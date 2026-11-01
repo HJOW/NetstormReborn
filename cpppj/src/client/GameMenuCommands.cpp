@@ -1,5 +1,6 @@
 // 보호PE의초기명령DWORD를이름/GUI변환과구별한다.
 #include "client/GameMenuCommands.h"
+#include "client/RitualChoiceInput.h" //의식선택명령도같은HTML/일반입력으로요청한다.
 #include "client/AddRandomInput.h"
 #include "client/DestroyAtInput.h"
 #include "client/UrlInput.h" // 스크린샷View버튼과대본도기존Help링크분배기를사용한다.
@@ -14,7 +15,7 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,39> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,42> kCommands{{
     {0x00542a54U,kPlayIntroCommand}, // 원문 PlayIntro 이름의 초기 DWORD다.
     {0x00542ae8U,kRecheckCdCommand}, //RecheckCD의 이름·메타·큐 명령이다. 실제 CD 재탐색이 아니라 현재 serial 정리다.
     {0x00542968U,kCaptureCommand}, //연속 화면 저장의 이름과 정수 명령을 같은 큐로 보낸다.
@@ -34,6 +35,9 @@ constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,39> kCommands{{
     {0x00542948U,0x02000095U},
     {0x0054295cU,0x0200009aU}, //PlaySound의 문자열 인자와 여섯 음향 인자를 전달한다.
     {0x005427acU,0x0200002dU}, //DigUp 이름도 기존 일반 입력의 같은 보상 경로를 사용한다.
+    {0x00542a44U,kUpgradeAltarCommand}, //원문의제단업그레이드요청이며즉시지급과구별한다.
+    {0x00542a48U,kGetNewTechCommand}, //원문의기술선택6b요청이다.
+    {0x00542ad8U,kRequestStormpowerCommand}, //원문의시간초과SP보상선택요청이다.
     {0x00542970U,0x0200009fU}, //GetTechnology의 이름과 HTML 버튼도 같은 일반 입력으로 전달한다.
     {0x00542974U,0x020000a0U},
     {0x005429acU,0x020000aeU},
@@ -83,6 +87,9 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="reloadtheams") return 0x02000123U;
     if (key=="pause") return 0x020000cfU;
     if (key=="techhelp") return 0x02000049U; //원문 TechHelp 이름표와54281c의 현재 일반 명령이다.
+    if (key=="getnewtech") return kGetNewTechCommand;
+    if (key=="requeststormpower") return kRequestStormpowerCommand;
+    if (key=="upgradealtar") return kUpgradeAltarCommand; //원문세이름과메뉴행이같은요청입력에연결된다.
     if (key=="getfulldeck") return 0x020000cdU;
     if (key=="toggleminimap") return 0x02000037U; //원본542d40 이름표→5427d4의 독립 미니맵 전환 명령이다.
     if (key=="togglebottomgump") return 0x02000088U; // 원본542fc8 이름표→542914의 하단 채팅 전환이며0/1/2 인자는 기존 도킹 경로가 해석한다.

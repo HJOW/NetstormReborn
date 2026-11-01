@@ -2,9 +2,10 @@
 #pragma once
 #include <cstdint>
 #include <functional>
+#include <string_view> //현재Tell의동기문자열경계를빌린다.
 namespace netstorm::client {
 class Client; //현재 게임 시계/정지/장치의 실제 소유자다.
 class GameWorld; //같은 Session과 UI 선택 저장소를 소유한다.
 // 실제 하드웨어 커서 선택기를 공유하며 별도 선택/경로 사본을 만들지 않는다.
-void BindCampaignUserInputServices(Client& client,GameWorld& world,std::function<void(std::uint32_t)> selectCursor);
+void BindCampaignUserInputServices(Client& client,GameWorld& world,std::function<void(std::uint32_t)> selectCursor,std::function<void(std::string_view)> tell={});
 }

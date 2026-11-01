@@ -1,5 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/RitualChoiceInput.h" //6b요청은같은현재선택제단과실제전송을사용한다.
+#include "o/RawRitualChoice.h" //선택Form교체를실제종속수신기에연결한다.
 #include "client/TechnologyListMenu.h" //HTML 원소별 기술 목록의 현재 TYPE/기술 종류WORD/가상 레벨을 연결한다.
 #include "o/RawRitualRefresh.h" //같은 현재 Session의 로컬 의식 완료 기록을 연결한다.
 #include "o/RawForeignRitualReward.h" //비로컬 보상도 현재 분산 SP와 Client 수명의 별도 Core 장부를 사용한다.
@@ -282,7 +284,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,16> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6c}; // 송금6c도 같은 Session의 등록과 해제 수명을 따른다.
+constexpr std::array<std::uint32_t,17> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c}; // 의식선택6b와송금6c도 같은 Session의 등록과 해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -3481,7 +3483,7 @@ void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& ow
     if ((s.editorUiRequest[0]!=1 && s.editorUiRequest[0]!=2) || state.current[0] || state.immediate[0] || state.next[0]!=4 || state.phase!=s.editorUiRequest || state.old!=s.editorUiPreviousPhase || !std::equal(state.current.begin()+1,state.current.end(),s.editorUiRequest.begin()+1)) throw std::logic_error("기존 Editor 실제 State 공통 확정/다음 Poll4 미완료");
     if (s.services.editorTransport) {
         auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch || s.editorActivityRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
-        for (const auto type:kEditorGameplayMessages) if (dispatch.Registration(type).receive) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); // 전체13종을 먼저 확인하여 기존 처리기를 부분 덮어쓰지 않는다.
+        for (const auto type:kEditorGameplayMessages) if (dispatch.Registration(type).receive) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); // 전체 등록종을 먼저 확인하여 기존 처리기를 부분 덮어쓰지 않는다.
         if (dispatch.Registration(0x64).receive || dispatch.Registration(0x41).receive || dispatch.Registration(0x52).receive) throw std::logic_error("Editor 실제64h/41h/52h 수신 등록표의 다른 소유자 존재"); // 모든 receive 충돌을 쓰기 전에 거부한다.
         s.editorRegisteredDispatch=&dispatch;s.editorActivityRegisteredDispatch=&dispatch;s.editorRegisteringCommands=true;
         try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);RegisterConnectionActivity(dispatch,*s.connectionActivity);RegisterChatPacket(dispatch,s.chatGlobals->receivedMask,s.ChatDevices());RegisterBattleLeavePacket(dispatch,s.players);s.editorRegisteringCommands=false; }
@@ -3969,6 +3971,8 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     dispatch.Register(0x5f,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationEffect(packet); });
     dispatch.Observe(0x7d,{});dispatch.Version(0x7d,1,0);dispatch.RequireLength(0x7d,0xffff);
     dispatch.Register(0x7d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveBombTimer(packet); });
+    dispatch.Observe(0x6b,{});dispatch.Version(0x6b,1,0);dispatch.RequireLength(0x6b,10); //0040b380빈observer와원문등록표의6b/버전1/정책0이다.
+    dispatch.Register(0x6b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveRitualChoice(impl_->core.pool,impl_->contentFinder,*impl_->contained,packet,[this](Sid form,std::uint32_t flags) { impl_->world.Destroy(form,flags); }); }); //00448e90은sender/owner검사를추가하지않는다.직접획득/희생완료를부르지않는다.
     dispatch.Observe(0x6d,{});dispatch.Version(0x6d,1,0);dispatch.RequireLength(0x6d,8);
     dispatch.Register(0x6d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->priestPrayer->Receive(packet); }); // 원본493f80은송신자/두번째인수를기도관문에추가하지않는다.
     dispatch.Observe(0x75,{});dispatch.Version(0x75,1,0);dispatch.RequireLength(0x75,0xffff); // 단일 분배기는 writer를 호출하지 않으며 실제 송신 경계에서 FinalizePacket을 실행한다.
@@ -4405,6 +4409,19 @@ std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState&
     hooks.inProduction=[current](std::uint32_t type) { return current->production->Contains(type); };
     hooks.excluded=[current](std::uint32_t type) { const auto items=current->constructionExcludedTypes.Items();return std::find(items.begin(),items.end(),type)!=items.end(); };
     return ShowKnowledgeMenu(current->core.types,state,hooks);
+}
+//일반선택요청은Carrier.cpp의실제005453dc와동일한inputState를읽는다.보상지급과구별한다.
+RitualChoiceInputHooks RawCampaignSession::RitualChoiceInputs() {
+    if (!impl_->loaded) throw std::logic_error("설치 전 의식 선택 입력 요청");auto* current=impl_.get();RitualChoiceInputHooks hooks;
+    hooks.dais=[current] { return current->inputState.dais; };hooks.nuggetType=[current] { return current->daisState->nuggetType; };hooks.daisType=[current] { return current->runeState.daisType; };
+    hooks.construct=ConstructRitualChoicePacket;hooks.assertion=[](auto line) { std::clog<<"의식 선택 UserInput.cpp 대상 진단 "<<line<<'\n'; };hooks.send=[this](auto target,auto packet) { SendLocalPacket(target,packet); };return hooks;
+}
+//원문은미션에서는레벨/문자열/UI를조회하지않으며비미션에서만세인자의현재Tell을연다.
+void RawCampaignSession::ShowSacrificeMenu(std::uint32_t target,const std::function<void(std::string_view)>& tell) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 의식 선택 창 요청");if (impl_->globals.missionPost) return;
+    if (!target || target>65535U || target>=impl_->core.pool.Capacity()) throw std::out_of_range("의식 선택 창의 실제 대상 SID 범위");const Sid sid{static_cast<std::uint16_t>(target)};
+    const auto canUpgrade=impl_->RewardCount(sid)<3 ? 1 : 0;const auto level=impl_->RewardCount(sid);std::array<char,256> text{};const auto count=std::snprintf(text.data(),text.size(),"SacrificeMenu(%d,%d,%d)",std::bit_cast<std::int32_t>(target),level,canUpgrade);
+    if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("원문 의식 선택 창256BYTE 서식 범위");if (!tell) throw std::logic_error("의식 선택의 같은 실제 Tell 미연결");tell(std::string_view(text.data(),static_cast<std::size_t>(count)));
 }
 // GUI의 현재 controlled 메뉴는 caller가 유지하며 게임 조회만 같은 실제 Session으로 바인딩한다.
 void RawCampaignSession::AppendThemeTechnologyMenu(std::uint32_t target,std::int32_t theme,TechnologyListMenuHooks hooks) { AppendTechnologyMenu(target,std::move(hooks),theme); } //같은 실제 게임 조회를 공유한다.

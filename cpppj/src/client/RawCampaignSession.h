@@ -59,6 +59,7 @@
 namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; struct FortObjectLoadState; class RawFortBadgesGlobals; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::o { class RawConnectionRegistry; } //실제 Client와 로컬 양끝이 빌리는 같은 연결표다.
 namespace netstorm::client {
+struct RitualChoiceInputHooks; //실제 Carrier.cpp의 같은선택제단과전송을일반입력에빌린다.
 struct TechnologyListMenuHooks; //HTML 원소별 기술 목록의 GUI는 실제 현재 controlled 메뉴가 공급한다.
 struct SendMoneyHooks; // 같은 실제 세션의 경제 상태를 일반 입력과 숫자 창에 빌린다.
 class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같은 실제 Template9 수명이다.
@@ -529,6 +530,8 @@ public:
     std::unique_ptr<RawPriestMenu> MakePriestMenu(PriestMenuHooks hooks);
     // 현재 Player 기술/실제 내용물·제외·Deck으로 전체 지식 창을 작성한다. GUI는 같은 Client의 실제 처리기를 받는다.
     std::vector<std::uint32_t> ShowKnowledge(KnowledgeMenuState& state,KnowledgeMenuHooks hooks);
+    RitualChoiceInputHooks RitualChoiceInputs(); //같은현재선택제단/종류와실제9번송신큐를공급한다.즉시보상확정은하지않는다.
+    void ShowSacrificeMenu(std::uint32_t target,const std::function<void(std::string_view)>& tell); //004cfc10의미션관문→가상레벨두번→동일Tell이다.비미션UI는정적구현만한다.
     void AppendTechnologyMenu(std::uint32_t target,TechnologyListMenuHooks hooks,std::optional<std::int32_t> theme={}); //전체 HTML 목록과 원소별 목록이 같은 게임 경계를 공유한다.
     void AppendThemeTechnologyMenu(std::uint32_t target,std::int32_t theme,TechnologyListMenuHooks hooks); //004cb4b0과 두 필터를 같은 실제 기술 부모/가상 레벨에 연결한다.
     QuickHelpTypeInfo HelpTypeInfo(std::uint32_t type) const; // 같은 TYPE/무기 보충 표/실제 AST 후처리의 현재 도움말 값이다.

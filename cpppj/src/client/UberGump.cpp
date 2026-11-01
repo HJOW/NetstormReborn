@@ -4,6 +4,7 @@
 #include "client/RawEdgeScroll.h"
 #include "client/RawMinimapControls.h"
 #include "client/CampaignUserInputServices.h"
+#include "client/RitualChoiceInput.h" //의식선택은실제일반명령에서6b요청만작성한다.
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
@@ -773,7 +774,7 @@ void UberGump::FinishMissionWorldLoad() {
     // 같은 단일 커서에 현재 장치/트리·비용 표시·선택 해제·실제 로그인 전송을 공급한다.
     auto cursorEffects=MakeCampaignCursorClientEffects(client_,*rawButtons_);
     cursorEffects.send=[session=&world_->Session()](std::uint32_t target,std::span<const std::uint8_t> packet) { session->SendLocalPacket(std::bit_cast<std::int32_t>(target),packet); };
-    BindCampaignUserInputServices(client_,*world_,cursorEffects.lifecycle.selectCursor);
+    BindCampaignUserInputServices(client_,*world_,cursorEffects.lifecycle.selectCursor,[this](auto section) { Tell(std::string(section)); });
     cursorEffects.lifecycle.highlight=[this](std::uint32_t mode) { world_->Highlight(mode); };
     cursorEffects.drop.refresh=[this](std::uint32_t sid,std::uint32_t force,std::uint32_t move) {
         // 원본Drop의004d5c90(0,0,1)을 같은 실제 선택으로 전달한다. Select 파사드는 둘째0/셋째1을 보존한다.
@@ -1188,6 +1189,9 @@ void UberGump::Event(InputEvent event) {
         if (!(event.code&InputCode::kRelease)) BeginMission(std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y))),1);
         return; // 원본005429f4의 실제 세 번째 인자를 동일 공장으로 전달한다.
     }
+    if (IsRitualChoiceCommand(transitionCode)) {
+        if (event.code&InputCode::kRelease) return;if (!world_) throw std::logic_error("의식 선택 요청의 실제 현재 Session 없음");static_cast<void>(DispatchRitualChoiceInput(event,world_->Session().RitualChoiceInputs()));return;
+    } //원문일반부모의같은비동기요청이며0200009f기술즉시지급으로우회하지않는다.
     if (DispatchGetTechnologyInput(event,[this](auto type) { if (!world_) throw std::logic_error("GetTechnology의 실제 현재 Session 없음");world_->Session().LearnNewTechnology(type); })) return; // 원문492a30의 기존 기술 추가/snapshot/이름·그림/NewTech 안내를 같은 Session에서 실행한다.
     if (transitionCode==kCheatAllTechnologyCommand) {
         if (!(event.code&InputCode::kRelease)) { if (!world_) throw std::logic_error("현재 월드 없는 원소 기술 지급");ApplyThemeTechnology(world_->Session(),event.x);rebuild_=true; }
