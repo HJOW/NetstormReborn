@@ -49,6 +49,7 @@ public sealed class HostMenuInput
         if (_pending is not { } action) return; _pending = null;
         if (action.Command == "Tell") ShowTell(action.Argument);
         else if (action.Command == "Menu" && _popup?.Open(action.Argument) == true) { }
+        else if (_popup?.Execute(action) == true) { }
         else _unhandled(action);
     }
 

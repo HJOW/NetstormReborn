@@ -15,23 +15,68 @@ public sealed class HostPopupMenu
     private readonly HostHtmlWindows _windows;
     private readonly HostHtmlMenus _menus;
     private readonly Screen _screen;
+    private readonly HostStartupScene _startup;
+    private readonly Action _applyAudio;
     private readonly Action _changed;
     private MainMenuAction[] _actions = [];
 
     /// <summary>같은 공통 Gump 트리와 메뉴 수명·화면을 사용한다.</summary>
-    public HostPopupMenu(HostMainMenu root, HostHtmlWindows windows, HostHtmlMenus menus, Screen screen, Action changed)
-    { _root = root; _windows = windows; _menus = menus; _screen = screen; _changed = changed; }
+    public HostPopupMenu(HostMainMenu root, HostHtmlWindows windows, HostHtmlMenus menus, Screen screen, HostStartupScene startup, Action changed, Action applyAudio)
+    { _root = root; _windows = windows; _menus = menus; _screen = screen; _startup = startup; _changed = changed; _applyAudio = applyAudio; }
 
-    /// <summary>복원한 Help 팝업을 같은 Gump에 부착한다. 다른 메뉴는 상위 처리기에 남긴다.</summary>
+    /// <summary>Help·설정 및 해상도/음량 팝업을 같은 Gump에 부착한다.</summary>
     public bool Open(string name)
     {
-        if (!string.Equals(name, "help", StringComparison.OrdinalIgnoreCase)) return false;
+        var rows = new List<(string Label, MainMenuAction Action, bool Checked, bool Enabled)>();
+        void Add(string label, string command, string argument, bool check = false, bool enabled = true) => rows.Add((label, new(command, argument), check, enabled));
+        int Get(string key) => _startup.Configuration.GetInt(key);
+        switch (name.ToLowerInvariant())
+        {
+            case "help": Add("About NetStorm", "Tell", "About"); break;
+            case "options":
+                if ((_screen.Flags & ScreenMode.FullScreen) != 0) { Add("Adjust Direct Draw", "Tell", "AdjustDirectDraw"); Add("Window Mode", "ScreenModeAbsChange", "10"); }
+                else Add("Direct Draw / Full Screen", "Tell", "DirectDrawManager");
+                Add("Resolution >", "Menu", "resolution");
+                Add("Sound On", "Toggle", "sound", Get("sound") != 0); Add("Play Music", "Toggle", "music", Get("music") != 0);
+                Add("Wind Noise", "Toggle", "playWind", Get("playWind") != 0); Add("Speaker Swap L/R", "Toggle", "swapLeftRightSpeakers", Get("swapLeftRightSpeakers") != 0);
+                Add("Sound Effect Volume >", "Menu", "soundvolume"); Add("Music Volume >", "Menu", "musicvolume");
+                Add("Edge Scroll in Fullscreen", "Toggle", "edgeScroll", Get("edgeScroll") != 0);
+                Add("Auto-Demo", "Toggle", "autoDemo", Get("autoDemo") != 0); Add("Tell Tips at Startup", "Toggle", "tellTips", Get("tellTips") != 0);
+                Add("Pass Server Diagnostic", "", "", false, false); break;
+            case "resolution":
+                foreach (var (width, height) in new[] { (640, 480), (800, 600), (1024, 768), (1280, 720), (1280, 800), (1366, 768) })
+                    Add($"{width} by {height}", "Tell", $"SETSIZE({width},{height})", _screen.Width == width && _screen.Height == height);
+                break;
+            case "soundvolume": case "musicvolume":
+                string key = name.Equals("soundvolume", StringComparison.OrdinalIgnoreCase) ? "soundVolume" : "musicVolume";
+                for (int i = 1; i <= 5; i++) Add($"Volume {i}", "Volume", $"{key}={i}", Get(key) == i);
+                break;
+            default: return false;
+        }
         _windows.RequestCloseAll();
-        _actions = [new("Tell", "About")];
+        _actions = rows.Select(row => row.Action).ToArray();
         _menus.Widgets.BeginVertical();
-        _menus.Controls.AddChecked(false, Encoding.ASCII.GetBytes("About NetStorm"), SelectCommand, 1, true, true);
+        for (int i = 0; i < rows.Count; i++) _menus.Controls.AddChecked(rows[i].Checked, Encoding.ASCII.GetBytes(rows[i].Label), SelectCommand, (uint)i + 1, true, rows[i].Enabled);
         _menus.Menu.AttachCurrent(_screen.Width / 2 + 2, _screen.Height / 2 - 27, _root.Tree.Create.Entries[0]);
         _changed(); return true;
+    }
+
+    /// <summary>현재 설정을 변경하는 팝업 행동을 실행하고 실제 음향 경계에 반영한다.</summary>
+    public bool Execute(MainMenuAction action)
+    {
+        if (action.Command == "Toggle")
+        {
+            _startup.Configuration.SetInt(action.Argument, _startup.Configuration.GetInt(action.Argument) == 0 ? 1 : 0);
+            if (action.Argument is "sound" or "music" or "swapLeftRightSpeakers") _applyAudio();
+        }
+        else if (action.Command == "Volume")
+        {
+            int equals = action.Argument.IndexOf('=');
+            if (equals < 0) throw new ArgumentException("음량 설정 인자 오류");
+            _startup.Configuration.SetInt(action.Argument[..equals], Netstorm.Assets.ConfigNumbers.ParseLong(action.Argument[(equals + 1)..])); _applyAudio();
+        }
+        else return false;
+        _windows.RequestCloseAll(); _changed(); return true;
     }
 
     /// <summary>현재 행 번호를 원본 상위 메뉴 행동으로 반환한다.</summary>

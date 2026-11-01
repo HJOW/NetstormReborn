@@ -172,7 +172,7 @@ public sealed class ClientHostGame : Game
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
             _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
                 () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
-            _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, () => _menuDirty = true));
+            _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions));
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);

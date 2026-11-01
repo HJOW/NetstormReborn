@@ -454,7 +454,8 @@ public sealed class HostStartupSceneTests
         var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { }); menus.BindInput(queue, _ => { }, (_, _) => { });
         using var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 1, _ => 0, _ => throw new InvalidOperationException());
         router = new HostMenuInput(menu, windows, factory, queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
-        router.BindPopup(new HostPopupMenu(menu, windows, menus, screen, () => { }));
+        int audioUpdates = 0;
+        router.BindPopup(new HostPopupMenu(menu, windows, menus, screen, startup, () => { }, () => audioUpdates++));
         var driver = new HostFrameDriver(screen, queue); driver.BindInputHandler(router.Dispatch);
         var help = menu.ControlPoint("Help")!.Value;
         menu.Route(new(InputCode.LeftButton, help.X, help.Y)); menu.Route(new(InputCode.LeftButton | InputCode.Release, help.X, help.Y)); router.Tick();
@@ -463,6 +464,23 @@ public sealed class HostStartupSceneTests
         var position = menu.Tree.Collection.Position(menu.Tree.Create.Entries[column.Id]); int x = position.X + 8, y = position.Y + (int)column.Offsets[0] + 3;
         router.NotifyPointer(new(0, x, y)); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput()); router.Tick();
         Assert.Equal("About", System.Text.Encoding.Latin1.GetString(startup.TellState.Current).Split('\0')[0]);
+        windows.CloseAll();
+        int oldDemo = startup.Configuration.GetInt("autoDemo");
+        router.Post(new("Menu", "options")); router.Tick();
+        column = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>());
+        Assert.Equal(12u, column.ItemCount);
+        position = menu.Tree.Collection.Position(menu.Tree.Create.Entries[column.Id]); x = position.X + 8; y = position.Y + (int)column.Offsets[9] + 3;
+        router.NotifyPointer(new(0, x, y)); Assert.Equal(9, column.Selection); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput()); router.Tick();
+        Assert.Equal(oldDemo == 0 ? 1 : 0, startup.Configuration.GetInt("autoDemo")); router.FinishFrame();
+        router.Post(new("Menu", "resolution")); router.Tick();
+        column = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>());
+        Assert.Equal(6u, column.ItemCount);
+        windows.CloseAll(); router.Post(new("Menu", "soundvolume")); router.Tick();
+        column = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>());
+        Assert.Equal(5u, column.ItemCount);
+        position = menu.Tree.Collection.Position(menu.Tree.Create.Entries[column.Id]); x = position.X + 8; y = position.Y + (int)column.Offsets[1] + 3;
+        router.NotifyPointer(new(0, x, y)); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput()); router.Tick();
+        Assert.Equal(2, startup.Configuration.GetInt("soundVolume")); Assert.Equal(1, audioUpdates);
         windows.CloseAll();
     }
 
