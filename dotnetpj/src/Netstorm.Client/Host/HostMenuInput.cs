@@ -23,6 +23,11 @@ public sealed class HostMenuInput
     private readonly Action<MainMenuAction> _unhandled;
     /// <summary>원본 State::Post처럼 비었을 때만 채우는 단일 다음 Tick 행동.</summary>
     private MainMenuAction? _pending;
+    /// <summary>같은 공통 트리에 설치한 상위 팝업 메뉴다.</summary>
+    private HostPopupMenu? _popup;
+
+    /// <summary>Help 등 상위 팝업의 실제 controlled 메뉴를 연결한다.</summary>
+    public void BindPopup(HostPopupMenu popup) => _popup = popup ?? throw new ArgumentNullException(nameof(popup));
 
     /// <summary>같은 실제 메뉴·창·큐와 후속 명령 경계를 빌린다.</summary>
     public HostMenuInput(HostMainMenu menu, HostHtmlWindows windows, HostHtmlFactory factory, InputQueue queue,
@@ -42,7 +47,9 @@ public sealed class HostMenuInput
     public void Tick()
     {
         if (_pending is not { } action) return; _pending = null;
-        if (action.Command == "Tell") ShowTell(action.Argument); else _unhandled(action);
+        if (action.Command == "Tell") ShowTell(action.Argument);
+        else if (action.Command == "Menu" && _popup?.Open(action.Argument) == true) { }
+        else _unhandled(action);
     }
 
     /// <summary>Blank는 기존 창을 지연 삭제하고, 나머지는 같은 실제 Tell 공장에 전달한다.</summary>
@@ -58,6 +65,7 @@ public sealed class HostMenuInput
     {
         if (_menu.Route(input) != 0) { _changed(); return false; }
         uint code = input.Code & 0x03ffffff; bool released = (input.Code & InputCode.Release) != 0;
+        if (code == HostPopupMenu.QueuedSelectCommand && _popup != null) { if (!released) Post(_popup.Select(unchecked((uint)input.Y))); return false; }
         if (code == 0x020000be) { _windows.RequestCloseAll(); _changed(); return false; }
         if (code == 0x02000089) return false;
         if (code == 0x02000095) { if (!released) ShowTell(_strings.Resolve(unchecked((uint)input.Y))); return false; }

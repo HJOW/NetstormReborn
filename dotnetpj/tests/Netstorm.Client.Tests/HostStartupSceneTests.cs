@@ -437,6 +437,35 @@ public sealed class HostStartupSceneTests
         Assert.Null(startup.Configuration.Registry.FindByName(prefix));
     }
 
+    /// <summary>Help 버튼의 팝업과 About 선택을 같은 원본 Gump·큐·Tell로 연다.</summary>
+    [Fact]
+    public void HostHelpPopupOpensAboutFromActualMenuRow()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        HostMenuInput? router = null;
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        { Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 }, action => router!.Post(action));
+        var queue = new InputQueue(); var strings = new ScriptStringRing();
+        var windows = new HostHtmlWindows(menu, queue, () => 1, _ => throw new InvalidOperationException());
+        windows.BindParser(startup, raw => ScriptCommand.QueueScriptCommand(raw, queue, strings, new() { Lookup = DialogScriptCommands.Lookup, Unknown = _ => throw new InvalidOperationException() }));
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { }); text.Bind(windows);
+        var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { }); menus.BindInput(queue, _ => { }, (_, _) => { });
+        using var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 1, _ => 0, _ => throw new InvalidOperationException());
+        router = new HostMenuInput(menu, windows, factory, queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
+        router.BindPopup(new HostPopupMenu(menu, windows, menus, screen, () => { }));
+        var driver = new HostFrameDriver(screen, queue); driver.BindInputHandler(router.Dispatch);
+        var help = menu.ControlPoint("Help")!.Value;
+        menu.Route(new(InputCode.LeftButton, help.X, help.Y)); menu.Route(new(InputCode.LeftButton | InputCode.Release, help.X, help.Y)); router.Tick();
+        var column = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>());
+        Assert.Equal(1u, column.ItemCount); Assert.Equal(HostPopupMenu.SelectCommand, column.Items[0].Command);
+        var position = menu.Tree.Collection.Position(menu.Tree.Create.Entries[column.Id]); int x = position.X + 8, y = position.Y + (int)column.Offsets[0] + 3;
+        router.NotifyPointer(new(0, x, y)); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput()); router.Tick();
+        Assert.Equal("About", System.Text.Encoding.Latin1.GetString(startup.TellState.Current).Split('\0')[0]);
+        windows.CloseAll();
+    }
+
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
     [Fact]
     public void MainMenuRoutesEachButtonToItsOriginalAction()
