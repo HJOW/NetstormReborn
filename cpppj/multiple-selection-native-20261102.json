@@ -1,0 +1,35 @@
+{
+  "unit": 701,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 601,
+  "nativeBodies": [
+    "004da6b0",
+    "004d5500"
+  ],
+  "nativeHelpers": [
+    "00414450",
+    "0040ea00",
+    "004d5490",
+    "004b22d0",
+    "004b1b80",
+    "004b2340",
+    "004b1bf0",
+    "0041c0b0"
+  ],
+  "explicitBoundaries": [
+    "refresh +88",
+    "blocked463b50",
+    "highlight4d5bb0",
+    "sound4a9d70",
+    "carrierCommit42a360"
+  ],
+  "gameExecutions": 0,
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "768e9363e653fc8a0f1f5d04ecff86c57035fc67953da3421733cb7a630306b1",
+  "toolSha256": "67424c77834ceb41f4aa134ec8a9aa1b2164656a5d291c28748e6c43847a5d4b"
+}

@@ -8,6 +8,7 @@
 #include <memory>
 
 namespace netstorm::client {
+inline constexpr std::uint32_t kWorldDestinationSelectedCommand=0x02000044U; //00542808/00542da8의 WorldDestSelected이며 실제 사용자 이동점 통지를 일반 큐에 넣는다.
 class RawCampaignSession; // 같은 실제 선택 객체의 수명만 Session에 연결한다.
 // 선택·마우스 TYPE·기억 좌표와 다중 선택은 서로 다른 전역이다. 참조 대상은 처리기보다 오래 살아야 한다.
 struct UserSelectionState {
@@ -36,6 +37,8 @@ struct UserSelectionHooks {
     std::function<void(std::uint32_t,std::uint32_t,std::string_view,std::uint32_t)> sound; // 4a9d70의 두 float 비트/이름/0이다.
     std::function<void()> assertion; // selectedSid 진단 뒤 현재 선택을 다시 읽는다. 임의 성공을 만들지 않는다.
     std::function<void()> previewAssertion; // 426080의 !s.isForm() 진단 뒤 현재 TYPE를 다시 읽는다.
+    std::function<void(std::uint32_t)> appendMultiple,removeMultiple; //00414450의 고정 용량/중복 제외와0040ea00의 안정된 전체 일치 제거를 같은 실제 목록에 수행한다.
+    std::function<void(std::uint32_t)> writeEnabled; //004d5500은 같은005434e4를0/1로 쓰고 예외 때 선행0을 보존한다.
 };
 // PATCH10.78의 전체 선택 부모와 짧은 관련 몸체다. Select의 둘째·셋째 인자는 독립 DWORD다.
 class RawUserSelection {
@@ -47,6 +50,9 @@ public:
     std::uint32_t Select(std::uint32_t sid,std::uint32_t forceSelect,std::uint32_t activateMove) const; // 4d5c90: 거부0 또는 최종 대상 SID다.
     void Clear() const; // 4d5c60: enabled일 때 다중 선택 정리→현재SID0→강조0이다. Select(0,0,0)과 별도로 호출한다.
     void ClearMultiple() const; // 4d5490: 범위와 state&3만 검사하고+7c(0)→+88 뒤 최종 개수를0으로 쓴다.
+    void ToggleMultiple(std::uint32_t sid,std::uint32_t selected) const; //004da6b0: ffffffff 토글/주선택 승격/같은 목록과 현재 가상 통지·음향 순서다.
+    void ExtendSelection(std::uint32_t sid,std::uint32_t forceSelect) const; //004da39a..40e의 Shift 클릭 관문이며 최초 단일 선택과 추가 토글을 구별한다.
+    void MoveMultiple(std::uint32_t x,std::uint32_t y,const std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)>& move) const; //004d5500: enabled0→현재 목록 전송→enabled1→실제 다중 정리다. 기본 선택은 호출자가 뒤에서 전송한다.
     void Remember(std::uint32_t x,std::uint32_t y,std::uint32_t type) const; // 4d5440: flags2&30000일 때만 좌표와 TYPE를 기억한다.
     std::uint32_t CarrierMenu(o::Sid sid,const InputEvent& event,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) const; // 4268c0/492080: Select(sid,0,0) 뒤 실제 공통+ac다.
     std::uint32_t ArcherMenu(o::Sid sid,const InputEvent& event,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) const; // 41e660: 셋째 인자만1이며 둘째는0이다.

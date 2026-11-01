@@ -2829,3 +2829,9 @@ target_sources(netstorm_tests PRIVATE MainMenuActivityTests.cpp)
 add_executable(netstorm_main_activity_tests FocusedTestMain.cpp MainMenuActivityTests.cpp)
 target_link_libraries(netstorm_main_activity_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_main_activity_tests)
+
+# Shift 다중 선택/그룹 이동과 기존 단일 선택·같은 Client owner의 집중 검증이다(701).
+target_sources(netstorm_tests PRIVATE MultipleSelectionTests.cpp)
+add_executable(netstorm_multiple_selection_tests FocusedTestMain.cpp MultipleSelectionTests.cpp UserSelectionTests.cpp)
+target_link_libraries(netstorm_multiple_selection_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_multiple_selection_tests)

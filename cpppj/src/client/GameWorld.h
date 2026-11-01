@@ -75,9 +75,10 @@ public:
     // Players 메뉴의 명시 owner DWORD로4950d0을 실행한다. Home(true)의 로컬 소유자로 바꾸지 않는다.
     void ViewPriest(std::uint32_t owner);
     // 화면 좌표와 실제 렌더링 그림으로 선택 가능한 오브젝트를 찾는다.
-    o::SquidId Pick(ScreenPoint point) const;
+    o::SquidId Pick(ScreenPoint point,std::uint32_t force=0) const; //Ctrl+special의 원문 강제 후보 조회도 같은 실제 선택기를 사용한다.
     // 선택 번호를 현재 월드에서 검증하고 표시를 갱신한다.
     void Select(o::SquidId id);
+    void ExtendSelection(o::SquidId id,std::uint32_t force); //현재 이동 모드의 Shift 클릭을 실제 선택/토글 부모에 전달한다.
     void PrepareEditorObjectMenu(o::SquidId id); // 편집 우클릭의4d5c90(id,0,0) 뒤 같은 클릭 객체로4d5290을 실행한다.
     o::SquidId Selected() const { return selected_; } // 004d5430의 현재 단일SID 조회이며 선택을 바꾸거나 캐시하지 않는다.
     ClientUserSelectionGlobals& SelectionGlobals();const ClientUserSelectionGlobals& SelectionGlobals() const; // 같은 장기 raw DWORD/배열이며 실제 SID 변환은 소비자가 검증한다.
@@ -96,7 +97,7 @@ public:
     // 입력 폴링의 현재 화면 좌표를 강조 역투영과 공유한다.
     void SetMousePoint(ScreenPoint point);
     // 선택한 내 이동 유닛에 땅 좌클릭 명령을 내린다. 실패해도 선택은 해제한다.
-    bool MoveSelected(ScreenPoint point);
+    bool MoveSelected(ScreenPoint point,const std::function<void(std::int32_t,std::int32_t)>& destination={}); //실제 사용자 입력은 이동점 큐 통지 뒤 다중 목록→기본 선택 순서로 전송한다.
     // 현재 스프라이트·지형의 깊이 순 목록을 수집한다. 정적 InspectView를 거치지 않는다.
     std::vector<RenderSprite> Sprites() const;
     // 선택 괄호와 체력 막대를 원본 팔레트 색으로 합성한다.

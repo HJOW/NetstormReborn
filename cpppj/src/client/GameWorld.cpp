@@ -467,7 +467,7 @@ ScreenRect GameWorld::Bounds(const o::Squid& object) const {
     const auto p=ToScreen(object.x,object.y); return {p.x-offset.x+frame.rect.left,p.y-offset.y+frame.rect.top,p.x-offset.x+frame.rect.right+1,p.y-offset.y+frame.rect.bottom+1};
 }
 // 실제10.78은현재해시순위와원본픽셀hit을사용하며다른값형월드는기존선택기를유지한다.
-o::SquidId GameWorld::Pick(ScreenPoint point) const {
+o::SquidId GameWorld::Pick(ScreenPoint point,std::uint32_t force) const {
     const auto view=MapView();if (point.y<view.top || point.x<view.left || point.y>=view.bottom || point.x>=view.right) return 0;
     if (campaign_ && assets_.Edition()==o::OriginalEdition::Patch1078) {
         const auto core=campaign_->Core();o::RawSquidFinder finder(core.pool,core.hash,core.types);UserPickHooks hooks; //같은 실제 해시/현재 풀에서 원본 순서로 검색한다.
@@ -482,7 +482,7 @@ o::SquidId GameWorld::Pick(ScreenPoint point) const {
             if (!factoryDisplay_) throw std::logic_error("실제 픽셀 선택 표시기 미설치");
             return factoryDisplay_->Hit(sid,x,y,CameraGlobals().Snapshot().pixels,campaign_->LocalOwner(),[this](o::Sid object,int px,int py) { campaign_->DrawBridgeAdditional(object,px,py); });
         };
-        return RawUserPick(core.pool,core.types,std::move(hooks)).Pick(point.x,point.y).value;
+        return RawUserPick(core.pool,core.types,std::move(hooks)).Pick(point.x,point.y,force).value;
     }
     o::SquidId picked=0; double best=std::numeric_limits<double>::max();
     // 겹친 그림은 클릭과 중심점의 거리가 가장 가까운 객체를 고른다.
@@ -504,6 +504,8 @@ void GameWorld::Select(o::SquidId id) {
     if (campaign_) { if (!input_) throw std::logic_error("실제 선택 장치 미설치");static_cast<void>(input_->selection->Select(id,0,1));changed_=true;return; }
     const auto* object=Object(id);selected_=object && object->selectable ? id : 0;changed_=true;
 }
+// 실제 Shift 선택은 소유자를 임의 제한하거나 단일 Select로 바꾸지 않는다.
+void GameWorld::ExtendSelection(o::SquidId id,std::uint32_t force) { if (!campaign_ || !input_) throw std::logic_error("다중 선택의 실제 월드/입력 없음");input_->selection->ExtendSelection(id,force);changed_=true; }
 // 편집 우클릭은 선택 결과와 무관하게 같은 원래 클릭 객체의 owner를 후속으로 읽는다.
 void GameWorld::PrepareEditorObjectMenu(o::SquidId id) {
     if (!campaign_ || !input_) throw std::logic_error("편집 우클릭의 실제 월드/선택 장치 미설치");
@@ -524,10 +526,12 @@ const ClientUserSelectionGlobals& GameWorld::SelectionGlobals() const { return g
 // 폴링 후 키/마우스 사건이 함께 조회할 현재 화면 위치다.
 void GameWorld::SetMousePoint(ScreenPoint point) { mousePoint_=point; }
 // 선택한 유닛의 주인이 나일 때만 명령을 적용한다.
-bool GameWorld::MoveSelected(ScreenPoint point) {
+bool GameWorld::MoveSelected(ScreenPoint point,const std::function<void(std::int32_t,std::int32_t)>& destination) {
     if (campaign_) {
-        if (!input_) throw std::logic_error("실제 클릭 명령 장치 미설치");const auto number=selected_;const auto projected=input_->Project(point);const auto truncated=RawCursorPosition::TruncatePoint({projected.x,projected.y}); //원본 Userinput.cpp는4971e0→41d770 뒤42a360을 호출한다. 폴링 때도 같은 절삭을 적용하며 모드 전환 시의 직접 역투영과 구별한다.
-        input_->carrier->Commit(number,{truncated[0],truncated[1]});changed_=true;return number!=0;
+        if (!input_) throw std::logic_error("실제 클릭 명령 장치 미설치");const auto projected=input_->Project(point);const auto truncated=RawCursorPosition::TruncatePoint({projected.x,projected.y}); //원본 Userinput.cpp는4971e0→41d770 뒤42a360을 호출한다. 폴링 때도 같은 절삭을 적용하며 모드 전환 시의 직접 역투영과 구별한다.
+        if (destination) destination(std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(truncated[0]))),std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(truncated[1])))); //41d770의 유한 signedDWORD를 float로 저장한 값도 원문 재FTOL의 하위32비트로 변환한다.
+        input_->selection->MoveMultiple(std::bit_cast<std::uint32_t>(truncated[0]),std::bit_cast<std::uint32_t>(truncated[1]),[this](auto sid,auto x,auto y) { input_->carrier->Commit(sid,{std::bit_cast<float>(x),std::bit_cast<float>(y)}); }); //원문4d5500이 현재 다중 목록을 보낸 뒤 실제 기본 선택을 다시 읽는다.
+        const auto number=selected_;input_->carrier->Commit(number,{truncated[0],truncated[1]});changed_=true;return number!=0;
     }
     RefreshSurfaceGround();
     const auto id=selected_; selected_=0; changed_=true; if (id==0 || id>objects_.size()) return false;

@@ -1,0 +1,50 @@
+{
+  "unit": 701,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "ef13ec6e3cd69a90532dea42678a36399cf16890aa8cedff9d25bca51ef40deb",
+  "nativeInputs": 601,
+  "staticInputInstructions": 85,
+  "newCppTests": 3,
+  "existingCppTests": 12,
+  "focusedTests": 15,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "gameExecutions": 0,
+  "newFixtures": 1,
+  "protectedExisting": 2619,
+  "protectedFiles": 2620,
+  "protectedChanged": 0,
+  "firstFailures": {
+    "nativeV1": "Missing basic Mark entry in precise function table; bounded existing22-byte ret4 body added",
+    "focusedV1": "Two trace mismatches and SID0 exception: refreshed promoted selection rather than original target; fixed without changing fixture"
+  },
+  "limits": [
+    "Input wiring compiled and statically matched; no GUI run for product701",
+    "Last actual GUI product700; no full C++/34/ZIP",
+    "No physical input or PCM/listening/pixel match",
+    "No capture/sacrifice/specific enemy/victory or new dedicated airborne-three behavior tests",
+    "No MP/network test",
+    "Next-unit selection004da880 and remaining cursor/Edit/compatibility work remain"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/RawUserSelection.cpp": "a5668a40b9185f9b44574877ed44502a7ab2089d7b7f171fdf5e35d14729ba7d",
+    "cpppj/src/client/RawUserSelection.h": "88dbc77914790bd4689f3d3acc47af37cea51e8ccaa6324f41a83608e436a084",
+    "cpppj/src/client/ClientUserSelectionGlobals.cpp": "4b2944b2e2ccb42c5f6e9d169699b9662b67d69d5c0920a4a797b348f8e7c7dc",
+    "cpppj/src/client/ClientUserSelectionGlobals.h": "32cc48efb5447caccb5606612aedc4e794ddde448d5712748b60e74b967de99b",
+    "cpppj/src/client/GameWorld.cpp": "560434db4834d04cd6f31552193782d7f5f48e7b29292fed19cd742d897e7657",
+    "cpppj/src/client/GameWorld.h": "8518c6e9ad6dc2280dcf3d22d5ce0f4b21ef100e56ad343e12556afcbdf49ddd",
+    "cpppj/src/client/GameWorldInput.inc": "7c68fa608233dd4dfb897842969b491b2309871aa8093a5349a9bd5672539b56",
+    "cpppj/src/client/UserInput.cpp": "2b284b9e3e3cb824bbe2a69d5c1c90839daaefed7cd092c8a13945e714515bc6",
+    "cpppj/tests/MultipleSelectionTests.cpp": "e59c2dea8164e5109b5087d517b09d114aba1b34eb816aa7abf04b37f6d30558",
+    "tools/decomp_multiple_selection.py": "67424c77834ceb41f4aa134ec8a9aa1b2164656a5d291c28748e6c43847a5d4b",
+    "tools/cpp_multiple_selection_input_audit.py": "9899c285270b46f94bedafbea3093d2fe6bf0302fe4d0d0eeeae86a47921cd95",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}

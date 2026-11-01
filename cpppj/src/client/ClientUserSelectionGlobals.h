@@ -23,6 +23,8 @@ public:
     std::array<std::uint32_t,2> remembered{}; //005caf38/3c: 기억한 두 float의 원시 DWORD 비트다.
     std::int32_t multipleCount{}; //005caf34: 반복 조건이 매번 다시 읽는 signed DWORD다.
     std::vector<std::uint32_t> multiple=std::vector<std::uint32_t>(30); //005caf2c가 가리키는 실제 DWORD 요소들이다. 호스트 vector header를 Native pointer/header와 같다고 하지 않는다.
+    void AppendMultiple(std::uint32_t sid); //00414450의 고정 용량30·중복 제외 추가이며 용량 부족을 자동 확장하지 않는다.
+    void RemoveMultiple(std::uint32_t sid); //0040ea00처럼 전체 일치를 제거하고 남은 순서를 보존한다.
     // 기존 일반 World의 새 입력 상태만 같은 주소에서 준비한다. Native Clear나 prepared 대여에 사용하지 않는다.
     void ResetForGeneralWorld() { enabled=1;mode=selected=mouseType=0;mouse={};remembered={};multipleCount=0;multiple.resize(30);std::fill(multiple.begin(),multiple.end(),0U); }
     // 실제 다중 배열은 callback의 재할당 뒤에도 다음 반복에서 현재 pointer/size를 다시 읽는다.

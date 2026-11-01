@@ -13,6 +13,7 @@ struct GameWorld::Input {
         carrierHooks.highlight=[this](std::uint32_t mode) { highlight->Highlight(mode); };carrierHooks.multiple=[this] { return globals.multipleCount>0 ? 1U : 0U; };
         carrier=world.campaign_->MakeCarrierInput(std::move(carrierHooks));highlight=std::make_shared<RawUserHighlight>(world.HighlightSettings(),std::move(highlightHooks));
         selectHooks.enabled=[this] { return globals.enabled; };selectHooks.blocked=[this] { return consoleFocus; };selectHooks.highlight=[this](std::uint32_t mode) { highlight->Highlight(mode); };
+        selectHooks.appendMultiple=[this](auto sid) { globals.AppendMultiple(sid); };selectHooks.removeMultiple=[this](auto sid) { globals.RemoveMultiple(sid); };selectHooks.writeEnabled=[this](auto value) { globals.enabled=value; }; //실제 선택/다중 이동/State 정리가 같은 장기 owner를 직접 쓴다.
         selection=world.campaign_->MakeUserSelection(globals.SelectionState(),std::move(selectHooks));
     }
     //원본4971e0의 같은 현재 카메라/역투영을 사용한다.

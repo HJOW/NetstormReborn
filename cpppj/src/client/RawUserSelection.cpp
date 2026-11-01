@@ -100,6 +100,37 @@ std::uint32_t RawUserSelection::Select(std::uint32_t number,std::uint32_t forceS
 void RawUserSelection::Clear() const {
     if (Need(hooks_.enabled)()) { ClearMultiple();state_.selected=0;Need(hooks_.highlight)(0); }
 }
+// 유효/비free·비dead 대상만 통지한다. 명시 값2 같은 비정규 DWORD도 bool로 바꾸지 않는다.
+void RawUserSelection::ToggleMultiple(std::uint32_t number,std::uint32_t on) const {
+    if (!number || number>=pool_.Capacity() || number>65535U || (Raw(number)[11]&3U)) return;
+    const auto sid=SlotId(number);const auto marked=(Raw(number)[40]>>2)&1U;if (on==0xffffffffU) on=(~marked)&1U;if (marked==on) return;
+    Need(hooks_.selectNotice)(sid,on);
+    if (state_.selected==number) {
+        if (!state_.multipleCount) {
+            if (!Need(hooks_.enabled)() || Need(hooks_.blocked)()) return;
+            ClearMultiple();if (state_.selected) ClearPrevious(SlotId(state_.selected));Need(hooks_.highlight)(0);return;
+        }
+        const auto current=state_.currentMultiple ? state_.currentMultiple() : state_.multiple;if (current.empty()) throw std::out_of_range("다중 선택 승격의 현재 첫 원소 없음");state_.selected=current[0];number=state_.selected;
+    } else if (on) {
+        Need(hooks_.appendMultiple)(number);Need(hooks_.sound)(Read(Raw(number),14),Read(Raw(number),18),"select.wav",0);Need(hooks_.refresh)(sid);return;
+    }
+    Need(hooks_.removeMultiple)(number);Need(hooks_.refresh)(sid); //원문은 승격된 selected가 아니라 처음 보관한 대상 piVar5의+88을 호출한다.
+}
+// 원문은 선택 후보의 이동 플래그 뒤에만 현재 기본 선택의 상태/타입을 읽는다. 소유자 제한은 추가하지 않는다.
+void RawUserSelection::ExtendSelection(std::uint32_t number,std::uint32_t forceSelect) const {
+    if (Need(hooks_.paused)() || !number || !(Type(Raw(number)[10]).flags2&0x30000U)) return;
+    if (!state_.selected || (Raw(state_.selected)[11]&1U) || !(Type(Raw(state_.selected)[10]).flags2&0x30000U)) static_cast<void>(Select(number,forceSelect,1));
+    else ToggleMultiple(number,0xffffffffU);
+}
+// 개수/배열은 각 전송 뒤 현재 값을 다시 읽는다. 전송 실패 때 enabled를 RAII로1로 되돌리지 않는다.
+void RawUserSelection::MoveMultiple(std::uint32_t x,std::uint32_t y,const std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)>& move) const {
+    Need(hooks_.writeEnabled)(0);
+    for (std::int32_t index=0;index<state_.multipleCount;++index) { //원문 현재 signed count와 다음 원소를 재조회해 콜백의 변경을 보존한다.
+        const auto current=state_.currentMultiple ? state_.currentMultiple() : state_.multiple;if (static_cast<std::size_t>(index)>=current.size()) throw std::out_of_range("다중 이동의 현재 배열 물리 범위");const auto number=current[static_cast<std::size_t>(index)];
+        if (number && number<pool_.Capacity() && number<=65535U && !(Raw(number)[11]&3U)) Need(move)(number,x,y);
+    }
+    Need(hooks_.writeEnabled)(1);ClearMultiple();
+}
 // 보호 PE의 Carrier+ac는 선택 결과와 무관하게 마지막 공통 Open의 전체DWORD를 반환한다.
 std::uint32_t RawUserSelection::CarrierMenu(o::Sid sid,const InputEvent& event,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) const {
     if (!(Raw(sid.value)[40]&1)) static_cast<void>(Select(sid.value,0,0));return Need(common)(sid,event);

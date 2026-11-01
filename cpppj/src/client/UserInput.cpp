@@ -1,6 +1,8 @@
 #include "client/UserInput.h"
 #include "client/ProductionShortcuts.h"
 #include "client/ClientMain.h"
+#include "client/ClientGameplayGlobals.h" //Ctrl+special 강제 후보 조회의 현재0055a480을 읽는다.
+#include "client/RawUserSelection.h" //원문 WorldDestSelected와 실제 Shift 다중 선택 부모를 사용한다.
 #include "client/RawCampaignCursor.h"
 
 namespace netstorm::client {
@@ -34,7 +36,11 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     const auto mouse=event.code & 0x00ffffffu;
     if (mouse==InputCode::kRightButton) { const auto picked=world_.Pick(point);if (picked && world_.Session().Editor()) world_.PrepareEditorObjectMenu(picked);return picked; } // 원본 편집 우클릭의 선행 선택/Core 전환 뒤에만 객체 메뉴를 연다.
     if (mouse==InputCode::kLeftButton) {
-        if (world_.InputMode()==2 || world_.InputMode()==5) world_.MoveSelected(point);
+        if (world_.InputMode()==2 || world_.InputMode()==5) {
+            const auto force=(event.code&InputCode::kControl) && client_.GameplayGlobals()->player.special ? 1U : 0U;const auto picked=world_.Pick(point,force); //원문은 Shift 분기와 무관하게 현재 후보를 먼저 조회한다.
+            if (event.code&InputCode::kShift) world_.ExtendSelection(picked,force);
+            else world_.MoveSelected(point,[this](auto x,auto y) { client_.Input().PushCommand(kWorldDestinationSelectedCommand,x,y); });
+        }
         else world_.Select(world_.Pick(point));
     }
     return {};
