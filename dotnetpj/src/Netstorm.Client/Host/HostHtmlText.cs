@@ -11,6 +11,12 @@ public sealed class HostHtmlText
 {
     /// <summary>같은 공통 등록·입력·수명.</summary>
     private readonly GumpButtonTree _tree;
+    /// <summary>실제 글리프를 그리는 같은 논리 화면.</summary>
+    private readonly Screen _screen;
+    /// <summary>본문과 글리프 장치가 공유하는 현재 클립.</summary>
+    private readonly GumpDrawState _clip = new();
+    /// <summary>Draw 호출 동안에만 활성인 실제 글리프 출력기.</summary>
+    private GumpTextDraw? _activeText;
     /// <summary>부분 생성 자식까지 보관하는 같은 HTML 창 소유자.</summary>
     private readonly HostHtmlWindows _windows;
     /// <summary>원본 버퍼는 Gump 등록과 별도 주소 수명을 가진다.</summary>
@@ -36,9 +42,12 @@ public sealed class HostHtmlText
     {
         ArgumentNullException.ThrowIfNull(menu); ArgumentNullException.ThrowIfNull(windows); ArgumentNullException.ThrowIfNull(screen); ArgumentNullException.ThrowIfNull(poll);
         ArgumentNullException.ThrowIfNull(redraw); ArgumentNullException.ThrowIfNull(cursor); ArgumentNullException.ThrowIfNull(sound);
-        _tree = menu.Tree; _windows = windows; _bodyColor = screen.Colors().Basic[7];
+        _tree = menu.Tree; _windows = windows; _screen = screen; _bodyColor = screen.Colors().Basic[7];
         var font = new GumpText(_tree.Fonts); var styleHooks = new StyleTextHooks();
         StyleText.BindStyleTextFonts(styleHooks, font); StyleText.BindStyleTextPalette(styleHooks, screen.Colors());
+        styleHooks.TextDraw = (bytes, position, context) =>
+            (_activeText ?? throw new InvalidOperationException("HTML 본문 실제 출력 문맥 없음"))
+                .Draw(bytes, position, GumpText.DecodeGumpTextContext(context));
         var pictures = new Markup(Fragments, new(), new()); Markup.BindMarkup(styleHooks, pictures);
         var markupHooks = new StyleTextMarkupHooks { Sound = sound };
         StyleTextMarkup.BindStyleTextMarkupPalette(markupHooks, screen.Colors());
@@ -68,8 +77,8 @@ public sealed class HostHtmlText
         var textHooks = new ScrollingTextGumpHooks { Node = token => _tree.Node(token) as ScrollingTextGumpNode,
             BaseNode = _tree.Node, Redraw = redraw };
         StyleTextBufferStore.BindScrollingTextBuffers(textHooks, Buffers); ScrollGump.BindScrollingTextSlider(textHooks, slider);
-        var clip = new GumpDrawState(); GumpDraw.SetGumpDrawClip(clip, new(0, 0, screen.Width, screen.Height));
-        Text = new ScrollingTextGump(_tree.Create, _tree.Collection, clip, Fragments, style, textHooks);
+        GumpDraw.SetGumpDrawClip(_clip, new(0, 0, screen.Width, screen.Height));
+        Text = new ScrollingTextGump(_tree.Create, _tree.Collection, _clip, Fragments, style, textHooks);
         var state = new ScrollingTextGumpWidgetState { SliderType = menu.BackgroundType, SliderFrame = 1,
             ChangeEvent = sliderState.ChangeEvent, StepEvent = sliderState.StepEvent, RefreshEvent = 0x0200001b,
             CursorEvent = 0x0200003b, LeftTagEvent = 0x02000025, RightTagEvent = 0x02000026 };
@@ -102,6 +111,25 @@ public sealed class HostHtmlText
         if (size == 0xd8) { uint slider = _tree.AllocateNode(new ScrollGumpNode()); _windows.TrackChild(slider); return slider; }
         if (size != 0x38 || _nextBuffer >= 0x63000000) throw new ArgumentOutOfRangeException(nameof(size), "HTML 본문 자식 크기/주소 오류");
         uint token = _nextBuffer++; _bufferTokens.Add(token); return token;
+    }
+
+    /// <summary>현재 본문만 실제 글꼴과 화면 클립으로 출력한다. 호출자는 다른 Gump와의 표시 순서를 정한다.</summary>
+    /// <param name="token">같은 트리에 생성·부착된 다중 줄 본문 토큰.</param>
+    public void Draw(uint token)
+    {
+        if (_tree.Node(token) is not ScrollingTextGumpNode) throw new ArgumentException("HTML 본문 토큰 필요", nameof(token));
+        if (_activeText is not null) throw new InvalidOperationException("HTML 본문 출력 재진입");
+        byte[] pixels = _screen.Lock();
+        try
+        {
+            GumpDraw.SetGumpDrawClip(_clip, new(0, 0, _screen.Width, _screen.Height));
+            var target = new GumpPixelTarget(pixels, _screen.Pitch, _screen.Height, _clip);
+            _activeText = new GumpTextDraw(_tree.Fonts, GumpTextDraw.MakeGumpGlyphPixelHooks(target, new()));
+            var draw = new GumpDraw(_tree.Collection, _clip, new() { Draw = Text.Draw });
+            draw.Draw(token);
+        }
+        finally { _activeText = null; _screen.Unlock(); }
+        _screen.Update(_tree.Collection.Bounds(token));
     }
 
     /// <summary>HTML 부모의 본문 생성·파싱·스크롤 경계를 현재 실제 처리기에 연결한다.</summary>

@@ -146,6 +146,23 @@ public sealed class HostStartupSceneTests
         Assert.Equal(2, text.Buffers.Binding(body.Buffer).State.LineCount);
         Assert.Contains(text.Fragments.Fragments.Values, fragment => System.Text.Encoding.Latin1.GetString(fragment.Text).Contains("Storm", StringComparison.Ordinal));
         text.Text.FitContent(html.Body); Assert.True(body.BaseWidth > 0); Assert.True(body.BaseHeight > 0);
+        menu.Tree.Tree.Move(root, 100, 100, menu.Tree.Create.Entries[0]);
+        menu.Tree.Tree.Move(html.Body, 3, 4, root); text.Text.RequestScroll(html.Body, 0);
+        ScreenRect bounds = menu.Tree.Collection.Bounds(html.Body); byte[] before = screen.Pixels.ToArray();
+        text.Draw(html.Body);
+        // 실제 원본 글꼴이 본문 영역에 출력되고 clip 밖의 화면 픽셀은 보존된다.
+        bool changed = false;
+        for (int y = 0; y < screen.Height; y++)
+        {
+            // 전체 논리 행을 순회해 출력 영역 밖 쓰기도 확인한다.
+            for (int x = 0; x < screen.Width; x++)
+            {
+                if (before[y * screen.Pitch + x] == screen.Pixels[y * screen.Pitch + x]) continue;
+                Assert.True(x >= bounds.Left && x < bounds.Right && y >= bounds.Top && y < bounds.Bottom);
+                changed = true;
+            }
+        }
+        Assert.True(changed);
         owner.CloseAll(); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
     }
 
