@@ -118,17 +118,29 @@ public sealed class MissionScript : IDisposable
     private static byte[] ReadFortSource(ConfigInterface configuration, Func<string, byte[]?>? source, string selectedFort) =>
         ReadFortPath(source, configuration.PathSpec("fortSpec", selectedFort));
 
-    /// <summary>선택한 Fort 파일 원문과 실제 설치 경로를 함께 돌려준다. 경로 매퍼와 reader가 수명을 둔다.</summary>
-    /// <param name="fileName">경로 매퍼. 없으면 읽은 경로를 그대로 쓴다.</param>
-    public MissionFortFileReader FortFileReader(Func<string, string>? fileName = null)
+    /// <summary>현재 경로와 manager 이름을 먼저 선택하고, 파일 읽기는 반환한 함수가 호출될 때 수행한다.</summary>
+    /// <param name="fileName">실제 manager 이름 매퍼. 없으면 선택한 경로를 쓴다.</param>
+    public MissionFortFileSelector FortFileSelector(Func<string, string>? fileName = null)
     {
         ConfigInterface configuration = _configuration;
         Func<string, byte[]?>? source = _source;
         return selectedFort =>
         {
             string path = configuration.PathSpec("fortSpec", selectedFort);
-            byte[] bytes = ReadFortPath(source, path);
-            return new MissionFortSourceImage { Image = bytes, FileName = fileName != null ? fileName(path) : path };
+            string mapped = fileName != null ? fileName(path) : path;
+            return new MissionFortFileSelection { FileName = mapped, Read = () => ReadFortPath(source, path) };
+        };
+    }
+
+    /// <summary>같은 경로와 manager 이름을 선택한 직후 읽어 이미지와 이름을 함께 반환한다.</summary>
+    /// <param name="fileName">경로 매퍼. 없으면 읽은 경로를 그대로 쓴다.</param>
+    public MissionFortFileReader FortFileReader(Func<string, string>? fileName = null)
+    {
+        MissionFortFileSelector select = FortFileSelector(fileName);
+        return selectedFort =>
+        {
+            MissionFortFileSelection selection = select(selectedFort);
+            return new MissionFortSourceImage { Image = selection.Read(), FileName = selection.FileName };
         };
     }
 

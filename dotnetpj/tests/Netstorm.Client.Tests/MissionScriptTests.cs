@@ -112,4 +112,56 @@ public sealed class MissionScriptTests
         Assert.Equal(new byte[] { 1, 2 }, defaultMission.ReadFortImage("shared"));
     }
 
+    /// <summary>선택은 파일을 열지 않으며 설정 변경과 미션 반납 뒤에도 선택한 경로를 읽는다.</summary>
+    [Fact]
+    public void FortSelector_CapturesPathAndDefersRead()
+    {
+        var files = MakeFiles();
+        var config = new ConfigInterface(Reader(files));
+        config.Startup(new ConfigInterface.StartupOptions());
+        int reads = 0;
+        Func<string, byte[]?> source = path =>
+        {
+            reads++;
+            return path == "\\D\\shared.fort" ? [7, 8] : null;
+        };
+        MissionFortFileSelection selected;
+        using (var mission = new MissionScript(config, "second", source: source))
+        {
+            reads = 0;
+            selected = mission.FortFileSelector(path => "mapped:" + path)("shared");
+            Assert.Equal(0, reads);
+            Assert.Equal("mapped:\\D\\shared.fort", selected.FileName);
+        }
+        config.Set("DataDir", "\\Other");
+        Assert.Equal(new byte[] { 7, 8 }, selected.Read());
+        Assert.Equal(1, reads);
+    }
+
+    /// <summary>즉시 reader도 파일 읽기보다 먼저 매퍼를 호출해 I/O의 설정 변경과 예외 순서를 보존한다.</summary>
+    [Fact]
+    public void FortFileReader_MapsBeforeReading()
+    {
+        var config = new ConfigInterface(Reader(MakeFiles()));
+        config.Startup(new ConfigInterface.StartupOptions());
+        var calls = new List<string>();
+        Func<string, byte[]?> source = path =>
+        {
+            calls.Add("read:" + path);
+            config.Set("DataDir", "\\Other");
+            return [9];
+        };
+        using var mission = new MissionScript(config, "first", source: source);
+        config.Set("DataDir", "\\D");
+        calls.Clear();
+        MissionFortSourceImage result = mission.FortFileReader(path =>
+        {
+            calls.Add("map:" + path);
+            return config.PathSpec("fortSpec", "mapped");
+        })("shared");
+        Assert.Equal(new[] { "map:\\D\\shared.fort", "read:\\D\\shared.fort" }, calls);
+        Assert.Equal("\\D\\mapped.fort", result.FileName);
+        Assert.Equal(new byte[] { 9 }, result.Image);
+    }
+
 }

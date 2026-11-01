@@ -20,3 +20,17 @@ public sealed class MissionFortSourceImage
 /// </summary>
 /// <param name="selectedFort">고른 논리 요새 이름.</param>
 public delegate MissionFortSourceImage MissionFortFileReader(string selectedFort);
+
+/// <summary>선택된 파일의 manager 이름과 지연 읽기를 함께 소유한다.</summary>
+public sealed class MissionFortFileSelection
+{
+    /// <summary>선택 순간의 경로와 매퍼로 결정한 실제 파일 이름이다.</summary>
+    public required string FileName { get; init; }
+
+    /// <summary>선택한 경로와 source를 유지하며 호출할 때 파일을 읽는다.</summary>
+    public required Func<byte[]> Read { get; init; }
+}
+
+/// <summary>논리 이름으로 경로와 manager 이름을 선택하며 파일을 열지 않는다.</summary>
+/// <param name="selectedFort">선택할 논리 요새 이름.</param>
+public delegate MissionFortFileSelection MissionFortFileSelector(string selectedFort);
