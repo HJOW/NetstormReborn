@@ -45,6 +45,8 @@ public sealed class GumpButtonTree
     public ButtonGump Buttons { get; }
     /// <summary>현재 돌 버튼 생성·그리기 처리기.</summary>
     public StoneButtonGump Stones { get; }
+    /// <summary>같은 입력·수명·노드 트리의 모달 소유자.</summary>
+    public GumpModal Modal { get; }
     /// <summary>프레임별 등록 버튼의 idle과 통지.</summary>
     public GumpFrame Frame { get; }
     /// <summary>생성과 출력이 공유하는 실제 배경 자산.</summary>
@@ -116,6 +118,7 @@ public sealed class GumpButtonTree
         var events = new GumpEvents(Create, LifeState, new(), Collection, eventsHooks);
         Input = new(Create, LifeState, new() { OverlayEvent = 0x0200003b }, Collection, events, inputHooks);
         Frame = new(Create, LifeState, frameHooks);
+        Modal = new(Node, LifeState, Input, Lifetime, Tree, () => hooks.Redraw(Create.Entries[0], false));
         Buttons = new(Create, new() { ValueEvent = 0x02000070, ClickEvent = 0x0200002c, RightEvent = 0x02000012,
             RepeatEvent = 0x0200002f, BaseColor = 56 }, Factory, Collection, events, Input, Lifetime,
             new() { Node = token => Node(token) as ButtonGumpNode, BaseNode = Node, BackgroundFlags = BackgroundFlags,

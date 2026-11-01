@@ -1,5 +1,7 @@
 using System.Text;
 using Netstorm.Client.Gump;
+using Netstorm.Client.Host;
+using Netstorm.Assets;
 using Netstorm.Client.Input;
 using Netstorm.Client.Scripting;
 
@@ -14,6 +16,28 @@ public sealed class HtmlWindowFactoryTests
     {
         var s = new HtmlWindowFactoryScene(); uint before = s.Ui.Common.Create.Count, root = s.Show("{caption}<br>Choose a route."); var n = s.Ui.Root(root); Assert.NotEqual(0U, root); Assert.Equal(n.Serial, s.Ui.State.CreatedSerial); Assert.Equal((1, 1U, 1U, root, 1U), (s.FallbackCalls, s.Ui.State.Instances, s.Ui.Common.LifeState.DialogCount, s.Ui.Common.LifeState.CurrentDialog, n.ControlCount)); Assert.Contains("Storm Islands", s.BodyText(root)); Assert.Equal((0x0200006dU, 0U), (n.Controls[0].Command, n.Controls[0].Parameter)); s.Ui.Common.Input.Route(s.Ui.State.EnterEvent, 0, 0); var selected = s.Ui.Queue.Pop(false); Assert.Equal((0x0200006dU, 0, 0), (selected.Code, selected.X, selected.Y)); Assert.Equal(0U, s.Ui.Common.LifeState.DialogCount); Assert.Equal(1U, s.Ui.State.Instances); s.Ui.Common.Lifetime.Cleanup(); Assert.Equal((0U, before), (s.Ui.State.Instances, s.Ui.Common.Create.Count)); Assert.Empty(s.Ui.Fragments.Fragments);
     }
+    /// <summary>실제 배포 Tell 본문과 Config를 전체 HTML 공장·본문·모달에 전달한다.</summary>
+    [Fact]
+    public void ActualCreditsTellReachesHtmlFactoryAndModal()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var scene = new HtmlWindowFactoryScene();
+        string Raw(string value) => Encoding.Latin1.GetString(OriginalText.EncodeWindows1252(value));
+        string Text(string value) => OriginalText.DecodeWindows1252(Encoding.Latin1.GetBytes(value));
+        scene.Hooks.Substitute = (raw, _) => Raw(startup.Configuration.SubstituteLocal(Text(raw)));
+        scene.Hooks.Fallback = () => Raw(startup.Configuration.Configuration.Get("OkButton") ?? throw new InvalidOperationException("OkButton 누락"));
+        uint root = 0;
+        var result = startup.ShowTell("Credits", 0, null, (body, suppress, width, height) =>
+        {
+            uint serial = scene.Factory.Show(Raw(body), suppress, width, height);
+            root = scene.Ui.Reference(serial); return serial;
+        });
+        Assert.True(result.Found); Assert.NotEqual(0U, result.Serial); Assert.NotEqual(0U, root);
+        Assert.Equal(root, scene.Ui.Common.LifeState.CurrentDialog);
+        Assert.NotEmpty(scene.BodyText(root));
+        scene.Close(); Assert.Equal(0U, scene.Ui.State.Instances);
+    }
+
     /// <summary>메타 종류 우선순위/원문 공백과 처리수24 대 실제 버튼20개 한도를 검증한다.</summary>
     [Fact]
     public void ActualMetadataPriorityRawCommandAndTwentyControlLimit()

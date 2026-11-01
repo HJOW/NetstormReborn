@@ -36,6 +36,39 @@ public sealed class GumpButtonTreeTests
         Assert.Equal(second, tree.Input.Route(InputCode.LeftButton | InputCode.Release, 101, 11));
         Assert.Equal(b.Serial, notified[1].Serial); Assert.Equal(2, sound);
     }
+    /// <summary>중첩 모달은 이전 자식의 최소 깊이 앞에 오고 입력을 제한하며 제거 시 이전 모달로 돌아간다.</summary>
+    [Fact]
+    public void ModalUsesActualTreeDepthAndInputStack()
+    {
+        var fixture = new GumpFontFixture("gumptext"); var actions = new List<uint>(); int redraws = 0;
+        var tree = new GumpButtonTree(640, 480, GumpBackgroundTestAssets.Assets(), 82, 0, new(9, 243, 57), fixture.Fonts,
+            new() { Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => { },
+                Redraw = (_, _) => redraws++, HandleBase = (_, code, a, _) => { if (code == 0x0200002c) actions.Add(a); return 0; } });
+        uint first = tree.AddStone(75, 19, "First\0"u8.ToArray(), 10, 10);
+        uint second = tree.AddStone(75, 19, "Second\0"u8.ToArray(), 100, 10);
+        var one = Assert.IsType<StoneButtonGumpNode>(tree.Node(first));
+        var two = Assert.IsType<StoneButtonGumpNode>(tree.Node(second));
+        GumpCreateNode firstChild = tree.Node(one.Background)!; GumpCreateNode secondChild = tree.Node(two.Background)!;
+        one.Depth = 10; firstChild.Depth = unchecked((uint)-30); firstChild.Flags |= 1;
+        two.Depth = 80; secondChild.Depth = 82;
+        int before = redraws;
+        tree.Modal.SetModal(first, true); tree.Modal.SetModal(second, true);
+        Assert.Equal(unchecked((uint)-33), two.Depth); Assert.Equal(unchecked((uint)-31), secondChild.Depth);
+        Assert.Equal(second, tree.LifeState.CurrentDialog); Assert.Equal(2U, tree.LifeState.DialogCount);
+        tree.Input.Route(InputCode.LeftButton, 11, 11);
+        tree.Input.Route(InputCode.LeftButton | InputCode.Release, 11, 11);
+        Assert.Empty(actions);
+        Assert.Equal(second, tree.Input.Route(InputCode.LeftButton, 101, 11));
+        Assert.Equal(second, tree.Input.Route(InputCode.LeftButton | InputCode.Release, 101, 11));
+        Assert.Equal(new[] { two.Serial }, actions);
+        tree.Modal.SetModal(second, true); Assert.Equal(2U, tree.LifeState.DialogCount); Assert.Equal(unchecked((uint)-33), two.Depth);
+        tree.Modal.SetModal(second, false); Assert.Equal(first, tree.LifeState.CurrentDialog);
+        Assert.Equal(first, tree.Input.Route(InputCode.LeftButton, 11, 11));
+        Assert.Equal(first, tree.Input.Route(InputCode.LeftButton | InputCode.Release, 11, 11));
+        Assert.Equal(new[] { two.Serial, one.Serial }, actions); Assert.True(redraws > before);
+        tree.Remove(first); Assert.Equal(0U, tree.LifeState.CurrentDialog);
+    }
+
     /// <summary>같은 생성 노드의 배경과 부모를 실제 인덱스 표면에 출력한다.</summary>
     [Fact]
     public void DrawUsesSameNodesAndActualPixelSurface()
