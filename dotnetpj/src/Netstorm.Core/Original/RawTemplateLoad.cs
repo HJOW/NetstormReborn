@@ -34,7 +34,7 @@ public sealed class TemplateLoadHooks
     public Action? RefreshTitle { get; set; }
 
     /// <summary>읽기 실패 시 base DataManager 소멸과 저장 포인터 free를 순서대로 호출한다.</summary>
-    public TemplateLifetimeHooks Lifetime { get; } = new();
+    public TemplateLifetimeHooks Lifetime { get; set; } = new();
 }
 
 /// <summary>

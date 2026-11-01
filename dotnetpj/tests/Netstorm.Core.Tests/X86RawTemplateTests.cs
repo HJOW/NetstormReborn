@@ -861,9 +861,9 @@ public sealed class X86RawTemplateTests
                 // 합성 섹션 12를 부족하면 빈 섹션으로 채워 13개까지 늘린다
                 while (fort.Sections.Count < 13)
                 {
-                    fort.Sections.Add([]);
+                    fort.Sections.Add(new RawSectionBuffer());
                 }
-                fort.Sections[12] = [0xa0, (byte)profile, (byte)seed, 0, 0xfe];
+                fort.Sections[12] = RawSectionBuffer.FromBytes([0xa0, (byte)profile, (byte)seed, 0, 0xfe]);
             }
         }
         else
@@ -879,7 +879,7 @@ public sealed class X86RawTemplateTests
                 {
                     section[position] = (byte)(position * 29 + index * 13 + seed);
                 }
-                fort.Sections.Add(section);
+                fort.Sections.Add(RawSectionBuffer.FromBytes(section));
             }
         }
         fort.Flag = (byte)flag;
@@ -957,7 +957,7 @@ public sealed class X86RawTemplateTests
             FortImageData original = new RawFortImage(OriginalEdition.Patch1078, fort, hooks).Save();
             FortImageData repeated = new RawFortImage(OriginalEdition.Patch1078, fort, hooks).Save();
             Assert.True(original.Storage.AsSpan().SequenceEqual(repeated.Storage) && original.End == repeated.End);
-            fort.Sections[12] = [0xa0, (byte)profile, 1, 0, 0xfe];
+            fort.Sections[12] = RawSectionBuffer.FromBytes([0xa0, (byte)profile, 1, 0, 0xfe]);
             FortImageData changed = new RawFortImage(OriginalEdition.Patch1078, fort, hooks).Save();
             Assert.False(changed.Storage.AsSpan().SequenceEqual(original.Storage));
             CheckFortAllocation(changed);
@@ -966,7 +966,7 @@ public sealed class X86RawTemplateTests
             // 저장한 이미지를 다시 읽어도 섹션 바이트가 같다
             for (int index = 0; index < fort.Sections.Count; index++)
             {
-                Assert.Equal(fort.Sections[index], parsed.Sections[index]);
+                Assert.Equal(fort.Sections[index].ToArray(), parsed.Sections[index].ToArray());
             }
         }
     }
@@ -981,7 +981,7 @@ public sealed class X86RawTemplateTests
         FortImageData exact = new RawFortImage(OriginalEdition.Patch1078, fort, hooks).Save();
         Assert.Equal(32768, exact.End);
         Assert.Equal(new[] { FortImageAssertion.SectionCapacity }, assertions);
-        fort.Sections[34] = [.. fort.Sections[34], 1];
+        fort.Sections[34] = RawSectionBuffer.FromBytes([.. fort.Sections[34].ToArray(), 1]);
         Assert.True(Throws(() => new RawFortImage(OriginalEdition.Patch1078, fort, hooks).Save()));
         fort.Sections.Clear();
         hooks.TypeCount = () => 256;
@@ -993,7 +993,7 @@ public sealed class X86RawTemplateTests
         hooks.TypeCount = () => 188;
         for (int index = 0; index < 36; index++)
         {
-            fort.Sections.Add([]);
+            fort.Sections.Add(new RawSectionBuffer());
         }
         Assert.True(Throws(() => new RawFortImage(OriginalEdition.Patch1078, fort, hooks)));
         Assert.True(Throws(() => new FortImageData { End = 1 }.Bytes()));
@@ -1007,11 +1007,11 @@ public sealed class X86RawTemplateTests
     public void FortImageStreamCapacityBoundaryAtLastLengthWord()
     {
         FortTemplate fort = new();
-        fort.Sections.Add(new byte[32762]);
+        fort.Sections.Add(RawSectionBuffer.FromBytes(new byte[32762]));
         // 나머지 섹션은 빈 stream이다
         for (int index = 1; index < FortTemplate.SectionCount; index++)
         {
-            fort.Sections.Add([]);
+            fort.Sections.Add(new RawSectionBuffer());
         }
         List<FortImageAssertion> assertions = [];
         FortImageHooks hooks = new() { TypeCount = () => 188, Assertion = assertions.Add };

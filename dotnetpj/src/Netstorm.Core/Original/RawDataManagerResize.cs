@@ -10,13 +10,13 @@ namespace Netstorm.Core.Original;
 public sealed class DataManagerResizeHooks
 {
     /// <summary>같은 head/current와 60바이트 노드의 이름 검색이다.</summary>
-    public DataManagerSelectionHooks Selection { get; } = new();
+    public DataManagerSelectionHooks Selection { get; set; } = new();
 
     /// <summary>같은 노드의 추가·압축·제거·실제 반납이다.</summary>
-    public DataManagerListHooks List { get; } = new();
+    public DataManagerListHooks List { get; set; } = new();
 
     /// <summary>같은 실제 버퍼의 할당·쓰기·조회다.</summary>
-    public MemStreamHooks Memory { get; } = new();
+    public MemStreamHooks Memory { get; set; } = new();
 
     /// <summary>원본 new 60의 실제 할당과 반환 핸들이다.</summary>
     public Func<uint, uint>? AllocateStream { get; set; }

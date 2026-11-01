@@ -139,7 +139,7 @@ public sealed class RawFortImage
             // 원본 검색/current는 이전 길이 수정에 앞서 수행한다
             ReadOnlySpan<byte> section = _hooks.Section is { } lookup
                 ? lookup(index).Span
-                : index < _fort.Sections.Count ? _fort.Sections[index] : default;
+                : index < _fort.Sections.Count ? _fort.Sections[index].Span : default;
             if (previous != Capacity)
             {
                 Length(storage, previous, position - previous);

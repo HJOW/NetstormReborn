@@ -34,7 +34,7 @@ public delegate Span<byte> SnartNamesLookup();
 public sealed class DataManagerImageHooks
 {
     /// <summary>생성·검색·제거·압축은 같은 실제 노드와 버퍼를 빌린다.</summary>
-    public DataManagerResizeHooks Streams { get; } = new();
+    public DataManagerResizeHooks Streams { get; set; } = new();
 
     /// <summary>manager 가상 +4가 돌려준 같은 변경 가능 SNART 이름표다.</summary>
     public SnartNamesLookup? Names { get; set; }
@@ -81,7 +81,7 @@ public delegate bool DataManagerSignatureReader(Span<byte> source);
 public sealed class DataManagerFileHooks
 {
     /// <summary>서명 성공 뒤 현재 같은 source로 실행할 섹션 본문의 장치다.</summary>
-    public DataManagerImageHooks Image { get; } = new();
+    public DataManagerImageHooks Image { get; set; } = new();
 
     /// <summary>읽기 요청 직전 가상 +0의 현재 이름이다.</summary>
     public Func<string>? FileName { get; set; }

@@ -7,6 +7,7 @@ namespace Netstorm.Core.Original;
 /// </summary>
 /// <remarks>
 /// 2026-11-01 0.128에서 추가했다. 기존 <c>Netstorm.Assets.FortFile</c>은 같은 파일 형식의 이전 독립 판독기이며 이 클래스와 연결하지 않는다(은퇴는 R4 Fort 적재 단위).
+/// 같은 날 0.130(TS0)에서 <see cref="Sections"/>를 <c>byte[]</c> 목록에서 용량을 가진 <see cref="RawSectionBuffer"/> 목록으로 바꾸고 <see cref="Clone"/>을 더했다.
 /// </remarks>
 public sealed class FortTemplate
 {
@@ -34,8 +35,11 @@ public sealed class FortTemplate
     /// <summary>파일 둘째 바이트(0 또는 0xfe)다.</summary>
     public byte Flag { get; set; }
 
-    /// <summary>읽은 원시 섹션이다(최대 35개, 이름 순서). 각 섹션은 길이 필드 2바이트를 제외한 본문이다.</summary>
-    public List<byte[]> Sections { get; } = [];
+    /// <summary>
+    /// 읽은 원시 섹션이다(최대 35개, 이름 순서). 각 섹션은 길이 필드 2바이트를 제외한 본문이다.
+    /// 원본 MemStream의 alloc에 대응하는 용량을 가지는 <see cref="RawSectionBuffer"/>다(0.130 TS0에서 <c>byte[]</c>에서 바꿈).
+    /// </summary>
+    public List<RawSectionBuffer> Sections { get; } = [];
 
     /// <summary>마지막으로 읽은 섹션 뒤에 남은 바이트 수다.</summary>
     public int TrailingBytes { get; set; }
@@ -78,7 +82,7 @@ public sealed class FortTemplate
             {
                 break;
             }
-            fort.Sections.Add(bytes.Slice(position + SectionLengthBytes, length - SectionLengthBytes).ToArray());
+            fort.Sections.Add(RawSectionBuffer.FromBytes(bytes.Slice(position + SectionLengthBytes, length - SectionLengthBytes)));
             position += length;
         }
         fort.TrailingBytes = bytes.Length - position;
@@ -96,10 +100,33 @@ public sealed class FortTemplate
         {
             if (AsciiEquals(Names[index], name))
             {
-                return Sections[index];
+                return Sections[index].Span;
             }
         }
         return default;
+    }
+
+    /// <summary>
+    /// 값 복사(C++ 복사 생성)와 같이 깊은 복사본을 만든다. 섹션 버퍼는 크기만큼만 복사해 용량이 크기와 같아지며 원본의 예약 용량은 따라가지 않는다.
+    /// C#의 대입은 참조를 공유하므로 같은 Template을 두 번 설치하는 호출자만 이 복사를 거친다.
+    /// 타입 표가 필요한 해석 필드(Money·Technology·Deck·객체 등)는 F1에서 같은 클래스에 더할 때 이 복사에도 함께 더한다.
+    /// </summary>
+    public FortTemplate Clone()
+    {
+        FortTemplate copy = new()
+        {
+            Flag = Flag,
+            TrailingBytes = TrailingBytes,
+            HasTypeConversion = HasTypeConversion,
+        };
+        // 섹션마다 용량이 크기와 같은 새 버퍼로 복사한다
+        foreach (RawSectionBuffer section in Sections)
+        {
+            copy.Sections.Add(section.Clone());
+        }
+        copy.TypeHashes.AddRange(TypeHashes);
+        TypeConversion.CopyTo(copy.TypeConversion, 0);
+        return copy;
     }
 
     /// <summary>

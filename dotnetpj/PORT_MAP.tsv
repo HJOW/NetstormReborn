@@ -293,7 +293,10 @@ cpppj/src/o/RawFortCurrentName.cpp	Netstorm.Core/Original/RawFortCurrentName.cs	
 cpppj/src/o/RawFortCurrentName.h	Netstorm.Core/Original/RawFortCurrentName.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
 cpppj/src/o/RawFortImage.cpp	Netstorm.Core/Original/RawFortImage.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
 cpppj/src/o/RawFortImage.h	Netstorm.Core/Original/RawFortImage.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
+cpppj/src/o/RawFortMetaLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	9f401229672dd1b48ccca5ea95ef6c5f8a642764	port
+cpppj/src/o/RawFortMoneyLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	1a3ccedb702c4fa8d5b61250237a43841d58b048	port
 cpppj/src/o/RawFortSpWrite.cpp	Netstorm.Core/Original/RawFortSpWrite.cs	91a62e792661dfba55261308ebfb7d0ffae194e4	L1
+cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	860030e73e9e11599c89334b2e6ab4b0c6e1702d	port
 cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	73506bcbedac557bfd132e68524f772123f245d2	L1
 cpppj/src/o/RawMemStream.cpp	Netstorm.Core/Original/RawMemStream.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
 cpppj/src/o/RawMemStream.h	Netstorm.Core/Original/RawMemStream.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1

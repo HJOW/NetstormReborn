@@ -25,7 +25,7 @@ public sealed class DataManagerDumpHooks
     public DataManagerNamesReader? Names { get; set; }
 
     /// <summary>같은 실제 60바이트 노드와 CRT 비교를 <see cref="RawDataManagerSelection.FindSection"/>에 제공한다. 버퍼 내용과 pos는 읽지 않는다.</summary>
-    public DataManagerSelectionHooks Selection { get; } = new();
+    public DataManagerSelectionHooks Selection { get; set; } = new();
 
     /// <summary>실제 SNART 변환의 잘못된 첫 구분자 진단이다. 선택하지 않으면 필요 없다.</summary>
     public Action? SeparatorAssertion { get; set; }

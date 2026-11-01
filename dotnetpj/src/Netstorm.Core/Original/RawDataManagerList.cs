@@ -10,7 +10,7 @@ namespace Netstorm.Core.Original;
 public sealed class DataManagerListHooks
 {
     /// <summary>같은 60바이트 조회·버퍼 free·노드 free를 공유한다.</summary>
-    public DataManagerLifetimeHooks Lifetime { get; } = new();
+    public DataManagerLifetimeHooks Lifetime { get; set; } = new();
 
     /// <summary>마지막 노드의 실제 0044cd40이다. 그 뒤 현재 필드를 다시 읽는다.</summary>
     public Action<uint>? Compact { get; set; }
