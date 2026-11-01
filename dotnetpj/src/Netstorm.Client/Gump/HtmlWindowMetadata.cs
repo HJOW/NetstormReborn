@@ -104,4 +104,7 @@ public sealed class HtmlWindowMetadata
     public static void BindHtmlWindowMetadataDevices(HtmlWindowMetadataHooks hooks, HtmlWindowGump window, ScriptStringRing strings, GumpLifetime lifetime) { hooks.ClearButtons = window.ClearButtons; hooks.AddButton = window.AddButton; hooks.StoreText = strings.Store; hooks.Idle = lifetime.SetIdle; }
     /// <summary>현재 controlled 메뉴의 일반/체크 항목을 원문 고정 플래그로 연결한다.</summary>
     public static void BindHtmlWindowMetadataMenus(HtmlWindowMetadataHooks hooks, MenuGumpWidgets widgets, MenuGumpControls controls) { hooks.BeginMenu = flags => widgets.BeginVertical(flags); hooks.MenuText = (label, command, parameter) => controls.AddText(Encoding.Latin1.GetBytes(label), command, parameter, true, true, false); hooks.Checked = (check, label, command, parameter, enabled) => controls.AddChecked(check != 0, Encoding.Latin1.GetBytes(label), command, parameter, true, enabled); }
+    /// <summary>실제 맵 목록 장치가 준비된 경우 같은 Tell 열 수를 맵 부모에 전달한다.</summary>
+    public static void BindHtmlWindowMetadataMaps(HtmlWindowMetadataHooks hooks, TellMapMenuHooks maps)
+    { hooks.Maps = (string label, ref uint columns) => { if (!TellMapMenus.Append(label, ref columns, maps)) throw new InvalidOperationException("Tell 맵 목록 종류 오류"); }; }
 }
