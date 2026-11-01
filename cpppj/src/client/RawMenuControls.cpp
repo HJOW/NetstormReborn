@@ -780,6 +780,23 @@ void RawMenuControls::OpenAttached(const std::function<std::uint32_t(const MenuG
     if (root && (!s.menus.contains(root) || s.common.node(root)->parent!=s.common.create.collection.root)) throw std::logic_error("객체메뉴 실제루트부착필요");
     s.popup=root;s.common.changed();
 }
+// 메뉴 작성 뒤 실제 버튼의 +3c/+4c/+50을 읽고, 원문 Help/Options의 서로 다른 flags 작성 시점도 보존한다.
+// 원본: 004cebf0(10.78), Help 004ceca5..004ced97 / Options 004ceda8..004cee34. CD의 다른 부모에는 적용하지 않는다.
+std::uint32_t RawMenuControls::OpenMainMenuPopup(std::uint32_t button,bool options,const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder) {
+    auto& s=*impl_;std::uint32_t result{};
+    OpenAttached([&](const auto& widgets,const auto& controls,const auto& menu) {
+        const auto token=builder(widgets,controls,menu);auto* anchor=s.common.node(button);
+        if (!anchor || !s.menus.contains(token)) throw std::logic_error("메인 팝업의 실제 버튼/메뉴 없음");
+        auto& popup=*s.menus.at(token);const auto x=static_cast<float>(static_cast<double>(anchor->baseWidth)*0.5+anchor->x);
+        const auto y=options ? static_cast<float>(static_cast<double>(anchor->y)-40.0) : anchor->y; // 원문005069bc의float40이다.
+        if (options) popup.menuFlags|=0x04000000U;
+        s.Attach(token,x,y,s.common.create.collection.root,0);
+        s.common.tree.AddDepth(token,0U-90U-popup.depth);s.SetModal(token,true);
+        if (!options) popup.menuFlags|=0x04004000U;
+        result=token;return token;
+    },false);
+    return result;
+}
 // 원본의 sticky 팝업 삭제를 같은 수명 경로로 실행한다.
 void RawMenuControls::Close() { auto& s=*impl_;s.input->ClosePopups();s.common.lifetime.Cleanup();s.common.changed(); }
 // 실제 지식 조회 뒤 첫 controlled 생성 직전에만 기존 팝업을 정리한다. 카드별 생성은 같은 원본 처리기다.

@@ -831,6 +831,57 @@ void UberGump::ToggleGameMenu() {
     if (!token) OpenGameMenu();
     else { rawButtons_->KillGump(token);gameMenuState_->menuSerial=0;rawButtons_->RequestClosePopups();rebuild_=true; }
 }
+// 같은 원문 Options 작성기의 현재 설정/장치/모드만 공급한다. ESC의 Session getter 결합은 기존 작성 위치에 남긴다.
+GameMenusHooks UberGump::CurrentGameMenuHooks() {
+    GameMenusHooks hooks; // 메인과 ESC가 같은 Client 전역을 각 원문 조회 시점에 읽는다.
+    hooks.global=[this](std::uint32_t address)->std::uint32_t {
+        if (const auto value=GameMenuCommandValue(address)) return *value;
+        switch (address) {
+        case 0x563e38:return rawButtons_->RootToken();
+        case 0x531860:case 0x5c78f0:return static_cast<std::uint32_t>(client_.GetScreen().Width());
+        case 0x531864:case 0x5c78f4:return static_cast<std::uint32_t>(client_.GetScreen().Height());
+        case 0x5c78d4:return client_.GetScreen().Flags();
+        case 0x5c7910:return 1; // 원본 DirectDraw 설치 관문 대신 Windows10/11 호환 전체화면 기능을 메뉴에 공개한다.
+        case 0x5c7b14:return client_.WorldAudio().DeviceReady() ? 1U : 0U;
+        case 0x531900:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("soundVolume"));
+        case 0x531904:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("musicVolume"));
+        case 0x55b4b0:return client_.Paused() ? 1U : 0U; // 이소비자는원본깊이의양수여부만검사한다.
+        case 0x59a8ac:return hideBuildings_;
+        case 0x5c85a4:return client_.GameplayGlobals()->world.editor;
+        case 0x594fa4:return client_.GameplayGlobals()->world.missionPost;
+        case 0x594fb8:return client_.SurfaceStorage()->ownerMode.fort;
+        case 0x594fbc:return client_.SurfaceStorage()->ownerMode.battle;
+        case 0x594fc8:return client_.SurfaceStorage()->ownerMode.challenge;
+        default:throw std::logic_error("게임메뉴현재전역미연결: "+std::to_string(address));
+        }
+    };
+    hooks.config=[this](auto key) { return client_.Configuration().GetInt(key); };
+    hooks.readInt=[this](auto key,std::int32_t& value) { client_.Configuration().ReadInt(key,value); };
+    hooks.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
+    hooks.editingMission=[this] { return missionRuntime_ ? missionRuntime_->mode64 : 0U; };hooks.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; //원문 Guide getter는 현재 미션이 없으면0을 돌려준다.
+    hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른 Windows10/11 호환 화면비 추가이며 기본 원문 세 해상도는 유지한다.
+    return hooks;
+}
+// 원문004cebf0의 메인 Help/Options를 실제 클릭 버튼과 공통 메뉴/모달/명령 큐에 연결한다.
+void UberGump::OpenMainMenuPopup(bool options) {
+    std::uint32_t anchor{}; // 원문 버튼 배열 대신 현재 화면 번호와 실제 노드 사이의 대응만 찾는다.
+    for (std::size_t index=0;index<actions_.size();++index) { // 현재 메인 버튼의 실제 명령·인자를 조회하고 생성 순서나 토큰 산술은 쓰지 않는다.
+        const auto& action=actions_[index];if (o::AsciiLower(action.command)=="menu" && action.argument==(options ? "options" : "help")) { anchor=rawButtons_->ControlGump(static_cast<int>(index));break; }
+    }
+    if (!anchor) throw std::logic_error("메인 Help/Options의 현재 버튼 없음");
+    auto& menus=*rawButtons_->Menus();menus.SetPalette(client_.GetScreen().Colors());
+    menus.OpenMainMenuPopup(anchor,options,[&](const auto& widgets,const auto& controls,const auto& menu) {
+        auto hooks=CurrentGameMenuHooks();BindGameMenusControls(hooks,widgets,controls,menu,[this](auto text) { return scriptStrings_.Store(text); });
+        if (options) return RawGameMenus(std::move(hooks)).Options();
+        widgets.BeginVertical(0);
+        const auto topic=scriptStrings_.Store("F1Help");if (topic>0x0fffffffU) throw std::overflow_error("메인 Help 주제 별칭 소진"); // 원본 문자열 포인터를 TYPE<256과 혼동하지 않는 기존 Help 별칭 계약이다.
+        controls.AddText(hooks.translate("General Help - ~iF1~."),0x02000017U,0x70000000U|topic,true,true,false);
+        const auto technical=hooks.translate("Technical Help");controls.AddText(technical,0x02000049U,0,true,ClientTechnicalHelpAvailable(client_),false);
+        controls.AddText(hooks.translate("Version"),0x02000095U,scriptStrings_.Store("About"),true,true,false);
+        return menu.TakeCurrent();
+    });
+    rebuild_=true; // 실제 팝업 수명은 공통 Gump가 맡는다. 메인 버튼을 다시 생성하거나 별도 중앙 목록을 설치하지 않는다.
+}
 // 실제현재Session의조회/검산과기존공통controlled메뉴를한수명안에서작성한다.
 void UberGump::OpenGameMenu(bool playerList) {
     if (!world_ || state_.phase!=ClientPhase::Mission) throw std::logic_error("게임메뉴의현재설치월드없음"); //Editor도 실제 Session/Template의 같은 원본 메뉴를 사용한다.
@@ -838,27 +889,7 @@ void UberGump::OpenGameMenu(bool playerList) {
     if (!gameMenuState_) gameMenuState_=std::make_unique<GameMenuBarState>(session.GameMenuTrackingOffset());
     rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
     rawButtons_->Menus()->OpenAttached([&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& menu) {
-        GameMenusHooks hooks; // 실제Session외전역은각조회시점에같은현재Client에서읽는다.
-        hooks.global=[this](std::uint32_t address)->std::uint32_t {
-            if (const auto value=GameMenuCommandValue(address)) return *value;
-            switch (address) {
-            case 0x563e38:return rawButtons_->RootToken();
-            case 0x531860:case 0x5c78f0:return static_cast<std::uint32_t>(client_.GetScreen().Width());
-            case 0x531864:case 0x5c78f4:return static_cast<std::uint32_t>(client_.GetScreen().Height());
-            case 0x5c78d4:return client_.GetScreen().Flags();
-            case 0x5c7910:return 1; // 원본 DirectDraw 설치 관문 대신 Windows10/11 호환 전체화면 기능을 메뉴에 공개한다.
-            case 0x5c7b14:return client_.WorldAudio().DeviceReady() ? 1U : 0U;
-            case 0x531900:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("soundVolume"));
-            case 0x531904:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("musicVolume"));
-            case 0x55b4b0:return client_.Paused() ? 1U : 0U; // 이소비자는원본깊이의양수여부만검사한다.
-            case 0x59a8ac:return hideBuildings_;
-            default:throw std::logic_error("게임메뉴현재전역미연결: "+std::to_string(address));
-            }
-        };
-        hooks.config=[this](auto key) { return client_.Configuration().GetInt(key); };
-        hooks.readInt=[this](auto key,std::int32_t& value) { client_.Configuration().ReadInt(key,value); };
-        hooks.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
-        hooks.editingMission=[this] { return missionRuntime_ ? missionRuntime_->mode64 : 0U; };hooks.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; //원문 Guide getter는 현재 미션이 없으면0을 돌려준다.
+        auto hooks=CurrentGameMenuHooks();
         hooks.playerMenu=[&](auto subscriber) { return objectMenus_->BuildPlayerMenu(*world_,subscriber,widgets,controls,menu); };
         BindGameMenusControls(hooks,widgets,controls,menu,[this](auto text) { return scriptStrings_.Store(text); });
         hooks.node=[this](auto token) { return rawButtons_->Menus()->Node(token); };
@@ -966,6 +997,9 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
     if (!result) return false;if (*result) quit_=true;Refresh();return true;
 }
 void UberGump::OpenMenu(std::string name) {
+    if (client_.Edition()==o::OriginalEdition::Patch1078 && !world_ && state_.phase==ClientPhase::MainMenu) {
+        const auto key=o::AsciiLower(name);if (key=="help" || key=="options") { OpenMainMenuPopup(key=="options");return; }
+    } // 10.78 메인 버튼은 원문 전용 팝업을 즉시 작성한다. CD/기존 호스트 보조 메뉴의 계약은 별도로 유지한다.
     if (o::AsciiLower(name)=="game" && world_) { OpenGameMenu();return; } // 미션의실제수평부모는중앙임시메뉴와구별한다.
     popup_ = o::AsciiLower(name); ClearPage(); auto& config = client_.Configuration();
     // 목록 행에는 돌 버튼과 달리 누름 즉시 실행 규칙을 적용한다.
@@ -1031,7 +1065,7 @@ void UberGump::Event(InputEvent event) {
         if (missionRuntime_->tutorial->Event(missionEvent)) return;
     }
     bool worldUiRouted=false; // 실제 HTML 모달과 월드 사건은 같은 공통 Gump에서 먼저 한 번만 소비를 판정한다.
-    if (popup_.empty() && ((world_ && state_.phase==ClientPhase::Mission) || rawButtons_->Menus()->HtmlWindowsOpen())) {
+    if (popup_.empty() && ((world_ && state_.phase==ClientPhase::Mission) || rawButtons_->Menus()->HtmlWindowsOpen() || (state_.phase==ClientPhase::MainMenu && rawButtons_->Menus()->HasMenus()))) {
         const auto old=rawButtons_->Pressed();const auto routed=rawButtons_->RouteInput(event);worldUiRouted=true; // nativeGuide뒤466200의현재성공토큰이다.
         if (old!=rawButtons_->Pressed()) rebuild_=true;
         if (routed.activated) {

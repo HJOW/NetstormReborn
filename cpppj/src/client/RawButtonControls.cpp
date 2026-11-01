@@ -251,6 +251,8 @@ RawButtonInputResult RawButtonControls::RouteInput(InputEvent event) {
 }
 // 루트 교체 뒤에도 처음 생성한 토큰의 사본을 반환하지 않는다.
 std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entries[0]; }
+// 현재 화면 번호에 대응하는 실제 버튼만 조회한다. 생성 순서나 serial을 화면 번호로 간주하지 않는다.
+std::uint32_t RawButtonControls::ControlGump(int id) const { const auto found=impl_->controls.find(id);return found==impl_->controls.end() ? 0U : found->second; }
 // count/visible로 대체하지 않고 원문처럼 고정 등록칸과 현재 serial/dead만 읽는다.
 std::uint32_t RawButtonControls::SerialGump(std::uint32_t serial) const { return FindCurrentGumpSerial(impl_->create.entries,serial,[this](auto token) { return impl_->Node(token); }); }
 // 원문은 등록 ID를 읽으며 serial이나 명령으로 다시 검색하지 않는다.

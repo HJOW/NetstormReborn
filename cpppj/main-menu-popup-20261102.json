@@ -1,0 +1,74 @@
+{
+  "unit": 697,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "7395e66021c7c595d3a1c8f404d44dbee929b42cfab40ceca964eff4d02f4b54",
+  "newCppTests": 2,
+  "existingCppTests": 3,
+  "failedChecks": 0,
+  "nativeBodyExecutions": 0,
+  "gameExecutions": 2,
+  "gameExitCodes": [
+    0,
+    0
+  ],
+  "finalLive": {
+    "unit": 697,
+    "exit": 0,
+    "protectedUnchanged": true,
+    "gameExecutions": 1,
+    "missionEntries": 0,
+    "exeSha256": "7395e66021c7c595d3a1c8f404d44dbee929b42cfab40ceca964eff4d02f4b54",
+    "helpCommands": [
+      33554455,
+      33554505,
+      33554581
+    ],
+    "registryCounts": {
+      "main": 184,
+      "generalClosed": 184,
+      "aboutClosed": 184,
+      "toggled": 184,
+      "closed": 184,
+      "closedAgain": 184,
+      "restored": 184
+    },
+    "nativeOptions": true,
+    "nativeHelp": true,
+    "compatibilityResolutionSubmenu": true,
+    "configToggle": true,
+    "physicalInput": false
+  },
+  "protectedFiles": 2617,
+  "protectedChanged": 0,
+  "newFixtures": 0,
+  "firstFailures": {
+    "focused": "2 checks: prefix labels were not exact menu labels",
+    "live": "1 assertion: Technical Help configuration incorrectly assumed empty"
+  },
+  "limits": [
+    "No stage entries or natural completion",
+    "No new MP/network tests",
+    "No full C++/34/ZIP",
+    "No physical input/PCM/fullscreen device test",
+    "Main parent complete layout/Intro/autoDemo remain"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/RawButtonControls.cpp": "a63772611608017eff3f33d1c60392ca59031eaabd1a20d3b923fb96a70e60bf",
+    "cpppj/src/client/RawButtonControls.h": "68c913b7aad24b8440c37d2993ca3a9b32f5e48ad7ae3dfb1707fd3e3275e99b",
+    "cpppj/src/client/RawMenuControls.cpp": "1b465aa057d394290815ea65cc41f46b12de15692735b15c85e42404765e8c6b",
+    "cpppj/src/client/RawMenuControls.h": "b76db1a5b17817fb001f8fa916d93a32c4ec2bc7cfe42a2bc41fc29b191f371e",
+    "cpppj/src/client/UberGump.cpp": "22f6ccca6b830898f997517c69bf47bcfcd0694e8789a6198bbd4e9eb629e467",
+    "cpppj/src/client/UberGump.h": "a6320d7267bbfe2d6a6d269ea6be5047360964718703b3f54acf4702461021f3",
+    "cpppj/tests/RawMenuMainPopupTests.inc": "c51abb038bd5ce0600ee10a7cce76d5b7abd0cd9f3eef896028467e70fd5940b",
+    "cpppj/tests/RawMenuControlsTests.cpp": "cd4e0f660f8e6dbfebcc3c683ed4521d4a5b0aa1b9bd85e10f32be2e74f24e2c",
+    "tools/cpp_main_menu_popup_smoke.py": "b29cc34ed1ac0773da23deebb6f011006615035a36fa7777bef0fe91105b172a",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}

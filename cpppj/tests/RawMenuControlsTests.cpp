@@ -12,6 +12,7 @@
 #include "client/UrlInput.h" // 실제URL입력에서공통Help분배기까지같은고리로검사한다.
 #include "client/GameMenuCommands.h"
 #include "client/HtmlConditionEffect.h"
+#include "client/RawGameMenus.h"
 #include "client/ImageGump.h"
 #include "client/RawMinimapControls.h"
 #include "client/RawSurfaceWorld.h"
@@ -496,3 +497,5 @@ TEST_CASE(RawMenuControls_UrlInputSharesActualHelpScriptAndExternal) {
     activate("URL,file:///C:/Netstorm/image1.gif");CHECK(external=="file:///C:/Netstorm/image1.gif" && script=="Tell,Notes" && !client.menus->HelpOpen());
     activate("URL,unitHelp");CHECK(client.menus->HelpOpen() && external=="file:///C:/Netstorm/image1.gif" && script=="Tell,Notes"); // 실제내부주제는같은전용창을생성한다.
 }
+
+#include "RawMenuMainPopupTests.inc"

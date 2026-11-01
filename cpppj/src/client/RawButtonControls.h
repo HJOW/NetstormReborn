@@ -75,6 +75,7 @@ public:
     std::optional<int> Event(InputEvent event);
     RawButtonInputResult RouteInput(InputEvent event); // 같은 실제 Route를 한 번 실행해 월드 전 입력 소비를 돌려준다.
     std::uint32_t RootToken() const; // 현재 등록표0칸의 실제 공통 루트다.
+    std::uint32_t ControlGump(int id) const; // 현재 페이지의 실제 돌 버튼 토큰이다. Help/Options는 클릭한 버튼의 현재 기하를 읽으며 없는 번호는0이다.
     std::uint32_t SerialGump(std::uint32_t serial) const; //00464020: 등록1..999에서 같은serial·비dead의 첫 대상이다.
     void KillStateGumps(); //004666d0의 등록1..999·현재 제외타입11/dead 관문으로 Kill만 예약한다.
     void RefreshStormPower(); //0043dad0의 현재 예산 serial 조회/가상 Push/Attach/깊이 복원을 실행한다.

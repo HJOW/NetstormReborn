@@ -2812,3 +2812,8 @@ set_source_files_properties(RecheckCdInputTests.cpp PROPERTIES COMPILE_DEFINITIO
 add_executable(netstorm_recheck_cd_tests FocusedTestMain.cpp RecheckCdInputTests.cpp)
 target_link_libraries(netstorm_recheck_cd_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_recheck_cd_tests)
+
+# 메인 Help/Options의 실제 공통 팝업과 기존 원문 메뉴/입력만 집중 검사한다(697).
+add_executable(netstorm_main_popup_tests FocusedTestMain.cpp RawMenuControlsTests.cpp CampaignExistingEditorCheckpointTests.cpp GameMenusTests.cpp GameMenuActionsTests.cpp)
+target_link_libraries(netstorm_main_popup_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_main_popup_tests)

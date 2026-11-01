@@ -5,6 +5,7 @@
 #include "client/Gump.h"
 #include "client/RawButtonControls.h"
 #include "client/ScriptCommand.h"
+#include "client/RawGameMenus.h" // 메인과 ESC가 같은 현재 Options 작성기를 사용한다.
 #include "client/HtmlTextParser.h"
 #include "client/State.h"
 #include "client/Mission.h"
@@ -150,6 +151,8 @@ private:
     void RefreshWindowTitle();
     // 원본 Options/Help의 목록과 하위 메뉴를 구성한다.
     void OpenMenu(std::string name);
+    GameMenusHooks CurrentGameMenuHooks(); // 월드 유무와 관계없이 같은 Client의 현재 설정·화면·모드로 원문 메뉴를 작성한다.
+    void OpenMainMenuPopup(bool options); // 메인 버튼의 실제 기하와 원본 Help/Options 작성기를 공통 팝업 수명에 연결한다.
     void OpenGameMenu(bool playerList=false); // 기본값은004cc210 가로막대, true는004cbf10 중앙 Player List를 같은 Session/controlled 생성기로 작성한다.
     void ToggleGameMenu(); // ESC의현재serial조회→열기또는Kill/serial0/팝업닫기를실행한다.
     bool GameMenuOpen() const; // 현재serial을공통등록표에서조회하며과거열림bool을저장하지않는다.
