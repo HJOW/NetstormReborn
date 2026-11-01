@@ -2891,3 +2891,11 @@ add_executable(netstorm_guide_fort_request_tests FocusedTestMain.cpp GuideFortRe
 target_link_libraries(netstorm_guide_fort_request_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_guide_fort_request_tests)
 target_compile_definitions(netstorm_guide_fort_request_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+#DumpSquids의 원문 명시 제외48입력을 기존 표시 입력과 같은 집중 대상에 등록한다(715).
+set_property(SOURCE ScenarioEffectInputTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_DUMP_SQUIDS_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dump-squids-input-x86.tsv\"")
+
+#실제 HTML 조회기43개와 Menu 둘째 인자/큐를 비멀티 이름에 한정해 확인한다(715).
+target_sources(netstorm_tests PRIVATE HtmlScriptCommandNamesTests.cpp)
+target_sources(netstorm_scenario_effect_tests PRIVATE HtmlScriptCommandNamesTests.cpp)
+set_source_files_properties(HtmlScriptCommandNamesTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_HTML_SOLO_COMMAND_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-solo-command-names-pe.tsv\"")

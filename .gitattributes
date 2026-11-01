@@ -2368,3 +2368,6 @@ cpppj/tests/fixtures/xlat-assets-x86.tsv -text
 cpppj/tests/fixtures/language-request-x86.tsv -text
 
 cpppj/tests/fixtures/guide-fort-request-x86.tsv -text
+
+cpppj/tests/fixtures/dump-squids-input-x86.tsv -text
+cpppj/tests/fixtures/html-solo-command-names-pe.tsv -text

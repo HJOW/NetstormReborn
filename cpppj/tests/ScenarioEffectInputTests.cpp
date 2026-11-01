@@ -20,7 +20,7 @@ std::vector<std::string> EffectInputFields(std::string_view line) {
 // 보호 PE의 세 이름은 실제 parser/입력 큐를 공유한다.
 TEST_CASE(ScenarioEffectInput_OriginalNamesAndQueue) {
     using namespace netstorm::client;
-    for (const auto name:{"StartSmoke","Lightning","cReAtErAnDoMgUnS"}) { // 이름의 ASCII 대소문자를 무시한다.
+    for (const auto name:{"StartSmoke","Lightning","cReAtErAnDoMgUnS","dUmPsQuIdS"}) { // 이름의 ASCII 대소문자를 무시한다.
         const auto code=ScenarioEffectScriptCode(name);CHECK(code!=0xffffffffU && GameMenuScriptCode(name)==code && IsScenarioEffectCommand(code));
         InputQueue queue;ScriptStringRing strings;QueueScriptCommand(std::string(name)+",6008",queue,strings,{GameMenuScriptCode,{}});
         const auto event=queue.Pop(false);CHECK(event.code==code && event.x==6008 && event.y==6008 && queue.Empty());
@@ -54,4 +54,16 @@ TEST_CASE(ScenarioEffectInput_ReleaseNoopAndReachedMissingDevice) {
     for (const auto name:{"StartSmoke","Lightning"}) { // 누름만 실제 표시 생성/현재 조회를 요구한다.
         bool missing{};try { static_cast<void>(DispatchScenarioEffectInput({ScenarioEffectScriptCode(name),0,0},{})); }catch (const std::logic_error&) { missing=true; }CHECK(missing);
     }
+}
+
+// 별도 개발자 덤프를 호출하지 않고 실제48개 일반 입력의 정상 무동작을 대조한다.
+TEST_CASE(ScenarioEffectInput_DumpSquidsNative48AndNoDevices) {
+    using namespace netstorm::client;
+    CHECK(ScenarioEffectScriptCode("DumpSquids")==0x0200011bU && GameMenuScriptCode("DumpSquids")==0x0200011bU && ScenarioEffectScriptCode("DumpSquid")==0xffffffffU);
+    std::ifstream file(NETSTORM_DUMP_SQUIDS_INPUT_FIXTURE);if (!file) throw std::runtime_error("DumpSquids 최초 fixture 열기 실패");std::string line;std::getline(file,line);std::size_t count{};
+    while (std::getline(file,line)) { // 첫세 열은 원문 입력이고 뒤세 열은 실제 PE의 독립 관측이다.
+        if (!line.empty() && line.back()=='\r') line.pop_back();const auto fields=EffectInputFields(line);if (fields.size()!=6) throw std::runtime_error("DumpSquids 원문 열 폭");
+        const auto event=static_cast<std::uint32_t>(std::stoul(fields[0])),argument=static_cast<std::uint32_t>(std::stoul(fields[1]));CHECK(IsScenarioEffectCommand(event));
+        CHECK(DispatchScenarioEffectInput({event,305419896,std::bit_cast<std::int32_t>(argument)},{}));CHECK(fields[3]=="-" && fields[4]=="1" && fields[5]=="0");++count;
+    }CHECK(count==48);
 }

@@ -1,0 +1,3490 @@
+{
+  "unit": 715,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "kind": "read-only literal HTML inventory",
+  "gameExecutions": 0,
+  "nativeExecutions": 0,
+  "multiplayerTests": 0,
+  "scannedNameEntries": 288,
+  "documents": 549,
+  "sourceKinds": {
+    "Button": 3709,
+    "tag": 8479,
+    "Timeout": 1414,
+    "Checked": 490,
+    "Menu": 1254,
+    "Input": 9,
+    "Zsend": 2,
+    "OnExit": 104
+  },
+  "commands": [
+    {
+      "key": " but fortress 0984 is under attack...",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/FW6.english",
+          "kind": "Button",
+          "label": "Cool",
+          "argument": "MissionBegin,FW7\r\n\r\n[END]"
+        }
+      ]
+    },
+    {
+      "key": " fortress 0984 is under attack...",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/FW6.english",
+          "kind": "Button",
+          "label": "No time to wonder",
+          "argument": "MissionBegin,FW7\r\n\r\n[ai2TempleHalfDead]\r\nHelp"
+        }
+      ]
+    },
+    {
+      "key": " i wanna get my ass kicked",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/MM1c.english",
+          "kind": "Button",
+          "label": "But Mommy",
+          "argument": "DoNothing,0\r\n\r\n[Succeeded][BadTeamDead]\r\n<h2>If"
+        }
+      ]
+    },
+    {
+      "key": " missionabort",
+      "native": null,
+      "occurrences": 5,
+      "sourceFiles": 2,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/tester.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n\r\n[END]\r\n\r\n"
+        }
+      ]
+    },
+    {
+      "key": " missionbegin",
+      "native": null,
+      "occurrences": 7,
+      "sourceFiles": 2,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Next Mission",
+          "argument": "Kidnapped\r\n\r\n[ai3PriestDead]\r\nYou"
+        },
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Next Mission",
+          "argument": "Kidnapped\r\n\r\n[ai4PriestDead]\r\nYou"
+        },
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Next Mission",
+          "argument": "Kidnapped\r\n\r\n[ai5PriestDead]\r\nYou"
+        },
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Next Mission",
+          "argument": "Kidnapped\r\n\r\n[A.]\r\n\r\nh2>Revenge"
+        },
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Next Mission",
+          "argument": "Kidnapped\r\n\r\n[Failed]\r\n<h2>Now,"
+        },
+        {
+          "source": "originals/d/Revenge.english",
+          "kind": "Button",
+          "label": "Next Mission",
+          "argument": "Kidnapped\r\n\r\n[END]\r\n"
+        },
+        {
+          "source": "originals/d/Tourney.english",
+          "kind": "Button",
+          "label": "Next Mission",
+          "argument": "Guard\r\n\r\n[END]\r\n"
+        }
+      ]
+    },
+    {
+      "key": " tell nodeal\r\n$timeout=20",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/sw_m7.english",
+          "kind": "Button",
+          "label": "I'D RATHER DIE BY ICE FIRE",
+          "argument": "Tell,AllianceWithdrawn\r\n\r\n[AllianceBegun]\r\n<"
+        }
+      ]
+    },
+    {
+      "key": " this...",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/MM4.english",
+          "kind": "Button",
+          "label": "This",
+          "argument": "DoNothing,0\r\n\r\n[Secceeded][BadTeamDead]\r\n<h2>Heeheehe."
+        }
+      ]
+    },
+    {
+      "key": " what you don't",
+      "native": null,
+      "occurrences": 3,
+      "sourceFiles": 3,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/FW3.english",
+          "kind": "Button",
+          "label": "What you got",
+          "argument": "ShowTechnology,55\r\n"
+        },
+        {
+          "source": "originals/d/FW4.english",
+          "kind": "Button",
+          "label": "What you got",
+          "argument": "ShowTechnology,55\r\n"
+        },
+        {
+          "source": "originals/d/FW6.english",
+          "kind": "Button",
+          "label": "What you got",
+          "argument": "ShowTechnology,55\r\n"
+        }
+      ]
+    },
+    {
+      "key": " will ya! i only have eternity!",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/sw_m24.english",
+          "kind": "Button",
+          "label": "Hurry it up",
+          "argument": "DoNothing,0\r\n\r\n[@60]\r\nThe"
+        }
+      ]
+    },
+    {
+      "key": "abortmission",
+      "native": null,
+      "occurrences": 7,
+      "sourceFiles": 7,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/Imp1.english",
+          "kind": "Menu",
+          "label": "I wanna leave",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp1a.english",
+          "kind": "Menu",
+          "label": "I wanna leave",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp1b.english",
+          "kind": "Menu",
+          "label": "I wanna leave",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp1c.english",
+          "kind": "Menu",
+          "label": "I wanna leave",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp3.english",
+          "kind": "Menu",
+          "label": "I wanna leave",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp4.english",
+          "kind": "Menu",
+          "label": "I wanna leave",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp5.english",
+          "kind": "Menu",
+          "label": "I wanna leave",
+          "argument": "0\r\n"
+        }
+      ]
+    },
+    {
+      "key": "acceptscreenmodechange",
+      "native": {
+        "name": "AcceptScreenModeChange",
+        "entry": "005432a8",
+        "globalAddress": "00542a84",
+        "command": "020000e4"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "OK",
+          "argument": "1\r\n"
+        }
+      ]
+    },
+    {
+      "key": "accountsetup",
+      "native": {
+        "name": "AccountSetup",
+        "entry": "00542f58",
+        "globalAddress": "005428e0",
+        "command": "0200007a"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Setup is Done",
+          "argument": "1\r\n\r\n\r\n[***********************************************************]\r\n[QUITABANDON]\r\n<h2>{H2}Quit"
+        }
+      ]
+    },
+    {
+      "key": "addrandom",
+      "native": {
+        "name": "AddRandom",
+        "entry": "00543048",
+        "globalAddress": "00542954",
+        "command": "02000098"
+      },
+      "occurrences": 323,
+      "sourceFiles": 6,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m17.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m17.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m17.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m17.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m17.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m17.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m17.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m17.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "adminbcast",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "adminmcast",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "adminsettag",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "adminsetzone",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "capture",
+      "native": {
+        "name": "Capture",
+        "entry": "00543070",
+        "globalAddress": "00542968",
+        "command": "0200009d"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Begin Capture",
+          "argument": "1\r\n"
+        }
+      ]
+    },
+    {
+      "key": "chalforcejoinbattle",
+      "native": {
+        "name": "ChalForceJoinBattle",
+        "entry": "005432a0",
+        "globalAddress": "00542a80",
+        "command": "020000e3"
+      },
+      "occurrences": 2,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "BattleMaster",
+          "argument": "{param.1}\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "OK",
+          "argument": "{param.1}\r\n"
+        }
+      ]
+    },
+    {
+      "key": "chaljoinbattlenowarning",
+      "native": {
+        "name": "ChalJoinBattleNoWarning",
+        "entry": "00543378",
+        "globalAddress": "00542aec",
+        "command": "020000fe"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Don't Show This Again",
+          "argument": "{param.1}\r\n\r\n[old"
+        }
+      ]
+    },
+    {
+      "key": "chalsailjoinbattle",
+      "native": {
+        "name": "ChalSailJoinBattle",
+        "entry": "00542ee0",
+        "globalAddress": "005428a4",
+        "command": "0200006b"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Yes",
+          "argument": "{param.1}\r\n"
+        }
+      ]
+    },
+    {
+      "key": "chalsailpos",
+      "native": {
+        "name": "ChalSailPos",
+        "entry": "00542ee8",
+        "globalAddress": "005428a8",
+        "command": "0200006c"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Yes",
+          "argument": "{param.1}\r\n"
+        }
+      ]
+    },
+    {
+      "key": "changemoney",
+      "native": {
+        "name": "ChangeMoney",
+        "entry": "00542e90",
+        "globalAddress": "0054287c",
+        "command": "02000061"
+      },
+      "occurrences": 49,
+      "sourceFiles": 32,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/mike1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/mike1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/palace3.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/palace4.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/palacerain.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/palaceraing.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/palacestorm1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/palacestorm2.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "cheatalltechnology",
+      "native": {
+        "name": "CheatAllTechnology",
+        "entry": "00542cc8",
+        "globalAddress": "00542798",
+        "command": "02000028"
+      },
+      "occurrences": 18,
+      "sourceFiles": 4,
+      "cppStringHits": [
+        "cpppj/src/client/RawKnowledgeMenu.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "config",
+      "native": {
+        "name": "Config",
+        "entry": "00542ef0",
+        "globalAddress": "005428ac",
+        "command": "0200006d"
+      },
+      "occurrences": 6213,
+      "sourceFiles": 396,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc2bridging76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc3acid_bar76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc4bow_rush76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc5walkers76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc6mows76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc7sun_bars76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "confirmalliance",
+      "native": {
+        "name": "ConfirmAlliance",
+        "entry": "00542f78",
+        "globalAddress": "005428f0",
+        "command": "0200007e"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Yes",
+          "argument": "{param.3}\r\n"
+        }
+      ]
+    },
+    {
+      "key": "createrandomguns",
+      "native": {
+        "name": "CreateRandomGuns",
+        "entry": "00543338",
+        "globalAddress": "00542acc",
+        "command": "020000f6"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/ScenarioEffectInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/vnd1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "decendtochallevel",
+      "native": {
+        "name": "DecendToChalLevel",
+        "entry": "005430a8",
+        "globalAddress": "00542984",
+        "command": "020000a4"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Yes",
+          "argument": "{param.1}\r\n"
+        }
+      ]
+    },
+    {
+      "key": "destroyat",
+      "native": {
+        "name": "DestroyAt",
+        "entry": "00543290",
+        "globalAddress": "00542a78",
+        "command": "020000e1"
+      },
+      "occurrences": 65,
+      "sourceFiles": 4,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "digup",
+      "native": {
+        "name": "DigUp",
+        "entry": "00542cf0",
+        "globalAddress": "005427ac",
+        "command": "0200002d"
+      },
+      "occurrences": 6,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m21a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m21a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m21a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m21a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m21a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m21a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "do",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/Imp3.english",
+          "kind": "Button",
+          "label": "Thanx",
+          "argument": "Nothing\r\n\r\n[Say]\r\n<i>Steps"
+        }
+      ]
+    },
+    {
+      "key": "donnothing",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/Thunderb.english",
+          "kind": "Button",
+          "label": "Start Mission",
+          "argument": "0\r\n"
+        }
+      ]
+    },
+    {
+      "key": "donothin\r\n\r\n[failed]\r\n<h2>failure...</h2>\r\n<p>\r\nyour enemies are victorious and the rebellion is crushed. the lord of valdras laughs as your body burns as a sacrifice to the furies.\r\n\r\n$button=continue",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/rblscen.english",
+          "kind": "Button",
+          "label": "Continue",
+          "argument": "Tell,TryAgain\r\n\r\n[END]"
+        }
+      ]
+    },
+    {
+      "key": "donothing",
+      "native": {
+        "name": "DoNothing",
+        "entry": "00542fd0",
+        "globalAddress": "00542918",
+        "command": "02000089"
+      },
+      "occurrences": 1263,
+      "sourceFiles": 438,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "Button",
+          "label": "Ok",
+          "argument": "0\r\n</?>\r\n\r\n[ai1templedead]\r\n<h2>Secret</h2>\r\n<p>You"
+        },
+        {
+          "source": "tarc:\\d\\bc2bridging76.english",
+          "kind": "Button",
+          "label": "Lets do this!",
+          "argument": "0\r\n</?>\r\n\r\n[succeeded][ai2priestcaptured]\r\n<h2>Congratulations!</h2>\r\n<p>You"
+        },
+        {
+          "source": "tarc:\\d\\bc3acid_bar76.english",
+          "kind": "Button",
+          "label": "Lets do this!",
+          "argument": "0\r\n</?>\r\n\r\n[succeeded][badteamdead]\r\n<h2>Escape!</h2>\r\n<p>You"
+        },
+        {
+          "source": "tarc:\\d\\bc4bow_rush76.english",
+          "kind": "Button",
+          "label": "Lets do this!",
+          "argument": "0\r\n</?>\r\n\r\n[succeeded][badteamdead]\r\n<h2>Congratulations!</h2>\r\n<p>You"
+        },
+        {
+          "source": "tarc:\\d\\bc5walkers76.english",
+          "kind": "Button",
+          "label": "Lets do this!",
+          "argument": "0\r\n</?>\r\n\r\n[succeeded][ai2priestcaptured]\r\n<h2>~oNOOOOOOOOOOOOOOO!!!!</h2>\r\n<p>~wThe"
+        },
+        {
+          "source": "tarc:\\d\\bc6mows76.english",
+          "kind": "Button",
+          "label": "Lets do this!",
+          "argument": "0\r\n</?>\r\n\r\n[succeeded][badteamdead]\r\n<h2>Congratulations!</h2>\r\n<p>You"
+        },
+        {
+          "source": "tarc:\\d\\bc7sun_bars76.english",
+          "kind": "Button",
+          "label": "Lets do this!",
+          "argument": "0\r\n</?>\r\n\r\n[@300]\r\n<h2>Incoming"
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "kind": "Button",
+          "label": "Lets do this!",
+          "argument": "0\r\n</?>\r\n\r\n[@1]\r\n<h2>Message</h2>\r\n<p>Choose"
+        }
+      ]
+    },
+    {
+      "key": "donothing\r\n\r\n[ai5priestdead]\r\n<h2>failure!</h2>\r\n<p>\r\noh no!!! you let the furies high priests take the rebelious priest from you...his blood has stained thier altar...and your mission has failed!!\r\n\r\n$button=continue",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/CursedScen.english",
+          "kind": "Button",
+          "label": "Continue",
+          "argument": "Tell,TryAgain\r\n\r\n[Failed]\r\n<h2>Failure!</h2>\r\n<p>\r\nYou"
+        }
+      ]
+    },
+    {
+      "key": "donothing\r\n\r\n[ai5priestdead]\r\n<h2>failure!</h2>\r\n<p>~[isunwalker.a2] <br>\r\ngeneral kharlic has been slain on the altar of the evil aliens! you are demoted to peon for failing to save such a great warrior!\r\n\r\n$button=continue",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/FireScen.english",
+          "kind": "Button",
+          "label": "Continue",
+          "argument": "Tell,TryAgain\r\n\r\n[Failed]\r\n<h2>Failure!</h2>\r\n<p>\r\nYou"
+        }
+      ]
+    },
+    {
+      "key": "dumpsquids",
+      "native": {
+        "name": "DumpSquids",
+        "entry": "00543418",
+        "globalAddress": "00542b3c",
+        "command": "0200011b"
+      },
+      "occurrences": 60,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\weptest.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\weptest.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\weptest.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\weptest.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\weptest.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\weptest.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\weptest.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\weptest.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "gettechnolgy",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/FW5.english",
+          "kind": "Button",
+          "label": "But of what?",
+          "argument": "136\r\n\r\n[ai2PriestDead]\r\nIn"
+        }
+      ]
+    },
+    {
+      "key": "gettechnolog",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/Thundera.english",
+          "kind": "Button",
+          "label": "Wind",
+          "argument": "142\r\n\r\n[@500]\r\n<h2>A"
+        }
+      ]
+    },
+    {
+      "key": "gettechnology",
+      "native": {
+        "name": "GetTechnology",
+        "entry": "00543080",
+        "globalAddress": "00542970",
+        "command": "0200009f"
+      },
+      "occurrences": 1073,
+      "sourceFiles": 76,
+      "cppStringHits": [
+        "cpppj/src/client/RawKnowledgeMenu.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/b0.english",
+          "kind": "Button",
+          "label": "WIND",
+          "argument": "75\r\n"
+        },
+        {
+          "source": "originals/d/b0.english",
+          "kind": "Button",
+          "label": "RAIN",
+          "argument": "76\r\n"
+        },
+        {
+          "source": "originals/d/b0.english",
+          "kind": "Button",
+          "label": "THUNDER",
+          "argument": "77\r\n\r\n[Options]\r\n\r\n[A.]\r\n<h2>Overview</h2>"
+        },
+        {
+          "source": "originals/d/Bofend.english",
+          "kind": "Button",
+          "label": "Wind",
+          "argument": "70\r\n"
+        },
+        {
+          "source": "originals/d/Bofend.english",
+          "kind": "Button",
+          "label": "Wind",
+          "argument": "100\r\n"
+        },
+        {
+          "source": "originals/d/Bofend.english",
+          "kind": "Button",
+          "label": "Rain",
+          "argument": "101\r\n"
+        },
+        {
+          "source": "originals/d/Bofend.english",
+          "kind": "Button",
+          "label": "Rain",
+          "argument": "108\r\n\r\n[ai3PriestDead]\r\nEnemy"
+        },
+        {
+          "source": "originals/d/Bofend.english",
+          "kind": "Button",
+          "label": "Thunder",
+          "argument": "134\r\n"
+        }
+      ]
+    },
+    {
+      "key": "gomultiplayer",
+      "native": {
+        "name": "GoMultiplayer",
+        "entry": "005431a8",
+        "globalAddress": "00542a04",
+        "command": "020000c4"
+      },
+      "occurrences": 7,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Continue",
+          "argument": "1\r\n\r\n\r\n[ChangeFirewall]\r\n<h2>{H2}Toggle"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Continue",
+          "argument": "1\r\n\r\n[BattleOver2]\r\n<h2>{H2}DEFEAT!</h2>\r\n{Text}\r\n<"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Continue",
+          "argument": "1\r\n\r\n[BattleOver3]\r\n<h2>{H2}Battle"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Continue",
+          "argument": "1\r\n\r\n[BattleOver4]\r\n<h2>{H2}Connection"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Return to Challenge Area",
+          "argument": "1\r\n\r\n[BattleOver5]\r\n<h2>{H2}Draw</h2>\r\n{Text}\r\n<"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Continue",
+          "argument": "1\r\n\r\n\r\n[***********************************************************]\r\n[BattleVersionMismatch]\r\n<h2>{H2}Version"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "inflictdamage",
+      "native": {
+        "name": "InflictDamage",
+        "entry": "00543298",
+        "globalAddress": "00542a7c",
+        "command": "030000e2"
+      },
+      "occurrences": 107,
+      "sourceFiles": 8,
+      "cppStringHits": [
+        "cpppj/src/client/ScenarioObjectInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "keep going",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/mike3.english",
+          "kind": "Button",
+          "label": "THIS IS TOO FUN",
+          "argument": "DoNothing,0\r\n\r\n[ai3TempleDead]\r\n~B~E~wWell,"
+        }
+      ]
+    },
+    {
+      "key": "launchrootserver",
+      "native": {
+        "name": "LaunchRootServer",
+        "entry": "00543368",
+        "globalAddress": "00542ae4",
+        "command": "020000fc"
+      },
+      "occurrences": 4,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Timeout",
+          "label": "10",
+          "argument": "1\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Become Server",
+          "argument": "1\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Keep Searching",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Cancel",
+          "argument": "2\r\n\r\n[***********************************************************]\r\n[InsertCD]\r\n[no"
+        }
+      ]
+    },
+    {
+      "key": "leavebattle",
+      "native": {
+        "name": "LeaveBattle",
+        "entry": "005431b0",
+        "globalAddress": "00542a08",
+        "command": "020000c5"
+      },
+      "occurrences": 15,
+      "sourceFiles": 8,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/MissionGuideInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Depart",
+          "argument": "1\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Main Menu",
+          "argument": "1\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Leave Battle",
+          "argument": "1\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Leave Anyway",
+          "argument": "1\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Leave Honorably",
+          "argument": "9\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "OK",
+          "argument": "2\r\n\r\n[***********************************************************]\r\n[TooManyPirates]\r\n<h2>{H2}Too"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "OK",
+          "argument": "1\r\n\r\n[***********************************************************]\r\n[AskLaunchRootServer]\r\n<h2>{H2}Launch"
+        },
+        {
+          "source": "tarc:\\d\\thunderingpower.english",
+          "kind": "Button",
+          "label": "Depart in Disgrace",
+          "argument": "1\r\n"
+        }
+      ]
+    },
+    {
+      "key": "leavecheater",
+      "native": {
+        "name": "LeaveCheater",
+        "entry": "00542fa0",
+        "globalAddress": "00542904",
+        "command": "02000083"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Leave Honorably",
+          "argument": "0\r\n"
+        }
+      ]
+    },
+    {
+      "key": "lightning",
+      "native": {
+        "name": "Lightning",
+        "entry": "00543138",
+        "globalAddress": "005429cc",
+        "command": "020000b6"
+      },
+      "occurrences": 3,
+      "sourceFiles": 3,
+      "cppStringHits": [
+        "cpppj/src/o/TypeLoadOrder.cpp",
+        "cpppj/src/client/ScenarioEffectInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m18.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m19.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m20.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "makemine",
+      "native": {
+        "name": "MakeMine",
+        "entry": "00543100",
+        "globalAddress": "005429b0",
+        "command": "030000af"
+      },
+      "occurrences": 22,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/ScenarioObjectInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m25a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m25a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m25a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m25a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m25a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m25a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m25a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m25a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "meltdown",
+      "native": {
+        "name": "Meltdown",
+        "entry": "00543348",
+        "globalAddress": "00542ad4",
+        "command": "030000f8"
+      },
+      "occurrences": 13,
+      "sourceFiles": 2,
+      "cppStringHits": [
+        "cpppj/src/client/ScenarioObjectInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m14.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "menu",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/DialogScript.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/vn6.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "menujustclosed",
+      "native": {
+        "name": "MenuJustClosed",
+        "entry": "00543178",
+        "globalAddress": "005429ec",
+        "command": "020000be"
+      },
+      "occurrences": 12,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "misionabort",
+      "native": null,
+      "occurrences": 2,
+      "sourceFiles": 2,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/battle5.english",
+          "kind": "Button",
+          "label": "Thank you! Come again!",
+          "argument": "1\r\n\r\n[END]\r\n\r\n\r\n\r\n"
+        },
+        {
+          "source": "originals/d/battle6.english",
+          "kind": "Button",
+          "label": "Play something else",
+          "argument": "1\r\n\r\n[END]\r\n"
+        }
+      ]
+    },
+    {
+      "key": "misionbegin",
+      "native": null,
+      "occurrences": 2,
+      "sourceFiles": 2,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/sw_m1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m13.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "missinbegin",
+      "native": null,
+      "occurrences": 3,
+      "sourceFiles": 3,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/guiderahn.english",
+          "kind": "Checked",
+          "label": "9 Invasion",
+          "argument": "tnron82,{tnron82},{Donetnron8ex}"
+        },
+        {
+          "source": "originals/d/tnronb2.english",
+          "kind": "Checked",
+          "label": "6 Invasion",
+          "argument": "tnron82,{tnron82},{Donetnron8ex}\r\n"
+        },
+        {
+          "source": "originals/d/tnronguide.english",
+          "kind": "Menu",
+          "label": "Invasion",
+          "argument": "tnron82</?></?>\r\n<?{attime111}><?{tnron082}>"
+        }
+      ]
+    },
+    {
+      "key": "missionabort",
+      "native": {
+        "name": "MissionAbort",
+        "entry": "00542fe8",
+        "globalAddress": "00542924",
+        "command": "0200008c"
+      },
+      "occurrences": 483,
+      "sourceFiles": 351,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/MissionGuideInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\bc2bridging76.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n\r\n[@120]\r\n<h2>Hmm...</h2>\r\n<p>Looks"
+        },
+        {
+          "source": "tarc:\\d\\bc2bridging76.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n\r\n[END]"
+        },
+        {
+          "source": "tarc:\\d\\bc3acid_bar76.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n\r\n[Failed]\r\n<h2>Failure...</h2>\r\n<p>You"
+        },
+        {
+          "source": "tarc:\\d\\bc3acid_bar76.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n\r\n[END]"
+        },
+        {
+          "source": "tarc:\\d\\bc4bow_rush76.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n\r\n[Failed]\r\n<h2>Failure...</h2>\r\n<p>The"
+        },
+        {
+          "source": "tarc:\\d\\bc4bow_rush76.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n\r\n[END]"
+        },
+        {
+          "source": "tarc:\\d\\bc5walkers76.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n\r\n[Failed]\r\n<h2>Uhhh</h2>\r\n<p>How?!\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc5walkers76.english",
+          "kind": "Button",
+          "label": "Leave Missions",
+          "argument": "0\r\n\r\n[END]"
+        }
+      ]
+    },
+    {
+      "key": "missionbegin",
+      "native": {
+        "name": "MissionBegin",
+        "entry": "00542fe0",
+        "globalAddress": "00542920",
+        "command": "0200008b"
+      },
+      "occurrences": 1146,
+      "sourceFiles": 433,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/MissionGuideInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "Button",
+          "label": "Ready!",
+          "argument": "bc9ssun_bars76\r\n[ai2priestcaptured]\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "Button",
+          "label": "X-Bows",
+          "argument": "bc4bow_rush76\r\n[ai3priestcaptured]\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "Button",
+          "label": "Bridging",
+          "argument": "bc2bridging76\r\n[ai4priestcaptured]\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "Button",
+          "label": "Acid Bars",
+          "argument": "bc3acid_bar76\r\n[ai5priestcaptured]\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "Button",
+          "label": "Walkers",
+          "argument": "bc5walkers76\r\n[ai7priestcaptured]\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "Button",
+          "label": "Man o' War",
+          "argument": "BC6Mows76\r\n[ai6priestcaptured]\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "Button",
+          "label": "Sun Barricade",
+          "argument": "bc7Sun_bars76\r\n\r\n\r\n[END]"
+        },
+        {
+          "source": "tarc:\\d\\bc2bridging76.english",
+          "kind": "Button",
+          "label": "Training Menu",
+          "argument": "BC1Menu76\r\n<p>\r\n"
+        }
+      ]
+    },
+    {
+      "key": "missionrestart",
+      "native": {
+        "name": "MissionRestart",
+        "entry": "00542ff0",
+        "globalAddress": "00542928",
+        "command": "0200008d"
+      },
+      "occurrences": 10,
+      "sourceFiles": 9,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/MissionGuideInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Replay Mission",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Replay Mission",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp1.english",
+          "kind": "Menu",
+          "label": "I want to be resurrected",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp1a.english",
+          "kind": "Menu",
+          "label": "I want to be resurrected",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp1b.english",
+          "kind": "Menu",
+          "label": "I want to be resurrected",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp1c.english",
+          "kind": "Menu",
+          "label": "I want to be resurrected",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp3.english",
+          "kind": "Menu",
+          "label": "I want to be resurrected",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/Imp4.english",
+          "kind": "Menu",
+          "label": "I want to be resurrected",
+          "argument": "0\r\n"
+        }
+      ]
+    },
+    {
+      "key": "missonbegin",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/Resque.english",
+          "kind": "Button",
+          "label": "Retry Mission",
+          "argument": "Resque\r\n"
+        }
+      ]
+    },
+    {
+      "key": "movedialog",
+      "native": {
+        "name": "MoveDialog",
+        "entry": "005432f0",
+        "globalAddress": "00542aa8",
+        "command": "020000ed"
+      },
+      "occurrences": 68,
+      "sourceFiles": 19,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp4.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp5.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp5.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "movedialogbox",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/sw_m13.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "mssionbegin",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/Resque.english",
+          "kind": "Button",
+          "label": "Anything for a friend!",
+          "argument": "LCA\t\r\n"
+        }
+      ]
+    },
+    {
+      "key": "newfort",
+      "native": {
+        "name": "NewFort",
+        "entry": "00542f50",
+        "globalAddress": "005428dc",
+        "command": "02000079"
+      },
+      "occurrences": 2,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp",
+        "cpppj/src/client/FortCurrentNameDevices.cpp",
+        "cpppj/src/client/UberEditor.inc"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "nextmission",
+      "native": null,
+      "occurrences": 2,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/KQ6.english",
+          "kind": "Button",
+          "label": "Try again?",
+          "argument": "KQ1\r\n\r\n[Failed]\r\n<h2>Failure!</h2>\r\n<p>You"
+        },
+        {
+          "source": "originals/d/KQ6.english",
+          "kind": "Button",
+          "label": "Warp Back",
+          "argument": "KQ1\r\n\r\n\r\n[END]\r\n\r\n\r\n\r\n"
+        }
+      ]
+    },
+    {
+      "key": "playsound",
+      "native": {
+        "name": "PlaySound",
+        "entry": "00543058",
+        "globalAddress": "0054295c",
+        "command": "0200009a"
+      },
+      "occurrences": 285,
+      "sourceFiles": 35,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/bridging.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/bridging.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/deathguard.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/deathguard.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m1.english",
+          "kind": "OnExit",
+          "label": " ",
+          "argument": "priestMove1.wav\r\n"
+        },
+        {
+          "source": "originals/d/sw_m1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "OnExit",
+          "label": " ",
+          "argument": "golemMove1.wav\r\n<"
+        }
+      ]
+    },
+    {
+      "key": "quitapp",
+      "native": {
+        "name": "QuitApp",
+        "entry": "00542b98",
+        "globalAddress": "00542700",
+        "command": "02000001"
+      },
+      "occurrences": 4,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "OnExit",
+          "label": "test",
+          "argument": "99\r\n<"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Quit",
+          "argument": "99\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Yes",
+          "argument": "99\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Quit Game",
+          "argument": "99\r\n\r\n[***********************************************************]\r\n[WarnFailedDiags]\r\n<h2>{H2}You"
+        }
+      ]
+    },
+    {
+      "key": "recheckcd",
+      "native": {
+        "name": "RecheckCD",
+        "entry": "00543370",
+        "globalAddress": "00542ae8",
+        "command": "020000fd"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "OK",
+          "argument": "0\r\n"
+        }
+      ]
+    },
+    {
+      "key": "refreshplayers",
+      "native": {
+        "name": "RefreshPlayers",
+        "entry": "00543428",
+        "globalAddress": "00542b44",
+        "command": "0200011e"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "reloadtheams",
+      "native": {
+        "name": "ReloadTheams",
+        "entry": "00543448",
+        "globalAddress": "00542b54",
+        "command": "02000123"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "requestmenu",
+      "native": {
+        "name": "RequestMenu",
+        "entry": "00543420",
+        "globalAddress": "00542b40",
+        "command": "0200011c"
+      },
+      "occurrences": 6,
+      "sourceFiles": 2,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\update.english",
+          "kind": "Button",
+          "label": "Back",
+          "argument": "Updates\r\n"
+        },
+        {
+          "source": "tarc:\\d\\update.english",
+          "kind": "Button",
+          "label": "Back",
+          "argument": "Updates\r\n"
+        },
+        {
+          "source": "tarc:\\d\\update.english",
+          "kind": "Button",
+          "label": "Back",
+          "argument": "Updates\r\n"
+        },
+        {
+          "source": "tarc:\\d\\update.english",
+          "kind": "Button",
+          "label": "Back",
+          "argument": "Updates\r\n"
+        }
+      ]
+    },
+    {
+      "key": "requeststormpower",
+      "native": {
+        "name": "RequestStormpower",
+        "entry": "00543350",
+        "globalAddress": "00542ad8",
+        "command": "020000f9"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Timeout",
+          "label": "15",
+          "argument": "0\r\n"
+        }
+      ]
+    },
+    {
+      "key": "salvage",
+      "native": {
+        "name": "Salvage",
+        "entry": "00542e70",
+        "globalAddress": "0054286c",
+        "command": "0200005d"
+      },
+      "occurrences": 21,
+      "sourceFiles": 2,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Salvage It",
+          "argument": "{global.salvageSid}\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Salvage It!",
+          "argument": "{global.salvageSid}\r\n"
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m10.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "savegomain",
+      "native": {
+        "name": "SaveGoMain",
+        "entry": "005431e0",
+        "globalAddress": "00542a20",
+        "command": "020000cb"
+      },
+      "occurrences": 4,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "OK",
+          "argument": "0\r\n\r\n\r\n[***********************************************************]\r\n[GameVerDiff]\r\n<h2>{H2}Version"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "OK",
+          "argument": "0\r\n\r\n\r\n[***********************************************************]\r\n[PieceDump]\r\n{Text}\r\nThe"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Yes",
+          "argument": "1\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "No",
+          "argument": "0\r\n"
+        }
+      ]
+    },
+    {
+      "key": "screenmodeabschange",
+      "native": {
+        "name": "ScreenModeAbsChange",
+        "entry": "00542d08",
+        "globalAddress": "005427b8",
+        "command": "02000030"
+      },
+      "occurrences": 4,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Timeout",
+          "label": "15",
+          "argument": "{param.1}\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Cancel",
+          "argument": "{param.1}\r\n\r\n[***********************************************************]\r\n[NotRestart]\r\n<h2>{H2}Cannot"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "screenmodechange",
+      "native": {
+        "name": "ScreenModeChange",
+        "entry": "00542ba0",
+        "globalAddress": "00542704",
+        "command": "02000002"
+      },
+      "occurrences": 8,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Turn Off",
+          "argument": "2\r\n</?>\r\n<?!{global.ddBackBufferDib}>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Turn On",
+          "argument": "2\r\n</?>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Turn Off",
+          "argument": "64\r\n</?>\r\n<?!{global.ddSoftwareMouse}>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Turn On",
+          "argument": "64\r\n</?>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Turn Off",
+          "argument": "4\r\n</?>\r\n<?!{global.ddFlipping}>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Turn On",
+          "argument": "4\r\n</?>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Turn Off",
+          "argument": "16\r\n</?>\r\n<?!{global.ddParallax}>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Turn On",
+          "argument": "16\r\n</?>\r\n"
+        }
+      ]
+    },
+    {
+      "key": "sendallbucks",
+      "native": {
+        "name": "SendAllBucks",
+        "entry": "00543400",
+        "globalAddress": "00542b30",
+        "command": "02000118"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/SendMoneyInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Yes",
+          "argument": "{param.1}\r\n"
+        }
+      ]
+    },
+    {
+      "key": "sendbucks",
+      "native": {
+        "name": "SendBucks",
+        "entry": "005432e8",
+        "globalAddress": "00542aa4",
+        "command": "020000ec"
+      },
+      "occurrences": 15,
+      "sourceFiles": 5,
+      "cppStringHits": [
+        "cpppj/src/client/SendMoneyInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m18.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m18.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m19.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m19.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m2.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m20.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m20.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m4.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "setallbridge",
+      "native": {
+        "name": "SetAllBridge",
+        "entry": "00543238",
+        "globalAddress": "00542a4c",
+        "command": "020000d6"
+      },
+      "occurrences": 7,
+      "sourceFiles": 4,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m12.english",
+          "kind": "OnExit",
+          "label": " ",
+          "argument": "2\r\n</?>\r\n<?{sw_difficulty1}>\r\n<"
+        },
+        {
+          "source": "originals/d/sw_m12.english",
+          "kind": "OnExit",
+          "label": " ",
+          "argument": "0\r\n</?>\r\n\r\n[@3]\r\n<?{sw_difficulty1}>\r\n<"
+        },
+        {
+          "source": "originals/d/sw_m21a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m25a.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/vn8.english",
+          "kind": "Button",
+          "label": "Make it easier",
+          "argument": "0\r\n"
+        },
+        {
+          "source": "originals/d/vn8.english",
+          "kind": "Button",
+          "label": "Normal setting",
+          "argument": "1\r\n"
+        },
+        {
+          "source": "originals/d/vn8.english",
+          "kind": "Button",
+          "label": "I am a Netstorm God",
+          "argument": "2\r\n\r\n\r\n\r\n[ai2PriestSaved]\r\nYou"
+        }
+      ]
+    },
+    {
+      "key": "setowner",
+      "native": {
+        "name": "SetOwner",
+        "entry": "005431e8",
+        "globalAddress": "00542a24",
+        "command": "020000cc"
+      },
+      "occurrences": 9,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawObjectMenu.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "~[C.84]Human Player",
+          "argument": "1\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "~[C.249]Computer #1",
+          "argument": "2\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "~[C.184]Computer #2",
+          "argument": "3\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "~[C.140]Computer #3",
+          "argument": "4\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "~[C.150]Computer #4",
+          "argument": "5\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "~[C.112]Computer #5",
+          "argument": "6\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "~[C.156]Computer #6",
+          "argument": "7\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "~[C.222]Computer #7",
+          "argument": "8\r\n"
+        }
+      ]
+    },
+    {
+      "key": "show technology",
+      "native": null,
+      "occurrences": 11,
+      "sourceFiles": 11,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/Duel.english",
+          "kind": "Button",
+          "label": "Review Knowledge",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "originals/d/Girl.english",
+          "kind": "Button",
+          "label": "Review Knowledge",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "originals/d/Keep.english",
+          "kind": "Button",
+          "label": "Review Knowledge",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "originals/d/Rain.english",
+          "kind": "Button",
+          "label": "Review Knowledge",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "originals/d/Rebel.english",
+          "kind": "Button",
+          "label": "Review Knowledge",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "originals/d/Strike.english",
+          "kind": "Button",
+          "label": "Review Knowledge",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "originals/d/Sun.english",
+          "kind": "Button",
+          "label": "Review Knowledge",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "originals/d/Supply.english",
+          "kind": "Button",
+          "label": "Review Knowledge",
+          "argument": "55\r\n"
+        }
+      ]
+    },
+    {
+      "key": "showtechnology",
+      "native": {
+        "name": "ShowTechnology",
+        "entry": "00543088",
+        "globalAddress": "00542974",
+        "command": "020000a0"
+      },
+      "occurrences": 356,
+      "sourceFiles": 353,
+      "cppStringHits": [
+        "cpppj/src/client/RawKnowledgeMenu.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "kind": "Button",
+          "label": "Technology available",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc2bridging76.english",
+          "kind": "Button",
+          "label": "Technology available",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc3acid_bar76.english",
+          "kind": "Button",
+          "label": "Technology available",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc4bow_rush76.english",
+          "kind": "Button",
+          "label": "Technology available",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc5walkers76.english",
+          "kind": "Button",
+          "label": "Technology available",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc6mows76.english",
+          "kind": "Button",
+          "label": "Technology available",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc7sun_bars76.english",
+          "kind": "Button",
+          "label": "Technology available",
+          "argument": "55\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc9ssun_bars76.english",
+          "kind": "Button",
+          "label": "Technology available",
+          "argument": "55\r\n"
+        }
+      ]
+    },
+    {
+      "key": "startdemo",
+      "native": {
+        "name": "StartDemo",
+        "entry": "00543188",
+        "globalAddress": "005429f4",
+        "command": "020000c0"
+      },
+      "occurrences": 6,
+      "sourceFiles": 4,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "The Storm Rages",
+          "argument": "DemoStormRages\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "Demo of \"Guard My Back\"",
+          "argument": "GuardMyBack\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Menu",
+          "label": "Demo of \"Dissolved Alliance\"",
+          "argument": "DissolvedAlliance\r\n\r\n"
+        },
+        {
+          "source": "originals/d/GuideBattle.english",
+          "kind": "Button",
+          "label": "Start Demo",
+          "argument": "TheGreatBattleDemo"
+        },
+        {
+          "source": "originals/d/GuideFW1.english",
+          "kind": "Checked",
+          "label": "DEMO of Part II: Offensive Strike",
+          "argument": "DEMOFw,{DoneDEMOFw},1\r\n\r\n"
+        },
+        {
+          "source": "originals/d/guidetnron.english",
+          "kind": "Button",
+          "label": "Demo/Credits",
+          "argument": "tnrondemo\r\n\r\n\r\n\r\n\r\n\r\n"
+        }
+      ]
+    },
+    {
+      "key": "startsmoke",
+      "native": {
+        "name": "StartSmoke",
+        "entry": "00542d30",
+        "globalAddress": "005427cc",
+        "command": "02000035"
+      },
+      "occurrences": 144,
+      "sourceFiles": 3,
+      "cppStringHits": [
+        "cpppj/src/client/ScenarioEffectInput.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m15.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m15.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m15.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m15.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m15.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m15.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m15.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/sw_m15.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "tel",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/vn6.english",
+          "kind": "Menu",
+          "label": "~[IrainBalloon.1]",
+          "argument": "floater</?>\r\n<?{vn_windall}>"
+        }
+      ]
+    },
+    {
+      "key": "tell",
+      "native": {
+        "name": "Tell",
+        "entry": "00543030",
+        "globalAddress": "00542948",
+        "command": "02000095"
+      },
+      "occurrences": 3406,
+      "sourceFiles": 475,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/TellSection.cpp",
+        "cpppj/src/client/UberHud.inc",
+        "cpppj/src/client/EmbeddedTell.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\bc2bridging76.english",
+          "kind": "Button",
+          "label": "Restart",
+          "argument": "TryAgain\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc2bridging76.english",
+          "kind": "Button",
+          "label": "Restart",
+          "argument": "TryAgain\r\n<p>"
+        },
+        {
+          "source": "tarc:\\d\\bc3acid_bar76.english",
+          "kind": "Button",
+          "label": "MORE",
+          "argument": "A1.\r\n\r\n[A1.]\r\n<h2>Acid"
+        },
+        {
+          "source": "tarc:\\d\\bc3acid_bar76.english",
+          "kind": "Button",
+          "label": "Restart",
+          "argument": "TryAgain\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc3acid_bar76.english",
+          "kind": "Button",
+          "label": "Restart",
+          "argument": "TryAgain\r\n<p>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc4bow_rush76.english",
+          "kind": "Button",
+          "label": "Restart",
+          "argument": "TryAgain\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc4bow_rush76.english",
+          "kind": "Button",
+          "label": "Restart",
+          "argument": "TryAgain\r\n<p>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\bc5walkers76.english",
+          "kind": "Button",
+          "label": "Restart",
+          "argument": "TryAgain\r\n"
+        }
+      ]
+    },
+    {
+      "key": "tell (level 2)",
+      "native": null,
+      "occurrences": 42,
+      "sourceFiles": 10,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/palace3.english",
+          "kind": "Menu",
+          "label": "~kBulwark",
+          "argument": "TechMenuLV2</?>\r\n<?!{atweapon16}>"
+        },
+        {
+          "source": "originals/d/palace3.english",
+          "kind": "Menu",
+          "label": "~kBulwark",
+          "argument": "Tell,TechMenuLV2</?>\r\n<?{atweapon17}>"
+        },
+        {
+          "source": "originals/d/palace3.english",
+          "kind": "Menu",
+          "label": "~kArc Spire",
+          "argument": "TechMenuLV2</?>\r\n<?!{atweapon17}>"
+        },
+        {
+          "source": "originals/d/palace3.english",
+          "kind": "Menu",
+          "label": "~kArc Spire",
+          "argument": "Tell,TechMenuLV2</?>\r\n"
+        },
+        {
+          "source": "originals/d/palace4.english",
+          "kind": "Menu",
+          "label": "~kBulwark",
+          "argument": "TechMenuLV2</?>\r\n<?!{atweapon16}>"
+        },
+        {
+          "source": "originals/d/palace4.english",
+          "kind": "Menu",
+          "label": "~kBulwark",
+          "argument": "Tell,TechMenuLV2</?>\r\n<?{atweapon17}>"
+        },
+        {
+          "source": "originals/d/palace4.english",
+          "kind": "Menu",
+          "label": "~kArc Spire",
+          "argument": "TechMenuLV2</?>\r\n<?!{atweapon17}>"
+        },
+        {
+          "source": "originals/d/palace4.english",
+          "kind": "Menu",
+          "label": "~kArc Spire",
+          "argument": "Tell,TechMenuLV2</?>\r\n"
+        }
+      ]
+    },
+    {
+      "key": "tell nodeal\r\n$timeout=25",
+      "native": null,
+      "occurrences": 2,
+      "sourceFiles": 2,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/sw_m1.english",
+          "kind": "Button",
+          "label": "I'D RATHER DIE 1000 DEATHS",
+          "argument": "Tell,AllianceWithdrawn\r\n\r\n\r\n[ai1PriestCaptured]\r\n<h2>You"
+        },
+        {
+          "source": "originals/d/sw_m15.english",
+          "kind": "Button",
+          "label": "Are you crazy?",
+          "argument": "Tell,AllianceWithdrawn\r\n\r\n\r\n[AllianceBegun]\r\n<"
+        }
+      ]
+    },
+    {
+      "key": "telltip",
+      "native": {
+        "name": "TellTip",
+        "entry": "005432e0",
+        "globalAddress": "00542aa0",
+        "command": "020000eb"
+      },
+      "occurrences": 3,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Prior Tip",
+          "argument": "1\r\n</?>\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "Next Tip",
+          "argument": "2\r\n"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "OK",
+          "argument": "3\r\n\r\n\r\n[***********************************************************]\r\n[NotInDemo][BreakingThroughMissing][MissingMission]\r\n[Remvoed]\r\n<h2>{H2}NetStorm!</h2>\r\n<p>{Text}\r\nThis"
+        }
+      ]
+    },
+    {
+      "key": "timeout",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/DialogScript.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/sw_m7.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "url",
+      "native": {
+        "name": "URL",
+        "entry": "00542e60",
+        "globalAddress": "00542864",
+        "command": "0200005b"
+      },
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "Button",
+          "label": "View",
+          "argument": "file:///{InstallDir}{GifOutSpec}\r\n"
+        }
+      ]
+    },
+    {
+      "key": "viewpriest",
+      "native": {
+        "name": "ViewPriest",
+        "entry": "00543148",
+        "globalAddress": "005429d4",
+        "command": "020000b8"
+      },
+      "occurrences": 4,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "examples": [
+        {
+          "source": "originals/d/TpVlisten.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/TpVlisten.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/TpVlisten.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/TpVlisten.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "viewspot",
+      "native": {
+        "name": "ViewSpot",
+        "entry": "00543250",
+        "globalAddress": "00542a58",
+        "command": "020000d9"
+      },
+      "occurrences": 63,
+      "sourceFiles": 12,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\runforit.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "originals/d/Imp1.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "warning",
+      "native": {
+        "name": "Warning",
+        "entry": "00543398",
+        "globalAddress": "00542afc",
+        "command": "02000102"
+      },
+      "occurrences": 13,
+      "sourceFiles": 1,
+      "cppStringHits": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/DialogScript.cpp"
+      ],
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "kind": "tag",
+          "label": "",
+          "argument": ""
+        }
+      ]
+    },
+    {
+      "key": "wof2\r\n\r\n[failed]\r\n<h2>death!!!!!</h2>\r\n<p>\r\noh well",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/WOF1.english",
+          "kind": "Button",
+          "label": "Next MissionBegin",
+          "argument": "at"
+        }
+      ]
+    },
+    {
+      "key": "wof3\r\n\r\n[failed]\r\n<p>\r\neven with the advantages your foes ripped apart your corpse.\r\n$button=continue",
+      "native": null,
+      "occurrences": 1,
+      "sourceFiles": 1,
+      "cppStringHits": [],
+      "examples": [
+        {
+          "source": "originals/d/WOF2.english",
+          "kind": "Button",
+          "label": "Next MissionBegin",
+          "argument": "Tell,Tryagain\r\n\r\n\r\n[END]\r\n"
+        }
+      ]
+    }
+  ],
+  "sourceManifestSha256": "a7bbf11c929e96b7e571477118aaf6a405aaab899eae61e5cc9a6a09bc8ab8fb",
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/cpp_html_command_inventory.py": "3e6419ab889e5a2f466d774bbd48f77aedf4e0625b4ca6a58b3095a846c8a91c"
+  },
+  "limits": [
+    "Config/TARC의 실제 가림·동적 치환·전체 명령 실행 완료 판정이 아니다",
+    "CPP 문자열 존재는 주석/무관 분기를 포함할 수 있으며 이후 실제 이름 조회/입력 부모를 읽어 확인한다",
+    "메타의 줄바꿈 캡처/오자/동적 이름을 임의 trim/별칭으로 바꾸지 않는다"
+  ]
+}

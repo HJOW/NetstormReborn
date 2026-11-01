@@ -188,6 +188,8 @@ bool UberGump::InspectDestroySurface(std::string_view type,float x,float y) {
     if (!sid.value) throw std::out_of_range("검사할 raw 표면 없음");
     return world_->Surfaces().Destroy(sid);
 }
+// 실제 HTML이 사용하는 같은 조회기의 값을 검사/분석에 빌리며 새 별칭이나 번호표를 만들지 않는다.
+std::uint32_t HtmlScriptCommandValue(std::string_view name) { return DialogScriptCode(name); }
 // 검사 호출 시점만 커널로 옮기고 실제 섹션 해석·페이지 교체·정지는 일반 Tell에 맡긴다.
 void UberGump::InspectTell(std::string target) { Tell(std::move(target)); }
 namespace {

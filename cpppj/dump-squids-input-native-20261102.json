@@ -1,0 +1,31 @@
+{
+  "unit": 715,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 48,
+  "observations": 144,
+  "precisionOrRepeatDifferences": 0,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "fixtureSha256": "c92a0531a8d1dd6ef4ab8540aa7b11543bfc9d21b08849e19506043d38758f7a",
+  "boundaries": [
+    "실제004d6e61..004da477의 일반 입력 분기와 기존 실제 큐/Guide 관문 문맥만 격리 실행한다",
+    "큰 Guide/Gump/UI 장치는 기존 명시 입력이며 게임/OS/덤프 파일 생성/통신을 실행하지 않는다",
+    "DumpSquids는00542b3c의 명시 제외이며 별도 개발자 F7의004d6020 덤프 호출과 다르다",
+    "48개 사건마다 실제 전체 출력/명시 trace/정상 완료/스택·x87를 관측했다. 한정 CPP 입력 소비와 전체 부모의 부수 효과를 혼동하지 않는다"
+  ],
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_dump_squids_input.py": "5645176242fa86f204fb37b5b4a82a534ad0000738ebc0d1eb07f1a73957f194",
+    "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+    "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+    "cpppj/tests/fixtures/dump-squids-input-x86.tsv": "c92a0531a8d1dd6ef4ab8540aa7b11543bfc9d21b08849e19506043d38758f7a"
+  }
+}

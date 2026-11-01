@@ -1,0 +1,41 @@
+{
+  "unit": 715,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "names": 43,
+  "excluded": [
+    "accountsetup",
+    "chalforcejoinbattle",
+    "chaljoinbattlenowarning",
+    "chalsailjoinbattle",
+    "chalsailpos",
+    "confirmalliance",
+    "decendtochallevel",
+    "gomultiplayer",
+    "launchrootserver",
+    "leavebattle",
+    "leavecheater",
+    "refreshplayers",
+    "requestmenu",
+    "requeststormpower"
+  ],
+  "nativeExecutions": 0,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "fixtureSha256": "9e63cd5933ec3f5770bda260076794eff2c4315e04bf977b18cc50e6dd21fc5a",
+  "limits": [
+    "PE의 정적 이름표43개이며 명령 몸체/전체 동적 Config/전체 MP 이름표를 실행하지 않는다",
+    "대소문자 변형/실제 HTML 조회기와의 비교는 후속 CPP 검사이며 이 기대값 생성에 제품을 사용하지 않는다"
+  ],
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj/html-command-inventory-20261102.json": "1f8caf7b11806952bdd3a05d2d8eec5cc31399e27041f3a77f12cb05b4445824",
+    "tools/decomp_html_solo_command_names.py": "4823095f480d461784b2189a320fdb9c6850c9257c6b20d0e664b04fba1cdb9e",
+    "cpppj/tests/fixtures/html-solo-command-names-pe.tsv": "9e63cd5933ec3f5770bda260076794eff2c4315e04bf977b18cc50e6dd21fc5a"
+  }
+}
