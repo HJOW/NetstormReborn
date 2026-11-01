@@ -97,6 +97,33 @@ public sealed class HostStartupSceneTests
         Assert.Null(menu.Tree.Node(token)); Assert.Equal(initial, menu.Tree.Create.Count);
     }
 
+    /// <summary>호스트 HTML 소유자가 실제 버튼·명령 큐와 공통 등록 및 창 정리를 공유한다.</summary>
+    [Fact]
+    public void HostHtmlOwnerRoutesActualButtonAndCleansPartialBody()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        var queue = new InputQueue(); var owner = new HostHtmlWindows(menu, queue, () => 12.5, _ => throw new InvalidOperationException());
+        uint initial = menu.Tree.Create.Count; uint root = owner.Create(0, 0);
+        owner.Window.AddButton(root, "Okay", 0x02000095, 7, 0);
+        var html = Assert.IsType<HtmlWindowGumpNode>(menu.Tree.Node(root)); uint button = html.Controls[0].Child;
+        menu.Tree.Stones.FitToText(button); menu.Tree.Tree.Move(root, 100, 100, menu.Tree.Create.Entries[0]);
+        menu.Tree.Tree.Move(button, 5, 5, root); menu.Tree.Modal.SetModal(root, true);
+        menu.Route(new(InputCode.LeftButton, 106, 106)); menu.Route(new(InputCode.LeftButton | InputCode.Release, 106, 106));
+        InputEvent command = queue.Pop(false); Assert.Equal((0x02000095u, 7, 7), (command.Code, command.X, command.Y));
+        Assert.Equal(0U, menu.Tree.LifeState.CurrentDialog); menu.Tree.Lifetime.Cleanup();
+        Assert.Null(menu.Tree.Node(root)); Assert.Null(menu.Tree.Node(button)); Assert.Equal(0U, owner.State.Instances);
+        uint partial = owner.Create(0, 0);
+        Assert.Throws<InvalidOperationException>(() => owner.Window.SetBody(partial, "Pending body"));
+        owner.CloseAll(); Assert.Null(menu.Tree.Node(partial)); Assert.Equal(initial, menu.Tree.Create.Count);
+        Assert.Equal(12.5, owner.State.LastCloseTime);
+    }
+
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
     [Fact]
     public void MainMenuRoutesEachButtonToItsOriginalAction()

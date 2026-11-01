@@ -35,6 +35,9 @@ public sealed class ClientHostGame : Game
     /// <summary>실제 버튼 트리를 소유하는 초기 메인 메뉴.</summary>
     private HostMainMenu? _mainMenu;
 
+    /// <summary>메뉴와 같은 노드·입력 큐를 사용하는 HTML 창 소유자.</summary>
+    private HostHtmlWindows? _htmlWindows;
+
     /// <summary>메뉴 버튼이 쓰는 단조 실시간 시계.</summary>
     private readonly Stopwatch _wallClock = Stopwatch.StartNew();
 
@@ -84,10 +87,14 @@ public sealed class ClientHostGame : Game
         Window.TextInput += (_, arguments) => _driver.Input.Push(HostInputMapper.CharCode(arguments.Character), 0, 0);
     }
 
-    /// <summary>메뉴 효과음 장치와 그래픽 자원을 해제한다.</summary>
+    /// <summary>HTML 창과 메뉴 효과음 장치 및 그래픽 자원을 해제한다.</summary>
     protected override void Dispose(bool disposing)
     {
-        if (disposing) _buttonSound?.Dispose();
+        if (disposing)
+        {
+            _htmlWindows?.CloseAll();
+            _buttonSound?.Dispose();
+        }
         base.Dispose(disposing);
     }
 
@@ -125,6 +132,8 @@ public sealed class ClientHostGame : Game
                 Redraw = (_, _) => _menuDirty = true,
                 HandleBase = (_, _, _, _) => throw new InvalidOperationException("메인 메뉴 명령 소비자 미연결")
             });
+            _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _wallClock.Elapsed.TotalSeconds,
+                _ => throw new InvalidOperationException("HTML 링크 명령 소비자 미연결"));
             _driver.BindControlLocator(_mainMenu);
             _mainMenu.Draw(_driver.Screen);
             _menuDirty = false;
