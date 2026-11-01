@@ -8,6 +8,7 @@
 #include "client/RawCampaignSession.h" //Sleep 뒤의 실제 프레임말 Player 결과 소비에 장기 Session을 빌린다.
 #include "client/ClientDiagnostics.h"
 #include "client/ClientOptionsFile.h"
+#include "client/ClientOptionsDisk.h"
 #include "client/CdDirectory.h"
 #include "client/ClientBridgeDecay.h"
 #include "client/GifScreenshot.h"
@@ -497,26 +498,8 @@ void Client::ApplyAudioOptions() {
 void Client::SaveOptions() {
     SaveClientOptions(configuration_, [this](std::string_view, std::span<const std::uint8_t> bytes) {
         // 원본 0041b4c0 → 0041a5b0의 모드 2(w+b): 상위 폴더를 새로 만들지 않고 기존 내용을 잘라 쓴다.
-        const auto path=std::filesystem::absolute(options_.gameDirectory / "d" / "options.cfg");const auto pathUtf8=path.u8string();const std::string name(pathUtf8.begin(),pathUtf8.end());
-        FILE* file = ::_wfopen(path.c_str(), L"w+b"); // 원본ANSI와 다른 Windows10/11의 유니코드 경로 호환 처리이며 파일 모드는 같다.
-        if (!file) {
-            // 다른 CRT 접근 전에 Win32 값을 보관한다. fopen 내부에서 갱신하지 않은 과거 값일 수도 있다.
-            const DWORD openLastError = ::GetLastError();
-            // fopen의 현재 errno를 먼저 복사해 뒤의 오류 조회나 진단 출력과 분리한다.
-            const int openErrno = errno;
-            // _get_doserrno 조회 실패 때 이 초기값을 유효한 OS 오류로 해석하지 않는다.
-            unsigned long openDosError = 0;
-            // 반환 0일 때만 openDosError가 유효하며 Win32 값과 별도로 기록한다.
-            const errno_t openDosErrorStatus = ::_get_doserrno(&openDosError);
-            std::fprintf(stderr,
-                "SaveOptions fopen failed: path=\"%s\" errno=%d doserrno_read_status=%d doserrno_valid=%d doserrno=%lu last_error=%lu last_error_may_be_stale=1\n",
-                name.c_str(), openErrno, openDosErrorStatus, openDosErrorStatus == 0 ? 1 : 0,
-                openDosError, static_cast<unsigned long>(openLastError));
-            throw std::runtime_error("Unable to open d/options.cfg");
-        }
-        const auto written = std::fwrite(bytes.data(), 1, bytes.size(), file);
-        const int closed = std::fclose(file);
-        if (written != bytes.size() || closed != 0) throw std::runtime_error("Unable to write d/options.cfg");
+        const auto path=std::filesystem::absolute(options_.gameDirectory / "d" / "options.cfg"); // 현재 저장 위치는 유지한다. 사용자 홈 이동은5차다.
+        WriteClientOptionsDisk(path,bytes); // 원본과 다른 Windows10/11 호환 처리: 활성 파일 매핑의1224만 완성된 임시 파일 교체로 저장한다.
     });
 }
 

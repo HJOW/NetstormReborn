@@ -1,0 +1,88 @@
+{
+  "unit": 674,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "scope": "중단된 단위674 마무리·문서·로컬 커밋까지만 수행. 전체 목표는 일시 중지 유지.",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "modified": false
+  },
+  "product": {
+    "exe": "cpppj/build/bin/Release/Netstorm.exe",
+    "sha256": "0793f8e6890ab231cb83fe0e3b901844af7b9b01867c94d6989212c9757861fc"
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-options-mapped-save-674-build-v2.log"
+  },
+  "focused": {
+    "registered": 7,
+    "executed": 7,
+    "new": 4,
+    "existing": 3,
+    "failedChecks": 0,
+    "newCaseVolumeCombinations": 8,
+    "volumes": {
+      "C": "NTFS",
+      "H": "exFAT"
+    },
+    "log": "extracted/cpp-options-mapped-save-674-focused-v3.log"
+  },
+  "earlierAttempts": [
+    {
+      "buildLog": "extracted/cpp-options-mapped-save-674-build-v1.log",
+      "result": "제품/전용 검사 링크까지 기록됨. 중단으로 세션 종료 코드 미회수."
+    },
+    {
+      "testLog": "extracted/cpp-options-mapped-save-674-focused-v1.log",
+      "bytes": 0,
+      "result": "성공 근거 없음. 사라진 세션83223을 재개하려던 시도는 Unknown process id였다."
+    },
+    {
+      "testLog": "extracted/cpp-options-mapped-save-674-focused-v2.log",
+      "executed": 7,
+      "failedChecks": 2,
+      "result": "활성 매핑의 이전 파일은 삭제 오류5로 남으므로 즉시 폴더 삭제 기대를 실제 수명/지연 정리로 교정했다."
+    }
+  ],
+  "actualOsCoverage": [
+    "원문 w+b의 실제 ERROR_USER_MAPPED_FILE1224 재현",
+    "활성 view를 보존한 Unicode 새 설정 저장/재적재",
+    "성공 백업의 전체 이전 바이트와 매핑 반납 후 다음 저장의 지연 정리",
+    "삭제 공유 거부 시 실제32/이전 바이트/changed/새 복구 파일 보존",
+    "일반 신규/짧은/빈 파일의 절삭 의미",
+    "경로 부재/읽기 전용 오류를 성공으로 바꾸지 않음"
+  ],
+  "protected": {
+    "beforeCount": 2599,
+    "afterCount": 2599,
+    "unchanged": true,
+    "before": "extracted/cpp-options-mapped-save-674-protected-before.json",
+    "beforeProvenance": "673 직후 검증된 after2599파일과 같은 집합을674 시작 시 복사했다. 재개 후 전체 경로/길이/SHA를 다시 대조했다.",
+    "after": "extracted/cpp-options-mapped-save-674-protected-after.json"
+  },
+  "notPerformed": [
+    "게임/GUI 실행",
+    "새 Native/fixture",
+    "MP 검사",
+    "전체34",
+    "전체 C++",
+    "ZIP",
+    "자연 완주",
+    "실제 PCM/물리 입력"
+  ],
+  "limitations": [
+    "672 전체 음향 실패를 이번 통과로 변경하지 않는다. 실제 Client writer 연결은 빌드/코드로 확인했고 GUI 저장은 재실행하지 않았다.",
+    "기존 오류를 유발한 실제 매핑 소유자는 미확정이다. 볼륨형식 탓으로 단정하지 않는다.",
+    "Python 도구의 설정 복구 writer는 이번 제품 수정과 별개다.",
+    "외부 매핑이 프로세스 종료까지 남으면 성공 저장의 백업 폴더도 남을 수 있다. 실패한 교체의 복구 폴더는 의도적으로 보존한다.",
+    "부분쓰기/flush 실패와 ReplaceFile1176/1177 분기는 실제 오류 주입으로 검증하지 않았다."
+  ],
+  "sources": [
+    "https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--1000-1299-",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew"
+  ]
+}

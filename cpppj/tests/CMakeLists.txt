@@ -2655,3 +2655,9 @@ add_executable(netstorm_scene_current_battle_tests FocusedTestMain.cpp SceneMusi
 target_link_libraries(netstorm_scene_current_battle_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_scene_current_battle_tests)
 target_compile_definitions(netstorm_scene_current_battle_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 실제 매핑 오류1224의 설정 저장과 기존 인코딩/changed 수명을 게임 실행 없이 검사한다.
+target_sources(netstorm_tests PRIVATE ClientOptionsDiskTests.cpp)
+add_executable(netstorm_options_disk_tests FocusedTestMain.cpp ClientOptionsDiskTests.cpp ClientOptionsFileTests.cpp)
+target_link_libraries(netstorm_options_disk_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_options_disk_tests)
