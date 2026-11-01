@@ -1,5 +1,7 @@
 #include "client/GameWorld.h"
 #include "client/NextUnitSelection.h" //원문 N 키의 검색 부모는 같은 실제 선택/카메라 경계를 소비한다.
+#include "client/PriestSelectionShortcut.h" //원문 P/R는 현재 화면의 Pick 결과가 아니라 실제 참여 SID와 장기 카운터를 사용한다.
+#include "client/GameMenuCommands.h" //같은 View Your Priest 전역 ID를 일반 명령 큐에 전달한다.
 #include "client/ClientColorSortInput.h"
 #include "client/OwnerColorTableState.h"
 #include "client/RawCampaignFactoryDisplay.h"
@@ -512,6 +514,12 @@ void GameWorld::SelectNextUnit(std::uint32_t add) {
     if (!campaign_ || !input_) throw std::logic_error("다음 유닛 선택의 실제 월드/입력 없음");const auto core=campaign_->Core();NextUnitSelectionHooks hooks;
     hooks.localOwner=[this] { return campaign_->LocalOwner(); };hooks.paused=[this] { return paused && paused() ? 1U : 0U; };hooks.select=[this](auto sid,auto force,auto activate) { static_cast<void>(input_->selection->Select(sid,force,activate)); };
     hooks.center=[this](auto sid) { CenterOnObject(sid); };hooks.multiple=[this](auto sid,auto value) { input_->selection->ToggleMultiple(sid,value); };SelectNextMovingUnit(core.pool,core.types,selected_,add,hooks);changed_=true;
+}
+// 사제가 화면 밖에 있거나 가려져도 실제 참여 조회를 사용한다. 포획/희생 동작을 새로 실행하지 않는다.
+void GameWorld::SelectPriest(const std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)>& queue) {
+    if (!campaign_ || !input_) throw std::logic_error("사제 단축키의 실제 월드/입력 없음");PriestSelectionShortcutHooks hooks;
+    hooks.localOwner=[this] { return campaign_->LocalOwner(); };hooks.find=[this](auto owner) { return campaign_->FindPriestParticipation(owner); };hooks.select=[this](auto sid,auto force,auto activate) { static_cast<void>(input_->selection->Select(sid,force,activate)); };
+    hooks.viewCommand=[] { return GameMenuCommandValue(0x005429d4U).value(); };hooks.queue=queue;SelectPriestByKey(selected_,SelectionGlobals().priestSelections,hooks);changed_=true;
 }
 // 편집 우클릭은 선택 결과와 무관하게 같은 원래 클릭 객체의 owner를 후속으로 읽는다.
 void GameWorld::PrepareEditorObjectMenu(o::SquidId id) {

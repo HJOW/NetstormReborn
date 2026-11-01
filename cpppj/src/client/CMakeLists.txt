@@ -317,3 +317,4 @@ target_sources(netstorm PRIVATE IntroMenu.cpp IntroMenu.h) # 시작 파일 감�
 target_sources(netstorm PRIVATE MainMenuActivity.cpp MainMenuActivity.h) # 실제 메인 부모의 현재 모달·활동 기한과 자동 데모를 연결한다.
 target_sources(netstorm PRIVATE ClientUserSelectionGlobals.cpp) # 실제 Shift 다중 선택의 고정30슬롯 목록 추가/제거를 연결한다.
 target_sources(netstorm PRIVATE NextUnitSelection.cpp NextUnitSelection.h) # N/Shift+N의 실제 순환 검색·선택·카메라 이동 부모를 연결한다.
+target_sources(netstorm PRIVATE PriestSelectionShortcut.cpp PriestSelectionShortcut.h) # P/R의 실제 참여 조회·선택과 반복 View 명령을 연결한다.

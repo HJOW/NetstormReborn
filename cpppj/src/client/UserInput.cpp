@@ -4,6 +4,7 @@
 #include "client/ClientGameplayGlobals.h" //Ctrl+special 강제 후보 조회의 현재0055a480을 읽는다.
 #include "client/RawUserSelection.h" //원문 WorldDestSelected와 실제 Shift 다중 선택 부모를 사용한다.
 #include "client/RawCampaignCursor.h"
+#include <bit> //View 명령의 owner DWORD를 같은 signed 큐 저장 비트로 전달한다.
 
 namespace netstorm::client {
 namespace {
@@ -30,7 +31,7 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     if (!release && (character=='n' || character=='N')) { world_.SelectNextUnit(event.code&InputCode::kShift);return {}; } //004d9a2f는 Shift 원문 비트를 인자로 그대로 전달한다.
     if (!release && (character=='h' || character=='H')) { world_.Home(false); return {}; }
     if (!release && (character=='p' || character=='P' || character=='r' || character=='R')) {
-        if (const auto point=world_.Point("world:priest")) world_.Select(world_.Pick(*point)); return {};
+        world_.SelectPriest([this](auto code,auto first,auto second) { client_.Input().PushCommand(code,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); });return {}; //실제 원문 참여 조회/반복 카운터와 일반 View 큐를 사용한다.
     }
     if (release) return {};
     const ScreenPoint point{event.x,event.y};

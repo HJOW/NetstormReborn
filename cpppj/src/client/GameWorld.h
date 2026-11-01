@@ -80,6 +80,7 @@ public:
     void Select(o::SquidId id);
     void ExtendSelection(o::SquidId id,std::uint32_t force); //현재 이동 모드의 Shift 클릭을 실제 선택/토글 부모에 전달한다.
     void SelectNextUnit(std::uint32_t add); //원문 N 키는 현재 선택 다음의 내 이동 유닛을 검색해 같은 선택/카메라 부모를 사용한다.
+    void SelectPriest(const std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)>& queue); //P/R는 실제 참여 SID를 선택하고 반복 시 같은 일반 입력 큐로 View Your Priest를 보낸다.
     void PrepareEditorObjectMenu(o::SquidId id); // 편집 우클릭의4d5c90(id,0,0) 뒤 같은 클릭 객체로4d5290을 실행한다.
     o::SquidId Selected() const { return selected_; } // 004d5430의 현재 단일SID 조회이며 선택을 바꾸거나 캐시하지 않는다.
     ClientUserSelectionGlobals& SelectionGlobals();const ClientUserSelectionGlobals& SelectionGlobals() const; // 같은 장기 raw DWORD/배열이며 실제 SID 변환은 소비자가 검증한다.

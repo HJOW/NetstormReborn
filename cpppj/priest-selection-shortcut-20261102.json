@@ -1,0 +1,42 @@
+{
+  "unit": 703,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "09148c38829a6a234d925a6790af463938bac3d3626ea642714a800bf7830622",
+  "nativeBranchInputs": 220,
+  "newCppTests": 3,
+  "existingCppTests": 18,
+  "focusedTests": 21,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "gameExecutions": 0,
+  "protectedExisting": 2621,
+  "protectedChanged": 0,
+  "newFixtures": 1,
+  "protectedFiles": 2622,
+  "limits": [
+    "Only reviewed P/R branch ranges executed; not entire UserInput or participant/Select bodies",
+    "Find/Select/queue are explicit native boundaries; C++ InputQueue and actual persistent owner tested",
+    "Actual Session participation and Select wiring compiled; no new GUI/physical key test",
+    "Last GUI product700; no whole C++/34/ZIP or PCM/pixel verification",
+    "No capture/sacrifice/specific enemy/victory, dedicated airborne-three actions, MP or network tests",
+    "Remaining Home-key queue/gates and UI/Edit/scenario/file-lifetime/compatibility work remain"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/PriestSelectionShortcut.cpp": "f8933b1f0de1cfa0eeb43c4436b2f151789a66983a5311fe22164cfb5ab1df64",
+    "cpppj/src/client/PriestSelectionShortcut.h": "56c30ea582c54454a7310426f7bce4768a8bfdafb164852170f2cc3e6a26d031",
+    "cpppj/src/client/ClientUserSelectionGlobals.h": "1fbf78f11c6713ee2fb4c38d3cc5b30afde308c1c5963f112de4c2ec671bd133",
+    "cpppj/src/client/GameWorld.cpp": "0603b28fb1c5c49f9e634f031fc45fd1821a54c37645bf307f04882cd3ae3aa5",
+    "cpppj/src/client/GameWorld.h": "c9991d8e8fd0fc2919eb09f080b3aed1a3ee35b554e3d0e97e9d405ddcac23c8",
+    "cpppj/src/client/UserInput.cpp": "28f5514b3ce02fd1f8ccc813a72e25880e1be427ac2c5ebe2d3c91f877a82607",
+    "cpppj/tests/PriestSelectionShortcutTests.cpp": "b613a7d83d3b0e940dbd37bcf05a3905906c5e9ec47789818ea7dab71923faf6",
+    "tools/decomp_priest_selection_shortcut.py": "ca5d3f578346aaaff191e245ce40b17fbf4435cf852551aaef5029742193f9b8",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}

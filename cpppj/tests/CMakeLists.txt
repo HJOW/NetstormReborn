@@ -2841,3 +2841,9 @@ target_sources(netstorm_tests PRIVATE NextUnitSelectionTests.cpp)
 add_executable(netstorm_next_unit_selection_tests FocusedTestMain.cpp NextUnitSelectionTests.cpp MultipleSelectionTests.cpp UserSelectionTests.cpp)
 target_link_libraries(netstorm_next_unit_selection_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_next_unit_selection_tests)
+
+# P/R 부분 분기·누적 DWORD/큐와 기존 선택 부모를 함께 확인한다(703).
+target_sources(netstorm_tests PRIVATE PriestSelectionShortcutTests.cpp)
+add_executable(netstorm_priest_selection_shortcut_tests FocusedTestMain.cpp PriestSelectionShortcutTests.cpp NextUnitSelectionTests.cpp MultipleSelectionTests.cpp UserSelectionTests.cpp)
+target_link_libraries(netstorm_priest_selection_shortcut_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_priest_selection_shortcut_tests)
