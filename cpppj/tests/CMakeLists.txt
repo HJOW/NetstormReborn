@@ -2854,6 +2854,12 @@ add_executable(netstorm_selection_key_input_tests FocusedTestMain.cpp SelectionK
 target_link_libraries(netstorm_selection_key_input_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_selection_key_input_tests)
 
+# C/c의 원문 전체 입력 관측과 Client의 실제 회전 옵션 공유 수명을 집중 확인한다(717).
+target_sources(netstorm_tests PRIVATE RotationKeyInputTests.cpp)
+add_executable(netstorm_rotation_key_tests FocusedTestMain.cpp RotationKeyInputTests.cpp)
+target_link_libraries(netstorm_rotation_key_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_rotation_key_tests)
+
 # 공유 기술 필터/원소 목록과 실제 HTML 메타 부모의 집중 확인이다(705).
 target_sources(netstorm_tests PRIVATE TechnologyListMenuTests.cpp)
 add_executable(netstorm_technology_list_menu_tests FocusedTestMain.cpp TechnologyListMenuTests.cpp HtmlWindowMetadataTests.cpp)

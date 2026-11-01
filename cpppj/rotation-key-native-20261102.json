@@ -1,0 +1,32 @@
+{
+  "unit": 717,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 264,
+  "observations": 792,
+  "precisionOrRepeatDifferences": 0,
+  "nativeRange": "004d6e61..004da477",
+  "rotationBody": "004d97a0..004d97ce",
+  "rotationGlobal": "0054db60",
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "boundaries": [
+    "Guide 가상 입력/Gump/Config/formatter는 기존 명시 장치다. 실제 일반 입력과 정지/뗌/회전 DWORD 쓰기 순서를 실행한다.",
+    "Config callback의 전역 변경/명시 중단은 입력이다. 기존 큐/출력/스택/x87와 최초 fixture를 보존한다.",
+    "전체 원문 Interpret Options/GUI/실제 회전·OS·통신을 실행한 관측은 아니다."
+  ],
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "tools/decomp_rotation_key_input.py": "d038ea062215b5df1dd889dbbeaf5899563fc71e072d8b5ddb78fde802c9ddc4",
+    "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+    "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+    "cpppj/tests/fixtures/rotation-key-input-x86.tsv": "2f3c6d9020405b630feff0621cb838153d239550ed106e839c57cb887835714c"
+  }
+}

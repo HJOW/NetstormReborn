@@ -197,7 +197,7 @@ Client::Client(ClientOptions options)
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { if (languageOptionsReady_) InterpretLanguageOptions();InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 회전 방향/입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -540,6 +540,11 @@ std::uint32_t Client::ScriptMenuGlobal(std::uint32_t address) const {
     switch (address) { case 0x5cab30:return gameplayGlobals_->energy.userCheat;case 0x55a480:return gameplayGlobals_->player.special ? 1U : 0U;default:throw std::out_of_range("HTML 메뉴 현재 전역 주소 미연결"); }
 }
 
+// 원문은 매 해석에서0을 먼저 쓰며 누락 키가 이전 회전 방향을 보존하지 않는다.
+void Client::InterpretCursorOptions() {
+    auto& mode=gameplayGlobals_->CursorGlobals().RotationMode();mode=0;std::int32_t value=0;
+    configuration_.ReadInt("rotmode",value);mode=std::bit_cast<std::uint32_t>(value); // 같은 현재 Config의 signed 전체 비트를 bool로 정규화하지 않는다.
+}
 // 원본의 현재 DWORD를 signed ReadInt로 빌려 누락 시 보존하고 음수/상위 비트도 그대로 기록한다.
 void Client::InterpretMainMenuOptions() {
     auto value=std::bit_cast<std::int32_t>(localStateGlobals_->TellTips());configuration_.ReadInt("tellTips",value);localStateGlobals_->TellTips()=std::bit_cast<std::uint32_t>(value);
@@ -581,6 +586,7 @@ void Client::InterpretOptions() {
     configuration_.ReadInt("tracelevel",trace_->log.level); // 원문00542658의 같은 장기 필터를 읽으며 덤프 부모의 임시30과 구별한다.
     rendererFrame_->ReadOptions(); //같은 원문 showSoftAsserts의 현재값을 실제 Renderer 진단 관문에 적용한다.
     InterpretLanguageOptions(); //실제 current/published와 같은 Config를 원문 선택 순서로 갱신한다.
+    InterpretCursorOptions(); //원문에서 언어 다음에 읽는 rotmode를 실제 C/우클릭과 공유한다.
     std::int32_t width = 0, height = 0;
     configuration_.ReadInt("SCREENW", width);
     configuration_.ReadInt("SCREENH", height);

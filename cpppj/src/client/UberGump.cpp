@@ -34,6 +34,7 @@
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "client/GameMenuActions.h"
 #include "client/ViewKeyInput.h"
+#include "client/RotationKeyInput.h" //C/c는 World 없이도 같은 현재 Client 옵션을 반전하는 일반 입력이다.
 #include "client/GifScreenshot.h"
 #include "client/RawUserHighlight.h" // Editor F8도 같은 Client 선택 전역의 원본 강조 몸체를 사용한다.
 #include "client/TellParameters.h"
@@ -1240,6 +1241,11 @@ void UberGump::Event(InputEvent event) {
         };
         if (DispatchViewKeyInput(event,{hideBuildings_,worldRedraw_},hooks)) rebuild_=true;return;
     }
+    if (transitionCode=='C' || transitionCode=='c') {
+        if (rawButtons_->CurrentDialog()) return; //원문의 현재 Console/모달 관문 뒤에서만 C의 정지를 조회한다.
+        static_cast<void>(DispatchRotationKeyInput(event,client_.GameplayGlobals()->CursorGlobals().RotationMode(),{[this] { return client_.Paused(); },[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration()); }}));
+        rebuild_=true;return; //원문 C는 Editor/미션/메인 모드 조건이 없고 같은 설정 재해석이 우클릭 회전에 이어진다.
+    }
     if (transitionCode==kProductionBridgeCommand) {
         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // Guide/현재 모달 뒤 같은 Gump 트리로 전달한다. 정지/활성 커서 관문을 추가하지 않는다.
     }
@@ -1646,6 +1652,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     out<<"map_menu\t"<<rawButtons_->Menus()->HtmlMenuColumns()<<'\t'<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제 부착된 열과 캐시 상태만 관찰한다. 선택/로딩 성공을 합성하지 않는다.
     out<<"html_window_state\t"<<client_.HtmlWindowGlobals()->window.instances<<'\t'<<rawButtons_->DialogCount()<<'\t'<<rawButtons_->Menus()->HtmlWindowsOpen()<<'\n'; // Kill 뒤 인스턴스와 즉시 모달 반납을 구별하는 현재값이다.
     out<<"main_menu_globals\t"<<client_.LocalStateGlobals()->FirstMenuPending()<<'\t'<<client_.LocalStateGlobals()->UserUpdated()<<'\t'<<client_.LocalStateGlobals()->TellTips()<<'\t'<<client_.LocalStateGlobals()->TipNumber()<<'\t'<<client_.WorldAudio().ResultState()<<'\n'; //동일 Client의 현재 DWORD만 읽으며 설정 해석·번호 갱신·시작 안내를 실행하지 않는다.
+    out<<"rotation_mode\t"<<client_.GameplayGlobals()->CursorGlobals().RotationMode()<<'\t'<<client_.Configuration().GetInt("rotmode")<<'\n'; //C/메뉴/우클릭의 공유 DWORD와 실제 설정을 쓰기 없이 따로 관측한다(717).
     const auto& local=client_.LocalStateGlobals()->Blocks();out<<"fort_selection\t"<<fortSelectionMode_<<'\t'<<local[1][0]<<'\t'<<local[3][0]<<'\t'<<local[4][0]<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\n'; // 원문mode/확정phase/현재요청/next/pending을 설치완료와 구별해 읽는다.
     out<<"fort_names\t"<<Field(std::string(client_.FortGlobals()->Current()))<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\t'<<menuConfigRevision_<<'\t'<<client_.FortGlobals()->SelectedFileSpec()<<'\n'; // 같은 실제 두 버퍼/공유 dirty/선택 키를 읽기만 한다.
     if (editor_) out<<"editor_runtime\t"<<editor_->committed<<'\t'<<(editor_->transport ? editor_->transport->ClientAlive() : false)<<'\t'<<(editor_->transport ? editor_->transport->PendingAlive() : false)<<'\t'<<client_.GameplayGlobals()->FortKeepGenus()<<'\t'<<client_.GameplayGlobals()->StateAuxFC4()<<'\n'; //실제 공통 확정 복귀/양끝/두 현재 전역만 조회한다.

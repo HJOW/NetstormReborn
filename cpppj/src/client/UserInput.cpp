@@ -15,9 +15,8 @@ UserInput::UserInput(Client& client,GameWorld& world) : client_(client),world_(w
 std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     if ((event.code & InputCode::kOutside)!=0) return {};
     world_.SetMousePoint({event.x,event.y}); // 선택 시 모드5의 역투영도 같은 현재 클릭 좌표를 사용한다.
-    ReadCursorOptions();std::int32_t rotateMode=0; // 원본 rotmode의 누락 기본값0이다.
-    client_.Configuration().ReadInt("rotmode",rotateMode);
-    if (world_.Session().Cursor().HandleInput(event,static_cast<std::uint32_t>(rotateMode))) return {};
+    ReadCursorOptions();auto& rotateMode=client_.GameplayGlobals()->CursorGlobals().RotationMode(); // 실제 옵션 해석/메뉴와 같은 원문 DWORD다.
+    if (world_.Session().Cursor().HandleInput(event,rotateMode)) return {};
     if (QueueProductionShortcut(event,client_.Paused(),{[] { return kProductionBridgeCommand; },[this](auto command,auto slot,auto zero) { client_.Input().PushCommand(command,slot,zero); }})) return {}; // 실제 Gump 경로가 같은 큐의 다음 사건을 소비한다.
     SelectionKeyInputHooks selectionKeys;selectionKeys.paused=[this] { return client_.Paused(); };selectionKeys.command=[](auto address) { return GameMenuCommandValue(address).value(); };selectionKeys.localOwner=[this] { return world_.Session().LocalOwner(); }; //같은 실제 Client/Session의 현재 입력 경계를 사용한다.
     selectionKeys.queue=[this](auto code,auto first,auto second) { client_.Input().PushCommand(code,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };selectionKeys.next=[this](auto add) { world_.SelectNextUnit(add); };selectionKeys.priest=[this,queue=selectionKeys.queue] { world_.SelectPriest(queue); };

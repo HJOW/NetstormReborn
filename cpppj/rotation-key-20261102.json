@@ -1,0 +1,1159 @@
+{
+  "unit": 717,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productUnit": 717,
+  "version": "11.01",
+  "exeSha256": "26f7c9957b44e21af10bd5254944e71585f09710f98e3d26cd0b2efd6f2b22a9",
+  "testExeSha256": "bd8a804092a3503f9cff006b69431bc909320e6d6ff844e0c68d6d84de368e5c",
+  "productBuilds": 3,
+  "focusedBuilds": 2,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "newCppTests": 3,
+  "focusedTests": 3,
+  "focusedRuns": 2,
+  "failedChecks": 0,
+  "nativeInputs": 264,
+  "nativeObservations": 792,
+  "nativeNormalReturns": 260,
+  "explicitPartialStops": 4,
+  "gameExecutions": 2,
+  "initialFailures": [
+    {
+      "run": "live-v1",
+      "returnCode": 1,
+      "timedOut": false,
+      "reason": "앱 검사 CLI가 수정키 뒤 단일 문자를 허용하지 않음",
+      "binarySha256": "127559ef392577df42c4434260a86e1cacde8a5c272211057da786561fd6cd62",
+      "seconds": 9.271840500001417
+    }
+  ],
+  "final": {
+    "unit": 717,
+    "passed": true,
+    "processes": 1,
+    "exeSha256": "26f7c9957b44e21af10bd5254944e71585f09710f98e3d26cd0b2efd6f2b22a9",
+    "seconds": 24.550446100001864,
+    "protectionUnchanged": true,
+    "cursorSource": 15,
+    "directions": [
+      0,
+      2,
+      0
+    ],
+    "menu": {
+      "token": 872,
+      "index": 16,
+      "flags": 66693,
+      "command": 33554541,
+      "parameter": 142,
+      "visible": true,
+      "label": "Counterclockwise Piece Rotation - C"
+    },
+    "capture": {
+      "size": [
+        1024,
+        768
+      ],
+      "rgbColors": 196,
+      "sha256": "96fcc6b182d45b03342664c28fd04ffbf97fb47a3260d958aee6c81d07fd5108"
+    },
+    "observations": {
+      "require230": {
+        "frame": 230,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "6.82",
+          "7.465"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "initial": {
+        "frame": 235,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "6.914",
+          "7.559"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "zero": {
+        "frame": 245,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "7.131",
+          "7.776"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "counterclockwise": {
+        "frame": 255,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "7.334",
+          "7.979"
+        ],
+        "rotation_mode": [
+          "1",
+          "1"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "released": {
+        "frame": 265,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "7.552",
+          "8.197"
+        ],
+        "rotation_mode": [
+          "1",
+          "1"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "clockwise": {
+        "frame": 275,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "7.77",
+          "8.415"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "paused": {
+        "frame": 285,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "7.895",
+          "8.632"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "1"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "pausedKey": {
+        "frame": 295,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "7.895",
+          "8.836"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "1"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "resumed": {
+        "frame": 305,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "7.989",
+          "9.038"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "modal": {
+        "frame": 325,
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "ABORT"
+        ],
+        "time": [
+          "8.305",
+          "9.443"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "1"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "modalKey": {
+        "frame": 335,
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "ABORT"
+        ],
+        "time": [
+          "8.305",
+          "9.629"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "1"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "continued": {
+        "frame": 345,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "8.32",
+          "9.844"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "stocked": {
+        "frame": 900,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "18.595",
+          "20.119"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "cursor": {
+        "frame": 915,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "18.905",
+          "20.429"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "0",
+          "0",
+          "82",
+          "15",
+          "61",
+          "53",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "rotatedClockwise": {
+        "frame": 925,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "19.124",
+          "20.648"
+        ],
+        "rotation_mode": [
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "0",
+          "0",
+          "82",
+          "15",
+          "56",
+          "49",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ],
+        "raw_piece": [
+          "0",
+          "2"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "flipped": {
+        "frame": 935,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "19.326",
+          "20.85"
+        ],
+        "rotation_mode": [
+          "1",
+          "1"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "0",
+          "0",
+          "82",
+          "15",
+          "56",
+          "49",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ],
+        "raw_piece": [
+          "0",
+          "2"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "rotatedCounterclockwise": {
+        "frame": 945,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "19.544",
+          "21.068"
+        ],
+        "rotation_mode": [
+          "1",
+          "1"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "0",
+          "0",
+          "82",
+          "15",
+          "56",
+          "49",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "cancelled": {
+        "frame": 955,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "19.777",
+          "21.301"
+        ],
+        "rotation_mode": [
+          "1",
+          "1"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "82",
+          "0",
+          "56",
+          "49",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "options": {
+        "frame": 970,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "20.101",
+          "21.625"
+        ],
+        "rotation_mode": [
+          "1",
+          "1"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "82",
+          "0",
+          "56",
+          "49",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ],
+        "raw_piece": [
+          "0",
+          "0"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "main": {
+        "frame": 1040,
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "time": [
+          "22.963",
+          "22.963"
+        ],
+        "rotation_mode": [
+          "1",
+          "1"
+        ],
+        "paused": [
+          "0"
+        ]
+      },
+      "mainKey": {
+        "frame": 1060,
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "time": [
+          "23.349",
+          "23.349"
+        ],
+        "rotation_mode": [
+          "1",
+          "1"
+        ],
+        "paused": [
+          "0"
+        ]
+      }
+    },
+    "scope": "앱 내 C/c·수정키/뗌·정지/모달과 같은 실제 다리 커서의 우클릭 양방향 회전/취소·메뉴 체크·메인 모달의 C 차단을 확인한다. 물리 입력/전체 원문 픽셀·자연 완주·PCM·포획/희생/특정 적 공격/승리·공중3종 전용·MP/통신 검사는 아니다."
+  },
+  "protectedExisting": 2633,
+  "protectedFiles": 2634,
+  "protectedChanged": 0,
+  "newFixtures": 1,
+  "multiplayerTests": 0,
+  "networkTests": 0,
+  "excludedReproductions": 0,
+  "pythonSyntaxChecks": 2,
+  "limits": [
+    "원문 큰 Guide/Gump/Config/formatter는 명시 경계이며264입력 중4개는 의도된 Config 중단이다.",
+    "실제 GUI는 앱 내 Early1 기능별1계획 통과다. 물리 입력/창DC/PCM/전체 픽셀·자연 완주·전체 동일성 완료가 아니다.",
+    "전체34/전체C++/CTest/ZIP·새MP/통신·포획/희생/특정 적 공격/승리·공중3종 전용 검사는0이다.",
+    "CD10.72·Win11 실기·후순위MP/4~7차는 새 검증이 아니다."
+  ],
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "LEFT_JOBS.md": "b802104b3fba7f8550e02b6e00053ad0832e17d1fd140012bb028974cd21f4bf",
+    ".gitattributes": "61de1debd81954b4eafaba737e182798f9fbadb5feb9d3ddaf55e2f3b7ab8a47",
+    "cpppj/src/CMakeLists.txt": "e63d7c82b03fd3ef4926f4b4ca3f4153b31d0275df3676feab6993cd9051ba0f",
+    "cpppj/src/app/main.cpp": "7de0b1625d0e7fb397636707637c8ac764598a84068560bce69da18be74ab7b2",
+    "cpppj/src/client/RotationKeyInput.h": "cd08347a1c74b5c3f63e41a94ef65881f233e21b95d5a9d9c153517cf3a24d14",
+    "cpppj/src/client/RotationKeyInput.cpp": "79b113692308f608470ba92e26bb27bd1a2d45f273799fc206e46f9e73be69c4",
+    "cpppj/src/client/ClientCursorGlobals.h": "3ff1a37c5cbd9de0c95eddff724bd5c8a924aa006e40ef84dded1fcae133d043",
+    "cpppj/src/client/ClientMain.h": "eaa2d34f3ca11d2512f7fcd6532b210e5894958969bc0976590b42176a7959e0",
+    "cpppj/src/client/ClientMain.cpp": "cd9c06d9f8b0b9d0a8affedc55d297c72b6d898b76d9d33481e0cf5ef78059d9",
+    "cpppj/src/client/UberGump.cpp": "03368a666f4d31d2a843266a6ded7de707cbf32c99e608d719fc901f25104852",
+    "cpppj/src/client/UserInput.cpp": "933c84c694ee0095723b624ed5a43e8fc4f9e03e5af12a05114c14dbde2aecb8",
+    "cpppj/tests/CMakeLists.txt": "2cd61b36319a07c38c9eae3e00dc1cefd61395026fef913c46bf87677c8d1469",
+    "cpppj/tests/RotationKeyInputTests.cpp": "51ca9e61dc348355ef3dc5da3683dac15c68ee27d73b51038cf10e255c93554f",
+    "cpppj/tests/fixtures/rotation-key-input-x86.tsv": "2f3c6d9020405b630feff0621cb838153d239550ed106e839c57cb887835714c",
+    "tools/decomp_rotation_key_input.py": "d038ea062215b5df1dd889dbbeaf5899563fc71e072d8b5ddb78fde802c9ddc4",
+    "tools/cpp_rotation_key_smoke.py": "a433e253586b9a1bd28f8192772c8703a7669c65db609b65490de156513e048e",
+    "cpppj/rotation-key-native-20261102.json": "56e750bb4a11cd0c27a3af52910ade6273905eab11d08782cf7da0b8d52a8d72",
+    "docs/exe/cpp-rotation-key-20261102.md": "db246406a772d3a957db7e22282bbcd332e91ea1ecfa3413f11c64d9b680446e"
+  },
+  "logsSha256": {
+    "build-v1.log": "486ccdc43dd5f451dc54d5a30f623477244716353ea41bb8a3ba7f907851ecf0",
+    "build-v2.log": "907bb9a287fb98f5d1a4c1611218017415d65f4c681c854b5f105fffec21a69b",
+    "build-v3.log": "055e5fe8ac73160b5ae294f1244d37a1e6c0aa25b98f07ed974a36fd01df074c",
+    "focused-v1.log": "128a773c93d52e479de8f798c494cdf6f60ea7629c144c4751d18fef2789433b",
+    "focused-v2.log": "128a773c93d52e479de8f798c494cdf6f60ea7629c144c4751d18fef2789433b"
+  }
+}

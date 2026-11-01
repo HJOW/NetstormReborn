@@ -261,6 +261,7 @@ private:
     void InterpretFortFileOptions();
     void InterpretScriptMenuOptions(); // 원본4353ea의 개발 모드0/현재 userCheat ReadInt·허용값 검사를 같은 장기 전역에 적용한다.
     void InterpretMainMenuOptions(); //원문435220의 tellTips ReadInt를 현재 DWORD에 적용한다. 전체 옵션 부모의 미복원 순서를 대신하지 않는다.
+    void InterpretCursorOptions(); //원문435220의 rotmode=0 뒤 ReadInt를 같은 장기 커서 옵션에 적용한다.
     void InterpretOwnerColorOptions(); //435220의 useBanners 현재 정수를43bc40의 준비/현재 색표에 적용한다.
     // 원본 FUN_00436260: 로딩 화면(검은 바탕, 가운데 그림, 오른쪽 아래의 두 줄 글).
     void PaintLoading(NativeHandle dc);

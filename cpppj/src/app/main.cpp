@@ -719,6 +719,9 @@ int RunClient(std::vector<std::string> arguments) {
                         if (prefix=="shift") modifiers|=InputCode::kShift;else if (prefix=="ctrl") modifiers|=InputCode::kControl;else if (prefix=="alt") modifiers|=InputCode::kAlt;
                         else throw std::invalid_argument("Unknown UI key modifier: "+std::string(prefix));name.remove_prefix(split+1);
                     }
+                    if (name.size()==1 && static_cast<unsigned char>(name[0])>=0x20 && static_cast<unsigned char>(name[0])<0x7f) {
+                        c.Input().Push(static_cast<unsigned char>(name[0])|modifiers|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; //검사 전용 CLI의 수정키+문자도 같은 WM_CHAR 하위 코드와 실제 상위 비트로 보낸다(717). 제품의 물리 키 생성 규칙은 바꾸지 않는다.
+                    }
                     const std::map<std::string,unsigned> characters{{"enter",13},{"tab",9},{"backspace",8}}; //제어문자도 실제 WM_CHAR 경로의 하위 코드이며 가상키<<16과 구별한다.
                     if (const auto character=characters.find(std::string(name));character!=characters.end()) { c.Input().Push(character->second|modifiers|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; }
                     const auto found=keys.find(std::string(name)); if (found==keys.end()) throw std::invalid_argument("Unknown UI key: "+step.argument);
