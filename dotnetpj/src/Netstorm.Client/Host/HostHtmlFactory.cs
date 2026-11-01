@@ -9,10 +9,12 @@ namespace Netstorm.Client.Host; // 실제 Tell과 HTML 전체 창 생성의 공�
 
 /// <summary>현재 Config·입력 큐·공통 트리와 HTML 본문·메뉴를 전체 창 생성기에 연결한다.
 /// 근거: cpppj/src/client/RawMenuHtml.inc와 UberGump.cpp의 LoadingHtmlContext.</summary>
-public sealed class HostHtmlFactory
+public sealed class HostHtmlFactory : IDisposable
 {
     /// <summary>현재 설정과 Tell 섹션 소유자.</summary>
     private readonly HostStartupScene _startup;
+    /// <summary>화면보다 오래 보유하는 파일별 Config 목록.</summary>
+    private readonly TellFileMenus _fileMenus;
     /// <summary>현재 같은 실제 HTML 전체 생성기.</summary>
     public HtmlWindowFactory Factory { get; }
     /// <summary>실제 메타 처리기. 맵·파일·기술 목록 장치는 호출자가 같은 후크에 연결한다.</summary>
@@ -27,6 +29,7 @@ public sealed class HostHtmlFactory
         ArgumentNullException.ThrowIfNull(startup); ArgumentNullException.ThrowIfNull(screen); ArgumentNullException.ThrowIfNull(queue);
         ArgumentNullException.ThrowIfNull(strings); ArgumentNullException.ThrowIfNull(wallSeconds); ArgumentNullException.ThrowIfNull(menuGlobal);
         ArgumentNullException.ThrowIfNull(unknown); _startup = startup;
+        _fileMenus = new TellFileMenus(startup.Configuration, startup.Files.MatchFinder);
         var parser = windows.Parser ?? throw new InvalidOperationException("HTML 전체 생성 전 파서 연결 필요");
         var tree = menu.Tree;
         uint Read(uint address) => address switch
@@ -45,6 +48,15 @@ public sealed class HostHtmlFactory
         };
         HtmlWindowMetadata.BindHtmlWindowMetadataDevices(MetadataHooks, windows.Window, strings, tree.Lifetime);
         menus.BindMetadata(MetadataHooks);
+        void AppendFiles(string pattern, uint command, string argument, bool fallback) =>
+            _fileMenus.Append(pattern, command, argument, fallback, strings, item =>
+            {
+                if (item.Separator) menus.Controls.AddSeparator();
+                else menus.Controls.AddText(Encoding.Latin1.GetBytes(item.Label), item.Command, item.Parameter, true, true, false);
+            });
+        MetadataHooks.NamedList = (pattern, command, argument) => AppendFiles(pattern, command, argument, true);
+        MetadataHooks.FileList = (pattern, command, argument) => AppendFiles(pattern, command, argument, false);
+        MetadataHooks.InlineList = _fileMenus.Inline;
         var metadata = new HtmlWindowMetadata(MetadataHooks);
         var hooks = new HtmlWindowFactoryHooks
         {
@@ -72,4 +84,7 @@ public sealed class HostHtmlFactory
     /// <param name="mission">현재 미션의 선택적 섹션 조회.</param>
     public (bool Found, uint Serial) ShowTell(string target, uint suppress = 0, Func<string, string?>? mission = null) =>
         _startup.ShowTell(target, suppress, mission, (body, hide, width, height) => Factory.Show(Raw(body), hide, width, height));
+
+    /// <summary>파일 목록이 만든 장기 설정 객체를 Client 종료 때 반납한다.</summary>
+    public void Dispose() => _fileMenus.Dispose();
 }

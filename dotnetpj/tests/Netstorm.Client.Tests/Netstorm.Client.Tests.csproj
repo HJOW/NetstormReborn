@@ -23,6 +23,9 @@
     <None Include="../../../cpppj/tests/fixtures/palettecolor-x86.tsv" Link="X86/palettecolor-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/graphics-x86.tsv" Link="X86/graphics-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/drawsort-x86.tsv" Link="X86/drawsort-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/tell-file-menus-x86.tsv" Link="X86/tell-file-menus-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/tell-inline-list-x86.tsv" Link="X86/tell-inline-list-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/tell-inline-errors-x86.tsv" Link="X86/tell-inline-errors-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/sprite-colors-x86.tsv" Link="X86/sprite-colors-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/spritedraw-x86.tsv" Link="X86/spritedraw-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/gumpcreate-x86.tsv" Link="X86/gumpcreate-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

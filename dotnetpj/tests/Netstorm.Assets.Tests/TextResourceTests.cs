@@ -249,6 +249,28 @@ public sealed class TextResourceTests
         }
     }
 
+    /// <summary>FileFinder는 기본 디스크·기본 아카이브·보조 디스크·보조 아카이브의 첫 이름과 순서를 유지한다.</summary>
+    [Fact]
+    public void GameFileSystem_MatchFinderPreservesSourceOrderAndFirstCase()
+    {
+        string temp = Path.GetFullPath(Path.GetTempPath());
+        string root = Path.GetFullPath(Path.Combine(temp, "ns-finder-" + Guid.NewGuid().ToString("N")));
+        Assert.StartsWith(temp, root, StringComparison.OrdinalIgnoreCase); string secondary = Path.Combine(root, "cd");
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(root, "D")); Directory.CreateDirectory(Path.Combine(secondary, "d"));
+            File.WriteAllText(Path.Combine(root, "D", "First.english"), "disk");
+            File.WriteAllText(Path.Combine(secondary, "d", "Third.english"), "secondary");
+            File.WriteAllBytes(Path.Combine(root, "netstorm.tarc"), BuildArchive((@"\d\first.english", "duplicate"), (@"\d\Second.english", "archive")));
+            File.WriteAllBytes(Path.Combine(secondary, "other.tarc"), BuildArchive((@"\d\second.english", "duplicate"), (@"\d\Third.english", "archive duplicate"), (@"\d\Fourth.english", "archive")));
+            GameFileSystem fs = GameFileSystem.Open(root, secondary);
+            Assert.Equal([@"\D\First.english", @"\d\Second.english", @"\D\Third.english", @"\d\Fourth.english"], fs.MatchFinder(@"\D\*.english"));
+            Assert.Equal([@"\D\Missing.english"], fs.MatchFinder(@"\D\Missing.english"));
+            Assert.Equal("secondary", Text(fs, "d/Third.english")); Assert.Equal("archive", Text(fs, "d/Fourth.english"));
+        }
+        finally { if (Directory.Exists(root)) Directory.Delete(root, recursive: true); }
+    }
+
     /// <summary>원본: 공식 미션은 아카이브, 팬 미션은 느슨한 d/ 폴더에서 읽힌다</summary>
     [Fact]
     public void Original_FileSystemFindsBothSources()

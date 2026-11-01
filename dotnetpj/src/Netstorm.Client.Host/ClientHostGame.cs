@@ -116,6 +116,7 @@ public sealed class ClientHostGame : Game
         if (disposing)
         {
             _htmlWindows?.CloseAll();
+            _htmlFactory?.Dispose();
             _buttonSound?.Dispose();
             _cursor?.Dispose();
         }

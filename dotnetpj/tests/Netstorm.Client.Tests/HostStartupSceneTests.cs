@@ -406,6 +406,37 @@ public sealed class HostStartupSceneTests
         router.FinishFrame(); Assert.Null(menu.Tree.Node(original)); windows.CloseAll();
     }
 
+    /// <summary>실제 캠페인 파일 목록이 장기 Config로 등록되고 첫 행의 다음 Tell을 같은 트리에서 연다.</summary>
+    [Fact]
+    public void HostCampaignFileListOpensActualEarlyMissions()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        { Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
+        var queue = new InputQueue(); var strings = new ScriptStringRing();
+        var windows = new HostHtmlWindows(menu, queue, () => 1, _ => throw new InvalidOperationException());
+        windows.BindParser(startup, raw => ScriptCommand.QueueScriptCommand(raw, queue, strings,
+            new() { Lookup = DialogScriptCommands.Lookup, Unknown = _ => throw new InvalidOperationException() }));
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { }); text.Bind(windows);
+        var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { }); menus.BindInput(queue, _ => { }, (_, _) => { });
+        var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 1, _ => 0, _ => throw new InvalidOperationException());
+        var router = new HostMenuInput(menu, windows, factory, queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
+        var driver = new HostFrameDriver(screen, queue); driver.BindInputHandler(router.Dispatch);
+        router.Post(new("Tell", "UCampaign")); router.Tick(); uint root = menu.Tree.LifeState.CurrentDialog;
+        var column = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>());
+        Assert.True(column.ItemCount >= 6); string target = strings.Resolve(column.Items[0].Parameter);
+        Assert.Contains("overview", target, StringComparison.OrdinalIgnoreCase);
+        string prefix = target[..target.IndexOf('.')]; Assert.NotNull(startup.Configuration.Registry.FindByName(prefix));
+        var position = menu.Tree.Collection.Position(menu.Tree.Create.Entries[column.Id]); int x = position.X + 8, y = position.Y + (int)column.Offsets[0] + 3;
+        router.NotifyPointer(new(0, x, y)); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput());
+        Assert.NotEqual(root, menu.Tree.LifeState.CurrentDialog); router.FinishFrame(); Assert.Null(menu.Tree.Node(root));
+        Assert.Equal(target, System.Text.Encoding.Latin1.GetString(startup.TellState.Current).Split('\0')[0]);
+        windows.CloseAll(); Assert.NotNull(startup.Configuration.Registry.FindByName(prefix)); factory.Dispose();
+        Assert.Null(startup.Configuration.Registry.FindByName(prefix));
+    }
+
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
     [Fact]
     public void MainMenuRoutesEachButtonToItsOriginalAction()
