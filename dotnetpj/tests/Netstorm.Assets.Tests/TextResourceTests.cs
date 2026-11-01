@@ -265,6 +265,8 @@ public sealed class TextResourceTests
             File.WriteAllBytes(Path.Combine(secondary, "other.tarc"), BuildArchive((@"\d\second.english", "duplicate"), (@"\d\Third.english", "archive duplicate"), (@"\d\Fourth.english", "archive")));
             GameFileSystem fs = GameFileSystem.Open(root, secondary);
             Assert.Equal([@"\D\First.english", @"\d\Second.english", @"\D\Third.english", @"\d\Fourth.english"], fs.MatchFinder(@"\D\*.english"));
+            Assert.Equal(["D/First.english"], fs.MatchDisk(@"\D\*.english"));
+            Assert.Equal(["D/Missing.english"], fs.MatchDisk(@"\D\Missing.english"));
             Assert.Equal([@"\D\Missing.english"], fs.MatchFinder(@"\D\Missing.english"));
             Assert.Equal("secondary", Text(fs, "d/Third.english")); Assert.Equal("archive", Text(fs, "d/Fourth.english"));
         }

@@ -183,6 +183,19 @@ public sealed class GameFileSystem
         return [.. result];
     }
 
+    /// <summary>원본 FileSpec처럼 기본 디스크만 OS 열거 순서로 찾고 디렉터리도 포함한다.</summary>
+    public IReadOnlyList<string> MatchDisk(string pattern)
+    {
+        string raw = pattern.Split('\0')[0].Replace('\\', '/');
+        if (raw.StartsWith("./", StringComparison.Ordinal)) raw = raw[2..]; raw = raw.TrimStart('/');
+        if (raw.IndexOfAny(['*', '?']) < 0) return [raw];
+        int slash = raw.LastIndexOf('/'); string folder = slash >= 0 ? raw[..slash] : "", mask = raw[(slash + 1)..];
+        string? directory = folder.Length == 0 ? BaseDirectory : GameDataLocator.FindDirectory(BaseDirectory, folder);
+        if (directory == null) return [];
+        var options = new EnumerationOptions { MatchType = MatchType.Win32, MatchCasing = MatchCasing.CaseInsensitive, AttributesToSkip = 0, ReturnSpecialDirectories = true };
+        return Directory.EnumerateFileSystemEntries(directory, mask, options).Select(path => folder.Length == 0 ? Path.GetFileName(path) : folder + "/" + Path.GetFileName(path)).ToArray();
+    }
+
     /// <summary>원본 FileFinder처럼 기본 디스크·기본 TAFF·보조 디스크·보조 TAFF 순서와 첫 이름을 보존해 찾는다.</summary>
     /// <param name="pattern">폴더에 와일드카드가 없는 원본 경로 패턴.</param>
     public IReadOnlyList<string> MatchFinder(string pattern)

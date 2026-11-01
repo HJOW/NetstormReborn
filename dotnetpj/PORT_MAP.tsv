@@ -176,6 +176,7 @@ cpppj/src/client/ScrollingTextGumpWidgets.cpp	Netstorm.Client/Gump/ScrollingText
 cpppj/src/client/ScrollingTextGumpWidgets.cpp	Netstorm.Client/Gump/StyleTextBufferStore.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
 cpppj/src/client/ScrollingTextGumpWidgets.h	Netstorm.Client/Gump/ScrollingTextGumpWidgets.cs	5765d120253d9514e00dd935926b63d1b8c55ae1	port
 cpppj/src/client/ScrollingTextGumpWidgets.h	Netstorm.Client/Gump/StyleTextBufferStore.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
+cpppj/src/client/SoloMapCatalog.cpp	Netstorm.Client/Mission/SoloMapCatalog.cs	75dad0f349ec6ada0d070afe2ab0700824b01637	port
 cpppj/src/client/SpriteColorMaps.cpp	Netstorm.Client/Display/SpriteColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/SpriteColorMaps.h	Netstorm.Client/Display/SpriteColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/SpriteDraw.cpp	Netstorm.Client/Display/SpriteDraw.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
