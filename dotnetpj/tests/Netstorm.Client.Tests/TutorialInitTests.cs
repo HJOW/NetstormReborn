@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using Netstorm.Client.Mission;
+using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Tests;
 
@@ -26,11 +27,12 @@ public sealed class TutorialInitTests
             Array.Fill(state.Scratch, (byte)0xa5);
             var globals = new TutorialInitGlobals { TutorialNumber = 0x22222222, MissionNumber = 0x11111111, TutorialSeen = Number(7), LoginSubscriber = Number(8), InitialSubscriber = Number(9) };
             uint variant = Number(10); var trace = new List<string>();
+            byte[] options = Enumerable.Range(0, 87).Select(i => unchecked((byte)(i * 11 + 17))).ToArray();
             TutorialInit.Initialize(state, globals, new TutorialInitHooks
             {
                 ClearTemplates = () => { trace.Add("C"); if (variant == 1) state.Name = "AFTER_CLEAR"; },
                 Get = (key, fallback) => { string value = Text(key switch { "tutorialNumber" => 1, "missionNumber" => 2, "demo" => 3, _ => 4 }); if (value.Length == 0 && fallback != null) value = fallback; trace.Add($"G,{key},{Hex(fallback ?? "")},{Hex(value)}"); return value; },
-                ResetOptions = () => { trace.Add("O"); if (variant == 2) { state.Name = "AFTER_OPTIONS"; globals.InitialSubscriber = 7; } },
+                ResetOptions = () => { trace.Add("O"); if (variant == 2) { state.Name = "AFTER_OPTIONS"; globals.InitialSubscriber = 7; } RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, options); },
                 Set = (key, value) => { trace.Add($"S,{Hex(key)},{Hex(value)}"); if (variant == 3) { state.Name = "AFTER_SET"; globals.InitialSubscriber = 0x76543210; } },
                 RequestFort = value => { trace.Add("L," + Hex(value)); if (variant == 4) state.Flags = 0xfffffffe; },
                 Header = () => { trace.Add("H"); if (variant == 4) state.Flags ^= 0x102; }
@@ -38,6 +40,7 @@ public sealed class TutorialInitTests
             Assert.Equal(columns[1], $"{state.Flags},{state.Demo},{state.NamePrefix},{globals.TutorialNumber},{globals.MissionNumber},{globals.TutorialSeen},{globals.LoginSubscriber}");
             Assert.Equal(columns[2], Convert.ToHexString(state.Scratch).ToLowerInvariant());
             Assert.Equal(columns[3], Hex(state.Name));
+            Assert.Equal(columns[4], Convert.ToHexString(options).ToLowerInvariant());
             Assert.Equal(columns[5], string.Join(';', trace));
         }
     }

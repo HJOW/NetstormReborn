@@ -254,6 +254,7 @@ cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	73506bcbedac557bfd13
 cpppj/src/o/RawMetadisplayDirty.cpp	Netstorm.Core/Original/RawMetadisplayDirty.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawMissionAiSettings.cpp	Netstorm.Core/Original/RawMissionAiSettings.cs	081cfdc912a663d44bc0289f017fb807f9a3eab1	L1
 cpppj/src/o/RawMissionAiSettings.h	Netstorm.Core/Original/RawMissionAiSettings.cs	081cfdc912a663d44bc0289f017fb807f9a3eab1	L1
+cpppj/src/o/RawMissionBattleOptions.cpp	Netstorm.Core/Original/RawMissionBattleOptions.cs	fbb112b60993eace537283e03226f77769150c70	port
 cpppj/src/o/RawMissionGuide.cpp	Netstorm.Core/Original/RawMissionGuide.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
 cpppj/src/o/RawMissionGuide.h	Netstorm.Core/Original/RawMissionGuide.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
 cpppj/src/o/RawMissionStart.cpp	Netstorm.Core/Original/RawMissionStart.cs	93d26800ca81cc2b731e5a3ebe1c618b5dd44876	L1
