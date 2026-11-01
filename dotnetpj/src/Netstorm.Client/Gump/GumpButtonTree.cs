@@ -161,7 +161,7 @@ public sealed class GumpButtonTree
         Lifetime = new(Create, LifeState, lifeHooks);
         var eventsHooks = EventHooks = new GumpEventHooks { Node = Node, Handle = hooks.HandleBase };
         var inputHooks = InputHooks = new GumpInputHooks { Node = Node, Handle = hooks.HandleBase };
-        var frameHooks = FrameHooks = new GumpFrameHooks { Node = Node, Redraw = hooks.Redraw };
+        var frameHooks = FrameHooks = new GumpFrameHooks { Node = Node, Redraw = hooks.Redraw, Broadcast = (_, _, _, _) => { } };
         ButtonGump.BindButtonGump(eventsHooks, inputHooks, frameHooks, token => Node(token) is StoneButtonGumpNode ? Buttons : null);
         var events = Events = new GumpEvents(Create, LifeState, new(), Collection, eventsHooks);
         Input = new(Create, LifeState, new() { OverlayEvent = 0x0200003b }, Collection, events, inputHooks);

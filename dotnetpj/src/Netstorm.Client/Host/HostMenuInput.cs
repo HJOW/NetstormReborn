@@ -72,6 +72,15 @@ public sealed class HostMenuInput
         return false;
     }
 
+    /// <summary>현재 포인터가 화면 안이면 공통 overlay와 등록 노드의 이동 통지를 입력 큐보다 먼저 실행한다.</summary>
+    public uint? NotifyPointer(InputEvent pointer)
+    {
+        if ((pointer.Code & InputCode.Outside) != 0) return null;
+        uint overlay = _menu.Tree.Input.Overlay(pointer.Code, new(pointer.X, pointer.Y));
+        _menu.Tree.Frame.Broadcast(pointer.Code, unchecked((uint)pointer.X), unchecked((uint)pointer.Y));
+        return overlay;
+    }
+
     /// <summary>공통 지연 삭제를 먼저 처리한 뒤 실제 idle 표를 순회한다.</summary>
     public void FinishFrame()
     {

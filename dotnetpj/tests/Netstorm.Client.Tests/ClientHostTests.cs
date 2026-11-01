@@ -228,4 +228,17 @@ public sealed class ClientHostTests
         Assert.True(runner.Finished);
         driver.Finish();
     }
+
+    /// <summary>Draw가 밀려 이전 캡처가 대기해도 다음 Update의 실제 입력을 놓치지 않는다.</summary>
+    [Fact]
+    public void FrameDriverProcessesInputWhilePriorSnapshotAwaitsDraw()
+    {
+        var screen = new Screen(64, 48); var input = new InputQueue(); var saved = new List<string>();
+        var runner = new UiScriptRunner(UiScript.Parse(["1\tsnapshot\tfirst.bmp", "2\tclick\tscreen:7,9"]), input, screen, null, saved.Add);
+        var driver = new HostFrameDriver(screen, input, runner);
+        driver.BeginFrame(); driver.BeginFrame();
+        Assert.Equal(new InputEvent(InputCode.LeftButton, 7, 9), input.Pop(false));
+        Assert.Equal(new InputEvent(InputCode.LeftButton | InputCode.Release, 7, 9), input.Pop(false));
+        driver.EndFrame(); Assert.Equal(["first.bmp"], saved); driver.Finish();
+    }
 }

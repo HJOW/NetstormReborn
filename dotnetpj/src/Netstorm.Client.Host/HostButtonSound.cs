@@ -3,20 +3,27 @@ using Netstorm.Assets;
 
 namespace Netstorm.Client.Host;
 
-/// <summary>메인 메뉴 버튼 소리를 실제 WAV와 MonoGame 장치에 잇는다.
-/// 원본의 공통 SoundPlayer 전체가 아니라 버튼 경계만 제공한다.</summary>
+/// <summary>메뉴의 이름별 WAV를 실제 파일과 MonoGame 장치에 잇는다.
+/// 원본 공통 SoundPlayer의 위치·음악 처리는 별도다.</summary>
 internal sealed class HostButtonSound : IDisposable
 {
+    /// <summary>실제 설정과 파일을 보유한 시작 Client.</summary>
     private readonly HostStartupScene _startup;
+    /// <summary>아직 재생 중인 인스턴스와 장치 수명.</summary>
     private readonly List<SoundEffectInstance> _playing = [];
-    private SoundEffect? _effect;
-    private bool _attempted;
+    /// <summary>파일별 로드 결과. null은 해당 이름의 파일이 없음을 뜻한다.</summary>
+    private readonly Dictionary<string, SoundEffect?> _effects = new(StringComparer.OrdinalIgnoreCase);
+    /// <summary>장치 오류 이후 재생을 생략하는 상태.</summary>
     private bool _unavailable;
 
+    /// <summary>같은 실제 설정과 파일 장치를 빌린다.</summary>
     public HostButtonSound(HostStartupScene startup) => _startup = startup;
 
     /// <summary>효과음 설정과 동시 재생 상한을 확인한 뒤 button.wav를 재생한다.</summary>
-    public void Play()
+    public void Play() => PlayByName("button.wav");
+
+    /// <summary>메뉴가 지정한 WAV를 같은 음량·동시 재생 제한으로 재생한다.</summary>
+    public void PlayByName(string name)
     {
         _playing.RemoveAll(instance =>
         {
@@ -28,26 +35,26 @@ internal sealed class HostButtonSound : IDisposable
             _playing.Count >= _startup.Configuration.GetInt("maxSimulSounds")) return;
         try
         {
-            if (!_attempted)
+            if (!_effects.TryGetValue(name, out SoundEffect? effect))
             {
-                _attempted = true;
-                byte[]? bytes = _startup.Files.TryReadAllBytes("sound/button.wav");
-                if (bytes is null) return;
+                byte[]? bytes = _startup.Files.TryReadAllBytes("sound/" + name);
+                if (bytes is null) { _effects[name] = null; return; }
                 using var stream = new MemoryStream(bytes, writable: false);
                 byte[] pcm = WaveFile.ReadPcm16(stream, out WaveFile wave);
                 int rate = wave.SampleRate;
                 // MonoGame 장치의 최소 표본율에 맞춘다.
                 while (rate < 8000) rate *= 2;
                 if (rate != wave.SampleRate) pcm = WaveFile.ResamplePcm16(pcm, wave.Channels, wave.SampleRate, rate);
-                _effect = new SoundEffect(pcm, rate, wave.Channels == 2 ? AudioChannels.Stereo : AudioChannels.Mono);
+                effect = new SoundEffect(pcm, rate, wave.Channels == 2 ? AudioChannels.Stereo : AudioChannels.Mono);
+                _effects[name] = effect;
             }
-            if (_effect is null) return;
+            if (effect is null) return;
             // ClientAudio::VolumeFromStep의 1/100 dB를 선형 진폭으로 변환한다.
             int attenuation = _startup.Configuration.GetInt("soundVolume") switch
             {
                 1 => -4000, 2 => -2000, 3 => -1000, 4 => -500, _ => 0
             };
-            SoundEffectInstance instance = _effect.CreateInstance();
+            SoundEffectInstance instance = effect.CreateInstance();
             try
             {
                 instance.Volume = (float)Math.Pow(10, attenuation / 2000.0);
@@ -64,11 +71,13 @@ internal sealed class HostButtonSound : IDisposable
         }
     }
 
+    /// <summary>재생 인스턴스와 캐시된 음향 자원을 모두 반납한다.</summary>
     public void Dispose()
     {
         foreach (SoundEffectInstance instance in _playing) instance.Dispose();
         _playing.Clear();
-        _effect?.Dispose();
-        _effect = null;
+        // 캐시한 각 파일의 장치 자원을 모두 반납한다.
+        foreach (SoundEffect? effect in _effects.Values) effect?.Dispose();
+        _effects.Clear();
     }
 }

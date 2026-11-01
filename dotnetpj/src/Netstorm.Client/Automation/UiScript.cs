@@ -94,6 +94,9 @@ public sealed class UiScriptRunner
     /// <summary>다음에 실행할 단계의 위치. AfterFrame에서만 앞으로 간다.</summary>
     private int _next;
 
+    /// <summary>Draw를 기다리는 관측 단계와 독립적으로 진행하는 입력 위치.</summary>
+    private int _nextInput;
+
     /// <summary>실행기를 만든다.</summary>
     /// <param name="steps"><see cref="UiScript.Parse"/>의 결과.</param>
     /// <param name="input">입력 큐.</param>
@@ -132,12 +135,14 @@ public sealed class UiScriptRunner
     /// <param name="frame">현재 클라이언트 프레임 번호.</param>
     public void BeforeInput(ulong frame)
     {
-        // 위치부터 같은 프레임의 단계를 순서대로 입력한다.
-        for (int i = _next; i < _steps.Count && _steps[i].Frame == frame; i++)
+        // 지난 관측은 Draw를 기다려도 입력 위치는 진행한다. 놓친 입력은 뒤 단계도 막는다.
+        while (_nextInput < _steps.Count && _steps[_nextInput].Frame <= frame)
         {
-            UiStep step = _steps[i];
-            if (step.Operation is "snapshot" or "report" or "refresh") continue; // 그리기 뒤(AfterFrame)에 처리하는 관측이다.
-            Input(step);
+            UiStep step = _steps[_nextInput];
+            bool observation = step.Operation is "snapshot" or "report" or "refresh";
+            if (step.Frame < frame && !observation) return;
+            if (step.Frame == frame && !observation) Input(step);
+            _nextInput++;
         }
     }
 

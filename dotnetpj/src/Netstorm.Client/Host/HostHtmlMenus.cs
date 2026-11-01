@@ -1,5 +1,6 @@
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
+using Netstorm.Client.Input;
 
 namespace Netstorm.Client.Host; // HTML 창과 같은 실제 트리의 controlled 메뉴 열 소유 영역이다.
 
@@ -21,6 +22,8 @@ public sealed class HostHtmlMenus
     public MenuGumpControls Controls { get; }
     /// <summary>공통 출력기가 같은 항목 측정 장치를 사용한다.</summary>
     internal MenuGumpLayout Layout { get; }
+    /// <summary>한 번 연결한 실제 메뉴 입력 처리기.</summary>
+    private MenuGumpInput? _input;
 
     /// <summary>같은 화면·시작 설정·본문 장치를 빌려 메뉴 열을 연결한다.</summary>
     public HostHtmlMenus(HostMainMenu menu, HostHtmlWindows windows, HostHtmlText text, HostStartupScene startup, Screen screen, Action<uint, bool> redraw)
@@ -68,5 +71,25 @@ public sealed class HostHtmlMenus
     {
         ArgumentNullException.ThrowIfNull(hooks);
         HtmlWindowMetadata.BindHtmlWindowMetadataMenus(hooks, Widgets, Controls);
+    }
+
+    /// <summary>같은 공통 사건·프레임과 큐, 이름 소리 및 재그리기에 메뉴 선택을 연결한다.</summary>
+    public void BindInput(InputQueue queue, Action<string> sound, Action<uint, bool> redraw)
+    {
+        ArgumentNullException.ThrowIfNull(queue); ArgumentNullException.ThrowIfNull(sound); ArgumentNullException.ThrowIfNull(redraw);
+        if (_input is not null) throw new InvalidOperationException("메뉴 입력이 이미 연결되었다");
+        var hooks = new MenuGumpInputHooks
+        {
+            Node = token => _tree.Node(token) as MenuGumpNode, Base = _tree.Node,
+            Broadcast = (token, code, first, second) => _tree.FrameHooks.Broadcast!(token, code, first, second),
+            Handle = (token, code, first, second) => _tree.EventHooks.Handle!(token, code, first, second),
+            Push = _tree.Tree.Push, Attach = (token, x, y, parent, mode) => _tree.TreeHooks.Attach!(token, x, y, parent, mode),
+            Redraw = redraw, Command = (code, id, parameter) => queue.PushCommand(code, unchecked((int)id), unchecked((int)parameter)),
+            Sound = sound, Invalidate = _ => redraw(_tree.Create.Entries[0], false)
+        };
+        _input = new MenuGumpInput(_tree.Create, new() { RequestEvent = 0x0200000d, ClosedEvent = 0x020000be },
+            Menu, _tree.Collection, _tree.Events, _tree.Lifetime, _tree.Tree, hooks);
+        MenuGumpInput.BindMenuGumpInput(_tree.EventHooks, _tree.InputHooks, _tree.FrameHooks,
+            token => _tree.Node(token) is MenuGumpNode ? _input : null);
     }
 }

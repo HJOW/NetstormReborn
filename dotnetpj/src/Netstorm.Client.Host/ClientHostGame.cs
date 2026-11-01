@@ -7,6 +7,7 @@ using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
 using Netstorm.Client.Scripting;
+using Netstorm.Core.Rules;
 
 namespace Netstorm.Client.Host;
 
@@ -63,6 +64,9 @@ public sealed class ClientHostGame : Game
     /// <summary>메뉴 효과음의 MonoGame 장치 경계.</summary>
     private HostButtonSound? _buttonSound;
 
+    /// <summary>배포 자산의 원본 커서와 SDL 핸들.</summary>
+    private HostOriginalCursor? _cursor;
+
     /// <summary>버튼 트리가 요청한 다음 메뉴 재그리기.</summary>
     private bool _menuDirty;
 
@@ -113,6 +117,7 @@ public sealed class ClientHostGame : Game
         {
             _htmlWindows?.CloseAll();
             _buttonSound?.Dispose();
+            _cursor?.Dispose();
         }
         base.Dispose(disposing);
     }
@@ -143,6 +148,7 @@ public sealed class ClientHostGame : Game
         {
             _startup.Draw(_driver.Screen);
             _buttonSound = new HostButtonSound(_startup);
+            _cursor = new HostOriginalCursor(_startup);
             _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
             {
                 Now = () => _wallClock.Elapsed.TotalSeconds,
@@ -156,10 +162,10 @@ public sealed class ClientHostGame : Game
             _htmlWindows.BindParser(_startup, raw => ScriptCommand.QueueScriptCommand(raw, _driver.Input, _scriptStrings,
                 new ScriptCommandHooks { Lookup = DialogScriptCommands.Lookup, Unknown = name => Debug.WriteLine("HTML 스크립트 명령 미연결: " + name) }));
             _htmlText = new HostHtmlText(_mainMenu, _htmlWindows, _driver.Screen, Poll, (_, _) => _menuDirty = true,
-                _ => throw new InvalidOperationException("HTML 본문 커서 장치 미연결"),
-                _ => throw new InvalidOperationException("HTML 본문 이름 소리 장치 미연결"));
+                cursor => _cursor.Set((GameCursor)cursor), _buttonSound.PlayByName);
             _htmlText.Bind(_htmlWindows);
             _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
+            _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
                 _scriptStrings, () => _wallClock.Elapsed.TotalSeconds, _ => 0,
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
@@ -185,6 +191,7 @@ public sealed class ClientHostGame : Game
         _driver.BeginFrame();
         PumpKeyboard();
         PumpMouse();
+        if (_menuInput?.NotifyPointer(Poll(0xffff)) == 0) _cursor?.Set(GameCursor.Arrow);
         if (_driver.ProcessInput()) { Exit(); return; }
         _menuInput?.FinishFrame();
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
