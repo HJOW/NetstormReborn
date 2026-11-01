@@ -692,6 +692,8 @@ int RunClient(std::vector<std::string> arguments) {
                     c.Menu()->InspectDestroySurface(type,x,y);continue;
                 }
                 // 검사 전용: 원문 이름표의 일반 명령을 실제 입력 큐에 한 번 넣는다. 인자는 "이름[,첫째[,둘째]]"이며 이후 소비는 일반 프레임 입력과 같다. 단위696에서 추가했다.
+                // 검사 전용 입력이다. HTML과 같은 원문 문자열/명령 큐를 사용하며 상태나 파일 설치 성공을 합성하지 않는다.
+                if (step.operation=="script-command") { c.Menu()->QueueHtmlScriptCommand(step.argument);continue; }
                 if (step.operation=="command") {
                     std::istringstream fields(step.argument);std::string name;std::int32_t first{},second{};char comma{}; // 이름과 선택 인자 두 개다.
                     std::getline(fields,name,',');if (fields.good()) { fields>>first;if (fields.good()) { fields>>comma>>second; } }

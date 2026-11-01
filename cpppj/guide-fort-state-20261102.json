@@ -1,0 +1,176 @@
+{
+  "unit": 714,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "6590d506dcd8a2a7c017280b04330d78551aac9ff68d37fd2de8e7b4fd84f281",
+  "newCppTests": 1,
+  "focusedTests": 3,
+  "failedChecks": 0,
+  "finalBuild": 4,
+  "finalBuildWarnings": 0,
+  "finalBuildErrors": 0,
+  "buildFailures": [
+    {
+      "attempt": 3,
+      "reason": "ClientGameplayGlobals 전방 선언 누락",
+      "corrected": 4
+    }
+  ],
+  "gameExecutions": 5,
+  "runs": [
+    {
+      "attempt": 1,
+      "pid": 5240,
+      "returnCode": 1,
+      "timedOut": false,
+      "exeSha256": "a2ccdfa76016e6f428db6aa3d6bae0ea010deeb723ece5d5751f4559ecfe9621",
+      "seconds": 41.65512200000012
+    },
+    {
+      "attempt": 2,
+      "pid": 3744,
+      "returnCode": 1,
+      "timedOut": false,
+      "exeSha256": "f745c6467d940c1e3d4e2a419b2ecb5fb4ff3521c2543f3ae7b3652d8ed7d79d",
+      "seconds": 19.827963899999304
+    },
+    {
+      "attempt": 3,
+      "pid": 7468,
+      "returnCode": 0,
+      "timedOut": false,
+      "exeSha256": "6590d506dcd8a2a7c017280b04330d78551aac9ff68d37fd2de8e7b4fd84f281",
+      "seconds": 24.75407809999888
+    },
+    {
+      "attempt": 4,
+      "pid": 2312,
+      "returnCode": 0,
+      "timedOut": false,
+      "exeSha256": "6590d506dcd8a2a7c017280b04330d78551aac9ff68d37fd2de8e7b4fd84f281",
+      "seconds": 15.427334599997266
+    },
+    {
+      "attempt": 5,
+      "pid": 2856,
+      "returnCode": 0,
+      "timedOut": false,
+      "exeSha256": "6590d506dcd8a2a7c017280b04330d78551aac9ff68d37fd2de8e7b4fd84f281",
+      "seconds": 15.109916299999895
+    }
+  ],
+  "finalRun": 5,
+  "finalRunReanalyzedWithoutNewProcess": true,
+  "initialRuntimeFailures": [
+    "v1 최초 편집 파일 장치 부재",
+    "v2 미설치 Session의 공개 Cursor 접근"
+  ],
+  "validationFailures": [
+    "v3 캠페인 재설치 뒤 예상하지 않은 BadTeamDead 안내/phase 기대",
+    "v4 H 뒤 정상 Early1 B 안내가 ESC를 가림",
+    "v5 소비·반납된 Zone 이름을 최종 Player에서 찾는 잘못된 기대"
+  ],
+  "incidentalOutcome": {
+    "attempt": 3,
+    "section": "BadTeamDead",
+    "alias": "Succeeded",
+    "intentionalVictoryTest": false,
+    "additionalVictoryVerification": false,
+    "nextMissionClicked": false,
+    "settingsRestored": true
+  },
+  "finalChecks": {
+    "size": [
+      1024,
+      768
+    ],
+    "rgbColors": 202,
+    "initialGeneration": "1",
+    "finalGeneration": "3",
+    "timeStart": "10.522",
+    "timeEnd": "11.927",
+    "menu": [
+      "1143",
+      "1",
+      "84"
+    ],
+    "closed": [
+      "0",
+      "0",
+      "84"
+    ],
+    "stageBeforeH": "65",
+    "stageAfterH": "66",
+    "paused": [
+      "0"
+    ],
+    "fort": [
+      "BridgeTheGap",
+      "BridgeTheGap",
+      "1",
+      "fortSpec"
+    ],
+    "phase": [
+      "2",
+      "14",
+      "0",
+      "0",
+      "BridgeTheGap"
+    ]
+  },
+  "multiplayerTests": 0,
+  "networkTests": 0,
+  "newNativeInputs": 0,
+  "existingNativeRequestRowsReplayed": 144,
+  "protectedExisting": 2631,
+  "protectedFiles": 2631,
+  "protectedChanged": 0,
+  "newFixtures": 0,
+  "limits": [
+    "실제 앱 내 입력과 Early1의 짧은 State1/7 재설치이며 전체 동일성/자연 완주가 아니다",
+    "물리 화면/키·포커스/PCM·CD/Windows11/전체34/전체C++/CTest/ZIP 검증0",
+    "v3 우발 승리 안내1회는 의도한 승리 검사나 자연 완료 증거가 아니며 추가 확인을 하지 않았다",
+    "State3 제목 callback 뒤 current 변경의 특이 분기는 도달 미입증/미연결 상태다",
+    "신규 MP/통신·포획/희생/특정 적 공격·공중3종 전용 검사0"
+  ],
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "cpppj/src/app/main.cpp": "08dd52717a5b978805d5b5282cab23b9f2f581c52263c4592f910a0b802aeef2",
+    "cpppj/src/client/UberGump.h": "4f4b41b8f3591f199f701662a07e661e180749d3b0026d07680e79e00455bb0d",
+    "cpppj/src/client/UberGump.cpp": "eeb62cc7e6806b2ffc4aeaa5d04440a5c9915d43c4a7a89180b0572eaf0dddb8",
+    "cpppj/src/client/UberEditor.inc": "6114fcae83570f856142ff80c759c4e459bdf3f3eca14c9db526f0556a954555",
+    "cpppj/src/client/ClientStateWorldCleanup.h": "6d33ebc494ff249db3bca07ceb0d98b852205325d178253add8b8d59bea31985",
+    "cpppj/src/client/ClientStateWorldCleanup.cpp": "bedee525185e0cf8a26b3eeb767806285343ba0f054b9febca9444e1bb29ae13",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp": "8024c49e6ac72b3d84fd234824da5dc341828cf72c2f1d9c64ae2c0768882b34",
+    "tools/cpp_guide_fort_state_smoke.py": "e80a8c807cbae6d67332f30acfa4686fcf523154657cc6bdd8601fad70bd81dd",
+    "docs/exe/cpp-guide-fort-state-20261102.md": "1df756f89217e7b2c493d5323e4f15ed916c31cc6f0ffc48ca9f951e74c7281f"
+  },
+  "rawSha256": {
+    "build-v1.log": "50745af2d3251073cc3b8f732c971daaef7316c923f82f9a67d0f76c31b3ca55",
+    "build-v2.log": "681bfeb22444fc4c05d972f0d6b7a067332deb08512159ce89d376b7015ef16d",
+    "build-v3.log": "3b10a5fe86178398dd137afb6bd5deec4725494f8d88436b42c8e38ce7b4c46c",
+    "build-v4.log": "fdc94f27cb4b39f36f088bb8cbf73dba310a7cfeedeefd05439547741a410d0e",
+    "focused-v1-1.log": "2fc3c880d985b4902b9ead3ebf29855d0f122735c01aac71ae72a92025336f60",
+    "focused-v1-2.log": "40c5be2afe6feb6bd0821583d3de29eb47821f5394d95c3f25685d0a79123d58",
+    "focused-v1-3.log": "4d6e39595790bb656ef6692d4aca492d40ca9805f0c3b66b03f8360eb5294aff",
+    "live-v1.log": "311132199318ceb5ea583b19eea9c982c4e5777403e016eb4582958ecfb043aa",
+    "live-v2.log": "30723ef798e700d2cbc7dad60a1eeaf964c0aa6fab41b0777285d84eba224344",
+    "live-v3.log": "d94e98108aa4c7b4daa5ca838b1443b2d71ed047cd9b5206a734ca41b665a0cf",
+    "live-v4.log": "c9cb606e66d5fb6c9124787ad4def5df5585a3feefb1b5781822f84f87e1cb7b",
+    "live-v5.log": "955f30b2d099f0b7005e43d6bb19c16d8e193bcb95a49ae9980e25e0a28fb388",
+    "live-v5-verified.log": "491b0ea80ce96bda8e0db8e0be1e4d496437988ca2c581f225fa00477fe23439",
+    "live-final-checks.json": "af10c8370b095ff18450b813d1f63cbfe1a6fe9dcdee65f2992a0e6da62cf5ba",
+    "scenario-sections.json": "4638519c2569c6bd1d1e009d0ebed0b7e37add8733e4436286649328781fe061",
+    "scenario-sections-v2.json": "a2450b289de398c62ce3d85a7a31c3d7fe885ca1d0cbb5ef4d08573bdd475f63"
+  },
+  "runtimeWorkArchive": {
+    "path": "extracted/cpp-guide-fort-state-714/runtime-work",
+    "files": 437,
+    "manifestSha256": "357dce73af73e8ad782d3160d78d327f9f7cab7d70363b9d9e0dd363e9380ec4"
+  }
+}

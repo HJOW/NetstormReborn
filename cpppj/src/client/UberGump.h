@@ -38,6 +38,7 @@ struct RawHtmlWindowContext; // 실제 전체 HTML에 현재 게임 소유자의
 struct RawMovieContext; // 실제 MovieGump의 화면/두 정지/음향 장치를 빌린다.
 class TellFileMenus; // 실제 파일 목록의 등록 Config를 부모/미션보다 오래 유지한다.
 class TextClipboard; //같은 Client UI의 모든 문자 입력이 공유하는 실제 CF_TEXT 부모다.
+class EditorFortFileDevices; // 최초 캠페인 편집 요청에서도 같은 지연 작업 파일 장치를 사용한다.
 class EditorCatalogWorkspace; //목록/직접 Edit/이름 변경이 공유하는 장기 단일 namespace와 이관 장부다.
 // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
@@ -95,6 +96,7 @@ public:
     bool InspectDestroySurface(std::string_view type,float x,float y);
     // --ui-script의 커널 검사에서 일반 게임과 같은 Tell 경로를 실행한다. 일반 사용자 명령으로 노출하지 않는다.
     void InspectTell(std::string target);
+    void QueueHtmlScriptCommand(std::string_view text); // 현재 HTML과 검사 입력이 같은 원문 이름표/문자열 고리/실제 입력 큐로 명령을 예약한다. 상태나 결과를 직접 바꾸지 않는다.
     void InspectBridgePatterns(std::string_view patterns); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. UI 검사에서 지정 순서를 교체/해제한다.
     std::uint32_t CurrentDialogSerial() const; // 테스트 전용 읽기다. 현재 모달 Gump의 실제 serial이며 없으면 0이다. RecheckCD 검사가 005c85ec에 넣을 값을 읽을 때만 쓴다(단위696).
 private:
@@ -114,6 +116,7 @@ private:
     void Execute(const DialogAction& action);
     bool FortSelectionEvent(const InputEvent& event); // 실제 AskEditFort/ReadFort를 같은 pending 이름·목록·숫자 nextState에 분배한다.
     void SelectCurrentFortName(std::string_view name); // 원문 MissionFortRequest.selectFort 위치에서 전체 현재 이름 부모를 실제 Client/Template에 연결한다.
+    EditorFortFileDevices& EnsureEditorFortFiles(); // World/State 설치 전에 실제 현재 파일 경계가 필요할 때만 장기 작업본 장치를 준비한다.
     FortSelectionHooks FortEditEffects(); //실제 선택된 Battle14의 파일/State 보존 경계도 같은 현재 World와 작업 파일에 연결한다.
     void EnsureHudFactories(); //현재 Client 장기 전역·물리로 네 공장만 준비하며 새 월드/Session을 생성하지 않는다.
     std::uint32_t ReadChatGlobal(std::uint32_t address); // 현재 Client/실제 월드·팔레트에서 채팅이 읽는 전역만 조회한다.

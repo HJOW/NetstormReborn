@@ -26,6 +26,11 @@ namespace netstorm::client { // 같은 Native 부모를 재구현하지 않고 �
 namespace { // 선택된 실제 외부 장치만 요구하며 미선택 선택지는 호출하지 않는다.
 template<class F> const F& NeedState(const F& function) { if (!function) throw std::logic_error("전체 State 정리의 선택된 실제 외부 장치 누락");return function; }
 }
+// 현재 Session 대여와 실제 커서 실행기 존재를 구별하며 미설치도 같은 장기 전역의 원문 Cancel을 실행한다.
+void CancelClientStateCursor(ClientGameplayGlobals& game,const std::function<void()>& cancelWithoutRuntime) {
+    if (game.Borrowed()) { auto& session=game.RequireSession();if (session.HasCursorRuntimeForState()) { session.CancelCursorForState();return; } }
+    NeedState(cancelWithoutRuntime)(); // 미설치 성공을 합성하지 않고 실제 Client Cursor/Prepare 장치를 요구한다.
+}
 void CleanupClientStateWorld(std::uint32_t reason,ClientStateWorldContext c,std::shared_ptr<RawSurfaceStorage> storage,const ClientStateWorldDevices& devices) {
     if (!storage || storage.get()!=&c.surface) throw std::invalid_argument("전체 State 정리의 같은 실제 표면 owner 필요");
     const auto globals=BindClientStateWorldGlobals(c);ClientStateRuntimeRetirement runtime(c.client,storage);auto& game=*c.client.GameplayGlobals();auto& local=*c.client.LocalStateGlobals();auto& sp=c.client.SpGlobals()->Store();
@@ -46,7 +51,7 @@ void CleanupClientStateWorld(std::uint32_t reason,ClientStateWorldContext c,std:
         case E::EndConnections:c.client.ConnectionGlobals()->EndPlayers(game.Server()?1U:0U);return;
         case E::ResumeGame:c.client.PopGamePause();return;
         case E::ResumeAudio:c.audio.PopMute();return;
-        case E::Clear446e70:if (game.Borrowed()) game.RequireSession().Cursor().CancelForState();else NeedState(devices.cancelInitialCursor)();return;
+        case E::Clear446e70:CancelClientStateCursor(game,devices.cancelInitialCursor);return;
         case E::Clear4c1f20:ResetClientClockSynchronization(local);return;
         case E::ResetClock:c.client.ResetGameClock();return;
         case E::Clear42b1b0:ClearClientMetaZoneRecords(c.client,*storage);return;

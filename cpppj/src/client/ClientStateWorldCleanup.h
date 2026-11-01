@@ -4,6 +4,7 @@
 #include <memory>
 
 namespace netstorm::client { // 게임 자식은 내부 실제 owner에 연결하고 외부 UI/미복원 선택 경계만 명시 장치로 받는다.
+class ClientGameplayGlobals; // 같은 Client의 Session 대여와 커서 전역을 State 정리 위치에서 조회한다.
 struct ClientStateWorldDevices {
     std::function<void()> cancelInitialCursor; //Session 없는 첫 메뉴의 같은 Cursor Cancel/Prepare와 현재 Renderer를 연결한다.
     std::function<void()> killGumps,cleanupGumps,replaceUber; //같은 공통 등록표의 기존 Kill/Cleanup/전체 HUD 공장이다.
@@ -13,6 +14,7 @@ struct ClientStateWorldDevices {
     std::function<void(std::uint32_t)> saveBattle; //비mission 전투 phase14에서만 필요한004bf880의 실제 현재 snapshot이다.
     std::function<void(std::uint32_t)> assertion; //원문 중복 모드 진단을 같은 호출 위치에서 보고한다.
 };
+void CancelClientStateCursor(ClientGameplayGlobals& gameplay,const std::function<void()>& cancelWithoutRuntime); // 대여 중인 미설치 Session도 같은 Client 커서 전역을 정리한다. 실행기가 있으면 loaded 공개와 무관한 State 전용 Cancel만 호출한다.
 //004b2df0의 전체 직접 쓰기와34Effect 선택을 실행한다. UI·저장·metamap의 선택 장치 누락은 그 위치에서 실패한다.
 void CleanupClientStateWorld(std::uint32_t reason,ClientStateWorldContext context,std::shared_ptr<RawSurfaceStorage> storage,const ClientStateWorldDevices& devices);
 }

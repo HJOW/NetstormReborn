@@ -469,7 +469,7 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
     context.metadata.input=[this](auto mode,auto title,auto continuation) { SaveFortNameDialogContext dialog;dialog.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(dialog.editor,textClipboard_);dialog.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };dialog.tell=[this](auto section) { Tell(std::string(section)); };rawButtons_->Menus()->ShowHtmlInputDialog(std::move(dialog),std::bit_cast<std::uint32_t>(mode),title,continuation); }; //원문004d3ed0은mode/제목/다음Tell섹션이며입력제한/설정키가아니다.
     context.metadata.tech=[this](auto target) { if (!world_) throw std::logic_error("HTML 전체 기술 목록의 현재 Session 없음");rawButtons_->Menus()->AppendTechnology(world_->Session(),target,[this](auto text) { return FontBytes(client_.Translate(text)); }); }; //같은 HTML controlled 열과 실제 대상 Form을 사용한다.
     context.metadata.themeTech=[this](auto target,auto theme) { if (!world_) throw std::logic_error("HTML 원소 기술 목록의 현재 Session 없음");rawButtons_->Menus()->AppendThemeTechnology(world_->Session(),target,theme,[this](auto text) { return FontBytes(client_.Translate(text)); }); }; //같은 실제 HTML의 현재 열·가상 레벨/기술 부모를 사용한다.
-    context.factory.globals=&htmlGlobals_;context.factory.html.command=[this](auto&,auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{DialogScriptCode,[](auto name) { std::clog<<"HTML 스크립트 명령 미연결: "<<name<<'\n'; }}); };
+    context.factory.globals=&htmlGlobals_;context.factory.html.command=[this](auto&,auto text) { QueueHtmlScriptCommand(text); };
     BindHtmlConditionConfig(context.factory.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(context.factory.html);
     BindHtmlBackground(context.factory.html,htmlGlobals_); // 미션 안내의 전체 HTML도 같은 현재 배경을 쓴다.
     context.factory.substitute=[this](auto text,auto) { return FontBytes(client_.Configuration().SubstituteLocal(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };context.factory.fallback=[this] { return FontBytes(client_.Configuration().PathSpec("OkButton")); };
@@ -479,6 +479,10 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
         case 0x5cab30:case 0x55a480:return client_.ScriptMenuGlobal(address); // Checked의 실제 Client/공급/Player 전역이다.
         default:throw std::logic_error("전체 HTML 현재 Client 전역 미연결: "+std::to_string(address));
     } };return context;
+}
+// 같은 HTML 입력은 자신이 소유한 원문 문자열 고리와 일반40칸 큐를 그대로 사용한다.
+void UberGump::QueueHtmlScriptCommand(std::string_view text) {
+    QueueScriptCommand(text,client_.Input(),scriptStrings_,{DialogScriptCode,[](auto name) { std::clog<<"HTML 스크립트 명령 미연결: "<<name<<'\n'; }});
 }
 // 실제 전체 부모는 Kill만 예약하고 공통 Cleanup에서 OnExit/인스턴스를 반납한다.
 void UberGump::ClearPage() {
@@ -508,7 +512,7 @@ FortSelectionHooks UberGump::FortEditEffects() {
     hooks.pending=[this](auto name) { const std::string source(name);SetPendingFortName(client_.FortGlobals()->PendingBytes(),{reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1},[] { std::clog<<"Fort pending 이름의 점 진단\n"; }); };
     hooks.refresh=[this](auto mode) { static_cast<void>(mapCatalog_->Refresh(static_cast<std::int32_t>(mode))); };
     hooks.tell=[this](auto name) { Tell(std::string(name)); };hooks.gameSeconds=[this] { return client_.Time().game; };
-    hooks.currentFortPath=[this] { if (!editor_ || !editor_->paths) throw std::logic_error("편집 복귀의 실제 현재 Fort 파일 장치 없음");return std::string(editor_->paths->CurrentPath()); };
+    hooks.currentFortPath=[this] { return std::string(EnsureEditorFortFiles().PrepareCurrent()); }; // 캠페인의 첫 편집 요청도 현재 Fort의 같은 작업본을 준비한 뒤 원문 reader에 넘긴다. 보호 원본에는 쓰지 않는다.
     hooks.loadFort=[this](auto slot,auto path) {
         if (!editor_ || !editor_->paths) throw std::logic_error("편집 복귀의 실제 파일 reader 없음");TemplateFileLoadHooks load;
         load.wrongName=[] { std::clog<<"편집 복귀의 Template 파일 이름 불일치\n"; };load.tooManyTypes=[] { std::clog<<"편집 복귀의 TYPE 개수 진단\n"; };

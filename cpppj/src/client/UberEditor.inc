@@ -21,6 +21,14 @@ struct UberGump::EditorRuntime {
         return hooks;
     }
 };
+// 실제 파일 조회가 처음 필요할 때만 장기 작업 namespace의 장치를 만든다. World/Player/State 성공은 쓰지 않는다.
+EditorFortFileDevices& UberGump::EnsureEditorFortFiles() {
+    if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);if (editor_->paths) return *editor_->paths;auto& e=*editor_;
+    EditorFortPathEffects paths;paths.currentName=[this] { return client_.FortGlobals()->Current(); };paths.selectFileSpec=[this] { mapFileSpec_.SelectFort(); };paths.fileSpecKey=[this] { return mapFileSpec_.Current(); };
+    paths.resolve=[this](auto configured) { return editorCatalog_->Resolve(configured); };paths.prepare=[this](auto configured) { static_cast<void>(editorCatalog_->Prepare(configured)); }; //현재 경로와 lazy 준비 모두 같은 이관 장부/삭제 상태를 공유한다.
+    paths.assertion=[](auto line) { std::clog<<"Editor 파일 진단 "<<line<<'\n'; };e.paths=std::make_unique<EditorFortFileDevices>(e.files,client_.Files(),client_.Configuration(),std::move(paths));
+    return *e.paths;
+}
 // 원본 송금 숫자 창은 같은 문자 입력과 현재 Session의 경제 장치를 빌린다.
 void UberGump::OpenSendMoneyDialog(std::uint32_t target) {
     if (!world_) throw std::logic_error("송금 숫자 창의 현재 월드 없음");SaveFortNameDialogContext context;context.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(context.editor,textClipboard_);
@@ -72,9 +80,7 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     world_->BindHideBuildings([this] { return hideBuildings_; });world_->soundViewChanged=[this](auto view) { client_.WorldAudio().SetView(view); };
     world_->surfaceDisplay={[this] { return client_.GetRenderer().FullRedrawPending(); },[this](auto rect,auto flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     auto& session=world_->Session();session.WithExistingEditorPrefixUi(*client_.LocalStateGlobals(),[this] { ApplyHudModeForState(1); });
-    EditorFortPathEffects paths;paths.currentName=[this] { return client_.FortGlobals()->Current(); };paths.selectFileSpec=[this] { mapFileSpec_.SelectFort(); };paths.fileSpecKey=[this] { return mapFileSpec_.Current(); };
-    paths.resolve=[this](auto configured) { return editorCatalog_->Resolve(configured); };paths.prepare=[this](auto configured) { static_cast<void>(editorCatalog_->Prepare(configured)); }; //현재 경로와 lazy 준비 모두 같은 이관 장부/삭제 상태를 공유한다.
-    paths.assertion=[](auto line) { std::clog<<"Editor 파일 진단 "<<line<<'\n'; };e.paths=std::make_unique<EditorFortFileDevices>(e.files,client_.Files(),client_.Configuration(),std::move(paths));
+    static_cast<void>(EnsureEditorFortFiles()); // 첫 ReadFort에서 이미 만든 장치도 재생성하지 않아 같은 현재 경로/장부/reader 수명을 유지한다.
     CampaignExistingEditorCheckpointServices checkpoint;
     checkpoint.fort.currentName=[this] { return client_.FortGlobals()->Current(); };checkpoint.fort.pendingName=[this] { return client_.FortGlobals()->Pending(); };
     checkpoint.fort.compare=[](auto first,auto second) { return o::CompareDataManagerSectionNames(first,second); };

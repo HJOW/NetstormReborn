@@ -27,6 +27,8 @@
 #include "client/EditorFortFileDevices.h"
 #include "client/FortTypeConversionStorage.h"
 #include "client/Mission.h" //Guide 해제가 같은 Client의 Native 미션 모드를 반납한 뒤 prepared Editor가 그 물리를 빌리는지 확인한다.
+#include "client/ClientStateWorldCleanup.h" // State1 미설치 대여의 실제 커서 정리 분배를 검증한다.
+#include "client/ClientCursorStateCleanup.h" // 빈 실행기도 같은 현재 Client 전역의 Cancel/Prepare를 사용한다.
 #include "client/MissionFortRequest.h" // 현재 Guide 분기는 실제 Subscriber writer 뒤 같은 Zone 요청을 보유한다.
 #include "o/RawFortBadgesGlobals.h"
 #include "o/RawSunAviaryProcess.h" // 실제 사제 이동 프로세스의 동일 풀/부착 Form 조회 선언을 사용한다.
@@ -791,4 +793,14 @@ TEST_CASE(CampaignExistingEditorCheckpoint_CurrentGuideHandoffUsesActualSubscrib
         const auto bytes=stream.buffer(word(0));CHECK(word(8)==14 && bytes[0]==1 && bytes[1]==0 && bytes[4]==8 && bytes[5]==0 && std::string_view(reinterpret_cast<const char*>(bytes.data()+6),8)=="Champion");
     }); // 실제 typed writer의ID/길이WORD/본문을 읽는다.
     CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(local); }) && CheckpointRejects<std::logic_error>([&] { session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work); }));
+}
+
+// State1이 World 전에 미션으로 빠진 대여도 실제 Client 커서 정리로 이어지며 활성 입력 접근은 계속 닫힌다.
+TEST_CASE(CampaignExistingEditorCheckpoint_DeferredCleanupSelectsSharedCursor) {
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
+        CHECK(client.GameplayGlobals()->Borrowed() && !session.HasCursorRuntimeForState());CHECK(CheckpointRejects<std::logic_error>([&] { static_cast<void>(session.Cursor()); }));
+        Renderer renderer(640,480,OriginalEdition::Patch1078);std::size_t called{};const auto storage=session.World().Storage();const auto cursor=&client.GameplayGlobals()->cursor; // 같은 장기 전역과 선택된 실제 Renderer를 빌린다.
+        CancelClientStateCursor(*client.GameplayGlobals(),[&] { ++called;CancelClientCursorForState(client,*storage,{},[&]() -> Renderer& { return renderer; }); });
+        CHECK(called==1 && client.GameplayGlobals()->Borrowed() && !session.HasCursorRuntimeForState() && cursor==&client.GameplayGlobals()->cursor);CHECK(CheckpointRejects<std::logic_error>([&] { static_cast<void>(session.Cursor()); }));
+    },true);
 }
