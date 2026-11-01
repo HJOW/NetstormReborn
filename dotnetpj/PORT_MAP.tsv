@@ -271,6 +271,7 @@ cpppj/src/o/RawPriestPreDestroy.cpp	Netstorm.Core/Original/RawPriestPreDestroy.c
 cpppj/src/o/RawPriestRegen.cpp	Netstorm.Core/Original/RawPriestRegen.cs	37dbf68bfd44f3288348c9063681e7fce5d39ece	L1
 cpppj/src/o/RawPriestState.cpp	Netstorm.Core/Original/RawPriestState.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
 cpppj/src/o/RawRenderCollection.h	Netstorm.Core/Original/RenderCollectionEntry.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
+cpppj/src/o/RawSoloMapList.cpp	Netstorm.Core/Original/RawSoloMapList.cs	af9cd8fef46c3a786fb8a30bc6334c860ae33850	L1
 cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidDestroyDispatch.cpp	Netstorm.Core/Original/RawSquidDestroyDispatch.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidFinder.cpp	Netstorm.Core/Original/RawFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
