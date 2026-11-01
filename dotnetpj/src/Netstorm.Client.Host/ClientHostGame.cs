@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -32,6 +33,12 @@ public sealed class ClientHostGame : Game
 
     /// <summary>실제 버튼 트리를 소유하는 초기 메인 메뉴.</summary>
     private HostMainMenu? _mainMenu;
+
+    /// <summary>메뉴 버튼이 쓰는 단조 실시간 시계.</summary>
+    private readonly Stopwatch _wallClock = Stopwatch.StartNew();
+
+    /// <summary>메뉴 효과음의 MonoGame 장치 경계.</summary>
+    private HostButtonSound? _buttonSound;
 
     /// <summary>버튼 트리가 요청한 다음 메뉴 재그리기.</summary>
     private bool _menuDirty;
@@ -73,6 +80,13 @@ public sealed class ClientHostGame : Game
         Window.TextInput += (_, arguments) => _driver.Input.Push(HostInputMapper.CharCode(arguments.Character), 0, 0);
     }
 
+    /// <summary>메뉴 효과음 장치와 그래픽 자원을 해제한다.</summary>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing) _buttonSound?.Dispose();
+        base.Dispose(disposing);
+    }
+
     /// <summary>창 크기와 모드를 정한다. 시작 모드는 인자가 정한다.</summary>
     protected override void Initialize()
     {
@@ -98,11 +112,12 @@ public sealed class ClientHostGame : Game
         else
         {
             _startup.Draw(_driver.Screen);
+            _buttonSound = new HostButtonSound(_startup);
             _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
             {
-                Now = () => throw new InvalidOperationException("메인 메뉴 시계 입력 미연결"),
+                Now = () => _wallClock.Elapsed.TotalSeconds,
                 Poll = _ => throw new InvalidOperationException("메인 메뉴 포인터 폴링 미연결"),
-                Sound = () => throw new InvalidOperationException("메인 메뉴 소리 장치 미연결"),
+                Sound = _buttonSound.Play,
                 Redraw = (_, _) => _menuDirty = true,
                 HandleBase = (_, _, _, _) => throw new InvalidOperationException("메인 메뉴 명령 소비자 미연결")
             });
