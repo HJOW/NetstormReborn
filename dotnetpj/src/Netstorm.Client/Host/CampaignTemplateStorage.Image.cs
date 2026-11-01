@@ -12,7 +12,8 @@ public sealed partial class CampaignTemplateStorage
     /// </summary>
     /// <remarks>
     /// 2026-11-01 0.131(TS1)에서 노드·버퍼·<see cref="SyncStreams"/>·커서 공개·선택·소멸을 옮겼다. 동적 섹션 생성·쓰기·이름 교체·State 최소 확장은
-    /// 0.132(TS2)에서 <c>CampaignTemplateStorage.ImageSections.cs</c>로 같은 partial 클래스에 더했고, 파일 읽기/저장·빈 manager는 TS3~TS4에서 더한다
+    /// 0.132(TS2)에서 <c>CampaignTemplateStorage.ImageSections.cs</c>로, 파일 읽기/저장은 0.133(TS3)에서 <c>CampaignTemplateStorage.ImageFile.cs</c>로,
+    /// 빈 Image 생성자와 로그인 이미지용 복제·덤프·이미지 작성은 0.134(TS4)에서 이 파일과 <c>CampaignTemplateStorage.ImageLogin.cs</c>로 같은 partial 클래스에 더했다
     /// (계획서 <c>docs/dotnet-template-storage-plan-20261101.md</c> 4절).
     /// </remarks>
     private sealed partial class Image
@@ -149,6 +150,55 @@ public sealed partial class CampaignTemplateStorage
             RawSectionBuffer territoryBytes = SectionOrEmpty(TerritorySection());
             Territory.Set(territoryBytes.Memory, 0, (uint)territoryBytes.Count);
             SyncStreams();
+        }
+
+        /// <summary>
+        /// 원문 <c>new 276</c>의 같은 할당이다. 원문 생성자와 목록 생성은 아직 하지 않고, metadata의 선행 노드 투영도 막기 위해 모든 표준 위치를 연결된 것으로 표시한다.
+        /// 이름과 직렬화 버전은 <see cref="ConstructName"/>이 나중에 쓴다.
+        /// </summary>
+        /// <param name="names">같은 Client의 이름표 owner.</param>
+        /// <remarks>2026-11-02 0.134(TS4)에서 추가했다.</remarks>
+        internal Image(ClientTemplateSectionNames names)
+        {
+            ArgumentNullException.ThrowIfNull(names);
+            _sectionNames = names;
+            Fort = new FortTemplate();
+            Name = "";
+            Array.Fill(_seeded, true);
+        }
+
+        /// <summary>
+        /// 원문 생성자를 같은 생성 수명의 실제 manager에 실행한다: 공유 Client version을 0으로 쓰고 이름과 기본 서명/FE 판정을 기록한다. 이름표 할당은 하지 않는다.
+        /// </summary>
+        /// <param name="file">파일 이름(255바이트 이하, NUL 없음).</param>
+        /// <param name="globals">같은 Client의 직렬화 버전 전역.</param>
+        /// <exception cref="ArgumentException">이미 생성했거나 노드가 있거나 이름이 256바이트 이상이거나 NUL을 포함한다.</exception>
+        /// <remarks>2026-11-02 0.134(TS4)에서 추가했다.</remarks>
+        internal void ConstructName(string file, FortSerializationGlobals globals)
+        {
+            ArgumentNullException.ThrowIfNull(file);
+            ArgumentNullException.ThrowIfNull(globals);
+            if (Constructed || Streams.Count != 0 || file.Length >= ManagerNameBytes || file.Contains('\0'))
+            {
+                throw new ArgumentException("Template 빈Image 실제ctor계약");
+            }
+            // 실제 DWORD 객체의 BYTE 뷰에 해당하는 임시 4바이트에 0을 쓰는 효과를 원본 생성자에서 수행한 뒤 같은 전역에 돌려준다
+            Span<byte> global = stackalloc byte[4];
+            Put(global, 0, globals.Version);
+            RawTemplateLoad.ConstructManager(Manager, file, global);
+            globals.Version = Read(global, 0);
+            Name = file;
+            Constructed = true;
+        }
+
+        /// <summary>
+        /// 다음 노드 핸들이다. 서로 다른 manager의 노드를 같은 복제 장치에서 식별하려고 대상이 원본의 값을 이어받는다(원문 노드 범위 뒤에서 시작하게 한다).
+        /// </summary>
+        /// <remarks>2026-11-02 0.134(TS4)에서 추가했다.</remarks>
+        internal uint NextStreamHandle
+        {
+            get => _nextStreamHandle;
+            set => _nextStreamHandle = value;
         }
 
         /// <summary>표준 위치의 섹션을 돌려주고 파싱 자료에 그 위치가 없으면 빈 버퍼를 돌려준다(목록을 늘리지 않는다).</summary>

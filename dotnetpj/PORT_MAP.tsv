@@ -20,6 +20,8 @@ cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/CampaignTempla
 cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/CampaignTemplateStorage.Image.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
 cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/CampaignTemplateStorage.ImageSections.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
 cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/CampaignTemplateStorage.ImageFile.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
+cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/CampaignTemplateStorage.ImageLogin.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
+cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/CampaignTemplateStorage.Login.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
 cpppj/src/client/CampaignTemplateStorage.h	Netstorm.Client/Host/TemplateFileHooks.cs	473432cd5f2edca35ecb3cf78e79c151b105b0c2	port
 cpppj/src/client/CampaignTemplateStorage.h	Netstorm.Client/Host/CampaignTemplateStorage.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
 cpppj/src/client/CampaignTemplateStorage.h	Netstorm.Client/Host/TemplateWriteStream.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
@@ -312,6 +314,8 @@ cpppj/src/o/RawMissionAiSettings.h	Netstorm.Core/Original/RawMissionAiSettings.c
 cpppj/src/o/RawMissionBattleOptions.cpp	Netstorm.Core/Original/RawMissionBattleOptions.cs	fbb112b60993eace537283e03226f77769150c70	port
 cpppj/src/o/RawMissionGuide.cpp	Netstorm.Core/Original/RawMissionGuide.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
 cpppj/src/o/RawMissionGuide.h	Netstorm.Core/Original/RawMissionGuide.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
+cpppj/src/o/RawMissionLoginPackets.cpp	Netstorm.Core/Original/RawMissionLoginPackets.cs	05d7cb57da06dc94bf78e6e80ce0a88d145cc77f	L1
+cpppj/src/o/RawMissionLoginPackets.h	Netstorm.Core/Original/RawMissionLoginPackets.cs	05d7cb57da06dc94bf78e6e80ce0a88d145cc77f	L1
 cpppj/src/o/RawMissionStart.cpp	Netstorm.Core/Original/RawMissionStart.cs	93d26800ca81cc2b731e5a3ebe1c618b5dd44876	L1
 cpppj/src/o/RawMissionStart.h	Netstorm.Core/Original/RawMissionStart.cs	93d26800ca81cc2b731e5a3ebe1c618b5dd44876	L1
 cpppj/src/o/RawObjectConversion.cpp	Netstorm.Core/Original/RawObjectConversion.cs	b126e9007a61bb7bc133a29fe3ac585043194a56	L1

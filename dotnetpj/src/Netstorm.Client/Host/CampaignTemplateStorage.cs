@@ -15,7 +15,8 @@ namespace Netstorm.Client.Host;
 /// <see cref="FileHeader"/>·<see cref="Name"/>, State 확장(<see cref="GrowState"/>). 같은 날 0.132(TS2)에서 동적 섹션(<see cref="CreateSection"/>·
 /// <see cref="FindSection"/>·<see cref="SelectSection"/>·<see cref="RenameSection"/>·<see cref="CurrentWriteStream"/>·<see cref="WriteSection"/>·<see cref="AccessSection"/>)과
 /// <see cref="InitializeState"/>·<see cref="EnsureStateSize"/>를 더했다. 0.133(TS3)에서 파일 읽기/저장(<see cref="InstallFile"/>·<see cref="LoadFile"/>·<see cref="SaveFile"/>)과
-/// <see cref="BindCurrentName"/>을 더했다. 빈 manager·로그인 이미지(TS4)는 같은 partial 클래스에 단계별로 더한다.
+/// <see cref="BindCurrentName"/>을 더했다. 0.134(TS4)에서 빈 manager(<see cref="AllocateEmptyManager"/>·<see cref="ConstructEmptyManager"/>·<see cref="InitializeEmptyManager"/>·
+/// <see cref="ManagerBytes"/>·<see cref="ManagerLifetime"/>)와 로그인 송신 이미지(<see cref="BindDiagnosticLog"/>·<see cref="ReadLoginImage"/>)를 <c>CampaignTemplateStorage.Login.cs</c>에 더했다.
 /// 계획: <c>docs/dotnet-template-storage-plan-20261101.md</c>.
 /// C++의 참조 반환은 같은 객체를 돌려주는 클래스 인스턴스로 옮겼으므로 반환된 커서는 저장소가 manager를 반납할 때까지 같은 참조다.
 /// </remarks>

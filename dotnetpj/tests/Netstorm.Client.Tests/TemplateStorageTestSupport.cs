@@ -27,6 +27,15 @@ internal static class TemplateStorageTestSupport
         return FortTemplate.ReadSections(Files.Value!.ReadAllBytes("d/" + name + ".fort"));
     }
 
+    /// <summary>원본 데이터의 .fort 파일 전체 바이트를 읽는다(서명·길이 레코드를 포함한 파일 그대로).</summary>
+    /// <param name="name">확장자를 뺀 파일 이름.</param>
+    /// <remarks>2026-11-02 0.134(TS4)에서 추가했다.</remarks>
+    public static byte[] RealFortBytes(string name)
+    {
+        Assert.True(Files.Value is not null, "클론 데이터 폴더가 없습니다");
+        return Files.Value!.ReadAllBytes("d/" + name + ".fort");
+    }
+
     /// <summary>표준 섹션의 위치를 이름표에서 찾는다.</summary>
     /// <param name="name">섹션 이름.</param>
     public static int IndexOf(string name)

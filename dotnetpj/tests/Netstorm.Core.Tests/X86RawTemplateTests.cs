@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -895,7 +896,7 @@ public sealed class X86RawTemplateTests
         Assert.All(image.Storage.Skip(image.End), value => Assert.Equal(0, value));
     }
 
-    /// <summary>모든 독립 입력(저장 116행)의 현재 이미지/효과 읽기 순서를 대조한다. 송신(S)·예약(F) 행은 미션 로그인 패킷 계층을 옮길 때 잇는다.</summary>
+    /// <summary>모든 독립 입력(저장 116행)의 현재 이미지/효과 읽기 순서를 대조한다. 송신(S)·예약(F) 103행은 <see cref="MissionFortPacketsMatchNative103Rows"/>가 잇는다.</summary>
     [Fact]
     public void FortImageSaveMatchesNative116Rows()
     {
@@ -943,6 +944,180 @@ public sealed class X86RawTemplateTests
         }
         Assert.Equal(116, compared);
         NoProblems(problems, "Fort 이미지 저장 116행");
+    }
+
+    /// <summary>
+    /// 실제 DataManager 이미지와 sendFort의 예약·선언·전송 전체 바이트를 원본 x86 관찰과 대조한다: 송신(S) 93행과 예약(F) 10행.
+    /// 송신 행은 현재 Template·길이 WORD·watcher를 원문 위치마다 읽는 순서(trace), 이미지, 길이 확정 전후 예약 전체, 최종 wire를 모두 비교한다.
+    /// 실제 송신 출력에서 같은 예약 도우미를 따로 재생해 ff stale tail까지 비교한다 (0.134 TS4, 2026-11-02).
+    /// </summary>
+    [Fact]
+    public void MissionFortPacketsMatchNative103Rows()
+    {
+        string[][] rows = X86Fixture.Read("fort-image-packets");
+        List<string> problems = [];
+        int compared = 0;
+        // 각 행의 현재 Template·Player·효과 변경은 다음 행에 누적하지 않는다
+        foreach (string[] row in rows)
+        {
+            if (row[0] != "S" && row[0] != "F")
+            {
+                continue;
+            }
+            Assert.Equal(7, row.Length);
+            string[] fields = row[1].Split(',');
+            Assert.Equal(13, fields.Length);
+            uint[] input = fields.Select(Number).ToArray();
+            FortTemplate first = FortInput(input[0], input[1], input[2], input[3]);
+            FortTemplate second = FortInput(input[0], input[1] + 3, input[2], input[3] ^ 0xfeu);
+            byte[] players = new byte[1620];
+            players[input[6] * 180 + 0x58] = (byte)input[9];
+            FortTemplate? current = input[11] != 0 ? first : null;
+            StringBuilder trace = new();
+            // 실제 외부 읽기/효과만 기록한다
+            void Event(string text)
+            {
+                if (trace.Length != 0)
+                {
+                    trace.Append(';');
+                }
+                trace.Append(text);
+            }
+            FortImageHooks imageHooks = new()
+            {
+                TypeCount = () =>
+                {
+                    Event("G," + input[4]);
+                    return input[4];
+                },
+                Assertion = kind => Event(kind == FortImageAssertion.TypeCount ? "A,types" : kind == FortImageAssertion.SectionCapacity ? "A,section" : "A,stream"),
+            };
+            string imageText = "-", before = "-", after = "-", wire = "-";
+            if (row[0] == "F")
+            {
+                byte[] packet = new byte[20];
+                Array.Fill(packet, (byte)0xa5);
+                BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(12), input[8]);
+                RawMissionLoginPackets.FinalizeMissionFortPacket(packet, input[12] != 0, () => Event("A,packet"));
+                before = Hex(packet);
+            }
+            else
+            {
+                MissionFortPacketReads reads = new()
+                {
+                    Current = owner =>
+                    {
+                        Assert.Equal(input[6], owner);
+                        Event(current is not null ? "C,1" : "C,0");
+                        return current;
+                    },
+                    InitialLength = () =>
+                    {
+                        Event("H," + input[10]);
+                        if (input[12] == 3)
+                        {
+                            players[input[6] * 180 + 0x58] = 0x7f;
+                        }
+                        return (ushort)input[10];
+                    },
+                };
+                MissionFortPacketHooks hooks = new()
+                {
+                    Log = (owner, target) =>
+                    {
+                        Assert.Equal(input[6], owner);
+                        Assert.Equal(input[7], unchecked((uint)target));
+                        Event("L");
+                        if (input[12] == 1)
+                        {
+                            current = second;
+                        }
+                        else if (input[12] == 2)
+                        {
+                            current = null;
+                        }
+                    },
+                    MissingTemplate = () =>
+                    {
+                        Event("A,template");
+                        Assert.Equal(2u, input[12]);
+                        current = second;
+                    },
+                    Send = (target, bytes) =>
+                    {
+                        Event("S," + unchecked((uint)target));
+                        wire = Hex(bytes);
+                        uint imageSize = BinaryPrimitives.ReadUInt32LittleEndian(bytes[12..]);
+                        Assert.Equal((int)imageSize + 17, bytes.Length);
+                        ReadOnlySpan<byte> image = bytes.Slice(17, (int)imageSize);
+                        imageText = DashHex(image);
+                        // 실제 송신 출력에서 같은 예약 도우미를 별도 재생해 ff stale tail까지 비교한다
+                        MissionFortPacket packet = RawMissionLoginPackets.MakeMissionFortPacket(input[6], input[8], bytes[16], image, (ushort)input[10]);
+                        before = Hex(packet.Storage);
+                        RawMissionLoginPackets.FinalizeMissionFortPacket(packet.Storage, true);
+                        after = Hex(packet.Storage);
+                        Assert.Equal(wire, Hex(packet.Bytes()));
+                    },
+                };
+                RawMissionLoginPackets packets = new(OriginalEdition.Patch1078, players, reads, imageHooks, hooks);
+                Assert.Equal(input[11] != 0, packets.SendFort(input[6], unchecked((int)input[7]), input[8]));
+            }
+            if (imageText != row[2] || before != row[3] || after != row[4] || wire != row[5] || (trace.Length == 0 ? "-" : trace.ToString()) != row[6])
+            {
+                problems.Add(row[0] + "," + row[1] + " 현재 trace " + trace + " 기대 " + row[6]);
+            }
+            compared++;
+        }
+        Assert.Equal(103, compared);
+        NoProblems(problems, "Fort 송신·예약 103행");
+    }
+
+    /// <summary>현재 Template 없음은 자연 반환이고, 선택된 실제 소비자 누락은 그 원문 위치에서 거부한다. 패킷 도우미의 물리 경계도 확인한다.</summary>
+    [Fact]
+    public void MissionFortPacketSelectedBoundaries()
+    {
+        FortTemplate fort = FortInput(0, 0, 35, 0);
+        byte[] players = new byte[1620];
+        FortTemplate? current = null;
+        int readCount = 0;
+        MissionFortPacketReads input = new()
+        {
+            Current = _ =>
+            {
+                readCount++;
+                return current;
+            },
+            InitialLength = () => 0,
+        };
+        FortImageHooks image = new() { TypeCount = () => 188 };
+        MissionFortPacketHooks hooks = new();
+        RawMissionLoginPackets absent = new(OriginalEdition.Patch1078, players, input, image, hooks);
+        Assert.False(absent.SendFort(1, 9, 0));
+        Assert.Equal(1, readCount);
+        current = fort;
+        // 로그 장치가 없으면 Template를 찾은 뒤 로그 위치에서 거부한다
+        Assert.True(Throws(() => absent.SendFort(1, 9, 0)));
+        hooks = hooks with { Log = (_, _) => { } };
+        RawMissionLoginPackets noSend = new(OriginalEdition.Patch1078, players, input, image, hooks);
+        // 송신 장치가 없으면 패킷을 만든 뒤 송신 위치에서 거부하고, 범위 밖 owner는 먼저 거부한다
+        Assert.True(Throws(() => noSend.SendFort(1, 9, 0)));
+        Assert.True(Throws(() => noSend.SendFort(9, 9, 0)));
+        input = input with { Current = null };
+        Assert.True(Throws(() => new RawMissionLoginPackets(OriginalEdition.Patch1078, players, input, image, hooks)));
+        Assert.True(Throws(() => new RawMissionLoginPackets(OriginalEdition.Cd1072, players, input with { Current = _ => null }, image, hooks)));
+        Assert.True(Throws(() => new RawMissionLoginPackets(OriginalEdition.Patch1078, new byte[1619], input with { Current = _ => null }, image, hooks)));
+        RawMissionLoginPackets.FinalizeMissionFortPacket([], false);
+        Assert.True(Throws(() => RawMissionLoginPackets.FinalizeMissionFortPacket([], true)));
+        byte[] packet = new byte[17];
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(12), 0xffffffffu);
+        Assert.True(Throws(() => RawMissionLoginPackets.FinalizeMissionFortPacket(packet, true)));
+        MissionFortPacket malformed = new();
+        Assert.True(Throws(() => malformed.Bytes()));
+        malformed.Storage = new byte[4];
+        Assert.True(Throws(() => malformed.Bytes()));
+        Assert.True(Throws(() => RawMissionLoginPackets.MakeMissionFortPacket(1, 0, 0, new byte[32769], 0)));
+        // 정확히 실제 할당(0x8000)인 이미지는 거부하지 않고 예약은 이미지+20바이트다
+        Assert.Equal(32768 + 20, RawMissionLoginPackets.MakeMissionFortPacket(1, 0, 0, new byte[32768], 0).Storage.Length);
     }
 
     /// <summary>실제 파일의 현재 raw 섹션 변경이 반영되며 파일 캐시/해석 Money 필드로 되돌리지 않는다.</summary>
