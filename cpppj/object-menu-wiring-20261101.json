@@ -1,0 +1,392 @@
+{
+  "unit": 681,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "kind": "read-only static PE/source audit",
+  "nativeExecutions": 0,
+  "gameExecutions": 0,
+  "vtables": 83,
+  "populateRoutes": [
+    {
+      "originalBody": "0041c210",
+      "vtables": 1,
+      "consumer": "Meltdown",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 47,
+        "text": "case 0x41c210:"
+      }
+    },
+    {
+      "originalBody": "00420b30",
+      "vtables": 16,
+      "consumer": "Spell",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 79,
+        "text": "case 0x420b30:"
+      }
+    },
+    {
+      "originalBody": "00422000",
+      "vtables": 1,
+      "consumer": "Bridge",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 54,
+        "text": "case 0x422000:"
+      }
+    },
+    {
+      "originalBody": "004288f0",
+      "vtables": 7,
+      "consumer": "OpenCarrier",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 113,
+        "text": "case 0x4288f0:"
+      }
+    },
+    {
+      "originalBody": "0044cbd0",
+      "vtables": 20,
+      "consumer": "OpenDamageable",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 114,
+        "text": "case 0x44cbd0:"
+      }
+    },
+    {
+      "originalBody": "00454c00",
+      "vtables": 2,
+      "consumer": "OpenFactory",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 111,
+        "text": "case 0x454c00:"
+      }
+    },
+    {
+      "originalBody": "00462390",
+      "vtables": 1,
+      "consumer": "Buried",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 62,
+        "text": "case 0x462390:"
+      }
+    },
+    {
+      "originalBody": "00462550",
+      "vtables": 2,
+      "consumer": "Help",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 66,
+        "text": "case 0x462550:"
+      }
+    },
+    {
+      "originalBody": "00485600",
+      "vtables": 1,
+      "consumer": "Geyser",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 69,
+        "text": "case 0x485600:"
+      }
+    },
+    {
+      "originalBody": "0048eca0",
+      "vtables": 1,
+      "consumer": "IceTowerGrowth",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 72,
+        "text": "case 0x48eca0:"
+      }
+    },
+    {
+      "originalBody": "00494870",
+      "vtables": 1,
+      "consumer": "OpenPriest",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 112,
+        "text": "case 0x494870:"
+      }
+    },
+    {
+      "originalBody": "004b1270",
+      "vtables": 26,
+      "consumer": "OpenObject",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 115,
+        "text": "case 0x4b1270:"
+      }
+    },
+    {
+      "originalBody": "004dcca0",
+      "vtables": 4,
+      "consumer": "Temple",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 75,
+        "text": "case 0x4dcca0:"
+      }
+    }
+  ],
+  "openRoutes": [
+    {
+      "originalBody": "0041e660",
+      "vtables": 16,
+      "consumer": "OpenSelectionMenu(true)",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 129,
+        "text": "case 0x41e660:"
+      }
+    },
+    {
+      "originalBody": "004268c0",
+      "vtables": 7,
+      "consumer": "OpenSelectionMenu(false)",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 128,
+        "text": "case 0x4268c0:"
+      }
+    },
+    {
+      "originalBody": "004754b0",
+      "vtables": 2,
+      "consumer": "OpenFactory",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 126,
+        "text": "case 0x4754b0:"
+      }
+    },
+    {
+      "originalBody": "00492080",
+      "vtables": 1,
+      "consumer": "OpenSelectionMenu(false)",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 128,
+        "text": "case 0x492080:"
+      }
+    },
+    {
+      "originalBody": "004adb30",
+      "vtables": 55,
+      "consumer": "Open",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 127,
+        "text": "case 0x4adb30:"
+      }
+    }
+  ],
+  "variantCommands": [
+    {
+      "global": "00542ad4",
+      "command": "030000f8",
+      "label": "Meltdown",
+      "sources": [
+        {
+          "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+          "line": 190,
+          "text": "command==0x030000f8U"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 3986,
+          "text": "current.meltdown->Command"
+        }
+      ]
+    },
+    {
+      "global": "00542b5c",
+      "command": "02000125",
+      "label": "Set as Cracked",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1095,
+          "text": "transitionCode>=0x02000125U"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 3787,
+          "text": "RawCampaignSession::SetBridgeQuality"
+        }
+      ]
+    },
+    {
+      "global": "00542b60",
+      "command": "02000126",
+      "label": "Set as Normal",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1095,
+          "text": "transitionCode<=0x02000127U"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 3787,
+          "text": "RawCampaignSession::SetBridgeQuality"
+        }
+      ]
+    },
+    {
+      "global": "00542b64",
+      "command": "02000127",
+      "label": "Set as Hard",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1096,
+          "text": "transitionCode-0x02000125U"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 3787,
+          "text": "RawCampaignSession::SetBridgeQuality"
+        }
+      ]
+    },
+    {
+      "global": "00542a2c",
+      "command": "030000ce",
+      "label": "Turn To Spell/Obelisk",
+      "sources": [
+        {
+          "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+          "line": 190,
+          "text": "command==0x030000ceU"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 3996,
+          "text": "RawObjectConversion(current.core.pool"
+        }
+      ]
+    },
+    {
+      "global": "005427ac",
+      "command": "0200002d",
+      "label": "CHEAT Dig Up",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1099,
+          "text": "transitionCode==0x0200002dU"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1102,
+          "text": "GemReward().Reveal"
+        }
+      ]
+    },
+    {
+      "global": "005428c8",
+      "command": "03000074",
+      "label": "Detonate",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1106,
+          "text": "DispatchDetonateInput(event"
+        },
+        {
+          "path": "cpppj/src/client/DetonateInput.cpp",
+          "line": 12,
+          "text": "objectInput(target,event.code)"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 3996,
+          "text": "RawObjectConversion(current.core.pool"
+        }
+      ]
+    },
+    {
+      "global": "00542754",
+      "command": "02000017",
+      "label": "About/Help",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1031,
+          "text": "transitionCode==0x02000017U"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 692,
+          "text": "Menus()->OpenHelp"
+        }
+      ]
+    },
+    {
+      "global": "00542974",
+      "command": "020000a0",
+      "label": "Knowledge",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1144,
+          "text": "transitionCode==kShowTechnologyCommand"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1145,
+          "text": "OpenKnowledge(world_->Session()"
+        }
+      ]
+    }
+  ],
+  "deferredOpenRoutes": [
+    {
+      "originalBody": "004789b0",
+      "vtables": 1,
+      "consumer": "MP Metadisplay Battle/Challenge",
+      "path": "extracted/refined/originals/Netstorm.c",
+      "line": 98971,
+      "status": "3차 MP 무시험 사전 구현으로 이월; 현재 Client에 미연결"
+    },
+    {
+      "originalBody": "00479390",
+      "vtables": 1,
+      "consumer": "MP Challenge Area",
+      "path": "extracted/refined/originals/Netstorm.c",
+      "line": 99328,
+      "status": "3차 MP 무시험 사전 구현으로 이월; 현재 Client에 미연결"
+    }
+  ],
+  "unclassifiedRegisteredRoutes": [],
+  "preliminary": "최초 도구의 열기5개 전체 가정이 실패했다. 실제 PE에는7입구가 있었으며 남은2개는 기존 Metadisplay/Challenge MP 본체였다. 이를 비멀티 누락이나 실행 통과로 세지 않고3차 이월로 분류했다.",
+  "limits": "연결 지점/생성표를 대조했다. 모든 소유자/상태/픽셀/수명 효과의 실행 검증, CD 본문 대조, 전체 선택기 및 간접 alias 부재 증거가 아니다. 공중3종도 정적으로만 읽었으며 MP/포획/희생/공격/승리 검사는0이다.",
+  "sha256": {
+    "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "352480fb2e9848bb06f6826521ba503ab195fcd21e830ff0fd98c0112f48ff8e",
+    "cpppj/src/client/DetonateInput.cpp": "93fcc32b176e2b91877e31f642a4b002d79c844f1331a7e8a5350783799958d1",
+    "cpppj/src/client/ObjectMenuSlots.inc": "5845a39dd745b232f0921a5b48091c1854d34b3c32131a1493ed45c76637ab20",
+    "cpppj/src/client/RawCampaignSession.cpp": "fd1550a8af325bc9a630b828a55318c92f862f0dedb4adca957fc989128b4a3f",
+    "cpppj/src/client/RawObjectMenuVariants.cpp": "070542ffe01249e9682d16f4768668730fcce15a454a4bb3333f856e24dd0073",
+    "cpppj/src/client/UberGump.cpp": "116e1d82a95c5c207c583fbe4158f20b6526decaedbfedc100043d17410f15a5",
+    "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/cpp_object_menu_wiring_audit.py": "22f7e25b8dd26eef03c3e20f146ff5409900da0dcb779ac55e43351c376595c1"
+  }
+}
