@@ -1,0 +1,111 @@
+{
+  "unit": 691,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "case": "TheWarBegins LoadLocalConnection/Create89 flags0/owner1/Pop(112,118,0)",
+  "inputRole": "C++가제공한물리입력만사용. 기대출력은보호PE가생성.",
+  "observations": 3,
+  "precisionOrRepeatDifferences": 0,
+  "cppOutputDifferences": 0,
+  "cppResult": 2,
+  "typeName": "residence",
+  "flags1": 1048578,
+  "flags2": 1073741840,
+  "foot": [
+    4,
+    4
+  ],
+  "nativeRawBefore": "40f5500000000000000059040000000000000000000000000000000000000000000001000000000000000000000000000000",
+  "nativeRawAfter": "40f55000000000000000590400000000e0420000ec4200071205000000000000000001000000000000000000000000000000",
+  "spotsBeforeSha256": "895db7df961492080d5d120e85a9b5750bda3f50936dd6abdbf945118e895d10",
+  "spotsAfterSha256": "d49eec6c14fb561b888ce0d2f82baf3627d937a26e33c4155af5a1fa85531076",
+  "changedSpots": [
+    {
+      "index": 29549,
+      "x": 109,
+      "y": 115,
+      "before": 0,
+      "after": 16
+    },
+    {
+      "index": 29550,
+      "x": 110,
+      "y": 115,
+      "before": 0,
+      "after": 16
+    },
+    {
+      "index": 29551,
+      "x": 111,
+      "y": 115,
+      "before": 0,
+      "after": 16
+    }
+  ],
+  "nativeCalls": [
+    "004b02d0",
+    "004210a0",
+    "004e49c0",
+    "004e49c0",
+    "0049a840",
+    "004e49c0",
+    "004e49c0",
+    "004e49c0",
+    "004e49c0",
+    "0040e800",
+    "004afd30",
+    "0049a840",
+    "0049a840",
+    "0049a900",
+    "004e49c0",
+    "004e49c0",
+    "0049a840",
+    "004e49c0",
+    "004e49c0",
+    "0049a840",
+    "004afd30",
+    "0049a840",
+    "0049a840",
+    "0049a900",
+    "004e49c0",
+    "004e49c0",
+    "0049a840",
+    "004e49c0",
+    "004e49c0",
+    "0049a840",
+    "004afd30",
+    "0049a840",
+    "0049a840",
+    "0049a900",
+    "004e49c0",
+    "004e49c0",
+    "0049a840",
+    "004e49c0",
+    "004e49c0",
+    "0049a840",
+    "004afd30",
+    "0049a840",
+    "0049a840",
+    "0049a900",
+    "004e49c0",
+    "004e49c0",
+    "0049a840",
+    "004e49c0",
+    "004e49c0"
+  ],
+  "fixtures": {
+    "pop89-context-x86.tsv": "6cf932e3bb7eb2adcb0282fd4567f87b56ae255647aff04ef8a0ad76998ed3a4"
+  },
+  "boundaries": "실제4b02d0/4210a0/49a840/ftol/40e800/4afd30/49a900을대체없이실행했다. 같은TYPE4필드와전체점유표/50BYTE가입력이다. 진단/미허용하위/외부상태쓰기는거부한다. C++세계와원본게임의자연생성동일성증거가아니며공격/승리/GUI/통신/MP는0이다.",
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools\\decomp_pop89_context.py": "f1d41642043056603823f2918ebc6141119d560dede0982445397a4888d17393",
+    "tools\\decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "extracted\\cpp-pop-context-691\\probe.log": "d9521ce4c6c3d581dc8bfa4daacd505f4d95fdc11c16a36fe0cc77b04f914dab"
+  }
+}

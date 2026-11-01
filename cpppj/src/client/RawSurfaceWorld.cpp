@@ -206,10 +206,13 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     void Invalidate(o::SquidDisplayRect rect,std::uint32_t flags) override { changed=true;if (displayHooks.invalidate) displayHooks.invalidate(rect,flags); }
     // 현재 raw 프레임의 SHP 크기로 실제 공간과 파생 postPop을 등록한다.
     void Pop(o::Sid sid,float x,float y,std::uint32_t flags) {
-        const auto raw=pool.Slot(sid);const auto number=static_cast<std::int32_t>(Read(raw,edition==o::OriginalEdition::Patch1078 ? 36 : 34,edition==o::OriginalEdition::Patch1078 ? 4 : 1));
+        if (edition==o::OriginalEdition::Patch1078 && (!sid.value || sid.value>=pool.Capacity())) return; // 원문4b02d0의범위밖this는타입/그림을조회하기전에자연반환한다.
+        const auto raw=pool.Slot(sid);
+        if (edition==o::OriginalEdition::Patch1078 && (!(raw[11]&4U) || (raw[11]&8U))) return; // nonvoid/contained도원문앞단에서끝나므로유효하지않은프레임을새로조회하지않는다.
+        const auto number=static_cast<std::int32_t>(Read(raw,edition==o::OriginalEdition::Patch1078 ? 36 : 34,edition==o::OriginalEdition::Patch1078 ? 4 : 1));
         const auto size=display->FrameSize(edition,raw,number);
-        if (pop->Pop(sid,types[raw[10]],size[0],size[1],x,y,flags)!=o::RawPopResult::Registered) throw std::logic_error("raw 표면 월드 Pop 실패");
-        changed=true;
+        const auto result=pop->Pop(sid,types[raw[10]],size[0],size[1],x,y,flags);
+        if (result!=o::RawPopResult::Unchanged) changed=true; // 원문void Pop의겹침은부분좌표/spot을남긴정상반환이다. 호스트예외/성공등록/롤백으로변환하지않는다.
     }
     // 가상 삭제가 거부되면 changed를 새로 켜지 않는다.
     bool Destroy(o::Sid sid,std::uint32_t flags) { const bool result=formDispatch->Destroy(sid,flags);if (result) changed=true;return result; }

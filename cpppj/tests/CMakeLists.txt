@@ -2762,3 +2762,13 @@ add_executable(netstorm_destroy_at_tests FocusedTestMain.cpp DestroyAtTests.cpp 
 target_link_libraries(netstorm_destroy_at_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_destroy_at_tests)
 target_compile_definitions(netstorm_destroy_at_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 실제1-1의Pop겹침입력과기존두판본공간원문검사를선택실행한다(단위691).
+set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_POP89_CONTEXT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pop89-context-x86.tsv\"")
+add_executable(netstorm_pop_context_tests FocusedTestMain.cpp PopTests.cpp)
+target_link_libraries(netstorm_pop_context_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_pop_context_tests)
+target_compile_definitions(netstorm_pop_context_tests PRIVATE
+    NETSTORM_POP_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pop-x86.tsv"
+    NETSTORM_POP_VTABLE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pop-vtables.tsv") # 기존공간검사의독립기대값도같은경로로읽는다.

@@ -79,3 +79,34 @@ TEST_CASE(CampaignSession_DestroyAtUsesActualFinderAndVirtualDeletion) {
     session.DestroyAt("(10x10)"+type+"/25#1");CHECK((core.pool.Slot(target)[11]&1U)!=0);
     CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+
+//690과같은입력의겹침종료·부분쓰기와전체raw/점유표를별도로실행한원문출력에대조한다.
+TEST_CASE(CampaignSession_PopOriginalOverlapContext) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/TheWarBegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",std::move(services));session.LoadLocalConnection();auto core=session.Core();
+    const auto target=session.World().Create(89,0);core.owner.Set(target,session.LocalOwner());const auto raw=core.pool.Slot(target);const auto& type=core.types[89];
+    const auto size=core.display.FrameSize(OriginalEdition::Patch1078,raw,std::bit_cast<std::int32_t>(Get(raw,36)));const auto fixture=LoadFixture(NETSTORM_POP89_CONTEXT_FIXTURE);CHECK(fixture.rows.size()==1);const auto& row=fixture.rows.at(0);CHECK(row.size()==11);
+    const auto adler=[](std::span<const std::uint8_t> bytes) { std::uint32_t first=1,second=0;for (const auto byte:bytes) { first=(first+byte)%65521;second=(second+first)%65521; }return (second<<16)|first; }; //원문관측파일의전체입력/출력점유표체크값이며정답계산에쓰지않는다.
+    CHECK(Hex(raw)==row[0] && adler(core.spots)==Number(row[2]));CHECK(type.flags1==Number(row[5]) && type.flags2==Number(row[6]) && type.footX==std::stoi(row[7]) && type.footY==std::stoi(row[8]));CHECK(std::bit_cast<std::uint32_t>(size[0])==Number(row[9]) && std::bit_cast<std::uint32_t>(size[1])==Number(row[10]));
+    std::vector<std::uint8_t> expected(core.spots.begin(),core.spots.end());
+    for (const auto& change:Split(row[4],';')) { const auto values=Split(change,':');CHECK(values.size()==3);const auto index=Number(values[0]);CHECK(expected.at(index)==Number(values[1]));expected.at(index)=static_cast<std::uint8_t>(Number(values[2])); } //실제원문이바꾼세칸의관측값만반영한다.
+    CHECK((core.spots[115*256+112]&0x10U)!=0); //목표4×4발자국의첫행네번째칸이이미겹침비트를가진실제입력이다.
+    static_cast<void>(session.World().TakeChanged());session.World().Pop(target,112,118,0);
+    CHECK(Hex(core.pool.Slot(target))==row[1] && adler(core.spots)==Number(row[3]) && session.World().TakeChanged());CHECK(std::equal(expected.begin(),expected.end(),core.spots.begin()));
+    CHECK((core.pool.Slot(target)[11]&4U)!=0 && core.bookkeeping.depth==0); //해시/활성화이전의원문반환으로void와깊이를유지한다.
+}
+
+// 원문앞단의0/범위밖/nonvoid/contained는그림조회·원문효과·changed없이돌아온다.
+TEST_CASE(CampaignSession_PopOriginalEarlyReturnsBeforeFrameLookup) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/TheWarBegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",std::move(services));session.LoadLocalConnection();auto core=session.Core();
+    static_cast<void>(session.World().TakeChanged());CHECK(core.pool.Capacity()<65536);
+    session.World().Pop(Sid{},10,10,0);session.World().Pop(Sid{static_cast<std::uint16_t>(core.pool.Capacity())},10,10,0);CHECK(!session.World().TakeChanged());
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);CHECK((core.types[154].flags2&0x8100U)==0x8000U);
+    const auto contained=session.CreateContained(priest,154,1,0x20,0x10,0);CHECK((core.pool.Slot(contained)[11]&8U)!=0); //Factory생성만으로는void이며실제부착뒤에contained가된다. 너겟만부착하고예약된표시/사건프레임은실행하지않는다.
+    const auto containedBefore=Hex(core.pool.Slot(contained));static_cast<void>(session.World().TakeChanged());session.World().Pop(contained,10,10,0);CHECK(Hex(core.pool.Slot(contained))==containedBefore && !session.World().TakeChanged());
+    Sid ground{};for (const auto value:core.hash.Entries(0)) if (value && core.pool.Slot(Sid{value})[10]==97) { ground=Sid{value};break; } // 실제등록된지면으로nonvoid경로를선택한다.
+    CHECK(ground.value!=0);if (!ground.value) return;auto raw=core.pool.AllocatedBytes(ground);const auto originalFrame=Get(raw,36);Put(raw,36,0xffffffffU);const auto before=Hex(raw);std::string error;
+    try { session.World().Pop(ground,10,10,0); }catch (const std::exception& failure) { error=failure.what(); } // 실패해도세션반납전에실제프레임을복원한다.
+    const bool unchanged=Hex(raw)==before;Put(raw,36,originalFrame);CHECK(error.empty() && unchanged && !session.World().TakeChanged());
+}

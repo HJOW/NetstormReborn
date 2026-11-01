@@ -1,0 +1,87 @@
+{
+  "unit": 691,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productVersion": "11.01",
+  "productSha256": "6ccca0f0e79ecb5466c670f04f8b100dd1bb9a31b5dc05205fc1ebb4ebca48dc",
+  "native": {
+    "cases": 1,
+    "observations": 3,
+    "differences": 0,
+    "frozenBeforeProductEdit": true,
+    "replacedFunctions": 0,
+    "returnType": "void",
+    "cppDiagnosticResult": 2,
+    "meaning": "실제 residence 4x4 첫행 네번째 칸 겹침. 원문은 좌표/앞선 세 spot을 남기고 해시·활성화 전에 자연 반환한다. enum2는 C++ 진단값이며 원문 반환값이 아니다.",
+    "initialToolFailure": "괄호 누락 Python 구문 오류, 원문 실행 전 중단. native-v2를 최초 기대값으로 동결."
+  },
+  "change": "상위 RawSurfaceWorld가 Pop 겹침/무변경을 예외로 바꾸던 차이를 제거. 패치의 범위밖/nonvoid/contained 앞단은 SHP 조회 전에 자연 반환. 하위 SquidPop 배치 정책과 부분 쓰기는 유지.",
+  "build": {
+    "probeExit": 0,
+    "initialFocusedExit": 1,
+    "initialFailure": "새 집중 대상의 기존 Pop fixture/vtable 컴파일 정의 누락. 제품/Session 대상은 성공.",
+    "finalProductAndTargetsExit": 0,
+    "finalSessionRebuildExit": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0
+  },
+  "focused": {
+    "target": "netstorm_pop_context_tests",
+    "registered": 4,
+    "executed": 4,
+    "failedChecks": 0,
+    "existingRawLifecycleSteps": 4600
+  },
+  "session": {
+    "target": "netstorm_world_generation_tests",
+    "registered": 268,
+    "filter": "CampaignSession_PopOriginal",
+    "executed": 2,
+    "failedChecks": 0,
+    "initialFailedChecks": 1,
+    "initialFailure": "CreateContained만 한 void 객체를 이미 contained로 간주한 입력 오류. 실제 생성/부착으로 정정했으며 제품 guard를 통과시키기 위한 변경 없음.",
+    "coverage": "1-1 실제89 입력의 전체50BYTE/65536spot와 원문 fixture 대조. 실제 너겟 부착 뒤 contained 및0/범위밖/nonvoid의 프레임 조회 생략/무변경."
+  },
+  "finalUniqueSelectedTests": 6,
+  "newTests": 2,
+  "existingTests": 4,
+  "protection": {
+    "unchangedExisting": 2611,
+    "changed": [],
+    "newFixtures": 1,
+    "currentFixtures": 792,
+    "currentProtectedTotal": 2612,
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77"
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "full34Runs": 0,
+  "fullCppRuns": 0,
+  "newZip": false,
+  "limits": "새 원문은10.78의 특정 겹침1입력이다. 기존 두판본4600순서 대조와 구별하며 CD 새 게임/모든 겹침·파생/전체 공간 ABI·자연 생성·GUI 동일성으로 확대하지 않는다. 포획/희생/특정적공격/승리·공중3종 전용 검사0.",
+  "sha256": {
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "19987aa408a7852a08c59114103e909eec71947eb93dafff5ca223e16790a1dc",
+    "cpppj/tests/CampaignWorldGenerationTests.inc": "82575123edaeafc14fdf4c376502430aeef9cf3f8ae92b31e0121f94acfe9745",
+    "cpppj/tests/CMakeLists.txt": "f7527179dbb15d351ee6a735c747d50752013282b434ef30d2c23e48ca6854b7",
+    "cpppj/tests/fixtures/pop89-context-x86.tsv": "6cf932e3bb7eb2adcb0282fd4567f87b56ae255647aff04ef8a0ad76998ed3a4",
+    "cpppj/pop89-context-native-20261101.json": "6ce1bc12f5a731d01a6088d8b14b78a30903afd8beef2ff45520918c962601ba",
+    "tools/decomp_pop89_context.py": "f1d41642043056603823f2918ebc6141119d560dede0982445397a4888d17393",
+    "extracted\\cpp-pop-context-691\\build-final.log": "4eaede3e745006501faf2bdae3fdb447c5119a8f873ecf98d5791498a691a785",
+    "extracted\\cpp-pop-context-691\\build-probe.log": "f1c6842bb63ce77f92e595674cb3a4a6cce542c66f4268513d3bd7683c7330e2",
+    "extracted\\cpp-pop-context-691\\build-session-v3.log": "e04617f5d1dc80c35aa626ef823087f5ad93d26a11ecec41552a4d9d7d9b1043",
+    "extracted\\cpp-pop-context-691\\build-v2.log": "8bbdac6efdd34ba67b813e3a895ef9f13eed7201d987a118579c374dad617085",
+    "extracted\\cpp-pop-context-691\\native-v2.log": "08d78bdf9def689bc447ec14558ce2a7e254c21159272244dbe4b714682ef442",
+    "extracted\\cpp-pop-context-691\\native.log": "991b011ebe9120b5cd29251c5fabab0d9c3ec883784ba5a4fb1ac68ee19892ad",
+    "extracted\\cpp-pop-context-691\\pop-tests.log": "bdc96704af722e97df53604109675df1524ad9aa02cf2753124f86ea9a995b8f",
+    "extracted\\cpp-pop-context-691\\probe.log": "d9521ce4c6c3d581dc8bfa4daacd505f4d95fdc11c16a36fe0cc77b04f914dab",
+    "extracted\\cpp-pop-context-691\\session-tests-v3.log": "0f5cfdd0cc103390862a203426e967c31cc3445e2b024e1d2fc09e666438b7e5",
+    "extracted\\cpp-pop-context-691\\session-tests.log": "911c4d49b85abe68564b3e4d0a92f48113ddf8825eabcda21f66ac9213de0931",
+    "extracted/cpp-pop-context-691/session-registered.txt": "c739c770359e3151f471d287b9817639936f9ec953f4cf41d97f50814e8f5441",
+    "extracted/cpp-pop-context-691/protection.json": "74b47a07dca01d611fc744f17f89e8d02d86c4901eb72de479a6e10122681e8b"
+  }
+}
