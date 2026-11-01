@@ -15,11 +15,13 @@ public sealed class EditorWorkspacePaths
         ArgumentException.ThrowIfNullOrWhiteSpace(sourceRoot);
         SourceRoot = Canonical(sourceRoot); var source = new DirectoryInfo(SourceRoot);
         if (source.Parent == null || source.Name.Length == 0) throw new ArgumentException("편집 자산 루트의 형제 경로 없음", nameof(sourceRoot));
-        WorkRoot = Canonical(Path.Combine(source.Parent.FullName, source.Name + "-editor"));
+        string expected = Path.GetFullPath(Path.Combine(source.Parent.FullName, source.Name + "-editor"));
+        WorkRoot = Canonical(expected);
+        if (!string.Equals(expected, WorkRoot, StringComparison.OrdinalIgnoreCase)) throw new ArgumentException("편집 작업본의 외부 링크 경계");
         if (Inside(SourceRoot, WorkRoot) || Inside(WorkRoot, SourceRoot)) throw new ArgumentException("편집 원본과 작업 경로 중첩");
     }
     /// <summary>기존 경로 요소의 링크를 해석하고 없는 나머지 요소는 정규화해 반환한다.</summary>
-    private static string Canonical(string input)
+    internal static string Canonical(string input)
     {
         string absolute = Path.GetFullPath(input); string root = Path.GetPathRoot(absolute) ?? throw new ArgumentException("절대 경로 루트 없음");
         string current = root;
@@ -34,7 +36,7 @@ public sealed class EditorWorkspacePaths
         return Path.TrimEndingDirectorySeparator(Path.GetFullPath(current));
     }
     /// <summary>Windows 원본의 대소문자 무시 비교와 경로 요소 경계를 함께 검사한다.</summary>
-    private static bool Inside(string root, string path) => path.Equals(root, StringComparison.OrdinalIgnoreCase) ||
+    internal static bool Inside(string root, string path) => path.Equals(root, StringComparison.OrdinalIgnoreCase) ||
         path.StartsWith(root + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
     /// <summary>상대 또는 원본·작업본 절대 FileSpec을 검증된 같은 작업본 전체 경로에 대응시킨다.</summary>
     public string Resolve(string configured)
