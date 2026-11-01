@@ -2847,3 +2847,9 @@ target_sources(netstorm_tests PRIVATE PriestSelectionShortcutTests.cpp)
 add_executable(netstorm_priest_selection_shortcut_tests FocusedTestMain.cpp PriestSelectionShortcutTests.cpp NextUnitSelectionTests.cpp MultipleSelectionTests.cpp UserSelectionTests.cpp)
 target_link_libraries(netstorm_priest_selection_shortcut_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_priest_selection_shortcut_tests)
+
+# 선택 키의 실제 입력 부모·기존 N/P/R 몸체와 Guide/View 명령을 좁게 확인한다(704).
+target_sources(netstorm_tests PRIVATE SelectionKeyInputTests.cpp)
+add_executable(netstorm_selection_key_input_tests FocusedTestMain.cpp SelectionKeyInputTests.cpp NextUnitSelectionTests.cpp PriestSelectionShortcutTests.cpp GameMenuActionsTests.cpp TutorialOneTests.cpp)
+target_link_libraries(netstorm_selection_key_input_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_selection_key_input_tests)

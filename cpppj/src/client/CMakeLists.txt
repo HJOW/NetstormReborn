@@ -318,3 +318,4 @@ target_sources(netstorm PRIVATE MainMenuActivity.cpp MainMenuActivity.h) # 실�
 target_sources(netstorm PRIVATE ClientUserSelectionGlobals.cpp) # 실제 Shift 다중 선택의 고정30슬롯 목록 추가/제거를 연결한다.
 target_sources(netstorm PRIVATE NextUnitSelection.cpp NextUnitSelection.h) # N/Shift+N의 실제 순환 검색·선택·카메라 이동 부모를 연결한다.
 target_sources(netstorm PRIVATE PriestSelectionShortcut.cpp PriestSelectionShortcut.h) # P/R의 실제 참여 조회·선택과 반복 View 명령을 연결한다.
+target_sources(netstorm PRIVATE SelectionKeyInput.cpp SelectionKeyInput.h) # H/F4/F5 일반 View 큐·Ctrl F5/N·P/R의 공통 정지 관문을 연결한다.

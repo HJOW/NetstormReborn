@@ -590,6 +590,7 @@ void UberGump::RefreshWindowTitle() {
 }
 // 원본 Begin의 현재 finish/release 뒤 새 빈 미션을 만든다. StartDemo의 직접 지정값도 설치 전에 공급한다.
 void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mode) {
+    if (const auto parent=rawButtons_->MainMenuToken()) rawButtons_->KillGump(parent); //원본에 없는 --mission 예약은 첫 Native State3보다 앞일 수 있다. 실제 Begin 시 일반 메인 버튼 선택과 같은 부모 Kill을 예약해 Guide의 dialogsClear를 막지 않게 한다.
     auto source=mission_ ? mission_->FileSource() : o::ConfigInterface::FileReader{};auto effects=MissionTransitionEffects();effects.create=[this,demo,mode,source=std::move(source)](std::string_view target) { CreateMission(std::string(target),demo,mode,source); }; //기존 Guide를 해제하기 전에 명시 namespace를 소유 복사하며 다음 공장이 같은 source를 사용한다.
     BeginGuideMission(name,effects);
 }
@@ -1064,9 +1065,7 @@ void UberGump::Event(InputEvent event) {
     if (DispatchMissionAbort(event,client_.Input(),[this](std::string_view section) { Tell(std::string(section)); })) return;
     if (!missionRuntime_ && DispatchMissionFirst(event,{})) return; // 원본 Guide는 현재 미션이 없어도 First를 소비한다. 실제 Runtime이 있는 비Tutorial 미션을 빈 Guide로 판정하지 않는다.
     if (missionRuntime_ && missionRuntime_->tutorial) {
-        auto missionEvent=event; // 실제 카메라 F4 입력과 단계 판정이 같은 홈 명령을 보게 한다.
-        if ((event.code&0x83ffffffU)==(0x73U<<InputCode::kVirtualKeyShift)) missionEvent.code=0x020000aeU;
-        if (missionRuntime_->tutorial->Event(missionEvent)) return;
+        if (missionRuntime_->tutorial->Event(event)) return; //F4/H의 실제 ViewHome 큐가 다음 사건으로 한 번 도착한다. 원시 키를 별도 Home 명령으로 합성하지 않는다.
     }
     bool worldUiRouted=false; // 실제 HTML 모달과 월드 사건은 같은 공통 Gump에서 먼저 한 번만 소비를 판정한다.
     if (popup_.empty() && ((world_ && state_.phase==ClientPhase::Mission) || rawButtons_->Menus()->HtmlWindowsOpen() || (state_.phase==ClientPhase::MainMenu && rawButtons_->Menus()->HasMenus()))) {

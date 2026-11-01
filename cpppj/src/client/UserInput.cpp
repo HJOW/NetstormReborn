@@ -4,13 +4,11 @@
 #include "client/ClientGameplayGlobals.h" //Ctrl+special 강제 후보 조회의 현재0055a480을 읽는다.
 #include "client/RawUserSelection.h" //원문 WorldDestSelected와 실제 Shift 다중 선택 부모를 사용한다.
 #include "client/RawCampaignCursor.h"
+#include "client/SelectionKeyInput.h" //H/F4/F5의 일반 View 큐와 N/P/R의 원문 부모 정지 관문이다.
+#include "client/GameMenuCommands.h" //현재 메뉴 명령 ID를 기존 조회 표에서 읽는다.
 #include <bit> //View 명령의 owner DWORD를 같은 signed 큐 저장 비트로 전달한다.
 
 namespace netstorm::client {
-namespace {
-// 이 입력 어댑터가 아직 처리하는 두 Home 키이며 화살표 카메라 속도를 따로 만들지 않는다.
-constexpr unsigned kF4=0x73,kF5=0x74;
-}
 // 같은 Client/World를 빌리며 별도 키 누름/임시 카메라 시계를 만들지 않는다.
 UserInput::UserInput(Client& client,GameWorld& world) : client_(client),world_(world) {}
 // 원본의 좌클릭 이동과 우클릭 메뉴를 구분한다.
@@ -21,17 +19,14 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     client_.Configuration().ReadInt("rotmode",rotateMode);
     if (world_.Session().Cursor().HandleInput(event,static_cast<std::uint32_t>(rotateMode))) return {};
     if (QueueProductionShortcut(event,client_.Paused(),{[] { return kProductionBridgeCommand; },[this](auto command,auto slot,auto zero) { client_.Input().PushCommand(command,slot,zero); }})) return {}; // 실제 Gump 경로가 같은 큐의 다음 사건을 소비한다.
+    SelectionKeyInputHooks selectionKeys;selectionKeys.paused=[this] { return client_.Paused(); };selectionKeys.command=[](auto address) { return GameMenuCommandValue(address).value(); };selectionKeys.localOwner=[this] { return world_.Session().LocalOwner(); }; //같은 실제 Client/Session의 현재 입력 경계를 사용한다.
+    selectionKeys.queue=[this](auto code,auto first,auto second) { client_.Input().PushCommand(code,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };selectionKeys.next=[this](auto add) { world_.SelectNextUnit(add); };selectionKeys.priest=[this,queue=selectionKeys.queue] { world_.SelectPriest(queue); };
+    if (DispatchSelectionKeyInput(event,selectionKeys)) return {};
     const auto key=(event.code>>InputCode::kVirtualKeyShift)&255u;
     const bool release=(event.code & InputCode::kRelease)!=0;
     if (key>=8) {
         if (release) return {};
-        if (key==kF4) world_.Home(false); if (key==kF5) world_.Home(true); return {};
-    }
-    const auto character=event.code & 0xffffu;
-    if (!release && (character=='n' || character=='N')) { world_.SelectNextUnit(event.code&InputCode::kShift);return {}; } //004d9a2f는 Shift 원문 비트를 인자로 그대로 전달한다.
-    if (!release && (character=='h' || character=='H')) { world_.Home(false); return {}; }
-    if (!release && (character=='p' || character=='P' || character=='r' || character=='R')) {
-        world_.SelectPriest([this](auto code,auto first,auto second) { client_.Input().PushCommand(code,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); });return {}; //실제 원문 참여 조회/반복 카운터와 일반 View 큐를 사용한다.
+        return {}; //F4/F5는 위의 원문 View/다음 유닛 큐 경로가 처리했다.
     }
     if (release) return {};
     const ScreenPoint point{event.x,event.y};

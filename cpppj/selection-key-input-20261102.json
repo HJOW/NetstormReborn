@@ -1,0 +1,594 @@
+{
+  "unit": 704,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "e3a7a5e6735c581a3f8e987937e71750be35025e79bb2be6c348f58451d7d9f3",
+  "nativeParentInputs": 480,
+  "newCppTests": 4,
+  "existingCppTests": 12,
+  "focusedTests": 16,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "gameExecutions": 3,
+  "guiFinalPassed": true,
+  "guiFinalExit": 0,
+  "protectedExisting": 2622,
+  "protectedChanged": 0,
+  "newFixtures": 1,
+  "protectedFiles": 2623,
+  "cameraRevisionChecks": {
+    "initial": 3,
+    "priestSelected": 3,
+    "priestRepeat": 4,
+    "next": 5,
+    "ctrlNext": 6,
+    "paused": 6,
+    "pausedKeys": 6,
+    "resumed": 6,
+    "priestView": 7,
+    "blockedHome": 7,
+    "blockedShift": 7,
+    "home": 8,
+    "viewAgain": 9,
+    "homeF4": 10,
+    "releasedHome": 10
+  },
+  "guiObservations": {
+    "initial": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "0"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "3",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "13.323",
+        "15.248"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "12"
+      ]
+    },
+    "priestSelected": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "3",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "13.575",
+        "15.5"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "priestRepeat": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "4",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "13.809",
+        "15.734"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "next": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "5",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "14.059",
+        "15.984"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "ctrlNext": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "14.294",
+        "16.219"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "paused": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "1"
+      ],
+      "time": [
+        "14.451",
+        "16.469"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "pausedKeys": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "1"
+      ],
+      "time": [
+        "14.451",
+        "16.937"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "resumed": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "14.544",
+        "17.14"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "priestView": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "7",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "14.919",
+        "17.515"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "blockedHome": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "7",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "15.249",
+        "17.845"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "blockedShift": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "7",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "15.59",
+        "18.186"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "home": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "784",
+        "804"
+      ],
+      "raw_camera_frame": [
+        "784",
+        "804",
+        "784",
+        "804",
+        "6",
+        "8",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "15.934",
+        "18.53"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "viewAgain": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "976",
+        "793"
+      ],
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "9",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "16.263",
+        "18.859"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "homeF4": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "784",
+        "804"
+      ],
+      "raw_camera_frame": [
+        "784",
+        "804",
+        "784",
+        "804",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "16.622",
+        "19.218"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    },
+    "releasedHome": {
+      "phase": [
+        "4"
+      ],
+      "selected": [
+        "15000"
+      ],
+      "camera": [
+        "784",
+        "804"
+      ],
+      "raw_camera_frame": [
+        "784",
+        "804",
+        "784",
+        "804",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "paused": [
+        "0"
+      ],
+      "time": [
+        "16.857",
+        "19.453"
+      ],
+      "raw_input": [
+        "15000",
+        "5",
+        "14",
+        "12"
+      ]
+    }
+  },
+  "firstFailures": {
+    "buildV1": "Two signed/unsigned optional comparison warnings in new test; changed expected0 to0U",
+    "liveV1": "Exit1: fixed Play Mission click while Loading; no feature-key check",
+    "liveV2": "Exit0 but still Loading: Main parent201 blocked Guide initialization in direct --mission entry",
+    "buildV3": "Built but not run: moved cleanup from scheduling StartMission to actual BeginMission after initial Native3 creates parent"
+  },
+  "limits": [
+    "Reviewed paused/key-dispatch range executed; Next/Priest/queue are explicit native boundaries",
+    "Guide alias removed; actual ViewHome queued once and existing menu gates retained",
+    "Direct --mission parent cleanup is an original-absent CLI adaptation documented in code",
+    "GUI uses app input, not physical keyboard; one campaign1-1 final success, first two failures retained",
+    "No whole C++/34/ZIP, PCM/listening or full original pixel equality",
+    "No capture/sacrifice/specific enemy/victory or new dedicated airborne-three actions, MP/network tests",
+    "Remaining input/UI/Edit/scenario/file-lifetime and Windows10 checks remain"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/SelectionKeyInput.cpp": "22ad6653e690f4f467a688b6dd470977b74f9dd817fad069b4d03c7242aba63e",
+    "cpppj/src/client/SelectionKeyInput.h": "e5e20a5c51664da4d1ec1417ddeed3d4b0c4789ab0d3c556281a1a671b6e021c",
+    "cpppj/src/client/UserInput.cpp": "43f260c89bc877696a47b7f10c5b94ca6525e5de43d5784d910483278629a063",
+    "cpppj/src/client/UberGump.cpp": "9e54647b9daeca8fae55cca683f8529676a3c211531405f7d130af9bf9fa863d",
+    "cpppj/tests/SelectionKeyInputTests.cpp": "caa138d13e6aeb6a4b11ec675cd8e14a6f22f6da093676197d6eebfedd3de6ae",
+    "tools/decomp_selection_key_input.py": "68cf94f7570715c48514c81cccc522d3f346f6ae9df3a29bb081647a57bee4a2",
+    "tools/cpp_selection_key_smoke.py": "a98a16004d2446525a5f0486081abcf3a5a044e3c5ee54886e94e4a9791128ac",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}
