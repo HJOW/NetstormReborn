@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/TechnologyListMenu.h" //HTML 원소별 기술 목록의 현재 TYPE/기술 종류WORD/가상 레벨을 연결한다.
 #include "o/RawRitualRefresh.h" //같은 현재 Session의 로컬 의식 완료 기록을 연결한다.
 #include "o/RawForeignRitualReward.h" //비로컬 보상도 현재 분산 SP와 Client 수명의 별도 Core 장부를 사용한다.
 #include "client/ClientChatWindowGlobals.h"
@@ -4404,6 +4405,15 @@ std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState&
     hooks.inProduction=[current](std::uint32_t type) { return current->production->Contains(type); };
     hooks.excluded=[current](std::uint32_t type) { const auto items=current->constructionExcludedTypes.Items();return std::find(items.begin(),items.end(),type)!=items.end(); };
     return ShowKnowledgeMenu(current->core.types,state,hooks);
+}
+// GUI의 현재 controlled 메뉴는 caller가 유지하며 게임 조회만 같은 실제 Session으로 바인딩한다.
+void RawCampaignSession::AppendThemeTechnologyMenu(std::uint32_t target,std::int32_t theme,TechnologyListMenuHooks hooks) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 실제 원소 기술 목록 요청");auto* current=impl_.get();
+    hooks.typeCount=[current] { return static_cast<std::int32_t>(current->core.types.size()); };hooks.type=[current](auto number)->const RiftTypeRecord& { if (number>=current->core.types.size()) throw std::out_of_range("기술 목록의 현재 TYPE 범위");return current->core.types[number]; };
+    hooks.priestType=[current] { return current->motionState.carrier.priestType; };hooks.templeProduct=[current] { return current->templeProduct; };hooks.currentTechnology=[current] { return current->player->CurrentTechnology(); };
+    hooks.level=[current](auto sid) { if (!sid || sid>=current->core.pool.Capacity() || sid>65535U) throw std::out_of_range("기술 목록의 가상 레벨 SID 범위");return std::bit_cast<std::uint32_t>(current->RewardCount(Sid{static_cast<std::uint16_t>(sid)})); };
+    hooks.owns=[current](auto parent,auto kind) { if (parent>65535U || parent>=current->core.pool.Capacity()) throw std::out_of_range("기술 목록의 현재 기술 부모 SID 범위");const auto found=current->priests->Carrier().FindContained(Sid{static_cast<std::uint16_t>(parent)},4,kind,0);return found.value ? Read(current->core.pool.Slot(found),18)&0xffffU : 0U; };
+    hooks.assertion=[](auto line) { std::clog<<"기술 목록 Ui.cpp level 진단 "<<line<<'\n'; };TechnologyListMenu(std::move(hooks)).AppendTheme(target,theme);
 }
 // 정보 화면도 기존 현재 TYPE/사정거리/초당 피해 표와 AI·건설의 같은 요구 에너지 후처리를 사용한다.
 QuickHelpTypeInfo RawCampaignSession::HelpTypeInfo(std::uint32_t type) const {

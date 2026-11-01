@@ -1,0 +1,44 @@
+{
+  "unit": 705,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "3dc77042d1fb25b51db6667014177092a579731f99ca185740a3987b0c3c4d99",
+  "nativeInputs": 367,
+  "newCppTests": 3,
+  "existingCppTests": 1,
+  "focusedTests": 4,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "gameExecutions": 0,
+  "protectedExisting": 2623,
+  "protectedChanged": 0,
+  "newFixtures": 1,
+  "protectedFiles": 2624,
+  "limits": [
+    "Shared known/candidate helpers and ThemeTechList body executed; full TechList004cb690 remains unbound",
+    "Actual Session/controlled menu/HTML ThemeTechList wiring compiled; no new GUI",
+    "GetNewTech020000d5 selection/request not wired; do not replace by immediate GetTechnology0200009f",
+    "Full TechList upgrades/rank parent and Input/Zsend services remain",
+    "Native heap/virtual/type-address/owned/translate/description/printf/item/assert are explicit boundaries",
+    "No whole C++/34/ZIP, physical input/PCM or full original pixel equality",
+    "No capture/sacrifice/specific enemy/victory, dedicated airborne-three actions, MP/network tests"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/TechnologyListMenu.cpp": "82373532e699d8898467437c24215519f8ff7a7299111cadfe34ccc1c28f90b5",
+    "cpppj/src/client/TechnologyListMenu.h": "7d265c0ddc2519d67ebbec1297f8c08bf6f6f00d3676159ff70a9d32a6fd111b",
+    "cpppj/src/client/RawMenuControls.cpp": "a55b923d72d22d3b491a2604341f667f3ca42d1a0b0aa6da77996ad75258151c",
+    "cpppj/src/client/RawMenuControls.h": "4b62ab5a24a0bde89a314c320d059408388ed4c644d4f799f6d67600495bd578",
+    "cpppj/src/client/RawCampaignSession.cpp": "8f2ec120ed9fe8c9c8e4e7ea9561f438041d73aa8dee2e400d79bcb33d3a5e3c",
+    "cpppj/src/client/RawCampaignSession.h": "a4353c07c5f5126575b836003e6478809b97e88f5ff6a8810a685569cf31609f",
+    "cpppj/src/client/UberGump.cpp": "7dc9dbf4c11c0746c1a17b31994ab2c0f8fe9ea9dcf9846d6c6c4e71ed573d40",
+    "cpppj/tests/TechnologyListMenuTests.cpp": "b94a6bfbb4a7e3ceb3f9f0df8db373befdcbc3afd26fd75f7b390d4e6ce56e6b",
+    "tools/decomp_technology_list_menu.py": "b645c9215209794a3971a19015c740b4e2cd3b6bc195ec2467a3e38437bb2c7b",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}

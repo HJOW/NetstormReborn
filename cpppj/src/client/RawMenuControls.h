@@ -204,6 +204,7 @@ public:
     std::uint32_t MenuInstances() const; //00593024의 같은 현재 MenuGump 인스턴스 전체DWORD다.
     // 같은 controlled/Gump/StyleText에 실제 전체 지식 카드를 작성하고 원본 네 줄에 부착한다.
     bool OpenKnowledge(RawCampaignSession& session,std::function<std::string(std::string_view)> translate,std::uint32_t language);
+    void AppendThemeTechnology(RawCampaignSession& session,std::uint32_t target,std::int32_t theme,std::function<std::string(std::string_view)> translate); //기존 HTML의 현재 열에 원문 원소별 기술 행을 추가한다. 별도 지식 창/루트를 열지 않는다.
     // 저장한 카드 토큰의 현재 등록/visible/dead를 직접 읽는다. 별도 열림 bool을 두지 않는다.
     bool KnowledgeOpen() const;
     // 실제 비용 표시를 같은 루트/StyleText/idle/수명에 생성한다. 원본 커서의 reference는0이다.

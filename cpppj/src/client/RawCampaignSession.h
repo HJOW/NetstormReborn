@@ -59,6 +59,7 @@
 namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; struct FortObjectLoadState; class RawFortBadgesGlobals; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::o { class RawConnectionRegistry; } //실제 Client와 로컬 양끝이 빌리는 같은 연결표다.
 namespace netstorm::client {
+struct TechnologyListMenuHooks; //HTML 원소별 기술 목록의 GUI는 실제 현재 controlled 메뉴가 공급한다.
 struct SendMoneyHooks; // 같은 실제 세션의 경제 상태를 일반 입력과 숫자 창에 빌린다.
 class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같은 실제 Template9 수명이다.
 class EditorFiles; // 실제 작업본 파일 장치이며 연결한 Session보다 오래 살아야 한다.
@@ -528,6 +529,7 @@ public:
     std::unique_ptr<RawPriestMenu> MakePriestMenu(PriestMenuHooks hooks);
     // 현재 Player 기술/실제 내용물·제외·Deck으로 전체 지식 창을 작성한다. GUI는 같은 Client의 실제 처리기를 받는다.
     std::vector<std::uint32_t> ShowKnowledge(KnowledgeMenuState& state,KnowledgeMenuHooks hooks);
+    void AppendThemeTechnologyMenu(std::uint32_t target,std::int32_t theme,TechnologyListMenuHooks hooks); //004cb4b0과 두 필터를 같은 실제 기술 부모/가상 레벨에 연결한다.
     QuickHelpTypeInfo HelpTypeInfo(std::uint32_t type) const; // 같은 TYPE/무기 보충 표/실제 AST 후처리의 현재 도움말 값이다.
     // caller는 기존 Bind*MenuControls로 같은 Gump 작성기를 공급한다. 미공급 Chat/번역/통신 분기는 선택 시 오류다.
     // 반환 체인은 메뉴가 열린 동안 유지하고 월드 교체/Session 해제 전에 반납한다.

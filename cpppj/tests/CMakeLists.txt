@@ -2853,3 +2853,9 @@ target_sources(netstorm_tests PRIVATE SelectionKeyInputTests.cpp)
 add_executable(netstorm_selection_key_input_tests FocusedTestMain.cpp SelectionKeyInputTests.cpp NextUnitSelectionTests.cpp PriestSelectionShortcutTests.cpp GameMenuActionsTests.cpp TutorialOneTests.cpp)
 target_link_libraries(netstorm_selection_key_input_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_selection_key_input_tests)
+
+# 공유 기술 필터/원소 목록과 실제 HTML 메타 부모의 집중 확인이다(705).
+target_sources(netstorm_tests PRIVATE TechnologyListMenuTests.cpp)
+add_executable(netstorm_technology_list_menu_tests FocusedTestMain.cpp TechnologyListMenuTests.cpp HtmlWindowMetadataTests.cpp)
+target_link_libraries(netstorm_technology_list_menu_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_technology_list_menu_tests)

@@ -7,6 +7,8 @@
 #include "client/GumpFormBinding.h"
 #include "client/FloatingSpGump.h"
 #include "client/RawKnowledgeMenu.h"
+#include "client/TechnologyListMenu.h" //HTML 기술 목록의 행도 같은 controlled 메뉴에 작성한다.
+#include <cstdio> //원문의 고정256BYTE 기술 행 서식을 같은 두 printf 인자로 구성한다.
 #include "client/RawCampaignSession.h"
 #include "client/QuickHelpWindow.h"
 #include "client/MissionLoadingMessage.h"
@@ -827,6 +829,13 @@ bool RawMenuControls::KnowledgeOpen() const {
     const auto& s=*impl_;
     // 살아 있는 실제 카드 하나라도 표시/부착되어 있으면 같은 창이 열려 있다.
     for (const auto token:s.knowledge) { const auto node=Find(s.menus,token);if (node && (node->flags&1) && !(node->flags&0x10000) && node->parent==s.common.create.collection.root) return true; }return false;
+}
+// HTML 메타가 이미 연 controlled 열을 유지하며 Session은 게임 조회만 공급한다.
+void RawMenuControls::AppendThemeTechnology(RawCampaignSession& session,std::uint32_t target,std::int32_t theme,std::function<std::string(std::string_view)> translate) {
+    if (!translate) throw std::invalid_argument("원소 기술 목록 번역 장치 없음");auto& s=*impl_;TechnologyListMenuHooks hooks;hooks.translate=translate;
+    hooks.description=[&session,translate](auto type) { return translate(session.Core().types[type].description); };hooks.learnCommand=[] { return 0x020000d5U; }; //00542a48의 원문 GetNewTech 명령이며 실제 선택 후 부모는 별도 분배기다.
+    hooks.format=[](auto pattern,auto description,auto level) { std::array<char,256> text{};const std::string format(pattern),name(description);const auto count=std::snprintf(text.data(),text.size(),format.c_str(),name.c_str(),level);if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("원문 기술 행256BYTE 서식 범위");return std::string(text.data(),static_cast<std::size_t>(count)); };
+    hooks.item=[&s](auto label,auto command,auto parameter,bool enabled) { s.controls->AddText(label,command,parameter,true,enabled,false); };session.AppendThemeTechnologyMenu(target,theme,std::move(hooks));
 }
 // 커서 Take 등의 실행 중 스택이 현재 메뉴를 참조할 수 있으므로 원본의 지연 삭제 시점을 보존한다.
 void RawMenuControls::RequestClosePopups() { auto& s=*impl_;s.input->ClosePopups();s.common.changed(); }
