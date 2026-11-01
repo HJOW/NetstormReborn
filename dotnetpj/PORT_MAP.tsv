@@ -26,6 +26,7 @@ cpppj/src/client/DrawSort.cpp	Netstorm.Client/Display/DrawSort.cs	a36b80101b868a
 cpppj/src/client/DrawSort.h	Netstorm.Client/Display/DrawSort.cs	a36b80101b868a3ad9afa11953a6dbc21b9b1040	port
 cpppj/src/client/EmbeddedTell.cpp	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	L1
 cpppj/src/client/EmbeddedTell.h	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	L1
+cpppj/src/client/FortSelection.cpp	Netstorm.Client/Mission/FortSelection.cs	fb3911774a594162b2a9af981a2f6825cd1a2775	L1
 cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
 cpppj/src/client/GifImage.cpp	Netstorm.Client/Display/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
 cpppj/src/client/GifImage.h	Netstorm.Client/Display/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
