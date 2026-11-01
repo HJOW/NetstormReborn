@@ -14,6 +14,8 @@ public sealed class HostStartupScene
     public ConfigInterface Configuration { get; }
     /// <summary>설정의 fortPal 파일 팔레트.</summary>
     private readonly GamePalette _palette;
+    /// <summary>실제 512×512 Kencloud 초기 캐시의 인덱스.</summary>
+    private readonly byte[] _cloud;
     /// <summary>설정의 titleMenu GIF 인덱스와 불투명도.</summary>
     private readonly Netstorm.Client.Display.IndexedImage _title;
 
@@ -29,11 +31,16 @@ public sealed class HostStartupScene
         string palettePath = Configuration.PathSpec("GamePalSpec", Configuration.PathSpec("fortPal"));
         string titlePath = Configuration.PathSpec("BackgroundGifSpec", "titleMenu");
         if (palettePath.Length == 0 || titlePath.Length == 0) throw new InvalidDataException("시작 화면 팔레트 또는 타이틀 경로 설정이 없다");
+        string cloudPath = Configuration.PathSpec("CloudFileSpec");
+        if (cloudPath.Length == 0) throw new InvalidDataException("구름 경로 설정이 없다");
+        var cloud = Netstorm.Client.Display.GifImage.DecodeBackgroundGif(Files.ReadAllBytes(cloudPath));
+        if (cloud.Width != 512 || cloud.Height != 512) throw new InvalidDataException("구름 생성 대체 경로 미이식: 512×512 GIF 필요");
+        _cloud = cloud.Indices;
         _palette = new GamePalette(Files.ReadAllBytes(palettePath));
         _title = Netstorm.Client.Display.GifImage.DecodeGif(Files.ReadAllBytes(titlePath));
     }
 
-    /// <summary>현재 논리 화면에 팔레트를 적용하고 원본 메뉴의 640×480 중심 위치에 타이틀의 불투명 픽셀을 복사한다.</summary>
+    /// <summary>팔레트와 초기 구름 캐시를 전체 화면에 복사한 뒤 타이틀을 640×480 기준 중심에 그린다.</summary>
     /// <param name="screen">출력 장치가 연결된 8비트 논리 화면.</param>
     public void Draw(Screen screen)
     {
@@ -42,6 +49,13 @@ public sealed class HostStartupScene
         byte[] pixels = screen.Lock();
         try
         {
+            // 카메라 원점 0에서 전체 dirty 구름은 512×512 캐시를 화면에 반복 복사한다.
+            for (int y = 0; y < screen.Height; y++)
+            {
+                int source = (y & 511) * 512;
+                // 대상 행 너비만큼 현재 구름 색 번호를 복사한다.
+                for (int x = 0; x < screen.Width; x++) pixels[y * screen.Pitch + x] = _cloud[source + (x & 511)];
+            }
             int left = (screen.Width - 640) / 2, top = (screen.Height - 480) / 2;
             // 화면에 들어오는 각 GIF 행과 불투명 픽셀만 원본 색 번호로 복사한다.
             for (int y = 0; y < _title.Height; y++)

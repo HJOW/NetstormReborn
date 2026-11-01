@@ -14,11 +14,17 @@ public sealed class HostStartupSceneTests
         string? data = GameDataLocator.FindDataDirectory();
         Assert.NotNull(data);
         var startup = new HostStartupScene(data);
-        var screen = new Screen(640, 480);
+        var screen = new Screen(1024, 768);
         Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet));
         startup.Draw(screen);
         Assert.Equal(1U, screen.PaletteLoaded);
         Assert.Contains(screen.Pixels.ToArray(), pixel => pixel != 0);
         Assert.NotEmpty(startup.Configuration.PathSpec("BackgroundGifSpec", "titleMenu"));
+        string path = startup.Configuration.PathSpec("CloudFileSpec");
+        var cloud = Netstorm.Client.Display.GifImage.DecodeBackgroundGif(startup.Files.ReadAllBytes(path));
+        Assert.Equal(512, cloud.Width); Assert.Equal(512, cloud.Height);
+        Assert.Equal(cloud.Indices[0], screen.Pixels[0]);
+        Assert.Equal(cloud.Indices[0], screen.Pixels[512]);
+        Assert.Equal(cloud.Indices[0], screen.Pixels[512 * screen.Pitch]);
     }
 }
