@@ -69,6 +69,50 @@ public sealed class GumpButtonTreeTests
         tree.Remove(first); Assert.Equal(0U, tree.LifeState.CurrentDialog);
     }
 
+    /// <summary>HTML 부모와 자식 버튼이 메인 버튼과 같은 등록·사건·모달·수명을 사용한다.</summary>
+    [Fact]
+    public void HtmlWindowSharesRealTreeDispatchAndLifetime()
+    {
+        var fixture = new GumpFontFixture("gumptext"); var commands = new List<(uint, uint, uint)>();
+        var tree = new GumpButtonTree(640, 480, GumpBackgroundTestAssets.Assets(), 82, 0, new(9, 243, 57), fixture.Fonts,
+            new() { Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => { },
+                Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
+        uint main = tree.AddStone(75, 19, "Main\0"u8.ToArray(), 10, 10);
+        uint scratch = tree.AllocateNode(new HtmlWindowGumpNode()); tree.ReleaseUnregistered(scratch); Assert.Null(tree.Node(scratch));
+        var background = new GumpBackgroundDraw(tree.Collection, new(), new(), new() { Node = t => tree.Node(t) as GumpBackgroundNode });
+        var decoration = new GumpDecoration(tree.Create, new() { BackgroundType = 82, CornerType = 82 }, tree.Backgrounds,
+            background, tree.Collection, tree.Lifetime, new() { Node = t => tree.Node(t) as GumpDecorationNode, Base = tree.Node,
+                Type = _ => new GumpDecorationType(82, 0) });
+        var state = new HtmlWindowGumpState();
+        var hooks = new HtmlWindowGumpHooks
+        {
+            Node = t => tree.Node(t) as HtmlWindowGumpNode, Base = tree.Node, Button = t => tree.Node(t) as ButtonGumpNode,
+            ConstructDecoration = t => decoration.Construct(t, 0, 0), DestructBase = tree.Lifetime.DestructBase,
+            Allocate = size => size == 0x170 ? tree.AllocateNode(new StoneButtonGumpNode()) : throw new InvalidOperationException(),
+            ConstructButton = (t, label) => { tree.Stones.Construct(t, 75, 19, System.Text.Encoding.Latin1.GetBytes(label + "\0")); tree.Stones.SetLabel(t, System.Text.Encoding.Latin1.GetBytes(label + "\0")); },
+            Attach = (t, x, y, parent, mode) => tree.TreeHooks.Attach!(t, x, y, parent, mode),
+            Kill = tree.Lifetime.Kill, Reference = tree.Reference, WallSeconds = () => 2,
+            Queue = (code, first, second) => commands.Add((code, first, second)),
+            BaseHandle = tree.EventHooks.Handle, Release = t => tree.LifetimeHooks.Release!(t)
+        };
+        var window = new HtmlWindowGump(state, hooks);
+        HtmlWindowGump.BindHtmlWindow(tree.EventHooks, tree.InputHooks, tree.FrameHooks, tree.LifetimeHooks,
+            t => tree.Node(t) is HtmlWindowGumpNode ? window : null);
+        uint root = tree.AllocateNode(new HtmlWindowGumpNode()); window.Construct(root, 0, 0);
+        Assert.Throws<InvalidOperationException>(() => tree.ReleaseUnregistered(root));
+        tree.Tree.Move(root, 100, 100, tree.Create.Entries[0]); window.AddButton(root, "Okay", 0x02000095, 7, 0);
+        var node = Assert.IsType<HtmlWindowGumpNode>(tree.Node(root)); uint child = node.Controls[0].Child;
+        tree.Tree.Move(child, 5, 5, root); tree.Modal.SetModal(root, true);
+        Assert.Equal(root, tree.Reference(node.Serial)); Assert.Equal(root, tree.LifeState.CurrentDialog);
+        Assert.Equal(child, tree.Input.Route(InputCode.LeftButton, 106, 106));
+        // HTML 닫기가 캡처도 먼저 해제하므로 처리 성공 뒤 반환 토큰은 0이다.
+        Assert.Equal(0U, tree.Input.Route(InputCode.LeftButton | InputCode.Release, 106, 106));
+        Assert.Equal(new[] { (0x02000095u, 7u, 7u) }, commands);
+        Assert.Equal(0U, tree.LifeState.CurrentDialog); Assert.Equal(root, tree.Reference(node.Serial));
+        tree.Lifetime.Cleanup(); Assert.Null(tree.Node(root)); Assert.Null(tree.Node(child));
+        Assert.Equal(0U, tree.Reference(node.Serial)); Assert.NotNull(tree.Node(main)); Assert.Equal(3U, tree.Create.Count);
+    }
+
     /// <summary>같은 생성 노드의 배경과 부모를 실제 인덱스 표면에 출력한다.</summary>
     [Fact]
     public void DrawUsesSameNodesAndActualPixelSurface()

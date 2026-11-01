@@ -33,12 +33,24 @@ public sealed class GumpButtonTree
     public GumpLifetimeState LifeState { get; } = new();
     /// <summary>기본 및 파생 공통 생성기.</summary>
     public GumpCreate Factory { get; }
+    /// <summary>추가 파생 Gump가 기존 가상 부착 경로에 연결하는 같은 장치.</summary>
+    public GumpTreeHooks TreeHooks { get; }
+    /// <summary>추가 파생 Gump가 기존 소멸 경로에 연결하는 같은 장치.</summary>
+    public GumpLifetimeHooks LifetimeHooks { get; }
+    /// <summary>부모 전파와 재귀 입력이 쓰는 같은 사건 장치.</summary>
+    public GumpEventHooks EventHooks { get; }
+    /// <summary>캡처 입력이 쓰는 같은 가상 사건 장치.</summary>
+    public GumpInputHooks InputHooks { get; }
+    /// <summary>프레임 idle과 통지가 쓰는 같은 가상 장치.</summary>
+    public GumpFrameHooks FrameHooks { get; }
     /// <summary>현재 위치와 수집기.</summary>
     public GumpCollection Collection { get; }
     /// <summary>부모·자식 부착기.</summary>
     public GumpTree Tree { get; }
     /// <summary>지연 삭제와 자식 우선 파괴.</summary>
     public GumpLifetime Lifetime { get; }
+    /// <summary>같은 공통 노드의 재귀 사건 전달과 부모 전파.</summary>
+    public GumpEvents Events { get; }
     /// <summary>현재 캡처와 사건 전달.</summary>
     public GumpInput Input { get; }
     /// <summary>현재 버튼 상태 처리기.</summary>
@@ -55,6 +67,8 @@ public sealed class GumpButtonTree
     private readonly FontStore _fonts;
     /// <summary>실제 버튼 배경 생성기.</summary>
     private readonly GumpBackgroundCreate _backgrounds;
+    /// <summary>같은 실제 배경 생성기를 추가 파생 소유자에 빌려준다.</summary>
+    public GumpBackgroundCreate Backgrounds => _backgrounds;
     /// <summary>글자와 배경이 공유하는 현재 VFX 색표.</summary>
     private readonly GumpGlyphColorState _colors = new();
     /// <summary>파일 팔레트와 현재 버튼 배경 타입.</summary>
@@ -63,6 +77,37 @@ public sealed class GumpButtonTree
     /// <summary>안정된 등록 노드를 찾는다. 없는 토큰은 null이다.</summary>
     /// <param name="token">원본 포인터를 대신하는 토큰.</param>
     public GumpCreateNode? Node(uint token) => _nodes.GetValueOrDefault(token);
+
+    /// <summary>새 실제 파생 노드를 공통 소유 저장소에 할당한다. 생성과 등록은 각 원본 생성기가 수행한다.</summary>
+    /// <param name="node">다른 토큰에 아직 할당되지 않은 실제 기본 또는 파생 객체.</param>
+    public uint AllocateNode(GumpCreateNode node)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+        if (_nodes.Values.Any(existing => ReferenceEquals(existing, node))) throw new ArgumentException("이미 소유한 Gump 객체", nameof(node));
+        if (_nextToken == uint.MaxValue) throw new OverflowException("Gump 토큰 소진");
+        uint token = ++_nextToken; _nodes.Add(token, node); return token;
+    }
+
+    /// <summary>등록 전 생성 실패의 노드만 실제 저장소에서 반납한다. 등록된 노드는 자식 우선 수명으로 삭제해야 한다.</summary>
+    /// <param name="token">공통 저장소가 소유한 미등록 토큰.</param>
+    public void ReleaseUnregistered(uint token)
+    {
+        if (token == 0 || !_nodes.ContainsKey(token)) throw new ArgumentException("없는 Gump 토큰", nameof(token));
+        GumpCreateNode node = _nodes[token];
+        if (Create.Entries.Contains(token) || node.Vtable != 0 || node.Parent != 0 || node.Child != 0 || node.Next != 0)
+            throw new InvalidOperationException("생성되거나 연결된 Gump는 공통 수명으로 삭제해야 한다");
+        _nodes.Remove(token);
+    }
+
+    /// <summary>현재 등록표에서 serial이 같은 실제 노드를 찾는다. 죽음 표시와 실제 반납을 구분한다.</summary>
+    /// <param name="serial">원본 생성기가 부여한 serial. 0은 항상 없음이다.</param>
+    public uint Reference(uint serial)
+    {
+        if (serial == 0) return 0;
+        // 등록표 순서대로 현재 노드의 serial을 조회한다.
+        foreach (uint token in Create.Entries) if (token != 0 && Node(token)?.Serial == serial) return token;
+        return 0;
+    }
 
     /// <summary>같은 배경의 실제 플래그 저장 위치를 버튼에 빌려준다.</summary>
     private ref uint BackgroundFlags(uint token)
@@ -74,7 +119,6 @@ public sealed class GumpButtonTree
     /// <summary>요청 크기별 기본·돌 버튼·배경 파생을 실제 소유하고 토큰을 등록한다.</summary>
     private uint Allocate(int size)
     {
-        if (_nextToken == uint.MaxValue) throw new OverflowException("Gump 토큰 소진");
         GumpCreateNode node = size switch
         {
             GumpCreateState.BaseSize => new GumpCreateNode(),
@@ -82,7 +126,7 @@ public sealed class GumpButtonTree
             0xb8 => new GumpBackgroundNode(),
             _ => throw new ArgumentOutOfRangeException(nameof(size), "이 트리의 미연결 Gump 파생 크기")
         };
-        uint token = ++_nextToken; _nodes.Add(token, node); return token;
+        return AllocateNode(node);
     }
 
     /// <summary>실제 화면과 자산·글꼴 및 호스트 장치를 사용해 루트와 공통 처리기를 만든다.</summary>
@@ -102,20 +146,20 @@ public sealed class GumpButtonTree
         _stoneState.DefaultContext[6] = _stoneState.DefaultContext[7] = 1;
         Factory = new(Create, new() { Node = Node, Allocate = Allocate }); Factory.InitializeRoot();
         Collection = new(Create.Collection, Factory.CollectionHooks());
-        var treeHooks = new GumpTreeHooks { Node = Node, Redraw = hooks.Redraw,
+        var treeHooks = TreeHooks = new GumpTreeHooks { Node = Node, Redraw = hooks.Redraw,
             Push = token => Tree!.Push(token), Attach = (token, x, y, parent, mode) => Tree!.Attach(token, x, y, parent, mode),
             Kill = token => Lifetime!.Kill(token) };
-        var lifeHooks = new GumpLifetimeHooks { Node = Node, Push = treeHooks.Push,
+        var lifeHooks = LifetimeHooks = new GumpLifetimeHooks { Node = Node, Push = treeHooks.Push,
             DeletingDestructor = (token, flags) => Lifetime!.DeleteScalar(token, flags),
             Release = token => { if (!_nodes.Remove(token)) throw new InvalidOperationException("Gump 저장소 반납 불일치"); } };
         StoneButtonGump.BindStoneButtonGump(treeHooks, lifeHooks, token => Node(token) is StoneButtonGumpNode ? Stones : null);
         Tree = new(Create, new() { MapView = new(0, 0, width, height) }, treeHooks);
         Lifetime = new(Create, LifeState, lifeHooks);
-        var eventsHooks = new GumpEventHooks { Node = Node, Handle = hooks.HandleBase };
-        var inputHooks = new GumpInputHooks { Node = Node, Handle = hooks.HandleBase };
-        var frameHooks = new GumpFrameHooks { Node = Node, Redraw = hooks.Redraw };
+        var eventsHooks = EventHooks = new GumpEventHooks { Node = Node, Handle = hooks.HandleBase };
+        var inputHooks = InputHooks = new GumpInputHooks { Node = Node, Handle = hooks.HandleBase };
+        var frameHooks = FrameHooks = new GumpFrameHooks { Node = Node, Redraw = hooks.Redraw };
         ButtonGump.BindButtonGump(eventsHooks, inputHooks, frameHooks, token => Node(token) is StoneButtonGumpNode ? Buttons : null);
-        var events = new GumpEvents(Create, LifeState, new(), Collection, eventsHooks);
+        var events = Events = new GumpEvents(Create, LifeState, new(), Collection, eventsHooks);
         Input = new(Create, LifeState, new() { OverlayEvent = 0x0200003b }, Collection, events, inputHooks);
         Frame = new(Create, LifeState, frameHooks);
         Modal = new(Node, LifeState, Input, Lifetime, Tree, () => hooks.Redraw(Create.Entries[0], false));
