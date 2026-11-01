@@ -27,12 +27,14 @@ public sealed class GuideMissionRuntime
     public MissionFrameGateState Gate { get; } = new();
     /// <summary>공통 Start와 가상 단계가 공유하는 상태.</summary>
     public MissionStartState State { get; } = new();
+    /// <summary>같은 미션의 초기화 이름·지역 저장소이며 flags와 demo는 위 필드를 공유한다.</summary>
+    public TutorialInitState Init { get; }
 
     /// <summary>스크립트 판정과 초기 모드로 현재 미션 상태를 만든다.</summary>
     /// <param name="guided">10.78 튜토리얼 가상 단계를 쓰는지.</param><param name="demo">초기 데모 값.</param>
     /// <param name="mode">초기 복귀 모드.</param><param name="token">새 수명 토큰.</param>
-    internal GuideMissionRuntime(bool guided, uint demo, uint mode, uint token)
-    { Guided = guided; Gate.Demo = demo; Mode = mode; SaveToken = token; }
+    internal GuideMissionRuntime(bool guided, uint demo, uint mode, uint token, string name)
+    { Guided = guided; Gate.Demo = demo; Mode = mode; SaveToken = token; Init = new TutorialInitState(State, Gate) { Name = name }; }
 }
 
 /// <summary>Guide가 실제 호스트에 요청하는 화면과 지연 요청 수명 효과다.</summary>
@@ -74,6 +76,8 @@ public sealed class GuideMissionOwner
     private MissionScript? _mission;
     /// <summary>마지막으로 발급한 미션 수명 토큰.</summary>
     private uint _nextToken;
+    /// <summary>Client 수명에서 유지할 초기화 전역이다.</summary>
+    public TutorialInitGlobals InitGlobals { get; } = new();
 
     /// <summary>현재 스크립트. 반납 후에는 null이다.</summary>
     public MissionScript? Mission => _mission;
@@ -125,8 +129,25 @@ public sealed class GuideMissionOwner
         if (!guided && !string.Equals(type, "battle", StringComparison.OrdinalIgnoreCase))
             throw new InvalidOperationException("미구현 미션 형식: " + type);
         if (_nextToken == uint.MaxValue) throw new OverflowException("미션 수명 토큰 소진");
-        Runtime = new GuideMissionRuntime(guided, demo, mode, ++_nextToken);
+        Runtime = new GuideMissionRuntime(guided, demo, mode, ++_nextToken, name);
         Need(_hooks.Created)(Runtime);
+    }
+
+    /// <summary>현재 Guide와 같은 Config·전역을 사용해 실제 초기화 효과를 순서대로 실행한다.</summary>
+    public void InitializeTutorial(TutorialInitHooks effects)
+    {
+        var runtime = Current();
+        if (!runtime.Guided || _mission == null) throw new InvalidOperationException("Tutorial Init의 현재 Guide 계약 위반");
+        InitGlobals.Bind(runtime.Gate, _tutorialGlobals);
+        TutorialInit.Initialize(runtime.Init, InitGlobals, new TutorialInitHooks
+        {
+            ClearTemplates = effects.ClearTemplates,
+            ResetOptions = effects.ResetOptions,
+            Get = (key, fallback) => { string value = _mission.Get(key) ?? ""; int nul = value.IndexOf('\0'); if (nul >= 0) value = value[..nul]; return value.Length == 0 && fallback != null ? fallback : value; },
+            Set = (key, value) => { _mission.Set(key, value); },
+            RequestFort = effects.RequestFort,
+            Header = effects.Header
+        });
     }
 
     /// <summary>현재 미션만 반납하고 World와 입력 큐는 그대로 둔다. 생성 실패한 스크립트도 정리할 수 있다.</summary>

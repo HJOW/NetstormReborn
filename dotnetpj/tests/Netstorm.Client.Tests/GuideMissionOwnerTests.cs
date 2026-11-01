@@ -10,6 +10,34 @@ namespace Netstorm.Client.Tests;
 /// <summary>Guide 소유자가 실제 Config·입력 큐·문자열 고리와 Player 수명을 공유하는지 검사한다.</summary>
 public sealed class GuideMissionOwnerTests
 {
+    /// <summary>실제 Guide 설정의 초기화가 단계·반납과 동일한 필드와 Config를 변경한다.</summary>
+    [Fact]
+    public void TutorialInitializationSharesGuideAndReleaseState()
+    {
+        var files = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["d\\setup.cfg"] = Encoding.Latin1.GetBytes("DataDir=\"\\D\"\r\ncurrentLanguage=\"english\"\r\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\r\n"),
+            ["\\D\\one.english"] = Encoding.Latin1.GetBytes("missionType=\"Tutorial\"\r\ntutorialNumber=\"2\"\r\nmissionNumber=\"7\"\r\ndemo=\"3\"\r\nloadFort=\"fortOne\"\r\n"),
+        };
+        byte[]? Read(string path) => files.GetValueOrDefault(path);
+        var config = new ConfigInterface(Read); config.Startup(new ConfigInterface.StartupOptions());
+        var players = new PlayerParticipation(new byte[9 * PlayerParticipation.PlayerStride], new uint[81], new byte[9], new(), new());
+        var release = new TutorialMissionReleaseGlobals(); var trace = new List<string>();
+        var owner = new GuideMissionOwner(config, new(), new(), players, new(), release, new(), new()
+        { Created = _ => { }, ReleaseFortRequest = () => { }, SetAllowAll = _ => { } });
+        owner.Begin("one", source: Read); owner.InitGlobals.InitialSubscriber = 11;
+        owner.InitializeTutorial(new TutorialInitHooks
+        {
+            ClearTemplates = () => trace.Add("clear"), ResetOptions = () => trace.Add("options"),
+            RequestFort = name => { trace.Add(name); Assert.Equal(7u, release.MissionNumber); },
+            Header = () => { trace.Add("header"); Assert.Equal(2u, owner.Runtime!.Gate.TutorialNumber); }
+        });
+        Assert.Equal(new[] { "clear", "options", "fortOne", "header" }, trace);
+        Assert.Equal(1u, owner.Runtime!.State.Flags); Assert.Equal(3u, owner.Runtime.Gate.Demo);
+        Assert.Equal(11u, owner.InitGlobals.LoginSubscriber); Assert.Equal("One", owner.Mission!.Get("fileName"));
+        owner.Release(); Assert.Equal(0u, release.MissionNumber);
+    }
+
     /// <summary>명시 source와 큐의 명령으로 시작·분기·재시작·종료할 때 현재 등록과 미션 필드를 유지한다.</summary>
     [Fact]
     public void CommandsOwnScriptAndPreserveSourceAcrossTransitions()

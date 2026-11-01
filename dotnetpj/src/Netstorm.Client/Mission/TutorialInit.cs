@@ -1,6 +1,8 @@
 using System.Buffers.Binary;
 using System.Text;
 using Netstorm.Assets;
+using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Client.Mission;
 
@@ -10,15 +12,23 @@ public sealed class TutorialInitState
     public string Name { get; set; } = "";
     public uint NamePrefix { get; set; }
     public byte[] Scratch { get; } = new byte[80];
-    public uint Flags { get; set; }
-    public uint Demo { get; set; }
+    private readonly MissionStartState _start;
+    private readonly MissionFrameGateState _gate;
+    /// <summary>독립 입력 또는 Guide가 소유하는 현재 필드를 직접 사용한다.</summary>
+    public TutorialInitState(MissionStartState? start = null, MissionFrameGateState? gate = null) { _start = start ?? new(); _gate = gate ?? new(); }
+    public uint Flags { get => _start.Flags; set => _start.Flags = value; }
+    public uint Demo { get => _gate.Demo; set => _gate.Demo = value; }
 }
 
 /// <summary>초기화가 공유하는 현재 전역이다.</summary>
 public sealed class TutorialInitGlobals
 {
-    public uint TutorialNumber { get; set; }
-    public uint MissionNumber { get; set; }
+    private MissionFrameGateState _gate = new();
+    private TutorialMissionReleaseGlobals _release = new();
+    /// <summary>현재 Guide와 반납이 사용하는 전역 필드를 같은 저장소로 결합한다.</summary>
+    public void Bind(MissionFrameGateState gate, TutorialMissionReleaseGlobals release) { _gate = gate; _release = release; }
+    public uint TutorialNumber { get => _gate.TutorialNumber; set => _gate.TutorialNumber = value; }
+    public uint MissionNumber { get => _release.MissionNumber; set => _release.MissionNumber = value; }
     public uint TutorialSeen { get; set; }
     public uint LoginSubscriber { get; set; }
     public uint InitialSubscriber { get; set; }
