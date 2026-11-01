@@ -2780,3 +2780,11 @@ set_source_files_properties(UrlInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
 add_executable(netstorm_url_input_tests FocusedTestMain.cpp UrlInputTests.cpp HelpLinkPolicyTests.cpp)
 target_link_libraries(netstorm_url_input_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_url_input_tests)
+
+# 연속화면저장의원문세부모174입력만집중대조한다. 실제Client/파일접합은다음단위다(693).
+target_sources(netstorm_tests PRIVATE CaptureSequenceTests.cpp)
+set_source_files_properties(CaptureSequenceTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CAPTURE_SEQUENCE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/capture-sequence-x86.tsv\"")
+add_executable(netstorm_capture_sequence_tests FocusedTestMain.cpp CaptureSequenceTests.cpp)
+target_link_libraries(netstorm_capture_sequence_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_capture_sequence_tests)

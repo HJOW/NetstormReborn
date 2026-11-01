@@ -12,7 +12,7 @@ Three versions are developed in parallel, and **the one you can actually play to
 
 # Current development status
 
-**November 1, 2026, cpppj unit692 / product11.01:** connected the screenshot View button's URL name/input to the existing Help, cmd and external-link dispatcher. Frozen96 native inputs/288 observations and all5 selected tests pass, including an actual shared Help tree and link delivery. Two initial build omissions were corrected and recorded. No new game or external-program execution. The691 Pop return fix and previous reconstruction remain. Full34-path integration/ZIP remains645 on product644. Remaining UI/Edit/scenario/lifetime/compatibility work, untested multiplayer preparation and phases4–7 continue. See [LEFT_JOBS.md](LEFT_JOBS.md) and the [692 record](docs/exe/cpp-url-input-20261101.md).
+**November 1, 2026, cpppj unit693 / runtime product692·11.01:** added the frame-sequence Start/Frame/Stop backend, including the1,000-frame limit, to the library. Frozen174 native inputs/522 observations and both new focused tests pass. Actual indexed-BMP output, Client frame ownership and Capture input wiring remain next; the runtime EXE is unchanged from692. Existing URL/Pop fixes and earlier reconstruction remain. Remaining UI/Edit/scenario/lifetime/compatibility work, untested multiplayer preparation and phases4–7 continue. Full34-path integration/ZIP remains645 on product644. See [LEFT_JOBS.md](LEFT_JOBS.md) and the [693 record](docs/exe/cpp-capture-sequence-20261101.md).
 
 | Project | Execution and playability | Fidelity and remaining work |
 | --- | --- | --- |

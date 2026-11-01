@@ -1,0 +1,79 @@
+{
+  "unit": 693,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "runtimeProduct": 692,
+  "productVersion": "11.01",
+  "productSha256": "fd6fe876a4e13d374281b1379c8249b4dc645b32dbc081fdd8d12b22dacaebf3",
+  "runtimeExecutableRebuilt": false,
+  "backendLibraryBuilt": true,
+  "clientWiringComplete": false,
+  "native": {
+    "startCases": 18,
+    "frameCases": 96,
+    "stopCases": 60,
+    "cases": 174,
+    "observations": 522,
+    "differences": 0,
+    "frozenBeforeProductEdit": true,
+    "boundary": "실제4db210/4db230/4db2a0. 화면잠금·할당/free·Config/formatter·BMP8인자쓰기·보고/안내는명시경계. 전체1000토큰표/복사512BYTE와제공한콜백변이를관측하며실제heap/파일/GUI를실행하지않는다."
+  },
+  "build": {
+    "target": "netstorm_capture_sequence_tests",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "focused": {
+    "registered": 2,
+    "executed": 2,
+    "failedChecks": 0,
+    "newTests": 2,
+    "existingTests": 0
+  },
+  "staticReview": {
+    "requestMenu": "4d712e..4d717c는40a150패킷생성/이름복사뒤4e2dc0(11,packet)을호출한다. 현재부품구현대상과분리해3차서버메뉴전송경계에서정적으로잇는다. 신규MP실행/검사0.",
+    "recheckCd": "4d8b8d는1을인자로435060을호출한뒤4c8d90(&5c85ec)을호출한다. 435060은6BYTE의1반환이며반환을사용하지않는다. 실제440c60 CD탐색을호출하는분기로바꾸지않는다.",
+    "capture": "4db230은상한만확인하며active관문은436450호출자에있다. nativeShift키경로는55a484비영을요구하고4353ea의직접writer는0이다. 임의개발자활성화를추가하지않는다."
+  },
+  "remaining": [
+    "4ddc90의실제8비트BMP/미정지역바이트/비절삭파일writer",
+    "Client장기실제할당소유자와Frame의정확한캡처위치",
+    "Capture이름/일반입력및BeginCapture·최종안내접합",
+    "RecheckCD현재serial정리/RequestMenu서버경계정적복원"
+  ],
+  "protection": {
+    "unchangedExisting": 2613,
+    "changed": [],
+    "newFixtures": 1,
+    "currentFixtures": 794,
+    "currentProtectedTotal": 2614,
+    "agentsSha256": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77"
+  },
+  "gameExecutions": 0,
+  "newBmpFiles": 0,
+  "multiplayerTests": 0,
+  "full34Runs": 0,
+  "fullCppRuns": 0,
+  "newZip": false,
+  "limits": "새backend만174입력에대조했다. 실제BMPwriter/할당해제기/반복Capture/CurrentClient프레임/GUI접합은미완료다. 음수개수·1000슬롯밖/할당실패후접근·256BYTE범위밖은호스트물리계약거부이며원문fault/SEH동일성주장이아니다. 10.72새본문/전체스크린샷·자연완주·전체동일성/포획·희생·특정적공격·승리·공중3종신규검사0.",
+  "sha256": {
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "cpppj/src/CMakeLists.txt": "f38e3fc1f9ad0b3e2410fbd6ef016ea0ea9cac5cfc36456b4c3809830845a68a",
+    "cpppj/src/client/RawCaptureSequence.cpp": "8cf973219cde413f630bb507481e325e5b20dc1022cfc1998b8e7adba52be6bb",
+    "cpppj/src/client/RawCaptureSequence.h": "0475e12d519c5774072af23c97af31b792962a73308ad89d2d66c3688d695050",
+    "cpppj/tests/CMakeLists.txt": "303d76a77539637f9b6d098bd3865fb51172e5c542d8400a72d8e9b157e66578",
+    "cpppj/tests/CaptureSequenceTests.cpp": "0caf313cb4088c4cb6e459989ed3d7b772e78bae4789149b70a5a7dc52708819",
+    "cpppj/tests/fixtures/capture-sequence-x86.tsv": "c3b1a6047ac1685b88da171e9b669ce410c608e02088d6f7ddab2919dff148fb",
+    "cpppj/capture-sequence-native-20261101.json": "7651d914c319d7cd77cd30c3ba554774d471721ee152315299a77f6dc92a3774",
+    "tools/decomp_capture_sequence.py": "2ac6507ecc8ae973d2cb0f6c3d977dcabbfc140f453fd18e39bd943c342d15e5",
+    "extracted\\cpp-capture-sequence-693\\build.log": "0250beeeb9818845e4975d0d882144de6bd3b521040ff63f79b0777bbd23b20a",
+    "extracted\\cpp-capture-sequence-693\\focused.log": "090494042bece39e59945d928b26a4ef653dba0559cbcec1dedb3e8330a55faa",
+    "extracted\\cpp-capture-sequence-693\\native.log": "1e25c3615c3421d7b302448a1f53285b7a3efa160043e48b6413bdef6c8802c5",
+    "extracted/cpp-capture-sequence-693/protection.json": "7ffa890c79105d6656e8d7301bd529a5f653c9d2e8cb0eee7feebfcc29ffaac1"
+  }
+}
