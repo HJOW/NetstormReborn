@@ -20,10 +20,14 @@ public sealed class HostHtmlWindows
     private readonly HtmlWindowGumpHooks _hooks;
     /// <summary>연결된 HTML 전체 가상 배치 처리기.</summary>
     private HtmlWindowFit? _fit;
+    /// <summary>같은 실제 부모의 링크와 파서 전역을 소유하는 장치.</summary>
+    private HtmlWindowTextParser? _parser;
     /// <summary>클라이언트 수명의 현재 HTML 창 전역.</summary>
     public HtmlWindowGumpState State { get; } = new();
     /// <summary>같은 실제 등록/입력/소멸 장치를 쓰는 HTML 부모 처리기.</summary>
     public HtmlWindowGump Window { get; }
+    /// <summary>연결된 파서. 실제 설정·명령 경계를 설치하기 전에는 null이다.</summary>
+    public HtmlWindowTextParser? Parser => _parser;
 
     /// <summary>메뉴 트리와 실제 큐·벽 시각·링크 실행 경계를 연결한다.</summary>
     /// <param name="menu">같은 공통 트리와 실제 자산을 소유하는 메인 메뉴.</param>
@@ -53,7 +57,21 @@ public sealed class HostHtmlWindows
         HtmlWindowGump.BindHtmlWindow(_tree.EventHooks, _tree.InputHooks, _tree.FrameHooks, _tree.LifetimeHooks,
             token => _constructed.Contains(token) ? Window : null);
         Action<uint> release = _tree.LifetimeHooks.Release!;
-        _tree.LifetimeHooks.Release = token => { release(token); _owned.Remove(token); _constructed.Remove(token); };
+        _tree.LifetimeHooks.Release = token => { release(token); _parser?.Forget(token); _owned.Remove(token); _constructed.Remove(token); };
+    }
+
+    /// <summary>같은 시작 설정, HTML 전역 및 실제 명령 큐 경계로 창의 두 번 파서와 링크 수명을 연결한다.</summary>
+    /// <param name="startup">현재 Client와 공유하는 설정 소유자.</param>
+    /// <param name="command">파서가 만난 원시 스크립트 명령을 현재 큐에 넣는 처리기.</param>
+    public void BindParser(HostStartupScene startup, Action<string> command)
+    {
+        ArgumentNullException.ThrowIfNull(startup); ArgumentNullException.ThrowIfNull(command);
+        if (_parser is not null) throw new InvalidOperationException("HTML 파서가 이미 연결되었다");
+        var globals = new HtmlTextParserGlobals();
+        var hooks = new HtmlTextParserHooks { Command = (_, raw) => command(raw) };
+        HtmlConditionEffect.BindHtmlConditionConfig(hooks, startup.Configuration);
+        HtmlTextParser.BindHtmlPictureText(hooks); HtmlTextParser.BindHtmlBackground(hooks, globals);
+        _parser = new HtmlWindowTextParser(token => _constructed.Contains(token) ? _tree.Node(token) as HtmlWindowGumpNode : null, globals, hooks);
     }
 
     /// <summary>원본 크기별 HTML 소유 버튼 또는 본문 노드를 실제 공통 저장소에 할당한다.</summary>
@@ -135,7 +153,7 @@ public sealed class HostHtmlWindows
         foreach (uint token in _owned.ToArray())
         {
             if (_tree.Create.Entries.Contains(token)) throw new InvalidOperationException("HTML 정리 후 등록 노드 잔류");
-            _tree.ReleaseUnregistered(token); _owned.Remove(token); _constructed.Remove(token);
+            _tree.ReleaseUnregistered(token); _parser?.Forget(token); _owned.Remove(token); _constructed.Remove(token);
         }
     }
 }

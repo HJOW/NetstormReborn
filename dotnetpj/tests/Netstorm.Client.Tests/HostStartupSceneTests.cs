@@ -4,6 +4,7 @@ using Netstorm.Client.Host;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
 using Netstorm.Client.Automation;
+using Netstorm.Client.Scripting;
 
 namespace Netstorm.Client.Tests;
 
@@ -122,6 +123,39 @@ public sealed class HostStartupSceneTests
         Assert.Throws<InvalidOperationException>(() => owner.Window.SetBody(partial, "Pending body"));
         owner.CloseAll(); Assert.Null(menu.Tree.Node(partial)); Assert.Equal(initial, menu.Tree.Create.Count);
         Assert.Equal(12.5, owner.State.LastCloseTime);
+    }
+
+    /// <summary>실제 Config 변경을 HTML 조건에서 다시 읽고 링크가 부모 반납 때까지 유지되는지 확인한다.</summary>
+    [Fact]
+    public void HostHtmlParserUsesCurrentConfigAndOwnsLinksUntilRelease()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        var queue = new InputQueue(); var strings = new ScriptStringRing();
+        var owner = new HostHtmlWindows(menu, queue, () => 1, _ => { });
+        void QueueCommand(string raw) => ScriptCommand.QueueScriptCommand(raw, queue, strings,
+            new ScriptCommandHooks { Lookup = DialogScriptCommands.Lookup, Unknown = _ => throw new InvalidOperationException() });
+        owner.BindParser(startup, QueueCommand);
+        var parser = Assert.IsType<HtmlWindowTextParser>(owner.Parser);
+        Assert.Throws<InvalidOperationException>(() => owner.BindParser(startup, QueueCommand));
+        uint root = owner.Create(0, 0); startup.Configuration.Set("HostHtmlTest", "1");
+        string output = parser.Parse(new(), root, "<?{HostHtmlTest}>Visible</?><a href=\"#Target\">Link</a><$Tell,Next>", 8192);
+        Assert.Contains("Visible", output); InputEvent command = queue.Pop(false);
+        Assert.Equal(0x02000095U, command.Code & 0x03ffffffU); Assert.Equal(command.X, command.Y);
+        Assert.Equal("Next", strings.Resolve(unchecked((uint)command.X))); Assert.True(queue.Empty);
+        var match = System.Text.RegularExpressions.Regex.Match(output, @"~\[T(\d+)\]");
+        Assert.True(match.Success); uint link = uint.Parse(match.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+        Assert.Equal("Target", parser.Resolve(link));
+        startup.Configuration.Set("HostHtmlTest", "0");
+        Assert.DoesNotContain("Visible", parser.Parse(new(), root, "<?{HostHtmlTest}>Visible</?>", 8192));
+        menu.Tree.Lifetime.Kill(root); Assert.Equal("Target", parser.Resolve(link));
+        menu.Tree.Lifetime.Cleanup(); Assert.Throws<ArgumentOutOfRangeException>(() => parser.Resolve(link));
+        owner.CloseAll();
     }
 
     /// <summary>실제 호스트 자산에서 HTML 본문·슬라이더·글꼴 배치와 자식 수명을 검증한다.</summary>

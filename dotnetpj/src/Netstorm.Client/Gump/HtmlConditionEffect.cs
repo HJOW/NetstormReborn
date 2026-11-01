@@ -1,5 +1,6 @@
 using Netstorm.Assets;
 using Netstorm.Core.Original;
+using System.Text;
 
 namespace Netstorm.Client.Gump; // HTML 조건의 실제 토큰/현재 설정/가림 효과 영역이다.
 
@@ -48,4 +49,12 @@ public sealed class HtmlConditionEffect
     }
     /// <summary>같은 현재 ConfigStore를 매번 치환한다.전체 ConfigInterface 임시local 소유는 상위 조립 경계다.</summary>
     public static void BindHtmlConditionConfig(HtmlTextParserHooks hooks, ConfigStore config, OriginalEdition edition = OriginalEdition.Patch1078) { ArgumentNullException.ThrowIfNull(hooks); ArgumentNullException.ThrowIfNull(config); var condition = new HtmlConditionEffect(new() { Substitute = config.Expand }, edition); hooks.Condition = condition.Apply; }
+    /// <summary>실제 ConfigInterface의 임시 local 수명으로 매 조건을 치환한다. 원시 HTML BYTE와 설정 문자열은 Windows-1252 경계에서 변환한다.</summary>
+    public static void BindHtmlConditionConfig(HtmlTextParserHooks hooks, ConfigInterface config, OriginalEdition edition = OriginalEdition.Patch1078)
+    {
+        ArgumentNullException.ThrowIfNull(hooks); ArgumentNullException.ThrowIfNull(config);
+        var condition = new HtmlConditionEffect(new() { Substitute = raw =>
+            Encoding.Latin1.GetString(OriginalText.EncodeWindows1252(config.SubstituteLocal(OriginalText.DecodeWindows1252(Encoding.Latin1.GetBytes(raw))))) }, edition);
+        hooks.Condition = condition.Apply;
+    }
 }

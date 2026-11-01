@@ -6,6 +6,7 @@ using Netstorm.Client.Automation;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
+using Netstorm.Client.Scripting;
 
 namespace Netstorm.Client.Host;
 
@@ -40,6 +41,9 @@ public sealed class ClientHostGame : Game
 
     /// <summary>HTML 다중 줄 본문과 슬라이더 소유자.</summary>
     private HostHtmlText? _htmlText;
+
+    /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
+    private readonly ScriptStringRing _scriptStrings = new();
 
     /// <summary>메뉴 버튼이 쓰는 단조 실시간 시계.</summary>
     private readonly Stopwatch _wallClock = Stopwatch.StartNew();
@@ -137,6 +141,8 @@ public sealed class ClientHostGame : Game
             });
             _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _wallClock.Elapsed.TotalSeconds,
                 _ => throw new InvalidOperationException("HTML 링크 명령 소비자 미연결"));
+            _htmlWindows.BindParser(_startup, raw => ScriptCommand.QueueScriptCommand(raw, _driver.Input, _scriptStrings,
+                new ScriptCommandHooks { Lookup = DialogScriptCommands.Lookup, Unknown = name => Debug.WriteLine("HTML 스크립트 명령 미연결: " + name) }));
             _htmlText = new HostHtmlText(_mainMenu, _htmlWindows, _driver.Screen, Poll, (_, _) => _menuDirty = true,
                 _ => throw new InvalidOperationException("HTML 본문 커서 장치 미연결"),
                 _ => throw new InvalidOperationException("HTML 본문 이름 소리 장치 미연결"));
