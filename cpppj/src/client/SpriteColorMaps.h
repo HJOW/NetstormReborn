@@ -1,4 +1,4 @@
-// 원본 일반 자산 출력의 추상/건설/그림자 소스 색 변환표다.
+// 원본 일반 자산 출력의 추상/건설/그림자 대상 색 변환표다.
 #pragma once
 #include "client/Renderer.h"
 namespace netstorm::client {

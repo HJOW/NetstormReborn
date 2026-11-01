@@ -2673,3 +2673,12 @@ target_link_libraries(netstorm_return_options_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_return_options_tests)
 target_compile_definitions(netstorm_return_options_tests PRIVATE ${_netstorm_menu_session_definitions})
 target_sources(netstorm_tests PRIVATE SessionCursorReturnOptionsTests.cpp)
+
+# 대상 변환의 원문296표면과 기존 소스 배율/정렬/수집/색표/본체를 함께 확인한다(단위678).
+target_sources(netstorm_tests PRIVATE TranslatedPixelsTests.cpp)
+set_source_files_properties(TranslatedPixelsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TRANSLATED_PIXELS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/translated-pixels-x86.tsv\"")
+add_executable(netstorm_translated_pixels_tests FocusedTestMain.cpp TranslatedPixelsTests.cpp ScaledPixelsTests.cpp SpriteDrawTests.cpp
+    SpriteColorMapsTests.cpp DrawSortTests.cpp ObjectCollectionTests.cpp)
+target_link_libraries(netstorm_translated_pixels_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_translated_pixels_tests)
+target_compile_definitions(netstorm_translated_pixels_tests PRIVATE ${_netstorm_menu_session_definitions})

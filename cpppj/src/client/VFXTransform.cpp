@@ -50,10 +50,11 @@ std::uint32_t TextureStart(std::int32_t index) {
 bool IsWord(std::int32_t value) { return value>=kWordMinimum && value<=kWordMaximum; }
 }
 
-// 일반 VFX 해제 이미지에서 임시 255 표면과 같은 결과를 직접 샘플링한다.
-void DrawScaledVfxImage(std::span<std::uint8_t> pixels,int pitch,int height,
+namespace { // 두 원문 변환 커널의 같은 꼭짓점/텍스처 순회를 공유하되 픽셀 연산은 구별한다.
+// 일반 출력은 소스 색을, translated 출력은 불투명 마스크 아래의 현재 대상 색을 사용한다.
+void DrawVfxImage(std::span<std::uint8_t> pixels,int pitch,int height,
     const IndexedImage& image,const ShapeFrame& frame,ScreenPoint position,
-    std::int32_t scaleX,std::int32_t scaleY,ScreenRect clip,const ColorMap* colors) {
+    std::int32_t scaleX,std::int32_t scaleY,ScreenRect clip,const ColorMap* colors,bool translated) {
     if (pitch<1 || height<1 || std::uint64_t(pitch)*std::uint64_t(height)>pixels.size())
         throw std::invalid_argument("VFX 변환 표면 용량 오류");
     if (image.width<1 || image.height<1 || image.width>std::size_t(kWordMaximum)+1 ||
@@ -64,7 +65,7 @@ void DrawScaledVfxImage(std::span<std::uint8_t> pixels,int pitch,int height,
         std::int64_t(rect.bottom)-rect.top+1!=static_cast<std::int64_t>(image.height))
         throw std::invalid_argument("VFX 변환 실제 프레임 영역 오류");
     // 원본의 조기 일반 출력 분기에서는 255도 불투명 색으로 유지한다.
-    if (scaleX==kFixedUnit && scaleY==kFixedUnit) {
+    if (!translated && scaleX==kFixedUnit && scaleY==kFixedUnit) {
         DrawIndexedImage(pixels,pitch,height,image,Add(position.x,rect.left),Add(position.y,rect.top),clip,colors);
         return;
     }
@@ -98,10 +99,12 @@ void DrawScaledVfxImage(std::span<std::uint8_t> pixels,int pitch,int height,
         const auto sourceRow=std::size_t(v>>16)*image.width;
         const auto targetRow=std::size_t(y)*std::size_t(pitch);
         auto u=firstU;
-        // 마지막 x도 포함하고 투명/색 치환 후 255는 기존 대상 픽셀을 유지한다.
+        // 마지막 x도 포함한다. 일반 소스의 결과255와 translated 마스크의255는 각각 투명이다.
         for (int x=visible.left;x<visible.right;++x) {
             const auto input=sourceRow+std::size_t(u>>16);
-            if (image.opacity[input]) {
+            if (translated && image.opacity[input] && image.indices[input]!=kScratchTransparent) {
+                auto& output=pixels[targetRow+std::size_t(x)];output=(*colors)[output]; //0040351d은 결과255도 불투명 대상으로 저장한다.
+            } else if (!translated && image.opacity[input]) {
                 const auto ink=colors ? (*colors)[image.indices[input]] : image.indices[input];
                 if (ink!=kScratchTransparent) pixels[targetRow+std::size_t(x)]=ink;
             }
@@ -109,5 +112,18 @@ void DrawScaledVfxImage(std::span<std::uint8_t> pixels,int pitch,int height,
         }
         v=Advance(v,stepY,1);
     }
+}
+}
+// 일반 VFX는 기존 단위 배율의 직접 출력과 비단위 임시255 표면 동작을 유지한다.
+void DrawScaledVfxImage(std::span<std::uint8_t> pixels,int pitch,int height,
+    const IndexedImage& image,const ShapeFrame& frame,ScreenPoint position,
+    std::int32_t scaleX,std::int32_t scaleY,ScreenRect clip,const ColorMap* colors) {
+    DrawVfxImage(pixels,pitch,height,image,frame,position,scaleX,scaleY,clip,colors,false);
+}
+// 현재 대상 픽셀을 실제 표로 변환하며 원문의 마스크/기하 순서를 함께 사용한다.
+void DrawTranslatedVfxImage(std::span<std::uint8_t> pixels,int pitch,int height,
+    const IndexedImage& image,const ShapeFrame& frame,ScreenPoint position,
+    std::int32_t scaleX,std::int32_t scaleY,ScreenRect clip,const ColorMap& colors) {
+    DrawVfxImage(pixels,pitch,height,image,frame,position,scaleX,scaleY,clip,&colors,true);
 }
 }

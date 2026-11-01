@@ -244,7 +244,7 @@ SpriteDrawHooks SpritePixelTarget::Hooks(SpriteDrawHooks rules) {
     rules.shape=[this](auto request) { Shape(request); };rules.line=[this](auto first,auto last,auto color) { Line(first,last,color); };
     rules.fill=[this](auto rect,auto color) { Fill(rect,color); };return rules;
 }
-// shadow 호출도 원본 004dab90의 소스 색 치환이다. 대상 화면 색 변환 기능과 구분한다.
+//004dab90의 고정 표는 소스 마스크 아래의 대상 색을 바꾼다. 소유자 RLE의 소스 색 치환과 구별한다.
 void SpritePixelTarget::Shape(SpriteShapeRequest request) {
     const auto binding=RequiredSprite(shape_)(request.type);if (!binding.database) throw std::invalid_argument("Sprite Draw shape binding");
     const auto blocks=binding.database->Blocks();if (binding.block>=blocks.size() || request.frame>=blocks[binding.block].frames.size()) throw std::out_of_range("Sprite Draw frame");
@@ -254,7 +254,9 @@ void SpritePixelTarget::Shape(SpriteShapeRequest request) {
     std::optional<ColorMap> mapped;const ColorMap* colors=nullptr;
     if (request.mode==SpriteShapeMode::Owner) { if (!current_) throw std::logic_error("Sprite Draw owner colors missing");colors=&*current_; }
     else if (request.mode!=SpriteShapeMode::Plain) { mapped=RequiredSprite(colors_)(request.mode,request.type,0);colors=&*mapped; }
-    if (request.scaled) DrawScaledVfxImage(pixels_,pitch_,height_,image->second,frame,request.position,request.scaleX,request.scaleY,clip_,colors);
+    if (request.mode!=SpriteShapeMode::Plain && request.mode!=SpriteShapeMode::Owner) {
+        DrawTranslatedVfxImage(pixels_,pitch_,height_,image->second,frame,request.position,request.scaled ? request.scaleX : 65536,request.scaled ? request.scaleY : 65536,clip_,*colors);
+    } else if (request.scaled) DrawScaledVfxImage(pixels_,pitch_,height_,image->second,frame,request.position,request.scaleX,request.scaleY,clip_,colors);
     else DrawIndexedImage(pixels_,pitch_,height_,image->second,AddSprite(request.position.x,frame.rect.left),AddSprite(request.position.y,frame.rect.top),clip_,colors);
 }
 // 양 끝 포함 직교 선분을 정규화해 자른다. 대각선 입력은 이 Draw의 계약 밖이다.

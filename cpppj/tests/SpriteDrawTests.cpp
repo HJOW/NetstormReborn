@@ -111,7 +111,7 @@ TEST_CASE(SpriteDraw_CommonGroupDispatch) {
     std::fill(pixels.begin(),pixels.end(),std::uint8_t{9});std::int32_t count=1;hooks.group=[&](auto) { return DrawGroupView{1,std::span(&entry,1),&count}; };
     const RenderCollectionEntry group{0,0,1,0,1,0};DispatchDrawEntries(std::span(&group,1),{},hooks);CHECK(pixels[29]==0);CHECK(pixels[30]==255);
 }
-// 현재 소유자 색·명시 그림자 색은 소스 색을 치환하며 투명/클립을 유지한다.
+// 소유자는 소스 치환이고 고정 표는 별도 translated 커널이다. 이 한 행 SHP는 translated에서 출력하지 않는다.
 TEST_CASE(SpriteDraw_PixelModesTransparencyClip) {
     ShapeDatabase shape(SpritePixelShape());std::vector<std::uint8_t> pixels(32,9);
     SpritePixelTarget target(pixels,8,4,{1,1,5,3},[&](auto) { return PreviewShapeBinding{&shape,0}; },[](auto mode,auto,auto) {
@@ -121,7 +121,7 @@ TEST_CASE(SpriteDraw_PixelModesTransparencyClip) {
         return map;
     });auto hooks=target.Hooks();hooks.shape({70,0,{1,1},SpriteShapeMode::Plain});CHECK(pixels[9]==9);CHECK(pixels[10]==0);CHECK(pixels[11]==255);
     CHECK(Throws([&] { hooks.shape({70,0,{1,1},SpriteShapeMode::Owner}); }));hooks.setOwnerColors(70,2);hooks.shape({70,0,{1,1},SpriteShapeMode::Owner});CHECK(pixels[10]==10);CHECK(pixels[11]==9);
-    hooks.shape({70,0,{1,1},SpriteShapeMode::Shadow});CHECK(pixels[10]==40);CHECK(pixels[11]==39);CHECK(pixels[9]==9);
+    hooks.shape({70,0,{1,1},SpriteShapeMode::Shadow});CHECK(pixels[10]==10);CHECK(pixels[11]==9);CHECK(pixels[9]==9); //0040351d의 같은 y 꼭짓점은 한 행도 그리지 않는다. 전체 픽셀 근거는TranslatedPixelsTests다.
     hooks.shape({70,0,{4,2},SpriteShapeMode::Dead});CHECK(pixels[21]==9);CHECK(Throws([&] { hooks.shape({70,1,{1,1},SpriteShapeMode::Plain}); }));
 }
 // 선택선의 끝점/역순/클립과 half-open fill의 빈/역전 범위를 검사한다.

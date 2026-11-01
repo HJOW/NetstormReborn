@@ -1,0 +1,16 @@
+{
+  "unit": 678,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "exeSha256": "d0281224c6d1d2637faa2f04df936c5994efbd256f6c3dc4cab70f3abc220fee",
+  "native": {"cases": 296, "observations": 888, "differences": 0, "synthetic": 288, "actualGeyserFrames": 8, "fixtureSha256": "b5f6c7ca482be3d6ccd44f862aa7f4000fcd70a293d2086aab7e55d66564b49b", "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236", "toolSha256": "3c1f20dc1cecd8caec196a71626fcc8f0b055ab119c89505261333115815e6c5"},
+  "focused": {"registered": 31, "executed": 31, "failedChecks": 0, "new": 2, "existing": 29, "newSpriteSurfaces": 888},
+  "build": {"exitCode": 0, "warnings": 0, "errors": 0, "earlyTestInvocation": "빌드 완료 전 아직 없는 집중 EXE 호출, 실제 검사 본문 실행0"},
+  "live": {"processes": 2, "mission": "MasterOfWhirligigs", "exitCodes": [0, 0], "camera": [320, 221], "beforeGameSeconds": 10.833, "afterGameSeconds": 10.332},
+  "protected": {"originals": 1394, "originalCD": 425, "fixtures": 781, "agents": 1, "unchanged": true},
+  "mutation": {"replacedIncorrectHistoricalCase": true, "registered": 1, "executed": 0},
+  "rawDirectory": "extracted/cpp-translated-shadow-678",
+  "limits": ["실제1-2초기GUI와 독립 원문 표면 대조", "원본과 실제 새 다리 배치의 나란히 픽셀 검사는 아님", "새 원문은10.78 회전0·현재 signed WORD 범위", "전체34/전체 C++/새 ZIP/물리 입력/PCM/공중3종/신규MP 검사 없음", "포획/희생/특정 적 공격/승리 재현 없음"]
+}

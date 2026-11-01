@@ -12,4 +12,9 @@ namespace netstorm::client {
 void DrawScaledVfxImage(std::span<std::uint8_t> pixels,int pitch,int height,
     const IndexedImage& image,const ShapeFrame& frame,ScreenPoint position,
     std::int32_t scaleX,std::int32_t scaleY,ScreenRect clip,const ColorMap* colors=nullptr);
+// 0040351d의 angle=0: 소스는255 투명 마스크로만 쓰고 현재 대상 색을 표로 변환한다.
+// 일반 출력과 달리 단위 배율도 변환 꼭짓점/한 행 생략을 거치며 변환 결과255도 그대로 저장한다.
+void DrawTranslatedVfxImage(std::span<std::uint8_t> pixels,int pitch,int height,
+    const IndexedImage& image,const ShapeFrame& frame,ScreenPoint position,
+    std::int32_t scaleX,std::int32_t scaleY,ScreenRect clip,const ColorMap& colors);
 }

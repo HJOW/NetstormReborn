@@ -1,4 +1,4 @@
-// 일반 자산의 명암은 L1, 그림자는 제곱 거리로 소스 팔레트 번호를 변환한다.
+// 일반 자산의 명암은 L1, 그림자는 제곱 거리로 대상 화면의 팔레트 번호를 변환한다.
 #include "client/SpriteColorMaps.h"
 #include "client/PaletteShade.h"
 namespace netstorm::client {

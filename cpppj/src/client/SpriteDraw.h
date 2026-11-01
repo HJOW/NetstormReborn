@@ -81,7 +81,7 @@ struct SpriteDrawState {
 struct SpriteShapeRequest {
     std::uint32_t type{},frame{}; // 같은 자산 표의 TYPE/SHP 식별자와 실제 물리 프레임이다.
     ScreenPoint position; // 원문 VFX 기준점이며 프레임 rect 원점은 출력기가 적용한다.
-    SpriteShapeMode mode{}; // 원색/소유자/고정 소스 치환표의 선택이다.
+    SpriteShapeMode mode{}; // 원색/소유자 소스 치환/고정 대상 변환표의 선택이다.
     bool scaled{}; // true는 원문4daaf0의 회전 없는 VFX 배율 출력으로 분배한다.
     std::int32_t scaleX{65536},scaleY{65536}; // signed16.16 두 축 배율이며 기본은1배다.
 };
