@@ -34,4 +34,4 @@
 - `extracted/cpp-translated-shadow-679-mutation-v1.log`: 기준선31개 통과와 대상 변환 어댑터1종 검출, 종료0이다.
 - `extracted/cpp-mutation-process-679-tests-v2.log`: Python3개 최종 통과다.
 
-다음은 MoveDialog의 실제 Client 연결이다. 별도680 준비로 원문004c8df0/strchr의73입력/219관측을 `extracted/cpp-move-dialog-680/native-v1/`에 동결했고, 아직 등록/컴파일하지 않은 MoveDialog.h/cpp·MoveDialogTests.cpp와 `tools/decomp_move_dialog.py`를 준비했다. 이는679 제품 기능 완료가 아니다. 현재 제품 SHA256은678의 `d0281224c6d1d2637faa2f04df936c5994efbd256f6c3dc4cab70f3abc220fee`다.
+679 완료 당시 다음은 MoveDialog의 실제 Client 연결이었다. 별도680 준비의 원문73입력/219관측과 미등록 초안은 이후[680](cpp-move-dialog-20261101.md)에서 제품에 연결하고 검증했다. 이를679의 제품 변경으로 세지 않는다. 679 당시 제품 SHA256은678의 `d0281224c6d1d2637faa2f04df936c5994efbd256f6c3dc4cab70f3abc220fee`다.

@@ -2347,3 +2347,6 @@ fonts/License.txt -text
 
 # 단위678의 translated 커널 최초 CPU 전체 표면은 줄바꿈 변환 없이 보존한다.
 cpppj/tests/fixtures/translated-pixels-x86.tsv -text whitespace=-blank-at-eol
+
+# 단위680의 MoveDialog 최초 CPU 노드/Attach 인자를 줄바꿈 변환 없이 보존한다.
+cpppj/tests/fixtures/move-dialog-x86.tsv -text whitespace=-blank-at-eol

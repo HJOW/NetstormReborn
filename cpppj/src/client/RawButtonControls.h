@@ -81,6 +81,7 @@ public:
     void KillGump(std::uint32_t token); // 같은 실제 수명으로 Kill만 하고 callback 밖 프레임 Cleanup을 유지한다.
     std::uint32_t DialogCount() const; // Guide가 공통 입력/수명과 같은 현재 모달 개수를 읽는다. Kill의 즉시 반납과 소멸 전 창 인스턴스 수를 구별한다.
     std::uint32_t CurrentDialog() const; // 원문565dd4의 실제 현재 모달 토큰이다.4c8e90은 개수가 아닌 이 값의0 여부를 읽는다.
+    void MoveCurrentDialog(std::string_view location); //004c8df0: 현재 모달을 캡처하고 같은 공통 트리의 Push/Attach로 지정 축만 이동한다.
 
     // 004d68c2/004d69f4: 안쪽 포인터의 조건부 Overlay 뒤 raw code/x/y Broadcast만 실행한다. 일반 큐 드레인보다 앞에서 한 번 부른다.
     // cursorActive는445330의 참/거짓이고 mode는005cae90이다. allowOverlay는 아직 공통 부모가 아닌 논리 HTML의 명시 호스트 차단 경계다.

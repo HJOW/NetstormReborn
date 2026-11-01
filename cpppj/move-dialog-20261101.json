@@ -1,0 +1,16 @@
+{
+  "unit": 680,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "exeSha256": "16a5a8dd18b56ae3d696875d7e00a56a3868cd196546622abf586d146cbab1a0",
+  "command": {"value": "020000ed", "pointer": "00542aa8", "table": "005432f0", "name": "00518274", "handler": "004c8df0", "cdCandidate": "004c3860", "cdBodyCompared": false},
+  "native": {"cases": 73, "observations": 219, "differences": 0, "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236", "toolSha256": "7e8dee4d7cdaf0f7ab7503d65549ff7e4deccc02fb49cd7d338f822409731747", "fixtureSha256": "ea6d297da19b84e431ccd73e38d56a62024806b950978037b43486eb6c5bcbe4", "boundaries": "가상Push/공통Attach만명시효과. 실제strchr/산술/현재노드쓰기를실행"},
+  "focused": {"registered": 9, "executed": 9, "failedChecks": 0, "new": 1, "existing": 8},
+  "build": {"exitCode": 0, "warnings": 0, "errors": 0},
+  "live": {"processes": 2, "gameExitCodes": [0, 0], "firstDriverExit": 1, "firstFailure": "미등록 Imp4 접두어를 파일 적재로 잘못 가정한 검사 입력", "finalDriverExit": 0, "phase": 1, "currentDialog": 216, "observedWindowTop": 0, "testInstrumentation": "임시 본문/missionSpec/kernel-tell. 원본 시나리오와 구별"},
+  "protected": {"originals": 1394, "originalCD": 425, "fixtures": 782, "agents": 1, "unchanged": true},
+  "rawDirectory": "extracted/cpp-move-dialog-680",
+  "limits": ["10.78의현재모달위치와실제HTML/일반입력연결", "최종Attach몸체는기존GumpTree검사를사용", "C++호스트전체물리ABI/10.72새몸체/원본나란히픽셀검사아님", "전체34/전체 C++/새 ZIP/물리 입력/PCM/공중3종/신규MP 검사없음", "포획/희생/특정 적 공격/승리 재현없음"]
+}

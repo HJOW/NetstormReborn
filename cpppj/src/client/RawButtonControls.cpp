@@ -1,4 +1,5 @@
 #include "client/RawStormPowerRefresh.h" //현재 예산 serial과 가상 재부착의 원문 부모다.
+#include "client/MoveDialog.h" //현재 모달 포인터를 보존하는 원문 위치 명령이다.
 // 가상 함수의 호스트 분배만 구성하며 개별 원본 몸체는 기존 Gump/Button 모듈을 호출한다.
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -483,6 +484,12 @@ bool RawButtonControls::BlockingGumpOpen() const {
 std::uint32_t RawButtonControls::DialogCount() const { return impl_->life.dialogCount; }
 // Guide와 일반 입력이 같은 활성 부모 포인터를 읽는다.
 std::uint32_t RawButtonControls::CurrentDialog() const { return impl_->life.currentDialog; }
+// 원문565dd4를 먼저 캡처하며 공통00466750을 파생 가상 부착으로 바꾸지 않는다.
+void RawButtonControls::MoveCurrentDialog(std::string_view location) {
+    auto& s=*impl_;const auto token=s.life.currentDialog;auto* node=token ? s.Node(token) : nullptr;
+    if (token && !node) throw std::logic_error("MoveDialog의 현재 모달 노드 미연결");
+    MoveDialog(node,location,s.create.screenWidth,s.create.screenHeight,{[&s,token] { s.tree->Push(token); },[&s,token](auto x,auto y,auto parent,auto mode) { s.tree->Attach(token,x,y,parent,mode); }});
+}
 // 렌더링이 이전 어댑터의 캡처 사본을 조회하지 않게 현재 raw 상태만 읽는다.
 std::optional<int> RawButtonControls::Pressed() const {
     // 표시 명령 번호 순서는 부모 트리 방문 순서와 구별한다.

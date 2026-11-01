@@ -2682,3 +2682,11 @@ add_executable(netstorm_translated_pixels_tests FocusedTestMain.cpp TranslatedPi
 target_link_libraries(netstorm_translated_pixels_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_translated_pixels_tests)
 target_compile_definitions(netstorm_translated_pixels_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 원문 MoveDialog의73입력과 기존 공통 트리의 Attach/Push/제한을 함께 확인한다(단위680).
+target_sources(netstorm_tests PRIVATE MoveDialogTests.cpp)
+set_source_files_properties(MoveDialogTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_MOVE_DIALOG_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/move-dialog-x86.tsv\"")
+add_executable(netstorm_move_dialog_tests FocusedTestMain.cpp MoveDialogTests.cpp GumpTreeTests.cpp)
+target_link_libraries(netstorm_move_dialog_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_move_dialog_tests)
+target_compile_definitions(netstorm_move_dialog_tests PRIVATE ${_netstorm_menu_session_definitions})
