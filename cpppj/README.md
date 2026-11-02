@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **761 / 표시 버전11.01 유지**다. outside 큐 사건의 키·커서 라우팅과 실제 공통 정지·현재 모달 관문 연결. 집중15개가 통과했습니다. 원문684행/1356회와 별도 재관측이 바이트 일치했다. C32/Tab16/숫자32행·실제outside 키큐/커서·정지8조합·현재폴링 분리를 확인했다. 새 게임/MP 검사는0이며 전체 목표는 미완료입니다. 보호2672불변·현재2673이다. GUI/물리 입력/PCM은 별도다. [761 기록](../docs/exe/cpp-outside-input-routing-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다. 다음은 Config 명령/메인루프 priority(762)·명시41baa0(763)·글꼴/음질(764)·존재조회(765)·Help stream writer(766)·QuickHelp 최초reader(767)·DrawWater(768)와 남은 비멀티/호환성. 마지막GUI746·전체34/ZIP645·644는 별도 제품 근거다.
+현재 실행 제품은 **762 / 표시 버전11.01 유지**다. 팔레트·State·우선순위 명령과 동기 설정 reader 및 raw priority 메인루프 연결. 집중6개가 통과했습니다. 원문 명령238/714·이름30·메인루프96/288과 별도 재관측이 일치했다. 현재 Config/State 저장·목록kind/팔레트·범위밖 raw priority를 확인했다. 새 게임/MP 검사는0이며 전체 목표는 미완료입니다. 보호2673불변·현재2676이다. GUI/물리 입력/PCM은 별도다. [762 기록](../docs/exe/cpp-configuration-command-input-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다. 다음은 명시41baa0(763)·글꼴/음질(764)·존재조회(765)·Help stream writer(766)·QuickHelp 최초reader(767)·DrawWater(768)·DataManager reader(769)와 남은 비멀티/호환성. 마지막GUI746·전체34/ZIP645·644는 별도 제품 근거다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 

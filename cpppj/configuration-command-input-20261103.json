@@ -1,0 +1,384 @@
+{
+  "unit": 762,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 762,
+  "displayVersion": "11.01",
+  "exeSha256": "3b2fb7d83363830201493da9b59fdbd1b0d6b8eecfa07c59bd39bdb64434b8ca",
+  "summary": "팔레트·State·우선순위 명령과 동기 설정 reader 및 raw priority 메인루프 연결",
+  "tests": {
+    "totalUnique": 6,
+    "totalExecutions": 6,
+    "newTests": 6,
+    "failedChecks": 0,
+    "names": [
+      "ConfigurationCommandInput_ChangePalActualConfigAndExistingPaletteParent",
+      "ConfigurationCommandInput_Native238EnvelopeAndCurrentReads",
+      "ConfigurationCommandInput_Native30NamesAndRealQueue",
+      "ConfigurationCommandInput_NativePriorityLoop96",
+      "ConfigurationCommandInput_PrioritySameClientConfigReaderAndPartialEffects",
+      "ConfigurationCommandInput_SetFortTypeActualStateNotifyAndSavedKindReader"
+    ],
+    "logs": [
+      "tests-configuration-v2.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v2.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2673,
+    "currentCount": 2676,
+    "allUnchanged": true,
+    "fixtureCount": 856,
+    "newFixtures": [
+      "cpppj/tests/fixtures/configuration-commands-x86.tsv",
+      "cpppj/tests/fixtures/configuration-command-names-x86.tsv",
+      "cpppj/tests/fixtures/priority-loop-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 762,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 238,
+      "observations": 714,
+      "differences": 0,
+      "nativeBodiesUnchanged": true,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "fixtureSha256": "f0154f41759efa6797af4de90f58de225deabe9cc8e9d33a2692e2bd39b27267",
+      "toolSha256": "370479d8d76609fe7af720a33a4255b3d08e3b138ad15a3fd540982155bc3b40",
+      "extraBodies": [
+        "00435c80 Win32 priority selection",
+        "00460ca0 State+11/current owner reread",
+        "004bd540 Notify thunk"
+      ],
+      "boundaries": [
+        "Config Set004414d0/Get004410f0",
+        "palette004b6100",
+        "Win32 GetCurrentThread/SetThreadPriority",
+        "State004bd550/Notify004bd360",
+        "format004a89c0/Config00441580"
+      ],
+      "limits": [
+        "challenge/MP조건은코드대조만이며새관측하지않음",
+        "실제Stategetter/Notify저장과palette reader는기존복원부모이며이번CPU관측의명시경계다",
+        "실제OS우선순위/게임/GUI/파일I/O/통신0"
+      ],
+      "rawReportSha256": "820f8ca2cdfc0cda04b8d44c6093ce95f4ac1129930af1d17717d40b015d2bc2"
+    },
+    "reobserved-native.json": {
+      "unit": 762,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 238,
+      "observations": 714,
+      "differences": 0,
+      "nativeBodiesUnchanged": true,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "fixtureSha256": "f0154f41759efa6797af4de90f58de225deabe9cc8e9d33a2692e2bd39b27267",
+      "toolSha256": "370479d8d76609fe7af720a33a4255b3d08e3b138ad15a3fd540982155bc3b40",
+      "extraBodies": [
+        "00435c80 Win32 priority selection",
+        "00460ca0 State+11/current owner reread",
+        "004bd540 Notify thunk"
+      ],
+      "boundaries": [
+        "Config Set004414d0/Get004410f0",
+        "palette004b6100",
+        "Win32 GetCurrentThread/SetThreadPriority",
+        "State004bd550/Notify004bd360",
+        "format004a89c0/Config00441580"
+      ],
+      "limits": [
+        "challenge/MP조건은코드대조만이며새관측하지않음",
+        "실제Stategetter/Notify저장과palette reader는기존복원부모이며이번CPU관측의명시경계다",
+        "실제OS우선순위/게임/GUI/파일I/O/통신0"
+      ],
+      "rawReportSha256": "820f8ca2cdfc0cda04b8d44c6093ce95f4ac1129930af1d17717d40b015d2bc2"
+    },
+    "root-repeat.json": {
+      "unit": 762,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 238,
+      "observations": 714,
+      "differences": 0,
+      "nativeBodiesUnchanged": true,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "fixtureSha256": "f0154f41759efa6797af4de90f58de225deabe9cc8e9d33a2692e2bd39b27267",
+      "toolSha256": "7959ff107e1ed80deb64e93c6f6519ccf385ea591020dd77aa04605f77bec1d2",
+      "extraBodies": [
+        "00435c80 Win32 priority selection",
+        "00460ca0 State+11/current owner reread",
+        "004bd540 Notify thunk"
+      ],
+      "boundaries": [
+        "Config Set004414d0/Get004410f0",
+        "palette004b6100",
+        "Win32 GetCurrentThread/SetThreadPriority",
+        "State004bd550/Notify004bd360",
+        "format004a89c0/Config00441580"
+      ],
+      "limits": [
+        "challenge/MP조건은코드대조만이며새관측하지않음",
+        "실제Stategetter/Notify저장과palette reader는기존복원부모이며이번CPU관측의명시경계다",
+        "실제OS우선순위/게임/GUI/파일I/O/통신0"
+      ],
+      "rawReportSha256": "43f86c2b5e9f4290fc4cab85a02c02458d249235a464b8d90e3165fd3d025eb5"
+    },
+    "names-native.json": {
+      "unit": 762,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 30,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "commands": [
+        "ChangePal 0054279c/02000029",
+        "ChangePriority 0054291c/0200008a",
+        "SetFortType 00542a10/020000c7"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 370303,
+      "fixtureSha256": "6d265064c96551d7c61e8fcd68068965d1ff23dc9f6e42d88b037e32cefe7371",
+      "toolSha256": "c22916e13cefa5a9287b877101151186fb09d24213a83cd886c8a44b34e0a3d9",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "3605b37921896d37977955047e3686755fc3ddbfd12ed4e3fbb96b032034882f"
+    },
+    "root-names.json": {
+      "unit": 762,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 30,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "commands": [
+        "ChangePal 0054279c/02000029",
+        "ChangePriority 0054291c/0200008a",
+        "SetFortType 00542a10/020000c7"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 370303,
+      "fixtureSha256": "6d265064c96551d7c61e8fcd68068965d1ff23dc9f6e42d88b037e32cefe7371",
+      "toolSha256": "d634b96a4d52953a650edb396a18c140cbb336052389bd10424f801f7d0be167",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "d534c147c0f3b6df24f040336e143a69ee34e6398d24546a249a7e5a9bba288c"
+    },
+    "priority-native.json": {
+      "unit": 762,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "entry": "00439983",
+      "endExclusive": "004399ef",
+      "inputs": 96,
+      "observations": 288,
+      "differences": 0,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "actualOsCalls": 0,
+      "nativeBodiesUnchanged": true,
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "bodySha256": "9193cc0b70154d74e7037262b6ee4012e27075f532021deccecf4081f8b2b3fb",
+      "toolSha256": "dd0eae077029e17eb91011eef02c77acd811a752cc12b7cea442199a95173698",
+      "fixtureSha256": "261d3ba1acb8e8ff7cf9fc44146f0c443b172dc4c792e8ca3410b93780115bf2",
+      "controls": [
+        639,
+        895,
+        639
+      ],
+      "preconditions": [
+        "WinMain의 EBX=0",
+        "EDI는 선행00439966에서 GetCurrentThread IAT를 읽은 값",
+        "challenge00594fc8=0 고정"
+      ],
+      "boundaries": [
+        "GetCurrentThread:실제 CALL 순서별 명시 핸들",
+        "GetThreadPriority:명시 signed 반환",
+        "SetThreadPriority:실제 핸들/우선순위 인자 및 명시 BOOL 반환"
+      ],
+      "limits": [
+        "국소 원문 CPU이며 실제 WinMain/OS/프레임/게임 실행 검사가 아니다",
+        "challenge 양수 분기와 멀티플레이 실행은 관측하지 않았다",
+        "GetCurrentThread 장치는 인자/순서만 관측하고 호스트 스레드를 조회하지 않는다"
+      ],
+      "rawReportSha256": "3493552b5287508fd98801e6bbe0854d6aaee72ae3f5b33cf605584e838520a4"
+    },
+    "root-priority.json": {
+      "unit": 762,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "entry": "00439983",
+      "endExclusive": "004399ef",
+      "inputs": 96,
+      "observations": 288,
+      "differences": 0,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "actualOsCalls": 0,
+      "nativeBodiesUnchanged": true,
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "bodySha256": "9193cc0b70154d74e7037262b6ee4012e27075f532021deccecf4081f8b2b3fb",
+      "toolSha256": "dd0eae077029e17eb91011eef02c77acd811a752cc12b7cea442199a95173698",
+      "fixtureSha256": "261d3ba1acb8e8ff7cf9fc44146f0c443b172dc4c792e8ca3410b93780115bf2",
+      "controls": [
+        639,
+        895,
+        639
+      ],
+      "preconditions": [
+        "WinMain의 EBX=0",
+        "EDI는 선행00439966에서 GetCurrentThread IAT를 읽은 값",
+        "challenge00594fc8=0 고정"
+      ],
+      "boundaries": [
+        "GetCurrentThread:실제 CALL 순서별 명시 핸들",
+        "GetThreadPriority:명시 signed 반환",
+        "SetThreadPriority:실제 핸들/우선순위 인자 및 명시 BOOL 반환"
+      ],
+      "limits": [
+        "국소 원문 CPU이며 실제 WinMain/OS/프레임/게임 실행 검사가 아니다",
+        "challenge 양수 분기와 멀티플레이 실행은 관측하지 않았다",
+        "GetCurrentThread 장치는 인자/순서만 관측하고 호스트 스레드를 조회하지 않는다"
+      ],
+      "rawReportSha256": "3493552b5287508fd98801e6bbe0854d6aaee72ae3f5b33cf605584e838520a4"
+    },
+    "desktop-capture-retry.json": {
+      "date": "2026-11-03",
+      "host": "HJOW-Athlon",
+      "environmentEvidence": "work/win10-environment-audit/win32-readonly.json",
+      "boot": "2026-11-02 20:24:13 +09:00",
+      "rdpSession": 1,
+      "rdpLogin": "2026-11-02 20:25:09 +09:00",
+      "waveOutDevices": 1,
+      "device": "원격 오디오",
+      "monitorCount": 1,
+      "monitorPixels": [
+        1920,
+        1080
+      ],
+      "dpi": 96,
+      "skill": "computer-use:computer-use",
+      "target": {
+        "id": 66822,
+        "app": "Microsoft.VisualStudioCode",
+        "title": "TODO.md - NetstormReborn - Visual Studio Code"
+      },
+      "attempts": [
+        {
+          "selection": "fresh list_apps/get_window",
+          "result": "FrameArrived timed out: timed out waiting on channel"
+        },
+        {
+          "selection": "fresh list_apps/get_window retry",
+          "result": "window capture timed out: timed out waiting on channel"
+        }
+      ],
+      "newWindows": 0,
+      "newGameProcesses": 0,
+      "activations": 0,
+      "inputEvents": 0,
+      "physicalInputVerified": false,
+      "pcmOpened": false,
+      "pcmVerified": false,
+      "decision": "새환경에서도캡처실패.다음환경변화전반복하지않고물리입력미검증유지",
+      "rawReportSha256": "45636b0da3707e3f0b53ee447211e7ebe4646a18e54bc09cd788d10306c105b8"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "root C++ v1",
+      "log": "tests-configuration-v1.log",
+      "failedTests": 3,
+      "failedChecks": 8,
+      "detail": "priority6단언은 실제Client onChanged가 highPriorityValue를 공유DWORD에 재해석하지 않던 누락이다. 동기ReadInt를 추가했다. 나머지2단언은 준비입력의 잘못된 $1 경로서식을 원문 {local.1}로 교정했다. 기대 출력/fixture는 유지했다."
+    },
+    {
+      "scope": "root build v1",
+      "log": "build-v1.log",
+      "detail": "새검사 std::fill의 int→BYTE C4244 두유형을 명시uint8_t 입력으로 고쳤다. 최종v2 경고/오류0."
+    },
+    {
+      "scope": "merge check",
+      "detail": "758/760 이후 GameMenuCommands의 기존 추가줄과 준비patch 문맥이 달라 --check만 실패. 파일을 쓰기 전에 중단했고 기존내용을 보존하며 네 접합점을 수동 병합했다."
+    },
+    {
+      "scope": "desktop capture",
+      "detail": "새부팅/RDP1/원격오디오1 확인 뒤 기존VSCode창 fresh선택과재선택 총2회 모두timeout. activation/입력/새창/게임/PCM열기0; 다음환경변화전반복금지."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/CMakeLists.txt": "19b3603b59b4f1fdb10ed48ec6b11227ca976342b64447b8df360190b1a4771f",
+    "cpppj/src/client/ClientMain.cpp": "73a059f693d9e5ae57b91e8dcacfaf541cb3f45fde01619badb6fc935fbecf26",
+    "cpppj/src/client/ClientMain.h": "e56b62dea546b2c0f8724775b30e577ca8792b16705f9ae82bed64c4a0ce1f12",
+    "cpppj/src/client/ConfigurationCommandInput.cpp": "e13562769c671cb287ba22c2b0df6d737bde6768a444a68ba02e2815cc69821d",
+    "cpppj/src/client/ConfigurationCommandInput.h": "8d0e98abc504d325479b7a800bbe8b19853de220982b67c5b167844b001b9123",
+    "cpppj/src/client/GameMenuCommands.cpp": "937c3ca01b3f2e85b10c05f04a3f20f6dbc6deff274f3523dde5bb4c63008e43",
+    "cpppj/src/client/UberGump.cpp": "e0cac296e748a15023f9b8f1aa894586d8694c2239d510b739c16dc15614e1e1",
+    "cpppj/tests/CMakeLists.txt": "7dcb8e2076eb3c55d9a8ec129a57393880dc21dbc75241a96f1533e7d07013dc",
+    "cpppj/tests/ConfigurationCommandInputTests.cpp": "68e1afc4267d639e69fc289d2e8d264d2f154c653ea738c8a9037e4f4377a15c",
+    "cpppj/tests/PriorityLoopTests.inc": "30686396629d1102d7cf6947f8621cff14d0f11115322f31ad7e7271151800ef",
+    "tools/decomp_configuration_commands.py": "7959ff107e1ed80deb64e93c6f6519ccf385ea591020dd77aa04605f77bec1d2",
+    "tools/decomp_configuration_command_names.py": "d634b96a4d52953a650edb396a18c140cbb336052389bd10424f801f7d0be167",
+    "tools/decomp_priority_loop.py": "dd0eae077029e17eb91011eef02c77acd811a752cc12b7cea442199a95173698"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-762/protected-after.json",
+  "next": "명시41baa0(763)·글꼴/음질(764)·존재조회(765)·Help stream writer(766)·QuickHelp 최초reader(767)·DrawWater(768)·DataManager reader(769)와 남은 비멀티/호환성",
+  "limitations": [
+    "Native238과메인루프96의challenge는모두0이며C++도chalPal양성분기를검사하지않았다. 해당분기는정적복원만유지한다. 실제OS스레드우선순위성공/실패·게임/통신은0이다.",
+    "Native전체앞단과C++국소bodytrace/명시선행소비를구별한다. 실제Guide/Gump/HelpOpen앞설정명령접합은컴파일/정적근거이며이번새GUI관측은0이다.",
+    "SetFortType의실제State/Notify는현재World Session을사용한다. World없는진단정상복귀뒤State/Notify 수명은명시Runtime경계로남기며Meta에대신쓰지않는다.",
+    "새부팅/RDP1/원격오디오1은환경변화다. VSCode캡처2회timeout이므로물리입력/실제다른앱전환/DPI·PCM·활성전체화면물리출력은미검증이다. 다음환경변화전캡처반복금지.",
+    "새게임/CLI/MP·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다. 이전760분류전MP명령관측은별도기록이다."
+  ]
+}

@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ConfigurationCommandInput.h" //같은 raw highPriority와 WinMain의 실제 OS 등급 비교를 사용한다.
 #include "client/ScreenModeTransition.h" //원문00435ba0의 현재 모드/실패 복구/공유 갱신 부모다.
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
 #include "client/ConstructionHistoryKey.h" //최초 map mode 뒤 최근 건설 위치 다섯 칸을 한 번 초기화한다.
@@ -99,8 +100,6 @@ constexpr int kLoadingMarginX = 10;
 constexpr int kLoadingMarginY = 0x14;
 // 원본 메뉴 명령 번호: 끝내기.
 constexpr WORD kMenuExit = 0x9c41;
-// 설정 `highPriorityValue` 0·1·2에 대응하는 스레드 우선순위(원본 WinMain 루프).
-constexpr std::array<int, 3> kThreadPriorities{THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_TIME_CRITICAL};
 // 원본 실행 파일 버전(FUN_00441790에 넘기는 10, 0x4e). CD판은 10.72다.
 constexpr int kMajorVersion = 10;
 constexpr int kPatchMinorVersion = 78;
@@ -202,7 +201,7 @@ Client::Client(ClientOptions options)
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { if (languageOptionsReady_) InterpretLanguageOptions();InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 회전 방향/입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("highPriorityValue",highPriority_);InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 우선순위/회전 방향/입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -381,10 +380,10 @@ int Client::Run() {
     // 메인 루프(docs/exe/main-loop.md 2절). 옮기지 않은 단계는 순서의 자리에 적는다.
     while (true) {
         // 0. 창이 활성이면 설정한 우선순위로, 아니면 보통으로.
-        const int wanted = active_ ? std::clamp(highPriority_, 0, 2) : 0;
+        const int wanted = (surfaceStorage_->ownerMode.challenge || !active_) ? 0 : highPriority_; //원문은 challenge/비활성 때0이며 그 외 raw 요청을 그대로 비교한다. MP 양성 분기는 정적 연결만 한다.
         const int current = GetThreadPriority(GetCurrentThread());
-        const int level = current < 1 ? 0 : current < 3 ? 1 : current == THREAD_PRIORITY_TIME_CRITICAL ? 2 : 0;
-        if (level != wanted) SetThreadPriority(GetCurrentThread(), kThreadPriorities[static_cast<std::size_t>(wanted)]);
+        const auto priority=PlanNativeThreadPriority(wanted,current);
+        if (priority.change) SetNativeThreadPriority(priority.priority); //원문처럼 GetCurrentThread를 다시 조회하고 OS BOOL 반환은 검사하지 않는다.
         // 1. 시각 고정(FUN_00460e90).
         *time_ = clock_.Capture(timeGetTime());
         if (menu_) menu_->Tick();
@@ -821,6 +820,8 @@ void Client::LoadScenePalette(std::string_view name) {
 void Client::LoadPaletteFile(std::string_view path,std::uint32_t clear) {
     screen_->LoadPalette(GamePalette(files_.Read(path)),options_.edition,clear);
 }
+// 원문435c80이 선택한 우선순위를 실제 현재 스레드에 요청한다.
+void Client::SetNativeThreadPriority(std::int32_t priority) { static_cast<void>(SetThreadPriority(GetCurrentThread(),priority)); } //실제 Win32 두 호출 순서이며 실패도 공유 값/설정 쓰기를 취소하지 않는다.
 // 기존 전체 부모에 실제 파일/구름/Screen과 같은 고정 초기RGB의9표를 연결한다.
 void Client::ChangeFortPalette(const std::span<const std::uint8_t>& name) {
     o::FortPaletteTransitionHooks devices;devices.log=[](auto level,auto text) { std::clog<<"Palette "<<level<<' '<<text; };

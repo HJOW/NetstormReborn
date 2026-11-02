@@ -3065,3 +3065,8 @@ set_source_files_properties(KnowledgeWorldMenuTests.cpp PROPERTIES COMPILE_DEFIN
 target_sources(netstorm_tests PRIVATE UtilityCommandInputTests.cpp)
 target_sources(netstorm_script_bindings_tests PRIVATE UtilityCommandInputTests.cpp)
 set_source_files_properties(UtilityCommandInputTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_UTILITY_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/utility-commands-x86.tsv\";NETSTORM_UTILITY_COMMAND_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/utility-command-names-x86.tsv\"")
+
+# 비MP 설정명령238·이름30·메인루프priority96을 기존 script 집중 대상에서 확인한다(762).
+target_sources(netstorm_tests PRIVATE ConfigurationCommandInputTests.cpp)
+target_sources(netstorm_script_bindings_tests PRIVATE ConfigurationCommandInputTests.cpp)
+set_source_files_properties(ConfigurationCommandInputTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CONFIGURATION_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/configuration-commands-x86.tsv\";NETSTORM_CONFIGURATION_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/configuration-command-names-x86.tsv\";NETSTORM_PRIORITY_LOOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priority-loop-x86.tsv\"")

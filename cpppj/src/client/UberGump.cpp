@@ -33,6 +33,7 @@
 #include "client/RawGameMenus.h"
 #include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
 #include "client/GameMenuCommands.h"
+#include "client/ConfigurationCommandInput.h" //원문 모드별 palette와 공유 priority/State 일반 명령을 기존 부모에 연결한다.
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "client/GameMenuActions.h"
 #include "client/ViewKeyInput.h"
@@ -973,6 +974,20 @@ void UberGump::OpenGameMenu(bool playerList) {
 // 공통 입력/Guide가 소비하지 않은 현재 메뉴 명령을 같은 Session·음향·설정·시계에 전달한다.
 bool UberGump::GameMenuCommand(const InputEvent& event) {
     const auto code=event.code&0x03ffffffU;
+    if (IsConfigurationCommand(code)) {
+        if (event.code&InputCode::kRelease) return true; //원문 공통 뗌은 현재 장기 owner/State/Config 장치를 조회하지 않는다.
+        auto& game=*client_.GameplayGlobals();auto& modes=client_.SurfaceStorage()->ownerMode;ConfigurationCommandHooks configured;
+        configured.text=[this](auto token) { return scriptStrings_.Resolve(token); };
+        configured.set=[this](auto key,auto value) { static_cast<void>(client_.Configuration().Set(key,o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}))); };
+        configured.get=[this](auto key) { return FontBytes(client_.Configuration().PathSpec(key)); }; //현재 Config 치환값을 다시 원문 palette 이름 바이트로 넘긴다.
+        configured.palette=[this](auto name) { const std::string owned(name);client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(owned.c_str()),owned.size()+1}); }; //공유 설정 고리의 재진입과 별개인 NUL 수명이다.
+        configured.thread=[this](auto priority) { client_.SetNativeThreadPriority(priority); };
+        configured.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration()); };
+        configured.state=[this](auto slot) { if (!world_) throw std::logic_error("SetFortType의실제State Session 없음");return world_->Session().MutableFortState(slot); }; //같은 Client TemplateStorage의 새 현재 manager/State를 getter가 조회한다.
+        configured.notify=[this](auto slot) { if (!world_) throw std::logic_error("SetFortType의실제Notify Session 없음");world_->Session().BindFortCurrentName({}).notify(slot); }; //콜백마다 현재 Session을 읽고 같은 기존 Notify/파일 장치를 쓴다.
+        configured.assertion=[](auto line) { std::clog<<"원문 SetFortType 입력 진단 "<<line<<'\n'; }; //원문 진단의 정상 복귀를 일반 모드 거부로 바꾸지 않는다.
+        static_cast<void>(DispatchConfigurationCommandInput(event,{[&modes] { return modes.battle ? 1U : 0U; },[&modes] { return modes.challenge ? 1U : 0U; },[&game] { return game.world.editor; },[&game] { return game.player.templateOwner; },client_.ThreadPriorityValue()},configured));Refresh();return true;
+    }
     if (DispatchSetLanguage(event,[this](auto language) { client_.SetLanguage(language); })) return true; //현재 Gump/Guide 뒤 원문 일반 입력 위치다.
     if (code==0x020000f0U) { if (!(event.code&InputCode::kRelease)) OpenGameMenu(true);return true; } // 원본 일반 분배의 뗌 거부 뒤 같은 Player List 전체 부모를 연다.
     if (code==0x02000030U) {
@@ -1120,6 +1135,7 @@ void UberGump::Event(InputEvent event) {
     }
     if (DispatchScreenshotKey(event,[this] { client_.SaveGifScreenshot(); },[this](auto name) { Tell(std::string(name)); })) rebuild_=true; // Guide/Gump 뒤,console·정지와 일반 F7 배너 처리보다 앞이다. Tell이 연 정지를 아래에서 다시 읽는다.
     static_cast<void>(DispatchDiagnosticKey(event,[this] { client_.DumpDiagnostics(); })); // 같은 원문 위치에서 객체→프로세스 순서로 출력하며 정지/console은 아래에서 다시 읽는다.
+    if (IsConfigurationCommand(event.code)) { static_cast<void>(GameMenuCommand(event));return; } //원문 세 설정명령은 HelpOpen/모달/Console/정지보다 앞에서 현재 부모를 실행한다.
     UtilityCommandHooks utility; //원문5명령은Guide/Gump/뗌뒤이며Console/공통정지보다앞에있다.
     utility.text=[this](auto token) { return scriptStrings_.Resolve(token); };utility.screenshot=[this] { client_.SaveGifScreenshot(); };utility.tell=[this](auto section) { Tell(std::string(section)); };
     utility.readString=[this](auto key,auto& value) { return client_.Configuration().ReadString(key,value); };utility.url=[this](auto value) { rawButtons_->Menus()->ActivateHelpLinkText(value); };

@@ -329,3 +329,6 @@ target_sources(netstorm PRIVATE PauseKeyInput.cpp PauseKeyInput.h) #Pause 가상
 target_sources(netstorm PRIVATE GameTimeDisplay.cpp GameTimeDisplay.h) #T/t와 로그인에서 같은 CRT 시계/시간 표시 전역을 공유한다(754).
 
 target_sources(netstorm PRIVATE UtilityCommandInput.cpp UtilityCommandInput.h) #원문비멀티일반명령5개를기존부모에연결한다(760).
+
+# 현재 설정 일반명령을 기존 palette/State/스레드 부모에 연결한다(762).
+target_sources(netstorm PRIVATE ConfigurationCommandInput.cpp ConfigurationCommandInput.h)

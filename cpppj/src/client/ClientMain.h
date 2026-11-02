@@ -183,6 +183,8 @@ public:
     const std::shared_ptr<ClientRandomGlobals>& RandomGlobals() const; // 미션마다 복제하지 않는 실제 난수/ID초기화 소유자를 전달한다.
     const std::shared_ptr<ClientSpGlobals>& SpGlobals() const; // 생성자/getter에서 초기화하지 않는 같은 SP/추적 DWORD 소유자다.
     const std::shared_ptr<ClientKencloudGlobals>& KencloudGlobals() const; // 같은 실제 구름/팔레트/현재 Renderer 전역을 순수 조회한다.
+    std::int32_t& ThreadPriorityValue() { return highPriority_; } //54db2c의 실제 공유 DWORD를 옵션 reader/일반 명령/메인 루프가 같은 주소에서 사용한다.
+    void SetNativeThreadPriority(std::int32_t priority); //435c80이 선택한0/1/15를 현재 스레드에 요청하며 Win32 bool 반환은 원문처럼 사용하지 않는다.
     void ChangeFortPalette(const std::span<const std::uint8_t>& name); //004b6100의 전체 부모를 같은 구름/Screen clear1/추가9표/dirty에 실행한다.
     const std::shared_ptr<ClientLocalStateGlobals>& LocalStateGlobals() const; // 실제 State144BYTE와 활동기한의 Client 수명을 Session에 전달한다.
     void DetectIntroAvailability(); //00435de0의 현재 introMovie/파일 존재 조회로 Intro 표시값을 갱신한다. 시작 detect intro에서 한 번 호출한다.
