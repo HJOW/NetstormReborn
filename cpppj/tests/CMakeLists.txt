@@ -2862,6 +2862,10 @@ add_executable(netstorm_selection_key_input_tests FocusedTestMain.cpp SelectionK
 target_link_libraries(netstorm_selection_key_input_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_selection_key_input_tests)
 
+# F6의 실제 공통 정지/수정키 경계를 같은 선택 키 집중 대상에서 검사한다(741).
+target_sources(netstorm_tests PRIVATE KnowledgeKeyInputTests.cpp)
+target_sources(netstorm_selection_key_input_tests PRIVATE KnowledgeKeyInputTests.cpp)
+
 # C/c의 원문 전체 입력 관측과 Client의 실제 회전 옵션 공유 수명을 집중 확인한다(717).
 target_sources(netstorm_tests PRIVATE RotationKeyInputTests.cpp)
 add_executable(netstorm_rotation_key_tests FocusedTestMain.cpp RotationKeyInputTests.cpp)

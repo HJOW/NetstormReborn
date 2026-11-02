@@ -1,0 +1,303 @@
+{
+  "unit": 741,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "last_full_decompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "previous_goal_turn": "진척:740의 Edit 저장/삭제 연결·검사·커밋 완료",
+  "summary": "F6 지식 키를 실제 UserInput의 원문 공통 정지 검사 뒤에 연결",
+  "status": "단위 완료, 전체1~8차 목표 진행 중",
+  "runtime_product": 741,
+  "display_version": "11.01",
+  "exe_sha256": "7918970142e15a6d4d8e2261f5924922ff7c1f11c8a28f2559679055d598b4ae",
+  "implementation": [
+    "UberGump의 선행 F6 예약 제거",
+    "기존 DispatchSelectionKeyInput의 공통 정지 뒤 현재00542974 명령을0/0으로 예약",
+    "Control/Shift 거부·Alt 허용·키 뗌 거부",
+    "정지 앞의 기존F9 예약과 일반 ShowTechnology 명령은 유지",
+    "기존 집중 대상 확장으로 테스트 실행66개/전체71대상 유지"
+  ],
+  "native": {
+    "unit": 741,
+    "date": "2026-11-02",
+    "host": "HJOW-Athlon",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23"
+    },
+    "inputs": 16,
+    "nativeRange": "004d96b6..004d9bba",
+    "stopBefore": "004d9bbb",
+    "stackDelta": 0,
+    "explicitBoundaries": [
+      "paused00460de0",
+      "queue00452fe0"
+    ],
+    "releaseGuardOutsideRange": true,
+    "commandAddress": "00542974",
+    "command": 33554592,
+    "gameExecutions": 0,
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "f202f8b3edc89a1cff9cde75860cebe48a2b12e7c4316ae169ca7a7e66efd22f",
+    "toolSha256": "d2eb5d581910d2fd49af3a8c5aa05db3968dcac2b4284e49438126fb1996997f",
+    "sharedOracleSha256": "68cf94f7570715c48514c81cccc522d3f346f6ae9df3a29bb081647a57bee4a2"
+  },
+  "tests": {
+    "target": "netstorm_selection_key_input_tests",
+    "new_cases": 4,
+    "before": {
+      "cases": 4,
+      "failed_checks": 41,
+      "exit": 1
+    },
+    "after": {
+      "cases": 20,
+      "failed_checks": 0,
+      "exit": 0
+    },
+    "existing_selection_fixture_rows": 480,
+    "new_native_fixture_rows": 16,
+    "initial_build_failure": "새 검사 파일의 filesystem 헤더 누락. build-before-v2에서 보완한 뒤 제품 수정 전 실패를 확인했다."
+  },
+  "build": {
+    "configuration": "Release",
+    "targets": [
+      "NetstormCpp",
+      "netstorm_selection_key_input_tests"
+    ],
+    "exit": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "live": {
+    "processes": 1,
+    "seconds": 20.888862500003597,
+    "return_code": 0,
+    "timed_out": false,
+    "frames": 410,
+    "mission": "TheWarBegins",
+    "observations": {
+      "initial": {
+        "paused": [
+          "0"
+        ],
+        "time": "14.1",
+        "knowledgeCards": []
+      },
+      "paused": {
+        "paused": [
+          "1"
+        ],
+        "time": "14.233",
+        "knowledgeCards": []
+      },
+      "pausedF6": {
+        "paused": [
+          "1"
+        ],
+        "time": "14.233",
+        "knowledgeCards": []
+      },
+      "pausedRelease": {
+        "paused": [
+          "1"
+        ],
+        "time": "14.233",
+        "knowledgeCards": []
+      },
+      "resumed": {
+        "paused": [
+          "0"
+        ],
+        "time": "14.486",
+        "knowledgeCards": []
+      },
+      "ctrlBlocked": {
+        "paused": [
+          "0"
+        ],
+        "time": "14.852",
+        "knowledgeCards": []
+      },
+      "shiftBlocked": {
+        "paused": [
+          "0"
+        ],
+        "time": "15.201",
+        "knowledgeCards": []
+      },
+      "releaseBlocked": {
+        "paused": [
+          "0"
+        ],
+        "time": "15.585",
+        "knowledgeCards": []
+      },
+      "normalOpen": {
+        "paused": [
+          "0"
+        ],
+        "time": "15.931",
+        "knowledgeCards": [
+          794,
+          795,
+          796,
+          797,
+          798,
+          799,
+          800,
+          801,
+          802,
+          803,
+          804,
+          805,
+          806,
+          807,
+          808,
+          809,
+          810,
+          811,
+          812,
+          813,
+          814,
+          815,
+          816,
+          817,
+          818,
+          819,
+          820,
+          821,
+          822
+        ]
+      },
+      "closed": {
+        "paused": [
+          "0"
+        ],
+        "time": "16.319",
+        "knowledgeCards": []
+      },
+      "altOpen": {
+        "paused": [
+          "0"
+        ],
+        "time": "16.682",
+        "knowledgeCards": [
+          853,
+          854,
+          855,
+          856,
+          857,
+          858,
+          859,
+          860,
+          861,
+          862,
+          863,
+          864,
+          865,
+          866,
+          867,
+          868,
+          869,
+          870,
+          871,
+          872,
+          873,
+          874,
+          875,
+          876,
+          877,
+          878,
+          879,
+          880,
+          881
+        ]
+      },
+      "final": {
+        "paused": [
+          "0"
+        ],
+        "time": "17.264",
+        "knowledgeCards": []
+      }
+    },
+    "knowledge_cards": {
+      "headings": 4,
+      "types": 25,
+      "total": 29
+    },
+    "window_capture_inspected": true,
+    "originals_unchanged": true,
+    "data_unchanged": true,
+    "physical_input": false
+  },
+  "protected": {
+    "before": 2652,
+    "before_fixtures": 832,
+    "existing_unchanged": true,
+    "new_fixture": 1,
+    "after": 2653,
+    "after_fixtures": 833,
+    "next_baseline": "extracted/cpp-knowledge-key-741/protected-after.json"
+  },
+  "scope": {
+    "new_original_game_processes": 0,
+    "new_cpp_game_processes": 1,
+    "new_native_inputs": 16,
+    "new_multiplayer_tests": 0,
+    "communication_tests": 0,
+    "full_cpp_suite": false,
+    "full_34_paths": false,
+    "new_zip": false,
+    "physical_keys": false,
+    "pcm_verified": false
+  },
+  "source_sha256": {
+    "LEFT_JOBS.md": "2445229b026358e6a01f1257efef1b783ed8115fba167cc0fbfd524e82527731",
+    "README.md": "0735dbd1914e3cb8346404e8c6db2f15b7b7b6efb93f18344a03dd13fcb3d604",
+    "README.en.md": "42046c0584dbcadcb8c7cf9d2779a19b89219fe99701ef1ca7c9b0ed426985d8",
+    "cpppj/README.md": "2a7cac464f0a7c15c5de94bc2ab9cdcedee28671407c2f419f900636a4be9ec2",
+    "cpppj/src/client/SelectionKeyInput.cpp": "99191314cd19b543861f034ce430c6f90e59ee90f1be9eabfbaf5074208786e4",
+    "cpppj/src/client/SelectionKeyInput.h": "9372f648096336f08f4120077735fa46828cb33844591cc4de2e89542d203176",
+    "cpppj/src/client/UberGump.cpp": "1f46b5fec3f04ea3cf87a987f0a99121e7ae753d959b4007bc43e17568b57c5d",
+    "cpppj/tests/CMakeLists.txt": "b17d1f059733e809faf86b262780ce0a8949f2adbf35e4b953b94c4bbdb92c99",
+    "cpppj/tests/KnowledgeKeyInputTests.cpp": "cc7f0f37ea7325870d6ce7386962e52deb51ac1efa41d341064731afa08c885e",
+    "cpppj/tests/fixtures/knowledge-key-input-x86.tsv": "f202f8b3edc89a1cff9cde75860cebe48a2b12e7c4316ae169ca7a7e66efd22f",
+    "tools/decomp_knowledge_key_input.py": "d2eb5d581910d2fd49af3a8c5aa05db3968dcac2b4284e49438126fb1996997f",
+    "tools/cpp_knowledge_key_smoke.py": "79c31b1bc174066189cb0dea0728b10861bd168996d4931cb0d13792b481f3da",
+    "docs/exe/cpp-knowledge-key-20261102.md": "9c7c972b684caad3f692b031f972f0e9dbb02a155ec1da8e711e133e9fdff728"
+  },
+  "raw_evidence": {
+    "directory": "extracted/cpp-knowledge-key-741",
+    "sha256": {
+      "build-before.log": "89d7d33d549ed62b924c2b1f973a17e3931441f570b98b1d0bbfcf2e932db8b7",
+      "build-before-v2.log": "bb8cc374cd90c5d7c3081518cfd6ef1007aba67f8e0e49336859e375587434f7",
+      "tests-before.log": "4b7b0f3e6c438b9cfed598ed015505fca6b9d69ea3e12f7f46d470db55188e16",
+      "build-v1.log": "0998b5d68fb604d9080bc8c517a44760dab8072f47ca32bb09c00acea661d28d",
+      "tests-v1.log": "799112963966fbaf6727812198812c392d80ff6430b332b403ad3dbe084b6d4a",
+      "native-v1.json": "78b34d28746966720fb0283b5b1043dc4251a7eceb3b7d6cc90742fd3ce7b7d3",
+      "live-v1.log": "d1e741ebeca7472bb014e99bb3c78ca93b183d95b23b0031bc5e8ef1a96af2e4",
+      "live-v1/summary.json": "743ccc619b32959f2be2431ea22a8d5db8466f2f45e19a4e54428b1d458ddd07",
+      "live-v1/run/run.json": "a25df9750bf1ed326af26da1f9d71cdd741573c9ce999e20258e2c1d74cde0b8",
+      "live-v1/run/states.tsv": "dcc6b699a639d6a6987174fc7828a1fe9894c9f02c346f90119e3da6641a38d0",
+      "live-v1/run/steps.tsv": "adc4ecb9aa888a272de34c8a4c8cce41b6897a1c89a65bcdf8041d0d17dbb46c",
+      "live-v1/knowledge.bmp": "9b83929578e11f801abc5b7ea0d79843bdee23e41553dde0ebc1a31b4e655c28",
+      "protected-before.json": "10d1bcc768346bbf3663b61a162e26f0c45bb18ea5b477ec1f5952df8d69fef3",
+      "protected-after.json": "57fc7074c92d4cd361491309014b917026b817c4952a1fc738a7e967c6979d4f",
+      "document-check-note.txt": "cd09f759c7a32e8aa22ed0a223c582f7747d1244100cf03b355af5fc70206ff1"
+    }
+  },
+  "verification_notes": [
+    "최초 README 불변 검사의 제목 범위를 바로잡아 최신 상태 변경과 기존 빌드 안내의 불변을 구분했다."
+  ],
+  "limits": [
+    "원문 관측은 공통 정지 뒤 부분 분기이며 key-up/Guide/Gump/Console은 범위 밖이다.",
+    "실제 UI는 앱 내 입력의 단일 짧은 경로이며 물리 키/전체 픽셀·음향/전체 UI 동일성이 아니다.",
+    "포획·희생/특정 적 공격/시나리오 승리와 공중3종 전용 행동/MP 검사는 하지 않았다.",
+    "최신 전체34/ZIP645는644제품이며 이번 제품과 합산하지 않는다.",
+    "10.72 F6/전체 UserInput은 이번 새 대조 범위가 아니다."
+  ]
+}
