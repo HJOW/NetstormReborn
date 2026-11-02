@@ -736,7 +736,7 @@ void Client::SaveGifScreenshot() { // 원문이 저장하는 고정 primary 색�
     const std::uint8_t* pixels{};ScreenshotSaveHooks hooks; // 잠금에서 빌린 현재 DIB 포인터와 파일 장치다.
     hooks.set=[this](auto key,auto value) { configuration_.Set(key,value); };
     hooks.read=[this](auto key,auto& value) { return configuration_.ReadString(key,value); };
-    hooks.exists=[this](auto path) { return files_.TryRead(path).has_value(); }; //41ab10처럼 기본 디스크/아카이브/보조 디스크의 같은 존재 순서를 사용한다.
+    hooks.exists=[this](auto path) { return files_.Probe(path)!=0; }; // 원문41ab10의 TAFF메타우선/내용미읽기와 같은 현재고리를 사용하며 번호별 Config 재조회/폴링은 부모에 남긴다.
     hooks.lock=[this,&pixels] { pixels=screen_->Lock(); };
     hooks.gif=[this,&pixels](auto path) {
         const auto rgb=ScreenshotPrimaryPalette(colorSortInput_->Primary()->Bytes()); // 현재flash 팔레트가 아닌555d88의같은 기록이다.

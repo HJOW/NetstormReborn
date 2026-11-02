@@ -1,0 +1,174 @@
+{
+  "unit": 765,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 765,
+  "displayVersion": "11.01",
+  "exeSha256": "d0ab5ee203a80d4abcc8589209a39469e6f9eb56654f1a51b912231e962c3d38",
+  "summary": "존재조회의 FileSpec 수명과 실제 캡처·구름·배경 GIF 소비자 연결",
+  "tests": {
+    "totalUnique": 37,
+    "totalExecutions": 37,
+    "newTests": 7,
+    "failedChecks": 0,
+    "names": [
+      "BackgroundGifClient_ActualCommonPixelsBaseDimensionsAndClip",
+      "BackgroundGifClient_ActualDefaultPathFactoryAndConcurrentStorage",
+      "BackgroundGifClient_AllProtectedAssetsIndependentNativePixels",
+      "BackgroundGifClient_CommonInputPreservesRawQueueTripletAndRetirement",
+      "BackgroundGifClient_IndependentNativeDescriptorAndInterlaceVariants",
+      "BackgroundGifClient_MainMenuStoneTexturePressedClipAndPitch",
+      "BackgroundGifClient_MissingFilePartialDecodeAndPageLifetime",
+      "BackgroundGifClient_ProbeMetadataAndCurrentSecondaryKeepDecodeFailureLifetime",
+      "BaseFile_AbsoluteMissingRequeriesActualPrimaryAndSecondarySources",
+      "BaseFile_FileFinderDiskArchiveSecondaryOrderAndFirstDuplicate",
+      "BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix",
+      "BaseFile_MatchDiskNonPatternKeepsNativeFileSpecContract",
+      "BaseFile_ReadPolicyEmptyFileIsSuccessAndMissingLookupIsExplicit",
+      "BaseFile_ReadPolicyReplaysIndependentNative1024",
+      "BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder",
+      "BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp",
+      "BaseFile_SecondaryReadPriorityAndSeparateArchiveOnlyViews",
+      "BaseFile_SecondaryReplaysIndependentNativeRegistration27",
+      "BaseFile_WildcardCampaignDiscovery",
+      "ClientKencloudGlobals_ActualConfigCallbackAndPureOwner",
+      "ClientKencloudGlobals_ActualFileAndNative400SeedRandom",
+      "ClientKencloudGlobals_ActualTransitionUsesSameGlobalsAndDeviceOrder",
+      "ClientKencloudGlobals_ActualUpdateAndDirtyUseSameMemory",
+      "ClientKencloudGlobals_FallbackDivideFaultPreservesPrefix",
+      "ClientKencloudGlobals_MissingAndWrongSizeUseActualFallback",
+      "ClientKencloudGlobals_PhysicalGlobalsAndAddressLifetime",
+      "ClientKencloudGlobals_ProbeMetadataBeforeLooseDecodeAndPropagatesTruncation",
+      "FileProbe_ActualUnicodeMetadataTruncatedLooseAndSecondarySources",
+      "FileProbe_ActualWildcardUsesVirtualDirectoryAndKeepsRawPrefixLifetime",
+      "FileProbe_LookupExceptionClosesSameActiveSearchAndKeepsDeviceSlot",
+      "FileProbe_Native640SourcesFirstDeviceSlotSearchLifetimeAndNoPayload",
+      "GifScreenshot_ActualClientMetadataCollisionUsesOneProbeAndKeepsCounterOnStop",
+      "GifScreenshot_DefaultFileNamespaceAndAbsoluteOverride",
+      "GifScreenshot_EncoderPalettePaddingAndDictionaryReset",
+      "GifScreenshot_Native135InputsAndCurrentPause",
+      "GifScreenshot_Native256PrimaryPaletteRecords",
+      "GifScreenshot_WriteFailureUnlocksWithoutSuccessLog"
+    ],
+    "logs": [
+      "tests-probe-v1.log",
+      "tests-cloud-v1.log",
+      "tests-background-v1.log",
+      "tests-screenshot-v1.log",
+      "tests-basefile-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v3.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2683,
+    "currentCount": 2684,
+    "allUnchanged": true,
+    "fixtureCount": 864,
+    "newFixtures": [
+      "cpppj/tests/fixtures/file-probe-consumers-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 765,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "rows": 640,
+      "observations": 1280,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제41ab10/41aae0/FileSpec/Device/Format/CRT문자열. FindFirst/FindClose/fopen/fclose/TAFFmetadata만명시. fread/ftell/키장치는허용하지않아존재부모의payload미접근을검사. 세상위caller전체/OS I/O/SEH ABI는별도",
+      "sha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "observedToolSha256": "5abb0f0ca531eb4c0c3bc8fb07e50711814de4df4bf71e030f9946190b1f2e70",
+      "callerStaticAddresses": {
+        "GifScreenshot": "004db140",
+        "KencloudFile": "00470bb0",
+        "BackgroundGifRefresh": "00419ec0"
+      },
+      "rawReportSha256": "7daffec1f1f02cfb76e485390041b858cc84f13b4e1746bc9e5448d9ac3901d7"
+    },
+    "native-verify.json": {
+      "unit": 765,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "rows": 640,
+      "observations": 1280,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제41ab10/41aae0/FileSpec/Device/Format/CRT문자열. FindFirst/FindClose/fopen/fclose/TAFFmetadata만명시. fread/ftell/키장치는허용하지않아존재부모의payload미접근을검사. 세상위caller전체/OS I/O/SEH ABI는별도",
+      "sha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "56af5bd37d2984781e163e5d215695d65b34f54e8f41fe1d09463d7606f7a2df"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "prepared Native",
+      "detail": "최초LoadOracle는 실제Device459900 범위가 빠져 fixture 생성 전에 실패했다. 실제몸체를 허용범위에 추가한 뒤640행을 고정했다. native-attempt-v1.json을 보존했다."
+    },
+    {
+      "scope": "root build-v1",
+      "detail": "새FileProbeTests에 실제BaseFileSystem 선언 헤더가 누락돼 C2065와 연쇄오류로 실패했다. o/BaseFile.h를 명시 include했다. 최초로그는 유지한다."
+    },
+    {
+      "scope": "root build-v2",
+      "detail": "준비검사가비공개LoadFile을직접호출해C2248로실패했다. 공개Build→실제LoadFile경로를사용하도록바꿨다. 존재조회고리/실제payload/해독실패단언은유지하고미발견은기존원문Build의fallback할당까지확인한다. 제품용검사getter나public접근확장은없다."
+    },
+    {
+      "scope": "root static merge review",
+      "detail": "혼합줄바꿈 복원 중 ClientMain의 다른exists행을 선택해 캡처consumer 변경이 사라진 것을 diff로 발견했다. SaveGifScreenshot의 정확한TryRead행을Probe로 다시 연결하고v2/v3에서 재빌드했다. 원문fixture/존재조회단언은 바꾸지 않았다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/ClientKencloudGlobals.cpp": "582be018eff9c457e1e9acce73efdb234692260da4d29580255f72846882d656",
+    "cpppj/src/client/ClientMain.cpp": "c1efe20dda1acf768fa147b07341ea3ca6fee3f8602c94dc00635a29e33517d7",
+    "cpppj/src/client/RawBackgroundGifControls.cpp": "75961469d8a1c4aa0e2fe8f80e04c15d50adf354a63e6f486265864c4c9e9703",
+    "cpppj/src/o/BaseFile.cpp": "9cb4a32d40c683d8d18367ffc0267fa765628d60d510b62cc603675135034c1d",
+    "cpppj/src/o/RawBaseFileReadPolicy.cpp": "9a5a8b410585ea82a418bd432d930e15168baf095b44bc8ebb60b7fbf35f2729",
+    "cpppj/src/o/RawBaseFileReadPolicy.h": "a08110fecdca48fda1d9ed891c6736c0f6c1b020ef206e9b0fde19656a15fa89",
+    "cpppj/tests/BackgroundGifClientTests.cpp": "dc5dc265d4dad791b611d52bb96ee9f148a58d04767ae400ecaf6d503fbb76ea",
+    "cpppj/tests/CMakeLists.txt": "ae032c322e20d485516a23dd297eb18877d68d5b6b66f6cca0dd6680cfc47f39",
+    "cpppj/tests/ClientKencloudGlobalsTests.cpp": "b3b9973a2c454c1f2168f9dd6ee66ca3e7fa6950f954b3186151c023f11cfbc2",
+    "cpppj/tests/FileProbeTestSupport.h": "74e427eafce110d533ea5a01f59b1c0ac6578f4d4fa9e064bb3beee1bdc62c26",
+    "cpppj/tests/FileProbeTests.cpp": "5188b4822bb2dca91df34fab51d517045786419eabc6051c783324e22351bc8f",
+    "cpppj/tests/GifScreenshotTests.cpp": "d80e30c3a0432a38964e36524521e834866e9d51f1e96e5c0ae8c239a6e70694",
+    "tools/decomp_file_probe_consumers.py": "5a3bd7fc2e631699ea62d422e28893dbc0eca97349ef205be68309acce890059"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-765/protected-after.json",
+  "next": "Help stream writer(766)·QuickHelp 최초reader(767)·DrawWater(768)·DataManager(769)·CreateAt(770)·Config reader(771)·일반 AI 명령(772/773)·글꼴 인코딩(774)와 남은 비멀티/호환성",
+  "limitations": [
+    "Native는실제41ab10/FileSpec/Device/Format/secondary_EXISTS와CRT문자열을실행하고FindFirst/FindClose/fopen/fclose/TAFFmetadata는명시입력이다. 세상위caller전체/실제OS오류/32비트FILE/SEH전체동일성은아니다.",
+    "직접값형formatter-null 조회는literal판정을유지한다. 실제VFS만현재공유고리와가상게임CWD검색을연결한다. wildcard검색결과는Device판정에만쓰며원래wildcard이름의fopen은그대로실패한다.",
+    "존재만조회하므로등록TAFF의metadata는원래아카이브이동/손상과독립이다. 실제읽기/decoder는별도부모이며짧은파일해독실패를미발견/fallback으로숨기지않는다.",
+    "실제캡처consumer검사는두번째파일명Config.Set에서명시예외로화면잠금전에중단한다. 실제화면캡처/GUI/출력픽셀동일성검사로세지않는다.",
+    "새게임/GUI/CLI/MP·물리/PCM·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다."
+  ]
+}

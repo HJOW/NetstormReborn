@@ -264,20 +264,20 @@ bool BaseFileSystem::ContainsArchiveOnly(std::string_view name,bool secondary) c
 }
 // 원문 rb 열기/닫기와 TAFF 이름 조회만 사용한다. Windows10/11의 한글 경로는 기존 UTF-8/W 경계로 처리한다.
 std::uint32_t BaseFileSystem::Probe(std::string_view name) const {
-    const auto primary=PathText(std::filesystem::absolute(base_).lexically_normal()),secondary=PathText(std::filesystem::absolute(secondary_).lexically_normal());
     return ProbeBaseFileByPolicy(name,[&](auto site,auto query) {
         if (site==BaseFileReadSite::PrimaryArchive || site==BaseFileReadSite::SecondaryArchive) return ContainsArchiveOnly(query,site==BaseFileReadSite::SecondaryArchive);
-        auto path=NativePath(site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk ? primary : secondary,query,*fileNames_));
+        auto selected=std::string(query);if (site!=BaseFileReadSite::DirectDisk) selected=JoinBaseFileRoot(PathText(std::filesystem::absolute(site==BaseFileReadSite::PrimaryDisk ? base_:secondary_).lexically_normal()),query,*fileNames_); // 원문처럼해당disk에도달했을때의현재root만작성하며metadata성공앞의불필요한root/CWD조회는하지않는다.
+        auto path=NativePath(selected);
 #ifdef _WIN32
         if (site==BaseFileReadSite::DirectDisk && !path.has_root_directory()) {
-            const auto root=NativePath(primary),drive=path.root_name();if (drive.native().size()==2 && drive.native()[1]==L':' && AsciiLower(PathText(drive))==AsciiLower(PathText(root.root_name()))) path=root/path.relative_path(); // 원본 chdir과 달리 호스트 CWD를 보존하는 기존 Windows10/11 호환 해석이다.
+            const auto drive=path.root_name();if (drive.native().size()==2 && drive.native()[1]==L':') { const auto root=std::filesystem::absolute(base_).lexically_normal();if (AsciiLower(PathText(drive))==AsciiLower(PathText(root.root_name()))) path=root/path.relative_path(); } // 원본chdir대신같은드라이브상대이름만현재게임root로해석하며절대/UNC는root조회도하지않는다.
         }
         auto* file=::_wfopen(path.c_str(),L"rb");
 #else
         auto* file=std::fopen(path.c_str(),"rb");
 #endif
         if (!file) return false;static_cast<void>(std::fclose(file));return true;
-    },fileNames_.get());
+    },fileNames_.get(),FileSpecDirectoryHooks(base_));
 }
 // 찾지 못하면 호출자에게 예외로 알린다.
 std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {

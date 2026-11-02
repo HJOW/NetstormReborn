@@ -1,5 +1,6 @@
 // 실제 구름 물리/파일/옵션과 기존 Native 본체를 같은 소유자에 조립해 검사한다.
 #include "TestSupport.h"
+#include "FileProbeTestSupport.h"
 #include "client/ClientKencloudGlobals.h"
 #include "client/ClientMain.h"
 #include "client/ClientGameplayGlobals.h"
@@ -64,4 +65,11 @@ TEST_CASE(ClientKencloudGlobals_ActualUpdateAndDirtyUseSameMemory) {
     Client client(CloudOptions());CloudConfig(client);auto cloud=client.KencloudGlobals();auto& random=client.RandomGlobals()->Game();random.SetState(0x89abcdefU);cloud->Update(client.Files(),client.Configuration(),random);const auto globals=cloud->Globals();const auto token=globals.cache,rng=random.State();CHECK(token && globals.phase==2 && rng==4201191824U);
     cloud->Update(client.Files(),client.Configuration(),random);CHECK(globals.phase==4 && globals.cache==token && random.State()==rng && cloud->Allocations()==1);cloud->MarkDirty();CHECK(globals.allDirty==1 && globals.partialDirty==0 && cloud->RowDirty(0xffffffffU,0)==1);
     cloud->State()[8]=1;globals.dirtyRows[8]=1;globals.dirtyRows[13]=1;cloud->CleanDirty();CHECK(cloud->State()[8]==0 && globals.dirtyRows[8]==0 && globals.dirtyRows[13]==1 && globals.allDirty==0 && globals.partialDirty==0); // 이전에 표시하지 않은13행은 보존한다.
+}
+
+TEST_CASE(ClientKencloudGlobals_ProbeMetadataBeforeLooseDecodeAndPropagatesTruncation) { // 실제LoadFile의exists1칸과별도decode2칸을동일Client에서검사한다.
+    using namespace netstorm::test::fileprobe;const auto root=Work();const std::array<std::uint8_t,3> shortPayload{{'b','a','d'}};Write(root/"probe.tarc",Taff("d/probe.gif",shortPayload));Write(root/"d/probe.gif",Gif(512,512,7));ClientOptions options;options.gameDirectory=root;options.noAudio=true;Client client(options);CloudConfig(client,"d/probe.gif");CHECK(client.Files().ContainsArchiveOnly("d/probe.gif"));const auto names=client.Files().FileNameOwner();auto cloud=client.KencloudGlobals();const auto before=names->Index();auto& random=client.RandomGlobals()->Game();cloud->Build(client.Files(),client.Configuration(),random);auto globals=cloud->Globals();const auto token=globals.cache;
+    CHECK(token && names->Index()==(before+3)%10 && cloud->Allocations()==1 && cloud->Memory(token).size()==262144 && std::all_of(cloud->Memory(token).begin(),cloud->Memory(token).end(),[](auto value) { return value==7; }));cloud->Release(token);globals.cache=0; // 다음독립입력전에완료된캐시만반납하고공개Build부모의현재cache를초기화한다.
+    Write(root/"d/probe.gif",shortPayload);const auto failedBefore=names->Index();CHECK(CloudRejects<std::out_of_range>([&] { cloud->Build(client.Files(),client.Configuration(),random); }) && cloud->Allocations()==0 && names->Index()==(failedBefore+3)%10); // decode의잘린헤더를exists미발견/구름fallback으로숨기지않는다.
+    client.Configuration().Set("CloudFileSpec","d/missing.gif");const auto missingBefore=names->Index();cloud->Build(client.Files(),client.Configuration(),random);CHECK(globals.cache && cloud->Allocations()==1 && names->Index()==(missingBefore+3)%10); // 미발견은기존원문Build부모의fallback할당으로내려가며존재조회고리3칸은변하지않는다.
 }

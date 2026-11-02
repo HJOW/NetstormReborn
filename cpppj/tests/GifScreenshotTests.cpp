@@ -1,5 +1,7 @@
 // 원본 PE 관측의 선택된135입력과 실제 GIF 인덱스/행 간격/사전 감김을 검사한다.
 #include "TestSupport.h"
+#include "FileProbeTestSupport.h"
+#include "client/ClientMain.h"
 #include "client/GifScreenshot.h"
 #include "client/GifImage.h"
 #include "client/ViewKeyInput.h"
@@ -94,4 +96,19 @@ TEST_CASE(GifScreenshot_DefaultFileNamespaceAndAbsoluteOverride) { // 원본설�
     CHECK(ResolveScreenshotDiskPath(root,"\\ScreenShot/pic0.gif")==root/"screenshot/pic0.gif"); // 기존BaseFile의대소문자무시정규형을같이사용한다.
     CHECK(ResolveScreenshotDiskPath(root,"ScreenShot/pic2.gif")==root/"screenshot/pic2.gif");
     CHECK(ResolveScreenshotDiskPath(root,"C:/chosen/pic9.gif")==std::filesystem::path("C:/chosen/pic9.gif"));
+}
+
+
+TEST_CASE(GifScreenshot_ActualClientMetadataCollisionUsesOneProbeAndKeepsCounterOnStop) { // 화면/GUI없이실제Client의첫metadata충돌과다음번호설정의부분효과를검사한다.
+    using namespace netstorm::test::fileprobe;const auto root=Work();const std::array<std::uint8_t,3> shortPayload{{'b','a','d'}};Write(root/"probe.tarc",Taff("shots/pic0.gif",shortPayload));ClientOptions options;options.gameDirectory=root;options.noAudio=true;Client client(options);auto& config=client.Configuration();config.Configuration().AppendSection("END");config.Set("GifOutSpec1","shots/{GifOutName}");CHECK(client.Files().ContainsArchiveOnly("shots/pic0.gif"));const auto existing=client.Files().Probe("shots/pic0.gif");CHECK(existing==2);if (existing!=2) return;const auto names=client.Files().FileNameOwner();const auto before=names->Index();
+    struct RestoreChanged { // 검사끝/예외에도원래실제Client옵션알림을복원한다.
+        netstorm::o::ConfigInterface& config;std::function<void()> prior; // 같은장기설정과원래callback소유자다.
+        ~RestoreChanged() { config.onChanged=std::move(prior); } // 테스트알림참조가Client소멸까지남지않는다.
+    } restore{config,config.onChanged};
+    struct CounterStop {}; // 다음번호를설정한뒤화면잠금전에멈추는명시검사입력이다.
+    std::uint32_t sets{};std::vector<std::string> seen;config.onChanged=[&] { std::string value;config.ReadString("GifOutName",value);seen.push_back(value);if (++sets>=2) throw CounterStop{}; };bool stopped{};
+    try { client.SaveGifScreenshot(); }catch (const CounterStop&) { stopped=true; }
+    CHECK(stopped && sets==2 && seen==std::vector<std::string>({"pic0.gif","pic1.gif"}) && names->Index()==(before+1)%10);const auto after=names->Index();stopped=false;
+    try { client.SaveGifScreenshot(); }catch (const CounterStop&) { stopped=true; }
+    CHECK(stopped && sets==3 && seen.back()=="pic2.gif" && names->Index()==after); // 실패뒤에도같은실제Client번호는되돌리지않으며두번째호출은존재조회전에중단한다.
 }

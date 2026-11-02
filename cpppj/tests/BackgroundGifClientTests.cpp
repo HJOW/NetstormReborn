@@ -1,5 +1,6 @@
 // 실제 보호 VFS/설정과 공통 등록표에 원문 GIF 공장·원시 픽셀·입력 큐·수명을 접합한다.
 #include "DudeSpawnSupport.h"
+#include "FileProbeTestSupport.h"
 #include "client/ClientMain.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -26,7 +27,7 @@ struct GifScene { // 모든 실제 Client/파일/설정/글꼴/공통 UI 수명�
     FontStore fonts{assets.files,"Arial"};std::array<std::uint32_t,256> logical{};PaletteColorTable palette; // 같은 실제 글꼴/팔레트다.
     std::vector<std::array<std::uint32_t,3>> queued;std::uint32_t destroyOnQueue{}; // 입력 장치의 실제 전달 순서와 명시 재진입 입력이다.
     RawButtonControls buttons{OriginalEdition::Patch1078,{[] { return 0.0; }}};RawMenuControls* menus{};RawBackgroundGifControls* gifs{}; // 같은 실제 공통 등록표와 원문 창이다.
-    GifScene() { // 파일 저장이나 Win32 창 없이 실제 원문 설정/공통 UI를 설치한다.
+    explicit GifScene(const std::filesystem::path& root={}):client([&] { auto options=GifOptions();if (!root.empty()) options.gameDirectory=root;return options; }()) { // 그래픽자산은보호자료를읽고명시root가있으면실제Client파일/고리만독립scratch로사용한다.
         ConfigInterface::StartupOptions startup;startup.majorVersion=10;startup.minorVersion=78;startup.installDir=assets.root.string();startup.cdDir=startup.installDir;client.Configuration().Startup(startup);
         for (std::size_t index=0;index<logical.size();++index) { const auto c=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=c.red|(std::uint32_t(c.green)<<8)|(std::uint32_t(c.blue)<<16); } // 실제 보호 RGB의 원문 DWORD 채널 순서다.
         palette=BuildPaletteColorTable(logical);RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,std::int32_t& value) { value=0; };hooks.sound=[](auto) {};hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,0,0}; };hooks.cursor=[](auto) {};
@@ -93,6 +94,13 @@ TEST_CASE(BackgroundGifClient_MissingFilePartialDecodeAndPageLifetime) {
     GifScene scene;const auto before=scene.Count(),token=scene.gifs->Create("titleMenu");scene.gifs->Backend().Refresh(token,"nonexistent-background-402");CHECK(scene.gifs->Node(token)->bitmap==0 && scene.gifs->Node(token)->baseWidth==0 && scene.gifs->Node(token)->height==0 && scene.gifs->ImageCount()==0);scene.Resize();CHECK(scene.Count()==before && !scene.menus->Node(token));
     scene.client.Configuration().Set("BackgroundGifSpec","d/setup.cfg");bool rejected{};try { scene.gifs->Create("invalid-gif-input"); }catch (const std::runtime_error&) { rejected=true; }CHECK(rejected && scene.Count()==before+1 && scene.gifs->ImageCount()==0);scene.menus->CloseBackgroundGifs();CHECK(scene.Count()==before);
     scene.client.Configuration().Set("BackgroundGifSpec","d/titleMenu.gif");scene.gifs->Create("first");scene.gifs->Create("second");CHECK(scene.gifs->ImageCount()==2);scene.Resize();CHECK(scene.Count()==before && scene.gifs->ImageCount()==0);
+}
+
+TEST_CASE(BackgroundGifClient_ProbeMetadataAndCurrentSecondaryKeepDecodeFailureLifetime) { // 실제공통GIF창의metadata/decode/현재보조root와반납순서를검사한다.
+    using namespace netstorm::test::fileprobe;const auto root=Work();const std::array<std::uint8_t,3> shortPayload{{'b','a','d'}};Write(root/"probe.tarc",Taff("d/probe.gif",shortPayload));Write(root/"d/probe.gif",Gif(2,3,9));GifScene scene(root);scene.client.Configuration().Set("BackgroundGifSpec","d/probe.gif");CHECK(scene.client.Files().ContainsArchiveOnly("d/probe.gif"));const auto names=scene.client.Files().FileNameOwner();const auto before=names->Index();const auto token=scene.gifs->Create("metadata");const auto& first=*scene.gifs->Node(token);
+    CHECK(names->Index()==(before+3)%10 && first.bitmap && first.baseWidth==2 && first.baseHeight==3 && scene.gifs->Bitmap(first.bitmap).indices==std::vector<std::uint8_t>(6,9));
+    const auto secondRoot=root/"new-secondary";Write(secondRoot/"d/second.gif",Gif(4,1,17));scene.client.InitializeNativeSecondaryFiles(netstorm::platform::PathToUtf8(secondRoot));scene.client.Configuration().Set("BackgroundGifSpec","d/second.gif");const auto secondaryBefore=names->Index();scene.gifs->Backend().Refresh(token,"secondary");const auto& second=*scene.gifs->Node(token);CHECK(names->Index()==(secondaryBefore+6)%10 && second.baseWidth==4 && second.baseHeight==1 && scene.gifs->ImageCount()==1);
+    Write(root/"d/bad.gif",shortPayload);scene.client.Configuration().Set("BackgroundGifSpec","d/bad.gif");const auto badBefore=names->Index();bool rejected{};try { scene.gifs->Backend().Refresh(token,"truncated"); }catch (const std::runtime_error&) { rejected=true; }CHECK(rejected && names->Index()==(badBefore+4)%10 && scene.gifs->Node(token)->bitmap==0 && scene.gifs->ImageCount()==0);scene.menus->CloseBackgroundGifs(); // 이전그림반납뒤의decode예외를없던파일로바꾸지않는다.
 }
 // ?? ??? ?? ?? Draw????????? ?? ?? ??? ?? GifScene?? ????.
 #include "MainMenuPaintTests.inc"

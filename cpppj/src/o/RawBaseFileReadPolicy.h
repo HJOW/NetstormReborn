@@ -6,6 +6,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include "o/FileSpecQuery.h" // 실제 존재조회는 FileSpec 검색 핸들을 함수 끝까지 유지한다.
 
 // UI/FILE 객체를 새로 소유하지 않고 선택된 실제 자료 조회만 빌리는 공통 정책이다.
 namespace netstorm::o {
@@ -27,5 +28,5 @@ std::string_view ReadBaseFileDevice(std::string_view name,RawFileName& formatter
 //0041b4c0의 읽기0 조회 부분이다. 미발견은 기존 TryRead 계약의nullopt로 반환하며 FILE/예외 객체 ABI를 합성하지 않는다.
 std::optional<std::vector<std::uint8_t>> ReadBaseFileByPolicy(std::string_view name,std::string_view primaryRoot,const BaseFileReadLookup& lookup,RawFileName* formatter=nullptr);
 //0041ab10의 존재 조회다. 직접 장치는5/0, 상대 이름은 기본TAFF2→기본disk1→보조disk3→보조TAFF4/0이다. 내용은 읽지 않는다.
-std::uint32_t ProbeBaseFileByPolicy(std::string_view name,const std::function<bool(BaseFileReadSite,std::string_view)>& lookup,RawFileName* formatter=nullptr);
+std::uint32_t ProbeBaseFileByPolicy(std::string_view name,const std::function<bool(BaseFileReadSite,std::string_view)>& lookup,RawFileName* formatter=nullptr,const FileSpecQueryHooks& search={}); // 실제VFS는가상게임CWD검색을제공하며literal값형계약은보존한다.
 }

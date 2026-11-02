@@ -48,9 +48,11 @@ std::optional<std::vector<std::uint8_t>> ReadBaseFileByPolicy(std::string_view n
     return Need(lookup)(BaseFileReadSite::SecondaryArchive,name);
 }
 // 읽기 부모와 다른 TAFF 우선순위와 장치 실패 시 fallback 없음·출처 번호를 보존한다.
-std::uint32_t ProbeBaseFileByPolicy(std::string_view name,const std::function<bool(BaseFileReadSite,std::string_view)>& lookup,RawFileName* formatter) {
+std::uint32_t ProbeBaseFileByPolicy(std::string_view name,const std::function<bool(BaseFileReadSite,std::string_view)>& lookup,RawFileName* formatter,const FileSpecQueryHooks& search) {
     if (!lookup) throw std::invalid_argument("BaseFile 존재 조회 장치 없음");name=Text(name);
-    if (Device(name,formatter)) return lookup(BaseFileReadSite::DirectDisk,name) ? 5U : 0U;
+    std::optional<FileSpecQuery> spec;bool device; // 원문41ab10의 FileSpec은 최종조회/예외까지 살아 있고 장치 getter만 같은 한 칸을 소비한다.
+    if (formatter) { spec.emplace(name,search);device=!formatter->Device(spec->Text()).empty(); }else device=Device(name,nullptr); // 독립값형 API는 기존literal판정을 유지하고 실제VFS만 전체FileSpec을사용한다.
+    if (device) return lookup(BaseFileReadSite::DirectDisk,name) ? 5U : 0U;
     for (const auto site:{BaseFileReadSite::PrimaryArchive,BaseFileReadSite::PrimaryDisk,BaseFileReadSite::SecondaryDisk,BaseFileReadSite::SecondaryArchive}) { // 실제 원문 방문 순서이며 첫 성공 뒤 나머지 장치를 열지 않는다.
         if (lookup(site,name)) return static_cast<std::uint32_t>(site);
     }
