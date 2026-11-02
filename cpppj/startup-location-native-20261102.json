@@ -1,0 +1,21 @@
+{
+  "unit": 735,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "rows": 84,
+  "observations": 168,
+  "normalRows": 72,
+  "assertionRows": 12,
+  "boundary": "실제441790~4418bd/실제Probe/정규화/FileSpec/Directory/Device/Format/CRT. fopen/fclose/두빈TAFF목록/없는보조디스크만명시경계. CD/CWD/TARC등록/설정Load/전체부모반환규약은범위밖",
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_startup_location.py": "e91401636709a79dcc2e7c76657db349f7b3e5f40450d36391458fc18b4cefe1",
+    "cpppj\\tests\\fixtures\\startup-location-x86.tsv": "f9f9b3b9e8978c2066b78ceba6fac86b94e2d605f63b5c4279b641f5a34fd1dc"
+  }
+}

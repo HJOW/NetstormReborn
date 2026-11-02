@@ -16,6 +16,8 @@
 #include "client/ClientDiagnostics.h"
 #include "client/ClientOptionsFile.h"
 #include "client/ClientOptionsDisk.h"
+#include "client/StartupFiles.h"
+#include "platform/Utf8Path.h"
 #include "client/CdDirectory.h"
 #include "client/ClientBridgeDecay.h"
 #include "client/GifScreenshot.h"
@@ -283,9 +285,12 @@ int Client::Run() {
     auto identity = Environment("IDENTITY");
     if (!identity || identity->empty()) identity = Environment("USER");
     startup.identity = identity.value_or(std::string());
-    const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); // 원본ANSI와 달리 Windows10/11의 한글 경로를 유효 UTF-8 설정 값으로 전달한다.
-    startup.cdDir=FindWindowsCdDirectory(); // 원문00440d40의 CD-ROM/깊이2 탐색 결과다. 부재는 기존 InstallDir fallback이며 W API만 Windows10/11 호환 경계다.
-    InitializeNativeSecondaryFiles(startup.cdDir); //설정 파일을 읽기 전에 원문41bc30의 보조 TAFF와41a4f0의 실제 root를 연결한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) {
+        const auto locations=PrepareStartupFiles(files_,options_.gameDirectory,FindWindowsCdDirectory);startup.dataPrefix=locations.dataPrefix;startup.installDir=platform::PathToUtf8(locations.installDirectory);startup.cdDir=locations.cdDirectory;options_.gameDirectory=locations.installDirectory; // 설정/자산/저장/편집은선택한같은기본root를사용한다.
+    } else {
+        const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); //10.72기존경로를보존하며이번10.78탐색근거로확대하지않는다.
+        startup.cdDir=FindWindowsCdDirectory();InitializeNativeSecondaryFiles(startup.cdDir);
+    }
     detectedLanguage_=DetectOriginalLanguage(GetUserDefaultLangID()); //원문00438dc0의 최초 OS 감지이며 매 Config 변경 때 감지하지 않는다.
     configuration_.Startup(startup);
     ApplyProductVersion(configuration_); // 원본 시작 계약 뒤 사용자 요청의 제품 표시11.01을 적용한다. 원본 데이터 판본은 바꾸지 않는다.

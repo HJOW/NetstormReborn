@@ -2970,3 +2970,10 @@ set_source_files_properties(FileDirectoryTests.cpp PROPERTIES COMPILE_DEFINITION
 add_executable(netstorm_file_directory_tests FocusedTestMain.cpp FileDirectoryTests.cpp PortableStartupTests.cpp FileNameTests.cpp StaticStringsTests.cpp StartupFileNamesTests.cpp)
 target_link_libraries(netstorm_file_directory_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_file_directory_tests)
+
+# 최초setup탐색의원문고리와실제가상cwd/설정reader/기본·CD목록을집중확인한다(735).
+target_sources(netstorm_tests PRIVATE StartupLocationTests.cpp)
+set_source_files_properties(StartupLocationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_STARTUP_LOCATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/startup-location-x86.tsv\"")
+add_executable(netstorm_startup_location_tests FocusedTestMain.cpp StartupLocationTests.cpp FileDirectoryTests.cpp StartupFileNamesTests.cpp BaseFileSecondaryTests.cpp)
+target_link_libraries(netstorm_startup_location_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_startup_location_tests)

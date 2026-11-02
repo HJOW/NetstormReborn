@@ -320,3 +320,4 @@ target_sources(netstorm PRIVATE NextUnitSelection.cpp NextUnitSelection.h) # N/S
 target_sources(netstorm PRIVATE PriestSelectionShortcut.cpp PriestSelectionShortcut.h) # P/R의 실제 참여 조회·선택과 반복 View 명령을 연결한다.
 target_sources(netstorm PRIVATE SelectionKeyInput.cpp SelectionKeyInput.h) # H/F4/F5 일반 View 큐·Ctrl F5/N·P/R의 공통 정지 관문을 연결한다.
 target_sources(netstorm PRIVATE TechnologyListMenu.cpp TechnologyListMenu.h) # HTML 원소별 기술 목록과 전체 목록의 공통 필터/고정40칸 수집을 연결한다.
+target_sources(netstorm PRIVATE StartupFiles.cpp StartupFiles.h) # 원문6후보setup탐색과같은고리/실제시작VFS루트를연결한다.
