@@ -1,0 +1,87 @@
+{
+  "unit": 747,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "previousTurn": "진척:746 화면 모드 부모 복원/검증/커밋 완료",
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 747,
+  "displayVersion": "11.01",
+  "exeSha256": "cfe3a71f07e65a18e3034d8e8cd0f44a1a369816f537863272c69a2db60fa8c6",
+  "summary": "Edit 소유자 추적/SetOwner의 실제 월드 재그리기 연결과 미니맵 주소 분리",
+  "implementation": [
+    "Session FollowObjectOwner가 같은Pool/PlayerCore/0059a8b0을 직접 공유",
+    "실제 편집 우클릭의 후반 owner 추적을 공통 Session 부모로 연결",
+    "SetOwner 일반 입력의 후반 증가도같은Uber worldRedraw 참조 사용",
+    "owner BYTE의MOVZX 유지·섬 추가47fb90의별도5949d4 증가 유지"
+  ],
+  "native": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-02",
+    "unit": 747,
+    "inputs": 256,
+    "newExecutions": 256,
+    "newFixtures": 0,
+    "fixtureSha256": "93f78ffb15c3624dd9229790a2dc7437ba43de6882a06980f86d987f7c7b24ab",
+    "scope": "원문4d8176..4d81cb와4d5290 재관측; 가상74/Core 선택은 기존 명시 경계; 실제 월드0059a8b0 주소 확인",
+    "gameProcesses": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-editor-owner-redraw-747/build-v1.log"
+  },
+  "tests": {
+    "before": {
+      "total": 1,
+      "failedChecks": 4,
+      "exitCode": 1,
+      "log": "extracted/cpp-editor-owner-redraw-747/tests-before.log"
+    },
+    "after": {
+      "total": 55,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-owner-redraw-747/tests-v1.log"
+    },
+    "newTests": 1,
+    "newExecutables": 0,
+    "retainedTestExecutables": 66,
+    "retainedAllTargets": 71,
+    "actualBoundary": "창 없는 실제GameWorld/Session·공유Kencloud/Gameplay주소와정지선택거부 뒤우클릭owner추적",
+    "fullSuiteRun": false
+  },
+  "protection": {
+    "previousCount": 2656,
+    "currentCount": 2656,
+    "fixtureCount": 836,
+    "changed": [],
+    "newFixtures": [],
+    "allUnchanged": true
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newFixtures": 0,
+  "latestGui": "746제품 화면 조정/저장 재시작; 이번 제품GUI검증 아님",
+  "nextProtectedBaseline": "extracted/cpp-editor-owner-redraw-747/protected-after.json",
+  "sourceSha256": {
+    "cpppj/src/client/GameWorld.cpp": "4187296ab9e4780489dfb9cab18fec3175a158e0c9c873de6f9d4f1f748dfae5",
+    "cpppj/src/client/ObjectOwnerCommands.cpp": "1526a3511abe25879fc56dd0f0bde35f34be3620f568f0bd19f4c2c63a943951",
+    "cpppj/src/client/ObjectOwnerCommands.h": "04904a5941c5e4e17bbd8574e311108d71dcbc3998bf0b927f13419bed70b4fd",
+    "cpppj/src/client/RawCampaignSession.cpp": "f1ee7f72ed09d2d1574f87ad2053ab0dff6d55efc009f0035fe2b643e835af79",
+    "cpppj/src/client/RawCampaignSession.h": "53a91d8aebeb1a045d5aa4f72ba7ec6357d9a75443bbf777f45c40025d8a8d13",
+    "cpppj/src/client/UberGump.cpp": "ac067cae103ba5e29a08b02ea65a58a151c7f00407d1283181378f35d976445f",
+    "cpppj/tests/CMakeLists.txt": "5b8406f326714192f1b7002df00fa1214f6017382794b6e360e0debb0946d6d0",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "8fd63c1febd62aa877f1482e428845fad949147907c7a333312c4b2ab44bb30b"
+  },
+  "next": "4da2e8..4da357 편집 좌클릭 후현재선택의 owner추적/Ctrl소유자·다리품질 순환과422640 연결",
+  "limitations": [
+    "일반SetOwner 실제UI/전체owner·타입·상태와CD대응은이번새GUI미검증",
+    "전체C++/전체34/새ZIP/물리입력/PCM/자연완주·제외재현·공중3종전용행동/신규MP검사0",
+    "나머지UI/Edit/시나리오/파일·수명/호환성과3~8차전체목표는남음"
+  ]
+}

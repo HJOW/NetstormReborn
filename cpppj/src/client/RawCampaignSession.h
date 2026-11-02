@@ -467,6 +467,7 @@ public:
     std::uint32_t CommandCarrierDrop(o::Sid parent,std::uint32_t command,o::Sid listParent); // 실제42aa50 Cast/Drop 메뉴와 최초 내용물 선택 순서를 실행한다.
     std::uint32_t CommandObject(o::Sid parent,std::uint32_t command); // 실제 비석/주문6c 전환과4ae010/4ac9b0 공통 부모 명령·미처리0 반환이다.
     void SetObjectOwner(o::Sid parent,std::uint32_t owner); // 실제 가상74의 신전·사제 재정의와 공통 소유자 변경을 같은 월드에서 분배한다.
+    void FollowObjectOwner(std::uint32_t sid); //004d5290의 같은 Pool/Player Core 선택과0059a8b0 증가를 실행한다. 미니맵 갱신과 구별한다.
     std::uint32_t CommandPriest(o::Sid parent,std::uint32_t command,std::uint32_t parameter); // 실제4940b0의packed y 기도 요청과 Carrier 부모 위임이다.
     // 같은 실제40h 요청/수신 처리기를 읽기 전용으로 빌린다.
     const o::RawCarrierMove& CarrierMove() const;

@@ -1138,11 +1138,8 @@ void UberGump::Event(InputEvent event) {
         const auto gameplay=client_.GameplayGlobals(); // release/미허용 모드/선택0은 원문처럼 Runtime을 요구하지 않는다.
         ObjectOwnerCommandHooks hooks;hooks.editor=[gameplay] { return gameplay->world.editor; };hooks.missionPost=[gameplay] { return gameplay->world.missionPost; };hooks.selected=[gameplay] { return gameplay->selection.selected; };
         hooks.owner=[this](auto sid,auto owner) { if (!world_) throw std::logic_error("선택된 실제 소유자 효과의 월드 미설치");if (sid>65535U) throw std::out_of_range("소유자 명령의 물리 SID WORD 범위");world_->Session().SetObjectOwner(o::Sid{static_cast<std::uint16_t>(sid)},owner); };
-        hooks.follow=[this](auto sid) { FollowEditorObjectOwner(world_->Session().Core().pool,sid,client_.GameplayGlobals()->MapRevision(),[this](auto owner,auto slot) {
-            const std::uint32_t metamap=world_->Session().Core().ownerMode.challenge ? 1U : 0U; // 같은 Player/현재 Core alias를 실제 원문 순서로 바꾼다.
-            world_->Session().PlayerCoreGlobals()->Select(client_.GameplayGlobals()->player,metamap,owner,slot);
-        }); };
-        static_cast<void>(DispatchObjectOwner(event,client_.GameplayGlobals()->MapRevision(),hooks));rebuild_=true;return;
+        hooks.follow=[this](auto sid) { world_->Session().FollowObjectOwner(sid); }; //가상 owner 뒤 현재 Editor가 선택한 같은 Session 부모다.
+        static_cast<void>(DispatchObjectOwner(event,worldRedraw_,hooks));rebuild_=true;return; //원문4d81c5도 미니맵이 아닌0059a8b0의 현재 DWORD를 증가시킨다.
     }
     if (transitionCode==kDialogDoNothing) return; // 원본 명령 자체는 효과가 없으며 HTML 부모는 발화 시 이미 Kill되었다.
     if (transitionCode==kEditorTestBattleCommand) {

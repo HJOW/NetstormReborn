@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/ObjectOwnerCommands.h" //편집 객체 추적이 같은 Session의 실제 월드 다시 그리기 DWORD를 사용한다.
 #include "o/RawFortSubscriberChange.h" // 현재 Fort의 Champion 변경도 같은 실제 Template writer를 사용한다.
 #include "client/RitualChoiceInput.h" //6b요청은같은현재선택제단과실제전송을사용한다.
 #include "o/RawRitualChoice.h" //선택Form교체를실제종속수신기에연결한다.
@@ -4016,6 +4017,14 @@ std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command
 }
 // 일반 입력의 전체 owner 인자를 실제 신전/사제/공통 소유자 몸체에 전달한다.
 void RawCampaignSession::SetObjectOwner(Sid parent,std::uint32_t owner) { if (!impl_->loaded) throw std::logic_error("설치 전 실제 가상 소유자 변경");impl_->ownership->SetOwner(parent,owner); }
+// 원문 추적은 객체의 현재 소유자를 읽고 같은 Core를 선택한 뒤 월드 표시 갱신을 증가시킨다.
+void RawCampaignSession::FollowObjectOwner(std::uint32_t sid) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 편집 객체 소유자 추적");auto& state=*impl_;
+    FollowEditorObjectOwner(state.core.pool,sid,state.worldRedraw,[&state](auto owner,auto slot) {
+        const std::uint32_t metamap=state.core.ownerMode.challenge ? 1U : 0U; //같은 Player Core의 현재 모드를 선택 시점에 읽는다.
+        state.coreDataGlobals->Select(state.playerState,metamap,owner,slot);
+    });
+}
 // 메뉴가 선택한현재사제와사건y의종류WORD를실제6d 요청으로전달한다.
 std::uint32_t RawCampaignSession::CommandPriest(Sid parent,std::uint32_t command,std::uint32_t parameter) { if (!impl_->loaded || !impl_->priestPrayer || impl_->core.pool.Slot(parent)[10]!=158 || Read(impl_->core.pool.Slot(parent),0)!=kPatchPriestVtable) throw std::logic_error("기도명령의현재사제/설치계약오류");return impl_->priestPrayer->Command(parent,command,parameter); }
 // 사용자 회수 명령은 같은 서버 요청을 보내며 결과/환불/삭제를 직접 만들지 않는다.

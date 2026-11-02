@@ -12,8 +12,8 @@ struct ObjectOwnerCommandHooks {
     std::function<void(std::uint32_t,std::uint32_t)> owner; // 선택 시 보관한 SID의 가상74이며 새 owner 전체DWORD를 받는다.
     std::function<void(std::uint32_t)> follow; // owner 변경 뒤 현재 Editor가 참이면 보관 SID로 실행하는4d5290이다.
 };
-// 원문4d817e..4d81cb의 모드 단락·보관SID·뒤늦은 Editor 조회·revision 감김이다.
+// 원문4d817e..4d81cb의 모드 단락·보관SID·뒤늦은 Editor 조회·0059a8b0 감김이다. revision 인자는 미니맵이 아닌 같은 월드 재그리기 DWORD다.
 bool DispatchObjectOwner(const InputEvent& event,std::uint32_t& revision,const ObjectOwnerCommandHooks& hooks);
-//4d5290의 현재 owner BYTE→SelectPlayerCoreData(owner,1)→revision이며 owner0은 무동작이다.
+//4d5290의 현재 unsigned owner BYTE→SelectPlayerCoreData(owner,1)→월드 재그리기 증가이며 owner0은 무동작이다. revision은0059a8b0을 빌린다.
 void FollowEditorObjectOwner(const o::SidPool& pool,std::uint32_t sid,std::uint32_t& revision,const std::function<void(std::uint32_t,std::uint32_t)>& selectCore);
 }

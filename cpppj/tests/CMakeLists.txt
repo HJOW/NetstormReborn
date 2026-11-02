@@ -3013,3 +3013,4 @@ target_sources(netstorm_selection_key_input_tests PRIVATE ScreenModeTransitionTe
 
 # 실제 비용 표시/Form 연결과 기존 파생/수집/부착/카메라 원문 관측을 같은 집중 대상에서 확인한다(745).
 target_sources(netstorm_menu_session_tests PRIVATE FloatingSpGumpTests.cpp GumpCollectionTests.cpp GumpTreeTests.cpp CameraViewTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE ObjectOwnerCommandsTests.cpp) #실제 편집 소유자 연결과 기존256행 원문 관측을 함께 확인한다(747).

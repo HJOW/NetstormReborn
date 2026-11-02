@@ -526,10 +526,7 @@ void GameWorld::PrepareEditorObjectMenu(o::SquidId id) {
     if (!campaign_ || !input_) throw std::logic_error("편집 우클릭의 실제 월드/선택 장치 미설치");
     if (!campaign_->Editor()) return;
     static_cast<void>(input_->selection->Select(id,0,0));
-    if (campaign_->Editor()) FollowEditorObjectOwner(campaign_->Core().pool,id,gameplayGlobals_->MapRevision(),[this](auto owner,auto slot) {
-        const std::uint32_t metamap=campaign_->Core().ownerMode.challenge ? 1U : 0U; // 현재 Core 선택은 같은 장기 Player 상태/물리를 사용한다.
-        campaign_->PlayerCoreGlobals()->Select(gameplayGlobals_->player,metamap,owner,slot);
-    });
+    if (campaign_->Editor()) campaign_->FollowObjectOwner(id); //원문0059a8b0의 같은 월드 갱신을 쓰며005949d4의 미니맵 갱신은 변경하지 않는다.
     changed_=true;
 }
 // 처리기 수명 동안 같은 선택/마우스 전역을 공유하며 선택 번호를 복사하지 않는다.

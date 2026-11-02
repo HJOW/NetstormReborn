@@ -24,7 +24,7 @@ bool DispatchObjectOwner(const InputEvent& event,std::uint32_t& revision,const O
 // 0번/예약/free/dead도 원문 물리 안이면 읽으며 유효한 플레이어 범위는 실제 선택 하위가 판정한다.
 void FollowEditorObjectOwner(const o::SidPool& pool,std::uint32_t sid,std::uint32_t& revision,const std::function<void(std::uint32_t,std::uint32_t)>& selectCore) {
     if (pool.Edition()!=o::OriginalEdition::Patch1078 || sid>=pool.Capacity() || sid>65535U) throw std::out_of_range("편집 객체 owner 조회의10.78 물리 SID 범위");
-    const auto owner=pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)})[34];
+    const auto owner=pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)})[34]; //원문4d529d의 MOVZX를 따르며 디컴파일의 char 표기만으로 부호 확장하지 않는다.
     if (owner) { Need(selectCore)(owner,1);++revision; }
 }
 }
