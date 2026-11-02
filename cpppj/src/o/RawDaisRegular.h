@@ -1,5 +1,6 @@
 // Rune304와 Dais305/306/307, 단계 진행/다음 목표 명령/희생 시작·종료의 원본 순서를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawCarrierPreDestroy.h"
 #include "o/RawPathStart.h"
 #include "o/RawRunePostPop.h"
@@ -20,7 +21,7 @@ struct DaisRegularState {
     std::array<std::uint32_t,kPlayerCount+1> playerResults{}; // patchPlayer+a0/CDPlayer+98의 마지막 개수/획득 타입이다.
     std::array<std::uint8_t,kPlayerCount+1> grantFlags{}; // 획득 시 지우는 patchPlayer+71/CDPlayer+69 BYTE다.
     std::uint32_t selectedType{},voiceCue{}; // 로컬 획득 타입 선택과 희생 종료에서 멈추는 전역 cue다.
-    bool debug{}; // 패치의 사제 genus/깊이/경로 생성 assert를 확인한다. CD는 읽지 않는다.
+    RawCheckingFlag debug{}; // 패치의 사제 genus/깊이/경로 생성 assert를 확인한다. CD는 읽지 않는다.
     std::span<std::uint8_t> playerRecords; // 실제9 Player 기록이며 비어 있으면 독립 원본 검사의 기존 배열을 사용한다.
     OriginalEdition playerEdition{OriginalEdition::Patch1078}; // 기록의0xb4/0xac 및 필드 폭을 판본대로 해석한다.
     void BindPlayerRecords(OriginalEdition edition,std::span<std::uint8_t> records); // 정확9기록을 같은 다이스 수명/획득이 공유한다.

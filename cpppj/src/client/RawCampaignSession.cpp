@@ -1,5 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "o/RawSidRobust.h" // 상세 SID 진단의 실제 부모다.
+#include "o/RawCheckingDiagnostics.h" // 원문4ad730의 실제 순수 Form 검사다.
 #include "client/AiDebugCommandInput.h" //일반진단입력도현재AI본문을직접사용한다.
 #include "client/ObjectOwnerCommands.h" //편집 객체 추적이 같은 Session의 실제 월드 다시 그리기 DWORD를 사용한다.
 #include "o/RawFortSubscriberChange.h" // 현재 Fort의 Champion 변경도 같은 실제 Template writer를 사용한다.
@@ -894,6 +896,10 @@ struct RawCampaignSession::Impl {
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
         if (!services.adoptPreparedWorld) playerState.playerKnown=1; // 실제 Native prefix를 대여한 경우 현재 known을 다시 쓰지 않는다.
+
+        // 각 원문 소비자가 같은 005e4794를 다시 읽으며 Session 사본/강제 활성값을 만들지 않는다.
+        gunState.checking.Bind(gameplayGlobals->AiDebug().Checking());gunTargetState.checking.Bind(gameplayGlobals->AiDebug().Checking());rewardState.debugAsserts.Bind(gameplayGlobals->AiDebug().Checking());missionAiSettings.checkingAsserts.Bind(gameplayGlobals->AiDebug().Checking());soundState.debug.Bind(gameplayGlobals->AiDebug().Checking());buildArrivalState.checking.Bind(gameplayGlobals->AiDebug().Checking());geyserMinedState.checking.Bind(gameplayGlobals->AiDebug().Checking());assetState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());regularState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());motionState.carrier.debug.Bind(gameplayGlobals->AiDebug().Checking());motionState.cleanup.checking.Bind(gameplayGlobals->AiDebug().Checking());generalDamageState.checking.Bind(gameplayGlobals->AiDebug().Checking());burningState.checking.Bind(gameplayGlobals->AiDebug().Checking());priestState.spawn.checkingPlacement.Bind(gameplayGlobals->AiDebug().Checking());priestState.forcefieldRegular.debug.Bind(gameplayGlobals->AiDebug().Checking());carrierDropState.checking.Bind(gameplayGlobals->AiDebug().Checking());
+        core.building.BindChecking(gameplayGlobals->AiDebug().Checking()); // 같은 물리 실행기만 장기 owner를 빌린다.
         assetState.sharedAuthority=gameplayGlobals->Authority().get();gunState.sharedAuthority=gameplayGlobals->Authority().get();regularState.sharedAuthority=gameplayGlobals->Authority().get(); // 첫 파생 모듈 전에 같은 owner를 연결하며 준비된false를 true로 덮지 않는다.
         assetState.inBattle=true;assetState.localOwner=1;
         if (services.installMode==CampaignInstallMode::ExistingEditor) {
@@ -1282,6 +1288,7 @@ struct RawCampaignSession::Impl {
         // 거주 구역은 현재 일치 신전을 찾은 호출 위치에서 실제 theammode를 다시 읽는다.
         if (!assetEffects.regular.themeMode) assetEffects.regular.themeMode=services.ownership.themeMode;
         FillMissing(assetEffects.regular.themeMode);
+        assetEffects.postPop.checkForms=[this](Sid sid) { if (!CheckRawObjectForms(core.pool,sid)) throw std::logic_error("자산 postPop checkForms() 원본 진단"); }; // 실제 검사 뒤 실패만 보고한다.
         assetEffects.gun=MakeCampaignGunQueryHooks(core,*gunMode,*gunTarget,*gunHit,gunState,firingIntervals,std::move(assetEffects.gun));
         assetEffects.gun=MakeGunTargetHooks(core.pool,*gunTarget,std::move(assetEffects.gun));
         assetEffects.gun=combat->GunHooks(std::move(assetEffects.gun));
@@ -1847,7 +1854,18 @@ struct RawCampaignSession::Impl {
         hooks.robust=[this](FlyerProcessFields& fields) {
             const auto form=fields.Form(),parent=fields.Parent();if ((form.value && form.value>=core.pool.Capacity()) || (parent.value && parent.value>=core.pool.Capacity())) throw std::logic_error("비행 Baseprocess0041be80의 Form/부모 원본 진단");return true; // 원문은 범위 진단 후1을 반환한다.
         };
-        hooks.sidRobust=[this](Sid sid,bool live) { if (!sid.value || sid.value==0xffff) return false;if (live && gunState.checking) throw std::logic_error("비행 개발자 SID 상세진단004ac040 미복원");return true; }; // checking0의004ac140은 추가 raw 검사를 하지 않는다.
+        hooks.sidRobust=[this](Sid sid,bool live) { // 원문SID번호판정과선택된상세진단을현재Pool·같은Client소유DWORD에연결한다.
+            SidRobustHooks robust;robust.addressMode=SidRobustAddressMode::HostPointer;
+            robust.checking=[this] { return gunState.checking.Read(); }; //779의같은현재전체DWORD뷰를원문선택분기에서만읽는다.
+            robust.poolBase=[this] { return reinterpret_cast<std::uintptr_t>(core.pool.Bytes().data()); };robust.capacity=[this] { return core.pool.Capacity(); };
+            robust.memory=[this](auto token,auto width) { // 범위선검사로원문type선행읽기를생략하지않고선택된물리접근에서만거부한다.
+                const auto raw=core.pool.Bytes();const auto base=reinterpret_cast<std::uintptr_t>(raw.data());
+                if (token<base || token-base>raw.size() || width>raw.size()-static_cast<std::size_t>(token-base)) throw std::out_of_range("SID 진단의 현재 Pool 물리 범위");
+                return raw.subspan(static_cast<std::size_t>(token-base),width);
+            };
+            robust.assertion=[this](std::string_view expression,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("SID 원문 진단 미연결 "+std::to_string(line));services.ai.assertion(expression); }; //실제진단이복귀하면ac140의1반환을막지않는다.
+            return RawIsSidRobust(static_cast<std::int32_t>(sid.value),live?1:0,gameplayGlobals->SidRobustDiagnostics(),robust);
+        };
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         hooks.finish=[this](FlyerProcessFields& fields) { flyer->Finish(fields); };
         hooks.otherFrame=[this](FlyerProcessFields& fields)->std::int32_t { if (Read(fields.bytes,0)==0x509f24U) return sunFlyerFrame->Animation(fields);if (Read(fields.bytes,0)==0x509f98U) return windFlyer->Animation(fields);throw std::logic_error("다른 플라이어 outer+8 Frame 미복원"); };
@@ -2652,7 +2670,7 @@ struct RawCampaignSession::Impl {
         hooks.select=[&](auto manager,auto name,auto writable) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("Objects 현재 manager 불일치");streams.push_back(templateStorage->SelectSection(slot,name,writable));return static_cast<std::uint32_t>(streams.size()); };
         hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("Objects 반환 stream 수명 범위");templateStorage->AccessSection(streams[token-1],operation); };
         hooks.prepareTypes=[this](auto owner) { PrepareFortTypeNames(static_cast<std::uint32_t>(owner)); };
-        hooks.conversion=[this] { return fortTypeConversion->Current(); };hooks.checking=[this] { return gunState.checking ? 1U : 0U; };
+        hooks.conversion=[this] { return fortTypeConversion->Current(); };hooks.checking=[this] { return gunState.checking.Read(); };
         hooks.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return fortTypeConversion->Bytes(token); };
         hooks.releaseConversion=[this] { auto& current=fortTypeConversion->Current();if (current) fortTypeConversion->Release(current);current=0; };
         hooks.contents=[&](Sid parent,auto stream) { auto reader=MakeFortContentsReader(hooks.access);const FortContentsLoadGlobals globals{fortTypeConversion->Current(),hooks.checking};static_cast<void>(LoadFortContents(parent.value,stream,9,0,globals,reader)); };
@@ -2688,7 +2706,7 @@ struct RawCampaignSession::Impl {
         meta.prepareTypeNames=[this,state] { PrepareFortTypeNames(state->slot);state->meta.hasTypeConversion=fortTypeConversion->Current()!=0; };
         meta.contents=[this,state](Sid parent,FortMetaStream&,std::uint32_t flags,bool relaxedConversion) {
             auto reader=MakeFortContentsReader([this,state](auto token,const auto& operation) { if (token!=1) throw std::out_of_range("Contents 실제Technology stream 토큰");templateStorage->AccessSection(state->technology,operation); });
-            const FortContentsLoadGlobals contentsGlobals{fortTypeConversion->Current(),[this] { return gunState.checking ? 1U : 0U; }}; //005c89bc는사본이아닌같은현재DWORD참조다.
+            const FortContentsLoadGlobals contentsGlobals{fortTypeConversion->Current(),[this] { return gunState.checking.Read(); }}; //005c89bc는사본이아닌같은현재DWORD참조다.
             static_cast<void>(LoadFortContents(parent.value,1,flags,relaxedConversion ? 1U : 0U,contentsGlobals,reader)); //기술wrapper는원문false를무시하고그뒤현재표해제/UI를계속한다.
             state->meta.hasTypeConversion=fortTypeConversion->Current()!=0; //reader/실제Create가바꾼현재pointer를반환직후해제관문에동기화한다.
         };

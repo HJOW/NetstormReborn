@@ -1,6 +1,7 @@
 // Soundprocess.cpp(원본 .\Soundprocess.cpp / CD soundProcess.cpp): 객체에 붙어 소리를 내는 프로세스(soundProcessType, 타입 47)를 복원한다.
 // 재생/정지는 SoundProcessHooks로 받으며 MakeSoundProcessHooks가 실제 재생 계층(SoundPlayer)에 잇는다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "client/Sound.h"
 #include "o/RawConstructionProcess.h"
 #include "o/RawPriestShield.h"
@@ -32,7 +33,7 @@ struct SoundProcessState {
     // 부착할 때 쓰는 프로세스 타입 번호다(DAT_0054112c / CD 0051ca1c).
     std::uint32_t processType{kSoundProcessType};
     // 패치판 debug 전역(DAT_005e4794)이다. 켜져 있으면 flags 조합을 검사해 assert를 보고한다. CD판은 읽지 않는다.
-    bool debug{};
+    o::RawCheckingFlag debug{};
     // 타입마다 마지막으로 소리를 낸 프레임 번호다. 같은 프레임에 같은 타입의 소리가 여러 번 시작되지 않게 막는다.
     // 원본은 타입 레코드 안의 필드(패치 +0x1f0 / CD +0x1d0)이며 다른 소리 요청 함수도 함께 쓴다. 색인은 타입 번호다.
     std::array<std::uint32_t,256> typeFrames{};

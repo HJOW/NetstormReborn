@@ -1,5 +1,6 @@
 // 실제 수집자의 수집/포획/귀환/경로 취소와 필요한 원본 genus 조회·다이스 접근점을 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawAiBrain.h"
 #include "o/RawContainedFinder.h"
 #include "o/RawPathRuntime.h"
@@ -9,12 +10,12 @@ namespace netstorm::o {
 //004acb80:현재 내용물 kind WORD의 TYPE genus를 먼저 읽고 전체WORD mask/모든 genus 비트/순번을 검사한다.
 Sid FindContainedGenus(const SidPool& pool,const ContainedFinderState& state,std::span<const RiftTypeRecord> types,Sid parent,std::uint32_t mask,std::uint32_t genus,std::uint32_t index);
 //004487e0:현재 진단 뒤 다이스 raw좌표-3 또는 같은 월드의 현재 invalid 두 float를 돌려준다.
-RawPathPoint DaisApproachPoint(const SidPool& pool,std::span<const RiftTypeRecord> types,const std::uint32_t& checking,const RawPathPoint& invalid,const std::function<void(std::string_view)>& assertion,Sid dais);
+RawPathPoint DaisApproachPoint(const SidPool& pool,std::span<const RiftTypeRecord> types,RawCheckingFlag checking,const RawPathPoint& invalid,const std::function<void(std::string_view)>& assertion,Sid dais);
 // 같은 실제 현재 전역을 참조하고 호출 위치에서 다시 읽는다.
 struct AiCarrierActionGlobals {
     const double& now; //0055b4d0의 현재 시각이다.
     const bool& boss; //00540bc4의 현재 권한이며 첫 크리스털 조회 뒤 판정한다.
-    const std::uint32_t& checking; //005e4794의 free 진단 활성값이다.
+    RawCheckingFlag checking; //005e4794의 free 진단 활성값이다.
     std::function<std::uint32_t()> invalidGraph; //같은 장부의 현재00540410이다.
 };
 // 각 분기에 도달한 실제 하위만 호출하며 빈 효과를 성공으로 바꾸지 않는다.

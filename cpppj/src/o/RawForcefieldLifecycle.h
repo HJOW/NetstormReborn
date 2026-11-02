@@ -1,5 +1,6 @@
 // 보호막의 최초 예약·프레임 진행·사제 존재 검사와 일반 Pop 분배를 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawFrameAdvance.h"
 #include "o/RawPriestPostPop.h"
 #include "o/RawSquidFinder.h"
@@ -36,7 +37,7 @@ private:
     ForcefieldPostPopHooks hooks_;
 };
 // 사제 타입 DWORD는 매 검사 때 읽는다. 소유자는 존재 검사의 조건이 아니다.
-struct ForcefieldRegularState { /* priestType: 사제 자산을 타입 표에서 찾는 번호. */ std::uint32_t priestType{kPriestType};/* debug: 원본 assert 경계와 진단 출력을 검사할지. */ bool debug{}; };
+struct ForcefieldRegularState { /* priestType: 사제 자산을 타입 표에서 찾는 번호. */ std::uint32_t priestType{kPriestType};/* debug: 원본 assert 경계와 진단 출력을 검사할지. */ RawCheckingFlag debug{}; };
 // 프레임 진행/가상 삭제만 외부 효과이며 위치의 일반 finder는 실제 모듈을 사용한다.
 struct ForcefieldRegularHooks {
     // advance: 대상의 프레임 진행과 후속 변경을 실행하는 콜백.

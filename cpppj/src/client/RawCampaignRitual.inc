@@ -86,6 +86,7 @@ void ConnectRitual() {
     rune.startConstruction=[this](Sid sid,float duration) { PrepareBuilding(core.processState.Now());building->Start(sid,duration); };
     runePostPop=std::make_unique<RawRunePostPop>(core.pool,core.hash,core.types,runeState,core.postPop,std::move(rune));core.postPop.SetRunePostPop(runePostPop.get());
     daisState=std::make_unique<DaisRegularState>(DaisRegularState{ritualState,runeState,core.processState,rewardState,playerState.battleOwner});
+    daisState->debug.Bind(gameplayGlobals->AiDebug().Checking()); // 지연 생성 뒤에도 현재 checking을 매 소비 위치에서 읽는다.
     daisState->BindPlayerRecords(core.pool.Edition(),players);daisState->voiceCue=0x020000df; // PE00542a70의 실제 희생 종료 명령이다.
     DaisRegularHooks dais; // 실제 의식 이동/초기 진행의 필수 효과와 아직 미연결인 후반 경계다.
     dais.setFrame=[this](Sid sid,std::int32_t value,std::uint32_t flags) { core.frame.Set(sid,value,flags); };

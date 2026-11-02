@@ -1,5 +1,6 @@
 // 삭제/해체 보상(패치 0044c2f0 ↔ CD 004626d0): 비용 곡선·소유자 비율·SP 지급·AI 지갑·샘 풀을 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/SidPool.h"
 #include "o/SpStore.h"
 #include "o/SquidPostPop.h"
@@ -28,7 +29,7 @@ struct SquidRewardState {
     bool aiMirrorDisabled{};             // AI 지갑 갱신을 끄는 전역(DAT_00594fc8 / CD 00540a24).
     bool walletClamp{};                  // 지갑을 0x4a6 이상으로 올리는 객체 조건(DAT_005634a0->+0x68 / CD 00549a08->+0x68).
     bool priestQuarterHp{};              // priest 최대 HP 1/4 전역(DAT_005ca8f0 / CD 00511c90).
-    bool debugAsserts{};                 // 패치 0049fce0의 디버그 assert 전역(DAT_005e4794). 켜지면 위반 입력을 거부한다.
+    RawCheckingFlag debugAsserts{};                 // 패치 0049fce0의 디버그 assert 전역(DAT_005e4794). 켜지면 위반 입력을 거부한다.
     std::array<std::int32_t,kPlayerCount+1> aiWallet{}; // 독립 값형/CD 재생의 지갑이다. 실제 PATCH Session은 BindPatchWallet로 같은 brain+2d8에 연결한다.
     float cdLocalSp{};                   // CD판 로컬 SP 전역(005120d4). 패치판은 ScrambledSpStore를 쓴다.
     std::uint32_t* sharedPercent{};std::int32_t* sharedGeyserPool{}; // 실제25비율과 같은 signed 자원 DWORD를 빌린다.

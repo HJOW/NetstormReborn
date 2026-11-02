@@ -22,7 +22,7 @@ std::int32_t Center(float value) { return Ftol(static_cast<float>(Ftol(static_ca
 }
 // PATCH의 실제 물리 자료만 받으며 CD의 다른 회피를 이 몸체로 대신하지 않는다.
 RawCarrierEscape::RawCarrierEscape(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,std::span<const std::uint8_t> spots,
-    const double& now,const bool& checking,std::span<const std::uint32_t> cardinalTypes,CarrierEscapeState& state,CarrierEscapeHooks hooks)
+    const double& now,RawCheckingFlag checking,std::span<const std::uint32_t> cardinalTypes,CarrierEscapeState& state,CarrierEscapeHooks hooks)
     :pool_(pool),hash_(hash),types_(types),spots_(spots),now_(now),checking_(checking),cardinalTypes_(cardinalTypes),state_(state),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || spots.size()!=65536 || cardinalTypes.size()!=4) throw std::invalid_argument("캐리어 회피 판본/물리 자료 오류");
 }

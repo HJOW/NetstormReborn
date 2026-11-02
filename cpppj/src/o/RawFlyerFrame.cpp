@@ -1,5 +1,6 @@
 // 맨 오 워 수명/프레임과 공통 비행 제어의 현재 읽기·부분 쓰기·가상 호출 순서를 유지한다.
 #include "o/RawFlyerFrame.h"
+#include "o/RawCheckingDiagnostics.h" // 공중 행동을 실행하지 않는 공통 Form 진단 부모다.
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -77,13 +78,7 @@ void RawFlyerFrame::ParentDying(FlyerProcessFields& fields) const {
     if (!(pool_.Slot(home)[11]&3U)) Need(hooks_.homeNotice)(home,0,0);
 }
 // 원본은 dead 종속을 허용하며 free/void와69보다 큰 타입만 거부한다.
-bool RawFlyerFrame::CheckForms(Sid parent) const {
-    const auto raw=pool_.Slot(parent);if (raw[10]<=69 || (raw[11]&5U)) return false;auto next=Read(raw,6,2);std::size_t guard=0;
-    while (next) { // 같은 종속의 현재 next를 읽으며 정상 체인을 끝까지 확인한다.
-        if (next>=pool_.Capacity() || ++guard>pool_.Capacity()) throw std::logic_error("비행 checkForms 정상 범위 밖/순환 체인");const auto child=pool_.Slot(Sid{static_cast<std::uint16_t>(next)});if ((child[11]&5U) || child[10]>69) return false;next=Read(child,4,2);
-    }
-    return true;
-}
+bool RawFlyerFrame::CheckForms(Sid parent) const { return CheckRawObjectForms(pool_,parent); }
 // 착륙 대상 포인터는 이동 분기에서 선택한 홈 snapshot이며 제거 인수는 현재 target/Form이다.
 bool RawFlyerFrame::ReturnHome(FlyerProcessFields& fields,Sid parent,Sid home) const {
     if (Read(pool_.Slot(home),12,2)!=fields.Parent().value) { Need(hooks_.finish)(fields);return false; }

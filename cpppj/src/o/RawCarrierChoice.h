@@ -1,5 +1,6 @@
 // 골렘의 귀환·간헐천 목록 수집과 실제 경로 시각에 따른 후보 평가를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawBoardTarget.h"
 #include "o/RawCarrierCandidateSort.h"
 #include "o/SquidPostPop.h"
@@ -25,7 +26,7 @@ struct CarrierChoiceHooks {
 class RawCarrierChoice {
 public:
     RawCarrierChoice(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const std::uint8_t> players,
-        SquidPostPopList& returns,SquidPostPopList& geysers,const double& now,const bool& checking,
+        SquidPostPopList& returns,SquidPostPopList& geysers,const double& now,RawCheckingFlag checking,
         const RawBoardTarget& board,CarrierChoiceState& state,CarrierChoiceHooks hooks); // PATCH의 물리 폭과 참조 계약을 확인한다.
     Sid Evaluate(SquidPostPopList& candidates,Sid anchor,Sid mover) const; //4280a0: WORD 거리→원본 정렬→필요한 임시 경로→엄격한 최소값이다.
     Sid ChooseReturn(Sid parent) const; //428ea0: 현재Player+7c를 먼저 넣고 별도 outposts 목록을 수집한다.
@@ -44,7 +45,7 @@ private:
     SquidPostPopList& returns_; //55a70c/710/714의 현재 별도 신전·아웃포스트 목록이다.
     SquidPostPopList& geysers_; //5950dc/e0/e4의 현재 간헐천 목록이다.
     const double& now_; // 실제55b4d0 QWORD이며 탐색 뒤 현재 시각을 사용한다.
-    const bool& checking_; // 실제5e4794 진단 전역이다.
+    RawCheckingFlag checking_; // 실제5e4794 진단 전역이다.
     const RawBoardTarget& board_; // 복원한 일반 접근점41d530을 재사용한다.
     CarrierChoiceState& state_; // 현재 탐색 설정/타입/임시 metric의 공유 전역이다.
     CarrierChoiceHooks hooks_; // 실제 큰 하위와 관측용 주소 변환이다.

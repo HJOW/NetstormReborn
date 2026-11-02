@@ -1,7 +1,9 @@
 // 원본 현재 getter를 연결하며 표적 검색을 별도 거리 모형으로 바꾸지 않는다.
 #include "client/RawCampaignGunQueries.h"
+#include "o/RawCheckingDiagnostics.h" // 현재 raw Form/지면의 순수 checking 진단이다.
 #include <bit>
 #include <stdexcept>
+#include <string> // 선택된 원문 진단 줄 번호를 보고한다.
 
 namespace netstorm::client {
 namespace {
@@ -24,6 +26,11 @@ o::GunProcessHooks MakeCampaignGunQueryHooks(RawWorldCore core,const o::RawGunMo
     std::span<const float> intervals,o::GunProcessHooks hooks) {
     if (&mode.Pool()!=&core.pool || &target.Pool()!=&core.pool || &hit.Pool()!=&core.pool || intervals.size()!=core.types.size())
         throw std::invalid_argument("캠페인 Gun query의 같은 Pool/TYPE 자료 불일치");
+    hooks.checkForms=[pool=&core.pool](o::Sid sid) { if (!o::CheckRawObjectForms(*pool,sid)) throw std::logic_error("Gunprocess.cpp parent.checkForms() 원본 진단"); }; // 실패 조건에서만 원문 진단을 보고한다.
+    hooks.validateIslandOwners=[pool=&core.pool,hash=&core.hash,types=core.types,neighbors=&core.neighbors,links=&core.bridgeState,&state](o::Sid sid) {
+        o::DiagnoseRawGunIslandOwners(*pool,*hash,types,sid,neighbors->Footprint(sid),state.checking,links->noIslandType,
+            [](auto line) { throw std::logic_error("Gunprocess.cpp noIsland 소유자 원본 진단 줄="+std::to_string(line)); });
+    }; // 같은 finder의 순서/현재 checking/type/부모 owner를 빌리고 진단 callback도 빈 성공으로 처리하지 않는다.
     hooks.targetingMode=[&mode](o::Sid sid,std::uint8_t) { return mode.Get(sid); };
     hooks.findTarget=[&target](float x,float y,std::uint32_t type,std::uint32_t direction,std::uint8_t owner) { return target.FindTarget(x,y,type,std::bit_cast<std::int32_t>(direction),owner); };
     hooks.refreshRange=[&hit,&state](o::Sid sid) { hit.SetTime(sid,state.now); };

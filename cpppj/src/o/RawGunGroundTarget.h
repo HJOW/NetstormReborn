@@ -1,5 +1,6 @@
 // AI의 group3 배치가 사용하는 별도 지상 표적 검색을 같은 실제 Gun 월드에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawGunTarget.h"
 
 namespace netstorm::o {
@@ -7,7 +8,7 @@ namespace netstorm::o {
 struct GunGroundTargetGlobals {
     const std::uint32_t& excludedType; //00541178의 현재 보행 운반체 검색 제외 TYPE다.초기값72다.
     const std::uint32_t& dependType; //00541074의 현재 Depend Form TYPE다.초기값1이다.
-    const bool& checking; //005e4794의 현재 원본 진단 활성화다.
+    RawCheckingFlag checking; //005e4794의 현재 원본 진단 활성화다.
     const bool& metamap; //00594fc8의 현재 전역 모드다.
     const bool& boss; //00540bc4의 현재 권한이다.
     std::function<void(std::string_view,std::uint32_t)> assertion; //원본 진단 장치이며 반환하면 원래 순서로 계속한다.

@@ -1,5 +1,6 @@
 // Damageable의 현재HP/최대HP 절반 비교와 실제burning 프로세스 생성/제거 분기를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/SquidReward.h"
 
 namespace netstorm::o {
@@ -17,7 +18,7 @@ struct DamageableBurningHooks {
 // 원본디버그검사와현재타입전역은호출할때다시읽는다.
 struct DamageableBurningState {
     // checking: 패치만두번째burning이없는지확인하는원본전역이다.
-    bool checking{};
+    RawCheckingFlag checking{};
     // burningType/bulfType: 원본process14/bulf135 전역의현재값이다.
     std::uint32_t burningType{14},bulfType{135};
 };

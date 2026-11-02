@@ -3150,3 +3150,10 @@ target_sources(netstorm_menu_session_tests PRIVATE RendererDiagnosticsTests.cpp 
 target_sources(netstorm_tests PRIVATE TypeLiveFileReadTests.cpp)
 target_sources(netstorm_file_tests PRIVATE TypeLiveFileReadTests.cpp)
 set_source_files_properties(TypeLiveFileReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TYPE_LIVE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-live-read-x86.tsv\"")
+# 779의 새 순수 진단만 기존 대상에 등록하며 게임/MP/공중 행동 검사는 실행하지 않는다.
+target_sources(netstorm_tests PRIVATE CheckingConsumersTests.cpp)
+target_sources(netstorm_world_generation_tests PRIVATE CheckingConsumersTests.cpp)
+# 779의기존전체/원시SID집중대상에추가하며신규target은만들지않는다.
+target_sources(netstorm_tests PRIVATE SidRobustParentTests.cpp)
+target_sources(netstorm_world_generation_tests PRIVATE SidRobustParentTests.cpp)
+set_source_files_properties(SidRobustParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SID_ROBUST_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sid-robust-parent-x86.tsv\"")

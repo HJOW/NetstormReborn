@@ -29,7 +29,7 @@ Sid FindContainedGenus(const SidPool& pool,const ContainedFinderState& state,std
     return {};
 }
 // 진단 callback 뒤 현재 genus/좌표/실패점도 다시 읽으며 free/dead 필터를 추가하지 않는다.
-RawPathPoint DaisApproachPoint(const SidPool& pool,std::span<const RiftTypeRecord> types,const std::uint32_t& checking,const RawPathPoint& invalid,const std::function<void(std::string_view)>& assertion,Sid dais) {
+RawPathPoint DaisApproachPoint(const SidPool& pool,std::span<const RiftTypeRecord> types,RawCheckingFlag checking,const RawPathPoint& invalid,const std::function<void(std::string_view)>& assertion,Sid dais) {
     const auto valid=[&] { return dais.value && dais.value<pool.Capacity(); }; //원본의 현재 물리 SID 범위만 검사한다.
     const auto isDais=[&] { return (TypeGenus(types,pool.Slot(dais)[10])&0x400000U)!=0; }; //현재 TYPE genus를 다시 읽는다.
     if (checking && (!valid() || !isDais())) Need(assertion)("dais.isValid() && dais.getGenus() & gDAIS");

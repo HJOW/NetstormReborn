@@ -1,5 +1,6 @@
 // 원본 일반 자산의 BaseHit·DamageableHit와 HP/사망/섬 경고 순서를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawPriestDamage.h"
 #include "o/RawSquidHitPoints.h"
 
@@ -9,7 +10,7 @@ struct DamageableHitState {
     // levels: 사제와 같은 실제 Challenge rank/CD Player level/NoDamage 자료를 공유한다.
     PriestDamageState& levels;
     // server/checking: 원본 사망 권한과 패치 held 피격 진단 전역이다.
-    bool server{true},checking{};
+    bool server{true}; RawCheckingFlag checking{};
     // localOwner: 원본 현재 localPlayerId BYTE다.
     std::uint8_t localOwner{1};
     // primaryIslands: Player+0x78/CD+0x70의 현재 주 섬 번호다.

@@ -1,5 +1,6 @@
 // 건물 Pop/Unpop의 옆면 표면 단어와 원본 다리 진단을 같은 raw 공간에 적용한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 현재 checking DWORD를 빌리는 상태 뷰다.
 #include "o/SidPool.h"
 #include "o/SquidHash.h"
 
@@ -10,11 +11,12 @@ struct BuildingSpaceState {
     // bridgeType: 다리 자산을 타입 표에서 찾는 번호.
     std::uint32_t islandType{},bridgeType{};
     // debug: 원본 assert 경계와 진단 출력을 검사할지.
-    bool debug{};
+    RawCheckingFlag debug{};
 };
 // 표면 WORD 지도는 실제 해시 0단계 배열이다. 복사 지도는 사용하지 않는다.
 class RawBuildingSpace {
 public:
+    void BindChecking(const std::int32_t& value) { state_.debug.Bind(value); } // 현재 물리 실행기가 원문 진단 DWORD를 직접 빌린다.
     // 사용 순서: 실제 풀/해시/타입으로 생성하고 같은 SquidPop/Unpop에 SetBuildingSpace로 등록한다.
     RawBuildingSpace(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,BuildingSpaceState& state);
     // 0040da00/CD 004abac0: 지도 밖이면 0, 그 외 해당 칸의 WORD SID를 반환한다.

@@ -1,5 +1,6 @@
 // 데빌메이커의 실제80BYTE 생산 상태를 현재 Kernel과 같은 풀에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawWindAviaryState.h"
 #include "o/SquidProcess.h"
 #include <optional>
@@ -8,7 +9,7 @@ namespace netstorm::o {
 // 처리 도중 바뀔 수 있는 원본 전역은 같은 수명의 참조로 읽는다.
 struct WindAviaryGlobals {
     const bool& fort; const bool& friendlyFire; const bool& server; // 편집/친군 사격/서버의 실제 관문이다.
-    const bool& boss; const std::uint32_t& editor; const bool& checking; // 같은 세션의 현재 생성 권한/편집 차단/개발자 진단이다.
+    const bool& boss; const std::uint32_t& editor; RawCheckingFlag checking; // 같은 세션의 현재 생성 권한/편집 차단/개발자 진단이다.
     const double& now; // 모든 생산 단계가 사용하는 현재 게임 시각이다.
     const std::uint32_t& processType; const std::uint32_t& flyerType; const std::uint32_t& aviaryType; // 59/138/139의 현재 타입이다.
 };

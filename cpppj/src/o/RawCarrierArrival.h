@@ -1,5 +1,6 @@
 // 실제 Carrier 도착의 현재 경로/내용물/다이스/운반 분기와 끝의 회피 검색 순서를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawContainedCreate.h"
 #include "o/RawCarrierPreDestroy.h"
 #include "o/RawPathCleanup.h"
@@ -11,7 +12,7 @@
 namespace netstorm::o {
 // 실제 조회/효과 뒤 다시 읽는 도착 권한·동맹·타입·Player AI 존재 전역이다.
 struct CarrierArrivalState {
-    bool boss{true},debug{},allowAlliedPickup{}; // 현재 권한/패치Robust 검사/친구 사제 pickup 허용 전역이다.
+    bool boss{true}; RawCheckingFlag debug{}; bool allowAlliedPickup{}; // 현재 권한/패치Robust 검사/친구 사제 pickup 허용 전역이다.
     std::uint32_t priestType{158},nuggetType{154},daisType{165},geyserType{122},outpostType{126},isleStalagType{84}; // 원래 mutable 타입 getter들이다.
     std::array<std::uint32_t,81> alliances{}; // [carrierOwner*9+candidateOwner]와 반대 방향을 임의 통합하지 않는다.
     std::array<bool,9> controlledOwners{}; // 독립 원문 재생의 입력이다. 실제 Session은 아래 currentControlled로 현재 Player를 읽는다.

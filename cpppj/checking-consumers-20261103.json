@@ -1,0 +1,163 @@
+{
+  "unit": 779,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 779,
+  "displayVersion": "11.01",
+  "exeSha256": "bbfe32098aa7293928027aef4b3ed1ef83e1325c140a48e912fa199c788df4e9",
+  "summary": "같은 checking DWORD의 기존 소비자와 SID/Form/noIsland 순수 진단 부모 연결",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-all-v1.log"
+    ],
+    "allConfiguredTargets": 71,
+    "testExecutables": 66,
+    "newExecutableTargets": 0,
+    "compileAndLinkOnly": true
+  },
+  "tests": {
+    "totalUnique": 10,
+    "totalExecutions": 10,
+    "newTests": 10,
+    "failedChecks": 0,
+    "names": [
+      "CheckingConsumers_CurrentFullDwordViews",
+      "CheckingConsumers_TemporaryAndParentViewLifetime",
+      "CheckingConsumers_ClientOwnerAndFinderReborrow",
+      "CheckingConsumers_NativeFormsDiagnostic",
+      "CheckingConsumers_FormsHostPhysicalBoundaries",
+      "CheckingConsumers_NativeIslandOwnerDiagnosticPrefix",
+      "SidRobustParent_Native1012BothBodiesCurrentReadsAndAssertionReturn",
+      "SidRobustParent_UnselectedNumberLiveAndCheckingNeverDemandPool",
+      "SidRobustParent_CurrentHostPoolPointerResetAndNoGenerationBits",
+      "SidRobustParent_TypeReadPrecedesLogicalRangeAndMissingPhysicalStopsThere"
+    ],
+    "logs": [
+      "tests-CheckingConsumers_.log",
+      "tests-SidRobustParent_.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "protection": {
+    "beforeCount": 2714,
+    "currentCount": 2717,
+    "allUnchanged": true,
+    "fixtureCount": 897,
+    "newFixtures": [
+      "checking-forms-x86.tsv",
+      "checking-island-owner-x86.tsv",
+      "sid-robust-parent-x86.tsv"
+    ]
+  },
+  "native": {
+    "preparedObservations": 2984,
+    "preparedRepeatObservations": 2984,
+    "resumeRepeatObservations": 2984,
+    "diagnostics": {
+      "unit": 779,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "formsInputs": 288,
+      "islandInputs": 192,
+      "observations": 960,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "airUnitTests": 0,
+      "instructions": 101826,
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "0f80304421e79d1ab29200bb4a21dcd75e5ea7df5b0013db8075487fc62b5c6d",
+      "fixtures": {
+        "checking-forms-x86.tsv": "ae5841c0c49da787725147ca0043277a41e97a9c0d3dad4f381096c8ddd88662",
+        "checking-island-owner-x86.tsv": "ca8cadbabd2ea20090dc7ddd0a3ac8757f78e5a15e2c4f5b336b409bcca019ca"
+      },
+      "limitations": [
+        "noIsland은46ba98..46bb42진단접두만선택했고전체GunFrame/실제공격/Kernel은실행하지않았다.",
+        "발자국getter와일반finder반환목록은명시경계이며4단계finder몸체의동일성재검사로합산하지않는다.",
+        "41def0/41d770/41d7a0/ftol은실제원문변환이다."
+      ]
+    },
+    "sid": {
+      "unit": 779,
+      "part": "SID diagnostic parent",
+      "rows": 1012,
+      "observations": 2024,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제ac040/ac140와선택전역/물리읽기순서.진단4e0620은명시반환/예외/현재전역변경장치.32비트합성Pool물리만읽으며OS/게임/가상vtable호출/SEH UI/실제64비트호스트포인터는CPU관측범위밖",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      }
+    },
+    "fixtureBytesMatch": true,
+    "documentationOnly": [
+      {
+        "path": "tools/decomp_checking_diagnostics.py",
+        "documentationOnly": true,
+        "observedSha256": "0f80304421e79d1ab29200bb4a21dcd75e5ea7df5b0013db8075487fc62b5c6d",
+        "finalSha256": "679a493930e9e44e043176f1a1c45ddf8eab33659a626643aaf5df70dc508125"
+      },
+      {
+        "path": "tools/decomp_sid_robust_parent.py",
+        "documentationOnly": true,
+        "observedSha256": "e3accf96e6e21ed95835fd043a78c3057a293d42bcec62965adbec7a1797fa02",
+        "finalSha256": "3e49a2d29779a1e867ce3323865faabb157f69e2ebf93f2b2e1ddab4f9c7d48d"
+      }
+    ]
+  },
+  "integration": {
+    "baseCommit": "b7867afe",
+    "preparedFiles": 62,
+    "existingFiles": 51,
+    "newFiles": 11,
+    "changedPublicHeaders": 39,
+    "mandatoryTypeCorrections": [
+      "RawBuildingSpace.debug의 RawCheckingFlag 승격/직접 include",
+      "SoundProcess.debug의 o:: 한정"
+    ],
+    "sourceComparison": "격리후보62개와 정규화 비교: 두 타입 교정과 Session 새 빈줄 공백 제거만 다름. 이후 Python 도구의 설명 주석/문서 문자열만 추가하고 AST 동일 확인",
+    "mappedWriteFailure": {
+      "path": "cpppj/src/o/RawCarrierEscape.h",
+      "errno": 22,
+      "recovered": "같은 볼륨 임시 파일 교체 뒤 전체후보 바이트 비교로 복구 확인"
+    }
+  },
+  "checkingInventory": {
+    "functions": 98,
+    "directReferences": 145,
+    "uniqueBodies": 95,
+    "categories": {
+      "779-existing-gate": 41,
+      "775": 3,
+      "other-parent-gap": 43,
+      "specific-parent-gap": 6,
+      "mp-static": 2,
+      "thunk": 3
+    },
+    "remainingParents": 51,
+    "connectedExistingGatesAreNotCompleteBodies": true
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "airThreeDedicatedTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "SID의 Original32 주소와 실제 Win64 Pool uintptr를 구별",
+    "Native noIsland의 finder/발자국 getter와 assertion은 명시 경계",
+    "ContentFormHost state=nullptr/inBattle·포획 부모와 Login Update/재접속 저장은 별도",
+    "전체 원문 진단/32비트 FILE·SEH ABI/실제 GUI를 검증한 것은 아님"
+  ],
+  "next": "783 Boardcoord41db70 한 부모, 이후781/782 GIF·초기화면/784 입력꼬리/785 보조음향"
+}

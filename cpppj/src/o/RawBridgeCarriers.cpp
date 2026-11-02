@@ -20,7 +20,7 @@ std::int32_t Add(std::int32_t value,std::int32_t delta) { return std::bit_cast<s
 }
 //PATCH의 raw 폭을 검증하며 구성 자체는 현재 전역/슬롯을 쓰지 않는다.
 RawBridgeCarriers::RawBridgeCarriers(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
-    const bool& boss,const bool& checking,const std::uint32_t& priest,const std::uint32_t& rainWalker,const std::int32_t& avoidLife,BridgeCarrierHooks hooks)
+    const bool& boss,RawCheckingFlag checking,const std::uint32_t& priest,const std::uint32_t& rainWalker,const std::int32_t& avoidLife,BridgeCarrierHooks hooks)
     :pool_(pool),hash_(hash),types_(types),boss_(boss),checking_(checking),priest_(priest),rainWalker_(rainWalker),avoidLife_(avoidLife),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188) throw std::invalid_argument("다리 이동체 대피의 PATCH 풀/TYPE 오류");
 }

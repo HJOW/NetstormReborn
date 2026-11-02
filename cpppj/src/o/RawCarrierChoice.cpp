@@ -26,7 +26,7 @@ std::uint16_t TravelWord(RawPathPoint first,RawPathPoint second,float speed) {
 }
 // Player 기록과 슬롯 폭이 다른 CD의 후보 몸체를 PATCH로 대신 실행하지 않는다.
 RawCarrierChoice::RawCarrierChoice(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const std::uint8_t> players,
-    SquidPostPopList& returns,SquidPostPopList& geysers,const double& now,const bool& checking,
+    SquidPostPopList& returns,SquidPostPopList& geysers,const double& now,RawCheckingFlag checking,
     const RawBoardTarget& board,CarrierChoiceState& state,CarrierChoiceHooks hooks)
     :pool_(pool),types_(types),players_(players),returns_(returns),geysers_(geysers),now_(now),checking_(checking),board_(board),state_(state),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || players.size()!=9*0xb4) throw std::invalid_argument("운반 후보의 판본/TYPE/Player9 오류");

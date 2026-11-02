@@ -1,12 +1,13 @@
 // Dude의 이동 정지·지면 판정·도착과 population 삭제를 같은 현재 월드에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/SquidPostPop.h"
 #include <functional>
 
 namespace netstorm::o {
 // 원본의 현재 진단 모드와 생성/최초 Pop이 공유하는 population이다.
 struct DudeBehaviorState {
-    const bool& checking; // 005e4794의 현재 진단 모드이며 도착에서만 조건부로 읽는다.
+    RawCheckingFlag checking; // 005e4794의 현재 진단 모드이며 도착에서만 조건부로 읽는다.
     SquidPostPopList& population; // 0055a4f0/4/8의 실제 목록·capacity·count이며 stale 꼬리도 보존한다.
 };
 // 이미 복원한 실제 task/타입/내용물/공통 삭제 몸체를 공급한다.

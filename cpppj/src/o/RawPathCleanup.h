@@ -1,5 +1,6 @@
 // PathProcess 삭제 통지의 공간 접두 뒤 실제 예약·운반 nugget·신전 의식·건설 helper 정리를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawPathRuntime.h"
 #include "o/RawSquidFinder.h"
 #include <functional>
@@ -11,7 +12,7 @@ class RawConstructionPlace; // 기존 판본별 Refund를 재사용한다.
 class SquidProcessHost; // 같은 Kernel의 실제 SharedRegular 예약을 재사용한다.
 // 공간 접두 뒤에도 현재 값을 다시 읽는 cleanup 전역이다.
 struct PathCleanupState {
-    bool boss{true},checking{}; // 기존 ProcessHost와 같은 권한/패치 assert 상태다.
+    bool boss{true}; RawCheckingFlag checking{}; // 기존 ProcessHost와 같은 권한/패치 assert 상태다.
     std::uint32_t priestType{158},daisType{165},outpostType{126},nuggetType{154}; // 부모/근처 의식 장소/운반 반환 장소/contained kind의 현재 타입 번호다.
     std::uint32_t helperEvent{0x1a2c}; // 양판본 보조 건설물에 지연1을 요청하는 SharedRegular 이벤트 번호다.
 };

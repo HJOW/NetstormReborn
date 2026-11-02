@@ -1,5 +1,6 @@
 // 생산 목록 ContentForm의 정렬 부착·재부착·부모 알림을 원본 raw 저장소에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/SquidForms.h"
 #include "o/RawContainedCreate.h"
 
@@ -7,7 +8,7 @@ namespace netstorm::o {
 // 부모 가상 +0x24(form,reason)의 추가1/제거2 알림이다. 부모의 실제 생산/UI 효과를 연결한다.
 using ContentFormNotice=std::function<void(Sid parent,Sid form,std::uint32_t reason)>;
 // 실제 월드의 전투·강한 검사 전역이다. 부착 알림 뒤의 최신 값을 읽는다.
-struct ContentFormState { /* inBattle: 내부 전투 여부. */ /* checkingLinks: 검사 연결 여부. */ bool inBattle{},checkingLinks{}; };
+struct ContentFormState { /* inBattle: 내부 전투 여부. */ /* checkingLinks: 검사 연결 여부. */ bool inBattle{}; RawCheckingFlag checkingLinks{}; };
 // 사제를 워커/벌룬에 담은 전투 부착 뒤 포획 알림(004927f0/CD 0040df80)을 요청한다.
 // 두 번째 인자는 내용물 +12의 하위7비트에 저장된 이전 사제 소유자다.
 using ContentPriestNotice=std::function<void(Sid parent,std::uint32_t previousOwner)>;

@@ -1,5 +1,6 @@
 // 원본 공통 비행 Frame과 맨 오 워 초기화/애니메이션을 같은 raw 필드로 실행한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawFlyerProcess.h"
 #include "o/RawSunAviaryProcess.h"
 
@@ -8,7 +9,7 @@ namespace netstorm::o {
 struct FlyerFrameGlobals {
     const bool& server; // 00540bc0의 현재 서버다.
     const bool& boss; // 00540bc4의 삭제/권한이며 server와 구별한다.
-    const bool& checking; // 005e4794의 원본 진단이다.
+    RawCheckingFlag checking; // 005e4794의 원본 진단이다.
     const double& now; // 0055b4d0의 현재 게임 시각이다.
     const std::uint32_t& frame; // 0055b4a8의 현재 프레임 번호다.
     const std::uint32_t& sunType; // 0054117c의 현재 훨리기그73이다.

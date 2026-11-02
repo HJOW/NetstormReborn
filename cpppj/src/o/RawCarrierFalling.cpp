@@ -23,7 +23,7 @@ std::int32_t Cell(float value) {
     return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(adjusted)));
 }
 }
-RawCarrierFalling::RawCarrierFalling(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint16_t> surface,std::span<const std::uint8_t> players,const bool& boss,const bool& checking,const std::uint32_t& priestType,const std::int32_t& mapLimit,CarrierFallingHooks hooks)
+RawCarrierFalling::RawCarrierFalling(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint16_t> surface,std::span<const std::uint8_t> players,const bool& boss,RawCheckingFlag checking,const std::uint32_t& priestType,const std::int32_t& mapLimit,CarrierFallingHooks hooks)
     :pool_(pool),types_(types),frames_(frames),surface_(surface),players_(players),boss_(boss),checking_(checking),priestType_(priestType),mapLimit_(mapLimit),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=188 || surface.size()!=65536 || players.size()%0xb4) throw std::invalid_argument("캐리어 낙하 PATCH 자료 크기 오류");
 }

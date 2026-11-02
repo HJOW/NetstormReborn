@@ -1,5 +1,6 @@
 // GunProcess의 원본 0x38 필드·상태 기계·표적 종속·패킷을 실제 ProcessForm에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/SquidProcess.h"
 #include "o/Player.h"
 #include <array>
@@ -30,7 +31,7 @@ struct GunProcessState {
     // disabled: 비활성 출력 색 또는 동작 차단 상태.
     // friendlyFire: 아군 발사 여부.
     // checking: 검사 여부.
-    bool boss{true},server{true},fortMode{},fixedMode{},disabled{},friendlyFire{},checking{};
+    bool boss{true},server{true},fortMode{},fixedMode{},disabled{},friendlyFire{}; RawCheckingFlag checking{};
     // processType: 프로세스 타입.
     // windArcherType: 크로스보우 자산을 타입 표에서 찾는 번호.
     // thunderCannonType: 썬더 캐논 자산을 타입 표에서 찾는 번호.

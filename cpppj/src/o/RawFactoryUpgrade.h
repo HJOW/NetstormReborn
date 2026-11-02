@@ -1,5 +1,6 @@
 // Factory의 실제 event3 예측 그림·완료와 종속 그림 정리를 같은 월드에서 처리한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/SquidProcess.h"
 #include <string_view>
 
@@ -9,7 +10,7 @@ struct FactoryUpgradeState {
     const std::uint32_t& outpost; //00541250:완료를 생략하는 아웃포스트 TYPE다.
     const std::uint32_t& dependType; //00541074:현재 DependFinder 필터다.
     const std::uint32_t& localPlayer; //00540c70:완료 안내 소리의 현재 로컬 소유자다.
-    const bool& checking; //005e4794:dead 부모 finder 진단 선택이다.
+    RawCheckingFlag checking; //005e4794:dead 부모 finder 진단 선택이다.
     const bool& challenge; //00594fc8:dead 부모 finder 진단을 생략한다.
     const bool& boss; //00540bc4:dead 부모 finder 진단을 생략한다.
 };

@@ -2,6 +2,7 @@
 // Client 수명의 현재 Player/커서/검색/미션 전역과 짧은 실제 Runtime 대여를 구별한다.
 #pragma once
 #include "client/ClientCursorGlobals.h"
+#include "o/RawSidRobust.h" // 현재 SID 진단의 두 DWORD를 장기 소유한다.
 #include "client/ClientAiDebugGlobals.h" //메뉴/입력/Renderer와같은AI진단DWORD수명이다.
 #include "client/RawCursorDrop.h"
 #include "client/ClientUserSelectionGlobals.h"
@@ -82,6 +83,8 @@ public:
     const ClientCameraGlobals& Camera() const { return camera_; } // Session 재대여가 카메라를 재생성하지 않는다.
     ClientCursorGlobals& CursorGlobals() { return cursorGlobals_; } // 같은현재커서데이터를첫메뉴/Session이직접빌린다.
     const ClientCursorGlobals& CursorGlobals() const { return cursorGlobals_; } // 실행기소멸뒤에도dataowner주소는유지한다.
+    o::RawSidRobustDiagnostics& SidRobustDiagnostics() { return sidRobustDiagnostics_; } //005c8450/005c7c48의같은현재DWORD를실제Session진단이직접쓴다.
+    const o::RawSidRobustDiagnostics& SidRobustDiagnostics() const { return sidRobustDiagnostics_; } //Session교체뒤에도같은최근진단owner를읽는다.
     ClientAiDebugGlobals& AiDebug() { return aiDebug_; } // 같은7로그/현재checking의장기소유자다.
     const ClientAiDebugGlobals& AiDebug() const { return aiDebug_; } // 현재진단값을복제하지않는다.
     std::uint32_t ReadDebugWord(std::uint32_t address) const { // 안전한원문주소식별자만현재저장소에연결한다.
@@ -135,6 +138,7 @@ private:
     std::uint32_t mapRevision_{}; // 최초 BSS0이며 Session 대여/반납으로 초기화하지 않는 실제005949d4다.
     std::shared_ptr<o::TerrainBitmapState> terrainBitmaps_; // 최초 분류를 모든 편집 창/Session보다 오래 같은 주소에 소유한다.
     std::shared_ptr<o::TerrainStampState> terrainStamp_; // 초기 지면의 독립99cache이며 RegionPaint/미리보기의 캐시와 합치지 않는다.
+    o::RawSidRobustDiagnostics sidRobustDiagnostics_; // 두원문BSS DWORD를새Client에서한번만0으로만들며Session재생성으로초기화하지않는다.
     ClientAiDebugGlobals aiDebug_; // World/Session교체에서도유지하는현재진단전역이다.
     RawCampaignSession* current_{};bool borrowed_{}; // 게임 값의 대체가 아닌 현재 C++ Runtime 대여다.
 };

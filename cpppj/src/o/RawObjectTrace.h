@@ -1,5 +1,6 @@
 // 0044dab0의 가상 진단·모든 Form 재귀와 현재 들여쓰기 전역을 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 진단 checking은 같은 현재 전체 DWORD 뷰다.
 #include "o/SidPool.h"
 #include <functional>
 #include <string_view>
@@ -18,7 +19,7 @@ private:
 struct ObjectTraceGlobals {
     std::uint32_t& depth; // 0055a4a0의 현재 재귀 깊이이며 DWORD 덧셈/뺄셈을 보존한다.
     const std::uint32_t& count; // 005c847c의 현재 논리 끝 번호이며 슬롯 자체는 물리 풀로 검사한다.
-    ObjectTraceFlag checkingDead; // 005e4794: 같은 현재 진단 관문이며 지역 정수 사본을 쓰지 않는다.
+    RawCheckingFlag checkingDead; // 005e4794: 같은 현재 진단 관문이며 지역 정수 사본을 쓰지 않는다.
     ObjectTraceFlag metamap; // 00594fc8: 실제 현재 메타맵 관문이다.
     const bool& boss; // 00540bc4의 같은 실제 권한 값이며 false일 때 dead 진단을 요청한다.
 };

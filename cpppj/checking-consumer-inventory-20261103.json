@@ -1,0 +1,1484 @@
+{
+  "functions": 98,
+  "directReferences": 145,
+  "categories": {
+    "779-existing-gate": 41,
+    "775": 3,
+    "other-parent-gap": 43,
+    "specific-parent-gap": 6,
+    "mp-static": 2,
+    "thunk": 3
+  },
+  "items": [
+    {
+      "function": "FUN_0040f030 @ 0040f030",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawMissionAiSettings.h"
+      ],
+      "assertions": [
+        "\"abilityName[index]\",\"\\\\Ns\\\\O\\\\Ai.cpp\",0x8a)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: MissionAiSettings.checkingAsserts"
+    },
+    {
+      "function": "FUN_00412130 @ 00412130",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawAiCarrierActions.h",
+        "cpppj\\src\\o\\RawAiRuntime.h",
+        "cpppj\\src\\client\\RawCampaignSession.h"
+      ],
+      "assertions": [
+        "\"!s.isFree()\",\"\\\\Ns\\\\O\\\\Ai.cpp\",0xc04)",
+        "\"!( s.getGenus() & gPRIEST )\",\"\\\\Ns\\\\O\\\\Ai.cpp\",0xc0a)",
+        "&DAT_00501390,\"\\\\Ns\\\\O\\\\Ai.cpp\",0xaeb)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: AiCarrierActionGlobals.checking"
+    },
+    {
+      "function": "FUN_00413dd0 @ 00413dd0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\RawCampaignSession.cpp",
+        "cpppj\\src\\client\\RawObjectMenuVariants.h"
+      ],
+      "assertions": [],
+      "has_no_assert": true,
+      "unit779_status": "775",
+      "unit779_detail": "775 연결: 775 conditional AI menu"
+    },
+    {
+      "function": "FUN_004162e0 @ 004162e0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawAiDropActions.h",
+        "cpppj\\src\\o\\RawAiRuntime.h",
+        "cpppj\\src\\client\\RawCampaignSession.h"
+      ],
+      "assertions": [
+        "\"drop.value == 0\",\"\\\\Ns\\\\O\\\\Ai.cpp\",0xf8b)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: AiDropActionGlobals.checking"
+    },
+    {
+      "function": "FUN_00417bd0 @ 00417bd0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawAiBridgeStrategies.h",
+        "cpppj\\src\\o\\RawAiRuntime.h",
+        "cpppj\\src\\client\\ScrollGumpWidgets.h"
+      ],
+      "assertions": [
+        ")"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: AiBridgeStrategyGlobals.checking getter"
+    },
+    {
+      "function": "FUN_0041cdb0 @ 0041cdb0",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"angle < 361.0f\",\"\\\\Ns\\\\O\\\\Boardcoord.cpp\",0xb3)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0041db70 @ 0041db70",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawConstructionNotice.h",
+        "cpppj\\src\\o\\RawBoardApproach.h",
+        "cpppj\\src\\o\\RawBoardTarget.h"
+      ],
+      "assertions": [
+        "&DAT_0050161c,\"\\\\Ns\\\\O\\\\Boardcoord.cpp\",0x235)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_004214a0 @ 004214a0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawAssetPostPop.h",
+        "cpppj\\src\\o\\RawAssetRegular.h",
+        "cpppj\\src\\o\\RawBridgeEditor.h",
+        "cpppj\\src\\o\\RawBridgeConnect.h",
+        "cpppj\\src\\o\\RawBridgeEvents.h",
+        "cpppj\\src\\o\\RawBuildingSpace.h",
+        "cpppj\\src\\o\\RawConstructionPlace.h",
+        "cpppj\\src\\o\\RawPriestOwner.h",
+        "cpppj\\src\\o\\RawBridgeDecay.h",
+        "cpppj\\src\\o\\RawGunHit.h",
+        "cpppj\\src\\o\\RawDamageablePostDestroy.h",
+        "cpppj\\src\\o\\RawFenceCreate.h",
+        "cpppj\\src\\client\\RawCampaignSession.cpp"
+      ],
+      "assertions": [
+        "\"num >= 0 && num <= 7\",\"\\\\Ns\\\\O\\\\Bridge.cpp\",0xff)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: BuildingSpaceState.debug"
+    },
+    {
+      "function": "FUN_00421f90 @ 00421f90",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawBridgeLifecycle.h",
+        "cpppj\\src\\o\\RawIslandLifecycle.h"
+      ],
+      "assertions": [
+        "\"s.getGenus() & gBRIDGE\",\"\\\\Ns\\\\O\\\\Bridge.cpp\",0x323)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_004227e0 @ 004227e0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\Bridge.h",
+        "cpppj\\src\\o\\RawBridgeDecayScan.h",
+        "cpppj\\src\\o\\RawBridgeDecay.h"
+      ],
+      "assertions": [
+        "\"0 <= lowestTimeLeft && lowestTimeLeft <= brMAX_TIME_LEFT\",\"\\\\Ns\\\\O\\\\Bridge.cpp\", 0x268)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00423d50 @ 00423d50",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawBurningFrame.h"
+      ],
+      "assertions": [
+        "\"isSidRobust(burningSid)\",\".\\\\Burning.cpp\",0x6f)",
+        "\"*((long**)&s)!=0\",\".\\\\Burning.cpp\",0x77)",
+        "\"s.hasHitPoints()\",\".\\\\Burning.cpp\",0x7f)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00424110 @ 00424110",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawBurningSources.h"
+      ],
+      "assertions": [
+        "\"isSidRobust(burningSid)\",\".\\\\Burning.cpp\",0x91)",
+        "\"burningVictim.hasHitPoints()\",\".\\\\Burning.cpp\",0x98)",
+        "\"rowTaken[killRow] == 1\",\".\\\\Burning.cpp\",0xf7)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00424530 @ 00424530",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawBurningFrame.h"
+      ],
+      "assertions": [
+        "\"isSidRobust(burningSid)\",\".\\\\Burning.cpp\",0x11f)",
+        "\"s.hasHitPoints()\",\".\\\\Burning.cpp\",0x126)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00425860 @ 00425860",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\CanonDecoder.cpp",
+        "cpppj\\src\\o\\CanonDecoder.h",
+        "cpppj\\src\\client\\RawCursorPreviews.h",
+        "cpppj\\src\\client\\InventoryItemGump.h",
+        "cpppj\\src\\client\\RawCursorPlacement.h"
+      ],
+      "assertions": [
+        "\"0 <= frame && frame < ::getType(type)->numFrames\",\"\\\\Ns\\\\O\\\\Canondecoder.cpp\", 0x305)",
+        "\"frame == EMPTY_FRAME || !(typeStruct->frameInfo[frame].flags & FF_CRACKED)\", \"\\\\Ns\\\\O\\\\Canondecoder.cpp\",0x325)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00426c80 @ 00426c80",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawCarrierFalling.h",
+        "cpppj\\src\\o\\RawCarrierFallStart.h"
+      ],
+      "assertions": [
+        "&DAT_00502348,\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x3bf)",
+        "\"priestPos.isValid()\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x3d0)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: RawCarrierFalling.checking_"
+    },
+    {
+      "function": "FUN_004274b0 @ 004274b0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawCarrierArrival.h",
+        "cpppj\\src\\o\\RawCarrierChoice.h"
+      ],
+      "assertions": [
+        "\"canProcessStormpower( sp.getTypeStruct() )\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x599)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: RawCarrierChoice.checking_"
+    },
+    {
+      "function": "FUN_00427d30 @ 00427d30",
+      "direct_references": 2,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawCarrierEscape.h",
+        "cpppj\\src\\o\\RawPathRuntime.cpp"
+      ],
+      "assertions": [
+        "\"0 <= p->moveAwayDepth\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x87b)",
+        "\"p->moveAwayDepth <= MAX_MOVE_AWAY_DEPTH\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x87c)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: RawCarrierEscape.checking_"
+    },
+    {
+      "function": "FUN_00427e00 @ 00427e00",
+      "direct_references": 2,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawFortMetaLoad.h",
+        "cpppj\\src\\o\\RawBridgeCarriers.h",
+        "cpppj\\src\\o\\Template.cpp"
+      ],
+      "assertions": [
+        "\"wontWalkOffEdge( getType() )\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x893)",
+        "\"result\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x8b0)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: RawBridgeCarriers.checking_"
+    },
+    {
+      "function": "FUN_004280a0 @ 004280a0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawCarrierChoice.h"
+      ],
+      "assertions": [
+        "\"!s.isSurface()\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0xace)",
+        "\"i < nVert\",\"c:\\\\ns\\\\o\\\\path.h\",0x24)",
+        "\"count == total\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0xb03)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: RawCarrierChoice.checking_"
+    },
+    {
+      "function": "FUN_00429800 @ 00429800",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawCarrierArrival.h",
+        "cpppj\\src\\o\\RawCarrierMining.h",
+        "cpppj\\src\\client\\RawCampaignMotionBindings.cpp",
+        "cpppj\\src\\client\\RawCampaignPathBindings.h"
+      ],
+      "assertions": [
+        "\"isCarrier()\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x6ca)",
+        "\"isRobust()\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x79c)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: CarrierArrivalState.debug"
+    },
+    {
+      "function": "FUN_0042a360 @ 0042a360",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\RawCarrierInput.h",
+        "cpppj\\src\\client\\RawMinimapControls.h",
+        "cpppj\\src\\client\\GameWorld.cpp"
+      ],
+      "assertions": [
+        "&DAT_0050161c,\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x179)",
+        "\"daisSid\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x153)",
+        "\"carrier.getGenus() & gPRIEST\",\"\\\\Ns\\\\O\\\\Carrier.cpp\",0x15a)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: CarrierInputHooks.checking getter"
+    },
+    {
+      "function": "FUN_0042bc10 @ 0042bc10",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"0 < pId && pId < CL_NUM_CHAL_PLAYERS\",\"\\\\Ns\\\\O\\\\Ch.cpp\",0x499)",
+        "\"p->isValid()\",\"\\\\Ns\\\\O\\\\Ch.cpp\",0x4a1)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00435220 @ 00435220",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawStateWorldCleanup.h",
+        "cpppj\\src\\client\\ClientMain.cpp",
+        "cpppj\\src\\client\\ClientMain.h",
+        "cpppj\\src\\client\\LanguageOptions.cpp",
+        "cpppj\\src\\client\\ClientAudio.h"
+      ],
+      "assertions": [],
+      "has_no_assert": true,
+      "unit779_status": "775",
+      "unit779_detail": "775 연결: 775 ReadInt(showSoftAsserts) writer"
+    },
+    {
+      "function": "FUN_004428c0 @ 004428c0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawConstructionProcess.h"
+      ],
+      "assertions": [
+        "\"getForm().isRobust()\",\"\\\\Ns\\\\O\\\\Construction.cpp\",0x1c4)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00444080 @ 00444080",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawConstructionArrival.h"
+      ],
+      "assertions": [],
+      "has_no_assert": true,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: ConstructionArrivalState.checking"
+    },
+    {
+      "function": "FUN_00444bc0 @ 00444bc0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawCarrierDrop.h",
+        "cpppj\\src\\client\\RawCampaignCarrierDrop.inc"
+      ],
+      "assertions": [
+        "\"server\")",
+        "\"contentType > 0 && contentType < numTypes\")"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: CarrierDropState.checking"
+    },
+    {
+      "function": "FUN_00446e70 @ 00446e70",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawStateWorldCleanup.h",
+        "cpppj\\src\\o\\RawStateWorldCleanup.cpp",
+        "cpppj\\src\\o\\RawProductionSync.h",
+        "cpppj\\src\\client\\RawCampaignSession.h",
+        "cpppj\\src\\client\\UberGump.cpp",
+        "cpppj\\src\\client\\RawKnowledgeMenu.h",
+        "cpppj\\src\\client\\RawCursorLifecycle.h",
+        "cpppj\\src\\client\\InventoryGump.h",
+        "cpppj\\src\\client\\GameMenuActions.h",
+        "cpppj\\src\\client\\RawCampaignCursor.h",
+        "cpppj\\src\\client\\ClientCursorStateCleanup.h",
+        "cpppj\\src\\client\\ClientStateWorldCleanup.cpp"
+      ],
+      "assertions": [
+        "\"false\",\".\\\\Cursor.cpp\",0x3f1)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00448500 @ 00448500",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\RawCampaignRitual.inc"
+      ],
+      "assertions": [
+        "\"altar.isValid()\",\".\\\\Dais.cpp\",0x3cb)",
+        "\"!altar.isInvisibleFrame() && !altar.isSacrifice()\",\".\\\\Dais.cpp\",0x3cc)",
+        "&DAT_00502348,\".\\\\Dais.cpp\",0x3cd)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: DaisRegularState.debug"
+    },
+    {
+      "function": "FUN_004487e0 @ 004487e0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawAiCarrierActions.h"
+      ],
+      "assertions": [
+        "\"dais.isValid() && dais.getGenus() & gDAIS\",\".\\\\Dais.cpp\",0x404)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: DaisApproachPoint checking view"
+    },
+    {
+      "function": "FUN_00448bd0 @ 00448bd0",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"!isInvisibleFrame() && !isSacrifice()\",\".\\\\Dais.cpp\",0x578)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00448e00 @ 00448e00",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "&DAT_0050161c,\".\\\\Dais.cpp\",0x479)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: ForcefieldRegularState.debug"
+    },
+    {
+      "function": "FUN_00449710 @ 00449710",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawPriestSacrificeRequest.cpp"
+      ],
+      "assertions": [
+        "\"priest.getGenus() & gPRIEST\",\".\\\\Dais.cpp\",0x140)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00449900 @ 00449900",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawPathRuntime.cpp"
+      ],
+      "assertions": [
+        "&DAT_005078ac,\".\\\\Dais.cpp\",0x18e)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0044b2e0 @ 0044b2e0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawDamageableRelease.h",
+        "cpppj\\src\\o\\RawPriestSpawn.h"
+      ],
+      "assertions": [
+        "&DAT_0050161c,\"\\\\Ns\\\\O\\\\Damageable.cpp\",0x62)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: PriestSpawnState.checkingPlacement"
+    },
+    {
+      "function": "FUN_0044c060 @ 0044c060",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawPriestRegen.h",
+        "cpppj\\src\\o\\RawDamageableBurning.h",
+        "cpppj\\src\\o\\RawPriestDamage.h",
+        "cpppj\\src\\client\\RawPriestWorldBindings.h"
+      ],
+      "assertions": [
+        "\"findProcess (mySid, burningSystemProcessType, 1 ) == 0\", \"\\\\Ns\\\\O\\\\Damageable.cpp\",0x210)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0044c420 @ 0044c420",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawSalvageCommand.h",
+        "cpppj\\src\\o\\RawAiPriestActions.h",
+        "cpppj\\src\\client\\RawCampaignSession.h"
+      ],
+      "assertions": [
+        "\"getType( altarType )->cost == getType( daisType )->cost\", \"\\\\Ns\\\\O\\\\Damageable.cpp\",0x295)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: SalvageCommandState.checking"
+    },
+    {
+      "function": "FUN_00450960 @ 00450960",
+      "direct_references": 2,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawDudeBehavior.h",
+        "cpppj\\src\\client\\RawCampaignSession.cpp"
+      ],
+      "assertions": [
+        "&DAT_0050161c,\".\\\\Dude.cpp\",0x153)",
+        "&DAT_0050161c,\".\\\\Dude.cpp\",0x157)",
+        "&DAT_0050161c,\".\\\\Dude.cpp\",0x15b)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: DudeBehaviorState.checking"
+    },
+    {
+      "function": "FUN_00450fa0 @ 00450fa0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawDudeRegular.h",
+        "cpppj\\src\\o\\RawDudeRegular.cpp",
+        "cpppj\\src\\client\\RawCampaignSession.cpp"
+      ],
+      "assertions": [
+        "&DAT_0050161c,\".\\\\Dude.cpp\",399)",
+        "&DAT_0050161c,\".\\\\Dude.cpp\",0x179)",
+        "&DAT_0050161c,\".\\\\Dude.cpp\",0x185)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: DudeRegularState.checking"
+    },
+    {
+      "function": "FUN_00451270 @ 00451270",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawDudeRegular.h",
+        "cpppj\\src\\client\\MenuGumpControls.h"
+      ],
+      "assertions": [
+        "\"walkSid\",\".\\\\Dude.cpp\",0x127)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: DudeRegularState.checking"
+    },
+    {
+      "function": "FUN_00453d70 @ 00453d70",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawFactoryResearch.h",
+        "cpppj\\src\\o\\RawFactoryUpgradeCommand.h"
+      ],
+      "assertions": [
+        "\"factory.getGenus() & gFACTORY\",\".\\\\Factory.cpp\",0x1a2)",
+        "&DAT_00502348,\".\\\\Factory.cpp\",0x199), DAT_00540bc4 == 0)) { ExceptionList = local_c"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: FactoryUpgradeCommandState.checking"
+    },
+    {
+      "function": "FUN_00457890 @ 00457890",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawBombEffectTimer.h"
+      ],
+      "assertions": [
+        "\"fence.getType() == sunFenceType\",\"\\\\Ns\\\\O\\\\Fence.cpp\",0x60f)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00457e20 @ 00457e20",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawBombStatus.h"
+      ],
+      "assertions": [
+        "\"fence.getType() == sunFenceType\",\"\\\\Ns\\\\O\\\\Fence.cpp\",0x602)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0045ba10 @ 0045ba10",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawFlyerTarget.h"
+      ],
+      "assertions": [
+        "\"myDependOnTargetSid\",\"\\\\Ns\\\\O\\\\Flyer.cpp\",0x374)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: FlyerTargetGlobals.checking"
+    },
+    {
+      "function": "FUN_0045c100 @ 0045c100",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawAiDamage.cpp",
+        "cpppj\\src\\o\\RawAiDamage.h"
+      ],
+      "assertions": [
+        "\"flyer.getGenus() & gFLYER\",\"\\\\Ns\\\\O\\\\Flyer.cpp\",0x8ee)",
+        "\"processSid\",\"\\\\Ns\\\\O\\\\Flyer.cpp\",0x8f5)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0045c9d0 @ 0045c9d0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawFlyerFrame.h",
+        "cpppj\\src\\o\\RawFlyerProcess.h",
+        "cpppj\\src\\o\\RawSunFlyerFrame.h"
+      ],
+      "assertions": [
+        ")",
+        ")",
+        ")",
+        ")",
+        ")",
+        ")",
+        ")",
+        ")",
+        ")"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: FlyerFrameGlobals.checking"
+    },
+    {
+      "function": "FUN_0045d8c0 @ 0045d8c0",
+      "direct_references": 5,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawSunAviaryProcess.h"
+      ],
+      "assertions": [
+        "\"s.getTypeStruct()->frameCheck( s.isAbstract(), frame+1, true )\", \"\\\\Ns\\\\O\\\\Flyer.cpp\",0x724)",
+        "\"s.getTypeStruct()->frameCheck( s.isAbstract(), frame-1, true )\", \"\\\\Ns\\\\O\\\\Flyer.cpp\",0x751)",
+        "\"AP_START <= getState() && getState() <= AP_WAITING_TO_BUILD\", \"\\\\Ns\\\\O\\\\Flyer.cpp\",0x75e)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: SunAviaryProcessGlobals.checking"
+    },
+    {
+      "function": "FUN_0045dde0 @ 0045dde0",
+      "direct_references": 3,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawRainAviaryProcess.h"
+      ],
+      "assertions": [
+        "\"s.getTypeStruct()->frameCheck( s.isAbstract(), frame+1, true )\", \"\\\\Ns\\\\O\\\\Flyer.cpp\",0x7fa)",
+        "\"AP_START <= getState() && getState() <= AP_WAITING_TO_BUILD\", \"\\\\Ns\\\\O\\\\Flyer.cpp\",0x820)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: RainAviaryProcessGlobals.checking"
+    },
+    {
+      "function": "FUN_0045f0a0 @ 0045f0a0",
+      "direct_references": 5,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawWindAviaryProcess.h"
+      ],
+      "assertions": [
+        "\"s.getTypeStruct()->frameCheck( s.isAbstract(), newFrame, true )\", \"\\\\Ns\\\\O\\\\Flyer.cpp\",0x884)",
+        "\"s.getTypeStruct()->frameCheck( s.isAbstract(), frame, true )\", \"\\\\Ns\\\\O\\\\Flyer.cpp\",0x8a6)",
+        "\"AP_START <= getState() && getState() <= 13\",\"\\\\Ns\\\\O\\\\Flyer.cpp\",0x8da)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: WindAviaryGlobals.checking"
+    },
+    {
+      "function": "FUN_00462a50 @ 00462a50",
+      "direct_references": 2,
+      "source_mentions": [
+        "cpppj\\src\\o\\Graph.h"
+      ],
+      "assertions": [
+        "\"inUse\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x59)",
+        "\"numSurfaces > 0\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x5a)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00462ac0 @ 00462ac0",
+      "direct_references": 2,
+      "source_mentions": [],
+      "assertions": [
+        "\"graphs[INVALID_GRAPH].numSurfaces == 0x7DFD\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x68)",
+        "\"graphs[INVALID_GRAPH].inUse == 0x7DFD\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x69)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00462bc0 @ 00462bc0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawPlayerPlacementAnchor.h",
+        "cpppj\\src\\o\\RawBridgeCarriers.h",
+        "cpppj\\src\\o\\RawTutorialOne.h",
+        "cpppj\\src\\o\\RawTutorialLater.h",
+        "cpppj\\src\\o\\RawCarrierChoice.h",
+        "cpppj\\src\\o\\RawAiPreparation.h",
+        "cpppj\\src\\o\\RawAiResourceChoice.h",
+        "cpppj\\src\\o\\RawAiCarrierActions.h",
+        "cpppj\\src\\o\\RawAiBridgePlanning.h",
+        "cpppj\\src\\o\\RawAiBridgeStrategies.h"
+      ],
+      "assertions": [
+        "\"mySid\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x93)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00462f10 @ 00462f10",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\Graph.h"
+      ],
+      "assertions": [
+        "\"cFinder.s().getSid() != sid\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x176)",
+        "\"d < FLOOD_STACK_SIZE\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x17a)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_004633c0 @ 004633c0",
+      "direct_references": 5,
+      "source_mentions": [
+        "cpppj\\src\\o\\Graph.h"
+      ],
+      "assertions": [
+        "\"pos.isValid()\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0xbd)",
+        "\"!s.isVoid() && !s.isDead() && !s.isFree()\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0xc2)",
+        "\"g->inUse == true\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0xf3)",
+        "\"biggestConnection >= 0 && biggestConnection < MAX_GRAPHS\", \"\\\\Ns\\\\O\\\\Graph.cpp\",0xfb)",
+        "\"g->inUse == true\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x100)",
+        "\"loser->numSurfaces <= biggestSize\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x113)",
+        "\"numFlooded == numConnections - 1\",\"\\\\Ns\\\\O\\\\Graph.cpp\",0x11f)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00464420 @ 00464420",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\ChatWindow.h",
+        "cpppj\\src\\client\\TextEntryGump.h",
+        "cpppj\\src\\client\\BackgroundGifGump.h",
+        "cpppj\\src\\client\\HtmlWindowGump.h"
+      ],
+      "assertions": [
+        "\"flags & GF_DESTROYING\",\".\\\\Gump.cpp\",0x1e1)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_004653c0 @ 004653c0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\HudDock.h"
+      ],
+      "assertions": [
+        "\"found!=-1\",\".\\\\Gump.cpp\",0x4f4)",
+        "\"found==-1 && free!=-1\",\".\\\\Gump.cpp\",0x4ef)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00466750 @ 00466750",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\MoveDialog.h",
+        "cpppj\\src\\client\\RawButtonControls.cpp",
+        "cpppj\\src\\client\\GumpFormBinding.h",
+        "cpppj\\src\\client\\GumpTree.h",
+        "cpppj\\src\\client\\MenuGumpInput.h",
+        "cpppj\\src\\client\\MenuGumpWidgets.h",
+        "cpppj\\src\\client\\ScrollGump.h",
+        "cpppj\\src\\client\\ScrollingTextGumpWidgets.h",
+        "cpppj\\src\\client\\StoneButtonGump.h",
+        "cpppj\\src\\client\\HudChatGeometry.h",
+        "cpppj\\src\\client\\HudDock.h",
+        "cpppj\\src\\client\\HudNsInfo.h",
+        "cpppj\\src\\client\\HudNsInfoCreate.h",
+        "cpppj\\src\\client\\TextEntryGump.h",
+        "cpppj\\src\\client\\RawProductionControls.cpp"
+      ],
+      "assertions": [
+        "\"parent\",\".\\\\Gump.cpp\",0x24d)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00467610 @ 00467610",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawGunAngle.h",
+        "cpppj\\src\\client\\RawCampaignSession.cpp"
+      ],
+      "assertions": [
+        "\"0 <= index && index < 20\",\"\\\\Ns\\\\O\\\\Gunanim.cpp\",0x387)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0046a340 @ 0046a340",
+      "direct_references": 3,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawGunProcess.h"
+      ],
+      "assertions": [
+        "\"getAnimFormSid() != 0\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x154)",
+        "\"getAnimFormSid() != 0\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x160)",
+        "\"false\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x16a)",
+        "\"info2 == getTargetSid()\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x16e)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0046a520 @ 0046a520",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"checkForms()\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x347)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0046a600 @ 0046a600",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"checkForms()\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x361)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0046a810 @ 0046a810",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"inFortMode || ( !(popFlags &( pfDONT_TRANSMIT|pfCLIENT_POP)) && !isClientSid() )\", \"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x3c8)",
+        "\"checkForms()\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x3c9)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0046ac00 @ 0046ac00",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawGunTarget.h"
+      ],
+      "assertions": [
+        ")"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: GunTargetState.checking"
+    },
+    {
+      "function": "FUN_0046aca0 @ 0046aca0",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"duringLoad || !(popFlags &( pfDONT_TRANSMIT|pfCLIENT_POP)) && !isClientSid()\", \"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x32a)",
+        "\"checkForms()\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x32b)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0046b830 @ 0046b830",
+      "direct_references": 9,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawGunProcess.h"
+      ],
+      "assertions": [
+        "\"getGroup() == parent.getGroup()\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x68)",
+        "\"!parent.isAbstract()\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x69)",
+        "\"!parent.isAstral()\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x6a)",
+        "\"getAnimFormSid() == 0\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x83)",
+        "\"getTargetSid() == 0\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x84)",
+        "\"getTargetSid() == 0\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0x97)",
+        "\"badNoIslandFinder.s().getPlayerId() == parent.getPlayerId()\", \"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0xad)",
+        "\"getAnimFormSid() == 0\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0xbc)",
+        "\"getAnimFormSid() == 0\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0xd4)",
+        "\"getAnimFormSid() == 0\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0xe3)",
+        "\"getAnimFormSid() == 0\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0xea)",
+        "\"false\",\"\\\\Ns\\\\O\\\\Gunprocess.cpp\",0xef)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: GunProcessState.checking / noIsland owner parent"
+    },
+    {
+      "function": "FUN_0046bd20 @ 0046bd20",
+      "direct_references": 2,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawGunProcess.h"
+      ],
+      "assertions": [
+        ")",
+        ")"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: GunProcessState.checking / 004ad730 parent"
+    },
+    {
+      "function": "FUN_00471650 @ 00471650",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\PaletteFlash.h",
+        "cpppj\\src\\client\\ThunderProcess.h"
+      ],
+      "assertions": [
+        "\"0 <= step <= 64\",\".\\\\Kencloud.cpp\",0x29e)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00472f70 @ 00472f70",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"!alreadyThere\",\"\\\\Ns\\\\O\\\\Mana.cpp\",0x44)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00482340 @ 00482340",
+      "direct_references": 2,
+      "source_mentions": [],
+      "assertions": [
+        "\"isRobust(firingSid)\",\".\\\\Missile.cpp\",0x1ee)",
+        "\"isRobust(firingSid)\",\".\\\\Missile.cpp\",0x2a0)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_00489ff0 @ 00489ff0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawPathRetarget.h",
+        "cpppj\\src\\o\\RawBalloonFrame.h",
+        "cpppj\\src\\o\\RawBulfFrame.h",
+        "cpppj\\src\\o\\RawPathProcess.h",
+        "cpppj\\src\\client\\RawCampaignSession.cpp"
+      ],
+      "assertions": [
+        "\"result == haltALREADY_DEAD\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x2d5)",
+        "\"!deadFlag\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x2f2)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0048aa00 @ 0048aa00",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawPathCleanup.h",
+        "cpppj\\src\\o\\RawPathProcess.h"
+      ],
+      "assertions": [
+        "\"shouldDestroy\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x437)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: PathCleanupState.checking"
+    },
+    {
+      "function": "FUN_0048b340 @ 0048b340",
+      "direct_references": 5,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawBalloonFrame.h",
+        "cpppj\\src\\o\\RawBulfFrame.h",
+        "cpppj\\src\\o\\RawPathProcess.h",
+        "cpppj\\src\\o\\RawWalkerFrame.h"
+      ],
+      "assertions": [
+        "\"walker.isValid() && !walker.isDead() && !walker.isFree()\", \"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x25c)",
+        "\"isRobust()\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x265)",
+        "\"isRobust()\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x284)",
+        "\"!walker.isDead() && !walker.isFree()\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x286)",
+        "\"!deadFlag\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x289)",
+        "\"returnCode == pathKILL || returnCode == pathALREADY_DEAD || returnCode == pathLINGER\" ,\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x28d)",
+        "\"isRobust()\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x29f)",
+        "\"isRobust()\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x2a4)",
+        "\"returnCode == pathALREADY_DEAD\",\"\\\\Ns\\\\O\\\\Pathprocess.cpp\",0x290)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_0048fb30 @ 0048fb30",
+      "direct_references": 2,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawMissionClientPackets.h",
+        "cpppj\\src\\o\\RawMissionLogin.cpp"
+      ],
+      "assertions": [
+        "\"getPlayer(playerId)->subscriberId == cachedCoreData[playerId].subId\", \"\\\\Ns\\\\O\\\\Player.cpp\",0x224)",
+        "\"getPlayer(playerId)->subscriberId == cachedCoreData[playerId].subId\", \"\\\\Ns\\\\O\\\\Player.cpp\",0x21f)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "specific-parent-gap",
+      "unit779_detail": "별도 부모 후속: MissionClientPackets는SP/MP공통수신이다.기존수신부모의checking관문은정적으로후속대조하고신규MP검사는하지않음"
+    },
+    {
+      "function": "FUN_004977f0 @ 004977f0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\RawCameraCommit.h",
+        "cpppj\\src\\client\\RawCameraCommit.cpp",
+        "cpppj\\src\\client\\RawRendererPrelude.h",
+        "cpppj\\src\\client\\RawRendererClouds.h",
+        "cpppj\\src\\client\\ClientRendererFrameGlobals.h"
+      ],
+      "assertions": [
+        "\"cloudDirtyRectCount < NUM_CLOUD_DIRTY_RECT\",\".\\\\Renderer.cpp\",0x40c)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "775",
+      "unit779_detail": "775 연결: 775 Renderer cloud dirty 관문"
+    },
+    {
+      "function": "FUN_0049fce0 @ 0049fce0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\SquidReward.h",
+        "cpppj\\src\\o\\RawIslandPopulation.h",
+        "cpppj\\src\\client\\QuickHelpHtml.h"
+      ],
+      "assertions": [
+        "\"(typeFlags & TYPE_FLAG_HAS_HIT_POINTS) != 0 || getNum() == daisType\", \"\\\\Ns\\\\O\\\\Rifttype.cpp\",0x1e3)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: SquidRewardState.debugAsserts"
+    },
+    {
+      "function": "FUN_004a7510 @ 004a7510",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        ")"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_004ab070 @ 004ab070",
+      "direct_references": 3,
+      "source_mentions": [
+        "cpppj\\src\\client\\SoundProcess.cpp",
+        "cpppj\\src\\client\\SoundProcess.h"
+      ],
+      "assertions": [
+        "\"isRobust( 1 )\",\".\\\\Soundprocess.cpp\",0x1b)",
+        "\"playOnce || !playPriority\",\".\\\\Soundprocess.cpp\",0x35)",
+        "\"playOnce || playAt\",\".\\\\Soundprocess.cpp\",0x36)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: SoundProcessState.debug"
+    },
+    {
+      "function": "FUN_004ac140 @ 004ac140",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawFlyerFrame.h",
+        "cpppj\\src\\o\\RawSunFlyerFrame.h",
+        "cpppj\\src\\o\\RawSunFlyerFrame.cpp",
+        "cpppj\\src\\client\\RawCampaignSession.cpp"
+      ],
+      "assertions": [
+        "\"resolve( sid ).isRobust()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x218)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: RawIsSidRobust / RawSquidIsRobust 부모"
+    },
+    {
+      "function": "FUN_004ad500 @ 004ad500",
+      "direct_references": 3,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawBombStatus.h",
+        "cpppj\\src\\o\\SquidDisplay.cpp",
+        "cpppj\\src\\o\\SelectionVtables.inc",
+        "cpppj\\src\\o\\RawBombEffectTimer.h"
+      ],
+      "assertions": [
+        "\"getTypeStruct()->frameCheck( isAbstract(), theFrame, true )\",\"\\\\Ns\\\\O\\\\Squid.cpp\", 0x846)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_004add10 @ 004add10",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\CampaignDamageVtables.inc",
+        "cpppj\\src\\o\\RawDamageableHit.cpp",
+        "cpppj\\src\\o\\RawDamageableHit.h"
+      ],
+      "assertions": [
+        "\"!isDead()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x9b1)",
+        "\"false\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x9bd)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: DamageableHitState.checking"
+    },
+    {
+      "function": "FUN_004aec10 @ 004aec10",
+      "direct_references": 2,
+      "source_mentions": [
+        "cpppj\\src\\o\\ContentFormHost.h"
+      ],
+      "assertions": [
+        "\"!into.isDead() && !into.isFree()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0xbe6)",
+        "\"!isDead() && !isFree()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0xbe7)",
+        "\"isValid()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0xc2b)",
+        "\"isRobust()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0xc2c)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "specific-parent-gap",
+      "unit779_detail": "별도 부모 후속: ContentFormState.checkingLinks view는준비했으나실제Session은state=nullptr이며inBattle/포획통지부모연결이먼저필요함"
+    },
+    {
+      "function": "FUN_004afe50 @ 004afe50",
+      "direct_references": 2,
+      "source_mentions": [
+        "cpppj\\src\\o\\SquidSpatial.h",
+        "cpppj\\src\\o\\SquidUnpop.h"
+      ],
+      "assertions": [
+        "\"!isForm()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x5d8)",
+        "\"!isContained()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x5d9)",
+        "\"isValid()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x5e0)",
+        "\"(flags & effectiveGenus) == ( unsigned char)effectiveGenus\", \"\\\\Ns\\\\O\\\\Squid.cpp\",0x617)",
+        "\"getGridSid( (float)fx, (float)fy) == getSid()\",\"\\\\Ns\\\\O\\\\Squid.cpp\", 0x629)",
+        "\"found\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x65d)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_004b02d0 @ 004b02d0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\SquidPop.h",
+        "cpppj\\src\\o\\SquidSpatial.h",
+        "cpppj\\src\\client\\RawSurfaceWorld.cpp"
+      ],
+      "assertions": [
+        "\"start.isValid()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x6b7)",
+        "\"false\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x6e8)",
+        "\"!isContained()\",\"\\\\Ns\\\\O\\\\Squid.cpp\",0x71a)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_004b2270 @ 004b2270",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawFortContentSave.h",
+        "cpppj\\src\\o\\RawPlayerCoreRefresh.h",
+        "cpppj\\src\\o\\RawContainedFinder.h",
+        "cpppj\\src\\o\\RawProductionSync.cpp",
+        "cpppj\\src\\o\\RawAiStrategySetup.h"
+      ],
+      "assertions": [
+        "\"!p.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy\", \"\\\\Ns\\\\O\\\\Squidfinder.cpp\",0x13c)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: ContainedFinderState.checkingDead"
+    },
+    {
+      "function": "FUN_004b22d0 @ 004b22d0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawObjectTrace.h",
+        "cpppj\\src\\o\\RawProcessRemoval.cpp",
+        "cpppj\\src\\o\\RawFactoryUpgrade.h",
+        "cpppj\\src\\o\\RawGunGroundTarget.h"
+      ],
+      "assertions": [
+        "\"inMetamapMode || !cont.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy\" ,\"\\\\Ns\\\\O\\\\Squidfinder.cpp\",0x158)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: ObjectTraceGlobals/FactoryUpgrade/GunGroundTarget checking"
+    },
+    {
+      "function": "FUN_004b4df0 @ 004b4df0",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"currState.state == S_META_CHAL_CONNECTED || currState.state == S_META_CHAL_CONNECTED_MONITOR\" ,\".\\\\State.cpp\",0xdef)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "mp-static",
+      "unit779_detail": "후순위 MP 전용 연결 상태 진단: meta connected/monitor 상태 관문을 원문대로 사전 구현할 범위, 신규 MP 검증0"
+    },
+    {
+      "function": "FUN_004b54e0 @ 004b54e0",
+      "direct_references": 2,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawMissionClientPackets.h",
+        "cpppj\\src\\o\\RawMissionLoginTimer.h"
+      ],
+      "assertions": [
+        "\"!(strchr(curFort,\\'.\\'))\",\".\\\\State.cpp\",0xf79)",
+        "\"serverCount <= 1\",\".\\\\State.cpp\",0xfa3)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "specific-parent-gap",
+      "unit779_detail": "별도 부모 후속: Begin getter는779공유하지만Update의파일명/count checking진단2개는별도누락"
+    },
+    {
+      "function": "FUN_004b61f0 @ 004b61f0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawMissionLoginTimer.h"
+      ],
+      "assertions": [
+        "\"server\",\".\\\\State.cpp\",0x1153)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: MissionLoginTimerReads.checkingAssertions getter"
+    },
+    {
+      "function": "FUN_004b8b20 @ 004b8b20",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"currState.state == S_META_CHAL_CONNECTED || currState.state == S_META_CHAL_CONNECTED_MONITOR\" ,\".\\\\State.cpp\",0xe39)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "mp-static",
+      "unit779_detail": "후순위 MP 전용 연결 상태 진단: meta connected/monitor 상태 관문을 원문대로 사전 구현할 범위, 신규 MP 검증0"
+    },
+    {
+      "function": "FUN_004b8cb0 @ 004b8cb0",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\ClientLocalStateGlobals.h"
+      ],
+      "assertions": [
+        "\"!reloadFile\",\".\\\\State.cpp\",0xf24)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "specific-parent-gap",
+      "unit779_detail": "별도 부모 후속: ClientLocalStateGlobals의전환진단:state부모의현재값재조회/재진입을후속복원"
+    },
+    {
+      "function": "FUN_004bd130 @ 004bd130",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawFortMetaLoad.h",
+        "cpppj\\src\\o\\RawFortContentsLoad.h",
+        "cpppj\\src\\o\\RawFortObjectLoad.h",
+        "cpppj\\src\\o\\Template.cpp",
+        "cpppj\\src\\o\\Template.h",
+        "cpppj\\src\\o\\RawFortObjectStream.h"
+      ],
+      "assertions": [
+        "\"typeConversion[type] > 0\",\"\\\\Ns\\\\O\\\\Template.cpp\",0x79)",
+        "\"pos<=end\",\"c:\\\\ns\\\\o\\\\memstream.h\",0x2e)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: FortContentsLoadGlobals.checking getter"
+    },
+    {
+      "function": "FUN_004bdc60 @ 004bdc60",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\o\\RawFortObjectLoad.h",
+        "cpppj\\src\\o\\Template.cpp",
+        "cpppj\\src\\o\\Template.h",
+        "cpppj\\src\\o\\RawFortObjectStream.cpp"
+      ],
+      "assertions": [
+        "\"typeConversion[type] > 0\",\"\\\\Ns\\\\O\\\\Template.cpp\",0x79)",
+        "\"num == 0\",\"\\\\Ns\\\\O\\\\Template.cpp\",0x2e8)",
+        "&DAT_0050161c,\"\\\\Ns\\\\O\\\\Template.cpp\",0x334)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "779-existing-gate",
+      "unit779_detail": "779 현재 gate owner 연결 준비: FortObjectStreamHooks.checking getter"
+    },
+    {
+      "function": "FUN_004c0e20 @ 004c0e20",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "&DAT_0050161c,\"\\\\Ns\\\\O\\\\Terrainbuilder.cpp\",0x25f)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "FUN_004c9350 @ 004c9350",
+      "direct_references": 1,
+      "source_mentions": [
+        "cpppj\\src\\client\\RawMenuSaveFort.inc",
+        "cpppj\\src\\client\\SendMoneyInput.h"
+      ],
+      "assertions": [
+        "\"inSingle\",\".\\\\Ui.cpp\")"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "specific-parent-gap",
+      "unit779_detail": "별도 부모 후속: SendMoneyInput/SaveFort공통부모checking진단은Session진단뷰와별개이며후속일반입력범위"
+    },
+    {
+      "function": "thunk_FUN_00464420 @ 004d0110",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [
+        "\"flags & GF_DESTROYING\",\".\\\\Gump.cpp\",0x1e1)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "thunk",
+      "unit779_detail": "별도 thunk 중복: 같은 원본 몸체의 분류를 따름"
+    },
+    {
+      "function": "FUN_004d62b0 @ 004d62b0",
+      "direct_references": 3,
+      "source_mentions": [
+        "cpppj\\src\\client\\ClientMain.cpp",
+        "cpppj\\src\\client\\GameMenuActions.h"
+      ],
+      "assertions": [
+        ")",
+        ")",
+        ")",
+        ")",
+        ")",
+        ")",
+        ")",
+        ")",
+        ")",
+        ")"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "specific-parent-gap",
+      "unit779_detail": "별도 부모 후속: 775는AI일반명령만복원.기존Guide/Console/정지입력의별도checking진단3개는후속UI부모범위"
+    },
+    {
+      "function": "thunk_FUN_004ad500 @ 004dbcd0",
+      "direct_references": 3,
+      "source_mentions": [],
+      "assertions": [
+        "\"getTypeStruct()->frameCheck( isAbstract(), theFrame, true )\",\"\\\\Ns\\\\O\\\\Squid.cpp\", 0x846)"
+      ],
+      "has_no_assert": false,
+      "unit779_status": "thunk",
+      "unit779_detail": "별도 thunk 중복: 같은 원본 몸체의 분류를 따름"
+    },
+    {
+      "function": "FUN_004dc220 @ 004dc220",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [],
+      "has_no_assert": true,
+      "unit779_status": "other-parent-gap",
+      "unit779_detail": "기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상"
+    },
+    {
+      "function": "thunk_FUN_004dc220 @ 004dcf00",
+      "direct_references": 1,
+      "source_mentions": [],
+      "assertions": [],
+      "has_no_assert": true,
+      "unit779_status": "thunk",
+      "unit779_detail": "별도 thunk 중복: 같은 원본 몸체의 분류를 따름"
+    }
+  ]
+}

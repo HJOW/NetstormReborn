@@ -1,5 +1,6 @@
 // Dude의 실제 정기 분배·보행·복귀·드롭·낙하를 같은 현재 월드에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawDudeBehavior.h"
 #include "o/RawPathRuntime.h"
 #include "o/SpStore.h"
@@ -10,7 +11,7 @@ inline constexpr std::size_t kDudePopulationCapacity=30; //4fc9b0→44fb20의 �
 void InitializeDudePopulation(SquidPostPopList& population);
 // 현재 검사 모드·공급자 active 목록·보행 순환 전역을 복사하지 않는다.
 struct DudeRegularState {
-    const bool& checking; //005e4794의 현재 진단 모드다.
+    RawCheckingFlag checking; //005e4794의 현재 진단 모드다.
     const SquidPostPopList& providers; //00592f84/88/8c의 기존 에너지 공급자 목록이다.
     std::int32_t& providerIndex; //0055a4fc의 같은 signed 순환 값이다.
     std::uint32_t pollEvent{0x1a2b},pathType{24}; //005326c0/005410d0의 현재 사건·경로 종류다.

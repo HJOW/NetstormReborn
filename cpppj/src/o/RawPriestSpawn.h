@@ -1,5 +1,6 @@
 // 사제 해방의 자리 탐색·생성 호출과 Carrier 검사 분기를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawDamageableRelease.h"
 
 namespace netstorm::o {
@@ -15,7 +16,7 @@ struct PriestPlacementQuery {
 // 사제 생성 처리 중 조회·갱신하는 상태 묶음이다.
 struct PriestSpawnState {
     std::uint32_t bridgeType{82}; // 005411a0 / CD 0051ca8c: WORD 쓰기 뒤 표면 알림 대상이다.
-    bool checkingPlacement{true}; // 005e4794: 패치에서 모든 자리 탐색 실패 시 debug assert를 보고하는 조건이다.
+    RawCheckingFlag checkingPlacement{true}; // 005e4794: 패치에서 모든 자리 탐색 실패 시 debug assert를 보고하는 조건이다.
 };
 // 사제 생성 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestSpawnHooks {

@@ -1,5 +1,6 @@
 // 간헐천 채집 통지의 현재 수량/cost·게임 난수·고갈 삭제/emptyGeyser 생성을 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/SidPool.h"
 #include "o/SquidHash.h"
 #include "o/SpStore.h"
@@ -10,7 +11,7 @@ namespace netstorm::o {
 class RawPacketDispatch; // 원본 단일 패킷 분배기는 등록 helper에 참조로만 전달한다.
 // handler가 효과 callback 뒤에도 다시 읽는 실제 전역이다.
 struct GeyserMinedState {
-    bool boss{true},checking{}; // 원본 권한과 패치 bridge 수량 assert를 제어한다.
+    bool boss{true}; RawCheckingFlag checking{}; // 원본 권한과 패치 bridge 수량 assert를 제어한다.
     std::uint32_t nuggetType{154},emptyGeyserType{84},isleType{97},bridgeType{82}; // 실제 두 PE의 현재 비용/생성/표면/수량 setter 타입 번호다.
     const bool* sharedBoss{}; // 실제 수신/음향 효과와 같은 Client boss 주소다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 음향과 수량 갱신 뒤 고갈 삭제 관문에서 현재값을 읽는다.

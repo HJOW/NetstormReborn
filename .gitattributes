@@ -2390,3 +2390,8 @@ cpppj/tests/fixtures/renderer-diagnostic-keys-x86.tsv -text
 # 단위777의 최초 TYPE 파일 부모 관측 바이트를 줄끝 변환 없이 보존한다.
 cpppj/tests/fixtures/type-live-read-x86.tsv -text
 cpppj/tests/fixtures/type-live-null-destination-x86.tsv -text
+
+# 단위779의 최초 checking/Form/SID 진단 관측 바이트를 보존한다.
+cpppj/tests/fixtures/checking-forms-x86.tsv -text
+cpppj/tests/fixtures/checking-island-owner-x86.tsv -text
+cpppj/tests/fixtures/sid-robust-parent-x86.tsv -text

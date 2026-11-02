@@ -1,12 +1,13 @@
 // 원본 Factory 업그레이드00453bf0 요청과00453d70의58h mode1 수신 접두를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawFactoryResearch.h"
 
 namespace netstorm::o {
 // 같은 원본 권한/검사/현재 시각을 복사하지 않고 빌린다.
 struct FactoryUpgradeCommandState {
     const bool& boss; //00540bc4:수신 뒤 현재 권한이 있을 때만 원문을 방송한다.
-    const bool& checking; //005e4794:수신의 Factory genus 진단을 선택한다.
+    RawCheckingFlag checking; //005e4794:수신의 Factory genus 진단을 선택한다.
     const double& now; //0055b4d0:요청 완료 시각과 수신 지연을 계산한다.
 };
 // 실제 분산SP/SharedRegular/전송과 원본 로그·진단을 연결한다.

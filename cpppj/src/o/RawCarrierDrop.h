@@ -1,5 +1,6 @@
 // 원본427070 요청·42aa50 명령·444bc0 서버 수신의 Cast/Drop 제어 흐름이다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawContainedFinder.h"
 #include "o/RawFormPacket.h"
 #include <functional>
@@ -8,7 +9,7 @@ namespace netstorm::o {
 // 실제 Session 전역이며 외부 효과 뒤 다시 읽는 값은 참조 상태에 남긴다.
 struct CarrierDropState {
     FormPacketHeader request{0x50,1,9},activation{0x5c,1,6}; // 각각40a9e0/40ac60이 읽는 현재 헤더다.
-    std::uint32_t localOwner{1},server{1},checking{},numTypes{188}; // 현재 소유자/서버/강한 진단/TYPE 개수다.
+    std::uint32_t localOwner{1},server{1}; RawCheckingFlag checking{}; std::uint32_t numTypes{188}; // 현재 소유자/서버/강한 진단/TYPE 개수다.
     std::uint32_t contentType{6},notifyProcessType{51},queueCommand{0x030000b2}; // 현재 내용물/통지 프로세스/입력 큐 토큰이다.
     std::uint32_t selectCommand{0x03000073},castCommand{0x0300011a},dropCommand{0x03000076},pickupCommand{0x03000075}; // 실제 메뉴 분배 토큰이다.
     std::int32_t mapLimit{256}; //40e800이 비교하는 현재 지도 한계다.

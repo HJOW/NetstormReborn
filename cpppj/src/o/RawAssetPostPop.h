@@ -1,5 +1,6 @@
 // 초기 요새 자산의 실제 postPop 재정의를 raw SID와 공통 장부에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawCarrierPostPop.h"
 #include "o/RawAuthorityState.h"
 #include <array>
@@ -21,7 +22,7 @@ struct AssetPostPopState {
     // fortMode: Fort 모드 여부.
     // checkingForms: 검사 Form 여부.
     // residenceAnimation: 거주건물 애니메이션 여부.
-    bool inBattle{},boss{true},fortMode{},checkingForms{},residenceAnimation{};
+    bool inBattle{},boss{true},fortMode{}; RawCheckingFlag checkingForms{}; bool residenceAnimation{};
     // loadingDepth: 로딩 깊이.
     // templeCount: 신전 개수.
     // selected: 현재 선택한 객체·컨트롤의 번호 또는 토큰.

@@ -1,5 +1,6 @@
 // 원본 회수 요청44c420·일반 삭제 송신4437c0·54h 수신4436f0의 순서를 보존한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawFormPacket.h"
 #include <functional>
 #include <string_view>
@@ -9,7 +10,7 @@ namespace netstorm::o {
 struct SalvageCommandState {
     const std::uint32_t& localOwner; // 540c70의 전체DWORD 로컬 번호다.
     const std::int32_t& denySalvage; // 595078의 현재 회수 금지 값이다.
-    const bool& checking; // 5e4794의 비용 일치 진단이다.
+    RawCheckingFlag checking; // 5e4794의 비용 일치 진단이다.
     const bool& mission; // 594fa4가 비영이면 서버의 소유자 비교를 생략한다.
     const bool& boss; // 540bc4의 현재 서버 권한이며 진단 뒤 다시 읽는다.
     const std::uint32_t& altarType; // 5412e8의 현재 제단 타입이다.

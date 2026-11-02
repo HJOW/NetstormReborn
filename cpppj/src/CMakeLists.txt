@@ -356,3 +356,5 @@ target_sources(netstorm PRIVATE o/RawAiCommandState.cpp o/RawAiCommandState.h cl
 target_sources(netstorm PRIVATE o/RawMakeAi.cpp o/RawMakeAi.h client/MakeAiCommandInput.cpp client/MakeAiCommandInput.h)
 # 실제10.78 TYPE 시작의 필수 live FILE/키 수명만 명시 연결한다(777).
 target_sources(netstorm PRIVATE client/TypeFileRead.cpp client/TypeFileRead.h)
+# 현재 checking 진단의 SID 부모만 기존 제품 모듈에 추가한다.
+target_sources(netstorm PRIVATE o/RawSidRobust.cpp o/RawSidRobust.h o/RawCheckingFlag.h o/RawCheckingDiagnostics.h)

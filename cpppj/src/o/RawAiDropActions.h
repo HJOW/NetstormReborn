@@ -1,5 +1,6 @@
 // AI의 현재 배치TYPE/예산 스캔과 생산·기한·사제 관문을 실제 후보 배치 행동으로 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawAiDropScan.h"
 
 namespace netstorm::o {
@@ -15,7 +16,7 @@ struct AiDropActionNotice {
 struct AiDropActionGlobals {
     const double& now; //0055b4d0의 현재 QWORD 시각이다.각 기한 비교에서 다시 읽는다.
     const std::int32_t& mapLimit; //00531928의 현재 strict 좌표 유효성 상한이다.
-    const bool& checking; //005e4794의 빈 후보/점수 모순 진단 관문이다.
+    RawCheckingFlag checking; //005e4794의 빈 후보/점수 모순 진단 관문이다.
 };
 // 이미 복원한 같은 실제 선택/스캔/생산·비용/배치/부족좌표/후보 압축과 원래 로그다.
 struct AiDropActionHooks {

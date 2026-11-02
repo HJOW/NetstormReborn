@@ -1,5 +1,6 @@
 // GunProcess의 실제 Cannon/Archer 표적 검색과 MayShoot를 같은 raw 풀·해시에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawGunProcess.h"
 #include "o/RawSquidFinder.h"
 #include "o/SquidDisplay.h"
@@ -28,7 +29,7 @@ struct GunTargetType {
 // 실제 전역/Player 표를 조회하는 상태다. 호출자는 같은 월드의 현재 값으로 갱신한다.
 struct GunTargetState {
     bool friendlyFire{}; // shootMyFriends 전역: 동맹 후보의 배제를 해제한다.
-    bool checking{}; // 패치의 미지원 group에 대한 flyer 원본 assert를 적용한다.
+    RawCheckingFlag checking{}; // 패치의 미지원 group에 대한 flyer 원본 assert를 적용한다.
     bool showRanges{}; // 원본 진단 사각형 그리기를 켠다. 필요한 sink가 없으면 예외다.
     std::uint32_t sunCannonType{128},sunFenceType{136},windArcherType{140},thunderArcherType{148}; // 원본 전역 타입 번호다.
     float windHalfAngle{30}; // 005409c0/CD0051a198: 크로스보우 관측각의 절반이다.

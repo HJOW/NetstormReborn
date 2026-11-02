@@ -1,5 +1,6 @@
 //위험한 다리 위 사제/rainWalker의 현재 이동 조회와 같은 Graph의 가까운 표면 대피를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawSquidFinder.h"
 #include "o/RawPathRuntime.h"
 
@@ -19,7 +20,7 @@ struct BridgeCarrierHooks {
 class RawBridgeCarriers {
 public:
     RawBridgeCarriers(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
-        const bool& boss,const bool& checking,const std::uint32_t& priest,const std::uint32_t& rainWalker,
+        const bool& boss,RawCheckingFlag checking,const std::uint32_t& priest,const std::uint32_t& rainWalker,
         const std::int32_t& avoidLife,BridgeCarrierHooks hooks); //모든 현재 참조와 callback 대상은 이 실행기보다 오래 살아야 한다.
     void Check(Sid bridge) const; //실제4202f0(flags0) 순회에서 두 TYPE만 현재 이동이 없을 때 대피한다.
     void Retreat(Sid parent) const; //427e00의 권한/Graph→반경5→정상 표면/같은Graph/거리→실제 이동 순서다.
@@ -31,7 +32,7 @@ private:
     const SidPool& pool_; //현재 부모/후보/칸 위 이동체의 실제50바이트 풀이다.
     const SquidHash& hash_; //서로 중첩하는 두 일반 finder가 공유하는 실제4단계 해시다.
     std::span<const RiftTypeRecord> types_; //현재 flags1/flags2/발자국이다.
-    const bool &boss_,&checking_; //원문의 조회 시점마다 현재 권한/진단 전역을 읽는다.
+    const bool& boss_;RawCheckingFlag checking_; //원문의 조회 시점마다 현재 권한/진단 전역을 읽는다.
     const std::uint32_t &priest_,&rainWalker_; //005412d0/c8의 현재 두 TYPE다.
     const std::int32_t& avoidLife_; //0052f964의 현재 signed 경계이며 최초7이다.
     BridgeCarrierHooks hooks_; //현재 큰 이동 장치와 이미 복원된 Graph만 공급한다.

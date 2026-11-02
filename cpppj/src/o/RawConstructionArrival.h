@@ -1,12 +1,13 @@
 // teleportEffect 건설 운반 객체의 도착 판정과 서버 대상 건설 시작/예측 대기를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawConstructionProcess.h"
 #include "o/RawSquidFinder.h"
 
 namespace netstorm::o {
 // 도착 판정 뒤에도 현재 값을 읽는 원본 전역이다. PathProcess의 시각/단계 상태와 구별한다.
 struct ConstructionArrivalState {
-    bool checking{}; // 005e4794 / CD 00531454: 예측 대기에서 streak contained 정리를 생략하는 debug 전역이다.
+    RawCheckingFlag checking{}; // 005e4794 / CD 00531454: 예측 대기에서 streak contained 정리를 생략하는 debug 전역이다.
     std::uint32_t streakProcessType{12}; // 005410a0 / CD 0051c990: 예측 대기 때 첫 contained에서 지우는 실제 타입이다.
     float duration{0.6F}; // 005325c0 / CD 0053fc38: 확정 대상에 전달하는 건설 지속 시간이다.
 };

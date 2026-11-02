@@ -1,5 +1,6 @@
 // 초기 자산의 실제 Handle를 같은 raw 풀·프레임 지정기·게임 난수에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawAssetPostPop.h"
 #include "o/RawFrameAdvance.h"
 #include "o/RawSquidFinder.h"
@@ -12,7 +13,7 @@ struct AssetRegularState {
     bool fortMode{}; // 신전의 편집 모드 역방향 프레임 진행을 선택한다.
     bool boss{true}; // 신전 이탈 사건의 3회/23회 대기를 선택한다.
     bool suppressLeaveRequest{}; // 신전 이탈 패킷 생성을 억제하는 원본 전역이다.
-    bool checkingForms{}; // event4가 count4 이후 대기를 생략하는 진단 전역이다.
+    RawCheckingFlag checkingForms{}; // event4가 count4 이후 대기를 생략하는 진단 전역이다.
     bool themeMode{true}; // 독립 호출의 고정 옵션 입력이다. 실제 캠페인은 hooks.themeMode로 현재 설정을 읽는다.
     std::uint32_t decorationType{102}; // event1이 탐색하는 실제 장식 타입 전역이다. 두 PE 초기값은102다.
     std::uint32_t maxDecorationScan{}; // 원본 전역에 저장하는 한 번의 finder 최대 조사 개수다.

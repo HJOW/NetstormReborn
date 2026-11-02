@@ -1,5 +1,6 @@
 // PATCH 훨리베이스의 실제 최초 후처리/0x30 생성자/프레임/상태 패킷을 같은 Kernel에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/SquidProcess.h"
 #include <array>
 #include <optional>
@@ -20,7 +21,7 @@ struct SunAviaryProcessFields {
 struct SunAviaryProcessGlobals {
     const bool& server; // 00540bc0이며 boss와 구별한다.
     const std::uint32_t& editor; // 005c85a4이며 비제로는 Frame을 생략한다.
-    const bool& checking; // 005e4794의 개발자 프레임 진단이다.
+    RawCheckingFlag checking; // 005e4794의 개발자 프레임 진단이다.
     const double& now; // 0055b4d0의 같은 게임 시각이다.
     const std::uint32_t& processType; // 005410f0의 현재 타입32다.
     const std::uint32_t& flyerType; // 0054117c의 현재 sunFlyer73이다.

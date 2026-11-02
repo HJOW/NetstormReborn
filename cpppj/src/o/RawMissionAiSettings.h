@@ -1,5 +1,6 @@
 // PATCH MissionStage3가 실제 AI 생성자에 넘기는 600바이트 설정의 기본값·공통/owner 덮어쓰기를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RiftType.h"
 #include <functional>
 #include <span>
@@ -10,7 +11,7 @@ namespace netstorm::o {
 // 기본값 생성에서 읽는 실제 정수 전역과 능력 이름 진단 모드다.
 struct MissionAiSettingsState {
     std::int32_t stuffRefreshRate{3},startingSp{2500}; // 005318d4/0052f3c8이며 float 비트를 정수로 해석하지 않는다.
-    bool checkingAsserts{}; // 005e4794가 켜져 있으면 알 수 없는 능력 이름을 먼저 진단한다.
+    RawCheckingFlag checkingAsserts{}; // 005e4794가 켜져 있으면 알 수 없는 능력 이름을 먼저 진단한다.
 };
 // 문자열 조회는 같은 현재 미션의 mission.<key>를 읽는다. atof는 원본 CRT 변환의 명시 경계다.
 struct MissionAiSettingsHooks {

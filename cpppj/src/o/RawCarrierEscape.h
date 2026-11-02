@@ -1,5 +1,6 @@
 //429010의 네 방향 회피와 주변 surface 경로 시간 비교를 실제 월드에 연결한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawPathRuntime.h"
 #include "o/RawSquidFinder.h"
 namespace netstorm::o {
@@ -23,7 +24,7 @@ struct CarrierEscapeHooks {
 class RawCarrierEscape {
 public:
     RawCarrierEscape(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,std::span<const std::uint8_t> spots,
-        const double& now,const bool& checking,std::span<const std::uint32_t> cardinalTypes,CarrierEscapeState& state,CarrierEscapeHooks hooks); // 참조 자료와 현재 전역은 이 객체보다 오래 살아야 한다.
+        const double& now,RawCheckingFlag checking,std::span<const std::uint32_t> cardinalTypes,CarrierEscapeState& state,CarrierEscapeHooks hooks); // 참조 자료와 현재 전역은 이 객체보다 오래 살아야 한다.
     std::uint32_t Run(Sid parent,float distance,std::uint32_t event) const; // 깊이관문은1000, 그외실패를포함한회피분기는1001이다.
     const SidPool& Pool() const; // 다른 실제 월드의 하위 연결을 확인한다.
 private:
@@ -37,7 +38,7 @@ private:
     std::span<const RiftTypeRecord> types_; // 현재 flags1 surface/flags2 비행부류다.
     std::span<const std::uint8_t> spots_; //65536칸의 현재 통행/점유 비트다.
     const double& now_; // 후보 탐색 뒤 현재55b4d0 시각이다.
-    const bool& checking_; // 현재5e4794 깊이 진단 전역이다.
+    RawCheckingFlag checking_; // 현재5e4794 깊이 진단 전역이다.
     std::span<const std::uint32_t> cardinalTypes_; // 기존 선택기와 같은 mutable488fb0 타입4종이다.
     CarrierEscapeState& state_; // 현재 물리 방향표다.
     CarrierEscapeHooks hooks_; // 실제 큰 하위만 도달할 때 요구한다.

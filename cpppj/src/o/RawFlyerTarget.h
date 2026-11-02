@@ -1,5 +1,6 @@
 // 원본 비행체의 표적 검색·의존 경쟁 수·포위 위치를 같은 현재 월드에서 계산한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 같은 현재 진단 DWORD의 비영 뷰를 저장한다.
 #include "o/RawFlyerProcess.h"
 #include "o/RawSquidFinder.h"
 
@@ -7,7 +8,7 @@ namespace netstorm::o {
 // 원본이 매번 읽는 권한·진단·시각과 내장 타입 경계다.
 struct FlyerTargetGlobals {
     const bool& server; // 00540bc0의 현재 표적 검색 권한이다.
-    const bool& checking; // 005e4794의 현재 진단 선택이다.
+    RawCheckingFlag checking; // 005e4794의 현재 진단 선택이다.
     const double& now; // 0055b4d0의 단일 게임 시각이다.
     const std::uint32_t& sunType; // 0054117c의 훨리기그 타입73이다.
     const std::uint32_t& processEnd; // 0054116c의 프로세스 타입 상한63이다.
