@@ -1,5 +1,6 @@
 // 원문 앞단/배경 본체는 유지하고 실제 Client/Screen/Gump/Pool 장치만 제공한다.
 #include "client/ClientRendererFrame.h"
+#include "client/DrawWater.h" //같은 실제 후단 finder/카메라/VFX·전체 viewport 출력을 연결한다.
 #include "client/ClientMain.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientKencloudGlobals.h"
@@ -139,6 +140,22 @@ void ClientRendererFrame::Submit(std::span<std::uint8_t> pixels,int pitch,int he
             DispatchDrawEntries(std::span(&entry,1),{globals_.HideGroups()!=0,false},hooks);
         }
     });
+}
+
+//994b0 반환/정리와 연속캡처 뒤의 별도 진단 표시다. dirty별 sprite/overlay로 섞지 않는다.
+void ClientRendererFrame::DrawWater() {
+    auto& enabled=client_.gameplayGlobals_->DrawWater();if (!enabled) return; //원문 flag0은 실제 물리/화면 장치를 요구하지 않는다.
+    const auto storage=client_.SurfaceStorage();auto& screen=*client_.screen_;auto& camera=client_.gameplayGlobals_->Camera();
+    DrawWaterHooks hooks;hooks.clip=[&screen](auto rect) { screen.SetClip(rect.left,rect.top,rect.right,rect.bottom); };
+    hooks.rectangle=[&screen](auto rect,auto color) {
+        const auto saved=screen.Clip();const ScreenRect full{0,0,screen.Width(),screen.Height()};screen.SetClip(full.left,full.top,full.right,full.bottom); //원문4a2270은 현재 객체 clip을 저장하고 전체 viewport로 임시 변경한다.
+        auto* pixels=screen.Lock();
+        try { DrawWaterRectangle({pixels,static_cast<std::size_t>(screen.Pitch())*static_cast<std::size_t>(screen.Height())},screen.Pitch(),screen.Height(),full,rect,color); }
+        catch (...) { screen.Unlock();screen.SetClip(saved.left,saved.top,saved.right,saved.bottom);throw; } //호스트 예외도 잠금/clip만 반납하며 앞서 그린 픽셀은 롤백하지 않는다.
+        screen.Unlock();screen.SetClip(saved.left,saved.top,saved.right,saved.bottom);
+    };
+    hooks.present=[&screen] { screen.PresentPaletteClear(); }; //이 기존 helper는 같은004a46d0의 전체 viewport 출력/clip 복구다. 새 팔레트 변경은 수행하지 않는다.
+    RawDrawWater(storage->pool,storage->hash,storage->types).Draw(camera.RendererView(),camera.Snapshot(),screen.Width(),screen.Height(),enabled,screen.Colors().basic[3],hooks); //원문005ad128은 같은 파일 팔레트 기본 파랑이다.
 }
 
 // 정상 Draw의 잠금 반납 뒤·Present 앞에서 원문4994b0 말미의 dirty 정리를 실행한다.

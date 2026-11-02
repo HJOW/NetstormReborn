@@ -55,6 +55,8 @@ public:
     const std::uint32_t& BattleClockStamp() const { return battleClockStamp_; } //CRT현재stamp의같은읽기전용주소다.
     std::uint32_t& BattleClockOrigin() { return battleClockOrigin_; } //00594fb4의로그인/수신원점을같은현재저장소에쓴다.
     const std::uint32_t& BattleClockOrigin() const { return battleClockOrigin_; } //메시지는매clock복귀뒤현재원점을읽는다.
+    std::uint32_t& DrawWater() { return drawWater_; } //0054d930의 같은 장기 DWORD이며 일반 명령/표시가 Session·Renderer 재생성 뒤에도 공유한다.
+    const std::uint32_t& DrawWater() const { return drawWater_; } //진단 보고/표시 조회는 현재값을 bool로 정규화하지 않는다.
     std::uint32_t& HideBuildings() { return hideBuildings_; } //0059a8ac의 실제 DWORD를 메뉴·Draw·State 정리가 직접 공유한다.
     const std::uint32_t& HideBuildings() const { return hideBuildings_; } // Uber 교체와 Session 반납으로 값이나 주소를 재생성하지 않는다.
     std::int32_t& DenySalvage() { return denySalvage_; } // 00595078의 signed DWORD를 Start·회수·Tutorial 소멸이 같은 Client 주소에 읽고 쓴다. 근거: docs/exe/cpp-guide-release-20261101.md.
@@ -91,6 +93,7 @@ private:
     std::uint32_t fullDeck_{}; // 최초 PE BSS0이며 준비 대여/반납은 Native 부모가 쓴 현재 값을 보존한다.
     std::uint32_t fortKeepGenus_{0x40480002U},stateAuxFC4_{}; //보호 PE00542640의 초기 마스크와00594fc4의 별도 BSS0이다.
     std::uint32_t showGameTime_{},battleClockStamp_{},battleClockOrigin_{}; //원문세BSSDWORD는새Client에서한번만0으로만든다.
+    std::uint32_t drawWater_{}; //보호 PE의 최초 BSS0이며 Native 명령 외에 미션/장치 수명으로 다시 지우지 않는다.
     std::uint32_t hideBuildings_{}; // 원문 최초 BSS0이며 명시 State store 외에 임의 초기화를 추가하지 않는다.
     std::int32_t denySalvage_{},denyAscend_{}; // 00595078/0059507c의 최초 BSS0이다. 대여·반납에서는 다시 쓰지 않고 Start와 Tutorial 소멸의 명시 쓰기만 공유한다.
     std::uint32_t patchDiagnostic_{6}; // 보호 10.78 PE의 초기 DWORD6이며 World/Session 대여·반납으로 다시 쓰지 않는다.

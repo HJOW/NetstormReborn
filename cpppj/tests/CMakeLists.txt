@@ -3095,3 +3095,8 @@ set_source_files_properties(QuickHelpListIntegrationTests.cpp PROPERTIES COMPILE
 target_sources(netstorm_tests PRIVATE QuickHelpFileReadTests.cpp)
 set_property(SOURCE QuickHelpWindowTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_QUICK_HELP_FILE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-file-read-x86.tsv\"")
 target_sources(netstorm_file_tests PRIVATE QuickHelpFileReadTests.cpp QuickHelpWindowTests.cpp StartupIoTests.cpp)
+
+# 실제 DrawWater 후단 finder/카메라/VFX와 일반 입력을 같은 기존 집중 대상에서 확인한다(768).
+target_sources(netstorm_tests PRIVATE DrawWaterTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE DrawWaterTests.cpp)
+set_source_files_properties(DrawWaterTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_DRAW_WATER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/draw-water-x86.tsv\";NETSTORM_DRAW_WATER_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/draw-water-input-x86.tsv\";NETSTORM_DRAW_WATER_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/draw-water-names-x86.tsv\"")

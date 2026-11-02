@@ -338,3 +338,6 @@ target_sources(netstorm PRIVATE PresentationCommandInput.cpp PresentationCommand
 
 # CreateHelpList의 같은 전용 Help/CRT writer다(766).
 target_sources(netstorm PRIVATE QuickHelpList.cpp QuickHelpList.h HelpListDisk.cpp HelpListDisk.h)
+
+# 후단 진단 계산과 현재 화면 장치의 접합이다(768).
+target_sources(netstorm PRIVATE DrawWater.cpp DrawWater.h)

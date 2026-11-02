@@ -20,6 +20,7 @@ public:
     void ReadOptions(); //Interpret Options 위치에서 showSoftAsserts의 현재 성공한 값만 저장한다.
     bool Prepare(); //실제10.78 메뉴가 있을 때4994b0 앞단을 실행하며 독립 표시/10.72는 false다.
     RendererWorldDrawing Drawing(); //같은 실제 dirty의 지형 수집/배경 장치이며 별도 장면/난수를 만들지 않는다.
+    void DrawWater(); //00436450의 capture 뒤·499fe0 앞에서00434dd0의 같은 현재 물리/Screen을 표시한다.
     void Finish(); //정상 Draw의 화면 잠금 반납 뒤470ca0을 실행한다. 실패 경로에서는 부르지 않는다.
     std::string Diagnostics() const; //현재 실제 owner/cache·요청/반환을 읽을 뿐 게임 상태를 바꾸지 않는다.
 private:

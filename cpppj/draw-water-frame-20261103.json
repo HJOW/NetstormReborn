@@ -1,0 +1,254 @@
+{
+  "unit": 768,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 768,
+  "displayVersion": "11.01",
+  "exeSha256": "6c9dac754d21f8da5a72152b63c6d4167beba1f895fbbcbf6e9f3e58aab1b7c2",
+  "summary": "DrawWater 일반 명령과 현재 Pool·카메라·VFX 및 후단 전체 viewport 출력을 연결",
+  "tests": {
+    "totalUnique": 5,
+    "totalExecutions": 5,
+    "newTests": 5,
+    "failedChecks": 0,
+    "names": [
+      "DrawWater_LongOwnerAndDisabledNoDeviceNoViewportDivision",
+      "DrawWater_Native384GeneralInputAndFullDwordStores",
+      "DrawWater_Native76FullFinderProjectionRectPixelsAndMutations",
+      "DrawWater_Native9NamesCurrentQueueAndNoDefaultMenuAlias",
+      "DrawWater_PostSceneIndependentOfDirtyAndScreenClip"
+    ],
+    "logs": [
+      "tests-draw-water-v2.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v2.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2689,
+    "currentCount": 2692,
+    "allUnchanged": true,
+    "fixtureCount": 872,
+    "newFixtures": [
+      "cpppj/tests/fixtures/draw-water-x86.tsv",
+      "cpppj/tests/fixtures/draw-water-input-x86.tsv",
+      "cpppj/tests/fixtures/draw-water-names-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 768,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 76,
+      "observations": 152,
+      "calls": {
+        "00434dd0": 152,
+        "00497530": 104,
+        "004e49c0": 2144,
+        "0041def0": 104,
+        "0041d770": 104,
+        "0041d7a0": 104,
+        "00497220": 262,
+        "004a1580": 262,
+        "004a2270": 786,
+        "004dade0": 3144,
+        "004011f1": 3144,
+        "004a46d0": 104
+      },
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "actual": [
+        "00434dd0",
+        "00497530",
+        "00497220",
+        "0041def0",
+        "0041d770",
+        "0041d7a0",
+        "004e49c0",
+        "004a1580",
+        "004a2270",
+        "004a46d0",
+        "004dade0",
+        "004011f1",
+        "actual RawSquidFinder Begin/Next and lower helpers"
+      ],
+      "boundary": "Screen Lock/Unlock/Present are explicit memory device boundaries, synthetic generic TYPE/SID/hash are independent input; no actual OS/GUI/whole frame execution",
+      "fixtureSha256": "f5ba237f32bbf4da282b0b58be4cb4d51d107147dbe5fe3824eb74228f73997c",
+      "protectedSha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "extracted\\refined\\originals\\Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+      },
+      "rawReportSha256": "0da53ce65ee7d2b0a801f50ffe968b44ffc838540d1daf13677a0d56cc21bb5c"
+    },
+    "native-input.json": {
+      "unit": 768,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 384,
+      "observations": 768,
+      "names": 9,
+      "nameObservations": 9,
+      "actual": "Guide/Gump/공통 release/일반 입력의0059a8b0=1 후0054d930=old==0 store; 실제 이름/토큰/FIFO",
+      "boundary": "Guide/Gump와 하위 비대상 효과·TLS/할당/로그는 명시 장치이며 실제 UI/게임/OS는 실행하지 않는다",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "sha256": {
+        "modified\\cpppj\\tests\\fixtures\\draw-water-input-x86.tsv": "c68dcbf1de8c9e845f0ca11f23e49bd73f2aa16b3123e73d8790d4298d8e2723",
+        "modified\\cpppj\\tests\\fixtures\\draw-water-names-x86.tsv": "819628db4e9da5ce4de01830eba90180ae27d54dba61b6f3aa92b665d31592bc"
+      },
+      "protectedSha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "extracted\\refined\\originals\\Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+      },
+      "rawReportSha256": "473406138670c4d9e9af979c9c894887e5e05db48aaa27edef4fce7346540784"
+    },
+    "native-frame-order.json": {
+      "unit": 768,
+      "host": "HJOW-Athlon",
+      "inputs": 5,
+      "observations": 10,
+      "actual": "00436450 branch/current active/ordered calls/16DWORD snapshot copy",
+      "boundary": "wall clock/pause and all child draw/present bodies are explicit boundaries, DrawWater whole body has separate exact Native coverage; not actual whole-frame/OS rendering",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "protectedSha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "extracted\\refined\\originals\\Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+      },
+      "rawReportSha256": "bc9b13491624cab344c6f4ffa8af54a5aaa9311d6ebf61905fde97077c53dcd4"
+    },
+    "display-repeat/native.json": {
+      "unit": 768,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 76,
+      "observations": 152,
+      "calls": {
+        "00434dd0": 152,
+        "00497530": 104,
+        "004e49c0": 2144,
+        "0041def0": 104,
+        "0041d770": 104,
+        "0041d7a0": 104,
+        "00497220": 262,
+        "004a1580": 262,
+        "004a2270": 786,
+        "004dade0": 3144,
+        "004011f1": 3144,
+        "004a46d0": 104
+      },
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "actual": [
+        "00434dd0",
+        "00497530",
+        "00497220",
+        "0041def0",
+        "0041d770",
+        "0041d7a0",
+        "004e49c0",
+        "004a1580",
+        "004a2270",
+        "004a46d0",
+        "004dade0",
+        "004011f1",
+        "actual RawSquidFinder Begin/Next and lower helpers"
+      ],
+      "boundary": "Screen Lock/Unlock/Present are explicit memory device boundaries, synthetic generic TYPE/SID/hash are independent input; no actual OS/GUI/whole frame execution",
+      "fixtureSha256": "f5ba237f32bbf4da282b0b58be4cb4d51d107147dbe5fe3824eb74228f73997c",
+      "rawReportSha256": "c5a51bff960c43bf517735e073defee9ed26848bc35b65f38434e78d395b76cf"
+    },
+    "input-repeat/native-input.json": {
+      "unit": 768,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 384,
+      "observations": 768,
+      "names": 9,
+      "nameObservations": 9,
+      "actual": "Guide/Gump/공통 release/일반 입력의0059a8b0=1 후0054d930=old==0 store; 실제 이름/토큰/FIFO",
+      "boundary": "Guide/Gump와 하위 비대상 효과·TLS/할당/로그는 명시 장치이며 실제 UI/게임/OS는 실행하지 않는다",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "sha256": {
+        "modified\\cpppj\\tests\\fixtures\\draw-water-input-x86.tsv": "c68dcbf1de8c9e845f0ca11f23e49bd73f2aa16b3123e73d8790d4298d8e2723",
+        "modified\\cpppj\\tests\\fixtures\\draw-water-names-x86.tsv": "819628db4e9da5ce4de01830eba90180ae27d54dba61b6f3aa92b665d31592bc"
+      },
+      "rawReportSha256": "68b92988f2de4c2163ad99ee653b7b6166ae5ef60792f7e3550250a8cf5b01e4"
+    },
+    "frame-repeat/native-frame-order.json": {
+      "unit": 768,
+      "host": "HJOW-Athlon",
+      "inputs": 5,
+      "observations": 10,
+      "actual": "00436450 branch/current active/ordered calls/16DWORD snapshot copy",
+      "boundary": "wall clock/pause and all child draw/present bodies are explicit boundaries, DrawWater whole body has separate exact Native coverage; not actual whole-frame/OS rendering",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "rawReportSha256": "19ab990bdb490ad1bcd11b1e1b28a57d445fefb1e628cd006de72e22b4fd0bd6"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "root build-v1",
+      "detail": "집중5개는모두통과했지만검사std::fill의int0→BYTE에서C4244경고2종이나왔다. 입력값을바꾸지않고std::uint8_t{0}으로명시했다. 최초경고로그와첫5개통과는보존하고최종v2를별도로확인했다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/CMakeLists.txt": "0e12a68783c64df422d1ced46d920e510ad488ac78565d849df5923f3fa27388",
+    "cpppj/src/client/ClientGameplayGlobals.h": "5a514e6c92376555da66aa43deaade644001326725e09c95c4e5166dd8f81258",
+    "cpppj/src/client/ClientMain.cpp": "a3bff32da654ff82618782e1031bf86f8c85f81266b605af610c7561c2223fb0",
+    "cpppj/src/client/ClientRendererFrame.cpp": "cb0f00672cdfb67f85d0fba8d79b4acc7356c85c1e5ee3d2e22eabec7d2d6d61",
+    "cpppj/src/client/ClientRendererFrame.h": "d2df6916e948c132a166061409e5439c24cf07befb2923021480ed2d35cd06ac",
+    "cpppj/src/client/GameMenuCommands.cpp": "5c63a74e8001338db035b2ae0903136b88b002bb4ff7d4c5abfd0943cbb9cc6d",
+    "cpppj/src/client/UberGump.cpp": "40eb3e35a631b0ca25d963f29b08b254d6d37a371700b51466e51d334f9d719c",
+    "cpppj/src/client/DrawWater.cpp": "39ffc76c2ebee94dd897fea544a668503421c5189c7c5e1c4b0bd2369a4b4025",
+    "cpppj/src/client/DrawWater.h": "3482af3287cda1b2dda2c211e919761a01adcf6c89dba9af476248e8849bb1bb",
+    "cpppj/tests/CMakeLists.txt": "830afea3c83e31ddb7c75ebbfc2d7901e1cb6932acaa0f2446e4289df273f020",
+    "cpppj/tests/DrawWaterTests.cpp": "1daa57855300091205834114133c50f5d841f2e7d15e6a183ffd154a8f8e0f23",
+    "tools/decomp_draw_water.py": "7bf240211c9e4905f5a1d8bd94ac67136805e1528a00cb43180804a685e7f343",
+    "tools/decomp_draw_water_input.py": "366ea74c88fa8c029b593c318aaff4a0841b01dbe00152800fe221d63598f967",
+    "tools/decomp_draw_water_frame_order.py": "e165f24f8e5da4610d2216a191dc92c34b7c45a22fe28790668b76e3ba932765"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-768/protected-after.json",
+  "next": "DataManager(769)·CreateAt(770)·Config reader(771)·일반 AI 명령(772/773)·글꼴 인코딩(774)·조건 AI 메뉴(775)·진단표시(776)와 남은 비멀티/호환성",
+  "limitations": [
+    "표시 Native는 실제 finder/투영/rect/VFX를 실행하지만 Lock/Unlock/Present는 명시 메모리 화면 경계다. 전체 프레임 부모의 하위 Draw/다섯 진단/Present/시각은 명시 경계이며 실제 OS/완전한 프레임 관측으로 세지 않는다.",
+    "현재 nativeFrame && captureFrame인 일반 프레임에만 접합했다. loading의 PresentScene(false)와 기존 sceneVisible/fullscreen 억제 정책을 임의로 바꾸지 않았다. 다른 네 진단은776 후속이다.",
+    "원문의 left==right와 bottomY−halfX, topY−halfY 및 current color 재조회를 보존한다. 분모0/INT_MIN÷−1은 host domain_error이며 정상 Native 표본과 전체 예외 동일성으로 확대하지 않는다.",
+    "DrawWaterRectangle 내부 실패는 잠금/clip만 복구하고 앞선 픽셀/flag를 되돌리지 않는다. Screen.Lock 자체의 depth증가뒤장치부재 예외는이try밖이며새검증범위가아니다. 정상프레임은앞선동일화면잠금을성공한뒤에이후단에진입한다. 기존Windows10/11 DIB helper를쓰고32비트DirectDraw ABI를가장하지않는다.",
+    "새 기본 debug UI/임의옵션/flag 초기화는 없다. 새 게임/GUI/CLI/MP·물리/PCM·공중3종 전용검사·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP 검사는0이다."
+  ],
+  "independentStaticReview": {
+    "confirmedFunctionalDefects": 0,
+    "compiledOrExecuted": false,
+    "rawReadmeSha256": "321d89c4d12d92cd948c431fb9693c221735bbe9732caefd00daa6da58abc227",
+    "note": "Screen.Lock 자체 예외는 반납 try 밖이라는 한계를 별도 명시했다."
+  }
+}

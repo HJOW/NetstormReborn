@@ -8,6 +8,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/DrawWater.h" //후단 표시와 일반 명령이 같은 장기 상태를 공유한다.
 #include "client/QuickHelpFileRead.h" //최초Help파일만같은Client의필수전체읽기를사용한다.
 #include "client/HelpListDisk.h" //현재Client VFS/지역파일의 같은 Help목록writer다.
 #include "client/ProductPresentation.h"
@@ -1170,6 +1171,7 @@ void UberGump::Event(InputEvent event) {
         [this](auto text) { rawButtons_->Menus()->ActivateHelpLinkText(text); })) { rebuild_=true;return; } //모드/현재World와무관하게같은내부Help·cmd·외부정책을사용한다.
     if (DispatchCaptureInput(event,client_.ScreenCapture().State().active,{[this] { client_.ScreenCapture().Start(); },[this] { client_.ScreenCapture().Stop(); },[this](auto section) { Tell(std::string(section)); }})) { rebuild_=true;return; } //현재active우선/param2=1시작이다. 개발자키55a484조건은켜지않는다.
     if (DispatchRecheckCdInput(event,client_.CdGlobals()->RecheckSerial(),{[this](auto serial) { return rawButtons_->SerialGump(serial); },[this](auto token) { rawButtons_->KillGump(token); }})) { rebuild_=true;return; } //4d8b8d: 현재 serial 조회→공통 Kill→0쓰기다. 실제 CD 재탐색(440c60)이나 온라인 검증은 호출하지 않는다(단위696).
+    if (DispatchDrawWater(event,client_.GameplayGlobals()->DrawWater(),worldRedraw_)) { rebuild_=true;return; } //Guide/Gump/뗌 뒤 HelpOpen/Console/정지 앞이며 모드 관문을 추가하지 않는다.
     if (DispatchCreateHelpList(event,[this] {
         QuickHelpListContext context;context.file=MakeHelpListDiskHooks(client_.GameDirectory(),&client_.Files()); //원문 전체41b4c0와 같은 현재 파일 소유자다. 기존파일의 r+b tail을 유지한다.
         context.typeCount=[this] { const auto size=client_.Assets().TypeTable().Types().size();if (size>0x7fffffffU) throw std::out_of_range("Help 목록의 원문 signed TYPE 개수");return static_cast<std::int32_t>(size); }; //월드/지식/임무 상태로 TYPE 목록을 거르지 않는다.
