@@ -19,8 +19,8 @@ public sealed class SquidOwnerMode
 /// 소유자 변경을 객체 슬롯과 소유자별 작업장 목록에 반영하는 처리기(원본 SquidOwner, 10.78).
 /// 편집·전투 모드에서 신전·공장 부류의 이전 소유자 목록에서 번호를 빼고,
 /// 빈·매립이 아닌 새 소유자의 목록에 자리가 차면 생략한다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 소유자·추가 바이트 위치가 달라서 옮기지 않았다).
-/// 근거: cpppj/src/o/SquidOwner.cpp (W02 Owner 조각, 2026-10-20).
+/// 판본별 소유자·추가 바이트 위치(패치 0x22·0x28, CD 0x20·0x23)를 따른다.
+/// 근거: cpppj/src/o/SquidOwner.cpp (W02 Owner 조각, 2026-10-20; CD 위치 F2c-2에서 추가).
 /// </summary>
 public sealed class SquidOwner
 {
@@ -42,11 +42,11 @@ public sealed class SquidOwner
     /// <summary>슬롯 안 상태 바이트의 위치.</summary>
     private const int StateOffset = 11;
 
-    /// <summary>슬롯 안 소유자 바이트의 위치(10.78).</summary>
-    private const int OwnerOffset = 34;
+    /// <summary>슬롯 안 소유자 바이트의 위치. 판본에 따라 다르다(패치 0x22, CD 0x20).</summary>
+    private int OwnerOffset => _pool.Edition == OriginalEdition.Cd1072 ? 0x20 : 0x22;
 
-    /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
-    private const int ExtraOffset = 40;
+    /// <summary>슬롯 안 추가 비트 바이트의 위치. 판본에 따라 다르다(패치 0x28, CD 0x23).</summary>
+    private int ExtraOffset => _pool.Edition == OriginalEdition.Cd1072 ? 0x23 : 0x28;
 
     /// <summary>슬롯을 읽고 쓸 풀.</summary>
     private readonly RawSidPool _pool;
@@ -63,8 +63,8 @@ public sealed class SquidOwner
     /// <summary>
     /// 풀·타입·장부·모드를 받아 소유자 지정을 만든다. 참조 대상은 이 객체보다 오래 살아야 한다.
     /// </summary>
-    /// <param name="pool">슬롯 풀.</param>
-    /// <param name="types">타입 번호 순서의 타입 레코드. 10.78 은 188개여야 한다.</param>
+    /// <param name="pool">슬롯 풀. 판본에 따라 소유자·추가 바이트 위치가 갈린다.</param>
+    /// <param name="types">타입 번호 순서의 타입 레코드. 판본에 맞는 개수(패치 188개, CD 171개)여야 한다.</param>
     /// <param name="bookkeeping">소유자별 작업장 목록을 가진 장부.</param>
     /// <param name="mode">기본 모드 영역.</param>
     public SquidOwner(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, RawPostPopState bookkeeping, SquidOwnerMode mode)
@@ -73,10 +73,11 @@ public sealed class SquidOwner
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(bookkeeping);
         ArgumentNullException.ThrowIfNull(mode);
-        // CD 10.72(171개)는 소유자·추가 바이트 위치가 다르므로 받지 않는다
-        if (types.Count != OriginalConstructors.TypeCount)
+        // CD 10.72(171개)는 소유자·추가 바이트 위치가 다르므로 풀 판본에 맞는 개수를 받는다
+        int expected = pool.Edition == OriginalEdition.Cd1072 ? 171 : OriginalConstructors.TypeCount;
+        if (types.Count != expected)
         {
-            throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (10.78 은 {OriginalConstructors.TypeCount}개)", nameof(types));
+            throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (기대 {expected}개)", nameof(types));
         }
         _pool = pool;
         _types = types;

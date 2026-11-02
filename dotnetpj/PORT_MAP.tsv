@@ -322,6 +322,8 @@ cpppj/src/o/RawFortMetaLoad.h	Netstorm.Core/Original/RawFortMetaLoad.cs	9271152f
 cpppj/src/o/RawFortMoneyLoad.cpp	Netstorm.Core/Original/RawFortMoneyLoad.cs	9271152fe7274ad6fb45fcd37e4403995b0eb1cd	L1
 cpppj/src/o/RawFortMoneyLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	1a3ccedb702c4fa8d5b61250237a43841d58b048	port
 cpppj/src/o/RawFortMoneyLoad.h	Netstorm.Core/Original/RawFortMoneyLoad.cs	9271152fe7274ad6fb45fcd37e4403995b0eb1cd	L1
+cpppj/src/o/RawFortObjectLoad.cpp	Netstorm.Core/Original/RawFortObjectLoad.cs	b9b13e7dd68797c8880ed1c8c5f78f2601b1bde3	L1
+cpppj/src/o/RawFortObjectLoad.h	Netstorm.Core/Original/RawFortObjectLoad.cs	b9b13e7dd68797c8880ed1c8c5f78f2601b1bde3	L1
 cpppj/src/o/RawFortPaletteTransition.cpp	Netstorm.Core/Original/RawFortPaletteTransition.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
 cpppj/src/o/RawFortPaletteTransition.h	Netstorm.Core/Original/RawFortPaletteTransition.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
 cpppj/src/o/RawFortSpWrite.cpp	Netstorm.Core/Original/RawFortSpWrite.cs	91a62e792661dfba55261308ebfb7d0ffae194e4	L1
