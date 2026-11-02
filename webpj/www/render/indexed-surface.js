@@ -45,7 +45,9 @@ export class IndexedSurface {
     // 색 번호 그림을 (left, top) 에 그린다(원본 DrawIndexedImage). 투명 픽셀은 기존 색을 유지한다.
     // clip 은 출력 제한 사각형(생략 시 표면 전체), colorMap 이 있으면 그림의 색 번호를 colorMap[번호] 로 바꿔 쓴다.
     // image 는 { width, height, indices, opacity } 이다.
-    drawImage(image, left, top, clip = this.bounds, colorMap = null) {
+    // shadow=true이면 불투명 픽셀에서 원본 그림 색 대신 현재 배경 색을 colorMap으로 변환한다(Renderer::DrawIndexedImage). (2026-11-02 WB03-Z)
+    drawImage(image, left, top, clip = this.bounds, colorMap = null, shadow = false) {
+        if (shadow && !colorMap) throw new TypeError('그림자에는 배경 색 변환표가 필요합니다.');
         const area = clipRect(clip, this.bounds);
         const startY = Math.max(top, area.top);
         const endY = Math.min(top + image.height, area.bottom);
@@ -59,7 +61,9 @@ export class IndexedSurface {
             const output = y * this.width;
             // 불투명 픽셀만 써서 투명 영역의 기존 화면 값을 남긴다.
             for (let x = startX; x < endX; x += 1) {
-                if (opacity[input + x]) pixels[output + x] = colorMap ? colorMap[indices[input + x]] : indices[input + x];
+                if (opacity[input + x]) {
+                    pixels[output + x] = colorMap ? colorMap[shadow ? pixels[output + x] : indices[input + x]] : indices[input + x];
+                }
             }
         }
     }
