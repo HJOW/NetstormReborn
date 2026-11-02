@@ -2,6 +2,7 @@
 // CD판은 동일 TAFF 형식을 사용한다. 헤더 오프셋은 두 판본 파일을 직접 대조한다.
 // 범위: 읽기 전용 아카이브/VFS. TAFF는 배열에 소유하며 디스크/메모리 읽기는 원문 FILE 몸체와 호스트 장치를 사용한다.
 #include "o/BaseFile.h"
+#include "o/FileSpecQuery.h"
 #include "o/RawBaseFileReadPolicy.h"
 #include "o/RawFileName.h" // 디스크 root 조합도 HUD와 같은 원문 고리를 전진시킨다.
 #include "o/RawBaseFileIO.h"
@@ -297,16 +298,10 @@ bool BaseFileSystem::ReadOnly(std::string_view name) const {
 }
 // 원본00459610/004597c0의 디스크 열거만 사용한다. 메뉴별 정렬은 이 원시 경계에서 수행하지 않는다.
 std::vector<std::string> BaseFileSystem::MatchDisk(std::string_view pattern) const {
-    std::string normalized(pattern.substr(0,pattern.find('\0')));std::replace(normalized.begin(),normalized.end(),'\\','/');
-    if (normalized.starts_with("./")) normalized.erase(0,2);const auto first=normalized.find_first_not_of('/');normalized=first==std::string::npos ? std::string{} : normalized.substr(first);
-    if (normalized.find_first_of("*?")==std::string::npos) return {normalized}; // 실제 이름의 대소문자는 Win32와 원본 FileSpec처럼 보존한다.
 #ifdef _WIN32
-    const auto path=NativePath(normalized);const auto absolute=path.is_absolute() ? path : base_/path;WIN32_FIND_DATAW found{};std::vector<std::string> names; //Windows10/11 한글 이름은 원본A API 대신 W API로 같은 열거 순서를 받는다.
-    const auto handle=FindFirstFileW(absolute.c_str(),&found);if (handle==INVALID_HANDLE_VALUE) return names;
-    try {
-        do { names.push_back(PathText(path.parent_path()/found.cFileName)); } while (FindNextFileW(handle,&found)); //디렉터리 속성도 원본처럼 별도로 제외하지 않고 같은 OS 반환 순서를 유지한다.
-    } catch (...) { FindClose(handle);throw; }
-    FindClose(handle);return names;
+    FileSpecQuery spec(pattern,FileSpecDirectoryHooks(base_));std::vector<std::string> names; // 원래 입력의 첫NUL/접두·slash·UNC와 실패 핸들까지 공통 FileSpec이 소유한다.
+    while (spec.Valid()) { names.emplace_back(spec.Text());static_cast<void>(spec.Next()); } // 디렉터리/명시 부재 한 경로와 실제 OS 순서를 그대로 복사하고 같은 핸들을 끝에서 반납한다.
+    return names;
 #else
     throw std::logic_error("원본 Filespec의 실제 Win32 디스크 열거는 Windows에서만 지원합니다");
 #endif
@@ -321,7 +316,8 @@ std::vector<std::string> BaseFileSystem::MatchFinder(std::string_view pattern) c
     };
     const auto disk=[&](const std::filesystem::path& root) { // FileSpec의 실제 Win32 순서를 가져와 원문의 기본 경로 접두부만 제거한다.
         const auto absoluteRoot=std::filesystem::absolute(root).lexically_normal();auto prefix=PathText(absoluteRoot);std::replace(prefix.begin(),prefix.end(),'/','\\');while (!prefix.empty() && prefix.back()=='\\') prefix.pop_back(); //끝 구분자는 반환 상대 이름에 한 번만 남기며 UTF-8 바이트를 보존한다.
-        const BaseFileSystem finder(root);for (const auto& name:finder.MatchDisk(pattern)) { // 디렉터리 속성도 FileSpec과 같이 제외하지 않는다.
+        auto nativePattern=std::string(pattern);std::replace(nativePattern.begin(),nativePattern.end(),'/','\\'); // 현대 VFS의 '/' 경로 확장만 caller에서 native로 변환하며 원문 FileSpec 입력 계약은 바꾸지 않는다.
+        const BaseFileSystem finder(root);for (const auto& name:finder.MatchDisk(nativePattern)) { // 디렉터리 속성도 FileSpec과 같이 제외하지 않는다.
             const auto path=NativePath(name);auto absolute=PathText(std::filesystem::absolute(path.is_absolute()?path:root/path).lexically_normal());std::replace(absolute.begin(),absolute.end(),'/','\\');
             if (absolute.size()>prefix.size() && absolute.compare(0,prefix.size(),prefix)==0 && absolute[prefix.size()]=='\\') append(absolute.substr(prefix.size())); // 원문처럼 경로 접두부 비교는 대소문자를 바꾸지 않는다.
         }

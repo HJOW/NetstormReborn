@@ -80,7 +80,8 @@ struct SoloMapCatalog::Impl {
         hooks.enumerate=[this] {
             std::vector<std::string> names;
             const auto pattern=config.PathSpec(Need(effects.fileSpecKey)(),"*"); //실제 열거 직전의 현재 키/설정만 읽으며 분류와 메타 읽기까지 캡처하지 않는다.
-            const auto paths=effects.enumeratePaths ? effects.enumeratePaths(pattern) : files.MatchDisk(pattern); //새 장치를 제공하지 않은 독립/기존 호출의 원래 디스크 경계를 보존한다.
+            auto nativePattern=pattern;std::replace(nativePattern.begin(),nativePattern.end(),'/','\\'); // 현대 Config의 '/' 확장을 독립 VFS 경계에서만 native로 변환하며 원문 목록 몸체는 그대로 둔다.
+            const auto paths=effects.enumeratePaths ? effects.enumeratePaths(pattern) : files.MatchDisk(nativePattern); //새 장치를 제공하지 않은 독립/기존 호출의 원래 디스크 경계를 보존한다.
             for (const auto& path:paths) names.push_back(MapName(path)); // 원본 OS 순서와 전체 점 제거를 유지하고 TAFF 목록은 합치지 않는다.
             return names;
         };

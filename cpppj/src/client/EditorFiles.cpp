@@ -134,7 +134,7 @@ std::vector<std::string> EditorFiles::MatchDisk(std::string_view pattern) const 
     if (pattern.find('\0')!=std::string_view::npos) throw std::invalid_argument("편집 목록 패턴의 NUL 경계 위반");
     const auto requested=PathFromUtf8(pattern); //현재 UTF-8 설정의 상대/절대 패턴을 파일명과 부모 경로로 분리한다.
     if (PathToUtf8(requested.parent_path()).find_first_of("*?")!=std::string::npos) throw std::invalid_argument("편집 목록의 폴더 와일드카드 범위 위반");
-    const auto directory=ResolvePath(PathToUtf8(requested.parent_path())),absolute=directory/requested.filename(); //실제 부모만 canonical 검사하고 파일 와일드카드를 filesystem 경로 조회에 넘기지 않는다.
+    const auto directory=ResolvePath(PathToUtf8(requested.parent_path()));auto absolute=directory/requested.filename();absolute.make_preferred(); // 현대 편집 경계의 '/' 입력을 native로 넘겨 원문 FileSpec이 절대 접두를 잃지 않게 하며 부모만 canonical 검사한다.
     const o::BaseFileSystem disk(root_,{},fileNames_);std::vector<std::string> result; //기존읽기전용OS열거를빌리며같은경로소유권을유지한다.
     for (const auto& name:disk.MatchDisk(PathToUtf8(absolute))) { //원본 FindFirst/Next 순서를 유지하되 작업본 밖으로 향하는 링크는 여기서 거부한다.
         auto listed=PathFromUtf8(name);const auto leaf=PathToUtf8(listed.filename());if (leaf!="." && leaf!="..") static_cast<void>(ResolvePath(name));listed.make_preferred();result.push_back(PathToUtf8(listed)); //OS 자체 . / .. 후보는 읽기 요청이 아니므로 부모 검사 뒤 보존한다. 실제 reader/writer의 root 보호는 그대로다.

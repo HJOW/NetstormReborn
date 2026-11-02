@@ -1,0 +1,420 @@
+{
+  "unit": 752,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 752,
+  "displayVersion": "11.01",
+  "exeSha256": "f467d9b4261f8a19280306e6586bd7bc615e29da4d32ae0116d5340254a03f6d",
+  "summary": "MatchDisk의 원문 FileSpec 계약과 가상 게임 CWD 및 현대 편집 경계 연결",
+  "tests": {
+    "totalUnique": 100,
+    "totalExecutions": 132,
+    "failedChecks": 0,
+    "newTests": 2,
+    "names": [
+      "BaseFile_AbsoluteMissingRequeriesActualPrimaryAndSecondarySources",
+      "BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix",
+      "BaseFile_MatchDiskNonPatternKeepsNativeFileSpecContract",
+      "BaseFile_ReadPolicyEmptyFileIsSuccessAndMissingLookupIsExplicit",
+      "BaseFile_ReadPolicyReplaysIndependentNative1024",
+      "BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder",
+      "BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp",
+      "BaseFile_SecondaryReadPriorityAndSeparateArchiveOnlyViews",
+      "BaseFile_SecondaryReplaysIndependentNativeRegistration27",
+      "ConfigPathLoad_ActualClientUnicodeFilesAndSharedOwner",
+      "ConfigPathLoad_Native12SectionsFindLifetimeAndRing",
+      "ConfigPathLoad_ReaderFailureClosesSearchAndKeepsPartialState",
+      "EditorCatalogFiles_ArchiveOnlyReadsRegisteredOrderWithoutDiskFallback",
+      "EditorCatalogFiles_ClassificationAndMetadataStillRereadCurrentWork",
+      "EditorCatalogFiles_CompletedDeletionAliasesAndDirectPrepareNeverRevive",
+      "EditorCatalogFiles_DirectoriesMissingPatternsDotsAndSiblingMetadata",
+      "EditorCatalogFiles_DuplicateLogicalNamesRemainTwoNativeRows",
+      "EditorCatalogFiles_ExistingUnreadableLedgerNeverRevivesDeletedSource",
+      "EditorCatalogFiles_NativeFiftyMatchesActualWorkOsSnapshot",
+      "EditorCatalogFiles_NativeRenameReadonlyAndDeletionShareNamespace",
+      "EditorCatalogFiles_NewNameRefreshAndOwnerRestartUseActualWork",
+      "EditorCatalogFiles_PendingCorruptLockedAndFailedJournalAreExplicit",
+      "EditorCatalogFiles_WorkOsOrderPreservesExistingCopyAndReadonly",
+      "EditorFileRing_ActualTemplateLoadUsesOwnerUntilTitleBoundary",
+      "EditorFileRing_MetadataNamespaceAndRejectedPathsKeepClientRing",
+      "EditorFileRing_MissingQueriesPreserveReservationAndWrapBorrowedView",
+      "EditorFileRing_TemplateReadQueriesContinueSourceOwner",
+      "EditorFileWriter_ActualSaveUsesCurrentManagerNameSignatureAndTail",
+      "EditorFileWriter_ExclusiveOpenFailurePreservesExistingBytes",
+      "EditorFileWriter_ExistingTailMissingCreationAndGeneralTruncation",
+      "EditorFileWriter_ProtectedAndAbsentParentFailBeforeMutation",
+      "EditorFiles_FortSelectionUsesCurrentStateAndWriter",
+      "EditorFiles_NotifySaveAndReloadProtectedTest01",
+      "EditorFiles_ProtectedNameRejectedThroughSaveParent",
+      "EditorFiles_RealManagerSignatureAndCurrentSearch",
+      "EditorFiles_RejectsProtectedPathsAndKeepsExistingWork",
+      "EditorFiles_SaveParentPreservesTailWhenCurrentTemplateGetsShorter",
+      "EditorFiles_WorkingRootNormalizesDirectorySpellingsAndPreservesWork",
+      "EditorFiles_WorkingRootStillRejectsProtectedAndNamelessRoots",
+      "EditorFortFiles_ActualReadOnlyAttributeIsSeparateFromConfigGate",
+      "EditorFortFiles_CurrentNameDiagnosticAndSelectorAreReachedLazily",
+      "EditorFortFiles_CurrentPathReusesConfigAndCurrentFileSpec",
+      "EditorFortFiles_MissingReadAndStatFailureRemainExplicit",
+      "EditorFortFiles_PreparedEditedBytesWinOverOriginal",
+      "EditorFortFiles_RejectsProtectedAndEscapedPathsBeforeAnyWrite",
+      "EditorFortFiles_RootedGamePathReusesBaseFileNormalization",
+      "EditorFortFiles_SaveGateKeepsWritableFileUntilCurrentDwordAllowsWrite",
+      "EditorFortFiles_ValidReadsOnlyCurrentHeaderPointer",
+      "EditorMutationRing_ActualTemplateSaveUsesClientOwnerOnce",
+      "EditorMutationRing_CreationFallbackHasOneReservationAndHostPreparationHasNone",
+      "EditorMutationRing_FailedOpenAndSharedDeleteKeepOneReservationEach",
+      "EditorMutationRing_ProtectedRequestsAndMetadataDoNotConsumeClientOwner",
+      "EditorMutationRing_ReadonlyMissingAndSuccessfulDeleteShareCurrentOwner",
+      "EditorMutationRing_TemplateWriterUsesOneSlotAfterDirectChmod",
+      "EditorMutationRing_WritesWrapTheBorrowedViewAfterTenCalls",
+      "EditorUnicode_CatalogImportReopenAndDeletion",
+      "EditorUnicode_CurrentFortDeviceRoundTrip",
+      "EditorUnicode_FilesPermissionsAtomicAndBoundary",
+      "EditorUnicode_MissingWorkDoesNotReadSourceArchive",
+      "FileDirectory_AliasClearAndPhysicalOverflowAreExplicit",
+      "FileDirectory_Native192WholeSlotsAndReadFaultBoundary",
+      "FileDirectory_NativeModuleParentFivePathsAndThreeSlots",
+      "FileDirectory_PortableLongUnicodeKeepsHostPathWithoutOverflow",
+      "FileDirectory_PortableUnicodeOwnerContinuesIntoActualClient",
+      "FileFull_AliasAndBoundsKeepReservationAndOtherSlots",
+      "FileFull_Native16PhysicalInputsAndWholeSlots",
+      "FileNameDevice_ReplaysNative32WholeSlotsAndReadonlyInput",
+      "FileName_ClientOwnerKeepsSeparateRingAcrossStaticReinitialization",
+      "FileName_PhysicalOverflowRejectsAndKeepsEarlierSlots",
+      "FileName_ReplaysNative352WholeBuffersAndPartialThrows",
+      "FileName_TenSlotsWrapAndInputAliasObservesClear",
+      "FilePathClient_ActualReadProbeReadonlyAndSavedFileShareTenSlots",
+      "FilePathClient_SecondaryLookupAndBorrowerKeepOneOwnerAlive",
+      "FileSpecQuery_NonPatternNextAndAssignKeepLastValueAndCloseOldHandle",
+      "SavedStateFiles_MissingReadonlyAndDirectoryKeepOriginalFailureSemantics",
+      "SavedStateFiles_NativeCrt263AndFirstDuplicateErrorMapping",
+      "SavedStateFiles_NativeMainMenuIgnoresRemoveFailureAndRecomputesSecondPath",
+      "SavedStateFiles_UnicodeExactTargetAndSuccessfulCrtErrorPreservation",
+      "SoloMapCatalog_CurrentFileSpecAndExplicitInvalidation",
+      "SoloMapCatalog_CurrentSubscriberSection",
+      "SoloMapCatalog_DiskEnumerationAndArchiveRead",
+      "SoloMapCatalog_EmptyShortAndMetadataOnly",
+      "SoloMapCatalog_FileDisappearsBetweenReads",
+      "SoloMapCatalog_FileSpecChangesBetweenClassificationAndMetadata",
+      "SoloMapCatalog_FileSpecStripsAllExtensions",
+      "SoloMapCatalog_ProtectedFilesAndCache",
+      "SoloMapCatalog_TellMetadataUsesActualFilesAndCurrentNames",
+      "StartupArchives_Native54FullRingsAndSameHandleAcrossLists",
+      "StartupArchives_RegisterFailureClosesActiveSearchAndKeepsPartialRing",
+      "StartupFileNames_ActualClientUnicodeStartupSaveAndReload",
+      "StartupFileNames_Native24OwnedArgumentsAndWholeRing",
+      "StartupFileNames_ReentrantReadKeepsLocalCopies",
+      "StartupLocation_ActualDiskSixCandidatesStopAtFirstSuccess",
+      "StartupLocation_MissingSetupStopsBeforeCdAndKeepsExistingFiles",
+      "StartupLocation_Native84CandidatesAndWholeRing",
+      "StartupLocation_UnicodeVirtualCwdReplacesPreloadAndKeepsReaderAndCd",
+      "StaticStrings_ActualClientEditorTranslationAndSharedLifetime",
+      "StaticStrings_ActualOwnerReservationAndAlias",
+      "StaticStrings_CrtFailurePreservesReservation",
+      "StaticStrings_ReplaysIndependentPe204"
+    ],
+    "logs": [
+      "tests-ring-v1.log",
+      "tests-editor-v1.log",
+      "tests-search-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "nativeVerification": {
+    "observations": 164,
+    "existingFixturesUnchanged": true,
+    "reports": {
+      "native-startup-verify.json": {
+        "unit": 736,
+        "date": "2026-11-02",
+        "host": "HJOW-Athlon",
+        "lastFullDecompilation": {
+          "host": "HJOW-Athlon",
+          "date": "2026-10-23"
+        },
+        "archiveRows": 54,
+        "fullRows": 16,
+        "observations": 140,
+        "boundary": "실제441965~441a44/Full/FileSpec/재대입/Next/CRT와별도실제dtor. OS FindFirst/Next/Close와등록/보조root설정은명시경계. CWD확정전/뒤Load/전체부모반환ABI는범위밖",
+        "gameExecutions": 0,
+        "multiplayerTests": 0,
+        "sha256": {
+          "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "tools\\decomp_startup_archives.py": "43b0d17856ee46076647788141053f10c3f43f17f29e3bcd692b6afd9a283679",
+          "cpppj\\tests\\fixtures\\startup-archives-x86.tsv": "8e7bdcdb9bb86b34064bc3a163ae62a110a2ae8c4925e01c8727b85eda10e0cd",
+          "cpppj\\tests\\fixtures\\file-full-x86.tsv": "67e8a8960fc2a8a479318170104babdeebe3215d04210776e5a7b2751fdc032a"
+        }
+      },
+      "native-config-verify.json": {
+        "unit": 731,
+        "date": "2026-11-02",
+        "host": "HJOW-Athlon",
+        "lastFullDecompilation": {
+          "host": "HJOW-Athlon",
+          "date": "2026-10-23"
+        },
+        "fixtureRows": 12,
+        "observations": 24,
+        "rows": [
+          {
+            "arguments": [],
+            "found": "",
+            "advances": 0,
+            "events": [
+              "clear",
+              "section:41524753",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "613d31",
+              "623d32"
+            ],
+            "found": "",
+            "advances": 0,
+            "events": [
+              "clear",
+              "section:41524753",
+              "inline:613d31",
+              "inline:623d32",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "613d31",
+              "40",
+              "",
+              "6f6e652e636667",
+              "642f74776f2e636667"
+            ],
+            "found": "",
+            "advances": 2,
+            "events": [
+              "clear",
+              "section:41524753",
+              "inline:613d31",
+              "name",
+              "section:6f6e652e636667",
+              "read:6f6e652e636667",
+              "name",
+              "section:74776f2e636667",
+              "read:642f74776f2e636667",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "406f6e652e636667",
+              "40645c74776f2e636667",
+              "783d33"
+            ],
+            "found": "",
+            "advances": 3,
+            "events": [
+              "clear",
+              "section:41524753",
+              "name",
+              "section:6f6e652e636667",
+              "read:6f6e652e636667",
+              "name",
+              "section:74776f2e636667",
+              "read:645c74776f2e636667",
+              "name",
+              "section:783d33",
+              "read:783d33",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "40433a5c646174615c6f6e652e636667",
+              "5c5c7365727665725c73686172655c74776f2e636667"
+            ],
+            "found": "",
+            "advances": 2,
+            "events": [
+              "clear",
+              "section:41524753",
+              "name",
+              "section:6f6e652e636667",
+              "read:433a5c646174615c6f6e652e636667",
+              "name",
+              "section:74776f2e636667",
+              "read:5c5c7365727665725c73686172655c74776f2e636667",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "40645ce9636f6c652e636667",
+              "706c61696e0069676e6f726564"
+            ],
+            "found": "",
+            "advances": 2,
+            "events": [
+              "clear",
+              "section:41524753",
+              "name",
+              "section:e9636f6c652e636667",
+              "read:645ce9636f6c652e636667",
+              "name",
+              "section:706c61696e",
+              "read:706c61696e",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "400069676e6f726564",
+              "6e6578742e636667"
+            ],
+            "found": "",
+            "advances": 1,
+            "events": [
+              "clear",
+              "section:41524753",
+              "name",
+              "section:6e6578742e636667",
+              "read:6e6578742e636667",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "40645c2a2e636667"
+            ],
+            "found": "63686f73656e2e636667",
+            "advances": 1,
+            "events": [
+              "clear",
+              "section:41524753",
+              "find:645c2a2e636667",
+              "name",
+              "section:63686f73656e2e636667",
+              "read:645c2a2e636667",
+              "close:4660",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "40645c2a2e636667"
+            ],
+            "found": "",
+            "advances": 1,
+            "events": [
+              "clear",
+              "section:41524753",
+              "find:645c2a2e636667",
+              "name",
+              "section:",
+              "read:645c2a2e636667",
+              "close:4294967295",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "40642f2a2e636667"
+            ],
+            "found": "63686f73656e2e636667",
+            "advances": 1,
+            "events": [
+              "clear",
+              "section:41524753",
+              "find:642f2a2e636667",
+              "name",
+              "section:",
+              "read:642f2a2e636667",
+              "close:4660",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "402a2e636667"
+            ],
+            "found": "63686f73656e2e636667",
+            "advances": 1,
+            "events": [
+              "clear",
+              "section:41524753",
+              "find:2a2e636667",
+              "name",
+              "section:",
+              "read:2a2e636667",
+              "close:4660",
+              "section:454e44"
+            ]
+          },
+          {
+            "arguments": [
+              "40645c78787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878"
+            ],
+            "found": "",
+            "advances": 1,
+            "events": [
+              "clear",
+              "section:41524753",
+              "name",
+              "section:78787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+              "read:645c78787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878787878",
+              "section:454e44"
+            ]
+          }
+        ],
+        "boundary": "실제440e00/45a220/459610/4595f0/459b20과실제CRT. 설정Clear/Section/Inline/Read·로그·FindFirst/FindClose는명시경계. 실제OS/파서/예외unwind를실행하지않음",
+        "gameExecutions": 0,
+        "multiplayerTests": 0,
+        "sha256": {
+          "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "tools\\decomp_config_path_load.py": "d8aa287ececde0b01b835a9c1b9cf5c0f1c8989ec1901f607ba33d208b2172b1",
+          "tools\\decomp_file_name_leaf.py": "35ecbc66df6bc3d0f41a29ebe721dffc74b2d6ff5928a952f56cd8cceac509de",
+          "cpppj\\tests\\fixtures\\config-path-load-x86.tsv": "c025d6dfae50bf61dac283a6f2bef96917df3b77e73ab3c41f7b12abadae6875"
+        }
+      }
+    }
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "count": 2662,
+    "allUnchanged": true,
+    "fixtureCount": 842,
+    "newFixtures": 0
+  },
+  "sourceSha256": {
+    "cpppj/src/o/BaseFile.cpp": "1b3688040d66ad82235965ab0208ba16c3f1055711b953607ec0a35d5ab0feb3",
+    "cpppj/src/o/BaseFile.h": "18b7670f7403e111759aaa16529ab3c9a37fedae93875f5e02596a3c926e76c5",
+    "cpppj/src/o/FileSpecQuery.cpp": "fcba70ab7bfffa81121730d4dfec963d5f5bd8b06b51f11962ed9a63f66f9f00",
+    "cpppj/src/o/FileSpecQuery.h": "86f03261e8bcdb8535b9eaa17f8637f42c9e560c6623af32823bc09e8ef4fd32",
+    "cpppj/src/client/EditorFiles.cpp": "0a40db3ad0b3f441d1c2988bc02d41443341c566758d26c25703989d525c8afa",
+    "cpppj/src/client/EditorMapCatalogFiles.cpp": "d76079b69fb2c07522bb305ee49d182930c4c184e2110b5ae161661c732d7e8f",
+    "cpppj/src/client/SoloMapCatalog.cpp": "d0fde4c285eb9c22461139ad2feae254acb6f00329cd96c2d6f865603683c520",
+    "cpppj/tests/BaseFileSecondaryTests.cpp": "33b4356b41d979a95ebd132db25077e99376121afdd6484f8d44c003f42d5292",
+    "cpppj/tests/SoloMapCatalogTests.cpp": "76a3c28e07982794f5ec28deafa31fbc8b07894e5a5ac839e57d7d5f83fde1f6",
+    "cpppj/tests/CMakeLists.txt": "439fb6bd2e359d35268df12fd9675c83fb97eb139e229a33c14bfade2a2fb315"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-752/protected-after.json",
+  "limitations": [
+    "전체264BYTE FileSpec/FILE 예외 ABI·실제 UNC 서버/다른 드라이브의 per-drive CWD·전체 부분I/O 실패는 별도다.",
+    "새 게임/GUI/물리 키/PCM/MP·공중3종 전용 행동·포획/희생·특정 적 공격·승리·자연 완주 검사0."
+  ]
+}

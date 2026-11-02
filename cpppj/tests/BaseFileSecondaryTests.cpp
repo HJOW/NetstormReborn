@@ -4,6 +4,7 @@
 #include "client/ClientMain.h"
 #include "client/TechnicalHelp.h"
 #include "o/BaseFile.h"
+#include "o/RawFileName.h" // MatchDisk이 공유 고리를 소비하지 않는 경계를 실제 번호로 확인한다.
 #include <windows.h>
 #include <atomic>
 #include <filesystem>
@@ -85,6 +86,28 @@ TEST_CASE(BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder) {
     CHECK(files.Match("d/*")==std::vector<std::string>({"d/a","d/b"})); //후보 중복은 첫 이름만 남기고 기존 정렬 API는 정렬을 유지한다.
     std::filesystem::create_directory(korean/L"d");WriteByte(korean/L"d/유니코드😀.english",'Q'); //실제 Unicode 파일 이름도 같은 코드 페이지 독립 경계로 왕복한다.
     CHECK(files.MatchFinder("d\\*.english")==std::vector<std::string>{"\\d\\유니코드😀.english"});CHECK(files.Match("d/*.english")==std::vector<std::string>{"d/유니코드😀.english"});CHECK(files.Read("d/유니코드😀.english")==std::vector<std::uint8_t>{'Q'});
+}
+
+// 원문 FileSpec의 비패턴은 존재 확인 없이 접두/구분자만 작성하며 장치·UNC·첫NUL을 제거하지 않는다.
+TEST_CASE(BaseFile_MatchDiskNonPatternKeepsNativeFileSpecContract) {
+    TaffTemporary work;BaseFileSystem files(work.path);const auto names=files.FileNameOwner(); // 파일명 고리와 TAFF 등록은 열거 API가 소비하지 않는다.
+    const std::array<std::pair<std::string,std::string>,10> cases{{{"ordinary",".\\ordinary"},{"d/absent.fort",".\\d\\absent.fort"},{"d\\absent.fort","d\\absent.fort"},{"\\rooted\\absent","\\rooted\\absent"},{"\\\\server\\share\\absent","\\\\server\\share\\absent"},{"/rooted/absent",".\\\\rooted\\absent"},{"",".\\"},{std::string("visible\0bad*",12),".\\visible"},{"Z:absent","Z:absent"},{"../absent",".\\..\\absent"}}}; // 반환 기대는 원문459610의 명시 접두/첫NUL 계약이다.
+    for (const auto& [input,expected]:cases) CHECK(files.MatchDisk(input)==std::vector<std::string>{expected}); // 비패턴 UNC 사례는 네트워크나 파일 존재를 조회하지 않는다.
+    CHECK(names->Index()==0);
+}
+
+// OS 검색에는 가상 게임 CWD를 적용하되 FileSpec 결과는 원래 입력의 마지막 backslash 접두만 보존한다.
+TEST_CASE(BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix) {
+    TaffTemporary work;const auto root=work.path/L"게임😀";std::filesystem::create_directories(root/L"d/folder.bin");WriteByte(root/L"d/z.bin",'Z');WriteByte(root/L"d/한글😀.bin",'K');BaseFileSystem files(root);const auto hostDirectory=std::filesystem::current_path(); // 폴더 후보도 원문처럼 포함하고 호스트 CWD는 바꾸지 않는다.
+    std::vector<std::string> leaves;WIN32_FIND_DATAW data{};const auto handle=::FindFirstFileW((root/L"d/*.bin").c_str(),&data);CHECK(handle!=INVALID_HANDLE_VALUE);
+    if (handle!=INVALID_HANDLE_VALUE) { do { leaves.push_back(TaffUtf8(data.cFileName)); }while (::FindNextFileW(handle,&data));static_cast<void>(::FindClose(handle)); } // 기대 순서는 제품 FileSpec을 거치지 않는 독립 OS 열거다.
+    CHECK(leaves.size()==3 && files.MatchDisk("d/*.bin")==leaves);std::vector<std::string> expected; // '/' 패턴은 원문처럼 하위 폴더 접두를 반환하지 않는다.
+    for (const auto& leaf:leaves) expected.push_back("d\\"+leaf); // native 상대 접두만 같은 OS 이름 앞에 유지한다.
+    CHECK(files.MatchDisk("d\\*.bin")==expected && files.MatchDisk("d\\missing-*.bin").empty());
+    auto absolute=root/L"d/*.bin";absolute.make_preferred();const auto absolutePattern=TaffUtf8(absolute);const auto drive=TaffUtf8(absolute.root_name());std::string rooted=absolutePattern.substr(drive.size()); // 현재 게임 드라이브의 루트 상대 패턴은 호출자 CWD 드라이브에 종속되지 않는다.
+    const std::array<std::string,3> patterns{{absolutePattern,rooted,drive+"d\\*.bin"}};
+    for (const auto& pattern:patterns) { const auto slash=pattern.find_last_of('\\');expected.clear();for (const auto& leaf:leaves) expected.push_back(pattern.substr(0,slash+1)+leaf);CHECK(files.MatchDisk(pattern)==expected); } // 절대/루트상대/같은드라이브상대의 OS 해석과 반환 접두를 함께 확인한다.
+    CHECK(std::filesystem::current_path()==hostDirectory && files.FileNameOwner()->Index()==0);
 }
 
 // Run/창/외부 실행 없이 실제 Client의 기본/보조 등록과 Help source4의 이름 판정을 연결한다.

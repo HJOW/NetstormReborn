@@ -3034,3 +3034,6 @@ set_source_files_properties(PointerMenuParentTests.cpp PROPERTIES COMPILE_DEFINI
 target_sources(netstorm_tests PRIVATE LostPositionKeyTests.cpp LostPositionOwnerTests.cpp)
 target_sources(netstorm_construction_history_key_tests PRIVATE LostPositionKeyTests.cpp)
 target_sources(netstorm_menu_session_tests PRIVATE LostPositionOwnerTests.cpp)
+
+# FileSpec 경계 변경과 실제 디스크/TAFF 맵 목록 소비자를 같은 기존 집중 대상에서 확인한다(752).
+target_sources(netstorm_editor_file_tests PRIVATE SoloMapCatalogTests.cpp)

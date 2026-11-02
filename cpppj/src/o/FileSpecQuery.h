@@ -2,6 +2,7 @@
 #pragma once
 #include <cstdint>
 #include <functional>
+#include <filesystem>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -13,6 +14,7 @@ struct FileSpecQueryHooks { // 두 경계가 모두 비어 있으면 실제 Wind
     std::function<void(std::uintptr_t)> close; // 비NULL/실패 핸들도 원문처럼 한 번 반납하며 예외를 던지지 않는다.
     std::function<std::optional<std::string>(std::uintptr_t)> next; // FindNext의실제BOOL/이름이며빈optional만실패다. 기존단일조회장치는호출전까지필요없다.
 };
+FileSpecQueryHooks FileSpecDirectoryHooks(std::filesystem::path directory); // 원문의 chdir 뒤 검색을 가상 게임 폴더에서 수행하며 호스트 CWD와 FileSpec 반환 문자열은 바꾸지 않는다.
 class FileSpecQuery { // 일반 입력은 핸들 없이 정규화하고 패턴은 원래 입력으로 검색한다.
 public:
     explicit FileSpecQuery(std::string_view name,const FileSpecQueryHooks& hooks={}); // 원문459610/45a220의 첫NUL·접두·slash·FindFirst 순서다.

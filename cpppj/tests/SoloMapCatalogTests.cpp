@@ -54,7 +54,7 @@ void Write(const std::filesystem::path& path,std::span<const std::uint8_t> bytes
 // 디스크 TEST01과 내장 맵 사본을 원본 OS 순서로 분류하고 모든 표시 행을 원시 파일과 대조한다.
 TEST_CASE(SoloMapCatalog_ProtectedFilesAndCache) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);std::vector<Metadata> source;bool custom{};
-    for (const auto& path:assets.files.MatchDisk("d/*.fort")) { // 실제 원본 Win32 디스크 열거 순서가 기대 목록 순서다.
+    for (const auto& path:assets.files.MatchDisk("d\\*.fort")) { // 실제 원본 Win32 디스크 열거 순서가 기대 목록 순서이며 FileSpec에는 원문 native 접두를 입력한다.
         auto bytes=assets.files.Read(path);const auto sections=FileSections(bytes);const auto& subscriber=sections[0];const auto& state=sections[1];
         CHECK(subscriber.size()>=6);if (subscriber.size()<6) return;const auto length=std::size_t(subscriber[4])+(std::size_t(subscriber[5])<<8);CHECK(length<=subscriber.size()-6);if (length>subscriber.size()-6) return;
         auto author=std::string(reinterpret_cast<const char*>(subscriber.data()+6),length);author=author.substr(0,author.find('\0'));auto name=std::filesystem::path(path).stem().string();custom|=AsciiLower(name)=="test01";
@@ -90,7 +90,7 @@ TEST_CASE(SoloMapCatalog_DiskEnumerationAndArchiveRead) {
     for (const auto& path:files.Match("d/*.fort")) { // 열거 밖의 내용 읽기도 같은 실제 파일/State 부모로 검사한다.
         const auto sections=FileSections(files.Read(path));const auto& state=sections[1];const auto kind=state.size()>17 ? state[17] : std::uint8_t{};CHECK(catalog.Kind(std::filesystem::path(path).stem().string())==kind);++read;
     }
-    const auto explicitName=files.MatchDisk("d/absent.fort");CHECK((explicitName==std::vector<std::string>{"d/absent.fort"}));std::printf("catalog disk-only menu empty, archive/secondary content reads=%zu\n",read);
+    const auto explicitName=files.MatchDisk("d\\absent.fort");CHECK((explicitName==std::vector<std::string>{"d\\absent.fort"}));std::printf("catalog disk-only menu empty, archive/secondary content reads=%zu\n",read); // 존재 확인 없는 원문 native 이름 계약이며 '/' 현대 입력 확장은 catalog 경계에서 변환한다.
 }
 
 // 빈/짧은 State의 실제 생성/확장과 메타 조회 두 수명을 별도 생성 파일로 확인한다.

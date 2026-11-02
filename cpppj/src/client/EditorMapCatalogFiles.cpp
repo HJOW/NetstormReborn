@@ -115,9 +115,9 @@ EditorCatalogWorkspace::~EditorCatalogWorkspace()=default; //동기 UI/Session�
 EditorFiles& EditorCatalogWorkspace::Files() const { return *impl_->files; } //Native 파일 부모의 기존 장치를 그대로 빌린다.
 std::filesystem::path EditorCatalogWorkspace::Resolve(std::string_view configuredPath) const { return impl_->files->ResolvePath(impl_->Key(configuredPath)); } //파일명/첫점 추정 없이 같은 물리 전체 키를 쓴다.
 void EditorCatalogWorkspace::ImportDisk(std::string_view configuredPattern) {
-    const auto pattern=impl_->Key(configuredPattern);const auto requested=PathFromUtf8(pattern);const o::BaseFileSystem source(impl_->sourceRoot);
+    const auto pattern=impl_->Key(configuredPattern);auto requested=PathFromUtf8(pattern);requested.make_preferred();const o::BaseFileSystem source(impl_->sourceRoot); // 현대 장부의 '/' 키만 native로 바꿔 원문 FileSpec이 같은 하위 폴더 접두를 유지한다.
     if (PathToUtf8(requested.filename()).find_first_of("*?")!=std::string::npos && std::filesystem::is_directory(impl_->SourcePath(PathToUtf8(requested.parent_path())))) impl_->files->EnsureDirectory(PathToUtf8(requested.parent_path())); //빈 source 폴더의 . / .. OS 후보도 실제 빈 작업 폴더에서 열거한다.
-    for (const auto& path:source.MatchDisk(pattern)) { const auto leaf=PathToUtf8(PathFromUtf8(path).filename());if (leaf=="." || leaf=="..") continue;impl_->Import(impl_->Key(path)); } //점 두 후보는 복사/장부를 만들지 않고 실제 work 열거가 그대로 돌려준다.
+    for (const auto& path:source.MatchDisk(PathToUtf8(requested))) { const auto leaf=PathToUtf8(PathFromUtf8(path).filename());if (leaf=="." || leaf=="..") continue;impl_->Import(impl_->Key(path)); } //점 두 후보는 복사/장부를 만들지 않고 실제 work 열거가 그대로 돌려준다.
 }
 std::filesystem::path EditorCatalogWorkspace::Prepare(std::string_view configuredPath) {
     const auto key=impl_->Key(configuredPath);impl_->Import(key);if (impl_->entries.contains(o::AsciiLower(key)) || std::filesystem::exists(impl_->files->ResolvePath(key))) return impl_->files->ResolvePath(key);

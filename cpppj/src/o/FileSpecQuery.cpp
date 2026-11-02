@@ -17,6 +17,18 @@ FileSpecFindResult WindowsFind(std::string_view name) { // 원본 ANSI와 다른
 void WindowsClose(std::uintptr_t handle) { static_cast<void>(::FindClose(reinterpret_cast<HANDLE>(handle))); } // 원문은 실패 핸들/FindClose 반환값도 별도로 처리하지 않는다.
 std::optional<std::string> WindowsNext(std::uintptr_t handle) { WIN32_FIND_DATAW data{};if (!::FindNextFileW(reinterpret_cast<HANDLE>(handle),&data)) return {};return platform::PathToUtf8(data.cFileName); } // 원본A대신Windows10/11의Unicode이름을같은OS열거순서로받는다.
 }
+FileSpecQueryHooks FileSpecDirectoryHooks(std::filesystem::path directory) { // Windows10/11 호환: 원문 게임 CWD를 명시 root로 대체하고 Unicode 검색 핸들 수명은 같은 장치에 맡긴다.
+    FileSpecQueryHooks hooks; // 비패턴 FileSpec은 폴더 절대화나 OS 조회도 시작하지 않는다.
+    hooks.find=[directory](std::string_view name) { // 원래 패턴은 FileSpec에 남기고 OS에 전달하는 상대 경로만 게임 폴더에 붙인다.
+        const auto root=std::filesystem::absolute(directory).lexically_normal();auto path=platform::PathFromUtf8(name);const auto drive=path.root_name(); // 드라이브 상대 이름과 루트/UNC 이름을 구별하며 검색 시에만 게임 폴더를 확정한다.
+        if (!path.is_absolute()) {
+            if (!path.has_root_name()) path=root/path;
+            else if (!path.has_root_directory() && drive.native().size()==2 && drive.native()[1]==L':' && ::CompareStringOrdinal(drive.c_str(),-1,root.root_name().c_str(),-1,TRUE)==CSTR_EQUAL) path=root/path.relative_path();
+        }
+        return WindowsFind(platform::PathToUtf8(path));
+    };
+    hooks.close=WindowsClose;hooks.next=WindowsNext;return hooks;
+}
 FileSpecQuery::Search::~Search() { if (handle) close(handle); } // 현재 호출이 실제 소유한 비NULL 검색 핸들만 한 번 반납한다.
 FileSpecQuery::FileSpecQuery(std::string_view name,const FileSpecQueryHooks& hooks):hooks_(hooks) { Assign(name); } // 재대입과같은최초검색/부분실패수명을사용한다.
 void FileSpecQuery::Assign(std::string_view name) { // 원문은패턴이있으면정규화한값대신원래입력으로다시검색한다.

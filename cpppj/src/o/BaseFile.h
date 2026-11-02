@@ -76,7 +76,7 @@ public:
     // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.
     std::vector<std::string> Match(std::string_view pattern) const;
     // 원본 Filespec.cpp의 Win32 FindFirst/Next 순서다. 기본 디스크만 열거하며 TAFF/보조 경로/정렬을 적용하지 않는다.
-    // 와일드카드가 없으면 원본처럼 존재 확인 없이 그 이름 한 개를 반환한다. cpppj의 Windows 경계다.
+    // 와일드카드가 없으면 존재 확인 없이 원문 .\\ 접두/구분자 이름 한 개다. 패턴은 원래 입력의 마지막 '\\' 접두만 유지하며 '/' 확장은 caller에서 변환한다.
     std::vector<std::string> MatchDisk(std::string_view pattern) const;
     // 원본4588a0 FileFinder의 기본 디스크→등록 TAFF→보조 디스크 스냅샷이다. 첫 대소문자 무시 중복만 남기며 정렬하지 않는다.
     std::vector<std::string> MatchFinder(std::string_view pattern) const;
