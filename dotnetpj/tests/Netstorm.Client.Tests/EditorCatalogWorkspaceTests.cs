@@ -50,8 +50,11 @@ public sealed class EditorCatalogWorkspaceTests
     private static SoloMapCatalog Catalog(EditorTempRoot temp, EditorCatalogWorkspace workspace)
     {
         var config = new ConfigInterface(null); config.Startup(new()); config.Set("fortSpec", "d/{local.1}.fort"); config.SetInt("mayEditMissions", 1);
-        return new SoloMapCatalog(new GameFileSystem(temp.Source, []), config, () => "Me", text => text,
-            () => throw new InvalidOperationException("정상 목록의 예상 밖 빈 State"), workspace.Enumerate, workspace.Read);
+        return new SoloMapCatalog(new GameFileSystem(temp.Source, []), config, new SoloMapCatalogEffects
+        {
+            TypeCount = () => 188, AllocationBytes = _ => throw new InvalidOperationException("정상 목록의 예상 밖 빈 State"),
+            UserName = () => "Me", Translate = text => text, EnumeratePaths = workspace.Enumerate, ReadFile = workspace.Read
+        });
     }
 
     /// <summary>구분자만 통일한다. "."·".." 후보나 물리 파일명은 바꾸지 않는다.</summary>
@@ -254,5 +257,31 @@ public sealed class EditorCatalogWorkspaceTests
         Assert.ThrowsAny<Exception>(() => new EditorCatalogWorkspace(files, Path.Combine(temp.Source, "work")));
         Assert.ThrowsAny<Exception>(() => new EditorCatalogWorkspace(files, temp.Root));
         Assert.False(Directory.Exists(Path.Combine(temp.Source, "work")));
+    }
+
+    /// <summary>
+    /// 분류 파일을 읽은 뒤 교체한 현재 작업본을 별도 메타 Template이 다시 읽어야 한다(cpppj <c>ClassificationAndMetadataStillRereadCurrentWork</c>).
+    /// 분류 읽기의 TYPE 개수 조회 시점에 작업본을 다른 종류로 바꿔, 목록 행이 두 번째 읽기의 값을 쓰고 원본 파일은 변하지 않음을 확인한다. (2026-11-02 TS6)
+    /// </summary>
+    [Fact]
+    public void ClassificationAndMetadataStillRereadCurrentWork()
+    {
+        using var temp = new EditorTempRoot();
+        byte[] before = Image(2), after = Image(1, 1);
+        string sourceFile = temp.Seed("d/Current.fort", before);
+        using var workspace = Open(temp);
+        var config = new ConfigInterface(null); config.Startup(new()); config.Set("fortSpec", "d/{local.1}.fort");
+        int loads = 0;
+        var catalog = new SoloMapCatalog(new GameFileSystem(temp.Source, []), config, new SoloMapCatalogEffects
+        {
+            TypeCount = () => { if (++loads == 1) workspace.Files.Write(workspace.Resolve("d/Current.fort"), after); return 188; },
+            AllocationBytes = _ => throw new InvalidOperationException("정상 목록의 예상 밖 빈 State"),
+            UserName = () => "Me", Translate = text => text, EnumeratePaths = workspace.Enumerate, ReadFile = workspace.Read
+        });
+        Assert.Equal(1, catalog.List.Refresh(2));
+        Assert.Equal(2, loads);
+        Assert.Equal(2u, catalog.State.Flags[0]);
+        Assert.Equal("Current", catalog.State.Names[0]);
+        Assert.Equal(before, File.ReadAllBytes(sourceFile));
     }
 }

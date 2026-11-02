@@ -38,9 +38,22 @@ public sealed class HostEditorSelection : IDisposable
         string language = startup.Configuration.Configuration.Get("currentLanguage") ?? "english";
         byte[]? bytes = startup.Files.TryReadAllBytes("d/xlat." + language);
         var translation = bytes == null ? null : Netstorm.Assets.XlatTable.FromFileBytes(bytes);
-        Catalog = new SoloMapCatalog(startup.Files, startup.Configuration, () => UserName, text => translation?.Translate(text) ?? text,
-            () => throw new InvalidOperationException("맵 목록의 빈 State 미정 할당 바이트 미연결"), Workspace.Enumerate, Workspace.Read);
+        Catalog = new SoloMapCatalog(startup.Files, startup.Configuration, new SoloMapCatalogEffects
+        {
+            TypeCount = () => PatchTypeCount,
+            AllocationBytes = _ => throw new InvalidOperationException("맵 목록의 빈 State 미정 할당 바이트 미연결"),
+            UserName = () => UserName,
+            Translate = text => translation?.Translate(text) ?? text,
+            EnumeratePaths = Workspace.Enumerate,
+            ReadFile = Workspace.Read
+        });
     }
+
+    /// <summary>
+    /// 10.78 TYPE 표의 개수다. 맵 목록의 임시 Template이 파일 서명 검사에서 읽는다.
+    /// 실제 TYPE 표(<c>RiftTypeTable</c>, F1)가 들어오면 그 현재 개수로 바꾼다. (2026-11-02 TS6)
+    /// </summary>
+    private const int PatchTypeCount = 188;
 
     /// <summary>작업본 장부 잠금을 반납한다. 기록된 장부와 작업본은 보존한다.</summary>
     public void Dispose() => Workspace.Dispose();

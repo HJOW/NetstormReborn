@@ -22,9 +22,23 @@ public sealed class HostFortNameConfirmation
     private readonly InputQueue _queue;
     /// <summary>현재 이름 필요 안내 창이다.</summary>
     private readonly Action<string> _tell;
-    /// <summary>같은 호스트의 장치와 큐, 목록이 쓰는 편집 작업본을 빌리며 파일을 생성하지 않는다.</summary>
-    public HostFortNameConfirmation(HostStartupScene startup, HostMainMenu menu, HostTextEntry entry, InputQueue queue, ScriptStringRing strings, EditorCatalogWorkspace workspace, Action<string> tell)
-    { _startup = startup; _tree = menu.Tree; _entry = entry; _queue = queue; _strings = strings; _tell = tell; _workspace = workspace; }
+    /// <summary>
+    /// 현재 Template 소유자의 20바이트 헤더 장치다. Save as의 현재 Fort 모드에서만 쓴다. 소유자는 세션(F3)이 정하므로 세션 연결 뒤 호스트가 주입하며,
+    /// 주입하지 않으면 그 지점에서 명시 오류로 멈춘다. (2026-11-02 TS6)
+    /// </summary>
+    private readonly Func<Memory<byte>>? _header;
+    /// <summary>
+    /// 현재 Fort 이름 전체 부모(<see cref="FortCurrentNameDevices.Set"/>)를 실행하는 장치다. 전체 snapshot과 월드 소유자가 필요해 세션 연결 뒤 주입한다.
+    /// 주입하지 않으면 그 지점에서 명시 오류로 멈춘다. (2026-11-02 TS6)
+    /// </summary>
+    private readonly Action<string>? _setName;
+    /// <summary>
+    /// 같은 호스트의 장치와 큐, 목록이 쓰는 편집 작업본을 빌리며 파일을 생성하지 않는다.
+    /// <paramref name="header"/>와 <paramref name="setName"/>은 현재 Fort 모드의 Save as가 쓰는 세션 소유 경계이며, 생략하면 해당 지점에서 명시 오류로 멈춘다.
+    /// </summary>
+    public HostFortNameConfirmation(HostStartupScene startup, HostMainMenu menu, HostTextEntry entry, InputQueue queue, ScriptStringRing strings, EditorCatalogWorkspace workspace, Action<string> tell,
+        Func<Memory<byte>>? header = null, Action<string>? setName = null)
+    { _startup = startup; _tree = menu.Tree; _entry = entry; _queue = queue; _strings = strings; _tell = tell; _workspace = workspace; _header = header; _setName = setName; }
     /// <summary>현재 입력을 원문대로 정리하고 충돌이 없으면 두 인자가 같은 ReadFort를 큐에 쓴다.</summary>
     public uint Confirm(uint token)
     {
@@ -38,8 +52,8 @@ public sealed class HostFortNameConfirmation
             Exists = path => _workspace.Files.PathExists(path) ? 1 : 0,
             ReadFort = name => { uint stored = _strings.Store(name); _queue.PushCommand(FortSelection.ReadFort, unchecked((int)stored), unchecked((int)stored)); },
             Tell = _tell,
-            Header = () => throw new InvalidOperationException("Save as의 현재 Template 소유자 미연결"),
-            SetName = _ => throw new InvalidOperationException("Save as의 현재 Fort 이름 소유자 미연결")
+            Header = _header ?? (() => throw new InvalidOperationException("Save as의 현재 Template 소유자 미연결")),
+            SetName = _setName ?? (_ => throw new InvalidOperationException("Save as의 현재 Fort 이름 소유자 미연결"))
         });
     }
 }

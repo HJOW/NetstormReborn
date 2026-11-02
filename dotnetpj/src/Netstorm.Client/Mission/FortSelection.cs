@@ -51,6 +51,34 @@ public static class FortSelection
         if (name.Contains('.')) Need(assertion)(); return name;
     }
 
+    /// <summary>
+    /// 현재 NUL·점 검사 뒤 같은 주소에서 전방 한 바이트씩 복사한다(cpppj의 물리 <c>SetPendingFortName</c>). 목적과 원본의 겹침도 별도 문자열로 바꾸지 않으며
+    /// 진단이 원본 바이트를 바꾸면 진단 뒤의 현재 원본을 다시 읽는다. 첫 점이나 NUL까지만 검사하고 NUL 뒤는 이름에 넣지 않는다.
+    /// 목적 버퍼가 짧거나 원본에 NUL이 없으면 앞서 쓴 바이트를 남긴 채 예외로 멈춘다.
+    /// </summary>
+    /// <param name="destination">실제 256바이트 목적 버퍼(대기 이름).</param>
+    /// <param name="source">NUL을 포함한 원본 바이트. 진단이 같은 메모리를 바꿀 수 있다.</param>
+    /// <param name="assertion">점이 있을 때의 진단. 복귀하면 그대로 복사한다. 점을 만나는데 연결되지 않았으면 명시 오류다.</param>
+    /// <exception cref="ArgumentOutOfRangeException">원본의 NUL 앞 검사나 복사가 두 버퍼의 물리 범위를 넘었다.</exception>
+    /// <remarks>2026-11-02 TS6에서 추가했다. 문자열 판(<see cref="PendingName"/>)은 호스트 이름 큐가 쓰던 기존 모양을 보존한다.</remarks>
+    public static void SetPendingFortName(Span<byte> destination, ReadOnlySpan<byte> source, Action? assertion = null)
+    {
+        // 원문 strchr처럼 첫 점 또는 NUL까지만 읽는다
+        for (int end = 0; ; end++)
+        {
+            if (end >= source.Length) throw new ArgumentOutOfRangeException(null, "Fort pending 이름 검사 NUL 범위");
+            if (source[end] == 0) break;
+            if (source[end] == (byte)'.') { Need(assertion)(); break; }
+        }
+        // 진단이 바꾼 현재 원본에서 한 바이트씩 읽고 같은 목적 버퍼에 쓴다
+        for (int index = 0; ; index++)
+        {
+            if (index >= source.Length || index >= destination.Length) throw new ArgumentOutOfRangeException(null, "Fort pending 이름 복사 물리 범위");
+            byte value = source[index]; destination[index] = value;
+            if (value == 0) return;
+        }
+    }
+
     /// <summary>일반 맵 읽기 State6을 같은 다음 블록에 예약한다.</summary>
     public static void RequestRead(FortSelectionGlobals state) => state.Next[0] = 6;
 

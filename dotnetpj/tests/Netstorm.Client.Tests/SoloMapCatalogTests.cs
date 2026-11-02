@@ -30,7 +30,11 @@ public sealed class SoloMapCatalogTests
             File.WriteAllBytes(Path.Combine(root, "empty.fort"), Image([]));
             File.WriteAllBytes(Path.Combine(root, "short.fort"), Image([0]));
             var files = new GameFileSystem(root, []); var config = new ConfigInterface(null); config.Startup(new()); config.Set("fortSpec", "{local.1}.fort");
-            int allocated = 0; var catalog = new SoloMapCatalog(files, config, () => "Me", x => x, () => { allocated++; return Enumerable.Repeat((byte)0xa5, 28).ToArray(); });
+            int allocated = 0;
+            var catalog = new SoloMapCatalog(files, config, new SoloMapCatalogEffects
+            {
+                TypeCount = () => 188, AllocationBytes = bytes => { allocated++; bytes.Fill(0xa5); }, UserName = () => "Me", Translate = x => x
+            });
             Assert.Equal(0, catalog.Kind("empty")); Assert.Equal(0, catalog.Kind("short")); Assert.Equal(1, allocated);
             Assert.Equal(2, catalog.List.Refresh(0));
             Assert.Equal(2u, catalog.State.Flags[Array.IndexOf(catalog.State.Names, "empty")]);
@@ -46,7 +50,10 @@ public sealed class SoloMapCatalogTests
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
         var startup = new HostStartupScene(data); var files = startup.Files; var config = startup.Configuration;
         config.Set("fortSpec", "d/{local.1}.fort"); config.SetInt("mayEditMissions", 1);
-        var catalog = new SoloMapCatalog(files, config, () => "", text => text, () => throw new InvalidOperationException("실제 28바이트 State가 필요"));
+        var catalog = new SoloMapCatalog(files, config, new SoloMapCatalogEffects
+        {
+            TypeCount = () => 188, AllocationBytes = _ => throw new InvalidOperationException("실제 28바이트 State가 필요"), UserName = () => "", Translate = text => text
+        });
         var paths = files.MatchDisk("d/*.fort"); Assert.NotEmpty(paths); int checkedCount = 0, editable = 0;
         foreach (string path in paths)
         {

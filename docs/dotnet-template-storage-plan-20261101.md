@@ -8,9 +8,9 @@ cpppj `client/CampaignTemplateStorage`와 그 소비자를 dotnetpj로 옮기는
 
 | 항목 | 값 |
 | --- | --- |
-| 이식 완료 | 0.128 원문 계층(`RawMemStream`, `RawDataManager*`, `RawTemplate*`, `RawFortImage`, `RawFortCurrentName`, `RawPlayerTemplateState`, `FortTemplate` 일부), 0.129 `ClientTemplateSectionNames`, 0.130 TS0(`RawSectionBuffer`, 섹션 버퍼 전환·`Clone`, 커서 3종, hook 묶음 setter), 0.131 TS1(`CampaignTemplateStorage`와 `Image` 골격·설치·선택), 0.132 TS2(동적 섹션·State 재생성·최소 확장·쓰기 참조), 0.133 TS3(파일 읽기·Load·저장·이름 부모 연결과 433개 왕복), 0.134 TS4(빈 manager 5개 메서드·`CloneSectionFrom`·`Dump`·`SaveImage`·`ReadLoginImage`와 Core `RawMissionLoginPackets`, `fort-image-packets` 송신·예약 103행), 0.135 TS5(`ExistingEditorTemplateValid`, 0.127에서 미룬 Editor 파일 검사 10개, 한글 작업 경로를 manager에 UTF-8로 보관하고 장치 경계에서 변환) |
-| 저장소 본체 | 미이식. `CampaignTemplateStorage.cpp` 581줄, `.h` 106줄(합 약 80KB). 0.128의 실측 비율로 보면 C# 약 2,500~3,000줄이 될 것으로 추정한다 |
-| 기준 커밋 | 0.128 원문 계층은 `d48ea756`. 2026-11-01 현재 HEAD까지 해당 cpppj 파일과 저장소 파일의 변경은 없다 |
+| 이식 완료 | 0.128 원문 계층(`RawMemStream`, `RawDataManager*`, `RawTemplate*`, `RawFortImage`, `RawFortCurrentName`, `RawPlayerTemplateState`, `FortTemplate` 일부), 0.129 `ClientTemplateSectionNames`, 0.130 TS0(`RawSectionBuffer`, 섹션 버퍼 전환·`Clone`, 커서 3종, hook 묶음 setter), 0.131 TS1(`CampaignTemplateStorage`와 `Image` 골격·설치·선택), 0.132 TS2(동적 섹션·State 재생성·최소 확장·쓰기 참조), 0.133 TS3(파일 읽기·Load·저장·이름 부모 연결과 433개 왕복), 0.134 TS4(빈 manager 5개 메서드·`CloneSectionFrom`·`Dump`·`SaveImage`·`ReadLoginImage`와 Core `RawMissionLoginPackets`, `fort-image-packets` 송신·예약 103행), 0.135 TS5(`ExistingEditorTemplateValid`, 0.127에서 미룬 Editor 파일 검사 10개, 한글 작업 경로를 manager에 UTF-8로 보관하고 장치 경계에서 변환), 0.136 TS6(새 맵 부모 `RawNewFort`의 원본 x86 1,400행 일치, `NewFortManagerDevices`·`ClientFortGlobals`·`FortCurrentNameDevices`, 실제 저장소를 쓰는 편집 맵 목록 `SoloMapCatalog`, `HostFortNameConfirmation` 주입 지점) |
+| 저장소 본체 | TS0~TS6로 이식 완료(소비자 장치까지). `CampaignTemplateStorage.cpp` 581줄, `.h` 106줄의 저장소와 이를 쓰는 소비자 장치가 검사로 확인된 상태다. 실제 Template을 설치하는 주체(`RawCampaignSession`)가 아직 없어 화면 변화는 F3 이후에 생긴다 |
+| 기준 커밋 | 0.128 원문 계층은 `d48ea756`. 2026-11-01 현재 HEAD까지 해당 cpppj 파일과 저장소 파일의 변경은 없다. TS6의 새 맵·이름·목록 파일은 PORT_MAP의 기준 커밋(`51e2d8f4`·`f4493776`·`2c7b3437`·`c4b75d7a`)을 따른다 |
 | 이 단계의 원본 fixture | 없다. 저장소는 cpppj가 만든 호스트 어댑터라 원본 x86 대조 대상이 아니다. 그래서 cpppj 검사 직역과 3절의 433개 왕복 검사가 근거다 |
 
 ## 2. 범위
@@ -93,13 +93,13 @@ cpppj 제품 코드에서 `.sections`를 고치는 곳은 `Template.cpp`와 저�
 | **TS3 파일** | `ReadFile` 두 경로·`BindFileStreams`, `InstallFile`·`LoadFile`·`SaveFile`·`BindCurrentName`. 가장 크므로 필요하면 읽기와 저장으로 나눈다 | cpppj 14개 + 433개 fort 왕복 | **완료(0.133)**: Client 19개(cpp 검사 13 + 왕복 1 + 직접 5), 433개 모두 왕복 일치, 변이 23종 중 19 검출·4 등가 |
 | **TS4 빈 manager·로그인** | `AllocateEmptyManager` 계열, `CloneSectionFrom`·`Dump`·`ReadLoginImage`, `RawMissionLoginPackets` | cpppj 3개 + `fort-image-packets` 송신·예약 103행 + 패킷 경계 1개 | **완료(0.134)**: Core 2개(송신·예약 103행 + 경계)·Client 8개(cpp 검사 4 + 직접 4), 103행 모두 일치, 변이 34종 중 30 검출·4 등가 |
 | **TS5 Editor 파일** | `ExistingEditorTemplateValid`, `EditorFortFileDevices.BindLoad`의 실제 사용, 한글 작업 경로를 manager에 UTF-8로 보관(`TemplateFileNames`) | 0.127에서 미룬 10개(`EditorFileWriter` 1, `EditorFiles` 5, `EditorFortFileDevices` 4) + 직접 4개 | **완료(0.135)**: Client 14개(cpp 검사 10 + 직접 4), 변이 31종 중 28 검출·3 등가 |
-| **TS6 이름·새 맵·목록** | `RawNewFort`·`NewFortManagerDevices`, `ClientFortGlobals`·`FortCurrentNameDevices`, `SoloMapCatalog.Probe`를 실제 저장소로 교체, `HostFortNameConfirmation` 연결 범위 판정 | 16개(`NewFort` 5, `FortCurrentNameDevices` 7, 목록 3, `EditorCatalogFiles` 1) | 미착수 |
+| **TS6 이름·새 맵·목록** | `RawNewFort`·`NewFortManagerDevices`, `ClientFortGlobals`·`FortCurrentNameDevices`, `SoloMapCatalog.Probe`를 실제 저장소로 교체, `HostFortNameConfirmation` 연결 범위 판정 | cpp 검사 19개(`NewFortManagerDevices` 5, `FortCurrentNameDevices` 7, 목록 6, `EditorCatalogFiles` 1) + `RawNewFort` 원본 x86 4종 1,400행 + 직접 15개 | **완료(0.136)**: Core 6개(x86 1,400행 일치 4 + 직접 2)·Client 32개(cpp 검사 19 + 직접 13), 변이 66종 중 63 검출·3 등가 또는 관측 불가 |
 
 **433개 왕복 검사(TS3):** 검사 데이터 폴더의 `d/*.fort` 전체(`originals/d` 기준 433개)를 `InstallFile`로 읽고 `SaveImage`로 다시 쓴 뒤 `ReadSections`로 섹션과 flag를 비교한다. 기대값이 입력 파일 자체에서 나오므로 cpppj 없이 전 파일을 덮는다. 어긋나는 파일은 실패로 묶지 말고 원인을 먼저 분류한다(뒤꼬리 바이트, 비표준 flag, 0x8000 초과 등).
 
 **TS1이 큰 이유:** 선택 없이는 노드를 관측할 수 없어 설치와 선택을 한 단계로 묶었다. `Borrow`·`SectionOrder`·`CurrentSection`·`FileHeader`·`GrowState`는 cpppj 제품 코드에 호출자가 없지만 검사가 쓰므로 옮긴다.
 
-**TS6의 한계:** `FortCurrentNameDevicesTests`는 `ClientMain`을 포함한다. `Client` 전체는 옮기지 않으므로 `ClientFortGlobals`로 좁혀 옮기고, 그렇게 안 되는 검사는 F3으로 넘긴다. `HostFortNameConfirmation`의 `Header`·`SetName`도 실제 Template을 설치할 세션이 없으면 장치까지만 연결된다. `TemplateDiagnosticClientTests` 1개는 `ClientDiagnostics`가 없어 F3으로 넘긴다.
+**TS6의 결과·한계(0.136):** `Client` 전체(`ClientMain`)는 옮기지 않았다(F3). 이름 장치 검사는 `ClientFortGlobals`·설정·저장소·파일 장치를 장면이 직접 조립해 7개를 모두 옮겼다. 목록 검사 3개(`DiskEnumerationAndArchiveRead`·`CurrentSubscriberSection`·`TellMetadataUsesActualFilesAndCurrentNames`)는 같은 경계를 이미 다른 C# 검사가 확인해 옮기지 않았다(사유는 단위 기록 0.136). `HostFortNameConfirmation`은 세션이 정하는 Template 소유자 헤더와 현재 이름 설정 장치를 선택 인자로 받게 했고 실제 연결은 F3이다. `TemplateDiagnosticClientTests` 1개와 `CampaignNewFort*Tests.inc` 4개는 `ClientDiagnostics`·`RawCampaignSession`이 필요해 F3으로 넘긴다.
 
 ### 뒤이은 트랙
 

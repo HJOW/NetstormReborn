@@ -51,6 +51,11 @@
     <None Include="../../../cpppj/tests/fixtures/template-lifetime-v2-x86.tsv" Link="X86/template-lifetime-v2-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fort-current-name-x86.tsv" Link="X86/fort-current-name-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fort-image-packets-x86.tsv" Link="X86/fort-image-packets-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 새 맵(NewFort) 부모 세 개의 원본 기계어 관측: manager 48행, 신규 자료 1,248행, 파일 부재 26행, 부재 State bit 78행 (2026-11-02 TS6). -->
+    <None Include="../../../cpppj/tests/fixtures/new-fort-manager-x86.tsv" Link="X86/new-fort-manager-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/new-fort-data-x86.tsv" Link="X86/new-fort-data-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/new-fort-missing-x86.tsv" Link="X86/new-fort-missing-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/new-fort-missing-bits-x86.tsv" Link="X86/new-fort-missing-bits-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/player-state-expand-x86.tsv" Link="X86/player-state-expand-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/player-state-initialization-x86.tsv" Link="X86/player-state-initialization-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- Totalmade 허용 표·세 누적 장부·부류 합산(Total 행)과 Early1 단계 판정(Stage 행)의 원본 PE 독립 관찰 (2026-10-15 감사 D14/D05). -->
