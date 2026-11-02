@@ -1317,7 +1317,9 @@ void UberGump::Event(InputEvent event) {
     const auto commandCode=event.code&0x03ffffffU; // 원본명령분배와같이최상위입력플래그만제거한다.
     if (commandCode==kScriptWarning) {
         warnings_->SetView(client_.GetScreen().Width(),client_.GetScreen().Height(),client_.GetScreen().Colors());
-        warnings_->Add(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)));rebuild_=true;return;
+        if (event.y) warnings_->Add(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)));
+        else warnings_->AddNull(); //원문004d88cd는 y=0도 그대로4d3090에 전달하며 유효한 빈 문자열과 구별한다.
+        rebuild_=true;return;
     }
     if (GameMenuCommand(event)) return;
     if (IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));

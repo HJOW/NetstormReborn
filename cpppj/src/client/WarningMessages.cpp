@@ -10,11 +10,12 @@
 
 namespace netstorm::client {
 namespace {
-constexpr std::uint32_t kWarningVtable=0x517b60,kDead=0x10000; // 원본 Warning 가상표와 공통 dead 비트다.
+constexpr std::uint32_t kDead=0x10000; // 원본 Warning 가상표와 공통 dead 비트다.
 constexpr std::uint32_t kDrawSlot=2; // 생산0/미니맵1과 겹치지 않는 공통 Draw 공급자다.
 // 실제 MessageGump/TextGump 주소에 보고용 원문만 덧붙인다. 출력은 공통 StyleText 체인을 읽는다.
 struct WarningNode:MessageGumpNode {
     std::string source; // 실제 창 관찰의 원문이며 별도 표시/측정 저장소가 아니다.
+    bool textConstructed{}; //호스트 예외 반납에서 원문 TextGump 생성 완료와 미등록 할당만의 단계를 구별한다.
 };
 }
 // 등록표/루트/수명/글자는 빌리고 원본20칸과 파생 필드만 소유한다.
@@ -26,31 +27,32 @@ struct WarningMessages::Impl {
     MessageBoardState boardState; // 원본20칸 serial 표이며 루트 교체 때 임의 초기화하지 않는다.
     std::map<std::uint32_t,std::unique_ptr<WarningNode>> messages; // 공통 토큰의 안정된 파생 저장소다.
     std::unique_ptr<MessageBoard> board; // 같은 현재 루트의 검색/생성/부착 순서다.
-    std::unique_ptr<MessageGump> pauseMessage; // 같은 TextGump를 쓰는 원본 종류11 생성자다.
+    std::unique_ptr<MessageGump> message; //같은 TextGump를 쓰는 원본 종류11/16/17 공통 생성자다.
 
     // 모든 callback은 호출 시 현재 공통 루트/노드/등록표를 읽는다.
     Impl(RawMenuTree tree,RawMenuControls& menu,std::function<double()> suppliedNow,std::function<void()> suppliedSound,MessageGumpHooks pauseContext,std::function<bool()> suppressed)
         :common(std::move(tree)),menus(menu),now(std::move(suppliedNow)),sound(std::move(suppliedSound)) {
         if (!now || !sound) throw std::invalid_argument("Warning 실제 벽 시각/음향 연결 누락");
-        if (pauseContext.challenge) {
+        { //모든지원종류가같은공통생성자/이름/번역장치를사용한다.실제Client는항상이장치를제공한다.
             pauseContext.node=[this](auto token)->MessageGumpNode* { return Node(token); };
-            pauseContext.constructText=[this](auto token) { menus.TextBackend().Construct(token,0,0,0,0); };
+            pauseContext.constructText=[this](auto token) { menus.TextBackend().Construct(token,0,0,0,0);Node(token)->textConstructed=true; };
             pauseContext.style=[this](auto token,auto value) { Style(token,value); };
-            pauseContext.wallSeconds=now;pauseContext.idle=[this](auto token,auto enabled) { common.lifetime.SetIdle(token,enabled); }; //같은벽시각/기존Idle표만빌린다.
+            pauseContext.warningSound=sound;pauseContext.wallSeconds=now;pauseContext.idle=[this](auto token,auto enabled) { common.lifetime.SetIdle(token,enabled); }; //같은벽시각/기존Idle표만빌린다.
             pauseContext.fit=[this](auto token,auto x,auto y) { menus.TextBackend().Fit(token,x,y); };
-            pauseMessage=std::make_unique<MessageGump>(common.create,std::move(pauseContext));
+            message=std::make_unique<MessageGump>(common.create,std::move(pauseContext));
         }
         MessageBoardHooks hooks;hooks.suppressed=std::move(suppressed);hooks.lookup=[this](auto serial) { return Lookup(serial); };
         hooks.kill=[this](auto token) { common.lifetime.Kill(token);common.changed(); };
-        hooks.create=[this](auto kind,auto player,auto parameter,std::string_view source) {
+        hooks.createText=[this](auto kind,auto player,auto parameter,std::optional<std::string_view> source) {
             if (kind!=17 && kind!=11 && kind!=16) throw std::logic_error("다른 원본 메시지 생성자 미연결");
             const auto token=common.token();auto& node=*messages.emplace(token,std::make_unique<WarningNode>()).first->second;
-            if (kind==11 || kind==16) {
-                if (!pauseMessage) throw std::logic_error("Pause 메시지의 현재 모드/이름/번역 미연결");
-                pauseMessage->Construct(token,kind,player,parameter);return MessageBoardRecord{token,node.serial,kind,player,parameter};
+            try { message->Construct(token,kind,player,parameter,source); } //kind17도 공통 Text/필드/이름 뒤의 음향·번역·서식·Style·기한·Idle·Fit 순서를 사용한다.
+            catch (...) {
+                //원문4fbf80/4fbfa0의 Text 소멸→할당 반납 순서를 유지한다. 아직 등록 전이면 저장소만 반납한다.
+                //원문SEH가 남기는 등록표 포인터는 호스트의 복구 가능한 서식/장치 예외에서 사용 후 해제가 되므로 Destroy로 함께 해제한다.
+                if (node.textConstructed) common.lifetime.Destroy(token);else messages.erase(token);
+                throw;
             }
-            menus.TextBackend().Construct(token,0,0,0,0);node.vtable=kWarningVtable;node.kind=kind;node.player=player;node.parameter=parameter;
-            sound();Style(token,source);node.deadline=WarningDeadline(now());common.lifetime.SetIdle(token,true);menus.TextBackend().Fit(token);
             return MessageBoardRecord{token,node.serial,kind,player,parameter};
         };
         hooks.width=[this](auto token) {
@@ -96,6 +98,8 @@ void WarningMessages::SetView(int width,int height,const PaletteColorTable& pale
 }
 // 원본 명령과 같은 종류17/플레이어0/표시1/매개변수0이다.
 void WarningMessages::Add(std::string_view styledText) { impl_->board->Show(17,0,true,0,styledText); }
+// 원문 일반 입력004d88cd의 NULL 인자도 같은20칸과 공통 생성자를 거친다.
+void WarningMessages::AddNull() { impl_->board->ShowText(17,0,true,0,std::nullopt); }
 // 시계/음향은 Pause 명령 소유자가 처리하며 이 경로는 같은20칸만 변경한다.
 void WarningMessages::PauseStatus(bool enabled) { impl_->board->Show(11,0,enabled,0,""); }
 //기존serial/직계자식검색과0.1초기한/Idle을그대로사용하고별도메시지캐시를만들지않는다.

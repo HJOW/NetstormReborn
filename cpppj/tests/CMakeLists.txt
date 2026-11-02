@@ -99,7 +99,7 @@ set_source_files_properties(TellParametersTests.cpp PROPERTIES COMPILE_DEFINITIO
 set_source_files_properties(GameMenuActionsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GAME_MENU_ACTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-menu-actions-x86.tsv\"")
 set_source_files_properties(MessageGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_MESSAGE_GUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/message-gump-x86.tsv\";NETSTORM_GAME_TIME_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-time-key-x86.tsv\";NETSTORM_GAME_TIME_MESSAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-time-message-x86.tsv\"")
+    "NETSTORM_MESSAGE_GUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/message-gump-x86.tsv\";NETSTORM_GAME_TIME_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-time-key-x86.tsv\";NETSTORM_GAME_TIME_MESSAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-time-message-x86.tsv\";NETSTORM_WARNING_MESSAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/warning-message-x86.tsv\"")
 set_source_files_properties(DialogExitCommandTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DIALOG_EXIT_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dialog-exit-command-x86.tsv\"")
 # 원본 UserInput 앞단의 입력·정적 기록·합성 release 관측을 해당 검사에만 공급한다.

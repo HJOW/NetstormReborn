@@ -1,0 +1,134 @@
+{
+  "unit": 759,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 759,
+  "displayVersion": "11.01",
+  "exeSha256": "8e19ca20a6c5cb7dc8b8f7027994ade4f84e5b665ed9ee35e8b902b2a748fa44",
+  "summary": "kind17 경고 공통 생성자와 실제 NULL 명령 및 생성 실패의 Text 수명 연결",
+  "tests": {
+    "totalUnique": 27,
+    "totalExecutions": 27,
+    "newTests": 7,
+    "failedChecks": 0,
+    "names": [
+      "GameTimeDisplay_CurrentOriginAndSelectedFailures",
+      "GameTimeDisplay_KeyNative168",
+      "GameTimeDisplay_MessageNative90",
+      "MessageGump_MissingSelectedBranchesStayExplicit",
+      "MessageGump_PauseNative324",
+      "MessageGump_WarningNative50",
+      "MessageGump_WarningReadsCurrentTextAfterSelectedEffects",
+      "MessageGump_WarningSelectedFailuresKeepNativePrefix",
+      "MessageGump_WarningTextAbiAndFormatLimits",
+      "Warnings_ActualConstructorFailureReleasesRegisteredText",
+      "Warnings_ActualCurrentMissionBlocksWarningKeepsPauseAndTime",
+      "Warnings_ActualNullAndEmptyUseSameBoard",
+      "Warnings_ActualStyleAndGumpLifetime",
+      "Warnings_ActualWarningUsesSharedConstructorAndCurrentText",
+      "Warnings_BoardNative154",
+      "Warnings_CommonDrawStyleAndClip",
+      "Warnings_CommonMenuOccludesByNativeDepth",
+      "Warnings_CommonPageClearAndStaleBoard",
+      "Warnings_CommonRegistryMixedMenuAndGlobalKill",
+      "Warnings_CurrentSuppressionGatePrecedesBoardEffects",
+      "Warnings_DeadlineNative10",
+      "Warnings_IdleNative90",
+      "Warnings_InlineCommandParser",
+      "Warnings_PauseSharesBoardAndPermanentText",
+      "Warnings_ReentrantSoundCreatesMenuInSameRegistry",
+      "Warnings_SeparatedFrameStagesExpireWhileGameClockIsPaused",
+      "Warnings_SeparatedIdleReusesBoardSlotBeforeFollowingCleanup"
+    ],
+    "logs": [
+      "tests-message-v1.log",
+      "tests-warnings-v1.log",
+      "tests-time-v2.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2669,
+    "currentCount": 2670,
+    "allUnchanged": true,
+    "fixtureCount": 850,
+    "newFixtures": [
+      "cpppj/tests/fixtures/warning-message-x86.tsv"
+    ]
+  },
+  "native": {
+    "native-v2/native.json": {
+      "inputs": 50,
+      "nativeExecutions": 150,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "lastDecompileHost": "HJOW-Athlon",
+      "lastDecompileDate": "2026-10-23",
+      "rawReportSha256": "148bc2c9cb7860aa8675325d5b6bf63fd8981223b42185e9b1100d00f6794108"
+    },
+    "repeat-v1/native.json": {
+      "inputs": 50,
+      "nativeExecutions": 150,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "lastDecompileHost": "HJOW-Athlon",
+      "lastDecompileDate": "2026-10-23",
+      "rawReportSha256": "148bc2c9cb7860aa8675325d5b6bf63fd8981223b42185e9b1100d00f6794108"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "prepared Native",
+      "detail": "최초 isdigit의 TLS 진입 거부 뒤 ASCII 숫자 분류만 명시 장치로 공급한 v2를 채택; 최초 fixture는 생성되지 않았다."
+    },
+    {
+      "scope": "prepared standalone build",
+      "detail": "기존754 fixture 정의 누락을 소형 CMake에서 보완했다. 제품 코드/기대값을 변경하지 않았다."
+    },
+    {
+      "scope": "root test driver",
+      "log": "tests-time-v1.log",
+      "detail": "등록명이 GameTimeDisplay_인데 GameTime_ 필터를 사용해0개/실패1. 올바른 필터의 v2에서3개 통과; 제품 실패가 아니다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/MessageBoard.cpp": "51f89c5261e8362001e1631e71e9099dbcf34ebab15b65433736e4cc096f9765",
+    "cpppj/src/client/MessageBoard.h": "6e81df39d7575b242916296fcbecc8cb428c0acf803d92f36b13d283df7d2950",
+    "cpppj/src/client/MessageGump.cpp": "24be530c874357a77d2c21a0f71021823440f5a3b6d9383830c47daf0c7cc75d",
+    "cpppj/src/client/MessageGump.h": "b1be11c694e5819098fdbed9e9e62bd5ffc0122e3974113b9e1fa71befb1c46f",
+    "cpppj/src/client/UberGump.cpp": "67d1f51b05ee3374dd9d6f659d906748b7171774d8757c42c28492579be0bec1",
+    "cpppj/src/client/WarningMessages.cpp": "68c5c276f460ef9e30966a0060f569fe198e8b2c0a8316eff71f4dd1f33d8de2",
+    "cpppj/src/client/WarningMessages.h": "a38bd644ef2e34aca3a2a4a811ef9f62e7904b1f15d834902162b2b968cdedb6",
+    "cpppj/tests/CMakeLists.txt": "8ad2b96cbc634f0ea7e131d9d97a571029089480a9c70f6db0eedc8bc68797e4",
+    "cpppj/tests/MessageGumpTests.cpp": "01540e39df535ae76a9f5fa34e2b71e519061692a56edb329968423c1a8d404c",
+    "cpppj/tests/WarningTests.cpp": "ac3c35ce40b7b9fc69dedc06cf4c63ff94b00cefe77104cbf18fb62c5ecb55e3",
+    "cpppj/tests/WarningMessageTests.inc": "e2db25801c4017f18f295c5f1c3a08cad9e12ba92bb8cf84d040690172b416ee",
+    "cpppj/tests/WarningMessageIntegrationTests.inc": "ead5a61dce17d851839c4f95fc50425530cb43d68fa3f5712a2df9c27ffeefba",
+    "tools/decomp_warning_message.py": "e1010c33580cbf58fa7412bc5942f69c06453ac243d035b864338a36253379e0"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-759/protected-after.json",
+  "next": "일반명령5종(760)·outside 어댑터(761)·Config 명령(762)·명시41baa0(763)·글꼴/음질(764)·존재조회(765)와 남은 비멀티/호환성",
+  "limitations": [
+    "한 문자열 %s/고정 폭·정밀도/왼쪽정렬/%%만 지원한다. 추가인자·가변폭·넓은문자 등 미공급 인자와 원문256BYTE를 넘는 메모리 훼손을 합성하지 않는다.",
+    "원문 SEH의 Text 소멸/free 순서를 참조했으나 등록표 잔류를 재현하지 않는다. 호스트에서 복구 가능한 예외 후 dangling pointer 방지를 위해 Destroy로 등록표/idle/조각/저장소도 반납한다. 32비트SEH ABI 동일성은 아니다.",
+    "실제 Uber Warning y=0 분기는 컴파일/정적 접합이며 새GUI 관측은0이다. 독립 생성자 NULL과 실제 공장 AddNull의 통과를 GUI 명령 성공으로 확대하지 않는다.",
+    "기존11/16/현재억제를 유지했다. 다른kind/Challenge 이름 신규관측·포획/희생·특정적공격·승리·자연완주·새게임/CLI/MP·전체C++/34/ZIP 검사는0이다."
+  ]
+}

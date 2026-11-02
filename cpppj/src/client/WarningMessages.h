@@ -23,6 +23,7 @@ public:
     void SetView(int width,int height,const PaletteColorTable& palette);
     // 원본 Warning 명령의 종류17/플레이어0/표시1/매개변수0으로 생성한다.
     void Add(std::string_view styledText);
+    void AddNull(); //일반 Warning 명령의 y=0을 문자열 고리 조회 없이 원문 NULL 인자로 생성한다.
     // 같은20칸 표에서 원본 Pause(kind11)의 영구 안내를 생성하거나 지연 삭제한다.
     void PauseStatus(bool enabled);
     void GameTimeStatus(); //원문메인루프의kind16/player1/enabled1/parameter0을같은20칸에요청한다.

@@ -104,6 +104,7 @@ struct WarningClient {
     // 같은 공통 가상 분배가 설치된 뒤에만 안내를 생성한다.
     WarningClient(std::function<double()> now,std::function<void()> sound,MessageGumpHooks context={},int w=1024,int h=768,std::function<bool()> suppressed={})
         :assets(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078)),fonts(assets.files,"Arial"),palette(WarningPalette(assets.game)),buttons(OriginalEdition::Patch1078),width(w),height(h) {
+        if (!context.challenge) context.challenge=[] { return 0U; };if (!context.playerName) context.playerName=[](auto) {};if (!context.translate) context.translate=[](auto value) { return std::string(value); }; //독립Gump검사만현재모드0/이름무사용/그대로번역의명시입력을공급한다.
         RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,auto&) {};hooks.sound=[](auto) {};
         hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,0,0}; };hooks.cursor=[](auto) {};
         menus=&buttons.EnableMenus(assets.game,fonts,std::move(hooks));messages=&buttons.EnableWarnings(std::move(now),std::move(sound),std::move(context),std::move(suppressed));Reset();
@@ -152,13 +153,13 @@ TEST_CASE(Warnings_ActualStyleAndGumpLifetime) {
 // Pause와 만료 Warning이 같은20칸/실제 글꼴/공통 삭제 수명을 공유한다.
 TEST_CASE(Warnings_PauseSharesBoardAndPermanentText) {
     double now{};int sounds{},names{},translations{};auto context=PauseContext();
-    context.playerName=[&](auto player) { CHECK(player==0);++names; };context.translate=[&](auto text) { CHECK(text=="~E~wGame Paused!");++translations;return std::string(text); };
+    context.playerName=[&](auto player) { CHECK(player==0);++names; };context.translate=[&](auto text) { CHECK(text=="~E~wGame Paused!" || text=="%s");++translations;return std::string(text); };
     WarningClient client([&] { return now; },[&] { ++sounds; },std::move(context),640,480);auto& messages=*client.messages;
-    messages.PauseStatus(true);messages.Add("~E~yWarning");const auto initial=client.Rows();CHECK(initial.size()==2 && names==1 && translations==1 && sounds==1);
+    messages.PauseStatus(true);messages.Add("~E~yWarning");const auto initial=client.Rows();CHECK(initial.size()==2 && names==2 && translations==2 && sounds==1);
     CHECK(initial[0].source=="~E~wGame Paused!" && initial[0].y==0 && initial[1].y==12);
     now=100;CHECK(client.buttons.IdleGumps());const auto paused=client.Rows();CHECK(paused.size()==1 && paused[0].source=="~E~wGame Paused!");
     messages.PauseStatus(false);CHECK(client.Rows().empty());client.buttons.CleanupGumps();CHECK(client.Fields()[1]==1);
-    messages.PauseStatus(true);CHECK(client.Rows().size()==1 && names==2 && sounds==1);
+    messages.PauseStatus(true);CHECK(client.Rows().size()==1 && names==3 && sounds==1);
 }
 // 실제 게임 시계 정지 중에도 같은 공통 Cleanup→Idle에서 벽시계 만료를 처리한다.
 TEST_CASE(Warnings_SeparatedFrameStagesExpireWhileGameClockIsPaused) {
@@ -242,3 +243,5 @@ TEST_CASE(Warnings_InlineCommandParser) {
 }
 
 #include "GameTimeSuppressionTests.inc" //현재미션억제의실제board/공통WarningGump바인딩을검사한다.
+
+#include "WarningMessageIntegrationTests.inc" //실제같은WarningMessages공장에생성자/현재입력/번역순서를검사한다.

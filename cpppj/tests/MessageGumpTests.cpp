@@ -78,7 +78,7 @@ TEST_CASE(MessageGump_PauseNative324) {
 // 지원하지 않는 종류와 선택된 Challenge 조회 누락을 성공으로 대체하지 않는다.
 TEST_CASE(MessageGump_MissingSelectedBranchesStayExplicit) {
     MessageScene scene;MessageGump message(scene.create,scene.Hooks());bool unsupported{};
-    try { static_cast<void>(message.Construct(kNode,17,0,0)); } catch (const std::logic_error&) { unsupported=true; }
+    try { static_cast<void>(message.Construct(kNode,18,0,0)); } catch (const std::logic_error&) { unsupported=true; }
     CHECK(unsupported && scene.trace.empty());
     auto hooks=scene.Hooks();hooks.challengePlayerName={};scene.challenge=1;MessageGump challenge(scene.create,std::move(hooks));bool missing{};
     try { static_cast<void>(challenge.Construct(kNode,11,1,0)); } catch (const std::logic_error&) { missing=true; }
@@ -87,3 +87,5 @@ TEST_CASE(MessageGump_MissingSelectedBranchesStayExplicit) {
 
 // T/t 게임 시간의 최초 원문 관측과 실제 메시지 생성자를 함께 검사한다(754).
 #include "GameTimeMessageTests.inc"
+
+#include "WarningMessageTests.inc" //새kind17의원문192BYTE/텍스트ABI/부분효과를기존공통검사와함께확인한다.

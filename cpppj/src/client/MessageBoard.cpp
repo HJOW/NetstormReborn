@@ -6,10 +6,14 @@
 namespace netstorm::client {
 // 선택된 분기의 모든 실제 하위를 생성 전에 확인한다.
 MessageBoard::MessageBoard(MessageBoardState& state,MessageBoardHooks hooks):state_(state),hooks_(std::move(hooks)) {
-    if (!hooks_.lookup || !hooks_.kill || !hooks_.create || !hooks_.width || !hooks_.attach) throw std::invalid_argument("메시지 표 실제 Gump 연결 누락");
+    if (!hooks_.lookup || !hooks_.kill || (!hooks_.create && !hooks_.createText) || !hooks_.width || !hooks_.attach) throw std::invalid_argument("메시지 표 실제 Gump 연결 누락");
+}
+// 기존 유효한 문자열 호출도 같은 부모를 사용하며 빈 문자열을 NULL로 바꾸지 않는다.
+void MessageBoard::Show(std::int32_t kind,std::int32_t player,bool enabled,std::int32_t parameter,std::string_view text) const {
+    ShowText(kind,player,enabled,parameter,text);
 }
 // 검색 중 발견한 첫 빈 칸을 보관하며 stale serial도 같은 칸에서 지운다.
-void MessageBoard::Show(std::int32_t kind,std::int32_t player,bool enabled,std::int32_t parameter,std::string_view text) const {
+void MessageBoard::ShowText(std::int32_t kind,std::int32_t player,bool enabled,std::int32_t parameter,std::optional<std::string_view> text) const {
     const auto suppressed=hooks_.suppressed ? hooks_.suppressed() : state_.suppressed; //원문은매호출진입에현재미션값을한번읽고20칸초기화/검색보다먼저억제를판정한다.
     if (suppressed && kind!=11 && kind!=16) return;
     if (state_.serials[0]==0xffffffffU) state_.serials.fill(0);
@@ -30,7 +34,8 @@ void MessageBoard::Show(std::int32_t kind,std::int32_t player,bool enabled,std::
         return;
     }
     if (firstEmpty==state_.serials.size()) return;
-    const auto record=hooks_.create(kind,player,parameter,text);state_.serials[firstEmpty]=record.serial;
+    if (!hooks_.createText && !text) throw std::logic_error("메시지 NULL 포인터의 실제 생성 장치 미연결");
+    const auto record=hooks_.createText ? hooks_.createText(kind,player,parameter,text) : hooks_.create(kind,player,parameter,*text);state_.serials[firstEmpty]=record.serial;
     const auto width=hooks_.width(record.token);
     const auto x=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(state_.screenWidth)-static_cast<std::uint32_t>(width));
     hooks_.attach(record.token,x,static_cast<std::int32_t>(firstEmpty*12));

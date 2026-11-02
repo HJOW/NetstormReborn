@@ -24,6 +24,7 @@ struct MessageBoardHooks {
     std::function<std::optional<MessageBoardRecord>(std::uint32_t)> lookup; // 직계 자식 serial 조회다.
     std::function<void(std::uint32_t)> kill; // 실제 지연 삭제 요청이다.
     std::function<MessageBoardRecord(std::int32_t,std::int32_t,std::int32_t,std::string_view)> create; // 실제 파생 생성이다.
+    std::function<MessageBoardRecord(std::int32_t,std::int32_t,std::int32_t,std::optional<std::string_view>)> createText; //원문 NULL과 유효한 빈 문자열을 구별하는 생성 장치이며 설치 시 기존 create보다 우선한다.
     std::function<std::int32_t(std::uint32_t)> width; // 생성/측정 후 원본 ftol의 현재 폭이다.
     std::function<void(std::uint32_t,std::int32_t,std::int32_t)> attach; // 실제 루트에 현재 좌표로 부착한다.
 };
@@ -34,6 +35,7 @@ public:
     MessageBoard(MessageBoardState& state,MessageBoardHooks hooks);
     // enabled=false이면 일치 메시지를 삭제한다. true이면 최초 빈 칸에 원본 순서대로 생성한다.
     void Show(std::int32_t kind,std::int32_t player,bool enabled,std::int32_t parameter,std::string_view text) const;
+    void ShowText(std::int32_t kind,std::int32_t player,bool enabled,std::int32_t parameter,std::optional<std::string_view> text) const; //원문 포인터 NULL도 같은 억제/검색/20칸 생성 부모에 전달한다.
 private:
     MessageBoardState& state_; // 현재20칸 표와 억제/해상도를 공유한다.
     MessageBoardHooks hooks_; // 실제 조회/생성/수명/부착 소비자다.
