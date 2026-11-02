@@ -1,0 +1,107 @@
+{
+  "unit": 721,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 721,
+    "version": "11.01",
+    "sha256": "23d1f60a595512de24053eeebece1d59e0e3ad00153ab79dba9cdd14f8c7b8ba"
+  },
+  "build": {
+    "log": "extracted/cpp-editor-graph-721/build-v1.log",
+    "exitCode": 0
+  },
+  "comparison": {
+    "scope": "같은 원본 Fort 재적재의 전체 surface 배치·개별 Graph 성분/장부·noGraph 소속. 번호 자체·frame·원시 Pool 바이트 동등성은 판정하지 않음.",
+    "fixture": "editor-graph-native-720",
+    "label": "reloaded",
+    "nativeSurfaces": 674,
+    "cppSurfaces": 674,
+    "missingSurfaces": 0,
+    "extraSurfaces": 0,
+    "surfacePlacementMatches": true,
+    "nativeGraph": {
+      "connectedSurfaces": 670,
+      "graphs": 1
+    },
+    "cppGraph": {
+      "connectedSurfaces": 670,
+      "graphs": 1
+    },
+    "graphMatches": true,
+    "matchingFrames": 200,
+    "unmatchedNativeFrames": 474,
+    "nativeNoGraphSurfaces": 4,
+    "reportSha256": "1f6a8ad09d9bb18120d0896b72b4cd98905629464aa8009024ddc625d0d2898a",
+    "membership": {
+      "observed": true,
+      "componentMembershipAndRecordsMatch": true,
+      "noGraphMembershipMatches": true,
+      "cppNoGraphSurfaces": 4,
+      "cppGraphHistogram": {
+        "2": 670,
+        "254": 4
+      },
+      "passed": true
+    },
+    "passed": true
+  },
+  "frameCodes": {
+    "type": 97,
+    "name": "isle",
+    "frames": 317,
+    "runs": {
+      "720": {
+        "surfaces": 674,
+        "sameFrame": 206,
+        "sameOrientation": 674,
+        "differentOnlyVariantByte": 468
+      },
+      "721": {
+        "surfaces": 674,
+        "sameFrame": 200,
+        "sameOrientation": 674,
+        "differentOnlyVariantByte": 474
+      }
+    },
+    "scope": "방향/flags/variant 코드만 비교. 그림 픽셀 동일성이나 난수 seed 일치는 판정하지 않음."
+  },
+  "toolTests": {
+    "total": 5,
+    "failed": 0,
+    "seconds": 0.084,
+    "log": "extracted/cpp-editor-graph-721/compare-tests-v2.log",
+    "firstLog": "extracted/cpp-editor-graph-721/compare-tests-v1.log",
+    "firstLogEncoding": "cp949 stderr, v2 UTF-8"
+  },
+  "live": {
+    "processes": 1,
+    "frames": 250,
+    "returnCode": 0,
+    "timedOut": false,
+    "seconds": 6.313498199997412,
+    "originalsUnchanged": true,
+    "dataUnchanged": true
+  },
+  "protected": {
+    "files": 2640,
+    "changed": []
+  },
+  "limitations": [
+    "한 맵 재적재의 개별 성분만 확인",
+    "배치 직후678/670·다중 섬/편집 분할 병합은 잔여",
+    "원본과 난수 seed/99cache가 같다는 근거 없음",
+    "그림 픽셀·전체 동일성·자연 완주는 사용자 확인",
+    "전체 C++/34/ZIP·새MP/통신·제외 재현 검사는 실행하지 않음"
+  ],
+  "sources": [
+    {
+      "path": "cpppj\\src\\client\\RawSurfaceWorld.cpp",
+      "sha256": "3f366b1fb3a584314dc4c00aa8332e18493f7d6f93f35f5d21e697739db03eb5"
+    }
+  ]
+}

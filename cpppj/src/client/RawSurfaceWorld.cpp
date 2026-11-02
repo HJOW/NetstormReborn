@@ -399,6 +399,11 @@ std::string RawSurfaceWorld::Report() const {
     // 예약 0번 다음의 실제 연결 성분을 센다.
     for (std::size_t i=1;i<o::Graph::kCount;++i) if (impl_->graph->Records()[i].inUse) { ++graphs;surfaces+=static_cast<std::uint16_t>(impl_->graph->Records()[i].surfaces); }
     out<<"raw_world\t"<<impl_->time.game<<'\t'<<impl_->time.number<<'\t'<<impl_->kernel.Size()<<'\t'<<surfaces<<'\t'<<graphs<<'\t'<<impl_->bookkeeping.TotalCost()<<'\t'<<impl_->bookkeeping.depth<<'\t'<<impl_->baseDestroy->PreDepth()<<'\t'<<impl_->baseDestroy->PostDepth()<<'\t'<<impl_->effectRequests<<'\t'<<impl_->deletionRequests<<'\n';
+    // 실제 Graph 표의 앞 두 signed WORD를 그대로 관측한다. 배치 직후 장부와 실제 소속 수의 차이를 보정하지 않는다.
+    for (std::size_t index=0;index<o::Graph::kCount;++index) {
+        const auto& record=impl_->graph->Records()[index]; // 예약0번도 독립 행으로 남기며 미정 reserved WORD는 비교하지 않는다.
+        out<<"raw_graph_record\t"<<index<<'\t'<<record.surfaces<<'\t'<<record.inUse<<'\n';
+    }
     const auto& scan=impl_->storage->bridgeDecayScan;out<<"bridge_decay\t"<<scan.first<<'\t'<<scan.last<<'\t'<<scan.cursor<<'\t'<<scan.next<<'\t'<<impl_->storage->bridgeDecayPeriod<<'\n'; //CLI 관측은 실제 현재 전역만 읽고 스캔/초기화를 실행하지 않는다.
     const auto terrainFrames=impl_->frames[impl_->terrainType].Run('J');out<<"raw_terrain_type\t"<<impl_->terrainType<<'\t'<<terrainFrames.first<<'\t'<<terrainFrames.count<<'\n'; //실제지면의기본/원소프레임범위를읽기만한다.
     const auto& islandRecords=impl_->storage->islands.records;out<<"raw_islands\t"<<Read(islandRecords,0,4)<<'\n';
@@ -408,6 +413,7 @@ std::string RawSurfaceWorld::Report() const {
         const auto& seed=snapshot.object;out<<"raw_object\t"<<snapshot.sid.value<<'\t'<<seed.type<<'\t'<<seed.owner<<'\t'<<seed.frame<<'\t'<<seed.x<<'\t'<<seed.y<<'\n';
         const auto raw=impl_->pool.Slot(snapshot.sid);const bool patch=impl_->edition==o::OriginalEdition::Patch1078; // 같은 실제 슬롯의 상태/extra/HP 저장 비트다.
         out<<"raw_asset_fields\t"<<snapshot.sid.value<<'\t'<<static_cast<std::uint32_t>(raw[11])<<'\t'<<static_cast<std::uint32_t>(raw[patch ? 40 : 35])<<'\t'<<Read(raw,26,patch ? 4 : 2)<<'\n';
+        if (impl_->types[raw[10]].flags1&o::TypeFlag1::kSurface) out<<"raw_surface_graph\t"<<snapshot.sid.value<<'\t'<<static_cast<std::uint32_t>(raw[patch ? 30 : 28])<<'\n'; // 렌더링에 쓰는 같은 표면의 실제 소속 BYTE이며 번호 재할당이나 flood를 실행하지 않는다.
         if (impl_->types[raw[10]].flags2&4U) { const auto codes=impl_->frames[raw[10]].Codes();if (seed.frame<0 || static_cast<std::size_t>(seed.frame)>=codes.size()) throw std::out_of_range("다리 현재 수명 보고의 프레임 범위");out<<"raw_bridge_fields\t"<<snapshot.sid.value<<'\t'<<Read(raw,12,2)<<'\t'<<static_cast<std::uint32_t>(codes[static_cast<std::size_t>(seed.frame)].flags)<<'\n'; } //CLI 읽기 전용 관측이며 실제 수명/Hard/Cracked 비트를 임의 주입하지 않는다.
         const auto table=Read(raw,0,4); // 원본 두FactoryVT의현재내용물을모든원소워크샾에서같은방식으로관측한다.
         if (patch && o::ObjectConversionBody(table)) { // 타입전환/저장재적재전후에같은실제Form과현재Regular예약을관측한다.
