@@ -1,5 +1,6 @@
 // 원문 앞단/배경 본체는 유지하고 실제 Client/Screen/Gump/Pool 장치만 제공한다.
 #include "client/ClientRendererFrame.h"
+#include "client/VFXLine.h" //진단방향선도기존실제VFX본문으로그린다.
 #include "client/DrawWater.h" //같은 실제 후단 finder/카메라/VFX·전체 viewport 출력을 연결한다.
 #include "client/ClientMain.h"
 #include "client/ClientGameplayGlobals.h"
@@ -46,7 +47,7 @@ std::int32_t RendererCollectionRowLimit(std::int32_t width,std::int32_t height) 
 // 초기화/새 미션/해상도 전환으로 Native 전역을 다시 만들지 않는다.
 ClientRendererFrame::ClientRendererFrame(Client& client):client_(client) {}
 ClientRendererFrame::~ClientRendererFrame()=default; //collector를 실제 storage보다 먼저 반납한다.
-void ClientRendererFrame::ReadOptions() { client_.configuration_.ReadInt("showSoftAsserts",client_.gameplayGlobals_->AiDebug().Checking()); } //441270의 누락 유지와 같은 현재 값을 Frame 진단 관문에 제공한다.
+void ClientRendererFrame::ReadOptions() { client_.configuration_.ReadInt("showSoftAsserts",client_.gameplayGlobals_->AiDebug().Checking());client_.gameplayGlobals_->DrawFire()=0; } //현재 Checking을 읽고 원문4356a6처럼 Fire만 끈다. 다른 진단 DWORD는 보존한다.
 
 // 실제 파일/난수/색/클립/잠금은 Client가 소유한 동일 장치를 빌린다.
 RendererCloudHooks ClientRendererFrame::CloudDevices() {
@@ -141,6 +142,36 @@ void ClientRendererFrame::Submit(std::span<std::uint8_t> pixels,int pitch,int he
         }
     });
 }
+
+// 같은 화면 잠금/clip과 현재 팔레트/기존BFS 배열을 지연 연결한다.
+RendererDiagnosticHooks ClientRendererFrame::DiagnosticDevices() {
+    auto& screen=*client_.screen_;const auto storage=client_.SurfaceStorage();RendererDiagnosticHooks hooks;
+    hooks.screen.clip=[&screen](auto rect) { screen.SetClip(rect.left,rect.top,rect.right,rect.bottom); };
+    const auto paint=[&screen](const auto& operation) { //원문4a2270/4a23b0은전체viewport로잠시바꾼뒤이전clip을복구한다.
+        const auto saved=screen.Clip();const ScreenRect full{0,0,screen.Width(),screen.Height()};screen.SetClip(full.left,full.top,full.right,full.bottom);auto* pixels=screen.Lock();
+        try { operation(std::span<std::uint8_t>(pixels,static_cast<std::size_t>(screen.Pitch())*static_cast<std::size_t>(screen.Height())),screen.Pitch(),screen.Height(),full); }
+        catch (...) { screen.Unlock();screen.SetClip(saved.left,saved.top,saved.right,saved.bottom);throw; } //호스트예외에도잠금/clip만반납하며이미그린픽셀은되돌리지않는다.
+        screen.Unlock();screen.SetClip(saved.left,saved.top,saved.right,saved.bottom);
+    };
+    hooks.screen.rectangle=[paint](auto rect,auto color) { paint([&](auto pixels,auto pitch,auto height,auto clip) { DrawWaterRectangle(pixels,pitch,height,clip,rect,color); }); };
+    hooks.line=[paint](auto first,auto second,auto color) { paint([&](auto pixels,auto pitch,auto height,auto clip) { DrawVfxLine(pixels,pitch,height,clip,{first[0],first[1]},{second[0],second[1]},color); }); };
+    hooks.screen.present=[&screen] { screen.PresentPaletteClear(); };
+    hooks.colors=[&screen]()->std::span<const std::uint32_t> { return screen.Colors().basic; };
+    hooks.invalidGraph=[this]()->std::uint32_t { if (!client_.menu_ || !client_.menu_->world_) throw std::logic_error("Renderer진단의현재graph소유자미설치");return client_.menu_->world_->Session().Core().bookkeeping.invalidGraph; };
+    hooks.distances=[storage]()->std::span<const std::int16_t> { const auto& current=storage->pathSearchWork;if (!current.initialized || !current.work) return {};return current.work->distance; }; //기존실제BFS가쓴원문거리표만읽고새검색은하지않는다.
+    hooks.assertion=[](auto line) { std::clog<<"원문 Renderer 진단 "<<line<<'\n'; };return hooks;
+}
+// 플래그0은Screen/Pool/거리표를빌리지않는원문단락이다.
+void ClientRendererFrame::DrawDiagnostic(RendererDiagnosticKind kind,const std::uint32_t& flag) {
+    if (!flag) return;const auto storage=client_.SurfaceStorage();const auto& camera=client_.gameplayGlobals_->Camera();auto& renderer=client_.GetRenderer();
+    RawRendererDiagnostics(storage->pool,storage->hash,storage->types,storage->spots).Draw(kind,camera.RendererView(),camera.Snapshot(),client_.screen_->Width(),client_.screen_->Height(),flag,client_.gameplayGlobals_->FireMode(),client_.gameplayGlobals_->WorldCells(),renderer.BackgroundRedraw(),DiagnosticDevices());
+}
+// 일반Draw/캡처뒤Hash→Fire→Spot은각자현재플래그를다시읽는다.
+void ClientRendererFrame::DrawDiagnosticsBeforeWater() {
+    auto& globals=*client_.gameplayGlobals_;DrawDiagnostic(RendererDiagnosticKind::Hash,globals.DrawHash());DrawDiagnostic(RendererDiagnosticKind::Fire,globals.DrawFire());DrawDiagnostic(RendererDiagnosticKind::Spot,globals.DrawSpot());
+}
+// Water뒤의Board와마지막Present/snapshot은서로다른현재효과다.
+void ClientRendererFrame::DrawDiagnosticsAfterWater() { DrawDiagnostic(RendererDiagnosticKind::Board,client_.gameplayGlobals_->DrawBoard()); }
 
 //994b0 반환/정리와 연속캡처 뒤의 별도 진단 표시다. dirty별 sprite/overlay로 섞지 않는다.
 void ClientRendererFrame::DrawWater() {

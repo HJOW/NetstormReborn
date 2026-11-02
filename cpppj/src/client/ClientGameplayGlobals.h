@@ -85,10 +85,20 @@ public:
     ClientAiDebugGlobals& AiDebug() { return aiDebug_; } // 같은7로그/현재checking의장기소유자다.
     const ClientAiDebugGlobals& AiDebug() const { return aiDebug_; } // 현재진단값을복제하지않는다.
     std::uint32_t ReadDebugWord(std::uint32_t address) const { // 안전한원문주소식별자만현재저장소에연결한다.
+        if (address==0x54d91cU) return DrawHash(); //776의현재진단DWORD를원문주소로조회한다.
+        if (address==0x54d920U) return DrawFire(); //776의현재진단DWORD를원문주소로조회한다.
+        if (address==0x54d924U) return DrawSpot(); //776의현재진단DWORD를원문주소로조회한다.
+        if (address==0x54d92cU) return DrawBoard(); //776의현재진단DWORD를원문주소로조회한다.
+        if (address==0x595144U) return FireMode(); //776의현재진단DWORD를원문주소로조회한다.
         if (address==0x55a480) return player.special;if (address==0x55a484) return specialAuxiliary;
         if (address==0x5e4794) return std::bit_cast<std::uint32_t>(aiDebug_.Checking());return aiDebug_.Read(address);
     }
     void WriteDebugWord(std::uint32_t address,std::uint32_t value) { // 원문29/99원시값을BOOL로좁히지않고같은저장소에쓴다.
+        if (address==0x54d91cU) { DrawHash()=value;return; } //776의같은저장소에전체DWORD를기록한다.
+        if (address==0x54d920U) { DrawFire()=value;return; } //776의같은저장소에전체DWORD를기록한다.
+        if (address==0x54d924U) { DrawSpot()=value;return; } //776의같은저장소에전체DWORD를기록한다.
+        if (address==0x54d92cU) { DrawBoard()=value;return; } //776의같은저장소에전체DWORD를기록한다.
+        if (address==0x595144U) { FireMode()=value;return; } //776의같은저장소에전체DWORD를기록한다.
         if (address==0x55a480) { player.special=value;return; }if (address==0x55a484) { specialAuxiliary=value;return; }
         if (address==0x5e4794) { aiDebug_.Checking()=std::bit_cast<std::int32_t>(value);return; }aiDebug_.Word(address)=value;
     }
@@ -98,8 +108,19 @@ public:
     o::ContainedFinderState finder; // 실제 현재 권한/TYPE6/진단을 모든 생산 소비자가 공유한다.
     o::CampaignWorldGlobals world; // 실제 두 Subscriber와 editor/missionPost를 같은 주소에서 보관한다.
     o::EnergySupplyState energy; // 공급 모듈과 메뉴가 같은5cab30을 빌린다. userCheat은 Runtime 교체로 지우지 않는다.
+    std::uint32_t& DrawHash() { return diagnosticHash_; } //0054d91c의같은현재진단DWORD이며명시writer외에는활성화하지않는다.
+    const std::uint32_t& DrawHash() const { return diagnosticHash_; } //Session/Renderer교체뒤에도같은주소와전체값을보존한다.
+    std::uint32_t& DrawFire() { return diagnosticFire_; } //0054d920의같은현재진단DWORD이며명시writer외에는활성화하지않는다.
+    const std::uint32_t& DrawFire() const { return diagnosticFire_; } //Session/Renderer교체뒤에도같은주소와전체값을보존한다.
+    std::uint32_t& DrawSpot() { return diagnosticSpot_; } //0054d924의같은현재진단DWORD이며명시writer외에는활성화하지않는다.
+    const std::uint32_t& DrawSpot() const { return diagnosticSpot_; } //Session/Renderer교체뒤에도같은주소와전체값을보존한다.
+    std::uint32_t& DrawBoard() { return diagnosticBoard_; } //0054d92c의같은현재진단DWORD이며명시writer외에는활성화하지않는다.
+    const std::uint32_t& DrawBoard() const { return diagnosticBoard_; } //Session/Renderer교체뒤에도같은주소와전체값을보존한다.
+    std::uint32_t& FireMode() { return diagnosticFireMode_; } //00595144의같은현재진단DWORD이며명시writer외에는활성화하지않는다.
+    const std::uint32_t& FireMode() const { return diagnosticFireMode_; } //Session/Renderer교체뒤에도같은주소와전체값을보존한다.
     std::uint32_t specialAuxiliary{}; // 원문55a484이며 설정 해석에서55a480과 함께0으로 쓴다. 별도 기능 해석은 후속이다.
 private:
+    std::uint32_t diagnosticHash_{},diagnosticFire_{},diagnosticSpot_{},diagnosticBoard_{},diagnosticFireMode_{}; //원문네플래그/Fire모드는최초BSS0이며설치/반납에서지우지않는다.
     std::uint32_t localAddress_{}; //보호PE005953fc의 최초BSS0이다. 이후 실제 네트워크 주소 writer는 후순위MP에서 연결한다.
     std::uint32_t fullDeck_{}; // 최초 PE BSS0이며 준비 대여/반납은 Native 부모가 쓴 현재 값을 보존한다.
     std::uint32_t fortKeepGenus_{0x40480002U},stateAuxFC4_{}; //보호 PE00542640의 초기 마스크와00594fc4의 별도 BSS0이다.

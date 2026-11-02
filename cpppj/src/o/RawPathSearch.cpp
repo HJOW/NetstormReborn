@@ -34,8 +34,8 @@ int Cell(float value) {
 }
 // 실제 해시0/표면/타입 표가 공유되며 거리/큐만 검색기가 소유한다.
 RawPathSearch::RawPathSearch(const SidPool& pool,const SquidHash& hash,std::span<const std::uint8_t> spots,
-    std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,RawPathSearchState& state)
-    :pool_(pool),hash_(hash),spots_(spots),types_(types),frames_(frames),state_(state),work_(std::make_unique<RawPathSearchWork>()) {
+    std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,RawPathSearchState& state,RawPathSearchStorage* sharedWork)
+    :pool_(pool),hash_(hash),spots_(spots),types_(types),frames_(frames),state_(state),sharedWork_(sharedWork),work_(sharedWork ? (sharedWork->work ? sharedWork->work : (sharedWork->work=std::make_shared<RawPathSearchWork>())) : std::make_shared<RawPathSearchWork>()) {
     if (spots.size()!=65536 || types.size()!=frames.size()) throw std::invalid_argument("BFS 실제 월드 연결");
 }
 // 표면 SID는 같은 실제 hash0 배열에서 조회한다.
@@ -76,6 +76,7 @@ void RawPathSearch::Append(std::vector<RawPathPoint>& points,std::vector<std::in
 // 미사용 queue byte는 다시 초기화하지 않는다. 원본은 거리표만 매 호출에서 전체 지운다.
 bool RawPathSearch::SearchCells(RawPathRuntime& output,int sx,int sy,int dx,int dy,bool cardinalOnly) {
     if (!Inside(sx,sy) || !Inside(dx,dy)) throw std::out_of_range("BFS 시작/끝 칸");
+    if (sharedWork_) sharedWork_->initialized=true; //진단의원문59514c비NULL은실제거리표초기화에도달한뒤에만관측한다.
     std::fill(work_->distance.begin(),work_->distance.end(),std::int16_t{});
     if (pool_.Edition()==OriginalEdition::Patch1078 && (state_.sharedPolicySelector ? *state_.sharedPolicySelector==5U : state_.policySelector==5)) state_.directionPrerequisite[3]=5;
     work_->queue[0]={static_cast<std::uint8_t>(sx),static_cast<std::uint8_t>(sy)};work_->distance[sy*256+sx]=1;

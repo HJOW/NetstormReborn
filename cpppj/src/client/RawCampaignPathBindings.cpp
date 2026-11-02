@@ -21,7 +21,7 @@ RawCampaignPathBindings::RawCampaignPathBindings(RawSurfaceWorld& world,RawWorld
     o::RawPathSearchState& searchState,RawCampaignPathEffects effects)
     :world_(world),core_(core),priests_(priests),halt_(halt),arrival_(arrival),cleanup_(cleanup),lookup_(lookup),
      startState_(startState),processState_(processState),effects_(std::move(effects)),
-     search_(core.pool,core.hash,core.spots,core.types,core.frames,searchState) {
+     search_(core.pool,core.hash,core.spots,core.types,core.frames,searchState,&world.Storage()->pathSearchWork) {
     const auto current=world_.Core();const auto* pool=&core_.pool;
     if (&current.pool!=pool || &current.hash!=&core_.hash || current.spots.data()!=core_.spots.data() ||
         current.types.data()!=core_.types.data() || current.frames.data()!=core_.frames.data() || current.shapes.data()!=core_.shapes.data() ||

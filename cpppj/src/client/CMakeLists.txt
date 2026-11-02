@@ -350,3 +350,5 @@ target_sources(netstorm PRIVATE FontFaceEncoding.h FontFaceEncoding.cpp)
 
 # 선택적AI메뉴/일반진단입력은같은현재Player와Client수명전역을공유한다(775).
 target_sources(netstorm PRIVATE ClientAiDebugGlobals.h RawAiDebugMenu.cpp RawAiDebugMenu.h AiDebugCommandInput.cpp AiDebugCommandInput.h)
+# 명시특수전역의네후단을실제현재물리에연결한다(776).
+target_sources(netstorm PRIVATE RendererDiagnostics.cpp RendererDiagnostics.h)

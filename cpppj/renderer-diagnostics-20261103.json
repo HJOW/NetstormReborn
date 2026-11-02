@@ -1,0 +1,154 @@
+{
+  "unit": 776,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 776,
+  "displayVersion": "11.01",
+  "exeSha256": "87a7aca2e7bd94f7424b8f75c147e46be3cf1a843f6944d2b91f88d2ea607df3",
+  "summary": "네 Renderer 진단과 현재 플래그·같은 경로 검색 작업 배열의 장기 소유 연결",
+  "tests": {
+    "totalUnique": 21,
+    "totalExecutions": 21,
+    "newTests": 4,
+    "failedChecks": 0,
+    "names": [
+      "RendererDiagnostics_Native252WholePixelsAndCurrentBodies",
+      "RendererDiagnostics_DisabledAndLongOwnerNoSyntheticActivation",
+      "RendererDiagnostics_SharedPathWorkSurvivesSearchOwnerReplacement",
+      "RendererDiagnostics_Native576KeyGatesFullDwordAndPositionLog",
+      "rawPathSearch_native_bfs_and_compression",
+      "rawPathSearch_current_surface_alias",
+      "rawPathSearch_init_uses_current_surface_before_search",
+      "rawPathSearch_kernel_moves_and_arrives_in_same_space",
+      "rawPathSearch_native_initialization_pipeline",
+      "rawPathSearch_shared_diagnostic_current_value_and_edition",
+      "DrawWater_Native76FullFinderProjectionRectPixelsAndMutations",
+      "DrawWater_Native384GeneralInputAndFullDwordStores",
+      "DrawWater_Native9NamesCurrentQueueAndNoDefaultMenuAlias",
+      "DrawWater_LongOwnerAndDisabledNoDeviceNoViewportDivision",
+      "DrawWater_PostSceneIndependentOfDirtyAndScreenClip",
+      "AiDebugMenu_Native60RowsAndCurrentBodyLifetime",
+      "AiDebugMenu_PartialEffectsAndUnchosenPhysicalBoundaries",
+      "AiDebugInput_Native200RowsAndCommonReleaseEnvelope",
+      "AiDebugInput_ActualClientOptionsAndStableDebugWords",
+      "AiDebugInput_Native84NamesAndActualQueue",
+      "CampaignSession_AiDebugUsesCurrentBodyAndStableClientWords"
+    ],
+    "logs": [
+      "tests-RendererDiagnostics_.log",
+      "tests-rawPathSearch_.log",
+      "tests-DrawWater_.log",
+      "tests-AiDebugMenu_-v2.log",
+      "tests-AiDebugInput_-v2.log",
+      "tests-CampaignSession_AiDebug-v3.log"
+    ],
+    "fullSuiteRun": false,
+    "initialFilterSelection": {
+      "processes": 4,
+      "executedTests": 0,
+      "failedChecks": 4,
+      "reason": "메뉴 집중 대상과 mission_entry에 해당 AI 검사가 등록되지 않아 필터가 비었음. 실제 등록된 script_bindings/world_generation 대상으로 교정",
+      "logs": [
+        "tests-AiDebugMenu_.log",
+        "tests-AiDebugInput_.log",
+        "tests-CampaignSession_AiDebug.log",
+        "tests-CampaignSession_AiDebug-v2.log"
+      ]
+    }
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-ai-regression-v1.log",
+      "build-session-regression-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2710,
+    "currentCount": 2712,
+    "allUnchanged": true,
+    "fixtureCount": 892,
+    "newFixtures": [
+      "renderer-diagnostics-x86.tsv",
+      "renderer-diagnostic-keys-x86.tsv"
+    ]
+  },
+  "native": {
+    "display": {
+      "unit": 776,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 252,
+      "observations": 504,
+      "actualBodies": [
+        "00434410",
+        "00434380",
+        "00434880",
+        "00434690",
+        "00434790",
+        "00434a00",
+        "00434bf0",
+        "004ad390",
+        "00488a50",
+        "004a23b0",
+        "004ac1e0"
+      ],
+      "calls": {
+        "00497530": 336,
+        "004e49c0": 20256,
+        "00497220": 7584,
+        "004a1580": 3360,
+        "004a2270": 7968,
+        "004dade0": 33024,
+        "004011f1": 33024,
+        "0041def0": 192,
+        "0041d770": 192,
+        "0041d7a0": 192,
+        "004a46d0": 288
+      },
+      "fixtureSha256": "c6a42b0827f4db4bf256a8973d4bd78790661251dc4b3ce54f2c59f598dabe83",
+      "toolSha256": "efd2c1d1dd04ffab6d8741ee8f694a1285436c95a2b28d15260df5a51629b059",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "cppTests": 0,
+      "boundary": "실제네후단/finder/투영/rect/line/VFX; Screen Lock/Unlock/Present와assert는메모리/기록경계. 거리표는명시입력이며BFS를생성하지않았다."
+    },
+    "keys": {
+      "unit": 776,
+      "host": "HJOW-Athlon",
+      "inputs": 576,
+      "observations": 1152,
+      "fixtureSha256": "fedba938ac7463ee59c647aae3026b217a5ee4d6050572aa1cb1d78b01223531",
+      "toolSha256": "bc4a9aa6823b222432191555ee5cf4b7a66607044d3f654314fff48aaaf3a80a",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "cppTests": 0,
+      "builds": 0,
+      "boundary": "실제Guide/Gump/공통release/Console/7·10·13분기store; 명시특수전역입력은DebugSwitch의완료관측이아니며ShiftP좌표/로그는경계다."
+    },
+    "preparedObservations": 1656,
+    "preparedRepeatObservations": 1656,
+    "resumeRepeatObservations": 1656,
+    "fixtureBytesMatch": true
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "Lock/Unlock/Present/assert는 메모리 장치 경계",
+    "실제 GUI/전체 프레임·원문32비트 FILE/SEH ABI·Lock 자체 실패는 별도",
+    "거리표는 기존 실제 BFS 저장소이며 진단은 새 검색을 실행하지 않음"
+  ],
+  "next": "777 TYPE 실시간 reader, 이후 재개 준비 인계의 순서"
+}

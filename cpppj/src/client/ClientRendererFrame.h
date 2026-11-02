@@ -3,6 +3,7 @@
 #include "client/ClientRendererFrameGlobals.h"
 #include "client/Renderer.h"
 #include "client/RawCameraView.h"
+#include "client/RendererDiagnostics.h" //네별도후단은768DrawWater와같은현재표시장치를쓴다.
 #include "o/RawRenderCollection.h"
 #include "client/DrawSubmission.h"
 #include <memory>
@@ -20,10 +21,14 @@ public:
     void ReadOptions(); //Interpret Options 위치에서 showSoftAsserts의 현재 성공한 값만 저장한다.
     bool Prepare(); //실제10.78 메뉴가 있을 때4994b0 앞단을 실행하며 독립 표시/10.72는 false다.
     RendererWorldDrawing Drawing(); //같은 실제 dirty의 지형 수집/배경 장치이며 별도 장면/난수를 만들지 않는다.
+    void DrawDiagnosticsBeforeWater(); //436450의Hash→Fire→Spot은DrawWater앞에순서대로실행한다.
+    void DrawDiagnosticsAfterWater(); //같은부모의Board는DrawWater뒤·Present앞이다.
     void DrawWater(); //00436450의 capture 뒤·499fe0 앞에서00434dd0의 같은 현재 물리/Screen을 표시한다.
     void Finish(); //정상 Draw의 화면 잠금 반납 뒤470ca0을 실행한다. 실패 경로에서는 부르지 않는다.
     std::string Diagnostics() const; //현재 실제 owner/cache·요청/반환을 읽을 뿐 게임 상태를 바꾸지 않는다.
 private:
+    void DrawDiagnostic(RendererDiagnosticKind kind,const std::uint32_t& flag); //선택한진단만현재물리/Screen을빌린다.
+    RendererDiagnosticHooks DiagnosticDevices(); //같은clip/lock/palette/BFS거리표를지연조회한다.
     RendererCloudHooks CloudDevices(); //같은 Screen/색/파일/난수의 현재 표시 장치이며 별도 DirectDraw 표면 경계를 유지한다.
     std::uint32_t Collect(ScreenRect clip,std::uint32_t flags); //원문 현재 지도/카메라 환산과 실제 해시0→2의 지형 수집/배경 덮임이다.
     void Background(ScreenRect clip,std::uint32_t flags,std::uint32_t covered); //같은 dirty를 지도 clip으로 자르고 배경 선택/픽셀 함수를 호출한다.

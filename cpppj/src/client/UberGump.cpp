@@ -1,3 +1,4 @@
+#include <cstdio> //원문좌표로그의실제%f서식을사용한다.
 #include "client/RawProductionControls.h"
 #include "client/RawCameraPan.h"
 #include "client/MoveDialog.h" //HTML 명령의 같은 실제 모달 위치 처리를 사용한다.
@@ -45,6 +46,7 @@
 #include "client/PresentationCommandInput.h" //일반 글꼴/음질 입력은 현재 캐시와 음향 장치 부모로 전달한다.
 #include "client/FontFaceEncoding.h" //변경 후 현재31BYTE ACP 이름만 실제 UTF-8 Config 경계에서 변환한다.
 #include "client/ConfigurationCommandInput.h" //원문 모드별 palette와 공유 priority/State 일반 명령을 기존 부모에 연결한다.
+#include "client/RendererDiagnostics.h" //명시특수전역뒤원문7/10/13키의현재DWORD만토글한다.
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "client/GameMenuActions.h"
 #include "client/ViewKeyInput.h"
@@ -1329,6 +1331,7 @@ void UberGump::Event(InputEvent event) {
     if (!(event.code&InputCode::kRelease) && transitionCode==(0x70U<<InputCode::kVirtualKeyShift)) { client_.Input().PushCommand(0x02000017U,0,0x61000003);return; } // 원본4d8c47의 F1Help 문자열이며 Control/Shift를 별도 거부하지 않는다.
     if (rawButtons_->Menus()->HelpOpen()) { if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; } // 현재 공통 모달/스크롤/태그/돌 버튼을 실제 GumpInput에 전달한다.
     if (!rawButtons_->CurrentDialog() && rawButtons_->Menus()->OpenChatInput(event)) { rebuild_=true;worldUiRouted=true; } //원문4d8c60의 모달 뒤/정지 앞 Enter다. 같은 사건을 새로 표시한 Console에 다시 보내지 않는다.
+    if (!rawButtons_->CurrentDialog()) { auto& globals=*client_.GameplayGlobals();if (DispatchRendererDiagnosticKey(event,globals.player.special,globals.specialAuxiliary,globals.DrawFire(),globals.DrawSpot(),globals.DrawBoard(),worldRedraw_,[this](InputEvent input) { const auto point=RawCursorPosition::ScreenToWorld(input.x,input.y,client_.GameplayGlobals()->Camera().Snapshot().worldBits);std::array<char,128> text{};const auto count=std::snprintf(text.data(),text.size(),"cursorPos: %f, %f\n",static_cast<double>(point[0]),static_cast<double>(point[1]));if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::runtime_error("원문좌표로그서식실패");client_.WriteDiagnosticLog(0x1d,std::string_view(text.data(),static_cast<std::size_t>(count))); })) { rebuild_=true;return; } } //Guide/Gump/Console뒤정지앞의원문특수관문이다.
     if (transitionCode==0x130000U) {
         if (rawButtons_->CurrentDialog()) return; //원문565dd4의 현재 Console/모달 관문 뒤이며 정지를 별도 조회하지 않는다.
         PauseKeyInputHooks hooks;hooks.command=[] { return GameMenuCommandValue(0x00542a30U).value(); }; //원문004d8dde의 같은 현재 Pause 명령이다.

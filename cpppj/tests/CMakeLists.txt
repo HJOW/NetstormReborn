@@ -3143,3 +3143,6 @@ set_source_files_properties(AiDebugMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS 
 
 # 775 원문Toggle이름의별도63행을기존names검사한개에추가한다.
 set_property(SOURCE AiDebugMenuTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_AI_DEBUG_TOGGLE_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-debug-toggle-names-x86.tsv\"")
+# 진단기계어/픽셀과기존경로공유소유를기존집중대상에서검사한다(776).
+target_sources(netstorm_tests PRIVATE RendererDiagnosticsTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE RendererDiagnosticsTests.cpp RawPathSearchTests.cpp)

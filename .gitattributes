@@ -2382,3 +2382,7 @@ cpppj/tests/fixtures/editor-graph-native-720* -text
 
 # 단위751의 최초 U/u 원문 관측을 줄바꿈 변환 없이 보존한다.
 cpppj/tests/fixtures/lost-position-key-x86.tsv -text
+
+# 단위776의 최초 진단 표시·일반키 관측 바이트를 줄끝 변환 없이 보존한다.
+cpppj/tests/fixtures/renderer-diagnostics-x86.tsv -text
+cpppj/tests/fixtures/renderer-diagnostic-keys-x86.tsv -text

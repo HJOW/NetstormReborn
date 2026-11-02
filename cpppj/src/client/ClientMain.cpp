@@ -722,7 +722,7 @@ void Client::PresentScene(bool captureFrame) {
         screen_->Unlock();
         if (nativeFrame) rendererFrame_->Finish(); //정상 Draw/잠금 반납 뒤·Present 앞의 같은 원문470ca0이다.
         if (captureFrame) captureSequence_->Frame(); //436450:994b0반환뒤·진단그림/499fe0출력앞이다. owner가현재active를확인한다.
-        if (nativeFrame && captureFrame) rendererFrame_->DrawWater(); //일반 프레임만 캡처 뒤/Present 앞에서 실제 후단을 실행한다. 즉시 적재 표시는 별도다.
+        if (nativeFrame && captureFrame) { rendererFrame_->DrawDiagnosticsBeforeWater();rendererFrame_->DrawWater();rendererFrame_->DrawDiagnosticsAfterWater(); } //원문Hash/Fire/Spot/Water/Board순서를유지한다.
         if (screen_->Flags()&ScreenMode::kFullScreen) {
             bool changed=false;renderer_->Present([&changed](ScreenRect) { changed=true; }); // 원본 dirty 소비/캐시는 그대로 진행한다.
             if (changed) screen_->Update({0,0,screenWidth_,screenHeight_}); // Windows10/11의 비정수 확대는 clip별 GDI 샘플 위상 차이를 피하도록 프레임당 전체 DIB를 한 번 출력한다.

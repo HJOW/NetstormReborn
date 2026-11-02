@@ -28,12 +28,19 @@ struct RawPathSearchWork {
     // queue: BFS 방문 순서대로 X·Y BYTE 좌표를 담는 16,384항목 큐.
     std::array<std::array<std::uint8_t,2>,16384> queue{};
 };
+// 원문59514c의거리/큐소유자는Session보다오래살며실제BFS도달여부를구별한다.
+struct RawPathSearchStorage {
+    std::shared_ptr<RawPathSearchWork> work; //기존실제거리/큐배열을공유하며진단에서새로계산하지않는다.
+    bool initialized{}; //실제SearchCells의거리표쓰기에도달한뒤에만원문비NULL로관측한다.
+};
 // 같은 실제 pool/hash0/spot/현재 타입·프레임에서만 경로를 계산한다.
 class RawPathSearch {
 public:
     // 모든 참조는 검색기보다 오래 살아야 한다. hash0의 실제 배열을 읽으며 표면 사본을 만들지 않는다.
     RawPathSearch(const SidPool& pool,const SquidHash& hash,std::span<const std::uint8_t> spots,
-        std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,RawPathSearchState& state);
+        std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,RawPathSearchState& state,RawPathSearchStorage* sharedWork=nullptr); //실제Client만장기59514c소유자를공급하고기존독립생성계약은유지한다.
+    RawPathSearch(const RawPathSearch&)=delete;RawPathSearch& operator=(const RawPathSearch&)=delete; //작업 배열의 공유 소유와 별개로 기존 검색기 자체의 복사 금지를 유지한다.
+    RawPathSearch(RawPathSearch&&)=default; //기존 독립 검색기처럼 명시 이동 생성만 허용하며 빌린 월드 참조는 그대로 유지한다.
     // 0040eaf0: 좌표+0.9999를 절삭한 실제 표면 SID다. 보드 밖은0이다.
     Sid SurfaceAt(RawPathPoint position) const;
     // 00462c30/CD0045b750: 시작/목적 표면의 같은 Graph 번호를 비교할 실제 조회다.
@@ -66,7 +73,8 @@ private:
     std::span<const RiftTypeFrames> frames_;
     // state_: Path.cpp가 직접 읽고 바꾸는 전역이다. 명령을 만든 부모의 owner를 별도 이동 허가 정책으로 바꾸지 않는다 (RawPathSearchState).
     RawPathSearchState& state_;
-    std::unique_ptr<RawPathSearchWork> work_; // 원본 lazy heap의 큰 배열을 호스트 stack에 두지 않는다.
+    RawPathSearchStorage* sharedWork_{}; //외부장기소유자는탐색기보다오래살며독립검사는NULL이다.
+    std::shared_ptr<RawPathSearchWork> work_; // 원본 lazy heap의 큰 배열을 호스트 stack에 두지 않는다.
 };
 // 같은 SID 풀의 BFS를 Path 검색 경계에 연결하고 기존 이동·도착·삭제 효과는 호출자의 실제 구현을 유지한다.
 RawPathProcessHooks MakePathSearchHooks(const SidPool& pool,RawPathSearch& search,RawPathProcessHooks hooks);
