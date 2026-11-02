@@ -36,6 +36,7 @@
 #include "client/ViewKeyInput.h"
 #include "client/RotationKeyInput.h" //C/c는 World 없이도 같은 현재 Client 옵션을 반전하는 일반 입력이다.
 #include "client/ConstructionHistoryKey.h" //Tab은 같은 최근 로컬 건설 위치를 현재 즉시 카메라로 순환한다.
+#include "client/LostPositionKey.h" //U/u는 같은 공통 삭제 owner의 최근 손실 좌표를 현재 카메라에 전달한다.
 #include "client/SavedCameraKey.h" //숫자 호출/Shift 실제 기호 저장의 언어 표와 현재 지도 중심을 공유한다.
 #include "client/GifScreenshot.h"
 #include "client/RawUserHighlight.h" // Editor F8도 같은 Client 선택 전역의 원본 강조 몸체를 사용한다.
@@ -1253,6 +1254,11 @@ void UberGump::Event(InputEvent event) {
     if (transitionCode==9) {
         if (rawButtons_->CurrentDialog()) return; //원문의 Console/모달 뒤 정지 관문과 같은 위치다.
         auto& gameplay=*client_.GameplayGlobals();static_cast<void>(DispatchConstructionHistoryKey(event,gameplay.Camera().ConstructionHistory(),gameplay.WorldCells(),{[this] { return client_.Paused(); },[this](auto x,auto y) { CenterViewPoint(x,y); }}));return;
+    }
+    if (transitionCode=='U' || transitionCode=='u') {
+        if (rawButtons_->CurrentDialog()) return; //원문 Console/모달 뒤의 공통 정지 관문을 유지한다.
+        auto& gameplay=*client_.GameplayGlobals();const auto& lost=*gameplay.GameAux(); //실제 삭제/Native cleanup과 같은005c848c/90 owner이며 Session 사본을 만들지 않는다.
+        static_cast<void>(DispatchLostPositionKey(event,lost.LostX(),lost.LostY(),gameplay.WorldCells(),{[this] { return client_.Paused(); },[this](auto x,auto y) { CenterViewPoint(x,y); }}));return;
     }
     SavedCameraKeyHooks savedCamera; //현재 숫자 키만 이 장치를 소비하며 다른 사건은 초기 게이트에서 반환한다.
     savedCamera.paused=[this] { return client_.Paused(); };savedCamera.language=[this] { return client_.LanguageNumber(); };

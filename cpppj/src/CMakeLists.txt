@@ -12,6 +12,7 @@
 add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE client/ScreenModeTransition.cpp client/ScreenModeTransition.h) #원문 화면 변경 부모의 실패 복구/설정/공유 갱신 순서다(746).
 target_sources(netstorm PRIVATE client/SavedCameraKey.cpp client/SavedCameraKey.h) #숫자/Shift 기호와 현재 Renderer 중심의 저장 카메라다(719).
+target_sources(netstorm PRIVATE client/LostPositionKey.cpp client/LostPositionKey.h) #U/u는 공통 삭제가 기록한 현재 손실 위치로 즉시 이동한다(751).
 target_sources(netstorm PRIVATE o/RawConstructionHistory.h client/ConstructionHistoryKey.cpp client/ConstructionHistoryKey.h) #Tab과 실제 건설 통지가 공유하는 Client 이력/순환이다(718).
 target_sources(netstorm PRIVATE client/RotationKeyInput.cpp client/RotationKeyInput.h) #C/c의 원문 회전 방향 반전과 현재 Config 쓰기다(717).
 target_sources(netstorm PRIVATE client/LanguageRequest.cpp client/LanguageRequest.h) #원문 언어 요청/현재 Client 큐와 Gump 알림 경로다.

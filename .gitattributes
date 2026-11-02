@@ -2379,3 +2379,6 @@ cpppj/tests/fixtures/file-name-device-x86.tsv -text
 
 # 단위720의 최초 실제 원본 Fort/전체 표면/TYPE 관측을 바이트 그대로 보존한다.
 cpppj/tests/fixtures/editor-graph-native-720* -text
+
+# 단위751의 최초 U/u 원문 관측을 줄바꿈 변환 없이 보존한다.
+cpppj/tests/fixtures/lost-position-key-x86.tsv -text

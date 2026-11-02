@@ -1,0 +1,141 @@
+{
+  "unit": 751,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·사용자 요청으로 cpppj 재개·전체 목표 미완료",
+  "runtimeProduct": 751,
+  "displayVersion": "11.01",
+  "exeSha256": "b60e77541fecb65a887dbabbdecb577a58d12e942500f9fd3d95e15896128516",
+  "summary": "U/u 최근 손실 좌표의 현재 owner·유효점 판정과 즉시 카메라 이동 연결",
+  "native": {
+    "unit": 751,
+    "date": "2026-11-02",
+    "host": "HJOW-Athlon",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23"
+    },
+    "inputs": 1022,
+    "nativeExecutions": 3066,
+    "precisionOrRepeatDifferences": 0,
+    "gameExecutions": 0,
+    "multiplayerTests": 0,
+    "initialFailure": "첫 실행은 다른 가상키의 Shift 기호 검색004d53f0을 허용 범위 밖으로 거부했다. 실제 순수 검색 몸체004d53f0..004d542d를 정적으로 확인해 추가했고 최초 fixture 생성 전 재실행했다.",
+    "ranges": [
+      "004d6eca..004d6ed5",
+      "004d8c60..004d9bba",
+      "0040e800..0040e84c",
+      "004d53f0..004d542d"
+    ],
+    "boundaries": [
+      "뗌 gate와 Console/모달→정지→일반 키 부모 사이의 일반 명령/Guide/Gump는 실행하지 않는다.",
+      "정지00460de0·즉시중심00433aa0·다른키의strchr만 명시 외부 장치다. 실제433aa0 내부·GUI·OS·게임전체 관측은 아니다.",
+      "큐 사건 outside 비트는 원문 뗌 gate와 키mask에서 실제 관측하며 일반 폴링/OS 비활성 정책과 구별한다.",
+      "CD1072는 이번 기계어 실행 대상이 아니며 정적 대응만 별도 문서화한다."
+    ],
+    "codeSha256": {
+      "004d6eca..004d6ed5": "db2659fd280e2fcc7b0bd39fcca0500f0ea6648ef5b4872040255c4db18698f9",
+      "004d8c60..004d9bba": "0c7faa344c008d102c85c720c08690beaee9fc5659905f444c0475e37fed335d",
+      "0040e800..0040e84c": "3ce2c4e6731e226d93de08db1a2865351b243debf27a0c8f0d9b2f96ee425ce5",
+      "004d53f0..004d542d": "c0f1d7de4d853a4568a15cc5f5bc6dabf874586017fc0e3ad39f6ac5a8f29ccf"
+    },
+    "zeroComparisonBits": 0,
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+      "tools/decomp_lost_position_key.py": "25663c42fbf18d966ddad9294c94a7031905432a9a689571139583f0372cb310",
+      "cpppj/tests/fixtures/lost-position-key-x86.tsv": "b93aa2db6cd5ae38d9978f5ca6c5bd7c1ccffa270732073cf4616d6d3e645672"
+    }
+  },
+  "nativeVerification": {
+    "exitCode": 0,
+    "fixtureMatches": true,
+    "codeMatches": true,
+    "additionalExecutions": 3066
+  },
+  "tests": {
+    "total": 21,
+    "newTests": 4,
+    "failedChecks": 0,
+    "fullSuiteRun": false,
+    "logs": [
+      "tests-construction-v1.log",
+      "tests-camera-v3.log"
+    ],
+    "names": [
+      "ConstructionHistoryKey_IndependentNative511Inputs",
+      "ConstructionHistoryKey_LazyGatesAndPartialFallback",
+      "ConstructionHistoryKey_ClientOwnerAcrossWorldAndRenderer",
+      "ConstructionNotice_ReplaysOriginals",
+      "ConstructionNotice_ReplaysCd",
+      "ConstructionNotice_ReplaysExtra1037",
+      "ConstructionNotice_RejectsInvalidInputsBeforeEffects",
+      "ConstructionNotice_ObservesStateChangesAtEffectBoundaries",
+      "ConstructionNotice_SharedClientHistoryBeforePlacement",
+      "ConstructionNotice_SharedBossRecheckedAfterPlace",
+      "LostPositionKey_IndependentNative1022Inputs",
+      "LostPositionKey_CurrentReferencesAndLazyBoundaries",
+      "LostPositionKey_CenterPartialFailurePreservesCurrentData",
+      "CampaignFloatingSp_ProjectCurrentObjectAndCameraWithoutSidTruncation",
+      "CameraView_Native16WholeImageAndProjection",
+      "CameraView_BssExplicitInitializeTargetSnapshotAndDenominatorStayDistinct",
+      "CameraView_FirstMenuActualPrepareRequeriesSnapshotAndRenderer",
+      "CameraView_PlacementCostRequeriesSharedPixelsAfterDirtyEffect",
+      "CameraView_WorldSetterAssertionRequeriesCurrentFieldsAfterAllStores",
+      "CameraCenter_Native140PreservesCurrentViewsAndOnlyWritesTarget",
+      "LostPositionKey_ActualSessionDeletionWritesCurrentClientCamera"
+    ],
+    "initialFailures": [
+      "tests-owner-v1.log",
+      "tests-camera-v1.log",
+      "tests-camera-v2.log"
+    ]
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-product-v1.log",
+      "build-tests-v1.log",
+      "build-tests-v2.log",
+      "build-tests-v3.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2661,
+    "currentCount": 2662,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/lost-position-key-x86.tsv"
+    ],
+    "fixtureCount": 842
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-751/protected-after.json",
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "c37d5a98d8694ce9e0b3bad30057b1016bf7a523dcbe549546b331868cf06309",
+    "cpppj/src/client/LostPositionKey.cpp": "fc6dc4d0f92f4e53d30957463b30b072500f3160b9af344d0002cc40af2d3002",
+    "cpppj/src/client/LostPositionKey.h": "de25cba8996c8f0ea9f4e5d1ab79d0f2cc9dc23c53e4692cc3733c7978ff46c7",
+    "cpppj/src/client/UberGump.cpp": "aac3fc38aa9845849a0af924af19b6bb413e676c612292ec013bd7f32509d2c5",
+    "cpppj/tests/CMakeLists.txt": "2c3db3e110bdc77816a36039bfca82d3d376cba89e8e99dda9bef01049647ab2",
+    "cpppj/tests/LostPositionKeyTests.cpp": "5c4c1a824e498601f3f05825eea36f01f51b8de269cd541f4ae645bf652ddc31",
+    "cpppj/tests/LostPositionOwnerTests.cpp": "f1d6de92cf39c53ee375fdfa2f349068536595667459d1ce3443541a4e81a438",
+    "tools/decomp_lost_position_key.py": "25663c42fbf18d966ddad9294c94a7031905432a9a689571139583f0372cb310"
+  },
+  "next": "MatchDisk의 FileSpec/가상CWD/문자열 계약과 남은 비멀티 UI·시나리오·파일·수명·호환성",
+  "limitations": [
+    "정지/중심/문자검색의 명시 외부 경계와 실제 Point 기계어를 구별한다.",
+    "실제 Client/Session의 공통 삭제와 카메라 owner는 창 없이 확인했다. UberGump::Event의 OS GUI 입력 접합은 컴파일이며 신규 GUI/물리/PCM 확인은 아니다.",
+    "CD 특수 비교·전체 C++·전체34·ZIP·자연 완주·포획/희생·특정 적 공격·승리·공중3종 전용 행동·신규 MP 검사0."
+  ]
+}

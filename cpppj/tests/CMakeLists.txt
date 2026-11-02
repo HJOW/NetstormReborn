@@ -3029,3 +3029,8 @@ set_source_files_properties(CursorObjectPickupTests.cpp PROPERTIES COMPILE_DEFIN
 target_sources(netstorm_tests PRIVATE PointerMenuParentTests.cpp)
 target_sources(netstorm_menu_session_tests PRIVATE PointerMenuParentTests.cpp)
 set_source_files_properties(PointerMenuParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_POINTER_MENU_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pointer-object-menu-parent-x86.tsv\";NETSTORM_POINTER_SPECIAL_TRACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pointer-special-trace-x86.tsv\"")
+
+#U/u의 독립 원문 관측과 실제 Client의 삭제 좌표/카메라 연결을 기존 집중 대상에서 확인한다(751).
+target_sources(netstorm_tests PRIVATE LostPositionKeyTests.cpp LostPositionOwnerTests.cpp)
+target_sources(netstorm_construction_history_key_tests PRIVATE LostPositionKeyTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE LostPositionOwnerTests.cpp)
