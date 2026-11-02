@@ -78,6 +78,7 @@ public:
     o::SquidId Pick(ScreenPoint point,std::uint32_t force=0) const; //Ctrl+special의 원문 강제 후보 조회도 같은 실제 선택기를 사용한다.
     // 선택 번호를 현재 월드에서 검증하고 표시를 갱신한다.
     void Select(o::SquidId id);
+    void SelectFromPointer(o::SquidId id,std::uint32_t force,bool control); //일반 좌클릭의Select(id,force,1) 뒤 편집 owner 추적/Ctrl 변경·다리 순환을 같은 Session에 실행한다.
     void ExtendSelection(o::SquidId id,std::uint32_t force); //현재 이동 모드의 Shift 클릭을 실제 선택/토글 부모에 전달한다.
     void SelectNextUnit(std::uint32_t add); //원문 N 키는 현재 선택 다음의 내 이동 유닛을 검색해 같은 선택/카메라 부모를 사용한다.
     void SelectPriest(const std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)>& queue); //P/R는 실제 참여 SID를 선택하고 반복 시 같은 일반 입력 큐로 View Your Priest를 보낸다.

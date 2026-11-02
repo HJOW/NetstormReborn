@@ -3810,6 +3810,15 @@ void RawCampaignSession::SetBridgeQuality(std::uint32_t sid,std::uint32_t qualit
     const std::int32_t crackLife=kBridgeCrackLife; // 원본0052f960과 기존 다리의 같은 불변5다.
     RawBridgeEditor(current.core.pool,current.core.bridgeState.bridgeType,crackLife,current.random,std::move(hooks)).SetOne(current.globals.editor,sid,quality);
 }
+// 입력 부모가 판정한 보관 SID를 그대로 사용하며 개별 메뉴의 Editor/고정 bridgeType 관문을 추가하지 않는다.
+void RawCampaignSession::CycleBridgeQuality(std::uint32_t sid) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 편집 다리 품질 순환");auto& current=*impl_;
+    BridgeEditorHooks hooks;hooks.frames=[&current](auto type)->const RiftTypeFrames& { if (type>=current.core.frames.size()) throw std::out_of_range("다리 순환의 실제 TYPE 범위");return current.core.frames[type]; };
+    hooks.flags2=[&current](Sid object) { const auto type=current.core.pool.Slot(object)[10];if (type>=current.core.types.size()) throw std::out_of_range("다리 순환의 현재 TYPE 범위");return current.core.types[type].flags2; }; //매 분기에서 현재 슬롯의 TYPE를 다시 조회한다.
+    hooks.notifySurface=[&current](Sid object) { current.core.building.NotifySurface(object); };hooks.refresh=[&current](Sid object) { current.core.display.Update(current.core.pool.Slot(object)); };
+    const std::int32_t crackLife=kBridgeCrackLife; //0052f960의 같은 불변5를 호출 동안 빌린다.
+    RawBridgeEditor(current.core.pool,current.core.bridgeState.bridgeType,crackLife,current.random,std::move(hooks)).Cycle(sid);
+}
 // 원본 로그인/AI 초기화와 승패 판정은 같은9 Player 바이트를 공유한다.
 std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }
 // 명시 State 호출은 선택된 free 실패를 전파하며 앞선 Player 쓰기와 나머지 월드 수명을 보존한다.

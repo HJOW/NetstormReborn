@@ -27,4 +27,15 @@ void FollowEditorObjectOwner(const o::SidPool& pool,std::uint32_t sid,std::uint3
     const auto owner=pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)})[34]; //원문4d529d의 MOVZX를 따르며 디컴파일의 char 표기만으로 부호 확장하지 않는다.
     if (owner) { Need(selectCore)(owner,1);++revision; }
 }
+// 가상74가 Editor/선택을 바꿔도 최초 ESI의 같은 SID를 따라가며 일반 SetOwner 명령과 재조회 순서를 섞지 않는다.
+void FinishEditorPrimarySelection(bool control,const EditorPrimarySelectionHooks& hooks) {
+    if (!Need(hooks.editor)()) return;
+    const auto selected=Need(hooks.selected)();if (!selected) return; //선택이0이면 owner/로컬 Player/TYPE를 읽지 않는다.
+    if (control) {
+        const auto owner=Need(hooks.readOwner)(selected);const auto local=Need(hooks.localOwner)(); //원문 MOVZX 뒤 현재 로컬 DWORD를 한 번 읽는다.
+        if (owner!=local) { Need(hooks.assignOwner)(selected,local);Need(hooks.follow)(selected);return; }
+        if (Need(hooks.flags2)(selected)&4U) Need(hooks.cycleBridge)(selected);
+    }
+    Need(hooks.follow)(selected);
+}
 }

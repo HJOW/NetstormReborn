@@ -60,6 +60,33 @@ TEST_CASE(RawBridgeEditor_ReplaysNativeWholePoolTraceAndRandom) {
     }
     CHECK(checked==30);
 }
+// 원문422640의20/40 우선순위·Cracked 부재 복구·모든 프레임 부재·난수를 전체 슬롯으로 대조한다.
+TEST_CASE(RawBridgeEditor_ReplaysNativeCycle120) {
+    std::size_t checked{}; //원문120입력의 실제 재생 개수다.
+    for (const auto& row:LoadFixture(NETSTORM_EDITOR_BRIDGE_CYCLE_FIXTURE).rows) { //모든 기대 슬롯/표시/난수는 독립 x86 출력에서 읽는다.
+        CHECK(row.size()==7);SidPool pool(OriginalEdition::Patch1078,24000);PrepareEditorBridgePool(pool,Number(row[3]));
+        auto bytes=std::span<std::uint8_t>(const_cast<std::uint8_t*>(pool.Bytes().data()),pool.Bytes().size());Put(bytes,5*50+36,Number(row[0]));
+        const RiftTypeFrames frames({{'A','P',1,0},{'A','P',11,32},{'A','P',20,64},{'A','P',21,96},{'B','P',1,0},{'B','P',11,32},{'B','P',20,64},{'C','P',1,0},{'C','P',20,64},{'D','P',20,64}}); //후보 부재가 있는 두 방향도 원문 입력과 동일하다.
+        const std::uint32_t bridge=82;const std::int32_t crack=5;GameRandom random(Number(row[2]));std::string trace;auto expected=std::vector<std::uint8_t>(pool.Bytes().begin(),pool.Bytes().end());
+        BridgeEditorHooks hooks;hooks.frames=[&](auto type)->const RiftTypeFrames& { CHECK(type==82);return frames; };hooks.flags2=[&](Sid sid) { CHECK(sid.value==5);return Number(row[1]); };hooks.notifySurface=[](Sid sid) { CHECK(sid.value==5); };
+        hooks.refresh=[&](Sid sid) { if (!trace.empty()) trace+=';';const auto raw=pool.Slot(sid);trace+=std::to_string(sid.value)+':'+std::to_string(Get(raw,12,2))+':'+std::to_string(Get(raw,36)); };
+        RawBridgeEditor(pool,bridge,crack,random,std::move(hooks)).Cycle(5);
+        for (const auto& item:Split(row[4],';')) { //관측한 전체50BYTE와 관측 밖 풀 보존을 함께 확인한다.
+            const auto fields=Split(item,':');const auto raw=EditorBridgeHex(fields[1]);CHECK(raw.size()==50);std::copy(raw.begin(),raw.end(),expected.begin()+static_cast<std::ptrdiff_t>(Number(fields[0])*50));
+        }
+        CHECK(std::equal(expected.begin(),expected.end(),pool.Bytes().begin()));CHECK((trace.empty() ? "-" : trace)==row[5]);CHECK(random.State()==Number(row[6]));++checked;
+    }
+    CHECK(checked==120);
+}
+// frame getter가 물리를 바꾸어도20 판정은 앞서 보관한 프레임이며 다음40 판정은 현재TYPE를 다시 읽는다.
+TEST_CASE(RawBridgeEditor_CycleCachesFrameAndRequeriesFlags) {
+    SidPool pool(OriginalEdition::Patch1078,24000);PrepareEditorBridgePool(pool,0);const std::uint32_t bridge=82;const std::int32_t crack=5;GameRandom random(1);const auto frames=EditorBridgeFrames();std::uint32_t flagReads{},frameReads{},notify{},refresh{};
+    BridgeEditorHooks hooks;hooks.flags2=[&](Sid) { return ++flagReads==1 ? 4U : 0U; };hooks.frames=[&](auto)->const RiftTypeFrames& { ++frameReads;return frames; };hooks.notifySurface=[&](Sid) { ++notify; };hooks.refresh=[&](Sid) { ++refresh; };
+    RawBridgeEditor(pool,bridge,crack,random,hooks).Cycle(5);CHECK(flagReads==2 && frameReads==2 && notify==1 && refresh==1);CHECK(Get(pool.Slot(Sid{5}),36)==2 || Get(pool.Slot(Sid{5}),36)==3);
+    PrepareEditorBridgePool(pool,0);Put(pool.AllocatedBytes(Sid{6}),36,1);flagReads=frameReads=notify=refresh=0;hooks.flags2=[&](Sid) { ++flagReads;return 4U; };
+    hooks.frames=[&](auto)->const RiftTypeFrames& { if (++frameReads==1) Put(pool.AllocatedBytes(Sid{6}),36,2);return frames; }; //첫 getter가 raw 프레임을Hard로 바꾸어도 보관 Cracked의20 분기를 선택한다.
+    RawBridgeEditor(pool,bridge,crack,random,hooks).Cycle(6);CHECK(flagReads==1 && frameReads==2 && notify==1 && refresh==1);CHECK(Get(pool.Slot(Sid{6}),36)==0);
+}
 // 원문 쓰기 뒤 실패는 이미 쓴 수명만 유지하며 미지원 정수는 미연결 효과를 요구하지 않는다.
 TEST_CASE(RawBridgeEditor_PreservesPartialWriteAndUnsupportedNoop) {
     SidPool pool(OriginalEdition::Patch1078,24000);PrepareEditorBridgePool(pool,0);const std::uint32_t bridge=82;const std::int32_t crack=5;GameRandom random(1);

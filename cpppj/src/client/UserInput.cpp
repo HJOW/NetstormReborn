@@ -37,7 +37,11 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
             if (event.code&InputCode::kShift) world_.ExtendSelection(picked,force);
             else world_.MoveSelected(point,[this](auto x,auto y) { client_.Input().PushCommand(kWorldDestinationSelectedCommand,x,y); });
         }
-        else world_.Select(world_.Pick(point));
+        else if (world_.InputMode()==1 || world_.InputMode()==6) world_.Select(world_.Pick(point)); //두 전용 모드의 기존 경계를 일반 좌클릭 후처리와 섞지 않는다. 원문 전용 동작은 후속 연결이다.
+        else {
+            const bool control=(event.code&InputCode::kControl)!=0;const auto force=control && client_.GameplayGlobals()->player.special ? 1U : 0U; //같은 Ctrl+special 값을 Pick과 Select 양쪽에 전달한다.
+            world_.SelectFromPointer(world_.Pick(point,force),force,control);
+        }
     }
     return {};
 }

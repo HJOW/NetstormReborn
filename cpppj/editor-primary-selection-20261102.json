@@ -1,0 +1,265 @@
+{
+  "unit": 748,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 748,
+  "displayVersion": "11.01",
+  "exeSha256": "3471ba2b14c5d6d6417ebcb25f37e407ce3d019eed7dc4f95984c205f48611bc",
+  "summary": "Edit 일반 좌클릭의 owner 추적/Ctrl 소유자 변경과 다리 품질 순환을 실제 입력에 연결",
+  "implementation": [
+    "Select(id,force,1) 뒤 현재선택의4da2e8..357 후처리",
+    "Ctrl 다른owner 가상74 뒤Editor 재조회 없이 보관SID 추적",
+    "같은owner flags2&4 다리422640과 기존 Normal/Cracked/Hard 하위 재사용",
+    "20 우선·40 Cracked 부재 시Normal·TYPE 재조회/프레임 선행 보관",
+    "Ctrl+special 강제선택 값을 Pick/Select 양쪽에 전달"
+  ],
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+    "originalGameExecuted": false,
+    "verifiedExistingFixtures": true,
+    "primary": {
+      "path": "cpppj/tests/fixtures/editor-primary-selection-x86.tsv",
+      "rows": 256,
+      "sha256": "cf76d3f6792218e9d7560feae438fb4a2de833d0776f61a855a4c5bd15387db2"
+    },
+    "primaryCode": {
+      "range": "004da2e8-004da357",
+      "bytes": 112,
+      "sha256": "40d3aef63cfbadca28695df9a71a477505040690a479b25a0c7e4defe9da1083"
+    },
+    "cycle": {
+      "path": "cpppj/tests/fixtures/editor-bridge-cycle-x86.tsv",
+      "rows": 120,
+      "sha256": "5f4cb1163036c40a984b0dc5d4f78d452669b194aa5fafb7bd5810dd91abafdf"
+    },
+    "cycleCodesHex": "4150010041500b2041501440415015604250010042500b2042501440435001004350144044501440",
+    "cycleCode": [
+      {
+        "entry": "0040eb40",
+        "ranges": [
+          "0040eb40-0040eb71"
+        ],
+        "bytes": 50,
+        "sha256": "b1e8f7a451d4d42753b5140e17e9543251a815216dd0db84c91950319e798353"
+      },
+      {
+        "entry": "004214a0",
+        "ranges": [
+          "004214a0-004214f7"
+        ],
+        "bytes": 88,
+        "sha256": "74d477b17184227507e4bfd12c352f485c5c922038494ece887a097d1e636664"
+      },
+      {
+        "entry": "00421bd0",
+        "ranges": [
+          "00421bd0-00421c24"
+        ],
+        "bytes": 85,
+        "sha256": "b67f6a3aa88a4e10c2adc59643d9a1264c919732650313a877af9d5e8bf17089"
+      },
+      {
+        "entry": "00421db0",
+        "ranges": [
+          "00421db0-00421e5a"
+        ],
+        "bytes": 171,
+        "sha256": "ed5cd16c0228e98f415c432f535f229c8cd942df842eb6dae5bf614e812a45fd"
+      },
+      {
+        "entry": "00421e60",
+        "ranges": [
+          "00421e60-00421ea0"
+        ],
+        "bytes": 65,
+        "sha256": "d5333580f723cef67e3c0f17fcfc967a3ca657ba39582ec77ffb2f23858c65fd"
+      },
+      {
+        "entry": "00421eb0",
+        "ranges": [
+          "00421eb0-00421f19"
+        ],
+        "bytes": 106,
+        "sha256": "832b1fb34d9525e86afd3fca2bc0cc8ddf10a82a50ba6a6cadfc6ea954f090a8"
+      },
+      {
+        "entry": "00422640",
+        "ranges": [
+          "00422640-00422716"
+        ],
+        "bytes": 215,
+        "sha256": "f8077f0c60981371a643eb5733c812a26baf78571a4407d01ef6c5b703236de0"
+      },
+      {
+        "entry": "00422a70",
+        "ranges": [
+          "00422a70-00422b9d"
+        ],
+        "bytes": 302,
+        "sha256": "cc4c34a40eeb2086df2384539a7571cebbd49a394cc53c08180207cd0c6bf622"
+      },
+      {
+        "entry": "004558c0",
+        "ranges": [
+          "004558c0-004558e7"
+        ],
+        "bytes": 40,
+        "sha256": "86b2d1fcfd125840f9fdbecb6a2825ac82eeb58b984b6b1f40eea54b77fc8cbb"
+      },
+      {
+        "entry": "0049a840",
+        "ranges": [
+          "0049a840-0049a852"
+        ],
+        "bytes": 19,
+        "sha256": "ef7fb1ddc081345687d5f8823c7b1131b872fa37d6086dfc9d26d4d693b82339"
+      },
+      {
+        "entry": "0049a9a0",
+        "ranges": [
+          "0049a9a0-0049a9dd"
+        ],
+        "bytes": 62,
+        "sha256": "ccf4671157531099fc7682712be45f827741e258e15a674042160b4dab45db92"
+      },
+      {
+        "entry": "0049a9e0",
+        "ranges": [
+          "0049a9e0-0049aa2e"
+        ],
+        "bytes": 79,
+        "sha256": "26821d1a39e34c2d85b335300812c4ba5be149a2809091e104cd70f4ca948ac6"
+      },
+      {
+        "entry": "0049aa90",
+        "ranges": [
+          "0049aa90-0049acd5"
+        ],
+        "bytes": 582,
+        "sha256": "c22a119773c6365f811fc86867d5a32dfec56d3288baadd9e76a90a349d3234d"
+      },
+      {
+        "entry": "004ac200",
+        "ranges": [
+          "004ac200-004ac213"
+        ],
+        "bytes": 20,
+        "sha256": "fd1812d19f681ae03ca08d1c99b88d6cdee059ddf67c617698b6690a6a8444d9"
+      },
+      {
+        "entry": "004ac550",
+        "ranges": [
+          "004ac550-004ac55d"
+        ],
+        "bytes": 14,
+        "sha256": "bf03e2e7e3d1c4416af61f790177c31299ef776547da9cafa32f12b0afa6e4ab"
+      },
+      {
+        "entry": "004ad680",
+        "ranges": [
+          "004ad680-004ad6bd"
+        ],
+        "bytes": 62,
+        "sha256": "290256b771187c7a51415416439ed8e2cf3dfafe31f7a9ce2ffdae47d77270af"
+      }
+    ],
+    "codeImageUnchanged": true,
+    "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "replaced": {
+      "primary": [
+        "virtual+74",
+        "CoreSelect",
+        "Flags2",
+        "CycleBridge"
+      ],
+      "cycle": [
+        "operator_new(1024)",
+        "free",
+        "virtual+88"
+      ]
+    },
+    "scope": "선택 후처리 기본블록256행과 실제 다리 순환120행. 입력 부모/Pick/Select/게임GUI 전체의 관측은 아님"
+  },
+  "build": {
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "log": "extracted/cpp-editor-primary-selection-748/build-v2.log",
+    "initialFailure": "build-v1.log의span.at 미지원2진단을범위확인+operator[]로수정"
+  },
+  "tests": {
+    "before": {
+      "total": 1,
+      "failedChecks": 2,
+      "exitCode": 1,
+      "log": "extracted/cpp-editor-primary-selection-748/tests-before-v3.log",
+      "scope": "원래plain 좌클릭 후보0/선택disabled 보존의Core추적/월드갱신누락"
+    },
+    "setupAttempts": [
+      "tests-before.log Subscriber 소유자 누락",
+      "tests-before-v2.log Core/Player 소유자 누락"
+    ],
+    "after": {
+      "total": 64,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-primary-selection-748/tests-v2.log"
+    },
+    "newTests": 5,
+    "newExecutables": 0,
+    "retainedTestExecutables": 66,
+    "retainedAllTargets": 71,
+    "actualBoundary": "창 없는 실제Client/UserInput/GameWorld/Session·공유Gameplay/Kencloud/Subscriber/Core/Player·disabled 선택보존의plain follow와새편집다리owner/Hard/Cracked/Normal",
+    "fullSuiteRun": false
+  },
+  "protection": {
+    "beforeCount": 2656,
+    "currentCount": 2658,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/editor-primary-selection-x86.tsv",
+      "cpppj/tests/fixtures/editor-bridge-cycle-x86.tsv"
+    ],
+    "counts": {
+      "agents": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 838
+    }
+  },
+  "newFixtures": 2,
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "latestGui": "746제품 화면 조정/저장 재시작; 이번 제품GUI검증 아님",
+  "nextProtectedBaseline": "extracted/cpp-editor-primary-selection-748/protected-after.json",
+  "sourceSha256": {
+    "cpppj/src/client/GameWorld.cpp": "e0a4acb9a76763a966781d86cd06bc2217610fe2f9f2870761652fb50df83fec",
+    "cpppj/src/client/GameWorld.h": "8b3c26b39e4b066a74d46af729b5f75376b0b35d813b26dbebe70df6f1f1aed0",
+    "cpppj/src/client/ObjectOwnerCommands.cpp": "c780ea14713bef92180197c60e1728480c5ebf57303c97f868192b6102146a55",
+    "cpppj/src/client/ObjectOwnerCommands.h": "28f2dd90eb6a004395b85361fe42c6cc39a8078d55d37516ac5c5932183d5386",
+    "cpppj/src/client/RawCampaignSession.cpp": "cf8acedaff6414342ed049826b5b0fdc194d67ac17b7f98a2685ef6f986279ef",
+    "cpppj/src/client/RawCampaignSession.h": "48c4029917a894aa2a82c64dbd768bae9a5d712d1baf7657095b3518637d3902",
+    "cpppj/src/client/UserInput.cpp": "78aad875b426e53b0b479f37bec9f70d9381005a81ffefb892c10b71f01b3f7a",
+    "cpppj/src/o/RawBridgeEditor.cpp": "c7da7ad4eba3ff43cb564c5efd983b014411ff87b7d7ca8eea0fb6e684539275",
+    "cpppj/src/o/RawBridgeEditor.h": "d9e113be16f6a58226490a8f69ef782ee15563cf0c08d188d1b89017426c775d",
+    "cpppj/tests/CMakeLists.txt": "acf9d0bbc34c78c1729a9618f5468e79023e78bc7b67d2a398de94acf64a317c",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "d95c309290224ca6160e4cb497f4cc52951cdc467bd3900d255faf380b29d825",
+    "cpppj/tests/ObjectOwnerCommandsTests.cpp": "b9d658b00eb0a89b9d35fd25e6f37ca48f0bea4d748905968c91d65373ac5c22",
+    "cpppj/tests/RawBridgeEditorTests.cpp": "fc4aacc9ef5b2f532ff00ec52993d3635b59cc86a47bb85979681b67d83be45a",
+    "tools/decomp_editor_primary_selection.py": "0f3e2a988a8b153909ce0b334710e2eb9cafd76090dfd5002989b68d963a170f"
+  },
+  "next": "일반 마우스의 모드1/6 전용 분기와 우클릭 모드 관문·Ctrl+special 영역 가상70·missionPost 선행 처리",
+  "limitations": [
+    "실제연결검사는맵밖후보0/disabled선택보존 경계·화면픽셀Pick/활성Select와전체편집GUI 검사는아님",
+    "Ctrl+special 영역·missionPost 선행·모드1/6·우클릭모드/후반은남음",
+    "CD10.72 대응/전체C++/전체34/새ZIP/물리입력/PCM/자연완주·제외재현·공중3종전용행동/신규MP검사0",
+    "나머지UI/Edit/시나리오/파일·수명/호환성과3~8차전체목표는남음"
+  ]
+}

@@ -3014,3 +3014,8 @@ target_sources(netstorm_selection_key_input_tests PRIVATE ScreenModeTransitionTe
 # 실제 비용 표시/Form 연결과 기존 파생/수집/부착/카메라 원문 관측을 같은 집중 대상에서 확인한다(745).
 target_sources(netstorm_menu_session_tests PRIVATE FloatingSpGumpTests.cpp GumpCollectionTests.cpp GumpTreeTests.cpp CameraViewTests.cpp)
 target_sources(netstorm_menu_session_tests PRIVATE ObjectOwnerCommandsTests.cpp) #실제 편집 소유자 연결과 기존256행 원문 관측을 함께 확인한다(747).
+
+# 실제 편집 좌클릭 후처리와 기존 전체/개별 다리 회귀를 같은 집중 대상에서 검사한다(748).
+target_sources(netstorm_menu_session_tests PRIVATE RawBridgeEditorTests.cpp)
+set_property(SOURCE ObjectOwnerCommandsTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_EDITOR_PRIMARY_SELECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-primary-selection-x86.tsv\"")
+set_property(SOURCE RawBridgeEditorTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_EDITOR_BRIDGE_CYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-bridge-cycle-x86.tsv\"")

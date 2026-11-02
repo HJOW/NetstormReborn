@@ -12,6 +12,8 @@
 #include "client/GumpFormBinding.h"
 #include "client/RawCameraView.h"
 #include "client/ClientKencloudGlobals.h" //실제 월드 재그리기와 미니맵 갱신의 서로 다른 공유 주소를 검사한다.
+#include "client/ClientMain.h" //Run 없이 실제 Client 전역을 일반 마우스 입력에 공급한다.
+#include "client/UserInput.h" //편집 좌클릭을 메서드 직접 호출이 아닌 실제 입력 부모로 전달한다.
 #include "o/OriginalText.h"
 #include "o/RawContentPreviewProcess.h"
 #include <cmath>
@@ -381,6 +383,23 @@ TEST_CASE(GameWorldEditorOwner_RightClickUsesWorldRedrawAndKeepsMinimapDirty) { 
     auto raw=session.Core().pool.AllocatedBytes(priest);const auto saved=raw[34];raw[34]=0;kencloud->WorldRedraw()=17;world.PrepareEditorObjectMenu(priest.value);raw[34]=saved; //중립 입력은 명시 물리 검사이며 실제 소유자 변경/포획을 실행하지 않는다.
     CHECK(kencloud->WorldRedraw()==17 && gameplay->MapRevision()==0x12345678U && gameplay->player.templateOwner==1);
     gameplay->world.editor=0;world.PrepareEditorObjectMenu(0xffffffffU);CHECK(kencloud->WorldRedraw()==17 && gameplay->MapRevision()==0x12345678U);
+}
+
+// 비활성 선택이 보존한 현재 객체도 일반 좌클릭 후반의 편집 Core 추적을 실행한다.
+TEST_CASE(GameWorldEditorPrimary_ActualInputFollowsPreservedSelection) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ClientOptions options;options.gameDirectory=assets.root;options.noAudio=true;Client client(std::move(options));MenuServices external;auto services=external.Make();
+    services.cameraCommit=netstorm::test::camera::CommitScreenless;services.gameplayGlobals=client.GameplayGlobals();services.kencloudGlobals=client.KencloudGlobals();services.coreDataGlobals=client.CoreDataGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords(); // 실제 입력/Session이 같은 전역·Subscriber·Core에 연결된 Player 소유자를 빌린다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),{},"thewarbegins",std::move(services),{640,480});
+    UserSelectionHooks selection;selection.paused=[] { return 0U; };world.BindUserInput(std::move(selection),{},{});auto& session=world.Session();auto& gameplay=*client.GameplayGlobals();auto& redraw=client.KencloudGlobals()->WorldRedraw();
+    const auto priest=session.FindPriestParticipation(1);CHECK(priest);gameplay.world.editor=1;gameplay.selection.enabled=0;gameplay.selection.mode=0;gameplay.selection.selected=priest;gameplay.player.templateOwner=7;redraw=0xffffffffU;gameplay.MapRevision()=0x12345678U;session.CursorDropSettings().lockDepth=1;
+    UserInput input(client,world);CHECK(!input.Event({InputCode::kLeftButton,0,0})); // 맵 밖 좌표의 후보0을 disabled 선택이 거부하여 현재 SID가 유지된다.
+    CHECK(gameplay.selection.selected==priest && gameplay.player.templateOwner==1);CHECK(redraw==0);CHECK(gameplay.MapRevision()==0x12345678U);
+    const auto bridge=session.World().Create(82,2);CHECK(bridge.value);const auto frameTable=assets.game.Types()[82-kFirstAssetTypeNumber].definition.FrameTable();const auto frameFlags=[&] { const auto raw=session.Core().pool.Slot(bridge);const auto frame=Get(raw,36);const auto codes=frameTable.Codes();if (frame>=codes.size()) throw std::out_of_range("편집 입력 검사 실제 다리 프레임 범위");return codes[frame].flags; }; //포획/희생 대신 편집용 새 다리의 실제 프레임만 관찰한다.
+    CHECK(session.Core().pool.Slot(bridge)[34]==0);CHECK((frameFlags()&0x60U)==0);gameplay.selection.selected=bridge.value;gameplay.selection.mode=0;gameplay.player.templateOwner=7;
+    CHECK(!input.Event({InputCode::kLeftButton|InputCode::kControl,0,0}));CHECK(session.Core().pool.Slot(bridge)[34]==session.LocalOwner());CHECK(gameplay.player.templateOwner==1 && gameplay.selection.selected==bridge.value);CHECK(redraw==1);CHECK((frameFlags()&0x60U)==0);
+    CHECK(!input.Event({InputCode::kLeftButton|InputCode::kControl,0,0}));CHECK(frameFlags()&0x40U);
+    CHECK(!input.Event({InputCode::kLeftButton|InputCode::kControl,0,0}));CHECK(frameFlags()&0x20U);
+    CHECK(!input.Event({InputCode::kLeftButton|InputCode::kControl,0,0}));CHECK((frameFlags()&0x60U)==0);
 }
 
 // 실제 Form6 추가 통지가491을 예약하고 같은Session의그림/타이머/가상삭제까지 실행해야 한다.

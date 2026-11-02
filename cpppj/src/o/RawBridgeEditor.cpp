@@ -39,8 +39,8 @@ std::span<std::uint8_t> RawBridgeEditor::Bytes(Sid sid) const {
     const auto offset=pool_.Offset(sid);return std::span<std::uint8_t>(pool_.bytes_).subspan(offset,pool_.Layout().stride);
 }
 // 00421db0/00421e60/00421eb0의 수명 쓰기와 +88 순서를 같은 물리에 적용한다.
-void RawBridgeEditor::Change(Sid sid,std::uint32_t quality) const {
-    if (quality>2) return;
+bool RawBridgeEditor::Change(Sid sid,std::uint32_t quality) const {
+    if (quality>2) return false;
     auto raw=Bytes(sid); //일반 할당의 예약/상태 관문을 추가하지 않고 현재 원문 물리에 쓴다.
     const auto life=quality==0 ? ((static_cast<std::uint32_t>(crackLife_)*8U-8U)&0x78U) : 0U;
     raw[12]=static_cast<std::uint8_t>((raw[12]&0x87U)|life);Need(hooks_.notifySurface)(sid);
@@ -58,9 +58,24 @@ void RawBridgeEditor::Change(Sid sid,std::uint32_t quality) const {
         }
         if (!candidates.empty()) selected=candidates[random_.Next(static_cast<std::uint32_t>(candidates.size()))];
     }
-    if (selected==-1) return;
+    if (selected==-1) return false;
     raw=Bytes(sid);
     for (std::size_t byte=0;byte<4;++byte) raw[36+byte]=static_cast<std::uint8_t>(static_cast<std::uint32_t>(selected)>>(byte*8)); //원문의 직접 DWORD 쓰기이므로 SquidFrame.Set/Unpop/Pop을 부르지 않는다.
     Need(hooks_.refresh)(sid);
+    return true;
+}
+// 현재 프레임의20/40 판정은 각각 TYPE를 재조회하며 프레임 번호는 frames getter 이전에 보관한다.
+void RawBridgeEditor::Cycle(std::uint32_t sid) const {
+    if (sid>=pool_.Capacity() || sid>65535U) throw std::out_of_range("편집 다리 순환의 원문 물리 SID 범위");
+    const Sid object{static_cast<std::uint16_t>(sid)}; //원문은0도 마지막 Hard 하위에 전달하며 별도 상태/소유자 관문을 넣지 않는다.
+    const auto marked=[&](std::uint8_t mask) { //선택된 분기에서만 실제 TYPE/프레임 표를 요구한다.
+        if (!sid || !(Need(hooks_.flags2)(object)&4U)) return false;
+        const auto raw=Bytes(object);const auto frame=std::uint32_t(raw[36])|(std::uint32_t(raw[37])<<8)|(std::uint32_t(raw[38])<<16)|(std::uint32_t(raw[39])<<24);
+        const auto& frames=Need(hooks_.frames)(raw[10]);const auto codes=frames.Codes();
+        if (frame>=codes.size()) throw std::out_of_range("편집 다리 순환의 현재 프레임 범위");return (codes[frame].flags&mask)!=0;
+    };
+    if (marked(0x20U)) { Change(object,1);return; }
+    if (marked(0x40U)) { if (!Change(object,0)) Change(object,1);return; }
+    Change(object,2);
 }
 }

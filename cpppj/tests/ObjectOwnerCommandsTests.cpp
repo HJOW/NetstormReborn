@@ -9,6 +9,37 @@ using namespace netstorm::test::rawscene;
 namespace { // Native 효과 문자열만 조합하는 검사 장치다.
 void AppendOwnerTrace(std::string& trace,std::string value) { if (!trace.empty()) trace+=';';trace+=value; } // 효과 순서와 인자 폭을 보존한다.
 }
+// 좌클릭 후처리는 일반 SetOwner와 달리 가상74 뒤 Editor를 다시 읽지 않는 원문256행이다.
+TEST_CASE(EditorPrimarySelection_ReplaysNativeHeldSidAndLateOwner) {
+    std::size_t count{}; //독립 CPU 관측에서 소비한 실제 행 수다.
+    for (const auto& row:LoadFixture(NETSTORM_EDITOR_PRIMARY_SELECTION_FIXTURE).rows) { //기대 효과/상태를 제품 계산에서 만들지 않는다.
+        CHECK(row.size()==9);SidPool pool(OriginalEdition::Patch1078,kCapacity);Sid slot{};
+        while (slot.value<50) slot=pool.Allocate(2); //원문 this의 실제 물리SID50을 준비한다.
+        auto editor=Number(row[0]),selected=Number(row[2]),revision=Number(row[6]);const auto mutation=Number(row[5]);pool.AllocatedBytes(slot)[34]=static_cast<std::uint8_t>(Number(row[3]));std::string trace;
+        EditorPrimarySelectionHooks hooks;hooks.editor=[&] { return editor; };hooks.selected=[&] { return selected; };hooks.localOwner=[] { return 1U; };
+        hooks.readOwner=[&](auto sid) { return pool.Slot(Sid{static_cast<std::uint16_t>(sid)})[34]; };
+        hooks.flags2=[&](auto sid) { AppendOwnerTrace(trace,"F,"+std::to_string(sid));return Number(row[4]); };
+        hooks.assignOwner=[&](auto sid,auto owner) {
+            AppendOwnerTrace(trace,"O,"+std::to_string(sid)+','+std::to_string(owner));pool.AllocatedBytes(Sid{static_cast<std::uint16_t>(sid)})[34]=static_cast<std::uint8_t>(owner);
+            if (mutation&1) editor=1-editor;
+            if (mutation&2) { selected=51;pool.AllocatedBytes(slot)[34]=6; }
+        };
+        hooks.cycleBridge=[&](auto sid) { AppendOwnerTrace(trace,"B,"+std::to_string(sid)); };
+        hooks.follow=[&](auto sid) { FollowEditorObjectOwner(pool,sid,revision,[&](auto owner,auto templateOwner) { AppendOwnerTrace(trace,"C,"+std::to_string(owner)+','+std::to_string(templateOwner)); }); };
+        FinishEditorPrimarySelection(Number(row[1])!=0,hooks);
+        CHECK((trace.empty() ? "-" : trace)==row[7]);CHECK(std::to_string(revision)+','+std::to_string(editor)+','+std::to_string(selected)+','+std::to_string(pool.Slot(slot)[34])==row[8]);++count;
+    }
+    CHECK(count==256);
+}
+// 원문이 단락한 경계는 연결을 요구하지 않으며 선택한 효과가 없을 때 앞선 쓰기는 남아야 한다.
+TEST_CASE(EditorPrimarySelection_UnselectedHooksAndReachedFailure) {
+    EditorPrimarySelectionHooks hooks;hooks.editor=[] { return 0U; };CHECK(!Throws([&] { FinishEditorPrimarySelection(true,hooks); }));
+    hooks.editor=[] { return 1U; };hooks.selected=[] { return 0U; };CHECK(!Throws([&] { FinishEditorPrimarySelection(true,hooks); }));
+    hooks.selected=[] { return 50U; };std::uint32_t followed{},assigned{};hooks.follow=[&](auto sid) { followed=sid; };
+    FinishEditorPrimarySelection(false,hooks);CHECK(followed==50);followed=0;
+    hooks.readOwner=[](auto) { return 2U; };hooks.localOwner=[] { return 1U; };hooks.assignOwner=[&](auto sid,auto owner) { CHECK(sid==50);assigned=owner; };hooks.follow={};
+    CHECK(Throws([&] { FinishEditorPrimarySelection(true,hooks); }));CHECK(assigned==1 && followed==0);
+}
 // 가상74 뒤 모드/선택이 바뀌어도 원문의 보관 SID와 현재 owner 조회가 일치해야 한다.
 TEST_CASE(ObjectOwnerCommand_ReplaysNative256LateModeAndHeldSid) {
     std::size_t count{}; // 실제 소비한 독립 fixture 행 수다.

@@ -507,6 +507,18 @@ void GameWorld::Select(o::SquidId id) {
     if (campaign_) { if (!input_) throw std::logic_error("실제 선택 장치 미설치");static_cast<void>(input_->selection->Select(id,0,1));changed_=true;return; }
     const auto* object=Object(id);selected_=object && object->selectable ? id : 0;changed_=true;
 }
+// 편집 후처리는 Select의 반환값이 아니라 현재005caea0을 읽으므로 거부된 선택 뒤에도 실행한다.
+void GameWorld::SelectFromPointer(o::SquidId id,std::uint32_t force,bool control) {
+    if (!campaign_) { Select(id);return; }
+    if (!input_) throw std::logic_error("일반 좌클릭의 실제 선택 장치 미설치");static_cast<void>(input_->selection->Select(id,force,1));
+    EditorPrimarySelectionHooks hooks;hooks.editor=[this] { return campaign_->Editor(); };hooks.selected=[this] { return selected_; };hooks.localOwner=[this] { return campaign_->LocalOwner(); };
+    const auto raw=[this](std::uint32_t number) { //가상효과 뒤 현재 물리를 다시 빌리며 DWORD SID를 WORD로 조용히 좁히지 않는다.
+        const auto core=campaign_->Core();if (number>=core.pool.Capacity() || number>65535U) throw std::out_of_range("편집 좌클릭 현재 SID 범위");return core.pool.Slot(o::Sid{static_cast<std::uint16_t>(number)});
+    };
+    hooks.readOwner=[raw](auto number) { return raw(number)[34]; };hooks.flags2=[this,raw](auto number) { const auto type=raw(number)[10];const auto core=campaign_->Core();if (type>=core.types.size()) throw std::out_of_range("편집 좌클릭 현재 TYPE 범위");return core.types[type].flags2; };
+    hooks.assignOwner=[this](auto number,auto owner) { campaign_->SetObjectOwner(o::Sid{static_cast<std::uint16_t>(number)},owner); };hooks.cycleBridge=[this](auto number) { campaign_->CycleBridgeQuality(number); };hooks.follow=[this](auto number) { campaign_->FollowObjectOwner(number); };
+    FinishEditorPrimarySelection(control,hooks);changed_=true;
+}
 // 실제 Shift 선택은 소유자를 임의 제한하거나 단일 Select로 바꾸지 않는다.
 void GameWorld::ExtendSelection(o::SquidId id,std::uint32_t force) { if (!campaign_ || !input_) throw std::logic_error("다중 선택의 실제 월드/입력 없음");input_->selection->ExtendSelection(id,force);changed_=true; }
 // 독립 후보 검색용 복사 월드를 만들지 않고 현재 Session 풀과 실제 기본 선택을 직접 사용한다.
