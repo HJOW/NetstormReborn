@@ -4430,7 +4430,7 @@ std::unique_ptr<RawPriestMenu> RawCampaignSession::MakePriestMenu(PriestMenuHook
         current->constructionExcludedTypes,current->contentFinder,state,std::move(hooks));
 }
 // 원본의 게임 조회를 같은 현재 저장소에 연결하며 번역/GUI를 관찰 콜백으로 대신하지 않는다.
-std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState& state,KnowledgeMenuHooks hooks) {
+std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState& state,KnowledgeMenuHooks hooks,KnowledgeMenuKind kind) {
     if (!impl_->loaded) throw std::logic_error("설치 전 실제 지식 창 요청");auto* current=impl_.get();state.templeProduct=current->templeProduct;
     hooks.blocked=[current] { return current->core.ownerMode.challenge; };hooks.cancel=[current] { current->cursor->Cancel(); };
     hooks.currentTechnology=[current] { return current->player->CurrentTechnology(); };
@@ -4438,6 +4438,7 @@ std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState&
     hooks.mana=BindAiTypeRequiredEnergy(current->assets.game,current->core.types); // 실제 TYPE+a0 후처리 기본값도 같은 표에서 읽는다.
     hooks.inProduction=[current](std::uint32_t type) { return current->production->Contains(type); };
     hooks.excluded=[current](std::uint32_t type) { const auto items=current->constructionExcludedTypes.Items();return std::find(items.begin(),items.end(),type)!=items.end(); };
+    if (kind==KnowledgeMenuKind::Side) return ShowKnowledgeSideMenu(state,hooks);if (kind==KnowledgeMenuKind::World) return ShowWorldKnowledgeMenu(current->core.types,state,hooks);
     return ShowKnowledgeMenu(current->core.types,state,hooks);
 }
 //일반선택요청은Carrier.cpp의실제005453dc와동일한inputState를읽는다.보상지급과구별한다.

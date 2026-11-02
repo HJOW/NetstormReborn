@@ -1,0 +1,184 @@
+{
+  "unit": 758,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 758,
+  "displayVersion": "11.01",
+  "exeSha256": "812d4e2d5a7ebeecb62b84d0a91d651c315b5b29899a47171d432fa55692fb8a",
+  "summary": "World 지식 카드와 Storm/World 선택 메뉴를 실제 HTML 명령 및 현재 Session에 연결",
+  "tests": {
+    "totalUnique": 4,
+    "totalExecutions": 4,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "KnowledgeMenu_ActualScriptCommandQueue",
+      "KnowledgeMenu_Native25",
+      "KnowledgeWorldMenu_Native21NamesAndQueue",
+      "KnowledgeWorldMenu_Native50"
+    ],
+    "logs": [
+      "tests-knowledge-v2.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-v2.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2667,
+    "currentCount": 2669,
+    "allUnchanged": true,
+    "fixtureCount": 849,
+    "newFixtures": [
+      "cpppj/tests/fixtures/knowledge-world-menu-x86.tsv",
+      "cpppj/tests/fixtures/knowledge-world-names-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 758,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 50,
+      "normalReturns": 50,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "bodies": [
+        "00493210 World theme4..7",
+        "004938c0 Storm/World side selector"
+      ],
+      "explicitBoundaries": [
+        "TYPE/ownership/excluded/translation/format/GUI allocation/attach/virtual push-pop/position/thread"
+      ],
+      "fixtureSha256": "5f937f02e5eea14f08746ae798095a43dd6477d8490d1bca1c86a2d54a8c4a36",
+      "toolSha256": "31285b49e4be6e2427e4e67bdc1b0b469418b3b18b76688946cfb56424fc6db5",
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "limitations": [
+        "현재 x87기본정밀도이며 두정밀도/재관측 아님",
+        "실제GUI/전체UI/기본메뉴노출/자연플레이의 근거 아님"
+      ],
+      "rawReportSha256": "3af1d4c6fe8f5c1f369f4400cf52d56170baa7c5826f7fe92286a21ec57f2c6a"
+    },
+    "names-native.json": {
+      "unit": 758,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 21,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "tableEntries": [
+        "005434a8 ShowTecSideMenu → 00542b84 → 02000132",
+        "005434b0 ShowTecMenu2 → 00542b88 → 02000133"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 493930,
+      "fixtureSha256": "0b1a436cfc9a86b681264009b0cf9157212cbd3b876ac0db91bb58a961bb1494",
+      "toolSha256": "ddbf4e7b4524323f6a157fa1c47abbdeb89b50e93ba96c42164b3488d6c6c5b6",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "3b120e44b7a8dda17802bb2f489aa89ad37f48aff6d712542f2dd7845baf9b7a"
+    },
+    "native-repeat.json": {
+      "unit": 758,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 50,
+      "normalReturns": 50,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "bodies": [
+        "00493210 World theme4..7",
+        "004938c0 Storm/World side selector"
+      ],
+      "explicitBoundaries": [
+        "TYPE/ownership/excluded/translation/format/GUI allocation/attach/virtual push-pop/position/thread"
+      ],
+      "fixtureSha256": "5f937f02e5eea14f08746ae798095a43dd6477d8490d1bca1c86a2d54a8c4a36",
+      "toolSha256": "b6d23f13715e9350a1cdf3ed9605c2d112f1cf3c50dcddd8333fbff6410dd20a",
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "limitations": [
+        "현재 x87기본정밀도이며 두정밀도/재관측 아님",
+        "실제GUI/전체UI/기본메뉴노출/자연플레이의 근거 아님"
+      ],
+      "rawReportSha256": "187ddf8648ec520bc7947def0bf7b9b87f0c8889d00ebb71a87d57464d18476a"
+    },
+    "names-repeat.json": {
+      "unit": 758,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 21,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "tableEntries": [
+        "005434a8 ShowTecSideMenu → 00542b84 → 02000132",
+        "005434b0 ShowTecMenu2 → 00542b88 → 02000133"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 493930,
+      "fixtureSha256": "0b1a436cfc9a86b681264009b0cf9157212cbd3b876ac0db91bb58a961bb1494",
+      "toolSha256": "ddbf4e7b4524323f6a157fa1c47abbdeb89b50e93ba96c42164b3488d6c6c5b6",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "3b120e44b7a8dda17802bb2f489aa89ad37f48aff6d712542f2dd7845baf9b7a"
+    }
+  },
+  "initialFailures": [],
+  "sourceSha256": {
+    "cpppj/src/client/GameMenuCommands.cpp": "0a21e4a97c03d1fb1fa2cf0c274e12e8cf3fa2b82682e621057bfdd2aad47694",
+    "cpppj/src/client/RawCampaignSession.cpp": "e7879ed91cf24a85012673c33382aaedd3e8e1e55ed121316393c0897e87713e",
+    "cpppj/src/client/RawCampaignSession.h": "a31f9fbf6dd1c2d4de374a69817553f8b30ed95fc3a6a4191dc10bc96edf8a23",
+    "cpppj/src/client/RawKnowledgeMenu.cpp": "65dd8d4259a6b23e14ceba6c0c8fa74e1a3c52f7435288f368dc392e1477a751",
+    "cpppj/src/client/RawKnowledgeMenu.h": "ade740fd5b6fd3e65f785604071a3bb26e98ce7ce1d4b3e7f84ff9e6f75b2e8a",
+    "cpppj/src/client/RawMenuControls.cpp": "5879f0c7af1b7a3b0666cb9506b1b9d80a2ae86384c764ca2081bc79782624b9",
+    "cpppj/src/client/RawMenuControls.h": "8279e4724c58e58b3704afb78759528bb57854239b3b1d651a09d0416ca864d3",
+    "cpppj/src/client/UberGump.cpp": "4fd6e32575ceeacbce15dc89c360b8a2d967eb1a7289394dc7232833c359843c",
+    "cpppj/tests/CMakeLists.txt": "3192e144b5aae5e2cb805ae79972e845374ff611eafdafcaa7f5a41f302011e1",
+    "cpppj/tests/KnowledgeWorldMenuTests.cpp": "297f12a980933055b3a5ad164bb616feba3123bb27005fd887c5852aca1b6321",
+    "tools/decomp_knowledge_world_menu.py": "b6d23f13715e9350a1cdf3ed9605c2d112f1cf3c50dcddd8333fbff6410dd20a",
+    "tools/decomp_knowledge_world_names.py": "4d80ed08c9882422e2323880ab1e8732e4e21bebf5ac8475b07e281a0fe31625"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-758/protected-after.json",
+  "next": "kind17 생성자(759)·일반명령5종(760)·outside 어댑터(761)·Config 명령(762)·명시 실시간읽기41baa0(763)·글꼴/음질명령(764)·존재조회 소비자(765)와 남은 비멀티/호환성",
+  "limitations": [
+    "원문 메뉴50입력은 기본x87정밀도만 관측했다. 별도 재관측을 수행했으나 두정밀도 관측이라고 쓰지 않는다.",
+    "현재 playerKnown/challenge 조건과 실제 HTML→FIFO→Uber→메뉴→Session 접합을 유지했다. 기본 느슨한 english/cfg의 직접 활성 caller는 찾지 못했으므로 새 기본 UI를 임의 노출하지 않았다.",
+    "TYPE/소유/제외/번역/GUI 생성·부착·가상 push/pop/위치는 원문관측의 명시 장치 경계다. 호스트 접합은 빌드/집중검사이며 실제 GUI/전체픽셀은 별도다.",
+    "새 게임/CLI/물리/PCM·포획/희생·특정적공격·승리·자연완주·MP·전체C++/34/ZIP 검사는0이다."
+  ]
+}

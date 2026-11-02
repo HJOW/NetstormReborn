@@ -1,6 +1,7 @@
 // 실제 Client Gump 트리에서 원본 메뉴·장식·제목·Slider와 StyleText를 함께 소유한다.
 #pragma once
 #include "client/Gump.h"
+#include "client/RawKnowledgeMenu.h" //기존지식카드와명시Storm/World선택을같은공통트리에붙인다.
 #include "client/MenuGumpControls.h"
 #include "client/MenuGumpWidgets.h"
 #include "client/MenuGumpInput.h"
@@ -204,7 +205,7 @@ public:
     bool HasMenus() const;
     std::uint32_t MenuInstances() const; //00593024의 같은 현재 MenuGump 인스턴스 전체DWORD다.
     // 같은 controlled/Gump/StyleText에 실제 전체 지식 카드를 작성하고 원본 네 줄에 부착한다.
-    bool OpenKnowledge(RawCampaignSession& session,std::function<std::string(std::string_view)> translate,std::uint32_t language);
+    bool OpenKnowledge(RawCampaignSession& session,std::function<std::string(std::string_view)> translate,std::uint32_t language,KnowledgeMenuKind kind=KnowledgeMenuKind::Storm);
     void AppendTechnology(RawCampaignSession& session,std::uint32_t target,std::function<std::string(std::string_view)> translate,std::optional<std::int32_t> theme={}); //실제 HTML의 전체/원소별 기술 목록을 같은 controlled 열에 작성한다.
     void AppendThemeTechnology(RawCampaignSession& session,std::uint32_t target,std::int32_t theme,std::function<std::string(std::string_view)> translate); //기존 HTML의 현재 열에 원문 원소별 기술 행을 추가한다. 별도 지식 창/루트를 열지 않는다.
     // 저장한 카드 토큰의 현재 등록/visible/dead를 직접 읽는다. 별도 열림 bool을 두지 않는다.

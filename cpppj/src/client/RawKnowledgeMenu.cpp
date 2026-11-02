@@ -8,6 +8,7 @@ namespace netstorm::client {
 // 이름 비교는 기존 원본 ASCII 규칙을 사용한다.
 std::uint32_t KnowledgeScriptCode(std::string_view name) {
     const auto lower=o::AsciiLower(name); // 세 기술 명령도 원본 ASCII 이름 비교를 공유한다.
+    if (lower=="showtecsidemenu") return kShowTecSideMenuCommand;if (lower=="showtecmenu2") return kShowTecMenu2Command; //실제5434a8/b0의등록이름만추가하며기존F6는바꾸지않는다.
     return lower=="gettechnology" ? kGetTechnologyCommand : lower=="showtechnology" ? kShowTechnologyCommand : lower=="cheatalltechnology" ? kCheatAllTechnologyCommand : 0xffffffffU;
 }
 namespace {
@@ -17,24 +18,25 @@ template<class F> const F& KnowledgeEffect(const F& effect) { if (!effect) throw
 std::string KnowledgeText(std::string value) { const auto end=value.find('\0');if (end!=value.npos) value.resize(end);return value; }
 }
 // 카드마다 같은 기존 메뉴 크기/부착 몸체를 사용한다. 독자적인 그림·창 체계를 만들지 않는다.
-std::vector<std::uint32_t> ShowKnowledgeMenu(std::span<const o::RiftTypeRecord> types,const KnowledgeMenuState& state,const KnowledgeMenuHooks& hooks) {
+namespace { //두원문카드의동일112BYTE수집/정렬/행배치를공유하고원소범위와머리만구별한다.
+std::vector<std::uint32_t> ShowKnowledgeThemeMenu(std::span<const o::RiftTypeRecord> types,const KnowledgeMenuState& state,const KnowledgeMenuHooks& hooks,bool world) { //false는492b60의Storm,true는493210의World다.
     if (KnowledgeEffect(hooks.blocked)()) return {};
     KnowledgeEffect(hooks.cancel)();const auto technology=KnowledgeEffect(hooks.currentTechnology)();std::vector<KnowledgeRecord> records;
-    // 원본 타입 순서를 그대로 순회하고 내용물 조회 뒤 테마0..3을 판정한다.
+    // 원본 타입 순서를 그대로 순회하고 내용물 조회 뒤 선택한 네 테마의 범위를 판정한다.
     for (std::uint32_t type=0;type<types.size();++type) {
         if (types[type].group==10 || (types[type].flags2&0x200000U) || type==state.templeProduct) continue;
-        const auto owned=KnowledgeEffect(hooks.owns)(technology,type);const auto mana=KnowledgeText(KnowledgeEffect(hooks.mana)(type));if (types[type].theme<0 || types[type].theme>3) continue;
+        const auto owned=KnowledgeEffect(hooks.owns)(technology,type);const auto mana=KnowledgeText(KnowledgeEffect(hooks.mana)(type));if (world ? types[type].theme<4 || types[type].theme>7 : types[type].theme<0 || types[type].theme>3) continue;
         KnowledgeRecord record;record.type=type;record.mana=mana;record.available=owned || mana.empty();record.description=KnowledgeText(KnowledgeEffect(hooks.description)(type));record.inProduction=KnowledgeEffect(hooks.inProduction)(type);
         if (record.mana.size()>9 || record.description.size()>81) throw std::length_error("원본 지식 행112BYTE의 문자열 범위");records.push_back(std::move(record));
     }
     if (records.size()>96) throw std::length_error("원본 지식 창의 머리 포함100개 메뉴 범위");SortKnowledgeRecords(records,types);
-    std::array<std::int32_t,4> offsets{};std::vector<std::uint32_t> menus;const std::array<std::string_view,4> headings{"WIND","RAIN","THUN.","SUN"}; // 원본 네 테마 머리의 생성 순서다.
+    std::array<std::int32_t,4> offsets{};std::vector<std::uint32_t> menus;const std::array<std::string_view,4> headings=world ? std::array<std::string_view,4>{"EARTH","FIRE","WATER.","MOON"} : std::array<std::string_view,4>{"WIND","RAIN","THUN.","SUN"}; // 원본 네 테마 머리의 생성 순서다.
     // 먼저 네 머리를 만들고 같은 정렬 행의 카드들을 같은 네 줄에 누적한다.
     for (std::size_t index=0;index<records.size()+4;++index) {
         const auto token=KnowledgeEffect(hooks.begin)();menus.push_back(token);KnowledgeEffect(hooks.node)(token).menuFlags|=0x1000000U;std::uint32_t theme{};
         if (index<4) {
             theme=static_cast<std::uint32_t>(index);KnowledgeEffect(hooks.title)(KnowledgeEffect(hooks.translate)(headings[index]));KnowledgeEffect(hooks.separator)();
-            KnowledgeEffect(hooks.item)("~[Imana."+std::to_string(index+4)+']',state.helpCommand,std::string("themeHelp"),true);
+            KnowledgeEffect(hooks.item)("~[Imana."+std::to_string(index+(world ? 12 : 4))+']',state.helpCommand,std::string("themeHelp"),true);
             KnowledgeEffect(hooks.item)("",state.helpCommand,std::string("themeHelp"),true);KnowledgeEffect(hooks.item)("",state.helpCommand,std::string("themeHelp"),true);
         } else {
             const auto& record=records[index-4];theme=types[record.type].theme;
@@ -55,6 +57,23 @@ std::vector<std::uint32_t> ShowKnowledgeMenu(std::span<const o::RiftTypeRecord> 
     for (const auto token:menus) static_cast<void>(KnowledgeEffect(hooks.position)(token));
     // 모두 만든 뒤에만 popup bit를 켜서 작성 도중 앞 카드를 닫지 않는다.
     for (const auto token:menus) KnowledgeEffect(hooks.node)(token).flags|=0x4000U;
-    KnowledgeEffect(hooks.mark)(kShowTechnologyCommand);return menus;
+    KnowledgeEffect(hooks.mark)(world ? kShowTecMenu2Command : kShowTechnologyCommand);return menus;
+}
+}
+std::vector<std::uint32_t> ShowKnowledgeMenu(std::span<const o::RiftTypeRecord> types,const KnowledgeMenuState& state,const KnowledgeMenuHooks& hooks) { return ShowKnowledgeThemeMenu(types,state,hooks,false); } //기존Storm호출의공개계약과기본F6를유지한다.
+std::vector<std::uint32_t> ShowWorldKnowledgeMenu(std::span<const o::RiftTypeRecord> types,const KnowledgeMenuState& state,const KnowledgeMenuHooks& hooks) { return ShowKnowledgeThemeMenu(types,state,hooks,true); } //World원소는별도명령으로만선택한다.
+// 원문4938c0은기술보유/번역을조회하지않고두고정메뉴의명령행을작성한다.
+std::vector<std::uint32_t> ShowKnowledgeSideMenu(const KnowledgeMenuState& state,const KnowledgeMenuHooks& hooks) {
+    if (KnowledgeEffect(hooks.blocked)()) return {};KnowledgeEffect(hooks.cancel)();std::vector<std::uint32_t> menus; //도달한현재메타맵관문뒤의원문두메뉴다.
+    for (std::int32_t index=0;index<2;++index) { //Storm메뉴를먼저만들고World메뉴를그오른쪽에붙인다.
+        const auto token=KnowledgeEffect(hooks.begin)();menus.push_back(token);KnowledgeEffect(hooks.node)(token).menuFlags|=0x1000000U;
+        const auto command=index ? kShowTecMenu2Command : kShowTechnologyCommand;KnowledgeEffect(hooks.item)("~[IMANA.16]",command,0U,true);
+        KnowledgeEffect(hooks.item)(index ? "~3      The Furies of the World" : "~3      The Furies of the Storm",command,0U,true);
+        KnowledgeEffect(hooks.attach)(state.width/2-260+index*320,state.height/2-190);KnowledgeEffect(hooks.push)(token);KnowledgeEffect(hooks.width)(token,300.0F);KnowledgeEffect(hooks.height)(token,300.0F);KnowledgeEffect(hooks.pop)(token);
+        auto& node=KnowledgeEffect(hooks.node)(token);node.targetWidth=static_cast<float>((static_cast<double>(node.width)-node.targetWidth)*0.5+node.targetWidth);node.flags&=~0x4000U;
+    }
+    for (const auto token:menus) static_cast<void>(KnowledgeEffect(hooks.position)(token)); //둘다완성한뒤실제현재위치를다시읽는다.
+    for (const auto token:menus) KnowledgeEffect(hooks.node)(token).flags|=0x4000U; //원문의두번째순회에서만팝업표식을켠다.
+    KnowledgeEffect(hooks.mark)(kShowTecSideMenuCommand);return menus;
 }
 }

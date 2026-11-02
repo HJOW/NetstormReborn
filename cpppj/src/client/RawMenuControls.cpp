@@ -814,7 +814,7 @@ std::uint32_t RawMenuControls::OpenMainMenuPopup(std::uint32_t button,bool optio
 // 원본의 sticky 팝업 삭제를 같은 수명 경로로 실행한다.
 void RawMenuControls::Close() { auto& s=*impl_;s.input->ClosePopups();s.common.lifetime.Cleanup();s.common.changed(); }
 // 실제 지식 조회 뒤 첫 controlled 생성 직전에만 기존 팝업을 정리한다. 카드별 생성은 같은 원본 처리기다.
-bool RawMenuControls::OpenKnowledge(RawCampaignSession& session,std::function<std::string(std::string_view)> translate,std::uint32_t language) {
+bool RawMenuControls::OpenKnowledge(RawCampaignSession& session,std::function<std::string(std::string_view)> translate,std::uint32_t language,KnowledgeMenuKind kind) {
     if (!translate) throw std::invalid_argument("지식 창 실제 번역 경계 누락");auto& s=*impl_;if (!session.PlayerKnown() || session.Core().ownerMode.challenge) return false;
     KnowledgeMenuState state;state.width=s.common.create.screenWidth;state.height=s.common.create.screenHeight;state.language=language;std::size_t created{};
     KnowledgeMenuHooks hooks;hooks.translate=translate;hooks.description=[&](std::uint32_t type) { return translate(session.Core().types[type].description); };
@@ -830,7 +830,7 @@ bool RawMenuControls::OpenKnowledge(RawCampaignSession& session,std::function<st
     hooks.push=[&](std::uint32_t token) { s.common.tree.Push(token); };hooks.pop=[&](std::uint32_t token) { const auto node=s.common.node(token);s.common.attach(token,node->x,node->y,0,0); };
     hooks.width=[&](std::uint32_t token,float value) { s.menu->SetWidth(token,value); };hooks.height=[&](std::uint32_t token,float value) { s.menu->SetHeight(token,value); };
     hooks.position=[&](std::uint32_t token) { return s.common.collection.Position(token); };hooks.mark=[&](std::uint32_t command) { s.popupState.Mark(command); };
-    auto tokens=session.ShowKnowledge(state,std::move(hooks));if (s.menuState.index) throw std::logic_error("지식 창 작성 뒤 controlled 스택 잔존");
+    auto tokens=session.ShowKnowledge(state,std::move(hooks),kind);if (s.menuState.index) throw std::logic_error("지식 창 작성 뒤 controlled 스택 잔존");
     s.knowledge=std::move(tokens);s.popup=s.knowledge.empty() ? 0 : s.knowledge.front();s.common.changed();return !s.knowledge.empty();
 }
 // 지식 카드는 모두 같은 실제 루트의 팝업이며 다른 팝업이 닫은 뒤 stale 토큰은 열림으로 세지 않는다.

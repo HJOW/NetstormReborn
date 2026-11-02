@@ -3055,3 +3055,8 @@ target_sources(netstorm_selection_key_input_tests PRIVATE MessageGumpTests.cpp W
 target_sources(netstorm_tests PRIVATE BaseFileOpenPolicyTests.cpp)
 set_source_files_properties(BaseFileOpenPolicyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BASEFILE_OPEN_POLICY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/basefile-open-policy-x86.tsv\"")
 target_sources(netstorm_basefile_io_tests PRIVATE BaseFileOpenPolicyTests.cpp)
+
+# World/Storm 선택 지식 메뉴와 실제 원문 명령 이름/FIFO를 기존 스크립트 집중 대상에 포함한다(758).
+target_sources(netstorm_tests PRIVATE KnowledgeWorldMenuTests.cpp)
+target_sources(netstorm_script_bindings_tests PRIVATE KnowledgeWorldMenuTests.cpp KnowledgeMenuTests.cpp)
+set_source_files_properties(KnowledgeWorldMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_KNOWLEDGE_WORLD_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/knowledge-world-menu-x86.tsv\";NETSTORM_KNOWLEDGE_WORLD_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/knowledge-world-names-x86.tsv\"")

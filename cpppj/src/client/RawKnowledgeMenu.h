@@ -5,7 +5,9 @@
 #include <variant>
 namespace netstorm::client {
 inline constexpr std::uint32_t kShowTechnologyCommand=0x020000a0U; // 보호00542974의 실제 스크립트/사제/F6 명령이다.
-// 원본 이름 표의 ShowTechnology/CheatAllTechnology를 조회한다. 미등록은 원본ffffffff다.
+inline constexpr std::uint32_t kShowTecSideMenuCommand=0x02000132U,kShowTecMenu2Command=0x02000133U; //00542b84/88의 원문 Storm/World선택·World카드 명령이다.
+enum class KnowledgeMenuKind { Storm,World,Side }; //원문492b60/493210/4938c0의 별도일반명령만선택하며기본메뉴는Storm을유지한다.
+// 원본 이름 표의 ShowTechnology/CheatAllTechnology/ShowTecSideMenu/ShowTecMenu2를 조회한다. 미등록은 원본ffffffff다.
 std::uint32_t KnowledgeScriptCode(std::string_view name);
 // 화면/언어/아이콘 치수와 원본 타입/명령 전역을 현재 호출에서 제공한다.
 struct KnowledgeMenuState {
@@ -35,4 +37,6 @@ struct KnowledgeMenuHooks {
 };
 // 00492b60: 전체 카드 토큰을 생성 순서대로 반환한다. 실제 게임/GUI는 훅의 현재 소비자를 사용한다.
 std::vector<std::uint32_t> ShowKnowledgeMenu(std::span<const o::RiftTypeRecord> types,const KnowledgeMenuState& state,const KnowledgeMenuHooks& hooks);
+std::vector<std::uint32_t> ShowWorldKnowledgeMenu(std::span<const o::RiftTypeRecord> types,const KnowledgeMenuState& state,const KnowledgeMenuHooks& hooks); //00493210의theme4..7과아이콘12..15를같은정렬/실제카드로작성한다.
+std::vector<std::uint32_t> ShowKnowledgeSideMenu(const KnowledgeMenuState& state,const KnowledgeMenuHooks& hooks); //004938c0의Storm/World두행을원문명령으로만예약하는300폭팝업2개다.
 }

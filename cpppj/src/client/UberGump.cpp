@@ -1287,9 +1287,9 @@ void UberGump::Event(InputEvent event) {
     if (transitionCode==0x02000088U) {
         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // 원본 하단 전환은 HUD 효과 뒤 기본 반환0이다. 이미 실행한 Route를 반복하거나 미구현 메뉴 오류로 바꾸지 않는다.
     }
-    if (transitionCode==kShowTechnologyCommand) {
-        if (!(event.code&InputCode::kRelease) && world_) rawButtons_->Menus()->OpenKnowledge(world_->Session(),[this](std::string_view key) { return FontBytes(client_.Translate(key)); },static_cast<std::uint32_t>(client_.LanguageNumber()));
-        rebuild_=true;return; // 원본 일반 입력의 뗌 거부와 PlayerKnown/메타맵 관문은 실제 메뉴 연결에서 유지한다.
+    if (transitionCode==kShowTechnologyCommand || transitionCode==kShowTecSideMenuCommand || transitionCode==kShowTecMenu2Command) {
+        if (!(event.code&InputCode::kRelease) && world_) rawButtons_->Menus()->OpenKnowledge(world_->Session(),[this](std::string_view key) { return FontBytes(client_.Translate(key)); },static_cast<std::uint32_t>(client_.LanguageNumber()),transitionCode==kShowTecSideMenuCommand ? KnowledgeMenuKind::Side : transitionCode==kShowTecMenu2Command ? KnowledgeMenuKind::World : KnowledgeMenuKind::Storm);
+        rebuild_=true;return; //원문추가두명령도같은뗌/PlayerKnown/메타맵관문을사용하며기본F6에는새UI를노출하지않는다.
     }
     // F6는 아래 실제 UserInput의 공통 정지 관문 뒤에서 처리한다. 직접 ShowTechnology 메뉴 명령과 F9의 정지 앞 예약은 별개다(원문4d96b6/4d9a00).
     if (world_ && state_.phase==ClientPhase::Mission && QueuePlayerListKey(event,client_.Input())) return; // F9와 Shift+F9는 실제 메뉴/정지 명령을 큐 끝에 예약한다.

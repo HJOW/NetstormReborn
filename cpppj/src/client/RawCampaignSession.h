@@ -2,6 +2,7 @@
 // 실제 캠페인 초기화/전투/이동의 상태와 모듈 수명을 클라이언트 세션 하나에 보관한다.
 #pragma once
 #include "client/RawImage.h"
+#include "client/RawKnowledgeMenu.h" //추가지식일반명령도기존Session의같은조회/카드수명을쓴다.
 #include "o/RawTerrainBitmap.h"
 #include "client/GameAssets.h"
 #include "client/CampaignLoginServices.h"
@@ -532,7 +533,7 @@ public:
     // 반환 객체는 Session보다 먼저 해제한다. 설치 전에는 메뉴/내용물 생성을 허용하지 않는다.
     std::unique_ptr<RawPriestMenu> MakePriestMenu(PriestMenuHooks hooks);
     // 현재 Player 기술/실제 내용물·제외·Deck으로 전체 지식 창을 작성한다. GUI는 같은 Client의 실제 처리기를 받는다.
-    std::vector<std::uint32_t> ShowKnowledge(KnowledgeMenuState& state,KnowledgeMenuHooks hooks);
+    std::vector<std::uint32_t> ShowKnowledge(KnowledgeMenuState& state,KnowledgeMenuHooks hooks,KnowledgeMenuKind kind=KnowledgeMenuKind::Storm);
     RitualChoiceInputHooks RitualChoiceInputs(); //같은현재선택제단/종류와실제9번송신큐를공급한다.즉시보상확정은하지않는다.
     void ShowSacrificeMenu(std::uint32_t target,const std::function<void(std::string_view)>& tell); //004cfc10의미션관문→가상레벨두번→동일Tell이다.비미션UI는정적구현만한다.
     void AppendTechnologyMenu(std::uint32_t target,TechnologyListMenuHooks hooks,std::optional<std::int32_t> theme={}); //전체 HTML 목록과 원소별 목록이 같은 게임 경계를 공유한다.

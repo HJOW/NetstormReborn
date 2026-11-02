@@ -9,6 +9,7 @@
 #include "client/RecheckCdInput.h" //RecheckCD 이름·메타·큐 명령도 같은 일반 입력의 현재 serial 정리를 사용한다.
 #include "client/IntroMenu.h" // PlayIntro도 같은 이름·메타·일반 입력 큐로 State39를 예약한다.
 #include "client/ScenarioObjectInput.h"
+#include "client/RawKnowledgeMenu.h" //원문ShowTec두명령의숫자/버튼허용을기존표에공유한다.
 #include "client/ScenarioEffectInput.h"
 #include "o/OriginalText.h"
 #include <array>
@@ -16,7 +17,8 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,44> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,46> kCommands{{
+    {0x00542b84U,kShowTecSideMenuCommand},{0x00542b88U,kShowTecMenu2Command}, //원문추가지식선택버튼의현재명령도같은허용표를쓴다.
     {0x00542988U,kSetLanguageCommand},{0x0054298cU,kLanguageChangedCommand}, //원문의 두 언어 명령이다.
     {0x00542a54U,kPlayIntroCommand}, // 원문 PlayIntro 이름의 초기 DWORD다.
     {0x00542ae8U,kRecheckCdCommand}, //RecheckCD의 이름·메타·큐 명령이다. 실제 CD 재탐색이 아니라 현재 serial 정리다.
