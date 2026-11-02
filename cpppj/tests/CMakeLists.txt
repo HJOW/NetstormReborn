@@ -2937,3 +2937,10 @@ set_source_files_properties(FilePathClientTests.cpp PROPERTIES COMPILE_DEFINITIO
 add_executable(netstorm_file_path_client_tests FocusedTestMain.cpp FilePathClientTests.cpp FileNameTests.cpp StaticStringsTests.cpp SavedStateFilesTests.cpp BaseFileReadPolicyTests.cpp BaseFileSecondaryTests.cpp)
 target_link_libraries(netstorm_file_path_client_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_file_path_client_tests)
+
+# 옵션/캡처/CD/Help의 실제 경로 고리와 관련 파일/원문 회귀만 창 없이 집중 실행한다(729).
+target_sources(netstorm_tests PRIVATE FilePathUiTests.cpp)
+set_source_files_properties(FilePathUiTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OPTIONS_PATH_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/options-path-parent-x86.tsv\"")
+add_executable(netstorm_file_path_ui_tests FocusedTestMain.cpp FilePathUiTests.cpp ClientOptionsFileTests.cpp ClientOptionsDiskTests.cpp CaptureInputTests.cpp CdPresenceTests.cpp CdDirectoryTests.cpp TechnicalHelpTests.cpp)
+target_link_libraries(netstorm_file_path_ui_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_file_path_ui_tests)

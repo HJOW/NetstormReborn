@@ -8,6 +8,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+namespace netstorm::o { class RawFileName; } // 경로 조합에 실제 장기 고리만 선택적으로 빌린다.
 
 namespace netstorm::client { // 경로 판단과 Windows10/11의 실제 W 파일 장치를 구별한다.
 struct CdDirectoryEntry { std::string name;bool directory{}; }; // OS가 반환한 현재 이름과 디렉터리 속성이다.
@@ -22,5 +23,5 @@ struct CdDirectoryHooks { // 원본이 도달한 열거/종료/cancel 경계만 
 };
 bool FindCdDirectory(std::span<char> destination,const CdDirectoryHooks& hooks); // 최초 발견 디렉터리를 strncpy/NUL로 쓰며 실패는 기존 목적지를 보존한다.
 std::string FindWindowsCdDirectory(); // 실제 CD-ROM만 읽고 UTF-8 CDDir을 반환한다. 부재는 빈 문자열이다.
-CdPresenceHooks MakeWindowsCdPresenceHooks(); // 원문 루트 열거와 표시 파일 속성을 실제 Windows 장치에 연결한다. 재귀 CDDir 탐색을 대신 호출하지 않는다.
+CdPresenceHooks MakeWindowsCdPresenceHooks(o::RawFileName* names=nullptr); // 원문 루트 열거/속성과 경로 한 칸을 연결한다. 기본값은 독립 값형 조합이며 재귀 CDDir 탐색은 바꾸지 않는다.
 }

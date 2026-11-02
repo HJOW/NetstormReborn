@@ -4,9 +4,10 @@
 #include <filesystem>
 #include <map>
 #include <memory>
+namespace netstorm::o { class RawFileName; } // 실제 캡처는 Client/VFS의 같은 경로 고리를 빌린다.
 namespace netstorm::client { //Session/화면 교체는 저장 상태를 복제하지 않는다.
 class Client; //현재 Screen/Config/공통 HTML/임시 고리의 실제 소유자다.
-std::filesystem::path ResolveCaptureBitmapPath(const std::filesystem::path& root,std::string_view name); //원문 장치 이름은 직접 쓰고 나머지는 같은459c60 root 조합을 사용한다.
+std::filesystem::path ResolveCaptureBitmapPath(const std::filesystem::path& root,std::string_view name,o::RawFileName* names=nullptr); //원문 장치 getter 한 칸/상대 root 작성 한 칸을 공유한다. 기본값은 기존 독립 값형 조회다.
 std::string CaptureNoticeFontBytes(std::string_view text); //원문 글꼴 바이트를 유지하며 Windows10/11 Unicode 경로의 미지원 문자만[U+코드]로 식별한다. 실제 파일명은 바꾸지 않는다.
 class ClientCaptureSequence { //원문 상태/할당 표를 같은 Client 수명에 소유하고 실제 화면/파일 장치에 연결한다.
 public:

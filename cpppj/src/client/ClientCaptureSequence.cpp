@@ -24,10 +24,10 @@ std::string CaptureNoticeFontBytes(std::string_view text) {
     }
     return result;
 } //잘못된UTF-8자체는원문글꼴누락과구별해거부한다.
-std::filesystem::path ResolveCaptureBitmapPath(const std::filesystem::path& root,std::string_view name) {
+std::filesystem::path ResolveCaptureBitmapPath(const std::filesystem::path& root,std::string_view name,o::RawFileName* names) {
     name=name.substr(0,name.find('\0'));std::string slashes(name);std::replace(slashes.begin(),slashes.end(),'/','\\');
-    const bool device=name.find(':')!=name.npos || (name.find('\\')!=name.npos && slashes.starts_with("\\\\"));
-    auto path=platform::PathFromUtf8(device ? slashes:o::JoinBaseFileRoot(platform::PathToUtf8(root),name)); //Windows10/11 호환: 원본ANSI 대신 UTF-8/W 경로다. 상대/장치 분기는 유지한다.
+    const bool device=names ? !o::ReadBaseFileDevice(name,*names).empty() : name.find(':')!=name.npos || (name.find('\\')!=name.npos && slashes.starts_with("\\\\")); // 실제459900은 빈 장치 반환도 같은 고리 한 칸을 사용한다.
+    auto path=platform::PathFromUtf8(device ? slashes:names ? o::JoinBaseFileRoot(platform::PathToUtf8(root),name,*names):o::JoinBaseFileRoot(platform::PathToUtf8(root),name)); //Windows10/11 호환: 원본ANSI 대신 UTF-8/W 경로다. 상대/장치 분기는 유지한다.
 #ifdef _WIN32
     const auto drive=path.root_name();if (device && !path.has_root_directory() && drive.native().size()==2 && drive.native()[1]==L':' && o::AsciiLower(platform::PathToUtf8(drive))==o::AsciiLower(platform::PathToUtf8(root.root_name()))) path=root/path.relative_path(); //같은 드라이브 상대 이름은 게임CWD이며 공통 BaseFile과 같은 경계다.
 #endif
@@ -54,7 +54,7 @@ CaptureSequenceHooks ClientCaptureSequence::Hooks() {
     hooks.prefix=[this] { return client_.Configuration().PathSpec("GifSequenceName"); }; //index인자를 붙이지 않는다.
     hooks.bitmap=[this](auto name,auto token,auto x,auto y,auto width,auto height,auto pitch,auto palette) {
         if (palette!=2) throw std::out_of_range("Client 연속 저장의 현재 논리 팔레트 토큰");const auto logical=client_.GetScreen().LogicalPalette();const auto& allocation=allocations_.at(token);IndexedBitmapScratch scratch; //지역 기본0을 원문 미정 스택의 값으로 주장하지 않는다.
-        WriteIndexedBitmapFile(ResolveCaptureBitmapPath(client_.GameDirectory(),name),{allocation.bytes.get(),allocation.size},{x,y,width,height,pitch},{reinterpret_cast<const std::uint8_t*>(logical.data()),logical.size_bytes()},scratch);
+        WriteIndexedBitmapFile(ResolveCaptureBitmapPath(client_.GameDirectory(),name,&client_.StaticStrings()->FileNames()),{allocation.bytes.get(),allocation.size},{x,y,width,height,pitch},{reinterpret_cast<const std::uint8_t*>(logical.data()),logical.size_bytes()},scratch);
     };
     hooks.report=[this](auto first,auto last) { const auto bytes=client_.StaticStrings()->FormatCaptureRange(first,last);return std::string(reinterpret_cast<const char*>(bytes.data())); }; //공유 고리80예약/전체 서식 뒤 같은 본문을 즉시 전달한다.
     hooks.notice=[this](auto message,auto width,auto height) { auto* menu=client_.Menu();if (!menu) throw std::logic_error("Client 연속 저장의 현재 공통 HTML 미연결");menu->ShowCaptureNotice(message,width,height); };

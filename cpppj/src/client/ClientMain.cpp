@@ -272,7 +272,7 @@ int Client::Run() {
     loadingFont_ = CreateFontA(-MulDiv(kLoadingFontPoints, GetDeviceCaps(static_cast<HDC>(windowDc_), LOGPIXELSY), 72),
         0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, 0, 0, FF_SWISS, "Arial");
     // [원본] 레지스트리의 InstallMax·DiagResults 읽기는 별도 잔여다. CDDir 재귀와 다른 시작 CD 결과만 원문 위치에 기록한다.
-    if (options_.edition==o::OriginalEdition::Patch1078) cdGlobals_->InitializeStartup(MakeWindowsCdPresenceHooks()); //004392ed: 옵션/파일 해석 전에 같은 Client 캐시를 검사하고 별도0054db6c에 결과를 저장한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) cdGlobals_->InitializeStartup(MakeWindowsCdPresenceHooks(&staticStrings_->FileNames())); //004392ed: 옵션/파일 해석 전에 같은 Client 캐시/경로 고리를 사용하고 별도0054db6c에 결과를 저장한다.
 
     // "init parse options"(FUN_004359f0): 설정을 시작 순서로 읽고 해석한다.
     if (!PumpMessages()) return 0;
@@ -512,11 +512,7 @@ void Client::ApplyAudioOptions() {
 // 원본 00441d10·00441de0의 경로 인자는 빈 문자열(00540cec)·"d"(00540cf8)·"options.cfg"다.
 // 원본은 게임 폴더를 작업 폴더로 바꾸고 d\options.cfg를 연다. cpppj는 같은 위치를 절대 경로로 연다.
 void Client::SaveOptions() {
-    SaveClientOptions(configuration_, [this](std::string_view, std::span<const std::uint8_t> bytes) {
-        // 원본 0041b4c0 → 0041a5b0의 모드 2(w+b): 상위 폴더를 새로 만들지 않고 기존 내용을 잘라 쓴다.
-        const auto path=std::filesystem::absolute(options_.gameDirectory / "d" / "options.cfg"); // 현재 저장 위치는 유지한다. 사용자 홈 이동은5차다.
-        WriteClientOptionsDisk(path,bytes); // 원본과 다른 Windows10/11 호환 처리: 활성 파일 매핑의1224만 완성된 임시 파일 교체로 저장한다.
-    });
+    SaveClientOptionsInGameDirectory(configuration_,options_.gameDirectory,staticStrings_->FileNames()); //441d10의 한 칸 작성/지역 복사를 실제 저장 전에 수행한다.
 }
 
 // 원본 00436e40은 CRT remove를 부른다. UberGump 004cebf0의 버튼 사건에만 연결되는 함수다.

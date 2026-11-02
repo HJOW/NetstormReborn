@@ -1,5 +1,7 @@
 // 원본은 매번 w+b로 설정을 잘랐다. Windows10/11에서 다른 프로세스가 파일을 매핑했을 때의1224만 교체 저장으로 보완한다.
 #include "client/ClientOptionsDisk.h"
+#include "client/ClientOptionsFile.h"
+#include "platform/Utf8Path.h"
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
@@ -102,6 +104,12 @@ void ReplaceMappedOptions(const std::filesystem::path& path,std::span<const std:
         static_cast<void>(::MoveFileExW(files.previous.c_str(),path.c_str(),MOVEFILE_WRITE_THROUGH));
     throw std::system_error(static_cast<int>(error),std::system_category(),"Replace mapped options; recovery files: "+DiskPathText(files.directory));
 }
+}
+void SaveClientOptionsInGameDirectory(o::ConfigInterface& config,const std::filesystem::path& gameDirectory,o::RawFileName& names) { // 원본 chdir/ANSI 대신 Windows10/11의 Unicode 설치 경로를 W 파일 장치에 전달한다.
+    SaveClientOptions(config,[&gameDirectory](std::string_view name,std::span<const std::uint8_t> bytes) {
+        const auto path=std::filesystem::absolute(gameDirectory/platform::PathFromUtf8(name)).lexically_normal(); // 원문 .\d\options.cfg 위치를 유지하며 사용자 홈 이동은5차다.
+        WriteClientOptionsDisk(path,bytes); // 매핑1224의 기존 호환 정책과 부모 폴더 미생성을 그대로 쓴다.
+    },names);
 }
 
 // 원본 w+b 성공 경로는 유지한다. 매핑 오류를 다른 권한/경로/디스크 오류와 구별해 유일한 호환 경로로 보낸다.

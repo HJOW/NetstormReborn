@@ -54,8 +54,8 @@ std::string FindWindowsCdDirectory() { // 원본의 CD 자동 탐색은 유지�
     return FindCdDirectory(output,h) ? std::string(output.data()) : std::string();
 }
 // 루트는 ASCII 드라이브 글자이므로 원문 A 열거를 그대로 쓰고 파일 경로만 현대 Windows의 W API로 전달한다.
-CdPresenceHooks MakeWindowsCdPresenceHooks() {
-    CdPresenceHooks hooks;hooks.path=[](auto root,auto marker) { return o::JoinBaseFileRoot(root,marker); };
+CdPresenceHooks MakeWindowsCdPresenceHooks(o::RawFileName* names) {
+    CdPresenceHooks hooks;hooks.path=[names](auto root,auto marker) { return names ? o::JoinBaseFileRoot(root,marker,*names):o::JoinBaseFileRoot(root,marker); }; //00440c7f/440ce7는 장치 getter 없이 직접 한 칸만 작성한다.
     hooks.exists=[](auto path) { CdMediaErrorMode mode;return GetFileAttributesW(CdWide(path).c_str())!=INVALID_FILE_ATTRIBUTES; }; // 원본 ANSI와 다른 Windows10/11 UTF-8/native 경로 호환이며 디렉터리 비영도 유지한다.
     hooks.roots=[](std::span<char,128> output) {
         CdDriveRootsHooks roots;roots.logicalDrives=[](std::span<char,128> buffer) { return static_cast<std::uint32_t>(GetLogicalDriveStringsA(128,buffer.data())); };roots.driveType=[](auto root) { const std::string terminated(root);return static_cast<std::uint32_t>(GetDriveTypeA(terminated.c_str())); };

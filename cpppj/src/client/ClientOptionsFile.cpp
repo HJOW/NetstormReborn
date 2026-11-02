@@ -1,6 +1,7 @@
 // Windows10/11의 한글·보충 문자 경로를 기존 설정 로더의 서명/BOM 경계에 연결한다.
 #include "client/ClientOptionsFile.h"
 #include "o/BaseFile.h"
+#include "o/RawFileName.h"
 #include <stdexcept>
 
 namespace netstorm::client { // 기존 영어/서유럽 설정의 디스크 바이트는 그대로 유지한다.
@@ -30,11 +31,19 @@ std::vector<std::uint8_t> EncodeClientOptions(std::string_view text) { // 원본
         bytes.insert(bytes.end(),body.begin(),body.end());o::ApplyXor(bytes);return bytes;
     }
 }
-void SaveClientOptions(o::ConfigInterface& config,const o::ConfigInterface::FileWriter& writer) { // writer 예외를 인코딩 폴백으로 재시도하지 않는다.
+namespace { // 실제 경로 작성과 독립인 인코딩/changed의 같은 기존 저장 본체다.
+void SaveOptionsName(o::ConfigInterface& config,const o::ConfigInterface::FileWriter& writer,std::string_view name) { // writer 예외를 인코딩 폴백으로 재시도하지 않는다.
     const bool changed=config.Configuration().changed;
     try {
-        const auto bytes=EncodeClientOptions(config.SaveText("d\\options.cfg"));config.Configuration().changed=changed;
-        writer("d\\options.cfg",bytes);config.Configuration().changed=false;
+        const auto bytes=EncodeClientOptions(config.SaveText(name));config.Configuration().changed=changed;
+        writer(name,bytes);config.Configuration().changed=false;
     } catch (...) { config.Configuration().changed=changed;throw; }
+}
+}
+void SaveClientOptions(o::ConfigInterface& config,const o::ConfigInterface::FileWriter& writer) { SaveOptionsName(config,writer,"d\\options.cfg"); } // 기존 값형 호출자의 이름 계약을 유지한다.
+void SaveClientOptions(o::ConfigInterface& config,const o::ConfigInterface::FileWriter& writer,o::RawFileName& names,std::optional<std::string_view> directory) { // 원문441d10의 작성→지역 복사→직렬화/쓰기 순서다.
+    const std::array<o::FileNamePart,4> parts{{{-2,directory.value_or("")},{-2,""},{-2,"d"},{-3,"options.cfg"}}}; // NULL일 때 첫 명시 root 부품만 생략한다.
+    const std::string name(names.Format(std::span(parts).subspan(directory ? 0 : 1))); // 원문 local_100처럼 다음 열 번의 고리 사용에도 살아 있는 소유 복사다.
+    SaveOptionsName(config,writer,name);
 }
 }

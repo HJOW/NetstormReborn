@@ -709,7 +709,7 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
         ~LoadingRetirement() { if (!continued) menus.CloseMissionLoading(); } // 준비 실패의 현재 안내는 반납하고 정상 대기는 일반 프레임까지 유지한다.
     } loading{*rawButtons_->Menus()};
     if (!nativePlayers) { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true;Compose();client_.PresentScene(); } //10.72의 기존 어댑터만 파일 전 표시를 유지한다.10.78은 원문 State7 안내 위치에서 생성한다.
-    if (nativePlayers) { CaptureCampaignMissionStarting(client_,*missionFortRequest_);CleanupNativeStateWorld(1);client_.LocalStateGlobals()->CdPresent()=client_.CdGlobals()->Check(MakeWindowsCdPresenceHooks()); } // 최초 복사/로그는 같은 부모가 이미 수행했다. 기본 분모/정리 전 지역 값 뒤 cleanup/CD 순서를 유지한다.
+    if (nativePlayers) { CaptureCampaignMissionStarting(client_,*missionFortRequest_);CleanupNativeStateWorld(1);client_.LocalStateGlobals()->CdPresent()=client_.CdGlobals()->Check(MakeWindowsCdPresenceHooks(&client_.StaticStrings()->FileNames())); } // 최초 복사/로그는 같은 부모가 이미 수행했다. 기본 분모/정리 전 지역 값 뒤 cleanup/CD 순서를 유지한다.
     else if (world_) ClearWorld(); //10.72의 기존 동기 World 어댑터는 해당 판본 전체 State 복원 전까지 유지한다.
     if (world_) throw std::logic_error("미션 State cleanup 뒤 이전 World 대여가 남아 있음"); //원문 정리의 실제 반납을 확인한 뒤에만 새 Session을 만든다.
     if (nativePlayers) {

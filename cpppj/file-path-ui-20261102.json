@@ -1,0 +1,85 @@
+{
+  "unit": 729,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 729,
+    "version": "11.01",
+    "sha256": "917cd3cf518b37bd166d25735e2a60215f65e549574e05165a054f26b4cda711"
+  },
+  "implementation": [
+    "441d10의 옵션 경로 한 칸 작성→지역 소유 복사→인코딩/쓰기, NULL/명시 root 분기. 실제 Client 저장에 연결",
+    "Capture의 장치 getter/상대 경로와 실제 CD presence 경로가 같은 Client/VFS 고리를 사용",
+    "실제 TechnicalHelp FileSpec 장치 getter/기본·보조 root를 같은 고리에 연결. 실패 wildcard의 빈 FileSpec 유지",
+    "Unicode W 경계·1224 옵션 교체·폴더 미생성·changed 실패 정책 유지"
+  ],
+  "native": {
+    "report": "cpppj/options-path-parent-native-20261102.json",
+    "observations": 20,
+    "fixtureRows": 8,
+    "precisions": [
+      "027f",
+      "037f"
+    ],
+    "localCopyAt440f30": true,
+    "conditionalAdvances": [
+      0,
+      1
+    ],
+    "rerunMatches": true,
+    "boundary": "실제 옵션 경로 부모→459c60/strchr. 440f30 저장 진입은 지역 인자만 관측하고 반환. 전체 Config 저장의 고리 소모 근거가 아니다"
+  },
+  "tests": {
+    "new": 4,
+    "existing": 20,
+    "final": 24,
+    "failed": 0,
+    "nativeRowsReplayed": 883,
+    "log": "extracted/cpp-file-path-ui-729/tests-v2.log",
+    "first": {
+      "failedTests": 1,
+      "failedChecks": 1,
+      "reason": "새BMP 검사의 논리RGB0 팔레트를 packed RGB24 768BYTE로 잘못 공급. 실제1024BYTE로 교정",
+      "log": "extracted/cpp-file-path-ui-729/tests-v1.log"
+    }
+  },
+  "build": {
+    "final": "extracted/cpp-file-path-ui-729/build-v2.log",
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_path_ui_tests"
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstTargetCorrection": "첫 Netstorm target은 netstorm library만 빌드했으므로 최종은 실제 NetstormCpp target으로 실행 파일을 갱신"
+  },
+  "protection": {
+    "baselineFiles": 2643,
+    "unchangedFiles": 2643,
+    "baselineGroups": {
+      "AGENTS.md": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 823
+    },
+    "agentAuthoredChanges": 0,
+    "newFixtures": 1,
+    "currentTotal": 2644,
+    "fixtureTotal": 824,
+    "previousGroupCountsCorrected": true
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "limits": [
+    "이번 옵션 한 칸은441d10의 초기 경로만이다.440f30의459b20 파일명 추출 및 BaseFile 쓰기 부모의 장치/경로 추가 소모, Startup/Template 소비자는 다음 단위에 이어간다",
+    "Capture의 상대 성공 경로를 연결했으며 일반FILE 쓰기의 보조/TAFF 실패 정책 전체 복원은 별도다",
+    "실제 Help 조회만 실행했고 외부 프로세스/브라우저는 실행하지 않았다. CD 삽입/열거는 새로 시험하지 않았다",
+    "새GUI/전체34/전체C++/ZIP·물리입력/PCM/DPI·포획/희생·특정 적 공격/승리·공중3종 전용·MP/통신 검사는0이다",
+    "기존 전체34/ZIP은645의644제품이며 전체 목표1~8차는 진행 중이다"
+  ],
+  "rawDirectory": "extracted/cpp-file-path-ui-729"
+}

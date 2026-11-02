@@ -3,6 +3,8 @@
 #include "client/TechnicalHelp.h"
 #include "client/ExternalHelpClient.h"
 #include "client/ClientMain.h"
+#include "client/ClientStaticStrings.h"
+#include "o/RawBaseFileReadPolicy.h"
 #include <windows.h>
 #include <filesystem>
 #include <fstream>
@@ -19,11 +21,10 @@ struct FileSpec { //원문 FileSpec의 Find 핸들은 경로 선택이 끝날 �
         if (name.find_first_of("*?")!=name.npos) { WIN32_FIND_DATAW data{};handle=FindFirstFileW(Wide(name).c_str(),&data);if (handle==INVALID_HANDLE_VALUE) value.clear();else { const auto slash=name.find_last_of('\\');value=slash==name.npos ? std::string{} : std::string(name.substr(0,slash+1));value+=Utf8(data.cFileName); } }
     }
     ~FileSpec() { if (handle) FindClose(handle); } //원문4595f0처럼 INVALID_HANDLE_VALUE도 비NULL이면 닫기를 요청한다.
-    bool Device() const { return value.starts_with("\\\\") || value.find(':')!=value.npos; } //459900의 UNC/콜론 접두이며 실제 파일 존재 여부를 대신 묻지 않는다.
 };
 std::optional<std::string> Resolve(Client& client,std::string_view name) { //원문의 원래 이름과 실제 선택한 디스크 경로를 구별한다.
-    FileSpec spec(name);ExternalFileHooks h;h.device=[&spec](auto) { return spec.Device(); };
-    h.path=[&client](bool secondary,auto file) { return JoinExternalFileRoot(secondary ? client.Configuration().PathSpec("CDDir") : Utf8(client.GameDirectory()),file); };
+    name=name.substr(0,name.find('\0'));FileSpec spec(name);ExternalFileHooks h;h.device=[&client,&spec](auto) { return !client.StaticStrings()->FileNames().Device(spec.value).empty(); }; //459900의 실제 빈 장치 조회도 같은 한 칸을 소비한다.
+    h.path=[&client](bool secondary,auto file) { return o::JoinBaseFileRoot(secondary ? client.Configuration().PathSpec("CDDir") : Utf8(client.GameDirectory()),file,client.StaticStrings()->FileNames()); }; //41ad10의 상대 기본/보조 경로는 각 한 칸이며 실제 선택 순서만 소비한다.
     h.readable=[](auto path) { return std::ifstream(Wide(path),std::ios::binary).is_open(); }; //원본 rb 열기/닫기와 같은 존재 판정이며 Win10/11 한글 경로를 지원한다.
     h.archive=[&client](bool secondary,auto file) { return client.Files().ContainsArchiveOnly(file,secondary); }; //원문처럼 기본/보조 등록 목록을 구별하며 파일을 추출하거나 실행하지 않는다.
     return ResolveExternalFilePath(name,nullptr,h);
