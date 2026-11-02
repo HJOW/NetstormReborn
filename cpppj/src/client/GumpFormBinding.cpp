@@ -1,5 +1,7 @@
 // 호스트 Form 토큰에는 원본 SID를 사용한다. 32비트 원본 포인터/가상 표를 실행 주소로 변환하지 않는다.
 #include "client/GumpFormBinding.h"
+#include "client/RawCameraView.h"
+#include <cstring>
 #include <limits>
 #include <stdexcept>
 #include <utility>
@@ -11,6 +13,12 @@ o::Sid Sid(std::uint32_t value) {
     if (value>std::numeric_limits<std::uint16_t>::max()) throw std::out_of_range("GumpForm SID 표현 범위 초과");
     return o::Sid{static_cast<std::uint16_t>(value)};
 }
+}
+// 객체의 최초 위치나 별도 UI 카메라를 저장하지 않고 원문의 현재 raw 두 float와 픽셀 원점을 매번 읽는다.
+ScreenPoint ProjectGumpObject(const o::SidPool& pool,const RawCameraViewState& camera,std::uint32_t object) {
+    if (pool.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("월드 부착 Gump의10.78 객체 투영 필요");
+    const auto raw=pool.Slot(Sid(object));float x{},y{};std::memcpy(&x,raw.data()+14,sizeof(x));std::memcpy(&y,raw.data()+18,sizeof(y)); // byte 단위 Pool에서 비정렬 float를 원문 폭 그대로 읽는다.
+    const auto point=ProjectCameraView(camera,x,y);return {point[0],point[1]};
 }
 // 매 알림에서 현재 등록 표를 읽으므로 생성 당시의 UI 주소/토큰을 저장하지 않는다.
 o::GumpFormNotice MakeGumpFormNotice(GumpCreateState& state,GumpObjectRelease releaseObject) {

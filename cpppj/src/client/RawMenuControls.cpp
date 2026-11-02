@@ -218,7 +218,7 @@ struct RawMenuControls::Impl {
             fh.styledText=[this](auto token,std::string_view text) { auto& node=*Find(costs,token);style->Parse(node.head,text,node.textContext); };
             fh.idle=[this](auto token,bool enabled) { common.lifetime.SetIdle(token,enabled); };fh.redraw=[this](auto token,bool erase) { Redraw(token,erase); };
             fh.kill=[this](auto token) { common.lifetime.Kill(token); };fh.attach=common.attach;
-            fh.reference=[](auto,auto) { throw std::logic_error("비용 표시00464540의 실제 객체 참조 미연결"); };
+            fh.reference=[this](auto token,auto object) { widgets->Reference(token,object);auto* node=common.node(token);if (!node) throw std::logic_error("비용 표시 객체 연결 뒤 현재 Gump 없음");node->flags|=0x2000U; }; // 원본464540의4644e0→월드 투영 비트 순서이며 같은 실제 Form/등록표를 쓴다.
             fh.deleteText=[this](auto token,auto flags) { return costText->DeleteScalar(token,flags); };costGump=std::make_unique<FloatingSpGump>(common.create,std::move(fh));
             MetaImageGumpHooks meta;meta.node=[this](auto token) { return Find(metaImages,token); };meta.attach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };
             meta.position=[this](auto token) { return common.collection.Position(token); };meta.color=[this](auto color) { activeMetaImage.color(color); };meta.draw=[this](auto request) { activeMetaImage.draw(request); };

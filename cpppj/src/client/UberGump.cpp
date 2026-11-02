@@ -98,6 +98,7 @@
 #include "client/RawChatPacket.h"
 #include "client/RawChatReceive.h"
 #include "client/ScreenMouseKey.h" // 원문 Guide 앞 전체화면 F12의 즉시 장치 전환이다.
+#include "client/GumpFormBinding.h" // 월드 부착 Gump도 같은 실제 Pool/현재 카메라를 투영한다.
 #include "client/ClientDotCommandGlobals.h"
 #include "client/ClientStaticStrings.h"
 #include "client/ClientPlayerRecords.h"
@@ -287,6 +288,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) {
         buttonHooks.invalidate=[this](auto rectangle,auto flags) { client_.GetRenderer().Invalidate(rectangle,flags); }; //장치 교체 뒤에도 같은 현재 Renderer의 원문 dirty 저장소에 전달한다.
         buttonHooks.invalidateAll=[this] { client_.GetRenderer().InvalidateAll(); }; //영역 정보가 없는 기존 적응 계층 요청은 각 소비자의 원문 영역 복원 전까지 이전 그림을 지운다.
+        buttonHooks.project=[this](auto object) { if (!world_) throw std::logic_error("월드 부착 Gump의 현재 Session 없음");return ProjectGumpObject(world_->Session().Core().pool,client_.GameplayGlobals()->Camera().Snapshot(),object); }; // 미션/Editor 교체와 카메라 이동 뒤에도 같은 현재 Pool/497220을 조회한다.
     }
     rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),std::move(buttonHooks),&client_.GameplayGlobals()->MapRevision()); //전체 HUD와 같은 현재 원본 DWORD를 첫 미니맵 생성 전부터 빌린다.
     rawButtons_->BindMainMenu({[this] { return client_.LocalStateGlobals()->AutoDemo(); },[this] { return std::bit_cast<std::int32_t>(client_.HtmlWindowGlobals()->window.instances); },[this](auto command,auto first,auto second) { const auto x=scriptStrings_.Store(first),y=first==second ? x : scriptStrings_.Store(second);client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); },[this] { client_.ClearFullScreenState(); }}); //같은 원문 정적 문자열의 두 인자는 같은80칸 고리 별칭으로 일반 큐에 보낸다. 시작 표식은 실제 부모 callback에서 지운다.

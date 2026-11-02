@@ -1,0 +1,100 @@
+{
+  "unit": 745,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "previousGoalTurn": "진척:744 F12 복원·검사·커밋 완료",
+  "status": "단위 완료, 사용자 요청에 따라 문서/커밋 뒤 목표 일시 정지",
+  "pauseRequest": "지금 작업까지 마무리하고 문서 작성 및 git 커밋까지 완료되면 목표 일시 정지해 줘",
+  "runtimeProduct": 745,
+  "displayVersion": "11.01",
+  "exeSha256": "9a7ad6ba91854fdb62d45e36a94b78a5aabab296a649339b6c8447d3266fd8e4",
+  "summary": "객체 부착 SP 비용 표시의 실제 Form과 공통 월드 투영 연결",
+  "implementation": [
+    "464540의 기존 Reference 뒤2000비트 순서 연결",
+    "공통 GumpTree/GumpCollection이 같은 현재 객체 투영 콜백 사용",
+    "현재 Pool raw float와 현재 Client 카메라 snapshot 재조회",
+    "참조0/실제 UI Kill·Form/등록 반납 및 부모 삭제의 후반 Cleanup 유지"
+  ],
+  "native": {
+    "newExecutions": 0,
+    "newFixtures": 0,
+    "staticFunctions": [
+      "00464540",
+      "004644e0",
+      "00464740",
+      "00497220"
+    ],
+    "existingFixtureSha256": {
+      "floating-sp-x86.tsv": "89c61652ca97026e9b3d9a9c8e294292d6d6d2e7e87c3fbc7d67b864463a4aeb",
+      "gumpcollection-x86.tsv": "9e27ea77b8bbf7812b7a923cc84e30877d3c3043633c1d09b5f8b6a7d6e8ba26",
+      "gumptree-x86.tsv": "a7c87acffdb45ab27d8a8ecb50e3669da403d121a22dd557fc498855d7c2b0e6",
+      "camera-view-x86.tsv": "fb22a21df5be3ca9201d1c8d635f0e4b49b6f974efbacfe46e012a86536887d0",
+      "camera-center-x86.tsv": "25506a2c807af9fbab8755320c08f26eb2b29660754628128fb765f895a9d669"
+    }
+  },
+  "build": {
+    "config": "Release",
+    "productLog": "extracted/cpp-floating-sp-reference-745/build-v1.log",
+    "focusedFinalLog": "extracted/cpp-floating-sp-reference-745/build-v2.log",
+    "targets": [
+      "NetstormCpp",
+      "netstorm_menu_session_tests"
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "before": {
+      "total": 2,
+      "failedChecks": 2,
+      "exitCode": 1,
+      "log": "extracted/cpp-floating-sp-reference-745/tests-before.log"
+    },
+    "after": {
+      "total": 52,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-floating-sp-reference-745/tests-v2.log"
+    },
+    "newTests": 3,
+    "newExecutables": 0,
+    "retainedTestExecutables": 66,
+    "retainedAllTargets": 71,
+    "fullSuiteRun": false,
+    "actualPixelOutput": "별도 창 없는 실제 Session/Gump/보호 글꼴·팔레트 출력"
+  },
+  "protection": {
+    "previousCount": 2655,
+    "currentCount": 2655,
+    "fixtureCount": 835,
+    "changed": [],
+    "newFixtures": [],
+    "allUnchanged": true
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "latestGui": "744 제품 F12 검사이며 이번 제품 결과로 합산하지 않음",
+  "limitations": [
+    "전체 C++/전체34 재실행 없음; 전체34/ZIP645는644 제품 근거",
+    "실제 게임/물리 키/PCM·전체UI/원본 동일성·자연 완주 검증 아님",
+    "10.72 다른 raw 배치는 이번 연결 범위 밖",
+    "포획/희생·특정 적 공격/승리·공중3종 전용 행동·MP 검사0"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/GumpFormBinding.h": "9754b658d8e51f37c9c15e01977b9df6be2de2864418e64a1d7048a08506cce2",
+    "cpppj/src/client/GumpFormBinding.cpp": "3b05c1fb9ba4659457f441590effb446535f307feef9c429edbdb401102da456",
+    "cpppj/src/client/RawButtonControls.h": "cd413d7016f72683f7c96ad33c54e8f4c835b74d5fff269a4568d675bc7bc17c",
+    "cpppj/src/client/RawButtonControls.cpp": "840b18491f070d26ad525267fae3e16965041015c9796f2e01d58fd4013dc920",
+    "cpppj/src/client/RawMenuControls.cpp": "5a05cba1cd8ef370fee6d6ae7a32df87b9867109a7f09c00d2ce686544428423",
+    "cpppj/src/client/UberGump.cpp": "3ca88e1160efadce2829b8d02588f42ce0328cf05125820a94110b4fe1eb4dfa",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "da146516b18ada1d4e97f02c7ddd5a2d6d4421348c53f3f9da8f27fb21048814",
+    "cpppj/tests/CMakeLists.txt": "ef68f6ac6ee520cbbc1191446585908826ada2fd7ca244dcfaa4c05e430a591f"
+  },
+  "nextProtectedBaseline": "extracted/cpp-floating-sp-reference-745/protected-after.json",
+  "nextUnit": "사용자 재개 전746 시작 금지"
+}

@@ -4,6 +4,9 @@
 #include "o/GumpFormHost.h"
 
 namespace netstorm::client {
+struct RawCameraViewState; // 현재 Client 카메라의 원문 픽셀 snapshot을 빌린다.
+// 00464740/00466750의 월드 부착은 같은 Pool 객체+0e/+12를 현재497220으로 투영한다. 10.78 전용이며 넓은 SID를 절단하지 않는다.
+ScreenPoint ProjectGumpObject(const o::SidPool& pool,const RawCameraViewState& camera,std::uint32_t object);
 // 원본 Gump vtable +4의 객체 삭제 통지다. 대상은 등록 ID가 아닌 조회된 현재 Gump 토큰이다.
 using GumpObjectRelease=std::function<void(std::uint32_t token,o::Sid object)>;
 // 00464190/CD 00492be0: 알림 시점의 등록 표를 조회하고 현재 가상 +4 처리기에 부모 SID를 전달한다.

@@ -9,6 +9,8 @@
 #include "client/RawUserHighlight.h"
 #include "client/GameWorld.h"
 #include "CameraTestDevices.h"
+#include "client/GumpFormBinding.h"
+#include "client/RawCameraView.h"
 #include "o/OriginalText.h"
 #include "o/RawContentPreviewProcess.h"
 #include <cmath>
@@ -67,14 +69,16 @@ struct ActualMenuUi {
     std::vector<std::string> infoTitles,infoLines; // 실제controlled제목/머리에전달한원문바이트의관찰이다.
     std::vector<std::array<std::uint32_t,3>> buildRows; // 실제 사제 작성기의 command/parameter/enabled 관찰이다.
     std::uint32_t cursor{},highlight{},address{}; // 현재 장치/강조 모드/Identity 주소 입력이다.
+    double gameSeconds{100.0}; // 비용 표시가 읽는 명시 게임 시계이며 벽시계와 섞지 않는다.
     // 창/게임 실행 없이 같은 자산과 실제 공통 UI 처리기를 준비한다.
     explicit ActualMenuUi(const netstorm::test::dudespawn::DudeAssets& source):assets(source),configuration([this](std::string_view path) { return assets.files.TryRead(path); }),fonts(source.files,"Arial"),buttons(OriginalEdition::Patch1078,{[] { return 0.0; },[this](std::uint32_t) { return mouse; },[] {},[this](std::uint32_t form,std::uint32_t flags) {
         if (!currentSession || form>65535U) throw std::logic_error("검사현재Form삭제호스트미연결");currentSession->GumpForms().Destroy(Sid{static_cast<std::uint16_t>(form)},flags);
-    }}) {
+    },{},{},[this](auto object) { if (!currentSession) throw std::logic_error("검사현재Gump객체투영Session없음");return ProjectGumpObject(currentSession->Core().pool,currentSession->CameraGlobals().Snapshot(),object); }}) {
         ConfigInterface::StartupOptions startup;startup.majorVersion=10;startup.minorVersion=78;startup.installDir=source.root.string();startup.cdDir=startup.installDir;configuration.Startup(startup); // 파일을저장하지않고실제설정치환문맥만설치한다.
         RawMenuHooks hooks;hooks.command=[this](std::uint32_t code,std::uint32_t id,std::uint32_t parameter) { commands.PushCommand(code,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter)); };
         hooks.readInt=[](std::string_view,std::int32_t& value) { value=0; };hooks.sound=[](std::string_view) {};hooks.poll=[this](std::uint32_t) { return mouse; };hooks.cursor=[this](std::uint32_t value) { cursor=value; };
         hooks.objectForms=[this]() -> GumpFormHost& { if (!currentSession) throw std::logic_error("검사현재메뉴Form호스트미연결");return currentSession->GumpForms(); };
+        hooks.gameSeconds=[this] { return gameSeconds; }; // 비용 표시의 생성/idle이 같은 현재 시각을 읽는다.
         menus=&buttons.EnableMenus(source.game,fonts,std::move(hooks));menus->SetPalette(Palette());
         const auto& type=source.game.Find("fortGump");const auto frame=source.game.FrameIndex(type,"A00",0);const auto metrics=source.game.Shapes().SquidMetrics(type.block,frame);
         buttons.SetControls({}, {},1024,768,{static_cast<std::uint32_t>(70+type.block),static_cast<std::uint32_t>(frame),metrics.width,metrics.height,ButtonColors(Palette())});
@@ -255,6 +259,48 @@ TEST_CASE(CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup) {
         ui.menus->Close();CHECK(!ui.menus->Node(root));CHECK(!ui.buttons.RegisteredGump(id));
     }
     CHECK(!ui.menus->HasMenus());ui.currentSession=nullptr;
+}
+
+// 참조0의 일반 비용 표시와 실제 사제에 붙인 비용 표시가 같은 등록표/Form 수명에서 반납된다.
+TEST_CASE(CampaignFloatingSp_ActualReferenceAndUiCleanup) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
+    const auto plain=ui.menus->ShowSp(25,320,240,0);const auto* plainNode=ui.menus->Node(plain);CHECK(plainNode && !(plainNode->flags&0x2040U) && !plainNode->form && plainNode->x==320 && plainNode->y==240);
+    ui.buttons.KillGump(plain);ui.buttons.CleanupGumps();CHECK(!ui.menus->Node(plain)); // 참조0은 현재 Session/객체 투영 장치를 요구하지 않는다.
+    auto services=external.Make();services.gumpNotice=ui.buttons.ObjectNotice();auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();ui.currentSession=&session;
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);auto core=session.Core();const auto head=Get(core.pool.Slot(priest),6,2); // 기존 실제 종속 체인의 머리를 보존한다.
+    const auto token=ui.menus->ShowSp(-75,777,555,priest.value);const auto* node=ui.menus->Node(token);CHECK(node && (node->flags&0x2040U)==0x2040U && node->object==priest.value);
+    if (node) {
+        const Sid form{static_cast<std::uint16_t>(node->form)};const auto id=node->id;CHECK(core.pool.Slot(form)[10]==3 && session.GumpForms().Parent(form)==priest && session.GumpForms().Owner(form)==id);
+        CHECK(Get(core.pool.Slot(priest),6,2)==form.value && Get(core.pool.Slot(form),4,2)==head);CHECK(ui.buttons.RegisteredGump(id)==token);
+        std::array<RenderCollectionEntry,64> entries{};const auto collected=ui.menus->CollectDrawing({0,0,1024,768},entries,64);CHECK(collected>0 && std::any_of(entries.begin(),entries.begin()+collected,[&](const auto& entry) { return entry.token==token; })); // 부착뿐 아니라 실제 공통 수집기의 월드 투영도 사용한다.
+        std::array<std::uint32_t,256> logical{};for (std::size_t index=0;index<logical.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 보호 팔레트를 실제 글꼴/명암 출력에 전달한다.
+        std::vector<std::uint8_t> pixels(1024*768,0);ui.menus->Draw(pixels,1024,768,ui.Palette(),BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto value) { return value!=0; })); // 참조 비용 표시도 기존 StyleText/클립/픽셀 경로에서 글자를 출력한다.
+        ui.buttons.KillGump(token);CHECK(ui.menus->Node(token) && (ui.menus->Node(token)->flags&0x10000U));ui.buttons.CleanupGumps();
+        CHECK(!ui.menus->Node(token) && !ui.buttons.RegisteredGump(id) && (core.pool.Slot(form)[11]&1U) && Get(core.pool.Slot(priest),6,2)==head && !(core.pool.Slot(priest)[11]&3U));
+    }
+    ui.currentSession=nullptr;
+}
+
+// 월드 부모의 삭제 통지가 실제 비용 Gump를 Kill하고 후반 Cleanup이 소멸/등록 반납을 끝낸다.
+TEST_CASE(CampaignFloatingSp_ParentDeletionKeepsDeferredUiLifetime) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
+    auto services=external.Make();services.gumpNotice=ui.buttons.ObjectNotice();auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();ui.currentSession=&session;
+    auto& forms=session.GumpForms();const auto parent=forms.Create(2);const auto token=ui.menus->ShowSp(10,17,29,parent.value);const auto* node=ui.menus->Node(token);CHECK(node);
+    if (node) {
+        const Sid form{static_cast<std::uint16_t>(node->form)};const auto id=node->id;CHECK(forms.Parent(form)==parent && forms.Owner(form)==id);
+        CHECK(session.World().Destroy(parent) && (session.Core().pool.Slot(parent)[11]&1U) && (session.Core().pool.Slot(form)[11]&1U));
+        CHECK(ui.menus->Node(token) && (ui.menus->Node(token)->flags&0x10000U) && ui.buttons.RegisteredGump(id)==token);ui.buttons.CleanupGumps();CHECK(!ui.menus->Node(token) && !ui.buttons.RegisteredGump(id));
+    }
+    ui.currentSession=nullptr;
+}
+
+// UI 연결이 같은 실제 raw 위치/현재 카메라를 사용하며 넓은 DWORD를 하위 SID로 접지 않는다.
+TEST_CASE(CampaignFloatingSp_ProjectCurrentObjectAndCameraWithoutSidTruncation) {
+    SidPool pool(OriginalEdition::Patch1078,24000);const auto sid=pool.Allocate(2);auto raw=pool.AllocatedBytes(sid);RawCameraViewState camera;camera.pixels={17,-23}; // 명시 raw 위치와 원문 픽셀 snapshot이다.
+    Put(raw,14,std::bit_cast<std::uint32_t>(1.25F));Put(raw,18,std::bit_cast<std::uint32_t>(2.5F));auto point=ProjectGumpObject(pool,camera,sid.value);CHECK(point.x==3 && point.y==51);
+    Put(raw,14,std::bit_cast<std::uint32_t>(2.5F));Put(raw,18,std::bit_cast<std::uint32_t>(1.25F));point=ProjectGumpObject(pool,camera,sid.value);CHECK(point.x==23 && point.y==37);camera.pixels={25,-7};point=ProjectGumpObject(pool,camera,sid.value);CHECK(point.x==15 && point.y==21);
+    CHECK(Throws([&] { ProjectGumpObject(pool,camera,0x10000U|sid.value); }));CHECK(Throws([&] { ProjectGumpObject(pool,camera,24000U); })); // 잘못된 표현/Pool 범위는 실제 읽기 전에 거부한다.
+    SidPool cd(OriginalEdition::Cd1072,24000);CHECK(Throws([&] { ProjectGumpObject(cd,camera,0); })); // CD의 다른 raw 배치를10.78 offset으로 해석하지 않는다.
 }
 
 // 명시peer의현재이름/동맹/부분실패를실제Identity→4인자정보→같은controlled제목에서확인한다.

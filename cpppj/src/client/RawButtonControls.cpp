@@ -119,11 +119,12 @@ struct RawButtonControls::Impl {
         inputState.overlayEvent=kOverlayEvent; // 새 Client 포인터 연결의 원본 별도 사건 전역이며 caller의 raw code와 구별한다.
         factory=std::make_unique<GumpCreate>(create,GumpCreateHooks{
             [this](auto token) { return Node(token); },[this](auto bytes) { return Allocate(bytes); }});
-        collection=std::make_unique<GumpCollection>(create.collection,factory->CollectionHooks());
+        collection=std::make_unique<GumpCollection>(create.collection,factory->CollectionHooks(hooks.project)); // 월드 부착 Gump도 현재 객체/카메라를 공통 수집기에서 재조회한다.
         GumpTreeHooks treeHooks;treeHooks.node=[this](auto token) { return Node(token); };
         treeHooks.redraw=[this](auto token,auto erase) { Redraw(token,erase); };treeHooks.push=[this](auto token) { tree->Push(token); };
         treeHooks.attach=[this](auto token,float x,float y,auto parent,auto mode) { Attach(token,x,y,parent,mode); };
         treeHooks.kill=[this](auto token) { lifetime->Kill(token); };
+        treeHooks.project=hooks.project; // 최초 화면 제한 계산도 위치 수집과 같은 투영 장치를 사용한다.
         tree=std::make_unique<GumpTree>(create,treeState,std::move(treeHooks));
         GumpLifetimeHooks lifeHooks;lifeHooks.node=[this](auto token) { return Node(token); };
         lifeHooks.push=[this](auto token) { tree->Push(token); };
