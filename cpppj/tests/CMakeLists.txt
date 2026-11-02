@@ -3060,3 +3060,8 @@ target_sources(netstorm_basefile_io_tests PRIVATE BaseFileOpenPolicyTests.cpp)
 target_sources(netstorm_tests PRIVATE KnowledgeWorldMenuTests.cpp)
 target_sources(netstorm_script_bindings_tests PRIVATE KnowledgeWorldMenuTests.cpp KnowledgeMenuTests.cpp)
 set_source_files_properties(KnowledgeWorldMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_KNOWLEDGE_WORLD_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/knowledge-world-menu-x86.tsv\";NETSTORM_KNOWLEDGE_WORLD_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/knowledge-world-names-x86.tsv\"")
+
+# 기존 script 집중 대상에서 원문 일반명령5개·355입력/48이름을 확인한다(760).
+target_sources(netstorm_tests PRIVATE UtilityCommandInputTests.cpp)
+target_sources(netstorm_script_bindings_tests PRIVATE UtilityCommandInputTests.cpp)
+set_source_files_properties(UtilityCommandInputTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_UTILITY_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/utility-commands-x86.tsv\";NETSTORM_UTILITY_COMMAND_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/utility-command-names-x86.tsv\"")

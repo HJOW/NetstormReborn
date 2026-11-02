@@ -1,5 +1,6 @@
 // 보호PE의초기명령DWORD를이름/GUI변환과구별한다.
 #include "client/GameMenuCommands.h"
+#include "client/UtilityCommandInput.h" //원문유틸리티5이름/숫자도같은일반입력허용표를쓴다.
 #include "client/LanguageRequest.h" //언어 요청/알림 이름도 같은 원문 입력 큐로 보낸다.
 #include "client/RitualChoiceInput.h" //의식선택명령도같은HTML/일반입력으로요청한다.
 #include "client/AddRandomInput.h"
@@ -71,6 +72,7 @@ std::optional<std::uint32_t> GameMenuCommandValue(std::uint32_t address) {
 }
 // 원본name→ID표에서확인한메뉴확인창의필수이름이다.
 std::uint32_t GameMenuScriptCode(std::string_view name) {
+    const auto utility=UtilityCommandScriptCode(name);if (utility!=0xffffffffU) return utility; //기본메뉴노출없이원문등록이름만연결한다.
     const auto effect=ScenarioEffectScriptCode(name);if (effect!=0xffffffffU) return effect; // 일반 표시 명령도 같은 HTML/메타/대본 이름표로 조회한다.
     const auto object=ScenarioObjectScriptCode(name);if (object!=0xffffffffU) return object; // 시나리오/메뉴 버튼도 원문 객체 이름표를 공유한다.
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
@@ -110,6 +112,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
 }
 // 실제큐연결허용과선택후미연결명령진단에같은표를쓴다.
 bool IsGameMenuCommand(std::uint32_t code) {
+    if (IsUtilityCommand(code)) return true; //같은일반분배가처리하는명령만HTML/버튼에서허용한다.
     for (const auto& [address,value]:kCommands) if (value==code) return true; // 같은값의주소항목이여럿이어도허용결과는같다.
     return code==0x02000049U || code==0x02000002U || code==0x020000e4U; // TechnicalHelp와 화면 조정/확인의 실제 원문 기본 전역 명령이다.
 }

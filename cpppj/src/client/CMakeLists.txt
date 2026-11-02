@@ -327,3 +327,5 @@ target_sources(netstorm PRIVATE ScreenMouseKey.cpp ScreenMouseKey.h) # Guide/Gum
 target_sources(netstorm PRIVATE PauseKeyInput.cpp PauseKeyInput.h) #Pause 가상키의 정지 앞 일반명령 예약을 연결한다(753).
 
 target_sources(netstorm PRIVATE GameTimeDisplay.cpp GameTimeDisplay.h) #T/t와 로그인에서 같은 CRT 시계/시간 표시 전역을 공유한다(754).
+
+target_sources(netstorm PRIVATE UtilityCommandInput.cpp UtilityCommandInput.h) #원문비멀티일반명령5개를기존부모에연결한다(760).

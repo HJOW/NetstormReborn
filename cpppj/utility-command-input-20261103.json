@@ -1,0 +1,351 @@
+{
+  "unit": 760,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 760,
+  "displayVersion": "11.01",
+  "exeSha256": "c63c500ddf879c003eeedb1acb1404dfdf99ab39967fd14b1edd494e11c56097",
+  "summary": "화면 저장·URL 별칭·Run·SID 보기와 항해 명령의 정적 고정 분기 연결",
+  "tests": {
+    "totalUnique": 5,
+    "totalExecutions": 5,
+    "newTests": 5,
+    "failedChecks": 0,
+    "names": [
+      "UtilityCommandInput_AliasFailureAndOwnedStringsRunMode",
+      "UtilityCommandInput_ExistingCurrentSidCamera",
+      "UtilityCommandInput_Native283NonMultiplayerWrappers",
+      "UtilityCommandInput_Native39NonMultiplayerNamesAndQueue",
+      "UtilityCommandInput_ScreenshotExistingSaveFailureOrder"
+    ],
+    "logs": [
+      "tests-utility-v2.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-v2.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2670,
+    "currentCount": 2672,
+    "allUnchanged": true,
+    "fixtureCount": 852,
+    "newFixtures": [
+      "cpppj/tests/fixtures/utility-commands-x86.tsv",
+      "cpppj/tests/fixtures/utility-command-names-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 760,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 355,
+      "observations": 1065,
+      "differences": 0,
+      "nativeBodiesUnchanged": true,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "fixtureSha256": "b4c86f894beff7d756650f1f16d86bbe82a416bd6ef8c934aca314706ffb3e1c",
+      "toolSha256": "38098c40bed6cb8c74cd98d80a526132f5907cb546b2c7855bf3da0a1cf2ebb0",
+      "extraBodies": [
+        "004d50e0 screenshot wrapper",
+        "004a02b0 alias copy/read/URL",
+        "004cf970 Run→Tell mode1"
+      ],
+      "boundaries": [
+        "save004db140",
+        "Config ReadString00441300",
+        "URL004a00c0",
+        "Tell004cf730",
+        "Highlight004d5bb0",
+        "CenterObject00433ba0"
+      ],
+      "limits": [
+        "実게임/물리입력/링크프로그램/통신/GUI0",
+        "실제파일I/O실패/전체Tell·강조·SID몸체는새전체원문실행이아니다"
+      ],
+      "rawReportSha256": "996c6ce5dbe9c43082b6633ea6a6da67c3f02bcf141931b9f887e3a1607aef89"
+    },
+    "reobserved-native.json": {
+      "unit": 760,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 355,
+      "observations": 1065,
+      "differences": 0,
+      "nativeBodiesUnchanged": true,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "fixtureSha256": "b4c86f894beff7d756650f1f16d86bbe82a416bd6ef8c934aca314706ffb3e1c",
+      "toolSha256": "4c335ab07e1b67a21d2fdf76d35d094696df718598f516cc5ebb126a839ce2cc",
+      "extraBodies": [
+        "004d50e0 screenshot wrapper",
+        "004a02b0 alias copy/read/URL",
+        "004cf970 Run→Tell mode1"
+      ],
+      "boundaries": [
+        "save004db140",
+        "Config ReadString00441300",
+        "URL004a00c0",
+        "Tell004cf730",
+        "Highlight004d5bb0",
+        "CenterObject00433ba0"
+      ],
+      "limits": [
+        "실제게임/물리입력/링크프로그램/통신/GUI0",
+        "실제파일I/O실패/전체Tell·강조·SID몸체는새전체원문실행이아니다"
+      ],
+      "rawReportSha256": "b38a01571916bdcc35f752d341cf85564c8ce44d6254fece651cbe868a148283"
+    },
+    "root-repeat.json": {
+      "unit": 760,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 355,
+      "observations": 1065,
+      "differences": 0,
+      "nativeBodiesUnchanged": true,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "fixtureSha256": "b4c86f894beff7d756650f1f16d86bbe82a416bd6ef8c934aca314706ffb3e1c",
+      "toolSha256": "4c335ab07e1b67a21d2fdf76d35d094696df718598f516cc5ebb126a839ce2cc",
+      "extraBodies": [
+        "004d50e0 screenshot wrapper",
+        "004a02b0 alias copy/read/URL",
+        "004cf970 Run→Tell mode1"
+      ],
+      "boundaries": [
+        "save004db140",
+        "Config ReadString00441300",
+        "URL004a00c0",
+        "Tell004cf730",
+        "Highlight004d5bb0",
+        "CenterObject00433ba0"
+      ],
+      "limits": [
+        "실제게임/물리입력/링크프로그램/통신/GUI0",
+        "실제파일I/O실패/전체Tell·강조·SID몸체는새전체원문실행이아니다"
+      ],
+      "rawReportSha256": "b38a01571916bdcc35f752d341cf85564c8ce44d6254fece651cbe868a148283"
+    },
+    "names-native.json": {
+      "unit": 760,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 48,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "commands": [
+        "TakeScreenShot 00542768/0200001c",
+        "URLAlias 00542860/0200005a",
+        "Run 00542a5c/020000da",
+        "MoveIsland 00542714/02000006",
+        "LookAtSid 0054299c/020000aa"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 461497,
+      "fixtureSha256": "72333f29c8c811fd6aab2386bbcc18018a24cd050ca100304e70508f7d51bd61",
+      "toolSha256": "728cfc6974ff5498e37fdae2dc8c13ca5effc89e053b8a41d465d71ad90b2dde",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "41d7e3a1c53fe9f087be262206333674047c528051215f77a342459a19795f15"
+    },
+    "root-names-repeat.json": {
+      "unit": 760,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 48,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "commands": [
+        "TakeScreenShot 00542768/0200001c",
+        "URLAlias 00542860/0200005a",
+        "Run 00542a5c/020000da",
+        "MoveIsland 00542714/02000006",
+        "LookAtSid 0054299c/020000aa"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 461497,
+      "fixtureSha256": "72333f29c8c811fd6aab2386bbcc18018a24cd050ca100304e70508f7d51bd61",
+      "toolSha256": "728cfc6974ff5498e37fdae2dc8c13ca5effc89e053b8a41d465d71ad90b2dde",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "41d7e3a1c53fe9f087be262206333674047c528051215f77a342459a19795f15"
+    },
+    "non-mp-repeat.json": {
+      "unit": 760,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 283,
+      "observations": 849,
+      "differences": 0,
+      "nativeBodiesUnchanged": true,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "fixtureSha256": "5a28eb4bcae245c2e020d7e8e85636a5ecb1fdfc0f37207c77852d1a0b0226ff",
+      "toolSha256": "30e1274b2c5e3dd73f4b9fd9cc7977790701bedb839f6c41d24471c8ebe49f24",
+      "extraBodies": [
+        "004d50e0 screenshot wrapper",
+        "004a02b0 alias copy/read/URL",
+        "004cf970 Run→Tell mode1"
+      ],
+      "boundaries": [
+        "save004db140",
+        "Config ReadString00441300",
+        "URL004a00c0",
+        "Tell004cf730",
+        "Highlight004d5bb0",
+        "CenterObject00433ba0"
+      ],
+      "limits": [
+        "실제게임/물리입력/링크프로그램/통신/GUI0",
+        "실제파일I/O실패/전체Tell·강조·SID몸체는새전체원문실행이아니다"
+      ],
+      "rawReportSha256": "16460bcd1a5aa6529f3566921784bb655dfe873ba8282270357f77c61400f1a9"
+    },
+    "non-mp-names.json": {
+      "unit": 760,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 39,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "commands": [
+        "TakeScreenShot 00542768/0200001c",
+        "URLAlias 00542860/0200005a",
+        "Run 00542a5c/020000da",
+        "MoveIsland 00542714/02000006",
+        "LookAtSid 0054299c/020000aa"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 442774,
+      "fixtureSha256": "c0887e4b8e2ccf5ba2a9065f71403d2cf393bf72509b9c42f84f34ce4e1fc52d",
+      "toolSha256": "b7a0c7256332756ad7f16bc4aa8e2133b961b8f5c9bac5830f768982bc17553b",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "44c150ff377ea116a163b47e11f0b52014be6b936db815d5230aaff24dca2eee"
+    },
+    "non-mp-subsets.json": {
+      "body": {
+        "originalRows": 355,
+        "nonMultiplayerRows": 283,
+        "excludedMoveIslandRows": 72,
+        "allSelectedBytesEqual": true,
+        "originalSha256": "b4c86f894beff7d756650f1f16d86bbe82a416bd6ef8c934aca314706ffb3e1c",
+        "selectedSha256": "5a28eb4bcae245c2e020d7e8e85636a5ecb1fdfc0f37207c77852d1a0b0226ff"
+      },
+      "names": {
+        "originalRows": 48,
+        "nonMultiplayerRows": 39,
+        "excludedMoveIslandRows": 9,
+        "allSelectedBytesEqual": true,
+        "originalSha256": "72333f29c8c811fd6aab2386bbcc18018a24cd050ca100304e70508f7d51bd61",
+        "selectedSha256": "c0887e4b8e2ccf5ba2a9065f71403d2cf393bf72509b9c42f84f34ce4e1fc52d"
+      },
+      "rawReportSha256": "79f1fb78459ffa362773b4fa33421ca699cc7074c0c3cdb9cb090ce65fcb1170"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "root C++ v1",
+      "log": "tests-utility-v1.log",
+      "failedTests": 1,
+      "failedChecks": 15,
+      "detail": "MoveIsland의 param2 전달은 오류이며 원문004d76f8은 push6이다. 고정6으로 수정했다. MP전용 분류 뒤 해당72행/이름9행/합성3회는 재실행하지 않는다."
+    },
+    {
+      "scope": "pre-build audit",
+      "detail": "준비 worldless project의 float/DWORD 반환형 오류를 빌드 전에 수정했으나, 고정6 확인 뒤 mode5 장치 자체를 제거했다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/CMakeLists.txt": "8f921233ce667897990ce716128e00c69a764c00cd4a2df2a54057d4f9ed8b89",
+    "cpppj/src/client/GameMenuCommands.cpp": "60e4054dac2b3de7e763fa02b3d867d45a6106fba892311e5b828633a672e2c4",
+    "cpppj/src/client/UberGump.cpp": "16d69474baf500a211b62623766f27084296f53671cc624c16a9adb64037a61c",
+    "cpppj/src/client/UtilityCommandInput.cpp": "171c030fe7f0297e654bdb4c3a49df07a836b5a922670a9b56f4bb096d72ce9c",
+    "cpppj/src/client/UtilityCommandInput.h": "afd643495ebeb7f3a453d307daf9c7851e415e0b42f27e3501ed9cbb39d0b962",
+    "cpppj/tests/CMakeLists.txt": "23b7e8e3f097ed0b8b5507578ac04c3fe6bd6a8b8037e95a78f2aa2c78dcfd3d",
+    "cpppj/tests/UtilityCommandInputTests.cpp": "a40bdc682975e52db831955c55e12e05a4a732db05bea6484c907370c83c5a48",
+    "tools/decomp_utility_commands.py": "30e1274b2c5e3dd73f4b9fd9cc7977790701bedb839f6c41d24471c8ebe49f24",
+    "tools/decomp_utility_command_names.py": "b7a0c7256332756ad7f16bc4aa8e2133b961b8f5c9bac5830f768982bc17553b"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": null,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-760/protected-after.json",
+  "next": "outside/공통정지·모달 어댑터(761)·Config 명령(762)·명시41baa0(763)·글꼴/음질(764)·존재조회(765)·Help stream writer(766)와 남은 비멀티/호환성",
+  "limitations": [
+    "MoveIsland는 y가 아닌 고정6이며 ChalSailPos MP 명령이다. 분류 전 Native/CPP 명령관측과 최초15실패를 보존한다. 분류 후 원문72/이름9행을 제외하고 재관측하며, 고정6 수정은 정적 근거만으로 판정한다. 실제MP/통신/항해 동작 미검증이다.",
+    "최종Native283의 Guide/Gump/envelope는 원문에서 실행했지만 C++는 명시 선행소비 결과와 국소 bodytrace만 비교한다. 실제Uber 전체 envelope/GUI 검증이 아니다.",
+    "World 없는 예약SID1은 같은Pool/TYPE/기존CameraHome·CenterViewPoint에 연결했다. World없는Carrier의 후속 preview는 실제 카메라 적용 뒤 명시Runtime 경계이며 loadingDepth0을 합성하지 않는다.",
+    "원문256BYTE URL키/설정값 초과는 호스트에서 거부한다. 새게임/CLI·외부링크프로그램/물리/PCM·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP 검사는0이다."
+  ],
+  "multiplayerClassification": {
+    "reason": "MoveIsland→고정6→ChalSailPos MP전용임을 최초실패 분석에서 확인",
+    "actualGameOrCommunicationRuns": 0,
+    "preClassification": {
+      "nativeMode6InputRowsPerFullBatch": 72,
+      "nativeMode6BranchObservationsAcrossThreeFullBatches": 648,
+      "nativeNameQueueRowsAcrossTwoBatches": 18,
+      "cppFixtureRows": 72,
+      "cppNameRows": 9,
+      "cppSyntheticDispatcherCalls": 3,
+      "firstCppFailedChecks": 15
+    },
+    "afterClassification": {
+      "cppExcludedBodyRows": 72,
+      "cppExcludedNameRows": 9,
+      "newNativeBodyInputs": 283,
+      "newNativeNameInputs": 39,
+      "newMoveIslandExecutions": 0
+    },
+    "fixedMode6VerifiedBy": "정적 기계어004d76f8 push6; MP 명령의 수정 후 실행검사 생략"
+  }
+}

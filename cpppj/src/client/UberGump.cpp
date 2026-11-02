@@ -10,7 +10,9 @@
 #include "client/UberGump.h"
 #include "client/ProductPresentation.h"
 #include "client/ExternalHelpClient.h" //원래 외부 Help 정책을 현재 Client/Windows 장치에 연결한다.
-#include "client/UrlInput.h" // HTML의URL버튼과같은일반입력/현재고리/Help분배기접합이다.
+#include "client/UrlInput.h"
+#include "client/CameraHome.h" //World없는LookAtSid도기존433ba0의현재Pool/TYPE와공통즉시카메라를사용한다.
+#include "client/UtilityCommandInput.h" //기존저장/별칭/Run/강조/SID보기부모를일반명령으로연결한다.
 #include "client/CaptureInput.h"
 #include "client/ClientCaptureSequence.h"
 #include "client/RecheckCdInput.h"
@@ -1118,6 +1120,23 @@ void UberGump::Event(InputEvent event) {
     }
     if (DispatchScreenshotKey(event,[this] { client_.SaveGifScreenshot(); },[this](auto name) { Tell(std::string(name)); })) rebuild_=true; // Guide/Gump 뒤,console·정지와 일반 F7 배너 처리보다 앞이다. Tell이 연 정지를 아래에서 다시 읽는다.
     static_cast<void>(DispatchDiagnosticKey(event,[this] { client_.DumpDiagnostics(); })); // 같은 원문 위치에서 객체→프로세스 순서로 출력하며 정지/console은 아래에서 다시 읽는다.
+    UtilityCommandHooks utility; //원문5명령은Guide/Gump/뗌뒤이며Console/공통정지보다앞에있다.
+    utility.text=[this](auto token) { return scriptStrings_.Resolve(token); };utility.screenshot=[this] { client_.SaveGifScreenshot(); };utility.tell=[this](auto section) { Tell(std::string(section)); };
+    utility.readString=[this](auto key,auto& value) { return client_.Configuration().ReadString(key,value); };utility.url=[this](auto value) { rawButtons_->Menus()->ActivateHelpLinkText(value); };
+    utility.run=[this](auto section,auto mode) { static_cast<void>(TryTell(std::string(section),false,nullptr,mode)); }; //기존cf730의suppress1을그대로사용하며일반Tell로바꾸지않는다.
+    utility.highlight=[this](auto mode) {
+        if (world_) { world_->Highlight(mode);return; } //살아있는월드는기존공유Carrier/선택/커서몸체를그대로사용한다.
+        UserHighlightHooks effects;effects.selectCursor=[this](auto cursor) { client_.GetCursor().Set(cursor); }; //이 명령은 고정6만 전달하므로 역투영/이동의 mode5에 도달하지 않는다.
+        RawUserHighlight(client_.GameplayGlobals()->selection.HighlightState(),std::move(effects)).Highlight(mode);
+    };
+    utility.center=[this](auto sid) {
+        if (!sid) return;if (world_) { world_->CenterOnObject(sid);return; }
+        const auto& storage=*client_.SurfaceStorage();if (sid>65535U || sid>=storage.pool.Capacity()) throw std::out_of_range("LookAtSid의현재물리SID범위");
+        CameraHomeState current;current.width=client_.GetScreen().Width();current.height=client_.GetScreen().Height(); //CenterOn은이현재화면과같은Pool/TYPE만읽으며Reset의모드/로딩기본값을사용하지않는다.
+        CameraHomeHooks effects;effects.contentPreview=[](o::Sid) { throw std::logic_error("미설치World의LookAtSid내용물preview Runtime미연결"); }; //Carrier일때만카메라적용뒤도달한다.실제loadingDepth를0으로합성하거나preview성공을만들지않는다.
+        CameraHome(storage.pool,storage.types,current,[this](float x,float y) { CenterViewPoint(x,y); },std::move(effects)).CenterOn(o::Sid{static_cast<std::uint16_t>(sid)}); //예약SID1도원문처럼현재좌표/foot을읽고같은즉시카메라전체부모를실행한다.
+    };
+    if (DispatchUtilityCommandInput(event,utility)) { rebuild_=true;return; }
     if (DispatchUrlInput(event,[this](auto token) { return scriptStrings_.Resolve(token); },
         [this](auto text) { rawButtons_->Menus()->ActivateHelpLinkText(text); })) { rebuild_=true;return; } //모드/현재World와무관하게같은내부Help·cmd·외부정책을사용한다.
     if (DispatchCaptureInput(event,client_.ScreenCapture().State().active,{[this] { client_.ScreenCapture().Start(); },[this] { client_.ScreenCapture().Stop(); },[this](auto section) { Tell(std::string(section)); }})) { rebuild_=true;return; } //현재active우선/param2=1시작이다. 개발자키55a484조건은켜지않는다.
