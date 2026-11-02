@@ -1,0 +1,99 @@
+{
+  "unit": 731,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 731,
+    "version": "11.01",
+    "sha256": "2220e48e62e789d1595c4f1c672290c37216cd904b85eeff6427fdb2d46176d0"
+  },
+  "implementation": [
+    "설정Load가현재Client/VFS와같은소유자의459b20이름한칸으로section을고른뒤원래이름을읽는다",
+    "FileSpecQuery는459610/4595f0의첫NUL·접두/구분자·원래와일드카드검색·정상/실패핸들수명을소유하며Reader예외에도반납",
+    "실제Help도같은FileSpecQuery를사용하며CLI/자산설정5곳도각VFS소유자를공유",
+    "독립1인자ConfigInterface값형계약을유지하며Load인자의첫NUL뒤물리는읽지않는다"
+  ],
+  "native": {
+    "report": "cpppj/config-path-load-native-20261102.json",
+    "fixtureRows": 12,
+    "observations": 24,
+    "precisions": [
+      "027f",
+      "037f"
+    ],
+    "advances": [
+      0,
+      0,
+      2,
+      3,
+      2,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "rerunMatches": true,
+    "boundary": "실제440e00/FileSpec/이름getter/CRT이며설정파서/로그/FindFirst·Close는명시경계. 실제OS/SEH unwind는실행하지않음"
+  },
+  "tests": {
+    "new": 3,
+    "existing": 19,
+    "final": 22,
+    "failed": 0,
+    "nativeRowsReplayed": 252,
+    "log": "extracted/cpp-config-path-load-731/tests-v1.log",
+    "actualClientLoadAdvances": 9,
+    "actualUnicodeFind": true,
+    "readerFailureClosesSearch": true
+  },
+  "build": {
+    "final": "extracted/cpp-config-path-load-731/build-v2.log",
+    "warnings": 0,
+    "errors": 0,
+    "firstFailure": {
+      "log": "extracted/cpp-config-path-load-731/build-v1.log",
+      "cause": "기존익명FileNamePart함수와공통FileNamePart구조체의이름충돌",
+      "correction": "값형보조함수이름을ConfigFileNamePart로구분"
+    }
+  },
+  "cli": {
+    "processes": 1,
+    "command": "Netstorm.exe --config-get originals SCREENW",
+    "output": "1024",
+    "exitCode": 0,
+    "log": "extracted/cpp-config-path-load-731/cli-config.log",
+    "gameFrames": 0
+  },
+  "protection": {
+    "baselineFiles": 2645,
+    "unchangedFiles": 2645,
+    "baselineGroups": {
+      "AGENTS.md": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 825
+    },
+    "agentAuthoredChanges": 0,
+    "newFixtures": 1,
+    "currentTotal": 2646,
+    "fixtureTotal": 826
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "limits": [
+    "ConfigLoad부모의경로/검색수명을연결했으며Startup441790의선행위치탐색/경로작성순서는별도잔여다",
+    "FileSpecQuery는현재backslash의생성/조회/검색핸들부분이다.전체264BYTE ABI/FindNext/다른getter나VFS와일드카드전체수명은완료가아니다",
+    "원문의ANSI 대신Windows10/11 UTF8/W 검색을쓰는호환차이를코드주석에명시했다",
+    "전체Template·일반FILE/TAFF/보조실패·SEH/부분I/O수명은남는다",
+    "새GUI/전체34/전체C++/ZIP·물리입력/PCM/DPI·포획/희생·특정적공격/승리·공중3종전용·MP/통신검사는0이다",
+    "전체34/ZIP은645의644제품이며전체목표1~8차는진행중이다"
+  ],
+  "rawDirectory": "extracted/cpp-config-path-load-731"
+}

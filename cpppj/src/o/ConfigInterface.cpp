@@ -7,6 +7,7 @@
 #include "o/ConfigInterface.h"
 #include "o/BaseFile.h"
 #include "o/OriginalText.h"
+#include "o/RawFileName.h"
 
 namespace netstorm::o {
 namespace {
@@ -17,7 +18,7 @@ constexpr std::string_view kEndSection = "END";
 constexpr std::string_view kLocalObjectName = "local";
 
 // 원본 FUN_00459b20(경로, 1): 마지막 `\` 또는 `:` 뒤의 파일 이름. `/`도 받는 것은 새 확장이다.
-std::string_view FileNamePart(std::string_view path) {
+std::string_view ConfigFileNamePart(std::string_view path) {
     const auto separator = path.find_last_of("\\:/");
     return separator == std::string_view::npos ? path : path.substr(separator + 1);
 }
@@ -61,8 +62,8 @@ std::vector<std::uint8_t> EncodeConfigFile(std::string_view text) {
 }
 
 // 005280ac~005280b8의 CRT 순서와 같다. 멤버는 fort→global→configuration→language 역순으로 반납한다.
-ConfigInterface::ConfigInterface(FileReader reader)
-    : reader_(std::move(reader)), language_(registry_), configuration_(registry_),
+ConfigInterface::ConfigInterface(FileReader reader,std::shared_ptr<RawFileName> fileNames,FileSpecQueryHooks fileSpecHooks)
+    : reader_(std::move(reader)), fileNames_(std::move(fileNames)),fileSpecHooks_(std::move(fileSpecHooks)),language_(registry_), configuration_(registry_),
       global_(registry_, "global"), fort_(registry_, "fort") {
     // `{@미션.키}`: 원본 00440760은 missionSpec 경로의 미션 스크립트를 임시 객체에 읽는다.
     registry_.loadMission = [this](Config& temporary, std::string_view mission) {
@@ -82,17 +83,18 @@ void ConfigInterface::Load(std::span<const std::string> arguments) {
     bool inlineMode = true;
     // 인자를 받은 순서대로 처리한다.
     for (const auto& argument : arguments) {
-        std::string_view path = argument;
+        std::string_view path = std::string_view(argument).substr(0,argument.find('\0')); // 원문 C인자의 첫NUL 뒤 물리는 읽지 않는다.
         if (!path.empty() && path.front() == '@') path.remove_prefix(1);
         else if (inlineMode) {
-            configuration_.AppendArguments(argument, reader_);
+            configuration_.AppendArguments(path, reader_);
             continue;
         }
         inlineMode = false;
         if (path.empty()) continue;
         // 파일마다 `[파일이름]` 섹션 줄을 먼저 넣는다. 파일이 없어도 섹션 줄은 남는다.
-        configuration_.AppendSection(FileNamePart(path));
-        LoadFile(configuration_, path);
+        if (fileNames_) {
+            const FileSpecQuery spec(path,fileSpecHooks_);configuration_.AppendSection(fileNames_->Name(spec.Text()));LoadFile(configuration_,path); //440e00은 이름 한 칸 뒤 파일을 읽고 마지막에 같은 Find 핸들을 반납한다.
+        } else { configuration_.AppendSection(ConfigFileNamePart(path));LoadFile(configuration_,path); } // 기존 독립 값형 호출자의 경로 계약이다.
     }
     configuration_.AppendSection(kEndSection);
 }
@@ -172,7 +174,7 @@ void ConfigInterface::LoadLanguage(std::string_view language) {
 // 원본은 `[파일이름]` 본문이 서명으로 시작하지 않으면 서명을 먼저 쓰고, 이어서 `[END]` 본문을 쓴다.
 std::string ConfigInterface::SaveText(std::string_view fileName) {
     std::string result;
-    if (const auto body = configuration_.Section(FileNamePart(fileName))) {
+    if (const auto body = configuration_.Section(ConfigFileNamePart(fileName))) {
         if (!body->starts_with(kConfigSignature)) result += kConfigSignature;
         result += *body;
     }

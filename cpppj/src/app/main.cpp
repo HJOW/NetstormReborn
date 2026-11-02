@@ -265,7 +265,7 @@ void StartConfiguration(netstorm::o::ConfigInterface& config, const std::filesys
 // 설정에서 계산한 전투 팔레트 경로(`GamePalSpec`에 `battlePal`을 넣은 값)로 자산을 읽는다.
 netstorm::client::GameAssets LoadAssets(const std::filesystem::path& root, netstorm::o::OriginalEdition edition) {
     const auto files = Files(root);
-    netstorm::o::ConfigInterface config([&files](std::string_view path) { return files.TryRead(path); });
+    netstorm::o::ConfigInterface config([&files](std::string_view path) { return files.TryRead(path); },files.FileNameOwner());
     StartConfiguration(config, root, edition);
     const auto palette = config.PathSpec("GamePalSpec", config.Configuration().Get("battlePal").value_or(std::string()));
     return netstorm::client::GameAssets(files, edition, palette);
@@ -466,7 +466,7 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
         std::string path = arguments[1];
         // 경로 구분자나 확장자가 없으면 미션 이름으로 보고 설정의 fortSpec으로 경로를 만든다.
         if (path.find_first_of("\\/.") == std::string::npos) {
-            netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); });
+            netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); },files.FileNameOwner());
             StartConfiguration(config, root, edition);
             path = config.PathSpec("fortSpec", path);
         }
@@ -474,7 +474,7 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
         return 0;
     }
     if (command == "--dump-world" && arguments.size()==2) {
-        netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); });
+        netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); },files.FileNameOwner());
         StartConfiguration(config,root,edition); netstorm::client::MissionScript mission(config,arguments[1]);
         if (!mission.Loaded() || netstorm::o::AsciiLower(mission.MissionType())!="tutorial") throw std::invalid_argument("World restoration currently supports stored Tutorial missions");
         const auto fort=netstorm::o::FortTemplate::Parse(files.Read(mission.FortPath()),types);
@@ -482,7 +482,7 @@ int RunFortCommand(const std::string& command, std::vector<std::string> argument
         netstorm::client::GameWorld world(assets,fort,std::move(players)); world.Resize(1024,768); WriteText(world.Report(true)); return 0;
     }
     if (command == "--inspect-mission" && arguments.size() == 2) {
-        netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); });
+        netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); },files.FileNameOwner());
         StartConfiguration(config, root, edition);
         netstorm::client::MissionScript mission(config, arguments[1]);
         std::printf("Mission: %s\n  script: %s (%s)\n", mission.Name().c_str(), mission.ScriptPath().c_str(), mission.Loaded() ? "loaded" : "missing");
@@ -827,7 +827,7 @@ int RunConfigCommand(const std::string& command, std::vector<std::string> argume
     if (arguments.empty()) throw std::invalid_argument("Missing game directory");
     const std::filesystem::path root = arguments[0];
     const auto files = Files(root);
-    netstorm::o::ConfigInterface config([&files](std::string_view path) { return files.TryRead(path); });
+    netstorm::o::ConfigInterface config([&files](std::string_view path) { return files.TryRead(path); },files.FileNameOwner());
     StartConfiguration(config, root, edition);
     if (command == "--config-dump" && arguments.size() == 1) { WriteText(config.Configuration().Text()); return 0; }
     if (command == "--config-get" && arguments.size() == 2) {

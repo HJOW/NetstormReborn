@@ -2949,3 +2949,10 @@ netstorm_apply_compiler_options(netstorm_file_path_ui_tests)
 target_sources(netstorm_tests PRIVATE FileNameLeafTests.cpp)
 target_sources(netstorm_file_path_ui_tests PRIVATE FileNameLeafTests.cpp)
 set_source_files_properties(FileNameLeafTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FILE_NAME_LEAF_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/file-name-leaf-x86.tsv\"")
+
+# 설정Load의 실제FileSpec/고리·기존설정·Help 회귀를 창 없이 집중 확인한다(731).
+target_sources(netstorm_tests PRIVATE ConfigPathLoadTests.cpp)
+set_source_files_properties(ConfigPathLoadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CONFIG_PATH_LOAD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/config-path-load-x86.tsv\"")
+add_executable(netstorm_config_path_load_tests FocusedTestMain.cpp ConfigPathLoadTests.cpp ConfigInterfaceTests.cpp FileNameLeafTests.cpp TechnicalHelpTests.cpp)
+target_link_libraries(netstorm_config_path_load_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_config_path_load_tests)

@@ -2,8 +2,10 @@
 // 전역 변수 대신 객체 하나로 묶는다. 근거·검증 범위: docs/exe/cpp-config-reconstruction.md
 #pragma once
 #include "o/Config.h"
+#include "o/FileSpecQuery.h"
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
@@ -11,6 +13,7 @@
 #include <vector>
 
 namespace netstorm::o {
+class RawFileName; // 실제 Client/VFS의 같은 이름 반환 고리를 선택적으로 공유한다.
 // 원본 CRT atol(MSVC): 앞 공백·부호·숫자만 읽고 넘침은 검사하지 않는다(32비트로 감긴다).
 std::int32_t ConfigParseLong(std::string_view text);
 // 원본 FUN_004411e0 ↔ CD 004a9560: `;`로 나눈 목록의 index번째 항목. 범위를 벗어나면 빈 문자열.
@@ -40,7 +43,7 @@ public:
     };
 
     // 원본 CRT 순서대로 language→configuration→global→fort를 같은 Registry에 등록한다(004fc8c0~004fc920).
-    explicit ConfigInterface(FileReader reader);
+    explicit ConfigInterface(FileReader reader,std::shared_ptr<RawFileName> fileNames={},FileSpecQueryHooks fileSpecHooks={}); // 실제 Client는 같은 고리를 보유하고 독립 값형 호출은 기존 계약을 유지한다.
 
     // 원본 FUN_00440e00 ↔ CD 004a9120: `[ARGS]`, 인자(첫 `@` 인자 전까지는 글, 그 뒤는 파일), `[END]`.
     void Load(std::span<const std::string> arguments);
@@ -93,6 +96,8 @@ private:
     ConfigRegistry registry_;
     // reader_: 설정·파일 내용을 읽는 공급자.
     FileReader reader_;
+    std::shared_ptr<RawFileName> fileNames_; // 원문 Load의 파일명 getter가 실제 VFS와 같은10칸을 사용한다.
+    FileSpecQueryHooks fileSpecHooks_; // 실제 Windows 또는 명시 검색 장치를 현재 파일 읽기 동안 유지한다.
     // language_: 원본 설정 객체(0x18바이트): +0 버퍼, +8 환경 변수 허용, +0xc "이름.", +0x10 이름 길이, +0x14 변경 표시 (Config).
     Config language_;
     // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.

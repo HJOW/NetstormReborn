@@ -35,6 +35,7 @@ target_sources(netstorm PRIVATE o/RawWorldGeyser.h o/RawWorldGeyser.cpp) # 세�
 target_sources(netstorm PRIVATE o/RawWorldGeyserBounds.h o/RawWorldGeyserBounds.cpp) # 전체 간헐천의 청크 범위·분할·Player 예산이다.
 target_sources(netstorm PRIVATE o/RawPlayerNotification.h o/RawPlayerNotification.cpp) #프레임말 대기 결과 알림과 Core 기술 합계다.
 target_sources(netstorm PRIVATE client/TechnicalHelp.h client/TechnicalHelp.cpp client/TechnicalHelpClient.cpp) # 가용성/별도 실행과 실제 Filespec 경로 해석이다.
+target_sources(netstorm PRIVATE o/FileSpecQuery.cpp o/FileSpecQuery.h) # 설정Load/Help의원문FileSpec경로와검색핸들수명을공유한다(731).
 
 target_sources(netstorm PRIVATE client/HelpLinkPolicy.cpp client/HelpLinkPolicy.h client/ExternalHelpClient.cpp client/ExternalHelpClient.h) # 원문 Help 정책과 UTF-8 Windows 실행 경계다.
 target_link_libraries(netstorm PUBLIC shell32) # 원본 ShellExecuteA에 대응하는 Windows10/11 W API를 제공한다.
