@@ -7,6 +7,18 @@
 namespace netstorm::o { // 원본 전체459c60의 정상 물리 범위와 throw 위치를 보존한다.
 std::uint32_t RawFileName::Index() const { return index_; } // 조회는 고리를 전진시키지 않는다.
 std::span<const std::uint8_t,256> RawFileName::CurrentBytes() const { return buffers_[index_]; } // 현재 한 칸의 실제 바이트다.
+// 원문은 전체 FileSpec을 먼저 복사하고 UNC의 서버 끝/colon 다음 또는 첫BYTE에만 NUL을 쓴다.
+std::string_view RawFileName::Device(std::string_view fileSpec,char separator) {
+    index_=(index_+1U)%10U;auto& bytes=buffers_[index_];bytes.fill(0);fileSpec=fileSpec.substr(0,fileSpec.find('\0'));
+    if (fileSpec.size()>=bytes.size()) throw std::length_error("원문 FileSpec 장치 조회의256BYTE 물리 범위 초과");
+    std::copy(fileSpec.begin(),fileSpec.end(),bytes.begin());auto size=fileSpec.size();
+    if (size>=2 && fileSpec[0]==separator && fileSpec[1]==separator) {
+        const auto end=fileSpec.find(separator,2);if (end!=std::string_view::npos) { bytes[end]=0;size=end; }
+    } else {
+        const auto colon=fileSpec.find(':');size=colon==std::string_view::npos ? 0 : colon+1;bytes[size]=0;
+    }
+    return {reinterpret_cast<const char*>(bytes.data()),size};
+}
 std::string_view RawFileName::Format(std::span<const FileNamePart> parts,char separator) {
     index_=(index_+1U)%10U;auto& bytes=buffers_[index_];bytes.fill(0);std::size_t size{};
     const auto append=[&](std::string_view text) { // 원문 memcpy의 전체 NUL 포함 폭을 확인하고 부분 문자열로 성공시키지 않는다.

@@ -3,6 +3,7 @@
 // 범위: 읽기 전용 아카이브/VFS. TAFF는 배열에 소유하며 디스크/메모리 읽기는 원문 FILE 몸체와 호스트 장치를 사용한다.
 #include "o/BaseFile.h"
 #include "o/RawBaseFileReadPolicy.h"
+#include "o/RawFileName.h" // 디스크 root 조합도 HUD와 같은 원문 고리를 전진시킨다.
 #include "o/RawBaseFileIO.h"
 #include "o/OriginalText.h"
 #include <algorithm>
@@ -159,7 +160,9 @@ std::vector<std::uint8_t> TaffArchive::Read(std::string_view name) const {
 }
 // 보조 경로 미지정 시 원본처럼 기본 경로를 다시 사용한다.
 BaseFileSystem::BaseFileSystem(std::filesystem::path base, std::filesystem::path secondary)
-    : base_(std::move(base)), secondary_(secondary.empty() ? base_ : std::move(secondary)) {}
+    : base_(std::move(base)), secondary_(secondary.empty() ? base_ : std::move(secondary)),fileNames_(std::make_shared<RawFileName>()) {}
+// 실제 shared 소유권이므로 Client 임시 문자열 장치와 VFS 중 어느 쪽을 먼저 반납해도 빌린 고리가 남는다.
+std::shared_ptr<RawFileName> BaseFileSystem::FileNameOwner() const { return fileNames_; }
 // 두 단일 목록의 중복 관문은 파일을 다시 읽기 전에 적용하며 실패한 후보는 목록에 남기지 않는다.
 bool BaseFileSystem::RegisterArchive(const std::filesystem::path& path,bool secondary) {
     const auto utf8=std::filesystem::absolute(path).lexically_normal().generic_u8string();auto key=AsciiLower({reinterpret_cast<const char*>(utf8.data()),utf8.size()}); //Windows10/11 한글 경로는 원본ANSI와 달리 UTF-8 중복 키로 보존한다.
@@ -192,7 +195,7 @@ std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_vie
     std::replace(primary.begin(),primary.end(),'/','\\');std::replace(secondary.begin(),secondary.end(),'/','\\');
     return ReadBaseFileByPolicy(name,primary,[&](BaseFileReadSite site,std::string_view query)->std::optional<std::vector<std::uint8_t>> {
         if (site==BaseFileReadSite::PrimaryArchive || site==BaseFileReadSite::SecondaryArchive) return TryReadArchiveOnly(query,site==BaseFileReadSite::SecondaryArchive);
-        const auto filename=site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk?primary:secondary,query);
+        const auto filename=site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk?primary:secondary,query,*fileNames_);
 #ifdef _WIN32
         //원본의 BYTE 접두 절삭이 UTF-8 글자 중간에 끝나면 Windows10/11 W 경로로 열 수 없다. 디스크 실패를 반환하되 뒤 TAFF의 원시 이름 조회는 계속한다.
         if (!filename.empty() && !MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,filename.data(),static_cast<int>(filename.size()),nullptr,0) && GetLastError()==ERROR_NO_UNICODE_TRANSLATION) return {};
@@ -203,7 +206,7 @@ std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_vie
             if (drive.native().size()==2 && drive.native()[1]==L':' && AsciiLower(PathText(drive))==AsciiLower(PathText(root.root_name()))) path=root/path.relative_path();
         }
         return netstorm::o::TryRead(path);
-    });
+    },fileNames_.get());
 }
 // 등록 archive만 조회하는 새 읽기 경계이며 기존 TryRead/Read의 disk 우선순위는 바꾸지 않는다.
 std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryReadArchiveOnly(std::string_view name,bool secondary) const {
@@ -222,7 +225,7 @@ std::uint32_t BaseFileSystem::Probe(std::string_view name) const {
     const auto primary=PathText(std::filesystem::absolute(base_).lexically_normal()),secondary=PathText(std::filesystem::absolute(secondary_).lexically_normal());
     return ProbeBaseFileByPolicy(name,[&](auto site,auto query) {
         if (site==BaseFileReadSite::PrimaryArchive || site==BaseFileReadSite::SecondaryArchive) return ContainsArchiveOnly(query,site==BaseFileReadSite::SecondaryArchive);
-        auto path=NativePath(site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk ? primary : secondary,query));
+        auto path=NativePath(site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk ? primary : secondary,query,*fileNames_));
 #ifdef _WIN32
         if (site==BaseFileReadSite::DirectDisk && !path.has_root_directory()) {
             const auto root=NativePath(primary),drive=path.root_name();if (drive.native().size()==2 && drive.native()[1]==L':' && AsciiLower(PathText(drive))==AsciiLower(PathText(root.root_name()))) path=root/path.relative_path(); // 원본 chdir과 달리 호스트 CWD를 보존하는 기존 Windows10/11 호환 해석이다.
@@ -232,7 +235,7 @@ std::uint32_t BaseFileSystem::Probe(std::string_view name) const {
         auto* file=std::fopen(path.c_str(),"rb");
 #endif
         if (!file) return false;static_cast<void>(std::fclose(file));return true;
-    });
+    },fileNames_.get());
 }
 // 찾지 못하면 호출자에게 예외로 알린다.
 std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
@@ -246,8 +249,7 @@ bool BaseFileSystem::ReadOnly(std::string_view name) const {
     name=name.substr(0,name.find('\0'));if (name.empty()) throw std::logic_error("원본 Basefile.cpp 진단1152: fileName && *fileName");
     auto primary=PathText(std::filesystem::absolute(base_).lexically_normal()),secondary=PathText(std::filesystem::absolute(secondary_).lexically_normal()); //원문 getcwd/CD root를 실제 게임 자료 root로 대여하며 프로세스 CWD는 바꾸지 않는다.
     std::replace(primary.begin(),primary.end(),'/','\\');std::replace(secondary.begin(),secondary.end(),'/','\\');
-    auto slashes=std::string(name);std::replace(slashes.begin(),slashes.end(),'/','\\'); //FileSpec은 장치 판정 전에 기존 backslash 유무를 확인하고 나서 구분자를 바꾼다.
-    const bool device=name.find(':')!=name.npos || (name.find('\\')!=name.npos && slashes.starts_with("\\\\"));
+    const bool device=!ReadBaseFileDevice(name,*fileNames_).empty(); // 원문41ad10의 장치 getter도 같은10칸 고리를 먼저 전진시킨다.
     const auto native=[&](std::string_view value) { //Windows10/11 Unicode 설치 이름은 원본 ANSI 대신 UTF-8/W CRT로 보존한다. 같은 드라이브의 상대 이름은 원본 게임 CWD 기준이다.
         auto path=NativePath(value);const auto drive=path.root_name();
         if (device && !path.has_root_directory() && drive.native().size()==2 && drive.native()[1]==L':' && AsciiLower(PathText(drive))==AsciiLower(PathText(NativePath(primary).root_name()))) path=NativePath(primary)/path.relative_path();
@@ -265,10 +267,10 @@ bool BaseFileSystem::ReadOnly(std::string_view name) const {
     std::string resolved; //직접 출처5 또는 기본1/보조3에서 선택한 실제 stat 이름이며 아카이브 이름은 stat하지 않는다.
     if (device) resolved=name;
     else {
-        resolved=JoinBaseFileRoot(primary,name);
+        resolved=JoinBaseFileRoot(primary,name,*fileNames_);
         if (!opens(resolved)) {
             if (ContainsArchiveOnly(name)) return true;
-            resolved=JoinBaseFileRoot(secondary,name);
+            resolved=JoinBaseFileRoot(secondary,name,*fileNames_);
             if (!opens(resolved)) {
                 if (ContainsArchiveOnly(name,true)) return true;
                 throw std::logic_error("원본 Basefile.cpp 진단1156: trueFileName");

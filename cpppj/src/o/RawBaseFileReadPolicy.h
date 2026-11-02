@@ -9,6 +9,7 @@
 
 // UI/FILE 객체를 새로 소유하지 않고 선택된 실제 자료 조회만 빌리는 공통 정책이다.
 namespace netstorm::o {
+class RawFileName; // 파일 계층이 소유한 실제 경로 고리를 호출 위치에서 빌린다.
 // 원문이 실제로 방문하는 다섯 읽기 위치다. 장치 경로 실패 뒤에는 기본 디스크를 다시 방문하지 않는다.
 enum class BaseFileReadSite : std::uint32_t {
     DirectDisk=0, //원래 장치 경로를 직접 연다.
@@ -21,8 +22,10 @@ enum class BaseFileReadSite : std::uint32_t {
 using BaseFileReadLookup=std::function<std::optional<std::vector<std::uint8_t>>(BaseFileReadSite,std::string_view)>;
 //459c60(-2,root,-3,name,0)의 NUL/구분자/끝 구분자 조합이다. 실제 Help도 같은 몸체를 쓴다.
 std::string JoinBaseFileRoot(std::string_view root,std::string_view name);
+std::string JoinBaseFileRoot(std::string_view root,std::string_view name,RawFileName& formatter); // 실제 VFS/Client는 이 공유 고리를 사용하며 결과 바이트만 소유 문자열로 복사한다.
+std::string_view ReadBaseFileDevice(std::string_view name,RawFileName& formatter); //459610의 기본 접두/구분자 처리 뒤459900의 실제 장치 문자열 고리 한 칸을 사용한다.
 //0041b4c0의 읽기0 조회 부분이다. 미발견은 기존 TryRead 계약의nullopt로 반환하며 FILE/예외 객체 ABI를 합성하지 않는다.
-std::optional<std::vector<std::uint8_t>> ReadBaseFileByPolicy(std::string_view name,std::string_view primaryRoot,const BaseFileReadLookup& lookup);
+std::optional<std::vector<std::uint8_t>> ReadBaseFileByPolicy(std::string_view name,std::string_view primaryRoot,const BaseFileReadLookup& lookup,RawFileName* formatter=nullptr);
 //0041ab10의 존재 조회다. 직접 장치는5/0, 상대 이름은 기본TAFF2→기본disk1→보조disk3→보조TAFF4/0이다. 내용은 읽지 않는다.
-std::uint32_t ProbeBaseFileByPolicy(std::string_view name,const std::function<bool(BaseFileReadSite,std::string_view)>& lookup);
+std::uint32_t ProbeBaseFileByPolicy(std::string_view name,const std::function<bool(BaseFileReadSite,std::string_view)>& lookup,RawFileName* formatter=nullptr);
 }

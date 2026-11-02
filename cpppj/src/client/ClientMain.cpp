@@ -189,7 +189,7 @@ Client::Client(ClientOptions options)
       chatWindowGlobals_(std::make_shared<ClientChatWindowGlobals>()),
       nsInfoGlobals_(std::make_shared<ClientNsInfoGlobals>()),
       chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
-      staticStrings_(std::make_shared<ClientStaticStrings>()),
+      staticStrings_(std::make_shared<ClientStaticStrings>(files_.FileNameOwner())),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)),trace_(std::make_unique<ClientTraceGlobals>()) {
     files_.RegisterArchives(); //원본441790처럼 기본 폴더의 모든*.tarc를 Win32 반환 순서로 등록한다.

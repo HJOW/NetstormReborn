@@ -2930,3 +2930,10 @@ set_source_files_properties(HtmlScriptCommandNamesTests.cpp PROPERTIES COMPILE_D
 add_executable(netstorm_terrain_cache_tests FocusedTestMain.cpp TerrainStampTests.cpp ClientRandomGlobalsTests.cpp)
 target_link_libraries(netstorm_terrain_cache_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_terrain_cache_tests)
+
+# 실제 VFS/Client/저장 상태가 공유하는 경로 고리와 기존 원문/파일 회귀만 집중 실행한다(728).
+target_sources(netstorm_tests PRIVATE FilePathClientTests.cpp)
+set_source_files_properties(FilePathClientTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FILE_NAME_DEVICE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/file-name-device-x86.tsv\"")
+add_executable(netstorm_file_path_client_tests FocusedTestMain.cpp FilePathClientTests.cpp FileNameTests.cpp StaticStringsTests.cpp SavedStateFilesTests.cpp BaseFileReadPolicyTests.cpp BaseFileSecondaryTests.cpp)
+target_link_libraries(netstorm_file_path_client_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_file_path_client_tests)

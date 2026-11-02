@@ -4,6 +4,7 @@
 #include "client/NativeMainMenuState.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "o/Win32FileError.h"
+#include "o/RawFileName.h" // 각 독립 파일 장치가 같은 경로 고리를 명시 소유한다.
 #include <array>
 #include <cerrno>
 #include <chrono>
@@ -44,35 +45,38 @@ TEST_CASE(SavedStateFiles_NativeCrt263AndFirstDuplicateErrorMapping) {
 
 // 파일명 조회는 쓰지 않으며 실제 Unicode 삭제도 지정한 한 파일만 없애야 한다.
 TEST_CASE(SavedStateFiles_UnicodeExactTargetAndSuccessfulCrtErrorPreservation) {
-    const auto root=StateWork("success"),path=SavedStateFilePath(root);CHECK(!std::filesystem::exists(root));
+    netstorm::o::RawFileName names; // 실제 Client와 같이 파일명 조회/삭제의 동일 고리를 사용한다.
+    const auto root=StateWork("success"),path=SavedStateFilePath(root,names);CHECK(!std::filesystem::exists(root));
     CHECK(path==std::filesystem::absolute(root/"d"/"!state.dat") && path.filename()==L"!state.dat");
     std::filesystem::create_directories(path.parent_path());WriteStateTest(path,"state bytes");WriteStateTest(path.parent_path()/"other.dat","keep");WriteStateTest(path.parent_path()/"options.cfg","options");
-    errno=E2BIG;static_cast<void>(::_set_doserrno(0x11223344UL));CHECK(DeleteSavedStateFile(root)==0);
+    errno=E2BIG;static_cast<void>(::_set_doserrno(0x11223344UL));CHECK(DeleteSavedStateFile(root,names)==0);
     unsigned long dos{};CHECK(::_get_doserrno(&dos)==0 && dos==0x11223344UL && errno==E2BIG);
     CHECK(!std::filesystem::exists(path) && ReadStateTest(path.parent_path()/"other.dat")=="keep" && ReadStateTest(path.parent_path()/"options.cfg")=="options");
 }
 
 // 원문 DeleteFile의 부재/readonly/디렉터리 실패는 파일 속성·내용·디렉터리를 바꾸지 않는다.
 TEST_CASE(SavedStateFiles_MissingReadonlyAndDirectoryKeepOriginalFailureSemantics) {
-    const auto root=StateWork("errors"),path=SavedStateFilePath(root);std::filesystem::create_directories(path.parent_path());
-    CHECK(DeleteSavedStateFile(root)==-1 && errno==ENOENT);unsigned long dos{};CHECK(::_get_doserrno(&dos)==0 && dos==ERROR_FILE_NOT_FOUND);
+    netstorm::o::RawFileName names; // 실제 Client와 같이 파일명 조회/삭제의 동일 고리를 사용한다.
+    const auto root=StateWork("errors"),path=SavedStateFilePath(root,names);std::filesystem::create_directories(path.parent_path());
+    CHECK(DeleteSavedStateFile(root,names)==-1 && errno==ENOENT);unsigned long dos{};CHECK(::_get_doserrno(&dos)==0 && dos==ERROR_FILE_NOT_FOUND);
     WriteStateTest(path,"protected bytes");const auto attributes=::GetFileAttributesW(path.c_str());CHECK(attributes!=INVALID_FILE_ATTRIBUTES);
-    CHECK(::SetFileAttributesW(path.c_str(),attributes|FILE_ATTRIBUTE_READONLY)!=0);CHECK(DeleteSavedStateFile(root)==-1 && errno==EACCES);
+    CHECK(::SetFileAttributesW(path.c_str(),attributes|FILE_ATTRIBUTE_READONLY)!=0);CHECK(DeleteSavedStateFile(root,names)==-1 && errno==EACCES);
     CHECK(::_get_doserrno(&dos)==0 && dos==ERROR_ACCESS_DENIED && ReadStateTest(path)=="protected bytes" && (::GetFileAttributesW(path.c_str())&FILE_ATTRIBUTE_READONLY));
-    CHECK(::SetFileAttributesW(path.c_str(),attributes)!=0);CHECK(DeleteSavedStateFile(root)==0);std::filesystem::create_directory(path);
-    CHECK(DeleteSavedStateFile(root)==-1 && errno==EACCES && std::filesystem::is_directory(path));
+    CHECK(::SetFileAttributesW(path.c_str(),attributes)!=0);CHECK(DeleteSavedStateFile(root,names)==0);std::filesystem::create_directory(path);
+    CHECK(DeleteSavedStateFile(root,names)==-1 && errno==EACCES && std::filesystem::is_directory(path));
 }
 
 // 명시 State3 입력은 실제 파일 장치를 호출하되 승패 판정/월드/게임을 만들지 않는다.
 TEST_CASE(SavedStateFiles_NativeMainMenuIgnoresRemoveFailureAndRecomputesSecondPath) {
+    netstorm::o::RawFileName names; // 실제 Client와 같이 파일명 조회/삭제의 동일 고리를 사용한다.
     for (std::uint32_t scenario=0;scenario<3;++scenario) { // 성공·처음부터 부재·같은 부모의 두 삭제를 구별한다.
-        const auto root=StateWork(std::to_string(scenario)),path=SavedStateFilePath(root);std::filesystem::create_directories(path.parent_path());if (scenario!=1) WriteStateTest(path,"state");
+        const auto root=StateWork(std::to_string(scenario)),path=SavedStateFilePath(root,names);std::filesystem::create_directories(path.parent_path());if (scenario!=1) WriteStateTest(path,"state");
         ClientLocalStateGlobals local;local.State().current[0]=3;local.State().phase[0]=scenario==2 ? 7U : 4U;
         std::uint32_t source=scenario==2 ? 1U : 0U,outcome=scenario==1 ? 2U : 1U,first{},editor{};bool battle{},tail{};
         std::array<char,80> background{};std::array<std::uint8_t,32> current{},pending{};std::vector<std::int32_t> removed;std::vector<std::string> music;
         NativeMainMenuStateGlobals globals{local.State(),source,outcome,first,battle,editor,background,current,pending,{},{}};
         NativeMainMenuStateHooks hooks;hooks.configInt=[](auto key) { CHECK(key=="intro" || key=="WelcomeGiven");return 1; };
-        hooks.deleteSavedState=[&] { removed.push_back(DeleteSavedStateFile(root)); };hooks.requestMusic=[&](auto name) { CHECK(!std::filesystem::exists(path));music.emplace_back(name); };
+        hooks.deleteSavedState=[&] { removed.push_back(DeleteSavedStateFile(root,names)); };hooks.requestMusic=[&](auto name) { CHECK(!std::filesystem::exists(path));music.emplace_back(name); };
         hooks.sourceBackground=[](auto type)->std::optional<std::string> { CHECK(type==1);return std::nullopt; };
         hooks.prefix=[] {};hooks.hudPrefix=[] {};hooks.title=[] {};hooks.closeGuide=[] {};hooks.tell=[](auto section) { CHECK(section=="Blank"); };hooks.startup=[] { return 0U; };hooks.tail=[&] { tail=true; };
         CHECK(InstallNativeMainMenuState(globals,hooks)==netstorm::o::LocalMissionParentResult::Commit && tail && !outcome);

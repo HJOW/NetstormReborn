@@ -2,6 +2,7 @@
 #pragma once
 #include <cstdint>
 #include <filesystem>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
@@ -9,6 +10,7 @@
 #include <vector>
 
 namespace netstorm::o {
+class RawFileName; // VFS와 실제 Client의 모든 경로 소비자가 공유할 원문10칸 작성기다.
 // 원본 TAFF 헤더와 설정 파일이 공유하는 XOR 키. 엔트리마다 키 위치는 0부터 시작한다.
 inline constexpr std::string_view kXorKey = "mydoghasfleas";
 // 파일·엔트리 시작 기준 XOR를 적용한다. 다시 적용하면 원래 바이트가 된다.
@@ -54,6 +56,7 @@ class BaseFileSystem {
 public:
     // 기본 경로·보조 경로를 설정한다. 등록 순서는 호출자가 원본 순서에 맞춰 지정한다.
     explicit BaseFileSystem(std::filesystem::path base, std::filesystem::path secondary = {});
+    std::shared_ptr<RawFileName> FileNameOwner() const; // 파일 조회와 HUD/저장 상태가 같은 고리 주소/번호를 빌린다. 파일 내용은 읽지 않는다.
     //0041b9d0/41bc20/41bc30: 두 목록을 독립적으로 등록한다. 같은 목록의 중복·파일/헤더/인덱스 읽기 실패는false다.
     bool RegisterArchive(const std::filesystem::path& path,bool secondary=false);
     //00441790: 선택한 root의 *.tarc를 실제 Win32 열거 순서로 모두 등록한다. 잘못된 후보는 원문처럼 건너뛴다.
@@ -87,5 +90,6 @@ private:
     std::vector<TaffArchive> archives_;
     std::vector<std::string> secondaryArchiveNames_; //00544f80 보조 목록의 대소문자 무시 중복 키이며 기본 목록과 별도다.
     std::vector<TaffArchive> secondaryArchives_; //보조/CD 아카이브의 실제 등록 순서와 읽기 전용 바이트 소유자다.
+    std::shared_ptr<RawFileName> fileNames_; // 새로운 독립 VFS에서만 BSS0을 만들고 실제 Client와 공유해 먼저 해제하지 않는다.
 };
 }

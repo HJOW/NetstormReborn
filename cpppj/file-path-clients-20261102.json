@@ -1,0 +1,128 @@
+{
+  "unit": 728,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 728,
+    "version": "11.01",
+    "sha256": "35f08c1c1fa1d08929fe1c5ac0b215356cf33eba7ba4f3d5f2cc0e5a4433d9ee"
+  },
+  "implementation": [
+    "VFS/ClientStaticStrings가 같은 shared 경로 고리 소유권을 보유",
+    "기본/보조 TryRead·Probe·ReadOnly가 전체459c60 조합과459900 장치 getter를 실행",
+    "State1/3·Abort의 저장 상태 이름/삭제도 같은 고리를 사용하며 기존 Unicode W/오류 정책 유지",
+    "원문 장치 getter는 비장치에서도 고리를 선증가하고 전체 입력 복사 뒤 첫BYTE만NUL. UNC/colon 절삭과NUL뒤바이트 유지"
+  ],
+  "native": {
+    "report": "cpppj/file-path-consumers-native-20261102.json",
+    "observations": 71,
+    "deviceRows": 32,
+    "devicePrecisions": [
+      "027f",
+      "037f"
+    ],
+    "readRingAdvances": [
+      2,
+      3,
+      3,
+      1,
+      2
+    ],
+    "readOperations": [
+      [
+        "00459900",
+        "00459c60"
+      ],
+      [
+        "00459900",
+        "00459c60",
+        "00459c60"
+      ],
+      [
+        "00459900",
+        "00459c60",
+        "00459c60"
+      ],
+      [
+        "00459900"
+      ],
+      [
+        "00459900",
+        "00459c60"
+      ]
+    ],
+    "savedStatePath": ".\\d\\!state.dat",
+    "savedStateAdvances": 1,
+    "rerunMatches": true
+  },
+  "before": {
+    "focusedTests": 2,
+    "failedChecks": 20,
+    "reason": "원문 장치 getter의 추가 고리 소모를 반영한 기대에 기존 순수 bool 연결이 불일치",
+    "log": "extracted/cpp-file-paths-728/tests-before-device.log"
+  },
+  "tests": {
+    "final": 22,
+    "failed": 0,
+    "new": 3,
+    "existing": 19,
+    "nativeRowsReplayed": 1902,
+    "log": "extracted/cpp-file-paths-728/tests-v2.log"
+  },
+  "build": {
+    "final": "extracted/cpp-file-paths-728/build-v2.log",
+    "warnings": 0,
+    "errors": 0
+  },
+  "gui": {
+    "processes": 1,
+    "seconds": 22.748800899993512,
+    "frames": 220,
+    "returnCode": 0,
+    "timedOut": false,
+    "unicodeGameRoot": true,
+    "editorLoaded": true,
+    "mainReturned": true,
+    "originalsUnchanged": true,
+    "dataUnchanged": true,
+    "capture": "extracted/cpp-file-paths-728/live-v1/editor.bmp",
+    "captureReviewed": true
+  },
+  "protection": {
+    "baselineFiles": 2642,
+    "unchangedFiles": 2641,
+    "agentAuthoredChanges": 0,
+    "externalCommittedChanges": [
+      {
+        "path": "AGENTS.md",
+        "commit": "98b2f20cea2d3028572b82a8b10208d21f846049",
+        "beforeSha256": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+        "afterSha256": "60068235bf59921c806b969ee2b43d93179105949a39b5f3d524d0773e59a8f2",
+        "reason": "진행 중 사용자가 커밋한8차 시나리오 편집/기본english 자동 생성 요구. 이 작업에서 수정하지 않음"
+      }
+    ],
+    "newFixtures": 1,
+    "currentTotal": 2643,
+    "fixtureTotal": 819
+  },
+  "limits": [
+    "원문 읽기5분기의 파일/TAFF·CRT 조회와 저장 상태 고정sprintf는 명시 경계이며 OS/게임을 실행한 원문 관측이 아니다",
+    "새32행은 전체459900/strchr를 실행했다. FileSpec 전체 와일드카드/FILE 예외ABI는 별도다",
+    "값형 독립 정책 호출은 optional formatter 없이 기존 조회 계약을 유지하며 실제 VFS는 같은 소유자를 반드시 전달한다",
+    "Options/Startup·Capture·CD·Help 등 다른 경로 고리 소비자와 전체 공용 파일 계층은 남는다",
+    "10.78 복원이다.10.72 전체 실행/동일성을 새로 검증하지 않았다",
+    "새 전체34/전체C++/ZIP·물리 입력/PCM·포획/희생·특정 적 공격/승리·공중3종 전용·MP/통신 검사는0이다"
+  ],
+  "additionalRequirement": {
+    "commit": "98b2f20c",
+    "phase": 8,
+    "implemented": false,
+    "content": "Edit 시나리오 UI·기본 english 자동 생성·파일 부재 TestBattle 종료 개선",
+    "order": "기존1~7차 뒤 후순위"
+  },
+  "rawDirectory": "extracted/cpp-file-paths-728"
+}

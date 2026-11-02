@@ -1,0 +1,75 @@
+{
+  "unit": 728,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "readRows": [
+    {
+      "label": "primary",
+      "ringAdvances": 2,
+      "operations": [
+        "00459900",
+        "00459c60"
+      ],
+      "trace": "433a5c62617365\t645c6f6e652e646174\t2\t1\tok\t1\t1:433a5c626173655c645c6f6e652e646174"
+    },
+    {
+      "label": "secondary",
+      "ringAdvances": 3,
+      "operations": [
+        "00459900",
+        "00459c60",
+        "00459c60"
+      ],
+      "trace": "433a5c62617365\t645c74776f2e646174\t8\t1\tok\t3\t1:433a5c626173655c645c74776f2e646174;2:645c74776f2e646174;3:443a5c646973635c645c74776f2e646174"
+    },
+    {
+      "label": "missing",
+      "ringAdvances": 3,
+      "operations": [
+        "00459900",
+        "00459c60",
+        "00459c60"
+      ],
+      "trace": "433a5c62617365\t6d697373696e672e646174\t0\t1\tmissing\t-1\t1:433a5c626173655c6d697373696e672e646174;2:6d697373696e672e646174;3:443a5c646973635c6d697373696e672e646174;4:6d697373696e672e646174"
+    },
+    {
+      "label": "direct",
+      "ringAdvances": 1,
+      "operations": [
+        "00459900"
+      ],
+      "trace": "433a5c62617365\t433a5c626173655c6f6e652e646174\t1\t1\tok\t0\t0:433a5c626173655c6f6e652e646174"
+    },
+    {
+      "label": "archive",
+      "ringAdvances": 2,
+      "operations": [
+        "00459900",
+        "00459c60"
+      ],
+      "trace": "433a5c62617365\t645c617263686976652e646174\t4\t1\tok\t2\t1:433a5c626173655c645c617263686976652e646174;2:645c617263686976652e646174"
+    }
+  ],
+  "savedState": {
+    "index": 1,
+    "path": ".\\d\\!state.dat",
+    "slotHex": "2e5c645c2173746174652e6461740000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "deviceRows": 32,
+  "observations": 71,
+  "readBoundary": "기존 읽기 부모/실제FileSpec·장치판정·전체459c60을 실행하며 파일/TAFF·CRT조회는 기존 명시 장치다",
+  "savedBoundary": "실제4b5470→459c60/strchr이며 고정!%s.dat/state의sprintf만 명시 장치다",
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_file_path_consumers.py": "4c0c5a0792e9f65293efed981897ef7192dd5d6c77469c4ef77487c6654772df",
+    "tools\\decomp_basefile_read_policy.py": "557f7c8cd5c804b6688c8b7a821c9d9f66c8e20a758298bbc18775708aae88e6",
+    "tools\\decomp_file_name_formatter.py": "0f9353dd0dee412f5fefc306baab2970f894c07476825d856e13080879e6fb2e",
+    "cpppj\\tests\\fixtures\\file-name-device-x86.tsv": "861219c034b010426940b649c5c8e9b20da7d2c1051404da7da977b3a8e37089"
+  }
+}
