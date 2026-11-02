@@ -2548,6 +2548,8 @@ set_source_files_properties(InventoryBlinkTests.cpp PROPERTIES COMPILE_DEFINITIO
 add_executable(netstorm_menu_session_tests FocusedTestMain.cpp CampaignObjectMenuTests.cpp)
 target_link_libraries(netstorm_menu_session_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_menu_session_tests)
+# 제품의 편집 전용 CHEAT 노출을 원문 작성기 자체와 구별하며 기존 양판본/파생 fixture도 집중 실행할 수 있게 한다(725).
+target_sources(netstorm_menu_session_tests PRIVATE ObjectMenuTests.cpp ObjectMenuVariantsTests.cpp)
 get_target_property(_netstorm_menu_session_definitions netstorm_tests COMPILE_DEFINITIONS) # 기존 공용 fixture 경로를 같은 값으로 빌린다.
 target_compile_definitions(netstorm_menu_session_tests PRIVATE ${_netstorm_menu_session_definitions})
 

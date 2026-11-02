@@ -4473,7 +4473,7 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     auto& inputs=chain->ui; // 이 주소는 반환 객체의 수명 동안 바뀌지 않는다.
     inputs.objectState.localOwnerRead=[current] { return current->playerState.battleOwner; };
     inputs.objectState.editorRead=[current] { return current->globals.editor!=0; };
-    inputs.objectState.specialRead=[current] { return current->playerState.special; };
+    inputs.objectState.specialRead=[current] { return current->globals.editor && current->playerState.special; }; // 사용자 지정 CHEAT 편집 전용 규칙을 실제 공통 메뉴에 적용한다. 원문 작성기의 독립 special 분기는 참조 대조용으로 유지한다.
     inputs.objectState.chargeBlockedRead=[current] { return current->globals.missionPost; };
     auto reads=inputs.identity; // 주소/실패 이름/선택적 metadata는 현재 Client의 실제 입력을 유지한다.
     reads.localOwner=inputs.objectState.localOwnerRead;reads.subscriber=[current] { return current->globals.mySubscriber; };
@@ -4533,6 +4533,10 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     factory.baseMenu=[chain](Sid sid) { chain->object->OpenDamageable(sid); };
     chain->factoryMenu=std::make_unique<RawFactoryMenu>(current->core.pool,current->core.types,current->contentFinder,current->constructionExcludedTypes,chain->factoryState,std::move(factory));
     auto variants=inputs.variants; // UI의 실제 작성기는 보존하고 게임 값만 현재 소유자에 연결한다.
+    variants.item=[current,item=std::move(variants.item)](auto label,auto command,auto parameter,auto include,auto enabled) {
+        if (!current->globals.editor && command==ObjectMenuVariantCommandValue(0x5427ac).value()) include=0; // CHEAT Dig Up은 Edit 밖에서 숨기며 Edit 안의 원문 special/include/enabled 조건은 그대로 전달한다.
+        if (!item) throw std::logic_error("파생 객체 메뉴의 실제 항목 작성기 없음");item(label,command,parameter,include,enabled);
+    };
     variants.global=[current](std::uint32_t address)->std::uint32_t {
         if (const auto code=ObjectMenuVariantCommandValue(address)) return *code;
         switch (address) { case 0x594fa4:return current->globals.missionPost;case 0x5c85a4:return current->globals.editor;case 0x55a480:return current->playerState.special;case 0x540c70:return current->playerState.battleOwner;default:throw std::logic_error("파생 객체 메뉴 현재 전역 미연결"); }

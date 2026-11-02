@@ -475,3 +475,4 @@ TEST_CASE(CampaignFactory_WorkshopDuplicatePreservesWarningAndDeletesOld) {
 }
 
 #include "CampaignDetonateInputTests.inc" // 같은 실제 메뉴/자산 장치를 사용해 Detonate 입력을 확인한다.
+#include "CampaignEditorCheatMenuTests.inc" // 실제 controlled 메뉴의 편집 전용 CHEAT 노출과 원문 추가 조건을 확인한다(725).

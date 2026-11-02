@@ -1,0 +1,109 @@
+{
+  "unit": 725,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 725,
+    "version": "11.01",
+    "sha256": "82daddd899323ddb01dc43d8304225a35ae0374465e6a77d011da9958bde6032"
+  },
+  "userRule": "2026-10-28 CHEAT 항목은 Edit에서만 표시하고 원문 추가 조건을 유지",
+  "problem": "실제 Session의 editor0/special1에서 공통 CHEAT 항목과 Dig Up이 노출됨",
+  "before": {
+    "tests": 1,
+    "failedChecks": 7,
+    "log": "extracted/cpp-editor-cheat-menu-725/tests-before.log"
+  },
+  "fix": [
+    "actual ObjectMenuState special getter requires current editor and special",
+    "actual variant item writer forces include0 for CHEAT Dig Up outside editor and preserves original include/enabled within editor"
+  ],
+  "tests": {
+    "finalTotal": 7,
+    "failed": 0,
+    "new": 1,
+    "actualMenus": 8,
+    "nativeRowsReplayed": 2458,
+    "groups": [
+      {
+        "filter": "CampaignEditorCheatMenu_",
+        "total": 1,
+        "failed": 0,
+        "log": "extracted\\cpp-editor-cheat-menu-725\\tests-final-CampaignEditorCheatMenu_.log",
+        "sha256": "ca674d5cde3a92ae7f66439400aeef8353d36d1af6c19a9d1700140767ac2c1e"
+      },
+      {
+        "filter": "ObjectMenu_",
+        "total": 4,
+        "failed": 0,
+        "log": "extracted\\cpp-editor-cheat-menu-725\\tests-final-ObjectMenu_.log",
+        "sha256": "47f29e845b7faa17c471f53c0cdd2c6da7dedf4834f88b14da49644489971493"
+      },
+      {
+        "filter": "ObjectMenuVariants_",
+        "total": 1,
+        "failed": 0,
+        "log": "extracted\\cpp-editor-cheat-menu-725\\tests-final-ObjectMenuVariants_.log",
+        "sha256": "a468dceadb6b25cf627f2f5878bb3a37a09b5467d28be816d59d75319b9b8bd0"
+      },
+      {
+        "filter": "CampaignDetonateInput_",
+        "total": 1,
+        "failed": 0,
+        "log": "extracted\\cpp-editor-cheat-menu-725\\tests-final-CampaignDetonateInput_.log",
+        "sha256": "7ff33acf617e5651d47f65ce06632f4c4c650fdd315d4de4ecabd6dbd3e61d42"
+      }
+    ]
+  },
+  "builds": {
+    "before": "extracted/cpp-editor-cheat-menu-725/build-before.log",
+    "productAndFocused": "extracted/cpp-editor-cheat-menu-725/build-after.log",
+    "referenceFocused": "extracted/cpp-editor-cheat-menu-725/build-reference.log",
+    "exitCodes": [
+      0,
+      0,
+      0
+    ]
+  },
+  "protected": {
+    "files": 2641,
+    "changed": []
+  },
+  "gameLaunches": 0,
+  "newMultiplayerTests": 0,
+  "limitations": [
+    "원문 독립 작성기의 special 분기는 참조용으로 유지하고 실제 제품 메뉴의 사용자 노출 규칙과 구별함",
+    "전체 동일성/자연 완주·현재 전체34/ZIP·물리 입력/PCM 검증은 아님",
+    "새 게임/MP·통신·제외 재현/공중3종 전용 검사는 실행하지 않음"
+  ],
+  "files": [
+    {
+      "path": "cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "a36fd34bc6de6ec12746e2c1f50dcdd9c287bcce6ab04711df90e63c92dd4a3e"
+    },
+    {
+      "path": "cpppj/src/client/RawObjectMenu.cpp",
+      "sha256": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef"
+    },
+    {
+      "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+      "sha256": "070542ffe01249e9682d16f4768668730fcce15a454a4bb3333f856e24dd0073"
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "sha256": "00dfd4ecb37c484450b8bd401a1f308903a9e1918603820b0c119035a7f16369"
+    },
+    {
+      "path": "cpppj/tests/CampaignEditorCheatMenuTests.inc",
+      "sha256": "403587280e1934bab72233f30722e959088ac1c4c97d9a585003b070d8689a48"
+    },
+    {
+      "path": "cpppj/tests/CMakeLists.txt",
+      "sha256": "df7798924be778cbdf3e1d3c3524cdd27a69490f3b4f7c947a05f07c2aff56ba"
+    }
+  ]
+}
