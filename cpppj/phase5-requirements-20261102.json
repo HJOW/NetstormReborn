@@ -1,0 +1,68 @@
+{
+  "unit": 733,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "type": "요구갱신/정적입출력목록·제품코드변경없음",
+  "product": {
+    "unit": 732,
+    "version": "11.01",
+    "sha256": "d25df1aec10ae397355ec4f9e9842a1e2318e2890474712cadbe8721985821e6",
+    "peMachine": "0x8664/AMD64"
+  },
+  "requirements": [
+    {
+      "commit": "aaafbbc4",
+      "scope": "5차는일반권한/읽기전용설치에서도정상실행.모든자동생성파일/디렉터리와읽기경로를Saved Games/Netstorm하위로전환",
+      "implemented": false
+    },
+    {
+      "commit": "61067075",
+      "scope": "cpppj Windows10/11 x86-64/AMD64대상·Windows11 ARM지원고려",
+      "armBuildOrRuntimeVerified": false
+    }
+  ],
+  "inventory": {
+    "report": "cpppj/phase5-file-inventory-20261102.json",
+    "sourceFiles": 1709,
+    "candidateSites": 50,
+    "families": 12,
+    "rerunMatches": true,
+    "implemented": false
+  },
+  "protection": {
+    "baselineFiles": 2647,
+    "unchangedFiles": 2646,
+    "agentAuthoredChanges": 0,
+    "externalCommittedChanges": [
+      {
+        "path": "AGENTS.md",
+        "commits": [
+          "aaafbbc4",
+          "61067075"
+        ],
+        "beforeSha256": "60068235bf59921c806b969ee2b43d93179105949a39b5f3d524d0773e59a8f2",
+        "afterSha256": "3134d0a2b9482da6655c48d2816a371374fc39be0136c79dda452a68cfbb2716",
+        "gitBlob": "bd50aa272a4593967045a5dc9dd3b65554f1f0b3",
+        "reason": "사용자가5차모든자동파일/읽기경로·읽기전용설치및Win10/11 x64·Win11 ARM고려조건을추가"
+      }
+    ],
+    "currentTotal": 2647,
+    "fixtureTotal": 827,
+    "newFixtures": 0
+  },
+  "builds": 0,
+  "cppTests": 0,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "limits": [
+    "정적후보는주석/읽기전용열기/동적모드도포함한다.전체writer복원/이관/실제권한검증완료가아니다",
+    "5차순서는유지한다.1~4차잔여와5차준비를혼동하지않는다",
+    "윈도우11 ARM은고려사항으로기록했으며지원완료/실기검증을주장하지않는다",
+    "현재제품은읽기전용설치대응5차가미구현이다.제품732의집중25개/CLI와전체34/ZIP645·644의기존근거를유지한다"
+  ],
+  "rawDirectory": "extracted/cpp-file-directory-733"
+}

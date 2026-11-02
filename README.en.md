@@ -12,7 +12,7 @@ Three versions are developed in parallel, and **the one you can actually play to
 
 # Current development status
 
-**November 2, 2026, cpppj unit732 / runtime product732·11.01:** Startup now preserves the original filename-construction order, local copies and unused demo reservation after file-location selection. All25 focused tests pass after262 assertions exposed missing behavior. There are48 native observations/24 frozen rows, a Unicode Startup/save/reload check and a successful1024 configuration CLI result. All2646 protected files remain unchanged. Earlier location search/CWD/archive registration, Template and general file failures/UI remain. No new game run was added; full34-path integration/ZIP remains645 on product644. The full goal remains active. See [LEFT_JOBS.md](LEFT_JOBS.md) and the [732 record](docs/exe/cpp-startup-file-names-20261102.md).
+**November 2, 2026, cpppj unit733 / runtime product732·11.01 unchanged:** The expanded phase5 requirement covers normal execution from an installation with no write permission: every automatically generated file/directory and its readers must use Saved Games/Netstorm. Twelve file families and50 static candidates were recorded; implementation remains pending. The clarified target is Windows10/11 x86-64(AMD64), with Windows11 ARM support to be considered and still unverified. No new build or game run was added. Product732 focused25/CLI evidence and full34-path integration/ZIP645 on product644 remain separate. The full goal remains active. See [LEFT_JOBS.md](LEFT_JOBS.md) and the [733 record](docs/exe/cpp-phase5-file-inventory-20261102.md).
 
 | Project | Execution and playability | Fidelity and remaining work |
 | --- | --- | --- |
