@@ -90,6 +90,7 @@ public sealed class RiftTypeTableTests
         Assert.Equal((byte)'A', type.Clusters[1].Code.Variant);
         Assert.Equal(4, type.Clusters[1].Code.Number);
         Assert.Equal(126, type.Clusters[1].Code.Flags);
+        Assert.Equal(1, type.Clusters[0].Code.Flags); // A00의 Fringe 한 단어만 비트 0x01이다(cpppj TypeParser.cpp)
         Assert.Equal(0, type.Clusters[2].Code.Flags);
         Assert.Equal(2, type.SpecialFrames.DefaultFrame);
         Assert.Equal(2, type.SpecialFrames.GumpFrame);
@@ -136,6 +137,11 @@ public sealed class RiftTypeTableTests
         Assert.Equal((byte)'Q', type.Clusters[0].Code.Side);
         Assert.Equal((byte)'P', type.Clusters[0].Code.Variant);
         Assert.Equal(7, type.Clusters[0].Code.Number);
+        // 글자가 둘이면 변형은 두 번째 글자다(cpppj TypeParser.cpp의 label[1])
+        RiftTypeDefinition two = RiftTypeDefinition.Parse("typename T {} AB12: default : \"x\" # 0;");
+        Assert.Equal((byte)'A', two.Clusters[0].Code.Side);
+        Assert.Equal((byte)'B', two.Clusters[0].Code.Variant);
+        Assert.Equal(12, two.Clusters[0].Code.Number);
         // '+' 뒤에 또 부호가 오는 값은 from_chars가 받지 않는다
         Assert.Throws<InvalidDataException>(() => RiftTypeDefinition.Parse("typename T { a=++3; }"));
         // 음의 번호는 하위 8비트만 남는다
@@ -283,6 +289,7 @@ public sealed class RiftTypeTableTests
         OriginalTypeRecord priest = Type("priest");
         Assert.True((priest.Flags1 & TypeFlag1.Container) != 0 && (priest.Flags1 & 0x8000) != 0);
         Assert.True(priest.ContainerListFlags == 0x20 && priest.Kind == "walker");
+        Assert.True((priest.Flags2 & 0x200000) != 0); // "priest" 단어 비트(cpppj TypeParser의 0x200000)
         // factory: 내용물 목록 플래그 0x10, foot_y 6은 8로 바뀐다
         OriginalTypeRecord factory = Type("sunFactory");
         Assert.Equal(TypeFlag1.Container | 0x4000000u, factory.Flags1 & (TypeFlag1.Container | 0x4000000u));

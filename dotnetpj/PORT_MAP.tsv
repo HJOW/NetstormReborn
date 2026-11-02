@@ -258,6 +258,7 @@ cpppj/src/o/ContentFormHost.cpp	Netstorm.Core/Original/RawContentFormHost.cs	9eb
 cpppj/src/o/ContentFormLifetime.cpp	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/ContentFormLifetime.h	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/DependFormHost.cpp	Netstorm.Core/Original/RawDependFormHost.cs	eb739b8095351e2931be9af9aeec2fd95b1f9b05	L1
+cpppj/src/o/DerivedConstructors.inc	Netstorm.Core/Original/OriginalConstructors.Data.cs	ea21e0e8a2e79db0e2ca5424bd053c65d8c8e4ad	L1
 cpppj/src/o/FortSerializationGlobals.h	Netstorm.Core/Original/FortSerializationGlobals.cs	d48ea75609a1fe57db3acee4e28167de1723651b	port
 cpppj/src/o/Graph.cpp	Netstorm.Core/Bridges/SurfaceGraph.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/GumpFormHost.cpp	Netstorm.Core/Original/RawGumpFormHost.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
@@ -365,8 +366,8 @@ cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalEdition.cs	4fab249c1190a4f
 cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalTypeRecord.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	L1
 cpppj/src/o/RiftType.h	Netstorm.Core/Original/RiftTypeDefinition.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/o/RiftType.h	Netstorm.Core/Original/RiftTypeFrames.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
-cpppj/src/o/RiftType.h	Netstorm.Core/Original/RiftTypeTable.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
-cpppj/src/o/RiftTypeTable.cpp	Netstorm.Core/Original/RiftTypeTable.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
+cpppj/src/o/RiftType.h	Netstorm.Core/Original/RiftTypeTable.cs	c2d292277d843ecc690a11787b8892afad5143f2	L1
+cpppj/src/o/RiftTypeTable.cpp	Netstorm.Core/Original/RiftTypeTable.cs	c2d292277d843ecc690a11787b8892afad5143f2	L1
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	L1
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Simulation/SidPool.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/SpStore.cpp	Netstorm.Core/Original/RawSpStore.cs	3d038e510444a9c7448b6d4c88cc84f78446d395	L1
@@ -394,7 +395,7 @@ cpppj/src/o/Template.cpp	Netstorm.Core/Original/FortTemplate.Parse.cs	c2d292277d
 cpppj/src/o/Template.cpp	Netstorm.Core/Original/FortTemplate.cs	d48ea75609a1fe57db3acee4e28167de1723651b	port
 cpppj/src/o/Template.h	Netstorm.Core/Original/FortTemplate.cs	d48ea75609a1fe57db3acee4e28167de1723651b	port
 cpppj/src/o/Template.h	Netstorm.Core/Original/FortTemplateRecords.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
-cpppj/src/o/TypeConstructors.inc	Netstorm.Core/Original/OriginalConstructors.Data.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
+cpppj/src/o/TypeConstructors.inc	Netstorm.Core/Original/OriginalConstructors.Data.cs	c2d292277d843ecc690a11787b8892afad5143f2	L1
 cpppj/src/o/TypeLoadOrder.cpp	Netstorm.Core/Original/RiftTypeLoadOrder.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/o/TypeParser.cpp	Netstorm.Core/Original/RiftTypeDefinition.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/platform/Bitmap.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port

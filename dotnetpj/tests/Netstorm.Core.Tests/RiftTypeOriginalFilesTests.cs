@@ -10,8 +10,9 @@ namespace Netstorm.Core.Tests;
 /// (4) 모든 .fort의 <c>TypeNames</c> 해시가 해당 판본의 타입 표 해시와 같은지 확인하고 그 파일을 끝까지 해석한다. (F1, 2026-11-02)
 /// </summary>
 /// <remarks>
-/// 이 파일의 검사는 작성 시점(2026-11-02)에 아직 실행하지 않았다(사용자 지시로 테스트 수행을 미뤘다). 해시 일치 개수의 하한은
-/// <c>docs/exe/cpp-fort-reconstruction.md</c>의 기록(패치 29개, CD판 낱개 415개 + CD 아카이브 9개)에서 가져왔으며 첫 실행에서 실제 개수로 고쳐 적는다.
+/// 이 파일의 검사는 2026-11-02에 처음 실행했다(집중 21개 통과, Core 전체 1,146개·Client 전체 841개).
+/// .fort 해시 일치 개수는 첫 실행의 실제값으로 고정한다: 전체 488개 중 패치판 29개·CD판 424개가 일치하고,
+/// 나머지 35개는 구성이 다른 옛 빌드 저장(타입 수 171개여도 구성이 다른 캠페인 5개 포함)과 TypeNames가 비어 있는 1개다.
 /// </remarks>
 public sealed class RiftTypeOriginalFilesTests
 {
@@ -266,9 +267,9 @@ public sealed class RiftTypeOriginalFilesTests
             }
         }
         Assert.True(failures.Count == 0, $"{failures.Count}개 실패: {string.Join(" | ", failures.Take(40))}");
-        // docs/exe/cpp-fort-reconstruction.md 의 기록이 하한이다(패치 29개, CD판 낱개 415개 + CD 아카이브 9개). 첫 실행에서 실제 개수로 고쳐 적는다
-        Assert.True(patchMatches >= 29, $"패치판 해시 일치 {patchMatches}개");
-        Assert.True(cdMatches >= 415 + 9, $"CD판 해시 일치 {cdMatches}개");
+        // 2026-11-02 첫 실행의 실제값이다(전체 488개: 패치판 29개, CD판 424개, 옛 빌드·빈 TypeNames 35개 제외).
+        Assert.Equal(29, patchMatches);
+        Assert.Equal(424, cdMatches);
         Assert.True(objectCount > 0);
     }
 }
