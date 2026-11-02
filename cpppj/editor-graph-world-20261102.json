@@ -1,0 +1,1027 @@
+{
+  "unit": 724,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 722,
+    "version": "11.01",
+    "sha256": "0f787b72ef4f81e95ac293a39c3217656d3629bc1871d9c96cbc47173f37bdc0",
+    "sourceChanges": 0,
+    "relink": false
+  },
+  "scenes": [
+    {
+      "case": "incremental",
+      "before": {
+        "activeGraphs": {
+          "1": [
+            678,
+            1
+          ],
+          "2": [
+            689,
+            1
+          ]
+        },
+        "bridges": 0,
+        "sha256": {
+          "pool.bin": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+          "spots.bin": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "heads.bin": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "records.bin": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+          "stack.bin": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "707ae9e74e4d4ffc503a928f847c5f31e8406035a69a4cd31f717d8dd701087f"
+        }
+      },
+      "after": {
+        "activeGraphs": {
+          "1": [
+            678,
+            1
+          ],
+          "2": [
+            689,
+            1
+          ]
+        },
+        "bridges": 0,
+        "sha256": {
+          "pool.bin": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+          "spots.bin": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "heads.bin": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "records.bin": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+          "stack.bin": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "707ae9e74e4d4ffc503a928f847c5f31e8406035a69a4cd31f717d8dd701087f"
+        }
+      }
+    },
+    {
+      "case": "reset",
+      "before": {
+        "activeGraphs": {
+          "1": [
+            678,
+            1
+          ],
+          "2": [
+            689,
+            1
+          ]
+        },
+        "bridges": 0,
+        "sha256": {
+          "pool.bin": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+          "spots.bin": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "heads.bin": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "records.bin": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+          "stack.bin": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "25553e62ee13c1db697412f1b4d851df7825fd42f9da674d857254fc2824cb15"
+        }
+      },
+      "after": {
+        "activeGraphs": {
+          "2": [
+            670,
+            1
+          ],
+          "3": [
+            681,
+            1
+          ]
+        },
+        "bridges": 0,
+        "sha256": {
+          "pool.bin": "21a9f35546a40d1107fcdcff368ca2e04ca54578b1174da4eafbff3714aecd01",
+          "spots.bin": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "heads.bin": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "records.bin": "71857377c2b0fba1560e09296c2ed00796368a0c483f0c60ef0d443b4094fdfe",
+          "stack.bin": "d82529894dd2e1ba297d466a6ab58ec248fe8667339423bbf64ce378474e0a87",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "25553e62ee13c1db697412f1b4d851df7825fd42f9da674d857254fc2824cb15"
+        }
+      }
+    },
+    {
+      "case": "joined",
+      "before": {
+        "activeGraphs": {
+          "2": [
+            1445,
+            1
+          ]
+        },
+        "bridges": 94,
+        "sha256": {
+          "pool.bin": "23e39e5da9b7ea8b648fe1cd5d1d51b2dc2f81e6b5b306793abb7afed416b753",
+          "spots.bin": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "heads.bin": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "records.bin": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "25553e62ee13c1db697412f1b4d851df7825fd42f9da674d857254fc2824cb15"
+        }
+      },
+      "after": {
+        "activeGraphs": {
+          "2": [
+            1445,
+            1
+          ]
+        },
+        "bridges": 94,
+        "sha256": {
+          "pool.bin": "23e39e5da9b7ea8b648fe1cd5d1d51b2dc2f81e6b5b306793abb7afed416b753",
+          "spots.bin": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "heads.bin": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "records.bin": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "25553e62ee13c1db697412f1b4d851df7825fd42f9da674d857254fc2824cb15"
+        }
+      }
+    },
+    {
+      "case": "owner",
+      "before": {
+        "activeGraphs": {
+          "2": [
+            1445,
+            1
+          ]
+        },
+        "bridges": 94,
+        "sha256": {
+          "pool.bin": "b9d151342114ec36f820b107d3bbdc4430fa23bfb9321071d1cfbb668e1f4abe",
+          "spots.bin": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "heads.bin": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "records.bin": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "707ae9e74e4d4ffc503a928f847c5f31e8406035a69a4cd31f717d8dd701087f"
+        }
+      },
+      "after": {
+        "activeGraphs": {
+          "2": [
+            1445,
+            1
+          ]
+        },
+        "bridges": 94,
+        "sha256": {
+          "pool.bin": "b9d151342114ec36f820b107d3bbdc4430fa23bfb9321071d1cfbb668e1f4abe",
+          "spots.bin": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "heads.bin": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "records.bin": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "707ae9e74e4d4ffc503a928f847c5f31e8406035a69a4cd31f717d8dd701087f"
+        }
+      }
+    },
+    {
+      "case": "cut",
+      "before": {
+        "activeGraphs": {
+          "1": [
+            727,
+            1
+          ],
+          "2": [
+            717,
+            1
+          ]
+        },
+        "bridges": 93,
+        "sha256": {
+          "pool.bin": "999bf6e798c6068af909477b37bfb774b498d50d2920427645a101bc300ab31a",
+          "spots.bin": "be004ca90897ed53b5c802f352c1a6952a8920cfb205eb10e12fe052b4c4fed3",
+          "heads.bin": "469ee94a3465cf85ced4c683fca3a1aac11242ce644ffe2dddc1c1c9fb6a99b0",
+          "records.bin": "2b706215d1661e75c942cd50cdbd9a48351c854ca128c5d54e0f17e21f330779",
+          "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "25553e62ee13c1db697412f1b4d851df7825fd42f9da674d857254fc2824cb15"
+        }
+      },
+      "after": {
+        "activeGraphs": {
+          "2": [
+            717,
+            1
+          ],
+          "3": [
+            727,
+            1
+          ]
+        },
+        "bridges": 93,
+        "sha256": {
+          "pool.bin": "8b69199c100dcb4a58335a624525f7062229779d8c9a02c2a18a2873fc592572",
+          "spots.bin": "be004ca90897ed53b5c802f352c1a6952a8920cfb205eb10e12fe052b4c4fed3",
+          "heads.bin": "469ee94a3465cf85ced4c683fca3a1aac11242ce644ffe2dddc1c1c9fb6a99b0",
+          "records.bin": "75b5d5d9036c11e2bb6abfc71b24b71482fa7969ecc709fa7eec9f85728b9047",
+          "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "types.tsv": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+          "meta.tsv": "25553e62ee13c1db697412f1b4d851df7825fd42f9da674d857254fc2824cb15"
+        }
+      }
+    }
+  ],
+  "nativeResults": [
+    {
+      "case": "incremental",
+      "reset": 0,
+      "control": 639,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 561919,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 1
+      },
+      "inputSha256": {
+        "pool.bin": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+        "spots.bin": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+        "heads.bin": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+        "records.bin": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+        "stack.bin": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+          "cppSha256": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "cppSha256": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "cppSha256": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+          "cppSha256": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8",
+          "cppSha256": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": "incremental",
+      "reset": 0,
+      "control": 895,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 561919,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 1
+      },
+      "inputSha256": {
+        "pool.bin": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+        "spots.bin": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+        "heads.bin": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+        "records.bin": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+        "stack.bin": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+          "cppSha256": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "cppSha256": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "cppSha256": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+          "cppSha256": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8",
+          "cppSha256": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": "reset",
+      "reset": 1,
+      "control": 639,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 3792151,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 3,
+        "Flood": 2
+      },
+      "inputSha256": {
+        "pool.bin": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+        "spots.bin": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+        "heads.bin": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+        "records.bin": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+        "stack.bin": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "21a9f35546a40d1107fcdcff368ca2e04ca54578b1174da4eafbff3714aecd01",
+          "cppSha256": "21a9f35546a40d1107fcdcff368ca2e04ca54578b1174da4eafbff3714aecd01",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "cppSha256": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "cppSha256": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "71857377c2b0fba1560e09296c2ed00796368a0c483f0c60ef0d443b4094fdfe",
+          "cppSha256": "71857377c2b0fba1560e09296c2ed00796368a0c483f0c60ef0d443b4094fdfe",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "d82529894dd2e1ba297d466a6ab58ec248fe8667339423bbf64ce378474e0a87",
+          "cppSha256": "d82529894dd2e1ba297d466a6ab58ec248fe8667339423bbf64ce378474e0a87",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": "reset",
+      "reset": 1,
+      "control": 895,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 3792151,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 3,
+        "Flood": 2
+      },
+      "inputSha256": {
+        "pool.bin": "25d7262c58ee1584491a3db7b62eb305cf43d1b6a2a23842cd385ab34275d989",
+        "spots.bin": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+        "heads.bin": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+        "records.bin": "49b3047b4332c0ca286dd31e529ddd3bea15e0561fd142984b003b32639ed87d",
+        "stack.bin": "ef38ff8ac0afd6776efbae743011617e4bd3dcef973411a15e6da92e983f53f8"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "21a9f35546a40d1107fcdcff368ca2e04ca54578b1174da4eafbff3714aecd01",
+          "cppSha256": "21a9f35546a40d1107fcdcff368ca2e04ca54578b1174da4eafbff3714aecd01",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "cppSha256": "dede06419a0afef8a014251eee9a508de82b4cad89d32972e456358cd8f36977",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "cppSha256": "60488771d0211454fa041629fdfcd92d232415c013baf5dfccc963428582d323",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "71857377c2b0fba1560e09296c2ed00796368a0c483f0c60ef0d443b4094fdfe",
+          "cppSha256": "71857377c2b0fba1560e09296c2ed00796368a0c483f0c60ef0d443b4094fdfe",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "d82529894dd2e1ba297d466a6ab58ec248fe8667339423bbf64ce378474e0a87",
+          "cppSha256": "d82529894dd2e1ba297d466a6ab58ec248fe8667339423bbf64ce378474e0a87",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": "joined",
+      "reset": 1,
+      "control": 639,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 3966841,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 2,
+        "Flood": 1
+      },
+      "inputSha256": {
+        "pool.bin": "23e39e5da9b7ea8b648fe1cd5d1d51b2dc2f81e6b5b306793abb7afed416b753",
+        "spots.bin": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+        "heads.bin": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+        "records.bin": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+        "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "23e39e5da9b7ea8b648fe1cd5d1d51b2dc2f81e6b5b306793abb7afed416b753",
+          "cppSha256": "23e39e5da9b7ea8b648fe1cd5d1d51b2dc2f81e6b5b306793abb7afed416b753",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "cppSha256": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "cppSha256": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "cppSha256": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "cppSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": "joined",
+      "reset": 1,
+      "control": 895,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 3966841,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 2,
+        "Flood": 1
+      },
+      "inputSha256": {
+        "pool.bin": "23e39e5da9b7ea8b648fe1cd5d1d51b2dc2f81e6b5b306793abb7afed416b753",
+        "spots.bin": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+        "heads.bin": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+        "records.bin": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+        "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "23e39e5da9b7ea8b648fe1cd5d1d51b2dc2f81e6b5b306793abb7afed416b753",
+          "cppSha256": "23e39e5da9b7ea8b648fe1cd5d1d51b2dc2f81e6b5b306793abb7afed416b753",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "cppSha256": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "cppSha256": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "cppSha256": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "cppSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": "owner",
+      "reset": 0,
+      "control": 639,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 571763,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 1
+      },
+      "inputSha256": {
+        "pool.bin": "b9d151342114ec36f820b107d3bbdc4430fa23bfb9321071d1cfbb668e1f4abe",
+        "spots.bin": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+        "heads.bin": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+        "records.bin": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+        "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "b9d151342114ec36f820b107d3bbdc4430fa23bfb9321071d1cfbb668e1f4abe",
+          "cppSha256": "b9d151342114ec36f820b107d3bbdc4430fa23bfb9321071d1cfbb668e1f4abe",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "cppSha256": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "cppSha256": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "cppSha256": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "cppSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": "owner",
+      "reset": 0,
+      "control": 895,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 571763,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 1
+      },
+      "inputSha256": {
+        "pool.bin": "b9d151342114ec36f820b107d3bbdc4430fa23bfb9321071d1cfbb668e1f4abe",
+        "spots.bin": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+        "heads.bin": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+        "records.bin": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+        "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "b9d151342114ec36f820b107d3bbdc4430fa23bfb9321071d1cfbb668e1f4abe",
+          "cppSha256": "b9d151342114ec36f820b107d3bbdc4430fa23bfb9321071d1cfbb668e1f4abe",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "cppSha256": "9945dcb3817e7c027e2c333e881bac579a0d749db7f29a0acbe14d842c6b6cfa",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "cppSha256": "208f8baf75a46b69d9319908562424898de94b03b9e6eb90f8ca9dea530cbaab",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "cppSha256": "381c178b9b9928b7917c15489a2fdb14e964901002029ee1af7c4bc7283db053",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "cppSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": "cut",
+      "reset": 1,
+      "control": 639,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 3965839,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 3,
+        "Flood": 2
+      },
+      "inputSha256": {
+        "pool.bin": "999bf6e798c6068af909477b37bfb774b498d50d2920427645a101bc300ab31a",
+        "spots.bin": "be004ca90897ed53b5c802f352c1a6952a8920cfb205eb10e12fe052b4c4fed3",
+        "heads.bin": "469ee94a3465cf85ced4c683fca3a1aac11242ce644ffe2dddc1c1c9fb6a99b0",
+        "records.bin": "2b706215d1661e75c942cd50cdbd9a48351c854ca128c5d54e0f17e21f330779",
+        "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "8b69199c100dcb4a58335a624525f7062229779d8c9a02c2a18a2873fc592572",
+          "cppSha256": "8b69199c100dcb4a58335a624525f7062229779d8c9a02c2a18a2873fc592572",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "be004ca90897ed53b5c802f352c1a6952a8920cfb205eb10e12fe052b4c4fed3",
+          "cppSha256": "be004ca90897ed53b5c802f352c1a6952a8920cfb205eb10e12fe052b4c4fed3",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "469ee94a3465cf85ced4c683fca3a1aac11242ce644ffe2dddc1c1c9fb6a99b0",
+          "cppSha256": "469ee94a3465cf85ced4c683fca3a1aac11242ce644ffe2dddc1c1c9fb6a99b0",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "75b5d5d9036c11e2bb6abfc71b24b71482fa7969ecc709fa7eec9f85728b9047",
+          "cppSha256": "75b5d5d9036c11e2bb6abfc71b24b71482fa7969ecc709fa7eec9f85728b9047",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "cppSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    },
+    {
+      "case": "cut",
+      "reset": 1,
+      "control": 895,
+      "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "assertions": 0,
+      "instructions": 3965839,
+      "calls": {
+        "Rebuild": 1,
+        "Allocate": 3,
+        "Flood": 2
+      },
+      "inputSha256": {
+        "pool.bin": "999bf6e798c6068af909477b37bfb774b498d50d2920427645a101bc300ab31a",
+        "spots.bin": "be004ca90897ed53b5c802f352c1a6952a8920cfb205eb10e12fe052b4c4fed3",
+        "heads.bin": "469ee94a3465cf85ced4c683fca3a1aac11242ce644ffe2dddc1c1c9fb6a99b0",
+        "records.bin": "2b706215d1661e75c942cd50cdbd9a48351c854ca128c5d54e0f17e21f330779",
+        "stack.bin": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94"
+      },
+      "typesSha256": "900ecd0dd44d7af38534ca25685b652bf62c549cfe340a8dc80ad7550eaedf05",
+      "outputs": {
+        "pool.bin": {
+          "bytes": 1638400,
+          "matches": true,
+          "nativeSha256": "8b69199c100dcb4a58335a624525f7062229779d8c9a02c2a18a2873fc592572",
+          "cppSha256": "8b69199c100dcb4a58335a624525f7062229779d8c9a02c2a18a2873fc592572",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "spots.bin": {
+          "bytes": 65536,
+          "matches": true,
+          "nativeSha256": "be004ca90897ed53b5c802f352c1a6952a8920cfb205eb10e12fe052b4c4fed3",
+          "cppSha256": "be004ca90897ed53b5c802f352c1a6952a8920cfb205eb10e12fe052b4c4fed3",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "heads.bin": {
+          "bytes": 172544,
+          "matches": true,
+          "nativeSha256": "469ee94a3465cf85ced4c683fca3a1aac11242ce644ffe2dddc1c1c9fb6a99b0",
+          "cppSha256": "469ee94a3465cf85ced4c683fca3a1aac11242ce644ffe2dddc1c1c9fb6a99b0",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "records.bin": {
+          "bytes": 1530,
+          "matches": true,
+          "nativeSha256": "75b5d5d9036c11e2bb6abfc71b24b71482fa7969ecc709fa7eec9f85728b9047",
+          "cppSha256": "75b5d5d9036c11e2bb6abfc71b24b71482fa7969ecc709fa7eec9f85728b9047",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        },
+        "stack.bin": {
+          "bytes": 16384,
+          "matches": true,
+          "nativeSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "cppSha256": "f5a3ff412009619b69fb0b647defe5aee493944d9f62501b5ca8b303c855ef94",
+          "firstDifference": null,
+          "nativeByte": null,
+          "cppByte": null
+        }
+      },
+      "passed": true
+    }
+  ],
+  "comparedBytes": 18943940,
+  "tests": {
+    "final": {
+      "cpp": 1,
+      "failed": 0,
+      "log": "extracted/cpp-editor-graph-724/tests-v3.log"
+    },
+    "native": {
+      "cases": 5,
+      "precisions": 2,
+      "calls": 10,
+      "failed": 0,
+      "log": "extracted/cpp-editor-graph-724/oracle-v2.log"
+    },
+    "v2v3Identity": {
+      "files": 70,
+      "differences": 0,
+      "log": "extracted/cpp-editor-graph-724/v2-v3-identical.json"
+    }
+  },
+  "builds": [
+    {
+      "version": 1,
+      "exitCode": 0,
+      "scope": "two islands"
+    },
+    {
+      "version": 2,
+      "exitCode": 1,
+      "reason": "test used private SetFrameField"
+    },
+    {
+      "version": 3,
+      "exitCode": 0,
+      "scope": "public SquidFrame::Set and join/owner/cut"
+    },
+    {
+      "version": 4,
+      "exitCode": 0,
+      "scope": "assert immediate component counts before rebuild"
+    }
+  ],
+  "protected": {
+    "baselineFiles": 2640,
+    "changed": [],
+    "pinned723Fixture": "e80c01260ac718d19aa662d3da923e181486883cb64e407cadee77ab8403c18c",
+    "verifiedFiles": 2641
+  },
+  "gameLaunches": 0,
+  "newMultiplayerTests": 0,
+  "files": [
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "sha256": "6607a1a0ce7639cdb491ac091a78d8a1a6d6756fb7d9a8cf7958c93b1f90dd37"
+    },
+    {
+      "path": "cpppj/tests/CampaignEditorGraphWorldTests.inc",
+      "sha256": "41f98204aa32e79d7464614901f534b13413d088c746f85b2d7bcc7f3e8b3bd5"
+    },
+    {
+      "path": "tools/cpp_editor_graph_world_oracle.py",
+      "sha256": "b0aa62dc61148cec94207b08e9b7306b8d6473f71c3ecadce984a128c2a0aa04"
+    },
+    {
+      "path": "tools/decomp_graphrebuild_oracle.py",
+      "sha256": "3067c4cc7dce2c286e11ee2cec55816d8e0c82609e1171f4d12391bd65346552"
+    },
+    {
+      "path": "tools/decomp_graphremove_oracle.py",
+      "sha256": "d2c68d51d1516f28e648abdb519c63db40b91baae7fa05f00acbc48145bbb06a"
+    },
+    {
+      "path": "tools/decomp_rawgraph_oracle.py",
+      "sha256": "5f512692a511993077de48375510b2488008b57d382509d88860c5689d99eb30"
+    },
+    {
+      "path": "tools/decomp_graph_oracle.py",
+      "sha256": "fe646925d04131f2924dac87dfe4b1bd8da717b8061f209c0085f170cbbceb51"
+    },
+    {
+      "path": "tools/decomp_creation_oracle.py",
+      "sha256": "646adc1ca6c9eaeac08a9c700324ae05ba1727416bc62070e0a066afc07dc053"
+    },
+    {
+      "path": "tools/decomp_sid_oracle.py",
+      "sha256": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff"
+    },
+    {
+      "path": "tools/decomp_pop_oracle.py",
+      "sha256": "2a50f34e6b229d5ea4611f7073877ca1e165e0bf841f32c83f17d300b6113bb6"
+    },
+    {
+      "path": "tools/decomp_display_oracle.py",
+      "sha256": "bd9a42431cdef96d3fb13accf78d5a0d6a3155243b1bbc0362d58e79f662f7a4"
+    }
+  ],
+  "limitations": [
+    "Current world supplied as native input; geometry generation is not independently emulated in this unit",
+    "Bridge line is explicit headless input, not QWASZX GUI placement",
+    "Only native1078 Graph Rebuild is emulated; no original/clone process/OS/socket execution",
+    "No full parity/natural completion/full34/fullC++/ZIP/physical input/PCM claim"
+  ]
+}
