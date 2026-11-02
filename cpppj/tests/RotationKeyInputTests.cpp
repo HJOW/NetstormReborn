@@ -30,7 +30,7 @@ TEST_CASE(RotationKeyInput_IndependentNative264Inputs) {
 // 키/정지 관문은 필요한 장치만 요구하고 설정 실패 시 먼저 쓴 반전값을 유지한다.
 TEST_CASE(RotationKeyInput_ExactCodesAndPartialEffects) {
     std::uint32_t mode=0;RotationKeyInputHooks hooks;
-    for (const auto code:std::array{InputCode::kRelease|'C',InputCode::kOutside|'c',InputCode::kCommand|'C',0x430000U,std::uint32_t('V')}) { //가상키/명령을 같은 문자로 오인하지 않는다.
+    for (const auto code:std::array{InputCode::kRelease|'C',InputCode::kCommand|'C',0x430000U,std::uint32_t('V')}) { //가상키/명령을 같은 문자로 오인하지 않는다.
         CHECK(!DispatchRotationKeyInput({code,0,0},mode,hooks) && mode==0);
     }
     hooks.paused=[] { return true; };CHECK(DispatchRotationKeyInput({'C',0,0},mode,hooks) && mode==0);
@@ -48,3 +48,5 @@ TEST_CASE(RotationKeyInput_ActualClientConfigAndWorldResetLifetime) {
     CHECK(DispatchRotationKeyInput({'c'|InputCode::kControl|InputCode::kShift|InputCode::kAlt,0,0},mode,hooks) && mode==1 && config.GetInt("rotmode")==1);
     config.Set("rotmode","-1");CHECK(mode==0xffffffffU);CHECK(DispatchRotationKeyInput({'C',0,0},mode,hooks) && mode==0 && config.GetInt("rotmode")==0);
 }
+
+#include "OutsideKeyInputTests.inc" // 새684행 중 C/Tab/숫자 후보와 raw 슬롯 무효 효과를 확인한다.

@@ -170,7 +170,7 @@ void RawCampaignCursor::Unlock() { impl_->Prepare();impl_->actions->Unlock(); } 
 void RawCampaignCursor::Rotate(std::int32_t step) { impl_->Prepare();impl_->actions->Rotate(step); } // 현재 Range/TYPE도 같은 몸체다.
 // 원본4d9bbb..4d9c2e의 활성 커서 분기이며 release는 그 앞의 공통 필터에서 제외된다.
 bool RawCampaignCursor::HandleInput(InputEvent event,std::uint32_t rotateMode) {
-    if (impl_->data.drop.lockDepth || (event.code&(InputCode::kRelease|InputCode::kOutside))) return false;
+    if (impl_->data.drop.lockDepth || (event.code&InputCode::kRelease)) return false; //4d9bbb..4d9c2e는 큐 outside를 별도로 거부하지 않는다.
     switch (event.code&0x03ffffffU) {
     case InputCode::kLeftButton:Drop();return true;
     case InputCode::kRightButton:Rotate(rotateMode ? -2 : 2);return true;

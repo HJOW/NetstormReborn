@@ -1,4 +1,5 @@
 #include "o/RawFortObjectSave.h"
+#include "ReadyConstructionInput.h" //검사 사본의 원시 저장 stream에만 준비 부품을 삽입한다.
 #include "CameraTestDevices.h"
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
@@ -2007,17 +2008,11 @@ TEST_CASE(CampaignSession_ConstructionDefaultTimeOwnsActualSoundProcess) {
 }
 
 namespace {
-// 생산 완료를 대신하지 않고 복제한 Fort의 원본 저장 내용물 입력에 준비된75를 추가한다.
+// 실제 raw Chaff/Terr 사본에 준비75를 넣어 현재 stream 로더의 입력으로 사용한다.
 void ReadyConstructionInput(FortTemplate& fort,std::int32_t factoryType) {
-    const auto add=[factoryType](FortChunkSection& section) { // 원본 저장 섹션의 공장 내용물만 바꾼다.
-        // 같은 청크/객체 순서로 실제 저장 내용물 로더에 넘길 입력을 준비한다.
-        for (auto& chunk:section.chunks) {
-            // 목표 공장은 원본 thewarbegins의124(소유자1)/123(소유자2)다.
-            for (auto& object:chunk.objects) if (object.type==factoryType) { if (!object.contents) object.contents=FortContentList{};FortContent ready;ready.type=75;ready.listFlags=0x10;ready.listFlagsStored=true;object.contents->items.push_back(ready); }
-        }
-    };
-    // 지역 섹션과 별도 Chaff를 원래 설치 경로로 읽게 한다.
-    for (auto& section:fort.territories) add(section);add(fort.chaff);
+    if (factoryType<0) throw std::out_of_range("준비 공장의 음수 TYPE");
+    const auto& types=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game.TypeTable();
+    static_cast<void>(netstorm::test::readyconstruction::AddReadyConstructionInput(fort,types,static_cast<std::uint32_t>(factoryType)));
 }
 // 실제 소유자 공장과 같은 Graph의 빈3×3 지면을 찾으며 배치/경로 결과는 합성하지 않는다.
 CellPoint GeneralConstructionPoint(const RawWorldCore& core,std::uint32_t owner) {
@@ -2273,7 +2268,7 @@ TEST_CASE(CampaignSession_CursorActionsUseActualPreviewsAndInput) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyCursorFactoryInput(fort);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();SessionCursorUi ui;auto& cursor=session.Cursor();auto& drop=session.CursorDropSettings();CHECK(drop.lockDepth==1 && !cursor.HandleInput({InputCode::kLeftButton,0,0},0));cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;session.SetSp(1,5000);CursorEnergyInput(session);cursor.Take(ReadyCursorFactoryForm(session),0x41);const auto point=CursorPlacementPoint(session,ui);CHECK(drop.lockDepth==0 && drop.direction==0);
     const auto preview=cursor.Lifecycle().previews[0];cursor.Lock(0);CHECK(drop.lockDepth==1 && ui.cursors.back()==1);const auto count=ui.cursors.size();cursor.Lock(1);CHECK(drop.lockDepth==2 && ui.cursors.size()==count);cursor.Unlock();CHECK(drop.lockDepth==1 && ui.cursors.size()==count);cursor.Unlock();CHECK(drop.lockDepth==0 && cursor.Lifecycle().previews[0]==preview);
     CHECK(cursor.HandleInput({InputCode::kRightButton,ui.mouse.x,ui.mouse.y},0) && drop.direction==2);CHECK(cursor.HandleInput({0x250000|InputCode::kShift,0,0},0) && drop.direction==0);CHECK(cursor.HandleInput({InputCode::kRightButton,0,0},1) && drop.direction==6);CHECK(cursor.HandleInput({0x270000,0,0},0) && drop.direction==0);
-    CHECK(!cursor.HandleInput({InputCode::kRightButton|InputCode::kRelease,0,0},0));CHECK(!cursor.HandleInput({InputCode::kRightButton|InputCode::kOutside,0,0},0));CHECK(drop.direction==0 && session.Sp(1)==5000 && ui.sent.empty());CHECK(drop.x==point.x && drop.y==point.y);
+    CHECK(!cursor.HandleInput({InputCode::kRightButton|InputCode::kRelease,0,0},0));CHECK(cursor.HandleInput({InputCode::kRightButton|InputCode::kOutside,0,0},0));CHECK(drop.direction==2 && session.Sp(1)==5000 && ui.sent.empty());CHECK(drop.x==point.x && drop.y==point.y);
     const auto refreshed=ui.refreshes;CHECK(cursor.HandleInput({0x1b,0,0},0));CHECK(drop.lockDepth==1 && !drop.preview && cursor.Lifecycle().previewCount==0 && ui.refreshes==refreshed+1);CHECK(!cursor.HandleInput({0x270000,0,0},0));
 }
 // 실제 회전 조건의 Range 삭제/재생성은 같은51 Form/Kernel/표시 수명을 사용한다.
@@ -5382,6 +5377,7 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
         modes->world.missionPost=mission;Put(records,2*0xb4+0x54,0);session.SetSp(2,0);const auto point=EmptySessionSupport(core);CHECK(session.ConfirmConstruction({75,static_cast<float>(point.x+2),static_cast<float>(point.y+2),2,0,0,1,0,0,0}));if (!mission) ++charged;
         CHECK(formats==charged && others==charged && direct==charged && money==charged && rejects==charged);CHECK(Get(records,2*0xb4+0x54)==(mission?0U:0x400U));CHECK(session.Sp(2)==(mission?0.0F:400.0F));
     }
+
 }
 
 // 마나103 Native 추가 Draw를 실제 자산/Pool 픽셀과 대조한다.
@@ -5395,3 +5391,5 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
 
 // 남은 세계 생성 분기를 같은 Session/서비스 장치에 연결한다.
 #include "CampaignWorldGenerationTests.inc"
+
+#include "CampaignOutsideInputTests.inc" // 실제 큐 어댑터와 폴링 outside 계약을 구별한다.

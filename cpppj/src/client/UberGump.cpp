@@ -1365,6 +1365,7 @@ void UberGump::Event(InputEvent event) {
         static_cast<void>(rawButtons_->Event(event));rebuild_=true;return;
     }
     if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
+        if (rawButtons_->CurrentDialog()) return; //4d8c60의 현재 모달은 하위Gump가0을 반환해도 세계 입력 꼬리를 차단한다. 선행 일반명령/정지 중ESC는 위에서 처리한다.
         // 가상키도 상위16비트에 있으므로 버튼과 정확히 일치할 때만 좌표로 UI를 가린다.
         const auto mouse=event.code&0x03ffffffu;
         const bool mouseButton=mouse==InputCode::kLeftButton || mouse==InputCode::kRightButton || mouse==InputCode::kMiddleButton;

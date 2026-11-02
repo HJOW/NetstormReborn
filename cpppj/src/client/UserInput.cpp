@@ -24,7 +24,8 @@ std::uint32_t SailCoordinate(float value) { //4e49c0의int64절삭 결과 하위
 UserInput::UserInput(Client& client,GameWorld& world) : client_(client),world_(world) {}
 // 원본의 좌클릭 이동과 우클릭 메뉴를 구분한다.
 std::optional<o::SquidId> UserInput::Event(InputEvent event) {
-    if ((event.code & InputCode::kOutside)!=0) return {};
+    // 원문4d6eca는 큐 사건의 release만 거부한다. outside는 키/마우스 마스크가 제거하며 현재 폴링과 구별한다.
+    if ((event.code&InputCode::kRelease) || client_.Paused()) return {}; //이 함수는4d96b6 공통 정지 뒤의 꼬리다. 옵션/활성커서/세계마우스를 정지 전에 실행하지 않는다.
     //005cae94/98은 앞선 폴링의 현재 좌표다. 큐 사건 좌표로 덮어쓰면 모드5/6의 원문 입력이 달라진다.
     ReadCursorOptions();auto& rotateMode=client_.GameplayGlobals()->CursorGlobals().RotationMode(); // 실제 옵션 해석/메뉴와 같은 원문 DWORD다.
     if (world_.Session().Cursor().HandleInput(event,rotateMode)) return {};

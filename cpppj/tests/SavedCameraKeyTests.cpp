@@ -54,7 +54,7 @@ TEST_CASE(SavedCameraKey_IndependentNative1750Inputs) {
 //선택하지 않은 장치는 요구하지 않고 소리 뒤 캡처 실패의 선행 변경도 보존한다.
 TEST_CASE(SavedCameraKey_LazyDevicesAndPartialWrites) {
     SavedCameraPositions saved;InitializeSavedCameraPositions(saved);const auto initial=SavedImage(saved);SavedCameraKeyHooks hooks;
-    for (const auto code:std::array{InputCode::kRelease|std::uint32_t('1'),InputCode::kOutside|std::uint32_t('1'),InputCode::kCommand|std::uint32_t('1'),0x310000U,std::uint32_t('C')}) CHECK(!DispatchSavedCameraKey({code,0,0},saved,hooks)); //다른 종류의 사건에 정지/언어/장치를 요구하지 않는다.
+    for (const auto code:std::array{InputCode::kRelease|std::uint32_t('1'),InputCode::kCommand|std::uint32_t('1'),0x310000U,std::uint32_t('C')}) CHECK(!DispatchSavedCameraKey({code,0,0},saved,hooks)); //다른 종류의 사건에 정지/언어/장치를 요구하지 않는다.
     hooks.paused=[] { return true; };CHECK(DispatchSavedCameraKey({'1',0,0},saved,hooks) && SavedImage(saved)==initial);
     hooks.paused=[] { return false; };hooks.language=[] { return 0; };CHECK(DispatchSavedCameraKey({'1',0,0},saved,hooks)); //무효 저장 위치는 카메라가 없어도 자연 생략한다.
     bool threw=false;try { static_cast<void>(DispatchSavedCameraKey({InputCode::kShift|'!',0,0},saved,hooks)); }catch (const std::logic_error&) { threw=true; }CHECK(threw && SavedImage(saved)==initial);

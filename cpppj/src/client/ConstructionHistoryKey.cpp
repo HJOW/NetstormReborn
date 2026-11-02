@@ -12,7 +12,7 @@ bool IsConstructionHistoryPointValid(o::ConstructionNoticePoint point,std::int32
     return 0.0F<point.x && point.x<maximum && 0.0F<point.y && point.y<maximum;
 }
 bool DispatchConstructionHistoryKey(InputEvent event,o::ConstructionHistoryState& history,const std::int32_t& worldCells,const ConstructionHistoryKeyHooks& hooks) {
-    if ((event.code&(InputCode::kRelease|InputCode::kOutside)) || (event.code&0x03ffffffU)!=9) return false;
+    if ((event.code&InputCode::kRelease) || (event.code&0x03ffffffU)!=9) return false;
     if (!hooks.paused) throw std::logic_error("최근 건설 위치 키의 실제 정지 판정 미연결");if (hooks.paused()) return true;
     if (history.index>=history.points.size()) throw std::out_of_range("최근 건설 위치 순번의 물리5칸 범위");
     auto point=history.points[history.index]; //실제 두DWORD를 현재 순번에서 먼저 복사한다.

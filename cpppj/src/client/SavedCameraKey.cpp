@@ -23,7 +23,7 @@ o::ConstructionNoticePoint CaptureSavedCameraCenter(const RawCameraViewState& vi
 }
 bool IsSavedCameraPositionValid(o::ConstructionNoticePoint point) { return 0.0F<=point.x && 0.0F<=point.y && point.x<256.0F && point.y<256.0F; } //Tab의 strict 양수/현재 세계 크기 판정과 합치지 않는다.
 bool DispatchSavedCameraKey(InputEvent event,SavedCameraPositions& saved,const SavedCameraKeyHooks& hooks) {
-    if ((event.code&(InputCode::kRelease|InputCode::kOutside)) || !Candidate(event.code&0x03ffffffU)) return false;
+    if ((event.code&InputCode::kRelease) || !Candidate(event.code&0x03ffffffU)) return false;
     if (!hooks.paused) throw std::logic_error("숫자 저장 카메라의 실제 정지 판정 미연결");if (hooks.paused()) return true;
     if (!hooks.language) throw std::logic_error("숫자 저장 카메라의 현재 공개 언어 미연결");const auto symbols=Symbols(hooks.language());const auto character=static_cast<char>(event.code&255U);
     if (kDigits.find(character)==kDigits.npos && symbols.find(character)==symbols.npos) return true;

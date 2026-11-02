@@ -419,6 +419,8 @@ TEST_CASE(GameWorldPointerModes_EmptyPickupCancelAndPollingCoordinates) {
         globals.mode=mode;globals.mouseType=82;cursors.clear();CHECK(!input.Event({InputCode::kRightButton,0,0}));CHECK(globals.mode==0 && globals.mouseType==0 && globals.selected==priest);CHECK(cursors==std::vector<std::uint32_t>{1});
     }
     globals.enabled=1;globals.mode=2;cursors.clear();CHECK(!input.Event({InputCode::kRightButton,0,0}));CHECK(globals.selected==0 && globals.mode==0 && cursors==std::vector<std::uint32_t>{1}); //정지1이어도0번 선택 해제는 원문대로 실행한다.
+    globals.selected=priest;globals.mode=2;cursors.clear();CHECK(!input.Event({InputCode::kRightButton|InputCode::kOutside,0,0}));CHECK(globals.selected==0 && globals.mode==0 && cursors==std::vector<std::uint32_t>{1}); // 큐 outside도 같은 선행 강조0/선택0을 실행한다.
+    globals.selected=priest;globals.mode=1;globals.mouseType=82;cursors.clear();CHECK(!input.Event({InputCode::kLeftButton|InputCode::kOutside,0,0}));CHECK(globals.selected==priest && globals.mode==0 && globals.mouseType==0 && cursors==std::vector<std::uint32_t>{1}); // 대상0인 편집 좌클릭도 원문의 강조 해제 꼬리를 실행한다.
     globals.selected=priest;globals.mode=0;CHECK(!input.Event({InputCode::kRightButton,0,0}));CHECK(globals.selected==0 && globals.mode==0);CHECK(globals.mouse.x==320 && globals.mouse.y==200);
     const auto type=static_cast<std::uint32_t>(assets.game.TypeTable().Find("windFactory"));const auto source=session.World().Create(type,2);session.Core().owner.Set(source,1);session.World().Pop(source,220,220,0);client.GameplayGlobals()->Camera().ApplyPixelsToRendererAndSnapshot(220*16-320,220*11-240); //전투 대신 편집용 워크샾을 빈 좌표에 배치하고 실제 카메라 setter로 클릭 영역을 만든다.
     const auto center=world.ToScreen(220,220);std::optional<ScreenPoint> hit;

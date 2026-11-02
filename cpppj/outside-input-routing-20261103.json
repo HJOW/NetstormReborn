@@ -1,0 +1,421 @@
+{
+  "unit": 761,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 761,
+  "displayVersion": "11.01",
+  "exeSha256": "2be37b422e18c4aa16b50800c10625c7c564a0167d798dcfaff75b4f7dac1276",
+  "summary": "outside 큐 사건의 키·커서 라우팅과 실제 공통 정지·현재 모달 관문 연결",
+  "tests": {
+    "totalUnique": 15,
+    "totalExecutions": 15,
+    "newTests": 4,
+    "failedChecks": 0,
+    "names": [
+      "CampaignSession_CursorActionsUseActualPreviewsAndInput",
+      "ConstructionHistoryKey_ClientOwnerAcrossWorldAndRenderer",
+      "ConstructionHistoryKey_IndependentNative511Inputs",
+      "ConstructionHistoryKey_LazyGatesAndPartialFallback",
+      "GameWorldPointerModes_EmptyPickupCancelAndPollingCoordinates",
+      "Outside761_ActualUserInputQueueAndCurrentCursor",
+      "Outside761_HistoryNative16Rows",
+      "Outside761_RotationNative32Rows",
+      "Outside761_SavedCameraNative32RowsAndNoOutsideWrites",
+      "RotationKeyInput_ActualClientConfigAndWorldResetLifetime",
+      "RotationKeyInput_ExactCodesAndPartialEffects",
+      "RotationKeyInput_IndependentNative264Inputs",
+      "SavedCameraKey_ClientOwnerAcrossRendererAndWorld",
+      "SavedCameraKey_IndependentNative1750Inputs",
+      "SavedCameraKey_LazyDevicesAndPartialWrites"
+    ],
+    "logs": [
+      "tests-rotation-v3.log",
+      "tests-history-v3.log",
+      "tests-saved-v3.log",
+      "tests-outside-v3.log",
+      "tests-cursor-v3.log",
+      "tests-pointer-v3.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v3.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2672,
+    "currentCount": 2673,
+    "allUnchanged": true,
+    "fixtureCount": 853,
+    "newFixtures": [
+      "cpppj/tests/fixtures/outside-input-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 761,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "executions": 1356,
+      "observations": 684,
+      "ranges": [
+        "004d6e61..004d6ed5",
+        "004d8c60..004d8c6c",
+        "004d96b6..004d9c62",
+        "004d53f0..004d542d",
+        "0040e800..0040e84c",
+        "004d5020..004d507f"
+      ],
+      "codeSha256": {
+        "004d6e61..004d6ed5": "efd0f5b240e41f30807e5a1a16dd07a629278a997c42b623be34821c23b5db7e",
+        "004d8c60..004d8c6c": "843275680926f620d87ceb4d733c1b96655fca84bc99cd481788faa63fa1d46b",
+        "004d96b6..004d9c62": "f70ac129f162928769cfbd4d82b3ee211b8e02f5890138d05a1f4a7d8fcbe862",
+        "004d53f0..004d542d": "c0f1d7de4d853a4568a15cc5f5bc6dabf874586017fc0e3ad39f6ac5a8f29ccf",
+        "0040e800..0040e84c": "3ce2c4e6731e226d93de08db1a2865351b243debf27a0c8f0d9b2f96ee425ce5",
+        "004d5020..004d507f": "04ba8573449cf097b0d87438fce671d0f2fb112be402c95ba64bdb571a623df8"
+      },
+      "outsidePairDifferences": [
+        {
+          "input": [
+            67108913,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Center;Cursor:0",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          },
+          "outside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Cursor:0",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          }
+        },
+        {
+          "input": [
+            67108913,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "inside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Center;Cursor:1",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          },
+          "outside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Cursor:1",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          }
+        },
+        {
+          "input": [
+            603979809,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Sound;Capture;Cursor:0",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 2,
+            "savedSha256": "be47c9d11a8995f28d2f1cd70dc2f4ea443530e7b401c588f5e00bfec89f1a64"
+          },
+          "outside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Cursor:0",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          }
+        },
+        {
+          "input": [
+            603979809,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "inside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Sound;Capture;Cursor:1",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 2,
+            "savedSha256": "be47c9d11a8995f28d2f1cd70dc2f4ea443530e7b401c588f5e00bfec89f1a64"
+          },
+          "outside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Cursor:1",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          }
+        }
+      ],
+      "boundaries": [
+        "Guide/Gump/큐/소리/설정/카메라/선택·Drop·회전은 실제 호출 인자만 기록하는 명시 경계다.",
+        "일반 명령 및 개발자 키 사슬은 실행하지 않으며 4d8c60 모달 뒤에서 4d96b6 정지 앞까지 생략한다.",
+        "세계 좌/우 분기는 첫 마커에서 중단하며 실제 선택·이동·세계 효과를 실행하지 않는다.",
+        "물리 OS 입력/게임 전체/MP 검사와 CD1072 관측은 아니다."
+      ],
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "sourceSha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "toolSha256": "7baaeeb2d95689c36b02f3b90be262a87d0e95ac6f3179561d138f36b67ba741",
+      "rawReportSha256": "c816f26d6edc0497a25119960914935f41354c40eb17d40704db5c55a12885d2"
+    },
+    "repeat-v2/native.json": {
+      "unit": 761,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "executions": 1356,
+      "observations": 684,
+      "ranges": [
+        "004d6e61..004d6ed5",
+        "004d8c60..004d8c6c",
+        "004d96b6..004d9c62",
+        "004d53f0..004d542d",
+        "0040e800..0040e84c",
+        "004d5020..004d507f"
+      ],
+      "codeSha256": {
+        "004d6e61..004d6ed5": "efd0f5b240e41f30807e5a1a16dd07a629278a997c42b623be34821c23b5db7e",
+        "004d8c60..004d8c6c": "843275680926f620d87ceb4d733c1b96655fca84bc99cd481788faa63fa1d46b",
+        "004d96b6..004d9c62": "f70ac129f162928769cfbd4d82b3ee211b8e02f5890138d05a1f4a7d8fcbe862",
+        "004d53f0..004d542d": "c0f1d7de4d853a4568a15cc5f5bc6dabf874586017fc0e3ad39f6ac5a8f29ccf",
+        "0040e800..0040e84c": "3ce2c4e6731e226d93de08db1a2865351b243debf27a0c8f0d9b2f96ee425ce5",
+        "004d5020..004d507f": "04ba8573449cf097b0d87438fce671d0f2fb112be402c95ba64bdb571a623df8"
+      },
+      "outsidePairDifferences": [
+        {
+          "input": [
+            67108913,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Center;Cursor:0",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          },
+          "outside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Cursor:0",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          }
+        },
+        {
+          "input": [
+            67108913,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "inside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Center;Cursor:1",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          },
+          "outside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Cursor:1",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          }
+        },
+        {
+          "input": [
+            603979809,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Sound;Capture;Cursor:0",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 2,
+            "savedSha256": "be47c9d11a8995f28d2f1cd70dc2f4ea443530e7b401c588f5e00bfec89f1a64"
+          },
+          "outside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Cursor:0",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          }
+        },
+        {
+          "input": [
+            603979809,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "inside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Sound;Capture;Cursor:1",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 2,
+            "savedSha256": "be47c9d11a8995f28d2f1cd70dc2f4ea443530e7b401c588f5e00bfec89f1a64"
+          },
+          "outside": {
+            "trace": "Guide;Gump;Pause:0;Language:4294967295;Cursor:1",
+            "gate": "body",
+            "rotation": 0,
+            "gameTime": 0,
+            "tabIndex": 0,
+            "slotWrites": 0,
+            "savedSha256": "78cb68050f461065530da1b8c0994050aa37ed4d74db6afe907d94ca01e9677f"
+          }
+        }
+      ],
+      "boundaries": [
+        "Guide/Gump/큐/소리/설정/카메라/선택·Drop·회전은 실제 호출 인자만 기록하는 명시 경계다.",
+        "일반 명령 및 개발자 키 사슬은 실행하지 않으며 4d8c60 모달 뒤에서 4d96b6 정지 앞까지 생략한다.",
+        "세계 좌/우 분기는 첫 마커에서 중단하며 실제 선택·이동·세계 효과를 실행하지 않는다.",
+        "물리 OS 입력/게임 전체/MP 검사와 CD1072 관측은 아니다."
+      ],
+      "rawReportSha256": "ca9c94b59393c0f5e7b5654710b43f0be9a206aa9cf9fb9ec40ba7ec25b4ad83"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "root Native writer",
+      "log": "native-repeat-v1.log",
+      "detail": "관측루프 뒤 출력경로 output이 dict 관측변수에 가려져 TypeError. 파일생성 전 실패를 보존하고 output_directory로 고쳐 새repeat-v2 경로를 사용했다. 성공 재관측으로 합산하지 않는다."
+    },
+    {
+      "scope": "root C++ v1",
+      "logs": [
+        "tests-rotation-v1.log",
+        "tests-outside-v1.log",
+        "tests-cursor-v1.log"
+      ],
+      "failedTests": 3,
+      "failedChecks": 10,
+      "detail": "숫자8단언은 원문 언어조회 인자ffffffff와 반환0을 혼동한 trace 장치 오류. 커서2검사는 parsed Fort만 바꾸던 옛 준비코드가 현재 실제 raw stream에 준비75를 전달하지 못한 전제 오류. 기대값/제품 로더는 유지했다."
+    },
+    {
+      "scope": "root build v2",
+      "log": "build-v2.log",
+      "warnings": 1,
+      "detail": "새검사 scanner의 unsigned kind/int IslandType 비교 C4389를 타입폭 일치로 수정. 최종v3 경고/오류0."
+    },
+    {
+      "scope": "pre-build audit",
+      "detail": "준비 새include가 기존 TEST_CASE 내부에 삽입되어 있어 전역 EOF로 이동했다. 제품 빌드 실패는 발생하지 않았다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/ConstructionHistoryKey.cpp": "1f10335de6475181a4573e693320602b0248dc1972c00746a0dba7127bd95cbb",
+    "cpppj/src/client/RawCampaignCursor.cpp": "2bd2a29a262f36c9ae94d331853f712fab1c8e6270e3a8de5d69dce5dbb5a34c",
+    "cpppj/src/client/RotationKeyInput.cpp": "3762bdc8aaaa597b390565e86fe2cd4040efc418089e11a270a123b079eb81c1",
+    "cpppj/src/client/SavedCameraKey.cpp": "310217b4a61eedb902a59d8f649e23ba53b65e104316e98e95d22347cf8c64e7",
+    "cpppj/src/client/UberGump.cpp": "9ff3b5bea0d00a183189738cc2f475d27c5bb84a1ffddc50604ffbc2b4e391f1",
+    "cpppj/src/client/UserInput.cpp": "690091b6ecd568d7c63c93f33e4c086ff412ba9b048611cd7c10e6a6c87cc4a8",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "c7e58c817afe4d23da6b11eab8ed5141919254fa55df5da261b41c9f0b5314bb",
+    "cpppj/tests/CampaignSessionTests.cpp": "d84f7391d34d59b02f2ec7ae4f138c483f94918d790e8f96479df2f2955c39af",
+    "cpppj/tests/ConstructionHistoryKeyTests.cpp": "fd0917d74c7aa10ba7fe2c6a5b996b39c7f347c36008aab1274933c6f25082f3",
+    "cpppj/tests/RotationKeyInputTests.cpp": "5043952e991f23969d2af5f8305c2a5d333e7bfc155891b5163b8fa71d357489",
+    "cpppj/tests/SavedCameraKeyTests.cpp": "1bd5a5df66ba342382ba8fe7454af82e200b356f38d2d5aab9b5491d868c4c09",
+    "cpppj/tests/CampaignOutsideInputTests.inc": "dfd7e74ad390caedf7f9a8bdde07f8047827a5de247e85e032757e6d2feb927f",
+    "cpppj/tests/OutsideKeyInputTests.inc": "708580bf971e05f96a79cfea9143c99221dc1430a821ceaf82caf876f6c71df8",
+    "cpppj/tests/ReadyConstructionInput.h": "5adb68bcf37dcb69db37e552c162951c9cea5ab1a004210fbde4dde1fdab44e3",
+    "tools/decomp_outside_input.py": "26ef4e3fb98c2a008a0775347e5f2f26e113a0980340ea44c33fdcc5d495aad4"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-761/protected-after.json",
+  "next": "Config 명령/메인루프 priority(762)·명시41baa0(763)·글꼴/음질(764)·존재조회(765)·Help stream writer(766)·QuickHelp 최초reader(767)·DrawWater(768)와 남은 비멀티/호환성",
+  "limitations": [
+    "Native는 Guide/Gump/release·모달·정지/키/커서 분류와 국소 helper 효과를 관측했다. 일반명령/개발자사슬은 생략하고 세계 좌/우 효과는 첫 분기 마커에서 멈춘다. 두x87정밀도 관측이라고 기록하지 않는다.",
+    "UserInput 실제 Client 정지와 큐/커서는 검사했지만 Uber의 현재 모달 guard는 컴파일/정적접합이며 새GUI 통과가 아니다. 기존 ESC/일반명령 선행 위치를 유지했다.",
+    "Client Poll/OS CharacterEvent/KeyEvent/활성화/화면경계·Gump자체outside·UpdateCursor 폴링정책은 바꾸지 않았다. 물리 포커스 문제를 재현/수정한 것으로 확대하지 않는다.",
+    "새게임/CLI/MP·물리/PCM·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP 검사는0이다. 760의분류전MP명령관측은별도원시/문서에보존한다."
+  ]
+}

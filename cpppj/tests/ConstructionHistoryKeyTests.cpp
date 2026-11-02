@@ -39,7 +39,7 @@ TEST_CASE(ConstructionHistoryKey_IndependentNative511Inputs) {
 //다른 사건/뗌/정지는 장부나 카메라를 요구하지 않고 물리 범위는 임의 modulo로 보정하지 않는다.
 TEST_CASE(ConstructionHistoryKey_LazyGatesAndPartialFallback) {
     netstorm::o::ConstructionHistoryState history;history.index=0xffffffffU;std::int32_t cells=256;ConstructionHistoryKeyHooks hooks;
-    for (const auto code:std::array{InputCode::kRelease|9U,InputCode::kOutside|9U,InputCode::kCommand|9U,0x90000U,std::uint32_t('C')}) CHECK(!DispatchConstructionHistoryKey({code,0,0},history,cells,hooks)); //정수 명령/가상Tab을 실제 문자로 오인하지 않는다.
+    for (const auto code:std::array{InputCode::kRelease|9U,InputCode::kCommand|9U,0x90000U,std::uint32_t('C')}) CHECK(!DispatchConstructionHistoryKey({code,0,0},history,cells,hooks)); //정수 명령/가상Tab을 실제 문자로 오인하지 않는다.
     hooks.paused=[] { return true; };CHECK(DispatchConstructionHistoryKey({9,0,0},history,cells,hooks) && history.index==0xffffffffU);
     hooks.paused=[] { return false; };bool threw=false;try { static_cast<void>(DispatchConstructionHistoryKey({9,0,0},history,cells,hooks)); }catch (const std::out_of_range&) { threw=true; }CHECK(threw);
     InitializeConstructionHistory(history);history.index=3;history.points[0]={20,30};threw=false;try { static_cast<void>(DispatchConstructionHistoryKey({9,0,0},history,cells,hooks)); }catch (const std::logic_error&) { threw=true; }CHECK(threw && history.index==0); //카메라 미연결 이전의 첫 칸 복귀 쓰기는 보존한다.
