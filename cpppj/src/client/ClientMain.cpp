@@ -194,7 +194,7 @@ Client::Client(ClientOptions options)
       staticStrings_(std::make_shared<ClientStaticStrings>(files_.FileNameOwner())),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)),trace_(std::make_unique<ClientTraceGlobals>()) {
-    files_.RegisterArchives(); //원본441790처럼 기본 폴더의 모든*.tarc를 Win32 반환 순서로 등록한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) files_.DeferPrimaryArchiveRegistration();else files_.RegisterArchives(); // 원본10.78은441790의setup탐색뒤에등록한다. 독립조회는첫TAFF접근까지예약하고10.72기존초기화는유지한다.
     rendererFrame_=std::make_unique<ClientRendererFrame>(*this); //생성은 BSS0 owner/참조만 준비하며 아직 화면/파일/난수를 사용하지 않는다.
     captureSequence_=std::make_unique<ClientCaptureSequence>(*this); //원문BSS0처럼파일/화면 없이 장기 상태만 준비한다.
     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
@@ -287,7 +287,7 @@ int Client::Run() {
     startup.identity = identity.value_or(std::string());
     std::optional<StartupFileLocations> startupFiles; // 원문마지막FileSpec은설정Load/경로Set뒤까지살아있다.
     if (options_.edition==o::OriginalEdition::Patch1078) {
-        startupFiles.emplace(PrepareStartupFiles(files_,options_.gameDirectory,FindWindowsCdDirectory));const auto& locations=*startupFiles;startup.dataPrefix=locations.dataPrefix;startup.installDir=platform::PathToUtf8(locations.installDirectory);startup.cdDir=locations.cdDirectory;options_.gameDirectory=locations.installDirectory; // 설정/자산/저장/편집은선택한같은기본root를사용한다.
+        startupFiles.emplace(InitializeNativeStartupFiles(FindWindowsCdDirectory));const auto& locations=*startupFiles;startup.dataPrefix=locations.dataPrefix;startup.installDir=platform::PathToUtf8(locations.installDirectory);startup.cdDir=locations.cdDirectory; // 설정/자산/저장/편집은선택한같은기본root를사용한다.
     } else {
         const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); //10.72기존경로를보존하며이번10.78탐색근거로확대하지않는다.
         startup.cdDir=FindWindowsCdDirectory();InitializeNativeSecondaryFiles(startup.cdDir);
@@ -1161,6 +1161,9 @@ const std::shared_ptr<ClientStaticStrings>& Client::StaticStrings() const { retu
 const std::shared_ptr<ClientDotCommandGlobals>& Client::DotCommandGlobals() const { return dotCommandGlobals_; }
 // 파일 시스템.
 const o::BaseFileSystem& Client::Files() const { return files_; }
+StartupFileLocations Client::InitializeNativeStartupFiles(const std::function<std::string()>& findCd) { // 원문441790순서로선택한같은VFS/게임루트를실제Run과공유한다.
+    auto result=PrepareStartupFiles(files_,options_.gameDirectory,findCd);options_.gameDirectory=result.installDirectory;return result;
+}
 // 원문은 CD를 찾았을 때만 별도 목록을 등록한다. Windows10/11 한글 CD 경로는 ANSI 대신 UTF-8/W 경로로 보존한다.
 void Client::InitializeNativeSecondaryFiles(std::string_view directory) {
     files_.SetSecondaryDirectory(directory.empty()?std::filesystem::path{}:std::filesystem::path(std::u8string(reinterpret_cast<const char8_t*>(directory.data()),directory.size())));

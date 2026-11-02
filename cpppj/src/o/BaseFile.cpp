@@ -164,7 +164,8 @@ BaseFileSystem::BaseFileSystem(std::filesystem::path base, std::filesystem::path
 // 실제 shared 소유권이므로 Client 임시 문자열 장치와 VFS 중 어느 쪽을 먼저 반납해도 빌린 고리가 남는다.
 std::shared_ptr<RawFileName> BaseFileSystem::FileNameOwner() const { return fileNames_; }
 // 두 단일 목록의 중복 관문은 파일을 다시 읽기 전에 적용하며 실패한 후보는 목록에 남기지 않는다.
-bool BaseFileSystem::RegisterArchive(const std::filesystem::path& path,bool secondary) {
+bool BaseFileSystem::RegisterArchive(const std::filesystem::path& path,bool secondary) { return RegisterArchiveCache(path,secondary); } // 기존명시등록API는동일한반환/등록순서를유지한다.
+bool BaseFileSystem::RegisterArchiveCache(const std::filesystem::path& path,bool secondary) const { // 파일루트가아닌논리적아카이브목록만갱신한다.
     const auto utf8=std::filesystem::absolute(path).lexically_normal().generic_u8string();auto key=AsciiLower({reinterpret_cast<const char*>(utf8.data()),utf8.size()}); //Windows10/11 한글 경로는 원본ANSI와 달리 UTF-8 중복 키로 보존한다.
     auto& names=secondary?secondaryArchiveNames_:archiveNames_;auto& archives=secondary?secondaryArchives_:archives_;
     if (std::find(names.begin(),names.end(),key)!=names.end()) return false;
@@ -173,12 +174,16 @@ bool BaseFileSystem::RegisterArchive(const std::filesystem::path& path,bool seco
     archives.push_back(std::move(archive));names.push_back(std::move(key));return true;
 }
 // 원본은 FindFirstFileA/Next를 사용한다. Windows10/11의 한글 설치/CD 폴더를 위해 W API로 같은 열거 순서를 받는다.
-void BaseFileSystem::RegisterArchives(bool secondary) {
+void BaseFileSystem::RegisterArchives(bool secondary) { RegisterArchivesCache(secondary); } // 명시기본등록은대기예약도완료한다.
+void BaseFileSystem::DeferPrimaryArchiveRegistration() { primaryArchivesPending_=true; } // 파일/디렉터리를열지않고독립조회호환을예약한다.
+void BaseFileSystem::EnsurePrimaryArchives() const { if (primaryArchivesPending_) RegisterArchivesCache(false); } // 재진입/다음조회에서중복등록하지않는다.
+void BaseFileSystem::RegisterArchivesCache(bool secondary) const { // 실제Startup은별도원문부모를사용하고이몸체는독립값형등록을유지한다.
+    if (!secondary) primaryArchivesPending_=false;
 #ifdef _WIN32
     const auto& root=secondary?secondary_:base_;WIN32_FIND_DATAW found{};const auto handle=FindFirstFileW((root/L"*.tarc").c_str(),&found); //정렬하거나 netstorm.tarc를 앞으로 이동하지 않는다.
     if (handle==INVALID_HANDLE_VALUE) return;
     try {
-        do { static_cast<void>(RegisterArchive(root/found.cFileName,secondary)); } while (FindNextFileW(handle,&found)); //디렉터리 후보도 원문 fopen 실패와 같은false로 처리한다.
+        do { static_cast<void>(RegisterArchiveCache(root/found.cFileName,secondary)); } while (FindNextFileW(handle,&found)); //디렉터리 후보도 원문 fopen 실패와 같은false로 처리한다.
     }catch (...) { FindClose(handle);throw; }
     FindClose(handle);
 #else
@@ -210,12 +215,14 @@ std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_vie
 }
 // 등록 archive만 조회하는 새 읽기 경계이며 기존 TryRead/Read의 disk 우선순위는 바꾸지 않는다.
 std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryReadArchiveOnly(std::string_view name,bool secondary) const {
+    EnsurePrimaryArchives(); // 실제Startup뒤에는예약이없고독립Client조회만목록을준비한다.
     const auto& archives=secondary?secondaryArchives_:archives_; //서로 다른 원문 단일 연결 목록이다.
     for (const auto& archive:archives) if (archive.Find(name)) return archive.Read(name); //기존 등록 순서의 첫 일치만 읽고 어떤 디스크 경로도 호출하지 않는다.
     return std::nullopt;
 }
 // 외부 실행 경로의 존재 판정은 파일 내용 읽기와 독립이다.
 bool BaseFileSystem::ContainsArchiveOnly(std::string_view name,bool secondary) const {
+    EnsurePrimaryArchives(); // 내용읽기없이등록목록을준비한뒤같은메타데이터를조회한다.
     const auto& archives=secondary?secondaryArchives_:archives_; //외부 Help도 실제 두 집합을 같은 메타데이터 조회로 구별한다.
     for (const auto& archive:archives) if (archive.Find(name)) return true; //등록 순서의 첫 이름 일치에서 끝난다.
     return false;
@@ -306,6 +313,7 @@ std::vector<std::string> BaseFileSystem::MatchDisk(std::string_view pattern) con
 }
 // 실제 FileFinder 목록은 기본 디스크/기본 TAFF/보조 디스크/보조 TAFF의 첫 열거 순서를 유지한다.
 std::vector<std::string> BaseFileSystem::MatchFinder(std::string_view pattern) const {
+    EnsurePrimaryArchives(); // 독립Client의최초목록조회도TAFF파일을누락하지않는다.
     const auto normalized=NormalizeGamePath(pattern);const auto wanted=NativePath(normalized);const auto directory=wanted.parent_path(),maskPath=wanted.filename();const auto mask=PathText(maskPath);std::vector<std::string> result;
     const auto append=[&](std::string name) { //587f0은 첫 문자열의 대소문자/바이트를 보존하고 나중 중복만 제외한다.
         std::replace(name.begin(),name.end(),'/','\\');if (name.empty() || name.front()!='\\') name.insert(name.begin(),'\\');
@@ -332,6 +340,7 @@ std::vector<std::string> BaseFileSystem::MatchFinder(std::string_view pattern) c
 }
 // 기존 정렬 목록 API다. 실제 Tell은 index 확정 전에 정렬하지 않는 MatchFinder를 사용한다.
 std::vector<std::string> BaseFileSystem::Match(std::string_view pattern) const {
+    EnsurePrimaryArchives(); // 기존정렬API의등록목록계약을같이유지한다.
     const auto normalized = NormalizeGamePath(pattern);
     const auto path=NativePath(normalized);
     const auto directory = path.parent_path();

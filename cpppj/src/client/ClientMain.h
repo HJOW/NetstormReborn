@@ -28,6 +28,7 @@ namespace netstorm::o { class RawXlat; } //10.78 다중 번역 장부의 Client 
 
 namespace netstorm::o { class RawFortBadgesGlobals; } // Client 수명의 원본 Badges 장부를 고정 주소로 소유한다.
 namespace netstorm::client {
+struct StartupFileLocations; // 최초Native파일초기화의선택경로와설정Load까지유지할검색수명이다.
 class UberGump;
 struct ClientTraceGlobals;struct TraceLogHooks; // 같은 장기 진단 owner와 현재 출력 장치를 선언한다.
 class ClientAudio;
@@ -200,6 +201,7 @@ public:
     const std::shared_ptr<ClientDotCommandGlobals>& DotCommandGlobals() const; //최초 say를 보존하는 같은 장기 등록 표를 빌린다.
     const o::BaseFileSystem& Files() const;
     void InitializeNativeSecondaryFiles(std::string_view directory); //00441790의 CD 탐색 뒤 보조 root/TAFF 등록을 같은 장기 VFS에 연결한다. 빈 결과는 기본 root이며 별도 목록은 만들지 않는다.
+    StartupFileLocations InitializeNativeStartupFiles(const std::function<std::string()>& findCd); //10.78실제시작과창없는집중검사가같은설정탐색/CD/등록순서를호출한다. 반환검색객체는설정Load뒤반납한다.
     const std::filesystem::path& GameDirectory() const { return options_.gameDirectory; } //편집 작업본을 읽기 전용 게임 자산의 형제 디렉터리에 배치할 실제 입력 경로다.
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();

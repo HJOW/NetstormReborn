@@ -1,0 +1,116 @@
+{
+  "unit": 737,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 737,
+    "version": "11.01",
+    "sha256": "f4bf188d852c031fc994e2e196e389608603db78387c254faf54ac8f0571aade",
+    "machine": "0x8664 / AMD64"
+  },
+  "implementation": [
+    "10.78Client생성자의TAFF선행읽기제거. 실제Run과같은InitializeNativeStartupFiles에서setup/CD/선택루트등록/설정뒤핸들반납을연결",
+    "독립Client조회는최초TAFF내용/메타데이터/목록접근에서한번기존등록을준비. 직접디스크/절대Probe/MatchDisk는미실행",
+    "명시등록/중복/순서계약을공유하며mutable논리캐시로const조회와const복사도정의된C++객체변경을사용",
+    "10.72기존생성자등록은유지"
+  ],
+  "before": {
+    "productUnit": 736,
+    "productCommit": "c2d29227",
+    "testsExecuted": 1,
+    "failedTests": 1,
+    "failedChecks": 1,
+    "log": "extracted\\cpp-startup-io-737\\tests-before.log",
+    "cause": "setup선택앞의생성자가실행하위폴더의손상TAFF를미리읽어생성자체가끝나지않음"
+  },
+  "native": {
+    "newObservations": 0,
+    "newFixtures": 0,
+    "existingFixtureRowsReplayed": 414,
+    "references": [
+      "cpppj/startup-location-native-20261102.json",
+      "cpppj/startup-archives-native-20261102.json"
+    ],
+    "boundary": "735/736의원문탐색/등록순서와기존fixture회귀. 손상파일은hostparser의읽기시점검출이며원본손상예외/전체반환ABI관측이아님"
+  },
+  "tests": {
+    "new": 6,
+    "existing": 25,
+    "final": 31,
+    "failed": 0,
+    "nativeRowsReplayed": 414,
+    "actualClientParentSelection": true,
+    "unselectedPoisonArchiveNotRead": true,
+    "selectedBadArchiveFailsAfterCdBoundary": true,
+    "independentFirstLookupKinds": 7,
+    "oneSnapshotPerClient": true,
+    "constCopySeparateSnapshot": true,
+    "directDiskAndAbsoluteProbeDoNotLoadCatalog": true,
+    "existingUnicodeVfsAndConfigSaveReload": true,
+    "log": "extracted\\cpp-startup-io-737\\tests-v1.log"
+  },
+  "build": {
+    "logs": [
+      "extracted\\cpp-startup-io-737\\build-before.log",
+      "extracted\\cpp-startup-io-737\\build-v1.log"
+    ],
+    "targets": [
+      "NetstormCpp",
+      "netstorm_startup_io_tests"
+    ],
+    "warnings": 0,
+    "errors": 0
+  },
+  "cli": {
+    "processes": 1,
+    "command": "Netstorm.exe --config-get originals SCREENW",
+    "output": "1024",
+    "exitCode": 0,
+    "gameFrames": 0,
+    "log": "extracted\\cpp-startup-io-737\\cli-config.log"
+  },
+  "protection": {
+    "baselineFiles": 2652,
+    "unchangedFiles": 2652,
+    "baselineGroups": {
+      "AGENTS.md": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 832
+    },
+    "agentAuthoredChanges": 0,
+    "newFixtures": 0,
+    "currentTotal": 2652,
+    "fixtureTotal": 832
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "requirements": {
+    "phase5": "733의전체자동파일/reader·일반권한설치요구유지. 이관구현미착수",
+    "platform": "Windows10/11AMD64대상·Windows11ARM고려유지. ARM빌드/실기미검증"
+  },
+  "limits": [
+    "선행TAFF제거를전체최초FILE/리소스I/O/실패종류별수명복원으로확대하지않는다",
+    "독립API예약등록은cpppj호환이며실제Run은새VFS의원문Startup등록을사용한다",
+    "손상TAFF의기존host오류시점확인이며원본손상예외/전체264BYTE ABI/다른FileSpec/Template/UI/호환성은별도다",
+    "새Native/fixture/GUI/전체34/전체C++/ZIP·물리입력/PCM/포커스·포획/희생·특정적공격/승리·공중3종전용/MP/통신검사0",
+    "최근GUI735의성공은별도제품근거이며전체1~8차목표는진행중이다"
+  ],
+  "rawDirectory": "extracted\\cpp-startup-io-737",
+  "sha256": {
+    "LEFT_JOBS.md": "db0f12d6586df2901ba7b3b5db5b27cb16eb5975bce6fdd6853af674e291348d",
+    "cpppj/README.md": "25d546629c078acceb9281a26cddb86ac509f8a90c79e2b284a020c2c8b10340",
+    "cpppj/src/client/ClientMain.cpp": "467b619e4dfa59006f81b254272be5a199f4ecd4ead5533ae16620a8b0efc16d",
+    "cpppj/src/client/ClientMain.h": "4a0026cdab341ddc1801cdf368377818ef3902bd8f94bffd01cbe5e7bb1f4eac",
+    "cpppj/src/client/StartupFiles.cpp": "3cc7ce3f45384df7e6ee5cb0bc3286c08ab6072fb841e045b8808970f9fa6673",
+    "cpppj/src/o/BaseFile.cpp": "1b54b2d7f62f0d19019705d4cfe462c36b287c9d5137717682792490afbd8351",
+    "cpppj/src/o/BaseFile.h": "4faa8467087044ea4087605e7d6598aa312af35ef754927bc7568fa39f7e70d8",
+    "cpppj/tests/CMakeLists.txt": "bfa15383c348cbe9ee6d490ec5b0a0af62c8f2520f8ed2ce58d6766dbdedb29b",
+    "cpppj/tests/StartupIoTests.cpp": "9553c7aef2e6430a1e0b93e789cd551fd7795cb46b61b7862b1a8ac86c8914be",
+    "docs/exe/cpp-startup-io-20261102.md": "02d2f187744674bdf562998e4bb29d79067d12bfda60d580c1a66dda18d83276"
+  }
+}

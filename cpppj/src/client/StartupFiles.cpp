@@ -29,7 +29,7 @@ StartupFileLocations PrepareStartupFiles(o::BaseFileSystem& files,const std::fil
     result.installDirectory=std::filesystem::absolute(platform::PathFromUtf8(parent)).lexically_normal();if (result.installDirectory.filename().empty()) result.installDirectory=result.installDirectory.parent_path();
     if (!std::filesystem::is_directory(result.installDirectory)) throw std::logic_error("\\Ns\\O\\Configinterface.cpp:215: result == 0");
     result.cdDirectory=cd.empty() ? platform::PathToUtf8(result.installDirectory):cd;
-    // cpppj의독립Client생성자가미리읽은목록을최초Startup에가져오지않는다. 원문최초BSS의두빈목록에서선택한root만등록하며경로고리소유자는유지한다.
+    // 독립조회에예약된옛루트나별도로등록한목록을최초Startup에가져오지않는다. 원문최초BSS의두빈목록에서선택한root만등록하며경로고리소유자는유지한다.
     files=o::BaseFileSystem(result.installDirectory,{},owner);o::StartupArchiveHooks hooks;
     hooks.registerFile=[&files,&result](auto name,bool secondary) { auto path=platform::PathFromUtf8(name);if (path.is_relative()) path=result.installDirectory/path;static_cast<void>(files.RegisterArchive(path,secondary)); }; // 원본chdir뒤상대입력도같은Unicode가상기본root에서연다.
     hooks.setSecondary=[&files](auto directory) { files.SetSecondaryDirectory(platform::PathFromUtf8(directory)); };

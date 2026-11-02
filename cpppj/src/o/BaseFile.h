@@ -61,6 +61,7 @@ public:
     bool RegisterArchive(const std::filesystem::path& path,bool secondary=false);
     //00441790: 선택한 root의 *.tarc를 실제 Win32 열거 순서로 모두 등록한다. 잘못된 후보는 원문처럼 건너뛴다.
     void RegisterArchives(bool secondary=false);
+    void DeferPrimaryArchiveRegistration(); // 원문Run전의Client생성자는I/O하지않는다. 독립값형Client파일조회는최초TAFF조회에서한번만기존자동등록을준비한다.
     //0041a4f0: 보조/CD 디스크 root만 바꾼다. 이미 등록한 아카이브 목록은 원문처럼 보존한다. 빈 경로는 기본 root다.
     void SetSecondaryDirectory(std::filesystem::path directory);
     // 상대 읽기: 기본 디스크→기본 TAFF→보조 디스크→보조 TAFF다. 절대 이름은 직접 읽는다.
@@ -80,16 +81,20 @@ public:
     // 원본4588a0 FileFinder의 기본 디스크→등록 TAFF→보조 디스크 스냅샷이다. 첫 대소문자 무시 중복만 남기며 정렬하지 않는다.
     std::vector<std::string> MatchFinder(std::string_view pattern) const;
 private:
+    void EnsurePrimaryArchives() const; // 독립조회에예약된기본목록만등록하며실제Startup의새VFS는예약하지않는다.
+    bool RegisterArchiveCache(const std::filesystem::path& path,bool secondary) const; // 논리적등록캐시만갱신해const조회도정의된C++객체변경으로준비한다.
+    void RegisterArchivesCache(bool secondary) const; // 기존Win32순서의등록몸체이며공개명시등록과예약실행이공유한다.
     // base_: 파생 처리에서 공통 동작을 위임하는 기본 객체.
     std::filesystem::path base_;
     // secondary_: 보조.
     std::filesystem::path secondary_;
     // archiveNames_: 검색 대상으로 등록한 TAFF 아카이브 이름 목록.
-    std::vector<std::string> archiveNames_;
+    mutable std::vector<std::string> archiveNames_;
     // archives_: 읽기 위해 열린 TAFF 아카이브 목록.
-    std::vector<TaffArchive> archives_;
-    std::vector<std::string> secondaryArchiveNames_; //00544f80 보조 목록의 대소문자 무시 중복 키이며 기본 목록과 별도다.
-    std::vector<TaffArchive> secondaryArchives_; //보조/CD 아카이브의 실제 등록 순서와 읽기 전용 바이트 소유자다.
+    mutable std::vector<TaffArchive> archives_;
+    mutable std::vector<std::string> secondaryArchiveNames_; //00544f80 보조 목록의 대소문자 무시 중복 키이며 기본 목록과 별도다.
+    mutable std::vector<TaffArchive> secondaryArchives_; //보조/CD 아카이브의 실제 등록 순서와 읽기 전용 바이트 소유자다.
     std::shared_ptr<RawFileName> fileNames_; // 새로운 독립 VFS에서만 BSS0을 만들고 실제 Client와 공유해 먼저 해제하지 않는다.
+    mutable bool primaryArchivesPending_{}; // Client의독립조회호환만예약하며생성/디스크직접조회에는파일을읽지않는다.
 };
 }
