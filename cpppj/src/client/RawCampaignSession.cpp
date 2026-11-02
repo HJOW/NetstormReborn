@@ -2271,7 +2271,9 @@ struct RawCampaignSession::Impl {
         gameplay.notice.immobile=[this](Sid sid) { return priests->PriestState().Immobile(sid); };
         gameplay.notice.approach=[this](Sid sid,float x,float y,std::uint32_t flags) {
             if (!anchor) throw std::logic_error("일반 통지 접근점의 실제 Graph 미설치");const auto footprint=gunTarget->Footprint(sid,false);auto rect=std::array<float,4>{footprint.left,footprint.top,footprint.right,footprint.bottom};
-            RawBoardApproach approach([this](float px,float py) { return anchor->GraphAt(px,py); });return approach.Find(rect,x,y,flags);
+            RawBoardApproach approach([this](float px,float py) { return anchor->GraphAt(px,py); },[this] {
+                if (!services.ai.assertion) throw std::logic_error("Boardcoord.cpp 0x235 실제진단장치미연결");services.ai.assertion("0"); // 원문0식의실제기존진단장치를선택하며복귀하면순회를계속한다.
+            });return approach.Find(rect,x,y,flags,gameplayGlobals->AiDebug().Checking()); // Graph효과뒤현재전체DWORD관문을다시읽는다.
         };
         gameplay.notice.tryMove=[this](Sid priest,float x,float y,Sid target) { if (!motion) throw std::logic_error("일반 통지의 실제54 미설치");return motion->Paths().StartPriest({priest,{x,y},0,target.value,0,0,0})!=nullptr; };
         gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
@@ -2845,7 +2847,9 @@ struct RawCampaignSession::Impl {
     hooks=MakeConstructionBuilderHooks(current->core.pool,*current->anchor,current->core.factory,current->core.owner,std::move(hooks));
     hooks.pop=[current](Sid sid,float x,float y,std::uint32_t flags) { current->world.Pop(sid,x,y,flags); };
     hooks.notifySurface=[current](Sid sid) { current->core.building.NotifySurface(sid); };
-    hooks.approach=[current](const std::array<float,4>& rectangle,float x,float y,std::uint32_t flags) { auto mutableRectangle=rectangle;RawBoardApproach approach([current](float px,float py) { return current->anchor->GraphAt(px,py); });return approach.Find(mutableRectangle,x,y,flags); };
+    hooks.approach=[current](const std::array<float,4>& rectangle,float x,float y,std::uint32_t flags) { auto mutableRectangle=rectangle;RawBoardApproach approach([current](float px,float py) { return current->anchor->GraphAt(px,py); },[current] {
+        if (!current->services.ai.assertion) throw std::logic_error("Builder Boardcoord.cpp 0x235 실제진단장치미연결");current->services.ai.assertion("0"); // 같은원문진단뒤실제caller의변경사각형으로재개한다.
+    });return approach.Find(mutableRectangle,x,y,flags,current->gameplayGlobals->AiDebug().Checking()); };
     hooks.move=[current](Sid sid,float x,float y)->ConstructionBuilderPath* {
         auto* path=current->motion->Paths().StartConstruction({sid,{x,y},0,0,0,0,0});if (!path) return nullptr;const auto pid=current->core.kernel.Find(*path);
         auto& view=current->builderPaths[sid.value];

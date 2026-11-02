@@ -1,0 +1,113 @@
+{
+  "unit": 783,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 783,
+  "displayVersion": "11.01",
+  "exeSha256": "4b047e072d57f1c5ec1569e71f33ddb7820f8529c2c497dee7d460e236557aa1",
+  "summary": "0041db70의 현재 checking과 선택 진단을 건설 통지/빌더의 실제 GraphAt에 연결",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-input-v2.log"
+    ],
+    "targets": [
+      "NetstormCpp",
+      "netstorm_world_generation_tests",
+      "netstorm_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "totalUnique": 5,
+    "totalExecutions": 5,
+    "allAttemptExecutions": 9,
+    "newTests": 4,
+    "failedChecks": 0,
+    "names": [
+      "BoardCheckingParent_Native288CurrentOwnerAndResume",
+      "BoardCheckingParent_ClientDwordRecheckedAfterActualBoundary",
+      "BoardCheckingParent_UnselectedAndMissingDiagnosticBoundaries",
+      "BoardCheckingParent_DiagnosticFailurePreservesCurrentCallerPrefix",
+      "BoardApproach_Native696"
+    ],
+    "logs": [
+      "tests-BoardCheckingParent_-v2.log",
+      "tests-BoardApproach_.log"
+    ],
+    "fullSuiteRun": false,
+    "initialFailure": {
+      "log": "tests-BoardCheckingParent_.log",
+      "executions": 4,
+      "failedChecks": 1,
+      "reason": "새 Client 검사 Graph가 매번99를 써 마지막0을 덮음. Native0,4,1,0,0과 같은 첫 후보1회 변경으로 입력만 교정"
+    }
+  },
+  "native": {
+    "preparedObservations": 576,
+    "preparedRepeatObservations": 576,
+    "resumeRepeat": {
+      "unit": 783,
+      "dependsOn": 779,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 288,
+      "observations": 576,
+      "instructions": 1389048,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "airUnitTests": 0,
+      "actualConstructionOrMovement": 0,
+      "fixtureSha256": "98b8cd2f7fbfa3c33ef7b5f6e6504a03713a3558c1ecd91aadb9db598bf41c73",
+      "toolSha256": "d9bcb64925d58316a3157a49f85b6f796b262025f28ce85f196b8f49c35cf8b7",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "limitations": [
+        "GraphAt은명시응답/변형경계이며실제Graph/UI의동일성을검증하지않는다.제품후보는기존실제anchor.GraphAt을유지한다.",
+        "caller사각형변형은선택진단/부분효과의순서를분리하기위한격리입력이다.정상게임에서자연발생했다고주장하지않는다.",
+        "원문assertioncallee는0식/Boardcoord.cpp0x235를관측하고정상복귀시켰다.실제assertUI/CRT파일은호출하지않는다."
+      ]
+    },
+    "selectedRows": 90,
+    "unselectedRows": 198,
+    "fixtureBytesMatch": true,
+    "rootAdaptation": "작업폴더 도구의 ROOT 식만 저장소를 가리키게 변경. 보호PE 해시와 함수/관측 본문은 동일"
+  },
+  "protection": {
+    "beforeCount": 2717,
+    "currentCount": 2718,
+    "allUnchanged": true,
+    "fixtureCount": 898,
+    "newFixtures": [
+      "cpppj\\tests\\fixtures\\board-checking-parent-x86.tsv"
+    ]
+  },
+  "checkingRemaining": {
+    "parentGaps": 42,
+    "partialGaps": 6,
+    "mpStatic": 2,
+    "total": 50,
+    "completedAddress": "0041db70",
+    "obsoleteClassification": "4b54e0을 작은SP Login으로 분류하지 않고 일반battle 재접속 저장의MP로 유지"
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "airThreeDedicatedTests": 0,
+  "actualConstructionOrMovement": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "next": "781/782 GIF·초기화면 →784 입력 꼬리 →785 보조 음향",
+  "boundaries": [
+    "Native Graph 응답/사각형·checking 변경은 명시 입력",
+    "실제 Runtime의 GraphAt 연결은 소스/컴파일 근거",
+    "원문 assertUI/CRT·SEH ABI/실제 Graph·GUI 전체 동일성은 별도"
+  ]
+}

@@ -32,6 +32,8 @@
 
 ## FUN_0041db70 @ 0041db70
 
+**783 완료:** 현재 checking 뷰와 선택 진단을 두 실제 건설 소비자에 연결했다. 아래 미복원 서술은779 당시 상태다. [783 기록](cpp-board-checking-parent-20261103.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawConstructionNotice.h, cpppj\src\o\RawBoardApproach.h, cpppj\src\o\RawBoardTarget.h

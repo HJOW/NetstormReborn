@@ -2395,3 +2395,6 @@ cpppj/tests/fixtures/type-live-null-destination-x86.tsv -text
 cpppj/tests/fixtures/checking-forms-x86.tsv -text
 cpppj/tests/fixtures/checking-island-owner-x86.tsv -text
 cpppj/tests/fixtures/sid-robust-parent-x86.tsv -text
+
+# 단위783의 최초 접근점 checking 부모 관측 바이트를 보존한다.
+cpppj/tests/fixtures/board-checking-parent-x86.tsv -text

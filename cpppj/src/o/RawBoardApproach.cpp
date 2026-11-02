@@ -22,7 +22,7 @@ ConstructionNoticePoint Side(const std::array<float,4>& r,std::uint32_t side) {
 RawBoardApproach::RawBoardApproach(std::function<std::uint32_t(float,float)> graph,std::function<void()> assertion)
     :graph_(std::move(graph)),assertion_(std::move(assertion)) { if (!graph_) throw std::invalid_argument("접근점 실제 GraphAt 미연결"); }
 // 유효 게임 사각형에 실제 float 저장 위치와 정수 순회 조건을 적용한다.
-ConstructionNoticePoint RawBoardApproach::Find(std::array<float,4>& r,float x,float y,std::uint32_t flags,bool checking) const {
+ConstructionNoticePoint RawBoardApproach::Find(std::array<float,4>& r,float x,float y,std::uint32_t flags,RawCheckingFlag checking) const {
     if (!std::isfinite(x) || !std::isfinite(y) || r[2]<r[0] || r[3]<r[1]) throw std::invalid_argument("접근점 사각형/좌표 오류");
     const auto original=r;const float cx=static_cast<float>((static_cast<double>(r[0])+r[2])*0.5),cy=static_cast<float>((static_cast<double>(r[1])+r[3])*0.5);
     const auto side=(static_cast<std::uint32_t>(RawSquidNeighbors::Direction(x,y,cx,cy))-4U)&7U;const auto destinationGraph=graph_(x,y);

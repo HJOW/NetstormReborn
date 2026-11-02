@@ -3157,3 +3157,8 @@ target_sources(netstorm_world_generation_tests PRIVATE CheckingConsumersTests.cp
 target_sources(netstorm_tests PRIVATE SidRobustParentTests.cpp)
 target_sources(netstorm_world_generation_tests PRIVATE SidRobustParentTests.cpp)
 set_source_files_properties(SidRobustParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SID_ROBUST_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sid-robust-parent-x86.tsv\"")
+
+# 783은현재checking접근점의순수진단만등록하며건설/이동/게임/MP는실행하지않는다.
+target_sources(netstorm_tests PRIVATE BoardCheckingParentTests.cpp)
+target_sources(netstorm_world_generation_tests PRIVATE BoardCheckingParentTests.cpp)
+set_source_files_properties(BoardCheckingParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BOARD_CHECKING_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/board-checking-parent-x86.tsv\"")
