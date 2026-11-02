@@ -8,7 +8,7 @@ cpppj `client/CampaignTemplateStorage`와 그 소비자를 dotnetpj로 옮기는
 
 | 항목 | 값 |
 | --- | --- |
-| 이식 완료 | 0.128 원문 계층(`RawMemStream`, `RawDataManager*`, `RawTemplate*`, `RawFortImage`, `RawFortCurrentName`, `RawPlayerTemplateState`, `FortTemplate` 일부), 0.129 `ClientTemplateSectionNames`, 0.130 TS0(`RawSectionBuffer`, 섹션 버퍼 전환·`Clone`, 커서 3종, hook 묶음 setter), 0.131 TS1(`CampaignTemplateStorage`와 `Image` 골격·설치·선택), 0.132 TS2(동적 섹션·State 재생성·최소 확장·쓰기 참조), 0.133 TS3(파일 읽기·Load·저장·이름 부모 연결과 433개 왕복), 0.134 TS4(빈 manager 5개 메서드·`CloneSectionFrom`·`Dump`·`SaveImage`·`ReadLoginImage`와 Core `RawMissionLoginPackets`, `fort-image-packets` 송신·예약 103행) |
+| 이식 완료 | 0.128 원문 계층(`RawMemStream`, `RawDataManager*`, `RawTemplate*`, `RawFortImage`, `RawFortCurrentName`, `RawPlayerTemplateState`, `FortTemplate` 일부), 0.129 `ClientTemplateSectionNames`, 0.130 TS0(`RawSectionBuffer`, 섹션 버퍼 전환·`Clone`, 커서 3종, hook 묶음 setter), 0.131 TS1(`CampaignTemplateStorage`와 `Image` 골격·설치·선택), 0.132 TS2(동적 섹션·State 재생성·최소 확장·쓰기 참조), 0.133 TS3(파일 읽기·Load·저장·이름 부모 연결과 433개 왕복), 0.134 TS4(빈 manager 5개 메서드·`CloneSectionFrom`·`Dump`·`SaveImage`·`ReadLoginImage`와 Core `RawMissionLoginPackets`, `fort-image-packets` 송신·예약 103행), 0.135 TS5(`ExistingEditorTemplateValid`, 0.127에서 미룬 Editor 파일 검사 10개, 한글 작업 경로를 manager에 UTF-8로 보관하고 장치 경계에서 변환) |
 | 저장소 본체 | 미이식. `CampaignTemplateStorage.cpp` 581줄, `.h` 106줄(합 약 80KB). 0.128의 실측 비율로 보면 C# 약 2,500~3,000줄이 될 것으로 추정한다 |
 | 기준 커밋 | 0.128 원문 계층은 `d48ea756`. 2026-11-01 현재 HEAD까지 해당 cpppj 파일과 저장소 파일의 변경은 없다 |
 | 이 단계의 원본 fixture | 없다. 저장소는 cpppj가 만든 호스트 어댑터라 원본 x86 대조 대상이 아니다. 그래서 cpppj 검사 직역과 3절의 433개 왕복 검사가 근거다 |
@@ -73,6 +73,7 @@ cpppj 제품 코드에서 `.sections`를 고치는 곳은 `Template.cpp`와 저�
 | 람다의 `span` 캡처 | 전용 대리자, 또는 진입 시 배열로 복사 | C#은 Span을 캡처할 수 없다. `WriteStream`의 입력 복사는 입력이 대상 버퍼와 겹치지 않을 때만 동등하므로 소비자를 옮길 때 겹침 여부를 확인한다 |
 | `.at()`의 `out_of_range` | 명시 검사 뒤 `ArgumentOutOfRangeException` | 사전 조회 실패가 `KeyNotFoundException`으로 바뀌지 않게 한다 |
 | 무효화된 span은 UB | 옛 배열이 살아 있어 쓰기가 조용히 사라진다 | C#이 더 위험하다. 재할당을 일으킬 수 있는 호출을 넘어 Span을 들고 있지 않는다 |
+| 파일 이름 `std::string`(UTF-8 바이트) | 호스트에는 실제 문자열(UTF-16), manager+c에는 UTF-8 바이트 | Core `RawTemplateLoad`는 문자 하나가 바이트 하나인 표기(Latin1)라 한글·이모지 경로를 그대로 담지 못한다. 저장소의 `TemplateFileNames`가 장치로 나가는 지점(읽기·readonly·이름 비교·서명 거부 요청·권한·쓰기)과 들어오는 지점(설치·Load 요청)에서 변환한다. 이름 한도는 UTF-8 바이트 수 256 미만이다. 짝이 안 맞는 UTF-8(옛 ANSI 이름)은 왕복하지 않는다 |
 
 토큰 값(`0x10000000+핸들` 버퍼, `0x20000000+핸들` 임시, `0x30000` 파일 입력, `0x50000` 이미지)은 그대로 쓴다. 파일은 `partial class`로 나누고 위치는 `TemplateFileHooks.cs`와 같은 `Netstorm.Client/Host/`다.
 
@@ -91,7 +92,7 @@ cpppj 제품 코드에서 `.sections`를 고치는 곳은 `Template.cpp`와 저�
 | **TS2 동적 섹션** | `WithMemory`·`WriteStream`·`AccessSection`·`CompactTail`, `CreateSection`·`InitializeState`·`RenameSection`·`EnsureStateSize`, 쓰기 참조의 생성 수명 | cpppj 10개(용량 확인 4개 포함) | **완료(0.132)**: Client 18개(cpp 검사 11 + 직접 7), 변이 33종 중 31 검출·2 등가 |
 | **TS3 파일** | `ReadFile` 두 경로·`BindFileStreams`, `InstallFile`·`LoadFile`·`SaveFile`·`BindCurrentName`. 가장 크므로 필요하면 읽기와 저장으로 나눈다 | cpppj 14개 + 433개 fort 왕복 | **완료(0.133)**: Client 19개(cpp 검사 13 + 왕복 1 + 직접 5), 433개 모두 왕복 일치, 변이 23종 중 19 검출·4 등가 |
 | **TS4 빈 manager·로그인** | `AllocateEmptyManager` 계열, `CloneSectionFrom`·`Dump`·`ReadLoginImage`, `RawMissionLoginPackets` | cpppj 3개 + `fort-image-packets` 송신·예약 103행 + 패킷 경계 1개 | **완료(0.134)**: Core 2개(송신·예약 103행 + 경계)·Client 8개(cpp 검사 4 + 직접 4), 103행 모두 일치, 변이 34종 중 30 검출·4 등가 |
-| **TS5 Editor 파일** | `ExistingEditorTemplateValid`, `EditorFortFileDevices.BindLoad`의 실제 사용 | 0.127에서 미룬 10개(`EditorFileWriter` 1, `EditorFiles` 5, `EditorFortFileDevices` 4) | 미착수 |
+| **TS5 Editor 파일** | `ExistingEditorTemplateValid`, `EditorFortFileDevices.BindLoad`의 실제 사용, 한글 작업 경로를 manager에 UTF-8로 보관(`TemplateFileNames`) | 0.127에서 미룬 10개(`EditorFileWriter` 1, `EditorFiles` 5, `EditorFortFileDevices` 4) + 직접 4개 | **완료(0.135)**: Client 14개(cpp 검사 10 + 직접 4), 변이 31종 중 28 검출·3 등가 |
 | **TS6 이름·새 맵·목록** | `RawNewFort`·`NewFortManagerDevices`, `ClientFortGlobals`·`FortCurrentNameDevices`, `SoloMapCatalog.Probe`를 실제 저장소로 교체, `HostFortNameConfirmation` 연결 범위 판정 | 16개(`NewFort` 5, `FortCurrentNameDevices` 7, 목록 3, `EditorCatalogFiles` 1) | 미착수 |
 
 **433개 왕복 검사(TS3):** 검사 데이터 폴더의 `d/*.fort` 전체(`originals/d` 기준 433개)를 `InstallFile`로 읽고 `SaveImage`로 다시 쓴 뒤 `ReadSections`로 섹션과 flag를 비교한다. 기대값이 입력 파일 자체에서 나오므로 cpppj 없이 전 파일을 덮는다. 어긋나는 파일은 실패로 묶지 말고 원인을 먼저 분류한다(뒤꼬리 바이트, 비표준 flag, 0x8000 초과 등).

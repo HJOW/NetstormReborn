@@ -128,14 +128,14 @@ public sealed partial class CampaignTemplateStorage
             _sectionNames = names;
             Fort = value;
             Name = file;
-            if (Name.Length >= ManagerNameBytes || Name.Contains('\0'))
+            if (TemplateFileNames.ManagerByteCount(Name) >= ManagerNameBytes || Name.Contains('\0'))
             {
                 throw new ArgumentException("Template 실제 파일명256BYTE 계약 위반");
             }
             // 실제 DWORD 객체의 BYTE 뷰에 해당하는 임시 4바이트에 0을 쓰는 효과를 원본 생성자에서 수행한 뒤 같은 전역에 돌려준다
             Span<byte> global = stackalloc byte[4];
             Put(global, 0, globals.Version);
-            RawTemplateLoad.ConstructManager(Manager, Name, global);
+            RawTemplateLoad.ConstructManager(Manager, TemplateFileNames.ToManager(Name), global);
             globals.Version = Read(global, 0);
             Constructed = true;
             if (fileImage)
@@ -178,14 +178,14 @@ public sealed partial class CampaignTemplateStorage
         {
             ArgumentNullException.ThrowIfNull(file);
             ArgumentNullException.ThrowIfNull(globals);
-            if (Constructed || Streams.Count != 0 || file.Length >= ManagerNameBytes || file.Contains('\0'))
+            if (Constructed || Streams.Count != 0 || TemplateFileNames.ManagerByteCount(file) >= ManagerNameBytes || file.Contains('\0'))
             {
                 throw new ArgumentException("Template 빈Image 실제ctor계약");
             }
             // 실제 DWORD 객체의 BYTE 뷰에 해당하는 임시 4바이트에 0을 쓰는 효과를 원본 생성자에서 수행한 뒤 같은 전역에 돌려준다
             Span<byte> global = stackalloc byte[4];
             Put(global, 0, globals.Version);
-            RawTemplateLoad.ConstructManager(Manager, file, global);
+            RawTemplateLoad.ConstructManager(Manager, TemplateFileNames.ToManager(file), global);
             globals.Version = Read(global, 0);
             Name = file;
             Constructed = true;
@@ -662,7 +662,7 @@ public sealed partial class CampaignTemplateStorage
         /// <exception cref="ArgumentOutOfRangeException">256바이트 안에 NUL이 없다.</exception>
         internal string CurrentName()
         {
-            string current = TerminatedText(Manager.AsSpan(ManagerNameOffset, ManagerNameBytes), "Template 현재 manager 파일명의 NUL 범위");
+            string current = TemplateFileNames.FromManager(TerminatedText(Manager.AsSpan(ManagerNameOffset, ManagerNameBytes), "Template 현재 manager 파일명의 NUL 범위"));
             if (Name != current)
             {
                 Name = current;

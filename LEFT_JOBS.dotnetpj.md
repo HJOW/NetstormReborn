@@ -12,7 +12,7 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-02, 단위 기록 0.134 기준)
+### 0.1 현재 값 (2026-11-02, 단위 기록 0.135 기준)
 
 | 항목 | 값 |
 | --- | --- |
@@ -20,9 +20,9 @@
 | 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식. R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | `7ad11307`(0.133 Template 저장소 TS3). 이번 0.134(TS4)는 이 문서와 함께 커밋하므로 다음 단위가 해시를 적는다. 이후 `3b2b9e58`은 AGENTS.md 변경을 반영한 문서 커밋이다. |
-| 검사 | Release 전체 통과 수의 프로젝트별 마지막 확인값: **Client 795개**(0.134), **Core 1,119개**(0.134), **Assets 366개**(0.128). 서로 다른 단위에서 실행한 값이라 한 번의 `sln` 전체 실행으로 합산하지 않으며 실패·건너뜀은 모두 0이다. 0.134는 PORT_MAP 무결성 2개도 통과했다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 단위별 집중 검사 수는 0.127~0.134 기록과 이관 파일의 0.74~0.126을 본다. |
-| 포트 맵 | `PORT_MAP.tsv` 373행 (L1 197, port 176) |
+| 마지막 구현 커밋 | `2b34b797`(0.134 Template 저장소 TS4). 이번 0.135(TS5)는 이 문서와 함께 커밋하므로 다음 단위가 해시를 적는다. |
+| 검사 | Release 전체 통과 수의 프로젝트별 마지막 확인값: **Client 809개**(0.135), **Core 1,119개**(0.134, 0.135는 Core 코드를 바꾸지 않았다), **Assets 366개**(0.128). 서로 다른 단위에서 실행한 값이라 한 번의 `sln` 전체 실행으로 합산하지 않으며 실패·건너뜀은 모두 0이다. 0.135는 PORT_MAP 무결성 2개도 통과했다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 단위별 집중 검사 수는 0.127~0.135 기록과 이관 파일의 0.74~0.126을 본다. |
+| 포트 맵 | `PORT_MAP.tsv` 374행 (L1 197, port 177) |
 | fixture | 연결 160개(0.128에서 DataManager·Template 14개 추가). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 단위695 제품(표시 11.01), cpppj 커밋 `b61b2007`([LEFT_JOBS.md](LEFT_JOBS.md) 0.1절). 소스는 HEAD만 쓰고 미커밋 변경은 쓰지 않는다. 위 fixture의 `reflected-commit`(`f95a8db2`)은 영향 검토 전의 기준이라 올리지 않았다. |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**(LEFT_JOBS.md 0절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한다. |
@@ -179,7 +179,7 @@
   - Start의 실제 Config·Player·SP·AI·Gump 효과(0.70)
   - AI 설정의 Session 소유자, 실제 AI 생성자·초기 갱신·전략 AI(0.71, 0.72)
   - `PlayerParticipation`의 현재 getter는 이식했다(0.74). 실제 세션 바인딩과 동맹 수신 `ReceiveAlliance` 등 나머지는 미완료다.
-  - **Template/DataManager 계층 (0.127에서 미이식 확인, 0.128에서 원문 계층 이식, 0.130~0.134에서 저장소 TS0~TS4 이식, TS5 이후·로더는 미이식):** 0.128에서 `o/RawMemStream`, `RawDataManager*`(Lifetime·Selection·List·Resize·Image·FileSave·Initialize·Dump), `RawSnart`, `RawTemplateLifetime`·`RawTemplateLoad`·`RawTemplateSectionNames`, `RawFortImage`, `RawFortCurrentName`, `RawPlayerTemplateState`, `FortSerializationGlobals`와 `Template`의 타입 표가 필요 없는 부분(`FortTemplate` 자료·섹션 조회·`ReadSections`)을 `Netstorm.Core/Original`로 옮기고 원본 x86 fixture 14개(합 약 2만 행 이상)로 대조했다. 남은 것은 [Template 저장소 이식 계획](docs/dotnet-template-storage-plan-20261101.md)을 따른다(설계 네 가지는 2026-11-01 사용자 확정, 3절 12번). TS0(버퍼형·선행)은 0.130에서, TS1(설치·선택)은 0.131에서, TS2(동적 섹션)는 0.132에서, TS3(파일)은 0.133에서, TS4(빈 manager·로그인 이미지·송신 패킷)는 0.134에서 완료했다. 다음은 TS5 Editor 파일(재개 지점) → TS6 이름·새 맵·목록 순서이고, 뒤이어 F1 타입 표·`Parse`, F2 Fort 적재·저장 26개 모듈, F3 `RawCampaignSession` 연결이 온다. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS 단계만으로는 화면 변화가 거의 없다.
+  - **Template/DataManager 계층 (0.127에서 미이식 확인, 0.128에서 원문 계층 이식, 0.130~0.135에서 저장소 TS0~TS5 이식, TS6 이후·로더는 미이식):** 0.128에서 `o/RawMemStream`, `RawDataManager*`(Lifetime·Selection·List·Resize·Image·FileSave·Initialize·Dump), `RawSnart`, `RawTemplateLifetime`·`RawTemplateLoad`·`RawTemplateSectionNames`, `RawFortImage`, `RawFortCurrentName`, `RawPlayerTemplateState`, `FortSerializationGlobals`와 `Template`의 타입 표가 필요 없는 부분(`FortTemplate` 자료·섹션 조회·`ReadSections`)을 `Netstorm.Core/Original`로 옮기고 원본 x86 fixture 14개(합 약 2만 행 이상)로 대조했다. 남은 것은 [Template 저장소 이식 계획](docs/dotnet-template-storage-plan-20261101.md)을 따른다(설계 네 가지는 2026-11-01 사용자 확정, 3절 12번). TS0(버퍼형·선행)은 0.130에서, TS1(설치·선택)은 0.131에서, TS2(동적 섹션)는 0.132에서, TS3(파일)은 0.133에서, TS4(빈 manager·로그인 이미지·송신 패킷)는 0.134에서, TS5(Editor 파일 계층)는 0.135에서 완료했다. 다음은 TS6 이름·새 맵·목록(재개 지점) 순서이고, 뒤이어 F1 타입 표·`Parse`, F2 Fort 적재·저장 26개 모듈, F3 `RawCampaignSession` 연결이 온다. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS 단계만으로는 화면 변화가 거의 없다.
   - 0.5 R4의 나머지 범위
 - [ ] **R3 잔여 → 이정표 D1:** 위젯 본체와 실제 호스트의 표시·입력 경로는 대부분 옮겼으나(1절 색인의 호스트·메뉴 행) R3 전체 완료로 세지 않는다. 남은 것:
   - 대화창 분리(`ParseDialogPage`)와 `ConfigOverwriteAndQueueLifetime`의 남은 부분, MessageGump·대화창
@@ -198,11 +198,20 @@
   - 0.81: 반복 `--set`은 C# 호스트가 병합하고 같은 이름은 마지막 값을 쓰지만 cpppj는 마지막 묶음만 보관한다. 오라클 연결 때 계약 차이를 정리한다.
   - 0.86·0.87: 프레임 사이의 빠른 물리 입력 이력, 공통 음향·음악(R6 범위)과 옵션 변경 중 재생 관리가 남았다.
   - 0.93: 부분 생성 중 돌 버튼 내부 배경 할당 실패의 모든 사례를 검증하지 않았다.
-  - 0.126: cpppj와의 이관 장부 교차 읽기, `MatchDisk`의 Win32 특수 경계(절대 경로·긴 경로)는 검증하지 않았다. Native 이름 변경과 실제 Editor State1 월드·저장·Save as의 Template/현재 이름 소유자는 미이식이다(Template 저장소 TS5·TS6·F3 범위).
+  - 0.126: cpppj와의 이관 장부 교차 읽기, `MatchDisk`의 Win32 특수 경계(절대 경로·긴 경로)는 검증하지 않았다. Native 이름 변경과 실제 Editor State1 월드·저장·Save as의 Template/현재 이름 소유자는 미이식이다(Template 저장소 TS6·F3 범위).
 
 ### 0.10~0.126 — 이관
 
-2026-10-28 문서 작업 기록과 단위 기록 0.11~0.65는 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073)로, 단위 기록 0.66~0.126은 [이관 파일의 2026-11-02 절](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126)로 옮겼다. 완료 범위는 1절 색인을 본다. 아래 0.127 이후는 별도 단위 문서가 없고 다음 작업(Template 저장소 TS5 이후)의 직접 근거라 본문에 남겼다. 0.126 이하에서 이후 단위로 해소되지 않은 한계는 0.9의 '이월한 이식 한계' 항목으로 옮겼다.
+2026-10-28 문서 작업 기록과 단위 기록 0.11~0.65는 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073)로, 단위 기록 0.66~0.126은 [이관 파일의 2026-11-02 절](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126)로 옮겼다. 완료 범위는 1절 색인을 본다. 아래 0.127 이후는 별도 단위 문서가 없고 다음 작업(Template 저장소 TS6 이후)의 직접 근거라 본문에 남겼다. 0.126 이하에서 이후 단위로 해소되지 않은 한계는 0.9의 '이월한 이식 한계' 항목으로 옮겼다.
+
+### 0.135 단위 기록 — Template 저장소 TS5: Editor 파일 계층과 한글 작업 경로 이름 (2026-11-02, HJOW-Athlon)
+
+- **구현:** (1) `EditorFortFileDevices.ExistingEditorTemplateValid`(정적 메서드): cpppj 자유 함수(원문 0041aad0)를 옮겼다. 현재 헤더 첫 DWORD의 네 바이트 중 하나라도 0이 아니면 1이고 토큰 조회나 파일 서명은 보지 않는다(호스트가 모르는 비영 토큰도 1). 9칸 밖은 `ArgumentOutOfRangeException(slot)`, null 저장소는 `ArgumentNullException`이다. `BindLoad`는 0.127에서 이미 옮겼고 이번에 `LoadFile`에 실제로 연결해 검사했다(읽기·readonly 판정·ASCII `stricmp` 비교). (2) `Netstorm.Client/Host/TemplateFileNames.cs`(새): manager+c의 이름 바이트 문자열(문자 하나가 바이트 하나, Core `RawTemplateLoad`와 같은 표기)과 호스트의 실제 문자열 사이를 UTF-8로 바꾼다. cpppj는 이름이 UTF-8 `std::string`이라 한글·이모지 작업 경로(5차 목표의 사용자 홈 경로 포함)가 그대로 manager에 UTF-8 바이트로 들어가지만, TS1~TS4의 C# 저장소는 이름을 문자 하나 = 바이트 하나로만 쓰고 읽어 한글 경로를 담지 못하고 저장 때 쓰기 장치에 깨진 경로가 넘어갈 상태였다(그 단계의 검사는 모두 ASCII 이름이라 드러나지 않았다). 변환을 `Image` 생성자·`ConstructName`·`CurrentName`과 이름이 호스트 장치로 나가는 지점(읽기, readonly, 이름 비교, 서명 거부 요청, 권한, 쓰기)과 들어오는 지점(`LoadFile` 요청 이름)에 넣었다. 저장소 안쪽(Core 호출, 이름표 검색, `Dump` 출력)은 계속 바이트 문자열이다. ASCII 이름은 동작이 같다. 이름 한도는 UTF-8 바이트 수 256 미만이다(한글 85자까지).
+- **C#에서 달라진 모양:** cpppj의 `ExistingEditorTemplateValid`는 헤더 파일의 자유 함수지만 C#은 `EditorFortFileDevices`의 정적 메서드다. cpppj의 `FortTemplate::Parse`는 아직 없어(F1) 검사에서는 같은 섹션 읽기만 하는 `FortTemplate.ReadSections`로 대신했다. cpppj 검사는 실제 보호 루트(`originals`·`originalCD`)를 읽어 보호 경로로 넘겼지만 C# 검사는 임시 폴더에 둔 복사본을 보호 루트로 쓴다(저장 경로가 틀려도 원본에 쓸 수 없게 한다). 실제 TEST01 원문은 읽기 전용 입력으로만 쓰고 끝에 다시 읽어 변하지 않았음을 확인한다. `FortSelectionHooks.Core`는 `Memory<byte>`를 요구해 검사에서 `state.Get(slot)`을 부른 뒤 `storage.State(slot).Bytes`를 돌려준다.
+- **검증:** `Client.Tests`에 `EditorTemplateFileTests` 14개를 추가했다. cpppj 검사 10개: `EditorFileWriterTests`의 실제 저장(현재 manager 이름·서명·기존 끝 보존, 한글·이모지 경로) 1개, `EditorFilesTests` 5개(TEST01 Notify 저장·다시 읽기와 저장 억제·숨김 소유자·빌린 헤더 isMine·+16 관문, 새 manager 서명 -1 정규화와 signed 타입 수·현재 섹션 검색, 짧아진 Template의 기존 끝 보존, 보호 이름 거부, Fort 선택의 State·Notify·저장·다시 읽기), `EditorFortFileDevicesTests`에서 저장소를 쓰던 부분 4개(저장 억제 DWORD 관문, 유효성, 준비한 수정본 Load, 실제 readonly 속성이 Config와 독립으로 헤더 +8에 반영). 직접 4개: 한글 이름의 UTF-8 보관과 바이트 수 한도, 빈 manager 생성의 같은 규칙, 서명 거부 요청이 실제 경로를 받음, `LoadFile`이 장치에 실제 경로를 넘기고 다시 읽으면 같은 이름으로 판정. Client 전체 Release 809개(새 14개) 통과, 실패·건너뜀 0. Core는 이 단위에서 바꾸지 않았고 PORT_MAP 무결성 2개만 다시 돌려 통과했다. 변이 31종(`ExistingEditorTemplateValid` 7, 이름 변환 도우미 3, 이름이 흐르는 호출 지점 14, 서명 flag·FE 판정·0x46 3, Template 쓰기 잘라쓰기 1, `BindLoad` 3)을 `extracted/dn-mutation-ts0` 사본에서 시도했다. 첫 실행에서 4종을 놓쳤다. 슬롯 경계 `>=`→`>`(E4)는 슬롯 9에서 `Slice`가 같은 예외 형식을 던져 가려졌기 때문이라 검사가 예외 매개변수 이름(`slot`)과 `uint.MaxValue`를 확인하게 고쳐 검출했다. 남은 3종은 등가 변이다: `Image` 생성자·`ConstructName`·`ManagerByteCount`가 바이트 수 대신 문자 수로 한도를 검사해도 Core `ConstructManager`가 변환된 바이트 문자열이 256자 이상이면 같은 `ArgumentException`을 내는 중복 방어다. 28종을 검출했다. 원본 x86 fixture가 없는 어댑터 계층이라 L1이 아니다.
+- **PORT_MAP:** `CampaignTemplateStorage.cpp` → `TemplateFileNames.cs` 1행을 `port`(기준 커밋 `ce5f58f9`)로 추가했다. cpppj에 대응 파일이 없는 C# 보조 변환이라 이름을 쓰는 저장소 본체 파일에 대응시켰다. 374행(L1 197, port 177). `EditorFortFileDevices` 대응 행의 기준 커밋(`473432cd`)은 `cpp_sync.py --ports`상 변경이 없어 그대로다.
+- **실제 호스트:** 저장소와 Editor 파일 장치를 호스트가 아직 소비하지 않아 호스트 실행은 하지 않았다. 원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다.
+- **남은 것·주의:** TS6(`RawNewFort`·`NewFortManagerDevices`, `ClientFortGlobals`·`FortCurrentNameDevices`, `SoloMapCatalog.Probe`를 실제 저장소로 교체, `HostFortNameConfirmation` 연결 범위 판정)부터다. `BindCurrentName`은 manager+c의 256바이트를 그대로 빌려주므로 이름 변경 장치(TS6)가 한글 경로를 UTF-8 바이트로 쓰는지 그때 확인한다. `Dump`가 출력하는 파일명은 바이트 문자열 그대로라 로그에서 한글 경로는 UTF-8 바이트 문자로 나온다(cpppj도 UTF-8 바이트를 그대로 출력). 짝이 맞지 않는 UTF-8(옛 ANSI 이름)은 manager에서 꺼낼 때 U+FFFD로 바뀌어 왕복하지 않는다(현재 호출 경로는 모두 UTF-8 경로다). 같은 작업 트리에서 다른 세션이 cpppj 파일(`RawConstructionNotice`·`UberGump` 등)을 수정·추가 중이었고 이 단위는 그 파일들을 쓰지 않았다(HEAD 기준만 사용).
 
 ### 0.134 단위 기록 — Template 저장소 TS4: 빈 manager·로그인 이미지·송신 패킷 (2026-11-02, HJOW-Athlon)
 
@@ -303,7 +312,7 @@
 | Tutorial Init·초기화 조립 (11-01, 0.105~0.110) | Tutorial Init(원본 152행), 미션 전투 옵션 초기화(전체 옵션 바이트 fixture 대조), 요새 요청의 상태144바이트·Zone 복제, Guide와 Init 상태 공유, 기술 허용 목록·공유 제한 표 쓰기, 초기화 순서 조립 | [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126) 0.105~0.110 | L1. 실제 소유자 조립은 R4 |
 | 호스트 Help·Options·옵션 저장 (11-01, 0.111~0.114) | Help 팝업의 About 행과 Tell, Options·해상도·음량 팝업과 설정 토글, 화면 모드 절대 변경·미리보기·확인 명령, 변경된 옵션의 options.cfg 저장과 재시작 화면 크기 복원 | [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126) 0.111~0.114 | 새 경로. 9-1 C의 일부 |
 | Edit 맵 목록·이름·작업본 (11-01, 0.115~0.127) | 편집 맵 목록 50칸 캐시와 분류·행 표시, Tell 맵 열 분할·파일 키 복구, AskEditFort/ReadFort·편집 복귀 State 예약, 기본 디스크 열거와 Fort 섹션 기반 맵 메타, 호스트 Edit 입력·맵 목록, 새 Fort 이름 확인·호스트 문자 입력·이름/숫자 모달, 편집 이관 장부·작업본 장치, 편집 파일 장치(존재·readonly·권한·Template 쓰기·원자 쓰기) | [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126) 0.115~0.126, 이 문서 0.127 | 새 경로 |
-| DataManager·Template 저장소 (11-01~02, 0.128~0.134) | 원문 계층(MemStream·DataManager·Template·Fort 이미지·State, 원본 x86 fixture 14개), ClientTemplateSectionNames, 저장소 TS0~TS4(용량을 가진 섹션 버퍼·설치/선택·동적 섹션·파일 읽기/저장·빈 manager·로그인 송신 이미지, 원본 .fort 433개 읽기→저장 왕복 일치, 송신 패킷 `fort-image-packets` 219행 전체 일치) | 이 문서 0.127~0.134, [이식 계획](docs/dotnet-template-storage-plan-20261101.md) | 새 경로. TS5 이후 미착수 |
+| DataManager·Template 저장소 (11-01~02, 0.128~0.135) | 원문 계층(MemStream·DataManager·Template·Fort 이미지·State, 원본 x86 fixture 14개), ClientTemplateSectionNames, 저장소 TS0~TS5(용량을 가진 섹션 버퍼·설치/선택·동적 섹션·파일 읽기/저장·빈 manager·로그인 송신 이미지·Editor 파일 계층, 원본 .fort 433개 읽기→저장 왕복 일치, 송신 패킷 `fort-image-packets` 219행 전체 일치, 한글 작업 경로의 UTF-8 이름 보관) | 이 문서 0.127~0.135, [이식 계획](docs/dotnet-template-storage-plan-20261101.md) | 새 경로. TS6 이후 미착수 |
 
 최신 전체 빌드·검사 결과는 0.1절을 따른다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 새 경로의 진행도는 Client 검사와 0.5절의 실제 단계 완료 기준을 함께 본다.
 

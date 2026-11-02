@@ -33,10 +33,16 @@ public sealed record EditorFortPathEffects
 /// </summary>
 /// <remarks>
 /// 2026-11-01 0.127에서 추가했다. 생성만으로는 파일이나 manager를 읽거나 쓰지 않는다. 반환하는 경로 문자열은 다음 호출까지 유효한 scratch가 아니라 값이다.
-/// cpppj의 <c>ExistingEditorTemplateValid</c>는 Template 저장소(<c>CampaignTemplateStorage</c>)가 필요해 아직 옮기지 않았다.
+/// cpppj의 자유 함수 <c>ExistingEditorTemplateValid</c>는 Template 저장소가 옮겨진 뒤 2026-11-02 0.135(TS5)에서 정적 메서드 <see cref="ExistingEditorTemplateValid"/>로 옮겼다.
 /// </remarks>
 public sealed class EditorFortFileDevices
 {
+    /// <summary>Template 칸 수(원본 헤더 9개)다. <see cref="ExistingEditorTemplateValid"/>의 슬롯 범위다.</summary>
+    private const uint TemplateSlots = 9;
+
+    /// <summary>Template 헤더 한 칸의 폭(바이트)이다. 첫 DWORD가 현재 manager 토큰이다.</summary>
+    private const int TemplateHeaderBytes = 20;
+
     /// <summary>원본·CD 밖의 유일한 작업 namespace와 실제 권한·쓰기 장치다.</summary>
     private readonly EditorFiles _work;
     /// <summary>원본·아카이브를 읽기만 하는 파일 시스템이다. 준비 뒤의 읽기는 이것을 거치지 않는다.</summary>
@@ -143,4 +149,24 @@ public sealed class EditorFortFileDevices
         ReadOnly = ReadOnly,
         SameName = (first, second) => string.Equals(AsciiLower(CString(first)), AsciiLower(CString(second)), StringComparison.Ordinal)
     };
+
+    /// <summary>
+    /// 0041aad0: 지정한 칸의 현재 헤더 첫 DWORD(manager 토큰)가 0이 아니면 1, 0이면 0이다. 토큰 조회나 파일 서명을 추가로 검사하지 않으므로
+    /// 호스트가 모르는 비영 토큰도 원문처럼 1이다. 이후 접근이 실패하는지는 별개다. 호스트가 편집 설치 부모의 <c>valid</c> 판정에 공급한다.
+    /// </summary>
+    /// <param name="storage">헤더 180바이트를 가진 Template 저장소.</param>
+    /// <param name="slot">0~8.</param>
+    /// <returns>manager가 있으면 1, 없으면 0.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">슬롯이 9칸 밖이다.</exception>
+    /// <remarks>2026-11-02 0.135(TS5)에서 추가했다. cpppj <c>client/EditorFortFileDevices</c>의 <c>ExistingEditorTemplateValid</c>를 옮겼다.</remarks>
+    public static int ExistingEditorTemplateValid(CampaignTemplateStorage storage, uint slot)
+    {
+        ArgumentNullException.ThrowIfNull(storage);
+        if (slot >= TemplateSlots)
+        {
+            throw new ArgumentOutOfRangeException(nameof(slot), slot, "Editor valid의 실제 9슬롯 범위");
+        }
+        ReadOnlySpan<byte> header = storage.Headers.Span.Slice((int)slot * TemplateHeaderBytes, 4);
+        return header[0] != 0 || header[1] != 0 || header[2] != 0 || header[3] != 0 ? 1 : 0;
+    }
 }

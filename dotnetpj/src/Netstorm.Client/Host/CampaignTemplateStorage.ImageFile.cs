@@ -138,7 +138,7 @@ public sealed partial class CampaignTemplateStorage
                     {
                         throw new InvalidOperationException("Template 파일 읽기의 실제 요청 인수 불일치");
                     }
-                    source = NeedFile(fileEffects.Read)(fileName) ?? throw new InvalidOperationException("Template 실제 파일 Load 장치 미연결");
+                    source = NeedFile(fileEffects.Read)(TemplateFileNames.FromManager(fileName)) ?? throw new InvalidOperationException("Template 실제 파일 Load 장치 미연결");
                     Put(length, 0, (uint)source.Length);
                     return source.Length == 0 ? 0u : FileInputToken;
                 },
@@ -160,7 +160,7 @@ public sealed partial class CampaignTemplateStorage
                     TypeCount = () => NeedFile(fileEffects.TypeCount)(),
                     FileName = file.FileName,
                     TooManyTypes = () => NeedFile(fileEffects.TooManyTypes)(),
-                    RejectFile = fileName => NeedFile(fileEffects.RejectFile)(fileName),
+                    RejectFile = fileName => NeedFile(fileEffects.RejectFile)(TemplateFileNames.FromManager(fileName)),
                 };
                 return RawDataManagerImage.ReadTemplateFileSignature(Manager, cursor, signature);
             };
@@ -258,14 +258,14 @@ public sealed partial class CampaignTemplateStorage
                     Put(fields, 12, (uint)image.Storage.Length);
                 },
                 FileName = source => RawTemplateLoad.FileName(source),
-                Permissions = (name, mode) => (file.Permissions ?? throw new InvalidOperationException("Template 실제 파일 권한 장치 미연결"))(name, mode),
+                Permissions = (name, mode) => (file.Permissions ?? throw new InvalidOperationException("Template 실제 파일 권한 장치 미연결"))(TemplateFileNames.FromManager(name), mode),
                 Write = (name, pointer, length) =>
                 {
                     if (pointer != SavedImageToken || image is null || length > (uint)image.Storage.Length)
                     {
                         throw new ArgumentOutOfRangeException(null, "Template 파일 저장의 실제 이미지 포인터/길이 범위");
                     }
-                    (file.Write ?? throw new InvalidOperationException("Template 실제 파일 쓰기 장치 미연결"))(name, image.Storage.AsSpan(0, (int)length));
+                    (file.Write ?? throw new InvalidOperationException("Template 실제 파일 쓰기 장치 미연결"))(TemplateFileNames.FromManager(name), image.Storage.AsSpan(0, (int)length));
                 },
                 Release = pointer =>
                 {

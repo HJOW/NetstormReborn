@@ -376,3 +376,4 @@ cpppj/src/o/SquidUnpop.cpp	Netstorm.Core/Original/RawUnpop.cs	c7459e61da4d3b6a97
 cpppj/src/o/Template.cpp	Netstorm.Core/Original/FortTemplate.cs	d48ea75609a1fe57db3acee4e28167de1723651b	port
 cpppj/src/o/Template.h	Netstorm.Core/Original/FortTemplate.cs	d48ea75609a1fe57db3acee4e28167de1723651b	port
 cpppj/src/platform/Bitmap.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
+cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/TemplateFileNames.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port

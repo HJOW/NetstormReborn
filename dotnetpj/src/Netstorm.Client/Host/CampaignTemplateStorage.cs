@@ -507,7 +507,8 @@ public sealed partial class CampaignTemplateStorage
         {
             // 항상 전달받은 현재 handle의 실제 +12를 빌린다
             FileName = manager => RawTemplateLoad.FileName(_images[manager].Manager),
-            SameName = (first, second) => NeedFile(file.SameName)(first, second),
+            // 저장소 안의 이름은 manager 바이트 문자열이므로 호스트 장치에는 실제 문자열로 바꿔 넘긴다
+            SameName = (first, second) => NeedFile(file.SameName)(TemplateFileNames.FromManager(first), TemplateFileNames.FromManager(second)),
             WrongName = () => NeedFile(file.WrongName)(),
             Allocate = bytes =>
             {
@@ -520,7 +521,7 @@ public sealed partial class CampaignTemplateStorage
             // 생성자의 공유 version 0과 실제 Image 소유를 끝낸 뒤 원문 부모가 header.ptr를 공개한다
             Construct = (manager, fileName) =>
             {
-                Image created = new(fort, fileName, _serializationGlobals, _sectionNames, fileImage: true);
+                Image created = new(fort, TemplateFileNames.FromManager(fileName), _serializationGlobals, _sectionNames, fileImage: true);
                 created.Fort.Sections.Clear();
                 if (!_images.TryAdd(manager, created))
                 {
@@ -528,14 +529,14 @@ public sealed partial class CampaignTemplateStorage
                 }
                 return manager;
             },
-            ReadOnly = fileName => NeedFile(file.ReadOnly)(fileName),
+            ReadOnly = fileName => NeedFile(file.ReadOnly)(TemplateFileNames.FromManager(fileName)),
             // readonly callback 뒤 header에서 재조회한 manager를 그대로 읽는다
             ReadFile = manager => _images[manager].ReadFile(file),
             IsCurrent = () => slot == NeedFile(file.CurrentSlot)(),
             RefreshTitle = () => NeedFile(file.RefreshTitle)(),
             Lifetime = Effects(),
         };
-        RawTemplateLoad.Load(Header(slot), name, hooks);
+        RawTemplateLoad.Load(Header(slot), TemplateFileNames.ToManager(name), hooks);
     }
 
     /// <summary>
