@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **738 / 표시 버전11.01 유지**다. 최신 단위739는 사용자 지정 게임/통합 테스트/기존 전체 선택 빌드와 루트README.md/README.en.md 컴파일 안내를 구현했다. `powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1`을 저장소 루트에서 실행해 선택하거나 `-Mode Game`, `-Mode Tests`, `-Mode All`을 지정한다. 새 CMake 구성의 테스트 기본값은 OFF이며 기존 CI/프리셋은 전체 빌드를 유지한다. 선택 확인15개·게임/집중 테스트 대상 증분 빌드·전체 구성 그래프를 확인했고 EXE 해시는 그대로다. [739 기록](../docs/exe/cpp-build-modes-20261102.md)·[현재 인계](../LEFT_JOBS.md)를 따른다. 게임 소스의 최신 검증은 [738](../docs/exe/cpp-editor-file-ring-20261102.md)의 공유 경로 고리/실제 Template·집중51개 실패0·기존원문1902행이다. 새Native/fixture/GUI0이며 GUI735/전체34/ZIP645·644는 별도 제품 근거다.733의5차/플랫폼 요구·미구현 상태와 전체1~8차 목표를 유지한다.
+현재 실행 제품은 **740 / 표시 버전11.01 유지**다. 실제 Edit Template 저장과 삭제도 같은 Client 경로 고리에 연결했다. 직접 chmod는 예약하지 않는 원문 호출 순서를 유지한다. 새7개/18단언 실패 뒤 집중58개 실패0·기존 원문1902행 재생이며 실제Unicode/tail/생성/공유거부/readonly/누락/보호·장부분리·35섹션SaveFile·10칸뷰수명과 CLI11.01/종료0을 확인했다. [740 기록](../docs/exe/cpp-editor-mutation-ring-20261102.md)·[현재 인계](../LEFT_JOBS.md)를 따른다. [739의 선택 빌드](../docs/exe/cpp-build-modes-20261102.md)는 완료했으며 게임/통합 테스트/기존 전체를 고를 수 있다. 새 검사는 기존 집중 대상에 추가해 테스트 실행 대상66개를 유지했다. 새Native/fixture/GUI0이고 GUI735/전체34/ZIP645·644는 별도 제품 근거다.733의5차/플랫폼 요구·미구현 상태와 전체1~8차 목표를 유지한다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 

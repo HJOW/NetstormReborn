@@ -2996,3 +2996,7 @@ target_sources(netstorm_tests PRIVATE EditorFileRingTests.cpp)
 add_executable(netstorm_editor_file_ring_tests FocusedTestMain.cpp EditorFileRingTests.cpp EditorFortFileDevicesTests.cpp EditorFilesTests.cpp EditorFileWriterTests.cpp EditorUnicodeFilesTests.cpp FilePathClientTests.cpp FileNameTests.cpp StaticStringsTests.cpp SavedStateFilesTests.cpp BaseFileReadPolicyTests.cpp BaseFileSecondaryTests.cpp)
 target_link_libraries(netstorm_editor_file_ring_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_editor_file_ring_tests)
+
+# 같은 Edit 집중 대상에서 실제 저장/삭제의 공유 고리와 직접 chmod 경계를 확인한다(740).
+target_sources(netstorm_tests PRIVATE EditorFileMutationRingTests.cpp)
+target_sources(netstorm_editor_file_ring_tests PRIVATE EditorFileMutationRingTests.cpp)

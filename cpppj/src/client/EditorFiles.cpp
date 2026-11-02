@@ -174,7 +174,7 @@ bool EditorFiles::ReadOnly(std::string_view fileName,const std::function<void(st
     return (status.st_mode&S_IWUSR)==0; //cpppj Windows외의호스트용대응이며NTFS관측으로주장하지않는다.
 #endif
 }
-// chmod 실패는 원본처럼 쓰기를 중단시키지 않는다. 실제 쓰기 실패는 Write가 보고한다.
+// 원문44d8d0은 현재 이름으로 chmod를 직접 호출하므로 장치 경로 고리를 예약하지 않는다. 실패 반환도 쓰기를 중단시키지 않는다.
 void EditorFiles::MakeWritable(std::string_view fileName,std::uint32_t mode) const {
     if (mode!=0x180U) throw std::invalid_argument("편집 파일 장치의 미지원 원본 권한 모드");const auto path=Checked(PathFromUtf8(fileName));
 #ifdef _WIN32
@@ -191,6 +191,7 @@ void EditorFiles::Write(std::string_view fileName,std::span<const std::uint8_t> 
 // 실제Template저장은기존파일의tail을자르지않고원문BaseFile의mode1/fallback/void쓰기/반납순서를사용한다.
 void EditorFiles::WriteTemplate(std::string_view fileName,std::span<const std::uint8_t> bytes) const {
     const auto path=Checked(PathFromUtf8(fileName));EditorTemplateWriter writer(path);
+    static_cast<void>(o::ReadBaseFileDevice(PathToUtf8(path),*fileNames_)); //41bb90→41b4c0은절대경로도같은459900을한번사용한다.r+b실패뒤w+b는같은예약을이어쓴다.
     if (!o::OpenBaseFileDisk(writer.state,PathToUtf8(path),1,1,writer.hooks)) throw std::runtime_error("편집Template작업본파일열기실패"); //0041b4c0의장치경로쓰기실패는예외이며TAFF/보조경로로재조회하지않는다.
     o::WriteBaseFile(writer.state,bytes,-1,writer.hooks); //새r+b/w+b FILE의현재0위치부터요청한이미지한element를쓴다.부모폴더는생성하지않는다.
 }
@@ -201,6 +202,7 @@ TemplateFileWriteHooks EditorFiles::Writer() const {
 // 실제 삭제 직전에 같은 canonical 경로를 다시 검사하며 원본/CD/작업루트 밖 요청은 수행하지 않는다.
 void EditorFiles::Delete(std::string_view fileName) const {
     const auto path=Checked(PathFromUtf8(fileName)); // 디렉터리 제거와 재귀 삭제는 원문 DeleteFileA 경계에 포함되지 않는다.
+    static_cast<void>(o::ReadBaseFileDevice(PathToUtf8(path),*fileNames_)); //41aef0의절대장치판정도삭제성공/실패전에Client의같은한칸을사용한다.
 #ifdef _WIN32
     static_cast<void>(_wunlink(path.c_str())); //Windows10/11의 한글 파일명은 원본 ANSI unlink 대신 같은 wide CRT로 삭제한다.
 #else

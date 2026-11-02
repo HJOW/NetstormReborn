@@ -1,0 +1,234 @@
+{
+  "unit": 740,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "last_full_decompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "previous_goal_turn": "진척:739 선택 빌드/문서/커밋 완료",
+  "summary": "실제 Edit Template 저장/삭제에 같은 Client 경로 고리를 연결하고 원문 직접 chmod의 비소모를 보존",
+  "status": "단위 완료, 전체1~8차 목표 진행 중",
+  "runtime_product": 740,
+  "display_version": "11.01",
+  "exe_sha256": "a4ba503283f1c4d6362f6cb524ce79f709fd030278850f1b64b950dbf9a46b4d",
+  "implementation": [
+    "WriteTemplate의 보호 검사/지역 파일 구성 뒤 같은 FileNameOwner의 장치 getter1회",
+    "Delete는 성공/실패/부재와 무관하게 보호 검사 뒤 같은 장치 getter1회",
+    "직접 chmod와 호스트 전용 준비/일반 잘라쓰기는0회",
+    "기존 집중/통합 대상에 새 검사 파일을 연결하고 테스트 실행 파일 수66개/전체71대상 유지"
+  ],
+  "static_original_pe": {
+    "binary": "originals/Netstorm.exe",
+    "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "functions": {
+      "save_parent": {
+        "address": "0044d8d0",
+        "size": 175,
+        "sha256": "8dfeb94da01ccbc31c10172bcde2ab87fd28f87c7e884e0cd2605200e76fdd89",
+        "calls": [
+          "0x44d640",
+          "dword ptr [edx]",
+          "0x4f868b",
+          "dword ptr [edx]",
+          "0x41bb90",
+          "0x4e4354"
+        ]
+      },
+      "template_write": {
+        "address": "0041bb90",
+        "size": 140,
+        "sha256": "4cbbd3fa83e439cc80f4f43b19c57e449471745bcc164f764cd3f1b201f75f48",
+        "calls": [
+          "0x41b4c0",
+          "0x41a910",
+          "0x4e54b9",
+          "0x4e4354"
+        ]
+      },
+      "open_policy": {
+        "address": "0041b4c0",
+        "size": 917,
+        "sha256": "0bbaa1f76b11fadc429fe2e3501b263ba42400fdaa2a27330d42713bab15d00f",
+        "calls": [
+          "0x45a220",
+          "0x459900",
+          "0x459c60",
+          "0x41a5b0",
+          "0x41a340",
+          "0x41b460",
+          "0x41a0d0",
+          "0x4e5a09",
+          "0x459c60",
+          "0x41a5b0",
+          "0x41a340",
+          "0x41b460",
+          "0x41a0d0",
+          "0x4e5a09",
+          "0x4e59a3",
+          "0x41a0d0",
+          "0x4e5a09",
+          "0x41a5b0",
+          "0x41a340",
+          "0x41b460",
+          "0x41a0d0",
+          "0x4e5a09",
+          "0x459c60",
+          "0x41a5b0",
+          "0x41a340",
+          "0x41b460",
+          "0x41a0d0",
+          "0x4e5a09",
+          "0x41a620",
+          "0x4595f0",
+          "0x4e59a3",
+          "0x41a0d0",
+          "0x4e5a09",
+          "0x4e59a3",
+          "0x41a0d0",
+          "0x4e5a09"
+        ]
+      },
+      "disk_open": {
+        "address": "0041a5b0",
+        "size": 103,
+        "sha256": "3b2e57dfb5472393a7b13f00c9c849b0df84a9241d7590d4abe8fc8d83d8f676",
+        "calls": [
+          "0x4e545a",
+          "0x4e545a"
+        ]
+      },
+      "delete": {
+        "address": "0041aef0",
+        "size": 143,
+        "sha256": "2922a6ea39dbba7bdbd6bba4341937c9cff17e741900b42123bb25a925415515",
+        "calls": [
+          "0x45a220",
+          "0x459900",
+          "0x459c60",
+          "0x4e58e4",
+          "0x4595f0"
+        ]
+      },
+      "chmod": {
+        "address": "004f868b",
+        "size": 65,
+        "sha256": "b435dd9ac7881ab8364ef25973df6d0acd5261f3426a0688ca56c5e59eb977b5",
+        "calls": [
+          "dword ptr [0x500120]",
+          "dword ptr [0x500118]",
+          "dword ptr [0x5000a0]",
+          "0x4ed5ee"
+        ]
+      }
+    },
+    "kind": "정적 명령 대조, 원본 프로세스/Native 실행0"
+  },
+  "tests": {
+    "target": "netstorm_editor_file_ring_tests",
+    "new_cases": 7,
+    "before": {
+      "cases": 7,
+      "failed_checks": 18,
+      "exit": 1
+    },
+    "after": {
+      "cases": 58,
+      "failed_checks": 0,
+      "exit": 0
+    },
+    "frozen_native_replay": {
+      "device": 32,
+      "filename": 352,
+      "static_strings": 204,
+      "saved_state_crt": 263,
+      "read_policy": 1024,
+      "archive_registration": 27,
+      "rows": 1902,
+      "cases": [
+        "FileNameDevice_ReplaysNative32WholeSlotsAndReadonlyInput",
+        "FileName_ReplaysNative352WholeBuffersAndPartialThrows",
+        "StaticStrings_ReplaysIndependentPe204",
+        "SavedStateFiles_NativeCrt263AndFirstDuplicateErrorMapping",
+        "BaseFile_ReadPolicyReplaysIndependentNative1024",
+        "BaseFile_SecondaryReplaysIndependentNativeRegistration27"
+      ]
+    },
+    "coverage": [
+      "Unicode/tail/빈 쓰기/새 파일 생성 fallback의 상위 예약 한 번",
+      "공유 거부와 부모 부재의 실패 예약/데이터 보존",
+      "readonly/성공/누락 삭제 및 chmod0회",
+      "보호 경로/장부 독립 소유자",
+      "실제35섹션 SaveFile",
+      "열 번째 쓰기의 빌린 뷰 덮어쓰기"
+    ]
+  },
+  "build": {
+    "configuration": "Release",
+    "targets": [
+      "NetstormCpp",
+      "netstorm_editor_file_ring_tests"
+    ],
+    "exit": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "cli": {
+    "arguments": [
+      "--help"
+    ],
+    "exit": 0,
+    "version": "11.01",
+    "game_frames": 0
+  },
+  "protected": {
+    "count": 2652,
+    "unchanged": true,
+    "agents": 1,
+    "originals": 1394,
+    "original_cd": 425,
+    "fixtures": 832,
+    "new_fixture": 0
+  },
+  "scope": {
+    "new_game_processes": 0,
+    "new_gui_processes": 0,
+    "new_native_executions": 0,
+    "new_multiplayer_tests": 0,
+    "communication_tests": 0,
+    "full_cpp_suite": false,
+    "full_34_paths": false,
+    "new_zip": false
+  },
+  "source_sha256": {
+    "LEFT_JOBS.md": "c81be1405896029b310be3e6b799e3ad7ed73fdc3d068e3cc3f1c56a4fa0a98a",
+    "README.md": "6ecf5e6940e033c9ee224528cabb38c80ff80de14ac3380385250c3ad8b37c1c",
+    "README.en.md": "a8191660db09170ac5df5cca7c0ed13a3fd34f8a58ba27b1aea072debe7c3f7c",
+    "cpppj/README.md": "41b1d3ade7460aa56e2bae7bfe04f74f9c3f2c41e17d15e1720e20e0caa14971",
+    "cpppj/src/client/EditorFiles.cpp": "28d6c7b82f20c5babe7577dc5d87ac303e6a1b2d72c2d84724f1359b5ec1b01f",
+    "cpppj/tests/CMakeLists.txt": "33beaf3848684fb79df92f9208e9d4bf299962cca0e397dab86d354447aea8d3",
+    "cpppj/tests/EditorFileMutationRingTests.cpp": "db9f1f75b62fec1162e385d0293b4bffd7241d8c82e2cf7b2fe98d7f3af5fd9e",
+    "docs/exe/cpp-editor-mutation-ring-20261102.md": "f3cc50bd32fee60d220716cde0e40bdad39fb83d3dd443cd86a5b2dcc9bd6384"
+  },
+  "raw_evidence": {
+    "directory": "extracted/cpp-editor-mutation-ring-740",
+    "sha256": {
+      "build-before.log": "b61b2c42cd293e791f105c033ef7335045e2887022e36ddc4a43379f7ad6b3f6",
+      "tests-before.log": "0bf35a6395406ecee64749b06f492d6864cab832b52c9ea9f5d90680af7dced7",
+      "build-v1.log": "aa2aa65ec3c43561151dc516e8bccfc6fab1cc79fc49e690341664d7e408736d",
+      "tests-v1.log": "302b3fbd1cb3bd2803d43479d6def7b043c9de2c56e4f2ef2c8d475862dd1fe2",
+      "cli-help.log": "1e02d8c4af17df978c6ef2820417990b656189c8d673224c491f5be93a17c6ac",
+      "original-static.json": "184f9d74d0c004bd10a8adfa777e77b4690e5266adec9475cb65d09db8c334ba",
+      "original-static.asm": "c208297c1abb44c26fa91a9a0d5368451e622b412dabdba192a6371216c34e69",
+      "protected-before.json": "10d1bcc768346bbf3663b61a162e26f0c45bb18ea5b477ec1f5952df8d69fef3",
+      "protected-after.json": "10d1bcc768346bbf3663b61a162e26f0c45bb18ea5b477ec1f5952df8d69fef3"
+    }
+  },
+  "limits": [
+    "전체 FILE/예외 ABI·부분 I/O/다른 소비자와 전체 UI/원본 동일성 완료가 아니다.",
+    "기존 RawFileName256BYTE 물리 범위 밖 거부를 유지하며 긴 절대 경로 전체의 호환성을 새로 확인한 것은 아니다.",
+    "고정1902행은 C++ 재생이며 새 Native 관측이 아니다.",
+    "GUI735/전체34 및 ZIP645의644제품은 별도 근거이며 자연 완주는 사용자 확인이다.",
+    "CD10.72 삭제/chmod를 이번에 새로 검증하지 않았다."
+  ]
+}
