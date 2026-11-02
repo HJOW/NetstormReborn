@@ -419,3 +419,13 @@ cpppj/src/o/TypeConstructors.inc	Netstorm.Core/Original/OriginalConstructors.Dat
 cpppj/src/o/TypeLoadOrder.cpp	Netstorm.Core/Original/RiftTypeLoadOrder.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/o/TypeParser.cpp	Netstorm.Core/Original/RiftTypeDefinition.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/platform/Bitmap.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
+cpppj/src/o/RawFortMoneySave.cpp	Netstorm.Core/Original/RawFortMoneySave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortMoneySave.h	Netstorm.Core/Original/RawFortMoneySave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortMissionSave.cpp	Netstorm.Core/Original/RawFortMissionSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortMissionSave.h	Netstorm.Core/Original/RawFortMissionSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortRegionSave.cpp	Netstorm.Core/Original/RawFortRegionSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortRegionSave.h	Netstorm.Core/Original/RawFortRegionSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortSnapshotBasics.cpp	Netstorm.Core/Original/RawFortSnapshotBasics.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortSnapshotBasics.h	Netstorm.Core/Original/RawFortSnapshotBasics.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortSnapshotParent.cpp	Netstorm.Core/Original/RawFortSnapshotParent.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortSnapshotParent.h	Netstorm.Core/Original/RawFortSnapshotParent.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
