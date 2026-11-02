@@ -322,9 +322,13 @@ cpppj/src/o/RawFortMetaLoad.h	Netstorm.Core/Original/RawFortMetaLoad.cs	9271152f
 cpppj/src/o/RawFortMoneyLoad.cpp	Netstorm.Core/Original/RawFortMoneyLoad.cs	9271152fe7274ad6fb45fcd37e4403995b0eb1cd	L1
 cpppj/src/o/RawFortMoneyLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	1a3ccedb702c4fa8d5b61250237a43841d58b048	port
 cpppj/src/o/RawFortMoneyLoad.h	Netstorm.Core/Original/RawFortMoneyLoad.cs	9271152fe7274ad6fb45fcd37e4403995b0eb1cd	L1
+cpppj/src/o/RawFortPaletteTransition.cpp	Netstorm.Core/Original/RawFortPaletteTransition.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
+cpppj/src/o/RawFortPaletteTransition.h	Netstorm.Core/Original/RawFortPaletteTransition.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
 cpppj/src/o/RawFortSpWrite.cpp	Netstorm.Core/Original/RawFortSpWrite.cs	91a62e792661dfba55261308ebfb7d0ffae194e4	L1
 cpppj/src/o/RawFortSubscriberLoad.cpp	Netstorm.Core/Original/RawFortSubscriberLoad.cs	be8f80f909787e5304bce1b926596031a452c71f	L1
 cpppj/src/o/RawFortSubscriberLoad.h	Netstorm.Core/Original/RawFortSubscriberLoad.cs	be8f80f909787e5304bce1b926596031a452c71f	L1
+cpppj/src/o/RawFortTerritoryRecover.cpp	Netstorm.Core/Original/RawFortTerritoryRecover.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
+cpppj/src/o/RawFortTerritoryRecover.h	Netstorm.Core/Original/RawFortTerritoryRecover.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
 cpppj/src/o/RawFortTypeNamesLoad.cpp	Netstorm.Core/Original/RawFortTypeNamesLoad.cs	be8f80f909787e5304bce1b926596031a452c71f	L1
 cpppj/src/o/RawFortTypeNamesLoad.h	Netstorm.Core/Original/RawFortTypeNamesLoad.cs	be8f80f909787e5304bce1b926596031a452c71f	L1
 cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	860030e73e9e11599c89334b2e6ab4b0c6e1702d	port
