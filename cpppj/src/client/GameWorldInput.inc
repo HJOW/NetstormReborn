@@ -2,7 +2,6 @@
 struct GameWorld::Input {
     GameWorld& world; //선택 SID/카메라/마우스/Session의 유일한 소유자다.
     ClientUserSelectionGlobals& globals{world.SelectionGlobals()}; // 실제9DWORD/현재 다중 배열은 World 교체 뒤에도 같은 Client owner에 남는다.
-    std::uint32_t consoleFocus{}; // 기존 호스트 콘솔 관문은 선택 cleanup이 읽지 않는 별도 Runtime 상태다.
     std::unique_ptr<RawCarrierInput> carrier; //같은 Session/로그인 전송을 사용하는 실제 커서/클릭 몸체다.
     std::shared_ptr<RawUserHighlight> highlight; //커서 수명과 원본 선택이 공유하는 같은 강조 몸체다.
     std::unique_ptr<RawUserSelection> selection; //현재 선택의 실제+7c/프로세스/마나/범위/음향을 분배한다.
@@ -12,7 +11,7 @@ struct GameWorld::Input {
         highlightHooks.move=[this](std::uint32_t sid,std::uint32_t x,std::uint32_t y,std::uint32_t force) { carrier->Highlight(sid,{std::bit_cast<float>(x),std::bit_cast<float>(y)},force); };
         carrierHooks.highlight=[this](std::uint32_t mode) { highlight->Highlight(mode); };carrierHooks.multiple=[this] { return globals.multipleCount>0 ? 1U : 0U; };
         carrier=world.campaign_->MakeCarrierInput(std::move(carrierHooks));highlight=std::make_shared<RawUserHighlight>(world.HighlightSettings(),std::move(highlightHooks));
-        selectHooks.enabled=[this] { return globals.enabled; };selectHooks.blocked=[this] { return consoleFocus; };selectHooks.highlight=[this](std::uint32_t mode) { highlight->Highlight(mode); };
+        selectHooks.enabled=[this] { return globals.enabled; };selectHooks.highlight=[this](std::uint32_t mode) { highlight->Highlight(mode); }; // 463b50의 현재 미션 demo는 같은 Session factory가 연결한다.
         selectHooks.appendMultiple=[this](auto sid) { globals.AppendMultiple(sid); };selectHooks.removeMultiple=[this](auto sid) { globals.RemoveMultiple(sid); };selectHooks.writeEnabled=[this](auto value) { globals.enabled=value; }; //실제 선택/다중 이동/State 정리가 같은 장기 owner를 직접 쓴다.
         selection=world.campaign_->MakeUserSelection(globals.SelectionState(),std::move(selectHooks));
     }

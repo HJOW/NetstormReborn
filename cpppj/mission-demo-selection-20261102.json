@@ -1,0 +1,148 @@
+{
+  "unit": 743,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "previousGoalTurn": "진척:742 ESC 정리·실제 전후 검사·커밋 완료",
+  "status": "단위 완료, 전체1~8차 목표 진행 중",
+  "runtimeProduct": 743,
+  "displayVersion": "11.01",
+  "exeSha256": "777a62d333b82b356e9d08566453b8baeb26f833b59eccc945cae6543c10748f",
+  "summary": "실제 선택기의 임시 콘솔 관문을 현재 미션 demo 조회로 교체",
+  "implementation": [
+    "Session factory가 현재 missionOutcome.demo를 매번 조회",
+    "World의 불변 consoleFocus 및 가짜 blocked 연결 제거",
+    "독립 Clear와 Select/ESC 초기화의 서로 다른 원문 관문 유지"
+  ],
+  "native": {
+    "entry": "00463b50",
+    "missionPointer": "005634a0",
+    "demoOffset": "0x68",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "rows": [
+      {
+        "missionPresent": false,
+        "demoDword": 0,
+        "result": 0
+      },
+      {
+        "missionPresent": false,
+        "demoDword": 1,
+        "result": 0
+      },
+      {
+        "missionPresent": false,
+        "demoDword": 2,
+        "result": 0
+      },
+      {
+        "missionPresent": false,
+        "demoDword": 2147483648,
+        "result": 0
+      },
+      {
+        "missionPresent": false,
+        "demoDword": 4294967295,
+        "result": 0
+      },
+      {
+        "missionPresent": true,
+        "demoDword": 0,
+        "result": 0
+      },
+      {
+        "missionPresent": true,
+        "demoDword": 1,
+        "result": 1
+      },
+      {
+        "missionPresent": true,
+        "demoDword": 2,
+        "result": 1
+      },
+      {
+        "missionPresent": true,
+        "demoDword": 2147483648,
+        "result": 1
+      },
+      {
+        "missionPresent": true,
+        "demoDword": 4294967295,
+        "result": 1
+      }
+    ],
+    "executions": 10,
+    "host": "HJOW-Athlon",
+    "gameProcesses": 0,
+    "newFixture": 0
+  },
+  "protected": {
+    "count": 2654,
+    "fixtures": 834,
+    "changed": [],
+    "newFixtures": [],
+    "missingFixtures": [],
+    "allUnchanged": true
+  },
+  "tests": {
+    "before": {
+      "log": "extracted/cpp-mission-demo-selection-743/test-before.log",
+      "tests": 2,
+      "failedChecks": 20,
+      "exitCode": 1
+    },
+    "afterMenuSession": {
+      "log": "extracted/cpp-mission-demo-selection-743/test-menu-after.log",
+      "tests": 28,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "afterSelectionRegression": {
+      "log": "extracted/cpp-mission-demo-selection-743/test-selection-after.log",
+      "tests": 23,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    "afterTotal": 51,
+    "newTests": 2,
+    "newExecutables": 0,
+    "retainedTestExecutables": 66,
+    "retainedAllTargets": 71,
+    "newFixtures": 0,
+    "fullSuiteRun": false
+  },
+  "build": {
+    "beforeLog": "extracted/cpp-mission-demo-selection-743/build-before.log",
+    "afterLog": "extracted/cpp-mission-demo-selection-743/build-after.log",
+    "config": "Release",
+    "targets": [
+      "NetstormCpp",
+      "netstorm_menu_session_tests",
+      "netstorm_priest_selection_shortcut_tests"
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "newGameProcesses": 0,
+  "newCliRuns": 0,
+  "latestGui": "742 제품의 ESC 전후 기록이며 이번 제품 GUI 결과로 합산하지 않음",
+  "limitations": [
+    "이번 제품 GUI/전체34/전체C++ 재실행 아님",
+    "전체Console/모달·물리 입력/픽셀/PCM·자연 완주/전체 동일성 미검증",
+    "10.72 새 관측 없음",
+    "제외된 포획/희생·특정 적 공격/승리·공중3종 전용 행동·MP 검사0"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/GameWorldInput.inc": "49282069b98e35ecec29f94cfe10fa9af367784c002c328f04ed0d2913c071cc",
+    "cpppj/src/client/RawCampaignSession.cpp": "ac248a4521c32375df29a9f338aeba6d38a791ebbe35f7a5401bf09fc5888315",
+    "cpppj/src/client/UberGump.cpp": "e578da845b3707461c8bbc94b9c6672a0eff134b5d2656e5a6c2779db3699d11",
+    "cpppj/src/client/RawUserSelection.cpp": "a5668a40b9185f9b44574877ed44502a7ab2089d7b7f171fdf5e35d14729ba7d",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "abda252aa3d4669c68c10acf049449b1e052752e6a4d99f31b16910757aafae4"
+  },
+  "rawDirectory": "extracted/cpp-mission-demo-selection-743",
+  "nextProtectedBaseline": "extracted/cpp-mission-demo-selection-743/protected-after.json"
+}

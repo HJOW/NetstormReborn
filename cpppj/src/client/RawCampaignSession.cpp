@@ -4567,6 +4567,7 @@ GumpFormHost& RawCampaignSession::GumpForms() { if ((!impl_->loaded && !impl_->e
 // 큰 UI/현재 관문을 보존하고 같은 월드가 이미 소유하는 게임 계산·표시 프로세스만 연결한다.
 std::unique_ptr<RawUserSelection> RawCampaignSession::MakeUserSelection(UserSelectionState state,UserSelectionHooks hooks) {
     if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 선택 요청");auto* current=impl_.get(); // 반환 몸체가 빌리는 같은 장기 Session이다.
+    hooks.blocked=[current] { return current->services.missionOutcome.demo()!=0 ? 1U : 0U; }; // 원본463b50은 현재 Guide+68의 demo이며 콘솔/missionPost나 생성 시점의 값이 아니다.
     hooks.localOwner=[current] { return current->playerState.battleOwner; };hooks.editor=[current] { return current->globals.editor; };
     hooks.dais=[current] { return current->runeState.daisType; };hooks.manaProcess=[current] { return current->cursorManaGlobals.processType; };hooks.rangeProcess=[current] { return current->cursorRangeGlobals.processType; };
     hooks.refresh=[current](Sid sid) { current->core.display.Update(current->core.pool.Slot(sid)); };

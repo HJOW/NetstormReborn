@@ -7,6 +7,8 @@
 #include "client/RawKnowledgeMenu.h"
 #include "client/QuickHelpHtml.h"
 #include "client/RawUserHighlight.h"
+#include "client/GameWorld.h"
+#include "CameraTestDevices.h"
 #include "o/OriginalText.h"
 #include "o/RawContentPreviewProcess.h"
 #include <cmath>
@@ -18,6 +20,7 @@ struct MenuServices {
     SoundList names{OriginalEdition::Patch1078}; // 실제 같은 이름표를 세션보다 오래 유지한다.
     std::array<std::uint8_t,4> you{'Y','o','u',0}; // 원본 부모의 명시 영어 번역 입력이다.
     Sid selected{}; // 이 headless UI의 현재 선택이며 미리보기 삭제도 같은 값을 조회한다.
+    std::uint32_t demo{},demoReads{}; // 현재 Guide의 demo DWORD와 실제 조회 횟수이며 선택기 생성 후에도 바뀐다.
     // 선택되는 장치/설정 경계만 공급하며 미복원 하위를 성공으로 채우지 않는다.
     RawCampaignSessionServices Make() {
         names.Initialize();RawCampaignSessionServices result;result.soundNames=&names;result.unixSeconds=[] { return 946684800; };
@@ -33,7 +36,7 @@ struct MenuServices {
         result.priest.shield.noticeSound=[](const PriestShieldNotice&) {};result.priest.shield.translate=[](std::string_view key) { return std::string(key); };result.priest.shield.tell=[](std::string_view) {};
         result.deletion.selected=[this] { return selected; };
         result.deletion.emit=[this](const SquidDestroyEvent& event) { if (event.effect==SquidDestroyEffect::ClearSelection) { selected={};return; }throw std::logic_error("메뉴 검사 다른 실제 삭제 효과 미연결"); };
-        result.player.log=[](std::uint32_t,std::string_view) {};return result;
+        result.player.log=[](std::uint32_t,std::string_view) {};result.missionOutcome.demo=[this] { ++demoReads;return demo; };return result;
     }
 };
 // 실제 서식의 인자 순서만 처리하는 명시 영어 UI 경계다. 원본 게임 조건은 계산하지 않는다.
@@ -286,6 +289,39 @@ TEST_CASE(CampaignUserSelection_SamePoolMarksRegularAndManaNotice) {
     CursorLifecycleHooks mana;session.BindCursorMana(mana);const auto token=mana.createMana(priest,0);auto* process=dynamic_cast<CursorManaProcess*>(core.kernel.Get(token));CHECK(process && process->Parent()==priest);
     if (process) CHECK(Get(process->Fields().bytes,0x94)==0);CHECK(selection->Select(0,0,1)==0);CHECK(selected==0 && !(core.pool.Slot(priest)[40]&4));if (process) CHECK(Get(process->Fields().bytes,0x94)==1);
     CHECK(dumps==1 && cursors==0); // 같은 mode0은 불필요한 장치 커서 변경을 하지 않는다.
+}
+
+// 실제 Session factory가 현재 미션 관문을 연결하며 초기 demo 값이나 호출자의 가짜 관문을 보관하지 않는다.
+TEST_CASE(CampaignUserSelection_CurrentMissionDemoBlocksBeforeSelectionEffects) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();
+    const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);auto core=session.Core();
+    std::uint32_t selected{},mouseType{},paused{},enabled{1},dumps{},highlights{},fakeReads{};std::array<std::uint32_t,2> remembered{};std::array<std::uint32_t,1> multiple{priest.value};std::int32_t count{}; // 같은 실제 선택과 명시 UI 관찰이다.
+    UserSelectionHooks hooks;hooks.paused=[&] { return paused; };hooks.enabled=[&] { return enabled; };hooks.blocked=[&] { ++fakeReads;return 0U; };
+    hooks.dump=[&](Sid sid) { CHECK(sid==priest);++dumps; };hooks.highlight=[&](auto mode) { CHECK(mode==0);++highlights; };hooks.assertion=hooks.previewAssertion=[] { throw std::logic_error("현재 미션 선택 검사 예상 밖 진단"); };
+    auto selection=session.MakeUserSelection({selected,mouseType,remembered,multiple,count},std::move(hooks));external.demoReads=0;
+    CHECK(selection->Select(priest.value,0,0)==priest.value && selected==priest.value && dumps==1 && (core.pool.Slot(priest)[40]&4));CHECK(external.demoReads==1 && fakeReads==0);
+    count=1;const auto initialHighlights=highlights; // 관문 뒤 가상 통지/표시/강조가 아직 실행되지 않아야 한다.
+    for (const std::uint32_t value:{1U,2U,0x80000000U,0xffffffffU}) { // 모든 비영 DWORD를 차단하며 SID 유효성 검사보다 먼저 반환한다.
+        external.demo=value;const auto reads=external.demoReads;
+        CHECK(!Throws([&] { CHECK(selection->Select(0xffffffffU,1,1)==0); }));CHECK(selection->Select(0,0,0)==0);
+        CHECK(selected==priest.value && count==1 && multiple[0]==priest.value && dumps==1 && highlights==initialHighlights && (core.pool.Slot(priest)[40]&4));CHECK(external.demoReads==reads+2 && fakeReads==0);
+    }
+    const auto reads=external.demoReads;paused=1;CHECK(selection->Select(priest.value,0,0)==0);paused=0;enabled=0;CHECK(selection->Select(0,0,0)==0);CHECK(external.demoReads==reads && selected==priest.value && count==1); // 원문 앞쪽 정지/비활성 관문은 demo까지 읽지 않는다.
+    enabled=1;selection->Clear();CHECK(external.demoReads==reads && selected==0 && count==0 && !(core.pool.Slot(priest)[40]&4)); // 독립 Clear는 demo를 읽지 않고 미션 전환 정리를 수행한다.
+    external.demo=0;CHECK(selection->Select(priest.value,0,0)==priest.value);CHECK(selection->Select(0,0,0)==0 && selected==0 && !(core.pool.Slot(priest)[40]&4));CHECK(fakeReads==0);
+}
+
+// 실제 World 입력의 Select/ESC 초기화와 미션 전환 Clear가 동일한 현재 Guide/선택 저장소를 사용한다.
+TEST_CASE(GameWorldUserSelection_CurrentMissionDemoKeepsResetAndClearDistinct) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();services.cameraCommit=netstorm::test::camera::CommitScreenless;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),{},"thewarbegins",std::move(services),{640,480});
+    UserSelectionHooks selection;selection.paused=[] { return 0U; };world.BindUserInput(std::move(selection),{},{});auto& owner=world.SelectionGlobals();auto& session=world.Session();const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);auto raw=session.Core().pool.AllocatedBytes(priest);
+    owner.selected=priest.value;owner.multiple={priest.value};owner.multipleCount=1;raw[40]|=4;external.demo=0x80000000U;external.demoReads=0;
+    world.ResetSelection();CHECK(owner.selected==priest.value && owner.multipleCount==1 && (raw[40]&4) && external.demoReads==1);
+    CHECK(!Throws([&] { world.Select(0xffffffffU); }));CHECK(owner.selected==priest.value && owner.multipleCount==1 && external.demoReads==2);
+    world.ClearSelection();CHECK(owner.selected==0 && owner.multipleCount==0 && !(raw[40]&4) && external.demoReads==2);
+    owner.selected=priest.value;owner.multipleCount=1;raw[40]|=4;external.demo=0;world.ResetSelection();CHECK(owner.selected==0 && owner.multipleCount==0 && !(raw[40]&4) && external.demoReads==3);
 }
 
 // 실제 Form6 추가 통지가491을 예약하고 같은Session의그림/타이머/가상삭제까지 실행해야 한다.
