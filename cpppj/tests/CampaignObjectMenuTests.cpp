@@ -402,6 +402,26 @@ TEST_CASE(GameWorldEditorPrimary_ActualInputFollowsPreservedSelection) {
     CHECK(!input.Event({InputCode::kLeftButton|InputCode::kControl,0,0}));CHECK((frameFlags()&0x60U)==0);
 }
 
+// 비기본 모드의 우클릭은 객체 메뉴/Pick 대신 먼저 강조를 해제하고 현재 선택 관문을 따른다.
+TEST_CASE(GameWorldPointerModes_EmptyPickupCancelAndPollingCoordinates) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ClientOptions options;options.gameDirectory=assets.root;options.noAudio=true;Client client(std::move(options));MenuServices external;auto services=external.Make();
+    services.cameraCommit=netstorm::test::camera::CommitScreenless;services.gameplayGlobals=client.GameplayGlobals();services.kencloudGlobals=client.KencloudGlobals();services.coreDataGlobals=client.CoreDataGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords(); //같은 실제 입력/Session 소유자를 사용한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),{},"thewarbegins",std::move(services),{640,480});
+    std::vector<std::uint32_t> cursors;UserSelectionHooks selection;selection.paused=[] { return 1U; };UserHighlightHooks highlight;highlight.selectCursor=[&](auto value) { cursors.push_back(value); };world.BindUserInput(std::move(selection),std::move(highlight),{});
+    auto& session=world.Session();auto& globals=world.SelectionGlobals();const auto priest=session.FindPriestParticipation(1);CHECK(priest);session.CursorDropSettings().lockDepth=1;globals.enabled=0;globals.selected=priest;UserInput input(client,world);world.SetMousePoint({320,200});
+    globals.mode=1;globals.mouseType=82;CHECK(!input.Event({InputCode::kLeftButton,0,0}));CHECK(globals.mode==0 && globals.mouseType==0 && globals.selected==priest);CHECK(globals.mouse.x==320 && globals.mouse.y==200);CHECK(cursors==std::vector<std::uint32_t>{1});
+    for (const auto mode:{1U,2U,3U,4U,5U}) { //멀티플레이 전용6은 새 검사에서 제외한다. enabled0이어도 선행 강조0은 적용한다.
+        globals.mode=mode;globals.mouseType=82;cursors.clear();CHECK(!input.Event({InputCode::kRightButton,0,0}));CHECK(globals.mode==0 && globals.mouseType==0 && globals.selected==priest);CHECK(cursors==std::vector<std::uint32_t>{1});
+    }
+    globals.enabled=1;globals.mode=2;cursors.clear();CHECK(!input.Event({InputCode::kRightButton,0,0}));CHECK(globals.selected==0 && globals.mode==0 && cursors==std::vector<std::uint32_t>{1}); //정지1이어도0번 선택 해제는 원문대로 실행한다.
+    globals.selected=priest;globals.mode=0;CHECK(!input.Event({InputCode::kRightButton,0,0}));CHECK(globals.selected==0 && globals.mode==0);CHECK(globals.mouse.x==320 && globals.mouse.y==200);
+    const auto type=static_cast<std::uint32_t>(assets.game.TypeTable().Find("windFactory"));const auto source=session.World().Create(type,2);session.Core().owner.Set(source,1);session.World().Pop(source,220,220,0);client.GameplayGlobals()->Camera().ApplyPixelsToRendererAndSnapshot(220*16-320,220*11-240); //전투 대신 편집용 워크샾을 빈 좌표에 배치하고 실제 카메라 setter로 클릭 영역을 만든다.
+    const auto center=world.ToScreen(220,220);std::optional<ScreenPoint> hit;
+    for (int y=center.y-30;y<=center.y+30 && !hit;++y) for (int x=center.x-30;x<=center.x+30 && !hit;++x) { if (world.Pick({x,y})==source.value) hit=ScreenPoint{x,y}; } //실제SHP 투명픽셀/해시Pick에서 해당 객체를 찾으며 선택 결과를 주입하지 않는다.
+    CHECK(hit.has_value());if (!hit) return;ActualMenuUi ui(assets);ui.currentSession=&session;ui.mouse={InputCode::kLeftButton,hit->x,hit->y};auto effects=ui.CursorEffects();effects.lifecycle.highlight=[&](auto value) { world.Highlight(value); };session.Cursor().SetEffects(std::move(effects));globals.mode=1;globals.selected=0;const auto before=session.Sp(1);
+    CHECK(!input.Event(ui.mouse));const auto form=CursorPreviewSid(session.CursorDropSettings().preview);CHECK(form.value && session.Core().pool.Slot(form)[10]==6);CHECK(Get(session.Core().pool.Slot(form),18,2)==type);CHECK(session.CursorDropSettings().costFlags==0x100 && session.CursorDropSettings().lockDepth==0);CHECK(globals.mode==0 && globals.selected==0 && session.Sp(1)==before);CHECK(session.Core().pool.Slot(source)[11]&4U);
+    session.Cursor().Cancel();ui.currentSession=nullptr; //실제생성된커서/미리보기를같은수명으로정리하며플레이승리나공격을실행하지않는다.
+}
 // 실제 Form6 추가 통지가491을 예약하고 같은Session의그림/타이머/가상삭제까지 실행해야 한다.
 TEST_CASE(CampaignContentPreview_RealNoticeCreatePopAndExpiry) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();

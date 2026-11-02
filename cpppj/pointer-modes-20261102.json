@@ -1,0 +1,107 @@
+{
+  "unit": 749,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 749,
+  "displayVersion": "11.01",
+  "exeSha256": "3063ffb5c15f4db35ace855dee2aa924d8e3db3742a9a34560a564cdd733594d",
+  "summary": "편집 모드1 객체 취득과 일반 우클릭 취소·현재 폴링 좌표 분리",
+  "implementation": [
+    "모드1 Pick(force0)→447340→selectTab.wav→Highlight0; 빈후보도Highlight0",
+    "447340의가상48 Unpop뒤현재TYPE/WORD→80/10/0 Form→flags|100 Take",
+    "비기본우클릭Highlight0→같은ResetSelection; 기본빈후보의비메타또는known0 선택정리",
+    "기본우클릭 Ctrl&&(special||Editor) force와사건종류03ffffff 마스크",
+    "큐사건이005cae94/98 폴링좌표를덮어쓰지않음",
+    "MP모드6 ChalSailPos는현재폴링점지도사각형검사→사건좌표역투영→X상위WORD/Y하위WORD 명령6c→강조0만정적연결"
+  ],
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+    "rows": 96,
+    "verifiedExistingFixture": true,
+    "originalGameExecuted": false,
+    "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "629909a2ea028ab370db21e24d7f20ac5aac47bff222994d4fe9d75e240b806f",
+    "code": {
+      "range": "00447340-0044738b",
+      "sha256": "63baafda81d14020f3c2867fba85c06cf9e2ecfb3cf7559a2d111a7f87601f17",
+      "unchanged": true
+    },
+    "replaced": [
+      "virtual+48",
+      "4afa70 CreateContained",
+      "447000 Take"
+    ],
+    "scope": "447340 호출 순서/인자/현재raw 재조회만 관측. 외부 하위/일반입력/게임 전체 실행은 아님"
+  },
+  "build": {
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "log": "extracted/cpp-pointer-modes-749/build-v2.log",
+    "initialFailure": "build-v1.log의비공개GameWorld CameraGlobals 접근1진단을실제Client Gameplay Camera 접근으로정정"
+  },
+  "tests": {
+    "before": {
+      "total": 1,
+      "failedChecks": 23,
+      "exitCode": 1,
+      "log": "extracted/cpp-pointer-modes-749/tests-before.log",
+      "scope": "모드1 빈후보/우클릭 취소/폴링좌표의원래부분"
+    },
+    "after": {
+      "total": 67,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-pointer-modes-749/tests-v2.log"
+    },
+    "newTests": 3,
+    "actualBoundary": "창없는실제Client/UserInput/World/Session·disabled모드1빈후보·우클릭1~5·정지중비메타빈점선택정리·폴링보존·새워크샾실제SHP/해시Pick→Unpop/Form/커서취득/취소",
+    "newExecutables": 0,
+    "retainedTestExecutables": 66,
+    "retainedAllTargets": 71,
+    "fullSuiteRun": false
+  },
+  "protection": {
+    "beforeCount": 2658,
+    "currentCount": 2659,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/cursor-object-pickup-x86.tsv"
+    ],
+    "counts": {
+      "agents": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 839
+    }
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newFixtures": 1,
+  "latestGui": "746제품 화면 조정/저장 재시작; 이번제품GUI증거는아님",
+  "nextProtectedBaseline": "extracted/cpp-pointer-modes-749/protected-after.json",
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "a74a077c3fb7597550ce0afbc8915e2b21b0b31ec70d2c5cb104dff1f7d552b4",
+    "cpppj/src/client/UserInput.cpp": "522f1a87e5afd7252952344e1a471354073da43f23cf6a3d52f2164701fb99ee",
+    "cpppj/src/client/RawCampaignCursor.cpp": "44b07c38bbb0165706cb214f5d601b84093665ec2bfef1fc5866a38662d26323",
+    "cpppj/src/client/RawCampaignCursor.h": "b4958dfbfb9ab9274987358f6993b0ff0befb2c854028c78e82fe03c998fafa4",
+    "cpppj/src/client/CursorObjectPickup.cpp": "e44aeff38b4b7fd5d128acc4e5b645c5568ae80b113383849c337855ae6a74f7",
+    "cpppj/src/client/CursorObjectPickup.h": "2d125aa18ae5ec23ee590290754c0716b2fa2805bdb2f8500cc1add99beda153",
+    "cpppj/tests/CMakeLists.txt": "dd08d3e358ec9439e0a2b2bce87e5705160d429157ab40d51d880247b4f2ce2a",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "57375f0ee899c872f8d621a71f3caf6e3fa1e7da36bf91eaf9b9f932ba7eb5d3",
+    "cpppj/tests/CursorObjectPickupTests.cpp": "e6a4b9753bebb62a151c32797766177471db59a4bb98bd18dee48a70f639a00c",
+    "tools/decomp_cursor_object_pickup.py": "189920ae8c7f03f2cc88d765dd07c1e702d27c4d262d5f2805e6dcb62b2b52c8"
+  },
+  "next": "Ctrl+special 영역가상70·challenge 선행클릭/빈점항해메뉴·객체우클릭 반환/음향과남은UI/시나리오/파일·수명/호환성",
+  "limitations": [
+    "모드6은멀티플레이정적사전연결이며신규CPU/단위/게임/통신검사0;항해명령소비자는후속",
+    "실제워크샾한종류의창없는픽셀/취득검사이며전체타입/활성OS GUI/음향PCM으로확대하지않음",
+    "CD10.72/전체C++/전체34/새ZIP/물리입력/PCM/자연완주·포획/희생/특정적공격/승리·공중3종전용검사0",
+    "나머지1/2차와3~8차목표는남음"
+  ]
+}

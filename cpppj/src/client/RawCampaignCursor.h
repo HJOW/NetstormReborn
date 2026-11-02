@@ -61,6 +61,7 @@ public:
     void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다. // 실제 파일 팔레트와 Native Take의 두 현재 색을 연결한다.
     void SetView(SoundView view); // 현재 화면 픽셀 원점을 Query/Prepare/Draw가 공유하게 한다.
     void Take(o::Sid form,std::uint32_t flags); // 실제00447000의 전체 DWORD flags를 전달한다.
+    void TakeObject(std::uint32_t source,std::uint32_t flags); //447340의 실제Unpop→현재TYPE/WORD의Form→flags|100 Take를 동일 커서에 연결한다.
     void CancelForState(); //00446e70만실행하며외곽game.prepare를Native효과로추가하지않는다.
     void Cancel(); // 잠긴 상태에서도 실제 꼬리 정리/프로세스 반납을 실행한다.
     void Update(std::int32_t x,std::int32_t y); // 실제00446b50으로 현재 마우스/카메라를 반영한다.

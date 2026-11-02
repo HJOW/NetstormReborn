@@ -3,6 +3,7 @@
 #include "client/RawCampaignCursorDisplay.h"
 #include "client/RawCursorPreviews.h"
 #include "client/RawCursorActions.h"
+#include "client/CursorObjectPickup.h" //편집 대상의 현재 원문 필드와 같은 Form/커서 수명을 사용한다.
 #include <stdexcept>
 #include <utility>
 
@@ -145,6 +146,11 @@ void RawCampaignCursor::SetPalette(std::span<const ScreenColor> palette,std::spa
 void RawCampaignCursor::SetView(SoundView view) { if (!impl_->placementState.sharedScreenOrigin) impl_->placementState.screenOrigin={view.cameraX,view.cameraY};impl_->display->SetView(view); }
 // 실제 취득의 Cancel/Query/생성/측정/위치 꼬리를 그대로 실행한다.
 void RawCampaignCursor::Take(o::Sid form,std::uint32_t flags) { impl_->Prepare();impl_->lifecycle->Take(form,flags); }
+// 원문447340의 Unpop은 Take 준비보다 앞이며 새 객체/임시 월드로 대체하지 않는다.
+void RawCampaignCursor::TakeObject(std::uint32_t source,std::uint32_t flags) {
+    CursorObjectPickupHooks hooks;hooks.unpop=[this](o::Sid sid,auto value) { impl_->data.world.Unpop(sid,value); };hooks.create=[this](auto sid,auto type,auto argument,auto value,auto attach,auto quality) { return impl_->data.contained.Create(sid,type,argument,value,attach,quality); };hooks.take=[this](auto form,auto value) { Take(form,value); };
+    PickupObjectForCursor(impl_->core.pool,source,flags,hooks);
+}
 // 잠긴 상태의 꼬리 정리도 원본 몸체가 결정한다.
 void RawCampaignCursor::CancelForState() { impl_->lifecycle->Cancel(); }
 // 일반입력의기존호스트준비와NativeCancel leaf를구별한다.

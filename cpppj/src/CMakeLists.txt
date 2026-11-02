@@ -328,3 +328,6 @@ target_sources(netstorm PRIVATE client/ProductPresentation.cpp client/ProductPre
 
 #현재 Fort Subscriber 변경의 원문 관문·현재값 재조회 몸체다(713).
 target_sources(netstorm PRIVATE o/RawFortSubscriberChange.cpp o/RawFortSubscriberChange.h)
+
+# 편집 모드1의 원문 객체 취득을 같은 Form/커서 수명에 연결한다(749).
+target_sources(netstorm PRIVATE client/CursorObjectPickup.cpp client/CursorObjectPickup.h)

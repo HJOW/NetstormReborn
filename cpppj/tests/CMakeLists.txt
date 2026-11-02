@@ -3019,3 +3019,8 @@ target_sources(netstorm_menu_session_tests PRIVATE ObjectOwnerCommandsTests.cpp)
 target_sources(netstorm_menu_session_tests PRIVATE RawBridgeEditorTests.cpp)
 set_property(SOURCE ObjectOwnerCommandsTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_EDITOR_PRIMARY_SELECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-primary-selection-x86.tsv\"")
 set_property(SOURCE RawBridgeEditorTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_EDITOR_BRIDGE_CYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-bridge-cycle-x86.tsv\"")
+
+# 편집 취득의 원문96행/실제 입력 취소와 기존 메뉴·Session을 함께 확인한다(749). MP 모드6의 새 검사는 추가하지 않는다.
+target_sources(netstorm_tests PRIVATE CursorObjectPickupTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE CursorObjectPickupTests.cpp)
+set_source_files_properties(CursorObjectPickupTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CURSOR_OBJECT_PICKUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-object-pickup-x86.tsv\"")
