@@ -1,3 +1,7 @@
+#include "client/QuickHelpFileRead.h"
+#include "QuickHelpFileReadTestSupport.h"
+#include "o/RawColorMapCache.h"
+#include "o/RawFileName.h"
 // 최초98행의 전용 창/HTML 부모 전체 경로를 실제 제품 몸체와 명시 GUI 경계로 대조한다.
 #include "GumpRawSupport.h"
 #include "client/QuickHelpWindow.h"
@@ -7,7 +11,7 @@
 using namespace netstorm::client;
 using namespace netstorm::test::gumpraw;
 namespace {
-constexpr std::uint32_t kPool=0x12000000,kWindow=kPool+0x40000,kDecoration=kPool+0x41000,kInner=kPool+0x42000,kPictureBg=kPool+0x43000,kBodyBg=kPool+0x44000,kBody=kPool+0x45000,kLearn=kPool+0x4a000,kBack=kPool+0x4b000,kCancel=kPool+0x4c000,kInfo=kPool+0x4d000,kPicture=kPool+0x4e000,kScroll=kPool+0x4f000,kTable=kPool+0x51000,kSource=0x13000000; // 독립 원문이 사용한 의미별 호스트 식별값이다.
+constexpr std::uint32_t kPool=0x12000000,kWindow=kPool+0x40000,kDecoration=kPool+0x41000,kInner=kPool+0x42000,kPictureBg=kPool+0x43000,kBodyBg=kPool+0x44000,kBody=kPool+0x45000,kLearn=kPool+0x4a000,kBack=kPool+0x4b000,kCancel=kPool+0x4c000,kInfo=kPool+0x4d000,kPicture=kPool+0x4e000,kScroll=kPool+0x4f000,kTable=kPool+0x51000,kWindowHelpSource=0x13000000; // 독립 원문이 사용한 의미별 호스트 식별값이다.
 constexpr std::array<std::uint32_t,12> kNodes{kWindow,kDecoration,kInner,kPictureBg,kBodyBg,kBody,kLearn,kBack,kCancel,kInfo,kPicture,kScroll}; // 원문 raw 비교 순서다.
 // 문자열은 원문 바이트16진수로만 직렬화한다.
 std::string TextHex(std::string_view value) { return Hex({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}); }
@@ -29,6 +33,8 @@ struct WindowFixtureScene {
     std::unique_ptr<HtmlBodyGump> html;std::unique_ptr<QuickHelpWindow> help;std::map<std::size_t,std::size_t> allocations; // 실제 제품 처리기와 명시 할당 순서다.
     float scale{1};bool script{},empty{},failure{};std::int32_t lineCount{1},frame{3};std::string trace,helpText="<a name=\"unitType\"><info><p>BODY</a>\nEND"; // 독립 GUI/파일/Config 입력이다.
     std::function<void(std::uint32_t)> backgroundCreated; //질감 자식 생성 뒤 원본 전역이 바뀐 경우의 현재 값 재조회를 검사한다.
+    std::function<std::optional<std::string>(std::string_view)> fileRead; // 선택한 실제/명시 FILE reader를 기존 창 몸체에 공급한다.
+    std::function<void(std::string_view)> fileError; // NULL 반환의 원문 로그와 실제 Open 예외를 구별한다.
     // 첫 관측과 같은 현재 노드/기본 전역을 공급하고 제품 처리기만 조립한다.
     WindowFixtureScene() {
         // 실제 생성자가 덮기 전의 독립 기본 필드를 설치한다.
@@ -47,7 +53,7 @@ struct WindowFixtureScene {
         h.constructInformation=[this](auto token,auto width,auto height,auto font,auto color) { ConstructText(token,width,height,font,color); };
         h.constructPicture=[this](auto token,auto type,auto image,auto mode) { Event("Picture,"+std::to_string(token)+','+std::to_string(type)+','+std::to_string(image)+','+std::to_string(mode));Fill(token,99,88,1); };
         h.translate=[](std::string_view value) { return std::string(value); };h.config=[this](std::string_view key) { Event("Config,"+TextHex(key));return std::string("d/help.english"); };
-        h.load=[this](std::string_view name) -> std::optional<std::string> { Event("Load,"+TextHex(name)+",0,2");return failure ? std::nullopt : std::optional<std::string>(helpText); };h.loadError=[this](std::string_view name) { Event("LoadError,9,"+TextHex(name)); };
+        h.load=[this](std::string_view name) -> std::optional<std::string> { Event("Load,"+TextHex(name)+",0,2");if (fileRead) return fileRead(name);return failure ? std::nullopt : std::optional<std::string>(helpText); };h.loadError=[this](std::string_view name) { Event("LoadError,9,"+TextHex(name));if (fileError) fileError(name); };
         h.substitute=[this](std::string_view text) { Event("Substitute,"+TextHex(text)+",8192");return empty ? std::string{} : std::string(text); };h.nearestColor=[this](auto red,auto green,auto blue) { Event("Color,"+std::to_string(red)+','+std::to_string(green)+','+std::to_string(blue));return 35U; };h.scripted=[this] { Event("Script");return script; };
         h.kill=[this](auto token) { Kill(token); };h.push=[this](auto token) { Push(token); };h.clearBody=[this](auto token) { html->Clear(token); };h.attach=[this](auto token,float x,float y,auto parent,auto mode) { Attach(token,x,y,parent,mode); };h.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { BaseAttach(token,x,y,parent,mode); };h.lines=[this](auto token) { CHECK(token==kInfo);return lineCount; };
         h.render=[this](auto token,auto type,std::string_view topic,auto information,auto stream) { Render(token,type,topic,information,stream); };h.helpFrame=[this](auto) { return std::optional<std::int32_t>(frame); };h.bodyText=[this](auto token,std::string_view value) { html->SetText(token,value); };help=std::make_unique<QuickHelpWindow>(state,popup,std::move(h));
@@ -92,7 +98,7 @@ struct WindowFixtureScene {
                 // 원본+a0..cc의 물리 순서를 유지한다.
                 for (std::size_t i=0;i<values.size();++i) Put(raw,i*4,values[i]);result+=Hex(raw);
             } }
-        return result+'|'+std::to_string(state.id)+','+std::to_string(state.helpData ? kSource : 0U)+','+std::to_string(popup.command)+'|'+TextHex(popup.Argument())+'|'+trace;
+        return result+'|'+std::to_string(state.id)+','+std::to_string(state.helpData ? kWindowHelpSource : 0U)+','+std::to_string(popup.command)+'|'+TextHex(popup.Argument())+'|'+trace;
     }
     // native에 공급한 생성/배치/본문 입력을 그대로 적용한다.
     void Run(std::string_view kind,const std::vector<std::string>& input,bool paths) {
@@ -129,4 +135,51 @@ TEST_CASE(QuickHelpWindow_Native98) {
         for (const auto& row:netstorm::test::rawscene::LoadFixture(path).rows) { CHECK(row.size()==3);if (row.size()!=3) return;WindowFixtureScene scene;scene.Run(row[0],InputsForWindow(row[1]),paths);const auto value=scene.Output();if (value!=row[2]) std::printf("Quick Help 전체 창 원문 차이 %zu %s %s\n%s\n",count,row[0].c_str(),row[1].c_str(),value.c_str());CHECK(value==row[2]);++count; }
     }
     CHECK(count==98);
+}
+
+namespace { // 전체 창/41baa0의 신규 원문 입력 장치와 현재 File 관측이다.
+constexpr std::uintptr_t kHelpFile=0x12200000,kHelpKey=0x12318000; // 독립 CPU의 FILE/키 토큰이다.
+constexpr std::uint32_t kHelpPoison=0x65656565; // 원문 미작성 지역에 준 명시 seed다.
+struct HelpReadFailure { std::string kind; }; // Open/할당/read/close 예외 지점의 이름이다.
+std::string HelpReadFields(const netstorm::o::RawBaseFileState& file) { // 실제 여섯 필드를 원문 DWORD와 같은 순서로 보존한다.
+    const std::array<std::uintptr_t,6> values{{file.file,file.flags,static_cast<std::uint32_t>(file.offset),static_cast<std::uint32_t>(file.length),file.key,file.keyLength}};std::string result;
+    for (const auto value:values) { if (!result.empty()) result+=',';result+=std::to_string(value); } // 포인터 토큰도 native 입력 폭 그대로 기록한다.
+    return result;
+}
+std::string HelpReadEvents(const std::vector<std::string>& events) { std::string result;for (const auto& event:events) { if (!result.empty()) result+=';';result+=event; }return result.empty()?"-":result; } // 실제 장치 방문 순서다.
+}
+
+TEST_CASE(QuickHelpFileRead_Native62WholeReadExtraTwoLfNulAndConstructorCache) { // GUI는 기존 장치이며 생성자/전체읽기/FILE 반납/캐시는 모두 실제 제품 몸체다.
+    using namespace netstorm::o;std::size_t rows{};
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(NETSTORM_QUICK_HELP_FILE_READ_FIXTURE).rows) { // 앞7열만 독립 입력으로 쓰고 원문 결과열은 수정하지 않는다.
+        CHECK(row.size()==14);if (row.size()!=14) return;const auto length=Number(row[0]),key=Number(row[1]),subfile=Number(row[2]),scenario=Number(row[4]),cached=Number(row[5]),repeat=Number(row[6]);auto available=Number(row[3]);std::uint32_t used{},position{},calls{};std::vector<std::string> events;std::vector<std::uint8_t> allocation;std::array<std::uint8_t,4096> scratch;scratch.fill(101);std::int32_t output=99;
+        RawBaseFileState file{kHelpPoison,kHelpPoison,static_cast<std::int32_t>(kHelpPoison),static_cast<std::int32_t>(kHelpPoison),kHelpPoison,kHelpPoison};RawBaseFileIOHooks io;BaseFileWholeReadHooks whole;WindowFixtureScene scene;scene.state.helpData=cached ? std::optional<std::string>("OLD\n"):std::nullopt;
+        whole.probe=[](auto)->std::uint32_t { throw std::logic_error("필수 Help의 사전Probe 호출"); }; // 원문 고정 check0이면 도달하지 않는다.
+        whole.open=[&](auto& current,auto physical,auto mode,auto create) { const auto end=std::find(physical.begin(),physical.end(),std::uint8_t{});const std::string name(reinterpret_cast<const char*>(physical.data()),static_cast<std::size_t>(end-physical.begin()));events.push_back("O:"+TextHex(name)+":"+std::to_string(mode)+":"+std::to_string(create)+":"+HelpReadFields(current));current={scenario==2?0:kHelpFile,0x80U|subfile,subfile?37:0,subfile?static_cast<std::int32_t>(length):0,key?kHelpKey:0,key?3U:0U};position=subfile?37U:0U;if (scenario==1) throw HelpReadFailure{"open"}; };
+        whole.allocate=[&](auto size) { events.push_back("N:"+std::to_string(size));if (scenario==3) throw HelpReadFailure{"allocation"};allocation.assign(size,205);return BaseFileWholeAllocation{kWindowHelpSource,allocation}; };
+        io.tell=[&](auto token) { events.push_back("T:"+std::to_string(token));return static_cast<std::int32_t>(position); };io.seek=[&](auto token,auto offset,auto origin) { events.push_back("S:"+std::to_string(token)+":"+std::to_string(static_cast<std::uint32_t>(offset))+":"+std::to_string(origin));position=origin==2?length:static_cast<std::uint32_t>(offset); };
+        io.read=[&](auto token,auto destination,auto size,auto count) { const auto actual=std::min(size*count,available);events.push_back("R:"+std::to_string(token)+":"+std::to_string(size)+":"+std::to_string(count)+":"+std::to_string(actual));if (scenario==4) throw HelpReadFailure{"read"};for (std::uint32_t index=0;index<actual;++index) destination[index]=static_cast<std::uint8_t>((used+index)*29+7);used+=actual;available-=actual;position+=actual; }; // fread가 쓰지 않은 입력/암호scratch는 명시 seed 그대로 남긴다.
+        const std::array<std::uint8_t,3> keyBytes{{'a','b','c'}};io.key=[&](auto token,auto size) { CHECK(token==kHelpKey && size==3);return std::span<const std::uint8_t>(keyBytes); };io.close=[&](auto token) { events.push_back("C:"+std::to_string(token));if (scenario==5) throw HelpReadFailure{"close"}; };io.freeKey=[&](auto token) { events.push_back("F:"+std::to_string(token)); };
+        scene.fileRead=[&](std::string_view name)->std::optional<std::string> { ++calls;events.push_back("W:"+TextHex(name)+":0:2");std::string input(name);input+='\0';const auto result=ReadQuickHelpFileBytes(file,{reinterpret_cast<const std::uint8_t*>(input.data()),input.size()},output,io,whole,scratch);if (!result) return {};return std::string(reinterpret_cast<const char*>(allocation.data()),static_cast<std::size_t>(output)); };
+        scene.fileError=[&](auto) { events.push_back("E:9"); };std::string outcome="ok";
+        try { for (std::uint32_t index=0;index<repeat;++index) { scene.allocations.clear();scene.help->Construct(kWindow,0); } }catch (const HelpReadFailure& failure) { outcome=failure.kind; } // 명시 GUI 주소만 재사용하며 같은 Help 전역 캐시는 지우지 않는다.
+        CHECK(outcome==row[7] && static_cast<bool>(scene.state.helpData)==static_cast<bool>(Number(row[8])) && (scene.state.helpData?TextHex(*scene.state.helpData):"-")==row[9]);CHECK((calls?HelpReadFields(file):"-")==row[11] && HelpReadEvents(events)==row[12] && calls==Number(row[13]));
+        if (allocation.empty()) CHECK(row[10]=="-");
+        else { const auto physical=Bytes(row[10]);CHECK(physical.size()==allocation.size());if (scene.state.helpData && !cached) { // 값형 문자열은 LF/NUL까지 같은 논리 바이트를 소유하고 원문 미작성 padding은 노출하지 않는다.
+                CHECK(scene.state.helpData->size()+1<=physical.size());CHECK(std::equal(scene.state.helpData->c_str(),scene.state.helpData->c_str()+scene.state.helpData->size()+1,physical.begin(),[](char a,std::uint8_t b) { return static_cast<std::uint8_t>(a)==b; }));CHECK(std::equal(allocation.begin(),allocation.begin()+output,physical.begin()));
+            }else CHECK(allocation==physical); }
+        ++rows;
+    }
+    CHECK(rows==62);
+}
+
+TEST_CASE(QuickHelpFileRead_ActualClientSuccessfulCacheRetainsFirstBytesAndSingleLf) { // 기존 창 몸체가 실제 Client 읽기를 한 번만 수행하고 재생성에서는 성공 캐시를 유지한다.
+    using namespace netstorm::test::helpread;const auto root=Work();const std::string original("old\0tail",8);Text(root/"d/help.english",original);netstorm::client::Client instance(Options(root));WindowFixtureScene scene;scene.state.helpData.reset();std::size_t reads{};scene.fileRead=[&](auto name) { ++reads;return ReadClientQuickHelpFile(instance,name); };scene.help->Construct(kWindow,0);
+    CHECK(scene.state.helpData && *scene.state.helpData==original+"\n" && scene.state.helpData->c_str()[scene.state.helpData->size()]==0 && reads==1);const auto index=instance.Files().FileNameOwner()->Index();Text(root/"d/help.english","new");scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(*scene.state.helpData==original+"\n" && reads==1 && instance.Files().FileNameOwner()->Index()==index);
+}
+
+TEST_CASE(QuickHelpFileRead_ActualMissingThrowsBeforeCacheAndEmptyFileCanRetry) { // 필수 missing을 optional 없음으로 바꾸지 않고 실패 전 자식 생성과 다음 빈 파일 성공을 보존한다.
+    using namespace netstorm::test::helpread;const auto root=Work();std::filesystem::create_directories(root);netstorm::client::Client instance(Options(root));WindowFixtureScene scene;scene.state.helpData.reset();std::size_t errors{};scene.fileRead=[&](auto name) { return ReadClientQuickHelpFile(instance,name); };scene.fileError=[&](auto) { ++errors; };bool rejected{};
+    try { scene.help->Construct(kWindow,0); }catch (const netstorm::o::ColorCacheUnableToOpen&) { rejected=true; }
+    CHECK(rejected && !scene.state.helpData && scene.state.id==0 && errors==0 && scene.window.body==kBody && scene.window.backButton==kBack);Text(root/"d/help.english","");scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(scene.state.helpData==std::string("\n") && scene.state.helpData->c_str()[1]==0 && scene.state.id==scene.window.serial && errors==0);
 }

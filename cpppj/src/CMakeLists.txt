@@ -339,3 +339,6 @@ target_sources(netstorm PRIVATE client/SpecialPointerTrace.cpp client/SpecialPoi
 
 # snapshot/직접OS API와 분리한 명시 전체읽기41baa0 부모다(763).
 target_sources(netstorm PRIVATE o/RawBaseFileWholeRead.cpp o/RawBaseFileWholeRead.h)
+
+# 최초Help만같은Client FILE/키의필수전체읽기에연결한다(767).
+target_sources(netstorm PRIVATE client/QuickHelpFileRead.cpp client/QuickHelpFileRead.h)

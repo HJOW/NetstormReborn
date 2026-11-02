@@ -8,6 +8,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/QuickHelpFileRead.h" //최초Help파일만같은Client의필수전체읽기를사용한다.
 #include "client/HelpListDisk.h" //현재Client VFS/지역파일의 같은 Help목록writer다.
 #include "client/ProductPresentation.h"
 #include "client/ExternalHelpClient.h" //원래 외부 Help 정책을 현재 Client/Windows 장치에 연결한다.
@@ -324,7 +325,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     RawHelpHooks help;help.globals=&htmlGlobals_; // Tell과 같은 HTML 전역/Config/입력 고리를 빌린다.
     help.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };help.config=[this](auto key) { return FontBytes(client_.Configuration().PathSpec(key)); };
     help.substitute=[this](auto text) { const auto decoded=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()});return FontBytes(client_.Configuration().SubstituteLocal(decoded)); };
-    help.load=[this](auto name) -> std::optional<std::string> { const auto bytes=client_.Files().TryRead(name);if (!bytes) return std::nullopt;return std::string(bytes->begin(),bytes->end()); };
+    help.load=[this](auto name) { return ReadClientQuickHelpFile(client_,name); }; //원문check0/extra2이며LF/NUL/성공cache는기존전용창이소유한다.
     help.text=[this](auto token) { // 메뉴의정적도움말주제는같은소유저장소에서읽고Script고리/별칭과구별한다.
         const auto literal=objectMenus_ ? objectMenus_->StaticText(token) : std::nullopt;
         if (literal) return std::string(*literal);

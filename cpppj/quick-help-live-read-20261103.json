@@ -1,0 +1,137 @@
+{
+  "unit": 767,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 767,
+  "displayVersion": "11.01",
+  "exeSha256": "f1cff102b20417dccd8b6c4d2fec96864ea78197d3cc0e1600a1d692d74a3071",
+  "summary": "QuickHelp 최초 파일을 같은 Client의 필수 전체읽기와 FILE·키·성공 캐시에 연결",
+  "tests": {
+    "totalUnique": 12,
+    "totalExecutions": 12,
+    "newTests": 6,
+    "failedChecks": 0,
+    "names": [
+      "QuickHelpFileRead_ActualClientArchiveReadsCurrentPayloadAndKeepsSnapshotApi",
+      "QuickHelpFileRead_ActualClientSecondaryRootRefreshAndUnicodeDirectName",
+      "QuickHelpFileRead_ActualClientSuccessfulCacheRetainsFirstBytesAndSingleLf",
+      "QuickHelpFileRead_ActualClientTruncatedEncryptedFileFailsAfterCloseAndCanRetry",
+      "QuickHelpFileRead_ActualMissingThrowsBeforeCacheAndEmptyFileCanRetry",
+      "QuickHelpFileRead_Native62WholeReadExtraTwoLfNulAndConstructorCache",
+      "StartupIo_ActualClientSelectsParentAndNeverLoadsPoisonedEntryArchive",
+      "StartupIo_ClientConstructorDoesNotReadArchiveBeforeSetupSearch",
+      "StartupIo_DeferredCatalogIsValidThroughConstCopy",
+      "StartupIo_DirectDiskAndStartupStyleProbeDoNotConsumeDeferredCatalog",
+      "StartupIo_IndependentClientArchiveLookupsLoadOneSnapshot",
+      "StartupIo_SelectedBadArchiveStillFailsAfterSetupAndCdBoundary"
+    ],
+    "logs": [
+      "tests-help-read-v1.log",
+      "tests-startup-io-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v2.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2688,
+    "currentCount": 2689,
+    "allUnchanged": true,
+    "fixtureCount": 869,
+    "newFixtures": [
+      "cpppj/tests/fixtures/quick-help-file-read-x86.tsv"
+    ]
+  },
+  "native": {
+    "prepared-native.json": {
+      "unit": 767,
+      "host": "HJOW-Athlon",
+      "rows": 62,
+      "observations": 124,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "boundary": "실제4c5380→41baa0/길이/읽기/소멸·LF/NUL·같은성공cache. GUI/Config/Open/FILE/new는명시입력. 예외에는41baa0 marker0일때실제4f93a0만호출하며외부창ctor SEH/부분GUI 소멸을실행하지않음. 부분암호scratch는명시101seed이며미정스택동일성주장아님",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "f69b64ca59a26140de26adadedabd387356029c61179a45e5ce6992e139db875"
+    },
+    "prepared-native-verify.json": {
+      "unit": 767,
+      "host": "HJOW-Athlon",
+      "rows": 62,
+      "observations": 124,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "boundary": "실제4c5380→41baa0/길이/읽기/소멸·LF/NUL·같은성공cache. GUI/Config/Open/FILE/new는명시입력. 예외에는41baa0 marker0일때실제4f93a0만호출하며외부창ctor SEH/부분GUI 소멸을실행하지않음. 부분암호scratch는명시101seed이며미정스택동일성주장아님",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "f69b64ca59a26140de26adadedabd387356029c61179a45e5ce6992e139db875"
+    },
+    "native-verify.json": {
+      "unit": 767,
+      "host": "HJOW-Athlon",
+      "rows": 62,
+      "observations": 124,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "boundary": "실제4c5380→41baa0/길이/읽기/소멸·LF/NUL·같은성공cache. GUI/Config/Open/FILE/new는명시입력. 예외에는41baa0 marker0일때실제4f93a0만호출하며외부창ctor SEH/부분GUI 소멸을실행하지않음. 부분암호scratch는명시101seed이며미정스택동일성주장아님",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "f69b64ca59a26140de26adadedabd387356029c61179a45e5ce6992e139db875"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "prepared Native capture",
+      "detail": "최초관측은창생성자/재생성종료뒤이미반납된지역File스택을읽었다. 최초TSV/JSON을prepared-observations에보존하고최종은4c580e의41baa0호출직후실제File필드를포착했다. 현재fixture/두준비재관측/추가root관측은교정본이다."
+    },
+    {
+      "scope": "root build-v1",
+      "detail": "새검사의using namespace netstorm::o와창검사의기존kSource이름이충돌해C2872와연쇄오류가났다. 검사상수를kWindowHelpSource로명시개명했고주소값/기대fixture/제품은바꾸지않았다. 최초빌드로그는유지한다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "dd0dde35703583fe273173732f4260e0074c7b739fb04b9995c4ee8ee2e911d1",
+    "cpppj/src/client/QuickHelpFileRead.cpp": "6434673060f34e7214b8d8f7e2df8c6724e11458e69a2210200437d47df87adf",
+    "cpppj/src/client/QuickHelpFileRead.h": "ae6636de8b1bff26e7f5a50118bbc72f7da8c73ee753745358043bbe0ddb259e",
+    "cpppj/src/client/UberGump.cpp": "8072e2b69d551a46443b9d94967a5365804a7ef5805039012a37ccc6181384d2",
+    "cpppj/tests/CMakeLists.txt": "e938f4f9f47c149300ce519aa7ea92105baad03549c5480b4e0949a863974028",
+    "cpppj/tests/QuickHelpFileReadTestSupport.h": "dc1c36191c51eb405669adbf47d64f5e23bc794f250d012dc355c09fe94a7797",
+    "cpppj/tests/QuickHelpFileReadTests.cpp": "889908ca2fd8b56345d42df3d7adc0d0a3928614b1b2681d5e59b05bbbb226ce",
+    "cpppj/tests/QuickHelpWindowTests.cpp": "883cf92880ca1dccdca9368395f183e69ad160ca7cefed99e3ad3203cbbe6630",
+    "tools/decomp_quick_help_file_read.py": "d83a1eee181fabd8ee1609f3ab4ebac1f9f77a61fa83414ba5927659830e5fd0"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-767/protected-after.json",
+  "next": "DrawWater(768)·DataManager(769)·CreateAt(770)·Config reader(771)·일반 AI 명령(772/773)·글꼴 인코딩(774)·조건 AI 메뉴(775)·진단표시(776)와 남은 비멀티/호환성",
+  "limitations": [
+    "Raw4c5380→41baa0의check0/extra2·초기length0과FILE완료뒤정리만복원한다. GUI/Config/Open/FILE/new는CPU명시입력이고41baa0 marker0의실제4f93a0만별도호출하며외부창ctor SEH/부분GUI반납은관측하지않는다.",
+    "최소4/extra2padding은hostvector에서0이지만반환본문에노출하지않는다. 원문부분암호scratch101seed/미정tail자체의동일성을주장하지않으며host는부분fread를FILE/키반납뒤명시거부한다.",
+    "실제Open의필수missing은typed예외이며rawNULLFILE/logger경로와optional미발견을같게하지않는다. 성공cache는기존창이소유하며LF를한번더하고std::string의NUL로원문끝을보존한다.",
+    "Host바깥reader는미완성Open뒤남은OSFILE/키도추가반납한다. 원문24BYTE ABI/SEH dispatcher전체동일성으로세지않는다. 일반Files.Read/TryRead의snapshot·optional과OS직접reader는보존했다.",
+    "새게임/GUI/CLI/MP·물리/PCM·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다. 기존QuickHelpWindow_Native98의모든모드재실행은하지않았다."
+  ]
+}

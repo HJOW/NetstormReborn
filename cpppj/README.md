@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **766 / 표시 버전11.01 유지**다. CreateHelpList 일반 명령과 같은 Help HTML stream 및 지역 BaseFile 수명 연결. 집중8개가 통과했습니다. 원문299입력/580관측과 추가580회·별도LF경계7관측 일치. 현재TYPE재조회·실제HTML/CRLF·r+b tail·공유고리·stream반납을확인했다. 새 게임/MP 검사는0이며 전체 목표는 미완료입니다. 보호2684불변·현재2688이다. GUI/물리 입력/PCM은 별도다. [766 기록](../docs/exe/cpp-quick-help-list-stream-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다. 다음은 QuickHelp 최초reader(767)·DrawWater(768)·DataManager(769)·CreateAt(770)·Config reader(771)·일반 AI 명령(772/773)·글꼴 인코딩(774)·조건 AI 메뉴(775)와 남은 비멀티/호환성. 마지막GUI746·전체34/ZIP645·644는 별도 제품 근거다.
+현재 실행 제품은 **767 / 표시 버전11.01 유지**다. QuickHelp 최초 파일을 같은 Client의 필수 전체읽기와 FILE·키·성공 캐시에 연결. 집중12개가 통과했습니다. 원문62입력/124관측과 준비재관측124·추가124회 일치. 현재TAFF/Unicode·부분암호실패반납·필수missing·LF/NUL/단일성공cache와snapshot분리를확인했다. 새 게임/MP 검사는0이며 전체 목표는 미완료입니다. 보호2688불변·현재2689이다. GUI/물리 입력/PCM은 별도다. [767 기록](../docs/exe/cpp-quick-help-live-read-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다. 다음은 DrawWater(768)·DataManager(769)·CreateAt(770)·Config reader(771)·일반 AI 명령(772/773)·글꼴 인코딩(774)·조건 AI 메뉴(775)·진단표시(776)와 남은 비멀티/호환성. 마지막GUI746·전체34/ZIP645·644는 별도 제품 근거다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 

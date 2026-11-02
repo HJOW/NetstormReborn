@@ -3090,3 +3090,8 @@ target_sources(netstorm_tests PRIVATE QuickHelpListTests.cpp QuickHelpListIntegr
 target_sources(netstorm_menu_session_tests PRIVATE QuickHelpListTests.cpp QuickHelpListIntegrationTests.cpp)
 set_source_files_properties(QuickHelpListTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_QUICK_HELP_LIST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-list-x86.tsv\";NETSTORM_QUICK_HELP_LIST_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-list-input-x86.tsv\";NETSTORM_QUICK_HELP_LIST_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-list-names-x86.tsv\"")
 set_source_files_properties(QuickHelpListIntegrationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_QUICK_HELP_LIST_HTML_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-list-html-x86.tsv\"")
+
+# 새6개Help reader/창cache와기존snapshot I/O를같은기존파일집중대상에서검사한다(767).
+target_sources(netstorm_tests PRIVATE QuickHelpFileReadTests.cpp)
+set_property(SOURCE QuickHelpWindowTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_QUICK_HELP_FILE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-file-read-x86.tsv\"")
+target_sources(netstorm_file_tests PRIVATE QuickHelpFileReadTests.cpp QuickHelpWindowTests.cpp StartupIoTests.cpp)
