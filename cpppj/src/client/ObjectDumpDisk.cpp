@@ -4,6 +4,7 @@
 #include "o/RawBaseFileIO.h"
 #include "o/RawBaseFileReadPolicy.h"
 #include "o/RawFileName.h"
+#include "o/RawBaseFileWholeRead.h"
 #include "platform/Utf8Path.h"
 #include <cstdio>
 #include <array>
@@ -70,8 +71,10 @@ ObjectDumpHooks MakeObjectDumpDiskHooks(const std::filesystem::path& directory,s
     hooks.close=[](auto stream) { std::fclose(File(stream)); };
     hooks.read=[state](auto name,auto first,auto second) { // 실제Client의41baa0도 같은 전체열기/현재TAFF FILE/키를 사용하며 값형VFS snapshot으로 대신하지 않는다.
         if (first || second) throw std::invalid_argument("객체 덤프 전체읽기인자");if (!state->source) return o::ReadFileBytes(Utf8Path(name));
-        Writer reader;state->source->Open(reader.state,name,0,0,reader.hooks);const auto length=o::BaseFileLength(reader.state,reader.hooks);if (length<0) throw std::runtime_error("객체 덤프 전체읽기의 signed 길이 실패");
-        std::vector<std::uint8_t> bytes(static_cast<std::size_t>(length));std::array<std::uint8_t,4096> scratch{};o::ReadBaseFile(reader.state,bytes,-1,reader.hooks,scratch);if (!reader.readComplete) throw std::runtime_error("객체 덤프 전체읽기의 실제 부분 I/O");return bytes; // 원문 미정 tail을0으로 합성한 정상파일로 내보내지 않는 호스트 경계다.
+        Writer reader;std::vector<std::uint8_t> bytes;std::int32_t length=0;std::string input(name);input+='\0';o::BaseFileWholeReadHooks whole; // 값형Read/optional미발견계약은보존하고이41baa0호출위치만명시실시간읽기에연결한다. 원문Dump의length지역값도0이다.
+        whole.probe=[state](auto physical) { return state->source->Probe({reinterpret_cast<const char*>(physical.data()),physical.size()}); };whole.open=[&](auto& file,auto physical,auto mode,auto create) { state->source->Open(file,{reinterpret_cast<const char*>(physical.data()),physical.size()},mode,create,reader.hooks); };
+        whole.allocate=[&](auto requested) { bytes.resize(requested);return o::BaseFileWholeAllocation{1,bytes}; };std::array<std::uint8_t,4096> scratch{};
+        static_cast<void>(o::ReadWholeBaseFile(reader.state,{reinterpret_cast<const std::uint8_t*>(input.data()),input.size()},0,&length,0,reader.hooks,whole,scratch));if (!reader.readComplete) throw std::runtime_error("객체 덤프 전체읽기의 실제 부분 I/O");bytes.resize(static_cast<std::size_t>(length));return bytes; // extra/min4의미작성padding은노출하지않는다. Windows10/11의바깥Writer보호자는미완성Open의남은OSFILE도반납하며그추가반납을원문SEH동일성으로세지않는다.
     };
     hooks.allocate=[state](std::uint32_t size) { state->allocation.resize(static_cast<std::size_t>(size)+1);return std::span<std::uint8_t>(state->allocation); }; // 원본요청의끝NUL1BYTE초과위험만호스트물리에서방지한다.
     hooks.construct=[state](auto file) { if (state->writer) throw std::logic_error("객체 덤프 파일중복생성");state->writer=std::make_unique<Writer>();state->identity=file.data(); };

@@ -1,0 +1,126 @@
+{
+  "unit": 763,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 763,
+  "displayVersion": "11.01",
+  "exeSha256": "c2c3e0a1ec7c82f628bb3e27c84b7809a4d4a18d2be972a1ed6c09c34b16c119",
+  "summary": "명시 전체읽기41baa0와 현재 객체덤프의 FILE·키·할당·예외 수명 연결",
+  "tests": {
+    "totalUnique": 19,
+    "totalExecutions": 19,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "BaseFileIO_IndependentNative322CursorCloseAndChunkedWrite",
+      "BaseFileIO_MissingBoundariesAndCloseKeepEarlierEffects",
+      "BaseFileIO_RealObjectDumpDiskUsesSharedWriteAndDestruct",
+      "BaseFileOpenPolicy_ActualArchiveReadsCurrentDiskPayloadAndInstallsKey",
+      "BaseFileOpenPolicy_ActualRelativeWriterFallsBackToSecondaryAndDirectFailureDoesNot",
+      "BaseFileOpenPolicy_ArchiveOpenFailureStopsBeforeSecondaryDisk",
+      "BaseFileOpenPolicy_FileSpecFailureAndOrdinaryExceptionsCloseSameHandle",
+      "BaseFileOpenPolicy_MetadataDoesNotReadPayloadAndKeepsRealArchiveName",
+      "BaseFileOpenPolicy_NativeAllModesCreateSourcesFieldsAndRing",
+      "BaseFileWholeRead_Native133ProbeAllocationReadOutputAndCompletedCtorLifetime",
+      "BaseFileWholeRead_UnsafeNegativeLengthOrSmallAllocationIsExplicitHostBoundary",
+      "ObjectDump_ActualClientSharedRingUnicodePipeline",
+      "ObjectDump_IndependentNative56FullTraceFilesAndCurrentBounds",
+      "ObjectDump_RealDiskPipelineMatchesIndependentNativeBytes",
+      "ObjectDump_RealOpenFailureDoesNotCreateParentOrRestoreModes",
+      "ObjectDump_SharedRingFirstOpenFailureKeepsOneReservation",
+      "ObjectDump_SharedRingReadExceptionKeepsThreeReservations",
+      "ObjectDump_SharedRingWriterFailureRunsFullFallbackAndKeepsSixReservations",
+      "ObjectDump_TypedRegionUnwindAndRestorationFollowNativeEhMetadata"
+    ],
+    "logs": [
+      "tests-io-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-v2.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2676,
+    "currentCount": 2677,
+    "allUnchanged": true,
+    "fixtureCount": 857,
+    "newFixtures": [
+      "cpppj/tests/fixtures/basefile-whole-read-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 763,
+      "host": "HJOW-Athlon",
+      "rows": 133,
+      "observations": 266,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제41baa0/길이/전체읽기/소멸과명시예외뒤실제004f93a0 cleanup funclet. Open/Probe/FILE/new와최초암호scratch4096BYTE=101seed는명시경계. MSVC SEH dispatcher는실행하지않고marker0에서실제funclet을별도호출. 음수길이/할당밖원문미정쓰기는정상행에포함하지않음",
+      "sha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "lastFullDecompilation": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "observedToolSha256": "95271de7ff367009135873bd31b9acd1bf1c8b1c9e5f71cde9ef31f37363c839",
+      "rawReportSha256": "1da5a30dd5ae0039bf95871995a5dd05ef4cb86d688783b9f82af6989e2e1c64"
+    },
+    "native-verify.json": {
+      "unit": 763,
+      "host": "HJOW-Athlon",
+      "rows": 133,
+      "observations": 266,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제41baa0/길이/전체읽기/소멸과명시예외뒤실제004f93a0 cleanup funclet. Open/Probe/FILE/new와최초암호scratch4096BYTE=101seed는명시경계. MSVC SEH dispatcher는실행하지않고marker0에서실제funclet을별도호출. 음수길이/할당밖원문미정쓰기는정상행에포함하지않음",
+      "sha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "c1167bb9188e22d992aad08f38cbd768324eb5ba42aa743a08092aa0a5c578f3"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "prepared Native correction",
+      "detail": "첫 스택 관측은 암호4101/available2050의 미작성 scratch를 host간 미정값으로 비교했다. 최초133행을 observations에 보존하고 명시scratch101 seed와 실제marker0 cleanup funclet 관측으로 교정했다. 두 payload행만 달라졌으며 현재 교정fixture를 제품 준비 전에 고정했다. root의 빌드/집중검사 실패는0."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "6d6cb2c8b3df16c5b13a273160f6ec461e626d7088d6648a1dec07f7c79bc358",
+    "cpppj/src/client/ObjectDumpDisk.cpp": "5c6f7085aa3e47dc65b0a1ad8a931a2421544eccd2ab58f2d63a5d48c44d9264",
+    "cpppj/src/o/RawBaseFileWholeRead.cpp": "e3f9bcc786a36f240fad4d6267bf4b45e94e1abac7816348a27d395ded06d824",
+    "cpppj/src/o/RawBaseFileWholeRead.h": "157ce4046793f7711406fb58838df1e65e1381ef526a26a5854e4bba9cc6f556",
+    "cpppj/tests/BaseFileWholeReadTests.cpp": "bb6b2c2860fb6b314f3de906580c8c7497b9bfa853c8771117d95740c18656db",
+    "cpppj/tests/CMakeLists.txt": "a67656aa4f30ce60c5b1d87a64b3b6ab602e0d390a9adcd6434e8591a32acf29",
+    "tools/decomp_basefile_whole_read.py": "7c4df56f02ef6f348b31e9cd492d75635fd33b041875d65c1935663ce1ab9abb"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-763/protected-after.json",
+  "next": "글꼴/음질과 glyph cache(764)·존재조회(765)·Help stream writer(766)·QuickHelp 최초reader(767)·DrawWater(768)·DataManager(769)·CreateAt(770)·Config reader(771)와 남은 비멀티/호환성",
+  "limitations": [
+    "Raw core는 불완전Open 뒤 File소멸을 실행하지 않는다. 실제Host ObjectDump의 바깥Writer는 Windows 호스트자원 보호를 위해 남은OS FILE/키도 반납하며 값형vector도예외에서반납한다. 이추가RAII를원문SEH동일성으로세지않는다.",
+    "원문marker0에서실제4f93a0→41b410을별도실행했다. 전체SEH dispatcher/32비트24BYTE FILE/원문미정stack 자체의동일성은아니다. 최초암호scratch101과할당205는명시입력이다.",
+    "Raw core는부분읽기의미작성물리를유지하지만실제ObjectDump는short fread를정상출력으로노출하지않고명시거부한다. extra/min4padding은외부에노출하지않는다. 음수길이/할당밖미정쓰기도호스트오류다.",
+    "기존TryRead/Read의snapshot·무진단optional과ReadFileBytes/TAFF등록의직접OS계약은보존했다. GIF/팔레트/Xlat/Font의각다른부모를일괄치환하지않았다.",
+    "새게임/CLI/MP·GUI/물리/PCM·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다."
+  ]
+}
