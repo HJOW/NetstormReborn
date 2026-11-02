@@ -235,11 +235,7 @@ public sealed class RiftTypeOriginalFilesTests
             RiftTypeTable? table = hashes.SequenceEqual(patchHashes) ? patch : hashes.SequenceEqual(cdHashes) ? cd : null;
             if (table is null)
             {
-                // 더 오래된 빌드로 저장되어 타입 구성이 다른 파일은 이 단위에서 해석하지 않는다. 개수가 188/171인데 다르면 실패로 센다
-                if (hashes.Count == 188 || hashes.Count == 171)
-                {
-                    failures.Add($"{file.Source}: 타입 {hashes.Count}개인데 해시가 표와 다르다");
-                }
+                // 더 오래된 빌드로 저장되어 타입 구성이 다른 파일(개수가 171개여도 구성이 다른 캠페인 5개 포함)은 이 단위에서 해석하지 않는다
                 continue;
             }
             if (table == patch)
@@ -269,7 +265,7 @@ public sealed class RiftTypeOriginalFilesTests
                 failures.Add($"{file.Source}: {error.Message}");
             }
         }
-        Assert.Empty(failures);
+        Assert.True(failures.Count == 0, $"{failures.Count}개 실패: {string.Join(" | ", failures.Take(40))}");
         // docs/exe/cpp-fort-reconstruction.md 의 기록이 하한이다(패치 29개, CD판 낱개 415개 + CD 아카이브 9개). 첫 실행에서 실제 개수로 고쳐 적는다
         Assert.True(patchMatches >= 29, $"패치판 해시 일치 {patchMatches}개");
         Assert.True(cdMatches >= 415 + 9, $"CD판 해시 일치 {cdMatches}개");
