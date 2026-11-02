@@ -1,0 +1,95 @@
+{
+  "unit": 734,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "directoryRows": 192,
+  "directoryReadFaultRows": 30,
+  "parentRows": [
+    {
+      "suppliedHex": "",
+      "executableHex": "433a5c47616d655c4e657473746f726d2e657865",
+      "pathHex": "433a5c47616d655c",
+      "advances": 3,
+      "events": [
+        "module",
+        "filename",
+        "00459990",
+        "00459900",
+        "00459c60"
+      ]
+    },
+    {
+      "suppliedHex": "",
+      "executableHex": "433a2f47616d652f4e657473746f726d2e657865",
+      "pathHex": "433a5c47616d655c",
+      "advances": 3,
+      "events": [
+        "module",
+        "filename",
+        "00459990",
+        "00459900",
+        "00459c60"
+      ]
+    },
+    {
+      "suppliedHex": "",
+      "executableHex": "5c5c7365727665725c73686172655c67616d655c4e657473746f726d2e657865",
+      "pathHex": "5c5c7365727665725c73686172655c67616d655c",
+      "advances": 3,
+      "events": [
+        "module",
+        "filename",
+        "00459990",
+        "00459900",
+        "00459c60"
+      ]
+    },
+    {
+      "suppliedHex": "",
+      "executableHex": "433a5c4e657473746f726d2e657865",
+      "pathHex": "433a5c4e657473746f726d2e6578655c",
+      "advances": 3,
+      "events": [
+        "module",
+        "filename",
+        "00459990",
+        "00459900",
+        "00459c60"
+      ]
+    },
+    {
+      "suppliedHex": "",
+      "executableHex": "443a5c612e625c635c4e657473746f726d2e657865",
+      "pathHex": "443a5c612e625c635c",
+      "advances": 3,
+      "events": [
+        "module",
+        "filename",
+        "00459990",
+        "00459900",
+        "00459c60"
+      ]
+    },
+    {
+      "suppliedHex": "676976656e2f726f6f74",
+      "executableHex": "433a5c69676e6f7265642e657865",
+      "pathHex": "676976656e2f726f6f74",
+      "advances": 0,
+      "events": []
+    }
+  ],
+  "observations": 396,
+  "boundary": "실제459990/strchr전체와435cd0/FileSpec/디렉터리/장치/전체작성기. 모듈Win32두경계만명시응답. 없는separator의Native read fault는정상출력으로합성하지않음",
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_file_directory.py": "2772f6341a7ae81cac6f1c5e4baad8208dc5fe9cca97b1fb409d8ceb63377f9d",
+    "cpppj\\tests\\fixtures\\file-directory-x86.tsv": "59b0c891f28e51a0fab7ebfcc26794233cb2f1bcc8c2c62c1bb710de0d53c1ec",
+    "cpppj\\tests\\fixtures\\file-module-directory-x86.tsv": "4a7d00bc79cdebadf6383abde27e3441cc8b46e7f9cbf67352b576fd25b8da1f"
+  }
+}

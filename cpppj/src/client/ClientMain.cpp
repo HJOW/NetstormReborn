@@ -168,7 +168,7 @@ struct Client::ChatState {
 };
 // 파일 시스템·설정·전역 Chat 저장소만 만든다. 창과 화면은 Run에서 원본 순서대로 만든다.
 Client::Client(ClientOptions options)
-    : options_(std::move(options)), files_(options_.gameDirectory),
+    : options_(std::move(options)), files_(options_.gameDirectory,{},options_.startupFileNames),
       configuration_([this](std::string_view path) { return files_.TryRead(path); },files_.FileNameOwner()), // 설정 Load의 이름 추출도 실제 VFS와 같은 고리다.
       fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
       fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),

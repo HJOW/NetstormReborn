@@ -1,5 +1,8 @@
 // 원본과 다른 game/ 휴대 배치와 Windows 10/11 유니코드 실행 경로를 지원한다.
 #include "platform/PortableStartup.h"
+#include "platform/Utf8Path.h"
+#include "o/FileSpecQuery.h"
+#include "o/RawFileName.h"
 #include <stdexcept>
 #include <vector>
 #if defined(_WIN32)
@@ -24,8 +27,18 @@ std::filesystem::path CurrentExecutableFile() {
 #endif
 }
 
-std::filesystem::path PortableGameDirectory(const std::filesystem::path& executable) {
-    const auto directory=std::filesystem::absolute(executable).parent_path(); // 호출자의 cwd 대신 실제 EXE가 소유한 자료만 선택한다.
+std::string ModuleDirectory(std::string_view executable,o::RawFileName& names) { // 모듈 조회 OS 경계는 호출자가 담당하고 나머지 원문 부모의 고리 수명은 그대로 따른다.
+    o::FileSpecQuery spec(executable);const auto directory=names.Directory(spec.Text());const auto device=names.Device(spec.Text());
+    const std::array<o::FileNamePart,2> parts{{{-1,device},{-2,directory}}};return std::string(names.Format(parts));
+}
+
+std::filesystem::path PortableGameDirectory(const std::filesystem::path& executable,o::RawFileName* names) {
+    const auto absolute=std::filesystem::absolute(executable);const auto text=PathToUtf8(absolute);o::RawFileName localNames;
+    auto directory=absolute.parent_path(); // 호출자의 cwd 대신 실제 EXE가 소유한 자료만 선택한다.
+    if (text.size()<256) {
+        directory=PathFromUtf8(ModuleDirectory(text,names ? *names:localNames)).parent_path();
+        if (directory!=absolute.parent_path()) directory=absolute.parent_path(); // 원본과 다른 Windows10/11 호환: 드라이브 루트의 EXE도 파일명을 디렉터리로 오인하지 않는다. 원문 세 칸의 내용은 유지한다.
+    } // 원본과 다른 Windows10/11 호환: UTF-8로256BYTE 이상인 Unicode 설치 경로는 원문 고정 배열의 범위를 넘기므로 OS 경로를 보존한다.
     for (const auto& candidate:{directory/"game",directory}) { // 배포본의 하위 자료를 같은 이름의 옆 자료보다 우선한다.
         std::error_code error; // 누락/접근 불가 자료로 다른 cwd나 원본 폴더에 자동 진입하지 않는다.
         if (std::filesystem::is_regular_file(candidate/"netstorm.tarc",error)) return candidate;

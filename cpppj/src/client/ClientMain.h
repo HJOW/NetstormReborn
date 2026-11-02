@@ -89,6 +89,7 @@ struct ClientOptions {
     bool audioMute{};                      // 새 옵션(검사용): 참이면 장치를 열고 음악을 실제로 재생하되 소리는 내지 않는다(음소거 깊이 1로 시작).
     std::filesystem::path audioReport;     // 새 옵션(검사용): 닫기 직전의 소리·음악 상태를 이 파일에 `이름	값` 줄로 저장한다.
     std::string testBridgePatterns; // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 명시 CLI에서만 지정하고 설정 파일에 저장하지 않는다.
+    std::shared_ptr<o::RawFileName> startupFileNames; // 무인자 모듈 위치 탐색이 사용한 고리 소유권을 VFS/설정/전역 문자열까지 넘긴다. 명시 경로는 새 BSS0이다.
 };
 
 // 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다.

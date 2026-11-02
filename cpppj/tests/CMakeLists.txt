@@ -2963,3 +2963,10 @@ set_source_files_properties(StartupFileNamesTests.cpp PROPERTIES COMPILE_DEFINIT
 add_executable(netstorm_startup_file_names_tests FocusedTestMain.cpp StartupFileNamesTests.cpp ConfigPathLoadTests.cpp ConfigInterfaceTests.cpp FileNameLeafTests.cpp TechnicalHelpTests.cpp)
 target_link_libraries(netstorm_startup_file_names_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_startup_file_names_tests)
+
+#459990의 전체 바이트와 무인자 모듈 경로/실제Client의 공유 소유권을 집중 확인한다(734).
+target_sources(netstorm_tests PRIVATE FileDirectoryTests.cpp)
+set_source_files_properties(FileDirectoryTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FILE_DIRECTORY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/file-directory-x86.tsv\";NETSTORM_FILE_MODULE_DIRECTORY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/file-module-directory-x86.tsv\"")
+add_executable(netstorm_file_directory_tests FocusedTestMain.cpp FileDirectoryTests.cpp PortableStartupTests.cpp FileNameTests.cpp StaticStringsTests.cpp StartupFileNamesTests.cpp)
+target_link_libraries(netstorm_file_directory_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_file_directory_tests)

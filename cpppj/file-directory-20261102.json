@@ -1,0 +1,129 @@
+{
+  "unit": 734,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 734,
+    "version": "11.01",
+    "machine": "0x8664 / AMD64",
+    "sha256": "65352cd6dfe04a8072d3167e49cae901f26e0a2f85b024d4570c4da3a964eb00"
+  },
+  "implementation": [
+    "459990 디렉터리 전체/단계 모드와 같은10칸 고리/부분 출력 복원",
+    "435cd0 무인자 모듈 경로의 FileSpec→Directory→Device→Format 세 칸 연결",
+    "실제 main의 실행 위치 탐색 소유자를 ClientOptions/VFS/설정/ClientStaticStrings까지 인계",
+    "드라이브 루트/긴Unicode 선택과 native path 인계에 원본과 다른 Windows10/11 호환 이유를 주석으로 명시"
+  ],
+  "native": {
+    "report": "cpppj/file-directory-native-20261102.json",
+    "directoryRows": 192,
+    "normalRows": 162,
+    "readFaultRows": 30,
+    "moduleRows": 6,
+    "moduleCppRowsReplayed": 5,
+    "observations": 396,
+    "precisions": [
+      "027f",
+      "037f"
+    ],
+    "rerunMatches": true,
+    "wholeSlotBytes": 256,
+    "wholeModuleRingBytes": 2560,
+    "boundary": "실제459990/strchr전체와435cd0/FileSpec/디렉터리/장치/전체작성기. 모듈Win32두경계만명시응답. 없는separator의Native read fault는정상출력으로합성하지않음"
+  },
+  "tests": {
+    "new": 5,
+    "existing": 13,
+    "final": 18,
+    "failed": 0,
+    "nativeRowsReplayed": 777,
+    "nativeRowsByGroup": {
+      "directory": 192,
+      "module": 5,
+      "formatter": 352,
+      "staticStrings": 204,
+      "startup": 24
+    },
+    "actualUnicodePackage": true,
+    "actualClientOwnerHandoff": true,
+    "actualConfigThenVfsIndexes": [
+      3,
+      4,
+      8,
+      1
+    ],
+    "longUnicodeDirectorySelectionOnly": true,
+    "log": "extracted\\cpp-file-directory-734\\tests-v1.log"
+  },
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_directory_tests"
+    ],
+    "log": "extracted\\cpp-file-directory-734\\build-v1.log",
+    "warnings": 0,
+    "errors": 0
+  },
+  "cli": {
+    "processes": 1,
+    "command": "Netstorm.exe --config-get originals SCREENW",
+    "output": "1024",
+    "exitCode": 0,
+    "gameFrames": 0,
+    "log": "extracted\\cpp-file-directory-734\\cli-config.log"
+  },
+  "protection": {
+    "baselineFiles": 2647,
+    "unchangedFiles": 2647,
+    "baselineGroups": {
+      "AGENTS.md": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 827
+    },
+    "agentAuthoredChanges": 0,
+    "newFixtures": 2,
+    "currentTotal": 2649,
+    "fixtureTotal": 829
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "requirements": {
+    "phase5": "733 반영: 모든 자동 생성 파일/디렉터리와 reader를 사용자 Netstorm 하위로 이관. 일반 권한/읽기 전용 설치 정상 동작. 구현 미착수",
+    "platform": "Windows10/11 AMD64 대상·Windows11 ARM 고려. ARM 빌드/실기 미검증"
+  },
+  "limits": [
+    "구분자 부재의 원문30행은 NULL 읽기 실패이며 호스트 invalid_argument와 구별한다",
+    "긴Unicode 검사는 모듈 경로 선택뿐이며 다른 VFS 소비자의 무제한 경로 지원 증명이 아니다",
+    "드라이브 루트의 원문 잘못된 경로도 모듈 전체 고리에 보존하고 실제 휴대 자료 선택은 OS 부모로 보정한다",
+    "명시 인자 Native1행은 복사/0칸 근거이며 C++ModuleDirectory는 무인자5행만 재생한다",
+    "Startup 선행6후보/CWD/TARC 등록/Full/FindNext/VFS 전체검색수명·Template·일반 FILE/TAFF/보조 실패는 남는다",
+    "10.78 기준이며10.72 대응 부모는 새로 관측하지 않았다",
+    "새 GUI/전체34/전체 C++/ZIP·포획/희생·특정 적 공격/승리·공중3종 전용·MP/통신 검사는0",
+    "전체1~8차 목표는 진행 중이다"
+  ],
+  "rawDirectory": "extracted\\cpp-file-directory-734",
+  "sha256": {
+    "LEFT_JOBS.md": "6a8b4040be599dbe2b0c9a76e873ddd6acb4eed7ecebe39229b11e5dca46129e",
+    "cpppj/README.md": "3f8bb3da13bac1ec2f650fcb6c55ce6d7686f709b53548d1e58ea37cf9be013d",
+    "cpppj/src/app/main.cpp": "484ed17c8355b6df1c7452bc14edcd6967d8c21dbf2f79a5fd5a6069dd2adebf",
+    "cpppj/src/client/ClientMain.cpp": "757f3733120843e1df024bc13af8ee2af564069c288da4bf0998e716895b5f6e",
+    "cpppj/src/client/ClientMain.h": "47921239548914846e30e8962c8b5475b1503b2fa732653bb934e792dcea7cb8",
+    "cpppj/src/o/BaseFile.cpp": "4dd92238df5e8854b09474162831adaf885aa510065dcd450ff38f012a3bb6bc",
+    "cpppj/src/o/BaseFile.h": "6cb248f647a2a5b0dcd0f2c62988a7ab9f22298d55c83392e6c3032759d63f56",
+    "cpppj/src/o/RawFileName.cpp": "28888fdb307d2405f4c36527f7907009839650cbdc8badc89359d2af2db31003",
+    "cpppj/src/o/RawFileName.h": "44da1ccda6774d5972a4aa04952484be9a55b3a6ee19bed2734a43395e01e97a",
+    "cpppj/src/platform/PortableStartup.cpp": "0e9907d4ae1a6efbb62d9841a0ad5569a82ea788212a6a5b90e01c3ecdfef60c",
+    "cpppj/src/platform/PortableStartup.h": "f482d816f17cb95e06b8df6a64a8a15a8dcb755243d1c035ba8776cd47985541",
+    "cpppj/tests/CMakeLists.txt": "ea8e1b21020ea0673a7fcc8d119fed70b4e79642720fc32b3ac8b595e87c4305",
+    "cpppj/tests/FileDirectoryTests.cpp": "842478ef0562194c496977fba2df3d2964810453b1bf94bae77c00965cd9a17f",
+    "cpppj/tests/fixtures/file-directory-x86.tsv": "59b0c891f28e51a0fab7ebfcc26794233cb2f1bcc8c2c62c1bb710de0d53c1ec",
+    "cpppj/tests/fixtures/file-module-directory-x86.tsv": "4a7d00bc79cdebadf6383abde27e3441cc8b46e7f9cbf67352b576fd25b8da1f",
+    "tools/decomp_file_directory.py": "2772f6341a7ae81cac6f1c5e4baad8208dc5fe9cca97b1fb409d8ceb63377f9d",
+    "docs/exe/cpp-file-directory-20261102.md": "7a5d228794262c5111aa98b4bea5eaa67e7a9f446163484745f39034960372e5"
+  }
+}

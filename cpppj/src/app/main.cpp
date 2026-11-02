@@ -28,6 +28,7 @@
 #include "client/UberGump.h"
 #include "client/GifImage.h"
 #include "o/BaseFile.h"
+#include "o/RawFileName.h"
 #include "o/CanonDecoder.h"
 #include "o/Config.h"
 #include "o/ConfigInterface.h"
@@ -583,11 +584,12 @@ std::vector<UiStep> ReadUiSteps(const std::filesystem::path& path) {
     return steps;
 }
 // 원본 방식의 창과 Renderer를 띄운다. 기본은 메뉴, --view는 독립 검사 장면이다.
-int RunClient(std::vector<std::string> arguments) {
+int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::RawFileName> startupFileNames={},std::optional<std::filesystem::path> portableRoot={}) { // 무인자 탐색의 경로/고리를 Client까지 소유 복사로 인계한다.
     netstorm::client::ClientOptions options;
     options.edition = TakeEdition(arguments);
-    if (arguments.empty()) throw std::invalid_argument("Missing game directory");
-    options.gameDirectory = arguments[0];
+    if (arguments.empty() && !portableRoot) throw std::invalid_argument("Missing game directory");
+    options.gameDirectory = portableRoot ? *portableRoot:std::filesystem::path(arguments[0]);
+    options.startupFileNames=std::move(startupFileNames);
     std::string view;
     bool renderStats = false;
     std::filesystem::path uiScript, uiReport;
@@ -872,9 +874,9 @@ int RunConfigCommand(const std::string& command, std::vector<std::string> argume
 int main(int argc, char** argv) {
     try {
         if (argc == 1) {
-            const auto directory=netstorm::platform::PortableGameDirectory(netstorm::platform::CurrentExecutableFile()); // 새 휴대 배포 배치이며 원본과 다른 Windows 10/11 경로 어댑터다.
+            auto names=std::make_shared<netstorm::o::RawFileName>();const auto directory=netstorm::platform::PortableGameDirectory(netstorm::platform::CurrentExecutableFile(),names.get()); // 새 휴대 배포 배치이며 원본과 다른 Windows 10/11 경로 어댑터다.
             netstorm::platform::DetachOwnGuiConsole();
-            return RunClient({directory.string()});
+            return RunClient({},std::move(names),directory); // 원본과 다른 Windows10/11 호환: 이미 얻은 Unicode 경로를 좁은 명령줄 문자열로 재변환하지 않는다. manifest의UTF-8설정도 유지한다.
         }
         if (argc == 2 && std::string(argv[1]) == "--help") { PrintBuildInfo(); return 0; }
         const std::string command = argv[1];

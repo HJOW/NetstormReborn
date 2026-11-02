@@ -55,7 +55,7 @@ private:
 class BaseFileSystem {
 public:
     // 기본 경로·보조 경로를 설정한다. 등록 순서는 호출자가 원본 순서에 맞춰 지정한다.
-    explicit BaseFileSystem(std::filesystem::path base, std::filesystem::path secondary = {});
+    explicit BaseFileSystem(std::filesystem::path base, std::filesystem::path secondary = {},std::shared_ptr<RawFileName> fileNames = {}); // 실행 위치 탐색에서 이미 사용한 고리가 있으면 같은 소유자를 인계받는다.
     std::shared_ptr<RawFileName> FileNameOwner() const; // 파일 조회와 HUD/저장 상태가 같은 고리 주소/번호를 빌린다. 파일 내용은 읽지 않는다.
     //0041b9d0/41bc20/41bc30: 두 목록을 독립적으로 등록한다. 같은 목록의 중복·파일/헤더/인덱스 읽기 실패는false다.
     bool RegisterArchive(const std::filesystem::path& path,bool secondary=false);

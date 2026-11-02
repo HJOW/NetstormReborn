@@ -159,8 +159,8 @@ std::vector<std::uint8_t> TaffArchive::Read(std::string_view name) const {
     return ReadTaffPayload(std::span<const std::uint8_t>(bytes_).subspan(begin,entry->size),(flags_&2U)!=0);
 }
 // 보조 경로 미지정 시 원본처럼 기본 경로를 다시 사용한다.
-BaseFileSystem::BaseFileSystem(std::filesystem::path base, std::filesystem::path secondary)
-    : base_(std::move(base)), secondary_(secondary.empty() ? base_ : std::move(secondary)),fileNames_(std::make_shared<RawFileName>()) {}
+BaseFileSystem::BaseFileSystem(std::filesystem::path base, std::filesystem::path secondary,std::shared_ptr<RawFileName> fileNames)
+    : base_(std::move(base)), secondary_(secondary.empty() ? base_ : std::move(secondary)),fileNames_(fileNames ? std::move(fileNames):std::make_shared<RawFileName>()) {}
 // 실제 shared 소유권이므로 Client 임시 문자열 장치와 VFS 중 어느 쪽을 먼저 반납해도 빌린 고리가 남는다.
 std::shared_ptr<RawFileName> BaseFileSystem::FileNameOwner() const { return fileNames_; }
 // 두 단일 목록의 중복 관문은 파일을 다시 읽기 전에 적용하며 실패한 후보는 목록에 남기지 않는다.

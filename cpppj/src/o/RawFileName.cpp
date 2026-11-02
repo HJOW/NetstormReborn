@@ -34,6 +34,35 @@ std::string_view RawFileName::Name(std::string_view fileSpec,bool extension,char
     }
     return {reinterpret_cast<const char*>(bytes.data()+offset),size};
 }
+std::string_view RawFileName::Directory(std::string_view fileSpec,std::int32_t level,char separator) { //459990은 파일 시스템의 parent_path와 다른 dot/UNC/단계 경계를 가진다.
+    index_=(index_+1U)%10U;auto& bytes=buffers_[index_];bytes.fill(0);fileSpec=fileSpec.substr(0,fileSpec.find('\0'));
+    if (fileSpec.size()>=bytes.size()) throw std::length_error("원문 FileSpec 디렉터리 조회의256BYTE 물리 범위 초과");
+    const auto output=[&]() -> std::string_view { return {reinterpret_cast<const char*>(bytes.data())}; }; // 현재 첫NUL까지 빌리며 뒤에 남은 이전 복사 바이트는 지우지 않는다.
+    const auto copySuffix=[&](std::size_t from) { const auto suffix=fileSpec.substr(from);std::copy(suffix.begin(),suffix.end(),bytes.begin());bytes[suffix.size()]=0; }; // 원문 strcpy처럼 이번 끝NUL까지만 덮어쓴다.
+    std::size_t cursor=fileSpec.starts_with(std::string(2,separator)) ? 2:0;
+    for (std::int64_t step=0;step<=level || level==-1;++step) { // -1은 첫 suffix에서 반환하고 나머지는 명시 단계만 순회한다.
+        auto cut=fileSpec.find(separator,cursor);
+        if (cut==std::string_view::npos) throw std::invalid_argument("원문 디렉터리 조회의 NULL 구분자 읽기");
+        if (cursor<cut && fileSpec[cut-1]=='.') --cut;
+        if (level==-1) {
+            copySuffix(cut);const auto size=output().size();
+            for (auto at=size ? size-1:0;at>0;--at) { // 원문 역방향 탐색은 offset0의 구분자를 검사하지 않는다.
+                if (bytes[at]==static_cast<std::uint8_t>(separator)) { bytes[at+1]=0;break; }
+            }
+            return output();
+        }
+        cursor=cut+1;
+        if (fileSpec.find(separator,cursor)==std::string_view::npos) { if (step==0 && level<1) { bytes[0]=static_cast<std::uint8_t>(separator);bytes[1]=0; }else bytes[0]=0;return output(); }
+        copySuffix(cut);
+        const auto next=output().find(separator,1);bytes[next]=0;
+    }
+    const auto size=output().size();
+    if (!size || bytes[size-1]!=static_cast<std::uint8_t>(separator)) {
+        if (size+1>=bytes.size()) throw std::length_error("원문 디렉터리 연결의256BYTE 물리 범위 초과");
+        bytes[size]='\\';bytes[size+1]=0; // 원문 고정 연결문자는 현재 separator와 독립적인 역슬래시다.
+    }
+    return output();
+}
 std::string_view RawFileName::Format(std::span<const FileNamePart> parts,char separator) {
     index_=(index_+1U)%10U;auto& bytes=buffers_[index_];bytes.fill(0);std::size_t size{};
     const auto append=[&](std::string_view text) { // 원문 memcpy의 전체 NUL 포함 폭을 확인하고 부분 문자열로 성공시키지 않는다.
