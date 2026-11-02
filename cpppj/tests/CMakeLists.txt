@@ -2944,3 +2944,8 @@ set_source_files_properties(FilePathUiTests.cpp PROPERTIES COMPILE_DEFINITIONS "
 add_executable(netstorm_file_path_ui_tests FocusedTestMain.cpp FilePathUiTests.cpp ClientOptionsFileTests.cpp ClientOptionsDiskTests.cpp CaptureInputTests.cpp CdPresenceTests.cpp CdDirectoryTests.cpp TechnicalHelpTests.cpp)
 target_link_libraries(netstorm_file_path_ui_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_file_path_ui_tests)
+
+#459b20의 실제 내부 뷰와 옵션 전체 성공 경로의 추가 고리 수명을 같은 집중 대상에 포함한다(730).
+target_sources(netstorm_tests PRIVATE FileNameLeafTests.cpp)
+target_sources(netstorm_file_path_ui_tests PRIVATE FileNameLeafTests.cpp)
+set_source_files_properties(FileNameLeafTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FILE_NAME_LEAF_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/file-name-leaf-x86.tsv\"")

@@ -32,10 +32,10 @@ std::vector<std::uint8_t> EncodeClientOptions(std::string_view text) { // 원본
     }
 }
 namespace { // 실제 경로 작성과 독립인 인코딩/changed의 같은 기존 저장 본체다.
-void SaveOptionsName(o::ConfigInterface& config,const o::ConfigInterface::FileWriter& writer,std::string_view name) { // writer 예외를 인코딩 폴백으로 재시도하지 않는다.
+void SaveOptionsName(o::ConfigInterface& config,const o::ConfigInterface::FileWriter& writer,std::string_view name,o::RawFileName* names=nullptr) { // 실제440f30의459b20 한 칸을 쓰며 독립 값형 호출자는 기존 계약을 유지한다.
     const bool changed=config.Configuration().changed;
     try {
-        const auto bytes=EncodeClientOptions(config.SaveText(name));config.Configuration().changed=changed;
+        const auto section=names ? names->Name(name):name;const auto bytes=EncodeClientOptions(config.SaveText(section));config.Configuration().changed=changed; // 파일명 getter 내부 뷰로 같은 설정 section을 고르며 writer는 부모의 지역 전체 이름을 받는다.
         writer(name,bytes);config.Configuration().changed=false;
     } catch (...) { config.Configuration().changed=changed;throw; }
 }
@@ -44,6 +44,6 @@ void SaveClientOptions(o::ConfigInterface& config,const o::ConfigInterface::File
 void SaveClientOptions(o::ConfigInterface& config,const o::ConfigInterface::FileWriter& writer,o::RawFileName& names,std::optional<std::string_view> directory) { // 원문441d10의 작성→지역 복사→직렬화/쓰기 순서다.
     const std::array<o::FileNamePart,4> parts{{{-2,directory.value_or("")},{-2,""},{-2,"d"},{-3,"options.cfg"}}}; // NULL일 때 첫 명시 root 부품만 생략한다.
     const std::string name(names.Format(std::span(parts).subspan(directory ? 0 : 1))); // 원문 local_100처럼 다음 열 번의 고리 사용에도 살아 있는 소유 복사다.
-    SaveOptionsName(config,writer,name);
+    SaveOptionsName(config,writer,name,&names);
 }
 }

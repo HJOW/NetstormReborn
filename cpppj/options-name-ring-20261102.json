@@ -1,0 +1,109 @@
+{
+  "unit": 730,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 730,
+    "version": "11.01",
+    "sha256": "34fb11fa3c02bc6df4b2fc82bc6c9f07dfc9bcd8171c119a605a549266558dc9"
+  },
+  "implementation": [
+    "459b20/선택459550의전체이름getter: 같은고리선증가/clear·전체복사·마지막구분자/colon다음내부뷰·선두dot보존/끝확장자제거·bare첫BYTE만NUL",
+    "실제옵션저장본문이름getter로설정section조회. writer의전체경로는729의지역소유복사로유지",
+    "옵션디스크성공경로도459900/선택root459c60을공유하여일반저장총4칸",
+    "UnicodeW/1224교체·상대게임root·changed실패·기존값형API유지"
+  ],
+  "native": {
+    "report": "cpppj/file-name-leaf-native-20261102.json",
+    "fixtureRows": 64,
+    "observations": 136,
+    "precisions": [
+      "027f",
+      "037f"
+    ],
+    "rerunMatches": true,
+    "saveAdvances": [
+      4,
+      4,
+      4,
+      3
+    ],
+    "saveOperationsRelative": [
+      "00459c60",
+      "00459b20",
+      "00459900",
+      "00459c60"
+    ],
+    "saveOperationsDirect": [
+      "00459c60",
+      "00459b20",
+      "00459900"
+    ],
+    "boundary": "실제441d10→440f30/FileSpec/이름getter/41b4c0. 설정section없음/길이0·disk성공·key인자경계이며실제내용쓰기/OS/예외unwind는실행하지않음"
+  },
+  "before": {
+    "tests": 24,
+    "failedTests": 2,
+    "failedChecks": 20,
+    "log": "extracted/cpp-file-name-leaf-730/tests-before.log",
+    "reason": "독립원문4칸/이름추출한칸기준이729초기경로만연결한제품에서누락을검출"
+  },
+  "tests": {
+    "new": 3,
+    "existing": 46,
+    "final": 49,
+    "failed": 0,
+    "focusedSets": [
+      27,
+      22
+    ],
+    "nativeRowsReplayed": 2849,
+    "logs": [
+      "extracted/cpp-file-name-leaf-730/tests-ui-v1.log",
+      "extracted/cpp-file-name-leaf-730/tests-path-v1.log"
+    ],
+    "actualRelativeGameRoot": true,
+    "actualUnicodeOptionsRoundTrip": true,
+    "sharedOptionsReadCdOwner": true
+  },
+  "build": {
+    "final": "extracted/cpp-file-name-leaf-730/build-v2.log",
+    "implementationBuild": "extracted/cpp-file-name-leaf-730/build-v1.log",
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_path_ui_tests",
+      "netstorm_file_path_client_tests"
+    ],
+    "warnings": 0,
+    "errors": 0
+  },
+  "protection": {
+    "baselineFiles": 2644,
+    "unchangedFiles": 2644,
+    "baselineGroups": {
+      "AGENTS.md": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 824
+    },
+    "agentAuthoredChanges": 0,
+    "newFixtures": 1,
+    "currentTotal": 2645,
+    "fixtureTotal": 825
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "limits": [
+    "이번옵션4칸은상대기본디스크성공을복원한것이다.일반쓰기의TAFF/보조실패정책·FILE/SEH ABI·부분I/O 전체는남는다",
+    "기존호스트설정인코딩을완료한뒤실제열기하는정책을유지했다.원문전체스트림/인코딩실패시디스크변경까지동일함을주장하지않는다",
+    "전체FileSpec wildcard/Config Startup·Load/Template와다른이름getter소비자는남는다",
+    "원문256BYTE밖미정쓰기는host길이오류로거부하며절단성공으로바꾸지않는다",
+    "새GUI/전체34/전체C++/ZIP·물리입력/PCM/DPI·포획/희생·특정적공격/승리·공중3종전용·MP/통신검사는0이다",
+    "전체34/ZIP은645의644제품이며전체목표1~8차는진행중이다"
+  ],
+  "rawDirectory": "extracted/cpp-file-name-leaf-730"
+}

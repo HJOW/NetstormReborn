@@ -33,32 +33,32 @@ std::vector<std::uint8_t> ReadUiPath(const std::filesystem::path& path) { // 실
 }
 }
 
-//441d10의8개 경로/전체256BYTE와 writer 중 열 번의 고리 덮임에도 지역 이름이 유지되는지 대조한다.
+//441d10의8개 경로/전체256BYTE와440f30의 이름 한 칸 뒤에도 writer가 지역 이름을 보존하는지 대조한다.
 TEST_CASE(FilePathUi_OptionsNative8LocalCopyAndFailureOrdering) {
     using namespace netstorm;std::size_t count{};
     for (const auto& row:test::rawscene::LoadFixture(NETSTORM_OPTIONS_PATH_PARENT_FIXTURE).rows) { // 기대 이름은 제품이 아닌 실제 부모 기계어 출력이다.
         CHECK(row.size()==4);o::RawFileName names;o::ConfigInterface config({});config.Startup({});config.Set("InstallDir","H:\\게임😀");const auto root=UiPathBytes(row[1]);const auto directory=row[0]=="null" ? std::nullopt:std::make_optional(std::string_view(root));unsigned writes{};
-        client::SaveClientOptions(config,[&](auto name,auto bytes) { ++writes;CHECK(name==UiPathBytes(row[2]) && names.Index()==1 && test::rawscene::Hex(names.CurrentBytes())==row[3]);CHECK(o::ConfigText::FromBytes(bytes).GetRaw("InstallDir")=="H:\\게임😀");
+        client::SaveClientOptions(config,[&](auto name,auto bytes) { ++writes;CHECK(name==UiPathBytes(row[2]) && names.Index()==2 && test::rawscene::Hex(names.CurrentBytes())==row[3]);CHECK(o::ConfigText::FromBytes(bytes).GetRaw("InstallDir")=="H:\\게임😀");
             const std::array<o::FileNamePart,1> overwrite{{{-3,"overwritten"}}}; // 실제 writer 재진입이 같은 열 칸을 한 바퀴 쓰는 입력이다.
             for (unsigned call=0;call<10;++call) static_cast<void>(names.Format(overwrite)); // 최초 formatter 반환 칸까지 덮어쓴다.
-            CHECK(name==UiPathBytes(row[2]) && names.Index()==1);CHECK(config.Configuration().changed);
+            CHECK(name==UiPathBytes(row[2]) && names.Index()==2);CHECK(config.Configuration().changed);
         },names,directory);CHECK(writes==1 && !config.Configuration().changed);++count;
     }
     CHECK(count==8);o::RawFileName names;o::ConfigInterface config({});config.Startup({});config.Set("InstallDir",std::string("bad\xc0\xaf",5));unsigned writes{};bool invalid{};
     try { client::SaveClientOptions(config,[&](auto,auto) { ++writes; },names); }catch (const std::invalid_argument&) { invalid=true; }
-    CHECK(invalid && writes==0 && names.Index()==1 && config.Configuration().changed); // 직렬화 실패보다 먼저 원문 이름 한 칸/지역 복사가 완료된다.
+    CHECK(invalid && writes==0 && names.Index()==2 && config.Configuration().changed); // 직렬화 실패보다 먼저 부모 경로/지역 복사와 이름 getter 두 칸이 완료된다.
     config.Set("InstallDir","H:\\게임😀");bool failed{};
     try { client::SaveClientOptions(config,[&](auto name,auto) { CHECK(name==".\\d\\options.cfg");++writes;throw std::runtime_error("쓰기 실패 관측"); },names); }catch (const std::runtime_error&) { failed=true; }
-    CHECK(failed && writes==1 && names.Index()==2 && config.Configuration().changed);
+    CHECK(failed && writes==1 && names.Index()==4 && config.Configuration().changed);
 }
 
 // 실제 Client::SaveOptions가 쓰는 같은 디스크 어댑터의 Unicode 저장/재적재와 부모 부재 실패를 확인한다.
 TEST_CASE(FilePathUi_OptionsActualGameDirectoryDiskAndMissingParent) {
     using namespace netstorm;const auto root=UiPathWork("options");std::filesystem::create_directories(root/"d");o::ConfigInterface config({});config.Startup({});config.Set("InstallDir",platform::PathToUtf8(root));o::RawFileName names;
-    client::SaveClientOptionsInGameDirectory(config,root,names);CHECK(names.Index()==1 && !config.Configuration().changed);const auto bytes=ReadUiPath(root/"d/options.cfg");CHECK(o::ConfigText::FromBytes(bytes).GetRaw("InstallDir")==platform::PathToUtf8(root));CHECK(!std::filesystem::exists(root/"options.cfg"));
+    client::SaveClientOptionsInGameDirectory(config,root,names);CHECK(names.Index()==4 && !config.Configuration().changed);const auto bytes=ReadUiPath(root/"d/options.cfg");CHECK(o::ConfigText::FromBytes(bytes).GetRaw("InstallDir")==platform::PathToUtf8(root));CHECK(!std::filesystem::exists(root/"options.cfg"));
     const auto absent=UiPathWork("absent");config.Set("InstallDir","changed");bool failed{};
     try { client::SaveClientOptionsInGameDirectory(config,absent,names); }catch (const std::runtime_error&) { failed=true; }
-    CHECK(failed && names.Index()==2 && config.Configuration().changed && !std::filesystem::exists(absent));
+    CHECK(failed && names.Index()==8 && config.Configuration().changed && !std::filesystem::exists(absent));
 }
 
 // 캡처의 실제BMP 출력과 CD 캐시 확인이 Client/VFS의 같은 고리 번호를 이어서 소비한다.

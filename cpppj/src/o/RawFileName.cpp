@@ -19,6 +19,21 @@ std::string_view RawFileName::Device(std::string_view fileSpec,char separator) {
     }
     return {reinterpret_cast<const char*>(bytes.data()),size};
 }
+std::string_view RawFileName::Name(std::string_view fileSpec,bool extension,char separator) { // 원문은 파일명만 옮겨 쓰지 않고 전체 입력의 고리 내부 포인터를 반환한다.
+    index_=(index_+1U)%10U;auto& bytes=buffers_[index_];bytes.fill(0);fileSpec=fileSpec.substr(0,fileSpec.find('\0'));
+    if (fileSpec.size()>=bytes.size()) throw std::length_error("원문 FileSpec 이름 조회의256BYTE 물리 범위 초과");
+    std::copy(fileSpec.begin(),fileSpec.end(),bytes.begin());const auto end=fileSpec.size();std::size_t offset=end;bool found{};
+    while (offset>0) { --offset;if (bytes[offset]==static_cast<std::uint8_t>(separator) || bytes[offset]==':') { ++offset;found=true;break; } } // 원문 마지막 구분자/colon을 뒤에서 찾아 그 다음 주소를 빌린다.
+    if (!found) { bytes[0]=0;return {reinterpret_cast<const char*>(bytes.data()),0}; }
+    auto size=end-offset;
+    if (!extension && size>1) {
+        for (auto at=end-1;at>offset;--at) { //459550은 선두 dot을 확장자로 지우지 않으며 구분자/colon을 만나면 중단한다.
+            if (bytes[at]=='.') { bytes[at]=0;size=at-offset;break; }
+            if (bytes[at]==static_cast<std::uint8_t>(separator) || bytes[at]==':') break;
+        }
+    }
+    return {reinterpret_cast<const char*>(bytes.data()+offset),size};
+}
 std::string_view RawFileName::Format(std::span<const FileNamePart> parts,char separator) {
     index_=(index_+1U)%10U;auto& bytes=buffers_[index_];bytes.fill(0);std::size_t size{};
     const auto append=[&](std::string_view text) { // 원문 memcpy의 전체 NUL 포함 폭을 확인하고 부분 문자열로 성공시키지 않는다.

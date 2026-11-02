@@ -1,0 +1,148 @@
+{
+  "unit": 730,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "fixtureRows": 64,
+  "observations": 136,
+  "saves": [
+    {
+      "rootHex": null,
+      "advances": 4,
+      "events": [
+        {
+          "operation": "00459c60"
+        },
+        {
+          "operation": "00459b20"
+        },
+        {
+          "section": "6f7074696f6e732e636667"
+        },
+        {
+          "section": "454e44"
+        },
+        {
+          "operation": "00459900"
+        },
+        {
+          "operation": "00459c60"
+        },
+        {
+          "disk": "433a5c626173655c2e5c645c6f7074696f6e732e636667",
+          "mode": 2,
+          "create": 1
+        },
+        {
+          "key": true
+        }
+      ]
+    },
+    {
+      "rootHex": "",
+      "advances": 4,
+      "events": [
+        {
+          "operation": "00459c60"
+        },
+        {
+          "operation": "00459b20"
+        },
+        {
+          "section": "6f7074696f6e732e636667"
+        },
+        {
+          "section": "454e44"
+        },
+        {
+          "operation": "00459900"
+        },
+        {
+          "operation": "00459c60"
+        },
+        {
+          "disk": "433a5c626173655c2e5c645c6f7074696f6e732e636667",
+          "mode": 2,
+          "create": 1
+        },
+        {
+          "key": true
+        }
+      ]
+    },
+    {
+      "rootHex": "72656c6174697665",
+      "advances": 4,
+      "events": [
+        {
+          "operation": "00459c60"
+        },
+        {
+          "operation": "00459b20"
+        },
+        {
+          "section": "6f7074696f6e732e636667"
+        },
+        {
+          "section": "454e44"
+        },
+        {
+          "operation": "00459900"
+        },
+        {
+          "operation": "00459c60"
+        },
+        {
+          "disk": "433a5c626173655c2e5c72656c61746976655c645c6f7074696f6e732e636667",
+          "mode": 2,
+          "create": 1
+        },
+        {
+          "key": true
+        }
+      ]
+    },
+    {
+      "rootHex": "463a5c637573746f6d",
+      "advances": 3,
+      "events": [
+        {
+          "operation": "00459c60"
+        },
+        {
+          "operation": "00459b20"
+        },
+        {
+          "section": "6f7074696f6e732e636667"
+        },
+        {
+          "section": "454e44"
+        },
+        {
+          "operation": "00459900"
+        },
+        {
+          "disk": "463a5c637573746f6d5c645c6f7074696f6e732e636667",
+          "mode": 2,
+          "create": 1
+        },
+        {
+          "key": true
+        }
+      ]
+    }
+  ],
+  "leafBoundary": "실제459b20과선택된459550 전체. 출력offset/전체256BYTE·입력/보존레지스터/FPCW/ESP 확인",
+  "saveBoundary": "실제441d10→440f30/FileSpec/이름getter/41b4c0. 설정section은없음/길이0, disk mode2/create1은성공, key저장은인자관측만. 내용쓰기/실제OS/예외unwind는실행하지않음",
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_file_name_leaf.py": "35ecbc66df6bc3d0f41a29ebe721dffc74b2d6ff5928a952f56cd8cceac509de",
+    "tools\\decomp_options_path_parent.py": "232a13a1ea5bc60f284593f37af20bd2d2908169f985cbdb240f77899d636310",
+    "cpppj\\tests\\fixtures\\file-name-leaf-x86.tsv": "d74a20647f2dfdddf0e03aa46164e8b525df45000f5ac6f3a9ba8ded037773af"
+  }
+}

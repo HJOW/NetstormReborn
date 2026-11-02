@@ -1,6 +1,7 @@
 // 원본은 매번 w+b로 설정을 잘랐다. Windows10/11에서 다른 프로세스가 파일을 매핑했을 때의1224만 교체 저장으로 보완한다.
 #include "client/ClientOptionsDisk.h"
 #include "client/ClientOptionsFile.h"
+#include "o/RawBaseFileReadPolicy.h"
 #include "platform/Utf8Path.h"
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -106,8 +107,9 @@ void ReplaceMappedOptions(const std::filesystem::path& path,std::span<const std:
 }
 }
 void SaveClientOptionsInGameDirectory(o::ConfigInterface& config,const std::filesystem::path& gameDirectory,o::RawFileName& names) { // 원본 chdir/ANSI 대신 Windows10/11의 Unicode 설치 경로를 W 파일 장치에 전달한다.
-    SaveClientOptions(config,[&gameDirectory](std::string_view name,std::span<const std::uint8_t> bytes) {
-        const auto path=std::filesystem::absolute(gameDirectory/platform::PathFromUtf8(name)).lexically_normal(); // 원문 .\d\options.cfg 위치를 유지하며 사용자 홈 이동은5차다.
+    SaveClientOptions(config,[&gameDirectory,&names](std::string_view name,std::span<const std::uint8_t> bytes) {
+        const bool device=!o::ReadBaseFileDevice(name,names).empty();const auto selected=device ? std::string(name):o::JoinBaseFileRoot(platform::PathToUtf8(gameDirectory),name,names); //41b4c0의 성공 쓰기도 장치 한 칸·선택된 기본 경로 한 칸을 사용한다.
+        const auto path=std::filesystem::absolute(platform::PathFromUtf8(selected)).lexically_normal(); // 선택한 root를 다시 붙이지 않으며 상대 게임 디렉터리도 원래 위치다. 사용자 홈 이동은5차다.
         WriteClientOptionsDisk(path,bytes); // 매핑1224의 기존 호환 정책과 부모 폴더 미생성을 그대로 쓴다.
     },names);
 }
