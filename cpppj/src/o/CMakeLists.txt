@@ -546,3 +546,6 @@ target_sources(netstorm PRIVATE RawObjectTraceMain.h RawObjectTraceMain.cpp)
 target_sources(netstorm PRIVATE RawFortObjectStream.h RawFortObjectStream.cpp)
 target_sources(netstorm PRIVATE RawTutorialMissionRelease.h RawTutorialMissionRelease.cpp) # Tutorial 소멸의 현재 전역과 AI/기본 Mission 반납을 공유한다.
 target_sources(netstorm PRIVATE StartupArchiveFiles.h StartupArchiveFiles.cpp) # 같은FileSpec의기본/CD열거와설정Load까지의수명을연결한다.
+
+# 기존 위치 parser/Factory/Owner/HP/Pop을 재사용하는 CreateAt 전체 부모다(770).
+target_sources(netstorm PRIVATE RawCreateAt.h RawCreateAt.cpp)

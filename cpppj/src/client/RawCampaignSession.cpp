@@ -17,6 +17,8 @@
 #include "o/RawIslandQueries.h"
 #include "o/RawAddRandom.h"
 #include "o/RawDestroyAt.h"
+#include "o/RawCreateAt.h" //같은 위치 parser와 실제 생성/가상Owner/HP/Pop 부모다.
+#include "o/RawSquidHitPoints.h" //CreateAt도 같은 비가상 공통HP DWORD 쓰기를 사용한다.
 #include "client/EditorIslandBitmap.h"
 #include "o/RawFortRandomPlacement.h"
 #include "o/RawWorldGeyser.h" //실제 전체 간헐천 부모와 같은 지도/옵션 범위를 조립한다.
@@ -4094,6 +4096,25 @@ void RawCampaignSession::AddRandomObjects(std::uint32_t type,std::uint32_t quant
     hooks.island=[&s](auto owner,auto territory) { return o::FindFortTerritoryIsland(s.islands->Bytes(),s.core.ownerMode.fort,std::bit_cast<std::int32_t>(owner),territory); };
     hooks.place=[&placement](auto& random,const auto& rectangle,auto region,auto count,auto selected,auto force) { return placement.PlaceRandom(random,rectangle,region,count,selected,force); };
     o::AddRandomObjects(type,quantity,hooks);
+}
+//관리 명령도 현재 실제 Factory/지면/파생 소유자/HP·프레임/Pop을 사용하며 임의 배치 성공을 합성하지 않는다.
+void RawCampaignSession::CreateAt(std::string_view location) {
+    auto& s=*impl_;if (!s.loaded) throw std::logic_error("설치 전 CreateAt 실제 생성 부모");
+    o::CreateAtHooks hooks;hooks.boss=[&s] { return s.core.processState.Boss(); };
+    hooks.assertion=[](auto line) { throw std::logic_error("원본Damageable.cpp 권한 진단 "+std::to_string(line)); };
+    hooks.parse=[&s](auto text) { return o::ParseDestroyAtLocation(text,[&s](auto name) { return s.assets.game.TypeTable().Find(name); }); };
+    hooks.create=[&s](auto type,auto flags) { return static_cast<std::uint32_t>(s.world.Create(type,flags).value); };
+    hooks.surface=[&s](auto x,auto y) { return static_cast<std::uint32_t>(s.core.building.Surface(x,y).value); };
+    const auto sid=[&s](std::uint32_t value) { if (!value || value>65535U || value>=s.core.pool.Capacity()) throw std::out_of_range("CreateAt의 실제 현재 SID 물리 범위");return o::Sid{static_cast<std::uint16_t>(value)}; }; //NULL을 예약SID0의 정상 생성으로 해석하지 않는다.
+    hooks.slot=[&s,&sid](auto value) { return s.core.pool.Slot(sid(value)); };
+    hooks.owner=[&s,&sid](auto value,auto owner) { s.ownership->SetOwner(sid(value),owner); }; //신전/사제/공통의 같은 실제 가상74다. 파생 효과를 raw owner BYTE로 축약하지 않는다.
+    hooks.hasHitPoints=[&s,&sid](auto value) { return s.hp.HasHitPoints(sid(value)); };hooks.maximumHitPoints=[&s,&sid](auto value) { return s.hp.MaxHitPoints(sid(value)); };
+    hooks.hitPoints=[&s,&sid](auto value,auto amount) { o::SetRawSquidHitPoints(s.core.pool,sid(value),amount); }; //공통004adca0은 표시/회복/가상 사제 전환 효과를 추가하지 않는다.
+    hooks.directional=[&s](auto type) { const auto values=std::span<const std::uint32_t>(s.constructionState.confirm.patternTypes).subspan(4);return std::find(values.begin(),values.end(),type)!=values.end(); }; //기존 AI/건설과 같은 현재 네 전투TYPE 전역을 읽는다.
+    hooks.frameField=[&s,&sid](auto value,auto offset) { const auto type=s.core.pool.Slot(sid(value))[10];if (type>=s.core.frames.size()) throw std::out_of_range("CreateAt의 현재 생성 객체 TYPE 프레임 범위");return o::CreateAtFrameField(s.core.frames[type],offset); };
+    hooks.frame=[&s,&sid](auto value,auto frame) { auto raw=s.core.pool.AllocatedBytes(sid(value));for (std::size_t byte=0;byte<4;++byte) raw[36+byte]=static_cast<std::uint8_t>(frame>>(byte*8)); }; //원문의 직접+24 DWORD이며 가상SetFrame/Unpop/Repop은 호출하지 않는다.
+    hooks.pop=[&s,&sid](auto value,auto x,auto y,auto flags) { s.world.Pop(sid(value),x,y,flags); };
+    o::CreateObjectAt(location,hooks);
 }
 // 현재 finder가 소유한 next를 보존하며 실제 파생 삭제/공간·장부 정리를 같은 월드에 맡긴다.
 void RawCampaignSession::DestroyAt(std::string_view location) {

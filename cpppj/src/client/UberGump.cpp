@@ -8,6 +8,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/CreateAtInput.h" //현재 문자열 고리와 실제 생성 Session을 공유한다.
 #include "client/DataManagerFileRead.h" //명시 Native Template만 현재 FILE 전체 읽기를 사용한다.
 #include "client/DrawWater.h" //후단 표시와 일반 명령이 같은 장기 상태를 공유한다.
 #include "client/QuickHelpFileRead.h" //최초Help파일만같은Client의필수전체읽기를사용한다.
@@ -1261,6 +1262,10 @@ void UberGump::Event(InputEvent event) {
     if (DispatchAddRandomInput(event,client_.GameplayGlobals()->world.editor!=0,client_.GameplayGlobals()->world.missionPost!=0,
         [this](auto token) { return client_.Assets().TypeTable().Find(scriptStrings_.Resolve(token)); },
         [this](auto type,auto quantity) { if (!world_) throw std::logic_error("AddRandom의 실제 현재 Session 없음");world_->Session().AddRandomObjects(type,quantity); })) { rebuild_=true;return; } // 원문 타입 문자열/숫자와현재모드를 같은 기존 배치 부모에 전달한다.
+    const bool createAtHandled=DispatchCreateAtInput(event,client_.GameplayGlobals()->world.editor!=0,client_.GameplayGlobals()->world.missionPost,[this](auto token) {
+        if (!world_) throw std::logic_error("CreateAt의 실제 현재 World/Runtime 없음");world_->Session().CreateAt(scriptStrings_.Resolve(token)); //현재 토큰을 실제 parser에 전달하며 별도 성공 객체를 만들지 않는다.
+    }); //원문 생성 뒤에도 현재 Help/모달/세계 입력 꼬리를 진행한다.
+    if (createAtHandled) { rebuild_=true;if (event.code&InputCode::kRelease) return; } //공통 뗌은 소비만 하며 누름은 조기 반환하지 않는다.
     if (DispatchDestroyAtInput(event,client_.GameplayGlobals()->world.editor!=0,client_.GameplayGlobals()->world.missionPost!=0,
         [this](auto token) { if (!world_) throw std::logic_error("DestroyAt의 실제 현재 Session 없음");world_->Session().DestroyAt(scriptStrings_.Resolve(token)); })) { rebuild_=true;return; } // 원문문자열을현재권한/점검색/파생삭제에전달한다.
     if (IsScenarioEffectCommand(transitionCode)) {
@@ -1381,8 +1386,8 @@ void UberGump::Event(InputEvent event) {
         else warnings_->AddNull(); //원문004d88cd는 y=0도 그대로4d3090에 전달하며 유효한 빈 문자열과 구별한다.
         rebuild_=true;return;
     }
-    if (GameMenuCommand(event)) return;
-    if (IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
+    if (!createAtHandled && GameMenuCommand(event)) return; //앞서 실행한 생성 명령을 늦은 메뉴 dispatcher에 다시 보내지 않는다.
+    if (!createAtHandled && IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
     if (IsObjectMenuVariantCommand(commandCode)) throw std::logic_error("현재 파생 객체 메뉴 선택의 실행 미연결: "+std::to_string(commandCode)); // 미복원 개발자/편집 실행을 입력에서 조용히 버리지 않는다.
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if (IsEscapeKeyPress(event)) {

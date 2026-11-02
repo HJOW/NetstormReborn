@@ -341,3 +341,6 @@ target_sources(netstorm PRIVATE QuickHelpList.cpp QuickHelpList.h HelpListDisk.c
 
 # 후단 진단 계산과 현재 화면 장치의 접합이다(768).
 target_sources(netstorm PRIVATE DrawWater.cpp DrawWater.h)
+
+# 일반 CreateAt의 현재 문자열 토큰/모드와 Runtime 생성 부모를 연결한다(770).
+target_sources(netstorm PRIVATE CreateAtInput.h CreateAtInput.cpp)

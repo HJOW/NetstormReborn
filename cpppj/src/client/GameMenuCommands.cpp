@@ -1,5 +1,6 @@
 // 보호PE의초기명령DWORD를이름/GUI변환과구별한다.
 #include "client/GameMenuCommands.h"
+#include "client/CreateAtInput.h" //같은 일반 명령의 원문 이름과 숫자다.
 #include "client/DrawWater.h" //같은 일반 명령 이름/현재 DWORD만 허용한다.
 #include "client/QuickHelpList.h" //같은 원문 Help목록 이름/숫자를 일반입력에 연결한다.
 #include "client/PresentationCommandInput.h" //글꼴/음질도 같은 실제 명령 이름과 입력 큐를 사용한다.
@@ -22,7 +23,7 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,50> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,51> kCommands{{
     {0x00542760U,kDrawWaterCommand}, //원문 후단 진단 명령이며 기본 메뉴 노출은 바꾸지 않는다.
     {0x00542964U,kCreateHelpListCommand}, //원문 일반입력의 현재 전용Help 출력부모다.
     {0x00542764U,kChangeFontFaceCommand},{0x00542a68U,kChangeSoundQualityCommand}, //원문 두 현재 옵션 명령이다.
@@ -32,6 +33,7 @@ constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,50> kCommands{{
     {0x00542ae8U,kRecheckCdCommand}, //RecheckCD의 이름·메타·큐 명령이다. 실제 CD 재탐색이 아니라 현재 serial 정리다.
     {0x00542968U,kCaptureCommand}, //연속 화면 저장의 이름과 정수 명령을 같은 큐로 보낸다.
     {0x00542864U,kUrlCommand}, // 원문 URL의 이름·숫자·HTML 버튼을 같은 입력으로 보낸다.
+    {0x00542a74U,kCreateAtCommand}, //현재 Runtime 생성 부모만 허용하고 기본 UI는 추가하지 않는다.
     {0x00542a78U,kDestroyAtCommand}, // 원문DestroyAt의 문자열 토큰도 같은 일반 입력/버튼 큐다.
     {0x00542954U,kAddRandomCommand}, // 원본AddRandom 이름도 같은 일반 입력/버튼 큐를 사용한다.
     {0x0054287cU,0x02000061U}, //원문 Cheat의 같은 일반 SP 가산 명령이다.
@@ -80,6 +82,7 @@ std::optional<std::uint32_t> GameMenuCommandValue(std::uint32_t address) {
 }
 // 원본name→ID표에서확인한메뉴확인창의필수이름이다.
 std::uint32_t GameMenuScriptCode(std::string_view name) {
+    const auto createAt=CreateAtScriptCode(name);if (createAt!=0xffffffffU) return createAt; //원문 등록 이름을 같은 문자열 고리에 보낸다.
     const auto water=DrawWaterScriptCode(name);if (water!=0xffffffffU) return water;
     const auto helpList=CreateHelpListScriptCode(name);if (helpList!=0xffffffffU) return helpList;
     const auto presentation=PresentationCommandScriptCode(name);if (presentation!=0xffffffffU) return presentation;

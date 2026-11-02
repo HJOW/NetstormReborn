@@ -5393,3 +5393,6 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
 #include "CampaignWorldGenerationTests.inc"
 
 #include "CampaignOutsideInputTests.inc" // 실제 큐 어댑터와 폴링 outside 계약을 구별한다.
+
+//실제 생성 부모와 같은 소유권/HP/공간·장부의 CreateAt 접합만 검사한다.
+#include "CampaignCreateAtTests.inc"

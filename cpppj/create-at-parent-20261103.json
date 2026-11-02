@@ -1,0 +1,281 @@
+{
+  "unit": 770,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 770,
+  "displayVersion": "11.01",
+  "exeSha256": "ab430481d6c8d365bd3f186d4a15d87044c991a6e956076cce66833d9348ce6c",
+  "summary": "CreateAt의 현재 문자열·실제 생성·소유권·HP·직접 프레임·배치와 일반 입력 꼬리를 연결",
+  "tests": {
+    "totalUnique": 14,
+    "totalExecutions": 14,
+    "newTests": 9,
+    "failedChecks": 0,
+    "names": [
+      "CampaignCreateAt_ActualCurrentSurfaceOwnershipInference",
+      "CampaignCreateAt_ActualFactoryOwnerHitPointsPopAndProviderList",
+      "CampaignCreateAt_ActualLoadedAndBossBoundariesNeverInventAnObject",
+      "CampaignSession_DestroyAtUsesActualFinderAndVirtualDeletion",
+      "CreateAt_FrameFieldRetainsFirstCountsKindsAndRejectsPointers",
+      "CreateAt_Native15NamesFirstNulAndCurrentScriptStringQueue",
+      "CreateAt_Native408GeneralInputKeepsGuideGumpReleaseAndModes",
+      "CreateAt_Native580ParentsPreserveCurrentStateAndFloatBits",
+      "CreateAt_OnlyReachedParentAndThrowingActualCallback",
+      "CreateAt_ReachedParentFailuresKeepEarlierEffects",
+      "DestroyAt_Native16LocationParsers",
+      "DestroyAt_Native48InputAndScriptQueue",
+      "DestroyAt_Native804ParentsKeepPointFilterAndNextOrder",
+      "DestroyAt_OnlyReachedDevicesAreRequired"
+    ],
+    "logs": [
+      "tests-create-at-v2.log",
+      "tests-campaign-create-at-v1.log",
+      "tests-destroy-at-v2.log",
+      "tests-campaign-destroy-at-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v2.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2694,
+    "currentCount": 2697,
+    "allUnchanged": true,
+    "fixtureCount": 877,
+    "newFixtures": [
+      "cpppj/tests/fixtures/create-at-input-x86.tsv",
+      "cpppj/tests/fixtures/create-at-names-x86.tsv",
+      "cpppj/tests/fixtures/create-at-parent-x86.tsv"
+    ]
+  },
+  "native": {
+    "prepared-native.json": {
+      "unit": 770,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 580,
+      "observations": 1160,
+      "actual": "0044c660 + actual0044c540/CRT token/atol +0040da00/004adc60/004adcb0/004adca0/00425830/004ac550/0049fce0/0049b060",
+      "boundary": "TYPE name/getter, new and virtual owner/Pop, TLS/assert are explicit independent boundaries; synthetic raw TYPE/objects only; NULL stops before first dereference, no actual allocator/virtual World/MP/combat/OS/SEH",
+      "calls": {
+        "0044c660": 1160,
+        "0044c540": 776,
+        "0040da00": 100,
+        "004adc60": 528,
+        "00425830": 528,
+        "004adcb0": 264,
+        "0049fce0": 264,
+        "004adca0": 264,
+        "004ac550": 288
+      },
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "fixtureSha256": "cc8d013050f51349c68c1f2e6f2bf21d2d19f0c2afc0c1d1b0e3dc8f94702ea7",
+      "rawReportSha256": "7424d52f9067ba4b7e028c057ef418c954d8e6591125ec8dac7052a2a54404b3"
+    },
+    "prepared-native-input.json": {
+      "unit": 770,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 408,
+      "observations": 816,
+      "names": 15,
+      "nameObservations": 15,
+      "actual": "004d6e 입력의 실제 Guide/Gump/release→004d84f8..851b editor OR mission→0044c660(param2);00542a74 이름의 실제 ScriptCommand/토큰/고리/FIFO",
+      "bodyCounts": {
+        "-": 363,
+        "createAt:4275878552": 36,
+        "createAt:0": 3,
+        "createAt:2147483648": 3,
+        "createAt:4294967295": 3
+      },
+      "envelopeCounts": {
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0;general;paused:0;cursor:1": 4,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0": 24,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552": 48,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0;general": 12,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0;general;paused:1;cursor:1": 4,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0;general;paused:3;cursor:1": 4,
+        "guide:2181038304:305419896:4275878552;mission:2181038304:305419896:4275878552;gump:2181038304:305419896:4275878552:0": 48,
+        "guide:2181038304:305419896:4275878552;mission:2181038304:305419896:4275878552": 48,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0;general;paused:0;cursor:1": 4,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0": 24,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552": 48,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0;general": 12,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0;general;paused:1;cursor:1": 4,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0;general;paused:3;cursor:1": 4,
+        "guide:3187671264:305419896:4275878552;mission:3187671264:305419896:4275878552;gump:3187671264:305419896:4275878552:0": 48,
+        "guide:3187671264:305419896:4275878552;mission:3187671264:305419896:4275878552": 48,
+        "guide:33554656:305419896:0;mission:33554656:305419896:0;gump:33554656:305419896:0:0;general;paused:0;cursor:1": 4,
+        "guide:33554656:305419896:2147483648;mission:33554656:305419896:2147483648;gump:33554656:305419896:2147483648:0;general;paused:0;cursor:1": 4,
+        "guide:33554656:305419896:4294967295;mission:33554656:305419896:4294967295;gump:33554656:305419896:4294967295:0;general;paused:0;cursor:1": 4,
+        "guide:2181038304:305419896:0;mission:2181038304:305419896:0;gump:2181038304:305419896:0:0": 4,
+        "guide:2181038304:305419896:2147483648;mission:2181038304:305419896:2147483648;gump:2181038304:305419896:2147483648:0": 4,
+        "guide:2181038304:305419896:4294967295;mission:2181038304:305419896:4294967295;gump:2181038304:305419896:4294967295:0": 4
+      },
+      "nativeTotals": {
+        "27f": {
+          "runs": 408,
+          "instructions": 37786
+        },
+        "37f": {
+          "runs": 408,
+          "instructions": 37786
+        }
+      },
+      "nameInstructions": 278804,
+      "nameQueueCalls": 14,
+      "boundary": "Guide/Gump와 생성0044c660·비대상 하위 효과, CRT TLS/할당/로그는 명시 장치. 생성 성공/실제 Runtime/게임/OS/멀티플레이는 이 관측에 포함하지 않는다. Editor/mission 이외 MP전용 globals 양성 입력은 추가하지 않았다.",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "sha256": {
+        "modified\\cpppj\\tests\\fixtures\\create-at-input-x86.tsv": "17971b232228baecf08ceefbe68c1b775d355e646baa9aace336cac3ca03e75f",
+        "modified\\cpppj\\tests\\fixtures\\create-at-names-x86.tsv": "2e6610161a6ef271ee526a20b0125d05741989c6c5c8aece0db4050842d12679"
+      },
+      "rawReportSha256": "dcb9118a7bdc3275ec79e231e115d11550a1f124c4f2c17b2b3375a438082fde"
+    },
+    "native-parent-repeat/native.json": {
+      "unit": 770,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 580,
+      "observations": 1160,
+      "actual": "0044c660 + actual0044c540/CRT token/atol +0040da00/004adc60/004adcb0/004adca0/00425830/004ac550/0049fce0/0049b060",
+      "boundary": "TYPE name/getter, new and virtual owner/Pop, TLS/assert are explicit independent boundaries; synthetic raw TYPE/objects only; NULL stops before first dereference, no actual allocator/virtual World/MP/combat/OS/SEH",
+      "calls": {
+        "0044c660": 1160,
+        "0044c540": 776,
+        "0040da00": 100,
+        "004adc60": 528,
+        "00425830": 528,
+        "004adcb0": 264,
+        "0049fce0": 264,
+        "004adca0": 264,
+        "004ac550": 288
+      },
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "fixtureSha256": "cc8d013050f51349c68c1f2e6f2bf21d2d19f0c2afc0c1d1b0e3dc8f94702ea7",
+      "rawReportSha256": "7424d52f9067ba4b7e028c057ef418c954d8e6591125ec8dac7052a2a54404b3"
+    },
+    "native-input-repeat/native-input.json": {
+      "unit": 770,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 408,
+      "observations": 816,
+      "names": 15,
+      "nameObservations": 15,
+      "actual": "004d6e 입력의 실제 Guide/Gump/release→004d84f8..851b editor OR mission→0044c660(param2);00542a74 이름의 실제 ScriptCommand/토큰/고리/FIFO",
+      "bodyCounts": {
+        "-": 363,
+        "createAt:4275878552": 36,
+        "createAt:0": 3,
+        "createAt:2147483648": 3,
+        "createAt:4294967295": 3
+      },
+      "envelopeCounts": {
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0;general;paused:0;cursor:1": 4,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0": 24,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552": 48,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0;general": 12,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0;general;paused:1;cursor:1": 4,
+        "guide:33554656:305419896:4275878552;mission:33554656:305419896:4275878552;gump:33554656:305419896:4275878552:0;general;paused:3;cursor:1": 4,
+        "guide:2181038304:305419896:4275878552;mission:2181038304:305419896:4275878552;gump:2181038304:305419896:4275878552:0": 48,
+        "guide:2181038304:305419896:4275878552;mission:2181038304:305419896:4275878552": 48,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0;general;paused:0;cursor:1": 4,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0": 24,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552": 48,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0;general": 12,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0;general;paused:1;cursor:1": 4,
+        "guide:1040187616:305419896:4275878552;mission:1040187616:305419896:4275878552;gump:1040187616:305419896:4275878552:0;general;paused:3;cursor:1": 4,
+        "guide:3187671264:305419896:4275878552;mission:3187671264:305419896:4275878552;gump:3187671264:305419896:4275878552:0": 48,
+        "guide:3187671264:305419896:4275878552;mission:3187671264:305419896:4275878552": 48,
+        "guide:33554656:305419896:0;mission:33554656:305419896:0;gump:33554656:305419896:0:0;general;paused:0;cursor:1": 4,
+        "guide:33554656:305419896:2147483648;mission:33554656:305419896:2147483648;gump:33554656:305419896:2147483648:0;general;paused:0;cursor:1": 4,
+        "guide:33554656:305419896:4294967295;mission:33554656:305419896:4294967295;gump:33554656:305419896:4294967295:0;general;paused:0;cursor:1": 4,
+        "guide:2181038304:305419896:0;mission:2181038304:305419896:0;gump:2181038304:305419896:0:0": 4,
+        "guide:2181038304:305419896:2147483648;mission:2181038304:305419896:2147483648;gump:2181038304:305419896:2147483648:0": 4,
+        "guide:2181038304:305419896:4294967295;mission:2181038304:305419896:4294967295;gump:2181038304:305419896:4294967295:0": 4
+      },
+      "nativeTotals": {
+        "27f": {
+          "runs": 408,
+          "instructions": 37786
+        },
+        "37f": {
+          "runs": 408,
+          "instructions": 37786
+        }
+      },
+      "nameInstructions": 278804,
+      "nameQueueCalls": 14,
+      "boundary": "Guide/Gump와 생성0044c660·비대상 하위 효과, CRT TLS/할당/로그는 명시 장치. 생성 성공/실제 Runtime/게임/OS/멀티플레이는 이 관측에 포함하지 않는다. Editor/mission 이외 MP전용 globals 양성 입력은 추가하지 않았다.",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "sha256": {
+        "modified\\cpppj\\tests\\fixtures\\create-at-input-x86.tsv": "17971b232228baecf08ceefbe68c1b775d355e646baa9aace336cac3ca03e75f",
+        "modified\\cpppj\\tests\\fixtures\\create-at-names-x86.tsv": "2e6610161a6ef271ee526a20b0125d05741989c6c5c8aece0db4050842d12679"
+      },
+      "rawReportSha256": "dcb9118a7bdc3275ec79e231e115d11550a1f124c4f2c17b2b3375a438082fde"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "root C++ first focused",
+      "detail": "새ReachedParentFailures검사가callback을재사용하며세번째TYPE76입력도이전131로검사해1실패했다. 실제parser기대/원문580/제품은불변이며각입력의expectedType131→76을명시해잘못된검사상태를교정했다. 최초로그와깨끗한v1빌드를보존한다."
+    },
+    {
+      "scope": "root regression target selection",
+      "detail": "menu_session에DestroyAt검사가등록돼있다고잘못가정해filter0/no-match1을받았다. 원시tests-destroy-at-v1.log를남기고실제기존netstorm_destroy_at_tests를빌드하여네등록검사를실행했다. 미실행을통과로세지않았다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/CMakeLists.txt": "2265a7057a4c7154e4621ddaa2fcf10eb31fa4a66f859092a8b2355925065715",
+    "cpppj/src/client/CreateAtInput.cpp": "514728818f41f7c1a6acffbae1e756e80c1774d0a93c2bbf0d4596c2bf640245",
+    "cpppj/src/client/CreateAtInput.h": "c7b6047ae42c2d48eded0f495f3114bb595ae08059d9e8da29d64dcc33071557",
+    "cpppj/src/client/GameMenuCommands.cpp": "2dbfd6b747f5401f59c0ca71b05052de30ce722b707e7692865839f5c8dcffc6",
+    "cpppj/src/client/RawCampaignSession.cpp": "e901d968531e121740c83c5377d88fc200b04752110e2866b8259d1323cd4bc3",
+    "cpppj/src/client/RawCampaignSession.h": "99397256144197ce889e4a60da3b8509efc2a81e3f54e99f18754e822d462b4b",
+    "cpppj/src/client/UberGump.cpp": "207dfda4f0504670c59b3ddef5494b2d6e278b2903fb6dd1f61a38ba07871edb",
+    "cpppj/src/o/CMakeLists.txt": "cba1fcf438b0223b63eb35ac74b75e96c1bd705d39f83c76ce64e75a9be0d00d",
+    "cpppj/src/o/RawCreateAt.cpp": "a95d64d4e737987ac4c9b76bf8702b84ae5c051955b4c9df04a4e720ab0633f6",
+    "cpppj/src/o/RawCreateAt.h": "26c75003a74a734801d05a684e0fb747310fe13c232f040c8ccbdfc5b3334352",
+    "cpppj/tests/CampaignCreateAtTests.inc": "6980733deaf0023c30c6c2d0a15579a8fb26bab5a48a2d806af334a0546202d1",
+    "cpppj/tests/CampaignSessionTests.cpp": "df20c38aa39e830d967e9db158cca209d76943e5dccf151bd60b26bfbd66e555",
+    "cpppj/tests/CMakeLists.txt": "2504f3724ea8200dcf671f8775e15bc60b693cc57e5e6d943082435ee7488cb6",
+    "cpppj/tests/CreateAtInputTests.cpp": "5d26de6ce3f4167798274c57aac21ccbd8bdce7bad1982ffe5d391d9bbe4acc6",
+    "cpppj/tests/CreateAtTests.cpp": "77e1ea2c730ff1076d2e05f627c1101803ca3e026d82b64300cc3fba7898395d",
+    "tools/decomp_create_at.py": "d8d649b5763c09f6cbef1a1026613a0595b7a1e5949c1033f58af82466e4d46e",
+    "tools/decomp_create_at_input.py": "dc09ba85d7213998832fa8987387706cc64c6445c4fe03b5b1f3788c6bf49b7e"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-770/protected-after.json",
+  "next": "Config reader(771)·일반 AI 명령(772/773)·글꼴 인코딩(774)·조건 AI 메뉴(775)·진단표시(776)·TYPE reader(777)·checking(779)·GIF/초기화면(781/782)과 남은 비멀티/호환성",
+  "limitations": [
+    "원문580은실제44c660/parser/지면/HP/메타프레임몸체를실행하지만new/가상owner/Pop·TYPE name/TLS/assert는명시합성경계다. 전체Factory/Windows/가상객체ABI·전체SEH동등성은주장하지않는다.",
+    "실제Runtime3검사는TYPE76 RainGenerator/일반받침만생성한다. Kernel/AI frame·특수4TYPE 실제생성/행동·공중3종·공격/포획/희생/승패/MP는새검사하지않는다.",
+    "TYPE+15c의radius0은L.first다. 첫16/count16/kinds의물리범위만매핑하고이웃필드/32BIT포인터는현재상태효과뒤명시out_of_range다. 임의frame0이나호스트포인터성공을합성하지않는다.",
+    "Native 입력408의일반413d50/Paused/445330후속조회가있어실제Uber누름은CreateAt처리뒤에도현재Help/모달/세계입력꼬리를이어간다. 늦은메뉴재분배/미연결진단만막는다. 집중helper검사는전체Uber/GUI/모달픽셀동등성의증거가아니다.",
+    "권한진단의실제Sessionhook은예외를던지며원문assert복귀/미정stack/NULL역참조와구별한다. 256BYTE원문strcpy초과와NULLnew는명시host실패다. 앞선생성/owner/HP를롤백하지않는다.",
+    "새게임/GUI/CLI/MP·물리/PCM·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다."
+  ]
+}

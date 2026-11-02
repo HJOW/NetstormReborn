@@ -3108,3 +3108,13 @@ set_source_files_properties(DataManagerLiveReadTests.cpp PROPERTIES COMPILE_DEFI
 
 # 기존60행은보존하고번호가겹치지않는본문예외4행을추가한다(769).
 set_property(SOURCE DataManagerLiveReadTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_DATAMANAGER_LIVE_BODY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-live-body-x86.tsv\"")
+
+# 원문 CreateAt 입력/문자열과 실제 생성 후처리 부모를 기존 검사 타깃에서만 확인한다.
+target_sources(netstorm_tests PRIVATE CreateAtTests.cpp CreateAtInputTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE CreateAtTests.cpp CreateAtInputTests.cpp)
+foreach(create_at_target IN ITEMS netstorm_tests netstorm_menu_session_tests)
+    target_compile_definitions(${create_at_target} PRIVATE
+        NETSTORM_CREATE_AT_PARENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/create-at-parent-x86.tsv"
+        NETSTORM_CREATE_AT_INPUT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/create-at-input-x86.tsv"
+        NETSTORM_CREATE_AT_NAMES_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/create-at-names-x86.tsv")
+endforeach()
