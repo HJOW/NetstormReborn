@@ -1,0 +1,98 @@
+{
+  "unit": 732,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 732,
+    "version": "11.01",
+    "sha256": "d25df1aec10ae397355ec4f9e9842a1e2318e2890474712cadbe8721985821e6"
+  },
+  "implementation": [
+    "확정된dataPrefix에서identity→options→user→dev→setup→demo→guild의원문작성순서/전체459c60/지역소유복사를실제Startup에연결",
+    "identity는별도-3파일/-4cfg확장자를사용하며빈C문자열이면그한칸을소비하지않는다",
+    "demo는작성/지역복사하지만Load인자에서제외.실제읽기순서는identity→user→options→dev→guild→setup",
+    "731의실제Load/같은VFS고리와결합하며독립값형API는기존파일이름계약을유지"
+  ],
+  "native": {
+    "report": "cpppj/startup-file-names-native-20261102.json",
+    "fixtureRows": 24,
+    "observations": 48,
+    "precisions": [
+      "027f",
+      "037f"
+    ],
+    "initialIndexes": [
+      0,
+      9
+    ],
+    "advances": [
+      11,
+      13
+    ],
+    "rerunMatches": true,
+    "wholeRingBytesPerRow": 2560,
+    "boundary": "실제441a44~441c5e위치확정뒤구간+440e00/FileSpec/이름/CRT. prefix는명시입력, getenv/고정sprintf/parser/read/log/Find/Close는명시경계. 선행탐색/CWD/TARC·뒤Set/정리/전체함수ABI·실제OS는범위밖"
+  },
+  "before": {
+    "tests": 25,
+    "failedTests": 3,
+    "failedChecks": 262,
+    "log": "extracted/cpp-startup-names-732/tests-before.log",
+    "cause": "초기Startup이단순경로연결만해원문작성/지역복사/미사용demo와고리소모가누락됨"
+  },
+  "tests": {
+    "new": 3,
+    "existing": 22,
+    "final": 25,
+    "failed": 0,
+    "nativeRowsReplayed": 276,
+    "log": "extracted/cpp-startup-names-732/tests-v1.log",
+    "reentrantReadOverwritesTenSlots": true,
+    "actualClientStartupAdvances": 25,
+    "actualClientThenSaveAdvances": 4,
+    "actualClientThenReadAdvances": 2,
+    "actualUnicodeRoundTrip": true
+  },
+  "build": {
+    "final": "extracted/cpp-startup-names-732/build-v1.log",
+    "warnings": 0,
+    "errors": 0
+  },
+  "cli": {
+    "processes": 1,
+    "command": "Netstorm.exe --config-get originals SCREENW",
+    "output": "1024",
+    "exitCode": 0,
+    "gameFrames": 0,
+    "log": "extracted/cpp-startup-names-732/cli-config.log"
+  },
+  "protection": {
+    "baselineFiles": 2646,
+    "unchangedFiles": 2646,
+    "baselineGroups": {
+      "AGENTS.md": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 826
+    },
+    "agentAuthoredChanges": 0,
+    "newFixtures": 1,
+    "currentTotal": 2647,
+    "fixtureTotal": 827
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "limits": [
+    "전체Startup고리소모가아닌위치확정뒤작성/Load의상대소모11/13이다.실제Client25는기본디스크읽기2칸/각파일을합친명시조건이다",
+    "선행6후보위치탐색·CWD/TARC등록의원문고리/다른FileSpec getter·Template·일반FILE실패수명은남는다",
+    "getenv fallback은Native에서관측했으며C++StartupOptions.identity는호출자가이미선택한값이다",
+    "10.78기준이며10.72의대응Startup구간은이번에새로관측하지않았다",
+    "새GUI/전체34/전체C++/ZIP·물리입력/PCM/DPI·포획/희생·특정적공격/승리·공중3종전용·MP/통신검사는0이다",
+    "전체34/ZIP은645의644제품이며전체목표1~8차는진행중이다"
+  ],
+  "rawDirectory": "extracted/cpp-startup-names-732"
+}

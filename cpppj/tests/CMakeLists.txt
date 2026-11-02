@@ -2956,3 +2956,10 @@ set_source_files_properties(ConfigPathLoadTests.cpp PROPERTIES COMPILE_DEFINITIO
 add_executable(netstorm_config_path_load_tests FocusedTestMain.cpp ConfigPathLoadTests.cpp ConfigInterfaceTests.cpp FileNameLeafTests.cpp TechnicalHelpTests.cpp)
 target_link_libraries(netstorm_config_path_load_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_config_path_load_tests)
+
+# Startup의post-location원문전체고리와기존Load/설정/Help를창없이집중확인한다(732).
+target_sources(netstorm_tests PRIVATE StartupFileNamesTests.cpp)
+set_source_files_properties(StartupFileNamesTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_STARTUP_FILE_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/startup-file-names-x86.tsv\"")
+add_executable(netstorm_startup_file_names_tests FocusedTestMain.cpp StartupFileNamesTests.cpp ConfigPathLoadTests.cpp ConfigInterfaceTests.cpp FileNameLeafTests.cpp TechnicalHelpTests.cpp)
+target_link_libraries(netstorm_startup_file_names_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_startup_file_names_tests)

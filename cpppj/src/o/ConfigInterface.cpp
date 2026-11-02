@@ -101,16 +101,19 @@ void ConfigInterface::Load(std::span<const std::string> arguments) {
 // 원본 00441790이 00440e00에 넘기는 인자 순서 그대로다. demo.cfg는 경로만 만들고 읽지 않는다(원본 그대로).
 void ConfigInterface::Startup(const StartupOptions& options) {
     const auto major = std::to_string(options.majorVersion), minor = std::to_string(options.minorVersion);
-    std::vector<std::string> arguments{
-        options.commandLine,
-        "MAJOR_VERSION=" + major + ";MINOR_VERSION=" + minor + ";version=\"v" + major + "." + minor + "\";",
-        "@",
-        options.identity.empty() ? std::string() : options.dataPrefix + options.identity + ".cfg",
-        options.dataPrefix + "user.cfg",
-        options.dataPrefix + "options.cfg",
-        options.dataPrefix + "dev.cfg",
-        options.dataPrefix + "guild.cfg",
-        options.dataPrefix + "setup.cfg"};
+    std::vector<std::string> arguments{options.commandLine,"MAJOR_VERSION=" + major + ";MINOR_VERSION=" + minor + ";version=\"v" + major + "." + minor + "\";","@"};
+    if (fileNames_) {
+        const auto makeName=[&](std::string_view file) { //441acd~441bda의각459c60반환을원문지역배열처럼즉시소유복사한다.
+            const std::array<FileNamePart,2> parts{{{-2,options.dataPrefix},{-3,file}}};return std::string(fileNames_->Format(parts));
+        };
+        std::string identityName;const auto identity=std::string_view(options.identity).substr(0,options.identity.find('\0'));
+        if (!identity.empty()) { const std::array<FileNamePart,3> parts{{{-2,options.dataPrefix},{-3,identity},{-4,"cfg"}}};identityName=fileNames_->Format(parts); } // 이미선택된IDENTITY/USER가비어있으면이한칸을예약하지않는다.
+        const auto optionsName=makeName("options.cfg"),userName=makeName("user.cfg"),devName=makeName("dev.cfg"),setupName=makeName("setup.cfg"); // 원문작성순서는읽기순서와다르다.
+        const auto demoName=makeName("demo.cfg");static_cast<void>(demoName); // 원문은지역배열로복사하지만Load인자에넣지않아도같은한칸을소비한다.
+        const auto guildName=makeName("guild.cfg");arguments.insert(arguments.end(),{identityName,userName,optionsName,devName,guildName,setupName});
+    } else {
+        arguments.insert(arguments.end(),{options.identity.empty() ? std::string() : options.dataPrefix+options.identity+".cfg",options.dataPrefix+"user.cfg",options.dataPrefix+"options.cfg",options.dataPrefix+"dev.cfg",options.dataPrefix+"guild.cfg",options.dataPrefix+"setup.cfg"}); // 기존독립값형API의읽기장치이름계약은유지한다.
+    }
     Load(arguments);
     Set("InstallDir", options.installDir);
     Set("CDDir", options.cdDir.empty() ? options.installDir : options.cdDir);
