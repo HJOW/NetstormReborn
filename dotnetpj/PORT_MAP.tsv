@@ -429,3 +429,9 @@ cpppj/src/o/RawFortSnapshotBasics.cpp	Netstorm.Core/Original/RawFortSnapshotBasi
 cpppj/src/o/RawFortSnapshotBasics.h	Netstorm.Core/Original/RawFortSnapshotBasics.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
 cpppj/src/o/RawFortSnapshotParent.cpp	Netstorm.Core/Original/RawFortSnapshotParent.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
 cpppj/src/o/RawFortSnapshotParent.h	Netstorm.Core/Original/RawFortSnapshotParent.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortContentSave.cpp	Netstorm.Core/Original/RawFortContentSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortContentSave.h	Netstorm.Core/Original/RawFortContentSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortObjectSave.cpp	Netstorm.Core/Original/RawFortObjectSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortObjectSave.h	Netstorm.Core/Original/RawFortObjectSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortObjectsSave.cpp	Netstorm.Core/Original/RawFortObjectsSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
+cpppj/src/o/RawFortObjectsSave.h	Netstorm.Core/Original/RawFortObjectsSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
