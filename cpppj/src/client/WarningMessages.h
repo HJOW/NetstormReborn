@@ -16,7 +16,7 @@ struct PaletteColorTable;
 class WarningMessages {
 public:
     // Client의 단일 Gump/StyleText를 빌린다. 부모가 노드를 먼저 정리하며 now는 실제 벽 시각이다.
-    WarningMessages(RawMenuTree tree,RawMenuControls& menus,std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext={});
+    WarningMessages(RawMenuTree tree,RawMenuControls& menus,std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext={},std::function<bool()> suppressed={});
     // 공통 Draw의 참조를 끊는다. 노드 소멸은 같은 Client의 가상 소멸 분배가 먼저 수행한다.
     ~WarningMessages();
     // 현재 화면/파일 팔레트를 갱신한다. 기존 메시지의 저장 문맥은 원본처럼 유지한다.
@@ -25,6 +25,7 @@ public:
     void Add(std::string_view styledText);
     // 같은20칸 표에서 원본 Pause(kind11)의 영구 안내를 생성하거나 지연 삭제한다.
     void PauseStatus(bool enabled);
+    void GameTimeStatus(); //원문메인루프의kind16/player1/enabled1/parameter0을같은20칸에요청한다.
     // 원본 Show의 enabled=false로 같은 종류/플레이어/매개변수 메시지를 지연 삭제한다.
     void Remove(std::int32_t kind,std::int32_t player,std::int32_t parameter);
     MessageGumpNode* Node(std::uint32_t token) const; // 공통 기본/텍스트 분배에 같은 안정된 파생 주소를 빌린다.

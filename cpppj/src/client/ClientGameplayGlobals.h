@@ -49,6 +49,12 @@ public:
     std::uint32_t& StateAuxFC4() { return stateAuxFC4_; } //00594fc4의 별도 현재 DWORD이며 battle/fort bool과 합치지 않는다.
     std::uint32_t& MapRevision() { return mapRevision_; } // 005949d4의 같은 전체 미니맵 갱신 DWORD를 지형/소유자/HUD/표시 소비자가 공유한다.
     const std::uint32_t& MapRevision() const { return mapRevision_; } // 단조 버전이 아니며 실제 Refresh가0으로 소비한 현재값도 즉시 읽는다.
+    std::uint32_t& ShowGameTime() { return showGameTime_; } //00594fc0의현재DWORD이며T/t가비영전체를0으로토글한다.
+    const std::uint32_t& ShowGameTime() const { return showGameTime_; } //Session교체뒤에도같은표시플래그를보존한다.
+    std::uint32_t& BattleClockStamp() { return battleClockStamp_; } //00594fb0을메시지/로그인/수신이동일주소로쓴다.
+    const std::uint32_t& BattleClockStamp() const { return battleClockStamp_; } //CRT현재stamp의같은읽기전용주소다.
+    std::uint32_t& BattleClockOrigin() { return battleClockOrigin_; } //00594fb4의로그인/수신원점을같은현재저장소에쓴다.
+    const std::uint32_t& BattleClockOrigin() const { return battleClockOrigin_; } //메시지는매clock복귀뒤현재원점을읽는다.
     std::uint32_t& HideBuildings() { return hideBuildings_; } //0059a8ac의 실제 DWORD를 메뉴·Draw·State 정리가 직접 공유한다.
     const std::uint32_t& HideBuildings() const { return hideBuildings_; } // Uber 교체와 Session 반납으로 값이나 주소를 재생성하지 않는다.
     std::int32_t& DenySalvage() { return denySalvage_; } // 00595078의 signed DWORD를 Start·회수·Tutorial 소멸이 같은 Client 주소에 읽고 쓴다. 근거: docs/exe/cpp-guide-release-20261101.md.
@@ -84,6 +90,7 @@ private:
     std::uint32_t localAddress_{}; //보호PE005953fc의 최초BSS0이다. 이후 실제 네트워크 주소 writer는 후순위MP에서 연결한다.
     std::uint32_t fullDeck_{}; // 최초 PE BSS0이며 준비 대여/반납은 Native 부모가 쓴 현재 값을 보존한다.
     std::uint32_t fortKeepGenus_{0x40480002U},stateAuxFC4_{}; //보호 PE00542640의 초기 마스크와00594fc4의 별도 BSS0이다.
+    std::uint32_t showGameTime_{},battleClockStamp_{},battleClockOrigin_{}; //원문세BSSDWORD는새Client에서한번만0으로만든다.
     std::uint32_t hideBuildings_{}; // 원문 최초 BSS0이며 명시 State store 외에 임의 초기화를 추가하지 않는다.
     std::int32_t denySalvage_{},denyAscend_{}; // 00595078/0059507c의 최초 BSS0이다. 대여·반납에서는 다시 쓰지 않고 Start와 Tutorial 소멸의 명시 쓰기만 공유한다.
     std::uint32_t patchDiagnostic_{6}; // 보호 10.78 PE의 초기 DWORD6이며 World/Session 대여·반납으로 다시 쓰지 않는다.

@@ -38,6 +38,8 @@
 #include "client/RotationKeyInput.h" //C/c는 World 없이도 같은 현재 Client 옵션을 반전하는 일반 입력이다.
 #include "client/ConstructionHistoryKey.h" //Tab은 같은 최근 로컬 건설 위치를 현재 즉시 카메라로 순환한다.
 #include "client/LostPositionKey.h" //U/u는 같은 공통 삭제 owner의 최근 손실 좌표를 현재 카메라에 전달한다.
+#include "client/GameTimeDisplay.h" //같은장기CRT시계와T/t표시DWORD를연결한다.
+#include <ctime> //원문CRT clock을조회하며게임시계와구별한다.
 #include "client/SavedCameraKey.h" //숫자 호출/Shift 실제 기호 저장의 언어 표와 현재 지도 중심을 공유한다.
 #include "client/GifScreenshot.h"
 #include "client/RawUserHighlight.h" // Editor F8도 같은 Client 선택 전역의 원본 강조 몸체를 사용한다.
@@ -348,10 +350,11 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
         static_cast<void>(world_->Session().PlayerRecords().subspan(static_cast<std::size_t>(owner)*180U+12U)); // 반환 이름은 종류11에서 읽지 않는다.
     };
     pauseContext.challengePlayerName=[](auto) { throw std::logic_error("Challenge 메시지 현재 이름 관리자 미연결"); };
+    pauseContext.gameTimeSeconds=[this] { auto& game=*client_.GameplayGlobals();return ReadGameTimeSeconds(game.BattleClockStamp(),game.BattleClockOrigin(),[] { return static_cast<std::uint32_t>(std::clock()); }); }; //기존로그인과같은CRT경계/현재두DWORD를사용한다.
     pauseContext.translate=[this](auto value) { return FontBytes(client_.Translate(value)); };
     warnings_=&rawButtons_->EnableWarnings([this] { return client_.WallSeconds(); },[this] {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
-    },std::move(pauseContext));
+    },std::move(pauseContext),[this] { return client_.GameplayGlobals()->world.missionPost; }); //원문의현재00594fa4를같은장기owner에서매Show진입에읽는다.
     fileMenus_=std::make_shared<TellFileMenus>(client_.Configuration(),[this](auto pattern) { return client_.Files().MatchFinder(pattern); }); // 실제 FileFinder의 디스크/TAFF/보조 순서와 장기 Config 수명을 공유한다.
     o::MissionGuideHooks guideHooks; // 같은 실제 현재 미션/전환 큐/창과 복원한 Guide 반복 몸체다.
     guideHooks.current=[this]() -> o::MissionStartState* { return missionRuntime_ && missionRuntime_->guided ? &missionRuntime_->state : nullptr; };
@@ -1262,6 +1265,10 @@ void UberGump::Event(InputEvent event) {
         if (rawButtons_->CurrentDialog()) return; //원문의 Console/모달 뒤 정지 관문과 같은 위치다.
         auto& gameplay=*client_.GameplayGlobals();static_cast<void>(DispatchConstructionHistoryKey(event,gameplay.Camera().ConstructionHistory(),gameplay.WorldCells(),{[this] { return client_.Paused(); },[this](auto x,auto y) { CenterViewPoint(x,y); }}));return;
     }
+    if (transitionCode=='T' || transitionCode=='t') {
+        if (rawButtons_->CurrentDialog()) return; //원문Console/모달뒤의공통정지관문이다.
+        static_cast<void>(DispatchGameTimeKey(event,client_.GameplayGlobals()->ShowGameTime(),[this] { return client_.Paused(); }));return;
+    }
     if (transitionCode=='U' || transitionCode=='u') {
         if (rawButtons_->CurrentDialog()) return; //원문 Console/모달 뒤의 공통 정지 관문을 유지한다.
         auto& gameplay=*client_.GameplayGlobals();const auto& lost=*gameplay.GameAux(); //실제 삭제/Native cleanup과 같은005c848c/90 owner이며 Session 사본을 만들지 않는다.
@@ -1759,4 +1766,6 @@ std::string UberGump::Report(bool cameraOnly) const {
     }
     return out.str();
 }
+//부모가현재battle/showTime을확인한뒤같은board를호출한다.
+void UberGump::ShowGameTimeMessage() { warnings_->GameTimeStatus(); }
 }

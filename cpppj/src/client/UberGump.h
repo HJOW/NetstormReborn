@@ -92,6 +92,7 @@ public:
     std::optional<ScreenPoint> ControlPoint(std::string_view label) const;
     bool QuitRequested() const { return quit_; } // 실제 QuitApp/사용자 종료 요청만 읽으며 검사 프레임 제한 종료와 구별한다.
     void CleanupGumps(); // 원본4662b0 위치에서 실제 전체 HTML/Warning을 포함한 같은 공통 큐를 정리한다.
+    void ShowGameTimeMessage(); //00439b5f의kind16/player1/표시1을기존메시지20칸에전달한다.
     void IdleGumps(); // 원본464170 위치에서 Warning을 포함한 현재 공통 idle 표를 한 번 실행한다.
     // --ui-script 전용 검사 경계다. 실제 월드의 가상 삭제를 호출하며 일반 게임 입력에는 노출하지 않는다.
     bool InspectDestroySurface(std::string_view type,float x,float y);

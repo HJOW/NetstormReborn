@@ -29,22 +29,23 @@ struct WarningMessages::Impl {
     std::unique_ptr<MessageGump> pauseMessage; // 같은 TextGump를 쓰는 원본 종류11 생성자다.
 
     // 모든 callback은 호출 시 현재 공통 루트/노드/등록표를 읽는다.
-    Impl(RawMenuTree tree,RawMenuControls& menu,std::function<double()> suppliedNow,std::function<void()> suppliedSound,MessageGumpHooks pauseContext)
+    Impl(RawMenuTree tree,RawMenuControls& menu,std::function<double()> suppliedNow,std::function<void()> suppliedSound,MessageGumpHooks pauseContext,std::function<bool()> suppressed)
         :common(std::move(tree)),menus(menu),now(std::move(suppliedNow)),sound(std::move(suppliedSound)) {
         if (!now || !sound) throw std::invalid_argument("Warning 실제 벽 시각/음향 연결 누락");
         if (pauseContext.challenge) {
             pauseContext.node=[this](auto token)->MessageGumpNode* { return Node(token); };
             pauseContext.constructText=[this](auto token) { menus.TextBackend().Construct(token,0,0,0,0); };
             pauseContext.style=[this](auto token,auto value) { Style(token,value); };
+            pauseContext.wallSeconds=now;pauseContext.idle=[this](auto token,auto enabled) { common.lifetime.SetIdle(token,enabled); }; //같은벽시각/기존Idle표만빌린다.
             pauseContext.fit=[this](auto token,auto x,auto y) { menus.TextBackend().Fit(token,x,y); };
             pauseMessage=std::make_unique<MessageGump>(common.create,std::move(pauseContext));
         }
-        MessageBoardHooks hooks;hooks.lookup=[this](auto serial) { return Lookup(serial); };
+        MessageBoardHooks hooks;hooks.suppressed=std::move(suppressed);hooks.lookup=[this](auto serial) { return Lookup(serial); };
         hooks.kill=[this](auto token) { common.lifetime.Kill(token);common.changed(); };
         hooks.create=[this](auto kind,auto player,auto parameter,std::string_view source) {
-            if (kind!=17 && kind!=11) throw std::logic_error("다른 원본 메시지 생성자 미연결");
+            if (kind!=17 && kind!=11 && kind!=16) throw std::logic_error("다른 원본 메시지 생성자 미연결");
             const auto token=common.token();auto& node=*messages.emplace(token,std::make_unique<WarningNode>()).first->second;
-            if (kind==11) {
+            if (kind==11 || kind==16) {
                 if (!pauseMessage) throw std::logic_error("Pause 메시지의 현재 모드/이름/번역 미연결");
                 pauseMessage->Construct(token,kind,player,parameter);return MessageBoardRecord{token,node.serial,kind,player,parameter};
             }
@@ -83,8 +84,8 @@ struct WarningMessages::Impl {
     }
 };
 // 소유자는 RawButtonControls이며 가상 분배 설치 후에만 생성/Idle을 실행한다.
-WarningMessages::WarningMessages(RawMenuTree tree,RawMenuControls& menus,std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext)
-    :impl_(std::make_unique<Impl>(std::move(tree),menus,std::move(now),std::move(sound),std::move(pauseContext))) {}
+WarningMessages::WarningMessages(RawMenuTree tree,RawMenuControls& menus,std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext,std::function<bool()> suppressed)
+    :impl_(std::make_unique<Impl>(std::move(tree),menus,std::move(now),std::move(sound),std::move(pauseContext),std::move(suppressed))) {}
 // 부모가 공통 큐를 먼저 비운 뒤 빌린 Draw callback만 해제한다.
 WarningMessages::~WarningMessages() { impl_->menus.SetExternalGumps(kDrawSlot,{}); }
 // 화면/팔레트도 동일한 실제 루트와 글자 전역에 전달한다. 기존 문맥 사본은 유지한다.
@@ -97,6 +98,8 @@ void WarningMessages::SetView(int width,int height,const PaletteColorTable& pale
 void WarningMessages::Add(std::string_view styledText) { impl_->board->Show(17,0,true,0,styledText); }
 // 시계/음향은 Pause 명령 소유자가 처리하며 이 경로는 같은20칸만 변경한다.
 void WarningMessages::PauseStatus(bool enabled) { impl_->board->Show(11,0,enabled,0,""); }
+//기존serial/직계자식검색과0.1초기한/Idle을그대로사용하고별도메시지캐시를만들지않는다.
+void WarningMessages::GameTimeStatus() { impl_->board->Show(16,1,true,0,""); }
 // 같은 현재 직계 자식 검색 뒤 공통 지연 Kill을 실행한다.
 void WarningMessages::Remove(std::int32_t kind,std::int32_t player,std::int32_t parameter) { impl_->board->Show(kind,player,false,parameter,""); }
 // 기본/텍스트 가상 분배에 같은 안정된 파생 주소를 빌린다.

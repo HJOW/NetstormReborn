@@ -325,3 +325,5 @@ target_sources(netstorm PRIVATE StartupFiles.cpp StartupFiles.h) # 원문6후보
 target_sources(netstorm PRIVATE ScreenMouseKey.cpp ScreenMouseKey.h) # Guide/Gump 앞 F12를 현재 Windows 호환 화면 장치에 연결한다.
 
 target_sources(netstorm PRIVATE PauseKeyInput.cpp PauseKeyInput.h) #Pause 가상키의 정지 앞 일반명령 예약을 연결한다(753).
+
+target_sources(netstorm PRIVATE GameTimeDisplay.cpp GameTimeDisplay.h) #T/t와 로그인에서 같은 CRT 시계/시간 표시 전역을 공유한다(754).

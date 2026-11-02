@@ -102,11 +102,11 @@ struct WarningClient {
     RawMenuControls* menus{};WarningMessages* messages{}; // 위 소유자의 같은 처리기를 빌린다.
     int width{},height{}; // 현재 실제 표면 크기다.
     // 같은 공통 가상 분배가 설치된 뒤에만 안내를 생성한다.
-    WarningClient(std::function<double()> now,std::function<void()> sound,MessageGumpHooks context={},int w=1024,int h=768)
+    WarningClient(std::function<double()> now,std::function<void()> sound,MessageGumpHooks context={},int w=1024,int h=768,std::function<bool()> suppressed={})
         :assets(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078)),fonts(assets.files,"Arial"),palette(WarningPalette(assets.game)),buttons(OriginalEdition::Patch1078),width(w),height(h) {
         RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,auto&) {};hooks.sound=[](auto) {};
         hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,0,0}; };hooks.cursor=[](auto) {};
-        menus=&buttons.EnableMenus(assets.game,fonts,std::move(hooks));messages=&buttons.EnableWarnings(std::move(now),std::move(sound),std::move(context));Reset();
+        menus=&buttons.EnableMenus(assets.game,fonts,std::move(hooks));messages=&buttons.EnableWarnings(std::move(now),std::move(sound),std::move(context),std::move(suppressed));Reset();
     }
     // 호스트 페이지 전환도 같은 실제 공통 Kill/Cleanup으로 이전 자식을 반납한다.
     void Reset(bool preserve=false) { buttons.SetControls({}, {},width,height,{},preserve);messages->SetView(width,height,palette); }
@@ -240,3 +240,5 @@ TEST_CASE(Warnings_InlineCommandParser) {
     CHECK(ParseDialogPage("<$Warning,\"A, B > C\">").warnings==std::vector<std::string>{"A, B > C"});
     CHECK(ParseDialogPage("<?0><$Warning,\"Hidden\"></?>").warnings.empty());
 }
+
+#include "GameTimeSuppressionTests.inc" //현재미션억제의실제board/공통WarningGump바인딩을검사한다.

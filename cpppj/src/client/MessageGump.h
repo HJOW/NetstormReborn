@@ -1,4 +1,4 @@
-// 원본10.78의004d0600 중 Pause(kind11) 메시지를 기존 TextGump에 연결한다.
+// 원본10.78의004d0600 중 Pause(kind11)/게임시간(kind16) 메시지를 기존 TextGump에 연결한다.
 #pragma once
 #include "client/TextGump.h"
 #include <functional>
@@ -22,13 +22,16 @@ struct MessageGumpHooks {
     std::function<void(std::int32_t)> playerName,challengePlayerName; // 48f480/42bbb0의 실제 조회다. Pause는 반환 이름을 쓰지 않는다.
     std::function<std::string(std::string_view)> translate; // 실제 원문 Pause 문자열을 현재 언어로 번역한다.
     std::function<void(std::uint32_t,std::string_view)> style; // 같은 기본 문맥으로4bc800의 StyleText를 작성한다.
+    std::function<std::int32_t()> gameTimeSeconds; //004a68b0→ftol의현재CRT정수초이며게임FrameTime을대신쓰지않는다.
+    std::function<double()> wallSeconds; //00424930은현재벽시각을읽은뒤0.1초를더한다.
+    std::function<void(std::uint32_t,bool)> idle; //같은노드를기존00465330표에등록한다.
     std::function<void(std::uint32_t,std::int32_t,std::int32_t)> fit; // 기존 TextGump::Fit(0,0)의 측정/단정도 저장이다.
 };
 // 등록/루트20칸/Draw/삭제는 기존 MessageBoard·TextGump·GumpLifetime이 담당한다.
 class MessageGump {
 public:
     MessageGump(const GumpCreateState& create,MessageGumpHooks hooks); // 실제10.78 공통 생성 상태와 경계를 확인한다.
-    std::uint32_t Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter) const; // kind11만 생성하며 다른 종류는 명시 거부한다.
+    std::uint32_t Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter) const; //kind11/16만생성하며다른종류는명시거부한다.
 private:
     MessageGumpNode& Node(std::uint32_t token) const; // 경계 호출 뒤 같은 현재 노드를 다시 조회한다.
     MessageGumpHooks hooks_; // 현재 실제 저장소와 공통 처리기를 빌리는 안정된 경계다.

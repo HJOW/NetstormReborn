@@ -84,3 +84,6 @@ TEST_CASE(MessageGump_MissingSelectedBranchesStayExplicit) {
     try { static_cast<void>(challenge.Construct(kNode,11,1,0)); } catch (const std::logic_error&) { missing=true; }
     CHECK(missing && scene.trace=="Text");
 }
+
+// T/t 게임 시간의 최초 원문 관측과 실제 메시지 생성자를 함께 검사한다(754).
+#include "GameTimeMessageTests.inc"

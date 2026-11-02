@@ -20,6 +20,7 @@ struct MessageBoardState {
 };
 // 실제 Gump 조회/생성/삭제/부착을 공급한다. 생성된 노드의 주소는 호출 동안 안정되어야 한다.
 struct MessageBoardHooks {
+    std::function<bool()> suppressed; //실제Client는매Show진입현재00594fa4를읽는다.독립기존장치만state.suppressed를사용한다.
     std::function<std::optional<MessageBoardRecord>(std::uint32_t)> lookup; // 직계 자식 serial 조회다.
     std::function<void(std::uint32_t)> kill; // 실제 지연 삭제 요청이다.
     std::function<MessageBoardRecord(std::int32_t,std::int32_t,std::int32_t,std::string_view)> create; // 실제 파생 생성이다.

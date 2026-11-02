@@ -99,7 +99,7 @@ set_source_files_properties(TellParametersTests.cpp PROPERTIES COMPILE_DEFINITIO
 set_source_files_properties(GameMenuActionsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GAME_MENU_ACTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-menu-actions-x86.tsv\"")
 set_source_files_properties(MessageGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_MESSAGE_GUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/message-gump-x86.tsv\"")
+    "NETSTORM_MESSAGE_GUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/message-gump-x86.tsv\";NETSTORM_GAME_TIME_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-time-key-x86.tsv\";NETSTORM_GAME_TIME_MESSAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/game-time-message-x86.tsv\"")
 set_source_files_properties(DialogExitCommandTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DIALOG_EXIT_COMMAND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dialog-exit-command-x86.tsv\"")
 # 원본 UserInput 앞단의 입력·정적 기록·합성 release 관측을 해당 검사에만 공급한다.
@@ -3042,3 +3042,6 @@ target_sources(netstorm_menu_session_tests PRIVATE LostPositionOwnerTests.cpp)
 
 # FileSpec 경계 변경과 실제 디스크/TAFF 맵 목록 소비자를 같은 기존 집중 대상에서 확인한다(752).
 target_sources(netstorm_editor_file_tests PRIVATE SoloMapCatalogTests.cpp)
+
+# T/t의 같은 메시지 생성/만료와 현재 미션 억제 getter를 기존 입력 집중 대상에서 확인한다(754).
+target_sources(netstorm_selection_key_input_tests PRIVATE MessageGumpTests.cpp WarningTests.cpp)

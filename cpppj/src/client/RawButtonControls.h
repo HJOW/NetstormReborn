@@ -119,7 +119,7 @@ public:
     std::uint32_t BubbleGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second); // 원문00464e90의 현재 부모 체인에만 전달한다.
     std::uint32_t ConstructNsInfo(RawNsInfoContext context); // 같은 공통 Button/배경 전역으로 전체 NSInfo 생성만 한다.
     // 실제 공통 Gump/StyleText를 빌리는 안내 처리기를 한 번 설치한다. 별도 루트/등록표를 만들지 않는다.
-    WarningMessages& EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext);
+    WarningMessages& EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext,std::function<bool()> suppressed={});
     WarningMessages* Warnings() const; // 같은 공통 가상 분배가 소유하는 현재 안내 처리기다.
     RawProductionControls& EnableProduction(RawCampaignSession& session,const GameAssets& assets,RawProductionHooks hooks); // 현재 미션 패널을 조립한다.
     RawProductionControls& ConstructProduction(ProductionControlContext context,const GameAssets& assets,RawProductionHooks hooks); // Session 이전에도 같은 원문 생성만 수행하며 루트 부착은 실제 부모가 담당한다.

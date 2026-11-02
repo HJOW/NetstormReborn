@@ -1,11 +1,14 @@
 #include "client/MessageGump.h"
+#include <cstdio>
 #include <stdexcept>
 #include <utility>
 
 namespace netstorm::client {
 namespace {
 constexpr std::uint32_t kMessageVtable=0x00517b60U; // 보호10.78의 메시지 파생 가상 표다.
+constexpr std::int32_t kGameTime=16; //원문게임시간메시지의실제종류다.
 constexpr std::int32_t kPause=11; // 원문 분배기와 생성자가 사용하는 실제 Pause 종류다.
+constexpr std::string_view kGameTimeText="~E~yGame Time~r:~w %d:%02d:%02d"; //PE00516024의원문번역서식이다.
 constexpr std::string_view kPauseText="~E~wGame Paused!"; // PE00516010의 현재 원문 번역 키다.
 }
 // 선택되지 않은 Challenge 이름 조회는 도달할 때만 요구한다.
@@ -21,7 +24,7 @@ MessageGumpNode& MessageGump::Node(std::uint32_t token) const {
 }
 // Pause는 시계/음향/idle을 호출하지 않고 기한0의 영구 메시지를 측정한다.
 std::uint32_t MessageGump::Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter) const {
-    if (kind!=kPause) throw std::logic_error("다른 원본 메시지 종류의 생성 분기 미복원");
+    if (kind!=kPause && kind!=kGameTime) throw std::logic_error("다른 원본 메시지 종류의 생성 분기 미복원");
     hooks_.constructText(token);
     Node(token).vtable=kMessageVtable;
     Node(token).deadline=0.0;
@@ -32,8 +35,19 @@ std::uint32_t MessageGump::Construct(std::uint32_t token,std::int32_t kind,std::
         if (!hooks_.challengePlayerName) throw std::logic_error("Challenge 메시지의 실제42bbb0 이름 조회 미연결");
         hooks_.challengePlayerName(player);
     } else hooks_.playerName(player);
-    const auto text=hooks_.translate(kPauseText); // 번역은 원문 이름 조회 뒤에 실행한다.
-    hooks_.style(token,text);
+    if (Node(token).kind==kGameTime) {
+        if (!hooks_.gameTimeSeconds) throw std::logic_error("게임시간메시지의현재CRT시계미연결");
+        const auto seconds=hooks_.gameTimeSeconds(); //원문은이위치의signed정수초에서시/분/초를계산한다.
+        const auto hours=(seconds/60)/60,minutes=(seconds/60)%60,remainder=(seconds%60)%60; //IDIV의음수절삭/나머지도보존한다.
+        const auto format=hooks_.translate(kGameTimeText); //정수계산뒤현재언어번역을조회한다.
+        char text[256]; //원문의현재256BYTE서식버퍼이며초과는호스트에서명시거부한다.
+        const auto length=std::snprintf(text,sizeof(text),format.c_str(),hours,minutes,remainder);
+        if (length<0 || static_cast<std::size_t>(length)>=sizeof(text)) throw std::length_error("게임시간메시지원문서식버퍼범위초과");
+        hooks_.style(token,std::string_view(text,static_cast<std::size_t>(length)));
+        if (!hooks_.wallSeconds) throw std::logic_error("게임시간메시지의현재벽시각미연결");
+        const auto now=hooks_.wallSeconds();Node(token).deadline=0.1+now; //PE00501960은double0.1이며1초가아니다.
+        if (!hooks_.idle) throw std::logic_error("게임시간메시지의실제Idle등록미연결");hooks_.idle(token,true);
+    } else { const auto text=hooks_.translate(kPauseText);hooks_.style(token,text); } //Pause는기존영구기한0/무음향/무Idle을유지한다.
     hooks_.fit(token,0,0);
     return token;
 }

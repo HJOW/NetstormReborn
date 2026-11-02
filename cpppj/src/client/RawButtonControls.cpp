@@ -433,13 +433,13 @@ std::uint32_t RawButtonControls::ConstructNsInfo(RawNsInfoContext context) {
     context.constructButton=[&s](auto token,auto width,auto height,auto flags) { s.buttons->ConstructBase(token,width,height,flags); };return s.menus->CreateNsInfo(std::move(context));
 }
 // 같은 공통 참조를 빌려 실제 Warning/Pause를 가상 분배와 원본 정렬 Draw에 연결한다.
-WarningMessages& RawButtonControls::EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext) {
+WarningMessages& RawButtonControls::EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext,std::function<bool()> suppressed) {
     auto& s=*impl_;if (s.warnings || !s.menus) throw std::logic_error("Warning 공통 트리/메뉴 수명 오류");
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
         [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); },[&s](auto rect,auto flags) { s.DirectRedraw(rect,flags); }};
-    s.warnings=std::make_unique<WarningMessages>(std::move(tree),*s.menus,std::move(now),std::move(sound),std::move(pauseContext));return *s.warnings;
+    s.warnings=std::make_unique<WarningMessages>(std::move(tree),*s.menus,std::move(now),std::move(sound),std::move(pauseContext),std::move(suppressed));return *s.warnings;
 }
 // 소유권을 넘기지 않고 같은 현재 처리기를 빌린다.
 WarningMessages* RawButtonControls::Warnings() const { return impl_->warnings.get(); }

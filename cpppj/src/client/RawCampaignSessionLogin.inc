@@ -23,7 +23,8 @@ struct RawCampaignSession::Impl::Login {
     bool& simul{s.localStateGlobals->Simulconnect()};bool adjust{};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},localTitle{};std::uint8_t& battleByte{s.localStateGlobals->BattleByte()}; //State의 현재 입력은 같은 Client 수명이며 독립 검사만 별도 배경 첫BYTE를 사용한다.
     std::uint8_t& title{s.services.htmlWindowGlobals ? reinterpret_cast<std::uint8_t&>(s.services.htmlWindowGlobals->text.background[0]) : localTitle}; //현재 HTML 배경80BYTE의 첫BYTE만 같은 주소로 빌린다.
     std::uint32_t& activeStamp{s.connectionActivityGlobals->ActiveStamp()};std::uint32_t& zoneWord{s.connectionActivityGlobals->ActiveZoneWord()}; // 두 활동 표 사이005c8540/544의 실제 현재 Zone 출력을 직접 빌린다.
-    std::uint32_t pendingStamp{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},archipelago{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
+    std::uint32_t pendingStamp{},predictable{},beginSeed{},battleSeed{},burst{},archipelago{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
+    std::uint32_t& clockStamp{s.gameplayGlobals->BattleClockStamp()};std::uint32_t& baseClock{s.gameplayGlobals->BattleClockOrigin()}; //메시지와같은00594fb0/4의Clientowner를로그인/타이머/수신도직접쓴다.
     std::uint32_t& optionValue{s.gameplayGlobals->GameAux()->RefundPercent()}; // 실제25비율을 Reward/Options와 공유한다.
     std::uint32_t& begin{s.localStateGlobals->Begin()};std::uint32_t& central{s.localStateGlobals->CentralCreated()}; // 실제 Login/Ready/metadata도 Client 수명의 같은 DWORD를 읽고 쓴다.
     std::uint32_t& coreActive{s.coreDataGlobals->Active()}; // Chat/현재 Core getter/패킷이 같은00595348을 직접 사용한다.

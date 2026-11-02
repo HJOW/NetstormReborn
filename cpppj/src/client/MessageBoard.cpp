@@ -10,7 +10,8 @@ MessageBoard::MessageBoard(MessageBoardState& state,MessageBoardHooks hooks):sta
 }
 // 검색 중 발견한 첫 빈 칸을 보관하며 stale serial도 같은 칸에서 지운다.
 void MessageBoard::Show(std::int32_t kind,std::int32_t player,bool enabled,std::int32_t parameter,std::string_view text) const {
-    if (state_.suppressed && kind!=11 && kind!=16) return;
+    const auto suppressed=hooks_.suppressed ? hooks_.suppressed() : state_.suppressed; //원문은매호출진입에현재미션값을한번읽고20칸초기화/검색보다먼저억제를판정한다.
+    if (suppressed && kind!=11 && kind!=16) return;
     if (state_.serials[0]==0xffffffffU) state_.serials.fill(0);
     std::size_t firstEmpty=state_.serials.size(),index=0;std::optional<MessageBoardRecord> found;
     // 원본은 중복 일치에서 멈추므로 그 뒤의 stale 칸을 미리 정리하지 않는다.
