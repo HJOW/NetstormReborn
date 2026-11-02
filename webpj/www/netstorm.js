@@ -11,6 +11,7 @@
 // (2026-10-31 WB03-N: 언어가 한국어면 D2Coding 글꼴·번역표 묶음을 받아 메인 메뉴·펼침 메뉴 라벨을 한국어로 그린다)
 import { AssetLoader } from './assets/asset-loader.js';
 import { GameData } from './assets/game-data.js';
+import { loadTerrainScene } from './assets/terrain-scene.js';
 import {
     BUTTON_SOUND_NAME,
     MENU_ASSET_PATHS,
@@ -29,6 +30,7 @@ import { Settings, findSettingKey, getLocalStorage } from './platform/settings.j
 import { Progress, isProgressKey } from './platform/progress.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
+import { TerrainPreview } from './ui/terrain-preview.js';
 import { PopupMenu } from './ui/popup-menu.js';
 import { buildPopupItems } from './ui/option-menus.js';
 import { createTellWindow } from './ui/tell-window.js';
@@ -89,6 +91,8 @@ export const AppState = Object.freeze({
     ERROR: 'error',
     CLICK_TO_START: 'clickToStart',
     MAIN_MENU: 'mainMenu',
+    // 게임 규칙 없이 지면·절벽·받침을 점검하는 개발용 정적 화면이다. (2026-11-02 WB03-AA)
+    TERRAIN_PREVIEW: 'terrainPreview',
     DESTROYED: 'destroyed',
 });
 
@@ -348,6 +352,7 @@ function readQueryParams() {
 //  - prepare: async (app) => void. 내장 자산 적재 뒤 실행하는 추가 준비 훅. 예외를 던지면 ERROR 상태가 된다.
 //  - onStateChange: (새 상태, 이전 상태) => void. 상태가 바뀔 때 호출된다.
 //  - onMenuCommand: (명령, 라벨) => void. 메인 메뉴 버튼이 실행됐을 때 호출된다(다음 화면은 아직 없음).
+//  - previewMap: 개발용 정적 지형을 클릭하여 시작 뒤 연다. 기본은 ?map=파일이름, 없으면 null이다. 미션은 실행하지 않는다. (2026-11-02 WB03-AA)
 // (2026-10-23 WB01, 2026-10-23 WB03-M1: 자산·소리·메뉴 옵션 추가)
 export class Netstorm {
     // 앱을 만든다. DOM 은 init 에서 만든다.
@@ -359,6 +364,7 @@ export class Netstorm {
         this.options = {
             language: normalizeLanguage(options.language ?? params.get('lang') ?? globalThis.navigator?.language),
             debug: options.debug ?? params.has('debug'),
+            previewMap: options.previewMap ?? (params.has('map') ? params.get('map') || 'savetheisland' : null),
             fillWindow: options.fillWindow ?? true,
             autoFocus: options.autoFocus ?? true,
             maxCanvasPixels: Math.max(1, Math.floor(options.maxCanvasPixels ?? DEFAULT_MAX_CANVAS_PIXELS) || DEFAULT_MAX_CANVAS_PIXELS),
@@ -377,6 +383,8 @@ export class Netstorm {
         this._aspect = findScreenMode(requestedAspect) ? requestedAspect : AUTO_ASPECT;
         // 현재 앱 상태다.
         this._state = AppState.IDLE;
+        // 개발용 지형 화면이다. 일반 메뉴에서는 null이며 destroy/메뉴 복귀에서 참조를 놓는다. (2026-11-02 WB03-AA)
+        this._terrainPreview = null;
         // 게임을 넣은 루트 요소다. destroy 후에는 null 이다.
         this._root = null;
         // 게임 Canvas 요소다.
@@ -591,6 +599,7 @@ export class Netstorm {
         this._resizeObserver = null;
         this._mainMenu?.cancel();
         this._mainMenu = null;
+        this._terrainPreview = null;
         this._settings = null;
         this._progress = null;
         if (this._audio) {
@@ -752,6 +761,11 @@ export class Netstorm {
         } else if (this._state === AppState.CLICK_TO_START) {
             this._unlockAudio();
             this._enterMainMenu();
+            // 개발용 맵도 클릭/오디오 활성화 관문 뒤에만 연다. 없는 맵은 메뉴를 유지하며 원인을 알린다. (2026-11-02 WB03-AA)
+            if (this.options.previewMap) {
+                try { this.previewMap(this.options.previewMap); }
+                catch (error) { console.warn('Netstorm: 지형 미리보기를 열지 못했습니다.', error); }
+            }
         }
     }
 
@@ -1034,6 +1048,36 @@ export class Netstorm {
         else if (name !== 'donothing') console.info(`Netstorm: 대화상자 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
     }
 
+    // 이미 받은 공개 자산으로 정적 지형을 연다. 플레이어/미션 상태·진행 저장·현재 미션 Config는 바꾸지 않는다.
+    // 사용: 클릭하여 시작한 뒤 app.previewMap('savetheisland'). 실패 시 기존 화면을 유지하고 오류를 던진다. (2026-11-02 WB03-AA)
+    previewMap(name) {
+        if (![AppState.MAIN_MENU, AppState.TERRAIN_PREVIEW].includes(this._state) || !this._gameData || !this._resources) {
+            throw new Error('지형 미리보기는 시작 입력 뒤에 열 수 있습니다.');
+        }
+        const scene = loadTerrainScene(this._gameData.files, name);
+        const preview = new TerrainPreview(scene, this._resources, this.options.language);
+        preview.resize(this._layout.logicalWidth, this._layout.logicalHeight);
+        this._mainMenu?.cancel();
+        this._terrainPreview = preview;
+        this._setState(AppState.TERRAIN_PREVIEW);
+        this._root.ownerDocument.title = `NetStorm - ${scene.name}`;
+        this._displayDirty = true;
+        return preview;
+    }
+
+    // 개발용 지형 화면에서 메뉴로 돌아온다. 시작 환영/팁 흐름을 다시 실행하지 않는다. (2026-11-02 WB03-AA)
+    closeTerrainPreview() {
+        if (!this._terrainPreview) return false;
+        this._terrainPreview.cancel();
+        this._terrainPreview = null;
+        this._input.keys.clear();
+        this._setState(AppState.MAIN_MENU);
+        this._root.ownerDocument.title = this._resources.translate(MAIN_MENU_WINDOW_TITLE);
+        if (this._mainMenu) this._mainMenu.dirty = true;
+        this._displayDirty = true;
+        return true;
+    }
+
     // 논리 화면 크기의 8비트 표면을 준비한다. 크기가 바뀌면 새로 만들고 메인 메뉴를 다시 배치한다. (2026-10-23 WB03-M1)
     _ensureSurface() {
         const layout = this._layout;
@@ -1047,6 +1091,7 @@ export class Netstorm {
         } else if (this._mainMenu && (this._mainMenu.width !== width || this._mainMenu.height !== height)) {
             this._mainMenu.resize(width, height);
         }
+        this._terrainPreview?.resize(width, height);
     }
 
     // 루트 요소가 속한 문서의 window 를 돌려준다. iframe 안에서도 그 문서의 프레임 예약·픽셀 비율·오디오를 쓰기 위해서다.
@@ -1211,7 +1256,7 @@ export class Netstorm {
         style.top = `${next.top}px`;
         style.visibility = next.visible ? 'visible' : 'hidden';
         this._displayDirty = true;
-        if (this._state === AppState.MAIN_MENU) this._ensureSurface();
+        if (this._state === AppState.MAIN_MENU || this._state === AppState.TERRAIN_PREVIEW) this._ensureSurface();
         this._applyCursor();
         if (next.visible) this._render(view.performance?.now?.() ?? 0);
     }
@@ -1347,12 +1392,14 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU && this._mainMenu && event.button === 0 && pointer.inside) {
             this._mainMenu.pointerDown(pointer.x, pointer.y);
         }
+        if (this._state === AppState.TERRAIN_PREVIEW && event.button === 0 && pointer.inside) this._terrainPreview?.pointerDown(pointer.x, pointer.y);
     }
 
     // 포인터가 움직였을 때 좌표를 갱신하고, 메인 메뉴의 붙잡힌 버튼 모양을 갱신한다(원본 Broadcast). 포인터 아래 커서 모양은 다음 프레임의 _onFrame 이 고른다. (원본도 매 갱신마다 선택한다)
     _onPointerMove(event) {
         this._updatePointer(event);
         if (this._state === AppState.MAIN_MENU && this._mainMenu) this._mainMenu.pointerMove(this._input.pointer.x, this._input.pointer.y);
+        if (this._state === AppState.TERRAIN_PREVIEW) this._terrainPreview?.pointerMove(this._input.pointer.x, this._input.pointer.y);
     }
 
     // 버튼을 뗐을 때 버튼 상태를 갱신하고, 메인 메뉴에서는 왼쪽 버튼 뗌을 돌 버튼에 전달한다(안쪽에서 떼면 실행).
@@ -1362,6 +1409,7 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU && this._mainMenu && event.button === 0) {
             this._mainMenu.pointerUp(this._input.pointer.x, this._input.pointer.y);
         }
+        if (event.button === 0) this._terrainPreview?.cancel();
     }
 
     // 브라우저가 포인터 입력을 취소했을 때(터치 제스처 등) 버튼 상태를 비우고 메뉴 누름을 실행 없이 취소한다. (2026-10-23 WB03-M1)
@@ -1369,6 +1417,7 @@ export class Netstorm {
         this._updatePointer(event);
         this._input.pointer.buttons = event.buttons ?? 0;
         this._mainMenu?.cancel();
+        this._terrainPreview?.cancel();
     }
 
     // 포인터가 Canvas 를 벗어났을 때 안쪽 표시를 끈다. 가장자리 스크롤 등은 이 값을 기준으로 멈춘다.
@@ -1389,6 +1438,12 @@ export class Netstorm {
         this._input.keys.add(event.code);
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
+        // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)
+        if (this._state === AppState.TERRAIN_PREVIEW) {
+            if (event.code === 'Escape') { event.preventDefault(); this.closeTerrainPreview(); }
+            else if (this._terrainPreview?.keyDown(event.code)) event.preventDefault();
+            return;
+        }
         // Esc 는 열려 있는 펼침 메뉴를 닫는다(원본 입력 0x020000be: RequestClosePopups). (2026-10-29 WB03-F)
         if (event.code === 'Escape' && this._state === AppState.MAIN_MENU && this._mainMenu?.closePopup()) this._displayDirty = true;
         // F1 은 일반 도움말을 연다(원본 입력 0x70 → F1Help). 브라우저의 도움말 동작은 막는다. 열린 도움말 창은 PageUp·PageDown·위·아래 화살표로 본문을 스크롤한다. (2026-10-30 WB03-G)
@@ -1422,6 +1477,7 @@ export class Netstorm {
         this._input.pointer.buttons = 0;
         this._input.pointer.inside = false;
         this._mainMenu?.cancel();
+        this._terrainPreview?.cancel();
     }
 
     // 시작 이후의 입력에서 오디오가 아직 재생 가능 상태가 아니면 다시 활성화를 시도한다.
@@ -1488,6 +1544,14 @@ export class Netstorm {
         const layout = this._layout;
         if (!ctx || !layout?.visible) return;
         const { logicalWidth: width, logicalHeight: height, drawScaleX, drawScaleY } = layout;
+        if (this._state === AppState.TERRAIN_PREVIEW && this._terrainPreview && this._surface) {
+            const changed = this._terrainPreview.dirty;
+            if (!changed && !this._displayDirty && !this.options.debug) return;
+            if (changed) this._terrainPreview.render(this._surface);
+            this._presenter.present(ctx, this._surface, layout, changed);
+            this._displayDirty = false;
+            return;
+        }
         if (this._state === AppState.MAIN_MENU && this._mainMenu && this._surface) {
             const changed = this._mainMenu.dirty;
             if (!changed && !this._displayDirty && !this.options.debug) return;
