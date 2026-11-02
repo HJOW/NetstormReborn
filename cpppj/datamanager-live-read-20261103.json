@@ -1,0 +1,208 @@
+{
+  "unit": 769,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 769,
+  "displayVersion": "11.01",
+  "exeSha256": "f5f473e7d488e4cf3e699b9b461815258383ca7f3cdb0b157d60023931e03dec",
+  "summary": "일반 미션 DataManager의 실제 FILE·키·소유 할당과 Template 파서 반납을 연결",
+  "tests": {
+    "totalUnique": 15,
+    "totalExecutions": 15,
+    "newTests": 6,
+    "failedChecks": 0,
+    "names": [
+      "CampaignTemplateLoadFile_ExceptionKeepsPublishedManagerAndMissingEffects",
+      "CampaignTemplateLoadFile_ExistingNamePreservesActualOwnerAndCursor",
+      "CampaignTemplateLoadFile_NormalFalseDestroysOnlyCurrentManager",
+      "CampaignTemplateLoadFile_PartialReadKeepsAttachedActualNode",
+      "CampaignTemplateLoadFile_PostReadNullHeaderSkipsTitleAndKeepsOwner",
+      "CampaignTemplateLoadFile_PresetReadOnlyAndNonCurrentSelectedEffects",
+      "CampaignTemplateLoadFile_PublishesManagerBeforeReadAndKeepsActualBytes",
+      "CampaignTemplateLoadFile_RejectedSignatureHasNormalFalseCleanup",
+      "CampaignTemplateLoadFile_RereadsRedirectedManagerAndPreservesEmptyExistingSection",
+      "DataManagerLiveRead_ActualClientCurrentArchivePayloadKeepsLegacySnapshot",
+      "DataManagerLiveRead_ActualClientMissingAndEmptyAreSeparateAllocationsWithSameFalseResult",
+      "DataManagerLiveRead_ActualCompleteIoWithMalformedImageKeepsParsedPrefix",
+      "DataManagerLiveRead_ActualSelectedArchiveOpenFailureKeepsPublishedManager",
+      "DataManagerLiveRead_ActualTruncatedEncryptedFileFailsBeforeParserAndClosesFile",
+      "DataManagerLiveRead_Native64ParentMinimumAllocationSignatureAndCleanup"
+    ],
+    "logs": [
+      "tests-live-read-v4.log",
+      "tests-template-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v4.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2692,
+    "currentCount": 2694,
+    "allUnchanged": true,
+    "fixtureCount": 874,
+    "newFixtures": [
+      "cpppj/tests/fixtures/datamanager-live-read-x86.tsv",
+      "cpppj/tests/fixtures/datamanager-live-body-x86.tsv"
+    ]
+  },
+  "native": {
+    "prepared-native.json": {
+      "unit": 769,
+      "rows": 60,
+      "observations": 120,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제44d980→41baa0/Template4bce10/FILE·키반납 및관측marker0의실제4f93a0/4fa070→44d040 cleanup.41b4c0/Probe/CRT는독립장치,44d380/44cdb0/SNART는실제빈이름표경로이며큰섹션노드할당분기는별도검사범위.암호원문scratch는명시101seed.전체SEH dispatcher/할당ABI/전체35섹션파서는범위밖",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "7539f218f37ea6479daf20b6fbb74abb019b4217e764da4bc94fd0faa58f8178"
+    },
+    "prepared-native-verify.json": {
+      "unit": 769,
+      "rows": 60,
+      "observations": 120,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제44d980→41baa0/Template4bce10/FILE·키반납 및관측marker0의실제4f93a0/4fa070→44d040 cleanup.41b4c0/Probe/CRT는독립장치,44d380/44cdb0/SNART는실제빈이름표경로이며큰섹션노드할당분기는별도검사범위.암호원문scratch는명시101seed.전체SEH dispatcher/할당ABI/전체35섹션파서는범위밖",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "7539f218f37ea6479daf20b6fbb74abb019b4217e764da4bc94fd0faa58f8178"
+    },
+    "native-verify.json": {
+      "unit": 769,
+      "rows": 60,
+      "observations": 120,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제44d980→41baa0/Template4bce10/FILE·키반납 및관측marker0의실제4f93a0/4fa070→44d040 cleanup.41b4c0/Probe/CRT는독립장치,44d380/44cdb0/SNART는실제빈이름표경로이며큰섹션노드할당분기는별도검사범위.암호원문scratch는명시101seed.전체SEH dispatcher/할당ABI/전체35섹션파서는범위밖",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "7539f218f37ea6479daf20b6fbb74abb019b4217e764da4bc94fd0faa58f8178"
+    },
+    "native-verify-v2.json": {
+      "unit": 769,
+      "scenarioInterpretation": "7=inherited WholeRead allocationNULL with explicit mapped zero-page;9=separate body exception",
+      "rows": 60,
+      "observations": 120,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제44d980→41baa0/Template4bce10/FILE·키반납 및관측marker0의실제4f93a0/4fa070→44d040 cleanup.41b4c0/Probe/CRT는독립장치,44d380/44cdb0/SNART는실제빈이름표경로이며큰섹션노드할당분기는별도검사범위.암호원문scratch는명시101seed.전체SEH dispatcher/할당ABI/전체35섹션파서는범위밖",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "3240c1f7c3fd94c8a7d287f434d54e01aca9f57948ef54053a98210fcd25fd1b"
+    },
+    "native-body-first.json": {
+      "unit": 769,
+      "scenarioInterpretation": "7=inherited WholeRead allocationNULL with explicit mapped zero-page;9=separate body exception",
+      "rows": 4,
+      "observations": 8,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제44d980→41baa0/Template4bce10/FILE·키반납 및관측marker0의실제4f93a0/4fa070→44d040 cleanup.41b4c0/Probe/CRT는독립장치,44d380/44cdb0/SNART는실제빈이름표경로이며큰섹션노드할당분기는별도검사범위.암호원문scratch는명시101seed.전체SEH dispatcher/할당ABI/전체35섹션파서는범위밖",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "e1bef6a2745fd8d2a7c3e8b5b07d8c96fcbcda42fee2f8c1a7353d9ab74f5cd5"
+    },
+    "native-body-verify.json": {
+      "unit": 769,
+      "scenarioInterpretation": "7=inherited WholeRead allocationNULL with explicit mapped zero-page;9=separate body exception",
+      "rows": 4,
+      "observations": 8,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제44d980→41baa0/Template4bce10/FILE·키반납 및관측marker0의실제4f93a0/4fa070→44d040 cleanup.41b4c0/Probe/CRT는독립장치,44d380/44cdb0/SNART는실제빈이름표경로이며큰섹션노드할당분기는별도검사범위.암호원문scratch는명시101seed.전체SEH dispatcher/할당ABI/전체35섹션파서는범위밖",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "e1bef6a2745fd8d2a7c3e8b5b07d8c96fcbcda42fee2f8c1a7353d9ab74f5cd5"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "prepared Native body",
+      "detail": "최초120관측은44d380을가상본문경계로남겼다. prepared-observations에보존하고최종은실제44d980→41baa0→4bce10→44d380/44cdb0의빈SNART/이름표경로와실제cleanup까지실행했다. 길이1 F의pos>end진단을숨기거나fixture기대를약화하지않았다."
+    },
+    {
+      "scope": "root C++ v1/v2",
+      "detail": "원문60중4행에서시나리오7의입력모형이달랐다. 상위WholeReadOracle의7은mallocNULL이며Native는명시mapped0페이지에fread하고할당토큰0으로본문에진입하지않는다. C++은할당성공/본문예외로주입했다. 기존60fixture불변상태로NULLtoken/별도4BYTE mapped0페이지의입력모형을맞췄고본문예외는새9번4행을원문에서독립고정했다. 실제Client의vector할당은NULL을반환하지않으며이CPU경계를OS지원으로주장하지않는다."
+    },
+    {
+      "scope": "root C++ v3",
+      "detail": "CRLF문맥의준비기삽입누락으로새본문4행이연결되지않아rows64검사가실패했다. 실제반복대상을두fixture합본으로고쳐4행미실행을통과로세지않았다. 제품/기존fixture는변경하지않았으며최초4실패/diagnostic/행수실패로그를보존했다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "ed2b57c8d30ebd456cd6dd518c5ca3ddd8eddb9178e762b5aeb0ffe7debfbc6f",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "97689846ae00b8212eb9a866ff003ebdca65faf54c1191d732113e5ac1fc263a",
+    "cpppj/src/client/CampaignTemplateStorage.h": "8a4871fff041a3db56963d2cfcca0281a8054fe640cd44bfdf4a9db2e30e183a",
+    "cpppj/src/client/DataManagerFileRead.cpp": "25211b10c4d48d8834cb8e440e85dbafe9a2db00ed9e79ce522ef2f413328cad",
+    "cpppj/src/client/DataManagerFileRead.h": "6ece981d83021fc4238c82de32c4a00e187ecc1dd1311386df75b9b6a707bd1c",
+    "cpppj/src/client/UberGump.cpp": "ee984f20c29ff3e2318229cff01a7b9bc71a7036a625544874d63399d04d6340",
+    "cpppj/tests/CMakeLists.txt": "525c20a15c389e552161de8b0b15709f524160fd4707ca2659e791b46ae839f9",
+    "cpppj/tests/DataManagerLiveReadTests.cpp": "30b8dd5337dba90ea6914df0b41575e0c97cca62cef765c949399ebb40ae10b1",
+    "tools/decomp_datamanager_live_read.py": "f7cda70128b71c46352601af93bb3cde83fba5d52a629e48da3aef99d0fcda5e"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-769/protected-after.json",
+  "next": "CreateAt(770)·Config reader(771)·일반 AI 명령(772/773)·글꼴 인코딩(774)·조건 AI 메뉴(775)·진단표시(776)·TYPE reader(777)와 남은 비멀티/호환성",
+  "limitations": [
+    "Native는실제44d980/41baa0/4bce10/44d380/44cdb0의generic 빈이름표경로와marker cleanup4f93a0/4fa070→44d040을실행한다. 전체35섹션Native몸체·SEH dispatcher/32비트FILE ABI 동등성은주장하지않는다.",
+    "실제Template 가상이름표는고정15+Terr20=35이며payload0도각각노드를만든다. generic Native의emptySNART 성공을실제Fort의잘린레코드허용근거로쓰지않는다. 기존created35 guard는보존했다.",
+    "minimum4의hostpadding0과CPU205seed는구별한다. 논리length와물리할당을분리하고부분fread는FILE/키반납뒤거부한다. 원문미정padding을유효이미지로합성하지않는다.",
+    "실제caller는Native10.78 && !mission.FileSource에만readWhole을설치한다. 명시Editor source·CD·GameAssets/CLIspan·기본read/snapshot/직접OS API는보존한다. 이미선택한TAFF Open실패를보조정상파일로숨기지않는다.",
+    "Host바깥reader와vector RAII는미완성Open/미공개할당도추가반납한다. length는호스트필드이며원문MarkStream20주소별칭/미정stack물리를가장하지않는다.",
+    "새게임/GUI/CLI/MP·물리/PCM·공중3종전용검사·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다."
+  ],
+  "independentReviews": [
+    {
+      "path": "extracted\\cpp-resume-769\\reader-api-review-769-771",
+      "readOnly": true,
+      "confirmedDefects": 0,
+      "readmeSha256": "be61bfbe3cf0ce5ab0b87a1c714f6824effbb5b57b57a8d354d4ff51af73d116"
+    },
+    {
+      "path": "extracted\\cpp-resume-769\\template-image-fidelity-778",
+      "readOnly": true,
+      "confirmedDefects": 0,
+      "readmeSha256": "6a635be9b83d05eb2ac5424cb38fe9616ad96aba90e4dac3c096f4402f368715"
+    }
+  ]
+}

@@ -3100,3 +3100,11 @@ target_sources(netstorm_file_tests PRIVATE QuickHelpFileReadTests.cpp QuickHelpW
 target_sources(netstorm_tests PRIVATE DrawWaterTests.cpp)
 target_sources(netstorm_menu_session_tests PRIVATE DrawWaterTests.cpp)
 set_source_files_properties(DrawWaterTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_DRAW_WATER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/draw-water-x86.tsv\";NETSTORM_DRAW_WATER_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/draw-water-input-x86.tsv\";NETSTORM_DRAW_WATER_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/draw-water-names-x86.tsv\"")
+
+# 명시 DataManager reader와 기존 Template 소유자 회귀를 기존 집중 대상에 포함한다(769).
+target_sources(netstorm_tests PRIVATE DataManagerLiveReadTests.cpp)
+target_sources(netstorm_mission_entry_tests PRIVATE DataManagerLiveReadTests.cpp CampaignTemplateLoadFileTests.cpp)
+set_source_files_properties(DataManagerLiveReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_DATAMANAGER_LIVE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-live-read-x86.tsv\"")
+
+# 기존60행은보존하고번호가겹치지않는본문예외4행을추가한다(769).
+set_property(SOURCE DataManagerLiveReadTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_DATAMANAGER_LIVE_BODY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/datamanager-live-body-x86.tsv\"")

@@ -342,3 +342,6 @@ target_sources(netstorm PRIVATE o/RawBaseFileWholeRead.cpp o/RawBaseFileWholeRea
 
 # 최초Help만같은Client FILE/키의필수전체읽기에연결한다(767).
 target_sources(netstorm PRIVATE client/QuickHelpFileRead.cpp client/QuickHelpFileRead.h)
+
+# DataManager만 현재 FILE/키/최소4 할당과 논리 길이를 별도로 소유한다(769).
+target_sources(netstorm PRIVATE client/DataManagerFileRead.cpp client/DataManagerFileRead.h)

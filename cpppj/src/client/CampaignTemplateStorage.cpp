@@ -365,18 +365,24 @@ struct CampaignTemplateStorage::Image {
         RequireNoAccess();
         if (streams.empty() && !Read(std::span(manager).subspan(4))) { fort.sections.clear();fort.sections.resize(o::FortTemplate::kSectionCount);seeded.fill(true);state={{},0,0,false};territory={}; }
         else SyncStreams();
-        std::vector<std::uint8_t> source;std::uint32_t allocating{},created{}; // 파일할당은지역소유지만이름표는같은Client에서빌린다.
+        std::vector<std::uint8_t> source;std::optional<DataManagerFileAllocation> wholeSource;std::uint32_t allocating{},created{}; // 파일할당은지역소유지만이름표는같은Client에서빌린다.
         o::DataManagerImageHooks hooks;hooks.names=[this] { return sectionNames.Names(); };hooks.assertion=[](auto) { throw std::logic_error("Template 실제 파일 이미지의 원본 진단"); };
         hooks.streams.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.streams.list=ListEffects();
         hooks.streams.allocateStream=[this,&allocating,&created](auto size) { if (size!=60 || created>=o::FortTemplate::kSectionCount) throw std::logic_error("Template 파일 이미지의 새 노드 계약 위반");++created;allocating=AllocateStream();return allocating; }; // 기존 canonical 버퍼는 원문 제거 전까지 덮어쓰지 않는다.
-        hooks.streams.memory.buffer=[this,&source](auto pointer)->std::span<std::uint8_t> {
-            if (pointer==0x30000) return source;if (pointer<=0x10000000U || !streams.contains(pointer-0x10000000U)) throw std::out_of_range("Template 파일 이미지의 실제 버퍼 토큰 범위");return Buffer(pointer-0x10000000U);
+        hooks.streams.memory.buffer=[this,&source,&wholeSource](auto pointer)->std::span<std::uint8_t> {
+            if (pointer==0x30000) return wholeSource ? std::span(wholeSource->storage):std::span(source);if (pointer<=0x10000000U || !streams.contains(pointer-0x10000000U)) throw std::out_of_range("Template 파일 이미지의 실제 버퍼 토큰 범위");return Buffer(pointer-0x10000000U);
         }; // 입력과 새 임시 할당 및 기존 노드 모두 현재 실제 버퍼를 빌린다.
         hooks.streams.memory.allocate=[this,&allocating](auto size) { auto& buffer=Buffer(allocating);if (!buffer.empty()) throw std::logic_error("Template 파일 이미지의 새 버퍼 중복 할당");buffer.resize(size);return BufferToken(allocating); };
         hooks.streams.memory.assertion=[](auto) { throw std::logic_error("Template 파일 이미지의 실제 MemStream 진단"); };
         o::DataManagerFileHooks file;file.image=hooks;file.fileName=[this] { return o::TemplateDataManagerFileName(manager); };
-        file.readFile=[&source,&fileEffects](std::string_view fileName,std::int32_t mode,std::span<std::uint8_t> length,std::int32_t flags) {
-            if (mode!=1 || flags || length.size()!=4) throw std::logic_error("Template 파일 읽기의 실제 요청 인수 불일치");source=NeedFile(fileEffects.read)(fileName);
+        file.readFile=[&source,&wholeSource,&fileEffects](std::string_view fileName,std::int32_t mode,std::span<std::uint8_t> length,std::int32_t flags) {
+            if (mode!=1 || flags || length.size()!=4) throw std::logic_error("Template 파일 읽기의 실제 요청 인수 불일치");
+            if (fileEffects.readWhole) { // 실제 Native만 할당 존재와 논리 길이를 분리한다. 기존 snapshot/Editor namespace의 값형read는 아래에 유지한다.
+                wholeSource=fileEffects.readWhole(fileName);if (!wholeSource) return 0U;
+                if (wholeSource->length<0 || wholeSource->storage.size()<4 || static_cast<std::uint32_t>(wholeSource->length)>wholeSource->storage.size()) throw std::out_of_range("Template Native 파일의 실제 할당/논리 길이 불일치");
+                Put(length,0,static_cast<std::uint32_t>(wholeSource->length));return 0x30000U;
+            }
+            source=NeedFile(fileEffects.read)(fileName);
             if (source.size()>0xffffffffU) throw std::out_of_range("Template 실제 파일 읽기의 DWORD 길이 초과");Put(length,0,static_cast<std::uint32_t>(source.size()));return source.empty() ? 0U : 0x30000U;
         }; // manager/header가 공개되고 readonly/+16을 쓴 뒤에만 실제 파일 장치를 호출한다.
         file.signature=[this,&hooks,&file,&fileEffects](std::span<std::uint8_t> cursor) {
@@ -384,7 +390,7 @@ struct CampaignTemplateStorage::Image {
             signature.tooManyTypes=[&fileEffects] { NeedFile(fileEffects.tooManyTypes)(); };signature.rejectFile=[&fileEffects](auto fileName) { NeedFile(fileEffects.rejectFile)(fileName); };
             return o::ReadTemplateFileSignature(manager,cursor,signature);
         };
-        file.releaseFile=[&source](auto pointer) { if (pointer!=0x30000U) throw std::logic_error("Template 파일 읽기 부모의 실제 할당 반납 불일치");std::vector<std::uint8_t>{}.swap(source); }; // 기존 원문 reader가 성공/거부/예외에서 한 번만 반납한다.
+        file.releaseFile=[&source,&wholeSource](auto pointer) { if (pointer!=0x30000U) throw std::logic_error("Template 파일 읽기 부모의 실제 할당 반납 불일치");wholeSource.reset();std::vector<std::uint8_t>{}.swap(source); }; // 기존 원문 reader가 성공/거부/예외에서 한 번만 반납한다.
         try { const auto success=o::ReadDataManagerFile(manager,file);BindFileStreams();if (success && created!=o::FortTemplate::kSectionCount) throw std::logic_error("Template 실제 파일의 전체 이름 표 불일치");return success; }
         catch (...) { BindFileStreams();throw; } // host 예외 전에 원문이 이미 붙인 노드/부분 pos를 숨기거나 rollback하지 않는다.
     }

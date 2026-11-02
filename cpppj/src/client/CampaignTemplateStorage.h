@@ -1,6 +1,7 @@
 // Client와 Session이 같은 Template9/실제 manager 이미지·State cursor 수명을 공유한다.
 #pragma once
 #include "o/Template.h"
+#include "client/DataManagerFileRead.h"
 #include "o/RawFortWorldLoad.h"
 #include "o/RawPlayerTemplateState.h"
 #include "o/RawTemplateLifetime.h"
@@ -21,7 +22,7 @@ struct TemplateFileWriteHooks {
 };
 // 원문 Load의 실제 파일/CRT/현재 슬롯/제목 경계다. 선택한 호출만 연결을 요구한다.
 struct TemplateFileLoadHooks {
-    std::function<std::vector<std::uint8_t>(std::string_view)> read; // 실제 읽기 시점의 파일 할당이다. 빈 벡터는 원문 open 실패이며 throw와 구별한다.
+    std::function<std::vector<std::uint8_t>(std::string_view)> read; // 기존 독립 값형 파일 입력이다. 빈 벡터를 buffer0으로 보던 호환 계약은 유지하며 Native 실시간 읽기는 readWhole을 쓴다.
     std::function<bool(std::string_view,std::string_view)> sameName; // 기존 manager 이름과 요청 이름의 실제 CRT stricmp==0이다.
     std::function<void()> wrongName; // 기존 다른 이름의 isCalled 진단이며 반환하면 원문대로 기존 manager를 유지한다.
     std::function<bool(std::string_view)> readOnly; // 파일 출처/권한으로 판정하는0041af80 경계다. 기존 header+8 비영이면 호출하지 않는다.
@@ -30,6 +31,7 @@ struct TemplateFileLoadHooks {
     std::function<void(std::string_view)> rejectFile; // 잘못된 서명의 실제 파일 제거 요청이다. 보호 파일 삭제를 자동 허용하지 않는다.
     std::function<std::uint32_t()> currentSlot; // 성공 뒤 원문 현재 Template 인덱스를 다시 조회한다.
     std::function<void()> refreshTitle; // 현재 슬롯의 성공에서만00460730의 중간 제목 효과를 수행한다.
+    std::function<std::optional<DataManagerFileAllocation>(std::string_view)> readWhole; // 명시 Native41baa0의 최소4 물리/논리길이다. nullopt와 존재하는 빈 파일을 구별한다.
 };
 // 현재 섹션이 바뀌어도 같은 manager의 같은 생성 수명에 쓰기 위한 불투명 참조다.
 struct TemplateWriteStream {

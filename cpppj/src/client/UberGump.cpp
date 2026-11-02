@@ -8,6 +8,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/DataManagerFileRead.h" //명시 Native Template만 현재 FILE 전체 읽기를 사용한다.
 #include "client/DrawWater.h" //후단 표시와 일반 명령이 같은 장기 상태를 공유한다.
 #include "client/QuickHelpFileRead.h" //최초Help파일만같은Client의필수전체읽기를사용한다.
 #include "client/HelpListDisk.h" //현재Client VFS/지역파일의 같은 Help목록writer다.
@@ -762,6 +763,7 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
             const auto current=client_.FortGlobals()->Current();if (current.empty()) throw std::logic_error("현재 Fort 파일 선택의 원문 빈 이름 진단");
             return select(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()})); //00460680은 각 지역/서버 읽기 시점의 같은 curFort를 재조회하며 최초 요청 이름으로 고정하지 않는다.
         };services.missionFortLoad.readOnly=[this](auto path) { return client_.Files().ReadOnly(path); };
+        if (!mission_->FileSource()) services.missionFortLoad=BindDataManagerFileRead(std::move(services.missionFortLoad),client_.Files()); //일반10.78만 연결하며 명시Editor 작업본/삭제 장부 namespace는 유지한다.
         services.missionFortLoad.tooManyTypes=[] { throw std::logic_error("미션 Template 파일의 numTypes<256 진단"); };
         services.missionFortLoad.rejectFile=[](auto path) { throw std::runtime_error("미션 Template 잘못된 서명의 원본 삭제 요청: 보호 파일은 삭제하지 않습니다: "+std::string(path)); }; // 원본 삭제 요청을 보호 자산에 자동 적용하지 않는다.
     } else { services.missionFortImage=fortImage;services.missionFortFileName=std::move(fortFile.fileName);services.missionFortRead=mission_->FortReader(); } //10.72의 기존 부분 어댑터만 동기 입력을 유지한다.
