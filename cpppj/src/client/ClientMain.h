@@ -125,7 +125,7 @@ public:
     void InterpretStateOptions(); //004b2df0 후반의 실제435220을 같은 현재 설정/장치에 재실행한다. State/미션 확정은 하지 않는다.
     // 원본 세 해상도의 창 모드 장치와 Renderer를 다시 만든다.
     void ChangeResolution(int width, int height);
-    void ChangeScreenMode(std::uint32_t flags,bool remember=true); // 원본 절대 모드를 적용하며 조정 미리보기만 기억된 전체화면 값을 보존한다.
+    void ChangeScreenMode(std::uint32_t flags); // 원문 부모의 실제 모드 복구/시작 설정/메타 갱신을 수행한다. 마지막 workingFullScreenFlags는 별도 확인에서만 저장한다.
     void AcceptScreenMode(); // 조정 확인창에서 현재 실제 모드를 다음 실행의 전체화면 선택으로 저장한다.
     std::string ScreenDiagnostics() const; // 실제 창/출력/커서 제한을 짧은 UI 실행의 관측 자료로만 읽는다.
     // 원본 창 제목을 현재 미션/메뉴 상태에 맞춘다.
@@ -336,6 +336,7 @@ private:
     NativeHandle loadingFont_{};       // DAT_0054de74
     // screen_: 원본 Screen.cpp의 전역 변수 묶음을 객체 하나로 둔다. 창과 창의 장치 문맥은 ClientMain이 만든다 (std::unique_ptr<Screen>).
     std::uint32_t paletteLoaded_{}; //00555e08실제DWORD를Screen보다오래소유하여해상도재생성으로0복제하지않는다.
+    std::uint32_t screenModeInitialized_{}; //0054dbb4의 최초 BSS0이며 모드 장치의 첫 성공 뒤1을 유지한다. HWND 유무와 다르다.
     std::unique_ptr<Screen> screen_;
     // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     std::unique_ptr<GameAssets> assets_;

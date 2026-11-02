@@ -3008,6 +3008,8 @@ target_sources(netstorm_editor_file_ring_tests PRIVATE EditorFileMutationRingTes
 # 기존 선택 키 집중 대상에서 Guide 앞 F12와 모드 장치 연결을 함께 확인한다(744).
 target_sources(netstorm_tests PRIVATE ScreenMouseKeyTests.cpp)
 target_sources(netstorm_selection_key_input_tests PRIVATE ScreenMouseKeyTests.cpp)
+target_sources(netstorm_tests PRIVATE ScreenModeTransitionTests.cpp) #화면 변경 부모의 원문192입력과 명시 실패 수명이다(746).
+target_sources(netstorm_selection_key_input_tests PRIVATE ScreenModeTransitionTests.cpp ScreenPresentationTests.cpp)
 
 # 실제 비용 표시/Form 연결과 기존 파생/수집/부착/카메라 원문 관측을 같은 집중 대상에서 확인한다(745).
 target_sources(netstorm_menu_session_tests PRIVATE FloatingSpGumpTests.cpp GumpCollectionTests.cpp GumpTreeTests.cpp CameraViewTests.cpp)

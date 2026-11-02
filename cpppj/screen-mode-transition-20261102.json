@@ -1,0 +1,119 @@
+{
+  "unit": 746,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "status": "완료 단위·전체 목표 진행 중",
+  "resume": "이번 /goal 지시로745 뒤 일시 정지를 해제하고 재개",
+  "runtimeProduct": 746,
+  "displayVersion": "11.01",
+  "exeSha256": "034db39b9bcd7af8c407cc74b253439a30e1104e4a2f93a50d0cf26d6443902f",
+  "summary": "화면 모드 변경의 실패 복구·시작 설정·현재 메타 갱신 부모 복원",
+  "native": {
+    "unit": 746,
+    "host": "HJOW-Athlon",
+    "inputs": 192,
+    "executions": 384,
+    "range": "00435ba0..00435c28",
+    "boundaries": [
+      "004a4fe0 화면 장치의 요청/명시 현재 모드",
+      "00441520 설정 쓰기/명시 갱신값 변경"
+    ],
+    "exceptionBranch": "435c29 정적 대조/C++ 명시 실패 검사만; 실제 SEH 미실행",
+    "gameProcesses": 0,
+    "fixtureSha256": "639bd6d2b71fb44b0b3ddf8a94bc2843c2a48d4d4dfbede030ab85d8f36a4831",
+    "toolSha256": "461d39b0a098f69a8570c09d31b85086174f614015fa3a12e05ccc8b048b506a",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "build": {
+    "finalLog": "extracted/cpp-screen-mode-transition-746/build-v3.log",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "firstFailure": "build-v1 비const Config getter를 읽기 전용 진단에서 호출한 컴파일 실패; 최종 진단은 실제 갱신 DWORD만 읽음"
+  },
+  "tests": {
+    "total": 33,
+    "failedChecks": 0,
+    "newTests": 5,
+    "newExecutables": 0,
+    "log": "extracted/cpp-screen-mode-transition-746/tests-v3.log",
+    "fullSuiteRun": false,
+    "retainedTestExecutables": 66,
+    "retainedAllTargets": 71
+  },
+  "live": {
+    "totalNewGameProcesses": 4,
+    "finalProductGameProcesses": 3,
+    "main": {
+      "log": "extracted/cpp-screen-mode-transition-746/live-v2/result.json",
+      "exitCode": 0,
+      "observerPassed": true,
+      "seconds": 25.62564539999994,
+      "modes": [
+        235,
+        235,
+        235,
+        235,
+        171,
+        235,
+        171,
+        171,
+        235,
+        171,
+        138
+      ],
+      "metaRefresh": "0→8; 실패 복구/동일 모드/미리보기/취소/시간 만료/창 전환",
+      "savedOptions": {
+        "startInFullScreen": 0,
+        "workingFullScreenFlags": 171
+      }
+    },
+    "restart": {
+      "log": "extracted/cpp-screen-mode-transition-746/restart-v3/result.json",
+      "exitCode": 0,
+      "observerPassed": true,
+      "seconds": 1.0766254999998637,
+      "startupMode": 138
+    },
+    "preservedFailures": [
+      "live-v1 중간 제품의11시점은 일치하나 설정의 따옴표 숫자 파싱 실패",
+      "live-v2/restart 최종 제품 시작138은 관측했으나 Tips 미종료로 Quit 입력 실패; 같은 사본의 시작 안내만 정정해 재시작 검사"
+    ],
+    "physicalInput": false,
+    "pcm": false
+  },
+  "protection": {
+    "previousCount": 2655,
+    "currentCount": 2656,
+    "fixtureCount": 836,
+    "changed": [],
+    "newFixtures": [
+      "cpppj/tests/fixtures/screen-mode-transition-x86.tsv"
+    ],
+    "allUnchanged": true
+  },
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "b4c2be2414e0b2ee90736df3bf5c65399f6eac6553a7c75af29c0aeea0467e90",
+    "cpppj/src/client/ScreenModeTransition.h": "195bcbf32ee8844a2be9b2f5df582c8b755efea95cc825d339e5070a2450178e",
+    "cpppj/src/client/ScreenModeTransition.cpp": "6002cdce7748904c623b7f81e6c64315fdbe653ae963346f7b3c8a5c4312da4f",
+    "cpppj/src/client/ClientMain.h": "d280411677f50307e3ce0677c127f7b1bff9af2c86cb929f8f86a7ea57b4d626",
+    "cpppj/src/client/ClientMain.cpp": "dcf32ce1502b5dcbe02d7853ebb4a0724237547bcfc3e04b7f25fa44760f917d",
+    "cpppj/src/client/UberGump.cpp": "0bac6ee43746dd84ca354cb76799cb087909fa803f25e2ab9971a4a331cbd5f5",
+    "cpppj/tests/ScreenModeTransitionTests.cpp": "4c9b538ea97a2243b3e4e1378dc00b541f2136b26576d24a14024e0216d1ea1c",
+    "cpppj/tests/CMakeLists.txt": "0647fa2f33ecb07e2561d4d17cea448d6ac539c7be64d3d242f2f3769a662d78",
+    "tools/decomp_screen_mode_transition.py": "461d39b0a098f69a8570c09d31b85086174f614015fa3a12e05ccc8b048b506a",
+    "tools/cpp_screen_mode_transition_smoke.py": "f1f2c2268a99d0b8243c7401bf36e94576bfb9da16987b18c2d4182ffb787353"
+  },
+  "nextProtectedBaseline": "extracted/cpp-screen-mode-transition-746/protected-after.json",
+  "limitations": [
+    "원문384회는 정상 부모만; 실제 C++ SEH 언와인딩/예외 분기는 정적 대조와 명시 C++ 실패 입력",
+    "명시 요청17은 검사 입력이며 원문 메뉴에서 생성한다고 주장하지 않음",
+    "CD 대응은 정적 대조만; 전체 부모/실기 미검증",
+    "전체C++/전체34/새ZIP/스테이지/자연완주·제외 재현/MP 검사 없음",
+    "UI/Edit/시나리오/파일·수명/호환성과3~8차 전체 목표 미완료"
+  ]
+}

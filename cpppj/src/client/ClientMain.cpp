@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ScreenModeTransition.h" //원문00435ba0의 현재 모드/실패 복구/공유 갱신 부모다.
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
 #include "client/ConstructionHistoryKey.h" //최초 map mode 뒤 최근 건설 위치 다섯 칸을 한 번 초기화한다.
 #include "client/SavedCameraKey.h" //원문 최초 저장 위치10칸 초기화를 최근 위치5칸보다 먼저 실행한다.
@@ -338,7 +339,7 @@ int Client::Run() {
     }
     // 원본 004a4fe0의 끝: 정해진 실제 모드를 설정에 적는다. --window는 시작 시에만 적용하고 저장된 사용자 선택을 바꾸지 않는다.
     const auto mode = screen_->Flags();
-    PublishScreenMode();
+    PublishScreenMode();screenModeInitialized_=1; //원문004a4fe0의 끝에서 성공을 기록하며 Screen 재생성으로0복제하지 않는다.
     InitializeNativeAudio(); // 원본 init sound의 기존 위치에서 같은 본체를 실행한다.
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
     gameplayGlobals_->WorldCells()=256; //00438dc0/004395df의 실제 kernel 뒤 명시00531928 store다. Session 생성에서 다시 쓰지 않는다.
@@ -888,7 +889,7 @@ void Client::ChangeResolution(int width, int height) {
     windowWidth_ = rect.right - rect.left; windowHeight_ = rect.bottom - rect.top;
     if (!screen_->SetMode(mode, windowWidth_, windowHeight_, initWindowPos_))
         throw std::runtime_error("Unable to change window resolution");
-    PublishScreenMode();if ((mode&ScreenMode::kSoftwareMouse) && cursor_) cursor_->BuildSoftware(screen_->Palette());
+    PublishScreenMode();screenModeInitialized_=1;if ((mode&ScreenMode::kSoftwareMouse) && cursor_) cursor_->BuildSoftware(screen_->Palette());
     renderer_ = std::make_unique<Renderer>(width, height,options_.edition);
     kencloudGlobals_->BindRenderer(renderer_.get()); // 새 장치를 같은 현재 renderer 전역에 공개한다.
     // 메뉴/독립 검사 화면도 새 화면 크기로 위치 효과음을 계산한다. 미션은 다음 Compose/Resize에서 실제 카메라를 공급한다.
@@ -911,15 +912,21 @@ void Client::PublishScreenMode() {
     configuration_.SetInt("global.ddFourPage",0);
 }
 // 원본 ScreenModeAbsChange 명령의 모드 값을 같은 장치에 적용하고 사용자 선택만 저장한다.
-void Client::ChangeScreenMode(std::uint32_t flags,bool remember) {
+void Client::ChangeScreenMode(std::uint32_t flags) {
     if (!screen_) throw std::logic_error("화면 모드 변경의 현재 장치 없음");
-    if (!screen_->SetMode(flags,windowWidth_,windowHeight_,initWindowPos_)) throw std::runtime_error("지원하지 않는 화면 모드 조합");
-    PublishScreenMode();const auto mode=screen_->Flags();
-    if (remember) configuration_.SetInt("startInFullScreen",(mode&ScreenMode::kFullScreen)!=0); // 마지막 유효 workingFullScreenFlags는 원본처럼 별도 확인 명령에서만 바꾼다.
-    ClearFullScreenState(); // 원본 DirectDraw 실패 표식을 새 호환 모드에 남기지 않는다.
-    if (cursor_) { if (mode&ScreenMode::kSoftwareMouse) cursor_->BuildSoftware(screen_->Palette());else cursor_->Apply(); }
-    if (renderer_) { renderer_->SetSoftwareCursor(nullptr,{});renderer_->InvalidateAll(); }
-    InvalidateRect(static_cast<HWND>(window_),nullptr,FALSE);
+    ScreenModeTransitionHooks hooks;hooks.current=[this] { return screen_->Flags(); }; // 같은 Client의 현재 모드를 복구 뒤에도 재조회한다.
+    hooks.change=[this](auto requested) { // 원본 DirectDraw와 다른 Windows10/11 DIB 호환 장치/커서/출력 갱신을 같은 성공 경계에 둔다.
+        if (!screen_->SetMode(requested,windowWidth_,windowHeight_,initWindowPos_)) throw std::runtime_error("지원하지 않는 화면 모드 조합");
+        PublishScreenMode();const auto mode=screen_->Flags();ClearFullScreenState(); // 원본 실패 표식을 새 호환 모드에 남기지 않는다.
+        if (cursor_) { if (mode&ScreenMode::kSoftwareMouse) cursor_->BuildSoftware(screen_->Palette());else cursor_->Apply(); }
+        if (renderer_) { renderer_->SetSoftwareCursor(nullptr,{});renderer_->InvalidateAll(); }
+        InvalidateRect(static_cast<HWND>(window_),nullptr,FALSE);
+        screenModeInitialized_=1; // 원문은 화면 장치 성공의 마지막에 초기화 완료 DWORD를 쓴다.
+    };
+    hooks.diagnostic=[this](auto level,auto text) { WriteDiagnosticLog(static_cast<std::int32_t>(level),text); };
+    hooks.initialized=[this] { return screenModeInitialized_!=0; }; // 원문0054dbb4의 현재 초기화 관문이며 HWND 존재로 대체하지 않는다.
+    hooks.remember=[this](auto key,auto value) { configuration_.SetInt(std::string(key),static_cast<std::int32_t>(value)); };
+    TransitionScreenMode(flags,localStateGlobals_->MetaRefresh(),hooks); // 설정 callback 뒤 현재 DWORD를 증가시키며 미리보기에도 같은 부모를 쓴다.
 }
 // 원본 AcceptScreenModeChange의 workingFullScreenFlags 저장은 실제 미리보기를 사용자가 확인한 뒤에만 한다.
 void Client::AcceptScreenMode() { if (screen_ && (screen_->Flags()&ScreenMode::kFullScreen)) configuration_.SetInt("workingFullScreenFlags",static_cast<std::int32_t>(screen_->Flags())); }
@@ -927,6 +934,7 @@ void Client::AcceptScreenMode() { if (screen_ && (screen_->Flags()&ScreenMode::k
 std::string Client::ScreenDiagnostics() const {
     std::ostringstream out;if (!screen_) return {};RECT window{},client{},clip{};GetWindowRect(static_cast<HWND>(window_),&window);GetClientRect(static_cast<HWND>(window_),&client);GetClipCursor(&clip);const auto output=screen_->PresentationRect();
     out<<"screen_mode\t"<<screen_->Flags()<<'\t'<<screenWidth_<<'\t'<<screenHeight_<<'\t'<<screen_->Pitch()<<'\t'<<active_<<'\n';
+    out<<"screen_transition\t"<<localStateGlobals_->MetaRefresh()<<'\n'; //읽기 전용 진단이며 실제 공통 부모의 갱신 DWORD만 관측하고 설정 재해석을 실행하지 않는다.
     out<<"screen_window\t"<<window.left<<'\t'<<window.top<<'\t'<<window.right<<'\t'<<window.bottom<<'\t'<<client.right<<'\t'<<client.bottom<<'\t'<<GetWindowLongPtrA(static_cast<HWND>(window_),GWL_STYLE)<<'\n';
     out<<"screen_output\t"<<output.left<<'\t'<<output.top<<'\t'<<output.right<<'\t'<<output.bottom<<'\n';
     out<<"screen_cursor_clip\t"<<clip.left<<'\t'<<clip.top<<'\t'<<clip.right<<'\t'<<clip.bottom<<'\n';return out.str();

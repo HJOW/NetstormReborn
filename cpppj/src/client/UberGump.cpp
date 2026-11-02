@@ -975,7 +975,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
         }
         return true;
     } // 원본 절대 모드 값은 같은 입력 큐 뒤 실제 호환 Screen 장치로 전달한다.
-    if (code==0x02000002U) { if (!(event.code&InputCode::kRelease)) { const auto previous=client_.GetScreen().Flags();client_.ChangeScreenMode(previous^std::bit_cast<std::uint32_t>(event.y),false);Tell("DirectDrawVerify("+std::to_string(previous)+")"); }return true; } // 원본 조정 비트를 반전하고 같은15초 Tell/Cancel 절대 복구 경로를 사용한다.
+    if (code==0x02000002U) { if (!(event.code&InputCode::kRelease)) { const auto previous=client_.GetScreen().Flags();client_.ChangeScreenMode(previous^std::bit_cast<std::uint32_t>(event.y));Tell("DirectDrawVerify("+std::to_string(previous)+")"); }return true; } // 원본 조정도 같은435ba0 부모를 거치고15초 Tell/Cancel 절대 복구 경로를 사용한다.
     if (code==0x020000e4U) { if (!(event.code&InputCode::kRelease)) { client_.AcceptScreenMode();Tell("AdjustDirectDraw"); }return true; } // 원본 확인 뒤에만 현재 전체화면 모드를 기억하고 같은 조정 창으로 돌아간다.
     if (code==0x020000beU) {
         if (state_.phase==ClientPhase::Dialog) Tell("Blank"); // 원본 대화 부모의 MenuJustClosed→Kill에 대응하는 페이지 수명 정리다.
