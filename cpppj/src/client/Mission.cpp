@@ -23,9 +23,9 @@ std::vector<std::uint8_t> ReadFortSource(o::ConfigInterface& configuration,const
 // 원본 순서: 객체 생성 → 추가 설정(FUN_00440410) → `missionSpec` 경로의 파일(FUN_00440380).
 MissionScript::MissionScript(o::ConfigInterface& configuration, std::string_view name, std::string_view extraSettings,o::ConfigInterface::FileReader source)
     : configuration_(configuration), name_(name),explicitSource_(static_cast<bool>(source)),source_(source ? std::move(source) : configuration.Reader()), script_(configuration.Registry(), "mission") {
-    script_.AppendArguments(extraSettings, source_);
+    if (explicitSource_) script_.AppendArguments(extraSettings,source_);else configuration_.AppendConfigArguments(script_,extraSettings); // 명시작업source는같은namespace를유지하고일반Native만Config부모를쓴다.
     scriptPath_ = configuration_.PathSpec("missionSpec", name_);
-    if (source_) if (const auto bytes = source_(scriptPath_)) script_.LoadBytes(*bytes);
+    if (explicitSource_) { if (source_) if (const auto bytes=source_(scriptPath_)) script_.LoadBytes(*bytes); }else configuration_.LoadFile(script_,scriptPath_);
     if (script_.IsValid()) script_.Set("fileName", name_);
 }
 // 원본은 미션 설정 객체를 this로 FUN_004409d0을 부른다. 스크립트를 읽지 못했으면 찾지 못한다.

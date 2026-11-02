@@ -345,3 +345,6 @@ target_sources(netstorm PRIVATE client/QuickHelpFileRead.cpp client/QuickHelpFil
 
 # DataManager만 현재 FILE/키/최소4 할당과 논리 길이를 별도로 소유한다(769).
 target_sources(netstorm PRIVATE client/DataManagerFileRead.cpp client/DataManagerFileRead.h)
+
+# 실제Config만40380의존재/해독/Append복귀후free를사용한다(771).
+target_sources(netstorm PRIVATE o/RawConfigFileLoad.cpp o/RawConfigFileLoad.h client/ConfigFileRead.cpp client/ConfigFileRead.h)

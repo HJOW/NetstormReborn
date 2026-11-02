@@ -28,7 +28,7 @@ std::vector<o::Config*> TellFileMenus::Collect(std::string_view pattern,std::siz
         Limit(path,256);const auto name=FileName(path);Limit(name,256);auto* object=config_.Registry().FindByName(name);
         if (!object) {
             auto created=std::make_unique<o::Config>(config_.Registry(),name);object=created.get();owned_.push_back(std::move(created)); // 적재 중 실패해도 이미 등록한 원문 객체의 수명을 보존한다.
-            object->Append("path="+path);object->Append("fileName="+name);object->Append("index="+std::to_string(index));if (config_.Reader()) if (const auto bytes=config_.Reader()(path)) object->LoadBytes(*bytes);
+            object->Append("path="+path);object->Append("fileName="+name);object->Append("index="+std::to_string(index));config_.LoadFile(*object,path);
         }
         if (std::find(objects.begin(),objects.end(),object)==objects.end()) { if (objects.size()>=capacity) throw PhysicalLimitError("Tell 파일 목록의 원본 prefix 배열 범위 초과");objects.push_back(object);++index; }
     }

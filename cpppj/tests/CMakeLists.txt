@@ -3118,3 +3118,7 @@ foreach(create_at_target IN ITEMS netstorm_tests netstorm_menu_session_tests)
         NETSTORM_CREATE_AT_INPUT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/create-at-input-x86.tsv"
         NETSTORM_CREATE_AT_NAMES_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/create-at-names-x86.tsv")
 endforeach()
+
+target_sources(netstorm_tests PRIVATE ConfigLiveReadTests.cpp)
+target_sources(netstorm_config_path_load_tests PRIVATE ConfigLiveReadTests.cpp MissionFortSelectionTests.cpp StartupIoTests.cpp)
+set_source_files_properties(ConfigLiveReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CONFIG_LIVE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/config-live-read-x86.tsv\"")

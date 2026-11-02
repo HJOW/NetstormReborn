@@ -8,6 +8,7 @@
 #include "o/BaseFile.h"
 #include "o/OriginalText.h"
 #include "o/RawFileName.h"
+#include <stdexcept>
 
 namespace netstorm::o {
 namespace {
@@ -62,8 +63,8 @@ std::vector<std::uint8_t> EncodeConfigFile(std::string_view text) {
 }
 
 // 005280ac~005280b8의 CRT 순서와 같다. 멤버는 fort→global→configuration→language 역순으로 반납한다.
-ConfigInterface::ConfigInterface(FileReader reader,std::shared_ptr<RawFileName> fileNames,FileSpecQueryHooks fileSpecHooks)
-    : reader_(std::move(reader)), fileNames_(std::move(fileNames)),fileSpecHooks_(std::move(fileSpecHooks)),language_(registry_), configuration_(registry_),
+ConfigInterface::ConfigInterface(FileReader reader,std::shared_ptr<RawFileName> fileNames,FileSpecQueryHooks fileSpecHooks,ConfigFileLoadHooks fileLoad)
+    : reader_(std::move(reader)),fileLoad_(std::move(fileLoad)), fileNames_(std::move(fileNames)),fileSpecHooks_(std::move(fileSpecHooks)),language_(registry_), configuration_(registry_),
       global_(registry_, "global"), fort_(registry_, "fort") {
     // `{@미션.키}`: 원본 00440760은 missionSpec 경로의 미션 스크립트를 임시 객체에 읽는다.
     registry_.loadMission = [this](Config& temporary, std::string_view mission) {
@@ -72,8 +73,14 @@ ConfigInterface::ConfigInterface(FileReader reader,std::shared_ptr<RawFileName> 
 }
 // 파일이 없으면 아무것도 더하지 않는다.
 void ConfigInterface::LoadFile(Config& config, std::string_view path) {
+    if (fileLoad_.load) { fileLoad_.load(config,path);return; }
     if (!reader_) return;
     if (const auto bytes = reader_(path)) config.LoadBytes(*bytes);
+}
+// @토큰의바깥존재조회는40410의효과이며안쪽40380도자체Probe를수행한다.
+void ConfigInterface::AppendConfigArguments(Config& config,std::string_view text) {
+    if (!fileLoad_.load) { config.AppendArguments(text,reader_);return; }
+    config.AppendArguments(text,{},[this,&config](auto path) { if (!fileLoad_.probe) throw std::logic_error("Config 인자의 실제Probe 장치 미연결");if (fileLoad_.probe(path)) fileLoad_.load(config,path); });
 }
 // 원본 00440e00. 첫 글자가 `@`인 인자가 나오기 전까지는 인자를 글로 넣고, 그 뒤로는 모두 파일로 읽는다.
 void ConfigInterface::Load(std::span<const std::string> arguments) {
@@ -86,7 +93,7 @@ void ConfigInterface::Load(std::span<const std::string> arguments) {
         std::string_view path = std::string_view(argument).substr(0,argument.find('\0')); // 원문 C인자의 첫NUL 뒤 물리는 읽지 않는다.
         if (!path.empty() && path.front() == '@') path.remove_prefix(1);
         else if (inlineMode) {
-            configuration_.AppendArguments(path, reader_);
+            AppendConfigArguments(configuration_,path);
             continue;
         }
         inlineMode = false;

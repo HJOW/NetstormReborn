@@ -1,0 +1,62 @@
+// 실제Config40380과Client의현재파일을기존값형snapshot/명시작업source와구별한다.
+#include "QuickHelpFileReadTestSupport.h"
+#include "client/ConfigFileRead.h"
+#include "client/Mission.h"
+#include "o/BaseFile.h"
+#include "o/RawConfigFileLoad.h"
+#include <cstdio>
+
+namespace { // 원문CPU기대값과실제Unicode디스크입력은게임/MP를시작하지않는다.
+using namespace netstorm;using namespace netstorm::client;using namespace netstorm::o;using namespace netstorm::test::rawscene;
+constexpr std::uintptr_t kConfigLiveFile=0x12200000,kConfigLiveKey=0x12300100,kConfigLiveAllocation=0x12302000; // 원문도구와같은격리토큰이다.
+constexpr std::uint32_t kConfigLivePoison=0x65656565; // 원문이작성하지않은File필드의명시입력seed다.
+struct ConfigLiveBoundary { std::string kind; }; // Open/할당/read/close/Append/free경계실패만구별한다.
+std::vector<std::uint8_t> ConfigLiveBytes(const std::string& hex) { std::vector<std::uint8_t> bytes;for (std::size_t at=0;at<hex.size();at+=2) bytes.push_back(static_cast<std::uint8_t>(std::stoul(hex.substr(at,2),nullptr,16)));return bytes; } // fixture의원시저장입력만읽는다.
+std::string ConfigLiveFields(const RawBaseFileState& file) { const std::array<std::uintptr_t,6> values{{file.file,file.flags,static_cast<std::uint32_t>(file.offset),static_cast<std::uint32_t>(file.length),file.key,file.keyLength}};std::string result;for (const auto value:values) { if (!result.empty()) result+=',';result+=std::to_string(value); }return result; } // 완료생성자반납직후의필드다.
+std::string ConfigLiveEvents(const std::vector<std::string>& events) { std::string result;for (const auto& event:events) { if (!result.empty()) result+=';';result+=event; }return result; } // FILE반납/Append복귀후free순서까지연결한다.
+}
+
+TEST_CASE(ConfigLiveRead_Native68ParentMinimumAllocationConditionalXorAndAppendLifetime) { // 실제440380/41baa0/4f93a0의두정밀도기대값이며ConfigAppend본문은별도경계다.
+    std::size_t rows{};
+    for (const auto& row:LoadFixture(NETSTORM_CONFIG_LIVE_READ_FIXTURE).rows) { // 앞6열은입력이고나머지4열은실제PE관측이다.
+        CHECK(row.size()==10);if (row.size()!=10) return;const auto payload=ConfigLiveBytes(row[0]);const auto key=Number(row[1]),subfile=Number(row[2]),probe=Number(row[3]),scenario=Number(row[5]);auto available=Number(row[4]);std::uint32_t used{},position{};std::vector<std::string> events{"W:1:1"};std::vector<std::uint8_t> allocation;std::array<std::uint8_t,4096> scratch;scratch.fill(101);
+        RawBaseFileState file{kConfigLivePoison,kConfigLivePoison,static_cast<std::int32_t>(kConfigLivePoison),static_cast<std::int32_t>(kConfigLivePoison),kConfigLivePoison,kConfigLivePoison};RawBaseFileIOHooks io;BaseFileWholeReadHooks whole;ConfigFileLoadBodyHooks body;
+        whole.probe=[&](auto physical) { const auto end=std::find(physical.begin(),physical.end(),std::uint8_t{});events.push_back("P:"+Hex(physical.first(static_cast<std::size_t>(end-physical.begin()))));return probe; };
+        whole.open=[&](auto& state,auto physical,auto mode,auto create) { const auto end=std::find(physical.begin(),physical.end(),std::uint8_t{});events.push_back("O:"+Hex(physical.first(static_cast<std::size_t>(end-physical.begin())))+":"+std::to_string(mode)+":"+std::to_string(create)+":"+ConfigLiveFields(state));state={scenario==2?0:kConfigLiveFile,0x80U|subfile,subfile?37:0,subfile?static_cast<std::int32_t>(payload.size()):0,key?kConfigLiveKey:0,key?3U:0U};position=subfile?37U:0U;if (scenario==1) throw ConfigLiveBoundary{"open"}; };
+        whole.allocate=[&](auto size) { events.push_back("N:"+std::to_string(size));if (scenario==3) throw ConfigLiveBoundary{"allocation"};allocation.assign(size,205);return BaseFileWholeAllocation{kConfigLiveAllocation,allocation}; };
+        io.tell=[&](auto token) { events.push_back("T:"+std::to_string(token));return static_cast<std::int32_t>(position); };io.seek=[&](auto token,auto offset,auto origin) { events.push_back("S:"+std::to_string(token)+":"+std::to_string(static_cast<std::uint32_t>(offset))+":"+std::to_string(origin));position=origin==2?static_cast<std::uint32_t>(payload.size()):static_cast<std::uint32_t>(offset); };
+        io.read=[&](auto token,auto destination,auto size,auto count) { const auto actual=std::min(size*count,available);events.push_back("R:"+std::to_string(token)+":"+std::to_string(size)+":"+std::to_string(count)+":"+std::to_string(actual));if (scenario==4) throw ConfigLiveBoundary{"read"};if (actual) std::copy_n(payload.begin()+used,actual,destination.begin());used+=actual;available-=actual;position+=actual; };
+        const std::array<std::uint8_t,3> keyBytes{{'a','b','c'}};io.key=[&](auto token,auto size) { CHECK(token==kConfigLiveKey && size==3);return std::span<const std::uint8_t>(keyBytes); };io.close=[&](auto token) { events.push_back("C:"+std::to_string(token));if (scenario==5) throw ConfigLiveBoundary{"close"}; };io.freeKey=[&](auto token) { events.push_back("F:"+std::to_string(token)); };
+        body.buffer=[&](auto token) { CHECK(token==kConfigLiveAllocation);return std::span(allocation); };body.append=[&](auto token,auto bytes) { CHECK(token==kConfigLiveAllocation);const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});events.push_back("A:"+Hex(bytes.first(static_cast<std::size_t>(end-bytes.begin()))));if (scenario==6) throw ConfigLiveBoundary{"append"}; };body.release=[&](auto token) { events.push_back("B:"+std::to_string(token));if (scenario==8) throw ConfigLiveBoundary{"release"}; };std::string outcome="ok";constexpr std::array<std::uint8_t,10> input{{'i','n','p','u','t','.','c','f','g',0}}; // Native입력과같은NUL포함이름이다.
+        try { LoadConfigFile(file,input,io,whole,body,scratch); }catch (const ConfigLiveBoundary& failure) { outcome=failure.kind; }
+        CHECK(outcome==row[6] && ConfigLiveFields(file)==row[7] && ConfigLiveEvents(events)==row[8] && (allocation.empty()?"-":Hex(allocation))==row[9]);++rows;
+    }
+    CHECK(rows==68);
+}
+
+TEST_CASE(ConfigLiveRead_ActualClientCurrentArchivePreservesSharedSnapshotReader) { // 실제Startup/Load파일은현재FILE이고공유Reader/Fort용값은이전TAFFsnapshot이다.
+    using namespace netstorm::test::helpread;const auto root=Work(),path=root/"one.tarc";const std::string first="value=OLD\r\n",second="value=NEW\r\n";const auto bytes=[](const std::string& text) { return std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(text.data()),text.size()); };Write(path,Archive("d/live.cfg",bytes(first),true));Client instance(Options(root));CHECK(instance.Files().Read("d/live.cfg")==std::vector<std::uint8_t>(first.begin(),first.end()));Write(path,Archive("d/live.cfg",bytes(second),true));const std::array<std::string,2> arguments{{"@","d/live.cfg"}};instance.Configuration().Load(arguments);CHECK(instance.Configuration().Configuration().Get("value")=="NEW");const auto snapshot=instance.Configuration().Reader()("d/live.cfg");CHECK(snapshot && std::string(snapshot->begin(),snapshot->end())==first);
+    ConfigInterface independent([&](auto name) { return instance.Files().TryRead(name); });independent.Load(arguments);CHECK(independent.Configuration().Get("value")=="OLD");
+}
+
+TEST_CASE(ConfigLiveRead_ActualClientLanguageAndDynamicMissionReloadCurrentFile) { // LoadLanguage와임시@미션조회는캐시로바꾸지않으며임시Config도정상반납한다.
+    using namespace netstorm::test::helpread;const auto root=Work();Text(root/"d/lang.english","Sun=FIRST\n");Text(root/"d/MAP.english","name=FIRST\n");Client instance(Options(root));auto& config=instance.Configuration();config.Configuration().Assign("LanguageSpec=\"d/lang.{local.1}\"\nmissionSpec=\"d/{local.1}.english\"\n");config.LoadLanguage("english");CHECK(config.Language().Get("Sun")=="FIRST" && config.Configuration().Substitute("{@map.name}")=="FIRST");Text(root/"d/lang.english","Sun=SECOND\n");Text(root/"d/MAP.english","name=SECOND\n");config.LoadLanguage("english");CHECK(config.Language().Get("Sun")=="SECOND" && config.Configuration().Substitute("{@map.name}")=="SECOND" && config.Registry().Objects().size()==4);
+}
+
+TEST_CASE(ConfigLiveRead_ArgumentsKeepOuterProbeAndOriginalAtNameBeforeInlineAppend) { // 40410은@를지우지않고바깥Probe를먼저하며파일본문은인자글보다먼저붙는다.
+    std::vector<std::string> events;ConfigFileLoadHooks live;live.probe=[&](auto name) { events.push_back("outer:"+std::string(name));return name=="@exists.cfg"?1U:0U; };live.load=[&](auto& target,auto name) { events.push_back("load:"+std::string(name));target.Append("value=file"); };ConfigInterface config([](auto)->std::optional<std::vector<std::uint8_t>> { throw std::logic_error("명시Native인자의값reader우회"); },{},{},live);Config target(config.Registry());config.AppendConfigArguments(target,"value=inline;@missing.cfg;@exists.cfg;tail=1");CHECK(events==std::vector<std::string>({"outer:@missing.cfg","outer:@exists.cfg","load:@exists.cfg"}) && target.Get("value")=="file" && target.Get("tail")=="1");
+}
+
+TEST_CASE(ConfigLiveRead_MissionNativeScriptAndExplicitEditorSourceKeepSeparateNamespaces) { // 일반미션script만live장치이고Fort지연읽기와명시작업source는기존reader를유지한다.
+    std::vector<std::string> reads,liveReads,explicitReads;ConfigFileLoadHooks live;live.probe=[](auto) { return 1U; };live.load=[&](auto& target,auto name) { liveReads.emplace_back(name);target.Append("loadFort=Picked\nmissionType=Native\n"); };ConfigInterface config([&](auto name)->std::optional<std::vector<std::uint8_t>> { reads.emplace_back(name);return std::vector<std::uint8_t>{7,8,9}; },{},{},live);config.Configuration().Assign("missionSpec=\"d/{local.1}.english\"\nfortSpec=\"d/{local.1}.fort\"\n");{ MissionScript native(config,"Choice");CHECK(native.MissionType()=="Native" && liveReads==std::vector<std::string>{"d/Choice.english"} && reads.empty());const auto selected=native.FortFileSelector()("Picked");CHECK(selected.read()==std::vector<std::uint8_t>({7,8,9}) && reads==std::vector<std::string>{"d/Picked.fort"}); }
+    const auto before=liveReads;MissionScript editor(config,"Choice",{},[&](auto name)->std::optional<std::vector<std::uint8_t>> { explicitReads.emplace_back(name);const std::string script="loadFort=Working\nmissionType=Editor\n";return std::vector<std::uint8_t>(script.begin(),script.end()); });CHECK(editor.MissionType()=="Editor" && editor.FortName()=="Working" && liveReads==before && explicitReads==std::vector<std::string>{"d/Choice.english"});
+}
+
+TEST_CASE(ConfigLiveRead_ActualTruncatedEncryptedFileFailsBeforeAppendAndClosesFile) { // 실제짧은fread를없음/부분성공으로숨기지않고기존Config본문을보존한다.
+    using namespace netstorm::test::helpread;const auto root=Work(),path=root/"one.tarc";const std::string text="value=COMPLETE\r\n";const auto bytes=std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(text.data()),text.size());auto archive=Archive("d/live.cfg",bytes,true);Write(path,archive);Client instance(Options(root));CHECK(instance.Files().ContainsArchiveOnly("d/live.cfg"));archive.resize(archive.size()-3);Write(path,archive);Config target(instance.Configuration().Registry());target.Assign("old=KEPT\n");const auto before=target.Text();bool failed{};try { instance.Configuration().LoadFile(target,"d/live.cfg"); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="Config 전체읽기의 실제 부분 I/O"; }CHECK(failed && target.Text()==before);std::filesystem::rename(path,root/"short.tarc");Write(path,Archive("d/live.cfg",bytes,true));instance.Configuration().LoadFile(target,"d/live.cfg");CHECK(target.Get("value")=="COMPLETE" && target.Get("old")=="KEPT");
+}
+
+TEST_CASE(ConfigLiveRead_ActualMissingEmptyLfNulAndEncodedConfigKeepExistingBodyRules) { // 미발견은미할당이고빈파일/LF/첫NUL/조건XOR뒤Append는기존Config몸체를쓴다.
+    using namespace netstorm::test::helpread;const auto root=Work();std::filesystem::create_directories(root);Client instance(Options(root));Config target(instance.Configuration().Registry());instance.Configuration().LoadFile(target,"d/missing.cfg");CHECK(!target.IsValid());Text(root/"d/empty.cfg","");instance.Configuration().LoadFile(target,"d/empty.cfg");CHECK(target.IsValid() && target.Text()=="\r\n");const std::string nul("first=ONE\n\0hidden=TWO\n",22);Text(root/"d/nul-content.cfg",nul);instance.Configuration().LoadFile(target,"d/nul-content.cfg");const auto first=target.Get("first"),hidden=target.Get("hidden");if (first!="ONE" || hidden) std::fprintf(stderr,"Config NUL first=[%s] hidden=[%s] text=[%s]\n",first ? first->c_str():"<none>",hidden ? hidden->c_str():"<none>",target.Text().c_str());CHECK(target.Get("first")=="ONE" && !target.Get("hidden")); // 실패 시 실제 현재 본문/값을 보존한다.
+    const auto encoded=EncodeConfigFile("mQdsT\nencoded=YES\n");Write(root/"d/encoded.cfg",encoded);instance.Configuration().LoadFile(target,"d/encoded.cfg");CHECK(target.Get("encoded")=="YES" && target.Text().find("mQdsT\nencoded=YES\r\n")!=std::string::npos);
+}

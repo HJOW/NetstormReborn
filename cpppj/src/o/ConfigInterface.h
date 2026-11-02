@@ -21,6 +21,11 @@ std::string ConfigListItem(std::string_view list, int index);
 // SaveText가 정한 평문을 Windows-1252로 되돌려 XOR한다. 서명·BOM을 추가하지 않는다.
 std::vector<std::uint8_t> EncodeConfigFile(std::string_view text);
 
+struct ConfigFileLoadHooks { // 실제Native Config만파일존재/40380을명시하며공유Fort reader와분리한다.
+    std::function<std::uint32_t(std::string_view)> probe; //40410의@파일사전조회이며40380안쪽존재조회와별개다.
+    std::function<void(Config&,std::string_view)> load; //실제40380의할당/해독/Append복귀후free를수행한다.
+};
+
 // 언어·프로그램 설정 조회를 공통 저장소에 연결하는 인터페이스이다.
 class ConfigInterface {
 public:
@@ -43,7 +48,7 @@ public:
     };
 
     // 원본 CRT 순서대로 language→configuration→global→fort를 같은 Registry에 등록한다(004fc8c0~004fc920).
-    explicit ConfigInterface(FileReader reader,std::shared_ptr<RawFileName> fileNames={},FileSpecQueryHooks fileSpecHooks={}); // 실제 Client는 같은 고리를 보유하고 독립 값형 호출은 기존 계약을 유지한다.
+    explicit ConfigInterface(FileReader reader,std::shared_ptr<RawFileName> fileNames={},FileSpecQueryHooks fileSpecHooks={},ConfigFileLoadHooks fileLoad={}); // 실제 Client는 같은 고리를 보유하고 독립 값형 호출은 기존 계약을 유지한다.
 
     // 원본 FUN_00440e00 ↔ CD 004a9120: `[ARGS]`, 인자(첫 `@` 인자 전까지는 글, 그 뒤는 파일), `[END]`.
     void Load(std::span<const std::string> arguments);
@@ -88,14 +93,15 @@ public:
     ConfigRegistry& Registry();
     // 파일 읽기 함수. 미션 스크립트처럼 다른 설정 객체에 파일을 읽어 넣을 때 쓴다.
     const FileReader& Reader() const;
+    void LoadFile(Config& config,std::string_view path); //40380명시입구다.Native장치가없으면기존reader를사용하며Fort/Editor의Reader()는바꾸지않는다.
+    void AppendConfigArguments(Config& config,std::string_view text); //40410의@외부Probe뒤같은40380을호출한다.기본값형FileReader에는기존한번읽기를유지한다.
 private:
-    // 파일이 있으면 읽어 설정 객체에 더한다(원본 FUN_00440380).
-    void LoadFile(Config& config, std::string_view path);
 
     // registry_: 설정 객체나 등록 대상을 조회하는 등록부.
     ConfigRegistry registry_;
     // reader_: 설정·파일 내용을 읽는 공급자.
     FileReader reader_;
+    ConfigFileLoadHooks fileLoad_; //실제Config파일전용장치이며Reader()의snapshot/namespace를대체하지않는다.
     std::shared_ptr<RawFileName> fileNames_; // 원문 Load의 파일명 getter가 실제 VFS와 같은10칸을 사용한다.
     FileSpecQueryHooks fileSpecHooks_; // 실제 Windows 또는 명시 검색 장치를 현재 파일 읽기 동안 유지한다.
     // language_: 원본 설정 객체(0x18바이트): +0 버퍼, +8 환경 변수 허용, +0xc "이름.", +0x10 이름 길이, +0x14 변경 표시 (Config).

@@ -1,0 +1,193 @@
+{
+  "unit": 771,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 771,
+  "displayVersion": "11.01",
+  "exeSha256": "201c6a0dab30ba8fce0e4a0eb68b5797b4fd633b42f3693439a573b9bf131d84",
+  "summary": "실제 Config의 현재 파일·키·조건 해독·Append와 정상 반납을 일반 미션 및 Tell에 연결",
+  "tests": {
+    "totalUnique": 38,
+    "totalExecutions": 38,
+    "newTests": 7,
+    "failedChecks": 0,
+    "names": [
+      "ConfigEncoding_PreservesEveryWindows1252Byte",
+      "ConfigInterface_Load_SwitchesFromTextToFilesAtFirstAtSign",
+      "ConfigInterface_MissionLookup_ReadsMissionScriptThroughSpec",
+      "ConfigInterface_ParseLongAndListItem_FollowOriginalRules",
+      "ConfigInterface_QualifiedSetKeepsGlobalFortAndRootSeparate",
+      "ConfigInterface_SaveFile_PreservesChangesOnFailure",
+      "ConfigInterface_SetAndSave_RoundTripsThroughOriginalFormat",
+      "ConfigInterface_Startup_BuildsSectionsInOriginalOrder",
+      "ConfigInterface_StaticOwnersMatchPatchCrtOrder",
+      "ConfigInterface_StaticOwnersPreserveLegacyRootsAndTemporaryScope",
+      "ConfigInterface_TypedAccessors_KeepOriginalQuirks",
+      "ConfigLiveRead_ActualClientCurrentArchivePreservesSharedSnapshotReader",
+      "ConfigLiveRead_ActualClientLanguageAndDynamicMissionReloadCurrentFile",
+      "ConfigLiveRead_ActualMissingEmptyLfNulAndEncodedConfigKeepExistingBodyRules",
+      "ConfigLiveRead_ActualTruncatedEncryptedFileFailsBeforeAppendAndClosesFile",
+      "ConfigLiveRead_ArgumentsKeepOuterProbeAndOriginalAtNameBeforeInlineAppend",
+      "ConfigLiveRead_MissionNativeScriptAndExplicitEditorSourceKeepSeparateNamespaces",
+      "ConfigLiveRead_Native68ParentMinimumAllocationConditionalXorAndAppendLifetime",
+      "ConfigPathLoad_ActualClientUnicodeFilesAndSharedOwner",
+      "ConfigPathLoad_Native12SectionsFindLifetimeAndRing",
+      "ConfigPathLoad_ReaderFailureClosesSearchAndKeepsPartialState",
+      "FileNameLeaf_ActualOptionsReadAndCdKeepOneClientOwner",
+      "FileNameLeaf_InternalAliasAndPhysicalBoundary",
+      "FileNameLeaf_Native64OffsetsAndWholeBuffers",
+      "MissionFortSelection_DefersMissingEmptyAndThrowWithoutFallback",
+      "MissionFortSelection_ReadOwnsSourceAfterScriptAndConfigRetirement",
+      "MissionFortSelection_SeparatesChoiceFromReadAndFreezesSelectedPath",
+      "MissionScript_ResolvesScriptFortAndType",
+      "StartupIo_ActualClientSelectsParentAndNeverLoadsPoisonedEntryArchive",
+      "StartupIo_ClientConstructorDoesNotReadArchiveBeforeSetupSearch",
+      "StartupIo_DeferredCatalogIsValidThroughConstCopy",
+      "StartupIo_DirectDiskAndStartupStyleProbeDoNotConsumeDeferredCatalog",
+      "StartupIo_IndependentClientArchiveLookupsLoadOneSnapshot",
+      "StartupIo_SelectedBadArchiveStillFailsAfterSetupAndCdBoundary",
+      "TechnicalHelp_Native28ExternalRootJoin",
+      "TechnicalHelp_Native64ExternalFileSourcesAndFailurePreservation",
+      "TechnicalHelp_Native84AvailabilityLaunchAndPartialOutputs",
+      "TechnicalHelp_SelectedMissingDevicesReleaseAndCd"
+    ],
+    "logs": [
+      "tests-config-family-v3.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v3.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2697,
+    "currentCount": 2698,
+    "allUnchanged": true,
+    "fixtureCount": 878,
+    "newFixtures": [
+      "cpppj/tests/fixtures/config-live-read-x86.tsv"
+    ]
+  },
+  "native": {
+    "prepared-native.json": {
+      "unit": 771,
+      "rows": 68,
+      "observations": 136,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제40380→41baa0/조건XOR/종료NUL/Append복귀후free·관측marker0의실제4f93a0. FILE/Open/Probe/new/ConfigAppend는명시경계. ConfigAppend내부정규화/UTF-8확장·실제SEH dispatcher/24BYTE ABI는별도. 부분암호scratch101/할당205는독립seed이며미정메모리동일성주장아님",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "b57ad3a1dc86b0105c60bef68718e967e9332a7f1d263db73677c61fe55139fe"
+    },
+    "prepared-native-verify.json": {
+      "unit": 771,
+      "rows": 68,
+      "observations": 136,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제40380→41baa0/조건XOR/종료NUL/Append복귀후free·관측marker0의실제4f93a0. FILE/Open/Probe/new/ConfigAppend는명시경계. ConfigAppend내부정규화/UTF-8확장·실제SEH dispatcher/24BYTE ABI는별도. 부분암호scratch101/할당205는독립seed이며미정메모리동일성주장아님",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "b57ad3a1dc86b0105c60bef68718e967e9332a7f1d263db73677c61fe55139fe"
+    },
+    "native-verify.json": {
+      "unit": 771,
+      "rows": 68,
+      "observations": 136,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제40380→41baa0/조건XOR/종료NUL/Append복귀후free·관측marker0의실제4f93a0. FILE/Open/Probe/new/ConfigAppend는명시경계. ConfigAppend내부정규화/UTF-8확장·실제SEH dispatcher/24BYTE ABI는별도. 부분암호scratch101/할당205는독립seed이며미정메모리동일성주장아님",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "b57ad3a1dc86b0105c60bef68718e967e9332a7f1d263db73677c61fe55139fe"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "root first focused38",
+      "detail": "새NUL본문검사의입력파일명을nul.cfg로써Windows예약NUL장치에쓰기가버려지고읽기가빈파일처럼되어1실패했다. 제품/기존fixture/원문68은불변이며검사파일명만nul-content.cfg로바꿨다. 실제nul.cfg일반파일이생성되지않음과첫값/hidden모두없음/본문CRLF의진단원시를보존한다."
+    },
+    {
+      "scope": "root v2 diagnostic",
+      "detail": "v2는단일NUL진단1개/1실패만실행했다. 추가printf뒤행주석에붙었던후행encoded검사코드는v3전에개행해복구했으며v2를암호회귀성공으로세지않는다. 최종v3는전체38과해당encoded확인을실행한다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/ClientMain.cpp": "6295f09075a8601575632da879354b4c0be69ffd82817d44ea2bdc4577f155b0",
+    "cpppj/src/client/ConfigFileRead.cpp": "fd2c397b342ee625ad4f338f67b3625ad64de13d6109f4c45e6ba44033443390",
+    "cpppj/src/client/ConfigFileRead.h": "db5afe3fa39e4fb1d321efc163381482dac415f11eef38d008580784678b6f38",
+    "cpppj/src/client/EmbeddedTell.cpp": "eae508923731df03575b4c817e81a4d2b4ac34856499b64c16375ceb509c8108",
+    "cpppj/src/client/Mission.cpp": "25d69c82619046c2a1661d7007fe86a26bd69f8cf0c914290edd83dcd2bdc172",
+    "cpppj/src/client/TellFileMenus.cpp": "82529cb625d3b8af8baec7f2bbb5979051057c0f4e87e8b648edc779ab0c1e53",
+    "cpppj/src/client/TellSection.cpp": "dba247f541a33582baa25bed92ddf357a514f72bebe6a5e61800e81372aa3bed",
+    "cpppj/src/CMakeLists.txt": "665a9952b7c483030f91d58d839aed0bb5b03b0ab743b820485e514c33a21ba0",
+    "cpppj/src/o/Config.cpp": "da4c23d270a456efbc07e8fe75f2ecd28eda9dd9d56a6964548ca39fc7953564",
+    "cpppj/src/o/Config.h": "242be3b462167eb22fd0427644f928164a82446d069ac30e9ef4534e21023670",
+    "cpppj/src/o/ConfigInterface.cpp": "9490d10f38124831dc08d565eb44916791d689e83f6d944111e8e22b0ff5f44f",
+    "cpppj/src/o/ConfigInterface.h": "abc0aefe2b31045dc517c4860eac19f62c2d6b91d7a08295e59b3258d1c536a8",
+    "cpppj/src/o/RawConfigFileLoad.cpp": "ae5995b939d65071d076c949a3a4a04a775d547043943593c1672b341b10fa55",
+    "cpppj/src/o/RawConfigFileLoad.h": "55724f06dfcc9fdbff6388ea9eb04d4a03e91455c2af699a65289acbb5dc417c",
+    "cpppj/tests/CMakeLists.txt": "a5e1d8c12678bf33e895658df2687a3cd7c1b579edef68a64434031d2dfb776c",
+    "cpppj/tests/ConfigLiveReadTests.cpp": "8ec144227c589291f6b1e749b6c27f848840c6007b8f400420e269fbaaea9955",
+    "cpppj/tests/ConfigPathLoadTests.cpp": "a1dbe401322aacda8e5c3c8abc08dab630e98ff63f8528d839260e510e2710b5",
+    "tools/decomp_config_live_read.py": "0338c0a792b8492717f037dd3d43615ce1adcf1ebe930244ffa7efc22c5d99d1"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-771/protected-after.json",
+  "next": "일반 AI 명령(772/773)·글꼴 인코딩(774)·조건 AI 메뉴(775)·진단표시(776)·TYPE reader(777)·checking(779)·GIF/초기화면(781/782)과 남은 비멀티/호환성",
+  "limitations": [
+    "Native68은실제40380/41baa0/조건XOR/종료NUL/Append복귀후free·관측marker0의4f93a0을실행한다. FILE/Open/Probe/new/ConfigAppend는명시경계이며ConfigAppend전체Native본문/SEH dispatcher/24BYTE ABI는새검증하지않는다.",
+    "논리길이1/2에서도원문은물리세번째BYTE를읽는다. 최소4할당의host0padding과Native205seed/부분암호scratch101는구별하며미작성원문메모리동등성을주장하지않는다.",
+    "실제Client Patch1078에만Config전용장치를설치하고CD/default값형Reader/명시Mission Editor source/공유Fort snapshot은보존한다. 등록/임시미션·언어·TellFileMenus/내장Tell·fallback은동일LoadFile을사용한다.",
+    "기본LoadBytes의>=3 XOR/서명/BOM/첫NUL/Windows1252해석은유지하고AppendDecodedBytes에뒤처리만추출했다. Native40380은조건XOR를이미끝내이함수로가며이중해독하지않는다.",
+    "40410의@파일은바깥Probe후40380안쪽Probe를한다. 실제Client경로검사의고리9→2는상대성공5/상대부재4/직접성공3의12칸이며기존12행fixture/defaultReader기대는유지한다.",
+    "실제부분fread는FILE/키반납뒤Append앞에서거부한다. 미완성Open/Append예외에host RAII가추가반납하는것과원문raw부모의Append정상복귀때만free는구별한다.",
+    "새게임/GUI/CLI/MP·물리/PCM·공중3종전용검사·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다."
+  ],
+  "independentReviews": [
+    {
+      "path": "extracted/cpp-resume-771/independent-review",
+      "scope": "actual caller/API/ordered file parent/default reader preservation",
+      "readOnly": true,
+      "confirmedDefects": 0
+    },
+    {
+      "path": "extracted/cpp-resume-771/independent-nul-review",
+      "scope": "Windows reserved NUL filename is a test-input defect",
+      "readOnly": true,
+      "confirmedProductDefects": 0
+    }
+  ],
+  "sourceHygiene": {
+    "record": "extracted/cpp-resume-771/eol-restoration.json",
+    "restoredExistingFiles": 10,
+    "normalizedContentEqual": true,
+    "rebuiltAfterRestoration": true
+  }
+}

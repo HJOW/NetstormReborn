@@ -168,8 +168,11 @@ void Config::AppendSection(std::string_view name) {
 void Config::LoadBytes(std::span<const std::uint8_t> bytes) {
     std::vector<std::uint8_t> plain(bytes.begin(), bytes.end());
     if (plain.size() >= 3 && plain[0] == 0 && plain[2] == 0) ApplyXor(plain);
-    // 원본은 C 문자열로 다루므로 첫 NUL에서 끝난다.
-    plain.erase(std::find(plain.begin(), plain.end(), std::uint8_t{0}), plain.end());
+    AppendDecodedBytes(plain);
+}
+// 기존값형LoadBytes와Native40380은같은인코딩/서명/첫NUL처리를공유한다.
+void Config::AppendDecodedBytes(std::span<const std::uint8_t> bytes) {
+    const auto plain=bytes.first(static_cast<std::size_t>(std::find(bytes.begin(),bytes.end(),std::uint8_t{})-bytes.begin()));
     const bool hasSignature = plain.size() >= kConfigSignature.size()
         && std::equal(kConfigSignature.begin(), kConfigSignature.end(), plain.begin());
     // 새 UTF-8 파일은 서명 뒤(또는 파일 맨 앞)의 BOM으로 구분한다. 서명 자체는 ASCII라 그대로 둔다.
@@ -179,7 +182,8 @@ void Config::LoadBytes(std::span<const std::uint8_t> bytes) {
 }
 // 원본 00440410: `@`로 시작하는 낱말은 그 이름('@' 포함)의 파일이 있으면 먼저 읽어 넣고, 나머지 글은 뒤에 더한다.
 void Config::AppendArguments(std::string_view text,
-    const std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)>& readFile) {
+    const std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)>& readFile,
+    const std::function<void(std::string_view)>& loadFile) {
     text = UntilNul(text);
     if (text.empty()) return;
     std::string inlineText;
@@ -190,7 +194,7 @@ void Config::AppendArguments(std::string_view text,
             const auto begin = pos;
             // 낱말은 공백·탭·`;` 또는 끝에서 끝난다. 낱말 자체는 버퍼에 복사하지 않는다.
             while (pos < text.size() && !IsBlank(text[pos]) && text[pos] != ';') ++pos;
-            if (readFile) if (const auto bytes = readFile(text.substr(begin, pos - begin))) LoadBytes(*bytes);
+            if (loadFile) loadFile(text.substr(begin,pos-begin));else if (readFile) if (const auto bytes = readFile(text.substr(begin, pos - begin))) LoadBytes(*bytes);
             if (pos == text.size()) break; // 원본은 여기서 문자열 끝 너머를 읽는다. 새 구현은 멈춘다.
         }
         if (text[pos] == ';') inlineText += "\r\n";

@@ -31,7 +31,7 @@ std::optional<std::string> FindTellSectionInConfig(TellSectionState& state,std::
     };
     hooks.mission=[&](auto target)->std::optional<std::string> { return mission ? mission(Decode(target)) : std::nullopt; }; // 현재 미션 없음은 원문 NULL 관문이다.
     hooks.fallback=[&](auto target)->std::optional<std::string> { // 같은 이름의 기존 tell 객체와 구별되는 새 임시 설정을 적재한다.
-        o::Config temporary(config.Registry(),"tell");const auto path=config.PathSpec("missionSpec","tell");if (config.Reader()) if (const auto bytes=config.Reader()(path)) temporary.LoadBytes(*bytes);
+        o::Config temporary(config.Registry(),"tell");const auto path=config.PathSpec("missionSpec","tell");config.LoadFile(temporary,path);
         const auto body=temporary.Section(Decode(target));return body ? std::optional<std::string>(std::string(*body)) : std::nullopt;
     };
     return FindTellSection(state,name,hooks);

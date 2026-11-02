@@ -55,9 +55,9 @@ TEST_CASE(ConfigPathLoad_ReaderFailureClosesSearchAndKeepsPartialState) {
     CHECK(failed && closed && !active && names->Index()==1 && LoadSections(config.Configuration().Text())==std::vector<std::string>({"ARGS","chosen.cfg"}));
 }
 
-// 실제 Client의 파일명 한 칸과 VFS 조회2/3/1칸을 같은 소유자가 순서대로 소비한다.
+// 실제 Client는 파일명각1칸 뒤40380의Probe/Open을소비한다. 성공상대1+2+2/미발견1+3/직접1+1+1의총12칸이다.
 TEST_CASE(ConfigPathLoad_ActualClientUnicodeFilesAndSharedOwner) {
     using namespace netstorm;const auto root=ConfigPathWork();WriteLoadPath(root/"d/one.cfg","mQdsTfirst=0\r\nloaded=\"yes\"\r\n");client::ClientOptions options;options.gameDirectory=root;options.noAudio=true;client::Client instance(std::move(options));auto names=instance.Files().FileNameOwner();CHECK(names.get()==&instance.StaticStrings()->FileNames());const auto direct=platform::PathToUtf8(root/"d/one.cfg");const std::array<std::string,3> arguments{"@d/one.cfg","missing.cfg",direct};instance.Configuration().Load(arguments);
-    CHECK(names->Index()==9 && instance.Configuration().Configuration().Get("loaded")=="yes");CHECK(LoadSections(instance.Configuration().Configuration().Text())==std::vector<std::string>({"ARGS","one.cfg","missing.cfg","one.cfg","END"}));
+    CHECK(names->Index()==2 && instance.Configuration().Configuration().Get("loaded")=="yes");CHECK(LoadSections(instance.Configuration().Configuration().Text())==std::vector<std::string>({"ARGS","one.cfg","missing.cfg","one.cfg","END"}));
     const auto pattern=platform::PathToUtf8((root/"d/*.cfg").make_preferred());{ o::FileSpecQuery actual(pattern);CHECK(actual.Text()==platform::PathToUtf8((root/"d/one.cfg").make_preferred())); } // 실제 W 검색 장치는 Unicode 폴더에서도 원래 backslash prefix를 보존한다.
 }

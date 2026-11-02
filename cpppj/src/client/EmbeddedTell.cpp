@@ -23,7 +23,7 @@ std::uint32_t ShowEmbeddedTellInConfig(std::string_view name,o::ConfigInterface&
     std::function<std::optional<std::string>(std::string_view)> mission,EmbeddedTellHooks hooks) {
     hooks.mission=mission ? std::function<std::optional<std::string>(std::string_view)>([mission=std::move(mission)](auto key) { return mission(EmbeddedDecode(key)); }) : decltype(hooks.mission){};
     hooks.fallback=[&config](auto key)->std::optional<std::string> {
-        o::Config temporary(config.Registry(),"tell");const auto path=config.PathSpec("missionSpec","tell");if (config.Reader()) if (const auto bytes=config.Reader()(path)) temporary.LoadBytes(*bytes);
+        o::Config temporary(config.Registry(),"tell");const auto path=config.PathSpec("missionSpec","tell");config.LoadFile(temporary,path);
         const auto section=temporary.Section(EmbeddedDecode(key));return section ? std::optional<std::string>(std::string(*section)) : std::nullopt;
     };
     return ShowEmbeddedTell(name,hooks);

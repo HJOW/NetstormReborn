@@ -97,9 +97,11 @@ public:
     void AppendSection(std::string_view name);
     // 원본 FUN_00440380 ↔ CD 0042ad70의 복호화: XOR 감지 후 버퍼에 더한다. 서명 `mQdsT`는 원본처럼 남는다.
     void LoadBytes(std::span<const std::uint8_t> bytes);
+    void AppendDecodedBytes(std::span<const std::uint8_t> bytes); // 이미해독한원문을첫NUL/기존UTF-8·BOM경계로더한다.Native40380은XOR를중복하지않고같은Append에접합한다.
     // 원본 FUN_00440410 ↔ CD 0042ae60: 명령줄 형식. `;`는 줄바꿈, `@파일`은 그 파일을 읽어 넣는다.
     void AppendArguments(std::string_view text,
-        const std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)>& readFile);
+        const std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)>& readFile,
+        const std::function<void(std::string_view)>& loadFile={}); // 명시loadFile이있으면그@항목만사용하며기본값형readFile계약은유지한다.
 
     // 이 객체의 버퍼에서만 찾는 원시 값(원본 FUN_00440150). 버퍼가 없으면 찾지 못한다.
     std::optional<std::string> GetRaw(std::string_view key) const;

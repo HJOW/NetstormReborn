@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ConfigFileRead.h" //실제10.78 Config만 현재 FILE/키와40380 부모를 사용한다.
 #include "client/ConfigurationCommandInput.h" //같은 raw highPriority와 WinMain의 실제 OS 등급 비교를 사용한다.
 #include "client/ScreenModeTransition.h" //원문00435ba0의 현재 모드/실패 복구/공유 갱신 부모다.
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
@@ -171,7 +172,7 @@ struct Client::ChatState {
 // 파일 시스템·설정·전역 Chat 저장소만 만든다. 창과 화면은 Run에서 원본 순서대로 만든다.
 Client::Client(ClientOptions options)
     : options_(std::move(options)), files_(options_.gameDirectory,{},options_.startupFileNames),
-      configuration_([this](std::string_view path) { return files_.TryRead(path); },files_.FileNameOwner()), // 설정 Load의 이름 추출도 실제 VFS와 같은 고리다.
+      configuration_([this](std::string_view path) { return files_.TryRead(path); },files_.FileNameOwner(),options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileSearchHooks([this] { return options_.gameDirectory; }):o::FileSpecQueryHooks{},options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileReadHooks(files_):o::ConfigFileLoadHooks{}), // Config파일만명시Native장치를쓰고공유Fort/Editor Reader와CD는기존계약을유지한다.
       fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
       fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),
       subscriberGlobals_(std::make_shared<ClientSubscriberGlobals>()),
