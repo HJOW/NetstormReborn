@@ -1,0 +1,149 @@
+{
+  "unit": 726,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 725,
+    "version": "11.01",
+    "sha256": "82daddd899323ddb01dc43d8304225a35ae0374465e6a77d011da9958bde6032",
+    "changed": false
+  },
+  "change": "실제 Edit의 같은 워크샾 소유자 취소·2·0·8·취소와 Yes 저장 후 별도 설치 재적재 검증 도구",
+  "source": {
+    "map": "originals/d/TEST02.fort",
+    "sha256": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640"
+  },
+  "observations": [
+    {
+      "label": "loaded",
+      "sid": 15006,
+      "owner": 1,
+      "currentOwner": 1,
+      "coreOffset": 288
+    },
+    {
+      "label": "cancel1",
+      "sid": 15006,
+      "owner": 1,
+      "currentOwner": 1,
+      "coreOffset": 288
+    },
+    {
+      "label": "owned2",
+      "sid": 15006,
+      "owner": 2,
+      "currentOwner": 2,
+      "coreOffset": 468
+    },
+    {
+      "label": "unowned",
+      "sid": 15006,
+      "owner": 0,
+      "currentOwner": 2,
+      "coreOffset": 468
+    },
+    {
+      "label": "owned8",
+      "sid": 15006,
+      "owner": 8,
+      "currentOwner": 8,
+      "coreOffset": 1548
+    },
+    {
+      "label": "cancel8",
+      "sid": 15006,
+      "owner": 8,
+      "currentOwner": 8,
+      "coreOffset": 1548
+    },
+    {
+      "label": "reloaded",
+      "sid": 15000,
+      "owner": 8,
+      "currentOwner": 1,
+      "coreOffset": 288
+    }
+  ],
+  "savedFortSha256": "70e53d26eb0de742f10be1c58862f787eeba37b8c7faf1e7c621d4f1f216214d",
+  "gui": {
+    "processes": 5,
+    "acceptedFinalPaths": 1,
+    "finalFrames": 675,
+    "finalSeconds": 43.72373460000381,
+    "runs": [
+      {
+        "name": "live-v1",
+        "role": "이름 입력이 중립·비선택 객체를 찾지 못해 종료1",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 3.708880099999078,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "scriptSha256": "6c003a18dad6e11baaed86403a815f15e77c413e068017f785049a3ceae64ab8"
+      },
+      {
+        "name": "live-v2",
+        "role": "n720 중립 Residence의 SetOwner 탐색",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.871156900000642,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "scriptSha256": "c0885e423185bccf906e342a8421dbb966adfa13ccffb13f02817e6569f46c9a"
+      },
+      {
+        "name": "live-v3",
+        "role": "TEST02 일반 건물의1→2 탐색",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 18.790174100002332,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "scriptSha256": "5a712abcc033ad14379a30365ab851c53b84c8cbf483c9ff32b5e2ce489ffdfc"
+      },
+      {
+        "name": "final-v1",
+        "role": "실행 종료0이나 혼합 선택 대상에 대한 검증 실패",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 42.980519099997764,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "scriptSha256": "f9333c8df8edc1236724825030269f259e9a5175160afad837eae8b88ee04388"
+      },
+      {
+        "name": "final-v2",
+        "role": "같은 워크샾의 전체 최종 경로 통과",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 43.72373460000381,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "scriptSha256": "52b7b9db59998064aa720386b6933591973ee2d4fa8073a08b763cc367fedc67"
+      }
+    ]
+  },
+  "existingNativeEvidence": "519의004d8176..4d81cb/004d5290·256입력 근거를 재사용하며 이번 새 원문 실행/fixture/C++ 검사는0",
+  "protection": {
+    "files": 2641,
+    "changed": 0
+  },
+  "builds": 0,
+  "newCppTests": 0,
+  "nativeExecutions": 0,
+  "multiplayerTests": 0,
+  "limits": [
+    "실제 앱의 일반 입력 큐이며 물리 입력 검사가 아니다",
+    "현재 대상은 TYPE86 windFactory(140,174)와 창 모드1024×768이다",
+    "원문 전체 저장 바이트·전체 객체/시나리오·픽셀 동일성을 판정하지 않는다",
+    "새 게임 실행5개는 원본 게임0·현재725제품5이며 최종 수락은한 경로다",
+    "포획/희생·적 공격·승리·공중3종 전용 생성/행동·MP/통신 검사는0",
+    "전체34/ZIP·전체C++를 재실행하지 않았다"
+  ],
+  "rawDirectory": "extracted/cpp-editor-owner-726",
+  "toolSha256": "fc9ffe1849d53d94cdfcc4c5cbf87cf4a7f6582ef85e1d76ba74747c0a915dff"
+}
