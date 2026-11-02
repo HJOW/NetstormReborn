@@ -1,0 +1,150 @@
+{
+  "unit": 774,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 774,
+  "displayVersion": "11.01",
+  "exeSha256": "7ee355ed807e79b58077e64327783551c7ae174d4084a73fba00707148d7b1a8",
+  "summary": "raw ACP 글꼴 이름과 UTF-8 설정·Unicode 디스크 경계를 연결하고 긴 DBCS 경로의 고리 계약을 보존",
+  "tests": {
+    "totalUnique": 26,
+    "totalExecutions": 26,
+    "newTests": 6,
+    "failedChecks": 0,
+    "names": [
+      "BaseFile_AbsoluteMissingRequeriesActualPrimaryAndSecondarySources",
+      "BaseFile_FileFinderDiskArchiveSecondaryOrderAndFirstDuplicate",
+      "BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix",
+      "BaseFile_MatchDiskNonPatternKeepsNativeFileSpecContract",
+      "BaseFile_ReadPolicyEmptyFileIsSuccessAndMissingLookupIsExplicit",
+      "BaseFile_ReadPolicyReplaysIndependentNative1024",
+      "BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder",
+      "BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp",
+      "BaseFile_SecondaryReadPriorityAndSeparateArchiveOnlyViews",
+      "BaseFile_SecondaryReplaysIndependentNativeRegistration27",
+      "BaseFile_WildcardCampaignDiscovery",
+      "FontFaceEncoding_ActualConfigSaveReloadPreservesAcpNamesAndChanged",
+      "FontFaceEncoding_ActualFontStoreReadsUnicodeDiskAndKeepsRawCatalog",
+      "FontFaceEncoding_ActualVfsDiskAdapterPreservesRawArchiveOrderAndRing",
+      "FontFaceEncoding_PartialDbcsKeepsOriginalParentEffectsAndRejectsConfig",
+      "FontFaceEncoding_Raw31ByteLongAsciiRootKeepsRawRingAndTaffFallback",
+      "FontFaceEncoding_WindowsNls24RowsKeepCodePagesAndRejectLoss",
+      "PresentationCommand_ActualAudioMutedOptionsKeepDeadlineAndClock",
+      "PresentationCommand_ActualFontStoreClearsAndReloadsChfntInPlace",
+      "PresentationCommand_AudioNative192RowsAndFailureOrder",
+      "PresentationCommand_FontCatalogNative315RowsAndLookupBoundary",
+      "PresentationCommand_FontParentNativeRowsAndLateReaders",
+      "PresentationCommand_Native21NamesAndQueue",
+      "PresentationCommand_SoundNative32RowsAndPartialFailure",
+      "PresentationFontRebuild_ActualFontStoreDrawsNewGlyphAtReusedAddress",
+      "Renderer_DecodedImagesRetireExplicitlyAtShapeAddressReuse"
+    ],
+    "logs": [
+      "tests-font-encoding-v1.log",
+      "tests-presentation-v1.log",
+      "tests-font-cache-v1.log",
+      "tests-render-cache-v1.log",
+      "tests-base-file-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2705,
+    "currentCount": 2706,
+    "allUnchanged": true,
+    "fixtureCount": 886,
+    "newFixtures": [
+      "cpppj/tests/fixtures/font-face-encoding-win32.tsv"
+    ]
+  },
+  "native": {
+    "prepared-nls.json": {
+      "unit": 774,
+      "host": "HJOW-Athlon",
+      "systemAcp": 949,
+      "inputs": 24,
+      "observations": 24,
+      "rejected": 9,
+      "actual": "Windows MultiByteToWideChar strict + WideCharToMultiByte no-best-fit/used-default check; current ACP queried only",
+      "boundary": "No EnumFontFamilies/GDI font creation/OS font change/game/MP; explicit codepages1252/949/932/65001, current installed fonts are not asserted",
+      "sha256": "d3719268f6c70f4a4ee749e2a3e426f905507529e5d245d3fedd403fd7505993",
+      "builds": 0,
+      "game": 0,
+      "multiplayer": 0,
+      "rawReportSha256": "65d45124634534f342aa27d3c7c3118c40f1230918a553a7305127d28a8dd44e"
+    },
+    "nls-repeat/nls.json": {
+      "unit": 774,
+      "host": "HJOW-Athlon",
+      "systemAcp": 949,
+      "inputs": 24,
+      "observations": 24,
+      "rejected": 9,
+      "actual": "Windows MultiByteToWideChar strict + WideCharToMultiByte no-best-fit/used-default check; current ACP queried only",
+      "boundary": "No EnumFontFamilies/GDI font creation/OS font change/game/MP; explicit codepages1252/949/932/65001, current installed fonts are not asserted",
+      "sha256": "d3719268f6c70f4a4ee749e2a3e426f905507529e5d245d3fedd403fd7505993",
+      "builds": 0,
+      "game": 0,
+      "multiplayer": 0,
+      "rawReportSha256": "65d45124634534f342aa27d3c7c3118c40f1230918a553a7305127d28a8dd44e"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "integration static preparation",
+      "detail": "후보최초정적준비가현재ClientMain/CMake의혼합CRLF/LF를거부하는guard에서중단됐다. 기존줄끝/현재771initializer/773handled/CMakeprefix를보존하는최소행편집으로교정했다. 실제제품컴파일/검사실패가아니며원시initial-static-preparation을보존했다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/BitmapFont.cpp": "eec241e151ca8225e62c3c745092edcccd5134307b80984e3246c8ab2bfa0051",
+    "cpppj/src/client/ClientMain.cpp": "5b23ae8eb902250c913de86560a09cc3612c1799d4e389ba62975ab6dc806a5c",
+    "cpppj/src/client/CMakeLists.txt": "90da490f21aabd74bd7f858850c4536aaf40b642f069c093f097b7e9250a8291",
+    "cpppj/src/client/FontFaceEncoding.cpp": "7e5181c6b74507d732ca2fe16acba9ef9d593aefeacc6923e00664c207207f95",
+    "cpppj/src/client/FontFaceEncoding.h": "3ebf45dda05b50f2b23546755a7487fe3f5fc425d15c3d56b762a3abbe4c19b5",
+    "cpppj/src/client/UberGump.cpp": "86e3938297a3170f97a476ac4bb44c42a09105e1630ab63556975af688def853",
+    "cpppj/src/o/BaseFile.cpp": "22ec40e7d901564556afee3a578e7a42adf1cc01695880177e49b463ea20d54f",
+    "cpppj/src/o/BaseFile.h": "b6bb3376a9f53a5fa3f4b5fd5fedf4e3022c9cea185450f5519d940452f4a6d6",
+    "cpppj/tests/CMakeLists.txt": "4f5362ed93a6b91647483de9d54e4326207c456722071c97c7c96762f69aca7c",
+    "cpppj/tests/FontFaceEncodingTests.cpp": "2db8f5bba1752be4e6d3c51713c73335c1c83f5b678877fb798955001ac0892a",
+    "tools/observe_font_face_encoding.py": "22b3d2d02d25014312e084826615c4f89cddc4e6c7cfffe8f4791fbf58039b38"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-774/protected-after.json",
+  "next": "조건 AI 메뉴·실제Toggle이름(775)·진단표시(776)·TYPE reader(777)·checking(779/783)·GIF/초기화면(781/782)·최근명령 꼬리(784)·잔여I/O(785)와 남은 비멀티/호환성",
+  "limitations": [
+    "새NLS24는원문x86게임관측이아니라명시1252/949/932/65001의Windows순수변환참고다. systemACP949는조회만했고OS/글꼴/코드페이지설정을바꾸지않았다. 다른실제설치글꼴/ACP/Windows11실기동등성은주장하지않는다.",
+    "원문raw31BYTE/7슬롯/18유효캐시/ANSI GDI A/글리프0..255·원래열거순서/중복을유지한다. DBCS중간잘림을문자경계로바꾸지않고디스크변환실패뒤rawTAFF/GDI기존경계를유지한다.",
+    "공유256BYTE고리에는rawquery를먼저Join하고UTF8변환OS문자열만고리밖에조합한다. 원래Device1/기본disk1/보조disk1과기본TAFF→보조disk순서를유지하며default TryRead를두번호출하지않는다.",
+    "raw31BYTE CP949/ASCIIroot190의raw245·UTF8260반례는실제짧은검사TAFF와존재하지않는긴읽기root로검사한다. 긴디렉터리생성/사용자파일수정없이rawfallback과고리바이트를확인한다.",
+    "현재Config내UTF8만ACP로되돌리고현재raw선택을Set직전에만UTF8로변환한다. 기본1252 XOR/유효비1252 UTF8 BOM writer/changed실패정책은기존구현을쓴다. 구형무BOM비1252설정자동이관/한국어UI완료가아니다.",
+    "새게임/GUI/CLI/MP·물리/PCM·공중3종전용검사·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다."
+  ],
+  "independentReviewCorrections": [
+    "Config.Get optional presence before value conversion",
+    "empty NLS dash sentinel decoding",
+    "raw ring first and separate Unicode OS path",
+    "new raw31/CP949/long-root regression"
+  ],
+  "integrationCandidate": {
+    "path": "extracted/cpp-resume-774/integration-candidate",
+    "sourceUnit": 773,
+    "sourceHead": "b466c12774a9400c6f3c3a441ac4144897f6a3a4",
+    "sameElevenFileBytes": true
+  }
+}

@@ -2,6 +2,7 @@
 #pragma once
 #include <cstdint>
 #include <filesystem>
+#include <functional> //명시 글꼴 소비자의 디스크 이름 변환만 빌린다.
 #include <memory>
 #include <optional>
 #include <span>
@@ -75,6 +76,7 @@ public:
     bool ReadOnly(std::string_view name) const;
     // Read와 같은 순서로 찾되, 없으면 예외 대신 빈 값을 돌려준다(없어도 되는 설정 파일용).
     std::optional<std::vector<std::uint8_t>> TryRead(std::string_view name) const;
+    std::optional<std::vector<std::uint8_t>> TryReadWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const; //명시 ACP 글꼴 소비자만 디스크 이름을UTF-8로 변환한다. raw TAFF/방문순서/고리소비는 그대로다.
     std::optional<std::vector<std::uint8_t>> TryReadArchiveOnly(std::string_view name,bool secondary=false) const; //선택한 목록만 등록 순서로 읽고 다른 목록/디스크로 fallback하지 않는다.
     bool ContainsArchiveOnly(std::string_view name,bool secondary=false) const; //선택한41a340 목록의 이름 메타데이터만 조회하며 내용/복호화/디스크를 읽지 않는다.
     std::uint32_t Probe(std::string_view name) const; //0041ab10의 출처0..5를 내용 읽기 없이 조회한다. 직접 경로 실패는 상대/TAFF로 fallback하지 않는다.

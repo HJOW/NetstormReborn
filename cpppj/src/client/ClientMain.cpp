@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/FontFaceEncoding.h" //Config 내부UTF-8 글꼴 이름을 원문 GDI A의 현재 ACP로 옮긴다.
 #include "client/ConfigFileRead.h" //실제10.78 Config만 현재 FILE/키와40380 부모를 사용한다.
 #include "client/ConfigurationCommandInput.h" //같은 raw highPriority와 WinMain의 실제 OS 등급 비교를 사용한다.
 #include "client/ScreenModeTransition.h" //원문00435ba0의 현재 모드/실패 복구/공유 갱신 부모다.
@@ -321,7 +322,7 @@ int Client::Run() {
     // "init fonts"(004a3ce0): 슬롯 표를 만들고 원본의 0번 글꼴을 캐시/GDI로 준비한다.
     std::string fontFace;
     configuration_.ReadString("fontFaceName", fontFace);
-    fonts_ = std::make_unique<FontStore>(files_, fontFace);
+    fonts_ = std::make_unique<FontStore>(files_, FontFaceFromUtf8(fontFace));
     fonts_->Get();
     // "init screen mode": startInFullScreen이면 workingFullScreenFlags, 아니면 windowScreenFlags.
     std::uint32_t flags = static_cast<std::uint32_t>(configuration_.GetInt("workingFullScreenFlags"));

@@ -344,3 +344,6 @@ target_sources(netstorm PRIVATE DrawWater.cpp DrawWater.h)
 
 # 일반 CreateAt의 현재 문자열 토큰/모드와 Runtime 생성 부모를 연결한다(770).
 target_sources(netstorm PRIVATE CreateAtInput.h CreateAtInput.cpp)
+
+# 원문 ACP 글꼴 이름을 현재 UTF-8 Config/디스크에만 변환한다(774).
+target_sources(netstorm PRIVATE FontFaceEncoding.h FontFaceEncoding.cpp)

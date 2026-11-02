@@ -34,6 +34,19 @@ std::filesystem::path NativePath(std::string_view value) { return std::filesyste
 // 경로를 현재 코드 페이지로 손실시키지 않고 목록/오류 메시지의 UTF-8로 돌려준다.
 std::string PathText(const std::filesystem::path& value) { const auto bytes=value.generic_u8string();return {bytes.begin(),bytes.end()}; }
 
+// 원문 고리의 raw 이름 작성 뒤 OS에만 넘길 UTF-8 경로를 고리 밖 소유 문자열로 조합한다.
+std::string JoinUtf8DiskRoot(std::string_view root,std::string_view query) {
+    std::string directory(root.substr(0,root.find('\0'))),file(query.substr(0,query.find('\0'))); // 현재 root는 이미 UTF-8이고 query만 명시 인코딩 변환을 끝낸 값이다.
+    for (auto& byte:directory) if (byte=='/' || byte=='\\') byte='\\'; // 원문 -2 디렉터리의 구분자 규칙만 같은 결과로 유지한다.
+    for (auto& byte:file) if (byte=='/' || byte=='\\') byte='\\'; // 원문 -3 파일 부품의 구분자 규칙을 OS 문자열에도 적용한다.
+    if (directory.size()>1 && directory.back()=='\\') directory.pop_back();
+    std::string result;if (directory.find('\\')==directory.npos && directory.find(':')==directory.npos) result=".\\";
+    result+=directory;if (result.empty() || result.back()!='\\') result+='\\'; // -2는 디렉터리 뒤 구분자를 남기며 원문256BYTE 고리의 폭 검사는 앞서 raw 이름으로 끝냈다.
+    file.erase(0,file.find_first_not_of('\\'));if (file.size()>1 && file.back()=='\\') file.pop_back(); // -3의 선행 전부/후행 한 구분자 제거를 유지한다.
+    result+=file;return result; // Unicode 확장 바이트는 원문 고리에 쓰지 않으며 실제 OS 경로의 성공/실패는 뒤 장치가 판정한다.
+}
+
+
 // 덧셈 오버플로 없이 파일 내부 범위를 확인한다.
 void RequireRange(std::size_t begin, std::size_t length, std::size_t end) {
     if (begin > end || length > end - begin) throw std::runtime_error("TAFF range outside file");
@@ -230,12 +243,18 @@ void BaseFileSystem::SetSecondaryDirectory(std::filesystem::path directory) {
     secondary_=directory.empty()?base_:std::move(directory);
 }
 // 원본 FUN_0041b4c0의 상대 경로 읽기 순서를 복원한다.
-std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_view name) const {
+std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_view name) const { return TryReadWithDiskName(name,{}); }
+//이름 인코딩 어댑터는 선택된 디스크query만 바꾸고 archive에는 원래 BYTE를 그대로 전달한다.
+std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryReadWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const {
     auto primary=PathText(std::filesystem::absolute(base_).lexically_normal()),secondary=PathText(std::filesystem::absolute(secondary_).lexically_normal()); //원문 getcwd/CD의 native 구분자를 Windows10/11 UTF-8로 보존한다.
     std::replace(primary.begin(),primary.end(),'/','\\');std::replace(secondary.begin(),secondary.end(),'/','\\');
     return ReadBaseFileByPolicy(name,primary,[&](BaseFileReadSite site,std::string_view query)->std::optional<std::vector<std::uint8_t>> {
         if (site==BaseFileReadSite::PrimaryArchive || site==BaseFileReadSite::SecondaryArchive) return TryReadArchiveOnly(query,site==BaseFileReadSite::SecondaryArchive);
-        const auto filename=site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk?primary:secondary,query,*fileNames_);
+        auto filename=site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk?primary:secondary,query,*fileNames_); // 같은 고리에는 원문 raw query를 먼저 작성하여 바이트 폭/소비를 유지한다.
+        if (diskName) {
+            const auto decoded=diskName(query);if (!decoded) return {}; // 변환 실패도 이미 선택한 원문root 한 칸을 남기고 뒤 raw TAFF로 진행한다.
+            filename=site==BaseFileReadSite::DirectDisk ? *decoded:JoinUtf8DiskRoot(site==BaseFileReadSite::PrimaryDisk?primary:secondary,*decoded); // root는 재해독하지 않고 Unicode 디스크 경로만 고리 밖에서 조합한다.
+        }
 #ifdef _WIN32
         //원본의 BYTE 접두 절삭이 UTF-8 글자 중간에 끝나면 Windows10/11 W 경로로 열 수 없다. 디스크 실패를 반환하되 뒤 TAFF의 원시 이름 조회는 계속한다.
         if (!filename.empty() && !MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,filename.data(),static_cast<int>(filename.size()),nullptr,0) && GetLastError()==ERROR_NO_UNICODE_TRANSLATION) return {};

@@ -42,6 +42,7 @@
 #include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
 #include "client/GameMenuCommands.h"
 #include "client/PresentationCommandInput.h" //일반 글꼴/음질 입력은 현재 캐시와 음향 장치 부모로 전달한다.
+#include "client/FontFaceEncoding.h" //변경 후 현재31BYTE ACP 이름만 실제 UTF-8 Config 경계에서 변환한다.
 #include "client/ConfigurationCommandInput.h" //원문 모드별 palette와 공유 priority/State 일반 명령을 기존 부모에 연결한다.
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "client/GameMenuActions.h"
@@ -1029,7 +1030,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
         PresentationCommandHooks effects;effects.fontFace=[this](auto index) { return client_.Fonts().FaceAt(index); };effects.rebuildFonts=[this](auto face) { RebuildPresentationFonts(client_.Fonts(),client_.GetRenderer(),face); }; // 글리프 주소 재사용 전에 실제 Renderer 캐시를 반납한다.
         effects.width=[this] { return client_.GetScreen().Width(); };effects.height=[this] { return client_.GetScreen().Height(); };
         effects.invalidate=[this](auto left,auto top,auto width,auto height,auto flags) { client_.GetRenderer().Invalidate({left,top,width,height},flags);rebuild_=true; }; //새 글꼴을 쓰기 전에 같은 호스트 장면을 재수집한다.
-        effects.currentFontFace=[this] { return client_.Fonts().CurrentFace(); };effects.set=[this](auto key,auto value) { client_.Configuration().Set(std::string(key),std::string(value));client_.ApplyAudioOptions(); }; //4414d0의 현재 Config와 기존 음향 재해석을 동기 사용한다.
+        effects.currentFontFace=[this] { return client_.Fonts().CurrentFace(); };effects.set=[this](auto key,auto value) { client_.Configuration().Set(std::string(key),FontFaceToUtf8(value));client_.ApplyAudioOptions(); }; //4414d0의 현재 Config와 기존 음향 재해석을 동기 사용한다.
         effects.closeSound=[this] { client_.WorldAudio().Shutdown(); };effects.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration());client_.ApplyAudioOptions(); };
         effects.sound=[this](auto name,auto a,auto b,auto c,auto d,auto e) { client_.WorldAudio().Sounds().PlayByName(name,a,b,c,d,e); };
         return DispatchPresentationCommandInput(event,effects); //release/정지/모달/실패의 관문은 원문의 해당 부모만 실행한다.

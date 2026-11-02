@@ -1,5 +1,6 @@
 // 원본 Screen.cpp 004a3240 ↔ CD 00425980, 004a2e40 ↔ CD 00425570, 004a39f0 ↔ CD 00425d10.
 #include "client/BitmapFont.h"
+#include "client/FontFaceEncoding.h" //raw ACP CHFNT 이름은 TAFF에, UTF-8 이름은 디스크에만 사용한다.
 #include <algorithm>
 #include <bit>
 #include <cstring>
@@ -250,7 +251,7 @@ const BitmapFont& FontStore::Get(int slot, FontStyle style) {
     if (!font) {
         const std::string face = slot == 1 ? "Courier New" : face_;
         const auto path = "d/!" + face + "." + kStyles[index] + "." + std::to_string(kHeights[slot]) + "." + std::to_string(kWeights[slot]) + ".chfnt";
-        if (const auto bytes = files_.TryRead(path)) {
+        if (const auto bytes = files_.TryReadWithDiskName(path,[](auto raw) { return FontCacheDiskName(raw); })) {
             try { font = std::make_unique<BitmapFont>(*bytes); }
             catch (const std::runtime_error&) { /* 원본도 읽기에 실패한 캐시는 GDI로 다시 만든다. */ }
         }

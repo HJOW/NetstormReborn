@@ -3130,3 +3130,8 @@ target_sources(netstorm_script_bindings_tests PRIVATE AiCommandStateTests.cpp Ai
 # 새실행대상없이같은원문MakeAi/객체수명/입력과이름을기존집중대상에추가한다(773).
 target_sources(netstorm_tests PRIVATE MakeAiTests.cpp MakeAiCommandInputTests.cpp)
 target_sources(netstorm_script_bindings_tests PRIVATE MakeAiTests.cpp MakeAiCommandInputTests.cpp)
+
+# ACP 글꼴 이름의 UTF-8 Config/VFS 경계를 창 없는 기존 집중 대상에서 검사한다(774).
+target_sources(netstorm_tests PRIVATE FontFaceEncodingTests.cpp)
+target_sources(netstorm_script_bindings_tests PRIVATE FontFaceEncodingTests.cpp)
+set_source_files_properties(FontFaceEncodingTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FONT_FACE_ENCODING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/font-face-encoding-win32.tsv\"")

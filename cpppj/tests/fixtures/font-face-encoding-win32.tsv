@@ -1,0 +1,25 @@
+# direction	codepage	sourceHex	outcome	outputHex; actual Windows NLS only, no font/window/config changes
+to	1252	436166e9	ok	436166c3a9
+to	1252	466163650069676e6f726564	ok	46616365
+to	1252	-	ok	-
+to	1252	80466f6e74	ok	e282ac466f6e74
+to	1252	81	ok	c281
+to	949	b1dbb2c3	ok	eab880eabcb4
+to	949	414141414141414141414141414141414141414141414141414141414141b0	throw	-
+to	932	96be92a9	ok	e6988ee69c9d
+to	65001	c3a946616365	ok	c3a946616365
+to	65001	c0af	throw	-
+to	65001	f0	throw	-
+from	1252	436166c3a9	ok	436166e9
+from	1252	f09f9880	throw	-
+from	1252	e2889e	throw	-
+from	1252	-	ok	-
+from	1252	417269616c0069676e6f726564	ok	417269616c
+from	949	eab880eabcb4	ok	b1dbb2c3
+from	949	f09f9880	throw	-
+from	932	e6988ee69c9d	ok	96be92a9
+from	65001	f09f9880	ok	f09f9880
+from	65001	eda080	throw	-
+from	65001	f4908080	throw	-
+to	65001	f09f9880	ok	f09f9880
+from	1252	e9	throw	-
