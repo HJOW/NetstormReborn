@@ -1,0 +1,37 @@
+{
+  "unit": 719,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 1750,
+  "observations": 5250,
+  "normalReturns": 1740,
+  "partialStops": 10,
+  "precisionOrRepeatDifferences": 0,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "ranges": [
+    "004d96b6..004d9bba",
+    "004d53f0..004d542f",
+    "004d5020..004d5066",
+    "00497e50..00497eb1",
+    "00439928..0043994b"
+  ],
+  "boundaries": [
+    "strchr/정지/선택음/즉시 중심만 명시 경계이며 언어 표·Point·현재 Renderer 뷰포트 중심은 실제 x86이다.",
+    "해제/Console/Guide/Gump 등 상위 입력 관문·전체 GUI/OS/통신은 실행하지 않는다.",
+    "음향/캡처/중심 명시 중단의 선행 부분 효과와x87조건/NaN을 정상 반환과 구별한다."
+  ],
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "tools/decomp_saved_camera_key.py": "298a853496de57e4725d993b6f6db6de6f138617345728a446294e0e4fecf28d",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "cpppj/tests/fixtures/saved-camera-key-x86.tsv": "aff166aad233756cf65ac9e2215b818a415461e0dc6d74f4943e4e9ff95a4025"
+  }
+}

@@ -2866,6 +2866,12 @@ add_executable(netstorm_construction_history_key_tests FocusedTestMain.cpp Const
 target_link_libraries(netstorm_construction_history_key_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_construction_history_key_tests)
 
+# 별개10칸 저장 카메라의 원문1750입력·현재 Renderer·Client 수명을 집중 확인한다(719).
+target_sources(netstorm_tests PRIVATE SavedCameraKeyTests.cpp)
+add_executable(netstorm_saved_camera_key_tests FocusedTestMain.cpp SavedCameraKeyTests.cpp)
+target_link_libraries(netstorm_saved_camera_key_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_saved_camera_key_tests)
+
 # 공유 기술 필터/원소 목록과 실제 HTML 메타 부모의 집중 확인이다(705).
 target_sources(netstorm_tests PRIVATE TechnologyListMenuTests.cpp)
 add_executable(netstorm_technology_list_menu_tests FocusedTestMain.cpp TechnologyListMenuTests.cpp HtmlWindowMetadataTests.cpp)

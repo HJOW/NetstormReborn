@@ -2,6 +2,7 @@
 #pragma once
 #include "client/RawCameraView.h"
 #include "o/RawConstructionHistory.h" //최근 로컬 건설 위치/Tab 순번을 Session보다 오래 소유한다.
+#include "client/SavedCameraKey.h" //숫자 저장10칸은 최근 배치5칸과 독립인 Client 전역이다.
 
 namespace netstorm::client { // 호스트8비트 Renderer 장치의 생성/소멸과 게임 카메라 수명을 구별한다.
 // Renderer 앞64BYTE 밖의 목표/한계다. 목표 쓰기만으로 현재 view를 바꾸지 않는다.
@@ -30,6 +31,8 @@ public:
     const RawRendererDenominatorState& Denominator() const { return denominator_; } // Q16이나 카메라 원점과 합치지 않는다.
     o::ConstructionHistoryState& ConstructionHistory() { return constructionHistory_; } //원문 최근40BYTE와 별도 Tab 순번의 유일한 Client owner다.
     const o::ConstructionHistoryState& ConstructionHistory() const { return constructionHistory_; } //관측은 초기화/순번/카메라를 바꾸지 않는다.
+    SavedCameraPositions& SavedPositions() { return savedPositions_; } //005caeb0의 같은80BYTE를 실제 숫자 키가 읽고 쓴다.
+    const SavedCameraPositions& SavedPositions() const { return savedPositions_; } //보고는 무효 Point나 저장 좌표를 변경하지 않는다.
     void InitializeNativeRenderer(std::int32_t width,std::int32_t height,std::int32_t worldCells,std::uint32_t& worldRedraw,std::uint32_t& mapRevision); // 실제4993c0의 명시 초기화·목표·복사·두 마지막store를 수행한다.
     void UpdateTargetLimits(std::int32_t width,std::int32_t height,float worldWidth,float worldHeight); //497f80의 실제 계산만 적용하며 view/snapshot을 초기화하지 않는다.
     void RequestPixels(std::int32_t x,std::int32_t y); // 목표만 쓴다. 497e00/497f20의 좌표/전역 카운터 처리는 상위 caller가 소유한다.
@@ -44,5 +47,6 @@ private:
     RawCameraTargetState target_{}; // 현재 view와 독립인 원문 목표/한계다.
     RawRendererDenominatorState denominator_{}; // PE 초기15/15의 별도 두 DWORD다.
     o::ConstructionHistoryState constructionHistory_{}; //최초BSS0이며 명시 시작 초기화 뒤에는 건설/Tab writer만 변경한다.
+    SavedCameraPositions savedPositions_{}; //최초BSS0/명시 시작 이후에는 저장 키만 쓰며 Renderer/Session 재설정은 보존한다.
 };
 }

@@ -7,6 +7,7 @@
 #include "client/ClientMain.h"
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
 #include "client/ConstructionHistoryKey.h" //최초 map mode 뒤 최근 건설 위치 다섯 칸을 한 번 초기화한다.
+#include "client/SavedCameraKey.h" //원문 최초 저장 위치10칸 초기화를 최근 위치5칸보다 먼저 실행한다.
 #include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
 #include "client/LanguageRequest.h" //SetLanguage는같은현재언어/설정/입력큐와공유카운터를사용한다.
 #include "o/RawXlat.h" //시작 때 함께 읽은 세 언어의 번역을 선택 변경 뒤에도 보존한다.
@@ -363,6 +364,7 @@ int Client::Run() {
     if (audio_) audio_->StartScene(false);
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientChatManager(*this); //00439840의 실제 map mode 시작이며 메뉴/Session 생성보다 먼저 같은 현재 manager/명령표를 구성한다.
     fortBadges_->ResetCounts(); // 원본0043984a는 Chat 시작 다음의 같은 장부 count reset이며 매 Session 생성 때 반복하지 않는다.
+    if (options_.edition==o::OriginalEdition::Patch1078) InitializeSavedCameraPositions(gameplayGlobals_->Camera().SavedPositions()); //00439928의 최초10칸 쓰기이며 일반 미션/Renderer 재시작에서는 반복하지 않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeConstructionHistory(gameplayGlobals_->Camera().ConstructionHistory()); //원문0043994c의 최초5칸 쓰기다. 새 미션/Session/Renderer마다 반복하지 않는다.
     // 현재 UberGump는 단일 플레이 메뉴/브리핑과 저장 미션의 지형·선택·이동 월드를 연결한다.
     if (ready) ready(*this);

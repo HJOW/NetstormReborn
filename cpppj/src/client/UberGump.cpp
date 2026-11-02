@@ -36,6 +36,7 @@
 #include "client/ViewKeyInput.h"
 #include "client/RotationKeyInput.h" //C/c는 World 없이도 같은 현재 Client 옵션을 반전하는 일반 입력이다.
 #include "client/ConstructionHistoryKey.h" //Tab은 같은 최근 로컬 건설 위치를 현재 즉시 카메라로 순환한다.
+#include "client/SavedCameraKey.h" //숫자 호출/Shift 실제 기호 저장의 언어 표와 현재 지도 중심을 공유한다.
 #include "client/GifScreenshot.h"
 #include "client/RawUserHighlight.h" // Editor F8도 같은 Client 선택 전역의 원본 강조 몸체를 사용한다.
 #include "client/TellParameters.h"
@@ -1251,6 +1252,12 @@ void UberGump::Event(InputEvent event) {
         if (rawButtons_->CurrentDialog()) return; //원문의 Console/모달 뒤 정지 관문과 같은 위치다.
         auto& gameplay=*client_.GameplayGlobals();static_cast<void>(DispatchConstructionHistoryKey(event,gameplay.Camera().ConstructionHistory(),gameplay.WorldCells(),{[this] { return client_.Paused(); },[this](auto x,auto y) { CenterViewPoint(x,y); }}));return;
     }
+    SavedCameraKeyHooks savedCamera; //현재 숫자 키만 이 장치를 소비하며 다른 사건은 초기 게이트에서 반환한다.
+    savedCamera.paused=[this] { return client_.Paused(); };savedCamera.language=[this] { return client_.LanguageNumber(); };
+    savedCamera.sound=[this] { client_.WorldAudio().Sounds().PlayByName("select.wav",0,0,0,0,0); };
+    savedCamera.capture=[this] { const auto map=CurrentMapView();return CaptureSavedCameraCenter(client_.GameplayGlobals()->Camera().RendererView(),{map.left,map.top,map.right,map.bottom}); }; //선택음 이후의 같은 실제 지도LTRB/Renderer를 읽는다.
+    savedCamera.center=[this](auto x,auto y) { CenterViewPoint(x,y); };
+    if (!rawButtons_->CurrentDialog() && DispatchSavedCameraKey(event,client_.GameplayGlobals()->Camera().SavedPositions(),savedCamera)) return; //Guide/Gump/Chat/모달 뒤의 원문 정지 관문이며 World 유무를 별도 제한하지 않는다.
     if (transitionCode==kProductionBridgeCommand) {
         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // Guide/현재 모달 뒤 같은 Gump 트리로 전달한다. 정지/활성 커서 관문을 추가하지 않는다.
     }
@@ -1660,6 +1667,8 @@ std::string UberGump::Report(bool cameraOnly) const {
     out<<"rotation_mode\t"<<client_.GameplayGlobals()->CursorGlobals().RotationMode()<<'\t'<<client_.Configuration().GetInt("rotmode")<<'\n'; //C/메뉴/우클릭의 공유 DWORD와 실제 설정을 쓰기 없이 따로 관측한다(717).
     const auto& constructionHistory=client_.GameplayGlobals()->Camera().ConstructionHistory();out<<"construction_history\t"<<constructionHistory.index;
     for (const auto& point:constructionHistory.points) out<<'\t'<<std::bit_cast<std::uint32_t>(point.x)<<'\t'<<std::bit_cast<std::uint32_t>(point.y); //최근5좌표의 실제 비트를 읽으며 빈 값/NaN을 다른 좌표로 치환하지 않는다(718).
+    out<<'\n';
+    out<<"saved_camera";for (const auto& point:client_.GameplayGlobals()->Camera().SavedPositions().points) out<<'\t'<<std::bit_cast<std::uint32_t>(point.x)<<'\t'<<std::bit_cast<std::uint32_t>(point.y); //별개10칸의 원시 비트만 읽고 현재 카메라/이력을 쓰지 않는다(719).
     out<<'\n';
     const auto& local=client_.LocalStateGlobals()->Blocks();out<<"fort_selection\t"<<fortSelectionMode_<<'\t'<<local[1][0]<<'\t'<<local[3][0]<<'\t'<<local[4][0]<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\n'; // 원문mode/확정phase/현재요청/next/pending을 설치완료와 구별해 읽는다.
     out<<"fort_names\t"<<Field(std::string(client_.FortGlobals()->Current()))<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\t'<<menuConfigRevision_<<'\t'<<client_.FortGlobals()->SelectedFileSpec()<<'\n'; // 같은 실제 두 버퍼/공유 dirty/선택 키를 읽기만 한다.
