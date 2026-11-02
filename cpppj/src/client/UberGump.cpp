@@ -97,6 +97,7 @@
 #include "client/ClientChatRuntime.h"
 #include "client/RawChatPacket.h"
 #include "client/RawChatReceive.h"
+#include "client/ScreenMouseKey.h" // 원문 Guide 앞 전체화면 F12의 즉시 장치 전환이다.
 #include "client/ClientDotCommandGlobals.h"
 #include "client/ClientStaticStrings.h"
 #include "client/ClientPlayerRecords.h"
@@ -1075,6 +1076,7 @@ void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
+    if (DispatchScreenMouseKey(event,[this] { return client_.GetScreen().Flags(); },[this](auto mode) { client_.ChangeScreenMode(mode); })) rebuild_=true; // 원본 DirectDraw 호출은 Windows10/11에서 borderless/DIB 호환 장치로 실행한다. 같은 사건은 Guide/모달에 계속 전달한다.
     if (const auto* movie=rawButtons_->Menus()->Movies();movie && movie->Active()) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) { rebuild_=true;return; } } // 실제 MovieGump 모달을 일반 ESC/키 처리보다 먼저 같은 Gump Route에 전달한다.
     const auto transitionCode=event.code&0x03ffffffU; // 원본 Guide 제어 사건은 일반 입력/프레임보다 먼저 소비한다.
     if (DispatchPlayIntroInput(event,client_.LocalStateGlobals()->State())) return; // 현재 두 인자는 쓰지 않고 Native State39/40/41의 기존 영상/복귀 수명에 맡긴다.

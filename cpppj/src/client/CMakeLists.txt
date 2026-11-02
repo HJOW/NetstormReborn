@@ -321,3 +321,5 @@ target_sources(netstorm PRIVATE PriestSelectionShortcut.cpp PriestSelectionShort
 target_sources(netstorm PRIVATE SelectionKeyInput.cpp SelectionKeyInput.h) # H/F4/F5 일반 View 큐·Ctrl F5/N·P/R의 공통 정지 관문을 연결한다.
 target_sources(netstorm PRIVATE TechnologyListMenu.cpp TechnologyListMenu.h) # HTML 원소별 기술 목록과 전체 목록의 공통 필터/고정40칸 수집을 연결한다.
 target_sources(netstorm PRIVATE StartupFiles.cpp StartupFiles.h) # 원문6후보setup탐색과같은고리/실제시작VFS루트를연결한다.
+
+target_sources(netstorm PRIVATE ScreenMouseKey.cpp ScreenMouseKey.h) # Guide/Gump 앞 F12를 현재 Windows 호환 화면 장치에 연결한다.

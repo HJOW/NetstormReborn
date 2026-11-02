@@ -1,0 +1,236 @@
+{
+  "unit": 744,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "previousGoalTurn": "진척:743 실제 현재 demo 선택 관문·검사·커밋 완료",
+  "status": "단위 완료, 전체1~8차 목표 진행 중",
+  "runtimeProduct": 744,
+  "displayVersion": "11.01",
+  "exeSha256": "270a74f92abba129894eb16d33c8cf78542425622aac07671186731021995bf0",
+  "summary": "Guide/모달/정지 앞 전체화면 F12를 현재 Windows 호환 화면 장치에 연결",
+  "native": {
+    "unit": 744,
+    "date": "2026-11-02",
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23"
+    },
+    "inputs": 552,
+    "executions": 1104,
+    "controls": [
+      639,
+      895
+    ],
+    "nativeRange": "004d6e34..004d6e60",
+    "stopBefore": "004d6e61 Guide",
+    "stackDelta": 0,
+    "explicitBoundary": "00435ba0 화면 장치의 실제 단일 DWORD 인자만 관찰",
+    "gameProcesses": 0,
+    "fixtureSha256": "df30c91ba86a9e8f0aab815361272c0c7e851ee1ed2401e9018b88b89945d5ed",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "toolSha256": "aeb847d3cb82423be180b174de9a9ebe67093e8b489329e3bf3f73ae2bf900d5",
+    "sharedOracleSha256": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+  },
+  "protection": {
+    "previousCount": 2654,
+    "currentCount": 2655,
+    "fixtureCount": 835,
+    "changed": [],
+    "newFixtures": [
+      "cpppj/tests/fixtures/screen-mouse-key-x86.tsv"
+    ],
+    "allPreviousUnchanged": true
+  },
+  "build": {
+    "config": "Release",
+    "targets": [
+      "NetstormCpp",
+      "netstorm_selection_key_input_tests"
+    ],
+    "log": "extracted/cpp-screen-mouse-key-744/build-v1.log",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "total": 23,
+    "failedChecks": 0,
+    "newTests": 3,
+    "newExecutables": 0,
+    "retainedTestExecutables": 66,
+    "retainedAllTargets": 71,
+    "log": "extracted/cpp-screen-mouse-key-744/tests-v1.log",
+    "fullSuiteRun": false
+  },
+  "gui": {
+    "processes": 2,
+    "runs": [
+      {
+        "label": "live-before",
+        "pid": 18564,
+        "binarySha256": "777a62d333b82b356e9d08566453b8baeb26f833b59eccc945cae6543c10748f",
+        "returnCode": 1,
+        "seconds": 2.4864735000010114,
+        "timedOut": false,
+        "observerPassed": false,
+        "originalsUnchanged": true,
+        "rawDirectory": "extracted/cpp-screen-mouse-key-744/live-before",
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ]
+          },
+          "modal": {
+            "page": [
+              "AdjustDirectDraw"
+            ],
+            "mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ]
+          }
+        },
+        "classification": "검사 도구 F12 이름 미지원, 제품 F12 동작의 실패 재현으로 세지 않음"
+      },
+      {
+        "label": "live-v1",
+        "pid": 18848,
+        "binarySha256": "270a74f92abba129894eb16d33c8cf78542425622aac07671186731021995bf0",
+        "returnCode": 0,
+        "seconds": 4.048154000003706,
+        "timedOut": false,
+        "observerPassed": true,
+        "originalsUnchanged": true,
+        "rawDirectory": "extracted/cpp-screen-mouse-key-744/live-v1",
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ]
+          },
+          "modal": {
+            "page": [
+              "AdjustDirectDraw"
+            ],
+            "mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ]
+          },
+          "toggled": {
+            "page": [
+              "AdjustDirectDraw"
+            ],
+            "mode": [
+              "171",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ]
+          },
+          "released": {
+            "page": [
+              "AdjustDirectDraw"
+            ],
+            "mode": [
+              "171",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ]
+          },
+          "modified": {
+            "page": [
+              "AdjustDirectDraw"
+            ],
+            "mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ]
+          },
+          "window": {
+            "page": [
+              "main"
+            ],
+            "mode": [
+              "138",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ]
+          },
+          "windowAfterKey": {
+            "page": [
+              "main"
+            ],
+            "mode": [
+              "138",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ]
+          }
+        }
+      }
+    ],
+    "frameLimit": 106,
+    "quitInputFrame": 96,
+    "lastObservedFrame": 90,
+    "physicalInput": false,
+    "originalGameRuns": 0
+  },
+  "standaloneCliRuns": 0,
+  "compatibilityDifference": "원본 DirectDraw 장치 호출은 Windows10/11 borderless/DIB 호환 장치로 실행하며 해당 차이를 한국어 주석에 명시",
+  "limitations": [
+    "메인 메뉴 앱 내 입력이며 실제 스테이지/물리 키/다른 앱 포커스/PCM/전체UI 동일성 아님",
+    "전체C++/전체34 재실행 없음, 전체34/ZIP645는644 제품 근거",
+    "10.72 새 F12 대조 없음",
+    "포획/희생·특정 적 공격/승리·공중3종 전용 행동·MP 검사0"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/ScreenMouseKey.cpp": "152515eec7820e0b9e09356878dcc9558d6b9b8add4059634b919cbaaf25abf4",
+    "cpppj/src/client/ScreenMouseKey.h": "c911fc3bef6d0329769deda42a2723eced0cdc224a214694cc2edcb7b940b463",
+    "cpppj/src/client/UberGump.cpp": "b0f0be68c9bb182dce67c1a3ac175f06de62741cd616e234c004fb5dd00b53bd",
+    "cpppj/src/app/main.cpp": "54d7ca60735db479278ead5854ce5e15b50ae1103badd81053aa33b78d81ccf7",
+    "cpppj/src/client/CMakeLists.txt": "c59e91237d29e17e3781e43976df16846af46693c014d4a1639b77e5c3dd7ea8",
+    "cpppj/tests/CMakeLists.txt": "90717c8b1cf2ff44e2661f347a963dc91e275e82ab5575bd6b8589cf71cdf20d",
+    "cpppj/tests/ScreenMouseKeyTests.cpp": "549a1611a205e06b8578fedd03feac253a5aeb77828ed51722e9e7d7297b5547",
+    "tools/decomp_screen_mouse_key.py": "aeb847d3cb82423be180b174de9a9ebe67093e8b489329e3bf3f73ae2bf900d5",
+    "tools/cpp_screen_mouse_key_smoke.py": "8a19c2cb8ddd7c46cac12a89fa7dd45b6bfcc18d7d739c20ce356a52f2871c59",
+    "cpppj/tests/fixtures/screen-mouse-key-x86.tsv": "df30c91ba86a9e8f0aab815361272c0c7e851ee1ed2401e9018b88b89945d5ed"
+  },
+  "nextProtectedBaseline": "extracted/cpp-screen-mouse-key-744/protected-after.json"
+}

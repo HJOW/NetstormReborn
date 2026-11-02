@@ -3004,3 +3004,7 @@ netstorm_apply_compiler_options(netstorm_editor_file_ring_tests)
 # 같은 Edit 집중 대상에서 실제 저장/삭제의 공유 고리와 직접 chmod 경계를 확인한다(740).
 target_sources(netstorm_tests PRIVATE EditorFileMutationRingTests.cpp)
 target_sources(netstorm_editor_file_ring_tests PRIVATE EditorFileMutationRingTests.cpp)
+
+# 기존 선택 키 집중 대상에서 Guide 앞 F12와 모드 장치 연결을 함께 확인한다(744).
+target_sources(netstorm_tests PRIVATE ScreenMouseKeyTests.cpp)
+target_sources(netstorm_selection_key_input_tests PRIVATE ScreenMouseKeyTests.cpp)

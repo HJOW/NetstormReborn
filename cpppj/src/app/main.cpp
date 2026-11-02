@@ -714,7 +714,7 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
                     if (step.argument.size()==1 && static_cast<unsigned char>(step.argument[0])>=0x20 && static_cast<unsigned char>(step.argument[0])<0x7f) {
                         c.Input().Push(static_cast<unsigned char>(step.argument[0])|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; // WM_CHAR와 같은 하위 문자 코드를 넣는다. 가상 키 번호로 바꾸지 않는다.
                     }
-                    const std::map<std::string,unsigned> keys{{"left",0x25},{"up",0x26},{"right",0x27},{"down",0x28},{"home",0x73},{"priest",0x74},{"f1",0x70},{"f2",0x71},{"f3",0x72},{"f4",0x73},{"f5",0x74},{"f6",0x75},{"f7",0x76},{"f8",0x77},{"f9",0x78}}; // 검사도 실제 Win32 가상 키 번호를 같은 큐에 넣는다.
+                    const std::map<std::string,unsigned> keys{{"left",0x25},{"up",0x26},{"right",0x27},{"down",0x28},{"home",0x73},{"priest",0x74},{"f1",0x70},{"f2",0x71},{"f3",0x72},{"f4",0x73},{"f5",0x74},{"f6",0x75},{"f7",0x76},{"f8",0x77},{"f9",0x78},{"f12",0x7b}}; // 검사도 실제 Win32 가상 키 번호를 같은 큐에 넣는다. F12는 검사 입력 이름만 추가하며 물리 키 생성은 기존 KeyEvent가 담당한다.
                     std::string_view name=step.argument;std::uint32_t modifiers{}; // 검사 입력도 같은 Win32 Ctrl/Shift/Alt 사건 비트만 만든다.
                     while (name.find('+')!=name.npos) { // 복수 수정키는 입력 순서와 관계없이 원본 상위 비트를 합친다.
                         const auto split=name.find('+');const auto prefix=name.substr(0,split); // 현재 수정키 접두와 다음 실제 키의 경계다.
