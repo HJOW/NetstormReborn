@@ -2866,6 +2866,11 @@ netstorm_apply_compiler_options(netstorm_selection_key_input_tests)
 target_sources(netstorm_tests PRIVATE KnowledgeKeyInputTests.cpp)
 target_sources(netstorm_selection_key_input_tests PRIVATE KnowledgeKeyInputTests.cpp)
 
+#D/d의 원문452입력과 실제 최근 생산항목 소비·기존 생산단축키를 같은 집중 대상으로 확인한다(756).
+target_sources(netstorm_tests PRIVATE RepeatItemKeyTests.cpp)
+target_sources(netstorm_selection_key_input_tests PRIVATE RepeatItemKeyTests.cpp ProductionShortcutsTests.cpp InventoryItemGumpTests.cpp)
+set_source_files_properties(RepeatItemKeyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_REPEAT_ITEM_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/repeat-item-key-x86.tsv\"")
+
 #Pause 가상키의 원문246입력과 기존 일반 Pause 소비를 같은 집중 대상으로 확인한다(753).
 target_sources(netstorm_tests PRIVATE PauseKeyInputTests.cpp)
 target_sources(netstorm_selection_key_input_tests PRIVATE PauseKeyInputTests.cpp)

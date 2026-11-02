@@ -1,0 +1,294 @@
+{
+  "unit": 756,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 756,
+  "displayVersion": "11.01",
+  "exeSha256": "b2a6b98c89153b2831762a7a7b5ccf3ea3001777b794140b2d9c31d0d41a8d59",
+  "summary": "D/d 최근 생산 항목의 현재 명령 예약과 기존 Inventory 소비자 연결",
+  "tests": {
+    "totalUnique": 65,
+    "totalExecutions": 65,
+    "newTests": 4,
+    "failedChecks": 0,
+    "names": [
+      "GameMenuActions_Native610CurrentBodyAndPartialEffects",
+      "GameMenuActions_UnhandledReleaseAndRequiredEffects",
+      "GameTimeDisplay_CurrentOriginAndSelectedFailures",
+      "GameTimeDisplay_KeyNative168",
+      "GameTimeDisplay_MessageNative90",
+      "InventoryItemGump_ActualAssetsTreePixelsAndClick",
+      "InventoryItemGump_Native132",
+      "KnowledgeKeyInput_IndependentNativePauseAndModifiers",
+      "KnowledgeKeyInput_PausedAndModifiedKeysRequireNoQueueDevices",
+      "KnowledgeKeyInput_QueueFullAndMissingBoundaryPreservePriorEffects",
+      "KnowledgeKeyInput_UsesCurrentCommandAndRealFifoWithoutCoordinates",
+      "MessageGump_MissingSelectedBranchesStayExplicit",
+      "MessageGump_PauseNative324",
+      "NextUnitSelection_ActualSelectionAndPauseOrder",
+      "NextUnitSelection_IndependentNative",
+      "NextUnitSelection_PartialFailure",
+      "PauseKeyInput_MissingQueuePreservesCurrentCommandLookup",
+      "PauseKeyInput_Native246InputsAndRealQueue",
+      "PauseKeyInput_NonPauseAndReleaseDoNotRequireDevices",
+      "PauseKeyInput_QueuedCommandUsesCurrentPauseAndExistingActions",
+      "PriestSelectionShortcut_CurrentOwnerQueueAndCounterLifetime",
+      "PriestSelectionShortcut_IndependentNativeBranch",
+      "PriestSelectionShortcut_PartialFailureAndCurrentWrap",
+      "ProductionShortcuts_Native4280ReachableCases",
+      "ProductionShortcuts_ReleasePauseAndLazyDevices",
+      "RepeatItemKey_CurrentCommandAndPartialFailure",
+      "RepeatItemKey_ExistingItemConsumesCurrentTypeContentAndSerial",
+      "RepeatItemKey_Native452InputsAndRealQueue",
+      "RepeatItemKey_ReleasePauseMaskAndLazyDevices",
+      "ScreenModeTransition_Native192WholeParent",
+      "ScreenModeTransition_NotInitializedKeepsActualFailedDeviceResult",
+      "ScreenModeTransition_RecoveryAndRememberFailuresPropagateWithoutIncrement",
+      "ScreenModeTransition_RestoreAfterFailureAndReadCurrentAfterCallbacks",
+      "ScreenModeTransition_SameModeNeedsNoDeviceAndMissingDeviceIsExplicit",
+      "ScreenMouseKey_LazyDeviceErrorsAndWindowedMode",
+      "ScreenMouseKey_Native552CurrentModeAndInputBits",
+      "ScreenMouseKey_UsesCurrentModeAndCallsDeviceImmediately",
+      "ScreenPresentation_AspectFitAndLetterbox",
+      "ScreenPresentation_CompatibilityFlagsAndNativeCommands",
+      "ScreenPresentation_IntegerNearestPixelsAndBounds",
+      "ScreenPresentation_InversePointAndDirtyPhase",
+      "ScreenPresentation_WideDibUsesActualAlignedPitch",
+      "SelectionKeyInput_IndependentNativeParent",
+      "SelectionKeyInput_LazyGatesAndExactCodes",
+      "SelectionKeyInput_QueueCapacityAndMissingBoundary",
+      "SelectionKeyInput_QueuedHomeGuideAndMenuGates",
+      "TutorialOne_SharedStateAndMutableList",
+      "TutorialOne_StageNative266",
+      "TutorialOne_TotalMadeNative104",
+      "TutorialOne_TotalMadeSharedResetAndDirectHelperReplayNative104",
+      "Warnings_ActualCurrentMissionBlocksWarningKeepsPauseAndTime",
+      "Warnings_ActualStyleAndGumpLifetime",
+      "Warnings_BoardNative154",
+      "Warnings_CommonDrawStyleAndClip",
+      "Warnings_CommonMenuOccludesByNativeDepth",
+      "Warnings_CommonPageClearAndStaleBoard",
+      "Warnings_CommonRegistryMixedMenuAndGlobalKill",
+      "Warnings_CurrentSuppressionGatePrecedesBoardEffects",
+      "Warnings_DeadlineNative10",
+      "Warnings_IdleNative90",
+      "Warnings_InlineCommandParser",
+      "Warnings_PauseSharesBoardAndPermanentText",
+      "Warnings_ReentrantSoundCreatesMenuInSameRegistry",
+      "Warnings_SeparatedFrameStagesExpireWhileGameClockIsPaused",
+      "Warnings_SeparatedIdleReusesBoardSlotBeforeFollowingCleanup"
+    ],
+    "logs": [
+      "tests-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2665,
+    "currentCount": 2666,
+    "allUnchanged": true,
+    "fixtureCount": 846,
+    "newFixtures": [
+      "cpppj/tests/fixtures/repeat-item-key-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 756,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 452,
+      "nativeObservations": 904,
+      "precisionDifferences": 0,
+      "stackDelta": 0,
+      "nativeRanges": [
+        [
+          "0x4d6e61",
+          "0x4da477"
+        ],
+        [
+          "0x463e40",
+          "0x463f62"
+        ],
+        [
+          "0x460de0",
+          "0x460def"
+        ],
+        [
+          "0x445330",
+          "0x44533e"
+        ],
+        [
+          "0x452fe0",
+          "0x45303c"
+        ],
+        [
+          "0x4e63d0",
+          "0x4e63d5"
+        ],
+        [
+          "0x4e63e0",
+          "0x4e649e"
+        ],
+        [
+          "0x4d53f0",
+          "0x4d5480"
+        ]
+      ],
+      "repeatBranch": "004d96fa..004d9705",
+      "pauseQueryBefore": "004d96b6",
+      "commandAddress": "00542b10",
+      "initialCommand": 33554695,
+      "gameExecutions": 0,
+      "nativeBodiesUnchanged": true,
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "fixtureSha256": "52c758d5de7cf7fbf20928eeaa7dbc099cfa21f4e171d552fbbc0b0114a8f3e3",
+      "toolSha256": "d7011b956f3e3568e7d516107ed75d7556fdf24ed95365c19266145aac3170a8",
+      "sharedOracleSha256": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+      "totals": {
+        "27f": {
+          "runs": 452,
+          "instructions": 133299
+        },
+        "37f": {
+          "runs": 452,
+          "instructions": 133299
+        }
+      },
+      "boundaries": {
+        "guide": 1048,
+        "mission": 1048,
+        "gump": 1016,
+        "general": 544,
+        "paused": 536,
+        "queue": 400,
+        "cursor": 536
+      },
+      "explicitBoundaries": [
+        "Guide virtual+24",
+        "Gump Route",
+        "general input cleanup"
+      ],
+      "scope": "비멀티 D/d 키/일반 getlastitem FIFO. OS 키/게임 실행/MP 통신/전체UI 없음",
+      "rawReportSha256": "6200999afcccc3d31d1db14e6c756647af75c6122221849ca4d5616dc301728c"
+    },
+    "native-repeat.json": {
+      "unit": 756,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 452,
+      "nativeObservations": 904,
+      "precisionDifferences": 0,
+      "stackDelta": 0,
+      "nativeRanges": [
+        [
+          "0x4d6e61",
+          "0x4da477"
+        ],
+        [
+          "0x463e40",
+          "0x463f62"
+        ],
+        [
+          "0x460de0",
+          "0x460def"
+        ],
+        [
+          "0x445330",
+          "0x44533e"
+        ],
+        [
+          "0x452fe0",
+          "0x45303c"
+        ],
+        [
+          "0x4e63d0",
+          "0x4e63d5"
+        ],
+        [
+          "0x4e63e0",
+          "0x4e649e"
+        ],
+        [
+          "0x4d53f0",
+          "0x4d5480"
+        ]
+      ],
+      "repeatBranch": "004d96fa..004d9705",
+      "pauseQueryBefore": "004d96b6",
+      "commandAddress": "00542b10",
+      "initialCommand": 33554695,
+      "gameExecutions": 0,
+      "nativeBodiesUnchanged": true,
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "fixtureSha256": "52c758d5de7cf7fbf20928eeaa7dbc099cfa21f4e171d552fbbc0b0114a8f3e3",
+      "toolSha256": "d7011b956f3e3568e7d516107ed75d7556fdf24ed95365c19266145aac3170a8",
+      "sharedOracleSha256": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+      "totals": {
+        "27f": {
+          "runs": 452,
+          "instructions": 133299
+        },
+        "37f": {
+          "runs": 452,
+          "instructions": 133299
+        }
+      },
+      "boundaries": {
+        "guide": 1048,
+        "mission": 1048,
+        "gump": 1016,
+        "general": 544,
+        "paused": 536,
+        "queue": 400,
+        "cursor": 536
+      },
+      "explicitBoundaries": [
+        "Guide virtual+24",
+        "Gump Route",
+        "general input cleanup"
+      ],
+      "scope": "비멀티 D/d 키/일반 getlastitem FIFO. OS 키/게임 실행/MP 통신/전체UI 없음",
+      "rawReportSha256": "6200999afcccc3d31d1db14e6c756647af75c6122221849ca4d5616dc301728c"
+    }
+  },
+  "initialFailures": [],
+  "sourceSha256": {
+    "cpppj/src/client/ProductionShortcuts.cpp": "752c2aa1ba9d83ba1c5683f2359772e7907bca2aaa743c39fe6ec79cdce18d56",
+    "cpppj/src/client/ProductionShortcuts.h": "af33faf0cd6018424ec54a6ca126555f343382e93bad76879e87cfbd885e5b4b",
+    "cpppj/src/client/UserInput.cpp": "2db6caa7a6178c69c81595544ae60beb0de1590d22239032ac1091a4ee721721",
+    "cpppj/tests/CMakeLists.txt": "29cf2cd95e2d2358032b200e650a224f346b3c3c6dcbe5d99277e2f3eb449683",
+    "cpppj/tests/RepeatItemKeyTests.cpp": "76c56ce8c643c1c92dda624b48d9542d4dcee790ea99ed54fa634fe0bf743a42",
+    "tools/decomp_repeat_item_key.py": "d7011b956f3e3568e7d516107ed75d7556fdf24ed95365c19266145aac3170a8"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-756/protected-after.json",
+  "next": "BaseFile 전체열기부모(757)·추가지식메뉴(758)·kind17생성자(759)·일반명령5종(760)·outside어댑터(761)와 남은 비멀티/호환성",
+  "limitations": [
+    "원문관측의Guide/Gump/일반정리와실제OS는명시외부경계다. Inventory본문은기존현재상태를공개메서드로명시공급한창없는합성검사다.",
+    "UserInput::Event선행outside거부와RawCampaignCursor/C/c/Tab의기존차이는미수정이다. D/d를특례로우회하지않고761에서각원문단계에맞춰복원한다.",
+    "대본getlastitem별칭/OS키/새GUI·MP·공중3종행동·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다."
+  ]
+}

@@ -28,7 +28,7 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     //005cae94/98은 앞선 폴링의 현재 좌표다. 큐 사건 좌표로 덮어쓰면 모드5/6의 원문 입력이 달라진다.
     ReadCursorOptions();auto& rotateMode=client_.GameplayGlobals()->CursorGlobals().RotationMode(); // 실제 옵션 해석/메뉴와 같은 원문 DWORD다.
     if (world_.Session().Cursor().HandleInput(event,rotateMode)) return {};
-    if (QueueProductionShortcut(event,client_.Paused(),{[] { return kProductionBridgeCommand; },[this](auto command,auto slot,auto zero) { client_.Input().PushCommand(command,slot,zero); }})) return {}; // 실제 Gump 경로가 같은 큐의 다음 사건을 소비한다.
+    if (QueueProductionShortcut(event,client_.Paused(),{[] { return kProductionBridgeCommand; },[this](auto command,auto slot,auto zero) { client_.Input().PushCommand(command,slot,zero); },[] { return kProductionRepeatCommand; }})) return {}; // 실제 Gump 경로가 같은 큐의 다음 사건을 소비한다.
     SelectionKeyInputHooks selectionKeys;selectionKeys.paused=[this] { return client_.Paused(); };selectionKeys.command=[](auto address) { return GameMenuCommandValue(address).value(); };selectionKeys.localOwner=[this] { return world_.Session().LocalOwner(); }; //같은 실제 Client/Session의 현재 입력 경계를 사용한다.
     selectionKeys.queue=[this](auto code,auto first,auto second) { client_.Input().PushCommand(code,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };selectionKeys.next=[this](auto add) { world_.SelectNextUnit(add); };selectionKeys.priest=[this,queue=selectionKeys.queue] { world_.SelectPriest(queue); };
     if (DispatchSelectionKeyInput(event,selectionKeys)) return {};
