@@ -3050,3 +3050,8 @@ target_sources(netstorm_editor_file_tests PRIVATE SoloMapCatalogTests.cpp)
 
 # T/t의 같은 메시지 생성/만료와 현재 미션 억제 getter를 기존 입력 집중 대상에서 확인한다(754).
 target_sources(netstorm_selection_key_input_tests PRIVATE MessageGumpTests.cpp WarningTests.cpp)
+
+# 전체 BaseFile 열기와 실제 TAFF/덤프 소비자를 기존 FILE 집중 대상에서 확인한다(757).
+target_sources(netstorm_tests PRIVATE BaseFileOpenPolicyTests.cpp)
+set_source_files_properties(BaseFileOpenPolicyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BASEFILE_OPEN_POLICY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/basefile-open-policy-x86.tsv\"")
+target_sources(netstorm_basefile_io_tests PRIVATE BaseFileOpenPolicyTests.cpp)

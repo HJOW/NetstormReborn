@@ -1,14 +1,16 @@
 // 원본: FUN_0041a240(이름 검색), FUN_0041a340(엔트리 위치·XOR 플래그), FUN_0041b4c0(열기).
 // CD판은 동일 TAFF 형식을 사용한다. 헤더 오프셋은 두 판본 파일을 직접 대조한다.
-// 범위: 읽기 전용 아카이브/VFS. TAFF는 배열에 소유하며 디스크/메모리 읽기는 원문 FILE 몸체와 호스트 장치를 사용한다.
+// 범위: 값형 아카이브/VFS와 caller의 FILE/키를 여는 전체부모. TAFF snapshot 읽기와 실제부분파일 열기를 구별한다.
 #include "o/BaseFile.h"
 #include "o/FileSpecQuery.h"
 #include "o/RawBaseFileReadPolicy.h"
 #include "o/RawFileName.h" // 디스크 root 조합도 HUD와 같은 원문 고리를 전진시킨다.
 #include "o/RawBaseFileIO.h"
+#include "o/RawColorMapCache.h" // 기존 EX_UNABLE_TO_OPEN_FILE marker와 같은 정확한 typed 분류를 사용한다.
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <cstdio>
 #include <limits>
 #include <stdexcept>
@@ -152,6 +154,8 @@ const TaffEntry* TaffArchive::Find(std::string_view name) const {
     for (const auto& entry : entries_) if (NormalizeGamePath(entry.name) == key) return &entry;
     return nullptr;
 }
+std::uint32_t TaffArchive::DataOffset() const { return dataOffset_; } // 등록한 헤더 메타데이터만 반환하고 현재 payload를 읽지 않는다.
+std::uint32_t TaffArchive::Flags() const { return flags_; } // 다른 헤더 비트를 bool로 축약하지 않고 같은DWORD를 반환한다.
 // 엔트리별로 XOR 키를 처음부터 적용한다.
 std::vector<std::uint8_t> TaffArchive::Read(std::string_view name) const {
     const auto* entry = Find(name);
@@ -164,15 +168,45 @@ BaseFileSystem::BaseFileSystem(std::filesystem::path base, std::filesystem::path
     : base_(std::move(base)), secondary_(secondary.empty() ? base_ : std::move(secondary)),fileNames_(fileNames ? std::move(fileNames):std::make_shared<RawFileName>()) {}
 // 실제 shared 소유권이므로 Client 임시 문자열 장치와 VFS 중 어느 쪽을 먼저 반납해도 빌린 고리가 남는다.
 std::shared_ptr<RawFileName> BaseFileSystem::FileNameOwner() const { return fileNames_; }
+std::optional<BaseFileArchiveOpen> BaseFileSystem::FindArchiveOpen(std::string_view name,bool secondary) const { // 원문41a340의 첫 메타데이터 일치와 선택목록만 사용한다.
+    EnsurePrimaryArchives();const auto& archives=secondary?secondaryArchives_:archives_;const auto& paths=secondary?secondaryArchivePaths_:archivePaths_;
+    for (std::size_t index=0;index<archives.size();++index) { // 기존 등록/중복 순서를 바꾸거나 payload를 복호화하지 않는다.
+        const auto& archive=archives[index];const auto* entry=archive.Find(name);if (!entry) continue;
+        return BaseFileArchiveOpen{paths.at(index),std::bit_cast<std::int32_t>(archive.DataOffset()+entry->offset),std::bit_cast<std::int32_t>(entry->size),archive.Flags()&2U};
+    }
+    return {};
+}
+void BaseFileSystem::Open(RawBaseFileState& state,std::string_view name,std::uint32_t mode,std::uint32_t create,const RawBaseFileIOHooks& io) const { // 실제 게임의 현재 root/등록/고리와 caller의 동일 FILE/키 수명을 빌린다.
+    std::string primary,secondary;BaseFileOpenPolicyHooks hooks; // root 콜백 뒤 반환뷰는 다음 같은 콜백까지 유지한다.
+    const auto rootText=[](const std::filesystem::path& root) { auto text=PathText(std::filesystem::absolute(root).lexically_normal());std::replace(text.begin(),text.end(),'/','\\');return text; }; // 원문 getcwd 배열을 Windows10/11 Unicode 게임 root로 대체한다.
+    hooks.primaryRoot=[&]()->std::string_view { primary=rootText(base_);return primary; };hooks.secondaryRoot=[&]()->std::string_view { secondary=rootText(secondary_);return secondary; };
+    hooks.archive=[&](auto query,bool cd) { return FindArchiveOpen(query,cd); };hooks.search=FileSpecDirectoryHooks(base_);
+    hooks.unableToOpen=[](auto failed) { const std::string text(failed);std::printf("unable to open: %s\n",text.c_str());throw ColorCacheUnableToOpen{}; }; // 원문 이름 진단과 typed 분류만 보존하며 MSVC32 예외 payload/SEH ABI를 가장하지 않는다.
+    auto devices=io;devices.open=[&](std::string_view file,std::string_view fileMode)->std::uintptr_t { // OS에 전달하는 상대 이름만 가상 게임 CWD에서 해석하며 공유고리를 추가 소비하지 않는다.
+        if (!io.open) throw std::logic_error("BaseFile 전체 열기의 실제 FILE 장치 미연결");
+#ifdef _WIN32
+        if (!file.empty() && !MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,file.data(),static_cast<int>(file.size()),nullptr,0) && GetLastError()==ERROR_NO_UNICODE_TRANSLATION) return 0; // 원문 BYTE 절삭이 UTF-8 중간이면 disk 실패만 반환하고 뒤 TAFF의 원시 이름 조회는 유지한다.
+#endif
+        auto path=NativePath(file);const auto root=std::filesystem::absolute(base_).lexically_normal();const auto drive=path.root_name(); // 직접 장치/다른 드라이브/UNC는 원문 OS 의미를 보존한다.
+        if (!path.is_absolute()) {
+            if (!path.has_root_name()) path=root/path;
+#ifdef _WIN32
+            else if (!path.has_root_directory() && drive.native().size()==2 && drive.native()[1]==L':' && AsciiLower(PathText(drive))==AsciiLower(PathText(root.root_name()))) path=root/path.relative_path();
+#endif
+        }
+        return io.open(PathText(path),fileMode);
+    };
+    std::string input(name.substr(0,name.find('\0')));input+='\0';OpenBaseFileByPolicy(state,{reinterpret_cast<const std::uint8_t*>(input.data()),input.size()},mode,create,*fileNames_,devices,hooks); // 문자열 API는 원본 입력을 안정된NUL 물리로 소유하며 raw 부모 API는 외부 변경 가능한 전체 물리도 지원한다.
+}
 // 두 단일 목록의 중복 관문은 파일을 다시 읽기 전에 적용하며 실패한 후보는 목록에 남기지 않는다.
 bool BaseFileSystem::RegisterArchive(const std::filesystem::path& path,bool secondary) { return RegisterArchiveCache(path,secondary); } // 기존명시등록API는동일한반환/등록순서를유지한다.
 bool BaseFileSystem::RegisterArchiveCache(const std::filesystem::path& path,bool secondary) const { // 파일루트가아닌논리적아카이브목록만갱신한다.
     const auto utf8=std::filesystem::absolute(path).lexically_normal().generic_u8string();auto key=AsciiLower({reinterpret_cast<const char*>(utf8.data()),utf8.size()}); //Windows10/11 한글 경로는 원본ANSI와 달리 UTF-8 중복 키로 보존한다.
-    auto& names=secondary?secondaryArchiveNames_:archiveNames_;auto& archives=secondary?secondaryArchives_:archives_;
+    auto& names=secondary?secondaryArchiveNames_:archiveNames_;auto& archives=secondary?secondaryArchives_:archives_;auto& paths=secondary?secondaryArchivePaths_:archivePaths_;
     if (std::find(names.begin(),names.end(),key)!=names.end()) return false;
     auto bytes=netstorm::o::TryRead(path);if (!bytes || !RegisterableHeader(*bytes)) return false;
-    auto archive=TaffArchive(std::move(*bytes));archives.reserve(archives.size()+1);names.reserve(names.size()+1); //두 vector의 확보를 먼저 끝내 부분 등록을 방지한다.
-    archives.push_back(std::move(archive));names.push_back(std::move(key));return true;
+    auto archive=TaffArchive(std::move(*bytes));auto physical=std::filesystem::absolute(path).lexically_normal();physical.make_preferred();const auto native=physical.u8string();std::string original(native.begin(),native.end());archives.reserve(archives.size()+1);names.reserve(names.size()+1);paths.reserve(paths.size()+1); // 세목록 확보가 끝나야 동일 인덱스의 등록을 확정한다.
+    archives.push_back(std::move(archive));names.push_back(std::move(key));paths.push_back(std::move(original));return true;
 }
 // 원본은 FindFirstFileA/Next를 사용한다. Windows10/11의 한글 설치/CD 폴더를 위해 W API로 같은 열거 순서를 받는다.
 void BaseFileSystem::RegisterArchives(bool secondary) { RegisterArchivesCache(secondary); } // 명시기본등록은대기예약도완료한다.

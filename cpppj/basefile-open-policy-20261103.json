@@ -1,0 +1,154 @@
+{
+  "unit": 757,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 757,
+  "displayVersion": "11.01",
+  "exeSha256": "e67b4ceb13be995fd0fb39f60aa5dfbb1428c18cfbff20c3acad6555039ef3fd",
+  "summary": "BaseFile 전체 열기 부모와 실제 TAFF 메타데이터·FILE·키 및 덤프 소비자 연결",
+  "tests": {
+    "totalUnique": 44,
+    "totalExecutions": 44,
+    "newTests": 6,
+    "failedChecks": 0,
+    "names": [
+      "BaseFileIO_IndependentNative322CursorCloseAndChunkedWrite",
+      "BaseFileIO_MissingBoundariesAndCloseKeepEarlierEffects",
+      "BaseFileIO_RealObjectDumpDiskUsesSharedWriteAndDestruct",
+      "BaseFileOpenPolicy_ActualArchiveReadsCurrentDiskPayloadAndInstallsKey",
+      "BaseFileOpenPolicy_ActualRelativeWriterFallsBackToSecondaryAndDirectFailureDoesNot",
+      "BaseFileOpenPolicy_ArchiveOpenFailureStopsBeforeSecondaryDisk",
+      "BaseFileOpenPolicy_FileSpecFailureAndOrdinaryExceptionsCloseSameHandle",
+      "BaseFileOpenPolicy_MetadataDoesNotReadPayloadAndKeepsRealArchiveName",
+      "BaseFileOpenPolicy_NativeAllModesCreateSourcesFieldsAndRing",
+      "BaseFile_AbsoluteMissingRequeriesActualPrimaryAndSecondarySources",
+      "BaseFile_FileFinderDiskArchiveSecondaryOrderAndFirstDuplicate",
+      "BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix",
+      "BaseFile_MatchDiskNonPatternKeepsNativeFileSpecContract",
+      "BaseFile_ReadPolicyEmptyFileIsSuccessAndMissingLookupIsExplicit",
+      "BaseFile_ReadPolicyReplaysIndependentNative1024",
+      "BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder",
+      "BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp",
+      "BaseFile_SecondaryReadPriorityAndSeparateArchiveOnlyViews",
+      "BaseFile_SecondaryReplaysIndependentNativeRegistration27",
+      "BaseFile_WildcardCampaignDiscovery",
+      "Config_EncodedSignatureAndWindows1252_AreDecoded",
+      "Config_FirstMatchAndQuotedComments_ArePreserved",
+      "Dialog_ConditionsAndQuotedCommandArguments",
+      "GameClock_NestedPauseAndWrap_AreReproduced",
+      "Gif_IndicesInterlaceTransparencyAndTruncation",
+      "Gump_MenuRowsAndSceneChange",
+      "Gump_StoneCaptureAndInputBoundaries",
+      "Kernel_MutationUsesLiveSlots_InOriginalOrder",
+      "ObjectDump_ActualClientSharedRingUnicodePipeline",
+      "ObjectDump_IndependentNative56FullTraceFilesAndCurrentBounds",
+      "ObjectDump_RealDiskPipelineMatchesIndependentNativeBytes",
+      "ObjectDump_RealOpenFailureDoesNotCreateParentOrRestoreModes",
+      "ObjectDump_SharedRingFirstOpenFailureKeepsOneReservation",
+      "ObjectDump_SharedRingReadExceptionKeepsThreeReservations",
+      "ObjectDump_SharedRingWriterFailureRunsFullFallbackAndKeepsSixReservations",
+      "ObjectDump_TypedRegionUnwindAndRestorationFollowNativeEhMetadata",
+      "Renderer_OwnedBackgroundAndReplacement",
+      "State_OneDeferredTransitionPerInputBatch",
+      "Taff_IndexAndFlags_AreReadFromHeader",
+      "TechnicalHelp_Native28ExternalRootJoin",
+      "TechnicalHelp_Native64ExternalFileSourcesAndFailurePreservation",
+      "TechnicalHelp_Native84AvailabilityLaunchAndPartialOutputs",
+      "TechnicalHelp_SelectedMissingDevicesReleaseAndCd",
+      "Xlat_DuplicateAndIncompleteBlocks_AreHandled"
+    ],
+    "logs": [
+      "tests-io-v1.log",
+      "tests-files-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2666,
+    "currentCount": 2667,
+    "allUnchanged": true,
+    "fixtureCount": 847,
+    "newFixtures": [
+      "cpppj/tests/fixtures/basefile-open-policy-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 757,
+      "host": "HJOW-Athlon",
+      "rows": 1364,
+      "observations": 2728,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제41b4c0/FileSpec/Device/Format/일반열기/부분파일/키setter. 실제OS fopen/fseek/free/new와archive metadata만명시경계. 실패는41a0d0진입또는operator_new예외에서중단하므로256BYTE예외객체/SEH unwind/OS FILE ABI는범위밖",
+      "sha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "date": "2026-11-03",
+      "lastFullDecompilation": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "preparedToolSha256": "2f74a9b99fb30e52d13d55b0214ee34e7ae3f3ed92911c1ca8487d2edfc3ad08",
+      "rawReportSha256": "12900a288ca6e63a24f325daed4ba37ca098e00029fa6f6e6cb27fbe0781b559"
+    },
+    "native-verify.json": {
+      "unit": 757,
+      "date": "2026-11-03",
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "rows": 1364,
+      "observations": 2728,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제41b4c0/FileSpec/Device/Format/일반열기/부분파일/키setter. 실제OS fopen/fseek/free/new와archive metadata만명시경계. 실패는41a0d0진입또는operator_new예외에서중단하므로256BYTE예외객체/SEH unwind/OS FILE ABI는범위밖",
+      "sha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      },
+      "rawReportSha256": "2cf0ae205a12ae31aed7237c1c1d70b6d5ca9ff8ab544490c9225f11f24080fb"
+    }
+  },
+  "initialFailures": [],
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "49282553217517a995f584a75c5c317addf170f8bf8950abff15750bb125cf6e",
+    "cpppj/src/client/ObjectDumpDisk.cpp": "6908d0ff6a7448c585ce8ba3b4e4c098aba468eef1f8a252083eb32addc4f48e",
+    "cpppj/src/o/BaseFile.cpp": "79791801d4dbc108de81b397102d2251cc863ce8b29dfab32c3186866804ec4b",
+    "cpppj/src/o/BaseFile.h": "0085c1b9a56cd831304c427306e3611c8c76d57b5c68258c007c24d0e561e358",
+    "cpppj/src/o/RawBaseFileOpenPolicy.cpp": "3c49cd5c020023e6ef0461f59b8e63492eee3b44f06552b15a9aa137e6556eaa",
+    "cpppj/src/o/RawBaseFileOpenPolicy.h": "1d5d55139b19d3558160512bd544bf183f0c7d424904750798cf63d3ee5ae458",
+    "cpppj/tests/BaseFileOpenPolicyTests.cpp": "5e74513335dedf20d5f7181007d2e2de0150e7bd4b75ba9acd72effe31a15b92",
+    "cpppj/tests/CMakeLists.txt": "639df21453a4c19cb18ecb9174d590667d8bd665506393c8f6d856c991f13bdc",
+    "cpppj/tests/ObjectDumpTests.cpp": "3b46699b5c96905f2c786ed85bd0f8bb34b726e3e2de3075f946b07b866bd400",
+    "tools/decomp_basefile_open_policy.py": "2efccce6c3b51ce6e19785499253b7e901e130c8e4ce4fa06fc6d596ae910827"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-757/protected-after.json",
+  "next": "추가지식메뉴(758)·kind17생성자(759)·일반명령5종(760)·outside어댑터(761)·Config명령(762)·명시실시간읽기41baa0(763)·글꼴/음질명령(764)과 남은 비멀티/호환성",
+  "limitations": [
+    "Native실패는41a0d0진입/키operator_new예외경계에서멈춘다.256BYTE예외payload·32비트FILE24BYTE/FileSpec264BYTE/SEH unwind ABI와host표현을같다고주장하지않는다.",
+    "기존snapshot TryRead와OS물리ReadFileBytes의계약은보존했다.모든다른consumer/MP를새API로일괄이관한것이아니며명시41baa0reader는763후속이다.",
+    "현재OS FILE·부분읽기는실제로연결했으나실제부분I/O/닫기반환실패·할당실패의모든호스트경우는완료검증아니다.",
+    "새게임/GUI/CLI·물리/PCM·공중3종행동·포획/희생·특정적공격·승리·자연완주·MP·전체C++/34/ZIP검사는0이다."
+  ]
+}

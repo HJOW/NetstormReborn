@@ -33,6 +33,7 @@ target_sources(netstorm PRIVATE client/ScenarioObjectInput.cpp client/ScenarioOb
 target_sources(netstorm PRIVATE client/MoveDialog.cpp client/MoveDialog.h) #004c8df0의 현재 모달 위치/원문 문자열 규칙이다.
 target_sources(netstorm PRIVATE client/CdPresence.cpp client/CdPresence.h client/ClientCdGlobals.h) # 현재 CD 루트 열거/캐시 판단을 실제 State 수명과 연결한다.
 target_sources(netstorm PRIVATE o/RawBaseFileIO.cpp o/RawBaseFileIO.h) # FILE 위치/길이/종료와 원문4096BYTE 암호 쓰기를 공유한다.
+target_sources(netstorm PRIVATE o/RawBaseFileOpenPolicy.cpp o/RawBaseFileOpenPolicy.h) # 전체41b4c0 부모의 장치/TAFF/보조/키/typed 실패와 실제 VFS 메타데이터를 연결한다(757).
 target_sources(netstorm PRIVATE o/RawWorldGeyser.h o/RawWorldGeyser.cpp) # 세계 간헐천의 실제 생성 부모00486440이다.
 target_sources(netstorm PRIVATE o/RawWorldGeyserBounds.h o/RawWorldGeyserBounds.cpp) # 전체 간헐천의 청크 범위·분할·Player 예산이다.
 target_sources(netstorm PRIVATE o/RawPlayerNotification.h o/RawPlayerNotification.cpp) #프레임말 대기 결과 알림과 Core 기술 합계다.

@@ -174,8 +174,8 @@ TEST_CASE(ObjectDump_SharedRingReadExceptionKeepsThreeReservations) {
     CHECK(failed && names->Index()==3 && scene.log.stream==0 && scene.log.level==30 && scene.suppress==1 && std::filesystem::exists(directory/"squids.txt"));
 }
 
-// 기존 직접 mode2 쓰기 장치가 거부한 typed 예외는 다섯 칸 뒤 부모에서 복구한다. 전체 상대 TAFF/보조 fallback 검사는 아니다.
-TEST_CASE(ObjectDump_SharedRingDirectWriterFailureKeepsFiveReservations) {
+// 실제 mode2의 기본/TAFF/보조 실패는 여섯 칸 뒤 typed 부모에서 복구하며 앞선 텍스트 바이트를 유지한다.
+TEST_CASE(ObjectDump_SharedRingWriterFailureRunsFullFallbackAndKeepsSixReservations) {
     const auto directory=WorkDirectory()/"shared-write-failure-755";std::filesystem::create_directories(directory);ClientOptions options;options.gameDirectory=directory;options.noAudio=true;Client client(options);const auto names=client.Files().FileNameOwner();DumpScene scene(Rows().at(6));const auto logger=MakeObjectDumpDiskLogHooks([](auto) {});
     struct ReadLock { // 재읽기 뒤 쓰기만 거부하며 정상/검사예외 모두 현재 공유 핸들을 한 번 닫는다.
         HANDLE handle=INVALID_HANDLE_VALUE; // 실제 현재 읽기 핸들이며 아직 열지 않은 상태와 구별한다.
@@ -184,5 +184,5 @@ TEST_CASE(ObjectDump_SharedRingDirectWriterFailureKeepsFiveReservations) {
     ReadLock lock;std::vector<std::uint8_t> before;std::uint32_t destructs{};auto hooks=MakeObjectDumpDiskHooks(directory,[&](auto sid) { scene.Trace(sid,logger); },[] { throw std::logic_error("공유 쓰기 검사 열기 실패"); },&client.Files());const auto read=hooks.read;const auto destruct=hooks.destruct;
     hooks.read=[&](auto name,auto first,auto second) { auto bytes=read(name,first,second);before=bytes;lock.handle=::CreateFileW((directory/"squids.txt").c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);CHECK(lock.handle!=INVALID_HANDLE_VALUE);return bytes; }; // 실제 Win32 공유거부로 w+b만 실패시키며 앞선 바이트는 유지한다.
     hooks.destruct=[&](auto file) { ++destructs;destruct(file); };DumpRawObjects(scene.pool,scene.types,scene.log,scene.Globals(),logger,hooks,scene.file);
-    CHECK(names->Index()==5 && destructs==1 && scene.log.stream==0 && scene.log.level==7 && scene.suppress==0 && ReadFileBytes(directory/"squids.txt")==before);
+    CHECK(names->Index()==6 && destructs==1 && scene.log.stream==0 && scene.log.level==7 && scene.suppress==0 && ReadFileBytes(directory/"squids.txt")==before);
 }

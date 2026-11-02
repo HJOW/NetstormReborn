@@ -1,4 +1,4 @@
-// 원본 BaseFile.cpp의 읽기 경로 복원. 쓰기·레지스트리·CD 자동 탐색은 아직 옮기지 않았다.
+// 원본 BaseFile.cpp의 값형 읽기/VFS와 caller의 실제 FILE을 여는 전체부모다. 레지스트리·CD 자동탐색은 다른 장치가 담당한다.
 #pragma once
 #include <cstdint>
 #include <filesystem>
@@ -8,6 +8,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include "o/RawBaseFileOpenPolicy.h" // 실제 FILE/TAFF 열기 부모가 받는 상태/장치와 읽기전용 메타데이터다.
 
 namespace netstorm::o {
 class RawFileName; // VFS와 실제 Client의 모든 경로 소비자가 공유할 원문10칸 작성기다.
@@ -39,6 +40,8 @@ public:
     const std::vector<TaffEntry>& Entries() const;
     // 대소문자를 무시하여 첫 일치 엔트리를 찾는다.
     const TaffEntry* Find(std::string_view name) const;
+    std::uint32_t DataOffset() const; // 등록 때 읽은 데이터 시작 DWORD이며 payload를 읽거나 파일을 다시 열지 않는다.
+    std::uint32_t Flags() const; // 등록 때 읽은 헤더 flags 원문DWORD다. 부분 파일 열기 뒤 flags&2의 키 설치 판정에 사용한다.
     // 이름으로 찾아 플래그 bit 1이 켜진 아카이브만 복호화한다.
     std::vector<std::uint8_t> Read(std::string_view name) const;
 private:
@@ -57,6 +60,8 @@ public:
     // 기본 경로·보조 경로를 설정한다. 등록 순서는 호출자가 원본 순서에 맞춰 지정한다.
     explicit BaseFileSystem(std::filesystem::path base, std::filesystem::path secondary = {},std::shared_ptr<RawFileName> fileNames = {}); // 실행 위치 탐색에서 이미 사용한 고리가 있으면 같은 소유자를 인계받는다.
     std::shared_ptr<RawFileName> FileNameOwner() const; // 파일 조회와 HUD/저장 상태가 같은 고리 주소/번호를 빌린다. 파일 내용은 읽지 않는다.
+    std::optional<BaseFileArchiveOpen> FindArchiveOpen(std::string_view name,bool secondary=false) const; // 독립Client의 예약 기본등록만 먼저 완료하고 선택목록의 첫 offset/length/xor/실제TAFF이름을 반환한다. 등록 뒤 metadata 조회는 payload/디스크를 다시 읽지 않는다.
+    void Open(RawBaseFileState& state,std::string_view name,std::uint32_t mode,std::uint32_t create,const RawBaseFileIOHooks& io) const; // 전체41b4c0 부모를 같은 VFS/고리/현재 FILE에 연결한다. 호스트 typed marker는 원문 예외 분류이며256BYTE 예외객체 ABI는 별도다.
     //0041b9d0/41bc20/41bc30: 두 목록을 독립적으로 등록한다. 같은 목록의 중복·파일/헤더/인덱스 읽기 실패는false다.
     bool RegisterArchive(const std::filesystem::path& path,bool secondary=false);
     //00441790: 선택한 root의 *.tarc를 실제 Win32 열거 순서로 모두 등록한다. 잘못된 후보는 원문처럼 건너뛴다.
@@ -92,8 +97,10 @@ private:
     mutable std::vector<std::string> archiveNames_;
     // archives_: 읽기 위해 열린 TAFF 아카이브 목록.
     mutable std::vector<TaffArchive> archives_;
+    mutable std::vector<std::string> archivePaths_; // 중복 비교키와 별개인 기본 등록의 원래 대소문자/Unicode 실제 파일명이다.
     mutable std::vector<std::string> secondaryArchiveNames_; //00544f80 보조 목록의 대소문자 무시 중복 키이며 기본 목록과 별도다.
     mutable std::vector<TaffArchive> secondaryArchives_; //보조/CD 아카이브의 실제 등록 순서와 읽기 전용 바이트 소유자다.
+    mutable std::vector<std::string> secondaryArchivePaths_; // 보조 등록과 같은 인덱스의 실제 TAFF 이름이며 기본목록과 분리한다.
     std::shared_ptr<RawFileName> fileNames_; // 새로운 독립 VFS에서만 BSS0을 만들고 실제 Client와 공유해 먼저 해제하지 않는다.
     mutable bool primaryArchivesPending_{}; // Client의독립조회호환만예약하며생성/디스크직접조회에는파일을읽지않는다.
 };
