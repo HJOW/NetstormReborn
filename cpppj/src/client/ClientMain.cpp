@@ -547,7 +547,7 @@ void Client::InterpretScriptMenuOptions() {
 }
 // 가짜 UI 복사본 없이 현재 장기 소유자를 매번 읽는다. 특수 모드는 기존 Player의 bool 표현을 사용한다.
 std::uint32_t Client::ScriptMenuGlobal(std::uint32_t address) const {
-    switch (address) { case 0x5cab30:return gameplayGlobals_->energy.userCheat;case 0x55a480:return gameplayGlobals_->player.special ? 1U : 0U;default:throw std::out_of_range("HTML 메뉴 현재 전역 주소 미연결"); }
+    switch (address) { case 0x5cab30:return gameplayGlobals_->energy.userCheat;case 0x55a480:return gameplayGlobals_->player.special;default:throw std::out_of_range("HTML 메뉴 현재 전역 주소 미연결"); }
 }
 
 // 원문은 매 해석에서0을 먼저 쓰며 누락 키가 이전 회전 방향을 보존하지 않는다.

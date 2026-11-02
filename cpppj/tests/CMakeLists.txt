@@ -3135,3 +3135,11 @@ target_sources(netstorm_script_bindings_tests PRIVATE MakeAiTests.cpp MakeAiComm
 target_sources(netstorm_tests PRIVATE FontFaceEncodingTests.cpp)
 target_sources(netstorm_script_bindings_tests PRIVATE FontFaceEncodingTests.cpp)
 set_source_files_properties(FontFaceEncodingTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FONT_FACE_ENCODING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/font-face-encoding-win32.tsv\"")
+
+# 원문조건부AI메뉴/직접진단writer의새고정관측을기존집중대상에잇는다(775).
+target_sources(netstorm_tests PRIVATE AiDebugMenuTests.cpp)
+target_sources(netstorm_script_bindings_tests PRIVATE AiDebugMenuTests.cpp)
+set_source_files_properties(AiDebugMenuTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_AI_DEBUG_MENU_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-debug-menu-x86.tsv\";NETSTORM_AI_DEBUG_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-debug-input-x86.tsv\";NETSTORM_AI_DEBUG_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-debug-names-x86.tsv\"")
+
+# 775 원문Toggle이름의별도63행을기존names검사한개에추가한다.
+set_property(SOURCE AiDebugMenuTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_AI_DEBUG_TOGGLE_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ai-debug-toggle-names-x86.tsv\"")

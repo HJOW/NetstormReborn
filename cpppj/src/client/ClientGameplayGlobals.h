@@ -2,6 +2,7 @@
 // Client 수명의 현재 Player/커서/검색/미션 전역과 짧은 실제 Runtime 대여를 구별한다.
 #pragma once
 #include "client/ClientCursorGlobals.h"
+#include "client/ClientAiDebugGlobals.h" //메뉴/입력/Renderer와같은AI진단DWORD수명이다.
 #include "client/RawCursorDrop.h"
 #include "client/ClientUserSelectionGlobals.h"
 #include "o/RawAuthorityState.h"
@@ -81,6 +82,16 @@ public:
     const ClientCameraGlobals& Camera() const { return camera_; } // Session 재대여가 카메라를 재생성하지 않는다.
     ClientCursorGlobals& CursorGlobals() { return cursorGlobals_; } // 같은현재커서데이터를첫메뉴/Session이직접빌린다.
     const ClientCursorGlobals& CursorGlobals() const { return cursorGlobals_; } // 실행기소멸뒤에도dataowner주소는유지한다.
+    ClientAiDebugGlobals& AiDebug() { return aiDebug_; } // 같은7로그/현재checking의장기소유자다.
+    const ClientAiDebugGlobals& AiDebug() const { return aiDebug_; } // 현재진단값을복제하지않는다.
+    std::uint32_t ReadDebugWord(std::uint32_t address) const { // 안전한원문주소식별자만현재저장소에연결한다.
+        if (address==0x55a480) return player.special;if (address==0x55a484) return specialAuxiliary;
+        if (address==0x5e4794) return std::bit_cast<std::uint32_t>(aiDebug_.Checking());return aiDebug_.Read(address);
+    }
+    void WriteDebugWord(std::uint32_t address,std::uint32_t value) { // 원문29/99원시값을BOOL로좁히지않고같은저장소에쓴다.
+        if (address==0x55a480) { player.special=value;return; }if (address==0x55a484) { specialAuxiliary=value;return; }
+        if (address==0x5e4794) { aiDebug_.Checking()=std::bit_cast<std::int32_t>(value);return; }aiDebug_.Word(address)=value;
+    }
     o::PlayerWorldState player; //595344/540c70/540cac 등 실제 현재 Player 조회 전역이다.
     CursorDropState cursor{.lockDepth=1}; //5325c8 초기 잠금1과 실제 현재 조각/마우스/플래그다.
     ClientUserSelectionGlobals selection; // 실제 선택/강조9DWORD와 현재 다중 배열이며 Runtime/장치 callback을 보관하지 않는다.
@@ -103,6 +114,7 @@ private:
     std::uint32_t mapRevision_{}; // 최초 BSS0이며 Session 대여/반납으로 초기화하지 않는 실제005949d4다.
     std::shared_ptr<o::TerrainBitmapState> terrainBitmaps_; // 최초 분류를 모든 편집 창/Session보다 오래 같은 주소에 소유한다.
     std::shared_ptr<o::TerrainStampState> terrainStamp_; // 초기 지면의 독립99cache이며 RegionPaint/미리보기의 캐시와 합치지 않는다.
+    ClientAiDebugGlobals aiDebug_; // World/Session교체에서도유지하는현재진단전역이다.
     RawCampaignSession* current_{};bool borrowed_{}; // 게임 값의 대체가 아닌 현재 C++ Runtime 대여다.
 };
 }

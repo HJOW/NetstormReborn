@@ -17,7 +17,7 @@ struct PlayerWorldState {
     std::uint32_t templateOwner{1}; // PATCH540cac/CD50f6d4: 저장 Template 선택용 별도 owner이며 이 네 몸체는 쓰지 않는다.
     std::uint32_t playerType{152}; // PATCH5412b8/CD51cba4: Create/Find가 매 호출 읽는 실제 playerType 전역이다.
     bool fortMode{}; // PATCH594fb8/CD540a1c: local 최초 Regular1을 생략하는 조건이다.
-    bool special{}; // PATCH55a480/CD537e8c: 생성 y=10 및 최초 직접 frame1 조건이다.
+    std::uint32_t special{}; // PATCH55a480/CD537e8c의원시DWORD다. DebugSwitch의29/99와생성y=10/직접frame1의비영조건을함께보존한다.
 };
 // 실제 Factory/Owner/Pop/예약을 빠짐없이 연결한다. 선택 효과를 기본값으로 대체하지 않는다.
 struct PlayerWorldHooks {

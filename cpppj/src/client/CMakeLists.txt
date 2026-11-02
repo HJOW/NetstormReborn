@@ -347,3 +347,6 @@ target_sources(netstorm PRIVATE CreateAtInput.h CreateAtInput.cpp)
 
 # 원문 ACP 글꼴 이름을 현재 UTF-8 Config/디스크에만 변환한다(774).
 target_sources(netstorm PRIVATE FontFaceEncoding.h FontFaceEncoding.cpp)
+
+# 선택적AI메뉴/일반진단입력은같은현재Player와Client수명전역을공유한다(775).
+target_sources(netstorm PRIVATE ClientAiDebugGlobals.h RawAiDebugMenu.cpp RawAiDebugMenu.h AiDebugCommandInput.cpp AiDebugCommandInput.h)

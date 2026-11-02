@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/AiDebugCommandInput.h" //일반진단입력도현재AI본문을직접사용한다.
 #include "client/ObjectOwnerCommands.h" //편집 객체 추적이 같은 Session의 실제 월드 다시 그리기 DWORD를 사용한다.
 #include "o/RawFortSubscriberChange.h" // 현재 Fort의 Champion 변경도 같은 실제 Template writer를 사용한다.
 #include "client/RitualChoiceInput.h" //6b요청은같은현재선택제단과실제전송을사용한다.
@@ -445,9 +446,9 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiRuntime> aiRuntime; //Player1..8의실제전체행동/초기화/종료수명이다.
     std::uint32_t aiTiming{1}; //0052f3c4의현재실행시간로그초기값이다.
     bool aiBridgeDisabled{}; //0054db88의현재debug다리중단값이며checking일때만읽는다.
-    std::uint32_t aiBridgeLog{99}; //0052f3cc의 현재 다리 로그 종류이며29에서만 디버그 표식을 배치한다.
+    std::uint32_t& aiBridgeLog{gameplayGlobals->AiDebug().Word(0x52f3cc)}; //0052f3cc의 현재 다리 로그 종류이며29에서만 디버그 표식을 배치한다.
     std::uint32_t aiBridgeStartType{113},aiBridgeEndType{119},aiBridgeTargetType{117}; //0054121c/234/22c의 현재 시작/끝/목표 표식 TYPE다.
-    std::uint32_t aiLayLog{99}; //0052f3d0의 원본 Debug Lay Piece 초기 로그 종류다.29는 디버그 표시 선택값이다.
+    std::uint32_t& aiLayLog{gameplayGlobals->AiDebug().Word(0x52f3d0)}; //0052f3d0의 원본 Debug Lay Piece 초기 로그 종류다.29는 디버그 표시 선택값이다.
     std::unique_ptr<RawAiFactoryProduction> aiFactoryProduction; //같은 기술/생산 내용물과 시설 미처리/업그레이드 큐를 처리한다.
     std::unique_ptr<RawAiDrySpots> aiDrySpots; //같은본체의에너지부족좌표와실제Mana판정을연결한다.
     std::unique_ptr<RawSquidName> objectNames; //같은현재가상68의실제설명/Factory레벨이름이다.
@@ -466,13 +467,13 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawAiDryGeometry> aiDryGeometry; //같은 실제 현재 표면 지도/경계와 가짜좌표의 수직 양방향 탐색·표식 수명이다.
     std::unique_ptr<RawAiFakeDrySpots> aiFakeDrySpots; //같은 현재 공급시설/부족거리·중심/실제 양방향 탐색과 전체 가짜좌표 갱신이다.
     std::uint32_t aiDryMarkerType{104}; //005411f8의 현재 디버그 표식 TYPE 초기값이다.
-    std::uint32_t aiDropLog{29}; //0052f3d4의현재배치선택/스캔로그종류다.보호PE의초기값은29다.
+    std::uint32_t& aiDropLog{gameplayGlobals->AiDebug().Word(0x52f3d4)}; //0052f3d4의현재배치선택/스캔로그종류다.보호PE의초기값은29다.
     AiBuildSearchBounds aiDropScanBounds{10,10,246,246}; //CRT004fc530이00544d14..20에만드는현재원본경계다.BSS의0값이아니다.
     std::uint32_t aiManaProbeType{71},aiGroundExcludedType{72}; //00541174/00541178의 현재 원본 TYPE 전역이며 기본값은 보호 PE와 같다.
-    std::uint32_t aiGeyserLog{29}; //0052f3e4의끊긴간헐천로그초기종류다.
-    std::uint32_t aiMoveLog{99}; //0052f3d8의원본Debug Move초기로그종류다.
-    std::uint32_t aiDrySpotLog{99}; //0052f3dc의원본Debug Dry Spot 초기로그종류다.
-    std::uint32_t aiFactoryLog{99}; //0052f3e0의 원본 Debug Factory 초기 로그 종류다.
+    std::uint32_t& aiGeyserLog{gameplayGlobals->AiDebug().Word(0x52f3e4)}; //0052f3e4의끊긴간헐천로그초기종류다.
+    std::uint32_t& aiMoveLog{gameplayGlobals->AiDebug().Word(0x52f3d8)}; //0052f3d8의원본Debug Move초기로그종류다.
+    std::uint32_t& aiDrySpotLog{gameplayGlobals->AiDebug().Word(0x52f3dc)}; //0052f3dc의원본Debug Dry Spot 초기로그종류다.
+    std::uint32_t& aiFactoryLog{gameplayGlobals->AiDebug().Word(0x52f3e0)}; //0052f3e0의 원본 Debug Factory 초기 로그 종류다.
     std::array<std::uint32_t,4> aiWorkshops{86,87,88,85}; // PATCH004709d0의 theme0/1/2/3이 읽는005411b0/b4/b8/ac의 실제 기본 타입이다.
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
@@ -4617,7 +4618,12 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     variants.localOwner=[current] { return current->playerState.battleOwner; };variants.maximumHp=[current](Sid sid) { return current->hp.MaxHitPoints(sid); };
     variants.eventZero=[current](Sid sid) { return current->core.processes.FindEvent(sid,0)!=nullptr; };
     variants.hasBrain=[current](Sid sid) { const auto owner=current->core.pool.Slot(sid)[34];if (owner>=9) throw std::out_of_range("신전 메뉴 Player 범위");return owner && Read(current->players,owner*180+0xb0)!=0; };
-    variants.aiMenu=[current](std::uint32_t owner) { if (!current->gunState.checking || !owner) return;if (owner>=9) throw std::out_of_range("AI 디버그 메뉴 Player 범위");if (Read(current->players,owner*180+0xb0)) throw std::logic_error("개발자 checking 모드 AI 디버그 메뉴00413dd0 미연결"); }; // 원본 일반 checking0의 즉시 반환을 유지하며 큰 개발자 전용 본체는 성공으로 대체하지 않는다.
+    variants.aiMenu=[current,chain](std::uint32_t owner) {
+        AiDebugMenuReads reads;reads.checking=[current] { return std::bit_cast<std::uint32_t>(current->gameplayGlobals->AiDebug().Checking()); };
+        reads.player=[current](auto number) { return std::span<const std::uint8_t>(current->players).subspan(number*180,180); };reads.body=[current](auto token) { return std::span<const std::uint8_t>(current->aiMemory.Bytes(token)); };
+        reads.debug=[current](auto address) { return current->gameplayGlobals->ReadDebugWord(address); };reads.command=[](auto address) { if (address==0x542a34) return kAiReportingCommand;if (address==0x542a38) return kDebugSwitchCommand;if (address==0x5428d8) return 0x2000078U;throw std::out_of_range("AI 메뉴 명령 주소 미연결"); };
+        OpenAiDebugMenu(owner,reads,chain->ui.aiDebug);
+    }; //checking0/현재brain0은실제부모가효과없이반환한다.조건부작성성공을빈메뉴로바꾸지않는다.
     variants.count=actualCount;variants.object=[chain](Sid sid) { chain->object->Open(sid); };variants.damageable=[chain](Sid sid) { chain->object->OpenDamageable(sid); };
     variants.salvage=[chain](Sid sid,std::uint32_t type,std::uint32_t count) { chain->object->AddSalvage(sid,type,count); };
     chain->variants=std::make_unique<RawObjectMenuVariants>(current->core.pool,std::move(variants));
@@ -4733,4 +4739,13 @@ const RawCarrierPickup& RawCampaignSession::CarrierPickup() const { if (!impl_->
 // 현재같은후보와4f 서버요청을실행한다.원본요청에는직접수신이없다.
 void RawCampaignSession::RequestCarrierPickup(Sid parent) { CarrierPickup().Request(parent); }
 
+}
+
+// 원문진단writer는새지갑/brain을만들지않고현재Player와생존본문에만쓴다.
+bool netstorm::client::RawCampaignSession::DispatchAiDebugCommand(InputEvent event) {
+    auto* current=impl_.get();AiDebugInputState state;
+    state.metamap=[current] { return current->core.ownerMode.challenge ? 1U : 0U; };
+    state.player=[current](auto owner) { return std::span<const std::uint8_t>(current->players).subspan(owner*180,180); };state.body=[current](auto token) { return current->aiMemory.Bytes(token); };
+    state.readDebug=[current](auto address) { return current->gameplayGlobals->ReadDebugWord(address); };state.writeDebug=[current](auto address,auto value) { current->gameplayGlobals->WriteDebugWord(address,value); };
+    return DispatchAiDebugCommandInput(event,state);
 }

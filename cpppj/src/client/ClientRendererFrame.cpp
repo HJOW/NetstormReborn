@@ -46,7 +46,7 @@ std::int32_t RendererCollectionRowLimit(std::int32_t width,std::int32_t height) 
 // 초기화/새 미션/해상도 전환으로 Native 전역을 다시 만들지 않는다.
 ClientRendererFrame::ClientRendererFrame(Client& client):client_(client) {}
 ClientRendererFrame::~ClientRendererFrame()=default; //collector를 실제 storage보다 먼저 반납한다.
-void ClientRendererFrame::ReadOptions() { client_.configuration_.ReadInt("showSoftAsserts",softAsserts_); } //441270의 누락 유지와 같은 현재 값을 Frame 진단 관문에 제공한다.
+void ClientRendererFrame::ReadOptions() { client_.configuration_.ReadInt("showSoftAsserts",client_.gameplayGlobals_->AiDebug().Checking()); } //441270의 누락 유지와 같은 현재 값을 Frame 진단 관문에 제공한다.
 
 // 실제 파일/난수/색/클립/잠금은 Client가 소유한 동일 장치를 빌린다.
 RendererCloudHooks ClientRendererFrame::CloudDevices() {
@@ -67,7 +67,7 @@ bool ClientRendererFrame::Prepare() {
     auto& screen=*client_.screen_;auto& renderer=*client_.renderer_;auto& clouds=*client_.kencloudGlobals_;auto& camera=client_.gameplayGlobals_->Camera();auto& ui=*client_.menu_->rawButtons_;
     const auto& view=ui.MapViewRect();auto dirtyCount=static_cast<std::uint32_t>(renderer.CameraDirtyEntries().size()); //호스트 vector의 개수는 Native0 store 경계의 clearDirty로 같은 실제 표에 반영한다.
     RendererPreludeHooks hooks;hooks.markCloudDirty=[&clouds] { clouds.MarkDirty(); };
-    hooks.queueCloudDirty=[this](auto rect) { const auto checking=static_cast<std::uint32_t>(softAsserts_);AppendRendererCloudDirty(globals_.CloudQueue(),rect,checking,CloudDevices()); };
+    hooks.queueCloudDirty=[this](auto rect) { const auto checking=static_cast<std::uint32_t>(client_.gameplayGlobals_->AiDebug().Checking());AppendRendererCloudDirty(globals_.CloudQueue(),rect,checking,CloudDevices()); };
     hooks.overrideActive=[this,&ui] { lastOverride_=ui.CurrentOverride();return lastOverride_; };
     hooks.updateClouds=[this,&clouds] { clouds.Update(client_.files_,client_.configuration_,client_.randomGlobals_->Game()); };
     hooks.rowDirty=[&clouds](auto row,auto y) { return clouds.RowDirty(static_cast<std::uint32_t>(row),static_cast<std::uint32_t>(y)); };

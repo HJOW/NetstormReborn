@@ -41,6 +41,7 @@
 #include "client/RawGameMenus.h"
 #include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
 #include "client/GameMenuCommands.h"
+#include "client/AiDebugCommandInput.h" //일반진단두명령은현재Player/장기DWORD를사용한다.
 #include "client/PresentationCommandInput.h" //일반 글꼴/음질 입력은 현재 캐시와 음향 장치 부모로 전달한다.
 #include "client/FontFaceEncoding.h" //변경 후 현재31BYTE ACP 이름만 실제 UTF-8 Config 경계에서 변환한다.
 #include "client/ConfigurationCommandInput.h" //원문 모드별 palette와 공유 priority/State 일반 명령을 기존 부모에 연결한다.
@@ -1157,6 +1158,16 @@ void UberGump::Event(InputEvent event) {
     static_cast<void>(DispatchDiagnosticKey(event,[this] { client_.DumpDiagnostics(); })); // 같은 원문 위치에서 객체→프로세스 순서로 출력하며 정지/console은 아래에서 다시 읽는다.
     if (IsPresentationCommand(event.code & 0x03ffffffU)) { static_cast<void>(GameMenuCommand(event));return; } //원문 두 설정명령은 Guide/Gump 뒤 공통 뗌 관문을 거쳐 HelpOpen/Console/정지보다 먼저 실행한다.
     if (IsConfigurationCommand(event.code)) { static_cast<void>(GameMenuCommand(event));return; } //원문 세 설정명령은 HelpOpen/모달/Console/정지보다 앞에서 현재 부모를 실행한다.
+    const bool aiDebugHandled=IsAiDebugCommand(event.code); //413d50뒤에도같은사건의모달/Console/정지/세계입력꼬리를유지한다.
+    if (aiDebugHandled) {
+        if (world_) static_cast<void>(world_->Session().DispatchAiDebugCommand(event));
+        else {
+            AiDebugInputState state;state.metamap=[this] { return client_.SurfaceStorage()->ownerMode.challenge ? 1U : 0U; };
+            state.player=[this](auto owner) { return std::span<const std::uint8_t>(client_.PlayerRecords()->Records()).subspan(owner*180,180); };state.body=[](auto)->std::span<std::uint8_t> { throw std::logic_error("World 없는 비영AI본문 미연결"); };
+            state.readDebug=[this](auto address) { return client_.GameplayGlobals()->ReadDebugWord(address); };state.writeDebug=[this](auto address,auto value) { client_.GameplayGlobals()->WriteDebugWord(address,value); };static_cast<void>(DispatchAiDebugCommandInput(event,state));
+        }
+        if (event.code&InputCode::kRelease) return; //원문공통뗌은하위관문을읽지않고끝난다.press는별도return/dirty없이다음꼬리로진행한다.
+    }
     bool aiUtilityHandled=false; //772 press는뒤의현재Help/Console/정지/월드꼬리로진행한다.
     if (IsAiUtilityCommand(event.code & 0x03ffffffU)) { //Guide/Gump/뗌 뒤·HelpOpen/Console/공통 정지 앞의 원문 순서다.
         o::AiCommandStateHooks worldlessAi; //World가 없더라도 현재 Player의 NULL brain은 자연 반환하며 비영 Runtime을 합성하지 않는다.
@@ -1407,8 +1418,8 @@ void UberGump::Event(InputEvent event) {
         else warnings_->AddNull(); //원문004d88cd는 y=0도 그대로4d3090에 전달하며 유효한 빈 문자열과 구별한다.
         rebuild_=true;return;
     }
-    if (!createAtHandled && !aiUtilityHandled && !makeAiHandled && GameMenuCommand(event)) return; //앞서 실행한 생성 명령을 늦은 메뉴 dispatcher에 다시 보내지 않는다.
-    if (!createAtHandled && !aiUtilityHandled && !makeAiHandled && IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
+    if (!createAtHandled && !aiUtilityHandled && !makeAiHandled && !aiDebugHandled && GameMenuCommand(event)) return; //앞서 실행한 생성 명령을 늦은 메뉴 dispatcher에 다시 보내지 않는다.
+    if (!createAtHandled && !aiUtilityHandled && !makeAiHandled && !aiDebugHandled && IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
     if (IsObjectMenuVariantCommand(commandCode)) throw std::logic_error("현재 파생 객체 메뉴 선택의 실행 미연결: "+std::to_string(commandCode)); // 미복원 개발자/편집 실행을 입력에서 조용히 버리지 않는다.
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if (IsEscapeKeyPress(event)) {

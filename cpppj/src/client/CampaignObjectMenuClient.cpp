@@ -96,6 +96,9 @@ struct CampaignObjectMenuClient::Impl {
         BindPriestMenuControls(ui.priest,widgets,controls,raw);BindCarrierMenuControls(ui.carrier,controls);BindPlayerMenuControls(ui.player,widgets,controls,raw);BindObjectMenuInfoControls(ui.info,controls);
         BindFactoryMenuControls(ui.factory,widgets,controls,raw,[this](std::string_view text) { return Static(text); });
         BindObjectMenuControls(ui.object,controls,raw,client.Configuration(),[this](std::string_view text) { return Static(text); });
+        ui.aiDebug.format=[](auto requested,std::string_view pattern,std::span<const PriestMenuArgument> arguments) { if (requested!=80) throw std::logic_error("AI 메뉴 원문 서식 요청폭");return PrintMenu(pattern,arguments); };
+        ui.aiDebug.header=[&controls](auto value) { controls.AddHeader(value); };ui.aiDebug.checked=[&controls](auto checked,auto label,auto command,auto parameter,auto include,auto enabled) { controls.AddChecked(checked!=0,label,command,parameter,include!=0,enabled!=0); };
+        ui.aiDebug.begin=[&widgets](auto flags) { static_cast<void>(widgets.BeginVertical(flags)); };ui.aiDebug.take=[&raw] { return raw.TakeCurrent(); };ui.aiDebug.submenu=[&controls](auto label,auto child,auto enabled,auto checked) { controls.AddSubmenu(label,child,enabled!=0,checked!=0); }; //원래controlled자식스택/수명만사용한다.
         ui.variants.translate=ui.player.translate;ui.variants.helpWord=[this] { std::string text;if (!client.Configuration().ReadString("helpWord",text)) throw std::logic_error("풀숲 메뉴 실제 helpWord 없음");const auto bytes=o::EncodeOriginalText(text);return std::string(bytes.begin(),bytes.end()); };
         ui.variants.format=[](std::string_view pattern,std::int32_t value) { const std::array<PriestMenuArgument,1> arguments{value};return PrintMenu(pattern,arguments); };
         ui.variants.item=[&controls](auto label,auto command,auto parameter,auto include,auto enabled) { controls.AddText(label,command,parameter,include!=0,enabled!=0,false); };

@@ -4,6 +4,8 @@
 #include "client/GameMenuCommands.h"
 #include "client/CreateAtInput.h" //같은 일반 명령의 원문 이름과 숫자다.
 #include "client/DrawWater.h" //같은 일반 명령 이름/현재 DWORD만 허용한다.
+
+#include "client/AiDebugCommandInput.h" //원문두진단명령의실제이름/허용표다.
 #include "client/QuickHelpList.h" //같은 원문 Help목록 이름/숫자를 일반입력에 연결한다.
 #include "client/PresentationCommandInput.h" //글꼴/음질도 같은 실제 명령 이름과 입력 큐를 사용한다.
 #include "client/ConfigurationCommandInput.h" //현재 설정 세 이름/명령도 같은 원문 허용표를 공유한다.
@@ -25,10 +27,11 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,55> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,57> kCommands{{
     {0x005429a8U,kCreateInitialGeysersCommand},{0x005429f8U,kBrainCrankMoneyCommand},{0x005428d8U,kAiParamSetCommand}, //772의원문세일반명령이다.
     {0x005429d0U,kMakeAiCommand}, //005429d0의 실제 초기 일반 명령이다.
     {0x00542760U,kDrawWaterCommand}, //원문 후단 진단 명령이며 기본 메뉴 노출은 바꾸지 않는다.
+    {0x542a34U,kAiReportingCommand},{0x542a38U,kDebugSwitchCommand}, //조건부AI메뉴의실제현재명령이다.
     {0x00542964U,kCreateHelpListCommand}, //원문 일반입력의 현재 전용Help 출력부모다.
     {0x00542764U,kChangeFontFaceCommand},{0x00542a68U,kChangeSoundQualityCommand}, //원문 두 현재 옵션 명령이다.
     {0x00542b84U,kShowTecSideMenuCommand},{0x00542b88U,kShowTecMenu2Command}, //원문추가지식선택버튼의현재명령도같은허용표를쓴다.
@@ -90,6 +93,8 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto ai=AiUtilityCommandScriptCode(name);if (ai!=0xffffffffU) return ai;
     const auto createAt=CreateAtScriptCode(name);if (createAt!=0xffffffffU) return createAt; //원문 등록 이름을 같은 문자열 고리에 보낸다.
     const auto water=DrawWaterScriptCode(name);if (water!=0xffffffffU) return water;
+
+    const auto aiDebug=AiDebugCommandScriptCode(name);if (aiDebug!=0xffffffffU) return aiDebug;
     const auto helpList=CreateHelpListScriptCode(name);if (helpList!=0xffffffffU) return helpList;
     const auto presentation=PresentationCommandScriptCode(name);if (presentation!=0xffffffffU) return presentation;
     const auto utility=UtilityCommandScriptCode(name);if (utility!=0xffffffffU) return utility; //기본메뉴노출없이원문등록이름만연결한다.

@@ -41,6 +41,7 @@
 #include "client/RawObjectMenuOpen.h"
 #include "client/RawObjectMenuInfo.h"
 #include "client/RawObjectMenuVariants.h"
+#include "client/RawAiDebugMenu.h" //조건부AI메뉴작성기는동일controlled/현재Player를공유한다.
 #include "client/RawUserSelection.h"
 #include "client/RawCarrierInput.h"
 #include "client/RawPlayerMenu.h"
@@ -99,6 +100,7 @@ struct CampaignObjectMenuUi {
     ObjectMenuHooks object; // 실제 GUI/서식/설정/문자열 토큰이다. 두 미복원 파생 가상80만 count 경계를 사용한다.
     PlayerMenuHooks player; // 실제 Chat 상태/통신/허용 전역/GUI다. 현재 미션·요새·SP는 세션이 공급한다.
     ObjectMenuInfoHooks info; // 실제제목/머리·번역·순수서식·Config치환이다. 게임/Identity조회는같은Session이교체한다.
+    AiDebugMenuHooks aiDebug; //원문413dd0의서식/머리/체크/메뉴스택을현재UI가공급한다.
     ObjectMenuVariantHooks variants; // 여덟 파생+a8의 실제 번역/항목/설명/구분선이며 게임 조회는 같은 Session에 연결한다.
 };
 // 사제→Carrier→Damageable→공통 객체→Player의 실제 몸체를 한 수명으로 소유한다.
@@ -372,6 +374,7 @@ public:
     // 원본0040edb0처럼 직접 float비트만 쓴다. AddSp의 지갑/화면 갱신을 대신 호출하지 않는다.
     void SetSp(std::uint32_t owner,float value);
     SendMoneyHooks MoneyInputHooks(); // 메뉴·숫자 창이 같은 실제 SP/Player/AI 지갑/로컬 송신을 사용한다.
+    bool DispatchAiDebugCommand(InputEvent event); // 현재Player/생존AI본문/장기진단DWORD에413d50을적용한다.
     std::int32_t AiMoney(std::uint32_t owner) const; // 현재 AI 본체 지갑의 읽기 전용 관측이며 분산 SP와 구별한다.
     // 같은 미션의 회수·승천·포획·간헐천 설정을 Start와 후속 게임 명령이 직접 공유한다.
     o::MissionStartGlobals& MissionStartSettings();

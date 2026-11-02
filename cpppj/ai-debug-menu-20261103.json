@@ -1,0 +1,452 @@
+{
+  "unit": 775,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 775,
+  "displayVersion": "11.01",
+  "exeSha256": "0b6b4abee79f0b00ef880af2a46a391f505c044d91c01208fa6936f002d23fa2",
+  "summary": "조건부 AI 메뉴와 실제 ToggleReporting·ToggleDebug 이름 및 현재 로그·진단 DWORD를 연결",
+  "tests": {
+    "totalUnique": 12,
+    "totalExecutions": 12,
+    "newTests": 6,
+    "failedChecks": 0,
+    "names": [
+      "AiDebugInput_ActualClientOptionsAndStableDebugWords",
+      "AiDebugInput_Native200RowsAndCommonReleaseEnvelope",
+      "AiDebugInput_Native84NamesAndActualQueue",
+      "AiDebugMenu_Native60RowsAndCurrentBodyLifetime",
+      "AiDebugMenu_PartialEffectsAndUnchosenPhysicalBoundaries",
+      "CampaignSession_AiDebugUsesCurrentBodyAndStableClientWords",
+      "CampaignSession_MakeAiUsesExistingBrainAndBattleZeroWithoutFrames",
+      "MakeAiCommandInput_Native12NamesAndActualQueue",
+      "MakeAiCommandInput_Native64ModeMaskReleaseAndDeferredReads",
+      "MakeAi_Native2592ActualIteratorOwnerCountsRegionAndClearMask",
+      "MakeAi_Native770DefaultSettingsSpFtolAndOwnerZeroEnvelope",
+      "MakeAi_PartialFailureAndNextCandidateBeforeVirtualDeletion"
+    ],
+    "logs": [
+      "tests-ai-debug-menu-v1.log",
+      "tests-ai-debug-input-v1.log",
+      "tests-campaign-ai-debug-v1.log",
+      "tests-make-ai-v1.log",
+      "tests-make-ai-input-v1.log",
+      "tests-campaign-make-ai-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2706,
+    "currentCount": 2710,
+    "allUnchanged": true,
+    "fixtureCount": 890,
+    "newFixtures": [
+      "cpppj/tests/fixtures/ai-debug-input-x86.tsv",
+      "cpppj/tests/fixtures/ai-debug-menu-x86.tsv",
+      "cpppj/tests/fixtures/ai-debug-names-x86.tsv",
+      "cpppj/tests/fixtures/ai-debug-toggle-names-x86.tsv"
+    ]
+  },
+  "native": {
+    "prepared-native-first/native.json": {
+      "unit": 775,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "menuInputs": 60,
+      "inputInputs": 200,
+      "observations": 520,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "toolSha256": "e095c7ce9b217113c0cf7ff5c3877f53a738e7b1e11ece09ab9f6f795eed9352",
+      "fixtureSha256": {
+        "ai-debug-menu-x86.tsv": "7a48479e908aa4db35996c93dcc04689cfd27f58156b5269c0dfd77e2028240d",
+        "ai-debug-input-x86.tsv": "81ff05d4454b92594212c20f5f68f3cf5ebaed0607c6aa875f114017c2816715"
+      },
+      "limitations": [
+        "메뉴하위GUI/서식기는명시호출경계다. actualCRT/제어메뉴스택몸체/픽셀을실행한것은아니다.",
+        "입력은413d50rawchild이며앞선Guide/Gump/release/Console/정지전체부모는별도다.",
+        "메타맵양성/임의잘못된Player주소/Goal범위밖/해제메모리는관측하지않았다."
+      ],
+      "rawReportSha256": "1f30d02411ff6a37851c3e637bcb04c98e7fd5b9f68a2c30c66af2c1c5ca2703"
+    },
+    "prepared-native-first/names-native.json": {
+      "unit": 775,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 21,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "commands": [
+        "AIReporting 00542a34/020000d0",
+        "DebugSwitch 00542a38/020000d1"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 472054,
+      "fixtureSha256": "5491dc6c34faf75a6dcec1d358173aa40ff3275a531441064a1f6f1b95617e17",
+      "toolSha256": "799dd7c339215a31342928e9e615bc4ea70f946f8ef4f843de86286a2abd500a",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "9d92610f20d9f953330a24fbf15b7cecae98be11e0c6907ef5b52d724ce50743"
+    },
+    "prepared-native-repeat/native.json": {
+      "unit": 775,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "menuInputs": 60,
+      "inputInputs": 200,
+      "observations": 520,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "toolSha256": "e095c7ce9b217113c0cf7ff5c3877f53a738e7b1e11ece09ab9f6f795eed9352",
+      "fixtureSha256": {
+        "ai-debug-menu-x86.tsv": "7a48479e908aa4db35996c93dcc04689cfd27f58156b5269c0dfd77e2028240d",
+        "ai-debug-input-x86.tsv": "81ff05d4454b92594212c20f5f68f3cf5ebaed0607c6aa875f114017c2816715"
+      },
+      "limitations": [
+        "메뉴하위GUI/서식기는명시호출경계다. actualCRT/제어메뉴스택몸체/픽셀을실행한것은아니다.",
+        "입력은413d50rawchild이며앞선Guide/Gump/release/Console/정지전체부모는별도다.",
+        "메타맵양성/임의잘못된Player주소/Goal범위밖/해제메모리는관측하지않았다."
+      ],
+      "rawReportSha256": "1f30d02411ff6a37851c3e637bcb04c98e7fd5b9f68a2c30c66af2c1c5ca2703"
+    },
+    "prepared-native-repeat/names-native.json": {
+      "unit": 775,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 21,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "commands": [
+        "AIReporting 00542a34/020000d0",
+        "DebugSwitch 00542a38/020000d1"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 472054,
+      "fixtureSha256": "5491dc6c34faf75a6dcec1d358173aa40ff3275a531441064a1f6f1b95617e17",
+      "toolSha256": "799dd7c339215a31342928e9e615bc4ea70f946f8ef4f843de86286a2abd500a",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "9d92610f20d9f953330a24fbf15b7cecae98be11e0c6907ef5b52d724ce50743"
+    },
+    "toggle-names-fix/native-first.json": {
+      "unit": 775,
+      "kind": "toggle-name-followup",
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "inputs": 63,
+      "observations": 63,
+      "x87Precision": "0x027f (name/token/queue integer path)",
+      "coverage": {
+        "registered": 24,
+        "nul-after-command": 2,
+        "nul-in-number": 2,
+        "nul-after-name": 2,
+        "nul-mid-name": 2,
+        "nul-in-string": 2,
+        "nul-first": 1,
+        "unregistered-alias": 24,
+        "unregistered-missing": 4
+      },
+      "queued": 32,
+      "unregistered": 31,
+      "nativeInstructions": 1237443,
+      "nativeLookup": "004d52c0",
+      "nativeParser": "004c9090",
+      "nativeTable": "00542b90",
+      "actualNameEntries": [
+        {
+          "entry": "00543208",
+          "name": "ToggleReporting",
+          "codePointer": "00542a34",
+          "code": "020000d0"
+        },
+        {
+          "entry": "00543210",
+          "name": "ToggleDebug",
+          "codePointer": "00542a38",
+          "code": "020000d1"
+        }
+      ],
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "C:\\Users\\BUZZ\\Documents\\Codex\\2026-11-02\\agents-md-left-jobs-md-cpppj-4\\work\\ai-debug-menu-775\\decomp_ai_debug_names.py": "799dd7c339215a31342928e9e615bc4ea70f946f8ef4f843de86286a2abd500a",
+        "C:\\Users\\BUZZ\\Documents\\Codex\\2026-11-02\\agents-md-left-jobs-md-cpppj-4\\work\\ai-debug-toggle-names-fix-775\\native_toggle_names.py": "e5130960f06cfccdb68ba20d82a5dd9f23446c66c14415a09a8423e5f3c61f43",
+        "work\\ai-debug-toggle-names-fix-775\\ai-debug-toggle-names-x86.tsv": "3cd3f4c838d610e383448cbe956c6293d04f4d8e2fa80fc93f9d628c8eafa8bf"
+      },
+      "repeatVerification": false,
+      "gameExecutions": 0,
+      "multiplayerExecutions": 0,
+      "cppExecutions": 0,
+      "builds": 0,
+      "nlsExecutions": 0,
+      "limitations": [
+        "실제명령표/토큰/숫자변환/문자열고리/FIFO만실행",
+        "메뉴픽셀/413d50writer/전략/게임/MP를실행하지않음",
+        "할당/반납/TLS/로그는기존명시장치경계",
+        "원래21fixture및동결준비본/제품수정0"
+      ],
+      "rawReportSha256": "92f54d0c68d2216e74f7d565b3b01822f2d52a59f7cd01887c108272702de518"
+    },
+    "toggle-names-fix/native-repeat.json": {
+      "unit": 775,
+      "kind": "toggle-name-followup",
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "inputs": 63,
+      "observations": 63,
+      "x87Precision": "0x027f (name/token/queue integer path)",
+      "coverage": {
+        "registered": 24,
+        "nul-after-command": 2,
+        "nul-in-number": 2,
+        "nul-after-name": 2,
+        "nul-mid-name": 2,
+        "nul-in-string": 2,
+        "nul-first": 1,
+        "unregistered-alias": 24,
+        "unregistered-missing": 4
+      },
+      "queued": 32,
+      "unregistered": 31,
+      "nativeInstructions": 1237443,
+      "nativeLookup": "004d52c0",
+      "nativeParser": "004c9090",
+      "nativeTable": "00542b90",
+      "actualNameEntries": [
+        {
+          "entry": "00543208",
+          "name": "ToggleReporting",
+          "codePointer": "00542a34",
+          "code": "020000d0"
+        },
+        {
+          "entry": "00543210",
+          "name": "ToggleDebug",
+          "codePointer": "00542a38",
+          "code": "020000d1"
+        }
+      ],
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "C:\\Users\\BUZZ\\Documents\\Codex\\2026-11-02\\agents-md-left-jobs-md-cpppj-4\\work\\ai-debug-menu-775\\decomp_ai_debug_names.py": "799dd7c339215a31342928e9e615bc4ea70f946f8ef4f843de86286a2abd500a",
+        "C:\\Users\\BUZZ\\Documents\\Codex\\2026-11-02\\agents-md-left-jobs-md-cpppj-4\\work\\ai-debug-toggle-names-fix-775\\native_toggle_names.py": "e5130960f06cfccdb68ba20d82a5dd9f23446c66c14415a09a8423e5f3c61f43",
+        "work\\ai-debug-toggle-names-fix-775\\ai-debug-toggle-names-x86.tsv": "3cd3f4c838d610e383448cbe956c6293d04f4d8e2fa80fc93f9d628c8eafa8bf"
+      },
+      "repeatVerification": true,
+      "gameExecutions": 0,
+      "multiplayerExecutions": 0,
+      "cppExecutions": 0,
+      "builds": 0,
+      "nlsExecutions": 0,
+      "limitations": [
+        "실제명령표/토큰/숫자변환/문자열고리/FIFO만실행",
+        "메뉴픽셀/413d50writer/전략/게임/MP를실행하지않음",
+        "할당/반납/TLS/로그는기존명시장치경계",
+        "원래21fixture및동결준비본/제품수정0"
+      ],
+      "rawReportSha256": "93f6a36c236467f826fb69d687f6e60478811e6ed8e3d3a2dd8ab59ec205ee57"
+    },
+    "native-repeat/native.json": {
+      "unit": 775,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "menuInputs": 60,
+      "inputInputs": 200,
+      "observations": 520,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "toolSha256": "1c0b5098eb7f7e4e79ae08cfc2e0df164d3bede4c50f1b41afebd4a7358b0939",
+      "fixtureSha256": {
+        "ai-debug-menu-x86.tsv": "7a48479e908aa4db35996c93dcc04689cfd27f58156b5269c0dfd77e2028240d",
+        "ai-debug-input-x86.tsv": "81ff05d4454b92594212c20f5f68f3cf5ebaed0607c6aa875f114017c2816715"
+      },
+      "limitations": [
+        "메뉴하위GUI/서식기는명시호출경계다. actualCRT/제어메뉴스택몸체/픽셀을실행한것은아니다.",
+        "입력은413d50rawchild이며앞선Guide/Gump/release/Console/정지전체부모는별도다.",
+        "메타맵양성/임의잘못된Player주소/Goal범위밖/해제메모리는관측하지않았다."
+      ],
+      "rawReportSha256": "568f268d7d4f54b6e85b54c180e3963b7a98ad623c0f411466942c70cadd0d92"
+    },
+    "native-names-repeat.json": {
+      "unit": 775,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 21,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "commands": [
+        "AIReporting 00542a34/020000d0",
+        "DebugSwitch 00542a38/020000d1"
+      ],
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "nativeInstructions": 472054,
+      "fixtureSha256": "5491dc6c34faf75a6dcec1d358173aa40ff3275a531441064a1f6f1b95617e17",
+      "toolSha256": "6880c9bfdf5d67f7ae63633e53a3e5ac2e2b39efd45b27ce2be234a294624e62",
+      "limitations": [
+        "명령조회/토큰/실제큐만실행하며GUI몸체는별도관측이다",
+        "실제대본태그호출/기본메뉴노출을확인한것은아니다"
+      ],
+      "rawReportSha256": "daef6b8f4c27fe22cefc0ec1bee7e74d6b701b0fdb7e7ded4416eab64d91170b"
+    },
+    "native-toggle-names-repeat.json": {
+      "unit": 775,
+      "kind": "toggle-name-followup",
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "inputs": 63,
+      "observations": 63,
+      "x87Precision": "0x027f (name/token/queue integer path)",
+      "coverage": {
+        "registered": 24,
+        "nul-after-command": 2,
+        "nul-in-number": 2,
+        "nul-after-name": 2,
+        "nul-mid-name": 2,
+        "nul-in-string": 2,
+        "nul-first": 1,
+        "unregistered-alias": 24,
+        "unregistered-missing": 4
+      },
+      "queued": 32,
+      "unregistered": 31,
+      "nativeInstructions": 1237443,
+      "nativeLookup": "004d52c0",
+      "nativeParser": "004c9090",
+      "nativeTable": "00542b90",
+      "actualNameEntries": [
+        {
+          "entry": "00543208",
+          "name": "ToggleReporting",
+          "codePointer": "00542a34",
+          "code": "020000d0"
+        },
+        {
+          "entry": "00543210",
+          "name": "ToggleDebug",
+          "codePointer": "00542a38",
+          "code": "020000d1"
+        }
+      ],
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_ai_debug_names.py": "6880c9bfdf5d67f7ae63633e53a3e5ac2e2b39efd45b27ce2be234a294624e62",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_ai_debug_toggle_names.py": "e3d2309377f6c0c4951c49701ee42f8fc25eee420a45afc321187b578235306b",
+        "cpppj\\tests\\fixtures\\ai-debug-toggle-names-x86.tsv": "3cd3f4c838d610e383448cbe956c6293d04f4d8e2fa80fc93f9d628c8eafa8bf"
+      },
+      "repeatVerification": true,
+      "gameExecutions": 0,
+      "multiplayerExecutions": 0,
+      "cppExecutions": 0,
+      "builds": 0,
+      "nlsExecutions": 0,
+      "limitations": [
+        "실제명령표/토큰/숫자변환/문자열고리/FIFO만실행",
+        "메뉴픽셀/413d50writer/전략/게임/MP를실행하지않음",
+        "할당/반납/TLS/로그는기존명시장치경계",
+        "원래21fixture및동결준비본/제품수정0"
+      ],
+      "rawReportSha256": "d857965f342779f8eed4b439fa7b97a566ba741ceb07fa17ab796b2b066ade78"
+    }
+  },
+  "initialFailures": [],
+  "sourceSha256": {
+    "cpppj/src/client/AiDebugCommandInput.cpp": "db9b7d7706a1f43c97e59d4958f7fb25e96655adbc8fcd3160440c7be6c5e4d3",
+    "cpppj/src/client/AiDebugCommandInput.h": "3ace34be1e02f6e7b7b67e77b63bb6b837a1221db14ca2ce76eafd79fd2aa4b1",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "01c55f0d56e3f45c7f8c607dcdd87d86888c7235b4406fbca2238d7671b92858",
+    "cpppj/src/client/ClientAiDebugGlobals.h": "c0f07d2cb8b9b83909d386f54d2ff5091394f1ad76844ef64b81ca948b7bd9fe",
+    "cpppj/src/client/ClientGameplayGlobals.h": "4273fc00a89f6d911cf0a9792f1e625dd71247706a787da53eeb39898f189d29",
+    "cpppj/src/client/ClientMain.cpp": "fe3b784bc96a6a51abaaa0ffcdd41f0127353888dfb59050c4b026ffe5cff3e9",
+    "cpppj/src/client/ClientRendererFrame.cpp": "00ea2867878ba84de2922bfc2bb9aa16d11248412a5321c3abfb85ab644e27cf",
+    "cpppj/src/client/ClientRendererFrame.h": "a7cfb896d94c715f790f3c3f24f9709fc09591fe241465e14f2374af6674ce09",
+    "cpppj/src/client/CMakeLists.txt": "4702462d4bd3d03b22da0ab10c66da57878d5a39a66965a7418b9d4fa472c7cf",
+    "cpppj/src/client/GameMenuCommands.cpp": "3e94e283c5e00757be2a50b62ae63debb4f8b7b60ea1e22fa350de2be1231b76",
+    "cpppj/src/client/RawAiDebugMenu.cpp": "888f9b42290df2624a0cd5d25d7e7289d0242dbf3743be87a524b95d684a6a3f",
+    "cpppj/src/client/RawAiDebugMenu.h": "a44cc8eb32dc0d3d9b9adcec7003eac959c061469239f8e4bc5810a1067d44b1",
+    "cpppj/src/client/RawCampaignSession.cpp": "68124143e498878befb6aa3af9893d6426fb83b90d9b91e66e5c14bb6863aaeb",
+    "cpppj/src/client/RawCampaignSession.h": "15b96e07c35e1c8c7fd9d6baad68c39f86663725a22647ada974cd4fc2272fab",
+    "cpppj/src/client/UberGump.cpp": "1bab349d40998f12e727afee185a31cb7999e622ab7e5a6bcf3264a10c2d9828",
+    "cpppj/src/o/RawPlayerWorld.h": "0a0ada8966e9fb753be93603a4e3ff9a034b49231dbbe99731c6c63b40f15fb1",
+    "cpppj/tests/AiDebugMenuTests.cpp": "2ab57a1e9582217ea74da6c9f12a114fb2cf3134c719840efd544cbbeaa3485d",
+    "cpppj/tests/CampaignAiDebugTests.inc": "606accb6dd6dbadce5cd18037839ee4c5d2cf28de03c45f3dd286b7045f2172d",
+    "cpppj/tests/CampaignSessionTests.cpp": "dddf5b60b782a5bb741572b63998c27770733ae7cc3fa72d5e47075365fc2c2b",
+    "cpppj/tests/CMakeLists.txt": "c2e66d2bb770373206da0dc8d3da259ecb5eb5c3602efd513955a21779e08019",
+    "tools/decomp_ai_debug.py": "1c0b5098eb7f7e4e79ae08cfc2e0df164d3bede4c50f1b41afebd4a7358b0939",
+    "tools/decomp_ai_debug_names.py": "6880c9bfdf5d67f7ae63633e53a3e5ac2e2b39efd45b27ce2be234a294624e62",
+    "tools/decomp_ai_debug_toggle_names.py": "e3d2309377f6c0c4951c49701ee42f8fc25eee420a45afc321187b578235306b"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-775/protected-after.json",
+  "next": "사용자 요청으로775 인계·커밋 뒤 목표 일시 정지. 재개 시776 진단표시부터777 TYPE reader·779/783 checking·781/782 GIF/초기화면·784 입력꼬리·785 보조음향과 남은 비멀티/호환성을 진행",
+  "limitations": [
+    "메뉴60/입력200은명시GUI/서식/실제메뉴픽셀·전략이없는원문CPU경계다. 입력은413d50 rawchild이고Guide/Gump/release/Console/정지전체부모실행이아니다. 실제Uber는release만반환하고press후공통꼬리를진행한다.",
+    "showSoftAsserts조건·현재owner/brain·16파라미터/7로그값을원문각지점에서읽고새기본UI를추가하지않는다. decimal600(0x258)과AiParamSet의hex0x600은다른필드다.",
+    "실제등록이름은ToggleReporting/ToggleDebug다. AIReporting/DebugSwitch는함수명/초기보고라벨이며미등록alias21행음성으로보존한다. 옛관측보고commands필드의설명라벨을실제이름등록근거로사용하지않는다.",
+    "추가63과반복63은Command/정수parser/문자열고리/FIFO이며정밀도027f1회다. directLookup Native0이고공개helper첫NUL4CHECK는원문stricmp정적근거와C++검사다. 84행한case는old21+new63을모두실행한다.",
+    "Client장기7로그/checking와special/보조개발자DWORD를소유하고BOOL정규화를없앴다. 창없는Client데이터검사는55a480/55a484의29·99저장폭만검사하며실제게임/개발자키입력/새UI활성화는0이다.",
+    "knownRVA resolver만현재typedowner에매핑한다. 임의32비트포인터의host주소역참조·잘못된Player주소/해제본문/전체SEH·ABI는명시범위밖이다. checking전체98소비자와5추가표시getter는779/776별도다.",
+    "새게임/GUI/CLI/MP·물리/PCM·공중3종전용검사·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다."
+  ],
+  "independentReviewCorrections": [
+    "private hex decoder and empty sentinel",
+    "original Toggle names and unknown aliases",
+    "84 command/FIFO rows in the existing case",
+    "public first-NUL lookup checks"
+  ],
+  "pauseRequested": {
+    "byUser": true,
+    "after": "775 document and local commit",
+    "overallGoalComplete": false,
+    "nextUnit": 776
+  },
+  "preparedResumeBackup": {
+    "archive": "extracted\\cpp-resume-775\\resume-prepared-after-775.zip",
+    "archiveBytes": 4856594,
+    "archiveSha256": "60aebb17941f651023c956bad62c7706be40c705f3d82a049848b2f7cd109c9f",
+    "fileCount": 655,
+    "gitTracked": false
+  },
+  "pauseHandover": {
+    "path": "docs\\exe\\cpp-pause-handover-20261103.md",
+    "sha256": "52950cab82af87d85de9a795824d3a096a8473537bf20fb5cb853ef0df5c135e",
+    "requestedByUser": true,
+    "resumeAtUnit": 776
+  }
+}
