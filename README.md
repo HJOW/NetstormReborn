@@ -123,13 +123,44 @@ bash ./PREPARE.sh --check-only
 
 Windows 10/11, CMake 3.21 이상, C++20 컴파일러(Visual Studio 2022 이상 또는 Build Tools의 C++ 도구)가 필요합니다. Win32 API를 직접 사용하는 Windows 전용 빌드입니다. 프로젝트 루트에서 실행합니다.
 
-```sh
-cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
-cmake --build cpppj/build --config Release
+다음 스크립트를 실행하면 **게임 / 통합 테스트 / 전체** 선택 메뉴가 나옵니다. 빈 입력은 취소합니다.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1
+```
+
+| 선택 | 명령 뒤에 붙이는 인자 | 컴파일 범위 |
+| --- | --- | --- |
+| 게임 (권장) | `-Mode Game` | 게임 실행 파일과 필요한 공용 코드. 테스트 소스 제외 |
+| 통합 테스트 | `-Mode Tests` | `netstorm_tests`와 필요한 공용 코드·도우미. 별도 집중 테스트의 중복 컴파일 제외 |
+| 전체 | `-Mode All` | 기존처럼 게임·통합 테스트·모든 집중 테스트·도우미 전체 |
+
+예를 들어 게임만 빌드하거나 집중 테스트 하나만 빌드하려면 다음처럼 실행합니다. 빌드는 증분 방식이며, 스크립트가 게임이나 테스트를 실행하지는 않습니다.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode Game
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode Tests -TestTarget netstorm_editor_file_ring_tests
+```
+
+기본 구성은 Release, 병렬 작업 수는 4입니다. `-Configuration Debug`, `-Jobs 2`, `-BuildDirectory cpppj/build-other`로 바꿀 수 있고, `-DryRun`은 실행할 명령만 표시합니다. 선택 메뉴 없이 통합 테스트는 `-Mode Tests`, 기존 전체 빌드는 `-Mode All`을 사용합니다.
+
+CMake를 직접 사용할 때의 동일한 명령은 다음과 같습니다. **새 빌드 폴더의 기본값은 테스트 OFF**이며, 기존 캐시의 ON 값은 자동으로 바뀌지 않습니다.
+
+```powershell
+# 게임만
+cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release -DNETSTORM_BUILD_TESTS=OFF
+cmake --build cpppj/build --config Release --target NetstormCpp --parallel 4
+# 통합 테스트만 (필요한 공용 코드도 컴파일)
+cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release -DNETSTORM_BUILD_TESTS=ON
+cmake --build cpppj/build --config Release --target netstorm_tests --parallel 4
+# 기존 전체 빌드 (테스트 ON 구성 후 대상 생략)
+cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release -DNETSTORM_BUILD_TESTS=ON
+cmake --build cpppj/build --config Release --parallel 4
+# 통합 테스트 실행은 컴파일과 별개로 선택
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-CTest는 래퍼 검사 하나로 등록되어 있으며, 현재 등록된 C++ 검사는 3,514개입니다. 전체 실행은 수 분이 걸리며, 각 단위의 집중 검사와 전체 검사 결과는 [인수인계](LEFT_JOBS.md)에서 구분해 확인할 수 있습니다. Visual Studio 생성기 기준 실행 파일은 `cpppj/build/bin/Release/Netstorm.exe`입니다. 다음 명령은 창 모드로 C++ 복원판의 메인 메뉴를 엽니다. 메인 메뉴의 Campaign에서 캠페인 1장의 첫 미션 **The War Begins**를 선택하면 캠페인 1-1을 시작합니다.
+CTest 실행은 통합 테스트 빌드 후에 사용합니다. 각 단위의 집중 검사와 전체 검사 결과는 [인수인계](LEFT_JOBS.md)에서 구분해 확인할 수 있습니다. Visual Studio 생성기 기준 게임 실행 파일은 `cpppj/build/bin/Release/Netstorm.exe`입니다. 다음 명령은 창 모드로 C++ 복원판의 메인 메뉴를 엽니다. 메인 메뉴의 Campaign에서 캠페인 1장의 첫 미션 **The War Begins**를 선택하면 캠페인 1-1을 시작합니다.
 
 ```powershell
 .\cpppj\build\bin\Release\Netstorm.exe --run originals --window

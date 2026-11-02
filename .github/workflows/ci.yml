@@ -51,7 +51,7 @@ jobs:
         run: python tools/path_audit.py
 
       - name: 구성
-        run: cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release -DNETSTORM_BUILD_TESTS=ON
 
       - name: 빌드
         run: cmake --build cpppj/build --config Release

@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **738 / 표시 버전11.01 유지**다. Edit/목록/Template의Exists/readonly/read를실제Client와같은경로고리에연결했다. 수정전3단언실패→집중51개실패0·기존원문1902행·실제Unicode/누락/진단/10칸수명/장부분리·Template35섹션Load의두칸/제목경계·CLI종료0이다. [738 기록](../docs/exe/cpp-editor-file-ring-20261102.md)·[현재 인계](../LEFT_JOBS.md)를따른다. 다음우선작업은사용자지정게임/테스트/전체선택빌드와루트README.md/README.en.md컴파일안내다. 새Native/fixture/GUI0이며GUI735/전체34/ZIP645·644는별도제품근거다.733의5차/플랫폼요구·미구현상태와전체1~8차목표를유지한다.
+현재 실행 제품은 **738 / 표시 버전11.01 유지**다. 최신 단위739는 사용자 지정 게임/통합 테스트/기존 전체 선택 빌드와 루트README.md/README.en.md 컴파일 안내를 구현했다. `powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1`을 저장소 루트에서 실행해 선택하거나 `-Mode Game`, `-Mode Tests`, `-Mode All`을 지정한다. 새 CMake 구성의 테스트 기본값은 OFF이며 기존 CI/프리셋은 전체 빌드를 유지한다. 선택 확인15개·게임/집중 테스트 대상 증분 빌드·전체 구성 그래프를 확인했고 EXE 해시는 그대로다. [739 기록](../docs/exe/cpp-build-modes-20261102.md)·[현재 인계](../LEFT_JOBS.md)를 따른다. 게임 소스의 최신 검증은 [738](../docs/exe/cpp-editor-file-ring-20261102.md)의 공유 경로 고리/실제 Template·집중51개 실패0·기존원문1902행이다. 새Native/fixture/GUI0이며 GUI735/전체34/ZIP645·644는 별도 제품 근거다.733의5차/플랫폼 요구·미구현 상태와 전체1~8차 목표를 유지한다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 
@@ -393,11 +393,18 @@ AI가 게임 또는 클론/도구의 별도 창을 실행할 때는 [실행 전 
 
 Windows 10/11, CMake 3.21 이상, C++20 컴파일러(Visual Studio 2022 이상 또는 Build Tools)가 필요하다. 다른 OS에서는 구성 단계에서 멈춘다. 저장소 루트에서 실행한다.
 
-```sh
-cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
-cmake --build cpppj/build --config Release
-ctest --test-dir cpppj/build --build-config Release --output-on-failure
+```powershell
+# 모드 생략: 게임/통합 테스트/전체 선택 메뉴
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1
+# 게임만 컴파일 (테스트 소스 제외)
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode Game
+# 통합 테스트만 컴파일 (필요한 공용 코드/도우미 포함)
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode Tests
+# 기존 전체 컴파일
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode All
 ```
+
+스크립트는 컴파일만 한다. 통합 테스트 빌드 후 실행하려면 별도로 `ctest --test-dir cpppj/build --build-config Release --output-on-failure`를 사용한다. 특정 집중 대상은 `-Mode Tests -TestTarget netstorm_editor_file_ring_tests`로 지정한다. 새 CMake 구성은 테스트 OFF가 기본이며 Game은 기존 캐시도 OFF로 바꾼다. 직접 CMake 명령과 기타 옵션은 [루트 README](../README.md#c-복원판-빌드와-실행-cpppj-주력)와 [빌드 문서](../docs/cpp-build.md#3-빌드와-테스트)를 따른다.
 
 실행 파일은 `cpppj/build/bin/Release/Netstorm.exe` 에 생긴다. 배포 ZIP은 압축을 모두 푼 뒤 최상위 `Netstorm.exe`를 직접 실행한다(저장된 화면 모드). `Netstorm.bat`는 창 모드를 강제한다. 개발 빌드는 아래처럼 `--run <자료 경로>`를 명시하며 정보 출력은 `--help`다.
 

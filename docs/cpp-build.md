@@ -161,17 +161,26 @@ AI가 게임 또는 클론/도구의 별도 창을 실행할 때는 [실행 전 
 
 저장소 루트에서 실행한다. Windows 10/11 과 Visual Studio 2022(또는 Build Tools)의 C++ 도구가 필요하다. 외부 라이브러리가 없어 인터넷 연결이 필요 없다.
 
-```sh
-cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
-cmake --build cpppj/build --config Release
-ctest --test-dir cpppj/build --build-config Release --output-on-failure
+```powershell
+# 생략하면 게임/통합 테스트/전체 선택 메뉴, 빈 입력은 취소
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1
+# 메뉴 없이 선택
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode Game
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode Tests
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode All
 ```
+
+게임은 테스트 구성을 OFF로 바꾸고 `NetstormCpp`만, 통합 테스트는 ON으로 바꾸고 `netstorm_tests`와 공용 코드/도우미만 컴파일한다. 전체는 ON으로 구성한 뒤 대상을 생략하여 기존 게임/모든 테스트 빌드를 유지한다. 통합 테스트 모드는 별도 집중 실행 파일들의 중복 컴파일을 피한다. 집중 대상만 필요하면 `-Mode Tests -TestTarget netstorm_editor_file_ring_tests`처럼 지정한다. 컴파일과 테스트 실행은 분리되어 있으며 자동으로 게임/검사를 실행하지 않는다.
+
+직접 CMake를 쓰려면 게임은 `cmake -S cpppj -B cpppj/build -DNETSTORM_BUILD_TESTS=OFF` 후 `cmake --build cpppj/build --config Release --target NetstormCpp --parallel 4`, 통합 테스트는 `-DNETSTORM_BUILD_TESTS=ON` 구성 후 `--target netstorm_tests`, 기존 전체는 ON 구성 후 `--target` 없이 빌드한다. 새 빌드 폴더의 기본값은 OFF지만 기존 캐시는 보존된다. 통합 테스트를 컴파일한 뒤 필요할 때 `ctest --test-dir cpppj/build --build-config Release --output-on-failure`로 실행한다. 선택별 명령 전체는 [README](../README.md#c-복원판-빌드와-실행-cpppj-주력)를 참고한다.
+
+스크립트는 기본 Release/병렬4이며 `-Configuration`, `-Jobs`, `-BuildDirectory`, `-Generator`, `-CMakePath`를 지원한다. 상대 빌드 경로는 저장소 루트 기준이다. `-DryRun`은 명령만 표시하고, `-ConfigureOnly`는 구성까지만 한다. Windows PowerShell5.1과 PowerShell7에서 쓸 수 있다.
 
 * Windows 에서는 CMake 가 설치된 Visual Studio 를 찾아 쓴다(개발자 명령 프롬프트가 아니어도 된다). 실행 파일은 `cpppj/build/bin/Release/Netstorm.exe` 에 생긴다.
 * **Windows 가 아니면 구성 단계에서 멈춘다**(`cpppj builds on Windows only`). 2026-10-05 이전에는 공용 코드를 Linux 에서도 컴파일해 보았지만, 클라이언트 코드가 Win32 를 직접 부르게 되면서 그만두었다.
-* 프리셋을 쓰려면 `cpppj/` 에서 실행한다: `cmake --preset vs2022 && cmake --build --preset vs2022 && ctest --preset vs2022`.
+* 기존 `vs2022`/`ninja` 프리셋은 테스트 ON을 명시해 전체 빌드/CTest 동작을 유지한다. `cpppj/`에서 `cmake --preset vs2022`, `cmake --build --preset vs2022`, 필요하면 `ctest --preset vs2022`를 차례로 실행한다.
 * 필요한 도구는 `PREPARE.ps1` 의 "VS Build Tools 2022 (C++)"와 "CMake" 항목으로 설치한다.
-* CI(`.github/workflows/ci.yml`)의 `cpp-build-test` 작업이 Windows 에서 위 세 명령을 실행한다.
+* CI(`.github/workflows/ci.yml`)의 `cpp-build-test`는 테스트 ON을 명시하고 기존 전체 빌드/CTest를 유지한다.
 
 인자 없이 실행하면 빌드 정보·검사 명령을 표시한다. 원본 게임을 실행하지 않고 복원한 모듈을 사용한다.
 

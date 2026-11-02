@@ -22,8 +22,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # 편집기·분석 도구용 compile_commands.json 을 빌드 폴더에 만든다 (Ninja·Makefile 생성기에서만 생긴다)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# 단위 테스트 빌드 여부 (기본 켜짐)
-option(NETSTORM_BUILD_TESTS "단위 테스트를 함께 빌드한다" ON)
+# 새 빌드 폴더는 게임만 구성한다. 테스트/기존 전체 빌드는 ON 또는 build-cpppj.ps1에서 선택한다.
+# 기존 캐시의 ON 값은 CMake가 보존하므로 게임 전용 전환에는 명시적으로 OFF를 전달한다.
+option(NETSTORM_BUILD_TESTS "단위 테스트 빌드 대상을 추가한다" OFF)
 
 # 실행 파일과 라이브러리를 빌드 폴더의 한곳에 모은다 (게임 데이터·글꼴을 실행 파일 기준으로 찾기 쉽게)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")

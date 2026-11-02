@@ -111,19 +111,50 @@ Omit `-CheckOnly` or `--check-only` to open tool selection and installation. REA
 
 You need Windows 10/11, CMake 3.21 or later, and a C++20 compiler (Visual Studio 2022 or later, or the C++ tools in Build Tools). This build uses the Win32 API directly and is Windows only. Run from the repository root:
 
-```sh
-cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
-cmake --build cpppj/build --config Release
+Run this script to choose **game / combined tests / everything** from a menu. An empty answer cancels.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1
+```
+
+| Choice | Arguments to append | What gets compiled |
+| --- | --- | --- |
+| Game (recommended) | `-Mode Game` | Game executable and required shared code; no test sources |
+| Combined tests | `-Mode Tests` | `netstorm_tests`, required shared code and helpers; skips duplicate compilation in separate focused test targets |
+| Everything | `-Mode All` | The existing full build: game, combined tests, every focused test target and helper |
+
+For example, build just the game or a single focused test target with the following commands. Builds are incremental. The script compiles without launching the game or running tests.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode Game
+powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mode Tests -TestTarget netstorm_editor_file_ring_tests
+```
+
+Defaults are Release and four parallel jobs. Use `-Configuration Debug`, `-Jobs 2` or `-BuildDirectory cpppj/build-other` to change them; `-DryRun` only prints commands. To skip the menu, use `-Mode Tests` for combined tests or `-Mode All` for the existing full build.
+
+Equivalent direct CMake commands follow. **Tests default to OFF in a new build directory.** An existing cached ON value is preserved unless explicitly changed.
+
+```powershell
+# Game only
+cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release -DNETSTORM_BUILD_TESTS=OFF
+cmake --build cpppj/build --config Release --target NetstormCpp --parallel 4
+# Combined tests only (also compiles required shared code)
+cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release -DNETSTORM_BUILD_TESTS=ON
+cmake --build cpppj/build --config Release --target netstorm_tests --parallel 4
+# Existing full build (after configuring with tests ON, omit the target)
+cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release -DNETSTORM_BUILD_TESTS=ON
+cmake --build cpppj/build --config Release --parallel 4
+# Optionally run combined tests separately from compilation
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-CTest registers a single wrapper test and currently has 3,514 registered C++ tests. A full run takes several minutes; see the [handover](LEFT_JOBS.md) for the distinction between each unit's focused checks and full-suite results. With the Visual Studio generator, the executable is `cpppj/build/bin/Release/Netstorm.exe`. Open the reconstruction's main menu in windowed mode with the command below. Choosing Campaign in the main menu and then the first mission of chapter 1, **The War Begins**, starts Campaign 1-1.
+Run CTest after building the combined tests. See the [handover](LEFT_JOBS.md) for the distinction between each unit's focused checks and full-suite results. With the Visual Studio generator, the game executable is `cpppj/build/bin/Release/Netstorm.exe`. Open the reconstruction's main menu in windowed mode with the command below. Choosing Campaign in the main menu and then the first mission of chapter 1, **The War Begins**, starts Campaign 1-1.
 
 ```powershell
 .\cpppj\build\bin\Release\Netstorm.exe --run originals --window
 ```
 
-`--run <game-data folder>` runs the C++ reconstruction (it does not run the original game). Adding `--mission <mission key>` skips the menu and opens that mission's briefing (for example, `--mission Tutorial1`; Campaign 1-1 is `--mission TheWarBegins`). `--view fonts`, `--view types`, and `--view TEST01` open font, type and mission inspection scenes. Running without arguments (or with `--help`) prints build information and the available options. Live construction, production, bridges, harvesting/transport, combat and automatic execution of the shared strategy AI are connected, while natural playthroughs of all target missions, remaining Edit tools, scenarios and lifetime transitions, and original-parity verification remain unfinished. See [C++ build](docs/cpp-build.md) for build instructions and the [handover](LEFT_JOBS.md) for current integration status.
+`--run <game-data folder>` runs the C++ reconstruction (it does not run the original game). Adding `--mission <mission key>` skips the menu and opens that mission's briefing (for example, `--mission Tutorial1`; Campaign 1-1 is `--mission TheWarBegins`). `--view fonts`, `--view types`, and `--view TEST01` open font, type and mission inspection scenes. Running without arguments opens the GUI main menu; `--help` prints build information and the available options. Live construction, production, bridges, harvesting/transport, combat and automatic execution of the shared strategy AI are connected, while natural playthroughs of all target missions, remaining Edit tools, scenarios and lifetime transitions, and original-parity verification remain unfinished. See [C++ build](docs/cpp-build.md) for build instructions and the [handover](LEFT_JOBS.md) for current integration status.
 
 ## Building and running the distributable archive
 
