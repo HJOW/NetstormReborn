@@ -1,0 +1,314 @@
+# webpj 절벽 fringe 기대값 표 — make-terrain-fringe-expected.py 가 fringe.type·isle.type 텍스트를 직접 읽어 만든다(JS 구현의 출력이 아님).
+# pair\t글자 쌍\t단계\t후보\t0x10 제외 후\t0x18 제외 후   /   isle\t클러스터 번호\t이름\t0x10 제외 후 허용 후보 수
+pair	AA	side	81,82	81,82	81,82
+pair	AB	exact	81	81	81
+pair	AC	side	81,82	81,82	81,82
+pair	AD	side	81,82	81,82	81,82
+pair	AE	exact	82	82	82
+pair	AF	side	81,82	81,82	81,82
+pair	AG	side	81,82	81,82	81,82
+pair	AH	side	81,82	81,82	81,82
+pair	AI	side	81,82	81,82	81,82
+pair	AJ	side	81,82	81,82	81,82
+pair	AK	side	81,82	81,82	81,82
+pair	AL	side	81,82	81,82	81,82
+pair	AM	side	81,82	81,82	81,82
+pair	AN	side	81,82	81,82	81,82
+pair	AO	side	81,82	81,82	81,82
+pair	AP	side	81,82	81,82	81,82
+pair	BA	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BB	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BC	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BD	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BE	exact	51,52,53,54,55,56	51,52,53,55	51,52
+pair	BF	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BG	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BH	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BI	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BJ	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BK	exact	45,46,47,48,49,50	45,46,47,49	45,46
+pair	BL	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BM	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BN	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BO	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	BP	side	45,46,47,48,49,50,51,52,53,54,55,56	45,46,47,49,51,52,53,55	45,46,51,52
+pair	CA	none	-	-	-
+pair	CB	none	-	-	-
+pair	CC	none	-	-	-
+pair	CD	none	-	-	-
+pair	CE	none	-	-	-
+pair	CF	none	-	-	-
+pair	CG	none	-	-	-
+pair	CH	none	-	-	-
+pair	CI	none	-	-	-
+pair	CJ	none	-	-	-
+pair	CK	none	-	-	-
+pair	CL	none	-	-	-
+pair	CM	none	-	-	-
+pair	CN	none	-	-	-
+pair	CO	none	-	-	-
+pair	CP	none	-	-	-
+pair	DA	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DB	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DC	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DD	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DE	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DF	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DG	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DH	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DI	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DJ	exact	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DK	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DL	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DM	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DN	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DO	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	DP	side	69,70,71,72,73,74	69,70,71,73	69,70
+pair	EA	exact	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EB	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EC	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	ED	exact	75,76,77,78,79,80	75,76,77,79	75,76
+pair	EE	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EF	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EG	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EH	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EI	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EJ	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EK	exact	57,58,59,60,61,62	57,58,59,61	57,58
+pair	EL	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EM	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EN	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EO	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	EP	sideA	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38	0,1,2,3,4,5,6,7,8,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37	0,1,2,3,4,5,6,7,8
+pair	FA	none	-	-	-
+pair	FB	none	-	-	-
+pair	FC	none	-	-	-
+pair	FD	none	-	-	-
+pair	FE	none	-	-	-
+pair	FF	none	-	-	-
+pair	FG	none	-	-	-
+pair	FH	none	-	-	-
+pair	FI	none	-	-	-
+pair	FJ	none	-	-	-
+pair	FK	none	-	-	-
+pair	FL	none	-	-	-
+pair	FM	none	-	-	-
+pair	FN	none	-	-	-
+pair	FO	none	-	-	-
+pair	FP	none	-	-	-
+pair	GA	none	-	-	-
+pair	GB	none	-	-	-
+pair	GC	none	-	-	-
+pair	GD	none	-	-	-
+pair	GE	none	-	-	-
+pair	GF	none	-	-	-
+pair	GG	none	-	-	-
+pair	GH	none	-	-	-
+pair	GI	none	-	-	-
+pair	GJ	none	-	-	-
+pair	GK	none	-	-	-
+pair	GL	none	-	-	-
+pair	GM	none	-	-	-
+pair	GN	none	-	-	-
+pair	GO	none	-	-	-
+pair	GP	none	-	-	-
+pair	HA	exact	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HB	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HC	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HD	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HE	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HF	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HG	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HH	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HI	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HJ	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HK	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HL	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HM	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HN	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HO	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	HP	sideA	63,64,65,66,67,68	63,64,65,67	63,64
+pair	IA	exact	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IB	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IC	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	ID	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IE	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IF	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IG	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IH	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	II	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IJ	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IK	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IL	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IM	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IN	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IO	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	IP	sideA	39,40,41,42,43,44	39,40,41,43	39,40
+pair	JA	none	-	-	-
+pair	JB	none	-	-	-
+pair	JC	none	-	-	-
+pair	JD	none	-	-	-
+pair	JE	none	-	-	-
+pair	JF	none	-	-	-
+pair	JG	none	-	-	-
+pair	JH	none	-	-	-
+pair	JI	none	-	-	-
+pair	JJ	none	-	-	-
+pair	JK	none	-	-	-
+pair	JL	none	-	-	-
+pair	JM	none	-	-	-
+pair	JN	none	-	-	-
+pair	JO	none	-	-	-
+pair	JP	none	-	-	-
+pair	KA	none	-	-	-
+pair	KB	none	-	-	-
+pair	KC	none	-	-	-
+pair	KD	none	-	-	-
+pair	KE	none	-	-	-
+pair	KF	none	-	-	-
+pair	KG	none	-	-	-
+pair	KH	none	-	-	-
+pair	KI	none	-	-	-
+pair	KJ	none	-	-	-
+pair	KK	none	-	-	-
+pair	KL	none	-	-	-
+pair	KM	none	-	-	-
+pair	KN	none	-	-	-
+pair	KO	none	-	-	-
+pair	KP	none	-	-	-
+pair	LA	none	-	-	-
+pair	LB	none	-	-	-
+pair	LC	none	-	-	-
+pair	LD	none	-	-	-
+pair	LE	none	-	-	-
+pair	LF	none	-	-	-
+pair	LG	none	-	-	-
+pair	LH	none	-	-	-
+pair	LI	none	-	-	-
+pair	LJ	none	-	-	-
+pair	LK	none	-	-	-
+pair	LL	none	-	-	-
+pair	LM	none	-	-	-
+pair	LN	none	-	-	-
+pair	LO	none	-	-	-
+pair	LP	none	-	-	-
+pair	MA	none	-	-	-
+pair	MB	none	-	-	-
+pair	MC	none	-	-	-
+pair	MD	none	-	-	-
+pair	ME	none	-	-	-
+pair	MF	none	-	-	-
+pair	MG	none	-	-	-
+pair	MH	none	-	-	-
+pair	MI	none	-	-	-
+pair	MJ	none	-	-	-
+pair	MK	none	-	-	-
+pair	ML	none	-	-	-
+pair	MM	none	-	-	-
+pair	MN	none	-	-	-
+pair	MO	none	-	-	-
+pair	MP	none	-	-	-
+pair	NA	none	-	-	-
+pair	NB	none	-	-	-
+pair	NC	none	-	-	-
+pair	ND	none	-	-	-
+pair	NE	none	-	-	-
+pair	NF	none	-	-	-
+pair	NG	none	-	-	-
+pair	NH	none	-	-	-
+pair	NI	none	-	-	-
+pair	NJ	none	-	-	-
+pair	NK	none	-	-	-
+pair	NL	none	-	-	-
+pair	NM	none	-	-	-
+pair	NN	none	-	-	-
+pair	NO	none	-	-	-
+pair	NP	none	-	-	-
+pair	OA	none	-	-	-
+pair	OB	none	-	-	-
+pair	OC	none	-	-	-
+pair	OD	none	-	-	-
+pair	OE	none	-	-	-
+pair	OF	none	-	-	-
+pair	OG	none	-	-	-
+pair	OH	none	-	-	-
+pair	OI	none	-	-	-
+pair	OJ	none	-	-	-
+pair	OK	none	-	-	-
+pair	OL	none	-	-	-
+pair	OM	none	-	-	-
+pair	ON	none	-	-	-
+pair	OO	none	-	-	-
+pair	OP	none	-	-	-
+pair	PA	none	-	-	-
+pair	PB	none	-	-	-
+pair	PC	none	-	-	-
+pair	PD	none	-	-	-
+pair	PE	none	-	-	-
+pair	PF	none	-	-	-
+pair	PG	none	-	-	-
+pair	PH	none	-	-	-
+pair	PI	none	-	-	-
+pair	PJ	none	-	-	-
+pair	PK	none	-	-	-
+pair	PL	none	-	-	-
+pair	PM	none	-	-	-
+pair	PN	none	-	-	-
+pair	PO	none	-	-	-
+pair	PP	none	-	-	-
+isle	24	AB	1
+isle	25	AB	1
+isle	26	AB	1
+isle	27	AB	1
+isle	28	AB	1
+isle	29	AB	1
+isle	30	AB	1
+isle	31	AB	1
+isle	48	AE	1
+isle	49	AE	1
+isle	50	AE	1
+isle	51	AE	1
+isle	52	AE	1
+isle	53	AE	1
+isle	54	AE	1
+isle	55	AE	1
+isle	116	EI	24
+isle	117	EI	24
+isle	118	EI	24
+isle	119	EI	24
+isle	120	EI	24
+isle	121	EI	24
+isle	122	EI	24
+isle	123	EI	24
+isle	124	EI	24
+isle	125	EI	24
+isle	126	EI	24
+isle	127	EI	24
+isle	128	EI	24
+isle	129	EI	24
+isle	130	EI	24
+isle	131	EI	24
+isle	132	EI	24
+isle	133	EI	24
+isle	134	EI	24
+isle	135	EI	24
+isle	136	EI	24
+isle	137	EI	24
+isle	138	EI	24
+isle	139	EI	24
+isle	156	HN	4
+isle	157	HN	4
+isle	158	HN	4
+isle	159	HN	4
+isle	160	HN	4
+isle	161	HN	4
+isle	162	HN	4
+isle	163	HN	4
+isle	164	IO	4
+isle	165	IO	4
+isle	166	IO	4
+isle	167	IO	4
+isle	168	IO	4
+isle	169	IO	4
+isle	170	IO	4
+isle	171	IO	4

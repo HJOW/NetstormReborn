@@ -1,7 +1,8 @@
 // 지면 타일 선택 모듈이다: 본섬 칸 마스크(terrain-mask.js)의 칸마다 직선·대각선 이웃으로 방향 글자 두 개를 만들고, `isle` 타입의 프레임 코드 표에서 클러스터(프레임) 번호를 고른다.
 // 복원 기준: cpppj `o/RawTerrainStamp.cpp`(첫 도장 FrameAt, 원본 Terrainbuilder 004c04b0)·`o/RawFrameChoose.cpp`(ChooseTerrainFrame, 원본 0049aa90)·`o/TerrainBuilder.cpp`(Orientation 표 0x52f8fc·Normalize 0041cd20)·
 // `o/RawRegionPaint.cpp`(지역 도장 Select, 원소 갱신 0046fe40)·`o/RawGameRandomSeed.cpp`(원본 00455970 난수 시드)이며 근거 문서는 docs/exe/terrain-and-bridges.md 와 docs/exe/cpp-initial-terrain-stamp-audit-20261013.md 이다.
-// 범위: 칸마다 프레임 번호(`isle` 타입의 클러스터 번호)까지이다. 절벽(fringe)·edgeFarm·작은 받침·소유자 색 변환과 그리기는 옮기지 않았다.
+// 범위: 칸마다 프레임 번호(`isle` 타입의 클러스터 번호)까지이다. 절벽 fringe 는 terrain-fringe.js(첫 도장 훅 onStamp 로 이어 붙임), 소유자 색 변환은 owner-colors.js, 작은 받침은 island-supports.js 에 있고
+// edgeFarm 과 그리기는 옮기지 않았다.
 // 규칙 요약:
 //  - 이웃 비트는 북부터 시계 방향 여덟 칸 `1,2,2,4,4,8,8,1`(짝수 번호는 직선 쪽 mask, 홀수 번호는 대각선 쪽 mask)이고, 이웃이 같은 영역일 때만 켠다. 두 mask 를 비트→글자 표 `PNOILJFBMHKEGDCA` 로 바꾼 것이 (방향 글자, 변형 글자)이다.
 //  - 두 글자가 모두 'A'(여덟 이웃이 모두 같은 영역 = 원본 문자 'x' 안쪽 칸)이면 3 × 3 그림 네 변형 중 하나이다. 가장자리 칸('=')은 같은 글자의 클러스터 후보에서 고른다.
@@ -301,25 +302,30 @@ export function classifyCells(land) {
 // 1단계(첫 도장): 월드 y 바깥·x 안쪽 순서로 안쪽 칸(두 글자가 모두 'A')은 stampCoreFrame, 가장자리 칸은 원소 0 의 chooseTerrainFrame(후보가 없으면 프레임 0)이다.
 // 2단계(지역 도장): options.themeOf(영역 번호)가 0~3 을 돌려주는 영역은 그 영역의 칸을 다시 y·x 순서로 고른다. 원본은 지금 프레임의 코드(첫 도장이 고른 클러스터의 글자)로 판단하고 안쪽 코드면 paintCoreFrame, 아니면 그 원소의 chooseTerrainFrame 이다.
 // themeOf 가 null/undefined 를 돌려주면(소유자가 없는 영역) 첫 도장 그대로 둔다. 원본의 지역 도장은 신전에서 번지는 순서와 경계 처리가 있어 난수를 쓰는 순서가 다르다(후보 집합과 안쪽 칸 규칙은 같다).
-// options: { random(기본 seedGameRandoms().game), crt(기본 seedGameRandoms().crt), themeOf(기본 모든 영역이 소유자 없음) }.
-// 사용: buildTerrainFrames(mask, FrameCodeTable.fromDefinition(def), { themeOf: (territory) => themes.get(territory) }). (2026-11-02 WB03-X)
+// options: { random(기본 seedGameRandoms().game), crt(기본 seedGameRandoms().crt), themeOf(기본 모든 영역이 소유자 없음),
+//   stampVariants(이미 만들어 둔 첫 도장 난수표 99개, 기본은 첫 지면 칸에서 crt 로 새로 만듦 — 원본은 이 표를 전역에 한 번만 만들어 월드마다 다시 쓴다), onStamp(x, y, frame, random)(첫 도장에서 칸의 프레임을 고른 직후 부르는 훅,
+//   원본이 지면 하나를 만든 뒤 절벽 fringe 를 이어서 만드는 순서를 같은 난수로 이어 가기 위한 것이다 — terrain-fringe.js 의 createFringeStamper 가 쓴다) }.
+// 사용: buildTerrainFrames(mask, FrameCodeTable.fromDefinition(def), { themeOf: (territory) => themes.get(territory) }). (2026-11-02 WB03-X; stampVariants·onStamp 훅은 2026-11-02 WB03-Y 에서 절벽 fringe 연결을 위해 추가)
 export function buildTerrainFrames(land, frames, options = {}) {
     const seeded = options.random && options.crt ? null : seedGameRandoms();
     const random = options.random ?? seeded.game;
     const crt = options.crt ?? seeded.crt;
     const themeOf = options.themeOf ?? (() => null);
     const result = new Int32Array(land.length).fill(-1);
-    const stampVariants = createStampVariants(crt);
+    // 첫 도장 난수표이다. 지면 칸이 하나도 없으면 원본처럼 crt 를 소비하지 않도록 첫 칸에서 만든다(원본은 첫 프레임 요청에서 표를 만들고 이후 재사용한다). (2026-11-02 WB03-Y)
+    let stampVariants = options.stampVariants ?? null;
     // 1단계: 모든 지면 칸을 첫 도장 규칙으로 고른다.
     for (let y = 0; y < WORLD_CELLS; y += 1) {
         // 같은 행의 칸을 왼쪽부터 첫 도장 규칙으로 고른다.
         for (let x = 0; x < WORLD_CELLS; x += 1) {
             const index = y * WORLD_CELLS + x;
             if (land[index] === EMPTY_TERRAIN) continue;
+            stampVariants ??= createStampVariants(crt);
             const letters = neighborLetters(land, x, y);
             const interior = letters.side === 'A' && letters.variant === 'A';
             const frame = interior ? stampCoreFrame(frames, stampVariants, x, y) : chooseTerrainFrame(frames, letters.side, letters.variant, 0, random);
             result[index] = frame === -1 ? 0 : frame;
+            options.onStamp?.(x, y, result[index], random);
         }
     }
     // 2단계: 원소가 정해진 영역만 지역 도장 규칙으로 다시 고른다.
