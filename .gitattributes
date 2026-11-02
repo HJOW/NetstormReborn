@@ -2374,6 +2374,7 @@ cpppj/tests/fixtures/html-solo-command-names-pe.tsv -text
 cpppj/tests/fixtures/rotation-key-input-x86.tsv -text
 cpppj/tests/fixtures/construction-history-key-x86.tsv -text
 cpppj/tests/fixtures/saved-camera-key-x86.tsv -text
+cpppj/tests/fixtures/file-name-formatter-x86.tsv -text
 
 # 단위720의 최초 실제 원본 Fort/전체 표면/TYPE 관측을 바이트 그대로 보존한다.
 cpppj/tests/fixtures/editor-graph-native-720* -text

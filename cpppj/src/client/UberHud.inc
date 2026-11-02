@@ -74,11 +74,8 @@ void UberGump::EnsureHudFactories() {
         context.root.formatMessage=[this](const std::array<std::uint32_t,9>& expression) {
             const std::array<std::uint32_t,9> expected{0xfffffffeU,0x503c8bU,0xfffffffeU,0x508ab4U,0xfffffffdU,0x565e70U,0xfffffffcU,0x51501cU,0}; // 보호PE의 빈 root/d/현재 이름/.col이다.
             if (expression!=expected) throw std::logic_error("Uber 고정 팔레트 경로의 실제 원문 인자 변경");
-            auto name=std::string(HtmlBackgroundName(htmlGlobals_));std::replace(name.begin(),name.end(),'/','\\');
-            while (!name.empty() && name.front()=='\\') name.erase(name.begin()); // 원문 filename(-3)은 선행 구분자만 제거한다.
-            if (name.ends_with('\\')) throw std::logic_error("Uber 팔레트 이름의 후행 디렉터리 구분자 원문 물리 확인 필요");
-            std::string path=".\\d\\"+name;if (!path.ends_with('.')) path+='.';path+="col"; // 원문의 -2 빈root→-2 d→-3 이름→-4 .col 선택 경로다.
-            if (path.size()>=256) throw std::length_error("Uber 팔레트 경로의 원문256BYTE 물리 범위");hud_->paletteProbe=path;return client_.ChatWindowGlobals()->Store(path);
+            const std::array<o::FileNamePart,4> parts{{{-2,""},{-2,"d"},{-3,HtmlBackgroundName(htmlGlobals_)},{-4,"col"}}}; // 같은9인자를 전체 원문 작성기의 네 부품으로 전달한다.
+            const auto path=client_.StaticStrings()->FileNames().Format(parts);hud_->paletteProbe=path;return client_.ChatWindowGlobals()->Store(path);
         };
         context.root.testMessage=[this](auto token) -> std::uint32_t { const auto& path=client_.ChatWindowGlobals()->strings.at(token);hud_->paletteFound=client_.Files().TryRead(path).has_value();std::clog<<"Uber palette probe "<<path<<" exists "<<hud_->paletteFound<<'\n';return hud_->paletteFound ? 1U : 0U; }; // 실제 VFS 조회 결과만 조건으로 사용하며 없는 파일을 만들지 않는다.
         context.root.visitMessage=[this](auto token) { const auto& text=client_.ChatWindowGlobals()->strings.at(token);const std::span<const std::uint8_t> name{reinterpret_cast<const std::uint8_t*>(text.c_str()),text.size()+1};client_.ChangeFortPalette(name); }; // 원문이 선택한 같은 메시지 포인터로 실제 전체 부모를 호출한다.

@@ -1,0 +1,23 @@
+{
+  "unit": 727,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "entry": "00459c60",
+  "actualCrt": "004e63e0 strchr",
+  "samples": 352,
+  "observations": 704,
+  "instructions": 389708,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "boundary": "004e5a09 throw 진입의 char0/형식만 관찰하며 SEH 전개를 실행하지 않는다",
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "cpppj\\tests\\fixtures\\file-name-formatter-x86.tsv": "9abf8632875f9fd1c362814ec3668e2c4f619a1eda081effb0cfc74f94e25834",
+    "tools\\decomp_file_name_formatter.py": "0f9353dd0dee412f5fefc306baab2970f894c07476825d856e13080879e6fb2e"
+  }
+}

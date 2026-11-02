@@ -626,6 +626,12 @@ add_executable(netstorm_tests
 )
 netstorm_apply_compiler_options(netstorm_tests)
 target_link_libraries(netstorm_tests PRIVATE netstorm)
+# 전체 경로 작성기/Client 고리를 큰 전체 검사와 별도로 같은 제품 라이브러리에 연결한다(727).
+target_sources(netstorm_tests PRIVATE FileNameTests.cpp)
+set_source_files_properties(FileNameTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FILE_NAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/file-name-formatter-x86.tsv\"")
+add_executable(netstorm_file_name_tests FocusedTestMain.cpp FileNameTests.cpp StaticStringsTests.cpp)
+target_link_libraries(netstorm_file_name_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_file_name_tests)
 target_sources(netstorm_tests PRIVATE BaseFileSecondaryTests.cpp BaseFileReadPolicyTests.cpp) #전체 대상에도 같은 독립 PE 회귀를 등록한다.
 # 공통 VFS 헤더 변경 시 관련 검사만 같은 새 제품 라이브러리로 링크하는 집중 대상이다.
 add_executable(netstorm_file_tests FocusedTestMain.cpp BaseFileSecondaryTests.cpp BaseFileReadPolicyTests.cpp RecoveryTests.cpp MenuTests.cpp TechnicalHelpTests.cpp)

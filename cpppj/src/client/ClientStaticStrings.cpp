@@ -12,6 +12,7 @@
 
 namespace netstorm::client { // 소유자는 모든 동기 callback과 빌린 문자열보다 오래 살아야 한다.
 o::StaticStringGlobals ClientStaticStrings::Globals() { return {size_,base_,current_,last_}; } // 단일 실제 슬롯의 참조다.
+o::RawFileName& ClientStaticStrings::FileNames() { return fileNames_; } // 별도 고리의 현재 상태/주소를 그대로 유지한다.
 void ClientStaticStrings::Initialize(std::uint32_t size) { o::InitializeStaticStrings(size,Globals(),Hooks()); } // 실제 시작 호출만 고정 크기를 결정한다.
 std::uint32_t ClientStaticStrings::Allocate(std::uint32_t size) {
     const auto next=std::uint64_t(nextBase_)+size+4096U;if (next>std::numeric_limits<std::uint32_t>::max()) throw std::overflow_error("임시 고리 주소 토큰 소진");
