@@ -49,6 +49,7 @@
 #include "client/ClientSubscriberGlobals.h"
 #include "client/CampaignClientServices.h"
 #include "client/CampaignObjectMenuClient.h"
+#include "client/RawObjectMenuOpen.h" //같은 실제 가상ac 반환값으로만 우클릭 열기음향을 판정한다.
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
@@ -1074,7 +1075,7 @@ void UberGump::OpenMenu(std::string name) {
 // 원본 파생 열기/선택/작성/위치/실제 Form 부착을 현재 사건으로 실행한다.
 void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
     if (!world_ || !id || !world_->Object(id)) return;
-    objectMenus_->Open(*world_,o::Sid{static_cast<std::uint16_t>(id)},event);rebuild_=true; //다음 현재 폴링은 실제 열린 메뉴/모달을 사용한다.
+    static_cast<void>(OpenPointerObjectMenu([this,id,&event] { return objectMenus_->Open(*world_,o::Sid{static_cast<std::uint16_t>(id)},event); },[this](auto name) { if (auto* audio=client_.Audio()) audio->Sounds().PlayByName(name,0,0,0,0,0); }));rebuild_=true; //실제가상ac가비영일때만원문열기음향을재생하며noAudio는기존검사장치정책을따른다.
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {

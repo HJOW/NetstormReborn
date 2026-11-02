@@ -136,16 +136,17 @@ CampaignObjectMenuClient::CampaignObjectMenuClient(Client& client,RawButtonContr
 // 대상 Session은 호출자가 Clear까지 유지한다.
 CampaignObjectMenuClient::~CampaignObjectMenuClient() { Clear(); }
 // 실제 객체 메뉴는 게임 시계를 멈추지 않고 원본 controlled 생성/부착을 사용한다.
-void CampaignObjectMenuClient::Open(GameWorld& world,o::Sid sid,const InputEvent& event) {
-    Clear();auto& s=*impl_;s.world=&world;
+std::uint32_t CampaignObjectMenuClient::Open(GameWorld& world,o::Sid sid,const InputEvent& event) {
+    Clear();auto& s=*impl_;s.world=&world;std::uint32_t accepted{}; //원문 가상ac의 반환과 실제 루트토큰은 별개다.
     s.buttons.Menus()->OpenAttached([&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& raw) {
         s.chain=world.Session().MakeObjectMenus(s.Ui(widgets,controls,raw));ObjectMenuOpenHooks hooks;
         hooks.delegate=[&s](o::Sid object,const InputEvent& input) { return s.Dispatch(object,input); };
         hooks.beginFancy=[&] { widgets.BeginFancy(); };hooks.summary=[&s](o::Sid object) { s.chain->Summary(object); };hooks.populate=[&s](o::Sid object) { s.Populate(object); };
         hooks.menuWidth=[&] { return s.buttons.Menus()->Node(raw.Current())->baseWidth; };hooks.screenWidth=[&s] { return s.client.GetScreen().Width(); };
         hooks.attach=[&](o::Sid object,std::int32_t x,std::int32_t y) { s.root=raw.Current();raw.AttachObjectCurrent(object.value,x,y); };
-        s.opener=world.Session().MakeObjectMenuOpen(std::move(hooks));const auto accepted=s.Dispatch(sid,event);return accepted ? s.root : 0U;
+        s.opener=world.Session().MakeObjectMenuOpen(std::move(hooks));accepted=s.Dispatch(sid,event);return accepted ? s.root : 0U;
     });
+    return accepted;
 }
 // 같은 fancy/설명 작성기와 현재 Session을 사용하며 원본처럼 게임 시계를 멈추지 않는다.
 std::uint32_t CampaignObjectMenuClient::OpenProduction(GameWorld& world,const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) {

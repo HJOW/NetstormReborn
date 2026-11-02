@@ -20,7 +20,7 @@ class CampaignObjectMenuClient {
 public:
     CampaignObjectMenuClient(Client& client,RawButtonControls& buttons,std::function<void(std::string_view)> tell); // 실제 장치/트리와 지연 Tell을 빌린다.
     ~CampaignObjectMenuClient(); // 월드가 살아 있는 동안 Clear로 객체 Form을 먼저 반납한다.
-    void Open(GameWorld& world,o::Sid sid,const InputEvent& event); // 현재 사건 참조와 원본 파생 메뉴 슬롯을 사용한다.
+    std::uint32_t Open(GameWorld& world,o::Sid sid,const InputEvent& event); //현재사건/파생메뉴슬롯의실제반환값을보존하며루트의visible로대체하지않는다.
     std::uint32_t OpenProduction(GameWorld& world,const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable); //43d330의 실제 내용물 정보 메뉴를 연다.
     std::uint32_t BuildPlayerMenu(GameWorld& world,std::uint32_t subscriber,const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& menu); // 같은 작성 스택 안에서 기존 전체 Player 하위를 작성한다.
     void Clear(); // 팝업→메뉴 체인→현재 월드 순서로 참조를 해제한다.

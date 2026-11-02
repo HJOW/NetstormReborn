@@ -331,3 +331,6 @@ target_sources(netstorm PRIVATE o/RawFortSubscriberChange.cpp o/RawFortSubscribe
 
 # 편집 모드1의 원문 객체 취득을 같은 Form/커서 수명에 연결한다(749).
 target_sources(netstorm PRIVATE client/CursorObjectPickup.cpp client/CursorObjectPickup.h)
+
+# 선택 뒤 Ctrl+special의 지점 진단을 실제 월드 탐색/로그와 연결한다(750).
+target_sources(netstorm PRIVATE client/SpecialPointerTrace.cpp client/SpecialPointerTrace.h)

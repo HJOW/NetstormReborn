@@ -37,4 +37,5 @@ private:
     std::span<const o::RiftTypeRecord> types_; // 콜백 뒤 변경한 현재 TYPE를 다시 읽는다.
     ObjectMenuOpenHooks hooks_; // 실행 경로에서 도달한 실제 외부 몸체만 요구한다.
 };
+std::uint32_t OpenPointerObjectMenu(const std::function<std::uint32_t()>& open,const std::function<void(std::string_view)>& sound); //4d9df0..4d9e1e:실제가상ac의비영반환때만opengump.wav를한번재생하고원래반환값을보존한다.
 }

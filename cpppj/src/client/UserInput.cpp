@@ -8,6 +8,8 @@
 #include "client/GameMenuCommands.h" //현재 메뉴 명령 ID를 기존 조회 표에서 읽는다.
 #include "client/ClientAudio.h" //편집 대상 취득 뒤 같은 실제 selectTab.wav 이름/장치를 사용한다.
 #include "client/RawCursorPosition.h" //ChalSailPos 원문의 현재 카메라 역투영을 사용한다.
+#include "client/ClientDiagnostics.h" //같은 Client의 suppress/로그/들여쓰기를 직접 가상70 출력에 빌린다.
+#include "o/RawObjectTraceMain.h" //주변 진단은 Form 재귀가 아닌 원문의 현재 가상70만 호출한다.
 #include <bit> //View 명령의 owner DWORD를 같은 signed 큐 저장 비트로 전달한다.
 #include <cmath> //원문ftol의 비정상/64비트 범위 밖 입력을 같은 하위DWORD0으로 처리한다.
 
@@ -68,7 +70,12 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
         }
         else {
             const bool control=(event.code&InputCode::kControl)!=0;const auto force=control && client_.GameplayGlobals()->player.special ? 1U : 0U; //같은 Ctrl+special 값을 Pick과 Select 양쪽에 전달한다.
-            world_.SelectFromPointer(world_.Pick(point,force),force,control);
+            world_.SelectFromPointer(world_.Pick(point,force),force,control,event,[this](o::Sid sid) {
+                const auto core=world_.Session().Core();o::TraceRawObjectVirtual(core.pool,core.types,client_.DiagnosticGlobals().suppress,sid.value,[this](auto level,auto text,auto) {
+                    std::size_t prefix{};while (prefix+1<text.size() && text[prefix]=='~') prefix+=2; //실제 고정format의 선행 색상쌍만 로그 접두로 전달한다.
+                    client_.WriteDiagnosticLog(level,text,prefix);
+                });
+            });
         }
     }
     return {};

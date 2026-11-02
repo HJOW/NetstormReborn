@@ -3024,3 +3024,8 @@ set_property(SOURCE RawBridgeEditorTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE CursorObjectPickupTests.cpp)
 target_sources(netstorm_menu_session_tests PRIVATE CursorObjectPickupTests.cpp)
 set_source_files_properties(CursorObjectPickupTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CURSOR_OBJECT_PICKUP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-object-pickup-x86.tsv\"")
+
+# 우클릭 반환/음향8행과 Ctrl special 지점진단36행을 실제 메뉴 집중 대상과 함께 확인한다(750).
+target_sources(netstorm_tests PRIVATE PointerMenuParentTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE PointerMenuParentTests.cpp)
+set_source_files_properties(PointerMenuParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_POINTER_MENU_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pointer-object-menu-parent-x86.tsv\";NETSTORM_POINTER_SPECIAL_TRACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pointer-special-trace-x86.tsv\"")

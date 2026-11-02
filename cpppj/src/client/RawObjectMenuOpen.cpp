@@ -5,6 +5,11 @@
 #include <stdexcept>
 
 namespace netstorm::client {
+// 메뉴의활성상태/루트토큰을반환값으로추정하지않고가상ac가돌려준DWORD를직접판정한다.
+std::uint32_t OpenPointerObjectMenu(const std::function<std::uint32_t()>& open,const std::function<void(std::string_view)>& sound) {
+    if (!open) throw std::logic_error("포인터 객체메뉴의 실제 열기 미연결");const auto accepted=open();
+    if (accepted) { if (!sound) throw std::logic_error("포인터 객체메뉴의 실제 열기 음향 미연결");sound("opengump.wav"); }return accepted;
+}
 namespace {
 // 미연결 제목/가상 메뉴/부착을 빈 성공으로 처리하지 않는다.
 template<class F> const F& Required(const F& hook) {

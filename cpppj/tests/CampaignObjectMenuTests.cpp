@@ -14,6 +14,11 @@
 #include "client/ClientKencloudGlobals.h" //실제 월드 재그리기와 미니맵 갱신의 서로 다른 공유 주소를 검사한다.
 #include "client/ClientMain.h" //Run 없이 실제 Client 전역을 일반 마우스 입력에 공급한다.
 #include "client/UserInput.h" //편집 좌클릭을 메서드 직접 호출이 아닌 실제 입력 부모로 전달한다.
+#include "client/CampaignObjectMenuClient.h" //제품과 같은 객체메뉴 반환을 창없는 트리에서 검사한다.
+#include "client/RawObjectMenuOpen.h" //실제가상ac의 성공/거부와 열기음향 부모를 함께 검사한다.
+#include "client/ClientDiagnostics.h" //현재로그버퍼와 깊이를 관찰하여 직접진단/Form재귀를 구별한다.
+#include "client/RawChatWindowContext.h" //제품 Player 하위메뉴가 조회하는 실제 빈 Chat 입력버퍼를 같은 트리에 생성한다.
+#include "client/ScriptCommand.h" //Chat 공장이 빌리는 실제80칸 문자열 고리의 수명을 검사 안에 유지한다.
 #include "o/OriginalText.h"
 #include "o/RawContentPreviewProcess.h"
 #include <cmath>
@@ -421,6 +426,22 @@ TEST_CASE(GameWorldPointerModes_EmptyPickupCancelAndPollingCoordinates) {
     CHECK(hit.has_value());if (!hit) return;ActualMenuUi ui(assets);ui.currentSession=&session;ui.mouse={InputCode::kLeftButton,hit->x,hit->y};auto effects=ui.CursorEffects();effects.lifecycle.highlight=[&](auto value) { world.Highlight(value); };session.Cursor().SetEffects(std::move(effects));globals.mode=1;globals.selected=0;const auto before=session.Sp(1);
     CHECK(!input.Event(ui.mouse));const auto form=CursorPreviewSid(session.CursorDropSettings().preview);CHECK(form.value && session.Core().pool.Slot(form)[10]==6);CHECK(Get(session.Core().pool.Slot(form),18,2)==type);CHECK(session.CursorDropSettings().costFlags==0x100 && session.CursorDropSettings().lockDepth==0);CHECK(globals.mode==0 && globals.selected==0 && session.Sp(1)==before);CHECK(session.Core().pool.Slot(source)[11]&4U);
     session.Cursor().Cancel();ui.currentSession=nullptr; //실제생성된커서/미리보기를같은수명으로정리하며플레이승리나공격을실행하지않는다.
+}
+// 실제 제품 메뉴의 반환값/부착/소리 부모와 Ctrl+special의 직접 진단을 같은 현재 월드에서 확인한다.
+TEST_CASE(CampaignPointerMenu_ActualReturnSoundAndDirectSpecialTrace) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ClientOptions options;options.gameDirectory=assets.root;options.noAudio=true;Client client(std::move(options));client.Configuration().Set("helpWord","Help");MenuServices external;auto services=external.Make();
+    services.cameraCommit=netstorm::test::camera::CommitScreenless;services.gameplayGlobals=client.GameplayGlobals();services.kencloudGlobals=client.KencloudGlobals();services.coreDataGlobals=client.CoreDataGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords(); //제품과 같은 현재 전역을 사용한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),{},"thewarbegins",std::move(services),{640,480});UserSelectionHooks selection;selection.paused=[] { return 1U; };world.BindUserInput(std::move(selection),{},{});auto& session=world.Session();auto core=session.Core();
+    const auto type=static_cast<std::uint32_t>(assets.game.TypeTable().Find("windFactory"));const auto source=session.World().Create(type,2);core.owner.Set(source,1);session.World().Pop(source,220,220,0);client.GameplayGlobals()->Camera().ApplyPixelsToRendererAndSnapshot(220*16-320,220*11-240);
+    ScriptStringRing strings;ActualMenuUi ui(assets);ui.currentSession=&session;RawChatWindowContext chat;chat.globals=client.ChatWindowGlobals();chat.commands=client.DotCommandGlobals();chat.editor.now=[] { return 0.0; };chat.translate=[](auto text) { return std::string(text); }; //문자열고리가UI소멸보다오래살며Player조회에쓰는실제초기빈Console/공유로그를생성한다. 전송은실행하지않는다.
+    chat.text=[&](auto token) { return strings.Resolve(token); };chat.storeText=[&](auto text) { return strings.Store(text); };chat.recipient=[](auto)->bool { throw std::logic_error("빈 초기Chat 검사의 예상 밖 비어있지 않은 접두 검사"); };
+    chat.read=[&](auto address)->std::uint32_t { switch (address) { case 0x594fc8:return core.ownerMode.challenge;case 0x594fbc:return core.ownerMode.battle;case 0x563e38:return ui.buttons.RootToken();case 0x5cae94:return 304;case 0x5cae98:return 229;default:throw std::logic_error("포인터 메뉴 검사의 예상 밖 Chat 현재전역"); } };static_cast<void>(ui.menus->CreateChatWindow(std::move(chat)));
+    CampaignObjectMenuClient menu(client,ui.buttons,[](std::string_view) {});std::vector<std::string> sounds;const auto play=[&](auto name) { sounds.emplace_back(name); };const InputEvent event{InputCode::kRightButton,304,229};
+    auto raw=core.pool.AllocatedBytes(source);raw[40]|=1;CHECK(OpenPointerObjectMenu([&] { return menu.Open(world,source,event); },play)==0);CHECK(!menu.Active() && sounds.empty());
+    raw=core.pool.AllocatedBytes(source);raw[40]&=0xfeU;CHECK(OpenPointerObjectMenu([&] { return menu.Open(world,source,event); },play)==1);CHECK(menu.Active() && sounds==std::vector<std::string>{"opengump.wav"});menu.Clear();
+    const auto content=session.CreateContained(source,154,7,0x20,0x10,0);CHECK(content.value);auto& diagnostic=client.DiagnosticGlobals();diagnostic.depth=7;diagnostic.log.indent=3;diagnostic.log.buffer.fill(0);auto& gameplay=*client.GameplayGlobals();gameplay.selection.enabled=0;gameplay.selection.selected=0;gameplay.selection.mode=0;gameplay.player.special=1;session.CursorDropSettings().lockDepth=1;world.SetMousePoint({123,145});UserInput input(client,world);
+    CHECK(!input.Event({InputCode::kLeftButton|InputCode::kControl,304,229}));const std::string line(diagnostic.log.buffer.data());CHECK(line.find("Main")!=std::string::npos);CHECK(line.find("END") ==std::string::npos);CHECK(diagnostic.depth==7 && diagnostic.log.indent==3);CHECK(gameplay.selection.mouse.x==123 && gameplay.selection.mouse.y==145); //같은 지점의 자식Form은 재귀 출력하지 않으며 현재 들여쓰기와 폴링도 유지한다.
+    diagnostic.log.buffer.fill(0);gameplay.player.special=0;CHECK(!input.Event({InputCode::kLeftButton|InputCode::kControl,304,229}));CHECK(diagnostic.log.buffer[0]==0);ui.menus->CloseChatWindows();ui.currentSession=nullptr;
 }
 // 실제 Form6 추가 통지가491을 예약하고 같은Session의그림/타이머/가상삭제까지 실행해야 한다.
 TEST_CASE(CampaignContentPreview_RealNoticeCreatePopAndExpiry) {

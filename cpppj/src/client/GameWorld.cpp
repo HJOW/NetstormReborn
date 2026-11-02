@@ -30,6 +30,7 @@
 #include <stdexcept>
 #include <utility>
 #include "client/ObjectOwnerCommands.h"
+#include "client/SpecialPointerTrace.h" //선택 뒤 현재special과 실제 단일지점 탐색을 편집 후처리 앞에 연결한다.
 #include "client/ClientCoreDataGlobals.h"
 
 namespace netstorm::client {
@@ -508,9 +509,14 @@ void GameWorld::Select(o::SquidId id) {
     const auto* object=Object(id);selected_=object && object->selectable ? id : 0;changed_=true;
 }
 // 편집 후처리는 Select의 반환값이 아니라 현재005caea0을 읽으므로 거부된 선택 뒤에도 실행한다.
-void GameWorld::SelectFromPointer(o::SquidId id,std::uint32_t force,bool control) {
+void GameWorld::SelectFromPointer(o::SquidId id,std::uint32_t force,bool control,const InputEvent& event,const std::function<void(o::Sid)>& trace) {
     if (!campaign_) { Select(id);return; }
     if (!input_) throw std::logic_error("일반 좌클릭의 실제 선택 장치 미설치");static_cast<void>(input_->selection->Select(id,force,1));
+    const auto diagnosticCore=campaign_->Core();o::RawSquidFinder finder(diagnosticCore.pool,diagnosticCore.hash,diagnosticCore.types);SpecialPointerTraceHooks diagnostic; //실제 해시/타입을 빌리기만 하며 관문 전에는 탐색하지 않는다.
+    diagnostic.project=[this](auto x,auto y) { return RawCursorPosition::ScreenToWorld(x,y,CameraGlobals().Snapshot().worldBits); };
+    diagnostic.begin=[&finder](auto point) { const auto cell=RawCursorPosition::TruncatePoint(point);return finder.Begin({static_cast<int>(cell[0]),static_cast<int>(cell[1]),static_cast<int>(cell[0]),static_cast<int>(cell[1])},0).value; };
+    diagnostic.trace=[&trace](auto number) { if (!trace || number>65535U) throw std::logic_error("현재 지점의 실제 가상70 진단 미연결/SID폭");trace(o::Sid{static_cast<std::uint16_t>(number)}); };diagnostic.next=[&finder] { return finder.Next().value; };
+    TraceSpecialPointer(control,gameplayGlobals_->player.special,event,diagnostic);
     EditorPrimarySelectionHooks hooks;hooks.editor=[this] { return campaign_->Editor(); };hooks.selected=[this] { return selected_; };hooks.localOwner=[this] { return campaign_->LocalOwner(); };
     const auto raw=[this](std::uint32_t number) { //가상효과 뒤 현재 물리를 다시 빌리며 DWORD SID를 WORD로 조용히 좁히지 않는다.
         const auto core=campaign_->Core();if (number>=core.pool.Capacity() || number>65535U) throw std::out_of_range("편집 좌클릭 현재 SID 범위");return core.pool.Slot(o::Sid{static_cast<std::uint16_t>(number)});

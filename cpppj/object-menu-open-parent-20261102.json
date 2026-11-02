@@ -1,0 +1,117 @@
+{
+  "unit": 750,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·사용자 요청 일시 중지",
+  "runtimeProduct": 750,
+  "displayVersion": "11.01",
+  "exeSha256": "4b9401c8f830cedba06fa0d3c8ff75775d706c11b6c7034e8aecdd83a5a1719a",
+  "summary": "객체우클릭의실제반환/성공음향과선택후Ctrl+special 직접진단연결",
+  "implementation": [
+    "CampaignObjectMenuClient Open이실제파생가상ac DWORD를보존",
+    "같은Uber포인터부모가비영반환때만opengump.wav를한번재생",
+    "Select뒤현재special/Ctrl관문→사건좌표역투영→단일지점finder→직접가상70→편집후처리",
+    "현재Pool/TYPE/Client suppress/로그/들여쓰기공유·44dab0 Form재귀와분리"
+  ],
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+    "originalGameExecuted": false,
+    "verifiedExistingFixtures": true,
+    "opening": {
+      "path": "cpppj/tests/fixtures/pointer-object-menu-parent-x86.tsv",
+      "rows": 8,
+      "sha256": "05d5818ac95b45e1a1b3d2511f3736a13afeff0db25a6b6ed8ed662ad9109693"
+    },
+    "area": {
+      "path": "cpppj/tests/fixtures/pointer-special-trace-x86.tsv",
+      "rows": 36,
+      "sha256": "fc6c8939b2bf80736893fbb7415909743b16d7667d77933ead69d5b5a8079808"
+    },
+    "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "codeImageUnchanged": true,
+    "codeSha256": {
+      "004d9df0-004d9e1e": "9fe86fbda9ce8b5e9b2c306cd912c5d4b221902d6d92e78133c607acb2cec7f9",
+      "004da263-004da2e7": "5e77012ddcaa16fc12e334206d5bb142793f0c3ea8217e9555bdfcaafc65e8b6"
+    },
+    "scope": "4d9df0..9e1e 및4da263..2e6 기본블록 호출/인자/분기. 가상ac/70·음향·투영·finder는명시외부경계이며실제하위/게임전체아님"
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-object-menu-open-parent-750/build-v5.log"
+  },
+  "tests": {
+    "total": 71,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "newTests": 4,
+    "newExecutables": 0,
+    "retainedTestExecutables": 66,
+    "retainedAllTargets": 71,
+    "fullSuiteRun": false,
+    "log": "extracted/cpp-object-menu-open-parent-750/tests-v5.log",
+    "actualBoundary": "창없는실제Client/Input/World/Session·제품CampaignObjectMenuClient의워크샾거부0/성공1·부착/해제와음향부모·Form자식있는지점직접Main로그/깊이·들여쓰기·폴링보존/special0무동작",
+    "beforeFailureRun": false,
+    "initialSetupFailure": {
+      "total": 71,
+      "failedChecks": 1,
+      "log": "extracted/cpp-object-menu-open-parent-750/tests-v2.log",
+      "reason": "창없는검사장치의현재Chat미연결"
+    },
+    "initialBuildFailure": "build-v3.log의ScriptStringRing선언헤더누락·연쇄진단",
+    "actualRetry": {
+      "total": 1,
+      "failedChecks": 0,
+      "log": "extracted/cpp-object-menu-open-parent-750/tests-v4-actual.log"
+    }
+  },
+  "protection": {
+    "beforeCount": 2659,
+    "currentCount": 2661,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/pointer-object-menu-parent-x86.tsv",
+      "cpppj/tests/fixtures/pointer-special-trace-x86.tsv"
+    ],
+    "counts": {
+      "agents": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 841
+    }
+  },
+  "newFixtures": 2,
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "latestGui": "746제품 화면 조정/저장 재시작; 이번제품GUI아님",
+  "nextProtectedBaseline": "extracted/cpp-object-menu-open-parent-750/protected-after.json",
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "bfa549d9e35e00243e88743fa5574372d2f7e6496363e3869d003630d0e584e2",
+    "cpppj/src/client/UserInput.cpp": "88e53aacb8097275dfb26a0a481f5dd1c58f8dae160f21696434949a9cd7dbf5",
+    "cpppj/src/client/GameWorld.cpp": "c2dc4cbc9e51d478bdc0e47315d919ecc7ea26ec3b729cefeafd39c512103c52",
+    "cpppj/src/client/GameWorld.h": "b78536da2086fc34db43af50c8a2be5c883e52eaf9b8093a541948046ce669d1",
+    "cpppj/src/client/RawObjectMenuOpen.cpp": "9451a333983def31b91fc631dbf8aa81784aeebb1e0bb8cf12cd1d57437dfd51",
+    "cpppj/src/client/RawObjectMenuOpen.h": "a8c3b11f74bb8c618fb75560cd48204ab5462b510ceb77f0d1470d9959797d98",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "97a75f370aba84df46d54c58d8cf14c6b3944972d4631f4988e978a4929611d1",
+    "cpppj/src/client/CampaignObjectMenuClient.h": "1c7ba01c10defa88ea6386e64bc8e57131f015b0ce2591e5b29060ec40d8c7f1",
+    "cpppj/src/client/UberGump.cpp": "bdd22ba51e8384106aec64acb587ce2239a93ca4b4cd6c3537a05486e8d8151e",
+    "cpppj/src/client/SpecialPointerTrace.cpp": "0bc7c733971f281bf42eb4d9d920520a4fb5fb30740b9c531a6e90cf28652ca3",
+    "cpppj/src/client/SpecialPointerTrace.h": "b6c7bbd28e3460eed84ba4beaebe7afc97c34e847b1ee1a9f3cacdee27c9d4f1",
+    "cpppj/tests/CMakeLists.txt": "3cdecb22227b3d6d3691494ca00988601526a7982f79a0dbdff320238a750d00",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "46f66cb863e48ad0edc15c3a5b15e937f2541a59e78d7f1110e1304d235e0360",
+    "cpppj/tests/PointerMenuParentTests.cpp": "1c2f1bd10d56c1e993c0a6861d2f04bfaf45f6e3b168607aedcb83f61ca43209",
+    "tools/decomp_pointer_menu_parent.py": "166fd0177eab9391a9f4b83dbd360fffb96ef42176a2819813202b985b9a2cc0"
+  },
+  "next": "MP challenge 선행클릭/빈점항해메뉴는후속무시험구현으로구별·남은비멀티명령/UI·시나리오/파일·수명/호환성정리",
+  "limitations": [
+    "원문44행은검토기본블록의분기/호출/인자이며가상ac/70·음향·투영·finder는명시외부경계",
+    "실제워크샾한종류의창없는메뉴·직접로그접합이며전체타입/OS GUI/물리음향PCM은아님",
+    "MP mode6/challenge 항해메뉴/명령소비자는검증완료아님·새MP검사0",
+    "CD10.72/전체C++/전체34/새ZIP/물리/PCM/자연완주·포획/희생/특정적공격/승리·공중3종전용검사0·나머지1/2차와3~8차진행중"
+  ]
+}
