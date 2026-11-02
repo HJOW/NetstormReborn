@@ -41,6 +41,16 @@ struct ClientAudioOptions {
     bool swapSpeakers{};
 };
 
+// 옵션 전역/장치와 음량·현재 곡의 순서를 실제 ClientAudio와 창 없는 집중 검사가 공유한다.
+struct ClientAudioInterpretHooks {
+    std::function<void(const ClientAudioOptions&)> globals; //옵션의 현재 전역을 먼저 쓴다. 열기 실패가 끈 enabled를 나중에 덮지 않는다.
+    std::function<void(std::int32_t)> open; //기존 OpenDevice/Initialize의 이미 열림·품질 하향·실패 수명을 사용한다.
+    std::function<void()> close; //기존 음악 합류/장치 종료이며 게임 시계·Scene songEnd를 새로 쓰지 않는다.
+    std::function<void(std::int32_t)> effectVolume,musicVolume; //장치 자연 반환 뒤 같은 음소거 깊이/예약 음량을 갱신한다.
+    std::function<void(bool)> selectMusic; //원문 현재 곡 선택이며 장면 난수/새 기한 시작과 구별한다.
+};
+void ReinterpretClientAudioOptions(const ClientAudioOptions& options,const ClientAudioInterpretHooks& hooks); //최초 해석 뒤4355df..435680의 순서 몸체다.
+
 // 클라이언트가 소유하는 소리·음악 묶음이다. 한 프로세스에 하나만 만든다.
 // 사용: 생성자는 어떤 OS 자원도 열지 않는다. Initialize(창 핸들, 옵션)가 장치→미리 적재→음악 스레드 순서로 연다.
 //       메인 루프는 매 프레임 CountPlaying()과 SceneFrame()을 부르고, 장면이 바뀌면 StartScene()·RequestMusic()을 부른다.
@@ -124,11 +134,12 @@ private:
     ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
         std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external,o::GameRandom* sharedRandom);
     // 장치를 열고(성공하면 true) 음악 스레드를 시작한다. 이미 열려 있으면 false다. Initialize·Interpret가 함께 쓴다.
-    bool OpenDevice(std::uintptr_t window,int quality);
+    bool OpenDevice(std::uintptr_t window,int quality,bool preload=true); //초기 init sound만 천둥을 미리 읽고 옵션 재열기는 기존 장치 초기화만 수행한다.
     // 음악 스레드를 합류한 뒤 장치를 닫는다(원본에 없는 순서 보장: 스레드가 닫힌 버퍼를 건드리면 안 된다).
     void CloseDevice();
     // 옵션 값을 상태와 음량에 적용한다(장치 열기·닫기는 하지 않는다).
     void ApplyValues(const ClientAudioOptions& options);
+    void ApplyOptionGlobals(const ClientAudioOptions& options); //장치 열기보다 앞서 현재 옵션 전역만 쓰고 음량은 별도 순서에 둔다.
 
     // 효과음 이름 표와 재생 전역, 장치(동적 dsound.dll), 재생 계층이다. 선언 순서가 곧 생성 순서이며 소멸은 반대로 한다.
     SoundList list_;

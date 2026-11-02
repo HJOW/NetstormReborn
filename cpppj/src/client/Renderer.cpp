@@ -142,6 +142,8 @@ void Renderer::SetScene(std::vector<RenderSprite> sprites, std::vector<RenderTex
     if (!text_.empty() || !text.empty()) dirty_.InvalidateAll();
     sprites_ = std::move(sprites); text_ = std::move(text);
 }
+// ShapeDatabase 소유자가 반납·재생성할 때만 호출하며 일반 장면/dirty 갱신의 캐시는 유지한다.
+void Renderer::ClearDecodedImages() { images_.clear(); }
 // 화면 모드 변경·전체 다시 그리기.
 void Renderer::InvalidateAll() { dirty_.InvalidateAll(); }
 // 원문 force redraw가 기존100칸을 비운 뒤 전체 사각형을 추가할 때 같은 표를 비운다.

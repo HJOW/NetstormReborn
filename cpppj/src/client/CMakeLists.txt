@@ -332,3 +332,6 @@ target_sources(netstorm PRIVATE UtilityCommandInput.cpp UtilityCommandInput.h) #
 
 # 현재 설정 일반명령을 기존 palette/State/스레드 부모에 연결한다(762).
 target_sources(netstorm PRIVATE ConfigurationCommandInput.cpp ConfigurationCommandInput.h)
+
+# 현재 글꼴/음질 명령과 기존 Client 장치 부모를 연결한다(764).
+target_sources(netstorm PRIVATE PresentationCommandInput.cpp PresentationCommandInput.h)

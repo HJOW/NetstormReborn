@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <bit>
 #include <cstring>
+#include <exception> //Win32 Enum callback의 C++ 실패를 DC 반납 뒤 다시 던진다.
 #include <limits>
 #include <stdexcept>
 #define WIN32_LEAN_AND_MEAN
@@ -189,8 +190,48 @@ int BitmapFont::Height() const { return height_; }
 int BitmapFont::Ascent() const { return ascent_; }
 // 기준선 아래 높이.
 int BitmapFont::Descent() const { return descent_; }
-// 설정의 fontFaceName을 보존한다.
-FontStore::FontStore(const o::BaseFileSystem& files, std::string face) : files_(files), face_(face.empty() ? "Arial" : std::move(face)) {}
+namespace { // EnumFontFamiliesA의 두 번 열거와 원문32BYTE 행 계약을 Win32 경계에 한정한다.
+// ANSI TrueType 후보를 두 번 읽어 최초 개수와 다음 기록 순서를 유지한다.
+std::vector<std::array<char,32>> CollectFontFaces(const FontFaceEnumeration& enumerate) {
+    std::size_t count{};enumerate([&](std::string_view,std::uint32_t type,std::uint8_t charset) { if (type==4 && !charset) ++count; });
+    std::vector<std::array<char,32>> result(count);std::size_t written{};
+    enumerate([&](std::string_view face,std::uint32_t type,std::uint8_t charset) {
+        if (type!=4 || charset) return;if (written>=result.size()) throw std::runtime_error("원문 글꼴 두 번 열거 사이 후보 수 증가");
+        face=face.substr(0,face.find('\0'));const auto size=std::min<std::size_t>(31,face.size());std::copy_n(face.begin(),size,result[written].begin());++written; //strncpy32 뒤 마지막BYTE0과 같은 유효 문자열이다.
+    });
+    if (written!=count) throw std::runtime_error("원문 글꼴 두 번 열거 사이 후보 수 감소");return result; //원문의 미작성/범위 밖 heap을 호스트에서 가짜 후보로 만들지 않는다.
+}
+// OS callback 안에서 예외를 넘기지 않고 Enum/ReleaseDC가 끝난 다음 같은 실패를 다시 던진다.
+void EnumerateSystemFontFaces(const FontFaceVisitor& visitor) {
+    struct Context { const FontFaceVisitor& visitor;std::exception_ptr error; }; //visitor는 이번 동기 Enum 동안 살아 있으며 최초 C++ 실패만 소유한다.
+    Context context{visitor,{}};const auto dc=GetDC(nullptr);if (!dc) throw std::runtime_error("글꼴 목록의 화면 DC 열기 실패");
+    const auto callback=+[](const LOGFONTA* font,const TEXTMETRICA*,DWORD type,LPARAM raw)->int {
+        auto& current=*reinterpret_cast<Context*>(raw);
+        try { current.visitor(font->lfFaceName,type,font->lfCharSet);return 1; }catch (...) { current.error=std::current_exception();return 0; }
+    }; //원본 EnumFontFamiliesA가 제공한 순서를 정렬/중복 제거하지 않는다.
+    EnumFontFamiliesA(dc,nullptr,callback,reinterpret_cast<LPARAM>(&context));ReleaseDC(nullptr,dc);if (context.error) std::rethrow_exception(context.error);
+}
+}
+// 설정의 첫 NUL까지 보관하며 원문 고정 현재 이름은 별도31BYTE로 제한한다.
+FontStore::FontStore(const o::BaseFileSystem& files,std::string face,FontFaceEnumeration enumerate)
+    :files_(files),face_(face.empty() || face.front()=='\0' ? "Arial" : std::string(face.substr(0,face.find('\0')))),faces_(CollectFontFaces(enumerate ? enumerate : FontFaceEnumeration(EnumerateSystemFontFaces))) {
+    std::copy_n(face_.begin(),std::min<std::size_t>(31,face_.size()),currentFace_.begin());
+}
+// 원문 음수는 assert 뒤 유효 영역 밖 접근 가능성이 있어 호스트는 진단 예외로 명시 거부한다.
+std::optional<std::string_view> FontStore::FaceAt(std::int32_t index) const {
+    if (index<0) throw std::out_of_range("원문 글꼴 which >= 0 관문");if (static_cast<std::size_t>(index)>=faces_.size()) return std::nullopt;
+    const auto& face=faces_[static_cast<std::size_t>(index)];return std::string_view(face.data(),static_cast<std::size_t>(std::find(face.begin(),face.end(),'\0')-face.begin()));
+}
+// 모든 이전 글리프를 먼저 반납하고 같은 저장소 참조 아래18개 유효 캐시를 원문 순서로 다시 읽는다.
+void FontStore::Rebuild(std::optional<std::string_view> requested) {
+    for (auto& slot:fonts_) for (auto& font:slot) font.reset(); //원문4a39f0도7칸 전체 Clear를 새 글꼴 생성보다 먼저 수행한다.
+    face_=requested ? std::string(requested->substr(0,requested->find('\0'))) : "Arial"; //유효 빈 이름은 NULL→Arial과 다르다.
+    constexpr std::array<FontStyle,5> styles{FontStyle::Normal,FontStyle::Italic,FontStyle::Bold,FontStyle::Underline,FontStyle::Strikeout}; //4a34a0의 실제 캐시 조회 순서다.
+    for (int slot=0;slot<7;++slot) for (const auto style:styles) if (Available(slot,style)) static_cast<void>(Get(slot,style)); //CHFNT가 없거나 손상된 조합만 기존 GDI 생성으로 내려간다.
+    currentFace_.fill(0);std::copy_n(face_.begin(),std::min<std::size_t>(31,face_.size()),currentFace_.begin()); //생성/캐시가 모두 자연 반환한 뒤에만4a3cc4의 현재 이름을 쓴다.
+}
+// Config 기록은 실제 dirty 통지 뒤 이 현재값을 읽으며 GDI가 대체 선택한 물리 이름을 조회하지 않는다.
+std::string_view FontStore::CurrentFace() const { return {currentFace_.data(),static_cast<std::size_t>(std::find(currentFace_.begin(),currentFace_.end(),'\0')-currentFace_.begin())}; }
 // 캐시 내부의 tmHeight 대신 원본의 CreateFontA 요청 높이 전역을 읽는다.
 int FontStore::LogicalHeight(int slot) {
     if (slot<0 || slot>=static_cast<int>(kHeights.size())) throw std::invalid_argument("Gump 글꼴 슬롯 범위 오류");

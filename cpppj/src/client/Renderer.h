@@ -114,6 +114,8 @@ public:
     void SetOverlayProcedure(std::optional<RenderProcedure> procedure);
     // 정지한 미션 위에 대화상자를 합성하는 배경을 만든다. 변경 표·출력 상태·커서는 건드리지 않는다.
     IndexedImage SceneImage();
+    // 글꼴/자산 소유자가 셰이프를 반납하기 전에 주소 기반 압축 해제 캐시만 비운다. dirty 갱신은 기존 caller가 맡는다.
+    void ClearDecodedImages();
     // 배경이나 WM_PAINT 등 화면 전체 변화.
     void InvalidateAll();
     void ClearDirty(); //Native Renderer+64의0 쓰기를 현재 호스트의 같은 vector/전체 플래그에 반영한다.

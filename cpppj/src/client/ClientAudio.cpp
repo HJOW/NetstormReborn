@@ -89,16 +89,24 @@ bool ClientAudio::Initialize(std::uintptr_t window,const ClientAudioOptions& opt
     return OpenDevice(window,options.quality);
 }
 
-// 소리가 켜져 있으면(그리고 아직 열려 있지 않으면) 장치를 열고, 꺼져 있으면 닫는다. 그 뒤 음량과 현재 곡을 옵션에 맞춘다.
+namespace { //실제 옵션 재해석과 장치 없는 집중 검사가 같은 순서 몸체를 사용한다.
+template<class F> const F& NeedAudioInterpret(const F& hook) { if (!hook) throw std::logic_error("음향 옵션의 실제 재해석 경계 미연결");return hook; } //미연결 장치를 성공으로 채우지 않는다.
+}
+// 원문4355df..435680: 옵션 전역→장치 열기/닫기→효과음/음악 음량→현재 곡의 순서다.
+void ReinterpretClientAudioOptions(const ClientAudioOptions& options,const ClientAudioInterpretHooks& hooks) {
+    NeedAudioInterpret(hooks.globals)(options);
+    if (options.sound) NeedAudioInterpret(hooks.open)(options.quality);else NeedAudioInterpret(hooks.close)(); //이미 열린 경우의0 반환도 기존 OpenDevice/장치 몸체가 정한다.
+    NeedAudioInterpret(hooks.effectVolume)(VolumeFromStep(options.soundVolumeStep));NeedAudioInterpret(hooks.musicVolume)(VolumeFromStep(options.musicVolumeStep));
+    NeedAudioInterpret(hooks.selectMusic)(options.music); //장치 열기 실패의 자연 반환 뒤에도 현재 음악 옵션을 같은 선택기에 전달한다.
+}
+
+// 실제 장치의 성공/실패와 같은 음량 보류 상태를 원문의 재해석 순서로 연결한다.
 void ClientAudio::Interpret(std::uintptr_t window,const ClientAudioOptions& options) {
-    options_=options;
-    ApplyValues(options);
-    // 원본 `if (sound != 0 && !첫 해석) 004aa600(품질) else 004a8ef0()`. 이미 열려 있으면 장치 계층이 false를 돌려주므로 다시 열지 않는다.
-    if (options.sound) { if (!state_.initialized) OpenDevice(window,options.quality); }
-    else CloseDevice();
-    // 원본 `00435160(현재 곡 이름, 음악 옵션)`: 꺼지면 정지, 켜져 있으면 멈춰 있을 때 다시 시작한다. 이름이 비어 있으면 고를 곡이 없다.
-    const std::string current(selected_.Current());
-    if (!current.empty()) selection_.Select(current.c_str(),options.music ? 1 : 0);
+    options_=options;ClientAudioInterpretHooks hooks;hooks.globals=[this](const auto& values) { ApplyOptionGlobals(values); };
+    hooks.open=[this,window](auto quality) { static_cast<void>(OpenDevice(window,quality,false)); };hooks.close=[this] { CloseDevice(); };
+    hooks.effectVolume=[this](auto volume) { player_.SetMasterVolume(volume); };hooks.musicVolume=[this](auto volume) { music_.SetVolume(volume); };
+    hooks.selectMusic=[this](auto enabled) { const std::string current(selected_.Current());if (!current.empty()) selection_.Select(current.c_str(),enabled ? 1 : 0); };
+    ReinterpretClientAudioOptions(options,hooks);
 }
 
 // 음악 스레드를 합류한 뒤 장치를 닫는다.
@@ -174,9 +182,9 @@ void ClientAudio::WriteSongEndBits(std::uint64_t bits) noexcept { std::memcpy(&s
 bool ClientAudio::DeviceReady() const { return state_.initialized; }
 
 // 원본 순서: 004aa600(장치) → 004a9520(천둥 효과음 적재) → 004aadd0(음악 스레드). 음악 스레드를 못 만들면 장치를 닫고 소리를 끈다.
-bool ClientAudio::OpenDevice(std::uintptr_t window,int quality) {
+bool ClientAudio::OpenDevice(std::uintptr_t window,int quality,bool preload) {
     if (!device_.Initialize(window,quality)) return false;
-    player_.Preload(kPreloadedSound);
+    if (preload) player_.Preload(kPreloadedSound); //4355f1의 옵션 재열기는 WinMain의 별도 천둥 preload를 반복하지 않는다.
     try {
         runtime_.Initialize();
     } catch (const std::exception&) {
@@ -200,12 +208,14 @@ void ClientAudio::CloseDevice() {
 
 // 소리 전역과 음량을 옵션으로 채운다. 음량 두 호출은 초기화 여부와 무관하게 부른다(원본 00435631·0043566a).
 void ClientAudio::ApplyValues(const ClientAudioOptions& options) {
+    ApplyOptionGlobals(options);player_.SetMasterVolume(VolumeFromStep(options.soundVolumeStep));music_.SetVolume(VolumeFromStep(options.musicVolumeStep));
+}
+// 초기 Initialize는 기존 순서를 유지하며 옵션 재해석만 장치 뒤 음량 경계를 사용한다.
+void ClientAudio::ApplyOptionGlobals(const ClientAudioOptions& options) {
     state_.enabled=options.sound;
     state_.swapSpeakers=options.swapSpeakers;
     state_.maxPlaying=options.maxSimulSounds;
     selected_.enabled=options.music ? 1 : 0;
-    player_.SetMasterVolume(VolumeFromStep(options.soundVolumeStep));
-    music_.SetVolume(VolumeFromStep(options.musicVolumeStep));
 }
 
 // 줄마다 `이름\t값`. 장치에서 읽는 값은 장치가 열려 있고 음악 버퍼가 있을 때만 적는다.

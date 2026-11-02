@@ -33,6 +33,7 @@
 #include "client/RawGameMenus.h"
 #include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
 #include "client/GameMenuCommands.h"
+#include "client/PresentationCommandInput.h" //일반 글꼴/음질 입력은 현재 캐시와 음향 장치 부모로 전달한다.
 #include "client/ConfigurationCommandInput.h" //원문 모드별 palette와 공유 priority/State 일반 명령을 기존 부모에 연결한다.
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "client/GameMenuActions.h"
@@ -1015,6 +1016,15 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
         }
         ++menuConfigRevision_;worldRedraw_=1;rawButtons_->RouteInput(event);Refresh();return true; // 원본 이 분기의 두 번째466200 호출을 보존한다.
     }
+    if (IsPresentationCommand(code)) {
+        PresentationCommandHooks effects;effects.fontFace=[this](auto index) { return client_.Fonts().FaceAt(index); };effects.rebuildFonts=[this](auto face) { RebuildPresentationFonts(client_.Fonts(),client_.GetRenderer(),face); }; // 글리프 주소 재사용 전에 실제 Renderer 캐시를 반납한다.
+        effects.width=[this] { return client_.GetScreen().Width(); };effects.height=[this] { return client_.GetScreen().Height(); };
+        effects.invalidate=[this](auto left,auto top,auto width,auto height,auto flags) { client_.GetRenderer().Invalidate({left,top,width,height},flags);rebuild_=true; }; //새 글꼴을 쓰기 전에 같은 호스트 장면을 재수집한다.
+        effects.currentFontFace=[this] { return client_.Fonts().CurrentFace(); };effects.set=[this](auto key,auto value) { client_.Configuration().Set(std::string(key),std::string(value));client_.ApplyAudioOptions(); }; //4414d0의 현재 Config와 기존 음향 재해석을 동기 사용한다.
+        effects.closeSound=[this] { client_.WorldAudio().Shutdown(); };effects.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration());client_.ApplyAudioOptions(); };
+        effects.sound=[this](auto name,auto a,auto b,auto c,auto d,auto e) { client_.WorldAudio().Sounds().PlayByName(name,a,b,c,d,e); };
+        return DispatchPresentationCommandInput(event,effects); //release/정지/모달/실패의 관문은 원문의 해당 부모만 실행한다.
+    }
     if (!IsGameMenuCommand(code)) return false;
     if (DispatchTechnicalHelpInput(event.code,[this] { static_cast<void>(LaunchClientTechnicalHelp(client_)); })) { Refresh();return true; } //원문 일반 명령은 현재 설정을 다시 해석하고435f10을 실행한다.
     auto binding=world_ ? world_->Session().BindGameMenus({}) : GameMenusHooks{}; // 종료/음량은 월드 설치 전후에도 같은 Client 명령이다.
@@ -1135,6 +1145,7 @@ void UberGump::Event(InputEvent event) {
     }
     if (DispatchScreenshotKey(event,[this] { client_.SaveGifScreenshot(); },[this](auto name) { Tell(std::string(name)); })) rebuild_=true; // Guide/Gump 뒤,console·정지와 일반 F7 배너 처리보다 앞이다. Tell이 연 정지를 아래에서 다시 읽는다.
     static_cast<void>(DispatchDiagnosticKey(event,[this] { client_.DumpDiagnostics(); })); // 같은 원문 위치에서 객체→프로세스 순서로 출력하며 정지/console은 아래에서 다시 읽는다.
+    if (IsPresentationCommand(event.code & 0x03ffffffU)) { static_cast<void>(GameMenuCommand(event));return; } //원문 두 설정명령은 Guide/Gump 뒤 공통 뗌 관문을 거쳐 HelpOpen/Console/정지보다 먼저 실행한다.
     if (IsConfigurationCommand(event.code)) { static_cast<void>(GameMenuCommand(event));return; } //원문 세 설정명령은 HelpOpen/모달/Console/정지보다 앞에서 현재 부모를 실행한다.
     UtilityCommandHooks utility; //원문5명령은Guide/Gump/뗌뒤이며Console/공통정지보다앞에있다.
     utility.text=[this](auto token) { return scriptStrings_.Resolve(token); };utility.screenshot=[this] { client_.SaveGifScreenshot(); };utility.tell=[this](auto section) { Tell(std::string(section)); };

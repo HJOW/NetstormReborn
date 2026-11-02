@@ -3075,3 +3075,7 @@ set_source_files_properties(ConfigurationCommandInputTests.cpp PROPERTIES COMPIL
 target_sources(netstorm_tests PRIVATE BaseFileWholeReadTests.cpp)
 set_source_files_properties(BaseFileWholeReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BASEFILE_WHOLE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/basefile-whole-read-x86.tsv\"")
 target_sources(netstorm_basefile_io_tests PRIVATE BaseFileWholeReadTests.cpp)
+
+# 글꼴/음질과 실제 글리프 픽셀 회귀를 기존 집중 대상에만 추가한다(764).
+target_sources(netstorm_tests PRIVATE PresentationCommandInputTests.cpp PresentationFontRenderCacheTests.cpp)
+target_sources(netstorm_script_bindings_tests PRIVATE PresentationCommandInputTests.cpp PresentationFontRenderCacheTests.cpp ClientAudioTests.cpp)

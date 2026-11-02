@@ -6,6 +6,9 @@
 #include <memory>
 #include <string>
 #include <string_view>
+#include <functional>
+#include <optional>
+#include <vector>
 
 namespace netstorm::client {
 // 원본 문맥의 스타일 번호(004a3ed0). 글꼴 슬롯 2는 원본에서도 비어 있다.
@@ -44,11 +47,17 @@ private:
     // glyphs_: 문자 코드로 찾아 사용할 글리프 표.
     std::array<FontGlyph, 256> glyphs_{};
 };
+// 원문 EnumFontFamiliesA가 반환한 이름/종류/charset을 현재 순서로 전달하는 동기 경계다.
+using FontFaceVisitor=std::function<void(std::string_view,std::uint32_t,std::uint8_t)>;
+using FontFaceEnumeration=std::function<void(const FontFaceVisitor&)>; //실제 OS 열거 또는 창 없는 집중 검사의 명시 입력이다.
 // 요청한 이름·크기의 글꼴을 읽어 캐시하는 저장소이다.
 class FontStore {
 public:
     // 원본 기본 글꼴 슬롯을 초기화한다. 파일 시스템은 이 객체보다 오래 살아야 한다.
-    FontStore(const o::BaseFileSystem& files, std::string face);
+    FontStore(const o::BaseFileSystem& files,std::string face,FontFaceEnumeration enumerate={});
+    std::optional<std::string_view> FaceAt(std::int32_t index) const; //4a2df0의 현재 목록 인덱스다. 음수는 원문 assert 영역의 호스트 오류, 양수 범위 밖은 NULL이다.
+    void Rebuild(std::optional<std::string_view> face); //같은 참조 아래 전체 캐시를 비운 뒤 재생성하며 NULL/유효 빈 이름을 구별한다.
+    std::string_view CurrentFace() const; //4a2e30의 현재32BYTE 중 첫NUL까지이며 생성 완료 뒤에만 바뀐다.
     // 슬롯과 스타일의 캐시를 읽고, 없거나 손상됐으면 같은 GDI 글꼴로 만든다.
     const BitmapFont& Get(int slot = 0, FontStyle style = FontStyle::Normal);
     // 004a39f0가 별도 전역에 지정한 슬롯 높이다. 캐시 tmHeight와 구분하며 빈 슬롯 2는 0이다.
@@ -60,6 +69,8 @@ private:
     const o::BaseFileSystem& files_;
     // face_: GDI 글꼴 생성에 요청할 글꼴 이름.
     std::string face_;
+    std::vector<std::array<char,32>> faces_; //원문 두 번 열거의 최초 순서/최대31BYTE 이름이며 Session/메뉴 교체로 지우지 않는다.
+    std::array<char,32> currentFace_{}; //005accd8의 현재 요청 이름이다. GDI가 대신 고른 물리 글꼴 이름과 구별한다.
     // fonts_: 이름·크기로 찾아 재사용하는 글꼴 저장소.
     std::array<std::array<std::unique_ptr<BitmapFont>, 5>, 7> fonts_{};
 };
