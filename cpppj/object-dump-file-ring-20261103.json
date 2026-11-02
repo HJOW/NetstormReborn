@@ -1,0 +1,87 @@
+{
+  "unit": 755,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 755,
+  "displayVersion": "11.01",
+  "exeSha256": "560c9884b931cd0c72c810a9e7a671a84d254012c15b7a0e6d17ecc73b7993f9",
+  "summary": "객체 덤프의 실제 Client VFS와 공유 파일명 고리 연결",
+  "tests": {
+    "totalUnique": 11,
+    "totalExecutions": 11,
+    "newTests": 4,
+    "failedChecks": 0,
+    "names": [
+      "BaseFileIO_IndependentNative322CursorCloseAndChunkedWrite",
+      "BaseFileIO_MissingBoundariesAndCloseKeepEarlierEffects",
+      "BaseFileIO_RealObjectDumpDiskUsesSharedWriteAndDestruct",
+      "ObjectDump_ActualClientSharedRingUnicodePipeline",
+      "ObjectDump_IndependentNative56FullTraceFilesAndCurrentBounds",
+      "ObjectDump_RealDiskPipelineMatchesIndependentNativeBytes",
+      "ObjectDump_RealOpenFailureDoesNotCreateParentOrRestoreModes",
+      "ObjectDump_SharedRingDirectWriterFailureKeepsFiveReservations",
+      "ObjectDump_SharedRingFirstOpenFailureKeepsOneReservation",
+      "ObjectDump_SharedRingReadExceptionKeepsThreeReservations",
+      "ObjectDump_TypedRegionUnwindAndRestorationFollowNativeEhMetadata"
+    ],
+    "logs": [
+      "tests-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2665,
+    "currentCount": 2665,
+    "allUnchanged": true,
+    "fixtureCount": 845,
+    "newFixtures": []
+  },
+  "native": {
+    "native.json": {
+      "unit": 755,
+      "prepared": false,
+      "host": "HJOW-Athlon",
+      "observations": 60,
+      "boundary": "실제459c60과41b4c0 mode0/mode2의정상기본디스크성공.004d6020전체부모/41baa0할당읽기/OS FILE/예외unwind는범위밖이며상대쓰기실패의TAFF/보조폴백은검사하지않음",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "sha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "tools\\decomp_basefile_read_policy.py": "557f7c8cd5c804b6688c8b7a821c9d9f66c8e20a758298bbc18775708aae88e6"
+      },
+      "rawReportSha256": "adf288a318e0af1f05c251c6a3f5fec380fb351e2b0097bbb1f72237caadfd97"
+    }
+  },
+  "initialFailures": [],
+  "sourceSha256": {
+    "cpppj/src/client/ObjectDumpDisk.h": "3059d0652027848508704c7b933d3faa2acf233bc64245862eb97bd190c95af1",
+    "cpppj/src/client/ObjectDumpDisk.cpp": "b875f772f8f03fc7018daff9616acdf156c3a78f0743983f8ce70a72b0b1006e",
+    "cpppj/src/client/ClientDiagnostics.cpp": "28fece45e6ec939b54c876ec63fbf9461825e800fbe507de43357cc65eadbb87",
+    "cpppj/tests/ObjectDumpTests.cpp": "dd8f4c963977f5369af8e9e0b6f734c6d2d6038d772eb95de8946ce428f073db",
+    "tools/decomp_object_dump_file_ring.py": "b749fdf9dff9695b14b2915be2d9abc5bc6fbbc1ccf95e0f0e7640adde70235d"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-755/protected-after.json",
+  "next": "D/d 최근생산취득(756)·BaseFile 전체열기부모(757)·추가지식메뉴(758)·kind17생성자(759)·일반명령5종(760)·outside어댑터(761)와 남은 비멀티/호환성",
+  "limitations": [
+    "원문관측은459c60과41b4c0 mode0/mode2의성공경로이며004d6020전체부모/41baa0할당/OS FILE/예외unwind는관측경계다.",
+    "새공유API는정상5칸/직접쓰기실패5칸을확인했으나상대mode2실패의전체TAFF/보조폴백은아직연결하지않았다.757의공통OpenAPI로복원한다.",
+    "실제Client진단입력접합은컴파일이며새게임/GUI/CLI·물리/PCM·MP·금지플레이·전체C++/34/ZIP검사는0이다."
+  ]
+}

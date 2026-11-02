@@ -45,7 +45,7 @@ void Client::TraceObject(std::uint32_t sid) { // 현재 물리 소유자를 고�
 void Client::DumpDiagnostics() { //004437f0은 실제 단일RET이며 이어서004d6020→00471890을 호출한다.
     const auto surface=SurfaceStorage();const auto gameplay=GameplayGlobals();
     const ObjectDumpGlobals globals{trace_->suppress,surface->pool.CapacityValue(),gameplay->GameAux()->TerrainType(),gameplay->TerrainBitmaps().fringeType,gameplay->GameAux()->EdgeFarmType()};
-    const auto hooks=MakeObjectDumpDiskHooks(GameDirectory(),[this](auto sid) { TraceObject(sid); },[] { throw std::logic_error("원문 객체 덤프 trace FILE 열기 진단"); }); // 원문의 빈 설치 prefix는 같은 게임 폴더다. CRT 프로세스 요약의 상대경로와 구별한다.
+    const auto hooks=MakeObjectDumpDiskHooks(GameDirectory(),[this](auto sid) { TraceObject(sid); },[] { throw std::logic_error("원문 객체 덤프 trace FILE 열기 진단"); },&Files()); // 원문의 빈 prefix/재읽기/재쓰기는 실제 Client의 같은10칸을 사용하고 OS 상대 열기만 가상 게임 CWD로 대체한다.
     std::array<std::uint8_t,24> file{};DumpRawObjects(surface->pool,surface->types,trace_->log,globals,DiagnosticLogHooks(),hooks,file);
     o::ProcessSummaryHooks summary;summary.slot=[this](auto slot) { return reinterpret_cast<o::ProcessSummaryHandle>(GetKernel().Get(slot)); };
     summary.form=[](auto handle) { return std::uint32_t(DiagnosticProcess(handle).Form().value); };summary.parent=[](auto handle) { return std::int32_t(DiagnosticProcess(handle).Parent().value); };

@@ -5,6 +5,17 @@
 #include "o/RawObjectTrace.h"
 #include "o/RawObjectTraceMain.h"
 #include "o/BaseFile.h"
+#include "o/RawFileName.h"
+#include "client/ClientMain.h"
+#include "client/ClientStaticStrings.h"
+#include "platform/Utf8Path.h"
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN // 실제 공유거부 장치만 필요하므로 부가 Win32 헤더는 제외한다.
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX // Win32의 min/max 매크로가 표준 검사 계산과 충돌하지 않게 한다.
+#endif
+#include <windows.h>
 #include <algorithm>
 #include <array>
 #include <filesystem>
@@ -128,4 +139,50 @@ TEST_CASE(ObjectDump_RealOpenFailureDoesNotCreateParentOrRestoreModes) {
     const auto hooks=MakeObjectDumpDiskHooks(directory,[](auto) { throw std::logic_error("선택하지 않은 trace"); },[&] { ++failures; });
     DumpRawObjects(scene.pool,scene.types,scene.log,scene.Globals(),{},hooks,scene.file);
     CHECK(failures==1 && scene.log.stream==0 && scene.log.level==30 && scene.suppress==1 && !std::filesystem::exists(directory));
+}
+
+// 실제 Client/VFS/StaticStrings의 한 소유자에 원문 논리 이름→빈장치/기본root→빈장치/기본root 다섯 칸을 연결한다.
+TEST_CASE(ObjectDump_ActualClientSharedRingUnicodePipeline) {
+    const auto row=Rows().at(6);const auto expectedFile=Unhex(std::string_view(row.at(7)).substr(row.at(7).rfind('|')+1)); // 기존 독립 원문의 전체 파일 BYTE를 그대로 기대한다.
+    for (const auto initial:{0U,8U,9U}) { // 첫순환과 끝칸 교체를 같은 실제 디스크 파이프라인으로 확인한다.
+        const auto directory=WorkDirectory()/std::filesystem::path(u8"공유-😀")/std::to_string(initial);std::filesystem::create_directories(directory);ClientOptions options;options.gameDirectory=directory;options.noAudio=true;Client client(options);const auto names=client.Files().FileNameOwner();CHECK(names.get()==&client.StaticStrings()->FileNames() && names->Index()==0);
+        std::array<const std::uint8_t*,10> slots{};std::array<std::array<std::uint8_t,256>,10> expected{}; // 반환 뷰의 실제10칸 주소와 독립 기대BYTE다.
+        for (unsigned call=0;call<10;++call) { static_cast<void>(names->Format({}));slots[names->Index()]=names->CurrentBytes().data(); } // 고리 주소만 빌린 뒤 원래번호0을 유지한다.
+        for (unsigned call=0;call<initial;++call) static_cast<void>(names->Format({})); // 원문 초기번호를 입력으로 선택한다.
+        const auto hostDirectory=std::filesystem::current_path();DumpScene scene(row);const auto logger=MakeObjectDumpDiskLogHooks([](auto) {});const auto hooks=MakeObjectDumpDiskHooks(directory,[&](auto sid) { scene.Trace(sid,logger); },[] { throw std::logic_error("공유 고리 덤프의 실제 열기 실패"); },&client.Files());CHECK(names->Index()==initial);
+        DumpRawObjects(scene.pool,scene.types,scene.log,scene.Globals(),logger,hooks,scene.file);
+        auto root=std::filesystem::absolute(directory).lexically_normal();root.make_preferred();const std::string logical=".\\squids.txt",joined=netstorm::platform::PathToUtf8(root)+"\\.\\squids.txt"; // 원문은 OS에 넘기기 전 `.\\`를 제거하지 않는다.
+        const std::array<std::string,5> written{{logical,logical,joined,logical,joined}};
+        for (std::size_t step=0;step<written.size();++step) { auto& slot=expected[(initial+step+1)%10];std::copy(written[step].begin(),written[step].end(),slot.begin());if (step==1 || step==3) slot[0]=0; } //459900의 빈 반환은 전체복사 뒤 첫BYTE만0이며 뒤물리를 보존한다.
+        for (std::size_t slot=0;slot<slots.size();++slot) CHECK(std::equal(expected[slot].begin(),expected[slot].end(),slots[slot])); // 미사용 칸/첫NUL 뒤BYTE도 원문 호출열과 대조한다.
+        CHECK(names->Index()==(initial+5)%10 && std::filesystem::current_path()==hostDirectory);const auto bytes=ReadFileBytes(directory/"squids.txt");CHECK(std::string(bytes.begin(),bytes.end())==expectedFile && scene.log.stream==0 && scene.log.level==7 && scene.suppress==0);
+    }
+}
+
+// 첫 CRT 열기 거부는 경로 한 칸만 남기며 FileSpec 읽기/쓰기와 모드 복구는 아직 선택하지 않는다.
+TEST_CASE(ObjectDump_SharedRingFirstOpenFailureKeepsOneReservation) {
+    DumpScene scene(Rows().at(0));const auto directory=WorkDirectory()/"shared-missing-parent-755";CHECK(!std::filesystem::exists(directory));ClientOptions options;options.gameDirectory=directory;options.noAudio=true;Client client(options);const auto names=client.Files().FileNameOwner();std::uint32_t failures{};
+    const auto hooks=MakeObjectDumpDiskHooks(directory,[](auto) { throw std::logic_error("선택하지 않은 공유 trace"); },[&] { ++failures; },&client.Files());DumpRawObjects(scene.pool,scene.types,scene.log,scene.Globals(),{},hooks,scene.file);
+    CHECK(failures==1 && names->Index()==1 && std::string(reinterpret_cast<const char*>(names->CurrentBytes().data()))==".\\squids.txt" && scene.log.stream==0 && scene.log.level==30 && scene.suppress==1 && !std::filesystem::exists(directory));
+}
+
+// 실제 재읽기 뒤 일반 예외가 생기면 이미 소비한 세 칸을 보존하고 BaseFile 쓰기 생성/복구에 들어가지 않는다.
+TEST_CASE(ObjectDump_SharedRingReadExceptionKeepsThreeReservations) {
+    const auto directory=WorkDirectory()/"shared-read-failure-755";std::filesystem::create_directories(directory);ClientOptions options;options.gameDirectory=directory;options.noAudio=true;Client client(options);const auto names=client.Files().FileNameOwner();DumpScene scene(Rows().at(6));const auto logger=MakeObjectDumpDiskLogHooks([](auto) {});
+    auto hooks=MakeObjectDumpDiskHooks(directory,[&](auto sid) { scene.Trace(sid,logger); },[] { throw std::logic_error("공유 읽기 검사 열기 실패"); },&client.Files());const auto read=hooks.read;hooks.read=[&](auto name,auto first,auto second)->std::vector<std::uint8_t> { static_cast<void>(read(name,first,second));throw std::runtime_error("명시 재읽기 뒤 일반 예외"); };bool failed{};
+    try { DumpRawObjects(scene.pool,scene.types,scene.log,scene.Globals(),logger,hooks,scene.file); }catch (const std::runtime_error&) { failed=true; }
+    CHECK(failed && names->Index()==3 && scene.log.stream==0 && scene.log.level==30 && scene.suppress==1 && std::filesystem::exists(directory/"squids.txt"));
+}
+
+// 기존 직접 mode2 쓰기 장치가 거부한 typed 예외는 다섯 칸 뒤 부모에서 복구한다. 전체 상대 TAFF/보조 fallback 검사는 아니다.
+TEST_CASE(ObjectDump_SharedRingDirectWriterFailureKeepsFiveReservations) {
+    const auto directory=WorkDirectory()/"shared-write-failure-755";std::filesystem::create_directories(directory);ClientOptions options;options.gameDirectory=directory;options.noAudio=true;Client client(options);const auto names=client.Files().FileNameOwner();DumpScene scene(Rows().at(6));const auto logger=MakeObjectDumpDiskLogHooks([](auto) {});
+    struct ReadLock { // 재읽기 뒤 쓰기만 거부하며 정상/검사예외 모두 현재 공유 핸들을 한 번 닫는다.
+        HANDLE handle=INVALID_HANDLE_VALUE; // 실제 현재 읽기 핸들이며 아직 열지 않은 상태와 구별한다.
+        ~ReadLock() { if (handle!=INVALID_HANDLE_VALUE) static_cast<void>(::CloseHandle(handle)); } // 앞선 공유 핸들만 닫으며 파일 내용/속성은 바꾸지 않는다.
+    };
+    ReadLock lock;std::vector<std::uint8_t> before;std::uint32_t destructs{};auto hooks=MakeObjectDumpDiskHooks(directory,[&](auto sid) { scene.Trace(sid,logger); },[] { throw std::logic_error("공유 쓰기 검사 열기 실패"); },&client.Files());const auto read=hooks.read;const auto destruct=hooks.destruct;
+    hooks.read=[&](auto name,auto first,auto second) { auto bytes=read(name,first,second);before=bytes;lock.handle=::CreateFileW((directory/"squids.txt").c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);CHECK(lock.handle!=INVALID_HANDLE_VALUE);return bytes; }; // 실제 Win32 공유거부로 w+b만 실패시키며 앞선 바이트는 유지한다.
+    hooks.destruct=[&](auto file) { ++destructs;destruct(file); };DumpRawObjects(scene.pool,scene.types,scene.log,scene.Globals(),logger,hooks,scene.file);
+    CHECK(names->Index()==5 && destructs==1 && scene.log.stream==0 && scene.log.level==7 && scene.suppress==0 && ReadFileBytes(directory/"squids.txt")==before);
 }
