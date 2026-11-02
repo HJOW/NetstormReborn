@@ -12,7 +12,7 @@ bool Equal(std::string_view left, std::string_view right) {
 }
 }
 // 팔레트 경로는 호출자가 설정에서 계산해 준다. 주지 않으면 원본 setup.cfg의 공통 팔레트 gifcloud다.
-GameAssets::GameAssets(const o::BaseFileSystem& files, o::OriginalEdition edition, std::string_view palettePath)
+GameAssets::GameAssets(const o::BaseFileSystem& files, o::OriginalEdition edition, std::string_view palettePath,TypeDefinitionRead readType)
     : edition_(edition),shapes_(files.Read("d/_shapes.shp")), palette_(files.Read(palettePath)) {
     const auto order = o::TypeLoadOrder(edition);
     if (shapes_.Blocks().size() != order.size()) throw std::runtime_error("Shape block count does not match selected edition (use --cd for CD data)");
@@ -20,7 +20,7 @@ GameAssets::GameAssets(const o::BaseFileSystem& files, o::OriginalEdition editio
     // 다른 판본의 추가 타입이나 디렉터리 정렬 순서를 섞지 않는다.
     for (std::size_t i = 0; i < order.size(); ++i) {
         const auto name = std::string(order[i]);
-        auto type = o::RiftTypeDefinition::Parse(o::DecodeOriginalText(files.Read("d/"+name+".type")));
+        auto type = readType ? readType(name):o::RiftTypeDefinition::Parse(o::DecodeOriginalText(files.Read("d/"+name+".type"))); // 명시 Native 부모만 현재 FILE을 열며 기존 도구/독립 GameAssets와 CD 값형 판독은 그대로 둔다.
         types_.push_back({name, std::move(type), i});
     }
     std::vector<o::RiftTypeSource> sources;

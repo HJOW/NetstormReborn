@@ -2386,3 +2386,7 @@ cpppj/tests/fixtures/lost-position-key-x86.tsv -text
 # 단위776의 최초 진단 표시·일반키 관측 바이트를 줄끝 변환 없이 보존한다.
 cpppj/tests/fixtures/renderer-diagnostics-x86.tsv -text
 cpppj/tests/fixtures/renderer-diagnostic-keys-x86.tsv -text
+
+# 단위777의 최초 TYPE 파일 부모 관측 바이트를 줄끝 변환 없이 보존한다.
+cpppj/tests/fixtures/type-live-read-x86.tsv -text
+cpppj/tests/fixtures/type-live-null-destination-x86.tsv -text

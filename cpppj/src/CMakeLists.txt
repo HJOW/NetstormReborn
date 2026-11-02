@@ -354,3 +354,5 @@ target_sources(netstorm PRIVATE o/RawAiCommandState.cpp o/RawAiCommandState.h cl
 
 # 일반MakeAi와owner0객체수명을기존실제생성/World부모에연결한다(773).
 target_sources(netstorm PRIVATE o/RawMakeAi.cpp o/RawMakeAi.h client/MakeAiCommandInput.cpp client/MakeAiCommandInput.h)
+# 실제10.78 TYPE 시작의 필수 live FILE/키 수명만 명시 연결한다(777).
+target_sources(netstorm PRIVATE client/TypeFileRead.cpp client/TypeFileRead.h)

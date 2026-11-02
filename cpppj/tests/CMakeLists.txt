@@ -3146,3 +3146,7 @@ set_property(SOURCE AiDebugMenuTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NE
 # 진단기계어/픽셀과기존경로공유소유를기존집중대상에서검사한다(776).
 target_sources(netstorm_tests PRIVATE RendererDiagnosticsTests.cpp)
 target_sources(netstorm_menu_session_tests PRIVATE RendererDiagnosticsTests.cpp RawPathSearchTests.cpp)
+# TYPE의 명시 live FILE/키와 기존 snapshot 경계를 기존 파일 집중 대상에만 더한다(777).
+target_sources(netstorm_tests PRIVATE TypeLiveFileReadTests.cpp)
+target_sources(netstorm_file_tests PRIVATE TypeLiveFileReadTests.cpp)
+set_source_files_properties(TypeLiveFileReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TYPE_LIVE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-live-read-x86.tsv\"")

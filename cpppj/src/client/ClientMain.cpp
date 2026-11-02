@@ -7,6 +7,7 @@
 #include "client/ClientMain.h"
 #include "client/FontFaceEncoding.h" //Config 내부UTF-8 글꼴 이름을 원문 GDI A의 현재 ACP로 옮긴다.
 #include "client/ConfigFileRead.h" //실제10.78 Config만 현재 FILE/키와40380 부모를 사용한다.
+#include "client/TypeFileRead.h"
 #include "client/ConfigurationCommandInput.h" //같은 raw highPriority와 WinMain의 실제 OS 등급 비교를 사용한다.
 #include "client/ScreenModeTransition.h" //원문00435ba0의 현재 모드/실패 복구/공유 갱신 부모다.
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
@@ -355,7 +356,9 @@ int Client::Run() {
     // 초기 메뉴가 준비되기 전 현재 창에 원본147/Arial20 로딩을 확정 출력한다. 표시 여부가 WM_PAINT 예약만의 타이밍에 의존하지 않게 하며 별도 대기시간은 두지 않는다.
     InvalidateRect(window,nullptr,FALSE);UpdateWindow(window);GdiFlush();DwmFlush(); // 유효한 WM_PAINT 갱신을 실행한 뒤 Windows 합성 화면의 다음 표시까지 완료하여 빠른 메뉴 교체가 로딩을 덮지 않게 한다.
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
-    assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath);
+    GameAssets::TypeDefinitionRead readType; // 원문49c160의 현재 FILE/키 정책은10.78의 실제 시작에서만 명시 사용한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) readType=[this](auto name) { return ReadNativeTypeDefinition(files_,name); };
+    assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath,std::move(readType));
     if (options_.edition==o::OriginalEdition::Patch1078) colorSortInput_->OwnerTables()->Initialize(colorSortInput_->Primary(),assets_->TypeTable().Types().size(),static_cast<std::uint32_t>(assets_->Find("bridge").block+o::kFirstAssetTypeNumber),kencloudGlobals_->WorldRedraw()); // 원문43c4e0→43be30의 최초 등록이다. 호스트는 TYPE 크기가 확정된 직후, 첫 UI/World보다 먼저 수행한다.
     surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority(),gameplayGlobals_->GameAux()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.

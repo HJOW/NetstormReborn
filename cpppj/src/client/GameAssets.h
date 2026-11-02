@@ -4,6 +4,7 @@
 #include "client/VFXDraw.h"
 #include "o/BaseFile.h"
 #include "o/RiftType.h"
+#include <functional>
 #include <optional>
 #include <string>
 #include <vector>
@@ -24,8 +25,9 @@ public:
     static constexpr std::string_view kDefaultPalettePath = "d/gifcloud.col";
     // 선택한 판본의 타입·SHP·팔레트를 동일한 VFS에서 읽어 연결한다.
     // 팔레트 경로는 설정(`GamePalSpec`에 `battlePal` 등을 넣은 값)으로 계산해 넘길 수 있다.
+    using TypeDefinitionRead=std::function<o::RiftTypeDefinition(std::string_view)>; // 실제 Native만 명시하는 동기 TYPE 로더이며 기본값은 기존 snapshot Parse다.
     GameAssets(const o::BaseFileSystem& files, o::OriginalEdition edition,
-        std::string_view palettePath = kDefaultPalettePath);
+        std::string_view palettePath = kDefaultPalettePath,TypeDefinitionRead readType={});
     // 원본 로딩 순서를 보존한 자산 목록.
     std::span<const TypeAsset> Types() const;
     // 파일 이름 또는 typename으로 타입을 찾는다. ASCII 대소문자는 구분하지 않는다.

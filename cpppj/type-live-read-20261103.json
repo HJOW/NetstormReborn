@@ -1,0 +1,119 @@
+{
+  "unit": 777,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 777,
+  "displayVersion": "11.01",
+  "exeSha256": "94e79d5aabbfdb8a98fb6e889b8ad3d8d5e5da4c8bdf10dc0223692947ea192d",
+  "summary": "실제 Patch1078 Client의 TYPE 읽기를 같은 파일명 고리·현재 FILE/키의 필수 전체읽기에 연결",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-diagnostic-v2.log",
+      "build-null-mapping-v3.log"
+    ]
+  },
+  "tests": {
+    "totalUnique": 13,
+    "totalExecutions": 13,
+    "allAttemptExecutions": 23,
+    "newTests": 5,
+    "failedChecks": 0,
+    "names": [
+      "TypeLiveFileRead_Native47FixedCallFormatterAndWholeReadLifetime",
+      "TypeLiveFileRead_CurrentEncryptedArchivePreservesSnapshotApi",
+      "TypeLiveFileRead_CurrentDiskAndSecondaryUnicodeRoots",
+      "TypeLiveFileRead_RequiredMissingEmptyAndSyntaxFailureReleaseThenRetry",
+      "TypeLiveFileRead_TruncatedEncryptedArchiveRejectsAfterCloseAndKeepsTypedOpenFailure",
+      "QuickHelpFileRead_ActualClientArchiveReadsCurrentPayloadAndKeepsSnapshotApi",
+      "QuickHelpFileRead_ActualClientTruncatedEncryptedFileFailsAfterCloseAndCanRetry",
+      "QuickHelpFileRead_ActualClientSecondaryRootRefreshAndUnicodeDirectName",
+      "QuickHelpFileRead_Native62WholeReadExtraTwoLfNulAndConstructorCache",
+      "QuickHelpFileRead_ActualClientSuccessfulCacheRetainsFirstBytesAndSingleLf",
+      "QuickHelpFileRead_ActualMissingThrowsBeforeCacheAndEmptyFileCanRetry",
+      "BaseFile_ReadPolicyReplaysIndependentNative1024",
+      "BaseFile_ReadPolicyEmptyFileIsSuccessAndMissingLookupIsExplicit"
+    ],
+    "logs": [
+      "tests-TypeLiveFileRead_-v3.log",
+      "tests-QuickHelpFileRead_.log",
+      "tests-BaseFile_ReadPolicy.log"
+    ],
+    "fullSuiteRun": false,
+    "initialFailures": {
+      "logs": [
+        "tests-TypeLiveFileRead_.log",
+        "tests-TypeLiveFileRead_-v2.log"
+      ],
+      "executions": 10,
+      "failedChecks": 8,
+      "affectedInputs": [
+        36,
+        37,
+        38,
+        39
+      ],
+      "reason": "새 검사 장치가 반환0의 읽기 대상과 예약 ALLOCATION 블록을 같은 span으로 잘못 대응. 기존47행 기대와 제품 코어는 유지하고 입력 물리를 분리"
+    }
+  },
+  "native": {
+    "preparedObservations": 94,
+    "preparedRepeatObservations": 94,
+    "resumeRepeat": {
+      "unit": 777,
+      "rows": 47,
+      "observations": 94,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제49c160/459c60/strchr/41baa0와 marker0의4f93a0 cleanup. Open/CRT/new/진단은명시장치. TYPE scanner/parser/49c0f0 EOF·전체SEH dispatcher·24BYTE ABI·미정할당동일성은범위밖",
+      "sha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+      }
+    },
+    "allResumeObservations": 282,
+    "fixtureSha256": "b7237e0091bc581003a96183f127a0ad9b54cbae0ad3e26f819b9c8eb26acb81",
+    "fixtureVerified": true,
+    "nullDestination": {
+      "rows": 4,
+      "observations": 8,
+      "includedInLast94": true,
+      "captureAddress": "0041bb53",
+      "fixture": "cpppj/tests/fixtures/type-live-null-destination-x86.tsv",
+      "sha256": "60da4f6c82fbdcec77a5102e7ce20f30d95c53b65c164b43ecf261de50c27e5f",
+      "firstProbe": "native-null-destination.json의 반환후 관측은FS0 복구와 겹쳐 첫DWORD가0이었다. native-null-after-read.json에서는Read복귀뒤/소멸앞41bb53에서 관측"
+    }
+  },
+  "protection": {
+    "beforeCount": 2712,
+    "currentCount": 2714,
+    "allUnchanged": true,
+    "fixtureCount": 894,
+    "newFixtures": [
+      "cpppj/tests/fixtures/type-live-read-x86.tsv",
+      "cpppj/tests/fixtures/type-live-null-destination-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "기존 Decode/Parse·기본 GameAssets/CLI/CD/snapshot 판독을 유지",
+    "0049c0f0 scanner/read-ahead의 정확한 EOF·offset·line·해제 수명은 범위 밖",
+    "실제 Client의 접합은 소스/빌드 근거이며 새 GUI 관측은 없음",
+    "원문32비트 FILE/SEH ABI·미정 padding과 실제 OS 수명 경계는 구별"
+  ],
+  "next": "779 checking 공유 소비자/필수 교정 후783 별도 부모"
+}
