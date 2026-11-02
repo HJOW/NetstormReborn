@@ -9,6 +9,7 @@
 #include "client/StoneButtonGump.h"
 #include "client/QuickHelpControl.h"
 #include "client/QuickHelpHtml.h"
+#include "client/QuickHelpList.h" //같은 전용 Help의 실제 HTML 스트림/지역 BaseFile 출력 부모다.
 #include "o/GumpFormHost.h"
 #include <memory>
 #include <filesystem>
@@ -158,6 +159,7 @@ public:
     ButtonGumpNode* BaseButton(std::uint32_t token) const; // 실제 특수 Button 파생도 공통 입력 처리기에 빌린다.
     QuickHelpPopupState& PopupState() const; // 지식 카드 표식과 전용 Help Back이 공유할 같은 실제 저장소다.
     void EnableHelp(RawHelpHooks hooks); // 현재 Client 경계를 같은 공통 트리에 한 번 연결한다.
+    void CreateHelpList(QuickHelpListContext context); //004c63e0의 같은 전용 부모/파서/지역 파일이며 기본 메뉴를 추가하지 않는다.
     std::uint32_t OpenHelp(std::uint32_t topic=0,std::int32_t mode=1,std::uint32_t learnType=0); // 실제 전용 창 재사용/모달/요청이다.
     // 원본cf570의 전체 HTML 생성/현재 부모 재갱신을 같은 Client 전역과 실제 공장에 연결한다.
     std::uint32_t ShowMissionLoading(RawHtmlWindowContext context,std::string_view message,std::function<std::string()> cancelText); // Cancel 번역은 기본 버튼이 필요한 분기에서만 조회한다.

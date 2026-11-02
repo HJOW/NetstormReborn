@@ -1,0 +1,220 @@
+{
+  "unit": 766,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 766,
+  "displayVersion": "11.01",
+  "exeSha256": "7de3ad603912817a2e8876b6db105faf096ee3f4246371ecf858755173f2256d",
+  "summary": "CreateHelpList 일반 명령과 같은 Help HTML stream 및 지역 BaseFile 수명 연결",
+  "tests": {
+    "totalUnique": 8,
+    "totalExecutions": 8,
+    "newTests": 8,
+    "failedChecks": 0,
+    "names": [
+      "QuickHelpListDisk_BinaryRPlusBPreservesTailAndSharedFileRing",
+      "QuickHelpListDisk_FailedOpenDestructAndSameDeviceReuse",
+      "QuickHelpListIntegration_FailedStreamRetiresCallbackKeepsOriginalToken",
+      "QuickHelpListIntegration_NativeHtmlBytesAndDeferredKill",
+      "QuickHelpList_AbsentHelpFirstNulAndReachedBounds",
+      "QuickHelpList_Native128GeneralGuideGumpReleasePauseConsole",
+      "QuickHelpList_Native142ParentOrderAndFailurePrefixes",
+      "QuickHelpList_Native21NamesAndRealStringQueue"
+    ],
+    "logs": [
+      "tests-help-list-v2.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-v2.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2684,
+    "currentCount": 2688,
+    "allUnchanged": true,
+    "fixtureCount": 868,
+    "newFixtures": [
+      "cpppj/tests/fixtures/quick-help-list-x86.tsv",
+      "cpppj/tests/fixtures/quick-help-list-input-x86.tsv",
+      "cpppj/tests/fixtures/quick-help-list-names-x86.tsv",
+      "cpppj/tests/fixtures/quick-help-list-html-x86.tsv"
+    ]
+  },
+  "native": {
+    "native.json": {
+      "unit": 766,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 142,
+      "observations": 284,
+      "instructions": 55176,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "actual": "004c63e0 + 0041a5a0/0041a910/0041a680/0041b410",
+      "boundary": "OpenHelp/TYPE getter/Show/Cleanup/Kill/Tell/format/whole Open and CRT FILE only; Show supplies a distinct marker, real QuickHelpHtml stream has separate existing native coverage; failure prefixes stop before SEH unwind",
+      "sha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "extracted\\refined\\originals\\Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+      },
+      "fixtureSha256": "5bc8b2931ecc4c9b06acdbbaf01acc5a44331bb1363898451805a2500100f3da",
+      "rawReportSha256": "0dd34855c59643bf464ec52436cbac5c1ac044feba224c67d6547c74a782ae4d"
+    },
+    "native-command-and-file.json": {
+      "unit": 766,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "generalInputs": 128,
+      "generalObservations": 256,
+      "nameInputs": 21,
+      "nameObservations": 21,
+      "wholeOpenInputs": 5,
+      "wholeOpenObservations": 10,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "boundary": "일반 parent의 Guide/Gump·하위 CreateHelpList는 명시 경계. 이름/FIFO는 실제 원본 조회/토큰/큐이며 TLS/할당 경계. 전체41b4c0/하위파일/경로는 실제 원문이며 fopen/TAFF metadata/SEH throw 경계. 실제 FILE ABI/SEH unwind/게임 관측은 아니다.",
+      "sha256": {
+        "modified\\cpppj\\tests\\fixtures\\quick-help-list-input-x86.tsv": "d22112c523c8de7f2fc2dfb520bf96fc4b1b00c11c6790b5503e098cebe2064c",
+        "modified\\cpppj\\tests\\fixtures\\quick-help-list-names-x86.tsv": "82f1f4ea7cf74249be7a6d995b33bb0750b62b6d2df5b329522657016bbc3b85",
+        "whole-open-x86.tsv": "ee8335ffd295d9e812a742a110faa33e1b20168ae7d31fd6d82b27dbd5968e6c"
+      },
+      "rawReportSha256": "21b2e4a4134b72b3e2cc6fd940ef7c5ffd02bbb44147aeadae6d3160d59b814f"
+    },
+    "native-html.json": {
+      "inputs": 3,
+      "observations": 6,
+      "hitPointsGetterObservations": 3,
+      "actual": "existing exact 4c4c00/4c4cc0/4c4c60 + base HTML/links +49fce0",
+      "boundary": "synthetic TYPE profile1 from reviewed native tool, same independent values for adapter integration; pane/stream/translate/config are explicit boundaries; no original UI/OS/game",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "fixtureSha256": "df18ee340593ff0fa6aa9fcf8bbd66f0400ac2b94c0d7350a6579a77fd3014fa",
+      "rawReportSha256": "a1153bb52da655711f0218b674610388592cc9d7d09c1c200a0454a005718f9d"
+    },
+    "parent-repeat/native.json": {
+      "unit": 766,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "inputs": 142,
+      "observations": 284,
+      "instructions": 55176,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "actual": "004c63e0 + 0041a5a0/0041a910/0041a680/0041b410",
+      "boundary": "OpenHelp/TYPE getter/Show/Cleanup/Kill/Tell/format/whole Open and CRT FILE only; Show supplies a distinct marker, real QuickHelpHtml stream has separate existing native coverage; failure prefixes stop before SEH unwind",
+      "sha256": {
+        "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "extracted\\refined\\originals\\Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+      },
+      "fixtureSha256": "5bc8b2931ecc4c9b06acdbbaf01acc5a44331bb1363898451805a2500100f3da",
+      "rawReportSha256": "f6ea6e06b07896e614440f177e716bc97fbebc3cb91487fdb37b7742a5668380"
+    },
+    "input-repeat/native-command-and-file.json": {
+      "unit": 766,
+      "host": "HJOW-Athlon",
+      "lastDecompile": "HJOW-Athlon / 2026-10-23",
+      "generalInputs": 128,
+      "generalObservations": 256,
+      "nameInputs": 21,
+      "nameObservations": 21,
+      "wholeOpenInputs": 5,
+      "wholeOpenObservations": 10,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "boundary": "일반 parent의 Guide/Gump·하위 CreateHelpList는 명시 경계. 이름/FIFO는 실제 원본 조회/토큰/큐이며 TLS/할당 경계. 전체41b4c0/하위파일/경로는 실제 원문이며 fopen/TAFF metadata/SEH throw 경계. 실제 FILE ABI/SEH unwind/게임 관측은 아니다.",
+      "sha256": {
+        "modified\\cpppj\\tests\\fixtures\\quick-help-list-input-x86.tsv": "d22112c523c8de7f2fc2dfb520bf96fc4b1b00c11c6790b5503e098cebe2064c",
+        "modified\\cpppj\\tests\\fixtures\\quick-help-list-names-x86.tsv": "82f1f4ea7cf74249be7a6d995b33bb0750b62b6d2df5b329522657016bbc3b85",
+        "whole-open-x86.tsv": "ee8335ffd295d9e812a742a110faa33e1b20168ae7d31fd6d82b27dbd5968e6c"
+      },
+      "rawReportSha256": "4d46d6ff1b83dbec46bec1bdfd3c9f908ff3b87faa0a45980927b6c53d86e116"
+    },
+    "html-repeat/native-html.json": {
+      "inputs": 3,
+      "observations": 6,
+      "hitPointsGetterObservations": 3,
+      "actual": "existing exact 4c4c00/4c4cc0/4c4c60 + base HTML/links +49fce0",
+      "boundary": "synthetic TYPE profile1 from reviewed native tool, same independent values for adapter integration; pane/stream/translate/config are explicit boundaries; no original UI/OS/game",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "fixtureSha256": "df18ee340593ff0fa6aa9fcf8bbd66f0400ac2b94c0d7350a6579a77fd3014fa",
+      "rawReportSha256": "3c5117e17508b6a6ba0e24a2fcc414ba8c1c3e64e7bc6ea37f3bff3394bb8db8"
+    },
+    "reader-lf-boundary.json": {
+      "unit": 766,
+      "host": "HJOW-Athlon",
+      "readerInputs": 1,
+      "readerObservations": 1,
+      "htmlInputs": 3,
+      "htmlObservations": 6,
+      "constructor": "004c5380",
+      "directFixture": "cpppj/tests/fixtures/quick-help-list-html-x86.tsv",
+      "cachedBytesHex": "3c61206e616d653d22756e697454797065223e3c696e666f3e3c703e424f44593c2f613e0a454e440a00",
+      "originalReaderSourceHex": "3c61206e616d653d22756e697454797065223e3c696e666f3e3c703e424f44593c2f613e0a454e44",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제ctor LF/NULstore와 실제parser만관측한다. 기본GUI/파일child/TYPE/Config/번역/stream callback은기존도구의명시입력이다. 제품출력은읽지않고기존fixture는수정하지않는다.",
+      "sourceSha256": {
+        "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "tools/decomp_quick_help_window.py": "fa76ed7bddec56031e82f8ce33d19f99ddbf2d8c78a84de07d063ba8b85a4e99",
+        "tools/decomp_quick_help_html.py": "9ca7de230810d8b96e0bd8057ecb0101cb450d0172d6926b36b4f866721e9e0e"
+      },
+      "rawReportSha256": "30f95c504507c2a6f945567d927c127429e1d5fdf09c65dbb40c00522a957b93"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "root C++ v1",
+      "detail": "실제Help통합3행만직접parser fixture와달랐다. 준비기대가4c5380 ctor의본문끝LF/NUL을빠뜨린것이었다. 실제원문ctor1회+LF추가parser6회로접합경계를확인한뒤완전바이트기대에원문LF를추가했다. 제품/parser/기존fixture는변경하지않았으며최초3실패로그는보존했다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/CMakeLists.txt": "6f3e1bb2815607e16c77e70b832c25f9c33c4ba14fd7dea2f44ea322ee79ee23",
+    "cpppj/src/client/GameMenuCommands.cpp": "c5343df3edca8c1d08326c6db673a20147404d1c241907cf5c4d4f4d9cbd457b",
+    "cpppj/src/client/HelpListDisk.cpp": "b10fe02ba548df5a1d9c263e8727d0eafae5d1ebcb556e11853a43e3929c012a",
+    "cpppj/src/client/HelpListDisk.h": "c99c4513dac1ef10c8365b15ff9deebc35b58d5c1bc6aeddddc8932a093a3d11",
+    "cpppj/src/client/QuickHelpList.cpp": "42bd3ef4f72586d2be1fcf34e14bed8713761f568fd88442891432311536de66",
+    "cpppj/src/client/QuickHelpList.h": "cdbfe8242dafceabe22c2deefc05df25c272c3ddfee5f54da15e5d8bbb453c1d",
+    "cpppj/src/client/RawMenuControls.cpp": "5c5ad25c517f41b59643d020a84f7df36d426e389231cd01ad80d2aa390478d7",
+    "cpppj/src/client/RawMenuControls.h": "e829c7830976f10557beb3cd01556c7b9326cab778d53029833d344c1fe85fea",
+    "cpppj/src/client/UberGump.cpp": "151c509961778b00ea0ec0eaaeb2ec841961e0f7cbc7497f0eaa502991cdbf2e",
+    "cpppj/tests/CMakeLists.txt": "2dba497807e59e8963a8864d15d8f0731c5753c77b31636faf7197190b1d6f3c",
+    "cpppj/tests/QuickHelpListTests.cpp": "a5512729b4e85593bf2e54f3b6d9bcb1e6877f472733b211d63450b647442a80",
+    "cpppj/tests/QuickHelpListIntegrationTests.cpp": "e1fe95aa3626a14725362a6156f9e61f3e05b066dfb76549d779666a95be3962",
+    "tools/decomp_help_list.py": "02cf96df5b7ec5a497b7e0b129c0e4bfaade4c3834aeaae3dd1056a41888cd6e",
+    "tools/decomp_help_list_input.py": "8cceffa3f2d27c20e4ffbe0925ef8716997139dcc39bec43b90f76b562d44858",
+    "tools/decomp_help_list_html.py": "bbb74adcc7e98d38a8ab732dffcdf89d50bcaea31b81641acbdc19964b123f29",
+    "tools/decomp_help_list_window_lf.py": "6c6aab67738a330da5449a5c2bd983c413af255b1e52486510233ed64cdc4495"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-766/protected-after.json",
+  "next": "QuickHelp 최초reader(767)·DrawWater(768)·DataManager(769)·CreateAt(770)·Config reader(771)·일반 AI 명령(772/773)·글꼴 인코딩(774)·조건 AI 메뉴(775)와 남은 비멀티/호환성",
+  "limitations": [
+    "원문Open/Write/Show/Cleanup/Kill/Tell실패6종은진입직전prefix이며SEHunwind전체관측이아니다. 호스트는파일소멸효과를별도대조하고앞선효과를되돌리지않는다.",
+    "실패뒤원문의Help+bc값은남기되지역callback만반납해dangling지역FILE접근을명시거부한다. 정상일때만+bc=0→Close→지연Kill→Tell→Destruct다.",
+    "NativeTYPE/Show/Config/번역/CRT FILE/OS는명시경계다. 실제HTML3관측의profile1은합성TYPE입력이며실제월드TYPE/화면/브라우저전체동일성관측이아니다.",
+    "256BYTE %sType초과는호스트length_error로명시거부한다. 첫NUL/고정suffix와현재getter순서는보존한다. 미도달장치는새선행필수조건으로만들지않는다.",
+    "NetStormPieceList.html은5차의자동생성물이다. 해당writer와PieceDump의file링크/안내도사용자Netstorm하위동일namespace로함께이관해야하며현재1차게임CWD계약을바꾸지않았다.",
+    "새게임/GUI/CLI/MP·외부프로그램/브라우저·물리/PCM·포획/희생·특정적공격·승리·자연완주·전체C++/34/ZIP검사는0이다."
+  ]
+}

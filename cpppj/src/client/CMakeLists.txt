@@ -335,3 +335,6 @@ target_sources(netstorm PRIVATE ConfigurationCommandInput.cpp ConfigurationComma
 
 # 현재 글꼴/음질 명령과 기존 Client 장치 부모를 연결한다(764).
 target_sources(netstorm PRIVATE PresentationCommandInput.cpp PresentationCommandInput.h)
+
+# CreateHelpList의 같은 전용 Help/CRT writer다(766).
+target_sources(netstorm PRIVATE QuickHelpList.cpp QuickHelpList.h HelpListDisk.cpp HelpListDisk.h)

@@ -3084,3 +3084,9 @@ target_sources(netstorm_script_bindings_tests PRIVATE PresentationCommandInputTe
 target_sources(netstorm_tests PRIVATE FileProbeTests.cpp)
 set_source_files_properties(FileProbeTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FILE_PROBE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/file-probe-consumers-x86.tsv\"")
 target_sources(netstorm_file_tests PRIVATE FileProbeTests.cpp ClientKencloudGlobalsTests.cpp BackgroundGifClientTests.cpp GifScreenshotTests.cpp)
+
+# 실제 CreateHelpList 부모/일반입력/이름/FIFO·현재 전용 Help 파일stream을 같은 기존 집중 대상에 포함한다(766).
+target_sources(netstorm_tests PRIVATE QuickHelpListTests.cpp QuickHelpListIntegrationTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE QuickHelpListTests.cpp QuickHelpListIntegrationTests.cpp)
+set_source_files_properties(QuickHelpListTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_QUICK_HELP_LIST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-list-x86.tsv\";NETSTORM_QUICK_HELP_LIST_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-list-input-x86.tsv\";NETSTORM_QUICK_HELP_LIST_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-list-names-x86.tsv\"")
+set_source_files_properties(QuickHelpListIntegrationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_QUICK_HELP_LIST_HTML_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/quick-help-list-html-x86.tsv\"")

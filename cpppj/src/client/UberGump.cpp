@@ -8,6 +8,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/HelpListDisk.h" //현재Client VFS/지역파일의 같은 Help목록writer다.
 #include "client/ProductPresentation.h"
 #include "client/ExternalHelpClient.h" //원래 외부 Help 정책을 현재 Client/Windows 장치에 연결한다.
 #include "client/UrlInput.h"
@@ -1168,6 +1169,14 @@ void UberGump::Event(InputEvent event) {
         [this](auto text) { rawButtons_->Menus()->ActivateHelpLinkText(text); })) { rebuild_=true;return; } //모드/현재World와무관하게같은내부Help·cmd·외부정책을사용한다.
     if (DispatchCaptureInput(event,client_.ScreenCapture().State().active,{[this] { client_.ScreenCapture().Start(); },[this] { client_.ScreenCapture().Stop(); },[this](auto section) { Tell(std::string(section)); }})) { rebuild_=true;return; } //현재active우선/param2=1시작이다. 개발자키55a484조건은켜지않는다.
     if (DispatchRecheckCdInput(event,client_.CdGlobals()->RecheckSerial(),{[this](auto serial) { return rawButtons_->SerialGump(serial); },[this](auto token) { rawButtons_->KillGump(token); }})) { rebuild_=true;return; } //4d8b8d: 현재 serial 조회→공통 Kill→0쓰기다. 실제 CD 재탐색(440c60)이나 온라인 검증은 호출하지 않는다(단위696).
+    if (DispatchCreateHelpList(event,[this] {
+        QuickHelpListContext context;context.file=MakeHelpListDiskHooks(client_.GameDirectory(),&client_.Files()); //원문 전체41b4c0와 같은 현재 파일 소유자다. 기존파일의 r+b tail을 유지한다.
+        context.typeCount=[this] { const auto size=client_.Assets().TypeTable().Types().size();if (size>0x7fffffffU) throw std::out_of_range("Help 목록의 원문 signed TYPE 개수");return static_cast<std::int32_t>(size); }; //월드/지식/임무 상태로 TYPE 목록을 거르지 않는다.
+        context.flags2=[this](auto type) { const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("Help 목록 TYPE flags2 범위");return types[type].flags2; };
+        context.typeName=[this](auto type) { const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("Help 목록 TYPE 이름 범위");return types[type].name; };
+        context.cleanup=[this] { rawButtons_->CleanupGumps(); };context.tell=[this](auto section) { Tell(std::string(section)); };
+        rawButtons_->Menus()->CreateHelpList(std::move(context));
+    })) { rebuild_=true;return; } //Guide/Gump/뗌 뒤이며 Console/정지/월드·편집 모드 조건을 추가하지 않는다.
     if (transitionCode==0x02000037U) {
         if (!(event.code&InputCode::kRelease)) { EnsureHudFactories();rawButtons_->ToggleMinimap(hud_->createMinimap); }
         rebuild_=true;return; //원본 일반 입력의5427d4→480810을 동일 공장/지연Kill에 연결하며 뗌은 전환하지 않는다.

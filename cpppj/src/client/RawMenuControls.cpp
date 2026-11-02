@@ -112,6 +112,7 @@ struct RawMenuControls::Impl {
     std::uint32_t popup{}; // 마지막 루트 메뉴 토큰이며 원본 등록표의 생존 여부로 검사한다.
     std::vector<std::uint32_t> knowledge; // 같은 공통 트리에 실제 부착된 지식 카드 토큰이며 수명/열림은 노드에서 읽는다.
     QuickHelpPopupState popupState; // 005ca938/940의 마지막 팝업을 Help Back과 같은 저장소로 공유한다.
+    std::map<std::uint32_t,std::function<void(std::string_view)>> helpStreams; //살아 있는 지역 BaseFile callback만 소유하며 실패 뒤 +bc의 stale token은 역참조하지 않는다.
     RawHelpHooks helpHooks; // 실제 Client/현재 Session 경계이며 노드 수명과 별개다.
     QuickHelpWindowState helpState;HtmlBodyGumpState bodyState;QuickHelpHistory helpHistory; // 같은 캐시/전역/전역 이력이다.
     std::uint32_t mainMenuSerial{}; //005cad28의 최초 BSS0이며 최신 실제 메인 생성자의 serial을 보존한다.
@@ -450,10 +451,11 @@ struct RawMenuControls::Impl {
     }
     // TYPE 정보와 본문이 같은 기본 HTML/링크·현재 정보 pane을 직접 사용한다.
     void RenderHelp(std::uint32_t body,std::uint32_t type,std::string_view topic,std::uint32_t pane,std::uint32_t stream) {
-        if (stream) throw std::logic_error("Help 파일 기록 스트림 미연결");auto& node=*Find(helpBodies,body);auto& links=helpLinks.at(body);links.cursor=0;if (!links.bytes.empty()) links.bytes[0]=0;
+        auto& node=*Find(helpBodies,body);auto& links=helpLinks.at(body);links.cursor=0;if (!links.bytes.empty()) links.bytes[0]=0;
         HtmlTextParserState state;auto base=helpHooks.html;BindHtmlLinkText(base,links);QuickHelpTypeInfo current;
         QuickHelpHtmlHooks h;h.type=[&]() -> const QuickHelpTypeInfo& { current=helpHooks.type(type);return current; };h.description=[&] { return helpHooks.description(type); };h.hitPoints=[&] { return helpHooks.hitPoints(type); };
         h.translate=helpHooks.translate;h.config=helpHooks.config;h.substitute=helpHooks.substitute;
+        h.stream=[this,stream](auto bytes) { const auto found=helpStreams.find(stream);if (found==helpStreams.end()) throw std::logic_error("Help 목록의 반납되었거나 미연결된 실제 파일 스트림");const auto write=found->second;write(bytes); }; //같은 실제 파서의 원문 순서/한BYTE 쓰기를 바로 지역파일에 전달한다.
         h.print=[](std::string_view pattern,std::span<const PriestMenuArgument> arguments) { // 원본 정보 서식의 %s/%d만 순서대로 쓴다.
             std::string result;std::size_t argument{};
             // 다른 서식은 이 경계의 실제 계약 위반이다.
@@ -462,7 +464,7 @@ struct RawMenuControls::Impl {
         h.pane=[this,pane] { return common.node(pane); };h.paneText=[this,pane](auto text) { titleMarkup->Parse(pane,text); };h.paneScroll=[this,pane](auto y) { title->RequestScroll(pane,y); };
         h.panePush=[this,pane] { common.tree.Push(pane); };h.paneAttach=[this,pane] { const auto& n=*common.node(pane);common.attach(pane,n.x,n.y,0,0); };
         ManaPictureState mana;mana.type=static_cast<std::uint32_t>(assets.Find("mana").block+o::kFirstAssetTypeNumber);
-        QuickHelpHtml parser(state,*helpHooks.globals,helpState.infoMode,type,topic,false,mana,std::move(h),std::move(base),&links);
+        QuickHelpHtml parser(state,*helpHooks.globals,helpState.infoMode,type,topic,stream!=0,mana,std::move(h),std::move(base),&links);
         helpBody->Parse(body,{[] { return false; },[](auto,auto) {},[&] { const auto result=parser.Parse(helpState.helpData.value_or(std::string{}));std::copy(result.begin(),result.end(),node.body.begin());node.body[result.size()]=0; }});
         if (links.bytes.size()>node.links.size()) throw std::length_error("Help 링크8192바이트 초과");std::copy(links.bytes.begin(),links.bytes.end(),node.links.begin());
     }
@@ -500,6 +502,18 @@ struct RawMenuControls::Impl {
     void HelpLink(std::string_view value) {
         HelpLinkHooks link;link.script=helpHooks.script;link.help=[this](auto topic,auto mode,auto learn) { OpenHelp(helpHooks.storeText(topic),static_cast<std::int32_t>(mode),learn); };
         link.external=[this](auto original,auto,auto) { helpHooks.external(original); };DispatchHelpLink(assets.Edition(),value,link);
+    }
+    // 같은 전용 창의 직접 Show/stream만 부모에 연결하고 출력용 UI 복사본을 만들지 않는다.
+    void CreateHelpList(QuickHelpListContext context) {
+        std::uint32_t stream{}; //중첩 동기 출력이 +bc를 바꾸어도 이 호출의 callback만 반납한다.
+        QuickHelpListWindowHooks window;
+        window.openEmpty=[this] { return OpenHelp(0,0,0); }; //기존 HelpText(0)의 비null 빈 주제 바이트 계약을 사용하며 Script 문자열 고리를 소비하지 않는다.
+        window.attachStream=[this,&stream](auto token,auto write) { auto* node=Find(helpWindows,token);if (!node) throw std::out_of_range("Help 목록 현재 부모 없음");stream=common.token();if (!helpStreams.emplace(stream,std::move(write)).second) throw std::logic_error("Help 목록 스트림 토큰 충돌");node->stream=stream; }; //호스트 포인터를 게임 DWORD에 좁히지 않는다.
+        window.detachStream=[this,&stream](auto token) { auto* node=Find(helpWindows,token);if (!node) throw std::out_of_range("Help 목록 종료 부모 없음");node->stream=0;helpStreams.erase(stream); }; //원문 정상 +bc=0은 Close보다 먼저다.
+        window.abandonStream=[this,&stream](auto) { helpStreams.erase(stream); }; //실패 뒤 원문은 +bc를 지우지 않는다. host callback만 반납하여 dangling 지역 주소 접근을 명시 거부한다.
+        window.show=[this](auto token,auto type,auto topic) { if (!helpWindow) throw std::logic_error("Help 목록의 실제 Show 미설치");helpWindow->Show(token,type,topic); };
+        window.kill=[this](auto token) { common.lifetime.Kill(token); };
+        CreateQuickHelpList(context,window);
     }
     // 466600의 실제 dialog 등록/이전 창 깊이와 같은 목록을 사용한다.
     std::uint32_t OpenHelp(std::uint32_t topic,std::int32_t mode,std::uint32_t learnType) {
@@ -565,6 +579,7 @@ void RawMenuControls::MeasureText(std::span<const char> bytes,const std::array<s
 const GumpBackgroundCreate& RawMenuControls::BackgroundBackend() const { return *impl_->backgroundCreate; } // 같은 실제 자산이다.
 QuickHelpPopupState& RawMenuControls::PopupState() const { return impl_->popupState; } // 현재 팝업 표식 사본을 만들지 않는다.
 void RawMenuControls::EnableHelp(RawHelpHooks hooks) { impl_->EnableHelp(std::move(hooks)); } // 같은 실제 처리기를 설치한다.
+void RawMenuControls::CreateHelpList(QuickHelpListContext context) { impl_->CreateHelpList(std::move(context)); } //같은 실제 부모와 공통 Cleanup 장치를 동기 호출 동안 빌린다.
 std::uint32_t RawMenuControls::OpenHelp(std::uint32_t topic,std::int32_t mode,std::uint32_t learnType) { return impl_->OpenHelp(topic,mode,learnType); } // 원본 전용 재사용 경로다.
 // 같은 현재 transient를 실제 원본 생성/갱신 경로에 전달한다.
 std::uint32_t RawMenuControls::ShowMissionLoading(RawHtmlWindowContext context,std::string_view message,std::function<std::string()> cancelText) { return impl_->ShowLoading(std::move(context),message,std::move(cancelText)); }
