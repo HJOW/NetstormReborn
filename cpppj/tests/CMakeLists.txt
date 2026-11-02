@@ -3122,3 +3122,7 @@ endforeach()
 target_sources(netstorm_tests PRIVATE ConfigLiveReadTests.cpp)
 target_sources(netstorm_config_path_load_tests PRIVATE ConfigLiveReadTests.cpp MissionFortSelectionTests.cpp StartupIoTests.cpp)
 set_source_files_properties(ConfigLiveReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CONFIG_LIVE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/config-live-read-x86.tsv\"")
+
+# 원문직접writer/일반명령은기존실행대상에만추가한다(772).
+target_sources(netstorm_tests PRIVATE AiCommandStateTests.cpp AiUtilityCommandInputTests.cpp)
+target_sources(netstorm_script_bindings_tests PRIVATE AiCommandStateTests.cpp AiUtilityCommandInputTests.cpp)

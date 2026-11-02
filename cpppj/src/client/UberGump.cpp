@@ -17,6 +17,8 @@
 #include "client/ExternalHelpClient.h" //원래 외부 Help 정책을 현재 Client/Windows 장치에 연결한다.
 #include "client/UrlInput.h"
 #include "client/CameraHome.h" //World없는LookAtSid도기존433ba0의현재Pool/TYPE와공통즉시카메라를사용한다.
+#include "client/AiUtilityCommandInput.h" //772의실제세부모를같은일반입력에연결한다.
+#include "o/RawAiCommandState.h" //World없는현재Player의NULL brain도같은raw부모가판정한다.
 #include "client/UtilityCommandInput.h" //기존저장/별칭/Run/강조/SID보기부모를일반명령으로연결한다.
 #include "client/CaptureInput.h"
 #include "client/ClientCaptureSequence.h"
@@ -1153,6 +1155,17 @@ void UberGump::Event(InputEvent event) {
     static_cast<void>(DispatchDiagnosticKey(event,[this] { client_.DumpDiagnostics(); })); // 같은 원문 위치에서 객체→프로세스 순서로 출력하며 정지/console은 아래에서 다시 읽는다.
     if (IsPresentationCommand(event.code & 0x03ffffffU)) { static_cast<void>(GameMenuCommand(event));return; } //원문 두 설정명령은 Guide/Gump 뒤 공통 뗌 관문을 거쳐 HelpOpen/Console/정지보다 먼저 실행한다.
     if (IsConfigurationCommand(event.code)) { static_cast<void>(GameMenuCommand(event));return; } //원문 세 설정명령은 HelpOpen/모달/Console/정지보다 앞에서 현재 부모를 실행한다.
+    bool aiUtilityHandled=false; //772 press는뒤의현재Help/Console/정지/월드꼬리로진행한다.
+    if (IsAiUtilityCommand(event.code & 0x03ffffffU)) { //Guide/Gump/뗌 뒤·HelpOpen/Console/공통 정지 앞의 원문 순서다.
+        o::AiCommandStateHooks worldlessAi; //World가 없더라도 현재 Player의 NULL brain은 자연 반환하며 비영 Runtime을 합성하지 않는다.
+        worldlessAi.players=[this] { return std::span<const std::uint8_t>(client_.PlayerRecords()->Records()); };
+        worldlessAi.body=[](std::uint32_t)->std::span<std::uint8_t> { throw std::logic_error("World없는 비영 AI 본체의 실제 Runtime 미연결"); };
+        AiUtilityCommandHooks aiCommands;
+        aiCommands.initialGeysers=[this] { if (!world_) throw std::logic_error("세계 간헐천의 실제 World 미설치");world_->Session().GenerateWorldGeysers(); };
+        aiCommands.crankMoney=[this,worldlessAi] { if (world_) world_->Session().CrankAiMoney();else o::CrankAiMoney(worldlessAi); };
+        aiCommands.parameter=[this,worldlessAi](auto packed) { if (world_) world_->Session().SetAiParameter(packed);else o::SetAiParameter(packed,worldlessAi); };
+        aiUtilityHandled=DispatchAiUtilityCommandInput(event,aiCommands);if (event.code&InputCode::kRelease) return; //공통뗌만즉시반환하고선택효과뒤새dirty/정지관문은추가하지않는다.
+    }
     UtilityCommandHooks utility; //원문5명령은Guide/Gump/뗌뒤이며Console/공통정지보다앞에있다.
     utility.text=[this](auto token) { return scriptStrings_.Resolve(token); };utility.screenshot=[this] { client_.SaveGifScreenshot(); };utility.tell=[this](auto section) { Tell(std::string(section)); };
     utility.readString=[this](auto key,auto& value) { return client_.Configuration().ReadString(key,value); };utility.url=[this](auto value) { rawButtons_->Menus()->ActivateHelpLinkText(value); };
@@ -1386,8 +1399,8 @@ void UberGump::Event(InputEvent event) {
         else warnings_->AddNull(); //원문004d88cd는 y=0도 그대로4d3090에 전달하며 유효한 빈 문자열과 구별한다.
         rebuild_=true;return;
     }
-    if (!createAtHandled && GameMenuCommand(event)) return; //앞서 실행한 생성 명령을 늦은 메뉴 dispatcher에 다시 보내지 않는다.
-    if (!createAtHandled && IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
+    if (!createAtHandled && !aiUtilityHandled && GameMenuCommand(event)) return; //앞서 실행한 생성 명령을 늦은 메뉴 dispatcher에 다시 보내지 않는다.
+    if (!createAtHandled && !aiUtilityHandled && IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
     if (IsObjectMenuVariantCommand(commandCode)) throw std::logic_error("현재 파생 객체 메뉴 선택의 실행 미연결: "+std::to_string(commandCode)); // 미복원 개발자/편집 실행을 입력에서 조용히 버리지 않는다.
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if (IsEscapeKeyPress(event)) {

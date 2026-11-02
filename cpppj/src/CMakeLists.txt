@@ -348,3 +348,6 @@ target_sources(netstorm PRIVATE client/DataManagerFileRead.cpp client/DataManage
 
 # 실제Config만40380의존재/해독/Append복귀후free를사용한다(771).
 target_sources(netstorm PRIVATE o/RawConfigFileLoad.cpp o/RawConfigFileLoad.h client/ConfigFileRead.cpp client/ConfigFileRead.h)
+
+# 일반간헐천/AI직접명령의실제본문writer를기존제품에연결한다(772).
+target_sources(netstorm PRIVATE o/RawAiCommandState.cpp o/RawAiCommandState.h client/AiUtilityCommandInput.cpp client/AiUtilityCommandInput.h)

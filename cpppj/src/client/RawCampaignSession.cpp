@@ -179,6 +179,7 @@
 #include "o/RawPlayerTechnology.h"
 #include "o/RawAiCreate.h"
 #include "o/RawPlayerColor.h"
+#include "o/RawAiCommandState.h" //772의직접writer도같은현재Player/생존brain을빌린다.
 #include "o/RawAiBrainInitialUpdate.h"
 #include "o/RawAiDamage.h"
 #include "o/RawAiWallet.h"
@@ -3849,6 +3850,17 @@ std::uint8_t RawCampaignSession::BattleOption(std::size_t offset) const { return
 std::uint32_t RawCampaignSession::CreateAi(std::uint32_t owner,std::span<const std::uint8_t> settings) {
     if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 생성만 허용");
     return impl_->aiCreate->Create(owner,settings);
+}
+// 원문 직접30000 쓰기이며 기존 Credit/데모 하한/분산SP를 사용하지 않는다.
+void RawCampaignSession::CrankAiMoney() {
+    if (!impl_->loaded) throw std::logic_error("AI 직접 명령의 실제 Session 미설치");
+    o::CrankAiMoney({[this] { return std::span<const std::uint8_t>(impl_->players); },[this](auto token) { return impl_->aiMemory.Bytes(token); }});
+}
+// 같은 현재 Player 포인터와 생존0xb08 본체를 각 원문 재조회 위치에 연결한다.
+void RawCampaignSession::SetAiParameter(std::uint32_t packed) {
+    if (!(packed&7U)) return; //원문 owner0은 현재 Player/실제 Runtime을 읽기 전에 반환한다.
+    if (!impl_->loaded) throw std::logic_error("AI 직접 명령의 실제 Session 미설치");
+    o::SetAiParameter(packed,{[this] { return std::span<const std::uint8_t>(impl_->players); },[this](auto token) { return impl_->aiMemory.Bytes(token); }});
 }
 // 후속 전략 caller도 같은 준비 몸체를 사용한다. 생성 시점으로 최초 스캔을 당기지 않는다.
 bool RawCampaignSession::PrepareAi(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 준비만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiPreparation->Update(token);return true; }

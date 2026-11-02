@@ -5396,3 +5396,5 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
 
 //실제 생성 부모와 같은 소유권/HP/공간·장부의 CreateAt 접합만 검사한다.
 #include "CampaignCreateAtTests.inc"
+
+#include "CampaignAiCommandStateTests.inc" //772의실제AI메모리/기존지갑reader와반납수명이다.

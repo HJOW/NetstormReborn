@@ -1,4 +1,5 @@
 // 보호PE의초기명령DWORD를이름/GUI변환과구별한다.
+#include "client/AiUtilityCommandInput.h" //772의세이름/명령도같은현재허용표를공유한다.
 #include "client/GameMenuCommands.h"
 #include "client/CreateAtInput.h" //같은 일반 명령의 원문 이름과 숫자다.
 #include "client/DrawWater.h" //같은 일반 명령 이름/현재 DWORD만 허용한다.
@@ -23,7 +24,8 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,51> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,54> kCommands{{
+    {0x005429a8U,kCreateInitialGeysersCommand},{0x005429f8U,kBrainCrankMoneyCommand},{0x005428d8U,kAiParamSetCommand}, //772의원문세일반명령이다.
     {0x00542760U,kDrawWaterCommand}, //원문 후단 진단 명령이며 기본 메뉴 노출은 바꾸지 않는다.
     {0x00542964U,kCreateHelpListCommand}, //원문 일반입력의 현재 전용Help 출력부모다.
     {0x00542764U,kChangeFontFaceCommand},{0x00542a68U,kChangeSoundQualityCommand}, //원문 두 현재 옵션 명령이다.
@@ -82,6 +84,7 @@ std::optional<std::uint32_t> GameMenuCommandValue(std::uint32_t address) {
 }
 // 원본name→ID표에서확인한메뉴확인창의필수이름이다.
 std::uint32_t GameMenuScriptCode(std::string_view name) {
+    const auto ai=AiUtilityCommandScriptCode(name);if (ai!=0xffffffffU) return ai;
     const auto createAt=CreateAtScriptCode(name);if (createAt!=0xffffffffU) return createAt; //원문 등록 이름을 같은 문자열 고리에 보낸다.
     const auto water=DrawWaterScriptCode(name);if (water!=0xffffffffU) return water;
     const auto helpList=CreateHelpListScriptCode(name);if (helpList!=0xffffffffU) return helpList;

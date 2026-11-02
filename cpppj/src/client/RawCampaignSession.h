@@ -401,6 +401,8 @@ public:
     std::uint8_t BattleOption(std::size_t offset) const; // 같은 실제87BYTE의 현재 메뉴 허용 값을 읽는다.
     // 설치 뒤 실제 생성자→현재 Player 부착→초기 갱신을 실행한다. 전략 프레임/자동 승패는 켜지 않는다.
     std::uint32_t CreateAi(std::uint32_t owner,std::span<const std::uint8_t> settings);
+    void CrankAiMoney(); //00413c60의같은현재Player1..8/실제본체지갑에30000을직접쓴다.
+    void SetAiParameter(std::uint32_t packed); //004143b0의packed owner/selector/signed값을실제현재본문에쓴다.
     bool PrepareAi(std::uint32_t owner); // 같은 현재 brain에00416eb0 준비 전체를 명시 호출한다. 없음은false이며 전체 전략/프레임 자동 활성화는 후속이다.
     bool InitializeAi(std::uint32_t owner); //같은 현재 brain의00414af0 초기 전략을 명시 재시도한다.258 완료 여부를 반환하며 자동 프레임은 후속이다.
     bool RefreshAiBridges(std::uint32_t owner); //같은 현재 brain/기술부모로0040fcb0 재고를 갱신한다. 본체 없음은false이며 자동 프레임은 후속이다.

@@ -1,0 +1,268 @@
+{
+  "unit": 772,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 772,
+  "displayVersion": "11.01",
+  "exeSha256": "f2f42d346a4a5d983a1f941df8c6710a8bba75735f66cf94787ae355e0467f59",
+  "summary": "일반 간헐천 생성·AI 지갑 직접쓰기·현재 파라미터 재조회와 실제 일반 입력을 연결",
+  "tests": {
+    "totalUnique": 10,
+    "totalExecutions": 10,
+    "newTests": 6,
+    "failedChecks": 0,
+    "names": [
+      "AiCommandState_LazyParentsCurrentPointersAndExplicitPhysicalFailures",
+      "AiCommandState_MoneyVisitsCurrentLaterBrainAndStopsAtFailure",
+      "AiCommandState_Native1940RowsAndWholeBodyPreservation",
+      "AiUtilityCommandInput_Native30NamesAndRealQueue",
+      "AiUtilityCommandInput_Native72SelectedParentsAndRelease",
+      "CampaignSession_AiDirectCommandsShareCurrentBrainAndExistingWalletReader",
+      "WorldGeyserBounds_IndependentNative820",
+      "WorldGeyserBounds_SelectedHooksAndPhysicalGuards",
+      "WorldGeyser_IndependentNative354",
+      "WorldGeyser_SelectedHooksPreserveEffects"
+    ],
+    "logs": [
+      "tests-ai-command-state-v1.log",
+      "tests-ai-utility-input-v1.log",
+      "tests-campaign-ai-direct-v1.log",
+      "tests-world-geyser-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2698,
+    "currentCount": 2701,
+    "allUnchanged": true,
+    "fixtureCount": 881,
+    "newFixtures": [
+      "cpppj/tests/fixtures/ai-command-state-x86.tsv",
+      "cpppj/tests/fixtures/ai-utility-commands-x86.tsv",
+      "cpppj/tests/fixtures/ai-utility-names-x86.tsv"
+    ]
+  },
+  "native": {
+    "prepared-native-first/native.json": {
+      "unit": 772,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "stateInputs": 1940,
+      "stateExecutions": 3880,
+      "inputCases": 72,
+      "inputExecutions": 144,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "productWrites": 0,
+      "observedToolSha256": "a26577e0d24aa9e93e4dcaae9553e01dfcec0af02281baa6e2eb932f5dd0e266",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "codeSha256": {
+        "00413c60..00413d45": "7b600f4c40e8b66d01b3c05e17d29b517d962330052c5ee3e4d4456f0ccc2183",
+        "004143b0..00414436": "c0551f5c8fe823886ce53a4763df4b1ec382a5678cb780c4363a7b5da7b4d0fb",
+        "004d6eca..004d6edd": "e3a4f5bd40c985c793bae3e79392877aab50d2f8ec37e0b05a3fb8f8536642eb",
+        "004d7eab..004d7eb4": "41cd4a96dab3df571ec4da33f121a690c8f65c33bc443cea2d8317a59a14e2a3",
+        "004d801f..004d8028": "9148d9e00f13d4259551d31601212f210f7083008af66921cd916abfb2c847af",
+        "004d8aca..004d8ad7": "4972760736d734b4836dbbcf1e993db82ea9a877beb5b3fb6d64eb6d99d8b3c8"
+      },
+      "limitations": [
+        "일반입력은 Guide/Gump가 소비하지 않은 뒤 release/mask와 선택된 실제call/꼬리만 관측한다. 전체 일반입력 함수/실제 메뉴 노출은 별도다.",
+        "실제 두 writer는 정상 Player9/등록된 brain 물리만 사용하며 원문 감긴 NULL Player base의 주소 자체는 host 계약 밖이다.",
+        "selector0 재조회 mutation은 독립 검사 입력이며 일반 게임에서 포인터가 바뀐다고 주장하지 않는다.",
+        "CreateInitialGeysers 전체 하위 생성은 기존 원문 복원 부모에 연결하고 이번 CPU는 호출 경계만 관측한다."
+      ],
+      "rawReportSha256": "085cebd3131587d3d4aa90ed09242e6875bbeba54a67d5c22c7f538fa2ba05ae"
+    },
+    "prepared-native-first/names-native.json": {
+      "unit": 772,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 30,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "nativeInstructions": 439573,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "productWrites": 0,
+      "fixtureSha256": "accd8c24e371d193e9157be644226a0abf0d0aaebb7b70526a4b90065bb5453e",
+      "observedToolSha256": "8abd014a3c4355287940321939c1b6f13d9a53e51086fed95cdac519b8547df0",
+      "limitations": [
+        "실제 이름 lookup/숫자·문자열 파서/FIFO만 관측하며 세 하위 몸체나 GUI를 실행하지 않는다."
+      ],
+      "rawReportSha256": "136ee783129fdd4ee3324b54a0f45d9bf3b19c2677845d810924de804c543373"
+    },
+    "prepared-native-repeat/native.json": {
+      "unit": 772,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "stateInputs": 1940,
+      "stateExecutions": 3880,
+      "inputCases": 72,
+      "inputExecutions": 144,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "productWrites": 0,
+      "observedToolSha256": "a26577e0d24aa9e93e4dcaae9553e01dfcec0af02281baa6e2eb932f5dd0e266",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "codeSha256": {
+        "00413c60..00413d45": "7b600f4c40e8b66d01b3c05e17d29b517d962330052c5ee3e4d4456f0ccc2183",
+        "004143b0..00414436": "c0551f5c8fe823886ce53a4763df4b1ec382a5678cb780c4363a7b5da7b4d0fb",
+        "004d6eca..004d6edd": "e3a4f5bd40c985c793bae3e79392877aab50d2f8ec37e0b05a3fb8f8536642eb",
+        "004d7eab..004d7eb4": "41cd4a96dab3df571ec4da33f121a690c8f65c33bc443cea2d8317a59a14e2a3",
+        "004d801f..004d8028": "9148d9e00f13d4259551d31601212f210f7083008af66921cd916abfb2c847af",
+        "004d8aca..004d8ad7": "4972760736d734b4836dbbcf1e993db82ea9a877beb5b3fb6d64eb6d99d8b3c8"
+      },
+      "limitations": [
+        "일반입력은 Guide/Gump가 소비하지 않은 뒤 release/mask와 선택된 실제call/꼬리만 관측한다. 전체 일반입력 함수/실제 메뉴 노출은 별도다.",
+        "실제 두 writer는 정상 Player9/등록된 brain 물리만 사용하며 원문 감긴 NULL Player base의 주소 자체는 host 계약 밖이다.",
+        "selector0 재조회 mutation은 독립 검사 입력이며 일반 게임에서 포인터가 바뀐다고 주장하지 않는다.",
+        "CreateInitialGeysers 전체 하위 생성은 기존 원문 복원 부모에 연결하고 이번 CPU는 호출 경계만 관측한다."
+      ],
+      "rawReportSha256": "085cebd3131587d3d4aa90ed09242e6875bbeba54a67d5c22c7f538fa2ba05ae"
+    },
+    "prepared-native-repeat/names-native.json": {
+      "unit": 772,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 30,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "nativeInstructions": 439573,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "productWrites": 0,
+      "fixtureSha256": "accd8c24e371d193e9157be644226a0abf0d0aaebb7b70526a4b90065bb5453e",
+      "observedToolSha256": "8abd014a3c4355287940321939c1b6f13d9a53e51086fed95cdac519b8547df0",
+      "limitations": [
+        "실제 이름 lookup/숫자·문자열 파서/FIFO만 관측하며 세 하위 몸체나 GUI를 실행하지 않는다."
+      ],
+      "rawReportSha256": "136ee783129fdd4ee3324b54a0f45d9bf3b19c2677845d810924de804c543373"
+    },
+    "native-repeat/native.json": {
+      "unit": 772,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "stateInputs": 1940,
+      "stateExecutions": 3880,
+      "inputCases": 72,
+      "inputExecutions": 144,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "productWrites": 0,
+      "observedToolSha256": "a26577e0d24aa9e93e4dcaae9553e01dfcec0af02281baa6e2eb932f5dd0e266",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "codeSha256": {
+        "00413c60..00413d45": "7b600f4c40e8b66d01b3c05e17d29b517d962330052c5ee3e4d4456f0ccc2183",
+        "004143b0..00414436": "c0551f5c8fe823886ce53a4763df4b1ec382a5678cb780c4363a7b5da7b4d0fb",
+        "004d6eca..004d6edd": "e3a4f5bd40c985c793bae3e79392877aab50d2f8ec37e0b05a3fb8f8536642eb",
+        "004d7eab..004d7eb4": "41cd4a96dab3df571ec4da33f121a690c8f65c33bc443cea2d8317a59a14e2a3",
+        "004d801f..004d8028": "9148d9e00f13d4259551d31601212f210f7083008af66921cd916abfb2c847af",
+        "004d8aca..004d8ad7": "4972760736d734b4836dbbcf1e993db82ea9a877beb5b3fb6d64eb6d99d8b3c8"
+      },
+      "limitations": [
+        "일반입력은 Guide/Gump가 소비하지 않은 뒤 release/mask와 선택된 실제call/꼬리만 관측한다. 전체 일반입력 함수/실제 메뉴 노출은 별도다.",
+        "실제 두 writer는 정상 Player9/등록된 brain 물리만 사용하며 원문 감긴 NULL Player base의 주소 자체는 host 계약 밖이다.",
+        "selector0 재조회 mutation은 독립 검사 입력이며 일반 게임에서 포인터가 바뀐다고 주장하지 않는다.",
+        "CreateInitialGeysers 전체 하위 생성은 기존 원문 복원 부모에 연결하고 이번 CPU는 호출 경계만 관측한다."
+      ],
+      "rawReportSha256": "085cebd3131587d3d4aa90ed09242e6875bbeba54a67d5c22c7f538fa2ba05ae"
+    },
+    "native-names-repeat/names-native.json": {
+      "unit": 772,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 30,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "nativeInstructions": 439573,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "productWrites": 0,
+      "fixtureSha256": "accd8c24e371d193e9157be644226a0abf0d0aaebb7b70526a4b90065bb5453e",
+      "observedToolSha256": "8abd014a3c4355287940321939c1b6f13d9a53e51086fed95cdac519b8547df0",
+      "limitations": [
+        "실제 이름 lookup/숫자·문자열 파서/FIFO만 관측하며 세 하위 몸체나 GUI를 실행하지 않는다."
+      ],
+      "rawReportSha256": "136ee783129fdd4ee3324b54a0f45d9bf3b19c2677845d810924de804c543373"
+    }
+  },
+  "initialFailures": [],
+  "sourceSha256": {
+    "cpppj/src/client/AiUtilityCommandInput.cpp": "8791951c1125b191c981717d36a053845316da37385774ef83268221b034e23d",
+    "cpppj/src/client/AiUtilityCommandInput.h": "3754ded3076256941fb034f36a3619f12097a36649c0967af85c6cae2a282d74",
+    "cpppj/src/client/GameMenuCommands.cpp": "8c4afb958c8c9332cc01d90dc20a2bea0d0573723eb085dfd0354666d98982c2",
+    "cpppj/src/client/RawCampaignSession.cpp": "6448865ebc2de18aacac09a00dfb06b4b39245fa60b825ab47f8ec5fd80d23a3",
+    "cpppj/src/client/RawCampaignSession.h": "b0f928d722650f5c2dc7243d3d545edd6d2eaeb08f40e7eb0f22173256e7d183",
+    "cpppj/src/client/UberGump.cpp": "604467c1b9e2c3b87bc3951e0d11c378d9575c967e80ea65925ba6c77e023693",
+    "cpppj/src/CMakeLists.txt": "6c4ee3f43d82a29ba5a474825102abf0b036e5e11e059007a285336412677403",
+    "cpppj/src/o/RawAiCommandState.cpp": "6064120120f6d39e2fc2621256e55f2d82e126457eb3b90d9b05e5e1e7c4a1fa",
+    "cpppj/src/o/RawAiCommandState.h": "4345a3d593f7cf0a96d9a265517ca36efa763df4d6ff7add71ca94564d16ea47",
+    "cpppj/tests/AiCommandStateTests.cpp": "b33f6c709a901dd4ef740023ec9785245be835dc23dde03430a3593e85dfa4e9",
+    "cpppj/tests/AiUtilityCommandInputTests.cpp": "00f5c200df6496be8beced257c59cab22737ca03e0623299a4a73d18fd4ab081",
+    "cpppj/tests/CampaignAiCommandStateTests.inc": "a9847dcff19ecce1054896f42341cb62ba404f49912da81de5145ba3e3181262",
+    "cpppj/tests/CampaignSessionTests.cpp": "1e1b6fc98d141d13575dac44d5960a7de95548052bdd167bc93e400117b86f2f",
+    "cpppj/tests/CMakeLists.txt": "859959d15fe5f0fca1baabcb759e897af3ff6343fa25c982021b7728631c8020",
+    "tools/decomp_ai_command_state.py": "a26577e0d24aa9e93e4dcaae9553e01dfcec0af02281baa6e2eb932f5dd0e266",
+    "tools/decomp_ai_utility_names.py": "8abd014a3c4355287940321939c1b6f13d9a53e51086fed95cdac519b8547df0"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-772/protected-after.json",
+  "next": "MakeAi(773)·글꼴 인코딩(774)·조건 AI 메뉴(775)·진단표시(776)·TYPE reader(777)·checking(779/783)·GIF/초기화면(781/782)·최근명령 꼬리(784)와 남은 비멀티/호환성",
+  "limitations": [
+    "원문writer1940은현재Player9/명시brain0xb08물리의전체63DWORD와store순서를두정밀도로읽는다. 미정NULL Player base/호스트uintptr·전체AI생성자/전략동등성을주장하지않는다.",
+    "일반입력72는Guide/Gump소비뒤release/mask/선택된호출과4d8bda진입라벨까지만관측한다. 그라벨에서멈췄으므로Console/정지/세계꼬리전체효과를실행한증거가아니다. 실제Uberpress는그꼬리를이어가고release만즉시반환한다.",
+    "CrankMoney는같은현재Player1..8의b0와생존brain의2d8에30000을직접쓴다. wallet Credit/공통SP를바꾸지않는다. AiParamSet low3 owner0은저장소접근전에반환하고selector0은220/600쓰기직전b0를각각다시읽는다.",
+    "실제Runtime1은CreateAi/현재메모리/기존AiMoney reader/RemoveAi/재생성만사용한다. Kernel/AI전략프레임·생산/이동·공중3종·특정적공격·포획/희생/승리·MP는실행하지않는다.",
+    "CreateInitialGeysers의새Native관측은기존전체부모를부르는경계까지다. 기존WorldGeyser/Bounds회귀와같은Runtime부모를쓰되새실제게임/새원문전체생성검증으로합산하지않는다.",
+    "MakeAi와showSoftAsserts 조건메뉴/AIReporting/DebugSwitch는773/775의별도후속이다. CD1072와전체가상객체ABI/SEH·원본전체UI/픽셀동등성은이번완료범위가아니다.",
+    "새게임/GUI/CLI/MP·물리/PCM·금지플레이·자연완주·전체C++/34/ZIP검사는0이다."
+  ],
+  "integrationReview": {
+    "path": "extracted/cpp-resume-772/integration-review",
+    "confirmedFix": "press tail preserved; late menu dispatch only skipped",
+    "otherConfirmedWriterDefects": 0,
+    "readOnlyExecutions": 0
+  }
+}
