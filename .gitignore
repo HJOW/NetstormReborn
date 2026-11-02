@@ -139,3 +139,8 @@ Thumbs.db
 desktop.ini
 .DS_Store
 *~
+
+# webpj Playwright / Node 산출물
+webpj/node_modules/
+webpj/test-results/
+webpj/playwright-report/
