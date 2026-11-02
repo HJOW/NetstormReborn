@@ -91,6 +91,8 @@
 #include "o/RawDudeDrop.h"
 #include "o/RawDudeBehavior.h"
 #include "o/RawDudeRegular.h"
+#include "o/RawMakeAi.h" //일반 wrapper와 owner0의 같은 실제 객체 이전/삭제 부모다.
+#include "client/CurrentAllocationBytes.h" //미작성600BYTE를 호스트 할당 입력과 구별한다.
 #include "o/RawMissionAiSettings.h"
 #include "client/RawCampaignCursor.h"
 #include "client/PriestPlacementAssets.h"
@@ -3851,6 +3853,25 @@ std::uint32_t RawCampaignSession::CreateAi(std::uint32_t owner,std::span<const s
     if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("실제 Session 설치 후 owner1..8 AI 생성만 허용");
     return impl_->aiCreate->Create(owner,settings);
 }
+// 일반 MakeAi는 기본600BYTE 설정만 준비하며 미션 시작의 공통/owner 키 override를 읽지 않는다.
+void RawCampaignSession::MakeAi(std::uint32_t owner) {
+    auto& s=*impl_;std::array<std::uint8_t,RawMissionAiSettings::kSize> settings; // 원문 미작성 stack는 실제 할당입력으로 명시 채운 뒤 부분 초기화한다.
+    MakeAiReads reads;reads.battle=[&s] { return s.core.ownerMode.battle ? 1U : 0U; };reads.missionPost=[&s] { return s.globals.missionPost; };reads.playerKnown=[&s] { return s.playerState.playerKnown; };reads.localOwner=[&s] { return s.playerState.battleOwner; };
+    reads.brain=[&s](auto current) { if (current>=9) throw std::out_of_range("MakeAi local+1의 실제 Player9 범위");return Read(s.players,current*180U+0xb0); };
+    MakeAiObjectHooks objects(s.objectState.loadingDepth); // 같은 실제 로딩 깊이를 모든 사제/자산 소비자에게 전파한다.
+    objects.capacity=[&s] { return s.core.pool.Capacity(); };objects.localOwner=reads.localOwner;objects.playerType=[&s] { return s.playerState.playerType; };objects.bridgeType=[&s] { return s.core.bridgeState.bridgeType; };
+    objects.slot=[&s](auto sid)->std::span<const std::uint8_t> { if (sid>65535U) throw std::out_of_range("MakeAi 객체 iterator의 SID 폭");return s.core.pool.Slot(Sid{static_cast<std::uint16_t>(sid)}); };
+    objects.flags=[&s](auto sid) { if (sid>65535U) throw std::out_of_range("MakeAi 현재 flags의 SID 폭");const auto type=s.core.pool.Slot(Sid{static_cast<std::uint16_t>(sid)})[10];if (type>=s.core.types.size()) throw std::out_of_range("MakeAi 현재 flags의 TYPE 범위");return s.core.types[type].flags2; };
+    objects.players=[&s] { return std::span<std::uint8_t>(s.players); };objects.region=[&s](float x,float y) { if (!s.loaded) throw std::logic_error("설치 전 MakeAi 실제 섬 조회");return std::bit_cast<std::uint32_t>(s.ownership->IslandNumber(x,y)); };
+    objects.setOwner=[this](auto sid,auto target) { SetObjectOwner(Sid{static_cast<std::uint16_t>(sid)},target); };
+    objects.destroy=[&s](auto sid,auto flags) { if (!s.loaded) throw std::logic_error("설치 전 MakeAi 실제 전체삭제");static_cast<void>(s.world.Destroy(Sid{static_cast<std::uint16_t>(sid)},flags)); };
+    objects.decrementLocal=[&s](auto type) { --s.core.bookkeeping.LocalCounts().at(type); };objects.decrementBuilt=[&s](auto type) { --s.core.bookkeeping.LocalSecondaryCounts().at(type); };objects.loadingDepthChanged=[&s](auto depth) { s.world.SetLoadingDepth(depth); };
+    MakeAiHooks hooks;hooks.initialize=[&s](auto bytes) { CurrentAllocationBytes(bytes);MissionAiSettingsHooks h;h.get=[](std::string_view)->std::string { throw std::logic_error("일반 MakeAi는 미션 override를 읽지 않는다"); };RawMissionAiSettings(s.core.pool.Edition(),s.missionAiSettings,std::move(h)).Initialize(bytes); };
+    hooks.stormPower=[&s](auto current) { return std::bit_cast<float>(s.sp.Get(current)); };hooks.create=[this](auto target,auto bytes) { return CreateAi(target,bytes); };
+    hooks.transferObjects=[&objects](auto target) { TransferMakeAiObjects(target,objects); };hooks.clearObjects=[&objects](auto mask) { ClearMakeAiObjects(mask,objects); };
+    o::MakeAi(owner,settings,reads,hooks);
+}
+
 // 원문 직접30000 쓰기이며 기존 Credit/데모 하한/분산SP를 사용하지 않는다.
 void RawCampaignSession::CrankAiMoney() {
     if (!impl_->loaded) throw std::logic_error("AI 직접 명령의 실제 Session 미설치");

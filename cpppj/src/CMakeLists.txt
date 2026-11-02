@@ -351,3 +351,6 @@ target_sources(netstorm PRIVATE o/RawConfigFileLoad.cpp o/RawConfigFileLoad.h cl
 
 # 일반간헐천/AI직접명령의실제본문writer를기존제품에연결한다(772).
 target_sources(netstorm PRIVATE o/RawAiCommandState.cpp o/RawAiCommandState.h client/AiUtilityCommandInput.cpp client/AiUtilityCommandInput.h)
+
+# 일반MakeAi와owner0객체수명을기존실제생성/World부모에연결한다(773).
+target_sources(netstorm PRIVATE o/RawMakeAi.cpp o/RawMakeAi.h client/MakeAiCommandInput.cpp client/MakeAiCommandInput.h)

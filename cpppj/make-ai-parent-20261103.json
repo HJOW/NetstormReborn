@@ -1,0 +1,322 @@
+{
+  "unit": 773,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 773,
+  "displayVersion": "11.01",
+  "exeSha256": "570cf765ca815d72d90a3f145431e4b1b1cde1a6064211b989011ac16bf039c7",
+  "summary": "MakeAi 기본설정·현재 SP 변환과 owner0 객체 이전·AI 생성·선택 삭제를 현재 Session에 연결",
+  "tests": {
+    "totalUnique": 12,
+    "totalExecutions": 12,
+    "newTests": 6,
+    "failedChecks": 0,
+    "names": [
+      "AiCommandState_LazyParentsCurrentPointersAndExplicitPhysicalFailures",
+      "AiCommandState_MoneyVisitsCurrentLaterBrainAndStopsAtFailure",
+      "AiCommandState_Native1940RowsAndWholeBodyPreservation",
+      "AiUtilityCommandInput_Native30NamesAndRealQueue",
+      "AiUtilityCommandInput_Native72SelectedParentsAndRelease",
+      "CampaignSession_AiDirectCommandsShareCurrentBrainAndExistingWalletReader",
+      "CampaignSession_MakeAiUsesExistingBrainAndBattleZeroWithoutFrames",
+      "MakeAiCommandInput_Native12NamesAndActualQueue",
+      "MakeAiCommandInput_Native64ModeMaskReleaseAndDeferredReads",
+      "MakeAi_Native2592ActualIteratorOwnerCountsRegionAndClearMask",
+      "MakeAi_Native770DefaultSettingsSpFtolAndOwnerZeroEnvelope",
+      "MakeAi_PartialFailureAndNextCandidateBeforeVirtualDeletion"
+    ],
+    "logs": [
+      "tests-make-ai-v1.log",
+      "tests-make-ai-input-v1.log",
+      "tests-campaign-make-ai-v1.log",
+      "tests-ai-command-state-v1.log",
+      "tests-ai-utility-input-v1.log",
+      "tests-campaign-ai-direct-v1.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2701,
+    "currentCount": 2705,
+    "allUnchanged": true,
+    "fixtureCount": 885,
+    "newFixtures": [
+      "cpppj/tests/fixtures/make-ai-input-x86.tsv",
+      "cpppj/tests/fixtures/make-ai-names-x86.tsv",
+      "cpppj/tests/fixtures/make-ai-objects-x86.tsv",
+      "cpppj/tests/fixtures/make-ai-parent-x86.tsv"
+    ]
+  },
+  "native": {
+    "prepared-native-first/native.json": {
+      "unit": 773,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": "HJOW-Athlon / 2026-10-23",
+      "parentInputs": 770,
+      "objectInputs": 1440,
+      "inputInputs": 64,
+      "observations": 4548,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "productWrites": 0,
+      "builds": 0,
+      "toolSha256": "be8d2fa4096e77613c5ea7c9bb708a2e7762335a5d1377758a2945a87a60e92a",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "codeSha256": {
+        "00417fa0..0041806c": "caf7b42041a82f635283d385156cd0a6f26d25222e9485dd01a9c7df348fca66",
+        "00417f50..00417f95": "fe385d6610a41c8866ac256a71b3aa36b17b8997eaab345a6f0d7ea745f33598",
+        "0040ef80..0040f023": "410651d58a9050632bd3bf85b413bad14989f14c21b60047469f9350e5d12844",
+        "004e49c0..004e4a34": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4",
+        "004c27c0..004c2981": "f8b3298174a9663ad9617add2198ae9d802f527da0226521e6ba1bfe549a0ec3",
+        "00414c80..00414d2c": "93523283b3c5cc43f80b2221f37891d4e3010c72dce4b0a237bf2c75d31a9566",
+        "0040eb40..0040eb71": "b1e8f7a451d4d42753b5140e17e9543251a815216dd0db84c91950319e798353",
+        "004ac200..004ac213": "fd1812d19f681ae03ca08d1c99b88d6cdee059ddf67c617698b6690a6a8444d9",
+        "004c25c0..004c25cb": "ddd35cefc3046bae843b1d2cdeb9b222ac599bd9600cb019fcf7931bbdc039f3",
+        "004c25d0..004c25db": "74ea1623614ba7d84dd927b358aef12f400b8310ed27120095eecb1bd2bb2861",
+        "004d6eca..004d6edd": "e3a4f5bd40c985c793bae3e79392877aab50d2f8ec37e0b05a3fb8f8536642eb",
+        "004d7f6e..004d7f9b": "9d0f2234a172eb7fbbc4237f3690856fdec28f2bc191d87f8210afec59132479"
+      },
+      "limitations": [
+        "SP/AI실제생성/가상소유자/가상삭제/섬getter는명시CPU경계다. 실제게임·AI전략프레임·포획/공격/희생/승리는실행하지않는다.",
+        "owner0실제전이/삭제는독립명시슬롯만관측하며전체실제월드동일성을주장하지않는다.",
+        "600BYTE미작성stack는205로명시했고실제게임의미정stack와같다고주장하지않는다."
+      ],
+      "rawReportSha256": "295929cdcfb80a80b9b6ae1150cd9d564cf07a22e3d491ffd763309e0f991bbd"
+    },
+    "prepared-native-final/native.json": {
+      "unit": 773,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": "HJOW-Athlon / 2026-10-23",
+      "parentInputs": 770,
+      "objectInputs": 2592,
+      "inputInputs": 64,
+      "observations": 6852,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "productWrites": 0,
+      "builds": 0,
+      "toolSha256": "70d077e5a287394d4e2a16bab0e9731e79d96f125133fe73c234ad2f030d7fbe",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "codeSha256": {
+        "00417fa0..0041806c": "caf7b42041a82f635283d385156cd0a6f26d25222e9485dd01a9c7df348fca66",
+        "00417f50..00417f95": "fe385d6610a41c8866ac256a71b3aa36b17b8997eaab345a6f0d7ea745f33598",
+        "0040ef80..0040f023": "410651d58a9050632bd3bf85b413bad14989f14c21b60047469f9350e5d12844",
+        "004e49c0..004e4a34": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4",
+        "004c27c0..004c2981": "f8b3298174a9663ad9617add2198ae9d802f527da0226521e6ba1bfe549a0ec3",
+        "00414c80..00414d2c": "93523283b3c5cc43f80b2221f37891d4e3010c72dce4b0a237bf2c75d31a9566",
+        "0040eb40..0040eb71": "b1e8f7a451d4d42753b5140e17e9543251a815216dd0db84c91950319e798353",
+        "004ac200..004ac213": "fd1812d19f681ae03ca08d1c99b88d6cdee059ddf67c617698b6690a6a8444d9",
+        "004c25c0..004c25cb": "ddd35cefc3046bae843b1d2cdeb9b222ac599bd9600cb019fcf7931bbdc039f3",
+        "004c25d0..004c25db": "74ea1623614ba7d84dd927b358aef12f400b8310ed27120095eecb1bd2bb2861",
+        "004d6eca..004d6edd": "e3a4f5bd40c985c793bae3e79392877aab50d2f8ec37e0b05a3fb8f8536642eb",
+        "004d7f6e..004d7f9b": "9d0f2234a172eb7fbbc4237f3690856fdec28f2bc191d87f8210afec59132479"
+      },
+      "limitations": [
+        "SP/AI실제생성/가상소유자/가상삭제/섬getter는명시CPU경계다. 실제게임·AI전략프레임·포획/공격/희생/승리는실행하지않는다.",
+        "owner0실제전이/삭제는독립명시슬롯만관측하며전체실제월드동일성을주장하지않는다.",
+        "600BYTE미작성stack는205로명시했고실제게임의미정stack와같다고주장하지않는다."
+      ],
+      "rawReportSha256": "3de8d64940d170eb31f3046f1597aa154e5e2ba71fad35159816dd124055debe"
+    },
+    "prepared-native-final/names-native.json": {
+      "unit": 773,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 12,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "nativeInstructions": 198655,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "productWrites": 0,
+      "fixtureSha256": "841802d0e698a358e9afc873a9b1136cb255758b642a5908a6958b715f19a35c",
+      "observedToolSha256": "8eb97b00ef95e790d5d1b095d872dd6123a69500e7cd3818246d095a6608b1e7",
+      "limitations": [
+        "실제 이름 lookup/숫자·문자열 파서/FIFO만 관측하며 세 하위 몸체나 GUI를 실행하지 않는다."
+      ],
+      "rawReportSha256": "b8638435dae76658b6f49edcbd998967db56e8fac7896024ffb5b012407caef5"
+    },
+    "prepared-native-repeat/native.json": {
+      "unit": 773,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": "HJOW-Athlon / 2026-10-23",
+      "parentInputs": 770,
+      "objectInputs": 2592,
+      "inputInputs": 64,
+      "observations": 6852,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "productWrites": 0,
+      "builds": 0,
+      "toolSha256": "70d077e5a287394d4e2a16bab0e9731e79d96f125133fe73c234ad2f030d7fbe",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "codeSha256": {
+        "00417fa0..0041806c": "caf7b42041a82f635283d385156cd0a6f26d25222e9485dd01a9c7df348fca66",
+        "00417f50..00417f95": "fe385d6610a41c8866ac256a71b3aa36b17b8997eaab345a6f0d7ea745f33598",
+        "0040ef80..0040f023": "410651d58a9050632bd3bf85b413bad14989f14c21b60047469f9350e5d12844",
+        "004e49c0..004e4a34": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4",
+        "004c27c0..004c2981": "f8b3298174a9663ad9617add2198ae9d802f527da0226521e6ba1bfe549a0ec3",
+        "00414c80..00414d2c": "93523283b3c5cc43f80b2221f37891d4e3010c72dce4b0a237bf2c75d31a9566",
+        "0040eb40..0040eb71": "b1e8f7a451d4d42753b5140e17e9543251a815216dd0db84c91950319e798353",
+        "004ac200..004ac213": "fd1812d19f681ae03ca08d1c99b88d6cdee059ddf67c617698b6690a6a8444d9",
+        "004c25c0..004c25cb": "ddd35cefc3046bae843b1d2cdeb9b222ac599bd9600cb019fcf7931bbdc039f3",
+        "004c25d0..004c25db": "74ea1623614ba7d84dd927b358aef12f400b8310ed27120095eecb1bd2bb2861",
+        "004d6eca..004d6edd": "e3a4f5bd40c985c793bae3e79392877aab50d2f8ec37e0b05a3fb8f8536642eb",
+        "004d7f6e..004d7f9b": "9d0f2234a172eb7fbbc4237f3690856fdec28f2bc191d87f8210afec59132479"
+      },
+      "limitations": [
+        "SP/AI실제생성/가상소유자/가상삭제/섬getter는명시CPU경계다. 실제게임·AI전략프레임·포획/공격/희생/승리는실행하지않는다.",
+        "owner0실제전이/삭제는독립명시슬롯만관측하며전체실제월드동일성을주장하지않는다.",
+        "600BYTE미작성stack는205로명시했고실제게임의미정stack와같다고주장하지않는다."
+      ],
+      "rawReportSha256": "3de8d64940d170eb31f3046f1597aa154e5e2ba71fad35159816dd124055debe"
+    },
+    "prepared-native-repeat/names-native.json": {
+      "unit": 773,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 12,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "nativeInstructions": 198655,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "productWrites": 0,
+      "fixtureSha256": "841802d0e698a358e9afc873a9b1136cb255758b642a5908a6958b715f19a35c",
+      "observedToolSha256": "8eb97b00ef95e790d5d1b095d872dd6123a69500e7cd3818246d095a6608b1e7",
+      "limitations": [
+        "실제 이름 lookup/숫자·문자열 파서/FIFO만 관측하며 세 하위 몸체나 GUI를 실행하지 않는다."
+      ],
+      "rawReportSha256": "b8638435dae76658b6f49edcbd998967db56e8fac7896024ffb5b012407caef5"
+    },
+    "native-repeat/native.json": {
+      "unit": 773,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": "HJOW-Athlon / 2026-10-23",
+      "parentInputs": 770,
+      "objectInputs": 2592,
+      "inputInputs": 64,
+      "observations": 6852,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "productWrites": 0,
+      "builds": 0,
+      "toolSha256": "928700aa7b61f3b4def2d1150faa2476eacaad489fa2f6f532ad54a24a09e09d",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "codeSha256": {
+        "00417fa0..0041806c": "caf7b42041a82f635283d385156cd0a6f26d25222e9485dd01a9c7df348fca66",
+        "00417f50..00417f95": "fe385d6610a41c8866ac256a71b3aa36b17b8997eaab345a6f0d7ea745f33598",
+        "0040ef80..0040f023": "410651d58a9050632bd3bf85b413bad14989f14c21b60047469f9350e5d12844",
+        "004e49c0..004e4a34": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4",
+        "004c27c0..004c2981": "f8b3298174a9663ad9617add2198ae9d802f527da0226521e6ba1bfe549a0ec3",
+        "00414c80..00414d2c": "93523283b3c5cc43f80b2221f37891d4e3010c72dce4b0a237bf2c75d31a9566",
+        "0040eb40..0040eb71": "b1e8f7a451d4d42753b5140e17e9543251a815216dd0db84c91950319e798353",
+        "004ac200..004ac213": "fd1812d19f681ae03ca08d1c99b88d6cdee059ddf67c617698b6690a6a8444d9",
+        "004c25c0..004c25cb": "ddd35cefc3046bae843b1d2cdeb9b222ac599bd9600cb019fcf7931bbdc039f3",
+        "004c25d0..004c25db": "74ea1623614ba7d84dd927b358aef12f400b8310ed27120095eecb1bd2bb2861",
+        "004d6eca..004d6edd": "e3a4f5bd40c985c793bae3e79392877aab50d2f8ec37e0b05a3fb8f8536642eb",
+        "004d7f6e..004d7f9b": "9d0f2234a172eb7fbbc4237f3690856fdec28f2bc191d87f8210afec59132479"
+      },
+      "limitations": [
+        "SP/AI실제생성/가상소유자/가상삭제/섬getter는명시CPU경계다. 실제게임·AI전략프레임·포획/공격/희생/승리는실행하지않는다.",
+        "owner0실제전이/삭제는독립명시슬롯만관측하며전체실제월드동일성을주장하지않는다.",
+        "600BYTE미작성stack는205로명시했고실제게임의미정stack와같다고주장하지않는다."
+      ],
+      "rawReportSha256": "cf9bd1c2b0186dfc77f6be9abfab1fa2e7be9399d3a22e1d040deb854d110f0c"
+    },
+    "native-names-repeat/names-native.json": {
+      "unit": 773,
+      "host": "HJOW-Athlon",
+      "lastPreciseDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23"
+      },
+      "inputs": 12,
+      "nativeLookup": "004d52c0",
+      "nativeQueueParser": "004c9090",
+      "nativeTable": "00542b90",
+      "nativeInstructions": 198655,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "builds": 0,
+      "productWrites": 0,
+      "fixtureSha256": "841802d0e698a358e9afc873a9b1136cb255758b642a5908a6958b715f19a35c",
+      "observedToolSha256": "8eb97b00ef95e790d5d1b095d872dd6123a69500e7cd3818246d095a6608b1e7",
+      "limitations": [
+        "실제 이름 lookup/숫자·문자열 파서/FIFO만 관측하며 세 하위 몸체나 GUI를 실행하지 않는다."
+      ],
+      "rawReportSha256": "b8638435dae76658b6f49edcbd998967db56e8fac7896024ffb5b012407caef5"
+    }
+  },
+  "initialFailures": [
+    {
+      "scope": "prepared Native extension verifier",
+      "detail": "최초유효4548관측을보존한뒤고정2000양성/음성을확장했다. 첫확장시MakeClear라벨의stdcall ret4검증누락으로fixture생성전에단언실패했다. 검증조건만operation!=Transfer로교정하고v2최종6852/추가6852가일치했다. 처음1440객체행은최종2592에전체동일하게포함되며최초로그/observedtoolSHA를보존했다."
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/GameMenuCommands.cpp": "340f6b7330f2b45e7a71f5f238fb7af6bf49ce8bbb15a6fad7c702ff814f1ca0",
+    "cpppj/src/client/MakeAiCommandInput.cpp": "6323bc72d0b5b00915bf37e73b9e65ec7db71cfc613580d04d3d891bb9996c5f",
+    "cpppj/src/client/MakeAiCommandInput.h": "0fb54094f209b06c26be32ef70bc5e33cc77781de0f007c9892a07cfb14be48d",
+    "cpppj/src/client/RawCampaignSession.cpp": "8292b62a3d52a66e7237c7133354e223c9b7311ea4eaa8e7deacc17a4350534c",
+    "cpppj/src/client/RawCampaignSession.h": "ce2489150c71f511750e9d2fe7aeedafeba24284184f70b19b46b112a7736f42",
+    "cpppj/src/client/UberGump.cpp": "abd2ee39290f27cc76757c9412ed364fc7f818ffd31fc8cc96118e94c31bafbf",
+    "cpppj/src/CMakeLists.txt": "ba3a014cd9d7fbf8a01dbf563aa546dfa9d5344844e994d2884917adaec712c7",
+    "cpppj/src/o/RawMakeAi.cpp": "506c70b76abac5441599141be6e69b0e77651fe487ae33cc6251ede0a272fa34",
+    "cpppj/src/o/RawMakeAi.h": "1bb8fa5de52fc2fc620fb03e4d5ee131a24f4f326dc3b161d75222f33f68ba6b",
+    "cpppj/tests/CampaignMakeAiTests.inc": "b2ea3584f9afb0106344e529da9d51418c6b89ee2875248b2227eae15d360d1b",
+    "cpppj/tests/CampaignSessionTests.cpp": "9f32c5b20488214d6afb3ef9fc8ccce19a60d5ec366f2ce0d4b959537351f947",
+    "cpppj/tests/CMakeLists.txt": "fac446e5a0cbc5e991001a05d9880c762e1b5bb4cbbee5a2a38e0727e3c86bb3",
+    "cpppj/tests/MakeAiCommandInputTests.cpp": "0701e7efd5117af727f9adb080dd804a9209540313841ea126c3ceba2084c79e",
+    "cpppj/tests/MakeAiTests.cpp": "7133c32ed0314d0c191eed255b29f3b8539a91f1e8e935d9e725129b41831273",
+    "tools/decomp_make_ai.py": "928700aa7b61f3b4def2d1150faa2476eacaad489fa2f6f532ad54a24a09e09d",
+    "tools/decomp_make_ai_names.py": "8eb97b00ef95e790d5d1b095d872dd6123a69500e7cd3818246d095a6608b1e7"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-773/protected-after.json",
+  "next": "글꼴 인코딩(774)·조건 AI 메뉴(775)·진단표시(776)·TYPE reader(777)·checking(779/783)·GIF/초기화면(781/782)·최근명령 꼬리(784)와 남은 비멀티/호환성",
+  "limitations": [
+    "Native최종6852는실제40ef80/ftol/iterator40eb40/현재flags getter/카운터감소몸체를실행한다. SP/실제AI생성/가상Owner/가상삭제/섬getter는명시경계이며전체실제월드동일성의증거가아니다.",
+    "600BYTE미작성stack205와host CurrentAllocationBytes는구별한다. 원문감긴Player주소/정상Pool밖/손상TYPE/64비트포인터/전체SEH·ABI는명시host범위밖으로거부한다. 실제local+1 Player9범위도고쳐가짜owner를만들지않는다.",
+    "owner0이전의두번째Owner예외는증가한loadingDepth를남긴다. 같은objectState깊이를World.SetLoadingDepth로실제사제/자산소비자에전파한다. Transfer는효과뒤Next,Clear는가상삭제앞Next를유지한다.",
+    "실제Runtime1은battle0과이미brain이있는positive owner/owner0만검사한다. 실제owner0양성이전/가상삭제·Kernel/AI전략/공중3종·공격/포획/희생/승패/MP는새검사하지않는다.",
+    "Native입력64는공통뗌/Editor OR missionPost와선택된MakeAi·꼬리진입경계까지이며전체Guide/Gump/Console/모달/세계꼬리실행은아니다. Uberpress는현재꼬리를이어가고늦은메뉴중복만막는다.",
+    "직접공개이름helper의NUL은원문stricmp에맞췄다. 실제QueueScriptCommand는기존에RawTextToken에서NUL을잘랐으므로이를그caller의가시게임오류로확대하지않는다.",
+    "CD1072·showSoftAsserts조건메뉴/AIReporting/DebugSwitch와기존772세명령을이번완료로대체하지않는다. 새게임/GUI/CLI/MP·물리/PCM·금지플레이·자연완주·전체C++/34/ZIP검사는0이다."
+  ],
+  "independentReview": {
+    "path": "extracted/cpp-resume-773/independent-review",
+    "preparedContractCorrections": [
+      "press tail",
+      "direct name first NUL"
+    ],
+    "additionalConfirmedParentCoreDefects": 0,
+    "executions": 0
+  }
+}

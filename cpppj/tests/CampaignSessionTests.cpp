@@ -5398,3 +5398,5 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
 #include "CampaignCreateAtTests.inc"
 
 #include "CampaignAiCommandStateTests.inc" //772의실제AI메모리/기존지갑reader와반납수명이다.
+
+#include "CampaignMakeAiTests.inc" //실제 battle0/기존brain만 검사하며 전략/owner0 양성 전이를 실행하지 않는다.

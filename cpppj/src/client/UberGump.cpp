@@ -19,6 +19,7 @@
 #include "client/CameraHome.h" //World없는LookAtSid도기존433ba0의현재Pool/TYPE와공통즉시카메라를사용한다.
 #include "client/AiUtilityCommandInput.h" //772의실제세부모를같은일반입력에연결한다.
 #include "o/RawAiCommandState.h" //World없는현재Player의NULL brain도같은raw부모가판정한다.
+#include "client/MakeAiCommandInput.h" //현재모드와 실제Session의 일반MakeAi를 공유한다.
 #include "client/UtilityCommandInput.h" //기존저장/별칭/Run/강조/SID보기부모를일반명령으로연결한다.
 #include "client/CaptureInput.h"
 #include "client/ClientCaptureSequence.h"
@@ -1166,6 +1167,12 @@ void UberGump::Event(InputEvent event) {
         aiCommands.parameter=[this,worldlessAi](auto packed) { if (world_) world_->Session().SetAiParameter(packed);else o::SetAiParameter(packed,worldlessAi); };
         aiUtilityHandled=DispatchAiUtilityCommandInput(event,aiCommands);if (event.code&InputCode::kRelease) return; //공통뗌만즉시반환하고선택효과뒤새dirty/정지관문은추가하지않는다.
     }
+    bool makeAiHandled=false; //누름 효과 뒤 원문 공통 입력 꼬리를 진행한다.
+    if (IsMakeAiCommand(event.code&0x03ffffffU)) {
+        MakeAiCommandHooks h;h.editor=[this] { return client_.GameplayGlobals()->world.editor; };h.missionPost=[this] { return client_.GameplayGlobals()->world.missionPost; };
+        h.makeAi=[this](auto owner) { if (!world_) { if (client_.SurfaceStorage()->ownerMode.battle) throw std::logic_error("battle MakeAi의 실제 현재 World 없음");return; }world_->Session().MakeAi(owner); }; //world밖 battle0은원문417fa0의정상반환이며battle1의실제부모누락은거부한다.
+        makeAiHandled=DispatchMakeAiCommandInput(event,h);if (event.code&InputCode::kRelease) return; //뗌만 즉시 반환하며 누름은 현재 Help/Console/정지/세계 입력으로 간다.
+    }
     UtilityCommandHooks utility; //원문5명령은Guide/Gump/뗌뒤이며Console/공통정지보다앞에있다.
     utility.text=[this](auto token) { return scriptStrings_.Resolve(token); };utility.screenshot=[this] { client_.SaveGifScreenshot(); };utility.tell=[this](auto section) { Tell(std::string(section)); };
     utility.readString=[this](auto key,auto& value) { return client_.Configuration().ReadString(key,value); };utility.url=[this](auto value) { rawButtons_->Menus()->ActivateHelpLinkText(value); };
@@ -1399,8 +1406,8 @@ void UberGump::Event(InputEvent event) {
         else warnings_->AddNull(); //원문004d88cd는 y=0도 그대로4d3090에 전달하며 유효한 빈 문자열과 구별한다.
         rebuild_=true;return;
     }
-    if (!createAtHandled && !aiUtilityHandled && GameMenuCommand(event)) return; //앞서 실행한 생성 명령을 늦은 메뉴 dispatcher에 다시 보내지 않는다.
-    if (!createAtHandled && !aiUtilityHandled && IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
+    if (!createAtHandled && !aiUtilityHandled && !makeAiHandled && GameMenuCommand(event)) return; //앞서 실행한 생성 명령을 늦은 메뉴 dispatcher에 다시 보내지 않는다.
+    if (!createAtHandled && !aiUtilityHandled && !makeAiHandled && IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
     if (IsObjectMenuVariantCommand(commandCode)) throw std::logic_error("현재 파생 객체 메뉴 선택의 실행 미연결: "+std::to_string(commandCode)); // 미복원 개발자/편집 실행을 입력에서 조용히 버리지 않는다.
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if (IsEscapeKeyPress(event)) {

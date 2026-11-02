@@ -3126,3 +3126,7 @@ set_source_files_properties(ConfigLiveReadTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 원문직접writer/일반명령은기존실행대상에만추가한다(772).
 target_sources(netstorm_tests PRIVATE AiCommandStateTests.cpp AiUtilityCommandInputTests.cpp)
 target_sources(netstorm_script_bindings_tests PRIVATE AiCommandStateTests.cpp AiUtilityCommandInputTests.cpp)
+
+# 새실행대상없이같은원문MakeAi/객체수명/입력과이름을기존집중대상에추가한다(773).
+target_sources(netstorm_tests PRIVATE MakeAiTests.cpp MakeAiCommandInputTests.cpp)
+target_sources(netstorm_script_bindings_tests PRIVATE MakeAiTests.cpp MakeAiCommandInputTests.cpp)
