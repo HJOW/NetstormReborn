@@ -245,7 +245,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     templateStorage_->BindDiagnosticLog([client=&client_](auto level,auto text) { client->WriteDiagnosticLog(level,text); }); // 지역 Template 덤프도 원본 level29 formatter/FILE/flush/trace→Chat을 같은 Client 수명에서 사용한다.
     auto& config = client_.Configuration();
     const auto catalogRoot=EditorWorkingRoot(client_.GameDirectory()); //목록의 작업 namespace는 Native 전송/World가 반납된 뒤에도 같은 자산 경로로 계산한다.
-    const auto catalogFiles=std::make_shared<EditorFiles>(catalogRoot,std::vector<std::filesystem::path>{client_.GameDirectory(),catalogRoot.parent_path()/"originals",catalogRoot.parent_path()/"originalCD"}); //생성은 경로 보호만 확인하고 파일을 만들거나 쓰지 않는다. 두 Catalog callback이 읽기 장치 수명을 함께 소유한다.
+    const auto catalogFiles=std::make_shared<EditorFiles>(catalogRoot,std::vector<std::filesystem::path>{client_.GameDirectory(),catalogRoot.parent_path()/"originals",catalogRoot.parent_path()/"originalCD"},client_.Files().FileNameOwner()); // 생성은보호경로/같은Client경로소유자만연결한다. 목록의Template읽기와실제Editor가같은장치를공유한다.
     EditorCatalogSourceDevices catalogSource;catalogSource.root=client_.GameDirectory();catalogSource.archiveOnly=[this](auto path) { return client_.Files().TryReadArchiveOnly(path); }; //실제 기존 등록순서의 TAFF만 읽어 완료키 삭제의 disk 우회를 막는다.
     editorCatalog_=std::make_shared<EditorCatalogWorkspace>(catalogFiles,std::move(catalogSource)); //한 장기 이관 owner를 목록과 실제 Editor 경로 모두에 공유한다.
     SoloMapCatalogEffects mapEffects; // 현재 실제 장치만 제공하며 목록 분류/행 처리는 기존 몸체를 사용한다.

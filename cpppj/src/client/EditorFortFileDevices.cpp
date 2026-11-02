@@ -12,7 +12,7 @@ template<class Function> const Function& Need(const Function& function) { if (!f
 }
 // 장기장치참조와scratch를보관하며아직파일/manager/State효과를발생시키지않는다.
 EditorFortFileDevices::EditorFortFileDevices(EditorFiles& work,const o::BaseFileSystem& source,o::ConfigInterface& config,EditorFortPathEffects effects)
-    :work_(work),source_(source),config_(config),effects_(std::move(effects)) {}
+    :work_(work),source_(source),config_(config),effects_(std::move(effects)) { work_.BindFileNameOwner(source_.FileNameOwner()); } // 생성은파일을열지않고실제source와같은경로고리만연결한다.
 // 실제현재이름진단뒤같은고정키를선택하고기존Config함수로설정경로를얻는다.
 std::string_view EditorFortFileDevices::CurrentPath() {
     const auto name=Need(effects_.currentName)();if (name.empty() || !name.front()) Need(effects_.assertion)(39);

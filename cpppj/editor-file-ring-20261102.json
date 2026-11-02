@@ -1,0 +1,90 @@
+{
+  "unit": 738,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 738,
+    "version": "11.01",
+    "sha256": "56d190464315a86f43bfc2418c769386f19321550b330c097971dd7a13ce0340"
+  },
+  "implementation": [
+    "실제Edit/목록작업본에ClientFileNameOwner연결",
+    "Template파일장치가source와같은소유자로Exists/readonly/read를사용",
+    "장부형제namespace는독립소유자이며기존작업root/빈TAFF/보호/Unicode정책유지"
+  ],
+  "before": {
+    "productUnit": 737,
+    "testsExecuted": 1,
+    "failedChecks": 3,
+    "log": "extracted\\cpp-editor-file-ring-738\\tests-before.log"
+  },
+  "tests": {
+    "new": 4,
+    "existing": 47,
+    "final": 51,
+    "failed": 0,
+    "nativeRowsReplayed": 1902,
+    "rowsByGroup": {
+      "device": 32,
+      "formatter": 352,
+      "staticStrings": 204,
+      "savedStateCrt": 263,
+      "readPolicy": 1024,
+      "taffRegistration": 27
+    },
+    "actualTemplateLoadAdvances": 2,
+    "absoluteExistsAdvances": 1,
+    "absoluteReadOnlyAdvances": 1,
+    "absoluteReadSuccessAdvances": 1,
+    "absoluteReadMissingAdvances": 2,
+    "metadataSeparateOwner": true,
+    "log": "extracted\\cpp-editor-file-ring-738\\tests-v1.log"
+  },
+  "build": {
+    "logs": [
+      "extracted\\cpp-editor-file-ring-738\\build-before.log",
+      "extracted\\cpp-editor-file-ring-738\\build-v1.log"
+    ],
+    "warnings": 0,
+    "errors": 0
+  },
+  "cli": {
+    "processes": 1,
+    "output": "1024",
+    "exitCode": 0,
+    "gameFrames": 0,
+    "log": "extracted\\cpp-editor-file-ring-738\\cli-config.log"
+  },
+  "protection": {
+    "baselineFiles": 2652,
+    "unchangedFiles": 2652,
+    "newFixtures": 0,
+    "fixtureTotal": 832,
+    "agentAuthoredChanges": 0
+  },
+  "nativeNewObservations": 0,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "nextPriority": "사용자지정게임전용/테스트전용/전체선택빌드와루트README.md/README.en.md컴파일안내",
+  "limits": [
+    "전체Template/FileSpecABI와일반쓰기/권한변경/삭제/다른파일실패는별도",
+    "새Native/fixture/GUI/전체34/전체C++/ZIP·제외재현·MP/통신검사0",
+    "전체1~8차목표와733의5차/플랫폼요구·미구현상태는유지"
+  ],
+  "rawDirectory": "extracted\\cpp-editor-file-ring-738",
+  "sha256": {
+    "LEFT_JOBS.md": "7b950b4d81ade081e944053b0df50ac3dc0d50595e019c038c3fbe424163ac0f",
+    "cpppj/README.md": "6f056f59eeb69cec21f967f800b00ea6fdd4321a6e8f1edd02c1c3dff06e1f4f",
+    "cpppj/src/client/EditorFiles.cpp": "18600caac2aa2150e7b1d8acfc8b2a598d643512b993f5eb574e2e9cc1c93c1d",
+    "cpppj/src/client/EditorFiles.h": "991079ed9027ca6b9396fd1f6e4f1f66534940404f8c8a509c695eb27e5df7a3",
+    "cpppj/src/client/EditorFortFileDevices.cpp": "5dc837833be5e27742e8a2fa986a3d839e8d08ef7d2d30fa4e3627953628f713",
+    "cpppj/src/client/UberGump.cpp": "cd71c428f2fc69d371513b3796572347cfe103d58cf6768e527b2b4a96fb0da4",
+    "cpppj/tests/CMakeLists.txt": "5cafd7af8fe9bb86e44ad75e6f0d2021a2ec34e43ed50d6750dbb044cc6c99cc",
+    "cpppj/tests/EditorFileRingTests.cpp": "a1b31ec2ff4a71dbaaf7a449ca3d5ad136a5c9a92a82e238a8fe90b3db88188e",
+    "docs/exe/cpp-editor-file-ring-20261102.md": "24551b06b547acb667c9f118ef2510d227fe3181a3a8b9ba0d7991074710ab20"
+  }
+}

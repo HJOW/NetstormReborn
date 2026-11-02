@@ -2,6 +2,8 @@
 #include "client/EditorFiles.h"
 #include "client/CampaignTemplateStorage.h"
 #include "o/BaseFile.h"
+#include "o/RawFileName.h"
+#include "o/RawBaseFileReadPolicy.h"
 #include "o/RawBaseFileIO.h"
 #include "o/OriginalText.h"
 #include "platform/Utf8Path.h"
@@ -62,12 +64,14 @@ std::filesystem::path EditorWorkingRoot(const std::filesystem::path& gameDirecto
     auto name=directory.filename();name+="-editor";return directory.parent_path()/name; //같은 실제 이름으로 형제 작업 디렉터리만 선택한다. 원본 보호 검사는 EditorFiles가 계속 수행한다.
 }
 // 작업 경로를 원본/CD 아래로 지정한 경우 파일 생성 전에 거부한다.
-EditorFiles::EditorFiles(std::filesystem::path root,std::vector<std::filesystem::path> protectedRoots):root_(Actual(root)) {
+EditorFiles::EditorFiles(std::filesystem::path root,std::vector<std::filesystem::path> protectedRoots,std::shared_ptr<o::RawFileName> fileNames):root_(Actual(root)),fileNames_(fileNames?std::move(fileNames):std::make_shared<o::RawFileName>()) {
     if (protectedRoots.empty()) throw std::invalid_argument("편집 파일 장치의 원본 보호 경로 누락");
     for (const auto& path:protectedRoots) { //모든 원본 루트를 실제 경로로 보관하고 작업 루트와의 관계를 확인한다.
         const auto source=Actual(path);if (Contains(source,root_)) throw std::invalid_argument("편집 작업 디렉터리가 보호 원본 내부입니다");protected_.push_back(source);
     }
 }
+void EditorFiles::BindFileNameOwner(std::shared_ptr<o::RawFileName> fileNames) { if (!fileNames) throw std::invalid_argument("편집파일의공유경로소유자누락");fileNames_=std::move(fileNames); } // 다른임시고리를만들지않고같은주소/번호를이어받는다.
+std::shared_ptr<o::RawFileName> EditorFiles::FileNameOwner() const { return fileNames_; } // 조회는고리를전진시키지않는다.
 // 상대 파일명은 작업 루트 기준이며 폴더 링크를 통해 원본으로 들어가는 경우도 거부한다.
 std::filesystem::path EditorFiles::Checked(const std::filesystem::path& path) const {
     const auto target=Actual(path.is_absolute() ? path : root_/path);if (!Contains(root_,target)) throw std::invalid_argument("편집 파일 쓰기가 현재 작업 디렉터리를 벗어납니다");
@@ -131,7 +135,7 @@ std::vector<std::string> EditorFiles::MatchDisk(std::string_view pattern) const 
     const auto requested=PathFromUtf8(pattern); //현재 UTF-8 설정의 상대/절대 패턴을 파일명과 부모 경로로 분리한다.
     if (PathToUtf8(requested.parent_path()).find_first_of("*?")!=std::string::npos) throw std::invalid_argument("편집 목록의 폴더 와일드카드 범위 위반");
     const auto directory=ResolvePath(PathToUtf8(requested.parent_path())),absolute=directory/requested.filename(); //실제 부모만 canonical 검사하고 파일 와일드카드를 filesystem 경로 조회에 넘기지 않는다.
-    const o::BaseFileSystem disk(root_);std::vector<std::string> result; //기존 읽기 전용 OS 열거만 빌리며 전역 파일 저장소는 바꾸지 않는다.
+    const o::BaseFileSystem disk(root_,{},fileNames_);std::vector<std::string> result; //기존읽기전용OS열거를빌리며같은경로소유권을유지한다.
     for (const auto& name:disk.MatchDisk(PathToUtf8(absolute))) { //원본 FindFirst/Next 순서를 유지하되 작업본 밖으로 향하는 링크는 여기서 거부한다.
         auto listed=PathFromUtf8(name);const auto leaf=PathToUtf8(listed.filename());if (leaf!="." && leaf!="..") static_cast<void>(ResolvePath(name));listed.make_preferred();result.push_back(PathToUtf8(listed)); //OS 자체 . / .. 후보는 읽기 요청이 아니므로 부모 검사 뒤 보존한다. 실제 reader/writer의 root 보호는 그대로다.
     }
@@ -141,7 +145,7 @@ std::vector<std::string> EditorFiles::MatchDisk(std::string_view pattern) const 
 std::optional<std::vector<std::uint8_t>> EditorFiles::TryRead(std::string_view configuredPath) const {
     if (configuredPath.find('\0')!=std::string_view::npos) throw std::invalid_argument("편집 목록 파일명의 NUL 경계 위반");
     const auto requested=PathFromUtf8(configuredPath);const auto path=PathToUtf8(requested.filename()).find_first_of("*?")==std::string::npos ? ResolvePath(configuredPath) : ResolvePath(PathToUtf8(requested.parent_path()))/requested.filename(); //파일명 wildcard를 fopen에 전달하는 원문 실패도 canonical wildcard 조회 없이 보존한다.
-    return o::BaseFileSystem(root_).TryRead(PathToUtf8(path));
+    return o::BaseFileSystem(root_,{},fileNames_).TryRead(PathToUtf8(path)); // 같은작업root/빈TAFF목록정책을유지하고실제장치/선택경로만공유고리를사용한다.
 }
 // 원래 Prepare의 기존 파일 보존/새 파일 생성 순서를 설정 경로에서도 그대로 사용한다.
 std::filesystem::path EditorFiles::PreparePath(std::string_view configuredPath,std::span<const std::uint8_t> original) {
@@ -151,12 +155,12 @@ std::filesystem::path EditorFiles::PreparePath(std::string_view configuredPath,s
 }
 // 경로를 가진 파일의 원문분기는 아카이브/보조 경로보다 해당 실제 파일만 fopen한다.
 std::int32_t EditorFiles::Exists(std::string_view fileName) const {
-    const auto path=ResolvePath(fileName);FILE* file=OpenEditorFile(path,false);if (!file) return 0;std::fclose(file);return 5;
+    const auto path=ResolvePath(fileName);static_cast<void>(o::ReadBaseFileDevice(PathToUtf8(path),*fileNames_));FILE* file=OpenEditorFile(path,false);if (!file) return 0;std::fclose(file);return 5; //41ab10의실제절대장치getter한칸뒤fopen이다.
 }
 // 실제 작업 파일은 원문 resolver의출처5다. stat의쓰기비트는NTFS readonly속성을반영하고ACL쓰기성공검사는하지않는다.
 bool EditorFiles::ReadOnly(std::string_view fileName,const std::function<void(std::uint32_t)>& assertion) const {
     if (fileName.empty()) { if (!assertion) throw std::logic_error("편집 readonly의원문빈이름진단미연결");assertion(0x480);throw std::invalid_argument("편집 readonly의빈실제경로"); }
-    const auto path=ResolvePath(fileName);
+    const auto path=ResolvePath(fileName);static_cast<void>(o::ReadBaseFileDevice(PathToUtf8(path),*fileNames_)); //41af80→41ad10의실제절대파일분기도stat앞에같은장치한칸을사용한다.
 #ifdef _WIN32
     static_assert(_S_IWRITE==0x80); //원문stat mode하위BYTE의부호비트와같은CRT쓰기비트다.
     struct _stat64 status{};const auto result=_wstat64(path.c_str(),&status); //Windows10/11의 한글 경로는 원본 ANSI stat 대신 같은 wide CRT로 조회한다.

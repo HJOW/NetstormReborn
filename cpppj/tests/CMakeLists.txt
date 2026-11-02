@@ -2990,3 +2990,9 @@ target_sources(netstorm_tests PRIVATE StartupIoTests.cpp)
 add_executable(netstorm_startup_io_tests FocusedTestMain.cpp StartupIoTests.cpp StartupArchiveFilesTests.cpp ConfigPathLoadTests.cpp StartupLocationTests.cpp FileDirectoryTests.cpp StartupFileNamesTests.cpp BaseFileSecondaryTests.cpp)
 target_link_libraries(netstorm_startup_io_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_startup_io_tests)
+
+# Edit Template의실제작업파일장치/공유고리와기존파일보호/Unicode/저장을집중확인한다(738).
+target_sources(netstorm_tests PRIVATE EditorFileRingTests.cpp)
+add_executable(netstorm_editor_file_ring_tests FocusedTestMain.cpp EditorFileRingTests.cpp EditorFortFileDevicesTests.cpp EditorFilesTests.cpp EditorFileWriterTests.cpp EditorUnicodeFilesTests.cpp FilePathClientTests.cpp FileNameTests.cpp StaticStringsTests.cpp SavedStateFilesTests.cpp BaseFileReadPolicyTests.cpp BaseFileSecondaryTests.cpp)
+target_link_libraries(netstorm_editor_file_ring_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_editor_file_ring_tests)

@@ -3,19 +3,23 @@
 #include <cstdint>
 #include <filesystem>
 #include <functional>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
 #include <string_view>
 #include <vector>
 
+namespace netstorm::o { class RawFileName; } // 실제Client와작업파일장치가같이빌리는원문10칸소유자다.
 namespace netstorm::client {
 struct TemplateFileWriteHooks; //실제 Template 저장 부모가 사용하는 권한/쓰기 경계다.
 std::filesystem::path EditorWorkingRoot(const std::filesystem::path& gameDirectory); //실제 자산 디렉터리의 형제 <이름>-editor를 계산한다. 끝 구분자와 ./.. 표기는 같은 작업본을 선택하며 파일을 만들지 않는다.
 // 사용자 작업본과 보호된 원본 경로를 다른 실제 디렉터리로 유지한다.
 class EditorFiles {
 public:
-    EditorFiles(std::filesystem::path root,std::vector<std::filesystem::path> protectedRoots); //원본/CD 보호 루트들을 반드시 명시하며 생성만으로 파일을 쓰지 않는다.
+    EditorFiles(std::filesystem::path root,std::vector<std::filesystem::path> protectedRoots,std::shared_ptr<o::RawFileName> fileNames={}); //원본/CD보호루트를명시하며실제Client는같은경로고리도넘긴다. 독립장치는별도소유자를만든다.
+    void BindFileNameOwner(std::shared_ptr<o::RawFileName> fileNames); // Template장치가같은source의고리소유권을파일조회전에연결한다. I/O/고리예약은하지않는다.
+    std::shared_ptr<o::RawFileName> FileNameOwner() const; // 현재공유소유자만빌리며파일이나경로버퍼를조회하지않는다.
     const std::filesystem::path& RootPath() const; //검사된 실제 작업 root를 I/O 장치에만 빌린다. 쓰기 보호 범위를 넓히지 않는다.
     std::filesystem::path RelativePath(std::string_view configuredPath) const; //같은 보호 검사를 통과한 전체 물리 상대 경로를 얻는다. 이름 첫점/파일명으로 축약하지 않는다.
     EditorFiles SiblingNamespace(std::string_view suffix) const; //현재 보호 roots와 work root를 모두 보호하는 형제 metadata 장치를 만들며 파일을 쓰지 않는다.
@@ -38,5 +42,6 @@ private:
     std::filesystem::path Checked(const std::filesystem::path& path) const; //현재 실제 경로가 작업 루트 안/모든 원본 루트 밖인지 확인한다.
     std::filesystem::path root_; //실제 정규화한 사용자 편집 작업 디렉터리다.
     std::vector<std::filesystem::path> protected_; //원본/CD와 다른 읽기 전용 자산 디렉터리들의 실제 경로다.
+    std::shared_ptr<o::RawFileName> fileNames_; // 실제Template의존재/권한/읽기가같은Client고리의현재번호와물리칸을사용한다.
 };
 }
