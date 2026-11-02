@@ -56,6 +56,21 @@ public static partial class OriginalConstructors
         ? AddressTable[typeNumber]
         : throw new ArgumentOutOfRangeException(nameof(typeNumber), typeNumber, "생성자 타입 번호 오류");
 
+    /// <summary>
+    /// 판본별 타입 번호의 생성자 원본 주소를 돌려준다(cpppj <c>TypeConstructorAddress</c>). 패치판은 0~187, CD판은 0~170이다.
+    /// 호스트 함수 주소로 쓰지 않는 식별 값이며 0이면 기본 생성이다. 추가: F1 타입 표가 두 판본의 주소를 채우려고 CD 몫을 더했다(2026-11-02).
+    /// </summary>
+    /// <param name="edition">원본 판본.</param>
+    /// <param name="typeNumber">타입 번호.</param>
+    /// <exception cref="ArgumentOutOfRangeException">판본의 타입 수 밖이다.</exception>
+    public static uint Address(OriginalEdition edition, int typeNumber)
+    {
+        uint[] table = edition == OriginalEdition.Cd1072 ? CdAddressTable : AddressTable;
+        return typeNumber >= 0 && typeNumber < table.Length
+            ? table[typeNumber]
+            : throw new ArgumentOutOfRangeException(nameof(typeNumber), typeNumber, "생성자 타입 번호 오류");
+    }
+
     /// <summary>생성자 주소에 대응하는 검증된 파생 생성자를 찾는다. 표에 없으면(미복원·null·assert 생성자) null 이다.</summary>
     /// <param name="address">타입의 생성자 주소.</param>
     public static ConstructorRecipe? Recipe(uint address) => RecipesByAddress.GetValueOrDefault(address);

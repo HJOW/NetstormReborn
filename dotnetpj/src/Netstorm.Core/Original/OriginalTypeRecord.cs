@@ -61,6 +61,42 @@ public sealed class OriginalTypeRecord
     /// <summary>추가 기준점의 세로 오프셋(TYPE 정의 hotspotY). 추가: R2d-2(2026-10-29).</summary>
     public int HotspotY { get; set; }
 
+    /// <summary>
+    /// +4(20바이트)를 C 문자열로 읽은 이름이다. 내장 프로세스 타입은 20글자로 잘린다. .type 타입은 파일 이름이지만 20글자 이상이면 종료 문자가 없어
+    /// 바로 뒤의 설명 필드까지 이어 읽힌다(fakeThreeByThreeSurface). 문자 하나 = 바이트 하나로 다룬다. 추가: F1 타입 표(2026-11-02).
+    /// </summary>
+    public string Name { get; set; } = "";
+
+    /// <summary>+0x18(40바이트): <c>description</c> 속성이다. 추가: F1 타입 표(2026-11-02).</summary>
+    public string Description { get; set; } = "";
+
+    /// <summary>.type 파일 이름(로딩 순서의 이름)이다. 표시·도구용이며 원본 구조체 필드가 아니다. 추가: F1 타입 표(2026-11-02).</summary>
+    public string AssetName { get; set; } = "";
+
+    /// <summary>원소별 최소 에너지 사용량(+0x54, minUsage 속성). 추가: F1 타입 표(2026-11-02).</summary>
+    public float[] MinUsage { get; set; } = new float[3];
+
+    /// <summary>원소별 최대 에너지 사용량(+0x60: maxUsage·maxRainBattleUsage, maxThunderBattleUsage, maxWindBattleUsage). 추가: F1 타입 표(2026-11-02).</summary>
+    public float[] MaxUsage { get; set; } = new float[3];
+
+    /// <summary>레벨(+0x94). <c>level</c> 속성 - 1이다. 추가: F1 타입 표(2026-11-02).</summary>
+    public int Level { get; set; }
+
+    /// <summary>테마(+0x98). <c>theme</c> 첫 글자의 조회값이며 실제 표 초기화가 패치 5 / CD 4를 넣는다. 추가: F1 타입 표(2026-11-02).</summary>
+    public int Theme { get; set; }
+
+    /// <summary>마지막으로 나온 종류 단어(+0xf0, 최대 8글자, 원본 strncpy 그대로)다. 추가: F1 타입 표(2026-11-02).</summary>
+    public string Kind { get; set; } = "";
+
+    /// <summary>이 타입이 그릇일 때 내용물의 목록 플래그(+0xfc, 0이면 파일에서 읽는다)다. 추가: F1 타입 표(2026-11-02).</summary>
+    public uint ContainerListFlags { get; set; }
+
+    /// <summary>이 타입이 내용물일 때의 목록 플래그(+0x100, 0이면 그릇 것을 쓴다)다. 추가: F1 타입 표(2026-11-02).</summary>
+    public uint ContentListFlags { get; set; }
+
+    /// <summary>.type 파일에서 읽은 타입인가. 추가: F1 타입 표(2026-11-02).</summary>
+    public bool FromAsset { get; set; }
+
     /// <summary>현재 값의 복사본을 만든다. 삭제 수명주기가 타입 입력을 고정할 때 쓴다(추가: W03 삭제·수명 셋째 조각, 2026-10-21).</summary>
     public OriginalTypeRecord Clone()
     {
@@ -80,6 +116,17 @@ public sealed class OriginalTypeRecord
             TechBitIndex = TechBitIndex,
             HotspotX = HotspotX,
             HotspotY = HotspotY,
+            Name = Name,
+            Description = Description,
+            AssetName = AssetName,
+            MinUsage = (float[])MinUsage.Clone(),
+            MaxUsage = (float[])MaxUsage.Clone(),
+            Level = Level,
+            Theme = Theme,
+            Kind = Kind,
+            ContainerListFlags = ContainerListFlags,
+            ContentListFlags = ContentListFlags,
+            FromAsset = FromAsset,
         };
     }
 }

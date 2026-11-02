@@ -162,6 +162,11 @@
     <None Include="../../../cpppj/tests/fixtures/bomb-predestroy-x86.tsv" Link="X86/bomb-predestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W03 다리 밖 자산 삭제 재정의 조각: 플라이어 사전 파괴 96행(네 슬롯 200바이트 포함). -->
     <None Include="../../../cpppj/tests/fixtures/flyer-predestroy-x86.tsv" Link="X86/flyer-predestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- F1 타입 표(2026-11-02): 숫자 속성 구간(기준점) 1,404행, 기본 비용 후처리 3,000행, techBit 27입력과 보호 자산 188필드의 원본 PE 독립 관찰. 생성자 주소 표는 위 constructors-x86.tsv 의 CD 행도 쓴다. -->
+    <None Include="../../../cpppj/tests/fixtures/typehotspot-x86.tsv" Link="X86/typehotspot-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/type-default-cost-x86.tsv" Link="X86/type-default-cost-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/type-tech-bit-x86.tsv" Link="X86/type-tech-bit-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/type-tech-bit-assets-x86.tsv" Link="X86/type-tech-bit-assets-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 연결한 fixture 의 SHA-256 목록과 그 검사. cpppj 가 fixture 를 다시 만들면 실패해 재대조를 요구한다 (W01, 2026-10-16). 갱신: dotnetpj/tools/cpp_sync.py -->
     <None Include="../Shared/cpp-fixture-manifest.tsv" Link="X86/cpp-fixture-manifest.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/CppFixtureManifest.cs" Link="Shared/CppFixtureManifest.cs" />

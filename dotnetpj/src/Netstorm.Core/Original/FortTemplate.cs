@@ -2,14 +2,14 @@ namespace Netstorm.Core.Original;
 
 /// <summary>
 /// .fort 파일의 원시 섹션 35개와 서명 flag, 그리고 TypeNames 해시로 만든 타입 번호 변환표를 담는다(cpppj <c>o/Template.h</c>의 <c>FortTemplate</c>).
-/// 이 단위에서는 RiftTypeTable 없이 쓸 수 있는 저장 자료와 조회(섹션 이름 순서, 이름별 섹션, 타입 번호 변환)만 옮겼다.
-/// 타입 표가 필요한 <c>Parse</c>와 객체·내용물·덱 해석(<c>FortObject</c>, <c>FortChunkSection</c> 등)은 RiftTypeTable 이식 뒤에 같은 클래스에 더한다.
+/// 0.128 단위에서는 RiftTypeTable 없이 쓸 수 있는 저장 자료와 조회(섹션 이름 순서, 이름별 섹션, 타입 번호 변환)만 옮겼고,
+/// F1(2026-11-02)에서 타입 표가 필요한 <see cref="Parse"/>와 객체·내용물·덱 해석(<see cref="FortObject"/>, <see cref="FortChunkSection"/> 등)을 같은 클래스에 더했다(<c>FortTemplate.Parse.cs</c>).
 /// </summary>
 /// <remarks>
 /// 2026-11-01 0.128에서 추가했다. 기존 <c>Netstorm.Assets.FortFile</c>은 같은 파일 형식의 이전 독립 판독기이며 이 클래스와 연결하지 않는다(은퇴는 R4 Fort 적재 단위).
 /// 같은 날 0.130(TS0)에서 <see cref="Sections"/>를 <c>byte[]</c> 목록에서 용량을 가진 <see cref="RawSectionBuffer"/> 목록으로 바꾸고 <see cref="Clone"/>을 더했다.
 /// </remarks>
-public sealed class FortTemplate
+public sealed partial class FortTemplate
 {
     /// <summary>실행 파일의 섹션 이름 목록(패치 005146b0 15개 + Terr00~Terr19) 길이다.</summary>
     public const int SectionCount = 35;
@@ -52,6 +52,30 @@ public sealed class FortTemplate
 
     /// <summary>파일 타입 번호 → 현재 타입 번호 변환표다(없으면 0). 255칸이다.</summary>
     public byte[] TypeConversion { get; } = new byte[255];
+
+    /// <summary><c>Subscriber</c> 섹션의 소유자 ID와 요새 이름이다. 해당 섹션이 없으면 null이다. 추가: F1(2026-11-02).</summary>
+    public FortSubscriber? Subscriber { get; set; }
+
+    /// <summary><c>Money</c> 섹션의 플레이어별 시작 SP(Storm Power)다. 섹션이 4바이트 미만이면 null이다. 추가: F1(2026-11-02).</summary>
+    public float? Money { get; set; }
+
+    /// <summary><c>Territory</c> 섹션 120바이트(6바이트 × 20)의 원시 값이다. 섹션이 120바이트 미만이면 빈 배열이다. 해석은 영역 배치 단계에서 한다. 추가: F1(2026-11-02).</summary>
+    public byte[] Territory { get; set; } = [];
+
+    /// <summary><c>Technology</c> 섹션이다: 플레이어를 그릇으로 한 내용물 목록(타입별 저장 상태). 추가: F1(2026-11-02).</summary>
+    public FortContentList Technology { get; set; } = new();
+
+    /// <summary><c>Technology</c> 목록 뒤에 남은 바이트 수다(원본은 읽지 않는다). 추가: F1(2026-11-02).</summary>
+    public int TechnologyTrailingBytes { get; set; }
+
+    /// <summary><c>Deck</c> 섹션의 저장된 다리 조각 덱 항목 목록이다. 추가: F1(2026-11-02).</summary>
+    public List<FortDeckEntry> Deck { get; } = [];
+
+    /// <summary><c>Chaff</c> 섹션이다: 특정 영역에 속하지 않는 저장 청크 목록. 추가: F1(2026-11-02).</summary>
+    public FortChunkSection Chaff { get; set; } = new();
+
+    /// <summary>영역 번호별(<c>Terr00</c>~<c>Terr19</c>) 저장 청크와 객체 자료다. 추가: F1(2026-11-02).</summary>
+    public FortChunkSection[] Territories { get; } = Enumerable.Range(0, TerritoryCount).Select(_ => new FortChunkSection()).ToArray();
 
     /// <summary>섹션 길이 필드의 크기다. 길이에는 이 2바이트가 포함된다.</summary>
     private const int SectionLengthBytes = 2;
@@ -109,7 +133,7 @@ public sealed class FortTemplate
     /// <summary>
     /// 값 복사(C++ 복사 생성)와 같이 깊은 복사본을 만든다. 섹션 버퍼는 크기만큼만 복사해 용량이 크기와 같아지며 원본의 예약 용량은 따라가지 않는다.
     /// C#의 대입은 참조를 공유하므로 같은 Template을 두 번 설치하는 호출자만 이 복사를 거친다.
-    /// 타입 표가 필요한 해석 필드(Money·Technology·Deck·객체 등)는 F1에서 같은 클래스에 더할 때 이 복사에도 함께 더한다.
+    /// 해석 필드(Subscriber·Money·Technology·Deck·객체 등)는 F1에서 더했고 읽은 뒤 바꾸지 않는 자료는 참조를 공유하며 배열·목록은 새로 만든다.
     /// </summary>
     public FortTemplate Clone()
     {
@@ -126,6 +150,15 @@ public sealed class FortTemplate
         }
         copy.TypeHashes.AddRange(TypeHashes);
         TypeConversion.CopyTo(copy.TypeConversion, 0);
+        // 해석 필드: 읽은 뒤 바꾸지 않는 레코드는 공유하고, 바뀔 수 있는 배열·목록은 새로 만든다
+        copy.Subscriber = Subscriber;
+        copy.Money = Money;
+        copy.Territory = (byte[])Territory.Clone();
+        copy.Technology = Technology;
+        copy.TechnologyTrailingBytes = TechnologyTrailingBytes;
+        copy.Deck.AddRange(Deck);
+        copy.Chaff = Chaff;
+        Territories.CopyTo(copy.Territories, 0);
         return copy;
     }
 

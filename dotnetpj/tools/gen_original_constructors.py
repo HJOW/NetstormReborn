@@ -5,9 +5,10 @@
   python -X utf8 dotnetpj/tools/gen_original_constructors.py --check    만든 결과가 현재 파일과 같은지만 확인한다 (다르면 종료 코드 1)
 
 입력은 cpppj/src/o/TypeConstructors.inc 와 DerivedConstructors.inc 이며 읽기만 한다.
-CD 10.72 표는 기준 판본이 아니므로 옮기지 않는다. 결과 표의 정확성은 원본 기계어 기대값
+생성자 주소 표만 CD 10.72 몫(kCdConstructors)도 옮긴다(F1 타입 표가 두 판본의 생성자 주소를 채운다). 파생 생성자 쓰기 표는 10.78만 옮긴다.
+결과 표의 정확성은 원본 기계어 기대값
 constructors-x86.tsv(주소 표)와 derived-x86.tsv(쓰기 결과)를 읽는 C# 검사가 확인한다.
-(2026-10-16 W02 첫 조각으로 추가)
+(2026-10-16 W02 첫 조각으로 추가, 2026-11-02 F1에서 CD 주소 표 추가)
 """
 
 from pathlib import Path
@@ -26,6 +27,8 @@ DERIVED_CONSTRUCTORS = ROOT / "cpppj" / "src" / "o" / "DerivedConstructors.inc"
 OUTPUT = ROOT / "dotnetpj" / "src" / "Netstorm.Core" / "Original" / "OriginalConstructors.Data.cs"
 # 10.78 타입 수. 주소 표의 길이가 이와 다르면 입력이 바뀐 것이므로 중단한다.
 PATCH_TYPE_COUNT = 188
+# CD 10.72 타입 수. 주소 표의 길이가 이와 다르면 입력이 바뀐 것이므로 중단한다. (F1, 2026-11-02)
+CD_TYPE_COUNT = 171
 # 10.78 파생 생성자 수.
 PATCH_RECIPE_COUNT = 82
 
@@ -56,12 +59,12 @@ def parse_int(token: str) -> int:
     return int(token.rstrip("uUlL"), 0)
 
 
-def parse_addresses(text: str) -> list[int]:
-    """kPatchConstructors 의 타입 번호 순서 생성자 주소를 읽는다."""
-    body = block_of(text, "kPatchConstructors")
+def parse_addresses(text: str, name: str = "kPatchConstructors", expected: int = PATCH_TYPE_COUNT) -> list[int]:
+    """`name` 표(기본 kPatchConstructors)의 타입 번호 순서 생성자 주소를 읽는다. 개수가 `expected`와 다르면 중단한다."""
+    body = block_of(text, name)
     values = [parse_int(token) for token in re.findall(r"0x[0-9A-Fa-f]+U", body)]
-    if len(values) != PATCH_TYPE_COUNT:
-        raise ValueError(f"10.78 생성자 주소가 {len(values)}개다 (기대 {PATCH_TYPE_COUNT})")
+    if len(values) != expected:
+        raise ValueError(f"{name} 생성자 주소가 {len(values)}개다 (기대 {expected})")
     return values
 
 
@@ -86,13 +89,16 @@ def parse_recipes(text: str) -> list[tuple[int, int, list[tuple[int, int, bool, 
 
 def render() -> str:
     """읽은 표로 C# 데이터 파일의 전체 내용을 만든다 (LF, UTF-8)."""
-    addresses = parse_addresses(TYPE_CONSTRUCTORS.read_text(encoding="utf-8"))
+    constructors_text = TYPE_CONSTRUCTORS.read_text(encoding="utf-8")
+    addresses = parse_addresses(constructors_text)
+    cd_addresses = parse_addresses(constructors_text, "kCdConstructors", CD_TYPE_COUNT)
     recipes = parse_recipes(DERIVED_CONSTRUCTORS.read_text(encoding="utf-8"))
     lines = [
         "// 이 파일은 dotnetpj/tools/gen_original_constructors.py 가 만든다. 직접 고치지 말고 도구를 다시 실행한다.",
         f"// 입력(cpppj, 읽기 전용): TypeConstructors.inc sha256={sha256_lf(TYPE_CONSTRUCTORS)}",
         f"//                         DerivedConstructors.inc sha256={sha256_lf(DERIVED_CONSTRUCTORS)}",
-        "// 10.78 부분만 옮겼다. 결과는 원본 기계어 기대값 constructors-x86.tsv·derived-x86.tsv 로 검사한다 (W02 첫 조각, 2026-10-16).",
+        "// 파생 생성자 쓰기 표는 10.78 부분만 옮겼고 타입 번호별 주소 표는 CD 10.72 몫도 옮겼다.",
+        "// 결과는 원본 기계어 기대값 constructors-x86.tsv·derived-x86.tsv 로 검사한다 (W02 첫 조각, 2026-10-16. CD 주소 표는 F1, 2026-11-02).",
         "namespace Netstorm.Core.Original;",
         "",
         "/// <summary>타입 번호별 생성자 원본 주소와 생성 절차(10.78)를 담는 데이터 전용 클래스다. RawSquidFactory 가 Recipe·BaseVtable 로 읽는다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 첫 조각 2026-10-16 생성, 2026-10-20 summary 추가)</summary>",
@@ -105,6 +111,16 @@ def render() -> str:
     # 주소 8개씩 한 줄로 늘어놓는다.
     for start in range(0, len(addresses), 8):
         lines.append("        " + ", ".join(f"0x{value:08X}" for value in addresses[start:start + 8]) + ",")
+    lines += [
+        "    ];",
+        "",
+        f"    /// <summary>타입 번호 0~{CD_TYPE_COUNT - 1} 의 생성자 원본 주소(CD 10.72). 0 은 기본 Squid 생성이다. 호스트 함수 주소로 쓰지 않는 식별 값이다. (F1, 2026-11-02)</summary>",
+        "    private static readonly uint[] CdAddressTable =",
+        "    [",
+    ]
+    # 주소 8개씩 한 줄로 늘어놓는다.
+    for start in range(0, len(cd_addresses), 8):
+        lines.append("        " + ", ".join(f"0x{value:08X}" for value in cd_addresses[start:start + 8]) + ",")
     lines += [
         "    ];",
         "",
