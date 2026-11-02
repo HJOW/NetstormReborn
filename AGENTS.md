@@ -65,6 +65,7 @@
                  5차 - 설정 및 캠페인 진행 상황 저장 디렉토리를 OS 사용자 홈 디렉토리 내부로 이동 (Windows 기준 %USERPROFILE%\Saved Games\Netstorm\Saves\ 에 저장)
                        커스텀 맵 (Edit 기능으로 작성한 맵) 은 기존 디렉토리와 사용자 홈 디렉토리 내부 (Windows 기준 %USERPROFILE%\Saved Games\Netstorm\CustomMaps\ ) 둘 다 불러오되, Edit 메뉴에서 신규 작성한 맵은 사용자 홈 디렉토리 내부 (Windows 기준 %USERPROFILE%\Saved Games\Netstorm\CustomMaps\ ) 에 저장하도록 한다.
                        추가로, 메인 메뉴에서 Edit 선택 시 나타나는 커스텀 맵 목록에 스크롤을 도입하고 출력 갯수 제한을 무제한으로 변경한다.
+                       이 사항은 단순히 저장 디렉토리를 변경하는 것이 아니다. 게임을 관리자 권한 없이는 파일 수정이 안되는 곳에 설치했을 때에도 게임이 정상 동작하도록 하기 위한 것이기도 하다. 게임 구동 시 자동 생성되어야 하는 모든 파일과 디렉토리가 %USERPROFILE%\Saved Games\Netstorm\ 하위로 들어가야 하며, 해당 파일을 읽는 코드도 그에 맞게 수정되어야 한다.
                  6차 - 한국어 지원 작업
                  7차 - 안티앨리어싱 및 FSR 1.0 선택사항으로 추가
                        메인 메뉴 - Options 에서 안티앨리어싱 및 FSR 1.0 을 선택적으로 켤 수 있도록 기능 추가 (기본값으로는 꺼져 있어야 함)
