@@ -773,6 +773,7 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
 
 // 새 공통 UI 검사가 같은 실제 Editor 설치 helper를 동기 범위에 빌린다.
 #include "CampaignEditorIslandWindowSession.inc"
+#include "CampaignEditorGraphNativeTests.inc" // 원본 후보8의 실제 배치 직후 표면/Graph 장부를 새 맵에 대조한다(723).
 
 #include "EditorInvalidFileTests.inc" // 실제 파일 반복/새 맵 분배와 반납 예외의 부분 상태를 확인한다.
 

@@ -1,0 +1,111 @@
+{
+  "unit": 723,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 722,
+    "version": "11.01",
+    "sha256": "0f787b72ef4f81e95ac293a39c3217656d3629bc1871d9c96cbc47173f37bdc0",
+    "gameSourceChanges": 0,
+    "gameLaunches": 0
+  },
+  "native": {
+    "sourceUnit": 720,
+    "pid": 4364,
+    "poolSha256": "72e79be380c0f92f8a9abaf2d6a8f874ec563786d6be647228247c120553f1c2",
+    "typesSha256": "06617ebf920d06a373476d5cb1ccb82df75d25e5bfad2a6e2edc49956b433e07",
+    "surfaceRows": 674,
+    "recordBeforeDrop": "080355650000"
+  },
+  "comparison": {
+    "scope": "원본과 같은 후보 배치 직후/같은 Fort 재적재의 명시 단계에서 전체 surface 배치·개별 Graph 성분/장부·noGraph 소속. 번호 자체·frame·원시 Pool 바이트 동등성은 판정하지 않음.",
+    "fixture": "editor-graph-native-720",
+    "phase": "placement",
+    "nativeSurfaceFixture": "editor-graph-placement-723-surfaces.tsv",
+    "label": "placed",
+    "nativeSurfaces": 674,
+    "cppSurfaces": 674,
+    "missingSurfaces": 0,
+    "extraSurfaces": 0,
+    "surfacePlacementMatches": true,
+    "nativeGraph": {
+      "connectedSurfaces": 678,
+      "graphs": 1
+    },
+    "cppGraph": {
+      "connectedSurfaces": 678,
+      "graphs": 1
+    },
+    "graphMatches": true,
+    "matchingFrames": 227,
+    "unmatchedNativeFrames": 447,
+    "nativeNoGraphSurfaces": 4,
+    "reportSha256": "9432c7fc073d49e4b730a1733059a42b0b5582360eea11003311fbe4d6485528",
+    "membership": {
+      "observed": true,
+      "componentMembershipAndRecordsMatch": true,
+      "noGraphMembershipMatches": true,
+      "cppNoGraphSurfaces": 4,
+      "cppGraphHistogram": {
+        "1": 670,
+        "254": 4
+      },
+      "passed": true
+    },
+    "passed": true
+  },
+  "build": {
+    "exitCode": 0,
+    "log": "extracted/cpp-editor-graph-723/build-v1.log",
+    "gameRelink": false
+  },
+  "tests": {
+    "cpp": {
+      "selected": 1,
+      "failed": 0,
+      "log": "extracted/cpp-editor-graph-723/tests-v1.log"
+    },
+    "tool": {
+      "selected": 6,
+      "failed": 0,
+      "log": "extracted/cpp-editor-graph-723/tool-tests-v1.log"
+    }
+  },
+  "protected": {
+    "existing": 2640,
+    "changed": [],
+    "addedFixture": 1,
+    "total": 2641
+  },
+  "files": [
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "sha256": "9ac12bd98733836b0bf4824bcac42eb2acfd160d1fd4a6489243793db008653d"
+    },
+    {
+      "path": "cpppj/tests/CampaignEditorGraphNativeTests.inc",
+      "sha256": "e28d2b6abb1ee38114f2b48bd44181e18864c5f7868ef8aa35af5b6011da3f6a"
+    },
+    {
+      "path": "cpppj/tests/fixtures/editor-graph-placement-723-surfaces.tsv",
+      "sha256": "e80c01260ac718d19aa662d3da923e181486883cb64e407cadee77ab8403c18c"
+    },
+    {
+      "path": "tools/cpp_editor_graph_compare.py",
+      "sha256": "c1f401e86b2cbb233b432d9d4b6fb01d37599bdc8c2bfac6adc78f82c7fabe1d"
+    },
+    {
+      "path": "tools/test_cpp_editor_graph_compare.py",
+      "sha256": "90d1157f56eaef0b427bd346485fc39f0bebbe9b0e3029e96d9bfa6d7d9f0507"
+    }
+  ],
+  "limitations": [
+    "같은 후보1개의 배치 직후만 확인했고 다중 섬/편집 후 분할·병합은 남음",
+    "frame447개 차이와 전체 그림 동일성은 판정하지 않음",
+    "새 게임/원본/MP·통신·제외 재현 검사는 실행하지 않음"
+  ]
+}

@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]  # 현재 제품 보고와 원본 고
 FIXTURES = ROOT / 'cpppj/tests/fixtures'  # 실행 중 얻은 관측을 수정하거나 제품에서 기대값을 만들지 않는다.
 NAME = 'editor-graph-native-720'  # 원본에서 실제 생성·저장·재적재한 한 맵의 식별자다.
 FLAGS_SHA256 = '277529af0c146bbde2aef7d715581f0f1d7f9398de3269b2fe66c50f33612460'  # 원본 재적재의 전체188개 TYPE 플래그 관측이다.
+PLACEMENT_SHA256 = 'e80c01260ac718d19aa662d3da923e181486883cb64e407cadee77ab8403c18c'  # 원본 배치 직후 전체120000 Pool의 표면674개를 고정한 최초 관측이다.
 
 
 def bits(value):
@@ -57,13 +58,18 @@ def membership(native, objects, numbers, records, expected):
                 passed=left == right and no_graph_matches)
 
 
-def compare(report, label, require_membership=False):
+def compare(report, label, require_membership=False, phase='reloaded'):
     """현재 보고의 한 상태에서 전체 surface의 타입·상태·소유자·좌표와 Graph 합계만 판정한다."""
     meta = json.loads((FIXTURES / (NAME + '.json')).read_text('utf-8'))
     for name, expected in meta['fixtureSha256'].items():  # 최초 원본 관측과 실제 저장 맵의 바이트 변화를 거부한다.
         if hashlib.sha256((FIXTURES / name).read_bytes()).hexdigest() != expected:
             raise ValueError('원본 고정 관측 SHA 불일치: ' + name)
-    with (FIXTURES / (NAME + '-surfaces.tsv')).open(encoding='utf-8', newline='') as stream:
+    if phase not in ('reloaded', 'placement'):
+        raise ValueError('Graph 원본 관측 단계 오류')
+    native_path = FIXTURES / ('editor-graph-placement-723-surfaces.tsv' if phase == 'placement' else NAME + '-surfaces.tsv')
+    if phase == 'placement' and hashlib.sha256(native_path.read_bytes()).hexdigest() != PLACEMENT_SHA256:
+        raise ValueError('원본 배치 직후 표면 관측 SHA 불일치')
+    with native_path.open(encoding='utf-8', newline='') as stream:
         native = [{key: int(value) for key, value in row.items()} for row in csv.DictReader(stream, delimiter='\t')]
     flags_path = FIXTURES / (NAME + '-type-flags.tsv')
     if hashlib.sha256(flags_path.read_bytes()).hexdigest() != FLAGS_SHA256:
@@ -100,20 +106,20 @@ def compare(report, label, require_membership=False):
     current_placement = collections.Counter(tuple(row[key] for key in keys) for row in objects)
     native_frames = collections.Counter(tuple(row[key] for key in keys) + (row['frame'],) for row in native)
     current_frames = collections.Counter(tuple(row[key] for key in keys) + (row['frame'],) for row in objects)
-    expected_graph = {key: meta['reloaded'][key] for key in ('connectedSurfaces', 'graphs')}
+    expected_graph = {key: meta[phase][key] for key in ('connectedSurfaces', 'graphs')}
     missing = sum((native_placement-current_placement).values())
     extra = sum((current_placement-native_placement).values())
     result = dict(scope='같은 원본 Fort의 한 번 재적재: 전체 surface 배치와 Graph 합계. 개별 Graph 번호/할당 SID·frame·원시 Pool 바이트 동등성은 판정하지 않음.',
-                  fixture=NAME, label=label, nativeSurfaces=len(native), cppSurfaces=len(objects), missingSurfaces=missing,
+                  fixture=NAME, phase=phase, nativeSurfaceFixture=native_path.name, label=label, nativeSurfaces=len(native), cppSurfaces=len(objects), missingSurfaces=missing,
                   extraSurfaces=extra, surfacePlacementMatches=not (missing or extra), nativeGraph=expected_graph, cppGraph=graph,
                   graphMatches=graph == expected_graph, matchingFrames=sum((native_frames & current_frames).values()),
                   unmatchedNativeFrames=sum((native_frames-current_frames).values()),
                   nativeNoGraphSurfaces=sum(row['graph'] == 254 for row in native),
                   reportSha256=hashlib.sha256(report.read_bytes()).hexdigest())
-    result['membership'] = membership(native, objects, numbers, records, meta['reloaded']) if numbers or records else dict(observed=False, passed=False)
+    result['membership'] = membership(native, objects, numbers, records, meta[phase]) if numbers or records else dict(observed=False, passed=False)
     result['passed'] = result['surfacePlacementMatches'] and result['graphMatches'] and (result['membership']['passed'] or not require_membership)
     if result['membership']['observed']:
-        result['scope'] = '같은 원본 Fort 재적재의 전체 surface 배치·개별 Graph 성분/장부·noGraph 소속. 번호 자체·frame·원시 Pool 바이트 동등성은 판정하지 않음.'
+        result['scope'] = '원본과 같은 후보 배치 직후/같은 Fort 재적재의 명시 단계에서 전체 surface 배치·개별 Graph 성분/장부·noGraph 소속. 번호 자체·frame·원시 Pool 바이트 동등성은 판정하지 않음.'
     return result
 
 
@@ -124,8 +130,9 @@ def main():
     parser.add_argument('--label', default='reloaded')
     parser.add_argument('--output', type=Path)
     parser.add_argument('--require-membership', action='store_true', help='개별 Graph 관측이 없는 과거 보고를 성공으로 판정하지 않음')
+    parser.add_argument('--phase', choices=('reloaded', 'placement'), default='reloaded', help='배치 직후678과 재적재670의 원본 장부를 구별함')
     args = parser.parse_args()
-    result = compare(args.report, args.label, args.require_membership)
+    result = compare(args.report, args.label, args.require_membership, args.phase)
     text = json.dumps(result, ensure_ascii=False, indent=2) + '\n'
     if args.output:
         output = args.output.resolve()

@@ -56,6 +56,18 @@ class MembershipTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, '표면 없는 활성'):
             self.compare()
 
+    def test_placement_overcount_is_preserved(self):
+        """실제 원본 배치의678/실제670 차이를 그대로 허용하고 장부를670으로 바꾸면 거부한다."""
+        with (FIXTURES / 'editor-graph-placement-723-surfaces.tsv').open(encoding='utf-8', newline='') as stream:
+            self.native = [{key: int(value) for key, value in row.items()} for row in csv.DictReader(stream, delimiter='\t')]
+        self.expected = json.loads((FIXTURES / (NAME + '.json')).read_text('utf-8'))['placement']
+        self.current = copy.deepcopy(self.native)
+        self.numbers = {row['sid']: 7 if row['graph'] == 1 else row['graph'] for row in self.current}
+        self.records = {7: (678, 1)}
+        self.assertTrue(self.compare()['passed'])
+        self.records[7] = (670, 1)
+        self.assertFalse(self.compare()['passed'])
+
 
 if __name__ == '__main__':
     unittest.main()
