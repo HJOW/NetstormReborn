@@ -1,3 +1,4 @@
+using System.Globalization;
 using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Original;
@@ -137,6 +138,44 @@ public sealed class FortObjectLoadHooks
 /// 모든 경계는 types·frames·state·pool·hash·random과 같은 객체보다 오래 살아야 한다.
 /// </summary>
 /// <remarks>2026-11-03 F2c-2에서 추가했다. 스트림 적재(ObjectStream·LoadStream 계열)는 F2c-3에서 잇는다.</remarks>
+/// <summary>
+/// 같은 월드 모듈의 준비·깊이 경계를 전달하는 실제 Objects 스트림 장치다(cpppj <c>o/RawFortObjectStream.h</c>의 <c>FortObjectStreamHooks</c>).
+/// 원본 DWORD 토큰은 실제 MemStream을 쓰며 생성 해석 목록을 만들지 않는다.
+/// </summary>
+/// <remarks>2026-11-03 F2c-3에서 추가했다. 선택·파일·이름 준비·변환표·해제·내용물·진단만 연결하고 조회·쓰기·현재 상태 판단은 로더가 실행한다.</remarks>
+public sealed class FortObjectStreamHooks
+{
+    /// <summary>고정 Template 슬롯의 현재 manager DWORD다.</summary>
+    public Func<int, uint>? Manager { get; set; }
+
+    /// <summary>같은 manager의 Select(name,1)가 반환한 stream 토큰이다.</summary>
+    public Func<uint, string, int, uint>? Select { get; set; }
+
+    /// <summary>고정 stream의 실제 16바이트·버퍼를 동기 빌림으로만 빌린다.</summary>
+    public Action<uint, Action<Span<byte>, MemStreamHooks>>? Access { get; set; }
+
+    /// <summary>같은 실제 255바이트 변환표를 준비하는 실제 004bd800이다.</summary>
+    public Action<int>? PrepareTypes { get; set; }
+
+    /// <summary>현재 005c89bc·005e4794를 각각 필요 위치에서 읽는다.</summary>
+    public Func<uint>? Conversion { get; set; }
+
+    /// <summary>현재 005e4794 조회다.</summary>
+    public Func<uint>? Checking { get; set; }
+
+    /// <summary>현재 변환표 토큰의 실제 물리 255바이트다.</summary>
+    public RawBytesLookup? ConversionBuffer { get; set; }
+
+    /// <summary>정상 꼬리에서 현재를 해제하고 free 뒤 current 0이며 예외 경로에서도 호출하지 않는다.</summary>
+    public Action? ReleaseConversion { get; set; }
+
+    /// <summary>같은 stream 위치에서 실제 004bd130(parent,stream,9,0)을 실행한다.</summary>
+    public Action<int, uint>? Contents { get; set; }
+
+    /// <summary>원본 진단 번호를 전달하며 복귀 뒤 중간 효과는 남기고 계속한다.</summary>
+    public Action<uint>? Assertion { get; set; }
+}
+
 public sealed class RawFortObjectLoad
 {
     /// <summary>공통 raw 읽기 WORD·HP와 기본 프레임 위치다.</summary>
@@ -700,6 +739,417 @@ public sealed class RawFortObjectLoad
             {
                 Section(fort.Chaff, owner, -1);
             }
+            NeedObject(_hooks.FinishOwner)(owner);
+        }
+        catch
+        {
+            _state.LoadingDepth--;
+            NeedObject(_hooks.LoadingDepthChanged)(_state.LoadingDepth);
+            throw;
+        }
+        _state.LoadingDepth--;
+        NeedObject(_hooks.LoadingDepthChanged)(_state.LoadingDepth);
+    }
+
+    /// <summary>
+    /// 도달한 미연결 장치만 거부하여 앞선 조회·생성의 부분 효과를 보존한다.
+    /// </summary>
+    /// <typeparam name="T">장치 대리자 형식(참조 형식).</typeparam>
+    /// <param name="function">확인할 장치다.</param>
+    /// <exception cref="InvalidOperationException">Fort 표시 Objects 실제 장치가 미연결이다.</exception>
+    private static T NeedStream<T>(T? function) where T : class
+    {
+        if (function is null)
+        {
+            throw new InvalidOperationException("Fort 표시 Objects 실제 장치 미연결");
+        }
+        return function;
+    }
+
+    /// <summary>
+    /// 비정렬 DWORD를 현재 4바이트로 읽는다.
+    /// </summary>
+    /// <param name="bytes">읽을 바이트다.</param>
+    /// <param name="at">읽을 위치다.</param>
+    private static uint StreamDword(ReadOnlySpan<byte> bytes, int at)
+    {
+        if (at > bytes.Length || bytes.Length - at < 4)
+        {
+            throw new ArgumentOutOfRangeException(nameof(at), at, "Fort Objects stream DWORD 물리범위");
+        }
+        uint value = 0;
+        // 낮은 바이트부터 네 바이트만 합친다
+        for (int index = 0; index < 4; index++)
+        {
+            value |= (uint)bytes[at + index] << (index * 8);
+        }
+        return value;
+    }
+
+    /// <summary>
+    /// pos 쓰는 실제 슬롯의 DWORD만 둔다.
+    /// </summary>
+    /// <param name="bytes">쓸 16바이트 필드다.</param>
+    /// <param name="at">쓸 위치다.</param>
+    /// <param name="value">쓸 값이다.</param>
+    private static void StreamPut(Span<byte> bytes, int at, uint value)
+    {
+        if (at > bytes.Length || bytes.Length - at < 4)
+        {
+            throw new ArgumentOutOfRangeException(nameof(at), at, "Fort Objects DWORD 쓰기 물리범위");
+        }
+        // 이웃 필드를 보존한다
+        for (int index = 0; index < 4; index++)
+        {
+            bytes[at + index] = (byte)(value >> (index * 8));
+        }
+    }
+
+    /// <summary>
+    /// BYTE 직접 읽기는 논리 end 검사를 추측하지 않으며 추후 판정만 로더가 실행한다.
+    /// </summary>
+    /// <param name="token">읽을 stream 토큰이다.</param>
+    /// <param name="hooks">실제 장치다.</param>
+    private static uint StreamByte(uint token, FortObjectStreamHooks hooks)
+    {
+        uint value = 0;
+        NeedStream(hooks.Access)(token, (fields, memory) =>
+        {
+            uint position = StreamDword(fields, 4);
+            ReadOnlySpan<byte> bytes = NeedStream(memory.Buffer)(StreamDword(fields, 0));
+            if (position >= (uint)bytes.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(token), position, "Fort Objects 직접 BYTE 물리범위");
+            }
+            value = bytes[(int)position];
+            StreamPut(fields, 4, position + 1u);
+        });
+        return value;
+    }
+
+    /// <summary>
+    /// WORD를 먼저 읽고 pos 증가 뒤 signed end 진단을 수행한다.
+    /// </summary>
+    /// <param name="token">읽을 stream 토큰이다.</param>
+    /// <param name="hooks">실제 장치다.</param>
+    /// <param name="signedValue">참이면 부호 확장한다.</param>
+    private static uint StreamWord(uint token, FortObjectStreamHooks hooks, bool signedValue)
+    {
+        uint value = 0;
+        NeedStream(hooks.Access)(token, (fields, memory) =>
+        {
+            uint position = StreamDword(fields, 4);
+            ReadOnlySpan<byte> bytes = NeedStream(memory.Buffer)(StreamDword(fields, 0));
+            if (position > (uint)bytes.Length || (uint)bytes.Length - position < 2u)
+            {
+                throw new ArgumentOutOfRangeException(nameof(token), position, "Fort Objects 직접 WORD 물리범위");
+            }
+            value = (uint)bytes[(int)position] | ((uint)bytes[(int)position + 1] << 8);
+            uint end = StreamDword(fields, 8);
+            StreamPut(fields, 4, position + 2u);
+            if (unchecked((int)(position + 2u)) > unchecked((int)end))
+            {
+                NeedStream(hooks.Assertion)(0x2e);
+            }
+        });
+        return signedValue ? unchecked((uint)(int)(short)value) : value;
+    }
+
+    /// <summary>
+    /// 원본 signed 좌표에 DWORD 감산 셈을 한다.
+    /// </summary>
+    /// <param name="value">기준값이다.</param>
+    /// <param name="delta">지를 값이다.</param>
+    private static int StreamAdd(int value, uint delta)
+    {
+        return unchecked((int)(unchecked((uint)value) + delta));
+    }
+
+    /// <summary>
+    /// 원본 BYTE 종류를 현재 변환표·검증 모드로 조회한다.
+    /// </summary>
+    /// <param name="type">조회할 종류 바이트다.</param>
+    /// <param name="hooks">실제 장치다.</param>
+    private static uint StreamType(uint type, FortObjectStreamHooks hooks)
+    {
+        if (type >= 0xf6u)
+        {
+            return type;
+        }
+        uint conversion = NeedStream(hooks.Conversion)();
+        if (conversion == 0)
+        {
+            return type;
+        }
+        uint Read(uint pointer)
+        {
+            ReadOnlySpan<byte> bytes = NeedStream(hooks.ConversionBuffer)(pointer);
+            if (type >= (uint)bytes.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(type), type, "Fort Objects 변환표 BYTE 물리범위");
+            }
+            return bytes[(int)type];
+        }
+        if (NeedStream(hooks.Checking)() != 0 && Read(conversion) == 0)
+        {
+            NeedStream(hooks.Assertion)(0x79);
+            conversion = NeedStream(hooks.Conversion)();
+        }
+        return Read(conversion);
+    }
+
+    /// <summary>
+    /// 버전 BYTE 뒤에 오는 원문 data·end·pos 관문만 판단한다.
+    /// </summary>
+    /// <param name="token">볼 stream 토큰이다.</param>
+    /// <param name="hooks">실제 장치다.</param>
+    private static bool StreamRemaining(uint token, FortObjectStreamHooks hooks)
+    {
+        bool present = false;
+        NeedStream(hooks.Access)(token, (fields, _) =>
+        {
+            present = StreamDword(fields, 0) != 0 && StreamDword(fields, 8) != 0 && unchecked((int)StreamDword(fields, 4)) < unchecked((int)StreamDword(fields, 8));
+        });
+        return present;
+    }
+
+    /// <summary>
+    /// 004bdc60의 직접 읽기·즉시 생성으로 실행한다. 10.78만 쓴다.
+    /// </summary>
+    /// <param name="stream">읽을 stream 토큰이다.</param>
+    /// <param name="originX">원점 x다.</param>
+    /// <param name="originY">원점 y다.</param>
+    /// <param name="defaultOwner">미션 기본 소유자다.</param>
+    /// <param name="hooks">같은 실제 stream 장치다.</param>
+    public int ObjectStream(uint stream, int originX, int originY, uint defaultOwner, FortObjectStreamHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        if (_pool.Edition != OriginalEdition.Patch1078)
+        {
+            throw new ArgumentException("Fort 표시 Objects는 10.78 전용", nameof(stream));
+        }
+        uint position = StreamByte(stream, hooks);
+        uint stored = StreamByte(stream, hooks);
+        uint type = stored;
+        uint owner = defaultOwner;
+        if (stored < 0xf6u)
+        {
+            type = StreamType(stored, hooks);
+        }
+        else
+        {
+            owner = 255u - stored;
+            type = _state.BridgeType;
+        }
+        if (type == 0)
+        {
+            if (StreamByte(stream, hooks) != 0)
+            {
+                NeedStream(hooks.Assertion)(0x2e8);
+            }
+            return 0;
+        }
+        if (type == _state.IslandType)
+        {
+            NeedStream(hooks.Access)(stream, (fields, _) => StreamPut(fields, 4, StreamDword(fields, 4) + 1u));
+            return 0;
+        }
+        float x = Add(originX, position >> 4);
+        float y = Add(originY, position & 15u);
+        int sid = NeedObject(_hooks.Create)(type, 0);
+        Type(sid);
+        if ((Type(sid).Flags1 & TypeFlag1.SaveFrame) != 0)
+        {
+            Frame(sid, StreamByte(stream, hooks));
+        }
+        if ((Type(sid).Flags1 & TypeFlag1.SaveQA) != 0)
+        {
+            uint low = StreamByte(stream, hooks);
+            Word(sid, ((uint)_pool.Slot(sid)[WordOffset + 1] << 8) | low);
+        }
+        if ((Type(sid).Flags1 & TypeFlag1.SaveQB) != 0)
+        {
+            Word(sid, StreamWord(stream, hooks, true));
+        }
+        if ((Type(sid).Flags2 & TypeFlag2.Bridge) != 0)
+        {
+            Frame(sid, StreamByte(stream, hooks));
+        }
+        if (_state.Version == 0)
+        {
+            NeedObject(_hooks.SetState)(sid, StreamByte(stream, hooks));
+        }
+        if (unchecked((int)_state.Version) > 1 && (Type(sid).Flags2 & TypeFlag2.Factory) != 0)
+        {
+            NeedObject(_hooks.SetState)(sid, StreamByte(stream, hooks));
+        }
+        if (unchecked((int)_state.Version) > 0)
+        {
+            if ((Type(sid).Flags2 & _state.OwnerSavedMask) != 0)
+            {
+                owner = StreamByte(stream, hooks);
+                if (owner == 0 || owner > 8)
+                {
+                    owner = 1;
+                }
+                if (!_state.Special && !_state.Mission)
+                {
+                    owner = defaultOwner;
+                }
+            }
+        }
+        else
+        {
+            owner = defaultOwner;
+        }
+        if ((Type(sid).Flags2 & _state.OwnerClearedMask) != 0)
+        {
+            owner = 0;
+        }
+        uint current = _pool.Slot(sid)[TypeOffset];
+        if (current == _state.IslandType || current == _state.NoIslandType)
+        {
+            owner = 0;
+        }
+        if (current == _state.LargeIslandType)
+        {
+            NeedStream(hooks.Assertion)(0x334);
+        }
+        NeedObject(_hooks.SetOwner)(sid, owner);
+        if (NeedObject(_hooks.HasHitPoints)(sid))
+        {
+            StreamPut(_pool.AllocatedBytes(sid), HpOffset, unchecked((uint)NeedObject(_hooks.MaxHitPoints)(sid)));
+        }
+        if ((Type(sid).Flags1 & TerrainFrameBit) != 0)
+        {
+            int ground = Terrain(x, y);
+            if (ground != 0)
+            {
+                uint frame = StreamDword(_pool.Slot(ground), PatchFrameOffset);
+                Frame(sid, frame == 0xffffffffu ? 0u : frame);
+            }
+        }
+        if ((Type(sid).Flags1 & RandomFrameBit) != 0)
+        {
+            int frame = RandomFrame(sid);
+            Frame(sid, frame == -1 ? 0u : unchecked((uint)frame));
+        }
+        NeedObject(_hooks.Pop)(sid, x, y, 9);
+        if ((Type(sid).Flags1 & ContainerFlag) != 0)
+        {
+            NeedStream(hooks.Contents)(sid, stream);
+        }
+        if (_state.Fort && !_state.IsFortDestroyBlocked())
+        {
+            if ((Type(sid).Flags2 & _state.FortKeepGenus()) == 0 ||
+                (!_state.Special && !_state.Mission && (Type(sid).Flags2 & DaisFlag) != 0 && NeedObject(_hooks.VirtualCount)(sid) == 1))
+            {
+                NeedObject(_hooks.Destroy)(sid, 0);
+            }
+        }
+        return sid;
+    }
+
+    /// <summary>
+    /// 청크·WORD 개수 뒤 객체를 같은 즉시 적용한다.
+    /// </summary>
+    /// <param name="stream">읽을 stream 토큰이다.</param>
+    /// <param name="x">청크 x 칸이다.</param>
+    /// <param name="y">청크 y 칸이다.</param>
+    /// <param name="owner">적을 소유자다.</param>
+    /// <param name="hooks">같은 실제 stream 장치다.</param>
+    private void ChunkStream(uint stream, int x, int y, uint owner, FortObjectStreamHooks hooks)
+    {
+        int originX = unchecked((int)(unchecked((uint)x) << 4));
+        int originY = unchecked((int)(unchecked((uint)y) << 4));
+        if (StreamByte(stream, hooks) != 99u)
+        {
+            NeedStream(hooks.Assertion)(0x37a);
+        }
+        uint count = StreamWord(stream, hooks, false);
+        // 해석 코드 실패 뒤선 객체·함수를 남기지 않는다
+        for (uint index = 0; index < count; index++)
+        {
+            ObjectStream(stream, originX, originY, owner, hooks);
+        }
+    }
+
+    /// <summary>
+    /// 원문 y·x별 현재 지역 읽기와 책갈피 적용을 그대로 실행한다.
+    /// </summary>
+    /// <param name="stream">읽을 stream 토큰이다.</param>
+    /// <param name="owner">적을 소유자다.</param>
+    /// <param name="territory">적용 영역 번호다. Chaff는 -1이다.</param>
+    /// <param name="hooks">같은 실제 stream 장치다.</param>
+    private void SectionStream(uint stream, uint owner, int territory, FortObjectStreamHooks hooks)
+    {
+        _state.Scope = territory < 0 ? 2u : 1u;
+        // 원본과 같이 현재 지역 읽기를 y 바깥·x 오른쪽 순서로 돈다
+        for (int y = 0; y < _state.ChunksY; y = StreamAdd(y, 1))
+        {
+            // 같은 실제 청크를 Terr 적용 뒤에 바로 실행한다
+            for (int x = 0; x < _state.ChunksX; x = StreamAdd(x, 1))
+            {
+                sbyte region = NeedObject(_hooks.ChunkRegion)(x, y);
+                if (territory >= 0 && !NeedObject(_hooks.TerritoryAllowed)(region, owner, territory))
+                {
+                    continue;
+                }
+                ChunkStream(stream, x, y, owner, hooks);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 깊이·변환표 준비→Terr·Chaff·정책표 반납·후처리하며 예외는 깊이를 반납한다.
+    /// </summary>
+    /// <param name="slot">고정 this의 Template 칸 번호다.</param>
+    /// <param name="hooks">같은 실제 stream 장치다.</param>
+    /// <param name="start">시작 영역 번호다.</param>
+    /// <param name="end">끝 영역 번호다(미포함).</param>
+    public void LoadStream(int slot, FortObjectStreamHooks hooks, int start = 0, int end = 20)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        if (_pool.Edition != OriginalEdition.Patch1078)
+        {
+            throw new ArgumentException("Fort 표시 Objects 부모는 10.78 전용", nameof(slot));
+        }
+        _state.LoadingDepth++;
+        NeedObject(_hooks.LoadingDepthChanged)(_state.LoadingDepth);
+        try
+        {
+            if (NeedStream(hooks.Manager)(slot) == 0)
+            {
+                NeedStream(hooks.Assertion)(0x3f5);
+            }
+            if (start == end)
+            {
+                NeedStream(hooks.Assertion)(0x3f9);
+            }
+            NeedStream(hooks.PrepareTypes)(slot);
+            uint owner = slot >= 1 && slot <= 8 ? (uint)slot : 0u;
+            // 원본과 같이 현재 manager를 매회 선택 직전에 다시 읽는다
+            for (int territory = start; territory < end; territory = StreamAdd(territory, 1))
+            {
+                // 원본 snprintf "Terr%02d"와 같이 두 자리로 만든다(0~19 범위다)
+                string name = "Terr" + territory.ToString("00", CultureInfo.InvariantCulture);
+                uint stream = NeedStream(hooks.Select)(NeedStream(hooks.Manager)(slot), name, 1);
+                _state.Version = StreamByte(stream, hooks);
+                if (StreamRemaining(stream, hooks))
+                {
+                    SectionStream(stream, owner, territory, hooks);
+                }
+            }
+            if (_state.Fort || _state.ChaffMode)
+            {
+                uint stream = NeedStream(hooks.Select)(NeedStream(hooks.Manager)(slot), "Chaff", 1);
+                _state.Version = StreamByte(stream, hooks);
+                if (StreamRemaining(stream, hooks))
+                {
+                    SectionStream(stream, owner, -1, hooks);
+                }
+            }
+            NeedStream(hooks.ReleaseConversion)();
             NeedObject(_hooks.FinishOwner)(owner);
         }
         catch

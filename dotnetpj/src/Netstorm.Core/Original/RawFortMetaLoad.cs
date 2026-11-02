@@ -1,3 +1,6 @@
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -73,7 +76,7 @@ public sealed class FortMetaLoadHooks
 /// <remarks>
 /// 2026-11-02 F2a에서 추가했다. badges는 장기 소유한 원본 28×220BYTE이며 이 객체보다 오래 살아야 한다.
 /// 이미 원본 TypeNames 파싱을 끝낸 같은 <c>FortTemplate</c>의 실제 Contents 몸체만 연결하는 <c>MakeFortMetaContentsHooks</c>는
-/// <c>RawFortObjectLoad</c>가 필요한 F2b에서 옮긴다.
+/// F2c-3에서 옮겼다.
 /// </remarks>
 public sealed class RawFortMetaLoad
 {
@@ -324,5 +327,60 @@ public sealed class RawFortMetaLoad
     {
         _setDepth(value);
         _hooks.LoadingDepthChanged!(value);
+    }
+
+    /// <summary>
+    /// 같은 풀의 실제 Contents 몸체만 연결한다. 변환표 준비·실제·기술부모·UI 전체 복사는 이 범위가 아니다(cpppj <c>o/RawFortMetaLoad.cpp</c>의 <c>MakeFortMetaContentsHooks</c>).
+    /// 같은 FortTemplate의 실제 해석 Contents 몸체를 호출하며 Technology parsed 바이트와 같은 stream 구간을 요구한다.
+    /// </summary>
+    /// <param name="pool">검사할 풀이다.</param>
+    /// <param name="objects">같은 풀의 실제 객체 적재 몸체다.</param>
+    /// <param name="fort">이미 원본 TypeNames 파싱을 끝낸 같은 FortTemplate이다.</param>
+    /// <param name="hooks">물을 훅 묶음이다.</param>
+    /// <exception cref="ArgumentException">Fort meta Contents SID 풀 불일치·Technology 바이트와 stream 불일치다.</exception>
+    /// <exception cref="InvalidOperationException">Fort Technology는 완화 변환 호출만 처리한다.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Fort Technology parsed 뒤꼬리 범위 오류다.</exception>
+    public static FortMetaLoadHooks MakeFortMetaContentsHooks(RawSidPool pool, RawFortObjectLoad objects, FortTemplate fort, FortMetaLoadHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(pool);
+        ArgumentNullException.ThrowIfNull(objects);
+        ArgumentNullException.ThrowIfNull(fort);
+        ArgumentNullException.ThrowIfNull(hooks);
+        if (!ReferenceEquals(pool, objects.Pool()))
+        {
+            throw new ArgumentException("Fort meta Contents SID 풀 불일치", nameof(pool));
+        }
+        return new FortMetaLoadHooks
+        {
+            Assertion = hooks.Assertion,
+            LoadingDepthChanged = hooks.LoadingDepthChanged,
+            TechnologyParent = hooks.TechnologyParent,
+            PrepareTypeNames = hooks.PrepareTypeNames,
+            Contents = (parent, stream, flags, relaxed) =>
+            {
+                if (!relaxed)
+                {
+                    throw new InvalidOperationException("Fort Technology는 완화 변환 호출만 처리한다");
+                }
+                ReadOnlySpan<byte> bytes = fort.Section("Technology");
+                if (fort.TechnologyTrailingBytes < 0 || fort.TechnologyTrailingBytes > bytes.Length)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(fort), fort.TechnologyTrailingBytes, "Fort Technology parsed 뒤꼬리 범위 오류");
+                }
+                if (stream.Bytes.Length != bytes.Length)
+                {
+                    throw new ArgumentException("Fort Technology parsed 바이트와 stream 불일치", nameof(stream));
+                }
+                // 같은 할당의 같은 구간인지 첫 바이트 주소로 확인한다. C++의 포인터 비교와 같다
+                if (bytes.Length > 0 && !Unsafe.AreSame(ref MemoryMarshal.GetReference(bytes), ref MemoryMarshal.GetReference(stream.Bytes.Span)))
+                {
+                    throw new ArgumentException("Fort Technology parsed 바이트와 stream 불일치", nameof(stream));
+                }
+                objects.Contents(parent.Value, fort.Technology, flags);
+                stream.Position = unchecked((uint)(bytes.Length - fort.TechnologyTrailingBytes));
+            },
+            ReleaseTypeConversion = hooks.ReleaseTypeConversion,
+            RefreshTechnologyUi = hooks.RefreshTechnologyUi,
+        };
     }
 }

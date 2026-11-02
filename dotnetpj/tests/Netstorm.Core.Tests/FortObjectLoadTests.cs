@@ -735,4 +735,294 @@ public sealed class FortObjectLoadTests
             }
         }
     }
+
+    /// <summary>독립 MemStream의 물리 16바이트와 입력 바이트를 함께 소유한다.</summary>
+    private sealed class ObjectStreamMemory
+    {
+        /// <summary>data 토큰 1·pos·end·alloc이며 callback 사이도 같은 주소다.</summary>
+        public byte[] Fields = new byte[16];
+
+        /// <summary>논리 end 뒤 물리 영역까지 명시 입력으로 미리 채운다.</summary>
+        public byte[] Bytes;
+
+        /// <summary>
+        /// 실제 쓰기 결과를 미리 담지 않는다.
+        /// </summary>
+        /// <param name="value">입력 바이트다.</param>
+        public ObjectStreamMemory(byte[] value)
+        {
+            Bytes = value;
+            Put(Fields, 0, 1, 4);
+            Put(Fields, 8, (uint)value.Length, 4);
+            Put(Fields, 12, (uint)value.Length, 4);
+        }
+
+        /// <summary>한 쓰기에서 실제 fields·버퍼를 빌린다.</summary>
+        /// <param name="operation">쓸 동작이다.</param>
+        public void Access(Action<Span<byte>, MemStreamHooks> operation)
+        {
+            MemStreamHooks memory = new()
+            {
+                Buffer = token =>
+                {
+                    if (token != 1)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(token), token, "Objects 검사 stream 범위");
+                    }
+                    return Bytes;
+                },
+            };
+            operation(Fields, memory);
+        }
+    }
+
+    /// <summary>보호 기계값 hex를 바이트로 복원한다.</summary>
+    /// <param name="text">hex 문자열이다.</param>
+    private static byte[] ObjectStreamHex(string text)
+    {
+        if (text.Length % 2 != 0)
+        {
+            throw new InvalidOperationException("Objects 검사 hex 길이 오류");
+        }
+        return Convert.FromHexString(text);
+    }
+
+    /// <summary>573개 객체와 36개 부모를 같은 보호 기대값으로 대조한다.</summary>
+    [Fact]
+    public void ReplaysIndependentPatch609ObjectsAndParent()
+    {
+        string[][] rows = X86Fixture.Read("fortobjectload");
+        int count = 0;
+        // 각 입력의 실제 깊이·stream·현재 영역을 사용한다
+        foreach (string[] row in rows)
+        {
+            if (row[0] != "originals")
+            {
+                continue;
+            }
+            List<uint> values = Inputs(row[2]);
+            FortLoadScene scene = new(OriginalEdition.Patch1078, values);
+            FortObjectLoadHooks effects = scene.Hooks();
+            RawFortObjectLoad loader = new(scene.Pool, scene.Hash, scene.Types, scene.Frames, scene.Random, scene.State, effects);
+            List<ObjectStreamMemory> memory = [];
+            uint conversion = 0;
+            byte[] table = Enumerable.Range(0, 255).Select(index => (byte)index).ToArray();
+            if (row[1] == "O")
+            {
+                memory.Add(new ObjectStreamMemory(ObjectStreamHex(row[3])));
+                if (scene.V[(int)Field.Stored] < 246 && scene.V[(int)Field.Stored] != scene.V[(int)Field.FortTypeInput])
+                {
+                    conversion = 1;
+                    table[scene.V[(int)Field.Stored]] = (byte)scene.V[(int)Field.FortTypeInput];
+                }
+            }
+            else
+            {
+                // 원문 실행기의 20 Terr·Chaff 입력을 맺는다
+                for (int index = 0; index < 21; index++)
+                {
+                    List<byte> bytes = [0];
+                    if (index == 0 || index == 1 || index == 20)
+                    {
+                        bytes = [2];
+                        for (int chunk = 0; chunk < 4; chunk++)
+                        {
+                            bytes.AddRange([99, 1, 0, 0x21, (byte)scene.V[(int)Field.Stored], (byte)scene.V[(int)Field.OwnerInput]]);
+                        }
+                    }
+                    memory.Add(new ObjectStreamMemory([.. bytes]));
+                }
+            }
+            Action<uint, Action<Span<byte>, MemStreamHooks>> access = (token, operation) =>
+            {
+                if (token == 0 || token > (uint)memory.Count)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(token), token, "Objects 검사 stream 범위");
+                }
+                memory[(int)token - 1].Access(operation);
+            };
+            FortObjectStreamHooks hooks = new()
+            {
+                Manager = _ => 0x1111u,
+                Select = (manager, name, writable) =>
+                {
+                    Assert.Equal(0x1111u, manager);
+                    Assert.Equal(1, writable);
+                    int index = name == "Chaff" ? 20 : int.Parse(name.Substring(4), CultureInfo.InvariantCulture);
+                    Assert.True(index < memory.Count);
+                    return (uint)index + 1u;
+                },
+                PrepareTypes = _ => { },
+                Conversion = () => conversion,
+                Checking = () => 0u,
+                ConversionBuffer = token =>
+                {
+                    Assert.Equal(1u, token);
+                    return table;
+                },
+                ReleaseConversion = () => conversion = 0,
+                Assertion = line => throw new InvalidOperationException("Objects 검사 중단 진단: " + line),
+                Access = access,
+                Contents = (parent, stream) =>
+                {
+                    FortContentsLoadHooks reader = new()
+                    {
+                        Access = access,
+                        ConversionBuffer = token =>
+                        {
+                            Assert.Equal(1u, token);
+                            return table;
+                        },
+                        Type = type => new FortContentsLoadType(scene.Types[(int)type].Flags1, scene.Types[(int)type].ContentListFlags),
+                        ParentListFlags = sid => scene.Types[scene.Pool.Slot((int)sid)[10]].ContainerListFlags,
+                        Create = (sid, type, quantity, listFlags, flags, quality) => (uint)effects.CreateContent!((int)sid, type, quantity, listFlags, flags, quality),
+                        Assertion = _ => throw new InvalidOperationException("Objects 검사 Contents 중단 진단"),
+                    };
+                    RawFortContentsLoad.LoadFortContents((uint)parent, stream, 9, 0, new FortContentsLoadGlobals { GetConversion = () => conversion, Checking = () => 0u }, reader);
+                },
+            };
+            if (row[1] == "O")
+            {
+                loader.ObjectStream(1, unchecked((int)scene.V[(int)Field.OriginX]), unchecked((int)scene.V[(int)Field.OriginY]), scene.V[(int)Field.DefaultOwner], hooks);
+            }
+            else
+            {
+                loader.LoadStream((int)scene.V[(int)Field.Slot], hooks);
+            }
+            string state = scene.State.Version.ToString(CultureInfo.InvariantCulture) + ',' + scene.State.LoadingDepth.ToString(CultureInfo.InvariantCulture) + ',' + scene.State.Scope.ToString(CultureInfo.InvariantCulture) + ',' + (scene.State.FortDestroyBlocked ? "1" : "0");
+            bool same = scene.EventsText() == row[4] && scene.Raws() == row[5] && scene.Random.State.ToString(CultureInfo.InvariantCulture) == row[6] && state == row[7];
+            Assert.True(same, "Fort ObjectStream " + row[1] + " 행 " + count);
+            count++;
+        }
+        Assert.Equal(609, count);
+    }
+
+    /// <summary>두 번째 잘린 동일 입력이 수행 객체를 유지하고 cursor를 지연시키는지 확인한다.</summary>
+    [Fact]
+    public void TruncatedSecondObjectKeepsFirstAndPartialSecond()
+    {
+        List<uint> values = Inputs(X86Fixture.Read("fortobjectload")[0][2]);
+        FortLoadScene scene = new(OriginalEdition.Patch1078, values);
+        FortObjectLoadHooks effects = scene.Hooks();
+        RawFortObjectLoad loader = new(scene.Pool, scene.Hash, scene.Types, scene.Frames, scene.Random, scene.State, effects);
+        List<byte> bytes = [.. ObjectStreamHex(X86Fixture.Read("fortobjectload")[0][3]), 0x21, 100];
+        List<ObjectStreamMemory> memory = [new ObjectStreamMemory([.. bytes])];
+        uint conversion = 0;
+        byte[] table = [];
+        Action<uint, Action<Span<byte>, MemStreamHooks>> access = (token, operation) =>
+        {
+            Assert.Equal(1u, token);
+            memory[0].Access(operation);
+        };
+        FortObjectStreamHooks hooks = new()
+        {
+            Manager = _ => 0x1111u,
+            Select = (manager, name, writable) => 1u,
+            Access = access,
+            PrepareTypes = _ => { },
+            Conversion = () => conversion,
+            Checking = () => 0u,
+            ConversionBuffer = _ => table,
+            ReleaseConversion = () => conversion = 0,
+            Assertion = line => throw new InvalidOperationException("Objects 검사 중단 진단: " + line),
+            Contents = (parent, stream) => throw new InvalidOperationException("Objects 검사 내용물 경로 미사용"),
+        };
+        loader.ObjectStream(1, 16, 32, 1, hooks);
+        Assert.Equal(1, scene.Born);
+        Assert.Equal(3u, Read(memory[0].Fields, 4, 4));
+        bool failed = false;
+        try
+        {
+            loader.ObjectStream(1, 16, 32, 1, hooks);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            failed = true;
+        }
+        Assert.True(failed && scene.Born == 2 && Read(memory[0].Fields, 4, 4) == (uint)bytes.Count);
+        Assert.Equal(1, scene.Pool.Slot(100)[34]);
+        Assert.Equal(100, scene.Pool.Slot(101)[10]);
+        Assert.Equal(3u, scene.State.LoadingDepth);
+    }
+
+    /// <summary>원문 예외 helper는 깊이를 감소하고 정상 꼬리 free·처리는 수행하지 않는다.</summary>
+    [Fact]
+    public void ParentFailureKeepsConversionAndOnlyUnwindsDepth()
+    {
+        List<uint> values = Inputs(X86Fixture.Read("fortobjectload")[0][2]);
+        values[(int)Field.Flags2] = 0x40000u;
+        values[(int)Field.Mission] = 1;
+        values[(int)Field.Qa] = 0;
+        FortLoadScene scene = new(OriginalEdition.Patch1078, values);
+        scene.State.ChunksX = scene.State.ChunksY = 1;
+        FortObjectLoadHooks effects = scene.Hooks();
+        int finished = 0;
+        effects.FinishOwner = _ => finished++;
+        RawFortObjectLoad loader = new(scene.Pool, scene.Hash, scene.Types, scene.Frames, scene.Random, scene.State, effects);
+        List<ObjectStreamMemory> memory = [new ObjectStreamMemory([2, 99, 2, 0, 0x21, 100, 2, 0x21, 100])];
+        uint conversion = 0;
+        byte[] table = Enumerable.Range(0, 255).Select(index => (byte)index).ToArray();
+        Action<uint, Action<Span<byte>, MemStreamHooks>> access = (token, operation) =>
+        {
+            Assert.Equal(1u, token);
+            memory[0].Access(operation);
+        };
+        FortObjectStreamHooks hooks = new()
+        {
+            Manager = _ => 0x1111u,
+            Select = (manager, name, writable) => 1u,
+            Access = access,
+            PrepareTypes = slot =>
+            {
+                Assert.Equal(1, slot);
+                Assert.Equal(4u, scene.State.LoadingDepth);
+                conversion = 1;
+            },
+            Conversion = () => conversion,
+            Checking = () => 0u,
+            ConversionBuffer = token =>
+            {
+                Assert.Equal(1u, token);
+                return table;
+            },
+            ReleaseConversion = () => conversion = 0,
+            Assertion = line => throw new InvalidOperationException("Objects 검사 중단 진단: " + line),
+            Contents = (parent, stream) =>
+            {
+                FortContentsLoadHooks reader = new()
+                {
+                    Access = access,
+                    ConversionBuffer = token =>
+                    {
+                        Assert.Equal(1u, token);
+                        return table;
+                    },
+                    Type = type => new FortContentsLoadType(scene.Types[(int)type].Flags1, scene.Types[(int)type].ContentListFlags),
+                    ParentListFlags = sid => scene.Types[scene.Pool.Slot((int)sid)[10]].ContainerListFlags,
+                    Create = (sid, type, quantity, listFlags, flags, quality) => (uint)effects.CreateContent!((int)sid, type, quantity, listFlags, flags, quality),
+                    Assertion = _ => throw new InvalidOperationException("Objects 검사 Contents 중단 진단"),
+                };
+                RawFortContentsLoad.LoadFortContents((uint)parent, stream, 9, 0, new FortContentsLoadGlobals { GetConversion = () => conversion, Checking = () => 0u }, reader);
+            },
+        };
+        int released = 0;
+        hooks.ReleaseConversion = () =>
+        {
+            released++;
+            conversion = 0;
+        };
+        bool failed = false;
+        try
+        {
+            loader.LoadStream(1, hooks);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            failed = true;
+        }
+        Assert.True(failed && scene.Born == 2 && finished == 0 && released == 0 && conversion == 1 && scene.State.LoadingDepth == 3 && scene.State.Scope == 1);
+        Assert.Equal(9u, Read(memory[0].Fields, 4, 4));
+        Assert.Equal(2, scene.Pool.Slot(100)[34]);
+        Assert.Equal(100, scene.Pool.Slot(101)[10]);
+    }
 }

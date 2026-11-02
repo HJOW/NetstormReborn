@@ -2,6 +2,7 @@ using System.Buffers.Binary;
 using System.Globalization;
 using System.Text;
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 using Netstorm.Tests;
 
 namespace Netstorm.Core.Tests;
@@ -462,5 +463,153 @@ public sealed class FortMetaLoadTests
         Assert.ThrowsAny<Exception>(() => meta.LoadBadgesSelected(null!));
         Assert.Equal(3u, depth);
         Assert.Equal(1, parents);
+    }
+
+    /// <summary>선택 Technology Contents만 실제 Factory·ContainedCreate·ContentForm으로 같은 풀에 재생한다.</summary>
+    [Fact]
+    public void ActualSamePoolContentsAndMandatoryBoundaries()
+    {
+        // 부모 getter·변환표 준비·실제 UI 설명 경계이며 HP·프레임·Pop·Owner는 이 분기에서 요청하지 않는다
+        foreach (OriginalEdition edition in new[] { OriginalEdition.Patch1078, OriginalEdition.Cd1072 })
+        {
+            RawSidPool pool = new(24000, false, null, edition);
+            RawSquidHash hash = new();
+            List<OriginalTypeRecord> types = Enumerable.Range(0, edition == OriginalEdition.Patch1078 ? 188 : 171).Select(_ => new OriginalTypeRecord()).ToList();
+            // C# 생성·내용물 모듈은 10.78 표 188개 가드를 두므로 CD 장면에서는 뒤에 빈 기록을 채운 복사본을 쓴다
+            List<OriginalTypeRecord> moduleTypes = edition == OriginalEdition.Patch1078 ? types : [.. types, .. Enumerable.Range(0, 17).Select(_ => new OriginalTypeRecord())];
+            List<RiftTypeFrames> frames = [];
+            for (int index = 0; index < types.Count; index++)
+            {
+                frames.Add(new RiftTypeFrames([]));
+            }
+            types[89].ConstructorAddress = 0;
+            // C# 팩토리는 재구성된 생성자만 지원하므로(원본 89번 생성자는 미복원) 기본 Squid로 만든다.
+            // 부모 슬롯의 가상 표는 이 검사에서 대조하지 않으며 연결·소유자·내용물은 동일하게 대조된다.
+            types[89].FootX = types[89].FootY = 1;
+            types[110].Flags1 = 0x1000;
+            types[110].ContentListFlags = 0x10;
+            types[111].Flags1 = 0x2000;
+            types[111].ContentListFlags = 0x20;
+            RawSquidFactory factory = new(pool, moduleTypes);
+            int parent = factory.Create(89, (SidAllocation)2);
+            List<int> children = [];
+            int transmits = 0;
+            RawContentFormHost forms = new(pool, moduleTypes,
+                (owner, form, reason) =>
+                {
+                    Assert.Equal(parent, owner);
+                    Assert.Equal(1u, reason);
+                    children.Add(form);
+                },
+                (sid, flags) => transmits++);
+            ContainedCreateState containedState = new();
+            RawContainedCreate contained = new(pool, containedState, forms.BindCreate(factory, new ContainedCreateHooks
+            {
+                NotifySurface = _ => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            }));
+            NetstormRandom random = new(12345);
+            FortObjectLoadState objectState = new();
+            RawFortObjectLoad objects = new(pool, hash, types, frames, random, objectState, ContentsOnly(contained));
+            FortTemplate fort = new();
+            for (int index = 0; index < FortTemplate.SectionCount; index++)
+            {
+                fort.Sections.Add(new RawSectionBuffer());
+            }
+            int technologyIndex = FortTemplate.SectionNames.ToList().IndexOf("Technology");
+            byte[] techBytes = [2, 110, 9, 111, 254, 255, 0xee];
+            fort.Sections[technologyIndex] = RawSectionBuffer.FromBytes(techBytes);
+            fort.TechnologyTrailingBytes = 1;
+            FortContent first = new() { StoredType = 110, Type = 110, Quantity = 9 };
+            FortContent second = new() { StoredType = 111, Type = 111, Quantity = -2 };
+            fort.Technology = new FortContentList { Items = [first, second] };
+            uint depth = 3;
+            FortMetaLoadState state = new() { HasTypeConversion = true };
+            List<string> effects = [];
+            FortMetaLoadHooks hooks = new()
+            {
+                Assertion = _ => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+                LoadingDepthChanged = value =>
+                {
+                    Assert.Equal(depth, value);
+                    objectState.LoadingDepth = value;
+                },
+                TechnologyParent = () =>
+                {
+                    effects.Add("parent");
+                    return new Sid((ushort)parent);
+                },
+                PrepareTypeNames = () =>
+                {
+                    effects.Add("prepare-boundary");
+                    Assert.True(state.HasTypeConversion);
+                },
+                ReleaseTypeConversion = () =>
+                {
+                    effects.Add("release-boundary");
+                    Assert.True(state.HasTypeConversion);
+                },
+                RefreshTechnologyUi = () => effects.Add("ui-boundary"),
+            };
+            hooks = RawFortMetaLoad.MakeFortMetaContentsHooks(pool, objects, fort, hooks);
+            byte[] badges = BadgeInput(0);
+            RawFortMetaLoad meta = new(pool, badges, () => depth, value => depth = value, state, hooks);
+            FortMetaStream stream = new() { Bytes = fort.Sections[technologyIndex].Memory, Position = 19, End = 7, Present = true };
+            meta.LoadTechnology(stream);
+            Assert.Equal(2, children.Count);
+            Assert.Equal(0, transmits);
+            Assert.Equal(6u, stream.Position);
+            Assert.Equal(7u, stream.End);
+            Assert.Equal(3u, depth);
+            Assert.Equal(3u, objectState.LoadingDepth);
+            Assert.False(state.HasTypeConversion);
+            Assert.Equal(new[] { "parent", "prepare-boundary", "release-boundary", "ui-boundary" }, effects);
+            RawSquidForms formsView = new(pool);
+            Assert.Equal(parent, formsView.Parent(children[0]));
+            Assert.Equal(parent, formsView.Parent(children[1]));
+            Assert.Equal(110u, ReadU16(pool.Slot(children[0]), 18));
+            Assert.Equal(111u, ReadU16(pool.Slot(children[1]), 18));
+            Assert.Equal(9u, ReadU16(pool.Slot(children[0]), 12));
+            Assert.Equal(65534u, ReadU16(pool.Slot(children[1]), 12));
+            Assert.Equal(12345u, random.State);
+            Assert.Equal(children[0], (int)ReadU16(pool.Slot(parent), 6));
+            Assert.Equal(children[1], (int)ReadU16(pool.Slot(children[0]), 4));
+            RawSidPool foreign = new(24000, false, null, edition);
+            Assert.Throws<ArgumentException>(() => RawFortMetaLoad.MakeFortMetaContentsHooks(foreign, objects, fort, hooks));
+            FortMetaStream wrong = new() { Bytes = ReadOnlyMemory<byte>.Empty, Position = 19, End = 7, Present = true };
+            Assert.Throws<ArgumentException>(() => hooks.Contents!(new Sid((ushort)parent), wrong, 17, true));
+            FortMetaStream alien = new() { Bytes = new ReadOnlyMemory<byte>((byte[])techBytes.Clone()), Position = 19, End = 7, Present = true };
+            Assert.Throws<ArgumentException>(() => hooks.Contents!(new Sid((ushort)parent), alien, 17, true));
+        }
+    }
+
+    /// <summary>실제 Contents만 실행하는 경로의 명시 효과만 둔다.</summary>
+    /// <param name="contained">같은 풀의 실제 내용물 생성 몸체다.</param>
+    private static FortObjectLoadHooks ContentsOnly(RawContainedCreate contained)
+    {
+        return new FortObjectLoadHooks
+        {
+            Create = (type, flags) => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            NotifySurface = _ => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            SetState = (_, _) => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            SetOwner = (_, _) => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            HasHitPoints = _ => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            MaxHitPoints = _ => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            VirtualCount = _ => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            Pop = (_, _, _, _) => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            Destroy = (_, _) => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            CreateContent = (parent, type, quantity, listFlags, flags, quality) => contained.Create(parent, type, quantity, listFlags, flags, quality),
+            ChunkRegion = (_, _) => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            TerritoryAllowed = (_, _, _) => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            LoadingDepthChanged = _ => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+            FinishOwner = _ => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
+        };
+    }
+
+    /// <summary>비정렬 WORD를 little endian으로 읽는다.</summary>
+    /// <param name="bytes">읽을 바이트다.</param>
+    /// <param name="offset">읽을 위치다.</param>
+    private static uint ReadU16(ReadOnlySpan<byte> bytes, int offset)
+    {
+        return (uint)bytes[offset] | ((uint)bytes[offset + 1] << 8);
     }
 }
