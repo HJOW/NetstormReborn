@@ -39,6 +39,61 @@ public sealed class SessionStoreTests : IDisposable
         Assert.Equal(session.Id, store.Load(session.Id).Id);
     }
 
+    /// <summary>실제 게임 없이 종료한 복사본의 검증이 작업 맵과 설정을 보존하는지 확인한다.</summary>
+    [Fact]
+    public async Task PreparedRestartPreservesSavedMapAndOptions()
+    {
+        var store = new SessionStore(_root);
+        AnalysisSession session = await store.CreateAsync("재실행 검증", CancellationToken.None);
+        session.Phase = "ended";
+        string game = Path.GetDirectoryName(store.GamePath(session))!;
+        string map = Path.Combine(game, "d", "native-map.fort");
+        File.WriteAllBytes(map, [0x46, 0x02, 3, 4]);
+        byte[] options = File.ReadAllBytes(Path.Combine(game, "d", "options.cfg"));
+        store.ValidateRestartCopy(session);
+        Assert.Equal(new byte[] { 0x46, 0x02, 3, 4 }, File.ReadAllBytes(map));
+        Assert.Equal(options, File.ReadAllBytes(Path.Combine(game, "d", "options.cfg")));
+        Assert.Equal("ended", session.Phase);
+    }
+
+    /// <summary>종료 전 상태와 바뀐 코드 바이트를 각각 새 실제 실행 전에 거부한다.</summary>
+    [Fact]
+    public async Task PreparedRestartRejectsStateAndChangedCode()
+    {
+        var store = new SessionStore(_root);
+        AnalysisSession session = await store.CreateAsync("재실행 거부", CancellationToken.None);
+        Assert.Throws<InvalidOperationException>(() => store.ValidateRestartCopy(session));
+        session.Phase = "ended";
+        File.WriteAllBytes(store.GamePath(session), [0x4d, 0x5a, 2]);
+        Assert.Throws<InvalidDataException>(() => store.ValidateRestartCopy(session));
+    }
+
+    /// <summary>기존 요청의 녹화 기본값과 명시 생략을 같은 CLI JSON 형식으로 읽는다.</summary>
+    [Fact]
+    public void AutomaticRecordingRequestKeepsDefaultAndExplicitFalse()
+    {
+        Assert.True(JsonSerializer.Deserialize<AnalysisRequest>("{}", SessionStore.Json)!.AutomaticRecording);
+        Assert.False(JsonSerializer.Deserialize<AnalysisRequest>("{\"automaticRecording\":false}", SessionStore.Json)!.AutomaticRecording);
+    }
+
+    /// <summary>새 실행의 명시 녹화 생략을 종료 응답에서도 과거 실패와 구분하며 원시 실패 기록은 보존한다.</summary>
+    [Fact]
+    public async Task AutomaticRecordingSkippedEndKeepsPreviousFailureAsHistory()
+    {
+        var engine = new AnalysisEngine(_root);
+        AnalysisSession session = await engine.Store.CreateAsync("녹화 생략 종료", CancellationToken.None);
+        session.AutomaticRecordingRequested = false;
+        engine.Store.Save(session);
+        AutomaticRecording.SaveState(engine.Store, new AutomaticRecordingState { SessionId = session.Id,
+            RunId = Guid.NewGuid().ToString("N"), Fps = 30, State = "failed", Error = "이전 실행의 장치 실패" });
+        AnalysisResult result = await engine.ExecuteAsync("end_session", new() { SessionId = session.Id }, TestContext.Current.CancellationToken);
+        Assert.False(result.IsError);
+        JsonElement data = JsonSerializer.SerializeToElement(result.Data, SessionStore.Json);
+        Assert.False(data.GetProperty("automaticRecordingRequested").GetBoolean());
+        Assert.Equal(JsonValueKind.Null, data.GetProperty("automaticRecording").ValueKind);
+        Assert.Equal("이전 실행의 장치 실패", AutomaticRecording.ReadState(engine.Store, session.Id)!.Error);
+    }
+
     /// <summary>세션 ID로 임의 경로에 접근하는 요청을 거부한다.</summary>
     [Theory]
     [InlineData("../originals")]

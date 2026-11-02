@@ -1,0 +1,190 @@
+{
+  "unit": 720,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "productUnit": 719,
+  "displayVersion": "11.01",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "outcome": "원본 생성 Fort의 재적재와 현재719 제품의 전체 surface 배치/Graph 합계를 대조했다. 게임 소스 변경은 없고 분석기 재실행/명시 녹화 생략을 추가했다. 전체 목표는 미완료이며 사용자 요청대로 이 단위의 문서/커밋 후 일시 중지한다.",
+  "cppBinarySha256": "d12b1551fce69b896444b637476b430dc7f20042f39095c0369e0fceba7f581c",
+  "native": {
+    "source": "HJOW-Athlon / Windows10 / 실제 10.78 원본 UI로 New Map n720 생성→후보8 선택/배치→저장→같은 복사본 재실행→Edit n720",
+    "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "session": "20261102T002815148Z-def423cc12b9",
+    "surfaceFlag": 2048,
+    "slotStride": 50,
+    "typeStride": 500,
+    "placement": {
+      "pid": 4364,
+      "capacity": 120000,
+      "graphs": 1,
+      "connectedSurfaces": 678,
+      "allocatedSurfaces": 674,
+      "graphHistogram": {
+        "1": 670,
+        "254": 4
+      },
+      "activeGraphRecords": {
+        "1": [
+          678,
+          1,
+          1024
+        ]
+      },
+      "rawSha256": {
+        "pool": "72e79be380c0f92f8a9abaf2d6a8f874ec563786d6be647228247c120553f1c2",
+        "types": "06617ebf920d06a373476d5cb1ccb82df75d25e5bfad2a6e2edc49956b433e07",
+        "graph": "d0944902cc78bed67a84ceb785849a587b8e4835c2a0c93e88fcb88c716289a3"
+      }
+    },
+    "reloaded": {
+      "pid": 11128,
+      "capacity": 120000,
+      "graphs": 1,
+      "connectedSurfaces": 670,
+      "allocatedSurfaces": 674,
+      "graphHistogram": {
+        "2": 670,
+        "254": 4
+      },
+      "activeGraphRecords": {
+        "2": [
+          670,
+          1,
+          5376
+        ]
+      },
+      "rawSha256": {
+        "pool": "6f36186239c09dac30ecb586606331961e2f30c9fc84c6c9fe1e4aa15585e71d",
+        "types": "dedaf99c9735414b65c4a4aded932f0718d40fc6ac63082a1d57b4eb39d2a6ec",
+        "graph": "c69945dc2a24c6d9b5ca22edbb9424dd1f79548b54da9caf1ef7148cb7d42dfc"
+      }
+    },
+    "fixtureSha256": {
+      "editor-graph-native-720.fort": "545c0f12ad4db7f3dc3ebe3ff8565abf9d0114d967d1973a5548b203ed8715e0",
+      "editor-graph-native-720-surfaces.tsv": "a0006321b833884897a92feb073e84bf7a82b9116361ccda717cd35b48e65a5b"
+    },
+    "limitations": [
+      "현재 한 맵의 관측이며 전체 편집기 동일성은 아님",
+      "세 번째 Graph WORD는 미정 바이트일 수 있어 판정하지 않음",
+      "기존 snapshot의08000000 파생 histogram은 진단용으로 보존하고 이 표는 실제800 플래그로 다시 읽음",
+      "SID/Graph 번호는 각 수명의 할당 값이며 제품과 직접 동일성을 요구하지 않음"
+    ]
+  },
+  "comparison": {
+    "scope": "같은 원본 Fort의 한 번 재적재: 전체 surface 배치와 Graph 합계. 개별 Graph 번호/할당 SID·frame·원시 Pool 바이트 동등성은 판정하지 않음.",
+    "fixture": "editor-graph-native-720",
+    "label": "reloaded",
+    "nativeSurfaces": 674,
+    "cppSurfaces": 674,
+    "missingSurfaces": 0,
+    "extraSurfaces": 0,
+    "surfacePlacementMatches": true,
+    "nativeGraph": {
+      "connectedSurfaces": 670,
+      "graphs": 1
+    },
+    "cppGraph": {
+      "connectedSurfaces": 670,
+      "graphs": 1
+    },
+    "graphMatches": true,
+    "matchingFrames": 206,
+    "unmatchedNativeFrames": 468,
+    "nativeNoGraphSurfaces": 4,
+    "reportSha256": "db9764c349ef71e0ed2f71b3cd8d8e414be44230db48721b7a184e443997d207",
+    "passed": true
+  },
+  "tooling": {
+    "restart": "종료 상태·최초 EXE SHA·살아 있는 다른 소유 세션 검사 뒤 같은 복사본의 맵/설정/기록을 보존해 새 PID/생성시각으로 실행",
+    "automaticRecordingDefault": true,
+    "explicitSkip": "automaticRecording=false / automatic_recording_skipped 이벤트와 현재 요청 bool·null 상태로 이전 실패 기록과 구별",
+    "memoryReader": "경로·생성시각·원본 EXE SHA·MZ를 검증한 VM_READ|QUERY_LIMITED_INFORMATION. 실제120000×50BYTE 전체 Pool/188×500BYTE TYPE/255×6BYTE Graph를 두 번 일관성 검사. 쓰기·중단·디버거 API 없음"
+  },
+  "verification": {
+    "managerBuildV1": {
+      "passed": true,
+      "warnings": 0,
+      "errors": 0,
+      "seconds": 11.74
+    },
+    "managerFocusedV1": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "managerFocusedV2": {
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "mcpProtocol": {
+      "passed": true,
+      "tools": 16,
+      "eof": true,
+      "live": false,
+      "initialV2ArgumentOmission": "--exe 누락은 구문 오류이며 v3 올바른 인자로 통과"
+    },
+    "cppRun": {
+      "processes": 1,
+      "frames": 250,
+      "seconds": 7.393430999996781,
+      "exit": 0,
+      "timedOut": false,
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    "cppRebuild": false,
+    "wholeCppTests": false,
+    "whole34": false,
+    "newPackage": false
+  },
+  "originalExecution": {
+    "processes": 4,
+    "identifiers": [
+      1516,
+      4364,
+      1464,
+      11128
+    ],
+    "editorCreatedAndSavedPid": 4364,
+    "reloadVerifiedPid": 11128,
+    "audioFailure": "최초 manager 실행의 기본 출력 오디오 캡처가 0x80070490(요소 없음)로 실패. AV 녹화 성공으로 세지 않는다.",
+    "userClarification": "사용자는 앞서 실행 중이던 게임을 실수로 직접 종료했다고 명시했다. 해당 중간 종료는 비정상 종료/게임 결함으로 기록하지 않는다. 사용자 발언에 PID가 없어 개별 PID에 단정해 배정하지 않는다.",
+    "transport": "중간 CLI 45초 대기 만료는 별도 관측이며 게임 종료의 원인으로 확정하지 않는다. 최종 재실행은 첫 화면·원본 Edit 재적재·전체 Pool 관측·종료까지 확인.",
+    "incidentalAutoDemo": "저장 뒤 첫 메인 메뉴 대기 중 자동 데모가 시작되어 화면을 확인하고 소유 세션을 종료했다. 특정 적 공격·승리 재현을 기획/검증한 것이 아니며 전투 검증 근거로 사용하지 않는다.",
+    "wgc": "최초 FrameArrived timeout·재선택 뒤 window capture timeout. 같은 WGC 캡처를 반복하지 않고 기존 analyzeManager 화면 복사 캡처 사용.",
+    "copyOnly": "작업 복사본의 다른 Fort433개를 별도 보관한 뒤 n720만 목록에 유지했다. options/setup의 noAutoDemo·무음·경로 변경도 복사본 전용. 원본/기존 fixture 변경0."
+  },
+  "limitations": [
+    "한 개 n720 맵의 재적재 대조이며 다중 섬/삭제/다리/소유자 변경/Graph 분할·병합 전체 검증이 아니다.",
+    "원본 배치 직후 Graph 장부678과 실제 소속670의8차이는 그대로 보존했다. 재적재는670이다. 현재 cpppj의 같은 배치 직후와 직접 비교하지 않았다.",
+    "surface674개 중 frame206개 일치·468개 불일치. 원인/동일 난수 상태/전체 픽셀을 확인하지 않았다.",
+    "현재 cpppj 개별 surface Graph 번호는 보고하지 않아 개별 연결 소속 동일성은 판정하지 않는다. Native SID/Graph 번호와 미정 reserved WORD·전체 Pool 바이트 동일성도 판정하지 않는다.",
+    "과거493~494의694→0 입력을 그대로 재실행한 결과가 아니다. cb4137c53이 적재 중 graphsEnabled를 이미 보완한 현재 제품에서 이 맵은0이 아니다.",
+    "사제 포획/희생·특정 적 공격·시나리오 승리·공중3종 전용·신규MP/통신 검사를 추가하지 않았다. 자연 완주/전체 동일성은 사용자 확인이다.",
+    "Windows11 실기·전체화면·음향/PCM·새 배포판 검증이 아니다. 최신 전체34/ZIP은645의644제품, 전체 C++ 마지막549의7실패 기록을 유지한다."
+  ],
+  "protection": {
+    "existing": 2636,
+    "newFixtures": 4,
+    "current": 2640,
+    "changed": [],
+    "agentsSha256": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  },
+  "rawEvidence": "extracted/cpp-editor-graph-720/",
+  "fixtures": {
+    "cpppj/tests/fixtures/editor-graph-native-720-surfaces.tsv": "a0006321b833884897a92feb073e84bf7a82b9116361ccda717cd35b48e65a5b",
+    "cpppj/tests/fixtures/editor-graph-native-720-type-flags.tsv": "277529af0c146bbde2aef7d715581f0f1d7f9398de3269b2fe66c50f33612460",
+    "cpppj/tests/fixtures/editor-graph-native-720.fort": "545c0f12ad4db7f3dc3ebe3ff8565abf9d0114d967d1973a5548b203ed8715e0",
+    "cpppj/tests/fixtures/editor-graph-native-720.json": "a384eb5c80fb30cd43931e2b2a6a0e0e55b9cba8386300a63a39dc1de8c2f51f"
+  },
+  "followup": [
+    "같은 후보/난수 입력에서 cpppj 배치 직후 장부와 원본678/670차이를 대조한다.",
+    "다중 섬/편집 동작별 Graph 수명·작업본/파일 실패·나머지 비멀티 UI/시나리오 작업을 잇는다.",
+    "frame468개 차이는 Graph 합계 통과와 분리해 실제 원문 난수/지면 프레임 재생성 시점부터 확인한다."
+  ]
+}

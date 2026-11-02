@@ -12,7 +12,7 @@
 
 **2026-10-12 갱신:** 일반 시스템에서 실제 게임을 구동하거나 작업 중 별도 창을 띄울 때는, **실행 목적과 필요성을 개발자(사용자)에게 설명하고 명시적인 확인을 받아야 한다.** 자세한 적용 범위는 [공통 실행 확인 조건](execution-confirmation.md)에 있다.
 
-- CLI/MCP `start_session`, `mcp_smoke.py --live`, 원본/복사본 직접 실행과 클론 GUI 검사에 적용한다. `guide`·`record-play`의 안내/녹화 창도 창 생성 조건에 따른다.
+- CLI/MCP `start_session`·`restart_session`, `mcp_smoke.py --live`, 원본/복사본 직접 실행과 클론 GUI 검사에 적용한다. `guide`·`record-play`의 안내/녹화 창도 창 생성 조건에 따른다.
 - **시스템 예외:** 다음 IP·호스트명에 해당하는 시스템에서는 **기존 게임 실행과 별도 창 작업 모두 확인 없이 가능**하다. 현재 시스템의 식별값을 확인해 적용한다.
 
 | 구분 | IP | 호스트명 |
@@ -244,7 +244,11 @@ analyzeManager/bin/Release/net10.0-windows/Netstorm.AnalyzeManager.exe call capt
 
 ### 자동 분석의 세션 전체 연속 녹화
 
-`start_session`은 첫 표시 화면을 확인한 뒤 별도 숨김 프로세스로 영상·Windows 기본 출력 소리·게임 입력 녹화를 시작하고 첫 프레임 저장까지 확인한다. CLI 명령이 끝나거나 MCP 연결이 닫혀도 게임이 계속 실행 중이면 녹화가 이어진다. 파일은 `extracted/analyzeManager/<ID>/recording/`에 저장한다. 시작 시 오디오·입력 훅·캡처가 실패하면 오류와 세션 ID를 반환하므로 `game_status`로 상태를 확인한다.
+**2026-11-02 추가:** CLI/MCP `start_session`·`restart_session`의 `automaticRecording`은 기본 `true`다. 화면/상태만 분석할 때 `false`를 명시하면 녹화 장치를 열지 않고 `automatic_recording_skipped` 이벤트를 남긴다. 현재 요청은 `automaticRecordingRequested=false`, 현재 `automaticRecording=null`로 반환하며 이전 실행의 실패 파일은 이력으로 보존한다. 명시 생략은 녹화/음향 성공이 아니다.
+
+종료한 세션은 `call restart_session --json '{"sessionId":"ID","automaticRecording":false}'`로 같은 작업 복사본을 다시 실행할 수 있다. 먼저 `end_session`으로 종료 상태를 확정해야 하며, 원본 실행 파일의 최초 SHA와 살아 있는 다른 분석 세션을 검사한다. 맵/설정/이벤트를 유지하고 새 PID·생성시각을 기록한다. 게임 실행 전 확인 조건은 `start_session`과 같고 기존 세션의 FPS를 유지한다. [실제 n720 저장/재적재 및 한계](exe/cpp-editor-graph-native-20261102.md)를 따른다.
+
+`start_session`·`restart_session`은 기본값에서 첫 표시 화면을 확인한 뒤 별도 숨김 프로세스로 영상·Windows 기본 출력 소리·게임 입력 녹화를 시작하고 첫 프레임 저장까지 확인한다. CLI 명령이 끝나거나 MCP 연결이 닫혀도 게임이 계속 실행 중이면 녹화가 이어진다. 파일은 `extracted/analyzeManager/<ID>/recording/`에 저장한다. 시작 시 오디오·입력 훅·캡처가 실패하면 오류와 세션 ID를 반환하므로 `game_status`로 상태를 확인한다.
 
 `automatic-recording.json`과 `game_status` 응답의 `automaticRecording`에는 선택한 FPS·녹화 프로세스·상태·프레임 수·오류가 남는다. 별도 녹화 프로세스는 세션의 이벤트 파일을 직접 수정하지 않아 CLI/MCP 기록 번호와 충돌하지 않는다. `end_session`이 게임 종료를 확인하면 녹화 파일 마감도 기다린다. 종료 확인 창이 남은 `closed=false` 상태에서는 녹화가 계속된다.
 

@@ -18,6 +18,8 @@ public sealed class AnalysisSession
     public long? ProcessStartedUtcTicks { get; set; }
     public string ExeSha256 { get; set; } = "";
     public string Phase { get; set; } = "preparing";
+    /// <summary>현재 실행이 자동 녹화를 요청했는지 구별하며 이전 실행의 실패 상태를 새 요청으로 오인하지 않는다.</summary>
+    public bool AutomaticRecordingRequested { get; set; } = true;
     public int EventCount { get; set; }
     public int LogPart { get; set; } = 1;
     public int ReportPart { get; set; } = 1;

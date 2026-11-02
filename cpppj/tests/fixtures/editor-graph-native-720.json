@@ -1,0 +1,64 @@
+{
+  "source": "HJOW-Athlon / Windows10 / 실제 10.78 원본 UI로 New Map n720 생성→후보8 선택/배치→저장→같은 복사본 재실행→Edit n720",
+  "originalExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "session": "20261102T002815148Z-def423cc12b9",
+  "surfaceFlag": 2048,
+  "slotStride": 50,
+  "typeStride": 500,
+  "placement": {
+    "pid": 4364,
+    "capacity": 120000,
+    "graphs": 1,
+    "connectedSurfaces": 678,
+    "allocatedSurfaces": 674,
+    "graphHistogram": {
+      "1": 670,
+      "254": 4
+    },
+    "activeGraphRecords": {
+      "1": [
+        678,
+        1,
+        1024
+      ]
+    },
+    "rawSha256": {
+      "pool": "72e79be380c0f92f8a9abaf2d6a8f874ec563786d6be647228247c120553f1c2",
+      "types": "06617ebf920d06a373476d5cb1ccb82df75d25e5bfad2a6e2edc49956b433e07",
+      "graph": "d0944902cc78bed67a84ceb785849a587b8e4835c2a0c93e88fcb88c716289a3"
+    }
+  },
+  "reloaded": {
+    "pid": 11128,
+    "capacity": 120000,
+    "graphs": 1,
+    "connectedSurfaces": 670,
+    "allocatedSurfaces": 674,
+    "graphHistogram": {
+      "2": 670,
+      "254": 4
+    },
+    "activeGraphRecords": {
+      "2": [
+        670,
+        1,
+        5376
+      ]
+    },
+    "rawSha256": {
+      "pool": "6f36186239c09dac30ecb586606331961e2f30c9fc84c6c9fe1e4aa15585e71d",
+      "types": "dedaf99c9735414b65c4a4aded932f0718d40fc6ac63082a1d57b4eb39d2a6ec",
+      "graph": "c69945dc2a24c6d9b5ca22edbb9424dd1f79548b54da9caf1ef7148cb7d42dfc"
+    }
+  },
+  "fixtureSha256": {
+    "editor-graph-native-720.fort": "545c0f12ad4db7f3dc3ebe3ff8565abf9d0114d967d1973a5548b203ed8715e0",
+    "editor-graph-native-720-surfaces.tsv": "a0006321b833884897a92feb073e84bf7a82b9116361ccda717cd35b48e65a5b"
+  },
+  "limitations": [
+    "현재 한 맵의 관측이며 전체 편집기 동일성은 아님",
+    "세 번째 Graph WORD는 미정 바이트일 수 있어 판정하지 않음",
+    "기존 snapshot의08000000 파생 histogram은 진단용으로 보존하고 이 표는 실제800 플래그로 다시 읽음",
+    "SID/Graph 번호는 각 수명의 할당 값이며 제품과 직접 동일성을 요구하지 않음"
+  ]
+}

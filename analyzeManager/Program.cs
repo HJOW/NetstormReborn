@@ -18,7 +18,7 @@ internal static class Program
         Netstorm.AnalyzeManager [--repo 저장소] guide --session 세션ID [--steps-file UTF8파일] [--fps 30|60]
         Netstorm.AnalyzeManager [--repo 저장소] record-play --session 세션ID [--fps 30|60]
 
-        도구: list_sessions, start_session, game_status, capture_state,
+        도구: list_sessions, start_session, restart_session, game_status, capture_state,
               game_input, wait_for_change, record_observation, set_guide_steps, end_session
         YouTube 영상 분석(게임 실행 없음, 인터넷 사용):
               youtube_probe, youtube_list, youtube_frames, youtube_clip, youtube_note, youtube_videos

@@ -27,8 +27,16 @@ public sealed class ExplorerTools
     [Description("실제 게임을 실행합니다. AGENTS.md의 시스템 1(IP 10.0.0.15·호스트명 vm-debian-codex), 시스템 2(IP 10.0.0.17·호스트명 VM-W11-Codex), 시스템 3(IP 192.168.0.94·호스트명 HJOW-Athlon)에서는 기존 게임 실행과 별도 창 작업 모두 사용자 확인 없이 가능합니다. 개발자가 기존 게임 수동 컨트롤 방식 또는 기존 게임 플레이 녹화 분석 방식으로 진행을 직접 요청한 단계에서는 실제 게임 구동 확인을 다시 받지 않습니다. 그 밖의 시스템에서 게임을 실행하거나 별도 창을 띄울 때는 목적·필요성을 설명하고 명시적인 확인을 받으세요. 확인 상태는 허용한 작업 단계가 완료될 때까지 유지하며 별도 중단 지시는 해당 범위에서 준수합니다. originals를 복사해 창 모드 1024x768로 실행하고 새 sessionId와 첫 화면을 반환합니다.")]
     public Task<CallToolResult> StartSession([Description("분석 목적, 200자 이하")] string label = "",
         [Description("분석·연속 녹화 FPS: 30 또는 60. 생략하면 서버 설정을 사용하며 기본은 30입니다.")] int? fps = null,
-        CancellationToken cancellation = default)
-        => Run("start_session", new() { Label = label, Fps = fps }, cancellation);
+        CancellationToken cancellation = default,
+        [Description("자동 영상/음성 녹화 여부. 기본 true이며 화면·상태만 분석할 때 false를 명시할 수 있습니다.")] bool automaticRecording = true)
+        => Run("start_session", new() { Label = label, Fps = fps, AutomaticRecording = automaticRecording }, cancellation);
+
+    /// <summary>종료한 세션의 작업 복사본과 저장 맵을 보존한 채 새 실제 게임 수명으로 실행한다.</summary>
+    [McpServerTool(Name = "restart_session", OpenWorld = false, Destructive = false)]
+    [Description("종료한 세션의 같은 작업 복사본을 다시 실행합니다. 최초 실행 파일 해시와 다른 살아 있는 세션을 검증하며 기존 맵·설정·기록을 보존합니다. 실제 게임 실행의 AGENTS.md 호스트별 확인 조건은 start_session과 같습니다.")]
+    public Task<CallToolResult> RestartSession(string sessionId,
+        [Description("자동 영상/음성 녹화 여부. 기본 true.")] bool automaticRecording = true, CancellationToken cancellation = default)
+        => Run("restart_session", new() { SessionId = sessionId, AutomaticRecording = automaticRecording }, cancellation);
 
     /// <summary>게임 상태를 입력이나 포커스 변경 없이 조회한다.</summary>
     [McpServerTool(Name = "game_status", ReadOnly = true, OpenWorld = false)]

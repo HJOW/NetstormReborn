@@ -14,7 +14,7 @@ NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 # YouTube 영상 분석 도구 이름 (Windows 판·리눅스용 YouTube 전용 빌드 공통)
 YOUTUBE_TOOLS = {"youtube_probe", "youtube_list", "youtube_frames", "youtube_clip", "youtube_note", "youtube_videos"}
 # 원본 게임 조작 도구 이름 (Windows 판 전용)
-GAME_TOOLS = {"list_sessions", "start_session", "game_status", "capture_state",
+GAME_TOOLS = {"list_sessions", "start_session", "restart_session", "game_status", "capture_state",
               "game_input", "wait_for_change", "record_observation", "set_guide_steps", "end_session"}
 # PNG 파일 머리 8바이트 (이미지 콘텐츠 확인용)
 PNG_SIGNATURE = bytes([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A])
@@ -141,6 +141,12 @@ def main():
             assert "개발자" in start_tool["description"] and "확인" in start_tool["description"]
             assert "10.0.0.15" in start_tool["description"] and "vm-debian-codex" in start_tool["description"]
             assert "fps" in start_tool["inputSchema"]["properties"]
+            assert start_tool["inputSchema"]["properties"]["automaticRecording"]["default"] is True
+            restart_tool = next(tool for tool in listing if tool["name"] == "restart_session")
+            assert "sessionId" in restart_tool["inputSchema"]["required"]
+            assert restart_tool["inputSchema"]["properties"]["automaticRecording"]["default"] is True
+            # 잘못된 기존 세션은 작업 복사본/게임을 만들거나 실행하지 않고 거부한다.
+            client.call("restart_session", {"sessionId": "../invalid", "automaticRecording": False}, expect_error=True)
             wait_tool = next(tool for tool in listing if tool["name"] == "wait_for_change")
             assert "fps" in wait_tool["inputSchema"]["properties"]
             assert wait_tool["inputSchema"]["properties"]["pollMs"]["default"] == 0

@@ -29,6 +29,8 @@ public sealed class AnalysisRequest
     public int TimeoutMs { get; set; } = 5000;
     /// <summary>분석·녹화 FPS. 생략하면 세션 값(새 세션 기본 30)을 사용한다.</summary>
     public int? Fps { get; set; }
+    /// <summary>시작/재실행의 자동 녹화 여부. 기본 true이며 소리 없는 상태 비교는 명시 false로 실행할 수 있다.</summary>
+    public bool AutomaticRecording { get; set; } = true;
     /// <summary>변화 감지 간격(ms). 0이면 FPS를 사용하고 양수이면 이전 방식의 간격을 명시한다.</summary>
     public int PollMs { get; set; }
     public double Threshold { get; set; } = 0.01;

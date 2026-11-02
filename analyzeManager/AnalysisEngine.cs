@@ -45,7 +45,7 @@ public sealed class AnalysisEngine
                     if (running != null) throw new InvalidOperationException($"실행 중인 sessionId={previous.Id}를 계속 사용하거나 종료하세요.");
                 }
                 session = await Store.CreateAsync(request.Label, cancellation, request.Fps ?? DefaultFps);
-                return await StartAsync(session, cancellation);
+                return await StartAsync(session, request.AutomaticRecording, cancellation);
             }
             session = Store.Load(request.SessionId);
             if (session.EventCount >= SessionStore.MaximumEvents - 1 && tool is not ("game_status" or "end_session"))
@@ -55,6 +55,7 @@ public sealed class AnalysisEngine
                 return tool switch
                 {
                     "game_status" => Status(session),
+                    "restart_session" => await RestartAsync(session, request.AutomaticRecording, cancellation),
                     "capture_state" => await CaptureAsync(session, request, cancellation),
                     "game_input" => await InputAsync(session, request, cancellation),
                     "wait_for_change" => await WaitAsync(session, request, cancellation),
@@ -91,9 +92,23 @@ public sealed class AnalysisEngine
         return new(new { sessions = items });
     }
 
-    /// <summary>게임을 실행하고 최대 15초 안에 보이는 창을 얻는다.</summary>
-    private async Task<AnalysisResult> StartAsync(AnalysisSession session, CancellationToken cancellation)
+    /// <summary>종료한 작업 복사본의 코드와 데스크톱 소유권을 검증하고 저장 맵을 보존해 재실행한다.</summary>
+    private async Task<AnalysisResult> RestartAsync(AnalysisSession session, bool automaticRecording, CancellationToken cancellation)
     {
+        Store.ValidateRestartCopy(session);
+        foreach (AnalysisSession previous in Store.Sessions()) // 다른 살아 있는 분석 세션도 새 실행과 같은 데스크톱 소유권 관문을 따른다.
+        {
+            using Process? running = Store.OwnedProcess(previous);
+            if (running != null) throw new InvalidOperationException($"실행 중인 sessionId={previous.Id}를 계속 사용하거나 종료하세요.");
+        }
+        Store.Append(session, "restart_requested", new { automaticRecording });
+        return await StartAsync(session, automaticRecording, cancellation);
+    }
+
+    /// <summary>같은 실제 실행 지점에서 현재 녹화 요청과 새 PID/생성시각을 장부에 기록한다.</summary>
+    private async Task<AnalysisResult> StartAsync(AnalysisSession session, bool automaticRecording, CancellationToken cancellation)
+    {
+        session.AutomaticRecordingRequested = automaticRecording; // 현재 실행 요청을 최초 started/실패 장부에도 남긴다.
         try
         {
             using Process process = Process.Start(new ProcessStartInfo(Store.GamePath(session))
@@ -132,9 +147,13 @@ public sealed class AnalysisEngine
                     continue;
                 }
                 await Task.Delay(500, cancellation);
-                AutomaticRecordingState recording = await AutomaticRecording.StartAsync(Store, session, cancellation);
-                Store.Append(session, "automatic_recording_started", new { recording.Fps, recording.RunId,
-                    directory = "recording/", status = "automatic-recording.json" });
+                if (automaticRecording)
+                {
+                    AutomaticRecordingState recording = await AutomaticRecording.StartAsync(Store, session, cancellation);
+                    Store.Append(session, "automatic_recording_started", new { recording.Fps, recording.RunId,
+                        directory = "recording/", status = "automatic-recording.json" });
+                }
+                else Store.Append(session, "automatic_recording_skipped", new { requested = false }); // 명시 생략은 장치 실패/녹화 성공과 구별한다.
                 return await CaptureAsync(session, new AnalysisRequest(), cancellation);
             }
             throw new TimeoutException($"시작 화면을 확인하지 못했습니다: {lastError}. game_status/end_session으로 이어갈 수 있습니다.");
@@ -162,7 +181,7 @@ public sealed class AnalysisEngine
             catch (InvalidOperationException error) { windowError = error.Message; }
         }
         return new(new { sessionId = session.Id, session.Phase, running = process != null, window, windowError,
-            session.EventCount, session.Fps, automaticRecording = AutomaticRecording.Status(Store, session.Id), report = ReportPath(session) });
+            session.EventCount, session.Fps, automaticRecordingRequested = session.AutomaticRecordingRequested, automaticRecording = session.AutomaticRecordingRequested ? AutomaticRecording.Status(Store, session.Id) : null, report = ReportPath(session) });
     }
 
     /// <summary>게임 창을 전면에 두고 필요한 영역의 화면과 증거 경로를 반환한다.</summary>
@@ -174,7 +193,7 @@ public sealed class AnalysisEngine
         ScreenshotEvidence evidence = Store.StoreFrame(session, frame);
         Store.Append(session, "capture", new { region = request.Region }, evidence);
         return FrameResult(session, evidence, request.IncludeImage, new { sessionId = session.Id, evidence, session.Fps,
-            automaticRecording = AutomaticRecording.Status(Store, session.Id), report = ReportPath(session) });
+            automaticRecordingRequested = session.AutomaticRecordingRequested, automaticRecording = session.AutomaticRecordingRequested ? AutomaticRecording.Status(Store, session.Id) : null, report = ReportPath(session) });
     }
 
     /// <summary>원본 입력을 보내기 전에 인자를 검사하고 전후 화면을 모두 기록한다.</summary>
@@ -310,7 +329,8 @@ public sealed class AnalysisEngine
         session.Phase = "ended";
         Store.Save(session);
         if (session.EventCount < SessionStore.MaximumEvents) Store.Append(session, "ended", new { force });
-        return new(new { sessionId = session.Id, closed = true, automaticRecording = recording, report = ReportPath(session) });
+        return new(new { sessionId = session.Id, closed = true, automaticRecordingRequested = session.AutomaticRecordingRequested,
+            automaticRecording = session.AutomaticRecordingRequested ? recording : null, report = ReportPath(session) });
     }
 
     /// <summary>이미지 반환 여부는 AI가 고를 수 있고 증거 기록에는 영향을 주지 않는다.</summary>
