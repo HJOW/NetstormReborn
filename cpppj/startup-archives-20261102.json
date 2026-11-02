@@ -1,0 +1,124 @@
+{
+  "unit": 736,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 736,
+    "version": "11.01",
+    "sha256": "5f694a28e066a608e52fbb2413f7853a761ce94fae4198706ca0532007e3a95f",
+    "machine": "0x8664 / AMD64"
+  },
+  "implementation": [
+    "459890 Full의같은고리/전체또는조건없는물리+2복사",
+    "FileSpecQuery의원문재대입/Next/유효표식과마지막문자열/실패핸들보존",
+    "실제10.78 Startup기본·CD의같은FileSpec/Full/등록/Next/두번째Format뒤첫핸들닫기",
+    "마지막핸들을ConfigStartup의Load/InstallDir/CDDir설정뒤원문위치에서반납"
+  ],
+  "native": {
+    "report": "cpppj/startup-archives-native-20261102.json",
+    "archiveRows": 54,
+    "fullRows": 16,
+    "observations": 140,
+    "precisions": [
+      "027f",
+      "037f"
+    ],
+    "rerunMatches": true,
+    "wholeRingBytes": 2560,
+    "boundary": "실제441965~441a44/Full/FileSpec/재대입/Next/CRT와별도실제dtor. OS FindFirst/Next/Close와등록/보조root설정은명시경계. CWD확정전/뒤Load/전체부모반환ABI는범위밖"
+  },
+  "tests": {
+    "new": 5,
+    "existing": 20,
+    "final": 25,
+    "failed": 0,
+    "nativeRowsReplayed": 414,
+    "nativeRowsByGroup": {
+      "archive": 54,
+      "full": 16,
+      "configLoad": 12,
+      "setupLocation": 84,
+      "directory": 192,
+      "module": 5,
+      "startupNames": 24,
+      "taffRegistration": 27
+    },
+    "sameSearchAcrossPrimaryAndCd": true,
+    "closesAfterLoadBoundary": true,
+    "registerExceptionClosesActiveHandle": true,
+    "nonPatternAndFailedHandleTransitions": true,
+    "existingUnicodeVfsAndConfigAndSaveReload": true,
+    "log": "extracted\\cpp-startup-archives-736\\tests-v1.log"
+  },
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_startup_archive_tests"
+    ],
+    "log": "extracted\\cpp-startup-archives-736\\build-v1.log",
+    "warnings": 0,
+    "errors": 0
+  },
+  "cli": {
+    "processes": 1,
+    "command": "Netstorm.exe --config-get originals SCREENW",
+    "output": "1024",
+    "exitCode": 0,
+    "gameFrames": 0,
+    "log": "extracted\\cpp-startup-archives-736\\cli-config.log"
+  },
+  "protection": {
+    "baselineFiles": 2650,
+    "unchangedFiles": 2650,
+    "baselineGroups": {
+      "AGENTS.md": 1,
+      "originals": 1394,
+      "originalCD": 425,
+      "fixtures": 830
+    },
+    "agentAuthoredChanges": 0,
+    "newFixtures": 2,
+    "currentTotal": 2652,
+    "fixtureTotal": 832
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "requirements": {
+    "phase5": "733의전체자동파일/reader·일반권한설치요구유지. 이관구현미착수",
+    "platform": "Windows10/11AMD64대상·Windows11ARM고려. ARM빌드/실기미검증"
+  },
+  "limits": [
+    "Native는위치확정뒤두목록구간과별도dtor이며뒤Load/전체부모반환ABI는범위밖이다",
+    "전체264BYTE FileSpec ABI/NUL뒤미정배열과짧은물리view의원문접근을성공으로합성하지않는다",
+    "기존독립RegisterArchives와생성자의선행TAFF읽기는값형계약을유지한다. 최초I/O순서/다른소비자/실패수명은남는다",
+    "10.72/분석CLI의시작경로는735이전계약을유지하며10.78로확대하지않는다",
+    "새GUI/전체34/전체C++/ZIP·물리입력/PCM/포커스·포획/희생·특정적공격/승리·공중3종전용/MP/통신검사는0",
+    "최근GUI735의성공은별도제품근거이며전체1~8차목표는진행중이다"
+  ],
+  "rawDirectory": "extracted\\cpp-startup-archives-736",
+  "sha256": {
+    "LEFT_JOBS.md": "784657d0179e7047ee94e68eab96d683be9ea8b814f53a453939a0359a7d63e6",
+    "cpppj/README.md": "2dbbf86a45d075672a02980283cbb6b6666bf6e8eaefd843138374b3619a8140",
+    "cpppj/src/client/ClientMain.cpp": "ceaf5f5484aa79310c7646fdde0d143862a15f4f718a5818273fccdeaaab6186",
+    "cpppj/src/client/StartupFiles.cpp": "49877be39f711173aebfadd00b4d697e88befcf8378b94cbf5d4aa7e439087f2",
+    "cpppj/src/client/StartupFiles.h": "c006b598f45b76ca76f0968431907a6ded714551d10b50f20ea5f57363d52f6a",
+    "cpppj/src/o/CMakeLists.txt": "2f012f5affe0783461f5dde54caa9385108fdf4b83219dbfa7170cdc612d9206",
+    "cpppj/src/o/FileSpecQuery.cpp": "edd71284862b0add8fa78e1aae9cb1d407d6c16514fceecbb89178a77789fad2",
+    "cpppj/src/o/FileSpecQuery.h": "b5e6199672f08f51fe86045a95fe87f663b680291c63985541afbe58d7cf65ff",
+    "cpppj/src/o/RawFileName.cpp": "94f4864746a36f723d965e4513f8ac89d43706cda0525a5b138397221ee2d6e7",
+    "cpppj/src/o/RawFileName.h": "82ea07f59029abf98f49a2548bd5015778ee6c8842c12417559e73f567368a57",
+    "cpppj/tests/CMakeLists.txt": "0eeb4bc58241b7d7301e790dac6cb52b34e0623a18063632f16d1ee441ec6586",
+    "cpppj/tests/StartupLocationTests.cpp": "517ad6b4bee0a0618d44c403a36b9eb2ac20adf816f40d8640bbc5ff9719386f",
+    "cpppj/src/o/StartupArchiveFiles.h": "c2c878cc4e730efe0f116437ac991636fd4db958f7a9d67a47222cd43b5c0414",
+    "cpppj/src/o/StartupArchiveFiles.cpp": "70e7bb475157bed32fea0b8fc443f23664128084d3883b73c374d073d3e80636",
+    "cpppj/tests/StartupArchiveFilesTests.cpp": "628ada9112857697fffa79aade788b067f00015b5e459cd1920e747620dfbac8",
+    "cpppj/tests/fixtures/file-full-x86.tsv": "67e8a8960fc2a8a479318170104babdeebe3215d04210776e5a7b2751fdc032a",
+    "cpppj/tests/fixtures/startup-archives-x86.tsv": "8e7bdcdb9bb86b34064bc3a163ae62a110a2ae8c4925e01c8727b85eda10e0cd",
+    "tools/decomp_startup_archives.py": "43b0d17856ee46076647788141053f10c3f43f17f29e3bcd692b6afd9a283679",
+    "docs/exe/cpp-startup-archives-20261102.md": "d5ce1b0b394fe515a7a393f6cb062ce491a20759712bafe2c4c91d494d659e40"
+  }
+}

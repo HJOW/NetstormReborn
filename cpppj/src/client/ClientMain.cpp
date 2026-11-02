@@ -285,14 +285,16 @@ int Client::Run() {
     auto identity = Environment("IDENTITY");
     if (!identity || identity->empty()) identity = Environment("USER");
     startup.identity = identity.value_or(std::string());
+    std::optional<StartupFileLocations> startupFiles; // 원문마지막FileSpec은설정Load/경로Set뒤까지살아있다.
     if (options_.edition==o::OriginalEdition::Patch1078) {
-        const auto locations=PrepareStartupFiles(files_,options_.gameDirectory,FindWindowsCdDirectory);startup.dataPrefix=locations.dataPrefix;startup.installDir=platform::PathToUtf8(locations.installDirectory);startup.cdDir=locations.cdDirectory;options_.gameDirectory=locations.installDirectory; // 설정/자산/저장/편집은선택한같은기본root를사용한다.
+        startupFiles.emplace(PrepareStartupFiles(files_,options_.gameDirectory,FindWindowsCdDirectory));const auto& locations=*startupFiles;startup.dataPrefix=locations.dataPrefix;startup.installDir=platform::PathToUtf8(locations.installDirectory);startup.cdDir=locations.cdDirectory;options_.gameDirectory=locations.installDirectory; // 설정/자산/저장/편집은선택한같은기본root를사용한다.
     } else {
         const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); //10.72기존경로를보존하며이번10.78탐색근거로확대하지않는다.
         startup.cdDir=FindWindowsCdDirectory();InitializeNativeSecondaryFiles(startup.cdDir);
     }
     detectedLanguage_=DetectOriginalLanguage(GetUserDefaultLangID()); //원문00438dc0의 최초 OS 감지이며 매 Config 변경 때 감지하지 않는다.
     configuration_.Startup(startup);
+    startupFiles.reset(); // 원문은Load/InstallDir/CDDir설정뒤마지막FileSpec의핸들을반납한다.
     ApplyProductVersion(configuration_); // 원본 시작 계약 뒤 사용자 요청의 제품 표시11.01을 적용한다. 원본 데이터 판본은 바꾸지 않는다.
     SaveOptions(); // 원본 FUN_004359f0 → FUN_00441d10(0): 설정 해석 전에 한 번 저장한다.
     InterpretOptions();

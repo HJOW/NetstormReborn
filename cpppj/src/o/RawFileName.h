@@ -20,6 +20,7 @@ public:
     std::string_view Device(std::string_view fileSpec,char separator='\\'); //459900은 같은 고리를 선증가/clear한 뒤 이미 작성된 FileSpec의 장치 접두를 반환한다. NUL 뒤 바이트도 보존하며256BYTE 밖은 거부한다.
     std::string_view Name(std::string_view fileSpec,bool extension=true,char separator='\\'); //459b20은 같은 고리 전체 복사 뒤 마지막 구분자/colon 다음 내부 뷰를 반환한다. 구분자가 없으면 첫BYTE만NUL이며 extension=false는459550의 끝 확장자만 제거한다.
     std::string_view Directory(std::string_view fileSpec,std::int32_t level=-1,char separator='\\'); //459990의 전체(-1)/단계별 디렉터리와 부분 버퍼를 같은 고리에 반환한다. 원문 NULL 읽기는 현재 칸을 보존한 invalid_argument로 거부한다.
+    std::string_view Full(std::string_view fileSpec,bool prefix=true); //459890은 같은 칸을 clear한 뒤 전체 또는 무조건+2주소에서 첫NUL까지 복사한다. prefix=false는두BYTE이상의물리입력을요구한다.
     std::uint32_t Index() const; // 원문 선증가/10 나머지 뒤의 현재 물리 칸 번호다.
     std::span<const std::uint8_t,256> CurrentBytes() const; // NUL 뒤 남은 바이트까지 같은 실제256BYTE를 빌린다.
 private:

@@ -63,6 +63,12 @@ std::string_view RawFileName::Directory(std::string_view fileSpec,std::int32_t l
     }
     return output();
 }
+std::string_view RawFileName::Full(std::string_view fileSpec,bool prefix) { // 원문은 .\\인지검사하지않고선택한물리주소부터strcpy한다.
+    index_=(index_+1U)%10U;auto& bytes=buffers_[index_];bytes.fill(0);
+    if (!prefix) { if (fileSpec.size()<2) throw std::invalid_argument("원문Full의+2물리입력범위가없음");fileSpec.remove_prefix(2); }
+    fileSpec=fileSpec.substr(0,fileSpec.find('\0'));if (fileSpec.size()>=bytes.size()) throw std::length_error("원문Full의256BYTE물리범위초과");
+    std::copy(fileSpec.begin(),fileSpec.end(),bytes.begin());return {reinterpret_cast<const char*>(bytes.data()),fileSpec.size()};
+}
 std::string_view RawFileName::Format(std::span<const FileNamePart> parts,char separator) {
     index_=(index_+1U)%10U;auto& bytes=buffers_[index_];bytes.fill(0);std::size_t size{};
     const auto append=[&](std::string_view text) { // 원문 memcpy의 전체 NUL 포함 폭을 확인하고 부분 문자열로 성공시키지 않는다.

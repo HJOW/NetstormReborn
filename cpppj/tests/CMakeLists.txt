@@ -2977,3 +2977,10 @@ set_source_files_properties(StartupLocationTests.cpp PROPERTIES COMPILE_DEFINITI
 add_executable(netstorm_startup_location_tests FocusedTestMain.cpp StartupLocationTests.cpp FileDirectoryTests.cpp StartupFileNamesTests.cpp BaseFileSecondaryTests.cpp)
 target_link_libraries(netstorm_startup_location_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_startup_location_tests)
+
+# Startup의실제두목록/Full/검색핸들수명을이전설정/루트/등록경계와집중확인한다(736).
+target_sources(netstorm_tests PRIVATE StartupArchiveFilesTests.cpp)
+set_source_files_properties(StartupArchiveFilesTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_STARTUP_ARCHIVES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/startup-archives-x86.tsv\";NETSTORM_FILE_FULL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/file-full-x86.tsv\"")
+add_executable(netstorm_startup_archive_tests FocusedTestMain.cpp StartupArchiveFilesTests.cpp ConfigPathLoadTests.cpp StartupLocationTests.cpp FileDirectoryTests.cpp StartupFileNamesTests.cpp BaseFileSecondaryTests.cpp)
+target_link_libraries(netstorm_startup_archive_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_startup_archive_tests)

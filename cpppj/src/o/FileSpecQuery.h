@@ -1,7 +1,8 @@
-// 원문 FileSpec의 생성/검색 핸들 수명을 경로 조회 동안 소유한다. 전체264BYTE ABI나 FindNext는 별도다.
+// 원문FileSpec의생성/재대입/다음검색/핸들수명을소유한다. 전체264BYTE ABI는별도다.
 #pragma once
 #include <cstdint>
 #include <functional>
+#include <optional>
 #include <string>
 #include <string_view>
 
@@ -10,12 +11,16 @@ struct FileSpecFindResult { std::uintptr_t handle{};std::string name; }; // 실�
 struct FileSpecQueryHooks { // 두 경계가 모두 비어 있으면 실제 Windows 장치를 사용한다.
     std::function<FileSpecFindResult(std::string_view)> find; // 원래 입력 패턴을 조회하고 단일 첫 이름을 반환한다.
     std::function<void(std::uintptr_t)> close; // 비NULL/실패 핸들도 원문처럼 한 번 반납하며 예외를 던지지 않는다.
+    std::function<std::optional<std::string>(std::uintptr_t)> next; // FindNext의실제BOOL/이름이며빈optional만실패다. 기존단일조회장치는호출전까지필요없다.
 };
 class FileSpecQuery { // 일반 입력은 핸들 없이 정규화하고 패턴은 원래 입력으로 검색한다.
 public:
     explicit FileSpecQuery(std::string_view name,const FileSpecQueryHooks& hooks={}); // 원문459610/45a220의 첫NUL·접두·slash·FindFirst 순서다.
     FileSpecQuery(const FileSpecQuery&)=delete;FileSpecQuery& operator=(const FileSpecQuery&)=delete; // 검색 핸들을 복사하거나 이중 반납하지 않는다.
     std::string_view Text() const; // 현재 FileSpec 문자열을 같은 수명 안에서 빌린다.
+    void Assign(std::string_view name); //459610처럼새입력정규화뒤이전핸들을닫고같은객체로다시검색한다.
+    bool Valid() const; // 원문+104의존재표식이며일반입력은파일조회없이true다.
+    bool Next(); //4597c0은핸들0이면false, 유효검색만OS로넘기고실패시마지막문자열을보존한다.
 private:
     struct Search { // 생성 도중 문자열 할당이 실패해도 이미 얻은 핸들을 반납한다.
         std::uintptr_t handle{}; // 일반 입력0·검색 성공 핸들·INVALID_HANDLE_VALUE를 구별한다.
@@ -23,5 +28,7 @@ private:
         ~Search(); // 원문4595f0처럼 비NULL에만 FindClose를 호출한다.
     } search_; // 파일 내용을 읽는 콜백보다 오래 살며 정상/예외 모두 정리된다.
     std::string value_; // 원문 기본 접두/구분자 또는 검색 결과로 선택한 현재 문자열이다.
+    FileSpecQueryHooks hooks_; // 현재객체의첫검색/재대입이같은검색장치를사용한다.
+    bool valid_{true}; // 검색실패/종료표식과마지막문자열의수명을분리한다.
 };
 }

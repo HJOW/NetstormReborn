@@ -1,0 +1,21 @@
+{
+  "unit": 736,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "archiveRows": 54,
+  "fullRows": 16,
+  "observations": 140,
+  "boundary": "실제441965~441a44/Full/FileSpec/재대입/Next/CRT와별도실제dtor. OS FindFirst/Next/Close와등록/보조root설정은명시경계. CWD확정전/뒤Load/전체부모반환ABI는범위밖",
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_startup_archives.py": "43b0d17856ee46076647788141053f10c3f43f17f29e3bcd692b6afd9a283679",
+    "cpppj\\tests\\fixtures\\startup-archives-x86.tsv": "8e7bdcdb9bb86b34064bc3a163ae62a110a2ae8c4925e01c8727b85eda10e0cd",
+    "cpppj\\tests\\fixtures\\file-full-x86.tsv": "67e8a8960fc2a8a479318170104babdeebe3215d04210776e5a7b2751fdc032a"
+  }
+}
