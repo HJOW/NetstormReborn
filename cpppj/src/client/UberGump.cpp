@@ -34,6 +34,7 @@
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "client/GameMenuActions.h"
 #include "client/ViewKeyInput.h"
+#include "client/PauseKeyInput.h" //Pause 가상키도 같은 일반 Pause 명령 FIFO를 정지 관문 전에 사용한다.
 #include "client/RotationKeyInput.h" //C/c는 World 없이도 같은 현재 Client 옵션을 반전하는 일반 입력이다.
 #include "client/ConstructionHistoryKey.h" //Tab은 같은 최근 로컬 건설 위치를 현재 즉시 카메라로 순환한다.
 #include "client/LostPositionKey.h" //U/u는 같은 공통 삭제 owner의 최근 손실 좌표를 현재 카메라에 전달한다.
@@ -1228,6 +1229,12 @@ void UberGump::Event(InputEvent event) {
     if (!(event.code&InputCode::kRelease) && transitionCode==(0x70U<<InputCode::kVirtualKeyShift)) { client_.Input().PushCommand(0x02000017U,0,0x61000003);return; } // 원본4d8c47의 F1Help 문자열이며 Control/Shift를 별도 거부하지 않는다.
     if (rawButtons_->Menus()->HelpOpen()) { if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; } // 현재 공통 모달/스크롤/태그/돌 버튼을 실제 GumpInput에 전달한다.
     if (!rawButtons_->CurrentDialog() && rawButtons_->Menus()->OpenChatInput(event)) { rebuild_=true;worldUiRouted=true; } //원문4d8c60의 모달 뒤/정지 앞 Enter다. 같은 사건을 새로 표시한 Console에 다시 보내지 않는다.
+    if (transitionCode==0x130000U) {
+        if (rawButtons_->CurrentDialog()) return; //원문565dd4의 현재 Console/모달 관문 뒤이며 정지를 별도 조회하지 않는다.
+        PauseKeyInputHooks hooks;hooks.command=[] { return GameMenuCommandValue(0x00542a30U).value(); }; //원문004d8dde의 같은 현재 Pause 명령이다.
+        hooks.queue=[this](auto command,auto first,auto second) { client_.Input().PushCommand(command,first,second); };
+        static_cast<void>(DispatchPauseKeyInput(event,hooks));return; //정지/재개와 음향은 다음 일반 Pause 명령이 소비한다.
+    }
     if (transitionCode==0x710000U || transitionCode==0x720000U || transitionCode==0x770000U || (transitionCode==0x760000U && (event.code&(InputCode::kShift|InputCode::kControl))!=(InputCode::kShift|InputCode::kControl))) {
         if (rawButtons_->CurrentDialog()) return; // 원문565dd4 모달 관문은 일반 F2/F3/F8보다 앞이다. Guide 뒤 조기 F8 예약을 하지 않는다.
         ViewKeyInputHooks hooks; // 같은 Client 표시 전역과 현재 설정/Tell/큐를 사용한다.

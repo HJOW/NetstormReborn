@@ -323,3 +323,5 @@ target_sources(netstorm PRIVATE TechnologyListMenu.cpp TechnologyListMenu.h) # H
 target_sources(netstorm PRIVATE StartupFiles.cpp StartupFiles.h) # 원문6후보setup탐색과같은고리/실제시작VFS루트를연결한다.
 
 target_sources(netstorm PRIVATE ScreenMouseKey.cpp ScreenMouseKey.h) # Guide/Gump 앞 F12를 현재 Windows 호환 화면 장치에 연결한다.
+
+target_sources(netstorm PRIVATE PauseKeyInput.cpp PauseKeyInput.h) #Pause 가상키의 정지 앞 일반명령 예약을 연결한다(753).

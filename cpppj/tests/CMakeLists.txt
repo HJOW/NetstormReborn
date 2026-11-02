@@ -2866,6 +2866,11 @@ netstorm_apply_compiler_options(netstorm_selection_key_input_tests)
 target_sources(netstorm_tests PRIVATE KnowledgeKeyInputTests.cpp)
 target_sources(netstorm_selection_key_input_tests PRIVATE KnowledgeKeyInputTests.cpp)
 
+#Pause 가상키의 원문246입력과 기존 일반 Pause 소비를 같은 집중 대상으로 확인한다(753).
+target_sources(netstorm_tests PRIVATE PauseKeyInputTests.cpp)
+target_sources(netstorm_selection_key_input_tests PRIVATE PauseKeyInputTests.cpp)
+set_source_files_properties(PauseKeyInputTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_PAUSE_KEY_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pause-key-input-x86.tsv\"")
+
 # C/c의 원문 전체 입력 관측과 Client의 실제 회전 옵션 공유 수명을 집중 확인한다(717).
 target_sources(netstorm_tests PRIVATE RotationKeyInputTests.cpp)
 add_executable(netstorm_rotation_key_tests FocusedTestMain.cpp RotationKeyInputTests.cpp)

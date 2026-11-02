@@ -1,0 +1,185 @@
+{
+  "unit": 753,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 미완료",
+  "runtimeProduct": 753,
+  "displayVersion": "11.01",
+  "exeSha256": "ae5b47cf9f9aa0d88d8f29730d87d9079e0bb2281b15ca5cf507e05d48d61e55",
+  "summary": "Pause 가상키의 정지 앞 일반 명령 예약과 기존 Pause 소비 연결",
+  "native": {
+    "unit": 753,
+    "host": "HJOW-Athlon",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23"
+    },
+    "inputs": 246,
+    "nativeObservations": 492,
+    "precisionDifferences": 0,
+    "stackDelta": 0,
+    "nativeRanges": [
+      [
+        "0x4d6e61",
+        "0x4da477"
+      ],
+      [
+        "0x463e40",
+        "0x463f62"
+      ],
+      [
+        "0x460de0",
+        "0x460def"
+      ],
+      [
+        "0x445330",
+        "0x44533e"
+      ],
+      [
+        "0x452fe0",
+        "0x45303c"
+      ],
+      [
+        "0x4e63d0",
+        "0x4e63d5"
+      ],
+      [
+        "0x4e63e0",
+        "0x4e649e"
+      ],
+      [
+        "0x4d53f0",
+        "0x4d5480"
+      ]
+    ],
+    "pauseBranch": "004d8db2..004d8df1",
+    "pauseQueryAfter": "004d96b6",
+    "commandAddress": "00542a30",
+    "initialCommand": 33554639,
+    "gameExecutions": 0,
+    "nativeBodiesUnchanged": true,
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "95609b06c013b10db5849de1b9c66b3070437328142ca571d64f402c0aa108ad",
+    "toolSha256": "0dcc2feb388514fa3517da69fb40dfa0e445e178b70a2742a1bf64845ee83d57",
+    "sharedOracleSha256": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+    "totals": {
+      "27f": {
+        "runs": 246,
+        "instructions": 111307
+      },
+      "37f": {
+        "runs": 246,
+        "instructions": 111307
+      }
+    },
+    "boundaries": {
+      "guide": 636,
+      "mission": 636,
+      "gump": 620,
+      "general": 348,
+      "queue": 336,
+      "paused": 344,
+      "cursor": 344
+    },
+    "explicitBoundaries": [
+      "Guide virtual+24",
+      "Gump Route",
+      "general input cleanup"
+    ],
+    "scope": "비멀티 Pause 키/일반 명령 FIFO. OS 키/게임 실행/MP 통신/전체UI 없음"
+  },
+  "nativeRepeat": {
+    "observations": 492,
+    "fixtureMatches": true,
+    "report": "native-repeat.json"
+  },
+  "initialFailure": "준비단계 첫 원문 관측은 Shift 숫자검색004d53f0의 허용 범위 누락으로 중단했다. 실제 순수 검색 몸체 끝까지 허용 후246입력/492관측을 생성했다. 별도 최초 원시 로그 파일은 없으며 도구 반환 관측과 최종 성공을 구별한다. 게임/제품 실행 실패는 아니다.",
+  "tests": {
+    "total": 37,
+    "newTests": 4,
+    "failedChecks": 0,
+    "fullSuiteRun": false,
+    "names": [
+      "SelectionKeyInput_IndependentNativeParent",
+      "SelectionKeyInput_LazyGatesAndExactCodes",
+      "SelectionKeyInput_QueuedHomeGuideAndMenuGates",
+      "SelectionKeyInput_QueueCapacityAndMissingBoundary",
+      "NextUnitSelection_IndependentNative",
+      "NextUnitSelection_ActualSelectionAndPauseOrder",
+      "NextUnitSelection_PartialFailure",
+      "PriestSelectionShortcut_IndependentNativeBranch",
+      "PriestSelectionShortcut_CurrentOwnerQueueAndCounterLifetime",
+      "PriestSelectionShortcut_PartialFailureAndCurrentWrap",
+      "GameMenuActions_Native610CurrentBodyAndPartialEffects",
+      "GameMenuActions_UnhandledReleaseAndRequiredEffects",
+      "TutorialOne_TotalMadeNative104",
+      "TutorialOne_TotalMadeSharedResetAndDirectHelperReplayNative104",
+      "TutorialOne_StageNative266",
+      "TutorialOne_SharedStateAndMutableList",
+      "KnowledgeKeyInput_IndependentNativePauseAndModifiers",
+      "KnowledgeKeyInput_PausedAndModifiedKeysRequireNoQueueDevices",
+      "KnowledgeKeyInput_UsesCurrentCommandAndRealFifoWithoutCoordinates",
+      "KnowledgeKeyInput_QueueFullAndMissingBoundaryPreservePriorEffects",
+      "PauseKeyInput_Native246InputsAndRealQueue",
+      "PauseKeyInput_NonPauseAndReleaseDoNotRequireDevices",
+      "PauseKeyInput_MissingQueuePreservesCurrentCommandLookup",
+      "PauseKeyInput_QueuedCommandUsesCurrentPauseAndExistingActions",
+      "ScreenMouseKey_Native552CurrentModeAndInputBits",
+      "ScreenMouseKey_UsesCurrentModeAndCallsDeviceImmediately",
+      "ScreenMouseKey_LazyDeviceErrorsAndWindowedMode",
+      "ScreenModeTransition_Native192WholeParent",
+      "ScreenModeTransition_RestoreAfterFailureAndReadCurrentAfterCallbacks",
+      "ScreenModeTransition_NotInitializedKeepsActualFailedDeviceResult",
+      "ScreenModeTransition_RecoveryAndRememberFailuresPropagateWithoutIncrement",
+      "ScreenModeTransition_SameModeNeedsNoDeviceAndMissingDeviceIsExplicit",
+      "ScreenPresentation_AspectFitAndLetterbox",
+      "ScreenPresentation_InversePointAndDirtyPhase",
+      "ScreenPresentation_CompatibilityFlagsAndNativeCommands",
+      "ScreenPresentation_WideDibUsesActualAlignedPitch",
+      "ScreenPresentation_IntegerNearestPixelsAndBounds"
+    ],
+    "logs": [
+      "tests-v1.log"
+    ]
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ]
+  },
+  "protection": {
+    "beforeCount": 2662,
+    "currentCount": 2663,
+    "allUnchanged": true,
+    "fixtureCount": 843,
+    "newFixtures": [
+      "cpppj/tests/fixtures/pause-key-input-x86.tsv"
+    ]
+  },
+  "sourceSha256": {
+    "cpppj/src/client/CMakeLists.txt": "4d7d9363953bcc4644d8c2758ef659e20fcc2419412a7261757a51f2c34c3424",
+    "cpppj/src/client/PauseKeyInput.cpp": "146d7c5db73f54e90e77a7f7392c8c023ec606c04f3be58e7a35a87c6ef47127",
+    "cpppj/src/client/PauseKeyInput.h": "43251dab99be901686b1a9304f834c42784b27bd171b3c6b48977bad4919efd3",
+    "cpppj/src/client/UberGump.cpp": "07049bdba28c0f4d916eb91f3bb1ceef33e4a84e9ddd6741d776e469fba78b8b",
+    "cpppj/tests/CMakeLists.txt": "fa7ce291504327fa040702275a581911b4934fe47390bea2dbb48413932b390d",
+    "cpppj/tests/PauseKeyInputTests.cpp": "abe86d9b0b2300fdd96a08f4bb8439e060f0706cfe6b478a102e43c5d94edf1a",
+    "tools/decomp_pause_key_input.py": "0dcc2feb388514fa3517da69fb40dfa0e445e178b70a2742a1bf64845ee83d57"
+  },
+  "newGameProcesses": 0,
+  "newStandaloneCliRuns": 0,
+  "newMultiplayerTests": 0,
+  "newTestExecutables": 0,
+  "latestGui": 746,
+  "latestFull34": "645 / product644",
+  "nextProtectedBaseline": "extracted/cpp-resume-753/protected-after.json",
+  "next": "T/t 게임 시간의 CRT 현재 시계/메시지·객체 덤프 공유 경로·D/d 최근 생산 취득 및 나머지 비멀티/호환성",
+  "limitations": [
+    "Guide/Gump/Console과 정리 callback은 원문 관측의 명시 경계이며 실제 OS 키/GUI를 실행한 것이 아니다.",
+    "제품 UberGump 접합은 빌드/정적 대조이며 새 GUI/물리 입력/PCM·MP·자연 완주 검사는0이다."
+  ]
+}
