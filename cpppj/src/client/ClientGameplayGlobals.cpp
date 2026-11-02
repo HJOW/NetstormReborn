@@ -2,6 +2,7 @@
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "o/RawTerrainBitmap.h"
+#include "o/RawTerrainStamp.h"
 #include <stdexcept>
 #include <utility>
 
@@ -10,7 +11,7 @@ namespace netstorm::client {
 // 원본: Init004c3290/World004b5300의00540c74←0054265c. 독립 장치는 기존0/0 fallback을 유지한다.
 // 이력: 2026-10-27 — MSVC19.44에서 조건식 임시값의 이동이 참조를 값 사본으로 끊는 문제를 피한다.
 ClientGameplayGlobals::ClientGameplayGlobals(std::shared_ptr<ClientSubscriberGlobals> subscribers,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
-    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),subscribers_(std::move(subscribers)),world(o::CampaignWorldGlobals::SubscriberBinding{subscribers_?&subscribers_->MySubscriber():nullptr,subscribers_?&subscribers_->LoginSubscriber():nullptr}),terrainBitmaps_(std::make_shared<o::TerrainBitmapState>()) { finder.sharedBoss=&authority_->boss; } //World 이전 SID0 finder도 같은 실제 권한을 재조회한다.
+    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),subscribers_(std::move(subscribers)),world(o::CampaignWorldGlobals::SubscriberBinding{subscribers_?&subscribers_->MySubscriber():nullptr,subscribers_?&subscribers_->LoginSubscriber():nullptr}),terrainBitmaps_(std::make_shared<o::TerrainBitmapState>()),terrainStamp_(std::make_shared<o::TerrainStampState>()) { finder.sharedBoss=&authority_->boss; } //World 이전 SID0 finder도 같은 실제 권한을 재조회한다.99cache는 최초FrameAt까지 미생성 상태로 보관한다.
 // Session 모듈보다 먼저 대여하여 아직 살아 있는 전역을 초기화하지 않는다.
 ClientGameplayGlobals::Use::Use(ClientGameplayGlobals& globals,bool prepared):globals_(globals),prepared_(prepared) {
     if (globals_.borrowed_) throw std::logic_error("현재 게임 전역 중복 대여");
@@ -45,4 +46,6 @@ bool ClientGameplayGlobals::Borrowed() const { return borrowed_; }
 const std::shared_ptr<ClientSubscriberGlobals>& ClientGameplayGlobals::Subscribers() const { return subscribers_; }
 // 최초 BSS 상태와 현재 캐시의 고정 주소만 빌리며 조회로 분류를 실행하지 않는다.
 o::TerrainBitmapState& ClientGameplayGlobals::TerrainBitmaps() { return *terrainBitmaps_; }
+// 초기 지면의 상태 자체를 빌리며 getter/대여/반납에서 CRT 난수를 소비하거나 캐시를 비우지 않는다.
+o::TerrainStampState& ClientGameplayGlobals::TerrainStamp() { return *terrainStamp_; }
 }

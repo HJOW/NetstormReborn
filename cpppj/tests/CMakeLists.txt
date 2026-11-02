@@ -2917,3 +2917,8 @@ set_property(SOURCE ScenarioEffectInputTests.cpp APPEND PROPERTY COMPILE_DEFINIT
 target_sources(netstorm_tests PRIVATE HtmlScriptCommandNamesTests.cpp)
 target_sources(netstorm_scenario_effect_tests PRIVATE HtmlScriptCommandNamesTests.cpp)
 set_source_files_properties(HtmlScriptCommandNamesTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_HTML_SOLO_COMMAND_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-solo-command-names-pe.tsv\"")
+
+# 최초 지면의 원본99cache와 두 실제 Session의 Client 공유 수명만 창/통신 없이 집중 확인한다(722).
+add_executable(netstorm_terrain_cache_tests FocusedTestMain.cpp TerrainStampTests.cpp ClientRandomGlobalsTests.cpp)
+target_link_libraries(netstorm_terrain_cache_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_terrain_cache_tests)

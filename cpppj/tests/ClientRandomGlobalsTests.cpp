@@ -2,11 +2,15 @@
 #include "DudeSpawnSupport.h"
 #include "client/ClientMain.h"
 #include "client/ClientRandomGlobals.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/RawSurfaceWorld.h"
+#include "o/RawTerrainStamp.h"
 #include "client/RawCampaignSession.h"
 #include "o/RawSubscriberIdGenerate.h"
 #include <algorithm>
 #include <array>
 #include <memory>
+#include <map>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -135,4 +139,36 @@ TEST_CASE(ClientRandomGlobals_IndependentSessionFallbackStaysSeparate) {
         independent.Load();CHECK(devices.globals->CrtState()==0x13579bdfU && devices.globals->SubscriberIdInitialized()==19);
     }
     CHECK(devices.globals->CrtState()==0x13579bdfU && devices.globals->SubscriberIdInitialized()==19);
+}
+
+// 두 실제 미션 월드를 순차 반납/재생성해 Client의 초기 지면 cache와 내부3×3 그림이 계속 같은지 확인한다.
+TEST_CASE(ClientRandomGlobals_SequentialActualSessionsReuseClientTerrainCache) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/thewarbegins.fort"); // 보호 Fort는 읽기 입력으로만 쓴다.
+    Client client(RandomClientOptions());auto game=client.GameplayGlobals();auto random=client.RandomGlobals();RandomSessionDevices firstDevices,secondDevices;
+    firstDevices.globals=secondDevices.globals=random;secondDevices.seconds=1;
+    std::map<std::pair<float,float>,std::int32_t> interior;std::array<std::int32_t,99> variants{}; // 첫 월드의 AA 타일과 원본 cache의 실제 관측만 보존한다.
+    CHECK(!game->TerrainStamp().variants);
+    {
+        auto services=firstDevices.Make();services.gameplayGlobals=game;services.subscriberGlobals=client.SubscriberGlobals(); // 같은 Client의 두 Subscriber DWORD도 실제 소유자와 맞춘다.
+        RawCampaignSession first(assets.game,assets.files,FortTemplate::Parse(original,assets.game.TypeTable()),"terrain-cache-first",std::move(services));first.Load();
+        CHECK(game->TerrainStamp().variants.has_value());if (!game->TerrainStamp().variants) return;variants=*game->TerrainStamp().variants;
+        const auto core=first.Core();const auto begin=core.frames[97].Run('J').first+1; // 원문 AA 분기는 J 다음36개를 좌표/99cache로 결정한다.
+        for (const auto& row:first.World().Objects()) { // 실제 생성된 지면에서 AA 범위의 프레임만 관측하며 가장자리의 별도 게임 난수는 비교하지 않는다.
+            const auto& object=row.object;if (object.type==97 && object.frame>=begin && object.frame<begin+36) interior[{object.x,object.y}]=object.frame;
+        }
+        CHECK(!interior.empty());
+    }
+    CHECK(!game->Borrowed() && game->TerrainStamp().variants && *game->TerrainStamp().variants==variants);
+    {
+        auto services=secondDevices.Make();services.gameplayGlobals=game;services.subscriberGlobals=client.SubscriberGlobals(); // 실제 Session의 장기 전역/Subscriber 정체성 관문을 그대로 유지한다.
+        RawCampaignSession second(assets.game,assets.files,FortTemplate::Parse(original,assets.game.TypeTable()),"terrain-cache-second",std::move(services));
+        random->CrtState()=0x87654321U;second.Load(); // 새 SP 초기화의 합법 재시드 뒤 실제 지형 재생성만 관측한다.
+        CHECK(game->TerrainStamp().variants && *game->TerrainStamp().variants==variants && random->CrtState()==0x87654321U);
+        std::size_t matched{};for (const auto& row:second.World().Objects()) { // 두 번째 실제 Pool의 같은 좌표 지면이 첫 내부 그림을 보존하는지 확인한다.
+            const auto& object=row.object;if (object.type!=97) continue;const auto found=interior.find({object.x,object.y});if (found==interior.end()) continue;
+            CHECK(object.frame==found->second);++matched;
+        }
+        CHECK(matched==interior.size());
+    }
+    CHECK(!game->Borrowed() && assets.files.Read("d/thewarbegins.fort")==original);
 }

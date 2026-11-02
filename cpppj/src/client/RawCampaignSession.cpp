@@ -614,7 +614,7 @@ struct RawCampaignSession::Impl {
 
     std::unique_ptr<RawCanonPlacementPipeline> pipeline; // 실제 Same Core MayPlace다.
     TerrainContextGlobals terrainGlobals; // 정상 문자 mapping의 실제 전역이다.
-    TerrainStampState stamp; // 첫 생성 이후에도 유지되는 실제99cache다.
+    TerrainStampState& stamp{gameplayGlobals->TerrainStamp()}; // 원본005c8be4의99cache는 Client가 소유한다. 재시작/편집 복귀 때 다시 추첨해 CRT를99회 더 소비하지 않는다.
     FortRandomPlacementState randomPlacement; // 실제 지형/edgeFarm 배치 상태다.
     FarmClusterState farm; // 실제 정상 군집 모드다.
     std::unique_ptr<RawNormalTerrainWorldBinding> normal; // 실제 성장/도장/Normalize/군집 몸체다.

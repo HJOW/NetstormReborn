@@ -1,0 +1,95 @@
+{
+  "unit": 722,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "product": {
+    "unit": 722,
+    "version": "11.01",
+    "sha256": "0f787b72ef4f81e95ac293a39c3217656d3629bc1871d9c96cbc47173f37bdc0"
+  },
+  "problem": "원본 전역99cache를 Session마다 다시 만들어 지면 변형과 CRT 후속 상태를 바꾸던 수명 차이",
+  "native": {
+    "patchFrame": "004c04b0",
+    "patchGlobal": "005c8be4",
+    "cdFrame": "0049cf20",
+    "cdGlobal": "00537190",
+    "rowsReplayed": 1560,
+    "fixtureSha256": "cf6848c4c51c0af2aecf5ed020637c3798011425ca2cb929a3870ebadb7495c6"
+  },
+  "fix": "ClientGameplayGlobals가 초기 TerrainStampState를 소유하고 RawCampaignSession은 같은 상태를 참조로 빌린다",
+  "builds": [
+    {
+      "log": "extracted/cpp-terrain-cache-722/build-v1.log",
+      "exitCode": 0,
+      "scope": "product and focused runner"
+    },
+    {
+      "log": "extracted/cpp-terrain-cache-722/build-v2.log",
+      "exitCode": 0,
+      "scope": "test-only Subscriber owner binding and explicit algorithm include"
+    }
+  ],
+  "tests": {
+    "first": {
+      "log": "extracted/cpp-terrain-cache-722/tests-v1.log",
+      "total": 10,
+      "failed": 1,
+      "reason": "new integration setup omitted matching Client Subscriber owner; existing rejection retained"
+    },
+    "final": {
+      "log": "extracted/cpp-terrain-cache-722/tests-v2.log",
+      "total": 10,
+      "new": 2,
+      "failed": 0
+    },
+    "checks": [
+      "two native editions first99cache matches frozen x86 observations",
+      "general/prepared borrow and new stamp/map/Pool preserve99cache without CRT consumption",
+      "fresh Client starts without cache",
+      "two sequential actual campaign Sessions share cache and preserve all observed AA interior frames",
+      "independent Sessions retain separate fallback owners"
+    ]
+  },
+  "protected": {
+    "files": 2640,
+    "changed": []
+  },
+  "gameLaunches": 0,
+  "newMultiplayerTests": 0,
+  "limitations": [
+    "No new GUI run; latest related GUI is721 on its own SHA",
+    "No original RNG seed/cache equality or complete pixel parity claimed",
+    "No full C++/34/ZIP/PCM/physical input/Windows11 runs",
+    "No capture/sacrifice/target attack/win or airborne3 dedicated reproduction"
+  ],
+  "sources": [
+    {
+      "path": "cpppj/src/client/ClientGameplayGlobals.cpp",
+      "sha256": "81a5c1ef0248f9e5cfcb11e7954a6dc08e3783db2af36c52df0c98484b20f388"
+    },
+    {
+      "path": "cpppj/src/client/ClientGameplayGlobals.h",
+      "sha256": "1baace60e54cc802e8fa7ebe3c3c3f3de418973e86e2e871a69100fbfdf6b9bd"
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "714256b9f9d5bab480ab8a032d850c914a6f7562c853e507a533d940ece2cee7"
+    },
+    {
+      "path": "cpppj/tests/TerrainStampTests.cpp",
+      "sha256": "e757a261ebbea55a46f7136f845ac21eefbb1bdb5c523b777357c0f1a8370818"
+    },
+    {
+      "path": "cpppj/tests/ClientRandomGlobalsTests.cpp",
+      "sha256": "ce92d584085f97c730b95d46ecf1e04efe4dda3ff51bc8de7667aec67c987234"
+    },
+    {
+      "path": "cpppj/tests/CMakeLists.txt",
+      "sha256": "ecdb97814ca9dd4bb4bf2e9eda39458fdf0bd8b065f7bfc1e781d59366beb92a"
+    }
+  ]
+}

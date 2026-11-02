@@ -1,7 +1,9 @@
 // 두 보호PE의 독립 초기프레임/stamp 결과를 같은 raw pool/두 난수/공유Choose와 비교한다.
 #include "RawSceneSupport.h"
 #include "o/RawTerrainStamp.h"
+#include "client/ClientGameplayGlobals.h"
 #include "o/RawSquidRegion.h"
+#include <algorithm>
 #include <cstdio>
 
 using namespace netstorm::o;
@@ -170,4 +172,30 @@ TEST_CASE(TerrainStamp_PreservesCacheAndRejectsMissingEffects) {
     bool rejected=false;
     try { RawTerrainStamp missing(scene.pool,scene.types,scene.frames,scene.map,scene.random,scene.crtState,scene.state,{}); }
     catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
+}
+
+// 원본 x86의 AA 프레임/99cache를 Client 대여·실행기 교체 뒤 재사용하며 두 번째99회 소비를 막는다.
+TEST_CASE(TerrainStamp_ClientCacheSurvivesWorldBorrowAndStampReplacement) {
+    const auto& rows=StampRows(); // 최초 원본 입력/기대와 현재 전역 수명을 함께 검사한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 양판본의 원본 캐시는 Session 밖에서 유지된다.
+        const auto name=edition==OriginalEdition::Patch1078 ? "originals" : "originalCD";
+        const auto found=std::find_if(rows.begin(),rows.end(),[&](const auto& row) { return row[0]==name && row[1]=="Frame" && row[2]=="120,15,15,50,53,0,0,0,0,0"; });
+        CHECK(found!=rows.end());if (found==rows.end()) continue;
+        netstorm::client::ClientGameplayGlobals globals;auto* address=&globals.TerrainStamp(); // 실제 Client가 소유하는 같은 상태형이며 조회는 cache를 만들지 않는다.
+        CHECK(!address->variants);TerrainStampScene first(edition);first.Prepare(*found);
+        {
+            const auto use=globals.Acquire();RawTerrainStamp stamp(first.pool,first.types,first.frames,first.map,first.random,first.crtState,globals.TerrainStamp(),first.Hooks());
+            CHECK(stamp.FrameAt(50,53)==static_cast<std::int32_t>(Number((*found)[3])));
+            CHECK(first.crtState==Number((*found)[5]) && address->variants.has_value());
+            std::string cache;for (const auto value:*address->variants) { if (!cache.empty()) cache+=',';cache+=std::to_string(value); } // 기대99개를 제품으로 재계산하지 않고 원본 관측 전체와 비교한다.
+            CHECK(cache==(*found)[6]);
+        }
+        const auto cache=*address->variants;TerrainStampScene second(edition);second.Prepare(*found);second.crtState=0x87654321U; // 앞 실행기/지도/Pool과 다른 현재 입력이며 두 번째 초기화를 검출한다.
+        {
+            const auto use=globals.AcquirePrepared();RawTerrainStamp stamp(second.pool,second.types,second.frames,second.map,second.random,second.crtState,globals.TerrainStamp(),second.Hooks());
+            CHECK(&globals.TerrainStamp()==address && stamp.FrameAt(50,53)==static_cast<std::int32_t>(Number((*found)[3])));
+            CHECK(second.crtState==0x87654321U && *address->variants==cache);
+        }
+        netstorm::client::ClientGameplayGlobals fresh;CHECK(!fresh.TerrainStamp().variants && &fresh.TerrainStamp()!=address); // 새 Client만 최초 미생성 상태이며 앞 캐시를 전역 static으로 공유하지 않는다.
+    }
 }

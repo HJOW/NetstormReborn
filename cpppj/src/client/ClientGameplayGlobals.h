@@ -11,7 +11,7 @@
 #include "o/RawEnergySupply.h"
 #include <memory>
 
-namespace netstorm::o { struct TerrainBitmapState; } // 미리보기의 최초 문자 분류는 Session 밖의 Client 수명으로 유지한다.
+namespace netstorm::o { struct TerrainBitmapState;struct TerrainStampState; } // 미리보기 분류와 초기 지면의99개 변형 캐시는 서로 구별하여 Client 수명으로 유지한다.
 namespace netstorm::client {
 class ClientSubscriberGlobals;class RawCampaignSession; // 실제 전역 소유자와 현재 Runtime을 복제하지 않는다.
 class ClientGameplayGlobals {
@@ -42,6 +42,7 @@ public:
     bool Borrowed() const; // 현재 대여 여부의 읽기 전용 관측이다.
     const std::shared_ptr<ClientSubscriberGlobals>& Subscribers() const; // 다른 Client의 참조를 잘못 합치지 않는다.
     o::TerrainBitmapState& TerrainBitmaps(); // 같은005c8ab0/005c8bb8 캐시와 fringe TYPE를 조회하며 Session 대여/반납에서 초기화하지 않는다.
+    o::TerrainStampState& TerrainStamp(); // 최초 FrameAt에서 만드는005c8be4의99개 변형을 미션/편집 월드 교체 뒤에도 같은 주소에서 빌린다.
     std::uint32_t& FullDeck() { return fullDeck_; } // 0054db14의 실제 DWORD를 생산/건설/배치/객체/HUD가 같은 주소로 빌린다.
     const std::uint32_t& FullDeck() const { return fullDeck_; } // 자연 writer의0/1 외에도 현재 비영 DWORD를 정규화 없이 보존한다.
     std::uint32_t& FortKeepGenus() { return fortKeepGenus_; } //00542640의 같은 현재 마스크를 Editor prefix/객체 읽기/해방이 공유한다.
@@ -91,6 +92,7 @@ private:
     ClientCursorGlobals cursorGlobals_; // callback/타이머없이Lifecycle/Placement/snap만장기소유한다.
     std::uint32_t mapRevision_{}; // 최초 BSS0이며 Session 대여/반납으로 초기화하지 않는 실제005949d4다.
     std::shared_ptr<o::TerrainBitmapState> terrainBitmaps_; // 최초 분류를 모든 편집 창/Session보다 오래 같은 주소에 소유한다.
+    std::shared_ptr<o::TerrainStampState> terrainStamp_; // 초기 지면의 독립99cache이며 RegionPaint/미리보기의 캐시와 합치지 않는다.
     RawCampaignSession* current_{};bool borrowed_{}; // 게임 값의 대체가 아닌 현재 C++ Runtime 대여다.
 };
 }
