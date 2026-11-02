@@ -1272,7 +1272,7 @@ void UberGump::Event(InputEvent event) {
     // F6는 아래 실제 UserInput의 공통 정지 관문 뒤에서 처리한다. 직접 ShowTechnology 메뉴 명령과 F9의 정지 앞 예약은 별개다(원문4d96b6/4d9a00).
     if (world_ && state_.phase==ClientPhase::Mission && QueuePlayerListKey(event,client_.Input())) return; // F9와 Shift+F9는 실제 메뉴/정지 명령을 큐 끝에 예약한다.
     if (!worldUiRouted && rawButtons_->Menus()->KnowledgeOpen()) {
-        if ((event.code&0xffffU)==0x1b && !(event.code&InputCode::kRelease)) { rawButtons_->Menus()->RequestClosePopups();rebuild_=true;return; }
+        if (IsEscapeKeyPress(event)) { rawButtons_->Menus()->RequestClosePopups();rebuild_=true;return; }
         if (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton || transitionCode==InputCode::kMiddleButton) { static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; }
     }
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078 && DispatchBattleRetreatConfirmation(event,[this](auto section) { Tell(std::string(section)); })) return; //원문 이유0 이하의 확인 요청은 같은 Session/Native 상태를 보존한 채 실제 안내창만 연다.
@@ -1301,10 +1301,11 @@ void UberGump::Event(InputEvent event) {
     if (IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
     if (IsObjectMenuVariantCommand(commandCode)) throw std::logic_error("현재 파생 객체 메뉴 선택의 실행 미연결: "+std::to_string(commandCode)); // 미복원 개발자/편집 실행을 입력에서 조용히 버리지 않는다.
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
-    if ((event.code & 0xffffu) == 0x1b && (event.code & InputCode::kRelease) == 0) {
+    if (IsEscapeKeyPress(event)) {
         if (state_.phase == ClientPhase::Briefing || state_.phase == ClientPhase::LoadingMission) return;
         if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
-            if (!world_->Session().CursorDropSettings().lockDepth) { userInput_->Event(event);rawButtons_->RequestClosePopups();rebuild_=true; }
+            world_->ResetSelection(); // 원문4d9494의정리와Select(0,0,0)은154입력/두정밀도의전체효과가같다.정지중에도선택/강조를먼저정리한다.
+            if (!world_->Session().CursorDropSettings().lockDepth) { world_->Session().CancelCursorForState();rawButtons_->RequestClosePopups();rebuild_=true; } // 원문446e70→66710만호출하며일반마우스/설정읽기와팝업닫기를중복하지않는다.
             else ToggleGameMenu(); // 현재커서가없으면같은serial조회로막대를열거나닫는다.
             return;
         }

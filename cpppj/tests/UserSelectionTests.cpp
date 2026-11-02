@@ -4,6 +4,7 @@
 #include "client/RawUserHighlight.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientUserSelectionCleanup.h"
+#include "client/GameMenuCommands.h"
 #include "client/RawSurfaceWorld.h"
 #include "DudeSpawnSupport.h"
 #include <bit>
@@ -162,6 +163,22 @@ TEST_CASE(UserSelection_ClearLazyBoundaryAndWrittenPrefix) {
     RawUserSelection denied(scene.pool,scene.types,{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},std::move(disabled));denied.Clear();CHECK(scene.selected==51 && scene.count==2);
     scene.count=0;UserSelectionHooks enabled;enabled.enabled=[] { return 1U; };RawUserSelection missing(scene.pool,scene.types,{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},std::move(enabled));bool rejected{}; // 강조 경계를 의도적으로 비운다.
     try { missing.Clear(); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected && !scene.selected && !scene.count);
+}
+
+// 실제ESC 부분과Select0의각154입력을두x87정밀도로대조한출력에같은기존C++몸체를연결한다.
+TEST_CASE(UserSelection_EscapeNative154MatchesZeroSelection) {
+    SelectionScene scene;std::size_t count{};const auto path=(std::filesystem::path(NETSTORM_USER_SELECTION_FIXTURE).parent_path()/"escape-selection-x86.tsv").string();
+    for (const auto& fields:LoadFixture(path.c_str()).rows) { // 관문·다중/단일 선택·강조·콜백 현재값을 모든 고정 행과 대조한다.
+        CHECK(fields.size()==4);if (fields.size()!=4) continue;scene.Prepare(SelectionNumbers(fields[0]));RawUserHighlight highlight({scene.mode,scene.selected,scene.mouseType,scene.mouseX,scene.mouseY},scene.HighlightHooks());RawUserSelection selection(scene.pool,scene.types,{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},scene.Hooks(highlight));
+        static_cast<void>(selection.Select(0,0,0));CHECK((scene.trace.empty() ? "-" : scene.trace)==fields[2]);CHECK(scene.Current()==SelectionNumbers(fields[3]));++count;
+    }
+    CHECK(count==154);
+}
+
+// 일반 ESC와 같은하위BYTE의명령/마우스/가상키를구별하고수정키가별도거부조건이아님을확인한다.
+TEST_CASE(UserSelection_EscapeRecognizesNativeEventKindAndRelease) {
+    for (const auto code:std::array<std::uint32_t,4>{0x1bU,InputCode::kShift|0x1bU,InputCode::kControl|0x1bU,InputCode::kAlt|0x1bU}) CHECK(IsEscapeKeyPress({code,37,-19})); // 원문 전체 코드 판정에서 수정키는 비교 대상이 아니다.
+    for (const auto code:std::array<std::uint32_t,5>{InputCode::kRelease|0x1bU,InputCode::kCommand|0x1bU,InputCode::kLeftButton|0x1bU,0x1b0000U,'A'}) CHECK(!IsEscapeKeyPress({code,0,0})); // 하위16BIT가같아도입력종류나뗌이다르면메뉴를열지않는다.
 }
 
 namespace { // 공유 owner의 입력/출력을 실제 아홉 DWORD 비트로만 비교한다.

@@ -1,0 +1,718 @@
+{
+  "unit": 742,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "last_full_decompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "previous_goal_turn": "진척:741의F6연결·집중검사·실제UI·커밋 완료",
+  "summary": "ESC 선택 정리 뒤 현재 커서 취소/메뉴 토글과 정확한 사건 종류 판정을 실제 입력에 연결",
+  "status": "단위 완료, 전체1~8차 목표 진행 중",
+  "runtime_product": 742,
+  "display_version": "11.01",
+  "exe_sha256": "31761cf004b2be41745b8ab0822f54706ade049eac29938fcb0db0c591a77a99",
+  "implementation": [
+    "실제 ESC 부모가 기존 ResetSelection/Select(0,0,0)을 먼저 호출",
+    "현재 커서 조회 뒤 직접 CancelCursorForState/팝업닫기1회 또는 기존 serial 메뉴 토글",
+    "일반 UserInput 우회로 인한 마우스/커서설정 조회·중복팝업닫기 제거",
+    "전체 사건 코드/뗌으로 ESC를 판정하여 같은 하위BYTE의 다른 사건을 구별"
+  ],
+  "native": {
+    "unit": 742,
+    "date": "2026-11-02",
+    "host": "HJOW-Athlon",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23"
+    },
+    "uniqueInputs": 154,
+    "escapeExecutions": 308,
+    "selectZeroExecutions": 308,
+    "controls": [
+      639,
+      895
+    ],
+    "nativeEscapeRange": "004d9494..004d9573",
+    "selectEntry": "004d5c90",
+    "allEqual": true,
+    "eaxCompared": false,
+    "wrapper": "명시 EBX/ESI/EDI 저장과0x120 지역 스택. 원문9574 직전에 반환하여 커서/메뉴는 실행하지 않는다.",
+    "originalGameExecutions": 0,
+    "fixtureSha256": "4fc418163b78fa7f5e391910ec959b07f8891f2af6ec8c7cf789d340834922a5",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "toolSha256": "06536c13dad6b9e9eb12c17f38c4c9c518bcfe34b844b830757377256db390ab",
+    "sharedOracleSha256": "79cc31f6c9cf391853126cfbb6885e7adeb0477ea27472c70def72ab501f897c"
+  },
+  "tests": {
+    "target": "netstorm_priest_selection_shortcut_tests",
+    "new_cases": 2,
+    "cases": 23,
+    "failed_checks": 0,
+    "exit": 0,
+    "new_fixture_rows": 154,
+    "existing_selection_rows": 1074,
+    "existing_clear_rows": 87,
+    "new_test_executables": 0,
+    "test_executables": 66,
+    "all_targets": 71
+  },
+  "build": {
+    "configuration": "Release",
+    "targets": [
+      "NetstormCpp",
+      "netstorm_priest_selection_shortcut_tests"
+    ],
+    "exit": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "live_before": {
+    "product": 741,
+    "frames": 355,
+    "seconds": 18.288089600013336,
+    "process_return_code": 0,
+    "observer_exit": 1,
+    "failure": "ESC/정지ESC 뒤 선택15000 잔존",
+    "binary_sha256": "7918970142e15a6d4d8e2261f5924922ff7c1f11c8a28f2559679055d598b4ae",
+    "observations": {
+      "selected": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "13.271",
+          "14.897"
+        ]
+      },
+      "escaped": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "740",
+          "1",
+          "104"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "13.617",
+          "15.243"
+        ]
+      },
+      "closed": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "104"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "13.95",
+          "15.576"
+        ]
+      },
+      "selectedAgain": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "104"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "14.267",
+          "15.893"
+        ]
+      },
+      "pausedSelected": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "104"
+        ],
+        "paused": [
+          "1"
+        ],
+        "time": [
+          "14.468",
+          "16.275"
+        ]
+      },
+      "pausedEscaped": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "769",
+          "1",
+          "107"
+        ],
+        "paused": [
+          "1"
+        ],
+        "time": [
+          "14.468",
+          "16.626"
+        ]
+      },
+      "pausedClosed": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "107"
+        ],
+        "paused": [
+          "1"
+        ],
+        "time": [
+          "14.468",
+          "16.973"
+        ]
+      },
+      "resumed": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "107"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "14.669",
+          "17.326"
+        ]
+      }
+    },
+    "originals_unchanged": true,
+    "data_unchanged": true
+  },
+  "live_after": {
+    "product": 742,
+    "frames": 415,
+    "seconds": 19.25926249999611,
+    "process_return_code": 0,
+    "observer_exit": 0,
+    "observations": {
+      "selected": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "12.887",
+          "14.338"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "escaped": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "0"
+        ],
+        "game_menu_bar": [
+          "764",
+          "1",
+          "112"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "13.271",
+          "14.722"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "closed": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "112"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "13.619",
+          "15.07"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "selectedAgain": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "112"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "13.936",
+          "15.387"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "pausedSelected": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "15000"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "112"
+        ],
+        "paused": [
+          "1"
+        ],
+        "time": [
+          "14.084",
+          "15.717"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "pausedEscaped": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "0"
+        ],
+        "game_menu_bar": [
+          "793",
+          "1",
+          "115"
+        ],
+        "paused": [
+          "1"
+        ],
+        "time": [
+          "14.084",
+          "16.034"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "pausedClosed": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "115"
+        ],
+        "paused": [
+          "1"
+        ],
+        "time": [
+          "14.084",
+          "16.381"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "resumed": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "115"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "14.303",
+          "16.752"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "held": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "115"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "14.635",
+          "17.084"
+        ],
+        "raw_cursor": [
+          "0",
+          "0",
+          "82",
+          "73",
+          "100",
+          "117",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ]
+      },
+      "cancelled": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "115"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "15.016",
+          "17.465"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "82",
+          "0",
+          "100",
+          "117",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ]
+      },
+      "openedAfterCancel": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "0"
+        ],
+        "game_menu_bar": [
+          "877",
+          "1",
+          "118"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "15.383",
+          "17.832"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "82",
+          "0",
+          "100",
+          "117",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ]
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "selected": [
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "118"
+        ],
+        "paused": [
+          "0"
+        ],
+        "time": [
+          "15.748",
+          "18.197"
+        ],
+        "raw_cursor": [
+          "1",
+          "0",
+          "82",
+          "0",
+          "100",
+          "117",
+          "64",
+          "512",
+          "0",
+          "1",
+          "1"
+        ]
+      }
+    },
+    "window_capture_inspected": true,
+    "originals_unchanged": true,
+    "data_unchanged": true,
+    "bridge_placed": false
+  },
+  "protected": {
+    "before": 2653,
+    "before_fixtures": 833,
+    "existing_unchanged": true,
+    "new_fixture": 1,
+    "after": 2654,
+    "after_fixtures": 834,
+    "next_baseline": "extracted/cpp-escape-selection-742/protected-after.json"
+  },
+  "scope": {
+    "new_original_game_processes": 0,
+    "new_cpp_game_processes": 2,
+    "new_escape_native_executions": 308,
+    "new_select_zero_native_executions": 308,
+    "new_multiplayer_tests": 0,
+    "communication_tests": 0,
+    "full_cpp_suite": false,
+    "full_34_paths": false,
+    "new_zip": false,
+    "physical_keys": false,
+    "pcm_verified": false
+  },
+  "source_sha256": {
+    "LEFT_JOBS.md": "dc25248405f1078c0faeb629fed0fa578df63f3fb52f005463de89c774ee7833",
+    "README.md": "80cbaeb30d0a3ba8c3c56246c5625d83c6288505d3479610faa198e9d45c4cff",
+    "README.en.md": "1abd2b572e3439f53e9f889e049e23a81ed7ea178b3372823e38b080d1259dbe",
+    "cpppj/README.md": "081a11330ae28d1e1bf7420e3a37f6dc468e661de6f73b0bf07620954cf3b4e6",
+    "cpppj/src/client/GameMenuCommands.cpp": "6895ea6862991e39191a08594bf6ce63b1ffaa5b4cc3b81ef9544e9780a84182",
+    "cpppj/src/client/GameMenuCommands.h": "34df2aa794ae98cbb4ff0698d0cda9a127f67ab75e0996cbaf8cf580e79a94d3",
+    "cpppj/src/client/UberGump.cpp": "e578da845b3707461c8bbc94b9c6672a0eff134b5d2656e5a6c2779db3699d11",
+    "cpppj/tests/UserSelectionTests.cpp": "cd094edd0a2fac107279cdda04372fbb40a200297e4a057c24f62f6feef99250",
+    "cpppj/tests/fixtures/escape-selection-x86.tsv": "4fc418163b78fa7f5e391910ec959b07f8891f2af6ec8c7cf789d340834922a5",
+    "tools/decomp_escape_selection.py": "06536c13dad6b9e9eb12c17f38c4c9c518bcfe34b844b830757377256db390ab",
+    "tools/cpp_escape_selection_smoke.py": "a1b5842459d5d8901ed214d70b648c99254f58bfb898aae138ebdea8508fdde3",
+    "docs/exe/cpp-escape-selection-20261102.md": "55d41b8fd86d327ca0dfa7718fa92357a23fc30b4f8d6b6430d8c7ea791e8b69"
+  },
+  "raw_evidence": {
+    "directory": "extracted/cpp-escape-selection-742",
+    "sha256": {
+      "native-v1.json": "9e0f99c37e35afbf5503cfbdb52a6fb58d47f279393455118d752f9b60fd2686",
+      "native-v1.log": "f9b09f65c6ee6300eedbe02318066c737f0d3f772dfb071b26b30f5562b4dfd9",
+      "build-v1.log": "a3bb2701ebc920c84bddc974e8bbe6015049b9146beb2e5d359c614020f8bf2c",
+      "tests-v1.log": "2d796d0337fd2171a91cdd3958f8c1db9fd26bbff8c4e7102ef76ce33c1bb93b",
+      "live-before.log": "567273c73964414303c56874011820142bfef54532b2f4af5e6d281d76f58ccc",
+      "live-before/observations.json": "0c459d53a67583a0e5c2b090066da16e78c13eede81807b52951825a1818b28f",
+      "live-before/run/run.json": "f617406f7fbf55e2b5e961b731e102f618008bbdd290a04ad4146c4e5dfa2afb",
+      "live-before/run/steps.tsv": "275f5f6765bad7a1b2d264795f2918886fab0e84debdd9236d81c97a4451be33",
+      "live-before/run/states.tsv": "cff86a4df34787da74d5ead6e34c8376b603f113b26529a940194915206ae7ab",
+      "live-v1.log": "466d28cd2b0df343c2c3bd479fe2d4d91c2b513b38491b2513350caccbe53a97",
+      "live-v1/summary.json": "19adba287f04b7069bc5c1515ffa2469cb7e776f5c1833f2fcc79fb79557d600",
+      "live-v1/run/run.json": "518f2e0dcf202d49647356874546110920dbc774550910e973aac6141486874d",
+      "live-v1/run/steps.tsv": "f0ef8cb5120af77720d34e448bd4e74d9438144cf6d654fd59ac47fb1ec0ecb2",
+      "live-v1/run/states.tsv": "40078a2119d2eacdc4d610591f5865de8929edbf8b884bf5fe11778e363b744f",
+      "live-v1/paused-menu.bmp": "879db030ecaf376222a1f944e5481f0a3da02cc8b9faf7c2293cad8c43161553",
+      "protected-before.json": "57fc7074c92d4cd361491309014b917026b817c4952a1fc738a7e967c6979d4f",
+      "protected-after.json": "f5e9f3df59b43e75b33aa91196f35432709e747539344c6611cdc607b82d1465"
+    }
+  },
+  "limits": [
+    "Native동등성은대조한154입력의전체효과/현재전역이며모든가능한상태의증명이아니다.",
+    "Native부분관측은커서/메뉴·key-up/Guide/Gump/Console범위밖이며EAX는비교하지않는다.",
+    "실제입력은짧은캠페인UI이며물리키/전체Console·모달/모든커서상태/전체픽셀·PCM/원본전체동일성이아니다.",
+    "후실행에Q취소구간을추가했으므로전후전체입력/프레임수는같지않고시간은성능비교가아니다.",
+    "포획·희생/특정적공격/승리/공중3종전용행동/MP검사는하지않았다.",
+    "전체34/ZIP645의644제품과별도이며10.72ESC전체부모는새대조범위가아니다."
+  ]
+}
