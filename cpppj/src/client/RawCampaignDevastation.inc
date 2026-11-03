@@ -3,10 +3,17 @@
 bool WindSpellTable(std::uint32_t table) const { return table==0x5025d8U || table==0x502e68U || table==0x502f30U; }
 // 같은 공용 시전/수신을 사용하는 정확한 여섯 가상 표만 허용한다.
 bool ConnectedBombTable(std::uint32_t table) const { return table==0x502370U || table==0x502510U || table==0x502ff8U || WindSpellTable(table); }
+// 상태 주문/만료의 현재 타입 진단 부모를 거쳐 같은 기존 펜스 몸체를 실행한다.
+void DispatchFenceType(Sid sid,FenceTypeOperation operation) {
+    FenceTypeParentHooks hooks; // 같은 Session의 현재 진단 서비스와 전체 자식이다.
+    hooks.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("펜스 타입 원문 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); };
+    hooks.body=[this,operation](Sid target) { if (operation==FenceTypeOperation::Rebuild) fenceRebuild->Rebuild(target);else fenceLifetime->Refresh(target); };
+    RunFenceTypeParent(core.pool.Slot(sid),sid,gunTargetState.sunFenceType,gunState.checking,operation,hooks);
+}
 // 상태 효과의 적용/만료는 동일한 실제 가상 배치·표시·펜스 소비자를 사용한다.
 BombEffectTimerHooks MakeBombTimerHooks() {
     BombEffectTimerHooks hooks;hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
-    hooks.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid),0); };hooks.fence=[this](Sid sid) { fenceRebuild->Rebuild(sid); };return hooks;
+    hooks.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid),0); };hooks.fence=[this](Sid sid) { DispatchFenceType(sid,FenceTypeOperation::Rebuild); };return hooks;
 }
 // 7d는 현재 free Form에 새 타이머를 읽고 같은 Host의 지정 SID 부착으로 전달한다.
 void ReceiveBombTimer(std::span<const std::uint8_t> packet) {
@@ -43,7 +50,7 @@ void ConnectDevastation() {
     // 자산 로드 목록은188TYPE 전체와 길이가 다르므로 실제 block 번호로만 음향을 보충한다.
     for (const auto& asset:assets.game.Types()) { const auto name=asset.definition.String("fireSound");auto& type=devastationEffectTypes.at(70+asset.block);type.sound=name && !name->empty() ? soundNames.Lookup(*name) : 0;type.delay=static_cast<std::int32_t>(asset.definition.Number("effecttime").value_or(0)); }
     BombStatusHooks status;status.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid),0); };status.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };status.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
-    status.fence=[this](Sid sid) { fenceLifetime->Refresh(sid); };status.flare=[this](Sid sid,std::int32_t count,std::uint32_t event,std::uint32_t type,std::uint32_t direction) { flare->SpawnDirection(sid,count,event,type,direction); };bombStatusState.alliances=alliances;bombStatus=std::make_unique<RawBombStatus>(core.pool,core.types,bombStatusState,std::move(status));
+    status.fence=[this](Sid sid) { DispatchFenceType(sid,FenceTypeOperation::Refresh); };status.flare=[this](Sid sid,std::int32_t count,std::uint32_t event,std::uint32_t type,std::uint32_t direction) { flare->SpawnDirection(sid,count,event,type,direction); };bombStatusState.alliances=alliances;bombStatus=std::make_unique<RawBombStatus>(core.pool,core.types,bombStatusState,std::move(status));
     windSpellCounts.resize(core.types.size());for (const auto& asset:assets.game.Types()) windSpellCounts.at(70+asset.block)=static_cast<std::int32_t>(asset.definition.Number("spawns").value_or(0)); // 현재 TYPE의 signed 소환 개수만 공급한다.
     windSpellState.counts=windSpellCounts;WindSpellHooks summons;summons.exists=[this](Sid parent,std::uint32_t type) { return FindAttachedProcess(core.pool,parent,type).value!=0; };
     summons.allocate=[]()->std::optional<WindAviaryProcessFields> { auto* storage=std::malloc(80);if (!storage) return std::nullopt;WindAviaryProcessFields fields;std::memcpy(fields.bytes.data(),storage,80);std::free(storage);return fields; };

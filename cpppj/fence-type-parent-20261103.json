@@ -1,0 +1,155 @@
+{
+  "unit": 802,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 802,
+  "displayVersion": "11.01",
+  "exeSha256": "26f8f461c806af747887b5556ceb53a1c3db9aac7c95a393a94cd616afe16541",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "successfulBuilds": 2,
+    "failedBuilds": 0,
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "finalLog": "build-v2.log",
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 9,
+    "newTests": 3,
+    "finalFailedChecks": 0,
+    "names": [
+      "FenceTypeParent_NativeFullParents432",
+      "FenceTypeParent_DiagnosticReturnUsesActualChildrenAndSameRaw",
+      "FenceTypeParent_SelectedBoundariesAndDwordTypeWidth",
+      "FenceLifetime_NativeClearRefreshAndPre207",
+      "FenceLifetime_GuardsAndSamePool",
+      "FenceCreate_NativeMarkers106",
+      "FenceCreate_NativeShields306",
+      "FenceCreate_NativeRebuild166",
+      "FenceCreate_RequiredBoundariesAndPartialWrites"
+    ],
+    "initialFailedTestCases": 1,
+    "initialFailedChecks": 102,
+    "correction": "전역 타입을 BYTE로 좁히던 초안을 DWORD 전체 비교로 수정·원문 fixture 불변",
+    "oldTestsFirstPass": 6,
+    "changedNewTestsFinalPass": 3,
+    "previousGoldenCases": 785,
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "entries": [
+        "00457890",
+        "00457e20"
+      ],
+      "rows": 432,
+      "observations": 864,
+      "normalReturns": 306,
+      "assertionStops": 126,
+      "diagnostics": 252,
+      "gameExecutions": 0,
+      "boundaries": [
+        "두 dispatcher 전체·진단과 기존 재생성/정리 자식만 명시 장치",
+        "같은 raw/전역 BYTE 변경·주소/수명 변경은 입력 밖",
+        "진단UI/전체SEH/32비트ABI와 실제 게임 관측 아님"
+      ]
+    },
+    "repeat": {
+      "host": "HJOW-Athlon",
+      "entries": [
+        "00457890",
+        "00457e20"
+      ],
+      "rows": 432,
+      "observations": 864,
+      "normalReturns": 306,
+      "assertionStops": 126,
+      "diagnostics": 252,
+      "gameExecutions": 0,
+      "boundaries": [
+        "두 dispatcher 전체·진단과 기존 재생성/정리 자식만 명시 장치",
+        "같은 raw/전역 BYTE 변경·주소/수명 변경은 입력 밖",
+        "진단UI/전체SEH/32비트ABI와 실제 게임 관측 아님"
+      ]
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 1728,
+    "failedRuns": 0,
+    "metadataClarification": "raw 슬롯은 BYTE zero-extend·타입 전역은 전체 DWORD·기계어 비교 감사 참조"
+  },
+  "integration": {
+    "twoCallerReplacementsOnly": true,
+    "otherDevastationBodyUnchanged": true,
+    "childSourceByteIdentity": {
+      "cpppj/src/o/RawFenceRebuild.cpp": "de2620c35cef5ed42fa62bfcbda0180e36e7349132bb0f799e1f9867317b9f71",
+      "cpppj/src/o/RawFenceLifetime.cpp": "f24971d75e0ad7ee97739ee00964b2ec71be8a127c0ecd1bbc6b29797bb45ddf",
+      "cpppj/src/o/RawBombEffectTimer.cpp": "b8a759c37967908b09877796909d38b8279178ee633c6ec09b55ce92c27fd342",
+      "cpppj/src/o/RawBombStatus.cpp": "d23d0bb3feb91d9f955423fc98ec27f224ed08574322416c03f186388772109d"
+    },
+    "checkingOwner": "gunState.checking→ClientGameplayGlobals.AiDebug.Checking",
+    "typeOwner": "gunTargetState.sunFenceType의 전체 DWORD·슬롯 TYPE BYTE zero-extend와 비교",
+    "slotLifetime": "진단 동안 같은50BYTE 주소가 유지되는 입력·reset/해제는 이 함수 계약 밖",
+    "firstTestFailure": "전역 BYTE 축소 초안·새 원문1개/102단언 실패",
+    "machineComparison": {
+      "0x4578ad": [
+        "cmp eax, dword ptr [0x541278]"
+      ],
+      "0x4578d0": [
+        "cmp ecx, dword ptr [0x541278]"
+      ],
+      "0x457e3d": [
+        "cmp eax, dword ptr [0x541278]"
+      ],
+      "0x457e60": [
+        "cmp ecx, dword ptr [0x541278]"
+      ]
+    }
+  },
+  "checking": {
+    "before": 41,
+    "after": 39,
+    "completed": [
+      "00457890",
+      "00457e20"
+    ],
+    "remainingBreakdown": {
+      "parent": 30,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2731,
+    "currentCount": 2732,
+    "fixtureCount": 912,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/fence-type-parent-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "두 dispatcher 전체와 명시 진단/재생성/정리 자식",
+    "같은 raw 주소/수명이 유지되는 입력·진단 중 reset/해제는 계약 밖",
+    "실제 두 자식은 C++ 검사·실제 Session 두 caller와 같은 checking/type owner는 소스/빌드",
+    "전체SEH/진단UI/32비트ABI·CD 새 대조·실제 주문 시전 아님"
+  ],
+  "next": "checking 잔여39·비멀티 UI/Edit/수명·호환성"
+}

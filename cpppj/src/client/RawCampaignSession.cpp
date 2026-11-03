@@ -166,6 +166,7 @@
 #include "o/RawProjectileGeometry.h"
 #include "o/RawFormPacket.h"
 #include "o/RawFenceLifetime.h"
+#include "o/RawFenceTypeParent.h" // 주문/만료의 현재 타입 진단과 복귀 뒤 재판정을 같은 펜스에 연결한다.
 #include "client/RawCursorPlacement.h"
 #include "o/RawContentParentNotice.h"
 #include "o/RawPlayerDamageNotice.h"

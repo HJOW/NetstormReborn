@@ -3218,3 +3218,8 @@ set_property(SOURCE ConstructionProcessTests.cpp APPEND PROPERTY COMPILE_DEFINIT
 # 커서 취소의 현재 checking/진단 복귀와 기존565행 전체 수명을 같은 집중 대상에서 확인한다.
 target_sources(netstorm_file_tests PRIVATE CursorLifecycleTests.cpp)
 set_property(SOURCE CursorLifecycleTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_CURSOR_CANCEL_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cursor-cancel-checking-x86.tsv\"")
+
+# 썬 바리케이드 타입 부모와 기존 전체 연결/정리 자식만 집중 재생한다(802).
+target_sources(netstorm_tests PRIVATE FenceTypeParentTests.cpp)
+target_sources(netstorm_file_tests PRIVATE FenceTypeParentTests.cpp FenceLifetimeTests.cpp FenceCreateTests.cpp)
+set_source_files_properties(FenceTypeParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FENCE_TYPE_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-type-parent-x86.tsv\"")

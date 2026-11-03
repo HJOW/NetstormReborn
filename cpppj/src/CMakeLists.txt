@@ -358,3 +358,5 @@ target_sources(netstorm PRIVATE o/RawMakeAi.cpp o/RawMakeAi.h client/MakeAiComma
 target_sources(netstorm PRIVATE client/TypeFileRead.cpp client/TypeFileRead.h)
 # 현재 checking 진단의 SID 부모만 기존 제품 모듈에 추가한다.
 target_sources(netstorm PRIVATE o/RawSidRobust.cpp o/RawSidRobust.h o/RawCheckingFlag.h o/RawCheckingDiagnostics.h)
+# 상태 주문/효과 만료가 같은 현재 펜스 타입 진단 부모를 사용한다(802).
+target_sources(netstorm PRIVATE o/RawFenceTypeParent.cpp o/RawFenceTypeParent.h)
