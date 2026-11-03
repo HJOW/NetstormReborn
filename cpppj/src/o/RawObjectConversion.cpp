@@ -1,5 +1,6 @@
 // 보호 PE의 실제41e400/462290 입력과17개 가상6c 슬롯을 복원한다.
 #include "o/RawObjectConversion.h"
+#include "o/SquidFactory.h"
 #include <array>
 #include <stdexcept>
 #include <utility>
@@ -7,6 +8,8 @@
 namespace netstorm::o { // 10.78의 현재 객체 입력만 다루며 CD는 별도 경로로 남긴다.
 namespace { // 실제 슬롯 표와 선택된 외부 효과의 계약이다.
 constexpr std::array<std::uint32_t,16> kSpellTables{0x502370,0x502448,0x502510,0x5025d8,0x5026a0,0x502778,0x502840,0x502908,0x5029d0,0x502aa8,0x502b70,0x502e68,0x502f30,0x502ff8,0x5030c0,0x503188}; // 원본6c가41e400인 생성자 표다.
+// 004b1620의 진단 0x22d..0x22f가 보고하는 실제 식을 원문 순서로 보존한다.
+constexpr std::array<std::string_view,3> kRetypeAssertions{"isVoid()","::getType(typeNum)->footX == ::getType(newType)->footX","::getType(typeNum)->footY == ::getType(newType)->footY"};
 template<class F> const F& Need(const F& hook) { if (!hook) throw std::logic_error("객체 전환의 실제 하위 미연결");return hook; } // 도달한 효과가 없으면 앞선 쓰기를 보존하고 중단한다.
 }
 // 모체·자산 이름이나 Bomb genus만으로 서로 다른 원문 가상 입력을 합치지 않는다.
@@ -14,6 +17,24 @@ std::uint32_t ObjectConversionBody(std::uint32_t vtable) {
     if (vtable==0x50a748) return 0x462290;
     for (const auto table:kSpellTables) if (table==vtable) return 0x41e400; // 현재 실제 표에 처음 일치하면 끝낸다.
     return 0;
+}
+// 실제 타입 변경의 진단을 선택한 위치에서만 요구하며 원문의 쓰기 폭을 유지한다.
+ObjectConversionHooks MakeObjectConversionHooks(SidPool& pool,SquidFactory& factory,ObjectConversionHooks hooks,
+    ObjectConversionAssertion assertion) {
+    if (&factory.Pool()!=&pool || pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("객체 전환 실제 Factory/풀/판본 불일치");
+    hooks.retype=[&factory,assertion=std::move(assertion)](Sid sid,std::uint32_t type) {
+        factory.Retype(sid,type,[&assertion](std::uint32_t line) {
+            if (line<0x22d || line>0x22f) throw std::out_of_range("객체 전환 원문 타입 변경 진단 행 범위");
+            if (!assertion) throw std::logic_error("객체 전환 실제 타입 변경 진단 장치 미연결");
+            assertion(kRetypeAssertions[line-0x22d],"\\Ns\\O\\Squid.cpp",line);
+        });
+    };
+    hooks.frame=[&pool](Sid sid,std::uint32_t frame) {
+        auto raw=pool.AllocatedBytes(sid);
+        for (std::size_t byte=0;byte<4;++byte) raw[36+byte]=static_cast<std::uint8_t>(frame>>(8*byte)); // 현재 프레임 DWORD만 쓰며 인접 extra/level은 보존한다.
+    };
+    hooks.qa=[&pool](Sid sid,std::uint32_t value) { auto raw=pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(value);raw[13]=static_cast<std::uint8_t>(value>>8); }; // QA는 원문4ac220처럼 하위 WORD만 기록한다.
+    return hooks;
 }
 // 생성 중 외부 효과나 원문 객체 변경은 실행하지 않는다.
 RawObjectConversion::RawObjectConversion(const SidPool& pool,const std::uint32_t& buriedType,ObjectConversionHooks hooks)

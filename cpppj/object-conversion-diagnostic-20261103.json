@@ -1,0 +1,138 @@
+{
+  "unit": 812,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "오벨리스크/스펠 전환의 실제 진단 복귀 연결 완료·전체 목표 진행 중",
+  "runtimeProduct": 812,
+  "displayVersion": "11.01",
+  "exeSha256": "5f02c9a61963e7b012013d35437073c923c5c4a6594aa12f7d270dcc78583281",
+  "build": {
+    "successfulInvocations": 1,
+    "failedInvocations": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_scenario_object_tests"
+    ],
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "log": "build-v1.log"
+  },
+  "tests": {
+    "total": 6,
+    "newTests": 3,
+    "failedChecks": 0,
+    "filters": {
+      "ObjectConversion_": 5,
+      "SquidRetype_": 1
+    },
+    "fullSuiteRun": false
+  },
+  "native": {
+    "newObservations": 0,
+    "fixtureRows": 164,
+    "retypeRows": 128,
+    "commandRows": 36,
+    "cppReplays": 328,
+    "fixtures": [
+      {
+        "path": "cpppj/tests/fixtures/squid-retype-x86.tsv",
+        "rows": 128,
+        "sha256": "695a553d2ee0c6a4eff4bb77e6cb0aa1f7d5d1545923a04796425edeb57e4988"
+      },
+      {
+        "path": "cpppj/tests/fixtures/object-conversion-x86.tsv",
+        "rows": 36,
+        "sha256": "f05675cd6873807fd82b4b492db84c226b99488c0010a9056fa1c2ca26bd8a41"
+      }
+    ],
+    "sourceBinarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "integration": {
+    "before": "Session retype callback always threw on every selected original assertion",
+    "after": "same current services.ai.assertion(expression), then current Retype/frame/QA/Repop continue if callback returns",
+    "binder": "MakeObjectConversionHooks",
+    "diagnostics": [
+      {
+        "expression": "isVoid()",
+        "file": "\\Ns\\O\\Squid.cpp",
+        "line": 557
+      },
+      {
+        "expression": "::getType(typeNum)->footX == ::getType(newType)->footX",
+        "file": "\\Ns\\O\\Squid.cpp",
+        "line": 558
+      },
+      {
+        "expression": "::getType(typeNum)->footY == ::getType(newType)->footY",
+        "file": "\\Ns\\O\\Squid.cpp",
+        "line": 559
+      }
+    ],
+    "currentRetypeCaller": "RawCampaignSession::CommandObject only·RawSurfaceWorld only reads ObjectConversionBody for inspection",
+    "physicalWrites": "frame DWORD +36, QA WORD +12·unpop/repop/defaultFrame/base hooks preserved",
+    "sourceAudit": {
+      "baseCommit": "2a8f937e",
+      "unchangedConversionFunctions": {
+        "std::uint32_t ObjectConversionBody(": true,
+        "std::uint32_t RawObjectConversion::Command(": true
+      },
+      "unpopRepopDefaultFrameBaseUnchanged": true,
+      "factoryRetypeBodyUnchanged": true,
+      "actualCurrentService": true,
+      "sourceDiagnostics": [
+        {
+          "expression": "isVoid()",
+          "file": "\\Ns\\O\\Squid.cpp",
+          "line": 557
+        },
+        {
+          "expression": "::getType(typeNum)->footX == ::getType(newType)->footX",
+          "file": "\\Ns\\O\\Squid.cpp",
+          "line": 558
+        },
+        {
+          "expression": "::getType(typeNum)->footY == ::getType(newType)->footY",
+          "file": "\\Ns\\O\\Squid.cpp",
+          "line": 559
+        }
+      ],
+      "refinedSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+    }
+  },
+  "checking": {
+    "before": 30,
+    "after": 30,
+    "reason": "004b1620의 세 진단은 checking과 무관하므로 checking51 집계에 새로 포함하지 않음",
+    "remainingBreakdown": {
+      "parent": 21,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2739,
+    "currentCount": 2739,
+    "fixtureCount": 919,
+    "allUnchanged": true,
+    "newFixtures": []
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "원문128+36행은기존517 Native 근거·새 Native/실제게임아님",
+    "공간 Unpop/Repop·상위 입력은 명시 장치·실제 Factory Retype/생성자/필드 쓰기는 제품 본체",
+    "실제 Session과 현재 Client 서비스는 소스/빌드 근거·전체 진단 UI/SEH/물리 범위 밖은 별도 한계",
+    "모든 대상/소유자/상태별 메뉴 효과와 전체 동일성·자연 완주 완료로 합산하지 않음"
+  ],
+  "next": "우선순위1 객체 메뉴/커서의 나머지 타입·소유자·상태별 효과/수명 대조"
+}

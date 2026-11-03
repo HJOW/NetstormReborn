@@ -34,7 +34,7 @@ struct ConversionScene {
         factory=std::make_unique<SquidFactory>(pool,types);
     }
     // 원문에서 분리한 실제 장치 효과만 제공하며 객체 전환은 제품 본체가 수행한다.
-    ObjectConversionHooks Hooks() {
+    ObjectConversionHooks Hooks(bool bindWorld=false) {
         ObjectConversionHooks hooks;
         hooks.unpop=[this](Sid sid,auto flags) { CHECK(sid==kConversionSid);Emit("U,"+std::to_string(flags));auto raw=Raw();raw[11]|=4;if (mutation==1) Put(raw,12,116,2);else if (mutation==2) raw[10]=116; };
         hooks.repop=[this](Sid sid,auto flags) { CHECK(sid==kConversionSid);auto raw=Raw();Emit("P,"+std::to_string(Get(raw,14))+','+std::to_string(Get(raw,18))+','+std::to_string(flags));raw[11]=static_cast<std::uint8_t>(raw[11]&~4U); };
@@ -42,6 +42,7 @@ struct ConversionScene {
         hooks.defaultFrame=[](auto type)->std::uint32_t { switch (type) { case 112:return 17;case 114:return 21;case 116:return 33;case 80:return 5;default:throw std::logic_error("명시 원문 기본프레임 TYPE 범위"); } };
         hooks.frame=[this](Sid sid,auto value) { CHECK(sid==kConversionSid);Put(Raw(),36,value); };hooks.qa=[this](Sid sid,auto value) { CHECK(sid==kConversionSid);Put(Raw(),12,value,2); };
         hooks.base=[this](Sid sid,auto code) { CHECK(sid==kConversionSid);Emit("B,"+std::to_string(code));return 77U; };
+        if (bindWorld) return MakeObjectConversionHooks(pool,*factory,std::move(hooks),[this](std::string_view expression,std::string_view file,std::uint32_t line) { CHECK(!expression.empty() && file=="\\Ns\\O\\Squid.cpp");Diagnose(line); }); // 실제 Session과 같은 Factory/필드 쓰기 바인더를 원문 기대값에 재생한다.
         return hooks;
     }
     // fixture50BYTE만 읽고 TYPE/VT/프레임/QA 밖 바이트까지 그대로 대조한다.
@@ -76,4 +77,41 @@ TEST_CASE(ObjectConversion_RejectsSelectedMissingEffectsAndKeepsWrittenPrefix) {
     scene.types[116].constructorAddress=0xffffffffU;scene.factory=std::make_unique<SquidFactory>(scene.pool,scene.types);
     CHECK(Throws([&] { scene.factory->Retype(kConversionSid,116); }));CHECK(scene.Raw()[10]==116);CHECK(Get(scene.Raw(),0)==0x50a748U);
     scene.Prepare(112,114,0,0);CHECK(Throws([&] { scene.factory->Retype(kConversionSid,114); }));CHECK(scene.Raw()[10]==112);
+}
+
+// 실제 Session용 바인더로 두 가상 전환의 전체 슬롯/공간 순서를 기존 독립 원문36행에 맞춘다.
+TEST_CASE(ObjectConversion_WorldBindingReplaysNative36Commands) {
+    const auto fixture=LoadFixture(NETSTORM_OBJECT_CONVERSION_FIXTURE);std::size_t checked{};
+    for (const auto& row:fixture.rows) { // 상위 비트/부모 위임과 Unpop 뒤 QA/TYPE 변화도 같은 실제 경계를 지난다.
+        if (row[0]=="body") continue;CHECK(row.size()==7);const bool buried=row[0]=="Buried";ConversionScene scene;scene.Prepare(buried ? 112 : 114,114,Number(row[1]),0);scene.mutation=Number(row[3]);
+        RawObjectConversion conversion(scene.pool,scene.buried,scene.Hooks(true));CHECK(conversion.Command(kConversionSid,Number(row[2]),ObjectConversionBody(Get(scene.Raw(),0)))==Number(row[4]));CHECK(scene.Same(row[5]) && scene.trace==row[6]);++checked;
+    }
+    CHECK(checked==36);
+}
+
+// 진단에서 복귀하는 실제 Factory 바인딩도 원문128행의 전체 타입/생성자 결과를 보존한다.
+TEST_CASE(ObjectConversion_WorldBindingRetypeDiagnostics128) {
+    const auto fixture=LoadFixture(NETSTORM_SQUID_RETYPE_FIXTURE);std::size_t checked{};
+    for (const auto& row:fixture.rows) { // void/발자국 진단 조합과 원문 생성자 없는 fallback까지 비교한다.
+        if (row[0]=="old") continue;CHECK(row.size()==6);ConversionScene scene;scene.Prepare(Number(row[0]),Number(row[1]),Number(row[2]),Number(row[3]));const auto free=scene.pool.FreeCount();auto hooks=scene.Hooks(true);hooks.retype(kConversionSid,Number(row[1]));
+        CHECK(scene.Same(row[4]) && scene.trace==row[5]);CHECK(scene.pool.FreeCount()==free);++checked;
+    }
+    CHECK(checked==128);
+}
+
+// 원문 진단 장치는 선택된 위치에서만 요구하고 같은 풀·실제 DWORD/WORD 쓰기 폭을 보존한다.
+TEST_CASE(ObjectConversion_WorldBindingDiagnosticReturnAndPhysicalFields) {
+    ConversionScene scene;scene.Prepare(112,114,4,0);SidPool foreign(OriginalEdition::Patch1078,24000);SquidFactory other(foreign,scene.types);
+    CHECK(Throws([&] { MakeObjectConversionHooks(scene.pool,other,{},{}); }));auto healthy=MakeObjectConversionHooks(scene.pool,*scene.factory,{},{});healthy.retype(kConversionSid,114);CHECK(scene.Raw()[10]==114);
+    scene.Prepare(112,114,0,3);const auto before=std::vector<std::uint8_t>(scene.Raw().begin(),scene.Raw().end());auto missing=MakeObjectConversionHooks(scene.pool,*scene.factory,{},{});CHECK(Throws([&] { missing.retype(kConversionSid,114); }));CHECK(std::equal(before.begin(),before.end(),scene.Raw().begin()));
+    std::vector<std::uint32_t> lines;auto hooks=MakeObjectConversionHooks(scene.pool,*scene.factory,{},[&](std::string_view expression,std::string_view file,std::uint32_t line) {
+        CHECK(file=="\\Ns\\O\\Squid.cpp");
+        if (line==0x22d) CHECK(expression=="isVoid()");
+        else if (line==0x22e) CHECK(expression=="::getType(typeNum)->footX == ::getType(newType)->footX");
+        else if (line==0x22f) CHECK(expression=="::getType(typeNum)->footY == ::getType(newType)->footY");
+        else CHECK(false);
+        lines.push_back(line); // 같은 실제 Client처럼 보고 후 반환하여 뒤 진단/생성자를 계속한다.
+    });
+    hooks.retype(kConversionSid,114);CHECK((lines==std::vector<std::uint32_t>{0x22d,0x22e,0x22f}));CHECK(scene.Raw()[10]==114);
+    auto expected=std::vector<std::uint8_t>(scene.Raw().begin(),scene.Raw().end());Put(expected,36,0x89abcdefU);Put(expected,12,0x12345678U,2);hooks.frame(kConversionSid,0x89abcdefU);hooks.qa(kConversionSid,0x12345678U);CHECK(std::equal(expected.begin(),expected.end(),scene.Raw().begin()));
 }

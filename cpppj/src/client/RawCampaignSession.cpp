@@ -4091,11 +4091,12 @@ std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command
     const auto body=ObjectConversionBody(Read(current.core.pool.Slot(parent),0));
     if (!body) return current.objectCommand->Command(parent,command);
     ObjectConversionHooks hooks;hooks.unpop=[&current](Sid sid,auto flags) { current.world.Unpop(sid,flags); };hooks.repop=[&current](Sid sid,auto flags) { current.world.Repop(sid,flags); };
-    hooks.retype=[&current](Sid sid,auto type) { current.core.factory.Retype(sid,type,[](auto line) { throw std::logic_error("원본Squid.cpp 타입 변경 진단 "+std::to_string(line)); }); };
     hooks.defaultFrame=[&current](auto type) { if (type<70 || type>=current.core.types.size()) throw std::out_of_range("전환 뒤 현재 기본 프레임 TYPE 범위");return std::bit_cast<std::uint32_t>(current.assets.game.Types()[type-70].definition.specialFrames.defaultFrame); };
-    hooks.frame=[&current](Sid sid,auto frame) { auto raw=current.core.pool.AllocatedBytes(sid);for (std::size_t byte=0;byte<4;++byte) raw[36+byte]=static_cast<std::uint8_t>(frame>>(8*byte)); }; // 원문의 직접 DWORD 쓰기이며 SquidFrame.Set을 대신 호출하지 않는다.
-    hooks.qa=[&current](Sid sid,auto type) { auto raw=current.core.pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(type);raw[13]=static_cast<std::uint8_t>(type>>8); };
     hooks.base=[&current](Sid sid,auto code) { return current.objectCommand->Command(sid,code); };
+    hooks=MakeObjectConversionHooks(current.core.pool,current.core.factory,std::move(hooks),[&current](std::string_view expression,std::string_view,std::uint32_t line) {
+        if (!current.services.ai.assertion) throw std::logic_error("객체 전환 현재 타입 변경 진단 장치 미연결 "+std::to_string(line));
+        current.services.ai.assertion(expression); // 원문 진단 서비스가 복귀하면 타입/생성자·frame/QA·Repop을 계속한다.
+    });
     return RawObjectConversion(current.core.pool,current.gemRewardState.buriedType,std::move(hooks)).Command(parent,command,body);
 }
 // 일반 입력의 전체 owner 인자를 실제 신전/사제/공통 소유자 몸체에 전달한다.

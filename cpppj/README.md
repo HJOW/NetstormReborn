@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **811 / 표시 버전11.01**이다. CanonDecoder의 나머지 건설·섬/지형·Fort/캠페인 소비자를 같은 현재 진단 owner에 연결했다. 집중38개(새8)가 통과했고 현재 호출18곳을 분류했다. checking 잔여는30(부모21·부분6·MP3)이다. Release 빌드2회 경고/오류0·보호2739/fixture919 불변이며 전체 목표는 진행 중이다. [811 기록](../docs/exe/cpp-canon-consumers-checking-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
+현재 실행 제품은 **812 / 표시 버전11.01**이다. 오벨리스크/스펠 전환의 실제 타입 변경 진단을 현재 Client 서비스로 전달해 복귀 후 전환을 계속한다. 집중6개(새3)·원문128+36행 대조와 Release 빌드가 통과했다. checking 잔여30·보호2739/fixture919 불변이며 전체 목표는 진행 중이다. [812 기록](../docs/exe/cpp-object-conversion-diagnostic-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 
