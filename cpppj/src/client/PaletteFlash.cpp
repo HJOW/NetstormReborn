@@ -35,6 +35,8 @@ void PaletteFlash::Init() {
     state_.steps=kThunderSteps;
 }
 // 지연된 프레임에서는 남은 단계를 한꺼번에 진행하되 last에 interval을 반복 더하는 원본 반올림 순서를 유지한다.
+// 10.78의 checking 분기는 setge의0/1을64와 비교해 진단이 항상 미도달이다(00471677~1687).
+// 0<=step<=64의 정상 범위 검사를 신설하면 원문과 달라지므로 실제 시간/색/종료만 처리한다.
 bool PaletteFlash::Frame() {
     if (!state_.initialized) return false;
     double elapsed=hooks_.wallSeconds()-state_.last;

@@ -3319,3 +3319,9 @@ target_sources(netstorm_tests PRIVATE MonitorTimeTests.cpp)
 target_sources(netstorm_file_tests PRIVATE MonitorTimeTests.cpp)
 set_source_files_properties(MonitorTimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MONITOR_TIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/monitor-time-hardware-x86.tsv\";NETSTORM_TEMPORARY_CHAT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/temporary-chat-format-hardware-x86.tsv\"")
+
+# checking 미도달을 실제CPU 프레임/현재 Client Kernel·시각·Form 수명까지 대조한다.
+target_sources(netstorm_tests PRIVATE PaletteFrameCheckingTests.cpp)
+target_sources(netstorm_file_tests PRIVATE PaletteFrameCheckingTests.cpp PaletteFlashTests.cpp ThunderProcessTests.cpp)
+set_source_files_properties(PaletteFrameCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PALETTE_FRAME_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/palette-frame-hardware-x86.tsv\"")

@@ -2479,3 +2479,9 @@ tools/native_monitor_time_probe.cpp text eol=lf
 tools/observe_monitor_time_hardware.py text eol=lf
 cpppj/monitor-time-hardware-native-20261104.json text eol=lf
 cpppj/monitor-time-20261104.json text eol=lf
+
+cpppj/tests/fixtures/palette-frame-hardware-x86.tsv -text
+tools/native_palette_frame_probe.cpp text eol=lf
+tools/observe_palette_frame_hardware.py text eol=lf
+cpppj/palette-frame-hardware-native-20261104.json text eol=lf
+cpppj/palette-frame-checking-20261104.json text eol=lf

@@ -1,0 +1,193 @@
+{
+  "unit": 824,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "previousCommit": "8f60c53d / 20261104-05 CP",
+  "exeSha256": "0bc85ce37a5a415d99878f7e7a43744b6ed6684b73227e597fac04993142a9b0",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "실제 Windows x86 CPU / 전용 payload / 표시·Kill·진단 요청 관측",
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "rows": 1670,
+    "fixtureSha256": "f3bd4686b3f421dc69c8a76e4893a8b52601d90004728e642ee27a66625b0c38",
+    "probeSha256": "91e17221969319bdd5564d9309c0dea4c42206afcbcd6fedb1fc9c0bbcbaf6b8",
+    "probeSourceSha256": "734ae331c591773d0bfda8810098ec96e1a4cc898be982d233f66136df5c3fe6",
+    "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "boundary": "유효 Init 뒤 Frame/순수 장치·0x027f/53비트·INT_MAX는최대1진행·CD 미초기화 stack Frame은 별도 미복원/문서화"
+  },
+  "nativeReobservedRows": 1670,
+  "nativeCountsPerObservation": {
+    "rows": 1670,
+    "actualFrameCalls": 1690,
+    "nativeDiagnosticRows": 0,
+    "applyCalls": 250,
+    "restoreCalls": 595,
+    "killCalls": 1190
+  },
+  "checkingProof": {
+    "range": "00471677..00471687",
+    "instructions": "xor eax,eax; test step,step; setge al; cmp eax,64; jle skip",
+    "domain": "all signed32 step: EAX0 or1 <=64, assertion unreachable regardless current checking",
+    "nativeCheckingInputs": [
+      "0",
+      "80000000",
+      "ffffffff"
+    ],
+    "newAssertionOrFlagHook": false
+  },
+  "tests": [
+    {
+      "filter": "PaletteFrameChecking_",
+      "cases": 2,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-824/test-PaletteFrameChecking-final.log",
+      "sha256": "10b9411d66b4581bd816e819bf8fac5ba7ae9145bcdf8d1be55f1c73790ad757"
+    },
+    {
+      "filter": "PaletteFlash_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-824/test-PaletteFlash-first.log",
+      "sha256": "402cd2ca5a87b725bebcc21296b2f101aadd12ca084ba14cac8e2c01d34fd49b"
+    },
+    {
+      "filter": "ThunderProcess_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-824/test-ThunderProcess-first.log",
+      "sha256": "dc49e1710dc07e31164ebdb5a4b347315b4d00c665bf15adec69926ae826799e"
+    },
+    {
+      "filter": "IssueCommands_ThunderBrightnessUsesActualFormPalette",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-824/test-ThunderBrightness-first.log",
+      "sha256": "49bfe4df6f089c29b901f2f045d6797122a8e86dbad1b338ddc768ced7ae2d32"
+    }
+  ],
+  "focusedCases": 10,
+  "newCases": 2,
+  "failedChecks": 0,
+  "builds": [
+    {
+      "kind": "Release NetstormCpp+집중",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/cpp-resume-824/build-first.log",
+      "sha256": "47d14f94288f194860dcfed1b4013b8ceb0e5663d6cffd30a984ee91a6a42b92"
+    },
+    {
+      "kind": "x86 프로브 최초 inline asm",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/cpp-resume-824/probe-build-first.log",
+      "sha256": "0aec353ebe84972862548e857ac266c8478900e5f3ec52a5173f392e62f78743"
+    },
+    {
+      "kind": "x86 프로브 최종 ABI",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/cpp-resume-824/probe-build-final.log",
+      "sha256": "0aec353ebe84972862548e857ac266c8478900e5f3ec52a5173f392e62f78743"
+    }
+  ],
+  "initialIssues": {
+    "nativeFirstRows": 1670,
+    "reobserveDifferentRows": 3,
+    "firstFocusedFailedChecks": 4,
+    "cause": "inline asm foreign CALL kept C++ now/increment in volatile XMM1/2 across host palette callback; actual probe disassembly confirmed",
+    "correction": "probe-only explicit thiscall/noinline ABI; products math and protected existing fixtures unchanged",
+    "preserved": [
+      "checking-inlined-native-first.tsv",
+      "checking-inlined-native-first.json",
+      "native-reobserve-second.tsv",
+      "native-differences.json",
+      "native-verify.log",
+      "test-PaletteFrameChecking-first.log",
+      "probe-inlined-call-asm.txt",
+      "probe-final-abi-asm.txt"
+    ],
+    "initialProbeExecutable": "최종 프로브 빌드로 교체됨; 당시 데이터/기계어/보고서 해시와 구별"
+  },
+  "actualCallers": [
+    "VT0050c108[6] -> PaletteFlash.Frame -> ThunderProcess -> current Client",
+    "004180f0/00469c80/004d5300 -> 00470fa0 -> actual Client RequestThunderFlash",
+    "actual Client Kernel/FrameTime/checking -> storage -> World/Form attach -> game pause wall4/4.125/4.51 -> single restore/kill"
+  ],
+  "checking": {
+    "remaining": 22,
+    "parents": 14,
+    "partial": 5,
+    "multiplayer": 3,
+    "completedParents": 28,
+    "closedThisUnit": [
+      "00471650"
+    ]
+  },
+  "boundaries": [
+    "x87 0x027f/53bit",
+    "Frame after valid Init; original uninitialized raw memory is separate",
+    "INT_MAX finite positive interval at most1 integration; billions-of-iterations cases excluded",
+    "CD004b1450 uninitialized stack+20/24 reads are documented separately, not equal to patch Frame",
+    "in-memory GDI palette regression is not physical fullscreen output"
+  ],
+  "next": "825 RawDamageableBurning.Refresh0044c060/CD00462480 current index1 find diagnostic resume/all actual damageableRefresh consumers; no actual attack tests",
+  "protection": {
+    "unchangedPreviousFiles": 2751,
+    "afterFiles": 2752,
+    "fixtureFiles": 932,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted/cpp-resume-824/protected-after.json",
+    "sha256": "af28b4ba55663da0545a96e0014c0d8c051d92939fed5cff6906cca1aaed9685"
+  },
+  "excluded": [
+    "원본 게임/GUI·자연 플레이/자동 공략",
+    "포획/희생/특정 적 공격/승리·사용자 직접 확인",
+    "MP/공중3종 새 전용",
+    "실제 PCM/청취/물리 출력·캡처 재시도",
+    "전체 CTest/71대상/34미션/ZIP"
+  ],
+  "sources": {
+    "cpppj/src/client/PaletteFlash.cpp": "b8b1233e1696c8971680539e52702150592cfac38dd4b55d286c193f7975d7ee",
+    "cpppj/src/client/PaletteFlash.h": "feec6a0e0a28a191bb4adf5327717fd6ed2594cd809f0a87326ea41ea442576b",
+    "cpppj/src/client/ThunderProcess.cpp": "3f5c0176861753b3f8bc2a826478551bb9df0d6eb695226b9444c4457a28e30d",
+    "cpppj/src/client/ThunderProcess.h": "66ab867351abf8faab2e44dc8dd60d8b7a7e14807ca39a36eaafae476f6ee1bb",
+    "cpppj/src/client/ClientMain.cpp": "a1a91ab72b7383901e9970d18c8ae329770a22d547aeccb0912155f8394955bb",
+    "cpppj/src/o/RawCheckingFlag.h": "6a047f285a8d0330dbd7c8426537032164c31070c480824208b2df60f5136c64",
+    "cpppj/tests/CMakeLists.txt": "1889e931e58fc1e2087a3dcacdf17b20f9ea117ab934eb9deb48c7f2b0575d32",
+    "cpppj/tests/PaletteFrameCheckingTests.cpp": "b5257219e154e4235b4462df58e4b4600d436c99dae5185a85b8e13b9a7ffae8",
+    "cpppj/tests/PaletteFlashTests.cpp": "7dba5f435108eab7c58fa2cde324d3c59b2708eb598dc4cb9394247135c70df5",
+    "cpppj/tests/ThunderProcessTests.cpp": "fc319360cfdb35194441662427299806e606ef5fad0a76afb2c10f3ae99b122e",
+    "cpppj/SOURCE_MAP.md": "d80c990123d8dbf8342b0267929c452cbb197fb4bba1327c0ecd8db18465309f",
+    "tools/native_palette_frame_probe.cpp": "734ae331c591773d0bfda8810098ec96e1a4cc898be982d233f66136df5c3fe6",
+    "tools/observe_palette_frame_hardware.py": "70950b2b580a8e46852e5a85d1f40ec508790cd33b280d29569501c6fdbaad99",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0"
+  },
+  "normalizedSources": {
+    "cpppj/src/client/PaletteFlash.cpp": "8112b9146867bccef2f9f03d48631ec90e131d947bcfa2915e50c045fb5e5d74",
+    "cpppj/src/client/PaletteFlash.h": "ed6ae1724ac794ef00df741915b2c22d1e42ef631a3a6f5e5ff19087e3e2c9b8",
+    "cpppj/src/client/ThunderProcess.cpp": "6fd40f04e84e89929606aa8bb8944b1ea10de1bba55db526f0da2de252e2ada4",
+    "cpppj/src/client/ThunderProcess.h": "8b04fc9bba8d917a61581f2d7ba09dee4ffc985fa7bee76d1e08677dc29e6aa4",
+    "cpppj/src/client/ClientMain.cpp": "361d62be098f9d45ee0277fbbfd6d75220195d8e6713a4feff8657170d121f02",
+    "cpppj/src/o/RawCheckingFlag.h": "5265025dd4ddbbc3f6c5f0f1d8f52e3d7432680c1e913eab9e1db2a1faca97ac",
+    "cpppj/tests/CMakeLists.txt": "1ddc0510c4c24c21044fba405dc8b1c96c0fa85c072c2d531909a0600f246b1d",
+    "cpppj/tests/PaletteFrameCheckingTests.cpp": "b5257219e154e4235b4462df58e4b4600d436c99dae5185a85b8e13b9a7ffae8",
+    "cpppj/tests/PaletteFlashTests.cpp": "19ad90d9c5a81357054e43465ed8945395ac33fdfeb2870a22186355f8343e0f",
+    "cpppj/tests/ThunderProcessTests.cpp": "6e7f5c4cd273bcc1e2ae31cee43bb96a121161251510adae57e7b2554053e8bf",
+    "cpppj/SOURCE_MAP.md": "6bab4284c23dd971e562d8227a8da6c6440d2ae5fb0fa51aef8eb418ab915c2b",
+    "tools/native_palette_frame_probe.cpp": "734ae331c591773d0bfda8810098ec96e1a4cc898be982d233f66136df5c3fe6",
+    "tools/observe_palette_frame_hardware.py": "70950b2b580a8e46852e5a85d1f40ec508790cd33b280d29569501c6fdbaad99",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca"
+  }
+}

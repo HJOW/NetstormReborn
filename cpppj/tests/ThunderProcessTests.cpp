@@ -1,6 +1,8 @@
 // 번개를 실제 World/Host/Form에 붙여 자연 종료·중단·부모 삭제의 단일 수명을 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/ThunderProcess.h"
+#include "client/ClientMain.h"
+#include "client/ClientGameplayGlobals.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/RawProcessSummary.h"
 #include <algorithm>
@@ -69,4 +71,16 @@ TEST_CASE(IssueCommands_ThunderBrightnessUsesActualFormPalette) {
     auto* attached=scene.core.processes.Attach(std::move(process),kThunderProcessType,parent,0x10);CHECK(attached!=nullptr);if (!attached) return;
     scene.core.kernel.RunFrame();CHECK(scene.applies==1 && observed.red==83 && observed.green==103 && observed.blue==123);
     scene.core.processes.Kill(*attached,0x10);CHECK(scene.destructs==1 && scene.restores==1);
+}
+
+// 현재 Client FrameTime/Kernel과 checking owner를 빌린 같은 프로세스의 자연 종료/정리를 확인한다.
+TEST_CASE(PaletteFrameChecking_ActualClientClockKernelAndFormRetirement) {
+    ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;Client client(std::move(options));const auto clock=client.FrameClockOwner();clock->wall=4.0;clock->game=0;
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);storage->BindChecking(RawCheckingFlag{client.GameplayGlobals()->AiDebug().Checking()});storage->Processes().BindDevices(client.ProcessKernelOwner(),clock);
+    RawSurfaceWorld world(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,ThunderLinks(),97,nullptr,storage);auto core=world.Core();const auto parent=core.factory.Create(82,2);unsigned reads{},applies{},restores{},destroyed{};
+    auto process=std::make_unique<ThunderProcess>(true,PaletteFlashHooks{[clock] { return clock->wall; },[] { return true; },[&](auto,auto count,auto colors) { ++reads;std::fill_n(colors,count,ScreenColor{10,20,30,99}); },[&](auto,auto,auto) { ++applies; },[&] { ++restores; }},[&](ProcessId) { ++destroyed; });
+    auto* attached=core.processes.Attach(std::move(process),kThunderProcessType,parent,0x10);CHECK(attached!=nullptr && reads==2);if (!attached) return;const auto form=attached->Form();const auto id=client.GetKernel().Find(*attached);CHECK(id!=0 && &core.kernel==&client.GetKernel());client.Pause(true);
+    client.GameplayGlobals()->AiDebug().Checking()=(-2147483647-1);clock->wall=4.125;client.GetKernel().RunFrame();CHECK(applies==1 && restores==0 && destroyed==0 && client.GetKernel().Get(id)!=nullptr && client.Paused() && clock->game==0);
+    client.GameplayGlobals()->AiDebug().Checking()=-1;clock->wall=4.51;client.GetKernel().RunFrame();CHECK(restores==1 && destroyed==1 && !client.GetKernel().Get(id) && (core.pool.Slot(form)[11]&1) && core.pool.Slot(parent)[6]==0 && core.pool.Slot(parent)[7]==0); // 종료 전에 initialized0을 써 파괴 시 중복 복구하지 않는다.
+    client.Pause(false);CHECK(clock.get()==client.FrameClockOwner().get() && storage->Checking().Read()==0xffffffffU);
 }

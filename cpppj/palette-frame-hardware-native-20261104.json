@@ -1,0 +1,12 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "backend": "실제 Windows x86 CPU / 전용 payload / 표시·Kill·진단 요청 관측",
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "rows": 1670,
+  "fixtureSha256": "f3bd4686b3f421dc69c8a76e4893a8b52601d90004728e642ee27a66625b0c38",
+  "probeSha256": "91e17221969319bdd5564d9309c0dea4c42206afcbcd6fedb1fc9c0bbcbaf6b8",
+  "probeSourceSha256": "734ae331c591773d0bfda8810098ec96e1a4cc898be982d233f66136df5c3fe6",
+  "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+  "boundary": "유효 Init 뒤 Frame/순수 장치·0x027f/53비트·INT_MAX는최대1진행·CD 미초기화 stack Frame은 별도 미복원/문서화"
+}

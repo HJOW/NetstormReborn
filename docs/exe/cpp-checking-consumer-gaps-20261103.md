@@ -1004,6 +1004,8 @@ LAB_0046ad51:
 
 ## FUN_00471650 @ 00471650
 
+**824 현재 Frame/분류 완료:** 실제 기계어 setge0/1→cmp64→jle로 진단이 미도달임을 증명했다. 새 진단을 만들지 않고 기존 Frame→ThunderProcess→Client의 현재 시각/색/종료를 실제CPU1670행/재관측1670행과 집중10개(새2)로 대조했다. 최초 관측기의 inline CALL/XMM 오류와4단언 실패는 원시 보존 후 관측기 ABI만 교정했다. checking 잔여는22(부모14/부분5/MP3)다. 아래는779 당시 분류이며 [824 기록](cpp-palette-frame-checking-20261104.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\client\PaletteFlash.h, cpppj\src\client\ThunderProcess.h

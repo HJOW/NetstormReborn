@@ -123,7 +123,7 @@
 | `src/client/HtmlGump.cpp` | Htmlgump.cpp | HtmlGump.cpp | 1 |  |
 | `src/client/Image.cpp` | Image.cpp | Image.cpp | 2 |  |
 | `src/client/Kaboom.cpp` | Kaboom.cpp | Kaboom.cpp |  |  |
-| `src/client/KenCloud.cpp` | Kencloud.cpp | kenCloud.cpp | 2 |  |
+| `src/client/KenCloud.cpp` · `src/client/PaletteFlash.cpp` · `src/client/ThunderProcess.cpp` | Kencloud.cpp | kenCloud.cpp | 2 | 있음(번개 Frame 현재 시각/색/종료·checking 미도달 증명,824) |
 | `src/client/Lightning.cpp` | Lightning.cpp | lightning.cpp | 4 |  |
 | `src/client/Look.cpp` | — | look.cpp |  |  |
 | `src/client/ManaUser.cpp` | Manauser.cpp | ManaUser.cpp | 1 |  |
