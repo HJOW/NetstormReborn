@@ -1,0 +1,191 @@
+{
+  "unit": 823,
+  "date": "2026-11-04",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "version": "11.01",
+  "previousCommit": "a9ededa6 / 20261104-04 CP",
+  "exeSha256": "e04330dae3f72cc9659b249efd5f20140c54bf065ea9123f73c103175c12b997",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "실제 Windows x86 CPU / 전용 payload / 시계·달력·Config·제출 경계 관측",
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "fixtures": {
+      "timer": {
+        "rows": 1176,
+        "sha256": "11306fdb76dfda8395222d6dc3cbee56f5bf7d66fc25d011270ee043cd66fbd3"
+      },
+      "format": {
+        "rows": 12,
+        "sha256": "3e709504420a0db882ca2b36823b4d68929e130c539e63b81d7ff313a8b0b359"
+      }
+    },
+    "probeSha256": "0fce632a93317be06dacf10b9c0f74ea6b77f811cd1bbaa18fe967492c6b70d7",
+    "probeSourceSha256": "d86d3fca5b4f3da3d7226e68371b5755a200c184671cec95dc6a0fb4b9807f4b",
+    "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "boundary": "원문 시간/서식/CRT setter 실행·0x027f/53비트·원본 게임/GUI/통신/실제 달력 시계 미실행"
+  },
+  "nativeReobserved": {
+    "timer": 1176,
+    "temporaryFormat": 12
+  },
+  "nativeCountsPerObservation": {
+    "originals": {
+      "rows": 588,
+      "parentCalls": 1938,
+      "wallCalls": 2447,
+      "calendarCalls": 703,
+      "submitCalls": 703,
+      "noopAtExit": 0
+    },
+    "originalCD": {
+      "rows": 588,
+      "parentCalls": 1938,
+      "wallCalls": 2447,
+      "calendarCalls": 703,
+      "submitCalls": 703,
+      "noopAtExit": 288
+    }
+  },
+  "tests": [
+    {
+      "filter": "MonitorTime_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-823/test-MonitorTime-first.log",
+      "sha256": "ced46749e3071689c88f957327f91adfa2f017435597cac8773ea5da14f94998"
+    },
+    {
+      "filter": "AmbientSound_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-823/test-AmbientSound-first.log",
+      "sha256": "880a4f2e30a7e0c41ed737c505d489b6f0ddd1d63d4478653f7b259eb2ae2b78"
+    },
+    {
+      "filter": "ExistingEditorAfterCheckpoint_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-823/test-ExistingEditorAfterCheckpoint-first.log",
+      "sha256": "1f0850a035f57ceab693dfd688c1575f06b08e4257a1c92f2c8e71f1578c7ffa"
+    }
+  ],
+  "focusedCases": 11,
+  "newCases": 4,
+  "failedChecks": 0,
+  "builds": [
+    {
+      "kind": "제품Release+집중 최초",
+      "exitCode": 1,
+      "warnings": 0,
+      "errors": 4,
+      "log": "extracted/cpp-resume-823/build-first.log",
+      "sha256": "f199737e480e6e62adde157354b809abf1c2aaa1c303b778b1fd73c826e09dbd"
+    },
+    {
+      "kind": "검사 도우미 이름 충돌 교정 집중",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/cpp-resume-823/build-focused-second.log",
+      "sha256": "7e6dfb14b527a37ea4eba09f5eac6b5ee85788917c70e72fb70cae0ad66fe727"
+    },
+    {
+      "kind": "x86프로브 최초",
+      "exitCode": 0,
+      "warnings": 2,
+      "errors": 0,
+      "log": "extracted/cpp-resume-823/probe-build-first.log",
+      "sha256": "3c81e378fda475fae8815b8842b1dc40f16a934d9724ef99fd24d9717e35df66"
+    },
+    {
+      "kind": "x86프로브 최종",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted/cpp-resume-823/probe-build-final.log",
+      "sha256": "651d84c4f42e6b037db8a20b0b96ec0eacb394ac0b28edf5d5a072a20751a8f5"
+    }
+  ],
+  "initialIssues": [
+    "제품 Release는 첫 빌드에서 생성됐으나 검사 Hex가 RawSceneSupport.Hex와 충돌해 집중 컴파일 C2668/C2088,전체명령1. 새 검사 도우미만 MonitorHex로 수정 뒤 집중 컴파일0.",
+    "Native 최초 strcpy 경고2건은 고정폭 memcpy로 수정. Native/C++ 의미 검사 최초실행은 모두0. 제품/fixture 교정0."
+  ],
+  "currentConnections": [
+    "Client Movie update depth<=0: AmbientSound -> AmbientWind -> MonitorTime -> bridge/audio",
+    "LocalState MonitorTime same guard/deadline/monitor/alert; initial Options + onChanged ReadInt no timer reset",
+    "real calendar _time32/_localtime32_s/asctime_s -> current Uber handle -> same ConfigPathSpec -> temporary manager front -> same general Chat submit",
+    "original Chat factory binding body3148 characters unchanged -> MakeChatContext shared by actual UI/monitor"
+  ],
+  "boundaries": [
+    "CD registers noop atexit on first guard; pure state lifetime replaces noop host cleanup and Native counts remain separate",
+    "Native wall/calendar/fixed CRT format/Config/submit use explicit devices; actual CRT calendar is separately executed in the Client test",
+    "temporary front local80/line256 physical bounds; out-of-range host inputs reject instead of original memory corruption",
+    "actual UI packet/MP sends not executed by these tests"
+  ],
+  "checking": {
+    "remaining": 23,
+    "parents": 15,
+    "partial": 5,
+    "multiplayer": 3,
+    "closedThisUnit": []
+  },
+  "next": "824 PaletteFlash.Frame00471650/CD004b1450 -> ThunderProcess -> actual Client current checking/Time.wall; prove chained unreachable assertion before changing behavior",
+  "protection": {
+    "unchangedPreviousFiles": 2749,
+    "afterFiles": 2751,
+    "fixtureFiles": 931,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted/cpp-resume-823/protected-after.json",
+    "sha256": "bd648189d7678eef3511fb627b79694f48a04d40ff45a169e773d0d2b5ce8063"
+  },
+  "excluded": [
+    "원본 게임/GUI·자연 플레이/자동 공략",
+    "포획/희생/특정 적 공격/승리·사용자 직접 확인",
+    "MP/공중3종 새 전용",
+    "실제 PCM/청취/물리 출력·캡처 재시도",
+    "전체 CTest/71대상/34미션/ZIP"
+  ],
+  "sources": {
+    "cpppj/src/client/RawMonitorTime.h": "c0c037166a3f4a0c1f5658df04a974500c90c9445623b04cc8e6524a81f84d46",
+    "cpppj/src/client/RawMonitorTime.cpp": "273a3f3a22adc5af190dbb54bb2ba0eedcf75d7e558b3a63376beaa46b57a01d",
+    "cpppj/src/client/CMakeLists.txt": "2b15e917ad2bf6f251fa3c39f2d20f73008081648cf76a36dec55989e9a07143",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "7b4ef48f55ab39e8b67c92a8c63a89d41032c42f7c6f25d1fada0742336086c6",
+    "cpppj/src/client/ClientMain.h": "68a091975a486afd44f8a377920d619c672f22fc3d64f2251f02b7bbdb1f653d",
+    "cpppj/src/client/ClientMain.cpp": "a1a91ab72b7383901e9970d18c8ae329770a22d547aeccb0912155f8394955bb",
+    "cpppj/src/client/UberGump.h": "88a4e535d9da53c2d37a5faef1c615e1dcfbcf24894b65976d57d0078e6819af",
+    "cpppj/src/client/UberGump.cpp": "4040dbbd546c29446ed638bc28fdf793410de3f503075ff1566b388f698d4205",
+    "cpppj/src/client/UberHud.inc": "25465f1d4e241c14ac6ce3296715e432d7f8e7d358cc6783af32891010288739",
+    "cpppj/tests/CMakeLists.txt": "eec8be07c8d630eccb8d0a21858fc47982edccf472482e4af55bf4596930f1c2",
+    "cpppj/tests/MonitorTimeTests.cpp": "3105908aa73f3470493a1798193e880330dd4dabfa9300b7a49c7c710b5f0e6b",
+    "cpppj/SOURCE_MAP.md": "376cddfc4c91b884a9655eda19b3a42ebc29030ad57e254c4f2a07837c1120cf",
+    "tools/native_monitor_time_probe.cpp": "d86d3fca5b4f3da3d7226e68371b5755a200c184671cec95dc6a0fb4b9807f4b",
+    "tools/observe_monitor_time_hardware.py": "043b82e2f850daa3e79f876a8013733e364ca1b236d7a8c25f92a5b994d908f4",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0"
+  },
+  "normalizedSources": {
+    "cpppj/src/client/RawMonitorTime.h": "c0c037166a3f4a0c1f5658df04a974500c90c9445623b04cc8e6524a81f84d46",
+    "cpppj/src/client/RawMonitorTime.cpp": "273a3f3a22adc5af190dbb54bb2ba0eedcf75d7e558b3a63376beaa46b57a01d",
+    "cpppj/src/client/CMakeLists.txt": "2b15e917ad2bf6f251fa3c39f2d20f73008081648cf76a36dec55989e9a07143",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "7b4ef48f55ab39e8b67c92a8c63a89d41032c42f7c6f25d1fada0742336086c6",
+    "cpppj/src/client/ClientMain.h": "68a091975a486afd44f8a377920d619c672f22fc3d64f2251f02b7bbdb1f653d",
+    "cpppj/src/client/ClientMain.cpp": "361d62be098f9d45ee0277fbbfd6d75220195d8e6713a4feff8657170d121f02",
+    "cpppj/src/client/UberGump.h": "88a4e535d9da53c2d37a5faef1c615e1dcfbcf24894b65976d57d0078e6819af",
+    "cpppj/src/client/UberGump.cpp": "4040dbbd546c29446ed638bc28fdf793410de3f503075ff1566b388f698d4205",
+    "cpppj/src/client/UberHud.inc": "4c172d18e006be09b6af1e85a263a503a5e4f84b7715b8afcbf21a63d96838ff",
+    "cpppj/tests/CMakeLists.txt": "3cf47378108776413c565a341f5e20937c8bb566a08410a01cc5090bcfbfadc4",
+    "cpppj/tests/MonitorTimeTests.cpp": "3105908aa73f3470493a1798193e880330dd4dabfa9300b7a49c7c710b5f0e6b",
+    "cpppj/SOURCE_MAP.md": "45ddf78c911457a93a8d7e6359e82a54020161b5ff6de02d43dc391a367b6ba7",
+    "tools/native_monitor_time_probe.cpp": "d86d3fca5b4f3da3d7226e68371b5755a200c184671cec95dc6a0fb4b9807f4b",
+    "tools/observe_monitor_time_hardware.py": "043b82e2f850daa3e79f876a8013733e364ca1b236d7a8c25f92a5b994d908f4",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca"
+  }
+}

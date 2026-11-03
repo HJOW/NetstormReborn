@@ -43,28 +43,7 @@ void UberGump::EnsureHudFactories() {
             data.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };data.storeText=[this](auto text) { return client_.ChatWindowGlobals()->Store(text); };
             data.text=[this](auto token) -> std::string_view { return client_.ChatWindowGlobals()->strings.at(token); };return rawButtons_->ConstructNsInfo(std::move(data));
         };
-        context.root.createChat=[this] {
-            RawChatWindowContext data;data.globals=client_.ChatWindowGlobals();data.commands=client_.DotCommandGlobals();data.editor.now=[this] { return client_.WallSeconds(); };
-            BindTextClipboard(data.editor,textClipboard_); //공통 TextEntry가 처음 생성될 때 같은 장치를 설치하고 Console/벽시계 문맥은 보존한다.
-            data.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };data.storeText=[this](auto text) { return client_.ChatWindowGlobals()->Store(text); };
-            data.text=[this](auto token) -> std::string_view { return client_.ChatWindowGlobals()->strings.at(token); };
-            BindClientChatRecipients(data,client_,client_.SurfaceStorage(),[this]() -> std::string_view { return world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_); }); //목록과같은장기현재이름을매조회빌리고Session교체전주소를캡처하지않는다.
-            const auto name=[this]() -> std::string_view { return world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_); }; // 현재 소유 이름의 실제 NUL 포함 물리를 송신 동안 빌린다.
-            auto packet=MakeClientChatPacketHooks(client_.ChatManagerGlobals());packet.currentName=[name]() -> std::span<const std::uint8_t> { const auto text=name();return {reinterpret_cast<const std::uint8_t*>(text.data()),text.size()+1}; };
-            packet.read=[this](auto address) { return ReadChatGlobal(address); };packet.send=[this](auto target,auto bytes) { if (!world_) throw std::logic_error("일반 Chat 송신의 현재 실제 월드 없음");world_->Session().SendMutableLocalPacket(target,bytes); };
-            packet.log=[this](auto level,auto text) { client_.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),text); };
-            const auto zero=std::make_shared<std::array<std::uint8_t,20>>();packet.zeroAddress=[zero] { zero->fill(0);(*zero)[0]=2; }; //004e0cd0("0.0.0.0",0)의 같은 IPv4 주소를 DNS/소켓 없이 구성한다.
-            packet.localReceive=[this,zero](auto bytes) { if ((*zero)[0]!=2) throw std::logic_error("Chat 로컬 fallback의 현재 zero 주소 없음");ReceiveChatMessage(bytes); };
-            BindClientChatMessage(data,client_,client_.SurfaceStorage(),name,std::move(packet));BindClientChatSubmit(data,client_,*rawButtons_->Menus()); // 실제 say/조합/원시 패킷→동일 로컬 큐와 clear/quit/서식을 함께 연결한다.
-            data.read=[this](auto address) -> std::uint32_t { switch (address) {
-                case 0x594fc8:return client_.SurfaceStorage()->ownerMode.challenge;case 0x594fbc:return world_ ? world_->Session().BattleActive() : 0U;
-                case 0x548714:return client_.ChatManagerGlobals()->Current();case 0x563e38:return rawButtons_->RootToken();
-                case 0x5cae94:return std::bit_cast<std::uint32_t>(client_.GameplayGlobals()->cursor.screenX);case 0x5cae98:return std::bit_cast<std::uint32_t>(client_.GameplayGlobals()->cursor.screenY);
-                case 0x542944:return 0x02000094U;default:throw std::logic_error("Chat 실제 Client 전역 미연결:"+std::to_string(address));
-            } };
-            data.config=[this](auto key) { return client_.Configuration().GetInt(key); };data.quit=[this](auto event,auto first,auto second) { client_.Input().Push(event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };
-            return rawButtons_->Menus()->CreateChatWindow(std::move(data)); // 대상/완성/일반 제출과 서식 설정이 같은 실제 장치를 사용한다.
-        };
+        context.root.createChat=[this] { return rawButtons_->Menus()->CreateChatWindow(MakeChatContext()); }; // 실제 UI만 생성하며 시간 알림과 같은 현재 제출 장치를 쓴다.
         context.root.refreshTechnology=[this] { RefreshClientChatRankPrefix(client_,client_.Assets(),*client_.SurfaceStorage()); }; // Fort Technology와 같은 실제 현재 manager/Core/아이콘을 사용한다.
         context.root.translate=[this](auto text) { return client_.ChatWindowGlobals()->Store(FontBytes(client_.Translate(text))); };
         context.root.help=[this](auto token,auto text) { rawButtons_->Menus()->SetHelpText(token,client_.ChatWindowGlobals()->strings.at(text)); };
@@ -140,4 +119,35 @@ void UberGump::InstallHud() {
         if (hud_->boundMinimap!=minimap) { if (!hud_->boundMinimap && !client_.GameplayGlobals()->world.editor) rawButtons_->HandleGump(rawButtons_->RootToken(),0x0200003dU,3,0);current->BindWorld(world_->Session().Core());hud_->boundMinimap=minimap; } //첫 World 대여만 mode3으로 도킹한다. 독립 재생성은 원본100,100·128크기를 유지한다.
     }
     world_->BindMapView([this] { return rawButtons_->MapViewRect(); }); // 현재 지도 영역의 같은 저장소를 표시/미니맵/선택/음향에서 읽는다.
+}
+
+// 창 생성 여부와 무관하게 같은 현재 Client/World를 읽는 실제 제출 장치다.
+RawChatWindowContext UberGump::MakeChatContext() {
+            RawChatWindowContext data;data.globals=client_.ChatWindowGlobals();data.commands=client_.DotCommandGlobals();data.editor.now=[this] { return client_.WallSeconds(); };
+            BindTextClipboard(data.editor,textClipboard_); //공통 TextEntry가 처음 생성될 때 같은 장치를 설치하고 Console/벽시계 문맥은 보존한다.
+            data.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };data.storeText=[this](auto text) { return client_.ChatWindowGlobals()->Store(text); };
+            data.text=[this](auto token) -> std::string_view { return client_.ChatWindowGlobals()->strings.at(token); };
+            BindClientChatRecipients(data,client_,client_.SurfaceStorage(),[this]() -> std::string_view { return world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_); }); //목록과같은장기현재이름을매조회빌리고Session교체전주소를캡처하지않는다.
+            const auto name=[this]() -> std::string_view { return world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_); }; // 현재 소유 이름의 실제 NUL 포함 물리를 송신 동안 빌린다.
+            auto packet=MakeClientChatPacketHooks(client_.ChatManagerGlobals());packet.currentName=[name]() -> std::span<const std::uint8_t> { const auto text=name();return {reinterpret_cast<const std::uint8_t*>(text.data()),text.size()+1}; };
+            packet.read=[this](auto address) { return ReadChatGlobal(address); };packet.send=[this](auto target,auto bytes) { if (!world_) throw std::logic_error("일반 Chat 송신의 현재 실제 월드 없음");world_->Session().SendMutableLocalPacket(target,bytes); };
+            packet.log=[this](auto level,auto text) { client_.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),text); };
+            const auto zero=std::make_shared<std::array<std::uint8_t,20>>();packet.zeroAddress=[zero] { zero->fill(0);(*zero)[0]=2; }; //004e0cd0("0.0.0.0",0)의 같은 IPv4 주소를 DNS/소켓 없이 구성한다.
+            packet.localReceive=[this,zero](auto bytes) { if ((*zero)[0]!=2) throw std::logic_error("Chat 로컬 fallback의 현재 zero 주소 없음");ReceiveChatMessage(bytes); };
+            BindClientChatMessage(data,client_,client_.SurfaceStorage(),name,std::move(packet));BindClientChatSubmit(data,client_,*rawButtons_->Menus()); // 실제 say/조합/원시 패킷→동일 로컬 큐와 clear/quit/서식을 함께 연결한다.
+            data.read=[this](auto address) -> std::uint32_t { switch (address) {
+                case 0x594fc8:return client_.SurfaceStorage()->ownerMode.challenge;case 0x594fbc:return world_ ? world_->Session().BattleActive() : 0U;
+                case 0x548714:return client_.ChatManagerGlobals()->Current();case 0x563e38:return rawButtons_->RootToken();
+                case 0x5cae94:return std::bit_cast<std::uint32_t>(client_.GameplayGlobals()->cursor.screenX);case 0x5cae98:return std::bit_cast<std::uint32_t>(client_.GameplayGlobals()->cursor.screenY);
+                case 0x542944:return 0x02000094U;default:throw std::logic_error("Chat 실제 Client 전역 미연결:"+std::to_string(address));
+            } };
+            data.config=[this](auto key) { return client_.Configuration().GetInt(key); };data.quit=[this](auto event,auto first,auto second) { client_.Input().Push(event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };
+    return data;
+}
+
+// 기존 장기 메뉴 이름과 현재 Session 이름의 원래 선택을 알림에서도 공유한다.
+std::string_view UberGump::CurrentHandle() const { return world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_); }
+// 원문42f430은 Chat 창 유무로 임의 생략하지 않는다. 현재 일반 제출 경계가 원래 관문을 판정한다.
+void UberGump::SubmitMonitorChat(std::string_view format,std::string_view line) {
+    auto context=MakeChatContext();const auto owner=client_.ChatManagerGlobals();SubmitTemporaryChatFormat(owner->Current(),format,line,client_.Edition(),{[owner](auto token) { return owner->Bytes(token); },context.sendChat});
 }

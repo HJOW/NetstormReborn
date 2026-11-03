@@ -111,6 +111,7 @@
 #include "client/RawNsInfoContext.h"
 #include "client/RawUberRootControls.h"
 #include "client/RawChatWindowContext.h"
+#include "client/RawMonitorTime.h"
 #include "client/RawBackgroundGifControls.h"
 #include "client/RawTextEntryControls.h"
 #include "client/ClientCoreDataGlobals.h"

@@ -35,6 +35,7 @@ struct MissionFortLoadRequest; // Init부터 실제 Session 설치까지 같은 
 class CampaignTemplateStorage; // 원본 명시 Init/State 정리까지 같은9개 manager의 수명을 소유한다.
 struct CampaignGuideRuntime; // 같은 실제 Guide 상태와 소멸을 창 없는 World 검사에도 공유한다.
 struct RawHtmlWindowContext; // 실제 전체 HTML에 현재 게임 소유자의 장치를 빌린다.
+struct RawChatWindowContext; // 실제 Chat UI/시간 알림이 같은 제출 장치를 구성한다.
 struct RawMovieContext; // 실제 MovieGump의 화면/두 정지/음향 장치를 빌린다.
 class TellFileMenus; // 실제 파일 목록의 등록 Config를 부모/미션보다 오래 유지한다.
 class TextClipboard; //같은 Client UI의 모든 문자 입력이 공유하는 실제 CF_TEXT 부모다.
@@ -100,6 +101,8 @@ public:
     void InspectTell(std::string target);
     void QueueHtmlScriptCommand(std::string_view text); // 현재 HTML과 검사 입력이 같은 원문 이름표/문자열 고리/실제 입력 큐로 명령을 예약한다. 상태나 결과를 직접 바꾸지 않는다.
     void InspectBridgePatterns(std::string_view patterns); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. UI 검사에서 지정 순서를 교체/해제한다.
+    std::string_view CurrentHandle() const; // 기존 World/메뉴 이름과 같은 현재00540ca8을 읽는다.
+    void SubmitMonitorChat(std::string_view format,std::string_view line); // 현재 Chat manager의 임시서식/일반 제출/정상복원을 사용한다.
     std::uint32_t CurrentDialog() const; //565dd4의 현재 실제 모달 토큰이며 serial/인스턴스 수와 구별한다.
     std::uint32_t CurrentDialogSerial() const; // 테스트 전용 읽기다. 현재 모달 Gump의 실제 serial이며 없으면 0이다. RecheckCD 검사가 005c85ec에 넣을 값을 읽을 때만 쓴다(단위696).
 private:
@@ -121,6 +124,7 @@ private:
     void SelectCurrentFortName(std::string_view name); // 원문 MissionFortRequest.selectFort 위치에서 전체 현재 이름 부모를 실제 Client/Template에 연결한다.
     EditorFortFileDevices& EnsureEditorFortFiles(); // World/State 설치 전에 실제 현재 파일 경계가 필요할 때만 장기 작업본 장치를 준비한다.
     FortSelectionHooks FortEditEffects(); //실제 선택된 Battle14의 파일/State 보존 경계도 같은 현재 World와 작업 파일에 연결한다.
+    RawChatWindowContext MakeChatContext(); // 창을 만들지 않고 현재 이름/Identity/제출/패킷 장치를 조립해 알림과 UI가 공유한다.
     void EnsureHudFactories(); //현재 Client 장기 전역·물리로 네 공장만 준비하며 새 월드/Session을 생성하지 않는다.
     std::uint32_t ReadChatGlobal(std::uint32_t address); // 현재 Client/실제 월드·팔레트에서 채팅이 읽는 전역만 조회한다.
     void ReceiveChatMessage(std::span<std::uint8_t> packet); // 같은 실제 Chat 로그/설정·음향·표시 사건에 수신 부모를 연결한다.

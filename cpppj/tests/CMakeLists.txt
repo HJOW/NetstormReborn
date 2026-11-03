@@ -3313,3 +3313,9 @@ target_sources(netstorm_tests PRIVATE AmbientSoundTests.cpp)
 target_sources(netstorm_file_tests PRIVATE AmbientSoundTests.cpp ExistingEditorAfterCheckpointTests.cpp ClientAudioTests.cpp)
 set_source_files_properties(AmbientSoundTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_AMBIENT_SOUND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ambient-sound-hardware-x86.tsv\"")
+
+# 실제CPU 시간/임시서식과 현재 Client 옵션/수명을 같은 집중 대상에 연결한다.
+target_sources(netstorm_tests PRIVATE MonitorTimeTests.cpp)
+target_sources(netstorm_file_tests PRIVATE MonitorTimeTests.cpp)
+set_source_files_properties(MonitorTimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MONITOR_TIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/monitor-time-hardware-x86.tsv\";NETSTORM_TEMPORARY_CHAT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/temporary-chat-format-hardware-x86.tsv\"")

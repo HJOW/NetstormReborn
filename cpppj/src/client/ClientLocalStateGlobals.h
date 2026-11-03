@@ -2,6 +2,7 @@
 #pragma once
 #include "o/RawLocalMissionState.h"
 #include "o/RawAmbientSound.h"
+#include "client/RawMonitorTime.h"
 #include "o/RawClockSyncReset.h"
 #include "o/RawMetaZoneCleanup.h"
 #include <array>
@@ -30,6 +31,8 @@ public:
     const std::uint32_t& IntroAvailable() const { return introAvailable_; } // 메인 버튼 작성기는 최초 감지한 같은 DWORD를 읽는다.
     std::uint32_t& AutoDemo() { return autoDemo_; } //0054db90의 현재 옵션을 메인 Idle과 동기 옵션 해석이 공유한다.
     const std::uint32_t& AutoDemo() const { return autoDemo_; } //같은 실제 DWORD를 읽으며 메인 재생성 때 초기화하지 않는다.
+    MonitorTimeState& MonitorTime() { return monitorTime_; } // 같은 guard/기한/monitor/alert를 Session 교체에서도 보존한다.
+    const MonitorTimeState& MonitorTime() const { return monitorTime_; } // 진단은 같은 현재 물리를 읽는다.
     o::AmbientSoundGlobals AmbientSound() { return {activityEnd_,ambientKind_,ambientForced_}; } // 실제 주변음은 State/Edit의 같은00544d58과 현재 두 DWORD를 직접 빌린다.
     double& ActivityEnd() { return activityEnd_; } // 기존 Login과 Editor가00544d58의 같은 벽시각 기한을 직접 쓴다.
     const double& ActivityEnd() const { return activityEnd_; } // 기한 사본이나 별도 Editor 타이머를 만들지 않는다.
@@ -99,6 +102,7 @@ private:
     std::uint32_t tipNumber_{1}; //00531910의 PE 초기1이며 TellTips 옵션과 별개인 실제32비트 안내 순번이다.
     std::uint32_t introAvailable_{}; //0054db98의 최초 BSS0이며 00435de0이0/1을 쓴다.
     std::uint32_t autoDemo_{}; //0054db90의 최초 BSS0이며 ReadInt 누락 시 현재 비트를 보존한다.
+    MonitorTimeState monitorTime_; //00544d68/60과0054db9c/dba0의 최초 BSS0이다.
     std::int32_t ambientKind_{},ambientForced_{}; //00544d50/54의 최초 BSS0이며 Session 반납/설정으로 임의 변경하지 않는다.
     double activityEnd_{}; //00544d58의 최초 BSS0이며 게임 정지 가능한 시계로 바꾸지 않는다.
     std::uint32_t zonePending_{},sourceType_{},begin_{},centralCreated_{}; // 순서가 다른 Native 주소들의 명시 소유자이며 주소 산술 배열로 쓰지 않는다.

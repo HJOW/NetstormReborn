@@ -2472,3 +2472,10 @@ tools/native_ambient_sound_probe.cpp text eol=lf
 tools/observe_ambient_sound_hardware.py text eol=lf
 cpppj/ambient-sound-hardware-native-20261104.json text eol=lf
 cpppj/ambient-sound-20261104.json text eol=lf
+
+cpppj/tests/fixtures/monitor-time-hardware-x86.tsv -text
+cpppj/tests/fixtures/temporary-chat-format-hardware-x86.tsv -text
+tools/native_monitor_time_probe.cpp text eol=lf
+tools/observe_monitor_time_hardware.py text eol=lf
+cpppj/monitor-time-hardware-native-20261104.json text eol=lf
+cpppj/monitor-time-20261104.json text eol=lf

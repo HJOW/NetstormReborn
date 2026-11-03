@@ -207,7 +207,7 @@ Client::Client(ClientOptions options)
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("highPriorityValue",highPriority_);InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 우선순위/회전 방향/입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("highPriorityValue",highPriority_);InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretMonitorOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 우선순위/회전 방향/입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -428,6 +428,7 @@ int Client::Run() {
             if (configuration_.Configuration().changed) SaveOptions();
             UpdateAmbientSound(); //00439aeb는 같은 난수를 소비하는 Wind 바로 앞이며 noAudio/게임 정지로 생략하지 않는다.
             surfaceStorage_->UpdateAmbientWind(randomGlobals_->Game()); //00439af0의 Movie 잠금 없는 가지이며 게임 시계 정지/메뉴 여부와 무관하게 같은 난수를 소비한다.
+            UpdateMonitorTime(); //00439af5는 Wind 뒤이며 게임 시계 정지/장치 없는 음향과 무관하다.
             RunClientBridgeDecay(*this); //00422bc0은 메뉴에서도 실행하며 위치 소리469f60보다 먼저 현재 다리 수명/파괴를 처리한다.
             if (audio_) audio_->SceneFrame(); //469f60은 미니맵/Gump/Kernel보다 앞이다.
             if (menu_) menu_->RefreshMinimap(); //481320은 게임 시계 정지와 무관하다.
@@ -610,6 +611,7 @@ void Client::InterpretLanguageOptions() {
 }
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(네트워크 등)의 전체 부모 순서는 후속이다.
 void Client::InterpretOptions() {
+    InterpretMonitorOptions(); // 최초 설정 적재도 같은 monitor/alert 현재값을 읽는다.
     configuration_.ReadInt("tracelevel",trace_->log.level); // 원문00542658의 같은 장기 필터를 읽으며 덤프 부모의 임시30과 구별한다.
     rendererFrame_->ReadOptions(); //같은 원문 showSoftAsserts의 현재값을 실제 Renderer 진단 관문에 적용한다.
     InterpretLanguageOptions(); //실제 current/published와 같은 Config를 원문 선택 순서로 갱신한다.
@@ -1250,5 +1252,16 @@ void Client::UpdateAmbientSound() {
     hooks.currentDialog=[this] { return menu_ ? menu_->CurrentDialog() : 0U; }; // 소리 요청 복귀 뒤 같은 현재565dd4를 읽는다.
     hooks.flash=[this](auto brightness) { RequestThunderFlash(brightness); };
     o::StepAmbientSound(localStateGlobals_->AmbientSound(),randomGlobals_->Game(),hooks);
+}
+}
+
+namespace netstorm::client { // 시간 알림은 같은 현재 Config/UI를 그 호출 지점에서만 읽는다.
+void Client::InterpretMonitorOptions() { auto& state=localStateGlobals_->MonitorTime();configuration_.ReadInt("monitor",state.monitor);configuration_.ReadInt("alert",state.alert); } // 누락 키/상위 비트와 기존 기한은 보존한다.
+void Client::UpdateMonitorTime() {
+    MonitorTimeHooks hooks;hooks.wallSeconds=[this] { return WallSeconds(); };hooks.calendar=MonitorCalendarText;
+    hooks.handle=[this]() -> std::string_view { if (!menu_) throw std::logic_error("시간 알림의 현재 이름 UI 소유자 없음");return menu_->CurrentHandle(); };
+    hooks.format=[this] { const auto text=configuration_.PathSpec("monitorFormat");const auto bytes=o::EncodeOriginalText(text);return std::string(bytes.begin(),bytes.end()); }; // 세 치환 인자는0이며 시간 본문은 별도 다음 스택 인자다.
+    hooks.submit=[this](auto format,auto line) { if (!menu_) throw std::logic_error("시간 알림의 실제 Chat 제출 소유자 없음");menu_->SubmitMonitorChat(format,line); };
+    StepMonitorTime(localStateGlobals_->MonitorTime(),hooks);
 }
 }

@@ -101,6 +101,7 @@
 | `src/client/ClientBoard.cpp` | Clientboard.cpp | ClientBoard.cpp | 6 |  |
 | `src/client/ClientDebug.cpp` | Clientdebug.cpp | ClientDebug.cpp | 1 |  |
 | `src/client/ClientMain.cpp` | Clientmain.cpp | ClientMain.cpp | 3 | 있음 |
+| `src/client/RawMonitorTime.cpp` | 시간004182c0/임시서식0042f430 | CD004ecb30/004b2d40 | 2 | 있음(현재 Client/옵션/이름·기한180초·Chat front 복귀·CPU1176+12행/집중11개 통과) |
 | `src/client/Cloud.cpp` | — | cloud.cpp |  |  |
 | `src/client/CloudSystem.cpp` | — | CloudSystem.cpp |  |  |
 | `src/client/ColorSort.cpp` | Colorsort.cpp | ColorSort.cpp | 6 |  |

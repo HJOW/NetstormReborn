@@ -360,3 +360,6 @@ target_sources(netstorm PRIVATE FontFaceEncoding.h FontFaceEncoding.cpp)
 target_sources(netstorm PRIVATE ClientAiDebugGlobals.h RawAiDebugMenu.cpp RawAiDebugMenu.h AiDebugCommandInput.cpp AiDebugCommandInput.h)
 # 명시특수전역의네후단을실제현재물리에연결한다(776).
 target_sources(netstorm PRIVATE RendererDiagnostics.cpp RendererDiagnostics.h)
+
+# 현재의 벽시각/Chat 임시서식을 같은 Client 시간 알림에 연결한다.
+target_sources(netstorm PRIVATE RawMonitorTime.h RawMonitorTime.cpp)
