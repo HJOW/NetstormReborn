@@ -5,6 +5,7 @@
 #include "client/GumpBackground.h"
 #include "o/RiftType.h"
 #include "o/GumpFormHost.h"
+#include "o/RawCheckingFlag.h"
 #include <functional>
 #include <memory>
 #include <string>
@@ -80,6 +81,7 @@ public:
     std::uint32_t ControlGump(int id) const; // 현재 페이지의 실제 돌 버튼 토큰이다. Help/Options는 클릭한 버튼의 현재 기하를 읽으며 없는 번호는0이다.
     void LayoutMainMenuControls(std::span<GumpControl> controls); // 004ce940: 실제 글자에 맞춘 공통 폭과 두 행 중앙 배치를 적용하고 같은 입력 영역을 갱신한다.
     void BindMainMenu(RawMainMenuHooks hooks); //같은 Client의 현재 autoDemo/HTML 인스턴스/원문 문자열 큐를 한 번 연결한다.
+    void BindChecking(o::RawCheckingFlag checking); //공통 overlay/기본 소멸이 읽는 같은 Client DWORD를 모든 Gump보다 오래 빌린다.
     std::uint32_t MainMenuToken() const; //실제로 살아 있는 메인 부모 토큰이며 phase/버튼 개수로 추정하지 않는다.
     std::string MainMenuReport() const; //현재 부모/기한/포인터와 옵션의 읽기 전용 관측이다.
     std::uint32_t SerialGump(std::uint32_t serial) const; //00464020: 등록1..999에서 같은serial·비dead의 첫 대상이다.

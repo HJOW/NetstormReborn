@@ -312,6 +312,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
         buttonHooks.project=[this](auto object) { if (!world_) throw std::logic_error("월드 부착 Gump의 현재 Session 없음");return ProjectGumpObject(world_->Session().Core().pool,client_.GameplayGlobals()->Camera().Snapshot(),object); }; // 미션/Editor 교체와 카메라 이동 뒤에도 같은 현재 Pool/497220을 조회한다.
     }
     rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),std::move(buttonHooks),&client_.GameplayGlobals()->MapRevision()); //전체 HUD와 같은 현재 원본 DWORD를 첫 미니맵 생성 전부터 빌린다.
+    rawButtons_->BindChecking(o::RawCheckingFlag{client_.GameplayGlobals()->AiDebug().Checking()}); //기본 UI 생성/메뉴보다 먼저 같은 Client 진단 DWORD를 연결한다.
     rawButtons_->BindMainMenu({[this] { return client_.LocalStateGlobals()->AutoDemo(); },[this] { return std::bit_cast<std::int32_t>(client_.HtmlWindowGlobals()->window.instances); },[this](auto command,auto first,auto second) { const auto x=scriptStrings_.Store(first),y=first==second ? x : scriptStrings_.Store(second);client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); },[this] { client_.ClearFullScreenState(); }}); //같은 원문 정적 문자열의 두 인자는 같은80칸 고리 별칭으로 일반 큐에 보낸다. 시작 표식은 실제 부모 callback에서 지운다.
     rawButtons_->ConfigureTestBridgePatterns(client_.TestBridgePatterns()); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 첫 조각 생성 전에 명시 CLI만 반영한다.
     if (!client_.TestBridgePatterns().empty()) std::clog<<"테스트 전용 다리 조각 순서: "<<client_.TestBridgePatterns()<<" (원본 분석 결과 아님)\n";

@@ -3199,3 +3199,7 @@ set_source_files_properties(TitleBitmapLifetimeTests.cpp PROPERTIES COMPILE_DEFI
 target_sources(netstorm_world_generation_tests PRIVATE BridgeDecayTests.cpp)
 target_compile_definitions(netstorm_world_generation_tests PRIVATE NETSTORM_BRIDGEDECAY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgedecay-x86.tsv")
 set_source_files_properties(BridgeDecayTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BRIDGE_DECAY_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridge-decay-checking-x86.tsv\"")
+# 현재 Gump 수명 진단은 기존 파일/UI 집중 대상과 전체 등록에만 추가한다(796).
+target_sources(netstorm_tests PRIVATE GumpCheckingParentsTests.cpp)
+target_sources(netstorm_file_tests PRIVATE GumpCheckingParentsTests.cpp GumpLifetimeTests.cpp RawButtonControlsTests.cpp)
+set_source_files_properties(GumpCheckingParentsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GUMP_CHECKING_PARENTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gump-checking-parents-x86.tsv\"")

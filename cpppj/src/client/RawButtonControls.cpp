@@ -127,6 +127,7 @@ struct RawButtonControls::Impl {
         treeHooks.project=hooks.project; // 최초 화면 제한 계산도 위치 수집과 같은 투영 장치를 사용한다.
         tree=std::make_unique<GumpTree>(create,treeState,std::move(treeHooks));
         GumpLifetimeHooks lifeHooks;lifeHooks.node=[this](auto token) { return Node(token); };
+        lifeHooks.assertion=[](auto condition,auto source,auto line) { throw std::logic_error("원문 Gump 수명 진단 "+std::string(source)+":"+std::to_string(line)+": "+std::string(condition)); }; //실제 진단 UI가 없는 호스트는 선택된 원문 조건만 명시 실패한다.
         lifeHooks.push=[this](auto token) { tree->Push(token); };
         lifeHooks.deleteForm=[this](std::uint32_t form,std::uint32_t flags) { if (!hooks.deleteForm) throw std::logic_error("현재UI Form삭제소비자미연결");hooks.deleteForm(form,flags); };
         lifeHooks.deletingDestructor=[this](auto token,auto flags) {
@@ -295,6 +296,7 @@ std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entrie
 // 현재 화면 번호에 대응하는 실제 버튼만 조회한다. 생성 순서나 serial을 화면 번호로 간주하지 않는다.
 std::uint32_t RawButtonControls::ControlGump(int id) const { const auto found=impl_->controls.find(id);return found==impl_->controls.end() ? 0U : found->second; }
 void RawButtonControls::BindMainMenu(RawMainMenuHooks hooks) { if (!hooks.enabled || !hooks.htmlInstances || !hooks.queue) throw std::invalid_argument("메인 현재 Client 경계 없음");impl_->mainHooks=std::move(hooks); } //장치 연결은 부모를 만들거나 옵션을 읽어 쓰지 않는다.
+void RawButtonControls::BindChecking(o::RawCheckingFlag checking) { impl_->life.checking=checking; } //뷰 객체의 주소가 아닌 같은 원래 owner 주소/자체값을 복사한다.
 std::uint32_t RawButtonControls::MainMenuToken() const { return impl_->LiveMain(); } //실제 dead 관문만 사용한다.
 std::string RawButtonControls::MainMenuReport() const { const auto& s=*impl_;std::ostringstream out;const auto token=s.LiveMain();out<<"main_menu_parent\t"<<token;if (token) { const auto& node=*s.mainMenus.at(token);out<<'\t'<<node.serial<<'\t'<<node.activity.deadline<<'\t'<<node.activity.pointer.x<<'\t'<<node.activity.pointer.y; }out<<'\n';return out.str(); } //읽기 전용 검사이며 기한/모달을 수정하지 않는다.
 // 메인 버튼을 현재 글꼴로 측정하고 가장 넓은 폭으로 통일한 뒤 첫4개/나머지의 두 행을 각각 가운데에 둔다.

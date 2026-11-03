@@ -1,6 +1,9 @@
 // 생성/트리와 같은 노드 저장소에서 원본의 지연 삭제와 기본 소멸자 수명을 처리한다.
 #pragma once
 #include "client/GumpCreate.h"
+#include "o/RawCheckingFlag.h"
+#include <optional>
+#include <string_view>
 
 namespace netstorm::client {
 // 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다.
@@ -20,7 +23,17 @@ struct GumpLifetimeState {
     // currentDialog: 현재 활성 다이얼로그 토큰.
     // diagnostics: 원본 assert 경계를 대조할 진단 기록.
     std::uint32_t killCount{},dialogCount{},focus{},currentDialog{},diagnostics{};
+    std::optional<o::RawCheckingFlag> checking; //실제 Client의 같은 DWORD 뷰다. 독립 기존 입력은 diagnostics를 그대로 사용한다.
+    o::RawCheckingFlag Checking() const { return checking ? *checking : o::RawCheckingFlag{diagnostics}; } //표/플래그 소비 지점에서 현재 owner를 읽으며 별도0/1 사본을 만들지 않는다.
 };
+//004653c0의 선택 진단 뒤 signed 슬롯 쓰기를 명시 장치로 분리한다. -1의 원문 쓰기는 호스트 배열 경계와 구별한다.
+struct GumpOverlayParentHooks {
+    std::function<void(std::int32_t,std::uint32_t)> write; //진단 전 선택한 마지막 free/found 슬롯에만 쓴다.
+    std::function<std::uint32_t()> flags; //슬롯 쓰기 뒤의 현재 노드 플래그를 읽는다.
+    std::function<void(std::uint32_t)> setFlags; //같은 노드에 overlay 비트만 적용한 결과를 쓴다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //원문 조건/파일/줄의 진단이며 정상 복귀 뒤 처리를 계속한다.
+};
+void RunGumpOverlayParent(std::uint32_t token,bool enabled,std::span<const std::uint32_t,100> entries,o::RawCheckingFlag checking,const GumpOverlayParentHooks& hooks); //Patch 부모의 전체 탐색/진단/쓰기 순서이며 실제 포인터 역참조를 합성하지 않는다.
 // 가상 Push/삭제 소멸자·Form 삭제·CRT free의 명시 경계다. 콜백은 현재 상태를 바꿀 수 있다.
 // node는 실행 중 안정된 주소를 공급하며 가상 deletingDestructor/release만 실제 저장소를 해제한다.
 struct GumpLifetimeHooks {
@@ -34,6 +47,7 @@ struct GumpLifetimeHooks {
     std::function<void(std::uint32_t,std::uint32_t)> deletingDestructor;
     // release: 대상 저장소나 핸들을 해제하는 콜백.
     std::function<void(std::uint32_t)> release;
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //기본 소멸/overlay의 실제 원문 진단을 선택한 때만 요구한다.
 };
 // Kill은 자식 우선 요청만 쌓고 Cleanup이 등록 해제 및 가상 소멸자를 실행한다.
 class GumpLifetime {

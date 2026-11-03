@@ -9,6 +9,17 @@ namespace {
 // 원본 Gump flags와 판본별 기본 가상 표의 raw 주소다.
 constexpr std::uint32_t kIdle=0x80,kOverlay=0x80000,kVoid=8,kDead=0x10000,kDestroying=4,kUnregistered=0x100000;
 constexpr std::uint32_t kPatchVtable=0x50ac70,kCdVtable=0x5048a8;
+template<class Function> const Function& Need(const Function& function) { if (!function) throw std::logic_error("Gump 수명 진단의 선택 장치 미연결");return function; } //선택하지 않은 진단/플래그 장치는 선행 요구하지 않는다.
+}
+void RunGumpOverlayParent(std::uint32_t token,bool enabled,std::span<const std::uint32_t,100> entries,o::RawCheckingFlag checking,const GumpOverlayParentHooks& hooks) { //원문처럼 전체100칸의 마지막 free/found를 고정하고 callback 뒤 다시 찾지 않는다.
+    std::int32_t found=-1,empty=-1;
+    for (std::int32_t index=0;index<100;++index) { if (!entries[index]) empty=index;if (entries[index]==token) found=index; } //반환·진단 전까지 현재 표만 순서대로 읽는다.
+    if (!enabled) {
+        if (found==-1) { if (checking) Need(hooks.assertion)("found!=-1",".\\Gump.cpp",0x4f4);return; }
+        Need(hooks.write)(found,0);Need(hooks.setFlags)(Need(hooks.flags)()&~kOverlay);return;
+    }
+    if (found!=-1 || empty==-1) Need(hooks.assertion)("found==-1 && free!=-1",".\\Gump.cpp",0x4ef);
+    Need(hooks.write)(empty,token);Need(hooks.setFlags)(Need(hooks.flags)()|kOverlay);
 }
 // 저장소 조회만 필수다. 실제 도달한 외부 호출에 한해 해당 경계의 존재를 검사한다.
 GumpLifetime::GumpLifetime(GumpCreateState& state,GumpLifetimeState& lifetime,GumpLifetimeHooks hooks)
@@ -34,6 +45,12 @@ void GumpLifetime::SetIdle(std::uint32_t token,bool enabled) const {
 }
 // 원본 overlay 검색은 끝까지 훑어 마지막 후보를 사용한다.
 void GumpLifetime::SetOverlay(std::uint32_t token,bool enabled) const {
+    if (state_.collection.edition==o::OriginalEdition::Patch1078) {
+        GumpOverlayParentHooks hooks;hooks.assertion=hooks_.assertion;
+        hooks.write=[this](auto index,auto value) { if (index<0 || index>=static_cast<std::int32_t>(lifetime_.overlay.size())) throw std::out_of_range("Gump overlay 진단 복귀 뒤 실제 배열 범위");lifetime_.overlay[static_cast<std::size_t>(index)]=value; }; //원문 free=-1 쓰기는 호스트의 인접 전역을 훼손하지 않고 도달 시점에 명시 실패한다.
+        hooks.flags=[this,token] { return Node(token).flags; };hooks.setFlags=[this,token](auto value) { Node(token).flags=value; };
+        RunGumpOverlayParent(token,enabled,lifetime_.overlay,lifetime_.Checking(),hooks);return;
+    }
     auto& node=Node(token);std::size_t found=lifetime_.overlay.size(),empty=found;
     // 중복 disable도 마지막 일치만 지운다. 앞의 중복 포인터는 남는다.
     for (std::size_t i=0;i<lifetime_.overlay.size();++i) {
@@ -43,7 +60,6 @@ void GumpLifetime::SetOverlay(std::uint32_t token,bool enabled) const {
         if (found!=lifetime_.overlay.size() || empty==lifetime_.overlay.size()) throw std::length_error("Gump overlay 원본 등록 계약 위반");
         lifetime_.overlay[empty]=token;node.flags|=kOverlay;
     } else if (found!=lifetime_.overlay.size()) { lifetime_.overlay[found]=0;node.flags&=~kOverlay; }
-    else if (state_.collection.edition==o::OriginalEdition::Patch1078 && lifetime_.diagnostics) throw std::runtime_error("Gump overlay 원본 진단 계약 위반");
 }
 // 남은 항목의 순서를 유지하고 첫 일치만 제거한다. 없는 토큰에는 노드 조회가 필요 없다.
 bool GumpLifetime::RemoveDialog(std::uint32_t token) const {
@@ -126,7 +142,7 @@ void GumpLifetime::ReplaceRoot(std::uint32_t token) const {
 // 텍스트 해제 콜백 이후 각 포인터를 0으로 쓴다. 두 번째 포인터는 그 시점의 현재 값을 읽는다.
 void GumpLifetime::DestructBase(std::uint32_t token) const {
     auto& node=Node(token);node.vtable=state_.collection.edition==o::OriginalEdition::Patch1078 ? kPatchVtable : kCdVtable;
-    if (state_.collection.edition==o::OriginalEdition::Patch1078 && lifetime_.diagnostics && !(node.flags&kDestroying)) throw std::runtime_error("Gump 기본 소멸자 destroying 필요");
+    if (state_.collection.edition==o::OriginalEdition::Patch1078 && lifetime_.Checking() && !(node.flags&kDestroying)) Need(hooks_.assertion)("flags & GF_DESTROYING",".\\Gump.cpp",0x1e1); //가상 표 복원 뒤 진단하며 복귀하면 현재 텍스트/표의 기존 반납 순서를 계속한다.
     if (node.textPointer) { if (!hooks_.release) throw std::invalid_argument("Gump 텍스트 해제 경계 필요");hooks_.release(node.textPointer);node.textPointer=0; }
     if (node.alternateTextPointer) { if (!hooks_.release) throw std::invalid_argument("Gump 대체 텍스트 해제 경계 필요");hooks_.release(node.alternateTextPointer);node.alternateTextPointer=0; }
     // 소멸자는 각 표에서 모든 중복 일치를 지운다. 플래그/개수/dialog는 직접 변경하지 않는다.

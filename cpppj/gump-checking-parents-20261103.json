@@ -1,0 +1,151 @@
+{
+  "unit": 796,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 796,
+  "displayVersion": "11.01",
+  "exeSha256": "67e2bd3503a216038e385f1e69577cb553f9ce0d0a4fc2b228580d4edc7336f1",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "initialBuildFailure": {
+      "errors": 2,
+      "reason": "RawButtonControls 공개 RawCheckingFlag의 직접 include 누락",
+      "correction": "해당 헤더 추가",
+      "log": "build-v1.log"
+    },
+    "secondBuildFailure": {
+      "productSucceeded": true,
+      "errors": 29,
+      "reason": "새 검사 Scene 이름이 공용 rawscene::Scene과 충돌",
+      "correction": "검사 전용 GumpCheckingScene으로 변경",
+      "log": "build-v2.log"
+    },
+    "finalLog": "build-v3.log",
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 19,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "RawButtonControls_ActualDirtyRectAndStructuralBoundaries",
+      "RawButtonControls_CaptureUsesRawTreeAndParentSerial",
+      "RawButtonControls_DrawReadsCurrentChildAndButtonState",
+      "RawButtonControls_DrawMatchesNativeConstructorFixture",
+      "RawButtonControls_PageReplacementReusesRegistryAndKeepsSerial",
+      "RawButtonControls_CurrentRegisteredDirectHandle",
+      "RawButtonControls_RouteAndSerialStayDistinctAcrossDeletion",
+      "RawButtonControls_RetiredPageStopsInputBeforeCleanup",
+      "GumpLifetime_PatchNative",
+      "GumpLifetime_CdNative",
+      "GumpLifetime_AdditionalNative",
+      "GumpLifetime_CreateTreeKillCleanupAndReuse",
+      "GumpLifetime_TreeReplacementDefersDestruction",
+      "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+      "GumpLifetime_CdIdleCapacity",
+      "GumpLifetime_ContractsAndCycles",
+      "GumpLifetime_CallbackExceptionKeepsWrittenState",
+      "GumpCheckingParents_NativeOverlay320AndBase48",
+      "GumpCheckingParents_ActualOverlayCurrentViewAndBounds"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "unit": 796,
+      "rows": 368,
+      "observations": 736,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제4653c0/464420·진단과free는명시장치. 소진후복귀의overlay[-1]쓰기까지가상메모리로관측하며실제호스트배열에는허용하지않음. 비복귀진단은명시중단·전체SEH/UI아님.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_gump_checking_parents.py": "a46fd679012fb047ea106d07eab9e3a188b035182263c5268af30ce7c5c1cf2e",
+        "cpppj\\tests\\fixtures\\gump-checking-parents-x86.tsv": "de8b2790b5827a60a1ec6d97565030896d30f5d7c3b6daf82bfea40dc99390ac"
+      }
+    },
+    "repeat": {
+      "unit": 796,
+      "rows": 368,
+      "observations": 736,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제4653c0/464420·진단과free는명시장치. 소진후복귀의overlay[-1]쓰기까지가상메모리로관측하며실제호스트배열에는허용하지않음. 비복귀진단은명시중단·전체SEH/UI아님.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_gump_checking_parents.py": "a46fd679012fb047ea106d07eab9e3a188b035182263c5268af30ce7c5c1cf2e",
+        "cpppj\\tests\\fixtures\\gump-checking-parents-x86.tsv": "de8b2790b5827a60a1ec6d97565030896d30f5d7c3b6daf82bfea40dc99390ac"
+      }
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 1472,
+    "failedToolRuns": 0,
+    "cases": {
+      "rows": 368,
+      "operations": {
+        "O": 320,
+        "B": 48
+      },
+      "outcomes": {
+        "ok": 275,
+        "assertion": 93
+      },
+      "diagnostics": 186,
+      "overflowOriginalWrites": 32
+    }
+  },
+  "integration": {
+    "actualUberBindsBeforeMainMenu": true,
+    "independentDiagnosticsDwordRetained": true,
+    "optionalViewCopiesOriginalOwner": true,
+    "overlayFullParentSignedWriteAndFlagsMatch": true,
+    "actualNegativeSlotExplicitBoundary": true,
+    "baseVtableBeforeDiagnosticAndCurrentSecondPointer": true,
+    "checkingRemainingBefore": 48,
+    "checkingRemainingAfter": 46,
+    "remainingBreakdown": {
+      "parent": 38,
+      "partial": 6,
+      "multiplayer": 2
+    }
+  },
+  "protection": {
+    "beforeCount": 2726,
+    "currentCount": 2727,
+    "fixtureCount": 907,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/gump-checking-parents-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "실제 overlay[-1] 쓰기는 호스트 배열에 허용하지 않음·순수 signed 쓰기 장치와 격리 Native에서만 원문 관측",
+    "진단/free는 명시 장치·전체SEH/진단UI/메모리 allocator 별도",
+    "실제 Uber/Client 뷰 연결은 소스/컴파일이며 새GUI0",
+    "CD 기본 무진단/기존 독립 DWORD는 유지·새CD Native0"
+  ],
+  "next": "checking 잔여46·비멀티 UI/Edit/수명·호환성"
+}

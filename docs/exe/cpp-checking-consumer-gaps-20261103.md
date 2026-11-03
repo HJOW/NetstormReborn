@@ -678,6 +678,8 @@ void __cdecl FUN_00462ac0(void)
 
 ## FUN_00464420 @ 00464420
 
+**796 완료:** 같은 Client checking 뷰·진단 복귀를 공통 수명에 연결했다. 두 부모의 원본368입력/736회와 재관측736회 일치·집중19개(새2개) 통과다. 아래 미복원 설명은779 당시이며 실제 배열 경계는 [796 기록](cpp-gump-checking-parents-20261103.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\client\ChatWindow.h, cpppj\src\client\TextEntryGump.h, cpppj\src\client\BackgroundGifGump.h, cpppj\src\client\HtmlWindowGump.h
@@ -703,6 +705,8 @@ void __cdecl FUN_00462ac0(void)
 - `"flags & GF_DESTROYING",".\\Gump.cpp",0x1e1)`
 
 ## FUN_004653c0 @ 004653c0
+
+**796 완료:** 같은 Client checking 뷰·진단 복귀를 공통 수명에 연결했다. 두 부모의 원본368입력/736회와 재관측736회 일치·집중19개(새2개) 통과다. 아래 미복원 설명은779 당시이며 실제 배열 경계는 [796 기록](cpp-gump-checking-parents-20261103.md)을 따른다.
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
