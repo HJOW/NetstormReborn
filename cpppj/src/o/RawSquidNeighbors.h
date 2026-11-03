@@ -1,16 +1,17 @@
 // SquidFinder(객체 번호, flags)의 연결 이웃을 실제 raw 풀·일반 해시에서 찾는다.
 // 원본: 004b23e0/004b1d70/004b1e80/004b1e70 ↔ CD 004ebad0/004ebf30/004ec040/004ec030.
-// 끝 칸 변환(flag 0)과 다리/섬 연결(flag 4)은 이 경로를 사용하며 flag 8의 표면 지도 탐색으로 대신할 수 없다.
+// 끝 칸 변환(flag 0)과 다리/섬 연결(flag 4)의 일반 해시 순회와 flag 8의 표면 지도 순회를 구별한다.
 #pragma once
 #include "o/RawSquidFinder.h"
 
 namespace netstorm::o {
-// 탐색기 flags(원본 finder +0x48)의 비트다. 8(표면 지도 순회, 004b1c20)은 이 클래스가 지원하지 않는다.
+// 탐색기 flags(원본 finder +0x48)의 비트다. 표면 지도 순회에서도 같은 연결/상태 필터를 사용한다.
 namespace NeighborFlag {
 inline constexpr std::uint32_t kNoJoint = 1;      // 프레임 접합 검사를 하지 않는다.
 inline constexpr std::uint32_t kAnyType = 2;      // surface 타입이 아닌 후보도 받는다.
 inline constexpr std::uint32_t kSkipAbstract = 4; // abstract(extra 비트 1) 후보를 제외한다.
-inline constexpr std::uint32_t kSupported = kNoJoint | kAnyType | kSkipAbstract;
+inline constexpr std::uint32_t kSurfaceMap = 8; // 004b1c20의 현재 단계0 지도 y/x 순회를 선택한다.
+inline constexpr std::uint32_t kSupported = kNoJoint | kAnyType | kSkipAbstract | kSurfaceMap; // 원문 네 비트의 지원 조합이다.
 }
 // 원본 float 발자국 사각형이다(004ade70 ↔ CD 004aeec0). 왼쪽/위는 1..255로 보정한 값이다.
 struct SquidFootprint { /* left: 사각형의 왼쪽 경계. */ /* top: 사각형의 위쪽 경계. */ /* right: 사각형의 오른쪽 경계. */ /* bottom: 사각형의 아래쪽 경계. */ float left{},top{},right{},bottom{}; };
@@ -74,15 +75,16 @@ private:
 // 순회 도중 호출자가 객체를 등록/삭제하면 원본처럼 그 변경이 뒤의 결과에 반영된다.
 class RawSquidNeighborWalk {
 public:
-    // neighbors는 이 객체보다 오래 살아야 한다. flags는 NeighborFlag의 조합(0~7)이다.
+    // neighbors는 이 객체보다 오래 살아야 한다. flags는 NeighborFlag의 조합(0~15)이다.
     RawSquidNeighborWalk(const RawSquidNeighbors& neighbors,Sid source,std::uint32_t flags);
     // 현재 이웃 번호다. 0이면 끝이다.
     Sid Current() const;
-    // 004b1e70 ↔ CD 004ec030: flag 8이 없으면 일반 Next(004b1810)에 연결 필터를 건 것이다. 끝난 뒤에는 0을 유지한다.
+    // 004b1e70 ↔ CD 004ec030: flag8이면 현재 표면 지도, 아니면 일반 Next와 연결 필터를 사용한다. 끝난 뒤에는0을 유지한다.
     Sid Next();
 private:
     // finder_: 검색기.
     RawSquidFinder finder_;
+    std::function<Sid()> surfaceNext_; // flags8의 원천 snapshot·y/x 커서·signed short 중복 캐시를 값으로 보관하는 현재 지도 순회다.
     // current_: 현재 처리 위치 또는 현재 선택 상태.
     Sid current_{};
 };

@@ -96,7 +96,7 @@ bool RawSquidNeighbors::Interior(const Object& source) const {
             bits=static_cast<std::uint8_t>(bits&spots_[static_cast<std::size_t>(y*kWorldCells+x)]);
     return (bits&kInterior)!=0;
 }
-// 004b1e80 ↔ CD 004ec040: 일반 finder가 이미 buried·정수 사각형 교차를 검사한 후보만 받는다.
+// 004b1e80 ↔ CD 004ec040: 일반 finder의 기하 교차와 flags8 지도 후보를 구별하고 현재 프레임/상태/spot을 검사한다.
 bool RawSquidNeighbors::Accept(Sid candidate,const Object& source,std::uint32_t flags) const {
     const auto raw=pool_.Slot(candidate); const auto number=raw[kType];
     if ((types_.at(number).flags1&TypeFlag1::kSurface)==0 && (flags&NeighborFlag::kAnyType)==0) return false;
@@ -107,7 +107,8 @@ bool RawSquidNeighbors::Accept(Sid candidate,const Object& source,std::uint32_t 
         const float x2=std::min(source.right,right),y2=std::min(source.bottom,bottom);
         return x1>=kFirstCell && y1>=kFirstCell && x2<kWorldCells && y2<kWorldCells && x1<=x2 && y1<=y2;
     };
-    if (intersects(object.left-1.0f,object.top,object.right+1.0f,object.bottom)==
+    if ((flags&NeighborFlag::kSurfaceMap)==0 &&
+        intersects(object.left-1.0f,object.top,object.right+1.0f,object.bottom)==
         intersects(object.left,object.top-1.0f,object.right,object.bottom+1.0f)) return false;
     if ((flags&NeighborFlag::kNoJoint)==0) {
         const auto framed=ReadObject(candidate,true);
@@ -119,7 +120,9 @@ bool RawSquidNeighbors::Accept(Sid candidate,const Object& source,std::uint32_t 
     if ((flags&NeighborFlag::kSkipAbstract)!=0 && (raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&kAbstract)!=0) return false;
     // 후보 기준점의 spot은 좌표에 0.9999를 더해 자른 칸에서 읽는다. 소수 좌표의 객체는 다음 칸을 본다.
     // 원본은 y*256+x의 선형 주소를 읽으므로 x가 256이 되면 다음 줄의 첫 칸이다. 배열 밖만 거부한다.
-    const auto index=static_cast<std::size_t>(BiasedCell(object.bottom)*kWorldCells+BiasedCell(object.right));
+    // 후보의 실제 좌표를 사용한다. (0,y)/(x,0)의 보정된 발자국 모서리로 바꾸면 원문의 내부 spot 필터가 달라진다.
+    const auto index=static_cast<std::size_t>(BiasedCell(std::bit_cast<float>(Read(raw,kY)))*kWorldCells+
+        BiasedCell(std::bit_cast<float>(Read(raw,kX))));
     if (index>=spots_.size()) throw std::out_of_range("raw 이웃 spot 칸 범위 오류");
     return (spots_[index]&kInterior)==0;
 }
@@ -127,14 +130,39 @@ bool RawSquidNeighbors::Accept(Sid candidate,const Object& source,std::uint32_t 
 Sid RawSquidNeighbors::First(Sid source) const {
     return RawSquidNeighborWalk(*this,source,0).Current();
 }
-// 004b23e0 → 004b1d70: source 발자국이 섬 내부이면 탐색하지 않고, 아니면 한 칸 넓힌 정수 사각형으로 일반 탐색을 시작한다.
+// 004b23e0 → 004b1d70: 원천을 한 번 보관하고 내부 발자국이면 끝낸다. flags8은 현재 지도, 나머지는 현재 일반 해시에서 찾는다.
 RawSquidNeighborWalk::RawSquidNeighborWalk(const RawSquidNeighbors& neighbors,Sid source,std::uint32_t flags)
     :finder_(neighbors.pool_,neighbors.hash_,neighbors.types_) {
-    if ((flags&~NeighborFlag::kSupported)!=0) throw std::invalid_argument("raw 이웃 flags(표면 지도 순회는 미지원)");
+    if ((flags&~NeighborFlag::kSupported)!=0) throw std::invalid_argument("raw 이웃 flags 범위 오류");
     const auto object=neighbors.ReadObject(source,true);
     if (neighbors.Interior(object)) return;
     // 필터는 생성 때 읽은 source 값과 flags를 값으로 잡는다. 이 객체를 옮겨도 유효하다.
     const auto* owner=&neighbors;
+    if ((flags&NeighborFlag::kSurfaceMap)!=0) {
+        // 원문 _ftol로 저장하는 확장 사각형의 정수 네 모서리다. 지도 밖 셀은 Next에서0으로 취급한다.
+        const int left=static_cast<int>(object.left-1.0f),top=static_cast<int>(object.top-1.0f);
+        const int right=static_cast<int>(object.right+1.0f),bottom=static_cast<int>(object.bottom+1.0f);
+        // 원천/flags/사각형은 생성 때 보관한다. 커서와 SHORT 캐시는 각 Walk가 독립적으로 소유한다.
+        surfaceNext_=[owner,object,flags,left,top,right,bottom,x=left,y=top,seen=std::vector<std::int16_t>{}]() mutable -> Sid {
+            // 원문004b1c20의 선증가와 모서리 생략을 유지하며 현재 셀/후보를 매 Next마다 읽는다.
+            for (;;) {
+                ++x;
+                if (y==top || y==bottom) {
+                    if (x>=right) { ++y;if (y>bottom) return {};x=left; }
+                } else if (x>right) { ++y;x=left+(y==bottom ? 1 : 0); }
+                if (x<0 || y<0 || x>=kWorldCells || y>=kWorldCells) continue;
+                const Sid candidate{owner->hash_.Cell(0,x,y)};if (!candidate.value) continue;
+                const auto raw=owner->pool_.Slot(candidate);
+                const float cx=std::bit_cast<float>(Read(raw,kX)),cy=std::bit_cast<float>(Read(raw,kY));
+                if (object.left<=cx && cx<=object.right && object.top<=cy && cy<=object.bottom) continue;
+                if (!owner->Accept(candidate,object,flags)) continue;
+                // 원문 캐시는 signed short를 int로 확장해 DWORD SID와 비교한다. 별도 자기 번호 제외는 없다.
+                if (std::any_of(seen.begin(),seen.end(),[candidate](auto prior) { return static_cast<std::int32_t>(prior)==candidate.value; })) continue;
+                seen.push_back(std::bit_cast<std::int16_t>(candidate.value));return candidate;
+            }
+        };
+        current_=surfaceNext_();return;
+    }
     current_=finder_.Begin({static_cast<int>(object.left-1.0f),static_cast<int>(object.top-1.0f),
         static_cast<int>(object.right+1.0f),static_cast<int>(object.bottom+1.0f)},0,
         [owner,object,flags](Sid candidate) { return owner->Accept(candidate,object,flags); });
@@ -143,7 +171,7 @@ RawSquidNeighborWalk::RawSquidNeighborWalk(const RawSquidNeighbors& neighbors,Si
 Sid RawSquidNeighborWalk::Current() const { return current_; }
 // 끝난 뒤(또는 내부 발자국이라 시작하지 않은 경우)에는 일반 탐색을 다시 부르지 않는다.
 Sid RawSquidNeighborWalk::Next() {
-    if (current_.value!=0) current_=finder_.Next();
+    if (current_.value!=0) current_=surfaceNext_ ? surfaceNext_() : finder_.Next();
     return current_;
 }
 }

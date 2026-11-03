@@ -3274,3 +3274,10 @@ target_sources(netstorm_tests PRIVATE GraphSentinelCheckingTests.cpp)
 target_sources(netstorm_file_tests PRIVATE GraphSentinelCheckingTests.cpp)
 set_source_files_properties(GraphSentinelCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GRAPH_SENTINEL_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-sentinel-checking-x86.tsv\"")
+
+# flags8의 현재 지도 순회와 기존 정수 발자국/필터를 원문 기대값으로 비교한다.
+target_sources(netstorm_tests PRIVATE SurfaceNeighborCurrentTests.cpp)
+target_sources(netstorm_file_tests PRIVATE SurfaceNeighborCurrentTests.cpp NeighborTests.cpp)
+set_source_files_properties(SurfaceNeighborCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SURFACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/surface-x86.tsv\";NETSTORM_SURFACE_NEIGHBOR_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/surface-neighbor-current-x86.tsv\"")
+set_property(SOURCE NeighborTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_NEIGHBOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/neighbor-x86.tsv\"")

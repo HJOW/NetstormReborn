@@ -1,0 +1,33 @@
+{
+  "unit": 817,
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "version": "11.01",
+  "exeSha256": "cd0e3824b51c72f3a3c36363a8164d4d476e6196a0bc910a0f8e8f10d1fe34ab",
+  "buildCommands": 3,
+  "buildExitCodes": [
+    0,
+    0,
+    0
+  ],
+  "nativeRows": 32,
+  "existingNativeScenes": 125,
+  "existingRawComparisons": 250,
+  "newTests": 2,
+  "focusedTests": 6,
+  "finalFailedChecks": 0,
+  "initialFailedChecks": 4,
+  "correction": "경계 후보 spot은 보정된 발자국 대신 현재 raw 위치에서 읽는다. 원문 fixture/기대값 불변.",
+  "protectedUnchanged": 2742,
+  "fixturesUnchanged": 922,
+  "checkingRemaining": 27,
+  "pending": "RawGraph actual Flood/Add/Rebuild/Detach/PostDestroy and nested sentinel/log consumers",
+  "executedGameOrGui": false,
+  "executedMp": false,
+  "sources": {
+    "cpppj/src/o/RawSquidNeighbors.h": "d607b51b973ee9bc9a9d48350da0407b702480db8f64c76f0daa53fc8b5fae0d",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "9bea95cf72cd4e4b0e730eae399ff53f3971b4ef25699b4cec7629329f14e671",
+    "cpppj/tests/SurfaceNeighborCurrentTests.cpp": "6e24c65d5c3cc16705e7c9e7471886cc55c63784a422939ce9caa38f051653d3",
+    "tools/decomp_surface_neighbor_current.py": "016a633cf355c12d64c443a250a8f72e167c71ae0f12e2f3a977bff9101b06b1"
+  }
+}

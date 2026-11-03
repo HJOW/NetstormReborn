@@ -2435,3 +2435,7 @@ cpppj/tests/fixtures/graph-reference-checking-x86.tsv -text
 tools/decomp_graph_sentinel_checking.py text eol=lf
 cpppj/graph-sentinel-checking-native-20261103.json text eol=lf
 cpppj/tests/fixtures/graph-sentinel-checking-x86.tsv -text
+# 현재 표면 이웃 순회의 원문 관측과 생성기 해시를 보존한다.
+tools/decomp_surface_neighbor_current.py text eol=lf
+cpppj/surface-neighbor-current-native-20261103.json text eol=lf
+cpppj/tests/fixtures/surface-neighbor-current-x86.tsv -text

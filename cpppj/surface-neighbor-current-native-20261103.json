@@ -1,0 +1,11 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "binaries": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "rows": 32,
+  "fixtureSha256": "4c7f9b9acf48f18129a2fcc7d3131443828cf0428b489d3a868727cf32e9ea1a",
+  "boundary": "게임/GUI/OS 미실행·실제 flags8 생성/Next/필터·순회 사이 명시 입력 변경"
+}
