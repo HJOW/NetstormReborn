@@ -2426,3 +2426,7 @@ cpppj/tests/fixtures/squid-display-number-x86.tsv -text
 cpppj/tests/fixtures/gump-attach-diagnostic-x86.tsv -text
 
 cpppj/tests/fixtures/gun-notify-checking-x86.tsv -text
+# Graph 참조 진단의 독립 관측과 생성기 해시를 체크아웃마다 같은 바이트로 보존한다.
+tools/decomp_graph_reference_checking.py text eol=lf
+cpppj/graph-reference-checking-native-20261103.json text eol=lf
+cpppj/tests/fixtures/graph-reference-checking-x86.tsv -text

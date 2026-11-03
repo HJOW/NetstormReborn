@@ -62,7 +62,10 @@ std::uint32_t RawPlayerPlacementAnchor::GraphAt(float x,float y) const {
 // surface 타입은 그래프 활성 여부와 무관하게 자신의 raw 번호를 사용한다.
 std::uint32_t RawPlayerPlacementAnchor::GraphFor(std::uint32_t sid) const {
     if (!sid) {
-        if (pool_.Edition()==OriginalEdition::Patch1078 && contained_.checkingDead) throw std::invalid_argument("Player graph SID 0 assert");
+        if (pool_.Edition()==OriginalEdition::Patch1078 && contained_.checkingDead) {
+            if (!state_.graphAssertion) throw std::invalid_argument("Player graph SID 0 실제 진단 미연결");
+            state_.graphAssertion("mySid","\\Ns\\O\\Graph.cpp",0x93);
+        }
         return 0;
     }
     const auto raw=Raw(sid);if (raw[kType]>=types_.size()) throw std::out_of_range("Player graph 타입 오류");

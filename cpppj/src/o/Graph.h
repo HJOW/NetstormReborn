@@ -1,6 +1,9 @@
 // Graph.cpp의 정수 표면 연결·flood·병합과 기존 그래프 표 관리 경로다.
 #pragma once
 #include "o/SquidFinder.h"
+#include "o/RawCheckingFlag.h"
+#include <functional>
+#include <string_view>
 #include <map>
 
 namespace netstorm::o {
@@ -8,6 +11,13 @@ namespace netstorm::o {
 enum class GraphRecovery { Reject,FullPool };
 // 원본 그래프 레코드의 6바이트 WORD 세 개다. 전체 초기화만 0번 reserved의 low byte를 바꾼다.
 struct GraphRecord { /* surfaces: 표면 객체의 공간·연결·수명 처리 자료. */ /* inUse: 내부 사용. */ /* reserved: 예약영역. */ std::int16_t surfaces{},inUse{},reserved{}; };
+// 현재 checking과 원문 식/파일/행의 실제 진단 서비스를 빌리는 Graph 공통 입력이다.
+struct GraphDiagnostics {
+    RawCheckingFlag checking{}; //005e4794의 전체 현재 DWORD이며 진단 복귀 뒤 다시 읽는다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 선택한 원문 진단이 복귀하면 현재 기록 쓰기를 계속한다.
+};
+//00462a50/CD0045b530의 현재6BYTE 행을 처리한다. 진단이 고친 같은 행을 다시 읽고 reserved는 보존한다.
+void RemoveGraphSurface(GraphRecord& record,OriginalEdition edition,const GraphDiagnostics& diagnostics={});
 // 실제 raw 슬롯의 그래프 byte와 state를 표면 스냅샷 번호에 연결한 입력이다.
 struct GraphMembership { /* id: 대상을 구별하는 식별 번호. */ std::uint16_t id{}; /* graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기. */ /* state: 처리 중 조회·갱신하는 상태 (std::uint8_t graph{254},). */ std::uint8_t graph{254},state{}; };
 // 서로 연결된 표면의 Graph 번호와 소속 목록을 관리하는 처리기이다.
@@ -30,7 +40,7 @@ public:
     // 00462e50 ↔ CD 0045c460. 254는 그대로 두고 유효 레코드의 앞 두 WORD만 지운다.
     void Free(std::uint8_t graph);
     // 00462a50 ↔ CD 0045b530. 활성/양수일 때 감소하고 0이 되면 미사용으로 전환한다.
-    void Remove(std::uint8_t graph);
+    void Remove(std::uint8_t graph,const GraphDiagnostics& diagnostics={});
     // 00462f10 ↔ CD 0045bb90. 원본 LIFO 순서·중복 push·WORD 감김·변경 수를 유지한다.
     std::uint32_t Flood(std::uint16_t id,std::uint8_t graph);
     // 004633c0 ↔ CD 0045b7d0. 가장 큰 이웃 그래프에 붙이고 나머지를 flood로 병합한다.

@@ -1,0 +1,760 @@
+originals	Remove	-32768	0	0	0	00800000e94b	0	-	-
+originals	Remove	-32768	0	0	1	00800000e94b	0	-	-
+originals	Remove	-32768	0	0	2	00800000e94b	0	-	-
+originals	Remove	-32768	0	0	3	00800000e94b	0	-	-
+originals	Remove	-32768	0	0	4	00800000e94b	0	-	-
+originals	Remove	-32768	0	1	0	00800000e94b	1	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	1	1	00800000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	1	2	02000100cafe	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	1	3	04000000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	1	4	00800100e94b	1	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	2147483648	0	00800000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	2147483648	1	00800000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	2147483648	2	02000100cafe	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	2147483648	3	04000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	2147483648	4	00800100e94b	2147483648	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	4294967295	0	00800000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	4294967295	1	00800000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	4294967295	2	02000100cafe	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	4294967295	3	04000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	0	4294967295	4	00800100e94b	4294967295	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	0	0	00800100e94b	0	-	-
+originals	Remove	-32768	1	0	1	00800100e94b	0	-	-
+originals	Remove	-32768	1	0	2	00800100e94b	0	-	-
+originals	Remove	-32768	1	0	3	00800100e94b	0	-	-
+originals	Remove	-32768	1	0	4	00800100e94b	0	-	-
+originals	Remove	-32768	1	1	0	00800100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	1	1	00800100e94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	1	2	02000100cafe	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	1	3	03000100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	1	4	00800100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	2147483648	0	00800100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	2147483648	1	00800100e94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	2147483648	2	02000100cafe	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	2147483648	3	03000100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	2147483648	4	00800100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	4294967295	0	00800100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	4294967295	1	00800100e94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	4294967295	2	02000100cafe	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	4294967295	3	03000100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	1	4294967295	4	00800100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	0	0	0080ffffe94b	0	-	-
+originals	Remove	-32768	-1	0	1	0080ffffe94b	0	-	-
+originals	Remove	-32768	-1	0	2	0080ffffe94b	0	-	-
+originals	Remove	-32768	-1	0	3	0080ffffe94b	0	-	-
+originals	Remove	-32768	-1	0	4	0080ffffe94b	0	-	-
+originals	Remove	-32768	-1	1	0	0080ffffe94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	1	1	0080ffffe94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	1	2	02000100cafe	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	1	3	0300ffffe94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	1	4	00800100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	2147483648	0	0080ffffe94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	2147483648	1	0080ffffe94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	2147483648	2	02000100cafe	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	2147483648	3	0300ffffe94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	2147483648	4	00800100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	4294967295	0	0080ffffe94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	4294967295	1	0080ffffe94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	4294967295	2	02000100cafe	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	4294967295	3	0300ffffe94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-32768	-1	4294967295	4	00800100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	0	0	ffff0000e94b	0	-	-
+originals	Remove	-1	0	0	1	ffff0000e94b	0	-	-
+originals	Remove	-1	0	0	2	ffff0000e94b	0	-	-
+originals	Remove	-1	0	0	3	ffff0000e94b	0	-	-
+originals	Remove	-1	0	0	4	ffff0000e94b	0	-	-
+originals	Remove	-1	0	1	0	ffff0000e94b	1	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	1	1	ffff0000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	1	2	02000100cafe	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	1	3	04000000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	1	4	ffff0100e94b	1	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	2147483648	0	ffff0000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	2147483648	1	ffff0000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	2147483648	2	02000100cafe	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	2147483648	3	04000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	2147483648	4	ffff0100e94b	2147483648	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	4294967295	0	ffff0000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	4294967295	1	ffff0000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	4294967295	2	02000100cafe	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	4294967295	3	04000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	-1	0	4294967295	4	ffff0100e94b	4294967295	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	0	0	ffff0100e94b	0	-	-
+originals	Remove	-1	1	0	1	ffff0100e94b	0	-	-
+originals	Remove	-1	1	0	2	ffff0100e94b	0	-	-
+originals	Remove	-1	1	0	3	ffff0100e94b	0	-	-
+originals	Remove	-1	1	0	4	ffff0100e94b	0	-	-
+originals	Remove	-1	1	1	0	ffff0100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	1	1	ffff0100e94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	1	2	02000100cafe	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	1	3	03000100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	1	4	ffff0100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	2147483648	0	ffff0100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	2147483648	1	ffff0100e94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	2147483648	2	02000100cafe	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	2147483648	3	03000100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	2147483648	4	ffff0100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	4294967295	0	ffff0100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	4294967295	1	ffff0100e94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	4294967295	2	02000100cafe	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	4294967295	3	03000100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	1	4294967295	4	ffff0100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	0	0	ffffffffe94b	0	-	-
+originals	Remove	-1	-1	0	1	ffffffffe94b	0	-	-
+originals	Remove	-1	-1	0	2	ffffffffe94b	0	-	-
+originals	Remove	-1	-1	0	3	ffffffffe94b	0	-	-
+originals	Remove	-1	-1	0	4	ffffffffe94b	0	-	-
+originals	Remove	-1	-1	1	0	ffffffffe94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	1	1	ffffffffe94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	1	2	02000100cafe	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	1	3	0300ffffe94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	1	4	ffff0100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	2147483648	0	ffffffffe94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	2147483648	1	ffffffffe94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	2147483648	2	02000100cafe	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	2147483648	3	0300ffffe94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	2147483648	4	ffff0100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	4294967295	0	ffffffffe94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	4294967295	1	ffffffffe94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	4294967295	2	02000100cafe	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	4294967295	3	0300ffffe94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	-1	-1	4294967295	4	ffff0100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	0	0	00000000e94b	0	-	-
+originals	Remove	0	0	0	1	00000000e94b	0	-	-
+originals	Remove	0	0	0	2	00000000e94b	0	-	-
+originals	Remove	0	0	0	3	00000000e94b	0	-	-
+originals	Remove	0	0	0	4	00000000e94b	0	-	-
+originals	Remove	0	0	1	0	00000000e94b	1	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	1	1	00000000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	1	2	02000100cafe	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	1	3	04000000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	1	4	00000100e94b	1	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	2147483648	0	00000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	2147483648	1	00000000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	2147483648	2	02000100cafe	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	2147483648	3	04000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	2147483648	4	00000100e94b	2147483648	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	4294967295	0	00000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	4294967295	1	00000000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	4294967295	2	02000100cafe	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	4294967295	3	04000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	0	0	4294967295	4	00000100e94b	4294967295	89:inUse:\Ns\O\Graph.cpp|90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	0	0	00000100e94b	0	-	-
+originals	Remove	0	1	0	1	00000100e94b	0	-	-
+originals	Remove	0	1	0	2	00000100e94b	0	-	-
+originals	Remove	0	1	0	3	00000100e94b	0	-	-
+originals	Remove	0	1	0	4	00000100e94b	0	-	-
+originals	Remove	0	1	1	0	00000100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	1	1	00000100e94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	1	2	02000100cafe	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	1	3	03000100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	1	4	00000100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	2147483648	0	00000100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	2147483648	1	00000100e94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	2147483648	2	02000100cafe	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	2147483648	3	03000100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	2147483648	4	00000100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	4294967295	0	00000100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	4294967295	1	00000100e94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	4294967295	2	02000100cafe	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	4294967295	3	03000100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	1	4294967295	4	00000100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	0	0	0000ffffe94b	0	-	-
+originals	Remove	0	-1	0	1	0000ffffe94b	0	-	-
+originals	Remove	0	-1	0	2	0000ffffe94b	0	-	-
+originals	Remove	0	-1	0	3	0000ffffe94b	0	-	-
+originals	Remove	0	-1	0	4	0000ffffe94b	0	-	-
+originals	Remove	0	-1	1	0	0000ffffe94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	1	1	0000ffffe94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	1	2	02000100cafe	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	1	3	0300ffffe94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	1	4	00000100e94b	1	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	2147483648	0	0000ffffe94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	2147483648	1	0000ffffe94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	2147483648	2	02000100cafe	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	2147483648	3	0300ffffe94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	2147483648	4	00000100e94b	2147483648	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	4294967295	0	0000ffffe94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	4294967295	1	0000ffffe94b	0	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	4294967295	2	02000100cafe	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	4294967295	3	0300ffffe94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	0	-1	4294967295	4	00000100e94b	4294967295	90:numSurfaces > 0:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	0	0	01000000e94b	0	-	-
+originals	Remove	1	0	0	1	01000000e94b	0	-	-
+originals	Remove	1	0	0	2	01000000e94b	0	-	-
+originals	Remove	1	0	0	3	01000000e94b	0	-	-
+originals	Remove	1	0	0	4	01000000e94b	0	-	-
+originals	Remove	1	0	1	0	01000000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	1	1	01000000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	1	2	02000100cafe	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	1	3	04000000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	1	4	00000000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	2147483648	0	01000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	2147483648	1	01000000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	2147483648	2	02000100cafe	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	2147483648	3	04000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	2147483648	4	00000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	4294967295	0	01000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	4294967295	1	01000000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	4294967295	2	02000100cafe	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	4294967295	3	04000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	0	4294967295	4	00000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	1	1	0	0	00000000e94b	0	-	-
+originals	Remove	1	1	0	1	00000000e94b	0	-	-
+originals	Remove	1	1	0	2	00000000e94b	0	-	-
+originals	Remove	1	1	0	3	00000000e94b	0	-	-
+originals	Remove	1	1	0	4	00000000e94b	0	-	-
+originals	Remove	1	1	1	0	00000000e94b	1	-	-
+originals	Remove	1	1	1	1	00000000e94b	1	-	-
+originals	Remove	1	1	1	2	00000000e94b	1	-	-
+originals	Remove	1	1	1	3	00000000e94b	1	-	-
+originals	Remove	1	1	1	4	00000000e94b	1	-	-
+originals	Remove	1	1	2147483648	0	00000000e94b	2147483648	-	-
+originals	Remove	1	1	2147483648	1	00000000e94b	2147483648	-	-
+originals	Remove	1	1	2147483648	2	00000000e94b	2147483648	-	-
+originals	Remove	1	1	2147483648	3	00000000e94b	2147483648	-	-
+originals	Remove	1	1	2147483648	4	00000000e94b	2147483648	-	-
+originals	Remove	1	1	4294967295	0	00000000e94b	4294967295	-	-
+originals	Remove	1	1	4294967295	1	00000000e94b	4294967295	-	-
+originals	Remove	1	1	4294967295	2	00000000e94b	4294967295	-	-
+originals	Remove	1	1	4294967295	3	00000000e94b	4294967295	-	-
+originals	Remove	1	1	4294967295	4	00000000e94b	4294967295	-	-
+originals	Remove	1	-1	0	0	00000000e94b	0	-	-
+originals	Remove	1	-1	0	1	00000000e94b	0	-	-
+originals	Remove	1	-1	0	2	00000000e94b	0	-	-
+originals	Remove	1	-1	0	3	00000000e94b	0	-	-
+originals	Remove	1	-1	0	4	00000000e94b	0	-	-
+originals	Remove	1	-1	1	0	00000000e94b	1	-	-
+originals	Remove	1	-1	1	1	00000000e94b	1	-	-
+originals	Remove	1	-1	1	2	00000000e94b	1	-	-
+originals	Remove	1	-1	1	3	00000000e94b	1	-	-
+originals	Remove	1	-1	1	4	00000000e94b	1	-	-
+originals	Remove	1	-1	2147483648	0	00000000e94b	2147483648	-	-
+originals	Remove	1	-1	2147483648	1	00000000e94b	2147483648	-	-
+originals	Remove	1	-1	2147483648	2	00000000e94b	2147483648	-	-
+originals	Remove	1	-1	2147483648	3	00000000e94b	2147483648	-	-
+originals	Remove	1	-1	2147483648	4	00000000e94b	2147483648	-	-
+originals	Remove	1	-1	4294967295	0	00000000e94b	4294967295	-	-
+originals	Remove	1	-1	4294967295	1	00000000e94b	4294967295	-	-
+originals	Remove	1	-1	4294967295	2	00000000e94b	4294967295	-	-
+originals	Remove	1	-1	4294967295	3	00000000e94b	4294967295	-	-
+originals	Remove	1	-1	4294967295	4	00000000e94b	4294967295	-	-
+originals	Remove	2	0	0	0	02000000e94b	0	-	-
+originals	Remove	2	0	0	1	02000000e94b	0	-	-
+originals	Remove	2	0	0	2	02000000e94b	0	-	-
+originals	Remove	2	0	0	3	02000000e94b	0	-	-
+originals	Remove	2	0	0	4	02000000e94b	0	-	-
+originals	Remove	2	0	1	0	02000000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	1	1	02000000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	1	2	02000100cafe	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	1	3	04000000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	1	4	01000100e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	2147483648	0	02000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	2147483648	1	02000000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	2147483648	2	02000100cafe	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	2147483648	3	04000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	2147483648	4	01000100e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	4294967295	0	02000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	4294967295	1	02000000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	4294967295	2	02000100cafe	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	4294967295	3	04000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	0	4294967295	4	01000100e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	2	1	0	0	01000100e94b	0	-	-
+originals	Remove	2	1	0	1	01000100e94b	0	-	-
+originals	Remove	2	1	0	2	01000100e94b	0	-	-
+originals	Remove	2	1	0	3	01000100e94b	0	-	-
+originals	Remove	2	1	0	4	01000100e94b	0	-	-
+originals	Remove	2	1	1	0	01000100e94b	1	-	-
+originals	Remove	2	1	1	1	01000100e94b	1	-	-
+originals	Remove	2	1	1	2	01000100e94b	1	-	-
+originals	Remove	2	1	1	3	01000100e94b	1	-	-
+originals	Remove	2	1	1	4	01000100e94b	1	-	-
+originals	Remove	2	1	2147483648	0	01000100e94b	2147483648	-	-
+originals	Remove	2	1	2147483648	1	01000100e94b	2147483648	-	-
+originals	Remove	2	1	2147483648	2	01000100e94b	2147483648	-	-
+originals	Remove	2	1	2147483648	3	01000100e94b	2147483648	-	-
+originals	Remove	2	1	2147483648	4	01000100e94b	2147483648	-	-
+originals	Remove	2	1	4294967295	0	01000100e94b	4294967295	-	-
+originals	Remove	2	1	4294967295	1	01000100e94b	4294967295	-	-
+originals	Remove	2	1	4294967295	2	01000100e94b	4294967295	-	-
+originals	Remove	2	1	4294967295	3	01000100e94b	4294967295	-	-
+originals	Remove	2	1	4294967295	4	01000100e94b	4294967295	-	-
+originals	Remove	2	-1	0	0	0100ffffe94b	0	-	-
+originals	Remove	2	-1	0	1	0100ffffe94b	0	-	-
+originals	Remove	2	-1	0	2	0100ffffe94b	0	-	-
+originals	Remove	2	-1	0	3	0100ffffe94b	0	-	-
+originals	Remove	2	-1	0	4	0100ffffe94b	0	-	-
+originals	Remove	2	-1	1	0	0100ffffe94b	1	-	-
+originals	Remove	2	-1	1	1	0100ffffe94b	1	-	-
+originals	Remove	2	-1	1	2	0100ffffe94b	1	-	-
+originals	Remove	2	-1	1	3	0100ffffe94b	1	-	-
+originals	Remove	2	-1	1	4	0100ffffe94b	1	-	-
+originals	Remove	2	-1	2147483648	0	0100ffffe94b	2147483648	-	-
+originals	Remove	2	-1	2147483648	1	0100ffffe94b	2147483648	-	-
+originals	Remove	2	-1	2147483648	2	0100ffffe94b	2147483648	-	-
+originals	Remove	2	-1	2147483648	3	0100ffffe94b	2147483648	-	-
+originals	Remove	2	-1	2147483648	4	0100ffffe94b	2147483648	-	-
+originals	Remove	2	-1	4294967295	0	0100ffffe94b	4294967295	-	-
+originals	Remove	2	-1	4294967295	1	0100ffffe94b	4294967295	-	-
+originals	Remove	2	-1	4294967295	2	0100ffffe94b	4294967295	-	-
+originals	Remove	2	-1	4294967295	3	0100ffffe94b	4294967295	-	-
+originals	Remove	2	-1	4294967295	4	0100ffffe94b	4294967295	-	-
+originals	Remove	32767	0	0	0	ff7f0000e94b	0	-	-
+originals	Remove	32767	0	0	1	ff7f0000e94b	0	-	-
+originals	Remove	32767	0	0	2	ff7f0000e94b	0	-	-
+originals	Remove	32767	0	0	3	ff7f0000e94b	0	-	-
+originals	Remove	32767	0	0	4	ff7f0000e94b	0	-	-
+originals	Remove	32767	0	1	0	ff7f0000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	1	1	ff7f0000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	1	2	02000100cafe	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	1	3	04000000e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	1	4	fe7f0100e94b	1	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	2147483648	0	ff7f0000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	2147483648	1	ff7f0000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	2147483648	2	02000100cafe	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	2147483648	3	04000000e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	2147483648	4	fe7f0100e94b	2147483648	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	4294967295	0	ff7f0000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	4294967295	1	ff7f0000e94b	0	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	4294967295	2	02000100cafe	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	4294967295	3	04000000e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	0	4294967295	4	fe7f0100e94b	4294967295	89:inUse:\Ns\O\Graph.cpp	-
+originals	Remove	32767	1	0	0	fe7f0100e94b	0	-	-
+originals	Remove	32767	1	0	1	fe7f0100e94b	0	-	-
+originals	Remove	32767	1	0	2	fe7f0100e94b	0	-	-
+originals	Remove	32767	1	0	3	fe7f0100e94b	0	-	-
+originals	Remove	32767	1	0	4	fe7f0100e94b	0	-	-
+originals	Remove	32767	1	1	0	fe7f0100e94b	1	-	-
+originals	Remove	32767	1	1	1	fe7f0100e94b	1	-	-
+originals	Remove	32767	1	1	2	fe7f0100e94b	1	-	-
+originals	Remove	32767	1	1	3	fe7f0100e94b	1	-	-
+originals	Remove	32767	1	1	4	fe7f0100e94b	1	-	-
+originals	Remove	32767	1	2147483648	0	fe7f0100e94b	2147483648	-	-
+originals	Remove	32767	1	2147483648	1	fe7f0100e94b	2147483648	-	-
+originals	Remove	32767	1	2147483648	2	fe7f0100e94b	2147483648	-	-
+originals	Remove	32767	1	2147483648	3	fe7f0100e94b	2147483648	-	-
+originals	Remove	32767	1	2147483648	4	fe7f0100e94b	2147483648	-	-
+originals	Remove	32767	1	4294967295	0	fe7f0100e94b	4294967295	-	-
+originals	Remove	32767	1	4294967295	1	fe7f0100e94b	4294967295	-	-
+originals	Remove	32767	1	4294967295	2	fe7f0100e94b	4294967295	-	-
+originals	Remove	32767	1	4294967295	3	fe7f0100e94b	4294967295	-	-
+originals	Remove	32767	1	4294967295	4	fe7f0100e94b	4294967295	-	-
+originals	Remove	32767	-1	0	0	fe7fffffe94b	0	-	-
+originals	Remove	32767	-1	0	1	fe7fffffe94b	0	-	-
+originals	Remove	32767	-1	0	2	fe7fffffe94b	0	-	-
+originals	Remove	32767	-1	0	3	fe7fffffe94b	0	-	-
+originals	Remove	32767	-1	0	4	fe7fffffe94b	0	-	-
+originals	Remove	32767	-1	1	0	fe7fffffe94b	1	-	-
+originals	Remove	32767	-1	1	1	fe7fffffe94b	1	-	-
+originals	Remove	32767	-1	1	2	fe7fffffe94b	1	-	-
+originals	Remove	32767	-1	1	3	fe7fffffe94b	1	-	-
+originals	Remove	32767	-1	1	4	fe7fffffe94b	1	-	-
+originals	Remove	32767	-1	2147483648	0	fe7fffffe94b	2147483648	-	-
+originals	Remove	32767	-1	2147483648	1	fe7fffffe94b	2147483648	-	-
+originals	Remove	32767	-1	2147483648	2	fe7fffffe94b	2147483648	-	-
+originals	Remove	32767	-1	2147483648	3	fe7fffffe94b	2147483648	-	-
+originals	Remove	32767	-1	2147483648	4	fe7fffffe94b	2147483648	-	-
+originals	Remove	32767	-1	4294967295	0	fe7fffffe94b	4294967295	-	-
+originals	Remove	32767	-1	4294967295	1	fe7fffffe94b	4294967295	-	-
+originals	Remove	32767	-1	4294967295	2	fe7fffffe94b	4294967295	-	-
+originals	Remove	32767	-1	4294967295	3	fe7fffffe94b	4294967295	-	-
+originals	Remove	32767	-1	4294967295	4	fe7fffffe94b	4294967295	-	-
+originals	Zero	0	0	0	0	00000000e94b	0	-	0
+originals	Zero	0	0	0	1	00000000e94b	0	-	0
+originals	Zero	0	0	0	2	00000000e94b	0	-	0
+originals	Zero	0	0	0	3	00000000e94b	0	-	0
+originals	Zero	0	0	0	4	00000000e94b	0	-	0
+originals	Zero	0	0	1	0	00000000e94b	1	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	1	1	00000000e94b	0	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	1	2	03000100cafe	1	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	1	3	04000000e94b	1	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	1	4	00000100e94b	1	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	2147483648	0	00000000e94b	2147483648	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	2147483648	1	00000000e94b	0	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	2147483648	2	03000100cafe	2147483648	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	2147483648	3	04000000e94b	2147483648	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	2147483648	4	00000100e94b	2147483648	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	4294967295	0	00000000e94b	4294967295	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	4294967295	1	00000000e94b	0	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	4294967295	2	03000100cafe	4294967295	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	4294967295	3	04000000e94b	4294967295	147:mySid:\Ns\O\Graph.cpp	0
+originals	Zero	0	0	4294967295	4	00000100e94b	4294967295	147:mySid:\Ns\O\Graph.cpp	0
+originalCD	Remove	-32768	0	0	0	00800000e94b	0	-	-
+originalCD	Remove	-32768	0	0	1	00800000e94b	0	-	-
+originalCD	Remove	-32768	0	0	2	00800000e94b	0	-	-
+originalCD	Remove	-32768	0	0	3	00800000e94b	0	-	-
+originalCD	Remove	-32768	0	0	4	00800000e94b	0	-	-
+originalCD	Remove	-32768	0	1	0	00800000e94b	1	-	-
+originalCD	Remove	-32768	0	1	1	00800000e94b	1	-	-
+originalCD	Remove	-32768	0	1	2	00800000e94b	1	-	-
+originalCD	Remove	-32768	0	1	3	00800000e94b	1	-	-
+originalCD	Remove	-32768	0	1	4	00800000e94b	1	-	-
+originalCD	Remove	-32768	0	2147483648	0	00800000e94b	2147483648	-	-
+originalCD	Remove	-32768	0	2147483648	1	00800000e94b	2147483648	-	-
+originalCD	Remove	-32768	0	2147483648	2	00800000e94b	2147483648	-	-
+originalCD	Remove	-32768	0	2147483648	3	00800000e94b	2147483648	-	-
+originalCD	Remove	-32768	0	2147483648	4	00800000e94b	2147483648	-	-
+originalCD	Remove	-32768	0	4294967295	0	00800000e94b	4294967295	-	-
+originalCD	Remove	-32768	0	4294967295	1	00800000e94b	4294967295	-	-
+originalCD	Remove	-32768	0	4294967295	2	00800000e94b	4294967295	-	-
+originalCD	Remove	-32768	0	4294967295	3	00800000e94b	4294967295	-	-
+originalCD	Remove	-32768	0	4294967295	4	00800000e94b	4294967295	-	-
+originalCD	Remove	-32768	1	0	0	00800100e94b	0	-	-
+originalCD	Remove	-32768	1	0	1	00800100e94b	0	-	-
+originalCD	Remove	-32768	1	0	2	00800100e94b	0	-	-
+originalCD	Remove	-32768	1	0	3	00800100e94b	0	-	-
+originalCD	Remove	-32768	1	0	4	00800100e94b	0	-	-
+originalCD	Remove	-32768	1	1	0	00800100e94b	1	-	-
+originalCD	Remove	-32768	1	1	1	00800100e94b	1	-	-
+originalCD	Remove	-32768	1	1	2	00800100e94b	1	-	-
+originalCD	Remove	-32768	1	1	3	00800100e94b	1	-	-
+originalCD	Remove	-32768	1	1	4	00800100e94b	1	-	-
+originalCD	Remove	-32768	1	2147483648	0	00800100e94b	2147483648	-	-
+originalCD	Remove	-32768	1	2147483648	1	00800100e94b	2147483648	-	-
+originalCD	Remove	-32768	1	2147483648	2	00800100e94b	2147483648	-	-
+originalCD	Remove	-32768	1	2147483648	3	00800100e94b	2147483648	-	-
+originalCD	Remove	-32768	1	2147483648	4	00800100e94b	2147483648	-	-
+originalCD	Remove	-32768	1	4294967295	0	00800100e94b	4294967295	-	-
+originalCD	Remove	-32768	1	4294967295	1	00800100e94b	4294967295	-	-
+originalCD	Remove	-32768	1	4294967295	2	00800100e94b	4294967295	-	-
+originalCD	Remove	-32768	1	4294967295	3	00800100e94b	4294967295	-	-
+originalCD	Remove	-32768	1	4294967295	4	00800100e94b	4294967295	-	-
+originalCD	Remove	-32768	-1	0	0	0080ffffe94b	0	-	-
+originalCD	Remove	-32768	-1	0	1	0080ffffe94b	0	-	-
+originalCD	Remove	-32768	-1	0	2	0080ffffe94b	0	-	-
+originalCD	Remove	-32768	-1	0	3	0080ffffe94b	0	-	-
+originalCD	Remove	-32768	-1	0	4	0080ffffe94b	0	-	-
+originalCD	Remove	-32768	-1	1	0	0080ffffe94b	1	-	-
+originalCD	Remove	-32768	-1	1	1	0080ffffe94b	1	-	-
+originalCD	Remove	-32768	-1	1	2	0080ffffe94b	1	-	-
+originalCD	Remove	-32768	-1	1	3	0080ffffe94b	1	-	-
+originalCD	Remove	-32768	-1	1	4	0080ffffe94b	1	-	-
+originalCD	Remove	-32768	-1	2147483648	0	0080ffffe94b	2147483648	-	-
+originalCD	Remove	-32768	-1	2147483648	1	0080ffffe94b	2147483648	-	-
+originalCD	Remove	-32768	-1	2147483648	2	0080ffffe94b	2147483648	-	-
+originalCD	Remove	-32768	-1	2147483648	3	0080ffffe94b	2147483648	-	-
+originalCD	Remove	-32768	-1	2147483648	4	0080ffffe94b	2147483648	-	-
+originalCD	Remove	-32768	-1	4294967295	0	0080ffffe94b	4294967295	-	-
+originalCD	Remove	-32768	-1	4294967295	1	0080ffffe94b	4294967295	-	-
+originalCD	Remove	-32768	-1	4294967295	2	0080ffffe94b	4294967295	-	-
+originalCD	Remove	-32768	-1	4294967295	3	0080ffffe94b	4294967295	-	-
+originalCD	Remove	-32768	-1	4294967295	4	0080ffffe94b	4294967295	-	-
+originalCD	Remove	-1	0	0	0	ffff0000e94b	0	-	-
+originalCD	Remove	-1	0	0	1	ffff0000e94b	0	-	-
+originalCD	Remove	-1	0	0	2	ffff0000e94b	0	-	-
+originalCD	Remove	-1	0	0	3	ffff0000e94b	0	-	-
+originalCD	Remove	-1	0	0	4	ffff0000e94b	0	-	-
+originalCD	Remove	-1	0	1	0	ffff0000e94b	1	-	-
+originalCD	Remove	-1	0	1	1	ffff0000e94b	1	-	-
+originalCD	Remove	-1	0	1	2	ffff0000e94b	1	-	-
+originalCD	Remove	-1	0	1	3	ffff0000e94b	1	-	-
+originalCD	Remove	-1	0	1	4	ffff0000e94b	1	-	-
+originalCD	Remove	-1	0	2147483648	0	ffff0000e94b	2147483648	-	-
+originalCD	Remove	-1	0	2147483648	1	ffff0000e94b	2147483648	-	-
+originalCD	Remove	-1	0	2147483648	2	ffff0000e94b	2147483648	-	-
+originalCD	Remove	-1	0	2147483648	3	ffff0000e94b	2147483648	-	-
+originalCD	Remove	-1	0	2147483648	4	ffff0000e94b	2147483648	-	-
+originalCD	Remove	-1	0	4294967295	0	ffff0000e94b	4294967295	-	-
+originalCD	Remove	-1	0	4294967295	1	ffff0000e94b	4294967295	-	-
+originalCD	Remove	-1	0	4294967295	2	ffff0000e94b	4294967295	-	-
+originalCD	Remove	-1	0	4294967295	3	ffff0000e94b	4294967295	-	-
+originalCD	Remove	-1	0	4294967295	4	ffff0000e94b	4294967295	-	-
+originalCD	Remove	-1	1	0	0	ffff0100e94b	0	-	-
+originalCD	Remove	-1	1	0	1	ffff0100e94b	0	-	-
+originalCD	Remove	-1	1	0	2	ffff0100e94b	0	-	-
+originalCD	Remove	-1	1	0	3	ffff0100e94b	0	-	-
+originalCD	Remove	-1	1	0	4	ffff0100e94b	0	-	-
+originalCD	Remove	-1	1	1	0	ffff0100e94b	1	-	-
+originalCD	Remove	-1	1	1	1	ffff0100e94b	1	-	-
+originalCD	Remove	-1	1	1	2	ffff0100e94b	1	-	-
+originalCD	Remove	-1	1	1	3	ffff0100e94b	1	-	-
+originalCD	Remove	-1	1	1	4	ffff0100e94b	1	-	-
+originalCD	Remove	-1	1	2147483648	0	ffff0100e94b	2147483648	-	-
+originalCD	Remove	-1	1	2147483648	1	ffff0100e94b	2147483648	-	-
+originalCD	Remove	-1	1	2147483648	2	ffff0100e94b	2147483648	-	-
+originalCD	Remove	-1	1	2147483648	3	ffff0100e94b	2147483648	-	-
+originalCD	Remove	-1	1	2147483648	4	ffff0100e94b	2147483648	-	-
+originalCD	Remove	-1	1	4294967295	0	ffff0100e94b	4294967295	-	-
+originalCD	Remove	-1	1	4294967295	1	ffff0100e94b	4294967295	-	-
+originalCD	Remove	-1	1	4294967295	2	ffff0100e94b	4294967295	-	-
+originalCD	Remove	-1	1	4294967295	3	ffff0100e94b	4294967295	-	-
+originalCD	Remove	-1	1	4294967295	4	ffff0100e94b	4294967295	-	-
+originalCD	Remove	-1	-1	0	0	ffffffffe94b	0	-	-
+originalCD	Remove	-1	-1	0	1	ffffffffe94b	0	-	-
+originalCD	Remove	-1	-1	0	2	ffffffffe94b	0	-	-
+originalCD	Remove	-1	-1	0	3	ffffffffe94b	0	-	-
+originalCD	Remove	-1	-1	0	4	ffffffffe94b	0	-	-
+originalCD	Remove	-1	-1	1	0	ffffffffe94b	1	-	-
+originalCD	Remove	-1	-1	1	1	ffffffffe94b	1	-	-
+originalCD	Remove	-1	-1	1	2	ffffffffe94b	1	-	-
+originalCD	Remove	-1	-1	1	3	ffffffffe94b	1	-	-
+originalCD	Remove	-1	-1	1	4	ffffffffe94b	1	-	-
+originalCD	Remove	-1	-1	2147483648	0	ffffffffe94b	2147483648	-	-
+originalCD	Remove	-1	-1	2147483648	1	ffffffffe94b	2147483648	-	-
+originalCD	Remove	-1	-1	2147483648	2	ffffffffe94b	2147483648	-	-
+originalCD	Remove	-1	-1	2147483648	3	ffffffffe94b	2147483648	-	-
+originalCD	Remove	-1	-1	2147483648	4	ffffffffe94b	2147483648	-	-
+originalCD	Remove	-1	-1	4294967295	0	ffffffffe94b	4294967295	-	-
+originalCD	Remove	-1	-1	4294967295	1	ffffffffe94b	4294967295	-	-
+originalCD	Remove	-1	-1	4294967295	2	ffffffffe94b	4294967295	-	-
+originalCD	Remove	-1	-1	4294967295	3	ffffffffe94b	4294967295	-	-
+originalCD	Remove	-1	-1	4294967295	4	ffffffffe94b	4294967295	-	-
+originalCD	Remove	0	0	0	0	00000000e94b	0	-	-
+originalCD	Remove	0	0	0	1	00000000e94b	0	-	-
+originalCD	Remove	0	0	0	2	00000000e94b	0	-	-
+originalCD	Remove	0	0	0	3	00000000e94b	0	-	-
+originalCD	Remove	0	0	0	4	00000000e94b	0	-	-
+originalCD	Remove	0	0	1	0	00000000e94b	1	-	-
+originalCD	Remove	0	0	1	1	00000000e94b	1	-	-
+originalCD	Remove	0	0	1	2	00000000e94b	1	-	-
+originalCD	Remove	0	0	1	3	00000000e94b	1	-	-
+originalCD	Remove	0	0	1	4	00000000e94b	1	-	-
+originalCD	Remove	0	0	2147483648	0	00000000e94b	2147483648	-	-
+originalCD	Remove	0	0	2147483648	1	00000000e94b	2147483648	-	-
+originalCD	Remove	0	0	2147483648	2	00000000e94b	2147483648	-	-
+originalCD	Remove	0	0	2147483648	3	00000000e94b	2147483648	-	-
+originalCD	Remove	0	0	2147483648	4	00000000e94b	2147483648	-	-
+originalCD	Remove	0	0	4294967295	0	00000000e94b	4294967295	-	-
+originalCD	Remove	0	0	4294967295	1	00000000e94b	4294967295	-	-
+originalCD	Remove	0	0	4294967295	2	00000000e94b	4294967295	-	-
+originalCD	Remove	0	0	4294967295	3	00000000e94b	4294967295	-	-
+originalCD	Remove	0	0	4294967295	4	00000000e94b	4294967295	-	-
+originalCD	Remove	0	1	0	0	00000100e94b	0	-	-
+originalCD	Remove	0	1	0	1	00000100e94b	0	-	-
+originalCD	Remove	0	1	0	2	00000100e94b	0	-	-
+originalCD	Remove	0	1	0	3	00000100e94b	0	-	-
+originalCD	Remove	0	1	0	4	00000100e94b	0	-	-
+originalCD	Remove	0	1	1	0	00000100e94b	1	-	-
+originalCD	Remove	0	1	1	1	00000100e94b	1	-	-
+originalCD	Remove	0	1	1	2	00000100e94b	1	-	-
+originalCD	Remove	0	1	1	3	00000100e94b	1	-	-
+originalCD	Remove	0	1	1	4	00000100e94b	1	-	-
+originalCD	Remove	0	1	2147483648	0	00000100e94b	2147483648	-	-
+originalCD	Remove	0	1	2147483648	1	00000100e94b	2147483648	-	-
+originalCD	Remove	0	1	2147483648	2	00000100e94b	2147483648	-	-
+originalCD	Remove	0	1	2147483648	3	00000100e94b	2147483648	-	-
+originalCD	Remove	0	1	2147483648	4	00000100e94b	2147483648	-	-
+originalCD	Remove	0	1	4294967295	0	00000100e94b	4294967295	-	-
+originalCD	Remove	0	1	4294967295	1	00000100e94b	4294967295	-	-
+originalCD	Remove	0	1	4294967295	2	00000100e94b	4294967295	-	-
+originalCD	Remove	0	1	4294967295	3	00000100e94b	4294967295	-	-
+originalCD	Remove	0	1	4294967295	4	00000100e94b	4294967295	-	-
+originalCD	Remove	0	-1	0	0	0000ffffe94b	0	-	-
+originalCD	Remove	0	-1	0	1	0000ffffe94b	0	-	-
+originalCD	Remove	0	-1	0	2	0000ffffe94b	0	-	-
+originalCD	Remove	0	-1	0	3	0000ffffe94b	0	-	-
+originalCD	Remove	0	-1	0	4	0000ffffe94b	0	-	-
+originalCD	Remove	0	-1	1	0	0000ffffe94b	1	-	-
+originalCD	Remove	0	-1	1	1	0000ffffe94b	1	-	-
+originalCD	Remove	0	-1	1	2	0000ffffe94b	1	-	-
+originalCD	Remove	0	-1	1	3	0000ffffe94b	1	-	-
+originalCD	Remove	0	-1	1	4	0000ffffe94b	1	-	-
+originalCD	Remove	0	-1	2147483648	0	0000ffffe94b	2147483648	-	-
+originalCD	Remove	0	-1	2147483648	1	0000ffffe94b	2147483648	-	-
+originalCD	Remove	0	-1	2147483648	2	0000ffffe94b	2147483648	-	-
+originalCD	Remove	0	-1	2147483648	3	0000ffffe94b	2147483648	-	-
+originalCD	Remove	0	-1	2147483648	4	0000ffffe94b	2147483648	-	-
+originalCD	Remove	0	-1	4294967295	0	0000ffffe94b	4294967295	-	-
+originalCD	Remove	0	-1	4294967295	1	0000ffffe94b	4294967295	-	-
+originalCD	Remove	0	-1	4294967295	2	0000ffffe94b	4294967295	-	-
+originalCD	Remove	0	-1	4294967295	3	0000ffffe94b	4294967295	-	-
+originalCD	Remove	0	-1	4294967295	4	0000ffffe94b	4294967295	-	-
+originalCD	Remove	1	0	0	0	01000000e94b	0	-	-
+originalCD	Remove	1	0	0	1	01000000e94b	0	-	-
+originalCD	Remove	1	0	0	2	01000000e94b	0	-	-
+originalCD	Remove	1	0	0	3	01000000e94b	0	-	-
+originalCD	Remove	1	0	0	4	01000000e94b	0	-	-
+originalCD	Remove	1	0	1	0	01000000e94b	1	-	-
+originalCD	Remove	1	0	1	1	01000000e94b	1	-	-
+originalCD	Remove	1	0	1	2	01000000e94b	1	-	-
+originalCD	Remove	1	0	1	3	01000000e94b	1	-	-
+originalCD	Remove	1	0	1	4	01000000e94b	1	-	-
+originalCD	Remove	1	0	2147483648	0	01000000e94b	2147483648	-	-
+originalCD	Remove	1	0	2147483648	1	01000000e94b	2147483648	-	-
+originalCD	Remove	1	0	2147483648	2	01000000e94b	2147483648	-	-
+originalCD	Remove	1	0	2147483648	3	01000000e94b	2147483648	-	-
+originalCD	Remove	1	0	2147483648	4	01000000e94b	2147483648	-	-
+originalCD	Remove	1	0	4294967295	0	01000000e94b	4294967295	-	-
+originalCD	Remove	1	0	4294967295	1	01000000e94b	4294967295	-	-
+originalCD	Remove	1	0	4294967295	2	01000000e94b	4294967295	-	-
+originalCD	Remove	1	0	4294967295	3	01000000e94b	4294967295	-	-
+originalCD	Remove	1	0	4294967295	4	01000000e94b	4294967295	-	-
+originalCD	Remove	1	1	0	0	00000000e94b	0	-	-
+originalCD	Remove	1	1	0	1	00000000e94b	0	-	-
+originalCD	Remove	1	1	0	2	00000000e94b	0	-	-
+originalCD	Remove	1	1	0	3	00000000e94b	0	-	-
+originalCD	Remove	1	1	0	4	00000000e94b	0	-	-
+originalCD	Remove	1	1	1	0	00000000e94b	1	-	-
+originalCD	Remove	1	1	1	1	00000000e94b	1	-	-
+originalCD	Remove	1	1	1	2	00000000e94b	1	-	-
+originalCD	Remove	1	1	1	3	00000000e94b	1	-	-
+originalCD	Remove	1	1	1	4	00000000e94b	1	-	-
+originalCD	Remove	1	1	2147483648	0	00000000e94b	2147483648	-	-
+originalCD	Remove	1	1	2147483648	1	00000000e94b	2147483648	-	-
+originalCD	Remove	1	1	2147483648	2	00000000e94b	2147483648	-	-
+originalCD	Remove	1	1	2147483648	3	00000000e94b	2147483648	-	-
+originalCD	Remove	1	1	2147483648	4	00000000e94b	2147483648	-	-
+originalCD	Remove	1	1	4294967295	0	00000000e94b	4294967295	-	-
+originalCD	Remove	1	1	4294967295	1	00000000e94b	4294967295	-	-
+originalCD	Remove	1	1	4294967295	2	00000000e94b	4294967295	-	-
+originalCD	Remove	1	1	4294967295	3	00000000e94b	4294967295	-	-
+originalCD	Remove	1	1	4294967295	4	00000000e94b	4294967295	-	-
+originalCD	Remove	1	-1	0	0	00000000e94b	0	-	-
+originalCD	Remove	1	-1	0	1	00000000e94b	0	-	-
+originalCD	Remove	1	-1	0	2	00000000e94b	0	-	-
+originalCD	Remove	1	-1	0	3	00000000e94b	0	-	-
+originalCD	Remove	1	-1	0	4	00000000e94b	0	-	-
+originalCD	Remove	1	-1	1	0	00000000e94b	1	-	-
+originalCD	Remove	1	-1	1	1	00000000e94b	1	-	-
+originalCD	Remove	1	-1	1	2	00000000e94b	1	-	-
+originalCD	Remove	1	-1	1	3	00000000e94b	1	-	-
+originalCD	Remove	1	-1	1	4	00000000e94b	1	-	-
+originalCD	Remove	1	-1	2147483648	0	00000000e94b	2147483648	-	-
+originalCD	Remove	1	-1	2147483648	1	00000000e94b	2147483648	-	-
+originalCD	Remove	1	-1	2147483648	2	00000000e94b	2147483648	-	-
+originalCD	Remove	1	-1	2147483648	3	00000000e94b	2147483648	-	-
+originalCD	Remove	1	-1	2147483648	4	00000000e94b	2147483648	-	-
+originalCD	Remove	1	-1	4294967295	0	00000000e94b	4294967295	-	-
+originalCD	Remove	1	-1	4294967295	1	00000000e94b	4294967295	-	-
+originalCD	Remove	1	-1	4294967295	2	00000000e94b	4294967295	-	-
+originalCD	Remove	1	-1	4294967295	3	00000000e94b	4294967295	-	-
+originalCD	Remove	1	-1	4294967295	4	00000000e94b	4294967295	-	-
+originalCD	Remove	2	0	0	0	02000000e94b	0	-	-
+originalCD	Remove	2	0	0	1	02000000e94b	0	-	-
+originalCD	Remove	2	0	0	2	02000000e94b	0	-	-
+originalCD	Remove	2	0	0	3	02000000e94b	0	-	-
+originalCD	Remove	2	0	0	4	02000000e94b	0	-	-
+originalCD	Remove	2	0	1	0	02000000e94b	1	-	-
+originalCD	Remove	2	0	1	1	02000000e94b	1	-	-
+originalCD	Remove	2	0	1	2	02000000e94b	1	-	-
+originalCD	Remove	2	0	1	3	02000000e94b	1	-	-
+originalCD	Remove	2	0	1	4	02000000e94b	1	-	-
+originalCD	Remove	2	0	2147483648	0	02000000e94b	2147483648	-	-
+originalCD	Remove	2	0	2147483648	1	02000000e94b	2147483648	-	-
+originalCD	Remove	2	0	2147483648	2	02000000e94b	2147483648	-	-
+originalCD	Remove	2	0	2147483648	3	02000000e94b	2147483648	-	-
+originalCD	Remove	2	0	2147483648	4	02000000e94b	2147483648	-	-
+originalCD	Remove	2	0	4294967295	0	02000000e94b	4294967295	-	-
+originalCD	Remove	2	0	4294967295	1	02000000e94b	4294967295	-	-
+originalCD	Remove	2	0	4294967295	2	02000000e94b	4294967295	-	-
+originalCD	Remove	2	0	4294967295	3	02000000e94b	4294967295	-	-
+originalCD	Remove	2	0	4294967295	4	02000000e94b	4294967295	-	-
+originalCD	Remove	2	1	0	0	01000100e94b	0	-	-
+originalCD	Remove	2	1	0	1	01000100e94b	0	-	-
+originalCD	Remove	2	1	0	2	01000100e94b	0	-	-
+originalCD	Remove	2	1	0	3	01000100e94b	0	-	-
+originalCD	Remove	2	1	0	4	01000100e94b	0	-	-
+originalCD	Remove	2	1	1	0	01000100e94b	1	-	-
+originalCD	Remove	2	1	1	1	01000100e94b	1	-	-
+originalCD	Remove	2	1	1	2	01000100e94b	1	-	-
+originalCD	Remove	2	1	1	3	01000100e94b	1	-	-
+originalCD	Remove	2	1	1	4	01000100e94b	1	-	-
+originalCD	Remove	2	1	2147483648	0	01000100e94b	2147483648	-	-
+originalCD	Remove	2	1	2147483648	1	01000100e94b	2147483648	-	-
+originalCD	Remove	2	1	2147483648	2	01000100e94b	2147483648	-	-
+originalCD	Remove	2	1	2147483648	3	01000100e94b	2147483648	-	-
+originalCD	Remove	2	1	2147483648	4	01000100e94b	2147483648	-	-
+originalCD	Remove	2	1	4294967295	0	01000100e94b	4294967295	-	-
+originalCD	Remove	2	1	4294967295	1	01000100e94b	4294967295	-	-
+originalCD	Remove	2	1	4294967295	2	01000100e94b	4294967295	-	-
+originalCD	Remove	2	1	4294967295	3	01000100e94b	4294967295	-	-
+originalCD	Remove	2	1	4294967295	4	01000100e94b	4294967295	-	-
+originalCD	Remove	2	-1	0	0	0100ffffe94b	0	-	-
+originalCD	Remove	2	-1	0	1	0100ffffe94b	0	-	-
+originalCD	Remove	2	-1	0	2	0100ffffe94b	0	-	-
+originalCD	Remove	2	-1	0	3	0100ffffe94b	0	-	-
+originalCD	Remove	2	-1	0	4	0100ffffe94b	0	-	-
+originalCD	Remove	2	-1	1	0	0100ffffe94b	1	-	-
+originalCD	Remove	2	-1	1	1	0100ffffe94b	1	-	-
+originalCD	Remove	2	-1	1	2	0100ffffe94b	1	-	-
+originalCD	Remove	2	-1	1	3	0100ffffe94b	1	-	-
+originalCD	Remove	2	-1	1	4	0100ffffe94b	1	-	-
+originalCD	Remove	2	-1	2147483648	0	0100ffffe94b	2147483648	-	-
+originalCD	Remove	2	-1	2147483648	1	0100ffffe94b	2147483648	-	-
+originalCD	Remove	2	-1	2147483648	2	0100ffffe94b	2147483648	-	-
+originalCD	Remove	2	-1	2147483648	3	0100ffffe94b	2147483648	-	-
+originalCD	Remove	2	-1	2147483648	4	0100ffffe94b	2147483648	-	-
+originalCD	Remove	2	-1	4294967295	0	0100ffffe94b	4294967295	-	-
+originalCD	Remove	2	-1	4294967295	1	0100ffffe94b	4294967295	-	-
+originalCD	Remove	2	-1	4294967295	2	0100ffffe94b	4294967295	-	-
+originalCD	Remove	2	-1	4294967295	3	0100ffffe94b	4294967295	-	-
+originalCD	Remove	2	-1	4294967295	4	0100ffffe94b	4294967295	-	-
+originalCD	Remove	32767	0	0	0	ff7f0000e94b	0	-	-
+originalCD	Remove	32767	0	0	1	ff7f0000e94b	0	-	-
+originalCD	Remove	32767	0	0	2	ff7f0000e94b	0	-	-
+originalCD	Remove	32767	0	0	3	ff7f0000e94b	0	-	-
+originalCD	Remove	32767	0	0	4	ff7f0000e94b	0	-	-
+originalCD	Remove	32767	0	1	0	ff7f0000e94b	1	-	-
+originalCD	Remove	32767	0	1	1	ff7f0000e94b	1	-	-
+originalCD	Remove	32767	0	1	2	ff7f0000e94b	1	-	-
+originalCD	Remove	32767	0	1	3	ff7f0000e94b	1	-	-
+originalCD	Remove	32767	0	1	4	ff7f0000e94b	1	-	-
+originalCD	Remove	32767	0	2147483648	0	ff7f0000e94b	2147483648	-	-
+originalCD	Remove	32767	0	2147483648	1	ff7f0000e94b	2147483648	-	-
+originalCD	Remove	32767	0	2147483648	2	ff7f0000e94b	2147483648	-	-
+originalCD	Remove	32767	0	2147483648	3	ff7f0000e94b	2147483648	-	-
+originalCD	Remove	32767	0	2147483648	4	ff7f0000e94b	2147483648	-	-
+originalCD	Remove	32767	0	4294967295	0	ff7f0000e94b	4294967295	-	-
+originalCD	Remove	32767	0	4294967295	1	ff7f0000e94b	4294967295	-	-
+originalCD	Remove	32767	0	4294967295	2	ff7f0000e94b	4294967295	-	-
+originalCD	Remove	32767	0	4294967295	3	ff7f0000e94b	4294967295	-	-
+originalCD	Remove	32767	0	4294967295	4	ff7f0000e94b	4294967295	-	-
+originalCD	Remove	32767	1	0	0	fe7f0100e94b	0	-	-
+originalCD	Remove	32767	1	0	1	fe7f0100e94b	0	-	-
+originalCD	Remove	32767	1	0	2	fe7f0100e94b	0	-	-
+originalCD	Remove	32767	1	0	3	fe7f0100e94b	0	-	-
+originalCD	Remove	32767	1	0	4	fe7f0100e94b	0	-	-
+originalCD	Remove	32767	1	1	0	fe7f0100e94b	1	-	-
+originalCD	Remove	32767	1	1	1	fe7f0100e94b	1	-	-
+originalCD	Remove	32767	1	1	2	fe7f0100e94b	1	-	-
+originalCD	Remove	32767	1	1	3	fe7f0100e94b	1	-	-
+originalCD	Remove	32767	1	1	4	fe7f0100e94b	1	-	-
+originalCD	Remove	32767	1	2147483648	0	fe7f0100e94b	2147483648	-	-
+originalCD	Remove	32767	1	2147483648	1	fe7f0100e94b	2147483648	-	-
+originalCD	Remove	32767	1	2147483648	2	fe7f0100e94b	2147483648	-	-
+originalCD	Remove	32767	1	2147483648	3	fe7f0100e94b	2147483648	-	-
+originalCD	Remove	32767	1	2147483648	4	fe7f0100e94b	2147483648	-	-
+originalCD	Remove	32767	1	4294967295	0	fe7f0100e94b	4294967295	-	-
+originalCD	Remove	32767	1	4294967295	1	fe7f0100e94b	4294967295	-	-
+originalCD	Remove	32767	1	4294967295	2	fe7f0100e94b	4294967295	-	-
+originalCD	Remove	32767	1	4294967295	3	fe7f0100e94b	4294967295	-	-
+originalCD	Remove	32767	1	4294967295	4	fe7f0100e94b	4294967295	-	-
+originalCD	Remove	32767	-1	0	0	fe7fffffe94b	0	-	-
+originalCD	Remove	32767	-1	0	1	fe7fffffe94b	0	-	-
+originalCD	Remove	32767	-1	0	2	fe7fffffe94b	0	-	-
+originalCD	Remove	32767	-1	0	3	fe7fffffe94b	0	-	-
+originalCD	Remove	32767	-1	0	4	fe7fffffe94b	0	-	-
+originalCD	Remove	32767	-1	1	0	fe7fffffe94b	1	-	-
+originalCD	Remove	32767	-1	1	1	fe7fffffe94b	1	-	-
+originalCD	Remove	32767	-1	1	2	fe7fffffe94b	1	-	-
+originalCD	Remove	32767	-1	1	3	fe7fffffe94b	1	-	-
+originalCD	Remove	32767	-1	1	4	fe7fffffe94b	1	-	-
+originalCD	Remove	32767	-1	2147483648	0	fe7fffffe94b	2147483648	-	-
+originalCD	Remove	32767	-1	2147483648	1	fe7fffffe94b	2147483648	-	-
+originalCD	Remove	32767	-1	2147483648	2	fe7fffffe94b	2147483648	-	-
+originalCD	Remove	32767	-1	2147483648	3	fe7fffffe94b	2147483648	-	-
+originalCD	Remove	32767	-1	2147483648	4	fe7fffffe94b	2147483648	-	-
+originalCD	Remove	32767	-1	4294967295	0	fe7fffffe94b	4294967295	-	-
+originalCD	Remove	32767	-1	4294967295	1	fe7fffffe94b	4294967295	-	-
+originalCD	Remove	32767	-1	4294967295	2	fe7fffffe94b	4294967295	-	-
+originalCD	Remove	32767	-1	4294967295	3	fe7fffffe94b	4294967295	-	-
+originalCD	Remove	32767	-1	4294967295	4	fe7fffffe94b	4294967295	-	-
+originalCD	Zero	0	0	0	0	00000000e94b	0	-	0
+originalCD	Zero	0	0	0	1	00000000e94b	0	-	0
+originalCD	Zero	0	0	0	2	00000000e94b	0	-	0
+originalCD	Zero	0	0	0	3	00000000e94b	0	-	0
+originalCD	Zero	0	0	0	4	00000000e94b	0	-	0
+originalCD	Zero	0	0	1	0	00000000e94b	1	-	0
+originalCD	Zero	0	0	1	1	00000000e94b	1	-	0
+originalCD	Zero	0	0	1	2	00000000e94b	1	-	0
+originalCD	Zero	0	0	1	3	00000000e94b	1	-	0
+originalCD	Zero	0	0	1	4	00000000e94b	1	-	0
+originalCD	Zero	0	0	2147483648	0	00000000e94b	2147483648	-	0
+originalCD	Zero	0	0	2147483648	1	00000000e94b	2147483648	-	0
+originalCD	Zero	0	0	2147483648	2	00000000e94b	2147483648	-	0
+originalCD	Zero	0	0	2147483648	3	00000000e94b	2147483648	-	0
+originalCD	Zero	0	0	2147483648	4	00000000e94b	2147483648	-	0
+originalCD	Zero	0	0	4294967295	0	00000000e94b	4294967295	-	0
+originalCD	Zero	0	0	4294967295	1	00000000e94b	4294967295	-	0
+originalCD	Zero	0	0	4294967295	2	00000000e94b	4294967295	-	0
+originalCD	Zero	0	0	4294967295	3	00000000e94b	4294967295	-	0
+originalCD	Zero	0	0	4294967295	4	00000000e94b	4294967295	-	0

@@ -910,6 +910,9 @@ struct RawCampaignSession::Impl {
         // 서버 요청/확정/통지 배치/예측 정리가 같은 장기 진단 객체를 빌린다.
         for (auto* diagnostics:{&constructionState.request.decoderDiagnostics,&constructionState.confirm.decoderDiagnostics,&constructionState.place.decoderDiagnostics,&constructionState.clear.decoderDiagnostics}) *diagnostics=&metadata.geometry.decoderDiagnostics;
         core.building.BindChecking(gameplayGlobals->AiDebug().Checking()); // 같은 물리 실행기만 장기 owner를 빌린다.
+        core.graph.BindDiagnostics({RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph 참조 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }}); // 독립 Session도 같은 현재 owner/서비스를 쓰며 Validate 계획에는 진단을 섞지 않는다.
+        anchorState.graphAssertion=[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph SID 조회 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 현재 상태의 복사본도 같은 장기 Session 서비스를 매 호출 읽는다.
+        placement.anchor.graphAssertion=anchorState.graphAssertion; // 지형 생성용 고정 파이프라인도 같은 현재 진단을 빌리며 gameplay 쪽은 매 요청 anchorState 전체를 복사한다.
         assetState.sharedAuthority=gameplayGlobals->Authority().get();gunState.sharedAuthority=gameplayGlobals->Authority().get();regularState.sharedAuthority=gameplayGlobals->Authority().get(); // 첫 파생 모듈 전에 같은 owner를 연결하며 준비된false를 true로 덮지 않는다.
         assetState.inBattle=true;assetState.localOwner=1;
         if (services.installMode==CampaignInstallMode::ExistingEditor) {

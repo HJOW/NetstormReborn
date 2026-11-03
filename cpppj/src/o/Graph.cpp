@@ -81,10 +81,17 @@ void Graph::Free(std::uint8_t graph) {
     CheckNumber(graph,true); if (graph==kInvalid) return;
     records_[graph].surfaces=records_[graph].inUse=0;
 }
-// debug assert UI를 실행하지 않는 원본 일반 경로다.
-void Graph::Remove(std::uint8_t graph) {
-    CheckNumber(graph,false); auto& r=records_[graph];
-    if (r.inUse && r.surfaces>0) { r.surfaces=Word(r.surfaces-1); if (!r.surfaces) r.inUse=0; }
+// PATCH의 두 checking 관문은 분리하며 CD에는 원문 진단이 없다.
+void RemoveGraphSurface(GraphRecord& record,OriginalEdition edition,const GraphDiagnostics& diagnostics) {
+    if (edition==OriginalEdition::Patch1078 && diagnostics.checking) {
+        if (!record.inUse) { if (!diagnostics.assertion) throw std::logic_error("Graph inUse 실제 진단 미연결");diagnostics.assertion("inUse","\\Ns\\O\\Graph.cpp",0x59); }
+        if (diagnostics.checking && record.surfaces<1) { if (!diagnostics.assertion) throw std::logic_error("Graph surfaces 실제 진단 미연결");diagnostics.assertion("numSurfaces > 0","\\Ns\\O\\Graph.cpp",0x5a); }
+    }
+    if (record.inUse && record.surfaces>0) { record.surfaces=Word(record.surfaces-1);if (!record.surfaces) record.surfaces=record.inUse=0; }
+}
+// 값형 입력도 같은 원문 행 처리기를 쓰며 실제 영역 통지는 장기 raw 행을 직접 제공한다.
+void Graph::Remove(std::uint8_t graph,const GraphDiagnostics& diagnostics) {
+    CheckNumber(graph,false);RemoveGraphSurface(records_[graph],OriginalEdition::Patch1078,diagnostics);
 }
 // membership 밖 지도/스택 과다 입력은 원본의 부분 변경을 게임 월드에 전파하지 않는다.
 std::uint32_t Graph::Flood(std::uint16_t id,std::uint8_t graph) {

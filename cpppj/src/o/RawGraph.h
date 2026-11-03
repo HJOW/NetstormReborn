@@ -58,6 +58,7 @@ public:
     void Rebuild(bool resetAll);
     // 원본00462b20의 월드 초기 표를 만든다. Graph0 예약·reserved LOW BYTE·sentinel만 초기화하고 풀/스택은 보존한다.
     void ResetTable();
+    void BindDiagnostics(GraphDiagnostics diagnostics); // 같은 Client의 현재 checking/진단을 연결하며 표/스택/풀은 쓰지 않는다.
     // 빈 번호가 있으면 표만 갱신하고, 소진되면 전체 raw 풀 재구성 뒤 번호를 확보한다.
     std::uint8_t Allocate();
     // 기존 레코드의 reserved WORD와 전체 스택의 미사용 흔적도 노출한다.
@@ -93,7 +94,7 @@ private:
     // 공간은 읽기 전용으로 공유하고 SID/그래프 사본에서 순차 Add의 번호/스택 변화를 이어 간다.
     Plan CalculatePostDestroy(Sid sid) const;
     // 원본 일반 탐색기의 단계/행/열/next 순서와 한 칸 넓은 끝 버킷을 유지한다.
-    void Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan) const;
+    void Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan,bool live=false) const;
     // 삭제의 일반 finder는 네 단계/체인 순서와 가로·세로 경계 접촉 교차 XOR를 사용한다.
     // sourceFrameValid가 false이면 원본 마스크가 방향 코드를 덮어쓰는 연결만 해석한다.
     std::vector<std::uint16_t> DetachConnections(const SurfaceObject& source,const SurfaceFinder& finder,bool sourceFrameValid) const;
@@ -115,5 +116,6 @@ private:
     std::array<std::uint32_t,Graph::kFloodSize>& stack_; // 현재 기록과 같은 owner의 flood 흔적이다.
     // 전체 원본 자산 풀 계약을 선택한 경우 Add/Detach/Pop의 내부 번호 소진도 복구한다.
     GraphRecovery recovery_{GraphRecovery::Reject};
+    GraphDiagnostics diagnostics_; // 실제 호출의 현재 진단 뷰이며 사전 계산/Validate에는 전달하지 않는다.
 };
 }

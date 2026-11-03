@@ -6,6 +6,7 @@
 #include <bit>
 #include <cmath>
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::o {
 namespace {
@@ -75,7 +76,7 @@ void RawGraph::ValidateTypes(std::span<const RiftTypeRecord> types) const {
             throw std::invalid_argument("postPop/raw 그래프 타입이 다릅니다");
 }
 // 원본 일반 SquidFinder는 단계 0..3의 y/x 버킷과 next 체인을 순회하고 매몰 후보만 건너뛴다.
-void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan) const {
+void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan,bool live) const {
     const auto root=pool_.Slot(sid); const auto& source=types_[root[10]];
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto extraOffset=patch ? 40U : 35U,graphOffset=patch ? 30U : 28U;
@@ -122,9 +123,13 @@ void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_
                     if (ax<left || aLeft>right || ay<top || aTop>bottom || !(type.flags1&TypeFlag1::kSurface) ||
                         !(spots[static_cast<std::size_t>(ay*kWorldCells+ax)]&8)) continue;
                     const auto staged=std::find_if(plan.numbers.begin(),plan.numbers.end(),[&](const auto& item){return item.first==candidate;});
-                    const auto graph=staged==plan.numbers.end() ? bytes[graphOffset] : staged->second;
+                    const auto graph=live || staged==plan.numbers.end() ? bytes[graphOffset] : staged->second;
                     if (graph!=Graph::kInvalid) {
                         if (graph>=Graph::kCount) throw std::out_of_range("그래프 영역 후보 번호 오류");
+                        if (live) {
+                            RemoveGraphSurface(records_[graph],pool_.Edition(),diagnostics_);
+                            pool_.AllocatedBytes(candidate)[graphOffset]=Graph::kInvalid;continue; // 진단 복귀 뒤 현재 슬롯의 graph BYTE만 무효화한다. 다음 SID는 finder와 같이 이미 저장했다.
+                        }
                         auto& record=plan.records[graph];
                         // Remove의 활성/양수 조건을 유지하며 0이 되면 사용 여부도 지운다. reserved는 보존한다.
                         if (record.inUse && record.surfaces>0) { --record.surfaces; if (!record.surfaces) record.inUse=0; }
@@ -428,6 +433,8 @@ void RawGraph::Rebuild(bool resetAll) { Commit(Calculate(Sid{},Operation::Rebuil
 void RawGraph::ResetTable() {
     ResetRawGraphTable(storage_);
 }
+// 실행기 수명에 현재 뷰를 보관하고 실제 참조 감소 위치에서만 진단한다.
+void RawGraph::BindDiagnostics(GraphDiagnostics diagnostics) { diagnostics_=std::move(diagnostics); }
 // 같은 원문85BYTE의 쓰기를 Session/Pool/타입/stack 효과 없이 현재 장기 물리에도 적용한다.
 void ResetRawGraphTable(RawGraphStorage& storage) {
     for (std::size_t index=0;index<Graph::kCount;++index) storage.records[index].surfaces=storage.records[index].inUse=0; // 앞251개의 두 WORD만 지우고 reserved/나머지 행은 보존한다.
@@ -439,9 +446,13 @@ std::uint8_t RawGraph::Allocate() {
     const auto plan=Calculate(Sid{},Operation::Allocate,0,nullptr); Commit(plan); return static_cast<std::uint8_t>(plan.changed);
 }
 // 영역 단독 helper도 동일한 원본 탐색·표 감소를 사용한다.
-void RawGraph::InvalidateRegion(Sid sid) { Commit(Calculate(sid,Operation::Region,0,nullptr)); }
+void RawGraph::InvalidateRegion(Sid sid) {
+    if (!diagnostics_.checking) { Commit(Calculate(sid,Operation::Region,0,nullptr));return; }
+    Plan scratch{};Region(sid,nullptr,spots_,scratch,true); // 현재 원문 진단의 쓰기를 사본 Commit으로 덮어쓰지 않는다.
+}
 // 성공한 전체 후처리를 한 번에 raw 번호와 그래프 표에 반영한다.
 void RawGraph::PostPop(Sid sid,bool invalidate,bool add) {
+    if (invalidate && diagnostics_.checking) { InvalidateRegion(sid);if (add) Add(sid);return; } // 실제 원문 순서대로 현재 영역 통지 뒤 표면 Add를 실행한다.
     if (invalidate || add) Commit(Calculate(sid,invalidate ? (add ? Operation::RegionAdd : Operation::Region) : Operation::Add,0,nullptr));
 }
 // sentinel과 reserved WORD를 포함한 전체 표를 제공한다.

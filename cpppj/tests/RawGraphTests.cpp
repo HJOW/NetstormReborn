@@ -133,8 +133,9 @@ std::vector<std::uint8_t> SharedGraphBytes(const o::RawGraphStorage& storage) {
 
 // 공통 입력/전체 출력 대조를 공유하되 기대값은 각 실제 x86 도구가 독립적으로 기록한다.
 static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls,bool regionFixture,bool globalFixture=false,
-    o::GraphRecovery recovery=o::GraphRecovery::Reject) {
+    o::GraphRecovery recovery=o::GraphRecovery::Reject,bool checkingEnabled=false) {
     std::ifstream input(path); CHECK(input.good()); std::string line; int lineNumber=0,begins=0,calls=0;
+    std::size_t diagnosticCalls=0; // 켜진 실제 영역 경로의 선택 진단 횟수만 관측하며 fixture의 바이트 기대값은 유지한다.
     std::unique_ptr<o::SidPool> pool; std::unique_ptr<o::SquidHash> hash; std::unique_ptr<o::RawGraph> graph;
     std::unique_ptr<o::SquidPostPop> post; std::unique_ptr<o::SquidPop> pop; std::unique_ptr<o::SquidDisplay> display; std::unique_ptr<Sink> sink;
     std::unique_ptr<o::SquidUnpop> unpop;
@@ -187,6 +188,9 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
             // 새 fixture는 긴 stale 스택을 반복 저장하지 않고 입력 시드로 복원한다.
             if (regionFixture) for (std::size_t i=0;i<stack.size();++i) stack[i]=static_cast<std::uint32_t>(std::stoul(row[4])+i);
             graph=std::make_unique<o::RawGraph>(*pool,*hash,spots,types,frames,Records(row[3]),stack,recovery);
+            if (checkingEnabled) graph->BindDiagnostics({o::RawCheckingFlag{checkingEnabled},[&](std::string_view expression,std::string_view file,std::uint32_t line) {
+                CHECK(file=="\\Ns\\O\\Graph.cpp");CHECK((line==0x59 && expression=="inUse") || (line==0x5a && expression=="numSurfaces > 0"));++diagnosticCalls;
+            }}); // 진단이 복귀하면 같은 원문 바이트 결과를 계속 대조한다. 진단 식/횟수의 독립 근거는 새760행이다.
             post=std::make_unique<o::SquidPostPop>(*pool,types,state,graph.get());
             display=std::make_unique<o::SquidDisplay>(pool->Edition(),types,shapes,*sink,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
             pop=std::make_unique<o::SquidPop>(*pool,*hash,spots,display.get(),post.get());
@@ -246,6 +250,7 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
         if (test::FailureCount()!=before) { std::cerr<<"raw 그래프 fixture 행: "<<lineNumber<<'\n'; break; }
     }
     CHECK(begins==expectedBegins); CHECK(calls==expectedCalls);
+    if (checkingEnabled) std::printf("Graph checking 영역: %d 연산, 진단 %zu회\n",calls,diagnosticCalls);
 }
 
 // 기존 fixture를 그대로 재생하여 일반 표면/매몰 다리 경로의 회귀를 확인한다.
@@ -369,6 +374,10 @@ TEST_CASE(RawGraph_PositionHeadEarlyReturnAndPreflightPreserveSource) {
 // 세 실제 PE와 두 x87 정밀도의 일반 탐색/다리/섬 Pop 결과를 전체 슬롯/메모리와 대조한다.
 TEST_CASE(RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop) {
     ReplayRawGraph(NETSTORM_REGIONGRAPH_FIXTURE,6,1536,true);
+}
+// 같은 독립 원문1536연산을 실제 checking 경로에도 재생하여 전체 슬롯/표/스택/공간/장부를 유지한다.
+TEST_CASE(GraphReferenceChecking_ActualRegionReplaysExistingNativeGeometry) {
+    ReplayRawGraph(NETSTORM_REGIONGRAPH_FIXTURE,6,1536,true,false,o::GraphRecovery::Reject,true);
 }
 
 // void 해제 전 옛 좌표로 시험하면 놓칠 그래프 소진/소수 좌표를 Pop 쓰기 전에 잡는다.

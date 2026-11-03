@@ -1,0 +1,147 @@
+{
+  "unit": 815,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "runtimeProduct": 815,
+  "displayVersion": "11.01",
+  "exeSha256": "4570e7dcfba9a0cd58e9d4f890995393e58d200a7a60688381beb7ffcbc9803f",
+  "status": "Graph 참조 감소와 SID0 조회의 현재 진단/소비자 연결 완료·나머지3부모/전체 목표 진행 중",
+  "build": {
+    "successfulInvocations": 3,
+    "failedInvocations": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-v2.log",
+      "build-v3.log"
+    ],
+    "note": "제품/집중 빌드·마지막 라이브러리로 제품 재링크·검사 풀 크기 교정 뒤 집중 대상 재빌드"
+  },
+  "tests": {
+    "total": 7,
+    "newTests": 4,
+    "failedChecks": 0,
+    "filters": {
+      "GraphReferenceChecking_": 4,
+      "RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop": 1,
+      "player_anchor_patch_x86": 1,
+      "player_anchor_cd_x86": 1
+    },
+    "finalLogs": [
+      "test-GraphReferenceChecking_-v2.log",
+      "test-RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop-v2.log",
+      "test-player_anchor_patch_x86-v2.log",
+      "test-player_anchor_cd_x86-v2.log"
+    ],
+    "initialFailure": {
+      "checks": 3,
+      "log": "test-GraphReferenceChecking_-v1.log",
+      "cause": "새 검사 풀128이 원본 고정 predictable 구간보다 작아 생성 단계에서 SID 풀 크기 오류",
+      "correction": "검사 입력만 기존 원문 배치의32768슬롯으로 변경·제품/fixture 불변"
+    },
+    "fullSuiteRun": false
+  },
+  "native": {
+    "newUniqueInputs": 760,
+    "removeInputs": 720,
+    "zeroSidInputs": 40,
+    "newObservations": 1520,
+    "repeatEqual": true,
+    "cppReplays": 760,
+    "fixtureSha256": "28c650c2c434cb16cb0f6e6540309216d78473b24dcea5dc0a6c5babb0c827d4",
+    "provenance": "cpppj/graph-reference-checking-native-20261103.json",
+    "geometryOperations": 1536,
+    "geometryCppReplays": 3072,
+    "geometryActiveCheckingDiagnostics": 18,
+    "geometryFixture": "cpppj/tests/fixtures/regiongraph-x86.tsv",
+    "anchorRowsBothEditions": 3196,
+    "anchorFixture": "cpppj/tests/fixtures/playeranchor-x86.tsv",
+    "note": "새 두 부모는 실제 PE 진단 관찰/복귀, 기존 영역1536연산은checking0/비영의 전체 슬롯/표/스택/공간/장부 비교·기존 앵커 각1598행"
+  },
+  "integration": {
+    "completedFunctions": [
+      "00462a50",
+      "00462bc0"
+    ],
+    "cdFunctions": [
+      "0045b530",
+      "0045b6f0"
+    ],
+    "diagnostics": [
+      {
+        "expression": "inUse",
+        "line": 89
+      },
+      {
+        "expression": "numSurfaces > 0",
+        "line": 90
+      },
+      {
+        "expression": "mySid",
+        "line": 147
+      }
+    ],
+    "diagnosticFile": "\\Ns\\O\\Graph.cpp",
+    "remove": "현재 checking 재조회·진단이 바꾼 같은6BYTE 행 재조회·양수일 때만 감소/0이면 해제·reserved 보존",
+    "liveRegion": "actual checking 비영은 장기 기록/현재 슬롯을 직접 소비하고 진단/후속 후보 변경을 Plan Commit으로 덮지 않음·무진단 경로의 기존 계획/Validate는 유지",
+    "zeroSid": "선택 진단 복귀 뒤 원문대로0 반환·CD 진단 없음",
+    "owners": [
+      "첫 World의 장기 Storage 현재 진단",
+      "같은 Session 현재 서비스",
+      "일반 앵커·지형 고정 파이프라인·현재 gameplay 복사본"
+    ],
+    "sourceAudit": {
+      "baseCppCommit": "254ccc29",
+      "calculatePreflightBodyUnchanged": true,
+      "anchorNonzeroBodyUnchanged": true,
+      "firstWorldBeforeSession": true,
+      "currentSessionRecordService": true,
+      "terrainPipelineAssertion": true,
+      "gameplayPipelineCopiesCurrentAnchor": true,
+      "directLiveRecord": true,
+      "diagnosticsNotForwardedToCalculate": true,
+      "remainingGraphParents": [
+        "00462ac0",
+        "00462f10",
+        "004633c0"
+      ]
+    },
+    "hostBoundaries": "기존 SID/type/좌표/발자국/순환/할당 슬롯 guard 유지·선택 진단 장치 누락은 해당 첫 쓰기 전 예외"
+  },
+  "checkingRemaining": {
+    "total": 27,
+    "parents": 19,
+    "partial": 5,
+    "multiplayerClassified": 3,
+    "remainingGraphParents": [
+      "00462ac0",
+      "00462f10",
+      "004633c0"
+    ]
+  },
+  "protection": {
+    "previousFiles": 2739,
+    "previousFixtures": 919,
+    "changed": 0,
+    "newFixtures": 1,
+    "nextFiles": 2740,
+    "nextFixtures": 920,
+    "nextBaseline": "extracted/cpp-resume-815/protected-after.json"
+  },
+  "notRun": [
+    "실제 게임/GUI",
+    "포획/희생/공격/승리",
+    "공중3종 전용",
+    "MP/통신",
+    "물리/PCM",
+    "전체 CTest/71대상/34경로/ZIP"
+  ],
+  "next": "Graph sentinel 검사00462ac0·flood00462f10·병합004633c0의 현재 진단/실제 소비자, 이후 남은 UI/Edit/미션/파일/호환과3~8차"
+}

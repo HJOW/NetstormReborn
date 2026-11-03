@@ -3261,3 +3261,10 @@ target_sources(netstorm_file_tests PRIVATE CampaignMotionTests.cpp FactoryPostPo
 
 # 일반 내용물 부착의 진단 복귀와 Client 기한 수명만 선택 검사하며 실제 포획 재현은 제외한다.
 target_sources(netstorm_file_tests PRIVATE ContentLifetimeTests.cpp)
+
+# Graph 참조/SID0의 원문 진단과 실제 일반 영역 통지를 게임 없이 집중 대조한다.
+target_sources(netstorm_tests PRIVATE GraphReferenceCheckingTests.cpp)
+target_sources(netstorm_file_tests PRIVATE GraphReferenceCheckingTests.cpp PlayerPlacementAnchorTests.cpp RawGraphTests.cpp)
+set_source_files_properties(GraphReferenceCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GRAPH_REFERENCE_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-reference-checking-x86.tsv\"")
+target_compile_definitions(netstorm_file_tests PRIVATE ${_netstorm_menu_session_definitions}) # 기존 raw Graph/앵커 fixture 경로를 같은 값으로 재사용한다.

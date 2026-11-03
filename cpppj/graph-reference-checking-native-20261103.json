@@ -1,0 +1,21 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "editions": {
+    "originals": {
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "rows": 380,
+      "functionsSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+    },
+    "originalCD": {
+      "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "rows": 380,
+      "functionsSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+    }
+  },
+  "rows": 760,
+  "fixtureSha256": "28c650c2c434cb16cb0f6e6540309216d78473b24dcea5dc0a6c5babb0c827d4",
+  "toolSha256": "5e53b329f76dff48f194f062ca764930d797577f7f428a552a40107abdb2d85c",
+  "parentToolSha256": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+  "boundary": "실제 PE/허용 함수 명령만 실행·진단 UI만 관찰/변경/복귀·게임/OS/소켓 미실행"
+}
