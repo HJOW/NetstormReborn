@@ -2,6 +2,7 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    FontCacheFile.cpp FontCacheFile.h # 글꼴 캐시의 순차 읽기/쓰기와 부분 설치·File 정리 부모다.
     XlatFileRead.cpp XlatFileRead.h # 같은7칸 설치/정규화 File 수명과 닫은 뒤 기존 파서를 연결한다.
     PaletteFileRead.cpp PaletteFileRead.h # 현재 FILE과 직접 팔레트 쓰기를 같은 Screen 적용 수명에 연결한다.
     ObjectOwnerCommands.cpp ObjectOwnerCommands.h # 일반 SetOwner와 편집 우클릭의 실제 Player Core 선택이다.

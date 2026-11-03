@@ -1,0 +1,114 @@
+{
+  "unit": 788,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "순수 부모 단위 완료·실제 FontStore 연결과 전체 목표 진행 중",
+  "runtimeProduct": 788,
+  "displayVersion": "11.01",
+  "exeSha256": "44d70dc51089254e6510dda3f61026002f96b356407cd8f120a5bf8a64ad7b2a",
+  "summary": "글꼴캐시 순차읽기/쓰기·부분owner/글리프설치·명시Close뒤소멸 부모",
+  "actualFontStoreChanged": false,
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_script_bindings_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 11,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "FontCacheFile_Native80ReaderPartialInstallationAndClosePrefix",
+      "FontCacheFile_Native20WriterOrderedBytesAndClosePrefix",
+      "FontFaceEncoding_WindowsNls24RowsKeepCodePagesAndRejectLoss",
+      "FontFaceEncoding_ActualConfigSaveReloadPreservesAcpNamesAndChanged",
+      "FontFaceEncoding_ActualVfsDiskAdapterPreservesRawArchiveOrderAndRing",
+      "FontFaceEncoding_ActualFontStoreReadsUnicodeDiskAndKeepsRawCatalog",
+      "FontFaceEncoding_PartialDbcsKeepsOriginalParentEffectsAndRejectsConfig",
+      "FontFaceEncoding_Raw31ByteLongAsciiRootKeepsRawRingAndTaffFallback",
+      "PresentationCommand_FontCatalogNative315RowsAndLookupBoundary",
+      "PresentationCommand_FontParentNativeRowsAndLateReaders",
+      "PresentationFontRebuild_ActualFontStoreDrawsNewGlyphAtReusedAddress"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "unit": 788,
+      "rows": 100,
+      "observations": 200,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제4a3240/4a3090·BaseFile읽기/쓰기·Close/소멸/4fb3f0. Probe/Open/CRT/strncmp/할당/진단은명시. 실제FontStore/OS/GDI/전체SEH는별도.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_font_cache_file.py": "8112b80193c7c8bee5fcd6796349686fdc86ee70656349208b99a1de6d86bae8",
+        "extracted\\cpp-resume-788\\font-cache-first.tsv": "b08f9c1cbe5a4c62c7c88c89fc9f3d03611c2b1baa1cfec70e1ea86fedf315f5"
+      }
+    },
+    "repeat": {
+      "unit": 788,
+      "rows": 100,
+      "observations": 200,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제4a3240/4a3090·BaseFile읽기/쓰기·Close/소멸/4fb3f0. Probe/Open/CRT/strncmp/할당/진단은명시. 실제FontStore/OS/GDI/전체SEH는별도.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_font_cache_file.py": "8112b80193c7c8bee5fcd6796349686fdc86ee70656349208b99a1de6d86bae8",
+        "cpppj\\tests\\fixtures\\font-cache-file-x86.tsv": "b08f9c1cbe5a4c62c7c88c89fc9f3d03611c2b1baa1cfec70e1ea86fedf315f5"
+      }
+    },
+    "successfulReportedRuns": 2,
+    "reportedObservations": 400,
+    "initialFixtureGeneratedBeforeReportNameError": true,
+    "initialReportFailures": 1,
+    "fixtureByteVerified": true,
+    "outcomes": {
+      "ok": 38,
+      "open": 6,
+      "close": 6,
+      "assertion": 4,
+      "read": 24,
+      "allocation": 12,
+      "write": 10
+    }
+  },
+  "protection": {
+    "beforeCount": 2722,
+    "currentCount": 2723,
+    "allUnchanged": true,
+    "fixtureCount": 903,
+    "newFixtures": [
+      "cpppj/tests/fixtures/font-cache-file-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "실제FontStore는기존snapshot/메모리생성 유지·VFS/저장연결은789잔여",
+    "CRT/Probe/Open/strncmp/할당/진단은명시장치·OS/GDI/전체SEH아님",
+    "명시Close실패뒤cleanup재실패접두만관측·이중예외Windows종료미합산",
+    "명시0힙/암호작업물리는원문미정값자체와구별",
+    "CD10.72새관측0"
+  ],
+  "next": "789 실제FontStore 현재FILE/ACP경로·생성캐시저장·원본보호 연결"
+}
