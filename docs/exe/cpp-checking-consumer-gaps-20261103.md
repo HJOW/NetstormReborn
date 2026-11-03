@@ -777,6 +777,8 @@ void __cdecl FUN_00462ac0(void)
 
 ## FUN_00467610 @ 00467610
 
+**803 완료:** 현재 checking·진단 복귀/지역 인덱스를 실제 PostPop에 연결했다. 원본384입력/768회·재관측768회 일치·집중4개(새2개) 통과다. 기존518행/20각도/뒤 본문은 유지하며 음수 진단 뒤 표 밖 메모리는 기존 호스트 범위 실패다. [803 기록](cpp-gun-frame-checking-20261103.md)의 접두/전체SEH 경계를 따르며 아래는779 당시 기록이다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawGunAngle.h, cpppj\src\client\RawCampaignSession.cpp

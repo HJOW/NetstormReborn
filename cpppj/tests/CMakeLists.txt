@@ -3223,3 +3223,7 @@ set_property(SOURCE CursorLifecycleTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE FenceTypeParentTests.cpp)
 target_sources(netstorm_file_tests PRIVATE FenceTypeParentTests.cpp FenceLifetimeTests.cpp FenceCreateTests.cpp)
 set_source_files_properties(FenceTypeParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FENCE_TYPE_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-type-parent-x86.tsv\"")
+
+# Gunanim 현재 checking 접두와 기존518개 유효 방향을 같은 집중 대상에서 대조한다(803).
+target_sources(netstorm_file_tests PRIVATE GunAngleTests.cpp)
+set_property(SOURCE GunAngleTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_GUN_FRAME_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gun-frame-checking-x86.tsv\"")

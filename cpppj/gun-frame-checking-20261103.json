@@ -1,0 +1,144 @@
+{
+  "unit": 803,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 803,
+  "displayVersion": "11.01",
+  "exeSha256": "abb10fdf461a8018c407c9e8347af5fbe74f55fe61c3f0242be4b62c53eedc4f",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "successfulBuilds": 1,
+    "failedBuilds": 0,
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "build-v1.log",
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 4,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "GunAngle_Native518",
+      "GunAngle_InvalidNegativeIndex",
+      "GunAngle_NativeCheckingPrefix384",
+      "GunAngle_CurrentCheckingAndNegativeReadBoundary"
+    ],
+    "previousGoldenCases": 518,
+    "returnedPrefixIndicesCompared": 330,
+    "assertionStopOutcomesCompared": 54,
+    "stoppedCppLocalNotExposed": true,
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "entry": "00467610",
+      "checkpoint": "00467658 fld table",
+      "rows": 384,
+      "observations": 768,
+      "bodyEntries": 330,
+      "assertionStops": 54,
+      "diagnostics": 108,
+      "gameExecutions": 0,
+      "boundaries": [
+        "첫 표 역참조 전 접두·진단은 명시 복귀/중단 장치",
+        "음수 인덱스의 표 밖 메모리를 읽지 않음·유효 전체 방향은 기존518행",
+        "실제 공격/게임/진단UI/전체SEH/32비트ABI 관측 아님"
+      ]
+    },
+    "repeat": {
+      "host": "HJOW-Athlon",
+      "entry": "00467610",
+      "checkpoint": "00467658 fld table",
+      "rows": 384,
+      "observations": 768,
+      "bodyEntries": 330,
+      "assertionStops": 54,
+      "diagnostics": 108,
+      "gameExecutions": 0,
+      "boundaries": [
+        "첫 표 역참조 전 접두·진단은 명시 복귀/중단 장치",
+        "음수 인덱스의 표 밖 메모리를 읽지 않음·유효 전체 방향은 기존518행",
+        "실제 공격/게임/진단UI/전체SEH/32비트ABI 관측 아님"
+      ]
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 1536,
+    "failedRuns": 0
+  },
+  "integration": {
+    "existingAngleTableAndTailUnchanged": true,
+    "peAngles": [
+      0.0,
+      21.0,
+      35.0,
+      52.0,
+      71.0,
+      86.0,
+      97.0,
+      115.0,
+      121.0,
+      148.0,
+      180.0,
+      205.0,
+      237.0,
+      256.0,
+      272.0,
+      282.0,
+      291.0,
+      314.0,
+      328.0,
+      345.0
+    ],
+    "originalTableRead": "467658 fld dword ptr [esi*4+540940]",
+    "checkingOwner": "gunState.checking→ClientGameplayGlobals.AiDebug.Checking",
+    "actualCaller": "assetEffects.postPop.gunFrame",
+    "negativeBoundary": "진단 복귀 뒤 기존 out_of_range 유지·표 밖 원문 메모리 미해독",
+    "oldFixtureSha256": "86c0c4b0346bcf6fd230b940548b9dfbee369ca26c92ddae5a0def7c5fb43be2"
+  },
+  "checking": {
+    "before": 39,
+    "after": 38,
+    "completed": [
+      "00467610"
+    ],
+    "remainingBreakdown": {
+      "parent": 29,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2732,
+    "currentCount": 2733,
+    "fixtureCount": 913,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/gun-frame-checking-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "원문은 첫 표 읽기 전 접두·유효 전체 방향은 기존518행",
+    "음수 진단 복귀 뒤 기존 호스트 out_of_range 유지·표 밖 메모리 일치 아님",
+    "실제 Client owner와 PostPop 연결은 소스/빌드·진단UI/전체SEH/32비트ABI 별도",
+    "진단 중단54개는 C++ 함수 내부 지역 인덱스 비교를 주장하지 않음·CD 새 대조0"
+  ],
+  "next": "checking 잔여38·비멀티 UI/Edit/수명·호환성"
+}

@@ -2416,3 +2416,5 @@ cpppj/tests/fixtures/construction-form-parent-x86.tsv -text
 cpppj/tests/fixtures/cursor-cancel-checking-x86.tsv -text
 
 cpppj/tests/fixtures/fence-type-parent-x86.tsv -text
+
+cpppj/tests/fixtures/gun-frame-checking-x86.tsv -text
