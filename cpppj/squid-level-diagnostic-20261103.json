@@ -1,0 +1,115 @@
+{
+  "unit": 813,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "실제 기본/Factory 레벨 진단 복귀 연결 완료·전체 목표 진행 중",
+  "runtimeProduct": 813,
+  "displayVersion": "11.01",
+  "exeSha256": "f31db0a9136c9a00002104e92411c570ed29ab671e7c3cad55d84bf9d9d87b73",
+  "build": {
+    "successfulInvocations": 3,
+    "failedInvocations": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-v2.log",
+      "build-v3.log"
+    ],
+    "note": "최초 빌드 중 줄바꿈 정규화로 라이브러리가 다시 컴파일되어 게임 재링크, 검사 입력 교정 뒤 집중 대상 재빌드"
+  },
+  "tests": {
+    "total": 4,
+    "newTests": 1,
+    "failedChecks": 0,
+    "filters": {
+      "CampaignMotion_BaseLevelKeepsLowBitsAfterAssertion": 1,
+      "CampaignMotion_ReplaysActualLevelNativeBothEditions": 1,
+      "factoryPostPop_level_diagnostic_return_and_current_service": 1,
+      "factoryPostPop_actual_frame_effect_and_pool_contract": 1
+    },
+    "initialFailure": {
+      "count": 1,
+      "log": "test-factoryPostPop_level_diagnostic_return_and_current_service-v1.log",
+      "cause": "검사 콜백의 0x0b가 free 비트까지 설정하여 기존 AllocatedBytes 보호 경계에서 중단",
+      "correction": "제품/기대 fixture 불변·해제 비트가 없는 0x0a와 해당 BYTE 산술값으로 검사 입력 교정"
+    },
+    "fullSuiteRun": false
+  },
+  "native": {
+    "newObservations": 0,
+    "fixtureRows": 96,
+    "cppReplays": 96,
+    "fixture": "cpppj/tests/fixtures/squid-level-x86.tsv",
+    "fixtureSha256": "abc458e72971188a606e4069d893603a7afcebb29ddba3efaaf2b521eb037436",
+    "provenance": "cpppj/squid-level.json",
+    "editions": {
+      "originals": {
+        "rows": 48,
+        "sourceBinarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+      },
+      "originalCD": {
+        "rows": 48,
+        "sourceBinarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+      }
+    }
+  },
+  "integration": {
+    "binder": "MakeSquidLevelAssertion",
+    "currentSessionCallers": 2,
+    "diagnostics": [
+      {
+        "edition": "10.78",
+        "function": "004ad110",
+        "expression": "0 <= n && n < 8",
+        "file": "\\Ns\\O\\Squid.cpp",
+        "line": 1401
+      },
+      {
+        "edition": "10.72",
+        "function": "004ace20",
+        "expression": "0 <= n && n < 8",
+        "file": "\\ns\\o\\Squid.cpp",
+        "line": 1378
+      }
+    ],
+    "behavior": "현재 services.ai.assertion을 선택 시 조회·진단 복귀 뒤 현재 BYTE 하위5비트 보존/상위3비트 저장·Factory 가상88 표시 갱신",
+    "originalHasLevelOrConditionPreserved": true,
+    "factoryModuleUnchanged": true,
+    "sourceAudit": {
+      "baseCommit": "51ddba154fd22a6e27601180407225b78f206b14",
+      "levelConstructorAndBodiesUnchanged": true,
+      "factoryModuleUnchanged": true,
+      "oldMissingLevelCallbacksRemaining": 0,
+      "currentSessionDiagnosticAdapters": 2
+    }
+  },
+  "checkingRemaining": {
+    "total": 30,
+    "parents": 21,
+    "partial": 6,
+    "multiplayerClassified": 3
+  },
+  "protection": {
+    "files": 2739,
+    "fixtures": 919,
+    "changed": 0,
+    "newFixtures": 0,
+    "nextBaseline": "extracted/cpp-resume-813/protected-after.json"
+  },
+  "notRun": [
+    "실제 게임/GUI",
+    "포획/희생/공격/승리",
+    "공중3종 전용",
+    "Outpost/MP/통신 검사",
+    "물리 입력/PCM",
+    "전체 CTest/71대상/34경로/ZIP"
+  ],
+  "next": "우선순위1의 남은 객체 메뉴/커서 상태별 효과와 수명·ContentForm 부모 부분 공백, 이후 Edit/미션/파일/호환/후속 단계"
+}

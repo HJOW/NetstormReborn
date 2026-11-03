@@ -3255,3 +3255,6 @@ set_property(SOURCE GunProcessTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NET
 
 # Canon 진단 owner가 건설·섬·Fort의 실제 소비자까지 전달되는 집중 검사다.
 target_sources(netstorm_file_tests PRIVATE ConstructionConfirmTests.cpp ConstructionPlaceTests.cpp ConstructionClearTests.cpp ConstructionLocalTests.cpp ConstructionRequestTests.cpp IslandBuilderTests.cpp FortWorldLoadTests.cpp PlayerGeyserBoundsTests.cpp CampaignWorldLoadTests.cpp)
+
+# 같은 레벨 진단 어댑터와 Factory 표시 갱신을 기존 원본 슬롯 기대값으로 창 없이 대조한다.
+target_sources(netstorm_file_tests PRIVATE CampaignMotionTests.cpp FactoryPostPopTests.cpp)

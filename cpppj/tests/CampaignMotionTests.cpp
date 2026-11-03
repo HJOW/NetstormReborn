@@ -145,7 +145,10 @@ TEST_CASE(CampaignMotion_ReplaysActualLevelNativeBothEditions) {
         // 실제Native의 입력 SID50까지 로컬 할당하되 슬롯/기대값은 입력BYTE로만 준비한다.
         for (std::uint32_t sid=5;sid<=50;++sid) CHECK(pool.Allocate(2)==Sid{static_cast<std::uint16_t>(sid)});
         const Sid sid{50};auto raw=pool.AllocatedBytes(sid);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=82;raw[11]=static_cast<std::uint8_t>(Number(row[1]));std::uint32_t assertions=0;
-        RawSquidLevel level(pool,types,[&](SquidLevelAssertion) { ++assertions;if (Number(row[4])) pool.AllocatedBytes(sid)[11]=0x14; });
+        RawSquidLevel level(pool,types,MakeSquidLevelAssertion(edition,[&](std::string_view expression,std::string_view file,std::uint32_t line) {
+            CHECK(expression=="0 <= n && n < 8");CHECK(file==(edition==OriginalEdition::Patch1078 ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp"));
+            CHECK(line==(edition==OriginalEdition::Patch1078 ? 0x579U : 0x562U));++assertions;if (Number(row[4])) pool.AllocatedBytes(sid)[11]=0x14;
+        })); // 실제 세션과 같은 진단 어댑터로 기존 Native 전체 슬롯을 재생한다.
         CHECK(level.Has(sid)==(Number(row[5])!=0));level.Set(sid,Number(row[3]));
         CHECK(level.Get(sid)==Number(row[6]) && assertions==Number(row[7]) && Hex(pool.Slot(sid))==row[8]);++cases;
     }

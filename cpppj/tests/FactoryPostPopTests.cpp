@@ -171,3 +171,30 @@ TEST_CASE(factoryPostPop_actual_frame_effect_and_pool_contract) {
         CHECK(rejected);
     }
 }
+// 실제 Factory 가상84는 진단 복귀 뒤 현재 상태를 저장하고 표시 가상88을 한 번 호출한다.
+TEST_CASE(factoryPostPop_level_diagnostic_return_and_current_service) {
+    // 양 판본에서 현재 진단 장치 교체와 진단 중 슬롯 변경의 순서를 확인한다.
+    for (const bool patch:{true,false}) {
+        FactoryScene scene(patch);const std::array<std::uint32_t,11> input{0,86,0,0,0,1,7,7,0,0,0};scene.Prepare(input);
+        SquidPostPop base(scene.pool,scene.types,scene.baseState);
+        RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));
+        auto hooks=scene.Hooks();hooks.updateState=[&](Sid sid) { CHECK(sid==kSource);scene.events.push_back("U:"+std::to_string(scene.pool.Slot(sid)[11])); };
+        RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));
+        std::function<void(std::string_view)> current; // Session처럼 현재 서비스 멤버를 매 진단에서 다시 읽는다.
+        RawSquidLevel level(scene.pool,scene.types,MakeSquidLevelAssertion(scene.pool.Edition(),[&](std::string_view expression,std::string_view,std::uint32_t) {
+            if (!current) throw std::logic_error("검사의 현재 진단 미설치");current(expression);
+        }));
+        factory.SetState(level,kSource,3);CHECK(scene.events==std::vector<std::string>{"U:96"});
+        current=[&](std::string_view expression) { CHECK(expression=="0 <= n && n < 8");scene.events.push_back("A:1");scene.pool.AllocatedBytes(kSource)[11]=0x14; };
+        factory.SetState(level,kSource,8);CHECK(scene.events==std::vector<std::string>({"U:96","A:1","U:20"}));
+        current=[&](std::string_view) { scene.events.push_back("A:2");scene.pool.AllocatedBytes(kSource)[11]=0x0a; };
+        factory.SetState(level,kSource,0xffffffffU);CHECK(level.Get(kSource)==7);CHECK(scene.events.back()=="U:234");CHECK(scene.events[3]=="A:2");
+        current={};const auto before=Hex(scene.pool.Slot(kSource));const auto count=scene.events.size();bool rejected=false;
+        try { factory.SetState(level,kSource,8); } catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && Hex(scene.pool.Slot(kSource))==before && scene.events.size()==count);
+        // 정상 0..7은 선택하지 않은 원문 진단 장치의 누락을 요구하지 않는다.
+        RawSquidLevel missing(scene.pool,scene.types,MakeSquidLevelAssertion(scene.pool.Edition(),{}));
+        factory.SetState(missing,kSource,2);CHECK(level.Get(kSource)==2 && scene.events.back()=="U:74");
+        rejected=false;try { factory.SetState(missing,kSource,8); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected);
+    }
+}

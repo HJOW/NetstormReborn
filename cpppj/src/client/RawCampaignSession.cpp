@@ -895,7 +895,8 @@ struct RawCampaignSession::Impl {
         }
         if (!services.coreDataGlobals) coreDataGlobals->Players()=players; // 독립 Session만 같은 현재 Player뷰를 소유자에 직접 제공한다.
         if (!services.spGlobals) { sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize(); } // 독립 Session의 기존 명시 초기화만 보존한다. 실제 Client의 현재 SP/난수/추적 offset은 다시 쓰지 않는다.
-        level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
+        level=std::make_unique<RawSquidLevel>(core.pool,core.types,MakeSquidLevelAssertion(core.pool.Edition(),
+            [this](std::string_view expression,std::string_view,std::uint32_t) { if (!services.ai.assertion) throw std::logic_error("Squid level 실제 진단 장치 미연결");services.ai.assertion(expression); })); // 선택한 순간의 Client 서비스를 호출하고 복귀 뒤 현재 상태 저장을 계속한다.
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
         if (!services.adoptPreparedWorld) playerState.playerKnown=1; // 실제 Native prefix를 대여한 경우 현재 known을 다시 쓰지 않는다.
 
@@ -1301,7 +1302,8 @@ struct RawCampaignSession::Impl {
         assetEffects.gun=combat->GunHooks(std::move(assetEffects.gun));
         assetEffects.gun.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("GunProcess 통지 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 같은 Client 서비스가 복귀하면 통지 부모의 현재 필드 재판정을 계속한다.
         FillMissing(assetEffects.factory.warnDuplicate); //4538f0의 경고 뒤 삭제가 계속되도록 실제 Client 로그를 보존하고 선택된 누락만 진단한다.
-        assetEffects.levelAssertion=SessionMissing<void,SquidLevelAssertion>();
+        assetEffects.levelAssertion=MakeSquidLevelAssertion(core.pool.Edition(),
+            [this](std::string_view expression,std::string_view,std::uint32_t) { if (!services.ai.assertion) throw std::logic_error("Factory level 실제 진단 장치 미연결");services.ai.assertion(expression); }); // 같은 현재 Client 서비스의 복귀 뒤 Factory 표시 갱신도 계속한다.
         assetEffects.factory.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
         assetEffects.postPop.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
         assetEffects.postPop.gunFrame=[this](std::int32_t frame) { return static_cast<std::int32_t>(PatchGunGraphFromFrame(frame,gunState.checking,[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("Gunanim 인덱스 원문 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); })); }; // 실제00467610의 현재 checking/진단 복귀 뒤 같은 지역 인덱스로 표를 읽는다.

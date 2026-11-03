@@ -5,6 +5,15 @@
 #include <utility>
 
 namespace netstorm::o {
+// 양 판본의 범위 진단을 전달한다. 복귀하면 setter가 현재 상태 BYTE를 다시 읽는다.
+std::function<void(SquidLevelAssertion)> MakeSquidLevelAssertion(OriginalEdition edition,
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) {
+    return [edition,assertion=std::move(assertion)](SquidLevelAssertion kind) {
+        if (kind!=SquidLevelAssertion::OutOfRange || !assertion) throw std::logic_error("Squid level 실제 범위 진단 장치 미연결");
+        assertion("0 <= n && n < 8",edition==OriginalEdition::Patch1078 ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp",
+            edition==OriginalEdition::Patch1078 ? 0x579U : 0x562U);
+    };
+}
 // 판본의 전체 TYPE 표와 원본 진단 경계를 처음 쓰기 전에 확인한다.
 RawSquidLevel::RawSquidLevel(SidPool& pool,std::span<const RiftTypeRecord> types,std::function<void(SquidLevelAssertion)> assertion)
     :pool_(pool),types_(types),assertion_(std::move(assertion)) {

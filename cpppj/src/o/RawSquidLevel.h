@@ -3,10 +3,14 @@
 #include "o/SidPool.h"
 #include "o/RiftType.h"
 #include <functional>
+#include <string_view>
 
 namespace netstorm::o {
 // 원본 setter는 범위 진단 후에도 BYTE 저장을 계속한다.
 enum class SquidLevelAssertion { OutOfRange }; // 실제 signed n<0 또는 n>=8의 진단이다.
+// 같은 Client 진단 장치를 원문 식/파일/행으로 호출하며 선택되지 않은 누락은 요구하지 않는다.
+std::function<void(SquidLevelAssertion)> MakeSquidLevelAssertion(OriginalEdition edition,
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion);
 // PATCH004ad0a0/004ad0f0/004ad110 및 CD004acdc0/004ace00/004ace20의 base 몸체다.
 class RawSquidLevel {
 public:
