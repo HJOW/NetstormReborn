@@ -128,6 +128,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         postPop->SetIslandPrefix([this](o::Sid sid,std::uint32_t flags) { connect->IslandPostPopPrefix(sid,flags); });
         postPop->SetSurfacePrefix([this](o::Sid sid,std::uint32_t flags) { surface->Prefix(sid,flags); });
         unpop=std::make_unique<o::SquidUnpop>(pool,hash,spots,display.get());pop=std::make_unique<o::SquidPop>(pool,hash,spots,display.get(),postPop.get());
+        unpop->BindDiagnostics({storage->Checking(),types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // 첫 Session 전에도 같은 현재 Client 진단/TYPE를 쓴다.
         buildingState={terrainType,links.bridgeType,false};
         building=std::make_unique<o::RawBuildingSpace>(pool,hash,types,buildingState);
         pop->SetBuildingSpace(building.get());unpop->SetBuildingSpace(building.get());

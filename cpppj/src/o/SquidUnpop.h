@@ -2,6 +2,8 @@
 #pragma once
 #include "o/SidPool.h"
 #include "o/SquidHash.h"
+#include "o/RawSquidUnpopParent.h"
+#include <utility>
 
 namespace netstorm::o {
 class RawGraph;
@@ -13,6 +15,8 @@ class SquidUnpop {
 public:
     // 기존 SID 풀·네 단계 해시·spot을 함께 갱신한다. nullptr 표시 대상은 기존 억제 경로다.
     SquidUnpop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,SquidDisplay* display=nullptr);
+    void BindDiagnostics(SquidUnpopDiagnostics diagnostics) { diagnostics_=std::move(diagnostics); } // 같은 Client 현재 진단/TYPE 표를 실제 공간 부모에 연결한다.
+    void BindContainedUnpop(std::function<void(Sid)> contained) { containedUnpop_=std::move(contained); } // 선택된 실제 종속 해제/내용물 UI 종단만 연결한다.
     // 004afe50 ↔ CD 004ad0b0. 일반 자산/매몰 객체의 spot·머리/이전 next를 직접 해제한다.
     // 일반 섬/다리 통지는 같은 풀의 미니맵 큐에 선택 연결한다. 미연결 건물 옆면/화면 override는 거부한다.
     void Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags=0);
@@ -41,6 +45,8 @@ private:
     std::span<std::uint8_t> spots_;
     SquidDisplay* display_{}; // 제거 전 위치의 변경 표를 공통 표시 경로로 전달한다.
     const RawBuildingSpace* building_{}; // 건물 옆면의 실제 BYTE 해제/진단 몸체다.
+    SquidUnpopDiagnostics diagnostics_; // 패치의 현재 checking/원문 진단과 전체 TYPE 표다.
+    std::function<void(Sid)> containedUnpop_; // 아직 연결되지 않은 종단은 선택 시 명시 실패한다.
     const RawMetadisplayDirty* metadisplay_{}; // spot/체인 제거 전에 같은 raw 좌표를 등록하는 미니맵 큐다.
 };
 }

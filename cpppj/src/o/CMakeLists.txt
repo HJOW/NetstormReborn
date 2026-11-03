@@ -576,3 +576,6 @@ target_sources(netstorm PRIVATE RawPathHaltParent.h RawPathHaltParent.cpp)
 
 # 공통 도착과 항상참 Baseprocess SID 진단의 실제 부모를 공유한다.
 target_sources(netstorm PRIVATE RawPathArrivalParent.h RawPathArrivalParent.cpp)
+
+# 공통 Unpop의 현재 진단과 부분 공간 변경을 실제 부모에서 공유한다.
+target_sources(netstorm PRIVATE RawSquidUnpopParent.h RawSquidUnpopParent.cpp)

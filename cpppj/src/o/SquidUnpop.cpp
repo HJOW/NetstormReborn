@@ -1,4 +1,4 @@
-// 원본 next/상태/좌표를 직접 사용하며 잘못된 체인·미복원 효과는 변경 전에 거부한다.
+// 패치의 현재 진단/부분 공간 변경을 보존하고 CD의 기존 해제 경로를 유지한다.
 #include "o/SquidUnpop.h"
 #include "o/RawMetadisplayDirty.h"
 #include "o/Squid.h"
@@ -75,6 +75,15 @@ void SquidUnpop::SetBuildingSpace(const RawBuildingSpace* space) {
 }
 // 일반 공간 경로의 상태·spot·체인 쓰기 뒤 선택 연결한 공통 표시를 원본 순서로 적용한다.
 void SquidUnpop::Unpop(Sid sid,const RiftTypeRecord& type,std::uint32_t flags) {
+    if (pool_.Edition()==OriginalEdition::Patch1078) {
+        SquidUnpopParentHooks effects;effects.assertion=diagnostics_.assertion;
+        effects.type=[this,&type](std::uint8_t number) -> const RiftTypeRecord& { if (diagnostics_.types.empty()) return type;if (number>=diagnostics_.types.size()) throw std::out_of_range("Unpop 현재 TYPE 범위");return diagnostics_.types[number]; };
+        effects.miniMap=[this](Sid object,std::uint32_t) { if (metadisplay_) metadisplay_->Enqueue(object); }; // 원문 활성 큐가 없으면 helper도 자연 반환한다.
+        effects.side=[this](int x,int y) { if (!building_) throw std::logic_error("Unpop 실제 건물 옆면 미연결");building_->UnpopSide(x,y); };
+        effects.contained=containedUnpop_;
+        effects.update=[this](Sid object,std::uint32_t updateFlags) { const auto raw=Bytes(object);if (!SupportsDisplay(pool_.Edition(),Read(raw,0,4),updateFlags)) throw std::logic_error("Unpop의 현재 파생 표시 갱신 미복원");if (display_) display_->Update(raw,updateFlags); };
+        RunSquidUnpopParent(pool_,hash_,spots_,sid,flags,diagnostics_.checking,effects);return;
+    }
     auto bytes=Bytes(sid);
     if (!sid.value || bytes[kType]<kFirstAssetTypeNumber || (bytes[kState]&kContained))
         throw std::logic_error("Unpop 자산/SID 상태 오류");

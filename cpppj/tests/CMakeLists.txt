@@ -3361,3 +3361,12 @@ target_sources(netstorm_tests PRIVATE PathArrivalCheckingTests.cpp)
 target_sources(netstorm_file_tests PRIVATE PathArrivalCheckingTests.cpp)
 set_source_files_properties(PathArrivalCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PATH_ARRIVAL_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/path-arrival-parent-hardware-x86.tsv\"")
+
+# 원문 Unpop 부모/실제 Client World와 기존 동결 공간 fixture를 집중 검사한다.
+target_sources(netstorm_tests PRIVATE SquidUnpopCheckingTests.cpp)
+target_sources(netstorm_file_tests PRIVATE SquidUnpopCheckingTests.cpp UnpopTests.cpp)
+set_source_files_properties(SquidUnpopCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SQUID_UNPOP_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-unpop-parent-hardware-x86.tsv\"")
+set_property(SOURCE UnpopTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_UNPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/unpop-x86.tsv\""
+    "NETSTORM_UNPOP_VTABLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/unpop-vtables.tsv\"")

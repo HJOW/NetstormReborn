@@ -1,0 +1,206 @@
+{
+  "unit": 834,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "8a555c99 / 20261104-15 CP",
+  "exeSha256": "685226b931f4eb2af050390a36c27c1504ae6c663aed9c4eab4351e73ada9530",
+  "exeBytes": 10416640,
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "Windows x86 CPU /004afe50/실제004afd30·TYPE·CRT·GetGridSid·HashBucket",
+    "rows": 1300,
+    "diagnosticRows": 670,
+    "diagnosticCallsByLine": {
+      "1629": 178,
+      "1577": 1020,
+      "1559": 1350,
+      "1496": 108,
+      "1504": 108,
+      "1497": 48
+    },
+    "containedRows": 60,
+    "fixtureSha256": "a4df8f48be831c66ae530cd5fdc21d0e86515f119f9393e07736356694f32ed7",
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "probeSha256": "1140f7f210639ccd548a10cfd9a98fe14ecd55b95a3fa8e57b008485f8970d78",
+    "probeSourceSha256": "150d279021390a0c1e02ea387892c81a4ddb48e6c0e50a0db63b5babd289e5d4",
+    "boundary": "미니맵/옆면 통지/가상 표시·진단/contained 분리와 UI 종단만 명시 외부 경계;원문 spot/side byte/해시 변경은 실제 실행. contained 요청 관측을 실제 하위 연결/실행으로 확대하지 않음. 게임/GUI/통신 없음."
+  },
+  "nativeReobservedRows": 1300,
+  "tests": [
+    {
+      "filter": "SquidUnpopChecking_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-834/test-SquidUnpopChecking-first.log",
+      "sha256": "7f6c2e3115a6d5223b91f1cad926834e56443c2c7ba9c61a066e92ff29aa47a7"
+    },
+    {
+      "filter": "SquidUnpop_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-834/test-SquidUnpop-regression.log",
+      "sha256": "53f179a426ffd9ce27b96656a1b8430fbfcb26b6e4677b18084db7909bde905e"
+    },
+    {
+      "filter": "rawPathProcess_native_frame",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-834/test-PathFrame-regression.log",
+      "sha256": "b44405f95f237a8cfe7b39a8ee2ade3d287bfd9a8bf44fdc7b362af9c392ffad"
+    },
+    {
+      "filter": "rawPathProcess_native_arrival",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-834/test-PathArrival-regression.log",
+      "sha256": "8e57d70728629e54792147ee3eab1bca6ac4c71fd309dc59d0aefe3d2225eb8f"
+    },
+    {
+      "filter": "DamageableBurningChecking_ActualClientSessionRecoveryAndLifetime",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-834/test-ActualSession-regression.log",
+      "sha256": "99dae71af3f6f45fc30a625be02dd1cd881748c019d305bd6a1e96d90c44e9b0"
+    }
+  ],
+  "focusedCases": 10,
+  "newCases": 3,
+  "existingFrozenCases": {
+    "unpopSteps": 3618,
+    "unpopBegins": 18,
+    "vtableRows": 151,
+    "pathFrames": 120,
+    "pathArrival": 24
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-834/build-first.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "f7ccd809c6eb8d8e3f6e2eac5485fca05711f4ea3994df05008e281f33ba6cc8"
+    },
+    {
+      "log": "extracted/cpp-resume-834/build-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "55e0ab151d7a7bb74a5511777599607ad47aab1b06ef55f37ee5735df334c672"
+    }
+  ],
+  "probeBuilds": [
+    {
+      "log": "extracted/cpp-resume-834/probe-build-first.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "9e371109a7f2e1e9653185eb207ee9560c2e03d39c534be0cbb53733180af742"
+    },
+    {
+      "log": "extracted/cpp-resume-834/probe-build-grid-fix.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "9e371109a7f2e1e9653185eb207ee9560c2e03d39c534be0cbb53733180af742"
+    },
+    {
+      "log": "extracted/cpp-resume-834/probe-build-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "9e371109a7f2e1e9653185eb207ee9560c2e03d39c534be0cbb53733180af742"
+    }
+  ],
+  "nativeFailures": [
+    {
+      "exitCode": 3221225477,
+      "eip": "0040eaf0",
+      "reason": "MappedPe 복사 하한410000 아래 표면 조회 누락. 원문77BYTE를61e000 전용 payload에 복사하고 두_ftol/부모 상대CALL만 재연결.",
+      "log": "extracted/cpp-resume-834/native-first.log",
+      "sha256": "8816384d4a2448a708938d4c24f8e373cd6ea710e0fec190b39eb28b2eda2301"
+    },
+    {
+      "exitCode": 1,
+      "reason": "두 번째 상대CALL 오프셋1a가 mov esi 위치라는 검증 가드. 정확1c로 교정. 원본/제품/기대 결과 변경 없음.",
+      "log": "extracted/cpp-resume-834/native-grid-fix.log",
+      "sha256": "4ff04bed61bfa2ec2948f03e00112ceebd53a47e0607685a3b1e0325f5543e31"
+    }
+  ],
+  "staticReviewBeforeFirstCppTest": {
+    "testInput": "가상 표 내부 항목501e04 대신 지원표의 실제 기본VT501dd0 사용",
+    "productComment": "SquidUnpop.cpp 첫 줄의 예전 사전 무변경 설명을 현재 패치/기존CD 구분으로 교정",
+    "semanticProductCodeChangedAfterFirstBuild": false,
+    "cppTestsFailedBeforeCorrection": false
+  },
+  "legacyGuardCorrection": "원문 void/spot/체인 변경 뒤 진단·표시 소비를 검증하도록 잘못된 전체 사전무변경 가정 교정. 자기 next는 원문대로 쓰고 비대상 무한순환만 소비시점 거부. 기존 fixture 불변.",
+  "actualConsumers": [
+    "실제 SquidUnpop 패치 부모/같은 pool·hash·spot, 기존 미니맵/RawBuildingSpace/표시 갱신",
+    "RawSurfaceWorld Storage의 현재 Client checking/AssertDisplay와 전체 TYPE span",
+    "독립 RawCampaignSession core.unpop의 같은 Client DWORD/서비스",
+    "실제 같은 Storage 6대여(세 진단617/629/65d×2회)의 현재 owner·저장 spot 복귀"
+  ],
+  "checking": {
+    "remaining": 15,
+    "parents": 9,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 33,
+    "completedPartial": 3,
+    "closedThisUnit": [],
+    "partiallyConnectedThisUnit": [
+      "004afe50"
+    ],
+    "pendingUnpop": "004ac6b0 -> 004ad230 실제 종속 링크/부모 통지/내용물 UI 연결; 전체 함수 완료로 세지 않음"
+  },
+  "boundaries": [
+    "Native contained60행은 두 요청만 명시 외부 경계로 관측. 실제 하위 몸체 연결·실행 완료가 아님. 실제 World 미연결 종단은 선택시 명시실패.",
+    "원문 일반공간/부류·CRT·TYPE·Grid/Hash·spot/side/next 변경은 CPU 실행, 미니맵/통지/가상 표시·진단만 명시 경계.",
+    "C++ CPU대조는 raw6450/해시172544/점유65536BYTE 전체 체크섬과 모든 현재 필드/trace를 비교하며 옆면은 기존 실제 RawBuildingSpace.",
+    "원문 범위 밖 좌표/체인 무한순환/물리메모리·32비트 주소 및 SEH 자체 일치는 호스트 경계. CD 기존 본문은 유지.",
+    "Session 회복 수명 회귀는 새 Unpop 진단의 실제 Session 발생 재현이 아님."
+  ],
+  "protection": {
+    "unchangedPreviousFiles": 2758,
+    "afterFiles": 2759,
+    "fixtureFiles": 939,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "newFixtures": 1,
+    "manifest": "extracted/cpp-resume-834/protected-after.json",
+    "sha256": "4d1a48ced6ab8f7f0b8652d734c0123de1d459e19e15f57d8c092c707b7bbb69"
+  },
+  "pausePlan": {
+    "userRequested": true,
+    "finishUnitDocumentAndCommitThenPause": true,
+    "nextUnitStarted": false,
+    "resumeAt": "Unpop contained004ac6b0→004ad230의 실제 하위/World·Session·UI 연결과 나머지 부모; 전체1~8차 목표 미완료"
+  },
+  "excluded": [
+    "실제 원본/클론 게임 GUI·실제 포획/희생/특정 적 공격/승리·사용자 확인",
+    "신규MP·실제 통신/공중3종 전용 검사",
+    "물리/PCM 재시도·전체71/CTest/34미션/ZIP"
+  ],
+  "sources": {
+    "cpppj/src/o/RawSquidUnpopParent.h": "8d8213599e3a3992d8cc9160360273b6ec79732cb1b07678778a190a42c4b89b",
+    "cpppj/src/o/RawSquidUnpopParent.cpp": "4344ec07b2592d0efc03cf1bdaf6dbb585ea0b54a8dea0c45183fa1a2d42f8e4",
+    "cpppj/src/o/SquidUnpop.h": "d0dfa9fcd31ff364da0f7f5de5a29a4661b46c1dcdf8f58b1b6ec08921bc5d4f",
+    "cpppj/src/o/SquidUnpop.cpp": "ea66d11f974a70ec8a29bffd6d3fb9814ab6dd99d6be59fb3ae0ff4b277c9964",
+    "cpppj/src/o/CMakeLists.txt": "135134b4717d543caa2a9fb7ae173c06a22c205e37e6dc473a2ffeac89fc1ef6",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "33bc0415d4007ca375cbdf67fb89e204fcc20169c6e2b24ef89172f6ef2dc390",
+    "cpppj/src/client/RawCampaignSession.cpp": "7236e375d1b52eab2906f2cbc638f47f864d29ff1f362f8b9ea0b86e438160a5",
+    "cpppj/tests/SquidUnpopCheckingTests.cpp": "b23d929661c40bd0853ff3f21e575cbc704c09a7cbc59f003da347bc1cfde998",
+    "cpppj/tests/UnpopTests.cpp": "05a33be2b8f8c45da9bcc7eece8b78afde455858f39feaabcb0caa6d814a0f11",
+    "cpppj/tests/CMakeLists.txt": "f8780eec2b09176c7916bfb135b31aedb015878c4c4863250e01b3cac184f54c",
+    "tools/native_squid_unpop_probe.cpp": "150d279021390a0c1e02ea387892c81a4ddb48e6c0e50a0db63b5babd289e5d4",
+    "tools/observe_squid_unpop_hardware.py": "4b5afae7d8b76652f097b3f7cd33b9ab1065ed3ebcfb7644fa24cffef061f815"
+  }
+}

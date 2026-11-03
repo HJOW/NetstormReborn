@@ -154,31 +154,17 @@ TEST_CASE(SquidUnpop_VtableMetadata_MatchesActualCommonDisplayPaths) {
     CHECK(rows==151); CHECK(!SquidUnpop::SupportsDisplay(OriginalEdition::Patch1078,0,0));
 }
 
-// 손상된 검색 경로/미복원 효과는 상태·spot·머리·카운터를 바꾸기 전에 거부한다.
-TEST_CASE(SquidUnpop_Guards_PreserveRawPoolAndSpaceBeforeUnsupportedEffects) {
-    SidPool pool(OriginalEdition::Patch1078,32768); auto types=Types(pool.Edition()); SquidFactory factory(pool,types);
-    SquidHash hash; std::vector<std::uint8_t> spots(kWorldCells*kWorldCells,0xff); SquidUnpop unpop(pool,hash,spots);
-    const auto sid=factory.Create(82); auto bytes=pool.AllocatedBytes(sid); bytes[11]=0;
-    Put(bytes,14,std::bit_cast<std::uint32_t>(20.f)); Put(bytes,18,std::bit_cast<std::uint32_t>(20.f));
-    const auto before=std::vector(pool.Bytes().begin(),pool.Bytes().end()); const auto originalSpots=spots; const auto heads=ExtraBytes(nullptr,&hash);
-    CHECK(Throws([&] { unpop.Unpop(sid,types[82]); }));
-    CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()) && spots==originalSpots && ExtraBytes(nullptr,&hash)==heads);
-    hash.Bucket(1,20,20)=sid.value;
-    Put(bytes,0,0x12345678); auto invalidVtable=std::vector(pool.Bytes().begin(),pool.Bytes().end());
-    CHECK(Throws([&] { unpop.Unpop(sid,types[82]); }));
-    CHECK(std::equal(invalidVtable.begin(),invalidVtable.end(),pool.Bytes().begin()));
-    std::copy_n(before.begin()+static_cast<std::ptrdiff_t>(sid.value*pool.Layout().stride),4,bytes.begin());
-    bytes[11]=8; const auto contained=std::vector(pool.Bytes().begin(),pool.Bytes().end());
-    CHECK(Throws([&] { unpop.Unpop(sid,types[82]); }));
-    CHECK(std::equal(contained.begin(),contained.end(),pool.Bytes().begin())); bytes[11]=0;
-    auto unsupported=types[82]; unsupported.flags2=TypeFlag2::kFactory;
-    CHECK(Throws([&] { unpop.Unpop(sid,unsupported); }));
-    Put(bytes,4,sid.value,2); auto corrupt=std::vector(pool.Bytes().begin(),pool.Bytes().end());
-    CHECK(Throws([&] { unpop.Unpop(sid,types[82]); })); CHECK(std::equal(corrupt.begin(),corrupt.end(),pool.Bytes().begin()));
-    Put(bytes,4,0,2); Put(bytes,14,0x7fc00000); corrupt=std::vector(pool.Bytes().begin(),pool.Bytes().end());
-    CHECK(Throws([&] { unpop.Unpop(sid,types[82]); })); CHECK(std::equal(corrupt.begin(),corrupt.end(),pool.Bytes().begin()));
-    CHECK(spots==originalSpots && hash.Bucket(1,20,20)==sid.value);
-    SidPool other(pool.Edition(),32768); CHECK(Throws([&] { SquidFactory mixed(other,types,false,&unpop); }));
+// 원문 void/지도/체인 변경 뒤 선택된 진단·표시 경계에서 실패해도 부분 효과를 보존한다.
+TEST_CASE(SquidUnpop_Guards_PreservePartialEffectsAtSelectedBoundaries) {
+    SidPool pool(OriginalEdition::Patch1078,32768);auto types=Types(pool.Edition());SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(kWorldCells*kWorldCells,0xff);SquidUnpop unpop(pool,hash,spots);const auto sid=factory.Create(82),other=factory.Create(82);auto bytes=pool.AllocatedBytes(sid);bytes[11]=0;Put(bytes,14,std::bit_cast<std::uint32_t>(20.f));Put(bytes,18,std::bit_cast<std::uint32_t>(20.f));const auto initial=std::vector(pool.Bytes().begin(),pool.Bytes().end());const auto originalSpots=spots;
+    const auto reset=[&] { auto raw=std::span<std::uint8_t>{const_cast<std::uint8_t*>(pool.Bytes().data()),pool.Bytes().size()};std::copy(initial.begin(),initial.end(),raw.begin());hash.Reset();spots=originalSpots; }; // 각 경계를 독립된 같은 원문 입력에서 시작한다.
+    auto expected=initial;expected[sid.value*pool.Layout().stride+11]|=4;CHECK(Throws([&] { unpop.Unpop(sid,types[82]); }));CHECK(std::equal(expected.begin(),expected.end(),pool.Bytes().begin()) && spots==originalSpots); // found 진단은 void 쓰기 뒤다.
+    reset();hash.Bucket(1,20,20)=sid.value;Put(bytes,0,0x12345678);expected.assign(pool.Bytes().begin(),pool.Bytes().end());expected[sid.value*pool.Layout().stride+11]|=4;CHECK(Throws([&] { unpop.Unpop(sid,types[82]); }));CHECK(std::equal(expected.begin(),expected.end(),pool.Bytes().begin()) && !hash.Bucket(1,20,20)); // 미복원 표시 거부도 체인 해제 뒤다.
+    reset();bytes[11]=8;const auto contained=std::vector(pool.Bytes().begin(),pool.Bytes().end());CHECK(Throws([&] { unpop.Unpop(sid,types[82]); }));CHECK(std::equal(contained.begin(),contained.end(),pool.Bytes().begin())); // 접두 진단 장치가 없으면 아직 void 쓰기 전이다.
+    reset();hash.Bucket(1,20,20)=sid.value;Put(bytes,4,sid.value,2);CHECK(!Throws([&] { unpop.Unpop(sid,types[82]); }));CHECK(bytes[11]==4 && hash.Bucket(1,20,20)==sid.value); // 원문은 찾은 대상의 next를 그대로 머리에 쓰며 임의 self-next 거부를 추가하지 않는다.
+    reset();hash.Bucket(1,20,20)=other.value;Put(pool.AllocatedBytes(other),4,other.value,2);CHECK(Throws([&] { unpop.Unpop(sid,types[82]); }));CHECK(bytes[11]==4 && hash.Bucket(1,20,20)==other.value); // 대상에 닿지 않는 무한 순환은 물리 호스트 경계로 거부한다.
+    reset();Put(bytes,14,0x7fc00000);expected.assign(pool.Bytes().begin(),pool.Bytes().end());expected[sid.value*pool.Layout().stride+11]|=4;CHECK(Throws([&] { unpop.Unpop(sid,types[82]); }));CHECK(std::equal(expected.begin(),expected.end(),pool.Bytes().begin()) && spots==originalSpots); // 잘못된 좌표도 소비 시점 앞의 void 쓰기는 남긴다.
+    SidPool otherPool(pool.Edition(),32768);CHECK(Throws([&] { SquidFactory mixed(otherPool,types,false,&unpop); }));
 }
 
 // CD에서 없는 체인은 assert 없이 void로 전환한다. 실제 삭제 효과 없이 슬롯을 반납하는 범위다.

@@ -1,0 +1,21 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "backend": "Windows x86 CPU /004afe50/실제004afd30·TYPE·CRT·GetGridSid·HashBucket",
+  "rows": 1300,
+  "diagnosticRows": 670,
+  "diagnosticCallsByLine": {
+    "1629": 178,
+    "1577": 1020,
+    "1559": 1350,
+    "1496": 108,
+    "1504": 108,
+    "1497": 48
+  },
+  "containedRows": 60,
+  "fixtureSha256": "a4df8f48be831c66ae530cd5fdc21d0e86515f119f9393e07736356694f32ed7",
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "probeSha256": "1140f7f210639ccd548a10cfd9a98fe14ecd55b95a3fa8e57b008485f8970d78",
+  "probeSourceSha256": "150d279021390a0c1e02ea387892c81a4ddb48e6c0e50a0db63b5babd289e5d4",
+  "boundary": "미니맵/옆면 통지/가상 표시·진단/contained 분리와 UI 종단만 명시 외부 경계;원문 spot/side byte/해시 변경은 실제 실행. contained 요청 관측을 실제 하위 연결/실행으로 확대하지 않음. 게임/GUI/통신 없음."
+}
