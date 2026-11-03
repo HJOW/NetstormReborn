@@ -16,10 +16,10 @@ template<class Function> const Function& Need(const Function& function) { if (!f
 // 원본 _ftol의64비트 절삭 후 하위DWORD를 쓰며 불확정 정수의 하위DWORD는0이다.
 std::int32_t Amount(float value) { const double exact=value;if (!std::isfinite(exact) || exact>=9223372036854775808.0 || exact< -9223372036854775808.0) return 0;return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(exact))); }
 // 같은 고정/All/X의 플래그 분기를 공유하되 All에는 원문에 없는 inSingle 진단을 넣지 않는다.
-void Transfer(std::uint32_t target,std::int32_t amount,bool diagnose,const SendMoneyHooks& h) {
+void Transfer(std::uint32_t target,std::int32_t amount,bool diagnose,const SendMoneyHooks& h,std::string_view source,std::uint32_t line) {
     const auto flags=Need(h.flags)(target);const auto negative=static_cast<float>(std::bit_cast<std::int32_t>(0U-std::bit_cast<std::uint32_t>(amount))); // 원본 DWORD neg 뒤 signed fild다.
     if (flags&0x20U) {
-        if (diagnose && Need(h.checking)() && !Need(h.mission)()) Need(h.assertion)();
+        if (diagnose && Need(h.checking)() && !Need(h.mission)()) { if (h.assertionAt) h.assertionAt("inSingle",source,line);else Need(h.assertion)(); }
         Need(h.addLocal)(negative);Need(h.wallet)(target,amount);
     } else if (flags&1U) {
         Need(h.addOwner)(Need(h.local)(),negative);
@@ -48,17 +48,18 @@ bool DispatchSendMoneyInput(const InputEvent& event,const SendMoneyHooks& h) {
     if (code==0x02000100U) { Need(h.numberDialog)(target);return true; }
     if (code==0x0200012bU) { Need(h.askAll)(target);return true; }
     if (code==0x02000118U) {
-        if (Need(h.canAfford)(Need(h.money)())) Transfer(target,Amount(Need(h.money)()),false,h);
+        if (Need(h.canAfford)(Need(h.money)())) Transfer(target,Amount(Need(h.money)()),false,h,{},0);
         return true;
     }
     const auto amount=code==0x02000120U ? 300 : code==0x02000108U ? 700 : 1000;
-    if (Need(h.canAfford)(static_cast<float>(amount))) Transfer(target,amount,true,h);return true;
+    const auto line=code==0x02000120U ? 0x913U : code==0x02000108U ? 0x8e9U : 0x8c2U; // 원문 고정300/700/1000의 서로 다른 Userinput.cpp 진단줄이다.
+    if (Need(h.canAfford)(static_cast<float>(amount))) Transfer(target,amount,true,h,".\\Userinput.cpp",line);return true;
 }
 std::uint32_t ConfirmSendMoney(const std::uint32_t& target,std::string_view text,const SendMoneyHooks& h) {
     const auto line=text.substr(0,text.find('\n'));const std::string terminated(line);const auto amount=o::ConfigParseLong(terminated); // 원본 CopyText/첫LF/NUL 뒤 _atol 의미를 기존 CRT 파서로 유지한다.
     if (amount>0) {
         const auto visible=Need(h.known)() ? Need(h.money)() : 0.0F;
-        if (static_cast<float>(amount)<=visible && Need(h.canAfford)(static_cast<float>(amount))) Transfer(target,amount,true,h);
+        if (static_cast<float>(amount)<=visible && Need(h.canAfford)(static_cast<float>(amount))) Transfer(target,amount,true,h,".\\Ui.cpp",0x61c);
     }
     return 1;
 }

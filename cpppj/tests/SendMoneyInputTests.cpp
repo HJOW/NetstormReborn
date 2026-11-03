@@ -54,3 +54,16 @@ TEST_CASE(SendMoneyInput_ReleaseAndUnrelatedNeedNoDevices) { // 뗌과 다른 �
     }
     CHECK(!DispatchSendMoneyInput({123,0,0},{}));CHECK(SendMoneyScriptCode("SendAllBucks")==0x02000118U);CHECK(SendMoneyScriptCode("sendallbucks")==0x02000118U);CHECK(SendMoneyScriptCode("Unknown")==0xffffffffU);
 }
+
+// 기존 원문888행 중 비멀티 AI flags20/22의312행만 대조하며 패킷 장치는 선택하면 실패한다.
+TEST_CASE(SendMoneyInput_CheckingAiNative312) {
+    std::ifstream input(NETSTORM_SEND_MONEY_INPUT_FIXTURE);CHECK(input.good());if (!input) return;std::string line;std::size_t count{};
+    while (std::getline(input,line)) { // 기존 fixture의 입력/기대값을 바꾸지 않고 AI 가지를 선택한다.
+        if (!line.empty() && line.back()=='\r') line.pop_back();if (line.empty() || line.starts_with("name\t")) continue;const auto row=MoneySplit(line,'\t');CHECK(row.size()==16);if (row.size()!=16) return;const auto flags=MoneyNumber(row[4]);if (flags!=0x20U && flags!=0x22U) continue;++count;std::string trace;
+        const auto add=[&](std::string value) { if (!trace.empty()) trace+=';';trace+=value; };SendMoneyHooks hooks;hooks.local=[&] { return MoneyNumber(row[3]); };hooks.flags=[&](auto owner) { CHECK(owner==MoneyNumber(row[2]));return flags; };hooks.checking=[&] { return MoneyNumber(row[11]); };hooks.mission=[&] { return MoneyNumber(row[10]); };hooks.canAfford=[&](float amount) { add("afford:"+std::to_string(std::bit_cast<std::uint32_t>(amount)));return MoneyNumber(row[5])!=0; };
+        hooks.addLocal=[&](float amount) { add("addLocal:"+std::to_string(std::bit_cast<std::uint32_t>(amount))); };hooks.wallet=[&](auto owner,auto amount) { add("wallet:"+std::to_string(owner)+':'+std::to_string(amount)); };hooks.assertionAt=[&](auto expression,auto file,auto sourceLine) { CHECK(expression=="inSingle" && file==".\\Userinput.cpp");const auto code=MoneyNumber(row[1])&0x03ffffffU;CHECK(sourceLine==(code==0x02000120U ? 0x913U : code==0x02000108U ? 0x8e9U : 0x8c2U));add("assert"); }; // 줄 번호는 실제 기계어 PUSH로 확인했다.
+        hooks.addOwner=[](auto,auto) { throw std::logic_error("제외한 연결 Player 차감"); };hooks.send=[](auto) { throw std::logic_error("제외한 패킷 송금"); };
+        if (!MoneyNumber(row[6]) && !MoneyNumber(row[7])) CHECK(DispatchSendMoneyInput({MoneyNumber(row[1]),71,std::bit_cast<std::int32_t>(MoneyNumber(row[2]))},hooks)); // Guide/Gump가 이미 소비한 원문 행은 일반 명령을 실행하지 않는다.
+        CHECK((trace.empty() ? "-" : trace)==row[13] && row[14]=="1" && row[15]=="0");
+    }CHECK(count==312);
+}

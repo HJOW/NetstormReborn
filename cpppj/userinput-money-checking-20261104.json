@@ -1,0 +1,185 @@
+{
+  "unit": 830,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "586cc711 / 20261104-11 CP",
+  "exeSha256": "f8ba3dde280a1ad533359ab70b7c31c145224ae27dc0bf98c6069e6a5fc76f01",
+  "originalBinarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "originalParent": "004d62b0~004da650",
+  "classificationCorrection": "checking의 세 지점은 Guide/Console이 아닌 고정1000/700/300의 AI 송금 가지. 다른7진단과 전체 입력 UI는 별도다.",
+  "diagnosticSites": [
+    {
+      "amount": 1000,
+      "command": "020000ec",
+      "checking": "004d859d",
+      "assertionCall": "004d85be",
+      "expression": "inSingle",
+      "file": ".\\Userinput.cpp",
+      "line": 2242
+    },
+    {
+      "amount": 700,
+      "command": "02000108",
+      "checking": "004d86ec",
+      "assertionCall": "004d870d",
+      "expression": "inSingle",
+      "file": ".\\Userinput.cpp",
+      "line": 2281
+    },
+    {
+      "amount": 300,
+      "command": "02000120",
+      "checking": "004d882c",
+      "assertionCall": "004d884d",
+      "expression": "inSingle",
+      "file": ".\\Userinput.cpp",
+      "line": 2323
+    }
+  ],
+  "existingOriginalObservations": {
+    "sourceUnit": 547,
+    "backend": "기존 Unicorn /830 새 CPU 관측0",
+    "fixture": "cpppj/tests/fixtures/send-money-input-x86.tsv",
+    "fixtureSha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08",
+    "allRows": 888,
+    "selectedAiRows": 312,
+    "selectedDiagnosticRows": 1,
+    "selection": "Player flags0x20 또는0x22의 AI 가지. 연결 Player/송신 장치는 선택하면 실패.",
+    "changedRows": 0,
+    "reobservedRowsThisUnit": 0
+  },
+  "existingNumericHardwareRegression": {
+    "fixture": "cpppj/tests/fixtures/money-confirm-hardware-x86.tsv",
+    "fixtureSha256": "ee558e75e4547bd7991219d21da58c236818becdc1ca2c8120474ded5127b229",
+    "cppComparedRows": 432,
+    "newCpuExecutionsThisUnit": 0
+  },
+  "tests": [
+    {
+      "executable": "netstorm_scenario_money_tests",
+      "filter": "SendMoneyInput_CheckingAiNative312",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-830/test-FixedMoneyAi-final.log",
+      "sha256": "d87c181b16682d1eb75301c1411dab1c45a24a61e50c2448986db945d5afedac"
+    },
+    {
+      "executable": "netstorm_file_tests",
+      "filter": "MoneyConfirmChecking_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-830/test-MoneyConfirmChecking-final.log",
+      "sha256": "4a10bc639d123e3fac05be66e787cf1b0fa7b04c20f93672f9a58710a27240d9"
+    },
+    {
+      "executable": "netstorm_html_input_dialog_tests",
+      "filter": "MoneyConfirmChecking_",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-830/test-MoneyConfirmDialog-final.log",
+      "sha256": "f365ec09d7180bb477236ea91a61bbb574174db71d70ac55e828ac73db3baa92"
+    }
+  ],
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-830/build-first.log",
+      "exitCode": 1,
+      "errors": 3,
+      "warnings": 0,
+      "sha256": "5955b665c77acdea606d5a7ad895a5e14f299dd19e1cf0c456e53e6561cb86c3"
+    },
+    {
+      "log": "extracted/cpp-resume-830/build-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "da4f591c45d9240fcc05f493e5e881d28742214b02847e779ae3dc36e441e9c4"
+    }
+  ],
+  "firstCorrection": "새 검사 주석 뒤 줄바꿈 누락으로 packets 선언/초기화가 주석 처리되어 C2065 3건/종료1. 해당 검사 줄바꿈만 교정했고 최초 로그 보존. 제품/fixture 변경으로 숨기지 않음.",
+  "actualConsumers": [
+    "같은 UberGump.IsSendMoneyCommand -> DispatchSendMoneyInput -> 실제 Session.MoneyInputHooks 현재 Client checking. release는 World 대여 전 반환.",
+    "새 위치별 assertionAt이 숫자Ui.cpp:1564와 고정Userinput.cpp:2242/2281/2323을 구별한다. 독립 caller의 기존 assertion fallback/All 무진단 유지.",
+    "실제 Client/Session·기본 AI 생성/지갑에서 checking80000000/ffffffff/1을 진단이0으로 바꿔도 고정700/1000/300 SP/지갑 가산이 이어진다. 원문 네 위치 요청도 일치."
+  ],
+  "checking": {
+    "remaining": 17,
+    "parents": 11,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 31,
+    "completedPartial": 3,
+    "closedThisUnit": [
+      "004d62b0의 checking 세 지점/공통 실제 입력 소비자"
+    ],
+    "remainingPartial": [
+      "0048fb30",
+      "004b54e0",
+      "004b8cb0"
+    ],
+    "mpDeferredWithinParents": [
+      "004a7510"
+    ],
+    "mpDeferredWithinPartial": [
+      "004b54e0"
+    ]
+  },
+  "boundaries": [
+    "checking 세 곳과 그 일반 명령 소비자 완료이며004d62b0의 전체 OS/이벤트 폴링·다른7진단/나머지 UI 완료가 아님.",
+    "기존 Unicorn 자료의 AI312행을 새 C++ 집중 검사로 대조했으며 새 Native 관측/전체888 재실행/MP 검사를 하지 않음.",
+    "위치별 실제 진단 요청/현재 서비스 복귀를 보존하며 전체 원문 진단UI/SEH·32비트 스택은 별도.",
+    "10.72의 같은 세 checking/파일·줄 대응은 이번 추가 범위가 아님."
+  ],
+  "next": "831 부분004b8cb0의 실제 서버 전환/reloadFile caller와 비멀티 도달 범위를 먼저 대조하고 해당 소비자/MP 이월을 구별. 나머지17 및1~8차 전체 목표 미완료.",
+  "protection": {
+    "unchangedPreviousFiles": 2756,
+    "afterFiles": 2756,
+    "fixtureFiles": 936,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "newFixtures": 0,
+    "manifest": "extracted/cpp-resume-830/protected-after.json",
+    "sha256": "74501059bb7b2373705aab8aac594569b0806870681eaaca5ab8a2dc44fb840c"
+  },
+  "excluded": [
+    "원본/클론 실제 게임 GUI/자연 플레이·자동 공략",
+    "포획/희생/특정 적 공격/승리·사용자 직접 확인",
+    "신규 MP/연결 Player/패킷 검사·실제 통신",
+    "공중3종 전용·물리/PCM 재시도",
+    "전체 CTest/71대상/34미션/ZIP"
+  ],
+  "sources": {
+    "cpppj/src/client/SendMoneyInput.h": "2025658aee337943ac1b6bc2951aaf83995d071a293a049ff4126380b8f34a51",
+    "cpppj/src/client/SendMoneyInput.cpp": "1d35c03cb51160d0e5ebbb5ca9239a4856daffc64b81fbc1b3706cbf02b593da",
+    "cpppj/src/client/RawCampaignSession.cpp": "c2b4398df9cc1dab53ce51dac608417a9ec28883febb35072497b3319f0f9263",
+    "cpppj/src/client/UberGump.cpp": "4040dbbd546c29446ed638bc28fdf793410de3f503075ff1566b388f698d4205",
+    "cpppj/src/client/UberEditor.inc": "fe25649df05a5ae8135a3b7dff813923113979fc4a6267e335df2d968c328ab0",
+    "cpppj/src/client/RawMenuSaveFort.inc": "a92eb798f12dc960a3bc88e7e7888bf61083af3822c4805d07fc52cfcf3d7457",
+    "cpppj/tests/SendMoneyInputTests.cpp": "09b4fcd3056fced5fcb24d9ace5ffb50f8812c5179131ddfb2d1cc95f4ac4670",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "b8bdee8d7d932eda8835995021d7455f7639731cd7973559bf1ce75dfeb8ccd8",
+    "cpppj/tests/MoneyConfirmCheckingTests.cpp": "99690dbc9ab2deec4e97a959d6b1fc9ee70b571d262768bf63243c1f6ce7e602",
+    "cpppj/tests/SaveFortNameDialogTests.cpp": "5c3117e4b80d694507e840eabef080b19e22d1489a45557ef4e3b0e78b3ae988",
+    "cpppj/tests/CMakeLists.txt": "283abfa04c2f9f1932350b86f21dab9a36f2b3f7289d78dcc22665557da497b2",
+    "tools/decomp_send_money.py": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+  },
+  "normalizedSources": {
+    "cpppj/src/client/SendMoneyInput.h": "3bd17120c73d8b9f7fb7742ccdf9b8d2adb4c851a910bbc2b1d95f357ecbed47",
+    "cpppj/src/client/SendMoneyInput.cpp": "2bd0785c4f0ea2bc23a4d33627ac221c34def228c5668692be8d7dbb3016fd6e",
+    "cpppj/src/client/RawCampaignSession.cpp": "c2b4398df9cc1dab53ce51dac608417a9ec28883febb35072497b3319f0f9263",
+    "cpppj/src/client/UberGump.cpp": "4040dbbd546c29446ed638bc28fdf793410de3f503075ff1566b388f698d4205",
+    "cpppj/src/client/UberEditor.inc": "f55060dc5a3758be4d3c8d3168d1e2e2a353fae25e5a0e4a25bbf24e062cf578",
+    "cpppj/src/client/RawMenuSaveFort.inc": "a876d3c52d072821331ddde61a7a0aa679430a61a05cd456502a63cd2d05be09",
+    "cpppj/tests/SendMoneyInputTests.cpp": "06ea1e3f584db9ddb68e9d6a02e8a1efae3914f191b4d35fd4640611a036105e",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "b8bdee8d7d932eda8835995021d7455f7639731cd7973559bf1ce75dfeb8ccd8",
+    "cpppj/tests/MoneyConfirmCheckingTests.cpp": "99690dbc9ab2deec4e97a959d6b1fc9ee70b571d262768bf63243c1f6ce7e602",
+    "cpppj/tests/SaveFortNameDialogTests.cpp": "bdca32ce87611cf0ebd200266dddc3bc51b27d14017a7d3da2b8f33dced9574f",
+    "cpppj/tests/CMakeLists.txt": "19b7bde32a40c0d6fa285e26325bbc55e5d9cb2e3d0e300b0b5bc2ef094e4568",
+    "tools/decomp_send_money.py": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+  }
+}

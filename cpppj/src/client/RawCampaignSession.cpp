@@ -3803,7 +3803,7 @@ SendMoneyHooks RawCampaignSession::MoneyInputHooks() {
     h.flags=[s](auto owner) { if (owner>=9) throw std::out_of_range("송금 대상 Player 범위");return Read(s->players,owner*180U+0x50U); };
     h.addOwner=[s](auto owner,float amount) { s->rewardState.fixedSpA=s->core.ownerMode.fort;s->rewardState.fixedSpB=s->globals.editor!=0;s->rewardState.aiMirrorDisabled=s->core.ownerMode.challenge;s->hp.AddSp(owner,amount); };
     h.addLocal=[s,add=h.addOwner](float amount) { add(s->playerState.battleOwner,amount); };h.wallet=[s](auto owner,auto amount) { s->hp.CreditWallet(owner,amount); };
-    h.send=[this](auto packet) { SendLocalPacket(9,packet); };h.assertion=[s] { if (!s->services.ai.assertion) throw std::logic_error("송금 현재 원문 진단 장치 미연결: .\\Ui.cpp:1564");s->services.ai.assertion("inSingle"); };return h;
+    h.send=[this](auto packet) { SendLocalPacket(9,packet); };h.assertionAt=[s](std::string_view expression,std::string_view file,std::uint32_t line) { if (!s->services.ai.assertion) throw std::logic_error("송금 현재 원문 진단 장치 미연결: "+std::string(file)+":"+std::to_string(line));s->services.ai.assertion(expression); };h.assertion=[report=h.assertionAt] { report("inSingle",".\\Ui.cpp",0x61c); };return h;
 }
 // 현재 실제 AI 지갑의 값만 읽어 사용자 송금과 분산 SP를 별도로 관측한다.
 std::int32_t RawCampaignSession::AiMoney(std::uint32_t owner) const { if (!impl_->loaded || !impl_->aiWallet) throw std::logic_error("송금 관측의 실제 AI 지갑 미설치");return impl_->aiWallet->Balance(owner); }

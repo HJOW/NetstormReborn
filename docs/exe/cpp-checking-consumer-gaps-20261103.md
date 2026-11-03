@@ -1598,6 +1598,8 @@ LAB_004ad54f:
 
 ## FUN_004d62b0 @ 004d62b0
 
+**830 checking 범위 완료/분류 정정:**아래 Guide/Console 세 진단이라는 서술은 오기다. 실제 세 checking은 고정1000/700/300 AI 송금이며Userinput.cpp:0x8c2/0x8e9/0x913이다. 같은 현재 Client checking/서비스와 위치별 진단 복귀를 실제 입력에 연결했고 기존 Unicorn888 중 AI312행/숫자CPU432행의 C++ 대조·집중5개(새1/Session 확장)가 최종 통과했다. 새 원문 CPU/MP 관측은0이다. checking17(부모11/부분3/MP3)이며 다른7진단·전체 입력/Console/나머지 UI는 이 완료 범위 밖이다. 최초 검사 컴파일 오류3건 교정을 보존했다. [830 기록](cpp-userinput-money-checking-20261104.md).
+
 별도 부모 후속: 775는AI일반명령만복원.기존Guide/Console/정지입력의별도checking진단3개는후속UI부모범위
 
 현재 주소 언급: cpppj\src\client\ClientMain.cpp, cpppj\src\client\GameMenuActions.h

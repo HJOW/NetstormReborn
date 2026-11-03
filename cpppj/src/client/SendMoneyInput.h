@@ -17,7 +17,8 @@ struct SendMoneyHooks {
     std::function<void(std::uint32_t,std::int32_t)> wallet; //00413bb0의 실제 AI 지갑 가산이다.
     std::function<void(std::span<const std::uint8_t>)> send; //004e2dc0의 대상9이며11BYTE 메시지를 복사한다.
     std::function<void(std::uint32_t)> numberDialog,askAll; //실제 원본 X 입력 창과 asksend 확인 창이다.
-    std::function<void()> assertion; //inSingle 진단 뒤 정상 복귀를 보존하는 장치다.
+    std::function<void()> assertion; // 위치별 장치가 없는 독립 호출자의 기존 inSingle 진단이며 정상 복귀를 보존한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertionAt; // 현재 원문 식/파일/줄을 받으며 숫자 UI와 세 고정 UserInput을 구별한다.
 };
 // 메뉴/HTML 이름표에서 확인한 여섯 명령만 허용한다.
 bool IsSendMoneyCommand(std::uint32_t code);
