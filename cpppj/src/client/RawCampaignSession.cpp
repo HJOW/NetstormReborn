@@ -4640,9 +4640,9 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     auto object=inputs.object; // GUI/설정/문자열 토큰은 유지하며 게임 계산만 현재 실제 몸체로 교체한다.
     object.hasHitPoints=[current](Sid sid) { return current->hp.HasHitPoints(sid); };
     object.count=[current](Sid sid) { // 정보·회수 모두 같은 Session의 실제 가상80 몸체를 사용한다.
-        const auto raw=current->core.pool.Slot(sid);const auto type=static_cast<std::size_t>(raw[10]);
-        if (type>=current->core.types.size() || Read(raw,0)!=current->core.factory.ConstructorVtable(current->core.types[type])) throw std::logic_error("현재 객체 메뉴 가상80 VT 미연결");
-        const auto table=Read(raw,0); // 보호 PE의 나머지81 생성 VT는 모두 실제 base004ad0f0을 가리킨다.
+        const auto raw=current->core.pool.Slot(sid);const auto table=Read(raw,0); // 원문004ada70은 TYPE의 생성자 정보와 독립적으로 현재 VT+80을 호출한다.
+        if (!SquidFactory::SupportsConstructedVtable(current->core.pool.Edition(),table)) throw std::logic_error("현재 객체 메뉴 가상80 VT 미연결");
+        // 보호 PE의 나머지81 생성 VT는 모두 실제 base004ad0f0을 가리킨다. 미확인 VT는 선택 시 거부한다.
         if (table==0x5076b8U) return current->altarSacrifice->Count(sid); // 0044a480: 현재 위치의 다이스를 찾아 그 가상80에 위임한다.
         if (table==0x507950U) return current->templeRitual->Count(sid); // 004478f0: 현재 프레임/방향으로 다이스 레벨을 읽는다.
         return current->level->Get(sid);

@@ -325,6 +325,45 @@ TEST_CASE(CampaignObjectMenus_ActualSummaryUsesCurrentIdentityAndAlliance) {
     open();CHECK(std::find(ui.infoLines.begin(),ui.infoLines.end(),"~yCapturable!~.\n")!=ui.infoLines.end());ui.menus->Close();chain.reset();Put(session.Core().pool.AllocatedBytes(priest),26,std::bit_cast<std::uint32_t>(hitPoints));
 }
 
+TEST_CASE(CampaignObjectMenus_CurrentCountVtable_BaseLevelIgnoresTypeConstructorPair) { // 현재 VT의 공통 레벨을 같은 실제 Summary/UI에서 조회한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();ui.currentSession=&session;auto core=session.Core();
+    const auto type=static_cast<std::uint32_t>(assets.game.TypeTable().Find("windFactory"));const auto object=core.factory.Create(type,2);auto raw=core.pool.AllocatedBytes(object);const auto table=Get(raw,0);auto& current=session.World().Storage()->types[type];const auto savedConstructor=current.constructorAddress;std::unique_ptr<RawCampaignObjectMenus> chain;
+    const std::array<std::pair<std::uint32_t,std::string_view>,2> cases{{{0," Level III"},{0x12345678," Level IV"}}};std::uint32_t level=2; // 생성자 metadata와 실제 VT를 독립 입력으로 유지한다.
+    for (const auto& [constructor,title]:cases) { // 동일 객체/VT에서 현재 TYPE 생성자 metadata만 바뀌어도 공통 +80은 계속 실행된다.
+        current.constructorAddress=constructor;raw[11]=static_cast<std::uint8_t>((raw[11]&31U)|(level++<<5));ui.infoTitles.clear();ui.infoLines.clear();
+        ui.menus->Open({320,240},[&](const auto& widgets,const auto& controls,const auto& menus) { widgets.BeginFancy();chain=session.MakeObjectMenus(ui.Hooks(session,widgets,controls,menus));chain->Summary(object);chain->OpenObject(object); }); // 제품과 같은 Summary/controlled 제목/기본 메뉴를 작성한다.
+        CHECK(Get(core.pool.Slot(object),0)==table && std::find(ui.infoTitles.begin(),ui.infoTitles.end(),title)!=ui.infoTitles.end());
+        CHECK(std::find(ui.infoLines.begin(),ui.infoLines.end(),"\nOwner: ~iNobody~.")!=ui.infoLines.end());ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus());
+    }
+    current.constructorAddress=savedConstructor;ui.currentSession=nullptr; // 현재 TYPE 입력과 실제 메뉴 수명을 원래 소유자에 반납한다.
+}
+
+TEST_CASE(CampaignObjectMenus_CurrentCountVtable_AltarDelegatesToCurrentDaisCount) { // 제단/다이스의 두 파생 +80은 실제 희생 없이 초기 프레임의 개수만 조회한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();ui.currentSession=&session;auto core=session.Core();auto& types=session.World().Storage()->types;
+    const auto altar=core.factory.Create(164,2),dais=core.factory.Create(165,2);auto altarRaw=core.pool.AllocatedBytes(altar),daisRaw=core.pool.AllocatedBytes(dais);CHECK(Get(altarRaw,0)==0x5076b8U && Get(daisRaw,0)==0x507950U && Get(daisRaw,36)==0); // 생성자의 실제 VT와 Allocate의 초기 프레임0만 사용한다.
+    constexpr float coordinate=220.0F; // 기존 맵 배치와 별개인 finder 명시 입력 위치다.
+    Put(altarRaw,14,std::bit_cast<std::uint32_t>(coordinate));Put(altarRaw,18,std::bit_cast<std::uint32_t>(coordinate));Put(daisRaw,14,std::bit_cast<std::uint32_t>(coordinate));Put(daisRaw,18,std::bit_cast<std::uint32_t>(coordinate));
+    daisRaw[11]=static_cast<std::uint8_t>((daisRaw[11]&31U)|(7U<<5));altarRaw[11]=static_cast<std::uint8_t>((altarRaw[11]&31U)|(5U<<5)); // 공통 state 레벨과 파생 Count1을 구별하기 위한 입력이다.
+    auto& bucket=core.hash.Bucket(1,coordinate,coordinate);const auto savedHead=bucket;const auto savedNext=Get(daisRaw,4,2);Put(daisRaw,4,savedHead,2);bucket=dais.value; // 실제 일반 finder에만 void 다이스를 보이며 Pop/후처리/의식을 실행하지 않는다.
+    const auto savedAltarConstructor=types[164].constructorAddress,savedDaisConstructor=types[165].constructorAddress;types[164].constructorAddress=0;types[165].constructorAddress=0;std::unique_ptr<RawCampaignObjectMenus> chain;
+    const auto open=[&](Sid object) { ui.infoTitles.clear();ui.infoLines.clear();ui.menus->Open({320,240},[&](const auto& widgets,const auto& controls,const auto& menus) { widgets.BeginFancy();chain=session.MakeObjectMenus(ui.Hooks(session,widgets,controls,menus));chain->Summary(object);chain->OpenObject(object); }); }; // 현재 두 VT의 Summary를 같은 실제 메뉴 소유자에서 요청한다.
+    open(dais);CHECK(Get(core.pool.Slot(dais),36)==0 && !ui.infoTitles.empty());ui.menus->Close();chain.reset(); // 다이스 Count는 상태 상위7과 무관한 초기 프레임 조회만 실행한다.
+    open(altar);CHECK(std::find(ui.infoTitles.begin(),ui.infoTitles.end()," Level I")!=ui.infoTitles.end());CHECK(std::find(ui.infoTitles.begin(),ui.infoTitles.end()," Level V")==ui.infoTitles.end());ui.menus->Close();chain.reset(); // 실제 다이스 Count1을 제단 Describe가0으로 보정한다.
+    CHECK(Get(core.pool.Slot(altar),0)==0x5076b8U && Get(core.pool.Slot(dais),0)==0x507950U && Get(core.pool.Slot(dais),36)==0 && (core.pool.Slot(dais)[11]>>5)==7);
+    bucket=savedHead;Put(daisRaw,4,savedNext,2);types[164].constructorAddress=savedAltarConstructor;types[165].constructorAddress=savedDaisConstructor;ui.currentSession=nullptr; // finder 입력/현재 TYPE를 복원하고 메뉴와 Session의 대여를 끝낸다.
+}
+
+TEST_CASE(CampaignObjectMenus_CurrentCountVtable_UnknownTableFailsAndReopens) { // 미확인 VT를 TYPE 생성자나 공통 레벨로 임의 대체하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();ui.currentSession=&session;auto core=session.Core();const auto type=static_cast<std::uint32_t>(assets.game.TypeTable().Find("windFactory"));const auto object=core.factory.Create(type,2);auto raw=core.pool.AllocatedBytes(object);const auto savedTable=Get(raw,0);std::unique_ptr<RawCampaignObjectMenus> chain;
+    const auto open=[&] { ui.infoTitles.clear();ui.infoLines.clear();ui.menus->Open({320,240},[&](const auto& widgets,const auto& controls,const auto& menus) { widgets.BeginFancy();chain=session.MakeObjectMenus(ui.Hooks(session,widgets,controls,menus));chain->Summary(object);chain->OpenObject(object); }); }; // 지원 VT로 builder/controlled 스택을 완성한 실제 메뉴만 연다.
+    open();CHECK(ui.menus->HasMenus() && std::find(ui.infoTitles.begin(),ui.infoTitles.end()," Level I")!=ui.infoTitles.end());const auto titlesBefore=ui.infoTitles,linesBefore=ui.infoLines;Put(raw,0,0x12345678);const auto before=std::vector<std::uint8_t>(raw.begin(),raw.end()); // 메뉴 생성이 끝난 뒤 count의 현재 VT 실패만 독립 입력으로 준다.
+    CHECK(Throws([&] { chain->Summary(object); }));CHECK(std::equal(before.begin(),before.end(),core.pool.Slot(object).begin()) && ui.infoTitles==titlesBefore && ui.infoLines==linesBefore && ui.menus->HasMenus()); // builder 밖의 count 실패는 객체 바이트와 기존 제목/머리 출력을 변경하지 않는다.
+    Put(raw,0,savedTable);ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus());open();CHECK(std::find(ui.infoTitles.begin(),ui.infoTitles.end()," Level I")!=ui.infoTitles.end());ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus());ui.currentSession=nullptr;
+}
+
 // 같은Session의 실제선택bit/표시/491Regular와50ProcessForm 통지를 실행한다. UI/진단은 명시 경계다.
 TEST_CASE(CampaignUserSelection_SamePoolMarksRegularAndManaNotice) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;

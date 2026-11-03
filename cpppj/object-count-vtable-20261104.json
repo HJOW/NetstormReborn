@@ -1,0 +1,107 @@
+{
+  "unit": 837,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "98651032 / 20261104-18 CP",
+  "exeSha256": "ec2360c404074c509f441381318a999e07979c2c707bc764726897420ec6eb55",
+  "exeBytes": 10447360,
+  "sourceSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "52d50e696681a56513bed270ec16e5e9a7cb9db405e4c54f9e821169bd36ba63",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "9c1618f3410bb75ec01ace712da1c8f496a2da48b7c5682fc1a30b4c0176e61d"
+  },
+  "scope": "메뉴 Summary/회수 공통 count 소비자의 현재TYPE constructorVT 쌍강제를 현재지원VT 분배로 교정",
+  "staticPeVtables": {
+    "patchTotal": 83,
+    "common004ad0f0": 81,
+    "altar005076b8": "0044a480",
+    "dais00507950": "004478f0"
+  },
+  "tests": [
+    {
+      "filter": "CampaignObjectMenus_CurrentCountVtable_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-837\\test-current-count-final.log",
+      "sha256": "88c399c2ea972f76ad401067e611830faf71bbfb18fdde18491b0ad353295715"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-837\\test-refund-regression.log",
+      "sha256": "feb075621e686b73e66bf794e6c20e552978f87beba247aec77e371f13c7205f"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-837\\test-form-close-regression.log",
+      "sha256": "1271d58e49bfc91ba07e8db3c0053b63cff8c77947139c038d91cbcda83c0a40"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-837\\test-current-world-regression.log",
+      "sha256": "ad5f05af8504a5cb3d57f544c29dca3dafecb8cb38a660ccfe0bd10deadce4da"
+    }
+  ],
+  "focusedCases": 6,
+  "newCases": 3,
+  "nativeHardwareNewRows": 0,
+  "newFixtures": 0,
+  "builds": [
+    {
+      "log": "extracted\\cpp-resume-837\\build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "4a017cbe8a9eecaa75b881321976e79c43c0ac7f45420e75ed9900ccb334cfe3"
+    },
+    {
+      "log": "extracted\\cpp-resume-837\\build-test-correction.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "5aefe7676a3fe2ae81eb476a8972fd11ae6370cd54c2580c46fddecdadfc5b4f"
+    }
+  ],
+  "initialTestFailure": {
+    "cases": 3,
+    "failedChecks": 2,
+    "case": "UnknownTableFailsAndReopens",
+    "log": "extracted\\cpp-resume-837\\test-current-count-first.log",
+    "source": "extracted\\cpp-resume-837\\menu-tests-first.cpp",
+    "cause": "count guard와 별개인 메뉴 builder callback 예외 후 controlled stack 복구를 검사에서 가정. 지원VT로메뉴완성후builder밖Summary의명시실패/객체·기존출력불변/정상닫기·재개로계약분리. 제품 수정0.",
+    "baseAndAltarCasesPassedFirst": true
+  },
+  "checking": {
+    "remaining": 14,
+    "parents": 8,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 34,
+    "completedPartial": 3,
+    "closedThisUnit": []
+  },
+  "protection": {
+    "files": 2759,
+    "fixtureFiles": 939,
+    "changed": 0,
+    "manifest": "extracted\\cpp-resume-837\\protected-after.json",
+    "sha256": "4d1a48ced6ab8f7f0b8652d734c0123de1d459e19e15f57d8c092c707b7bbb69"
+  },
+  "boundaries": [
+    "직접메뉴count 분배만교정; Altar가찾은Dais의현재VT+80재분배는temple_.Count직접호출로별도미완료",
+    "RawSquidLevel.Has의AllocatedBytes/free거부와RawTempleRitual.Count의TYPE165강제는별도현행경계",
+    "제단/다이스 새검사는void객체의초기frame0 count조회만하며Pop/Frame/의식/포획/희생/전투/MP함수를실행하지않음",
+    "게임GUI/물리/PCM/CD삽입·실제포획/희생/특정적공격/승리·신규MP/통신·공중3종전용0;전체71/CTest/34미션/ZIP반복0"
+  ]
+}
