@@ -21,7 +21,7 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 | 전체 검사 기준 | 실행 대상66/전체 빌드 대상71. 전체71 마지막 컴파일은779. 전체 C++ 마지막 실행은549의3389개 중7개 실패(580단언); 마지막 전체 통과는510의508제품3337개. 이후 집중 통과를 전체 통과로 쓰지 않는다 |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
 | 보호 기준 | 기존2739개/fixture919개 전부 불변. 새 fixture1개 포함 다음 기준은 **2740개/920개**, `extracted/cpp-resume-815/protected-after.json` |
-| 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-10-23**. 이번 정리는 같은 호스트에서 했고 디컴파일 산출물은 변경하지 않았다 |
+| 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
 
@@ -45,6 +45,7 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 
 - **마지막 완료:** 단위815 / 제품815·11.01, 구현 커밋 `2d166e07 / 20261103-229 CP`. EXE SHA·집중7개·원문760입력/재관측·보호2740/fixture920의 기준은0.1절 그대로다. 전체 목표는 미완료다.
 - **이번 재개에서 한 일:** AGENTS.md·양 프로젝트 인계와 호스트/작업 트리/원문을 읽었다. 호스트는 마지막 전체 정밀 디컴파일과 같은 HJOW-Athlon이다. 코드 변경·새 Native/fixture·빌드·검사·게임/GUI 실행은 없었다. 중지 인계 전 작업 트리는 깨끗했으며 이 대화에서 시작한 실행 작업은 남아 있지 않다.
+- **2026-11-03 cpppj 사전 준비:** 사용자 요청으로 양판본 전체 정밀 디컴파일과 Release 컴파일을 완료했다. 패치판 5549/5549 성공, CD판 5822 성공·1 실패, 대응 2496쌍이다. 빌드는 MSBuild 18.11.1, 종료 코드0이며 `Netstorm.exe`를 생성했다. 검사 프로그램·게임은 실행하지 않았다. 세부 결과와 CD판의 미해결 디컴파일 1건은 [기록](docs/exe/cpp-decompilation-20261103.md)을 따른다. 구현 단위816은 아직 미착수이며 전체 목표는 계속 미완료다.
 - **새 구현은 시작하지 않았다:** 단위816은 미착수다. Graph 참조 감소00462a50/SID0조회00462bc0만815 완료이고 sentinel00462ac0/flood00462f10/병합004633c0은 여전히 미완료다. checking 잔여27(부모19·부분5·MP3)을 줄이지 않는다.
 - **다음 설계 판단:** 실제 `RawGraph`의 Add/Flood/Free/Rebuild/Detach/PostDestroy는 여전히 사본 계산/Commit을 사용한다. 현재 표/슬롯/stack을 직접 소비하는 원문 실행 경로와 기존 부작용 없는 Validate/계산을 구별해야 한다. 진단 복귀 뒤 현재 기록/이웃/다음 후보를 다시 읽고, 사본이 콜백 변경을 덮지 않도록 구현한다. 이것은 분석 중의 설계안이며 준비된 코드가 아니다.
 - **이웃 순회:** `RawSquidNeighbors`/`RawSquidNeighborWalk`는 flags0~7만 지원하며 flags8은 거부한다. 기존 `SurfaceFinder::Neighbors`는 snapshot이다. 원문 flags8의004b23e0→004b1d70→004b1c20/004b1e70은 source 발자국/타입/프레임/중심을 보관하고 현재 표면 지도와 후보를 Next 시점에 읽는다. 모서리 제외·y/x·현재 필터·signed short 중복 캐시를 보존해야 한다. 실제 진단이 켜진 경로만 고르는 것으로 원문 무조건 진단을 누락하지 않는다.
@@ -266,7 +267,7 @@ AI 미완료 체크 항목이 아니며 단계 전환을 막지 않는다. 부�
 ## 5. 참고 문서와 이관 기록
 
 - [C++ 빌드](docs/cpp-build.md), [로드맵](docs/cpp-roadmap.md), [플레이 가능 계획](docs/cpp-playable-plan.md), [소스 맵](cpppj/SOURCE_MAP.md), [모듈 맵](docs/exe/modules.md)
-- [디컴파일 신뢰도](docs/exe/decompile-reliability.md), [2026-10-23 양판본 디컴파일](docs/exe/cpp-decompilation-20261023.md), [analyzeManager](docs/analyze-manager.md)
+- [디컴파일 신뢰도](docs/exe/decompile-reliability.md), [2026-11-03 양판본 디컴파일·컴파일](docs/exe/cpp-decompilation-20261103.md), [2026-10-23 양판본 디컴파일](docs/exe/cpp-decompilation-20261023.md), [analyzeManager](docs/analyze-manager.md)
 - [준비본 보관](docs/exe/prepared/README.md): 443/444와 469의 일부는 후속 단위에 통합됐다. 보관본의 미적용/미빌드 문구를 현재 상태로 쓰지 않으며 base/patch/manifest/142파일 원시는 보존한다.
 - 과거 전체 원문: [504까지](LEFT_JOBS.old.md#archive-20261027-through-504), [549의 0절](LEFT_JOBS.old.md#archive-20261029-section0-through-549), [561의 3절](LEFT_JOBS.old.md#archive-20261029-section3-through-561), [638까지](LEFT_JOBS.old.md#archive-20261031-through-638), [695까지](LEFT_JOBS.old.md#archive-20261102-before-cleanup), **[808까지·이번 정리 직전](LEFT_JOBS.old.md#archive-20261103-through-808)**.
 - **이번 정리(2026-11-03, HJOW-Athlon):** 정리 전 원문을 보관 파일 끝에 그대로 추가하고 기존 보관 바이트를 유지했다. 대체된 실행/재개 지시·단위별 중간 수치/실패 나열·해소된 다음 작업·별도 요청 전 자동 공략 준비는 보관본으로 이관했다. 완료 항목은 2절의 `[x]`로, 미완료/부분·MP 이월·환경 대기·사용자 확인은 3절의 해당 위치로 정리했다. 제품 808/11.01·EXE 해시·마지막 디컴파일 호스트·일시중지는 유지했다. 문서/링크/보관 원문·해시·차이만 확인했으며 빌드/게임/기능 검사/디컴파일은 하지 않았다.
