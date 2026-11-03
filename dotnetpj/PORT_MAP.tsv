@@ -458,3 +458,7 @@ cpppj/src/client/ProductPresentation.h	Netstorm.Client/ProductPresentation.cs	10
 cpppj/src/client/ProductPresentation.cpp	Netstorm.Client/ProductPresentation.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
+cpppj/src/o/RawAddRandom.cpp	Netstorm.Core/Original/RawAddRandom.cs	108f76cc814769142a03e6923cb59966d76216b4	L1
+cpppj/src/o/RawAddRandom.h	Netstorm.Core/Original/RawAddRandom.cs	108f76cc814769142a03e6923cb59966d76216b4	L1
+cpppj/src/client/AddRandomInput.cpp	Netstorm.Client/Menu/AddRandomInput.cs	108f76cc814769142a03e6923cb59966d76216b4	L1
+cpppj/src/client/AddRandomInput.h	Netstorm.Client/Menu/AddRandomInput.cs	108f76cc814769142a03e6923cb59966d76216b4	L1
