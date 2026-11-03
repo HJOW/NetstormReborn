@@ -1290,7 +1290,8 @@ struct RawCampaignSession::Impl {
         // 거주 구역은 현재 일치 신전을 찾은 호출 위치에서 실제 theammode를 다시 읽는다.
         if (!assetEffects.regular.themeMode) assetEffects.regular.themeMode=services.ownership.themeMode;
         FillMissing(assetEffects.regular.themeMode);
-        assetEffects.postPop.checkForms=[this](Sid sid) { if (!CheckRawObjectForms(core.pool,sid)) throw std::logic_error("자산 postPop checkForms() 원본 진단"); }; // 실제 검사 뒤 실패만 보고한다.
+        assetEffects.postPop.checkForms=[this](Sid sid) { return CheckRawObjectForms(core.pool,sid); }; // 현재 판정만 반환하고 네 PostPop이 정확한 원문 위치에서 진단한다.
+        assetEffects.postPop.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("Gun postPop 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 같은 Client 서비스가 복귀하면 현재 전역과 공통 후처리를 계속한다.
         assetEffects.gun=MakeCampaignGunQueryHooks(core,*gunMode,*gunTarget,*gunHit,gunState,firingIntervals,std::move(assetEffects.gun));
         assetEffects.gun=MakeGunTargetHooks(core.pool,*gunTarget,std::move(assetEffects.gun));
         assetEffects.gun=combat->GunHooks(std::move(assetEffects.gun));

@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "o/RawAssetPostPop.h"
 #include <cstdio>
+#include <filesystem>
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -78,7 +79,7 @@ struct AssetScene {
         hooks.addRegular=[this](Sid sid,std::uint32_t event,float delay) { events.push_back("R:"+std::to_string(sid.value)+':'+std::to_string(event)+':'+std::to_string(std::bit_cast<std::uint32_t>(delay))); };
         hooks.createGunProcess=[this](Sid sid) { if (Allocate(56)) events.push_back("P:"+std::to_string(sid.value)); };
         hooks.removeAnimation=[this](Sid sid) { events.push_back("M:"+std::to_string(sid.value)); };
-        hooks.checkForms=[](Sid) {};
+        hooks.checkForms=[](Sid) { return true; };
         hooks.gunFrame=[this](std::int32_t angle) { events.push_back("F:"+std::to_string(angle));return 2; };
         hooks.setGraph=[this](Sid sid,std::int32_t graph) { events.push_back("Q:"+std::to_string(graph));pool.AllocatedBytes(sid)[patch ? 30 : 28]=static_cast<std::uint8_t>(graph); };
         hooks.surface=[](float,float) { return Sid{60}; };
@@ -272,4 +273,51 @@ TEST_CASE(AssetPostPop_ServerAuthorityRecheckedAfterFrameLookup) {
     hooks.gunFrame=[&,frameLookup](std::int32_t frame) { authority.server=false;return frameLookup(frame); }; // 원문은 이 두 각도/그래프 자식 호출 뒤540bc0을 읽는다.
     SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,std::move(hooks));base.SetAssetPostPop(&assets);base.Activate(kSource,2);
     CHECK(!authority.server && scene.state.inBattle);CHECK(scene.Output()==std::vector<std::string>(found->begin()+15,found->end())); // 같은 관문의 기존 server0 원문 출력과 비교하며 새 Native 관측으로 합산하지 않는다.
+}
+
+// 네 실제 PostPop의 현재 checking·로딩·편집 상태와 진단 복귀를 독립 원문 1344행으로 비교한다.
+TEST_CASE(GunPostPop_NativeDiagnosticOrderAndReturn1344) {
+    const auto fixture=LoadFixture((std::filesystem::path(NETSTORM_ASSETPOSTPOP_FIXTURE).parent_path()/"gun-postpop-checking-x86.tsv").string().c_str());
+    AssetScene scene(OriginalEdition::Patch1078);RawAuthorityState authority;std::size_t count{};
+    // 원문 생성/판정/진단 장치의 입력만 재생하며 발사·실제 게임·통신은 실행하지 않는다.
+    for (const auto& row:fixture.rows) {
+        CHECK(row.size()==9);if (row.size()!=9) throw std::logic_error("Gun PostPop fixture 필드 오류");
+        const auto input=Split(row[0],','),control=Split(row[1],',');CHECK(input.size()==14 && control.size()==5);
+        std::vector<std::string> legacy(21,"0");legacy[0]="originals";std::copy(input.begin(),input.end(),legacy.begin()+1);scene.Prepare(legacy);
+        std::uint32_t checking=Number(control[0]);scene.state.checkingForms.Bind(checking);scene.state.fortMode=Number(control[4])!=0;
+        authority.server=Number(input[3])!=0;scene.state.sharedAuthority=&authority;scene.state.inBattle=!authority.server;
+        const auto mutation=Number(control[3]);auto hooks=scene.Hooks();const auto create=hooks.createGunProcess,remove=hooks.removeAnimation;
+        hooks.createGunProcess=[&,create](Sid sid) {
+            if (mutation==1 || mutation==4) { checking=mutation==1 ? 0U : 1U;scene.state.loadingDepth=mutation==1 ? 1U : 0U;scene.state.fortMode=mutation==1; }
+            create(sid);
+        }; // 실제 new 시점의 전역 변경은 실패 반환에도 남는다.
+        hooks.removeAnimation=[&,remove](Sid sid) { remove(sid);if (mutation==5) authority.server=false; }; // 선택한 생성 분기는 서버가 바뀌어도 다시 취소하지 않는다.
+        hooks.checkForms=[&](Sid sid) { scene.events.push_back("C:"+std::to_string(sid.value));if (mutation==2) checking=0;return Number(control[1])!=0; };
+        hooks.assertion=[&](std::string_view expression,std::string_view file,std::uint32_t line) {
+            scene.events.push_back("X:"+Hex({reinterpret_cast<const std::uint8_t*>(expression.data()),expression.size()})+':'+Hex({reinterpret_cast<const std::uint8_t*>(file.data()),file.size()})+':'+std::to_string(line));
+            if (!Number(control[2])) throw std::runtime_error("명시 PostPop 진단 중단");
+            if (mutation==3) { checking=0;scene.state.loadingDepth=1;scene.state.fortMode=true;Put(scene.pool.AllocatedBytes(kSource),12,0x1234,2);Put(scene.pool.AllocatedBytes(kSource),36,0x6789); }
+        }; // 진단 뒤 현재 HP/extra와 전역을 다시 읽는지 전체 raw로 대조한다.
+        SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));
+        RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,std::move(hooks));std::string outcome="return";
+        assets.Validate(kSource,Number(input[1]));CHECK(scene.events.empty()); // 생성 앞 사전검사에서 원문 진단을 실행하지 않는다.
+        try { assets.PostPop(kSource,Number(input[1])); }
+        catch (const std::runtime_error& error) { if (std::string_view(error.what())!="명시 PostPop 진단 중단") throw;outcome="assertion"; }
+        const auto output=scene.Output();CHECK(output[0]==row[2]);CHECK(output[1]==row[3]);CHECK(outcome==row[4]);
+        CHECK(checking==Number(row[5]) && scene.state.loadingDepth==Number(row[6]) && scene.state.fortMode==(Number(row[7])!=0) && authority.server==(Number(row[8])!=0));++count;
+    }
+    CHECK(count==1344);
+}
+
+// 누락된 진단·판정은 생성 뒤 원문 소비 위치에서만 중단하며 checking0은 판정 장치를 요구하지 않는다.
+TEST_CASE(GunPostPop_MissingSelectedDiagnosticAfterCreation) {
+    AssetScene scene(OriginalEdition::Patch1078);scene.Prepare(Rows().front());Put(scene.pool.AllocatedBytes(kSource),0,kPatchAssetTables[2]);
+    scene.state.inBattle=true;std::uint32_t checking=0;scene.state.checkingForms.Bind(checking);
+    SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));
+    auto hooks=scene.Hooks();hooks.checkForms={};RawAssetPostPop missingGetter(scene.pool,scene.types,base,damageable,scene.state,hooks);
+    missingGetter.PostPop(kSource,1);CHECK(scene.events.size()==3 && scene.events.back()=="D:1");
+    scene.events.clear();checking=1;missingGetter.Validate(kSource,1);CHECK(scene.events.empty());
+    CHECK(Throws([&] { missingGetter.PostPop(kSource,1); }));CHECK(scene.events.size()==2 && scene.events.back()=="P:50");
+    scene.events.clear();hooks.checkForms=[](Sid) { return false; };RawAssetPostPop missingAssertion(scene.pool,scene.types,base,damageable,scene.state,hooks);
+    CHECK(Throws([&] { missingAssertion.PostPop(kSource,1); }));CHECK(scene.events.size()==2 && scene.events.back()=="P:50");
 }

@@ -1,0 +1,100 @@
+{
+  "unit": 809,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "goalComplete": false,
+  "runtimeProduct": 809,
+  "displayVersion": "11.01",
+  "exeSha256": "c7a2791b08d4bba3912c6b5d2487c0d7c668548f15577be8c4c68f2102898e35",
+  "build": {
+    "successfulInvocations": 1,
+    "failedInvocations": 2,
+    "finalLog": "build-v3.log",
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "failures": [
+      "v1: Validate 다른 Vortex 분기에서 쓰는 patch 변수 누락→복원",
+      "v2: 검사 filesystem include/LoadFixture const char* 경계 누락→직접 include와 string 변환"
+    ]
+  },
+  "tests": {
+    "total": 14,
+    "newTests": 2,
+    "failedChecks": 0,
+    "nativeRows": 1344,
+    "previousBothEditionsRows": 1636,
+    "filters": [
+      "GunPostPop_",
+      "AssetPostPop_"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "inputs": 1344,
+    "firstObservations": 2688,
+    "repeatObservations": 2688,
+    "totalObservations": 5376,
+    "identical": true,
+    "normalInputReturns": 1260,
+    "assertionInputStops": 84,
+    "diagnosticInputs": 228,
+    "entries": [
+      "0046a520",
+      "0046a600",
+      "0046a810",
+      "0046aca0",
+      "00441fa0"
+    ],
+    "fixtureSha256": "4ba2d249d9fa997b9c620d723b442e3af9c9013cee6dfe432ce53c75b4c42101"
+  },
+  "integration": {
+    "checkingOwner": "assetState.checkingForms→ClientGameplayGlobals.AiDebug.Checking",
+    "actualDiagnostic": "assetEffects.postPop.assertion→services.ai.assertion",
+    "forms": "CheckRawObjectForms의 현재 bool 판정만 반환·부모가 식/파일/행 선택",
+    "order": "GunProcess 생성 뒤 로딩/편집 무조건 진단→현재 checking→현재 Form 판정/실패 진단→HP/extra→Damageable",
+    "clientSid": "원문 00441fa0의 고정 5..14999 범위"
+  },
+  "checking": {
+    "before": 35,
+    "after": 31,
+    "completed": [
+      "0046a520",
+      "0046a600",
+      "0046a810",
+      "0046aca0"
+    ],
+    "remainingBreakdown": {
+      "parent": 22,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2737,
+    "currentCount": 2738,
+    "fixtureCount": 918,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/gun-postpop-checking-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "독립 생성/할당·Form 판정·공통 Damageable·진단은 명시 장치",
+    "실제 Client binder는 소스/빌드 근거·32비트 ABI/전체 SEH/진단 UI/실제 할당 실패는 별도 한계",
+    "실제 게임/발사/공격/포획/희생/승리/공중 전용/MP/물리·PCM 검사 없음"
+  ],
+  "next": "우선순위1 CanonDecoder 00425860의 현재 checking/프레임 진단과 실제 커서 소비자 연결"
+}

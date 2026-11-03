@@ -860,6 +860,8 @@ void __cdecl FUN_00462ac0(void)
 
 ## FUN_0046a520 @ 0046a520
 
+**809 완료:** 현재 checking·Form 판정·생성 뒤 로딩/편집 진단과 복귀를 실제 Client 서비스에 연결했다. 원문 1344입력/2688관측과 반복 일치·집중14개 실패0이며 [809 기록](cpp-gun-postpop-checking-20261103.md)을 따른다. 아래 미복원 서술은779 당시 상태다.
+
 **807 기반 교정:** 실제 서버 권한540bc0/CD540a28을 전투594fbc와 분리해 같은 Client owner로 읽도록 했다. 진단 위치/복귀는 아직 남아 있으며 [807 기록](cpp-asset-server-owner-20261103.md)을 따른다.
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
@@ -887,6 +889,8 @@ void __cdecl FUN_00462ac0(void)
 - `"checkForms()","\\Ns\\O\\Gunprocess.cpp",0x347)`
 
 ## FUN_0046a600 @ 0046a600
+
+**809 완료:** 현재 checking·Form 판정·생성 뒤 로딩/편집 진단과 복귀를 실제 Client 서비스에 연결했다. 원문 1344입력/2688관측과 반복 일치·집중14개 실패0이며 [809 기록](cpp-gun-postpop-checking-20261103.md)을 따른다. 아래 미복원 서술은779 당시 상태다.
 
 **807 기반 교정:** 실제 서버 권한540bc0/CD540a28을 전투594fbc와 분리해 같은 Client owner로 읽도록 했다. 진단 위치/복귀는 아직 남아 있으며 [807 기록](cpp-asset-server-owner-20261103.md)을 따른다.
 
@@ -916,6 +920,8 @@ void __cdecl FUN_00462ac0(void)
 
 ## FUN_0046a810 @ 0046a810
 
+**809 완료:** 현재 checking·Form 판정·생성 뒤 로딩/편집 진단과 복귀를 실제 Client 서비스에 연결했다. 원문 1344입력/2688관측과 반복 일치·집중14개 실패0이며 [809 기록](cpp-gun-postpop-checking-20261103.md)을 따른다. 아래 미복원 서술은779 당시 상태다.
+
 **807 기반 교정:** 실제 서버 권한540bc0/CD540a28을 전투594fbc와 분리해 같은 Client owner로 읽도록 했다. 진단 위치/복귀는 아직 남아 있으며 [807 기록](cpp-asset-server-owner-20261103.md)을 따른다.
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
@@ -944,6 +950,8 @@ LAB_0046a912:
 - `"checkForms()","\\Ns\\O\\Gunprocess.cpp",0x3c9)`
 
 ## FUN_0046aca0 @ 0046aca0
+
+**809 완료:** 현재 checking·Form 판정·생성 뒤 로딩/편집 진단과 복귀를 실제 Client 서비스에 연결했다. 원문 1344입력/2688관측과 반복 일치·집중14개 실패0이며 [809 기록](cpp-gun-postpop-checking-20261103.md)을 따른다. 아래 미복원 서술은779 당시 상태다.
 
 **807 기반 교정:** 실제 서버 권한540bc0/CD540a28을 전투594fbc와 분리해 같은 Client owner로 읽도록 했다. 진단 위치/복귀는 아직 남아 있으며 [807 기록](cpp-asset-server-owner-20261103.md)을 따른다.
 

@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **808 / 표시 버전11.01**이다. GunProcess 통지46a340의 현재 checking/animation/target 진단과 복귀를 실제 Client 서비스에 연결했다. 새 원문904입력/1808관측 및 재관측1808회가 일치했고 집중3개·기존 양판본 통지704행이 통과했다. checking 잔여는35(부모26·부분6·MP3)다. 게임/GUI/MP/Frame/Fire0·Release 경고/오류0·기존보호2736불변/새fixture1 포함2737이다. **사용자 요청으로 문서·로컬 커밋 후 목표를 일시중지하며 전체 목표는 미완료다.** [808 기록](../docs/exe/cpp-gun-notify-checking-20261103.md)·[일시중지 인계](../docs/exe/cpp-pause-handover-808-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
+현재 실행 제품은 **809 / 표시 버전11.01**이다. 네 Gun PostPop의 생성 뒤 진단 위치와 복귀를 실제 Client에 연결했다. 원문1344입력/2688관측과 재관측2688회가 일치했고 집중14개가 통과했다. checking 잔여는31(부모22·부분6·MP3)이며 최종 Release 경고/오류0이다. 사용자 `/goal` 요청으로 작업을 재개했고 전체 목표는 진행 중이다. [809 기록](../docs/exe/cpp-gun-postpop-checking-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 

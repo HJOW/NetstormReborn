@@ -127,12 +127,8 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
     }
     if (kind>=kGunAngle && kind<=kGunArcher) {
         if (!hooks_.createGunProcess || (kind==kGunAngle && (!hooks_.gunFrame || !hooks_.setGraph)) ||
-            (kind==kGunArcher && !hooks_.removeAnimation) || (patch && state_.checkingForms && !hooks_.checkForms))
+            (kind==kGunArcher && !hooks_.removeAnimation))
             throw std::invalid_argument("Gun postPop 효과 누락");
-        if (patch && state_.Server() && !(raw[40]&1) && (flags&1) &&
-            ((kind==kGunSun && !state_.loadingDepth) || (kind==kGunArcher && !state_.fortMode)) &&
-            ((flags&0x50) || (sid.value>=5 && sid.value<pool_.Layout().serverFirst)))
-            throw std::logic_error("Gun postPop 원본 서버/로딩 assert 경로");
         return;
     }
     if (!(flags&1) && kind<kVortexRain) return;
@@ -151,6 +147,11 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
 void RawAssetPostPop::Regular(Sid sid,std::uint32_t event,float delay) const {
     if (hooks_.reserveRegular()) hooks_.addRegular(sid,event,delay);
 }
+// 원문 assertion의 식과 정확한 파일/행을 현재 장치로 전달하며 성공을 합성하지 않는다.
+void RawAssetPostPop::GunAssertion(std::string_view expression,std::uint32_t line) const {
+    if (!hooks_.assertion) throw std::logic_error("Gun postPop 현재 진단 장치 미연결 "+std::to_string(line));
+    hooks_.assertion(expression,"\\Ns\\O\\Gunprocess.cpp",line);
+}
 // 실제 외부 효과 뒤 현재 extra/타입/HP를 읽어 원본 분기 순서를 유지한다.
 void RawAssetPostPop::Gun(Sid sid,std::uint32_t flags,std::uint32_t kind) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto extra=patch ? 40U : 35U,word=patch ? 36U : 34U;
@@ -163,7 +164,18 @@ void RawAssetPostPop::Gun(Sid sid,std::uint32_t flags,std::uint32_t kind) const 
         if (state_.Server() && !(pool_.Slot(sid)[extra]&1)) {
             if (kind==kGunArcher) hooks_.removeAnimation(sid);
             hooks_.createGunProcess(sid);
-            if (patch && state_.checkingForms) hooks_.checkForms(sid);
+            if (patch) {
+                // 생성/애니메이션 제거가 바꾼 현재 로딩·편집 상태를 읽는다. 진단은 checking과 독립이다.
+                if (kind==kGunSun && !state_.loadingDepth && ((flags&0x50U) || (sid.value>4 && sid.value<15000)))
+                    GunAssertion("duringLoad || !(popFlags &( pfDONT_TRANSMIT|pfCLIENT_POP)) && !isClientSid()",0x32a);
+                if (kind==kGunArcher && !state_.fortMode && ((flags&0x50U) || (sid.value>4 && sid.value<15000)))
+                    GunAssertion("inFortMode || ( !(popFlags &( pfDONT_TRANSMIT|pfCLIENT_POP)) && !isClientSid() )",0x3c8);
+                if (state_.checkingForms) {
+                    if (!hooks_.checkForms) throw std::logic_error("Gun postPop 현재 Form 판정 미연결");
+                    // getter가 checking을 꺼도 이미 선택한 실패 진단은 취소하지 않는다.
+                    if (!hooks_.checkForms(sid)) GunAssertion("checkForms()",kind==kGunAngle ? 0x347U : kind==kGunFirst ? 0x361U : kind==kGunSun ? 0x32bU : 0x3c9U);
+                }
+            }
         }
         if (kind==kGunSun && state_.loadingDepth && (Type(sid).flags1&0x1000))
             Write(pool_.AllocatedBytes(sid),word,Read(pool_.Slot(sid),12,2),patch ? 4U : 1U);

@@ -67,7 +67,8 @@ struct AssetPostPopHooks {
     std::function<void(Sid,std::uint32_t)> rainAviaryPostPop; // 실제0045ed10의 편집 관문/타입60 생성·부착/Damageable 전체 몸체다.
     std::function<void(Sid,std::uint32_t)> windAviaryPostPop; // 실제0045edf0의데빌메이커80BYTE 생성·부착·공통 후처리다.
     std::function<void(Sid)> removeAnimation; // 썬 디스크 발사기의 현재 애니메이션 제거다.
-    std::function<void(Sid)> checkForms; // 켜진 진단의 checkForms() assert를 검사한다.
+    std::function<bool(Sid)> checkForms; // 현재 Form 체인의 원문 판정값이며 진단 선택은 호출 부모가 맡는다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 원문 식/파일/행을 보고한다. 복귀하면 현재 전역을 다시 읽고 후처리를 계속한다.
     std::function<std::int32_t(std::int32_t)> gunFrame; // 현재 총 각도에서 실제 Gunanim 프레임을 조회한다.
     std::function<void(Sid,std::int32_t)> setGraph; // 004ad3e0/CD 004adbd0: BYTE 그래프 번호를 쓴다.
     std::function<Sid(float,float)> surface; // Residence의 현재 지면 SID 조회다.
@@ -120,6 +121,8 @@ private:
     void Regular(Sid sid,std::uint32_t event,float delay) const;
     // Gun 몸체의 네 분기·현재 raw 재조회·flags1 0x1000의 WORD/extra 쓰기다.
     void Gun(Sid sid,std::uint32_t flags,std::uint32_t kind) const;
+    // 선택한 원문 진단만 보고한다. 장치 누락은 그 위치에서 명시 오류이며 복귀 시 본문을 계속한다.
+    void GunAssertion(std::string_view expression,std::uint32_t line) const;
     // 거주 구역 최초 소유자·목록·예약·연결·패치의 잔여 프레임을 처리한다.
     void Residence(Sid sid,std::uint32_t flags) const;
     // 간헐천 최초 비용 WORD·목록·주변 받침 neutral 프레임·Damageable을 처리한다.
