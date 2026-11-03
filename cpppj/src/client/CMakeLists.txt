@@ -5,6 +5,7 @@ target_sources(netstorm PRIVATE
     ObjectOwnerCommands.cpp ObjectOwnerCommands.h # 일반 SetOwner와 편집 우클릭의 실제 Player Core 선택이다.
     # 모든 Template reader와 새 맵 초기화가 같은 Client 수명의 이름표를 빌린다.
     ClientTemplateSectionNames.cpp ClientTemplateSectionNames.h
+    TitleBitmapLifetime.cpp TitleBitmapLifetime.h ClientTitleBitmaps.cpp ClientTitleBitmaps.h # startup42의같은8칸/WM_PAINT/표시·반납이다.
     # 신규 manager의 실제 할당/생성/작업 파일/소멸/초기화 장치를 연결한다.
     NewFortManagerDevices.cpp NewFortManagerDevices.h
     EditorIslandDialog.cpp EditorIslandDialog.h EditorIslandDrag.cpp EditorIslandDrag.h # 실제 섬 추가 명령과 전용 창 드래그 입력이다.

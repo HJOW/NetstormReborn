@@ -1,4 +1,4 @@
-// 원문 004b6ebd..004b6fa9의 분기/현재 전역 쓰기/하위 호출 순서를 보존한다.
+// 원문 004b6e62..004b6fa9의 분기/현재 전역 쓰기/하위 호출 순서를 보존한다.
 #include "client/NativeIntroState.h"
 #include <stdexcept>
 
@@ -10,6 +10,8 @@ template<class F> const F& Need(const F& hook) { if (!hook) throw std::logic_err
 // State39 준비 뒤의 원문 bool 쓰기는 cleanup이 끝난 현재 같은 물리에 적용한다.
 o::LocalMissionParentResult InstallNativeIntroState(NativeIntroStateGlobals g,const NativeIntroStateHooks& h) {
     switch (g.state.current[0]) {
+    case 42:
+        Need(h.titleCursor)(false);Need(h.titleSplash)();Need(h.request)(41);g.state.immediate[35]=0;Need(h.restoreTitlePalette)();Need(h.titleCursor)(true);break; //source4b6e62..6eb9는예외앞선숨김/bitmap효과를되돌리지않는다.
     case 39:
         if (g.state.current[35]) {
             Need(h.cleanup)();Need(h.hideChatInput)();Need(h.hideChat)();
@@ -25,7 +27,7 @@ o::LocalMissionParentResult InstallNativeIntroState(NativeIntroStateGlobals g,co
     case 41:
         if (g.pendingName.empty()) throw std::out_of_range("Native 인트로 복귀의 pending 이름 물리 없음");
         g.pendingName[0]=0;Need(h.request)(3);break;
-    default:throw std::logic_error("Native 인트로 State39/40/41 계약");
+    default:throw std::logic_error("Native 인트로 State39/40/41/42 계약");
     }
     return o::LocalMissionParentResult::Commit;
 }

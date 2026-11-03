@@ -1,4 +1,4 @@
-// 원본 10.78의 State39/40/41을 현재 Native 블록과 실제 영상 장치 경계로 실행한다.
+// 원본 10.78의 State39/40/41/42을 현재 Native 블록과 실제 영상 장치 경계로 실행한다.
 #pragma once
 #include "o/RawLocalMissionState.h"
 #include <functional>
@@ -22,7 +22,9 @@ struct NativeIntroStateHooks {
     std::function<void(std::string_view)> openMovie; // 00484010의 실제 열기이며 원문은 성공 여부를 사용하지 않는다.
     std::function<bool()> movieActive; // 00483db0의 현재 MovieGump 존재 여부다.
     std::function<void(std::uint32_t)> request; // 같은 분배기의 immediate를 예약한다.
+    std::function<void()> titleSplash,restoreTitlePalette; //State42의4ab3e0과29로그/fortPal→GamePalSpec/clear1복구다.
+    std::function<void(bool)> titleCursor; //State42앞숨김과정상끝보임의4a40d0이다.
 };
-// 공통 commit은 RawLocalMissionState에 맡긴다. 39/40/41 외에는 장치 호출 전에 거부한다.
+// 공통 commit은 RawLocalMissionState에 맡긴다. 39/40/41/42 외에는 장치 호출 전에 거부한다.
 o::LocalMissionParentResult InstallNativeIntroState(NativeIntroStateGlobals globals,const NativeIntroStateHooks& hooks);
 }

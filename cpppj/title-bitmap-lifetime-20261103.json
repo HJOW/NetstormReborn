@@ -1,0 +1,337 @@
+{
+  "unit": 782,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 782,
+  "displayVersion": "11.01",
+  "exeSha256": "5394f953785684df57afdb0f7ba5ef3afc794e40c3d6052ed381f5bccbff0a48",
+  "summary": "활성 State42와 세 타이틀 GIF·같은8칸/WM_PAINT/반납을 연결하고 큰 화면의 할당 밖 재출력 종료를 같은 DIB 출력으로 교정",
+  "build": {
+    "runs": [
+      {
+        "log": "build-v1.log",
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "log": "build-v2.log",
+        "exitCode": 0,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests",
+      "netstorm_intro_menu_tests",
+      "netstorm_cd_presence_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "finalUnique": 21,
+    "newTests": 3,
+    "totalExecutions": 42,
+    "failedChecks": 0,
+    "names": [
+      "GifFileRead_Native56ExactZeroDimensionsDecodeAndCleanup",
+      "GifFileRead_CurrentEncryptedArchiveKeepsLegacySnapshot",
+      "GifFileRead_ValidDimensionsRemainBeforeInvalidLzwFailure",
+      "GifFileRead_KencloudCurrentArchiveUsesExistingPixelsAnd512Contract",
+      "IntroMenu_PresencePolicyArchiveFirstAndNoDeviceFallback",
+      "IntroMenu_DetectionZeroStoreCurrentPathAndPartialFailure",
+      "IntroMenu_IndependentNativeDetection84",
+      "IntroMenu_ActualFileProbeAndClientStartupOwner",
+      "IntroMenu_NameQueueAndNativeStateRequest",
+      "LocalMissionState_AliasesAndRequiredConsumers",
+      "NativeIntroState_Native17AllBlocksModesPendingAndPartialEffects",
+      "NativeIntroState_FreshMenuMarksIntroAfterPathThenCommitsMenuAndPollFour",
+      "StartupIo_ClientConstructorDoesNotReadArchiveBeforeSetupSearch",
+      "StartupIo_ActualClientSelectsParentAndNeverLoadsPoisonedEntryArchive",
+      "StartupIo_SelectedBadArchiveStillFailsAfterSetupAndCdBoundary",
+      "StartupIo_IndependentClientArchiveLookupsLoadOneSnapshot",
+      "StartupIo_DeferredCatalogIsValidThroughConstCopy",
+      "StartupIo_DirectDiskAndStartupStyleProbeDoNotConsumeDeferredCatalog",
+      "TitleBitmapLifetime_Native33SharedDimensionsPaintAndCleanup",
+      "TitleBitmapLifetime_State42Requests41AndRestoresPaletteAfterSplash",
+      "TitleBitmapLifetime_ActualRelativePathsReadSelectedUnicodeInstall"
+    ],
+    "excluded": [
+      "LocalMissionState_Native33의재접속/통신분기",
+      "LocalMissionState_QueuedReplyRunsAfterPhaseTenCommit"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "preparedObservations": 66,
+    "preparedRepeatObservations": 66,
+    "resumeRepeat": {
+      "unit": 782,
+      "rows": 33,
+      "observations": 66,
+      "host": "HJOW-Athlon",
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "bodies": [
+        "004ab3e0",
+        "004ab370",
+        "004ab2d0",
+        "004b3500"
+      ],
+      "boundary": "실제부모/시간대기분기/표/반납순서/초기42writer. GIF·palette·OS pump/input·시계·Lock/blit/Present/free는명시경계. 실제픽셀/게임/WM_PAINT OS/실제대기/MP검사0.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_title_bitmaps.py": "f4bc5740351833ea49469768e0b2f8659c04feb4fa40e623bed62241bc1c1d5d",
+        "cpppj\\tests\\fixtures\\title-bitmap-lifetime-x86.tsv": "8cb6eea07d2556b30fb144bb39ce4314f98b573682cc1bf8dd43536bbad94629"
+      }
+    },
+    "fixtureBytesVerified": true
+  },
+  "live": {
+    "totalSessions": 7,
+    "initialSessions": 2,
+    "initialProductFailures": 1,
+    "toolInputFailures": 1,
+    "finalSessions": 4,
+    "finalFailures": 0,
+    "finalDirectories": [
+      "live-1024-v2",
+      "live-640-v2",
+      "live-1280-v2",
+      "live-close-v3"
+    ],
+    "sessions": [
+      {
+        "rawDirectory": "live-640-v1",
+        "width": 640,
+        "height": 480,
+        "exitCode": 0,
+        "forced": false,
+        "elapsed": 12.866700999999011,
+        "observedState42": true,
+        "syntheticPaint": [],
+        "originalsUnchanged": true,
+        "exeSha256": "19c87eb5bf24c48343d5f70e16690bcb3f322c76bfd9a4b186c18744b9e6cb63",
+        "states": [
+          42,
+          41,
+          3,
+          4
+        ]
+      },
+      {
+        "rawDirectory": "live-1024-v1",
+        "width": 1024,
+        "height": 768,
+        "exitCode": 3221226505,
+        "forced": false,
+        "elapsed": 6.640040799999042,
+        "observedState42": true,
+        "syntheticPaint": [
+          {
+            "seconds": 1.3979211999994732,
+            "hwnd": 590250,
+            "message": "WM_PAINT",
+            "result": 1
+          }
+        ],
+        "originalsUnchanged": true,
+        "exeSha256": "19c87eb5bf24c48343d5f70e16690bcb3f322c76bfd9a4b186c18744b9e6cb63",
+        "states": [
+          42
+        ]
+      },
+      {
+        "rawDirectory": "live-1024-v2",
+        "width": 1024,
+        "height": 768,
+        "exitCode": 0,
+        "forced": false,
+        "elapsed": 11.920441199999914,
+        "observedState42": true,
+        "syntheticPaint": [
+          {
+            "seconds": 1.6133449999997538,
+            "hwnd": 1180760,
+            "message": "WM_PAINT",
+            "result": 1
+          },
+          {
+            "seconds": 4.592468500000905,
+            "hwnd": 1180760,
+            "message": "WM_PAINT",
+            "result": 1
+          },
+          {
+            "seconds": 7.603436999999758,
+            "hwnd": 1180760,
+            "message": "WM_PAINT",
+            "result": 1
+          }
+        ],
+        "originalsUnchanged": true,
+        "exeSha256": "5394f953785684df57afdb0f7ba5ef3afc794e40c3d6052ed381f5bccbff0a48",
+        "states": [
+          42,
+          41,
+          3,
+          4
+        ]
+      },
+      {
+        "rawDirectory": "live-640-v2",
+        "width": 640,
+        "height": 480,
+        "exitCode": 0,
+        "forced": false,
+        "elapsed": 11.640758600000481,
+        "observedState42": true,
+        "syntheticPaint": [
+          {
+            "seconds": 1.4497704000004887,
+            "hwnd": 3409552,
+            "message": "WM_PAINT",
+            "result": 1
+          },
+          {
+            "seconds": 4.434198200000537,
+            "hwnd": 3409552,
+            "message": "WM_PAINT",
+            "result": 1
+          },
+          {
+            "seconds": 7.445912999999564,
+            "hwnd": 3409552,
+            "message": "WM_PAINT",
+            "result": 1
+          }
+        ],
+        "originalsUnchanged": true,
+        "exeSha256": "5394f953785684df57afdb0f7ba5ef3afc794e40c3d6052ed381f5bccbff0a48",
+        "states": [
+          42,
+          41,
+          3,
+          4
+        ]
+      },
+      {
+        "rawDirectory": "live-1280-v2",
+        "width": 1280,
+        "height": 720,
+        "exitCode": 0,
+        "forced": false,
+        "elapsed": 11.708605999998326,
+        "observedState42": true,
+        "syntheticPaint": [
+          {
+            "seconds": 1.4429860999989614,
+            "hwnd": 1442956,
+            "message": "WM_PAINT",
+            "result": 1
+          },
+          {
+            "seconds": 4.426941499999884,
+            "hwnd": 1442956,
+            "message": "WM_PAINT",
+            "result": 1
+          },
+          {
+            "seconds": 7.429631499999232,
+            "hwnd": 1442956,
+            "message": "WM_PAINT",
+            "result": 1
+          }
+        ],
+        "originalsUnchanged": true,
+        "exeSha256": "5394f953785684df57afdb0f7ba5ef3afc794e40c3d6052ed381f5bccbff0a48",
+        "states": [
+          42,
+          41,
+          3,
+          4
+        ]
+      },
+      {
+        "rawDirectory": "live-close-v2",
+        "width": 1024,
+        "height": 768,
+        "exitCode": 1,
+        "forced": false,
+        "elapsed": 3.1472775000002002,
+        "observedState42": true,
+        "syntheticPaint": [
+          {
+            "seconds": 1.466461399999389,
+            "hwnd": 852114,
+            "message": "WM_CLOSE",
+            "result": 1
+          }
+        ],
+        "originalsUnchanged": true,
+        "exeSha256": "5394f953785684df57afdb0f7ba5ef3afc794e40c3d6052ed381f5bccbff0a48",
+        "states": [
+          42
+        ]
+      },
+      {
+        "rawDirectory": "live-close-v3",
+        "width": 1024,
+        "height": 768,
+        "exitCode": 0,
+        "forced": false,
+        "elapsed": 3.1433772000000317,
+        "observedState42": true,
+        "syntheticPaint": [
+          {
+            "seconds": 1.4828266000004078,
+            "hwnd": 524432,
+            "message": "WM_CLOSE",
+            "result": 1
+          }
+        ],
+        "originalsUnchanged": true,
+        "exeSha256": "5394f953785684df57afdb0f7ba5ef3afc794e40c3d6052ed381f5bccbff0a48",
+        "states": [
+          42
+        ]
+      }
+    ],
+    "scope": "사본의 시작/메뉴6프레임·자체 PID WM_PAINT 또는 시작중 WM_CLOSE. 실제 픽셀 동일성·물리 입력·전체34가 아님"
+  },
+  "protection": {
+    "beforeCount": 2719,
+    "currentCount": 2720,
+    "allUnchanged": true,
+    "fixtureCount": 900
+  },
+  "integration": {
+    "preparedFiles": 17,
+    "existingFiles": 10,
+    "newFiles": 7,
+    "corrections": [
+      "빈경로/고정d와현재VFSroot",
+      "같은경로helper의실제두설치회귀1개추가",
+      "작은그림의전체SCREEN재출력은이미완성된동일DIB를재사용"
+    ]
+  },
+  "gameExecutions": 7,
+  "multiplayerTests": 0,
+  "airThreeDedicatedTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "실제title픽셀/모든해상도/실제전경전체화면미검증",
+    "원문힙의할당밖픽셀과32비트SEHABI는동일성대상으로합성하지않음",
+    "최초종료오류의직접예외스택미수집·소스범위대조와실제WM_PAINT실패를근거로수정",
+    "기존eagerhost준비시점/메뉴전체예외는별도"
+  ],
+  "next": "784 일반 명령 press 꼬리→785 현재 보조 효과음 root→남은 비멀티/호환성"
+}

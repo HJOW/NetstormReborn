@@ -39,6 +39,7 @@ class ClientColorSortInput; //최초논리RGB와43c010의같은표입력을Clien
 class ClientRandomGlobals; // 같은 Client의 CRT holdrand와 Subscriber ID 최초시드 전역을 소유한다.
 class ClientSpGlobals; // 공통 시작의 SP/추적 offset을 사제와 Session보다 오래 같은 주소에 소유한다.
 class ClientKencloudGlobals; // 같은 구름/팔레트 전역과 현재 메모리를 모든 메뉴/장치 교체에서 유지한다.
+class ClientTitleBitmaps; // startup의실제8칸bitmap과WM_PAINT깊이owner다.
 class ClientRendererFrame; //같은 Renderer 전역과 실제 Frame의 구름/지형 장치를 조립한다.
 class ClientCaptureSequence; //연속 화면 저장의 장기 상태와 실제 프레임 할당을 소유한다.
 class ClientSubscriberGlobals; // 같은 Client의 실제 my/login 두 DWORD만 장기 소유한다.
@@ -95,6 +96,7 @@ struct ClientOptions {
 
 // 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다.
 class Client {
+    friend class ClientTitleBitmaps; // 실제startup bitmap owner가현재Screen/File/시계만빌린다.
     friend class ClientRendererFrame; //실제 프레임은 현재 Screen/초기 크기/전역 장치를 사본 없이 빌린다.
 public:
     explicit Client(ClientOptions options);
@@ -167,6 +169,7 @@ public:
     InputEvent Poll(std::uint32_t code) const;
 
     Screen& GetScreen();
+    void RunInitialTitleBitmaps(); // 실제State42의GIF/표시/입력대기/반납부모다.
     void LoadPaletteFile(std::string_view path,std::uint32_t clear); //GamePalSpec완성경로를DataDir재결합없이같은Screen에전달한다.
     void RebuildColorSortMaps(); //43c010의고정초기RGB/현재빨강9표만생성하며소비자갱신과구별한다.
     void RefreshPaletteConsumers(); //기존AudioTints/커서/월드/UI소비자를이후maps경계에서갱신한다.
@@ -343,6 +346,7 @@ private:
     // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     std::unique_ptr<GameAssets> assets_;
     std::shared_ptr<RawSurfaceStorage> surfaceStorage_; // 자산 뒤·UI/Session 앞에 확보해 모든 물리 참조보다 오래 유지한다.
+    std::unique_ptr<ClientTitleBitmaps> titleBitmaps_; //같은Client의원문startup8칸/paint깊이를소유하며Session교체로복제하지않는다.
     std::unique_ptr<ClientRendererFrame> rendererFrame_; //실제 Pool/해시보다 먼저 반납하고 Screen/미션 교체에도 같은 전역을 유지한다.
     std::unique_ptr<ClientCaptureSequence> captureSequence_; //화면/Session 교체에도 초기화하지 않는 실제 상태와 할당 owner다.
     // renderer_: 수집한 그림·텍스트를 화면에 그리는 렌더러.

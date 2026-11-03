@@ -398,7 +398,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     guideHooks.invalidStage=[] { throw std::logic_error("Guide 현재 미션 순번0..6 위반"); };
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) guide_=std::make_unique<o::RawMissionGuide>(client_.Assets().Edition(),std::move(guideHooks)); // Guide 몸체의 복원 판본은10.78이며 CD 메인 메뉴 생성은 기존대로 둔다.
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) {
-        client_.LocalStateGlobals()->State().next[0]=3;pageName_="main"; //첫 Tick에서도 실제 State3를 소비하여 최초 안내/현재 Core/모드가 원문과 같은 부모를 지난다.
+        if (client_.LocalStateGlobals()->State().next[0]!=42) client_.LocalStateGlobals()->State().next[0]=3;pageName_="main"; //첫 Tick에서도 실제 State3를 소비하여 최초 안내/현재 Core/모드가 원문과 같은 부모를 지난다.
     } else MainMenu();
     Compose(); client_.ShowScene();
 }

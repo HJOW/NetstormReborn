@@ -8,6 +8,7 @@
 #include "client/FontFaceEncoding.h" //Config 내부UTF-8 글꼴 이름을 원문 GDI A의 현재 ACP로 옮긴다.
 #include "client/ConfigFileRead.h" //실제10.78 Config만 현재 FILE/키와40380 부모를 사용한다.
 #include "client/TypeFileRead.h"
+#include "client/ClientTitleBitmaps.h" // 실제State42와WM_PAINT가같은bitmap owner를사용한다.
 #include "client/ConfigurationCommandInput.h" //같은 raw highPriority와 WinMain의 실제 OS 등급 비교를 사용한다.
 #include "client/ScreenModeTransition.h" //원문00435ba0의 현재 모드/실패 복구/공유 갱신 부모다.
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
@@ -211,6 +212,7 @@ Client::Client(ClientOptions options)
 Client::~Client() {
     configuration_.onChanged = {}; // 부분 반납 중인 Client를 콜백으로 다시 읽지 않게 먼저 해제한다.
     menu_.reset();
+    titleBitmaps_.reset(); //실패로남은host픽셀도Screen/창반납전에회수하며원문정상free8/깊이감소를합성하지않는다.
     rendererFrame_.reset(); //현재 Frame의 표시 작업 배열/Pool 대여를 화면·원문 물리 소유자보다 먼저 반납한다.
     captureSequence_.reset(); //미완료 수집도 메모리를 반납하며 Stop/파일/새 안내를 강제로 실행하지 않는다.
     ClearThunderFlashes();
@@ -376,6 +378,7 @@ int Client::Run() {
     if (audio_) audio_->StartScene(false);
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientChatManager(*this); //00439840의 실제 map mode 시작이며 메뉴/Session 생성보다 먼저 같은 현재 manager/명령표를 구성한다.
     fortBadges_->ResetCounts(); // 원본0043984a는 Chat 시작 다음의 같은 장부 count reset이며 매 Session 생성 때 반복하지 않는다.
+    if (options_.edition==o::OriginalEdition::Patch1078) RequestInitialTitleBitmap(localStateGlobals_->State().next); //439859의원문startup42/next+8c0.호스트/CD메뉴캐시로대체하지않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeSavedCameraPositions(gameplayGlobals_->Camera().SavedPositions()); //00439928의 최초10칸 쓰기이며 일반 미션/Renderer 재시작에서는 반복하지 않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeConstructionHistory(gameplayGlobals_->Camera().ConstructionHistory()); //원문0043994c의 최초5칸 쓰기다. 새 미션/Session/Renderer마다 반복하지 않는다.
     // 현재 UberGump는 단일 플레이 메뉴/브리핑과 저장 미션의 지형·선택·이동 월드를 연결한다.
@@ -391,7 +394,7 @@ int Client::Run() {
         if (priority.change) SetNativeThreadPriority(priority.priority); //원문처럼 GetCurrentThread를 다시 조회하고 OS BOOL 반환은 검사하지 않는다.
         // 1. 시각 고정(FUN_00460e90).
         *time_ = clock_.Capture(timeGetTime());
-        if (menu_) menu_->Tick();
+        if (menu_) { try { menu_->Tick(); }catch (const TitleBitmapQuit&) { return 0; } } //시작435b30의실제WM_QUIT만정상종료로연결한다.파일/표시예외는숨기지않는다.
         // 3. 재생 중인 효과음 수를 다시 센다(FUN_004a8e60). 2는 위 실제 상태 전환 부분이다.
         if (audio_) audio_->CountPlaying();
         if (menu_) menu_->PollMissionPackets(); //4의 원문 위치에서 로컬 미션/Editor 큐를 진행한다. 외부 송수신기/5~6의 시간 동기화·주기 내보내기는 별도 MP 복원 범위다.
@@ -1041,7 +1044,8 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
         {
             PAINTSTRUCT paint;
             const HDC dc = BeginPaint(window, &paint);
-            if (sceneVisible_ && renderer_) renderer_->InvalidateAll();
+            if (titleBitmaps_ && titleBitmaps_->Active()) titleBitmaps_->Redraw(); //원문startup의Renderer없음/paint깊이비영분기다.현대host는Renderer장치를먼저할당하므로실제startup깊이로구별한다.
+            else if (sceneVisible_ && renderer_) renderer_->InvalidateAll();
             else PaintLoading(dc);
             EndPaint(window, &paint);
         }

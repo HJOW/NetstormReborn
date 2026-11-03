@@ -3166,3 +3166,7 @@ set_source_files_properties(BoardCheckingParentTests.cpp PROPERTIES COMPILE_DEFI
 target_sources(netstorm_tests PRIVATE GifFileReadTests.cpp)
 target_sources(netstorm_file_tests PRIVATE GifFileReadTests.cpp)
 set_source_files_properties(GifFileReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GIF_FILE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gif-file-read-x86.tsv\"")
+# 원문startup title의큰부모/반납과State42요청을기존집중대상에서확인한다.
+target_sources(netstorm_tests PRIVATE TitleBitmapLifetimeTests.cpp)
+target_sources(netstorm_file_tests PRIVATE TitleBitmapLifetimeTests.cpp)
+set_source_files_properties(TitleBitmapLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TITLE_BITMAP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/title-bitmap-lifetime-x86.tsv\"")
