@@ -449,3 +449,5 @@ cpppj/src/o/TypeConstructors.inc	Netstorm.Core/Original/OriginalConstructors.Dat
 cpppj/src/o/TypeLoadOrder.cpp	Netstorm.Core/Original/RiftTypeLoadOrder.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/o/TypeParser.cpp	Netstorm.Core/Original/RiftTypeDefinition.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/platform/Bitmap.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
+cpppj/src/o/RawFortFinishOwner.cpp	Netstorm.Core/Original/RawFortFinishOwner.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
+cpppj/src/o/RawFortFinishOwner.h	Netstorm.Core/Original/RawFortFinishOwner.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
