@@ -1158,8 +1158,9 @@ void UberGump::Event(InputEvent event) {
     }
     if (DispatchScreenshotKey(event,[this] { client_.SaveGifScreenshot(); },[this](auto name) { Tell(std::string(name)); })) rebuild_=true; // Guide/Gump 뒤,console·정지와 일반 F7 배너 처리보다 앞이다. Tell이 연 정지를 아래에서 다시 읽는다.
     static_cast<void>(DispatchDiagnosticKey(event,[this] { client_.DumpDiagnostics(); })); // 같은 원문 위치에서 객체→프로세스 순서로 출력하며 정지/console은 아래에서 다시 읽는다.
-    if (IsPresentationCommand(event.code & 0x03ffffffU)) { static_cast<void>(GameMenuCommand(event));return; } //원문 두 설정명령은 Guide/Gump 뒤 공통 뗌 관문을 거쳐 HelpOpen/Console/정지보다 먼저 실행한다.
-    if (IsConfigurationCommand(event.code)) { static_cast<void>(GameMenuCommand(event));return; } //원문 세 설정명령은 HelpOpen/모달/Console/정지보다 앞에서 현재 부모를 실행한다.
+    bool recentCommandHandled=false; //최근12명령의실제효과뒤press는현재공통꼬리로진행하며늦은dispatcher만건너뛴다.
+    if (IsPresentationCommand(event.code & 0x03ffffffU)) { static_cast<void>(GameMenuCommand(event));recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //원문 두 설정명령은 Guide/Gump 뒤 공통 뗌 관문을 거쳐 HelpOpen/Console/정지보다 먼저 실행한다.
+    if (IsConfigurationCommand(event.code)) { static_cast<void>(GameMenuCommand(event));recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //원문 세 설정명령은 HelpOpen/모달/Console/정지보다 앞에서 현재 부모를 실행한다.
     const bool aiDebugHandled=IsAiDebugCommand(event.code); //413d50뒤에도같은사건의모달/Console/정지/세계입력꼬리를유지한다.
     if (aiDebugHandled) {
         if (world_) static_cast<void>(world_->Session().DispatchAiDebugCommand(event));
@@ -1203,12 +1204,12 @@ void UberGump::Event(InputEvent event) {
         CameraHomeHooks effects;effects.contentPreview=[](o::Sid) { throw std::logic_error("미설치World의LookAtSid내용물preview Runtime미연결"); }; //Carrier일때만카메라적용뒤도달한다.실제loadingDepth를0으로합성하거나preview성공을만들지않는다.
         CameraHome(storage.pool,storage.types,current,[this](float x,float y) { CenterViewPoint(x,y); },std::move(effects)).CenterOn(o::Sid{static_cast<std::uint16_t>(sid)}); //예약SID1도원문처럼현재좌표/foot을읽고같은즉시카메라전체부모를실행한다.
     };
-    if (DispatchUtilityCommandInput(event,utility)) { rebuild_=true;return; }
+    if (DispatchUtilityCommandInput(event,utility)) { rebuild_=true;recentCommandHandled=true;if (event.code&InputCode::kRelease) return; }
     if (DispatchUrlInput(event,[this](auto token) { return scriptStrings_.Resolve(token); },
         [this](auto text) { rawButtons_->Menus()->ActivateHelpLinkText(text); })) { rebuild_=true;return; } //모드/현재World와무관하게같은내부Help·cmd·외부정책을사용한다.
     if (DispatchCaptureInput(event,client_.ScreenCapture().State().active,{[this] { client_.ScreenCapture().Start(); },[this] { client_.ScreenCapture().Stop(); },[this](auto section) { Tell(std::string(section)); }})) { rebuild_=true;return; } //현재active우선/param2=1시작이다. 개발자키55a484조건은켜지않는다.
     if (DispatchRecheckCdInput(event,client_.CdGlobals()->RecheckSerial(),{[this](auto serial) { return rawButtons_->SerialGump(serial); },[this](auto token) { rawButtons_->KillGump(token); }})) { rebuild_=true;return; } //4d8b8d: 현재 serial 조회→공통 Kill→0쓰기다. 실제 CD 재탐색(440c60)이나 온라인 검증은 호출하지 않는다(단위696).
-    if (DispatchDrawWater(event,client_.GameplayGlobals()->DrawWater(),worldRedraw_)) { rebuild_=true;return; } //Guide/Gump/뗌 뒤 HelpOpen/Console/정지 앞이며 모드 관문을 추가하지 않는다.
+    if (DispatchDrawWater(event,client_.GameplayGlobals()->DrawWater(),worldRedraw_)) { rebuild_=true;recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //Guide/Gump/뗌 뒤 HelpOpen/Console/정지 앞이며 모드 관문을 추가하지 않는다.
     if (DispatchCreateHelpList(event,[this] {
         QuickHelpListContext context;context.file=MakeHelpListDiskHooks(client_.GameDirectory(),&client_.Files()); //원문 전체41b4c0와 같은 현재 파일 소유자다. 기존파일의 r+b tail을 유지한다.
         context.typeCount=[this] { const auto size=client_.Assets().TypeTable().Types().size();if (size>0x7fffffffU) throw std::out_of_range("Help 목록의 원문 signed TYPE 개수");return static_cast<std::int32_t>(size); }; //월드/지식/임무 상태로 TYPE 목록을 거르지 않는다.
@@ -1216,7 +1217,7 @@ void UberGump::Event(InputEvent event) {
         context.typeName=[this](auto type) { const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("Help 목록 TYPE 이름 범위");return types[type].name; };
         context.cleanup=[this] { rawButtons_->CleanupGumps(); };context.tell=[this](auto section) { Tell(std::string(section)); };
         rawButtons_->Menus()->CreateHelpList(std::move(context));
-    })) { rebuild_=true;return; } //Guide/Gump/뗌 뒤이며 Console/정지/월드·편집 모드 조건을 추가하지 않는다.
+    })) { rebuild_=true;recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //Guide/Gump/뗌 뒤이며 Console/정지/월드·편집 모드 조건을 추가하지 않는다.
     if (transitionCode==0x02000037U) {
         if (!(event.code&InputCode::kRelease)) { EnsureHudFactories();rawButtons_->ToggleMinimap(hud_->createMinimap); }
         rebuild_=true;return; //원본 일반 입력의5427d4→480810을 동일 공장/지연Kill에 연결하며 뗌은 전환하지 않는다.
@@ -1421,8 +1422,8 @@ void UberGump::Event(InputEvent event) {
         else warnings_->AddNull(); //원문004d88cd는 y=0도 그대로4d3090에 전달하며 유효한 빈 문자열과 구별한다.
         rebuild_=true;return;
     }
-    if (!createAtHandled && !aiUtilityHandled && !makeAiHandled && !aiDebugHandled && GameMenuCommand(event)) return; //앞서 실행한 생성 명령을 늦은 메뉴 dispatcher에 다시 보내지 않는다.
-    if (!createAtHandled && !aiUtilityHandled && !makeAiHandled && !aiDebugHandled && IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
+    if (!recentCommandHandled && !createAtHandled && !aiUtilityHandled && !makeAiHandled && !aiDebugHandled && GameMenuCommand(event)) return; //앞서 실행한 생성 명령을 늦은 메뉴 dispatcher에 다시 보내지 않는다.
+    if (!recentCommandHandled && !createAtHandled && !aiUtilityHandled && !makeAiHandled && !aiDebugHandled && IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
     if (IsObjectMenuVariantCommand(commandCode)) throw std::logic_error("현재 파생 객체 메뉴 선택의 실행 미연결: "+std::to_string(commandCode)); // 미복원 개발자/편집 실행을 입력에서 조용히 버리지 않는다.
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if (IsEscapeKeyPress(event)) {

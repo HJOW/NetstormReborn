@@ -1,0 +1,79 @@
+{
+  "unit": 784,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 784,
+  "displayVersion": "11.01",
+  "exeSha256": "60004899d0fc92b11dc74e6b641a6e13cdf74f878b83855cfa31992a5a52bc0d",
+  "summary": "일반12명령 press를공통후처리에잇고늦은중복dispatcher의기존네handled와새recent플래그를모두보존",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_script_bindings_tests",
+      "netstorm_menu_session_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 7,
+    "newTests": 0,
+    "failedChecks": 0,
+    "names": [
+      "ConfigurationCommandInput_Native238EnvelopeAndCurrentReads",
+      "CreateAt_Native408GeneralInputKeepsGuideGumpReleaseAndModes",
+      "DrawWater_Native384GeneralInputAndFullDwordStores",
+      "PresentationCommand_FontParentNativeRowsAndLateReaders",
+      "PresentationCommand_SoundNative32RowsAndPartialFailure",
+      "QuickHelpList_Native128GeneralGuideGumpReleasePauseConsole",
+      "UtilityCommandInput_Native283NonMultiplayerWrappers"
+    ],
+    "scope": "기존helper의release/주효과/실패회귀이며실제Uber전체tail검증이아님",
+    "fullSuiteRun": false
+  },
+  "staticIntegration": {
+    "base": "c4b8a17d",
+    "singleFile": "cpppj/src/client/UberGump.cpp",
+    "expectedMinimalChangesMatch": true,
+    "lateGuards": 2,
+    "handled": [
+      "recentCommandHandled",
+      "createAtHandled",
+      "aiUtilityHandled",
+      "makeAiHandled",
+      "aiDebugHandled"
+    ],
+    "existingBodiesAndHooksPreserved": true,
+    "sourceSha256": "8a6013fd7f42a5741b07f1f58182df328b536d0949646ba7ef9beaa24da303d5",
+    "newCppTests": 0,
+    "newNativeObservations": 0,
+    "gameExecutions": 0,
+    "multiplayerTests": 0
+  },
+  "staticToolCorrection": "최초prefix는Event밖분류도선택해도구중단·event.code로범위를교정",
+  "nativeObservations": 0,
+  "newFixtures": 0,
+  "protection": {
+    "beforeCount": 2720,
+    "currentCount": 2720,
+    "allUnchanged": true,
+    "fixtureCount": 900
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "전체Console/모달/커서의실제조건별writer효과는새관측없음",
+    "MoveIsland의MP전용분기는검사하지않음",
+    "호출범위차이를실제플레이오류재현으로확대하지않음"
+  ],
+  "next": "785 현재 보조 효과음 root→남은 비멀티/호환성"
+}
