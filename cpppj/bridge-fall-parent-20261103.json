@@ -1,0 +1,117 @@
+{
+  "unit": 793,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 793,
+  "displayVersion": "11.01",
+  "exeSha256": "e3bcc2d5b4639d6241e26bc4d41295ef352f61fb7adbfc846faea7eabb04f444",
+  "summary": "421f90 현재checking/genus 진단과같은Storage의실제낙하예약연결",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_world_generation_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 7,
+    "newTests": 3,
+    "failedChecks": 0,
+    "names": [
+      "BridgeFallParent_Native200CurrentCheckingArgumentsAndResume",
+      "BridgeFallParent_ActualHostChecksBeforeRegistrationAndKeepsChild",
+      "BridgeFallParent_StorageViewRetainsDwordAcrossWorldUses",
+      "CheckingConsumers_ClientOwnerAndFinderReborrow",
+      "CheckingConsumers_CurrentFullDwordViews",
+      "CheckingConsumers_TemporaryAndParentViewLifetime",
+      "process_delayed_fall_event_registers_and_ends"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "unit": 793,
+      "rows": 200,
+      "observations": 400,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제421f90만실행·genus/진단/21530예약은명시. 비복귀진단은관측중단이며전체SEH/실제Kernel/낙하행동검사아님. 풀주소변경/해제된포인터동작은관측하지않음.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_bridge_fall_parent.py": "95663ef5ccd2305893e1dab11a7a42e5d2d108eb392d17f21326ab1a8cb7fb61",
+        "extracted\\cpp-resume-793\\bridge-fall-parent-first.tsv": "22eda704911c2886da2efac28a5e28dbb1c2fbd1f0f06f5603d4e702f1addcbf"
+      }
+    },
+    "repeat": {
+      "unit": 793,
+      "rows": 200,
+      "observations": 400,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제421f90만실행·genus/진단/21530예약은명시. 비복귀진단은관측중단이며전체SEH/실제Kernel/낙하행동검사아님. 풀주소변경/해제된포인터동작은관측하지않음.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_bridge_fall_parent.py": "80c9060b47dabdcf2784419f58530d6ca3789dd1eab4c093add6717ed3d355e0",
+        "cpppj\\tests\\fixtures\\bridge-fall-parent-x86.tsv": "22eda704911c2886da2efac28a5e28dbb1c2fbd1f0f06f5603d4e702f1addcbf"
+      }
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 800,
+    "failedToolRuns": 0,
+    "commentOnlyCorrectionAfterFirst": true,
+    "initialToolArchived": true,
+    "fixtureByteVerified": true
+  },
+  "integration": {
+    "oldScheduleBridgeFallChildSourceUnchanged": true,
+    "actualClientDwordBoundBeforeWorld": true,
+    "actualSurfaceCallbackUsesSameStoragePoolAndTypes": true,
+    "nativeCheckingReadOnceAcrossGenusMutation": true,
+    "diagnosticBeforeKernelRegistration": true,
+    "storageViewSurvivesTwoAcquires": true,
+    "checkingRemainingBefore": 50,
+    "checkingRemainingAfter": 49,
+    "remainingBreakdown": {
+      "parent": 41,
+      "partial": 6,
+      "multiplayer": 2
+    }
+  },
+  "protection": {
+    "beforeCount": 2724,
+    "currentCount": 2725,
+    "allUnchanged": true,
+    "fixtureCount": 905,
+    "newFixtures": [
+      "cpppj/tests/fixtures/bridge-fall-parent-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "Native는부모만·genus/진단/21530은명시장치·실제Kernel/낙하행동/전체SEH아님",
+    "실제호스트등록/기존자식은C++집중검사와정적접합으로구별",
+    "풀재확보/해제된옛주소동작/32비트ABI동일성별도",
+    "실제진단UI미연결은선택조건명시예외·IgnoreUI전체동일성아님",
+    "CD는기존직접자식유지·새Native0"
+  ],
+  "next": "checking잔여49·비멀티UI/Edit/수명/호환성"
+}

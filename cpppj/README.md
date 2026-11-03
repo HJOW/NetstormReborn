@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **791 / 표시 버전11.01**이다. 791의실제SHP연결·집중17개통과를유지하며792는Script직접caller를CD/호스트fallback으로분류했다. 새제품/빌드/검사/Native/게임/MP0·보호2724불변이다. 다음checking잔여50·비멀티UI/Edit/수명·호환성을진행한다. [792 기록](../docs/exe/cpp-script-cache-callers-20261103.md)·[현재 인계](../LEFT_JOBS.md)를따른다.
+현재 실행 제품은 **793 / 표시 버전11.01**이다. 다리 낙하 예약의 현재 checking/TYPE 진단과 실제 Storage 뷰를 연결했다. 원본200입력/400회와 재관측400회가 일치했고 집중7개(새3개)가 통과했다. checking 잔여는49(부모41·부분6·MP2)다. 새게임/MP0·보호2724불변/현재2725다. [793 기록](../docs/exe/cpp-bridge-fall-parent-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 

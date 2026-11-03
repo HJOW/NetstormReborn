@@ -3,6 +3,7 @@
 #include "o/GameClock.h"
 #include "client/RawProcessHostStorage.h"
 #include "o/RawAuthorityState.h"
+#include "o/RawCheckingFlag.h" // Editor/Session이같은Client진단owner를빌린다.
 #include "o/RawGameAuxState.h"
 #include "o/RawBoardTarget.h"
 #include "o/RawPathSearch.h" //원문거리표의한소유자를Client물리에보존한다.
@@ -36,6 +37,7 @@ class RawSurfaceStorage {
 private:
     std::shared_ptr<o::RawAuthorityState> authority_; // Pool의 현재 서버 포인터와 World 실행기보다 먼저 만들고 마지막에 반납한다.
     std::shared_ptr<o::RawGameAuxState> gameAux_; // 실제 장부/게임 TYPE 참조보다 먼저 구성한다.
+    o::RawCheckingFlag checking_; // 대여/World반납뒤에도같은현재Client진단DWORD를읽는다.독립저장소기본값은0이다.
 public:
     // 대여 중에는 두 번째 월드가 같은 풀을 초기화하지 못하게 한다.
     class Use {
@@ -58,6 +60,8 @@ public:
     std::uint64_t Generation() const; // 성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다.
     const std::shared_ptr<o::RawAuthorityState>& Authority() const { return authority_; } // Client 전역/Session과 같은 실제 서버·권한 주소의 정체성이다.
     const std::shared_ptr<o::RawGameAuxState>& GameAux() const { return gameAux_; } // 같은 Gameplay/Host가 pin하는 실제 게임 보조 owner다.
+    void BindChecking(o::RawCheckingFlag checking) { checking_=checking; } // 비소유현재뷰또는독립자체값을수명안전하게복사하며bool사본을동기화하지않는다.
+    o::RawCheckingFlag Checking() const { return checking_; } // 호출위치에서현재owner를읽을수있는같은뷰다.
     std::uint32_t& GeyserType() { return gameAux_->GeyserType(); } // 모든 실제 타입 소비자의 현재 DWORD다.
     const std::uint32_t& GeyserType() const { return gameAux_->GeyserType(); } // 대여/반납으로 타입 주소를 교체하지 않는다.
     const GameAssets* Source() const; // Client 자산 정체성이다. 독립 raw 검사에서는 nullptr이다.

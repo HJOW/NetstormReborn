@@ -1,5 +1,6 @@
 // 호스트 통합이다. 개별 몸체의 원본 근거는 surface-graph-integration 및 각 raw 모듈 문서를 따른다.
 #include "client/RawSurfaceWorld.h"
+#include "o/RawBridgeFallParent.h" // 실제낙하예약이원문현재checking/TYPE진단부모를거친다.
 #include "o/RawBridgeEvents.h"
 #include "o/RawIslandPostPop.h"
 #include "o/RawSurfaceLifecycle.h"
@@ -153,7 +154,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
                 if (event.effect!=o::SquidDestroyEffect::Transmit) throw std::logic_error("raw 표면 월드의 미연결 삭제 효과");
             }},graph.get());
         lifecycle=std::make_unique<o::RawSurfaceLifecycle>(pool,*neighbors,links.connectorType,CommonDeletionHooks(),o::SurfaceLifecycleHooks{
-            [this](o::Sid sid,float x,float y) { o::ScheduleBridgeFall(*host,sid,x,y); },
+            [this](o::Sid sid,float x,float y) { o::ScheduleBridgeFallChecked(*host,pool,types,sid,x,y,storage->Checking()); },
             [this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); },
             [this](o::Sid sid) { if (runtimeBound) { if (!runtime.walkerFall(sid)) throw std::logic_error("월드 낙하 처리 실패"); }else ++walkerFalls; },
             [this](const o::BridgeLifecycleEvent& event) { if (runtimeBound) runtime.bridgeEffect(event);else ++effectRequests; }}); // 단독 기하 검사의 관찰과 실제 Session의 파편/소리를 구별한다.

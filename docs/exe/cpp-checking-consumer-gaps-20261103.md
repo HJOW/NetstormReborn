@@ -60,6 +60,8 @@
 
 ## FUN_00421f90 @ 00421f90
 
+**793 완료:** 같은 현재 checking/TYPE 진단 부모를 실제 낙하 예약과 Storage 뷰에 연결했다. 원본200입력/400회와 재관측400회 일치·집중7개 통과이며 기존 자식은 유지한다. 아래 미복원 서술은779 당시 상태다. [793 기록](cpp-bridge-fall-parent-20261103.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawBridgeLifecycle.h, cpppj\src\o\RawIslandLifecycle.h

@@ -2,6 +2,7 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    RawBridgeFallParent.cpp RawBridgeFallParent.h # 같은현재checking/TYPE의낙하예약진단부모다.
     RawFileName.cpp RawFileName.h #전체459c60의 부품 문법과10칸 임시 경로 고리다(727).
     RawDataManagerDump.cpp RawDataManagerDump.h #가상파일명/이름표와실제current의원문진단덤프다.
     RawBaseFileReadPolicy.cpp RawBaseFileReadPolicy.h #모드0 읽기의 실제 장치/접두/기본·보조 조회 순서다.
