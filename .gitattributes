@@ -2412,3 +2412,5 @@ cpppj/tests/fixtures/gump-checking-parents-x86.tsv -text
 cpppj/tests/fixtures/burning-victim-parent-x86.tsv -text
 cpppj/tests/fixtures/form-linked-parent-x86.tsv -text
 cpppj/tests/fixtures/construction-form-parent-x86.tsv -text
+
+cpppj/tests/fixtures/cursor-cancel-checking-x86.tsv -text

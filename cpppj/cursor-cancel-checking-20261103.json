@@ -1,0 +1,120 @@
+{
+  "unit": 801,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 801,
+  "displayVersion": "11.01",
+  "exeSha256": "611edbeeb24248ad05952a1ac5e341f2d7a0f3038912bdc8a30f9279763ea0d6",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "successfulBuilds": 1,
+    "failedBuilds": 0,
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "build-v1.log",
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 7,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "CursorLifecycle_NativeTakeCancelAndActivate565",
+      "CursorLifecycle_SharedMenuDropBindingsAndGuards",
+      "CursorLifecycle_ProtectedAssetsAndActualText",
+      "CursorLifecycle_NativeTypeNumberAndRange",
+      "CursorLifecycle_ActualAssetTypeRangeDuringTake",
+      "CursorLifecycle_NativeCancelCurrentCheckingAndDiagnosticReturn156",
+      "CursorLifecycle_CurrentClientCheckingSurvivesResetAndSelectedMissingDiagnostic"
+    ],
+    "previousGoldenCases": 565,
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "entry": "00446e70",
+      "rows": 156,
+      "observations": 312,
+      "returnCount": 149,
+      "assertionStops": 7,
+      "diagnostics": 21,
+      "precision": [
+        639,
+        895
+      ],
+      "gameExecutions": 0,
+      "boundaries": [
+        "기존 전체 취소/Activate 몸체와 명시 가상/UI/음향/SP 장치",
+        "진단은 명시 복귀/중단 장치이며 전체 SEH/진단UI 아님"
+      ],
+      "initialDiagnosticCountIncludedDetach": 144
+    },
+    "repeat": {
+      "host": "HJOW-Athlon",
+      "entry": "00446e70",
+      "rows": 156,
+      "observations": 312,
+      "returnCount": 149,
+      "assertionStops": 7,
+      "diagnostics": 21,
+      "precision": [
+        639,
+        895
+      ],
+      "gameExecutions": 0,
+      "boundaries": [
+        "기존 전체 취소/Activate 몸체와 명시 가상/UI/음향/SP 장치",
+        "진단은 명시 복귀/중단 장치이며 전체 SEH/진단UI 아님"
+      ]
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 624,
+    "failedRuns": 0,
+    "initialReportCorrection": "최초 보고서의 D:가 detach도 포함한144였으므로 진단 식 hex 접두로21로 정정·최초/반복 바이트 불변"
+  },
+  "checking": {
+    "before": 42,
+    "after": 41,
+    "completed": [
+      "00446e70"
+    ],
+    "remainingBreakdown": {
+      "parent": 32,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2730,
+    "currentCount": 2731,
+    "fixtureCount": 911,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/cursor-cancel-checking-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "기존 전체 취소/Activate와 명시 가상/UI/음향/SP/진단 장치",
+    "진단 복귀와 중단을 구별하며 전체 SEH/진단 UI는 별도",
+    "같은 Client DWORD/대여/반납은 C++ 검사·실제 Session 진단 서비스는 소스/빌드",
+    "마지막 실제 GUI는794의793제품·전체 C++/71대상/34/ZIP 반복0"
+  ],
+  "next": "checking 잔여41·비멀티 UI/Edit/수명·호환성"
+}

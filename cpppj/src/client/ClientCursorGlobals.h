@@ -15,7 +15,7 @@ public:
     const std::uint32_t& SnapToGrid() const { return snapToGrid_; } // 위치입력에서호출때마다다시읽는다.
     std::uint32_t& RotationMode() { return rotationMode_; } //0054db60의 현재 전체 DWORD이며 C/메뉴/우클릭이 같은 값을 쓴다.
     const std::uint32_t& RotationMode() const { return rotationMode_; } //Session 교체나 일반 커서 reset으로 옵션을 지우지 않는다.
-    void ResetForGeneralWorld() { const auto* pixels=placement_.sharedScreenOrigin;lifecycle_=CursorLifecycleState{};placement_=CursorPlacementState{};placement_.sharedScreenOrigin=pixels;snapToGrid_=0; } // 기존일반Runtime의fresh/반납호환이며NativeCancel의효과를대신하지않는다.
+    void ResetForGeneralWorld() { const auto* pixels=placement_.sharedScreenOrigin;const auto checking=lifecycle_.checking;lifecycle_=CursorLifecycleState{};lifecycle_.checking=checking;placement_=CursorPlacementState{};placement_.sharedScreenOrigin=pixels;snapToGrid_=0; } // 현재 checking 뷰와 카메라를 유지한 일반Runtime fresh/반납 호환이며 NativeCancel 효과를 대신하지 않는다.
 private:
     CursorLifecycleState lifecycle_; // Native임시목록과측정값이며pendingTimer/실행함수가없다.
     CursorPlacementState placement_; // 같은장기snapshot픽셀포인터만빌릴수있고Session포인터는없다.

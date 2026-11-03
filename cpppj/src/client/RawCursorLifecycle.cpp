@@ -69,7 +69,7 @@ void RawCursorLifecycle::Cancel() const {
                 const auto source=Need(hooks_.source)(preview);Raw(source);Need(hooks_.sourceNotice)(source,CursorPreviewSid(drop_.preview),4);
                 if (drop_.costFlags&0x80) {
                     Need(hooks_.sound)("teleporterActive.wav");
-                    if (state_.teleportBlocked) throw std::logic_error("커서 취소 teleporter 원본 false 진단");
+                    if (state_.Checking()) Need(hooks_.assertion)("false",".\\Cursor.cpp",0x3f1);
                     Need(hooks_.addLocalSp)(-Type().cost);
                 }
             }

@@ -2912,6 +2912,7 @@ struct RawCampaignSession::Impl {
         }; // 원본 가상+4c는 void 해제/복귀 Pop이며 +48 분리와 구별한다.
         game.lifecycle.destroy=[this](Sid sid,std::uint32_t flags) { if (!world.Destroy(sid,flags)) throw std::logic_error("커서 실제 가상 삭제 거부"); };
         game.lifecycle.addLocalSp=[this](float delta) { hp.AddSp(playerState.battleOwner,delta); };
+        game.lifecycle.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("커서 취소 원문 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 같은 현재 진단 서비스가 복귀하면 비용 차감과 기존 정리를 계속한다.
         game.lifecycle.sound=[this](std::string_view name) {
             if (!services.sound.play) throw std::logic_error("커서 실제 소리 장치 미연결");services.sound.play(soundNames.Lookup(name),0,0,0,0,0);
         };

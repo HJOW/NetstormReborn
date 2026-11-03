@@ -3,6 +3,8 @@
 #include "client/RawCursorDrop.h"
 #include "client/GumpText.h"
 #include "client/RawPriestMenu.h"
+#include "o/RawCheckingFlag.h"
+#include <optional>
 
 namespace netstorm::client {
 class GameAssets; // 실제 자산 저장소의 선언이며 헤더에서 게임 자산을 중복 소유하지 않는다.
@@ -19,6 +21,8 @@ struct CursorLifecycleState {
     std::int32_t costHotspotX{},costHotspotY{},imageHeight{}; // 비용 그림 프레임3의 signed WORD와 별도 높이다.
     std::uint32_t costImage{}; // 실제 SHP 블록의 호스트 식별값이며 원본 포인터로 역참조하지 않는다.
     std::string costText; // 0055a1bc의 절삭된 비용 문자열이다.
+    std::optional<o::RawCheckingFlag> checking; // 실제 Client의 현재 진단 DWORD를 빌린다. 독립 기존 입력은 teleportBlocked를 사용한다.
+    o::RawCheckingFlag Checking() const { return checking ? *checking : o::RawCheckingFlag{teleportBlocked}; } // 반환음과 진단 효과 뒤 소비 시점의 현재 값을 읽는다.
 };
 static_assert(sizeof(CursorLifecycleState::previews)==120); //원문배열의DWORD폭/30칸을컴파일시점에고정한다.
 o::Sid CursorPreviewSid(std::uint32_t number); //원문DWORD를잃지않고SID16호스트경계직전에범위를검사하며유효풀범위는각소비자가검사한다.
@@ -46,6 +50,7 @@ struct CursorLifecycleHooks {
     std::function<void(std::string_view)> sound; // teleporterActive.wav의 원본 여섯 인자 재생이다.
     std::function<void(float)> addLocalSp; // 실제0040eec0의 float 비용 차감이다.
     std::function<ScreenPoint()> mouse; // 현재005cae94/98을 꼬리 호출 직전에 읽는다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 원문 false/파일/행 진단이며 복귀하면 현재 TYPE 비용 차감과 꼬리를 계속한다.
 };
 // 사제 건설 메뉴와 생산 칸이 같은 Form·임시 객체·취소/내려놓기 상태를 공유하게 하는 원본 수명 몸체다.
 class RawCursorLifecycle {

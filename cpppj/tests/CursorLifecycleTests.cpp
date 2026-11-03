@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "client/RawCursorLifecycle.h"
 #include "client/GameAssets.h"
+#include "client/ClientGameplayGlobals.h"
 #include <filesystem>
 
 using namespace netstorm::test::rawscene;
@@ -163,4 +164,33 @@ TEST_CASE(CursorLifecycle_ActualAssetTypeRangeDuringTake) {
     RawCursorLifecycle logic(scene.pool,scene.types,scene.drop,scene.state,hooks);logic.Take(Sid{50},0x160);
     CHECK(scene.state.abstractType==128 && scene.drop.type==128 && scene.drop.cursorGump==2);
     CHECK(scene.trace.find("G:100:0")!=std::string::npos);
+}
+
+// 현재 checking/TYPE를 바꾸는 반환음과 진단을 전체 취소 원문156행의 상태/효과와 대조한다.
+TEST_CASE(CursorLifecycle_NativeCancelCurrentCheckingAndDiagnosticReturn156) {
+    CursorScene scene;std::size_t count{}; // 동일 풀을 재사용하되 각 행의 명시 입력을 다시 공급한다.
+    // 원문 출력의 중단 시점도 비교하므로 진단 예외 뒤 꼬리를 합성하지 않는다.
+    for (const auto& row:LoadFixture(NETSTORM_CURSOR_CANCEL_CHECKING_FIXTURE).rows) {
+        CHECK(row.size()==9);const auto values=Numbers(row[0]);CHECK(values.size()==20);const std::vector<std::uint32_t> input(values.begin()+3,values.end());scene.Prepare(input);
+        std::uint32_t checking=values[0];scene.state.checking=netstorm::o::RawCheckingFlag{checking};scene.types[101].cost=std::bit_cast<float>(0xc0700000U);scene.types[102].cost=std::bit_cast<float>(0x80000000U);auto hooks=scene.Hooks();
+        hooks.sound=[&](std::string_view name) { scene.Event(std::string("S:")+std::string(name),{0,0,0,0,0});if (values[1]) { checking=values[1]==1 ? 0U : 0x80000000U;scene.state.abstractType=101; } }; // 비용과 진단은 반환음 이후 현재 값을 읽는다.
+        hooks.assertion=[&](std::string_view expression,std::string_view file,std::uint32_t line) {
+            CHECK(expression=="false" && file==".\\Cursor.cpp" && line==0x3f1);scene.Event("D:66616c7365:2e5c437572736f722e637070:1009");
+            if (values[2]==2) throw std::runtime_error("명시 진단 중단");if (values[2]==1) { checking=0;scene.state.abstractType=102; }
+        }; // 진단 복귀 뒤 TYPE 재조회와 음수0 비용의 부호 비트도 보존한다.
+        std::string outcome="return";RawCursorLifecycle logic(scene.pool,scene.types,scene.drop,scene.state,std::move(hooks));
+        try { logic.Cancel(); } catch (const std::runtime_error& error) { if (std::string_view(error.what())!="명시 진단 중단") throw;outcome="assertion"; }
+        CHECK(scene.trace==row[1]);CHECK(scene.Snapshot()==row[2]);CHECK(scene.state.costText==row[3]);CHECK(Hex(scene.pool.Slot(Sid{50}))==row[4]);CHECK(Hex(scene.pool.Slot(Sid{51}))==row[5]);CHECK(Hex(scene.pool.Slot(Sid{77}))==row[6]);CHECK(outcome==row[7]);CHECK(checking==Number(row[8]));++count;
+    }
+    CHECK(count==156);
+}
+
+// Client의 현재 진단 owner는 일반/준비 대여와 반납 뒤에도 같은 DWORD를 읽는다.
+TEST_CASE(CursorLifecycle_CurrentClientCheckingSurvivesResetAndSelectedMissingDiagnostic) {
+    ClientGameplayGlobals globals;auto& state=globals.CursorGlobals().Lifecycle();globals.AiDebug().Checking()=std::bit_cast<std::int32_t>(0x80000000U);CHECK(static_cast<bool>(state.Checking()));
+    { auto use=globals.Acquire();CHECK(static_cast<bool>(state.Checking()));globals.AiDebug().Checking()=0;CHECK(!state.Checking()); }
+    globals.AiDebug().Checking()=-1;CHECK(static_cast<bool>(state.Checking()));{ auto use=globals.AcquirePrepared();CHECK(static_cast<bool>(state.Checking())); }CHECK(static_cast<bool>(state.Checking()));
+    CursorScene scene;scene.Prepare({1,0x80,0x80,0,0,0x437ac000,0,50,0,0,0,0,1,0,0,0,0});scene.state.teleportBlocked=1;auto hooks=scene.Hooks();RawCursorLifecycle logic(scene.pool,scene.types,scene.drop,scene.state,hooks);bool rejected{};
+    try { logic.Cancel(); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected);CHECK(scene.trace.ends_with("S:teleporterActive.wav:0:0:0:0:0"));CHECK(scene.drop.preview==50 && scene.drop.cursorGump==1 && scene.state.previewCount==2);
+    scene.Prepare({1,0x80,0x80,0,0,0x437ac000,0,50,0,0,0,0,1,0,0,0,0});scene.state.teleportBlocked=0;logic.Cancel();CHECK(scene.drop.preview==0 && scene.drop.lockDepth==1 && scene.drop.cursorGump==0); // 미선택 진단은 장치를 요구하지 않고 기존 전체 꼬리를 실행한다.
 }

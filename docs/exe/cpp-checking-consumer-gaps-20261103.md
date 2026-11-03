@@ -289,6 +289,8 @@ LAB_004259a2:
 
 ## FUN_00446e70 @ 00446e70
 
+**801 완료:** 반환음 뒤 현재 checking/TYPE 재조회와 진단 복귀·같은 Client owner/일반 대여 수명을 연결했다. 원본156입력/312회와 재관측312회 일치·집중7개(새2개) 통과다. 아래는779 당시이며 전체SEH/진단UI는 [801 기록](cpp-cursor-cancel-checking-20261103.md)의 별도 경계다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawStateWorldCleanup.h, cpppj\src\o\RawStateWorldCleanup.cpp, cpppj\src\o\RawProductionSync.h, cpppj\src\client\RawCampaignSession.h, cpppj\src\client\UberGump.cpp, cpppj\src\client\RawKnowledgeMenu.h, cpppj\src\client\RawCursorLifecycle.h, cpppj\src\client\InventoryGump.h, cpppj\src\client\GameMenuActions.h, cpppj\src\client\RawCampaignCursor.h, cpppj\src\client\ClientCursorStateCleanup.h, cpppj\src\client\ClientStateWorldCleanup.cpp
