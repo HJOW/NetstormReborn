@@ -1,0 +1,123 @@
+{
+  "unit": 787,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 787,
+  "displayVersion": "11.01",
+  "exeSha256": "45e95ad12feb6f0161a15bbb80d25094695618b8fa3c4059f42b894548fff6ef",
+  "summary": "현재Xlat FILE에서같은버퍼설치·직접읽기/CR정규화뒤닫기·기존파서병합을연결",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_xlat_runtime_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 10,
+    "newTests": 3,
+    "failedChecks": 0,
+    "names": [
+      "LanguageOptions_IndependentNative4655",
+      "LanguageOptions_CurrentWritesReloadOrderAndFailures",
+      "LanguageOptions_ActualClientConfigAndScenarioPath",
+      "XlatFileRead_Native252InstallCloseBufferAndMergedLanguages",
+      "XlatFileRead_CurrentArchiveStartupKeepsSnapshotAndMissingOrder",
+      "XlatFileRead_EmptyNativeInstallGuardAndDuplicatePreserveOtherLanguage",
+      "XlatRuntime_IndependentNativeBuffersAndMergedLookup",
+      "XlatRuntime_StartupReadFailurePreservesEarlierLanguages",
+      "XlatRuntime_IndependentActualTarcFiles",
+      "XlatRuntime_ActualClientArchiveAndLanguageChanges"
+    ],
+    "fullSuiteRun": false,
+    "legacyAssetBytes": 97526,
+    "legacyUniqueKeys": 830
+  },
+  "native": {
+    "first": {
+      "unit": 787,
+      "rows": 252,
+      "observations": 504,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제4de710/파서/병합/조회와41aad0/41aa80/41a7a0/41b410/4fc280. Path/Probe/Open/CRT/할당/memmove/로그는명시. 길이0의할당밖쓰기·중복진단복귀뒤UAF·전체SEH/OS실패는미관측.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_xlat_file_read.py": "03163719435e04d360f02bf01abf910386ed4cb0d9ae3ab5f9ef03551c68a4e1",
+        "extracted\\cpp-resume-787\\xlat-file-first.tsv": "577f9c6433b73ace32ac03aeba3619d4014f37af7ef2cbaae521ef530fb5658b"
+      }
+    },
+    "repeat": {
+      "unit": 787,
+      "rows": 252,
+      "observations": 504,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제4de710/파서/병합/조회와41aad0/41aa80/41a7a0/41b410/4fc280. Path/Probe/Open/CRT/할당/memmove/로그는명시. 길이0의할당밖쓰기·중복진단복귀뒤UAF·전체SEH/OS실패는미관측.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_xlat_file_read.py": "03163719435e04d360f02bf01abf910386ed4cb0d9ae3ab5f9ef03551c68a4e1",
+        "extracted\\cpp-resume-787\\xlat-file-first.tsv": "577f9c6433b73ace32ac03aeba3619d4014f37af7ef2cbaae521ef530fb5658b"
+      }
+    },
+    "successfulFullRuns": 2,
+    "totalCompleteObservations": 1008,
+    "preliminarySingleCaseProbe": true,
+    "failedToolRuns": 0,
+    "outcomes": {
+      "ok": 212,
+      "open": 4,
+      "assertion": 8,
+      "allocation": 8,
+      "read": 8,
+      "close": 4,
+      "parse": 8
+    },
+    "fixtureByteVerified": true
+  },
+  "integration": {
+    "normalizationLoopByteIdenticalAfterLineEndings": true,
+    "parserTailByteIdenticalAfterLineEndings": true,
+    "privateDataLayoutUnchanged": true,
+    "legacyEmptyAndDuplicateGuardsPreserved": true,
+    "fileClosedBeforeParser": true,
+    "patchOnlyClientEntry": true
+  },
+  "protection": {
+    "beforeCount": 2721,
+    "currentCount": 2722,
+    "allUnchanged": true,
+    "fixtureCount": 902,
+    "newFixtures": [
+      "cpppj/tests/fixtures/xlat-file-read-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "CRT/Path/Probe/Open/할당/memmove/로그는명시장치·실제OS/전체SEH아님",
+    "호스트할당과암호작업의명시0은원문미정힙/stack자체동일성주장아님",
+    "길이0은원문할당밖쓰기대신빈슬롯설치후거부·Native성공미합산",
+    "중복진단복귀뒤해제된키UAF는기존711거부계약유지",
+    "미완성Open의현대RAII자원회수와원문완료File정리구별",
+    "CD10.72는기존입구유지·새Native관측0"
+  ],
+  "next": "font cache·SHP·Script현재파일부모와checking잔여50·비멀티/호환성"
+}

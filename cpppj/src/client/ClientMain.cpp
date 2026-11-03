@@ -8,6 +8,7 @@
 #include "client/FontFaceEncoding.h" //Config 내부UTF-8 글꼴 이름을 원문 GDI A의 현재 ACP로 옮긴다.
 #include "client/ConfigFileRead.h" //실제10.78 Config만 현재 FILE/키와40380 부모를 사용한다.
 #include "client/TypeFileRead.h"
+#include "client/XlatFileRead.h" // 실제 Xlat만 현재 FILE/설치/정규화·닫기 위치를 사용한다.
 #include "client/ClientTitleBitmaps.h" // 실제State42와WM_PAINT가같은bitmap owner를사용한다.
 #include "client/ConfigurationCommandInput.h" //같은 raw highPriority와 WinMain의 실제 OS 등급 비교를 사용한다.
 #include "client/ScreenModeTransition.h" //원문00435ba0의 현재 모드/실패 복구/공유 갱신 부모다.
@@ -579,10 +580,8 @@ void Client::InterpretOwnerColorOptions() { // 준비 전의 원문 무시와 �
 // 원문004dea00의 실제 세 파일/부재 로그를 같은 Client 장부에 연결한다.
 void Client::InitializeNativeTranslations() {
     if (options_.edition!=o::OriginalEdition::Patch1078) return; //CD의 전체 Xlat 부모를 새10.78 경로로 대조한 것으로 주장하지 않는다.
-    if (nativeTranslations_) throw std::logic_error("Client Xlat 최초 적재의 중복 호출");nativeTranslations_=std::make_unique<o::RawXlat>();o::RawXlatStartupHooks hooks;
-    hooks.exists=[this](auto path) { return files_.Probe(path)!=0; };hooks.read=[this](auto path) { return files_.Read(path); };
-    hooks.missing=[this](auto path) { WriteDiagnosticLog(9,"Failed to open the translation file \""+std::string(path)+"\"\n"); };
-    o::InitializeRawXlat(*nativeTranslations_,hooks);
+    if (nativeTranslations_) throw std::logic_error("Client Xlat 최초 적재의 중복 호출");nativeTranslations_=std::make_unique<o::RawXlat>();
+    InitializeNativeXlat(*nativeTranslations_,files_,[this](auto reason,auto path) { const auto prefix=reason==XlatFileFailure::Missing ? "Failed to open the translation file \"" : "Failed to get translation file length for \"";WriteDiagnosticLog(9,std::string(prefix)+std::string(path)+"\"\n"); }); // 두 원문9번 문구와 다음 언어 진행을 구별한다.
 }
 // 원문004dea70을 현재 Client의 같은 장기 소유자에 연결한다.
 void Client::SetLanguage(std::uint32_t language) {

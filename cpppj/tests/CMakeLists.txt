@@ -2914,7 +2914,10 @@ netstorm_apply_compiler_options(netstorm_language_options_tests)
 
 #최초 다중 Xlat/원문 바이트와 언어 옵션·기존 파서 계약을 집중 확인한다(711).
 target_sources(netstorm_tests PRIVATE XlatRuntimeTests.cpp)
+target_sources(netstorm_tests PRIVATE XlatFileReadTests.cpp) # 현재 File/닫기 버퍼를 기존 원문 파서 회귀와 함께 검사한다(787).
 add_executable(netstorm_xlat_runtime_tests FocusedTestMain.cpp XlatRuntimeTests.cpp LanguageOptionsTests.cpp RecoveryTests.cpp)
+target_sources(netstorm_xlat_runtime_tests PRIVATE XlatFileReadTests.cpp)
+set_source_files_properties(XlatFileReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_XLAT_FILE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/xlat-file-read-x86.tsv\"")
 target_link_libraries(netstorm_xlat_runtime_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_xlat_runtime_tests)
 

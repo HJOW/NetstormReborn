@@ -17,10 +17,22 @@ std::string Text(std::span<const std::uint8_t> bytes,std::size_t start) { const 
 // 파일별 버퍼를 설치한 뒤 같은 원본 레코드의 다른 여섯 언어 칸은 건드리지 않는다.
 void RawXlat::Load(std::uint32_t which,std::span<const std::uint8_t> source) {
     auto& storage=buffers_.at(which);if (storage) throw std::logic_error("Xlat textBuffer[which] == NULL 원문 진단"); //원문 재적재 진단 뒤 해제된 옛 키 주소의 동작을 정상 경로로 합성하지 않는다.
-    if (source.empty()) throw std::out_of_range("Xlat 원문 길이0의 마지막BYTE 물리 범위");storage.emplace(source.begin(),source.end());auto& bytes=*storage;bytes.back()=0;
+    if (source.empty()) throw std::out_of_range("Xlat 원문 길이0의 마지막BYTE 물리 범위");storage.emplace(source.begin(),source.end());
+    NormalizeFileBuffer(which);ParseFileBuffer(which);
+}
+// 현재 textBuffer 슬롯의 실제 설치 여부를 읽으며 빈 설치도 미설치와 구별한다.
+bool RawXlat::HasBuffer(std::uint32_t which) const { return buffers_.at(which).has_value(); }
+std::span<std::uint8_t> RawXlat::AllocateFileBuffer(std::uint32_t which,std::uint32_t length) { // 할당이 실패하면 아직 설치하지 않은 슬롯은 비어 있다.
+    auto& storage=buffers_.at(which);if (storage) throw std::logic_error("Xlat 기존 버퍼 재사용의 원문 미정 포인터 경계");storage.emplace(length);return *storage;
+}
+void RawXlat::NormalizeFileBuffer(std::uint32_t which) { // 끝NUL/CR 정리는 같은 원래 크기의 버퍼에만 기록한다.
+    auto& storage=buffers_.at(which);if (!storage || storage->empty()) throw std::out_of_range("Xlat 원문 길이0의 마지막BYTE 물리 범위");auto& bytes=*storage;bytes.back()=0;
     for (std::size_t at=0;at<bytes.size() && bytes[at];) { //원문은 파일 전체 크기로 memmove하고 이동 후 같은 위치를 다시 검사한다.
         if (bytes[at]==13) std::memmove(bytes.data()+at,bytes.data()+at+1,bytes.size()-at-1);else ++at;
     }
+}
+void RawXlat::ParseFileBuffer(std::uint32_t which) { // 같은 기존 레코드 파서를 File 소멸 뒤의 원문 위치에서 실행한다.
+    auto& storage=buffers_.at(which);if (!storage || storage->empty()) throw std::out_of_range("Xlat 실제 파싱 버퍼 누락");auto& bytes=*storage;
     std::optional<std::size_t> cursor=0;
     while (cursor && bytes[*cursor]) { //각004de260은 실제 이전 cursor부터 새 레코드를 읽는다.
         std::uint32_t state{};std::optional<std::size_t> key,value;bool complete{};
