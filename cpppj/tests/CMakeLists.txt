@@ -3307,3 +3307,9 @@ target_sources(netstorm_tests PRIVATE AmbientWindTests.cpp)
 target_sources(netstorm_file_tests PRIVATE AmbientWindTests.cpp)
 set_source_files_properties(AmbientWindTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_AMBIENT_WIND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ambient-wind-hardware-x86.tsv\"")
+
+# 주변음 CPU1272행과 실제 Client/State 공유 기한을 대조한다.
+target_sources(netstorm_tests PRIVATE AmbientSoundTests.cpp)
+target_sources(netstorm_file_tests PRIVATE AmbientSoundTests.cpp ExistingEditorAfterCheckpointTests.cpp ClientAudioTests.cpp)
+set_source_files_properties(AmbientSoundTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_AMBIENT_SOUND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ambient-sound-hardware-x86.tsv\"")

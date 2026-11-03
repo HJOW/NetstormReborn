@@ -1,0 +1,197 @@
+{
+  "unit": 822,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "previousCommit": "e5a198df / 20261104-03 CP",
+  "exeSha256": "a65e2f2e94655308c29a62271f617c7f5f6d6c1788200c7cfaa8fa4efc624ddd",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "실제 Windows x86 CPU / 전용 payload / 시계·음향·화면 요청 관측",
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "rows": 1272,
+    "fixtureSha256": "b53d24da6391db8f0ee71541bba7bea3e9b97e335115cf80aad3a0b5d6b657dc",
+    "probeSha256": "911c0cfc50265c6b54059601a1e9c294c9123efad52d43527f2b50cfb62a216f",
+    "probeSourceSha256": "5d6ca7968ebf74be751be0e0aaa8e77de5873f727f1c5c8650d1d703a0c55bdb",
+    "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "boundary": "주변음/난수/재예약/선택 바람 원문 실행·0x027f/53비트·실제 OS시계/PCM/화면 프로세스는 경계 관측"
+  },
+  "nativeReobservedRows": 1272,
+  "nativeCountsPerObservation": {
+    "originals": {
+      "rows": 636,
+      "ambientCalls": 1524,
+      "resetCalls": 80,
+      "windCalls": 672,
+      "wallCalls": 2400,
+      "soundRequests": 748,
+      "flashRequests": 215,
+      "nativeAssertionEvents": 0
+    },
+    "originalCD": {
+      "rows": 636,
+      "ambientCalls": 1524,
+      "resetCalls": 80,
+      "windCalls": 672,
+      "wallCalls": 2400,
+      "soundRequests": 748,
+      "flashRequests": 215,
+      "nativeAssertionEvents": 0
+    }
+  },
+  "tests": [
+    {
+      "filter": "AmbientSound_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-822/test-AmbientSound-first.log",
+      "sha256": "880a4f2e30a7e0c41ed737c505d489b6f0ddd1d63d4478653f7b259eb2ae2b78"
+    },
+    {
+      "filter": "AmbientWind_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-822/test-AmbientWind-first.log",
+      "sha256": "8885260731353c0ce24ff2f2ca133363f76d7fda9ec60e701cdf54a32d28fe61"
+    },
+    {
+      "filter": "ExistingEditorAfterCheckpoint_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-822/test-ExistingEditorAfterCheckpoint-final.log",
+      "sha256": "1f0850a035f57ceab693dfd688c1575f06b08e4257a1c92f2c8e71f1578c7ffa"
+    },
+    {
+      "filter": "ClientAudio_ActualClientWithoutDeviceUsesGameGlobals",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-822/test-ClientAudioActual-final.log",
+      "sha256": "9cd2687704768e44ad617a6f1e3178e1c5aaf385c7a1c2eb2b6f236adb5372b3"
+    }
+  ],
+  "focusedCases": 11,
+  "newCases": 3,
+  "failedChecks": 0,
+  "builds": [
+    {
+      "kind": "제품Release NetstormCpp+집중",
+      "log": "extracted/cpp-resume-822/build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "c8cdedcca1d1daccf74b271670319e26bbf311d3c85638619eba8307c7493d95"
+    },
+    {
+      "kind": "기존검사2파일 추가 집중대상",
+      "log": "extracted/cpp-resume-822/build-focused-second.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "f6bd91dc283220f4ac4ef311cf0c030ceb92bd96963084a28116ce5a0f7a5602"
+    },
+    {
+      "kind": "MSVC x86 CPU프로브",
+      "log": "extracted/cpp-resume-822/probe-build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "c07b80aad17d59274281f507b7ec1946a71996d113b291dd94f8bb3a50bdefec"
+    }
+  ],
+  "initialIssues": [
+    {
+      "filter": "ExistingEditorAfterCheckpoint_",
+      "cases": 0,
+      "failedChecks": 1,
+      "log": "extracted/cpp-resume-822/test-ExistingEditorAfterCheckpoint-first.log"
+    },
+    {
+      "filter": "ClientAudio_ActualClientWithoutDeviceUsesGameGlobals",
+      "cases": 0,
+      "failedChecks": 1,
+      "log": "extracted/cpp-resume-822/test-ClientAudioActual-first.log"
+    },
+    "두 기존 파일이 집중대상에 없어0개였다. CMake 등록 뒤 실제5개 통과. 제품/기대값 변경0."
+  ],
+  "currentConnections": [
+    "Client.UpdateAmbientSound -> same LocalState.ActivityEnd/kind/forced -> current WallSeconds/GameRandom -> same SoundPlayer -> current actual Gump dialog -> shared RequestThunderFlash",
+    "actual Client Movie update depth<=0: AmbientSound -> AmbientWind -> bridge/audio",
+    "ExistingEditorAfterCheckpoint + RawLocalMissionState.Starting/actual Session starting tail -> ResetAmbientSoundDeadline same ActivityEnd"
+  ],
+  "checking": {
+    "remaining": 23,
+    "parents": 15,
+    "partial": 5,
+    "multiplayer": 3,
+    "closedThisUnit": []
+  },
+  "remaining": [
+    "823 monitorFormat004182c0/CD004ecb30: guard/180s/current options/handle/time32/localtime/asctime/real log + Wind 뒤 실제 Client",
+    "State19의004180d0 재예약 호출은 후순위 MP 큰 부모에 남긴다.",
+    "전체 Client 순서/난수/전체 동일성·자연 완주는 이번 부품으로 완료 판정하지 않는다."
+  ],
+  "protection": {
+    "unchangedPreviousFiles": 2748,
+    "afterFiles": 2749,
+    "fixtureFiles": 929,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted/cpp-resume-822/protected-after.json",
+    "sha256": "f29095eabe8ec9d4d843c2420cacd06c1a44e9cdc6a84adcd4de0d19ff250480"
+  },
+  "excluded": [
+    "원본 게임/GUI·자연 플레이/자동 공략",
+    "포획/희생/특정 적 공격/승리·사용자 직접 확인",
+    "MP/공중3종 새 전용",
+    "실제 PCM/청취/OS시계/물리 출력·캡처 재시도",
+    "전체 CTest/71대상/34미션/ZIP"
+  ],
+  "sourceHashBoundary": "실제 호스트 바이트와 CRLF를 LF로 정규화한 두 표를 함께 기록한다. LEFT/단위문서는 자기참조 해시를 피한다.",
+  "sources": {
+    "cpppj/src/o/RawAmbientSound.h": "e425d18d245f892507e5e3ed6d360382b0e18d3d2840129dbc9de5c2c674a109",
+    "cpppj/src/o/RawAmbientSound.cpp": "bc10a4b69dcf30d939f79443dd77ab10ccb8e4328a65e7762be137dc19134ea4",
+    "cpppj/src/o/CMakeLists.txt": "0f2b3afd54134ed0c5544db62be81f18ba3d2b2449ade5cd8aafd7bf6de06085",
+    "cpppj/src/o/RawLocalMissionState.cpp": "207552393d5539fa09560556e67eb34e4a7571a696843a6d7e69b825e6620562",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "7f1a43ce49064343b12de3902a3a25d64538e08ae51471b1f5e89927d3258f75",
+    "cpppj/src/client/ClientMain.h": "e7c4e41416bd2b68a65fa45dd64c909c2cda2f0328975b7b251a3ecc26b5f54e",
+    "cpppj/src/client/ClientMain.cpp": "26cbf9a03c19e749fd1621490c0358cf54a33e8a0d852a60b91c28faf7c47b6e",
+    "cpppj/src/client/UberGump.h": "1de01ce8d5e8be15c167a8a95c4a36bf2ff4ca7b6d9d67580785e7469771e396",
+    "cpppj/src/client/UberGump.cpp": "442193d771a1553f2e8b3b464de86e5e423fa03e22f8ea62cd2bc3e1e1827a5d",
+    "cpppj/src/client/ExistingEditorAfterCheckpoint.cpp": "2ed6ed08badcba573b7b19f4bddcfd8c6a9f827006a1e9093c58e3c8eaf1e4be",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "aba425919d2e890dda3e452c5ac961da020f90f321f763f0a602eb671b437764",
+    "cpppj/tests/CMakeLists.txt": "5f72dcdd4f91e1daa2c0d02d05a0c3493882ab4269ed97d59379c1b34ffb776b",
+    "cpppj/tests/AmbientSoundTests.cpp": "019dcc6b9a423056b4955ac023291dc8b650e64848f2971491bb027f98c4f5a2",
+    "cpppj/SOURCE_MAP.md": "5591b6d4e3418a04cfaf466a1424a4258daa713326f89a03454150774e60f3c5",
+    "tools/native_ambient_sound_probe.cpp": "5d6ca7968ebf74be751be0e0aaa8e77de5873f727f1c5c8650d1d703a0c55bdb",
+    "tools/observe_ambient_sound_hardware.py": "77176710ff34f8033d81cce1108a6319e91db5af3cbde53d5d9d274c9862c897",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0"
+  },
+  "normalizedSources": {
+    "cpppj/src/o/RawAmbientSound.h": "e425d18d245f892507e5e3ed6d360382b0e18d3d2840129dbc9de5c2c674a109",
+    "cpppj/src/o/RawAmbientSound.cpp": "bc10a4b69dcf30d939f79443dd77ab10ccb8e4328a65e7762be137dc19134ea4",
+    "cpppj/src/o/CMakeLists.txt": "0f2b3afd54134ed0c5544db62be81f18ba3d2b2449ade5cd8aafd7bf6de06085",
+    "cpppj/src/o/RawLocalMissionState.cpp": "c177944412a515e5720e116ff60d505b5a3079aaebef986bb8bfdcce3fc30c1b",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "7f1a43ce49064343b12de3902a3a25d64538e08ae51471b1f5e89927d3258f75",
+    "cpppj/src/client/ClientMain.h": "e7c4e41416bd2b68a65fa45dd64c909c2cda2f0328975b7b251a3ecc26b5f54e",
+    "cpppj/src/client/ClientMain.cpp": "ff093a967b7209c279b38928af52c262f2dc531924d158c7cecacf4a4591a968",
+    "cpppj/src/client/UberGump.h": "1de01ce8d5e8be15c167a8a95c4a36bf2ff4ca7b6d9d67580785e7469771e396",
+    "cpppj/src/client/UberGump.cpp": "442193d771a1553f2e8b3b464de86e5e423fa03e22f8ea62cd2bc3e1e1827a5d",
+    "cpppj/src/client/ExistingEditorAfterCheckpoint.cpp": "2ed6ed08badcba573b7b19f4bddcfd8c6a9f827006a1e9093c58e3c8eaf1e4be",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "aba425919d2e890dda3e452c5ac961da020f90f321f763f0a602eb671b437764",
+    "cpppj/tests/CMakeLists.txt": "e0f151a580c51f096b94cd7146022235a78f83d95b5cfbf58add4d02a94e583f",
+    "cpppj/tests/AmbientSoundTests.cpp": "019dcc6b9a423056b4955ac023291dc8b650e64848f2971491bb027f98c4f5a2",
+    "cpppj/SOURCE_MAP.md": "01f103f0499fab587d1d12b04757a6247188ec404001194b0f4cd6f1f9ac8d1e",
+    "tools/native_ambient_sound_probe.cpp": "5d6ca7968ebf74be751be0e0aaa8e77de5873f727f1c5c8650d1d703a0c55bdb",
+    "tools/observe_ambient_sound_hardware.py": "77176710ff34f8033d81cce1108a6319e91db5af3cbde53d5d9d274c9862c897",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca"
+  }
+}

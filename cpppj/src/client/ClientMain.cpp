@@ -426,6 +426,7 @@ int Client::Run() {
         if (movieUpdatePauseDepth_<=0) {
             // 원본439ad3의 설정 저장은439b13의 가상 소멸/OnExit 예약보다 먼저다.
             if (configuration_.Configuration().changed) SaveOptions();
+            UpdateAmbientSound(); //00439aeb는 같은 난수를 소비하는 Wind 바로 앞이며 noAudio/게임 정지로 생략하지 않는다.
             surfaceStorage_->UpdateAmbientWind(randomGlobals_->Game()); //00439af0의 Movie 잠금 없는 가지이며 게임 시계 정지/메뉴 여부와 무관하게 같은 난수를 소비한다.
             RunClientBridgeDecay(*this); //00422bc0은 메뉴에서도 실행하며 위치 소리469f60보다 먼저 현재 다리 수명/파괴를 처리한다.
             if (audio_) audio_->SceneFrame(); //469f60은 미니맵/Gump/Kernel보다 앞이다.
@@ -1241,3 +1242,13 @@ std::string Client::Translate(std::string_view text) const {
 }
 
 }  // namespace netstorm::client
+
+namespace netstorm::client { // 실제 Client 장치가 원문 주변음의 선택된 경계를 수행한다.
+void Client::UpdateAmbientSound() {
+    o::AmbientSoundHooks hooks;hooks.wallSeconds=[this] { return WallSeconds(); };
+    hooks.sound=[this](auto name,auto loop,auto volume,auto pan,auto priority,auto limit) { static_cast<void>(WorldAudio().Sounds().PlayByName(name,loop,volume,pan,priority,limit)); }; //장치가 없어도 이름표/같은 난수의 수명은 유지한다.
+    hooks.currentDialog=[this] { return menu_ ? menu_->CurrentDialog() : 0U; }; // 소리 요청 복귀 뒤 같은 현재565dd4를 읽는다.
+    hooks.flash=[this](auto brightness) { RequestThunderFlash(brightness); };
+    o::StepAmbientSound(localStateGlobals_->AmbientSound(),randomGlobals_->Game(),hooks);
+}
+}

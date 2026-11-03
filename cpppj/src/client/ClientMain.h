@@ -249,6 +249,7 @@ public:
     // 이번 프레임에 고정된 시각(원본 FUN_00460e90).
     const o::FrameTime& Time() const;
     // 원본 00460d70처럼 호출 때마다 timeGetTime을 읽는다. 버튼 예약의 별도 조회를 프레임 값으로 합치지 않는다.
+    void UpdateAmbientSound(); //004180f0의 실제 같은 State기한/난수/음향/현재 모달/화면 요청을 연결한다.
     double WallSeconds() const;
     // 창이 활성인가(원본 DAT_0054dc50).
     bool Active() const;

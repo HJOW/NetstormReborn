@@ -177,7 +177,7 @@ struct RawCampaignSession::Impl::Login {
         if (request) { std::vector<std::uint8_t>{}.swap(request->zone);request->consumed=true;blocks[3][0x80/4]=0;blocks[4][0x80/4]=0; } // 실제 할당 반납 뒤 current/next+80만 지운다. 이미 복사한 immediate+80은 보존한다.
         if (s.services.adoptInitializedPlayers || effects.initializeRenderer) Need(effects.initializeRenderer)(); // 실제 State7의4993c0 위치다. 앞선 실제 Player 정리를 채택한 미션은 장치 누락을 거부한다.
         s.playerState.playerKnown=0;
-        if (startingTail) { SetUiMode(2);activityEnd=Need(effects.wallSeconds)()+10.0;blocks[2][1]=20;state->Request(8);Need(effects.startingProgress)();Need(effects.battlePalette)(); } // UI2→ 새 기한/인자/즉시8→ 실제 안내→팔레트이며 예외도 앞선 쓰기를 보존한다.
+        if (startingTail) { SetUiMode(2);ResetAmbientSoundDeadline(activityEnd,effects.wallSeconds);blocks[2][1]=20;state->Request(8);Need(effects.startingProgress)();Need(effects.battlePalette)(); } // UI2→ 새 기한/인자/즉시8→ 실제 안내→팔레트이며 예외도 앞선 쓰기를 보존한다.
         };
         if (parentRunning) starting(); // 부모의 최초 복사/로그를 유지하며 후반만 반환한다. 외부 공통부가7 확정과8을 이어서 실행한다.
         else if (startingTail) state->RunStarting(starting); // 독립 편의 접합의 같은 원문 공통부가7 전체를 확정한 뒤 즉시8을 실행한다.

@@ -1,5 +1,6 @@
 // 상태번호를callback안에서확정하지않고원본공통부에서전체블록을복사한다.
 #include "o/RawLocalMissionState.h"
+#include "o/RawAmbientSound.h"
 #include <bit>
 #include <cmath>
 #include <limits>
@@ -55,7 +56,7 @@ void RawLocalMissionState::Starting() {
     if (globals_.simulconnect) throw std::logic_error("simulconnect서버분기는선택단독미션범위밖");
     if (saved.zonePending) { Need(hooks_.installZone,"현재Zone설치미연결")(state_.current[0x80/4]);Need(hooks_.freeZone,"현재Zone해제미연결")(state_.current[0x80/4]);state_.current[0x80/4]=0;state_.next[0x80/4]=0;Need(hooks_.installMapHandlers,"실제맵처리기등록미연결")(); }
     Need(hooks_.initializeRenderer,"현재Renderer초기화미연결")();globals_.player.playerKnown=0;Need(hooks_.uiMode,"현재UI모드미연결")(2);
-    const auto now=Need(hooks_.wallSeconds,"현재벽시각미연결")();globals_.activityEnd=now+10.0;state_.immediate[1]=20;Request(8);
+    ResetAmbientSoundDeadline(globals_.activityEnd,hooks_.wallSeconds);state_.immediate[1]=20;Request(8);
     if (state_.current[0x84/4]) { globals_.savedGame=true;Need(hooks_.loadReconnectFort,"재접속Fort읽기미연결")();Need(hooks_.progress,"재접속진행창미연결")(LocalMissionProgress::ReconnectStarting,0); }
     else if (globals_.missionPost) Need(hooks_.progress,"미션진행창미연결")(LocalMissionProgress::MissionStarting,0);
     else throw std::logic_error("일반전투연결UI분기는선택단독미션범위밖");

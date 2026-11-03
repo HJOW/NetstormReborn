@@ -475,6 +475,7 @@ void UberGump::ShowCaptureNotice(std::string_view body,std::uint32_t width,std::
     if (missionRuntime_ && missionRuntime_->tutorial) missionRuntime_->tutorial->Gate().PauseForDialog();else if (mission_) client_.Pause(true);RebuildControls();
 } //같은 전체HTML의기존모달/닫기수명을사용하며별도Tell섹션으로치환하지않는다.
 // 테스트 전용: 현재 모달 Gump의 실제 serial을 읽는다. 값을 바꾸지 않으며 열린 모달이 없으면 0이다(단위696).
+std::uint32_t UberGump::CurrentDialog() const { return rawButtons_->CurrentDialog(); } // 날씨도 소리 요청 뒤의 현재 모달을 읽는다.
 std::uint32_t UberGump::CurrentDialogSerial() const { const auto token=rawButtons_->CurrentDialog();const auto* node=token ? rawButtons_->Menus()->Node(token):nullptr;return node ? node->serial:0U; }
 // 실제 현재 Console만 전환하며 root 열기/닫기와 옵션 소비는 각 원문 부모가 담당한다.
 void UberGump::ToggleChatInput() { rawButtons_->Menus()->ToggleChatInput(); }

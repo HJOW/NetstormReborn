@@ -13,7 +13,7 @@ template<class Function> const Function& Need(const Function& function) {
 void ApplyExistingEditorAfterCheckpoint(ClientLocalStateGlobals& globals,InputQueue& input,const ExistingEditorAfterCheckpointEffects& effects) {
     auto state=globals.State(); //상태의 내용을 복사하지 않고 Client가 소유한 같은 다섯 블록을 빌린다.
     Need(effects.hud)(globals.HudModeCommand());
-    globals.ActivityEnd()=Need(effects.wallSeconds)()+10.0;
+    o::ResetAmbientSoundDeadline(globals.ActivityEnd(),effects.wallSeconds); // 현재 State/주변음이 같은 기한을 쓴다.
     Need(effects.requestMusic)("ser22.mus");
     if (state.current[0]==6) { //음악 복귀 뒤의 현재 요청이며 진입 시 요청을 캐시하지 않는다.
         Need(effects.battleOver)();throw std::logic_error("기존 Editor 한정 tail의 BattleOver 분기");

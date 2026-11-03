@@ -1,6 +1,7 @@
 // 같은 Client의 원문 State 다섯 블록과 로그인/기한 전역을 메뉴/Editor/로그인이 함께 빌린다.
 #pragma once
 #include "o/RawLocalMissionState.h"
+#include "o/RawAmbientSound.h"
 #include "o/RawClockSyncReset.h"
 #include "o/RawMetaZoneCleanup.h"
 #include <array>
@@ -29,6 +30,7 @@ public:
     const std::uint32_t& IntroAvailable() const { return introAvailable_; } // 메인 버튼 작성기는 최초 감지한 같은 DWORD를 읽는다.
     std::uint32_t& AutoDemo() { return autoDemo_; } //0054db90의 현재 옵션을 메인 Idle과 동기 옵션 해석이 공유한다.
     const std::uint32_t& AutoDemo() const { return autoDemo_; } //같은 실제 DWORD를 읽으며 메인 재생성 때 초기화하지 않는다.
+    o::AmbientSoundGlobals AmbientSound() { return {activityEnd_,ambientKind_,ambientForced_}; } // 실제 주변음은 State/Edit의 같은00544d58과 현재 두 DWORD를 직접 빌린다.
     double& ActivityEnd() { return activityEnd_; } // 기존 Login과 Editor가00544d58의 같은 벽시각 기한을 직접 쓴다.
     const double& ActivityEnd() const { return activityEnd_; } // 기한 사본이나 별도 Editor 타이머를 만들지 않는다.
     std::uint32_t& ZonePending() { return zonePending_; } // 005c85c0이며 실제 Fort 요청 작성과 State 정리가 같은 DWORD를 쓴다.
@@ -97,6 +99,7 @@ private:
     std::uint32_t tipNumber_{1}; //00531910의 PE 초기1이며 TellTips 옵션과 별개인 실제32비트 안내 순번이다.
     std::uint32_t introAvailable_{}; //0054db98의 최초 BSS0이며 00435de0이0/1을 쓴다.
     std::uint32_t autoDemo_{}; //0054db90의 최초 BSS0이며 ReadInt 누락 시 현재 비트를 보존한다.
+    std::int32_t ambientKind_{},ambientForced_{}; //00544d50/54의 최초 BSS0이며 Session 반납/설정으로 임의 변경하지 않는다.
     double activityEnd_{}; //00544d58의 최초 BSS0이며 게임 정지 가능한 시계로 바꾸지 않는다.
     std::uint32_t zonePending_{},sourceType_{},begin_{},centralCreated_{}; // 순서가 다른 Native 주소들의 명시 소유자이며 주소 산술 배열로 쓰지 않는다.
     bool savedGame_{}; // 기존 실제 소비자의 정상0/1 표현을 유지하며 임의 Native DWORD 모델은 후속이다.

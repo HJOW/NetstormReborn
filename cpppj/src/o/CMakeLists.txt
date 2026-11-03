@@ -561,3 +561,6 @@ target_sources(netstorm PRIVATE RawBoardAngle.h RawBoardAngle.cpp)
 
 # 실제 Client 바람을 같은 게임 난수와 현재 각도/입자에 연결한다.
 target_sources(netstorm PRIVATE RawAmbientWind.h RawAmbientWind.cpp)
+
+# 주변음/State 재예약은 같은 현재 벽시각과 게임 난수를 사용한다.
+target_sources(netstorm PRIVATE RawAmbientSound.h RawAmbientSound.cpp)

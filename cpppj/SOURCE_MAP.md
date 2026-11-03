@@ -27,6 +27,7 @@
 | `src/o/BaseProcess.cpp` | Baseprocess.cpp | BaseProcess.cpp | 5 | 있음 |
 | `src/o/BoardCoord.cpp` · `src/o/RawBoardAngle.cpp` | Boardcoord.cpp | BoardCoord.cpp | 5 | 있음(현재 각도/방향4소비자·바람 caller 연결) |
 | `src/o/RawAmbientWind.cpp` | 독립 Wind 부모004dd2b0/썽크004dd330 | CD004503f0/00450490 | 1 | 있음(현재 Client 난수·장기 바람/연소 owner) |
+| `src/o/RawAmbientSound.cpp` | 주변음004180f0/재예약004180d0 | CD004eca20/004ec9e0 | 2 | 있음(같은 State 기한·현재 Client/모달·공유 난수·CPU1272행/집중11개 통과) |
 | `src/o/Bomb.cpp` | Bomb.cpp | bomb.cpp | 5 |  |
 | `src/o/Bridge.cpp` | Bridge.cpp | bridge.cpp | 6 | 있음 |
 | `src/o/Bud.h` | bud.h | bud.h | 2 |  |
