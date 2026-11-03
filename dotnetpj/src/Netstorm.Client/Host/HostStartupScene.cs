@@ -19,6 +19,8 @@ public sealed class HostStartupScene
     public TellSectionState TellState { get; } = new();
     /// <summary>설정의 fortPal 파일 팔레트.</summary>
     private readonly GamePalette _palette;
+    /// <summary>새 제품 Credits 상세를 같은 Config 수명에 보관하는 등록 객체다.</summary>
+    private readonly Config _productCredits;
     /// <summary>실제 512×512 Kencloud 초기 캐시의 인덱스.</summary>
     private readonly byte[] _cloud;
     /// <summary>설정의 titleMenu GIF 인덱스와 불투명도.</summary>
@@ -35,6 +37,11 @@ public sealed class HostStartupScene
         _optionsPath = Path.Combine(Path.GetFullPath(dataDirectory), "d", "options.cfg");
         Configuration = new ConfigInterface(Files.TryReadAllBytes);
         Configuration.Startup(new ConfigInterface.StartupOptions { InstallDir = Path.GetFullPath(dataDirectory), CommandLine = settings });
+        // 새 제품 표기 11.01을 적용하고 추가 Credits 상세를 같은 수명에 등록한다
+        // (2026-11-03 11.01 요구에서 추가했다. 원본 데이터 판본은 바꾸지 않는다)
+        ProductPresentation.ApplyProductVersion(Configuration);
+        _productCredits = new Config(Configuration.Registry, ProductVersion.CreditsObject);
+        _productCredits.Append(ProductPresentation.PatchCreditsBody);
         string palettePath = Configuration.PathSpec("GamePalSpec", Configuration.PathSpec("fortPal"));
         string titlePath = Configuration.PathSpec("BackgroundGifSpec", "titleMenu");
         if (palettePath.Length == 0 || titlePath.Length == 0) throw new InvalidDataException("시작 화면 팔레트 또는 타이틀 경로 설정이 없다");

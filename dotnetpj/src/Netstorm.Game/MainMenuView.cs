@@ -59,8 +59,12 @@ internal sealed class MainMenuView : IDisposable
     private readonly StartupTips? _tips;
     /// <summary>지금 팁 창에 보여 주는 팁 번호</summary>
     private int _tipShown;
-    /// <summary>메뉴 위에 떠 있는 작은 창 ("tips" = 시작 팁, "version" = 버전 정보, null = 없음)</summary>
+    /// <summary>메뉴 위에 떠 있는 작은 창 ("tips" = 시작 팁, "version" = 버전 정보, "creditsDetail" = 제작진 상세, null = 없음)</summary>
     private string? _modal;
+    /// <summary>제작진 상세 창의 제목이다. 다른 Credits 창과 같은 창에 제목만 바꾼다.</summary>
+    private string? _creditsTitle;
+    /// <summary>제작진 상세 창의 본문 줄이다.</summary>
+    private string[] _creditsBody = [];
     /// <summary>_buttons: 현재 메뉴의 버튼 영역·문구·실행 동작 목록.</summary>
     private readonly List<MenuButton> _buttons = [];
     /// <summary>_lists: 현재 메뉴에 그릴 목록 패널의 사각형 영역.</summary>
@@ -184,13 +188,20 @@ internal sealed class MainMenuView : IDisposable
     /// <summary>버전 창의 영역</summary>
     private static Rectangle VersionPanel(int width, int height) => new((width - 380) / 2, (height - 170) / 2, 380, 170);
 
-    /// <summary>작은 창(팁·버전)의 버튼 판정 영역. 팁 창의 "이전 팁"은 팁 번호가 0 이 아닐 때만 있다 (원본 &lt;?{tipNumber}&gt;).</summary>
+    /// <summary>작은 창(팁·버전·제작진 상세)의 버튼 판정 영역. 팁 창의 "이전 팁"은 팁 번호가 0 이 아닐 때만 있다 (원본 &lt;?{tipNumber}&gt;).</summary>
     private List<GumpButton> ModalButtons(int width, int height)
     {
         var buttons = new List<GumpButton>();
         if (_modal == "version")
         {
             buttons.Add(OriginalUiSkin.Hit(0, VersionOkBounds(VersionPanel(width, height))));
+            return buttons;
+        }
+        if (_modal == "creditsDetail")
+        {
+            Rectangle panel = VersionPanel(width, height);
+            buttons.Add(OriginalUiSkin.Hit(0, CreditsBackBounds(panel)));
+            buttons.Add(OriginalUiSkin.Hit(1, CreditsCancelBounds(panel)));
             return buttons;
         }
         Rectangle tip = TipPanel(width, height);
@@ -202,8 +213,14 @@ internal sealed class MainMenuView : IDisposable
     /// <summary>버전 창 OK 버튼의 그려지는 영역.</summary>
     private static Rectangle VersionOkBounds(Rectangle panel) => new(panel.Center.X - 30, panel.Bottom - 31, 60, OriginalUiSkin.ButtonHeight);
 
+    /// <summary>제작진 상세 창의 Back 버튼 영역이다.</summary>
+    private static Rectangle CreditsBackBounds(Rectangle panel) => new(panel.Center.X - 80, panel.Bottom - 31, 60, OriginalUiSkin.ButtonHeight);
+
+    /// <summary>제작진 상세 창의 Cancel 버튼 영역이다.</summary>
+    private static Rectangle CreditsCancelBounds(Rectangle panel) => new(panel.Center.X + 20, panel.Bottom - 31, 60, OriginalUiSkin.ButtonHeight);
+
     /// <summary>
-    /// 작은 창(팁·버전)의 버튼 입력을 처리한다. 창이 떠 있는 동안 뒤쪽 메뉴는 누를 수 없다.
+    /// 작은 창(팁·버전·제작진 상세)의 버튼 입력을 처리한다. 창이 떠 있는 동안 뒤쪽 메뉴는 누를 수 없다.
     /// 원본 돌 버튼처럼 누르는 순간 소리가 나고 눌린 채 안쪽에서 뗄 때 실행한다 (<see cref="ButtonGump"/>). 키보드는 버튼에 영향을 주지 않는다.
     /// </summary>
     private void UpdateModal(MouseState mouse, int width, int height)
@@ -213,27 +230,47 @@ internal sealed class MainMenuView : IDisposable
         if (result.Activated is int id)
         {
             if (_modal == "version") _modal = null;
+            else if (_modal == "creditsDetail")
+            {
+                if (id == 0) _modal = null;
+                else { _modal = null; Open("main"); }
+            }
             else TipButton(id);
         }
         PressedLabel = _modalGump.Held is int held && _modalGump.IsPressed(held) ? ModalLabel(held) : null;
     }
 
-    /// <summary>팁 창 버튼 번호의 글자 (버전 창은 OK).</summary>
-    private string ModalLabel(int index) => _modal == "version" ? Text("확인", "OK")
-        : new[] { Text("이전 팁", "Prior Tip"), Text("다음 팁", "Next Tip"), Text("그만 보기", "No More Tips"), Text("확인", "OK") }[index];
+    /// <summary>팁 창 버튼 번호의 글자 (버전 창은 OK, 제작진 상세 창은 Back·Cancel).</summary>
+    private string ModalLabel(int index) => _modal switch
+    {
+        "version" => Text("확인", "OK"),
+        "creditsDetail" => index == 0 ? Text("뒤로", "Back") : Text("취소", "Cancel"),
+        _ => new[] { Text("이전 팁", "Prior Tip"), Text("다음 팁", "Next Tip"), Text("그만 보기", "No More Tips"), Text("확인", "OK") }[index],
+    };
 
-    /// <summary>시작 팁 창 또는 버전 창을 그린다.</summary>
+    /// <summary>시작 팁 창 또는 버전 창 또는 제작진 상세 창을 그린다.</summary>
     private void DrawModal(SpriteBatch batch, SpriteFontBase font, int width, int height)
     {
         if (_modal == "version")
         {
             Rectangle panel = VersionPanel(width, height); _skin.Panel(batch, panel);
             OriginalUiSkin.Text(batch, _skin.Title, "NetStorm", new Vector2(panel.X + 24, panel.Y + 18));
-            // 원본 tell.english [About] 문구와 클론 표기를 함께 보여 준다
-            string[] lines = [Text("원본 버전 10.78 기준 클론", "Clone of version 10.78"), "(c) 1997 Titanic Entertainment, Inc. and Activision Inc.",
+            // 새 제품 표기 11.01을 먼저 보여 주고 원본 tell.english [About] 문구와 클론 표기를 함께 보여 준다
+            // (2026-11-03 11.01 요구에서 추가했다. 원본 판본 표기 10.78은 복원 기준이라 바꾸지 않는다)
+            string[] lines = ["NetStorm 11.01", Text("원본 버전 10.78 기준 클론", "Clone of version 10.78"), "(c) 1997 Titanic Entertainment, Inc. and Activision Inc.",
                 "10.78 Patch by Ticonderoga Entertainment.", "NetStorm Reborn"];
             for (int i = 0; i < lines.Length; i++) OriginalUiSkin.Text(batch, font, lines[i], new Vector2(panel.X + 24, panel.Y + 50 + i * 18));
             _skin.Button(batch, VersionOkBounds(panel), Text("확인", "OK"), pressed: _modalGump.IsPressed(0));
+            return;
+        }
+        if (_modal == "creditsDetail")
+        {
+            Rectangle panel = VersionPanel(width, height); _skin.Panel(batch, panel);
+            OriginalUiSkin.Text(batch, _skin.Title, _creditsTitle ?? "", new Vector2(panel.X + 24, panel.Y + 18));
+            // 다른 Credits 창과 같은 창에 제목만 바꾸고 본문을 보여 준다
+            for (int i = 0; i < _creditsBody.Length; i++) OriginalUiSkin.Text(batch, font, _creditsBody[i], new Vector2(panel.X + 24, panel.Y + 50 + i * 18));
+            _skin.Button(batch, CreditsBackBounds(panel), Text("뒤로", "Back"), pressed: _modalGump.IsPressed(0));
+            _skin.Button(batch, CreditsCancelBounds(panel), Text("취소", "Cancel"), pressed: _modalGump.IsPressed(1));
             return;
         }
         Rectangle tip = TipPanel(width, height); _skin.Panel(batch, tip);
@@ -254,7 +291,7 @@ internal sealed class MainMenuView : IDisposable
     public void Open(string page = "main", bool optionsOnly = false)
     {
         OptionsOnly = optionsOnly;
-        _page = page is "campaigns" or "missions" or "options" or "help" ? page : "main";
+        _page = page is "campaigns" or "missions" or "options" or "help" or "credits" ? page : "main";
         if (_page == "campaigns")
         {
             _campaignTarget = CampaignMenu.Root;
@@ -352,14 +389,16 @@ internal sealed class MainMenuView : IDisposable
             string[] labels = [Text("캠페인", "Campaign"), Text("멀티플레이", "Multiplayer"), Text("데모", "Demo"), Text("도움말", "Help"),
                 Text("편집", "Edit"), Text("제작진", "Credits"), Text("옵션", "Options"), Text("종료", "Quit")];
             // 원본 1024×768의 (356,311)에서 시작하는 두 줄·네 열 버튼을 화면 중심에 맞춘다.
+            // (2026-11-03 11.01 요구에서 제작진을 활성화했다. 멀티플레이·데모·편집은 기존 경로의 범위 그대로 둔다)
             for (int i = 0; i < labels.Length; i++)
             {
                 int item = i;
                 Add(new Rectangle(cx - 156 + i % 4 * MainButtonPitch, cy - 73 + i / 4 * 23, MainButtonWidth, OriginalUiSkin.ButtonHeight),
-                    labels[i], i is 0 or 3 or 6 or 7, () =>
+                    labels[i], i is 0 or 3 or 5 or 6 or 7, () =>
                     {
                         if (item == 7) _quit();
                         else if (item == 3) Open(_page == "help" ? "main" : "help");
+                        else if (item == 5) Open("credits");
                         else Open(item == 0 ? "campaigns" : _page == "options" ? "main" : "options");
                     });
             }
@@ -367,11 +406,76 @@ internal sealed class MainMenuView : IDisposable
             if (_page == "help") BuildHelpMenu(width, height);
             return;
         }
+        if (_page == "credits")
+        {
+            BuildCredits(width, height);
+            return;
+        }
         if (_page == "campaigns")
         {
             BuildCampaignButtons(width, height);
         }
         else if (_page == "missions") BuildCampaignButtons(width, height);
+    }
+
+    /// <summary>
+    /// 새 제품 요구의 세 항목 Credits 목록을 만든다. 순서는 10.72·원본·11.01이다.
+    /// 다른 Credits 창과 같은 상세 창을 쓰며 제목·본문만 바꾼다.
+    /// (2026-11-03 11.01 요구에서 추가했다. 원본 판본 표기와 옛 Credits는 복원 기준이라 바꾸지 않는다)
+    /// </summary>
+    /// <param name="width">논리 화면 폭</param>
+    /// <param name="height">논리 화면 높이</param>
+    private void BuildCredits(int width, int height)
+    {
+        string[] labels = ["Netstorm 10.72 Patch Credits", "Netstorm Original Credits", "Netstorm 11.01 Patch Credits"];
+        int listWidth = 260;
+        int listHeight = labels.Length * OriginalUiSkin.RowHeight;
+        int panelWidth = listWidth + 60;
+        int panelHeight = listHeight + 90;
+        var panel = new Rectangle((width - panelWidth) / 2, (height - panelHeight) / 2, panelWidth, panelHeight);
+        var list = new Rectangle(panel.X + 30, panel.Y + 40, listWidth, listHeight);
+        _lists.Add(new Rectangle(panel.X, panel.Y, panelWidth, panelHeight));
+        _lists.Add(list);
+        // 목록 행마다 같은 상세 창으로 연다
+        for (int index = 0; index < labels.Length; index++)
+        {
+            int item = index;
+            Add(new Rectangle(list.X + 2, list.Y + index * OriginalUiSkin.RowHeight + 1, list.Width - 4, OriginalUiSkin.RowHeight),
+                labels[item], true, () => OpenCreditsDetail(item), listRow: true);
+        }
+        Add(new Rectangle(width / 2 - 22, list.Bottom + 10, 44, OriginalUiSkin.ButtonHeight),
+            Text("뒤로", "Back"), true, () => Open("main"));
+    }
+
+    /// <summary>
+    /// 같은 상세 창에 제목·본문을 채운다. Back은 목록으로, Cancel은 메인 메뉴로 복귀한다.
+    /// </summary>
+    /// <param name="item">0 10.72·1 원본·2 11.01 패치 Credits.</param>
+    private void OpenCreditsDetail(int item)
+    {
+        if (item == 2)
+        {
+            _creditsTitle = "NetStorm 11.01 Patch Credits";
+            _creditsBody = [Text("버전: v11.01", "Version: v11.01"),
+                Text("개발 및 Netstorm 11.01 패치: HJOW.", "Development and Netstorm 11.01 patch: HJOW."),
+                Text("OpenAI Codex와 ChatGPT의 AI 도움으로 개발.", "Developed with AI assistance using OpenAI Codex and ChatGPT."),
+                Text("분석·프로그래밍·문서화·검증에 AI를 활용.", "AI was used to assist analysis, programming, documentation, and verification.")];
+        }
+        else if (item == 0)
+        {
+            _creditsTitle = "Netstorm 10.72 Patch Credits";
+            _creditsBody = [Text("원본 10.72 패치 제작진.", "Original 10.72 patch credits."),
+                "(c) 1997 Titanic Entertainment, Inc. and Activision Inc."];
+        }
+        else
+        {
+            _creditsTitle = "Netstorm Original Credits";
+            _creditsBody = [Text("원본 제작진.", "Original game credits."),
+                "(c) 1997 Titanic Entertainment, Inc. and Activision Inc."];
+        }
+        _modal = "creditsDetail";
+        _gump.Cancel(); _modalGump.Cancel(); PressedLabel = null;
+        _previousMouse = Mouse.GetState(); _previousKeyboard = Keyboard.GetState();
     }
 
     /// <summary>캠페인 스크립트의 목록·조건·동작으로 선택창의 클릭 행을 만든다.</summary>

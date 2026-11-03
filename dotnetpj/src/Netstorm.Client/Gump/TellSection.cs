@@ -89,7 +89,7 @@ public static class TellSection
     public static string? FindInConfig(TellSectionState state, string name, ConfigInterface config, Func<string, string?>? mission)
     {
         ArgumentNullException.ThrowIfNull(config);
-        return Find(state, name, new TellSectionHooks
+        string? body = Find(state, name, new TellSectionHooks
         {
             Prior = previous => config.Set("global.priorTell", Decode(previous)),
             Named = (prefix, section) => config.Registry.FindByName(Decode(prefix))?.Section(Decode(section)),
@@ -102,6 +102,9 @@ public static class TellSection
                 return temporary.Section(Decode(target));
             }
         });
+        // 새 제품 요구의 세 번째 Credits 항목을 같은 $Menu 서식으로 추가한다
+        // (2026-11-03 11.01 요구에서 추가했다. Credits가 아니면 원본 그대로 둔다)
+        return body is null ? null : ProductPresentation.TellBody(name, body);
     }
 
     /// <summary>실제 param을 창 생성 전체 동안 등록하고 본문 발견 여부와 생성 serial을 반환한다.</summary>

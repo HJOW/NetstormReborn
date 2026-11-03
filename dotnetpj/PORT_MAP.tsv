@@ -453,3 +453,6 @@ cpppj/src/o/RawFortFinishOwner.cpp	Netstorm.Core/Original/RawFortFinishOwner.cs	
 cpppj/src/o/RawFortFinishOwner.h	Netstorm.Core/Original/RawFortFinishOwner.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
 cpppj/src/client/FortTypeConversionStorage.cpp	Netstorm.Client/Host/FortTypeConversionStorage.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/client/FortTypeConversionStorage.h	Netstorm.Client/Host/FortTypeConversionStorage.cs	108f76cc814769142a03e6923cb59966d76216b4	port
+cpppj/src/client/ProductVersion.h	Netstorm.Client/ProductVersion.cs	108f76cc814769142a03e6923cb59966d76216b4	port
+cpppj/src/client/ProductPresentation.h	Netstorm.Client/ProductPresentation.cs	108f76cc814769142a03e6923cb59966d76216b4	port
+cpppj/src/client/ProductPresentation.cpp	Netstorm.Client/ProductPresentation.cs	108f76cc814769142a03e6923cb59966d76216b4	port
