@@ -1,6 +1,8 @@
 // 같은 생성 저장소에서 원본 Gump 부착·밀어내기·정렬·깊이·이동 순서를 복원한다.
 #pragma once
 #include "client/GumpCreate.h"
+#include "o/RawCheckingFlag.h"
+#include <string_view>
 
 namespace netstorm::client {
 // 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다.
@@ -8,6 +10,8 @@ struct GumpTreeState {
     // mapView: 지도 출력과 연결된 Gump 토큰.
     ScreenRect mapView{};
     std::uint32_t pushDebugMode{}; // 3/4는 원본 패치판의 의도적인 링크 변경 분기다.
+    o::RawCheckingFlag checking; // 실제 UI는 같은 Client005e4794를 빌리며 독립 기본값은0이다.
+    std::int8_t typeLimit{67}; //0054045e의 현재 signed BYTE이며 보호 PE 초기값은0x43이다.
 };
 // 가상 +8/+0x18/+0x20과 삭제 요청/월드 투영을 실제 상위 처리기에 전달하는 경계다.
 // 각 콜백은 같은 저장소/현재 전역을 바꿀 수 있다. 처리기 몸체와 객체 삭제는 별도 복원 범위다.
@@ -24,7 +28,10 @@ struct GumpTreeHooks {
     std::function<void(std::uint32_t)> kill;
     // project: 로컬 좌표를 출력 좌표로 투영하는 콜백.
     std::function<ScreenPoint(std::uint32_t)> project;
+    std::function<void(std::string_view)> diagnostic; //436d20의 현재 상세 저장이며 오류 GT를 기록한 뒤 부착은 계속한다.
 };
+//466750의 첫 상태 쓰기 전 진단 접두다. 현재 signed GT/상한을 읽고 선택된 상세 writer만 요구한다.
+void RecordGumpAttachDiagnostic(const GumpCreateNode& node,o::RawCheckingFlag checking,std::int8_t limit,const std::function<void(std::string_view)>& diagnostic);
 // 00466750/CD 00493070의 머리 삽입과 원본의 후속 정렬/현재 자식 재배치를 담당한다.
 class GumpTree {
 public:

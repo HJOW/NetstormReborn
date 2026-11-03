@@ -4,6 +4,7 @@
 #include <bit>
 #include <stdexcept>
 #include <unordered_set>
+#include <string>
 
 namespace netstorm::client {
 namespace {
@@ -17,6 +18,11 @@ std::int32_t Center(std::int32_t low,std::int32_t high) {
 void Enter(std::unordered_set<std::uint32_t>& seen,std::uint32_t token) {
     if (seen.size()>=kGumpRegistryCapacity || !seen.insert(token).second) throw std::runtime_error("Gump 트리 링크 순환/한도 초과");
 }
+}
+// 원문4a89c0의 gt=%d와436d20 저장만 선택하며 같은 노드의 후속 필드는 덮어쓰지 않는다.
+void RecordGumpAttachDiagnostic(const GumpCreateNode& node,o::RawCheckingFlag checking,std::int8_t limit,const std::function<void(std::string_view)>& diagnostic) {
+    if (!checking) return;const auto type=std::bit_cast<std::int32_t>(node.command); // Native+20 DWORD는 signed GT이며 command라는 기존 호스트 필드명을 유지한다.
+    if (type<1 || type>=limit) { if (!diagnostic) throw std::logic_error("Gump 부착 원문 상세 writer 미연결");diagnostic("gt = "+std::to_string(type)); }
 }
 // 공통 가상 처리는 필수다. 월드 투영은 해당 분기에서만 요구한다.
 GumpTree::GumpTree(GumpCreateState& state,GumpTreeState& tree,GumpTreeHooks hooks):state_(state),tree_(tree),hooks_(std::move(hooks)) {
@@ -60,6 +66,7 @@ void GumpTree::Push(std::uint32_t token) const {
 // 부착의 상태 쓰기/가상 호출 순서는 원본과 같고 삭제 요청은 별도 실제 수명 처리기에 전달한다.
 void GumpTree::Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
     auto& node=Node(token);
+    if (state_.collection.edition==o::OriginalEdition::Patch1078) RecordGumpAttachDiagnostic(node,tree_.checking,tree_.typeLimit,hooks_.diagnostic); // 로그가 복귀한 뒤 같은 현재 flags/부모로 원문 부착을 계속한다.
     if (state_.collection.edition!=o::OriginalEdition::Patch1078 && !(node.flags&kVoid)) throw std::runtime_error("CD Gump 부착의 void 필요");
     const auto destination=parent ? parent : node.parent;Node(destination);
     node.flags&=~kVoid;if (parent) node.parent=parent;

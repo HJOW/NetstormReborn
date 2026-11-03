@@ -46,6 +46,7 @@ struct RawButtonControls::Impl {
     ProductionMaintenanceGlobals productionGlobals; // 전역 TYPE 시계/추첨 순번이며 패널 필드는 실제 생산 노드가 소유한다.
     // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;/* life: 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다 (GumpLifetimeState). */ GumpLifetimeState life;/* treeState: 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다 (GumpTreeState). */ GumpTreeState treeState;/* eventState: 원본 전체 트리 커서 선택의 현재 좌표/필터/최소 signed 깊이/선택 토큰 전역이다 (GumpEventState). */ GumpEventState eventState;/* inputState: overlay 처리기는 호출자의 사건 대신 원본의 별도 사건 코드 전역을 사용한다 (GumpInputState). */ GumpInputState inputState;
+    std::optional<std::string>* diagnosticDetail{}; //Client의005e4798 상세를 빌리며 UI보다 오래 살아야 한다.
     // buttonState: 실행 중 문자열 ID 전역 네 개와 기본 버튼 색 BYTE다. 사건 ID는 호출자가 실제 초기화 값을 공급한다 (ButtonGumpState).
     ButtonGumpState buttonState{kValueEvent,kClickEvent,kRightEvent,kRepeatEvent,kButtonType};
     // stoneState: 생성 시 읽는 색 BYTE·기본 글자 문맥·팔레트와 현재 배경 타입/프레임 전역이다 (StoneButtonGumpState).
@@ -125,6 +126,7 @@ struct RawButtonControls::Impl {
         treeHooks.attach=[this](auto token,float x,float y,auto parent,auto mode) { Attach(token,x,y,parent,mode); };
         treeHooks.kill=[this](auto token) { lifetime->Kill(token); };
         treeHooks.project=hooks.project; // 최초 화면 제한 계산도 위치 수집과 같은 투영 장치를 사용한다.
+        treeHooks.diagnostic=[this](std::string_view text) { if (!diagnosticDetail) throw std::logic_error("Gump 부착 Client 상세 owner 미연결");*diagnosticDetail=std::string(text); }; //436d20은 오류를 저장하고 부착을 계속하며 별도 창을 만들지 않는다.
         tree=std::make_unique<GumpTree>(create,treeState,std::move(treeHooks));
         GumpLifetimeHooks lifeHooks;lifeHooks.node=[this](auto token) { return Node(token); };
         lifeHooks.assertion=[](auto condition,auto source,auto line) { throw std::logic_error("원문 Gump 수명 진단 "+std::string(source)+":"+std::to_string(line)+": "+std::string(condition)); }; //실제 진단 UI가 없는 호스트는 선택된 원문 조건만 명시 실패한다.
@@ -296,7 +298,7 @@ std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entrie
 // 현재 화면 번호에 대응하는 실제 버튼만 조회한다. 생성 순서나 serial을 화면 번호로 간주하지 않는다.
 std::uint32_t RawButtonControls::ControlGump(int id) const { const auto found=impl_->controls.find(id);return found==impl_->controls.end() ? 0U : found->second; }
 void RawButtonControls::BindMainMenu(RawMainMenuHooks hooks) { if (!hooks.enabled || !hooks.htmlInstances || !hooks.queue) throw std::invalid_argument("메인 현재 Client 경계 없음");impl_->mainHooks=std::move(hooks); } //장치 연결은 부모를 만들거나 옵션을 읽어 쓰지 않는다.
-void RawButtonControls::BindChecking(o::RawCheckingFlag checking) { impl_->life.checking=checking; } //뷰 객체의 주소가 아닌 같은 원래 owner 주소/자체값을 복사한다.
+void RawButtonControls::BindChecking(o::RawCheckingFlag checking,std::optional<std::string>* detail) { impl_->life.checking=checking;impl_->treeState.checking=checking;impl_->diagnosticDetail=detail; } //뷰 객체의 주소가 아닌 같은 원래 owner 주소/자체값과 상세 저장소를 빌린다.
 std::uint32_t RawButtonControls::MainMenuToken() const { return impl_->LiveMain(); } //실제 dead 관문만 사용한다.
 std::string RawButtonControls::MainMenuReport() const { const auto& s=*impl_;std::ostringstream out;const auto token=s.LiveMain();out<<"main_menu_parent\t"<<token;if (token) { const auto& node=*s.mainMenus.at(token);out<<'\t'<<node.serial<<'\t'<<node.activity.deadline<<'\t'<<node.activity.pointer.x<<'\t'<<node.activity.pointer.y; }out<<'\n';return out.str(); } //읽기 전용 검사이며 기한/모달을 수정하지 않는다.
 // 메인 버튼을 현재 글꼴로 측정하고 가장 넓은 폭으로 통일한 뒤 첫4개/나머지의 두 행을 각각 가운데에 둔다.

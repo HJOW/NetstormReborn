@@ -751,6 +751,8 @@ void __cdecl FUN_00462ac0(void)
 
 ## FUN_00466750 @ 00466750
 
+**806 완료:** 현재 checking/signed GT 진단·signed BYTE 상한67과 Client 상세를 실제 공통 부착에 연결했다. 원본432입력/864회·재관측864회 일치·집중19개(새3개) 통과다. 기존 부착본문/세판본1722행은 유지하며 접두/상세 writer와 전체SEH 경계는 [806 기록](cpp-gump-attach-checking-20261103.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\client\MoveDialog.h, cpppj\src\client\RawButtonControls.cpp, cpppj\src\client\GumpFormBinding.h, cpppj\src\client\GumpTree.h, cpppj\src\client\MenuGumpInput.h, cpppj\src\client\MenuGumpWidgets.h, cpppj\src\client\ScrollGump.h, cpppj\src\client\ScrollingTextGumpWidgets.h, cpppj\src\client\StoneButtonGump.h, cpppj\src\client\HudChatGeometry.h, cpppj\src\client\HudDock.h, cpppj\src\client\HudNsInfo.h, cpppj\src\client\HudNsInfoCreate.h, cpppj\src\client\TextEntryGump.h, cpppj\src\client\RawProductionControls.cpp

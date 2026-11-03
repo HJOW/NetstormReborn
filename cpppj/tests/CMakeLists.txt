@@ -3238,3 +3238,8 @@ target_sources(netstorm_tests PRIVATE SquidDisplayLiveTests.cpp)
 target_sources(netstorm_file_tests PRIVATE SquidDisplayLiveTests.cpp DisplayTests.cpp FrameDisplayTests.cpp VortexDisplayTests.cpp)
 set_property(SOURCE SquidDisplayParentTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_SQUID_DISPLAY_NUMBER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-display-number-x86.tsv\"")
 set_property(SOURCE DisplayTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_DISPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/display-x86.tsv\"")
+
+# 공통 부착 GT 진단과 기존 세 판본 트리/실제 버튼 수명을 함께 대조한다(806).
+target_sources(netstorm_tests PRIVATE GumpAttachDiagnosticTests.cpp)
+target_sources(netstorm_file_tests PRIVATE GumpAttachDiagnosticTests.cpp GumpTreeTests.cpp)
+set_source_files_properties(GumpAttachDiagnosticTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GUMP_ATTACH_DIAGNOSTIC_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gump-attach-diagnostic-x86.tsv\"")
