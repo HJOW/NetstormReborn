@@ -1,6 +1,8 @@
 //진단 callback 중의 현재 SID 변경과 통과 후 슬롯 고정을 구별한다.
 #include "o/RawBurningVictim.h"
+#include "o/RawSidRobust.h"
 #include <stdexcept>
+#include <string>
 
 namespace netstorm::o { //원문 세 부모의 동일한 앞단만 공유하며 게임 동작은 실행하지 않는다.
 namespace { //선택된 장치를 빈 성공으로 처리하지 않는다.
@@ -14,5 +16,17 @@ std::optional<Sid> RunBurningVictimParent(const Sid& current,BurningVictimEntry 
     if (entry==BurningVictimEntry::Capture && !Need(hooks.vtable)(selected)) Need(hooks.assertion)("*((long**)&s)!=0",".\\Burning.cpp",0x77);
     if (!Need(hooks.hasHitPoints)(selected)) Need(hooks.assertion)(entry==BurningVictimEntry::Sources ? "burningVictim.hasHitPoints()" : "s.hasHitPoints()",".\\Burning.cpp",entry==BurningVictimEntry::Capture ? 0x7fU : entry==BurningVictimEntry::Sources ? 0x98U : 0x126U);
     return selected;
+}
+BurningVictimHooks MakeBurningVictimHooks(const SidPool& pool,std::span<const RiftTypeRecord> types,const BurningVictimState& state) { //원문의 비가상 HP/가상 표 조회와 현재 진단을 동일한 풀에 연결한다.
+    BurningVictimHooks result;
+    result.robust=[&state](Sid sid,bool live) {
+        if (state.robust) return state.robust(sid,live);
+        RawSidRobustDiagnostics diagnostics;SidRobustHooks hooks;hooks.checking=[&state] { return state.checking.Read(); }; //독립 checking0은 원문 번호 판정만 사용한다. 비영이면 미연결 상세 장치를 선택 지점에서 거부한다.
+        return RawIsSidRobust(static_cast<std::int32_t>(sid.value),live ? 1 : 0,diagnostics,hooks);
+    };
+    result.vtable=[&pool](Sid sid) { const auto raw=pool.Slot(sid);return (raw[0]|raw[1]|raw[2]|raw[3])!=0; }; //현재 DWORD의 비영 여부만 같은 네 바이트에서 읽는다.
+    result.hasHitPoints=[&pool,types](Sid sid) { const auto raw=pool.Slot(sid);const auto type=raw[10];if (type>=types.size()) throw std::out_of_range("연소 피해 대상의 현재 TYPE 범위");const auto& record=types[type];return record.flags2&0x400000U ? (raw[pool.Edition()==OriginalEdition::Patch1078 ? 40U : 35U]&1U)!=0 : (record.flags1&0x10U)!=0; }; //Dais는 extra bit1, 일반 자산은 현재 flags1 bit10이다.
+    result.assertion=[&state](auto condition,auto source,auto line) { if (state.assertion) state.assertion(condition,source,line);else throw std::logic_error("원문 연소 진단 "+std::string(source)+":"+std::to_string(line)+": "+std::string(condition)); }; //독립 장치도 선택 진단을 빈 성공으로 처리하지 않는다.
+    return result;
 }
 }

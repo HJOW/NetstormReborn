@@ -3,6 +3,7 @@
 #include "client/BurningFrameCapture.h"
 #include "client/Renderer.h"
 #include "client/SquidRenderer.h"
+#include "o/RawSidRobust.h"
 #include <cstdio>
 #include <filesystem>
 
@@ -53,7 +54,7 @@ std::vector<std::string> Output(const BurningVisualFields& fields,const BurningF
     return {Hex(rect),std::to_string(fields.registration.zOrder),std::to_string(fields.total),Hex(timer),std::to_string(fields.stage),Hex(metadata),fields.image.pixels.empty() ? "-" : Hex(fields.image.pixels),fields.rows.empty() ? "-" : Hex(fields.rows),std::to_string(fields.selected),fields.off ? "1" : "0",ParticleBytes(fields),std::to_string(random.State()),sink.regions.FullRedraw() ? "1" : "0",dirty.empty() ? "-" : dirty,captured ? std::to_string(fields.image.pixels.size())+','+std::to_string(fields.rows.size()) : "-"};
 }
 // 현재 입력만 만들고 실제 Frame→Capture/Sources/Append/dirty 사슬을 수행한다.
-std::vector<std::string> RunFrame(const std::vector<std::string>& row) {
+std::vector<std::string> RunFrame(const std::vector<std::string>& row,const BurningVictimState& victim={}) {
     const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,32768,true);
     // 명시 피해50은 실제 client 슬롯 번호로 확보한다.
     for (std::uint16_t sid=5;sid<=50;++sid) CHECK(pool.Allocate(2)==Sid{sid});
@@ -69,6 +70,7 @@ std::vector<std::string> RunFrame(const std::vector<std::string>& row) {
             if (source) { const auto group=(static_cast<std::int32_t>(x)+static_cast<std::int32_t>(y))/5;if (static_cast<std::size_t>(group)<fields.rows.size()) fields.rows[group]=1; }
         }
     }
+    state.victim=victim;sourceState.victim=victim; //검사 준비 캡처를 마친 뒤 실제 선택 프레임에만 현재 진단 장치를 공급한다.
     logic.Step(fields,frame);return Output(fields,frame,random,sink,captured);
 }
 // 현재 입력을 실행한 뒤에만 실제 독립출력과 비교하고 첫차이를 상세히 기록한다.
@@ -93,3 +95,25 @@ void ReplayFrame(std::string_view edition) {
 TEST_CASE(BurningFrame_PatchNativeCaptureSourcesParticlesAndDirty) { ReplayFrame("originals"); }
 // CD10.72의 signedDWORDlife와 저장된vx재읽기를 포함한 같은 실제 사슬을 대조한다.
 TEST_CASE(BurningFrame_CdNativeCaptureSourcesParticlesAndDirty) { ReplayFrame("originalCD"); }
+
+TEST_CASE(BurningFrame_CurrentVictimDiagnosticsReachThreeActualConsumers) { //준비 캡처와 구별한 실제 Capture/Step/Select의 진단 뒤 기존 전체 출력을 비교한다.
+    for (const auto stage:{0U,1U,2U}) { //초기 캡처·첫 좌표·입자 프레임의 서로 다른 세 소비자를 실행한다.
+        const auto found=std::find_if(FrameRows().begin(),FrameRows().end(),[stage](const auto& row) { return row[0]=="originals" && Number(row[1])!=0 && Number(row[2])==stage && (stage!=2 || (row[4]=="1" && row[5]=="0")); });CHECK(found!=FrameRows().end());if (found==FrameRows().end()) return;
+        const auto baseline=RunFrame(*found);std::int32_t checking=std::bit_cast<std::int32_t>(0x80000000U);std::uint32_t calls{};std::vector<std::uint32_t> lines;BurningVictimState victim;victim.checking=RawCheckingFlag{checking};
+        victim.robust=[&](Sid sid,bool live) { CHECK(sid==Sid{50} && live);return (++calls%2)==0; }; //각 부모의 첫 조회는 진단을 선택하고 두 번째 조회는 기존 본문을 허용한다.
+        victim.assertion=[&](auto condition,auto source,auto line) { CHECK(condition=="isSidRobust(burningSid)" && source==".\\Burning.cpp");lines.push_back(line); };
+        CHECK(RunFrame(*found,victim)==baseline);const std::vector<std::uint32_t> expected=stage==0 ? std::vector<std::uint32_t>{0x6f} : stage==1 ? std::vector<std::uint32_t>{0x11f} : std::vector<std::uint32_t>{0x11f,0x91};CHECK(lines==expected && calls==expected.size()*2 && victim.checking.Read()==0x80000000U);
+    }
+}
+TEST_CASE(BurningFrame_ActualVictimAdapterKeepsDetailedOwnerAndHpResume) { //같은 장기 상세 진단 owner·현재 풀/TYPE와 무조건 HP 진단의 복귀를 확인한다.
+    SidPool pool(OriginalEdition::Patch1078,32768,true);const auto sid=pool.Allocate();auto raw=pool.AllocatedBytes(sid);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[0]=1;raw[10]=70;std::vector<RiftTypeRecord> types(188);types[70].flags1=TypeFlag1::kHasHitPoints;
+    std::int32_t checking{};RawSidRobustDiagnostics owner{0x1111,0x2222};std::uint32_t detailed{},calls{};BurningVictimState state;state.checking=RawCheckingFlag{checking};SidRobustHooks access;access.addressMode=SidRobustAddressMode::HostPointer;
+    access.poolBase=[&] { return reinterpret_cast<std::uintptr_t>(pool.Bytes().data()); };access.capacity=[&] { return pool.Capacity(); };access.checking=[&] { return state.checking.Read(); };
+    access.memory=[&](auto address,auto width) { const auto bytes=pool.Bytes();const auto base=reinterpret_cast<std::uintptr_t>(bytes.data());if (address<base || address-base>bytes.size() || width>bytes.size()-static_cast<std::size_t>(address-base)) throw std::out_of_range("연소 검사 현재 풀 범위");return bytes.subspan(static_cast<std::size_t>(address-base),width); };
+    access.assertion=[&](auto condition,auto line) { CHECK(condition=="resolve( sid ).isRobust()" && line==0x218 && owner.lastRobust==2 && owner.type==70);++detailed;raw[0]=1; };
+    state.robust=[&](Sid current,bool live) { ++calls;return RawIsSidRobust(current.value,live ? 1 : 0,owner,access); };const auto hooks=MakeBurningVictimHooks(pool,types,state);
+    CHECK(RunBurningVictimParent(sid,BurningVictimEntry::Capture,state.checking,hooks)==sid && calls==1 && owner.lastRobust==0x1111 && owner.type==0x2222);
+    checking=std::bit_cast<std::int32_t>(0x80000000U);raw[0]=0;CHECK(RunBurningVictimParent(sid,BurningVictimEntry::Capture,state.checking,hooks)==sid && calls==3 && detailed==1 && owner.lastRobust==0 && owner.type==70); //내부 SID 진단이 돌아오면 외부 조회도1로 계속하고 다음 조회가 같은 owner를 다시 갱신한다.
+    checking=0;types[70].flags2=0x400000U;types[70].flags1=0;raw[40]=0;std::uint32_t hpDiagnostics{};state.assertion=[&](auto condition,auto source,auto line) { CHECK(condition=="s.hasHitPoints()" && source==".\\Burning.cpp" && line==0x7f);++hpDiagnostics;raw[40]=1; };
+    CHECK(RunBurningVictimParent(sid,BurningVictimEntry::Capture,state.checking,hooks)==sid && hpDiagnostics==1 && raw[40]==1 && !state.checking); //HP 진단은checking0에서도 선택하며 callback 뒤 정상 본문 진입을 허용한다.
+}

@@ -16,6 +16,7 @@ struct BurningFrameState {
     float wind{},deltaMultiplier{}; // 실제 입자 바람과 timer +44의 현재 배율이다.
     SquidDisplayRect viewport; // 양판본 실제 clipping/visible helper가 읽는 현재 경계다.
     bool insetViewport{}; // 현재 모드 전역이 켜지면 visible 경계를 양쪽100픽셀씩 줄인다.
+    BurningVictimState victim; //캡처/프레임의 현재 checking과 같은 Client SID 진단 owner다.
 };
 // 캡처는 실제 client ShapeToBuffer에 연결한다. nonzero 소리 정지는 별도 실제 소비자가 필요하다.
 struct BurningFrameHooks {

@@ -263,7 +263,7 @@ o::ConstructionVisualProcess* RawCampaignParticles::AddConstruction(o::Sid paren
     if (!construction_) throw std::logic_error("실제 건설 표시 미연결");return construction_->Add(parent,instant);
 }
 // 첫 색 표도 원본 gradient/병합 몸체로 만들고 실제 같은 단일 표시 목록을 사용한다.
-void RawCampaignParticles::ConnectBurning(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<void(std::uint32_t)> stopSound) {
+void RawCampaignParticles::ConnectBurning(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<void(std::uint32_t)> stopSound,o::BurningVictimState victim) {
     if (burning_ || !capture || !stopSound) throw std::invalid_argument("실제 Burning 연결 중복/필수 경계 누락");o::BurningSystemHooks hooks;
     hooks.visual.reserve=[](std::uint32_t bytes) { if (bytes!=3600 && bytes!=8) throw std::logic_error("Burning 실제 확보량 오류");return true; }; // 실제 vector/공유 색 객체가 저장소를 소유한다.
     hooks.visual.createPalette=[] { return 4U; }; // 색 번호와 다른 공유 객체 토큰이다.
@@ -275,7 +275,7 @@ void RawCampaignParticles::ConnectBurning(std::function<o::ConstructionVisualIma
     hooks.visual.buildPalette=[this](std::uint32_t token) {
         if (token!=4 || burningGradients_.size()!=1) throw std::logic_error("Burning 실제 첫 색표 연결 오류");burningMemory_.Assign(o::MergeParticleGradients(burningGradients_));burningColors_={static_cast<std::int32_t>(burningMemory_.Count()),burningMemory_.Snapshot()};burningGradients_.clear();
     };
-    hooks.frame.capture=std::move(capture);hooks.frame.stopSound=std::move(stopSound);
+    hooks.frame.capture=std::move(capture);hooks.frame.stopSound=std::move(stopSound);burningFrame_.victim=victim;burningSources_.victim=std::move(victim); //두 상태의 뷰/장치도 같은 Client owner를 가리키며 자체 진단 DWORD를 만들지 않는다.
     hooks.invalidate=[this](o::SquidDisplayRect rect) { Invalidate({rect.left,rect.top,rect.right,rect.bottom}); };
     hooks.clip=[this] { if (!target_) throw std::logic_error("Burning 실제 VFX clip 미연결");const auto& clip=target_->clip;return o::SquidDisplayRect{clip.left,clip.top,clip.right,clip.bottom}; };
     hooks.pixel=[this](std::int32_t x,std::int32_t y,std::uint8_t color) { if (!target_ || x<0 || x>=target_->pitch || y<0 || y>=target_->height) throw std::out_of_range("Burning 실제 표면/좌표 오류");target_->pixels[static_cast<std::size_t>(y)*target_->pitch+x]=color; };

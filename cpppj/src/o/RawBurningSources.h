@@ -2,6 +2,7 @@
 #pragma once
 #include "o/RawBurningVisual.h"
 #include "o/SpStore.h"
+#include "o/RawBurningVictim.h"
 
 namespace netstorm::o {
 // 실제 TYPE 최대HP helper가 읽는 현재 위크 마나 옵션과 타입 전역이다.
@@ -9,6 +10,7 @@ struct BurningSourcesState {
     bool weakenedMana{}; // 패치005ca8f0/CD00511c90이 켜지면 해당타입 최대HP를4로 나눈다.
     std::uint32_t manaType{158}; // 실제005412d0/CD0051cbbc의 마나/사제 자산 번호다.
     const bool* sharedWeakenedMana{}; // 실제005ca8f0의 주소이며 Frame 준비 사본보다 우선한다.
+    BurningVictimState victim; //연소점 부모가 읽는 같은 현재 checking/상세 SID 진단 장치다.
     bool WeakenedMana() const { return sharedWeakenedMana ? *sharedWeakenedMana : weakenedMana; } // 연소점 선택의 최대HP 조회 위치에서 현재값을 읽는다.
 };
 // 00424110/CD004a5d30의 연소점 선택이며 Step/캡처/팔레트/표시는 별도 연결한다.

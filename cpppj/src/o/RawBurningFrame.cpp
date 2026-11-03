@@ -64,10 +64,9 @@ void RawBurningFrame::Capture(BurningVisualFields& fields) const {
     fields.image.pixels.clear();fields.rows.clear();fields.total=0;
     // 실제 particle container clear는 용량만큼 모든24바이트 의미 필드를0으로 만든다.
     for (auto& particle:fields.particles) particle={};
-    if (!fields.victim.value || fields.victim.value==65535) return;
-    const auto raw=pool_.Slot(fields.victim);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (!FrameDword(raw,0)) { if (patch) throw std::logic_error("Burning capture 가상표0 원본 assert");return; }
-    if (!HasHitPoints(raw)) { if (patch) throw std::logic_error("Burning capture hasHitPoints 원본 assert");return; }
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (patch) { if (!RunBurningVictimParent(fields.victim,BurningVictimEntry::Capture,state_.victim.checking,MakeBurningVictimHooks(pool_,types_,state_.victim))) return; }
+    else { if (!fields.victim.value || fields.victim.value==65535) return;const auto raw=pool_.Slot(fields.victim);if (!FrameDword(raw,0) || !HasHitPoints(raw)) return; } //CD의 기존 인라인 무진단 계약을 보존한다.
     auto image=hooks_.capture(fields.victim);
     const auto sum=static_cast<std::int64_t>(image.width)+image.height;
     if (image.width<0 || image.height<0 || sum>std::numeric_limits<std::int32_t>::max()) throw std::out_of_range("Burning capture 행 표식 크기 오류");
@@ -104,9 +103,10 @@ void RawBurningFrame::Step(BurningVisualFields& fields,BurningFrameFields& frame
     if (!fields.capacity) return;
     if (fields.particles.size()!=fields.capacity || fields.total>fields.capacity) throw std::invalid_argument("Burning frame 현재 입자 배열 오류");
     if (fields.stage==0) { fields.lastTime=state_.now;fields.elapsed=0;Capture(fields);++fields.stage;return; }
-    if (!fields.victim.value || fields.victim.value==65535) return;
-    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto raw=pool_.Slot(fields.victim);
-    if (!HasHitPoints(raw)) { if (patch) throw std::logic_error("Burning frame hasHitPoints 원본 assert");return; }
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;Sid selected=fields.victim;
+    if (patch) { const auto victim=RunBurningVictimParent(fields.victim,BurningVictimEntry::Frame,state_.victim.checking,MakeBurningVictimHooks(pool_,types_,state_.victim));if (!victim) return;selected=*victim; }
+    else if (!selected.value || selected.value==65535) return;
+    const auto raw=pool_.Slot(selected);if (!patch && !HasHitPoints(raw)) return; //진단 뒤 현재 필드가 바뀌어도 원문이 보관한 선택 슬롯의 좌표/깊이를 읽는다.
     const auto x=std::bit_cast<float>(FrameDword(raw,14)),y=std::bit_cast<float>(FrameDword(raw,18));
     const auto centerX=static_cast<float>(static_cast<double>(x)*state_.pixelScaleX),centerY=static_cast<float>(static_cast<double>(y)*state_.pixelScaleY);
     fields.registration.zOrder=static_cast<std::int8_t>(raw[patch ? 35U : 33U])-1;

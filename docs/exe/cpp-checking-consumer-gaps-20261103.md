@@ -116,6 +116,8 @@ LAB_004229b8:
 
 ## FUN_00423d50 @ 00423d50
 
+**798 완료:** 797의 현재 SID/진단 앞단을 실제 소비자와 같은 Client checking/상세 SID owner에 연결했다. 집중13개(새2개) 통과·기존 양판본 몸체 fixture를 유지했다. 아래 미복원 설명은779 당시이며 [798 기록](cpp-burning-victim-live-20261103.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawBurningFrame.h
@@ -144,6 +146,8 @@ LAB_004229b8:
 
 ## FUN_00424110 @ 00424110
 
+**798 완료:** 797의 현재 SID/진단 앞단을 실제 소비자와 같은 Client checking/상세 SID owner에 연결했다. 집중13개(새2개) 통과·기존 양판본 몸체 fixture를 유지했다. 아래 미복원 설명은779 당시이며 [798 기록](cpp-burning-victim-live-20261103.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawBurningSources.h
@@ -171,6 +175,8 @@ LAB_004229b8:
 - `"rowTaken[killRow] == 1",".\\Burning.cpp",0xf7)`
 
 ## FUN_00424530 @ 00424530
+
+**798 완료:** 797의 현재 SID/진단 앞단을 실제 소비자와 같은 Client checking/상세 SID owner에 연결했다. 집중13개(새2개) 통과·기존 양판본 몸체 fixture를 유지했다. 아래 미복원 설명은779 당시이며 [798 기록](cpp-burning-victim-live-20261103.md)을 따른다.
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 

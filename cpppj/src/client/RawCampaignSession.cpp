@@ -1848,24 +1848,26 @@ struct RawCampaignSession::Impl {
         }
         flyerPostPop=std::make_unique<RawFlyerPostPop>(core.pool,core.types,details,core.processState.Server(),std::move(post));core.postPop.SetFlyerPostPop(flyerPostPop.get());
     }
+    //연소와 기존 SID 소비자가 같은 현재 풀/Client 진단 DWORD를 직접 사용한다.
+    bool CurrentSidRobust(Sid sid,bool live) {
+        SidRobustHooks robust;robust.addressMode=SidRobustAddressMode::HostPointer;
+        robust.checking=[this] { return gunState.checking.Read(); }; //779의같은현재전체DWORD뷰를원문선택분기에서만읽는다.
+        robust.poolBase=[this] { return reinterpret_cast<std::uintptr_t>(core.pool.Bytes().data()); };robust.capacity=[this] { return core.pool.Capacity(); };
+        robust.memory=[this](auto token,auto width) { // 범위선검사로원문type선행읽기를생략하지않고선택된물리접근에서만거부한다.
+            const auto raw=core.pool.Bytes();const auto base=reinterpret_cast<std::uintptr_t>(raw.data());
+            if (token<base || token-base>raw.size() || width>raw.size()-static_cast<std::size_t>(token-base)) throw std::out_of_range("SID 진단의 현재 Pool 물리 범위");
+            return raw.subspan(static_cast<std::size_t>(token-base),width);
+        };
+        robust.assertion=[this](std::string_view expression,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("SID 원문 진단 미연결 "+std::to_string(line));services.ai.assertion(expression); }; //실제진단이복귀하면ac140의1반환을막지않는다.
+        return RawIsSidRobust(static_cast<std::int32_t>(sid.value),live?1:0,gameplayGlobals->SidRobustDiagnostics(),robust);
+    }
     // 원본 제어/프레임·표적 검색을 같은 실제 큰 소비자에 연결하고 미복원 무기는 선택 시 구체적으로 거부한다.
     void ConnectFlyerFrame() {
         FlyerFrameHooks hooks;hooks.assertion=SessionMissing<void,std::uint32_t>();
         hooks.robust=[this](FlyerProcessFields& fields) {
             const auto form=fields.Form(),parent=fields.Parent();if ((form.value && form.value>=core.pool.Capacity()) || (parent.value && parent.value>=core.pool.Capacity())) throw std::logic_error("비행 Baseprocess0041be80의 Form/부모 원본 진단");return true; // 원문은 범위 진단 후1을 반환한다.
         };
-        hooks.sidRobust=[this](Sid sid,bool live) { // 원문SID번호판정과선택된상세진단을현재Pool·같은Client소유DWORD에연결한다.
-            SidRobustHooks robust;robust.addressMode=SidRobustAddressMode::HostPointer;
-            robust.checking=[this] { return gunState.checking.Read(); }; //779의같은현재전체DWORD뷰를원문선택분기에서만읽는다.
-            robust.poolBase=[this] { return reinterpret_cast<std::uintptr_t>(core.pool.Bytes().data()); };robust.capacity=[this] { return core.pool.Capacity(); };
-            robust.memory=[this](auto token,auto width) { // 범위선검사로원문type선행읽기를생략하지않고선택된물리접근에서만거부한다.
-                const auto raw=core.pool.Bytes();const auto base=reinterpret_cast<std::uintptr_t>(raw.data());
-                if (token<base || token-base>raw.size() || width>raw.size()-static_cast<std::size_t>(token-base)) throw std::out_of_range("SID 진단의 현재 Pool 물리 범위");
-                return raw.subspan(static_cast<std::size_t>(token-base),width);
-            };
-            robust.assertion=[this](std::string_view expression,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("SID 원문 진단 미연결 "+std::to_string(line));services.ai.assertion(expression); }; //실제진단이복귀하면ac140의1반환을막지않는다.
-            return RawIsSidRobust(static_cast<std::int32_t>(sid.value),live?1:0,gameplayGlobals->SidRobustDiagnostics(),robust);
-        };
+        hooks.sidRobust=[this](Sid sid,bool live) { return CurrentSidRobust(sid,live); }; //기존 상세 SID 진단 본문과 장기 owner를 그대로 재사용한다.
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         hooks.finish=[this](FlyerProcessFields& fields) { flyer->Finish(fields); };
         hooks.otherFrame=[this](FlyerProcessFields& fields)->std::int32_t { if (Read(fields.bytes,0)==0x509f24U) return sunFlyerFrame->Animation(fields);if (Read(fields.bytes,0)==0x509f98U) return windFlyer->Animation(fields);throw std::logic_error("다른 플라이어 outer+8 Frame 미복원"); };
@@ -3026,7 +3028,9 @@ struct RawCampaignSession::Impl {
         };
         buildingCapture=std::make_unique<RawShapeToBuffer>(core.pool,core.types,core.shapes,assets.game.Shapes(),buildingCaptureState);
         particles->ConnectConstruction([this](Sid sid) { return buildingCapture->Capture(sid); },[this](Sid sid) { return hp.MaxHitPoints(sid); });
-        particles->ConnectBurning([this](Sid sid) { return buildingCapture->Capture(sid); },[this](std::uint32_t sound) { if (!sound) return;if (!services.sound.stop) throw std::logic_error("Burning 실제 소리 정지 미연결");services.sound.stop(sound); });
+        BurningVictimState burningVictim;burningVictim.checking=gunState.checking;burningVictim.robust=[this](Sid sid,bool live) { return CurrentSidRobust(sid,live); }; //같은 장기 Client 진단 뷰와 현재 상세 SID 장치를 세 연소 소비자에 공급한다.
+        burningVictim.assertion=[this](auto condition,auto source,auto line) { if (services.ai.assertion) services.ai.assertion(condition);else throw std::logic_error("원문 연소 진단 "+std::string(source)+":"+std::to_string(line)+": "+std::string(condition)); }; //선택 진단이 돌아오면 원문 본문을 계속한다.
+        particles->ConnectBurning([this](Sid sid) { return buildingCapture->Capture(sid); },[this](std::uint32_t sound) { if (!sound) return;if (!services.sound.stop) throw std::logic_error("Burning 실제 소리 정지 미연결");services.sound.stop(sound); },std::move(burningVictim));
         ConstructionEffectsHooks effects; // 밀어내기에 필요한 현재 이동 종류/내용물 삭제/가상 공간이다.
         effects.pathType=[this](std::uint32_t type) { return SelectMovementProcessType(core.pool.Edition(),core.types,priestState.movement,type); };
         effects.clearPath=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(sid,type,0,true)); };

@@ -46,11 +46,13 @@ std::int32_t RawBurningSources::Row(const BurningParticle& particle) const {
 }
 // 원본의 선택 개수는 실제 추가 성공 수와 다르며 제거 후에도 selected를 감소시키지 않는다.
 void RawBurningSources::Select(BurningVisualFields& fields) const {
-    if (!fields.victim.value || fields.victim.value==65535) return;
-    const auto raw=pool_.Slot(fields.victim);const auto type=raw[10];const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;Sid selected=fields.victim;
+    if (patch) { const auto victim=RunBurningVictimParent(fields.victim,BurningVictimEntry::Sources,state_.victim.checking,MakeBurningVictimHooks(pool_,types_,state_.victim));if (!victim) return;selected=*victim; }
+    else if (!selected.value || selected.value==65535) return;
+    const auto raw=pool_.Slot(selected);const auto type=raw[10]; //HP 진단 뒤에도 같은 선택 슬롯의 현재 TYPE/HP를 다시 읽는다.
     if (type>=types_.size()) throw std::out_of_range("Burning sources 현재 타입 범위 오류");
     const auto& record=types_[type];const bool hasHp=(record.flags2&0x400000U) ? (raw[patch ? 40U : 35U]&1)!=0 : (record.flags1&TypeFlag1::kHasHitPoints)!=0;
-    if (!hasHp) { if (patch) throw std::logic_error("Burning sources hasHitPoints 원본 assert");return; }
+    if (!patch && !hasHp) return;
     const auto maximum=state_.WeakenedMana() && type==state_.manaType ? record.maxHitPoints/4 : record.maxHitPoints;
     const auto divisor=maximum-maximum/2;
     if (divisor<=0) throw std::invalid_argument("Burning sources 최대HP 나눗셈 범위 오류");

@@ -3207,3 +3207,5 @@ set_source_files_properties(GumpCheckingParentsTests.cpp PROPERTIES COMPILE_DEFI
 target_sources(netstorm_tests PRIVATE BurningVictimParentTests.cpp)
 target_sources(netstorm_world_generation_tests PRIVATE BurningVictimParentTests.cpp)
 set_source_files_properties(BurningVictimParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BURNING_VICTIM_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-victim-parent-x86.tsv\"")
+# 실제 세 연소 소비자와 기존 전체 캡처/입자·연소점·경계 fixture를 같은 기존 집중 대상에서 실행한다(798).
+target_sources(netstorm_file_tests PRIVATE BurningVictimParentTests.cpp BurningFrameTests.cpp BurningSourcesTests.cpp BurningSourcesCornerTests.cpp)

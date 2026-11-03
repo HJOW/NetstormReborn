@@ -1,0 +1,108 @@
+{
+  "unit": 798,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 798,
+  "displayVersion": "11.01",
+  "exeSha256": "f5f153c9224dc3a27ac34b3d5e8c39ced13fc8d7b27d907d3a24bef2d12411ee",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "failedBuilds": 0,
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 13,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "BurningSourcesCorner_PatchNativeTransparentShortCircuit",
+      "BurningSourcesCorner_CdNativeRowsBeforePixels",
+      "BurningSourcesCorner_SelectedOpaqueRowStillRejected",
+      "BurningFrame_PatchNativeCaptureSourcesParticlesAndDirty",
+      "BurningFrame_CdNativeCaptureSourcesParticlesAndDirty",
+      "BurningFrame_CurrentVictimDiagnosticsReachThreeActualConsumers",
+      "BurningFrame_ActualVictimAdapterKeepsDetailedOwnerAndHpResume",
+      "BurningVictimParent_Native504CurrentSidAndSelectedSlot",
+      "BurningVictimParent_SelectedHooksAndDwordLifetime",
+      "BurningSources_PatchNativeSelectionAndRemoval",
+      "BurningSources_CdNativeSelectionAndRemoval",
+      "BurningSources_PatchSharedWeakenedNativeSelection",
+      "BurningSources_CdSharedWeakenedNativeSelection"
+    ],
+    "failedInvocations": 0,
+    "fullSuiteRun": false
+  },
+  "native": {
+    "newObservations": 0,
+    "reusedFrom": 797,
+    "originalInputs": 504,
+    "priorFirstObservations": 1008,
+    "priorRepeatObservations": 1008,
+    "fixture": "cpppj/tests/fixtures/burning-victim-parent-x86.tsv",
+    "fixtureSha256": "77cea61c5e9a9f571dd5e1ed094adb352e53437ed12959816b006d3d237b1350",
+    "actualBodyGoldensReplayed": [
+      "burningframe-x86.tsv",
+      "burningsources-x86.tsv",
+      "burning-sources-corner-x86.tsv"
+    ],
+    "actualBodyGoldenSha256": {
+      "burningframe-x86.tsv": "8b09c3d54803039df92c36374537ff316fbd8062ffbaa02913e89dc0d4fdbcc6",
+      "burningsources-x86.tsv": "84abec71ace3f1cc634fbca2f3e4eec843f5d2ceb4595f7601f1db93f0b4eedd",
+      "burning-sources-corner-x86.tsv": "ad767cbadce23caf84a7c1303ecdc4d6bf75ff5654edc7fb67d968e01c149500"
+    }
+  },
+  "integration": {
+    "previousDetailedSidBodyMovedWithoutSemanticEdit": true,
+    "captureBodyAfterVictimRequestUnchanged": true,
+    "frameCoordinatesAndParticleBodyUnchanged": true,
+    "sourcesHpArithmeticAndSelectionBodyUnchanged": true,
+    "actualClientSharedCheckingAndSidOwnerConnected": true,
+    "existingAirSpecificTestsRun": false
+  },
+  "checking": {
+    "before": 46,
+    "after": 43,
+    "completed": [
+      "00423d50",
+      "00424110",
+      "00424530"
+    ],
+    "remainingBreakdown": {
+      "parent": 35,
+      "partial": 6,
+      "multiplayer": 2
+    }
+  },
+  "protection": {
+    "beforeCount": 2728,
+    "currentCount": 2728,
+    "fixtureCount": 908,
+    "allUnchanged": true,
+    "newFixtures": []
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "실제 Client 연결/장기 owner 공급은 소스/빌드·새GUI0",
+    "현재 풀/TYPE/같은 상세 진단 owner·세 렌더 소비자는 집중 C++ 명시 슬롯으로 확인",
+    "독립 checking0은기존번호계약·비영미연결상세장치는선택오류",
+    "32비트ABI/풀재확보후해제주소/전체SEH/진단UI는별도",
+    "797 원문 앞단/기존 전체 몸체 fixture 재사용·새Native 관측 아님"
+  ],
+  "next": "checking 잔여43·비멀티 UI/Edit/수명·호환성"
+}
