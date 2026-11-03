@@ -3167,6 +3167,10 @@ set_source_files_properties(BoardCheckingParentTests.cpp PROPERTIES COMPILE_DEFI
 # GIF 실제 파일의 입력0/정확길이/선행치수와 현재 backing FILE을 같은 기존 집중대상에 넣는다.
 target_sources(netstorm_tests PRIVATE GifFileReadTests.cpp)
 target_sources(netstorm_file_tests PRIVATE GifFileReadTests.cpp)
+# 현재 팔레트 reader와 기존 clear 순서를 창 없는 같은 집중 대상에서 대조한다(786).
+target_sources(netstorm_tests PRIVATE PaletteFileReadTests.cpp)
+target_sources(netstorm_file_tests PRIVATE PaletteFileReadTests.cpp ScreenPaletteApplyTests.cpp)
+set_source_files_properties(PaletteFileReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_PALETTE_FILE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/palette-file-read-x86.tsv\"")
 set_source_files_properties(GifFileReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GIF_FILE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gif-file-read-x86.tsv\"")
 # 원문startup title의큰부모/반납과State42요청을기존집중대상에서확인한다.
 target_sources(netstorm_tests PRIVATE TitleBitmapLifetimeTests.cpp)

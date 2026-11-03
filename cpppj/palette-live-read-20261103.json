@@ -1,0 +1,118 @@
+{
+  "unit": 786,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 786,
+  "displayVersion": "11.01",
+  "exeSha256": "55400bc43a9bd5d08f070901226f1f92c918c4491670525738bb8d0c260baba2",
+  "summary": "10.78팔레트의현재FILE·직접saved_쓰기·부분실패와같은Screen후단뒤닫기를연결",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 12,
+    "newTests": 3,
+    "failedChecks": 0,
+    "names": [
+      "GifFileRead_Native56ExactZeroDimensionsDecodeAndCleanup",
+      "GifFileRead_CurrentEncryptedArchiveKeepsLegacySnapshot",
+      "GifFileRead_ValidDimensionsRemainBeforeInvalidLzwFailure",
+      "GifFileRead_KencloudCurrentArchiveUsesExistingPixelsAnd512Contract",
+      "PaletteFileRead_Native92DirectWritesPrefixAndFileLifetime",
+      "PaletteFileRead_CurrentArchiveAndLooseRgbPreserveSnapshotAndReservedBytes",
+      "PaletteFileRead_MissingAndBadLengthStopBeforeApplyWithExistingSaved",
+      "ScreenPaletteApply_FirstPePrefixFixture",
+      "ScreenPaletteApply_NaturalSkipAndRequiredDevices",
+      "TitleBitmapLifetime_Native33SharedDimensionsPaintAndCleanup",
+      "TitleBitmapLifetime_State42Requests41AndRestoresPaletteAfterSplash",
+      "TitleBitmapLifetime_ActualRelativePathsReadSelectedUnicodeInstall"
+    ],
+    "scope": "Native92의File/바이트/reader효과열·현재VFS·기존clear/GIF/title회귀",
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "unit": 786,
+      "host": "HJOW-Athlon",
+      "rows": 92,
+      "observations": 184,
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제4a4850/41aa80/41a700/41a7a0/41b410/4fb3f0. Open/CRT/색검색/OS표면/표시/할당은명시장치. 실제색검색·픽셀·32비트전체SEH dispatcher를검증한것이아님.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_palette_file_read.py": "f4070378a1ddadea75310d694451fef21745cd15ccadfa95e301287d4913d694",
+        "extracted\\cpp-resume-786\\palette-first.tsv": "b9a765cbba5b7757bd74b5cf84fc637ad3dd17106088a22e6763cb6055004913"
+      }
+    },
+    "repeat": {
+      "unit": 786,
+      "host": "HJOW-Athlon",
+      "rows": 92,
+      "observations": 184,
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제4a4850/41aa80/41a700/41a7a0/41b410/4fb3f0. Open/CRT/색검색/OS표면/표시/할당은명시장치. 실제색검색·픽셀·32비트전체SEH dispatcher를검증한것이아님.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_palette_file_read.py": "f4070378a1ddadea75310d694451fef21745cd15ccadfa95e301287d4913d694",
+        "extracted\\cpp-resume-786\\palette-first.tsv": "b9a765cbba5b7757bd74b5cf84fc637ad3dd17106088a22e6763cb6055004913"
+      }
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 368,
+    "failedToolRuns": 3,
+    "corrections": [
+      "fread암호1024의size1/count1024",
+      "가상FILE0은명시nullRead실패"
+    ],
+    "fixtureByteVerified": true
+  },
+  "integration": {
+    "baseCommit": "e4b1b472",
+    "existingScreenTailByteEquivalentAfterNewlineNormalization": true,
+    "screenDataLayoutUnchanged": true,
+    "nativePatchOnly": true,
+    "valueApiAndCdPreserved": true,
+    "protectedBefore": 2720,
+    "protectedAfter": 2721
+  },
+  "protection": {
+    "beforeCount": 2720,
+    "currentCount": 2721,
+    "allUnchanged": true,
+    "fixtureCount": 901,
+    "newFixtures": [
+      "cpppj/tests/fixtures/palette-file-read-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "Native의화면전역/색검색횟수열을C++reader검증으로합산하지않음",
+    "CRT/OS/색검색/할당은명시장치·실제픽셀/전체SEH아님",
+    "가상NULL CRT실패와실제CRT OS동작구별",
+    "host미완성Open추가회수와0seed암호작업은현대경계",
+    "CD10.72입구는기존값형계약유지·새CDNative관측0"
+  ],
+  "next": "787 Xlat의현재파일/버퍼설치·CR정규화·닫은뒤파서, 이후checking잔여50·비멀티/호환성"
+}

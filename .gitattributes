@@ -2402,3 +2402,4 @@ cpppj/tests/fixtures/board-checking-parent-x86.tsv -text
 # 단위781의 최초 GIF 파일·디코드 수명 관측 바이트를 보존한다.
 cpppj/tests/fixtures/gif-file-read-x86.tsv -text
 cpppj/tests/fixtures/title-bitmap-lifetime-x86.tsv -text
+cpppj/tests/fixtures/palette-file-read-x86.tsv -text

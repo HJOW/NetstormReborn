@@ -10,7 +10,9 @@
 #include <memory>
 #include <optional>
 #include <span>
+#include <string_view>
 
+namespace netstorm::o { class BaseFileSystem; } // 파일 전용 팔레트 입구가 현재 VFS를 빌린다.
 namespace netstorm::client {
 // 팔레트 색 하나의 RGB 성분이다.
 struct PaletteColor { /* red: RGB 색의 빨강 성분(0~255). */ /* green: RGB 색의 초록 성분(0~255). */ /* blue: RGB 색의 파랑 성분(0~255). */ std::uint8_t red{}, green{}, blue{}; };
@@ -141,6 +143,7 @@ public:
     void SetPalette(unsigned start, unsigned count, ScreenColor* colors, bool apply);
     // 원본 FUN_004a4850: 팔레트 파일의 색을 저장 팔레트에 넣고 적용한다.
     void LoadPalette(const GamePalette& palette,o::OriginalEdition edition=o::OriginalEdition::Patch1078,std::uint32_t clear=0);
+    void LoadNativePaletteFile(const o::BaseFileSystem& files,std::string_view name,std::uint32_t clear); //10.78만 현재FILE로 같은saved_를 직접 기록하고 후단 끝에 닫는다.
     const std::uint32_t& PaletteLoaded() const; //00555e08 실제DWORD를 같은Screen수명으로빌린다.
     // 마지막 파일 팔레트로 계산한 원본 기본/표시/날씨 색 표다. SetPalette의 일시 번개/모드 적용으로 다시 계산하지 않는다.
     const PaletteColorTable& Colors() const;
@@ -187,6 +190,7 @@ public:
     // 창의 장치 문맥.
     NativeHandle WindowDc() const;
 private:
+    void ApplySavedPalette(o::OriginalEdition edition,std::uint32_t clear); // 값형/실제파일 입구가 같은 clear·Apply·색 표 후단을 공유한다.
     void WaitPaletteVerticalBlank(); //004a1fb0의GDI자연반환과미복원DirectDraw경계를구별한다.
     void RestoreWindowed(); // 원본과 다른 호환 창의 모양/위치/커서 제한을 전환/종료 때 되돌린다.
     void PresentPaletteClear(); //004a46d0의viewport복사전후같은clip을복구한다.

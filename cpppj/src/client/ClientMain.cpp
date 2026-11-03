@@ -831,7 +831,8 @@ void Client::LoadScenePalette(std::string_view name) {
 }
 // 완성된실제PathSpec경로를읽어원문clear DWORD를전달한다.미리DataDir를붙이지않는다.
 void Client::LoadPaletteFile(std::string_view path,std::uint32_t clear) {
-    screen_->LoadPalette(GamePalette(files_.Read(path)),options_.edition,clear);
+    if (options_.edition==o::OriginalEdition::Patch1078) screen_->LoadNativePaletteFile(files_,path,clear); //10.78은현재FILE/부분saved_효과를후단끝까지유지한다.
+    else screen_->LoadPalette(GamePalette(files_.Read(path)),options_.edition,clear); //CD/호스트값형decoder의기존계약이다.
 }
 // 원문435c80이 선택한 우선순위를 실제 현재 스레드에 요청한다.
 void Client::SetNativeThreadPriority(std::int32_t priority) { static_cast<void>(SetThreadPriority(GetCurrentThread(),priority)); } //실제 Win32 두 호출 순서이며 실패도 공유 값/설정 쓰기를 취소하지 않는다.

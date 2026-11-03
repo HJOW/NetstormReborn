@@ -8,6 +8,7 @@
 #include "client/Screen.h"
 #include "client/ScreenPresentation.h"
 #include "client/ScreenPaletteApply.h"
+#include "client/PaletteFileRead.h" // 같은 saved_에 현재 파일을 직접 읽고 기존 후단 끝에 닫는다.
 #include <algorithm>
 #include <bit>
 #include <cstring>
@@ -326,6 +327,16 @@ void Screen::LoadPalette(const GamePalette& palette,o::OriginalEdition edition,s
         const auto reserved=palette.Reserved(static_cast<std::uint8_t>(i)).value_or(saved_[i].reserved);
         saved_[i] = {color.blue, color.green, color.red, reserved};
     }
+    ApplySavedPalette(edition,clear);
+}
+// 같은 저장 팔레트에 직접 쓴 뒤 기존 적용·색 표 후단을 File보다 먼저 완료한다.
+void Screen::LoadNativePaletteFile(const o::BaseFileSystem& files,std::string_view name,std::uint32_t clear) {
+    static_assert(sizeof(ScreenColor)==4); // 원문의 BGRX256칸과 현재 저장소의 실제 폭을 확인한다.
+    const std::span<std::uint8_t,1024> saved(reinterpret_cast<std::uint8_t*>(saved_.data()),1024);
+    ReadNativePaletteFile(files,name,saved,[this,clear] { ApplySavedPalette(o::OriginalEdition::Patch1078,clear); });
+}
+// 값형/CD와 현재 FILE 입구는 기존의 같은 Screen 효과·색 소비 순서를 공유한다.
+void Screen::ApplySavedPalette(o::OriginalEdition edition,std::uint32_t clear) {
     const ScreenPaletteApplyHooks devices{
         [this] { Lock(); }, //같은현재깊이/표면을사용한다.
         [this] { if ((flags_&ScreenMode::kModeSet)==0) throw std::logic_error("팔레트전환Surface.fillBlt미복원");FillRect({0,0,width_,height_},0); }, //bit80없으면원문별도fillBlt경계를빈성공으로가장하지않는다.
