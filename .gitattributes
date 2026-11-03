@@ -2439,3 +2439,9 @@ cpppj/tests/fixtures/graph-sentinel-checking-x86.tsv -text
 tools/decomp_surface_neighbor_current.py text eol=lf
 cpppj/surface-neighbor-current-native-20261103.json text eol=lf
 cpppj/tests/fixtures/surface-neighbor-current-x86.tsv -text
+# 실제 Graph 부모의 원문 배열과 생성기 바이트를 보존한다.
+tools/decomp_graph_live_checking.py text eol=lf
+cpppj/graph-live-checking-native-20261103.json text eol=lf
+cpppj/tests/fixtures/graph-live-checking-x86.tsv -text
+cpppj/graph-live-free-callback-native-20261103.json text eol=lf
+cpppj/tests/fixtures/graph-live-free-callback-x86.tsv -text

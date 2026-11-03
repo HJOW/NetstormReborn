@@ -221,7 +221,7 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     const bool region=operation==Operation::Region || operation==Operation::RegionAdd;
     const bool add=operation==Operation::Add || operation==Operation::RegionAdd;
     // 자동 재구성 가능 경로는 void/contained 표면까지 전체 풀에서 읽는다. 부분 스냅샷 정책은 유지한다.
-    const bool fullPool=global || (recovery_==GraphRecovery::FullPool && (add || operation==Operation::Detach));
+    const bool fullPool=global || (recovery_==GraphRecovery::FullPool && (add || operation==Operation::Detach || operation==Operation::Inspect)); // 현재 실행의 물리 검사도 같은 전체 풀 계약을 사용해 지도 밖 contained/void를 새로 거부하지 않는다.
     const auto root=pool_.Slot(sid); const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto graphOffset=patch ? 30U : 28U,extraOffset=patch ? 40U : 35U,frameOffset=patch ? 36U : 34U;
     if (!global && (sid.value<5 || sid.value>kMaximumId || (root[11]&(kFree|kContained)) ||
@@ -323,6 +323,7 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
             type.flags1,type.flags2,code,(currentState&kDead)!=0,(bytes[extraOffset]&kBuried)!=0});
     }
     SurfaceFinder finder(objects,map,spots); Graph graph(finder,members,plan.records,plan.stack);
+    if (operation==Operation::Inspect) return plan; // 현재 물리/번호/프레임을 확인한 뒤 순회나 쓰기 계획을 실행하지 않는다.
     if (operation==Operation::Rebuild) graph.Rebuild(target!=0);
     else if (operation==Operation::Allocate) plan.changed=graph.AllocateWithRecovery();
     else if (add) graph.Add(sid.value,recovery_);
@@ -366,8 +367,8 @@ void RawGraph::Commit(const Plan& plan) {
     for (const auto& [sid,number]:plan.numbers) pool_.AllocatedBytes(sid)[offset]=number;
     records_=plan.records; stack_=plan.stack;
 }
-// 현재 프레임·상태·지도로 매번 다시 계산한다.
-void RawGraph::Add(Sid sid) { Commit(Calculate(sid,Operation::Add,0,nullptr)); }
+// 실제 실행은 원문 진단/로그 복귀 뒤의 현재 풀과 이웃을 직접 소비한다.
+void RawGraph::Add(Sid sid) { ExecuteAdd(sid); }
 // 분할 정책/특수 감소를 인코딩하고 선택한 전체 풀 소진 복구도 같은 사전 계획에서 검사한다.
 void RawGraph::ValidateDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,std::optional<std::uint8_t> sourceType) const {
     if (removedSurfaces!=1 && removedSurfaces!=9) throw std::invalid_argument("raw 그래프 감소 수 오류");
@@ -425,19 +426,19 @@ RawGraph::Plan RawGraph::CalculatePostDestroy(Sid sid) const {
 }
 // 앞선 Add 성공 뒤 뒤 후보가 실패해도 실제 풀/표/스택은 보존한다.
 void RawGraph::ValidatePostDestroy(Sid sid) const { static_cast<void>(CalculatePostDestroy(sid)); }
-// 원본 순차 Add의 최종 결과를 한 번에 반영한다. 이 함수는 Unpop/반납을 수행하지 않는다.
-void RawGraph::PostDestroy(Sid sid) { Commit(CalculatePostDestroy(sid)); }
+// 현재 일반 finder와 순차 Add를 실행한다. 사전 검사는 별도 사본에만 수행하고 Unpop/반납은 하지 않는다.
+void RawGraph::PostDestroy(Sid sid) { ExecutePostDestroy(sid); }
 // 기존 스택의 미사용 DWORD를 보존하여 flood 결과를 반영한다.
 std::uint32_t RawGraph::Flood(Sid sid,std::uint8_t graph) {
-    const auto plan=Calculate(sid,Operation::Flood,graph,nullptr); Commit(plan); return plan.changed;
+    return ExecuteFlood(sid,graph,true);
 }
-// 지역 root를 지정하지 않고 전체 할당 풀에서 계산한다.
-void RawGraph::Rebuild(bool resetAll) { Commit(Calculate(Sid{},Operation::Rebuild,resetAll ? 1 : 0,nullptr)); }
+// 원문 전역 재구성의 현재 표/두 SID 순회를 직접 실행한다.
+void RawGraph::Rebuild(bool resetAll) { ExecuteRebuild(resetAll); }
 // 같은 전체 월드가 첫 저장 객체를 설치하기 전에 호출하는 원본 표 초기화다.
 void RawGraph::ResetTable() {
     ResetRawGraphTable(storage_);
 }
-// 실행기 수명에 현재 뷰를 보관하고 실제 참조 감소 위치에서만 진단한다.
+// 실행기 수명에 현재 뷰를 보관하고 실제 Graph 부모/참조 감소 위치에서 소비한다.
 void RawGraph::BindDiagnostics(GraphDiagnostics diagnostics) { diagnostics_=std::move(diagnostics); }
 // 같은 원문85BYTE의 쓰기를 Session/Pool/타입/stack 효과 없이 현재 장기 물리에도 적용한다.
 void ResetRawGraphTable(RawGraphStorage& storage) {
@@ -445,19 +446,18 @@ void ResetRawGraphTable(RawGraphStorage& storage) {
     storage.records[0].inUse=1;storage.records[0].reserved=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>((static_cast<std::uint16_t>(storage.records[0].reserved)&0xff00U)|1U));
     storage.records[Graph::kInvalid].surfaces=storage.records[Graph::kInvalid].inUse=0x7dfd;
 }
-// 재구성 결과의 번호/표/스택을 함께 적용한 뒤 확보한 번호를 돌려준다.
-std::uint8_t RawGraph::Allocate() {
-    const auto plan=Calculate(Sid{},Operation::Allocate,0,nullptr); Commit(plan); return static_cast<std::uint8_t>(plan.changed);
-}
+// 빠른 빈 행 선택은 풀을 읽지 않고 소진 때만 실제 전역 재구성한다.
+std::uint8_t RawGraph::Allocate() { return ExecuteAllocate(true); }
 // 영역 단독 helper도 동일한 원본 탐색·표 감소를 사용한다.
 void RawGraph::InvalidateRegion(Sid sid) {
-    if (!diagnostics_.checking) { Commit(Calculate(sid,Operation::Region,0,nullptr));return; }
+    static_cast<void>(Calculate(sid,Operation::Region,0,nullptr)); // 물리/체인 보호는 유지하고 실제 효과는 현재 행에서만 낸다.
     Plan scratch{};Region(sid,nullptr,spots_,scratch,true); // 현재 원문 진단의 쓰기를 사본 Commit으로 덮어쓰지 않는다.
 }
-// 성공한 전체 후처리를 한 번에 raw 번호와 그래프 표에 반영한다.
+// 원본의 영역 통지→표면 Add를 현재 물리에서 순서대로 실행한다. 사전 실패는 기존처럼 쓰기 전에 거부한다.
 void RawGraph::PostPop(Sid sid,bool invalidate,bool add) {
-    if (invalidate && diagnostics_.checking) { InvalidateRegion(sid);if (add) Add(sid);return; } // 실제 원문 순서대로 현재 영역 통지 뒤 표면 Add를 실행한다.
-    if (invalidate || add) Commit(Calculate(sid,invalidate ? (add ? Operation::RegionAdd : Operation::Region) : Operation::Add,0,nullptr));
+    ValidatePostPop(sid,invalidate,add);
+    if (invalidate) InvalidateRegion(sid);
+    if (add) Add(sid);
 }
 // sentinel과 reserved WORD를 포함한 전체 표를 제공한다.
 std::span<const GraphRecord> RawGraph::Records() const { return records_; }

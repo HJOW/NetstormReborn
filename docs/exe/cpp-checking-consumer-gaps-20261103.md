@@ -539,6 +539,8 @@ LAB_0045c17f:
 
 ## FUN_00462ac0 @ 00462ac0
 
+**818 현재 소비자 확장:** 실제 Free/Add/Flood/Rebuild에서 현재 sentinel을 소비하며 Rebuild의 최초 검사는 Reset 전이다. Detach004637b0의 두 호출은 아직 사본 경로여서 이 함수를 전체 소비자 완료로 세지 않는다. [818 기록](cpp-graph-live-checking-20261103.md).
+
 **816 부분 연결:** 공통 sentinel의 현재 checking/두 WORD와 진단 복귀, 실제 `RawGraph::Free` 연결을 원문1,080행·새 집중2개로 대조했다. CD 실제 대응은 빈 함수 `0045b560`이다. Flood/Add/Rebuild/Detach 중첩 호출은 다음 실제 실행 경로 연결까지 남기며 잔여 함수 수27은 줄이지 않는다. [816 기록](cpp-graph-sentinel-checking-20261103.md).
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
@@ -600,6 +602,8 @@ void __cdecl FUN_00462ac0(void)
 
 ## FUN_00462f10 @ 00462f10
 
+**818 현재 부모 연결:** 현재 표/stack/슬롯·flags8·진단/로그 복귀를 구현하고 실제 Add의 두 호출과 Rebuild 호출에 연결했다. 새 PE168행·집중34개 최종 실패0이다. 원문 네 호출 중 Detach004637b0의 한 호출은 아직 사본 경로이므로 잔여 함수로 유지한다. [818 기록](cpp-graph-live-checking-20261103.md).
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\Graph.h
@@ -626,6 +630,8 @@ void __cdecl FUN_00462ac0(void)
 - `"d < FLOOD_STACK_SIZE","\\Ns\\O\\Graph.cpp",0x17a)`
 
 ## FUN_004633c0 @ 004633c0
+
+**818 연결 완료:** 현재 sentinel/위치/상태·이웃 수집·현재 최대 행 선택·병합/진단·level0x20 로그와 복귀를 실제 RawGraph에 구현했다. 원문 호출자004b0840/postDestroy·004b0d30/postPop 두 곳도 실제 현재 실행이다. 새 PE168행의 전체 기록/stack/슬롯/이벤트, C++34개(새3) 최종 실패0·실제 자산 Tutorial1 콘솔 초기 로드로 확인했다. checking 잔여는26(부모18·부분5·MP3)이다. 아래 미복원 서술은779 당시 분류다. [818 기록](cpp-graph-live-checking-20261103.md).
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 

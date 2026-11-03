@@ -21,6 +21,10 @@ void RawSurfaceStorage::RecordDisplayFrameError(std::uint32_t type,std::int32_t 
 }
 // 진단을 선택한 지점만 장치를 요구하며 복귀 뒤 다음 TYPE 조회를 막지 않는다.
 void RawSurfaceStorage::AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const { if (!displayAssertion_) throw std::logic_error("표시 원문 진단 장치 미연결");displayAssertion_(expression,file,line); }
+// Client의 현재 로그 서비스를 장기 owner에 보관한다. World 대여마다 다른 Session 포인터로 교체하지 않는다.
+void RawSurfaceStorage::BindGraphTrace(std::function<void(std::int32_t,std::string_view)> trace) { graphTrace_=std::move(trace); }
+// 독립 저장소는 기존 무출력 계약을 유지하고 실제 Client는 필터/FILE writer의 원문 계약을 적용한다.
+void RawSurfaceStorage::TraceGraph(std::int32_t level,std::string_view text) const { if (graphTrace_) graphTrace_(level,text); }
 // 참조 배열을 원본 자산에서 최초 한 번만 복사해 이후 주소를 고정한다.
 RawSurfaceStorage::RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
     :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),types(inputTypes.begin(),inputTypes.end()),frames(inputFrames.begin(),inputFrames.end()),shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true,&authority_->server),spots(kCells),bridgeDecayScan{edition==o::OriginalEdition::Patch1078 ? -1 : 0,edition==o::OriginalEdition::Patch1078 ? -1 : 0,0,0.0},source_(source) {

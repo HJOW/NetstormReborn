@@ -46,7 +46,7 @@
 | `src/o/Flyer.cpp` | Flyer.cpp | flyer.cpp | 13 |  |
 | `src/o/Gem.cpp` | Gem.cpp | gem.cpp | 4 |  |
 | `src/o/Geometry.cpp` | Geometry.cpp | geometry.cpp | 1 |  |
-| `src/o/Graph.cpp` | Graph.cpp | graph.cpp | 8 | 있음 |
+| `src/o/Graph.cpp` · `src/o/RawGraph.cpp` · `src/o/RawGraphLive.cpp` | Graph.cpp | graph.cpp | 8 | 있음(순수 사전 계산과 현재 풀 실행을 구별) |
 | `src/o/GunAnim.cpp` | Gunanim.cpp | GunAnim.cpp | 10 |  |
 | `src/o/GunProcess.cpp` | Gunprocess.cpp | GunProcess.cpp | 10 |  |
 | `src/o/Islandbuilder.cpp` | Islandbuilder.cpp | islandbuilder.cpp | 13 | 있음 |

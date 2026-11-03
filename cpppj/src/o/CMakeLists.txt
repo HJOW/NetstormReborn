@@ -302,6 +302,7 @@ target_sources(netstorm PRIVATE
     RawCarrierCheck.cpp RawCarrierCheck.h
     Graph.cpp Graph.h
     RawGraph.cpp RawGraph.h
+    RawGraphLive.cpp # 현재 풀/표/스택과 진단 복귀를 직접 소비하는 Graph 실행 경로다.
     BaseProcess.cpp BaseProcess.h
     Kernel.cpp Kernel.h
     GameClock.cpp GameClock.h

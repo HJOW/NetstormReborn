@@ -3281,3 +3281,11 @@ target_sources(netstorm_file_tests PRIVATE SurfaceNeighborCurrentTests.cpp Neigh
 set_source_files_properties(SurfaceNeighborCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SURFACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/surface-x86.tsv\";NETSTORM_SURFACE_NEIGHBOR_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/surface-neighbor-current-x86.tsv\"")
 set_property(SOURCE NeighborTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_NEIGHBOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/neighbor-x86.tsv\"")
+
+# 실제 Graph 부모와 현재 진단/로그 변경을 전체 원문 배열과 대조한다.
+target_sources(netstorm_tests PRIVATE GraphLiveCheckingTests.cpp)
+target_sources(netstorm_file_tests PRIVATE GraphLiveCheckingTests.cpp RawSurfaceWorldTests.cpp)
+set_source_files_properties(GraphLiveCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GRAPH_LIVE_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-live-checking-x86.tsv\";NETSTORM_GRAPH_LIVE_FREE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-live-free-callback-x86.tsv\"")
+set_property(SOURCE RawGraphTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_GRAPH_LIVE_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-live-checking-x86.tsv\"") # 기존 영역 대조의 추가 부모 진단도 독립 원문 목록만 허용한다.

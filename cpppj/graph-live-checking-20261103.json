@@ -1,0 +1,74 @@
+{
+  "unit": 818,
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "version": "11.01",
+  "exeSha256": "04b63384d5f75d1a81a41a08c768108e0a6648c0f4ca10a3ff4bf0659080f648",
+  "buildCommands": 4,
+  "buildExitCodes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "newNativeRows": 168,
+  "mainNativeRows": 144,
+  "freeCallbackRows": 24,
+  "focusedTests": 34,
+  "testGroups": {
+    "live": 3,
+    "raw": 17,
+    "reference": 4,
+    "world": 7,
+    "decay": 3
+  },
+  "newTests": 3,
+  "failedChecksFinal": 0,
+  "oldProtectedUnchanged": 2742,
+  "nextProtectedUnchanged": 2744,
+  "nextFixtureCount": 924,
+  "checkingRemaining": 26,
+  "checkingClassification": {
+    "parents": 18,
+    "partial": 5,
+    "mp": 3
+  },
+  "completed": "Add의 실제 postPop/postDestroy 두 소비자와 현재 Flood/Rebuild/Allocate·Client trace·World FullPool 연결",
+  "pending": "Detach와 그 안의 Flood/sentinel 소비자, Region 무효화 setter의 진단 후 free 경계",
+  "initialIssues": [
+    "예약 SID1~6과 할당5~10의 전역 iterator 의미 차이로 새144행 중 재구성48행 불일치; 유효 할당5~10으로 입력을 다시 관측함",
+    "기존 raw 검사2건의 상태 경계 예외; 내부 Flood의 반복 검사와 Inspect의 FullPool 계약 누락을 제품 수정함",
+    "추가 free24행의 최초 첫 입력에서 반복 검사 예외; 내부 호출은 현재 raw 상태를 소비하도록 구분함",
+    "기존 영역 listener가 추가 원문 부모 진단을 몰라3단언 실패; 새 독립 PE 목록만 허용하고 기존 바이트/통계 기대값은 유지함"
+  ],
+  "executedGameOrGui": false,
+  "executedMp": false,
+  "sources": {
+    "cpppj/src/o/RawGraph.h": "4c0c1ce0b61e9435b58186c9d48d685422a146ae4f75790ef601ef7f2a8e3d91",
+    "cpppj/src/o/RawGraph.cpp": "31d0068dd4eee957081a8448b6b0d78f1bfa9cac8e2c4c15a8908a87530340c1",
+    "cpppj/src/o/RawGraphLive.cpp": "8249433b1ae63d8c145d51af9357f12aae080c290bc6c319f1cbd78b3a9ba45b",
+    "cpppj/src/o/SidPool.h": "2e8fa2b7277cf79e7f2448387cadbcc692aaa23fb1a1d534516f053622d57c79",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "63dfcb61c701fc88ae4f8af1b48cf91826edf6a0429cbc5bc79505c38e5e5280",
+    "cpppj/src/client/RawSurfaceWorld.h": "1ce987b62b14f3d5c6734ebca6ad462863b6cab39de134218d2ffcb4c33e0615",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "71682d08079b712eddf11806e325d8be7acfe25cf84672aa90f8a2434f740238",
+    "cpppj/src/client/ClientMain.cpp": "bfee6fda6518701fffaff1d715fd25339a5af9584f1c4fe5c64cdae227621546",
+    "cpppj/tests/GraphLiveCheckingTests.cpp": "423580c162cdd1e698635cb66f72413880b046581c8de4cc740aab24a0813de4",
+    "cpppj/tests/RawGraphTests.cpp": "5f5e67c5cc3703492938c6577b5497be0309c30c0326fe350dc02bb493cb99d2",
+    "tools/decomp_graph_live_checking.py": "dd9b9ba7387f49ea84961f5cb2edbfb99ab64de986b991f8db5b7b1dd5dd44ef",
+    "cpppj/src/o/CMakeLists.txt": "615aaa3a6efa1b7d029c9b24c72ae6c183e416dca8b5194ea2548b149645bff6",
+    "cpppj/tests/CMakeLists.txt": "0b2ac08da8a7803d2d365d62e16ee764ba6b37551840c674ec545065f9375625",
+    "cpppj/SOURCE_MAP.md": "5f2ee5487244af58ba4055cd27725a9ad4241daa8dfbe7b3b308f3fc2024e701"
+  },
+  "headlessInitialLoad": {
+    "mission": "Tutorial1",
+    "exitCode": 0,
+    "logSha256": "cf869454837f930ea71f4beb26a79fe26a06f02906a084f5c9dd908964463ca3",
+    "logBytes": 207954,
+    "coverage": "실제 자산 초기 월드 로드·Resize·Report; 창/플레이/프레임 진행은 아님"
+  },
+  "protectedAfterConsoleUnchanged": 2744,
+  "existingRawOperations": 5094,
+  "checkingRegionOperations": 1536,
+  "referenceDiagnostics": 18,
+  "addedParentDiagnostics": 64
+}

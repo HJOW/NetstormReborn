@@ -34,9 +34,9 @@ public:
     void ValidatePostPop(Sid sid,bool invalidate,bool add,const RawGraphPop* pop=nullptr) const;
     // 00462d40 ↔ CD 0045c210: 4단계 해시의 발자국 교차 후보 중 내부 spot 표면을 무효화한다.
     void InvalidateRegion(Sid sid);
-    // 공통 postPop의 영역 통지와 표면 Add를 성공한 최종 결과로 함께 반영한다.
+    // 공통 postPop의 무효과 사전 검사 뒤 현재 영역 통지와 표면 Add를 원문 순서대로 실행한다.
     void PostPop(Sid sid,bool invalidate,bool add);
-    // 계산이 모두 성공한 뒤 관련 슬롯의 graph byte와 표/스택을 함께 반영한다.
+    // 원문 진단 복귀 뒤 현재 슬롯/표/이웃을 직접 소비한다. ValidateAdd의 사전 계산과 구별한다.
     void Add(Sid sid);
     // 원천의 위치/타입/프레임과 0단계 머리 SID의 그래프 번호를 구별한다. 빈 머리는 자연 반환한다.
     // dead 원천의 이웃 분할·1/특수 9 감소를 계산하며 Unpop/반납과 별도로 호출한다.
@@ -49,16 +49,18 @@ public:
     void Free(std::uint8_t graph);
     // 특수 삭제 분기의 원본 프레임 방향 문자를 읽는다. raw 타입/프레임 표를 캐시하지 않는다.
     FrameCode Frame(Sid sid) const;
-    // 공통 postDestroy의 발자국→일반 finder→표면별 Add를 같은 사본에서 연속 계산한다.
+    // 공통 postDestroy의 발자국→일반 finder→표면별 Add를 무효과 사본에서 미리 검사한다.
     void ValidatePostDestroy(Sid sid) const;
+    // 실제 postDestroy는 현재 finder/표면별 Add를 직접 소비하며 진단 복귀 뒤 다음 후보를 다시 읽는다.
     void PostDestroy(Sid sid);
     // 기존 raw 표면을 실제 탐색 순서로 flood하고 변경한 객체 수를 돌려준다.
     std::uint32_t Flood(Sid sid,std::uint8_t graph);
-    // 전체 raw 풀에서 무효 번호 수집 또는 전체 초기화 재구성을 원자적으로 반영한다.
+    // 전체 raw 풀의 현재 번호를 두 번 순회해 재구성한다. sentinel 진단은 초기화 전이며 복귀 뒤 현재 입력을 읽는다.
     void Rebuild(bool resetAll);
     // 원본00462b20의 월드 초기 표를 만든다. Graph0 예약·reserved LOW BYTE·sentinel만 초기화하고 풀/스택은 보존한다.
     void ResetTable();
     void BindDiagnostics(GraphDiagnostics diagnostics); // 같은 Client의 현재 checking/진단을 연결하며 표/스택/풀은 쓰지 않는다.
+    void BindTrace(std::function<void(std::int32_t,std::string_view)> trace); // 원문의 level0x20 로그를 현재 Client 장치에 연결한다. 독립 입력은 생략할 수 있다.
     // 빈 번호가 있으면 표만 갱신하고, 소진되면 전체 raw 풀 재구성 뒤 번호를 확보한다.
     std::uint8_t Allocate();
     // 기존 레코드의 reserved WORD와 전체 스택의 미사용 흔적도 노출한다.
@@ -88,7 +90,7 @@ private:
         std::uint32_t changed{};
     };
     // Add/Flood 외에 영역 단독·영역 후 Add를 구별한다. 원본 순서를 한 계획에 보존한다.
-    enum class Operation { Add,Flood,Region,RegionAdd,Detach,Rebuild,Allocate };
+    enum class Operation { Add,Flood,Region,RegionAdd,Detach,Rebuild,Allocate,Inspect }; // Inspect는 실제 쓰기 없이 기존 풀/지도/번호의 물리 계약만 확인한다.
     // 각 호출에서 현재 raw 입력을 다시 읽는다. noGraph 리셋/프레임 변경을 캐시하지 않는다.
     Plan Calculate(Sid sid,Operation operation,std::uint8_t target,const RawGraphPop* pop,std::optional<std::uint8_t> sourceType={}) const;
     // 공간은 읽기 전용으로 공유하고 SID/그래프 사본에서 순차 Add의 번호/스택 변화를 이어 간다.
@@ -100,6 +102,24 @@ private:
     std::vector<std::uint16_t> DetachConnections(const SurfaceObject& source,const SurfaceFinder& finder,bool sourceFrameValid) const;
     // 검사한 슬롯의 graph 필드 외에는 쓰지 않는다.
     void Commit(const Plan& plan);
+    // 현재 그래프 BYTE를 읽거나 쓴다. 원문 진단 뒤 free가 바뀌어도 같은 물리 슬롯의 BYTE 외에는 고치지 않는다.
+    std::uint8_t ReadNumber(Sid sid) const;
+    // 진단 복귀 뒤 물리 graph BYTE만 쓰며 다른 상태 필드는 보존한다.
+    void WriteNumber(Sid sid,std::uint8_t graph);
+    // 원문 판본별 파일/행을 실제 진단에 전달하며 복귀 후 호출자가 계속한다.
+    void Diagnose(std::string_view expression,std::uint32_t line,std::string_view file={}) const;
+    // 앞251행의 현재 사용 수를 세고 현재 로그 장치를 호출한다. 로그 복귀 뒤 caller가 sentinel을 다시 읽을 수 있다.
+    void TraceInUse() const;
+    // 원문 현재 표/스택/슬롯으로 실행하는 내부 부모다. 전체 재구성·병합도 같은 경로를 재사용한다.
+    std::uint32_t ExecuteFlood(Sid sid,std::uint8_t graph,bool inspect=false); // 외부 직접 호출만 초기 물리 검사를 한다. 내부 호출은 앞 진단/로그가 바꾼 free/contained를 새 관문으로 거부하지 않는다.
+    // 원문 현재 이웃 번호로 가장 큰 그래프를 선택하고 나머지를 병합한다.
+    void ExecuteAdd(Sid sid);
+    // 원문 sentinel→Reset→두 SID 순회→임시 해제→sentinel을 실행한다.
+    void ExecuteRebuild(bool resetAll);
+    // postDestroy의 현재 일반 finder가 반환한 각 표면에 실제 Add를 순서대로 적용한다.
+    void ExecutePostDestroy(Sid sid);
+    // 원본의 낮은 빈 번호 선택과 소진 재구성을 수행한다. 지역 입력의 Reject 정책은 재구성 전에 오류를 낸다.
+    std::uint8_t ExecuteAllocate(bool recover);
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
     // hash_: 좌표별 객체 후보를 찾는 공간 해시.
@@ -112,10 +132,11 @@ private:
     std::vector<std::vector<FrameCode>> frames_;
     RawGraphStorage localStorage_; // 기존 독립 snapshot과 CalculatePostDestroy의 임시 next만 사용하는 실제 사본이다.
     RawGraphStorage& storage_; // 명시 공유 입력 또는 위 지역 물리를 한 번 정하고 실행기보다 오래 유지한다.
-    std::array<GraphRecord,Graph::kTableSize>& records_; // 모든 기존 계산/Commit이 같은 현재 기록을 읽고 쓴다.
+    std::array<GraphRecord,Graph::kTableSize>& records_; // 사전 계산과 실제 부모가 같은 현재 기록을 읽으며 진단 효과는 실제 행에만 남긴다.
     std::array<std::uint32_t,Graph::kFloodSize>& stack_; // 현재 기록과 같은 owner의 flood 흔적이다.
     // 전체 원본 자산 풀 계약을 선택한 경우 Add/Detach/Pop의 내부 번호 소진도 복구한다.
     GraphRecovery recovery_{GraphRecovery::Reject};
     GraphDiagnostics diagnostics_; // 실제 호출의 현재 진단 뷰이며 사전 계산/Validate에는 전달하지 않는다.
+    std::function<void(std::int32_t,std::string_view)> trace_; // 실제 로그 소비자이며 Validate/Calculate 사본에는 전달하지 않는다.
 };
 }

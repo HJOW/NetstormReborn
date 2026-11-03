@@ -129,6 +129,22 @@ std::vector<std::uint8_t> SharedGraphBytes(const o::RawGraphStorage& storage) {
     for (const auto value:storage.stack) Append(bytes,value,4); // 비활성 flood 흔적까지 보존해야 한다.
     return bytes;
 }
+// 실제 부모 연결 뒤 추가된 진단은 별도 PE 관측의 식/파일/행 목록에 있을 때만 허용한다.
+const std::vector<std::string>& NativeGraphParentDiagnostics() {
+    static const auto events=[] {
+        std::ifstream input(NETSTORM_GRAPH_LIVE_CHECKING_FIXTURE);
+        if (!input) throw std::runtime_error("현재 Graph 부모의 원문 진단 fixture가 없습니다");
+        std::vector<std::string> result;std::string line;
+        // 전체 원문 행에서 이벤트 열만 읽고 기존 geometry/바이트 기대값은 바꾸지 않는다.
+        while (std::getline(input,line)) {
+            if (!line.empty() && line.back()=='\r') line.pop_back();if (line.empty() || line.front()=='#') continue;
+            const auto row=Split(line,'\t');if (row.size()!=10) throw std::runtime_error("현재 Graph 부모 fixture 열 수 오류");
+            // 로그를 제외한 실제 원문 assertion만 진단 카탈로그에 넣는다.
+            for (const auto& event:Split(row[9],'|')) if (event.starts_with("a:") && std::find(result.begin(),result.end(),event.substr(2))==result.end()) result.push_back(event.substr(2));
+        }
+        return result;
+    }();return events;
+}
 }
 
 // 공통 입력/전체 출력 대조를 공유하되 기대값은 각 실제 x86 도구가 독립적으로 기록한다.
@@ -136,6 +152,7 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
     o::GraphRecovery recovery=o::GraphRecovery::Reject,bool checkingEnabled=false) {
     std::ifstream input(path); CHECK(input.good()); std::string line; int lineNumber=0,begins=0,calls=0;
     std::size_t diagnosticCalls=0; // 켜진 실제 영역 경로의 선택 진단 횟수만 관측하며 fixture의 바이트 기대값은 유지한다.
+    std::size_t parentDiagnosticCalls=0; // 실제 Add/Flood 연결 후 추가된 원문 부모 진단은 독립 PE 목록으로만 허용한다.
     std::unique_ptr<o::SidPool> pool; std::unique_ptr<o::SquidHash> hash; std::unique_ptr<o::RawGraph> graph;
     std::unique_ptr<o::SquidPostPop> post; std::unique_ptr<o::SquidPop> pop; std::unique_ptr<o::SquidDisplay> display; std::unique_ptr<Sink> sink;
     std::unique_ptr<o::SquidUnpop> unpop;
@@ -189,8 +206,13 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
             if (regionFixture) for (std::size_t i=0;i<stack.size();++i) stack[i]=static_cast<std::uint32_t>(std::stoul(row[4])+i);
             graph=std::make_unique<o::RawGraph>(*pool,*hash,spots,types,frames,Records(row[3]),stack,recovery);
             if (checkingEnabled) graph->BindDiagnostics({o::RawCheckingFlag{checkingEnabled},[&](std::string_view expression,std::string_view file,std::uint32_t line) {
-                CHECK(file=="\\Ns\\O\\Graph.cpp");CHECK((line==0x59 && expression=="inUse") || (line==0x5a && expression=="numSurfaces > 0"));++diagnosticCalls;
-            }}); // 진단이 복귀하면 같은 원문 바이트 결과를 계속 대조한다. 진단 식/횟수의 독립 근거는 새760행이다.
+                CHECK(file=="\\Ns\\O\\Graph.cpp");const bool remove=(line==0x59 && expression=="inUse") || (line==0x5a && expression=="numSurfaces > 0");
+                if (remove) ++diagnosticCalls;
+                else {
+                    const auto event=std::to_string(line)+':'+std::string(expression)+':'+std::string(file);const auto& allowed=NativeGraphParentDiagnostics();
+                    CHECK(std::find(allowed.begin(),allowed.end(),event)!=allowed.end());++parentDiagnosticCalls;
+                }
+            }}); // 기존 참조 진단은760행, 추가된 부모 진단은 별도144행의 실제 PE 출력에만 의존한다. 슬롯/표/지도 기대값은 그대로다.
             post=std::make_unique<o::SquidPostPop>(*pool,types,state,graph.get());
             display=std::make_unique<o::SquidDisplay>(pool->Edition(),types,shapes,*sink,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
             pop=std::make_unique<o::SquidPop>(*pool,*hash,spots,display.get(),post.get());
@@ -250,7 +272,7 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
         if (test::FailureCount()!=before) { std::cerr<<"raw 그래프 fixture 행: "<<lineNumber<<'\n'; break; }
     }
     CHECK(begins==expectedBegins); CHECK(calls==expectedCalls);
-    if (checkingEnabled) std::printf("Graph checking 영역: %d 연산, 진단 %zu회\n",calls,diagnosticCalls);
+    if (checkingEnabled) std::printf("Graph checking 영역: %d 연산, 참조 진단 %zu회·추가 원문 부모 %zu회\n",calls,diagnosticCalls,parentDiagnosticCalls);
 }
 
 // 기존 fixture를 그대로 재생하여 일반 표면/매몰 다리 경로의 회귀를 확인한다.
