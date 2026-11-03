@@ -77,10 +77,11 @@
     "totalCompleteObservations": 368,
     "failedToolRuns": 3,
     "corrections": [
-      "fread암호1024의size1/count1024",
-      "가상FILE0은명시nullRead실패"
+      "가상FILE0의fread제한을명시nullRead실패로교정",
+      "fread실제관측은size1/count1또는size1024/count1이며암호1024도1024/1"
     ],
-    "fixtureByteVerified": true
+    "fixtureByteVerified": true,
+    "causeExplanationCorrection": "초기size1/count1024추정은잘못됐으며기존fixture의R:1024:1:1024와FILE0진단으로정정.제품/fixture/검사결과불변."
   },
   "integration": {
     "baseCommit": "e4b1b472",
