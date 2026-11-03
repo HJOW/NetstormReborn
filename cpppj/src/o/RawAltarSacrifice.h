@@ -31,6 +31,10 @@ struct AltarSacrificeHooks {
     std::function<void(Sid,float,std::uint32_t)> escapeEffect; // 원본00429010/CD004e5c10의5.0/0 효과다.
     std::function<void(std::uint32_t)> refreshOwner; // Dais 전처리의현재1..8 순서 갱신이다.
     std::function<float(Sid,std::uint32_t,std::uint32_t,float)> damageable; // 나머지 제단 사건의 기존 Damageable 전체 fallback이다.
+    // assertion: 제단/다이스의 원문 진단이며 정상 복귀하면 저장한 SID와 다음 효과를 유지한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion;
+    // boss: 실제 Client의 현재 권한을 읽으며 독립 호출자는 기존 상태 값을 사용한다.
+    std::function<bool()> boss;
 };
 // 원본 제단 몸체와 다이스 파생 PreDestroy다. 완료 의미는 실제 하위 소비자 연결 여부로 따로 평가한다.
 class RawAltarSacrifice {
@@ -55,6 +59,8 @@ private:
     std::int32_t First(Sid sid,std::uint8_t letter) const; // 현재 raw타입의 해당 글자 첫 번호다.
     void WriteFrame(Sid sid,std::int32_t value) const; // Release의 표시 없는 직접 프레임 필드쓰기다.
     std::array<float,2> Position(Sid sid) const; // 현재 float 좌표를 매효과 뒤 다시 읽는다.
+    void AssertRelease(std::string_view expression,std::uint32_t line) const; // 패치 진단이 돌아오면 저장한 조회 결과로 계속한다.
+    bool Boss() const; // 진단이나 앞선 효과 뒤에도 같은 Client의 현재 권한을 다시 읽는다.
     bool Valid(Sid sid) const; // 원본 isValid는 SID1..capacity-1만 본다.
     Sid ContainedPriest(Sid dais) const; // 원본 specialized 조회의kind WORD 조건을 기존 Carrier mask0/allowDeadfalse에 재사용한다.
     void FinishOnAltarForms(Sid dais,Sid altar) const; // 다음 링크를 먼저 저장하고 각 현재 Regular/Shared24를 실제 Host에서 읽는다.

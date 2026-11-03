@@ -567,3 +567,6 @@ target_sources(netstorm PRIVATE RawAmbientSound.h RawAmbientSound.cpp)
 
 # 현재 공급원 목록의 원문 중복 진단 복귀와 생산 카운터를 공통 postPop에 연결한다.
 target_sources(netstorm PRIVATE RawManaRegistration.h RawManaRegistration.cpp)
+
+# 제단 해방의 현재 진단/첫 검색 결과와 가상 공간·표시 없는 프레임 순서를 공유한다.
+target_sources(netstorm PRIVATE RawAltarReleaseParent.h RawAltarReleaseParent.cpp)

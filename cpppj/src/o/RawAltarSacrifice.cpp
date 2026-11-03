@@ -1,5 +1,6 @@
 // 실제 제단 사건과 다이스 전처리를 복원하고 기존 조회/프레임/Host/공통 삭제를 재사용한다.
 #include "o/RawAltarSacrifice.h"
+#include "o/RawAltarReleaseParent.h" // 패치의 실제 진단 복귀/저장 검색 결과를 공유한다.
 #include "o/RawAssetRegular.h"
 #include "o/SquidFactory.h"
 #include <bit>
@@ -37,6 +38,8 @@ RawAltarSacrifice::RawAltarSacrifice(SidPool& pool,const SquidHash& hash,std::sp
         || !hooks_.setFrame || !hooks_.destroy || !hooks_.reserveShared || !hooks_.addShared || !hooks_.randomInt || !hooks_.randomFloat || !hooks_.playAt || !hooks_.playGlobal || !hooks_.removeAnimation || !hooks_.unpop || !hooks_.repop || !hooks_.create || !hooks_.setOwner || !hooks_.pop || !hooks_.escapeEffect || !hooks_.refreshOwner || !hooks_.damageable)
         throw std::invalid_argument("제단 실제 하위 몸체/같은 풀/필수 효과 연결 누락");
 }
+// 실제 월드의 권한 getter를 우선하고 독립 호출자의 기존 상태도 유지한다.
+bool RawAltarSacrifice::Boss() const { return hooks_.boss ? hooks_.boss() : daisState_.ritual.boss; }
 // 원본은 free/dead를 isValid 조건에 추가하지 않는다.
 bool RawAltarSacrifice::Valid(Sid sid) const { return sid.value>0 && sid.value<pool_.Capacity(); }
 // 패치 signed DWORD와 CD BYTE를 구분한다.
@@ -75,15 +78,25 @@ void RawAltarSacrifice::EscapeFrame(Sid dais,std::uint32_t count) const {
     if (count<3) { if (!count) direction=14-static_cast<std::int32_t>(temple_.Count(dais));hooks_.setFrame(dais,frames_[type].Run(static_cast<std::uint8_t>(direction+'A')).first+static_cast<std::int32_t>(count),0);return; }
     const auto length=frames_[type].Run(static_cast<std::uint8_t>(direction+'A')).count;static_cast<void>(hooks_.randomInt(3000,length*1000));
 }
+// 제단/다이스의 선택된 원문 진단만 요구하며 진단 전 효과를 되돌리지 않는다.
+void RawAltarSacrifice::AssertRelease(std::string_view expression,std::uint32_t line) const { if (!hooks_.assertion) throw std::logic_error("제단/다이스 해방 원문 진단 장치 미연결");hooks_.assertion(expression,".\\Dais.cpp",line); }
 // 해방의 표시 없는 프레임 쓰기는 일반 Frame.Set으로 대체하지 않는다.
 void RawAltarSacrifice::ReleaseFromAltar(Sid altar) const {
-    const auto dais=DaisAt(altar);if (pool_.Edition()==OriginalEdition::Patch1078 && daisState_.debug && (Direction(altar)==12 || Direction(altar)==11)) throw std::logic_error("제단 해방 invisible/sacrifice assert");
-    if (Valid(dais)) ReleasePriest(dais);hooks_.unpop(altar,0);WriteFrame(altar,First(altar,'P'));hooks_.repop(altar,0);
+    if (pool_.Edition()==OriginalEdition::Patch1078) {
+        AltarReleaseParentHooks parent; // 같은 실제 조회/해방/공간/프레임 몸체만 빌린다.
+        parent.findDais=[this](Sid sid) { return DaisAt(sid); };parent.direction=[this](Sid sid) { return Direction(sid); };parent.assertion=hooks_.assertion;
+        parent.valid=[this](Sid sid) { return Valid(sid); };parent.release=[this](Sid sid) { ReleasePriest(sid); };
+        parent.unpop=hooks_.unpop;parent.repop=hooks_.repop;parent.plainP=[this](Sid sid) { WriteFrame(sid,First(sid,'P')); };
+        RunAltarReleaseParent(altar,daisState_.debug,parent);return;
+    }
+    const auto dais=DaisAt(altar);if (Valid(dais)) ReleasePriest(dais);hooks_.unpop(altar,0);WriteFrame(altar,First(altar,'P'));hooks_.repop(altar,0);
 }
 // 두 번 중심 조회와 가상효과 뒤의 현재raw 재읽기를 원본 순서대로 수행한다.
 void RawAltarSacrifice::ReleasePriest(Sid dais) const {
-    const auto altar=rune_.AltarAt(dais);if (!Valid(altar)) throw std::logic_error("다이스 해방 altar.isValid assert");const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (patch && daisState_.debug && (Direction(altar)==12 || Direction(altar)==11)) throw std::logic_error("다이스 해방 invisible/sacrifice assert");if (!daisState_.ritual.boss) throw std::logic_error("다이스 해방 boss assert");
+    const auto altar=rune_.AltarAt(dais);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (!Valid(altar)) { if (patch) AssertRelease("altar.isValid()",0x3cb);else throw std::logic_error("다이스 해방 altar.isValid assert"); }
+    if (patch && daisState_.debug && (Direction(altar)==12 || Direction(altar)==11)) AssertRelease("!altar.isInvisibleFrame() && !altar.isSacrifice()",0x3cc);
+    if (!Boss()) { if (patch) AssertRelease("boss",0x3cd);else throw std::logic_error("다이스 해방 boss assert"); } // 원문은 진단이 돌아오면 기존 내용물/음향 조회를 계속한다.
     const auto captured=ContainedPriest(dais);
     if (captured.value) {
         const auto created=hooks_.create(daisState_.ritual.priestType,0);const auto word=Read(pool_.Slot(captured),12,2);auto raw=pool_.AllocatedBytes(created);raw[12]=static_cast<std::uint8_t>(word);raw[13]=static_cast<std::uint8_t>(word>>8);hooks_.setOwner(created,0);
@@ -118,18 +131,18 @@ void RawAltarSacrifice::DaisPreDestroy(Sid dais,std::uint32_t flags) const {
 float RawAltarSacrifice::Handle(Sid altar,std::uint32_t event,std::uint32_t count,float payload) const {
     if (!Handles(altar)) throw std::invalid_argument("제단 Handle 타입/가상표 오류");auto dais=DaisAt(altar);std::array<float,2> center{};const bool hasDais=Valid(dais);if (hasDais) { const auto point=Position(dais);center={static_cast<float>(static_cast<double>(point[0])-kFinishedDelay),static_cast<float>(static_cast<double>(point[1])-kFinishedDelay)}; }
     if (event==21) {
-        if (pool_.Edition()==OriginalEdition::Patch1078) { const auto captured=ContainedPriest(dais);if (daisState_.ritual.boss && Valid(captured)) { const std::uint32_t oldOwner=pool_.Slot(captured)[12]&127,owner=pool_.Slot(dais)[34];if (oldOwner>kPlayerCount || owner>kPlayerCount) throw std::out_of_range("제단 자동 해방 동맹 인덱스");if (daisState_.alliances[oldOwner+owner*(kPlayerCount+1)]) { ReleaseFromAltar(altar);return -1.0F; } } }
+        if (pool_.Edition()==OriginalEdition::Patch1078) { const auto captured=ContainedPriest(dais);if (Boss() && Valid(captured)) { const std::uint32_t oldOwner=pool_.Slot(captured)[12]&127,owner=pool_.Slot(dais)[34];if (oldOwner>kPlayerCount || owner>kPlayerCount) throw std::out_of_range("제단 자동 해방 동맹 인덱스");if (daisState_.alliances[oldOwner+owner*(kPlayerCount+1)]) { ReleaseFromAltar(altar);return -1.0F; } } }
         if (Direction(altar)==15) return payload;std::uint32_t nextEvent=20;if (hooks_.randomInt(0,100000)/1000<state_.escapePercent) { nextEvent=22;advance_.Advance(altar,-1,0); }if (hooks_.reserveShared()) hooks_.addShared(altar,nextEvent,kStrugglePayload);
         if (hasDais && Direction(dais)!=10) { const auto chain=hooks_.randomInt(0,5);if (chain<0 || chain>=static_cast<std::int32_t>(kChains.size())) throw std::out_of_range("제단 chain 난수 범위");hooks_.playAt(center[0],center[1],kChains[static_cast<std::size_t>(chain)],0);const auto struggle=hooks_.randomInt(0,3000)/1000;if (struggle<0 || struggle>=static_cast<std::int32_t>(kStruggles.size())) throw std::out_of_range("제단 struggle 난수 범위");hooks_.playAt(center[0],center[1],kStruggles[static_cast<std::size_t>(struggle)],0); }
         return static_cast<float>(static_cast<double>(hooks_.randomFloat(0,2))+state_.struggleSeconds);
     }
     if (event==20 || event==22) { if (Direction(altar)!=14) return 0;const std::int32_t delta=event==20 ? 1 : -1;if (advance_.Advance(altar,delta,0)) { if (delta==-1) advance_.Advance(altar,1,0);return 0; }return payload; }
     if (event==23) return payload;if (event!=24) return hooks_.damageable(altar,event,count,payload);dais=DaisAt(altar);if (!Valid(dais)) throw std::logic_error("제단24 원본의 다이스0 프레임읽기 경계");
-    if (Direction(dais)==10) { if (daisState_.ritual.boss) { hooks_.destroy(dais,kSacrificeDestroy);return -1.0F; }return payload; }
+    if (Direction(dais)==10) { if (Boss()) { hooks_.destroy(dais,kSacrificeDestroy);return -1.0F; }return payload; }
     if (!advance_.Advance(altar,1,0)) {
         if (count<3 || hooks_.randomInt(0,100000)/1000<50) { if (Valid(dais)) EscapeFrame(dais,count); }if (hooks_.randomFloat(0,1)<payload) { const auto point=Position(altar);hooks_.playAt(point[0],point[1],"altarBurnCollapse.wav",0); }return payload;
     }
-    dais=DaisAt(altar);if (!Valid(dais)) return payload;if (daisState_.ritual.boss) { const auto captured=ContainedPriest(dais);if (captured.value) hooks_.destroy(captured,8); }hooks_.removeAnimation(altar);const auto point=Position(altar);hooks_.playAt(point[0],point[1],"explosion.wav",0);hooks_.setFrame(dais,First(dais,'K'),0);hooks_.setFrame(altar,First(altar,'M'),0);return kFinishedDelay;
+    dais=DaisAt(altar);if (!Valid(dais)) return payload;if (Boss()) { const auto captured=ContainedPriest(dais);if (captured.value) hooks_.destroy(captured,8); }hooks_.removeAnimation(altar);const auto point=Position(altar);hooks_.playAt(point[0],point[1],"explosion.wav",0);hooks_.setFrame(dais,First(dais,'K'),0);hooks_.setFrame(altar,First(altar,'M'),0);return kFinishedDelay;
 }
 // 현재풀참조를후속 실제 등록에 제공한다.
 const SidPool& RawAltarSacrifice::Pool() const { return pool_; }

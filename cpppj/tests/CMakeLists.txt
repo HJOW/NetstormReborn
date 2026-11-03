@@ -3337,3 +3337,9 @@ target_sources(netstorm_tests PRIVATE ManaRegistrationTests.cpp)
 target_sources(netstorm_file_tests PRIVATE ManaRegistrationTests.cpp PostPopTests.cpp)
 set_source_files_properties(ManaRegistrationTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MANA_REGISTRATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mana-registration-hardware-x86.tsv\"")
+
+# 실제 제단 부모의 CPU1596행/현재 Client와 선택 경계만 검사한다. 포획/희생 본체는 실행하지 않는다.
+target_sources(netstorm_tests PRIVATE AltarReleaseParentTests.cpp)
+target_sources(netstorm_file_tests PRIVATE AltarReleaseParentTests.cpp)
+set_source_files_properties(AltarReleaseParentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ALTAR_RELEASE_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/altar-release-parent-hardware-x86.tsv\"")

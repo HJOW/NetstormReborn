@@ -1,0 +1,155 @@
+{
+  "unit": 828,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "af2695ae / 20261104-09 CP",
+  "exeSha256": "4c1855c351f59568bd4e9a71d64a2aedc7709e1816d8b214d35553df424c46b1",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "실제 Windows x86 CPU / 전용 payload / typed finder·방향·진단·해방·공간·TYPE 장치 관측",
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "rows": 1596,
+    "fixtureSha256": "6d55205225413bd3cce63d6bcd36997244c2e07b9cef33334666a0cc432368ee",
+    "probeSha256": "902688be3c6d557306b2dd763e9974f39af51e995fdfbf9a0a5a251e5ad6492d",
+    "probeSourceSha256": "a89c331cfa36fd895938266066de2175dbe2e932f73d5a8219db17fb2b5349fe",
+    "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "boundary": "00448bd0 부모만 실행;00448500 사제 해방 본체는 명시 관측 경계 / 실제 포획·희생·게임·GUI·통신 없음"
+  },
+  "nativeReobservedRows": 1596,
+  "nativeDiagnosticRows": 468,
+  "tests": [
+    {
+      "filter": "AltarReleaseParent_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-828/test-AltarReleaseParent-final.log",
+      "sha256": "41c6df03dc9f30cc5d49b86e86322bc4b8c1c6149118de78f7ef48568153b3e8"
+    },
+    {
+      "filter": "DamageableBurningChecking_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-828/test-DamageableBurningChecking-final.log",
+      "sha256": "eae294292944b218774cbe1a8cb5285afbd3f5fd567600102ba24c1a4e42f708"
+    }
+  ],
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-828/build-first.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "3cee89d3fc75baf8ecd016472b5c9b18bda6d1f553dc8dc91399e52361472a88"
+    },
+    {
+      "log": "extracted/cpp-resume-828/build-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "ecebb46eb6a3023b8b2a1c0fb9ab7b5ec4322147b914b3019193329f184fa4ef"
+    },
+    {
+      "log": "extracted/cpp-resume-828/build-comment-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "13fc40c67a4fea78b9ede2eaef7116349619d24847a503a5f16a0dcb1d649258"
+    }
+  ],
+  "probeBuilds": [
+    {
+      "log": "extracted/cpp-resume-828/probe-build-first.log",
+      "exitCode": 2,
+      "errors": 1,
+      "warnings": 0,
+      "sha256": "39e8efcca66220090385c987ac5ea50d2eb4fb95e7f08c548a1c20cf37fa7690"
+    },
+    {
+      "log": "extracted/cpp-resume-828/probe-build-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "5bbd0b996d87061a59f73617261fb36101725519911be4e231a68b732fd35e8e"
+    }
+  ],
+  "firstCorrections": [
+    "관측기 TYPE uint8/record uint32의 단일 auto 선언 C3538 한 건/종료2를 별도 선언으로 교정. 실패 로그 보존; 실패 관측 fixture 없음.",
+    "실제 권한을 복사한 ritual.boss 대신 선택한 현재 Client getter로 읽도록 정적 검토에서 보완. 최종 세 번째 빌드는 한국어 주석 보완을 포함."
+  ],
+  "actualCallers": [
+    "원문 유일 직접 caller0044a6fa/0044a5e0의 제단21 동맹 사제 해방 가지 -> 실제 RawAltarSacrifice.Handle/ReleaseFromAltar",
+    "현재 finder/Direction/Valid/ReleasePriest/가상 World Unpop·Repop/표시 없는 WriteFrame이 같은 RawCampaignSession 의식 연결 사용",
+    "DaisRegularState.debug는 같은 Client AiDebug.Checking DWORD에 기존 Bind; 새 assertion도 같은 services.ai.assertion",
+    "altar.boss는 같은 현재 assetState.Boss를 조회; ReleasePriest00448500의 세 진단은 정상 복귀 후 현재 권한/내용물로 계속, 이 몸체는 정적 연결/빌드만 확인"
+  ],
+  "checking": {
+    "remaining": 19,
+    "parents": 11,
+    "partial": 5,
+    "multiplayerClassified": 3,
+    "completedParents": 31,
+    "closedThisUnit": [
+      "00448bd0"
+    ],
+    "mpDeferredWithinParents": [
+      "004a7510"
+    ],
+    "mpDeferredWithinPartial": [
+      "004b54e0"
+    ]
+  },
+  "boundaries": [
+    "CPU1596행은00448bd0 부모만 실행하며00448500 사제 몸체는 명시 관측 경계다. 실제 포획/희생/사제 생성이나 자동 동맹 해방 사건은 실행하지 않음.",
+    "물리풀 base는 현재 호스트에서 고정이다. 범위밖/해제 슬롯 직접 frame쓰기·손상 포인터 자체/전체진단UI·SEH는 호스트 경계로 남김.",
+    "CD 기존 경로 유지; 패치와 동일한 별도 CD 부모 주소를 임의 가정하지 않음."
+  ],
+  "next": "829 일반 숫자 송금 확인004c9350의 남은 현재 checking/inSingle 진단과 실제 UI 호출 부모를 대조. 신규 MP 검사/통신 및 사용자 제외 검사는 계속 생략. 군도 첫 시드/상위와 나머지1~8차 목표 미완료.",
+  "protection": {
+    "unchangedPreviousFiles": 2754,
+    "afterFiles": 2755,
+    "fixtureFiles": 935,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted/cpp-resume-828/protected-after.json",
+    "sha256": "7ebd360a1bc8b23cd2aef4bd590d823f6c9207cc12b87c3d3d0552f25e413076"
+  },
+  "excluded": [
+    "원본/클론 실제 게임 GUI·자연 플레이/자동 공략",
+    "포획/희생/해방 사제 본체·특정 적 공격/승리·사용자 직접 확인",
+    "MP/공중3종 새 전용 검사",
+    "물리 입력/캡처 재시도·PCM/청취",
+    "전체 CTest/71대상/34미션/ZIP"
+  ],
+  "sources": {
+    "cpppj/src/o/RawAltarReleaseParent.h": "b1d28e63148f49048b65a7e9a30d0e82d2c31a16fa7c6c0f4f318df070923d4d",
+    "cpppj/src/o/RawAltarReleaseParent.cpp": "dfefb07fafcbf98f43958d3557cd628f586edc1aec0d291d69bcdaa290cb8a68",
+    "cpppj/src/o/RawAltarSacrifice.h": "8e7cfca3dee89b2cc7f110b253c20d10c560a3e2ce4b7537c6a67ac3d3104ab8",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "70febada1e5c7fcabb037783665ec70cc1a336af9ba02678b3c2fb16092b06b0",
+    "cpppj/src/client/RawCampaignRitual.inc": "bbdad0efc30bf37d9e2c021890b658bc8b4f70473d96014e2b0a439846b1fdaa",
+    "cpppj/src/o/CMakeLists.txt": "805e2b0ab45593fb02672e8181c91cf1aebd1797ffa27783e71c6b4bd036be96",
+    "cpppj/tests/CMakeLists.txt": "c465a7d35bbded7195ec790ce1cbe1d52a5f5b7a973177a23132e1db6678726f",
+    "cpppj/tests/AltarReleaseParentTests.cpp": "b268fb83b2a31aee327ac8fe001df968364fcebf03e5f2df1ced7b01732a4415",
+    "tools/native_altar_release_probe.cpp": "a89c331cfa36fd895938266066de2175dbe2e932f73d5a8219db17fb2b5349fe",
+    "tools/observe_altar_release_hardware.py": "ce3eeedfc412cd296e26ba6098b91e2b7ba4ae9662c2f8d07edaf5d17463ee39",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0"
+  },
+  "normalizedSources": {
+    "cpppj/src/o/RawAltarReleaseParent.h": "b1d28e63148f49048b65a7e9a30d0e82d2c31a16fa7c6c0f4f318df070923d4d",
+    "cpppj/src/o/RawAltarReleaseParent.cpp": "dfefb07fafcbf98f43958d3557cd628f586edc1aec0d291d69bcdaa290cb8a68",
+    "cpppj/src/o/RawAltarSacrifice.h": "8e7cfca3dee89b2cc7f110b253c20d10c560a3e2ce4b7537c6a67ac3d3104ab8",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "70febada1e5c7fcabb037783665ec70cc1a336af9ba02678b3c2fb16092b06b0",
+    "cpppj/src/client/RawCampaignRitual.inc": "bbdad0efc30bf37d9e2c021890b658bc8b4f70473d96014e2b0a439846b1fdaa",
+    "cpppj/src/o/CMakeLists.txt": "805e2b0ab45593fb02672e8181c91cf1aebd1797ffa27783e71c6b4bd036be96",
+    "cpppj/tests/CMakeLists.txt": "2700cf74bd94792e8c84da2a776157c4cf12aeb873f67122823483b793254173",
+    "cpppj/tests/AltarReleaseParentTests.cpp": "b268fb83b2a31aee327ac8fe001df968364fcebf03e5f2df1ced7b01732a4415",
+    "tools/native_altar_release_probe.cpp": "a89c331cfa36fd895938266066de2175dbe2e932f73d5a8219db17fb2b5349fe",
+    "tools/observe_altar_release_hardware.py": "ce3eeedfc412cd296e26ba6098b91e2b7ba4ae9662c2f8d07edaf5d17463ee39",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca"
+  }
+}

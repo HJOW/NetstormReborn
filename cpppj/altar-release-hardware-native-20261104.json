@@ -1,0 +1,12 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "backend": "실제 Windows x86 CPU / 전용 payload / typed finder·방향·진단·해방·공간·TYPE 장치 관측",
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "rows": 1596,
+  "fixtureSha256": "6d55205225413bd3cce63d6bcd36997244c2e07b9cef33334666a0cc432368ee",
+  "probeSha256": "902688be3c6d557306b2dd763e9974f39af51e995fdfbf9a0a5a251e5ad6492d",
+  "probeSourceSha256": "a89c331cfa36fd895938266066de2175dbe2e932f73d5a8219db17fb2b5349fe",
+  "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+  "boundary": "00448bd0 부모만 실행;00448500 사제 해방 본체는 명시 관측 경계 / 실제 포획·희생·게임·GUI·통신 없음"
+}
