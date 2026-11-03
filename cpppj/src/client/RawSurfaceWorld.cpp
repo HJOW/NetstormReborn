@@ -14,6 +14,7 @@
 #include "o/SquidFormDispatch.h"
 #include "o/RawObjectConversion.h" // 비석/주문의정확한가상표만읽기전용예약진단대상으로구별한다.
 #include "o/RawBuildingSpace.h"
+#include "o/RawContentParentNotice.h" // 기본 빈 통지와 미연결 파생 통지를 실제 VT로 구분한다.
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -76,6 +77,9 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     // graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기.
     std::unique_ptr<o::RawGraph> graph;/* display: 객체·프레임에서 실제 화면 출력 요청을 만드는 처리기. */ std::unique_ptr<o::SquidDisplay> display;
     // postPop: 객체 Pop 이후 목록·공간 후처리를 수행하는 처리기.
+    std::uint32_t containedType{6},containedGumpType{3},containedUiEvent{0x02000039}; // 두 판본의 공통 최초 타입과 UpdateContents 명령이며 Player의31h 통지와 다르다.
+    std::unique_ptr<o::RawSquidContainedUnpop> containedUnpop; // 월드 기본 종단은 같은 물리와 장기 진단 장치만 빌린다.
+    std::weak_ptr<o::RawSquidContainedUnpop> sessionContainedUnpop; // Session 파생 부모/입력 큐가 해제된 뒤 callback을 보관하지 않는다.
     std::unique_ptr<o::SquidPostPop> postPop;/* unpop: 객체의 공간 등록을 해제하는 Unpop 처리기. */ std::unique_ptr<o::SquidUnpop> unpop;
     // pop: 객체를 공간 지도에 등록하는 Pop 처리기.
     std::unique_ptr<o::SquidPop> pop;/* factory: 타입에 맞는 객체를 생성하는 처리기. */ std::unique_ptr<o::SquidFactory> factory;
@@ -129,6 +133,14 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         postPop->SetSurfacePrefix([this](o::Sid sid,std::uint32_t flags) { surface->Prefix(sid,flags); });
         unpop=std::make_unique<o::SquidUnpop>(pool,hash,spots,display.get());pop=std::make_unique<o::SquidPop>(pool,hash,spots,display.get(),postPop.get());
         unpop->BindDiagnostics({storage->Checking(),types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // 첫 Session 전에도 같은 현재 Client 진단/TYPE를 쓴다.
+        o::SquidContainedUnpopHooks containedHooks;
+        containedHooks.parent=[this](o::Sid sid) { return o::CommonContainedParent(pool,sid); }; // 현재 실제 VT의 부모 getter를 사용한다.
+        containedHooks.previous=[this](o::Sid sid) { return o::CommonContainedPrevious(pool,sid); }; // Form과 자산의 서로 다른 WORD를 읽는다.
+        containedHooks.setPrevious=[this](o::Sid sid,o::Sid previous) { o::CommonContainedSetPrevious(pool,sid,previous); }; // 현재 이웃 VT의 setter만 실행한다.
+        containedHooks.parentNotice=[this](o::Sid parent,o::Sid form,std::uint32_t reason) { o::RawContentParentNotice(pool).Notice(parent,form,reason); }; // 실제 파생 종단이 필요한 경우 선택 시 명시 실패한다.
+        containedHooks.assertion=[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }; // 같은 Client 장기 진단을 호출한다.
+        containedUnpop=std::make_unique<o::RawSquidContainedUnpop>(pool,o::SquidContainedUnpopState{containedType,containedGumpType,containedUiEvent,storage->Checking(),[this] { return ownerMode.challenge; },[this] { return storage->Authority()->boss; }},std::move(containedHooks));
+        unpop->BindContainedUnpop([this](o::Sid sid) { if (const auto current=sessionContainedUnpop.lock()) current->Unpop(sid);else containedUnpop->Unpop(sid); }); // 일반 Unpop의 void 선행 뒤 실제 종단만 이어 실행한다.
         buildingState={terrainType,links.bridgeType,false};
         building=std::make_unique<o::RawBuildingSpace>(pool,hash,types,buildingState);
         pop->SetBuildingSpace(building.get());unpop->SetBuildingSpace(building.get());
@@ -263,6 +275,11 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
         !hooks.transmit.transmit || !hooks.walkerFall || !hooks.loadingDepth || !hooks.bridgeEffect) throw std::invalid_argument("월드 runtime 필수 경계 누락");
     s.formDispatch->SetAssets(hooks.assets,hooks.destroy);s.host->SetRegularHandler(hooks.regular);s.host->SetFormTransmit(hooks.transmit);
     s.runtime=std::move(hooks);s.runtimeBound=true;s.runtime.loadingDepth(s.loadState.loadingDepth);
+}
+// Session은 엔진을 소유하고 월드는 현재 호출 동안만 pin하여 생성 실패/반납 뒤 수명 밖 접근을 막는다.
+void RawSurfaceWorld::BindContainedUnpop(const std::shared_ptr<o::RawSquidContainedUnpop>& binding) {
+    if (binding && &binding->Pool()!=&impl_->pool) throw std::invalid_argument("종속 Unpop의 실제 SID 풀 불일치");
+    impl_->sessionContainedUnpop=binding;
 }
 // 기존표면분배기가보유한proxy를유지하면서단일공통삭제state의실제경제/UI소비자를교체한다.
 void RawSurfaceWorld::BindDeletion(o::SquidReward& reward,std::function<o::Sid()> selected,o::SquidDeletionHooks hooks) {

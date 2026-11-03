@@ -1,0 +1,108 @@
+{
+  "unit": 835,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "6ff267a1 / 20261104-16 CP",
+  "exeSha256": "756f9972fe128efe612bc66df16c3d2ea39716f1bab0803301cff7a780563600",
+  "exeBytes": 10443264,
+  "sourceSha256": {
+    "cpppj/src/o/RawSquidContainedUnpop.h": "97a5a78317e058b1bb495020e1e787a3bf34f311247dc4b4111665f70fee81c9",
+    "cpppj/src/o/RawSquidContainedUnpop.cpp": "1e7130818ceba668ae740261f09d11f0363ee8a745a7cb219f74d14329276c09",
+    "cpppj/src/client/RawSurfaceWorld.h": "27c924f948fe2b93b11630046fdf4bf95fceed9f0cdfd316038d81dce854b748",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "6a170f70de7e3cb69dad6c1ef073f49e39a2ef3bbe7800b11b6395382b2a3253",
+    "cpppj/src/client/RawCampaignSession.cpp": "c031947e27cf406fa7f5ef3d2d1f3b7e3853d70fa2ce590a92dcce97aa256f7c",
+    "cpppj/tests/SquidContainedUnpopTests.cpp": "99a0edf76d6f6048243c1896c1a8008f27e7293d3f272a40cc19e4c764252f45",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "20d33f598d4d9012d7b8450c851e3e0f35a74de5650ff279028d8d3033f00b71"
+  },
+  "implementation": [
+    "PATCH004ac6b0→004ad230/CD004ac160→004acf40 공통 종속 해제/UpdateContents 예약",
+    "실제 생성 VT PATCH83/CD68 자산 및 두판본 내장Form4종의 parent/previous/setPrevious 확인",
+    "같은 RawSurfaceWorld/SquidUnpop·약한 Session 대여·현재 부모 통지·실제 Client InputQueue"
+  ],
+  "nativeHardwareNewRows": 0,
+  "tests": [
+    {
+      "filter": "SquidContainedUnpop_",
+      "cases": 11,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-835\\test-contained-final.log",
+      "sha256": "29d0048878ea602017385081563de92e0544f3823865b8cb8f03246f087672bd"
+    },
+    {
+      "filter": "SquidUnpop",
+      "cases": 7,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-835\\test-unpop-regression.log",
+      "sha256": "ffb1ee724717e37710525a0b40cccaad804cfddbe0e037fc6cb214f9dafcdba6"
+    },
+    {
+      "filter": "DamageableBurningChecking_ActualClientSessionRecoveryAndLifetime",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-835\\test-session-regression.log",
+      "sha256": "99dae71af3f6f45fc30a625be02dd1cd881748c019d305bd6a1e96d90c44e9b0"
+    }
+  ],
+  "focusedCases": 19,
+  "newCases": 11,
+  "existingFrozenEvidence": {
+    "unpopParentRows": 1300,
+    "unpopSteps": 3618,
+    "vtableRows": 151
+  },
+  "initialTestFailure": {
+    "cases": 11,
+    "failedChecks": 1,
+    "cause": "검사의 TYPE74 빈 base 가정 오류. 실제 보호 TYPE74는 banner/flags1 28000003/flags2 02000000. 링크/상태/큐 단언은 첫 실행부터 통과. 제품 수정 없음.",
+    "log": "extracted\\cpp-resume-835\\test-contained-first.log",
+    "firstSource": "extracted\\cpp-resume-835\\session-tests-first.cpp",
+    "actualTypeDump": "extracted\\cpp-resume-835\\current-types.tsv"
+  },
+  "builds": [
+    {
+      "log": "extracted\\cpp-resume-835\\build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "41a1725eab86a0520269e5a528740a36bf179a42d7a2fb2c1e1e523e707be0d1"
+    },
+    {
+      "log": "extracted\\cpp-resume-835\\build-test-correction.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "4c429fcfaeeb529e9e4e9849914e58a9f5b38968ba020a1bdb576f1c6a4e8366"
+    }
+  ],
+  "checking": {
+    "remaining": 15,
+    "parents": 9,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 33,
+    "completedPartial": 3,
+    "closedThisUnit": [],
+    "pending": "004af610 Factory::Take의 contained 선행 거부/void 호출 생략·현재 상태/후단을836에서 처리 후004afe50 전체 완료 판정"
+  },
+  "protection": {
+    "files": 2759,
+    "fixtureFiles": 939,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "newFixtures": 0,
+    "manifest": "extracted\\cpp-resume-835\\protected-after.json",
+    "sha256": "4d1a48ced6ab8f7f0b8652d734c0123de1d459e19e15f57d8c092c707b7bbb69"
+  },
+  "boundaries": [
+    "새10개 순수 검사는 명시 입력의 계약검사이며 새 독립 CPU관측이 아니다. 실제 Client/Session 검사는 화면/프레임/공격/통신 없이 실제 모듈/큐를 실행했다.",
+    "UpdateContents 02000039는 원문 예약 종단이며 전용UI효과 근거가 없어 임의즉시갱신을 추가하지 않았다.",
+    "CD 하위/가상링크 계약은 구현했으나 기존 CD 일반Unpop의contained 거부는 유지했다.",
+    "GUI/물리/PCM/CD삽입·실제 포획/희생/특정 적 공격/승리·신규MP/통신·공중3종 전용 검사는0. 전체71/CTest/34미션/ZIP 재실행0."
+  ]
+}

@@ -3370,3 +3370,7 @@ set_source_files_properties(SquidUnpopCheckingTests.cpp PROPERTIES COMPILE_DEFIN
 set_property(SOURCE UnpopTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_UNPOP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/unpop-x86.tsv\""
     "NETSTORM_UNPOP_VTABLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/unpop-vtables.tsv\"")
+
+# 공통 contained 해제의 명시 링크/진단/UI 큐 계약을 검사한다. 게임과 통신은 실행하지 않는다.
+target_sources(netstorm_tests PRIVATE SquidContainedUnpopTests.cpp)
+target_sources(netstorm_file_tests PRIVATE SquidContainedUnpopTests.cpp)

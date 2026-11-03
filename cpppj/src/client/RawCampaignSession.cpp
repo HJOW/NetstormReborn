@@ -699,6 +699,8 @@ struct RawCampaignSession::Impl {
     std::uint32_t contentGumpType{3},contentEvent{0x02000031}; // PATCH0054107c/005427bc의 실제 초기값이다.
     std::unique_ptr<RawPlayerContentNotice> playerContent; // 현재 SP 저장소/같은 Player 체인/실제 UI를 조회한다.
     std::unique_ptr<RawCampaignLifetimeBindings> lifetime; // 공통 삭제와 ContentForm의 같은 풀 수명을 등록한다.
+    std::uint32_t contentUnpopEvent{0x02000039}; // 현재005427dc UpdateContents이며 Player 내용물 통지005427bc와 별개다.
+    std::shared_ptr<RawSquidContainedUnpop> containedUnpop; // World는 약한 참조만 빌리며 이 엔진을 lifetime보다 먼저 반납한다.
     std::unique_ptr<RawPlayerTechnology> technology; // 실제 시작/AI 갱신이 공유할 같은 Player 기술 체인이다.
     std::array<std::uint32_t,256> localRestrictions{}; // 독립 Session의 자체 금지DWORD 표다.
     std::array<std::uint32_t,256>& restrictions; // 실제 Client Init/Header와 생산·메뉴가 같은256DWORD를 빌린다.
@@ -2623,6 +2625,15 @@ struct RawCampaignSession::Impl {
         };
         lifetime=std::make_unique<RawCampaignLifetimeBindings>(world,*contentForms,contentLifetimeState,
             std::move(contentEffects),hp,*playerContent,std::move(parentNotice));
+        SquidContainedUnpopHooks unpopHooks;
+        unpopHooks.parent=[this](Sid sid) { return CommonContainedParent(core.pool,sid); }; // 실제 현재 VT가 선택한 부모 WORD다.
+        unpopHooks.previous=[this](Sid sid) { return CommonContainedPrevious(core.pool,sid); }; // Form/자산 혼합 종속의 이전 WORD를 분리한다.
+        unpopHooks.setPrevious=[this](Sid sid,Sid previous) { CommonContainedSetPrevious(core.pool,sid,previous); }; // 같은 실제 이웃 슬롯의 setter다.
+        unpopHooks.parentNotice=[this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); }; // 기존 Player/Carrier/제단/Factory 파생 통지로 이어 간다.
+        unpopHooks.command=[queue=services.assets.queueCommand](std::uint32_t command,std::uint32_t first,std::uint32_t second) { if (!queue) throw std::logic_error("종속 Unpop의 실제 UpdateContents 입력 큐 미연결");queue(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); }; // 실제 Client InputQueue의 정규화/FIFO를 사용한다.
+        unpopHooks.assertion=[assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("종속 Unpop의 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }; // 정상 복귀 뒤 원문의 현재 필드 재조회를 계속한다.
+        containedUnpop=std::make_shared<RawSquidContainedUnpop>(core.pool,SquidContainedUnpopState{contentFinder.containedType,contentGumpType,contentUnpopEvent,RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},[this] { return core.ownerMode.challenge; },[this] { return gameplayGlobals->Authority()->boss; }},std::move(unpopHooks));
+        world.BindContainedUnpop(containedUnpop); // 첫 객체 생성 전 같은 World의 일반 Unpop에 현재 Session 종단을 대여한다.
         ContainedCreateHooks createHooks;createHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(createHooks)));
         PlayerTechnologyHooks techHooks;techHooks.assertion=SessionMissing<void,PlayerTechnologyAssertion>();
@@ -3357,6 +3368,7 @@ struct RawCampaignSession::Impl {
         try { world.DrainCurrentProcessBindingsForShutdown(); } // 자기 현재 처리기가 만든 객체만 모듈보다 먼저 반납하고 이전 Native 잔류는 장기 Storage에 남긴다.
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
+        world.BindContainedUnpop({});containedUnpop.reset(); // 실제 Kernel 정리 뒤 파생 부모/UI 수명을 반납하고 World 기본 종단으로 복귀한다.
         core.postPop.BindPatchAiNotice({});world.CommonDeletion().BindPatchAiNotice({}); // AI 본체/통지 처리기를 해제하기 전에 외부 공통 몸체의 참조를 분리한다.
         core.postPop.SetDudePostPop(nullptr); // 생성/최초 Pop 모듈보다 먼저 파생 분배를 반납한다.
         core.postPop.SetCarrierStealPostPop(nullptr); // 장기 크랩 몸체보다 먼저 가상 분배를 반납한다.

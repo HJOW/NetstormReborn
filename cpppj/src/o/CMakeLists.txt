@@ -579,3 +579,6 @@ target_sources(netstorm PRIVATE RawPathArrivalParent.h RawPathArrivalParent.cpp)
 
 # 공통 Unpop의 현재 진단과 부분 공간 변경을 실제 부모에서 공유한다.
 target_sources(netstorm PRIVATE RawSquidUnpopParent.h RawSquidUnpopParent.cpp)
+
+# 공통 contained 해제의 실제 종속 링크/부모 통지와 Form UI 큐를 연결한다.
+target_sources(netstorm PRIVATE RawSquidContainedUnpop.h RawSquidContainedUnpop.cpp)

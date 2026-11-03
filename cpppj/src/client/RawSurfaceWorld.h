@@ -1,6 +1,7 @@
 // 본섬 표면·noIsland·다리와 파생 받침을 실제 raw 풀/Graph/Kernel로 소유하는 새 월드 연결부다.
 #pragma once
 #include "o/RawBoardAngle.h"
+#include "o/RawSquidContainedUnpop.h" // 같은 실제 SID 풀의 종속 해제와 UpdateContents 예약을 연결한다.
 #include "o/RawAmbientWind.h"
 #include "o/GameClock.h"
 #include "client/RawProcessHostStorage.h"
@@ -218,6 +219,7 @@ public:
     o::RawBridgeConnect& BridgeConnections();
     // 같은 저장소를 사용하는 자산/Regular/Form 전송/낙하/로딩 경계를 설치한다. 미연결 콜백을 생략하지 않는다.
     void BindRuntime(RawWorldRuntimeHooks hooks);
+    void BindContainedUnpop(const std::shared_ptr<o::RawSquidContainedUnpop>& binding); // 같은 풀의 Session 종단을 약한 참조로 빌린다. 반납/소멸 뒤에는 월드 기본 종단을 사용한다.
     // 첫 객체 생성 전에 공통 삭제의 관찰 경계를 실제 보상/현재 선택/선택해제·소리 소비자로 한 번 교체한다.
     void BindDeletion(o::SquidReward& reward,std::function<o::Sid()> selected,o::SquidDeletionHooks hooks);
     // 후설치와 같은 현재 원본 삭제 전역이다. 별도 세션 사본을 만들지 않는다.

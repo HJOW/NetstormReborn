@@ -93,3 +93,23 @@ TEST_CASE(MoneyConfirmChecking_ActualClientSessionAiWallet) {
     const std::vector<std::pair<std::string,std::uint32_t>> expected{{".\\Ui.cpp",0x61c},{".\\Userinput.cpp",0x8e9},{".\\Userinput.cpp",0x8c2},{".\\Userinput.cpp",0x913}};CHECK(locations==expected); // 숫자 UI와 세 고정 금액의 실제 원문 파일/줄을 구별한다.
 
 }
+
+// 실제 Client/Session/World의 공통 Unpop은 같은 GumpForm 종속을 찾고 기존 입력 FIFO에 한 번 예약한다.
+TEST_CASE(SquidContainedUnpop_ActualClientSessionWorldAndInputQueue) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    BurningSessionDevices external;ClientOptions options;options.gameDirectory=assets.root;options.noAudio=true;Client client(std::move(options));
+    auto services=external.Services();services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.processKernel=&client.GetKernel();
+    services.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); }; // Deck의 미초기화 바이트에만 기존 명시 검사 입력을 공급한다.
+    services.assets.queueCommand=[&client](auto command,auto first,auto second) { client.Input().PushCommand(command,first,second); }; // 제품과 같은 실제 큐의 정규화/FIFO를 실행한다.
+    std::uint32_t diagnostics{};services.ai.assertion=[&](std::string_view expression) { CHECK(expression=="!isContained()");++diagnostics; }; // 공통 부모의 진단은 정상 복귀하고 상태를 바꾸지 않는다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",std::move(services));session.Load();
+    while (!client.Input().Empty()) static_cast<void>(client.Input().Pop(false)); // 초기 설치 사건과 이번 원문 예약을 분리한다.
+    auto core=session.Core();const auto parent=core.factory.Create(74,2),source=core.factory.Create(74,2);auto raw=core.pool.AllocatedBytes(source);
+    CHECK(Get(raw,0)==0x501dd0U && core.types[74].name=="banner" && core.types[74].flags1==0x28000003U && core.types[74].flags2==0x02000000U); // 보호 TYPE74 banner의 실제 플래그와 공통 자산 VT를 사용하며 운반/포획 경로를 선택하지 않는다.
+    raw[11]=8;Put(raw,14,parent.value,2);Put(raw,16,0,2);Put(raw,4,0,2);Put(core.pool.AllocatedBytes(parent),6,source.value,2); // 비공간 contained 입력을 실제 같은 풀에 배치한다.
+    const auto form=session.GumpForms().Create(2);session.GumpForms().Attach(form,source,0x50); // GumpForm의 실제 부착/Pop이 source 자신의 종속 머리를 만든다.
+    core.unpop.Unpop(source,core.types[74]);
+    CHECK(diagnostics==1 && raw[11]==4 && Get(core.pool.Slot(parent),6,2)==0 && Get(raw,6,2)==form.value);
+    const auto event=client.Input().Pop(false);CHECK(event.code==0x02000039U && event.x==source.value && !event.y && client.Input().Empty()); // Player의31h 알림이나 즉시 UI 삭제로 바꾸지 않는다.
+    session.GumpForms().Destroy(form,0x50);CHECK(Get(raw,6,2)==0); // 같은 실제 Form 삭제/혼합 종속 체인으로 검사 자원을 반납한다.
+}
