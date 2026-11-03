@@ -1,0 +1,123 @@
+{
+  "unit": 794,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "ip": "192.168.0.94",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 793,
+  "displayVersion": "11.01",
+  "exeSha256": "e3bcc2d5b4639d6241e26bc4d41295ef352f61fb7adbfc846faea7eabb04f444",
+  "run": {
+    "unit": 794,
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-resume-794\\menu-v1\\copy\\Netstorm.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-resume-794\\menu-v1\\copy\\game",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "6",
+      "--set",
+      "autoDemo=0;tellTips=0;WelcomeGiven=1;maxFPS=40;sleepPerLoop=1",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-resume-794\\menu-v1\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-resume-794\\menu-v1\\states.tsv"
+    ],
+    "exitCode": 0,
+    "timedOut": false,
+    "elapsed": 11.653298199998972,
+    "exeSha256": "e3bcc2d5b4639d6241e26bc4d41295ef352f61fb7adbfc846faea7eabb04f444",
+    "resolution": [
+      1024,
+      768
+    ],
+    "framesRequested": 6,
+    "menuReportAtFrame4": true,
+    "observedState42": true,
+    "observedState41": true,
+    "applicationBitmap": {
+      "size": [
+        1024,
+        768
+      ],
+      "colors": 204,
+      "sha256": "e2e20ab6134a6a10a418d2950dcd512f0804e9bba973b430ba1711ad88888a29"
+    },
+    "originalsUnchanged": true,
+    "originalFiles": 1394,
+    "settings": {
+      "configurations": [
+        {
+          "file": "options.cfg",
+          "sha256": "fb7c238a65aed5cd7b746ad81983a5464568c164b141df167b707c1497fff133",
+          "settingKeys": [
+            "sound",
+            "music",
+            "playWind",
+            "SCREENW",
+            "SCREENH",
+            "startInFullScreen",
+            "windowScreenFlags",
+            "autoDemo",
+            "tellTips",
+            "WelcomeGiven",
+            "InstallDir",
+            "CDDir"
+          ],
+          "copyRootsVerified": true,
+          "outsideAbsolutePathsRejected": true
+        },
+        {
+          "file": "setup.cfg",
+          "sha256": "152293ba9f8c0d62372b0687f18446e8e0724e1d12abfe50377a75c38a606e75",
+          "settingKeys": [
+            "sound",
+            "music",
+            "playWind",
+            "SCREENW",
+            "SCREENH",
+            "startInFullScreen",
+            "windowScreenFlags",
+            "autoDemo",
+            "tellTips",
+            "WelcomeGiven",
+            "InstallDir",
+            "CDDir"
+          ],
+          "copyRootsVerified": true,
+          "outsideAbsolutePathsRejected": true
+        }
+      ],
+      "copiedFullscreenMarkerRemoved": true
+    },
+    "gameExecutions": 1,
+    "originalGameExecutions": 0,
+    "physicalInput": 0,
+    "physicalCapture": 0,
+    "prohibitedGameplay": 0,
+    "multiplayer": 0,
+    "pcm": 0
+  },
+  "buildRun": false,
+  "newCppTests": 0,
+  "newNativeObservations": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "protection": {
+    "beforeCount": 2725,
+    "currentCount": 2725,
+    "fixtureCount": 905,
+    "allUnchanged": true
+  },
+  "boundaries": [
+    "원본 GUI 실행0·최신 cpppj 사본1회만 실행",
+    "앱 내부 presented BMP와 보고서이며 물리 화면/WGC/물리 입력은 아님",
+    "메뉴 짧은 시작/종료만 확인·미션 진입/게임 규칙/자연 완주/전체 동일성 아님",
+    "no-audio·PCM/청취0·멀티플레이/공중 전용/지정 플레이0",
+    "캐시/맵 부모 집중 원문 근거는787~793의 별도 결과이며 GUI 하나로 전체 오류 경계를 증명하지 않음"
+  ],
+  "next": "checking 잔여49·비멀티 UI/Edit/수명·호환성"
+}

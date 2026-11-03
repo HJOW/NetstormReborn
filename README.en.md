@@ -12,7 +12,7 @@ Three versions are developed in parallel, and **the one you can actually play to
 
 # Current development status
 
-**November 3, 2026, cpppj unit793 / runtime product793·11.01:** Connected current checking/TYPE diagnostics to bridge-fall scheduling and shared storage. All7 focused tests pass (3 new);200 original inputs/400 observations and a400-observation repeat match. No new game or multiplayer tests were run. Checking49 and remaining non-multiplayer work continue. See the [handover](LEFT_JOBS.md) and [793 record](docs/exe/cpp-bridge-fall-parent-20261103.md).
+**November 3, 2026, cpppj unit794 / runtime product793·11.01:** One copied build displayed the1024×768 main menu for6 frames and exited successfully. All2725 protected files are unchanged. Checking49 and non-multiplayer work continue. See the [handover](LEFT_JOBS.md) and [794 record](docs/exe/cpp-asset-startup-smoke-20261103.md).
 
 | Project | Execution and playability | Fidelity and remaining work |
 | --- | --- | --- |
