@@ -3140,6 +3140,9 @@ target_sources(netstorm_script_bindings_tests PRIVATE MakeAiTests.cpp MakeAiComm
 target_sources(netstorm_tests PRIVATE FontFaceEncodingTests.cpp)
 target_sources(netstorm_tests PRIVATE FontCacheFileTests.cpp) # 같은 원문 캐시 부모의 순차 I/O를 대조한다(788).
 target_sources(netstorm_tests PRIVATE FontCacheNativeTests.cpp) # 실제 FontStore/VFS/생성 캐시 저장을 연결한다(789).
+target_sources(netstorm_tests PRIVATE ReadOnlyFileMapTests.cpp) # 원문 직접 매핑 부모와 AMD64 핸들 폭을 대조한다(790).
+target_sources(netstorm_file_tests PRIVATE ReadOnlyFileMapTests.cpp)
+set_source_files_properties(ReadOnlyFileMapTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_READONLY_FILE_MAP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/readonly-file-map-x86.tsv\"")
 target_sources(netstorm_script_bindings_tests PRIVATE FontCacheNativeTests.cpp)
 target_sources(netstorm_script_bindings_tests PRIVATE FontCacheFileTests.cpp)
 set_source_files_properties(FontCacheFileTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FONT_CACHE_FILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/font-cache-file-x86.tsv\"")

@@ -1,0 +1,95 @@
+{
+  "unit": 790,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "순수 매핑 부모 완료·실제SHP 연결과 전체 목표 진행 중",
+  "runtimeProduct": 790,
+  "displayVersion": "11.01",
+  "exeSha256": "8f9438c2ed5e6bba09eb5f351aae99ea277cffda8eaae3d795cf6b0dc6acd04a",
+  "actualShapeBackingChanged": false,
+  "summary": "004dd580의직접읽기전용매핑3호출·진단/복귀 순수부모",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 2,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "ReadOnlyFileMap_Native72ArgumentsAssertionsAndResume",
+      "ReadOnlyFileMap_HostHandlesPreserveAll64Bits"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "unit": 790,
+      "rows": 72,
+      "observations": 144,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제004dd580·OS3장치/진단은명시. 실제파일/Win32실패·SHP소비/반납·전체SEH는미관측.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_readonly_file_map.py": "5eb14efa58ce78d978d6d9425e7e08962aad221056a2811e21ac30d1b758f8e4",
+        "extracted\\cpp-resume-790\\readonly-file-map-first.tsv": "67a00ccd30c92a885d64f67638f5f490e9a31a3990c95638bda7e15b63339825"
+      }
+    },
+    "repeat": {
+      "unit": 790,
+      "rows": 72,
+      "observations": 144,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제004dd580·OS3장치/진단은명시. 실제파일/Win32실패·SHP소비/반납·전체SEH는미관측.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_readonly_file_map.py": "5eb14efa58ce78d978d6d9425e7e08962aad221056a2811e21ac30d1b758f8e4",
+        "cpppj\\tests\\fixtures\\readonly-file-map-x86.tsv": "67a00ccd30c92a885d64f67638f5f490e9a31a3990c95638bda7e15b63339825"
+      }
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 288,
+    "failedToolRuns": 0,
+    "fixtureByteVerified": true
+  },
+  "protection": {
+    "beforeCount": 2723,
+    "currentCount": 2724,
+    "allUnchanged": true,
+    "fixtureCount": 904,
+    "newFixtures": [
+      "cpppj/tests/fixtures/readonly-file-map-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "OS3장치/진단명시·실제Win32/파일실패아님",
+    "actualSHP/VFS/반납연결은791잔여",
+    "원문에Close없음·현대W API/RAII는후속어댑터",
+    "32비트security12와64비트실제구조체ABI구별",
+    "CD새Native관측0"
+  ],
+  "next": "791 실제SHP 이름선택/현재map-view backing·자산수명, 이후Script/checking잔여50"
+}

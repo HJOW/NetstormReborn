@@ -2405,3 +2405,4 @@ cpppj/tests/fixtures/title-bitmap-lifetime-x86.tsv -text
 cpppj/tests/fixtures/palette-file-read-x86.tsv -text
 cpppj/tests/fixtures/xlat-file-read-x86.tsv -text
 cpppj/tests/fixtures/font-cache-file-x86.tsv -text
+cpppj/tests/fixtures/readonly-file-map-x86.tsv -text
