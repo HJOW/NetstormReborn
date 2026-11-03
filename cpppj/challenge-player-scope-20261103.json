@@ -1,0 +1,55 @@
+{
+  "unit": 799,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "분류 단위 완료·구현/전체 목표 진행 중",
+  "runtimeProduct": 798,
+  "exeSha256": "f5f153c9224dc3a27ac34b3d5e8c39ced13fc8d7b27d907d3a24bef2d12411ee",
+  "function": "0042bc10",
+  "classification": "후순위 멀티플레이 Challenge 플레이어 삭제",
+  "implemented": false,
+  "directTextCallers": [
+    {
+      "header": "// ==== FUN_0042c2a0 @ 0042c2a0",
+      "calls": [
+        "FUN_0042bc10(this,*puVar1);"
+      ]
+    }
+  ],
+  "notAnIndirectAbsenceProof": true,
+  "checking": {
+    "totalBefore": 43,
+    "totalAfter": 43,
+    "before": {
+      "parent": 35,
+      "partial": 6,
+      "multiplayer": 2
+    },
+    "after": {
+      "parent": 34,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "buildRun": false,
+  "unitTests": 0,
+  "nativeObservations": 0,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "protection": {
+    "count": 2728,
+    "fixtureCount": 908,
+    "allUnchanged": true
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/src/o/SquidOwner.h": "9813ca1e1cd6d503a7947c832008f7e71ed20eefde6c723f50c12ef19b30e2db",
+    "cpppj/src/o/SquidOwner.cpp": "ceb14946089fcfe327591d23ace598b1ebc95dae50851194248417c0e5987117"
+  },
+  "next": "비멀티004428c0 건설 Form 진단·checking 잔여43"
+}
