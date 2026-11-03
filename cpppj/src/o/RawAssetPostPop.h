@@ -41,6 +41,8 @@ struct AssetPostPopState {
     SquidPostPopList residences,temples,geysers;
     SquidPostPopList outposts; // DAT0055a70c/CD005670e0: 신전/아웃포스트의 섬 소유권 재계산에 쓰는 별도 목록이다.
     RawAuthorityState* sharedAuthority{}; // 실제 제품은 같은 Client 권한을 빌린다. 실제 SID목록은 아래 별도 shared 포인터로 빌린다.
+    bool& Server() { return sharedAuthority ? sharedAuthority->server : inBattle; } // 실제540bc0/CD540a28을 읽는다. 독립 옛 fixture의 battle 열은 역사적으로 같은 서버 입력이었다.
+    const bool& Server() const { return sharedAuthority ? sharedAuthority->server : inBattle; } // 실제594fbc 전투 상태와 권한을 섞지 않고 소비 때 현재 owner를 읽는다.
     bool& Boss() { return sharedAuthority ? sharedAuthority->boss : boss; } // Vortex의 실제 권한 소비 시점에서 현재값을 읽는다.
     const bool& Boss() const { return sharedAuthority ? sharedAuthority->boss : boss; } // 순수 독립 모듈의 기존 bool fallback도 유지한다.
     SquidPostPopList* sharedResidences{}; //실제 거주 구역50칸을 Session보다 긴 owner에서 빌린다.

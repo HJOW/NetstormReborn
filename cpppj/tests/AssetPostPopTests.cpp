@@ -120,13 +120,13 @@ struct AssetScene {
     }
 };
 // 현재 C++ 경계와 원본 PE 결과를 각 body별로 독립 비교한다.
-void Replay(const char* edition,bool sharedAuthority=false) {
+void Replay(const char* edition,bool sharedAuthority=false,bool oppositeBattle=false) {
     RawAuthorityState authority;AssetScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;int failures=0; // 같은 owner 주소를 Scene과 모든 모듈보다 오래 보관한다.
     // 새 body의 정상 반환마다 raw·목록·Player·사건을 비교한다.
     for (const auto& row:Rows()) {
         if (row[0]!=edition) continue;
-        scene.Prepare(row);authority={true,scene.state.boss}; // 원본 입력을 현재 owner로 공급한다.
-        if (sharedAuthority) { scene.state.sharedAuthority=&authority;scene.state.boss=!authority.boss; } // Vortex는 반대 fallback 대신 실제 권한을 소비해야 한다.
+        scene.Prepare(row);authority={scene.state.inBattle,scene.state.boss}; // 원본 입력을 현재 owner로 공급한다.
+        if (sharedAuthority) { scene.state.sharedAuthority=&authority;scene.state.boss=!authority.boss;if (oppositeBattle) scene.state.inBattle=!authority.server; } // Vortex는 반대 fallback 대신 실제 권한을 소비해야 한다.
         SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));
         RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,scene.Hooks());base.SetAssetPostPop(&assets);
         CHECK(base.HandlesAsset(kSource));base.Activate(kSource,Number(row[2]));CHECK(scene.baseState.depth==0);
@@ -261,3 +261,15 @@ TEST_CASE(AssetPostPop_CdMutablePlayerNativeRecords) { ReplayMutablePlayers("ori
 
 // 동일 독립 Native 결과로 Vortex의 현재 shared 권한과 fallback 격리를 확인한다.
 TEST_CASE(AssetPostPop_SharedAuthorityReplaysBothNativeBodies) { Replay("originals",true);Replay("originalCD",true); }
+
+// 전투 표시 상태를 반대로 둬도 같은 현재 서버/권한 owner가 기존 두 판본 원문 출력을 결정한다.
+TEST_CASE(AssetPostPop_ServerAuthorityIsIndependentFromBattleView) { Replay("originals",true,true);Replay("originalCD",true,true); }
+
+// 각도 조회가 서버 권한을 바꾸면 Gun 생성 관문은 그 뒤의 현재 owner를 다시 읽는다.
+TEST_CASE(AssetPostPop_ServerAuthorityRecheckedAfterFrameLookup) {
+    const auto& rows=Rows();const auto found=std::find_if(rows.begin(),rows.end(),[](const auto& row) { return row[0]=="originals" && Number(row[1])==1 && Number(row[2])==2 && Number(row[3])==0 && Number(row[4])==0 && Number(row[5])==0; });CHECK(found!=rows.end());if (found==rows.end()) return;
+    RawAuthorityState authority;AssetScene scene(OriginalEdition::Patch1078);scene.Prepare(*found);authority={true,scene.state.boss};scene.state.sharedAuthority=&authority;scene.state.inBattle=true;auto hooks=scene.Hooks();const auto frameLookup=hooks.gunFrame;
+    hooks.gunFrame=[&,frameLookup](std::int32_t frame) { authority.server=false;return frameLookup(frame); }; // 원문은 이 두 각도/그래프 자식 호출 뒤540bc0을 읽는다.
+    SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,std::move(hooks));base.SetAssetPostPop(&assets);base.Activate(kSource,2);
+    CHECK(!authority.server && scene.state.inBattle);CHECK(scene.Output()==std::vector<std::string>(found->begin()+15,found->end())); // 같은 관문의 기존 server0 원문 출력과 비교하며 새 Native 관측으로 합산하지 않는다.
+}

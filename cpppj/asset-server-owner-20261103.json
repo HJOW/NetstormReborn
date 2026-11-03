@@ -1,0 +1,104 @@
+{
+  "unit": 807,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 807,
+  "displayVersion": "11.01",
+  "exeSha256": "148b4585b32efdfe2cdef2d0e1f6679bff578a46e9843ab8bf222b96c578564f",
+  "build": {
+    "successfulInvocations": 2,
+    "failedInvocations": 1,
+    "lastGameLog": "build-v1.log",
+    "lastFocusedLog": "build-v3.log",
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "initialLinkFailure": "v2 LNK1104 netstorm_file_tests.exe 열기 실패·관련 프로세스 없음 확인·같은 빌드 v3 성공·원인 미확정",
+    "testSourceRefinement": "각도 조회 뒤 현재 권한 재조회 검사 추가 후 집중 대상 재컴파일",
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 12,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "AssetPostPop_PatchNativeBodies",
+      "AssetPostPop_CdNativeBodies",
+      "AssetPostPop_DirectDamageableCarrierRegistration",
+      "AssetPostPop_MissingEffectsBeforeMutation",
+      "AssetPostPop_PatchSharedPlayerRecordsNativeBodies",
+      "AssetPostPop_CdSharedPlayerRecordsNativeBodies",
+      "AssetPostPop_PlayerRecordBindingRejectsWrongSize",
+      "AssetPostPop_PatchMutablePlayerNativeRecords",
+      "AssetPostPop_CdMutablePlayerNativeRecords",
+      "AssetPostPop_SharedAuthorityReplaysBothNativeBodies",
+      "AssetPostPop_ServerAuthorityIsIndependentFromBattleView",
+      "AssetPostPop_ServerAuthorityRecheckedAfterFrameLookup"
+    ],
+    "previousNativeRows": 1636,
+    "callbackChangeUsesExistingServerZeroOutput": true,
+    "newNativeObservationForCallbackChange": false,
+    "fullSuiteRun": false
+  },
+  "native": {
+    "newObservations": 0,
+    "existingFixtureSha256": "706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741",
+    "originalServerAddress": [
+      "00540bc0",
+      "00540a28"
+    ]
+  },
+  "integration": {
+    "replacements": 4,
+    "otherPostPopBodyUnchanged": true,
+    "originalServer": "Patch540bc0/CD540a28",
+    "battleView": "actual assetState.inBattle is594fbc; remains for IceTower/ContentNotice/BattleActive",
+    "actualOwner": "already bound assetState.sharedAuthority=ClientGameplayGlobals.Authority",
+    "legacyFixtureInput": "battle column in decomp_assetpostpop_oracle is540bc0/CD540a28",
+    "diagnosticParentsStillRemaining": [
+      "46a340",
+      "46a520",
+      "46a600",
+      "46a810",
+      "46aca0"
+    ]
+  },
+  "checking": {
+    "before": 36,
+    "after": 36,
+    "completed": [],
+    "remainingBreakdown": {
+      "parent": 27,
+      "partial": 6,
+      "multiplayer": 3
+    },
+    "reason": "서버 관문4곳 교정·통지/네PostPop 진단 복귀는 후속"
+  },
+  "protection": {
+    "beforeCount": 2736,
+    "currentCount": 2736,
+    "fixtureCount": 916,
+    "allUnchanged": true,
+    "newFixtures": []
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "공통 권한 조회의 독립 fixture 검사·MP 기능 검사 아님",
+    "독립 옛 battle열만 Server fallback·실제 Client는 sharedAuthority 사용",
+    "각도 callback 변경은 C++ 순서성 검사/기존server0행 비교·새Native관측 아님",
+    "GunProcess 통지/네PostPop 진단은 미완료·checking36 유지",
+    "마지막GUI794의793제품·전체 C++/71대상/34/ZIP 반복0"
+  ],
+  "next": "GunProcess 통지46a340와 네PostPop46a520/46a600/46a810/46aca0 진단 복귀·나머지 비멀티 작업"
+}

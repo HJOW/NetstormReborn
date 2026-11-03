@@ -3243,3 +3243,6 @@ set_property(SOURCE DisplayTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTO
 target_sources(netstorm_tests PRIVATE GumpAttachDiagnosticTests.cpp)
 target_sources(netstorm_file_tests PRIVATE GumpAttachDiagnosticTests.cpp GumpTreeTests.cpp)
 set_source_files_properties(GumpAttachDiagnosticTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GUMP_ATTACH_DIAGNOSTIC_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gump-attach-diagnostic-x86.tsv\"")
+
+# 자산 PostPop의 실제 서버/전투 상태 분리를 기존 전체 양판본 원문으로 대조한다(807).
+target_sources(netstorm_file_tests PRIVATE AssetPostPopTests.cpp)

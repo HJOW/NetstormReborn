@@ -121,7 +121,7 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
     if (kind==kGenerator) return;
     if (kind==kGrowingIce) { if (!hooks_.growingIcePostPop) throw std::invalid_argument("성장형 아이스 전체 후처리 미연결");return; } //48ead0은extra9와편집관문을추가하지않는다.
     if (kind==kBlocker) {
-        if (state_.inBattle && (flags&1) && !state_.loadingDepth && !hooks_.startBlocker)
+        if (state_.Server() && (flags&1) && !state_.loadingDepth && !hooks_.startBlocker)
             throw std::invalid_argument("바리케이드 최초 프로세스 경계 누락");
         return;
     }
@@ -129,7 +129,7 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
         if (!hooks_.createGunProcess || (kind==kGunAngle && (!hooks_.gunFrame || !hooks_.setGraph)) ||
             (kind==kGunArcher && !hooks_.removeAnimation) || (patch && state_.checkingForms && !hooks_.checkForms))
             throw std::invalid_argument("Gun postPop 효과 누락");
-        if (patch && state_.inBattle && !(raw[40]&1) && (flags&1) &&
+        if (patch && state_.Server() && !(raw[40]&1) && (flags&1) &&
             ((kind==kGunSun && !state_.loadingDepth) || (kind==kGunArcher && !state_.fortMode)) &&
             ((flags&0x50) || (sid.value>=5 && sid.value<pool_.Layout().serverFirst)))
             throw std::logic_error("Gun postPop 원본 서버/로딩 assert 경로");
@@ -160,7 +160,7 @@ void RawAssetPostPop::Gun(Sid sid,std::uint32_t flags,std::uint32_t kind) const 
     }
     const bool branch=kind==kGunAngle ? (flags&7)!=0 : (flags&1)!=0;
     if (branch && (kind!=kGunSun || !(pool_.Slot(sid)[extra]&1))) {
-        if (state_.inBattle && !(pool_.Slot(sid)[extra]&1)) {
+        if (state_.Server() && !(pool_.Slot(sid)[extra]&1)) {
             if (kind==kGunArcher) hooks_.removeAnimation(sid);
             hooks_.createGunProcess(sid);
             if (patch && state_.checkingForms) hooks_.checkForms(sid);
@@ -289,7 +289,7 @@ void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     else if (kind>=kGunAngle && kind<=kGunArcher) Gun(sid,flags,kind);
     else if (kind==kGunDecoration) { if (flags&1) Regular(sid,0,0.05f);base_.PostPopBase(sid,flags); }
     else if (kind==kResidence) Residence(sid,flags);
-    else if (kind==kBlocker) { if (state_.inBattle && (flags&1) && !state_.loadingDepth) hooks_.startBlocker(sid);damageable_.DamageablePostPop(sid,flags); }
+    else if (kind==kBlocker) { if (state_.Server() && (flags&1) && !state_.loadingDepth) hooks_.startBlocker(sid);damageable_.DamageablePostPop(sid,flags); }
     else if (kind==kGeyser) Geyser(sid,flags);
     else Vortex(sid,flags,kind);
 }
