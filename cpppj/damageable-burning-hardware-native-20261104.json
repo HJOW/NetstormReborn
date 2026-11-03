@@ -1,0 +1,21 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "backend": "실제 Windows x86 CPU / 전용 payload / 검색·생성·삭제·소리·진단 장치 관측",
+  "binaries": {
+    "originals": {
+      "path": "originals\\Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+    },
+    "originalCD": {
+      "path": "originalCD\\NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    }
+  },
+  "rows": 1100,
+  "fixtureSha256": "3a35ce8c2135ac10b224b9ec2e5e7670d09e4299be2f92d1c1edf9832e621927",
+  "probeSha256": "c7f6e2b2dbcff7dec24b25ea7f77d385bf59d02d1e2b3c7cf1d59a068453291e",
+  "probeSourceSha256": "13e7322bc592ad18cca211c3fb2c9014869f2be9c69d8a6b9baa2c9bd7df94aa",
+  "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+  "boundary": "공통 부모만 실행 / 합성 HP·검색 결과 / 실제 공격·게임 시작·GUI·통신 없음"
+}

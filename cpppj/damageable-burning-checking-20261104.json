@@ -1,0 +1,198 @@
+{
+  "unit": 825,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "51fbfaf8 / 20261104-06 CP",
+  "exeSha256": "f0325e3b732e2d45ed5fd88c5877e0d5945ea52e1427cbdd9ed095ee1f77cc22",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "실제 Windows x86 CPU / 전용 payload / 검색·생성·삭제·소리·진단 장치 관측",
+    "binaries": {
+      "originals": {
+        "path": "originals\\Netstorm.exe",
+        "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+      },
+      "originalCD": {
+        "path": "originalCD\\NETSTORM.EXE",
+        "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+      }
+    },
+    "rows": 1100,
+    "fixtureSha256": "3a35ce8c2135ac10b224b9ec2e5e7670d09e4299be2f92d1c1edf9832e621927",
+    "probeSha256": "c7f6e2b2dbcff7dec24b25ea7f77d385bf59d02d1e2b3c7cf1d59a068453291e",
+    "probeSourceSha256": "13e7322bc592ad18cca211c3fb2c9014869f2be9c69d8a6b9baa2c9bd7df94aa",
+    "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "boundary": "공통 부모만 실행 / 합성 HP·검색 결과 / 실제 공격·게임 시작·GUI·통신 없음"
+  },
+  "nativeReobservedRows": 1100,
+  "nativeCountsPerObservation": {
+    "originals": {
+      "rows": 550,
+      "F": 856,
+      "D": 216,
+      "C": 136,
+      "S": 66,
+      "X": 136
+    },
+    "originalCD": {
+      "rows": 550,
+      "F": 544,
+      "D": 0,
+      "C": 136,
+      "S": 48,
+      "X": 136
+    }
+  },
+  "tests": [
+    {
+      "filter": "DamageableBurningChecking_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-825\\test-DamageableBurningChecking-second.log",
+      "sha256": "eae294292944b218774cbe1a8cb5285afbd3f5fd567600102ba24c1a4e42f708"
+    },
+    {
+      "filter": "DamageableHit_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-825\\test-DamageableHit-first.log",
+      "sha256": "d2fb37426fa2b8a5025025b4bf684198ed891461187ecfc9a2fdf6a1b8f5f1d4"
+    }
+  ],
+  "newTestCases": 4,
+  "finalFocusedCases": 8,
+  "builds": [
+    {
+      "log": "extracted\\cpp-resume-825\\build-first.log",
+      "targets": [
+        "Netstorm (MSBuild에서 netstorm 라이브러리로 선택됨)",
+        "netstorm_file_tests"
+      ],
+      "exitCode": 1,
+      "errors": 7,
+      "reason": "새 검사에서 실제 클래스 Client를 ClientMain으로 잘못 표기함",
+      "sha256": "0ee91463fcd147f85de874c7aa228e2da436d02b16683747077bcc272b761943"
+    },
+    {
+      "log": "extracted\\cpp-resume-825\\build-final.log",
+      "targets": [
+        "NetstormCpp",
+        "netstorm_file_tests"
+      ],
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "f5fc7e97828de81a07ef017a1758bc72de6553666890550750ed539723fabeee"
+    },
+    {
+      "log": "extracted\\cpp-resume-825\\build-session-owner.log",
+      "targets": [
+        "netstorm_file_tests"
+      ],
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "4c429fcfaeeb529e9e4e9849914e58a9f5b38968ba020a1bdb576f1c6a4e8366"
+    }
+  ],
+  "probeBuild": {
+    "log": "extracted\\cpp-resume-825\\probe-build-first.log",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "sha256": "46af60aa1c4b07b4d40d71ae587f06d422c2b344b0b5e5362a5c91e4668e042e"
+  },
+  "firstFocusedFailure": {
+    "filter": "DamageableBurningChecking_",
+    "cases": 4,
+    "failedChecks": 1,
+    "exitCode": 1,
+    "reason": "검사 조립에서 실제 Client의 Subscriber 소유자를 함께 전달하지 않아 기존 정체성 guard가 거부함; 검사 연결만 수정",
+    "log": "extracted\\cpp-resume-825\\test-DamageableBurningChecking-first.log",
+    "sha256": "a005c4033c4d268ef670c46a48814f24a152140b6e06696050394949488532db"
+  },
+  "actualCallers": [
+    "RawCampaignHitBindings PriestDamage.damageableRefresh -> same burning.Refresh",
+    "MakeDamageableHitBurningHooks general.refresh -> same burning.Refresh",
+    "RawPriestWorldBindings.DamageableRefresh -> Session regen.damageable -> hits.Burning().Refresh",
+    "same ClientGameplayGlobals AiDebug.Checking -> burningState; default diagnostic -> CampaignClientServices ai.assertion log and resume",
+    "same RawContainedLookup/World.Destroy/Particles.AddBurning(mode1)/soundNames.playOnceAt"
+  ],
+  "checking": {
+    "remaining": 21,
+    "parents": 13,
+    "partial": 5,
+    "multiplayer": 3,
+    "completedParents": 29,
+    "closedThisUnit": [
+      "0044c060"
+    ]
+  },
+  "boundaries": [
+    "합성 HP/TYPE/검색/생성 입력; TYPE/최대HP getter와 장치 경계는 명시 외부 입력",
+    "실제 Session은 명시 HP/연소 Form, 기본 생성/회복 삭제, stage0까지만; 게임/공격/Kernel 프레임 없음",
+    "CD signed HP WORD, 진단 없음; 정상 유효 SID/TYPE/float 좌표 경계",
+    "전체 진단 UI/SEH 및 손상된 원본 포인터 자체 재현은 별도 호스트 한계"
+  ],
+  "next": "826 Mana00472f70 중복 목록 진단 복귀/같은 Client 전역·실제 postPop 소비자 연결; checking21과 객체 메뉴/커서 잔여 유지",
+  "protection": {
+    "unchangedPreviousFiles": 2752,
+    "afterFiles": 2753,
+    "fixtureFiles": 933,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted\\cpp-resume-825\\protected-after.json",
+    "sha256": "80344d833b0b6123b64e5e3d07405bf96f6a4f3f12bf82ab8bcd215864d126c9"
+  },
+  "excluded": [
+    "원본 게임/GUI·자연 플레이/자동 공략",
+    "포획/희생/특정 적 공격/승리·사용자 직접 확인",
+    "MP/공중3종 새 전용",
+    "실제 PCM/청취/물리 출력·캡처 재시도",
+    "전체 CTest/71대상/34미션/ZIP"
+  ],
+  "sources": {
+    "cpppj/src/o/RawDamageableBurning.h": "25de7aa3175920a6e46a7cf72c9daa8743705e809c1241a7e521a71574b77b65",
+    "cpppj/src/o/RawDamageableBurning.cpp": "0cbe8de986e98e69082df611e9319e0269c24dc1afcb11c9779bb4b3bfb68889",
+    "cpppj/src/client/RawCampaignSession.cpp": "5baaff72e99fd142aeb0f79e5800c7fc261b504c851bbe31e19cb51b61be857e",
+    "cpppj/src/client/CampaignClientServices.cpp": "9b7ab17f44c1a7ee13b01e78c08970ef7fd59dbdc0c1e6619b30b7984177c7ca",
+    "cpppj/src/client/RawCampaignHitBindings.cpp": "6473de792e1f5d5d5f30d29f0eefa798bf259172a0519d662b5b69bf5aa78c2e",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "77fadf2c93cf2b33b5b04a962a32ed8749e1ce4dedad72494e7a5b48507b456d",
+    "cpppj/src/o/RawPriestDamage.cpp": "8bd32543e8728acdf8a09c524ccfae3883130578d05f4770fb38b3a1d2bc445e",
+    "cpppj/src/o/RawDamageableHit.cpp": "ed432708aa90bda0a314b0d463ba8d8d794525dbcd423d248ae05287e27dec22",
+    "cpppj/src/o/RawPriestRegen.cpp": "b096e8533e6df56683967befd4ea912429daa91740779555e8f18b9286814f59",
+    "cpppj/tests/CMakeLists.txt": "d9a7b428a2f4eaf92aac9fe36cae32a7567d1f80dc19907e33170bb3c9fad819",
+    "cpppj/tests/DamageableBurningCheckingTests.cpp": "6da58d20ad1a31e75326a3abefed951dd3879e0abf1bb378285eb1d709808b6a",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "a97d8fe6527417089c85423896bd3d569f2e02710484f5f102cea6bee9e2b959",
+    "cpppj/tests/DamageableHitTests.cpp": "f156b1210055835226deca75858ed023a21e6bdda0ec787a4ab296166ea0d35d",
+    "tools/native_damageable_burning_probe.cpp": "13e7322bc592ad18cca211c3fb2c9014869f2be9c69d8a6b9baa2c9bd7df94aa",
+    "tools/observe_damageable_burning_hardware.py": "8dfab2911b76f53e5619e22a68e80dd4295d15aff4953d66498a5497d8034c29",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "cpppj/SOURCE_MAP.md": "d80c990123d8dbf8342b0267929c452cbb197fb4bba1327c0ecd8db18465309f"
+  },
+  "normalizedSources": {
+    "cpppj/src/o/RawDamageableBurning.h": "2a5e049b4eecd2237e8cb29d0066f007939d1245642f41267ee06a99ff72ce50",
+    "cpppj/src/o/RawDamageableBurning.cpp": "a1c0460591c201b9e4ab1107bf6b409808e6bb2a76aa7b23cb3c54da309a23a0",
+    "cpppj/src/client/RawCampaignSession.cpp": "5baaff72e99fd142aeb0f79e5800c7fc261b504c851bbe31e19cb51b61be857e",
+    "cpppj/src/client/CampaignClientServices.cpp": "9b7ab17f44c1a7ee13b01e78c08970ef7fd59dbdc0c1e6619b30b7984177c7ca",
+    "cpppj/src/client/RawCampaignHitBindings.cpp": "6473de792e1f5d5d5f30d29f0eefa798bf259172a0519d662b5b69bf5aa78c2e",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "77fadf2c93cf2b33b5b04a962a32ed8749e1ce4dedad72494e7a5b48507b456d",
+    "cpppj/src/o/RawPriestDamage.cpp": "9c337f7630a766a7ded051843a83f474820e0ab8561bfb9391072b301e8cbc68",
+    "cpppj/src/o/RawDamageableHit.cpp": "4c6bad42a345d9f645bf2cd035b30e7629c4f0dbcf2e302ebb4e5969c64051bd",
+    "cpppj/src/o/RawPriestRegen.cpp": "6956f341b1aeaab84a328ae9f2e9765a94c0b548fc872dcd93dee927e4d785ac",
+    "cpppj/tests/CMakeLists.txt": "7dc47d7917721df44b907df5b3d15d7383fb23dfe0379cd930244f69b781697b",
+    "cpppj/tests/DamageableBurningCheckingTests.cpp": "6da58d20ad1a31e75326a3abefed951dd3879e0abf1bb378285eb1d709808b6a",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "a97d8fe6527417089c85423896bd3d569f2e02710484f5f102cea6bee9e2b959",
+    "cpppj/tests/DamageableHitTests.cpp": "811f951fa0370ebe26c2cf6c4faae36567379659dd2035eb8f4c35097e33480b",
+    "tools/native_damageable_burning_probe.cpp": "13e7322bc592ad18cca211c3fb2c9014869f2be9c69d8a6b9baa2c9bd7df94aa",
+    "tools/observe_damageable_burning_hardware.py": "8dfab2911b76f53e5619e22a68e80dd4295d15aff4953d66498a5497d8034c29",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca",
+    "cpppj/SOURCE_MAP.md": "6bab4284c23dd971e562d8227a8da6c6440d2ae5fb0fa51aef8eb418ab915c2b"
+  }
+}

@@ -3325,3 +3325,9 @@ target_sources(netstorm_tests PRIVATE PaletteFrameCheckingTests.cpp)
 target_sources(netstorm_file_tests PRIVATE PaletteFrameCheckingTests.cpp PaletteFlashTests.cpp ThunderProcessTests.cpp)
 set_source_files_properties(PaletteFrameCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PALETTE_FRAME_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/palette-frame-hardware-x86.tsv\"")
+
+# 연소 갱신 CPU1100행과 실제 Client/Session의 현재 checking·회복 수명을 집중 비교한다.
+target_sources(netstorm_tests PRIVATE DamageableBurningCheckingTests.cpp DamageableBurningSessionTests.cpp)
+target_sources(netstorm_file_tests PRIVATE DamageableBurningCheckingTests.cpp DamageableBurningSessionTests.cpp DamageableHitTests.cpp)
+set_source_files_properties(DamageableBurningCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DAMAGEABLE_BURNING_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageable-burning-checking-hardware-x86.tsv\"")

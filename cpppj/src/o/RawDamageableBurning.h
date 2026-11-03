@@ -14,6 +14,8 @@ struct DamageableBurningHooks {
     std::function<void(Sid,std::uint32_t)> destroy;
     // bulfSound: 실제위치의bulfHurt.wav를재생한다.다른타입에는요구하지않는다.
     std::function<void(Sid,float,float)> bulfSound;
+    // assertion: 현재 중복 프로세스 진단 장치다. 정상 복귀하면 저장한 HP/첫 검색 결과로 계속한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion;
 };
 // 원본디버그검사와현재타입전역은호출할때다시읽는다.
 struct DamageableBurningState {

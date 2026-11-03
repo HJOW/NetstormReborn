@@ -401,6 +401,8 @@ LAB_004259a2:
 
 ## FUN_0044c060 @ 0044c060
 
+**825 완료:** 현재 index1 finder의 원문0x210(528)줄 진단/정상 복귀를 실제 Client·Session에 연결했다. 진단 전에 저장한 HP/절반/첫 검색과 진단 뒤 현재 TYPE/위치음·생성/회복 삭제를 CPU1100행/진단216·재관측·집중8개(새4)로 대조했다. 최초 새 검사 컴파일/공유 owner 조립 실패는 보존 후 검사만 교정했다. checking21(부모13/부분5/MP3),완료부모29다. 아래는779 당시 기록이며 [825 기록](cpp-damageable-burning-checking-20261104.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawPriestRegen.h, cpppj\src\o\RawDamageableBurning.h, cpppj\src\o\RawPriestDamage.h, cpppj\src\client\RawPriestWorldBindings.h

@@ -26,11 +26,15 @@ Sid RawDamageableBurning::Refresh(Sid victim) const {
     if (!hooks_.find) throw std::logic_error("burning 실제현재프로세스조회 누락");const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto current=patch ? std::bit_cast<std::int32_t>(ReadBurn(raw,26)) : std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(ReadBurn(raw,26,2)));const auto maximum=hp_.TypeHitPoints(raw[10]);const auto doubled=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(maximum)*2U);const auto half=doubled/4;
     auto found=hooks_.find(victim,state_.burningType,0);
-    if (patch && state_.checking && hooks_.find(victim,state_.burningType,1).value) throw std::logic_error("burning 두번째프로세스 원본 assert");
+    if (patch && state_.checking && hooks_.find(victim,state_.burningType,1).value) {
+        if (!hooks_.assertion) throw std::logic_error("burning 두번째프로세스 원본 진단 장치 미연결");
+        hooks_.assertion("findProcess (mySid, burningSystemProcessType, 1 ) == 0","\\Ns\\O\\Damageable.cpp",0x210);
+    } // 진단이 현재 HP/TYPE/전역을 바꿔도 앞서 저장한 current/half/found는 다시 읽지 않는다.
     if (current<half) {
         if (!found.value) {
-            if (!hooks_.create || (raw[10]==state_.bulfType && !hooks_.bulfSound)) throw std::logic_error("burning 실제생성/소리몸체 누락");
+            if (raw[10]==state_.bulfType && !hooks_.bulfSound) throw std::logic_error("burning 실제소리몸체 누락");
             if (raw[10]==state_.bulfType) hooks_.bulfSound(victim,std::bit_cast<float>(ReadBurn(raw,14)),std::bit_cast<float>(ReadBurn(raw,18)));
+            if (!hooks_.create) throw std::logic_error("burning 실제생성몸체 누락"); // 원문은 앞선 불프 위치음 요청 뒤 생성 경계에 진입한다.
             found=hooks_.create(victim);
         }
     } else if (found.value) {

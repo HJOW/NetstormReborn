@@ -1141,6 +1141,8 @@ struct RawCampaignSession::Impl {
         FillMissing(hitEffects.general.realTime);FillMissing(hitEffects.general.warningEvent);
         // MessageBoard::Show의 현재00594fa4 억제 조건을 같은 미션 전역에서 읽고 실제 UI 삭제에 적용한다.
         hitEffects.general.warningEvent=[this,remove=std::move(hitEffects.general.warningEvent)] { if (!globals.missionPost) remove(); };
+        // 실제 Client의 현재 진단 장치를 빌리며 정상 복귀 뒤 같은 갱신 부모를 계속한다.
+        if (!hitEffects.burning.assertion) hitEffects.burning.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("burning 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); };
         if (!hitEffects.burning.create) hitEffects.burning.create=[this](Sid victim) { const auto* process=particles->AddBurning(victim,1);return process ? process->Form() : Sid{}; };
         if (!hitEffects.burning.bulfSound) hitEffects.burning.bulfSound=[this](Sid,float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("불프 피격 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("bulfHurt.wav"),0,0); };
         // 건설 중 신전 피격은 기존 같은30 Form의 끝 시각과 실제 가상88 표시를 갱신한다.
