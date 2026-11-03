@@ -3141,6 +3141,10 @@ target_sources(netstorm_tests PRIVATE FontFaceEncodingTests.cpp)
 target_sources(netstorm_tests PRIVATE FontCacheFileTests.cpp) # 같은 원문 캐시 부모의 순차 I/O를 대조한다(788).
 target_sources(netstorm_tests PRIVATE FontCacheNativeTests.cpp) # 실제 FontStore/VFS/생성 캐시 저장을 연결한다(789).
 target_sources(netstorm_tests PRIVATE ReadOnlyFileMapTests.cpp) # 원문 직접 매핑 부모와 AMD64 핸들 폭을 대조한다(790).
+target_sources(netstorm_tests PRIVATE NativeShapeFileTests.cpp) # 실제map/view와공유셰이프수명을확인한다(791).
+target_sources(netstorm_file_tests PRIVATE NativeShapeFileTests.cpp AssetTests.cpp ShapeToBufferTests.cpp FontCacheNativeTests.cpp) # 기존값형/RLE·글꼴캐시회귀도같은backing변경을대조한다.
+target_sources(netstorm_file_tests PRIVATE PresentationFontRenderCacheTests.cpp) # 셰이프소유변경이주소재사용의그림/글꼴캐시반납을깨뜨리지않는지확인한다.
+target_compile_definitions(netstorm_file_tests PRIVATE NETSTORM_GRAPHICS_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graphics-x86.tsv") # 기존AssetTests의동결픽셀경로를집중대상에서도그대로재사용한다.
 target_sources(netstorm_file_tests PRIVATE ReadOnlyFileMapTests.cpp)
 set_source_files_properties(ReadOnlyFileMapTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_READONLY_FILE_MAP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/readonly-file-map-x86.tsv\"")
 target_sources(netstorm_script_bindings_tests PRIVATE FontCacheNativeTests.cpp)

@@ -26,8 +26,9 @@ public:
     // 선택한 판본의 타입·SHP·팔레트를 동일한 VFS에서 읽어 연결한다.
     // 팔레트 경로는 설정(`GamePalSpec`에 `battlePal` 등을 넣은 값)으로 계산해 넘길 수 있다.
     using TypeDefinitionRead=std::function<o::RiftTypeDefinition(std::string_view)>; // 실제 Native만 명시하는 동기 TYPE 로더이며 기본값은 기존 snapshot Parse다.
+    using ShapeDatabaseRead=std::function<ShapeDatabase()>; // 실제 Native만 같은 map/view 수명을 인계하며 CLI/CD 기본값은 기존 값형 reader다.
     GameAssets(const o::BaseFileSystem& files, o::OriginalEdition edition,
-        std::string_view palettePath = kDefaultPalettePath,TypeDefinitionRead readType={});
+        std::string_view palettePath = kDefaultPalettePath,TypeDefinitionRead readType={},ShapeDatabaseRead readShapes={});
     // 원본 로딩 순서를 보존한 자산 목록.
     std::span<const TypeAsset> Types() const;
     // 파일 이름 또는 typename으로 타입을 찾는다. ASCII 대소문자는 구분하지 않는다.

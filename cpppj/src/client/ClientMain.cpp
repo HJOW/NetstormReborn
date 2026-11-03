@@ -9,6 +9,7 @@
 #include "client/ConfigFileRead.h" //실제10.78 Config만 현재 FILE/키와40380 부모를 사용한다.
 #include "client/TypeFileRead.h"
 #include "client/XlatFileRead.h" // 실제 Xlat만 현재 FILE/설치/정규화·닫기 위치를 사용한다.
+#include "client/NativeShapeFile.h" // 실제10.78 SHP는 이름선택뒤직접읽기전용map/view다.
 #include "client/ClientTitleBitmaps.h" // 실제State42와WM_PAINT가같은bitmap owner를사용한다.
 #include "client/ConfigurationCommandInput.h" //같은 raw highPriority와 WinMain의 실제 OS 등급 비교를 사용한다.
 #include "client/ScreenModeTransition.h" //원문00435ba0의 현재 모드/실패 복구/공유 갱신 부모다.
@@ -360,8 +361,9 @@ int Client::Run() {
     InvalidateRect(window,nullptr,FALSE);UpdateWindow(window);GdiFlush();DwmFlush(); // 유효한 WM_PAINT 갱신을 실행한 뒤 Windows 합성 화면의 다음 표시까지 완료하여 빠른 메뉴 교체가 로딩을 덮지 않게 한다.
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
     GameAssets::TypeDefinitionRead readType; // 원문49c160의 현재 FILE/키 정책은10.78의 실제 시작에서만 명시 사용한다.
-    if (options_.edition==o::OriginalEdition::Patch1078) readType=[this](auto name) { return ReadNativeTypeDefinition(files_,name); };
-    assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath,std::move(readType));
+    GameAssets::ShapeDatabaseRead readShapes; // 실제 자산 수명까지 같은 view/핸들 owner를 인계한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) { readType=[this](auto name) { return ReadNativeTypeDefinition(files_,name); };readShapes=[this] { return LoadNativeShapeDatabase(files_,options_.gameDirectory); }; }
+    assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath,std::move(readType),std::move(readShapes));
     if (options_.edition==o::OriginalEdition::Patch1078) colorSortInput_->OwnerTables()->Initialize(colorSortInput_->Primary(),assets_->TypeTable().Types().size(),static_cast<std::uint32_t>(assets_->Find("bridge").block+o::kFirstAssetTypeNumber),kencloudGlobals_->WorldRedraw()); // 원문43c4e0→43be30의 최초 등록이다. 호스트는 TYPE 크기가 확정된 직후, 첫 UI/World보다 먼저 수행한다.
     surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority(),gameplayGlobals_->GameAux()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.

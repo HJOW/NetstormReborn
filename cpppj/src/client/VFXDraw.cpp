@@ -4,6 +4,7 @@
 #include <bit>
 #include <limits>
 #include <stdexcept>
+#include <utility> // 이동 뒤의 view와 머리 범위를 명시적으로 비운다.
 
 namespace netstorm::client {
 namespace {
@@ -46,7 +47,16 @@ bool ShapeFrame::IsSpecial() const {
 }
 
 // 실제 파일은 블록 헤더들이 앞에 연속으로 있고 압축 프레임들이 뒤에 놓인다.
-ShapeDatabase::ShapeDatabase(std::vector<std::uint8_t> bytes) : bytes_(std::move(bytes)) {
+ShapeDatabase::ShapeDatabase(std::vector<std::uint8_t> bytes)
+    :byteOwner_(std::make_shared<const std::vector<std::uint8_t>>(std::move(bytes))),bytes_(*static_cast<const std::vector<std::uint8_t>*>(byteOwner_.get())) { Parse(); } // 기존 값형 입구는 계속 자신의 불변 바이트를 소유한다.
+ShapeDatabase::ShapeDatabase(std::span<const std::uint8_t> bytes,std::shared_ptr<const void> owner)
+    :byteOwner_(std::move(owner)),bytes_(bytes) { if (!byteOwner_) throw std::invalid_argument("셰이프 view의 수명 소유자 누락");Parse(); } // 물리/파서 실패 시에도 소유 멤버가 backing을 반납한다.
+ShapeDatabase::ShapeDatabase(ShapeDatabase&& other) noexcept
+    :byteOwner_(std::move(other.byteOwner_)),bytes_(std::exchange(other.bytes_,{})),blocks_(std::move(other.blocks_)),headerEnd_(std::exchange(other.headerEnd_,0)) {} // 불변 view와 같은 수명을 함께 옮긴다.
+ShapeDatabase& ShapeDatabase::operator=(ShapeDatabase&& other) noexcept { // self 이동에서는 현재 view를 보존한다.
+    if (this!=&other) { byteOwner_=std::move(other.byteOwner_);bytes_=std::exchange(other.bytes_,{});blocks_=std::move(other.blocks_);headerEnd_=std::exchange(other.headerEnd_,0); }return *this;
+}
+void ShapeDatabase::Parse() { // 원래 생성자의 검증/프레임 경계 본문이며 backing 종류로 분기하지 않는다.
     std::size_t position = 0;
     std::vector<std::size_t> frameOffsets;
     // 이어지는 블록 헤더를 순서대로 읽어 타입 인덱스를 보존한다.

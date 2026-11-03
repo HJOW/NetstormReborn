@@ -1,0 +1,97 @@
+{
+  "unit": 791,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 791,
+  "displayVersion": "11.01",
+  "exeSha256": "f8f2a0d6c74b0b8ec4774f810abfc4dd84c6d933ffa2a374dcf167564cde1d56",
+  "summary": "실제Patch1078 SHP의이름선택/직접W매핑과불변ShapeDatabase 공유view·마지막반납연결",
+  "build": {
+    "firstErrors": 1,
+    "firstWarnings": 0,
+    "firstFailure": "집중대상으로재사용한AssetTests의GRAPHICS_FIXTURE정의누락",
+    "productAndFocusedFinalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "finalBuildLogs": [
+      "build-v2.log",
+      "build-v3.log"
+    ],
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 17,
+    "newTests": 4,
+    "failedChecks": 0,
+    "names": [
+      "FontCacheNative_CurrentArchiveAndOriginalSignatureBoundary",
+      "FontCacheNative_ActualStoreGeneratesPersistsAndReloadsSameGlyphBytes",
+      "FontCacheNative_RawAcpDiskAndArchivePreserveUnicodeRoot",
+      "FontCacheNative_WriteUnavailableAndProtectedRootsKeepGeneratedData",
+      "NativeShapeFile_SharedViewSurvivesCopiesMovesAndLastOwner",
+      "NativeShapeFile_FailedMapsAndParserReleaseTheirOwnResources",
+      "NativeShapeFile_UnicodeRootsAndArchiveSelectionKeepDirectMapBoundary",
+      "NativeShapeFile_ActualOriginalGameAssetsMatchLegacyStorage",
+      "PresentationFontRebuild_ActualFontStoreDrawsNewGlyphAtReusedAddress",
+      "ReadOnlyFileMap_Native72ArgumentsAssertionsAndResume",
+      "ReadOnlyFileMap_HostHandlesPreserveAll64Bits",
+      "Renderer_DecodedImagesRetireExplicitlyAtShapeAddressReuse",
+      "ShapeDatabase_PreservesTransparencyAndSharedFrames",
+      "ShapeDatabase_RejectsBrokenTablesAndRuns",
+      "ShapeToBuffer_CdNativePlainPixelsAndFallback",
+      "ShapeToBuffer_PatchNativePlainPixels",
+      "VFXDraw_MatchesBothOriginalX86Editions"
+    ],
+    "initialNativeShapeTests": 4,
+    "initialFailedChecks": 1,
+    "initialFailure": "원본자산비교검사root가한단계상위",
+    "correction": "검사root만수정·제품/fixture보존",
+    "fullSuiteRun": false
+  },
+  "native": {
+    "newObservations": 0,
+    "reusedDirectMappingInputs": 72
+  },
+  "integration": {
+    "originalParserBodyUnchangedAfterLineEndings": true,
+    "parent790Unchanged": true,
+    "actualGameAssetsCallbackPointerPreserved": true,
+    "originalShapeBytesCompared": 5618120,
+    "sharedCopyAndMovedFromEmptyVerified": true,
+    "windowsScratchWriteSharingAndLastOwnerDeleteVerified": true,
+    "legacyAndCdValueEntryPreserved": true,
+    "unchangedVfxLineEndingsRestoredFrom": "b8deab82",
+    "existingOriginalWriteOrDeleteTestTargets": 0
+  },
+  "protection": {
+    "beforeCount": 2724,
+    "currentCount": 2724,
+    "allUnchanged": true,
+    "fixtureCount": 904,
+    "newFixtures": []
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "realWindowsReadOnlyMappings": true,
+  "boundaries": [
+    "actualPatch1078만직접map·CLI/CD기본값형계약유지",
+    "TAFF일치의원래이름을추출/VFSwhole-read/보조성공으로바꾸지않음",
+    "원문누락핸들반납은현대RAII·security12와실제64비트구조체ABI구별",
+    "파서실제span범위용GetFileSizeEx는매핑뒤현대경계",
+    "이불변backing공유와원문미정힙/전체SEH동일성구별",
+    "0049ebb0전체타입초기화/checking완료아님·CD새Native0"
+  ],
+  "next": "Script활성파일부모와checking잔여50·비멀티/호환성"
+}

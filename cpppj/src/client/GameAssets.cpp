@@ -12,8 +12,8 @@ bool Equal(std::string_view left, std::string_view right) {
 }
 }
 // 팔레트 경로는 호출자가 설정에서 계산해 준다. 주지 않으면 원본 setup.cfg의 공통 팔레트 gifcloud다.
-GameAssets::GameAssets(const o::BaseFileSystem& files, o::OriginalEdition edition, std::string_view palettePath,TypeDefinitionRead readType)
-    : edition_(edition),shapes_(files.Read("d/_shapes.shp")), palette_(files.Read(palettePath)) {
+GameAssets::GameAssets(const o::BaseFileSystem& files, o::OriginalEdition edition, std::string_view palettePath,TypeDefinitionRead readType,ShapeDatabaseRead readShapes)
+    : edition_(edition),shapes_(readShapes ? readShapes():ShapeDatabase(files.Read("d/_shapes.shp"))), palette_(files.Read(palettePath)) { // 실제 Native만 직접map/view를 인계받고 값형 입구는 보존한다.
     const auto order = o::TypeLoadOrder(edition);
     if (shapes_.Blocks().size() != order.size()) throw std::runtime_error("Shape block count does not match selected edition (use --cd for CD data)");
     types_.reserve(order.size());

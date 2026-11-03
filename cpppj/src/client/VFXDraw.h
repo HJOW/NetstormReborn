@@ -2,6 +2,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <memory> // 같은 읽기전용 파일 view 또는 값형 vector의 수명을 공유한다.
 #include <span>
 #include <vector>
 
@@ -47,6 +48,11 @@ class ShapeDatabase {
 public:
     // 블록 상대 오프셋과 공유 프레임을 해석하고 파일 경계를 검증한다.
     explicit ShapeDatabase(std::vector<std::uint8_t> bytes);
+    ShapeDatabase(std::span<const std::uint8_t> bytes,std::shared_ptr<const void> owner); // 실제 map/view를 복사 없이 빌리며 owner를 마지막 소비까지 유지한다.
+    ShapeDatabase(const ShapeDatabase&)=default; // 변경 불가능한 바이트 소유권은 공유하고 파싱된 프레임 표는 값으로 복사한다.
+    ShapeDatabase& operator=(const ShapeDatabase&)=default; // 같은 읽기전용 backing과 프레임 표를 함께 대입한다.
+    ShapeDatabase(ShapeDatabase&& other) noexcept; // 이동 뒤 원본의 view를 비워 반납된 backing을 가리키지 않게 한다.
+    ShapeDatabase& operator=(ShapeDatabase&& other) noexcept; // 이전 backing을 반납하고 이동한 view/표를 함께 보관한다.
     // 타입 로딩 순서에 대응하는 블록 목록을 돌려준다.
     std::span<const ShapeBlock> Blocks() const;
     std::span<const std::uint8_t> Bytes() const; // 글꼴 캐시 writer에 같은 보관 블록을 읽기 전용으로 제공하며 다시 인코딩하지 않는다.
@@ -58,8 +64,9 @@ public:
     // RLE를 풀되 투명 픽셀과 팔레트 번호를 각각 보존한다.
     IndexedImage Decode(std::size_t block, std::size_t frame) const;
 private:
-    // bytes_: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
-    std::vector<std::uint8_t> bytes_;
+    std::shared_ptr<const void> byteOwner_; // 값형 vector 또는 실제 파일 map/view의 마지막 수명을 보관한다.
+    std::span<const std::uint8_t> bytes_; // 같은 변경 불가능한 backing을 복사 없이 조회한다.
+    void Parse(); // 기존 프레임/범위 검증 본문을 모든 backing 입구가 그대로 공유한다.
     // blocks_: 블록.
     std::vector<ShapeBlock> blocks_;
     std::size_t headerEnd_{}; // 추가 헤더가 블록 테이블을 읽는 일을 막는 경계다.

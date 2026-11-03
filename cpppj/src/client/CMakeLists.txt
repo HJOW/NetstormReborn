@@ -2,6 +2,7 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    NativeShapeFile.cpp NativeShapeFile.h # 실제SHP의같은map/view와자산수명을연결한다.
     ReadOnlyFileMap.cpp ReadOnlyFileMap.h # 원문 SHP의 직접 읽기전용 파일 매핑 부모다.
     NativeFontCacheFile.cpp NativeFontCacheFile.h # 현재 FontStore의 ACP/VFS·순차 캐시 저장을 연결한다.
     FontCacheFile.cpp FontCacheFile.h # 글꼴 캐시의 순차 읽기/쓰기와 부분 설치·File 정리 부모다.
