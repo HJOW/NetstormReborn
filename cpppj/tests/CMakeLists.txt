@@ -3232,3 +3232,9 @@ set_property(SOURCE GunAngleTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETST
 target_sources(netstorm_tests PRIVATE SquidDisplayParentTests.cpp)
 target_sources(netstorm_file_tests PRIVATE SquidDisplayParentTests.cpp)
 set_source_files_properties(SquidDisplayParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SQUID_DISPLAY_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-display-parent-x86.tsv\"")
+
+# 실제 표시/Client 진단 상세와 기존 양판본/부분 표시를 같은 제품 라이브러리에서 대조한다(805).
+target_sources(netstorm_tests PRIVATE SquidDisplayLiveTests.cpp)
+target_sources(netstorm_file_tests PRIVATE SquidDisplayLiveTests.cpp DisplayTests.cpp FrameDisplayTests.cpp VortexDisplayTests.cpp)
+set_property(SOURCE SquidDisplayParentTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_SQUID_DISPLAY_NUMBER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-display-number-x86.tsv\"")
+set_property(SOURCE DisplayTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_DISPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/display-x86.tsv\"")

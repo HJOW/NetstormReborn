@@ -5,6 +5,10 @@
 #include <cstdint>
 #include <span>
 #include <vector>
+#include "o/RawCheckingFlag.h"
+#include <stdexcept>
+#include <string>
+#include <string_view>
 
 namespace netstorm::o {
 // Squid 출력 요청에서 사용하는 사각형 경계이다.
@@ -30,6 +34,8 @@ struct SquidDisplayView {
     // viewport: 월드 그림을 투영하고 자를 화면 사각형.
     SquidDisplayRect viewport;
 };
+//43d40의 같은 TYPE 이름/프레임 개수와 세 인자로 오류 상세를 만든다. 임의 포인터/strdup 힙은 공유하지 않는다.
+std::string BuildSquidFrameAssertionDetail(std::span<const RiftTypeRecord> types,std::span<const SquidDisplayShape> shapes,std::uint32_t type,std::int32_t frame,std::uint32_t abstract);
 // Squid 출력 요청을 실제 렌더러에 연결하는 인터페이스이다.
 class SquidDisplaySink {
 public:
@@ -39,6 +45,9 @@ public:
     virtual bool Suppressed() const=0;
     // 원본 순서대로 main·shadow 영역과 플래그를 전달한다.
     virtual void Invalidate(SquidDisplayRect rect,std::uint32_t flags)=0;
+    virtual RawCheckingFlag Checking() const { return {}; } // 독립 기존 장치는 checking0이며 실제 World는 같은 Storage의 현재 뷰를 반환한다.
+    virtual void FrameError(std::uint32_t,std::int32_t,std::uint32_t) { throw std::logic_error("표시 오류 상세 writer 미연결"); } // 선택된43d40만 실제 저장소를 요구한다.
+    virtual void Assertion(std::string_view,std::string_view,std::uint32_t) { throw std::logic_error("표시 원문 진단 장치 미연결"); } // 진단 장치가 복귀하면 표시 부모가 현재 TYPE을 다시 조회한다.
 };
 // 타입·프레임 자료와 카메라에서 객체 출력 요청을 만드는 처리기이다.
 class SquidDisplay {
@@ -59,6 +68,7 @@ public:
     // Renderer의 원본 경계 계산 함수. 표시 억제/선택 확장은 여기서 적용하지 않는다.
     SquidDisplayRect Bounds(std::size_t type,int frame,float x,float y) const;
 private:
+    void Mark(std::size_t type,int frame,float x,float y,std::uint32_t marker); //4990d0의 기존 공통 억제/본그림/그림자 변경 등록을 순서대로 수행한다.
     // 패치의 frameCheck(false) 경로에서 invalid frame/null/해제 흔적이면 갱신하지 않는다.
     bool PatchFrameValid(std::size_t type,int frame) const;
     // edition_: 판본별 필드 배치와 동작을 선택하는 원본 버전.

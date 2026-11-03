@@ -19,8 +19,8 @@ bool FrameRange(RawSquidDisplayTypeView type,std::int32_t frame) { // 원문의 
 bool ShapePresent(RawSquidDisplayTypeView type) { // null SHP와 두 해제 표식은 유효 프레임 범위와 별개로 검사한다.
     return type.loaded && type.header!=-0x22222223 && type.header!=-0x32323233;
 }
-void Report(std::span<const std::uint8_t> raw,RawSquidDisplayTypeView type,std::int32_t frame,const RawSquidDisplayParentHooks& hooks) { // 로그 함수 호출 전 메시지 생성 효과가 먼저 수행된다.
-    const auto token=Need(hooks.describe)(type,frame,raw[40]&1U);Need(hooks.log)(token); // describe와 log 사이의 현재 checking을 임의로 다시 검사하지 않는다.
+void Report(std::span<const std::uint8_t> raw,RawSquidDisplayTypeView type,std::int32_t frame,const RawSquidDisplayParentHooks& hooks) { // TYPE 번호 조회 전에 abstract를 고정한 뒤 실제 세인자 상세 writer를 호출한다.
+    const auto abstract=raw[40]&1U;const auto number=Need(hooks.typeNumber)(type);Need(hooks.frameError)(number,frame,abstract); // 두 장치 사이에 checking을 임의로 다시 검사하지 않는다.
 }
 }
 void RunRawSquidDisplayParent(std::span<const std::uint8_t> raw,RawCheckingFlag checking,const RawSquidDisplayParentHooks& hooks) {

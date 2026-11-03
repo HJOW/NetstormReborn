@@ -1,5 +1,7 @@
 # Squid 표시의 현재 TYPE·프레임 진단 순수 부모
 
+**805 후속 완료:** 아래804의 설명 생성/메시지 토큰이라는 경계 이름은 실제 연결에서 TYPE번호getter49adc0/세인자오류writer43d40으로 교정했다.804의 큰 장치 fixture는 보존하고 새 세인자 관측·실제 표시/Client 상세 owner를 [805](cpp-squid-display-live-20261103.md)에서 연결했다. 아래는804 당시의 순수 부모/미연결 상태 기록이다.
+
 단위804는004ad500 전체의 두 TYPE 조회·진단/로그·표시 자식 호출을 순수 부모로 분리했다. 프레임 번호는 진입 때 고정한다. checking이 비영일 때 첫 TYPE의 현재 frameCheck를 진단하고, 진단 복귀 뒤 현재 raw TYPE으로 다시 조회한다. 두 번째 검사에서 표시가 선택되면 현재 TYPE BYTE/좌표/extra와 고정 frame을 넘긴다. TYPE 필드는 snapshot 값이 아니라 주소가 유지되는 비소유 뷰이며 count 두 배의 low DWORD 감김과 signed 비교를 유지한다.
 
 검사 범위는 부모 전체다. TYPE 조회·설명49adc0·로그43d40·진단4e0620·표시4990d0만 명시 장치다. null SHP·두 해제 표식·음수/상한 프레임·이중 레이어 비트와 checking0/1/상위비트/FFFFFFFF를 교차했다. 첫/본문 TYPE 조회·설명·로그·진단이 현재 raw/TYPE 필드·checking을 바꿀 때도 지역 frame을 고정한다. 진단이 복귀하면 checking을 다시 검사해 첫 진단을 취소하지 않는다.

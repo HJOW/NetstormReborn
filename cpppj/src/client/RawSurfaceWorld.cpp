@@ -206,6 +206,9 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     bool Suppressed() const override { return displayHooks.suppressed && displayHooks.suppressed(); }
     // 장치가 교체되어도 현재 콜백으로만 전달한다.
     void Invalidate(o::SquidDisplayRect rect,std::uint32_t flags) override { changed=true;if (displayHooks.invalidate) displayHooks.invalidate(rect,flags); }
+    o::RawCheckingFlag Checking() const override { return storage->Checking(); } // 표시 뷰 교체와 무관하게 같은 Client DWORD를 다시 빌린다.
+    void FrameError(std::uint32_t type,std::int32_t frameNumber,std::uint32_t abstract) override { storage->RecordDisplayFrameError(type,frameNumber,abstract); } // 장치와 별도로 장기 상세 owner에 저장한다.
+    void Assertion(std::string_view expression,std::string_view file,std::uint32_t line) override { storage->AssertDisplay(expression,file,line); } // 현재 진단 복귀를 실제 표시 부모에 돌려준다.
     // 현재 raw 프레임의 SHP 크기로 실제 공간과 파생 postPop을 등록한다.
     void Pop(o::Sid sid,float x,float y,std::uint32_t flags) {
         if (edition==o::OriginalEdition::Patch1078 && (!sid.value || sid.value>=pool.Capacity())) return; // 원문4b02d0의범위밖this는타입/그림을조회하기전에자연반환한다.

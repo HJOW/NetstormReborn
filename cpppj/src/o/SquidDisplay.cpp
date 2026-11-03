@@ -1,5 +1,6 @@
 // 패치 004ad500/004990d0/00498ff0 ↔ CD 004ae380/00456a00/00456930.
 #include "o/SquidDisplay.h"
+#include "o/RawSquidDisplayParent.h"
 #include "o/SquidUnpop.h"
 #include <algorithm>
 #include <bit>
@@ -54,6 +55,13 @@ SquidDisplayRect Clip(SquidDisplayRect r,SquidDisplayRect v) {
 }
 // 양의 면적만 변경 표에 보낸다.
 bool Nonempty(SquidDisplayRect r) { return r.left<r.right && r.top<r.bottom; }
+}
+//43d40의 원문 서식/이름/현재 프레임 개수를 호스트 소유 문자열에 그대로 보관한다.
+std::string BuildSquidFrameAssertionDetail(std::span<const RiftTypeRecord> types,std::span<const SquidDisplayShape> shapes,std::uint32_t type,std::int32_t frame,std::uint32_t abstract) {
+    if (types.size()!=shapes.size()) throw std::invalid_argument("표시 오류 상세 TYPE/shape 개수 불일치");
+    const auto signedType=std::bit_cast<std::int32_t>(type);const bool valid=signedType>=10 && type<types.size(); // 원문은 signed TYPE 범위를 먼저 판정한다.
+    const auto name=valid ? types[type].name : std::string("invalidType");const auto frames=valid ? shapes[type].frameCount : 0; // 실제 getType 두 조회의 읽기 전용 현재 필드다.
+    return "Frame assertion failed. Asking for type="+std::to_string(signedType)+" ("+name+") frame="+std::to_string(frame)+" abs="+std::to_string(std::bit_cast<std::int32_t>(abstract))+"\n\nType has "+std::to_string(frames)+" frames\n";
 }
 // 타입 번호 체계가 다른 목록의 혼용을 막는다.
 SquidDisplay::SquidDisplay(OriginalEdition edition,std::span<const RiftTypeRecord> types,
@@ -135,6 +143,18 @@ SquidDisplayRect SquidDisplay::Bounds(std::size_t type,int frame,float x,float y
 }
 // update8c는 update88로 가상 꼬리 호출하므로 지원 표에서 확인한 공통 경로를 공유한다.
 void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flags) {
+    const auto table=Read(bytes,0);const bool patchParent=edition_==OriginalEdition::Patch1078 && table!=kPatchManaVtable && table!=0x509810; // 파생 마나/볼트 부분 표시는 기존 몸체다.
+    const bool vortexPart=patchParent && (flags&0x2000) && Read(bytes,12,2)==0 && VortexInsets(edition_,table).has_value(); // 신전 부분 갱신도 기본88 부모를 호출하지 않는다.
+    if (patchParent && !vortexPart) {
+        if (!SquidUnpop::SupportsDisplay(edition_,table,flags)) throw std::logic_error("파생 표시 갱신 미복원");
+        RawSquidDisplayParentHooks hooks; // 타입/shape는 현재 같은 배열의 필드 주소를 직접 빌린다.
+        hooks.type=[this](std::uint32_t type) { if (type>=types_.size()) throw std::out_of_range("표시 타입 번호 범위 오류");return RawSquidDisplayTypeView{type,types_[type].flags1,shapes_[type].frameCount,shapes_[type].loaded,types_[type].maxHitPoints}; };
+        hooks.typeNumber=[](RawSquidDisplayTypeView type) { return type.token; }; // 실제49adc0의 표 인덱스 반환이다.
+        hooks.frameError=[this](auto type,auto frame,auto abstract) { sink_.FrameError(type,frame,abstract); };
+        hooks.assertion=[this](auto expression,auto file,auto line) { sink_.Assertion(expression,file,line); };
+        hooks.mark=[this](auto type,auto frame,auto x,auto y,auto marker) { Mark(type,frame,std::bit_cast<float>(x),std::bit_cast<float>(y),marker); };
+        RunRawSquidDisplayParent(bytes,sink_.Checking(),hooks);return;
+    }
     Validate(edition_,bytes,flags);
     // 473770→499240의 실제 부분 갱신이다. 추가10픽셀은 Q16 확대율을 곱하지 않으며 선택/그림자를 더하지 않는다.
     if (edition_==OriginalEdition::Patch1078 && (Read(bytes,0)==kPatchManaVtable || Read(bytes,0)==0x509810)) {
@@ -157,9 +177,12 @@ void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flag
             rect=Clip(rect,view_.viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);return;
         }
     }
-    if ((patch && !PatchFrameValid(type,frame)) || sink_.Suppressed()) return;
-    const auto x=std::bit_cast<float>(Read(bytes,14)),y=std::bit_cast<float>(Read(bytes,18));
-    const auto marker=(Read(bytes,patch ? 40 : 35,1)&4)!=0 ? kMarker : 0;
+    if (patch && !PatchFrameValid(type,frame)) return;
+    Mark(type,frame,std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18)),(Read(bytes,patch ? 40 : 35,1)&4)!=0 ? kMarker : 0);
+}
+// 기존4990d0 본문을 현재 인자로 실행한다. 진단 앞의 공간 preflight와 실제 표시 효과를 구별한다.
+void SquidDisplay::Mark(std::size_t type,int frame,float x,float y,std::uint32_t marker) {
+    if (sink_.Suppressed()) return;const bool patch=edition_==OriginalEdition::Patch1078; // 실제 표시 억제는 부모 진단 이후 자식 진입에서 평가한다.
     auto main=Clip(Bounds(type,frame,x,y),view_.viewport);
     if (marker) {
         if (static_cast<std::int64_t>(main.right)-main.left<19) { main.left=Coordinate(static_cast<std::int64_t>(main.left)-9); main.right=Coordinate(static_cast<std::int64_t>(main.right)+9); }

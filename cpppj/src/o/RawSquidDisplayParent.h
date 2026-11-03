@@ -15,8 +15,8 @@ struct RawSquidDisplayTypeView { // 선택된 TYPE의 주소 정체성을 유지
 };
 struct RawSquidDisplayParentHooks { // TYPE 조회와 이미 존재하는 로그/진단/표시 자식만 외부에 둔다.
     std::function<RawSquidDisplayTypeView(std::uint32_t)> type; // raw의 현재 BYTE 번호로 같은 표의 뷰를 반환한다.
-    std::function<std::uint32_t(RawSquidDisplayTypeView,std::int32_t,std::uint32_t)> describe; // 원문49adc0의 선택 TYPE/고정 frame/현재 abstract 비트다.
-    std::function<void(std::uint32_t)> log; // describe가 반환한 메시지 토큰의43d40이다.
+    std::function<std::uint32_t(RawSquidDisplayTypeView)> typeNumber; //49adc0은 선택된 TYPE 포인터의 번호만 반환하며 caller의 frame/abstract는 읽지 않는다.
+    std::function<void(std::uint32_t,std::int32_t,std::uint32_t)> frameError; //43d40의 TYPE번호/고정frame/번호조회 전 abstract를 받는 오류 상세 writer다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 원문846 진단이며 복귀할 수 있다.
     std::function<void(std::uint32_t,std::int32_t,std::uint32_t,std::uint32_t,std::uint32_t)> mark; //4990d0의 현재TYPE/고정frame/현재x·y비트/marker16이다.
 };

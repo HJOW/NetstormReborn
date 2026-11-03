@@ -13,6 +13,14 @@ namespace {
 constexpr std::uint32_t kCapacity=32768; // 기존 실제 월드의 SID 풀 크기이며 다음 대여에서 재확보하지 않는다.
 constexpr std::size_t kCells=65536; // 원본256×256 spot 배열의 실제 바이트 수다.
 }
+// Client 수명의 현재 상세와 진단 장치만 빌리며 짧은 World/Session 포인터를 저장하지 않는다.
+void RawSurfaceStorage::BindDisplayDiagnostics(std::optional<std::string>& detail,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) { displayAssertionDetail_=&detail;displayAssertion_=std::move(assertion); }
+//43d40의 현재 타입/shape와 세 인자를 같은 Client 상세 owner에 기록한다.
+void RawSurfaceStorage::RecordDisplayFrameError(std::uint32_t type,std::int32_t frame,std::uint32_t abstract) {
+    if (!displayAssertionDetail_) throw std::logic_error("표시 오류 상세 Client owner 미연결");*displayAssertionDetail_=o::BuildSquidFrameAssertionDetail(types,shapes,type,frame,abstract);
+}
+// 진단을 선택한 지점만 장치를 요구하며 복귀 뒤 다음 TYPE 조회를 막지 않는다.
+void RawSurfaceStorage::AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const { if (!displayAssertion_) throw std::logic_error("표시 원문 진단 장치 미연결");displayAssertion_(expression,file,line); }
 // 참조 배열을 원본 자산에서 최초 한 번만 복사해 이후 주소를 고정한다.
 RawSurfaceStorage::RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
     :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),types(inputTypes.begin(),inputTypes.end()),frames(inputFrames.begin(),inputFrames.end()),shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true,&authority_->server),spots(kCells),bridgeDecayScan{edition==o::OriginalEdition::Patch1078 ? -1 : 0,edition==o::OriginalEdition::Patch1078 ? -1 : 0,0,0.0},source_(source) {

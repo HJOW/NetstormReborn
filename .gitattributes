@@ -2420,3 +2420,5 @@ cpppj/tests/fixtures/fence-type-parent-x86.tsv -text
 cpppj/tests/fixtures/gun-frame-checking-x86.tsv -text
 
 cpppj/tests/fixtures/squid-display-parent-x86.tsv -text
+
+cpppj/tests/fixtures/squid-display-number-x86.tsv -text

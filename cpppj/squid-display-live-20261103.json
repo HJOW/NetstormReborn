@@ -1,0 +1,152 @@
+{
+  "unit": 805,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 805,
+  "displayVersion": "11.01",
+  "exeSha256": "63ca374795e8e839e8df343b645161f7ebf01b15c4731e23fd1d41d35c11d7ca",
+  "actualDisplayConnected": true,
+  "build": {
+    "gameBuilds": 2,
+    "focusedBuilds": 3,
+    "failedBuilds": 0,
+    "finalGameLog": "build-v2.log",
+    "finalFocusedLog": "build-v3.log",
+    "exitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "initialWarnings": 1,
+    "correction": "RawSurfaceWorld.FrameError의 frame 멤버 가림을 frameNumber로 변경",
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 18,
+    "newTests": 5,
+    "finalFailedChecks": 0,
+    "names": [
+      "SquidDisplayParent_NativeWholeParent696",
+      "SquidDisplayParent_NativeNumberAndThreeErrorArguments696",
+      "SquidDisplayParent_SelectedDevicesAndStableBorrowedFields",
+      "SquidDisplayLive_DiagnosticReturnRequeriesCurrentTypeAndCoordinates",
+      "SquidDisplayLive_ThreeArgumentDetailBeforeDiagnosticAndFixedFrame",
+      "SquidDisplayLive_SuppressionFollowsParentAndInvalidTypeDetail",
+      "SquidDisplayLive_ActualStorageAndClientDetailSurviveWorldView",
+      "SquidDisplay_X86_ActiveDirtyBoundsAndRawLifecycle",
+      "SquidDisplay_RendererAdapter_PaintsOldAndNewRawPositions",
+      "SquidDisplay_ShpMetrics_ReadSeparatePrefixAndRejectPlainVfx",
+      "SquidDisplay_InvalidFrameAndEdition_RejectBeforeRawMutation",
+      "frame_display_binding_updates_old_new_pixels_and_repop_level",
+      "frame_display_binding_preserves_shadow_marker_and_suppression",
+      "frame_display_binding_rejects_bad_current_frame_and_missing_shape",
+      "frame_display_binding_rejects_mismatched_connections",
+      "frame_display_shp_size_preserves_double_frames_and_cd_range_rules",
+      "VortexDisplay_PatchActualPE",
+      "VortexDisplay_CdActualPE"
+    ],
+    "initialFailedTestCases": 1,
+    "initialFailedChecks": 1,
+    "correction": "새 실제 World 입력의 connectorType0을 기존 Storage 검사와 같은155/bridge82/island94/stalag95/noIsland157로 설정·제품 변경0",
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "entries": [
+        "004ad500",
+        "0049adc0"
+      ],
+      "rows": 696,
+      "observations": 1392,
+      "normalReturns": 666,
+      "assertionStops": 30,
+      "diagnostics": 450,
+      "gameExecutions": 0,
+      "boundaries": [
+        "표시 부모/번호 getter 전체·TYPE조회/세인자오류writer/진단/표시자식만 명시",
+        "43d40 내부 포맷/strdup은 이 원문 실행에 포함하지 않음",
+        "번호조회 전에 고정한 frame/abstract 인자를 caller 스택에서 관측"
+      ]
+    },
+    "repeat": {
+      "host": "HJOW-Athlon",
+      "entries": [
+        "004ad500",
+        "0049adc0"
+      ],
+      "rows": 696,
+      "observations": 1392,
+      "normalReturns": 666,
+      "assertionStops": 30,
+      "diagnostics": 450,
+      "gameExecutions": 0,
+      "boundaries": [
+        "표시 부모/번호 getter 전체·TYPE조회/세인자오류writer/진단/표시자식만 명시",
+        "43d40 내부 포맷/strdup은 이 원문 실행에 포함하지 않음",
+        "번호조회 전에 고정한 frame/abstract 인자를 caller 스택에서 관측"
+      ]
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 2784,
+    "failedRuns": 0,
+    "oldFixtureReplayed": true,
+    "numberGetterExecuted": true,
+    "errorWriterThreeArgumentsObserved": true,
+    "errorWriterCrtExecuted": false
+  },
+  "integration": {
+    "oldMarkGeometryTailUnchanged": true,
+    "manaBoltVortexPartialBodiesUnchanged": true,
+    "parentFrameCapturedBeforeEffects": true,
+    "checkingOwner": "SquidDisplaySink→RawSurfaceWorld.Storage.Checking→같은 Client DWORD",
+    "detailOwner": "ClientAiDebugGlobals.AssertionDetail optional string→Storage가 비소유 대여·카메라/World 교체로 유지",
+    "originalNumberGetter": "49adc0=(this-59ab20)/500·frame/abstract를 읽지 않고 caller가 스택12BYTE 정리",
+    "originalErrorWriter": "436d40(type,frame,abstract)→sprintf exact source format→strdup→5e4798",
+    "preflightBoundary": "SquidPop의 Validate는 기존 공간쓰기 전 물리검사·Update의 실제 원문 부모는 별도 진입",
+    "unchangedFixtureSha256": {
+      "cpppj/tests/fixtures/squid-display-parent-x86.tsv": "e74a168a3593833ba3690b019f562827b432a1dc8a231364f0169e14ab543e6a",
+      "cpppj/tests/fixtures/display-x86.tsv": "1db3d440108a74ff20e49ed21d473ca32b99d10230d1ca3c2ca49409c709b7a0",
+      "cpppj/tests/fixtures/vortex-display-x86.tsv": "62a5ea1400238d64d6ad99b0585d6592c263578f8ff9863f0aeb548a2f7944e3"
+    }
+  },
+  "checking": {
+    "before": 38,
+    "after": 37,
+    "completed": [
+      "004ad500"
+    ],
+    "remainingBreakdown": {
+      "parent": 28,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2734,
+    "currentCount": 2735,
+    "fixtureCount": 915,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/squid-display-number-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "기본88의 실제 부모/같은 TYPE·shape/checking와 기존Mark 자식",
+    "43d40 문구는 원문 서식과 C++ 문자열 검사·CRT/strdup 실행은 별도",
+    "동일 raw/TYPE/shape 주소 수명 계약·reset/해제/32비트ABI/전체SEH/진단UI 별도",
+    "기존 공간쓰기 전 Validate는 호스트 preflight·실제 Update의 진단/억제 순서와 구별",
+    "마지막GUI794의793제품·전체 C++/71대상/34/ZIP 반복0"
+  ],
+  "next": "checking 잔여37·비멀티 UI/Edit/수명·호환성"
+}

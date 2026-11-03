@@ -367,6 +367,7 @@ int Client::Run() {
     if (options_.edition==o::OriginalEdition::Patch1078) colorSortInput_->OwnerTables()->Initialize(colorSortInput_->Primary(),assets_->TypeTable().Types().size(),static_cast<std::uint32_t>(assets_->Find("bridge").block+o::kFirstAssetTypeNumber),kencloudGlobals_->WorldRedraw()); // 원문43c4e0→43be30의 최초 등록이다. 호스트는 TYPE 크기가 확정된 직후, 첫 UI/World보다 먼저 수행한다.
     surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority(),gameplayGlobals_->GameAux()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     surfaceStorage_->BindChecking(o::RawCheckingFlag{gameplayGlobals_->AiDebug().Checking()}); // 같은ClientDWORD를Editor/Session대여전부터빌리며새World에서0으로복제하지않는다.
+    surfaceStorage_->BindDisplayDiagnostics(gameplayGlobals_->AiDebug().AssertionDetail(),[](std::string_view expression,std::string_view file,std::uint32_t line) { std::clog<<"원본 표시 진단: "<<file<<':'<<line<<' '<<expression<<'\n'; }); // 첫 Editor/Session 이전부터 현재 상세 저장소와 복귀하는 기존 로그 진단을 연결한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.
     // 원문469fc0/469f60은 소비 시점의00594fbc를 읽는다. 실제 물리 설치 뒤·최초 음악 Start 앞에서 같은 owner를 고정 수명으로 빌린다.
     // 근거: docs/exe/cpp-scene-current-battle-20261101.md. cleanup의 음악 Start 뒤 battle0 쓰기 순서는 그대로 유지한다.
