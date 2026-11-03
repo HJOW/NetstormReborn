@@ -2398,3 +2398,6 @@ cpppj/tests/fixtures/sid-robust-parent-x86.tsv -text
 
 # 단위783의 최초 접근점 checking 부모 관측 바이트를 보존한다.
 cpppj/tests/fixtures/board-checking-parent-x86.tsv -text
+
+# 단위781의 최초 GIF 파일·디코드 수명 관측 바이트를 보존한다.
+cpppj/tests/fixtures/gif-file-read-x86.tsv -text

@@ -3162,3 +3162,7 @@ set_source_files_properties(SidRobustParentTests.cpp PROPERTIES COMPILE_DEFINITI
 target_sources(netstorm_tests PRIVATE BoardCheckingParentTests.cpp)
 target_sources(netstorm_world_generation_tests PRIVATE BoardCheckingParentTests.cpp)
 set_source_files_properties(BoardCheckingParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BOARD_CHECKING_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/board-checking-parent-x86.tsv\"")
+# GIF 실제 파일의 입력0/정확길이/선행치수와 현재 backing FILE을 같은 기존 집중대상에 넣는다.
+target_sources(netstorm_tests PRIVATE GifFileReadTests.cpp)
+target_sources(netstorm_file_tests PRIVATE GifFileReadTests.cpp)
+set_source_files_properties(GifFileReadTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GIF_FILE_READ_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gif-file-read-x86.tsv\"")

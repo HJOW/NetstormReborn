@@ -2,6 +2,7 @@
 #include "client/ClientKencloudGlobals.h"
 #include "client/CurrentAllocationBytes.h"
 #include "client/GifImage.h"
+#include "client/GifFileRead.h" // Native GIF 입력은 현재 FILE을 Decode 뒤까지 보유한다.
 #include "client/Screen.h"
 #include "o/BaseFile.h"
 #include "o/ConfigInterface.h"
@@ -17,11 +18,7 @@ namespace netstorm::client { // 같은 고정 전역과 현재 할당을 동기 
 namespace { // 경로/치수의 실제 읽기 위치에서만 물리를 검사한다.
 std::string_view Text(std::span<const std::uint8_t> bytes) { const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});if (end==bytes.end()) throw std::out_of_range("구름 현재 C문자열 물리 범위");return {reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin())}; } // 같은 NUL 입력을 복제하지 않고 빌린다.
 void Path(std::vector<std::uint8_t>& target,const std::string& value) { target.assign(value.begin(),value.end());target.push_back(0); } // PathSpec 반환의 수명을 동기 부모 끝까지 유지한다.
-std::pair<std::int32_t,std::int32_t> Dimensions(std::span<const std::uint8_t> bytes) {
-    if (bytes.size()<13) throw std::out_of_range("구름 GIF 헤더 물리 범위");const std::size_t descriptor=13+((bytes[10]&0x80) ? (3U<<((bytes[10]&7)+1)) : 0U); //00407171의 실제 첫 descriptor 위치다.
-    if (descriptor>bytes.size() || bytes.size()-descriptor<10 || bytes[descriptor]!=0x2c) throw std::runtime_error("구름 GIF 첫 descriptor 누락");
-    const auto word=[&](auto offset) { return std::int32_t(bytes[descriptor+offset])|(std::int32_t(bytes[descriptor+offset+1])<<8); };return {word(5),word(7)}; // Native wrapper가 decoder 호출 전에 쓰는 실제 폭/높이다.
-}
+
 }
 ClientKencloudGlobals::ClientKencloudGlobals(std::function<void(std::span<std::uint8_t>)> allocation):allocation_(allocation ? std::move(allocation) : CurrentAllocationBytes) {} // 현재 할당 입력만 연결한다.
 o::KencloudGlobals ClientKencloudGlobals::Globals() { return {state_[515],state_[512],state_[514],state_[513],state_[2053],state_[2051],state_[2052],options_[3],options_[6],options_[1],options_[2],options_[5],rows_,std::span(state_).subspan(516,512),std::span(state_).subspan(1028,1000)}; } // 같은 packed 전역의 직접 참조다.
@@ -50,8 +47,10 @@ std::uint32_t ClientKencloudGlobals::LoadFile(const o::BaseFileSystem& files,o::
     o::KencloudFileScratch scratch;allocation_({reinterpret_cast<std::uint8_t*>(&scratch),sizeof(scratch)});static_assert(sizeof(scratch)==264); // 원문 지역 입력을 임의0으로 만들지 않는다.
     o::KencloudFileHooks hooks;hooks.pathSpec=[&](auto key,auto first,auto second,auto third) { if (first || second || third) throw std::logic_error("구름 실제 FileSpec 인자 계약");Path(filePath_,config.PathSpec(key));return std::span<const std::uint8_t>(filePath_); };
     hooks.exists=[&](auto path) { return files.Probe(Text(path)); }; // 원문41ab10의 직접5/기본TAFF2/기본disk1/보조disk3/TAFF4를 그대로 전달하고 decode의 오류는 미발견으로 바꾸지 않는다.
-    hooks.decode=[&](auto path,auto& width,auto& height) { const auto bytes=files.Read(Text(path));const auto dimensions=Dimensions(bytes);width=dimensions.first;height=dimensions.second; // 폭/높이 store는 실제 픽셀 해독보다 앞이다.
-        const auto size=std::uint64_t(static_cast<std::uint32_t>(width))*static_cast<std::uint32_t>(height);if (!size || size>16U*1024U*1024U) throw std::out_of_range("구름 GIF 실제 할당 폭");const auto token=Allocate(static_cast<std::uint32_t>(size));const auto image=DecodeBackgroundGif(bytes);if (image.width!=std::size_t(width) || image.height!=std::size_t(height) || image.indices.size()!=size) throw std::logic_error("구름 Native descriptor/decoder 치수 불일치");std::copy(image.indices.begin(),image.indices.end(),Memory(token).begin());return token; };
+    hooks.decode=[&](auto path,auto& width,auto& height) { GifBitmapHooks bitmap;
+        bitmap.allocate=[&](auto size)->std::uintptr_t { if (!size || size>16U*1024U*1024U) throw std::out_of_range("구름 GIF 실제 할당 폭");return Allocate(size); }; // 같은 실제 주소 할당은 두 치수 출력 뒤/Decode 앞이다.
+        bitmap.decode=[&](auto token,auto bytes,auto currentWidth,auto currentHeight) { const auto image=DecodeBackgroundGif(bytes);if (image.width!=currentWidth || image.height!=currentHeight || image.indices.size()!=std::uint64_t(currentWidth)*currentHeight) throw std::logic_error("구름 Native descriptor/decoder 치수 불일치");std::copy(image.indices.begin(),image.indices.end(),Memory(static_cast<std::uint32_t>(token)).begin()); }; // 기존 색 번호와 현재 cache 저장소를 유지한다.
+        return static_cast<std::uint32_t>(ReadBackgroundGifFile(files,Text(path),width,height,bitmap)); }; // Probe/경로 복사/512 판정은 기존 Kencloud 부모에 남긴다.
     hooks.release=[this](auto token) { Release(token); };return o::LoadKencloudFile(scratch,hooks); //512판정/잘못된 이미지 반납은 기존 Native 부모가 수행한다.
 }
 o::KencloudHooks ClientKencloudGlobals::Devices(const o::BaseFileSystem& files,o::ConfigInterface& config) { o::KencloudHooks hooks;hooks.loadFile=[&] { return LoadFile(files,config); };hooks.allocate=[this](auto bytes) { return Allocate(bytes); };hooks.memory=[this](auto address) { return Memory(address); };return hooks; } // 같은 동기 호출보다 오래 빌리지 않는다.

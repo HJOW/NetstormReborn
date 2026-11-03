@@ -1,0 +1,128 @@
+{
+  "unit": 781,
+  "applicationOrderAfter": 783,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 781,
+  "displayVersion": "11.01",
+  "exeSha256": "72fae232a2f00ae0b3c397f4b9eb87fda6f5e7083b006da0f76c1d42be6bfc40",
+  "summary": "Kencloud/Background의 현재 GIF FILE·키를 Decode 뒤까지 보관하고 선행 치수/실패 효과를 연결",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "build-v1.log"
+    ],
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "totalUnique": 20,
+    "totalExecutions": 20,
+    "newTests": 4,
+    "failedChecks": 0,
+    "names": [
+      "GifFileRead_Native56ExactZeroDimensionsDecodeAndCleanup",
+      "GifFileRead_CurrentEncryptedArchiveKeepsLegacySnapshot",
+      "GifFileRead_ValidDimensionsRemainBeforeInvalidLzwFailure",
+      "GifFileRead_KencloudCurrentArchiveUsesExistingPixelsAnd512Contract",
+      "ClientKencloudGlobals_PhysicalGlobalsAndAddressLifetime",
+      "ClientKencloudGlobals_ActualFileAndNative400SeedRandom",
+      "ClientKencloudGlobals_MissingAndWrongSizeUseActualFallback",
+      "ClientKencloudGlobals_FallbackDivideFaultPreservesPrefix",
+      "ClientKencloudGlobals_ActualConfigCallbackAndPureOwner",
+      "ClientKencloudGlobals_ActualTransitionUsesSameGlobalsAndDeviceOrder",
+      "ClientKencloudGlobals_ActualUpdateAndDirtyUseSameMemory",
+      "ClientKencloudGlobals_ProbeMetadataBeforeLooseDecodeAndPropagatesTruncation",
+      "BackgroundGifClient_ActualDefaultPathFactoryAndConcurrentStorage",
+      "BackgroundGifClient_AllProtectedAssetsIndependentNativePixels",
+      "BackgroundGifClient_IndependentNativeDescriptorAndInterlaceVariants",
+      "BackgroundGifClient_ActualCommonPixelsBaseDimensionsAndClip",
+      "BackgroundGifClient_CommonInputPreservesRawQueueTripletAndRetirement",
+      "BackgroundGifClient_MissingFilePartialDecodeAndPageLifetime",
+      "BackgroundGifClient_ProbeMetadataAndCurrentSecondaryKeepDecodeFailureLifetime",
+      "BackgroundGifClient_MainMenuStoneTexturePressedClipAndPitch"
+    ],
+    "logs": [
+      "tests-GifFileRead_.log",
+      "tests-ClientKencloudGlobals_.log",
+      "tests-BackgroundGifClient_.log"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "preparedObservations": 112,
+    "preparedRepeatObservations": 112,
+    "resumeRepeat": {
+      "unit": 781,
+      "host": "HJOW-Athlon",
+      "rows": 56,
+      "observations": 112,
+      "actualLzwCases": 8,
+      "actualLzwOutputRowsPerPrecision": 12,
+      "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "newMultiplayerTests": 0,
+      "boundary": "실제4dae60/407171/41a7a0/41aa80/41b410/4fc1a0. 정상8행은실제LZW/행복사경계이며그외decoder는명시반환/throw장치. validDims+invalidLZW의decode throw는host경계이고원문LZW의예외/성공합성이아니다. Open/CRT/malloc/free는명시. 전체SEH dispatcher/OS미정힙일치없음.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_gif_file_read.py": "4c1a128b3cd3bcb488b0331444a220b19204840110583e9f12088452e671e5b1",
+        "cpppj\\tests\\fixtures\\gif-file-read-x86.tsv": "221737e8856e95c8c8e91e3d04ea75ec8c9864d76ea89b4adf8960070cfb8dc0"
+      }
+    },
+    "fixtureBytesVerified": true
+  },
+  "protection": {
+    "beforeCount": 2718,
+    "currentCount": 2719,
+    "allUnchanged": true,
+    "fixtureCount": 899,
+    "newFixtures": [
+      "cpppj/tests/fixtures/gif-file-read-x86.tsv"
+    ]
+  },
+  "integration": {
+    "baseCommit": "35de22d2",
+    "preparedFiles": 9,
+    "existingFiles": 4,
+    "newFiles": 5,
+    "preBuildCorrections": [
+      "검사에서 o/BaseFile.h 직접 include",
+      "기존부터 필수인 ConfigInterface::FileReader{} 인수 명시"
+    ],
+    "preserved": [
+      "기존 snapshot/일반 GIF/CD/host decoder",
+      "765 Probe/같은 파일명 고리와 현재 root",
+      "Kencloud512/같은픽셀/난수·반납",
+      "Background 선행 bitmap 반납과 정상 뒤 geometry"
+    ]
+  },
+  "actualCallers": {
+    "totalDirectCallers": 5,
+    "connectedThisUnit": 2,
+    "nextTitleCallers": 3
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "airThreeDedicatedTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "8입력만 실제 원문 LZW/행 출력이며 나머지 decoder는 명시 장치",
+    "validDims+invalidLZW throw는 기존 host decoder 경계",
+    "현대 RAII와 원문 malloc/SEH ABI는 구별",
+    "실제 GUI/전체GIF·제품이미지수명 완료 아님"
+  ],
+  "next": "782 title0/6/7 실제 owner·초기화면과 필수 경로 교정, 이후784/785"
+}

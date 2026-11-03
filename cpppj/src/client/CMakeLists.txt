@@ -101,6 +101,7 @@ target_sources(netstorm PRIVATE
     BitmapFont.cpp BitmapFont.h
     Cursor.cpp Cursor.h
     GifImage.cpp GifImage.h
+    GifFileRead.cpp GifFileRead.h # Native GIF의 정확한 입력/치수/Decode-before-close 부모다.
     DialogScript.cpp DialogScript.h
     Gump.cpp Gump.h
     RawButtonControls.cpp RawButtonControls.h

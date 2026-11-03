@@ -1,7 +1,7 @@
 // BackgroundGif의 실제 소유 GIF와 기존 공통 입력/클립/수명을 조립한다.
 #include "client/RawBackgroundGifControls.h"
 #include "client/RawMenuControls.h"
-#include "client/GifImage.h"
+#include "client/GifFileRead.h" // 실제 Native FILE/키와 선행 치수 출력을 공유한다.
 #include "o/BaseFile.h"
 #include "o/ConfigInterface.h"
 #include <algorithm>
@@ -18,7 +18,7 @@ struct RawBackgroundGifControls::Impl { // 모든 원문 콜백은 이 고정 �
         if (common.create.collection.edition!=o::OriginalEdition::Patch1078 || !context.files || !context.config || !baseHandle) throw std::invalid_argument("BackgroundGif 실제10.78 파일/설정/기본 입력 필요");
         BackgroundGifGumpHooks h;h.node=[this](auto token) { return Node(token); };h.base=common.node;h.constructBase=[this](auto token) { common.factory.Construct(token,0,0,0,1); };h.destructBase=[this](auto token) { common.lifetime.DestructBase(token); };
         h.pathSpec=[this](auto name) { return context.config->PathSpec("BackgroundGifSpec",name); };h.exists=[this](auto path) { return context.files->Probe(path)!=0; }; // 실제현재VFS의메타우선존재만조회하고뒤 load/치수/decoder실패는원문부모에남긴다.
-        h.load=[this](auto path,std::int32_t& width,std::int32_t& height) { auto image=DecodeBackgroundGif(context.files->Read(path));if (image.width>std::numeric_limits<std::int32_t>::max() || image.height>std::numeric_limits<std::int32_t>::max()) throw std::overflow_error("BackgroundGif 실제 치수 범위 초과");width=static_cast<std::int32_t>(image.width);height=static_cast<std::int32_t>(image.height);if (nextBitmap==0x72ffffffU) throw std::overflow_error("BackgroundGif 이미지 주소 별칭 소진");const auto token=nextBitmap++;bitmaps.emplace(token,std::move(image));return token; };
+        h.load=[this](auto path,std::int32_t& width,std::int32_t& height) { auto image=ReadBackgroundGifFileImage(*context.files,path,width,height);if (nextBitmap==0x72ffffffU) throw std::overflow_error("BackgroundGif 이미지 주소 별칭 소진");const auto token=nextBitmap++;bitmaps.emplace(token,std::move(image));return token; }; // 두 치수는 Decode 앞에 쓰고 bitmap 공개/geometry는 정상 복귀 뒤 기존 부모가 수행한다.
         h.releaseBitmap=[this](auto token) { if (!token || bitmaps.erase(token)!=1) throw std::logic_error("BackgroundGif 같은 소유 메모리 반납 불일치"); };
         h.position=[this](auto token) { return common.collection.Position(token); };h.attach=common.attach;h.baseHandle=std::move(baseHandle);h.dispatch=[this](auto event,auto first,auto second) { if (!context.dispatch) throw std::logic_error("BackgroundGif 실제 원시 입력 큐 미연결");context.dispatch(event,first,second); };
         h.copy=[this](auto request) { if (!activePixels) throw std::logic_error("BackgroundGif 실제 Draw 문맥 없음");const auto found=bitmaps.find(request.bitmap);if (found==bitmaps.end()) throw std::logic_error("BackgroundGif 실제 원시 메모리 없음");
