@@ -2,6 +2,8 @@
 #pragma once
 #include "o/RawBridgeDecayScan.h"
 #include "o/Graph.h"
+#include "o/RawCheckingFlag.h"
+#include <string_view>
 
 namespace netstorm::o { //원문 슬롯/표면 지도는 호출 중에도 현재값을 읽는다.
 struct RawAuthorityState; //현재 Client 서버 전역의 주소만 빌리며 별도 사본을 만들지 않는다.
@@ -12,13 +14,14 @@ struct RawBridgeDecayHooks {
     std::function<void(Sid)> refresh; //가상88이며 프레임 Set/Unpop/Pop으로 바꾸지 않는다.
     std::function<void(Sid)> carriers; //004202f0 이후 현재 칸 위 이동체를 확인한다.
     std::function<void(Sid)> crackSound; //방문 칸 처리 뒤 원천 현재 위치에서 bridgeCrack.wav를 재생한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //현재 checking에서만 선택하는 최소 수명 진단이며 복귀 뒤 제한/쓰기를 계속한다.
 };
 //원문 한 칸은 이웃/방문 목록을 먼저 모은 뒤 실제 슬롯에 순서대로 수명을 적용한다.
 class RawBridgeDecay {
 public:
     RawBridgeDecay(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
         std::span<const std::uint16_t> surface,std::span<const std::uint8_t> spots,std::span<const GraphRecord> graphs,
-        const BridgeDecayMode& mode,RawBridgeDecayHooks hooks,const RawAuthorityState* authority=nullptr); //실제 Client는 같은 현재 서버 주소를 빌리며 기존 독립 입력만 mode fallback을 쓴다.
+        const BridgeDecayMode& mode,RawBridgeDecayHooks hooks,const RawAuthorityState* authority=nullptr,RawCheckingFlag checking={}); //실제 Client는 같은 현재 서버/진단 owner를 빌리며 독립 입력은 기존 기본값을 유지한다.
     void Cell(Sid root) const; //작은 Graph→Hard→이웃/열린 끝→방문 목록→현재 수명/삭제 순서다. 원문 예외는 바깥 스캔이 처리한다.
     void ApplyLife(Sid sid,std::int32_t reduction) const; //정상7 초과를 미리 거부하지 않고 원문의 signed 산술/4비트 쓰기를 보존한다.
 private:
@@ -35,5 +38,6 @@ private:
     const BridgeDecayMode& mode_; //같은 현재 server/authority/editor/개발용 표시 상태다.
     RawBridgeDecayHooks hooks_; //필요한 효과는 도달 시점에 검사하며 앞선 실제 쓰기를 보존한다.
     const RawAuthorityState* authority_{}; //수명0의 제거 관문은 효과 뒤에도 현재 server를 직접 읽는다.
+    RawCheckingFlag checking_; //최소 수명 선택 뒤 읽는 같은 Client DWORD의 비소유 뷰이며 독립 기본값은0이다.
 };
 }

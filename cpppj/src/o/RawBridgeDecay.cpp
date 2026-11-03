@@ -24,8 +24,8 @@ void Put(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value,std:
 //초기화/구성은 저장된 수명·스캔·Graph를 수정하지 않는다.
 RawBridgeDecay::RawBridgeDecay(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
     std::span<const std::uint16_t> surface,std::span<const std::uint8_t> spots,std::span<const GraphRecord> graphs,
-    const BridgeDecayMode& mode,RawBridgeDecayHooks hooks,const RawAuthorityState* authority)
-    :pool_(pool),types_(types),frames_(frames),surface_(surface),spots_(spots),graphs_(graphs),mode_(mode),hooks_(std::move(hooks)),authority_(authority) {
+    const BridgeDecayMode& mode,RawBridgeDecayHooks hooks,const RawAuthorityState* authority,RawCheckingFlag checking)
+    :pool_(pool),types_(types),frames_(frames),surface_(surface),spots_(spots),graphs_(graphs),mode_(mode),hooks_(std::move(hooks)),authority_(authority),checking_(checking) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=types.size() || surface.size()!=65536 || spots.size()!=surface.size() || graphs.size()!=255)
         throw std::invalid_argument("다리 붕괴의 PATCH 풀/현재 표면/Graph 표 오류");
 }
@@ -86,7 +86,9 @@ void RawBridgeDecay::Cell(Sid root) const {
     const auto walk=Collect(root);if (!walk.complete) throw std::logic_error("원문 다리 재귀 고리의 호스트 안전 중단");if (!walk.canDecay) return;
     std::int32_t lowest=std::numeric_limits<std::int32_t>::max();
     for (const auto number:walk.visited) { const auto life=static_cast<std::int32_t>((Read(pool_.Slot(Sid{number}),12,2)&0x78U)>>3);if (life && life<=lowest) lowest=life; } //방문 목록의 현재 비영 수명만 최소값에 반영한다.
-    const bool none=lowest==std::numeric_limits<std::int32_t>::max();if (!none && lowest>7) lowest=7;const auto target=none ? 7 : lowest-1;
+    const bool none=lowest==std::numeric_limits<std::int32_t>::max();
+    if (!none && checking_ && lowest>7) Need(hooks_.assertion)("0 <= lowestTimeLeft && lowestTimeLeft <= brMAX_TIME_LEFT","\\Ns\\O\\Bridge.cpp",0x268); //진단 복귀 뒤 같은 최소값을 제한하며 실제 슬롯은 아래 각 방문에서 다시 읽는다.
+    if (!none && lowest>7) lowest=7;const auto target=none ? 7 : lowest-1;
     for (const auto number:walk.visited) { const Sid sid{number};const auto current=pool_.Slot(sid);if (!(current[11]&2U)) ApplyLife(sid,static_cast<std::int32_t>((Read(current,12,2)&0x78U)>>3)-target); } //앞선 실제 삭제/반납의 결과를 이후 방문에서 다시 읽는다.
     if (target<kBridgeCrackLife && lowest>=kBridgeCrackLife) Need(hooks_.crackSound)(root);
 }

@@ -2407,3 +2407,4 @@ cpppj/tests/fixtures/xlat-file-read-x86.tsv -text
 cpppj/tests/fixtures/font-cache-file-x86.tsv -text
 cpppj/tests/fixtures/readonly-file-map-x86.tsv -text
 cpppj/tests/fixtures/bridge-fall-parent-x86.tsv -text
+cpppj/tests/fixtures/bridge-decay-checking-x86.tsv -text

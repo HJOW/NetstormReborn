@@ -3195,3 +3195,7 @@ set_source_files_properties(GifFileReadTests.cpp PROPERTIES COMPILE_DEFINITIONS 
 target_sources(netstorm_tests PRIVATE TitleBitmapLifetimeTests.cpp)
 target_sources(netstorm_file_tests PRIVATE TitleBitmapLifetimeTests.cpp)
 set_source_files_properties(TitleBitmapLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TITLE_BITMAP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/title-bitmap-lifetime-x86.tsv\"")
+# 다리 붕괴의 같은 현재 checking/진단 복귀를 기존 World 대상에서 원문과 대조한다(795).
+target_sources(netstorm_world_generation_tests PRIVATE BridgeDecayTests.cpp)
+target_compile_definitions(netstorm_world_generation_tests PRIVATE NETSTORM_BRIDGEDECAY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgedecay-x86.tsv")
+set_source_files_properties(BridgeDecayTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BRIDGE_DECAY_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridge-decay-checking-x86.tsv\"")

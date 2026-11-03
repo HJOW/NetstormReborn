@@ -189,7 +189,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             decay.refresh=[this](o::Sid sid) { changed=true;display->Update(pool.Slot(sid)); };
             decay.carriers=[this](o::Sid sid) { if (decayCarriers) decayCarriers(sid);else if (runtimeBound) throw std::logic_error("실제 다리 붕괴 대피 장치 미연결");else ++effectRequests; }; //독립 기하 관찰과 실제 Session의 필수 효과를 구별한다.
             decay.crackSound=[this](o::Sid sid) { if (decaySound) decaySound(sid);else if (runtimeBound) throw std::logic_error("실제 다리 균열 소리 장치 미연결");else ++effectRequests; };
-            bridgeDecay=std::make_unique<o::RawBridgeDecay>(pool,types,frames,hash.Entries(0),spots,graph->Records(),mode,std::move(decay),storage->Authority().get());
+            decay.assertion=[](auto condition,auto source,auto line) { throw std::logic_error("원문 다리 붕괴 진단 "+std::string(source)+":"+std::to_string(line)+": "+std::string(condition)); }; //진단 UI가 없는 호스트는 선택한 조건만 명시 실패하며 스캔의 기존 칸별 경계로 올린다.
+            bridgeDecay=std::make_unique<o::RawBridgeDecay>(pool,types,frames,hash.Entries(0),spots,graph->Records(),mode,std::move(decay),storage->Authority().get(),storage->Checking());
         }
     }
     // proxy는후설치이전공통객체의주소를보존하지않아같은state/reward로교체한뒤에도현재몸체를호출한다.

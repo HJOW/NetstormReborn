@@ -88,6 +88,8 @@
 
 ## FUN_004227e0 @ 004227e0
 
+**795 완료:** 현재 최소 수명 checking/진단 복귀와 같은 Storage 뷰를 연결했다. 원본272입력/544회와 재관측544회 일치·집중5개(새2개) 통과다. 아래 미복원 서술은779 당시 상태이며 [795 기록](cpp-bridge-decay-checking-20261103.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\Bridge.h, cpppj\src\o\RawBridgeDecayScan.h, cpppj\src\o\RawBridgeDecay.h

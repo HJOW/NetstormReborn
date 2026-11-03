@@ -499,3 +499,36 @@ TEST_CASE(RawBridgeDecay_NativeLifeIncludingWideValues) {
     }
     CHECK(rows==kLifeRows);
 }
+
+namespace { //진단의 문자열 바이트는 원본 인자와 직접 비교한다.
+std::string RawDecayDiagnosticHex(std::string_view text) { //원문 ASCII 조건/파일을 바이트로 직렬화한다.
+    constexpr char digits[]="0123456789abcdef"; //바이트당 두 자리의 고정 표다.
+    std::string result;for (const unsigned char value:text) { result+=digits[value>>4];result+=digits[value&15]; }return result; //실제 문자열 바이트를 순서대로 기록한다.
+}
+}
+TEST_CASE(RawBridgeDecay_CheckingNative272DiagnosticPrefixAndResume) { //최초 관측의 전체 Cell 결과와 진단 복귀 전 접두 상태를 대조한다.
+    std::ifstream file(NETSTORM_BRIDGE_DECAY_CHECKING_FIXTURE);CHECK(file.good());std::string line;std::getline(file,line);std::size_t rows{};const auto codes=Frames("0");
+    while (std::getline(file,line)) { //원본 결과 행을 수정하지 않고 모든272입력을 재생한다.
+        const auto row=Split(line,'\t');CHECK(row.size()==8);if (row.size()!=8) return;const auto p=Split(row[0],',');CHECK(p.size()==5);if (p.size()!=5) return;
+        const auto inputs=Inputs(row[1]);RawDecayScene scene(inputs,codes,row[2],"-",{});std::uint32_t checking=static_cast<std::uint32_t>(std::stoull(p[2]));const Sid root{static_cast<std::uint16_t>(std::stoul(row[3]))};auto hooks=scene.Hooks();std::string outcome="ok";
+        hooks.assertion=[&](auto condition,auto source,auto sourceLine) { //callback의 현재 WORD 변경도 복귀 뒤 같은 슬롯에서 다시 읽는다.
+            scene.Event("D:"+RawDecayDiagnosticHex(condition)+":"+RawDecayDiagnosticHex(source)+":"+std::to_string(sourceLine));
+            if (p[4]=="1") { checking=0;auto raw=RawDecayFixtureSlot(scene.pool,root.value);RawDecayPut(raw,12,(RawDecayRead(raw,12,2)&~0x78U)|8U,2); }
+            if (p[3]=="0") throw std::runtime_error("assertion");
+        };
+        RawBridgeDecay decay(scene.pool,scene.types,scene.frames,scene.surface,scene.spots,scene.graphs,scene.mode,std::move(hooks),nullptr,RawCheckingFlag{checking});
+        try { decay.Cell(root); }catch (const std::runtime_error& failure) { outcome=failure.what(); }
+        const bool same=outcome==row[4] && std::to_string(checking)==row[5] && scene.events==(row[6]=="-" ? "" : row[6]) && scene.After(inputs)==row[7];CHECK(same);
+        if (!same) { std::fprintf(stderr,"다리 checking 행%zu 상태=%s 사건=%s 결과=%s\n",rows,outcome.c_str(),scene.events.c_str(),scene.After(inputs).c_str());return; }++rows;
+    }
+    CHECK(rows==272);
+}
+TEST_CASE(RawBridgeDecay_CheckingCurrentOwnerAndMissingDiagnostic) { //같은 실행기를 만든 뒤 바뀐 전체 DWORD와 누락 장치의 쓰기 전 실패를 확인한다.
+    const auto codes=Frames("0");int frame=-1;for (std::size_t index=0;index<codes.Codes().size();++index) if (codes.Codes()[index].side=='K' && codes.Codes()[index].number==1) { frame=static_cast<int>(index);break; } //입력의 일반 가로 판자 코드만 찾는다.
+    CHECK(frame>=0);if (frame<0) return;
+    const std::vector<Input> inputs{{6100,99,100,1,1,TypeFlag1::kSurface,TypeFlag2::kIsland,1,0,0,0,1,0},{6101,100,100,1,1,TypeFlag1::kSurface,TypeFlag2::kBridge,0,frame,0,0,1,static_cast<std::uint16_t>(9<<3)}};
+    RawDecayScene scene(inputs,codes,"1,9,1","-",{});std::int32_t checking{};RawBridgeDecay decay(scene.pool,scene.types,scene.frames,scene.surface,scene.spots,scene.graphs,scene.mode,scene.Hooks(),nullptr,RawCheckingFlag{checking});
+    decay.Cell(Sid{6101});CHECK((RawDecayRead(scene.pool.Slot(Sid{6101}),12,2)&0x78U)==(6U<<3));
+    RawDecayPut(RawDecayFixtureSlot(scene.pool,6101),12,9U<<3,2);checking=std::bit_cast<std::int32_t>(0x80000000U);scene.events.clear();CHECK(Throws([&] { decay.Cell(Sid{6101}); }));CHECK(RawDecayRead(scene.pool.Slot(Sid{6101}),12,2)==(9U<<3) && scene.events.empty()); //선택 진단이 미연결이면 수명 쓰기 전 실패한다.
+    checking=0;decay.Cell(Sid{6101});CHECK((RawDecayRead(scene.pool.Slot(Sid{6101}),12,2)&0x78U)==(6U<<3));
+}

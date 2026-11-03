@@ -1,0 +1,124 @@
+{
+  "unit": 795,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 795,
+  "displayVersion": "11.01",
+  "exeSha256": "b8e4946f5fd62192947edda9b7437fb720db21e1054557db345562f7a8807a55",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_world_generation_tests"
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 5,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "RawBridgeDecay_NativeCellEventsAndPhysicalState",
+      "RawBridgeDecay_NativeLifeIncludingWideValues",
+      "RawBridgeDecay_CheckingNative272DiagnosticPrefixAndResume",
+      "RawBridgeDecay_CheckingCurrentOwnerAndMissingDiagnostic",
+      "BridgeFallParent_StorageViewRetainsDwordAcrossWorldUses"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "first": {
+      "unit": 795,
+      "rows": 272,
+      "observations": 544,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "전체 실제 Cell·기하/수명·프레임·Graph. 기존 할당/해제·기본삭제·표시·이동체·소리 장치는 유지. 진단 비복귀는 명시 중단이며 전체SEH/UI/실제게임 아님.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\bridgedecay\\originals\\functions.tsv": "5dfb15f709c2b08f1386169040b35da6a3e65e0ed04edb74568aceae0c471eca",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\fixtures\\bridgedecay-x86.tsv": "1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_bridge_decay_checking.py": "d18fada1eeab0d2d1a3ecb25053fdcfab240e057d66501600bd30f0799241264",
+        "cpppj\\tests\\fixtures\\bridge-decay-checking-x86.tsv": "5679832c469f1597cc72ece4690a6184281bca860846b3ab0fd8d622c45d9507"
+      }
+    },
+    "repeat": {
+      "unit": 795,
+      "rows": 272,
+      "observations": 544,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "전체 실제 Cell·기하/수명·프레임·Graph. 기존 할당/해제·기본삭제·표시·이동체·소리 장치는 유지. 진단 비복귀는 명시 중단이며 전체SEH/UI/실제게임 아님.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\bridgedecay\\originals\\functions.tsv": "5dfb15f709c2b08f1386169040b35da6a3e65e0ed04edb74568aceae0c471eca",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\fixtures\\bridgedecay-x86.tsv": "1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_bridge_decay_checking.py": "d18fada1eeab0d2d1a3ecb25053fdcfab240e057d66501600bd30f0799241264",
+        "cpppj\\tests\\fixtures\\bridge-decay-checking-x86.tsv": "5679832c469f1597cc72ece4690a6184281bca860846b3ab0fd8d622c45d9507"
+      }
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 1088,
+    "failedToolRuns": 0,
+    "cases": {
+      "rows": 272,
+      "outcomes": {
+        "ok": 224,
+        "assertion": 48
+      },
+      "diagnostics": 96,
+      "earlyShapes": {
+        "0": 256,
+        "1": 4,
+        "2": 4,
+        "3": 4,
+        "4": 4
+      }
+    }
+  },
+  "integration": {
+    "sameStorageCheckingPassed": true,
+    "currentReadAfterMinimumBeforeClamp": true,
+    "assertionResumesBeforeCurrentSlotReload": true,
+    "checkingRemainingBefore": 49,
+    "checkingRemainingAfter": 48,
+    "remainingBreakdown": {
+      "parent": 40,
+      "partial": 6,
+      "multiplayer": 2
+    }
+  },
+  "protection": {
+    "beforeCount": 2725,
+    "currentCount": 2726,
+    "fixtureCount": 906,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/bridge-decay-checking-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "진단 장치는 명시 복귀/중단·전체SEH/UI는 별도",
+    "기존 할당/기본삭제/이동체/표시/소리 장치 유지·게임행동 아님",
+    "기존 기하/방문/수명 본문 보존·새 CD 관측0",
+    "실제 Client/Storage 연결은 컴파일/소스와 기존 대여 검사이며 새 GUI0"
+  ],
+  "next": "checking 잔여48·비멀티 UI/Edit/수명·호환성"
+}
