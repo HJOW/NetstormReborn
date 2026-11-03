@@ -76,6 +76,7 @@ void ConnectRitual() {
     action.reserveShared=[this] { return ReserveRitualRegular(); };action.addShared=[this](Sid sid,std::uint32_t event,float payload) { AddRitualRegular(sid,event,payload,61); };
     ritualActions=std::make_unique<RawPriestRitualActions>(core.pool,core.frames,std::move(action));
     TempleRitualHooks temple; // 실제 생성/HP/owner/Pop과 위치 음향/307 예약이다.
+    temple.count=[this](Sid sid) { return VirtualCount(sid); }; // Stage가 저장한 프레임 뒤 현재 VT+80을 정확히 한 번 조회한다.
     temple.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
     temple.playAt=[this](float x,float y,std::string_view name,std::uint32_t flags) { if (!services.sound.playOnceAt) throw std::logic_error("의식 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };
     temple.reserveShared=[this] { return ReserveRitualRegular(); };
@@ -92,6 +93,13 @@ void ConnectRitual() {
     daisState->debug.Bind(gameplayGlobals->AiDebug().Checking()); // 지연 생성 뒤에도 현재 checking을 매 소비 위치에서 읽는다.
     daisState->BindPlayerRecords(core.pool.Edition(),players);daisState->voiceCue=0x020000df; // PE00542a70의 실제 희생 종료 명령이다.
     DaisRegularHooks dais; // 실제 의식 이동/초기 진행의 필수 효과와 아직 미연결인 후반 경계다.
+    dais.assertion=[assertion=services.ai.assertion](std::string_view expression,std::string_view,std::uint32_t line) { if (!assertion) throw std::logic_error("다이스 현재 진단 장치 미연결 "+std::to_string(line));assertion(expression); }; // 정상 복귀 뒤 원문 현재 TYPE/경로/상태 조회를 계속한다.
+    dais.boss=[this] { return assetState.Boss(); }; // PrepareRitual의 사본 대신 현재 Client 권한을 읽는다.
+    dais.alliance=[this](std::uint32_t row,std::uint32_t column) { if (row>kPlayerCount || column>kPlayerCount) throw std::out_of_range("다이스 현재 동맹 행/열 범위");return std::bit_cast<std::int32_t>(alliances[row*(kPlayerCount+1)+column]); }; // 진단 중 바뀐 실제 방향별 DWORD를 조회한다.
+    dais.priestType=[this] { return priestState.movement.priest; }; // 내용물 kind 비교 위치마다 실제 현재 사제 TYPE 전역을 읽는다.
+    dais.count=[this](Sid sid) { return VirtualCount(sid); }; // 확인된 내부 가상80도 메뉴/저장과 같은 현재 분배기를 사용한다.
+    priestState.contained.checkingDead.Bind(gameplayGlobals->AiDebug().Checking()); // Carrier finder도 Dais와 같은 현재 checking DWORD를 읽는다.
+    priestState.contained.assertion=[assertion=services.ai.assertion](std::string_view expression,std::string_view,std::uint32_t line) { if (!assertion) throw std::logic_error("내용물 finder 현재 진단 장치 미연결 "+std::to_string(line));assertion(expression); }; // dead 진단 복귀 뒤 현재 부모 head를 다시 읽는다.
     dais.setFrame=[this](Sid sid,std::int32_t value,std::uint32_t flags) { core.frame.Set(sid,value,flags); };
     dais.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
     dais.reserveShared=[this] { return ReserveRitualRegular(); };dais.addShared=[this](Sid sid,std::uint32_t event,float payload) { AddRitualRegular(sid,event,payload,61); };

@@ -61,6 +61,11 @@ struct DaisRegularHooks {
     std::function<bool(std::uint32_t)> priestExists; // 희생 후 SP 안내가 현재 각 플레이어의 실제 사제 존재를 읽는다.
     std::function<std::uint32_t()> multiplayerStatus; // 원본의 희생 안내 상태 helper다. 패치/CD의 차이를 실제 caller가 연결한다.
     std::function<void(const DaisChat&)> chat; // 원본 문자열 key/판본별 인자의 실제 UI 소비자다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 현재 checking이 선택한 Dais/Carrier 원문 진단은 복귀 뒤 본문을 계속한다.
+    std::function<bool()> boss; // 진단/하위 효과 뒤 현재 Client 권한을 읽으며 독립 입력은 기존 ritual 상태를 사용한다.
+    std::function<std::int32_t(std::uint32_t,std::uint32_t)> alliance; // 실제 현재 동맹표의 행/열을 읽는다. 독립 입력은 기존 배열을 사용한다.
+    std::function<std::uint32_t(Sid)> count; // 원문에서 확인된 자기 가상80 호출만 현재 Session 분배기에 위임한다.
+    std::function<std::uint32_t()> priestType; // 선택한 원문 위치에서 현재 canonical 사제 종류를 읽으며 독립 입력은 기존 ritual 상태를 사용한다.
 };
 // 기존 조회·프레임·Host·PathStart를 같은 풀에 재사용하는 Dais 실제 상위 몸체다.
 class RawDaisRegular {
@@ -84,6 +89,11 @@ public:
     std::int32_t MoveAwayDepth(Sid priest) const; // 현재 mapper/종속/Host로 실제 기존 Path 객체의 깊이를 읽는다.
     const SidPool& Pool() const; // 후속 GameWorld/등록의 동일 풀 검증이다.
 private:
+    void Assert(std::string_view expression,std::string_view file,std::uint32_t line) const; // 실제 진단이 정상 복귀하면 저장값/현재값을 구별해 이어간다.
+    bool Boss() const; // 실제 Client getter와 독립 입력의 기존 권한 계약을 구별한다.
+    std::int32_t Alliance(std::uint32_t row,std::uint32_t column) const; // 현재 방향별9×9 DWORD를 범위 안에서 조회한다.
+    std::uint32_t Count(Sid dais) const; // 실제 자기 가상80과 독립 입력의 기존 Temple Count를 같은 호출 위치에 연결한다.
+    std::uint32_t PriestType() const; // 진단 뒤에도 현재 원본 사제 종류를 실제 소유자에서 조회한다.
     std::int32_t CurrentFrame(Sid sid) const; // 패치signedDWORD/CD BYTE의 현재 프레임이다.
     TempleRitualPoint Position(Sid sid) const; // 원본 저장 폭의 현재 float 좌표다.
     std::uint32_t Owner(Sid sid) const; // 현재 owner BYTE를 효과 뒤 다시 읽는다.

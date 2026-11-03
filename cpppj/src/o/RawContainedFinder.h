@@ -2,6 +2,8 @@
 #pragma once
 #include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/SidPool.h"
+#include <functional>
+#include <string_view>
 #include <unordered_set>
 
 namespace netstorm::o {
@@ -12,6 +14,7 @@ struct ContainedFinderState {
     RawCheckingFlag checkingDead{}; // 005e4794: 패치판 dead 부모 조회 assert를 활성화한다.
     const bool* sharedBoss{}; // Carrier·Damageable·내용물 검색이 같은 실제 Client boss를 읽는 주소다.
     bool Boss() const { return sharedBoss ? *sharedBoss : boss; } // 외부 효과 뒤 또는 dead 진단의 원문 관문에서 현재값을 조회한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 내용물 finder의 dead 진단이며 없으면 기존 독립 입력의 명시 거부를 유지한다.
 };
 // contained finder의 현재/다음 SID와 기본 true 필터를 보존한다.
 class RawContainedFinder {

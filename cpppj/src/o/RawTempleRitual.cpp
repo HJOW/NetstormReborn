@@ -12,7 +12,9 @@
 
 namespace netstorm::o {
 namespace {
-constexpr std::array<std::int32_t,4> kCountFirst{{0,3,64,120}}; // 실제 dais count1..3의 첫 프레임이다. index0은 사용하지 않는다.
+constexpr std::array<std::int32_t,4> kCountFirst{{1,3,64,120}}; // PATCH00532620의 실제 네 DWORD다. 가상 count0도 저장된 첫 값1을 사용한다.
+constexpr std::array<std::int32_t,4> kCdCountFirst{{10611,3,64,120}}; // CD0052e2b4의 실제 네 DWORD이며 count0의 인접 문자열 바이트도 임의0으로 바꾸지 않는다.
+constexpr std::uint32_t kPatchCountVtable=0x00507950U,kCdCountVtable=0x00504090U; // 독립 입력에서 직접 Count로 연결할 수 있는 두 판본의 실제 Dais VT다.
 constexpr std::array<std::int32_t,5> kStageOffsets{{0,11,22,33,44}}; // 원본 각 의식 단계의 첫 프레임 오프셋이다.
 constexpr std::array<std::string_view,5> kStageSounds{{"forWind2.wav","forSun2.wav","forRain2.wav","forThunder2.wav","forStorm2.wav"}}; // 현재 단계의 위치 음향이다.
 constexpr std::array<float,5> kStageDelays{{1.9600000381469727F,2.25F,1.8799999952316284F,2.2200000286102295F,2.4100000858306885F}}; // 실제0x307 payload의 원본 float 비트다.
@@ -60,9 +62,19 @@ std::uint32_t RawTempleRitual::Count(Sid temple) const {
     if (direction==13) return 1;if (direction==12) return 2;if (direction==11) return 3;
     return frame<64 ? 1U : frame<=119 ? 2U : 3U;
 }
-// 명시 frame도 현재 raw count를 사용한다. frame-1만 현재 프레임으로 대체한다.
+// 가상 조회가 생략된 독립 입력도 현재 VT가 실제 Dais일 때만 같은 직접 몸체를 선택한다.
+std::uint32_t RawTempleRitual::VirtualCount(Sid temple) const {
+    if (hooks_.count) return hooks_.count(temple);
+    if (Read(pool_.Slot(temple),0)!=(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchCountVtable : kCdCountVtable))
+        throw std::logic_error("의식 Stage의 현재 가상80 분배 장치 미연결");
+    return Count(temple);
+}
+// frame-1의 현재 프레임도 가상 조회 전에 저장한다. 조회 뒤에는 반환 count로만 원문 표를 선택한다.
 std::uint32_t RawTempleRitual::Stage(Sid temple,std::int32_t frame) const {
-    if (frame==-1) frame=CurrentFrame(temple);const auto relative=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(frame)-static_cast<std::uint32_t>(kCountFirst[Count(temple)]));
+    if (frame==-1) frame=CurrentFrame(temple);const auto count=VirtualCount(temple);
+    const auto& first=pool_.Edition()==OriginalEdition::Patch1078 ? kCountFirst : kCdCountFirst;
+    if (count>=first.size()) throw std::out_of_range("의식 Stage의 가상 count 첫 프레임 표 범위 오류");
+    const auto relative=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(frame)-static_cast<std::uint32_t>(first[count]));
     if (relative<11) return 0;if (relative<22) return 1;if (relative<33) return 2;if (relative<44) return 3;return relative<=54 ? 4U : 5U;
 }
 // 원본419850 반환 헤더+20/+22의 의식 목표점이다. 표시 기준점(+1c/+1e)과 구별한다.

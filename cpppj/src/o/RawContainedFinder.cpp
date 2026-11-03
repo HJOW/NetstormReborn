@@ -18,10 +18,12 @@ RawContainedFinder::RawContainedFinder(const SidPool& pool,const ContainedFinder
 // Begin의 허용 표식은 패치 assert만 우회하며 후보의 타입 조건은 바꾸지 않는다.
 Sid RawContainedFinder::Begin(Sid parent,bool allowDead) {
     if (parent.value>=pool_.Capacity()) throw std::out_of_range("contained finder 부모 SID 오류");
-    const auto raw=pool_.Slot(parent);
-    if (pool_.Edition()==OriginalEdition::Patch1078 && state_.checkingDead && (raw[kState]&kDead) && !state_.Boss() && !allowDead)
-        throw std::logic_error("권한 없는 dead 부모 종속 조회 assert 경로");
-    next_=Link(raw,kHead);visited_.clear();return Next();
+    if (pool_.Edition()==OriginalEdition::Patch1078 && state_.checkingDead && (pool_.Slot(parent)[kState]&kDead) && !state_.Boss() && !allowDead) {
+        const auto assertion=state_.assertion; // 진단 중 현재 장치가 교체돼도 선택한 호출의 수명을 유지한다.
+        if (!assertion) throw std::logic_error("권한 없는 dead 부모 종속 조회 assert 경로");
+        assertion("!p.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy","\\Ns\\O\\Squidfinder.cpp",0x13c);
+    }
+    next_=Link(pool_.Slot(parent),kHead);visited_.clear();return Next(); // 진단이 정상 복귀한 뒤 현재 부모 head를 처음 읽는다.
 }
 // 반환할 후보의 다음 링크를 먼저 저장해 호출자의 중첩 효과에 대비한다.
 Sid RawContainedFinder::Next() {

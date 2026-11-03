@@ -1,0 +1,210 @@
+{
+  "unit": 840,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "21cf8caf / 20261104-21 CP",
+  "exeSha256": "33fcd2b5e91edeb4a4a2308984792156f6c83ea7ebdb2f483aa3121e6a8e48e0",
+  "exeBytes": 10456064,
+  "sourceSha256": {
+    "cpppj/src/client/RawCampaignRitual.inc": "a17595176d54edcc2cc67605ee3f9ac926aeb5ee38b8d2d344b149163433cc84",
+    "cpppj/src/o/RawAltarSacrifice.h": "a42146048bcef4b6cb8880be8fe33c6434203243451206e21fab89789f22da5f",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "6cb9a96db3f77c97b49868ec4a2f9af222720b519daf6f80154d2262a1892075",
+    "cpppj/src/o/RawCarrierPreDestroy.h": "12e094fd75132876f332fa6f820033ff525f1f8e6929c005dfa7c248e04f15d6",
+    "cpppj/src/o/RawCarrierPreDestroy.cpp": "e90b20cff8e7fc7b61be796b39dab1a2de4cde112de48d2370bd3f8c22e3d4a9",
+    "cpppj/src/o/RawContainedFinder.h": "bacd350611c6ef610c676a2ce11cd57fce40a6c64c51143c14076fdfdf7f98a5",
+    "cpppj/src/o/RawContainedFinder.cpp": "3f07a81a1c09c042c62f637a5dc6db16a4f30772ab7a6b55d1eae490dfa6687e",
+    "cpppj/src/o/RawDaisRegular.h": "33dece1495426e9f570920a47764a9110852f5bc83e686ea8e8d8ae14e966c7a",
+    "cpppj/src/o/RawDaisRegular.cpp": "4911862ca3f51e8f257c931373ded873812e08db944677a14e5f8df0090fb007",
+    "cpppj/src/o/RawTempleRitual.h": "f1f8deb96a820c9f6560582f160c1df8baa7cefcab4db1e730b6f1f5f4f501b8",
+    "cpppj/src/o/RawTempleRitual.cpp": "5dcce7246a6809ee6ae781e081bb17a6c39e460884b76695e7990bfaf0b612cc",
+    "cpppj/tests/DaisCheckingParentsTests.cpp": "84ce80657647b15bdb12dcf814ce63ed6698e0cce20e361b2aa3d792e68b029d",
+    "cpppj/tests/AltarSacrificeTests.cpp": "d13bdc1fc5b1a558fdef4c9cc226d1cac876ec5743f4617123fc780e46d25c6c",
+    "cpppj/tests/DaisRegularTests.cpp": "729057122585f4684c4c3710a5d4a3f90401e46667716c91ed79cd604bb8c8d5",
+    "cpppj/tests/TempleRitualTests.cpp": "ec42f546542f3181c4f211369b535d7924c280ecd98e7ecf173e1835a0ec8d84",
+    "cpppj/tests/CMakeLists.txt": "17e5ffd667edc22ddfcb702449f2427292b734545a58c4346575fd9c4f2b8585"
+  },
+  "scope": [
+    "CanBridge00449710/CD00481910의내용물검색선행과현재genus/TYPE/owner/kind/동맹",
+    "BridgeCommand00449900/CD00481ab0의현재권한·NULL p18e진단정상복귀후반환",
+    "MoveAwayDepth00427d30의저장진단조건/현재checking/현재반환·Host수명",
+    "내용물finder004b2270의13c진단복귀후현재head",
+    "Stage00447890/CD004812a0의프레임선행저장·현재가상80·판본별4DWORD표",
+    "EscapeFrame및Start/FinishSacrifice의확인된내부가상80실제Session연결(정적대조/컴파일만)"
+  ],
+  "staticStageTables": [
+    {
+      "path": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "va": "0x532620",
+      "fileOffset": 1254944,
+      "values": [
+        1,
+        3,
+        64,
+        120
+      ],
+      "executed": false
+    },
+    {
+      "path": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "va": "0x52e2b4",
+      "fileOffset": 1233076,
+      "values": [
+        10611,
+        3,
+        64,
+        120
+      ],
+      "executed": false
+    }
+  ],
+  "staticStageTableLog": {
+    "path": "extracted/cpp-resume-840/static-stage-tables.json",
+    "sha256": "baf7e9d37330cd7aedb65dc683557fa3eb514ade0bdc708e830a8912e0e4d7af"
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-840/build-first.log",
+      "exitCode": 1,
+      "warnings": 0,
+      "errors": 1,
+      "sha256": "22aba11669f310e8158e257eb64fbe8c7408458fc9cf62f0495cd63025e50080"
+    },
+    {
+      "log": "extracted/cpp-resume-840/build-final.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "4afa1feedb5d64ad737a373db0e64b70781276f3c8dd782c1002c7a28109663c"
+    }
+  ],
+  "tests": [
+    {
+      "filter": "DaisCheckingParents_",
+      "cases": 6,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-840/test-dais-first.log",
+      "sha256": "82bf392350ec6caf21df19d5d3c7f0fcc9867d465c62552a1639ca514d85a20f",
+      "expectedCases": 6,
+      "passed": true
+    },
+    {
+      "filter": "CurrentCountGetter_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-840/test-getter-regression.log",
+      "sha256": "9249ca40fdfa648b879bb6152b35a24eb0cdc5cd3606d0515f0aafe9f5a07299",
+      "expectedCases": 3,
+      "passed": true
+    },
+    {
+      "filter": "CurrentCountVtable_",
+      "cases": 5,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-840/test-virtual-count-regression.log",
+      "sha256": "f3e680edea11abac03cd9eb9d96c0294fefdb6f76c9640bc427b15ebc8d9e082",
+      "expectedCases": 5,
+      "passed": true
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-840/test-refund-regression.log",
+      "sha256": "feb075621e686b73e66bf794e6c20e552978f87beba247aec77e371f13c7205f",
+      "expectedCases": 1,
+      "passed": true
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-840/test-form-close-regression.log",
+      "sha256": "1271d58e49bfc91ba07e8db3c0053b63cff8c77947139c038d91cbcda83c0a40",
+      "expectedCases": 1,
+      "passed": true
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-840/test-current-world-regression.log",
+      "sha256": "ad5f05af8504a5cb3d57f544c29dca3dafecb8cb38a660ccfe0bd10deadce4da",
+      "expectedCases": 1,
+      "passed": true
+    }
+  ],
+  "focusedCases": 17,
+  "newCases": 6,
+  "firstTestFailures": 0,
+  "initialBuildErrors": 1,
+  "initialCorrection": {
+    "error": "C2248: protected SquidProcess::Pid 접근",
+    "beforeSource": "extracted/cpp-resume-840/RawDaisRegular-first.cpp",
+    "sha256": "9b8688ec85c5291a245b2cdd3715b7d4ee38173a6875b4efae15082b1091a8dd",
+    "fix": "Host.FromForm과같은Form+0x12 DWORD PID를저장하여IsRegistered수명검사유지;publicAPI추가0"
+  },
+  "nativeHardwareNewRows": 0,
+  "newFixtures": 0,
+  "existingEffectTestSourcesCompiledOnly": [
+    "TempleRitualTests.cpp",
+    "DaisRegularTests.cpp",
+    "AltarSacrificeTests.cpp"
+  ],
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 36,
+    "completedPartial": 3,
+    "closedThisUnit": [
+      "00449710",
+      "00449900"
+    ],
+    "auxiliaryNotAdditionalParent": "00427d30"
+  },
+  "protection": {
+    "files": 2759,
+    "fixtureFiles": 939,
+    "changed": 0,
+    "manifest": "extracted/cpp-resume-840/protected-after.json",
+    "sha256": "4d1a48ced6ab8f7f0b8652d734c0123de1d459e19e15f57d8c092c707b7bbb69"
+  },
+  "boundaries": [
+    "새6검사는명시합성입력의읽기/자격/진단복귀/실제NULL경로/빈Path깊이만실행하며새독립CPU관측이아님",
+    "성공이동/게임Frame/실제포획·희생/공격/승리효과실행0;해당함수의가상80연결은정적대조와컴파일만확인",
+    "진단중Path삭제는명시호스트수명오류;Stage count>=4/Escape count0방향16DWORD밖은범위오류",
+    "실제Session바인딩은빌드/정적대조이며실제Session의사제진단발생재현으로확대하지않음",
+    "현재839getter및메뉴회귀통과를전체71/CTest/34미션/ZIP/전체동일성완료로확대하지않음"
+  ],
+  "excluded": {
+    "gameGui": 0,
+    "actualPriestCaptureOrSacrifice": 0,
+    "specificEnemyAttack": 0,
+    "scenarioVictory": 0,
+    "newMultiplayerTests": 0,
+    "networkTests": 0,
+    "airThreeDedicatedTests": 0,
+    "physicalPcmRetry": 0,
+    "fullCTestOr71TargetsOr34MissionsOrZip": 0,
+    "push": 0,
+    "dotnetWebChanges": 0
+  },
+  "userStop": {
+    "request": "840검증·문서·로컬Git커밋후목표일시정지",
+    "nextUnitStarted": false,
+    "goalStatusRequestedAfterCommit": "paused"
+  },
+  "otherSessionChanges": "마무리시dotnetpj별도미커밋변경관측;해당파일수정/stage/CP커밋포함0·보존"
+}

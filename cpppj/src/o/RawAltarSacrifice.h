@@ -35,7 +35,7 @@ struct AltarSacrificeHooks {
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion;
     // boss: 실제 Client의 현재 권한을 읽으며 독립 호출자는 기존 상태 값을 사용한다.
     std::function<bool()> boss;
-    std::function<std::uint32_t(Sid)> count; // typed Dais 조회 뒤 대상의 현재 가상80으로 재분배한다. 독립 legacy 입력은 실제 Dais VT에서만 Temple Count를 유지한다.
+    std::function<std::uint32_t(Sid)> count; // typed Dais 조회 또는 이탈 count0 분기의 현재 대상 가상80으로 재분배한다. 독립 입력은 실제 Dais VT에서만 Temple Count를 유지한다.
 };
 // 원본 제단 몸체와 다이스 파생 PreDestroy다. 완료 의미는 실제 하위 소비자 연결 여부로 따로 평가한다.
 class RawAltarSacrifice {
@@ -55,6 +55,7 @@ public:
     void DaisPreDestroy(Sid dais,std::uint32_t flags) const; // 실제제단24 전체순회→완료→604취소→제단삭제→owner갱신→Damageable이다.
     const SidPool& Pool() const; // 후속 실제 세계의 동일 풀 검증에 쓴다.
 private:
+    std::uint32_t VirtualCount(Sid dais) const; // typed 조회를 다시 하지 않고 지정한 대상의 현재 가상80만 실행한다. 미연결 독립 입력은 실제 Dais VT만 허용한다.
     std::int32_t Frame(Sid sid) const; // 패치signedDWORD/CD BYTE의 현재 값이다.
     std::int32_t Direction(Sid sid) const; // 현재 raw타입의 실제 코드 방향이다.
     std::int32_t First(Sid sid,std::uint8_t letter) const; // 현재 raw타입의 해당 글자 첫 번호다.

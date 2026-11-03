@@ -70,18 +70,25 @@ Sid RawAltarSacrifice::ContainedPriest(Sid dais) const {
     if (!daisState_.ritual.priestType) throw std::logic_error("제단 specialized kind0은 일반 Carrier wildcard와 다르다");
     return carrier_.FindContained(dais,0,daisState_.ritual.priestType,0,false);
 }
-// 제단+80은 typed 조회 한 번의 결과를 고정하고 대상의 현재 가상80으로 위임한다.
-std::uint32_t RawAltarSacrifice::Count(Sid altar) const {
-    const auto dais=DaisAt(altar);if (!Valid(dais)) return 0;
+// 지정된 대상의 현재 가상80만 조회하며 typed 검색이나 대상을 바꾸는 효과를 추가하지 않는다.
+std::uint32_t RawAltarSacrifice::VirtualCount(Sid dais) const {
     if (hooks_.count) return hooks_.count(dais);
     if (Read(pool_.Slot(dais),0)!=(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchDaisVtable : kCdDaisVtable))
         throw std::logic_error("제단 Count의 현재 가상80 분배 장치 미연결");
     return temple_.Count(dais); // 기존 독립 fixture가 명시한 실제 Dais 가상 몸체만 유지하며 다른 VT를 Temple로 바꾸지 않는다.
 }
+// 제단+80은 typed 조회 한 번의 결과를 고정하고 대상의 현재 가상80으로 위임한다.
+std::uint32_t RawAltarSacrifice::Count(Sid altar) const { const auto dais=DaisAt(altar);return Valid(dais) ? VirtualCount(dais) : 0; }
 // 첫 프레임/길이는 현재raw타입에서 읽으며 count>=3의 난수 소비도 생략하지 않는다.
 void RawAltarSacrifice::EscapeFrame(Sid dais,std::uint32_t count) const {
     auto direction=Direction(dais);const auto type=pool_.Slot(dais)[10];
-    if (count<3) { if (!count) direction=14-static_cast<std::int32_t>(temple_.Count(dais));hooks_.setFrame(dais,frames_[type].Run(static_cast<std::uint8_t>(direction+'A')).first+static_cast<std::int32_t>(count),0);return; }
+    if (count<3) {
+        if (!count) {
+            direction=std::bit_cast<std::int32_t>(14U-VirtualCount(dais)); // 원문 DWORD 뺄셈의 감김을 보존하며 가상 반환값을 signed 뺄셈 UB로 만들지 않는다.
+            if (direction<0 || direction>15) throw std::out_of_range("다이스 이탈의 가상 count 첫 프레임 표 범위 오류"); // 원문의16DWORD 방향 표 밖을 BYTE 절단으로 유효 글자에 재매핑하지 않는다.
+        }
+        hooks_.setFrame(dais,frames_[type].Run(static_cast<std::uint8_t>(direction+'A')).first+static_cast<std::int32_t>(count),0);return;
+    }
     const auto length=frames_[type].Run(static_cast<std::uint8_t>(direction+'A')).count;static_cast<void>(hooks_.randomInt(3000,length*1000));
 }
 // 제단/다이스의 선택된 원문 진단만 요구하며 진단 전 효과를 되돌리지 않는다.

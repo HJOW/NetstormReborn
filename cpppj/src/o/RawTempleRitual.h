@@ -29,6 +29,7 @@ struct TempleRitualHooks {
     std::function<void(float,float,std::string_view,std::uint32_t)> playAt; // 현재 사제 좌표에서 단계별 for*.wav를flags0으로 요청한다.
     std::function<bool()> reserveShared; // 위치 음향 뒤 원본 new0x28 성공 여부를 공급한다.
     std::function<void(Sid,std::uint32_t,float)> addShared; // 같은 Host.AddSharedRegular(신전,0x307,단계별지연)이다.
+    std::function<std::uint32_t(Sid)> count; // Stage가 저장한 프레임 뒤 현재 대상의 가상+80을 한 번 조회한다. Count 자체의 직접 방향 계산과 구별한다.
 };
 // 기존 실제 Footprint/방향 프레임/최대HP/사제 의식 동작을 같은 풀에서 재사용한다.
 // 사용: PathCleanup의 ritual 경계와 신전0x307 후속에서 Ritual을 호출한다. 하위 효과와 참조는 더 오래 살아야 한다.
@@ -60,6 +61,7 @@ public:
     // 동일 월드의 PathCleanup/Host 연결을 검증한다.
     const SidPool& Pool() const;
 private:
+    std::uint32_t VirtualCount(Sid temple) const; // 같은 대상의 현재 가상+80을 조회하며 미연결 독립 입력은 실제 Dais VT에 한해 직접 Count를 사용한다.
     // 실제 현재 raw 프레임은 패치signedDWORD/CDBYTE 폭이다.
     std::int32_t CurrentFrame(Sid sid) const;
     // 원본 float 좌표 두 개와 현재 owner BYTE를 별도 raw 조회로 읽는다.

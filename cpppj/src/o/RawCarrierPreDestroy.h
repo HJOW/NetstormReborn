@@ -27,6 +27,7 @@ public:
     Sid FindContained(Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index,bool allowDead=false) const;
     // 연결 어댑터가 같은 풀인지 확인한다.
     const SidPool& Pool() const;
+    const CarrierPreDestroyState& FinderState() const; // 진단 전에 독립 커서를 시작해야 하는 Dais가 같은 현재 검색 전역을 빌린다.
 private:
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;

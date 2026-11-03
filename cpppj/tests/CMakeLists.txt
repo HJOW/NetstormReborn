@@ -3385,3 +3385,7 @@ set_property(SOURCE CreationTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 # 가상80의 현재 슬롯/TYPE 읽기 정의역은 효과를 실행하지 않는 전용 검사로 검증한다.
 target_sources(netstorm_tests PRIVATE CurrentCountGetterTests.cpp)
 target_sources(netstorm_menu_session_tests PRIVATE CurrentCountGetterTests.cpp)
+
+# 다이스 checking의 읽기/실패 경계만 선택 실행하고 기존 의식 fixture 장치 연결도 같은 빌드에서 확인한다.
+target_sources(netstorm_tests PRIVATE DaisCheckingParentsTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE DaisCheckingParentsTests.cpp TempleRitualTests.cpp DaisRegularTests.cpp AltarSacrificeTests.cpp)

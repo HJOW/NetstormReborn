@@ -49,6 +49,7 @@ Sid RawCarrierPreDestroy::FindContained(Sid parent,std::uint32_t mask,std::uint3
 }
 // raw 참조 대신 풀 동일성만 공개한다.
 const SidPool& RawCarrierPreDestroy::Pool() const { return pool_; }
+const CarrierPreDestroyState& RawCarrierPreDestroy::FinderState() const { return state_; } // 값 사본 없이 같은 내용물 종류/권한/진단을 조회한다.
 // 하위 검사를 사제 목록 효과 전에 호출하도록 같은 풀의 두 경계를 교체한다.
 PriestPreDestroyHooks MakeCarrierPreDestroyHooks(const SidPool& pool,const RawCarrierPreDestroy& carrier,PriestPreDestroyHooks hooks) {
     if (&carrier.Pool()!=&pool) throw std::invalid_argument("사제/Carrier preDestroy의 SID 풀이 다릅니다");

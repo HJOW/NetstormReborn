@@ -56,6 +56,16 @@ RawDaisRegular::RawDaisRegular(SidPool& pool,const SquidHash& hash,std::span<con
         || !hooks_.localSpecial || !hooks_.localType || !hooks_.refreshOwner || !hooks_.refreshLocal || !hooks_.priestExists || !hooks_.multiplayerStatus || !hooks_.chat)
         throw std::invalid_argument("Dais 실제 몸체/풀/필수 효과 연결 누락");
 }
+// 선택된 진단만 실제 장치를 요구하며 정상 복귀 뒤 현재 상태 조회를 계속한다.
+void RawDaisRegular::Assert(std::string_view expression,std::string_view file,std::uint32_t line) const {
+    if (!hooks_.assertion) throw std::logic_error("Dais의 선택된 실제 원문 진단 장치 미연결");hooks_.assertion(expression,file,line);
+}
+bool RawDaisRegular::Boss() const { return hooks_.boss ? hooks_.boss() : state_.ritual.boss; } // 실제 Client의 현재 권한과 기존 독립 입력을 구별한다.
+std::int32_t RawDaisRegular::Alliance(std::uint32_t row,std::uint32_t column) const { // 원문 방향별9×9 행/열을 바꾸지 않는다.
+    Player(row);Player(column);return hooks_.alliance ? hooks_.alliance(row,column) : state_.alliances[row*(kPlayerCount+1)+column];
+}
+std::uint32_t RawDaisRegular::Count(Sid dais) const { return hooks_.count ? hooks_.count(dais) : ritual_.Count(dais); } // 원문 자기 가상80 지점만 이 경계에 위임한다.
+std::uint32_t RawDaisRegular::PriestType() const { return hooks_.priestType ? hooks_.priestType() : state_.ritual.priestType; } // 실제 Session의 현재 전역과 기존 독립 상태를 구별한다.
 // 원본 프레임의 판본별 폭과 부호를 유지한다.
 std::int32_t RawDaisRegular::CurrentFrame(Sid sid) const {
     const auto raw=pool_.Slot(sid);return pool_.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(raw,36)) : raw[34];
@@ -106,7 +116,7 @@ void RawDaisRegular::Collapse(Sid dais) const {
 // 실제 코드의extra2/altarM/0또는45/Shared306순서다.
 void RawDaisRegular::StartSacrifice(Sid dais) const {
     auto raw=pool_.AllocatedBytes(dais);raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]|=2;const auto altar=rune_.AltarAt(dais);if (altar.value && altar.value<pool_.Capacity()) hooks_.setFrame(altar,First(altar,'M'),0);
-    const auto count=ritual_.Count(dais);if (count==1) hooks_.setFrame(dais,0,0);else if (count==2) hooks_.setFrame(dais,45,0);if (hooks_.reserveShared()) hooks_.addShared(dais,0x306,kInitialDelay);
+    const auto count=Count(dais);if (count==1) hooks_.setFrame(dais,0,0);else if (count==2) hooks_.setFrame(dais,45,0);if (hooks_.reserveShared()) hooks_.addShared(dais,0x306,kInitialDelay);
 }
 // 전역169코드구간을사용하며현재Dais타입의범용한번감김Advance로대신하지않는다.
 float RawDaisRegular::SacrificeAdvance(Sid dais) const {
@@ -123,7 +133,7 @@ void RawDaisRegular::DelaySound(Sid dais,std::string_view name,double delay) con
 // 최초stage를유지하되하위효과뒤사제/권한/포획조건은현재raw에서다시읽는다.
 void RawDaisRegular::Progress(Sid dais) const {
     const auto stage=ritual_.Stage(dais);const auto priest=ritual_.FindStrongOwnedPriest(dais);if (priest.value && priest.value<pool_.Capacity()) StopPriestRitual(priest);
-    if (stage<4) { if (state_.ritual.boss) BridgeCommand(dais,{},0);Collapse(dais);return; }
+    if (stage<4) { if (Boss()) BridgeCommand(dais,{},0);Collapse(dais);return; }
     const auto point=Position(dais);hooks_.playAt(point.x,point.y,"itIsDone2.wav",0);const bool upgrade=Contained(dais,4,pool_.Slot(dais)[10]).value!=0;
     DelaySound(dais,upgrade ? "priestSacrifice4.wav" : "priestSacrifice2.wav",upgrade ? 1.5 : 4.0);DelaySound(dais,"thunderCrack.wav",kThunderDelay);
     if (upgrade) { StartSacrifice(dais);return; }if (CapturedWord(dais) || state_.rune.suppressDuration) { const auto altar=rune_.AltarAt(dais);if (altar.value && altar.value<pool_.Capacity()) AltarEscape(altar); }
@@ -132,26 +142,48 @@ void RawDaisRegular::Progress(Sid dais) const {
 void RawDaisRegular::AltarEscape(Sid altar) const {
     static_cast<void>(FindDaisAt(altar));hooks_.setFrame(altar,First(altar,'L'),0);if (hooks_.reserveShared()) hooks_.addShared(altar,24,kSacrificeDelay);
 }
-// 현재이동자격의양판본동맹차이를유지한다.
+// 내용물 첫 후보/next는 genus 진단 전에 저장하고 복귀 뒤 현재 TYPE/owner/후보 조건/동맹을 읽는다.
 bool RawDaisRegular::CanBridge(Sid dais,Sid priest) const {
     if (ritual_.Stage(dais)==4 && ritual_.HasAbstractRune(dais)) return false;const auto altar=rune_.AltarAt(dais);if (!altar.value || altar.value>=pool_.Capacity()) return false;
-    if (RawPathAnimation::Direction(frames_[pool_.Slot(altar)[10]],CurrentFrame(altar))==12 || RawPathAnimation::Direction(frames_[pool_.Slot(altar)[10]],CurrentFrame(altar))==11) return false;
-    const auto type=pool_.Slot(priest)[10];const auto genus=types_[type].flags2;const bool patch=pool_.Edition()==OriginalEdition::Patch1078;if (patch && state_.debug && !(genus&0x200000)) throw std::logic_error("Dais 사제 genus assert");
-    if (!(genus&0x200000) || Owner(priest)!=Owner(dais)) return false;const auto captured=Contained(dais,32,state_.ritual.priestType,false);if (!captured.value) return false;if (!patch) return true;
-    const auto originalOwner=pool_.Slot(captured)[12]&127;const auto altarOwner=Owner(altar);Player(altarOwner);if (originalOwner>kPlayerCount) throw std::out_of_range("Dais 포획 사제 원래owner 범위");return state_.alliances[originalOwner+altarOwner*(kPlayerCount+1)]==0;
+    const auto direction=[this,altar] { // 두 원문 직접 호출은 각각 현재 TYPE/프레임의 signed 코드 BYTE를 읽는다.
+        const auto type=pool_.Slot(altar)[10];if (type>=frames_.size()) throw std::out_of_range("Dais 자격의 현재 제단 TYPE 범위");return RawPathAnimation::Direction(frames_[type],CurrentFrame(altar));
+    };
+    if (direction()==12 || direction()==11) return false;
+    RawContainedFinder finder(pool_,carrier_.FinderState());auto captured=finder.Begin(dais,false);
+    const auto genus=[this,priest] { // 진단이 고친 현재 사제 TYPE의 genus를 같은 실제 표에서 다시 읽는다.
+        const auto type=pool_.Slot(priest)[10];if (type>=types_.size()) throw std::out_of_range("Dais 자격의 현재 사제 TYPE 범위");return types_[type].flags2;
+    };
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (patch && state_.debug && !(genus()&0x200000)) Assert("priest.getGenus() & gPRIEST",".\\Dais.cpp",0x140);
+    if (!(genus()&0x200000) || Owner(priest)!=Owner(dais)) return false;
+    while (captured.value) { // 진단 전 저장한 첫 후보/next에서 계속하며 현재 mask/kind와 현재 사제 종류를 비교한다.
+        const auto raw=pool_.Slot(captured);
+        if ((raw[20]&0x20U) && Read(raw,18,2)==PriestType()) {
+            if (!patch) return true;const auto originalOwner=raw[12]&127U;return Alliance(Owner(altar),originalOwner)==0;
+        }
+        captured=finder.Next();
+    }
+    return false;
 }
 // 현재첫Path form을같은mapper/종속/Host에서조회한다.
 std::int32_t RawDaisRegular::MoveAwayDepth(Sid priest) const {
     const auto type=hooks_.processType(pool_.Slot(priest)[10]);const auto form=lookup_.Find(priest,type);if (!form.value) return 0;const auto* process=dynamic_cast<const RawPathProcess*>(host_.FromForm(form));if (!process) throw std::logic_error("Dais 현재 Path form 실제 프로세스 누락");
-    const auto depth=process->Runtime().MoveAwayDepth();if (pool_.Edition()==OriginalEdition::Patch1078 && state_.debug && (depth<0 || depth>3)) throw std::logic_error("Dais 이동 깊이 assert");return depth;
+    const auto pid=Read(pool_.Slot(form),18); // Host.FromForm과 같은 현재 Form+0x12 DWORD 번호를 저장해 진단 중 경로 삭제를 확인한다.
+    const auto current=[this,process,pid] { if (!host_.IsRegistered(pid,process)) throw std::logic_error("Dais 이동 깊이 진단 중 실제 경로 수명 종료");return process->Runtime().MoveAwayDepth(); }; // 같은 저장한 경로의 현재 DWORD를 다시 읽는다.
+    if (pool_.Edition()==OriginalEdition::Patch1078 && state_.debug) {
+        const auto saved=current(); // 두 진단의 비교는 최초 depth를 쓰고 반환만 현재 depth를 다시 읽는다.
+        if (saved<0) Assert("0 <= p->moveAwayDepth","\\Ns\\O\\Carrier.cpp",0x87b);
+        if (state_.debug && saved>3) Assert("p->moveAwayDepth <= MAX_MOVE_AWAY_DEPTH","\\Ns\\O\\Carrier.cpp",0x87c);
+    }
+    return current();
 }
 // 실제명령꼬리와마지막꼭짓점의위치를원본과같은순서로지정한다.
 void RawDaisRegular::BridgeCommand(Sid dais,Sid priest,std::uint32_t currentStage) const {
     if (!priest.value) priest=ritual_.FindStrongOwnedPriest(dais);if (!priest.value || !CanBridge(dais,priest) || ritual_.Stage(dais)>=5) return;
     if (!priest.value || priest.value>=pool_.Capacity()) return;const auto stage=ritual_.Stage(dais)+(currentStage ? 0U : 1U);if (ritual_.Stage(dais)>=5) return;if (stage>4) throw std::logic_error("Dais 손상 목표5의 원본 미초기화 좌표 경계");
     const auto target=ritual_.StagePoint(dais,stage),point=Position(priest);if (Integer(point.x)==Integer(target.x) && Integer(point.y)==Integer(target.y)) { ritual_.Ritual(dais,priest,0);return; }
-    if (!state_.ritual.boss) return;const auto depth=MoveAwayDepth(priest);const auto next=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(depth)+1);if (next>=4) return;
-    auto* process=path_.Start({priest,{target.x,target.y},1,0,dais.value,stage,0});if (!process) { if (pool_.Edition()==OriginalEdition::Patch1078 && state_.debug) throw std::logic_error("Dais Path 생성 assert");return; }
+    if (!Boss()) return;const auto depth=MoveAwayDepth(priest);const auto next=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(depth)+1);if (next>=4) return;
+    auto* process=path_.Start({priest,{target.x,target.y},1,0,dais.value,stage,0});if (!process) { if (pool_.Edition()==OriginalEdition::Patch1078 && state_.debug) Assert("p",".\\Dais.cpp",0x18e);return; }
     process->Runtime().ReplacePoint(process->Runtime().Count()-1,{target.x,target.y});const auto meta=hooks_.pathMetadata(priest);process->Prepare(0,meta.speed,meta.turningSpeed);process->Runtime().SetMoveAwayDepth(next);
 }
 // patch의비로컬획득과CD의생략분기를추가추정없이보존한다.
@@ -165,8 +197,8 @@ void RawDaisRegular::GrantCapturedType(std::uint32_t type,std::uint32_t owner) c
 void RawDaisRegular::FinishSacrifice(Sid dais) const {
     hooks_.stopVoice(state_.voiceCue,0,0);const auto altar=rune_.AltarAt(dais);if (!altar.value) throw std::logic_error("Dais altarSid assert");hooks_.setFrame(altar,First(altar,'P'),0);const auto originalOwner=Read(pool_.Slot(altar),12,2);
     if (!state_.rune.suppressDuration && Contained(dais,4,pool_.Slot(dais)[10]).value) {
-        const auto count=ritual_.Count(dais);if (count>=kUpgradeFirst.size()) throw std::out_of_range("Dais 다음 첫 프레임 범위");hooks_.setFrame(dais,kUpgradeFirst[count],0);Player(Owner(dais));state_.SetPlayerResult(Owner(dais),ritual_.Count(dais));
-        auto captured=Contained(dais,0,pool_.Slot(dais)[10]);if (captured.value && captured.value<pool_.Capacity()) hooks_.destroy(captured,kConsumedFlags);captured=Contained(dais,0,state_.ritual.priestType);
+        const auto count=Count(dais);if (count>=kUpgradeFirst.size()) throw std::out_of_range("Dais 다음 첫 프레임 범위");hooks_.setFrame(dais,kUpgradeFirst[count],0);const auto owner=Owner(dais);Player(owner);const auto currentCount=Count(dais);state_.SetPlayerResult(owner,currentCount);
+        auto captured=Contained(dais,0,pool_.Slot(dais)[10]);if (captured.value && captured.value<pool_.Capacity()) hooks_.destroy(captured,kConsumedFlags);captured=Contained(dais,0,PriestType());
         if (captured.value && captured.value<pool_.Capacity()) { hooks_.destroy(captured,kConsumedFlags);auto raw=pool_.AllocatedBytes(altar);raw[12]=raw[13]=0; }
         if (Owner(dais)==state_.localOwner) hooks_.chat({DaisChat::Kind::Upgrade});
     } else { const auto type=CapturedWord(dais);if (!state_.rune.suppressDuration) GrantCapturedType(type,Owner(dais));Player(Owner(dais));state_.SetPlayerResult(Owner(dais),type); }
@@ -179,7 +211,7 @@ void RawDaisRegular::FinishSacrifice(Sid dais) const {
     if (Owner(dais)==state_.localOwner) {
         hooks_.addLocalSp(5000);bool deadOpponent=false;Player(state_.localOwner);
         // 현재 각 플레이어의 사제 존재와 단방향 동맹을 효과 뒤 현재 전역으로 읽는다.
-        for (std::uint32_t owner=1;owner<=kPlayerCount;++owner) if (!hooks_.priestExists(owner) && !state_.alliances[owner+state_.localOwner*(kPlayerCount+1)]) deadOpponent=true;
+        for (std::uint32_t owner=1;owner<=kPlayerCount;++owner) if (!hooks_.priestExists(owner) && !Alliance(state_.localOwner,owner)) deadOpponent=true;
         if (deadOpponent) hooks_.chat({DaisChat::Kind::Stormpower});
     }
 }
