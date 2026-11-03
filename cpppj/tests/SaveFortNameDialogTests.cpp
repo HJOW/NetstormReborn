@@ -123,3 +123,14 @@ TEST_CASE(SendMoneyDialog_ActualLimitAndCancel) {
 
 //HTML Input 메타의실제문자/숫자모달은같은비공개공통UI장면으로검사한다.
 #include "HtmlInputDialogActualTests.inc"
+
+#include "client/SendMoneyInput.h"
+// 실제 숫자 모달은 두 번째 SP 조회 뒤 현재+d4를 저장하고 진단 뒤 변경으로 대상을 바꾸지 않는다.
+TEST_CASE(MoneyConfirmChecking_ActualDialogCurrentTargetAndLifetime) {
+    SaveNameScene scene;SaveFortNameDialogContext context;context.editor.now=[] { return 0.0; };context.translate=[](auto text) { return std::string(text); };SaveFortNameDialogNode* root{};std::uint32_t reads{},target{},diagnostics{};float debit{};SendMoneyHooks hooks;
+    hooks.known=[] { return 1U; };hooks.money=[&] { ++reads;return 1000.0F; };hooks.canAfford=[&](float amount) { ++reads;root->fortMode=3;return amount<=1000; };hooks.flags=[](auto owner) { CHECK(owner==3);return 0x20U; };hooks.checking=[] { return 0x80000000U; };hooks.mission=[] { return 0U; };
+    hooks.assertion=[&] { ++diagnostics;root->fortMode=8; };hooks.addLocal=[&](float amount) { debit+=amount; };hooks.wallet=[&](auto owner,auto amount) { target=owner;CHECK(amount==700); };
+    context.sendMoney=[&](const auto& owner,auto text) { CHECK(&owner==&root->fortMode);return ConfirmSendMoney(owner,text,hooks); };const auto token=scene.menus->ShowSendMoneyDialog(std::move(context),2);root=const_cast<SaveFortNameDialogNode*>(scene.menus->SaveFortNameNode(token));CHECK(root); // 같은 실제 창의+d4를 외부 조회/진단 입력에서만 변경한다.
+    for (const auto ch:std::string("700")) scene.buttons.RouteInput({static_cast<std::uint32_t>(ch),0,0}); // 선택된0을 같은 문자 부모로 바꾼다.
+    scene.buttons.RouteInput({13,0,0});CHECK(reads==2 && diagnostics==1 && target==3 && root->fortMode==8 && debit==-700 && (root->flags&0x10000U));scene.buttons.CleanupGumps();CHECK(!scene.buttons.CurrentDialog() && !scene.menus->SaveFortNameNode(token));
+}

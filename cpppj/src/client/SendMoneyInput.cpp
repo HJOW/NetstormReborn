@@ -19,7 +19,7 @@ std::int32_t Amount(float value) { const double exact=value;if (!std::isfinite(e
 void Transfer(std::uint32_t target,std::int32_t amount,bool diagnose,const SendMoneyHooks& h) {
     const auto flags=Need(h.flags)(target);const auto negative=static_cast<float>(std::bit_cast<std::int32_t>(0U-std::bit_cast<std::uint32_t>(amount))); // 원본 DWORD neg 뒤 signed fild다.
     if (flags&0x20U) {
-        if (diagnose && Need(h.single)() && !Need(h.mission)()) Need(h.assertion)();
+        if (diagnose && Need(h.checking)() && !Need(h.mission)()) Need(h.assertion)();
         Need(h.addLocal)(negative);Need(h.wallet)(target,amount);
     } else if (flags&1U) {
         Need(h.addOwner)(Need(h.local)(),negative);
@@ -54,7 +54,7 @@ bool DispatchSendMoneyInput(const InputEvent& event,const SendMoneyHooks& h) {
     const auto amount=code==0x02000120U ? 300 : code==0x02000108U ? 700 : 1000;
     if (Need(h.canAfford)(static_cast<float>(amount))) Transfer(target,amount,true,h);return true;
 }
-std::uint32_t ConfirmSendMoney(std::uint32_t target,std::string_view text,const SendMoneyHooks& h) {
+std::uint32_t ConfirmSendMoney(const std::uint32_t& target,std::string_view text,const SendMoneyHooks& h) {
     const auto line=text.substr(0,text.find('\n'));const std::string terminated(line);const auto amount=o::ConfigParseLong(terminated); // 원본 CopyText/첫LF/NUL 뒤 _atol 의미를 기존 CRT 파서로 유지한다.
     if (amount>0) {
         const auto visible=Need(h.known)() ? Need(h.money)() : 0.0F;

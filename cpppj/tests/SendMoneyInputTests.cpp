@@ -24,7 +24,7 @@ TEST_CASE(SendMoneyInput_Native888) { // 고정 세 금액의 실제 분기·차
     while (std::getline(input,line)) { // 각 입력은 다른 현재 로컬/플래그/장치 응답을 설치한다.
         if (!line.empty() && line.back()=='\r') line.pop_back();if (line.empty() || line.starts_with("name\t")) continue;const auto row=MoneySplit(line,'\t');CHECK(row.size()==16);if (row.size()!=16) continue;++count;
         std::string trace;const auto add=[&](std::string value) { if (!trace.empty()) trace+=';';trace+=value; }; // 제품에서 실제로 호출된 효과만 기록한다.
-        SendMoneyHooks h;h.local=[&] { return MoneyNumber(row[3]); };h.flags=[&](auto owner) { CHECK(owner==MoneyNumber(row[2]));return MoneyNumber(row[4]); };h.single=[&] { return MoneyNumber(row[11]); };h.mission=[&] { return MoneyNumber(row[10]); };
+        SendMoneyHooks h;h.local=[&] { return MoneyNumber(row[3]); };h.flags=[&](auto owner) { CHECK(owner==MoneyNumber(row[2]));return MoneyNumber(row[4]); };h.checking=[&] { return MoneyNumber(row[11]); };h.mission=[&] { return MoneyNumber(row[10]); };
         h.canAfford=[&](float amount) { add("afford:"+std::to_string(std::bit_cast<std::uint32_t>(amount)));return MoneyNumber(row[5])!=0; };
         h.addOwner=[&](auto owner,float amount) { add("addOwner:"+std::to_string(owner)+':'+std::to_string(std::bit_cast<std::uint32_t>(amount))); };h.addLocal=[&](float amount) { add("addLocal:"+std::to_string(std::bit_cast<std::uint32_t>(amount))); };
         h.wallet=[&](auto owner,auto amount) { add("wallet:"+std::to_string(owner)+':'+std::to_string(amount)); };h.send=[&](auto packet) { add("send:9:"+MoneyHex(packet)); };h.assertion=[&] { add("assert"); };
@@ -36,7 +36,7 @@ TEST_CASE(SendMoneyInput_Native888) { // 고정 세 금액의 실제 분기·차
 
 TEST_CASE(SendMoneyInput_AllReadsCurrentAmountAndXAffordability) { // All은 확인 순간의 SP를 읽고 원문처럼 정수 부분만 송금한다.
     float sp=1234.75F;std::int32_t wallet{};std::uint32_t reads{},checks{},dialogs{},asks{};SendMoneyHooks h; // 같은 실행기에서 바뀌는 현재 경제다.
-    h.money=[&] { ++reads;return sp; };h.known=[] { return 1U; };h.canAfford=[&](float amount) { ++checks;return amount<=sp; };h.flags=[](auto owner) { CHECK(owner==2);return 0x22U; };h.single=[] { return 1U; };h.mission=[] { return 1U; };
+    h.money=[&] { ++reads;return sp; };h.known=[] { return 1U; };h.canAfford=[&](float amount) { ++checks;return amount<=sp; };h.flags=[](auto owner) { CHECK(owner==2);return 0x22U; };h.checking=[] { return 1U; };h.mission=[] { return 1U; };
     h.addLocal=[&](float amount) { sp+=amount; };h.wallet=[&](auto owner,auto amount) { CHECK(owner==2);wallet+=amount; };h.numberDialog=[&](auto owner) { CHECK(owner==2);++dialogs; };h.askAll=[&](auto owner) { CHECK(owner==2);++asks; };
     CHECK(DispatchSendMoneyInput({0x02000100,0,2},h));CHECK(dialogs==1 && sp==1234.75F && !wallet);
     CHECK(DispatchSendMoneyInput({0x0200012b,0,2},h));CHECK(asks==1 && sp==1234.75F && !wallet);

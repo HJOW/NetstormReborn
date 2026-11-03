@@ -1570,6 +1570,8 @@ LAB_004ad54f:
 
 ## FUN_004c9350 @ 004c9350
 
+**829 완료:**현재 checking/inSingle 진단과 실제 숫자 모달→현재 Client·SP/AI 지갑을 연결했다. 자금 판정 뒤 현재+d4를 저장하고 진단 뒤 저장 대상을 유지한다. 실제 기계어는 진단줄0x61c(1564)를 넘기며 아래 C에는 생략됐다. CPU 비멀티432행/진단112·재관측·집중9개(새4) 최종 실패0. 최초 관측기 실행/Session 준비 실패는 원시 보존 후 교정했다. checking18(부모11/부분4/MP3)이다. 신규 MP/통신 검사는 하지 않았다. 아래 서술은779 당시 분류다. [829 기록](cpp-money-confirm-checking-20261104.md).
+
 별도 부모 후속: SendMoneyInput/SaveFort공통부모checking진단은Session진단뷰와별개이며후속일반입력범위
 
 현재 주소 언급: cpppj\src\client\RawMenuSaveFort.inc, cpppj\src\client\SendMoneyInput.h

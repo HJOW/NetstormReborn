@@ -28,7 +28,7 @@ std::uint32_t CancelSaveFortName(const std::uint32_t& canCancel,const std::funct
 // 실제 Client가 제공하는 현재 장치이며 매 창의 callback은 해당 모달보다 오래 살아야 한다.
 struct SaveFortNameDialogContext {
     bool htmlInput{}; //파일/송금과 구별되는 HTML Input 형제 창이며 같은 Tell 확인을 선택한다.
-    std::function<std::uint32_t(std::uint32_t,std::string_view)> sendMoney; // 원본+d4가 송금 대상인 숫자 창은 파일 장치 대신 같은 확정을 사용한다.
+    std::function<std::uint32_t(const std::uint32_t&,std::string_view)> sendMoney; // 원본+d4를 참조로 빌려 자금 조회 뒤 현재 대상을 저장하는 같은 숫자 확정을 사용한다.
     const EditorFiles* work{}; // 보호 원본과 구별된 실제 namespace를 반드시 지정한다.
     RawTextEntryContext editor; // 같은 공통 문자 UI의 벽시계/clipboard 장치다.
     std::function<std::string(std::string_view)> translate,fortPath; // 현재 번역과 fortSpec 선택/PathSpec의 원문 바이트 문자열이다.

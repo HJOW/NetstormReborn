@@ -1,0 +1,11 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "rows": 432,
+  "diagnosticRows": 112,
+  "fixtureSha256": "ee558e75e4547bd7991219d21da58c236818becdc1ca2c8120474ded5127b229",
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "probeSha256": "5f17b8aeddf4d88c044f86ad43d12b2b2b2e68aee8568bf2fdd450b85c55542a",
+  "probeSourceSha256": "e7d7d0d0e3217a4d23c922cf84528a04849e1c576904b5bfc5722dd2aacd647d",
+  "boundary": "004c9350 숫자 확인의 비멀티 AI/미선택 가지;CRT·CopyText·SP·진단·차감/AI지갑은 명시 외부 경계;연결 Player/패킷 가지는 도달 시 실패;게임/GUI/통신 없음"
+}

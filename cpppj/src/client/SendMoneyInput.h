@@ -8,7 +8,7 @@
 namespace netstorm::client { // 메뉴와 HTML 확인 버튼이 같은 송금 부모를 사용한다.
 // 원본 일반 입력이 읽는 현재 상태와 이미 복원된 경제/표시 장치다.
 struct SendMoneyHooks {
-    std::function<std::uint32_t()> local,known,editor,mission,single; // 실제 현재 로컬 번호·PlayerKnown·편집·미션·단독 상태다.
+    std::function<std::uint32_t()> local,known,editor,mission,checking; // 실제 현재 로컬 번호·PlayerKnown·편집·미션·checking DWORD다.
     std::function<float()> money; //0040ee90의 현재 로컬 SP다.
     std::function<bool(float)> canAfford; //00425e90의 현재 SP/Editor 비교다.
     std::function<std::uint32_t(std::uint32_t)> flags; //현재 Player+50 DWORD다.
@@ -25,6 +25,6 @@ bool IsSendMoneyCommand(std::uint32_t code);
 std::uint32_t SendMoneyScriptCode(std::string_view name);
 // 원본 일반 입력의 공통 release 관문과 고정/X/All 명령을 실행한다.
 bool DispatchSendMoneyInput(const InputEvent& event,const SendMoneyHooks& hooks);
-//004c9350의 숫자 창 확정은 잘못된 금액에서도1을 반환해 창을 닫는다.
-std::uint32_t ConfirmSendMoney(std::uint32_t target,std::string_view text,const SendMoneyHooks& hooks);
+//004c9350은 자금 판정 뒤 현재 target을 저장하고 진단 뒤에도 그 대상을 사용하며 잘못된 금액도1로 닫는다.
+std::uint32_t ConfirmSendMoney(const std::uint32_t& target,std::string_view text,const SendMoneyHooks& hooks);
 }

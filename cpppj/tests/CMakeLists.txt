@@ -3343,3 +3343,9 @@ target_sources(netstorm_tests PRIVATE AltarReleaseParentTests.cpp)
 target_sources(netstorm_file_tests PRIVATE AltarReleaseParentTests.cpp)
 set_source_files_properties(AltarReleaseParentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_ALTAR_RELEASE_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/altar-release-parent-hardware-x86.tsv\"")
+
+# 숫자 송금 확인의 비멀티 AI/미선택 CPU432행과 현재 Client 권한/진단을 대조한다.
+target_sources(netstorm_tests PRIVATE MoneyConfirmCheckingTests.cpp)
+target_sources(netstorm_file_tests PRIVATE MoneyConfirmCheckingTests.cpp)
+set_source_files_properties(MoneyConfirmCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MONEY_CONFIRM_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/money-confirm-hardware-x86.tsv\"")

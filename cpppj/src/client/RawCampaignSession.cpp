@@ -3797,13 +3797,13 @@ void RawCampaignSession::SetSp(std::uint32_t owner,float value) { impl_->sp.Set(
 // 원문 같은 현재 경제 처리기를 전달하며 AI에게 주는 돈을 새 분산 SP 사본으로 만들지 않는다.
 SendMoneyHooks RawCampaignSession::MoneyInputHooks() {
     auto* s=impl_.get();if (!s->loaded) throw std::logic_error("송금의 현재 세션 미설치");SendMoneyHooks h;
-    h.local=[s] { return s->playerState.battleOwner; };h.known=[s] { return s->playerState.playerKnown; };h.editor=[s] { return s->globals.editor; };h.mission=[s] { return s->globals.missionPost; };h.single=[] { return 1U; }; // 이 바인딩은 기존 단일 로컬 미션/Editor 어댑터이며 실제 MP 수명은 후속이다.
+    h.local=[s] { return s->playerState.battleOwner; };h.known=[s] { return s->playerState.playerKnown; };h.editor=[s] { return s->globals.editor; };h.mission=[s] { return s->globals.missionPost; };h.checking=[s] { return std::bit_cast<std::uint32_t>(s->gameplayGlobals->AiDebug().Checking()); }; // 같은 Client의 전체 진단 DWORD를 선택 순간에 다시 읽는다.
     h.money=[s] { return s->playerState.playerKnown ? std::bit_cast<float>(s->sp.Get(s->playerState.battleOwner)) : 0.0F; };
     h.canAfford=[s](float amount) { const auto current=std::bit_cast<float>(s->sp.Get(s->playerState.battleOwner));return s->globals.editor || amount<=current; };
     h.flags=[s](auto owner) { if (owner>=9) throw std::out_of_range("송금 대상 Player 범위");return Read(s->players,owner*180U+0x50U); };
     h.addOwner=[s](auto owner,float amount) { s->rewardState.fixedSpA=s->core.ownerMode.fort;s->rewardState.fixedSpB=s->globals.editor!=0;s->rewardState.aiMirrorDisabled=s->core.ownerMode.challenge;s->hp.AddSp(owner,amount); };
     h.addLocal=[s,add=h.addOwner](float amount) { add(s->playerState.battleOwner,amount); };h.wallet=[s](auto owner,auto amount) { s->hp.CreditWallet(owner,amount); };
-    h.send=[this](auto packet) { SendLocalPacket(9,packet); };h.assertion=[] { std::fprintf(stderr,"송금 원본 진단: inSingle\n"); };return h;
+    h.send=[this](auto packet) { SendLocalPacket(9,packet); };h.assertion=[s] { if (!s->services.ai.assertion) throw std::logic_error("송금 현재 원문 진단 장치 미연결: .\\Ui.cpp:1564");s->services.ai.assertion("inSingle"); };return h;
 }
 // 현재 실제 AI 지갑의 값만 읽어 사용자 송금과 분산 SP를 별도로 관측한다.
 std::int32_t RawCampaignSession::AiMoney(std::uint32_t owner) const { if (!impl_->loaded || !impl_->aiWallet) throw std::logic_error("송금 관측의 실제 AI 지갑 미설치");return impl_->aiWallet->Balance(owner); }

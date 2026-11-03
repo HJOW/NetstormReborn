@@ -1,0 +1,205 @@
+{
+  "unit": 829,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "1e7bf89e / 20261104-10 CP",
+  "exeSha256": "b8cfd29b41f31e05b36c0034478046f81ec0347d5275264a1f68923372611934",
+  "nativeBackend": "실제 Windows x86 CPU / 전용 payload /004c9350 AI·미선택 경로",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "rows": 432,
+    "diagnosticRows": 112,
+    "fixtureSha256": "ee558e75e4547bd7991219d21da58c236818becdc1ca2c8120474ded5127b229",
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "probeSha256": "5f17b8aeddf4d88c044f86ad43d12b2b2b2e68aee8568bf2fdd450b85c55542a",
+    "probeSourceSha256": "e7d7d0d0e3217a4d23c922cf84528a04849e1c576904b5bfc5722dd2aacd647d",
+    "boundary": "004c9350 숫자 확인의 비멀티 AI/미선택 가지;CRT·CopyText·SP·진단·차감/AI지갑은 명시 외부 경계;연결 Player/패킷 가지는 도달 시 실패;게임/GUI/통신 없음"
+  },
+  "nativeReobservedRows": 432,
+  "nativeDiagnosticRows": 112,
+  "tests": [
+    {
+      "executable": "netstorm_file_tests",
+      "filter": "MoneyConfirmChecking_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-829/test-MoneyConfirmChecking-final.log",
+      "sha256": "4a10bc639d123e3fac05be66e787cf1b0fa7b04c20f93672f9a58710a27240d9"
+    },
+    {
+      "executable": "netstorm_html_input_dialog_tests",
+      "filter": "MoneyConfirmChecking_",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-829/test-MoneyConfirmDialog-first.log",
+      "sha256": "f365ec09d7180bb477236ea91a61bbb574174db71d70ac55e828ac73db3baa92"
+    },
+    {
+      "executable": "netstorm_file_tests",
+      "filter": "AltarReleaseParent_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-829/test-AltarReleaseParent-final.log",
+      "sha256": "41c6df03dc9f30cc5d49b86e86322bc4b8c1c6149118de78f7ef48568153b3e8"
+    },
+    {
+      "executable": "netstorm_html_input_dialog_tests",
+      "filter": "SendMoneyDialog_",
+      "cases": 2,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-829/test-SendMoneyDialog-final.log",
+      "sha256": "de08dd850050725dfe205db15877ccb1fa71fdf04204110aa0f2490e1849432b"
+    }
+  ],
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-829/build-first.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "1f2abb628a807c71736f352e9e727c71312b996f8f20d3f0eb7ab4617ab20937"
+    },
+    {
+      "log": "extracted/cpp-resume-829/build-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "4c429fcfaeeb529e9e4e9849914e58a9f5b38968ba020a1bdb576f1c6a4e8366"
+    },
+    {
+      "log": "extracted/cpp-resume-829/build-devices-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "4c429fcfaeeb529e9e4e9849914e58a9f5b38968ba020a1bdb576f1c6a4e8366"
+    }
+  ],
+  "probeBuilds": [
+    {
+      "log": "extracted/cpp-resume-829/probe-build-first.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "00224c1a9a8d342c57ce68e5d63a2bf59746b7e8d8382b5407953e87dae8b0d6"
+    },
+    {
+      "log": "extracted/cpp-resume-829/probe-build-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "00224c1a9a8d342c57ce68e5d63a2bf59746b7e8d8382b5407953e87dae8b0d6"
+    }
+  ],
+  "firstFailures": [
+    {
+      "kind": "독립 관측기 실행",
+      "exitCode": 3221225477,
+      "log": "extracted/cpp-resume-829/native-first.log",
+      "reason": "payload00410000 아래0040ec50 직접 연결의 실행 접근 위반. 부모의 실제 두 CALL 피연산자와 차감 CALL만 외부 관측 함수에 연결해 수정. 원본 파일/제품/실패 fixture 변경 없음."
+    },
+    {
+      "kind": "집중 검사 준비",
+      "exitCode": 1,
+      "cases": 3,
+      "failedChecks": 3,
+      "log": "extracted/cpp-resume-829/test-MoneyConfirmChecking-first.log",
+      "reason": "Fort Session.Load만으로 owner2 AI 참여가 설치된다는 검사 가정 오류. 같은 실제 AI 설정 기본값/생성자로 brain·flags를 구성하고 같은 Client local/known을 명시 입력으로 준비. Player flag/지갑 기대값이나 원본 fixture를 바꾸지 않음."
+    }
+  ],
+  "actualCallers": [
+    "RawMenuSaveFort.AcceptSaveFort -> const-reference context.sendMoney -> UberEditor.OpenSendMoneyDialog -> ConfirmSendMoney after both money predicates -> value-cached Transfer target",
+    "Session.MoneyInputHooks.checking -> same Client GameplayGlobals.AiDebug.Checking current DWORD; old single field/fixture column represented this address, not single-player bool",
+    "same services.ai.assertion(\"inSingle\") resumes local SP debit and actual AiWallet credit; actual Session test sets current checking0/80000000, numeric700 twice and fixed300 once with no new frame/network",
+    "actual RawMenuControls/RawButtonControls numeric modal Enter: second affordability changes raw+d4 from2 to3; diagnostic changes to8; actual wallet still receives cached3; modal/entry disposed normally"
+  ],
+  "checking": {
+    "remaining": 18,
+    "parents": 11,
+    "partial": 4,
+    "multiplayerClassified": 3,
+    "completedParents": 31,
+    "completedPartial": 2,
+    "closedThisUnit": [
+      "004c9350"
+    ],
+    "remainingPartial": [
+      "0048fb30",
+      "004b54e0",
+      "004b8cb0",
+      "004d62b0"
+    ],
+    "mpDeferredWithinParents": [
+      "004a7510"
+    ],
+    "mpDeferredWithinPartial": [
+      "004b54e0"
+    ]
+  },
+  "boundaries": [
+    "실제 원문 AI/미선택 입력만432행, 연결 Player flags1/송신 가지는 도달 시 관측기 실패. 신규 MP/실제 통신 검사를 실행하지 않음.",
+    "실제 Session은 Fort/기본 AI 설정·생성/명시 SP/지갑 요청만 실행하며 AI/Kernel/공격/포획/희생/승리 프레임은 진행하지 않음.",
+    "숫자창 ASCII 정상 범위/현재값/진단 복귀와 const참조 수명. 손상 문자/외부 raw 포인터/전체 CRT·SEH/진단 UI/정확한 CD 대응은 별도.",
+    "세 번째 빌드/집중 검사 뒤 UberEditor.inc의 수정한 한 줄 CRLF만 LF로 정리했다. 의미 변경 없고 나머지 바이트 보존."
+  ],
+  "next": "830 UserInput004d62b0의 checking 세 지점이 Guide/Console인지 고정300/700/1000 송금인지 실제 원문/기계어로 다시 분류하고 같은 현재 checking 소비자를 대조. 다른18 및1~8차 전체 목표 미완료.",
+  "protection": {
+    "unchangedPreviousFiles": 2755,
+    "afterFiles": 2756,
+    "fixtureFiles": 936,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted/cpp-resume-829/protected-after.json",
+    "sha256": "74501059bb7b2373705aab8aac594569b0806870681eaaca5ab8a2dc44fb840c"
+  },
+  "excluded": [
+    "실제 게임/GUI·자연 플레이/자동 공략",
+    "포획/희생/특정 적 공격/승리·사용자 직접 확인",
+    "연결 Player/패킷을 포함한 신규 MP 검사·실제 통신",
+    "공중3종 전용 검사·물리 입력/캡처 재시도·PCM/청취",
+    "전체 CTest/71대상/34미션/ZIP"
+  ],
+  "sources": {
+    "cpppj/src/client/SendMoneyInput.h": "30650acd147dd531e824544ee5ef604ea8bb997cf41b453e1c43e79064c68d66",
+    "cpppj/src/client/SendMoneyInput.cpp": "9508879d894558310c9bb692c03044a497d988066355853449b1ce73d22e4a06",
+    "cpppj/src/client/RawCampaignSession.cpp": "fa09b68fce3e2af33ecfdd7cb6e36d62c494393dbead4439d0f2a54a51597e97",
+    "cpppj/src/client/SaveFortNameDialog.h": "d7bc5cb1ca41ba31303f6f8cde2d19e05e40b3fa20ebb70f1387eb20eee1665b",
+    "cpppj/src/client/UberEditor.inc": "fe25649df05a5ae8135a3b7dff813923113979fc4a6267e335df2d968c328ab0",
+    "cpppj/src/client/RawMenuSaveFort.inc": "a92eb798f12dc960a3bc88e7e7888bf61083af3822c4805d07fc52cfcf3d7457",
+    "cpppj/src/client/UberGump.cpp": "4040dbbd546c29446ed638bc28fdf793410de3f503075ff1566b388f698d4205",
+    "cpppj/tests/MoneyConfirmCheckingTests.cpp": "99690dbc9ab2deec4e97a959d6b1fc9ee70b571d262768bf63243c1f6ce7e602",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "09ac233a61335759585ad8994a65524256a6e9862bdf98997ddc6bec1982d72c",
+    "cpppj/tests/SaveFortNameDialogTests.cpp": "5c3117e4b80d694507e840eabef080b19e22d1489a45557ef4e3b0e78b3ae988",
+    "cpppj/tests/SendMoneyInputTests.cpp": "d2f2d0521d7190dea8693ff765d03f475044dd9c2f2c4a0c3a79f159734af974",
+    "cpppj/tests/CMakeLists.txt": "283abfa04c2f9f1932350b86f21dab9a36f2b3f7289d78dcc22665557da497b2",
+    "tools/native_money_confirm_probe.cpp": "e7d7d0d0e3217a4d23c922cf84528a04849e1c576904b5bfc5722dd2aacd647d",
+    "tools/observe_money_confirm_hardware.py": "df7766e48304d8f54c7239c3b1bba5b43bb777d80f1ef273f8bdbb4df91683b5",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "tools/decomp_send_money.py": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+  },
+  "normalizedSources": {
+    "cpppj/src/client/SendMoneyInput.h": "403525b8b53b390ed67e239de4ef351d156cf8eb007642947ff1eb4df0039d3e",
+    "cpppj/src/client/SendMoneyInput.cpp": "5e8f3bd5bad30b998097a735836a28f003a3cf106e79320953e8026e8cc6ad1e",
+    "cpppj/src/client/RawCampaignSession.cpp": "fa09b68fce3e2af33ecfdd7cb6e36d62c494393dbead4439d0f2a54a51597e97",
+    "cpppj/src/client/SaveFortNameDialog.h": "99ade0a28af1c3beccde622ca23fc4f920fd2a2b573005a06fd941bb697ac315",
+    "cpppj/src/client/UberEditor.inc": "f55060dc5a3758be4d3c8d3168d1e2e2a353fae25e5a0e4a25bbf24e062cf578",
+    "cpppj/src/client/RawMenuSaveFort.inc": "a876d3c52d072821331ddde61a7a0aa679430a61a05cd456502a63cd2d05be09",
+    "cpppj/src/client/UberGump.cpp": "4040dbbd546c29446ed638bc28fdf793410de3f503075ff1566b388f698d4205",
+    "cpppj/tests/MoneyConfirmCheckingTests.cpp": "99690dbc9ab2deec4e97a959d6b1fc9ee70b571d262768bf63243c1f6ce7e602",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "09ac233a61335759585ad8994a65524256a6e9862bdf98997ddc6bec1982d72c",
+    "cpppj/tests/SaveFortNameDialogTests.cpp": "bdca32ce87611cf0ebd200266dddc3bc51b27d14017a7d3da2b8f33dced9574f",
+    "cpppj/tests/SendMoneyInputTests.cpp": "02daaa2f1aeb0417dacd78c3c65cd8f64054e92c78ca9aae4e59f72c4921d65d",
+    "cpppj/tests/CMakeLists.txt": "19b7bde32a40c0d6fa285e26325bbc55e5d9cb2e3d0e300b0b5bc2ef094e4568",
+    "tools/native_money_confirm_probe.cpp": "e7d7d0d0e3217a4d23c922cf84528a04849e1c576904b5bfc5722dd2aacd647d",
+    "tools/observe_money_confirm_hardware.py": "df7766e48304d8f54c7239c3b1bba5b43bb777d80f1ef273f8bdbb4df91683b5",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca",
+    "tools/decomp_send_money.py": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+  }
+}
