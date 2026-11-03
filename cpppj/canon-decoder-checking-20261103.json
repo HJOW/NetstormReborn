@@ -1,0 +1,96 @@
+{
+  "unit": 810,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "진단 본체와 커서/배치 소비자 부분 완료·전체 목표 진행 중",
+  "runtimeProduct": 810,
+  "displayVersion": "11.01",
+  "exeSha256": "7115bf2300854028aee67973e77919ba26fc2554a03ac3ba0e418486444e7853",
+  "build": {
+    "successfulInvocations": 2,
+    "failedInvocations": 0,
+    "finalLog": "build-v2.log",
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0
+  },
+  "tests": {
+    "total": 6,
+    "newTests": 2,
+    "failedChecks": 0,
+    "nativeRows": 156,
+    "previousThreeEditionsRows": 3927,
+    "filters": [
+      "CanonChecking_",
+      "canon_type_"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "inputs": 156,
+    "firstObservations": 312,
+    "repeatObservations": 312,
+    "totalObservations": 624,
+    "identical": true,
+    "assertionStops": 40,
+    "diagnosticInputs": 68,
+    "fixtureSha256": "9f5976c556f892efa6a1205ee4136c0bf9d3ae3c06a15d1f433756bac9e259ea",
+    "setupFailuresBeforeBody": 1,
+    "setupCorrection": "Unicorn mem_write bytearray 인자를 bytes로 변환·원문 진입 전 Python 타입 오류"
+  },
+  "integration": {
+    "checkingOwner": "metadata.geometry.decoderDiagnostics.checking→ClientGameplayGlobals.AiDebug.Checking",
+    "actualDiagnostic": "현재 metadata.geometry.decoderDiagnostics.assertion→services.ai.assertion",
+    "connected": [
+      "RawCursorPlacement/RawCursorPreviews의 공유 walk",
+      "InventoryItemGump walk",
+      "RawCanonPlacementGeometry/RawPriestPlacementGeometry",
+      "RawCanonPixelShape"
+    ],
+    "remaining": [
+      "건설 Confirm/Place/Local/Request/Clear 직접 DecodeCanonType",
+      "RawIslandBuilder/RawIslandPlacement/RawPlayerGeyserBounds",
+      "RawNormalTerrainWorldBinding/옛 Islandbuilder 및 분석 CLI 호출자 분류"
+    ]
+  },
+  "checking": {
+    "before": 31,
+    "after": 31,
+    "completed": [],
+    "partialAdded": [
+      "00425860"
+    ],
+    "remainingBreakdown": {
+      "parent": 21,
+      "partial": 7,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2738,
+    "currentCount": 2739,
+    "fixtureCount": 919,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/canon-decoder-checking-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "비패턴 한 칸/끝의 원문 관측·패턴 현재 owner 변경은 별도 C++ 순서성 검사",
+    "실제 Client binder는 소스/빌드 근거·모든 Canon 소비자 완료 아님",
+    "CD 기존 동작 유지·패치 cracked 진단을 CD에 추가하지 않음",
+    "진단 복귀 뒤 물리 프레임 코드 범위 밖/Side 조회는 호스트 예외·원문 배열 밖 메모리/전체 SEH/진단 UI 미복원"
+  ],
+  "next": "CanonDecoder의 나머지 건설·섬/지형 소비자에 같은 현재 진단 owner 연결 후 00425860 완료 판정"
+}

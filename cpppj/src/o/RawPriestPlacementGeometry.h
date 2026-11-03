@@ -13,6 +13,7 @@ struct PriestPlainCanonType {
 struct PriestPlacementGeometryState {
     // CanonDecoder 생성에서 패턴으로 분기하는 네 특수 타입과 네 추가 타입의 현재 번호다.
     std::array<std::uint32_t,8> patternTypes{};
+    CanonDecoderDiagnostics decoderDiagnostics; // 실자산 커서/미리보기/배치가 빌리는 같은 현재 checking·진단 장치다.
 };
 // 사제 배치 검사 기하판정 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestPlacementGeometryHooks {

@@ -50,8 +50,8 @@ std::size_t SelectBridgePattern(std::int32_t random, OriginalEdition edition) {
 
 // 원본은 회전이 홀수면 폭과 높이를 바꿔 센다. 시작 패턴 좌표는 회전별 표에서 정한다.
 CanonDecoder::CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pattern, int direction, float x, float y,
-    std::function<void()> missingFrameDiagnostic)
-    : frames_(&frames), pattern_(&pattern), missingFrameDiagnostic_(std::move(missingFrameDiagnostic)),
+    std::function<void()> missingFrameDiagnostic,OriginalEdition edition,const CanonDecoderDiagnostics* diagnostics)
+    : diagnostics_(diagnostics),edition_(edition),frames_(&frames), pattern_(&pattern), missingFrameDiagnostic_(std::move(missingFrameDiagnostic)),
       rotation_(direction / 2), originX_(x), originY_(y) {
     if (rotation_ < 0 || rotation_ > 3) throw std::out_of_range("CanonDecoder rotation");
     const int width = pattern.width, height = pattern.height;
@@ -64,7 +64,7 @@ CanonDecoder::CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pat
 // 패턴 없는 경로의 폭/높이는 타입 발자국과 별개로 모두 1이다. 원본은 큰/음수 방향도 받아들이며
 // 회전표에서 읽은 값은 비패턴 출력에 영향을 주지 않는다. 내부 회전은 0으로 두어 불필요한 표 밖 접근을 피한다.
 CanonDecoder::CanonDecoder(const RiftTypeFrames& frames,int defaultFrame,int argument,int direction,float x,float y,
-    bool explicitFrame,OriginalEdition edition):frames_(&frames),pattern_(nullptr),rotation_(0),
+    bool explicitFrame,OriginalEdition edition,const CanonDecoderDiagnostics* diagnostics):diagnostics_(diagnostics),edition_(edition),frames_(&frames),pattern_(nullptr),rotation_(0),
     originX_(x),originY_(y),outerCount_(1),innerCount_(1),defaultFrame_(defaultFrame),argument_(argument),explicitFrame_(explicitFrame) {
     if (edition==OriginalEdition::Cd1072 && (direction&1)) throw std::out_of_range("CD 비패턴 CanonDecoder 홀수 방향 오류");
     if (!std::isfinite(x) || !std::isfinite(y)) throw std::invalid_argument("패턴 없는 CanonDecoder 좌표 오류");
@@ -81,6 +81,11 @@ std::array<int,4> CanonDecoder::Bounds(int footX,int footY) const {
 }
 // 남은 칸이 있는가.
 bool CanonDecoder::Valid() const { return valid_; }
+// 원문은 진단 UI가 돌아오면 좌표/패턴 인덱스와 다음 칸 처리를 계속한다.
+void CanonDecoder::Diagnose(std::string_view expression,std::uint32_t line) const {
+    if (!diagnostics_ || !diagnostics_->assertion) throw std::out_of_range("CanonDecoder 원문 진단 장치 미연결 "+std::to_string(line));
+    diagnostics_->assertion(expression,"\\Ns\\O\\Canondecoder.cpp",line);
+}
 // 원본 00425860.
 void CanonDecoder::Advance() {
     const auto rotation = static_cast<std::size_t>(rotation_);
@@ -99,7 +104,10 @@ void CanonDecoder::Advance() {
         // 셀 해석(00425700): 줄 우선 배열에서 (패턴 x, 패턴 y)의 셀.
         if (!pattern_) {
             frame_=explicitFrame_ ? argument_ : defaultFrame_;
-            if (explicitFrame_ && (frame_<0 || static_cast<std::size_t>(frame_)>=frames_->Codes().size())) throw std::out_of_range("CanonDecoder 명시 프레임 오류");
+            if (explicitFrame_ && (frame_<0 || static_cast<std::size_t>(frame_)>=frames_->Codes().size())) {
+                if (edition_!=OriginalEdition::Patch1078) throw std::out_of_range("CD CanonDecoder 명시 프레임 오류"); // CD 진단 UI의 별도 행 번호는 이번 패치 부모 범위에 섞지 않는다.
+                Diagnose("0 <= frame && frame < ::getType(type)->numFrames",0x305);
+            }
         } else {
             const auto& cell = pattern_->cells.at(static_cast<std::size_t>(pattern_->width * patternY_ + patternX_));
             const int label = cell[3];
@@ -118,6 +126,12 @@ void CanonDecoder::Advance() {
                 // 원본 assert lookup은 보고한 뒤 -1을 반환하며 동일 Advance가 그 칸을 계속 건너뛴다.
                 if (frame_ == -1 && missingFrameDiagnostic_) missingFrameDiagnostic_();
             }
+        }
+        // 패치는 현재 checking에서 현재 프레임 코드의 금 간 비트를 읽는다. CD에는 이 진단이 없다.
+        if (edition_==OriginalEdition::Patch1078 && diagnostics_ && diagnostics_->checking && frame_!=-1) {
+            if (frame_<0 || static_cast<std::size_t>(frame_)>=frames_->Codes().size()) throw std::out_of_range("CanonDecoder 진단 복귀 뒤 물리 프레임 코드 범위 오류"); // 원문 배열 밖 메모리 읽기는 호스트에서 재현하지 않는다.
+            if (frames_->Codes()[static_cast<std::size_t>(frame_)].flags&0x20U)
+                Diagnose("frame == EMPTY_FRAME || !(typeStruct->frameInfo[frame].flags & FF_CRACKED)",0x325);
         }
         x_ = static_cast<float>(step_ * inner_) + originX_;
         y_ = static_cast<float>(outer_ * step_) + originY_;
@@ -138,6 +152,9 @@ float CanonDecoder::X() const { return x_; }
 float CanonDecoder::Y() const { return y_; }
 // 현재 칸의 번호.
 int CanonDecoder::Label() const { return label_; }
-// 프레임 코드의 첫 바이트가 방향 글자다.
-char CanonDecoder::Side() const { return static_cast<char>(frames_->Codes()[static_cast<std::size_t>(frame_)].side); }
+// 프레임 코드의 첫 바이트가 방향 글자다. 진단 복귀 뒤에도 물리 표 밖의 원문 메모리는 읽지 않는다.
+char CanonDecoder::Side() const {
+    if (frame_<0 || static_cast<std::size_t>(frame_)>=frames_->Codes().size()) throw std::out_of_range("CanonDecoder 방향 조회 물리 프레임 범위 오류");
+    return static_cast<char>(frames_->Codes()[static_cast<std::size_t>(frame_)].side);
+}
 }

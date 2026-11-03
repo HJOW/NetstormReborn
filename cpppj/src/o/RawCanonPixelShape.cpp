@@ -40,7 +40,7 @@ const SquidDisplayFrame& RawCanonPixelShape::Header(std::uint32_t type,int frame
 PriestPlacementPixelShape RawCanonPixelShape::Measure(std::uint32_t type,std::uint32_t argument,std::uint32_t direction,bool explicitFrame) const {
     if (type>=types_.size()) throw std::out_of_range("일반 픽셀 모양 타입 번호 오류");
     const auto& meta=frames_[type];auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,geometryState_.patternTypes,
-        {type,std::bit_cast<std::int32_t>(argument),std::bit_cast<std::int32_t>(direction),0,0,explicitFrame},pool_.Edition());
+        {type,std::bit_cast<std::int32_t>(argument),std::bit_cast<std::int32_t>(direction),0,0,explicitFrame},pool_.Edition(),&geometryState_.decoderDiagnostics);
     PriestPlacementPixelShape result{{1000,1000,0,0},state_.scaleX,state_.scaleY};
     // 빈 칸을 건너뛴 decoder의 모든 유효 프레임을 원본 순서로 합친다.
     while (decoder.Valid()) {

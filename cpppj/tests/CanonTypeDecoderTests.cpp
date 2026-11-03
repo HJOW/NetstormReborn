@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "o/CanonTypeDecoder.h"
 #include <limits>
+#include <filesystem>
 
 namespace {
 using namespace netstorm::test::rawscene;
@@ -72,4 +73,38 @@ TEST_CASE(canon_type_tables_precedence_and_guards) {
     CHECK(Throws([&] { DecodeCanonType(frames,3,patterns,{94,0,8,0,0,false},OriginalEdition::Patch1078); }));
     CHECK(Throws([&] { DecodeCanonType(frames,3,patterns,{94,0,0,std::numeric_limits<float>::infinity(),0,false},OriginalEdition::Patch1078); }));
     auto explicitPattern=DecodeCanonType(frames,3,patterns,{94,1,0,0,0,true},OriginalEdition::Patch1078);CHECK(explicitPattern.Frame()==168);
+}
+
+// 비패턴 다음 칸의 공개 상태와 원문 진단 위치·복귀를 독립 156입력으로 대조한다.
+TEST_CASE(CanonChecking_NativeFrameDiagnosticAndReturn156) {
+    const auto fixture=LoadFixture((std::filesystem::path(NETSTORM_CANONTYPE_FIXTURE).parent_path()/"canon-decoder-checking-x86.tsv").string().c_str());std::size_t count{};
+    // 반복자 구성에서 이미 호출하는 첫 Advance와 유효 칸 뒤 끝 상태를 함께 비교한다.
+    for (const auto& row:fixture.rows) {
+        CHECK(row.size()==6);const auto input=Split(row[0],',');CHECK(input.size()==6);
+        const auto frame=std::stoi(input[1]);std::uint32_t checking=Number(input[2]);std::string events,outcome="return",first="-",last="-";
+        const RiftTypeFrames frames(std::vector<FrameCode>{{'A','P',0,static_cast<std::uint8_t>(Number(input[3]))},{'A','P',1,static_cast<std::uint8_t>(Number(input[3]))}});
+        CanonDecoderDiagnostics diagnostics;diagnostics.checking.Bind(checking);
+        diagnostics.assertion=[&](std::string_view expression,std::string_view file,std::uint32_t line) {
+            if (!events.empty()) events+=';';events+="X:"+Hex({reinterpret_cast<const std::uint8_t*>(expression.data()),expression.size()})+':'+Hex({reinterpret_cast<const std::uint8_t*>(file.data()),file.size()})+':'+std::to_string(line);
+            if (!Number(input[4])) throw std::runtime_error("명시 Canon 진단 중단");if (Number(input[5])) checking=0;
+        }; // 진단이 checking을 꺼도 원문처럼 좌표/순회 효과는 계속한다.
+        const auto snapshot=[](const CanonDecoder& decoder) { return std::to_string(decoder.Frame())+','+std::to_string(decoder.Valid())+','+std::to_string(std::bit_cast<std::uint32_t>(decoder.X()))+','+std::to_string(std::bit_cast<std::uint32_t>(decoder.Y())); }; // 공개 네 필드를 원문 비트 형식으로 읽는다.
+        try { CanonDecoder decoder(frames,frame,frame,0,20.5f,-3.25f,Number(input[0])!=0,OriginalEdition::Patch1078,&diagnostics);first=snapshot(decoder);if (decoder.Valid()) decoder.Advance();last=snapshot(decoder); }
+        catch (const std::runtime_error& error) { if (std::string_view(error.what())!="명시 Canon 진단 중단") throw;outcome="assertion"; }
+        CHECK(events==row[1] && outcome==row[2] && first==row[3] && last==row[4] && checking==Number(row[5]));++count;
+    }
+    CHECK(count==156);
+}
+
+// 같은 owner의 현재 checking·교체한 진단 콜백을 다음 Advance에서 읽으며 CD에 패치 진단을 추가하지 않는다.
+TEST_CASE(CanonChecking_CurrentOwnerAcrossPatternAdvance) {
+    const RiftTypeFrames frames(std::vector<FrameCode>{{'A','P',1,0x20}});CanonPattern pattern;pattern.width=2;pattern.height=1;pattern.cells[0]={'1','A',0,'a'};pattern.cells[1]={'1','A',0,'b'};
+    std::uint32_t checking{};CanonDecoderDiagnostics diagnostics;diagnostics.checking.Bind(checking);int called{};
+    CanonDecoder decoder(frames,pattern,0,20,30,{},OriginalEdition::Patch1078,&diagnostics);CHECK(decoder.Valid() && decoder.X()==20 && called==0);
+    diagnostics.assertion=[&](std::string_view expression,std::string_view file,std::uint32_t line) { CHECK(expression=="frame == EMPTY_FRAME || !(typeStruct->frameInfo[frame].flags & FF_CRACKED)" && file=="\\Ns\\O\\Canondecoder.cpp" && line==0x325);++called;checking=0; };
+    checking=0x80000000U;decoder.Advance();CHECK(decoder.Valid() && decoder.X()==21 && called==1 && checking==0);decoder.Advance();CHECK(!decoder.Valid());
+    checking=1;diagnostics.assertion={};CanonDecoder cd(frames,pattern,0,0,0,{},OriginalEdition::Cd1072,&diagnostics);CHECK(cd.Valid());cd.Advance();CHECK(cd.Valid());
+    CHECK(Throws([&] { CanonDecoder missing(frames,pattern,0,0,0,{},OriginalEdition::Patch1078,&diagnostics); })); // 실제 선택된 진단 장치가 없으면 성공을 합성하지 않는다.
+    checking=0;diagnostics.assertion=[](std::string_view,std::string_view,std::uint32_t line) { CHECK(line==0x305); }; // 잘못된 명시값 진단이 복귀해도 물리 메모리 안전 경계는 유지한다.
+    CanonDecoder invalid(frames,0,2,0,0,0,true,OriginalEdition::Patch1078,&diagnostics);CHECK(invalid.Valid() && invalid.Frame()==2);CHECK(Throws([&] { invalid.Side(); }));
 }

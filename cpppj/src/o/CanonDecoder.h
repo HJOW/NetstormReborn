@@ -3,6 +3,7 @@
 // 타입별 선택과 섬·받침·공유 전투 패턴은 CanonTypeDecoder에서 제공한다.
 #pragma once
 #include "o/RiftType.h"
+#include "o/RawCheckingFlag.h"
 #include <array>
 #include <cstdint>
 #include <functional>
@@ -26,16 +27,23 @@ std::span<const CanonPattern> BridgePatterns(OriginalEdition edition = OriginalE
 // 원본 004257c0 ↔ CD 0041fc70: 누적 가중치와 signed 나머지를 <=로 비교한다.
 std::size_t SelectBridgePattern(std::int32_t random, OriginalEdition edition = OriginalEdition::Patch1078);
 
+// 반복자보다 오래 사는 현재 checking 뷰와 원문 진단 장치다. 사본도 같은 Client owner를 읽는다.
+struct CanonDecoderDiagnostics {
+    RawCheckingFlag checking; // 005e4794의 현재 DWORD를 진단 소비 위치마다 읽는다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 식/파일/행을 전달하며 복귀하면 원래 순회를 계속한다.
+};
+
 // 원본 반복자 객체(0x54바이트).
 class CanonDecoder {
 public:
     // 원본 FUN_00425c20 ↔ CD 0041fcf0의 영역·다리 패턴 경로. direction은 방향 값이며 회전은 direction / 2다.
     // frames는 그 타입의 프레임 코드 표다. (x, y)는 첫 칸의 좌표다.
     CanonDecoder(const RiftTypeFrames& frames, const CanonPattern& pattern, int direction, float x, float y,
-        std::function<void()> missingFrameDiagnostic={});
+        std::function<void()> missingFrameDiagnostic={},OriginalEdition edition=OriginalEdition::Patch1078,
+        const CanonDecoderDiagnostics* diagnostics=nullptr);
     // 패턴 없는 타입은 한 칸이고 방향의 크기/부호는 출력에 영향을 주지 않는다. 기본 프레임 또는 명시 프레임을 선택하며 CD는 홀수를 assert한다.
     CanonDecoder(const RiftTypeFrames& frames,int defaultFrame,int argument,int direction,float x,float y,
-        bool explicitFrame=false,OriginalEdition edition=OriginalEdition::Patch1078);
+        bool explicitFrame=false,OriginalEdition edition=OriginalEdition::Patch1078,const CanonDecoderDiagnostics* diagnostics=nullptr);
     // 00425b90 / CD 004202e0: 현재 좌표 절삭에서 순회 개수×현재 발자국을 뺀 미리보기 사각형이다.
     std::array<int,4> Bounds(int footX,int footY) const;
     // 아직 칸이 남았는가(원본 +0x14).
@@ -52,6 +60,10 @@ public:
     // 원본 FUN_00425c00: 현재 프레임 코드의 방향 글자.
     char Side() const;
 private:
+    // 선택한 원문 진단을 보고한다. 장치 누락은 해당 위치에서 예외이며 복귀를 성공으로 합성하지 않는다.
+    void Diagnose(std::string_view expression,std::uint32_t line) const;
+    const CanonDecoderDiagnostics* diagnostics_{}; // 실제 owner의 현재 설정/콜백을 빌리므로 반복자보다 오래 살아야 한다.
+    OriginalEdition edition_{OriginalEdition::Patch1078}; // cracked 프레임 진단이 없는 CD와 패치 부모를 구별한다.
     // frames_: 타입 프레임의 코드와 방향별 번호 구간을 조회하는 표 (RiftTypeFrames).
     const RiftTypeFrames* frames_;
     // pattern_: 칸별 방향·변형·라벨을 펼칠 Canon 패턴 자료.

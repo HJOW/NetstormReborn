@@ -13,7 +13,7 @@ struct CanonTypeQuery {
 // 00425c20 ↔ CD 0041fcf0: 앞 네 전역을 우선 비교하고 뒤 네 타입은 공유 표를 쓴다.
 // 전역 순서: puzzlePiece, bridge, island, noIsland, thunderCannon, rainCannon, windArcher, windBlocker.
 CanonDecoder DecodeCanonType(const RiftTypeFrames& frames,int defaultFrame,std::span<const std::uint32_t,8> patternTypes,
-    CanonTypeQuery query,OriginalEdition edition);
+    CanonTypeQuery query,OriginalEdition edition,const CanonDecoderDiagnostics* diagnostics=nullptr);
 // 분석/검사에 복원된 네 패턴 레코드를 제공한다. 그룹은 island=0, noIsland=1, 공유 전투=2다.
 std::span<const CanonPattern> CanonSpecialPatterns(std::size_t group);
 }

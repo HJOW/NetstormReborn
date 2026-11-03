@@ -205,6 +205,8 @@ LAB_004229b8:
 
 ## FUN_00425860 @ 00425860
 
+**810 부분 연결:** 명시 프레임/현재 checking·금 간 프레임 진단 본체와 커서·생산 항목·배치/픽셀 소비자를 연결했다. 나머지 건설·섬/지형 직접 호출자는 남으므로 전체 완료로 세지 않는다. [810 기록](cpp-canon-decoder-checking-20261103.md)을 따른다. 아래 미복원 서술은779 당시 상태다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\CanonDecoder.cpp, cpppj\src\o\CanonDecoder.h, cpppj\src\client\RawCursorPreviews.h, cpppj\src\client\InventoryItemGump.h, cpppj\src\client\RawCursorPlacement.h

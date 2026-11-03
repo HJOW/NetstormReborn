@@ -108,7 +108,7 @@ void BindInventoryItemAssets(InventoryItemHooks& hooks,const GameAssets& assets,
     };
     hooks.measure=[&measure](auto type,auto argument,bool explicitFrame) { return measure.Measure(type,argument,0,explicitFrame); };
     hooks.walk=[&geometry,edition=assets.Edition()](o::CanonTypeQuery query,const std::function<void(InventoryItemCell)>& visitor) {
-        if (query.type>=geometry.frames.size()) throw std::out_of_range("생산 항목 실제decoder 타입 오류");const auto& meta=geometry.frames[query.type];auto decoder=o::DecodeCanonType(meta.frames,meta.defaultFrame,geometry.geometry.patternTypes,query,edition);
+        if (query.type>=geometry.frames.size()) throw std::out_of_range("생산 항목 실제decoder 타입 오류");const auto& meta=geometry.frames[query.type];auto decoder=o::DecodeCanonType(meta.frames,meta.defaultFrame,geometry.geometry.patternTypes,query,edition,&geometry.geometry.decoderDiagnostics);
         // 실제 전체 패턴의 현재 칸을 전달한 뒤 Advance한다.
         while (decoder.Valid()) { visitor({decoder.Frame(),decoder.X(),decoder.Y()});decoder.Advance(); }
     };

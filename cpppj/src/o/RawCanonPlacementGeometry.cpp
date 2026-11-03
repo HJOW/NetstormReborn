@@ -27,7 +27,7 @@ RawCanonPlacementGeometry::RawCanonPlacementGeometry(const SidPool& pool,std::sp
 CanonDecoder RawCanonPlacementGeometry::Decode(CanonTypeQuery query) const {
     if (query.type>=types_.size()) throw std::out_of_range("일반 배치 모양 타입 번호 오류");
     const auto& meta=frames_[query.type];
-    return DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,query,pool_.Edition());
+    return DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,query,pool_.Edition(),&state_.decoderDiagnostics);
 }
 // 빈 decoder에서도 원본처럼 첫 현재 좌표와 순회 개수로 미리보기 범위를 계산한다.
 SquidSearchArea RawCanonPlacementGeometry::Bounds(CanonTypeQuery query) const {

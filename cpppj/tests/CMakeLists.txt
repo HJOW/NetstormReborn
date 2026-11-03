@@ -3246,6 +3246,8 @@ set_source_files_properties(GumpAttachDiagnosticTests.cpp PROPERTIES COMPILE_DEF
 
 # 자산 PostPop의 실제 서버/전투 상태 분리를 기존 전체 양판본 원문으로 대조한다(807).
 target_sources(netstorm_file_tests PRIVATE AssetPostPopTests.cpp)
+# Canon 반복자의 현재 진단·기존 양판본 순회를 전체 CTest 없이 집중 실행한다.
+target_sources(netstorm_file_tests PRIVATE CanonTypeDecoderTests.cpp)
 
 # 통지/종속 정리만 실행하는 집중 필터에 GunProcess fixture를 연결한다(808).
 target_sources(netstorm_file_tests PRIVATE GunProcessTests.cpp)

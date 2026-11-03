@@ -129,7 +129,7 @@ void BindCursorPlacement(CursorLifecycleHooks& lifecycle,CursorDropHooks& drop,R
 void BindCursorPlacementAssets(CursorPlacementHooks& hooks,const GameAssets& assets,const o::PriestPlacementGeometryState& geometry) {
     hooks.walk=[&assets,&geometry](o::CanonTypeQuery query,const std::function<bool(CursorCanonCell)>& visit) {
         const auto& asset=Asset(assets,query.type);const auto frames=asset.definition.FrameTable();
-        auto decoder=o::DecodeCanonType(frames,asset.definition.specialFrames.defaultFrame,geometry.patternTypes,query,assets.Edition());
+        auto decoder=o::DecodeCanonType(frames,asset.definition.specialFrames.defaultFrame,geometry.patternTypes,query,assets.Edition(),&geometry.decoderDiagnostics);
         // false는 현재 칸에서 즉시 반환하며 원본처럼 Advance를 생략한다.
         while (decoder.Valid()) { if (!visit({decoder.Frame(),decoder.X(),decoder.Y()})) return;decoder.Advance(); }
     };
