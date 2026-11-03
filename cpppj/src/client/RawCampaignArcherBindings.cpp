@@ -84,6 +84,7 @@ struct RawCampaignArcherBindings::Impl {
         hooks=o::MakeArcherAnimationHostHooks(core.processes,std::move(hooks));
         hooks=o::MakeArcherMissileHooks(core.processes,*missile,std::move(hooks));
         crossbowRotateState.type=140;
+        crossbowRotateState.angles=animationState.angles; // 공통 회전도 같은 현재 Client 진단을 빌린다.
         crossbowRotate=std::make_unique<o::RawArcherAnimation>(core.pool,core.types,animationTypes,crossbowRotateState,hooks);
         animation=std::make_unique<o::RawArcherAnimation>(core.pool,core.types,animationTypes,animationState,std::move(hooks));
     }

@@ -555,3 +555,6 @@ target_sources(netstorm PRIVATE StartupArchiveFiles.h StartupArchiveFiles.cpp) #
 
 # 기존 위치 parser/Factory/Owner/HP/Pop을 재사용하는 CreateAt 전체 부모다(770).
 target_sources(netstorm PRIVATE RawCreateAt.h RawCreateAt.cpp)
+
+# 공통 Boardcoord 각도의 현재 진단/판본별 끝각 처리를 실제 소비자와 공유한다.
+target_sources(netstorm PRIVATE RawBoardAngle.h RawBoardAngle.cpp)

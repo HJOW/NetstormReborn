@@ -1,5 +1,6 @@
 // SunArcher71(Sun Disc Thrower)의실제회전/각속도발사와sunDisc83 생성을복원한다.
 #pragma once
+#include "o/RawBoardAngle.h"
 #include "o/RawMissile.h"
 
 namespace netstorm::o {
@@ -31,6 +32,7 @@ struct ArcherAnimationState {
     float winding{4},fireBias{30},springOffset{180},resetOffset{180};
     // finishSpeed/finishAngle/finishTolerance: 실제회전종료의각속도/위치/오차조건이다.
     float finishSpeed{180},finishAngle{270},finishTolerance{30};
+    BoardAngleDiagnostics angles; // 같은 Client checking/원문 Boardcoord 진단 장치를 빌린다.
 };
 // 실제공통공간/표적/완료/생성경계를재사용하고캐논프레임표를혼용하지않는다.
 struct ArcherAnimationHooks {
@@ -62,7 +64,7 @@ public:
     static float InitialAngle(std::int32_t frame);
     static std::int32_t FireFrame(float angle,bool sprung);
     static double Degrees(std::array<float,2> from,std::array<float,2> to);
-    static float DirectionAngle(std::array<float,2> from,std::array<float,2> to,OriginalEdition edition);
+    static float DirectionAngle(std::array<float,2> from,std::array<float,2> to,OriginalEdition edition,const BoardAngleDiagnostics& diagnostics={});
     // 실제월드adapter의동일풀/원본타입검사다.
     const SidPool& Pool() const;
     std::uint32_t Type() const;

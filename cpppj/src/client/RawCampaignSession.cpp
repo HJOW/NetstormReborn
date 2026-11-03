@@ -904,6 +904,7 @@ struct RawCampaignSession::Impl {
         if (!services.adoptPreparedWorld) playerState.playerKnown=1; // 실제 Native prefix를 대여한 경우 현재 known을 다시 쓰지 않는다.
 
         // 각 원문 소비자가 같은 005e4794를 다시 읽으며 Session 사본/강제 활성값을 만들지 않는다.
+        archerState.angles=world.Storage()->AngleDiagnostics();gunTargetState.angles=archerState.angles; // 네 방향 소비자가 같은 현재 Client 진단을 사용한다.
         gunState.checking.Bind(gameplayGlobals->AiDebug().Checking());gunTargetState.checking.Bind(gameplayGlobals->AiDebug().Checking());rewardState.debugAsserts.Bind(gameplayGlobals->AiDebug().Checking());missionAiSettings.checkingAsserts.Bind(gameplayGlobals->AiDebug().Checking());soundState.debug.Bind(gameplayGlobals->AiDebug().Checking());buildArrivalState.checking.Bind(gameplayGlobals->AiDebug().Checking());geyserMinedState.checking.Bind(gameplayGlobals->AiDebug().Checking());assetState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());regularState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());motionState.carrier.debug.Bind(gameplayGlobals->AiDebug().Checking());motionState.cleanup.checking.Bind(gameplayGlobals->AiDebug().Checking());generalDamageState.checking.Bind(gameplayGlobals->AiDebug().Checking());burningState.checking.Bind(gameplayGlobals->AiDebug().Checking());priestState.spawn.checkingPlacement.Bind(gameplayGlobals->AiDebug().Checking());priestState.forcefieldRegular.debug.Bind(gameplayGlobals->AiDebug().Checking());carrierDropState.checking.Bind(gameplayGlobals->AiDebug().Checking());
         metadata.geometry.decoderDiagnostics.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 반복자의 현재 checking은 같은 장기 Client owner를 읽는다.
         metadata.geometry.decoderDiagnostics.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("CanonDecoder 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 진단 복귀 후 좌표/다음 칸 순회를 계속한다.
@@ -1264,7 +1265,7 @@ struct RawCampaignSession::Impl {
         };
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
         if (!combatEffects.missile.damage) combatEffects.missile.damage=hits->DamageHooks({}).damage; // 반사 가상98도 사제/신전/일반 자산의 실제 현재 분배를 사용한다.
-        IceRicochetHooks ricochetHooks;ricochetHooks.initialPointBytes=combatEffects.ricochetPointBytes;
+        IceRicochetHooks ricochetHooks;ricochetHooks.angles=world.Storage()->AngleDiagnostics();ricochetHooks.initialPointBytes=combatEffects.ricochetPointBytes;
         ricochetHooks.createProjectile=[this](const GunProjectileRequest& request) {
             if (!combat) throw std::logic_error("아이스 반사 실제 Missile 설치 전 생성");
             if (!CreateMissile(core.processes,combat->Missile(),request)) throw std::logic_error("아이스 반사 실제 Host 부착 실패");

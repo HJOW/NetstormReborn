@@ -1,5 +1,6 @@
 // 본섬 표면·noIsland·다리와 파생 받침을 실제 raw 풀/Graph/Kernel로 소유하는 새 월드 연결부다.
 #pragma once
+#include "o/RawBoardAngle.h"
 #include "o/GameClock.h"
 #include "client/RawProcessHostStorage.h"
 #include "o/RawAuthorityState.h"
@@ -71,6 +72,7 @@ public:
     void RecordDisplayFrameError(std::uint32_t type,std::int32_t frame,std::uint32_t abstract); //현재 같은 TYPE/shape로43d40의 상세를 저장한다.
     void AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const; // 선택된 원문 진단 장치가 복귀하면 caller도 계속한다.
     void BindGraphTrace(std::function<void(std::int32_t,std::string_view)> trace); // 첫 World 전에 현재 Client의 로그 writer를 연결한다.
+    o::BoardAngleDiagnostics AngleDiagnostics() const; // 같은 현재 Client checking/원문 진단을 각도 부모에 빌린다.
     void BindGraphClock(std::function<double()> clock); // 같은 Client GameClock 장치를 장기 owner가 빌린다.
     double ReadGraphClock() const; // 독립 저장소는0이며 실제 장치는 현재 정지/누적 시간을 반영한다.
     void TraceGraph(std::int32_t level,std::string_view text) const; // 현재 장치가 있으면 원문 수준/텍스트를 그대로 전달한다.

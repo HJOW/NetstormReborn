@@ -2453,3 +2453,10 @@ cpppj/graph-detach-live-20261103.json text eol=lf
 cpppj/tests/fixtures/graph-region-free-x86.tsv -text
 tools/decomp_graph_region_free.py text eol=lf
 cpppj/graph-region-free-native-20261103.json text eol=lf
+
+cpppj/tests/fixtures/board-angle-hardware-x86.tsv -text
+tools/decomp_board_angle_checking.py text eol=lf
+cpppj/board-angle-hardware-native-20261104.json text eol=lf
+cpppj/board-angle-checking-20261104.json text eol=lf
+tools/observe_board_angle_hardware.py text eol=lf
+tools/native_board_angle_probe.cpp text eol=lf

@@ -1,5 +1,6 @@
 // GunProcess의 실제 Cannon/Archer 표적 검색과 MayShoot를 같은 raw 풀·해시에 연결한다.
 #pragma once
+#include "o/RawBoardAngle.h"
 #include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/RawGunProcess.h"
 #include "o/RawSquidFinder.h"
@@ -42,6 +43,7 @@ struct GunTargetState {
     std::uint32_t AllyMask(std::uint32_t owner) const;
     // 현재 참여 플래그를 반환한다. AI 부착 뒤에도 초기 사본을 읽지 않는다.
     std::uint32_t PlayerFlags(std::uint32_t owner) const;
+    BoardAngleDiagnostics angles; // 실제 관측각 helper와 배리어 계산이 같은 현재 Client 진단을 소비한다.
 };
 // 게임 출력 부수효과를 명시적으로 연결한다. 검색·기하 계산은 훅으로 대체하지 않는다.
 struct GunTargetHooks {

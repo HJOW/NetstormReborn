@@ -11,8 +11,8 @@ namespace {
 // 원본20칸비균등회전각표와실제라디안→도 계수다.
 constexpr std::array<float,20> kAngles{0,21,35,52,71,86,97,115,121,148,180,205,237,256,272,282,291,314,328,345};
 constexpr double kDegreesPerRadian=57.295827908797776;
-// 회전의가상float 대기간격과각도끝의원본float clamp다.
-constexpr float kRotateDelay=0.1f,kLastAngle=359.9999f;
+// 회전 가상 함수가 반환하는 원본 float 대기간격이다.
+constexpr float kRotateDelay=0.1f;
 // target0 방향 BYTE는 실제 0050afd8/CD00505354의 90도 계수로 변환한다.
 constexpr float kAimAngleScale=90.0f;
 // 원본비정렬little endian 필드를읽는다.
@@ -34,10 +34,7 @@ void AFloat(std::span<std::uint8_t> raw,std::size_t offset,float value) { PutArc
 void ArcherTime(ArcherAnimationFields& fields,double value) { const auto bits=std::bit_cast<std::uint64_t>(value);fields.bytes[40]|=8;PutArcher(fields.bytes,48,static_cast<std::uint32_t>(bits));PutArcher(fields.bytes,52,static_cast<std::uint32_t>(bits>>32)); }
 // 현재좌표쌍을원본float폭으로읽는다.
 std::array<float,2> APoint(std::span<const std::uint8_t> raw,std::size_t offset) { return {AFloat(raw,offset),AFloat(raw,offset+4)}; }
-// 원본BoardCoord의float 인자를fmod→음수보정→끝각clamp한다.
-float NormalizeArcher(float angle) {
-    if (!std::isfinite(angle)) throw std::invalid_argument("Archer 비유한각도");double value=std::fmod(static_cast<double>(angle),360.0);if (value<0) value+=360.0;return value>=360.0 ? kLastAngle : static_cast<float>(value);
-}
+
 }
 // 원본공통SID/시각필드조회다.
 Sid ArcherAnimationFields::Form() const { return Sid{static_cast<std::uint16_t>(ReadArcher(bytes,4))}; }
@@ -87,7 +84,7 @@ std::int32_t RawArcherAnimation::FireFrame(float angle,bool sprung) {
 // 좌표동률은0이며원본의근사pi 계수로현재가리키는각도를계산한다.
 double RawArcherAnimation::Degrees(std::array<float,2> from,std::array<float,2> to) { if (from==to) return 0;return std::atan2(-(static_cast<double>(to[1])-from[1]),static_cast<double>(to[0])-from[0])*kDegreesPerRadian; }
 // 원본BoardCoord.Angle은450-atanDegrees를float로저장후정규화한다.
-float RawArcherAnimation::DirectionAngle(std::array<float,2> from,std::array<float,2> to,OriginalEdition) { if (from==to) return 0;return NormalizeArcher(static_cast<float>(450.0-Degrees(from,to))); }
+float RawArcherAnimation::DirectionAngle(std::array<float,2> from,std::array<float,2> to,OriginalEdition edition,const BoardAngleDiagnostics& diagnostics) { if (from==to) return 0;return static_cast<float>(NormalizeBoardAngle(static_cast<float>(450.0-Degrees(from,to)),edition,diagnostics)); }
 // Fire부착후출력해제도현재원본WORD bit0만바꾼다.
 void RawArcherAnimation::InitializeFire(ArcherAnimationFields& fields) const {
     Parent(fields);if (!hooks_.notifySurface) throw std::logic_error("Archer 초기출력공간통지 누락");AFloat(fields.bytes,64,InitialAngle(Frame(fields.Parent())));AFloat(fields.bytes,68,state_.initialSpeed);AFloat(fields.bytes,72,state_.initialAcceleration);PutArcher(fields.bytes,76,0);PutArcher(fields.bytes,80,0);pool_.AllocatedBytes(fields.Parent())[12]&=0xfe;hooks_.notifySurface(fields.Parent());
@@ -98,7 +95,7 @@ void RawArcherAnimation::Finish(ArcherAnimationFields& fields,std::uint32_t info
 void RawArcherAnimation::Rotate(ArcherAnimationFields& fields) const {
     const auto raw=Parent(fields);const auto& data=animationTypes_[raw[10]];if (data.directions<=0 || data.frameCount/data.directions<=0) throw std::logic_error("Archer 실제방향/물리프레임자료 미공급");const auto per=data.frameCount/data.directions,current=Frame(fields.Parent())/per;float angle;
     if (!fields.Target().value) { if (!hooks_.aimDirection) throw std::logic_error("Archer 실제표적0방향조회 누락");angle=hooks_.aimDirection(fields.Parent())*kAimAngleScale; }
-    else { Track(fields);if (!hooks_.common.center) throw std::logic_error("Archer 실제현재중심경계 누락");angle=DirectionAngle(hooks_.common.center(fields.Parent()),APoint(fields.bytes,20),pool_.Edition()); }
+    else { Track(fields);if (!hooks_.common.center) throw std::logic_error("Archer 실제현재중심경계 누락");angle=DirectionAngle(hooks_.common.center(fields.Parent()),APoint(fields.bytes,20),pool_.Edition(),state_.angles); }
     const auto wanted=NearestDirection(angle,pool_.Edition());if (!(fields.Time()<=state_.now)) return;if (current==wanted) { Finish(fields,3,4);return; }
     const auto backward=current<wanted ? current-wanted+data.directions : current-wanted,forward=wanted<current ? wanted-current+data.directions : wanted-current;const auto step=forward<backward ? 1 : -1;const auto next=current==0 && step==-1 ? data.directions-1 : (current+step)%data.directions;SetFrame(fields.Parent(),next*per);ArcherTime(fields,state_.now+static_cast<double>(kRotateDelay));
     if (!hooks_.common.randomInteger || !hooks_.common.sound) throw std::logic_error("Archer 실제회전소리경계 누락");const auto number=hooks_.common.randomInteger(1000,10000)/1000;hooks_.common.sound(fields.Parent(),"sunDiscThrowerRatchet0"+std::to_string(number)+".wav");
@@ -120,7 +117,12 @@ void RawArcherAnimation::Fire(ArcherAnimationFields& fields) const {
         if (ReadArcher(fields.bytes,80) && ReadArcher(fields.bytes,76) && threshold+state_.resetOffset<=position) PutArcher(fields.bytes,76,0);
         if (position>0) { const auto next=FireFrame(position,ReadArcher(fields.bytes,76)!=0);if (next!=Frame(fields.Parent())) { SetFrame(fields.Parent(),next);if (AFloat(fields.bytes,68)<0) { if (!hooks_.common.sound) throw std::logic_error("Archer 실제sarachet.wav 경계 누락");hooks_.common.sound(fields.Parent(),"sarachet.wav"); }else if (Frame(fields.Parent())==2) { if (!hooks_.common.sound) throw std::logic_error("Archer 실제whoosh 경계 누락");hooks_.common.sound(fields.Parent(),"sunDiscThrowerWhoosh.wav"); } } }
     }
-    const auto speed=AFloat(fields.bytes,68);if ((ReadArcher(fields.bytes,80) && speed<=state_.finishSpeed && std::abs(static_cast<double>(NormalizeArcher(AFloat(fields.bytes,64)))-state_.finishAngle)<state_.finishTolerance) || AFloat(fields.bytes,64)<0) Finish(fields,6,7);
+    const auto speed=AFloat(fields.bytes,68);bool completed=false;
+    if (ReadArcher(fields.bytes,80) && speed<=state_.finishSpeed) {
+        const auto angle=NormalizeBoardAngle(AFloat(fields.bytes,64),pool_.Edition(),state_.angles); // 진단이 복귀한 뒤 현재 finishAngle/tolerance를 읽는다.
+        completed=std::abs(angle-state_.finishAngle)<state_.finishTolerance;
+    }
+    if (completed || AFloat(fields.bytes,64)<0) Finish(fields,6,7);
 }
 // 동일월드adapter가읽는현재풀과타입전역이다.
 const SidPool& RawArcherAnimation::Pool() const { return pool_; }

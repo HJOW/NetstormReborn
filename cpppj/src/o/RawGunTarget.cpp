@@ -165,11 +165,8 @@ bool RawGunTarget::ArcherShot(const GunTargetQuery& query,Sid target) const {
     if (query.centerX!=center[0] || query.centerY!=center[1]) {
         // x87 fpatan 뒤 degree 환산은 원본 double 상수57.295827908797776를 사용한다.
         const double radians=std::atan2(-(static_cast<double>(center[1])-query.centerY),static_cast<double>(center[0])-query.centerX);
-        float raw=static_cast<float>(450.0-radians*57.295827908797776);double normalized=std::fmod(static_cast<double>(raw),360.0);
-        if (normalized<0) normalized+=360;
-        if (pool_.Edition()==OriginalEdition::Patch1078) { if (normalized>=360) normalized=359.9999f; }
-        else { float rounded=static_cast<float>(normalized);if (rounded>=360) rounded=359.9999f;normalized=rounded; }
-        angle=Normalize(static_cast<float>(normalized));
+        const float raw=static_cast<float>(450.0-radians*57.295827908797776);
+        angle=Normalize(static_cast<float>(NormalizeBoardAngle(raw,pool_.Edition(),state_.angles)));
     }
     const float base=Normalize(static_cast<float>(static_cast<double>(query.direction)*45.0));
     return ContainsAngle(angle,Normalize(static_cast<float>(static_cast<double>(base)-state_.windHalfAngle)),Normalize(static_cast<float>(static_cast<double>(base)+state_.windHalfAngle)));

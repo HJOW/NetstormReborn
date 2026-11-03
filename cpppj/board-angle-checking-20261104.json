@@ -1,0 +1,215 @@
+{
+  "unit": 820,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "exeSha256": "05e90bbf4049446c540a073fd6517c41a97ce3ea9d05e3c7f58d2f5a17990488",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "실제 Windows x86 CPU / 별도 콘솔 / PE 메모리 복사",
+    "floatingControl": "0x027f / x87 53비트",
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "rows": 1088,
+    "fixtureSha256": "3082bb54f64cf04fd178da9705e056235436df8a755bd5c661f7daba767ff7a8",
+    "probeSha256": "441f16c3e6a688d7cac5ac8d53e3e8fb130ce90b55ecae0c5096280f881912ee",
+    "probeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "boundary": "원본 초기화/GUI/실제 게임/소켓0·실제 PE 부모/CRT만 호출·진단 UI만 관측 callback·파일은 읽기 전용"
+  },
+  "nativeHardwareReobservedRows": 1088,
+  "nativeDiagnosticCalls": 30,
+  "unicornDiagnosticOnly": {
+    "rows": 1088,
+    "sha256": "ea9d253676f5abfefee542b84f6d565878325ccd85aa242c8f59d501486d87e4",
+    "differentFromCpuRows": 112,
+    "largeInputDifferences": 64,
+    "negativeIntegerMultipleZeroSignDifferences": 48,
+    "retainedFixture": "extracted/cpp-resume-820/unicorn-board-angle-checking-x86.tsv",
+    "differenceLog": "extracted/cpp-resume-820/unicorn-hardware-differences.json",
+    "authoritativeGolden": false
+  },
+  "tests": [
+    {
+      "filter": "BoardAngleChecking",
+      "cases": 3,
+      "failedChecks": 0,
+      "log": "extracted/cpp-resume-820/test-BoardAngleChecking-verified.log",
+      "sha256": "d52b27c6de00728a63a539dcfa9cef289ca9ad2ad2e00ece00ea20291e9d6f6c"
+    },
+    {
+      "filter": "ArcherAnimation",
+      "cases": 4,
+      "failedChecks": 0,
+      "log": "extracted/cpp-resume-820/test-ArcherAnimation-verified.log",
+      "sha256": "4cf5270d9ae856bb5c746c74458ad1d8b43c604ea8fe8c6373f29268f299b103"
+    },
+    {
+      "filter": "GunTarget",
+      "cases": 5,
+      "failedChecks": 0,
+      "log": "extracted/cpp-resume-820/test-GunTarget-verified.log",
+      "sha256": "2739906bf6ccdc6f78b5ebbcbbda3c7b6d8605c4f49d8f34325bbe583e4e51d3"
+    },
+    {
+      "filter": "FenceTarget",
+      "cases": 5,
+      "failedChecks": 0,
+      "log": "extracted/cpp-resume-820/test-FenceTarget-verified.log",
+      "sha256": "0c59a7a22fe112ea0234b7a0318079464bd6e6f8f8d678fb2e4e207d77d83cea"
+    },
+    {
+      "filter": "IceRicochet",
+      "cases": 8,
+      "failedChecks": 0,
+      "log": "extracted/cpp-resume-820/test-IceRicochet-verified.log",
+      "sha256": "416cd748123c36dc29a6b4a01c662b4fae2be988d996bd37a3f3c6c2f931c57f"
+    },
+    {
+      "filter": "RawSurfaceWorld",
+      "cases": 7,
+      "failedChecks": 0,
+      "log": "extracted/cpp-resume-820/test-RawSurfaceWorld-verified.log",
+      "sha256": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e"
+    }
+  ],
+  "focusedCases": 32,
+  "newCases": 3,
+  "failedChecks": 0,
+  "cppBuilds": [
+    {
+      "log": "extracted/cpp-resume-820/build-first.log",
+      "exitCode": 0,
+      "diagnosticCodes": []
+    },
+    {
+      "log": "extracted/cpp-resume-820/build-final.log",
+      "exitCode": 0,
+      "diagnosticCodes": []
+    },
+    {
+      "log": "extracted/cpp-resume-820/build-hardware.log",
+      "exitCode": 0,
+      "diagnosticCodes": []
+    },
+    {
+      "log": "extracted/cpp-resume-820/build-hardware-final.log",
+      "exitCode": 0,
+      "diagnosticCodes": []
+    },
+    {
+      "log": "extracted/cpp-resume-820/build-verified.log",
+      "exitCode": 0,
+      "diagnosticCodes": []
+    }
+  ],
+  "probeBuild": {
+    "finalLog": "extracted/cpp-resume-820/probe-build-payload.log",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "compiler": "MSVC18 x86",
+    "imageBase": "0x400000",
+    "reservedPayloadBytes": 3145728,
+    "copiedOriginalBlocks": "0x410000..0x61ffff inside own blank payload",
+    "originalInitialization": false,
+    "originalImportsOrGui": false
+  },
+  "firstIssues": [
+    "최초005022a0을0으로 해석했다가 실제 PE43b3fffd/359.9999로 교정. 기대값 불변.",
+    "Unicorn 기계어 관측1088행을 C++와 비교해 큰각64행 실패. 실제 x86 CPU 재관측은112행이 달랐고 그중48행은 음수 정수 배수의-0이다.",
+    "CPU golden 적용 뒤 임시+0 강제 guard의48실패를 확인해 제거. 초기 입력±0만 실제 CRT의+0을 유지. 최종1088행과 재관측 모두 일치.",
+    "프로브의 처음 고정 주소 확보는 OS 맵 충돌. 관측기 자신의 빈.payload에 보호 PE 코드를 그대로 배치. 최초 min/max 컴파일/링크 경고·누락 CRT metadata의 접근 위반을 보존하고 최종 경고/오류0.",
+    "중간 선택 스크립트 괄호 오류 뒤旧fixture로 같은64실패가 반복됨. 최초/중간/수정 로그 모두 보존."
+  ],
+  "currentConsumers": [
+    "RawFenceTarget004568b0",
+    "RawArcherAnimation.Rotate00467940",
+    "RawGunTarget.ArcherShot0046aaf0",
+    "RawIceRicochet.Point00482080",
+    "RawArcherAnimation.Fire00467c80 종료각",
+    "실제 Session/크로스보우 공통 회전 -> 같은 Storage 현재 checking/진단"
+  ],
+  "remainingChecking": {
+    "total": 24,
+    "parents": 16,
+    "partial": 5,
+    "multiplayer": 3,
+    "angleParentClosed": false,
+    "pendingCaller": "004dd2b0 -> 004dd330 -> Client00439af0 바람과 현재 입자 소비자"
+  },
+  "protection": {
+    "unchangedPreviousFiles": 2746,
+    "afterFiles": 2747,
+    "fixtureFiles": 927,
+    "newFixtures": [
+      "cpppj/tests/fixtures/board-angle-hardware-x86.tsv"
+    ],
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted/cpp-resume-820/protected-after.json"
+  },
+  "boundaries": [
+    "x87 53비트0x027f·유한 binary32 입력을 관측. 전체64비트 확장 정밀도/비유한 CRT 오류/OS/SEH는 별도 경계.",
+    "같은 Client의 checking/진단 뷰를 전달하며 전체 각도 caller 완료는 바람 연결 뒤 집계.",
+    "실제 CPU 관측은 별도 콘솔에서 원본 수학 코드만 호출하며 원본 초기화/게임 GUI/소켓을 실행하지 않음."
+  ],
+  "excluded": [
+    "실제 게임/GUI 플레이",
+    "포획/희생/특정 적 공격/승리 재현",
+    "사용자 직접 확인 검사",
+    "멀티플레이 검사",
+    "공중3종 전용 검사",
+    "환경 변화 없는 물리 캡처 재시도",
+    "전체 CTest/71대상/34미션/배포ZIP"
+  ],
+  "sourceHashBoundary": "실제 작업 파일 바이트와 CRLF를 LF로 보정한 텍스트를 함께 기록한다.",
+  "sources": {
+    "cpppj/src/o/RawBoardAngle.h": "57e623b7e5810910d6ba7d458653359a586870c9870bcc75a4269160f0f9de16",
+    "cpppj/src/o/RawBoardAngle.cpp": "c6f6cc507c70e047e58174d440147a49a9e57633fe5d49bc57b6061ad06d9d01",
+    "cpppj/src/o/RawArcherAnimation.h": "d4e8d94d8ff2ab70f6098a07cfad45f2a4f5986073fd937b2b1bfafc3891350f",
+    "cpppj/src/o/RawArcherAnimation.cpp": "636267ffa299dfd1c85f3738210a6bb2be3f59fcc0f71e313a8b1a14a875228a",
+    "cpppj/src/o/RawGunTarget.h": "c477005854d929b1c24271ddf06ca8367ea2b7fd782346625fea2c45c8674a36",
+    "cpppj/src/o/RawGunTarget.cpp": "f49de9efcff26fd4c1dfe6432c3b2784395dc82b5ce308874322ccae2d942f06",
+    "cpppj/src/o/RawFenceTarget.cpp": "1964d4e913c8bd6d23ecb1c81acb16ebe8f3b792b91ade6374358dff15d28ed4",
+    "cpppj/src/o/RawIceRicochet.h": "6373b8b4aa831df5080ed398d18e355bfcc6b25bc282e090bd9b3e8517ddb69c",
+    "cpppj/src/o/RawIceRicochet.cpp": "da73700be10949434c72d0645446012c1308df9cf5882cb68705f8c5027afa30",
+    "cpppj/src/o/CMakeLists.txt": "18f5eeac9138256f6a5f7477261881e2f97ef771a53f00b875f24f2f854b72ef",
+    "cpppj/src/client/RawSurfaceWorld.h": "e62f85f211382f58dc2498ac707c9ff3b98ef5e41618a9e02e91c4650304e451",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "ec55257d9ed247a6cbd21a651fb332b46080fd38895a088706b3c432a85be983",
+    "cpppj/src/client/RawCampaignSession.cpp": "d1b5596e31b68fd5ec6494ea78030e7e910ca29aac5ce9590b4325ac18fdff6c",
+    "cpppj/src/client/RawCampaignArcherBindings.cpp": "e1ee0df07d932013cc6e661039e778afde708d6a8100b46119dec85e9ceaafba",
+    "cpppj/tests/BoardAngleCheckingTests.cpp": "bdf0d999cd3317c6f64063c724082878ed4c0380dd2cb493ae3e850b047b63d4",
+    "cpppj/tests/CMakeLists.txt": "9ed89111e09abbb59fa979ca03afa4545599fa61d8e393b20908ccbbb3b0af43",
+    "cpppj/SOURCE_MAP.md": "3afea000b3ca31a35a5588b9616b64759064591ac5a0408212a1390c6455fa5b",
+    "tools/decomp_board_angle_checking.py": "e6aed5b219f3fba52574d7636a6a690dea1f4d78508662cb5035357b3a80cde0",
+    "tools/observe_board_angle_hardware.py": "b355f88a649c24134a756862932e097f8a2558439e086783cd7fb1838c5497d9",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0"
+  },
+  "normalizedSources": {
+    "cpppj/src/o/RawBoardAngle.h": "4d00d0e8db914bf6be113aa30642e23909d5d2f8fd9c523e41ab5b158e0d600e",
+    "cpppj/src/o/RawBoardAngle.cpp": "f3d40a098f58fd7b159b1a928e6124bb2b1123b26ef841794fe597ab907dedeb",
+    "cpppj/src/o/RawArcherAnimation.h": "d4e8d94d8ff2ab70f6098a07cfad45f2a4f5986073fd937b2b1bfafc3891350f",
+    "cpppj/src/o/RawArcherAnimation.cpp": "636267ffa299dfd1c85f3738210a6bb2be3f59fcc0f71e313a8b1a14a875228a",
+    "cpppj/src/o/RawGunTarget.h": "c477005854d929b1c24271ddf06ca8367ea2b7fd782346625fea2c45c8674a36",
+    "cpppj/src/o/RawGunTarget.cpp": "f49de9efcff26fd4c1dfe6432c3b2784395dc82b5ce308874322ccae2d942f06",
+    "cpppj/src/o/RawFenceTarget.cpp": "1964d4e913c8bd6d23ecb1c81acb16ebe8f3b792b91ade6374358dff15d28ed4",
+    "cpppj/src/o/RawIceRicochet.h": "6373b8b4aa831df5080ed398d18e355bfcc6b25bc282e090bd9b3e8517ddb69c",
+    "cpppj/src/o/RawIceRicochet.cpp": "da73700be10949434c72d0645446012c1308df9cf5882cb68705f8c5027afa30",
+    "cpppj/src/o/CMakeLists.txt": "18f5eeac9138256f6a5f7477261881e2f97ef771a53f00b875f24f2f854b72ef",
+    "cpppj/src/client/RawSurfaceWorld.h": "e62f85f211382f58dc2498ac707c9ff3b98ef5e41618a9e02e91c4650304e451",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "ec55257d9ed247a6cbd21a651fb332b46080fd38895a088706b3c432a85be983",
+    "cpppj/src/client/RawCampaignSession.cpp": "d1b5596e31b68fd5ec6494ea78030e7e910ca29aac5ce9590b4325ac18fdff6c",
+    "cpppj/src/client/RawCampaignArcherBindings.cpp": "e1ee0df07d932013cc6e661039e778afde708d6a8100b46119dec85e9ceaafba",
+    "cpppj/tests/BoardAngleCheckingTests.cpp": "60617493b72e0dca8457244eeb8df484a5a091a2615fffb5c4e4061e3fec2970",
+    "cpppj/tests/CMakeLists.txt": "67b104f5503f0945bb3e4237824d1151fdc7620d8e5dc5986d1a419744e26684",
+    "cpppj/SOURCE_MAP.md": "656f64326c4831c3b6b3b8f02ec53ccba89e40605389a91c4223681524fe23a0",
+    "tools/decomp_board_angle_checking.py": "8b491baaca16849103801e71ae2b31501b0389607e79ec0ce51a59420e125dad",
+    "tools/observe_board_angle_hardware.py": "e3856889ecc79097a92166ab4893ef9c19940ee4eb5a4c38e83a23f29ef5cfbe",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca"
+  },
+  "objectiveComplete": false
+}

@@ -3295,3 +3295,9 @@ target_sources(netstorm_tests PRIVATE GraphDetachLiveTests.cpp)
 target_sources(netstorm_file_tests PRIVATE GraphDetachLiveTests.cpp)
 set_source_files_properties(GraphDetachLiveTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GRAPH_DETACH_LIVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-detach-live-x86.tsv\"")
+
+# 실제 각도 부모/CRT와 Storage 진단 뷰를 게임 없이 집중 비교한다.
+target_sources(netstorm_tests PRIVATE BoardAngleCheckingTests.cpp)
+target_sources(netstorm_file_tests PRIVATE BoardAngleCheckingTests.cpp ArcherAnimationTests.cpp GunTargetTests.cpp FenceTargetTests.cpp IceRicochetTests.cpp)
+set_source_files_properties(BoardAngleCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BOARD_ANGLE_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/board-angle-hardware-x86.tsv\"")

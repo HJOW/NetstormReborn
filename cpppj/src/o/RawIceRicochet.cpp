@@ -47,7 +47,7 @@ std::span<const std::uint8_t> RawIceRicochet::Slot(Sid sid) const {
 bool RawIceRicochet::Point(const MissileFields& fields,std::array<float,2>& output) const {
     const auto raw=Slot(fields.Parent());const auto current=IcePoint(raw,14),origin=IcePoint(fields.bytes,56);
     if (current==origin) return false;
-    const auto direction=RawArcherAnimation::DirectionAngle(origin,current,pool_.Edition());
+    const auto direction=RawArcherAnimation::DirectionAngle(origin,current,pool_.Edition(),hooks_.angles);
     const float sign=random_.Next(100)>49 ? -1.0F : 1.0F;
     const double offset=static_cast<double>(random_.Next(65536))*(1.0/65536.0)*120.0+30.0;
     const float angle=NormalizeIce(static_cast<float>(offset*sign+direction));

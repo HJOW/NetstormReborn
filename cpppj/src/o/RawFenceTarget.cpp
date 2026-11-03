@@ -40,14 +40,11 @@ int Direction(std::array<float,2> from,std::array<float,2> to,bool cardinal) {
     return y<0 ? 0 : y>0 ? 4 : -1;
 }
 // 실제 BoardCoord.angle의 float 입력 저장·double fpatan 환산·정규화 뒤 CRT 절삭이다.
-int Angle(std::array<float,2> from,std::array<float,2> to) {
+int Angle(std::array<float,2> from,std::array<float,2> to,const BoardAngleDiagnostics& diagnostics) {
     if (from==to) return 0;
     const double radians=std::atan2(-(static_cast<double>(to[1])-from[1]),static_cast<double>(to[0])-from[0]);
     const float degrees=static_cast<float>(450.0-radians*57.295827908797776);
-    double value=std::fmod(static_cast<double>(degrees),360.0);
-    if (value<0) value+=360;
-    if (value>=360) value=359.9999f;
-    return static_cast<int>(value);
+    return static_cast<int>(NormalizeBoardAngle(degrees,OriginalEdition::Patch1078,diagnostics));
 }
 }
 // 같은 Pool/TYPE 계약을 확인하며 CD의 다른 fence 몸체를 PATCH 규칙으로 실행하지 않는다.
@@ -162,7 +159,7 @@ std::array<float,2> RawFenceTarget::Across(Sid mark,Sid firing,Sid target) const
     const auto targetCenter=target_.Center(target),firingCenter=target_.Center(firing);
     auto point=Intersection(a,b,firingCenter,targetCenter);
     if (!Valid(point)) return point;
-    const int angle=Angle(point,targetCenter);
+    const int angle=Angle(point,targetCenter,targeting_.angles);
     if (axis) return Add(point,0,firingSide && !cannon && angle<192 ? -11 : -22);
     if (cannon) { point[1]=firingCenter[1];return Add(point,0,-15); }
     if (!firingSide) return Add(point,0,-11);

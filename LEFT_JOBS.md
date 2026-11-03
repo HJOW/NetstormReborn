@@ -6,21 +6,21 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-04, 단위 819 완료·목표 진행 중)
+### 0.1 현재 값 (2026-11-04, 단위 820 완료·목표 진행 중)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **사용자 /goal 요청으로 재개·전체 목표 미완료.** 마지막 구현은819이며 다음은820의 나머지 checking 부모와 객체 메뉴/커서 실제 소비자 연결이다. 제외 검사와 단위별 인계·커밋을 유지한다. 0.4절 참조 |
-| 현재 제품 | **819 / 표시 11.01.** 현재 Add/Flood/Rebuild/Detach/영역 setter와 실제 World 활성·분할 정책/Client 시계를 연결했다. sentinel8·Flood4 호출의 현재 소비자를 완료했다 |
-| 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반 31+데모 3의 마지막 전체 진입 검증은 **645의 644 제품**이며 현재 819의 전체 회귀 결과가 아니다 |
+| 진행 상태 | **사용자 /goal 요청으로 재개·전체 목표 미완료.** 마지막 구현은820이며 다음은821의 바람 caller/현재 입자와 나머지 checking·객체 메뉴/커서 실제 소비자 연결이다. 제외 검사와 단위별 인계·커밋을 유지한다. 0.4절 참조 |
+| 현재 제품 | **820 / 표시 11.01.** 현재 Boardcoord 각도/방향 네 소비자·썬 아처 종료각과 같은 Storage 진단을 연결했다. Graph 현재 실행819는 유지하며 바람 caller는821 잔여다 |
+| 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반 31+데모 3의 마지막 전체 진입 검증은 **645의 644 제품**이며 현재 820의 전체 회귀 결과가 아니다 |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | `d80fc3d02f6adbd33f66ab08e1c4077036188fb3d839c2837f0ef485b2457b74` (819 / 11.01) |
-| 최신 빌드·집중 검사 | 819 Release 명령2회 종료0, 최종 경고/오류0. C++집중45개(새3) 실패0. 새 PE Detach432+영역8행 전체 표/stack/슬롯/현재 정책/이벤트 일치. 기존 raw5094·checking 영역1536·부모168·sentinel1080·이웃/World/다리 수명도 통과. 최초 경고/필터 오류는0.4절·819 기록. 실제 자산 콘솔 초기 로드는818 기준이며 새 GUI·공격·MP0 |
+| EXE SHA-256 | `05e90bbf4049446c540a073fd6517c41a97ce3ea9d05e3c7f58d2f5a17990488` (820 / 11.01) |
+| 최신 빌드·집중 검사 | 820 Release 명령5회 종료0·최종 경고/오류0. 집중32개(새3) 최종 실패0. 실제32비트 CPU의 원본 부모/CRT1088행과 재관측1088행 일치. Unicorn112행 오류(큰각64/음수 배수-0 48)를 분리 보존하고 C++ 임시guard48실패도 교정했다. 최초/중간 로그는820 기록. 게임 GUI·공격·MP0 |
 | checking 잔여 | **24함수 = 부모16 + 부분5 + MP분류3.** 819에서 Detach의 마지막 호출들을 연결해 Flood00462f10/sentinel00462ac0을 완료 집계했다. Add는818 완료다 |
 | 마지막 GUI | **794에서 793 제품**의 시작/메인 메뉴를 확인. 815 GUI 통과로 합산하지 않는다 |
 | 전체 검사 기준 | 실행 대상66/전체 빌드 대상71. 전체71 마지막 컴파일은779. 전체 C++ 마지막 실행은549의3389개 중7개 실패(580단언); 마지막 전체 통과는510의508제품3337개. 이후 집중 통과를 전체 통과로 쓰지 않는다 |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
-| 보호 기준 | 기존2744개/fixture924개 불변. 새 fixture2개 포함 **2746개/926개**이며 원본/기존 fixture 변경0. `extracted/cpp-resume-819/protected-after.json` |
+| 보호 기준 | 기존2746개/fixture926개 불변. 새 CPU fixture1개 포함 **2747개/927개**이며 원본/기존 fixture 변경0. `extracted/cpp-resume-820/protected-after.json` |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
@@ -28,9 +28,9 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 1. 사용자 재개 요청 뒤 AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 해당 인계도 읽는다. `git status`와 `git fetch`로 다른 PC/세션 변경을 확인하며 push는 하지 않는다.
 2. 현재 호스트가 마지막 디컴파일 호스트와 다르면 cpppj 작업/디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 문서에 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 불완전하므로 쓰지 않는다.
 3. 실제 게임·별도 창 실행은 AGENTS.md의 확인 규칙을 따른다. 예외는 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94) 및 사용자가 직접 요청한 원본 수동 컨트롤/녹화 분석의 해당 단계다. 다른 PC는 실행 목적·필요성 설명 후 명시적 확인이 필요하다.
-4. 최신 완료 원시는 `extracted/cpp-resume-819/`이며 Git 제외·작업 PC 전용이다. 커밋되는 증거는 `cpppj/*.json`·`docs/exe/cpp-*.md`다. 다른 PC에 원시가 있다고 가정하지 않는다.
+4. 최신 완료 원시는 `extracted/cpp-resume-820/`이며 Git 제외·작업 PC 전용이다. 커밋되는 증거는 `cpppj/*.json`·`docs/exe/cpp-*.md`다. 다른 PC에 원시가 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj/webpj·staged 파일·실행 출력은 포함하지 않는다. 한 단위를 마치면 0.1절·해당 완료/잔여 항목·단위 문서를 갱신하고 해당 파일만 로컬 커밋한다.
-6. 네 Gun809·Canon810→811·전환812·레벨813·ContentForm814·Graph 참조 감소/SID0조회815는 완료했다. 816의 sentinel/Free와817의 flags8 부품도 완료했다. 818의 Add/Flood/Rebuild/Allocate/PostPop/PostDestroy와819의 Detach/영역 setter 현재 실행을 완료했다. 다음은 나머지 checking 부모24함수와 객체 메뉴·커서 상태/수명이다. 공통 Boardcoord0041cdb0의 각도 진단/소비자부터 살펴볼 수 있다. 포획 안내 실행/실제 포획 등 사용자 제외 검사는 계속 건너뛴다.
+6. 네 Gun809·Canon810→811·전환812·레벨813·ContentForm814·Graph 참조 감소/SID0조회815는 완료했다. 816의 sentinel/Free와817의 flags8 부품도 완료했다. 818의 Add/Flood/Rebuild/Allocate/PostPop/PostDestroy와819의 Detach/영역 setter 현재 실행을 완료했다. 820에서 공통 Boardcoord0041cdb0의 현재 각도와 방향 네 소비자를 연결했다. 다음821은 마지막 바람004dd2b0/Client439af0·현재 입자 바람이며 그 뒤 나머지 checking24와 객체 메뉴·커서 상태/수명이다. 포획 안내 실행/실제 포획 등 사용자 제외 검사는 계속 건너뛴다.
 
 ### 0.3 유지되는 제한과 보류
 
@@ -41,17 +41,16 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 - **환경 한계:** 물리 입력/캡처는762의 새 부팅·RDP세션1에서도 두 번 timeout이었다. 실제 환경 변화 전 재시도하지 않는다. 다른 모니터/DPI·실제 앱 전환·실제 PCM/청취·사용자 활성 전체화면의 물리 출력·실제 CD 삽입은 미검증이다.
 - **원문/호스트 경계:** 32비트 FILE/FileSpec/SEH·스택 배치/미정값 자체 일치, 부분 I/O/실제 할당 실패와 전체 진단 UI는 별도 한계다. 612의 반사 입력, VFX signed WORD/정상 표본·양수/회전0/원색의 근거를 전체 입력·픽셀로 확대하지 않는다.
 
-### 0.4 2026-11-03→04 재개 인계
+### 0.4 2026-11-04 재개 인계
 
-- **진행:** 사용자 /goal 전체 잔여를 계속 진행 중이다. 호스트와 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**으로 같고 기존 산출물을 읽었다. 819는03일 시작·04일 검증/커밋 단위다. GUI·자연 플레이·사용자 제외·MP 검사는 하지 않았다.
-- **이전 완료:** 816 sentinel/Free `588c0e9c / 20261103-232 CP`,817 flags8/경계 spot `586738be / 20261103-233 CP`,818 현재 Add/Flood/Rebuild/Allocate/PostPop/PostDestroy·World FullPool/Client trace `b7065914 / 20261103-234 CP`다. [818 기록](docs/exe/cpp-graph-live-checking-20261103.md)의 최초 입력/상태 검사 교정과 원시는 보존했다.
-- **819 완료:** RawGraph::Detach의 Calculate/Commit 적용을 실제 현재 실행으로 옮겼다. 위치 머리 번호와 값 원천을 구별하고 일반 finder(flags0)로 연결을 모은다. 각 Flood/진단/로그 뒤 현재 후보 번호·원래 행·남은 연결·분할 정책을 읽는다. sourceType은 삭제 정보의 발자국/중심/flags2/프레임만 치환하며 같은 타입의 다른 후보나 raw 타입은 바꾸지 않는다. 두 번째 코드가 실제 필요할 때만 치환 프레임을 해석하는 기존 지연 접합 계약을 유지했다. [819 기록](docs/exe/cpp-graph-detach-live-20261103.md).
-- **실제 연결:** World bookkeeping.graphsEnabled/deletion.rebuildGraph의 현재 주소를 읽으며 두 시각 조회는 Storage→같은 Client GameClock.GameSeconds에 연결했다. 실제 공통 preDestroy `004b0950`의 한 호출(CD `004add20`의 두 분기)도 현재 실행이다. sentinel의8호출·Flood의4호출이 모두 현재 소비자가 되어 두 함수를 완료 집계했다. checking은 **24=부모16+부분5+MP3**이다.
-- **영역 수정:** Remove 진단이 후보를 free/비표면으로 바꾸어도 같은 물리 graph BYTE를 쓰도록 AllocatedBytes 재관문 대신 원문 WriteNumber를 쓴다. 현재 타입/번호의 패치 setter 진단과 이후 후보의 현재 상태도 유지한다.
-- **검증:** 새 PE Detach432+영역8행의 전체255기록/4096DWORD/6슬롯/checking·활성·분할 DWORD/이벤트가 일치했다. Detach 원문 시각420·로그420·진단16회와 영역 진단5회다. 집중 **45개(새3) 실패0**: Detach3/raw17/참조4/이전 부모3/sentinel2/표면이웃2/World7/다리수명3/일반이웃4. 기존 raw5094연산·checking 영역1536연산(참조18/추가 부모64)·부모168행·sentinel1080행·표면250대조/32변경도 통과했다. Release2회 종료0·최종 경고/오류0. EXE/SHA는0.1절이며 실제 자산 콘솔 초기 로드는818 당시 결과다.
-- **최초 문제/교정:** Native 최초 시도는 미허용 일반 finder 하위 기하/무조건 true 필터에서 중단됐으며 해당 최신 몸체를 읽고 정확한 범위만 추가했다. 최초 C4244는 새 검사 optional<uint8_t>의 int81을 명시 바이트로 교정했다. 대문자 `Neighbor_` 필터는0개/실패1이었고 실제 `neighbor_`로 교정해4개 통과했다. 최초/중간/최종 로그를 모두 원시에 보존했다. 제품 로직/기존 기대값을 바꿔 실패를 숨기지 않았다. 기존 -text 세 파일의 변경 없는 줄바꿈을 HEAD 바이트로 유지했으며 컴파일한 정규화 내용과 같음을 확인했다.
-- **다음820:** checking24함수의 남은 부모와 우선순위1 객체 메뉴/커서 실제 소비자를 이어 복원한다. 공통 Boardcoord0041cdb0의 현재 각도 진단과 실제 caller를 먼저 점검할 수 있다. 819 Graph를 다시 미구현으로 세지 않는다. 1~4/Windows 호환 잔여 뒤 MP 무검사 사전 구현,4~8차 순서를 유지한다.
-- **한계/운영:** TYPE/프레임 배열은 기존 생성 시 복사 계약이며 삭제 감소는 기존1/9 API 입력이다. 호출 중 타입 전역 교체·원문 주변 stack/범위 밖 프레임·32비트 FILE/SEH·실제 할당 실패는 별도 경계다. 64연결 이상에 대한 기존 무효과 Validate 보호는 유지한다. 전체71/34미션 GUI/배포 ZIP/물리/PCM 검사를45개 C++ 검사와 혼동하지 않는다. 원시는 `extracted/cpp-resume-819/`, 보호2746/fixture926이다. 이 작업의 빌드/검사 프로세스는 모두 종료했다. 다른 채팅의 DN 변경을 건드리거나 커밋하지 않는다. 단위별 인계·커밋·push 금지, 사용자 제외·MP 신규 검사·공중3종 전용·환경 변화 없는 물리 재시도 제외를 유지한다. **전체 목표는 미완료다.**
+- **진행:** 사용자 /goal 전체 잔여를 계속 진행 중이다. 호스트와 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**으로 같고 기존 산출물을 읽었다. AGENTS/이 문서/dotnet 인계를 다시 읽었으며 GUI·자연 플레이·사용자 제외·MP 검사는 하지 않았다.
+- **이전 완료:** 818 현재 Add/Flood/Rebuild/Allocate/PostPop/PostDestroy·World FullPool/Client trace는 `b7065914 / 20261103-234 CP`,819 현재 Detach/Region setter·World 활성/분할 정책·Client 시계는 `8df974e5 / 20261104-01 CP`다. Graph sentinel8/Flood4 호출은 완료이며819의 집중45개/PE440행·최초 교정은 [819 기록](docs/exe/cpp-graph-detach-live-20261103.md)에 보존했다.
+- **820 완료:** RawBoardAngle에서 실제 CRT fmod와 패치 double/CD float 저장·signed 비트 끝각/현재 checking 진단을 공유한다. 방향 helper0041ce20의 네 소비자(배리어004568b0/썬 아처 회전00467940/관측각0046aaf0/아이스 반사00482080),썬 아처 발사00467c80의 종료각과 공통 크로스보우 회전에 같은 Storage 현재 진단 뷰를 전달했다. Fire의 진단 복귀 뒤 현재 finishAngle/tolerance도 순서대로 읽는다. 기존 aggregate 입력은 새 필드를 끝에 추가해 보존했다. [820 기록](docs/exe/cpp-board-angle-checking-20261104.md).
+- **실제 CPU 검증:** `tools/native_board_angle_probe.cpp`는 원본 파일을 읽기만 하고 자체 빈.payload(3MB)에410000..61ffff 바이트를 그대로 복사한다. 원본 시작/GUI/IAT 초기화 없이 실제 x86 CPU로 각도 부모/CRT만 호출하며 assertion UI만 callback이다. CPU1088행·재관측1088행의 binary64/checking/진단30회가 일치했다. golden SHA는`3082bb54f64cf04fd178da9705e056235436df8a755bd5c661f7daba767ff7a8`이다.
+- **검사/제품:** C++집중32개(새3) 최종 실패0: 각도3/아처4/총표적5/배리어5/반사8/World7. Release 명령5회 종료0·최종 경고/오류0. 실제 CPU 프로브 최종 빌드도 경고/오류0. 원본/기존 보호2746개 불변이며 새fixture1개 포함2747/927이다. EXE/SHA는0.1절이다. 실제 자산 콘솔 초기 로드는818 당시 결과이고 새 GUI/전체71/34미션/배포ZIP은 실행하지 않았다.
+- **최초 문제/교정:**005022a0을0으로 추정한 오류를 실제PE43b3fffd/359.9999로 교정했다. Unicorn 원문1088행 대조는 큰각64행에서 실패해 실제CPU 관측기를 추가했고, CPU와는112행(큰각64/음수 정수배수-0 48)이 달랐다. 기존 +0 임시guard48실패도 실제CPU 근거로 제거했다. 입력±0만 실제CRT처럼+0이다. 최초 Unicorn TSV/보고서는 원시의`unicorn-board-angle-checking-*`로 그대로 이동 보존했다. 제품 golden은 실제CPU 파일이며 기존 커밋fixture를 수정하지 않았다. 최초 CRT 허용범위 중단·주소충돌·프로브컴파일/링크/metadata 누락·중간Python 괄호오류/동일64실패·수정/최종 로그를 모두 원시에 보존했다.
+- **다음821(필수):** 직접 caller3곳 중 바람004dd2b0이 아직 미연결이라 checking24(부모16/부분5/MP3)를 유지한다. 썽크004dd330은 Client00439af0에서 Movie 갱신 잠금 없는 가지의004180f0 뒤/004182c0·다리 수명·위치 음향 앞이다. 현재Client에 이 호출이 없고 BurningFrameState.wind는0이다. x005e18a8/y005435b0/angle005e18b0의 실제 PE 초기값을 읽고 Client 수명의 현재 owner·같은 GameRandom·실제 입자 소비자에 연결한다. 사용자/Session 교체 때 임의 재시드·리셋하지 않는다. NativeCPU 프로브의 전용.payload를 재사용할 수 있으나 바람의 실제 난수/상수/쓰기 순서를 먼저 읽는다. 바람 caller까지 연결하기 전0041cdb0을 완료 집계하지 않는다.
+- **후속/한계:**821 뒤 나머지 checking과 우선순위1~4·Windows 호환 잔여를 진행하고 MP 무검사 사전 구현→4~8차로 간다. 이번 x87 관측은0x027f/53비트·유한 binary32이며 전체64비트 확장 정밀도/비유한 CRT 오류·OS/FILE/SEH는 별도 경계다. 원시는 `extracted/cpp-resume-820/`, 보호2747/fixture927이다. 이 작업의 빌드/검사/프로브 프로세스는 모두 종료했다. 다른 채팅의 DN 변경을 건드리거나 커밋하지 않는다. 단위별 인계·커밋·push 금지, 사용자 제외·MP 신규 검사·공중3종 전용·환경 변화 없는 물리 재시도 제외를 유지한다. **전체 목표는 미완료다.**
 
 ## 1. 현행 목표
 
@@ -131,6 +130,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 - [x] **현재 표면 이웃 flags8(817):** y/x·모서리/중복·현재 지도/후보/보관 원천의 부품을 연결했다. 기존250대조·새32행과 집중6개(새2) 최종 통과. 최초4단언 실패는 경계 후보 raw spot 조회로 제품 수정·fixture 불변. Graph 실제 부모 연결은 다음이며 checking27은 유지한다. [817 기록](docs/exe/cpp-surface-neighbor-current-20261103.md).
 - [x] **현재 Graph 부모/Client trace(818):** Add/Flood/Rebuild/Allocate·실제 postPop/postDestroy·World FullPool·현재 로그를 연결했다. 새 PE168행·C++집중34개(새3) 최종 통과, 실제 자산 Tutorial1 콘솔 초기 로드 종료0. 최초 입력/상태 관문/진단 listener 교정을 기록하고 기존 fixture 기대값을 유지했다. Add 완료이며 Detach 및 그 안의 Flood/sentinel·Region setter 잔여는 남는다. [818 기록](docs/exe/cpp-graph-live-checking-20261103.md).
 - [x] **현재 Detach/영역 setter/시계(819):** 삭제 값 원천·일반 finder·현재 정책/Flood/sentinel·World 활성/분할 상태·현재 Client 시계를 연결했다. 새 PE440행·집중45개(새3) 실패0·최종 Release 경고/오류0이며 기존 fixture는 불변이다. sentinel/Flood 두 함수 완료로 checking24가 남는다. 최초 경고/필터·허용 범위 교정을 기록했다. [819 기록](docs/exe/cpp-graph-detach-live-20261103.md).
+- [x] **Boardcoord 각도/방향 소비자(820):** 현재 CRT fmod/판본별 저장·진단 복귀를 네 방향 소비자와 썬 아처 종료각에 연결했다. 실제CPU1088행/재관측1088행·집중32개(새3) 최종 실패0. Unicorn112행 불일치와 최초 교정을 보존했다. 바람 caller 잔여라 checking24는 유지한다. [820 기록](docs/exe/cpp-board-angle-checking-20261104.md).
 - [x] **Edit 대표 수명·저장:** 기존/새 Fort·섬 추가·전체 저장/Save as·이름/목록, 시나리오 시작값·방향별 동맹(590·597), 실제 Objects 스트림·손상 파일 정리(663~665), Early1 중단→Edit→시험 전투/Restart/복귀·Cancel/No(716), 같은 워크샾 owner0/2/8·Yes 저장/재적재(726). [Edit 수명](docs/exe/cpp-mission-editor-lifetime-20261102.md), [소유자 저장](docs/exe/cpp-editor-owner-save-20261102.md). 전체 도구/분기/실패를 완료한 것은 아니다.
 - [x] **Edit Graph·지형 캐시:** 재적재 소속(721), 같은 후보 배치 직후 장부678/실제670·noGraph4(723), 두 섬/다리 연결·owner 변경·절단의 성분2→1→2와 원본 전체 출력(724), 지면99cache Client 수명(722). [대표 Graph](docs/exe/cpp-editor-graph-world-20261102.md). 원본에도 있는 장부 차이8은 정규화하지 않는다.
 - [x] **시나리오 명령 연결:** 객체/송금·연기/번개·AddRandom/DestroyAt·기술 지급·음향/ViewSpot·HTML Input·기술 목록(676·682·683·686~690·705~708), 명시549문서/43이름·Menu 둘째 인자/큐 조사(715). [이름/메뉴 조사](docs/exe/cpp-dump-squids-20261102.md). 명시 목록 일치를 동적/TARC/Config 실행 전체 완료로 세지 않는다. Zsend/비미션 의식 요청(707·709)은 MP 정적 연결만 했다.
@@ -143,14 +143,14 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 - [x] **일반 명령·글꼴/음향 설정:** press 후처리(784), CreateAt/AI 직접 명령/MakeAi/조건부 AI 메뉴(770·772·773·775), Config/우선순위 명령(762), 글꼴·음질/글리프 캐시(764), raw ACP 31BYTE↔UTF-8 Config/디스크 경계(774). [일반 후처리](docs/exe/cpp-recent-command-tail-20261103.md), [글꼴 이름](docs/exe/cpp-font-face-encoding-20261103.md). MakeAi의 owner0 이전/삭제·전략·실제 설치 글꼴/다른 ACP/구형 무BOM 설정은 별도 한계다.
 - [x] **checking 공유 owner와 후속 26부모:** 779의 기존 41관문 공유와 별도로, 접근점(783)·다리 낙하(793)/붕괴(795)·Gump 표시/소멸(796)·연소 3소비자(797→798)·건설 Form(800)·커서 취소(801)·펜스 2타입(802)·Gunanim(803)·Squid 표시(804→805)·Gump 부착(806)·Gun 통지(808)·네 Gun PostPop(809)·CanonDecoder(810→811)·Graph 참조 감소/SID0조회(815)·Graph Add(818)·Graph sentinel/Flood의 마지막 Detach 소비자(819)를 실제 소비자에 연결했다. [함수별 색인](docs/exe/cpp-checking-consumer-gaps-20261103.md), [808](docs/exe/cpp-gun-notify-checking-20261103.md). 순수부모 준비본을 실제 연결 완료로 중복 계산하지 않는다. 807의 Gun/바리케이드 서버 관문 4곳 owner 분리와 809의 네 PostPop 진단 위치·복귀까지 완료다.
 - [x] **Windows 10 화면 전환의 확인 범위:** DIB 호환 전체화면·가장자리 이동·세 화면비·저장/종료/새 프로세스 적용, F12(744), 화면 변경/불법 요청 복구·DD 마우스 조정/취소/확인/15초 만료·저장 재시작(746). [화면 전환](docs/exe/cpp-screen-mode-transition-20261102.md). 다른 장치/DPI·물리 입력/출력은 미검증이다.
-- [x] **배포 스크립트·빌드 선택:** `cpppj/package-cpppj.ps1`의 인자/대화형 경로·빈 값 취소·실행 파일/자산 동봉(562), 최상위 EXE 실행(637), Game/Tests/All 선택/기본 테스트 OFF(739). [빌드 모드](docs/exe/cpp-build-modes-20261102.md). 최신 제품 819의 새 배포 ZIP/전체 회귀는 아직 없다.
+- [x] **배포 스크립트·빌드 선택:** `cpppj/package-cpppj.ps1`의 인자/대화형 경로·빈 값 취소·실행 파일/자산 동봉(562), 최상위 EXE 실행(637), Game/Tests/All 선택/기본 테스트 OFF(739). [빌드 모드](docs/exe/cpp-build-modes-20261102.md). 최신 제품 820의 새 배포 ZIP/전체 회귀는 아직 없다.
 - [x] **사용자 제보 수정:** 덱 재활성 지연은 원문 Fast 1초로 복원(677), 간헐천 그림자는 원문 대상 변환/색표로 수정(678). [덱](docs/exe/cpp-deck-reactivation-20261101.md), [그림자](docs/exe/cpp-translated-shadow-20261101.md). 사용자의 자연 플레이 재확인은 별도다.
 - [x] **설정 매핑 저장 실패 대응:** 제품 674의 오류1224·백업/교체/지연 정리, 도구 675의 복구를 완료했다. [제품](docs/exe/cpp-options-mapped-save-20261101.md), [도구](docs/exe/cpp-tool-settings-writer-20261101.md). 과거 개별 원인 프로세스·1176/1177·부분 I/O와 전체 audio 재실행은 미확인이다.
 - [x] **11.01/Credits·외부 검증 비활성화:** 684·685 적용 완료. 1.3절의 문구·처리 경계를 따른다.
 
 ### 2.2 미션별 확보한 증거
 
-모든 행은 **과거 해당 제품의 증거**다. 현재 819의 자연 완주 회귀로 합산하지 않는다. 전체 34 최신 기준은645/644 제품이다.
+모든 행은 **과거 해당 제품의 증거**다. 현재 820의 자연 완주 회귀로 합산하지 않는다. 전체 34 최신 기준은645/644 제품이다.
 
 | 대상 | 확보한 증거 | 남은 사용자 확인 |
 | --- | --- | --- |
@@ -182,7 +182,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 ## 3. 앞으로 할 작업 (재개 후 권장 순서)
 
-**2026-11-03 사용자 /goal 요청으로 재개했다.** 819에서 Graph 현재 소비자를 완료했다. 나머지 checking 부모·객체 메뉴/커서 실제 소비자를 이어 간다(0.4절). 비멀티1~4번·Windows 10 호환성7번을 마친 뒤8번으로 간다. 5·6번은 사용자 확인 목록이며 단계 전환을 막지 않는다. 아래 `[ ]`만 실제 잔여이며 완료한 하위 범위는2절이다.
+**2026-11-03 사용자 /goal 요청으로 재개했다.** 819에서 Graph 현재 소비자를 완료했다. 820 각도/방향 소비자 뒤821 바람·나머지 checking·객체 메뉴/커서 실제 소비자를 이어 간다(0.4절). 비멀티1~4번·Windows 10 호환성7번을 마친 뒤8번으로 간다. 5·6번은 사용자 확인 목록이며 단계 전환을 막지 않는다. 아래 `[ ]`만 실제 잔여이며 완료한 하위 범위는2절이다.
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
 
@@ -209,7 +209,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 ### 4. 내부 수명·파일·checking 실제 연결
 
-**현재 연결 기준:** 네 Gun PostPop809·CanonDecoder810→811·전환812·레벨813·ContentForm814·Graph 참조/SID0조회815는 완료했다. [815 기록](docs/exe/cpp-graph-reference-checking-20261103.md). 818에서 Add와 postPop/postDestroy,819에서 Detach·영역 setter·World 정책/시계를 완료했다. sentinel8/Flood4 호출도 현재 실행이다.
+**현재 연결 기준:** 네 Gun PostPop809·CanonDecoder810→811·전환812·레벨813·ContentForm814·Graph 참조/SID0조회815는 완료했다. [815 기록](docs/exe/cpp-graph-reference-checking-20261103.md). 818에서 Add와 postPop/postDestroy,819에서 Detach·영역 setter·World 정책/시계를 완료했다. sentinel8/Flood4 호출도 현재 실행이다.820 각도 부모/방향4곳은 완료하되 바람004dd2b0이 남아 함수 집계24를 유지한다.
 
 - [ ] **checking 잔여 24함수**를 [함수별 공백](docs/exe/cpp-checking-consumer-gaps-20261103.md)에서 이어 간다. 부모 16/부분 5/MP 분류 3이며 779 당시 51개 중 2.1절의 26부모는 완료다. ContentForm 부분 `004aec10`은814 완료다. 남은 부분은 `0048fb30/004b54e0/004b8cb0/004c9350/004d62b0`이다. `004b54e0` 재접속 저장은 부분 5의 집계에 남지만 작업은 8번MP로 이월한다. MP 분류 3(`0042bc10/004b4df0/004b8b20`)도 8번이다.
 - [ ] 비멀티 파생 프로세스·State/Session의 남은 수명과 전체 팔레트 전환·Chat 모드별 표시·시스템뉴스 UI를 연결한다. 원격/메타맵·desc는8번이다.

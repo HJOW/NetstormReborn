@@ -1,5 +1,6 @@
 // 10.78 Missile의00482080 반사점과00482190 후보 선택/후속 생성 요청을 복원한다.
 #pragma once
+#include "o/RawBoardAngle.h"
 #include "o/RawMissile.h"
 #include "o/RawSquidFinder.h"
 #include "o/SpStore.h"
@@ -13,6 +14,7 @@ struct IceRicochetHooks {
     std::function<bool(Sid)> hasHitPoints; // 같은 SquidReward의004adc60 HP 보유 판정이다.
     std::function<void(const GunProjectileRequest&)> createProjectile; // 실제 반사 Missile의 생성·Pop·Host 부착을 수행해야 한다.
     std::function<void(std::span<std::uint8_t>)> initialPointBytes; // 변위0에서 Point가 쓰지 않은 호출자 지역점8BYTE를 공급한다. 임의 성공 좌표로 대체하지 않는다.
+    BoardAngleDiagnostics angles; // 실제 변위 방향 계산이 읽는 현재 Client checking/진단 뷰다.
 };
 // 전체 반사탄 수명과 분리한 원본 반사점/확률/표적 선택 몸체다.
 class RawIceRicochet {
