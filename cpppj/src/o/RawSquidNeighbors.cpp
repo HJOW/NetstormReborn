@@ -44,26 +44,31 @@ const SquidHash& RawSquidNeighbors::Hash() const { return hash_; }
 // 복사해 둔 타입 표다. 이 객체가 살아 있는 동안 유효하다.
 std::span<const RiftTypeRecord> RawSquidNeighbors::Types() const { return types_; }
 // 004ade70/0049ae80의 발자국과 004adea0의 중심을 저장한 float 정밀도로 읽는다.
-RawSquidNeighbors::Object RawSquidNeighbors::ReadObject(Sid sid,bool readFrame) const {
+RawSquidNeighbors::Object RawSquidNeighbors::ReadObject(Sid sid,bool readFrame) const { return ReadObject(Source(sid),readFrame,false); }
+// 실제 슬롯의 정보만 포착하며 프레임 코드나 후보를 아직 읽지 않는다.
+SquidNeighborSource RawSquidNeighbors::Source(Sid sid) const {
     if (!sid.value || sid.value>=pool_.Capacity()) throw std::out_of_range("raw 이웃 SID 오류");
-    const auto raw=pool_.Slot(sid); const auto number=raw[kType];
+    const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    return {std::bit_cast<float>(Read(raw,kX)),std::bit_cast<float>(Read(raw,kY)),raw[kType],Read(raw,patch ? 36 : 34,patch ? 4 : 1)};
+}
+// 값 원천의 보정 발자국/중심을 만들고 필요한 프레임만 판독한다. 후보의 같은 타입 자료는 바꾸지 않는다.
+RawSquidNeighbors::Object RawSquidNeighbors::ReadObject(const SquidNeighborSource& source,bool readFrame,bool lazyFrame) const {
+    const auto number=source.type;
     if (number<kFirstAssetTypeNumber || number>=types_.size()) throw std::out_of_range("raw 이웃 자산 타입 오류");
-    const auto& type=types_[number];
-    const float x=std::bit_cast<float>(Read(raw,kX)),y=std::bit_cast<float>(Read(raw,kY));
+    const auto& type=types_[number];const float x=source.x,y=source.y;
     if (!std::isfinite(x) || !std::isfinite(y) ||
         type.footX<1 || type.footY<1 || type.footX>kWorldCells || type.footY>kWorldCells)
-        throw std::out_of_range("raw 이웃 좌표/발자국 오류 SID="+std::to_string(sid.value)+" TYPE="+std::to_string(number)+" x="+std::to_string(x)+" y="+std::to_string(y)+" foot="+std::to_string(type.footX)+","+std::to_string(type.footY));
+        throw std::out_of_range("raw 이웃 좌표/발자국 오류 TYPE="+std::to_string(number)+" x="+std::to_string(x)+" y="+std::to_string(y)+" foot="+std::to_string(type.footX)+","+std::to_string(type.footY));
     // 실제49ae80의 모서리 확장은 원래 두 좌표가 모두(0,256) 안일 때만 이전 점을 보존한다.
     const float left=std::clamp(x-static_cast<float>(type.footX-1),kFirstCell,kLastCell),top=std::clamp(y-static_cast<float>(type.footY-1),kFirstCell,kLastCell);
     const bool valid=x>0 && x<kWorldCells && y>0 && y<kWorldCells; // 초기(0,0) 미리보기는 보정된 한 점이 된다.
     Object object{valid ? std::min(x,left) : left,valid ? std::min(y,top) : top,valid ? std::max(x,left) : left,valid ? std::max(y,top) : top,
         x-static_cast<float>(type.footX)*0.5f,y-static_cast<float>(type.footY)*0.5f,number,{}};
     if (readFrame) {
-        const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-        const auto frame=Read(raw,patch ? 36 : 34,patch ? 4 : 1);
         const auto codes=Frames(number).Codes();
-        if (frame>=codes.size()) throw std::out_of_range("raw 이웃 프레임 오류");
-        object.frame=codes[frame];
+        if (source.frame>=codes.size()) {
+            if (!lazyFrame) throw std::out_of_range("raw 이웃 프레임 오류");
+        } else object.frame=codes[source.frame];
     }
     return object;
 }
@@ -132,9 +137,12 @@ Sid RawSquidNeighbors::First(Sid source) const {
 }
 // 004b23e0 → 004b1d70: 원천을 한 번 보관하고 내부 발자국이면 끝낸다. flags8은 현재 지도, 나머지는 현재 일반 해시에서 찾는다.
 RawSquidNeighborWalk::RawSquidNeighborWalk(const RawSquidNeighbors& neighbors,Sid source,std::uint32_t flags)
+    :RawSquidNeighborWalk(neighbors,neighbors.Source(source),flags) {}
+// 삭제 값 인자와 일반 SID 생성자가 같은 현재 후보 필터/커서를 사용한다.
+RawSquidNeighborWalk::RawSquidNeighborWalk(const RawSquidNeighbors& neighbors,const SquidNeighborSource& source,std::uint32_t flags,bool lazyFrame)
     :finder_(neighbors.pool_,neighbors.hash_,neighbors.types_) {
     if ((flags&~NeighborFlag::kSupported)!=0) throw std::invalid_argument("raw 이웃 flags 범위 오류");
-    const auto object=neighbors.ReadObject(source,true);
+    const auto object=neighbors.ReadObject(source,true,lazyFrame);
     if (neighbors.Interior(object)) return;
     // 필터는 생성 때 읽은 source 값과 flags를 값으로 잡는다. 이 객체를 옮겨도 유효하다.
     const auto* owner=&neighbors;

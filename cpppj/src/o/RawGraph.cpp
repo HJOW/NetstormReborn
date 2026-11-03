@@ -128,7 +128,7 @@ void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_
                         if (graph>=Graph::kCount) throw std::out_of_range("그래프 영역 후보 번호 오류");
                         if (live) {
                             RemoveGraphSurface(records_[graph],pool_.Edition(),diagnostics_);
-                            pool_.AllocatedBytes(candidate)[graphOffset]=Graph::kInvalid;continue; // 진단 복귀 뒤 현재 슬롯의 graph BYTE만 무효화한다. 다음 SID는 finder와 같이 이미 저장했다.
+                            WriteNumber(candidate,Graph::kInvalid);continue; // 진단 복귀 뒤 현재 슬롯의 graph BYTE만 무효화한다. 다음 SID는 finder와 같이 이미 저장했다.
                         }
                         auto& record=plan.records[graph];
                         // Remove의 활성/양수 조건을 유지하며 0이 되면 사용 여부도 지운다. reserved는 보존한다.
@@ -374,10 +374,10 @@ void RawGraph::ValidateDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,
     if (removedSurfaces!=1 && removedSurfaces!=9) throw std::invalid_argument("raw 그래프 감소 수 오류");
     static_cast<void>(Calculate(sid,Operation::Detach,static_cast<std::uint8_t>((rebuild ? 1 : 0)|(removedSurfaces==9 ? 2 : 0)),nullptr,sourceType));
 }
-// 같은 성공 계획의 번호·표·스택만 적용하고 원천 state/좌표/next는 Unpop에 남긴다.
+// 무효과 사전 검사를 유지하며 실제 분할은 현재 물리를 직접 소비한다. 원천 state/좌표/next는 Unpop에 남긴다.
 void RawGraph::Detach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,std::optional<std::uint8_t> sourceType) {
     if (removedSurfaces!=1 && removedSurfaces!=9) throw std::invalid_argument("raw 그래프 감소 수 오류");
-    Commit(Calculate(sid,Operation::Detach,static_cast<std::uint8_t>((rebuild ? 1 : 0)|(removedSurfaces==9 ? 2 : 0)),nullptr,sourceType));
+    ExecuteDetach(sid,rebuild,removedSurfaces,sourceType);
 }
 // 254는 다른 입력을 읽지 않는 자연 반환이며 251..253/255는 정상 번호가 아니다.
 void RawGraph::ValidateFree(std::uint8_t graph) const {

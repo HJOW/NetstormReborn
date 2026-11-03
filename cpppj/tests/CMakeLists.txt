@@ -3289,3 +3289,9 @@ set_source_files_properties(GraphLiveCheckingTests.cpp PROPERTIES COMPILE_DEFINI
     "NETSTORM_GRAPH_LIVE_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-live-checking-x86.tsv\";NETSTORM_GRAPH_LIVE_FREE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-live-free-callback-x86.tsv\"")
 set_property(SOURCE RawGraphTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_GRAPH_LIVE_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-live-checking-x86.tsv\"") # 기존 영역 대조의 추가 부모 진단도 독립 원문 목록만 허용한다.
+
+# Detach의 현재 분할/타이머/값 원천을 두 원문 전체 물리와 집중 대조한다.
+target_sources(netstorm_tests PRIVATE GraphDetachLiveTests.cpp)
+target_sources(netstorm_file_tests PRIVATE GraphDetachLiveTests.cpp)
+set_source_files_properties(GraphDetachLiveTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GRAPH_DETACH_LIVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-detach-live-x86.tsv\"")

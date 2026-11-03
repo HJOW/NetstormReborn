@@ -2,6 +2,7 @@
 #include "o/RawGraph.h"
 #include "o/RawSquidNeighbors.h"
 #include "o/RawSquidFinder.h"
+#include "o/RawPathSearch.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -38,7 +39,7 @@ std::uint8_t RawGraph::ReadNumber(Sid sid) const {
     return pool_.Slot(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 30 : 28];
 }
 // PATCH는 타입/번호를 진단한 뒤 현재 graph BYTE를 쓴다. 진단으로 free가 바뀌어도 추가 수명 관문을 만들지 않는다.
-void RawGraph::WriteNumber(Sid sid,std::uint8_t graph) {
+void RawGraph::WriteNumber(Sid sid,std::uint8_t graph) const {
     const auto type=pool_.Slot(sid)[10];
     if (pool_.Edition()==OriginalEdition::Patch1078) {
         if (!(types_.at(type).flags1&TypeFlag1::kSurface) && type!=kFenceMark && type!=kWindArcher)
@@ -56,6 +57,10 @@ void RawGraph::TraceInUse() const {
 }
 // 같은 Client 수명의 현재 로그 장치를 보관하며 그래프 물리에는 쓰지 않는다.
 void RawGraph::BindTrace(std::function<void(std::int32_t,std::string_view)> trace) { trace_=std::move(trace); }
+// 실제 World의 활성/분할 전역을 같은 현재 주소에서 읽는다. 임시값은 RawCheckingFlag가 소유한다.
+void RawGraph::BindDetachState(RawCheckingFlag enabled,RawCheckingFlag rebuild) { detachEnabled_=enabled;detachRebuild_=rebuild; }
+// 삭제 부모가 호출한 원문 두 시각 읽기를 실제 Client 시계와 연결한다.
+void RawGraph::BindClock(std::function<double()> clock) { clock_=std::move(clock); }
 // 현재 낮은 빈 행을 선택하며 소진한 경우에만 전체 재구성을 수행한다.
 std::uint8_t RawGraph::ExecuteAllocate(bool recover) {
     auto found=std::find_if(records_.begin(),records_.begin()+Graph::kCount,[](const auto& record) { return !record.inUse; });
@@ -195,4 +200,50 @@ void RawGraph::ExecutePostDestroy(Sid sid) {
         if (types_.at(pool_.Slot(candidate)[10]).flags1&TypeFlag1::kSurface) Add(candidate);
     }
 }
+// 원문 삭제 정보는 sentinel 전 인자 값이다. 사전 검사는 기존 안전 계약만 유지하고 효과를 commit하지 않는다.
+void RawGraph::ExecuteDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,std::optional<std::uint8_t> sourceType) {
+    if (!detachEnabled_) return;
+    ValidateDetach(sid,detachRebuild_ ? static_cast<bool>(*detachRebuild_) : rebuild,removedSurfaces,sourceType);
+    std::vector<RiftTypeFrames> codes;codes.reserve(frames_.size());
+    // 후보 타입/프레임은 바꾸지 않고 값 원천만 삭제 정보의 타입으로 치환한다.
+    for (const auto& frames:frames_) codes.emplace_back(frames);
+    RawSquidNeighbors neighbors(pool_,hash_,spots_,types_,codes);auto source=neighbors.Source(sid);
+    if (sourceType) source.type=*sourceType;
+    CheckGraphSentinel(records_[Graph::kInvalid],pool_.Edition(),diagnostics_);
+    if (!detachEnabled_) return; // GetGraph(position)도 현재 활성 전역을 다시 읽는다.
+    const auto head=RawPathSurfaceAt(hash_,{source.x,source.y});if (!head.value) return;
+    const auto number=ReadNumber(head);if (number==Graph::kInvalid) return;ValidateFree(number);
+    auto& original=records_[number];if (!original.inUse) return;
+    RawSquidNeighborWalk walk(neighbors,source,0,true);std::array<Sid,64> connections{};std::size_t count=0;
+    // 원문은 그래프별 중복 제거 없이 일반 finder의 현재 SID를 모두 저장한다.
+    for (auto candidate=walk.Current();candidate.value;candidate=walk.Next()) {
+        if (count==connections.size()) throw std::out_of_range("Graph 삭제 연결의 원문 물리 범위를 넘습니다");
+        connections[count++]=candidate;
+        if (count>=connections.size()) Diagnose("numConnections < MAX_CONNECTIONS",0x1ef);
+    }
+    if (clock_) static_cast<void>(clock_());
+    // keep의 초기값은 현재 전역을 한 번 읽지만 각 연결의 분할 조건은 Flood 뒤 다시 읽는다.
+    const auto rebuilding=[&] { return detachRebuild_ ? static_cast<bool>(*detachRebuild_) : rebuild; };
+    bool keep=!rebuilding();std::size_t remaining=count;
+    // 후보 graph는 앞 flood/로그/진단이 고친 현재 슬롯에서 읽으며 초기 목록의 순서는 보존한다.
+    for (std::size_t index=0;index<count;++index,--remaining) {
+        const auto candidate=connections[index];if (!candidate.value) Diagnose("floodSid != 0",0x20b);
+        std::uint8_t current{};
+        if (!candidate.value) {
+            if (pool_.Edition()==OriginalEdition::Patch1078 && diagnostics_.checking) Diagnose("mySid",0x93);
+        } else if (types_.at(pool_.Slot(candidate)[10]).flags1&TypeFlag1::kSurface) current=ReadNumber(candidate);
+        else {
+            const auto raw=pool_.Slot(candidate);const auto surface=RawPathSurfaceAt(hash_,{GraphCoordinate(raw,14),GraphCoordinate(raw,18)});
+            current=surface.value ? ReadNumber(surface) : Graph::kInvalid;
+        }
+        ValidateFree(current);if (current!=number) continue;
+        if (!rebuilding() && remaining<2) { if (!(types_.at(source.type).flags2&8)) keep=true; }
+        else { const auto allocated=ExecuteAllocate(recovery_==GraphRecovery::FullPool);ExecuteFlood(candidate,allocated); }
+    }
+    if (count) original.surfaces=GraphWord(original.surfaces-removedSurfaces);
+    if (!keep) { original.surfaces=0;original.inUse=0; }
+    if (clock_) static_cast<void>(clock_());
+    CheckGraphSentinel(records_[Graph::kInvalid],pool_.Edition(),diagnostics_);
+}
+
 }

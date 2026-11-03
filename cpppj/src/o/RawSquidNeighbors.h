@@ -15,6 +15,11 @@ inline constexpr std::uint32_t kSupported = kNoJoint | kAnyType | kSkipAbstract 
 }
 // 원본 float 발자국 사각형이다(004ade70 ↔ CD 004aeec0). 왼쪽/위는 1..255로 보정한 값이다.
 struct SquidFootprint { /* left: 사각형의 왼쪽 경계. */ /* top: 사각형의 위쪽 경계. */ /* right: 사각형의 오른쪽 경계. */ /* bottom: 사각형의 아래쪽 경계. */ float left{},top{},right{},bottom{}; };
+// 삭제 부모가 값으로 받은8DWORD 정보 중 탐색에 사용하는 위치/타입/프레임이다. 후보 raw 타입에는 적용하지 않는다.
+struct SquidNeighborSource {
+    float x{},y{}; // 삭제 호출 전 포착한 두 단정도 좌표다.
+    std::uint32_t type{},frame{}; // 삭제 정보의 타입과 현재 프레임 인덱스이며 raw 슬롯 타입과 독립적이다.
+};
 // SquidFinder(객체 번호, flags)의 연결 이웃을 실제 raw 풀·일반 해시에서 찾는다.
 class RawSquidNeighbors {
 public:
@@ -24,6 +29,7 @@ public:
     // 004b23e0(source, 0)의 생성 직후 +0x34 값이다. 연결 이웃이 없으면 0이다.
     // 내부 발자국이면 탐색하지 않는다. 일반 해시의 단계/y/x/next 순서에서 첫 통과 후보만 읽는다.
     Sid First(Sid source) const;
+    SquidNeighborSource Source(Sid sid) const; // raw 입력을 값으로 포착한다. 진단 복귀 뒤 원본 인자 정보가 바뀌지 않게 한다.
     // 끝 칸 변환과 탐색 필터가 동일한 타입 프레임 표를 읽도록 제공한다.
     const RiftTypeFrames& Frames(std::uint32_t type) const;
     // 004ade70(sid, 0) ↔ CD 004aeec0: 객체의 float 발자국 사각형이다.
@@ -55,6 +61,8 @@ private:
     };
     // 유한 임시 좌표·양수 발자국을 확인한 뒤 원본 점 유효성/1..255 모서리 보정을 적용한다.
     Object ReadObject(Sid sid,bool readFrame) const;
+    // 삭제 정보의 범위 밖 프레임은 접합의 두 번째 코드가 실제 필요한 지점까지 판독을 늦춘다.
+    Object ReadObject(const SquidNeighborSource& source,bool readFrame,bool lazyFrame) const;
     // source 발자국 spot의 AND와 후보 기준점 spot을 서로 구별한다.
     bool Interior(const Object& source) const;
     // 표면 타입 → 가로/세로 확장 교차의 XOR → 중심 방향 접합 → dead/abstract/내부 제외 순서다.
@@ -77,6 +85,8 @@ class RawSquidNeighborWalk {
 public:
     // neighbors는 이 객체보다 오래 살아야 한다. flags는 NeighborFlag의 조합(0~15)이다.
     RawSquidNeighborWalk(const RawSquidNeighbors& neighbors,Sid source,std::uint32_t flags);
+    // 원문004b24c0/CD004ebbe0의 값 인자를 사용하며 원천만 치환한다. lazyFrame은 삭제 정보의 지연 접합 판독이다.
+    RawSquidNeighborWalk(const RawSquidNeighbors& neighbors,const SquidNeighborSource& source,std::uint32_t flags,bool lazyFrame=false);
     // 현재 이웃 번호다. 0이면 끝이다.
     Sid Current() const;
     // 004b1e70 ↔ CD 004ec030: flag8이면 현재 표면 지도, 아니면 일반 Next와 연결 필터를 사용한다. 끝난 뒤에는0을 유지한다.

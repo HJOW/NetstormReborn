@@ -60,6 +60,8 @@ public:
     // 원본00462b20의 월드 초기 표를 만든다. Graph0 예약·reserved LOW BYTE·sentinel만 초기화하고 풀/스택은 보존한다.
     void ResetTable();
     void BindDiagnostics(GraphDiagnostics diagnostics); // 같은 Client의 현재 checking/진단을 연결하며 표/스택/풀은 쓰지 않는다.
+    void BindDetachState(RawCheckingFlag enabled,RawCheckingFlag rebuild); // 실제 World의 현재 graphsWork/rebuildGraph를 빌린다. 독립 호출의 인자 정책은 미연결 때만 쓴다.
+    void BindClock(std::function<double()> clock); //00460cd0/CD00401130의 두 현재 시각 읽기다. 결과는 원문 지역변수처럼 외부에 쓰지 않는다.
     void BindTrace(std::function<void(std::int32_t,std::string_view)> trace); // 원문의 level0x20 로그를 현재 Client 장치에 연결한다. 독립 입력은 생략할 수 있다.
     // 빈 번호가 있으면 표만 갱신하고, 소진되면 전체 raw 풀 재구성 뒤 번호를 확보한다.
     std::uint8_t Allocate();
@@ -105,7 +107,7 @@ private:
     // 현재 그래프 BYTE를 읽거나 쓴다. 원문 진단 뒤 free가 바뀌어도 같은 물리 슬롯의 BYTE 외에는 고치지 않는다.
     std::uint8_t ReadNumber(Sid sid) const;
     // 진단 복귀 뒤 물리 graph BYTE만 쓰며 다른 상태 필드는 보존한다.
-    void WriteNumber(Sid sid,std::uint8_t graph);
+    void WriteNumber(Sid sid,std::uint8_t graph) const;
     // 원문 판본별 파일/행을 실제 진단에 전달하며 복귀 후 호출자가 계속한다.
     void Diagnose(std::string_view expression,std::uint32_t line,std::string_view file={}) const;
     // 앞251행의 현재 사용 수를 세고 현재 로그 장치를 호출한다. 로그 복귀 뒤 caller가 sentinel을 다시 읽을 수 있다.
@@ -114,6 +116,8 @@ private:
     std::uint32_t ExecuteFlood(Sid sid,std::uint8_t graph,bool inspect=false); // 외부 직접 호출만 초기 물리 검사를 한다. 내부 호출은 앞 진단/로그가 바꾼 free/contained를 새 관문으로 거부하지 않는다.
     // 원문 현재 이웃 번호로 가장 큰 그래프를 선택하고 나머지를 병합한다.
     void ExecuteAdd(Sid sid);
+    // 위치 머리 번호와 값 원천의 일반 이웃을 읽고 각 Flood 뒤 현재 후보 번호/분할 정책을 재판독한다.
+    void ExecuteDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,std::optional<std::uint8_t> sourceType);
     // 원문 sentinel→Reset→두 SID 순회→임시 해제→sentinel을 실행한다.
     void ExecuteRebuild(bool resetAll);
     // postDestroy의 현재 일반 finder가 반환한 각 표면에 실제 Add를 순서대로 적용한다.
@@ -136,6 +140,9 @@ private:
     std::array<std::uint32_t,Graph::kFloodSize>& stack_; // 현재 기록과 같은 owner의 flood 흔적이다.
     // 전체 원본 자산 풀 계약을 선택한 경우 Add/Detach/Pop의 내부 번호 소진도 복구한다.
     GraphRecovery recovery_{GraphRecovery::Reject};
+    RawCheckingFlag detachEnabled_{true}; // 실제00540414/CD005207f8이며 독립 raw 입력은 기존 활성 계약이다.
+    std::optional<RawCheckingFlag> detachRebuild_; // 실제00562c1c/CD005207fc의 현재 뷰다. 없으면 호출 인자 정책을 사용한다.
+    std::function<double()> clock_; // 현재 Client GameClock 장치이며 독립 입력은 두 읽기의 관측 장치를 생략할 수 있다.
     GraphDiagnostics diagnostics_; // 실제 호출의 현재 진단 뷰이며 사전 계산/Validate에는 전달하지 않는다.
     std::function<void(std::int32_t,std::string_view)> trace_; // 실제 로그 소비자이며 Validate/Calculate 사본에는 전달하지 않는다.
 };

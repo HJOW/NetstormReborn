@@ -1,0 +1,11 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "binaries": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "rows": 8,
+  "fixtureSha256": "7ccfb02fb8426bbaaec9520c2a37c54a943530047df454c6cacf35954fdf35d8",
+  "boundary": "실제 영역/일반 finder/Remove/setter·진단만 명시 반환·게임/GUI/OS/소켓0"
+}

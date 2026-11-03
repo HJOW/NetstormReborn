@@ -23,6 +23,10 @@ void RawSurfaceStorage::RecordDisplayFrameError(std::uint32_t type,std::int32_t 
 void RawSurfaceStorage::AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const { if (!displayAssertion_) throw std::logic_error("표시 원문 진단 장치 미연결");displayAssertion_(expression,file,line); }
 // Client의 현재 로그 서비스를 장기 owner에 보관한다. World 대여마다 다른 Session 포인터로 교체하지 않는다.
 void RawSurfaceStorage::BindGraphTrace(std::function<void(std::int32_t,std::string_view)> trace) { graphTrace_=std::move(trace); }
+// 삭제 Graph의 두 시각 조회가 실제 현재 Client 시계를 읽게 한다.
+void RawSurfaceStorage::BindGraphClock(std::function<double()> clock) { graphClock_=std::move(clock); }
+// 독립 저장소에는 외부 시계 효과가 없다. 실제 Client는 GameSeconds를 호출한다.
+double RawSurfaceStorage::ReadGraphClock() const { return graphClock_ ? graphClock_() : 0.0; }
 // 독립 저장소는 기존 무출력 계약을 유지하고 실제 Client는 필터/FILE writer의 원문 계약을 적용한다.
 void RawSurfaceStorage::TraceGraph(std::int32_t level,std::string_view text) const { if (graphTrace_) graphTrace_(level,text); }
 // 참조 배열을 원본 자산에서 최초 한 번만 복사해 이후 주소를 고정한다.

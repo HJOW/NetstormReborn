@@ -120,6 +120,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         graph=std::make_unique<o::RawGraph>(pool,hash,spots,types,codes,storage->graph,o::GraphRecovery::FullPool); // 실제 전체 풀은 원문 소진 재구성을 허용한다. 생성 자체는 현재 물리를 쓰지 않는다.
         graph->BindDiagnostics({storage->Checking(),[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // 첫 Session 이전에도 같은 장기 Client 진단을 영역 참조 감소에 제공한다.
         graph->BindTrace([owner=storage.get()](auto level,auto text) { owner->TraceGraph(level,text); }); // 재구성/병합의 실제 level0x20도 같은 현재 Client writer를 소비한다.
+        graph->BindDetachState(bookkeeping.graphsEnabled,deletion.rebuildGraph); // preDestroy와 내부 각 분할이 같은 현재 World 상태를 읽는다.
+        graph->BindClock([owner=storage.get()] { return owner->ReadGraphClock(); }); // 두 지역 시각 읽기도 장기 Client 장치를 거친다.
         display=std::make_unique<o::SquidDisplay>(edition,types,shapes,*this,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
         postPop=std::make_unique<o::SquidPostPop>(pool,types,bookkeeping,graph.get(),[this](o::Sid sid) { connect->Connect(sid); });
         postPop->SetIslandPrefix([this](o::Sid sid,std::uint32_t flags) { connect->IslandPostPopPrefix(sid,flags); });

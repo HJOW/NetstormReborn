@@ -2445,3 +2445,11 @@ cpppj/graph-live-checking-native-20261103.json text eol=lf
 cpppj/tests/fixtures/graph-live-checking-x86.tsv -text
 cpppj/graph-live-free-callback-native-20261103.json text eol=lf
 cpppj/tests/fixtures/graph-live-free-callback-x86.tsv -text
+
+cpppj/tests/fixtures/graph-detach-live-x86.tsv -text
+tools/decomp_graph_detach_live.py text eol=lf
+cpppj/graph-detach-live-native-20261103.json text eol=lf
+cpppj/graph-detach-live-20261103.json text eol=lf
+cpppj/tests/fixtures/graph-region-free-x86.tsv -text
+tools/decomp_graph_region_free.py text eol=lf
+cpppj/graph-region-free-native-20261103.json text eol=lf

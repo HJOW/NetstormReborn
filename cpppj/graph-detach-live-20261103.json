@@ -1,0 +1,254 @@
+{
+  "unit": 819,
+  "version": "11.01",
+  "startedDate": "2026-11-03",
+  "completedDate": "2026-11-04",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "exeSha256": "d80fc3d02f6adbd33f66ab08e1c4077036188fb3d839c2837f0ef485b2457b74",
+  "nativeDetach": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "rows": 432,
+    "fixtureSha256": "2d4b7573fe7567a914ba73b46fdc905cfe81bed89f7285db8e7344034d2028c2",
+    "boundary": "실제 PE Detach/일반 finder/Graph 명령·진단/로그/두 시각만 명시 반환·게임/GUI/OS/소켓0"
+  },
+  "nativeRegionFree": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "rows": 8,
+    "fixtureSha256": "7ccfb02fb8426bbaaec9520c2a37c54a943530047df454c6cacf35954fdf35d8",
+    "boundary": "실제 영역/일반 finder/Remove/setter·진단만 명시 반환·게임/GUI/OS/소켓0"
+  },
+  "nativeTotals": {
+    "rows": 440,
+    "comparedRecords": 255,
+    "comparedStackDwords": 4096,
+    "comparedRawSlotsPerRow": 6,
+    "detachClockCalls": 420,
+    "detachTraceCalls": 420,
+    "detachDiagnosticCalls": 16,
+    "regionDiagnosticCalls": 5
+  },
+  "tests": [
+    {
+      "filter": "GraphDetachLive_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "rawLog": "extracted/cpp-resume-819/test-GraphDetachLive-final.log",
+      "logSha256": "921d769f6645a60011e80a7cd8931dcc52b257c076bde2e06929c4e6897b76a5"
+    },
+    {
+      "filter": "RawGraph_",
+      "cases": 17,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "rawLog": "extracted/cpp-resume-819/test-RawGraph-first.log",
+      "logSha256": "ee45eae536598999bf66f2b147f769e2a4f216f41948a4da5588cd7ba175bd6e"
+    },
+    {
+      "filter": "GraphReferenceChecking_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "rawLog": "extracted/cpp-resume-819/test-GraphReferenceChecking-first.log",
+      "logSha256": "df261242253a9a2026973a14d7b7c87baf32529afa37274e2d2fd743df12f8d6"
+    },
+    {
+      "filter": "GraphLiveChecking_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "rawLog": "extracted/cpp-resume-819/test-GraphLiveChecking-first.log",
+      "logSha256": "4ddc8c85aaf1f4d0c5ae2e74d2dfbfed929556844d80b6ceb5ee5f486bdcbc88"
+    },
+    {
+      "filter": "GraphSentinelChecking_",
+      "cases": 2,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "rawLog": "extracted/cpp-resume-819/test-GraphSentinelChecking-first.log",
+      "logSha256": "82632a953de943ed20a9ca753b2fd2fee27da8639983a392bae8368873630955"
+    },
+    {
+      "filter": "SurfaceNeighborCurrent_",
+      "cases": 2,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "rawLog": "extracted/cpp-resume-819/test-SurfaceNeighborCurrent-first.log",
+      "logSha256": "8e8799ffc6ca533120f504c2ff7bee821e024ec281f41374339e4c7681a8c00c"
+    },
+    {
+      "filter": "RawSurfaceWorld_",
+      "cases": 7,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "rawLog": "extracted/cpp-resume-819/test-RawSurfaceWorld-first.log",
+      "logSha256": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e"
+    },
+    {
+      "filter": "BridgeDecayRuntime_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "rawLog": "extracted/cpp-resume-819/test-BridgeDecayRuntime-first.log",
+      "logSha256": "5301312af78188b7f17defc93653982182a3e14310c90526f882ed2cdbf3006a"
+    },
+    {
+      "filter": "neighbor_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "rawLog": "extracted/cpp-resume-819/test-neighbor-final.log",
+      "logSha256": "ce3b34f604bb2650c18e200c1a756172f8c4d208bd492908333a24c3a124346b"
+    }
+  ],
+  "focusedCases": 45,
+  "newCases": 3,
+  "failedChecks": 0,
+  "existingEvidence": {
+    "rawGraphOperations": 5094,
+    "checkingRegionOperations": 1536,
+    "checkingRegionReferenceDiagnostics": 18,
+    "checkingRegionAdditionalParentDiagnostics": 64,
+    "previousLiveParentRows": 168,
+    "sentinelRows": 1080,
+    "surfaceSceneComparisons": 250,
+    "surfaceMutationRows": 32
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-819/build-first.log",
+      "exitCode": 0,
+      "uniqueWarningCodes": [
+        "C4244"
+      ],
+      "warningCause": "새 검사 optional<uint8_t>의 int81 초기화이며 명시 uint8_t로 교정"
+    },
+    {
+      "log": "extracted/cpp-resume-819/build-final.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "initialIssues": [
+    "최초 Native 실행은 미허용 일반 finder 기하/true 필터에서 중단. 해당 최신 몸체를 읽고 정확한 범위만 추가하여 독립 관측함. 최초 로그 보존.",
+    "최초 빌드의 검사 입력 C4244 경고를 std::uint8_t{81}로 수정. 제품/fixture 기대값 변경 없음.",
+    "Neighbor_ 대문자 필터가0개/실패1을 보고. 실제 이름 neighbor_로 교정하여 기존4개 최종 통과. 최초 로그 보존."
+  ],
+  "newlinePreservation": {
+    "cpppj/tests/CMakeLists.txt": {
+      "normalizedTextSame": true,
+      "retainedUnchangedLines": true
+    },
+    "cpppj/src/client/ClientMain.cpp": {
+      "normalizedTextSame": true,
+      "retainedUnchangedLines": true
+    },
+    "cpppj/src/o/RawGraph.cpp": {
+      "normalizedTextSame": true,
+      "retainedUnchangedLines": true
+    }
+  },
+  "protection": {
+    "beforeFiles": 2744,
+    "unchangedPreviousFiles": 2744,
+    "afterFiles": 2746,
+    "fixtureFiles": 926,
+    "newFixtures": [
+      "cpppj/tests/fixtures/graph-detach-live-x86.tsv",
+      "cpppj/tests/fixtures/graph-region-free-x86.tsv"
+    ],
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "afterManifest": "extracted/cpp-resume-819/protected-after.json"
+  },
+  "consumers": {
+    "sentinelPatchCalls": 8,
+    "floodPatchCalls": 4,
+    "detachPatchCaller": "004b0950 at004b0a69",
+    "detachCdCaller": "004add20 at004ade84/004ade9e",
+    "actual": "SquidDestroyLifecycle::PreGraph -> RawGraph::Detach -> current generic walker/Flood/sentinel",
+    "worldState": "bookkeeping.graphsEnabled/deletion.rebuildGraph current views",
+    "clock": "Storage -> current Client GameClock.GameSeconds"
+  },
+  "remainingChecking": {
+    "total": 24,
+    "parents": 16,
+    "partial": 5,
+    "multiplayer": 3,
+    "closed": [
+      "00462ac0",
+      "00462f10"
+    ]
+  },
+  "boundaries": [
+    "기존 무효과 Validate/물리·수명·소진 보호 유지.64연결 이상은 기존 사전 보호 대상이며 주변 원문 stack을 흉내 내지 않음.",
+    "TYPE/프레임 배열은 기존 실행기 생성 시 복사 계약. 삭제 감소는 기존1/9 API 입력이며 타입 전역의 호출 중 교체는 관측하지 않음.",
+    "32비트 FILE/SEH·범위 밖 프레임/주변 메모리·실제 할당 실패는 호스트 경계."
+  ],
+  "excluded": {
+    "gameGui": false,
+    "originalGameProcess": false,
+    "multiplayerTests": false,
+    "captureSacrificeAttackVictory": false,
+    "userManualTests": false,
+    "dedicatedAir3Tests": false,
+    "physicalCaptureRetry": false,
+    "fullCtestOr71BuildOr34GuiOrZip": false
+  },
+  "sources": {
+    "cpppj/src/o/RawGraph.h": "adf097e2ff4fbee5f7de2d0604ae12eee480b49276a3cf98c40a0b884b52a1ae",
+    "cpppj/src/o/RawGraph.cpp": "05819da3a3add336f8f383871e325295e3723733592bc8d2eccd2e3c3a8fd2ca",
+    "cpppj/src/o/RawGraphLive.cpp": "e8b6ce36fff47cb18e3012a11327075e18799c02cde9404f5a7c134a188f455a",
+    "cpppj/src/o/RawSquidNeighbors.h": "4cfab988cf42838b449a8cb115e8dfe62bd761e2c9e16581a3e0c34a5e9be870",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "337e40d04376b1b9a242787e66bf71dc7ac53f8dc635575793852c8d4b1c8415",
+    "cpppj/src/client/ClientMain.cpp": "6b73220dfafff5559fe26fdc8c96fdca96dfbdcebc126dcd531a30501c7e4697",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "d0c5236080e11c45c4ade8e766b75316afecfc0c25c5e700d477dd5a569a63d7",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "2c2dacd26a88121149e64ba9b88f68b514a420e44a125b570d033e8b6b5b5ef4",
+    "cpppj/src/client/RawSurfaceWorld.h": "e0b39c7837d2e633e6300d445dab020d38cfd2aa2fac7c732110167aac788425",
+    "cpppj/tests/GraphDetachLiveTests.cpp": "c28d8f62c065ebcfce8d84a86d22fd5d2b10b04e36fc6f7eaeb47ac453cc1869",
+    "cpppj/tests/CMakeLists.txt": "f132b77fb47086d149e08be03649df82200ad40594e3354a8829ae07529ce8c8",
+    "cpppj/SOURCE_MAP.md": "7daf50ab27b365136ccb8ca67076d86b7bfafd3ef06753cb267d8a6def08457e",
+    "tools/decomp_graph_detach_live.py": "d034e587eb80eca078af50d38c68c27b7c062ec01b2ef127ee296eb7c3e5c71c",
+    "tools/decomp_graph_region_free.py": "1ac3e884f85941e1e2d7c7bef53ec0d234f8728916e954cf5fca573133bb9744",
+    "tools/decomp_graph_live_checking.py": "dd9b9ba7387f49ea84961f5cb2edbfb99ab64de986b991f8db5b7b1dd5dd44ef",
+    "tools/decomp_surface_oracle.py": "5a01b681c51fe9c59e25573a66bea0c31f3a20fa16e6d46f7e399124312067d5",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+  },
+  "objectiveComplete": false,
+  "sourceHashBoundary": "sources는 이 호스트의 실제 관측 바이트이며 normalizedSources는 CRLF를 LF로 보정한 이식 가능한 텍스트 기준이다.",
+  "normalizedSources": {
+    "cpppj/src/o/RawGraph.h": "355619ba285731698103ba5f63bfae8eca9bde4db55a26853fe545005754d50b",
+    "cpppj/src/o/RawGraph.cpp": "af93bbfb48b75d3863d716071fa47ec49d3d531259f11baf2d7de862a0a0d56f",
+    "cpppj/src/o/RawGraphLive.cpp": "0f3f6ce60a20f2f52ba3cb22f9ae836bc40fa77038adf5aa939340ead92476d1",
+    "cpppj/src/o/RawSquidNeighbors.h": "5b02eb75a143f92df7dc24e2cdb22d054b4a09d87291c416aff421b2ff7dcfe1",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "430264a73e9c6fbec332ae9e6d29aaa3649e4520abf5ffc12dae7d3cea0ec4c1",
+    "cpppj/src/client/ClientMain.cpp": "74424efb9f8dcf40144ce24f57b6eeee25575e599786e3bd98b827fbdbd117e9",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "556be6e3ff91354ed7ba1cbeca1a70264ab31f85685dde9fc3cfc93554a40b07",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "c5fa4d20156896eda40dccf6c088070a4fdd645cb5c9e8634374fb99da53c44f",
+    "cpppj/src/client/RawSurfaceWorld.h": "abd68d456c3ae773fb3b62396549b356c86994eb49093ff8cbe16c1c7990ddc7",
+    "cpppj/tests/GraphDetachLiveTests.cpp": "5c1d012797b87f6d9b1001e0ea737f5b8e7038a6e2c43a20dbd171704fdc83ba",
+    "cpppj/tests/CMakeLists.txt": "14116ceb49a761b6eba8803333f9176f97ea8667e074a8cc6686946446f307e0",
+    "cpppj/SOURCE_MAP.md": "61f82049e878881dd249d8a0fc69346b298b66b179e1bc0fcedd24ca30c96006",
+    "tools/decomp_graph_detach_live.py": "aabc50a204a2aee74ae059d68a2cd6c909e23df24ca60079479a5ea5a268edc6",
+    "tools/decomp_graph_region_free.py": "59d3c48d1af8a7e45c7bb6c9e2feb95602f8a29a70808e325999dfb6ef4b51f0",
+    "tools/decomp_graph_live_checking.py": "dd9b9ba7387f49ea84961f5cb2edbfb99ab64de986b991f8db5b7b1dd5dd44ef",
+    "tools/decomp_surface_oracle.py": "5a01b681c51fe9c59e25573a66bea0c31f3a20fa16e6d46f7e399124312067d5",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "extracted/refined/originals/functions.tsv": "d035e47a2de0bde54706f14e2541b3ad4b60d438d263bcef6f5c4b3ba70144d2",
+    "extracted/refined/originalCD/functions.tsv": "cd090fb3c5c173e6391bc7120bfc21357b78aee4d8a173fb4236c266401b587f"
+  }
+}

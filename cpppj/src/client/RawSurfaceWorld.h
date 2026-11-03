@@ -41,6 +41,7 @@ private:
     o::RawCheckingFlag checking_; // 대여/World반납뒤에도같은현재Client진단DWORD를읽는다.독립저장소기본값은0이다.
     std::optional<std::string>* displayAssertionDetail_{}; // 같은 Client의005e4798 소유자를 빌리며 Storage보다 오래 살아야 한다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> displayAssertion_; // 현재 표시 진단 장치이며 World/Session callback을 보관하지 않는다.
+    std::function<double()> graphClock_; // Client 수명 동안 현재 게임 시각을 읽는 장치다. World 대여/반납은 교체하지 않는다.
     std::function<void(std::int32_t,std::string_view)> graphTrace_; // 실제 Client의 현재 로그 장치를 빌리며 World보다 오래 살아 있다.
 public:
     // 대여 중에는 두 번째 월드가 같은 풀을 초기화하지 못하게 한다.
@@ -70,6 +71,8 @@ public:
     void RecordDisplayFrameError(std::uint32_t type,std::int32_t frame,std::uint32_t abstract); //현재 같은 TYPE/shape로43d40의 상세를 저장한다.
     void AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const; // 선택된 원문 진단 장치가 복귀하면 caller도 계속한다.
     void BindGraphTrace(std::function<void(std::int32_t,std::string_view)> trace); // 첫 World 전에 현재 Client의 로그 writer를 연결한다.
+    void BindGraphClock(std::function<double()> clock); // 같은 Client GameClock 장치를 장기 owner가 빌린다.
+    double ReadGraphClock() const; // 독립 저장소는0이며 실제 장치는 현재 정지/누적 시간을 반영한다.
     void TraceGraph(std::int32_t level,std::string_view text) const; // 현재 장치가 있으면 원문 수준/텍스트를 그대로 전달한다.
     std::uint32_t& GeyserType() { return gameAux_->GeyserType(); } // 모든 실제 타입 소비자의 현재 DWORD다.
     const std::uint32_t& GeyserType() const { return gameAux_->GeyserType(); } // 대여/반납으로 타입 주소를 교체하지 않는다.

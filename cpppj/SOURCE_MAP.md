@@ -46,7 +46,7 @@
 | `src/o/Flyer.cpp` | Flyer.cpp | flyer.cpp | 13 |  |
 | `src/o/Gem.cpp` | Gem.cpp | gem.cpp | 4 |  |
 | `src/o/Geometry.cpp` | Geometry.cpp | geometry.cpp | 1 |  |
-| `src/o/Graph.cpp` · `src/o/RawGraph.cpp` · `src/o/RawGraphLive.cpp` | Graph.cpp | graph.cpp | 8 | 있음(순수 사전 계산과 현재 풀 실행을 구별) |
+| `src/o/Graph.cpp` · `src/o/RawGraph.cpp` · `src/o/RawGraphLive.cpp` | Graph.cpp | graph.cpp | 8 | 있음(현재 Add/Flood/Rebuild/Detach·영역 setter와 순수 사전 계산을 구별) |
 | `src/o/GunAnim.cpp` | Gunanim.cpp | GunAnim.cpp | 10 |  |
 | `src/o/GunProcess.cpp` | Gunprocess.cpp | GunProcess.cpp | 10 |  |
 | `src/o/Islandbuilder.cpp` | Islandbuilder.cpp | islandbuilder.cpp | 13 | 있음 |
@@ -72,7 +72,7 @@
 | `src/o/Spot.cpp` | Spot.cpp | spot.cpp | 2 |  |
 | `src/o/Squid.cpp` | Squid.cpp | Squid.cpp | 42 | 있음 |
 | `src/o/Squid.h` | squid.h | squid.h | 10 | 있음 |
-| `src/o/SquidFinder.cpp` | Squidfinder.cpp | SquidFinder.cpp | 7 | 있음 |
+| `src/o/SquidFinder.cpp` · `src/o/RawSquidFinder.cpp` · `src/o/RawSquidNeighbors.cpp` | Squidfinder.cpp | SquidFinder.cpp | 7 | 있음(일반/flags8·삭제 값 원천을 구별) |
 | `src/o/SquidHash.cpp` | Squidhash.cpp | SquidHash.cpp | 2 | 있음 |
 | `src/o/StaticString.cpp` | Staticstring.cpp | staticString.cpp | 1 |  |
 | `src/o/Template.cpp` | Template.cpp | template.cpp | 37 | 있음 |
