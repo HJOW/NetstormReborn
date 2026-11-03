@@ -3203,3 +3203,7 @@ set_source_files_properties(BridgeDecayTests.cpp PROPERTIES COMPILE_DEFINITIONS 
 target_sources(netstorm_tests PRIVATE GumpCheckingParentsTests.cpp)
 target_sources(netstorm_file_tests PRIVATE GumpCheckingParentsTests.cpp GumpLifetimeTests.cpp RawButtonControlsTests.cpp)
 set_source_files_properties(GumpCheckingParentsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GUMP_CHECKING_PARENTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gump-checking-parents-x86.tsv\"")
+# 실제 연결 전 연소 세 앞단의 현재 SID/진단만 기존 World 대상에서 대조한다(797).
+target_sources(netstorm_tests PRIVATE BurningVictimParentTests.cpp)
+target_sources(netstorm_world_generation_tests PRIVATE BurningVictimParentTests.cpp)
+set_source_files_properties(BurningVictimParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BURNING_VICTIM_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-victim-parent-x86.tsv\"")

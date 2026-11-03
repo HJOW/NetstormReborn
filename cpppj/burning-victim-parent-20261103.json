@@ -1,0 +1,114 @@
+{
+  "unit": 797,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "순수 앞단 단위 완료·실제 소비자 연결과 전체 목표 진행 중",
+  "runtimeProduct": 796,
+  "libraryUnit": 797,
+  "displayVersion": "11.01",
+  "exeSha256": "67e2bd3503a216038e385f1e69577cb553f9ce0d0a4fc2b228580d4edc7336f1",
+  "build": {
+    "targets": [
+      "netstorm_world_generation_tests"
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "gameExeRelinked": false
+  },
+  "tests": {
+    "total": 2,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "BurningVictimParent_Native504CurrentSidAndSelectedSlot",
+      "BurningVictimParent_SelectedHooksAndDwordLifetime"
+    ],
+    "fullSuiteRun": false,
+    "initialInvocationFailure": {
+      "testsRun": 0,
+      "failedChecks": 1,
+      "reason": "빌드 완료 전 이전 바이너리에 새 필터 요청",
+      "log": "tests-parents-v1.log"
+    },
+    "finalLog": "tests-parents-v2.log"
+  },
+  "native": {
+    "first": {
+      "unit": 797,
+      "rows": 504,
+      "observations": 1008,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제 세 부모의 robust/가상 표/HP 진단 앞단만·본문 첫 명령 전에 중단. robust/HP/진단·캡처 선행 clear는 명시 장치. 실제SID진단/캡처/입자/전체SEH/게임은 아님.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_burning_victim_parent.py": "f73aae23fcd4b15a48ce0bb38b2b0c2ef44c98001a4ba1b9a549dc6f6d140e8f",
+        "cpppj\\tests\\fixtures\\burning-victim-parent-x86.tsv": "77cea61c5e9a9f571dd5e1ed094adb352e53437ed12959816b006d3d237b1350"
+      }
+    },
+    "repeat": {
+      "unit": 797,
+      "rows": 504,
+      "observations": 1008,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제 세 부모의 robust/가상 표/HP 진단 앞단만·본문 첫 명령 전에 중단. robust/HP/진단·캡처 선행 clear는 명시 장치. 실제SID진단/캡처/입자/전체SEH/게임은 아님.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_burning_victim_parent.py": "f73aae23fcd4b15a48ce0bb38b2b0c2ef44c98001a4ba1b9a549dc6f6d140e8f",
+        "cpppj\\tests\\fixtures\\burning-victim-parent-x86.tsv": "77cea61c5e9a9f571dd5e1ed094adb352e53437ed12959816b006d3d237b1350"
+      }
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 2016,
+    "failedToolRuns": 0,
+    "cases": {
+      "rows": 504,
+      "entries": {
+        "0": 168,
+        "1": 168,
+        "2": 168
+      },
+      "outcomes": {
+        "empty": 210,
+        "assertion": 137,
+        "body": 157
+      },
+      "fixtureSha256": "77cea61c5e9a9f571dd5e1ed094adb352e53437ed12959816b006d3d237b1350"
+    }
+  },
+  "actualBurningConsumersConnected": false,
+  "checkingRemaining": 46,
+  "protection": {
+    "beforeCount": 2727,
+    "currentCount": 2728,
+    "fixtureCount": 908,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/burning-victim-parent-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "각 부모의 본문 전 진단 앞단만·실제 캡처/연소점/프레임 연결은 다음 작업",
+    "robust/HP/진단/선행clear는 명시 장치·실제 RawIsSidRobust/그림/입자/SEH/UI는 별도",
+    "현재 게임 EXE796과 checking잔여46은 유지"
+  ],
+  "next": "세 실제 Burning 소비자·장기 Client checking/상세 SID 진단 owner 연결"
+}
