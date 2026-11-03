@@ -89,6 +89,18 @@ void RemoveGraphSurface(GraphRecord& record,OriginalEdition edition,const GraphD
     }
     if (record.inUse && record.surfaces>0) { record.surfaces=Word(record.surfaces-1);if (!record.surfaces) record.surfaces=record.inUse=0; }
 }
+// 원본 sentinel을 고치거나 복사하지 않는다. 0x68 진단이 checking 또는 현재 행을 바꾸면 0x69 판정에 즉시 반영한다.
+void CheckGraphSentinel(const GraphRecord& sentinel,OriginalEdition edition,const GraphDiagnostics& diagnostics) {
+    if (edition!=OriginalEdition::Patch1078 || !diagnostics.checking) return;
+    if (sentinel.surfaces!=0x7dfd) {
+        if (!diagnostics.assertion) throw std::logic_error("Graph sentinel surfaces 실제 진단 미연결");
+        diagnostics.assertion("graphs[INVALID_GRAPH].numSurfaces == 0x7DFD","\\Ns\\O\\Graph.cpp",0x68);
+    }
+    if (diagnostics.checking && sentinel.inUse!=0x7dfd) {
+        if (!diagnostics.assertion) throw std::logic_error("Graph sentinel inUse 실제 진단 미연결");
+        diagnostics.assertion("graphs[INVALID_GRAPH].inUse == 0x7DFD","\\Ns\\O\\Graph.cpp",0x69);
+    }
+}
 // 값형 입력도 같은 원문 행 처리기를 쓰며 실제 영역 통지는 장기 raw 행을 직접 제공한다.
 void Graph::Remove(std::uint8_t graph,const GraphDiagnostics& diagnostics) {
     CheckNumber(graph,false);RemoveGraphSurface(records_[graph],OriginalEdition::Patch1078,diagnostics);

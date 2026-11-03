@@ -1,0 +1,29 @@
+{
+  "unit": 816,
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "productVersion": "11.01",
+  "exeSha256": "9262fffb715cee93d1b84081ba54a03360f5218ee111c9929f04ec9c9977e185",
+  "nativeRows": 1080,
+  "newTests": 2,
+  "focusedTests": 6,
+  "failedChecks": 0,
+  "builds": {
+    "focused": 0,
+    "game": 0
+  },
+  "oldProtectedUnchanged": 2740,
+  "oldFixturesUnchanged": 920,
+  "nextProtectedCount": 2741,
+  "nextFixtureCount": 921,
+  "checkingRemaining": 27,
+  "coverage": "sentinel helper and actual Free only; Flood/Add/Rebuild/Detach nested consumers pending",
+  "excluded": "game/GUI, attack/capture/sacrifice/victory, dedicated airborne, MP, physical/PCM",
+  "sources": {
+    "cpppj/src/o/Graph.h": "ca3b96fdcbd698bb8d131c67c577201e3140648044385877ffc1d21bf031ac98",
+    "cpppj/src/o/Graph.cpp": "8bc5570fffc9f077e42ae68645afaaaf58e3d067fe1a5f30068c00f81ad8fadc",
+    "cpppj/src/o/RawGraph.cpp": "4a3f05f61871a4d94ff78caad966575516f80a2b8fc59ed1e4bdcb26849acc31",
+    "cpppj/tests/GraphSentinelCheckingTests.cpp": "2c4c9e712fa7e6109edb289f34545cbaf8d066c4eeb718e50273892087162e65",
+    "tools/decomp_graph_sentinel_checking.py": "e54580cf3f4a03d48dbc23e836b2492794f1e4f3bb374848109fd8f480017ccf"
+  }
+}

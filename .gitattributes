@@ -2430,3 +2430,8 @@ cpppj/tests/fixtures/gun-notify-checking-x86.tsv -text
 tools/decomp_graph_reference_checking.py text eol=lf
 cpppj/graph-reference-checking-native-20261103.json text eol=lf
 cpppj/tests/fixtures/graph-reference-checking-x86.tsv -text
+
+# Graph sentinel/Free의 원문 관측 바이트를 보존한다.
+tools/decomp_graph_sentinel_checking.py text eol=lf
+cpppj/graph-sentinel-checking-native-20261103.json text eol=lf
+cpppj/tests/fixtures/graph-sentinel-checking-x86.tsv -text

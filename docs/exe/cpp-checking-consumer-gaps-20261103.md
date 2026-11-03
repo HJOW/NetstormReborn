@@ -539,6 +539,8 @@ LAB_0045c17f:
 
 ## FUN_00462ac0 @ 00462ac0
 
+**816 부분 연결:** 공통 sentinel의 현재 checking/두 WORD와 진단 복귀, 실제 `RawGraph::Free` 연결을 원문1,080행·새 집중2개로 대조했다. CD 실제 대응은 빈 함수 `0045b560`이다. Flood/Add/Rebuild/Detach 중첩 호출은 다음 실제 실행 경로 연결까지 남기며 잔여 함수 수27은 줄이지 않는다. [816 기록](cpp-graph-sentinel-checking-20261103.md).
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: 현재 제품에 직접 주소 언급 없음. 앞/뒤 가상 호출과 SOURCE_MAP을 통해 연결 대상을 추가 확인해야 함.

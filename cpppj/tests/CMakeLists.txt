@@ -3268,3 +3268,9 @@ target_sources(netstorm_file_tests PRIVATE GraphReferenceCheckingTests.cpp Playe
 set_source_files_properties(GraphReferenceCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GRAPH_REFERENCE_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-reference-checking-x86.tsv\"")
 target_compile_definitions(netstorm_file_tests PRIVATE ${_netstorm_menu_session_definitions}) # 기존 raw Graph/앵커 fixture 경로를 같은 값으로 재사용한다.
+
+# 원문 sentinel/Free의 실제 현재행 진단 복귀를 창 없이 집중 대조한다.
+target_sources(netstorm_tests PRIVATE GraphSentinelCheckingTests.cpp)
+target_sources(netstorm_file_tests PRIVATE GraphSentinelCheckingTests.cpp)
+set_source_files_properties(GraphSentinelCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GRAPH_SENTINEL_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/graph-sentinel-checking-x86.tsv\"")

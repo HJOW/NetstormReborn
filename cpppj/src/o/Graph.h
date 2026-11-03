@@ -18,6 +18,8 @@ struct GraphDiagnostics {
 };
 //00462a50/CD0045b530의 현재6BYTE 행을 처리한다. 진단이 고친 같은 행을 다시 읽고 reserved는 보존한다.
 void RemoveGraphSurface(GraphRecord& record,OriginalEdition edition,const GraphDiagnostics& diagnostics={});
+// 00462ac0/CD0045b560의 현재 sentinel 두 WORD를 검사한다. 진단 복귀 뒤 checking과 두 번째 WORD를 다시 읽으며 CD는 아무것도 읽지 않는다.
+void CheckGraphSentinel(const GraphRecord& sentinel,OriginalEdition edition,const GraphDiagnostics& diagnostics={});
 // 실제 raw 슬롯의 그래프 byte와 state를 표면 스냅샷 번호에 연결한 입력이다.
 struct GraphMembership { /* id: 대상을 구별하는 식별 번호. */ std::uint16_t id{}; /* graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기. */ /* state: 처리 중 조회·갱신하는 상태 (std::uint8_t graph{254},). */ std::uint8_t graph{254},state{}; };
 // 서로 연결된 표면의 Graph 번호와 소속 목록을 관리하는 처리기이다.

@@ -1,0 +1,11 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "editions": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "rows": 1080,
+  "fixtureSha256": "60bbbac9a62c0536be5df69e882bfdf625742093958c9694a3fb53fd6c6b9684",
+  "boundary": "게임/GUI/OS/소켓 미실행·진단 UI만 명시 장치·정상 번호3/무효254"
+}

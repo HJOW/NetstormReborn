@@ -382,8 +382,12 @@ void RawGraph::Detach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,std::opt
 void RawGraph::ValidateFree(std::uint8_t graph) const {
     if (graph>=Graph::kCount && graph!=Graph::kInvalid) throw std::out_of_range("raw 그래프 Free 번호 오류");
 }
-// 레코드의 reserved WORD·풀 번호·전체 스택을 보존한다.
-void RawGraph::Free(std::uint8_t graph) { ValidateFree(graph);if (graph!=Graph::kInvalid) records_[graph].surfaces=records_[graph].inUse=0; }
+// 254는 sentinel도 읽지 않는다. 유효 번호는 실제 sentinel 진단 복귀 뒤 현재 행의 앞 두 WORD만 지워 reserved·풀·스택을 보존한다.
+void RawGraph::Free(std::uint8_t graph) {
+    ValidateFree(graph);if (graph==Graph::kInvalid) return;
+    CheckGraphSentinel(records_[Graph::kInvalid],pool_.Edition(),diagnostics_);
+    records_[graph].inUse=0;records_[graph].surfaces=0;
+}
 // 판본별 frame 폭을 구별하며 특수 타입의 현재 방향 문자를 조회한다.
 FrameCode RawGraph::Frame(Sid sid) const {
     const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
