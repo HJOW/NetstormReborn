@@ -250,6 +250,8 @@ cpppj/src/client/VFXTransform.h	Netstorm.Client/Display/VfxTransform.cs	ca0c01eb
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeDecayRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeSurfaceRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/BridgeFrameSearch.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/ChunkMap.cpp	Netstorm.Core/Original/RawChunkMap.cs	a8f87f6223e70e11d2f17b1cf0e6bb32258df766	port
+cpppj/src/o/ChunkMap.h	Netstorm.Core/Original/RawChunkMap.cs	a8f87f6223e70e11d2f17b1cf0e6bb32258df766	port
 cpppj/src/o/Config.cpp	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492ab5dc969361f25c51	L1
 cpppj/src/o/Config.h	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492ab5dc969361f25c51	L1
 cpppj/src/o/ConfigInterface.cpp	Netstorm.Core/Original/ConfigInterface.cs	760e5ec3cf0013ac2817daefbd8a099461033832	port
@@ -359,6 +361,8 @@ cpppj/src/o/RawFortSubscriberWrite.cpp	Netstorm.Core/Original/RawFortSubscriberW
 cpppj/src/o/RawFortSubscriberWrite.h	Netstorm.Core/Original/RawFortSubscriberWrite.cs	67321fab5686b0ab9f3b2801dbc79a2785bc8439	L1
 cpppj/src/o/RawFortTerritoryRecover.cpp	Netstorm.Core/Original/RawFortTerritoryRecover.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
 cpppj/src/o/RawFortTerritoryRecover.h	Netstorm.Core/Original/RawFortTerritoryRecover.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
+cpppj/src/o/RawFortTerritorySave.cpp	Netstorm.Core/Original/RawFortTerritorySave.cs	a8f87f6223e70e11d2f17b1cf0e6bb32258df766	L1
+cpppj/src/o/RawFortTerritorySave.h	Netstorm.Core/Original/RawFortTerritorySave.cs	a8f87f6223e70e11d2f17b1cf0e6bb32258df766	L1
 cpppj/src/o/RawFortTypeNamesLoad.cpp	Netstorm.Core/Original/RawFortTypeNamesLoad.cs	be8f80f909787e5304bce1b926596031a452c71f	L1
 cpppj/src/o/RawFortTypeNamesLoad.h	Netstorm.Core/Original/RawFortTypeNamesLoad.cs	be8f80f909787e5304bce1b926596031a452c71f	L1
 cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	860030e73e9e11599c89334b2e6ab4b0c6e1702d	port
