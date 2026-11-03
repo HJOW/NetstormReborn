@@ -123,8 +123,14 @@ void RawConstructionProcess::Construct(Sid parent,float duration) const {
     hooks_.refresh();
 }
 // 최대 HP 경계 뒤의 현재 시각으로 비율을 계산하고, 표시 경계 뒤의 abstract 비트와 Kill 뒤의 권한을 다시 읽는다.
-void RawConstructionProcess::Run(const ConstructionProcessFields& fields,Sid parent,const ConstructionProcessKill& kill) const {
+void RawConstructionProcess::Run(const ConstructionProcessFields& fields,Sid parent,const ConstructionProcessKill& kill,const std::function<Sid()>& currentForm,const std::function<Sid()>& currentParent) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (patch && state_.checking) {
+        if (!currentForm) throw std::logic_error("건설 현재 Form 조회 장치 미연결");const auto form=currentForm(); //뒤의 선택된 연결 장치가 없더라도 앞선 현재 Form 조회 효과는 보존한다.
+        if (!hooks_.formRobust) throw std::logic_error("건설 현재 Form 연결 진단 장치 미연결");
+        if (!hooks_.formRobust(form)) { if (!hooks_.assertion) throw std::logic_error("건설 Form 원문 진단 미연결");hooks_.assertion("getForm().isRobust()","\\Ns\\O\\Construction.cpp",0x1c4); } //진단이 돌아오면 checking을 다시 검사하지 않고 현재 최대HP/시각을 읽는다.
+    }
+    if (currentParent) parent=currentParent(); //원문 본문의 첫 getParent는 선택 진단이 끝난 뒤 현재 부착 대상을 읽는다.
     const auto maximum=hooks_.maxHitPoints(parent);
     // x87 순서: (현재-시작)/(끝-시작)에 정수 최대 HP를 곱한 뒤 0방향으로 절삭한다.
     auto value=Ftol(((state_.now-fields.start)/(fields.end-fields.start))*static_cast<double>(maximum));
@@ -175,7 +181,7 @@ ConstructionProcess::ConstructionProcess(const RawConstructionProcess& logic,con
 void ConstructionProcess::RunFrame() {
     auto* host=Host();if (!host) return;
     const auto pid=Pid();const SquidProcess* self=this;
-    logic_.Run(fields_,Parent(),[host,pid,self,this](std::uint32_t flags) { host->Kill(*this,flags);return host->IsRegistered(pid,self); });
+    logic_.Run(fields_,Sid{},[host,pid,self,this](std::uint32_t flags) { host->Kill(*this,flags);return host->IsRegistered(pid,self); },[this] { return Form(); },[this] { return Parent(); }); //선택된 checking에서만 Form을 읽고 진단 뒤 같은 프로세스의 현재 부모를 읽는다.
 }
 // 원본 flags 인자는 읽지 않는다.
 void ConstructionProcess::OnFormDestroy(std::uint32_t) { logic_.FormDestroyed(Parent()); }

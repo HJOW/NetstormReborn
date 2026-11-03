@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **798 / 표시 버전11.01**이다. 실제 연소 Capture/Select/Step에 현재 SID 진단/복귀와 같은 Client checking·상세 진단 owner를 연결했다. 집중13개(새2개)가 통과했고797 원문504입력/1008회·재관측1008회와 기존 양판본 캡처/입자/연소점 fixture를 재사용했다. checking 잔여43(부모35·부분6·MP2)이다. 새게임/MP0·보호2728개 불변이다. [798 기록](../docs/exe/cpp-burning-victim-live-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
+현재 실행 제품은 **800 / 표시 버전11.01**이다. 건설 Run의 현재 checking/Form 진단과 전체 부모 체인·진단 뒤 현재 부모 조회를 실제 Host에 연결했다. 원본184입력/368회와 재관측368회가 일치했고 집중18개(새5개)가 통과했다. checking 잔여42(부모33·부분6·MP3)이다. 새게임/MP0·기존보호2728불변/현재2730이다. [800 기록](../docs/exe/cpp-construction-form-parent-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 

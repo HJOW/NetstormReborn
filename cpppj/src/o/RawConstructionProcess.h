@@ -7,6 +7,7 @@
 #include "o/RawConstructionNotice.h"
 #include "o/SquidProcess.h"
 #include "o/SquidReward.h"
+#include "o/RawCheckingFlag.h"
 #include <string_view>
 
 namespace netstorm::o {
@@ -35,6 +36,7 @@ struct ConstructionProcessState {
     bool quickBuild{};                   // 0055a49c / 00537eb4: 콘솔 명령 quickbuild(qb). 켜져 있으면 모든 건설이 한 프레임에 끝난다.
     bool quickVortex{};                  // 0055a498 / 00537eb0: 콘솔 명령 quickvortex(qv). genus 0x200(vortex)의 건설만 바로 끝낸다.
     const bool* sharedBoss{}; // 실제 Client boss를 건설 진행/완료 실행기보다 오래 빌린다.
+    RawCheckingFlag checking; //Run 입구에서만 읽는 같은 Client 진단 DWORD이며 독립 기본값은0이다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // HP·표시·소리 효과 뒤 각각의 완료 관문에서 현재값을 읽는다.
 };
 // 건설 프로세스 밖의 효과다. attach를 뺀 모든 경계가 필요하며 attach는 실제 host를 주면 비워 둘 수 있다.
@@ -74,6 +76,8 @@ struct ConstructionProcessHooks {
     std::function<void(Sid,std::uint32_t)> repop;
     // 완성된 발자국의 유닛을 밀어낸다(x, y, 타입, 소유자). CD판 원본은 소유자를 넘기지 않는다. 00443800 / CD 004d2450.
     std::function<void(float,float,std::uint32_t,std::uint32_t)> push;
+    std::function<bool(Sid)> formRobust; //checking 선택 때만 현재 Form의 부모 체인 연결 여부를 검사한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //Construction.cpp1c4 진단이며 복귀하면 기존 HP 진행을 계속한다.
 };
 // 프로세스 Kill 요청(flags)이다. 호출 뒤에도 프로세스가 남아 있으면 참을 돌려준다. 0041bf10 / CD 0048f7b0.
 // 이력: 2026-10-11 추가.
@@ -105,9 +109,9 @@ public:
     // quickBuild(또는 vortex의 quickVortex)이면 바로 최대가 된다. 부모가 abstract가 아니면 Kill하고,
     // HP가 최대이고 권한이 있으면 Kill한다. 첫 Kill이 프로세스를 없앴으면(kill이 거짓) 둘째 Kill은 하지 않는다.
     // 원본은 해제된 객체로 둘째 Kill을 부르지만(해제 뒤 읽기) 그 동작은 옮기지 않았다. fields는 Kill 전에만 읽는다.
-    // 원본: 004428c0 / CD 004d0ba0 (vtable +0x18). 패치판 debug assert 구간은 옮기지 않았다.
+    // 원본: 004428c0 / CD 004d0ba0 (vtable +0x18). 패치 checking의 현재 Form 연결 진단 뒤 기존 HP 진행을 수행한다.
     // 이력: 2026-10-11 추가.
-    void Run(const ConstructionProcessFields& fields,Sid parent,const ConstructionProcessKill& kill) const;
+    void Run(const ConstructionProcessFields& fields,Sid parent,const ConstructionProcessKill& kill,const std::function<Sid()>& currentForm={},const std::function<Sid()>& currentParent={}) const; //checking0/CD는 currentForm/진단 장치를 읽지 않는다. 실제 Host는 진단 뒤 currentParent를 읽고 독립 값형 입력은 parent를 쓴다.
     // 건설을 끝낸다. 진행음 프로세스 삭제 → 갱신 → (로컬 소유·예측 번호가 아닌 객체) 완료음과 타입 준비 소리 →
     // (권한·예측 번호 아님·HP가 최대·abstract) Unpop → abstract 해제 → 재등록(flags 9) → genus가 맞으면 유닛 밀어내기.
     // Unpop 뒤에도 void가 아니면 원본 assert에 해당하므로 std::logic_error를 던진다.

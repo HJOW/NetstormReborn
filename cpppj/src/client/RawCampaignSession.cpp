@@ -140,6 +140,7 @@
 #include "o/RawSquidFinder.h"
 #include "o/RawConstructionArrival.h"
 #include "o/RawConstructionProcess.h"
+#include "o/RawFormLinked.h"
 #include "o/RawManaBoltArrival.h"
 #include "o/RawManaBoltRegular.h"
 #include "o/RawBoardApproach.h"
@@ -3044,6 +3045,8 @@ struct RawCampaignSession::Impl {
         };
         buildingEffects=std::make_unique<RawConstructionEffects>(core.pool,core.hash,core.types,core.spots,buildingEffectsState,std::move(effects));
         ConstructionProcessHooks hooks; // 실제 Host/vector가 확보를 수행하며 실패를 예외로 보고한다.
+        buildingState.checking=gunState.checking;hooks.formRobust=[this](Sid form) { return CheckRawFormLinked(core.pool,form,[this](Sid current) { return ReadRawProcessFormParent(core.pool,current); }); }; //같은 Client checking과 현재 ProcessForm/부모 체인의 실제 슬롯을 읽으며 free/TYPE 필터를 더하지 않는다.
+        hooks.assertion=[this](auto condition,auto source,auto line) { if (services.ai.assertion) services.ai.assertion(condition);else throw std::logic_error("원문 건설 Form 진단 "+std::string(source)+":"+std::to_string(line)+": "+std::string(condition)); }; //원문 진단 복귀 뒤 기존 진행/완료 순서를 유지한다.
         hooks.reserve=[] { return true; };hooks.reserveSound=[] { return true; };
         hooks.effect=[this](Sid sid,bool instant) { static_cast<void>(particles->AddConstruction(sid,instant)); };
         hooks.loadSound=[this](std::string_view name) { return soundNames.Lookup(name); };

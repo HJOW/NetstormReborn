@@ -3,6 +3,8 @@
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionProcess.h"
 #include "o/SpStore.h"
+#include "o/RawFormLinked.h"
+#include "RawSceneSupport.h"
 #include <cstdio>
 
 namespace {
@@ -326,4 +328,29 @@ TEST_CASE(ConstructionProcess_DeadParentAndForeignPoolAdapters) {
 // 실제 Kernel의 진행과 완료가 서로 다른 시점의 동일 boss를 읽는다.
 TEST_CASE(ConstructionProcess_SharedBossRecheckedDuringActualCompletion) {
     RealScene scene(OriginalEdition::Patch1078);bool boss=false,flipOnRefresh=false;scene.state.sharedBoss=&boss;auto hooks=scene.Hooks();const auto refresh=hooks.refresh;hooks.refresh=[&] { refresh();if (flipOnRefresh) boss=false; };RawConstructionProcess process(scene.pool,scene.types,scene.state,std::move(hooks),&scene.host);process.Start(scene.parent,8.F);scene.state.quickBuild=true;scene.state.now=10;scene.kernel.RunFrame();CHECK(scene.kernel.Size()==1 && scene.Hp()==300 && (scene.pool.Slot(scene.parent)[40]&1));boss=true;scene.state.boss=false;flipOnRefresh=true;scene.kernel.RunFrame();CHECK(scene.kernel.Size()==0 && scene.Hp()==300 && (scene.pool.Slot(scene.parent)[40]&1) && !boss);
+}
+
+TEST_CASE(ConstructionProcess_FormParentNative64DiagnosticPrefix) { //현재 checking/Form/진단 복귀까지 원문64입력과 비교하고 기존 HP 본문 진입에서 멈춘다.
+    std::ifstream file(NETSTORM_CONSTRUCTION_FORM_PARENT_FIXTURE);CHECK(file.good());std::string line;std::getline(file,line);std::size_t rows{};
+    while (std::getline(file,line)) { //동결 원문 입력과 접두를 전부 비교한다.
+        const auto row=netstorm::test::rawscene::Split(line,'\t');CHECK(row.size()==5);if (row.size()!=5) return;const auto p=netstorm::test::rawscene::Split(row[0],',');CHECK(p.size()==5);if (p.size()!=5) return;
+        const auto number=[](const std::string& value) { return netstorm::test::rawscene::Number(value); }; //전체 DWORD를 bool로 좁히지 않는 입력 판독이다.
+        auto checking=number(p[0]);Sid current{static_cast<std::uint16_t>(number(p[1]))};const auto robust=number(p[2]),resume=number(p[3]),mutate=number(p[4]);std::string events,outcome="body";std::size_t parentReads{};RealScene scene(OriginalEdition::Patch1078);scene.state.checking=RawCheckingFlag{checking};auto hooks=scene.Hooks();
+        const auto event=[&](std::string text) { if (!events.empty()) events+=';';events+=text; }; //실제 도달한 getter/진단/본문 순서만 기록한다.
+        hooks.formRobust=[&](Sid form) { event("R:"+std::to_string(form.value)+":"+std::to_string(robust));return robust!=0; };
+        hooks.assertion=[&](auto condition,auto source,auto sourceLine) { const auto hex=[](std::string_view text) { return netstorm::test::rawscene::Hex({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}); };event("D:"+hex(condition)+":"+hex(source)+":"+std::to_string(sourceLine));if (mutate) checking=0;if (!resume) throw std::runtime_error("assertion"); }; //진단 인자의 바이트와 비복귀 접두도 보존한다.
+        hooks.maxHitPoints=[&](Sid)->std::int32_t { event("B");throw std::runtime_error("body"); }; //원문 접두의 다음 부모/HP 처리와 구별하는 명시 중단이다.
+        RawConstructionProcess logic(scene.pool,scene.types,scene.state,std::move(hooks),&scene.host);ConstructionProcessFields fields;
+        try { logic.Run(fields,scene.parent,[](std::uint32_t) { return true; },[&] { const auto form=current;event("F:"+std::to_string(form.value));if (mutate) { checking=0;current=Sid{1}; }return form; },[&] { ++parentReads;return scene.parent; }); }catch (const std::runtime_error& failure) { outcome=failure.what(); }
+        CHECK(outcome==row[1] && std::to_string(checking)==row[2] && std::to_string(current.value)==row[3] && events==row[4] && parentReads==(outcome=="body" ? 1U : 0U));++rows;
+    }
+    CHECK(rows==64);
+}
+TEST_CASE(ConstructionProcess_ActualHostCurrentFormDiagnosisAndResume) { //건설 한 개의 실제 Form/부모 체인과 진단 복귀 뒤 기존 HP 진행만 확인한다.
+    RealScene scene(OriginalEdition::Patch1078);std::int32_t checking=std::bit_cast<std::int32_t>(0x80000000U);scene.state.checking=RawCheckingFlag{checking};std::uint32_t checked{},diagnostics{};Sid form{};auto hooks=scene.Hooks();
+    hooks.formRobust=[&](Sid current) { ++checked;CHECK(current==form);return CheckRawFormLinked(scene.pool,current,[&](Sid value) { return ReadRawProcessFormParent(scene.pool,value); }); };
+    hooks.assertion=[&](auto condition,auto source,auto line) { CHECK(condition=="getForm().isRobust()" && source=="\\Ns\\O\\Construction.cpp" && line==0x1c4);++diagnostics;checking=0;Put(scene.pool.AllocatedBytes(scene.parent),6,form.value,2); }; //검사에서만 분리한 체인을 현재 부모에 복구하고 원문 진단 복귀를 허용한다.
+    RawConstructionProcess logic(scene.pool,scene.types,scene.state,std::move(hooks),&scene.host);logic.Start(scene.parent,8.F);form=Sid{static_cast<std::uint16_t>(Get(scene.pool.Slot(scene.parent),6,2))};CHECK(form.value!=0);scene.state.now=4;scene.events.clear();scene.kernel.RunFrame();CHECK(checked==1 && diagnostics==0 && scene.Hp()==75 && scene.kernel.Size()==1);
+    Put(scene.pool.AllocatedBytes(scene.parent),6,0,2);scene.state.now=4.5;scene.kernel.RunFrame();CHECK(checked==2 && diagnostics==1 && !checking && Get(scene.pool.Slot(scene.parent),6,2)==form.value && scene.Hp()>75 && scene.Hp()<300 && scene.kernel.Size()==1); //전투/공격/시나리오 승리를 실행하지 않는다.
+    scene.kernel.Clear();
 }

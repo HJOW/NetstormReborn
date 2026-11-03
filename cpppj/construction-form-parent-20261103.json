@@ -1,0 +1,189 @@
+{
+  "unit": 800,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 800,
+  "displayVersion": "11.01",
+  "exeSha256": "d153850b55dd0f48d34d6ec2f203890157aaa32f825e10936b31fe5df0b3a0bb",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "successfulBuilds": 2,
+    "failedBuilds": 0,
+    "finalLog": "build-v2.log",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "staticCorrectionAfterFirst": "기존 Parent API의 free/TYPE 필터를 제거한 알려진 ProcessForm leaf로 교체",
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 18,
+    "newTests": 5,
+    "failedChecks": 0,
+    "names": [
+      "ConstructionProcess_ReplaysOriginals",
+      "ConstructionProcess_ReplaysCd",
+      "ConstructionProcess_ReplaysExtra1037",
+      "ConstructionProcess_RejectsMissingHooksAndForeignHost",
+      "ConstructionProcess_AllocationFailuresKeepOriginalEffects",
+      "ConstructionProcess_DurationSelectsDefaultTimeAndSound",
+      "ConstructionProcess_CompleteRequiresVoidBeforeClearingAbstract",
+      "ConstructionProcess_NoticeAdapterStartsDefaultConstruction",
+      "ConstructionProcess_ActualHostRunsToCompletion",
+      "ConstructionProcess_ActualHostSkipsSecondKillAfterRemoval",
+      "ConstructionProcess_ActualHostQuickBuildAndNonBossKeepsProcess",
+      "ConstructionProcess_DeadParentAndForeignPoolAdapters",
+      "ConstructionProcess_SharedBossRecheckedDuringActualCompletion",
+      "ConstructionProcess_FormParentNative64DiagnosticPrefix",
+      "ConstructionProcess_ActualHostCurrentFormDiagnosisAndResume",
+      "RawFormLinked_Native120WholeChainAndReadOnlyBytes",
+      "RawFormLinked_CurrentPoolAfterParentAndExplicitCycle",
+      "RawFormLinked_ProcessGetterKeepsWordAndIgnoresStateType"
+    ],
+    "fullSuiteRun": false,
+    "previousGoldenCases": 2868
+  },
+  "native": {
+    "first": {
+      "unit": 800,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "outputs": [
+        {
+          "fixture": "cpppj\\tests\\fixtures\\form-linked-parent-x86.tsv",
+          "rows": 120,
+          "observations": 240
+        },
+        {
+          "fixture": "cpppj\\tests\\fixtures\\construction-form-parent-x86.tsv",
+          "rows": 64,
+          "observations": 128
+        }
+      ],
+      "rows": 184,
+      "observations": 368,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제ae080전체·부모가상getter만명시. 건설4428c0은checking/Form/진단앞단만·41bfb0본문첫조회전중단. getter/연결반환/진단은명시장치·전체SEH/UI아님. 순환은원문정상반환표본에서제외.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_construction_form_parent.py": "3b9eeb8ef23599ce6dabcaa012005366ec016458565a3874f2b0d79f8f7deb81",
+        "cpppj\\tests\\fixtures\\form-linked-parent-x86.tsv": "a25d7aa27570bd79adb49b627a45a8e9a330bd968526ffeb2fdca0b9adc0bc15",
+        "cpppj\\tests\\fixtures\\construction-form-parent-x86.tsv": "5f7ef95ab43e877604a143a96343cc2505a59c3b283347629afb729a810e1290"
+      }
+    },
+    "repeat": {
+      "unit": 800,
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+      "outputs": [
+        {
+          "fixture": "cpppj\\tests\\fixtures\\form-linked-parent-x86.tsv",
+          "rows": 120,
+          "observations": 240
+        },
+        {
+          "fixture": "cpppj\\tests\\fixtures\\construction-form-parent-x86.tsv",
+          "rows": 64,
+          "observations": 128
+        }
+      ],
+      "rows": 184,
+      "observations": 368,
+      "gameExecutions": 0,
+      "multiplayerTests": 0,
+      "boundary": "실제ae080전체·부모가상getter만명시. 건설4428c0은checking/Form/진단앞단만·41bfb0본문첫조회전중단. getter/연결반환/진단은명시장치·전체SEH/UI아님. 순환은원문정상반환표본에서제외.",
+      "sha256": {
+        "H:\\T5Workspace\\NetstormReborn\\originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\refined\\originals\\functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "H:\\T5Workspace\\NetstormReborn\\tools\\decomp_construction_form_parent.py": "3b9eeb8ef23599ce6dabcaa012005366ec016458565a3874f2b0d79f8f7deb81",
+        "cpppj\\tests\\fixtures\\form-linked-parent-x86.tsv": "a25d7aa27570bd79adb49b627a45a8e9a330bd968526ffeb2fdca0b9adc0bc15",
+        "cpppj\\tests\\fixtures\\construction-form-parent-x86.tsv": "5f7ef95ab43e877604a143a96343cc2505a59c3b283347629afb729a810e1290"
+      }
+    },
+    "successfulRuns": 2,
+    "totalCompleteObservations": 736,
+    "failedRuns": 0
+  },
+  "integration": {
+    "runHpTimingDisplayKillBodyUnchanged": true,
+    "currentFormReadOnlyWhenCheckingSelected": true,
+    "hostParentReadAfterDiagnostic": true,
+    "actualClientCheckingBorrowed": true,
+    "parentLeafEvidence": [
+      {
+        "binary": "originals/Netstorm.exe",
+        "vtable": "0x512098",
+        "entry": "0x4ad010",
+        "bytes": "0fb74110c3",
+        "parentOffset": 16,
+        "typeAndStateRead": false,
+        "kind": "정적 PE leaf 확인·새 Native 실행 아님"
+      },
+      {
+        "binary": "originalCD/NETSTORM.EXE",
+        "vtable": "0x505990",
+        "entry": "0x4b04a0",
+        "bytes": "33c0668b4110c3",
+        "parentOffset": 16,
+        "typeAndStateRead": false,
+        "kind": "정적 PE leaf 확인·새 Native 실행 아님"
+      }
+    ],
+    "knownVtableOnlyBoundary": true,
+    "firstBuildSucceededThenRemovedLegacyStateTypePrefilter": true,
+    "remainingBefore": 43,
+    "remainingAfter": 42,
+    "remainingBreakdown": {
+      "parent": 33,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "checking": {
+    "before": 43,
+    "after": 42,
+    "completed": [
+      "004428c0"
+    ],
+    "remainingBreakdown": {
+      "parent": 33,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2728,
+    "currentCount": 2730,
+    "fixtureCount": 910,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/form-linked-parent-x86.tsv",
+      "cpppj/tests/fixtures/construction-form-parent-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "Form 전체 Native는 부모 가상 반환만 명시·건설 Native는 본문 첫 부모 조회 전 접두",
+    "알려진 ProcessForm getter만 실제 연결·임의 가상 표/32비트ABI는 별도",
+    "원문 비반환 고리는 호스트 명시 중단·전체SEH/진단UI 아님",
+    "부모 callback 뒤 풀 재대여는 별도 C++ 수명 검사",
+    "실제 Client checking 연결은 소스/빌드·실제 Host/Kernel은 명시 C++ 건설 검사·새GUI0"
+  ],
+  "next": "checking 잔여42·비멀티 UI/Edit/수명·호환성"
+}

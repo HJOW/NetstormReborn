@@ -3209,3 +3209,8 @@ target_sources(netstorm_world_generation_tests PRIVATE BurningVictimParentTests.
 set_source_files_properties(BurningVictimParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BURNING_VICTIM_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-victim-parent-x86.tsv\"")
 # 실제 세 연소 소비자와 기존 전체 캡처/입자·연소점·경계 fixture를 같은 기존 집중 대상에서 실행한다(798).
 target_sources(netstorm_file_tests PRIVATE BurningVictimParentTests.cpp BurningFrameTests.cpp BurningSourcesTests.cpp BurningSourcesCornerTests.cpp)
+# 건설 현재 Form 진단과 전체 체인 원문을 기존 집중 대상에 추가한다(800).
+target_sources(netstorm_tests PRIVATE RawFormLinkedTests.cpp)
+target_sources(netstorm_file_tests PRIVATE RawFormLinkedTests.cpp ConstructionProcessTests.cpp)
+set_source_files_properties(RawFormLinkedTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FORM_LINKED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/form-linked-parent-x86.tsv\"")
+set_property(SOURCE ConstructionProcessTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_CONSTRUCTION_FORM_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/construction-form-parent-x86.tsv\"")
