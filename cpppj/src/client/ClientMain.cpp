@@ -473,8 +473,12 @@ void Client::InitializeNativeAudio() {
         scene.loadPalette=[this](std::string_view name) { LoadScenePalette(name); };
         // 원본 00469c80은 천둥 효과음을 내기 전에 번개 프로세스를 생성한다. 소리 옵션과 별개로 진행한다.
         scene.thunderFlash=[this]() { StartThunderFlash(); };
+        SoundFileResolver effectFiles=[this,primary=options_.gameDirectory](std::string_view pattern,bool alternate) { //기본경로는기존계약이며보조경로만41a550처럼각조회때같은owner에서읽는다.
+            const auto secondary=alternate ? files_.SecondaryDirectory() : std::filesystem::path{}; //기본4패턴에서는보조root를선행조회하지않고빈보조값도새경로로대신하지않는다.
+            return MakeDiskSoundResolver(primary,secondary)(pattern,alternate); //현재FindFirstFile/WAVE의우선순위와부재/실패반환을그대로사용한다.
+        };
         audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, std::string(OriginalLanguageName(audioLanguage)),
-            [this]() { return clock_.WallSeconds(timeGetTime()); },randomGlobals_->Game(),std::move(scene)); // 원문 전투 음악도 게임/SP/AI와 같은00532710을 소비한다.
+            [this]() { return clock_.WallSeconds(timeGetTime()); },randomGlobals_->Game(),std::move(scene),std::move(effectFiles)); // 원문 전투 음악도 게임/SP/AI와 같은00532710을 소비한다.
         audio_->SetSceneTints(screen_->Colors().weather);
         audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
         audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());

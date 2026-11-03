@@ -1,0 +1,462 @@
+{
+  "unit": 785,
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "sourceSha256": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+  "textDirectCallsOnly": true,
+  "counts": {
+    "0041a620": 2,
+    "0041a910": 54,
+    "0041a700": 2,
+    "004a4850": 6,
+    "0049ebb0": 2,
+    "004a3090": 5,
+    "004de710": 3
+  },
+  "items": [
+    {
+      "target": "0041a620",
+      "caller": "FUN_0041b4c0",
+      "line": 20770,
+      "text": "FUN_0041a620(this,\"mydoghasfleas\");"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0041bb90",
+      "line": 20991,
+      "text": "FUN_0041a910(local_24,param_2,param_3,0xffffffff);"
+    },
+    {
+      "target": "0041a700",
+      "caller": "FUN_0042cd10",
+      "line": 34324,
+      "text": "FUN_0041a700(local_330,local_33c,0);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0042f590",
+      "line": 36809,
+      "text": "FUN_0041a910(DAT_0054874c,param_1,(int)pcVar3 - (int)(param_1 + 1),0xffffffff);"
+    },
+    {
+      "target": "004a4850",
+      "caller": "FUN_00438dc0",
+      "line": 44685,
+      "text": "FUN_004a4850(uVar10,1);"
+    },
+    {
+      "target": "0049ebb0",
+      "caller": "FUN_00438dc0",
+      "line": 44769,
+      "text": "FUN_0049ebb0();"
+    },
+    {
+      "target": "0049ebb0",
+      "caller": "FUN_004395df",
+      "line": 45039,
+      "text": "FUN_0049ebb0();"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0043c4e0",
+      "line": 47255,
+      "text": "FUN_0041a910(unaff_EBP + -0x94,&DAT_00556038,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0043c4e0",
+      "line": 47256,
+      "text": "FUN_0041a910(unaff_EBP + -0x94,&DAT_00557738,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0043c4e0",
+      "line": 47257,
+      "text": "FUN_0041a910(unaff_EBP + -0x94,&DAT_00556438,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0043c4e0",
+      "line": 47258,
+      "text": "FUN_0041a910(unaff_EBP + -0x94,&DAT_00556238,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0043c4e0",
+      "line": 47259,
+      "text": "FUN_0041a910(unaff_EBP + -0x94,&DAT_00556138,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0043c4e0",
+      "line": 47260,
+      "text": "FUN_0041a910(unaff_EBP + -0x94,&DAT_00556338,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0043c4e0",
+      "line": 47261,
+      "text": "FUN_0041a910(unaff_EBP + -0x94,&DAT_00555f38,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0043c4e0",
+      "line": 47262,
+      "text": "FUN_0041a910(unaff_EBP + -0x94,&DAT_00555e38,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_0043c4e0",
+      "line": 47263,
+      "text": "FUN_0041a910(unaff_EBP + -0x94,&DAT_00557838,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a620",
+      "caller": "FUN_00440f30",
+      "line": 50803,
+      "text": "FUN_0041a620(local_12c,\"mydoghasfleas\");"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_00440f30",
+      "line": 50817,
+      "text": "FUN_0041a910(local_12c,&DAT_00532564,pcVar5 + -0x532564,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_00440f30",
+      "line": 50819,
+      "text": "FUN_0041a910(local_12c,_Str1,local_130,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_00440f30",
+      "line": 50822,
+      "text": "FUN_0041a910(local_12c,iVar3,local_134,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_00458bf0",
+      "line": 67900,
+      "text": "FUN_0041a910(local_24,pcVar4,(int)pcVar3 - (int)(pcVar4 + 1),0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_00458bf0",
+      "line": 67903,
+      "text": "FUN_0041a910(local_24,&DAT_00504b0c,1,0xffffffff);"
+    },
+    {
+      "target": "004a4850",
+      "caller": "FUN_00469c80",
+      "line": 82101,
+      "text": "FUN_004a4850(uVar2);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123213,
+      "text": "FUN_0041a910(local_24,&DAT_00542398,0x10,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123215,
+      "text": "FUN_0041a910(local_24,&local_28,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123217,
+      "text": "FUN_0041a910(local_24,&local_28,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123219,
+      "text": "FUN_0041a910(local_24,&local_28,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123221,
+      "text": "FUN_0041a910(local_24,&local_28,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123224,
+      "text": "FUN_0041a910(local_24,&local_28,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123225,
+      "text": "FUN_0041a910(local_24,(int)this + 0x10,0x400,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123226,
+      "text": "FUN_0041a910(local_24,(int)this + 0x410,0x400,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123227,
+      "text": "FUN_0041a910(local_24,(int)this + 0x810,0x400,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123228,
+      "text": "FUN_0041a910(local_24,(int)this + 0xc10,0x400,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004a3090",
+      "line": 123231,
+      "text": "FUN_0041a910(local_24,*puVar2,puVar2[-0x100],0xffffffff);"
+    },
+    {
+      "target": "004a3090",
+      "caller": "FUN_004a34a0",
+      "line": 123385,
+      "text": "FUN_004a3090(puVar1,uVar2);"
+    },
+    {
+      "target": "004a3090",
+      "caller": "FUN_004a34a0",
+      "line": 123409,
+      "text": "FUN_004a3090(puVar1,uVar2);"
+    },
+    {
+      "target": "004a3090",
+      "caller": "FUN_004a34a0",
+      "line": 123433,
+      "text": "FUN_004a3090(puVar1,uVar2);"
+    },
+    {
+      "target": "004a3090",
+      "caller": "FUN_004a34a0",
+      "line": 123457,
+      "text": "FUN_004a3090(puVar1,uVar2);"
+    },
+    {
+      "target": "004a3090",
+      "caller": "FUN_004a34a0",
+      "line": 123481,
+      "text": "FUN_004a3090(puVar1,uVar2);"
+    },
+    {
+      "target": "0041a700",
+      "caller": "FUN_004a4850",
+      "line": 124281,
+      "text": "FUN_0041a700(local_24,8,0);"
+    },
+    {
+      "target": "004a4850",
+      "caller": "FUN_004ab3e0",
+      "line": 129595,
+      "text": "FUN_004a4850(uVar2);"
+    },
+    {
+      "target": "004a4850",
+      "caller": "FUN_004ab3e0",
+      "line": 129653,
+      "text": "FUN_004a4850(uVar2);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137243,
+      "text": "FUN_0041a910(local_130,&local_13c,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137258,
+      "text": "FUN_0041a910(local_130,local_118,0x100,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137261,
+      "text": "FUN_0041a910(local_130,&local_13c,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137272,
+      "text": "FUN_0041a910(local_130,&local_13c,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137277,
+      "text": "FUN_0041a910(local_130,&local_13c,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137284,
+      "text": "FUN_0041a910(local_130,local_138,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137286,
+      "text": "FUN_0041a910(local_130,local_138,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137287,
+      "text": "FUN_0041a910(local_130,iVar1 + 0xc,0x1e,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137288,
+      "text": "FUN_0041a910(local_130,iVar1 + 0x30,0x1e,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137290,
+      "text": "FUN_0041a910(local_130,local_138,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137292,
+      "text": "FUN_0041a910(local_130,local_138,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137293,
+      "text": "FUN_0041a910(local_130,iVar1 + 0x6c,10,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137304,
+      "text": "FUN_0041a910(local_130,local_138,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137306,
+      "text": "FUN_0041a910(local_130,local_138,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137308,
+      "text": "FUN_0041a910(local_130,local_138,4,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004b54e0",
+      "line": 137310,
+      "text": "FUN_0041a910(local_130,local_138,4,0xffffffff);"
+    },
+    {
+      "target": "004a4850",
+      "caller": "FUN_004b6100",
+      "line": 137714,
+      "text": "FUN_004a4850(uVar4);"
+    },
+    {
+      "target": "004a4850",
+      "caller": "FUN_004b6dd0",
+      "line": 139370,
+      "text": "FUN_004a4850(uVar6);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004c4c60",
+      "line": 149339,
+      "text": "FUN_0041a910(*(undefined4 *)((int)this + 0x40),pcVar2,1,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004c4c60",
+      "line": 149348,
+      "text": "FUN_0041a910(*(undefined4 *)((int)this + 0x40),pcVar2,1,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004c4cc0",
+      "line": 149515,
+      "text": "FUN_0041a910(*(int *)((int)this + 0x40),pcVar6,(int)pcVar3 - (int)(pcVar6 + 1),0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004c63e0",
+      "line": 150274,
+      "text": "FUN_0041a910(local_124,\"<html>\",6,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004c63e0",
+      "line": 150283,
+      "text": "FUN_0041a910(local_124,&DAT_00514fac,3,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004c63e0",
+      "line": 150289,
+      "text": "FUN_0041a910(local_124,\"</html>\",7,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004d6020",
+      "line": 160531,
+      "text": "FUN_0041a910(local_50,pcVar8,(int)pcVar2 - (int)(pcVar8 + 1),0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004ddc90",
+      "line": 165303,
+      "text": "FUN_0041a910(local_460,&local_448,0xe,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004ddc90",
+      "line": 165313,
+      "text": "FUN_0041a910(local_460,&local_438,0x28,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004ddc90",
+      "line": 165323,
+      "text": "FUN_0041a910(local_460,local_40c,0x400,0xffffffff);"
+    },
+    {
+      "target": "0041a910",
+      "caller": "FUN_004ddc90",
+      "line": 165326,
+      "text": "FUN_0041a910(local_460,param_3,param_5,0xffffffff);"
+    },
+    {
+      "target": "004de710",
+      "caller": "FUN_004dea00",
+      "line": 166063,
+      "text": "FUN_004de710(&DAT_005e22b8,3,\"xlat.german\");"
+    },
+    {
+      "target": "004de710",
+      "caller": "FUN_004dea00",
+      "line": 166064,
+      "text": "FUN_004de710(&DAT_005e22b8,1,\"xlat.english\");"
+    },
+    {
+      "target": "004de710",
+      "caller": "FUN_004dea00",
+      "line": 166065,
+      "text": "FUN_004de710(&DAT_005e22b8,6,\"xlat.portuguese\");"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "unit": 785,
+  "selected": {
+    "id": "secondary_effect_sound_root",
+    "originalParent": "004a9170",
+    "originalLiveCaller": "004249a0 -> 004a9cb0 -> 004a9550 -> 004a9170 -> 004a8f70 -> 004a8b50",
+    "currentOwner": "Client.files_ secondary_ -> ClientAudio.device_ SoundFileResolver",
+    "confirmedGap": "현재실제ClientAudio는primary만주어alternate4패턴이빈secondary에서항상부재로반환",
+    "preparation": "같은VFS현재root를각alternate패턴조회때읽는실제Client callback과기존공개생성자를보존한추가overload",
+    "files": 4
+  },
+  "coveredOrPreparedAvoidingDuplicate": [
+    {
+      "caller": "004c5380 / 0041baa0(check0,extra2)",
+      "unit": 767,
+      "owner": "QuickHelpFileRead / 실제QuickHelp최초캐시"
+    },
+    {
+      "caller": "0044d980 / 0041baa0(check1,extra0)",
+      "unit": 769,
+      "owner": "CampaignTemplateStorage.Image 및기존Editor workspace입구"
+    },
+    {
+      "caller": "00440380 / 0041baa0(check1,extra1)",
+      "unit": 771,
+      "owner": "설정/언어/일반미션/Tell fallback/file menu의Config명시입구"
+    },
+    {
+      "caller": "0049c160 / 0041baa0(check0,extra0)",
+      "unit": 777,
+      "owner": "실제Patch1078 TYPE입구.기존Parse/CLI/CD값API유지"
+    },
+    {
+      "caller": "00470bb0 / 00419ec0 -> 004dae60",
+      "unit": 781,
+      "owner": "같은ClientKencloud/RawBackgroundGif현재파일·치수·decoder"
+    },
+    {
+      "caller": "004ab3e0 title0/6/7 -> 004dae60",
+      "unit": 782,
+      "owner": "ClientTitleBitmaps State42/WM_PAINT/정리.별도path-fix필수"
+    },
+    {
+      "caller": "004c63e0 및004c4c60/004c4cc0 stream writer",
+      "unit": 766,
+      "owner": "실제HelpListDisk/QuickHelp HTML"
+    },
+    {
+      "caller": "004d6020 / 0041bb90 Editor쓰기",
+      "unit": "763/757/669",
+      "owner": "ObjectDump/보호Editor작업본.다른상위caller전체완료주장없음"
+    }
+  ],
+  "otherReadersClassifiedOnly": [
+    {
+      "id": "palette",
+      "original": "004a4850",
+      "status": "활성전용파일부모잔여분류만",
+      "boundary": "776/1024BYTE직접읽기·현재palette부분효과·후속Screen색소비까지FILE수명.782는GIFcaller복원이며이파일부모전체가아님"
+    },
+    {
+      "id": "xlat_patch",
+      "original": "004dea00 -> 004de710",
+      "status": "활성현재파일계약차이분류만",
+      "boundary": "실제InitializeNativeTranslations는Probe->Files.Read snapshot.원문은현재FILE/TAFFpayload를읽음.지속buffer/parse시점차이만으로공개관측gap을확정하지않음"
+    },
+    {
+      "id": "font_cache",
+      "original": "004a34a0 -> 004a3240/004a3090",
+      "status": "읽기/쓰기부모잔여분류만",
+      "boundary": "774는ACP/NLS/글꼴얼굴과소비자인코딩이다.캐시순차File읽기/저장부모와동일하지않으며785에서복원하지않음"
+    },
+    {
+      "id": "shape_map",
+      "original": "0049ebb0 -> 004dd580",
+      "status": "직접OS파일map/view경계분류만",
+      "boundary": "현재GameAssets의값형vector를그대로유지.41baa0이나VFS전체읽기로대체할대상아님.원문중복startup분할을별도활성부모로중복계수하지않음"
+    },
+    {
+      "id": "uber_script_cache",
+      "original": "옛inventory의00440380추가caller확인대상",
+      "status": "미확정caller경계유지",
+      "boundary": "현재UberGump::Script는필수Read후성공캐시.일반Config optional40380과동일부모라고가정해바꾸지않음"
+    },
+    {
+      "id": "eager_title_cloud_cd",
+      "status": "호스트/CD캐시계약유지",
+      "boundary": "782의실제title부모와동일캐시로합치지않음"
+    },
+    {
+      "id": "editor_snapshot_cli_music_os",
+      "status": "기존계약유지",
+      "boundary": "Editor namespace/tombstone·Read/TryRead snapshot·직접OS TAFF등록·CLI·SoundMusicFile mmio스트리밍을일괄교체하지않음"
+    }
+  ],
+  "rankAndNetworkDeferred": {
+    "rank": "004cfc10 missionPost0 -> 00448260 local+noIsland -> 0044fa00 -> 004b54e0.현재localSpecial FillMissing이며전체기술선택항목은이미707정적연결.일반battle/재접속save전체부모라MP후순위",
+    "otherMp": [
+      "00458bf0 !rootservers저장/00459190행읽기/00459300끝점부모",
+      "004b54e0 일반battle !missionPost/playerKnown 저장",
+      "서버/Outpust/재접속/조기희생일반battle"
+    ]
+  },
+  "excluded": [
+    "보류spellHelp이미지",
+    "greenrect",
+    "공중3종행동",
+    "사용자수동검사",
+    "실제공격/포획/희생/승리검사"
+  ],
+  "nativeCppGameMpExecutions": 0,
+  "productFrozenFixtureWrites": 0,
+  "snapshotMeaning": "785 준비 당시의 분류. selected.confirmedGap은적용전공백이며최종완료상태는secondary-sound-root-20261103.json을따른다.",
+  "titlePathFixAppliedAt782": true
+}

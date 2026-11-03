@@ -69,6 +69,9 @@ public:
     // 실제 Client는 게임과 같은00532710을 빌린다. random은 음향보다 오래 살아야 하며 생성/종료는 시드나 상태를 쓰지 않는다.
     ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
         std::function<double()> wallSeconds,o::GameRandom& random,SceneMusicHooks external={});
+    // 실제Client는효과음조회때현재보조root를읽는resolver를준다. 기존두생성자의기본디스크계약은유지한다.
+    ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
+        std::function<double()> wallSeconds,o::GameRandom& random,SceneMusicHooks external,SoundFileResolver effectsResolver);
     // 음악 스레드를 합류하고 장치를 닫는다. 이미 닫혔으면 아무 일도 하지 않는다.
     ~ClientAudio();
     // 내부 객체가 서로의 주소를 보관하므로 복제·이동하지 않는다.
@@ -130,9 +133,9 @@ public:
     // 검사용 상태 보고다. 장치·옵션·음량·지금 곡·채널 활성·곡 길이·재생 커서·음악 스레드 오류를 줄마다 `이름\t값`으로 적는다.
     std::string Describe();
 private:
-    // 두 공개 생성자가 같은 음향 계층을 조립한다. sharedRandom이 있으면 지역 시드 대신 해당 장기 객체를 빌린다.
+    // 공개 생성자들이 같은 음향 계층을 조립한다. sharedRandom이 있으면 지역 시드 대신 해당 장기 객체를 빌린다.
     ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
-        std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external,o::GameRandom* sharedRandom);
+        std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external,o::GameRandom* sharedRandom,SoundFileResolver effectsResolver);
     // 장치를 열고(성공하면 true) 음악 스레드를 시작한다. 이미 열려 있으면 false다. Initialize·Interpret가 함께 쓴다.
     bool OpenDevice(std::uintptr_t window,int quality,bool preload=true); //초기 init sound만 천둥을 미리 읽고 옵션 재열기는 기존 장치 초기화만 수행한다.
     // 음악 스레드를 합류한 뒤 장치를 닫는다(원본에 없는 순서 보장: 스레드가 닫힌 버퍼를 건드리면 안 된다).

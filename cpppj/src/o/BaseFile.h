@@ -70,6 +70,7 @@ public:
     void DeferPrimaryArchiveRegistration(); // 원문Run전의Client생성자는I/O하지않는다. 독립값형Client파일조회는최초TAFF조회에서한번만기존자동등록을준비한다.
     //0041a4f0: 보조/CD 디스크 root만 바꾼다. 이미 등록한 아카이브 목록은 원문처럼 보존한다. 빈 경로는 기본 root다.
     void SetSecondaryDirectory(std::filesystem::path directory);
+    const std::filesystem::path& SecondaryDirectory() const { return secondary_; } //같은현재보조root를빌리며조회로fallback/경로고리/등록목록을바꾸지않는다.
     // 상대 읽기: 기본 디스크→기본 TAFF→보조 디스크→보조 TAFF다. 절대 이름은 직접 읽는다.
     std::vector<std::uint8_t> Read(std::string_view name) const;
     //0041af80/41ad10: 내용물을 읽지 않고 실제 출처를 찾아 TAFF 또는 디스크의 쓰기 금지 상태를 반환한다. 빈 이름/조회·stat 실패는 원문 행 번호의 진단이다.

@@ -3079,6 +3079,8 @@ target_sources(netstorm_basefile_io_tests PRIVATE BaseFileWholeReadTests.cpp)
 # 글꼴/음질과 실제 글리프 픽셀 회귀를 기존 집중 대상에만 추가한다(764).
 target_sources(netstorm_tests PRIVATE PresentationCommandInputTests.cpp PresentationFontRenderCacheTests.cpp)
 target_sources(netstorm_script_bindings_tests PRIVATE PresentationCommandInputTests.cpp PresentationFontRenderCacheTests.cpp ClientAudioTests.cpp)
+# 보조 효과음 경로의 기존 디스크·검색·무장치 회귀를 새 실행 대상 없이 선택한다(785).
+target_sources(netstorm_script_bindings_tests PRIVATE SoundDeviceTests.cpp)
 
 # 존재조회/세 소비자 회귀를 기존 파일 집중대상에서 검사한다(765).
 target_sources(netstorm_tests PRIVATE FileProbeTests.cpp)

@@ -1,0 +1,91 @@
+{
+  "unit": 785,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·전체 목표 진행 중",
+  "runtimeProduct": 785,
+  "displayVersion": "11.01",
+  "exeSha256": "2b96954c8f1b38c65ce52f07be5297bc8a1d419683a46d873dc0ac34357f5ebe",
+  "summary": "실제Client효과음의각보조패턴조회때같은VFS현재root를읽고기존공개생성자와캐시·음악을보존",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_script_bindings_tests"
+    ],
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 13,
+    "newTests": 0,
+    "failedChecks": 0,
+    "names": [
+      "ClientAudio_WeatherHooksPreservePaletteAndTintOrder",
+      "ClientAudio_RejectsIncompletePaletteHooks",
+      "ClientAudio_VolumeStepFollowsOriginalJumpTable",
+      "ClientAudio_PreloadLoadsOnlyUnloadedEntries",
+      "ClientAudio_SceneRunsWithoutDevice",
+      "ClientAudio_WriteSongEndBitsPreservesCurrentOwnerAndOtherEffects",
+      "ClientAudio_SharedGameRandomMatchesNativeStartSeeds",
+      "ClientAudio_SharedRandomInterleavesCurrentSpState",
+      "ClientAudio_ActualClientWithoutDeviceUsesGameGlobals",
+      "ClientAudio_SharedRandomFailedConstructionKeepsSeed",
+      "SoundDevice_FindsActualDiskFiles",
+      "SoundDevice_OfflineHooksAndShutdown",
+      "SoundDevice_PreservesFileSearchAndAttenuation"
+    ],
+    "scope": "기존SoundDevice검색/디스크/무장치3개와ClientAudio10개.실제Client의보조callback실행/PCM확인과구별",
+    "fullSuiteRun": false
+  },
+  "integration": {
+    "preparedProductFiles": 4,
+    "testRegistrationFiles": 1,
+    "newExecutableTargets": 0,
+    "newFixtures": 0,
+    "existingPublicConstructorsPreserved": true,
+    "currentSecondaryRead": "each alternate pattern",
+    "lifetime": "Client 명시 audio 반납이 files보다 먼저",
+    "successfulSoundCachePreserved": true,
+    "musicSelectionUnchanged": true
+  },
+  "staticInventory": {
+    "classification": "cpppj/nonmp-file-consumers-20261103.json",
+    "directCallers": "cpppj/nonmp-file-direct-callers-20261103.json",
+    "textDirectCalls": 74,
+    "counts": {
+      "0041a620": 2,
+      "0041a910": 54,
+      "0041a700": 2,
+      "004a4850": 6,
+      "0049ebb0": 2,
+      "004a3090": 5,
+      "004de710": 3
+    },
+    "rawSourceSha256": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "allRecordedLinesVerified": true
+  },
+  "protection": {
+    "beforeCount": 2720,
+    "currentCount": 2720,
+    "allUnchanged": true,
+    "fixtureCount": 900
+  },
+  "newNativeObservations": 0,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "actualCdInsertionTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "기존helper회귀를실제Clientcallback/PCM성공으로확대하지않음",
+    "실제보조CD·음악의보조경로·전체FILEABI는별도",
+    "palette/Xlat/font cache/SHP/Script reader는분류만·재접속rank는MP후속"
+  ],
+  "next": "786 팔레트 현재 File·부분 쓰기와 적용/반납 부모, 이후 checking 잔여50/비멀티·호환성"
+}

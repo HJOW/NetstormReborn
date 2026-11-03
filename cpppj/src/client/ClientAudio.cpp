@@ -53,18 +53,23 @@ std::int32_t VolumeFromStep(std::int32_t step) {
 // 어떤 OS 자원도 여기서 열지 않는다(장치·스레드는 Initialize가 연다).
 ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
     std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external)
-    :ClientAudio(std::move(gameDirectory),edition,std::move(language),std::move(wallSeconds),randomSeed,std::move(external),nullptr) {}
+    :ClientAudio(std::move(gameDirectory),edition,std::move(language),std::move(wallSeconds),randomSeed,std::move(external),nullptr,{}) {}
 
 // Client의 같은 게임 난수를 빌리고 생성 시점에는 원문 난수 호출/재시드를 추가하지 않는다.
 ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
     std::function<double()> wallSeconds,o::GameRandom& random,SceneMusicHooks external)
-    :ClientAudio(std::move(gameDirectory),edition,std::move(language),std::move(wallSeconds),0,std::move(external),&random) {}
+    :ClientAudio(std::move(gameDirectory),edition,std::move(language),std::move(wallSeconds),0,std::move(external),&random,{}) {}
+
+// 실제Client의효과음resolver만장기장치에인계하며음악경로와생성시자원상태는바꾸지않는다.
+ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
+    std::function<double()> wallSeconds,o::GameRandom& random,SceneMusicHooks external,SoundFileResolver effectsResolver)
+    :ClientAudio(std::move(gameDirectory),edition,std::move(language),std::move(wallSeconds),0,std::move(external),&random,std::move(effectsResolver)) {}
 
 // 독립 검사와 실제 Client의 장치/감독 조립은 동일하며 활성 난수의 주소만 명시적으로 선택한다.
 ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
-    std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external,o::GameRandom* sharedRandom)
+    std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external,o::GameRandom* sharedRandom,SoundFileResolver effectsResolver)
     :list_(edition),
-     device_(list_,state_,MakeDiskSoundResolver(gameDirectory),language,kSoundDirectory),
+     device_(list_,state_,effectsResolver ? std::move(effectsResolver) : MakeDiskSoundResolver(gameDirectory),language,kSoundDirectory),
      player_(list_,state_,device_.Hooks()),
      primary_(edition,primaryState_,device_.BindMusicBuffers(files_.FileHooks())),
      secondary_(edition,secondaryState_,device_.BindMusicBuffers(files_.FileHooks())),
