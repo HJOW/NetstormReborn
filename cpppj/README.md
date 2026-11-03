@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **813 / 표시 버전11.01**이다. 기본/Factory 레벨의 실제 진단을 현재 Client 서비스에 연결하고 복귀 뒤 상태 저장·표시 갱신을 계속한다. 집중4개(새1)·원문96행 대조와 Release 빌드가 통과했다. checking 잔여30·보호2739/fixture919 불변이며 전체 목표는 진행 중이다. [813 기록](../docs/exe/cpp-squid-level-diagnostic-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
+현재 실행 제품은 **814 / 표시 버전11.01**이다. ContentForm 부착의 현재 전투/checking·진단 복귀와 포획 안내 부모를 연결했다. 일반 부착/기한/너겟 집중4개(새3)와 Release 빌드가 통과했다. 포획 안내 실행/실제 포획은 건너뛰었고 checking 잔여29·보호2739/fixture919 불변이며 전체 목표는 진행 중이다. [814 기록](../docs/exe/cpp-content-attach-parent-20261103.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 

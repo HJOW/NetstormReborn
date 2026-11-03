@@ -1,0 +1,140 @@
+{
+  "unit": 814,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "ContentForm 부착 부모 실제 전투/checking/진단과 포획 안내 정적 연결 완료·전체 목표 진행 중",
+  "runtimeProduct": 814,
+  "displayVersion": "11.01",
+  "exeSha256": "045f7e89b4a34ea060905beaa06f3fe0abc3cdea3a9510bd3559d4376f0f889f",
+  "build": {
+    "successfulInvocations": 3,
+    "failedInvocations": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "logs": [
+      "build-v1.log",
+      "build-v2.log",
+      "build-v3.log"
+    ],
+    "note": "게임/집중 대상 빌드·게임 재링크·정적 대조에서 clock 호출 뒤 현재 기한 조회를 명시한 후 해당 부모/게임/집중 대상 재빌드"
+  },
+  "tests": {
+    "total": 4,
+    "newTests": 3,
+    "failedChecks": 0,
+    "filters": {
+      "ContentFormAttach_": 3,
+      "ContentLifetime_ActualSpAndWalletIntegration": 1
+    },
+    "coverage": [
+      "checking0에서도 앞단 무조건 진단",
+      "진단 중 부모/자신 dead 상태 복구 뒤 링크/부모 통지",
+      "미복구 dead의 무변경 반환·CD 무진단 반환",
+      "현재 전투/checking 뷰의 전체 DWORD 보존",
+      "기한의 최초0/주소/일반 및 준비 대여 후 값 보존",
+      "일반 너겟 부착/삭제·SP/지갑/음향 기존 회귀"
+    ],
+    "fullSuiteRun": false,
+    "captureNoticeExecuted": false,
+    "finalLogs": [
+      "test-ContentFormAttach_-v2.log",
+      "test-ContentLifetime_ActualSpAndWalletIntegration-v2.log"
+    ]
+  },
+  "native": {
+    "newObservations": 0,
+    "newFixtures": 0,
+    "existingContentFixtureReplayed": false,
+    "note": "실제 포획 재현을 건너뛰므로 새 안내 본체는 원문·PE 어셈블리·정적 연결과 컴파일 근거만 기록"
+  },
+  "integration": {
+    "attachParent": "004aec10",
+    "cdAttach": "004afff0·앞단 무진단 조기 반환 유지",
+    "noticeParent": "004927f0",
+    "cdNotice": "0040df80·이번에 새 구현하지 않음",
+    "diagnostics": [
+      {
+        "expression": "!into.isDead() && !into.isFree()",
+        "line": 3046
+      },
+      {
+        "expression": "!isDead() && !isFree()",
+        "line": 3047
+      },
+      {
+        "expression": "isValid()",
+        "line": 3115
+      },
+      {
+        "expression": "isRobust()",
+        "line": 3116
+      }
+    ],
+    "diagnosticFile": "\\Ns\\O\\Squid.cpp",
+    "behavior": "현재 전투/각 checking 재조회·진단 복귀 뒤 현재 슬롯 재판정·기존 정렬/Pop/부모 통지 뒤 유효성/구조 연결 재검사",
+    "noticeBehavior": "현재 참여 갱신·로컬 포획자 반환·소유자별 전역 음향·벽시각 억제·이전 이름 먼저/포획자 이름 다음·Tell 뒤 현재 벽시각+20 저장",
+    "deadlineOwner": "ClientGameplayGlobals::PriestTakenDeadlines·9개 BSS0·월드 대여/반납에서 미초기화",
+    "binaryProof": {
+      "colors": [
+        "~q",
+        "~l",
+        "~r",
+        "~w",
+        "~u",
+        "~s",
+        "~y",
+        "~d",
+        "~a"
+      ],
+      "delaySeconds": 20.0,
+      "clock": "00460d70·timeGetTime 기반 벽시각",
+      "format": "%s(%d,%s,%s,%s,%s)",
+      "deadlineReferences": 2
+    },
+    "sourceAudit": {
+      "baseCppCommit": "17fe5d66",
+      "sortedLinksAndPopAndParentNoticeUnchanged": true,
+      "actualBattleView": true,
+      "actualCheckingView": true,
+      "actualCurrentDiagnostic": true,
+      "actualNotify": true,
+      "actualParticipation": true,
+      "actualWallClock": true,
+      "actualSound": true,
+      "actualTell": true,
+      "actualCurrentIdentity": true
+    },
+    "hostBoundaries": "기존 SID/type/vtable/순환/할당 슬롯 guard 유지·이전 owner0..8와 이름/서식 버퍼 밖 쓰기는 거부",
+    "clockBeforeDeadlineReadExplicit": true
+  },
+  "checkingRemaining": {
+    "total": 29,
+    "parents": 21,
+    "partial": 5,
+    "multiplayerClassified": 3,
+    "completedThisUnit": "004aec10"
+  },
+  "protection": {
+    "files": 2739,
+    "fixtures": 919,
+    "changed": 0,
+    "newFixtures": 0,
+    "nextBaseline": "extracted/cpp-resume-814/protected-after.json"
+  },
+  "notRun": [
+    "실제 게임/GUI",
+    "새 포획 안내 본체 실행/실제 사제 포획·희생·공격·승리",
+    "기존 포획 포함 Content fixture 전체",
+    "공중3종 전용",
+    "MP/통신",
+    "물리/PCM",
+    "전체 CTest/71대상/34경로/ZIP"
+  ],
+  "next": "우선순위1의 남은 객체 메뉴/커서와 Graph 참조/초기화/조회/칠하기/병합 부모5개(00462a50/00462ac0/00462bc0/00462f10/004633c0)의 현재 checking·소비자 대조, 이후 Edit/미션/파일/호환/후속 단계"
+}

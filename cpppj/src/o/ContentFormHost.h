@@ -3,12 +3,17 @@
 #include "o/RawCheckingFlag.h" // 원문 checking의 현재 DWORD 뷰와 독립 입력을 구별한다.
 #include "o/SquidForms.h"
 #include "o/RawContainedCreate.h"
+#include <string_view>
 
 namespace netstorm::o {
 // 부모 가상 +0x24(form,reason)의 추가1/제거2 알림이다. 부모의 실제 생산/UI 효과를 연결한다.
 using ContentFormNotice=std::function<void(Sid parent,Sid form,std::uint32_t reason)>;
 // 실제 월드의 전투·강한 검사 전역이다. 부착 알림 뒤의 최신 값을 읽는다.
-struct ContentFormState { /* inBattle: 내부 전투 여부. */ /* checkingLinks: 검사 연결 여부. */ bool inBattle{}; RawCheckingFlag checkingLinks{}; };
+struct ContentFormState {
+    RawCheckingFlag inBattle{}; // 부모 알림 뒤 원문00594fbc의 현재 전투 값을 읽는다.
+    RawCheckingFlag checkingLinks{}; // 두 진단 위치에서 같은005e4794를 다시 읽는다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 원문 식/파일/행을 전달하고 복귀 뒤 현재 상태를 다시 판정한다.
+};
 // 사제를 워커/벌룬에 담은 전투 부착 뒤 포획 알림(004927f0/CD 0040df80)을 요청한다.
 // 두 번째 인자는 내용물 +12의 하위7비트에 저장된 이전 사제 소유자다.
 using ContentPriestNotice=std::function<void(Sid parent,std::uint32_t previousOwner)>;
@@ -22,7 +27,7 @@ public:
     ContentFormHost(const ContentFormHost&)=delete;
     ContentFormHost& operator=(const ContentFormHost&)=delete;
     // 004aec10/CD 004afff0: flags의 0x300을 제외한 그룹 안에서 기존 순서 번호보다 앞에 삽입한다.
-    // 패치의 dead/free assert 경로는 거부하며 CD의 같은 상태 입력은 무동작이다.
+    // 패치는 dead/free 진단 복귀 뒤 현재 상태로 재판정하며 CD의 같은 상태 입력은 무동작이다.
     void Attach(Sid form,Sid parent,std::uint32_t flags=0) const;
     // 공통 Form Unpop 뒤 살아 있는 부모에 제거2를 알린다. 부모 dead/free의 링크는 원본대로 보존한다.
     void Unpop(Sid form) const;
@@ -39,6 +44,7 @@ public:
     // 전체 월드의 Form 분배기가 같은 풀을 사용하는지 확인한다.
     const SidPool& Pool() const;
 private:
+    void Assert(std::string_view expression,std::uint32_t line) const; // 선택한10.78 진단만 요구하고 돌아오면 원문 본문을 계속한다.
     // 타입6 가상 표·free 상태·원본 WORD 필드를 확인한다.
     void Form(Sid form) const;
     std::uint16_t Word(Sid sid,std::size_t offset) const;

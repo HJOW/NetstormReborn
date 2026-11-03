@@ -71,6 +71,7 @@ target_sources(netstorm PRIVATE
     # 원본 Guide 반복과 현재 실제 사제 참여 상태를 같은 저장소에서 처리한다.
     RawMissionGuide.cpp RawMissionGuide.h
     RawPriestParticipation.cpp RawPriestParticipation.h
+    RawPriestTakenNotice.cpp RawPriestTakenNotice.h
     # 같은 미션 게이트와 제작 장부로 Early Missions3~6의 실제 단계 조건을 판정한다.
     RawTutorialLater.cpp RawTutorialLater.h
     # 같은 Player9의 실제 로컬 로그인과 벽시계 완료/중단 순서를 공유한다.

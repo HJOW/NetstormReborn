@@ -1290,6 +1290,8 @@ LAB_004ad54f:
 
 ## FUN_004aec10 @ 004aec10
 
+**814 연결 완료:** 현재 전투/checking·진단 복귀와 실제 사제 참여/이름/음향/Tell의 포획 안내 부모를 Session에 연결했다. 일반 부착/기한 수명/너겟 집중4개(새3) 통과이며 포획 안내 본체 실행/실제 포획 재현은 사용자 확인으로 건너뛰었다. 아래 부분/미연결 서술은779 당시 상태다. [814 기록](cpp-content-attach-parent-20261103.md)을 따른다.
+
 별도 부모 후속: ContentFormState.checkingLinks view는준비했으나실제Session은state=nullptr이며inBattle/포획통지부모연결이먼저필요함
 
 현재 주소 언급: cpppj\src\o\ContentFormHost.h

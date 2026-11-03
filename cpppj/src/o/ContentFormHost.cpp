@@ -20,6 +20,11 @@ ContentFormHost::ContentFormHost(SidPool& pool,std::span<const RiftTypeRecord> t
     if (!notice_) throw std::invalid_argument("ContentForm 부모 알림 경계 필요");
     if (types_.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U)) throw std::invalid_argument("ContentForm 타입 판본/크기 오류");
 }
+// 선택한 원문 진단의 복귀 뒤 현재 전역과 슬롯 판정을 계속한다.
+void ContentFormHost::Assert(std::string_view expression,std::uint32_t line) const {
+    if (!state_ || !state_->assertion) throw std::logic_error("ContentForm 실제 원문 진단 장치 미연결");
+    state_->assertion(expression,"\\Ns\\O\\Squid.cpp",line);
+}
 // 공통 가상 표 검사를 사용하여 오염된 타입6 슬롯의 필드 변경을 거부한다.
 void ContentFormHost::Form(Sid form) const {
     if (pool_.Slot(form)[kType]!=kContent) throw std::logic_error("ContentForm 타입 오류");
@@ -44,15 +49,13 @@ void ContentFormHost::SetPrevious(Sid sid,std::uint16_t previous) const {
 // 기존 체인을 한 번 훑고 첫 순서 공백에 삽입한다. 다른 그룹과 일반 Form/자산은 건너뛴다.
 void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
     if (form.value<5 || parent.value<5 || parent.value>=pool_.Capacity() || parent==form) throw std::logic_error("ContentForm 부착 번호 오류");
-    if ((pool_.Slot(parent)[kState]|pool_.Slot(form)[kState])&(kFree|kDead)) {
-        if (pool_.Edition()==OriginalEdition::Cd1072) return;
-        throw std::logic_error("ContentForm dead/free 부착 금지");
+    if (pool_.Edition()==OriginalEdition::Patch1078) {
+        if (pool_.Slot(parent)[kState]&(kFree|kDead)) Assert("!into.isDead() && !into.isFree()",0xbe6);
+        if (pool_.Slot(form)[kState]&(kFree|kDead)) Assert("!isDead() && !isFree()",0xbe7);
     }
+    if ((pool_.Slot(parent)[kState]|pool_.Slot(form)[kState])&(kFree|kDead)) return;
     Form(form);forms_.ValidatePop(form,flags);
     const auto stored=Word(form,kContentType);if (stored>=types_.size()) throw std::logic_error("ContentForm 생산 타입 오류");
-    if (state_ && state_->inBattle && (types_[stored].flags2&0x200000) &&
-        (types_.at(pool_.Slot(parent)[kType]).flags2&0x30000) && !captured_)
-        throw std::invalid_argument("ContentForm 전투 사제 포획 알림 경계 필요");
     const auto listFlags=Word(form,kFlags);const auto orderOffset=pool_.Edition()==OriginalEdition::Patch1078 ? 23U : 22U;
     std::uint32_t order=0;Sid previous{},current{Word(parent,kHead)};bool inserted=false;std::unordered_set<std::uint16_t> visited;
     // 일치하는 그룹만 순서 카운터를 증가시키며 모든 항목은 tail 후보로 기억한다.
@@ -78,10 +81,13 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
     pool_.AllocatedBytes(form)[orderOffset]=static_cast<std::uint8_t>(order);Put(form,kParent,parent.value);
     pool_.AllocatedBytes(form)[kState]|=kContained;forms_.Pop(form,flags|0x100);notice_(parent,form,1);
     // 부모 알림/전송이 바꾼 현재 내용물 타입·부모 genus·전투 상태를 다시 읽어 사제 포획 알림 조건을 평가한다.
-    if (state_ && state_->inBattle && (types_.at(Word(form,kContentType)).flags2&0x200000) &&
-        (types_.at(pool_.Slot(parent)[kType]).flags2&0x30000)) {
-        if (state_->checkingLinks && !Linked(form)) throw std::logic_error("ContentForm 사제 포획 알림 연결 오류");
-        if (Linked(form)) {
+    if ((types_.at(Word(form,kContentType)).flags2&0x200000) &&
+        (types_.at(pool_.Slot(parent)[kType]).flags2&0x30000) && state_ && state_->inBattle) {
+        if (state_->checkingLinks) {
+            if (form.value<1 || form.value>=pool_.Capacity()) Assert("isValid()",0xc2b);
+            if (state_->checkingLinks && !Linked(form)) Assert("isRobust()",0xc2c);
+        }
+        if (form.value>=1 && form.value<pool_.Capacity() && Linked(form)) {
             if (!captured_) throw std::invalid_argument("ContentForm 전투 사제 포획 알림 경계 필요");
             captured_(parent,pool_.Slot(form)[12]&0x7f);
         }

@@ -225,6 +225,7 @@
 #include "o/RawPlayerNotification.h" //프레임말 대기 결과도 같은 실제 Player/기술/기록을 사용한다.
 #include "o/RawDaisDraw.h"
 #include "o/RawPriestSacrificeRequest.h"
+#include "o/RawPriestTakenNotice.h"
 #include "o/RawPriestRitualFrame.h"
 #include "o/RawDaisLifecycle.h"
 #include "o/RawDaisContentNotice.h"
@@ -631,6 +632,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawNormalTerrainWorldBinding> normal; // 실제 성장/도장/Normalize/군집 몸체다.
     std::unique_ptr<RawFortFinishOwner> finish; // 같은9 Player의 최초 지역을 읽는다.
     ContainedCreateState contentState; // 저장 내용물은 실제 Form6으로 생성한다.
+    ContentFormState contentFormState; // 같은 현재 전투/checking과 원문 진단을 부착 부모에 제공한다.
+    std::unique_ptr<RawPriestTakenNotice> priestTakenNotice; // 현재 참여/Player 이름/소리/Tell과 Client 기한을 연결한다.
     std::unique_ptr<ContentFormHost> contentForms; // ProcessForm과 다른 실제 Form6의 정렬 부착 몸체다.
     std::vector<CarrierRegularType> carrierRegularTypes; // 같은 실제 TYPE 정의의 기본 프레임/casttime이다.
     std::unique_ptr<RawContentPreviewProcess> contentPreviewProcess; // 같은 현재 시계/공유47타입의 일시 표시 수명이다.
@@ -2540,8 +2543,18 @@ struct RawCampaignSession::Impl {
         contentNotice=std::make_unique<RawContentParentNotice>(core.pool,[this](Sid parent,Sid form,std::uint32_t reason) {
             lifetime->ParentNotice(parent,form,reason);
         });
+        contentFormState.inBattle.Bind(core.ownerMode.battle);contentFormState.checkingLinks.Bind(gameplayGlobals->AiDebug().Checking());
+        contentFormState.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("ContentForm 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); };
+        PriestTakenNoticeHooks taken; // 원문004927f0의 선택 장치를 실제 세션의 현재 서비스에 연결한다.
+        taken.refresh=[this](std::uint32_t owner) { priestParticipation->Refresh(owner); };
+        taken.wallSeconds=[this] { if (!services.sound.wallSeconds) throw std::logic_error("포획 안내 실제 벽시각 미연결");return services.sound.wallSeconds(); };
+        taken.name=[this](std::uint32_t owner) { if (!services.priestTakenName) throw std::logic_error("포획 안내 실제 Player 이름 미연결");const auto end=std::find(handle.begin(),handle.end(),std::uint8_t{});if (end==handle.end()) throw std::logic_error("포획 안내 현재 이름 NUL 누락");return services.priestTakenName(owner,{reinterpret_cast<const char*>(handle.data()),static_cast<std::size_t>(end-handle.begin())}); };
+        taken.sound=[this](std::string_view name) { if (!services.sound.play) throw std::logic_error("포획 안내 실제 전역 음향 미연결");services.sound.play(soundNames.Lookup(name),0,0,0,1,0); };
+        taken.tell=[this](std::string_view section) { if (!services.factoryTell) throw std::logic_error("포획 안내 실제 Tell 미연결");services.factoryTell(section); };
+        priestTakenNotice=std::make_unique<RawPriestTakenNotice>(core.pool,playerState.battleOwner,gameplayGlobals->PriestTakenDeadlines(),std::move(taken));
         contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,
-            [this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); },services.dependencyTransmit);
+            [this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); },services.dependencyTransmit,&contentFormState,
+            [this](Sid parent,std::uint32_t previousOwner) { priestTakenNotice->Notify(parent,previousOwner); }); // 부착/일반 부모 알림 뒤 원문의 현재 상태로 포획 안내를 판정한다.
         auto contentEffects=services.contentLifetime;
         contentEffects.cancelCursor=[this] {
             if (!cursor) throw std::logic_error("현재 ContentForm 커서 수명 미설치");cursor->Cancel();

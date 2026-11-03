@@ -1,6 +1,7 @@
 // 특수 내용물 삭제의 실제 PE 출력과 공유 Form 분배/경제 저장소 연결을 검사한다.
 #include "ConstructionSupport.h"
 #include "o/SquidFormDispatch.h"
+#include "client/ClientGameplayGlobals.h" // 안내 기한의 Client 대여/반납 수명을 게임 실행 없이 확인한다.
 #include <filesystem>
 
 using namespace netstorm::o;
@@ -138,6 +139,48 @@ TEST_CASE(ContentLifetime_ActualSpAndWalletIntegration) {
         CHECK(rewardState.aiWallet[1]==(patch ? 100 : 0));CHECK(notified==(patch ? 1U : 0U));CHECK(sounded==(patch ? 1U : 0U));CHECK(refreshed==(patch ? 1U : 0U));
         CHECK(reasons==std::vector<std::uint32_t>({1,2}));CHECK(Get(pool.Slot(parent),6,2)==0);CHECK(pool.Deletions(true)[0].type==6);
     }
+}
+
+// 일반 내용물 부착은 진단 중 고친 현재 부모/자신 상태로 재판정한 뒤 링크와 부모 알림을 진행한다.
+TEST_CASE(ContentFormAttach_DeadDiagnosticsResumeAtCurrentSlots) {
+    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types(188);SquidFactory factory(pool,types);
+    const auto parent=factory.Create(90,2),form=factory.CreateContained(2);Put(pool.AllocatedBytes(form),18,85,2);
+    pool.AllocatedBytes(parent)[11]|=2;pool.AllocatedBytes(form)[11]|=2;
+    std::vector<std::uint32_t> events;std::uint32_t checking=0;bool battle=false;ContentFormState state;
+    state.inBattle.Bind(battle);state.checkingLinks.Bind(checking); // 초기 checking0도 앞단의 무조건 진단을 막지 않는다.
+    state.assertion=[&](std::string_view expression,std::string_view file,std::uint32_t line) {
+        CHECK(file=="\\Ns\\O\\Squid.cpp");events.push_back(line);
+        if (line==0xbe6) { CHECK(expression=="!into.isDead() && !into.isFree()");pool.AllocatedBytes(parent)[11]&=static_cast<std::uint8_t>(~2U); }
+        else { CHECK(line==0xbe7 && expression=="!isDead() && !isFree()");pool.AllocatedBytes(form)[11]&=static_cast<std::uint8_t>(~2U);checking=0x80000000U;battle=true; }
+    };
+    ContentFormHost forms(pool,types,[&](Sid object,Sid child,std::uint32_t reason) { CHECK(object==parent && child==form && reason==1);events.push_back(1); },{},&state);
+    forms.Attach(form,parent,0x10);CHECK(events==std::vector<std::uint32_t>({0xbe6,0xbe7,1}));CHECK(forms.Linked(form));
+    CHECK(Get(pool.Slot(parent),6,2)==form.value && Get(pool.Slot(form),16,2)==parent.value);
+    CHECK(state.checkingLinks.Read()==0x80000000U && state.inBattle);checking=0;battle=false;CHECK(!state.checkingLinks && !state.inBattle);
+}
+
+// 진단이 복귀해도 dead가 남으면 쓰지 않으며 CD의 같은 앞단은 진단 없이 끝난다.
+TEST_CASE(ContentFormAttach_UnrepairedDeadReturnsWithoutLinkWrites) {
+    // 두 판본에서 부모/자신/both dead 조합을 일반 생산 타입으로만 확인한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) for (const auto bits:{1U,2U,3U}) {
+        SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);SquidFactory factory(pool,types);
+        const auto parent=factory.Create(90,2),form=factory.CreateContained(2);Put(pool.AllocatedBytes(form),18,85,2);
+        if (bits&1) pool.AllocatedBytes(parent)[11]|=2;if (bits&2) pool.AllocatedBytes(form)[11]|=2;
+        const auto parentBefore=Hex(pool.Slot(parent)),formBefore=Hex(pool.Slot(form));std::uint32_t assertions=0,notices=0;ContentFormState state;
+        state.assertion=[&](std::string_view,std::string_view,std::uint32_t) { ++assertions; };
+        ContentFormHost forms(pool,types,[&](Sid,Sid,std::uint32_t) { ++notices; },{},&state);forms.Attach(form,parent,0x10);
+        CHECK(assertions==(edition==OriginalEdition::Patch1078 ? (bits==3 ? 2U : 1U) : 0U));CHECK(notices==0);
+        CHECK(Hex(pool.Slot(parent))==parentBefore && Hex(pool.Slot(form))==formBefore);
+    }
+}
+
+// 새 안내 기한은 Client에서 한 번만0이며 실제 포획이나 안내 호출 없이 대여/반납 수명만 확인한다.
+TEST_CASE(ContentFormAttach_PriestTakenDeadlineOwnerSurvivesWorldLeases) {
+    netstorm::client::ClientGameplayGlobals globals;auto* address=&globals.PriestTakenDeadlines();CHECK((*address==std::array<double,9>{}));
+    globals.PriestTakenDeadlines()[0]=123.5;globals.PriestTakenDeadlines()[8]=-7.0;
+    { const auto lease=globals.AcquirePrepared();CHECK(&globals.PriestTakenDeadlines()==address); }
+    { const auto lease=globals.Acquire();CHECK(&globals.PriestTakenDeadlines()==address); }
+    CHECK(globals.PriestTakenDeadlines()[0]==123.5 && globals.PriestTakenDeadlines()[8]==-7.0);
 }
 
 // 알림 뒤 체인에서 빠진 사제 내용물은 포획 알림을 생략한다. 목록 flags가 0이어도 정상 연결이면 알린다.

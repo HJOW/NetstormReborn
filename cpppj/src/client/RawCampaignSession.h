@@ -221,6 +221,7 @@ struct RawCampaignSessionServices {
     o::EditorPlayersHooks editorPlayerUi; // 같은 실제 Client 번역/임시 고리의 기본 장치다. 명시 설치 효과가 제공한 장치는 그대로 우선한다.
     std::function<std::uint32_t()> editorIslandGreen; // bitmap 최초 분류가 실제 현재 Screen005acd20 녹색을 읽는 장치다.
     std::function<void(std::string_view)> factoryTell; //Factory 입력의 같은004cf960 안내 섹션을 실제 현재Tell에연결한다.
+    std::function<std::string(std::uint32_t,std::string_view)> priestTakenName; //00484480의 현재 Player/Chat 이름이며 Session의 현재 원본 로컬 이름을 함께 받는다.
     std::function<void(std::string_view,std::uint32_t)> factoryHelp; //researchHelp의실제전용도움말창/모드1이다.
     o::DamageablePreDestroyHooks damageablePre; // 붕괴/폭발/음향의 실제 장치/효과 경계다. 해방/공통 삭제는 Session이 공급한다.
     o::DamageablePostDestroyHooks damageablePost; // 드롭 Dude/받침의 실제 생성 경계다. 예약/현재 다리/공통 삭제는 Session이 공급한다.

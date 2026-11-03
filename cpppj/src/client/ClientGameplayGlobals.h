@@ -12,6 +12,7 @@
 #include "o/RawContainedFinder.h"
 #include "o/RawEnergySupply.h"
 #include <memory>
+#include <array>
 
 namespace netstorm::o { struct TerrainBitmapState;struct TerrainStampState; } // 미리보기 분류와 초기 지면의99개 변형 캐시는 서로 구별하여 Client 수명으로 유지한다.
 namespace netstorm::client {
@@ -87,6 +88,7 @@ public:
     const o::RawSidRobustDiagnostics& SidRobustDiagnostics() const { return sidRobustDiagnostics_; } //Session교체뒤에도같은최근진단owner를읽는다.
     ClientAiDebugGlobals& AiDebug() { return aiDebug_; } // 같은7로그/현재checking의장기소유자다.
     const ClientAiDebugGlobals& AiDebug() const { return aiDebug_; } // 현재진단값을복제하지않는다.
+    std::array<double,9>& PriestTakenDeadlines() { return priestTakenDeadlines_; } //00595450의 벽시각 기한이며 월드/Session 대여와 반납에서 초기화하지 않는다.
     std::uint32_t ReadDebugWord(std::uint32_t address) const { // 안전한원문주소식별자만현재저장소에연결한다.
         if (address==0x54d91cU) return DrawHash(); //776의현재진단DWORD를원문주소로조회한다.
         if (address==0x54d920U) return DrawFire(); //776의현재진단DWORD를원문주소로조회한다.
@@ -140,6 +142,7 @@ private:
     std::shared_ptr<o::TerrainStampState> terrainStamp_; // 초기 지면의 독립99cache이며 RegionPaint/미리보기의 캐시와 합치지 않는다.
     o::RawSidRobustDiagnostics sidRobustDiagnostics_; // 두원문BSS DWORD를새Client에서한번만0으로만들며Session재생성으로초기화하지않는다.
     ClientAiDebugGlobals aiDebug_; // World/Session교체에서도유지하는현재진단전역이다.
+    std::array<double,9> priestTakenDeadlines_{}; // 원문 BSS의9개0 기한이며 새 Client에서 한 번만 만든다.
     RawCampaignSession* current_{};bool borrowed_{}; // 게임 값의 대체가 아닌 현재 C++ Runtime 대여다.
 };
 }

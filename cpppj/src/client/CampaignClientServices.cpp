@@ -232,6 +232,13 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     // 00493d30은 004a89c0으로 인자 없는 Tell 키를 포맷한다. Xlat으로 섹션 이름을 바꾸지 않는다.
     services.priest.shield.translate=[](std::string_view key) { return std::string(key); };
     services.factoryTell=ui.tell; //Factory 자금/진행 중 안내도같은실제Tell설정/창/게임시계를사용한다.
+    services.priestTakenName=[&client](std::uint32_t owner,std::string_view currentName) {
+        o::PlayerIdentityRecord record;o::RawPlayerIdentity::Initialize(record,0);
+        for (std::size_t byte=0;byte<4;++byte) record[byte]=static_cast<std::uint8_t>(owner>>(8*byte)); //00484480의 owner DWORD만 입력하며 같은 현재 Player/Chat 순서로 조회한다.
+        if (!ResolveClientChatIdentity(client,*client.SurfaceStorage(),currentName,record)) return std::string("SOMEONE");
+        const auto end=std::find(record.begin()+8,record.begin()+48,std::uint8_t{}); // 원문 이름40BYTE의 NUL까지 읽고 손상 시 호스트 범위 밖을 읽지 않는다.
+        if (end==record.begin()+48) throw std::logic_error("포획 안내 Player 이름 NUL 누락");return std::string(record.begin()+8,end);
+    }; // 안내 호출 중 현재 Session 이름과 Client의 실제 기록만 빌린다.
     services.newTechnology.name=[&client](auto type) { const auto types=client.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("기술 획득 이름의 현재 TYPE 범위");return client.Translate(types[type].description); }; //원문49af80의 현재 언어 표시 이름이다.
     services.newTechnology.configure=[&client](auto key,auto value) { client.Configuration().Set(std::string(key),std::string(value)); }; //같은 UTF-8 Config와 실제 변경 통지를 사용한다.
     services.newTechnology.format=[](auto pattern,std::int32_t value) { //원문4a89c0의 지역256BYTE 그림 서식이며 공유 임시 고리로 바꾸지 않는다.

@@ -3258,3 +3258,6 @@ target_sources(netstorm_file_tests PRIVATE ConstructionConfirmTests.cpp Construc
 
 # 같은 레벨 진단 어댑터와 Factory 표시 갱신을 기존 원본 슬롯 기대값으로 창 없이 대조한다.
 target_sources(netstorm_file_tests PRIVATE CampaignMotionTests.cpp FactoryPostPopTests.cpp)
+
+# 일반 내용물 부착의 진단 복귀와 Client 기한 수명만 선택 검사하며 실제 포획 재현은 제외한다.
+target_sources(netstorm_file_tests PRIVATE ContentLifetimeTests.cpp)
