@@ -49,6 +49,7 @@ public:
     explicit ShapeDatabase(std::vector<std::uint8_t> bytes);
     // 타입 로딩 순서에 대응하는 블록 목록을 돌려준다.
     std::span<const ShapeBlock> Blocks() const;
+    std::span<const std::uint8_t> Bytes() const; // 글꼴 캐시 writer에 같은 보관 블록을 읽기 전용으로 제공하며 다시 인코딩하지 않는다.
     // 일반 VFX 파일과 달리 _shapes.shp에 들어 있는 Squid의 추가 헤더를 읽는다.
     SquidFrameMetrics SquidMetrics(std::size_t block,std::size_t frame) const;
     // VFX 프레임 앞의 원본 36바이트를 복사한다. Markup의 두 추가 WORD도 정규화 없이 보존한다.

@@ -190,10 +190,14 @@ std::optional<BaseFileArchiveOpen> BaseFileSystem::FindArchiveOpen(std::string_v
     return {};
 }
 void BaseFileSystem::Open(RawBaseFileState& state,std::string_view name,std::uint32_t mode,std::uint32_t create,const RawBaseFileIOHooks& io) const { // 실제 게임의 현재 root/등록/고리와 caller의 동일 FILE/키 수명을 빌린다.
+    OpenWithDiskName(state,name,mode,create,io,{}); // 기존 모든 소비자의 UTF-8/current FILE 계약은 변환 없이 유지한다.
+}
+void BaseFileSystem::OpenWithDiskName(RawBaseFileState& state,std::string_view name,std::uint32_t mode,std::uint32_t create,const RawBaseFileIOHooks& io,const std::function<std::optional<std::string>(std::string_view)>& diskName) const { // 명시 소비자의 disk 이름에만 변환을 한정한다.
     std::string primary,secondary;BaseFileOpenPolicyHooks hooks; // root 콜백 뒤 반환뷰는 다음 같은 콜백까지 유지한다.
     const auto rootText=[](const std::filesystem::path& root) { auto text=PathText(std::filesystem::absolute(root).lexically_normal());std::replace(text.begin(),text.end(),'/','\\');return text; }; // 원문 getcwd 배열을 Windows10/11 Unicode 게임 root로 대체한다.
     hooks.primaryRoot=[&]()->std::string_view { primary=rootText(base_);return primary; };hooks.secondaryRoot=[&]()->std::string_view { secondary=rootText(secondary_);return secondary; };
     hooks.archive=[&](auto query,bool cd) { return FindArchiveOpen(query,cd); };hooks.search=FileSpecDirectoryHooks(base_);
+    if (diskName) hooks.diskPath=[&](auto root,auto query)->std::optional<std::string> { const auto decoded=diskName(query);if (!decoded) return {};return root.empty() ? *decoded:JoinUtf8DiskRoot(root,*decoded); }; // raw고리는 policy가 먼저 작성하며 OS 확장만 고리 밖에서 합친다.
     hooks.unableToOpen=[](auto failed) { const std::string text(failed);std::printf("unable to open: %s\n",text.c_str());throw ColorCacheUnableToOpen{}; }; // 원문 이름 진단과 typed 분류만 보존하며 MSVC32 예외 payload/SEH ABI를 가장하지 않는다.
     auto devices=io;devices.open=[&](std::string_view file,std::string_view fileMode)->std::uintptr_t { // OS에 전달하는 상대 이름만 가상 게임 CWD에서 해석하며 공유고리를 추가 소비하지 않는다.
         if (!io.open) throw std::logic_error("BaseFile 전체 열기의 실제 FILE 장치 미연결");
@@ -283,9 +287,14 @@ bool BaseFileSystem::ContainsArchiveOnly(std::string_view name,bool secondary) c
 }
 // 원문 rb 열기/닫기와 TAFF 이름 조회만 사용한다. Windows10/11의 한글 경로는 기존 UTF-8/W 경계로 처리한다.
 std::uint32_t BaseFileSystem::Probe(std::string_view name) const {
+    return ProbeWithDiskName(name,{}); // 기존 존재조회 소비자는 새 인코딩 장치를 요구하지 않는다.
+}
+std::uint32_t BaseFileSystem::ProbeWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const { // 존재조회에서도 root는 이미UTF-8이고 query만 명시변환한다.
     return ProbeBaseFileByPolicy(name,[&](auto site,auto query) {
         if (site==BaseFileReadSite::PrimaryArchive || site==BaseFileReadSite::SecondaryArchive) return ContainsArchiveOnly(query,site==BaseFileReadSite::SecondaryArchive);
-        auto selected=std::string(query);if (site!=BaseFileReadSite::DirectDisk) selected=JoinBaseFileRoot(PathText(std::filesystem::absolute(site==BaseFileReadSite::PrimaryDisk ? base_:secondary_).lexically_normal()),query,*fileNames_); // 원문처럼해당disk에도달했을때의현재root만작성하며metadata성공앞의불필요한root/CWD조회는하지않는다.
+        const auto selectedRoot=site==BaseFileReadSite::DirectDisk ? std::string{}:PathText(std::filesystem::absolute(site==BaseFileReadSite::PrimaryDisk ? base_:secondary_).lexically_normal()); // 도달한 disk root만 읽는다.
+        auto selected=selectedRoot.empty() ? std::string(query):JoinBaseFileRoot(selectedRoot,query,*fileNames_); // 같은 원문 raw고리를 변환 전 먼저 작성한다.
+        if (diskName) { const auto decoded=diskName(query);if (!decoded) return false;selected=selectedRoot.empty() ? *decoded:JoinUtf8DiskRoot(selectedRoot,*decoded); } // TAFF 조회에는 변환한 이름을 전달하지 않는다.
         auto path=NativePath(selected);
 #ifdef _WIN32
         if (site==BaseFileReadSite::DirectDisk && !path.has_root_directory()) {

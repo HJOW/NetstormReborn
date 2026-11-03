@@ -1,5 +1,7 @@
 // 원본 Screen.cpp 004a3240 ↔ CD 00425980, 004a2e40 ↔ CD 00425570, 004a39f0 ↔ CD 00425d10.
 #include "client/BitmapFont.h"
+#include "client/NativeFontCacheFile.h" // 현재 FILE과 같은 생성 글리프의 순차 캐시 reader/writer다.
+#include "o/RawFileName.h" // 원문(-2,d,-3,literal)의 같은 이름고리를 사용한다.
 #include "client/FontFaceEncoding.h" //raw ACP CHFNT 이름은 TAFF에, UTF-8 이름은 디스크에만 사용한다.
 #include <algorithm>
 #include <bit>
@@ -191,6 +193,14 @@ int BitmapFont::Height() const { return height_; }
 int BitmapFont::Ascent() const { return ascent_; }
 // 기준선 아래 높이.
 int BitmapFont::Descent() const { return descent_; }
+std::vector<std::uint8_t> BitmapFont::CacheBytes() const { // 같은 전진폭/기준점/그림과 원문 파일 레이아웃을 보존한다.
+    std::vector<std::uint8_t> bytes(kPayloadStart);std::copy(kSignature.begin(),kSignature.end(),bytes.begin());Put(bytes,16,1);Put(bytes,20,std::uint32_t(height_));Put(bytes,24,std::uint32_t(ascent_));Put(bytes,28,std::uint32_t(descent_));Put(bytes,32,256);
+    for (std::size_t code=0;code<glyphs_.size();++code) { // 같은 보관 VFX 블록을 읽기만 하며 그리기/재인코딩하지 않는다.
+        const auto& glyph=glyphs_[code];const auto shape=glyph.shape ? glyph.shape->Bytes():std::span<const std::uint8_t>{};if (shape.size()>std::numeric_limits<std::uint32_t>::max()) throw std::overflow_error("글꼴 캐시 블록 길이 초과");
+        Put(bytes,kTableStart+code*4,std::uint32_t(glyph.advance));Put(bytes,kTableStart+kTableBytes+code*4,std::uint32_t(glyph.bearing));Put(bytes,kTableStart+kTableBytes*2+code*4,std::uint32_t(glyph.drawAdvance));Put(bytes,kTableStart+kTableBytes*3+code*4,std::uint32_t(shape.size()));bytes.insert(bytes.end(),shape.begin(),shape.end());
+    }
+    return bytes;
+}
 namespace { // EnumFontFamiliesA의 두 번 열거와 원문32BYTE 행 계약을 Win32 경계에 한정한다.
 // ANSI TrueType 후보를 두 번 읽어 최초 개수와 다음 기록 순서를 유지한다.
 std::vector<std::array<char,32>> CollectFontFaces(const FontFaceEnumeration& enumerate) {
@@ -243,19 +253,17 @@ bool FontStore::Available(int slot,FontStyle style) {
     return slot>=0 && slot<7 && slot!=2 && static_cast<std::size_t>(style)<kStyles.size() &&
         ((slot!=1 && slot!=3 && slot!=4) || style==FontStyle::Normal);
 }
-// 원본 슬롯·스타일 제한을 유지하고 생성 시 파일을 덮어쓰지 않는다.
+// 원본 슬롯·스타일 제한과 현재 캐시 읽기/생성 뒤 쓰기 순서를 유지한다. 보호 원본/쓰기불가 설치는 메모리 글꼴을 유지한다.
 const BitmapFont& FontStore::Get(int slot, FontStyle style) {
     const auto index = static_cast<std::size_t>(style);
     if (!Available(slot,style)) throw std::invalid_argument("Unavailable font slot/style");
     auto& font = fonts_[static_cast<std::size_t>(slot)][index];
     if (!font) {
         const std::string face = slot == 1 ? "Courier New" : face_;
-        const auto path = "d/!" + face + "." + kStyles[index] + "." + std::to_string(kHeights[slot]) + "." + std::to_string(kWeights[slot]) + ".chfnt";
-        if (const auto bytes = files_.TryReadWithDiskName(path,[](auto raw) { return FontCacheDiskName(raw); })) {
-            try { font = std::make_unique<BitmapFont>(*bytes); }
-            catch (const std::runtime_error&) { /* 원본도 읽기에 실패한 캐시는 GDI로 다시 만든다. */ }
-        }
-        if (!font) font = BitmapFont::Generate(face, kHeights[slot], style == FontStyle::Bold ? kWeights[slot] + (slot == 0 ? 100 : 700) : kWeights[slot], style);
+        const auto literal="!"+face+"."+kStyles[index]+"."+std::to_string(kHeights[slot])+"."+std::to_string(kWeights[slot])+".chfnt";const std::array<o::FileNamePart,2> parts{{{-2,"d"},{-3,literal}}};const std::string path(files_.FileNameOwner()->Format(parts));
+        try { if (const auto bytes=LoadNativeFontCache(files_,path)) font=std::make_unique<BitmapFont>(*bytes); }
+        catch (const std::runtime_error&) { /* 기존 호스트의 손상 캐시 물리/metrics 검증 실패는 같은 GDI 재생성으로 처리한다. */ }
+        if (!font) { font=BitmapFont::Generate(face,kHeights[slot],style==FontStyle::Bold ? kWeights[slot]+(slot==0 ? 100:700):kWeights[slot],style);static_cast<void>(SaveNativeFontCache(files_,path,font->CacheBytes())); } // 생성/설치가 완료된 뒤 같은 파일 순서로 저장한다.
     }
     return *font;
 }

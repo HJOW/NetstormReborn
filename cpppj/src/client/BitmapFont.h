@@ -27,7 +27,7 @@ class BitmapFont {
 public:
     // 원본 .chfnt의 네 정수 표와 글자별 독립 VFX 블록을 읽는다. 손상된 캐시는 거부한다.
     explicit BitmapFont(std::span<const std::uint8_t> bytes);
-    // 원본 GDI 생성 경로. 캐시가 없는 PC에서는 메모리에서만 만들며 기존 원본 파일을 쓰지 않는다.
+    // 원본 GDI 생성 경로. FontStore가 생성 뒤 같은 바이트를 캐시하며 개발 원본/쓰기불가 설치는 메모리 글꼴을 유지한다.
     static std::unique_ptr<BitmapFont> Generate(std::string_view face, int height, int weight, FontStyle style);
     // 004a3df0: Windows-1252 바이트의 전진 폭 합계. UTF-8은 호출자가 먼저 변환한다.
     int Measure(std::string_view bytes) const;
@@ -39,6 +39,7 @@ public:
     int Ascent() const;
     // 기준선 아래쪽의 높이.
     int Descent() const;
+    std::vector<std::uint8_t> CacheBytes() const; // 현재 표와 같은 VFX 블록을 원문 CHFNT 순서로 직렬화한다. 그림을 재생성하지 않는다.
 private:
     // height_: 세로 크기.
     // ascent_: 글꼴 기준선 위쪽의 픽셀 높이.

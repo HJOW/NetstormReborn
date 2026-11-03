@@ -23,18 +23,23 @@ void OpenBaseFileByPolicy(RawBaseFileState& state,std::span<const std::uint8_t> 
         if (candidate->encrypted) SetBaseFileKey(state,std::span(reinterpret_cast<const std::uint8_t*>(kArchiveKey.data()),kArchiveKey.size()+1),io);
         return true;
     };
+    const auto disk=[&](std::string_view root,std::string_view query,std::uint32_t selectedMode,bool direct=false) { // 빈 상대root도 고리를 작성하며 직접 장치만 작성을 생략한다.
+        const auto raw=direct ? std::string(query):JoinBaseFileRoot(root,query,names);
+        if (!hooks.diskPath) return OpenBaseFileDisk(state,raw,selectedMode,create,io);
+        const auto mapped=hooks.diskPath(root,query);return mapped && OpenBaseFileDisk(state,*mapped,selectedMode,create,io);
+    };
     if (!device) {
-        const auto primary=JoinBaseFileRoot(Text(Need(hooks.primaryRoot)()),Text(name),names);if (OpenBaseFileDisk(state,primary,mode,create,io)) return;
+        if (disk(Text(Need(hooks.primaryRoot)()),Text(name),mode)) return;
         if (archive(name,false)) return;
-        const auto secondary=JoinBaseFileRoot(Text(Need(hooks.secondaryRoot)()),Text(name),names);if (OpenBaseFileDisk(state,secondary,mode,create,io)) return;
+        if (disk(Text(Need(hooks.secondaryRoot)()),Text(name),mode)) return;
         if (archive(name,true)) return;Unable(Text(name),hooks);
     }
-    if (OpenBaseFileDisk(state,Text(name),mode,create,io)) return;
+    if (disk({},Text(name),mode,true)) return;
     if (mode) Unable(Text(name),hooks); // 원문 장치 경로의 비읽기 실패는 TAFF/보조 디스크를 조회하지 않는다.
     const auto root=Text(Need(hooks.primaryRoot)());const auto current=Text(name);std::size_t common{}; // 구분자/전체접두 관문 없이 첫 불일치 BYTE까지 이동한 원문 포인터다.
     while (common<current.size() && common<root.size() && current[common]==root[common]) ++common; // 대소문자나 UTF-8 문자 경계를 정규화하지 않는다.
     const auto suffix=name.subspan(common);if (archive(suffix,false)) return;
-    const auto secondary=JoinBaseFileRoot(Text(Need(hooks.secondaryRoot)()),Text(suffix),names);if (OpenBaseFileDisk(state,secondary,0,create,io)) return;
+    if (disk(Text(Need(hooks.secondaryRoot)()),Text(suffix),0)) return;
     if (archive(suffix,true)) return;Unable(Text(name),hooks);
 }
 }

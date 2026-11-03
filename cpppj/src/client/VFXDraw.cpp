@@ -95,6 +95,7 @@ ShapeDatabase::ShapeDatabase(std::vector<std::uint8_t> bytes) : bytes_(std::move
 
 // 파일의 블록 순서가 곧 타입의 그래픽 순서다.
 std::span<const ShapeBlock> ShapeDatabase::Blocks() const { return blocks_; }
+std::span<const std::uint8_t> ShapeDatabase::Bytes() const { return bytes_; } // 캐시 저장 중에도 같은 VFX 저장소가 소유한다.
 
 // 런타임 frame table이 가리키는 VFX 레코드 앞의 원본 Squid 전용 헤더다.
 SquidFrameMetrics ShapeDatabase::SquidMetrics(std::size_t block,std::size_t frame) const {

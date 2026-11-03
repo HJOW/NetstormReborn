@@ -63,6 +63,7 @@ public:
     std::shared_ptr<RawFileName> FileNameOwner() const; // 파일 조회와 HUD/저장 상태가 같은 고리 주소/번호를 빌린다. 파일 내용은 읽지 않는다.
     std::optional<BaseFileArchiveOpen> FindArchiveOpen(std::string_view name,bool secondary=false) const; // 독립Client의 예약 기본등록만 먼저 완료하고 선택목록의 첫 offset/length/xor/실제TAFF이름을 반환한다. 등록 뒤 metadata 조회는 payload/디스크를 다시 읽지 않는다.
     void Open(RawBaseFileState& state,std::string_view name,std::uint32_t mode,std::uint32_t create,const RawBaseFileIOHooks& io) const; // 전체41b4c0 부모를 같은 VFS/고리/현재 FILE에 연결한다. 호스트 typed marker는 원문 예외 분류이며256BYTE 예외객체 ABI는 별도다.
+    void OpenWithDiskName(RawBaseFileState& state,std::string_view name,std::uint32_t mode,std::uint32_t create,const RawBaseFileIOHooks& io,const std::function<std::optional<std::string>(std::string_view)>& diskName) const; // ACP 글꼴 캐시만 현재 FILE의 disk query를 변환하며 root/TAFF/raw고리는 보존한다.
     //0041b9d0/41bc20/41bc30: 두 목록을 독립적으로 등록한다. 같은 목록의 중복·파일/헤더/인덱스 읽기 실패는false다.
     bool RegisterArchive(const std::filesystem::path& path,bool secondary=false);
     //00441790: 선택한 root의 *.tarc를 실제 Win32 열거 순서로 모두 등록한다. 잘못된 후보는 원문처럼 건너뛴다.
@@ -81,6 +82,7 @@ public:
     std::optional<std::vector<std::uint8_t>> TryReadArchiveOnly(std::string_view name,bool secondary=false) const; //선택한 목록만 등록 순서로 읽고 다른 목록/디스크로 fallback하지 않는다.
     bool ContainsArchiveOnly(std::string_view name,bool secondary=false) const; //선택한41a340 목록의 이름 메타데이터만 조회하며 내용/복호화/디스크를 읽지 않는다.
     std::uint32_t Probe(std::string_view name) const; //0041ab10의 출처0..5를 내용 읽기 없이 조회한다. 직접 경로 실패는 상대/TAFF로 fallback하지 않는다.
+    std::uint32_t ProbeWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const; // 같은 raw출처 순서에서 disk query만 변환하며 변환 실패도 다음 raw TAFF를 막지 않는다.
     // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.
     std::vector<std::string> Match(std::string_view pattern) const;
     // 원본 Filespec.cpp의 Win32 FindFirst/Next 순서다. 기본 디스크만 열거하며 TAFF/보조 경로/정렬을 적용하지 않는다.

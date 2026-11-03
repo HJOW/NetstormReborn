@@ -3139,6 +3139,8 @@ target_sources(netstorm_script_bindings_tests PRIVATE MakeAiTests.cpp MakeAiComm
 # ACP 글꼴 이름의 UTF-8 Config/VFS 경계를 창 없는 기존 집중 대상에서 검사한다(774).
 target_sources(netstorm_tests PRIVATE FontFaceEncodingTests.cpp)
 target_sources(netstorm_tests PRIVATE FontCacheFileTests.cpp) # 같은 원문 캐시 부모의 순차 I/O를 대조한다(788).
+target_sources(netstorm_tests PRIVATE FontCacheNativeTests.cpp) # 실제 FontStore/VFS/생성 캐시 저장을 연결한다(789).
+target_sources(netstorm_script_bindings_tests PRIVATE FontCacheNativeTests.cpp)
 target_sources(netstorm_script_bindings_tests PRIVATE FontCacheFileTests.cpp)
 set_source_files_properties(FontCacheFileTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FONT_CACHE_FILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/font-cache-file-x86.tsv\"")
 target_sources(netstorm_script_bindings_tests PRIVATE FontFaceEncodingTests.cpp)
