@@ -1,0 +1,76 @@
+{
+  "unit": 827,
+  "date": "2026-11-04",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "previousCommit": "72fed9ba / 20261104-08 CP",
+  "kind": "정적 근거/작업 순서 정정, 제품 코드 변경 없음",
+  "product": 826,
+  "version": "11.01",
+  "exeSha256": "10f8c29fb973ab33dcac6e644554cfade76e6b759370cb657b56ad8dd87a6abe",
+  "getter": {
+    "patch": "004c0e20",
+    "cd": "0049de40",
+    "return": "first valid chunk raw byte+5 = ChunkEntry.record[3], seed; not island/territory id",
+    "failure": 9011,
+    "assertion": "patch only false, \\Ns\\O\\Terrainbuilder.cpp,0x25f",
+    "comparison": "sign-extended island BYTE vs signed32 noRegion; patch rereads global per cell, CD caches value after nonempty Y range"
+  },
+  "actualCallers": [
+    {
+      "patch": "004c13f0 at004c13fe",
+      "use": "firstSeed * 0x5d -> local scatter seed",
+      "scope": "called only inside archipelago branch of004c1510"
+    },
+    {
+      "patch": "004c1510 at004c1661",
+      "use": "firstSeed * 0x1bb -> density/grow seed",
+      "scope": "same archipelago branch"
+    }
+  ],
+  "branch": "00540a2c!=0 &&00594fbc!=0 &&00594fa0==0 &&current islandCount==1 &&0052f7e5==0",
+  "scopeDecision": "현재 일반 성장 RunNormal 경로에 원문에 없는 조회/진단을 추가하지 않는다. 군도/비미션 전투의 미복원 상위와 함께 복원한다. 모든 비미션 공유 경로가 MP 전용이라고 단정하지 않는다.",
+  "checking": {
+    "remaining": 20,
+    "parents": 12,
+    "partial": 5,
+    "multiplayerClassified": 3,
+    "completedParents": 30,
+    "closedThisUnit": []
+  },
+  "unrestored": [
+    "004c0e20/CD0049de40 implementation and actual archipelago callers",
+    "004c13f0 scatter, full004c1510 archipelago density/growth/player placement/root connection"
+  ],
+  "builds": 0,
+  "tests": 0,
+  "nativeExecution": 0,
+  "gameExecution": 0,
+  "decompiledSourcesChanged": false,
+  "next": "828 Altar00448bd0.ReleaseFromAltar actual current checking/diagnostic resume and plain frame/space effects; no actual priest capture/sacrifice tests",
+  "protection": {
+    "unchangedFiles": 2754,
+    "afterFiles": 2754,
+    "fixtureFiles": 934,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted/cpp-resume-827/protected-after.json",
+    "sha256": "7a2f2d3c65a3c3a25bf9886bb72a1cdd35207fff11f2fc8a36440b8bfa5a8635"
+  },
+  "sources": {
+    "cpppj/src/o/ChunkMap.h": "9bc8daeb862c49abf2465ec729599426b052fb088ed0937cb7f31018283f7375",
+    "cpppj/src/o/RawTerrainGrowth.cpp": "65d1c3b08a5ff1329979b9f61e6b07bea75276f1371604c695d886bb2e57e754",
+    "cpppj/src/client/RawNormalTerrainWorldBinding.cpp": "b237ee51b1575392ac4f1815eb8e6d476aadbdba7ec1010cba309e8f2f40adee",
+    "cpppj/src/client/RawNormalTerrainWorldBinding.h": "59fd5940f183cef655e2ff761eb48db913ba83a6fdf2ad97d54fbe1369d1b416",
+    "cpppj/src/client/RawFortWorldLoadBinding.cpp": "1ec777736cc0e20a95fea16a2668380a4fa1dbe1f8d7ac64db5b1d6e2909e55b",
+    "cpppj/src/o/RawTerrainContext.h": "db150586f690272213d892ef7f58fec09c91f40d4498064afb656b93f323a525"
+  },
+  "staticEvidence": {
+    "extracted/cpp-resume-827/originalCD-first-territory-asm.txt": "17ded5e78173e9efd26ea408daebce35eaef1d5ac5f6481cf00dcd748a277e85",
+    "extracted/cpp-resume-827/originalCD-first-territory.c": "b8fa7681e674c1f2933f0e622e492a19b160cc30b4ce130b12c2276878cc6c74",
+    "extracted/cpp-resume-827/originals-004c13f0.c": "6c8e678160bae23bc9bed02733609bdae6362c1c17d5407f0900908374f79f5d",
+    "extracted/cpp-resume-827/originals-004c1510.c": "5509cad2f8719d2bab1385b5e1b4bd87dda0f13c7ede5e4e5ec8e47c843b5e6c",
+    "extracted/cpp-resume-827/originals-first-territory-asm.txt": "bf61bc151819e2640571e5c70dd7cd876123a4a397882d01dc6df79e41386192",
+    "extracted/cpp-resume-827/originals-first-territory.c": "8607735d9d10df9f623b1bd5762b2f76add651f619edbc14f5b4c39834666e05"
+  }
+}
