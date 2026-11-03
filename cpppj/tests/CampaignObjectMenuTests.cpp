@@ -364,6 +364,37 @@ TEST_CASE(CampaignObjectMenus_CurrentCountVtable_UnknownTableFailsAndReopens) { 
     Put(raw,0,savedTable);ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus());open();CHECK(std::find(ui.infoTitles.begin(),ui.infoTitles.end()," Level I")!=ui.infoTitles.end());ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus());ui.currentSession=nullptr;
 }
 
+TEST_CASE(CampaignObjectMenus_NestedCurrentCountVtable_TypedDaisUsesItsCurrentVirtualEntry) { // 제단이 찾은 TYPE165의 실제 현재 +80을 같은 Summary에서 다시 분배한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();ui.currentSession=&session;auto core=session.Core();
+    const auto altar=core.factory.Create(164,2),dais=core.factory.Create(165,2);auto altarRaw=core.pool.AllocatedBytes(altar),daisRaw=core.pool.AllocatedBytes(dais);const auto daisTable=Get(daisRaw,0);CHECK(Get(altarRaw,0)==0x5076b8U && daisTable==0x507950U && Get(daisRaw,36)==0);
+    constexpr float coordinate=220.0F; // finder의 독립 명시 입력이며 새 건설/Pop으로 등록하지 않는다.
+    Put(altarRaw,14,std::bit_cast<std::uint32_t>(coordinate));Put(altarRaw,18,std::bit_cast<std::uint32_t>(coordinate));Put(daisRaw,14,std::bit_cast<std::uint32_t>(coordinate));Put(daisRaw,18,std::bit_cast<std::uint32_t>(coordinate));daisRaw[11]=static_cast<std::uint8_t>((daisRaw[11]&31U)|(7U<<5));
+    auto& bucket=core.hash.Bucket(1,coordinate,coordinate);const auto savedHead=bucket;const auto savedNext=Get(daisRaw,4,2);Put(daisRaw,4,savedHead,2);bucket=dais.value;std::unique_ptr<RawCampaignObjectMenus> chain; // 원래 해시/next는 마지막에 복원한다.
+    const std::array<std::pair<std::uint32_t,std::string_view>,2> cases{{{0x501dd0," Level VII"},{0x507950," Level I"}}}; // 공통 레벨7과 초기 프레임의 다이스 Count1은 서로 다른 기대값이다.
+    for (const auto& [table,title]:cases) { // TYPE165/프레임0/레벨7은 그대로 두고 현재 VT만 변경한다.
+        Put(daisRaw,0,table);ui.infoTitles.clear();ui.infoLines.clear();
+        ui.menus->Open({320,240},[&](const auto& widgets,const auto& controls,const auto& menus) { widgets.BeginFancy();chain=session.MakeObjectMenus(ui.Hooks(session,widgets,controls,menus));chain->Summary(altar);chain->OpenObject(altar); }); // 메뉴→제단 Count→현재 다이스 VT의 공통/파생 Count를 실행한다.
+        CHECK(std::find(ui.infoTitles.begin(),ui.infoTitles.end(),title)!=ui.infoTitles.end());CHECK(daisRaw[10]==165 && (daisRaw[11]>>5)==7 && Get(daisRaw,36)==0 && Get(daisRaw,0)==table);ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus());
+    }
+    Put(daisRaw,0,daisTable);bucket=savedHead;Put(daisRaw,4,savedNext,2);ui.currentSession=nullptr; // 가상 표/검색 입력과 실제 메뉴 대여를 원래 소유자에 반납한다.
+}
+
+TEST_CASE(CampaignObjectMenus_NestedCurrentCountVtable_CycleFailsAndUnwindsForNextMenu) { // 동일 SID로 재진입하는 가상 Count 순환을0으로 숨기지 않고 복구 뒤 다시 조회한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;ActualMenuUi ui(assets);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();ui.currentSession=&session;auto core=session.Core();
+    const auto altar=core.factory.Create(164,2),dais=core.factory.Create(165,2);auto altarRaw=core.pool.AllocatedBytes(altar),daisRaw=core.pool.AllocatedBytes(dais);const auto daisTable=Get(daisRaw,0);CHECK(Get(altarRaw,0)==0x5076b8U && daisTable==0x507950U && Get(daisRaw,36)==0);
+    constexpr float coordinate=220.0F; // 일반 finder가 같은 TYPE165를 다시 찾게 할 명시 입력 좌표다.
+    Put(altarRaw,14,std::bit_cast<std::uint32_t>(coordinate));Put(altarRaw,18,std::bit_cast<std::uint32_t>(coordinate));Put(daisRaw,14,std::bit_cast<std::uint32_t>(coordinate));Put(daisRaw,18,std::bit_cast<std::uint32_t>(coordinate));
+    auto& bucket=core.hash.Bucket(1,coordinate,coordinate);const auto savedHead=bucket;const auto savedNext=Get(daisRaw,4,2);Put(daisRaw,4,savedHead,2);bucket=dais.value;std::unique_ptr<RawCampaignObjectMenus> chain;
+    const auto open=[&] { ui.infoTitles.clear();ui.infoLines.clear();ui.menus->Open({320,240},[&](const auto& widgets,const auto& controls,const auto& menus) { widgets.BeginFancy();chain=session.MakeObjectMenus(ui.Hooks(session,widgets,controls,menus));chain->Summary(altar);chain->OpenObject(altar); }); }; // 정상 VT로 실제 builder/controlled 메뉴를 먼저 완성한다.
+    open();CHECK(std::find(ui.infoTitles.begin(),ui.infoTitles.end()," Level I")!=ui.infoTitles.end());const auto titlesBefore=ui.infoTitles,linesBefore=ui.infoLines;Put(daisRaw,0,0x5076b8);const auto altarBefore=std::vector<std::uint8_t>(altarRaw.begin(),altarRaw.end()),daisBefore=std::vector<std::uint8_t>(daisRaw.begin(),daisRaw.end()); // 다이스의 현재 VT만 제단으로 바꾸면 자기 자신을 재조회한다.
+    std::string cycleError;try { chain->Summary(altar); }catch (const std::logic_error& error) { cycleError=error.what(); } // 실패는 builder 밖의 count 조회에서만 선택한다.
+    CHECK(cycleError=="현재 가상80 조회의 SID 재귀 순환");CHECK(ui.infoTitles==titlesBefore && ui.infoLines==linesBefore && ui.menus->HasMenus() && std::equal(altarBefore.begin(),altarBefore.end(),core.pool.Slot(altar).begin()) && std::equal(daisBefore.begin(),daisBefore.end(),core.pool.Slot(dais).begin())); // 순환 실패는 객체와 기존 UI 출력을 바꾸지 않는다.
+    Put(daisRaw,0,daisTable);ui.menus->Close();chain.reset();open();CHECK(std::find(ui.infoTitles.begin(),ui.infoTitles.end()," Level I")!=ui.infoTitles.end());ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus()); // 예외 뒤 활성 SID가 남았다면 같은 두 객체의 재조회가 실패한다.
+    bucket=savedHead;Put(daisRaw,4,savedNext,2);ui.currentSession=nullptr;
+}
+
 // 같은Session의 실제선택bit/표시/491Regular와50ProcessForm 통지를 실행한다. UI/진단은 명시 경계다.
 TEST_CASE(CampaignUserSelection_SamePoolMarksRegularAndManaNotice) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;

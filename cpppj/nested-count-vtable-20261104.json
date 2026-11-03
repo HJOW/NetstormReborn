@@ -1,0 +1,102 @@
+{
+  "unit": 838,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "09b6d969 / 20261104-19 CP",
+  "exeSha256": "0e3ecf932974749ea930af4a457385100e977baf4e2d86249a37e0727383d139",
+  "exeBytes": 10447872,
+  "sourceSha256": {
+    "cpppj/src/o/RawAltarSacrifice.h": "df3c7354bf7a58addea9fdd5ea1a4a6087a67933cd805222e491aef4a0659b9b",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "ccea6e6f2be118b0dc43719ac28e0befe0f69fad05c227bf3d789a29c0792fe8",
+    "cpppj/src/client/RawCampaignSession.cpp": "f1cb674707636f1aa2d2d7a8fcfcc7dd6c931a5483e7c160dae7331bcb91b4af",
+    "cpppj/src/client/RawCampaignRitual.inc": "f0c0de1f9423521d7b0c2c9b10fa322c9b43d0b3bba29637ba9eaef1b2877904",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "42a86c8a0752b7702ca881dc8a9f6607b5720a64013de3a8de1d297c170f5f56"
+  },
+  "scope": [
+    "Altar0044a480/CD00483670의DaisAt1회/Valid/대상현재VT80 재분배",
+    "Session Impl VirtualCount의현재83VT/activeSID RAII와같은제단callback",
+    "확인된Reward/Fort저장/객체메뉴/CoreRefresh/runtime/이름/Factory/AI 명시virtual80 소비자공유;명시공통Has는유지"
+  ],
+  "tests": [
+    {
+      "filter": "CampaignObjectMenus_NestedCurrentCountVtable_",
+      "cases": 2,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-838\\test-nested-count-first.log",
+      "sha256": "bc81a45702b55f0944e54ccce309d7ec3059d37b7fe0f092720f94ffb5f1571a"
+    },
+    {
+      "filter": "CampaignObjectMenus_CurrentCountVtable_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-838\\test-direct-count-regression.log",
+      "sha256": "88c399c2ea972f76ad401067e611830faf71bbfb18fdde18491b0ad353295715"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-838\\test-refund-regression.log",
+      "sha256": "feb075621e686b73e66bf794e6c20e552978f87beba247aec77e371f13c7205f"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-838\\test-form-close-regression.log",
+      "sha256": "1271d58e49bfc91ba07e8db3c0053b63cff8c77947139c038d91cbcda83c0a40"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-838\\test-current-world-regression.log",
+      "sha256": "ad5f05af8504a5cb3d57f544c29dca3dafecb8cb38a660ccfe0bd10deadce4da"
+    }
+  ],
+  "focusedCases": 8,
+  "newCases": 2,
+  "initialFailures": 0,
+  "builds": [
+    {
+      "log": "extracted\\cpp-resume-838\\build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "8675628e71aa848321ed5c41298307fe0797d6efd9390f104fd4bdbffa16f111"
+    }
+  ],
+  "nativeHardwareNewRows": 0,
+  "newFixtures": 0,
+  "checking": {
+    "remaining": 14,
+    "parents": 8,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 34,
+    "completedPartial": 3,
+    "closedThisUnit": []
+  },
+  "protection": {
+    "files": 2759,
+    "fixtureFiles": 939,
+    "changed": 0,
+    "manifest": "extracted\\cpp-resume-838\\protected-after.json",
+    "sha256": "4d1a48ced6ab8f7f0b8652d734c0123de1d459e19e15f57d8c092c707b7bbb69"
+  },
+  "boundaries": [
+    "free/SID/TYPE물리범위와RawTempleRitual.Count TYPE165 guard는현행;839에서getter읽기정의역별도대조",
+    "Temple.Stage/모든내부직접Count까지완료로확대하지않음;Factory전용두VT사전guard유지",
+    "선택장치없는독립AltarCount는실제DaisVT에만기존Temple몸체를허용하고다른VT는명시실패",
+    "같은SID순환은원문무한재귀의호스트경계로거부하며0성공fallback아님",
+    "실제게임/GUI·포획/희생/특정적공격/승리·신규MP/통신·공중3종전용·물리/PCM/CD삽입검사0;전체71/CTest/34미션/ZIP반복0"
+  ]
+}

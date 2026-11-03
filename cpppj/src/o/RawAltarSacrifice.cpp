@@ -70,8 +70,14 @@ Sid RawAltarSacrifice::ContainedPriest(Sid dais) const {
     if (!daisState_.ritual.priestType) throw std::logic_error("제단 specialized kind0은 일반 Carrier wildcard와 다르다");
     return carrier_.FindContained(dais,0,daisState_.ritual.priestType,0,false);
 }
-// 제단+80은 같은 기준점 다이스의 기존 가상 개수를 반환한다.
-std::uint32_t RawAltarSacrifice::Count(Sid altar) const { const auto dais=DaisAt(altar);return Valid(dais) ? temple_.Count(dais) : 0; }
+// 제단+80은 typed 조회 한 번의 결과를 고정하고 대상의 현재 가상80으로 위임한다.
+std::uint32_t RawAltarSacrifice::Count(Sid altar) const {
+    const auto dais=DaisAt(altar);if (!Valid(dais)) return 0;
+    if (hooks_.count) return hooks_.count(dais);
+    if (Read(pool_.Slot(dais),0)!=(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchDaisVtable : kCdDaisVtable))
+        throw std::logic_error("제단 Count의 현재 가상80 분배 장치 미연결");
+    return temple_.Count(dais); // 기존 독립 fixture가 명시한 실제 Dais 가상 몸체만 유지하며 다른 VT를 Temple로 바꾸지 않는다.
+}
 // 첫 프레임/길이는 현재raw타입에서 읽으며 count>=3의 난수 소비도 생략하지 않는다.
 void RawAltarSacrifice::EscapeFrame(Sid dais,std::uint32_t count) const {
     auto direction=Direction(dais);const auto type=pool_.Slot(dais)[10];

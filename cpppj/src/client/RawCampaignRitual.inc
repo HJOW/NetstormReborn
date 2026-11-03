@@ -28,6 +28,7 @@ void ConnectDaisLifecycle() {
     AltarSacrificeHooks altar; // 실제 같은 난수/프레임/경로/폭발과 명령 큐다.
     altar.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("제단 해방 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 같은 Client 현재 장치의 정상 복귀를 제단/다이스에 전달한다.
     altar.boss=[this] { return assetState.Boss(); }; // 앞선 진단이 돌아온 뒤에도 같은 Client의 현재 권한을 읽는다.
+    altar.count=[this](Sid sid) { return VirtualCount(sid); }; // typed Dais의 TYPE와 독립적인 현재 VT+80을 같은 Session에서 다시 분배한다.
     altar.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
     altar.reserveShared=[this] { return ReserveRitualRegular(); };
     altar.playAt=[this](float x,float y,std::string_view name,std::uint32_t flags) { if (!services.sound.playOnceAt) throw std::logic_error("제단 실제 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };

@@ -262,6 +262,7 @@
 #include <limits>
 #include <new>
 #include <source_location>
+#include <unordered_set>
 using namespace netstorm::o;
 namespace netstorm::client {
 namespace {
@@ -374,6 +375,7 @@ std::string_view RawCampaignObjectMenus::TextParameter(std::uint32_t token) cons
 bool RawCampaignObjectMenus::ResolveIdentity(PlayerIdentityRecord& record) const { return impl_->identity->Resolve(record); }
 // 실제 월드/상태와 모든 callback 대상을 같은 고정 주소에 소유한다.
 struct RawCampaignSession::Impl {
+    mutable std::unordered_set<std::uint16_t> activeVirtualCounts; // World/서비스보다 먼저 만들고 나중에 반납하는 현재 가상80 호출 사슬이며 정상/예외 복귀마다 지운다.
     std::shared_ptr<ClientGameplayGlobals> gameplayGlobals;std::unique_ptr<ClientGameplayGlobals::Use> gameplayUse; // 모든 모듈/Player 대여 뒤에 반납하는 현재 전역과 Runtime 대여다.
     std::shared_ptr<ClientCoreDataGlobals> coreDataGlobals; // 실제 현재 슬롯/active/cache이며 독립 Session도 하나의 실제 소유자를 쓴다.
     std::shared_ptr<ClientPlayerRecords> playerRecords; // 모든 소비자보다 먼저 구성하고 마지막에 반납하는 실제 Client Player owner다.
@@ -824,22 +826,28 @@ struct RawCampaignSession::Impl {
     std::array<std::uint32_t,9> playerDirections{16448,4,0,6,2,7,3,5,1}; // 실제0053181c의 Player0까지 보존한 초기9DWORD다.
     std::unique_ptr<RawCampaignConstructionBindings> construction; // 같은 실제 HP/SP/장부/Player/지도에 첫 객체 전 설치한다.
 
-    // 보상0044c2f0의 가상80은 다이스의 현재 프레임 기반 Count도 읽는다. 기본 레벨 바이트로 대신하면 제단 회수 환불이0이 된다.
-    std::int32_t RewardCount(Sid sid) const {
-        if (!sid.value || sid.value>=core.pool.Capacity()) throw std::out_of_range("보상 SID 범위 오류");
-        const auto raw=core.pool.Slot(sid); // 같은 Pool의 현재 TYPE·가상 표·상태만 읽고 보상 계산 시각을 바꾸지 않는다.
-        if (raw[10]>=core.types.size()) throw std::out_of_range("보상 타입 번호 범위 오류");
-        const auto table=Read(raw,0); // 원본의 두 파생 가상80만 선택하며 나머지는 기존 base004ad0f0을 유지한다.
-        if (table==0x5076b8U) {
-            if (!altarSacrifice) throw std::logic_error("제단 보상의 실제 가상80 설치 전 호출");
-            return std::bit_cast<std::int32_t>(altarSacrifice->Count(sid));
+    // 현재 생성 VT의+80을 TYPE 생성자와 쌍으로 묶지 않고 공통81/제단/다이스 몸체에 분배한다.
+    std::uint32_t VirtualCount(Sid sid) const {
+        if (!sid.value || sid.value>=core.pool.Capacity()) throw std::out_of_range("가상80 SID 범위 오류");
+        const auto raw=core.pool.Slot(sid);if (raw[10]>=core.types.size()) throw std::out_of_range("가상80 현재 TYPE 범위 오류");
+        const auto table=Read(raw,0); // typed Dais의 현재 VT가 base여도 실제 base level을 선택한다.
+        if (!SquidFactory::SupportsConstructedVtable(core.pool.Edition(),table)) throw std::logic_error("현재 가상80 VT 미연결");
+        if (!activeVirtualCounts.insert(sid.value).second) throw std::logic_error("현재 가상80 조회의 SID 재귀 순환");
+        struct CountCall { // 제단 callback의 중첩 조회도 같은 활성 사슬을 사용하고 예외 복귀 때 정리한다.
+            std::unordered_set<std::uint16_t>& active; // 현재 Session이 소유하며 모든 Count 호출보다 오래 사는 집합이다.
+            std::uint16_t sid; // 이 호출에서만 제거할 현재 SID다.
+            ~CountCall() { active.erase(sid); } // 정상/예외 모두 자기 활성 표식만 반납한다.
+        } call{activeVirtualCounts,sid.value};
+        if (table==kPatchAltarVtable) {
+            if (!altarSacrifice) throw std::logic_error("제단의 실제 가상80 설치 전 호출");return altarSacrifice->Count(sid);
         }
-        if (table==0x507950U) {
-            if (!templeRitual) throw std::logic_error("다이스 보상의 실제 가상80 설치 전 호출");
-            return std::bit_cast<std::int32_t>(templeRitual->Count(sid));
+        if (table==kPatchDaisVtable) {
+            if (!templeRitual) throw std::logic_error("다이스의 실제 가상80 설치 전 호출");return templeRitual->Count(sid);
         }
-        return static_cast<std::int32_t>(raw[11]>>5);
+        if (!level) throw std::logic_error("공통 가상80 설치 전 호출");return level->Get(sid); // 기존 level free guard와 Dais 역방향 TYPE 경계는 별도 유지한다.
     }
+    // 보상0044c2f0도 저장/메뉴/기술 목록과 같은 현재 가상80의 DWORD 비트를 읽는다.
+    std::int32_t RewardCount(Sid sid) const { return std::bit_cast<std::int32_t>(VirtualCount(sid)); }
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
         gameplayGlobals(SessionGameplayGlobals(input)),gameplayUse(input.adoptPreparedWorld ? gameplayGlobals->AcquirePrepared() : gameplayGlobals->Acquire()),
@@ -2170,7 +2178,7 @@ struct RawCampaignSession::Impl {
             const auto kind=core.pool.Slot(sid)[10];if (kind>=core.types.size()) throw std::out_of_range("Fort Robust TYPE 범위");return !(core.types[kind].flags1&0x20000000U);
         };
         hooks.hasLevel=[this](auto selected) { return level->Has(Sid{static_cast<std::uint16_t>(selected)}); };
-        hooks.level=[this](auto selected)->std::uint32_t { const Sid sid{static_cast<std::uint16_t>(selected)};const auto table=SaveVtable(sid);if (table==0x5076b8) return altarSacrifice->Count(sid);if (table==0x507950) return templeRitual->Count(sid);return level->Get(sid); };
+        hooks.level=[this](auto selected)->std::uint32_t { return VirtualCount(Sid{static_cast<std::uint16_t>(selected)}); }; // 객체 저장도 같은 현재 가상80을 재분배한다.
         hooks.island=[this](auto x,auto y) { return core.building.HasIsland(std::bit_cast<float>(x),std::bit_cast<float>(y)); };
         hooks.write=[this,stream](auto token,auto bytes) { if (token!=1) throw std::logic_error("객체 저장 stream 선택 불일치");templateStorage->WriteSection(stream,bytes); };
         hooks.contents=[this,stream](auto selected,auto token) { if (token!=1) throw std::logic_error("객체 내용물 stream 선택 불일치");SaveFortContents(selected,token,ContentWriter(stream)); };
@@ -2412,7 +2420,7 @@ struct RawCampaignSession::Impl {
         aiBridgeCandidates=std::make_unique<RawAiBridgeCandidates>(aiMemory,core.pool,core.types,core.frames,core.hash.Entries(0),core.spots,AiBridgeCandidateTypes{contentState.bridgeType,fenceNodeType,gunState.windArcherType});
         aiBridgeSearch=std::make_unique<RawAiBridgeSearch>(aiMemory,core.frames,core.spots,contentState.bridgeType,random);
         AiFactoryProductionHooks factories;factories.technology=[this](auto owner) { const auto value=player->Technology(std::bit_cast<std::int32_t>(owner));if (value>65535 || value>=core.pool.Capacity()) throw std::out_of_range("AI 시설 생산 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(value)}; };factories.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };factories.addProduct=[this](auto token,Sid factory,auto type) { aiStrategySetup->AddProduct(token,factory,type); };
-        factories.level=[this](Sid factory) { const auto table=Read(core.pool.Slot(factory),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("AI 시설 가상level80 미지원 실제 표");return level->Get(factory); };
+        factories.level=[this](Sid factory) { const auto table=Read(core.pool.Slot(factory),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("AI 시설 가상level80 미지원 실제 표");return VirtualCount(factory); };
         // 같은58h요청/수신/실제Regular그림·완료가 연결된 원본 업그레이드 경로를 선택한다.
         factories.upgrade=[this](Sid parent) { factoryUpgradeCommand->Request(parent); };factories.demo=[this] { return services.missionOutcome.demo()!=0; };factories.log=[this](auto token,AiFactoryAction action,auto type) { if (!services.player.log) throw std::logic_error("AI 시설 생산 현재 로그 미연결");std::string message="Upgrade factory!\n";if (action==AiFactoryAction::AddedProduct) { if (type>=core.types.size()) throw std::out_of_range("AI 시설 생산 로그 TYPE 범위");message="Added "+core.types[type].name+" to factory.\n"; }services.player.log(aiFactoryLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+message+"\n"); };
         aiFactoryProduction=std::make_unique<RawAiFactoryProduction>(aiMemory,core.pool,core.types,contentFinder,AiFactoryProductionGlobals{core.processState.Now(),[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(factories));
@@ -2472,7 +2480,7 @@ struct RawCampaignSession::Impl {
     std::array<std::uint32_t,2> AiCarrierTargets(Sid sid) { const auto kind=priests->MovementProcessType(core.pool.Slot(sid)[10]);RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });const auto form=lookup.Find(sid,kind);if (!form.value) return {};const auto* path=dynamic_cast<RawPathProcess*>(core.processes.FromForm(form));if (!path) throw std::logic_error("AI 현재 이동 프로세스 미연결");return {path->Runtime().TargetA(),path->Runtime().TargetB()}; }
     // 실제Motion기하설치뒤이름/경로/의식/공유요청헤더를현재AI에연결한다.
     void ConnectAiMovement() {
-        auto names=services.ai.names;names.level=[this](Sid parent) { return level->Get(parent); };objectNames=std::make_unique<RawSquidName>(core.pool,core.types,std::move(names));
+        auto names=services.ai.names;names.level=[this](Sid parent) { return VirtualCount(parent); };objectNames=std::make_unique<RawSquidName>(core.pool,core.types,std::move(names));
         AiMovementHooks hooks;hooks.movement=[this](auto type) { return priests->MovementProcessType(type); };hooks.lookup=[this](Sid parent,auto type,auto index,bool remove) { RawContainedLookup lookup(core.pool,[this](Sid object,auto flags) { world.Destroy(object,flags); });return lookup.Find(parent,type,index,remove); };hooks.footprint=[this](Sid target) { return core.neighbors.Footprint(target); };hooks.send=[this](auto target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("AI 실제 이동 요청 송신 미연결");services.carrierRequest(target,packet); };
         hooks.sacrifice=[this](Sid actor,Sid target) { sacrificeRequest->Begin(actor,target); };hooks.target=[this](Sid actor,Sid target,auto replace,auto helper) { return carrierTarget->StartTarget(actor,target,replace,helper); };hooks.start=[this](RawPathStartRequest request) { return StartMotion(request); };hooks.name=[this](Sid parent) { return objectNames->Name(parent); };hooks.distance=[this](RawPathPoint point,Sid target) { return AiDistanceToFootprint(point,core.neighbors.Footprint(target)); };
         hooks.logTarget=[this](auto token,std::string_view source,std::string_view target) { if (!services.player.log) throw std::logic_error("AI 대상 이동 로그 미연결");services.player.log(aiMoveLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Move "+std::string(source)+" to "+std::string(target)+"\n"); };hooks.logPoint=[this](auto token,std::string_view name,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 좌표 이동 로그 미연결");services.player.log(aiMoveLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Move "+std::string(name)+" to ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
@@ -2681,14 +2689,14 @@ struct RawCampaignSession::Impl {
     }
     // 메뉴와직접입력이같은분산SP/실제업그레이드/기존연구와공통객체를사용한다.
     void ConnectFactoryInput() {
-        FactoryInputHooks hooks;hooks.level=[this](Sid parent) { return level->Get(parent); };hooks.setLevel=[this](Sid parent,auto value) { assetBindings->SetState(parent,value); };hooks.adjustFrame=[this](Sid parent) { assetBindings->AdjustFactoryFrame(parent); };
+        FactoryInputHooks hooks;hooks.level=[this](Sid parent) { return VirtualCount(parent); };hooks.setLevel=[this](Sid parent,auto value) { assetBindings->SetState(parent,value); };hooks.adjustFrame=[this](Sid parent) { assetBindings->AdjustFactoryFrame(parent); };
         hooks.cost=[this](auto type) { return hp.TypeCostUnits(type); };hooks.money=[this](auto owner) { return std::bit_cast<float>(sp.Get(owner)); };hooks.upgrading=[this](Sid parent) { return factoryUpgrade->IsUpgrading(parent); };hooks.request=[this](Sid parent) { factoryUpgradeCommand->Request(parent); };hooks.tell=[this](std::string_view section) { if (!services.factoryTell) throw std::logic_error("Factory 실제 업그레이드 안내 미연결");services.factoryTell(section); };
         hooks.research=[this](Sid parent,auto code,auto parameter) { return factoryResearch->Input(parent,code,parameter); };hooks.parent=[this](Sid parent,auto code,auto) { if (!objectCommand) throw std::logic_error("Factory 실제 공통 입력 미설치");return objectCommand->Command(parent,code); };
         factoryInput=std::make_unique<RawFactoryInput>(core.pool,factoryInputState,std::move(hooks));
     }
     // 같은 실제Factory 가상경계/건설/종속쌍/AI본체를 연결한다.최초사건은Load완료후실행된다.
     void ConnectFactoryUpgrade() {
-        FactoryUpgradeHooks hooks;hooks.level=[this](Sid parent) { const auto table=Read(core.pool.Slot(parent),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("업그레이드 현재Factory level 가상표 미복원");return level->Get(parent); };hooks.setLevel=[this](Sid parent,std::uint32_t value) { assetBindings->SetState(parent,value); };hooks.maxHp=[this](Sid parent) { return hp.MaxHitPoints(parent); };hooks.adjustFrame=[this](Sid parent) { assetBindings->AdjustFactoryFrame(parent); };hooks.display=[this](Sid parent) { core.display.Update(core.pool.Slot(parent)); };
+        FactoryUpgradeHooks hooks;hooks.level=[this](Sid parent) { const auto table=Read(core.pool.Slot(parent),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("업그레이드 현재Factory level 가상표 미복원");return VirtualCount(parent); };hooks.setLevel=[this](Sid parent,std::uint32_t value) { assetBindings->SetState(parent,value); };hooks.maxHp=[this](Sid parent) { return hp.MaxHitPoints(parent); };hooks.adjustFrame=[this](Sid parent) { assetBindings->AdjustFactoryFrame(parent); };hooks.display=[this](Sid parent) { core.display.Update(core.pool.Slot(parent)); };
         hooks.soundAt=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("업그레이드 실제 위치 소리 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };hooks.sound=[this](std::string_view name) { if (!services.sound.play) throw std::logic_error("업그레이드 실제 로컬 소리 미연결");services.sound.play(soundNames.Lookup(name),0,0,0,1,0); };hooks.flare=[this](Sid parent,std::int32_t count,std::uint32_t event) { flare->Spawn(parent,count,event); };
         hooks.create=[this](auto type,auto flags) { return world.Create(type,flags); };hooks.owner=[this](Sid parent,auto owner) { core.owner.Set(parent,owner); };hooks.pop=[this](Sid parent,float x,float y,auto flags) { world.Pop(parent,x,y,flags); };hooks.construction=[this](Sid parent,float duration) { PrepareBuilding(core.processState.Now());building->Start(parent,duration); };hooks.depend=[this](Sid watched,Sid watcher) { static_cast<void>(core.dependencies.Create(watched,watcher)); };hooks.watcher=[this](Sid form) { return core.dependencies.Watcher(form); };hooks.destroy=[this](Sid parent,auto flags) { world.Destroy(parent,flags); };
         hooks.aiPresent=[this](Sid parent) { const auto owner=core.pool.Slot(parent)[34];if (!owner) return false;if (owner>=9) throw std::out_of_range("업그레이드현재AI Player 범위");return Read(players,owner*0xb4U+0xb0U)!=0; };hooks.notifyAi=[this](auto owner,Sid parent) { if (core.ownerMode.challenge || std::bit_cast<std::int32_t>(owner)<=0) return;if (owner>=9) throw std::out_of_range("업그레이드완료AI Player 범위");const auto token=Read(players,owner*0xb4U+0xb0U);if (token) aiFactoryProduction->Upgraded(token,parent); };
@@ -2828,7 +2836,7 @@ struct RawCampaignSession::Impl {
         hooks.builderAssertion=SessionMissing<void,RawIslandBuilderAssertion>();hooks.territoryAssertion=SessionMissing<void,FortWorldLoadAssertion>();
         hooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         hooks.setState=[this](Sid sid,std::uint32_t value) { assetBindings->SetState(sid,value); };
-        hooks.virtualCount=[this](Sid sid) { return static_cast<std::int32_t>(level->Get(sid)); };
+        hooks.virtualCount=[this](Sid sid) { return std::bit_cast<std::int32_t>(VirtualCount(sid)); }; // 초기 설치도 같은 실제 가상80 몸체를 사용한다.
         RawCampaignInstallData data{{},{},headers,handle,[this](auto slot)->const FortTemplate& { return templateStorage->Template(slot); },[this](auto slot)->FortTerritoryStream& { return templateStorage->SelectTerritory(slot); }};
         data.campaignObjects=[this](const RawFortObjectLoad& objects,auto slot) { ReadFortObjectStreams(objects,slot); }; // 초기 사본/로그인 재적재와 무관하게 실제 현재 manager를 같은 원문 부모로 읽는다.
         if (services.installMode==CampaignInstallMode::ExistingEditor) data.existingFort=[this](const RawFortObjectLoad& objects) { return MakeExistingFortChildren(objects); };
@@ -3603,14 +3611,13 @@ void RawCampaignSession::RefreshCurrentPlayerCore() {
     };
     hooks.playerType=[&s] { return s.runeState.daisType; }; //005412ec정상165이며Player152의005412b8과다르다.
     hooks.owner=[&s] { return s.playerState.battleOwner; };
-    hooks.level=[&s](PlayerCoreRefreshForm form)->std::int32_t { //실제같은다이스VT+80의Count를선택하며state상위level로대체하지않는다.
+    hooks.level=[&s](PlayerCoreRefreshForm form)->std::int32_t { // 캡처한 실제 객체의 현재 가상80을 공통 분배기로 선택한다.
         const auto bytes=s.core.pool.Bytes(); // 앞선가상효과뒤현재Pool과현재물리를다시확인한다.
         if (form.address<poolBase || (form.address-poolBase)%50U) throw std::out_of_range("현재Core갱신가상객체주소범위");
         const auto number=(form.address-poolBase)/50U; // 동일Pool의상대주소를원래SID로되돌린다.
         if (number>=s.core.pool.Capacity() || number>65535U || form.bytes.size()!=50 || form.bytes.data()!=bytes.data()+number*50U)
             throw std::out_of_range("현재Core갱신가상객체현재물리불일치");
-        if (Read(form.bytes,0)!=0x507950U) throw std::logic_error("현재Core갱신의선택된가상80몸체미연결");
-        return std::bit_cast<std::int32_t>(s.templeRitual->Count(Sid{static_cast<std::uint16_t>(number)}));
+        return std::bit_cast<std::int32_t>(s.VirtualCount(Sid{static_cast<std::uint16_t>(number)}));
     };
     hooks.assertion=SessionMissing<void,std::uint32_t>(); //Ch.cpp15a진단도선택위치에서실제누락을보고한다.
     RefreshPlayerCore(hooks);
@@ -4639,14 +4646,7 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     chain->player=std::make_unique<RawPlayerMenu>(*chain->identity,current->alliances,current->hiddenPlayers,current->priestState.priests.OwnerState(),inputs.playerState,std::move(player));
     auto object=inputs.object; // GUI/설정/문자열 토큰은 유지하며 게임 계산만 현재 실제 몸체로 교체한다.
     object.hasHitPoints=[current](Sid sid) { return current->hp.HasHitPoints(sid); };
-    object.count=[current](Sid sid) { // 정보·회수 모두 같은 Session의 실제 가상80 몸체를 사용한다.
-        const auto raw=current->core.pool.Slot(sid);const auto table=Read(raw,0); // 원문004ada70은 TYPE의 생성자 정보와 독립적으로 현재 VT+80을 호출한다.
-        if (!SquidFactory::SupportsConstructedVtable(current->core.pool.Edition(),table)) throw std::logic_error("현재 객체 메뉴 가상80 VT 미연결");
-        // 보호 PE의 나머지81 생성 VT는 모두 실제 base004ad0f0을 가리킨다. 미확인 VT는 선택 시 거부한다.
-        if (table==0x5076b8U) return current->altarSacrifice->Count(sid); // 0044a480: 현재 위치의 다이스를 찾아 그 가상80에 위임한다.
-        if (table==0x507950U) return current->templeRitual->Count(sid); // 004478f0: 현재 프레임/방향으로 다이스 레벨을 읽는다.
-        return current->level->Get(sid);
-    };
+    object.count=[current](Sid sid) { return current->VirtualCount(sid); }; // 정보·회수·변형도 같은 현재 가상80과 제단 재분배를 사용한다.
     object.salvageRefund=[current](Sid sid,std::uint32_t type,std::uint32_t count) { return current->hp.SalvageRefund(sid,type,std::bit_cast<std::int32_t>(count)); };
     BindObjectMenuIdentity(object,*chain->identity);BindObjectPlayerMenu(object,*chain->player);
     const auto actualCount=object.count; // 정보와회수는같은현재VT검증/실제가상80을공유한다.
@@ -4676,7 +4676,7 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     BindPriestMenuCarrier(priest,*chain->carrier);chain->priest=MakePriestMenu(std::move(priest));
     auto factory=inputs.factory; // GUI/번역을 보존하고 실제 현재 게임 조회만 같은 Session에 연결한다.
     factory.localOwner=[current] { return current->playerState.battleOwner; };factory.editor=[current] { return current->globals.editor!=0; };
-    factory.capacity=[current](Sid sid) { return current->production->FactoryCapacity(sid); };factory.level=[current](Sid sid) { return current->level->Get(sid); };
+    factory.capacity=[current](Sid sid) { return current->production->FactoryCapacity(sid); };factory.level=[current](Sid sid) { return current->VirtualCount(sid); };
     factory.currentTechnology=[current] { return current->player->CurrentTechnology(); };
     factory.technologyType=[current](Sid parent,std::uint32_t index) { const auto sid=current->priests->Carrier().FindContained(parent,4,0,index);return sid.value ? (Read(current->core.pool.Slot(sid),18)&0xffffU) : 0U; };
     factory.allowed=[current](std::uint32_t type) { return current->production->Allowed(static_cast<std::int32_t>(type)); };factory.inProduction=[current](std::uint32_t type) { return current->production->Contains(type); };

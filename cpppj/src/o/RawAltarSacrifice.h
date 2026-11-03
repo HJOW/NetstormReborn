@@ -35,6 +35,7 @@ struct AltarSacrificeHooks {
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion;
     // boss: 실제 Client의 현재 권한을 읽으며 독립 호출자는 기존 상태 값을 사용한다.
     std::function<bool()> boss;
+    std::function<std::uint32_t(Sid)> count; // typed Dais 조회 뒤 대상의 현재 가상80으로 재분배한다. 독립 legacy 입력은 실제 Dais VT에서만 Temple Count를 유지한다.
 };
 // 원본 제단 몸체와 다이스 파생 PreDestroy다. 완료 의미는 실제 하위 소비자 연결 여부로 따로 평가한다.
 class RawAltarSacrifice {
