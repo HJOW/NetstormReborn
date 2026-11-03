@@ -1,0 +1,130 @@
+{
+  "unit": 839,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "7bbe8af1 / 20261104-20 CP",
+  "exeSha256": "26ac381f65db988d75e6ac6c412f332a3c0f7852a36ae721b7a65a93160a537c",
+  "exeBytes": 10448384,
+  "sourceSha256": {
+    "cpppj/src/o/RawSquidLevel.cpp": "60acbf581192be8bd5a413085350e4bec8837954392168d05d8adfee9d9bf27b",
+    "cpppj/src/o/RawTempleRitual.cpp": "e5e2c06cbe0030000b0bf3cb7861f3d290624b0c411317172d5daba0e8a83c95",
+    "cpppj/tests/CurrentCountGetterTests.cpp": "aa1c4691b2a6f0f10ce18f58494f07ee9d59100573d0324b73926fa1ccc36f67",
+    "cpppj/tests/CMakeLists.txt": "767ab9f3870ef491cd1fe456b8764f8228e9436fba53504fc00163a4ab295d44"
+  },
+  "scope": [
+    "Has4ad0a0/CD4acdc0의현재TYPE물리조회후항상true·Get4ad0f0의state상위3bit읽기에free/dead/contained/예약SID거부제거",
+    "DaisCount4478f0/CD481310의TYPE165강제제거·현재types/frames물리범위유지",
+    "원문Direction4ad710/CD4ae4b0의signedside-A·N/M/L우선/64·120와기존BitCast정적대조"
+  ],
+  "tests": [
+    {
+      "filter": "CurrentCountGetter_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-839\\test-getter-first.log",
+      "sha256": "9249ca40fdfa648b879bb6152b35a24eb0cdc5cd3606d0515f0aafe9f5a07299"
+    },
+    {
+      "filter": "CurrentCountVtable_",
+      "cases": 5,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-839\\test-menu-count-regression.log",
+      "sha256": "f3e680edea11abac03cd9eb9d96c0294fefdb6f76c9640bc427b15ebc8d9e082"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-839\\test-refund-regression.log",
+      "sha256": "feb075621e686b73e66bf794e6c20e552978f87beba247aec77e371f13c7205f"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-839\\test-form-close-regression.log",
+      "sha256": "1271d58e49bfc91ba07e8db3c0053b63cff8c77947139c038d91cbcda83c0a40"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-839\\test-current-world-regression.log",
+      "sha256": "ad5f05af8504a5cb3d57f544c29dca3dafecb8cb38a660ccfe0bd10deadce4da"
+    },
+    {
+      "filter": "CampaignMotion_BaseLevelKeepsLowBitsAfterAssertion",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-839\\test-level-set-regression.log",
+      "sha256": "6c1cccd46ccb39ea6813b4ece27a5890d8dfb27b90bd7f8d5b0b7e04c96105b6"
+    },
+    {
+      "filter": "CampaignMotion_ReplaysActualLevelNativeBothEditions",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-839\\test-level-native-regression.log",
+      "sha256": "ec48ac1cabab8d0a24726b946cc4259b516a7d3bd1309a483087dd81c30943fd"
+    }
+  ],
+  "focusedCases": 13,
+  "newCases": 3,
+  "explicitContractInputs": {
+    "level": 3584,
+    "daisCount": 1920,
+    "note": "새독립CPU관측이아닌수동입력/기대표C++계약검사;전체raw불변/효과0"
+  },
+  "frozenNativeLevelRows": 96,
+  "nativeHardwareNewRows": 0,
+  "newFixtures": 0,
+  "initialFailures": 0,
+  "builds": [
+    {
+      "log": "extracted\\cpp-resume-839\\build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "3cf64581facebef17730f627b0698944f1b999884b4600012615f87ad72d58cc"
+    },
+    {
+      "log": "extracted\\cpp-resume-839\\build-level-regression.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "44a0b95855b7721cd11a7858b941fd6504fb9845eec07c27c63b6361c8546e01"
+    }
+  ],
+  "checking": {
+    "remaining": 14,
+    "parents": 8,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 34,
+    "completedPartial": 3,
+    "closedThisUnit": []
+  },
+  "protection": {
+    "files": 2759,
+    "fixtureFiles": 939,
+    "changed": 0,
+    "manifest": "extracted\\cpp-resume-839\\protected-after.json",
+    "sha256": "4d1a48ced6ab8f7f0b8652d734c0123de1d459e19e15f57d8c092c707b7bbb69"
+  },
+  "boundaries": [
+    "setter바디와실제AllocatedBytes쓰기guard유지;이를모든setter/free쓰기계약완료로확대하지않음",
+    "TYPE/프레임/코드배열범위밖은호스트오류로거부·실제의식/효과호출0",
+    "side80의Count결과는unsigned변이도같은기본분기이므로signed근거는PE movsx/기존bit_cast정적대조",
+    "Stage등내부Count가상연결/나머지메뉴·Dais checking·공통Pop은별도잔여",
+    "게임GUI/물리/PCM/CD삽입·실제포획/희생/특정적공격/승리·신규MP/통신·공중3종전용검사0;전체71/CTest/34미션/ZIP반복0"
+  ]
+}

@@ -3381,3 +3381,7 @@ set_property(SOURCE CreationTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_CREATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/creation-x86.tsv\""
     "NETSTORM_DERIVED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/derived-x86.tsv\""
     "NETSTORM_CONSTRUCTOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructors-x86.tsv\"")
+
+# 가상80의 현재 슬롯/TYPE 읽기 정의역은 효과를 실행하지 않는 전용 검사로 검증한다.
+target_sources(netstorm_tests PRIVATE CurrentCountGetterTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE CurrentCountGetterTests.cpp)

@@ -6,21 +6,21 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-04, 단위 838 완료·재개 진행 중·전체 미완료)
+### 0.1 현재 값 (2026-11-04, 단위 839 완료·재개 진행 중·전체 미완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **전체 목표 미완료·재개 진행 중.** 2026-11-04 새 `/goal` 요청으로 이전 일시 정지를 해제했다. 835의 실제 contained 종단 뒤836에서 Take의 void포함 실제 호출/현재TYPE·후단진단을 연결했다. 837에서객체메뉴직접가상80의TYPE/VT쌍강제를교정했다. 838에서제단의중첩현재가상80과Session공유소비자를연결했다. 다음839는getter읽기정의역이다.0.4~0.7절은직전이력이며0.8절이최신이다. |
-| 현재 제품 | **838 / 표시 11.01.** 제단의typedDais현재가상80과Session명시소비자를공통분배기에연결했다. getter free/TYPE165 경계는남으며checking14유지다 |
-| 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반 31+데모 3의 마지막 전체 진입 검증은 **645의 644 제품**이며 현재 838의 전체 회귀 결과가 아니다 |
+| 진행 상태 | **전체 목표 미완료·재개 진행 중.** 2026-11-04 새 `/goal` 요청으로 이전 일시 정지를 해제했다. 835의 실제 contained 종단 뒤836에서 Take의 void포함 실제 호출/현재TYPE·후단진단을 연결했다. 837에서객체메뉴직접가상80의TYPE/VT쌍강제를교정했다. 838에서제단의중첩현재가상80과Session공유소비자를연결했다. 839에서getter읽기정의역을교정했다. 다음840은Dais checking/현재조회다.0.4~0.8절은직전이력이며0.9절이최신이다. |
+| 현재 제품 | **839 / 표시 11.01.** Has/Get의free·예약SID읽기와Dais Count의현재TYPE/frames정의역을교정했다. Stage등내부가상연결과Dais checking은남으며checking14유지다 |
+| 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반 31+데모 3의 마지막 전체 진입 검증은 **645의 644 제품**이며 현재 839의 전체 회귀 결과가 아니다 |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | `0e3ecf932974749ea930af4a457385100e977baf4e2d86249a37e0727383d139` (838 / 11.01) |
-| 최신 빌드·집중 검사 | 838 집중8개(새2) 첫실행실패0. 같은Session의typedDais현재base/Dais VT→LevelVII/I와SID순환오류·RAII복귀/메뉴재개·기존직접count/회수/Form/현재World회귀통과. 명시virtual80소비자공유는정적대조로구별한다. 빌드1회종료0·경고/오류0. 새CPU/fixture/게임GUI/공격/MP0 |
+| EXE SHA-256 | `26ac381f65db988d75e6ac6c412f332a3c0f7852a36ae721b7a65a93160a537c` (839 / 11.01) |
+| 최신 빌드·집중 검사 | 839 집중13개(새3) 첫실행실패0. Level3584/Count1920명시입력·전체raw/지도/해시/난수불변·효과0와실제메뉴8·기존setter/원문96행재생통과. 새입력은CPU관측이아니며side80부호는정적대조근거다. 빌드2회종료0·경고/오류0. 새CPU/fixture/게임GUI/공격/MP0 |
 | checking 잔여 | **14함수 = 부모8 + 부분3 + MP분류3.**836에서004afe50의실제Take호출자/후단을이어완료했다. 완료부모34/완료부분3이다. 부모004a7510·부분004b54e0/004b8cb0은 같은 집계 안에서8번MP 미완료 이월이다 |
 | 마지막 GUI | **794에서 793 제품**의 시작/메인 메뉴를 확인. 815 GUI 통과로 합산하지 않는다 |
 | 전체 검사 기준 | 실행 대상66/전체 빌드 대상71. 전체71 마지막 컴파일은779. 전체 C++ 마지막 실행은549의3389개 중7개 실패(580단언); 마지막 전체 통과는510의508제품3337개. 이후 집중 통과를 전체 통과로 쓰지 않는다 |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
-| 보호 기준 | 기존2758개/fixture938개 불변. 새 CPU fixture 포함 **2759개/939개**이며 원본/기존 fixture 변경0. `extracted/cpp-resume-838/protected-after.json` |
+| 보호 기준 | 기존2758개/fixture938개 불변. 새 CPU fixture 포함 **2759개/939개**이며 원본/기존 fixture 변경0. `extracted/cpp-resume-839/protected-after.json` |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
@@ -28,7 +28,7 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 1. 사용자 재개 요청 뒤 AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 해당 인계도 읽는다. `git status`와 `git fetch`로 다른 PC/세션 변경을 확인하며 push는 하지 않는다.
 2. 현재 호스트가 마지막 디컴파일 호스트와 다르면 cpppj 작업/디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 문서에 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 불완전하므로 쓰지 않는다.
 3. 실제 게임·별도 창 실행은 AGENTS.md의 확인 규칙을 따른다. 예외는 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94) 및 사용자가 직접 요청한 원본 수동 컨트롤/녹화 분석의 해당 단계다. 다른 PC는 실행 목적·필요성 설명 후 명시적 확인이 필요하다.
-4. 최신 정적 범위 정정 원시는 `extracted/cpp-resume-831/`이며 최신 제품/검사 원시는 `extracted/cpp-resume-838/`이며 Git 제외·작업 PC 전용이다. 커밋되는 증거는 `cpppj/*.json`·`docs/exe/cpp-*.md`다. 다른 PC에 원시가 있다고 가정하지 않는다.
+4. 최신 정적 범위 정정 원시는 `extracted/cpp-resume-831/`이며 최신 제품/검사 원시는 `extracted/cpp-resume-839/`이며 Git 제외·작업 PC 전용이다. 커밋되는 증거는 `cpppj/*.json`·`docs/exe/cpp-*.md`다. 다른 PC에 원시가 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj/webpj·staged 파일·실행 출력은 포함하지 않는다. 한 단위를 마치면 0.1절·해당 완료/잔여 항목·단위 문서를 갱신하고 해당 파일만 로컬 커밋한다.
 6. 네 Gun809·Canon810→811·전환812·레벨813·ContentForm814·Graph 참조 감소/SID0조회815는 완료했다. 816의 sentinel/Free와817의 flags8 부품도 완료했다. 818의 Add/Flood/Rebuild/Allocate/PostPop/PostDestroy와819의 Detach/영역 setter 현재 실행을 완료했다. 820~821에서 Boardcoord0041cdb0의 현재 각도/세 직접caller·방향 네 소비자·실제 바람/입자를 연결했다. 822 주변음/날씨 scheduler를 완료했다. 823은004182c0 시간 알림/임시서식 부모를 연결했다. 824에서00471650의 미도달 진단/현재 수명을 대조했다. 825에서0044c060 연소 갱신의 진단 복귀/실제 Session 회복·생성·삭제를 완료했다. 826에서00472f70 마나 공급원 목록/카운터 진단을 완료했다. 827에서004c0e20은 첫 영역이 아닌 첫 청크record[3] 시드이고 두caller는 군도 전용 분기임을 확인했다. 일반 성장에 삽입하지 않고 군도 상위와 함께 미완료로 남긴다. 828에서 제단00448bd0의 현재 진단 복귀/같은 실제 공간·프레임과 현재 권한을 연결했다. 829에서 숫자 송금004c9350의 현재 checking/진단·대상 수명을 연결했다. 830에서004d62b0의 세 checking이 고정 송금 AI 가지임을 확인하고 실제 원문 위치/현재 서비스에 연결했다. checking17과 객체 메뉴·커서 상태/수명도 남는다. 831에서004b8cb0의 서버 전환/재접속을 같은 부분 집계 안에서8번MP로 미완료 이월했다. 832에서00489ff0의 현재 진단 복귀/같은 Client·Host 삭제/기존 재지정을 연결했다. 833에서0048b340의 현재 SID 진단/항상참 반환과 실제 도착 자기 삭제·겹침 정리를 연결했다. 834에서 공통 Unpop004afe50 일반 공간/진단을 부분 연결했으나 contained 종단이 남아 checking15를 유지한다. 834 뒤의 일시 정지는 새 `/goal`로 해제했으며835에서 해당 실제 종단부터 진행한다. 포획 안내 실행/실제 포획 등 사용자 제외 검사는 계속 건너뛴다.
 
@@ -79,8 +79,15 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 
 - 제단Count의typedDais한번→Valid→현재VT80 callback과Session공통VirtualCount를연결했다. Reward/Fort저장/정보·회수·변형/CoreRefresh/runtime/이름/Factory/AI의확인된명시가상80을공유하고공통Has·Factory특정caller guard는유지한다. activeSID첫멤버/RAII로같은SID재귀를거부하고예외뒤정리한다. [838 기록](docs/exe/cpp-nested-count-vtable-20261104.md).
 - 집중8개(새2) 첫실행실패0·Release1회종료0·경고/오류0이다. 실제같은Session/UI에서TYPE165/프레임0/레벨7을유지해VTbase/Dais의제단TitleVII/I와cycle예외뒤조회복귀를확인했다. 의식/포획/희생/Frame/Pop/전투함수실행0·보호2759개/fixture939개변경0·새CPU/fixture0이다. 제품/EXE SHA는0.1절이다.
-- **다음839:**공통level Has/Get은원문상현재TYPE조회후true/state상위3bit이며free/dead/contained/예약SID를거르지않는다. Has의AllocatedBytes를Slot+TYPE범위로대조한다. DaisCount4478f0/CD481310도TYPE165강제가없고현재TYPE framecodes/현재프레임을읽으므로types/frames물리범위로바꾼다. Count의미사용kDaisType상수정리필요. setter의실제AllocatedBytes쓰기와프레임/메모리밖host경계는유지한다. 호출효과없는getter만검사하고실제의식은진행하지않는다. 다음당일커밋번호21부터확인한다.
+- **839 진행 중(빌드/검사 전):**getter두CPP의읽기정의역을원문으로교정하고효과없는matrix검사를추가중이다. 최신검증제품은838이다. 공통level Has/Get은원문상현재TYPE조회후true/state상위3bit이며free/dead/contained/예약SID를거르지않는다. Has의AllocatedBytes를Slot+TYPE범위로대조한다. DaisCount4478f0/CD481310도TYPE165강제가없고현재TYPE framecodes/현재프레임을읽으므로types/frames물리범위로바꾼다. Count의미사용kDaisType상수정리필요. setter의실제AllocatedBytes쓰기와프레임/메모리밖host경계는유지한다. 호출효과없는getter만검사하고실제의식은진행하지않는다. 다음당일커밋번호21부터확인한다.
 - 독립AltarCount의미연결fallback은실제DaisVT에만허용한다. Temple.Stage등내부직접Count·나머지메뉴·Factory진단·CanBridge/BridgeCommand·공통Pop은별도잔여다. checking14=부모8+부분3+MP3·완료부모34/부분3유지. 실제포획/희생/특정적공격/승리·사용자직접확인·신규MP/통신·공중3종전용·물리/PCM재시도제외·전체71/CTest/34미션/ZIP반복0·push0·DN/WB변경0이다.
+
+### 0.9 2026-11-04 단위839 완료·다음840
+
+- Has4ad0a0/CD4acdc0의free/예약SID선행거부를Slot+TYPE범위로교정하고DaisCount4478f0/CD481310의TYPE165강제를현재types/frames물리범위로바꿨다. setter의실제쓰기guard·프레임/코드밖거부는유지한다. [839 기록](docs/exe/cpp-current-count-getter-20261104.md).
+- 새3/집중13개첫실행실패0·Release2회종료0·경고/오류0이다. Level3584/Count1920명시입력은전체raw/공간/난수불변·효과0이며새CPU관측이아니다. 기존메뉴8·setter/원문96행재생도통과했다. side80Count만으로signed변이검출을주장하지않고PE movsx/기존bit_cast정적대조를근거로한다. 보호2759개/fixture939개변경0·새CPU/fixture0이다.
+- **다음840:**CanBridge449710/CD481910은내용물finder를사제genus진단전에시작해first/next를보존하고진단복귀후현재TYPE/genus/owner·동맹/권한을다시읽어야한다. BridgeCommand449900/CD481ab0은PathStart NULL일때현재checking으로식p/.Dais.cpp18e를진단하고정상복귀해도반환한다. 부속MoveAwayDepth427d30도저장depth에따른각진단/currentdebug와최종현재depth조회가남는다. actualSession진단/현재alliance·boss서비스및Stage등내부virtual80호출을원문대조하며실제의식/희생/포획/공격재현은진행하지않는다. 다음당일커밋번호22부터확인한다.
+- checking14=부모8+부분3+MP3·완료부모34/부분3유지. 위의다음원문부모외나머지메뉴/Edit·State·파일·Factory진단·공통Pop·MP/4~8차는미완료다. 사용자직접확인/실제포획·희생·특정적공격·승리/신규MP·통신/공중3종전용/물리·PCM재시도제외·전체71/CTest/34미션/ZIP반복0·push0·DN/WB변경0이다.
 
 ## 1. 현행 목표
 
@@ -200,6 +207,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 - [x] **제단중첩현재가상80/Session공유(838):**typedDais현재VT분배·명시virtual80소비자공유·activeSID RAII를연결했다. 집중8개(새2) 첫실행실패0·빌드1회종료0·보호불변이다. getter의free/TYPE165경계와Stage등내부호출은별도잔여다. [838 기록](docs/exe/cpp-nested-count-vtable-20261104.md).
 
+- [x] **가상80getter읽기정의역(839):**Has의현재Slot/free·예약SID읽기와DaisCount의현재TYPE/frame범위를원문으로교정했다. Level3584/Count1920명시입력/새3·집중13첫실행실패0·기존원문96행불변·빌드2회종료0이다. setter쓰기·Stage등다른부모는별도잔여다. [839 기록](docs/exe/cpp-current-count-getter-20261104.md).
+
 ### 2.2 미션별 확보한 증거
 
 모든 행은 **과거 해당 제품의 증거**다. 현재 826의 자연 완주 회귀로 합산하지 않는다. 전체 34 최신 기준은645/644 제품이다.
@@ -238,7 +247,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
 
-- [ ] **현재가상80getter읽기정의역(839재개우선):**Has의free/예약SID선행거부와Dais Count의TYPE165강제를원문TYPE/frame물리범위검사와대조한다. setter/Stage·기타범위는별도로남긴다.
+- [x] **현재가상80getter읽기정의역(839):**Has의free/예약SID거부와DaisCount TYPE165강제를원문Slot/TYPE/frame물리범위로교정했다. setter쓰기·Stage등다른부모는별도잔여다.
 
 - [x] **현재가상80중첩/공유(838):**제단의typedDais현재VT+80과확인된Session명시소비자를연결했다. getter읽기정의역/free/TYPE165는839잔여이며Stage등내부직접Count완료로확대하지않는다.
 

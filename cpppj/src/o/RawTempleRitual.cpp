@@ -17,7 +17,7 @@ constexpr std::array<std::int32_t,5> kStageOffsets{{0,11,22,33,44}}; // 원본 �
 constexpr std::array<std::string_view,5> kStageSounds{{"forWind2.wav","forSun2.wav","forRain2.wav","forThunder2.wav","forStorm2.wav"}}; // 현재 단계의 위치 음향이다.
 constexpr std::array<float,5> kStageDelays{{1.9600000381469727F,2.25F,1.8799999952316284F,2.2200000286102295F,2.4100000858306885F}}; // 실제0x307 payload의 원본 float 비트다.
 constexpr float kAlmostCeil=0.9999899864196777F; // 사각형 우하단만 원본0041d7a0/CD00440a80으로 거의 올린다.
-constexpr std::uint32_t kDaisType=165,kRitualEvent=0x307; // 이 몸체가 처리하는 신전 타입과 후속 공유 사건이다.
+constexpr std::uint32_t kRitualEvent=0x307; // 의식 동작이 예약하는 후속 공유 사건이다.
 // 정렬되지 않은 현재 raw 필드를 지정 폭의 little endian 값으로 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
     std::uint32_t value=0;
@@ -53,9 +53,9 @@ TempleRitualPoint RawTempleRitual::Position(Sid sid) const {
 }
 // owner의 판본별BYTE를 그대로 읽는다.
 std::uint32_t RawTempleRitual::Owner(Sid sid) const { return pool_.Slot(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 34 : 32]; }
-// 실제 dais +0x80은 raw 상위 state/level 대신 현재 방향과 프레임 경계를 읽는다.
+// 선택된 실제 Dais +0x80은 TYPE165를 강제하지 않고 현재 TYPE 코드와 프레임을 읽는다. 상태 BYTE도 읽기의 거부 조건이 아니다.
 std::uint32_t RawTempleRitual::Count(Sid temple) const {
-    const auto raw=pool_.Slot(temple);if (raw[10]!=kDaisType) throw std::invalid_argument("신전 의식 dais count 타입 오류");
+    const auto raw=pool_.Slot(temple);if (raw[10]>=types_.size() || raw[10]>=frames_.size()) throw std::out_of_range("Dais Count 현재 TYPE/프레임 표 범위 오류");
     const auto frame=CurrentFrame(temple);const auto direction=RawPathAnimation::Direction(frames_[raw[10]],frame);
     if (direction==13) return 1;if (direction==12) return 2;if (direction==11) return 3;
     return frame<64 ? 1U : frame<=119 ? 2U : 3U;

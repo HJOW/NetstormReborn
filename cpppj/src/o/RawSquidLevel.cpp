@@ -20,9 +20,9 @@ RawSquidLevel::RawSquidLevel(SidPool& pool,std::span<const RiftTypeRecord> types
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || !assertion_)
         throw std::invalid_argument("Squid level 판본 TYPE/진단 누락");
 }
-// group10의 flags1|04000000==0이 양 판본 모두 불가능하므로 타입조회 후true다.
+// group10의 flags1|04000000==0은 양 판본 모두 불가능하다. 읽기에는 free/dead/contained 관문을 추가하지 않는다.
 bool RawSquidLevel::Has(Sid sid) const {
-    if (pool_.AllocatedBytes(sid)[10]>=types_.size()) throw std::out_of_range("Squid level 현재 TYPE 범위 오류");
+    if (pool_.Slot(sid)[10]>=types_.size()) throw std::out_of_range("Squid level 현재 TYPE 범위 오류");
     return true;
 }
 // base 가상80의 BYTE 상위비트만 읽는다.
