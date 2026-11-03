@@ -12,7 +12,7 @@ Three versions are developed in parallel, and **the one you can actually play to
 
 # Current development status
 
-**November 3, 2026, cpppj unit803 / runtime product803·11.01:** Connected current Gunanim frame-index diagnostics to the actual PostPop direction lookup. All4 focused tests pass (2 new);384 original inputs/768 observations and a repeat match. The518 valid direction cases remain; no new game runs. Checking38 continues. See the [handover](LEFT_JOBS.md) and [803 record](docs/exe/cpp-gun-frame-checking-20261103.md).
+**November 3, 2026, cpppj unit804 / runtime product803·11.01 retained:** Added the pure Squid display parent for current TYPE lookups and log/diagnostic continuation. Both new tests pass;696 original inputs/1392 observations and a repeat match. Actual display integration is next; checking38 remains. See the [handover](LEFT_JOBS.md) and [804 record](docs/exe/cpp-squid-display-parent-20261103.md).
 
 | Project | Execution and playability | Fidelity and remaining work |
 | --- | --- | --- |

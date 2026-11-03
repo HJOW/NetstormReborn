@@ -3227,3 +3227,8 @@ set_source_files_properties(FenceTypeParentTests.cpp PROPERTIES COMPILE_DEFINITI
 # Gunanim 현재 checking 접두와 기존518개 유효 방향을 같은 집중 대상에서 대조한다(803).
 target_sources(netstorm_file_tests PRIVATE GunAngleTests.cpp)
 set_property(SOURCE GunAngleTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_GUN_FRAME_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gun-frame-checking-x86.tsv\"")
+
+# 현재 TYPE/로그/진단/표시 부모를 독립 fixture로 검증하며 실제 표시 연결은 후속이다(804).
+target_sources(netstorm_tests PRIVATE SquidDisplayParentTests.cpp)
+target_sources(netstorm_file_tests PRIVATE SquidDisplayParentTests.cpp)
+set_source_files_properties(SquidDisplayParentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SQUID_DISPLAY_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-display-parent-x86.tsv\"")

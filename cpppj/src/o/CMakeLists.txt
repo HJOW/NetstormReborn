@@ -2,6 +2,7 @@
 # 클라이언트와 서버가 함께 쓰던 코드로 보인다. 이 폴더의 코드는 client/ 와 platform/ 을 포함하지 않는다.
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    RawSquidDisplayParent.cpp RawSquidDisplayParent.h #현재 TYPE 두 조회/진단 복귀 표시 부모를 독립 대조한다(804).
     RawFormLinked.cpp RawFormLinked.h #현재 Form 부모/전체 종속 체인의 원문 연결 진단이다(800).
     RawBurningVictim.cpp RawBurningVictim.h #연소 세 부모의 현재 SID 진단/재조회 앞단을 독립 대조한다(797).
     RawBridgeFallParent.cpp RawBridgeFallParent.h # 같은현재checking/TYPE의낙하예약진단부모다.

@@ -1216,6 +1216,8 @@ LAB_00472fc1:
 
 ## FUN_004ad500 @ 004ad500
 
+**804 순수 부모 완료·실제 연결 전:** 두 현재 TYPE 조회/로그/진단 복귀·고정 frame 전체를 독립 대조했다. 최종 원본696입력/1392회와 재관측1392회 일치·새2개 통과다. 실제 SquidDisplay/Renderer 연결 전이므로 잔여에서 빼지 않는다. 관측기 정정/주소 수명과 전체SEH 경계는 [804 기록](cpp-squid-display-parent-20261103.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawBombStatus.h, cpppj\src\o\SquidDisplay.cpp, cpppj\src\o\SelectionVtables.inc, cpppj\src\o\RawBombEffectTimer.h

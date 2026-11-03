@@ -1,0 +1,111 @@
+{
+  "unit": 804,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "순수 부모 완료·실제 연결 전·전체 목표 진행 중",
+  "runtimeProduct": 803,
+  "displayVersion": "11.01",
+  "exeSha256": "abb10fdf461a8018c407c9e8347af5fbe74f55fe61c3f0242be4b62c53eedc4f",
+  "actualDisplayConnected": false,
+  "gameRelinked": false,
+  "build": {
+    "targets": [
+      "netstorm_file_tests"
+    ],
+    "successfulBuilds": 1,
+    "failedBuilds": 0,
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "build-v1.log",
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 2,
+    "newTests": 2,
+    "failedChecks": 0,
+    "names": [
+      "SquidDisplayParent_NativeWholeParent696",
+      "SquidDisplayParent_SelectedDevicesAndStableBorrowedFields"
+    ],
+    "fullSuiteRun": false
+  },
+  "native": {
+    "finalFirst": {
+      "host": "HJOW-Athlon",
+      "entry": "004ad500",
+      "rows": 696,
+      "observations": 1392,
+      "normalReturns": 666,
+      "assertionStops": 30,
+      "diagnostics": 450,
+      "gameExecutions": 0,
+      "boundaries": [
+        "표시 부모 전체와 명시 TYPE 조회/설명 생성/로그/진단/표시 자식",
+        "같은 raw/TYPE 주소 수명이 유지되는 변경 입력",
+        "실제 SquidDisplay/Renderer 연결과 진단UI/전체SEH는 별도"
+      ]
+    },
+    "finalRepeat": {
+      "host": "HJOW-Athlon",
+      "entry": "004ad500",
+      "rows": 696,
+      "observations": 1392,
+      "normalReturns": 666,
+      "assertionStops": 30,
+      "diagnostics": 450,
+      "gameExecutions": 0,
+      "boundaries": [
+        "표시 부모 전체와 명시 TYPE 조회/설명 생성/로그/진단/표시 자식",
+        "같은 raw/TYPE 주소 수명이 유지되는 변경 입력",
+        "실제 SquidDisplay/Renderer 연결과 진단UI/전체SEH는 별도"
+      ]
+    },
+    "finalSuccessfulRuns": 2,
+    "finalCompleteObservations": 2784,
+    "initialDiscardedDeviceRuns": 2,
+    "initialDiscardedCompleteObservations": 2784,
+    "totalCompleteObservations": 5568,
+    "failedAttempts": 2,
+    "partialFailedAttemptsExcluded": true,
+    "initialAbiCorrection": "49adc0 장치는 스택을 정리하지 않음·caller가 설명2+로그1 인자12BYTE 정리",
+    "initialDeviceCorrection": "mutation0은 변경 없음·잘못 변경하던 초기 두 출력은 device-v1 보관·C++ 검사 전 수정 후 새2회"
+  },
+  "checking": {
+    "before": 38,
+    "after": 38,
+    "completed": [],
+    "remainingBreakdown": {
+      "parent": 29,
+      "partial": 6,
+      "multiplayer": 3
+    },
+    "reason": "004ad500 실제 표시 연결 전이므로 잔여 유지"
+  },
+  "protection": {
+    "beforeCount": 2733,
+    "currentCount": 2734,
+    "fixtureCount": 914,
+    "allUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/squid-display-parent-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "전체 부모/명시 TYPE·설명·로그·진단·표시 자식",
+    "같은 raw/TYPE 주소·수명이 유지되어야 함·reset/해제는 계약 밖",
+    "실제 SquidDisplay/Renderer 연결/진단UI/전체SEH/32비트ABI 별도·제품803 유지"
+  ],
+  "next": "이 순수 부모의 실제 SquidDisplay/같은 checking/현재TYPE·shape와 기존 표시 자식 연결"
+}
