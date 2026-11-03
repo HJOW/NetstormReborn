@@ -73,6 +73,7 @@ struct PathScene {
     Sid parent;
     // process: same pool/hash/spot/Kernel 위에서 원본 이동 프로세스를 실행한다. 별도 좌표/공간 복사본을 만들지 않는다 (RawPathProcess).
     RawPathProcess* process{};
+    std::function<void(Sid)> afterArrival; // 도착 가상이 같은 실제 Host 제거를 선택하는 검사 입력이다.
     std::function<void(Sid)> afterHalt; // 새 검사에서 같은 부모 가상이 실제 Host 삭제를 선택하는 외부 입력이다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> haltDiagnostic; // 경로 소멸 뒤에도 살아 있는 검사 장치다.
     // pid: 커널의 프로세스 등록 번호. 입력 구성 또는 실행 결과 대조에 사용한다.
@@ -127,10 +128,10 @@ struct PathScene {
         };
         hooks.halt=[this](Sid parent) { Event("halt,"+std::to_string(haltCode));if (haltCode==11) willDelete=true;if (afterHalt) afterHalt(parent);return haltCode; };
         hooks.assertion=[this](auto expression,auto file,auto line) { if (!haltDiagnostic) throw std::logic_error("경로 검사 진단 장치 미연결");haltDiagnostic(expression,file,line); };
-        hooks.arrival=[this](Sid,std::uint32_t first,std::uint32_t second) {
+        hooks.arrival=[this](Sid parentSid,std::uint32_t first,std::uint32_t second) {
             Event("arrival,"+std::to_string(first)+','+std::to_string(second)+','+std::to_string(returnCode));
             if (returnCode!=1002) willDelete=true;
-            if (returnCode==1001) host.Kill(*process,0);return returnCode;
+            if (returnCode==1001) host.Kill(*process,0);if (afterArrival) afterArrival(parentSid);return returnCode;
         };
         hooks.soundId=[](Sid) { return 321U; };
         hooks.stepSound=[this](Sid,float x,float y,std::uint32_t sound) { Event("sound,"+std::to_string(std::bit_cast<std::uint32_t>(x))+','+std::to_string(std::bit_cast<std::uint32_t>(y))+','+std::to_string(sound)); };
@@ -368,5 +369,29 @@ TEST_CASE(PathHaltChecking_ActualClientHostDeletionAndCurrentDiagnostic) {
         PathScene scene(OriginalEdition::Patch1078,false);auto& checking=client.GameplayGlobals()->AiDebug().Checking();checking=std::bit_cast<std::int32_t>(initial);scene.state.checking.Bind(checking);scene.haltCode=0;std::uint32_t diagnostics{};
         scene.haltDiagnostic=[&](auto expression,auto file,auto line) { CHECK(expression=="result == haltALREADY_DEAD" && file=="\\Ns\\O\\Pathprocess.cpp" && line==0x2d5);CHECK(!scene.kernel.Get(scene.pid) && scene.deleted);++diagnostics;checking=0; };
         scene.afterHalt=[&](Sid parent) { CHECK(parent==scene.parent);scene.host.Kill(*scene.process,0); };scene.process->RunFrame();CHECK(!scene.kernel.Get(scene.pid) && scene.deleted && diagnostics==(initial ? 1U : 0U) && !checking); // 삭제된 process 포인터를 이후 역참조하지 않는다.
+    }
+}
+
+// 실제 Client DWORD와 같은 Host의 삭제 뒤 현재 진단/겹침 정리를 확인한다. 실제 포획은 실행하지 않는다.
+TEST_CASE(PathArrivalChecking_ActualClientHostDeletionAndBlockedClear) {
+    netstorm::client::ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;netstorm::client::Client client(std::move(options));
+    for (const auto variant:{0U,1U,2U,3U}) { // 정상/비정상 반환과 살아남은/자기 삭제 경로를 구별한다.
+        PathScene scene(OriginalEdition::Patch1078,false);auto& checking=client.GameplayGlobals()->AiDebug().Checking();checking=variant ? std::bit_cast<std::int32_t>(0x80000000U) : 0;scene.state.checking.Bind(checking);scene.returnCode=variant<2 ? 1000U : 999U;std::vector<std::uint32_t> diagnostics;
+        const auto candidate=scene.pool.Allocate(2);auto raw=scene.pool.AllocatedBytes(candidate);raw[10]=1;raw[11]=0;Put(raw,4,0,2);Put(raw,14,std::bit_cast<std::uint32_t>(10.0F));Put(raw,18,std::bit_cast<std::uint32_t>(20.0F));scene.types[1].footX=scene.types[1].footY=1;scene.types[1].flags2=0x200;scene.hash.Cell(0,10,20)=candidate.value;scene.spots[20*256+10]|=8;
+        scene.haltDiagnostic=[&](auto expression,auto file,auto line) { CHECK(file=="\\Ns\\O\\Pathprocess.cpp");diagnostics.push_back(line);if (line==0x28d) { CHECK(expression=="returnCode == pathKILL || returnCode == pathALREADY_DEAD || returnCode == pathLINGER");checking=0; }else { CHECK(line==0x290 && expression=="returnCode == pathALREADY_DEAD");CHECK(!scene.kernel.Get(scene.pid) && scene.deleted);checking=0; } };
+        if (variant<3) scene.afterArrival=[&](Sid parent) { CHECK(parent==scene.parent);scene.host.Kill(*scene.process,0); };
+        scene.process->Arrive();CHECK(!scene.kernel.Get(scene.pid) && scene.deleted && !checking);CHECK(std::count(scene.events.begin(),scene.events.end(),"clearBlocked")==1);
+        CHECK(diagnostics==(variant==0 ? std::vector<std::uint32_t>{} : variant==1 ? std::vector<std::uint32_t>{0x290} : std::vector<std::uint32_t>{0x28d})); // 삭제된 경로 포인터는 다시 읽지 않는다.
+    }
+}
+// 예약 Form0도 항상참 robust를 지나 가상 도착하며 부모 진단의 정상 복귀를 보존한다.
+TEST_CASE(PathArrivalChecking_ActualHostZeroFormAndParentDiagnosticResume) {
+    for (const auto variant:{0U,1U,2U}) { // 처음 부모 상태/가상 Halt 뒤 상태를 각각 현재 진단으로 복원한다.
+        PathScene scene(OriginalEdition::Patch1078,false);std::uint32_t checking{0xffffffffU};scene.state.checking.Bind(checking);std::uint32_t arrivals{},diagnostics{};const auto image=scene.process->Runtime().Bytes();Put({const_cast<std::uint8_t*>(image.data()),image.size()},4,0);
+        const auto parentBytes=scene.pool.Slot(scene.parent);std::span<std::uint8_t> parentRaw{const_cast<std::uint8_t*>(parentBytes.data()),parentBytes.size()}; // free입력 진단도 같은 물리 슬롯에서 복구한다.
+        if (variant==1) parentRaw[11]|=3;
+        if (variant==2) scene.afterHalt=[&](Sid) { parentRaw[11]|=3; };
+        scene.haltDiagnostic=[&](auto,auto file,auto line) { CHECK(file=="\\Ns\\O\\Pathprocess.cpp" && line==(variant==1 ? 0x25cU : 0x286U));++diagnostics;parentRaw[11]&=static_cast<std::uint8_t>(~3U); };
+        scene.afterArrival=[&](Sid parent) { CHECK(parent==scene.parent);++arrivals; };scene.process->Arrive();CHECK(scene.kernel.Get(scene.pid)==scene.process && !scene.deleted && arrivals==1 && diagnostics==(variant ? 1U : 0U));CHECK(!scene.process->Runtime().Finished() && !scene.process->Runtime().DeathWatchToken());
     }
 }

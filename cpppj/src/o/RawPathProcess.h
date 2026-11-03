@@ -83,7 +83,7 @@ private:
     bool GroundStop(RawPathPoint point);
     // spot8의 실제 일반 finder로 막힌 부류를 확인한다.
     bool Blocked(RawPathPoint point) const;
-    // callback 뒤에도 살아 있는 같은 Kernel/form/부모인지 확인한다.
+    // 패치는 현재 두 SID의 범위를 진단한 뒤 항상참이며 CD는 기존 호스트 검사를 유지한다.
     bool Robust() const;
     // 원본 권한 또는 로컬 form 번호 범위다.
     bool MayMutate() const;

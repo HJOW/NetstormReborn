@@ -573,3 +573,6 @@ target_sources(netstorm PRIVATE RawAltarReleaseParent.h RawAltarReleaseParent.cp
 
 # 실제 공통 Halt의 현재 진단과 자기 삭제 뒤 복귀 부모를 공유한다.
 target_sources(netstorm PRIVATE RawPathHaltParent.h RawPathHaltParent.cpp)
+
+# 공통 도착과 항상참 Baseprocess SID 진단의 실제 부모를 공유한다.
+target_sources(netstorm PRIVATE RawPathArrivalParent.h RawPathArrivalParent.cpp)

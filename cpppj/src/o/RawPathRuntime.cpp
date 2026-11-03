@@ -169,6 +169,10 @@ bool RawPathRuntime::Finished() const { return Read(layout_.finished)!=0; }
 void RawPathRuntime::ResetCurrent() { Write(layout_.current,0); }
 // 도착1002는 finished를 다시 0으로 만든다.
 void RawPathRuntime::SetFinished(bool value) { Write(layout_.finished,value ? 1 : 0); }
+// 원문 포인터를 호스트에서 역참조하지 않고 같은 활성/비활성 의미를 읽는다.
+std::uint32_t RawPathRuntime::DeathWatchToken() const { return static_cast<std::uint32_t>(Read(layout_.deadFlag)); }
+// 실제 원문 필드 폭만 기록하며 다른 경로/대상/명령 꼬리는 보존한다.
+void RawPathRuntime::SetDeathWatchToken(std::uint32_t token) { Write(layout_.deadFlag,token); }
 // 현재 단계는 nVert까지 허용하며 각도/finished는 원본 저장 폭으로 복사한다.
 void RawPathRuntime::RestoreStep(std::int32_t current,float angle,bool finished) {
     if (current<0 || current>Count() || !std::isfinite(angle)) throw std::out_of_range("경로 상태 이관");

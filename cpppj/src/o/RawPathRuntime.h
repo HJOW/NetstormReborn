@@ -61,6 +61,10 @@ public:
     // Init/도착의 실제 필드 쓰기다. ResetCurrent는 finished/angle을 초기화하지 않는다.
     void ResetCurrent();
     void SetFinished(bool value);
+    // 현재 deathWatch DWORD의 관찰 토큰이다. 원문32비트 지역 주소 자체와 구별한다.
+    std::uint32_t DeathWatchToken() const;
+    // 같은 필드에 비주소 토큰1/해제0을 쓰며 실제 삭제 통지는 shared watch가 담당한다.
+    void SetDeathWatchToken(std::uint32_t token);
     // 원본 raw 상태를 독립 입력/수신 어댑터에서 이관한다. 이동 계산이나 경로 탐색 결과를 새로 만들지 않는다.
     void RestoreStep(std::int32_t current,float angle,bool finished=false);
     // 경로의 현재 방향·시각·좌표를 실제 애니메이션/건설 시각 조정에 제공한다.

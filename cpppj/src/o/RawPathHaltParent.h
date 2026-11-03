@@ -18,6 +18,7 @@ struct PathHaltParentHooks {
     std::function<bool()> hasTargets; // 현재 TargetB 또는 TargetA이며 조회 순서를 유지한다.
     std::function<void(Sid)> retarget; // 기존 내용물/후보/새 이동 몸체이며 자신을 삭제할 수 있다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 삭제 후에도 장치 수명이 유지되며 정상 복귀하면true다.
+    std::function<void()> armWatch,clearWatch; // raw 이미지의 비주소 관찰 토큰 경계이며 독립 수명 관찰만 쓰는 caller는 생략한다.
 };
 // checking은 caller 소멸 뒤에도 유효한 현재 DWORD 뷰를 값으로 빌린다.
 bool RunPathHaltParent(RawCheckingFlag checking,const PathHaltParentHooks& hooks);

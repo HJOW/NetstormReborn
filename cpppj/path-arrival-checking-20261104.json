@@ -1,0 +1,202 @@
+{
+  "unit": 833,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "25f4ed67 / 20261104-14 CP",
+  "exeSha256": "80458f9208781728bd5185f7621bda56456eb5377e325da5e6c0e4c9ddf6edb9",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "Windows x86 CPU /0048b340/실제0041be80·CRT절삭/TYPE",
+    "rows": 860,
+    "diagnosticRows": 462,
+    "diagnosticCallsByLine": {
+      "653": 156,
+      "656": 88,
+      "604": 132,
+      "108": 180,
+      "105": 344,
+      "646": 124,
+      "649": 16
+    },
+    "fixtureSha256": "c7053cf099c188faa2abe49bdd8d5eccd6e45f69092d484673906d199ee218b6",
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "probeSha256": "78d6d537dc1d3757adb3cacfd962fb0a24724d82754c1a3fab8d15d657e6283c",
+    "probeSourceSha256": "cc8c81498abe9fb4afe47c6854b457ccfc04b0634b678d9912bdae408372c85f",
+    "boundary": "Step·부모 공간/Halt·가상 도착/제거·후보 iterator·정리는 명시 외부 경계;실제 Baseprocess 진단/항상1·CRT·부류/분기는 원문실행;게임/GUI/통신 없음;watch주소는 비영 의미만 비교"
+  },
+  "nativeReobservedRows": 860,
+  "diagnosticRows": 462,
+  "isRobustFalseDiagnostics": {
+    "lines": [
+      613,
+      644,
+      671,
+      676
+    ],
+    "calls": 0,
+    "proof": "실제0041be80은 현재 Form/attach SID 범위를 진단한 뒤 mov eax,1/ret4. 부모의 다섯 실제 CALL과 현재 checking에 따른 진단 부작용은 유지."
+  },
+  "tests": [
+    {
+      "filter": "PathArrivalChecking_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-833/test-PathArrivalChecking-final.log",
+      "sha256": "479f15e226dcbba962ff4fedd030183bae608943da3047e8b6465312905b6a1d"
+    },
+    {
+      "filter": "PathHaltChecking_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-833/test-PathHaltChecking-regression.log",
+      "sha256": "4a2e6c29679a4a33042462e283f24f2fdf71eaa2c04476e9e943daa4496eae8a"
+    },
+    {
+      "filter": "PathRetarget_",
+      "cases": 2,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-833/test-PathRetarget-regression.log",
+      "sha256": "aa44dac4b8a7a7fd4be1a4f117b2a20bd8a9d5fa3da3bdf3c48b3d5916ada74e"
+    },
+    {
+      "filter": "rawPathProcess_native_frame",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-833/test-PathFrame-regression.log",
+      "sha256": "b44405f95f237a8cfe7b39a8ee2ade3d287bfd9a8bf44fdc7b362af9c392ffad"
+    },
+    {
+      "filter": "rawPathProcess_native_arrival",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-833/test-PathArrival-regression.log",
+      "sha256": "8e57d70728629e54792147ee3eab1bca6ac4c71fd309dc59d0aefe3d2225eb8f"
+    },
+    {
+      "filter": "DamageableBurningChecking_ActualClientSessionRecoveryAndLifetime",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-833/test-ActualSession-regression.log",
+      "sha256": "99dae71af3f6f45fc30a625be02dd1cd881748c019d305bd6a1e96d90c44e9b0"
+    }
+  ],
+  "focusedCases": 12,
+  "cppComparedExistingRows": {
+    "halt": 2288,
+    "retarget": 4801,
+    "frame": 120,
+    "arrival": 24
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-833/build-first.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "00530fffa33eca47a19e6601aa113ac35778f92742871cf90f314be8cb6f9a6e"
+    },
+    {
+      "log": "extracted/cpp-resume-833/build-test-fix.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "dda4011398a5e9955299da9808981548bf1be1c3bc28418ea7b7cab2ffde779a"
+    }
+  ],
+  "probeBuild": {
+    "log": "extracted/cpp-resume-833/probe-build-first.log",
+    "sha256": "966f392222ccad54db0af56d1790127415a54a3b81f1c5a7b214370bf85fa1ca",
+    "compiledProbeExecutedSuccessfully": true
+  },
+  "firstFailure": {
+    "kind": "새 실제 Host 검사 조립",
+    "log": "extracted/cpp-resume-833/test-PathArrivalChecking-first.log",
+    "sha256": "9382bd9a32f2238cec54ffa17d625be134349f3b86dcd5c9ab96357a50c8d459",
+    "cases": 4,
+    "failedChecks": 1,
+    "reason": "검사가 부모 free 비트를 세운 뒤 AllocatedBytes로 복구하려 하여 할당되지 않은 SID 쓰기 보호 예외. 같은 물리 Slot span으로 검사 입력만 복구. 제품/fixture/기대 결과는 변경하지 않음."
+  },
+  "checking": {
+    "remaining": 15,
+    "parents": 9,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 33,
+    "completedPartial": 3,
+    "closedThisUnit": [
+      "0048b340"
+    ],
+    "remainingPartial": [
+      "0048fb30",
+      "004b54e0",
+      "004b8cb0"
+    ],
+    "mpDeferredWithinParents": [
+      "004a7510"
+    ],
+    "mpDeferredWithinPartial": [
+      "004b54e0",
+      "004b8cb0"
+    ]
+  },
+  "actualConsumers": [
+    "패치 RawPathProcess.Arrive -> 현재 checking/진단을 쓰는 RunPathArrivalParent; 실제 Step/Pop/Unpop/Halt/Target/Host 제거와 현재 부모 metadata 정리를 유지",
+    "같은 Client checking/실제 Kernel·Host의 일반134 도착 자기 삭제와 잘못된 반환/진단 정상 복귀/삭제 뒤 blocked 정리",
+    "실제 Form0 raw 입력과 부모 dead/free 진단 복귀 뒤 가상 도착/linger; 물리 풀 쓰기 보호는 변경하지 않음",
+    "832의 실제 Session checking/서비스 연결을 재사용. Session 회복 수명 회귀는 새 Path 진단의 실제 Session 발생 재현이 아님"
+  ],
+  "boundaries": [
+    "원문 Step/가상 공간·Halt/도착/제거 요청·iterator 후보·정리·진단은 명시 외부 경계. 실제0041be80·CRT 절삭·TYPE/getGenus와 부모 제어 흐름은 CPU 실행.",
+    "C++는 실제 PathArrivalBlocked/RawSquidFinder를 사용하지만 내부 관측 API가 없어 원문 F/N 이벤트와 호출수 두 칸은 사전에 비교 제외. 판정 결과·현재 필드·나머지 이벤트를 대조.",
+    "raw watch 토큰1/0과 별도 shared 수명 관찰을 사용하며 원문32비트 지역stack 주소 자체/중간 이미지 주소값은 동일성 범위 밖.",
+    "SID 범위는 고정 물리 풀의 유효 범위이며 손상32비트 포인터 wrap alias/Step 내부 임의 파괴는 새 검증 범위 밖.",
+    "CD0047e220/0048f710은 별도 흐름/진단이므로 기존 CD 본문 유지·후속 정밀 복원 대상으로 기록."
+  ],
+  "protection": {
+    "unchangedPreviousFiles": 2757,
+    "afterFiles": 2758,
+    "fixtureFiles": 938,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "newFixtures": 1,
+    "manifest": "extracted/cpp-resume-833/protected-after.json",
+    "sha256": "2a97210dda10f5807635e1592cb76ec9f8d996c360a6168a31d45182816cd6ce"
+  },
+  "excluded": [
+    "실제 게임/GUI·자연 플레이·실제 포획/희생/특정 적 공격/승리·사용자 확인",
+    "신규MP/실제 통신/공중3종 전용 검사",
+    "물리/PCM 재시도·전체71/CTest/34미션/ZIP"
+  ],
+  "next": "834 공통 Squid Unpop004afe50의 현재 checking/진단 정상 복귀·부분 효과/실제 공간 소비자. checking15/객체 메뉴·Edit·수명 및1~8차 전체 목표 미완료.",
+  "sources": {
+    "cpppj/src/o/RawPathArrivalParent.h": "9a83270bcb163aed66304ef7540db1d9b07fe3d7adc1d9a60bcd54c14efa92cc",
+    "cpppj/src/o/RawPathArrivalParent.cpp": "09dcafce99d745bf666fbcdd86fd690cfe97fc95a865bd434f7d85924ec96de6",
+    "cpppj/src/o/RawPathHaltParent.h": "06c7676e0d026655f06e274d802ba603df821f7f2f5312560091e57c56abf9dc",
+    "cpppj/src/o/RawPathHaltParent.cpp": "0db2de4f9ef82b3267e924d1c9b5a1b72b838e697a953064a45a454941356481",
+    "cpppj/src/o/RawPathProcess.h": "9b1b78b41a367d817bdec54e1660409d4f8704b94b84f02e42b288b0d511da20",
+    "cpppj/src/o/RawPathProcess.cpp": "02b94e3de4ac99656050ce4b833586f9c66d638ea62a129a4a22db16d56034d5",
+    "cpppj/src/o/RawPathRuntime.h": "7ffff13b1b2d88932e5cf944d6a8e663a2f4b222a6cbf1f4484a5ea980b6a94d",
+    "cpppj/src/o/RawPathRuntime.cpp": "4ddd43c4e8cb1a70e4f50306c09f2dc4c94094795976c4ff169f1aaf4ca3aec2",
+    "cpppj/src/o/RawPathRetarget.h": "ef520e40fc8d68b700929a8f909d2db62edb02c33a24a770bd729e7e1bdac7f0",
+    "cpppj/src/o/RawPathRetarget.cpp": "0a8fd714c2415e14ffd2e9d44726298a12eefdb2cbac9dd3f415adefb69c9dde",
+    "cpppj/src/o/RawSquidFinder.cpp": "e799426b89f14230730824c52713580012bb881fd4a38856f1b38bfb495976d9",
+    "cpppj/src/o/CMakeLists.txt": "a55f2751b040905cfa65145c69c7d684739ea86f21f8b8fb8f13ccbc878ba667",
+    "cpppj/tests/CMakeLists.txt": "1d62672e03db59ab15200150ce3d63707307ab9940dcd86434cf4aa4c0d7b18f",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "520ce776c84b7b8a8eae72b1734653d9388ea6b2337de3dcdaf8dbc7beaf23c2",
+    "cpppj/tests/PathArrivalCheckingTests.cpp": "94745aa66538217f4c94009507c75ef748c7bc14223ecc812170e69b0567e35e",
+    "cpppj/tests/PathHaltCheckingTests.cpp": "cdc60e4de3db691a7a374456b02e974bad236e59d879b0601f565bb0b026a473",
+    "tools/native_path_arrival_probe.cpp": "cc8c81498abe9fb4afe47c6854b457ccfc04b0634b678d9912bdae408372c85f",
+    "tools/observe_path_arrival_hardware.py": "e79059edc1a552a4c40679c05d60e87945ec0992918ca87eeb4d98c889172bbb",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0"
+  }
+}

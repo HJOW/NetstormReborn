@@ -1,5 +1,6 @@
 // 이동/도착은 실제 raw 공간 효과를 호출하고, 자기 삭제 뒤에는 shared watch만 읽는다.
 #include "o/RawPathProcess.h"
+#include "o/RawPathArrivalParent.h" // 원문 도착/범위 진단과 수명 경계를 공유한다.
 #include "o/RawPathHaltParent.h" // 패치의 현재 진단 복귀를 실제 수명 감시와 연결한다.
 #include "o/RawPathSearch.h"
 #include "o/RawProcessRemoval.h"
@@ -86,8 +87,12 @@ void RawPathProcess::Prepare(float speedOverride,float speed,float turningSpeed)
 }
 // 클라이언트 범위는 현재 풀 판본의 실제 serverFirst다.
 bool RawPathProcess::MayMutate() const { return state_.clock.boss || (Form().value>4 && Form().value<pool_.Layout().serverFirst); }
-// 원본 isRobust(1)의 핵심은 현재 form/부모가 살아 있고 같은 프로세스가 등록된 경우다.
+// 패치는 두 현재 SID의 범위 진단 후 항상참이며 CD의 기존 호스트 검사는 유지한다.
 bool RawPathProcess::Robust() const {
+    if (pool_.Edition()==OriginalEdition::Patch1078) {
+        PathBaseRobustHooks effects;effects.form=[this] { return Read(runtime_.Bytes(),4); };effects.parent=[this] { return Read(runtime_.Bytes(),8); };effects.capacity=[this] { return static_cast<std::uint32_t>(pool_.Capacity()); };effects.assertion=hooks_.assertion;
+        return RunPathBaseRobust(effects);
+    }
     return Host() && Host()->IsRegistered(Pid(),this) && Form().value!=0 && (pool_.Slot(Form())[11]&3)==0 && Parent().value!=0 && (pool_.Slot(Parent())[11]&3)==0;
 }
 // callback 자체가 this를 지우면 돌아온 코드가 객체 필드를 읽지 않는다.
@@ -98,6 +103,7 @@ bool RawPathProcess::Halt() {
         effects.forcedStop=[this](Sid parent) { return (pool_.Slot(parent)[40]&0x20U)!=0; };effects.mayKill=[this] { return MayMutate(); };effects.kill=[this] { Host()->Kill(*this,0); };
         effects.boss=[this] { return state_.clock.boss; };effects.carrier=[this](Sid parent) { return (types_[pool_.Slot(parent)[10]].flags2&0x30000U)!=0; };effects.hasTargets=[this] { return runtime_.TargetB()!=0 || runtime_.TargetA()!=0; };
         effects.retarget=[this](Sid parent) { if (!hooks_.retarget) throw std::logic_error("실제 운반 재탐색 몸체 미복원 경계");hooks_.retarget(runtime_,parent); };
+        effects.armWatch=[this] { runtime_.SetDeathWatchToken(1); };effects.clearWatch=[this] { runtime_.SetDeathWatchToken(0); }; // 원문 지역 watch의 활성 의미만 raw 필드에도 남긴다.
         return RunPathHaltParent(state_.checking,effects);
     }
     const auto watch=alive_;const auto parent=Parent();auto result=hooks_.halt(parent);
@@ -127,13 +133,7 @@ bool RawPathProcess::GroundStop(RawPathPoint point) {
     return false;
 }
 // 추가 shape finder는 해당 정수 칸의 실제 일반 hash를 읽는다.
-bool RawPathProcess::Blocked(RawPathPoint point) const {
-    const int x=Cell(point.x,true),y=Cell(point.y,true);if ((spots_[y*256+x]&8)==0) return false;
-    RawSquidFinder finder(pool_,hash_,types_);auto candidate=finder.Begin({Cell(point.x,false),Cell(point.y,false),Cell(point.x,false),Cell(point.y,false)});
-    // 원본은 첫 일치가 나오면 끝낸다.
-    while (candidate.value!=0) { if ((types_[pool_.Slot(candidate)[10]].flags2&state_.blockingGenus)!=0) return true;candidate=finder.Next(); }
-    return false;
-}
+bool RawPathProcess::Blocked(RawPathPoint point) const { return PathArrivalBlocked(pool_,hash_,types_,spots_,state_.blockingGenus,point); }
 // type54은 사망/HP 이동 불가가 아니라 원본 Regular0x5105 존재를 먼저 검사한다.
 void RawPathProcess::RunFrame() {
     if (!Host()) throw std::logic_error("미부착 경로 RunFrame");
@@ -198,6 +198,20 @@ void RawPathProcess::RunFrame() {
 }
 // 도착이 부모·Form·프로세스 자신을 지워도 after-call은 watch와 보존한 외부 효과만 사용한다.
 void RawPathProcess::Arrive() {
+    if (pool_.Edition()==OriginalEdition::Patch1078) {
+        const auto watch=alive_; // 실제 객체 소멸 뒤에도 이 관찰과 복사한 장치는 유효하다.
+        if (priest_ || worm_ || dude_) { RawPathAnimation animation(pool_,frames_,{hooks_.unpop,hooks_.repop});animation.Stop(Parent()); }if (!*watch) return;
+        PathArrivalParentHooks effects;effects.alive=[watch] { return *watch; };effects.assertion=hooks_.assertion;
+        effects.parent=[this] { const auto value=Read(runtime_.Bytes(),8);if (value>0xffffU) throw std::out_of_range("도착 현재 부모의 물리 SID 폭");return Sid{static_cast<std::uint16_t>(value)}; };
+        effects.validAlive=[this](Sid parent) { return parent.value>0 && parent.value<pool_.Capacity() && !(pool_.Slot(parent)[11]&3U); };
+        effects.step=[this,current=effects.parent] { const auto parent=current();return runtime_.Step(state_.clock.Now(),Position(parent),state_.observation,[this,parent] { const auto position=Position(parent);hooks_.stepSound(parent,position.x,position.y,hooks_.soundId(parent)); },hooks_.observationStamp ? hooks_.observationStamp() : 0).position; };
+        effects.unpop=[call=hooks_.unpop](Sid parent) { call(parent,0); };effects.pop=[call=hooks_.pop](Sid parent,RawPathPoint point) { call(parent,point,0); };
+        effects.robust=[this] { static_cast<void>(Robust()); };effects.blocked=[this](RawPathPoint point) { return Blocked(point); };effects.halt=[this] { return Halt(); };effects.finished=[this](bool finished) { runtime_.SetFinished(finished); };
+        effects.deadOrFree=[this](Sid parent) { return (pool_.Slot(parent)[11]&3U)!=0; };effects.watchPresent=[this] { return runtime_.DeathWatchToken()!=0; };effects.armWatch=[this] { runtime_.SetDeathWatchToken(1); };effects.clearWatch=[this] { runtime_.SetDeathWatchToken(0); };
+        effects.arrival=[this,call=hooks_.arrival](Sid parent) { const auto first=runtime_.TargetA(),second=runtime_.TargetB();return call(parent,first,second); };effects.kill=[this] { Host()->Kill(*this,0); };
+        effects.clear=[clear=hooks_.clearBlocked,pool=&pool_](Sid parent) { const auto raw=pool->Slot(parent);clear(parent,{std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))},raw[10],raw[34]); }; // 같은 Pool/장치 복사본만 삭제 뒤 사용한다.
+        RunPathArrivalParent(state_.checking,effects);return;
+    }
     const auto watch=alive_;const auto parent=Parent();
     if (priest_ || worm_ || dude_) { RawPathAnimation animation(pool_,frames_,{hooks_.unpop,hooks_.repop});animation.Stop(parent); }
     const auto sample=runtime_.Step(state_.clock.Now(),Position(parent),state_.observation,[this,parent] {

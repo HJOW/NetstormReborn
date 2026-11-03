@@ -1,0 +1,21 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "backend": "Windows x86 CPU /0048b340/실제0041be80·CRT절삭/TYPE",
+  "rows": 860,
+  "diagnosticRows": 462,
+  "diagnosticCallsByLine": {
+    "653": 156,
+    "656": 88,
+    "604": 132,
+    "108": 180,
+    "105": 344,
+    "646": 124,
+    "649": 16
+  },
+  "fixtureSha256": "c7053cf099c188faa2abe49bdd8d5eccd6e45f69092d484673906d199ee218b6",
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "probeSha256": "78d6d537dc1d3757adb3cacfd962fb0a24724d82754c1a3fab8d15d657e6283c",
+  "probeSourceSha256": "cc8c81498abe9fb4afe47c6854b457ccfc04b0634b678d9912bdae408372c85f",
+  "boundary": "Step·부모 공간/Halt·가상 도착/제거·후보 iterator·정리는 명시 외부 경계;실제 Baseprocess 진단/항상1·CRT·부류/분기는 원문실행;게임/GUI/통신 없음;watch주소는 비영 의미만 비교"
+}

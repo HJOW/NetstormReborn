@@ -3355,3 +3355,9 @@ target_sources(netstorm_tests PRIVATE PathHaltCheckingTests.cpp)
 target_sources(netstorm_file_tests PRIVATE PathHaltCheckingTests.cpp RawPathRuntimeTests.cpp PathRetargetTests.cpp)
 set_source_files_properties(PathHaltCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PATH_HALT_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/path-halt-parent-hardware-x86.tsv\"")
+
+# 공통 도착의 독립CPU 관측과 실제 Host 수명을 함께 빌드한다.
+target_sources(netstorm_tests PRIVATE PathArrivalCheckingTests.cpp)
+target_sources(netstorm_file_tests PRIVATE PathArrivalCheckingTests.cpp)
+set_source_files_properties(PathArrivalCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_PATH_ARRIVAL_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/path-arrival-parent-hardware-x86.tsv\"")

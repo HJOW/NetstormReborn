@@ -1131,6 +1131,8 @@ LAB_00472fc1:
 
 ## FUN_0048b340 @ 0048b340
 
+**833 완료:**현재 checking/원문0041be80의 항상1·SID 범위 진단과 같은 실제 도착/공간·Host 자기 삭제 뒤 현재 metadata 정리를 연결했다. CPU860행/진단462·재관측·집중12개(새4) 최종 실패0이다. isRobust false 네 진단은 미도달/CPU0회며 내부 finder F/N trace는 사전 대조 제외·실제 판정 결과는 대조한다. 최초 검사 조립 실패1은 물리 슬롯 입력만 교정했다. checking15=부모9/부분3/MP3·완료부모33이다. 아래는779 당시 서술이며 [833 기록](cpp-path-arrival-checking-20261104.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawBalloonFrame.h, cpppj\src\o\RawBulfFrame.h, cpppj\src\o\RawPathProcess.h, cpppj\src\o\RawWalkerFrame.h
