@@ -4,6 +4,7 @@
 #include "o/SquidProcess.h"
 #include "o/Player.h"
 #include <array>
+#include <string_view>
 
 namespace netstorm::o {
 // 원본 new(0x38)의 미초기화 padding도 독립 대조에서 보존하도록 raw 필드를 소유한다.
@@ -67,6 +68,7 @@ struct GunProcessHooks {
     std::function<bool(const std::array<std::uint32_t,8>&,Sid)> shoot; // 0046b070/CD00434c30의 각도 판정·실제 투사체 생성이다.
     std::function<double(Sid)> firingInterval; // 현재 타입 +0x4c float 발사 간격을 읽는다.
     std::function<void(GunProcessFields&,Sid)> attach; // 실제 inner Attach(processType,parent,0,flags0)와 Kernel/전송이다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 통지의 원문 식/파일/행 진단이며 복귀하면 현재 단계/표적 조건으로 계속한다.
 };
 // 원본 GunProcess 몸체를 raw 필드와 같은 풀의 자산 상태로 실행한다.
 class RawGunProcess {

@@ -1,0 +1,109 @@
+{
+  "unit": 808,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "단위 완료·사용자 요청으로 목표 일시중지",
+  "pauseRequested": true,
+  "goalComplete": false,
+  "runtimeProduct": 808,
+  "displayVersion": "11.01",
+  "exeSha256": "a9ba707bd2be55477333e59d7f3c11ad9ec2adf9d68592f19334fe92527e625f",
+  "build": {
+    "successfulInvocations": 1,
+    "failedInvocations": 0,
+    "log": "build-v1.log",
+    "targets": [
+      "NetstormCpp",
+      "netstorm_file_tests"
+    ],
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "fullAllRepeated": false
+  },
+  "tests": {
+    "total": 3,
+    "newTests": 3,
+    "failedChecks": 0,
+    "names": [
+      "GunNotify_NativeCheckingAndDiagnosticReturn904",
+      "GunNotify_PreviousBothEditions704",
+      "GunNotify_SelectedDiagnosticAndCurrentOwner"
+    ],
+    "previousNotifyRows": 704,
+    "scope": "Notify/종속 정리만·Frame/Fire/발사 진입은 오류로 차단",
+    "fullSuiteRun": false
+  },
+  "native": {
+    "inputs": 904,
+    "firstObservations": 1808,
+    "repeatObservations": 1808,
+    "totalObservations": 3616,
+    "identical": true,
+    "normalInputReturns": 756,
+    "assertionInputStops": 148,
+    "diagnosticInputs": 296,
+    "fixtureSha256": "e7a26f78b6f2994cb373051b7fa0e3ebf73a5d636619bd1f6afaeb010c9c0463",
+    "entries": [
+      "0046a340",
+      "0046a290",
+      "0041bfb0"
+    ],
+    "setupFailuresBeforeBody": 1,
+    "setupCorrection": "이전 gunprocess 전용 export가 없어 기존 공통 PE/ABI 초기화와 현재 전체 정밀3함수 범위를 사용·새 디컴파일/추출물 변경0",
+    "completedRunFailures": 0
+  },
+  "integration": {
+    "otherGunBodiesUnchanged": true,
+    "checkingOwner": "gunState.checking→ClientGameplayGlobals.AiDebug.Checking",
+    "actualDiagnostic": "assetEffects.gun.assertion→services.ai.assertion·최종 GunHooks 조립 뒤 연결",
+    "selection": "Native 통지/종속정리/getParent만·C++ GunNotify_ 세 검사만",
+    "oldNotifyFixtureRows": 704,
+    "missingSpecificExportSetupAttempts": 1,
+    "setupCorrection": "이전 gunprocess 전용 export가 없어 기존 공통 PE/ABI 초기화와 현재 전체 정밀3함수 범위를 사용·새 디컴파일/추출물 변경0",
+    "pauseRequested": true
+  },
+  "checking": {
+    "before": 36,
+    "after": 35,
+    "completed": [
+      "0046a340"
+    ],
+    "remainingBreakdown": {
+      "parent": 26,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2736,
+    "currentCount": 2737,
+    "fixtureCount": 917,
+    "allExistingUnchanged": true,
+    "newFixtures": [
+      "cpppj/tests/fixtures/gun-notify-checking-x86.tsv"
+    ]
+  },
+  "gameExecutions": 0,
+  "guiExecutions": 0,
+  "frameFireExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "full34Run": false,
+  "fullCppSuiteRun": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "통지/종속정리/getParent 전체·애니메이션조회/종속제거/Repop/진단은 명시 장치",
+    "현재 정밀 함수표 범위만 실행·Frame/Fire/발사 경계는 도달 시 오류",
+    "실제 공격/게임/MP송신/진단UI/전체SEH 관측 아님",
+    "실제 Client binder는 소스/빌드 근거·진단 UI/전체 SEH 관측 아님",
+    "마지막 GUI는794의793제품·전체 C++/71대상/34/ZIP 반복0"
+  ],
+  "next": "사용자 재개 전 후속 작업 금지·재개 후 네PostPop46a520/46a600/46a810/46aca0 진단 위치/복귀와 나머지 비멀티 작업"
+}

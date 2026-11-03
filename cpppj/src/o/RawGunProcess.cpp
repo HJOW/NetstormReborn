@@ -192,14 +192,15 @@ void RawGunProcess::Frame(GunProcessFields& fields) const {
 // Animation 종료 메시지와 감시 표적 삭제 메시지는 원본 단계/권한 조건으로 처리한다.
 void RawGunProcess::Notify(GunProcessFields& fields,std::uint32_t event,std::uint32_t,std::uint32_t value) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const auto assertion=[this](std::string_view expression,std::uint32_t line) { if (!hooks_.assertion) throw std::logic_error("GunProcess 통지 원문 진단 장치 미연결");hooks_.assertion(expression,"\\Ns\\O\\Gunprocess.cpp",line); }; // 선택된 진단만 요구하며 복귀 뒤 현재 필드를 다시 읽는다.
     if (event==1) {
         if (value==4 || (value==7 && fields.Stage()==6)) {
-            if (patch && state_.checking && (!hooks_.animationForm || !hooks_.animationForm(fields.Parent()).value)) throw std::logic_error("GunProcess notify AnimationForm 원본 assert");
+            if (patch && state_.checking) { if (!hooks_.animationForm) throw std::logic_error("GunProcess 통지 animation getter 미연결");if (!hooks_.animationForm(fields.Parent()).value) assertion("getAnimFormSid() != 0",value==4 ? 0x154U : 0x160U); }
             Stage(fields,value);return;
         }
-        if (value!=7 && value!=10) throw std::logic_error("GunProcess animation notify 원본 assert");
+        if (value!=7 && value!=10) { if (!patch) throw std::logic_error("GunProcess animation notify 원본 assert");assertion("false",0x16a);return; }
     } else if (state_.Server() && event==2) {
-        if (patch && state_.checking && value!=fields.Target().value) throw std::logic_error("GunProcess notify 표적 원본 assert");
+        if (patch && state_.checking && value!=fields.Target().value) assertion("info2 == getTargetSid()",0x16e);
         if (value==fields.Target().value) {
             ClearTarget(fields,true);
             if (!(Parent(fields)[11]&2)) { if (!hooks_.repopForm) throw std::logic_error("GunProcess notify 재전송 누락");hooks_.repopForm(fields); }

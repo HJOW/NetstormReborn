@@ -807,6 +807,8 @@ void __cdecl FUN_00462ac0(void)
 
 ## FUN_0046a340 @ 0046a340
 
+**808 완료:** 현재 animation/target 진단과 복귀를 실제 Client 서비스에 연결했다. 원문904입력/1808관측 및 재관측1808회·통지 전용 집중3개/기존 양판본704행이 일치해 잔여 부모에서 제외했다. 아래는 복원 전 조사 기록이며 [808 기록](cpp-gun-notify-checking-20261103.md)의 현재 범위를 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawGunProcess.h

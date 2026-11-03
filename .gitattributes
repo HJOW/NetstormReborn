@@ -2424,3 +2424,5 @@ cpppj/tests/fixtures/squid-display-parent-x86.tsv -text
 cpppj/tests/fixtures/squid-display-number-x86.tsv -text
 
 cpppj/tests/fixtures/gump-attach-diagnostic-x86.tsv -text
+
+cpppj/tests/fixtures/gun-notify-checking-x86.tsv -text

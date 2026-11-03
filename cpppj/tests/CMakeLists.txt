@@ -3246,3 +3246,7 @@ set_source_files_properties(GumpAttachDiagnosticTests.cpp PROPERTIES COMPILE_DEF
 
 # 자산 PostPop의 실제 서버/전투 상태 분리를 기존 전체 양판본 원문으로 대조한다(807).
 target_sources(netstorm_file_tests PRIVATE AssetPostPopTests.cpp)
+
+# 통지/종속 정리만 실행하는 집중 필터에 GunProcess fixture를 연결한다(808).
+target_sources(netstorm_file_tests PRIVATE GunProcessTests.cpp)
+set_property(SOURCE GunProcessTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_GUNPROCESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunprocess-x86.tsv\";NETSTORM_GUN_NOTIFY_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gun-notify-checking-x86.tsv\"")

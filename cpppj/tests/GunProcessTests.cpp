@@ -234,3 +234,43 @@ TEST_CASE(GunProcess_SharedAuthorityChangesWithoutShadowSynchronization) {
     logic.ClearTarget(scene.fields,false);CHECK(scene.fields.bytes==before);authority.boss=true;CHECK(Throws([&] { logic.ClearTarget(scene.fields,false); }));
     authority.server=true;logic.ClearTarget(scene.fields,false);CHECK(scene.fields.Dirty()==4 && !scene.fields.Target().value && scene.fields.Stage()==1 && scene.state.boss && scene.state.server); // 자연 빈 표적도 원문 target dirty4는 쓰고 효과 장치는 요구하지 않는다.
 }
+
+namespace { // 통지 검사만의 식/파일 문자열을 원문 hex로 기록한다.
+std::string GunNotifyHex(std::string_view text) { return Hex(std::span(reinterpret_cast<const std::uint8_t*>(text.data()),text.size())); } // ASCII 원문 바이트를 변환하며 기대 분기는 계산하지 않는다.
+}
+// 현재 checking/진단 복귀·중단과 지역 단계/표적 재조회를904개 전체 원문 결과와 대조한다.
+TEST_CASE(GunNotify_NativeCheckingAndDiagnosticReturn904) {
+    GunScene scene(OriginalEdition::Patch1078);std::size_t count{}; // 동일 풀을 재사용하지만 각 입력은 다시 준비한다.
+    for (const auto& row:LoadFixture(NETSTORM_GUN_NOTIFY_CHECKING_FIXTURE).rows) { // Frame/Fire를 호출하지 않고 통지와 종속 정리만 실행한다.
+        CHECK(row.size()==9);const auto input=Split(row[0],',');const auto control=Split(row[1],',');CHECK(input.size()==29 && control.size()==3);std::vector<std::string> legacy{"originals"};legacy.insert(legacy.end(),input.begin(),input.end());legacy.resize(34);scene.Prepare(legacy);auto checking=Number(control[0]);scene.state.checking=RawCheckingFlag{checking};auto hooks=scene.Hooks();const auto animation=hooks.animationForm;
+        hooks.animationForm=[&,animation](Sid parent) { if (Number(control[1])==1) { checking=0;Put(scene.fields.bytes,28,9); }return animation(parent); }; // 조회가 checking을 꺼도 이미 선택된 진단은 취소하지 않는다.
+        hooks.assertion=[&](std::string_view expression,std::string_view file,std::uint32_t line) {
+            scene.events.push_back("X:"+GunNotifyHex(expression)+':'+GunNotifyHex(file)+':'+std::to_string(line));if (!Number(control[2])) throw std::runtime_error("명시 진단 중단");
+            const auto mutation=Number(control[1]);if (mutation==2 || mutation==3) { checking=0;Put(scene.fields.bytes,24,Number(legacy[26])&65535U,2);Put(scene.fields.bytes,28,2);scene.FixtureSlot(Sid{50})[11]=mutation==2 ? 2U : 0U; }
+        }; // 진단이 표적을 고치면 통지 본문은 현재 WORD를 다시 비교하고 부모free를 다시 읽는다.
+        hooks.shoot=[](const std::array<std::uint32_t,8>&,Sid)->bool { throw std::logic_error("통지 검사에서 발사 도달"); };hooks.startAnimation=[](auto,auto,auto) { throw std::logic_error("통지 검사에서 애니메이션 시작 도달"); }; // 실제 공격 경로를 실행하지 못하게 한다.
+        RawGunProcess logic(scene.pool,scene.types,scene.state,std::move(hooks));std::string outcome="return";
+        try { logic.Notify(scene.fields,Number(legacy[25]),0x12345678,Number(legacy[26])); } catch (const std::runtime_error& error) { if (std::string_view(error.what())!="명시 진단 중단") throw;outcome="assertion"; }
+        CHECK(scene.Output(0)==std::vector<std::string>(row.begin()+2,row.begin()+6));CHECK(outcome==row[6]);CHECK(checking==Number(row[7]));CHECK(scene.pool.Slot(Sid{50})[11]==Number(row[8]));++count;
+    }
+    CHECK(count==904);
+}
+
+// 이전 양판본 fixture 중 통지704행만 재생하며 Frame/Fire/패킷 송신 검사는 실행하지 않는다.
+TEST_CASE(GunNotify_PreviousBothEditions704) {
+    std::size_t count{}; // 원문 통지 입력만의 전체 행 수다.
+    for (const auto edition:{std::string_view("originals"),std::string_view("originalCD")}) { // 동일 통지 몸체의 기존 두 판본 출력을 보존한다.
+        GunScene scene(edition=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);
+        for (const auto& row:Rows()) { // 그 밖의 단계/발사/패킷 진입점은 실행하지 않는다.
+            if (row[0]!=edition || Number(row[1])!=5) continue;scene.Prepare(row);auto hooks=scene.Hooks();hooks.shoot=[](const std::array<std::uint32_t,8>&,Sid)->bool { throw std::logic_error("통지 회귀에서 발사 도달"); };RawGunProcess logic(scene.pool,scene.types,scene.state,std::move(hooks));logic.Notify(scene.fields,Number(row[25]),0x12345678,Number(row[26]));CHECK(scene.Output(0)==std::vector<std::string>(row.begin()+30,row.end()));++count;
+        }
+    }
+    CHECK(count==704);
+}
+
+// 현재 외부 checking/서버 owner를 읽고 선택된 getter/진단 누락만 원문 지점에서 중단한다.
+TEST_CASE(GunNotify_SelectedDiagnosticAndCurrentOwner) {
+    RawAuthorityState authority;GunScene scene(OriginalEdition::Patch1078);scene.Prepare(Rows().front());std::uint32_t checking{};scene.state.checking=RawCheckingFlag{checking};auto hooks=scene.Hooks();hooks.animationForm={};RawGunProcess missingGetter(scene.pool,scene.types,scene.state,hooks);missingGetter.Notify(scene.fields,1,0,4);CHECK(scene.fields.Stage()==4);Put(scene.fields.bytes,28,6);checking=0x80000000U;
+    CHECK(Throws([&] { missingGetter.Notify(scene.fields,1,0,4); }));CHECK(scene.fields.Stage()==6);hooks=scene.Hooks();scene.animation={};RawGunProcess missingDiagnostic(scene.pool,scene.types,scene.state,hooks);CHECK(Throws([&] { missingDiagnostic.Notify(scene.fields,1,0,4); }));CHECK(scene.fields.Stage()==6);
+    authority.server=false;scene.state.server=true;scene.state.sharedAuthority=&authority;scene.events.clear();Put(scene.fields.bytes,24,60,2);missingDiagnostic.Notify(scene.fields,2,0,61);CHECK(scene.events.empty() && scene.fields.Target()==Sid{60}); // 동일 현재 서버가false면 표적 진단/정리 관문 전체를 건너뛴다.
+}
