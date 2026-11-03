@@ -44,7 +44,7 @@ std::array<std::int32_t,2> RawPlayerGeyserBounds::Dimensions(std::span<const std
     const auto type=state_.puzzlePieceType;const auto patterns=TerritoryPatterns(); // 호출 시점의 실제 패턴 타입과 ROM 표다.
     if (type>=types_.size() || (record[0]&63U)>=patterns.size()) throw std::out_of_range("Player 범위의 현재 영역 타입/패턴 물리 범위");
     CanonDecoder decoder(frames_[type],patterns[record[0]&63U],static_cast<int>(record[0]>>6)*2,0,0,
-        [this] { assertion_(PlayerGeyserBoundsAssertion::MissingFrame); });
+        [this] { assertion_(PlayerGeyserBoundsAssertion::MissingFrame); },pool_.Edition(),state_.decoderDiagnostics);
     const auto bounds=decoder.Bounds(types_[type].footX,types_[type].footY); // 원본004bfd70→00425b90의 같은 발자국 기반 결과다.
     return {Signed(static_cast<std::uint32_t>(bounds[2])-static_cast<std::uint32_t>(bounds[0])),
         Signed(static_cast<std::uint32_t>(bounds[3])-static_cast<std::uint32_t>(bounds[1]))};

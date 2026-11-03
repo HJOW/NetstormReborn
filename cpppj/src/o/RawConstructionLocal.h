@@ -7,6 +7,7 @@ namespace netstorm::o {
 struct ConstructionLocalState {
     std::uint32_t localPlayer{}; // 00540c70 / CD 0050f6c8: 예측 조각 소유자와 사제 이동의 플레이어.
     std::array<std::uint32_t,8> patternTypes{107,82,94,157,131,129,140,142}; // puzzlePiece, bridge, island, noIsland, 전투 타입 넷.
+    const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
 };
 // 미리보기 SID와 원본 다섯 인자다. 타입·조각 반환 플래그·품질은 미리보기의 raw 필드에서 읽는다.
 struct ConstructionLocalRequest {

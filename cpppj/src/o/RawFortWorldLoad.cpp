@@ -31,7 +31,7 @@ void RawFortWorldLoad::ReadTerritory(std::uint32_t templateSlot,std::span<std::u
 }
 // 최초builder owner1/기본bounds와실제world주소를붙인뒤모든child를원본순서로소비한다.
 void RawFortWorldLoad::Load(std::int32_t alternate) const {
-    RawIslandBuilderState state;RawIslandBuilder builder(world_,world_,islands_,frames_,puzzlePiece_,state,hooks_.builderAssertion);
+    RawIslandBuilderState state;state.decoderDiagnostics=hooks_.decoderDiagnostics;RawIslandBuilder builder(world_,world_,islands_,frames_,puzzlePiece_,state,hooks_.builderAssertion);
     std::array<std::uint8_t,120> records{};ReadTerritory(localOwner_,records);builder.PlaceAll(records,0,20);hooks_.generate(state,noRegion_);
     if (!alternate) {
         auto owner=localOwner_;hooks_.objects(hooks_.currentTemplate(owner),owner);

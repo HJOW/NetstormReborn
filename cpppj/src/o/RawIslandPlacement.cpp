@@ -28,7 +28,7 @@ bool CanPlaceIsland(OriginalEdition edition,const ChunkMap& target,std::span<con
     const auto x=PlacementOrigin(state.bounds.left,value[2]&15U),y=PlacementOrigin(state.bounds.top,value[2]>>4); // decoder 안의 홀수 방향 진단보다 앞서 원점 인자를 고정한다.
     if (edition==OriginalEdition::Cd1072 && (direction&1)) diagnostic(RawIslandBuilderAssertion::OddDirection);
     CanonDecoder decoder(frames[type],TerritoryPatterns()[value[0]&63U],direction,x,y,
-        [&diagnostic] { diagnostic(RawIslandBuilderAssertion::MissingFrame); });
+        [&diagnostic] { diagnostic(RawIslandBuilderAssertion::MissingFrame); },edition,state.decoderDiagnostics);
     // 첫 유효 패턴 칸을 포함하여 현재 우측/하단과 실제 청크를 매번 다시 검사한다.
     for (;decoder.Valid();decoder.Advance()) {
         const auto cx=PlacementCoordinate(decoder.X()),cy=PlacementCoordinate(decoder.Y());

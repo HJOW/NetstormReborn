@@ -741,7 +741,7 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
                 const ScreenPoint mouse{x*16-CameraX()-placement.hotspotX+placement.imageWidth/2,y*11-CameraY()-placement.hotspotY+placement.imageHeight/2}; // 실제 기준점의 역산이다.
                 if (mouse.x<80 || mouse.x>=width_ || mouse.y<28 || mouse.y>=height_) continue;
                 campaign_->Cursor().Update(mouse.x,mouse.y);if (!drop.legal) continue;
-                o::CanonDecoder decoder(frames,patterns[drop.argument],std::bit_cast<std::int32_t>(drop.direction),drop.x,drop.y); // 현재 조각을 원본 반복자로 펼친다.
+                o::CanonDecoder decoder(frames,patterns[drop.argument],std::bit_cast<std::int32_t>(drop.direction),drop.x,drop.y,{},assets_.Edition(),&campaign_->DecoderDiagnostics()); // 명시 분석 조회도 같은 현재 진단으로 조각을 펼친다.
                 double reach=std::numeric_limits<double>::infinity(); // 이미 있는 다리와 겹치는 칸은 전진으로 세지 않는다.
                 // 유효한 Canon 칸만 읽으며 현재 월드를 변경하지 않는다.
                 while (decoder.Valid()) {

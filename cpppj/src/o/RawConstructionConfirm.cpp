@@ -27,7 +27,7 @@ bool RawConstructionConfirm::Confirm(const ConstructionConfirmRequest& request) 
         hooks_.findBuilder(request.player,request.type,request.x,request.y).value==0) return false;
     const auto& meta=frames_[request.type];
     auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument),
-        std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition());
+        std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics);
     std::size_t pieces=0;
     // 사본으로 유효 칸을 세어 상한을 넘는 요청을 SID 생성 전에 거부한다.
     for (auto probe=decoder;probe.Valid();probe.Advance()) ++pieces;

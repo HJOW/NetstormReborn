@@ -34,6 +34,7 @@ struct NormalTerrainDiagnostics {
     std::function<void(o::SquidRegionAssert)> region; // 원본 지역 setter의 판본별 진단이다.
     std::function<void(o::FarmClusterAssertion)> farm; // 군집 내부 지역 seed 조회의 진단이다.
     std::function<void(TerrainFarmPostpassAssertion)> postpass; // 상위의 첫 record/Bounds 조회 진단이다.
+    const o::CanonDecoderDiagnostics* decoderDiagnostics{}; // 현재 Canon 진단 owner를 같은 섬/지형/설치 수명 동안 빌린다.
 };
 // 기존 전체 배치·Factory·HP getter를 현재 ChunkMap/섬 owner·가상 공간/owner에 연결한다.
 // placement는 이 world.Core()의 types/frames/shapes/spots/hash/장부로 구성해야 한다.

@@ -70,7 +70,7 @@ bool RawConstructionRequest::Request(ConstructionConfirmRequest request) const {
     if (state_.editor) request.player=state_.localPlayer;
     if (!hooks_.mayPlace({request.type,request.argument,request.x,request.y,request.direction,request.player,0})) return false;
     auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument),
-        std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition());
+        std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics);
     const std::size_t extra=patch ? kPatchExtra : kCdExtra,owner=patch ? kPatchOwner : kCdOwner;
     // decoder의 모든 유효 칸에서 abstract 예측이 같은 플레이어·타입·정확한 좌표인지 검사한다.
     for (;decoder.Valid();decoder.Advance()) {

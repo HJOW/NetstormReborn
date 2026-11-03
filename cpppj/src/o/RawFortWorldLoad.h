@@ -28,6 +28,7 @@ struct FortWorldLoadHooks {
     std::function<void(const FortTemplate&,std::uint32_t)> objects,money,badges,technology; // 현재Template를각기존전체child에같은풀/깊이로전달한다.
     std::function<void(const RawIslandBuilderState&,std::int32_t)> populateIsland; // param nonzero와현재island0 Exists일때만0046e630/CD004906c0를요청한다.
     std::function<void(bool)> rebuildGraph; // 마지막00463110/CD0045bd60의인자0(false)를그대로전달한다.
+    const CanonDecoderDiagnostics* decoderDiagnostics{}; // 현재 Canon 진단 owner를 같은 섬/지형/설치 수명 동안 빌린다.
 };
 // 새부모는기존Builder/Runtime를재사용하고미복원전체child를기본성공값으로대체하지않는다.
 class RawFortWorldLoad {

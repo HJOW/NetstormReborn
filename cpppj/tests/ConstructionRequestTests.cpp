@@ -254,3 +254,11 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         CHECK(found==9 && pool.Slot(returned)[10]==6 && !(pool.Slot(returned)[11]&1));
     }
 }
+
+// 실제 요청은 MayPlace 복귀 뒤·abstract 탐색/받침 확정 전에 현재 Canon 진단을 선택한다.
+TEST_CASE(CanonConsumers_ConstructionRequestAfterMayPlace) {
+    RequestScene scene(OriginalEdition::Patch1078);auto values=Inputs(Fixture().front()[1]);values[0]=kTypePlain;values[7]=values[8]=1;values[10]=0;scene.Prepare(values);scene.frames[kTypePlain].frames=RiftTypeFrames(std::vector<FrameCode>{{'A','P',0,0x20}});
+    CanonDecoderDiagnostics diagnostics;std::uint32_t checking=1,reported=0,mayPlace=0;diagnostics.checking.Bind(checking);diagnostics.assertion=[&](auto,auto,std::uint32_t line) { CHECK(line==0x325);CHECK(mayPlace==1);++reported;throw std::runtime_error("요청 Canon 진단 중단"); };scene.state.decoderDiagnostics=&diagnostics;
+    auto hooks=scene.Hooks();hooks.mayPlace=[&](const CanonPlacementQuery&) { ++mayPlace;return true; };RawConstructionRequest request(scene.pool,scene.hash,scene.types,scene.frames,scene.spots,scene.state,hooks);
+    CHECK(Throws([&] { request.Request({kTypePlain,20,21,1,0,0,0,0,0,0}); }));CHECK(reported==1 && scene.events.empty());
+}

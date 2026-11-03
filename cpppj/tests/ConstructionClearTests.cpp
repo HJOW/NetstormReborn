@@ -208,3 +208,10 @@ TEST_CASE(ConstructionClear_SharedBossControlsForeignTypeCandidate) {
         ClearScene scene(edition);scene.Prepare(110,1,1,1,1,0,0,true);scene.Node(Sid{50},kOtherType,1,20,21,1,0,0);bool boss=true;scene.state.sharedAuthority=&boss;auto hooks=scene.Hooks();std::size_t removed{};hooks.destroy=[&](Sid sid,std::uint32_t) { CHECK(sid==Sid{50});++removed; };RawConstructionClear clear(scene.pool,scene.hash,scene.types,scene.frames,scene.state,std::move(hooks));clear.Clear({110,20,21,0,0,1});CHECK(removed==0);boss=false;clear.Clear({110,20,21,0,0,1});CHECK(removed==1);
     }
 }
+
+// 실제 예측 정리의 finder/삭제보다 먼저 같은 현재 Canon 진단을 선택한다.
+TEST_CASE(CanonConsumers_ConstructionClearBeforeFinder) {
+    ClearScene scene(OriginalEdition::Patch1078);scene.Prepare(kTypePlain,1,1,1,1,0,0,true);scene.frames[kTypePlain].frames=RiftTypeFrames(std::vector<FrameCode>{{'A','P',0,0x20}});
+    CanonDecoderDiagnostics diagnostics;std::uint32_t checking=0x80000000U,reported=0;diagnostics.checking.Bind(checking);diagnostics.assertion=[&](auto,auto,std::uint32_t line) { CHECK(line==0x325);++reported;throw std::runtime_error("정리 Canon 진단 중단"); };scene.state.decoderDiagnostics=&diagnostics;
+    RawConstructionClear clear(scene.pool,scene.hash,scene.types,scene.frames,scene.state,scene.Hooks());CHECK(Throws([&] { clear.Clear({kTypePlain,20,21,0,0,1}); }));CHECK(reported==1 && scene.events.empty());
+}

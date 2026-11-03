@@ -45,7 +45,7 @@ std::uint32_t RawIslandBuilder::Place(std::span<const std::uint8_t,6> record,std
     if (Pool().Edition()==OriginalEdition::Cd1072 && (direction&1)) diagnostic_(RawIslandBuilderAssertion::OddDirection);
     const auto patterns=TerritoryPatterns();if (pattern>=patterns.size()) throw std::out_of_range("실제 IslandBuilder 영역 패턴 범위 오류");
     CanonDecoder decoder(frames_[type],patterns[pattern],direction,x,y,
-        [this] { diagnostic_(RawIslandBuilderAssertion::MissingFrame); });std::int32_t ordinal=0;
+        [this] { diagnostic_(RawIslandBuilderAssertion::MissingFrame); },Pool().Edition(),state_.decoderDiagnostics);std::int32_t ordinal=0;
     // 실제 decoder의 최초유효칸을 포함하고 프레임이없는칸은 완료된Advance가 건너뛴다.
     for (;decoder.Valid();decoder.Advance(),++ordinal) {
         auto& entry=ChunkAt(ToChunkCoordinate(decoder.X()),ToChunkCoordinate(decoder.Y()));

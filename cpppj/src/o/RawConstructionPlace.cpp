@@ -69,7 +69,7 @@ void RawConstructionPlace::Place(const ConstructionPlaceRequest& request) {
     if (request.player==kServerPlayer) throw std::logic_error("건설 배치 플레이어가 서버 번호다(playerId != GAME_SERVER_ID assert)");
     const auto& meta=frames_[request.type];
     auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument),
-        std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition());
+        std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics);
     std::size_t pieces=0;
     // 사본으로 유효 칸을 끝까지 세어 본다. 원본 반복자는 건드리지 않는다.
     for (auto probe=decoder;probe.Valid();probe.Advance()) ++pieces;

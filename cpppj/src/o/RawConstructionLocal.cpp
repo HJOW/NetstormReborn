@@ -32,7 +32,7 @@ RawConstructionLocal::RawConstructionLocal(const SidPool& pool,std::span<const R
 // 모든 유효 칸에 타입 자체를 사용해 SID를 만든다. decoder가 골라 준 프레임은 뒤의 실제 Place가 사용한다.
 std::vector<std::uint16_t> RawConstructionLocal::Allocate(std::uint32_t type,float x,float y,std::uint32_t argument,std::uint32_t direction) const {
     const auto& meta=frames_[type];auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,
-        {type,std::bit_cast<int>(argument),std::bit_cast<int>(direction),x,y,false},pool_.Edition());
+        {type,std::bit_cast<int>(argument),std::bit_cast<int>(direction),x,y,false},pool_.Edition(),state_.decoderDiagnostics);
     std::vector<std::uint16_t> sids;std::size_t pieces=0;
     // 원본 로컬 WORD 배열 안에 들어가는 칸 수인지 SID 생성 전에 검사한다.
     for (auto probe=decoder;probe.Valid();probe.Advance()) if (++pieces>kMaxSids) throw std::length_error("로컬 건설 조각 수가 지역 SID 배열을 넘는다");

@@ -903,6 +903,8 @@ struct RawCampaignSession::Impl {
         gunState.checking.Bind(gameplayGlobals->AiDebug().Checking());gunTargetState.checking.Bind(gameplayGlobals->AiDebug().Checking());rewardState.debugAsserts.Bind(gameplayGlobals->AiDebug().Checking());missionAiSettings.checkingAsserts.Bind(gameplayGlobals->AiDebug().Checking());soundState.debug.Bind(gameplayGlobals->AiDebug().Checking());buildArrivalState.checking.Bind(gameplayGlobals->AiDebug().Checking());geyserMinedState.checking.Bind(gameplayGlobals->AiDebug().Checking());assetState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());regularState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());motionState.carrier.debug.Bind(gameplayGlobals->AiDebug().Checking());motionState.cleanup.checking.Bind(gameplayGlobals->AiDebug().Checking());generalDamageState.checking.Bind(gameplayGlobals->AiDebug().Checking());burningState.checking.Bind(gameplayGlobals->AiDebug().Checking());priestState.spawn.checkingPlacement.Bind(gameplayGlobals->AiDebug().Checking());priestState.forcefieldRegular.debug.Bind(gameplayGlobals->AiDebug().Checking());carrierDropState.checking.Bind(gameplayGlobals->AiDebug().Checking());
         metadata.geometry.decoderDiagnostics.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 반복자의 현재 checking은 같은 장기 Client owner를 읽는다.
         metadata.geometry.decoderDiagnostics.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("CanonDecoder 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 진단 복귀 후 좌표/다음 칸 순회를 계속한다.
+        // 서버 요청/확정/통지 배치/예측 정리가 같은 장기 진단 객체를 빌린다.
+        for (auto* diagnostics:{&constructionState.request.decoderDiagnostics,&constructionState.confirm.decoderDiagnostics,&constructionState.place.decoderDiagnostics,&constructionState.clear.decoderDiagnostics}) *diagnostics=&metadata.geometry.decoderDiagnostics;
         core.building.BindChecking(gameplayGlobals->AiDebug().Checking()); // 같은 물리 실행기만 장기 owner를 빌린다.
         assetState.sharedAuthority=gameplayGlobals->Authority().get();gunState.sharedAuthority=gameplayGlobals->Authority().get();regularState.sharedAuthority=gameplayGlobals->Authority().get(); // 첫 파생 모듈 전에 같은 owner를 연결하며 준비된false를 true로 덮지 않는다.
         assetState.inBattle=true;assetState.localOwner=1;
@@ -1471,6 +1473,7 @@ struct RawCampaignSession::Impl {
         placement.geometry=metadata.geometry;placement.placement.localPlayer=1;placement.permission.alliances.fill(1);
         pipeline=std::make_unique<RawCanonPlacementPipeline>(core.pool,core.hash,CanonPlacementPipelineData{core.types,metadata.frames,core.shapes,metadata.hotspots,core.spots,core.hash.Entries(0),{}},core.bookkeeping,additional,contentFinder,placement);
         NormalTerrainDiagnostics diagnostics{SessionMissing<void,TerrainContextAssertion>(),SessionMissing<void,TerrainStampAssertion>(),SessionMissing<void,SquidRegionAssert>(),SessionMissing<void,FarmClusterAssertion>(),SessionMissing<void,TerrainFarmPostpassAssertion>()};
+        diagnostics.decoderDiagnostics=&metadata.geometry.decoderDiagnostics; // 일반 지형의 패턴 개수 조회도 현재 Canon 진단을 생략하지 않는다.
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.Residences(),finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
         if (services.missionFortFileSelect && services.localLogin) { if (services.missionFortImage) throw std::logic_error("지연 미션 파일 선택에 선행 이미지가 함께 전달됨"); } // 실제10.78은 State9 지역Template 읽기와 서버 수신의 전역 설치까지 파일을 열거나 manager를 공개하지 않는다.
@@ -2286,7 +2289,7 @@ struct RawCampaignSession::Impl {
         gameplay.notice.tryMove=[this](Sid priest,float x,float y,Sid target) { if (!motion) throw std::logic_error("일반 통지의 실제54 미설치");return motion->Paths().StartPriest({priest,{x,y},0,target.value,0,0,0})!=nullptr; };
         gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
         construction=std::make_unique<RawCampaignConstructionBindings>(world,hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,
-            PlayerGeyserBoundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections},
+            PlayerGeyserBoundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections,&metadata.geometry.decoderDiagnostics},
             recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay));
     }
     // 실제 AI 계산/색 표/섬 프레임은 Session이 연결하고 언어/채팅/표시 통지는 외부 소비자에 남긴다.
@@ -2782,7 +2785,7 @@ struct RawCampaignSession::Impl {
     }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
     std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime() {
-        auto hooks=services.install;
+        auto hooks=services.install;hooks.decoderDiagnostics=&metadata.geometry.decoderDiagnostics; // 최초 Fort/캠페인 지형 적재도 같은 현재 owner를 사용한다.
         FillMissing(hooks.translateYou);FillMissing(hooks.setConfig);
         FillMissing(hooks.refreshWindowTitle);FillMissing(hooks.resetCamera);
         hooks.builderAssertion=SessionMissing<void,RawIslandBuilderAssertion>();hooks.territoryAssertion=SessionMissing<void,FortWorldLoadAssertion>();
@@ -4763,6 +4766,8 @@ const RawCarrierChoice& RawCampaignSession::CarrierChoice() const { if (!impl_->
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
 RawSurfaceWorld& RawCampaignSession::World() { return impl_->world; }
 RawWorldCore RawCampaignSession::Core() { return impl_->core; }
+// 임시 진단 사본을 만들지 않아 분석 조회 중 바뀐 checking/callback도 같은 owner에서 읽는다.
+const o::CanonDecoderDiagnostics& RawCampaignSession::DecoderDiagnostics() const { return impl_->metadata.geometry.decoderDiagnostics; }
 const SquidReward& RawCampaignSession::HitPoints() const { return impl_->hp; }
 const RawPriestWorldBindings& RawCampaignSession::Priests() const { return *impl_->priests; }
 // 같은 현재 포획 몸체를 실제 요청과 수신 검사에서 빌린다.

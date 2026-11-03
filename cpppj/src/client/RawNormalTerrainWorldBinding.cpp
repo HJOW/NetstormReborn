@@ -91,7 +91,7 @@ std::uint32_t RawNormalTerrainWorldBinding::PatternCount(std::span<const std::ui
     if (puzzlePieceType_>=core_.frames.size()) throw std::out_of_range("일반 지형 현재 puzzlePiece 타입 범위 오류");
     const auto patterns=o::TerritoryPatterns();const auto pattern=static_cast<std::size_t>(record[0]&0x3fU);
     if (pattern>=patterns.size()) throw std::out_of_range("일반 지형 패턴 번호 범위 오류");
-    o::CanonDecoder decoder(core_.frames[puzzlePieceType_],patterns[pattern],static_cast<std::int32_t>(record[0]>>6)*2,0,0);
+    o::CanonDecoder decoder(core_.frames[puzzlePieceType_],patterns[pattern],static_cast<std::int32_t>(record[0]>>6)*2,0,0,{},core_.pool.Edition(),diagnostics_.decoderDiagnostics);
     std::uint32_t count=0;
     // 원본 constructor의 최초 유효 칸을 포함하고 Advance가 끝날 때까지 센다.
     for (;decoder.Valid();decoder.Advance()) ++count;

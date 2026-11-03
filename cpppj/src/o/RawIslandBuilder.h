@@ -10,6 +10,7 @@ namespace netstorm::o {
 struct RawIslandBuilderState {
     ChunkRect bounds{DefaultChunkRect()}; // 최초 SetMap의(1,1)~(15,15), 실제 Place가 다시 읽는 청크 경계다.
     std::uint32_t owner{1}; // SetMap이 지정한 기본 owner이며 Runtime.Add에만 사용한다.
+    const CanonDecoderDiagnostics* decoderDiagnostics{}; // 현재 Canon 진단 owner를 같은 섬/지형/설치 수명 동안 빌린다.
 };
 // 원본 helper의 보고 후 계속 진행을 보존하는 진단 종류다.
 enum class RawIslandBuilderAssertion {

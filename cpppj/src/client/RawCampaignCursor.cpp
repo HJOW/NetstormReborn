@@ -96,6 +96,7 @@ struct RawCampaignCursor::Impl {
             std::array<std::uint8_t,25> packet{};o::WriteConstructionCommand(message,packet);
             Current(effects.send,"로컬 건설 송신")(destination,packet);
         };
+        localState.decoderDiagnostics=&data.geometry.decoderDiagnostics; // 실제 예측 배치도 커서 미리보기와 같은 현재 진단 장치를 읽는다.
         local=std::make_unique<o::RawConstructionLocal>(core.pool,core.types,data.frames,core.spots,localState,data.construction.BindLocal(std::move(localHooks)));
         dropHooks.playDrop=game.playDrop;
         dropHooks.previewSource=[this](o::Sid sid) { return o::SquidForms(core.pool).Parent(sid).value; };

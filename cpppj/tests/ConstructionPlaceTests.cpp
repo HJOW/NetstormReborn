@@ -327,3 +327,11 @@ TEST_CASE(ConstructionPlace_SharedServerControlsTakeIndependently) {
         PlaceScene scene(edition);scene.Prepare(kTypePlain,0,0,0,0,0,0,0,1,false,true,false,false,false,5);bool server=false;scene.state.sharedServer=&server;auto hooks=scene.Hooks();const auto take=hooks.take;std::size_t taken{};hooks.take=[&](std::uint32_t type,Sid sid) { ++taken;return take(type,sid); };SquidReward reward(scene.pool,scene.types,scene.books,scene.rewardState,scene.patch ? &scene.store : nullptr);RawConstructionPlace place(scene.pool,scene.types,scene.frames,scene.state,reward,std::move(hooks));const auto number=static_cast<std::uint16_t>(scene.pool.Layout().serverFirst);const std::array<std::uint16_t,1> sids{number};FillSlot(InputRaw(scene.pool,Sid{number}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,1,sids,0,0});CHECK(taken==1);server=true;scene.state.server=false;FillSlot(InputRaw(scene.pool,Sid{number}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,1,sids,0,0});CHECK(taken==1);
     }
 }
+
+// 실제 통지 배치의 SID/비용/Pop 효과에 앞서 현재 Canon 진단이 실행된다.
+TEST_CASE(CanonConsumers_ConstructionPlaceBeforeSideEffects) {
+    PlaceScene scene(OriginalEdition::Patch1078);scene.Prepare(kTypePlain,0,0,0,0,0,0,0,1,false,true,true,false,false,5);scene.frames[kTypePlain].frames=RiftTypeFrames(std::vector<FrameCode>{{'A','P',0,0x20}});
+    CanonDecoderDiagnostics diagnostics;std::uint32_t checking=1,reported=0;diagnostics.checking.Bind(checking);diagnostics.assertion=[&](auto,auto,std::uint32_t line) { CHECK(line==0x325);++reported;throw std::runtime_error("배치 Canon 진단 중단"); };scene.state.decoderDiagnostics=&diagnostics;
+    SquidReward reward(scene.pool,scene.types,scene.books,scene.rewardState,&scene.store);RawConstructionPlace place(scene.pool,scene.types,scene.frames,scene.state,reward,scene.Hooks());const std::array<std::uint16_t,1> sids{15010};
+    CHECK(Throws([&] { place.Place({kTypePlain,20,21,0,0,1,sids,0,0}); }));CHECK(reported==1 && scene.events.empty());
+}

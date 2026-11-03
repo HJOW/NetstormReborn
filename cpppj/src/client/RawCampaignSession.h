@@ -607,6 +607,8 @@ public:
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.
     RawWorldCore Core();
+    // 현재 Canon 반복자가 읽는 장기 checking·진단 owner를 분석용 같은 월드 조회에도 빌려준다.
+    const o::CanonDecoderDiagnostics& DecoderDiagnostics() const;
     // 화면의 현재 HP/최대 HP 조회는 실제 SquidReward를 사용한다.
     const o::SquidReward& HitPoints() const;
     // 실제 사제 목록/움직임/보호막 상태의 읽기 경계를 빌린다.

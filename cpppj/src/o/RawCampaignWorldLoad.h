@@ -54,6 +54,7 @@ struct CampaignWorldLoadHooks {
     std::function<void(const FortTemplate&,std::uint32_t)> objects; // 기존 실제 ObjectLoad(현재owner,0,20)를 같은 Factory/Pool로 실행한다.
     std::function<void(bool)> rebuildGraph; // 실제 Graph.Rebuild(false)를 정확히 한 번 요청한다.
     std::function<void()> resetCamera; // PATCH4340d0/CD488f50의 미복원 카메라/UI 경계다.
+    const CanonDecoderDiagnostics* decoderDiagnostics{}; // 현재 Canon 진단 owner를 같은 섬/지형/설치 수명 동안 빌린다.
 };
 // PATCH4b5300/CD4322e0은 Money/Badges/Technology를 호출하지 않는 실제 미션 설치 부모다.
 class RawCampaignWorldLoad {

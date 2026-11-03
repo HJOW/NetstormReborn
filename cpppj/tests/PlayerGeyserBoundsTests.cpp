@@ -103,3 +103,14 @@ TEST_CASE(PlayerGeyserBounds_RejectsMissingAssertion) {
     std::vector<std::uint8_t> players(9*0xb4);bool battle=true,mission=true,metamap=false;std::uint8_t size=0;std::uint32_t piece=107;std::array<std::uint32_t,9> directions{};bool rejected=false;
     try { const RawPlayerGeyserBounds body(pool,chunks,types,frames,players,{battle,mission,metamap,size,piece,directions},{}); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
 }
+
+// Player의 실제 패턴 폭/높이 계산에서도 같은 현재 Canon 진단 owner가 소비된다.
+TEST_CASE(CanonConsumers_PlayerGeyserPatternDimensions) {
+    SidPool pool(OriginalEdition::Patch1078,32768);ChunkMap chunks;std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));
+    const auto normal=InputFrames(0);std::vector<FrameCode> codes(normal.Codes().begin(),normal.Codes().end());
+    for (auto& code:codes) code.flags|=0x20U; // 기존 패턴의 선택 순서를 유지하고 금 간 비트만 입력한다.
+    frames[107]=RiftTypeFrames(std::move(codes));std::vector<std::uint8_t> players(9*0xb4);bool battle=true,mission=true,metamap=false;std::uint8_t size=0;std::uint32_t piece=107,checking=1,reported=0;std::array<std::uint32_t,9> directions{};
+    CanonDecoderDiagnostics diagnostics;diagnostics.checking.Bind(checking);diagnostics.assertion=[&](auto,auto,std::uint32_t line) { CHECK(line==0x325);++reported;throw std::runtime_error("Player 범위 Canon 진단 중단"); };
+    RawPlayerGeyserBounds body(pool,chunks,types,frames,players,{battle,mission,metamap,size,piece,directions,&diagnostics},[](PlayerGeyserBoundsAssertion) { throw std::logic_error("다른 Player 범위 진단 미선택"); });const std::array<std::uint8_t,6> record{3,1,0,7,0xaa,0xbb};
+    CHECK(Throws([&] { body.OriginPlacement(record); }));CHECK(reported==1);
+}

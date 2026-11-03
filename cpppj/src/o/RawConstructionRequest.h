@@ -11,6 +11,7 @@ struct ConstructionRequestState {
     std::uint32_t localPlayer{};    // 00540c70 / 0050f6c8: BYTE로 줄이지 않고 그대로 사용한다.
     std::uint32_t displaceGenus{};  // 005325b4 / 0053fc28: 이 genus에 해당하면 기존 유닛을 밀어낸다.
     std::array<std::uint32_t,8> patternTypes{107,82,94,157,131,129,140,142}; // decoder와 island/noIsland 번호 전역.
+    const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
 };
 // 요청 밖의 효과다. 공통 세 경계와 판본에 맞는 유닛 밀어내기 경계가 필수다.
 struct ConstructionRequestHooks {

@@ -41,7 +41,7 @@ void RawCampaignWorldLoad::Load() const {
     const auto handleEnd=std::find(handle_.begin(),handle_.end(),std::uint8_t{}); // config에전달하는현재NUL포함handle이다.
     hooks_.setConfig("fort.mySubHandle",handle_.first(static_cast<std::size_t>(handleEnd-handle_.begin())+1));hooks_.refreshWindowTitle();
     player_.Create(std::bit_cast<std::int32_t>(player_.State().battleOwner));
-    RawIslandBuilderState state;RawIslandBuilder builder(world_,world_,islands_,frames_,puzzlePiece_,state,hooks_.builderAssertion);
+    RawIslandBuilderState state;state.decoderDiagnostics=hooks_.decoderDiagnostics;RawIslandBuilder builder(world_,world_,islands_,frames_,puzzlePiece_,state,hooks_.builderAssertion);
     if (globals_.editor) { auto raw=CurrentPlayer();const auto field=Pool().Edition()==OriginalEdition::Patch1078 ? 0x78U : 0x70U;std::fill_n(raw.begin()+field,4,std::uint8_t{}); }
     std::array<std::uint8_t,120> records{};territory_.ReadTerritory(player_.State().templateOwner,records);builder.PlaceAll(records,0,20);hooks_.generate(state,noRegion_);
     const auto current=player_.State().templateOwner;hooks_.objects(hooks_.currentTemplate(current),current);hooks_.rebuildGraph(false);FinishMissionPriests();hooks_.resetCamera();

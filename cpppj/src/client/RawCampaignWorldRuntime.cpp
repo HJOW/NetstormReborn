@@ -51,7 +51,7 @@ struct RawCampaignWorldRuntime::Impl {
         objectHooks=o::MakeFortFinishOwnerHooks(core.pool,finish,std::move(objectHooks));
         objectHooks=o::MakeFortObjectLoadHooks(core.pool,core.factory,hp,contained,std::move(objectHooks));
         objects=std::make_unique<o::RawFortObjectLoad>(core.pool,core.hash,core.types,core.frames,random,objectState,std::move(objectHooks));
-        o::FortWorldLoadHooks territoryHooks;
+        o::FortWorldLoadHooks territoryHooks;territoryHooks.decoderDiagnostics=effects.decoderDiagnostics; // 같은 현재 Client 진단은 Fort/캠페인 두 로더에 전달한다.
         territoryHooks.templatePresent=[this](std::uint32_t slot) { CheckSlot(slot);const auto record=data.headers.subspan(slot*20,4);return record[0] || record[1] || record[2] || record[3]; };
         territoryHooks.territory=[this](std::uint32_t slot)->o::FortTerritoryStream& { CheckSlot(slot);auto& stream=data.territoryAt ? data.territoryAt(slot) : data.territories[slot];stream.position=0;return stream; };
         territoryHooks.currentTemplate=[this](std::uint32_t slot)->const o::FortTemplate& { return Template(slot); };
@@ -80,7 +80,7 @@ struct RawCampaignWorldRuntime::Impl {
             [this](const o::RawIslandBuilderState& builder,std::int32_t region) { Generate(builder,region); },
             [this](std::uint32_t slot)->const o::FortTemplate& { return Template(slot); },
             [this](const o::FortTemplate& input,std::uint32_t slot) { if (data.campaignObjects) data.campaignObjects(*objects,slot);else objects->Load(input,static_cast<std::int32_t>(slot)); }, // 실제 캠페인 Session은 원문의004be610을 같은 현재 stream으로 실행한다.
-            [this](bool mode) { core.graph.Rebuild(mode); },effects.resetCamera};
+            [this](bool mode) { core.graph.Rebuild(mode); },effects.resetCamera,effects.decoderDiagnostics};
         campaign=std::make_unique<o::RawCampaignWorldLoad>(chunks,islands,core.frames,puzzlePiece,noRegion,*territory,player,globals,data.headers,data.handle,std::move(campaignHooks));
     }
     // 현재 Template 번호를 매 하위 호출 직전에 실제9칸 범위로 검사한다.

@@ -15,6 +15,7 @@ struct ConstructionClearState {
     std::array<std::uint32_t,8> patternTypes{107,82,94,157,131,129,140,142};
     const bool* sharedAuthority{}; // 실제 Client boss를 후보 비교마다 조회하도록 빌린다.
     const bool& Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // 앞선 가상 삭제 뒤의 다음 후보도 현재 권한을 읽는다.
+    const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
 };
 // 정리 한 번의 입력이다. 통지의 타입·좌표·decoder 인자·방향·플레이어를 그대로 받는다.
 struct ConstructionClearRequest {

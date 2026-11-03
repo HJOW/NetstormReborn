@@ -63,7 +63,7 @@ void RawConstructionClear::Clear(const ConstructionClearRequest& request) const 
     if (request.type>=types_.size() || request.type>=frames_.size() || request.type>0xff) throw std::out_of_range("건설 예측 정리 타입 번호 오류");
     const auto& record=types_[request.type];const auto& meta=frames_[request.type];
     auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument),
-        std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition());
+        std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics);
     const std::size_t extraOffset=patch ? kPatchExtra : kCdExtra,ownerOffset=patch ? kPatchOwner : kCdOwner;
     const std::uint32_t serverFirst=pool_.Layout().serverFirst;
     const auto codes=meta.frames.Codes();

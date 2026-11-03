@@ -170,3 +170,10 @@ TEST_CASE(ConstructionLocal_ConnectsFactoryBasePlacementAndQuality) {
         CHECK(Throws([&] { MakeConstructionLocalHooks(pool,foreign,place,hooks); }));
     }
 }
+
+// 미리보기 반납 뒤·예측 SID 확보 전에 실제 로컬 배치가 같은 현재 진단을 읽는다.
+TEST_CASE(CanonConsumers_ConstructionLocalAfterPreviewCleanup) {
+    LocalScene scene(OriginalEdition::Patch1078);auto values=Inputs(Fixture().front()[1]);values[0]=kTypePlain;values[6]=0;values[9]=0;values[14]=0;scene.Prepare(values);scene.frames[kTypePlain].frames=RiftTypeFrames(std::vector<FrameCode>{{'A','P',0,0x20}});
+    CanonDecoderDiagnostics diagnostics;std::uint32_t checking=1,reported=0;std::string atDiagnostic;diagnostics.checking.Bind(checking);diagnostics.assertion=[&](auto,auto,std::uint32_t line) { CHECK(line==0x325);++reported;atDiagnostic=scene.events;throw std::runtime_error("로컬 Canon 진단 중단"); };scene.state.decoderDiagnostics=&diagnostics;
+    RawConstructionLocal local(scene.pool,scene.types,scene.frames,scene.spots,scene.state,scene.Hooks());CHECK(Throws([&] { local.Place({kPreview,20,21,0,0}); }));CHECK(reported==1 && scene.born==0 && scene.events==atDiagnostic && scene.events.find("D:")!=std::string::npos);
+}

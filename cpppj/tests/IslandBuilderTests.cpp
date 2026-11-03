@@ -180,3 +180,12 @@ TEST_CASE(IslandBuilder_RejectsMissingPhysicalStorageAndEffects) {
     CHECK(Throws([&] { builder.PlaceAll(records,-1,20); }));CHECK(Throws([&] { builder.PlaceAll(records,0,21); }));
     builder.PlaceAll(records,4,4);CHECK(scene.Events()=="E" && scene.records==before);
 }
+
+// 실제 Builder가 패턴을 쓰기 전에 현재 Canon 진단을 읽으며 상태 포인터를 복사해도 같은 owner다.
+TEST_CASE(CanonConsumers_IslandBuilderBeforeChunkWrites) {
+    BuilderReplayScene scene(OriginalEdition::Patch1078);scene.Prepare(0,0);auto codes=scene.frames[scene.piece].Codes();std::vector<FrameCode> cracked(codes.begin(),codes.end());
+    for (auto& code:cracked) code.flags|=0x20U; // 기존 정상 패턴 번호/순서는 유지하고 진단 비트만 입력한다.
+    scene.frames[scene.piece]=RiftTypeFrames(std::move(cracked));CanonDecoderDiagnostics diagnostics;std::uint32_t checking=1,reported=0;diagnostics.checking.Bind(checking);diagnostics.assertion=[&](auto,auto,std::uint32_t line) { CHECK(line==0x325);++reported;throw std::runtime_error("섬 Canon 진단 중단"); };
+    RawIslandBuilderState state;state.decoderDiagnostics=&diagnostics;const auto before=BuilderChunkBytes(scene.world);RawIslandBuilder builder(scene.world,scene.world,*scene.islands,scene.frames,scene.piece,state,[](RawIslandBuilderAssertion) { throw std::logic_error("별도 Builder 진단 미선택"); });const std::array<std::uint8_t,6> record{3,1,0,7,0xaa,0xbb};
+    CHECK(Throws([&] { builder.Place(record,0); }));CHECK(reported==1 && BuilderChunkBytes(scene.world)==before);
+}

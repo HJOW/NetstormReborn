@@ -135,3 +135,11 @@ TEST_CASE(FortWorldLoad_RejectsForeignPoolMissingChildAndTruncatedTerritory) {
     RawFortWorldLoad loader(scene.pool,scene.chunks,*scene.islands,scene.frames,scene.piece,scene.owner,scene.noRegion,scene.depth,scene.Hooks());scene.stream.bytes=std::span(scene.data).first(119);std::array<std::uint8_t,120> output{};
     CHECK(Throws([&] { loader.ReadTerritory(1,output); }));CHECK(scene.stream.position==0);
 }
+
+// Fort 부모의 선택 진단 owner가 지역 Builder까지 전달되어 생성/Objects 후처리 전에 중단한다.
+TEST_CASE(CanonConsumers_FortLoaderBeforeWorldGeneration) {
+    FortWorldReplayScene scene(OriginalEdition::Patch1078,"0,0,1,0,0,1,0,120,0,0,1");auto codes=scene.frames[scene.piece].Codes();std::vector<FrameCode> cracked(codes.begin(),codes.end());
+    for (auto& code:cracked) code.flags|=0x20U; // 원문 fixture의 패턴 모양은 유지한다.
+    scene.frames[scene.piece]=RiftTypeFrames(std::move(cracked));CanonDecoderDiagnostics diagnostics;std::uint32_t checking=1,reported=0;diagnostics.checking.Bind(checking);diagnostics.assertion=[&](auto,auto,std::uint32_t line) { CHECK(line==0x325);++reported;throw std::runtime_error("Fort Canon 진단 중단"); };auto hooks=scene.Hooks();hooks.decoderDiagnostics=&diagnostics;
+    RawFortWorldLoad loader(scene.pool,scene.chunks,*scene.islands,scene.frames,scene.piece,scene.owner,scene.noRegion,scene.depth,hooks);CHECK(Throws([&] { loader.Load(0); }));CHECK(reported==1 && scene.events.empty());
+}

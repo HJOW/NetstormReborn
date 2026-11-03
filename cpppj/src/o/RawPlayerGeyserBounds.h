@@ -21,6 +21,7 @@ struct PlayerGeyserBoundsState {
     const std::uint8_t& mapSize; // 현재 옵션 BYTE0052f7e6이며0~3은 간격3/4/5/6이다.
     const std::uint32_t& puzzlePieceType; // 00541204의 현재 영역 패턴 타입이다.
     std::span<const std::uint32_t,9> playerDirections; // 0053181c의 현재 Player별 방향표다.1~8의 초기값은4/0/6/2/7/3/5/1이다.
+    const CanonDecoderDiagnostics* decoderDiagnostics{}; // 현재 Canon 진단 owner를 같은 섬/지형/설치 수명 동안 빌린다.
 };
 // Player0048f5c0→현재record00432430→배치00432050→청크변환0040d900의 몸체다.
 class RawPlayerGeyserBounds {

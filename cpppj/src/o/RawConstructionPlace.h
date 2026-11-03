@@ -31,6 +31,7 @@ struct ConstructionPlaceState {
     const bool* sharedAuthority{}; // 비용 부족 처리의 현재 Client boss 주소다.
     const bool& Server() const { return sharedServer ? *sharedServer : server; } // 각 조각의 Take 관문에서 현재 서버 역할을 읽는다.
     const bool& Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // 비용 부족 안내/환불 또는 차감 직전에 현재 권한을 읽는다.
+    const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
 };
 // 배치 한 번의 입력이다. 원본 열 개 인자 가운데 SID 개수는 sids의 길이로 받는다.
 struct ConstructionPlaceRequest {

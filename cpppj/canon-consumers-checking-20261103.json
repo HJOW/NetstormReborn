@@ -1,0 +1,229 @@
+{
+  "unit": 811,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "status": "CanonDecoder 현재 제품 소비자 연결 완료·전체 목표 진행 중",
+  "runtimeProduct": 811,
+  "displayVersion": "11.01",
+  "exeSha256": "0994cfcda1a7565784be7d399bbe9e2febec157cdb9678831f06ff400149ffad",
+  "build": {
+    "successfulInvocations": 2,
+    "failedInvocations": 0,
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "finalLog": "build-v2.log",
+    "secondBuildReason": "Player 범위 검사에서 사용하지 않는 임시 프레임 span 제거·제품 변경 없음"
+  },
+  "tests": {
+    "total": 38,
+    "newTests": 8,
+    "failedChecks": 0,
+    "filters": {
+      "CanonConsumers": 8,
+      "CanonChecking": 2,
+      "canon_type": 4,
+      "ConstructionConfirm_Replays": 3,
+      "ConstructionPlace_Replays": 3,
+      "ConstructionClear_Replays": 3,
+      "ConstructionLocal_Replays": 3,
+      "ConstructionRequest_Replays": 3,
+      "IslandBuilder": 3,
+      "FortWorldLoad": 2,
+      "PlayerGeyserBounds": 2,
+      "CampaignWorldLoad": 2
+    },
+    "fullSuiteRun": false
+  },
+  "native": {
+    "newObservations": 0,
+    "reusedDiagnosticInputs": 156,
+    "reusedThreeEditionCanonRows": 3927,
+    "diagnosticFixtureSha256": "9f5976c556f892efa6a1205ee4136c0bf9d3ae3c06a15d1f433756bac9e259ea"
+  },
+  "integration": {
+    "actualOwner": "metadata.geometry.decoderDiagnostics→현재 Client AiDebug.Checking/services.ai.assertion",
+    "currentPointerConsumers": [
+      "Construction Confirm/Place/Clear/Request 상태",
+      "Cursor ConstructionLocal 상태",
+      "FortWorldLoadHooks/CampaignWorldLoadHooks→지역 Builder 상태",
+      "RawIslandPlacement/RawPlayerGeyserBounds/NormalTerrain PatternCount",
+      "명시 GameWorld 분석 조회→Session DecoderDiagnostics accessor"
+    ],
+    "abi": "새 포인터는 호스트 상태/콜백에만 추가·원본 슬롯/패킷/저장 바이트 배치 불변",
+    "copySemantics": "포인터가 같은 진단 객체를 빌려 checking뿐 아니라 callback 교체도 현재값으로 소비"
+  },
+  "callerAudit": {
+    "total": 18,
+    "explicitDiagnosticArguments": 14,
+    "factoryDefinitions": 1,
+    "analysisOnly": 3,
+    "unclassified": 0,
+    "entries": [
+      {
+        "file": "cpppj/src/app/FrameBindingInspect.cpp",
+        "line": 192,
+        "classification": "analysis-cli-no-client-owner",
+        "call": "DecodeCanonType(meta.frames,meta.defaultFrame,data.geometry.patternTypes,{type,argument,direction,20.5f,21.25f,false},edition)",
+        "sha256": "042602919b0531fb1cbaf3941dc6597bee73944bbf0d571dacfd638bb45dd07c"
+      },
+      {
+        "file": "cpppj/src/app/main.cpp",
+        "line": 291,
+        "classification": "analysis-cli-no-client-owner",
+        "call": "CanonDecoder decoder(frames, pattern, rotation*2, 0, 0)",
+        "sha256": "54d7ca60735db479278ead5854ce5e15b50ae1103badd81053aa33b78d81ccf7"
+      },
+      {
+        "file": "cpppj/src/client/GameWorld.cpp",
+        "line": 744,
+        "classification": "current-diagnostic-owner",
+        "call": "CanonDecoder decoder(frames,patterns[drop.argument],std::bit_cast<std::int32_t>(drop.direction),drop.x,drop.y,{},assets_.Edition(),&campaign_->DecoderDiagnostics())",
+        "sha256": "f84d1f4d3a17ed9d58d7672c3c1fbbd9c6433305209b6f43478d24e4db7a5fc8"
+      },
+      {
+        "file": "cpppj/src/client/InventoryItemGump.cpp",
+        "line": 111,
+        "classification": "current-diagnostic-owner",
+        "call": "DecodeCanonType(meta.frames,meta.defaultFrame,geometry.geometry.patternTypes,query,edition,&geometry.geometry.decoderDiagnostics)",
+        "sha256": "6958ad70293aefc61625979914a0c6b4ac405c4b4eea88270988a51dd4e48385"
+      },
+      {
+        "file": "cpppj/src/client/RawCursorPlacement.cpp",
+        "line": 132,
+        "classification": "current-diagnostic-owner",
+        "call": "DecodeCanonType(frames,asset.definition.specialFrames.defaultFrame,geometry.patternTypes,query,assets.Edition(),&geometry.decoderDiagnostics)",
+        "sha256": "8b4c9303dcaccdedb6c9dac903b9b276d9333c7f6721957e57fb889818841357"
+      },
+      {
+        "file": "cpppj/src/client/RawNormalTerrainWorldBinding.cpp",
+        "line": 94,
+        "classification": "current-diagnostic-owner",
+        "call": "CanonDecoder decoder(core_.frames[puzzlePieceType_],patterns[pattern],static_cast<std::int32_t>(record[0]>>6)*2,0,0,{},core_.pool.Edition(),diagnostics_.decoderDiagnostics)",
+        "sha256": "cdcac54988f81047ac5b2e93fbed12fa016f94027002b739fcb3e19a1770408f"
+      },
+      {
+        "file": "cpppj/src/o/CanonTypeDecoder.cpp",
+        "line": 19,
+        "classification": "factory-definition-forwards-diagnostics",
+        "call": "DecodeCanonType(const RiftTypeFrames& frames,int defaultFrame,std::span<const std::uint32_t,8> patternTypes, CanonTypeQuery query,OriginalEdition edition,const CanonDecoderDiagnostics* diagnostics)",
+        "sha256": "86443a0789d96d05a817651089b4500ac2d56557970cb40ae25adba14f323d4f"
+      },
+      {
+        "file": "cpppj/src/o/Islandbuilder.cpp",
+        "line": 33,
+        "classification": "analysis-cli-no-client-owner",
+        "call": "CanonDecoder decoder(*pieceFrames_, patterns[shape], record[0] >> kDirectionShift, static_cast<float>(rect_.left + offsetX), static_cast<float>(rect_.top + offsetY))",
+        "sha256": "3c31bad6b804c13386a9978f0c5a3b8ac9b7f7d0633ca061d65e0e778f186680"
+      },
+      {
+        "file": "cpppj/src/o/RawCanonPixelShape.cpp",
+        "line": 42,
+        "classification": "current-diagnostic-owner",
+        "call": "DecodeCanonType(meta.frames,meta.defaultFrame,geometryState_.patternTypes, {type,std::bit_cast<std::int32_t>(argument),std::bit_cast<std::int32_t>(direction),0,0,explicitFrame},pool_.Edition(),&geometryState_.decoderDiagnostics)",
+        "sha256": "2c6dc7ae47533e0058d3eacde636f1f2c626a43478e904c1f497c7327df714d2"
+      },
+      {
+        "file": "cpppj/src/o/RawCanonPlacementGeometry.cpp",
+        "line": 30,
+        "classification": "current-diagnostic-owner",
+        "call": "DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,query,pool_.Edition(),&state_.decoderDiagnostics)",
+        "sha256": "9de7326c2b587d57f85a7335c4c59107793b6ce9f52b028dc0bf66945e3a8497"
+      },
+      {
+        "file": "cpppj/src/o/RawConstructionClear.cpp",
+        "line": 65,
+        "classification": "current-diagnostic-owner",
+        "call": "DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument), std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics)",
+        "sha256": "660552fecd1e588f97b18fc50ac8dddaac9601e38f06c4e54cc7f9518aec418a"
+      },
+      {
+        "file": "cpppj/src/o/RawConstructionConfirm.cpp",
+        "line": 29,
+        "classification": "current-diagnostic-owner",
+        "call": "DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument), std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics)",
+        "sha256": "76ff96a4efa5556ffcdfe1e3166525d58dae1121c741281abae6d55b0e402bb4"
+      },
+      {
+        "file": "cpppj/src/o/RawConstructionLocal.cpp",
+        "line": 34,
+        "classification": "current-diagnostic-owner",
+        "call": "DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes, {type,std::bit_cast<int>(argument),std::bit_cast<int>(direction),x,y,false},pool_.Edition(),state_.decoderDiagnostics)",
+        "sha256": "57261a154f3f6eac60790cd2565a3b35589dbe7ce11623215c6c9d4f90926058"
+      },
+      {
+        "file": "cpppj/src/o/RawConstructionPlace.cpp",
+        "line": 71,
+        "classification": "current-diagnostic-owner",
+        "call": "DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument), std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics)",
+        "sha256": "4ec54d1dba808fb2cf95236711b99b27e5d84018a9b3aacd58b6a6f27f22ea85"
+      },
+      {
+        "file": "cpppj/src/o/RawConstructionRequest.cpp",
+        "line": 72,
+        "classification": "current-diagnostic-owner",
+        "call": "DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument), std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics)",
+        "sha256": "fbb585af6df69ea6d20c52b49451f98189c5b94ace6ea7c4a4f9026dabd146c0"
+      },
+      {
+        "file": "cpppj/src/o/RawIslandBuilder.cpp",
+        "line": 47,
+        "classification": "current-diagnostic-owner",
+        "call": "CanonDecoder decoder(frames_[type],patterns[pattern],direction,x,y, [this] { diagnostic_(RawIslandBuilderAssertion::MissingFrame); },Pool().Edition(),state_.decoderDiagnostics)",
+        "sha256": "2da8eac5b1d0d71f78851e18ac4d19a8991aa896ed3361fcf3136e983dbb8f75"
+      },
+      {
+        "file": "cpppj/src/o/RawIslandPlacement.cpp",
+        "line": 30,
+        "classification": "current-diagnostic-owner",
+        "call": "CanonDecoder decoder(frames[type],TerritoryPatterns()[value[0]&63U],direction,x,y, [&diagnostic] { diagnostic(RawIslandBuilderAssertion::MissingFrame); },edition,state.decoderDiagnostics)",
+        "sha256": "54742f05810eb0ca1eef7f251ccaf0967bb4acff25a68ae04e15e57f2778c83e"
+      },
+      {
+        "file": "cpppj/src/o/RawPlayerGeyserBounds.cpp",
+        "line": 46,
+        "classification": "current-diagnostic-owner",
+        "call": "CanonDecoder decoder(frames_[type],patterns[record[0]&63U],static_cast<int>(record[0]>>6)*2,0,0, [this] { assertion_(PlayerGeyserBoundsAssertion::MissingFrame); },pool_.Edition(),state_.decoderDiagnostics)",
+        "sha256": "e13442250af875216b0ad942a20a7924a218e6a4e7d260f71188e38e0698f1d0"
+      }
+    ],
+    "analysisOnlyProof": "app/main.cpp Canon 패턴/정적 GameWorld 보고, FrameBindingInspect, 옛 Islandbuilder→InspectView/main/정적 GameWorld 생성자·기본 GUI는 UberGump의 RawCampaignSession 생성자"
+  },
+  "checking": {
+    "before": 31,
+    "after": 30,
+    "completed": [
+      "00425860"
+    ],
+    "remainingBreakdown": {
+      "parent": 21,
+      "partial": 6,
+      "multiplayer": 3
+    }
+  },
+  "protection": {
+    "beforeCount": 2739,
+    "currentCount": 2739,
+    "fixtureCount": 919,
+    "allUnchanged": true,
+    "newFixtures": []
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "communicationTests": 0,
+  "prohibitedGameplayTests": 0,
+  "airUnitDedicatedTests": 0,
+  "physicalInputTests": 0,
+  "pcmTests": 0,
+  "full34Run": false,
+  "distributionZipCreated": false,
+  "boundaries": [
+    "실제 Client 조립은 소스/빌드 근거·새 소비자 검사는 동일 raw 월드의 명시 장치",
+    "분석 CLI에는 실제 Client checking owner가 없으며 새 실행/자동 공략 없음",
+    "RawIslandAdd의 활성 편집 호출자 복원 완료와 Canon 진단 인자 전달을 구별",
+    "물리 범위 밖/32비트 ABI·SEH/진단 UI 한계는 810을 유지·전체 동일성/자연 완주 미검증"
+  ],
+  "next": "우선순위1의 대상별 객체 메뉴·커서 상태 효과/수명 대조와 나머지 checking 부모"
+}

@@ -16,6 +16,7 @@ struct ConstructionConfirmState {
     std::array<std::uint32_t,8> patternTypes{107,82,94,157,131,129,140,142};
     const std::uint32_t* sharedFullDeck{}; // 실제0054db14 owner를 선택적으로 빌리며 기존 독립 aggregate의 순서를 유지한다.
     bool SkipBuilderCheck() const { return sharedFullDeck ? *sharedFullDeck!=0 : skipBuilderCheck; } // 각 Confirm의 원문 분기에서 현재 비영 여부를 다시 읽는다.
+    const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
 };
 // 확정 한 번의 입력이다. 원본 열 개 인자와 같은 순서다.
 struct ConstructionConfirmRequest {

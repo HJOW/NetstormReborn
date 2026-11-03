@@ -154,3 +154,12 @@ TEST_CASE(ConstructionConfirm_SharedFullDeckReadsCurrentDword) {
     }
     globals.FullDeck()=0;CHECK(!confirm.Confirm({kTypePlain,20,21,1,0,0,0,0,0,0}) && builders==2 && sent==2);state.sharedFullDeck=nullptr;CHECK(confirm.Confirm({kTypePlain,20,21,1,0,0,0,0,0,0}) && builders==2 && sent==3); // 기존 독립 bool 입력도 유지한다.
 }
+
+// 실제 확정의 SID 확보/송신 전에 현재 Canon 진단 owner가 소비되는지 확인한다.
+TEST_CASE(CanonConsumers_ConstructionConfirmBeforeAllocation) {
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,true);std::vector<RiftTypeRecord> types(188);std::vector<PriestPlainCanonType> frames(188);
+    frames[kTypePlain]={RiftTypeFrames(std::vector<FrameCode>{{'A','P',0,0x20}}),0};ConstructionConfirmState state;CanonDecoderDiagnostics diagnostics;std::uint32_t checking=1,reported=0,allocated=0;
+    diagnostics.checking.Bind(checking);diagnostics.assertion=[&](auto,auto,std::uint32_t line) { CHECK(line==0x325);++reported;throw std::runtime_error("확정 Canon 진단 중단"); };state.decoderDiagnostics=&diagnostics;
+    auto hooks=QuietHooks();hooks.create=[&](auto,auto) { ++allocated;return Sid{}; };RawConstructionConfirm confirm(pool,types,frames,state,hooks);
+    CHECK(Throws([&] { confirm.Confirm({kTypePlain,20,21,1,0,0,0,0,0,0}); }));CHECK(reported==1 && allocated==0);
+}

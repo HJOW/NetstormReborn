@@ -39,6 +39,7 @@ struct RawCampaignInstallEffects {
     std::function<void(o::Sid)> notifySurface; // 저장 QA 지정 뒤 다리의 실제 표면 통지다.
     std::function<void(o::Sid,std::uint32_t)> setState; // Factory 상태의 실제 가상+84 분배기다.
     std::function<std::int32_t(o::Sid)> virtualCount; // 실제 가상+80이며 편집 분기에서도 기본1로 바꾸지 않는다.
+    const o::CanonDecoderDiagnostics* decoderDiagnostics{}; // 현재 Canon 진단 owner를 같은 섬/지형/설치 수명 동안 빌린다.
 };
 // Player/사제/Asset PostPop을 먼저 같은 Core에 등록한 뒤 첫 객체 생성 전에 구성한다.
 // 이 연결은 전투 프레임/Ready/경제 스크립트 부모를 대신하지 않는다.
