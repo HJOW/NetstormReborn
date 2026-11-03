@@ -1,6 +1,7 @@
 // type23 teleportEffect와 type54 사제의 실제 Kernel 프레임/도착/수명 분배를 복원한다.
 #pragma once
 #include "o/RawPathRuntime.h"
+#include "o/RawCheckingFlag.h" // 공통 Halt가 같은 Client의 현재 진단 값을 읽는다.
 #include "o/RawPathAnimation.h"
 #include "o/RawSquidFinder.h"
 #include "o/SquidDisplay.h"
@@ -22,6 +23,7 @@ struct RawPathProcessState {
     std::uint32_t dudeProcess{24},dudeType{70}; //005410d0/00541170의 실제 Dude 부착 종류와 부모다.
     std::uint32_t walkerProcess{38},windWalkerType{137},rainWalkerType{156},windWalkerCounter{}; //00541108/54127c/5412c8/5951c4의 세션 공유 전역이다.
     std::uint32_t bulfProcess{41}; //00541114의 현재 Bulf 전용 회전/보행 경로다.
+    RawCheckingFlag checking; // 패치 Halt의 현재 진단 DWORD이며 삭제 뒤에도 원래 owner를 빌린다.
 };
 // 실제 가상 효과 및 아직 복원되지 않은 큰 하위 몸체의 경계다. 누락을 실행 가능한 빈 효과로 바꾸지 않는다.
 struct RawPathProcessHooks {
@@ -39,6 +41,7 @@ struct RawPathProcessHooks {
     std::function<void(float,float)> balloonFlame; //벌룬42의 현재 위치 balloonFlame.wav/loop0 장치다.
     std::function<std::int32_t(std::int32_t,std::int32_t)> bulfRandom; // Bulf41도 게임 전체와 같은004558f0 난수 상태를 소비한다.
     std::function<void(float,float,std::string_view)> bulfSound; // Bulf41이 고른 현재 좌표/파일명의004a9d70/loop0이다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 부모 Halt가 자신을 삭제한 뒤에도 유효한 진단 장치다.
 };
 // same pool/hash/spot/Kernel 위에서 원본 이동 프로세스를 실행한다. 별도 좌표/공간 복사본을 만들지 않는다.
 class RawPathProcess final:public SquidProcess {

@@ -1102,6 +1102,8 @@ LAB_00472fc1:
 
 ## FUN_00489ff0 @ 00489ff0
 
+**832 완료:**현재 checking과 삭제 전에 복사한 진단/수명 관찰로 삭제 뒤 진단 정상 복귀를 연결했다. 실제 RunFrame/도착·기존 재지정/현재 Client/Host를 사용하며CPU2288행/진단258·재관측·집중8개(새3)가 통과했다. !deadFlag:0x2f2는0쓰기 뒤 순수 TYPE 조회만 거쳐 정상 직렬 실행에서 미도달이며CPU에서도0행이다. 원문stack 주소 자체는 별도 호스트 경계다. 최초 관측기 thiscall ABI 오류를 보존·교정했다. checking16(부모10/부분3/MP3)이다. 아래 미복원 서술은779 당시다. [832 기록](cpp-path-halt-checking-20261104.md).
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: cpppj\src\o\RawPathRetarget.h, cpppj\src\o\RawBalloonFrame.h, cpppj\src\o\RawBulfFrame.h, cpppj\src\o\RawPathProcess.h, cpppj\src\client\RawCampaignSession.cpp

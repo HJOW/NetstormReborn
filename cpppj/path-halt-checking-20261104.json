@@ -1,0 +1,206 @@
+{
+  "unit": 832,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "c3b7f8f0 / 20261104-13 CP",
+  "exeSha256": "092ae555c8f48ecc317d35cb895fda655e78a9020d8e3a8f470133822dac7904",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "Windows x86 CPU / 부모00489ff0·순수 GetGenus/TYPE·실제 재지정 분기",
+    "rows": 2288,
+    "diagnosticRows": 258,
+    "deadFlagDiagnosticRows": 0,
+    "fixtureSha256": "ca7661b77324eb0b47cddf86211902d96e6fe282eee683ebf0cf251c648a2db8",
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "probeSha256": "f740faad1cc82fd920b436c52e421b92b9c1e1a26f9aaeac54e47b780859fd8b",
+    "probeSourceSha256": "644242df2f2e648063d243265a24614e6797e8b280ab0916dcf638863a0dce7c",
+    "boundary": "부모 가상Halt/진단/삭제 요청·내용물/후보/새 이동은 명시 외부 경계;실제 game/GUI/통신/포획·희생·공격 프레임 없음;stack watch 주소 자체는 비교하지 않음"
+  },
+  "nativeReobservedRows": 2288,
+  "diagnosticRows": 258,
+  "deadFlagDiagnosticRows": 0,
+  "deadFlagInvariant": {
+    "parent": "00489ff0",
+    "source": "\\Ns\\O\\Pathprocess.cpp",
+    "line": 754,
+    "proof": "생존한 첫 Halt 뒤 Runtime+186ec에0쓰기. 이후 순수004ac200 -> 0049a840(타입500배+현재59ab20)/TYPE+ec 읽기와 조건/대상 포인터 산술만 거쳐 !deadFlag 검사. 사이에 필드쓰기/진단/콜백 없음. 정상 직렬/유효 메모리에서 미도달.",
+    "boundary": "불법 동시 변경·SEH/원문 stack 포인터 주소/중간 raw 이미지 주소값 동일성은 별도 호스트 경계"
+  },
+  "tests": [
+    {
+      "filter": "PathHaltChecking_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-832/test-PathHaltChecking-first.log",
+      "sha256": "4a2e6c29679a4a33042462e283f24f2fdf71eaa2c04476e9e943daa4496eae8a"
+    },
+    {
+      "filter": "PathRetarget_",
+      "cases": 2,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-832/test-PathRetarget-final.log",
+      "sha256": "aa44dac4b8a7a7fd4be1a4f117b2a20bd8a9d5fa3da3bdf3c48b3d5916ada74e"
+    },
+    {
+      "filter": "rawPathProcess_native_frame",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-832/test-PathFrame-final.log",
+      "sha256": "b44405f95f237a8cfe7b39a8ee2ade3d287bfd9a8bf44fdc7b362af9c392ffad"
+    },
+    {
+      "filter": "rawPathProcess_native_arrival",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-832/test-PathArrival-final.log",
+      "sha256": "8e57d70728629e54792147ee3eab1bca6ac4c71fd309dc59d0aefe3d2225eb8f"
+    },
+    {
+      "filter": "DamageableBurningChecking_ActualClientSessionRecoveryAndLifetime",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-832/test-ActualSession-final.log",
+      "sha256": "99dae71af3f6f45fc30a625be02dd1cd881748c019d305bd6a1e96d90c44e9b0"
+    }
+  ],
+  "cppComparedExistingRows": {
+    "retarget": 4801,
+    "frame": 120,
+    "arrival": 24
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-832/build-first.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "f21beab92d27304b2c207887e66961fc93a90ddfaab5fe3e489c631e25f1305f"
+    }
+  ],
+  "probeBuilds": [
+    {
+      "log": "extracted/cpp-resume-832/probe-build-first.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "4a4d664572030ea6463b8febfa16789b56a18fdbd8212879f45c89d849ba7b84"
+    },
+    {
+      "log": "extracted/cpp-resume-832/probe-build-final.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "4a4d664572030ea6463b8febfa16789b56a18fdbd8212879f45c89d849ba7b84"
+    }
+  ],
+  "firstFailure": {
+    "kind": "독립 Native 관측기 실행",
+    "exitCode": 3221225477,
+    "log": "extracted/cpp-resume-832/native-first.log",
+    "reason": "find/후보/새 이동의 Ghidra C 인자를 Cdecl로 해석한 관측기 ABI 오류. 실제 기계어 ECX 수신자/stack cleanup으로5관측기를fastcall thiscall 경계에 교정. 제품/원본/기존 fixture 변경 없음;실패 fixture 미생성.",
+    "singleBaseRowDiagnostic": {
+      "stdout": "extracted/cpp-resume-832/probe-single-first.stdout",
+      "stderr": "extracted/cpp-resume-832/probe-single-first.stderr",
+      "exitCode": 0
+    }
+  },
+  "actualConsumers": [
+    "RawPathProcess 패치Halt -> RunPathHaltParent;삭제 전 copying checking/진단과 별도shared watch만 삭제 뒤 사용. 기존 CD 본문 유지.",
+    "Session.process.checking -> 같은 Client AiDebug.Checking; effects.path.assertion -> RawCampaignPathEffects/RawCampaignPathBindings -> 실제 생성 Path의 같은 services.ai.assertion",
+    "기존 RunFrame/Arrive 및 Walker/Bulf/Balloon의 공통 Halt caller/기존 RawPathRetarget 내용물·후보·새 이동을 유지",
+    "실제 Client checking0/80000000/ffffffff와 일반134 부모/Kernel/Host에서 실제 경로 제거 뒤 현재 진단 복귀·등록 해제/재접근 방지 확인",
+    "실제 Session 일반 Load/연소회복 수명 회귀는 프레임/공격 없이 실행;신규 Path 진단 전체 Session 발생을 직접 재현한 것으로 확대하지 않음"
+  ],
+  "checking": {
+    "remaining": 16,
+    "parents": 10,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 32,
+    "completedPartial": 3,
+    "closedThisUnit": [
+      "00489ff0"
+    ],
+    "remainingPartial": [
+      "0048fb30",
+      "004b54e0",
+      "004b8cb0"
+    ],
+    "mpDeferredWithinParents": [
+      "004a7510"
+    ],
+    "mpDeferredWithinPartial": [
+      "004b54e0",
+      "004b8cb0"
+    ]
+  },
+  "boundaries": [
+    "원문 부모/순수TYPE/재지정 분기 CPU,가상Halt·진단·삭제 요청/내용물/선택/새 이동은 명시 외부 경계. 실제 Host 삭제는 별도 C++에서 수행.",
+    "호스트64비트의 안전한 shared watch를 쓰며 원문32비트 지역stack 포인터 주소 자체를 재현하지 않음.",
+    "패치10.78 부모의 현재진단 복귀가 범위이며 기존 CD 코드를 패치와 같은 진단으로 바꾸지 않음."
+  ],
+  "next": "833 공통 도착0048b340의 현재 checking/isRobust/자기 삭제·가상 도착 반환/기존 실제 공간과 소비자 연결. 남은16/객체메뉴·Edit·수명 및1~8차 전체 목표 미완료.",
+  "protection": {
+    "unchangedPreviousFiles": 2756,
+    "afterFiles": 2757,
+    "fixtureFiles": 937,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "newFixtures": 1,
+    "manifest": "extracted/cpp-resume-832/protected-after.json",
+    "sha256": "c2db593ccc1473457f5ee4f3172ccee7fd842dcf6f70f99f73aa61cc59e4794a"
+  },
+  "excluded": [
+    "실제 원본/클론 게임 GUI·자연 플레이/자동 공략",
+    "실제 포획/희생/특정 적 공격/승리·사용자 직접 확인",
+    "신규MP·공중3종 전용 검사·실제 통신",
+    "물리/PCM 재시도·전체 CTest/71대상/34미션/ZIP"
+  ],
+  "sources": {
+    "cpppj/src/o/RawPathHaltParent.h": "03d7c3aafca0a857a41f5e876c43badfd06333557bd17d14cf64b4cb785706aa",
+    "cpppj/src/o/RawPathHaltParent.cpp": "f7eaa3bd807cb7b9d1638e03152caef1c3ac8d63793cc3d9429ecd8b3498d3dc",
+    "cpppj/src/o/RawPathProcess.h": "91326bd390ecdf4679b5581ed3635354a07354d60ca1ac1da6c3bb58a70fd51a",
+    "cpppj/src/o/RawPathProcess.cpp": "a125a2a53f83534f1fb79e521ba3a73fe268752b31e2d9f2e551f2922e17ec12",
+    "cpppj/src/o/RawPathRetarget.h": "ef520e40fc8d68b700929a8f909d2db62edb02c33a24a770bd729e7e1bdac7f0",
+    "cpppj/src/o/RawPathRetarget.cpp": "0a8fd714c2415e14ffd2e9d44726298a12eefdb2cbac9dd3f415adefb69c9dde",
+    "cpppj/src/o/CMakeLists.txt": "d38f96c2fd3cf9a31b5619f67a95a617c6513057c857b600d84ad336169c9410",
+    "cpppj/src/client/RawCampaignPathBindings.h": "b948a1c0fc6550edaaee5c98de8e1b14b9906040aed04ed54fb582199822ed07",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "8cf7485f0496e08dab2cafa578cf025ae02ae3d88281c100e6248f19ccfbd057",
+    "cpppj/src/client/RawCampaignSession.cpp": "bba3236d0f44e4caea62ceba719265a25ff5305bca76d4cb826fd4b0d35ae244",
+    "cpppj/tests/PathHaltCheckingTests.cpp": "cdc60e4de3db691a7a374456b02e974bad236e59d879b0601f565bb0b026a473",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "b90098ccd0d52ef60b6bb744a140b99cc51484354a86c62509a3f319b7938b23",
+    "cpppj/tests/PathRetargetTests.cpp": "5344e0f99885c66060bd64d64eac524c2e1365b3bd845a938b5eb9e151cade59",
+    "cpppj/tests/CMakeLists.txt": "9b996ecd629714bb85b5edaa3ed4420a0c95381e4f5b25f0fb4207b3168876db",
+    "tools/native_path_halt_probe.cpp": "644242df2f2e648063d243265a24614e6797e8b280ab0916dcf638863a0dce7c",
+    "tools/observe_path_halt_hardware.py": "7336a285522cc8258a13bf4c27bc5d59de1b8867d3055025bd3254ee1f08a2af",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0"
+  },
+  "normalizedSources": {
+    "cpppj/src/o/RawPathHaltParent.h": "03d7c3aafca0a857a41f5e876c43badfd06333557bd17d14cf64b4cb785706aa",
+    "cpppj/src/o/RawPathHaltParent.cpp": "f7eaa3bd807cb7b9d1638e03152caef1c3ac8d63793cc3d9429ecd8b3498d3dc",
+    "cpppj/src/o/RawPathProcess.h": "91326bd390ecdf4679b5581ed3635354a07354d60ca1ac1da6c3bb58a70fd51a",
+    "cpppj/src/o/RawPathProcess.cpp": "a125a2a53f83534f1fb79e521ba3a73fe268752b31e2d9f2e551f2922e17ec12",
+    "cpppj/src/o/RawPathRetarget.h": "bc69deb9620ee94bf7a35eb1f8262a635bfd54d78aac668d76084bf3cba67722",
+    "cpppj/src/o/RawPathRetarget.cpp": "76f960440f8908f16acd525be61dbb76d2905b84c50e03cbd13a2e319753eb24",
+    "cpppj/src/o/CMakeLists.txt": "d38f96c2fd3cf9a31b5619f67a95a617c6513057c857b600d84ad336169c9410",
+    "cpppj/src/client/RawCampaignPathBindings.h": "b948a1c0fc6550edaaee5c98de8e1b14b9906040aed04ed54fb582199822ed07",
+    "cpppj/src/client/RawCampaignPathBindings.cpp": "8cf7485f0496e08dab2cafa578cf025ae02ae3d88281c100e6248f19ccfbd057",
+    "cpppj/src/client/RawCampaignSession.cpp": "bba3236d0f44e4caea62ceba719265a25ff5305bca76d4cb826fd4b0d35ae244",
+    "cpppj/tests/PathHaltCheckingTests.cpp": "cdc60e4de3db691a7a374456b02e974bad236e59d879b0601f565bb0b026a473",
+    "cpppj/tests/RawPathRuntimeTests.cpp": "b90098ccd0d52ef60b6bb744a140b99cc51484354a86c62509a3f319b7938b23",
+    "cpppj/tests/PathRetargetTests.cpp": "07b2e79eda167bea7a9934db91863c2730d908a48cdfe8f4c905ac6588de9be0",
+    "cpppj/tests/CMakeLists.txt": "f54f253dfacdebe1dcb6d6333fa1b98bb7a851b8335a666fe40c7c6744c4a38e",
+    "tools/native_path_halt_probe.cpp": "644242df2f2e648063d243265a24614e6797e8b280ab0916dcf638863a0dce7c",
+    "tools/observe_path_halt_hardware.py": "7336a285522cc8258a13bf4c27bc5d59de1b8867d3055025bd3254ee1f08a2af",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca"
+  }
+}

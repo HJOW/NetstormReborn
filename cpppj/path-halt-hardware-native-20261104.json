@@ -1,0 +1,13 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "backend": "Windows x86 CPU / 부모00489ff0·순수 GetGenus/TYPE·실제 재지정 분기",
+  "rows": 2288,
+  "diagnosticRows": 258,
+  "deadFlagDiagnosticRows": 0,
+  "fixtureSha256": "ca7661b77324eb0b47cddf86211902d96e6fe282eee683ebf0cf251c648a2db8",
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "probeSha256": "f740faad1cc82fd920b436c52e421b92b9c1e1a26f9aaeac54e47b780859fd8b",
+  "probeSourceSha256": "644242df2f2e648063d243265a24614e6797e8b280ab0916dcf638863a0dce7c",
+  "boundary": "부모 가상Halt/진단/삭제 요청·내용물/후보/새 이동은 명시 외부 경계;실제 game/GUI/통신/포획·희생·공격 프레임 없음;stack watch 주소 자체는 비교하지 않음"
+}

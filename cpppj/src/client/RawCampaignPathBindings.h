@@ -27,6 +27,7 @@ struct RawCampaignPathEffects {
     std::function<std::uint32_t(o::Sid)> crabHalt; //156의42ab80은 공유 포획 counter와 원본 CarrierSteal.Halt를 호출한다.
     std::function<std::uint32_t(o::Sid)> dudeHalt; //70/508cc8 부모+38의 현재 지면·Fall 판정이다.
     std::function<std::uint32_t(o::Sid)> dudeArrival; //같은 부모+3c의 task별 실제 삭제·반환이다. 자신과 Path를 지울 수 있다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 같은 현재 Client의 실제 경로 진단이며 정상 복귀를 유지한다.
 };
 // 경로 계산과 프레임 실행을 새 이동 모형으로 대체하지 않는 같은 월드 연결부다.
 // 참조하는 월드/사제/도착/cleanup/상태/effects는 이 객체 및 부착한 Path보다 오래 살아야 한다.

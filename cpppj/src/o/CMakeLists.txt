@@ -570,3 +570,6 @@ target_sources(netstorm PRIVATE RawManaRegistration.h RawManaRegistration.cpp)
 
 # 제단 해방의 현재 진단/첫 검색 결과와 가상 공간·표시 없는 프레임 순서를 공유한다.
 target_sources(netstorm PRIVATE RawAltarReleaseParent.h RawAltarReleaseParent.cpp)
+
+# 실제 공통 Halt의 현재 진단과 자기 삭제 뒤 복귀 부모를 공유한다.
+target_sources(netstorm PRIVATE RawPathHaltParent.h RawPathHaltParent.cpp)

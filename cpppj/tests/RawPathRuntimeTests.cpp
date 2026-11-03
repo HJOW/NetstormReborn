@@ -73,6 +73,8 @@ struct PathScene {
     Sid parent;
     // process: same pool/hash/spot/Kernel 위에서 원본 이동 프로세스를 실행한다. 별도 좌표/공간 복사본을 만들지 않는다 (RawPathProcess).
     RawPathProcess* process{};
+    std::function<void(Sid)> afterHalt; // 새 검사에서 같은 부모 가상이 실제 Host 삭제를 선택하는 외부 입력이다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> haltDiagnostic; // 경로 소멸 뒤에도 살아 있는 검사 장치다.
     // pid: 커널의 프로세스 등록 번호. 입력 구성 또는 실행 결과 대조에 사용한다.
     ProcessId pid{};
     // returnCode: 반환 코드. 입력 구성 또는 실행 결과 대조에 사용한다.
@@ -123,7 +125,8 @@ struct PathScene {
             if (!willDelete) Event("repop,"+std::to_string(flags));const auto raw=pool.Slot(sid);
             CHECK(pop.Pop(sid,types[raw[10]],1,1,std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18)),flags)==RawPopResult::Registered);
         };
-        hooks.halt=[this](Sid) { Event("halt,"+std::to_string(haltCode));if (haltCode==11) willDelete=true;return haltCode; };
+        hooks.halt=[this](Sid parent) { Event("halt,"+std::to_string(haltCode));if (haltCode==11) willDelete=true;if (afterHalt) afterHalt(parent);return haltCode; };
+        hooks.assertion=[this](auto expression,auto file,auto line) { if (!haltDiagnostic) throw std::logic_error("경로 검사 진단 장치 미연결");haltDiagnostic(expression,file,line); };
         hooks.arrival=[this](Sid,std::uint32_t first,std::uint32_t second) {
             Event("arrival,"+std::to_string(first)+','+std::to_string(second)+','+std::to_string(returnCode));
             if (returnCode!=1002) willDelete=true;
@@ -354,4 +357,16 @@ TEST_CASE(rawProcessRemoval_missing_process_guard) {
     try { RemoveAttachedProcesses(scene.host,scene.parent,0); }
     catch (const std::logic_error& error) { rejected=std::string(error.what())=="실제 제거할 프로세스 부재"; }
     CHECK(rejected);
+}
+
+#include "client/ClientMain.h"
+#include "client/ClientGameplayGlobals.h"
+// 같은 Client checking과 실제 Kernel/Host의 자기 삭제 뒤 진단 복귀를 확인한다. 부모는 일반134다.
+TEST_CASE(PathHaltChecking_ActualClientHostDeletionAndCurrentDiagnostic) {
+    netstorm::client::ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;netstorm::client::Client client(std::move(options));
+    for (const auto initial:{0U,0x80000000U,0xffffffffU}) { // 현재 진단0/상위비트/전체비트를 각각 같은 실제 Host에 연결한다.
+        PathScene scene(OriginalEdition::Patch1078,false);auto& checking=client.GameplayGlobals()->AiDebug().Checking();checking=std::bit_cast<std::int32_t>(initial);scene.state.checking.Bind(checking);scene.haltCode=0;std::uint32_t diagnostics{};
+        scene.haltDiagnostic=[&](auto expression,auto file,auto line) { CHECK(expression=="result == haltALREADY_DEAD" && file=="\\Ns\\O\\Pathprocess.cpp" && line==0x2d5);CHECK(!scene.kernel.Get(scene.pid) && scene.deleted);++diagnostics;checking=0; };
+        scene.afterHalt=[&](Sid parent) { CHECK(parent==scene.parent);scene.host.Kill(*scene.process,0); };scene.process->RunFrame();CHECK(!scene.kernel.Get(scene.pid) && scene.deleted && diagnostics==(initial ? 1U : 0U) && !checking); // 삭제된 process 포인터를 이후 역참조하지 않는다.
+    }
 }

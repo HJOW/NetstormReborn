@@ -1,5 +1,6 @@
 // 이동/도착은 실제 raw 공간 효과를 호출하고, 자기 삭제 뒤에는 shared watch만 읽는다.
 #include "o/RawPathProcess.h"
+#include "o/RawPathHaltParent.h" // 패치의 현재 진단 복귀를 실제 수명 감시와 연결한다.
 #include "o/RawPathSearch.h"
 #include "o/RawProcessRemoval.h"
 #include "o/RawBalloonFrame.h"
@@ -91,6 +92,14 @@ bool RawPathProcess::Robust() const {
 }
 // callback 자체가 this를 지우면 돌아온 코드가 객체 필드를 읽지 않는다.
 bool RawPathProcess::Halt() {
+    if (pool_.Edition()==OriginalEdition::Patch1078) {
+        const auto watch=alive_;PathHaltParentHooks effects; // 자기 삭제 뒤에도 진단/수명 조회의 복사본만 남긴다.
+        effects.parent=[this] { return Parent(); };effects.halt=hooks_.halt;effects.alive=[watch] { return *watch; };effects.assertion=hooks_.assertion;
+        effects.forcedStop=[this](Sid parent) { return (pool_.Slot(parent)[40]&0x20U)!=0; };effects.mayKill=[this] { return MayMutate(); };effects.kill=[this] { Host()->Kill(*this,0); };
+        effects.boss=[this] { return state_.clock.boss; };effects.carrier=[this](Sid parent) { return (types_[pool_.Slot(parent)[10]].flags2&0x30000U)!=0; };effects.hasTargets=[this] { return runtime_.TargetB()!=0 || runtime_.TargetA()!=0; };
+        effects.retarget=[this](Sid parent) { if (!hooks_.retarget) throw std::logic_error("실제 운반 재탐색 몸체 미복원 경계");hooks_.retarget(runtime_,parent); };
+        return RunPathHaltParent(state_.checking,effects);
+    }
     const auto watch=alive_;const auto parent=Parent();auto result=hooks_.halt(parent);
     if (!*watch) { if (result!=12) throw std::logic_error("경로 Halt 자기 삭제 반환값");return true; }
     if (result==10 && (pool_.Slot(parent)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&0x20)!=0) result=11;

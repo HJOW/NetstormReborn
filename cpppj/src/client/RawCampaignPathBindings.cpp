@@ -57,6 +57,7 @@ std::unique_ptr<o::RawPathProcess> RawCampaignPathBindings::CreateType(std::uint
     const bool priest=type==processState_.priestProcess,flying=type==processState_.flyProcess,worm=type==processState_.wormProcess,balloon=type==processState_.balloonProcess,dude=type==processState_.dudeProcess,bulf=type==processState_.bulfProcess,walker=type==processState_.walkerProcess;
     if (!priest && !flying && !worm && !balloon && !dude && !bulf && !walker && type!=processState_.teleportProcess) throw std::logic_error("다른 캠페인 경로 생성자 미연결");
     o::RawPathProcessHooks hooks;
+    hooks.assertion=effects_.assertion; // 같은 현재 Client 장치를 경로의 독립 수명 복귀 부모로 복사한다.
     hooks.unpop=[this](o::Sid sid,std::uint32_t flags) { world_.Unpop(sid,flags); };
     hooks.repop=[this](o::Sid sid,std::uint32_t flags) { world_.Repop(sid,flags); };
     hooks.pop=[this](o::Sid sid,o::RawPathPoint point,std::uint32_t flags) { world_.Pop(sid,point.x,point.y,flags); };
