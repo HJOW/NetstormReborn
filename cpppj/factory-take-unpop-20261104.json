@@ -1,0 +1,124 @@
+{
+  "unit": 836,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "67d399fc / 20261104-17 CP",
+  "exeSha256": "ad5764db96aa59fdebe4010e3c161e83e9438b5586d80c96de417de491325c60",
+  "exeBytes": 10447360,
+  "sourceSha256": {
+    "cpppj/src/o/SquidFactory.h": "87cafe6aabb7f82d1ddd0d59744f47b5e6d01ee5fec82813ceb8e975564c73de",
+    "cpppj/src/o/SquidFactory.cpp": "ac71983ebb680e8223cb97710847ad10c6324f20784e7469b346751fee690d6e",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "23cf40f921462cf926bba9eae3d508c7f644efa41d6058b2dcc40dc607ee9891",
+    "cpppj/src/client/RawCampaignSession.cpp": "a30ea1ce32939bfc27d9880431816b3ddb310ec4f277769bda8f78f5756f3b1e",
+    "cpppj/tests/CreationTests.cpp": "a971539904334abb511aeca045aad3881afc4ea600b07a00f821df77ac0127b3",
+    "cpppj/tests/SquidContainedUnpopTests.cpp": "aa396fc14728b6fd885c425e759ac8a737be7f341f4aaacc616b91ea1619bb45",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "e7da23578826dc0bbf2f738cf80ff87de2e52fa7da0dd490e061498aed7e8900",
+    "cpppj/tests/CMakeLists.txt": "7caca84b7bbed5a69a60635f81a44ae9e7248866ea18ca5e7dccfefa3bfc2c49"
+  },
+  "sourceScope": [
+    "PATCH004af610의 모든 !free→실제 가상Unpop(0), void/contained 선행거부 제거",
+    "현재state&fc 뒤 현재요청TYPE 지원/constructor 재조회→생성자→TYPE→현재void OR",
+    "PATCH004ad4a0의 !isForm7f6 진단복귀→현재TYPE zOrder BYTE→!isContained7fa 진단복귀",
+    "실제 World/독립Session의 같은현재TYPE span/Client진단; 독립 입력의기존TYPE사본유지"
+  ],
+  "staticPeVtables": {
+    "patchAssetVtables": 83,
+    "unpopOffset48": "모두004afe50",
+    "postTakeOffset2c": "모두004ad4a0",
+    "mismatches": 0
+  },
+  "nativeHardwareNewRows": 0,
+  "newFixtures": 0,
+  "tests": [
+    {
+      "filter": "FactoryTakeChecking_",
+      "cases": 8,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-836\\test-factory-take-first.log",
+      "sha256": "d7777e881146aa28f8c2e4c4d616d96745fb8d6e182e81f242b29d75e8ae5920"
+    },
+    {
+      "filter": "SquidFactory",
+      "cases": 8,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-836\\test-creation-regression.log",
+      "sha256": "2b03266b063bb0ba01d55690dc29c2ff866db7769849306edd2a6a2685786651"
+    },
+    {
+      "filter": "SquidContainedUnpop_",
+      "cases": 11,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-836\\test-contained-regression.log",
+      "sha256": "29d0048878ea602017385081563de92e0544f3823865b8cb8f03246f087672bd"
+    },
+    {
+      "filter": "SquidUnpop",
+      "cases": 7,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-836\\test-unpop-regression.log",
+      "sha256": "ffb1ee724717e37710525a0b40cccaad804cfddbe0e037fc6cb214f9dafcdba6"
+    },
+    {
+      "filter": "TypeConstructors_X86Table",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-resume-836\\test-constructor-table.log",
+      "sha256": "c5cede489e8132c677e338c18b477f6d49ec7e32844ced0c9d65b072f34b799d"
+    }
+  ],
+  "focusedCases": 35,
+  "newCases": 8,
+  "actualSessionVariants": 4,
+  "initialTestFailures": 0,
+  "existingNativeEvidence": {
+    "baseCreationRows": 964,
+    "derivedCreationRows": 6028,
+    "creationBegins": 12,
+    "constructorRows": 359,
+    "unpopParentRows": 1300,
+    "unpopSteps": 3618,
+    "unpopVtableRows": 151
+  },
+  "builds": [
+    {
+      "log": "extracted\\cpp-resume-836\\build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "420a012158a3a333bb0883ab9e0110fcc0798e12459cca7f98da05a12dd621a7"
+    }
+  ],
+  "checking": {
+    "remaining": 14,
+    "parents": 8,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 34,
+    "completedPartial": 3,
+    "closedThisUnit": [
+      "004afe50"
+    ]
+  },
+  "protection": {
+    "files": 2759,
+    "fixtureFiles": 939,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted\\cpp-resume-836\\protected-after.json",
+    "sha256": "4d1a48ced6ab8f7f0b8652d734c0123de1d459e19e15f57d8c092c707b7bbb69"
+  },
+  "boundaries": [
+    "Factory의SID범위/타입불일치 원문상세로그·진단정상복귀는기존호스트거부로남는다. Factory전체복원완료가아니며004afe50 checking부모와현재Take소비자연결만완료다.",
+    "CD Take의기존contained guard/void생략/상태순서와CD PostTake기존경계를유지했고10.78변경을CD전체복원으로합산하지않는다.",
+    "새7개순수계약/실제Session1개는독립CPU새관측이아니다. 초기지원TYPE검사위치/현재VT분배의정적리뷰지적은첫빌드전에해소했다.",
+    "실제게임/GUI·공격/포획/희생/승리·신규MP/통신·공중3종전용·물리/PCM/CD삽입검사0. 전체71/CTest/34미션/ZIP반복0."
+  ]
+}

@@ -1360,6 +1360,8 @@ LAB_004ad54f:
 
 ## FUN_004afe50 @ 004afe50
 
+**836 완료:**835의공통contained 실제종단뒤836에서모든 !free Take의void포함실제Unpop 호출·현재TYPE/상태/후단진단을연결했다. 집중35개(새8) 첫실행실패0·기존원문fixture불변이며004afe50 checking부모를완료집계한다. 잔여14=부모8/부분3/MP3,완료부모34/부분3이다. Factory자체SID/TYPE불일치진단과CD경계는별도미완료다. [836 기록](cpp-factory-take-unpop-20261104.md).
+
 **834 일반 경로 부분 연결(전체 미완료):**현재 checking/진단 정상 복귀·저장 TYPE/spot byte와 현재 TYPE·void→해시→표시를 실제 Client/World·독립Session에 연결했다. CPU1300행/진단670·재관측·집중10개(새3) 실패0이다. contained60행은004ac6b0→004ad230 요청만 외부 관측했으며 실제 하위 종단 연결이 남아 checking15/완료부모33을 유지한다. 기존 guard의 잘못된 사전 무변경 가정은 원문 근거로 교정했고 기존 fixture는 불변이다. [834 기록](cpp-squid-unpop-checking-20261104.md).
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상

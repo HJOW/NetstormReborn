@@ -6,21 +6,21 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-04, 단위 835 완료·재개 진행 중·전체 미완료)
+### 0.1 현재 값 (2026-11-04, 단위 836 완료·재개 진행 중·전체 미완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **전체 목표 미완료·재개 진행 중.** 2026-11-04 새 `/goal` 요청으로 이전 일시 정지를 해제했다. 835에서 contained004ac6b0→004ad230의 실제 종단/World·Session·입력 큐를 연결했다. 다음836은 Take 상위 호출자다.0.4절은 직전 인계 이력이며0.5절이 최신이다. |
-| 현재 제품 | **835 / 표시 11.01.** 공통 contained 링크/현재 부모 통지와 실제 Session·UpdateContents 입력 큐를 연결했다. Take 상위의 contained 거부/void 생략이 남아 checking15를 유지한다 |
-| 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반 31+데모 3의 마지막 전체 진입 검증은 **645의 644 제품**이며 현재 835의 전체 회귀 결과가 아니다 |
+| 진행 상태 | **전체 목표 미완료·재개 진행 중.** 2026-11-04 새 `/goal` 요청으로 이전 일시 정지를 해제했다. 835의 실제 contained 종단 뒤836에서 Take의 void포함 실제 호출/현재TYPE·후단진단을 연결했다. 다음837은 객체 메뉴의 현재 가상80이다.0.4~0.5절은 직전 이력이며0.6절이 최신이다. |
+| 현재 제품 | **836 / 표시 11.01.** Take의 실제 Unpop 호출/현재TYPE와PostTake 진단복귀를 연결했다.004afe50 checking부모를 완료해 checking14다 |
+| 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반 31+데모 3의 마지막 전체 진입 검증은 **645의 644 제품**이며 현재 836의 전체 회귀 결과가 아니다 |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | `756f9972fe128efe612bc66df16c3d2ea39716f1bab0803301cff7a780563600` (835 / 11.01) |
-| 최신 빌드·집중 검사 | 835 집중19개(새11) 최종 실패0. 원문1300행/Unpop3618단계·VT151 회귀와 실제 Client/Session·GumpForm·입력 FIFO 통과. 최초 TYPE74 검사 가정 단언1실패를 보호 banner 정확 값으로 교정(제품 수정0), 첫 소스/로그 보존. 새 독립CPU/fixture0. 빌드2회 종료0·경고/오류0. 실제 게임/GUI/공격/MP0 |
-| checking 잔여 | **15함수 = 부모9 + 부분3 + MP분류3 유지.** 835는contained 종단까지 연결했으나 Take 상위가 남아004afe50 전체 완료로 집계하지 않았다. 완료부모33/완료부분3이다. 부모004a7510·부분004b54e0/004b8cb0은 같은 집계 안에서8번MP 미완료 이월이다 |
+| EXE SHA-256 | `ad5764db96aa59fdebe4010e3c161e83e9438b5586d80c96de417de491325c60` (836 / 11.01) |
+| 최신 빌드·집중 검사 | 836 집중35개(새8) 첫 실행 실패0. 실제 Session4조합/현재TYPE·GumpForm·FIFO와 원문 생성6992행/생성자359·Unpop1300행/3618단계·VT151 회귀 통과. 새 독립CPU/fixture0. 빌드1회 종료0·경고/오류0. 실제 게임/GUI/공격/MP0 |
+| checking 잔여 | **14함수 = 부모8 + 부분3 + MP분류3.**836에서004afe50의실제Take호출자/후단을이어완료했다. 완료부모34/완료부분3이다. 부모004a7510·부분004b54e0/004b8cb0은 같은 집계 안에서8번MP 미완료 이월이다 |
 | 마지막 GUI | **794에서 793 제품**의 시작/메인 메뉴를 확인. 815 GUI 통과로 합산하지 않는다 |
 | 전체 검사 기준 | 실행 대상66/전체 빌드 대상71. 전체71 마지막 컴파일은779. 전체 C++ 마지막 실행은549의3389개 중7개 실패(580단언); 마지막 전체 통과는510의508제품3337개. 이후 집중 통과를 전체 통과로 쓰지 않는다 |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
-| 보호 기준 | 기존2758개/fixture938개 불변. 새 CPU fixture 포함 **2759개/939개**이며 원본/기존 fixture 변경0. `extracted/cpp-resume-835/protected-after.json` |
+| 보호 기준 | 기존2758개/fixture938개 불변. 새 CPU fixture 포함 **2759개/939개**이며 원본/기존 fixture 변경0. `extracted/cpp-resume-836/protected-after.json` |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
@@ -28,7 +28,7 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 1. 사용자 재개 요청 뒤 AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 해당 인계도 읽는다. `git status`와 `git fetch`로 다른 PC/세션 변경을 확인하며 push는 하지 않는다.
 2. 현재 호스트가 마지막 디컴파일 호스트와 다르면 cpppj 작업/디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 문서에 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 불완전하므로 쓰지 않는다.
 3. 실제 게임·별도 창 실행은 AGENTS.md의 확인 규칙을 따른다. 예외는 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94) 및 사용자가 직접 요청한 원본 수동 컨트롤/녹화 분석의 해당 단계다. 다른 PC는 실행 목적·필요성 설명 후 명시적 확인이 필요하다.
-4. 최신 정적 범위 정정 원시는 `extracted/cpp-resume-831/`이며 최신 제품/검사 원시는 `extracted/cpp-resume-835/`이며 Git 제외·작업 PC 전용이다. 커밋되는 증거는 `cpppj/*.json`·`docs/exe/cpp-*.md`다. 다른 PC에 원시가 있다고 가정하지 않는다.
+4. 최신 정적 범위 정정 원시는 `extracted/cpp-resume-831/`이며 최신 제품/검사 원시는 `extracted/cpp-resume-836/`이며 Git 제외·작업 PC 전용이다. 커밋되는 증거는 `cpppj/*.json`·`docs/exe/cpp-*.md`다. 다른 PC에 원시가 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj/webpj·staged 파일·실행 출력은 포함하지 않는다. 한 단위를 마치면 0.1절·해당 완료/잔여 항목·단위 문서를 갱신하고 해당 파일만 로컬 커밋한다.
 6. 네 Gun809·Canon810→811·전환812·레벨813·ContentForm814·Graph 참조 감소/SID0조회815는 완료했다. 816의 sentinel/Free와817의 flags8 부품도 완료했다. 818의 Add/Flood/Rebuild/Allocate/PostPop/PostDestroy와819의 Detach/영역 setter 현재 실행을 완료했다. 820~821에서 Boardcoord0041cdb0의 현재 각도/세 직접caller·방향 네 소비자·실제 바람/입자를 연결했다. 822 주변음/날씨 scheduler를 완료했다. 823은004182c0 시간 알림/임시서식 부모를 연결했다. 824에서00471650의 미도달 진단/현재 수명을 대조했다. 825에서0044c060 연소 갱신의 진단 복귀/실제 Session 회복·생성·삭제를 완료했다. 826에서00472f70 마나 공급원 목록/카운터 진단을 완료했다. 827에서004c0e20은 첫 영역이 아닌 첫 청크record[3] 시드이고 두caller는 군도 전용 분기임을 확인했다. 일반 성장에 삽입하지 않고 군도 상위와 함께 미완료로 남긴다. 828에서 제단00448bd0의 현재 진단 복귀/같은 실제 공간·프레임과 현재 권한을 연결했다. 829에서 숫자 송금004c9350의 현재 checking/진단·대상 수명을 연결했다. 830에서004d62b0의 세 checking이 고정 송금 AI 가지임을 확인하고 실제 원문 위치/현재 서비스에 연결했다. checking17과 객체 메뉴·커서 상태/수명도 남는다. 831에서004b8cb0의 서버 전환/재접속을 같은 부분 집계 안에서8번MP로 미완료 이월했다. 832에서00489ff0의 현재 진단 복귀/같은 Client·Host 삭제/기존 재지정을 연결했다. 833에서0048b340의 현재 SID 진단/항상참 반환과 실제 도착 자기 삭제·겹침 정리를 연결했다. 834에서 공통 Unpop004afe50 일반 공간/진단을 부분 연결했으나 contained 종단이 남아 checking15를 유지한다. 834 뒤의 일시 정지는 새 `/goal`로 해제했으며835에서 해당 실제 종단부터 진행한다. 포획 안내 실행/실제 포획 등 사용자 제외 검사는 계속 건너뛴다.
 
@@ -57,8 +57,16 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 - 새 `/goal`로 재개해 AGENTS/이 문서/dotnet 인계·hostname/status/fetch를 확인했다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**으로 현재 호스트와 일치한다.
 - 공통 종속004ac6b0→004ad230/CD004ac160→004acf40의 실제 getter/prev·next·부모head·진단복귀/부모통지·Form검색/UpdateContents39 예약을 같은 World/Session/Client 입력큐에 연결했다. Session 엔진을 World가 weak참조로 빌리고 프로세스 정리 뒤 반납한다. [835 기록](docs/exe/cpp-squid-contained-unpop-20261104.md).
 - 집중19개(새11) 최종 실패0·Release2회 종료0·경고/오류0이다. 최초 TYPE74를 빈 base로 가정한 검사 단언1실패는 보호 banner/flags 정확 값으로 교정했고 제품 수정0·첫 소스/로그/덤프를 보존했다. 새 독립CPU/fixture0이며 보호2759개/fixture939개 변경0이다. 제품/EXE SHA는0.1절이다.
-- **다음836:**원문004af610은 모든 !free 슬롯에서 가상Unpop(0)을 호출하지만 현재Factory::Take는 contained선행거부/void호출생략과 생성자 전void쓰기를 갖는다. PostTake의LiveBytes contained거부도 대조해야 한다. 이 상위 연결 전에는004afe50 전체 완료로 세지 않으며 checking15=부모9+부분3+MP3·완료부모33/부분3을 유지한다. 다음 당일 커밋번호18부터 확인한다.
+- **836 진행 중(빌드/검사 전):**Factory current TYPE/진단과 PATCH !free의 void포함 실제Unpop·생성순서·PostTake진단복귀 소스를 작성했다. 실제 World/Session 현재TYPE·진단을 연결하고 계약검사를 확장 중이다. 최신 검증 제품은835다. 원문004af610은 모든 !free 슬롯에서 가상Unpop(0)을 호출하지만 현재Factory::Take는 contained선행거부/void호출생략과 생성자 전void쓰기를 갖는다. PostTake의LiveBytes contained거부도 대조해야 한다. 이 상위 연결 전에는004afe50 전체 완료로 세지 않으며 checking15=부모9+부분3+MP3·완료부모33/부분3을 유지한다. 다음 당일 커밋번호18부터 확인한다.
 - 공통Pop004b02d0의 현재TYPE/좌표/spot부분변경·해시/SHP·firstPop/Activate와 checking진단은 별도 미완료다. 실제 포획/희생/특정 적 공격/승리·사용자 직접 확인·신규MP/통신·공중3종 전용·물리/PCM 재시도는 제외한다. 전체71/CTest/34미션/ZIP 반복0·push0·DN/WB 변경0이다.
+
+### 0.6 2026-11-04 단위836 완료·다음837
+
+- PATCH Take의모든 !free→실제Unpop(0),현재state&fc뒤현재constructor→TYPE→void와PostTake의7f6→현재zOrder쓰기→7fa진단복귀를연결했다. World/Session도같은현재TYPE·Client진단을빌린다.83개VT+48/+2c를PE전수확인했다. [836 기록](docs/exe/cpp-factory-take-unpop-20261104.md).
+- 집중35개(새8) 첫실행 실패0·Release1회 종료0·경고/오류0이다. 실제Session4조합과 기존원문생성6992행/생성자359·Unpop1300행/3618단계·VT151을유지했다. 새CPU/fixture0·보호2759개/fixture939개변경0이다. 제품/EXE SHA는0.1절이다.
+- **checking14=부모8+부분3+MP3·완료부모34/부분3**이다.835의종단뒤836의Take호출자까지연결해004afe50을완료집계했다. Factory자체SID/TYPE불일치상세로그·진단정상복귀와CD기존Take/PostTake/contained경계는별도잔여로남는다. Factory전체·시나리오전체완료가아니다.
+- **다음837(우선순위1):**객체메뉴 Summary/회수의object.count가현재TYPE ctorVT와현재VT쌍일치를요구하는차이를고친다. 원문004ada70은현재VT+80으로직접분배하며83개중81개공통레벨/제단5076b8/다이스507950이다. 실제GUI실행없이현재Summary소비자로검사가능하다. 다음당일커밋번호19부터확인한다.
+- 후속자료: CanBridge449710/BridgeCommand449900은진단복귀/내용물finder선행·현재동맹/권한이남고실제희생플레이는제외다. 공통Pop4b02d0은현재TYPE/프레임조회시점·spot부분효과/checking·firstPop/Activate경계가남는다. 실제포획/희생/특정적공격/승리·사용자직접확인·신규MP/통신·공중3종전용·물리/PCM재시도는계속제외한다. 전체71/CTest/34미션/ZIP반복0·push0·DN/WB변경0이다.
 
 ## 1. 현행 목표
 
@@ -172,6 +180,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 - [x] **공통 contained 종단/실제 입력큐(835):**004ac6b0→004ad230의 실제 혼합링크·부모통지·UpdateContents39 예약과 World/Session weak대여를 연결했다. 집중19개(새11) 최종실패0·빌드2회 종료0·새CPU/fixture0·보호2759개 불변. Take 상위가 남아 checking15유지다. [835 기록](docs/exe/cpp-squid-contained-unpop-20261104.md).
 
+- [x] **실제 Take Unpop/현재 TYPE·PostTake(836):**PATCH의모든 !free/void진단호출과현재state·constructor→TYPE→void·zOrder/후단진단복귀를같은World/Session에연결했다. 집중35개(새8) 첫실행실패0·빌드1회종료0·기존fixture불변으로004afe50완료/checking14다. Factory자체진단/CD별도경계는남는다. [836 기록](docs/exe/cpp-factory-take-unpop-20261104.md).
+
 ### 2.2 미션별 확보한 증거
 
 모든 행은 **과거 해당 제품의 증거**다. 현재 826의 자연 완주 회귀로 합산하지 않는다. 전체 34 최신 기준은645/644 제품이다.
@@ -235,9 +245,10 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 **현재 연결 기준:** 네 Gun PostPop809·CanonDecoder810→811·전환812·레벨813·ContentForm814·Graph 참조/SID0조회815는 완료했다. [815 기록](docs/exe/cpp-graph-reference-checking-20261103.md). 818에서 Add와 postPop/postDestroy,819에서 Detach·영역 setter·World 정책/시계를 완료했다. sentinel8/Flood4 호출도 현재 실행이다.820~821에서 각도 세caller와 방향4곳·바람/입자를 완료해 함수 잔여23으로 갱신했고824 PaletteFlash 미도달진단/현재수명 완료 뒤22였고825 연소 갱신/회복 뒤21이었고826 마나 등록 완료 뒤20이었고828 제단 해방 부모 완료 뒤19였고829 숫자 확인 완료 뒤18이었고830 UserInput 세 checking 완료 뒤17이었고832 공통 Halt 완료 뒤16이었고833 공통 도착 완료 뒤15였고834 Unpop 일반 경로는 contained 종단 미연결로 완료 집계하지 않아15를 유지한다.
 
-- [ ] **checking 잔여 15함수**를 [함수별 공백](docs/exe/cpp-checking-consumer-gaps-20261103.md)에서 이어 간다. 부모 9/부분 3/MP 분류 3이며 779 당시 51개 중 2.1절의 33부모는 완료다. 부모004a7510 재접속도8번MP로 이월하며 완료로 세지 않는다. ContentForm 부분 `004aec10`은814·숫자 확인 `004c9350`은829·UserInput checking `004d62b0`은830 완료다. 남은 부분은 `0048fb30/004b54e0/004b8cb0`이다. `004b54e0` 재접속 저장·`004b8cb0` 서버 전환/StateReconnect는 부분 3의 집계에 남지만 작업은 8번MP로 이월한다. MP 분류 3(`0042bc10/004b4df0/004b8b20`)도 8번이다.
-- [ ] **공통 Unpop 상위(재개 우선):**835에서004ac6b0→004ad230의 실제 종속 링크/부모 통지/현재 GumpForm/입력 큐 종단을 연결했다.836에서Factory::Take의contained 선행거부/void 호출생략·현재상태/후단을 처리한 뒤004afe50 전체 완료를 판정한다.834 CPU contained60행은 여전히 외부요청 관측이다. 나머지 신규MP/공중3종 전용·실제 포획/희생/공격/승리 검사는 제외한다.
+- [ ] **checking 잔여 14함수**를 [함수별 공백](docs/exe/cpp-checking-consumer-gaps-20261103.md)에서 이어 간다. 부모 8/부분 3/MP 분류 3이며 779 당시 51개 중 2.1절의 34부모는 완료다. 부모004a7510 재접속도8번MP로 이월하며 완료로 세지 않는다. ContentForm 부분 `004aec10`은814·숫자 확인 `004c9350`은829·UserInput checking `004d62b0`은830 완료다. 남은 부분은 `0048fb30/004b54e0/004b8cb0`이다. `004b54e0` 재접속 저장·`004b8cb0` 서버 전환/StateReconnect는 부분 3의 집계에 남지만 작업은 8번MP로 이월한다. MP 분류 3(`0042bc10/004b4df0/004b8b20`)도 8번이다.
+- [x] **공통 Unpop 실제 종단/Take 상위(835~836):**004ac6b0→004ad230의실제종속링크/부모통지/현재GumpForm/입력큐와Factory::Take의void포함실제호출/현재TYPE·후단을연결했다.004afe50 checking부모완료/잔여14다.834 CPU contained60행자체는여전히외부요청관측이며835~836의실제부품연결검사와구별한다.
 - [ ] **군도 첫 시드/상위:**004c0e20/CD0049de40은 raw+5/record[3] 시드이며 두caller는 군도 분기다(827). 흩뿌리기004c13f0·밀도/성장/플레이어 배치·실제 상위/root와 함께 복원한다. 현재 일반 성장에 검사 호출을 임의 추가하지 않는다.
+- [ ] Factory자체004af610의SID범위/TYPE불일치상세로그·원문진단정상복귀와나머지부모/쓰기경계를대조한다.836의004afe50연결완료를Factory전체완료로확대하지않는다.
 - [ ] 비멀티 파생 프로세스·State/Session의 남은 수명과 전체 팔레트 전환·Chat 모드별 표시·시스템뉴스 UI를 연결한다. 원격/메타맵·desc는8번이다.
 - [ ] 경로 고리/FileSpec·BaseFile의 **분류만 했거나 아직 연결하지 않은 소비자**, 최초 FILE/리소스 I/O·다른 쓰기/키/스트림·TAFF/보조 폴백·손상/할당/부분 I/O 실패 수명을 대조한다. 이미 실제 연결한 reader/FontStore/SHP·Edit 쓰기는 2.1절을 따른다. [785의 직접 74caller 분류](docs/exe/cpp-secondary-sound-root-20261103.md)는 모든 부모 구현 완료가 아니다. 등록 snapshot/무진단 optional·OS 직접 ReadFileBytes 계약을 보존한다.
 - [ ] options.cfg의 실제 부분 I/O·1176/1177 실패 경계, 원문 FILE/FileSpec/SEH와 호스트 소유 경계의 남은 차이를 판정한다. `0044fa00`의 재접속 저장 소비자는 `004b54e0`과 함께8번이다. CD 일반 열기는 `004ba5d0`, 부분 파일은 `004ba630`이며 자동 정밀 후보의 반대 대응을 따르지 않는다(652). 실제 UNC 서버/다른 드라이브 상대CWD 등 미관측 경계도 보존한다.

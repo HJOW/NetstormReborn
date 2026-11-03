@@ -1,9 +1,12 @@
 // 공통 종속 해제의 링크·진단 복귀·UI 큐 계약을 명시 입력으로 검사한다. 새 CPU 관측이나 실제 플레이 검사가 아니다.
 #include "TestSupport.h"
 #include "o/RawSquidContainedUnpop.h"
+#include "o/SquidFactory.h"
+#include "o/SquidUnpop.h"
 #include <algorithm>
 #include <array>
 #include <functional>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -183,4 +186,108 @@ TEST_CASE(SquidContainedUnpop_CommonVirtualGettersKeepWordAndNeighborBytes) { //
         scene.Put(scene.source,0,0);scene.Put(scene.source,2,0);
         CHECK(ContainedFailed([&] { CommonContainedParent(scene.pool,scene.source); }) && ContainedFailed([&] { CommonContainedPrevious(scene.pool,scene.source); }) && ContainedFailed([&] { CommonContainedSetPrevious(scene.pool,scene.source,Sid{1}); })); // 모르는 VT를 공통 필드 추정으로 대체하지 않는다.
     }
+}
+
+namespace { // Take 상위는 실제 공간 해제/공통 종속 몸체와 동일한 물리를 사용한다.
+std::vector<RiftTypeRecord> FactoryTakeTypes() { // 생성자 주소는 원문 표에서 읽으며 동작 입력은 합성 TYPE74/75만 사용한다.
+    std::vector<RiftTypeRecord> types(188);
+    for (std::size_t number=0;number<types.size();++number) types[number].constructorAddress=TypeConstructorAddress(OriginalEdition::Patch1078,number); // 원문 생성자 전체 표를 현재 TYPE의 최초 입력으로 사용한다.
+    types[74].zOrder=17;types[75].zOrder=34;types[74].footX=types[74].footY=types[75].footX=types[75].footY=1;return types;
+}
+struct FactoryTakeScene { // 원본 게임 실행 없이 서버 SID의 동일 공간/생성/종속 연결을 구성한다.
+    SidPool pool{OriginalEdition::Patch1078,32768}; // Take가 요구하는 서버 번호 영역을 실제 풀에 확보한다.
+    SquidHash hash; // 일반 Unpop과 동일한 네 단계 공간 해시다.
+    std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); // 동일한 전체 점유 지도다.
+    std::vector<RiftTypeRecord> types=FactoryTakeTypes(); // 진단/부모 알림에서 수정할 현재 TYPE 저장소다.
+    SquidUnpop unpop{pool,hash,spots}; // Factory가 실제로 호출하는 공통 공간 해제다.
+    SquidFactory factory{pool,types,false,&unpop}; // 현재 TYPE와 진단은 생성자 뒤 명시 연결한다.
+    std::uint32_t contentFormType{6},gumpFormType{3},uiEvent{0x02000039}; // 공통 contained 후처리가 읽는 현재 DWORD다.
+    std::unique_ptr<RawSquidContainedUnpop> contained; // 같은 풀의 실제 링크 해제/UI finder 몸체다.
+    Sid source{},parent{}; // 실제 factory가 할당한 합성 자산과 부모 SID다.
+    std::size_t parentNotices{}; // 실제 공통 분리가 요청한 부모 통지 횟수다.
+    std::vector<std::uint32_t> diagnostics; // Unpop과 PostTake의 진단 순서를 함께 보관한다.
+    std::vector<std::array<std::uint32_t,3>> commands; // 현재 UI 명령 요청의 세 DWORD다.
+    std::function<void(std::uint32_t)> onAssertion; // 선택 진단이 정상 복귀하기 전에 바꿀 명시 입력이다.
+    std::function<void()> onParentNotice; // 분리가 끝난 뒤 상위 Take 재개 전의 명시 변경 입력이다.
+
+    FactoryTakeScene() { // callback 수명은 이 장면을 넘지 않으며 선택한 실제 장치만 사용한다.
+        const auto assertion=[this](std::string_view,std::string_view file,std::uint32_t line) { CHECK(file=="\\Ns\\O\\Squid.cpp");diagnostics.push_back(line);if (onAssertion) onAssertion(line); }; // 두 부모의 같은 원문 파일/현재 진단을 연결한다.
+        factory.BindDiagnostics({types,assertion});unpop.BindDiagnostics({{},types,assertion});
+        source=factory.Create(74);parent=factory.Create(74,2);auto raw=Raw(source);raw[11]=8;Put(source,14,parent.value);Put(source,16,0);Put(parent,6,source.value);raw[34]=7;
+        for (std::size_t byte=26;byte<30;++byte) raw[byte]=static_cast<std::uint8_t>(0xa0+byte-26); // Take가 보존하거나 생성자가 지울 HP 입력이다.
+        SquidContainedUnpopHooks hooks;hooks.parent=[this](Sid sid) { return CommonContainedParent(pool,sid); };hooks.previous=[this](Sid sid) { return CommonContainedPrevious(pool,sid); };hooks.setPrevious=[this](Sid sid,Sid previous) { CommonContainedSetPrevious(pool,sid,previous); }; // 실제 VT의 세 링크 getter/setter를 실행한다.
+        hooks.parentNotice=[this](Sid p,Sid object,std::uint32_t reason) { CHECK(p==parent && object==source && reason==2);++parentNotices;if (onParentNotice) onParentNotice(); }; // 부모 알림은 실제 분리 후에만 관측한다.
+        hooks.command=[this](std::uint32_t event,std::uint32_t object,std::uint32_t value) { commands.push_back({event,object,value}); };hooks.assertion=assertion; // 새 UI가 아닌 실제 요청 인자만 관측한다.
+        contained=std::make_unique<RawSquidContainedUnpop>(pool,SquidContainedUnpopState{contentFormType,gumpFormType,uiEvent,{},[] { return false; },[] { return true; }},std::move(hooks));
+        unpop.BindContainedUnpop([this](Sid sid) { contained->Unpop(sid); }); // Take→공통 Unpop→실제 종속 해제/UI를 같은 풀에서 연결한다.
+    }
+    std::span<std::uint8_t> Raw(Sid sid) { const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // 진단 복귀의 현재 free/타입 변경도 같은 물리에 구성한다.
+    std::uint16_t Word(Sid sid,std::size_t at) { const auto raw=Raw(sid);return static_cast<std::uint16_t>(raw[at]|(std::uint16_t(raw[at+1])<<8)); } // 실제 링크 WORD를 읽는다.
+    void Put(Sid sid,std::size_t at,std::uint16_t value) { auto raw=Raw(sid);raw[at]=static_cast<std::uint8_t>(value);raw[at+1]=static_cast<std::uint8_t>(value>>8); } // 같은 슬롯의 이웃 payload를 보존한다.
+    std::uint32_t Table() { return std::uint32_t(Word(source,0))|(std::uint32_t(Word(source,2))<<16); } // 실행 포인터와 구별되는 생성자 VT 기록값이다.
+};
+}
+
+TEST_CASE(FactoryTakeChecking_VoidAndLiveContainedUseActualUnpop) { // !free void도 진단을 실행하며 일반 contained만 실제 링크를 해제한다.
+    for (const bool initiallyVoid:{false,true}) { // 같은 Take 요청에서 Unpop의 void 조기 반환 차이를 관측한다.
+        FactoryTakeScene scene;scene.Raw(scene.source)[11]=initiallyVoid ? 12 : 8;const auto free=scene.pool.FreeCount();const auto spots=scene.spots;
+        CHECK(scene.factory.Take(74,scene.source)==scene.source);const auto raw=scene.Raw(scene.source);
+        CHECK(scene.diagnostics==(initiallyVoid ? std::vector<std::uint32_t>{0x5d9,0x7fa} : std::vector<std::uint32_t>{0x5d9}));
+        CHECK(scene.parentNotices==(initiallyVoid ? 0U : 1U) && scene.Word(scene.parent,6)==(initiallyVoid ? scene.source.value : 0U));
+        CHECK(raw[10]==74 && raw[11]==(initiallyVoid ? 12U : 4U) && raw[35]==17 && raw[34]==7 && raw[26]==0xa0 && raw[29]==0xa3 && scene.Table()==0x501dd0);
+        CHECK(scene.pool.FreeCount()==free && scene.spots==spots && scene.commands.empty()); // Take는 할당 장부나 실제 점유 지도를 새로 초기화하지 않는다.
+    }
+}
+
+TEST_CASE(FactoryTakeChecking_VoidDiagnosticCanResumeContainedUnpop) { // void 입력도 실제 Unpop 진단에서 바뀐 현재 상태로 본문을 재개한다.
+    FactoryTakeScene scene;scene.Raw(scene.source)[11]=12;
+    scene.onAssertion=[&](std::uint32_t line) { CHECK(line==0x5d9 && scene.Raw(scene.source)[11]==12);scene.Raw(scene.source)[11]=8; }; // 진단 복귀가 void를 해제한 명시 입력이다.
+    scene.factory.Take(74,scene.source);
+    CHECK(scene.diagnostics==std::vector<std::uint32_t>{0x5d9} && scene.parentNotices==1 && scene.Word(scene.parent,6)==0 && scene.Raw(scene.source)[11]==4);
+}
+
+TEST_CASE(FactoryTakeChecking_DeadParentKeepsLinksAndPostTakeWritesBeforeDiagnostic) { // 부모 dead는 링크를 유지하지만 UI 후처리와 PostTake를 생략하지 않는다.
+    FactoryTakeScene scene;scene.Raw(scene.parent)[11]|=2;const auto gump=scene.factory.CreateGumpForm(2);scene.Put(scene.source,6,gump.value);
+    scene.onAssertion=[&](std::uint32_t line) { if (line==0x7fa) { CHECK(scene.Raw(scene.source)[10]==74 && scene.Raw(scene.source)[11]==12 && scene.Raw(scene.source)[35]==17);CHECK(scene.commands.size()==1); } }; // zOrder 쓰기와 자신의 UI 검색이 먼저 완료되어야 한다.
+    scene.factory.Take(74,scene.source);
+    CHECK(scene.diagnostics==(std::vector<std::uint32_t>{0x5d9,0x7fa}) && scene.Word(scene.parent,6)==scene.source.value && scene.parentNotices==0 && scene.Raw(scene.source)[11]==12);
+    CHECK(scene.commands.size()==1 && scene.commands.front()==(std::array<std::uint32_t,3>{0x02000039,scene.source.value,0}));
+}
+
+TEST_CASE(FactoryTakeChecking_PostTakeReadsCurrentTypeAndPreservesWriteOrder) { // !isForm 진단 뒤 TYPE를 재조회하고 contained 진단 전에 zOrder를 쓴다.
+    FactoryTakeScene scene;auto raw=scene.Raw(scene.source);raw[10]=3;raw[11]=9;raw[35]=0xaa;
+    scene.onAssertion=[&](std::uint32_t line) {
+        if (line==0x7f6) { CHECK(raw[35]==0xaa);raw[10]=74;scene.types[74].zOrder=0x133; }
+        else { CHECK(line==0x7fa && raw[35]==0x33);raw[10]=75;scene.types[75].zOrder=0x144; } // 늦은 진단의 새 TYPE로 앞선 zOrder 쓰기를 반복하지 않는다.
+    };
+    scene.factory.PostTake(scene.source);
+    CHECK(scene.diagnostics==(std::vector<std::uint32_t>{0x7f6,0x7fa}) && raw[10]==75 && raw[11]==9 && raw[35]==0x33 && raw[26]==0xa0 && raw[34]==7);
+}
+
+TEST_CASE(FactoryTakeChecking_CurrentConstructorAndStateAfterUnpop) { // 분리 통지 뒤의 현재 생성자/상태를 쓰고 요청 TYPE→void→PostTake를 진행한다.
+    FactoryTakeScene scene;
+    scene.onParentNotice=[&] { auto raw=scene.Raw(scene.source);raw[10]=75;raw[11]=0x83;scene.types[74].constructorAddress=0x4794e0;scene.types[74].zOrder=0x123; }; // 원문 anim 생성자는 extra2/VT/WORD8/HP DWORD를 쓴다.
+    scene.factory.Take(74,scene.source);const auto raw=scene.Raw(scene.source);
+    CHECK(scene.diagnostics==std::vector<std::uint32_t>{0x5d9} && scene.parentNotices==1 && scene.Table()==0x50cc08 && raw[10]==74 && raw[11]==0x84 && raw[35]==0x23 && raw[34]==7 && (raw[40]&2U));
+    CHECK(scene.Word(scene.source,8)==0 && scene.Word(scene.source,26)==0 && scene.Word(scene.source,28)==0); // 최초 TYPE 사본의 base 생성자로 대체하면 이 결과를 얻지 못한다.
+    FactoryTakeScene invalid;
+    invalid.onParentNotice=[&] { invalid.Raw(invalid.source)[11]=0x83;invalid.types[74].constructorAddress=0x12345678; }; // 새 미등록 생성자는 실제 재조회 시점에서 실패한다.
+    CHECK(ContainedFailed([&] { invalid.factory.Take(74,invalid.source); }));CHECK(invalid.Word(invalid.parent,6)==0 && invalid.Raw(invalid.source)[11]==0x80 && invalid.Table()==0x501dd0 && invalid.Raw(invalid.source)[26]==0xa0); // 앞선 분리와 free/dead 해제는 되돌리지 않는다.
+}
+
+TEST_CASE(FactoryTakeChecking_InitialConstructorCanBeRepairedByActualUnpop) { // 최초 TYPE 생성자와 다른 지원 VT도 현재 가상 Unpop을 먼저 실행한다.
+    FactoryTakeScene scene;scene.types[74].constructorAddress=0x12345678;scene.Put(scene.source,0,0xcc08);scene.Put(scene.source,2,0x0050); // 실제 anim VT와 잘못된 TYPE 생성자 주소를 독립 입력으로 준다.
+    scene.onAssertion=[&](std::uint32_t line) { CHECK(line==0x5d9 && scene.Table()==0x50cc08);scene.types[74].constructorAddress=0; }; // 원문 Unpop 진단이 현재 생성자 표를 base로 복구한다.
+    CHECK(scene.factory.Take(74,scene.source)==scene.source);
+    CHECK(scene.diagnostics==std::vector<std::uint32_t>{0x5d9} && scene.parentNotices==1 && scene.Word(scene.parent,6)==0 && scene.Table()==0x501dd0 && scene.Raw(scene.source)[10]==74 && scene.Raw(scene.source)[11]==4 && scene.Raw(scene.source)[35]==17);
+}
+
+TEST_CASE(FactoryTakeChecking_SelectedMissingDevicesPreservePartialEffects) { // 실제 Unpop/contained/진단 장치의 선택 시점을 명시적으로 확인한다.
+    FactoryTakeScene disconnected;disconnected.Raw(disconnected.source)[11]=4;SquidFactory noUnpop(disconnected.pool,disconnected.types);const auto before=std::vector<std::uint8_t>(disconnected.Raw(disconnected.source).begin(),disconnected.Raw(disconnected.source).end());
+    CHECK(ContainedFailed([&] { noUnpop.Take(74,disconnected.source); }));CHECK(std::equal(before.begin(),before.end(),disconnected.Raw(disconnected.source).begin())); // !free void도 실제 Unpop 장치를 요구한다.
+    FactoryTakeScene missingContained;missingContained.unpop.BindContainedUnpop({});
+    CHECK(ContainedFailed([&] { missingContained.factory.Take(74,missingContained.source); }));CHECK(missingContained.Raw(missingContained.source)[11]==12 && missingContained.Word(missingContained.parent,6)==missingContained.source.value); // 일반 부모가 먼저 쓴 void는 남는다.
+    FactoryTakeScene missingAssertion;SquidFactory noAssertion(missingAssertion.pool,missingAssertion.types);auto raw=missingAssertion.Raw(missingAssertion.source);raw[35]=0xaa;
+    CHECK(ContainedFailed([&] { noAssertion.PostTake(missingAssertion.source); }));CHECK(raw[35]==17 && raw[11]==8); // contained 진단 장치 누락은 이미 쓴 zOrder를 취소하지 않는다.
+    raw[10]=3;raw[35]=0xaa;CHECK(ContainedFailed([&] { noAssertion.PostTake(missingAssertion.source); }));CHECK(raw[35]==0xaa); // !isForm 진단은 zOrder 쓰기보다 앞선다.
 }

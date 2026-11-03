@@ -1,6 +1,7 @@
 // 창 없이 실제 두 PE의 생성/Take/가상 초기화 결과와 생성자 표를 대조한다.
 #include "TestSupport.h"
 #include "o/SquidFactory.h"
+#include "o/SquidUnpop.h" // void Take도 같은 실제 공간 해제 부모를 호출한다.
 #include <algorithm>
 #include <fstream>
 #include <memory>
@@ -65,6 +66,7 @@ namespace {
 void Replay(const char* path,int expectedBegins,int expectedRows) {
     std::ifstream input(path); CHECK(static_cast<bool>(input));
     std::unique_ptr<SidPool> pool; std::unique_ptr<SquidFactory> factory;
+    std::unique_ptr<SquidHash> hash;std::vector<std::uint8_t> spots;std::unique_ptr<SquidUnpop> unpop; // fixture는 같은 풀의 실제 공간을 빌리며 void 조기 반환으로 해시/spot을 보존한다.
     std::vector<RiftTypeRecord> types; std::string line; bool weak=false; int rows=0,begins=0;
     // Type/Fill/Abstract는 합성 입력이며 원본 명령 호출 수에는 넣지 않는다.
     while (std::getline(input,line)) {
@@ -74,13 +76,13 @@ void Replay(const char* path,int expectedBegins,int expectedRows) {
         if (row[0]=="Begin") {
             CHECK(row.size()==5); const auto edition=row[1]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;
             pool=std::make_unique<SidPool>(edition,static_cast<std::uint32_t>(std::stoul(row[2])),row[3]=="1");
-            types=Types(edition); weak=row[4]=="1"; factory=std::make_unique<SquidFactory>(*pool,types,weak); ++begins;
+            types=Types(edition); weak=row[4]=="1";hash=std::make_unique<SquidHash>();spots.assign(65536,0);unpop=std::make_unique<SquidUnpop>(*pool,*hash,spots);factory=std::make_unique<SquidFactory>(*pool,types,weak,unpop.get()); ++begins;
         } else if (row[0]=="Type") {
             CHECK(row.size()==7); auto& type=types.at(std::stoul(row[1]));
             type.flags1=static_cast<std::uint32_t>(std::stoul(row[2])); type.flags2=static_cast<std::uint32_t>(std::stoul(row[3]));
             type.maxHitPoints=static_cast<std::int32_t>(std::stol(row[4])); type.zOrder=static_cast<std::int32_t>(std::stol(row[5]));
             type.constructorAddress=static_cast<std::uint32_t>(std::stoul(row[6]));
-            factory=std::make_unique<SquidFactory>(*pool,types,weak);
+            factory=std::make_unique<SquidFactory>(*pool,types,weak,unpop.get());
         } else if (row[0]=="Fill") {
             CHECK(row.size()==6); auto bytes=pool->AllocatedBytes(Sid{static_cast<std::uint16_t>(std::stoul(row[1]))});
             const auto seed=std::stoul(row[2]);
@@ -201,7 +203,7 @@ TEST_CASE(SquidFactory_DerivedGuards_RejectNullAssertAndUnknownAddressBeforeWrit
 TEST_CASE(SquidFactory_AnimTake_UsesEditionHpWidthAndReturnsToSidPool) {
     // CD는 HP 뒤의 두 바이트를 보존하며 패치는 네 바이트를 지운다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        SidPool pool(edition,32768); auto types=Types(edition); SquidFactory factory(pool,types);
+        SidPool pool(edition,32768); auto types=Types(edition);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);SquidFactory factory(pool,types,false,&unpop); // 양판본 같은 물리 장치로 void 수신 계약을 유지한다.
         const auto sid=factory.Create(161); auto bytes=pool.AllocatedBytes(sid);
         bytes[26]=1; bytes[27]=2; bytes[28]=3; bytes[29]=4;
         const auto ownerOffset=edition==OriginalEdition::Patch1078 ? 34U : 32U;

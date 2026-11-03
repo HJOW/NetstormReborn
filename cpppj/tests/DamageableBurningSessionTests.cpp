@@ -113,3 +113,28 @@ TEST_CASE(SquidContainedUnpop_ActualClientSessionWorldAndInputQueue) {
     const auto event=client.Input().Pop(false);CHECK(event.code==0x02000039U && event.x==source.value && !event.y && client.Input().Empty()); // Player의31h 알림이나 즉시 UI 삭제로 바꾸지 않는다.
     session.GumpForms().Destroy(form,0x50);CHECK(Get(raw,6,2)==0); // 같은 실제 Form 삭제/혼합 종속 체인으로 검사 자원을 반납한다.
 }
+
+// 실제 Take 호출자는 void/부모 삭제 중에도 원문 Unpop 접두와 postTake의 현재 TYPE/진단을 이어 실행한다.
+TEST_CASE(FactoryTakeChecking_ActualClientSessionCurrentTypeAndContainedCaller) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);BurningSessionDevices external;ClientOptions options;options.gameDirectory=assets.root;options.noAudio=true;Client client(std::move(options));
+    auto services=external.Services();services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.processKernel=&client.GetKernel();
+    services.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); }; // 기존 Session 장치 입력과 같은 미초기화 Deck 바이트다.
+    services.assets.queueCommand=[&client](auto command,auto first,auto second) { client.Input().PushCommand(command,first,second); }; // 실제 UpdateContents FIFO를 실행한다.
+    RawCampaignSession* current{};Sid source{};std::uint32_t diagnostics{};std::uint8_t order{};
+    services.ai.assertion=[&](std::string_view expression) { // 첫 접두 진단에서 현재 TYPE를 바꾸고 후단 진단의 zOrder 선행 쓰기를 확인한다.
+        CHECK(expression=="!isContained()");++diagnostics;auto core=current->Core();if (diagnostics==1) current->World().Storage()->types[74].zOrder=order;else CHECK(core.pool.Slot(source)[35]==order);
+    };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",std::move(services));current=&session;session.Load();auto core=session.Core();const auto originalOrder=core.types[74].zOrder;
+    for (const bool initialVoid:{false,true}) for (const bool dyingParent:{false,true}) { // 비공간 banner만 사용하며 포획/희생/공격/전투 프레임을 실행하지 않는다.
+        while (!client.Input().Empty()) static_cast<void>(client.Input().Pop(false)); // 앞선 설치/반복 사건을 비운다.
+        const auto parent=core.factory.Create(74,2);source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);CHECK(source.value>=core.pool.Layout().serverFirst && Get(raw,0)==0x501dd0U);
+        raw[11]=static_cast<std::uint8_t>(8U|(initialVoid ? 4U : 0U));Put(raw,14,parent.value,2);Put(raw,16,0,2);Put(raw,4,0,2);Put(core.pool.AllocatedBytes(parent),6,source.value,2);if (dyingParent) core.pool.AllocatedBytes(parent)[11]|=2;
+        const auto form=session.GumpForms().Create(2);session.GumpForms().Attach(form,source,0x50);diagnostics=0;order=static_cast<std::uint8_t>(70+initialVoid*2+dyingParent);const auto free=core.pool.FreeCount();
+        CHECK(core.factory.Take(74,source)==source);const bool staysContained=initialVoid || dyingParent;
+        CHECK(diagnostics==(staysContained ? 2U : 1U) && raw[11]==(staysContained ? 12U : 4U) && raw[35]==order && raw[10]==74 && core.pool.FreeCount()==free);
+        CHECK(Get(core.pool.Slot(parent),6,2)==(staysContained ? source.value : 0U));
+        if (initialVoid) CHECK(client.Input().Empty());else { const auto event=client.Input().Pop(false);CHECK(event.code==0x02000039U && event.x==source.value && !event.y && client.Input().Empty()); }
+        session.GumpForms().Destroy(form,0x50);CHECK(!Get(raw,6,2)); // 실제 Form을 반납하고 다음 명시 사례를 준비한다.
+    }
+    session.World().Storage()->types[74].zOrder=originalOrder; // 검사에서만 바꾼 TYPE 입력을 복원한다.
+}

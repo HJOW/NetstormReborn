@@ -3,6 +3,7 @@
 #include "o/SquidUnpop.h"
 #include "o/SquidForms.h"
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::o {
 namespace {
@@ -66,13 +67,28 @@ SquidFactory::SquidFactory(SidPool& pool,std::span<const RiftTypeRecord> types,b
     if (types_.size()!=count) throw std::invalid_argument("SID 판본과 타입 수가 다릅니다");
     if (unpop_ && &unpop_->Pool()!=&pool_) throw std::invalid_argument("Unpop과 Factory의 SID 풀이 다릅니다");
 }
-// 미복원 생성자 호출이나 form에 자산 가상 메서드를 적용하는 것을 막는다.
+// 현재 TYPE를 빌린 실제 소비자와 기존 사본을 쓰는 독립 입력의 수명을 구별한다.
+void SquidFactory::BindDiagnostics(SquidFactoryDiagnostics diagnostics) {
+    if (!diagnostics.types.empty() && diagnostics.types.size()!=types_.size()) throw std::invalid_argument("Factory 현재 TYPE의 판본/길이 오류");
+    diagnostics_=std::move(diagnostics);
+}
+// PostTake 진단 복귀 뒤에는 Form 타입도 같은 실제 표에서 읽으며 배열 밖 접근만 거부한다.
+const RiftTypeRecord& SquidFactory::TypeRecord(std::uint32_t number) const {
+    const auto types=diagnostics_.types.empty() ? std::span<const RiftTypeRecord>(types_) : diagnostics_.types;
+    if (number>=types.size()) throw std::out_of_range("Factory 현재 TYPE 번호 오류");return types[number];
+}
+// 미복원 생성자 호출이나 일반 자산 경로에 Form 가상 메서드를 적용하는 것을 막는다.
 const RiftTypeRecord& SquidFactory::Type(std::uint32_t number,bool requireSupported) const {
-    if (number<kFirstAssetTypeNumber || number>=types_.size()) throw std::out_of_range("base Squid 타입 번호 오류");
-    const auto& type=types_[number];
+    if (number<kFirstAssetTypeNumber) throw std::out_of_range("base Squid 타입 번호 오류");
+    const auto& type=TypeRecord(number);
     if (requireSupported && type.constructorAddress && !Recipe(pool_.Edition(),type.constructorAddress))
         throw std::logic_error("null/assert 또는 미복원 Squid 생성자는 지원하지 않습니다");
     return type;
+}
+// 진단 장치가 돌아오면 원문 다음 위치에서 현재 타입/상태를 다시 읽는다.
+void SquidFactory::Assert(std::string_view expression,std::uint32_t line) const {
+    if (!diagnostics_.assertion) throw std::logic_error("Factory의 선택된 원문 진단 장치 미연결");
+    diagnostics_.assertion(expression,"\\Ns\\O\\Squid.cpp",line);
 }
 // Take로 받은 예측 머리도 원본 범위 안이다. 일반 Allocate의 예약 검사와 분리한다.
 std::span<std::uint8_t> SquidFactory::LiveBytes(Sid sid) {
@@ -150,26 +166,35 @@ Sid SquidFactory::CreateContained(std::uint32_t flags) {
 Sid SquidFactory::CreateGumpForm(std::uint32_t flags) {
     return SquidForms(pool_).Create(kGumpFormType,flags);
 }
-// free/dead를 지운 뒤 생성자 필드만 다시 쓴다. 풀 카운터를 유지하며 공간 해제 필요성을 먼저 검사한다.
+// PATCH는 모든 !free 슬롯의 실제 Unpop 뒤 현재 상태/TYPE를 읽고 생성자→타입→void 순서로 수신한다.
 Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
-    const auto& record=Type(type,true);
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const auto& initial=Type(type,!patch); // PATCH의 실제 생성자 지원 판단은 Unpop/현재 상태 해제 뒤로 유지한다.
     if (sid.value<pool_.layout_.serverFirst) throw std::out_of_range("Take는 서버 영역 SID만 받습니다");
     const auto offset=pool_.Offset(sid);
     auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride);
-    if (bytes[kState]&kContained) throw std::logic_error("contained 객체의 base Take는 지원하지 않습니다");
+    if (!patch && (bytes[kState]&kContained)) throw std::logic_error("contained 객체의 CD base Take는 지원하지 않습니다");
     if (!(bytes[kState]&kFree)) {
         if (bytes[kType]!=type) throw std::logic_error("Take 타입이 기존 객체와 다릅니다");
-        if (Vtable(bytes)!=ConstructorVtable(record))
+        if (patch ? !SupportsConstructedVtable(pool_.Edition(),Vtable(bytes)) : Vtable(bytes)!=ConstructorVtable(initial))
             throw std::logic_error("Take의 미복원 가상/공간 해제 효과가 필요합니다");
-        if (!(bytes[kState]&kVoid)) {
-            if (!unpop_) throw std::logic_error("Take의 non-void 공간 해제 연결이 없습니다");
-            unpop_->Unpop(sid,record);
+        if (patch || !(bytes[kState]&kVoid)) {
+            if (!unpop_) throw std::logic_error("Take의 선택된 실제 공간 해제 연결이 없습니다");
+            unpop_->Unpop(sid,initial,0);
         }
-        // 이미 void인 실제 base Unpop은 쓰기 없이 반환한다.
     }
-    bytes[kState]=static_cast<std::uint8_t>((bytes[kState]&0xfc)|kVoid);
-    ApplyConstructor(bytes,record);
-    bytes[kType]=static_cast<std::uint8_t>(type);
+    if (patch) {
+        bytes=std::span(pool_.bytes_).subspan(pool_.Offset(sid),pool_.layout_.stride); // 진단/부모 통지 뒤 현재 실제 슬롯을 다시 빌린다.
+        bytes[kState]&=0xfc;
+        const auto& current=Type(type,true); // 원문처럼 free/dead 해제 뒤 현재 생성자 표를 읽는다.
+        ApplyConstructor(bytes,current);
+        bytes[kType]=static_cast<std::uint8_t>(type);
+        bytes[kState]|=kVoid;
+    } else {
+        bytes[kState]=static_cast<std::uint8_t>((bytes[kState]&0xfc)|kVoid);
+        ApplyConstructor(bytes,initial);
+        bytes[kType]=static_cast<std::uint8_t>(type);
+    }
     PostTake(sid);
     return sid;
 }
@@ -194,9 +219,16 @@ void SquidFactory::PostCreate(Sid sid) {
         Put(bytes,kHp,static_cast<std::uint32_t>(hp),patch ? 4 : 2);
     }
 }
-// 공통 postTake는 zOrder만 쓴다. 앞선 anim 생성자는 HP를 별도로 초기화한다.
+// PATCH의 원문 진단은 현재 zOrder 쓰기 전후에 있고, CD의 기존 독립 수신 계약은 유지한다.
 void SquidFactory::PostTake(Sid sid) {
+    if (pool_.Edition()==OriginalEdition::Patch1078) {
+        if (pool_.Slot(sid)[kType]<kFirstAssetTypeNumber) Assert("!isForm()",0x7f6);
+        const auto zOrder=TypeRecord(pool_.Slot(sid)[kType]).zOrder; // 진단이 고친 현재 TYPE를 다시 읽어 BYTE로 저장한다.
+        std::span(pool_.bytes_).subspan(pool_.Offset(sid),pool_.layout_.stride)[35]=static_cast<std::uint8_t>(zOrder);
+        if (pool_.Slot(sid)[kState]&kContained) Assert("!isContained()",0x7fa);
+        return;
+    }
     auto bytes=LiveBytes(sid);
-    bytes[pool_.Edition()==OriginalEdition::Patch1078 ? 35 : 33]=static_cast<std::uint8_t>(Type(bytes[kType],false).zOrder);
+    bytes[33]=static_cast<std::uint8_t>(Type(bytes[kType],false).zOrder);
 }
 }

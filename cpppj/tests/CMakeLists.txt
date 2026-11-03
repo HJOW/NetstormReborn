@@ -3374,3 +3374,10 @@ set_property(SOURCE UnpopTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 # 공통 contained 해제의 명시 링크/진단/UI 큐 계약을 검사한다. 게임과 통신은 실행하지 않는다.
 target_sources(netstorm_tests PRIVATE SquidContainedUnpopTests.cpp)
 target_sources(netstorm_file_tests PRIVATE SquidContainedUnpopTests.cpp)
+
+# Take 호출자 변경을 기존 생성/파생 생성자 원문 fixture와 같은 집중 대상에서 회귀한다.
+target_sources(netstorm_file_tests PRIVATE CreationTests.cpp)
+set_property(SOURCE CreationTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_CREATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/creation-x86.tsv\""
+    "NETSTORM_DERIVED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/derived-x86.tsv\""
+    "NETSTORM_CONSTRUCTOR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructors-x86.tsv\"")
