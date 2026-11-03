@@ -1,0 +1,83 @@
+{
+  "unit": 792,
+  "date": "2026-11-03",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "status": "정적 분류 완료·전체 목표 진행 중",
+  "runtimeProduct": 791,
+  "displayVersion": "11.01",
+  "exeSha256": "f8f2a0d6c74b0b8ec4774f810abfc4dd84c6d933ffa2a374dcf167564cde1d56",
+  "cppSourceFilesScanned": 1761,
+  "scriptTokens": [
+    {
+      "path": "cpppj/src/client/UberGump.h",
+      "line": 110,
+      "text": "o::Config& Script(std::string_view name);"
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "line": 483,
+      "text": "o::Config& UberGump::Script(std::string_view name) {"
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "line": 1643,
+      "text": "const std::string campaign = client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? \"UCampaign\" : Script(\"tell\").Section(\"UCampaign\") ? \"UCampaign\" : \"Campaign\"; // 원문10.78 MainMenu의 고정 target이며 영구 tell Config를 새로 등록하지 않는다."
+    }
+  ],
+  "currentDirectCallCount": 1,
+  "currentPatch1078DirectCallsFound": 0,
+  "currentCdHostFallbackDirectCalls": 1,
+  "originalMissionSpecParents": [
+    {
+      "function": "// ==== FUN_00440760 @ 00440760",
+      "line": 50384,
+      "loadLine": 50385,
+      "load": "00440380"
+    },
+    {
+      "function": "// ==== FUN_00482fb0 @ 00482fb0",
+      "line": 100537,
+      "loadLine": 100538,
+      "load": "00440380"
+    },
+    {
+      "function": "// ==== FUN_004c8f60 @ 004c8f60",
+      "line": 152089,
+      "loadLine": 152090,
+      "load": "00440380"
+    },
+    {
+      "function": "// ==== FUN_004cf730 @ 004cf730",
+      "line": 156356,
+      "loadLine": 156357,
+      "load": "00440380"
+    }
+  ],
+  "disposition": "현행 10.78 직접 caller가 없는 CD/호스트 캐시의 기존 필수 snapshot 읽기/수명을 유지한다. 기존771 Config40380과 동일 부모라 가정해 교체하지 않는다.",
+  "productCodeChanged": false,
+  "gameExecutions": 0,
+  "newNativeObservations": 0,
+  "multiplayerTests": 0,
+  "newTests": 0,
+  "builds": 0,
+  "fullSuiteRun": false,
+  "boundary": "정규식 소스 조사와 명시 조건식의 직접 호출 분류다. AST/외부 바이너리/모든 간접 경로의 부재 증명이나 CD 전체 동일성 검증으로 확대하지 않는다.",
+  "sourceSha256": {
+    "cpppj/src/client/UberGump.cpp": "8a6013fd7f42a5741b07f1f58182df328b536d0949646ba7ef9beaa24da303d5",
+    "cpppj/src/client/UberGump.h": "f0d50b8fe5b853ff49c9d19cf80b6ebaf17f4f3a5b5beb7c6c8347fd5b62d480",
+    "cpppj/src/client/ClientMain.cpp": "4e1d56599697625f2784df91965a518141d8484305236b8d53817c3555d4ec32",
+    "cpppj/src/o/ConfigInterface.cpp": "9490d10f38124831dc08d565eb44916791d689e83f6d944111e8e22b0ff5f44f",
+    "tools/cpp_script_cache_callers.py": "1736869ce1406b226c1089b5521222ee9b04d2e2f514aec7d6c71c9118d4e8b2",
+    "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "next": "checking잔여50·나머지비멀티UI/Edit/수명/호환성",
+  "protection": {
+    "beforeCount": 2724,
+    "currentCount": 2724,
+    "allUnchanged": true,
+    "fixtureCount": 904,
+    "newFixtures": []
+  }
+}

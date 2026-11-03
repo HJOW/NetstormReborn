@@ -12,7 +12,7 @@ Three versions are developed in parallel, and **the one you can actually play to
 
 # Current development status
 
-**November 3, 2026, cpppj unit791 / runtime product791·11.01:** Connected direct read-only SHP mappings and shared shape-storage lifetimes. All17 focused tests pass (4 new), including original5,618,120-byte/frame/pixel comparisons and legacy/CD/cache regressions. No new game or multiplayer tests were run. See the [handover](LEFT_JOBS.md) and [791 record](docs/exe/cpp-native-shape-file-20261103.md).
+**November 3, 2026, cpppj unit792 static classification / runtime product791·11.01:** Confirmed that the remaining Script-cache direct call is a CD/host fallback and kept its existing policy. No product changes, builds or tests were added. Product791 and its17 passing focused tests remain current; checking consumers and remaining UI/Edit/lifetime/compatibility work continue. See the [handover](LEFT_JOBS.md) and [792 record](docs/exe/cpp-script-cache-callers-20261103.md).
 
 | Project | Execution and playability | Fidelity and remaining work |
 | --- | --- | --- |
