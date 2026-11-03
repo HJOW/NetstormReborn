@@ -1,0 +1,251 @@
+{
+  "unit": 826,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "a9157275 / 20261104-07 CP",
+  "exeSha256": "10f8c29fb973ab33dcac6e644554cfade76e6b759370cb657b56ad8dd87a6abe",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "실제 Windows x86 CPU / 전용 payload / 진단 장치 관측",
+    "binaries": {
+      "originals": {
+        "path": "originals/Netstorm.exe",
+        "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+      },
+      "originalCD": {
+        "path": "originalCD/NETSTORM.EXE",
+        "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+      }
+    },
+    "rows": 1084,
+    "fixtureSha256": "4711f8b9998cd3e60f2cb5538dca4f84e95b8f24bf7e5477b5d00e0b3f7c532b",
+    "probeSha256": "4ff94426a26be7f3cdd1f8cae7846f2a01b9fb25179af26d504ef134b771d4bc",
+    "probeSourceSha256": "2b9bdf12fb53444c82d59b28ac049361a2dd2d110d6668eac949a10bdd1adf08",
+    "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "boundary": "유효 물리 목록16DWORD/활성0~4·signed 용량·독립 부모만 실행 / 실제 게임·GUI·통신 없음"
+  },
+  "nativeReobservedRows": 1084,
+  "nativeCountsPerObservation": {
+    "originals": {
+      "rows": 542,
+      "diagnosticRows": 135
+    },
+    "originalCD": {
+      "rows": 542,
+      "diagnosticRows": 0
+    }
+  },
+  "tests": [
+    {
+      "filter": "ManaRegistration_",
+      "cases": 6,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-826/test-ManaRegistration-final.log",
+      "sha256": "f43170362f32d243943a0611ac76ac048532264a87e952e2b762bc58b4cea084"
+    },
+    {
+      "filter": "SquidPostPop_",
+      "cases": 6,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-826/test-SquidPostPop-final.log",
+      "sha256": "b0234c04f25b764cee42fc3a487bbc59dd15bf14a1bcbd9d47a7aef004f2afb6"
+    },
+    {
+      "filter": "DamageableBurningChecking_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-826/test-DamageableBurningChecking-final.log",
+      "sha256": "eae294292944b218774cbe1a8cb5285afbd3f5fd567600102ba24c1a4e42f708"
+    }
+  ],
+  "firstFocusedTests": [
+    {
+      "filter": "ManaRegistration_",
+      "cases": 5,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-826/test-ManaRegistration-first.log",
+      "sha256": "ab438d2cbc02437c532984cb2010451333e8fae447b08cb74ae63593b7baa2c0"
+    },
+    {
+      "filter": "SquidPostPop_",
+      "cases": 6,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-826/test-SquidPostPop-first.log",
+      "sha256": "b0234c04f25b764cee42fc3a487bbc59dd15bf14a1bcbd9d47a7aef004f2afb6"
+    },
+    {
+      "filter": "DamageableBurningChecking_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-826/test-DamageableBurningChecking-first.log",
+      "sha256": "eae294292944b218774cbe1a8cb5285afbd3f5fd567600102ba24c1a4e42f708"
+    }
+  ],
+  "newTestCases": 6,
+  "finalFocusedCases": 16,
+  "initialFailures": [],
+  "loopReview": {
+    "proof": "CD0048a362 positive-count branch -> first array cmp0048a374 -> duplicate branch before current count read0048a37c; patch caches first ECX count",
+    "initialCpp": "for condition read CD count again before first array access; stable CPU input rows still passed",
+    "finalCpp": "do-body first, CD current count only at failed-match backedge; patch keeps captured count",
+    "newCase": "ManaRegistration_FirstSearchPrecedesNextCurrentCountRead, first reader returns1 then changes current count0; both editions find first duplicate, one count read, no append, counter+1",
+    "expectationsChanged": false
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-826/build-first.log",
+      "targets": [
+        "NetstormCpp",
+        "netstorm_file_tests"
+      ],
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "parallel": 4,
+      "msbuildOptions": [
+        "UseMultiToolTask=true",
+        "MultiProcMaxCount=4",
+        "EnforceProcessCountAcrossBuilds=true"
+      ],
+      "sha256": "6e006ed56f9a8dc1b7c0c2822527bcbc7ae0b88c6dcde3ce39ff6cf7ed6d2e26"
+    },
+    {
+      "log": "extracted/cpp-resume-826/build-final.log",
+      "targets": [
+        "NetstormCpp",
+        "netstorm_file_tests"
+      ],
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "parallel": 4,
+      "msbuildOptions": [
+        "UseMultiToolTask=true",
+        "MultiProcMaxCount=4",
+        "EnforceProcessCountAcrossBuilds=true"
+      ],
+      "sha256": "678a801813d4b14b5ab87e01712e7a41a460912d87900c539f746629cb7b9a58"
+    }
+  ],
+  "probeBuild": {
+    "log": "extracted/cpp-resume-826/probe-build-first.log",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "sha256": "fada297f277e5752b06b07b905d0571170103edc8510a6f7bc603cc4654f8960"
+  },
+  "actualCallers": [
+    "004b0d30/CD004ae180 unique direct caller -> RegisterManaProvider from shared SquidPostPop.PostPopBase",
+    "RawSurfaceWorld -> RawSurfaceStorage.Checking/AssertDisplay -> same Client AiDebug current DWORD",
+    "RawCampaignSession -> same GameplayGlobals/checking and copied AI diagnostic service; no Session this retained",
+    "existing RawStateSidLists.providers physical256DWORD/count -> same Providers readers in EnergySupply/placement/Dude/deletion",
+    "actual two World borrows: same provider address, diagnostic clears count and changes raw TYPE/owner/counter, captured duplicate/flags2 skip append and continue current stats",
+    "actual TheWarBegins Session: loaded real provider/common postPop/default diagnostic -> same array/current counter and final stats, no frames/attacks"
+  ],
+  "checking": {
+    "remaining": 20,
+    "parents": 12,
+    "partial": 5,
+    "multiplayerClassified": 3,
+    "completedParents": 30,
+    "closedThisUnit": [
+      "00472f70"
+    ],
+    "mpDeferredWithinParents": [
+      "004a7510"
+    ],
+    "mpDeferredWithinPartial": [
+      "004b54e0"
+    ]
+  },
+  "staticMultiplayerDeferral": {
+    "function": "004a7510",
+    "proof": "refined originals raw.c Reconnecting %d, participant subscriber match/rebind/team reconstruction and final checking assertion",
+    "scope": "8번 멀티플레이 사전 구현으로 이월, 미완료; 신규 MP 검사0; 779 부모 분류 집계에 남김"
+  },
+  "boundaries": [
+    "원문 DWORD value, signed32 count/capacity, unsigned32 production counter wrap",
+    "유효 물리16DWORD/활성0~4 및 두 실제 World의256DWORD provider storage; 배열 밖/음수 쓰기/주소 alias 손상 자체는 호스트 경계",
+    "기존 공통 PostPop.ValidateBase 손상 목록 사전 거부 유지; 하위 등록 함수의 선택된 물리 접근과 구별",
+    "CPU 관측은 원문 함수+진단 장치만, 실제 게임 초기화/GUI/통신 없음",
+    "실제 Session은 보호 자료 로드/명시 공통 postPop만, Kernel/AI/공격 프레임 없음"
+  ],
+  "next": "827 Terrainbuilder004c0e20의 첫 유효 청크 영역 조회/실패 진단과 실제 생성/편집 소비자 연결; 다른 checking20 및1~8차 잔여 유지",
+  "protection": {
+    "unchangedPreviousFiles": 2753,
+    "afterFiles": 2754,
+    "fixtureFiles": 934,
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted/cpp-resume-826/protected-after.json",
+    "sha256": "7a2f2d3c65a3c3a25bf9886bb72a1cdd35207fff11f2fc8a36440b8bfa5a8635"
+  },
+  "excluded": [
+    "원본 게임/GUI·자연 플레이/자동 공략",
+    "포획/희생/특정 적 공격/승리·사용자 직접 확인",
+    "MP/공중3종 새 전용",
+    "실제 PCM/청취/물리 출력·캡처 재시도",
+    "전체 CTest/71대상/34미션/ZIP"
+  ],
+  "sources": {
+    "cpppj/src/o/RawManaRegistration.h": "1b114fd2e7d96f3caea83a0dd2b2c2cf53608c45f6e5b9b75fdf45d5fc80ed0e",
+    "cpppj/src/o/RawManaRegistration.cpp": "6acf34a0c42ebfc4fa83477380fb5567e06f3c9a643005ad56fcdc7f365f943c",
+    "cpppj/src/o/SquidPostPop.h": "40205586da055078c3e2bc8d237fd25c9631fb63da301ebfd9d376c528db9fe2",
+    "cpppj/src/o/SquidPostPop.cpp": "28188a371e45a996b406e8cb7a12922ee9c51f6a9977fc671108aed6ea1cc050",
+    "cpppj/src/o/CMakeLists.txt": "6134e8a512324e77475cf6ca001702bee45ed42857ab057fb17682a816df7100",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "2454033bbd97f0e31da24e28db71859c3042b7e1bf5f9e7303b9d86472e91c8f",
+    "cpppj/src/client/RawSurfaceWorld.h": "61c0abd5a644dca20cf526201544b5b17ecb170730c113e9b1318cad18b235b5",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "dfc97b16e621a4e8aea098fddad1bfe38282f8f2e3c1a773f4f5cd7c1c7e1681",
+    "cpppj/src/client/RawCampaignSession.cpp": "e9d4b6f9f3109717c6c719f5ede0776726609405a406d976c97ac1fc288b38ba",
+    "cpppj/src/client/CampaignClientServices.cpp": "9b7ab17f44c1a7ee13b01e78c08970ef7fd59dbdc0c1e6619b30b7984177c7ca",
+    "cpppj/src/o/RawStateSidLists.h": "e00263c782d9c8bd4f7fd0a5b7c855a6e9ed57194225bf5d0556971073ed78ec",
+    "cpppj/src/o/SquidDestroyLifecycle.cpp": "c882cacaea63583f302eb3d6bcccb3d857facb75b3d7b7e086af2fd529f9e699",
+    "cpppj/src/o/RawDudeRegular.cpp": "1a95b32d4143e22472e06f958aa8f94f37ae12f572928ba2da11f5d6eaa93fc1",
+    "cpppj/tests/CMakeLists.txt": "26500d9a555571b3b40f3b4979e744862b3204266258f4d0ab665fd666396981",
+    "cpppj/tests/ManaRegistrationTests.cpp": "18bf252ebf4cd38718adbbcafde59405eab1dd0b2bed19e8302a9fdb001c8c84",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "4537d7c414872dc7afa7e9c16411d0c10c1eff583bda71ff8635e19e41f5ff8a",
+    "cpppj/tests/PostPopTests.cpp": "6cd0c37a8b2c9f84cd0b0c511f58f71000c4ba5936e06f73b3226788ec25dd2a",
+    "cpppj/tests/DamageableBurningCheckingTests.cpp": "6da58d20ad1a31e75326a3abefed951dd3879e0abf1bb378285eb1d709808b6a",
+    "tools/native_mana_registration_probe.cpp": "2b9bdf12fb53444c82d59b28ac049361a2dd2d110d6668eac949a10bdd1adf08",
+    "tools/observe_mana_registration_hardware.py": "c477c49d84e3caea5970359e5ca388b02d810a4e55a40a18d2d9b002d388148a",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "cpppj/SOURCE_MAP.md": "d80c990123d8dbf8342b0267929c452cbb197fb4bba1327c0ecd8db18465309f"
+  },
+  "normalizedSources": {
+    "cpppj/src/o/RawManaRegistration.h": "1b114fd2e7d96f3caea83a0dd2b2c2cf53608c45f6e5b9b75fdf45d5fc80ed0e",
+    "cpppj/src/o/RawManaRegistration.cpp": "6acf34a0c42ebfc4fa83477380fb5567e06f3c9a643005ad56fcdc7f365f943c",
+    "cpppj/src/o/SquidPostPop.h": "40205586da055078c3e2bc8d237fd25c9631fb63da301ebfd9d376c528db9fe2",
+    "cpppj/src/o/SquidPostPop.cpp": "28188a371e45a996b406e8cb7a12922ee9c51f6a9977fc671108aed6ea1cc050",
+    "cpppj/src/o/CMakeLists.txt": "6134e8a512324e77475cf6ca001702bee45ed42857ab057fb17682a816df7100",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "cb854f3f20986c9ab3898fb084ec6f8827e5c08bd798f8f613717d2e2e59a21f",
+    "cpppj/src/client/RawSurfaceWorld.h": "61c0abd5a644dca20cf526201544b5b17ecb170730c113e9b1318cad18b235b5",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "dfc97b16e621a4e8aea098fddad1bfe38282f8f2e3c1a773f4f5cd7c1c7e1681",
+    "cpppj/src/client/RawCampaignSession.cpp": "e9d4b6f9f3109717c6c719f5ede0776726609405a406d976c97ac1fc288b38ba",
+    "cpppj/src/client/CampaignClientServices.cpp": "9b7ab17f44c1a7ee13b01e78c08970ef7fd59dbdc0c1e6619b30b7984177c7ca",
+    "cpppj/src/o/RawStateSidLists.h": "53634a55fb1cde19d60f1b0c096f21be66e4d935584602a2e485cd5867e8f0c2",
+    "cpppj/src/o/SquidDestroyLifecycle.cpp": "00f0de926f2000df7ac284f3e6bd411f67b250ade242f1258c2c71e7f233bd09",
+    "cpppj/src/o/RawDudeRegular.cpp": "1a95b32d4143e22472e06f958aa8f94f37ae12f572928ba2da11f5d6eaa93fc1",
+    "cpppj/tests/CMakeLists.txt": "17530418078fd41c986585599c2f96097fcb2f91841ece82198fbc6d4d42de02",
+    "cpppj/tests/ManaRegistrationTests.cpp": "18bf252ebf4cd38718adbbcafde59405eab1dd0b2bed19e8302a9fdb001c8c84",
+    "cpppj/tests/DamageableBurningSessionTests.cpp": "4537d7c414872dc7afa7e9c16411d0c10c1eff583bda71ff8635e19e41f5ff8a",
+    "cpppj/tests/PostPopTests.cpp": "6d90443b47081b3e16f8f361fdbcc04279d807b8db5a582e4e26d9122949647f",
+    "cpppj/tests/DamageableBurningCheckingTests.cpp": "6da58d20ad1a31e75326a3abefed951dd3879e0abf1bb378285eb1d709808b6a",
+    "tools/native_mana_registration_probe.cpp": "2b9bdf12fb53444c82d59b28ac049361a2dd2d110d6668eac949a10bdd1adf08",
+    "tools/observe_mana_registration_hardware.py": "c477c49d84e3caea5970359e5ca388b02d810a4e55a40a18d2d9b002d388148a",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca",
+    "cpppj/SOURCE_MAP.md": "6bab4284c23dd971e562d8227a8da6c6440d2ae5fb0fa51aef8eb418ab915c2b"
+  },
+  "finalCommentOnlyAfterBuild": [
+    "RawManaRegistration.h의 진단 구조체 설명 주석1줄; 실행 코드/타입/선언 변경 없음"
+  ]
+}

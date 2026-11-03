@@ -1034,6 +1034,8 @@ LAB_0046ad51:
 
 ## FUN_00472f70 @ 00472f70
 
+**826 완료:** 현재 checking/중복 진단 복귀·저장된 alreadyThere·signed 용량/전체 DWORD/현재 생산 카운터를 실제 World/Session 공통postPop에 연결했다. CPU1084행/진단135·재관측·집중16개(새6) 실패0이며 CD 첫 원소 검사/현재count 순서도 대조했다. checking20(부모12/부분5/MP분류3),완료부모30이다. 아래는779 당시이며 [826 기록](cpp-mana-registration-checking-20261104.md)을 따른다.
+
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
 현재 주소 언급: 현재 제품에 직접 주소 언급 없음. 앞/뒤 가상 호출과 SOURCE_MAP을 통해 연결 대상을 추가 확인해야 함.
@@ -1235,6 +1237,8 @@ LAB_00472fc1:
 - `"getPlayer(playerId)->subscriberId == cachedCoreData[playerId].subId", "\\Ns\\O\\Player.cpp",0x21f)`
 
 ## FUN_004a7510 @ 004a7510
+
+**826 MP 이월(미완료):** 현재 정밀 raw.c의 Reconnecting/참가자 Subscriber 재연결·팀 재편 경로다. 8번 멀티플레이 사전 구현에서 현재 checking/마지막 실패 진단 복귀까지 복원하며 신규 MP 검사는 하지 않는다. 779의 부모 집계 안에 남기고 완료로 세지 않는다. 아래는 당시 분류다.
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 

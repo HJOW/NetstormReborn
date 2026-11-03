@@ -564,3 +564,6 @@ target_sources(netstorm PRIVATE RawAmbientWind.h RawAmbientWind.cpp)
 
 # 주변음/State 재예약은 같은 현재 벽시각과 게임 난수를 사용한다.
 target_sources(netstorm PRIVATE RawAmbientSound.h RawAmbientSound.cpp)
+
+# 현재 공급원 목록의 원문 중복 진단 복귀와 생산 카운터를 공통 postPop에 연결한다.
+target_sources(netstorm PRIVATE RawManaRegistration.h RawManaRegistration.cpp)

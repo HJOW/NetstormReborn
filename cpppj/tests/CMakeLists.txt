@@ -3331,3 +3331,9 @@ target_sources(netstorm_tests PRIVATE DamageableBurningCheckingTests.cpp Damagea
 target_sources(netstorm_file_tests PRIVATE DamageableBurningCheckingTests.cpp DamageableBurningSessionTests.cpp DamageableHitTests.cpp)
 set_source_files_properties(DamageableBurningCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DAMAGEABLE_BURNING_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageable-burning-checking-hardware-x86.tsv\"")
+
+# 마나 등록 CPU1084행과 현재 Client/World/Session의 실제 공급원 소비자를 대조한다.
+target_sources(netstorm_tests PRIVATE ManaRegistrationTests.cpp)
+target_sources(netstorm_file_tests PRIVATE ManaRegistrationTests.cpp PostPopTests.cpp)
+set_source_files_properties(ManaRegistrationTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_MANA_REGISTRATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mana-registration-hardware-x86.tsv\"")

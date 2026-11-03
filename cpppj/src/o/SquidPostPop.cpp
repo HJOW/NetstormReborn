@@ -374,9 +374,7 @@ void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
     if ((flags&1) && !(bytes[patch ? 40 : 35]&kAbstractBuried)) {
         state_.TotalCost()=TotalCost(number);
         if (type.flags1&kProvider) {
-            const auto items=state_.Providers().Items();
-            if (std::find(items.begin(),items.end(),sid.value)==items.end()) Append(state_.Providers(),sid);
-            ++state_.productionDirty;
+            RegisterManaProvider(pool_.Edition(),state_.Providers(),state_.productionDirty,sid.value,manaDiagnostics_);
         }
         const auto owner=bytes[patch ? 34 : 32];
         if (type.flags2&kFactoryMask) {
@@ -399,4 +397,8 @@ void SquidPostPop::BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)>
 void SquidPostPop::ValidateSpace(const SquidHash& hash,std::span<const std::uint8_t> spots) const {
     if (graph_) graph_->ValidateSpace(hash,spots);
 }
+}
+
+namespace netstorm::o { // 같은 수명의 진단 뷰를 복사하며 Session 임시 구조체를 참조하지 않는다.
+void SquidPostPop::BindManaDiagnostics(ManaRegistrationDiagnostics diagnostics) { manaDiagnostics_=std::move(diagnostics); } // 다음 등록 호출부터 현재 owner를 읽는다.
 }

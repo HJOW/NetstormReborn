@@ -3,6 +3,7 @@
 #include "o/SidPool.h"
 #include "o/Player.h"
 #include "o/RawGraph.h"
+#include "o/RawManaRegistration.h" // 현재 공급원 중복 진단과 같은 카운터를 연결한다.
 #include <array>
 #include <functional>
 
@@ -89,6 +90,7 @@ public:
         std::function<void(Sid)> bridgeConnector={});
     // PATCH004166e0의 실제 현재 Player/brain 통지다. 빈 함수는 수명 종료 때 분리하며 미연결 독립/CD 경로는 기존 검사를 유지한다.
     void BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice);
+    void BindManaDiagnostics(ManaRegistrationDiagnostics diagnostics); // 같은 Client checking과 정상 복귀하는 마나 중복 진단 장치를 빌린다.
     // 다리 postPop(00422150 / CD 00449890)의 접두 부분이다. flag 1은 extra 비트 2를 켜며,
     // flag 1 또는 (flag 4이고 abstract 아님)이면 004213b0/CD 00448b00의 연결 효과를 요청한다.
     // 연결 효과는 명시적 외부 경계이며 누락되면 쓰기 전에 거부한다.
@@ -186,6 +188,7 @@ private:
     // graph_: 서로 연결된 표면의 Graph 소속을 관리하는 처리기.
     RawGraph* graph_{};
     std::function<void(Sid)> bridgeConnector_; // 연결 객체 생성/소유자 전파(004213b0). RawBridgeConnect::Connect를 잇는다.
+    ManaRegistrationDiagnostics manaDiagnostics_; // 현재 공급원 등록의 같은 checking/선택 진단 장치다.
     std::function<void(std::uint32_t,Sid,bool)> aiNotice_; // 생산 목록 뒤·통계 앞에서 같은 실제 AI의 생성 통지를 수행한다.
     std::function<void(Sid,std::uint32_t)> islandPrefix_; // 섬 받침 postPop의 접두. RawBridgeConnect::IslandPostPopPrefix를 잇는다.
     std::function<void(Sid,std::uint32_t)> surfacePrefix_; // noIsland 최초 등록의 프레임/받침/소유자 효과.

@@ -2,25 +2,25 @@
 
 cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효한 사용자 결정**을 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-03 문서 정리:** 단위 808까지의 코드·보고서·커밋과 대조했다. 정리 전 전체 원문과 단위별 상세 이력은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261103-through-808)에 보존했다. 완료 범위는 2절, 재개 후 작업은 3절을 따른다. 2026-11-03 사용자 `/goal` 재개 요청으로 cpppj 구현 목표를 다시 진행한다. 단위 809는 `a8f87f62 / 20261103-223 CP`로 완료했다. 단위 810→811에서 CanonDecoder의 현재 제품 소비자 연결과 집중 검사를 완료했다. 816~819에서 Graph 현재값 소비를 이어 복원했으며 checking 잔여21개와 나머지 객체 메뉴/커서·Edit·수명·후속 단계는 미완료다. 이후 일시중지 요청은 이번 /goal 재개로 해제했다.
+**2026-11-03 문서 정리:** 단위 808까지의 코드·보고서·커밋과 대조했다. 정리 전 전체 원문과 단위별 상세 이력은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261103-through-808)에 보존했다. 완료 범위는 2절, 재개 후 작업은 3절을 따른다. 2026-11-03 사용자 `/goal` 재개 요청으로 cpppj 구현 목표를 다시 진행한다. 단위 809는 `a8f87f62 / 20261103-223 CP`로 완료했다. 단위 810→811에서 CanonDecoder의 현재 제품 소비자 연결과 집중 검사를 완료했다. 816~819에서 Graph 현재값 소비를 이어 복원했으며 checking 잔여20개와 나머지 객체 메뉴/커서·Edit·수명·후속 단계는 미완료다. 이후 일시중지 요청은 이번 /goal 재개로 해제했다.
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-04, 단위 825 완료·목표 진행 중)
+### 0.1 현재 값 (2026-11-04, 단위 826 완료·목표 진행 중)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **사용자 /goal 요청으로 재개·전체 목표 미완료.** 마지막 완료는825이며 다음은826의 Mana00472f70 중복 목록 진단과 나머지 checking·객체 메뉴/커서 실제 소비자 연결이다. 제외 검사와 단위별 인계·커밋을 유지한다. 0.4절 참조 |
-| 현재 제품 | **825 / 표시 11.01.** 연소 갱신0044c060/CD00462480의 현재 checking·중복 진단 복귀·저장 HP/첫 검색·현재 TYPE/위치음과 실제 Client/Session 회복·생성·삭제를 연결했다 |
-| 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반 31+데모 3의 마지막 전체 진입 검증은 **645의 644 제품**이며 현재 825의 전체 회귀 결과가 아니다 |
+| 진행 상태 | **사용자 /goal 요청으로 재개·전체 목표 미완료.** 마지막 완료는826이며 다음은827의 Terrainbuilder004c0e20 첫 유효 청크 영역 조회/실패 진단과 나머지 checking·객체 메뉴/커서 실제 소비자 연결이다. 제외 검사와 단위별 인계·커밋을 유지한다. 0.4절 참조 |
+| 현재 제품 | **826 / 표시 11.01.** 마나 공급원00472f70/CD0048a360의 현재 checking·중복 진단 복귀·같은 공급원 배열/생산 카운터와 실제 Client·World·Session 공통 postPop을 연결했다 |
+| 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반 31+데모 3의 마지막 전체 진입 검증은 **645의 644 제품**이며 현재 826의 전체 회귀 결과가 아니다 |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | `f0325e3b732e2d45ed5fd88c5877e0d5945ea52e1427cbdd9ed095ee1f77cc22` (825 / 11.01) |
-| 최신 빌드·집중 검사 | 825 집중8개(새4) 최종 실패0. 실제CPU1100행(판본별550)/진단216·재관측 일치. 실제 Client/Session 회복·생성/삭제와 일반 피해4도 통과. 최초 새 검사 클래스 오기7컴파일 오류/Subscriber 조립 누락1단언 실패는 로그 보존 후 검사만 교정했다. 최종 제품/집중 빌드2회·프로브1회 종료0·경고/오류0. GUI·공격·MP0 |
-| checking 잔여 | **21함수 = 부모13 + 부분5 + MP분류3.** 825에서 DamageableBurning0044c060의 현재 진단 복귀/실제 소비자를 완료 집계했다. 완료부모29이며 ContentForm 부분1도 별도 완료다 |
+| EXE SHA-256 | `10f8c29fb973ab33dcac6e644554cfade76e6b759370cb657b56ad8dd87a6abe` (826 / 11.01) |
+| 최신 빌드·집중 검사 | 826 집중16개(새6) 실패0. 실제CPU1084행(판본별542)/진단135·재관측 일치. 실제 Client·두 World 대여/Session·현재 목록/카운터/후속 통계와 기존 postPop6/연소4 통과. 첫 집중15개도 실패0이며 정적 검토에서 CD 첫 검색/do 조건 순서를 보완해 새1개를 추가했다. Release2·프로브1회 종료0·경고/오류0. GUI·공격·MP0 |
+| checking 잔여 | **20함수 = 부모12 + 부분5 + MP분류3.** 826에서 Mana00472f70을 완료 집계했다. 완료부모30이며 ContentForm 부분1도 별도 완료다. 부모004a7510 재접속도 미완료 상태로8번MP에 이월한다 |
 | 마지막 GUI | **794에서 793 제품**의 시작/메인 메뉴를 확인. 815 GUI 통과로 합산하지 않는다 |
 | 전체 검사 기준 | 실행 대상66/전체 빌드 대상71. 전체71 마지막 컴파일은779. 전체 C++ 마지막 실행은549의3389개 중7개 실패(580단언); 마지막 전체 통과는510의508제품3337개. 이후 집중 통과를 전체 통과로 쓰지 않는다 |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
-| 보호 기준 | 기존2752개/fixture932개 불변. 새 CPU fixture1개 포함 **2753개/933개**이며 원본/기존 fixture 변경0. `extracted/cpp-resume-825/protected-after.json` |
+| 보호 기준 | 기존2753개/fixture933개 불변. 새 CPU fixture1개 포함 **2754개/934개**이며 원본/기존 fixture 변경0. `extracted/cpp-resume-826/protected-after.json` |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
@@ -28,9 +28,9 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 1. 사용자 재개 요청 뒤 AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 해당 인계도 읽는다. `git status`와 `git fetch`로 다른 PC/세션 변경을 확인하며 push는 하지 않는다.
 2. 현재 호스트가 마지막 디컴파일 호스트와 다르면 cpppj 작업/디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 문서에 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 불완전하므로 쓰지 않는다.
 3. 실제 게임·별도 창 실행은 AGENTS.md의 확인 규칙을 따른다. 예외는 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94) 및 사용자가 직접 요청한 원본 수동 컨트롤/녹화 분석의 해당 단계다. 다른 PC는 실행 목적·필요성 설명 후 명시적 확인이 필요하다.
-4. 최신 완료 원시는 `extracted/cpp-resume-825/`이며 Git 제외·작업 PC 전용이다. 커밋되는 증거는 `cpppj/*.json`·`docs/exe/cpp-*.md`다. 다른 PC에 원시가 있다고 가정하지 않는다.
+4. 최신 완료 원시는 `extracted/cpp-resume-826/`이며 Git 제외·작업 PC 전용이다. 커밋되는 증거는 `cpppj/*.json`·`docs/exe/cpp-*.md`다. 다른 PC에 원시가 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj/webpj·staged 파일·실행 출력은 포함하지 않는다. 한 단위를 마치면 0.1절·해당 완료/잔여 항목·단위 문서를 갱신하고 해당 파일만 로컬 커밋한다.
-6. 네 Gun809·Canon810→811·전환812·레벨813·ContentForm814·Graph 참조 감소/SID0조회815는 완료했다. 816의 sentinel/Free와817의 flags8 부품도 완료했다. 818의 Add/Flood/Rebuild/Allocate/PostPop/PostDestroy와819의 Detach/영역 setter 현재 실행을 완료했다. 820~821에서 Boardcoord0041cdb0의 현재 각도/세 직접caller·방향 네 소비자·실제 바람/입자를 연결했다. 822 주변음/날씨 scheduler를 완료했다. 823은004182c0 시간 알림/임시서식 부모를 연결했다. 824에서00471650의 미도달 진단/현재 수명을 대조했다. 825에서0044c060 연소 갱신의 진단 복귀/실제 Session 회복·생성·삭제를 완료했다. 다음826은00472f70 마나 목록이며 나머지 checking21과 객체 메뉴·커서 상태/수명도 남는다. 포획 안내 실행/실제 포획 등 사용자 제외 검사는 계속 건너뛴다.
+6. 네 Gun809·Canon810→811·전환812·레벨813·ContentForm814·Graph 참조 감소/SID0조회815는 완료했다. 816의 sentinel/Free와817의 flags8 부품도 완료했다. 818의 Add/Flood/Rebuild/Allocate/PostPop/PostDestroy와819의 Detach/영역 setter 현재 실행을 완료했다. 820~821에서 Boardcoord0041cdb0의 현재 각도/세 직접caller·방향 네 소비자·실제 바람/입자를 연결했다. 822 주변음/날씨 scheduler를 완료했다. 823은004182c0 시간 알림/임시서식 부모를 연결했다. 824에서00471650의 미도달 진단/현재 수명을 대조했다. 825에서0044c060 연소 갱신의 진단 복귀/실제 Session 회복·생성·삭제를 완료했다. 826에서00472f70 마나 공급원 목록/카운터 진단을 완료했다. 다음827은004c0e20 첫 유효 청크 영역 조회이며 나머지 checking20과 객체 메뉴·커서 상태/수명도 남는다. 포획 안내 실행/실제 포획 등 사용자 제외 검사는 계속 건너뛴다.
 
 ### 0.3 유지되는 제한과 보류
 
@@ -43,12 +43,12 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 
 ### 0.4 2026-11-04 재개 인계
 
-- **진행/직전 커밋:** 사용자 /goal 전체 잔여를 계속 진행 중이다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**이며 AGENTS/이 문서/dotnet 인계를 다시 읽었다.824는 `51fbfaf8 / 20261104-06 CP`다. [824 기록](docs/exe/cpp-palette-frame-checking-20261104.md)의 최초 관측기 inline CALL/XMM 오류·CD 미초기화 stack 한계는 당시 기록대로 남긴다.
-- **825 완료:**0044c060/CD00462480의 중복 finder index1 진단을 실제 Session의 현재 Client 장치에 연결했다. 원문 진단은0x210(528)줄이며 이전512줄은 오기였다. 진단 뒤 저장한 HP/절반/첫 finder 결과로 계속하고 TYPE/현재 bulfType/위치는 원문 위치에서 다시 읽는다. 불프 위치음 뒤 생성 장치 확인·생성null·기존 효과 유지·회복 삭제와 RawPriestWorldBindings/피격 공통 소비자를 대조했다. [825 기록](docs/exe/cpp-damageable-burning-checking-20261104.md).
-- **검증:** 실제CPU1100행(판본별550)/중복진단216·재관측 일치. 집중 **8개(새4) 최종 실패0**: 새 CPU2/장치·부분효과1/실제Client·Session1, 기존 일반 피해4. 실제 Client checking 상위비트/같은 Kernel·Subscriber·Player 소유자와 실제 연소Form을 사용했다. 진단에서 HP회복/두 번째Form삭제 뒤 첫 효과 유지, 다음 갱신 정리와 기본 생성mode1/stage0·등록/삭제 깊이를 확인했다. 실제 게임/GUI/공격/Kernel 프레임은 진행하지 않았다. 최종 NetstormCpp+집중 빌드와 검사 owner 보완 빌드·프로브1회는 종료0·경고/오류0이며 EXE/SHA는0.1절이다.
-- **최초 실패 보존:** 최초 빌드는 새 검사에 ClientMain이라고 적어7컴파일 오류/종료1이었다. 실제 클래스 Client/ClientOptions로 검사만 교정했다. 첫 집중4개 중1단언은 ClientGameplayGlobals와 같은 Subscriber를 공급하지 않아 기존 정체성 guard가 거부한 검사 조립 누락이다. 같은 Client Subscriber/Player/Kernel을 연결해 통과했다. 최초 로그/중간 성공/최종 로그는 원시에 남겼다. 제품 계산이나 기존 fixture를 검사에 맞춰 바꾸지 않았다. 최초 target Netstorm은 netstorm 라이브러리로 선택됐으며 최종 실제 제품은 NetstormCpp로 명시 빌드했다.
-- **다음826:**00472f70 마나 목록의 alreadyThere 진단·정상 복귀와 현재 checking/목록 owner 및 실제 postPop 소비자를 분석/연결한다. 함수별 색인의 남은 비멀티 부모/부분과 객체 메뉴·커서·Edit·State/파일 수명도 계속 진행한다. 실제 특정 적 공격/포획·희생/승리 재현·사용자 직접 확인은 제외한다.
-- **잔여/한계:**checking **21=부모13+부분5+MP3**,완료부모29다.825 뒤 비멀티1~4/Windows7잔여→MP무검사 사전 구현→4~8차다. 실제 게임/GUI·자동공략·사용자 제외·MP·공중3종 전용·물리/PCM 재시도·전체71/34미션/ZIP 검사는 하지 않았다. 원시는 `extracted/cpp-resume-825/`, 보호2753/fixture933이다. 이 단위 빌드/프로브/검사는 모두 종료했다. 다른 채팅 DN 변경을 건드리거나 커밋하지 않는다. 단위별 인계·커밋·push금지/제외검사를 유지한다. **전체 목표는 미완료다.**
+- **진행/직전 커밋:** 사용자 /goal 전체 잔여를 계속 진행 중이다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**이며 AGENTS/이 문서/dotnet 인계를 다시 읽었다.825는 `a9157275 / 20261104-07 CP`다. [825 기록](docs/exe/cpp-damageable-burning-checking-20261104.md)의 초기 검사 컴파일/Subscriber 조립 실패는 당시 기록대로 보존했다.
+- **826 완료:**00472f70/CD0048a360의 공급원 중복 진단을 현재 Client/World/Session과 같은 공통 postPop에 연결했다. 원문0x44(68)줄의 !alreadyThere 진단이 목록/원소/개수를 바꿔도 저장한 중복으로 재추가를 생략하고 현재 생산 카운터만1 증가한다. 전체 DWORD 토큰·signed 용량·가득 참·카운터 감김·실제256DWORD 장기 배열/후속 현재TYPE·owner 통계를 대조했다. [826 기록](docs/exe/cpp-mana-registration-checking-20261104.md).
+- **검증:** 실제CPU1084행(판본별542)/중복진단135·재관측 일치. 집중 **16개(새6) 실패0**: CPU2/읽기순서1/선택장치·부분효과1/실제Client·두World대여1/실제Session1,기존postPop6/연소4. 실제 보호 TheWarBegins의 공급원과 기본 Session 진단 서비스도 선택했다. 두 World에서 같은 공급원 주소·진단의 목록0/현재counter ffffffff→0·TYPE/owner 변경 뒤 저장된 flags2와 현재 통계를 확인했다. 게임/GUI/Kernel·AI·공격 프레임은 진행하지 않았다. Release2회/프로브1회 종료0·경고/오류0이며 EXE/SHA는0.1절이다.
+- **검토 보완/실패:** 첫 집중15개도 실패0이었다. CD 기계어는 양수 개수로 진입한 첫 원소를 검사한 뒤 현재count를 다시 읽는데 첫 C++ for조건은 그 전에 읽었다. do 본문/후방 조건으로 보완하고 첫 count 반환 직후 현재값0이 되는 독립 경계 검사를 추가해 최종16개가 통과했다. Native/기존 fixture를 바꾸지 않았다. 최초/최종 빌드와 두 차례 검사 로그는 원시에 남겼으며 이번 단위의 컴파일/검사 실패는0이다.
+- **다음827:**004c0e20 Terrainbuilder의 현재 사각형/청크 조회·첫 유효 영역 반환/실패 진단과 실제 생성/편집 소비자를 분석/연결한다. 나머지 checking20·객체 메뉴/커서·Edit·State/파일 수명도 계속한다. 004a7510은 원문의 Reconnecting/참가자 Subscriber 재연결·팀 재편 경로라8번MP로 이월하며 새 MP 검사는 하지 않는다. 779의 부모 집계에 남아 있는 미완료 함수이고 완료로 세지 않는다.
+- **잔여/한계:**checking **20=부모12+부분5+MP분류3**,완료부모30이다. 부모004a7510·부분004b54e0은 이 집계 안에서MP 이월이다.826 뒤 비멀티1~4/Windows7잔여→MP무검사 사전 구현→4~8차다. 실제 게임/GUI·자동공략·사용자 제외·MP·공중3종 전용·물리/PCM 재시도·전체71/34미션/ZIP 검사는 하지 않았다. 원시는 `extracted/cpp-resume-826/`, 보호2754/fixture934다. 이 단위 빌드/프로브/검사는 모두 종료했다. 다른 채팅 DN 변경을 건드리거나 커밋하지 않는다. 단위별 인계·커밋·push금지/제외검사를 유지한다. **전체 목표는 미완료다.**
 
 ## 1. 현행 목표
 
@@ -134,6 +134,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 - [x] **시간 알림/임시 Chat 서식(823):** Wind 뒤180초·현재 guard/옵션/기한/이름·같은 Config/일반 제출·front 정상 복원을 연결했다. 실제CPU1176+12행/재관측·집중11개(새4) 통과. 최초 검사 컴파일 이름 충돌/Native 경고 교정은 기록에 보존했다. MP 실제 전송 검사는 하지 않았다. [823 기록](docs/exe/cpp-monitor-time-20261104.md).
 - [x] **팔레트 Frame의 미도달 진단/현재 수명(824):** 실제 기계어로 진단 미도달을 증명하고 기존 Frame/Client Kernel·FrameTime/Form을 CPU1670행/재관측·집중10개(새2)로 대조했다. 최초 관측기 inline CALL/XMM 오류와4단언 실패는 원시 보존 후 관측기 ABI만 교정했다. checking22이며CD 미초기화stack 차이는 별도다. [824 기록](docs/exe/cpp-palette-frame-checking-20261104.md).
 - [x] **연소 갱신 진단/현재 회복 소비자(825):** 실제CPU1100행/진단216·재관측과 집중8개(새4) 최종 실패0으로 저장 HP/첫 검색·현재 TYPE/위치음·실제 Client/Session Form 생성/회복 삭제를 대조했다. 최초 검사 컴파일/owner 조립 실패는 보존 후 교정했으며 checking21이다. [825 기록](docs/exe/cpp-damageable-burning-checking-20261104.md).
+- [x] **마나 공급원 등록/현재 카운터(826):** CPU1084행/진단135·재관측·집중16개(새6) 실패0으로 중복 진단/저장 판단·signed 용량/전체 DWORD·실제 Client/두World/Session 공통postPop·현재TYPE/owner 통계를 대조했다. CD 첫 검색/do조건 순서도 별도 검사했다. checking20이며 재접속004a7510은MP 미완료로 이월한다. [826 기록](docs/exe/cpp-mana-registration-checking-20261104.md).
 - [x] **Edit 대표 수명·저장:** 기존/새 Fort·섬 추가·전체 저장/Save as·이름/목록, 시나리오 시작값·방향별 동맹(590·597), 실제 Objects 스트림·손상 파일 정리(663~665), Early1 중단→Edit→시험 전투/Restart/복귀·Cancel/No(716), 같은 워크샾 owner0/2/8·Yes 저장/재적재(726). [Edit 수명](docs/exe/cpp-mission-editor-lifetime-20261102.md), [소유자 저장](docs/exe/cpp-editor-owner-save-20261102.md). 전체 도구/분기/실패를 완료한 것은 아니다.
 - [x] **Edit Graph·지형 캐시:** 재적재 소속(721), 같은 후보 배치 직후 장부678/실제670·noGraph4(723), 두 섬/다리 연결·owner 변경·절단의 성분2→1→2와 원본 전체 출력(724), 지면99cache Client 수명(722). [대표 Graph](docs/exe/cpp-editor-graph-world-20261102.md). 원본에도 있는 장부 차이8은 정규화하지 않는다.
 - [x] **시나리오 명령 연결:** 객체/송금·연기/번개·AddRandom/DestroyAt·기술 지급·음향/ViewSpot·HTML Input·기술 목록(676·682·683·686~690·705~708), 명시549문서/43이름·Menu 둘째 인자/큐 조사(715). [이름/메뉴 조사](docs/exe/cpp-dump-squids-20261102.md). 명시 목록 일치를 동적/TARC/Config 실행 전체 완료로 세지 않는다. Zsend/비미션 의식 요청(707·709)은 MP 정적 연결만 했다.
@@ -144,7 +145,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 - [x] **파일 경로·시작·BaseFile:** 공유 256BYTE/10칸 이름 고리와 Client·VFS/저장/Options/Capture/CD/Help/Config(727~732), 디렉터리/모듈·6후보 setup/가상CWD/아카이브 등록/반납(734~737), Edit 조회/저장/삭제·직접 chmod 경계(738·740), MatchDisk/FileSpec(752), 전체 열기 부모·키/TAFF/current FILE·객체 덤프(755·757·763). [경로 고리](docs/exe/cpp-file-name-formatter-20261102.md), [BaseFile](docs/exe/cpp-basefile-open-policy-20261103.md), [Edit 쓰기](docs/exe/cpp-editor-mutation-ring-20261102.md). 손상/부분 I/O·다른 소비자·32비트 ABI는 남는다.
 - [x] **파일 reader·자산 수명:** 존재조회/세 소비자(765), Help HTML stream writer(766), QuickHelp(767), DataManager/Template(769), Config(771), TYPE(777), GIF/타이틀 State42(781·782), 보조 효과음 현재 root(785), 팔레트(786), Xlat(787), 글꼴 캐시 순수부모→실제 FontStore(788→789), SHP 매핑부모→실제 공유 자산(790→791). [직접 74caller 분류](docs/exe/cpp-secondary-sound-root-20261103.md), [실제 SHP](docs/exe/cpp-native-shape-file-20261103.md). Script 캐시 직접 caller는792에서 CD/호스트의 비활성 10.78 경로로 분류했으며 기존 snapshot/캐시 정책을 유지한다.
 - [x] **일반 명령·글꼴/음향 설정:** press 후처리(784), CreateAt/AI 직접 명령/MakeAi/조건부 AI 메뉴(770·772·773·775), Config/우선순위 명령(762), 글꼴·음질/글리프 캐시(764), raw ACP 31BYTE↔UTF-8 Config/디스크 경계(774). [일반 후처리](docs/exe/cpp-recent-command-tail-20261103.md), [글꼴 이름](docs/exe/cpp-font-face-encoding-20261103.md). MakeAi의 owner0 이전/삭제·전략·실제 설치 글꼴/다른 ACP/구형 무BOM 설정은 별도 한계다.
-- [x] **checking 공유 owner와 후속 29부모:** 779의 기존 41관문 공유와 별도로, 접근점(783)·다리 낙하(793)/붕괴(795)·Gump 표시/소멸(796)·연소 3소비자(797→798)·건설 Form(800)·커서 취소(801)·펜스 2타입(802)·Gunanim(803)·Squid 표시(804→805)·Gump 부착(806)·Gun 통지(808)·네 Gun PostPop(809)·CanonDecoder(810→811)·Graph 참조 감소/SID0조회(815)·Graph Add(818)·Graph sentinel/Flood의 마지막 Detach 소비자(819)·Boardcoord각도 세caller(820~821)를 실제 소비자에 연결하고 PaletteFlash 미도달 진단/현재 수명(824)·연소 갱신/회복 소비자(825)를 대조했다. [함수별 색인](docs/exe/cpp-checking-consumer-gaps-20261103.md), [808](docs/exe/cpp-gun-notify-checking-20261103.md). 순수부모 준비본을 실제 연결 완료로 중복 계산하지 않는다. 807의 Gun/바리케이드 서버 관문 4곳 owner 분리와 809의 네 PostPop 진단 위치·복귀까지 완료다.
+- [x] **checking 공유 owner와 후속 30부모:** 779의 기존 41관문 공유와 별도로, 접근점(783)·다리 낙하(793)/붕괴(795)·Gump 표시/소멸(796)·연소 3소비자(797→798)·건설 Form(800)·커서 취소(801)·펜스 2타입(802)·Gunanim(803)·Squid 표시(804→805)·Gump 부착(806)·Gun 통지(808)·네 Gun PostPop(809)·CanonDecoder(810→811)·Graph 참조 감소/SID0조회(815)·Graph Add(818)·Graph sentinel/Flood의 마지막 Detach 소비자(819)·Boardcoord각도 세caller(820~821)를 실제 소비자에 연결하고 PaletteFlash 미도달 진단/현재 수명(824)·연소 갱신/회복 소비자(825)·마나 공급원 등록/카운터(826)를 대조했다. [함수별 색인](docs/exe/cpp-checking-consumer-gaps-20261103.md), [808](docs/exe/cpp-gun-notify-checking-20261103.md). 순수부모 준비본을 실제 연결 완료로 중복 계산하지 않는다. 807의 Gun/바리케이드 서버 관문 4곳 owner 분리와 809의 네 PostPop 진단 위치·복귀까지 완료다.
 - [x] **Windows 10 화면 전환의 확인 범위:** DIB 호환 전체화면·가장자리 이동·세 화면비·저장/종료/새 프로세스 적용, F12(744), 화면 변경/불법 요청 복구·DD 마우스 조정/취소/확인/15초 만료·저장 재시작(746). [화면 전환](docs/exe/cpp-screen-mode-transition-20261102.md). 다른 장치/DPI·물리 입력/출력은 미검증이다.
 - [x] **배포 스크립트·빌드 선택:** `cpppj/package-cpppj.ps1`의 인자/대화형 경로·빈 값 취소·실행 파일/자산 동봉(562), 최상위 EXE 실행(637), Game/Tests/All 선택/기본 테스트 OFF(739). [빌드 모드](docs/exe/cpp-build-modes-20261102.md). 최신 제품 821의 새 배포 ZIP/전체 회귀는 아직 없다.
 - [x] **사용자 제보 수정:** 덱 재활성 지연은 원문 Fast 1초로 복원(677), 간헐천 그림자는 원문 대상 변환/색표로 수정(678). [덱](docs/exe/cpp-deck-reactivation-20261101.md), [그림자](docs/exe/cpp-translated-shadow-20261101.md). 사용자의 자연 플레이 재확인은 별도다.
@@ -153,7 +154,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 ### 2.2 미션별 확보한 증거
 
-모든 행은 **과거 해당 제품의 증거**다. 현재 825의 자연 완주 회귀로 합산하지 않는다. 전체 34 최신 기준은645/644 제품이다.
+모든 행은 **과거 해당 제품의 증거**다. 현재 826의 자연 완주 회귀로 합산하지 않는다. 전체 34 최신 기준은645/644 제품이다.
 
 | 대상 | 확보한 증거 | 남은 사용자 확인 |
 | --- | --- | --- |
@@ -185,7 +186,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 ## 3. 앞으로 할 작업 (재개 후 권장 순서)
 
-**2026-11-03 사용자 /goal 요청으로 재개했다.** 819에서 Graph 현재 소비자를 완료했다. 821 바람/입자·822 주변음·823 시간 알림·824 팔레트·825 연소 뒤826 마나 목록/나머지 checking·객체 메뉴/커서 실제 소비자를 이어 간다(0.4절). 비멀티1~4번·Windows 10 호환성7번을 마친 뒤8번으로 간다. 5·6번은 사용자 확인 목록이며 단계 전환을 막지 않는다. 아래 `[ ]`만 실제 잔여이며 완료한 하위 범위는2절이다.
+**2026-11-03 사용자 /goal 요청으로 재개했다.** 819에서 Graph 현재 소비자를 완료했다. 821 바람/입자·822 주변음·823 시간 알림·824 팔레트·825 연소·826 마나 뒤827 청크 영역 조회/나머지 checking·객체 메뉴/커서 실제 소비자를 이어 간다(0.4절). 비멀티1~4번·Windows 10 호환성7번을 마친 뒤8번으로 간다. 5·6번은 사용자 확인 목록이며 단계 전환을 막지 않는다. 아래 `[ ]`만 실제 잔여이며 완료한 하위 범위는2절이다.
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
 
@@ -212,10 +213,10 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 ### 4. 내부 수명·파일·checking 실제 연결
 
-**현재 연결 기준:** 네 Gun PostPop809·CanonDecoder810→811·전환812·레벨813·ContentForm814·Graph 참조/SID0조회815는 완료했다. [815 기록](docs/exe/cpp-graph-reference-checking-20261103.md). 818에서 Add와 postPop/postDestroy,819에서 Detach·영역 setter·World 정책/시계를 완료했다. sentinel8/Flood4 호출도 현재 실행이다.820~821에서 각도 세caller와 방향4곳·바람/입자를 완료해 함수 잔여23으로 갱신했고824 PaletteFlash 미도달진단/현재수명 완료 뒤22였고825 연소 갱신/회복 완료 뒤21이 남는다.
+**현재 연결 기준:** 네 Gun PostPop809·CanonDecoder810→811·전환812·레벨813·ContentForm814·Graph 참조/SID0조회815는 완료했다. [815 기록](docs/exe/cpp-graph-reference-checking-20261103.md). 818에서 Add와 postPop/postDestroy,819에서 Detach·영역 setter·World 정책/시계를 완료했다. sentinel8/Flood4 호출도 현재 실행이다.820~821에서 각도 세caller와 방향4곳·바람/입자를 완료해 함수 잔여23으로 갱신했고824 PaletteFlash 미도달진단/현재수명 완료 뒤22였고825 연소 갱신/회복 뒤21이었고826 마나 등록 완료 뒤20이 남는다.
 
-- [ ] **checking 잔여 21함수**를 [함수별 공백](docs/exe/cpp-checking-consumer-gaps-20261103.md)에서 이어 간다. 부모 13/부분 5/MP 분류 3이며 779 당시 51개 중 2.1절의 29부모는 완료다. ContentForm 부분 `004aec10`은814 완료다. 남은 부분은 `0048fb30/004b54e0/004b8cb0/004c9350/004d62b0`이다. `004b54e0` 재접속 저장은 부분 5의 집계에 남지만 작업은 8번MP로 이월한다. MP 분류 3(`0042bc10/004b4df0/004b8b20`)도 8번이다.
-- [ ] **마나 목록(826 우선):**00472f70의 alreadyThere 진단 복귀/현재 checking·목록 owner와 실제 postPop 소비자를 연결한다. 연소 갱신825는 완료했다. 나머지 미완료 함수는 위 색인을 따른다.
+- [ ] **checking 잔여 20함수**를 [함수별 공백](docs/exe/cpp-checking-consumer-gaps-20261103.md)에서 이어 간다. 부모 12/부분 5/MP 분류 3이며 779 당시 51개 중 2.1절의 30부모는 완료다. 부모004a7510 재접속도8번MP로 이월하며 완료로 세지 않는다. ContentForm 부분 `004aec10`은814 완료다. 남은 부분은 `0048fb30/004b54e0/004b8cb0/004c9350/004d62b0`이다. `004b54e0` 재접속 저장은 부분 5의 집계에 남지만 작업은 8번MP로 이월한다. MP 분류 3(`0042bc10/004b4df0/004b8b20`)도 8번이다.
+- [ ] **첫 유효 청크 영역(827 우선):**004c0e20의 현재 사각형/청크 조회·첫 영역 반환/실패 checking 진단과 실제 생성·편집 소비자를 연결한다. 마나 공급원826은 완료했다. 나머지 함수는 위 색인을 따른다.
 - [ ] 비멀티 파생 프로세스·State/Session의 남은 수명과 전체 팔레트 전환·Chat 모드별 표시·시스템뉴스 UI를 연결한다. 원격/메타맵·desc는8번이다.
 - [ ] 경로 고리/FileSpec·BaseFile의 **분류만 했거나 아직 연결하지 않은 소비자**, 최초 FILE/리소스 I/O·다른 쓰기/키/스트림·TAFF/보조 폴백·손상/할당/부분 I/O 실패 수명을 대조한다. 이미 실제 연결한 reader/FontStore/SHP·Edit 쓰기는 2.1절을 따른다. [785의 직접 74caller 분류](docs/exe/cpp-secondary-sound-root-20261103.md)는 모든 부모 구현 완료가 아니다. 등록 snapshot/무진단 optional·OS 직접 ReadFileBytes 계약을 보존한다.
 - [ ] options.cfg의 실제 부분 I/O·1176/1177 실패 경계, 원문 FILE/FileSpec/SEH와 호스트 소유 경계의 남은 차이를 판정한다. `0044fa00`의 재접속 저장 소비자는 `004b54e0`과 함께8번이다. CD 일반 열기는 `004ba5d0`, 부분 파일은 `004ba630`이며 자동 정밀 후보의 반대 대응을 따르지 않는다(652). 실제 UNC 서버/다른 드라이브 상대CWD 등 미관측 경계도 보존한다.
@@ -250,7 +251,7 @@ AI 미완료 체크 항목이 아니며 단계 전환을 막지 않는다. 부�
 
 - [ ] **3차 TCP/IP 로컬 멀티플레이·Outpust**를 원문 근거로 사전 구현한다. 신규 단위/게임/통신 검사는 하지 않는다. 공식 서버 복구·구 클라이언트 유효성 검사는 연결하지 않는다.
 - MP 이월 목록: RequestMenu 전송 `004d712e..004d717c`, 메타맵 열기 `004789b0/00479390`·번개 `00479650`·Challenge 이미지/텍스트 `00478d10`/참가자 삭제 `0042bc10`, c6/db·ChalSailPos 모드6·선행클릭/항해 메뉴·desc, 비미션 의식/랭크·조기 희생 안내, PlayerNoMake writer `00433c30`, frame22/주기64·timeout/UI·endpoint/server/boss·리슨/수락/22칸 송신.
-- 일반 전투 `!state.dat` 저장/복구·saveBattle/metamap/비mission phase14·StateReconnect/서버 이전·Zone0/메타 Poll/`004c1e70` 시계 패킷·`004b54e0` 파일명/count 진단과 `0044fa00` 소비자·LeaveBattle 원격 페널티를 포함한다(661의 분류). 기존 질문/삭제 UI는 유지한다. 정적 사전 구현과 검증 완료를 구별한다.
+- 일반 전투 `!state.dat` 저장/복구·saveBattle/metamap/비mission phase14·StateReconnect/서버 이전·Zone0/메타 Poll/`004c1e70` 시계 패킷·`004b54e0` 파일명/count 진단과 `0044fa00` 소비자·`004a7510` 참가자 재접속/팀 재편·실패 진단·LeaveBattle 원격 페널티를 포함한다(661의 분류). 기존 질문/삭제 UI는 유지한다. 정적 사전 구현과 검증 완료를 구별한다.
 - [ ] **4차 로컬 MCP·해상도:** 모든 게임 조작·캡처·소리 포함 녹화, 16:9 최대 1920×1080을 제공한다. 그래픽 크기 스케일 조정은 이 단계의 요구가 아니다.
 - [ ] **5차 사용자 저장 경로·무제한 맵 목록:** 모든 자동 생성 파일/디렉터리와 reader를 `%USERPROFILE%\Saved Games\Netstorm\` 아래로 옮긴다. 설정/진행은 Saves, 신규 맵은 CustomMaps. 원래/사용자 맵 병행 읽기·목록 스크롤/무제한을 구현한다. [733 조사](docs/exe/cpp-phase5-file-inventory-20261102.md)의 12파일군/50후보와 이후 추가 writer(HTML PieceList·옵션 임시/복구·!state/전체화면 표식·Edit 장부/잠금/pending·GIF/BMP·squids/procSumm·MCP 생성물)까지 포함한다. 이관 우선순위·두 설치 충돌/장부 identity·명시 export 정책을 정하고 일반 권한/읽기 전용 설치·다른 CWD/Unicode·저장/재적재/중단/교체/전체화면 재실행을 확인한다.
 - [ ] **6차 한국어:** 메뉴/문자열/시나리오·글꼴을 지원한다. 글꼴은 D2Coding이며 명칭은 AGENTS.md를 따른다.

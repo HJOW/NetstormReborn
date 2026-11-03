@@ -1,0 +1,21 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "backend": "실제 Windows x86 CPU / 전용 payload / 진단 장치 관측",
+  "binaries": {
+    "originals": {
+      "path": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+    },
+    "originalCD": {
+      "path": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    }
+  },
+  "rows": 1084,
+  "fixtureSha256": "4711f8b9998cd3e60f2cb5538dca4f84e95b8f24bf7e5477b5d00e0b3f7c532b",
+  "probeSha256": "4ff94426a26be7f3cdd1f8cae7846f2a01b9fb25179af26d504ef134b771d4bc",
+  "probeSourceSha256": "2b9bdf12fb53444c82d59b28ac049361a2dd2d110d6668eac949a10bdd1adf08",
+  "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+  "boundary": "유효 물리 목록16DWORD/활성0~4·signed 용량·독립 부모만 실행 / 실제 게임·GUI·통신 없음"
+}
