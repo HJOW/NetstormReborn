@@ -1,0 +1,97 @@
+{
+  "unit": 831,
+  "date": "2026-11-04",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "kind": "원문/기계어/실제 caller 범위의 정적 분류;제품 코드 변경0",
+  "previousCommit": "ae3236e4 / 20261104-12 CP",
+  "productUnit": 830,
+  "version": "11.01",
+  "exeSha256": "f8ba3dde280a1ad533359ab70b7c31c145224ae27dc0bf98c6069e6a5fc76f01",
+  "originalBinarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "cdBinarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+  "function": "004b8cb0",
+  "assertion": {
+    "expression": "!reloadFile",
+    "file": ".\\State.cpp",
+    "line": 3876
+  },
+  "callers": [
+    {
+      "parent": "004b9010",
+      "site": "원문 자동 서버 연결 장애/기한 처리",
+      "reloadFile": 0,
+      "scope": "phase14·server0·연결9/수신 활동·재접속 옵션 뒤;004b6560의 일반 저장 준비 후 호출"
+    },
+    {
+      "parent": "004d62b0",
+      "site": "004d7e57",
+      "reloadFile": 0,
+      "commandGlobal": "00542998",
+      "command": "020000a9",
+      "name": "ForceServerDeath",
+      "nameTableEntry": "005430d0"
+    },
+    {
+      "parent": "004d62b0",
+      "site": "004d7e84",
+      "reloadFile": 1,
+      "commandGlobal": "005429a0",
+      "command": "020000ab",
+      "name": "StateReconnect",
+      "nameTableEntry": "005430e0"
+    }
+  ],
+  "classification": "일반 단독 State 전환의 진단이 아닌 서버 전환/저장 재접속 부모. 미완료 부분 집계 안에서8번MP 구현으로 이월. 정상 단독 경로에 임의 호출하지 않음.",
+  "limits": [
+    "004b8cb0 자체에 직접 inSingle return 관문은 없으므로 모든 단독 상태의 기계적 도달 불가를 증명했다고 쓰지 않음.",
+    "현재 GameMenuCommands에는 두 이름/명령 등록이 없으며 새로운 기본 단독 메뉴에 임의 노출하지 않음.",
+    "저장 검증004b5890·연결종료·연결 Player/서버 subscriber 선택·State15 또는 재접속State7/현재SP·NotRestart와 삭제를 포함하는 전체 부모는 아직 미구현.",
+    "CD 후보00432480은 같은 목적의 기본 구조/선택/재접속을 확인했으나 패치 진단과 동일한 checking 관문/전체 결과로 간주하지 않음."
+  ],
+  "checking": {
+    "remaining": 17,
+    "parents": 11,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 31,
+    "completedPartial": 3,
+    "closedThisUnit": [],
+    "mpDeferredWithinParents": [
+      "004a7510"
+    ],
+    "mpDeferredWithinPartial": [
+      "004b54e0",
+      "004b8cb0"
+    ]
+  },
+  "newExecutions": {
+    "build": 0,
+    "cppTests": 0,
+    "nativeProbe": 0,
+    "gameGui": 0,
+    "network": 0,
+    "mpTests": 0
+  },
+  "protection": {
+    "inheritedVerifiedUnit": 830,
+    "inheritedManifest": "extracted/cpp-resume-830/protected-after.json",
+    "inheritedFiles": 2756,
+    "inheritedFixtures": 936,
+    "writesToProtectedFiles": 0,
+    "rehashedAllFilesThisUnit": false,
+    "explicitlyRehashed": [
+      "originals/Netstorm.exe",
+      "originalCD/NETSTORM.EXE",
+      "cpppj/build/bin/Release/Netstorm.exe"
+    ]
+  },
+  "next": "832 비멀티 PathProcess00489ff0의 부모 Halt/현재 checking·진단 복귀/기존 대상 재지정·실제 소비자 연결. 사용자 제외 포획/희생/공격/승리·MP/공중3종 전용 검사는 계속 생략.",
+  "sources": {
+    "cpppj/src/client/ClientLocalStateGlobals.h": "7b4ef48f55ab39e8b67c92a8c63a89d41032c42f7c6f25d1fada0742336086c6",
+    "cpppj/src/client/GameMenuCommands.cpp": "3e94e283c5e00757be2a50b62ae63debb4f8b7b60ea1e22fa350de2be1231b76",
+    "cpppj/src/client/UberGump.cpp": "4040dbbd546c29446ed638bc28fdf793410de3f503075ff1566b388f698d4205",
+    "cpppj/src/o/RawLocalMissionState.cpp": "207552393d5539fa09560556e67eb34e4a7571a696843a6d7e69b825e6620562"
+  }
+}

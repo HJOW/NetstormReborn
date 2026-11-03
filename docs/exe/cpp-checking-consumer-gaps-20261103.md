@@ -1516,6 +1516,8 @@ LAB_004ad54f:
 
 ## FUN_004b8cb0 @ 004b8cb0
 
+**831 범위 분류(미완료):**실제 두 수동 caller는ForceServerDeath/StateReconnect 인자0/1이고 자동004b9010은서버 연결 장애 뒤다. 저장검증/연결 Player·서버 subscriber 선택/State15·재접속State7/NotRestart 전체 부모로8번MP에 이월한다. 단독 상태에 임의 진단을 넣지 않으며 직접inSingle 관문 부재를 모든 단독 도달불가 증명으로 확대하지 않는다. 부분3/잔여17·제품830 유지,새 빌드/기능·MP 검사0이다. [831 기록](cpp-state-reconnect-scope-20261104.md).
+
 별도 부모 후속: ClientLocalStateGlobals의전환진단:state부모의현재값재조회/재진입을후속복원
 
 현재 주소 언급: cpppj\src\client\ClientLocalStateGlobals.h
