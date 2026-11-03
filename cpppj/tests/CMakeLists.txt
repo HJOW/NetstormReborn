@@ -3301,3 +3301,9 @@ target_sources(netstorm_tests PRIVATE BoardAngleCheckingTests.cpp)
 target_sources(netstorm_file_tests PRIVATE BoardAngleCheckingTests.cpp ArcherAnimationTests.cpp GunTargetTests.cpp FenceTargetTests.cpp IceRicochetTests.cpp)
 set_source_files_properties(BoardAngleCheckingTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BOARD_ANGLE_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/board-angle-hardware-x86.tsv\"")
+
+# 실제CPU 바람/난수와 장기 owner·기존 연소 프레임의 현재 바람 읽기를 집중 비교한다.
+target_sources(netstorm_tests PRIVATE AmbientWindTests.cpp)
+target_sources(netstorm_file_tests PRIVATE AmbientWindTests.cpp)
+set_source_files_properties(AmbientWindTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_AMBIENT_WIND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ambient-wind-hardware-x86.tsv\"")

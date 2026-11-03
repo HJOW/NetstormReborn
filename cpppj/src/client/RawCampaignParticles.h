@@ -52,6 +52,8 @@ public:
     void PrepareBridgeClock(double now,std::uint32_t frameNumber); //이른 원문 스캔의 삭제/파편도 현재 시각을 읽도록 시간 필드만 쓰며 카메라/색표를 갱신하지 않는다.
     // 현재 실제 카메라/표시 영역과 장치 재생성에도 유효한 dirty 경계를 갱신한다.
     void BindCameraView(const RawCameraViewState& view); // 참조한 Client snapshot은 모든 입자보다 오래 살아야 한다.
+    void BindWind(const float& current); // 같은 Client의 현재 바람X를 실제 연소 프레임에 빌린다.
+    void BindWind(float&&)=delete;void BindWind(const float&&)=delete; // 임시 float 주소가 입자 수명 전에 소멸하지 않게 한다.
     void BindWeakenedMana(const bool& current); // 같은 Client005ca8f0을 연소점 선택에 빌리며 다른 주소 재연결은 거부한다.
     void BindWeakenedMana(bool&&)=delete; // 연소점 선택보다 먼저 소멸하는 임시 bool을 빌리지 않는다.
     void BindWeakenedMana(const bool&&)=delete; // const 임시값도 동일한 장기 수명 계약으로 거부한다.
@@ -119,7 +121,7 @@ private:
     std::unique_ptr<o::DissolveVisualSystem> dissolve_; //동일한 실제 세계/원본 캡처로 대상 삭제 뒤 유지하는18이다.
     o::BurningVisualState burningVisual_; // 같은 월드의 실제14/첫 공유 색 표다.
     o::BurningSourcesState burningSources_; // 같은 현재 약화 마나 옵션이다.
-    o::BurningFrameState burningFrame_; // 현재 시각/카메라/16·11/바람이다. 바람 초기화의 전체Client 복원은 후속이다.
+    o::BurningFrameState burningFrame_; // 현재 시각/카메라/16·11과 같은 Client 바람X의 비소유 뷰다.
     o::BurningDrawPalette burningColors_; // 실제8색과 인접 DWORD snapshot이다.
     ParticlePaletteMemory burningMemory_; // 다른 표시와 공유하지 않는 실제8색 할당이다.
     std::vector<o::ParticleGradient> burningGradients_; // 첫 생성자의 실제 색 띠 한 개다.

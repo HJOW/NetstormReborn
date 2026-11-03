@@ -23,6 +23,8 @@ void RawSurfaceStorage::RecordDisplayFrameError(std::uint32_t type,std::int32_t 
 void RawSurfaceStorage::AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const { if (!displayAssertion_) throw std::logic_error("표시 원문 진단 장치 미연결");displayAssertion_(expression,file,line); }
 // Client의 현재 로그 서비스를 장기 owner에 보관한다. World 대여마다 다른 Session 포인터로 교체하지 않는다.
 void RawSurfaceStorage::BindGraphTrace(std::function<void(std::int32_t,std::string_view)> trace) { graphTrace_=std::move(trace); }
+// 매 프레임 동일 게임 난수를 직접 소비하며 Session 또는 별도 난수 사본을 만들지 않는다.
+void RawSurfaceStorage::UpdateAmbientWind(o::GameRandom& random) { o::StepAmbientWind(wind,random,pool.Edition(),AngleDiagnostics()); }
 // 각도 부모는 같은 현재 checking과 같은 실제 Client 원문 진단 장치를 값 뷰로 보관한다.
 o::BoardAngleDiagnostics RawSurfaceStorage::AngleDiagnostics() const { return {checking_,[this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); }}; }
 // 삭제 Graph의 두 시각 조회가 실제 현재 Client 시계를 읽게 한다.

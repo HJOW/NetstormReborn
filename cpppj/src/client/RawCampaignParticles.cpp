@@ -290,6 +290,10 @@ o::BurningVisualProcess* RawCampaignParticles::AddBurning(o::Sid victim,std::uin
 
 namespace netstorm::client { // 실제 전역 owner와 기존 값형 하위 frame입력의 경계를 드러낸다.
 void RawCampaignParticles::BindCameraView(const RawCameraViewState& view) { cameraView_=&view;view_.cameraX=0;view_.cameraY=0;RefreshCamera(); }
+// 이전 프레임 사본을 공급하지 않고 각 입자가 같은 Client 바람X를 읽게 한다.
+void RawCampaignParticles::BindWind(const float& current) {
+    if (burningFrame_.sharedWind && burningFrame_.sharedWind!=&current) throw std::invalid_argument("연소 바람의 다른 owner 중복 연결");burningFrame_.sharedWind=&current;
+}
 // 현재 연소 처리기가 같은 장기 옵션을 읽고 Frame 인자 사본으로 대여를 교체하지 않게 한다.
 void RawCampaignParticles::BindWeakenedMana(const bool& current) {
     if (burningSources_.sharedWeakenedMana && burningSources_.sharedWeakenedMana!=&current) throw std::invalid_argument("연소 HP의 약화 전역 중복 다른 주소 연결");burningSources_.sharedWeakenedMana=&current;

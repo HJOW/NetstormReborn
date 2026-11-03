@@ -1221,6 +1221,7 @@ struct RawCampaignSession::Impl {
         },std::move(shrapnel));
         particles->BindCameraView(gameplayGlobals->Camera().Snapshot()); // 생성 직후부터 같은 전역 현재값을 사용한다.
         core.postPop.SetTeleportPrefix([this](Sid sid,std::uint32_t flags) { if (flags&1U) static_cast<void>(particles->AddStreak(sid)); }); // 원본4429f0의 최초 건설 마나12이며 재Pop에서 중복 생성하지 않는다.
+        particles->BindWind(world.Storage()->wind.x); // 같은 Client 수명의 현재 바람X를 입자별 가속 지점에서 읽는다.
         particles->BindWeakenedMana(gameplayGlobals->GameAux()->PriestQuarterHp()); // 연소점 선택도 Frame 준비 사본을 기다리지 않는다.
         auto combatEffects=services.archer;
         if (!combatEffects.iceCooling) combatEffects.iceCooling=[this](Sid parent) { static_cast<void>(particles->AddCooling(parent,projectileGeometry->Hotspot(parent))); }; //004a8770의 현재 SHP signed 포인트와 실제21 수명을 연결한다.

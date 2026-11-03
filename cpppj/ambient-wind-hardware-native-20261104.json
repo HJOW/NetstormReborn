@@ -1,0 +1,15 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "backend": "실제 Windows x86 CPU / 별도 콘솔 / 보호 PE 메모리 복사",
+  "binaries": {
+    "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "rows": 1920,
+  "fixtureSha256": "8d653588b6e676c85f7cd292677699df4a3702bb6ab268b5697caea19b04c999",
+  "probeSha256": "515f038d0c9a7210d4f01d28ad2f985ff27998311674d5ca1739377d3cb60d42",
+  "probeSourceSha256": "8e7eb8b9e418dd37ea620069c89c883a707583547ac9e36359e2d0e3318589ef",
+  "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+  "boundary": "0x027f/53비트·실제 바람/두 난수/fpatan/각도·원본 초기화/GUI/게임/소켓0"
+}

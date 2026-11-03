@@ -426,6 +426,7 @@ int Client::Run() {
         if (movieUpdatePauseDepth_<=0) {
             // 원본439ad3의 설정 저장은439b13의 가상 소멸/OnExit 예약보다 먼저다.
             if (configuration_.Configuration().changed) SaveOptions();
+            surfaceStorage_->UpdateAmbientWind(randomGlobals_->Game()); //00439af0의 Movie 잠금 없는 가지이며 게임 시계 정지/메뉴 여부와 무관하게 같은 난수를 소비한다.
             RunClientBridgeDecay(*this); //00422bc0은 메뉴에서도 실행하며 위치 소리469f60보다 먼저 현재 다리 수명/파괴를 처리한다.
             if (audio_) audio_->SceneFrame(); //469f60은 미니맵/Gump/Kernel보다 앞이다.
             if (menu_) menu_->RefreshMinimap(); //481320은 게임 시계 정지와 무관하다.

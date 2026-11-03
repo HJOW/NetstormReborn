@@ -1,0 +1,179 @@
+{
+  "unit": 821,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "exeSha256": "897a5603557980ed7931fe62e7bd230314abc5a3962a0a7f80f5ea2a6207327f",
+  "nativeHardware": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "실제 Windows x86 CPU / 별도 콘솔 / 보호 PE 메모리 복사",
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "rows": 1920,
+    "fixtureSha256": "8d653588b6e676c85f7cd292677699df4a3702bb6ab268b5697caea19b04c999",
+    "probeSha256": "515f038d0c9a7210d4f01d28ad2f985ff27998311674d5ca1739377d3cb60d42",
+    "probeSourceSha256": "8e7eb8b9e418dd37ea620069c89c883a707583547ac9e36359e2d0e3318589ef",
+    "sharedProbeSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "boundary": "0x027f/53비트·실제 바람/두 난수/fpatan/각도·원본 초기화/GUI/게임/소켓0"
+  },
+  "nativeReobservedRows": 1920,
+  "nativeParentCalls": 421632,
+  "nativeDiagnostics": 0,
+  "inputScope": "유한 x/y binary32·기존 angle의NaN비트 보존·시드0/55/상위비트/8종·1/2/7/64/1024프레임·checking0/0x80000000·x87 53비트",
+  "tests": [
+    {
+      "filter": "AmbientWind_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-821/test-AmbientWind-first.log",
+      "sha256": "8885260731353c0ce24ff2f2ca133363f76d7fda9ec60e701cdf54a32d28fe61"
+    },
+    {
+      "filter": "BurningFrame_",
+      "cases": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-821/test-BurningFrame-first.log",
+      "sha256": "2afe4296b01c20fa3b6f6c285018f50f68869dade265a69493545fe82e0d29c9"
+    },
+    {
+      "filter": "BoardAngleChecking_",
+      "cases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-821/test-BoardAngleChecking-first.log",
+      "sha256": "d52b27c6de00728a63a539dcfa9cef289ca9ad2ad2e00ece00ea20291e9d6f6c"
+    },
+    {
+      "filter": "RawSurfaceWorld_",
+      "cases": 7,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-821/test-RawSurfaceWorld-first.log",
+      "sha256": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e"
+    }
+  ],
+  "focusedCases": 17,
+  "newCases": 3,
+  "failedChecks": 0,
+  "existingBurningFrameRowsPerEdition": 213,
+  "sharedWindBurningRows": 426,
+  "builds": [
+    {
+      "kind": "Release NetstormCpp+netstorm_file_tests",
+      "log": "extracted/cpp-resume-821/build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "kind": "MSVC x86 CPU probe",
+      "log": "extracted/cpp-resume-821/probe-build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "initialIssues": [
+    "최초 Native/C++ 빌드와 집중17개는 모두 통과. 재관측은종료0. 통계용 Python 괄호 오류1회는 수정했으며 제품/기대값과 무관."
+  ],
+  "initialPeValues": {
+    "patch": "005e18a8=0/005435b0=1/005e18b0=0",
+    "cd": "0051fbf8=0/0051fbfc=1/0051fc00=0",
+    "dampingDouble": 0.9,
+    "noiseFloatBits": [
+      "bd75c28f",
+      "3d75c28f"
+    ]
+  },
+  "currentConnections": [
+    "ClientMain Movie update depth<=0 branch -> Storage.UpdateAmbientWind -> same ClientRandomGlobals.Game",
+    "Storage wind0/1/0 preserved across Acquire/Return",
+    "RawCampaignSession -> Particles.BindWind -> BurningFrameState.sharedWind -> actual particle velocity update",
+    "current Storage AngleDiagnostics -> BoardAngle Normalize"
+  ],
+  "checking": {
+    "remaining": 23,
+    "parents": 15,
+    "partial": 5,
+    "multiplayer": 3,
+    "closedThisUnit": [
+      "0041cdb0"
+    ],
+    "angleDirectCallers": [
+      "0041ce20",
+      "00467c80",
+      "004dd2b0"
+    ]
+  },
+  "newlyIdentifiedRemaining": [
+    "004180f0 주변음/날씨 scheduler는 Wind 바로 앞의 같은 난수를 소비하지만 현재 Client에 없다. 다음822의 원문 시간/난수/요청 장치 연결 대상이다. 전체 Client 난수 순서 완료로 쓰지 않는다.",
+    "004182c0 시간 monitorFormat 메시지 부모는 이후 UI/Console 수명 잔여다."
+  ],
+  "protection": {
+    "unchangedPreviousFiles": 2747,
+    "afterFiles": 2748,
+    "fixtureFiles": 928,
+    "newFixtures": [
+      "cpppj/tests/fixtures/ambient-wind-hardware-x86.tsv"
+    ],
+    "changedOriginals": 0,
+    "changedOldFixtures": 0,
+    "manifest": "extracted/cpp-resume-821/protected-after.json"
+  },
+  "excluded": [
+    "게임/GUI/실제 원본 게임 프로세스",
+    "실제 포획/희생/특정 적 공격/승리 재현",
+    "사용자 직접 확인 검사",
+    "MP/공중3종 전용 검사",
+    "환경 변화 없는 물리 캡처 재시도",
+    "전체 CTest/71대상/34미션/배포ZIP"
+  ],
+  "sourceHashBoundary": "실제 작업 파일과 CRLF→LF 정규화 해시를 함께 기록한다.",
+  "sources": {
+    "cpppj/src/o/RawAmbientWind.h": "8dad6d64e6399e26f3c26a10de43697ba99f7429d60148fdddcbef1cc42a6f88",
+    "cpppj/src/o/RawAmbientWind.cpp": "20572ecb3a4d7d21e0d55a82ca7077435a2ed228fec1062db2be06cc16ee23bc",
+    "cpppj/src/o/CMakeLists.txt": "008ad1e896cb0076d3a5cbf2e4960cba938a930fbba0ce7f9fda47d90a10a2b1",
+    "cpppj/src/client/RawSurfaceWorld.h": "61c0abd5a644dca20cf526201544b5b17ecb170730c113e9b1318cad18b235b5",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "dfc97b16e621a4e8aea098fddad1bfe38282f8f2e3c1a773f4f5cd7c1c7e1681",
+    "cpppj/src/client/ClientMain.cpp": "bae9b26366f508f94615bc9c61c07b8aa8cace9b5558a0ff12b37844c5cdd4ba",
+    "cpppj/src/client/RawCampaignParticles.h": "d467ca0c752fdd8f10565c37145ba9dd6a2c19e8702eac8cc40d7a70af2e08f5",
+    "cpppj/src/client/RawCampaignParticles.cpp": "fc74e1e92c6668c2b29ec726b7a08472438bffa3fd425c07c904d3e50a1f9085",
+    "cpppj/src/client/RawCampaignSession.cpp": "fd609f0b7a0a3533744bca3c523a50073fcb13a184f9e11a294a1f6b08595fed",
+    "cpppj/src/o/RawBurningFrame.h": "9037835739c6c17a817e5b00b62e5d0f31f90d6070aa2a3fab761dff4f635c0f",
+    "cpppj/src/o/RawBurningFrame.cpp": "1be21f52506c86042860657e46650b840c050d44c4e3b64d20b1ecafd18d695b",
+    "cpppj/tests/AmbientWindTests.cpp": "9d0e012c31c41e03528182aea0abd4a666e161645bf9236ba58f0bf53ded181d",
+    "cpppj/tests/BurningFrameTests.cpp": "0f3a2a31d45f9e9a407772342aa4964b28d525595996625dc9fec4b3b792f37a",
+    "cpppj/tests/CMakeLists.txt": "03bdcd06ab0325c77962939760f56ca6b6fea3f1261ca44f27ce583cabbe0e13",
+    "cpppj/SOURCE_MAP.md": "c7d6d74c466bedb0480f63c9f08e1ea6111656e7f171349a84f9465b6fb2e36b",
+    "tools/native_ambient_wind_probe.cpp": "8e7eb8b9e418dd37ea620069c89c883a707583547ac9e36359e2d0e3318589ef",
+    "tools/native_board_angle_probe.cpp": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "tools/observe_ambient_wind_hardware.py": "d8d3280deb49113bdaf8b508ffd6676e11064402757c17f98761552213f4c42e"
+  },
+  "normalizedSources": {
+    "cpppj/src/o/RawAmbientWind.h": "1d37f42bb9b5605792bbc2cf5c1a57dde3642a1dd2d6815762a6998e35a72822",
+    "cpppj/src/o/RawAmbientWind.cpp": "a0f152c5609c52e989ef5beac972c9d141a835c07688271fddd531d3f9dcd05d",
+    "cpppj/src/o/CMakeLists.txt": "008ad1e896cb0076d3a5cbf2e4960cba938a930fbba0ce7f9fda47d90a10a2b1",
+    "cpppj/src/client/RawSurfaceWorld.h": "61c0abd5a644dca20cf526201544b5b17ecb170730c113e9b1318cad18b235b5",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "dfc97b16e621a4e8aea098fddad1bfe38282f8f2e3c1a773f4f5cd7c1c7e1681",
+    "cpppj/src/client/ClientMain.cpp": "2e92ecb343a6fa724e9b0dfb66d533c61a7510d7e6e8af248e29dc3a1fe9cc54",
+    "cpppj/src/client/RawCampaignParticles.h": "d467ca0c752fdd8f10565c37145ba9dd6a2c19e8702eac8cc40d7a70af2e08f5",
+    "cpppj/src/client/RawCampaignParticles.cpp": "fc74e1e92c6668c2b29ec726b7a08472438bffa3fd425c07c904d3e50a1f9085",
+    "cpppj/src/client/RawCampaignSession.cpp": "fd609f0b7a0a3533744bca3c523a50073fcb13a184f9e11a294a1f6b08595fed",
+    "cpppj/src/o/RawBurningFrame.h": "9037835739c6c17a817e5b00b62e5d0f31f90d6070aa2a3fab761dff4f635c0f",
+    "cpppj/src/o/RawBurningFrame.cpp": "1be21f52506c86042860657e46650b840c050d44c4e3b64d20b1ecafd18d695b",
+    "cpppj/tests/AmbientWindTests.cpp": "fc1e585646cb665b2d05af7166b281ab66bc6fad865d662f21290e277c963d4b",
+    "cpppj/tests/BurningFrameTests.cpp": "0f3a2a31d45f9e9a407772342aa4964b28d525595996625dc9fec4b3b792f37a",
+    "cpppj/tests/CMakeLists.txt": "8385bb357a89aade915357ad5ef662a214b19af2d0eeb8b1817b99937d22c4ba",
+    "cpppj/SOURCE_MAP.md": "f4536188c4f0b9ef9851072fb1bed9c2e4c1f4c19ef8566a4f6f37691e5b06f6",
+    "tools/native_ambient_wind_probe.cpp": "818859f5e0e6cd73697834601f9029c206120a180797520c1d1347b072ee4421",
+    "tools/native_board_angle_probe.cpp": "fa36fb0d6bd60edb41a02d57d4f4c3b8014e1dd01dd8ea454cc60ceb9be90fca",
+    "tools/observe_ambient_wind_hardware.py": "fedfcf7494301f8868f045a1ddf27c5d4b5408329be3dde4dbc47ae9dfc496be"
+  },
+  "objectiveComplete": false
+}

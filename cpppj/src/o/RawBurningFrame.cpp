@@ -131,7 +131,7 @@ void RawBurningFrame::Step(BurningVisualFields& fields,BurningFrameFields& frame
             if (visual_.Append(fields,emitted)) IncludePoint(patch,emitted.x,emitted.y,left,top,right,bottom);
         } else {
             particle.life=static_cast<float>(static_cast<double>(particle.life)-frame.delta);
-            const auto velocity=static_cast<double>(particle.velocityX)+state_.wind;particle.velocityX=static_cast<float>(velocity);
+            const auto velocity=static_cast<double>(particle.velocityX)+state_.Wind();particle.velocityX=static_cast<float>(velocity);
             particle.x=static_cast<float>((patch ? velocity : static_cast<double>(particle.velocityX))*frame.delta+particle.x);
             particle.y=static_cast<float>(static_cast<double>(particle.velocityY)*frame.delta+particle.y);
             IncludePoint(patch,particle.x,particle.y,left,top,right,bottom);

@@ -25,7 +25,8 @@
 | `src/o/Angle.h` | angle.h | angle.h | 1 |  |
 | `src/o/BaseFile.cpp` | Basefile.cpp | BaseFile.cpp | 6 | 있음 |
 | `src/o/BaseProcess.cpp` | Baseprocess.cpp | BaseProcess.cpp | 5 | 있음 |
-| `src/o/BoardCoord.cpp` · `src/o/RawBoardAngle.cpp` | Boardcoord.cpp | BoardCoord.cpp | 5 | 부분(현재 각도/방향4소비자·바람 caller 잔여) |
+| `src/o/BoardCoord.cpp` · `src/o/RawBoardAngle.cpp` | Boardcoord.cpp | BoardCoord.cpp | 5 | 있음(현재 각도/방향4소비자·바람 caller 연결) |
+| `src/o/RawAmbientWind.cpp` | 독립 Wind 부모004dd2b0/썽크004dd330 | CD004503f0/00450490 | 1 | 있음(현재 Client 난수·장기 바람/연소 owner) |
 | `src/o/Bomb.cpp` | Bomb.cpp | bomb.cpp | 5 |  |
 | `src/o/Bridge.cpp` | Bridge.cpp | bridge.cpp | 6 | 있음 |
 | `src/o/Bud.h` | bud.h | bud.h | 2 |  |

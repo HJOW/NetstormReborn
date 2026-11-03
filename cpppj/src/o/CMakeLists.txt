@@ -558,3 +558,6 @@ target_sources(netstorm PRIVATE RawCreateAt.h RawCreateAt.cpp)
 
 # 공통 Boardcoord 각도의 현재 진단/판본별 끝각 처리를 실제 소비자와 공유한다.
 target_sources(netstorm PRIVATE RawBoardAngle.h RawBoardAngle.cpp)
+
+# 실제 Client 바람을 같은 게임 난수와 현재 각도/입자에 연결한다.
+target_sources(netstorm PRIVATE RawAmbientWind.h RawAmbientWind.cpp)
