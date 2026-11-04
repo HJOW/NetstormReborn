@@ -6,6 +6,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 using namespace netstorm::o;
 namespace { //원문하위경계만관측하며상위분기/결과를대신계산하지않는다.

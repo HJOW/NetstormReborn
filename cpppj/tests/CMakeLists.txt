@@ -3406,3 +3406,8 @@ target_sources(netstorm_pop_context_tests PRIVATE RiftShapeAccessTests.cpp RawGr
 # 현재공통후처리/마우스재검사는비멀티명시입력과실제Session으로대조한다(845).
 target_sources(netstorm_tests PRIVATE PostPopCurrentTests.cpp MouseSelectionRecheckTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE PostPopCurrentTests.cpp MouseSelectionRecheckTests.cpp)
+
+# 두공유부모의현재TYPE/로딩/부분효과와기존세판본7344행을함께집중대조한다(846).
+target_sources(netstorm_tests PRIVATE CarrierParentCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE CarrierParentCurrentTests.cpp CarrierPostPopTests.cpp)
+target_compile_definitions(netstorm_pop_context_tests PRIVATE NETSTORM_CARRIERPOSTPOP_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrierpostpop-x86.tsv")

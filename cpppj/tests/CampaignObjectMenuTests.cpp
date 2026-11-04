@@ -760,3 +760,18 @@ TEST_CASE(PostPopCurrent_ActualSessionUsesCurrentOwnerAndRememberedSelection) { 
     core.postPop.BindPatchAiNotice([](auto,Sid,bool) {});++core.bookkeeping.depth;core.postPop.PostPopBase(found,0x2000001);
     CHECK(selectionOwner.selected==source.value && selectionOwner.mouseType==74 && core.bookkeeping.depth==0);selectionOwner.selected=selectionOwner.mouseType=0;
 }
+
+TEST_CASE(CarrierParentCurrent_ActualSessionUsesCurrentTypeLoadingAndGeyser) { //현재VT의직접Damageable부모가같은World의지면하위와현재전역을소비한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();auto gameplay=std::make_shared<ClientGameplayGlobals>();services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+    const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);const auto saved=std::vector<std::uint8_t>(raw.begin(),raw.end());auto& type=session.World().Storage()->types[74];const auto savedFlags=type.flags1,savedGenus=type.flags2,savedGeyser=gameplay->GeyserType();std::array<int,2> point{};
+    for (int y=2;y<256 && !point[0];++y) { //실제현재표면지도의빈칸을찾고기존지도를지우지않는다.
+        for (int x=2;x<256;++x) if (!core.hash.Cell(0,x,y)) { point={x,y};break; } //보정된지면조회가실제빈칸을읽도록한좌표만선택한다.
+    }
+    CHECK(point[0]!=0);if (!point[0]) throw std::logic_error("지면하위검사의빈표면칸없음");
+    const auto write=[&](std::size_t offset,std::uint32_t value) { for (std::size_t index=0;index<4;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); }; //명시검사슬롯의VT/좌표DWORD만원문폭으로쓴다.
+    write(0,0x50a820);write(14,std::bit_cast<std::uint32_t>(float(point[0])-0.5F));write(18,std::bit_cast<std::uint32_t>(float(point[1])-0.5F));raw[11]=raw[40]=0;type.flags2=0;session.World().SetLoadingDepth(1);static_cast<void>(session.World().TakeChanged());
+    const auto run=[&] { ++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000);CHECK(core.bookkeeping.depth==0); }; //최초flags/Frame/전투를실행하지않고현재VT+20의공통체인을호출한다.
+    type.flags1&=~0x400U;run();CHECK(!session.World().TakeChanged());type.flags1|=0x400U;run();CHECK(session.World().TakeChanged()); //끄기/켜기둘다확인해고정사본으로는통과할수없게한다.
+    gameplay->GeyserType()=74;run();CHECK(!session.World().TakeChanged());gameplay->GeyserType()=savedGeyser;session.World().SetLoadingDepth(0);run();CHECK(!session.World().TakeChanged());
+    std::copy(saved.begin(),saved.end(),raw.begin());type.flags1=savedFlags;type.flags2=savedGenus;CHECK(core.bookkeeping.depth==0); //명시VT/상태/TYPE/전역변경을돌리고실제소유권변경검증으로확대하지않는다.
+}

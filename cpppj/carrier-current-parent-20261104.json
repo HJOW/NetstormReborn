@@ -1,0 +1,601 @@
+{
+  "unit": 846,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "resumedFromCommit": "ab4fd3d2 / 20261104-30 CP",
+  "previousVerifiedCommit": "99ff1a5f / 20261104-29 CP",
+  "exeSha256": "f280f0cb59dabe563b77aae042a1c96690ad5e8b2dd2c0b1e1ad47d7ad5028f0",
+  "exeBytes": 10538496,
+  "sourceSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "d7df0acb3627afdd97b90c94ca63d2bdcd575b992ec05438b1ed075d6a934f83",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "44c8f25de0a5a41557467d1eeab59db2819c05a95e36c8239c4131b820453467",
+    "cpppj/src/o/RawCarrierPostPop.cpp": "251f3917fb4c5716b59d24c7689dfc9768faa458afa3a6799fc7614208c050c0",
+    "cpppj/src/o/RawCarrierPostPop.h": "17c7f6c792eab42bb7f3f96b904786bb1d9d3475ec33a645ffbc254756d94280",
+    "cpppj/src/o/RawSquidPostPopParent.cpp": "38a52ad31cdeb4946a417c64629f757e4442a87a62668f7b1bc82927d45efc22",
+    "cpppj/tests/CarrierPostPopTests.cpp": "a1c78ec8736c608bdbc78a0af33d0bfdc7908ad2713044350118bf4466e4ec53",
+    "cpppj/tests/PostPopCurrentTests.cpp": "63cf4cf8ded419972697fae9fad446ed8ab7f29c155110de52de9270ab055899",
+    "cpppj/tests/CarrierParentCurrentTests.cpp": "698e8a23228ec115990b9f6aa3903390078bb930ae2e18a13e0493c0aea57e5f",
+    "cpppj/tests/CMakeLists.txt": "88767119a7441a12ee43e8332723294fe709baf49916dc20cd14327cee99189d",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "8116a21d63a349d2515ffff3d8b3c8c5dc2429406fe19784de8fee677b60d068"
+  },
+  "stoppedSourceSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "d7df0acb3627afdd97b90c94ca63d2bdcd575b992ec05438b1ed075d6a934f83",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "44c8f25de0a5a41557467d1eeab59db2819c05a95e36c8239c4131b820453467",
+    "cpppj/src/o/RawCarrierPostPop.cpp": "251f3917fb4c5716b59d24c7689dfc9768faa458afa3a6799fc7614208c050c0",
+    "cpppj/src/o/RawCarrierPostPop.h": "17c7f6c792eab42bb7f3f96b904786bb1d9d3475ec33a645ffbc254756d94280",
+    "cpppj/src/o/RawSquidPostPopParent.cpp": "38a52ad31cdeb4946a417c64629f757e4442a87a62668f7b1bc82927d45efc22",
+    "cpppj/tests/CarrierPostPopTests.cpp": "a1c78ec8736c608bdbc78a0af33d0bfdc7908ad2713044350118bf4466e4ec53",
+    "cpppj/tests/PostPopCurrentTests.cpp": "63cf4cf8ded419972697fae9fad446ed8ab7f29c155110de52de9270ab055899",
+    "cpppj/tests/CarrierParentCurrentTests.cpp": "511785f94d89bc0a7fef49fcb7c99f1cf7c0123c73bc652b511e63544f508eb3"
+  },
+  "scope": [
+    "00427720/0044bf80의현재실행과미선택전체Validate제거·선택장치/실패앞부분효과",
+    "반환을버리는004ad080최초TYPE접근과현재로딩/간헐천/extra/flags1지면관문",
+    "같은Session두Carrier의현재TYPE배열·로딩/간헐천DWORD참조와독립사본/CD계약",
+    "004b0d30의owner→localOwner읽기순서와실제Session현재Damageable VT분배"
+  ],
+  "staticEvidence": {
+    "vtables": 83,
+    "entryGroups": {
+      "0041c150": [
+        "00501ea0"
+      ],
+      "0041f870": [
+        "00502c38"
+      ],
+      "0041f920": [
+        "00502cf0"
+      ],
+      "0041fab0": [
+        "00502db0"
+      ],
+      "00422150": [
+        "005034c8"
+      ],
+      "00427720": [
+        "00503d80",
+        "00503e50",
+        "0050e568"
+      ],
+      "0042abb0": [
+        "00503f20",
+        "00503ff0"
+      ],
+      "0042ac90": [
+        "005040c0"
+      ],
+      "0042aed0": [
+        "00504198"
+      ],
+      "004421c0": [
+        "00506d98"
+      ],
+      "004423b0": [
+        "00506f08"
+      ],
+      "004429f0": [
+        "005070c0"
+      ],
+      "00448930": [
+        "005075d8"
+      ],
+      "00448ad0": [
+        "005076b8"
+      ],
+      "00448d20": [
+        "00507770"
+      ],
+      "00449320": [
+        "00507950"
+      ],
+      "0044bf80": [
+        "0050a820",
+        "0050a8e8"
+      ],
+      "00450cd0": [
+        "00508cc8"
+      ],
+      "004538f0": [
+        "00509148"
+      ],
+      "004557c0": [
+        "00509210"
+      ],
+      "00457560": [
+        "00509470"
+      ],
+      "0045e810": [
+        "0050a050"
+      ],
+      "0045ec50": [
+        "00509930"
+      ],
+      "0045ed10": [
+        "005099e8"
+      ],
+      "0045edf0": [
+        "00509aa0"
+      ],
+      "0045ef30": [
+        "0050a1e8"
+      ],
+      "0045fac0": [
+        "0050a388"
+      ],
+      "00462170": [
+        "0050a748"
+      ],
+      "004694b0": [
+        "0050b570"
+      ],
+      "0046a520": [
+        "0050b6e8"
+      ],
+      "0046a600": [
+        "0050b7c0"
+      ],
+      "0046a810": [
+        "0050b888"
+      ],
+      "0046aca0": [
+        "0050b9b8",
+        "0050bad0"
+      ],
+      "00484f90": [
+        "0050dc30"
+      ],
+      "004852e0": [
+        "0050da88"
+      ],
+      "0048c080": [
+        "0050e668"
+      ],
+      "0048c7a0": [
+        "0050e738"
+      ],
+      "0048ead0": [
+        "0050e888"
+      ],
+      "0048eda0": [
+        "0050e940",
+        "0050ea08",
+        "0050ead0"
+      ],
+      "004905d0": [
+        "0050ee08"
+      ],
+      "004950f0": [
+        "0050f210"
+      ],
+      "0049a2b0": [
+        "0050f540"
+      ],
+      "004b0d30": [
+        "00501dd0",
+        "00502370",
+        "00502448",
+        "00502510",
+        "005025d8",
+        "005026a0",
+        "00502778",
+        "00502840",
+        "00502908",
+        "005029d0",
+        "00502aa8",
+        "00502b70",
+        "00502e68",
+        "00502f30",
+        "00502ff8",
+        "005030c0",
+        "00503188",
+        "00503360",
+        "00506e50",
+        "005092d0",
+        "00509388",
+        "005096a0",
+        "00509758",
+        "00509810",
+        "00509b98",
+        "0050c3b0",
+        "0050c9f0",
+        "0050cc08",
+        "0050db78",
+        "0050eb98"
+      ],
+      "004dce40": [
+        "005196f0"
+      ],
+      "004dd020": [
+        "005197a8",
+        "00519860"
+      ],
+      "004dd1f0": [
+        "00519918"
+      ]
+    },
+    "carrierCc": {
+      "00503d80": "00426fc0",
+      "00503e50": "00426fc0",
+      "0050e568": "00426fc0"
+    },
+    "decompiledEntries": 6,
+    "editionPairs": 2,
+    "assemblyFiles": 4
+  },
+  "validation": {
+    "cases": 135,
+    "newCases": 14,
+    "firstFailedCases": 0,
+    "firstFailedChecks": 0,
+    "existingCarrierNativeRows": 7344,
+    "newCpuExecutions": 0,
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-846/resume-20261104/build-first.log",
+        "sha256": "68c6e23bd5a1a79ab8b540d2c881c8897f0e82c90096e61e0d923ef4aded8886",
+        "exitCode": 0,
+        "sessionId": 98630,
+        "compilerWarnings": 0,
+        "compilerErrors": 0,
+        "childProcessesExited": true
+      }
+    ],
+    "executions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "CarrierParentCurrent_",
+        "cases": 12,
+        "expectedCases": 12,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-carrier-current-first.log",
+        "sha256": "719ecd26d24c285d7d1d94a213494973b2638c5865871a84452256641fcd831d"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CarrierParentCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-carrier-current-session-first.log",
+        "sha256": "2ba62782fee3f667382d503f4c59a3ccce7c5a6155212a9fce08b3798dfe1b2a"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "carrier_postpop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-carrier-native.log",
+        "sha256": "ec6a577449fdba8802a48991131c15ffbfbdf0c229ef1fd37abf328c737aa465"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "CarrierPostPop_SharedBoss",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-carrier-shared-boss.log",
+        "sha256": "ec4658dcba92a225c8694f98f36733592fd28645214a17a87605298fc03f13c4"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 11,
+        "expectedCases": 11,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "MouseSelectionRecheck_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-mouse-recheck-first.log",
+        "sha256": "7f17b8057afb1f8a67ac15473acc03235ecb3aefeb614ab99eda74f3a5398cff"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-post-current-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "RiftShapeAccess_",
+        "cases": 9,
+        "expectedCases": 9,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-shape-first.log",
+        "sha256": "40bbc7b8455128e77112175aa1e9a5b36ca103361ba99f54a022e241c0058706"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "CurrentTypeBindings_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-types-first.log",
+        "sha256": "29f5245d8f9a959c21a80a04f8272d6934c16441daf5b28bbc65e0c019622064"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "RiftShapeAccess_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-shape-session-first.log",
+        "sha256": "adbde682ae339fb7b7541f4d89dfa6c2907ba683a8a1e36d1f123eac8e52c5b2"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-activate.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-activate-session.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPopParent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-pop-parent.log",
+        "sha256": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidPopParent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-pop-session.log",
+        "sha256": "1b833eddadccebfdf64429581e27918e11899c4cd5570c9d600e84b1b2fb0628"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPop_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-pop-fixtures.log",
+        "sha256": "f31bde755e6d76ecc4a4766e16f4145416c3b55edb2a395853389f1e27d98f46"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidSpatial_Coordinates_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-coordinate.log",
+        "sha256": "3a1f05f247f78409fcaf2608aadfa12321376d4f24b9ea17348eb8f099af081e"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "BuildingSpace_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-building-fixtures.log",
+        "sha256": "d6044d09bdcbc8732a0337681cf68081a896a6fc81c9b67dc9ded9199aad4927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-post-pop.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "frame_display_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-frame-display.log",
+        "sha256": "c365548d66b11990fca7873428250267355f9e6fdfaf8c646fb6f8eede47970b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "set_frame_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-set-frame.log",
+        "sha256": "0a45f97a0eeb88a7c1921c00d6cc901668d0e232bc9e654a84a80feadfcd5961"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-menu-open.log",
+        "sha256": "ad5f05af8504a5cb3d57f544c29dca3dafecb8cb38a660ccfe0bd10deadce4da"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-menu-refund.log",
+        "sha256": "feb075621e686b73e66bf794e6c20e552978f87beba247aec77e371f13c7205f"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-menu-form.log",
+        "sha256": "1271d58e49bfc91ba07e8db3c0053b63cff8c77947139c038d91cbcda83c0a40"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "RawGraph_",
+        "cases": 17,
+        "expectedCases": 17,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-graph.log",
+        "sha256": "6d7b77092a6bf2d8056cd603885c442513e9d55434cf83798347ffe92049b43c"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphReferenceChecking_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-graph-region.log",
+        "sha256": "145c6697af0624158e19e8358cf8c771ff53d2e523b82c9bd43d81fbb7353c88"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphLiveChecking_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-graph-live.log",
+        "sha256": "4ddc8c85aaf1f4d0c5ae2e74d2dfbfed929556844d80b6ceb5ee5f486bdcbc88"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphDetachLive_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-graph-detach.log",
+        "sha256": "921d769f6645a60011e80a7cd8931dcc52b257c076bde2e06929c4e6897b76a5"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "neighbor_",
+        "cases": 4,
+        "expectedCases": 4,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-neighbors.log",
+        "sha256": "ce3b34f604bb2650c18e200c1a756172f8c4d208bd492908333a24c3a124346b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidDisplayParent_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-846/resume-20261104/test-display-parent.log",
+        "sha256": "501c780bdde761346fc3ee4a8739c3b746ca9169a76c9455904179edfafda4ea"
+      }
+    ]
+  },
+  "limits": [
+    "World.TakeChanged는같은지면하위도달표지이며실제소유권변화검증이아님",
+    "currentVT+20의다른파생/자체Validate·전체Pop/전체State수명완료가아님",
+    "CD의기존사전검사/독립소유계약보존범위는기존fixture재생으로한정"
+  ],
+  "protected": {
+    "files": 2759,
+    "fixtures": 939,
+    "changed": 0,
+    "newFixtureFiles": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayer": 3,
+    "completedParents": 36,
+    "completedPartial": 3
+  },
+  "remaining": [
+    "Factory/나머지현재가상20파생의자체Validate·비가상부모호출/현재분배대조",
+    "객체메뉴/커서·Edit·State/파일/군도·Windows한계·무검사MP와4~8차"
+  ],
+  "excluded": [
+    "실제게임/GUI",
+    "포획/희생·특정적공격·시나리오승리",
+    "사용자직접확인",
+    "신규MP/패킷/통신검사",
+    "공중3종전용검사",
+    "물리/PCM/CD재시도",
+    "전체71/CTest/34미션/ZIP반복"
+  ],
+  "rawDirectory": "extracted/cpp-resume-846/resume-20261104"
+}
