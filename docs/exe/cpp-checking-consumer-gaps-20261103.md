@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**867 투사체 현재 진단 완료:**00482340의 두 관문·항상참0041be80과 같은Client/Host·저장 표시/후반 발사자 재조회를 연결했다. 고유28개/4묶음(새8) 첫 실패0·제품빌드1회/경고0·새Native/fixture0·보호2761개 불변이다. checking11=부모5+부분3+MP3·완료부모37/부분3이며 다음868은 비행 홈 코드/정적 대조다. [867 기록](cpp-missile-checking-20261104.md).
+
 **866 신전 event4 범위 정정:**004dc220의 현재 전역은curServer, 조회는fort signed territory이며0x02000013은Descend/State19다. 생성입구004dbac0/0x030000a7과 함께8번MP/메타맵에 미완료 이월한다. 직접inSingle 관문 부재를 단독 전체 미도달 증명으로 확대하지 않는다. 제품865·빌드/기능/MP 검사0·checking12/완료부모36/부분3 유지. [866 기록](cpp-temple-descend-scope-20261104.md).
 
 **865 최초 비용표 분리:**PATCH 공통후처리/보상에 최초 GameAssets 비용을 별도 대여해 현재TYPE float와 World/Session 재대여를 구별했다. 고유44개/8묶음(새5) 최종 실패0·Release2회 종료0·보호2761개 불변이며 새 정리/기존 비용 기대는 검사만 교정했다. 다음866은 신전004dc220의 현재 curServer/지역/명령 큐 대조다. checking12·완료부모36/부분3 유지. [865 기록](cpp-loaded-cost-table-20261104.md).
@@ -1113,6 +1115,8 @@ LAB_00472fc1:
 - `"!alreadyThere","\\Ns\\O\\Mana.cpp",0x44)`
 
 ## FUN_00482340 @ 00482340
+
+**867 완료:** 두 현재 checking/0041be80의 Baseprocess 진단 복귀·실제Client 연결과 Host 진단 중 삭제를 대조했다. 바깥 isRobust false 둘은 정적 미도달이며 새CPU 관측0이다. 아래 미복원 문구는779 당시 분류다. [867 기록](cpp-missile-checking-20261104.md).
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 

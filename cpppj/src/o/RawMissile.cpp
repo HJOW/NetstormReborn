@@ -1,5 +1,6 @@
 // 원본최초썬캐논및SunArcher의필드산술/표시생성/공간이동/피해/삭제순서를보존한다.
 #include "o/RawMissile.h"
+#include "o/RawPathArrivalParent.h" // 공통 도착과 동일한 0041be80 본체를 공유한다.
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -111,9 +112,21 @@ Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& requ
     if (sound) { if (!hooks_.firingSound) throw std::logic_error("Missile 실제 발사 사운드 경계 누락");hooks_.firingSound(origin[0],origin[1],sound); }
     hooks_.pop(asset,origin[0],origin[1],0);if (request.effectType) hooks_.flightEffect(request.effectType,asset);return asset;
 }
-// 최초 썬 캐논 incomingCorner 경로의 실제 보간·swept 충돌·피해/종료를 처리한다.
-void RawMissile::Frame(MissileFields& fields) const {
-    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const bool reflected=patch && Read(fields.bytes,kRicochet)!=0;const auto layout=patch ? kPatch : kCd;const auto firing=Slot(fields.Firing()),target=Slot(fields.Target(),reflected),asset=Slot(fields.Parent());
+// 공통 Baseprocess 범위 진단을 같은 실제 필드에 적용하며 선택하지 않은 장치를 요구하지 않는다.
+bool RawMissile::CheckBase(MissileFields& fields,const std::shared_ptr<const bool>& processAlive) const {
+    const auto alive=[processAlive] { return !processAlive || *processAlive; }; // 진단이 현재 프로세스를 삭제하면 남은 raw 조회를 생략한다.
+    if (!alive()) return false;if (!state_.checking) return true;
+    PathBaseRobustHooks effects;const auto* pool=&pool_; // 진단 callable과 풀 주소는 삭제될 Missile 객체의 필드에서 재조회하지 않는다.
+    effects.form=[&fields,alive] { return alive() ? Read(fields.bytes,kForm) : 0U; };
+    effects.parent=[&fields,alive] { return alive() ? Read(fields.bytes,kParent) : 0U; };
+    effects.capacity=[pool] { return static_cast<std::uint32_t>(pool->Capacity()); };effects.assertion=hooks_.assertion;
+    static_cast<void>(RunPathBaseRobust(effects));return alive(); // 반환은 항상1이므로 Missile.cpp의 두 false 진단은 미도달이다.
+}
+// 원문 첫 진단 뒤의 저장 SID와 두 번째 진단 뒤의 발사자 재조회를 구별한다.
+void RawMissile::Frame(MissileFields& fields,std::shared_ptr<const bool> processAlive) const {
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;if (patch && !CheckBase(fields,processAlive)) return;
+    const auto alive=[processAlive] { return !processAlive || *processAlive; }; // 실제 Host에서 진단 중 삭제된 프로세스의 필드 접근을 막는다.
+    const bool reflected=patch && Read(fields.bytes,kRicochet)!=0;const auto layout=patch ? kPatch : kCd;const auto assetSid=fields.Parent();const auto firing=Slot(fields.Firing()),target=Slot(fields.Target(),reflected),asset=Slot(assetSid);
     const bool archer=firing[10]==state_.sunArcherType;
     // 원본 group0 사거리/코너 종료는 크로스보우에도 같고71 전용 포구와 무관하다.
     const bool groupZero=archer || (patch && firing[10]==state_.crossbowType);
@@ -128,8 +141,8 @@ void RawMissile::Frame(MissileFields& fields) const {
     const float dx=static_cast<float>(static_cast<double>(endpoint[0])-origin[0]),dy=static_cast<float>(static_cast<double>(endpoint[1])-origin[1]);
     const double factor=patch ? 1.0/duration : static_cast<double>(dx)/duration;
     const std::array<float,2> current{static_cast<float>(static_cast<double>(endpoint[0])-(patch ? static_cast<double>(dx)*factor : factor)*remaining),static_cast<float>(static_cast<double>(endpoint[1])-(patch ? factor*static_cast<double>(dy) : static_cast<double>(dy)/duration)*remaining)};
-    if (!Valid(current)) { if (patch && Read(fields.bytes,44)) { if (!hooks_.impactSound) throw std::logic_error("Missile 빗나감 종료 음향 미연결");hooks_.impactSound(current[0],current[1],missileTypes_[state_.cornerImpactType].impactSound); }hooks_.destroy(fields.Parent(),0);return; }
-    hooks_.unpop(fields.Parent(),0);hooks_.pop(fields.Parent(),current[0],current[1],0);
+    if (!Valid(current)) { if (patch && Read(fields.bytes,44)) { if (!hooks_.impactSound) throw std::logic_error("Missile 빗나감 종료 음향 미연결");hooks_.impactSound(current[0],current[1],missileTypes_[state_.cornerImpactType].impactSound);if (!alive()) return; }hooks_.destroy(assetSid,0);return; }
+    hooks_.unpop(assetSid,0);if (!alive()) return;hooks_.pop(assetSid,current[0],current[1],0);if (!alive()) return;
     const bool corner=Read(fields.bytes,kCorner)!=0;
     if (fields.Target().value && !(target[11]&3)) {
         if (corner) { const auto point=Point(fields.bytes,layout.endpoint);PutFloat(fields.bytes,layout.box,point[0]-1.0f);PutFloat(fields.bytes,layout.box+4,point[1]-1.0f);PutFloat(fields.bytes,layout.box+8,point[0]);PutFloat(fields.bytes,layout.box+12,point[1]); }
@@ -176,26 +189,29 @@ void RawMissile::Frame(MissileFields& fields) const {
             hooks_.queueCommand(state_.hitCommand,state_.thunderMissileType,state_.stoneTowerType);
         }
     }
+    if (patch && !CheckBase(fields,processAlive)) return; // 실제 효과/입력 큐 뒤이며 이전 좌표 저장과 조기 반환보다 앞선 현재 관문이다.
     PutPoint(fields.bytes,layout.previous,last);if (!hit && !exhausted) return;
-    const bool liveFiring=(firing[11]&1)==0;const auto firingGroup=types_[firing[10]].group;
+    const auto finishingFiring=patch ? Slot(fields.Firing(),true) : firing; // PATCH 00482992는 진단 복귀 뒤 현재 firingSid를 다시 해석한다.
+    const bool liveFiring=(finishingFiring[11]&1)==0;const auto firingGroup=types_[finishingFiring[10]].group;
     if (liveFiring && (firingGroup==0 || firingGroup==1)) { if (hit && !corner) { if (!hooks_.hit) throw std::logic_error("Missile 실제 직접 총 피해 경계 누락");hooks_.hit(fields.Firing(),fields.Target()); }else { if (!hooks_.refresh) throw std::logic_error("Missile 실제 총 사거리 갱신 경계 누락");hooks_.refresh(fields.Firing()); } }
     else if (patch && (liveFiring || (hit && !corner))) {
-        const auto& damageType=missileTypes_[liveFiring ? firing[10] : state_.rainCannonType];float damage=static_cast<float>(static_cast<double>(damageType.damagePerSecond)*0.6F);
-        if (missileTypes_[firing[10]].specialFlyerDamage && (types_[target[10]].flags2&0x120000U)) damage=missileTypes_[firing[10]].flyerDamagePerSecond;
+        const auto& damageType=missileTypes_[liveFiring ? finishingFiring[10] : state_.rainCannonType];float damage=static_cast<float>(static_cast<double>(damageType.damagePerSecond)*0.6F);
+        if (missileTypes_[finishingFiring[10]].specialFlyerDamage && (types_[target[10]].flags2&0x120000U)) damage=missileTypes_[finishingFiring[10]].flyerDamagePerSecond;
         // 원문의 살아 있는 비총 발사자는 dead2 표적, 반납된 발사자는 살아 있는 표적에만 가상98을 호출한다.
         const bool eligible=fields.Target().value && (liveFiring ? ((target[11]&2)!=0 && !(target[11]&1)) : !(target[11]&3));
         if (eligible) { if (!hooks_.damage) throw std::logic_error("반사 Missile 실제 가상98 피해 미연결");hooks_.damage(fields.Target(),DamageInteger(damage),asset[34],Sid{}); }
     }
     if (patch && !hit && asset[10]==state_.iceMissileType) { if (!hooks_.impact) throw std::logic_error("아이스 투사체의 실제 사거리 종료 표시 미연결");hooks_.impact(last[0],last[1],2,.02F); } //00482b00은 비충돌 종료의 사거리 갱신 뒤에도2번 표시를 생성한다.
     if (patch && Read(fields.bytes,44)) { if (!hooks_.impactSound) throw std::logic_error("Missile 빗나감 종료 음향 미연결");hooks_.impactSound(last[0],last[1],missileTypes_[state_.cornerImpactType].impactSound); }
-    hooks_.destroy(fields.Parent(),0);static_cast<void>(asset);
+    hooks_.destroy(assetSid,0);static_cast<void>(asset); // 원문은 마지막 진단에서 바뀐 +8 대신 처음 저장한 표시 자산 포인터를 삭제한다.
 }
 // 같은 월드/프로세스 타입 번호를 factory에 제공한다.
 const SidPool& RawMissile::Pool() const { return pool_; }
 std::uint32_t RawMissile::ProcessType() const { return state_.processType; }
 // 실제 Kernel 객체가 원본 필드와 같은 수명을 가진다.
 Missile::Missile(const RawMissile& logic,MissileFields fields):logic_(logic),fields_(std::move(fields)) {}
-void Missile::RunFrame() { logic_.Frame(fields_); }
+Missile::~Missile() { *alive_=false; }
+void Missile::RunFrame() { const auto watch=alive_;logic_.Frame(fields_,watch); } // 호출 중 자기 삭제 뒤에는 this를 다시 읽지 않는다.
 void Missile::OnAttached() { Put(fields_.bytes,kForm,Form().value);Put(fields_.bytes,kParent,Parent().value); }
 const MissileFields& Missile::Fields() const { return fields_; }
 // 실제 Create 몸체만 연결하고 월드 Pop/owner/effect를 임의 noop로 대체하지 않는다.

@@ -1,0 +1,139 @@
+{
+ "unit": 867,
+ "date": "2026-11-04",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "3db5e17b / 20261104-54 CP",
+ "exeSha256": "c75abe2b06cbd226fe64bad5456a22edb2c3f599baaf1cf879234ef3350a6db2",
+ "exeBytes": 10590720,
+ "sourceSha256": {
+  "cpppj/src/o/RawMissile.h": "e91b43d3cb2cca23ad2eecab5a1d3237f650a83598967d5a22be1f575fec551e",
+  "cpppj/src/o/RawMissile.cpp": "b944d5ddd8abdb7a49734008cded07e6b4a27e6e6d13a55c43aef4903b1444ee",
+  "cpppj/src/client/RawCampaignSession.cpp": "860eb8cb959711fd256ceb65e82fca772f48a29e2d2b8774c409ff388d11ab16",
+  "cpppj/tests/MissileCheckingTests.cpp": "c18bc067ea4a9cdb1f5d7fc3ed265238932f196b14aa13dc03a0fac2ea9fd575",
+  "cpppj/tests/CMakeLists.txt": "cd4292b93901f0ef1f3da4f1640a5f67160ed596e36063a2ca27ae3a0ae362b3"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/o/RawMissile.h": "e91b43d3cb2cca23ad2eecab5a1d3237f650a83598967d5a22be1f575fec551e",
+  "cpppj/src/o/RawMissile.cpp": "b944d5ddd8abdb7a49734008cded07e6b4a27e6e6d13a55c43aef4903b1444ee",
+  "cpppj/src/client/RawCampaignSession.cpp": "860eb8cb959711fd256ceb65e82fca772f48a29e2d2b8774c409ff388d11ab16",
+  "cpppj/tests/MissileCheckingTests.cpp": "c18bc067ea4a9cdb1f5d7fc3ed265238932f196b14aa13dc03a0fac2ea9fd575",
+  "cpppj/tests/CMakeLists.txt": "cd4292b93901f0ef1f3da4f1640a5f67160ed596e36063a2ca27ae3a0ae362b3"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-867/originalCD-0044b260.c": "56a3ce5817c4046bb8c5b550b17ddf1ee3cd1212f9724b012114f7fa1bde2987",
+  "extracted/cpp-resume-867/originalCD-0048f710.c": "007b0b553388d999f89f0f5b8a7007077e6076fe318b655c906f5218cb28058e",
+  "extracted/cpp-resume-867/originals-0041be80.c": "98f01cbb6a4be6c0d029d56cb517f477596101ea2b270b79c693f39443caa8ee",
+  "extracted/cpp-resume-867/originals-00482340.c": "0db297d06c0ac24c00c1bf4b08fc86f2a703c1da0a3b6cbfbf5186887a3f5942"
+ },
+ "assemblySha256": "1cbf23ba3927b4ac2eb89d98ec76645a9b9a5d85ef2be8701603b1837bff9d74",
+ "scope": [
+  "PATCH00482340의 현재 checking 두 관문과 공통0041be80 진단 부작용",
+  "실제 Session의 현재 Client checking/진단 서비스 연결",
+  "첫 진단 뒤 저장 표시와 후반 발사자 재조회 구별",
+  "Host 진단 중 프로세스 삭제 뒤 필드 재접근 중단"
+ ],
+ "validation": {
+  "cases": 28,
+  "uniqueCasesVerifiedFromNames": true,
+  "groups": 4,
+  "newCases": 8,
+  "firstFailedCases": 0,
+  "finalFailedCases": 0,
+  "failedChecks": 0,
+  "productChangesAfterFirstBuild": 0,
+  "newNativeObservations": 0,
+  "newFixtures": 0,
+  "fixtureExpectationsChanged": false,
+  "manualExpectationCorrections": 0,
+  "builds": [
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 357.7628223,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-867/build-first.log",
+    "sha256": "a6901d853a6746a983360afda7bcb2798971414e9d92426b77b5bba3c8cee39f",
+    "targets": [
+     "NetstormCpp",
+     "netstorm_pop_context_tests"
+    ]
+   }
+  ],
+  "executions": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "MissileChecking_",
+    "cases": 8,
+    "expectedCases": 8,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-867/test-missile-checking-first.log",
+    "sha256": "8a9be9bd0120fb0a7cc760fd2118b247f34c356964c8c70f1be8a90c7ff37f5e"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "Missile_",
+    "cases": 14,
+    "expectedCases": 14,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-867/test-missile-native-first.log",
+    "sha256": "8f52dd69a05df7098a97b2f2926cc3f28026f5e26a34cc4dcd35b25f480f8927"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "IceMissileInitial_",
+    "cases": 4,
+    "expectedCases": 4,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-867/test-ice-initial-first.log",
+    "sha256": "04b2a0f78f407d56756bb0d301deba9783f2402c0cfc28144863b947504bbef5"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "MissileFloater_",
+    "cases": 2,
+    "expectedCases": 2,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-867/test-floater-first.log",
+    "sha256": "10745203efa20ae132dc16e69a109cf8d861dd5743387e87688ae9ef9c60d2b8"
+   }
+  ],
+  "actualHostDiagnosticDeletionCases": 2,
+  "actualClientDiagnosticConnection": "코드/정적 연결·Release 빌드 근거이며 새 Session/GUI 실행은0"
+ },
+ "checking": {
+  "remaining": 11,
+  "parents": 5,
+  "partial": 3,
+  "multiplayer": 3,
+  "completedParents": 37,
+  "completedPartial": 3,
+  "completedParent": "00482340",
+  "outerFalseAssertions": "0041be80은 항상1이므로0x1ee/0x2a0은 정적으로 미도달이며 새 Native 관측0"
+ },
+ "protection": {
+  "count": 2761,
+  "fixtures": 941,
+  "unchanged": true,
+  "snapshot": "extracted/cpp-resume-867/protected-after.json"
+ },
+ "limits": [
+  "CD0044b260에는 두 checking 호출이 없어 PATCH만 추가한다",
+  "물리 SID 범위와 raw 필드 수명 보장 밖 입력은 기존 호스트 경계다",
+  "모든 임의 효과의 Session 자체 삭제/해제메모리 배치 동일성까지 검증한 것은 아니다",
+  "실제 게임/GUI·포획/희생/특정 적 공격/승리·공중3종 전용·신규 MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복 제외"
+ ],
+ "next": {
+  "unit": 868,
+  "scope": "비행 홈0045c100의 현재 TYPE/프로세스 타입/checking·두 진단과 실제 AI caller 코드 대조. 공중 전용 신규 검사는 건너뛴다."
+ }
+}

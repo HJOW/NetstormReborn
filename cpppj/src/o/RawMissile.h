@@ -1,6 +1,7 @@
 // Missile.cpp의 실제 썬 캐논·썬 디스크 발사기 투사체 생성/이동을같은raw 자산/Kernel에연결한다.
 #pragma once
 #include "o/RawGunAnimation.h"
+#include "o/RawCheckingFlag.h" // 두 Handle 진단 관문이 같은 현재 DWORD를 빌린다.
 #include "o/SquidFactory.h"
 
 namespace netstorm::o {
@@ -28,6 +29,7 @@ struct MissileTypeData {
 };
 // 같은 실제 게임 시각과 원본 전역 타입 번호다.
 struct MissileState {
+    RawCheckingFlag checking; // PATCH 00482340의 두 관문이며 CD Handle에는 해당 호출이 없다.
     // now: 정지 시 유지되는 현재 게임 시각이다.
     double now{};
     // sunCannonType/sunDiscType/sunArcherType: 캐논128·표시sunDisc83·발사기71의원본타입이다.
@@ -100,6 +102,7 @@ struct MissileHooks {
     std::function<void(const MissileFields&)> ricochet; //00482190의 현재 필드/표시를 사용하는 실제 반사 생성이다. 선택된 누락은 거부한다.
     std::function<void(Sid,std::int32_t,std::uint8_t,Sid)> damage; // 반사 경로의 실제 가상98이며 원문처럼 공격자0/현재 표시 소유자를 전달한다.
     std::function<double(float,float)> randomFloat; //00455930의 원문 x87 반환이며 같은 게임 PRNG를 한 번만 소비한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //0041be80의 Baseprocess.cpp 진단이며 정상 복귀 뒤 현재 필드를 다시 읽는다.
 };
 // 초기 총 발사와10.78 아이스 반사의 실제 숫자 필드·표시 자산 수명/이동/충돌 사슬이다.
 class RawMissile {
@@ -111,11 +114,12 @@ public:
     Sid Construct(MissileFields& fields,const GunProjectileRequest& request) const;
     // 최초incomingCorner와 아이스 반사의 실제 이동·swept 충돌·범위 종료를 처리한다.
     //클라우드 플로터 회피는 같은 게임 PRNG를 사용한다. 다른 미복원 총/원작debug 좌표이동은 별도 계약이다.
-    void Frame(MissileFields& fields) const;
+    void Frame(MissileFields& fields,std::shared_ptr<const bool> processAlive={}) const; // Host 소멸 관찰은 진단에서 삭제된 raw 필드의 재접근만 막으며 독립 호출자는 필드 수명을 보장한다.
     // 동일한 월드인지 검증하는 adapter 자료다.
     const SidPool& Pool() const;
     std::uint32_t ProcessType() const;
 private:
+    bool CheckBase(MissileFields& fields,const std::shared_ptr<const bool>& processAlive) const; // 현재 checking이 선택한 항상참 0041be80의 두 SID 진단 부작용을 실행한다.
     // 지정한 SID와 raw 타입이 실제 살아 있는 입력 계약을 충족하는지 검사한다.
     std::span<const std::uint8_t> Slot(Sid sid,bool allowZero=false) const;
     // 원본 frame의 패치 DWORD/CD BYTE 폭으로 표시 자산 프레임을 쓴다.
@@ -136,6 +140,7 @@ class Missile final : public SquidProcess {
 public:
     // 생성된 raw 객체 필드와 frame 처리기의 수명을 연결한다.
     Missile(const RawMissile& logic,MissileFields fields);
+    ~Missile() override; // 현재 Host 삭제를 실행 중인 진단 caller의 비주소 관찰에 알린다.
     // Kernel 프레임과 부착 결과를 같은 raw 필드에 전달한다.
     void RunFrame() override;
     void OnAttached() override;
@@ -146,6 +151,7 @@ private:
     const RawMissile& logic_;
     // fields_: 원본 판본별 raw 객체 이미지다.
     MissileFields fields_;
+    std::shared_ptr<bool> alive_=std::make_shared<bool>(true); // 자기 삭제 뒤 raw 필드에 접근하지 않도록 하는 호스트 수명 관찰이며 게임 판정값은 아니다.
 };
 // 실제 SquidFactory 생성 몸체를 같은 풀의 Missile에 연결하고 나머지 효과 경계는 보존한다.
 MissileHooks MakeMissileFactoryHooks(const SidPool& pool,SquidFactory& factory,MissileHooks hooks);

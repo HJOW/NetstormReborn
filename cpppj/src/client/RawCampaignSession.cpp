@@ -1286,6 +1286,8 @@ struct RawCampaignSession::Impl {
         if (!combatEffects.missile.impactName) combatEffects.missile.impactName=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("아이스 투사체의 실제 파일명 위치 음향 미연결");static_cast<void>(services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0)); }; // 원문 동적 iceCannonImpact1..4 이름을 같은 SoundList/위치 장치에 전달한다.
         // 원본5429c8 토큰과 실제452fe0의 타입 인자를 같은 튜토리얼 소비자의 입력 큐로 전달한다.
         missileState.hitCommand=tutorialTechnologyCommand;
+        missileState.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 실제 투사체의 두 Handle 관문도 같은 Client DWORD를 현재 시점에 읽는다.
+        combatEffects.missile.assertion=[assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("투사체 실제 Baseprocess 진단 장치 미연결 "+std::to_string(line));assertion(expression); }; // 공통 경로와 동일한 현재 Client 서비스를 빌리며 도달한 진단만 요구한다.
         combatEffects.missile.queueCommand=[this](std::uint32_t command,std::uint32_t display,std::uint32_t target) {
             if (!services.assets.queueCommand) throw std::logic_error("투사체 실제 충돌 입력 큐 미연결");
             services.assets.queueCommand(command,std::bit_cast<std::int32_t>(display),std::bit_cast<std::int32_t>(target));
