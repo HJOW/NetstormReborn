@@ -3435,3 +3435,8 @@ target_sources(netstorm_pop_context_tests PRIVATE IslandCurrentTests.cpp IslandP
 target_sources(netstorm_tests PRIVATE PriestPostPopCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE PriestPostPopCurrentTests.cpp PriestPostPopTests.cpp PriestPostPopTailTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE PriestPopTests.cpp PriestPathArrivalHostTests.cpp PathCleanupTests.cpp StateSidListsTests.cpp PriestLookupTests.cpp PriestPreDestroyTests.cpp PriestRegenTests.cpp) # 같은 사제 접두/후반을 쓰는 기존 Pop·경로·정리·회복 소비자 회귀만 선택 실행한다.
+# 현재 TYPE 표 공유와 기존 HP/보상 원문 재생만 선택한다. 실제 포획/희생이나 게임 틱은 실행하지 않는다(단위863).
+target_sources(netstorm_pop_context_tests PRIVATE RewardCurrentTypesTests.cpp RewardTests.cpp PriestStateTests.cpp)
+target_compile_definitions(netstorm_pop_context_tests PRIVATE
+    NETSTORM_REWARD_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/reward-x86.tsv"
+    NETSTORM_PRIESTSTATE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/prieststate-x86.tsv")

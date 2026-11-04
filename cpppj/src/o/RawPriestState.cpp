@@ -48,11 +48,19 @@ RawPriestState::RawPriestState(SidPool& pool,const SquidReward& hp,std::span<con
     if (&hp.Pool()!=&pool || types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) ||
         spots.size()!=kWorldCells*kWorldCells) throw std::invalid_argument("사제 상태 조회 풀/타입/지도 연결 오류");
 }
+// 실제 월드 연결은 현재 표를 읽고 독립 입력은 기존 생성 시 사본을 읽는다.
+std::span<const RiftTypeRecord> RawPriestState::CurrentTypes() const { return currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_; }
+// 판본과 물리 폭이 다른 표는 기존 연결을 바꾸지 않고 거부한다.
+void RawPriestState::BindCurrentTypes(std::span<const RiftTypeRecord> types) {
+    if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188))
+        throw std::invalid_argument("사제 상태 현재 TYPE 대여의 판본/길이 오류");
+    currentTypes_=types;
+}
 // 예약/풀 밖 번호와 자산이 아닌 슬롯을 보호한다. dead/void/abstract는 추가로 제외하지 않는다.
 std::span<const std::uint8_t> RawPriestState::Raw(Sid sid) const {
     if (sid.value<5 || sid.value>=pool_.Capacity()) throw std::out_of_range("사제 상태 조회 SID 오류");
     const auto raw=pool_.Slot(sid);
-    if ((raw[kState]&kInvalidState) || raw[kType]<kFirstAssetTypeNumber || raw[kType]>=types_.size())
+    if ((raw[kState]&kInvalidState) || raw[kType]<kFirstAssetTypeNumber || raw[kType]>=CurrentTypes().size())
         throw std::invalid_argument("사제 상태 조회 raw 자산 오류");
     return raw;
 }
@@ -67,7 +75,7 @@ std::int32_t RawPriestState::CurrentHitPoints(Sid sid) const {
 // HP 경계는 signed 정수 최대 HP/2의 0방향 절삭이다. 저HP일 때에는 지면 좌표를 읽지 않는다.
 bool RawPriestState::GroundImmobile(Sid sid) const {
     const auto raw=Raw(sid);
-    if ((types_[raw[kType]].flags2&kPriestGenus)==0) return false;
+    if ((CurrentTypes()[raw[kType]].flags2&kPriestGenus)==0) return false;
     if (CurrentHitPoints(sid)<hp_.MaxHitPoints(sid)/2) return true;
     const int y=Cell(std::bit_cast<float>(Read(raw,kY))),x=Cell(std::bit_cast<float>(Read(raw,kX)));
     const auto extra=pool_.Edition()==OriginalEdition::Patch1078 ? 40U : 35U;

@@ -62,6 +62,9 @@ public:
     // 풀/타입/장부는 호출자가 소유한다. 패치판은 SP 저장소가 필요하고 CD판은 필요 없다.
     SquidReward(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& bookkeeping,
         SquidRewardState& state,ScrambledSpStore* store,SquidRewardHooks hooks={});
+    // 실제 PATCH 월드의 주소가 고정된 TYPE 표를 빌린다. 호출자는 표를 더 오래 유지하고 재할당하지 않아야 한다.
+    // 빈 표는 생성 시 소유한 사본으로 복귀한다. 독립 재생과 CD의 기존 계약은 그대로 유지한다(단위863).
+    void BindCurrentTypes(std::span<const RiftTypeRecord> types);
     // 상태를 바꾸지 않고 비용/지급액을 계산한다. 손상 입력은 여기서 거부한다.
     SquidRewardResult Plan(Sid sid,std::uint32_t recipient,bool salvage) const;
     // 0044c2f0 / 004626d0. salvage는 원본 세 번째 인자로, 거짓이면 삭제 보상 비율, 참이면 남은 HP 비례 환불이다.
@@ -105,6 +108,12 @@ private:
     SidPool& pool_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // 실제 PATCH 월드의 현재 TYPE 표다. 독립 구성에서는 비어 있고 types_ 사본을 사용한다.
+    std::span<const RiftTypeRecord> currentTypes_;
+    // 조회 시점마다 현재 표를 선택한다. TYPE 번호는 실제 역참조 위치에서 범위를 검사한다.
+    std::span<const RiftTypeRecord> CurrentTypes() const;
+    // 현재 표의 지정 TYPE 기록을 읽고 물리 범위 밖 번호는 예외로 보고한다.
+    const RiftTypeRecord& TypeRecord(std::uint32_t type) const;
     // bookkeeping_: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부.
     SquidPostPopState& bookkeeping_;
     // state_: 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidRewardState).

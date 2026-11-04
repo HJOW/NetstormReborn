@@ -50,14 +50,29 @@ SquidReward::SquidReward(SidPool& pool,std::span<const RiftTypeRecord> types,Squ
     // 패치판의 SP는 저장소에만 있다. CD판은 전역 float이므로 저장소를 연결하지 않는다.
     if (patch!=(store!=nullptr)) throw std::invalid_argument(patch ? "패치판 보상은 SP 저장소가 필요합니다" : "CD판 보상은 SP 저장소를 쓰지 않습니다");
 }
+// 같은 실제 TYPE 배열을 소비 위치에서 읽으며 명시 해제 시에만 생성 시 사본을 다시 쓴다.
+std::span<const RiftTypeRecord> SquidReward::CurrentTypes() const { return currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_; }
+// 잘못된 대여 요청은 기존 연결을 바꾸기 전에 거부한다.
+void SquidReward::BindCurrentTypes(std::span<const RiftTypeRecord> types) {
+    if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188))
+        throw std::invalid_argument("보상 현재 TYPE 대여의 판본/길이 오류");
+    currentTypes_=types;
+}
+// span에는 at이 없으므로 기존 vector::at과 같은 범위 거부를 역참조 직전에 유지한다.
+const RiftTypeRecord& SquidReward::TypeRecord(std::uint32_t type) const {
+    const auto types=CurrentTypes();
+    if (type>=types.size()) throw std::out_of_range("보상 TYPE 기록 범위 오류");
+    return types[type];
+}
 std::span<const std::uint8_t> SquidReward::Raw(Sid sid) const {
     if (sid.value==0 || sid.value>=pool_.Capacity()) throw std::out_of_range("보상 SID 범위 오류");
     const auto raw=pool_.Slot(sid);
-    if (raw[kType]>=types_.size()) throw std::out_of_range("보상 타입 번호 범위 오류");
+    if (raw[kType]>=CurrentTypes().size()) throw std::out_of_range("보상 타입 번호 범위 오류");
     return raw;
 }
 // 로더의 ftol(cost + 번호*23)을 그대로 따라 한 뒤 읽는 쪽의 감산까지 합친 값이다. CD판은 float 비용을 그대로 쓰므로 호출하지 않는다.
 std::int32_t SquidReward::TypeCostUnits(std::uint32_t type) const {
+    // PATCH 0059ab50의 단가는 TYPE+c4 float와 별도이며 로드 시 사본으로 캐시 초기값을 보존한다(단위863).
     const double encoded=static_cast<double>(types_.at(type).cost)+static_cast<double>(type*kCostBias);
     if (encoded<-2147483648.0 || encoded>=2147483648.0) throw std::out_of_range("보상 패치 비용 표 범위 오류");
     return Wrap(static_cast<std::int64_t>(encoded)-static_cast<std::int64_t>(type)*kCostBias);
@@ -73,26 +88,26 @@ std::int32_t SquidReward::Count(Sid sid) const {
 }
 std::int32_t SquidReward::TypeHitPoints(std::uint32_t type) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    const auto& record=types_.at(type);
+    const auto& record=TypeRecord(type);
     // 패치판 디버그 assert는 HP 비트가 없는 타입(dais 제외)의 조회를 보고한다. 보고 UI는 복원하지 않으므로 거부한다.
     if (patch && state_.debugAsserts && !(record.flags1&kHasHp) && type!=state_.types.dais)
         throw std::logic_error("보상 타입 HP assert 위반");
     return state_.PriestQuarterHp() && type==state_.PriestType() ? record.maxHitPoints/4 : record.maxHitPoints; // 1/4 비교 대상은 현재 사제 TYPE DWORD다(단위862).
 }
 bool SquidReward::HasHitPoints(Sid sid) const {
-    const auto raw=Raw(sid);const auto& type=types_[raw[kType]];
+    const auto raw=Raw(sid);const auto& type=TypeRecord(raw[kType]);
     const std::size_t extra=pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35;
     return (type.flags2&kDaisKind) ? (raw[extra]&1)!=0 : (type.flags1&kHasHp)!=0;
 }
 std::int32_t SquidReward::MaxHitPoints(Sid sid) const {
-    const auto raw=Raw(sid);const auto& type=types_[raw[kType]];
+    const auto raw=Raw(sid);const auto& type=TypeRecord(raw[kType]);
     const std::size_t extra=pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35;
     if (!(type.flags2&kDaisKind)) return TypeHitPoints(raw[kType]);
     // dais 부류는 켜져 있을 때 altar의 HP를 쓰고 꺼져 있으면 0이다.
     return (raw[extra]&1) ? TypeHitPoints(state_.types.none) : 0;
 }
 std::int32_t SquidReward::CostCurve(std::uint32_t type,std::int32_t count) const {
-    if (type>=types_.size()) throw std::out_of_range("보상 비용 타입 범위 오류");
+    if (type>=CurrentTypes().size()) throw std::out_of_range("보상 비용 타입 범위 오류");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     // altar/dais는 개수를 하나 줄여서 곡선에 넣는다.
     const auto n=(type==state_.types.none || type==state_.types.dais) ? Wrap(static_cast<std::int64_t>(count)-1) : count;
@@ -106,11 +121,11 @@ std::int32_t SquidReward::CostCurve(std::uint32_t type,std::int32_t count) const
         return Ftol(sum);
     }
     // CD판은 항 수와 float 단가를 곱해 float로 저장한다.
-    const float product=static_cast<float>(static_cast<double>(static_cast<std::int64_t>(n)+1)*static_cast<double>(types_[type].cost));
+    const float product=static_cast<float>(static_cast<double>(static_cast<std::int64_t>(n)+1)*static_cast<double>(TypeRecord(type).cost));
     return Ftol(static_cast<double>(product));
 }
 float SquidReward::SalvageCost(std::uint32_t type,std::int32_t count) const {
-    if (type>=types_.size()) throw std::out_of_range("보상 환불 타입 범위 오류");
+    if (type>=CurrentTypes().size()) throw std::out_of_range("보상 환불 타입 범위 오류");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto n=(type==state_.types.none || type==state_.types.dais) ? Wrap(static_cast<std::int64_t>(count)-1) : count;
     float result=0.0f;
@@ -125,7 +140,7 @@ float SquidReward::SalvageCost(std::uint32_t type,std::int32_t count) const {
         result=static_cast<float>(type!=state_.types.fullValue ? sum*kSalvageScale : sum);
         return result;
     }
-    if (n>=0) result=static_cast<float>(static_cast<double>(static_cast<std::int64_t>(n)+1)*static_cast<double>(types_[type].cost));
+    if (n>=0) result=static_cast<float>(static_cast<double>(static_cast<std::int64_t>(n)+1)*static_cast<double>(TypeRecord(type).cost));
     return type!=state_.types.fullValue ? static_cast<float>(static_cast<double>(result)*kSalvageScale) : result;
 }
 std::int32_t SquidReward::SalvageRefund(Sid sid,std::uint32_t type,std::int32_t count) const {

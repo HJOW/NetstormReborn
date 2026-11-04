@@ -1,0 +1,266 @@
+{
+ "unit": 863,
+ "date": "2026-11-04",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "22589c72 / 20261104-50 CP",
+ "exeSha256": "1716faf4af715e04290b3c532940da22669e6c41fb20bb247b7a6208cbef36a9",
+ "exeBytes": 10580992,
+ "scope": [
+  "SquidReward/RawPriestState PATCH 현재 TYPE 표 대여와 실제 Session/사제 World 연결",
+  "최대HP/HP플래그/다이스 부류/사제 genus를 현재 표에서 조회",
+  "독립/CD 생성 시 사본과 빈 대여 복귀 및 잘못된 판본/폭 무변경 거부 유지",
+  "PATCH 별도 정수 비용표는 생성 시 비용 사본 유지"
+ ],
+ "sourceSha256": {
+  "cpppj/src/o/SquidReward.h": "0b705646c9bbadfc1313fca8e0e3737a1f6fe2aab1edaf4c9c34269567be3431",
+  "cpppj/src/o/SquidReward.cpp": "5a5b6e91088bf0a4bee882227b21b0fa5e222c478d69d445659e6fd1ea974c5d",
+  "cpppj/src/o/RawPriestState.h": "535e6125359d62ef55b84a3cd29ecc3b873d175f717d72ce67735119629b793b",
+  "cpppj/src/o/RawPriestState.cpp": "62fc4e6df38d1f267899818ae7617b3cfea906ef94b6419365bacf401067b767",
+  "cpppj/src/client/RawCampaignSession.cpp": "a13ac09c9853e31064231a85aba0a2981e9174a242a09037066e91aaedbc2b88",
+  "cpppj/src/client/RawPriestWorldBindings.cpp": "c8cb416ff064c86e0986466bb9f97515552ab20b56647db0f756cb438cf152fc",
+  "cpppj/tests/RewardCurrentTypesTests.cpp": "1a59cd499481effe2e5816bec9fa570553ebebc7b6364e9fda9236dfca4d8012",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "b0519c11012fa16291c74dfe9259b917c37cd8e5f170d431bf73657f2108808b",
+  "cpppj/tests/CMakeLists.txt": "0b0af3b607e10e47a386629f79def4402d1250788214a93cd7409ff5e5d236c1"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/o/SquidReward.h": "ed852071fd9f4a2bd37e9a3a620cb216731e195f8b09b78c1f8d56b954c8b8b7",
+  "cpppj/src/o/SquidReward.cpp": "7b1ca87b5be0407eb72373509feab34c5393b6377f2ec26f40698fd7db8f83dc",
+  "cpppj/src/o/RawPriestState.h": "6548f16538127cd6086fecc20aa82972451c05774ad147ecc4fb10d42fca27cc",
+  "cpppj/src/o/RawPriestState.cpp": "39ac98a721848735aa5e291c420127c6b1449530ddd1e5a5f0b4c221b43a7181",
+  "cpppj/src/client/RawCampaignSession.cpp": "c3baffa34a2101722f72ccfbac9ff3b657c415ecbb673a3d7b77905145eeaf1f",
+  "cpppj/src/client/RawPriestWorldBindings.cpp": "c8cb416ff064c86e0986466bb9f97515552ab20b56647db0f756cb438cf152fc",
+  "cpppj/tests/RewardCurrentTypesTests.cpp": "4e99d2703fa69be9f0b1945296b58d853a7b0cfabe9bd3fa81823526204bb92b",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "95f8be94789248690ed4cada5962862c564446925b7d7b997a21c9bd47c66ecf",
+  "cpppj/tests/CMakeLists.txt": "0b0af3b607e10e47a386629f79def4402d1250788214a93cd7409ff5e5d236c1"
+ },
+ "sourceCorrectedBuildSha256": {
+  "cpppj/src/o/SquidReward.h": "ed852071fd9f4a2bd37e9a3a620cb216731e195f8b09b78c1f8d56b954c8b8b7",
+  "cpppj/src/o/SquidReward.cpp": "770dece9f86d1545a86958952835a2b0a5914187035de63b8dba0ca437347103",
+  "cpppj/src/o/RawPriestState.h": "6548f16538127cd6086fecc20aa82972451c05774ad147ecc4fb10d42fca27cc",
+  "cpppj/src/o/RawPriestState.cpp": "39ac98a721848735aa5e291c420127c6b1449530ddd1e5a5f0b4c221b43a7181",
+  "cpppj/src/client/RawCampaignSession.cpp": "9215eb07990916c33aa69550560adb5acbfdaf3853eaafd0602bfa812946f95a",
+  "cpppj/src/client/RawPriestWorldBindings.cpp": "c8cb416ff064c86e0986466bb9f97515552ab20b56647db0f756cb438cf152fc",
+  "cpppj/tests/RewardCurrentTypesTests.cpp": "1a59cd499481effe2e5816bec9fa570553ebebc7b6364e9fda9236dfca4d8012",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "95f8be94789248690ed4cada5962862c564446925b7d7b997a21c9bd47c66ecf",
+  "cpppj/tests/CMakeLists.txt": "0b0af3b607e10e47a386629f79def4402d1250788214a93cd7409ff5e5d236c1"
+ },
+ "lineEndingRestoredAfterTests": [
+  "cpppj/src/client/RawCampaignSession.cpp",
+  "cpppj/src/o/RawPriestState.cpp",
+  "cpppj/src/o/RawPriestState.h",
+  "cpppj/src/o/SquidReward.cpp",
+  "cpppj/src/o/SquidReward.h",
+  "cpppj/tests/CMakeLists.txt",
+  "cpppj/tests/CampaignObjectMenuTests.cpp"
+ ],
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-863/originalCD-0040d7b0.c": "2093f9ff84a2dd154bc3e5264c75560746736a2c617ce12d93d39b65641ad13b",
+  "extracted/cpp-resume-863/originalCD-004147c0.c": "793690fe9c07e0d4d081281d89f30da8a65935fa8623fa3807ae14fe5e997723",
+  "extracted/cpp-resume-863/originalCD-00414830.c": "3ebff7ab3c618ebe5f45ddbd1c72e1d2d3c76b7220e3bcf35d16203f599fe411",
+  "extracted/cpp-resume-863/originalCD-00444720.c": "04703bab0dec54703ca74e4aee312a59bea4f594e35e30c76da1c1cb61c2032d",
+  "extracted/cpp-resume-863/originalCD-00462610.c": "f9a1379099f534564fabd30edcedfb6893573823ddb3e79aad813147debfa32e",
+  "extracted/cpp-resume-863/originalCD-004626d0.c": "98ce48045a92fe5f23a1386d974e96232c84145b60529d2260d9fc9eb818e852",
+  "extracted/cpp-resume-863/originalCD-004aecf0.c": "630368a909863d453de1087867c03a2e4b2c9fb99a5265d7dc86477390d48cf0",
+  "extracted/cpp-resume-863/originalCD-004aed30.c": "53c208143267c8adac17c3b22182ab26987d66ae6f0cc3bcf30aeb4060f112c2",
+  "extracted/cpp-resume-863/originalCD-004e5150.c": "01bdf0823aae24169c884da12b8dd7a27f4f3d11ce3dffe09b0e0f0342ec9db2",
+  "extracted/cpp-resume-863/originals-00427030.c": "55749fedae31c2b1ae109546ad4605268bf392cb2d1fa84c2920bb36f46a3f97",
+  "extracted/cpp-resume-863/originals-0043cb30.c": "11557846e00a8c39bb29b497fc389d8032b888f6b10bfa0204d76d8fe4b1255f",
+  "extracted/cpp-resume-863/originals-0044b220.c": "f4fae2b4bbfe63038f1db980c02269b0474c711745a4758e58d9513ce1cfea80",
+  "extracted/cpp-resume-863/originals-0044c240.c": "6156151cd8e08c647f21a8314f183881fe104eff847af54e86d2881d9a23f768",
+  "extracted/cpp-resume-863/originals-0044c2f0.c": "ecd3602986e4eec8242725d2ccf4c04745ee2085430f0df9d0eb398a931ae227",
+  "extracted/cpp-resume-863/originals-00492090.c": "c58eee9ab23cae1c55066af5578299d68634ab1e2cc1714683ce5ef65057f1ca",
+  "extracted/cpp-resume-863/originals-0049b0d0.c": "016caff7445a6ad9a85d1c19df298c461c94e3292eb0e86f4e37b9860a25d4de",
+  "extracted/cpp-resume-863/originals-0049c2e0.c": "3d680c3e8d4239c06c6f39717be0e4a09294c060057a55d0f5d2d19110404075",
+  "extracted/cpp-resume-863/originals-0049fce0.c": "f9c4da47136773e66ddc9ec1505f0853eb9c9f12417700917d135564d76f9bbc",
+  "extracted/cpp-resume-863/originals-004adc60.c": "9ed2c9e389244a326bc1bbaf960d80b5ce0decd24e1e6e138a6ef1df83a2ff2e",
+  "extracted/cpp-resume-863/originals-004adcb0.c": "a8dde28c04a9bdf7cfed600b316681fc78f152056e1b2b37081bcb34696c0b4a",
+  "extracted/cpp-resume-863/originals-004b4900.c": "d2eb6eb1fe313d7fa89e1d26820b2e31cec3df95d3d6e95d2a347f026cb1ae81"
+ },
+ "validation": {
+  "cases": 49,
+  "groups": 9,
+  "newCases": 6,
+  "failedCases": 0,
+  "failedChecks": 0,
+  "firstFailedCases": 0,
+  "newNativeObservations": 0,
+  "newFixtures": 0,
+  "existingExpectationsChanged": false,
+  "builds": [
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 772.8742367,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-863/build-first.log",
+    "sha256": "504f163f7b8b32c7e2dd4e35a10e8659a7e9d328623f41c73dd7992972504d75"
+   },
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 83.3998477,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-863/build-corrected.log",
+    "sha256": "08a7977e75d5956324bb9cbff1f0b286e15136f24e0d2e7dc65d767316bb43b7"
+   }
+  ],
+  "executions": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "RewardCurrentTypes_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-863/test-current-types-first.log",
+    "sha256": "c1ce5a43fdf88d0d98cbd932a21671280b93cb1cb4a17af3ccc701efe04a3c57"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "RewardCurrentTypes_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-863/test-session-current-types-first.log",
+    "sha256": "ef185ff21597a2dd9d7d3867c333eb5a4f40a8d263c03b3076d9d61fe3b8dd09"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "reward_",
+    "cases": 9,
+    "expectedCases": 9,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-863/test-reward-existing-first.log",
+    "sha256": "b74226b7552ec6720cacb596c7b85fff225bed018315f844f2468df88d403220"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "GameAux_Reward",
+    "cases": 2,
+    "expectedCases": 2,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-863/test-reward-globals-first.log",
+    "sha256": "0444c9ecdbffbc89b6be1554f3e77be7dc8c685bde5eaa1320ce20387303c6ce"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "priest_state_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-863/test-priest-state-native-first.log",
+    "sha256": "620a65763db7e752ec9e3add16110d9b4bed68277a8d906049aee831d0085da2"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestState_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-863/test-priest-state-current-first.log",
+    "sha256": "9b4d4eb0d5266883682f2dd46e33406fcbe2165dc8e36d754832b74a405877df"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestPostPopCurrent_",
+    "cases": 6,
+    "expectedCases": 6,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-863/test-priest-prefix-current-first.log",
+    "sha256": "2285a6bcbadbca369852b6b4cc983925af092c4ebaf243ad2cc5fe1394d3816d"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "priest_postpop_",
+    "cases": 6,
+    "expectedCases": 6,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-863/test-priest-prefix-native-first.log",
+    "sha256": "18ef4b323511f619f13edb35044ca769c37c8c619ad3d653498b88f872aa5ed1"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "priest_regen_",
+    "cases": 10,
+    "expectedCases": 10,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-863/test-priest-regen-first.log",
+    "sha256": "8088a1a245f1e8c033313bc4a859277931a928314db44196c9b40243a5be222a"
+   }
+  ],
+  "fixtures": {
+   "reward-x86.tsv": {
+    "rows": 7200,
+    "editions": {
+     "originals": 2400,
+     "originalCD": 2400,
+     "original1037": 2400
+    },
+    "sha256": "a1fedbc77eca2e3f73976138aec2ea15d10a50b90967400b1f0ca6f6e5a8879c"
+   },
+   "prieststate-x86.tsv": {
+    "rows": 20256,
+    "editions": {
+     "Ground": 8160,
+     "Wrapper": 8160,
+     "Set": 3936
+    },
+    "sha256": "a8edd9d0c9bc1a4f29c2518bb34d432713b53fe44eaced85e821bf7ec2809223"
+   },
+   "priestpostpop-x86.tsv": {
+    "rows": 7176,
+    "editions": {
+     "Prefix": 7176
+    },
+    "sha256": "3924ceb7ffb2315eae4fd8a9a3e89b9bff261994d36c0109ac684c1d89738cdd"
+   }
+  },
+  "correctionBeforeFirstTest": "첫 빌드 중 원문0049c2e0/004b4900을 대조해 PATCH 비용 캐시와 현재TYPE+c4 float를 구별했다. 첫 검사 전에 TypeCostUnits의 기존 사본을 유지하고 새 수동 기대를 바로잡은 뒤 증분 빌드했다. 기존 fixture/기대값 변경0."
+ },
+ "protection": {
+  "count": 2761,
+  "fixtures": 941,
+  "unchanged": true,
+  "snapshot": "extracted/cpp-resume-863/protected-after.json"
+ },
+ "checking": {
+  "remaining": 12,
+  "parents": 6,
+  "partial": 3,
+  "multiplayer": 3,
+  "completedParents": 36,
+  "completedPartial": 3
+ },
+ "excluded": [
+  "실제 게임/GUI/진단 UI",
+  "포획/희생/특정 적 공격/승리",
+  "공중3종 전용",
+  "신규 MP/통신",
+  "물리입력/PCM/CD",
+  "전체71/CTest/34미션/ZIP 반복"
+ ],
+ "remaining": [
+  "제단/다이스/너겟/rainBlocker TYPE 번호 전역의 다른 사본",
+  "보호막 Regular 별도 진단/수명과 실제 VT/현재 사제 TYPE",
+  "Teleport 다른 유효 생성 함수/다른 가상20/전체 Pop",
+  "SquidPostPop::TotalCost의 현재 float비용과 PATCH 별도 정수 비용표 차이 추가 판정"
+ ]
+}

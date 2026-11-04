@@ -20,9 +20,11 @@ struct PriestHitPointHooks {
 // 사제/Carrier의 HP·지면·extra 기반 이동 불가 상태 조회를 복원한다.
 class RawPriestState {
 public:
-    // 같은 월드의 HP 모듈·타입·spot을 받는다. 타입은 복사하며 나머지 참조는 더 오래 살아야 한다.
+    // 같은 월드의 HP 모듈·타입·spot을 받는다. 기본 구성은 타입 사본을 쓰고 실제 PATCH는 BindCurrentTypes로 현재 표를 빌린다.
     RawPriestState(SidPool& pool,const SquidReward& hp,std::span<const RiftTypeRecord> types,
         std::span<const std::uint8_t> spots);
+    // 실제 PATCH의 주소 고정 TYPE 표를 빌린다. 표는 처리기보다 오래 살아야 하며 빈 표는 생성 시 사본으로 복귀한다.
+    void BindCurrentTypes(std::span<const RiftTypeRecord> types);
     // 패치 DWORD/CD signed WORD의 현재 HP를 읽는다. 최대 HP 모드와 별개인 raw 값이다.
     std::int32_t CurrentHitPoints(Sid sid) const;
     // 후속 회복 처리기의 같은 풀 연결을 검사한다.
@@ -43,6 +45,10 @@ private:
     const SquidReward& hp_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    // 실제 월드의 현재 TYPE 표다. 독립 재생과 CD는 기본적으로 생성 시 사본을 사용한다(단위863).
+    std::span<const RiftTypeRecord> currentTypes_;
+    // 지면 조회의 genus 판정 시 현재 표를 읽는다. 빈 대여는 기존 소유 사본을 선택한다.
+    std::span<const RiftTypeRecord> CurrentTypes() const;
     // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.
     std::span<const std::uint8_t> spots_;
 };

@@ -871,6 +871,7 @@ struct RawCampaignSession::Impl {
         rewardState.sharedPercent=&gameplayGlobals->GameAux()->RefundPercent();rewardState.sharedGeyserPool=&gameplayGlobals->GameAux()->ResourcePool(); // 실제 Reward/LocalGeyser의 같은 물리다.
         rewardState.sharedPriestQuarterHp=&gameplayGlobals->GameAux()->PriestQuarterHp(); // State 직접 쓰기와 기존 HP setter/최대HP가 같은 현재 전역을 쓴다.
         rewardState.sharedPriestType=&priestState.movement.priest; // 0049fce0의 1/4 비교와 사제 회복 분자가 같은 장기005412d0을 읽는다(단위862).
+        hp.BindCurrentTypes(core.types); // 실제 PATCH의 최대HP/HP 플래그가 World의 같은 현재 TYPE 표를 읽는다. 별도 정수 비용 캐시는 유지한다(단위863).
         priestState.regen.patch.sharedChangedSample=&gameplayGlobals->PatchDiagnostic();motionState.search.sharedPolicySelector=&gameplayGlobals->PatchDiagnostic(); // 최초 객체 생성 전에 추적 writer와 BFS가 같은 장기005318ec을 직접 빌린다.
         missionStart.sharedDenySalvage=&gameplayGlobals->DenySalvage();missionStart.sharedDenyAscend=&gameplayGlobals->DenyAscend(); // Start·회수·메뉴와 World 없는 Guide 해제가 같은 장기 전역을 빌린다. 근거: docs/exe/cpp-guide-release-20261101.md.
         missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
