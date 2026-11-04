@@ -44,8 +44,8 @@ std::uint16_t ContentFormLifetime::Word(Sid sid,std::size_t offset) const {
 std::uint32_t ContentFormLifetime::Owner(Sid parent) const { return pool_.Slot(parent)[kOwner]; }
 // 효과마다 현재 전역 타입 번호로 현재 cost를 다시 읽는다.
 float ContentFormLifetime::Cost() const {
-    if (state_.nuggetType>=types_.size()) throw std::out_of_range("Content 너겟 타입 번호 오류");
-    const auto cost=types_[state_.nuggetType].cost;if (!std::isfinite(cost)) throw std::invalid_argument("Content 너겟 비용 유한값 필요");return cost;
+    if (state_.NuggetType()>=types_.size()) throw std::out_of_range("Content 너겟 타입 번호 오류");
+    const auto cost=types_[state_.NuggetType()].cost;if (!std::isfinite(cost)) throw std::invalid_argument("Content 너겟 비용 유한값 필요");return cost;
 }
 // 실제 004adea0는 footZ를 포함하지 않은 발자국을 쓰고 각 결과를 float에 저장한다.
 std::array<float,2> ContentFormLifetime::Center(Sid parent) const {
@@ -61,7 +61,7 @@ void ContentFormLifetime::PreDestroy(Sid form) const {
         if (!hooks_.cancelCursor) throw std::invalid_argument("Content 커서 취소 경계 필요");hooks_.cancelCursor();
     }
     // CD는 공통 깊이 반납만 하며 패치판에만 너겟 알림/선지급 효과가 있다.
-    if (pool_.Edition()==OriginalEdition::Patch1078 && Word(form,kKind)==state_.nuggetType) {
+    if (pool_.Edition()==OriginalEdition::Patch1078 && Word(form,kKind)==state_.NuggetType()) {
         const Sid parent{Word(form,kParent)};
         if (!parent.value || parent.value>=pool_.Capacity()) throw std::logic_error("Content 너겟 부모 번호 오류");
         if (!(pool_.Slot(parent)[kState]&kDead)) {

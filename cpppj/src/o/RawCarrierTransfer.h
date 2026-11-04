@@ -9,6 +9,8 @@ struct CarrierTransferState {
     std::uint32_t haltCounter{},cooldown{},lastDonor{}; // 54542c/545424/545420의 현재 값이다.
     std::uint32_t emptyType{187},nuggetType{154}; // 효과 뒤 다시 읽는 현재 타입 전역이다.
     FormPacketHeader packet{0x60,1,10}; // 40acf0의 BYTE/BYTE/WORD 원문이며 길이를4 이상으로 보정하지 않는다.
+    const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 장기 번호를 전달 대상 kind 판정에 빌린다.
+    const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 앞선 내용물 조회 뒤 현재 번호를 읽으며 독립 입력은 기존154를 쓴다.
 };
 // 작은 전달 수신기는 실제 Form 가상 호출을 사용하고 큰 경제/경로 선택은 명시 경계다.
 struct CarrierTransferHooks {

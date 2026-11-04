@@ -15,6 +15,8 @@ struct PathCleanupState {
     bool boss{true}; RawCheckingFlag checking{}; // 기존 ProcessHost와 같은 권한/패치 assert 상태다.
     std::uint32_t priestType{158},daisType{165},outpostType{126},nuggetType{154}; // 부모/근처 의식 장소/운반 반환 장소/contained kind의 현재 타입 번호다.
     std::uint32_t helperEvent{0x1a2c}; // 양판본 보조 건설물에 지연1을 요청하는 SharedRegular 이벤트 번호다.
+    const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 같은 번호를 경로 정리·재지정/의식 요청이 빌린다.
+    const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 내용물 검색 위치의 현재값과 장기 참조 수명을 함께 유지한다.
 };
 // 수명/예약과 아직 별도로 복원할 신전 의식 하위 몸체다. 조회는 실제 기존 모듈을 공급한다.
 struct PathCleanupHooks {

@@ -15,6 +15,8 @@ struct GeyserMinedState {
     std::uint32_t nuggetType{154},emptyGeyserType{84},isleType{97},bridgeType{82}; // 실제 두 PE의 현재 비용/생성/표면/수량 setter 타입 번호다.
     const bool* sharedBoss{}; // 실제 수신/음향 효과와 같은 Client boss 주소다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 음향과 수량 갱신 뒤 고갈 삭제 관문에서 현재값을 읽는다.
+    const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 장기 owner이며 채집 음향 뒤 현재 단가 타입을 읽는다.
+    const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 독립/CD의 기존 값형 입력은 유지하며 비용 getter마다 현재 번호를 쓴다.
 };
 // 음향·가상 삭제/생성·Pop은 같은 raw 월드에 연결해야 하는 효과 경계다.
 struct GeyserMinedHooks {

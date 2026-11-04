@@ -241,3 +241,13 @@ TEST_CASE(CursorPreviewDword_ContentComparisonNative56KeepsAllBits) {
     }
     CHECK(observations==112);
 }
+
+// 커서 취소/안내/지갑 뒤의 서로 다른 현재 너겟 번호가 kind와 각 단가 조회에 반영된다(단위871).
+TEST_CASE(NuggetTypeNumber_ContentReadsCurrentKindAndEachIncomeCost) {
+    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types(188);types[71].cost=99.5F;types[72].cost=125.75F;types[90].footX=2;types[90].footY=4;SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
+    const auto parent=factory.Create(90,2);auto rawParent=pool.AllocatedBytes(parent);rawParent[34]=1;Put(rawParent,14,Bits(40.75F));Put(rawParent,18,Bits(41.25F));ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});ContentLifetimeState state;std::uint32_t current=154;state.sharedNuggetType=&current;std::string events;ContentLifetimeHooks hooks;
+    hooks.cancelCursor=[&] { events+='C';current=70; };hooks.localNotice=[&](auto command) { CHECK(command==state.notice && current==70);events+='N';current=71; };
+    hooks.wallet=[&](auto owner,auto amount) { CHECK(owner==1 && amount==99);events+='W';current=72; };hooks.addSp=[&](auto owner,float amount,bool local) { CHECK(owner==1 && amount==125.75F && local);events+='S'; };hooks.sound=[&](float x,float y) { CHECK(x==39.75F && y==39.25F);events+='A'; };
+    ContentFormLifetime lifetime(pool,types,forms,destroy,state,std::move(hooks));const auto form=factory.CreateContained(2);auto raw=pool.AllocatedBytes(form);Put(raw,18,70,2);Put(raw,20,0x20,2);raw[22]=0;forms.Attach(form,parent,0x10);state.cursor=form.value;lifetime.Destroy(form,0x10);
+    CHECK(events=="CNWSA" && current==72 && state.nuggetType==154 && (pool.Slot(form)[11]&1) && Get(pool.Slot(parent),6,2)==0 && destroy.PreDepth()==0 && destroy.PostDepth()==0);
+}

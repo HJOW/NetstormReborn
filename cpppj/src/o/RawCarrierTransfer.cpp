@@ -50,7 +50,7 @@ std::uint32_t RawCarrierTransfer::Transfer(Sid parent) const {
         const auto donor=pool_.Slot(candidate);
         if (donor[34]==pool_.Slot(parent)[34] && donor[10]==state_.emptyType) {
             const auto content=Need(hooks_.find)(candidate,0x20,0,0);
-            if (content.value && Read(pool_.Slot(content),18,2)==state_.nuggetType) {
+            if (content.value && Read(pool_.Slot(content),18,2)==state_.NuggetType()) {
                 state_.lastDonor=candidate.value;state_.cooldown=5;
                 std::array<std::uint8_t,10> packet{};packet[1]=state_.packet.message;Put(packet,2,state_.packet.length);packet[0]=state_.packet.protocol&0x7f;
                 Put(packet,4,parent.value);Put(packet,6,content.value);Put(packet,8,candidate.value);

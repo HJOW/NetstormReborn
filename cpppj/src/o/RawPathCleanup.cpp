@@ -81,7 +81,7 @@ void RawPathCleanup::AfterSpatial(RawPathRuntime& runtime,Sid parent) const {
     }
     if (pool_.Edition()==OriginalEdition::Patch1078 && !(pool_.Slot(parent)[11]&2)) {
         const auto raw=pool_.Slot(parent);const auto place=ReturnPlaceAt(Coordinate(raw,14),Coordinate(raw,18));
-        const auto nugget=hooks_.contained(parent,kNuggetMask,state_.nuggetType,0);
+        const auto nugget=hooks_.contained(parent,kNuggetMask,state_.NuggetType(),0);
         if (place.value && nugget.value && Owner(place)==Owner(parent)) {
             const auto parentGraph=hooks_.graphFor(parent),placeGraph=hooks_.graphFor(place);
             if (placeGraph==parentGraph && state_.boss) hooks_.destroy(nugget,0);

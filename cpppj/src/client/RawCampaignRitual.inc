@@ -91,6 +91,7 @@ void ConnectRitual() {
     rune.suppressDuration=[this] { return globals.missionPost; };rune.playerFlags=[this](std::uint32_t owner) { if (owner>kPlayerCount || owner*0xb4U+0x50U>=players.size()) throw std::out_of_range("Rune 현재 Player 기록 물리 범위");return players[owner*0xb4U+0x50U]; }; // 예약/생성 효과 뒤 시간 helper가 도달한 위치에서 같은 현재 전역/Player BYTE를 읽는다.
     runePostPop=std::make_unique<RawRunePostPop>(core.pool,core.hash,core.types,runeState,core.postPop,std::move(rune));core.postPop.SetRunePostPop(runePostPop.get());
     daisState=std::make_unique<DaisRegularState>(DaisRegularState{ritualState,runeState,core.processState,rewardState,playerState.battleOwner});
+    daisState->sharedNuggetType=rewardState.sharedNuggetType; // 늦게 생성된 다이스 선택/획득의 현재 너겟 번호도 같은 장기 Client owner를 빌린다.
     daisState->debug.Bind(gameplayGlobals->AiDebug().Checking()); // 지연 생성 뒤에도 현재 checking을 매 소비 위치에서 읽는다.
     daisState->BindPlayerRecords(core.pool.Edition(),players);daisState->voiceCue=0x020000df; // PE00542a70의 실제 희생 종료 명령이다.
     DaisRegularHooks dais; // 실제 의식 이동/초기 진행의 필수 효과와 아직 미연결인 후반 경계다.
@@ -151,5 +152,5 @@ void ConnectRitual() {
     };
     request.command=[this](Sid dais,Sid priest,std::uint32_t current) { PrepareRitual();daisRegular->BridgeCommand(dais,priest,current); };
     request.music=[this](std::string_view name) { if (!services.requestMusic) throw std::logic_error("희생 의식 실제 음악 요청 미연결");services.requestMusic(name); };
-    sacrificeRequest=std::make_unique<RawPriestSacrificeRequest>(core.pool,motionState.cleanup.nuggetType,playerState.battleOwner,std::move(request));PrepareRitual();ConnectDaisLifecycle();
+    sacrificeRequest=std::make_unique<RawPriestSacrificeRequest>(core.pool,motionState.cleanup.NuggetType(),playerState.battleOwner,std::move(request));PrepareRitual();ConnectDaisLifecycle();
 }

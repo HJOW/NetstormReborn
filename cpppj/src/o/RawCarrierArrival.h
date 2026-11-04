@@ -19,6 +19,8 @@ struct CarrierArrivalState {
     const std::int32_t* sharedAllowAlliedPickup{};const std::uint32_t* sharedGeyserType{}; // 실제 capture DWORD와 TYPE를 읽는다.
     bool AllowAlliedPickup() const { return sharedAllowAlliedPickup ? *sharedAllowAlliedPickup!=0 : allowAlliedPickup; } // bool로 alias하지 않고 현재 비0을 판정한다.
     std::uint32_t GeyserType() const { return sharedGeyserType ? *sharedGeyserType : geyserType; } // 선행 효과 뒤 현재 TYPE를 다시 읽는다.
+    const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 같은 장기 owner를 내용물 검색/너겟 생성이 공유한다.
+    const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 원문 위치마다 현재 번호를 읽고 독립/CD의 값형 입력은 유지한다.
 };
 // 각 큰 운반/포획/경제/프로토콜/회피 몸체는 호출되면 필수 실제 효과를 공급해야 한다.
 struct CarrierArrivalHooks {

@@ -32,6 +32,8 @@ struct ConstructionPlaceState {
     const bool& Server() const { return sharedServer ? *sharedServer : server; } // 각 조각의 Take 관문에서 현재 서버 역할을 읽는다.
     const bool& Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // 비용 부족 안내/환불 또는 차감 직전에 현재 권한을 읽는다.
     const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
+    const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 같은 너겟 번호로 비용 판정/환불 예외를 선택한다.
+    const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 실제 장기 owner를 참조하며 별도 연결 없는 독립/CD는 기존 필드를 쓴다.
 };
 // 배치 한 번의 입력이다. 원본 열 개 인자 가운데 SID 개수는 sids의 길이로 받는다.
 struct ConstructionPlaceRequest {

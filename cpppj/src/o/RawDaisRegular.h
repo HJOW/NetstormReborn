@@ -24,6 +24,8 @@ struct DaisRegularState {
     RawCheckingFlag debug{}; // 패치의 사제 genus/깊이/경로 생성 assert를 확인한다. CD는 읽지 않는다.
     std::span<std::uint8_t> playerRecords; // 실제9 Player 기록이며 비어 있으면 독립 원본 검사의 기존 배열을 사용한다.
     OriginalEdition playerEdition{OriginalEdition::Patch1078}; // 기록의0xb4/0xac 및 필드 폭을 판본대로 해석한다.
+    const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 장기 owner이며 선택/획득 종류가 같은 번호를 읽는다.
+    const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 의식 요청처럼 참조를 보관하는 소비자에 임시 값을 반환하지 않는다.
     void BindPlayerRecords(OriginalEdition edition,std::span<std::uint8_t> records); // 정확9기록을 같은 다이스 수명/획득이 공유한다.
     std::uint8_t GrantFlag(std::uint32_t owner) const; // 현재+71/CD+69 BYTE를 효과 뒤 다시 읽는다.
     void SetGrantFlag(std::uint32_t owner,std::uint8_t value); // 같은 현재 BYTE만 쓰고 다른 필드를 보존한다.

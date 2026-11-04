@@ -14,6 +14,8 @@ struct ContentLifetimeState {
     std::function<std::uint32_t()> currentCursor; //실제같은커서DWORD를매삭제시조회한다.미연결독립장치는같은폭의cursor입력을읽는다.
     const bool* sharedBoss{}; // 실제 커서 취소와 같은 Client의 boss 주소다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 중첩 커서 취소 뒤 원격 수입 알림 위치에서 현재값을 읽는다.
+    const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 장기 owner이며 커서 취소/알림 뒤 현재 kind·비용을 다시 읽는다.
+    const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 독립/CD는 기존 번호 필드를 사용하고 참조형 소비자에는 임시 값을 넘기지 않는다.
 };
 // 실제 UI/패킷·소리 경계다. wallet/SP는 SquidReward를 공급하면 실제 저장소로 연결한다.
 struct ContentLifetimeHooks {

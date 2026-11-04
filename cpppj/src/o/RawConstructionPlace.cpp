@@ -126,7 +126,7 @@ void RawConstructionPlace::ChargeForPlacement(const ConstructionPlaceRequest& re
     const auto player=std::bit_cast<std::int32_t>(request.player);
     if (request.player==state_.localPlayer || (state_.chargeBlockedRead ? state_.chargeBlockedRead() : state_.chargeBlocked) || player<=0 || player>=static_cast<std::int32_t>(kServerPlayer)) return; // 같은 원문의 short-circuit 순서에서만 현재 전역을 조회한다.
     const float cost=types_[request.type].cost;
-    if (cost==0.0F || request.type==state_.nuggetType) return;
+    if (cost==0.0F || request.type==state_.NuggetType()) return;
     if (!(Money(request.player)>=cost)) ChargeShortfall(request.type,request.player,request.x,request.y,request.argument,request.direction);
     else AddMoney(request.player,-cost);
 }
@@ -168,7 +168,7 @@ void RawConstructionPlace::ChargeShortfall(std::uint32_t type,std::uint32_t play
 void RawConstructionPlace::Refund(std::uint32_t type,std::uint32_t player) {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto& record=Type(type);
-    if (patch && type==state_.nuggetType) return;
+    if (patch && type==state_.NuggetType()) return;
     const std::int32_t amount=Ftol(static_cast<double>(record.cost));
     // 패치판만 SP를 돌려준다. 전투 표시 중의 로컬 플레이어는 가산을 건너뛴다.
     if (patch && !(state_.battleShown && player==state_.localPlayer)) AddMoney(player,static_cast<float>(amount));

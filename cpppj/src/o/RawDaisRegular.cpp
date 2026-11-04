@@ -189,7 +189,7 @@ void RawDaisRegular::BridgeCommand(Sid dais,Sid priest,std::uint32_t currentStag
 // patch의비로컬획득과CD의생략분기를추가추정없이보존한다.
 void RawDaisRegular::GrantCapturedType(std::uint32_t type,std::uint32_t owner) const {
     Player(owner);const bool local=owner==state_.localOwner;state_.SetGrantFlag(owner,0);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (type==state_.nuggetType) { if (local) { hooks_.addLocalSp(5000);hooks_.chat({DaisChat::Kind::Stormpower}); }else if (patch) hooks_.normalizeForeignSp(owner);return; }
+    if (type==state_.NuggetType()) { if (local) { hooks_.addLocalSp(5000);hooks_.chat({DaisChat::Kind::Stormpower}); }else if (patch) hooks_.normalizeForeignSp(owner);return; }
     if (type==state_.noIslandType) { if (local) hooks_.localSpecial(0);return; }
     if (local) { hooks_.localType(type);state_.selectedType=type; }else if (patch) hooks_.grantForeignType(owner,type);
 }

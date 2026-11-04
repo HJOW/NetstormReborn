@@ -875,6 +875,8 @@ struct RawCampaignSession::Impl {
         runeState.sharedAltarType=rewardState.sharedAltarType;runeState.sharedDaisType=rewardState.sharedDaisType; // Rune/다이스·참여자·AI/메뉴가 보상과 같은 현재 두 DWORD를 빌리며 임시 getter 값의 주소를 남기지 않는다.
         rewardState.sharedSilentType=damageablePostState.sharedSilentSurfaceType=&gameplayGlobals->GameAux()->RainBlockerType(); // 보상과 일반 삭제의 같은005412a4를 연결한다.
         rewardState.sharedAliasType=&gameplayGlobals->GameAux()->GrowingRainBlockerType();rewardState.sharedNuggetType=&gameplayGlobals->GameAux()->NuggetType(); // 별칭 비용/환불의 현재 성장형·너겟 번호다.
+        contentLifetimeState.sharedNuggetType=carrierTransferState.sharedNuggetType=geyserMinedState.sharedNuggetType=rewardState.sharedNuggetType; // 내용물·전달·채집이 보상과 같은 현재005412c0을 빌린다.
+        motionState.carrier.sharedNuggetType=motionState.cleanup.sharedNuggetType=constructionState.place.sharedNuggetType=rewardState.sharedNuggetType; // 경로·건설·덱/의식 요청의 참조도 같은 장기 owner로 연결한다.
         hp.BindCurrentTypes(core.types); // 실제 PATCH의 최대HP/HP 플래그가 World의 같은 현재 TYPE 표를 읽는다. 별도 정수 비용 캐시는 유지한다(단위863).
         hp.BindLoadedCosts(assets.game.TypeTable().Types()); // Session 교체 뒤에도 최초 로딩 비용표를 읽고 현재 TYPE+c4 float 쓰기와 분리한다(단위865).
         priestState.regen.patch.sharedChangedSample=&gameplayGlobals->PatchDiagnostic();motionState.search.sharedPolicySelector=&gameplayGlobals->PatchDiagnostic(); // 최초 객체 생성 전에 추적 writer와 BFS가 같은 장기005318ec을 직접 빌린다.
@@ -2513,13 +2515,13 @@ struct RawCampaignSession::Impl {
         hooks.sacrifice=[this](Sid actor,Sid target) { sacrificeRequest->Begin(actor,target); };hooks.target=[this](Sid actor,Sid target,auto replace,auto helper) { return carrierTarget->StartTarget(actor,target,replace,helper); };hooks.start=[this](RawPathStartRequest request) { return StartMotion(request); };hooks.name=[this](Sid parent) { return objectNames->Name(parent); };hooks.distance=[this](RawPathPoint point,Sid target) { return AiDistanceToFootprint(point,core.neighbors.Footprint(target)); };
         hooks.logTarget=[this](auto token,std::string_view source,std::string_view target) { if (!services.player.log) throw std::logic_error("AI 대상 이동 로그 미연결");services.player.log(aiMoveLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Move "+std::string(source)+" to "+std::string(target)+"\n"); };hooks.logPoint=[this](auto token,std::string_view name,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 좌표 이동 로그 미연결");services.player.log(aiMoveLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Move "+std::string(name)+" to ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
         aiMovement=std::make_unique<RawAiMovement>(aiMemory,core.pool,assetState.Boss(),*boardTarget,carrierMoveState,std::move(hooks));
-        AiResourceChoiceHooks resources;resources.center=[this](Sid sid) { const auto point=core.neighbors.Center(sid);return RawPathPoint{point[0],point[1]}; };resources.graph=[this](Sid sid) { return anchor->GraphFor(sid.value); };resources.crystals=[this](Sid actor) { return CountContained(core.pool,priestState.contained,actor,0x20,motionState.carrier.nuggetType); };
+        AiResourceChoiceHooks resources;resources.center=[this](Sid sid) { const auto point=core.neighbors.Center(sid);return RawPathPoint{point[0],point[1]}; };resources.graph=[this](Sid sid) { return anchor->GraphFor(sid.value); };resources.crystals=[this](Sid actor) { return CountContained(core.pool,priestState.contained,actor,0x20,motionState.carrier.NuggetType()); };
         resources.target=[this](auto token,Sid actor,Sid target) { aiMovement->ToTarget(token,actor,target,0); };resources.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };
         resources.captureLog=[this](auto token,Sid actor) { if (!services.player.log) throw std::logic_error("AI 포획 운반자 실제 로그 미연결");services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": PriestGetter=="+std::to_string(actor.value)+"\n\n"); };resources.disconnectedLog=[this](auto token,Sid geyser) { if (!services.player.log) throw std::logic_error("AI 끊긴 간헐천 실제 로그 미연결");services.player.log(aiGeyserLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Put disconnectd geyser "+std::to_string(geyser.value)+" back into yetToConnect list.\n\n"); };resources.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 간헐천 원본 진단 미연결");services.ai.assertion(text); };
         aiResourceChoice=std::make_unique<RawAiResourceChoice>(aiMemory,core.pool,core.types,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); },std::move(resources));
         AiCarrierActionHooks carriers;carriers.maxHitPoints=[this](Sid sid) { return hp.MaxHitPoints(sid); };carriers.prisoner=[this](Sid actor) { return FindContainedGenus(core.pool,priestState.contained,core.types,actor,0x20,0x200000,0); };carriers.path=[this](Sid actor) { return aiMovement->MovementForm(actor); };carriers.daisPoint=[this](Sid dais) { return DaisApproachPoint(core.pool,core.types,gunState.checking,boardTargetState.invalid,services.ai.assertion,dais); };
         carriers.point=[this](auto token,Sid actor,RawPathPoint point) { aiMovement->ToPoint(token,actor,point,0); };carriers.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };carriers.enemyAvailable=[this](auto owner) { return AiEnemyAvailable(owner); };carriers.vulnerable=[this](Sid sid) { return aiCollectors->Vulnerable(sid); };carriers.flyingGetter=[this](auto token) { return aiResourceChoice->HasFlyingCaptureCarrier(token); };carriers.graph=[this](Sid sid) { return anchor->GraphFor(sid.value); };
-        carriers.crystals=[this](Sid actor) { return CountContained(core.pool,priestState.contained,actor,0x20,motionState.carrier.nuggetType); };carriers.firstCrystal=[this](Sid actor) { return priests->Carrier().FindContained(actor,0x20,motionState.carrier.nuggetType,0); };carriers.dropRequest=[this](Sid actor) { PrepareCarrierDrop();carrierDrop->Request(actor,Sid{}); };carriers.destroy=[this](Sid crystal) { world.Destroy(crystal,0); };carriers.target=[this](auto token,Sid actor,Sid target) { aiMovement->ToTarget(token,actor,target,0); };
+        carriers.crystals=[this](Sid actor) { return CountContained(core.pool,priestState.contained,actor,0x20,motionState.carrier.NuggetType()); };carriers.firstCrystal=[this](Sid actor) { return priests->Carrier().FindContained(actor,0x20,motionState.carrier.NuggetType(),0); };carriers.dropRequest=[this](Sid actor) { PrepareCarrierDrop();carrierDrop->Request(actor,Sid{}); };carriers.destroy=[this](Sid crystal) { world.Destroy(crystal,0); };carriers.target=[this](auto token,Sid actor,Sid target) { aiMovement->ToTarget(token,actor,target,0); };
         carriers.remember=[this](auto token,Sid actor) { aiResourceChoice->RememberCaptureCarrier(token,actor); };carriers.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };carriers.targets=[this](Sid actor) { return AiCarrierTargets(actor); };carriers.reclassify=[this](auto token) { aiResourceChoice->ReclassifyDisconnected(token); };carriers.stop=[this](Sid actor) { aiMovement->Stop(actor); };carriers.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 운반 행동 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
         aiCarrierActions=std::make_unique<RawAiCarrierActions>(aiMemory,core.pool,core.types,AiCarrierActionGlobals{core.processState.Now(),assetState.Boss(),gunState.checking,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(carriers));
         AiBuildSearchHooks search;search.wall=services.construction.wallSeconds;search.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };aiBuildSearch=std::make_unique<RawAiBuildSearch>(aiMemory,core.types,core.spots,kAiSearchTypeBase,std::move(search));
@@ -2847,7 +2849,7 @@ struct RawCampaignSession::Impl {
         hooks.open=[this](auto deck,auto seedValue) { OpenRestoredDeck(productionDeck->Bytes(deck),random,seedValue); };
         DeckRestoreHooks restore;restore.assertion=SessionMissing<void,DeckRestoreAssertion>();
         restore.type=[this](auto type) { if (type>=core.types.size()) throw std::out_of_range("FullDeck 실제TYPE 범위");const auto& record=core.types[type];return FullDeckType{record.group,record.flags2}; };
-        hooks.full=[this,restore](auto deck) { const auto typeCount=static_cast<std::int32_t>(core.types.size());LoadFullDeck(productionDeck->Bytes(deck),random,{typeCount,motionState.carrier.nuggetType,geyserType},restore); };
+        hooks.full=[this,restore](auto deck) { const auto typeCount=static_cast<std::int32_t>(core.types.size());LoadFullDeck(productionDeck->Bytes(deck),random,{typeCount,motionState.carrier.NuggetType(),geyserType},restore); };
         hooks.append=[this,restore](auto deck,auto type,auto chance,auto power,auto remaining) { AppendRestoredDeckEntry(productionDeck->Bytes(deck),type,chance,power,remaining,restore); };
         hooks.prepareTypeNames=[this](auto owner) { PrepareFortTypeNames(static_cast<std::uint32_t>(owner)); };
         hooks.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return fortTypeConversion->Bytes(token); };
@@ -3145,7 +3147,7 @@ struct RawCampaignSession::Impl {
     }
     // 송신 효과 뒤 또는 외부 수신 직전에 실제 현재 전역을 같은 기존 handler에 공급한다.
     void ReceiveGeyserMined(std::span<const std::uint8_t> packet) {
-        geyserMinedState.checking=gunState.checking;geyserMinedState.nuggetType=motionState.carrier.nuggetType;
+        geyserMinedState.checking=gunState.checking;
         geyserMined->HandlePacket(packet);
     }
     // 같은 Graph/Host에 실제 경로와 의식 모듈을 연결한다. 저장 객체의 첫 Pop 전에 등록해야 한다.
@@ -3256,7 +3258,7 @@ struct RawCampaignSession::Impl {
         retarget.find=[this](Sid sid,std::uint32_t mask,std::uint32_t type,std::uint32_t index) { return priests->Carrier().FindContained(sid,mask,type,index); };
         retarget.chooseReturn=effects.carrier.chooseReturn;retarget.chooseGeyser=effects.carrier.chooseGeyser;
         retarget.goReturn=effects.carrier.goReturn;retarget.goGeyser=effects.carrier.goGeyser;
-        pathRetarget=std::make_unique<RawPathRetarget>(core.pool,motionState.carrier.nuggetType,std::move(retarget));
+        pathRetarget=std::make_unique<RawPathRetarget>(core.pool,motionState.carrier.NuggetType(),std::move(retarget));
         effects.path.retarget=[this](RawPathRuntime& runtime,Sid initialParent) { pathRetarget->Update(runtime,initialParent); };
         GeyserMinedHooks mined;
         mined.sound=[this](float x,float y,std::string_view name,std::uint32_t flags) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };
@@ -3300,7 +3302,7 @@ struct RawCampaignSession::Impl {
         FillMissing(effects.path.stepSound);
         motion=std::make_unique<RawCampaignMotionBindings>(world,*priests,*islands,*contained,*anchor,hp,metadata.frames,motionState,start,process,std::move(effects));
         ConnectPriestPanic();ConnectRitual();
-        salvageState=std::make_unique<SalvageCommandState>(SalvageCommandState{playerState.battleOwner,missionStart.DenySalvage(),gunState.checking,globals.missionPost,assetState.Boss(),runeState.AltarType(),runeState.DaisType(),motionState.carrier.nuggetType});
+        salvageState=std::make_unique<SalvageCommandState>(SalvageCommandState{playerState.battleOwner,missionStart.DenySalvage(),gunState.checking,globals.missionPost,assetState.Boss(),runeState.AltarType(),runeState.DaisType(),motionState.carrier.NuggetType()});
         SalvageCommandHooks salvage; // 요청은 전송만 하고 실제 서버 수신에서 기존 몸체를 호출한다.
         salvage.daisAt=[this](Sid sid) { return altarSacrifice->DaisAt(sid); };
         salvage.tell=[this](std::string_view key) { if (!services.priest.shield.tell) throw std::logic_error("회수 금지의 실제 Tell 소비자 미연결");services.priest.shield.tell(key); };
@@ -3785,7 +3787,7 @@ std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_
 // 별도 Player 사본/포획 실행 없이 기존 실제 기술/획득/현재 snapshot 자식을 재사용한다.
 void RawCampaignSession::NotifyPlayerResults() {
     auto& s=*impl_;o::PlayerNotificationHooks hooks;
-    hooks.global=[&s](std::uint32_t address)->std::uint32_t { switch (address) { case 0x595344:return s.playerState.playerKnown;case 0x594fbc:return s.core.ownerMode.battle ? 1U : 0U;case 0x540c70:return s.playerState.battleOwner;case 0x5411cc:return s.daisState->noIslandType;case 0x5412c0:return s.daisState->nuggetType;default:throw std::out_of_range("Player 알림의 다른 전역 주소"); } };
+    hooks.global=[&s](std::uint32_t address)->std::uint32_t { switch (address) { case 0x595344:return s.playerState.playerKnown;case 0x594fbc:return s.core.ownerMode.battle ? 1U : 0U;case 0x540c70:return s.playerState.battleOwner;case 0x5411cc:return s.daisState->noIslandType;case 0x5412c0:return s.daisState->NuggetType();default:throw std::out_of_range("Player 알림의 다른 전역 주소"); } };
     hooks.players=[&s] { return s.players; };hooks.technology=[&s] { return s.player->CurrentTechnology(); };
     hooks.weight=[&s](auto core) { o::CoreTechnologyWeightHooks weight;weight.count=[&s] { return static_cast<std::int32_t>(s.core.types.size()); };weight.type=[&s](std::int32_t index) { if (index<0 || static_cast<std::size_t>(index)>=s.core.types.size()) throw std::out_of_range("Core 기술 합계의 현재 TYPE 범위");const auto& type=s.core.types[static_cast<std::size_t>(index)];return o::CoreTechnologyWeightType{type.techBitIndex,type.level}; };return o::CoreTechnologyWeight(core,weight); };
     hooks.contained=[&s](auto parent,auto mask,auto kind,auto index) { if (parent>65535 || parent>=s.core.pool.Capacity()) throw std::out_of_range("Player 알림의 현재 기술 부모 SID 범위");return s.priests->Carrier().FindContained(o::Sid{static_cast<std::uint16_t>(parent)},mask,kind,index).value; };
@@ -3819,7 +3821,7 @@ void RawCampaignSession::GetFullDeck() {
     DeckRestoreHooks hooks;hooks.assertion=SessionMissing<void,DeckRestoreAssertion>();
     hooks.type=[&s](auto type) { if (type>=s.core.types.size()) throw std::out_of_range("전체 Deck의 실제 TYPE 범위");const auto& record=s.core.types[type];return FullDeckType{record.group,record.flags2}; };
     const auto typeCount=static_cast<std::int32_t>(s.core.types.size());
-    GetFullDeckCommand(s.fullDeck,s.playerState.templateOwner,s.core.bookkeeping.productionDirty,[&s](auto owner) { return s.productionDeck->Bytes(s.productionDeck->Get(owner)); },s.random,{typeCount,s.motionState.carrier.nuggetType,s.geyserType},hooks);
+    GetFullDeckCommand(s.fullDeck,s.playerState.templateOwner,s.core.bookkeeping.productionDirty,[&s](auto owner) { return s.productionDeck->Bytes(s.productionDeck->Get(owner)); },s.random,{typeCount,s.motionState.carrier.NuggetType(),s.geyserType},hooks);
 }
 
 // 유지 계산에 새 월드 사본을 주지 않고 같은 장기 Player/Pool/설정을 매 호출 시 조회한다.
@@ -4613,7 +4615,7 @@ std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState&
 //일반선택요청은Carrier.cpp의실제005453dc와동일한inputState를읽는다.보상지급과구별한다.
 RitualChoiceInputHooks RawCampaignSession::RitualChoiceInputs() {
     if (!impl_->loaded) throw std::logic_error("설치 전 의식 선택 입력 요청");auto* current=impl_.get();RitualChoiceInputHooks hooks;
-    hooks.dais=[current] { return current->inputState.dais; };hooks.nuggetType=[current] { return current->daisState->nuggetType; };hooks.daisType=[current] { return current->runeState.DaisType(); };
+    hooks.dais=[current] { return current->inputState.dais; };hooks.nuggetType=[current] { return current->daisState->NuggetType(); };hooks.daisType=[current] { return current->runeState.DaisType(); };
     hooks.construct=ConstructRitualChoicePacket;hooks.assertion=[](auto line) { std::clog<<"의식 선택 UserInput.cpp 대상 진단 "<<line<<'\n'; };hooks.send=[this](auto target,auto packet) { SendLocalPacket(target,packet); };return hooks;
 }
 //원문은미션에서는레벨/문자열/UI를조회하지않으며비미션에서만세인자의현재Tell을연다.
@@ -4639,7 +4641,7 @@ void RawCampaignSession::AppendTechnologyMenu(std::uint32_t target,TechnologyLis
     hooks.island=[current](auto sid) { const auto raw=current->core.pool.Slot(Sid{static_cast<std::uint16_t>(sid)});const auto flags=current->core.types[raw[10]].flags2;if (!(flags&0x1000006U)) std::clog<<"기술 목록 Squid.cpp 섬 종류 진단 1231\n";return !(flags&0x1000006U) || (flags&4U) ? 127U : Read(raw,8)&0xffffU; }; //004acda0은graphBYTE가아닌섬WORD이며bridge는현재127sentinel이다.
     hooks.rank=[current] { const std::uint32_t metamap=current->core.ownerMode.challenge ? 1U : 0U;return static_cast<std::uint32_t>(current->coreDataGlobals->Read(current->playerState,metamap,{SessionMissing<void,std::uint32_t>()})[4]); };
     hooks.maximumRank=[current] { const auto first=current->core.frames[current->daisState->noIslandType].Run('B').count;const auto second=current->core.frames[current->daisState->noIslandType].Run('C').count;return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(first)*static_cast<std::uint32_t>(second)-1U); }; //TYPE+174/+178은B/C프레임개수다. 전체보유랭크분기는정적사전구현만한다.
-    hooks.nuggetType=[current] { return current->daisState->nuggetType; };hooks.noIslandType=[current] { return current->daisState->noIslandType; };
+    hooks.nuggetType=[current] { return current->daisState->NuggetType(); };hooks.noIslandType=[current] { return current->daisState->noIslandType; };
     TechnologyListMenu menu(std::move(hooks));if (theme) menu.AppendTheme(target,*theme);else menu.AppendAll(target);
 }
 // 정보 화면도 기존 현재 TYPE/사정거리/초당 피해 표와 AI·건설의 같은 요구 에너지 후처리를 사용한다.

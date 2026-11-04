@@ -335,3 +335,12 @@ TEST_CASE(CanonConsumers_ConstructionPlaceBeforeSideEffects) {
     SquidReward reward(scene.pool,scene.types,scene.books,scene.rewardState,&scene.store);RawConstructionPlace place(scene.pool,scene.types,scene.frames,scene.state,reward,scene.Hooks());const std::array<std::uint16_t,1> sids{15010};
     CHECK(Throws([&] { place.Place({kTypePlain,20,21,0,0,1,sids,0,0}); }));CHECK(reported==1 && scene.events.empty());
 }
+
+// 비용 관문 뒤의 현재 너겟 예외와 별도 환불 예외를 확인하며 실제 배치 효과는 관찰 장치만 사용한다(단위871).
+TEST_CASE(NuggetTypeNumber_ConstructionChargesAndRefundsUseCurrentOwner) {
+    PlaceScene scene(OriginalEdition::Patch1078);scene.Prepare(kTypePlain,Bits(250.F),0,0,0,0,0,0,1,false,true,true,false,false,5);std::uint32_t current=154,next=kTypePlain,reads=0,charges=0,refunds=0,notices=0;scene.state.sharedNuggetType=&current;scene.state.chargeBlockedRead=[&] { current=next;return false; };auto hooks=scene.Hooks();
+    hooks.storedSp=[&](auto player) { CHECK(player==2);++reads;return 1000.F; };hooks.addPlayerSp=[&](auto player,float amount) { CHECK(player==2);if (amount<0) { CHECK(amount==-250.F);++charges; }else { CHECK(amount==250.F);++refunds; } };hooks.sendMoney=[&](auto player,const ConstructionMoneyNotice& notice) { CHECK(player==2 && notice.amount==250);++notices; };
+    SquidReward reward(scene.pool,scene.types,scene.books,scene.rewardState,&scene.store);RawConstructionPlace place(scene.pool,scene.types,scene.frames,scene.state,reward,std::move(hooks));const std::array<std::uint16_t,1> sids{50};
+    FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,2,sids,0,0});CHECK(reads==0 && charges==0);next=154;FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,2,sids,0,0});CHECK(reads==1 && charges==1);
+    current=kTypePlain;place.Refund(kTypePlain,2);CHECK(refunds==0 && notices==0);current=154;place.Refund(kTypePlain,2);CHECK(refunds==1 && notices==1 && scene.state.nuggetType==154);
+}

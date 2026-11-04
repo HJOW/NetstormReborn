@@ -85,7 +85,7 @@ std::uint32_t RawCarrierArrival::Arrival(Sid sid,std::uint32_t targetA,std::uint
     if (!(Genus(sid)&kCarrier)) { if (patch) throw std::logic_error("Carrier 도착 isCarrier 원본 assert");return kDone; }
     if (Genus(sid)&kPriest) { const auto* current=hooks_.path(sid);if (current && current->Helper()) return kDone; }
     if (!Owner(sid)) return kDone;
-    auto nugget=carrier_.FindContained(sid,kNuggetMask,state_.nuggetType,0);auto point=Position(sid);auto ground=hooks_.genusAt(point[0],point[1],0x10000000);point=Position(sid);static_cast<void>(hooks_.genusAt(point[0],point[1],0x2000));point=Position(sid);auto place=cleanup_.ReturnPlaceAt(point[0],point[1],1);const auto captured=carrier_.FindContained(sid,kNuggetMask,state_.priestType,0);
+    auto nugget=carrier_.FindContained(sid,kNuggetMask,state_.NuggetType(),0);auto point=Position(sid);auto ground=hooks_.genusAt(point[0],point[1],0x10000000);point=Position(sid);static_cast<void>(hooks_.genusAt(point[0],point[1],0x2000));point=Position(sid);auto place=cleanup_.ReturnPlaceAt(point[0],point[1],1);const auto captured=carrier_.FindContained(sid,kNuggetMask,state_.priestType,0);
     if (captured.value) { place={};ground={};nugget={}; }
     point=Position(sid);auto dais=cleanup_.NearbyType(point[0],point[1],1,state_.daisType);
     if (dais.value) { const auto daisPoint=Position(dais);if ((Extra(dais)&1) || static_cast<double>(point[0])!=static_cast<double>(daisPoint[0])-kDaisOffset || static_cast<double>(point[1])!=static_cast<double>(daisPoint[1])-kDaisOffset) dais={}; }
@@ -105,7 +105,7 @@ std::uint32_t RawCarrierArrival::Arrival(Sid sid,std::uint32_t targetA,std::uint
                     if (!targetB || !ValidReturn(sid,Sid{static_cast<std::uint16_t>(targetB)})) targetB=hooks_.chooseReturn(sid).value;
                     SetTargets(sid,ground.value,targetB);if (targetB) { replaced=true;hooks_.goReturn(sid,Sid{static_cast<std::uint16_t>(targetB)}); }
                 }
-                if (state_.boss && !nugget.value && Read(pool_.Slot(ground),12,2)) { create_.Create(sid,state_.nuggetType,0,kNuggetMask,0,0);hooks_.minedPacket(ground); }
+                if (state_.boss && !nugget.value && Read(pool_.Slot(ground),12,2)) { create_.Create(sid,state_.NuggetType(),0,kNuggetMask,0,0);hooks_.minedPacket(ground); }
                 if (replaced) return kReplaced;
             }
         } else if (Owner(place)==Owner(sid) && anchor_.GraphFor(place.value)==anchor_.GraphFor(sid.value)) {
