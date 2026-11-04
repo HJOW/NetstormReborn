@@ -1,0 +1,108 @@
+{
+ "unit": 866,
+ "date": "2026-11-04",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "238714d3 / 20261104-53 CP",
+ "kind": "정적 범위/이름 정정·미완료 이월",
+ "productUnit": 865,
+ "version": "11.01",
+ "exeSha256": "a7931f4b7aaa471744af77d5c171c5dc50bd4f9a0d7f4d59bb46923bc59ba8e4",
+ "exeBytes": 10586624,
+ "finding": {
+  "parent": "004dc220 event4",
+  "notAnimationRemoval": true,
+  "global": "0054db4c = curServer = ClientNsInfoGlobals::serverSelection",
+  "lookup": [
+   "0046f650 float wrapper",
+   "0046f5a0 inFortMode/현재 지면 WORD/SID → island argument → exists → signed BYTE record+10 territory"
+  ],
+  "queue": [
+   "00542744 file DWORD 02000013",
+   "00452fe0 queued command(first=second=curServer<<16|territory)",
+   "004d62b0 server index range check",
+   "004b3760 → 004b3620 fort descend preparation → State19"
+  ],
+  "producer": [
+   "004dbac0 actual Vortex virtual+6c",
+   "00542990 file DWORD 030000a7 with current argument0 → new Regular event4/payload0"
+  ],
+  "indirectReachabilityLimit": "검출한 literal4 생성 caller는1개지만 동적 생성/강제 명령·단독 모드 전체 도달 불가 증명이 아니다. 직접 inSingle 관문은 없다.",
+  "counterparts": {
+   "004dc220": "0044efd0",
+   "0046f650": "004bdcf0",
+   "0046f5a0": "004bdc80",
+   "004b3760": "0042ffd0",
+   "004b3620": "0042feb0"
+  },
+  "legacyNames": [
+   "AssetRegularState::regionGeneration은 curServer의 독립 입력 이름이었다",
+   "AssetRegularHooks::regionNumber는 일반 청크 island가 아닌 fort territory lookup 경계다",
+   "AssetRegularHooks::removeAnimation은 애니메이션 삭제가 아닌 Descend 명령 경계다"
+  ]
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-866/originalCD-0042feb0.c": "8bb382f1907ae16f95607c1ab01e167adeb2138883ee4f619953e6b8eaf23e7e",
+  "extracted/cpp-resume-866/originalCD-0042ffd0.c": "193ad781c49b3a5f13d2498b5ac85941e5f3df30b5a9facb78a502b2ac2d7dc6",
+  "extracted/cpp-resume-866/originalCD-0044efd0.c": "e0a6ccf9f7d5ee7cd6a8a65278dfda4b98c579668bde23df5fd26248b1e56b03",
+  "extracted/cpp-resume-866/originalCD-004bdc80.c": "59eaea1924675bd9e920d1d12d64b45ebb7aef0916de6f82717bcf0204e444f2",
+  "extracted/cpp-resume-866/originalCD-004bdcf0.c": "d8c8ce176300023c156a36d00212cb3bd86d670115594ea9f3a2bc1c676a3b0b",
+  "extracted/cpp-resume-866/originals-0046f530.c": "85e0310fcb6d67b8de8c285d7c1e9ab82cd5669f6c5034d8769191b2f6a5e46c",
+  "extracted/cpp-resume-866/originals-0046f5a0.c": "8e67c0d1690fecb666a3abbc1ac0cbeb75f40824276c2b0d9a5dc71d084ac119",
+  "extracted/cpp-resume-866/originals-0046f650.c": "18bc25aed688571e18c1ad964cedf407b799f3e6fa857687b2403637d09e7438",
+  "extracted/cpp-resume-866/originals-004adb30.c": "5fc206e7992fb75df958d76da0f1f01fa477fd1919b25e960fb4cd298e3b8842",
+  "extracted/cpp-resume-866/originals-004b3620.c": "0eee424ce4434d311cca725db535a7b716520a5a9474e18d663a22e11aef177e",
+  "extracted/cpp-resume-866/originals-004b3760.c": "a46c4a40caac83cd262abffc8c4ce467664003b4d1df7f8aea089c1ac08ed0b6",
+  "extracted/cpp-resume-866/originals-004dbac0.c": "2e689fa620dd231d281c9350adff4cf34e7ca088a44dea899ca24844a7e7110d",
+  "extracted/cpp-resume-866/originals-004dbce0.c": "e087ac1bd4ad7f51a77c718371204419ce1bfdde64654f0b8da93077cb119c9a",
+  "extracted/cpp-resume-866/originals-004dc050.c": "74d875da04ec63cbd8ad1cbe0e8956d341cd5e4e2166963f142c3f4a6db1cfd9",
+  "extracted/cpp-resume-866/originals-004dc220.c": "ed1970a9adca2c41882ade6a2e3cc85ce05512bf2309e99b095713dc9b9b2758",
+  "extracted/cpp-resume-866/originals-004dcca0.c": "90953ef1e1be9dc5589cc3f33904997ff265daa5ca5a442076013b85a33c1ea2",
+  "extracted/cpp-resume-866/originals-userinput-descend-excerpt.c": "b12edc1ad7c7c2921d198718284084cc352af5578744c03d23221cadf59eabe9",
+  "extracted/cpp-resume-866/pe-globals.json": "6d34cd220ee8b72eb45bafcec121a2dcb8d6383e9821cdc1b4f2fccbd348098f",
+  "extracted/cpp-resume-866/regular-event4-callers.json": "b1c7f602ddc3afa0c9ed226b94e1606e623bce6225403d0aa3c5407f8b7057e1",
+  "extracted/cpp-resume-866/temple-event4-start-callers.json": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f"
+ },
+ "unchangedImplementationSha256": {
+  "cpppj/src/o/RawAssetRegular.h": "0778b1231d000b0dd8bde04af0acf86a00b3bcbee5edc9656b92b378381b2561",
+  "cpppj/src/o/RawAssetRegular.cpp": "8532747d391e6c84fb4262228d49f471988ef53caa3c789f238fc95da0217e12",
+  "cpppj/src/client/RawCampaignAssetBindings.cpp": "dbc2cc792654a544fed13ee08bbfb5581d03dbaef7a9cc41b41cd685da4d847a",
+  "cpppj/src/client/RawCampaignSession.cpp": "35dbe863d20a382ff4ae1466c4adbc8f56d2b1780a5c24fa56970bad0c0b294a",
+  "cpppj/src/client/ClientNsInfoGlobals.h": "9a2903b92cac1a94631d0c86b269378943fb50af99e4cb274f5206c7c12d0539",
+  "cpppj/src/client/ClientMain.cpp": "3ee9de918f777186862bdf5a383c429073ea5f7c293ba86074d389a82018d38a"
+ },
+ "validation": {
+  "builds": 0,
+  "functionalCases": 0,
+  "nativeExecutions": 0,
+  "newFixtures": 0,
+  "gameGuiRuns": 0,
+  "multiplayerTests": 0,
+  "productSourceChanged": false
+ },
+ "protection": {
+  "count": 2761,
+  "fixtures": 941,
+  "unchanged": true
+ },
+ "checking": {
+  "remaining": 12,
+  "parents": 6,
+  "partial": 3,
+  "multiplayerClassification": 3,
+  "completedParents": 36,
+  "completedPartial": 3,
+  "sameCountDeferredParents": [
+   "004a7510",
+   "004dc220"
+  ],
+  "sameCountDeferredPartial": [
+   "004b54e0",
+   "004b8cb0"
+  ]
+ },
+ "remaining": "004dc220 event4/004dbac0 action/fort territory/curServer/UserInput Descend/State19는 LEFT_JOBS 3절8번 MP/메타맵 부모와 함께 정적 사전 구현할 미완료 범위다. 기존 독립 fixture 재생을 실제 Session 연결 완료로 세지 않는다.",
+ "nextUnit": 867,
+ "nextCandidate": "00482340 Missile 현재 checking/두 isRobust 호출과 실제 Host/진단 소비자 대조. 현재 TYPE 번호/Teleport/전체Pop 등 잔여도 유지."
+}

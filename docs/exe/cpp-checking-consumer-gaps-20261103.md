@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**866 신전 event4 범위 정정:**004dc220의 현재 전역은curServer, 조회는fort signed territory이며0x02000013은Descend/State19다. 생성입구004dbac0/0x030000a7과 함께8번MP/메타맵에 미완료 이월한다. 직접inSingle 관문 부재를 단독 전체 미도달 증명으로 확대하지 않는다. 제품865·빌드/기능/MP 검사0·checking12/완료부모36/부분3 유지. [866 기록](cpp-temple-descend-scope-20261104.md).
+
 **865 최초 비용표 분리:**PATCH 공통후처리/보상에 최초 GameAssets 비용을 별도 대여해 현재TYPE float와 World/Session 재대여를 구별했다. 고유44개/8묶음(새5) 최종 실패0·Release2회 종료0·보호2761개 불변이며 새 정리/기존 비용 기대는 검사만 교정했다. 다음866은 신전004dc220의 현재 curServer/지역/명령 큐 대조다. checking12·완료부모36/부분3 유지. [865 기록](cpp-loaded-cost-table-20261104.md).
 
 **864 보호막 Regular 현재 접속:**PATCH 도달 장치·현재 사제 TYPE/실제 typed finder·VT 분배와 checking 진단 정상 복귀를 연결했다. 고유31개/6묶음(새10) 최종 실패0·Release2회 종료0·보호2761개 불변이다. 기존 노후 Pop guard1개/2단언은 검사만 교정했다. 다음865는 공통 후처리 별도 비용 캐시이며 checking12·완료부모36/부분3 유지다. [864 기록](cpp-forcefield-regular-current-20261104.md).
@@ -1716,6 +1718,8 @@ LAB_004ad54f:
 - `)`
 
 ## FUN_004dc220 @ 004dc220
+
+**866 범위 정정(미완료 이월):**실제 checking event4는 curServer/fort territory→Descend/State19다. 기존 regionGeneration/removeAnimation 임시명은 실제 부모와 다르며8번MP/메타맵과 함께 잇는다. 생성004dbac0와CD 대응·단독 도달분류 한계는 [866 기록](cpp-temple-descend-scope-20261104.md)을 따른다.
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 
