@@ -111,7 +111,8 @@ TEST_CASE(BuildingSpace_BindingAndNativeDiagnostic_AreEditionSpecific) {
         std::vector<std::uint8_t> spots(65536);SquidFactory factory(pool,types);const auto sid=factory.Create(74,2);
         SquidPop pop(pool,hash,spots);SquidUnpop unpop(pool,hash,spots);BuildingSpaceState state{82,81,true};
         RawBuildingSpace building(pool,hash,types,state),mismatch(other,otherHash,types,state);
-        CHECK(Throws([&] { pop.Pop(sid,types[74],3,3,30,45); }));CHECK(Throws([&] { pop.SetBuildingSpace(&mismatch); }));CHECK(Throws([&] { unpop.SetBuildingSpace(&mismatch); }));
+        if (edition==OriginalEdition::Patch1078) CHECK(pop.Pop(sid,types[74],3,3,30,45)==RawPopResult::Registered);else CHECK(Throws([&] { pop.Pop(sid,types[74],3,3,30,45); })); // PATCH의 빈 표면 후보는 옆면 장치를 선택하지 않는다. CD 기존 경계는 유지한다.
+        CHECK(Throws([&] { pop.SetBuildingSpace(&mismatch); }));CHECK(Throws([&] { unpop.SetBuildingSpace(&mismatch); }));
         pop.SetBuildingSpace(&building);unpop.SetBuildingSpace(&building);
         auto bytes=pool.AllocatedBytes(sid);bytes[10]=81;bytes[12]=0x7e;bytes[edition==OriginalEdition::Patch1078 ? 40 : 35]=0;
         CHECK(Throws([&] { building.NotifySurface(sid); })==(edition==OriginalEdition::Patch1078));

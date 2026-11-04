@@ -192,19 +192,21 @@ TEST_CASE(SquidPostPop_FirstRegistrationAndProviderDuplicate_PreserveOriginalCou
     CHECK(state.localCounts[74]==2); CHECK(state.localSecondaryCounts[74]==2); CHECK(state.globalCounts[74]==2); CHECK(state.depth==0);
 }
 
-// 미복원 효과/비용/손상 목록은 Pop이 좌표나 체인을 쓰기 전에 거부한다.
-TEST_CASE(SquidPostPop_UnsupportedEffectsAndCorruptList_RejectBeforeSpaceWrites) {
+// 후처리의 미복원 효과/손상 목록 실패도 앞선 Pop의 공간 변경을 되돌리지 않는다.
+TEST_CASE(SquidPostPop_UnsupportedEffectsAndCorruptList_KeepEarlierSpaceWrites) {
     auto types=Types(o::OriginalEdition::Patch1078); types[74].flags2=0x10000; types[74].flags1=0x10000000;
     o::SidPool pool(o::OriginalEdition::Patch1078,32768,false); o::SquidFactory factory(pool,types); const auto sid=factory.Create(74,2);
     pool.AllocatedBytes(sid)[34]=1; o::SquidPostPopState state; state.providers.entries.resize(1); state.providers.count=2;
     o::SquidPostPop post(pool,types,state); o::SquidHash hash; std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells);
-    o::SquidPop pop(pool,hash,spots,nullptr,&post); const auto before=Hex(pool.Slot(sid));
-    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); })); CHECK(Hex(pool.Slot(sid))==before); CHECK(state.depth==0); CHECK(hash.Bucket(1,20,20)==0);
-    state.providers.count=0; state.aiAttached[1]=true;
-    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); })); CHECK(Hex(pool.Slot(sid))==before); CHECK(state.totalCost==0);
-    state.aiAttached[1]=false; state.pendingPlacement=true;
-    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); })); CHECK(Hex(pool.Slot(sid))==before);
-    state.pendingPlacement=false; state.suppressed=true;
+    o::SquidPop pop(pool,hash,spots,nullptr,&post);
+    const auto prepare=[&] { auto raw=pool.AllocatedBytes(sid);raw[11]=4;raw[40]=0;hash.Reset(); }; // 각 실패를 독립 void 입력에서 시작한다.
+    const auto partial=[&] { const auto raw=pool.Slot(sid);CHECK(raw[22]==0x40 && raw[23]==1 && raw[24]==0xdc && raw[25]==0);CHECK(raw[11]==0 && (raw[40]&0x80U) && hash.Bucket(1,20,20)==sid.value && state.depth==0); }; // 후처리 진입 전에 완료한 공간/firstPop/void 변경을 확인한다.
+    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); }));partial();
+    prepare();state.providers.count=0;state.aiAttached[1]=true;
+    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); }));partial();CHECK(state.totalCost==0);
+    prepare();state.aiAttached[1]=false;state.pendingPlacement=true;
+    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); }));partial();
+    prepare();state.pendingPlacement=false;state.suppressed=true;
     CHECK(pop.Pop(sid,types[74],1,1,20,20)==o::RawPopResult::Registered); CHECK(state.globalCounts[74]==0); CHECK(state.depth==0);
     // 표면 그래프 생성은 거부하고 noGraph 리셋 경로만 허용한다.
     auto graphTypes=types; graphTypes[74].flags1=o::TypeFlag1::kSurface;
@@ -251,7 +253,7 @@ TEST_CASE(SquidPostPop_BridgePrefix_X86_FlagsAndExtra) {
     CHECK((counts==std::array<std::size_t,3>{80,80,80}));
 }
 
-// 연결 경계가 없거나 다른 파생 표이면 공간 쓰기를 거부하며 공통 통계 억제도 다리 접두를 건너뛰지 않는다.
+// PATCH의 선택된 실패는 앞선 공간 쓰기를 유지하고 CD의 기존 사전 거부와 구별한다. 통계 억제도 다리 접두는 실행한다.
 TEST_CASE(SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon) {
     // 두 raw 레이아웃 모두 같은 가상 호출 계약을 지킨다.
     for (auto edition:{o::OriginalEdition::Patch1078,o::OriginalEdition::Cd1072}) {
@@ -261,17 +263,27 @@ TEST_CASE(SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon) {
         o::SquidPostPopState state; state.graphsEnabled=false; state.suppressed=true;
         o::SquidHash hash; std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells);
         o::SquidPostPop missing(pool,types,state); o::SquidPop guarded(pool,hash,spots,nullptr,&missing);
-        const auto before=Hex(pool.Slot(sid));
+        const auto initial=std::vector(pool.Slot(sid).begin(),pool.Slot(sid).end());const auto before=Hex(initial);
+        const auto prepare=[&] { auto raw=pool.AllocatedBytes(sid);std::copy(initial.begin(),initial.end(),raw.begin());hash.Reset();std::fill(spots.begin(),spots.end(),std::uint8_t{}); }; // 서로 독립인 실패/성공 호출의 초기 입력만 복원한다.
+        const auto partial=[&](std::span<const std::uint8_t> input,bool activated) { auto expected=std::vector(input.begin(),input.end());Put(expected,14,std::bit_cast<std::uint32_t>(20.0F));Put(expected,18,std::bit_cast<std::uint32_t>(20.0F));Put(expected,22,320,2);Put(expected,24,220,2);Put(expected,4,0,2);expected[33]=0;if (activated) { expected[40]|=0x80;expected[11]&=0xfb; }return Hex(expected); }; // 원문에서 실패 전에 완료한 고정 입력20,20의 정확한 raw 저장 폭을 확인한다.
         CHECK(Throws([&] { guarded.Pop(sid,types[82],1,1,20,20); }));
-        CHECK(Hex(pool.Slot(sid))==before); CHECK(hash.Bucket(0,20,20)==0);
-        CHECK(std::all_of(spots.begin(),spots.end(),[](auto bit) { return bit==0; }));
+        if (edition==o::OriginalEdition::Patch1078) {
+            CHECK(Hex(pool.Slot(sid))==partial(initial,true) && hash.Bucket(0,20,20)==sid.value);
+            CHECK(spots[20*256+20]==4 && std::count_if(spots.begin(),spots.end(),[](auto bit) { return bit!=0; })==1 && state.depth==0);
+        } else {
+            CHECK(Hex(pool.Slot(sid))==before && hash.Bucket(0,20,20)==0);
+            CHECK(std::all_of(spots.begin(),spots.end(),[](auto bit) { return bit==0; }));
+        }
         std::vector<o::Sid> connected;
         o::SquidPostPop post(pool,types,state,nullptr,[&](o::Sid target) { connected.push_back(target); });
         o::SquidPop pop(pool,hash,spots,nullptr,&post);
-        auto raw=pool.AllocatedBytes(sid); Put(raw,0,0xffffffff);
-        const auto invalid=Hex(raw);
-        CHECK(Throws([&] { pop.Pop(sid,types[82],1,1,20,20); })); CHECK(Hex(raw)==invalid);
-        // 전용 bridge 표만 복구하고 최초 등록을 수행한다.
+        prepare();auto raw=pool.AllocatedBytes(sid); Put(raw,0,0xffffffff);
+        const auto invalid=std::vector(raw.begin(),raw.end());
+        CHECK(Throws([&] { pop.Pop(sid,types[82],1,1,20,20); }));
+        if (edition==o::OriginalEdition::Patch1078) { CHECK(Hex(raw)==partial(invalid,false) && hash.Bucket(0,20,20)==sid.value && spots[20*256+20]==4); }
+        else CHECK(Hex(raw)==Hex(invalid));
+        // 독립 초기 입력에서 전용 bridge 표로 최초 등록을 수행한다.
+        prepare();
         Put(raw,0,edition==o::OriginalEdition::Patch1078 ? 0x005034c8 : 0x00501ab0);
         CHECK(pop.Pop(sid,types[82],1,1,20,20)==o::RawPopResult::Registered);
         CHECK((connected==std::vector<o::Sid>{sid})); CHECK(raw[edition==o::OriginalEdition::Patch1078 ? 40 : 35]&2);

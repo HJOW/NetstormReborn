@@ -231,6 +231,7 @@ target_sources(netstorm PRIVATE
     SquidFormDispatch.cpp SquidFormDispatch.h
     SquidUnpop.cpp SquidUnpop.h UnpopVtables.inc
     SquidPop.cpp SquidPop.h PopVtables.inc
+    RawSquidPopParent.cpp RawSquidPopParent.h #현재 TYPE/부분 공간 변경/진단 복귀의 실제 Pop 부모다(842).
     RawBuildingSpace.cpp RawBuildingSpace.h
     SquidDisplay.cpp SquidDisplay.h
     SquidFrame.cpp SquidFrame.h

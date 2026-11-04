@@ -34,6 +34,7 @@ SquidFrameHooks MakeSquidFrameHooks(SidPool& pool,std::span<const RiftTypeRecord
         [&pool,types,&display,&pop](Sid sid,float x,float y,std::uint32_t flags) {
             const auto number=pool.Slot(sid)[10];
             if (number>=types.size()) throw std::out_of_range("프레임 Pop 타입 번호 범위 오류");
+            if (pool.Edition()==OriginalEdition::Patch1078) { static_cast<void>(pop.Pop(sid,types[number],0,0,x,y,flags));return; } // 실제 표시기가 Pop의 spot 처리 뒤에 현재 SHP를 읽는다.
             const auto size=display.FrameSize(pool.Edition(),pool.Slot(sid),CurrentFrame(pool,sid));
             static_cast<void>(pop.Pop(sid,types[number],size[0],size[1],x,y,flags));
         }};

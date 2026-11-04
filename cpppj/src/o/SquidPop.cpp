@@ -1,5 +1,6 @@
 // 공간 쓰기 순서와 판본별 좌표/충돌 차이를 보존한다. 미복원 효과는 호출하지 않는다.
 #include "o/SquidPop.h"
+#include "o/SquidFactory.h"
 #include "o/RawMetadisplayDirty.h"
 #include "o/SquidUnpop.h"
 #include "o/Squid.h"
@@ -22,7 +23,7 @@ void SquidPop::SetMetadisplayDirty(const RawMetadisplayDirty* dirty) {
 namespace {
 // 정렬되지 않은 raw 필드의 원본 위치다.
 constexpr std::size_t kNext=4,kIsland=8,kType=10,kState=11,kX=14,kY=18,kScreenX=22,kScreenY=24;
-// 상태와 extra 비트다. free/transmitting 입력은 원본 assert 경로 대신 사전에 거부한다.
+// 상태와 extra 비트다. 아래 CD 전용 경계는 free/transmitting 입력을 사전에 거부한다.
 constexpr std::uint8_t kFree=1,kVoid=4,kContained=8,kTransmitting=16,kBuried=8,kFirstPop=128;
 // 영역 갱신/부착 효과를 요구하는 타입군과 spot 선택 마스크다.
 constexpr std::uint32_t kBuildingMask=0x50444200,kSpotMask=kBuildingMask|0x400ff;
@@ -70,11 +71,57 @@ bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32
     for (auto value:values) if (value==vtable) return SquidUnpop::SupportsDisplay(edition,vtable,flags);
     return false;
 }
-// 비전투 좌표→spot→체인→공통 표시→firstPop→Activate와 선택한 postPop 효과를 처리한다.
+// 실제 현재 TYPE는 같은 길이의 표를 빌리며 호출 중에는 선택된 장치만 요구한다.
+void SquidPop::BindDiagnostics(SquidPopDiagnostics diagnostics) {
+    if (!diagnostics.types.empty() && diagnostics.types.size()!=(pool_.Edition()==OriginalEdition::Patch1078 ? 188U : 171U)) throw std::invalid_argument("Pop 현재 TYPE의 판본/길이 오류");
+    diagnostics_=std::move(diagnostics);
+}
+// 실제 World는 호환 인자의 임의 TYPE/SHP 대신 선택 시점의 전체 현재 표/표시기를 사용한다.
+RawPopResult SquidPop::PopCurrent(Sid sid,float x,float y,std::uint32_t flags) {
+    if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("지연 현재 Pop은10.78 전용");
+    return PopPatch(sid,x,y,flags,nullptr,{});
+}
+// 기존 독립 fixture의 명시 TYPE/치수와 실제 World의 현재 조회를 같은 물리 부모에 연결한다.
+RawPopResult SquidPop::PopPatch(Sid sid,float x,float y,std::uint32_t flags,const RiftTypeRecord* fallback,std::array<float,2> size) {
+    SquidPopParentHooks effects;
+    effects.type=[this,fallback](std::uint8_t number)->const RiftTypeRecord& {
+        if (diagnostics_.types.empty()) { if (!fallback) throw std::logic_error("Pop 현재 전체 TYPE 미연결");return *fallback; }
+        if (number>=diagnostics_.types.size()) throw std::out_of_range("Pop 현재 TYPE 번호 범위");return diagnostics_.types[number];
+    };
+    effects.frameSize=[this,fallback,size](Sid object) {
+        const auto current=diagnostics_.frameSize;if (current) return current(object);
+        if (display_) { const auto raw=pool_.Slot(object);return display_->FrameSize(pool_.Edition(),raw,std::bit_cast<std::int32_t>(Read(raw,36))); }
+        if (!fallback) throw std::logic_error("Pop 현재 SHP 조회 미연결");return size; // 독립 입력의 치수는 실제 SHP 장치가 없는 경우에만 사용한다.
+    };
+    effects.metamap=[this] { const auto current=diagnostics_.metamap;return current ? current() : true; }; // 기존 독립 원문 fixture는00594fc8=1의 무로그 입력이다.
+    effects.trace=[this](auto level,auto text) { const auto current=diagnostics_.trace;if (!current) throw std::logic_error("Pop 실제 원문 로그 미연결");current(level,text); };
+    effects.assertion=[this](auto expression,auto file,auto line) { const auto current=diagnostics_.assertion;if (!current) throw std::logic_error("Pop 실제 원문 진단 미연결 "+std::to_string(line));current(expression,file,line); };
+    effects.miniMap=[this](Sid object,std::uint32_t) { if (metadisplay_) metadisplay_->Enqueue(object); }; // 실제 통지 helper도 활성 큐가 없으면 자연 반환한다.
+    effects.side=[this](int cx,int cy,float bx,float by) { if (!building_) throw std::logic_error("Pop 실제 건물 옆면 미연결");building_->PopSide(cx,cy,bx,by); };
+    effects.update=[this](Sid object,std::uint32_t requested) {
+        const auto raw=pool_.Slot(object);if (!SquidUnpop::SupportsDisplay(pool_.Edition(),Read(raw,0),requested)) throw std::logic_error("Pop 현재 파생 표시 갱신 미복원");
+        if (display_) display_->Update(raw,requested);
+    };
+    effects.firstPop=[this](Sid object) {
+        const auto raw=pool_.Slot(object);if (!SquidFactory::SupportsConstructedVtable(pool_.Edition(),Read(raw,0))) throw std::logic_error("Pop 현재 가상 firstPop 미복원");
+        const auto extra=raw[40];return (extra&9U)==0 ? 1U : ((extra&1U) ? 2U : 0U)|((extra&8U) ? 4U : 0U); // 보호83VT의+30은 모두004ad470이다. TYPE 생성자 쌍을 강제하지 않는다.
+    };
+    effects.activate=[this,&effects](Sid object,std::uint32_t requested) {
+        const auto view=pool_.Slot(object);auto raw=std::span<std::uint8_t>{const_cast<std::uint8_t*>(view.data()),view.size()};
+        if (!(raw[11]&4U)) effects.assertion("isVoid()","\\Ns\\O\\Squid.cpp",0x35c);
+        const auto state=raw[11];raw[11]&=0xfb;if (state&0x10U) effects.assertion("!xmitJustCreatedFlag","\\Ns\\O\\Squid.cpp",0x35f);
+        if (!(requested&8U)) requested|=0x10; // 기존 비전투 정규화다. 실제 서버 송신/현재 깊이 진단은 별도 잔여이며 이번 부모 완료로 숨기지 않는다.
+        if (postPop_) postPop_->Activate(object,requested);
+        else if (!Supports(pool_.Edition(),Read(raw,0),requested)) throw std::logic_error("Pop 현재 가상 후처리 미복원");
+    };
+    return RunSquidPopParent(pool_,hash_,spots_,sid,x,y,flags,diagnostics_.checking,effects);
+}
+// PATCH는 현재 원문 부모에 위임하고 CD는 기존 등록/지원 경계를 유지한다.
 RawPopResult SquidPop::Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,float frameHeight,
     float x,float y,std::uint32_t flags) {
+    if (pool_.Edition()==OriginalEdition::Patch1078) return PopPatch(sid,x,y,flags,&type,{frameWidth,frameHeight});
     const auto old=pool_.Slot(sid);
-    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const bool patch=false; // 아래는 기존 CD 전용 구현이며 PATCH 부모의 현재 진단을 섞지 않는다.
     if (!sid.value || (old[kState]&kVoid)==0 || (old[kState]&kContained)!=0) {
         if (patch) return RawPopResult::Unchanged;
         throw std::logic_error("CD Pop은 유효한 void 객체가 필요합니다");

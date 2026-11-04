@@ -133,6 +133,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         postPop->SetSurfacePrefix([this](o::Sid sid,std::uint32_t flags) { surface->Prefix(sid,flags); });
         unpop=std::make_unique<o::SquidUnpop>(pool,hash,spots,display.get());pop=std::make_unique<o::SquidPop>(pool,hash,spots,display.get(),postPop.get());
         unpop->BindDiagnostics({storage->Checking(),types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // 첫 Session 전에도 같은 현재 Client 진단/TYPE를 쓴다.
+        pop->BindDiagnostics({storage->Checking(),types,{},[owner=storage.get()] { return owner->ownerMode.challenge; },[owner=storage.get()](auto level,auto text) { owner->TraceGraph(level,text); },[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // 좌표/spot 뒤 현재 SHP·같은 Client 진단/로그를 사용한다.
         o::SquidContainedUnpopHooks containedHooks;
         containedHooks.parent=[this](o::Sid sid) { return o::CommonContainedParent(pool,sid); }; // 현재 실제 VT의 부모 getter를 사용한다.
         containedHooks.previous=[this](o::Sid sid) { return o::CommonContainedPrevious(pool,sid); }; // Form과 자산의 서로 다른 WORD를 읽는다.
@@ -230,9 +231,10 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     void Assertion(std::string_view expression,std::string_view file,std::uint32_t line) override { storage->AssertDisplay(expression,file,line); } // 현재 진단 복귀를 실제 표시 부모에 돌려준다.
     // 현재 raw 프레임의 SHP 크기로 실제 공간과 파생 postPop을 등록한다.
     void Pop(o::Sid sid,float x,float y,std::uint32_t flags) {
-        if (edition==o::OriginalEdition::Patch1078 && (!sid.value || sid.value>=pool.Capacity())) return; // 원문4b02d0의범위밖this는타입/그림을조회하기전에자연반환한다.
+        if (edition==o::OriginalEdition::Patch1078) {
+            const auto result=pop->PopCurrent(sid,x,y,flags);if (result!=o::RawPopResult::Unchanged) changed=true;return; // 원문 앞단/좌표/spot 뒤에 현재 TYPE/SHP를 조회한다.
+        }
         const auto raw=pool.Slot(sid);
-        if (edition==o::OriginalEdition::Patch1078 && (!(raw[11]&4U) || (raw[11]&8U))) return; // nonvoid/contained도원문앞단에서끝나므로유효하지않은프레임을새로조회하지않는다.
         const auto number=static_cast<std::int32_t>(Read(raw,edition==o::OriginalEdition::Patch1078 ? 36 : 34,edition==o::OriginalEdition::Patch1078 ? 4 : 1));
         const auto size=display->FrameSize(edition,raw,number);
         const auto result=pop->Pop(sid,types[raw[10]],size[0],size[1],x,y,flags);

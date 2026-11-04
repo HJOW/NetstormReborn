@@ -2,6 +2,7 @@
 #pragma once
 #include "o/SidPool.h"
 #include "o/SquidHash.h"
+#include "o/RawSquidPopParent.h"
 
 namespace netstorm::o {
 class SquidDisplay;
@@ -17,9 +18,11 @@ public:
     // Unpop과 같은 풀/해시/spot을 받는다. 공통 표시·비용/목록/통계 후처리를 선택 연결한다.
     SquidPop(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,SquidDisplay* display=nullptr,SquidPostPop* postPop=nullptr);
     // 004b02d0 ↔ CD 004ad490. 현재 SHP 프레임 크기로 단계를 정하고 실제 raw 공간 필드를 갱신한다.
-    // 공통 firstPop/postPop과 명시 연결한 파생·건물 옆면을 지원한다. 미연결 효과는 사전 거부한다.
+    // PATCH는 도달한 지점에서 현재 TYPE/프레임/효과를 조회하며 앞선 부분 변경을 유지한다. CD는 기존 사전 검사를 유지한다.
     RawPopResult Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,float frameHeight,
         float x,float y,std::uint32_t flags=0);
+    void BindDiagnostics(SquidPopDiagnostics diagnostics); // 같은 현재 TYPE/Client 진단과 선택적 지연 SHP 조회를 연결한다.
+    RawPopResult PopCurrent(Sid sid,float x,float y,std::uint32_t flags=0); // 실제 PATCH World는 사전 TYPE/SHP 조회 없이 같은 현재 표와 실제 표시기를 사용한다.
     // 원본 가상 주소를 메타데이터로 비교한다. 호스트 포인터로 호출하지 않는다.
     static bool Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags);
     // 프레임 변경의 제자리 갱신과 재등록이 같은 풀/표시 대상을 쓰는지 확인한다.
@@ -30,6 +33,8 @@ public:
     void SetMetadisplayDirty(const RawMetadisplayDirty* dirty);
     bool ReleaseMetadisplayDirty(const RawMetadisplayDirty* expected); // 같은 관측자 대여만 끊는다. 이후 연결한 새 미니맵의 대여는 유지한다.
 private:
+    RawPopResult PopPatch(Sid sid,float x,float y,std::uint32_t flags,const RiftTypeRecord* fallback,std::array<float,2> size); // 독립 명시 입력과 실제 현재 World를 같은 원문 부모로 실행한다.
+    SquidPopDiagnostics diagnostics_; // 전체 TYPE/장치의 수명은 이 실행기보다 길어야 한다.
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
     // hash_: 좌표별 객체 후보를 찾는 공간 해시.

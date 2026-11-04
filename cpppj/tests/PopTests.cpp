@@ -138,18 +138,17 @@ TEST_CASE(SquidPop_Vtables_RejectsUnrestoredPostPopOverrides) {
     CHECK(rows==151);
 }
 
-// 미복원 효과와 잘못된 상태는 raw 공간 쓰기 전에 실패해야 한다.
-TEST_CASE(SquidPop_Guards_PreservesRawPoolAndMap) {
-    SidPool pool(OriginalEdition::Patch1078,32768,false); auto types=Types(pool.Edition()); SquidFactory factory(pool,types);
-    SquidHash hash; std::vector<std::uint8_t> spots(kWorldCells*kWorldCells); SquidPop pop(pool,hash,spots);
-    const auto sid=factory.Create(74,2); const auto before=std::vector<std::uint8_t>(pool.Bytes().begin(),pool.Bytes().end());
+// 도달하지 않는 옆면 장치는 요구하지 않으며 invalid start 진단 앞의 좌표 쓰기는 유지한다.
+TEST_CASE(SquidPop_SelectedGuards_PreserveOriginalPartialWrites) {
+    SidPool pool(OriginalEdition::Patch1078,32768,false);auto types=Types(pool.Edition());SquidFactory factory(pool,types);
+    SquidHash hash;std::vector<std::uint8_t> spots(kWorldCells*kWorldCells);SquidPop pop(pool,hash,spots);const auto sid=factory.Create(74,2);
     types[74].flags2=0x4000;
-    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,30,40); }));
-    types[74].flags2=0x11; types[74].footX=40;
-    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,30,40); }));
-    CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));
-    CHECK(std::all_of(spots.begin(),spots.end(),[](auto v){return v==0;}));
-    CHECK(hash.Bucket(1,30,40)==0);
+    CHECK(pop.Pop(sid,types[74],1,1,30,40)==RawPopResult::Registered && hash.Bucket(1,30,40)==sid.value);
+    auto raw=pool.AllocatedBytes(sid);raw[11]=4;hash.Reset();types[74].flags2=0x11;types[74].footX=40; // 다음 명시 입력은 별도 void/빈 해시에서 시작한다.
+    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,35,44); }));
+    CHECK(std::bit_cast<float>(std::uint32_t(raw[14])|(std::uint32_t(raw[15])<<8)|(std::uint32_t(raw[16])<<16)|(std::uint32_t(raw[17])<<24))==35);
+    CHECK(raw[22]==0x30 && raw[23]==2 && raw[24]==0xe4 && raw[25]==1 && raw[11]==4);
+    CHECK(std::all_of(spots.begin(),spots.end(),[](auto value){return value==0;}) && hash.Bucket(1,35,44)==0);
 }
 
 // CD 디컴파일의 정수 캐스트 표현과 달리 양 판본은 0<x<1의 실제 float 좌표를 보존한다.

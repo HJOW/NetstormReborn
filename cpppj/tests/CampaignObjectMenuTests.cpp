@@ -714,3 +714,16 @@ TEST_CASE(FactoryTakeDiagnostics_ActualSessionUsesSameStorageDetail) { // 실제
     const auto expected=std::string("Invalid take. Server type ")+session.Core().types[74].name+", client type "+session.Core().types[75].name;
     CHECK(factory.Take(74,object)==object && assertions==1 && detail==expected && bytes[10]==74);
 }
+
+TEST_CASE(SquidPopParent_ActualSessionLateFrameLookup) { // 실제 Session이 다시 연결한 Pop도 좌표/spot 뒤 현재 SHP를 조회한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();
+    auto& type=session.World().Storage()->types[74];type.flags1=0;type.flags2=1;type.footX=type.footY=1;std::array<int,2> point{};
+    for (int y=1;y<256 && !point[0];++y) { // 기존 월드에서 비어 있는 실제 점유 칸을 찾는다.
+        for (int x=1;x<256;++x) if (!core.spots[y*256+x]) { point={x,y};break; } // 원래 데이터를 지우거나 적/유닛을 조작하지 않는다.
+    }
+    CHECK(point[0]!=0);const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);
+    for (std::size_t index=0;index<4;++index) raw[36+index]=0xff; // 명시한 새 슬롯의 현재 SHP 프레임만 범위 밖으로 둔다.
+    CHECK(Throws([&] { session.World().Pop(source,float(point[0]),float(point[1]),0x40); }));
+    CHECK(core.spots[point[1]*256+point[0]]==1 && raw[11]==4 && !(raw[40]&0x80U));
+    CHECK(std::bit_cast<float>(std::uint32_t(raw[14])|(std::uint32_t(raw[15])<<8)|(std::uint32_t(raw[16])<<16)|(std::uint32_t(raw[17])<<24))==float(point[0]));
+}

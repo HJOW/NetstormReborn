@@ -3393,3 +3393,8 @@ target_sources(netstorm_menu_session_tests PRIVATE DaisCheckingParentsTests.cpp 
 # Take의 진단 복귀/상세 소유자와 기존 생성 fixture는 창·게임·통신 없이 같은 집중 대상에서 검사한다.
 target_sources(netstorm_tests PRIVATE FactoryTakeDiagnosticsTests.cpp)
 target_sources(netstorm_file_tests PRIVATE FactoryTakeDiagnosticsTests.cpp)
+
+# 공통 Pop의 현재 부모와 기존 공간·후처리·프레임 원문 기대값을 게임 없이 집중 대조한다(842).
+target_sources(netstorm_tests PRIVATE SquidPopParentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE SquidPopParentTests.cpp BuildingSpaceTests.cpp PostPopTests.cpp FrameDisplayTests.cpp SetFrameTests.cpp)
+target_compile_definitions(netstorm_pop_context_tests PRIVATE ${_netstorm_menu_session_definitions})
