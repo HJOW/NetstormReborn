@@ -98,7 +98,7 @@ std::int32_t SquidReward::TypeHitPoints(std::uint32_t type) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto& record=TypeRecord(type);
     // 패치판 디버그 assert는 HP 비트가 없는 타입(dais 제외)의 조회를 보고한다. 보고 UI는 복원하지 않으므로 거부한다.
-    if (patch && state_.debugAsserts && !(record.flags1&kHasHp) && type!=state_.types.dais)
+    if (patch && state_.debugAsserts && !(record.flags1&kHasHp) && type!=state_.DaisType())
         throw std::logic_error("보상 타입 HP assert 위반");
     return state_.PriestQuarterHp() && type==state_.PriestType() ? record.maxHitPoints/4 : record.maxHitPoints; // 1/4 비교 대상은 현재 사제 TYPE DWORD다(단위862).
 }
@@ -112,13 +112,13 @@ std::int32_t SquidReward::MaxHitPoints(Sid sid) const {
     const std::size_t extra=pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35;
     if (!(type.flags2&kDaisKind)) return TypeHitPoints(raw[kType]);
     // dais 부류는 켜져 있을 때 altar의 HP를 쓰고 꺼져 있으면 0이다.
-    return (raw[extra]&1) ? TypeHitPoints(state_.types.none) : 0;
+    return (raw[extra]&1) ? TypeHitPoints(state_.AltarType()) : 0;
 }
 std::int32_t SquidReward::CostCurve(std::uint32_t type,std::int32_t count) const {
     if (type>=CurrentTypes().size()) throw std::out_of_range("보상 비용 타입 범위 오류");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     // altar/dais는 개수를 하나 줄여서 곡선에 넣는다.
-    const auto n=(type==state_.types.none || type==state_.types.dais) ? Wrap(static_cast<std::int64_t>(count)-1) : count;
+    const auto n=(type==state_.AltarType() || type==state_.DaisType()) ? Wrap(static_cast<std::int64_t>(count)-1) : count;
     if (n<0) return 0;
     if (patch) {
         // 같은 float 단가를 n+1번 누적한다. 정수 단가×항 수가 정확히 표현되는 범위만 지원한다.
@@ -135,7 +135,7 @@ std::int32_t SquidReward::CostCurve(std::uint32_t type,std::int32_t count) const
 float SquidReward::SalvageCost(std::uint32_t type,std::int32_t count) const {
     if (type>=CurrentTypes().size()) throw std::out_of_range("보상 환불 타입 범위 오류");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    const auto n=(type==state_.types.none || type==state_.types.dais) ? Wrap(static_cast<std::int64_t>(count)-1) : count;
+    const auto n=(type==state_.AltarType() || type==state_.DaisType()) ? Wrap(static_cast<std::int64_t>(count)-1) : count;
     float result=0.0f;
     if (patch) {
         double sum=0.0;
@@ -145,14 +145,14 @@ float SquidReward::SalvageCost(std::uint32_t type,std::int32_t count) const {
             if (std::fabs(sum)>=kExactLimit) throw std::out_of_range("보상 비용 곡선 누적 범위 오류");
         }
         // 합계는 x87 스택에 남은 채 배율을 곱하고 호출자가 float로 저장한다.
-        result=static_cast<float>(type!=state_.types.fullValue ? sum*kSalvageScale : sum);
+        result=static_cast<float>(type!=state_.NuggetType() ? sum*kSalvageScale : sum);
         return result;
     }
     if (n>=0) result=static_cast<float>(static_cast<double>(static_cast<std::int64_t>(n)+1)*static_cast<double>(TypeRecord(type).cost));
-    return type!=state_.types.fullValue ? static_cast<float>(static_cast<double>(result)*kSalvageScale) : result;
+    return type!=state_.NuggetType() ? static_cast<float>(static_cast<double>(result)*kSalvageScale) : result;
 }
 std::int32_t SquidReward::SalvageRefund(Sid sid,std::uint32_t type,std::int32_t count) const {
-    if (type==state_.types.alias) return 0;
+    if (type==state_.AliasType()) return 0;
     const float cost=SalvageCost(type,count);
     if (!HasHitPoints(sid)) return Ftol(static_cast<double>(cost));
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
@@ -177,14 +177,17 @@ SquidRewardResult SquidReward::Plan(Sid sid,std::uint32_t recipient,bool salvage
     const auto raw=Raw(sid);
     if (recipient>kPlayerCount) throw std::out_of_range("보상 수신자 번호는 0~8이어야 합니다");
     const auto type=static_cast<std::uint32_t>(raw[kType]);
-    if (type==state_.types.none || (!salvage && type==state_.types.silent)) return {};
-    // 가상 개수는 원본처럼 호출마다 다시 묻는다. 훅은 상태를 바꾸지 않아야 한다.
+    if (type==state_.AltarType() || (!salvage && type==state_.SilentType())) return {};
+    // 첫 TYPE는 가상Count 전에 저장하며 이후 별칭/환불의 현재 조회 순서는 원문 판본대로 구별한다.
     auto cost=CostCurve(type,Count(sid));
-    if (raw[kType]==state_.types.alias) cost=CostCurve(state_.types.silent,Count(sid));
+    if (raw[kType]==state_.AliasType()) { const auto count=Count(sid);cost=CostCurve(state_.SilentType(),count); } // 양판본은 Count 뒤의 현재005412a4/CD0051cb90을 읽는다.
     if (cost==0) return {};
-    std::int32_t refund=salvage ? SalvageRefund(sid,raw[kType],Count(sid))
-                                : Wrap(static_cast<std::int64_t>(static_cast<std::int32_t>(
-                                      static_cast<std::uint32_t>(state_.Percent())*static_cast<std::uint32_t>(cost)))/100);
+    std::int32_t refund;
+    if (salvage) {
+        auto refundType=static_cast<std::uint32_t>(raw[kType]);const auto count=Count(sid);
+        if (pool_.Edition()==OriginalEdition::Cd1072) refundType=raw[kType]; // PATCH0044c37f는 Count 전, CD00462784는 Count 후의 현재 TYPE를 저장한다.
+        refund=SalvageRefund(sid,refundType,count);
+    } else refund=Wrap(static_cast<std::int64_t>(static_cast<std::int32_t>(static_cast<std::uint32_t>(state_.Percent())*static_cast<std::uint32_t>(cost)))/100);
     if (recipient==0) refund=0;
     return {true,cost,refund};
 }

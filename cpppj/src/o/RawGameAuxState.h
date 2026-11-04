@@ -51,6 +51,16 @@ public:
     const std::uint32_t& StreakProcessType() const { return streakProcessType_; } // Runtime 교체/일반 월드 준비로12의 새 사본을 만들지 않는다.
     std::uint32_t& FlyerProcessType() { return flyerProcessType_; } //005410ec의 현재 비행 프로세스 TYPE를 생성/홈 조회가 같은 주소에서 읽는다.
     const std::uint32_t& FlyerProcessType() const { return flyerProcessType_; } // Session 교체나 일반 월드 준비로31의 새 사본을 만들지 않는다.
+    std::uint32_t& AltarType() { return altarType_; } //005412e8의 현재 제단 TYPE를 보상/HP가 같은 주소에서 읽는다.
+    const std::uint32_t& AltarType() const { return altarType_; } // 일반 월드 준비와 Session 교체로164를 다시 쓰지 않는다.
+    std::uint32_t& DaisType() { return daisType_; } //005412ec의 현재 다이스 TYPE를 비용 개수/HP 예외가 공유한다.
+    const std::uint32_t& DaisType() const { return daisType_; } // 최초165를 현재 owner의 값과 구별한다.
+    std::uint32_t& RainBlockerType() { return rainBlockerType_; } //005412a4의 현재 레인 바리케이드 TYPE를 보상/일반 삭제가 공유한다.
+    const std::uint32_t& RainBlockerType() const { return rainBlockerType_; } // 성장형 비용 별칭도 같은 현재 DWORD를 읽는다.
+    std::uint32_t& GrowingRainBlockerType() { return growingRainBlockerType_; } //005412b0의 현재 성장형 TYPE이며 비용 별칭/환불 제외를 선택한다.
+    const std::uint32_t& GrowingRainBlockerType() const { return growingRainBlockerType_; } // 현재150 초기값의 사본을 Session마다 만들지 않는다.
+    std::uint32_t& NuggetType() { return nuggetType_; } //005412c0의 현재 너겟 TYPE이며 보상 환불의 전액 단가 관문이다.
+    const std::uint32_t& NuggetType() const { return nuggetType_; } // 같은 장기 owner를 후속 운반/채집 소비자도 빌릴 수 있다.
     std::uint32_t& SupportTypeWas() { return supportTypeWas_; } //0054d4e4: 불완전한 받침 상세가 읽는 현재 DWORD다. MP 수신 writer 연결은 별도 잔여다.
     const std::uint32_t& SupportTypeWas() const { return supportTypeWas_; } // 일반 월드 준비/Session 교체로 현재 진단 문맥을 초기화하지 않는다.
     std::uint32_t& FirstTimerFactoryType() { return firstTimerFactoryType_; } //005411ac의 현재 DWORD를 Factory 최초 event2가 읽는다.
@@ -93,6 +103,9 @@ private:
     std::uint32_t geyserType_{122},subscriberMarker_{}; // 보호 PE TYPE122와 별도BSS 표지다.
     std::uint32_t fieryTailProcessType_{11},streakProcessType_{12}; // 보호10.78의 두 TYPE 전역 초기값이며 Session보다 오래 유지한다.
     std::uint32_t flyerProcessType_{31}; // 보호 PE005410ec의 초기 DWORD이며 홈/생성·후속 writer가 공유할 장기 물리다.
+    std::uint32_t altarType_{164},daisType_{165}; // 보호 PE005412e8/005412ec의 두 초기 DWORD이며 일반 월드 준비에서 초기화하지 않는다.
+    std::uint32_t rainBlockerType_{147},growingRainBlockerType_{150}; //005412a4/005412b0의 현재 두 TYPE 번호이며 TYPE 기록 표와 별개다.
+    std::uint32_t nuggetType_{154}; //005412c0의 최초154를 한 번만 소유하고 Session 재대여로 덮어쓰지 않는다.
     std::uint32_t supportTypeWas_{}; //0054d4e4의 최초 BSS0이며 진단 소비자와 이후 수신 writer가 공유할 장기 물리다.
     std::uint32_t firstTimerFactoryType_{85},secondTimerFactoryType_{87},outpostType_{126}; // 보호10.78 PE의 세 TYPE DWORD 초기값이며 일반 Runtime 초기화와 구별한다.
     std::uint32_t terrainType_{97},edgeFarmType_{121}; // 보호 PE 두 TYPE 전역이며 현재 Runtime 대여/반납은 초기화하지 않는다.

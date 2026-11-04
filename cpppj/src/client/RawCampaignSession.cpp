@@ -871,6 +871,9 @@ struct RawCampaignSession::Impl {
         rewardState.sharedPercent=&gameplayGlobals->GameAux()->RefundPercent();rewardState.sharedGeyserPool=&gameplayGlobals->GameAux()->ResourcePool(); // 실제 Reward/LocalGeyser의 같은 물리다.
         rewardState.sharedPriestQuarterHp=&gameplayGlobals->GameAux()->PriestQuarterHp(); // State 직접 쓰기와 기존 HP setter/최대HP가 같은 현재 전역을 쓴다.
         rewardState.sharedPriestType=&priestState.movement.priest; // 0049fce0의 1/4 비교와 사제 회복 분자가 같은 장기005412d0을 읽는다(단위862).
+        rewardState.sharedAltarType=&gameplayGlobals->GameAux()->AltarType();rewardState.sharedDaisType=&gameplayGlobals->GameAux()->DaisType(); // 비용 곡선/다이스HP의 현재 두 TYPE 번호를 같은 장기 owner에서 빌린다.
+        rewardState.sharedSilentType=damageablePostState.sharedSilentSurfaceType=&gameplayGlobals->GameAux()->RainBlockerType(); // 보상과 일반 삭제의 같은005412a4를 연결한다.
+        rewardState.sharedAliasType=&gameplayGlobals->GameAux()->GrowingRainBlockerType();rewardState.sharedNuggetType=&gameplayGlobals->GameAux()->NuggetType(); // 별칭 비용/환불의 현재 성장형·너겟 번호다.
         hp.BindCurrentTypes(core.types); // 실제 PATCH의 최대HP/HP 플래그가 World의 같은 현재 TYPE 표를 읽는다. 별도 정수 비용 캐시는 유지한다(단위863).
         hp.BindLoadedCosts(assets.game.TypeTable().Types()); // Session 교체 뒤에도 최초 로딩 비용표를 읽고 현재 TYPE+c4 float 쓰기와 분리한다(단위865).
         priestState.regen.patch.sharedChangedSample=&gameplayGlobals->PatchDiagnostic();motionState.search.sharedPolicySelector=&gameplayGlobals->PatchDiagnostic(); // 최초 객체 생성 전에 추적 writer와 BFS가 같은 장기005318ec을 직접 빌린다.

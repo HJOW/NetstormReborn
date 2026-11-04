@@ -1,0 +1,227 @@
+{
+ "unit": 869,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "8b81819b / 20261105-02 CP",
+ "exeSha256": "1b1277aedfb2c32ed3d2b1fd8bb00eccd1f6db13d2a1e92aa920dd3303ef53c9",
+ "exeBytes": 10592256,
+ "scope": [
+  "RawGameAuxState의 제단/다이스/일반·성장 레인 바리케이드/너겟 다섯 현재 TYPE 번호",
+  "보상 HP/비용/제외/별칭·전액 배율과 일반 삭제의 같은 현재 번호 대여",
+  "양판본 Count 뒤 별칭 번호 및 PATCH Count 전/CD Count 후 환불 TYPE 저장 명시",
+  "실제 두Session의 Load 없는 같은 owner 재대여 조회"
+ ],
+ "sourceSha256": {
+  "cpppj/src/o/RawGameAuxState.h": "12f1bfbe67184f72f147a93b8b49646cc8de4786e628ee29c2cf7c3cf866389d",
+  "cpppj/src/o/SquidReward.h": "7c236fb67f0ea434a89269c2399528d7dec03c36496bc205d491c25208a9da4b",
+  "cpppj/src/o/SquidReward.cpp": "f8684b517a52baf8cbb7234da222ce1e01daea700b259525c6d252537c2e8ae7",
+  "cpppj/src/o/RawDamageablePostDestroy.h": "e68b4210a5790240e3cf1b4e07cdbfe34d1f4c1379e20b836f20537ce995d1fe",
+  "cpppj/src/o/RawDamageablePostDestroy.cpp": "6c2e960e4da1c2af567c408068ac7cf1e3b5b3bbc044bfaed56d99112031888b",
+  "cpppj/src/client/RawCampaignSession.cpp": "77bbc2e02eb517571afd2d03fde794bb81a9718e2827f2877cb3d8b7fc4a695a",
+  "cpppj/tests/CMakeLists.txt": "49defc417bca723310ed5e0a9f301908292fb8d1828fa019a2b1a9f2bbbd4024",
+  "cpppj/tests/RewardTypeNumberTests.cpp": "1872cc5af8799f281e9f770073f7fad205f3c6c42ac76a8d158b5bf2aaa229bc",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "f40f86d6b3dee895cc4193d9d2ecd48a49b2725f948c3a897a9938e37d8af4c8"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/o/RawGameAuxState.h": "12f1bfbe67184f72f147a93b8b49646cc8de4786e628ee29c2cf7c3cf866389d",
+  "cpppj/src/o/SquidReward.h": "7c236fb67f0ea434a89269c2399528d7dec03c36496bc205d491c25208a9da4b",
+  "cpppj/src/o/SquidReward.cpp": "f8684b517a52baf8cbb7234da222ce1e01daea700b259525c6d252537c2e8ae7",
+  "cpppj/src/o/RawDamageablePostDestroy.h": "e68b4210a5790240e3cf1b4e07cdbfe34d1f4c1379e20b836f20537ce995d1fe",
+  "cpppj/src/o/RawDamageablePostDestroy.cpp": "6c2e960e4da1c2af567c408068ac7cf1e3b5b3bbc044bfaed56d99112031888b",
+  "cpppj/src/client/RawCampaignSession.cpp": "77bbc2e02eb517571afd2d03fde794bb81a9718e2827f2877cb3d8b7fc4a695a",
+  "cpppj/tests/CMakeLists.txt": "49defc417bca723310ed5e0a9f301908292fb8d1828fa019a2b1a9f2bbbd4024",
+  "cpppj/tests/RewardTypeNumberTests.cpp": "1872cc5af8799f281e9f770073f7fad205f3c6c42ac76a8d158b5bf2aaa229bc",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "f40f86d6b3dee895cc4193d9d2ecd48a49b2725f948c3a897a9938e37d8af4c8"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-869/originalCD-004626d0.c": "98ce48045a92fe5f23a1386d974e96232c84145b60529d2260d9fc9eb818e852",
+  "extracted/cpp-resume-869/originals-0043cb30.c": "11557846e00a8c39bb29b497fc389d8032b888f6b10bfa0204d76d8fe4b1255f",
+  "extracted/cpp-resume-869/originals-0044b220.c": "f4fae2b4bbfe63038f1db980c02269b0474c711745a4758e58d9513ce1cfea80",
+  "extracted/cpp-resume-869/originals-0044b9e0.c": "89dd0a364f3e076ba8aa8d5abfc417597e5f972b1dc3e757b36bc7ff28716053",
+  "extracted/cpp-resume-869/originals-0044c2f0.c": "ecd3602986e4eec8242725d2ccf4c04745ee2085430f0df9d0eb398a931ae227",
+  "extracted/cpp-resume-869/originals-0048ebe0.c": "7895bb2a454a914169569a28b0a2de0acc88bd965c61f3921671fa1d6ec6aa02",
+  "extracted/cpp-resume-869/originals-0048edf0.c": "e9dd062b6f35b122b58d0821772a1cfe23856ad15c45067d201501a42a475dab",
+  "extracted/cpp-resume-869/originals-0049ebb0.c": "f2aea7f33102e00f76b0591c9f0f9a0f328ea21dd3474ace39f0a134e6a130af",
+  "extracted/cpp-resume-869/originals-0049fce0.c": "f9c4da47136773e66ddc9ec1505f0853eb9c9f12417700917d135564d76f9bbc",
+  "extracted/cpp-resume-869/originals-004adc60.c": "9ed2c9e389244a326bc1bbaf960d80b5ce0decd24e1e6e138a6ef1df83a2ff2e",
+  "extracted/cpp-resume-869/originals-004adcb0.c": "a8dde28c04a9bdf7cfed600b316681fc78f152056e1b2b37081bcb34696c0b4a",
+  "extracted/cpp-resume-869/originals-004b0950.c": "fd0d3b9bb060ab889c574feeb042e0f37833e1c6d266b515fe1898ad50001f9f",
+  "extracted/cpp-resume-869/originals-004fcbe0.c": "2d66baf2bca2e326021aff90adde5ab620cbe585c48a4a25ad1405611f24f74a"
+ },
+ "assemblySha256": {
+  "originalCD-reward-assembly.txt": "0213b9faab1e2609d00466ab8309d9462d02cb2f0aba819916cc04d7c073141a",
+  "originals-reward-assembly.txt": "52ee780096d2dd9d5e30821b9882d22c0ba12dfcc0263b6fab21c8e475b2c0f4"
+ },
+ "peInitialGlobals": {
+  "005412e8": 164,
+  "005412ec": 165,
+  "005412a4": 147,
+  "005412b0": 150,
+  "005412c0": 154
+ },
+ "staticConsumerAudit": {
+  "unconvertedRewardFiveNumberReads": [],
+  "currentGetterOccurrences": {
+   "AltarType": 4,
+   "DaisType": 3,
+   "SilentType": 2,
+   "AliasType": 2,
+   "NuggetType": 2
+  },
+  "generalPostCurrentGetter": 1
+ },
+ "validation": {
+  "cases": 33,
+  "uniqueCasesVerifiedFromNames": true,
+  "groups": 8,
+  "newCases": 8,
+  "newPureCases": 7,
+  "newActualSessionGetterCases": 1,
+  "sequentialSessionsWithoutLoadInNewCase": 2,
+  "firstFailedCases": 0,
+  "finalFailedCases": 0,
+  "failedChecks": 0,
+  "productOrTestChangesAfterFirstBuild": 0,
+  "newNativeObservations": 0,
+  "newFixtures": 0,
+  "fixtureExpectationsChanged": false,
+  "manualExpectationCorrections": 0,
+  "builds": [
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 901.3841669999999,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-869/build-first.log",
+    "sha256": "d9a4ab388a2b9af4f2058aebe4402d5f59cae59b5af557de4b39b6b38d74be38",
+    "targets": [
+     "NetstormCpp",
+     "netstorm_pop_context_tests",
+     "netstorm_menu_session_tests"
+    ]
+   }
+  ],
+  "executions": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "RewardTypeNumber_",
+    "cases": 7,
+    "expectedCases": 7,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-869/test-type-numbers-first.log",
+    "sha256": "74e3955484bd3a5d00ea209be51dc64c8b0ec9cec8203ea7a29fa43da701d580"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "RewardTypeNumber_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-869/test-type-number-session-first.log",
+    "sha256": "bf1d5c16e78310f7d4716c80b71b909091fcb5be80edbd1e21a13e8f17fba07f"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "reward_",
+    "cases": 9,
+    "expectedCases": 9,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-869/test-reward-native-first.log",
+    "sha256": "b74226b7552ec6720cacb596c7b85fff225bed018315f844f2468df88d403220"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "RewardCurrentTypes_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-869/test-reward-current-first.log",
+    "sha256": "c1ce5a43fdf88d0d98cbd932a21671280b93cb1cb4a17af3ccc701efe04a3c57"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "LoadedCostTable_",
+    "cases": 4,
+    "expectedCases": 4,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-869/test-loaded-cost-first.log",
+    "sha256": "dface785aed9a54251d27fdbc74f44c05a65acc0e1c413acbbcbb996f1dd2e4b"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "DamageablePostDestroy_",
+    "cases": 4,
+    "expectedCases": 4,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-869/test-postdestroy-first.log",
+    "sha256": "3346ca263fecc95e7ba5dad95452d22675f2d2b3a26d51c9b5bee84b49cb2165"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "LoadedCostTable_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-869/test-loaded-session-first.log",
+    "sha256": "b7cc4d9114c429788bdc6b8f76507cab78825941876cba878fa9b34b26d8de19"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "GameAux_Reward",
+    "cases": 2,
+    "expectedCases": 2,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-869/test-reward-globals-first.log",
+    "sha256": "0444c9ecdbffbc89b6be1554f3e77be7dc8c685bde5eaa1320ce20387303c6ce"
+   }
+  ],
+  "fixturesSha256": {
+   "reward-x86.tsv": "a1fedbc77eca2e3f73976138aec2ea15d10a50b90967400b1f0ca6f6e5a8879c",
+   "damageablepostdestroy-x86.tsv": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b"
+  }
+ },
+ "protection": {
+  "count": 2761,
+  "fixtures": 941,
+  "unchanged": true,
+  "snapshot": "extracted/cpp-resume-869/protected-after.json"
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "completedParents": 38,
+  "completedPartial": 3,
+  "note": "이번 단위는 현재 TYPE 번호 연결이며 legacy51 checking 집계 감소0. 868 공중 전용 동작 검사는 여전히 생략 상태다."
+ },
+ "limits": [
+  "독립/CD는 별도 타입 번호 주소 대여가 없으면 기존 state.types 값을 쓴다",
+  "현재 TYPE 기록/번호와 최초 정수 비용 캐시는 별도이며 기존 물리/비유한/비용곡선·HP 진단 호스트 경계를 유지한다",
+  "다른 Rune/다이스 의식·운반/내용물·채집/건설/덱 소비자 사본은 후속 잔여다",
+  "실제 게임/GUI·포획/희생/특정 적 공격/승리·공중3종 전용·신규 MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복 제외"
+ ],
+ "next": {
+  "unit": 870,
+  "scope": "Rune/다이스의 현재 제단·다이스 번호와 공유 getter/메뉴·참여자·AI 연결. 다른 너겟 소비자는 후속으로 분리한다.",
+  "staticInventory": "extracted/cpp-resume-869/next-type-number-consumers.json"
+ }
+}

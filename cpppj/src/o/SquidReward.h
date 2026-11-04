@@ -44,6 +44,14 @@ struct SquidRewardState {
     const std::uint32_t* sharedPriestType{};
     // 최대HP 조회 시점의 현재 사제 TYPE 번호를 읽는다. 사본을 보관하지 않는다(단위862 추가).
     std::uint32_t PriestType() const { return sharedPriestType ? *sharedPriestType : types.priest; }
+    const std::uint32_t* sharedAltarType{};const std::uint32_t* sharedDaisType{}; // 실제005412e8/005412ec의 현재 장기 owner이며 독립 구성은 기존 types 사본을 쓴다.
+    const std::uint32_t* sharedSilentType{};const std::uint32_t* sharedAliasType{}; //005412a4/005412b0의 현재 일반/성장 레인 바리케이드 TYPE다.
+    const std::uint32_t* sharedNuggetType{}; //005412c0의 현재 너겟 TYPE이며 TYPE float 비용과 별개다.
+    std::uint32_t AltarType() const { return sharedAltarType ? *sharedAltarType : types.none; } // 현재 보상 제외·개수 보정·다이스 최대HP의 제단 번호다.
+    std::uint32_t DaisType() const { return sharedDaisType ? *sharedDaisType : types.dais; } // 현재 HP 예외/개수 보정의 다이스 번호다.
+    std::uint32_t SilentType() const { return sharedSilentType ? *sharedSilentType : types.silent; } // 삭제 보상 제외와 성장형 비용 별칭을 같은 현재 번호로 판단한다.
+    std::uint32_t AliasType() const { return sharedAliasType ? *sharedAliasType : types.alias; } // 가상Count 뒤의 현재 성장형 제외를 조회한다.
+    std::uint32_t NuggetType() const { return sharedNuggetType ? *sharedNuggetType : types.fullValue; } // 현재 너겟만 환불 단가의1/4 배율을 생략한다.
 };
 // 객체 보상 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct SquidRewardHooks {

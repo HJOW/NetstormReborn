@@ -110,7 +110,7 @@ void RawDamageablePostDestroy::PostDestroy(Sid sid,std::uint32_t flags) const {
     if (Ordinary(sid) && (Type(sid).flags1&0x400U)) {
         const auto position=Position(sid);
         if (GenusAt(position[0],position[1],kRubble).value && !(Genus(sid)&0x10000000U) &&
-            ((flags&0x200000U) || Slot(sid)[kType]!=state_.silentSurfaceType)) {
+            ((flags&0x200000U) || Slot(sid)[kType]!=state_.SilentSurfaceType())) {
             const auto current=Position(sid);hooks_.dropIsland(current[0],current[1],flags,
                 Slot(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 34U : 32U]);
         }

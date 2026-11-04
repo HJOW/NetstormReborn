@@ -3440,6 +3440,8 @@ target_sources(netstorm_pop_context_tests PRIVATE RewardCurrentTypesTests.cpp Re
 target_sources(netstorm_pop_context_tests PRIVATE ForcefieldRegularCurrentTests.cpp) # 보호막 현재 Regular의 선택 장치와 진단 복귀만 검사한다(단위864).
 target_sources(netstorm_pop_context_tests PRIVATE LoadedCostTableTests.cpp) # PATCH 별도 정수 비용 캐시와 현재 TYPE를 구별한다(단위865).
 target_sources(netstorm_tests PRIVATE MissileCheckingTests.cpp)
+target_sources(netstorm_tests PRIVATE RewardTypeNumberTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE RewardTypeNumberTests.cpp DamageablePostDestroyTests.cpp DamageablePostDestroyHostTests.cpp) # 현재 보상/삭제 TYPE 번호와 기존 비멀티 수치·수명만 선택 실행한다(단위869).
 target_sources(netstorm_pop_context_tests PRIVATE MissileCheckingTests.cpp MissileTests.cpp ArcherMissileTests.cpp CrossbowMissileTests.cpp ThunderMissileTests.cpp IceMissileInitialTests.cpp) # 비멀티 투사체의 현재 진단/Host와 기존 수치 원문만 선택 실행한다(단위867).
 target_compile_definitions(netstorm_pop_context_tests PRIVATE
     NETSTORM_REWARD_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/reward-x86.tsv"

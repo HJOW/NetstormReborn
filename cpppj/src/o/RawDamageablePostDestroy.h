@@ -19,6 +19,8 @@ struct DamageablePostDestroyState {
     std::uint32_t specialDropType{135}; // 현재 이 타입이면 일반 수량 대신3개를 생성한다.
     const bool* sharedBoss{}; // 원문 다리 후처리가 읽는 같은 Client boss를 빌린다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 드롭·섬·주변 피해 효과 뒤 현재 권한을 재조회한다.
+    const std::uint32_t* sharedSilentSurfaceType{}; // 실제005412a4는 보상과 같은 장기 Client TYPE 번호를 빌린다.
+    std::uint32_t SilentSurfaceType() const { return sharedSilentSurfaceType ? *sharedSilentSurfaceType : silentSurfaceType; } // 앞선 드롭/finder 효과 뒤 현재 번호를 읽으며 독립/CD는 기존 값을 쓴다.
 };
 // 해당 하위 몸체가 필요한 경우 성공값/noop으로 바꾸지 않는 필수 효과 연결이다.
 struct DamageablePostDestroyHooks {
