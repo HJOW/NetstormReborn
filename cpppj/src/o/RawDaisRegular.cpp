@@ -80,7 +80,7 @@ std::int32_t RawDaisRegular::First(Sid sid,std::uint8_t letter) const { return f
 bool RawDaisRegular::Handles(Sid sid) const {
     const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto vtable=Read(raw,0);
     if (patch) return vtable==kPatchRuneVtable || vtable==kPatchDaisVtable;
-    return (raw[10]==state_.rune.runeType && vtable==(patch ? kPatchRuneVtable : kCdRuneVtable)) || (raw[10]==state_.rune.DaisType() && vtable==(patch ? kPatchDaisVtable : kCdDaisVtable));
+    return (raw[10]==state_.rune.RuneType() && vtable==(patch ? kPatchRuneVtable : kCdRuneVtable)) || (raw[10]==state_.rune.DaisType() && vtable==(patch ? kPatchDaisVtable : kCdDaisVtable));
 }
 // Dais wrapper의allowDead1과CanBridge의0을 기존 공통 선택몸체에 전달한다.
 Sid RawDaisRegular::Contained(Sid dais,std::uint32_t mask,std::uint32_t kind,bool allowDead) const { return carrier_.FindContained(dais,mask,kind,0,allowDead); }
@@ -98,7 +98,7 @@ Sid RawDaisRegular::FindDaisAt(Sid sid) const {
 // 실제 Regular 분배의 반환 지연을 원본 float 비트대로 유지한다.
 float RawDaisRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
     if (!Handles(sid)) throw std::invalid_argument("Dais/Rune Handle 타입/가상표 오류");
-    if (pool_.Edition()==OriginalEdition::Patch1078 ? Read(pool_.Slot(sid),0)==kPatchRuneVtable : pool_.Slot(sid)[10]==state_.rune.runeType) {
+    if (pool_.Edition()==OriginalEdition::Patch1078 ? Read(pool_.Slot(sid),0)==kPatchRuneVtable : pool_.Slot(sid)[10]==state_.rune.RuneType()) {
         if (event!=0x304) return payload;const auto dais=rune_.FindOwnedDais(sid);if (dais.value && dais.value<pool_.Capacity()) Progress(dais);hooks_.destroy(sid,0x48);return -1.0F;
     }
     if (event==0x305) { const auto frame=CurrentFrame(sid);const auto next=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(frame)+1);const auto nextStage=ritual_.Stage(sid,next),stage=ritual_.Stage(sid,frame);hooks_.setFrame(sid,next,0);return stage==nextStage ? kCollapseDelay : 0; }
@@ -138,7 +138,7 @@ void RawDaisRegular::Progress(Sid dais) const {
     if (stage<4) { if (Boss()) BridgeCommand(dais,{},0);Collapse(dais);return; }
     const auto point=Position(dais);hooks_.playAt(point.x,point.y,"itIsDone2.wav",0);const bool upgrade=Contained(dais,4,pool_.Slot(dais)[10]).value!=0;
     DelaySound(dais,upgrade ? "priestSacrifice4.wav" : "priestSacrifice2.wav",upgrade ? 1.5 : 4.0);DelaySound(dais,"thunderCrack.wav",kThunderDelay);
-    if (upgrade) { StartSacrifice(dais);return; }if (CapturedWord(dais) || state_.rune.suppressDuration) { const auto altar=rune_.AltarAt(dais);if (altar.value && altar.value<pool_.Capacity()) AltarEscape(altar); }
+    if (upgrade) { StartSacrifice(dais);return; }if (CapturedWord(dais) || state_.rune.SuppressDuration()) { const auto altar=rune_.AltarAt(dais);if (altar.value && altar.value<pool_.Capacity()) AltarEscape(altar); }
 }
 // 이탈전에원본의Dais조회도수행하고현재altarL프레임및24예약을연결한다.
 void RawDaisRegular::AltarEscape(Sid altar) const {
@@ -198,17 +198,17 @@ void RawDaisRegular::GrantCapturedType(std::uint32_t type,std::uint32_t owner) c
 // 실제cue/altar/현재count·owner/포획삭제/획득/UI/사제존재순서를유지한다.
 void RawDaisRegular::FinishSacrifice(Sid dais) const {
     hooks_.stopVoice(state_.voiceCue,0,0);const auto altar=rune_.AltarAt(dais);if (!altar.value) throw std::logic_error("Dais altarSid assert");hooks_.setFrame(altar,First(altar,'P'),0);const auto originalOwner=Read(pool_.Slot(altar),12,2);
-    if (!state_.rune.suppressDuration && Contained(dais,4,pool_.Slot(dais)[10]).value) {
+    if (!state_.rune.SuppressDuration() && Contained(dais,4,pool_.Slot(dais)[10]).value) {
         const auto count=Count(dais);if (count>=kUpgradeFirst.size()) throw std::out_of_range("Dais 다음 첫 프레임 범위");hooks_.setFrame(dais,kUpgradeFirst[count],0);const auto owner=Owner(dais);Player(owner);const auto currentCount=Count(dais);state_.SetPlayerResult(owner,currentCount);
         auto captured=Contained(dais,0,pool_.Slot(dais)[10]);if (captured.value && captured.value<pool_.Capacity()) hooks_.destroy(captured,kConsumedFlags);captured=Contained(dais,0,PriestType());
         if (captured.value && captured.value<pool_.Capacity()) { hooks_.destroy(captured,kConsumedFlags);auto raw=pool_.AllocatedBytes(altar);raw[12]=raw[13]=0; }
         if (Owner(dais)==state_.localOwner) hooks_.chat({DaisChat::Kind::Upgrade});
-    } else { const auto type=CapturedWord(dais);if (!state_.rune.suppressDuration) GrantCapturedType(type,Owner(dais));Player(Owner(dais));state_.SetPlayerResult(Owner(dais),type); }
+    } else { const auto type=CapturedWord(dais);if (!state_.rune.SuppressDuration()) GrantCapturedType(type,Owner(dais));Player(Owner(dais));state_.SetPlayerResult(Owner(dais),type); }
     // 원본은항상플레이어1..8을순서대로갱신한다.
     for (std::uint32_t owner=1;owner<=kPlayerCount;++owner) hooks_.refreshOwner(owner);
-    if (!state_.rune.suppressDuration) {
+    if (!state_.rune.SuppressDuration()) {
         if (Owner(dais)==state_.localOwner) hooks_.refreshLocal();if (originalOwner==state_.localOwner) hooks_.chat({DaisChat::Kind::LocalPriestDead,originalOwner,Owner(dais),hooks_.multiplayerStatus()});else if (Owner(dais)!=state_.localOwner) hooks_.chat({DaisChat::Kind::OtherPriestDead,originalOwner,Owner(dais),0});
-        if (!state_.rune.suppressDuration) return;
+        if (!state_.rune.SuppressDuration()) return;
     }
     if (Owner(dais)==state_.localOwner) {
         hooks_.addLocalSp(5000);bool deadOpponent=false;Player(state_.localOwner);

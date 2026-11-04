@@ -55,6 +55,8 @@ public:
     const std::uint32_t& AltarType() const { return altarType_; } // 일반 월드 준비와 Session 교체로164를 다시 쓰지 않는다.
     std::uint32_t& DaisType() { return daisType_; } //005412ec의 현재 다이스 TYPE를 비용 개수/HP 예외가 공유한다.
     const std::uint32_t& DaisType() const { return daisType_; } // 최초165를 현재 owner의 값과 구별한다.
+    std::uint32_t& RuneType() { return runeType_; } //005412f0의 현재 Rune 번호를 조회/생성/주변 정리가 같은 장기 주소에서 읽는다.
+    const std::uint32_t& RuneType() const { return runeType_; } // 최초166 사본을 Session 교체나 일반 준비에서 새로 만들지 않는다.
     std::uint32_t& RainBlockerType() { return rainBlockerType_; } //005412a4의 현재 레인 바리케이드 TYPE를 보상/일반 삭제가 공유한다.
     const std::uint32_t& RainBlockerType() const { return rainBlockerType_; } // 성장형 비용 별칭도 같은 현재 DWORD를 읽는다.
     std::uint32_t& GrowingRainBlockerType() { return growingRainBlockerType_; } //005412b0의 현재 성장형 TYPE이며 비용 별칭/환불 제외를 선택한다.
@@ -105,6 +107,7 @@ private:
     std::uint32_t flyerProcessType_{31}; // 보호 PE005410ec의 초기 DWORD이며 홈/생성·후속 writer가 공유할 장기 물리다.
     std::uint32_t altarType_{164},daisType_{165}; // 보호 PE005412e8/005412ec의 두 초기 DWORD이며 일반 월드 준비에서 초기화하지 않는다.
     std::uint32_t rainBlockerType_{147},growingRainBlockerType_{150}; //005412a4/005412b0의 현재 두 TYPE 번호이며 TYPE 기록 표와 별개다.
+    std::uint32_t runeType_{166}; // 보호 PE005412f0의 초기 DWORD이며 ResetForGeneralWorld는 현재 번호를 유지한다.
     std::uint32_t nuggetType_{154}; //005412c0의 최초154를 한 번만 소유하고 Session 재대여로 덮어쓰지 않는다.
     std::uint32_t supportTypeWas_{}; //0054d4e4의 최초 BSS0이며 진단 소비자와 이후 수신 writer가 공유할 장기 물리다.
     std::uint32_t firstTimerFactoryType_{85},secondTimerFactoryType_{87},outpostType_{126}; // 보호10.78 PE의 세 TYPE DWORD 초기값이며 일반 Runtime 초기화와 구별한다.

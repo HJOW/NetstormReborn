@@ -1,0 +1,307 @@
+{
+ "unit": 874,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "ee8db232 / 20261105-07 CP",
+ "exeSha256": "e98d4e23f710ab5f46c40dd138b200239150053e06fbae0b2168fa8041a46996",
+ "exeBytes": 10598912,
+ "scope": [
+  "RawGameAuxState의 장기005412f0과 RunePostPopState/TempleRitualState 현재 const 참조 연결",
+  "Rune 시간·다이스 진행/완료·수명에서 현재00594fa4 getter 사용, PrepareRitual 사본 두 곳 제거",
+  "RuneAt의 가상 Count/Stage 뒤 현재 Rune 번호 조회 순서 교정",
+  "실제 Session의 Rune 명시 사전 검사와 기존 독립/CD 입력 보존"
+ ],
+ "sourceSha256": {
+  "cpppj/src/client/RawCampaignRitual.inc": "fead6fca37b3c30adba08ef7ba61025851647817261b64570f7838a5c0411434",
+  "cpppj/src/client/RawCampaignSession.cpp": "a8472e98a7a2568e0e254a5cbdd4de671dcdfac24105c622464f7962875458fd",
+  "cpppj/src/o/RawDaisLifecycle.cpp": "7e16b591de16942868f867c48d342906c3061e23f232335d97b2125d70f8e97b",
+  "cpppj/src/o/RawDaisRegular.cpp": "d5861fb85a9f71c99fd33142b29ac9c06aaecd797ccf2fd2b6aef60c8a7968e3",
+  "cpppj/src/o/RawGameAuxState.h": "d86d3c89c32e738db2a4a7783a54e17e88550bb769a94ef4727dfa1426984930",
+  "cpppj/src/o/RawRunePostPop.cpp": "90917ea3718259c86cae1372bffcf7479407063eb163d9eb0167fe634dc24c0c",
+  "cpppj/src/o/RawRunePostPop.h": "41739460ed47574a91ba5f93564605b86992ad96b7c269943656fae87cdeee2d",
+  "cpppj/src/o/RawTempleRitual.cpp": "d87df7babf9b66e03f74590f1fbdc4d6569b02373827258a7c3c2557f6775fbf",
+  "cpppj/src/o/RawTempleRitual.h": "17e285508e4e87723416f3e39570415083f6bb3e57c312c39810ef44d995e6db",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "48d778eedb6b4104ef7ba4faf5c1af007730cdb082ddb6c7b2e8161011b57a6c",
+  "cpppj/tests/DaisCheckingParentsTests.cpp": "b769dedc853f04314ec6cba839f8fb6dfbf7febb02afe61b3fa7a9178086024f",
+  "cpppj/tests/RunePostPopTests.cpp": "4e9c7ca6a9e9ebd90635a6380e1316b1e5a5cecb675dbf101f75dfe4850e3553"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-874/originalCD-004434d0.c": "81af385d17ce0b5ec4d4aee000b8bd9c11698a43605c7ab9d53bf6547b705af8",
+  "extracted/cpp-resume-874/originalCD-00481d10.c": "34e61733097f118501569754d4b5dc055b76a0562d2a56690a15eb868b9e8363",
+  "extracted/cpp-resume-874/originalCD-00481de0.c": "2ca6abe01edff194f74ee0ab13fdf2f7fed7de99b078ea1a1aad2f718ff45396",
+  "extracted/cpp-resume-874/originalCD-00481e50.c": "01be7795c5b6af603b00e69151881e09981a048d01ba75a39fcc52b3e65e1b20",
+  "extracted/cpp-resume-874/originalCD-00481ee0.c": "b84fc4fa8d40cd39ff205ae07e02f4605b22684f387bd3d58fa38a7a8d132848",
+  "extracted/cpp-resume-874/originalCD-00482620.c": "72e01267741aac8f224f300bdf87067f06187bf37bdbfe25c852e205cb237140",
+  "extracted/cpp-resume-874/originalCD-00482a20.c": "bf06fac4e1d7bab07e68452043a7659c30a3f1d73e8ddca3f4b9361515e377d4",
+  "extracted/cpp-resume-874/originalCD-004836b0.c": "88351e9e6343aa5b2490ae67f54f127556205d5bd69a426db7a7103c75dd5b1b",
+  "extracted/cpp-resume-874/originals-00447b30.c": "0825dfb14d1616eec769925bfdeb0d434305ada0e6f38b61c5c46fadd7e03306",
+  "extracted/cpp-resume-874/originals-00447c00.c": "0ef66269958f671106816f2443551775e5136de40d31d09d81c9ac9efbf896d6",
+  "extracted/cpp-resume-874/originals-00447ca0.c": "ae9238446c6be92bff8b4d556af684c46385bd232ce91ab3b47d522e244a8fbe",
+  "extracted/cpp-resume-874/originals-00447dc0.c": "16101d6ed52858ea4db410cc4fbf701712800fbb7793bbc003110288980a0d3f",
+  "extracted/cpp-resume-874/originals-00449b30.c": "24067ffb5cebb75482c514cc923491acf37b1953d75290066efdcea7e22670b8",
+  "extracted/cpp-resume-874/originals-00449f40.c": "c0587800bbfc258ef7fae5c2f1d7f6b2d77f671037a2cf76ca1e8860794d5806",
+  "extracted/cpp-resume-874/originals-0044a4d0.c": "e7e69b1ea5f01688570d7f6046257e028def55b1492a035873d9a8af4def1d6c",
+  "extracted/cpp-resume-874/originals-0049ebb0.c": "f2aea7f33102e00f76b0591c9f0f9a0f328ea21dd3474ace39f0a134e6a130af"
+ },
+ "nativeRuneMap": {
+  "originals": {
+   "address": "005412f0",
+   "initial": 166,
+   "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+   "runeConsumers": [
+    "00447b30",
+    "00447c00",
+    "00447ca0",
+    "00447dc0",
+    "0044a4d0",
+    "0049ebb0"
+   ]
+  },
+  "originalCD": {
+   "address": "0051cbdc",
+   "initial": 166,
+   "peSha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+   "runeConsumers": [
+    "004434d0",
+    "00481d10",
+    "00481de0",
+    "00481e50",
+    "00481ee0",
+    "004836b0"
+   ]
+  }
+ },
+ "nativeScopeNote": "각6함수 중 TYPE 생성 함수 표를 초기화하는0049ebb0/CD004434d0 writer는 이번 구현 범위 밖이며 Factory 잔여다.",
+ "build": {
+  "exitCode": 0,
+  "elapsedSeconds": 489.17681849999997,
+  "warningCount": 0,
+  "errorCount": 0,
+  "log": "extracted/cpp-resume-874/build-first.log",
+  "logSha256": "87b10abc075b5eaee073dfe60ceae6599e7207d58e9bb2b7dbc0dee3bd28d1fd"
+ },
+ "testExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "RuneSharedCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-874/test-rune-shared-current-first.log",
+   "sha256": "343bc756429316708bd7082722fbe22447fe32116ed5afd01eebdb0f2d616efe"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneSharedCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-874/test-rune-shared-session-and-lookup-first.log",
+   "sha256": "371741f08f33464ff84ad4ac8f68a7e9227494028c3c25fda751167ac225bc2f"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "rawRunePostPop_native_regular_owned_dais_and_duration",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-874/test-rune-native-first.log",
+   "sha256": "62c537bb7aaa147d9565b46f4ec99d7f076938294ddbf2c0230474d3ef00cdb5"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "BuriedRuneCurrent_Rune",
+   "cases": 10,
+   "expectedCases": 10,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-874/test-rune-current-prefix-first.log",
+   "sha256": "e36cd31d66d9083202829e6e26b9691d2bb14f75911bde118fe231cb66436d42"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisClassCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-874/test-dais-class-current-first.log",
+   "sha256": "6de8607702ee31f4142d3274227fb51da80872338c83d3379cefcb52e62f2f79"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisCheckingParents_StageUsesOneVirtualCountAndSavedInitialFrame",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-874/test-stage-current-first.log",
+   "sha256": "9914325212820baa3f96a9e49e519b98d816b257cccb4084d279ff2906e858f3"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-874/test-rune-number-first.log",
+   "sha256": "533b95a4db499eeeac1a6a1889bcd22eeb5c89a7d3763e56093968bac970a6dd"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-874/test-rune-number-session-first.log",
+   "sha256": "d05ccbcfe6bd015163388cb8a7cf8c62f73bfdb46c21a078facb93d8b7eb3943"
+  }
+ ],
+ "uniqueCases": [
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_StageUsesOneVirtualCountAndSavedInitialFrame"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_ActualSessionDispatchesReadOnlyRegularsByVtable"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_CountKeepsEditionSpecificPlayerDestination"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_LifecycleLazyDevicesAndPartialPlayerCleanup"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_RegularKeepsVtableFunctionIdentity"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneSharedCurrent_ActualSessionPreflightUsesCurrentRuneOwnerWithoutEffects"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneSharedCurrent_TempleLookupReadsTypeAfterVirtualCount"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneTypeNumber_ActualSessionChoiceGetterReadsCurrentDaisOwner"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneActualVtableWithDifferentTypeAndMissingUnusedDevices"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneCdKeepsConstructorAndTypePreflight"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneDurationReadPrecedesMissingConstruction"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneDurationReadsBoundGlobalsAfterReservation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneDurationSuppressionSkipsInvalidOwnerRecord"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneFailedAllocationSkipsMissingConstructor"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneMissingConstructorPreservesReservation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneMissingReservePrecedesFinderAndBase"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneNoDaisSkipsMissingConstruction"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BuriedRuneCurrent_RuneRegularMutationUsesCurrentDaisOwnerAndPhysicalSlot"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneSharedCurrent_OwnerAndMissionModeRemainLiveAfterGeneralReset"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneSharedCurrent_ReservationChangesBoundMissionBeforeDurationRead"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_CurrentFinderAndDurationUseBoundNumbers"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_ReferencesForParticipationAndAiKeepOriginalOwner"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_ReservationChangesCurrentNumbersBeforeFindAndDuration"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "rawRunePostPop_native_regular_owned_dais_and_duration"
+  ]
+ ],
+ "uniqueCaseCount": 24,
+ "groups": 8,
+ "newCases": 4,
+ "firstFailedCases": 0,
+ "firstFailedChecks": 0,
+ "postBuildCorrections": 0,
+ "expectationsChanged": 0,
+ "existingNativeRows": {
+  "runePostPop": 1920
+ },
+ "newNativeRows": 0,
+ "newFixtures": 0,
+ "protectedFiles": 2761,
+ "protectedFixtureFiles": 941,
+ "protectedChanged": 0,
+ "protectedAfterSha256": "f762a5e5138d30748d8dc97d07d20266e33c8b0b02afaa1f8f231869fbb60dea",
+ "checkingRemaining": {
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "total": 10
+ },
+ "checkingCompleted": {
+  "parents": 38,
+  "partial": 3
+ },
+ "limitations": [
+  "다이스 진행/희생 완료·Rune 생성/제단 주변 삭제의 현재 getter는 코드/정적/컴파일 근거이며 해당 효과 실행0",
+  "새 실제 Session은 명시 Validate만 조회하며 Pop/틱/예약/의식/명령/패킷0",
+  "실제 게임/GUI/포획/희생/특정 적 공격/승리·신규 MP/통신·공중3종 전용·물리입력/PCM/CD·전체71/CTest/34미션/ZIP 반복0",
+  "의식 helper의 현재 boss/사제 번호·선택 장치와 다른 TYPE/모드·전체 Pop/Factory/군도/메뉴/Edit/State/파일/Windows/후속 단계는 남음"
+ ],
+ "nextUnit": 875
+}

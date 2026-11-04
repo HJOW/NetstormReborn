@@ -156,3 +156,11 @@ TEST_CASE(RuneTypeNumber_ReservationChangesCurrentNumbersBeforeFindAndDuration) 
     hooks.reserveRegular=[&] { scene.events.push_back("N");owner.DaisType()=70;owner.AltarType()=71;scene.slots[6][10]=70;scene.slots[7][10]=71;scene.types[70].footX=scene.types[70].footY=scene.types[71].footX=scene.types[71].footY=1;scene.state.playerFlags[1]=1;return false; };
     RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));rune.PostPop(Sid{5},3);CHECK(RuneEffects(scene.events)=="N;C25" && scene.book.depth==0); // 건설 hook의 인자 관찰이며 실제 건설/의식/프레임 틱은 실행하지 않는다.
 }
+
+TEST_CASE(RuneSharedCurrent_OwnerAndMissionModeRemainLiveAfterGeneralReset) { // Rune 번호의 장기 주소와 미션 억제의 독립 fallback을 실제 시간 조회로 구별한다.
+    RuneCurrentScene scene;RawGameAuxState owner;bool mission=true;scene.state.sharedRuneType=&owner.RuneType();scene.state.sharedSuppressedDuration=&mission;scene.state.suppressDuration=false;const auto& current=scene.state.RuneType();CHECK(current==166 && &current==&owner.RuneType());owner.RuneType()=70;owner.ResetForGeneralWorld();CHECK(current==70);scene.state.runeType=71;CHECK(scene.state.RuneType()==70);scene.state.playerFlags[1]=1;RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,{});
+    CHECK(rune.ConstructionSeconds(Sid{5})==10);mission=false;CHECK(rune.ConstructionSeconds(Sid{5})==25);scene.state.sharedSuppressedDuration=nullptr;scene.state.suppressDuration=true;CHECK(rune.ConstructionSeconds(Sid{5})==10);scene.state.sharedRuneType=nullptr;CHECK(scene.state.RuneType()==71 && current==70); // 이미 보관한 참조는 기존 owner를 계속 읽는다.
+}
+TEST_CASE(RuneSharedCurrent_ReservationChangesBoundMissionBeforeDurationRead) { // 예약 콜백 뒤 미션 상태를 다시 읽으며 의식/프레임/실제 건설은 실행하지 않는다.
+    RuneCurrentScene scene;bool mission=true;scene.state.suppressDuration=true;scene.state.sharedSuppressedDuration=&mission;scene.state.playerFlags[1]=1;auto hooks=scene.Hooks();hooks.reserveRegular=[&] { scene.events.push_back("N");mission=false;return false; };RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));rune.PostPop(Sid{5},3);CHECK(RuneEffects(scene.events)=="N;C25" && scene.book.depth==0);
+}

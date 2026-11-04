@@ -31,11 +31,11 @@ RawRunePostPop::RawRunePostPop(SidPool& pool,const SquidHash& hash,std::span<con
 }
 // PATCH 가상 진입은 현재 TYPE와 무관하며 CD의 기존 분류는 유지한다.
 bool RawRunePostPop::Handles(Sid sid) const {
-    const auto raw=pool_.Slot(sid);return (pool_.Edition()==OriginalEdition::Patch1078 || raw[10]==state_.runeType) && Read(raw,0)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchRuneVtable : kCdRuneVtable);
+    const auto raw=pool_.Slot(sid);return (pool_.Edition()==OriginalEdition::Patch1078 || raw[10]==state_.RuneType()) && Read(raw,0)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchRuneVtable : kCdRuneVtable);
 }
 // 공통장부의원래예외/Graph조건도공간쓰기전에그대로검사한다.
 void RawRunePostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* projected) const {
-    if (!Handles(sid) || pool_.Slot(sid)[10]!=state_.runeType) throw std::invalid_argument("Rune 후처리 타입/가상표 오류");base_.ValidateBase(sid,flags,projected);
+    if (!Handles(sid) || pool_.Slot(sid)[10]!=state_.RuneType()) throw std::invalid_argument("Rune 후처리 타입/가상표 오류");base_.ValidateBase(sid,flags,projected);
 }
 // 현재raw좌표를효과뒤에도각조회시다시읽는다.
 std::array<float,2> RawRunePostPop::Position(Sid sid) const { const auto raw=pool_.Slot(sid);return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))}; }
@@ -58,7 +58,7 @@ Sid RawRunePostPop::AltarAt(Sid rune) const {
 // patch의char7/10/25와CD의int7/10/25를동일정수로반환한다.
 std::int32_t RawRunePostPop::ConstructionSeconds(Sid rune) const {
     const auto altar=AltarAt(rune);
-    if (!altar.value) return 10;const auto originalOwner=Read(pool_.Slot(altar),12,2);if (!originalOwner || (hooks_.suppressDuration ? RuneNeed(hooks_.suppressDuration)() : state_.suppressDuration)) return 10;
+    if (!altar.value) return 10;const auto originalOwner=Read(pool_.Slot(altar),12,2);if (!originalOwner || (hooks_.suppressDuration ? RuneNeed(hooks_.suppressDuration)() : state_.SuppressDuration())) return 10;
     if (hooks_.playerFlags) return (RuneNeed(hooks_.playerFlags)(originalOwner)&1) ? 25 : 7;
     if (originalOwner>=state_.playerFlags.size()) throw std::out_of_range("Rune altar 원래ownerWORD/player범위");return (state_.playerFlags[originalOwner]&1) ? 25 : 7;
 }

@@ -96,7 +96,7 @@ TempleRitualPoint RawTempleRitual::StageAnchor(Sid temple,std::uint32_t stage) c
 }
 // stage4의 지면 검사는 거의올림이 아닌 원본 __ftol 절삭 칸이다.
 TempleRitualPoint RawTempleRitual::StagePoint(Sid temple,std::uint32_t stage) const {
-    auto point=StageAnchor(temple,stage);const auto hotspot=Hotspot(state_.runeType,static_cast<std::int32_t>(stage));point=AddPixels(point,hotspot[0],hotspot[1]);
+    auto point=StageAnchor(temple,stage);const auto hotspot=Hotspot(state_.RuneType(),static_cast<std::int32_t>(stage));point=AddPixels(point,hotspot[0],hotspot[1]);
     if (stage==4) {
         const auto index=static_cast<std::int64_t>(Cell(point.y))*kWorldCells+Cell(point.x);if (index<0 || index>=static_cast<std::int64_t>(spots_.size())) throw std::out_of_range("신전 의식 마지막 목표 지면 범위");
         const auto spot=spots_[static_cast<std::size_t>(index)];if ((spot&6) && !(spot&8)) point=AddPixels(point,-9,-6);
@@ -105,7 +105,7 @@ TempleRitualPoint RawTempleRitual::StagePoint(Sid temple,std::uint32_t stage) co
 }
 // 현재 runeType의genus에 따라0/1단계부터 실제 점 finder를 탐색한다.
 Sid RawTempleRitual::RuneAt(Sid temple,TempleRitualPoint point) const {
-    const auto type=state_.runeType;if (type>=types_.size()) throw std::out_of_range("신전 의식 현재Rune 타입 범위");const auto hotspot=Hotspot(type,static_cast<std::int32_t>(Stage(temple)));point=AddPixels(point,-static_cast<std::int32_t>(hotspot[0]),-static_cast<std::int32_t>(hotspot[1]));
+    const auto stage=Stage(temple);const auto type=state_.RuneType();if (type>=types_.size()) throw std::out_of_range("신전 의식 현재Rune 타입 범위");const auto hotspot=Hotspot(type,static_cast<std::int32_t>(stage));point=AddPixels(point,-static_cast<std::int32_t>(hotspot[0]),-static_cast<std::int32_t>(hotspot[1]));
     const auto x=Cell(point.x),y=Cell(point.y);RawSquidFinder finder(pool_,hash_,types_);
     // 원본 첫 타입 일치에서 종료하며 별도dead/free/abstract 필터를 넣지 않는다.
     for (auto sid=finder.Begin({x,y,x,y},(types_[type].flags2&6)==0 ? 1U : 0U);sid.value;sid=finder.Next()) if (pool_.Slot(sid)[10]==type) return sid;
@@ -130,12 +130,12 @@ Sid RawTempleRitual::FindStrongOwnedPriest(Sid temple) const {
 bool RawTempleRitual::HasAbstractRune(Sid temple) const {
     RawSquidFinder finder(pool_,hash_,types_);
     // 첫 현재RuneType/extra1 일치만 참이며 일반finder의 buried 제외를 그대로 유지한다.
-    for (auto sid=finder.Begin(SearchArea(footprint_.Footprint(temple)));sid.value;sid=finder.Next()) { const auto raw=pool_.Slot(sid);if (raw[10]==state_.runeType && (raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&1)) return true; }
+    for (auto sid=finder.Begin(SearchArea(footprint_.Footprint(temple)));sid.value;sid=finder.Next()) { const auto raw=pool_.Slot(sid);if (raw[10]==state_.RuneType() && (raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&1)) return true; }
     return false;
 }
 // HP/소유자 효과 이후 각각현재 단계를 다시읽는 실제Rune 생성 순서다.
 void RawTempleRitual::SpawnRune(Sid temple) const {
-    const auto rune=hooks_.create(state_.runeType,0);if (!rune.value || rune.value>=pool_.Capacity()) throw std::out_of_range("신전 의식Rune 생성SID 오류");hooks_.setHitPoints(rune,0);const auto stage=Stage(temple);auto raw=pool_.AllocatedBytes(rune);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const auto rune=hooks_.create(state_.RuneType(),0);if (!rune.value || rune.value>=pool_.Capacity()) throw std::out_of_range("신전 의식Rune 생성SID 오류");hooks_.setHitPoints(rune,0);const auto stage=Stage(temple);auto raw=pool_.AllocatedBytes(rune);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     // 원본 패치DWORD/CDBYTE 프레임만 쓰고 옆필드는 보존한다.
     for (std::size_t i=0;i<(patch ? 4U : 1U);++i) raw[(patch ? 36U : 34U)+i]=static_cast<std::uint8_t>(stage>>(8*i));
     if (!(raw[11]&4)) throw std::logic_error("신전 의식Rune isVoid assert");raw[patch ? 40 : 35]|=1;hooks_.setOwner(rune,Owner(temple));const auto point=StageAnchor(temple,Stage(temple));hooks_.pop(rune,point.x,point.y,0);

@@ -872,6 +872,7 @@ struct RawCampaignSession::Impl {
         rewardState.sharedPriestQuarterHp=&gameplayGlobals->GameAux()->PriestQuarterHp(); // State 직접 쓰기와 기존 HP setter/최대HP가 같은 현재 전역을 쓴다.
         rewardState.sharedPriestType=&priestState.movement.priest; // 0049fce0의 1/4 비교와 사제 회복 분자가 같은 장기005412d0을 읽는다(단위862).
         rewardState.sharedAltarType=&gameplayGlobals->GameAux()->AltarType();rewardState.sharedDaisType=&gameplayGlobals->GameAux()->DaisType(); // 비용 곡선/다이스HP의 현재 두 TYPE 번호를 같은 장기 owner에서 빌린다.
+        runeState.sharedRuneType=&gameplayGlobals->GameAux()->RuneType();ritualState.sharedRuneType=runeState.sharedRuneType;runeState.sharedSuppressedDuration=&globals.missionPost; // 같은 현재 Rune 번호와 미션 상태를 효과 뒤 각 소비 지점에서 읽는다.
         runeState.sharedAltarType=rewardState.sharedAltarType;runeState.sharedDaisType=rewardState.sharedDaisType; // Rune/다이스·참여자·AI/메뉴가 보상과 같은 현재 두 DWORD를 빌리며 임시 getter 값의 주소를 남기지 않는다.
         rewardState.sharedSilentType=damageablePostState.sharedSilentSurfaceType=&gameplayGlobals->GameAux()->RainBlockerType(); // 보상과 일반 삭제의 같은005412a4를 연결한다.
         rewardState.sharedAliasType=&gameplayGlobals->GameAux()->GrowingRainBlockerType();rewardState.sharedNuggetType=&gameplayGlobals->GameAux()->NuggetType(); // 별칭 비용/환불의 현재 성장형·너겟 번호다.

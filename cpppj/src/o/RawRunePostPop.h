@@ -13,6 +13,9 @@ struct RunePostPopState {
     bool suppressDuration{}; // 00594fa4/CD0052e170: altar/player 시간선택을끄고10초로반환한다.
     std::array<std::uint32_t,kPlayerCount+1> playerFlags{}; // patchPlayer+50/CDPlayer+50의현재bit1을읽는다. 원래ownerWORD가index다.
     const std::uint32_t* sharedAltarType{};const std::uint32_t* sharedDaisType{}; // 같은 Client005412e8/005412ec의 현재 번호이며 독립 구성은 위 초기값을 쓴다.
+    const std::uint32_t* sharedRuneType{};const bool* sharedSuppressedDuration{}; // 같은 현재005412f0/00594fa4를 빌리며 독립/CD 입력은 기존 필드를 사용한다.
+    const std::uint32_t& RuneType() const { return sharedRuneType ? *sharedRuneType : runeType; } // 여러 의식 소비자가 원래 owner의 같은 번호를 계속 읽는다.
+    bool SuppressDuration() const { return sharedSuppressedDuration ? *sharedSuppressedDuration : suppressDuration; } // 표시/소리/Player 갱신 콜백 뒤 현재 미션 상태를 다시 읽는다.
     const std::uint32_t& AltarType() const { return sharedAltarType ? *sharedAltarType : altarType; } // 보상/의식/참여자/AI의 장기 참조를 같은 실제 DWORD에 연결하며 임시 값을 반환하지 않는다.
     const std::uint32_t& DaisType() const { return sharedDaisType ? *sharedDaisType : daisType; } // finder는 현재 값을 복사하고 참조형 소비자는 원래 owner 수명을 그대로 빌린다.
 };

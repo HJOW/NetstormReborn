@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "o/RawDaisRegular.h"
 #include "o/RawDaisLifecycle.h"
+#include "o/RawGameAuxState.h"
 #include "o/SquidUnpop.h"
 #include <memory>
 
@@ -146,4 +147,11 @@ TEST_CASE(DaisClassCurrent_LifecycleLazyDevicesAndPartialPlayerCleanup) { // 미
     bool explicitRejected=false;try { life->Validate(Sid{5},0); }catch (const std::invalid_argument&) { explicitRejected=true; }CHECK(explicitRejected); // 명시 preflight의 기존 TYPE 계약은 실제 가상 진입과 구별한다.
     Put(scene.Raw(Sid{7}),0,kPatchAltarVtable);scene.Raw(Sid{7})[10]=165;CHECK(scene.altar->Handles(Sid{7}) && life->Handles(Sid{7}));life->PostPop(Sid{7},0);CHECK(scene.common==2 && scene.effects==0); // Altar VT는 표시 TYPE165여도 Count/모드 장치에 진입하지 않는다.
     scene.Owner(Sid{5},1);scene.lifeState.players[1]={Sid{5},Sid{123},Sid{7},Sid{124},0};bool missing=false;try { life->PostDestroy(Sid{5},0x123); }catch (const std::logic_error&) { missing=true; }const auto& p=scene.lifeState.players[1];CHECK(missing && p.first.value==0 && p.firstMirror.value==0 && p.second==Sid{7} && p.secondMirror==Sid{124} && scene.effects==0); // 선택된 공통 장치 부재 앞의 SID쌍 쓰기를 되돌리지 않는다.
+}
+
+TEST_CASE(RuneSharedCurrent_TempleLookupReadsTypeAfterVirtualCount) { // 두 원문 모두 가상 Count로 단계를 얻은 뒤 현재 Rune 번호를 읽는다. 의식/생성/삭제는 실행하지 않는다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 표시 프레임 폭이 달라도 같은 순서로 현재 번호와 일반 finder를 사용한다.
+        DaisParentScene scene(edition);RawGameAuxState owner;scene.templeState.sharedRuneType=&owner.RuneType();owner.RuneType()=70;scene.types[71]=scene.types[166];scene.frames[71]=scene.frames[166];scene.shapes[71]=scene.shapes[166];scene.Object(Sid{8},71,40.75F,41.25F);scene.Raw(Sid{8})[scene.Patch() ? 40 : 35]=1;auto& head=scene.hash.Bucket(1,40.75F,41.25F);Put(scene.Raw(Sid{8}),4,head,2);head=8;scene.onCount=[&] { owner.RuneType()=71; };
+        CHECK(scene.ritual->RuneAt(Sid{5},{40.75F,41.25F})==Sid{8} && owner.RuneType()==71 && scene.countReads==1);CHECK(scene.ritual->HasAbstractRune(Sid{5}));owner.RuneType()=70;CHECK(!scene.ritual->HasAbstractRune(Sid{5}) && scene.effects==0); // 사본166 또는 Count 전 번호70으로 검색하면 결과가 달라진다.
+    }
 }

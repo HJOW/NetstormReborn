@@ -15,6 +15,8 @@ struct TempleRitualState {
     bool boss{true}; // 00540bc4/CD00540a2c: 후속 모드에서 룬을 생성할 권한이다.
     std::uint32_t priestType{158},runeType{166}; // 005412d0/005412f0 ↔ CD0051cbbc/0051cbdc의 현재 타입 번호다.
     float pixelScaleX{16},pixelScaleY{11}; // 0059a92c/930 ↔ CD00565c44/48: SHP 정수 핫스폿을 월드 좌표로 바꾼다.
+    const std::uint32_t* sharedRuneType{}; // RunePostPop/주변 정리와 같은 현재005412f0의 장기 owner다.
+    const std::uint32_t& RuneType() const { return sharedRuneType ? *sharedRuneType : runeType; } // 함수가 번호를 저장하는 위치는 기존 본문에 유지한다.
 };
 // 새 좌표 자료형은 원본의 단정도 저장 x/y 두 개다.
 struct TempleRitualPoint {
