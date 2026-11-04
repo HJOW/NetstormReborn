@@ -56,6 +56,7 @@ std::span<const std::uint8_t> SquidForms::Form(Sid sid) const {
 Sid SquidForms::Parent(Sid form) const { Form(form);return Sid{static_cast<std::uint16_t>(Read(form,kParent,2))}; }
 // 원본 Form의 이전 getter도 WORD 전체를 반환한다.
 Sid SquidForms::Previous(Sid form) const { Form(form);return Sid{static_cast<std::uint16_t>(Read(form,kPrevious,2))}; }
+void SquidForms::ConstructVtableAt(std::uint32_t type,Sid sid) const { Put(sid,0,Vtable(type),4); } // 원문 cdecl1/2/3/6의 단일DWORD 저장만 실행한다.
 // Allocate가 지운 슬롯에 생성자 가상 표→타입만 쓰며 자산 초기화는 호출하지 않는다.
 Sid SquidForms::Create(std::uint32_t type,std::uint32_t flags) const {
     const auto vtable=Vtable(type);const auto sid=pool_.Allocate(flags);

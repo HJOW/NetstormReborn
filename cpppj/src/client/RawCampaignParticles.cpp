@@ -43,6 +43,8 @@ void RawCampaignParticles::BindTailProcessTypes(const o::RawGameAuxState& state)
 }
 void RawCampaignParticles::CreateTailByConstructor(std::uint32_t address,o::Sid parent,
     const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion) { // 원본 cdecl 생성 함수와 내부 TYPE 전역을 구별하며 호출자가 무시하는 NULL 반환도 원문대로 복귀한다.
+    const std::array<std::array<std::uint32_t,2>,4> forms{{{0x004ae760U,1U},{0x004ae3d0U,2U},{0x004ae9f0U,3U},{0x004aea40U,6U}}}; // 이 네 함수의 첫 인자는 새 객체의 부모가 아니라 덮어쓸 물리 SID다.
+    for (const auto& form:forms) if (address==form[0]) { o::SquidForms(core_.pool).ConstructVtableAt(form[1],parent);return; } // 원문처럼 현재 슬롯 VT만 바꾸고 공통 부모로 복귀한다.
     if (address==0x00470b00U || address==0x00487ef0U) {
         const auto selected=assertion; // 진단이 자기 연결을 반납해도 현재 호출의 캡처 수명은 종료까지 보존한다.
         if (!selected) throw std::logic_error("현재 TYPE 생성 함수의 원문 진단 장치 미연결");

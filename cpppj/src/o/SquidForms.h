@@ -13,6 +13,8 @@ class SquidForms {
 public:
     // 풀은 이 객체보다 오래 살아야 한다. ContentForm의 live 부모 제거에는 notice가 필요하다.
     explicit SquidForms(SidPool& pool,FormRemovalNotice notice={},FormPopTransmit transmit={});
+    // 판본별1/2/3/6의 실제 cdecl 생성자는 지정 물리 SID의 가상 표DWORD만 쓴다. 할당/타입BYTE/다른 바이트는 쓰지 않는다.
+    void ConstructVtableAt(std::uint32_t type,Sid sid) const; // Take/Create를 실행하지 않으며 SID0/free/dead도 원문 물리 범위 안이면 그대로 쓴다.
     // 004af530/CD 004ab390의 타입 1/2/3/6 경로다. Allocate 뒤 가상 표→타입만 쓰며 postCreate는 비어 있다.
     Sid Create(std::uint32_t type,std::uint32_t flags=0) const;
     // 004af610/CD 004ab440: 지정 서버/예측 슬롯의 payload·풀 목록/카운터를 유지한다.

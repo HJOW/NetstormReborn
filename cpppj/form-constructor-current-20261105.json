@@ -1,0 +1,304 @@
+{
+ "unit": 884,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "d2091391 / 20261105-17 CP",
+ "exeSha256": "8f92587213fd90d774f1a8ac0db34bb4d77f412afc9048a7e57b0716a8f9528b",
+ "exeBytes": 10656768,
+ "caseCount": 24,
+ "groups": 6,
+ "newCases": 2,
+ "uniqueCases": [
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ActualTeleportSelectsConstructorAndItsCurrentTypeSource"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ActualVisualFrameNotifyPixelsAndSelfDeletionUseSameHost"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ParentZeroRemainsRenderedWithoutKernelAndOwnerPersists"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "FormConstructorCurrent_ActualTeleportUsesSelectedSlotConstructorThenCommon"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionNoFirstSkipsInvalidEffectType"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionSelectedPhysicalOrUnknownConstructorFailsBeforeCommon"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionTailBindingKeepsOriginalOwner"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionUsesCurrentConstructorAndItsOwnTypeGlobal"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_ActualSessionResumesCommonAfterNullAndCurrentTypeMutation"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_ActualSessionThrownDiagnosticKeepsPrefixMutationAndDepth"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_SelectedNullConstructorsKeepExactDiagnosticAndCallableLifetime"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "FormConstructorCurrent_Native56PhysicalSlotsOnlyStoreVtableDword"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_CallableSurvivesSelfUnbinding"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_CdDoesNotUsePatchPrefix"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ExplicitPreflightRemainsSeparate"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LateCommonFailureKeepsSelectedCreationAndCurrentTypeCounts"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LifetimeCapturesTypeBeforeRegistryAndParticleAllocation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LifetimeReadsSharedTypeForEachCreation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_MissingSelectedPrefixFailsBeforeCommon"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_NoFirstUsesActualVtableWithoutDeviceOrTypeGate"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_SelectedPrefixKeepsPhysicalMutationsBeforeCommon"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_TailTypeOwnerPersistsAcrossGeneralWorldPreparation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ThrownPrefixKeepsEffectsAndDepth"
+  ]
+ ],
+ "originalProtectedUnchanged": 2764,
+ "protectedCount": 2765,
+ "fixtureCount": 945,
+ "newFixtures": 1,
+ "nativeRows": 56,
+ "nativeReobservedRows": 56,
+ "sourceSha256": {
+  "cpppj/src/o/SquidForms.h": "1eb763d40574873b3faaeea5d9631285c3b74fd0cbd09983052cf1c87179f2bb",
+  "cpppj/src/o/SquidForms.cpp": "215201b96b86c26ab338cb31da47b0b8d48ab23e5d08412494cbb9f539eae0f2",
+  "cpppj/src/client/RawCampaignParticles.cpp": "255dd6306bca6d2b214549bb87934c8b1d88352f52e29a34e3c3d6862c2b09d1",
+  "cpppj/tests/FormConstructorTests.cpp": "5d967e606a145349be0c44214ce170787f206508176a7f21bbc00a8024961939",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "cfd9b9a79a0ffd6aeb5035fe4461dd0b59bfb6b16b82231f43e04bce360db651",
+  "cpppj/tests/CMakeLists.txt": "38c782f6d516129091e8a652aa0d1527ba7f75e9991ebcbcb89985bae450388a",
+  "tools/decomp_form_constructor.py": "543d67c92528cd42dee18983bd3ed26368a2445c1ab623cab1c443ddcebb0620",
+  "cpppj/tests/fixtures/form-constructor-x86.tsv": "8cb3b884d2e1b9147446498d5c161f6da75cb5697474f7ea99f71ca1d3281176"
+ },
+ "build": {
+  "exitCode": 0,
+  "elapsedSeconds": 944.5956204,
+  "log": "extracted/cpp-resume-884/build-first.log",
+  "logSha256": "d890114146aa960aca78f04eef02da5cd42d5634e21ca9a7b549388c508d4182",
+  "warnings": 0,
+  "errors": 0
+ },
+ "testExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "FormConstructorCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-884/test-form-constructor-native-first.log",
+   "sha256": "6584a1da436a125a438b17e9a14cf29b568a8e315e98e8f7dc9891c34cba90bf"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "FormConstructorCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-884/test-form-constructor-session-first.log",
+   "sha256": "3e31419c5a8af61e3801e2f96f51df858600643c5cf495296e552d8a37b0f513"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "EvilRayCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-884/test-evilray-current-first.log",
+   "sha256": "0c0676489849190ab84054864e8ae3d17cfa12f35fda76959f1a099321cfdae7"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-884/test-teleport-session-first.log",
+   "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportStubCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-884/test-teleport-stub-first.log",
+   "sha256": "520f80e3d1cc574235cb7b201cf082cbbc2b53b91fbd86bc1cc2a912433e20f7"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 12,
+   "expectedCases": 12,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-884/test-teleport-prefix-first.log",
+   "sha256": "1f6ce0bc4dc347ecc104fb401092b4321bafbcadd93ae0790579293194f91bdb"
+  }
+ ],
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-884/form-constructor-addresses.json": "4fcf13dca09fe8c6b57fb64b9129b060293e5655dc19623445d1d5bdfa784a33",
+  "extracted/cpp-resume-884/native-first.log": "e62ca3f2188706144547625b9fdda87866c2a88df089e389d24b47e826fc5483",
+  "extracted/cpp-resume-884/native-reobserved.log": "3386e437e907beb988a83ae3c24fe3bb2e997bee4873608deaef59583fd023d6",
+  "extracted/cpp-resume-884/originalCD-004af5c0-entry.asm": "b21b3489937981292e7b5128da642d4af04cfd9b0ce20804807ecb82b796ecf4",
+  "extracted/cpp-resume-884/originalCD-004af920-entry.asm": "bda905d0a7c38e39f9c51c6e2c6f155823d1dd86b9109d626f2666118516ee3d",
+  "extracted/cpp-resume-884/originalCD-004afd60-entry.asm": "5483dfeb8365c23295f9f08a1154223c4277454c4ccd07a1de1a80f802c978c9",
+  "extracted/cpp-resume-884/originalCD-004afe00-entry.asm": "ff7f3579bf9fa4f5e7908f6d2eea831591c8dd80412a444a8cad5b7bb69994df",
+  "extracted/cpp-resume-884/originals-004ae3d0-entry.asm": "5413466964847f0e72e1b8f7597fabd68c39e5ffa052c038a4993fb66e195069",
+  "extracted/cpp-resume-884/originals-004ae760-entry.asm": "14ae2440f4927fca02f2152cfd2d5f5a57b9d84d0c17b2c0b3533d0ecdcb412d",
+  "extracted/cpp-resume-884/originals-004ae9f0-entry.asm": "dfbdfc0d6b1b17a533c47fbb4f8715a20112d0c72a61d0a5194d774ee2458e4d",
+  "extracted/cpp-resume-884/originals-004aea40-entry.asm": "e5b3d791ec43020e9b7f3f59de4be3b75a3aecf65c9f460dd7a025a60696fff2"
+ },
+ "constructors": [
+  {
+   "edition": "originals",
+   "type": 1,
+   "address": "004ae760",
+   "firstReturnInstructions": 7
+  },
+  {
+   "edition": "originals",
+   "type": 2,
+   "address": "004ae3d0",
+   "firstReturnInstructions": 7
+  },
+  {
+   "edition": "originals",
+   "type": 3,
+   "address": "004ae9f0",
+   "firstReturnInstructions": 7
+  },
+  {
+   "edition": "originals",
+   "type": 6,
+   "address": "004aea40",
+   "firstReturnInstructions": 7
+  },
+  {
+   "edition": "originalCD",
+   "type": 1,
+   "address": "004af920",
+   "firstReturnInstructions": 8
+  },
+  {
+   "edition": "originalCD",
+   "type": 2,
+   "address": "004af5c0",
+   "firstReturnInstructions": 8
+  },
+  {
+   "edition": "originalCD",
+   "type": 3,
+   "address": "004afd60",
+   "firstReturnInstructions": 8
+  },
+  {
+   "edition": "originalCD",
+   "type": 6,
+   "address": "004afe00",
+   "firstReturnInstructions": 8
+  }
+ ],
+ "scope": [
+  "양판본1/2/3/6의 cdecl 생성자를 지정 물리 SID의 VT DWORD 단일 저장으로 복원",
+  "SID0/예약/free/dead/끝 슬롯에서 나머지 바이트·타입BYTE/할당 카운터 보존",
+  "실제 Teleport 현재 함수 선택→기존 슬롯 VT 변경→공통 장부/깊이; Create/Take/새Form/Kernel/renderer 생성 없음"
+ ],
+ "validation": {
+  "firstCompileFailed": false,
+  "firstTestFailedCases": 0,
+  "finalTestFailedCases": 0,
+  "cppReplayRows": 56,
+  "existingExpectationsChanged": false,
+  "newFixtureOverwritten": false,
+  "sourceStableDuringBuild": true,
+  "sourceChangesAfterFirstBuild": 0,
+  "gameExecutions": 0,
+  "newMpTests": 0,
+  "newAirThreeTests": 0
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "mp": 3,
+  "completedParents": 38,
+  "completedPartial": 3
+ },
+ "limits": [
+  "SID0의 최초 DWORD는 특수 풀 머리와 겹칠 수 있어 그 DWORD 자체는 원문대로 덮는다. 다른 바이트가 보존된다는 뜻이다.",
+  "현재 caller는 반환 포인터를 사용하지 않는다. C++ API는 유효 소유 메모리를 가진 SidPool의 물리 저장이며 null pool/32비트 주소 감김은 별도 호스트 경계다.",
+  "원문에서 의미상 잘못된 TYPE/VT 조합을 만든 뒤의 모든 Form 행동을 검증한 것은 아니다. 실제 Session 검사는 접두와 공통 복귀까지다.",
+  "다른 process11항목(경로8/UI2/timer1)과 자산 TYPE70 이상·다른 현재 전역/전체Pop은 미완료다.",
+  "게임/GUI/포획/희생/공격/승리/사용자직접확인/공중3종/신규MP/전체71/CTest/34미션/ZIP 실행0."
+ ],
+ "next": [
+  "경로8 생성자의 고정 ABI/클래스 선택과 부착 없는 생성 결과 소유권을 대조",
+  "다른 현재 TYPE/모드·전체Pop·군도·Factory·State/파일·객체메뉴/Edit·Windows·무검사MP/4~8차 계속"
+ ]
+}
