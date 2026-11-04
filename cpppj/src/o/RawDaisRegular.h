@@ -26,6 +26,9 @@ struct DaisRegularState {
     OriginalEdition playerEdition{OriginalEdition::Patch1078}; // 기록의0xb4/0xac 및 필드 폭을 판본대로 해석한다.
     const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 장기 owner이며 선택/획득 종류가 같은 번호를 읽는다.
     const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 의식 요청처럼 참조를 보관하는 소비자에 임시 값을 반환하지 않는다.
+    std::uint32_t bridgeType{82};const std::uint32_t* currentBridgeType{}; // 공통 WORD setter가 읽는005411a0/CD0051ca8c이며 독립 입력은 실제 초기82다.
+    const std::uint32_t& BridgeType() const { return currentBridgeType ? *currentBridgeType : bridgeType; } // WORD 저장 뒤 같은 현재 다리 번호를 읽는다.
+    std::span<std::uint8_t> PlayerResultSlot(std::uint32_t owner); // PATCH 가상 Count 앞에서 Player 결과 DWORD의 실제 네 바이트 주소를 저장한다.
     void BindPlayerRecords(OriginalEdition edition,std::span<std::uint8_t> records); // 정확9기록을 같은 다이스 수명/획득이 공유한다.
     std::uint8_t GrantFlag(std::uint32_t owner) const; // 현재+71/CD+69 BYTE를 효과 뒤 다시 읽는다.
     std::uint8_t& GrantFlagSlot(std::uint32_t owner); // Count가 재진입해 기록을 바꿔도 앞에서 선택한 실제 BYTE 주소를 유지한다.
@@ -69,6 +72,7 @@ struct DaisRegularHooks {
     std::function<std::int32_t(std::uint32_t,std::uint32_t)> alliance; // 실제 현재 동맹표의 행/열을 읽는다. 독립 입력은 기존 배열을 사용한다.
     std::function<std::uint32_t(Sid)> count; // 원문에서 확인된 자기 가상80 호출만 현재 Session 분배기에 위임한다.
     std::function<std::uint32_t()> priestType; // 선택한 원문 위치에서 현재 canonical 사제 종류를 읽으며 독립 입력은 기존 ritual 상태를 사용한다.
+    std::function<void(Sid)> notifySurface; // 희생 완료의 공통 WORD 지정이 현재 다리 타입에 해당할 때만 호출한다.
 };
 // 기존 조회·프레임·Host·PathStart를 같은 풀에 재사용하는 Dais 실제 상위 몸체다.
 class RawDaisRegular {

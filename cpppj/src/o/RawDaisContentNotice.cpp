@@ -1,5 +1,6 @@
 // 최초 부착 알림은 제단 Unpop 뒤 현재 타입을 다시 읽고 plain 프레임/WORD를 지정한다.
 #include "o/RawDaisContentNotice.h"
+#include "o/RawSquidWord.h"
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -28,14 +29,13 @@ bool RawDaisContentNotice::Handles(Sid dais) const {
 }
 // 첫 프레임의 원본 signed DWORD 또는 하위 BYTE를 그대로 쓴다.
 void RawDaisContentNotice::WriteFrame(Sid altar,std::int32_t frame) const {
-    auto raw=pool_.AllocatedBytes(altar);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto value=std::bit_cast<std::uint32_t>(frame);const std::size_t offset=patch ? 36 : 34,width=patch ? 4 : 1;
+    const auto physical=pool_.Slot(altar);auto raw=pool_.Edition()==OriginalEdition::Patch1078 ? std::span<std::uint8_t>(const_cast<std::uint8_t*>(physical.data()),physical.size()) : pool_.AllocatedBytes(altar);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto value=std::bit_cast<std::uint32_t>(frame);const std::size_t offset=patch ? 36 : 34,width=patch ? 4 : 1;
     // 표시 setter를 호출하지 않고 지정한 폭만 바꾼다.
     for (std::size_t index=0;index<width;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(8*index));
 }
 // 004ac220/CD004abb00의 WORD 폭과 현재 다리 후속 분기다.
 void RawDaisContentNotice::WriteWord(Sid altar,std::uint16_t word) const {
-    auto raw=pool_.AllocatedBytes(altar);raw[12]=static_cast<std::uint8_t>(word);raw[13]=static_cast<std::uint8_t>(word>>8);
-    if (raw[10]==state_.bridgeType) hooks_.notifySurface(altar);
+    SetRawSquidWord(pool_,altar,word,state_.BridgeType(),hooks_.notifySurface);
 }
 // reason2 제거는 자연반환이며 kind 검사는 현재 전역 사제 타입과 비교한다.
 void RawDaisContentNotice::Notice(Sid dais,Sid form,std::uint32_t reason) const {

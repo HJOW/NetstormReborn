@@ -1,0 +1,363 @@
+{
+ "unit": 877,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "02c39dbf / 20261105-10 CP",
+ "exeSha256": "0774e466b8c21d5ac28096c24a65d5cb9f584b2f89a00cd5cb0543200cb65e6c",
+ "exeBytes": 10613248,
+ "scope": [
+  "공통 WORD primitive004ac220/CD004abb00와 현재 Bridge82 주소를 다이스/제단/내용물 부모에 연결",
+  "PATCH plain frame/extra 쓰기의 물리 슬롯 및 altarSid 진단 정상 복귀",
+  "Count 앞 Player 결과 DWORD 주소(PATCH)/owner(CD) 저장 순서",
+  "현재 TYPE의 선택된 frame/방향 조회 물리 범위 오류 명시"
+ ],
+ "sourceSha256": {
+  "cpppj/src/client/RawCampaignRitual.inc": "5c93116ef7dbfbed8baac04977531d75133ee007d94ad59038e8d9ce549503f4",
+  "cpppj/src/o/RawAltarSacrifice.cpp": "c19d4dfce01cc49d1ccab8e4bfe8be51ea1ced66d6dc93eb82e4cde8c0978dbb",
+  "cpppj/src/o/RawAltarSacrifice.h": "b4014a2fc33475374a6628fa129248ecce2377ccb535436a16920511856d5abe",
+  "cpppj/src/o/RawDaisContentNotice.cpp": "b7e1f5d3b8a29763e65a2fa0891627b48cb48af19292343b84690df5c113c62d",
+  "cpppj/src/o/RawDaisContentNotice.h": "6c62891e0624006d8587c244bc9b91488d46a2b48cb55c944fa49be86abe287b",
+  "cpppj/src/o/RawDaisRegular.cpp": "4aa4a19ab7753c8ca49fd52f62a36a2a46be8ba1316b985df00d33ca91b12fed",
+  "cpppj/src/o/RawDaisRegular.h": "1b6caed04ff25cff725c8ae67c41f937d2155098a814ca03485f663aeba7c788",
+  "cpppj/tests/DaisCheckingParentsTests.cpp": "85fa8cb6a4e059eed35d65aadb4f2ff324486d173351cedd8ee8833032291422",
+  "cpppj/src/o/RawSquidWord.h": "cfd083648448516d707cfe84d7d320297663e3c3f0a2d2e44a5bd641884487e9"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/client/RawCampaignRitual.inc": "5c93116ef7dbfbed8baac04977531d75133ee007d94ad59038e8d9ce549503f4",
+  "cpppj/src/o/RawAltarSacrifice.cpp": "9fc1422e9f85dbaa5e77960b94a6fc913e209f02d48f17f1c39721e97d351a4c",
+  "cpppj/src/o/RawAltarSacrifice.h": "b4014a2fc33475374a6628fa129248ecce2377ccb535436a16920511856d5abe",
+  "cpppj/src/o/RawDaisContentNotice.cpp": "b7e1f5d3b8a29763e65a2fa0891627b48cb48af19292343b84690df5c113c62d",
+  "cpppj/src/o/RawDaisContentNotice.h": "6c62891e0624006d8587c244bc9b91488d46a2b48cb55c944fa49be86abe287b",
+  "cpppj/src/o/RawDaisRegular.cpp": "d4877509e22e456505f1d44fadaae2c419bddf693f010141f3db2a186cae8afe",
+  "cpppj/src/o/RawDaisRegular.h": "1b6caed04ff25cff725c8ae67c41f937d2155098a814ca03485f663aeba7c788",
+  "cpppj/tests/DaisCheckingParentsTests.cpp": "cb06b0bb3b18a3f7967a26af549a944bc4538f9e99ae5f65fc6889b345a1470d",
+  "cpppj/src/o/RawSquidWord.h": "cfd083648448516d707cfe84d7d320297663e3c3f0a2d2e44a5bd641884487e9"
+ },
+ "postFirstBuildStaticAmendments": [
+  "cpppj/src/o/RawAltarSacrifice.cpp",
+  "cpppj/src/o/RawDaisRegular.cpp",
+  "cpppj/tests/DaisCheckingParentsTests.cpp"
+ ],
+ "staticAmendmentNote": "첫 빌드 뒤 정적 검토에서 현재 TYPE의 표 밖 접근을 발견해 제품 getter3곳/새 범위 검사1개를 추가했다. 검사는 최종 빌드 뒤 처음 실행했으며 기존 기대값은 불변이다.",
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-877/originalCD-004816c0.c": "84f7f7d46a47ab98a1d8136b0cd6aafea8ae288f821e459a580a428e8bfc3276",
+  "extracted/cpp-resume-877/originalCD-00482620.c": "72e01267741aac8f224f300bdf87067f06187bf37bdbfe25c852e205cb237140",
+  "extracted/cpp-resume-877/originalCD-00482ec0.c": "753e50770e5a4391f4f5d8a405209d2f5e0250f0dbed20886aac4565521edfb3",
+  "extracted/cpp-resume-877/originalCD-004abb00.c": "8975dd44c6c8dd8a43258e00e43590cc150d50ba395c222bd328b11dc5004fcd",
+  "extracted/cpp-resume-877/originals-004483c0.c": "d865455e259654a82dfbcf28006f7579d9e941b86558c33a508eb756052b6c9d",
+  "extracted/cpp-resume-877/originals-00448500.c": "45debe1dddaee48ea1c0bc573da018cf1662d3069ff622c18b4bef412abaf0d7",
+  "extracted/cpp-resume-877/originals-00448bd0.c": "fa3f3620492a1bf6dd3ff6fabb09c5f802f69db02b00c485dcc4eeaded36d3cc",
+  "extracted/cpp-resume-877/originals-00449b30.c": "24067ffb5cebb75482c514cc923491acf37b1953d75290066efdcea7e22670b8",
+  "extracted/cpp-resume-877/originals-0044a200.c": "0931f8c1122e18bab839d4498c026630d7e436533e44d60daa7ca40bd415203e",
+  "extracted/cpp-resume-877/originals-004ac220.c": "97c28cbbba9f4dbb9c8b5a33e1e04ac19c239db4f1f3c5e4ed82afd3370dc020"
+ },
+ "nativeWordMap": {
+  "originals": {
+   "bridgeTypeAddress": "005411a0",
+   "initial": 82,
+   "selectedFunctions": [
+    "004483c0",
+    "00449660",
+    "00449b30",
+    "0044a200",
+    "004ac220"
+   ]
+  },
+  "originalCD": {
+   "bridgeTypeAddress": "0051ca8c",
+   "initial": 82,
+   "selectedFunctions": [
+    "004816c0",
+    "00482620",
+    "004abb00"
+   ]
+  }
+ },
+ "nativeMissingC": {
+  "00449660": {
+   "assembly": "extracted/cpp-resume-877/originals-00449660-bounded.asm",
+   "sha256": "e7c4552abcc16518fe3076311a75796e17adb85635371b11034591ad2f7374ad"
+  }
+ },
+ "peSha256": {
+  "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+ },
+ "builds": [
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 143.71657919999998,
+   "log": "extracted/cpp-resume-877/build-first.log",
+   "logSha256": "f6dc33ba53b3a328f17dd1bf0824be8d4e8df86cef5458bd62abcca3a2ba8daf",
+   "warnings": 0,
+   "errors": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 36.5339757,
+   "log": "extracted/cpp-resume-877/build-final.log",
+   "logSha256": "10817ec622ccb5e720b644c6179f1efd9994b5f477c7763ace1331e2776a27c8",
+   "warnings": 0,
+   "errors": 0
+  }
+ ],
+ "testExecutions": [
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RitualStorageCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-ritual-storage-current-first.log",
+   "sha256": "9c0ce612be198f1b4db9ed34537c9336cc31d4f4a3baa9ac3351ce469b8c6884"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RitualDeviceCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-ritual-devices-current-first.log",
+   "sha256": "9a671d142e4fef70cf44fd58fdcd0ae8207bb37ef7b215dec96836348781a91f"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TempleHelperCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-temple-current-first.log",
+   "sha256": "9618e8be9583a25693ad816e2d35c49e9c65c89875868332d053de60c917baca"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisCheckingParents_",
+   "cases": 6,
+   "expectedCases": 6,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-dais-checking-parents-first.log",
+   "sha256": "82bf392350ec6caf21df19d5d3c7f0fcc9867d465c62552a1639ca514d85a20f"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisClassCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-dais-class-current-first.log",
+   "sha256": "6de8607702ee31f4142d3274227fb51da80872338c83d3379cefcb52e62f2f79"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneSharedCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-rune-shared-menu-first.log",
+   "sha256": "371741f08f33464ff84ad4ac8f68a7e9227494028c3c25fda751167ac225bc2f"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "RuneSharedCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-rune-shared-prefix-first.log",
+   "sha256": "343bc756429316708bd7082722fbe22447fe32116ed5afd01eebdb0f2d616efe"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-rune-number-first.log",
+   "sha256": "533b95a4db499eeeac1a6a1889bcd22eeb5c89a7d3763e56093968bac970a6dd"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-rune-number-session-first.log",
+   "sha256": "d05ccbcfe6bd015163388cb8a7cf8c62f73bfdb46c21a078facb93d8b7eb3943"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "rawDaisLifecycle_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-877/test-dais-lifecycle-native-first.log",
+   "sha256": "97c1cb01fe458df50d6d2d7f6dacfc113b83c7d6c48e535efa5ea0e88a99414e"
+  }
+ ],
+ "uniqueCases": [
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_BridgeUsesCurrentBossAndNullPathDiagnosticReturns"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_CanBridgeCurrentAllianceAndCdNoPatchDiagnostic"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_CanBridgeCurrentFinderAndMetadataAfterDiagnostic"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_DeadParentDiagnosticPrecedesCurrentHeadRead"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_DepthDiagnosticsReturnCurrentRuntimeValue"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_StageUsesOneVirtualCountAndSavedInitialFrame"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_ActualSessionDispatchesReadOnlyRegularsByVtable"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_CountKeepsEditionSpecificPlayerDestination"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_LifecycleLazyDevicesAndPartialPlayerCleanup"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_RegularKeepsVtableFunctionIdentity"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualDeviceCurrent_AltarReadsTypedPositionBeforeSelectedFallback"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualDeviceCurrent_DaisLazyEligibilityAndNoEffectRegularKeepCdContract"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualStorageCurrent_InvalidCurrentTypeStopsBeforeAnyAltarAnimationEffect"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualStorageCurrent_PlayerResultDestinationKeepsOriginalRecordAndDwordWidth"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualStorageCurrent_WordStoresBeforeCurrentBridgeNotificationAndMissingDevice"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneSharedCurrent_ActualSessionPreflightUsesCurrentRuneOwnerWithoutEffects"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneSharedCurrent_TempleLookupReadsTypeAfterVirtualCount"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneTypeNumber_ActualSessionChoiceGetterReadsCurrentDaisOwner"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TempleHelperCurrent_PatchEarlyReturnSkipsUnusedDevicesAndInvalidPriest"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TempleHelperCurrent_ReadOnlyPriestLookupAndBossUseBoundOwner"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneSharedCurrent_OwnerAndMissionModeRemainLiveAfterGeneralReset"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneSharedCurrent_ReservationChangesBoundMissionBeforeDurationRead"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_CurrentFinderAndDurationUseBoundNumbers"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_ReferencesForParticipationAndAiKeepOriginalOwner"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_ReservationChangesCurrentNumbersBeforeFindAndDuration"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "rawDaisLifecycle_native_bound_player_records"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "rawDaisLifecycle_native_initial_pop_player_pairs_and_delete_prefix"
+  ]
+ ],
+ "uniqueCaseCount": 27,
+ "groups": 10,
+ "newCases": 3,
+ "firstFailedCases": 0,
+ "firstFailedChecks": 0,
+ "expectationsChanged": 0,
+ "existingNativeRows": {
+  "daisLifecycleUnique": 1928,
+  "replays": 2
+ },
+ "newNativeRows": 0,
+ "newFixtures": 0,
+ "protectedFiles": 2761,
+ "protectedFixtureFiles": 941,
+ "protectedChanged": 0,
+ "protectedAfterSha256": "f762a5e5138d30748d8dc97d07d20266e33c8b0b02afaa1f8f231869fbb60dea",
+ "checkingRemaining": {
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "total": 10
+ },
+ "checkingCompleted": {
+  "parents": 38,
+  "partial": 3
+ },
+ "limitations": [
+  "새3개는 WORD/Player 저장소 API와 효과 전 TYPE 범위만 검사한다. 실제 의식/포획/해방/희생 본체0",
+  "FinishSacrifice의 주소 저장/altarSid 진단·plain 쓰기와 세 실제 setter/Bridge 서비스 연결은 코드/정적/컴파일 근거",
+  "공통 WORD primitive의 모든61caller를 이번에 새로 연결한 것이 아니며 다른 모듈의 기존 setter는 유지한다",
+  "새 실제 Session/Native/fixture0·신규 MP/패킷/통신·공중3종 전용·실제 게임/GUI/특정 적 공격/승리·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복0",
+  "내용물 부모 알림의 PATCH 선택 장치와 다른 TYPE/모드·TYPE 초기화 writer·Teleport 생성 함수·전체Pop/Factory/군도/메뉴/Edit/State/파일/Windows/후속 단계는 남음"
+ ],
+ "nextUnit": 878
+}

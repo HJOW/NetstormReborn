@@ -9,6 +9,8 @@ struct DaisContentNoticeState {
     std::uint32_t& localOwner; // 현재 다이스 owner와 비교하는 patch00540c70/CD0050f6c8이다.
     std::uint32_t cue{}; // patch00542a50/CD00512bd8의 포획 사제 알림 cue다.
     std::uint32_t bridgeType{82}; // 공통 WORD 지정이 표면 통지를 추가하는 현재 다리 타입이다.
+    const std::uint32_t* currentBridgeType{}; // 실제 현재 BridgeState의 장기 번호를 선택적으로 빌린다.
+    const std::uint32_t& BridgeType() const { return currentBridgeType ? *currentBridgeType : bridgeType; } // 저장 뒤 현재 다리 통지 분기를 선택한다.
 };
 // 현재 제단의 가상 공간과 cue/다리 WORD 후속 효과를 실제 같은 월드에 연결한다.
 struct DaisContentNoticeHooks {

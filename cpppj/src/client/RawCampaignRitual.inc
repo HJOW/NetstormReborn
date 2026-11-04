@@ -26,6 +26,7 @@ void ConnectDaisLifecycle() {
     AltarSacrificeHooks altar; // 실제 같은 난수/프레임/경로/폭발과 명령 큐다.
     altar.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("제단 해방 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 같은 Client 현재 장치의 정상 복귀를 제단/다이스에 전달한다.
     altar.boss=[this] { return assetState.Boss(); }; // 앞선 진단이 돌아온 뒤에도 같은 Client의 현재 권한을 읽는다.
+    altar.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); }; // 사제 WORD 지정 뒤 현재 다리 TYPE에서만 실행한다.
     altar.count=[this](Sid sid) { return VirtualCount(sid); }; // typed Dais의 TYPE와 독립적인 현재 VT+80을 같은 Session에서 다시 분배한다.
     altar.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
     altar.reserveShared=[this] { return ReserveRitualRegular(); };
@@ -57,6 +58,7 @@ void ConnectDaisLifecycle() {
     life.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };life.damageablePostDestroy=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
     daisLifecycle=std::make_unique<RawDaisLifecycle>(core.pool,core.hash,core.types,core.neighbors,*templeRitual,*altarSacrifice,*carrier,*damageablePre,*daisState,altarState,*daisLifecycleState,std::move(life));core.postPop.SetDaisPostPop(daisLifecycle.get());
     daisNoticeState=std::make_unique<DaisContentNoticeState>(DaisContentNoticeState{priestState.movement.priest,playerState.battleOwner,0x020000d7});
+    daisNoticeState->currentBridgeType=&core.bridgeState.bridgeType; // 내용물 부모의 WORD setter도 현재 장기 다리 번호를 읽는다.
     DaisContentNoticeHooks notice; // plain 제단 프레임/WORD와 원본 입력 명령의 실제 부모 통지다.
     notice.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };notice.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
     notice.stopVoice=[this](std::uint32_t cue,std::uint32_t first,std::uint32_t second) { RitualCommand(cue,first,second); };notice.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
@@ -92,10 +94,12 @@ void ConnectRitual() {
     rune.suppressDuration=[this] { return globals.missionPost; };rune.playerFlags=[this](std::uint32_t owner) { if (owner>kPlayerCount || owner*0xb4U+0x50U>=players.size()) throw std::out_of_range("Rune 현재 Player 기록 물리 범위");return players[owner*0xb4U+0x50U]; }; // 예약/생성 효과 뒤 시간 helper가 도달한 위치에서 같은 현재 전역/Player BYTE를 읽는다.
     runePostPop=std::make_unique<RawRunePostPop>(core.pool,core.hash,core.types,runeState,core.postPop,std::move(rune));core.postPop.SetRunePostPop(runePostPop.get());
     daisState=std::make_unique<DaisRegularState>(DaisRegularState{ritualState,runeState,core.processState,rewardState,playerState.battleOwner});
+    daisState->currentBridgeType=&core.bridgeState.bridgeType; // 같은 현재 WORD setter 전역을 실제 다이스/제단이 공유한다.
     daisState->sharedNuggetType=rewardState.sharedNuggetType; // 늦게 생성된 다이스 선택/획득의 현재 너겟 번호도 같은 장기 Client owner를 빌린다.
     daisState->debug.Bind(gameplayGlobals->AiDebug().Checking()); // 지연 생성 뒤에도 현재 checking을 매 소비 위치에서 읽는다.
     daisState->BindPlayerRecords(core.pool.Edition(),players);daisState->voiceCue=0x020000df; // PE00542a70의 실제 희생 종료 명령이다.
     DaisRegularHooks dais; // 실제 의식 이동/초기 진행의 필수 효과와 아직 미연결인 후반 경계다.
+    dais.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); }; // 희생 완료의 공통 WORD 지정 뒤 선택 통지다.
     dais.assertion=[assertion=services.ai.assertion](std::string_view expression,std::string_view,std::uint32_t line) { if (!assertion) throw std::logic_error("다이스 현재 진단 장치 미연결 "+std::to_string(line));assertion(expression); }; // 정상 복귀 뒤 원문 현재 TYPE/경로/상태 조회를 계속한다.
     dais.boss=[this] { return assetState.Boss(); }; // PrepareRitual의 사본 대신 현재 Client 권한을 읽는다.
     dais.alliance=[this](std::uint32_t row,std::uint32_t column) { if (row>kPlayerCount || column>kPlayerCount) throw std::out_of_range("다이스 현재 동맹 행/열 범위");return std::bit_cast<std::int32_t>(alliances[row*(kPlayerCount+1)+column]); }; // 진단 중 바뀐 실제 방향별 DWORD를 조회한다.

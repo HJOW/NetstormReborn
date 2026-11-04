@@ -3,6 +3,7 @@
 #include "o/RawDaisRegular.h"
 #include "o/RawDaisLifecycle.h"
 #include "o/RawGameAuxState.h"
+#include "o/RawSquidWord.h"
 #include "o/SquidUnpop.h"
 #include <memory>
 
@@ -183,4 +184,22 @@ TEST_CASE(RitualDeviceCurrent_AltarReadsTypedPositionBeforeSelectedFallback) { /
             Put(raw,14,0x7fc00000);bool position=false;try { static_cast<void>(helper.Handle(Sid{7},23,0,.5F)); }catch (const std::out_of_range&) { position=true; }CHECK(position && scene.effects==0); // 사용하지 않는 장치나23의 반환을 앞세워 원문의 첫 위치 조회를 생략하지 않는다.
         }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected==!scene.Patch());
     }
+}
+
+TEST_CASE(RitualStorageCurrent_WordStoresBeforeCurrentBridgeNotificationAndMissingDevice) { // 독립 WORD primitive만 검사하며 의식/포획/해방/희생 본체는 호출하지 않는다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // PATCH의 free 물리 슬롯과 CD의 기존 할당 계약에서 같은 두 바이트만 쓴다.
+        SidPool pool(edition,24000,true);const auto sid=pool.Allocate(2);auto raw=pool.AllocatedBytes(sid);std::fill(raw.begin(),raw.end(),std::uint8_t{0x5a});raw[10]=70;raw[11]=edition==OriginalEdition::Patch1078 ? 1 : 0;std::uint32_t bridge=70,calls{};const std::function<void(Sid)> notify=[&](Sid current) { CHECK(current==sid && Get(pool.Slot(sid),12,2)==0xbeef);++calls;bridge=71; };
+        SetRawSquidWord(pool,sid,0xbeef,bridge,notify);SetRawSquidWord(pool,sid,0x1234,bridge,{});CHECK(calls==1 && Get(raw,12,2)==0x1234);bridge=70;bool missing=false;try { SetRawSquidWord(pool,sid,0xabcd,bridge,{}); }catch (const std::logic_error&) { missing=true; }CHECK(missing && Get(raw,12,2)==0xabcd && raw[10]==70 && raw[14]==0x5a && raw[11]==(edition==OriginalEdition::Patch1078 ? 1 : 0)); // 선택 장치 부재 전에 저장한 WORD와 인접 필드를 보존한다.
+    }
+}
+TEST_CASE(RitualStorageCurrent_PlayerResultDestinationKeepsOriginalRecordAndDwordWidth) { // 실제 희생 대신 저장소 API만 호출해 Count 앞에서 보관할 주소와 복귀 뒤 현재 쓰기를 구별한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 두 원본 Player stride/결과 offset과 독립 DWORD 표현을 확인한다.
+        DaisParentScene scene(edition);const auto stride=scene.Patch() ? 0xb4U : 0xacU,offset=scene.Patch() ? 0xa0U : 0x98U;std::vector<std::uint8_t> first(9*stride,0xa5),second(9*stride,0xb6);scene.state.BindPlayerRecords(edition,first);auto saved=scene.state.PlayerResultSlot(1);CHECK(saved.size()==4);scene.state.BindPlayerRecords(edition,second);Put(saved,0,0x12345678);scene.state.SetPlayerResult(1,0x89abcdef);CHECK(Get(first,stride+offset)==0x12345678 && Get(second,stride+offset)==0x89abcdef && first[stride+offset-1]==0xa5 && first[stride+offset+4]==0xa5 && second[stride+offset+4]==0xb6);
+        scene.state.playerRecords={};scene.state.SetPlayerResult(2,0x10203040);CHECK(scene.state.playerResults[2]==0x10203040 && scene.effects==0); // 값형 fallback도 정확한 네 바이트만 바꾼다.
+    }
+}
+
+TEST_CASE(RitualStorageCurrent_InvalidCurrentTypeStopsBeforeAnyAltarAnimationEffect) { // 표 밖 TYPE는 실제 메모리를 배열 밖으로 읽지 않고 선택한 방향 조회에서 명시 실패한다.
+    DaisLifecycleCurrentScene scene;scene.hash.Bucket(1,40.75F,41.25F)=0;auto raw=scene.Raw(Sid{7});Put(raw,0,kPatchAltarVtable);raw[10]=255;RawAltarSacrifice helper(scene.pool,scene.hash,scene.types,scene.frames,*scene.footprint,*scene.rune,*scene.ritual,*scene.carrier,*scene.dais,*scene.advance,*scene.host,*scene.damage,scene.state,scene.altarState,{});const auto before=std::vector<std::uint8_t>(scene.pool.Bytes().begin(),scene.pool.Bytes().end());bool rejected=false;
+    try { static_cast<void>(helper.Handle(Sid{7},20,1,.5F)); }catch (const std::out_of_range&) { rejected=true; }CHECK(rejected && scene.effects==0 && std::equal(before.begin(),before.end(),scene.pool.Bytes().begin())); // 프레임 진행/소리/희생 효과에는 도달하지 않는다.
 }

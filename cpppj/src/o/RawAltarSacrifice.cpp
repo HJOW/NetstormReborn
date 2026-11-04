@@ -1,5 +1,6 @@
 // 실제 제단 사건과 다이스 전처리를 복원하고 기존 조회/프레임/Host/공통 삭제를 재사용한다.
 #include "o/RawAltarSacrifice.h"
+#include "o/RawSquidWord.h"
 #include "o/RawAltarReleaseParent.h" // 패치의 실제 진단 복귀/저장 검색 결과를 공유한다.
 #include "o/RawAssetRegular.h"
 #include "o/SquidFactory.h"
@@ -11,6 +12,7 @@
 namespace netstorm::o {
 namespace {
 template<class F> F AltarNeed(const F& function) { if (!function) throw std::logic_error("제단의 선택된 실제 장치 미연결");return function; } // 선택한 callable을 복사해 실제 호출 중 연결 교체에도 수명을 유지한다.
+std::span<std::uint8_t> AltarRaw(SidPool& pool,Sid sid) { if (pool.Edition()!=OriginalEdition::Patch1078) return pool.AllocatedBytes(sid);const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // Unpop/해방 콜백 뒤 PATCH plain frame은 같은 물리 슬롯을 쓰며 CD 계약은 유지한다.
 constexpr float kStrugglePayload=0.08F,kFinishedDelay=3.0F,kReleaseOffset=0.5F; // 실제PE 3da3d70a/40400000/3f000000 비트다.
 constexpr std::uint32_t kSacrificeDestroy=0x400000,kAltarDestroy=0x48; // 최종 희생 완료와 제단 삭제의 실제 flags다.
 constexpr std::array<std::string_view,5> kChains{{"chainRattle23.wav","chainRattle24.wav","chainRattle25.wav","chainRattle26.wav","chainRattle27.wav"}}; // 두 판본의 실제 선택표 첫5개다.
@@ -46,12 +48,12 @@ bool RawAltarSacrifice::Valid(Sid sid) const { return sid.value>0 && sid.value<p
 // 패치 signed DWORD와 CD BYTE를 구분한다.
 std::int32_t RawAltarSacrifice::Frame(Sid sid) const { const auto raw=pool_.Slot(sid);return pool_.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(raw,36)) : raw[34]; }
 // 현재 raw타입을 읽어 실제 코드표의 방향을 반환한다.
-std::int32_t RawAltarSacrifice::Direction(Sid sid) const { return RawPathAnimation::Direction(frames_[pool_.Slot(sid)[10]],Frame(sid)); }
+std::int32_t RawAltarSacrifice::Direction(Sid sid) const { const auto type=pool_.Slot(sid)[10];if (type>=frames_.size()) throw std::out_of_range("제단 현재 방향 TYPE 물리 범위");return RawPathAnimation::Direction(frames_[type],Frame(sid)); }
 // 현재 타입의 실제 글자 구간 첫번호다.
-std::int32_t RawAltarSacrifice::First(Sid sid,std::uint8_t letter) const { return frames_[pool_.Slot(sid)[10]].Run(letter).first; }
+std::int32_t RawAltarSacrifice::First(Sid sid,std::uint8_t letter) const { const auto type=pool_.Slot(sid)[10];if (type>=frames_.size()) throw std::out_of_range("제단 현재 frame TYPE 물리 범위");return frames_[type].Run(letter).first; }
 // 표시 setter를 호출하지 않는 원본 해방의 plain 쓰기다.
 void RawAltarSacrifice::WriteFrame(Sid sid,std::int32_t value) const {
-    auto raw=pool_.AllocatedBytes(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto offset=patch ? 36U : 34U;const auto width=patch ? 4U : 1U;const auto bits=std::bit_cast<std::uint32_t>(value);
+    auto raw=AltarRaw(pool_,sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto offset=patch ? 36U : 34U;const auto width=patch ? 4U : 1U;const auto bits=std::bit_cast<std::uint32_t>(value);
     // 정확한 판본 필드 폭만 기록한다.
     for (std::size_t index=0;index<width;++index) raw[offset+index]=static_cast<std::uint8_t>(bits>>(index*8));
 }
@@ -113,7 +115,7 @@ void RawAltarSacrifice::ReleasePriest(Sid dais) const {
     if (!Boss()) { if (patch) AssertRelease("boss",0x3cd);else throw std::logic_error("다이스 해방 boss assert"); } // 원문은 진단이 돌아오면 기존 내용물/음향 조회를 계속한다.
     const auto captured=ContainedPriest(dais);
     if (captured.value) {
-        const auto created=AltarNeed(hooks_.create)(daisState_.ritual.PriestType(),0);const auto word=Read(pool_.Slot(captured),12,2);auto raw=pool_.AllocatedBytes(created);raw[12]=static_cast<std::uint8_t>(word);raw[13]=static_cast<std::uint8_t>(word>>8);AltarNeed(hooks_.setOwner)(created,0);
+        const auto created=AltarNeed(hooks_.create)(daisState_.ritual.PriestType(),0);const auto word=Read(pool_.Slot(captured),12,2);SetRawSquidWord(pool_,created,static_cast<std::uint16_t>(word),daisState_.BridgeType(),hooks_.notifySurface);AltarNeed(hooks_.setOwner)(created,0);
         const auto y=footprint_.Center(dais)[1];const auto x=footprint_.Center(dais)[0];AltarNeed(hooks_.pop)(created,static_cast<float>(static_cast<double>(x)+kReleaseOffset),y,0);AltarNeed(hooks_.escapeEffect)(created,5.0F,0);AltarNeed(hooks_.destroy)(captured,0);
     }
     AltarNeed(hooks_.playGlobal)("priestFree.wav",0,0,0,1,0);if (!patch && pool_.Slot(dais)[32]==daisState_.localOwner) AltarNeed(hooks_.playGlobal)("enemyPriestEsacping.wav",0,0,0,1,0);const auto priest=temple_.FindStrongOwnedPriest(dais);if (Valid(priest)) dais_.StopPriestRitual(priest);
