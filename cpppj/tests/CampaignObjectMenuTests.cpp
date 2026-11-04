@@ -970,3 +970,19 @@ TEST_CASE(TeleportCurrent_ActualSessionSelectedPhysicalOrUnknownConstructorFails
 TEST_CASE(TeleportCurrent_ActualSessionTailBindingKeepsOriginalOwner) { // 이미 연결한 현재 TYPE 주소는 재연결 실패 뒤에도 원래 장기 소유자를 읽는다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();auto gameplay=std::make_shared<ClientGameplayGlobals>();services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();session.Particles().BindTailProcessTypes(*gameplay->GameAux());netstorm::o::RawGameAuxState other;bool rejected=false;try { session.Particles().BindTailProcessTypes(other); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected);auto core=session.Core();session.World().Storage()->types[57]=session.World().Storage()->types[12];gameplay->GameAux()->StreakProcessType()=57;const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);netstorm::test::rawscene::Put(raw,0,0x5070c0);raw[11]=raw[40]=0;session.World().Storage()->types[74].flags1=session.World().Storage()->types[74].flags2=0;++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000001);auto* tail=TeleportCurrentTail(core,source);CHECK(tail && core.bookkeeping.depth==0);if (tail) CHECK(core.pool.Slot(tail->Form())[10]==57);
 }
+TEST_CASE(PriestPostPopCurrent_ActualSessionVirtualPrefixListRegularAndMobileQuery) { // 단위862: 같은 Session의 실제 사제 VT 분배로 장기 목록·실제 회복 Regular·소유자 칸·이동 가능 보호막 조회를 연결하며 틱/행동/포획/희생은 실행하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();auto storage=session.World().Storage();
+    auto& priests=storage->sidLists.priests;const auto previous=priests.Count();const auto entries=std::vector<std::uint32_t>(priests.Storage().begin(),priests.Storage().end());auto& owners=session.Priests().Priests().OwnerState();const auto ownerBefore=owners;
+    std::size_t ground=0;while (ground<core.spots.size() && !(core.spots[ground]&6U)) ++ground; // 실제 지도의 첫 섬/다리 지면 칸에 둔다.
+    CHECK(ground<core.spots.size());
+    const auto priest=core.factory.Create(158);auto raw=core.pool.AllocatedBytes(priest);raw[34]=1;raw[40]=0;netstorm::test::rawscene::Put(raw,12,1,2);
+    netstorm::test::rawscene::Put(raw,14,std::bit_cast<std::uint32_t>(static_cast<float>(ground%256)));netstorm::test::rawscene::Put(raw,18,std::bit_cast<std::uint32_t>(static_cast<float>(ground/256)));
+    const auto maximum=session.HitPoints().MaxHitPoints(priest);netstorm::test::rawscene::Put(raw,26,static_cast<std::uint32_t>(maximum));owners[1]=7; // 최대 HP의 이동 가능 사제이며 소유자 칸 쓰기를 관찰한다.
+    ++core.bookkeeping.depth;core.postPop.PostPopVirtual(priest,0x2000001);
+    auto* regen=core.processes.FindEvent(priest,0x25a);const auto type=session.HitPoints().TypeHitPoints(158); // 현재 장기 사제 TYPE DWORD의 초기값158이다.
+    const auto expected=static_cast<float>(static_cast<double>(static_cast<float>(static_cast<double>(type/6)*50.0))/static_cast<double>(maximum));
+    CHECK(regen!=nullptr && core.bookkeeping.depth==0 && owners[1]==0 && session.Priests().Forcefield().Find(priest)==netstorm::o::Sid{});
+    if (regen) CHECK(regen->Payload()==expected && regen->Parent()==priest);
+    CHECK(previous<priests.Capacity() && priests.Count()==previous+1);if (previous<priests.Storage().size()) CHECK(priests.Storage()[previous]==priest.value);
+    std::copy(entries.begin(),entries.end(),priests.Storage().begin());priests.SetCount(previous);owners=ownerBefore; // 명시 등록으로 바꾼 장기 목록/소유자 칸을 Session 정리 전에 복구한다.
+}

@@ -126,20 +126,25 @@ TEST_CASE(priest_postpop_cd_prefix_x86) { Replay("originalCD"); }
 TEST_CASE(priest_postpop_1037_prefix_x86) { Replay("original1037"); }
 
 // raw 타입/가상 표/목록 오류와 누락된 효과를 효과 전에 거부한다.
+// 단위862 교정: PATCH 실제 접두는 원문처럼 사전 검사 없이 도달 장치만 요구하므로 같은 입력을 명시 Validate로 거부하는지 확인한다.
+// CD는 기존 구성/접두 사전 계약을 그대로 검사한다. fixture 입력/기대값은 바꾸지 않았다.
 TEST_CASE(priest_postpop_prefix_rejects_invalid_bindings_before_effects) {
-    // 두 판본의 같은 보호 정책을 확인한다.
+    // 두 판본의 보호 정책을 각 계약 위치에서 확인한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         PrefixScene scene(edition);scene.Prepare(Fixture().front());
-        CHECK(Throws([&] { RawPriestPostPop invalid(scene.pool,*scene.hp,scene.state,{}); }));
         auto hooks=scene.Hooks();hooks.reserveRegular={};
-        CHECK(Throws([&] { RawPriestPostPop invalid(scene.pool,*scene.hp,scene.state,hooks); }));
+        if (scene.patch) { RawPriestPostPop deferred(scene.pool,*scene.hp,scene.state,{});RawPriestPostPop partial(scene.pool,*scene.hp,scene.state,hooks);CHECK(&deferred.Pool()==&scene.pool && &partial.Pool()==&scene.pool); } // PATCH 구성은 도달 전 장치를 요구하지 않는다.
+        else {
+            CHECK(Throws([&] { RawPriestPostPop invalid(scene.pool,*scene.hp,scene.state,{}); }));
+            CHECK(Throws([&] { RawPriestPostPop invalid(scene.pool,*scene.hp,scene.state,hooks); }));
+        }
         SidPool other(edition,kCapacity,false);
         CHECK(Throws([&] { RawPriestPostPop invalid(other,*scene.hp,scene.state,scene.Hooks()); }));
         RawPriestPostPop prefix(scene.pool,*scene.hp,scene.state,scene.Hooks());
         // 실패 입력은 raw 슬롯·목록·소유자 칸과 호출 기록을 바꾸지 않아야 한다.
         const auto reject=[&](Sid sid) {
             const auto before=Hex(scene.pool.Slot(kSource)),list=scene.List(),owners=scene.Owners();
-            CHECK(Throws([&] { prefix.Prefix(sid,1); }));
+            CHECK(Throws([&] { if (scene.patch) prefix.Validate(sid);else prefix.Prefix(sid,1); }));
             CHECK(Hex(scene.pool.Slot(kSource))==before && scene.List()==list && scene.Owners()==owners && scene.events.empty());
         };
         reject(Sid{0});reject(Sid{51});scene.pool.AllocatedBytes(kSource)[10]=82;reject(kSource);

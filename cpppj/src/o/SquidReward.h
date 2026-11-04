@@ -39,6 +39,11 @@ struct SquidRewardState {
     const std::int32_t& GeyserPool() const { return sharedGeyserPool ? *sharedGeyserPool : geyserPool; } // 다른 타입의 ref로 변환하지 않는다.
     const bool* sharedPriestQuarterHp{}; // 실제005ca8f0을 빌리며 독립 fixture만 기존 bool을 쓴다.
     bool PriestQuarterHp() const { return sharedPriestQuarterHp ? *sharedPriestQuarterHp : priestQuarterHp; } // 원문 최대HP 조회 시점의 현재 약화 값을 읽는다.
+    // 실제 Session은 0049fce0/CD00444720이 1/4 비교에 읽는005412d0/CD0051cbbc 현재 사제 TYPE DWORD를 빌린다.
+    // 비어 있으면 독립 fixture의 types.priest 값을 쓴다. (2026-11-04 단위862: 사제 회복 분자의 현재 TYPE 연결과 함께 추가했다.)
+    const std::uint32_t* sharedPriestType{};
+    // 최대HP 조회 시점의 현재 사제 TYPE 번호를 읽는다. 사본을 보관하지 않는다(단위862 추가).
+    std::uint32_t PriestType() const { return sharedPriestType ? *sharedPriestType : types.priest; }
 };
 // 객체 보상 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct SquidRewardHooks {

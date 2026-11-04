@@ -8,6 +8,7 @@
 
 namespace netstorm::o {
 // postPop 후반의 외부 효과다. 낙하는 자체 보호막 요청/공간 재등록을 포함하는 별도 몸체다.
+// PATCH는 실제 몸체가 도달한 효과만 그 시점에 요구하며, CD는 기존 구성 시 사전 계약을 유지한다(2026-11-04 단위862).
 struct PriestPostPopTailHooks {
     std::function<void(Sid)> fall; // 004941f0 / CD 0040c880의 전체 낙하 요청이다.
     std::function<void(Sid)> ensureShield; // 현재 이동 불가 분기에서 보호막을 확보한다.
@@ -18,6 +19,7 @@ struct PriestPostPopTailHooks {
 class RawPriestPostPopTail {
 public:
     // 같은 풀의 실제 모듈·프레임/spot을 연결한다. 프레임은 복사하고 나머지 대상은 더 오래 살아야 한다.
+    // 풀/표 크기는 두 판본 모두 효과 전에 거부한다. 훅 누락은 CD만 구성 때 거부하고 PATCH는 도달 시점에 거부한다(단위862).
     RawPriestPostPopTail(SidPool& pool,const RawPriestPostPop& prefix,const RawCarrierPostPop& carrier,
         const RawPriestState& state,std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> spots,
         PriestPostPopTailHooks hooks);

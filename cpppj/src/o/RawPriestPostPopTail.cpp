@@ -26,30 +26,37 @@ int Cell(float value) {
     if (!std::isfinite(value) || shifted<0 || shifted>=kWorldCells) throw std::out_of_range("사제 postPop 지면 좌표 오류");
     return static_cast<int>(shifted);
 }
+// PATCH에서 도달한 낙하/보호막 효과만 요구하고 호출 중 연결이 바뀌어도 선택한 callable 사본의 수명을 유지한다(단위862 추가).
+template<class Function> Function TailNeed(const Function& function) {
+    if (!function) throw std::logic_error("사제 postPop 후반 선택된 실제 하위 미연결");
+    return function;
 }
-// 풀·표·필수 효과의 연결 오류를 첫 목록/회복 효과 전에 거부한다.
+}
+// 풀·표의 연결 오류는 첫 목록/회복 효과 전에 거부한다. 효과 훅의 구성 시 사전 요구는 CD 계약에만 남긴다.
 RawPriestPostPopTail::RawPriestPostPopTail(SidPool& pool,const RawPriestPostPop& prefix,const RawCarrierPostPop& carrier,
     const RawPriestState& state,std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> spots,PriestPostPopTailHooks hooks)
     :pool_(pool),prefix_(prefix),carrier_(carrier),state_(state),frames_(frames.begin(),frames.end()),spots_(spots),hooks_(std::move(hooks)) {
+    const bool patch=pool.Edition()==OriginalEdition::Patch1078;
     if (&pool!=&prefix.Pool() || &pool!=&carrier.Pool() || &pool!=&state.Pool() ||
-        frames.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || spots.size()!=kWorldCells*kWorldCells ||
-        !hooks_.fall || !hooks_.ensureShield || !hooks_.clearShield) throw std::invalid_argument("사제 postPop 후반 연결 오류");
+        frames.size()!=(patch ? 188U : 171U) || spots.size()!=kWorldCells*kWorldCells ||
+        (!patch && (!hooks_.fall || !hooks_.ensureShield || !hooks_.clearShield))) throw std::invalid_argument("사제 postPop 후반 연결 오류");
 }
 // 낙하 효과로 extra/지면이 바뀌어도 원본이 선택한 이동 불가 분기의 보호막 요청을 유지한다.
+// PATCH004950f0은 접두→00427720→현재 extra→00427030→(0x800/지면/방향 조건부 004941f0)→00493d30, 이동 가능 시 00491980 순서다.
 void RawPriestPostPopTail::PostPop(Sid sid,std::uint32_t flags) const {
     prefix_.Prefix(sid,flags);carrier_.PostPop(sid,flags);
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (pool_.Slot(sid)[patch ? 40 : 35]&9) return;
-    if (!state_.Immobile(sid)) { hooks_.clearShield(sid);return; }
+    if (!state_.Immobile(sid)) { TailNeed(hooks_.clearShield)(sid);return; }
     if (!(flags&kFallingPop)) {
         const auto raw=pool_.Slot(sid);
         const int x=Cell(std::bit_cast<float>(Read(raw,kX))),y=Cell(std::bit_cast<float>(Read(raw,kY)));
         if (!(spots_[static_cast<std::size_t>(y*kWorldCells+x)]&kGroundMask)) {
             const auto frame=patch ? std::bit_cast<std::int32_t>(Read(raw,kPatchFrame)) : static_cast<std::int32_t>(Read(raw,kCdFrame,1));
-            if (RawPathAnimation::Direction(frames_.at(raw[10]),frame)!=kFallingDirection) hooks_.fall(sid);
+            if (RawPathAnimation::Direction(frames_.at(raw[10]),frame)!=kFallingDirection) TailNeed(hooks_.fall)(sid);
         }
     }
-    hooks_.ensureShield(sid);
+    TailNeed(hooks_.ensureShield)(sid);
 }
 // 공간 변경 전에는 현재 위치의 이동 불가/지면을 읽지 않고 접두 계약만 확인한다.
 void RawPriestPostPopTail::Validate(Sid sid) const { prefix_.Validate(sid); }

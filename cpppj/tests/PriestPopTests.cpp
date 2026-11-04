@@ -161,18 +161,28 @@ TEST_CASE(PriestPop_ComposesFallFrameSpaceAndRegularLifetime) {
 }
 
 // 전체 후처리가 없거나 다른 풀/잘못된 접두 계약이면 공간 쓰기 전에 거부한다.
+// 단위862 교정: 842 이후 PATCH 실제 Pop은 후처리 사전 검사 없이 현재 원문 부모로 공간을 쓴 뒤 가상 후처리를 호출하고,
+// 862 이후 PATCH 사제 접두는 00414450의 signed 초과 목록을 등록 생략으로 계속한다. 무변경 사전 거부는 CD Pop과 PATCH 명시 Validate 계약으로 검사한다.
 TEST_CASE(PriestPop_RequiresExplicitWholeHandlerBeforeMutation) {
-    PriestPopScene scene(OriginalEdition::Patch1078);scene.Prepare(Fixture().front());SquidUnpop unpop(scene.pool,scene.hash,scene.spots);
-    SquidPostPop base(scene.pool,scene.types,scene.book);SquidPop pop(scene.pool,scene.hash,scene.spots,nullptr,&base);
-    SquidReward hp(scene.pool,scene.types,scene.book,scene.hpMode,&scene.store);RawPriestState state(scene.pool,hp,scene.types,scene.spots);
-    RawPriestPostPop prefix(scene.pool,hp,scene.priests,{[](Sid,std::uint32_t) { return true; },[] { return false; },[](Sid,std::uint32_t,float) { CHECK(false); }});
-    CarrierPostPopState mode;RawCarrierPostPop carrier(scene.pool,scene.types,mode,MakeCarrierPostPopHooks(scene.pool,base,[](Sid) {},[](float,float,std::uint8_t) {}));
-    RawPriestPostPopTail tail(scene.pool,prefix,carrier,state,scene.frames,scene.spots,{[](Sid) {},[](Sid) {},[](Sid) {}});
-    const auto before=Hex(scene.pool.Slot(kObject));
-    CHECK(Throws([&] { pop.Pop(kObject,scene.types[kPriestType],1,1,20.75f,21.9f); }) && Hex(scene.pool.Slot(kObject))==before);
-    SidPool other(OriginalEdition::Patch1078,kCapacity,false);SquidPostPop otherBase(other,scene.types,scene.book);
-    CHECK(Throws([&] { otherBase.SetPriestPostPop(&tail); }));base.SetPriestPostPop(&tail);CHECK(base.HandlesPriest(kObject));
-    scene.priests.priests.count=5;
-    CHECK(Throws([&] { pop.Pop(kObject,scene.types[kPriestType],1,1,20.75f,21.9f); }) && Hex(scene.pool.Slot(kObject))==before && scene.hash.Bucket(1,20.75f,21.9f)==0);
-    scene.priests.priests.count=0;base.SetPriestPostPop(nullptr);CHECK(!base.HandlesPriest(kObject) && !SquidPop::Supports(OriginalEdition::Patch1078,kPatchPriestVtable,0));
+    // 두 판본에서 각자의 사전 계약 위치를 확인한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        PriestPopScene scene(edition);scene.Prepare(Fixture().front());SquidUnpop unpop(scene.pool,scene.hash,scene.spots);
+        SquidPostPop base(scene.pool,scene.types,scene.book);SquidPop pop(scene.pool,scene.hash,scene.spots,nullptr,&base);
+        SquidReward hp(scene.pool,scene.types,scene.book,scene.hpMode,scene.patch ? &scene.store : nullptr);RawPriestState state(scene.pool,hp,scene.types,scene.spots);
+        RawPriestPostPop prefix(scene.pool,hp,scene.priests,{[](Sid,std::uint32_t) { return true; },[] { return false; },[](Sid,std::uint32_t,float) { CHECK(false); }});
+        CarrierPostPopState mode;RawCarrierPostPop carrier(scene.pool,scene.types,mode,MakeCarrierPostPopHooks(scene.pool,base,[](Sid) {},[](float,float,std::uint8_t) {}));
+        RawPriestPostPopTail tail(scene.pool,prefix,carrier,state,scene.frames,scene.spots,{[](Sid) {},[](Sid) {},[](Sid) {}});
+        const auto before=Hex(scene.pool.Slot(kObject));
+        const auto reject=[&] { if (scene.patch) base.Validate(kObject,1);else pop.Pop(kObject,scene.types[kPriestType],1,1,20.75f,21.9f); }; // 판본별 무변경 사전 검사 위치다.
+        CHECK(Throws(reject) && Hex(scene.pool.Slot(kObject))==before);
+        SidPool other(edition,kCapacity,false);SquidPostPop otherBase(other,scene.types,scene.book);
+        CHECK(Throws([&] { otherBase.SetPriestPostPop(&tail); }));base.SetPriestPostPop(&tail);CHECK(base.HandlesPriest(kObject));
+        scene.priests.priests.count=5;
+        CHECK(Throws(reject) && Hex(scene.pool.Slot(kObject))==before && scene.hash.Bucket(1,20.75f,21.9f)==0);
+        if (scene.patch) { // 실제 PATCH Pop은 signed 초과 목록의 등록만 생략하고 공간/후처리를 계속한다.
+            CHECK(pop.Pop(kObject,scene.types[kPriestType],1,1,20.75f,21.9f)==RawPopResult::Registered && scene.hash.Bucket(1,20.75f,21.9f)==kObject.value);
+            CHECK(scene.priests.priests.count==5 && scene.priests.priests.entries==std::vector<std::uint32_t>({60,50,70,80}) && scene.book.depth==0);
+        }
+        scene.priests.priests.count=0;base.SetPriestPostPop(nullptr);CHECK(!base.HandlesPriest(kObject) && !SquidPop::Supports(edition,scene.patch ? kPatchPriestVtable : kCdPriestVtable,0));
+    }
 }

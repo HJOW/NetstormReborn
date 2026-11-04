@@ -184,17 +184,22 @@ TEST_CASE(PriestPostPopTail_ComposesProcessBooksAndShieldLifetimeRequests) {
 }
 
 // 필수 경계·표 크기·다른 풀을 첫 접두 효과 전에 거부한다.
+// 단위862 교정: 효과 훅 누락의 구성 시 거부는 CD 계약이며 PATCH는 도달 시점에 거부한다(PriestPostPopCurrentTests). 풀/표 크기 거부는 두 판본 공통이다.
 TEST_CASE(PriestPostPopTail_RejectsInvalidBindings) {
-    TailScene scene(OriginalEdition::Patch1078);scene.Prepare(Fixture().front());
-    RawPriestPostPop prefix(scene.pool,*scene.hp,scene.priests,scene.PrefixHooks());CarrierPostPopState mode;
-    RawCarrierPostPop carrier(scene.pool,scene.types,mode,{[](Sid) {},[](float,float,std::uint8_t) {},[](Sid,std::uint32_t) {},[](Sid,std::uint32_t) {}});
-    RawPriestState state(scene.pool,*scene.hp,scene.types,scene.spots);
-    CHECK(Throws([&] { RawPriestPostPopTail invalid(scene.pool,prefix,carrier,state,scene.frames,scene.spots,{}); }));
-    SidPool other(OriginalEdition::Patch1078,kCapacity,false);
-    CHECK(Throws([&] { RawPriestPostPopTail invalid(other,prefix,carrier,state,scene.frames,scene.spots,scene.TailHooks()); }));
-    CHECK(Throws([&] { RawPriestPostPopTail invalid(scene.pool,prefix,carrier,state,{},scene.spots,scene.TailHooks()); }));
-    CHECK(Throws([&] { RawPriestPostPopTail invalid(scene.pool,prefix,carrier,state,scene.frames,{},scene.TailHooks()); }));
-    CHECK(scene.events.empty() && scene.priests.priests.count==0);
+    // 두 판본에서 같은 물리 표 연결 오류를 확인한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        TailScene scene(edition);scene.Prepare(Fixture().front());
+        RawPriestPostPop prefix(scene.pool,*scene.hp,scene.priests,scene.PrefixHooks());CarrierPostPopState mode;
+        RawCarrierPostPop carrier(scene.pool,scene.types,mode,{[](Sid) {},[](float,float,std::uint8_t) {},[](Sid,std::uint32_t) {},[](Sid,std::uint32_t) {}});
+        RawPriestState state(scene.pool,*scene.hp,scene.types,scene.spots);
+        if (scene.patch) { RawPriestPostPopTail deferred(scene.pool,prefix,carrier,state,scene.frames,scene.spots,{});CHECK(&deferred.Pool()==&scene.pool); } // PATCH 구성은 도달 전 효과를 요구하지 않는다.
+        else CHECK(Throws([&] { RawPriestPostPopTail invalid(scene.pool,prefix,carrier,state,scene.frames,scene.spots,{}); }));
+        SidPool other(edition,kCapacity,false);
+        CHECK(Throws([&] { RawPriestPostPopTail invalid(other,prefix,carrier,state,scene.frames,scene.spots,scene.TailHooks()); }));
+        CHECK(Throws([&] { RawPriestPostPopTail invalid(scene.pool,prefix,carrier,state,{},scene.spots,scene.TailHooks()); }));
+        CHECK(Throws([&] { RawPriestPostPopTail invalid(scene.pool,prefix,carrier,state,scene.frames,{},scene.TailHooks()); }));
+        CHECK(scene.events.empty() && scene.priests.priests.count==0);
+    }
 }
 
 // 낙하 flag는 지면/프레임 조회 자체를 생략하고 Carrier 후 extra 차단도 먼저 적용한다.

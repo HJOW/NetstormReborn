@@ -120,7 +120,7 @@ struct RawPriestWorldBindings::Impl {
         if (core.pool.Edition()==o::OriginalEdition::Patch1078) carrierPost->BindCurrentTypes(core.types); //사제wrapper의직접Carrier부모도같은현재TYPE배열을읽는다.
         prefix=std::make_unique<o::RawPriestPostPop>(core.pool,core.reward,state.priests,o::PriestPostPopHooks{
             [this](o::Sid sid,std::uint32_t event) { return Host().FindEvent(sid,event)!=nullptr; },effects.reserveRegular,
-            [this](o::Sid sid,std::uint32_t event,float payload) { Host().AddRegular(sid,event,payload); }});
+            [this](o::Sid sid,std::uint32_t event,float payload) { Host().AddRegular(sid,event,payload); }},state.movement.priest); // 회복 분자는 같은 장기 사제 TYPE DWORD를 호출 시점에 읽는다(단위862).
         tail=std::make_unique<o::RawPriestPostPopTail>(core.pool,*prefix,*carrierPost,*priest,core.frames,core.spots,
             o::MakePriestPostPopTailShieldHooks(core.pool,*shield,*lookup,effects.destroy,[this](o::Sid sid) { fall->Begin(sid); }));
         carrierPre=std::make_unique<o::RawCarrierPreDestroy>(core.pool,state.contained,o::CarrierPreDestroyHooks{

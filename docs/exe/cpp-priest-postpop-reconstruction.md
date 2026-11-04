@@ -1,5 +1,7 @@
 # 사제 postPop의 목록·회복 예약 복원
 
+2026-11-04 단위862(`HJOW-Athlon`): [현재 접두와 실제 가상 진입](cpp-priest-postpop-current-20261104.md)으로 PATCH 접두의 사전 Validate/할당 확인을 제거하고 signed 목록·도달 장치·현재 사제 TYPE DWORD를 연결했다. 아래의 “실제 사제 타입은 158”·“효과 전 거부” 서술은 CD와 명시 Validate 계약에 해당하며, PATCH 실제 접두는 원문처럼 사전 거부 없이 진행한다.
+
 2026-10-10 최신(`HJOW-Athlon`): [사제 postPop 후반·전체 wrapper 연결](cpp-priest-postpop-tail-reconstruction.md)을 완료했다. 이 문서의 접두→실제 Carrier/공통 장부→이동 불가/지면/프레임→낙하·보호막 요청을 조합하고 세 PE 전체 wrapper를 정상 반환까지 6,144개로 대조했다. 낙하/보호막 공간/일반 Pop/GUI는 후속이며 아래 접두 전용 기록과 구별한다.
 
 2026-10-10 후속(`HJOW-Athlon`): [보호막 생성·소리·로컬 안내 요청](cpp-priest-shield-reconstruction.md)을 전체 wrapper/실제 lookup·소유자 지정으로 복원했다. factory/owner·조회/삭제 준비 연결을 검사한다. 보호막의 가상 Pop/destroy·실제 오디오/안내 창 및 사제 postPop 후반 결합은 후속이다. 아래 생성 미복원 표기는 이전 단계의 기록이다.

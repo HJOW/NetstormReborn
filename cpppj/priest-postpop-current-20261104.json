@@ -1,0 +1,347 @@
+{
+ "unit": 862,
+ "date": "2026-11-04",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "4fa7e89c / 20261104-47 CM (직전 CP 0c06fa66 / 20261104-46 CP, 사이 다른 세션 WB 48·49)",
+ "exeSha256": "9cd5b26346f6cc7b073304713b9dd35762e7c99b37103928e7de6cf5698ba726",
+ "exeBytes": 10580992,
+ "sourceSha256": {
+  "cpppj/src/o/RawPriestPostPop.cpp": "a729282b2674cb1861dbcdce12b9bcb9d90b110b504fca460de9944a6eea3956",
+  "cpppj/src/o/RawPriestPostPop.h": "dc000d607de0ce9088be7296bc106819b84a31c85d09fca8c26b48fd151f03d2",
+  "cpppj/src/o/RawPriestPostPopTail.cpp": "6698aa0b14a9bfa95499b4949a5852859bb7c86f082020a4cb1b4cdcfae2e3cb",
+  "cpppj/src/o/RawPriestPostPopTail.h": "06aa53969765fa079e263ef3bf2127fa3c2365e184dc09697d4d0ecec40dd3ff",
+  "cpppj/src/o/SquidPostPop.cpp": "68bbb6147b7d21fc3d7a9086e892103f0a168712b72d6180b531f652e38b6225",
+  "cpppj/src/o/SquidReward.h": "3a43491cb1549bfe7bd8322377cadf622458d5bf2f2772536c5bcaaca7ffc3bc",
+  "cpppj/src/o/SquidReward.cpp": "8efd06f8deaeb5d6330649ccbd496249dd42757256a3a7972a369a3f22532249",
+  "cpppj/src/client/RawPriestWorldBindings.cpp": "cf55305fdf9a50bf29acb2cd790d0c4eae8b926865bb3e5bcd9f61c526c384ce",
+  "cpppj/src/client/RawCampaignSession.cpp": "86ff5da6400c2f35a5e7274bb9fbed26ff0e8d16722d4351c61239e1ac71af72",
+  "cpppj/tests/PriestPostPopCurrentTests.cpp": "d01212d914a6c81ad095bba9e22d1c7b12e141c35760fc5addac0b5b1a411033",
+  "cpppj/tests/PriestPostPopTests.cpp": "1a31f6ab81f51db1a852be5e7d1664e85f42be96406505fa153076731693f465",
+  "cpppj/tests/PriestPostPopTailTests.cpp": "a80f1ad0d0153ce9c28d227a2209be24882ce4df8ed3c288eb8f76b8dd8a2d58",
+  "cpppj/tests/CMakeLists.txt": "d6044250fc40a4418664fc1f8a06a0e9a7336a0b35b0577514eb87da4bbcb413",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "be6c1a05754acfaa8dc534972371cedaa50871d55723668fd408248beb6da737",
+  "cpppj/tests/PriestPopTests.cpp": "107b179ee3607f215c2a95198516758b23569e2ea3e3ba22eba7b4dcc285062e"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/o/RawPriestPostPop.cpp": "a729282b2674cb1861dbcdce12b9bcb9d90b110b504fca460de9944a6eea3956",
+  "cpppj/src/o/RawPriestPostPop.h": "dc000d607de0ce9088be7296bc106819b84a31c85d09fca8c26b48fd151f03d2",
+  "cpppj/src/o/RawPriestPostPopTail.cpp": "6698aa0b14a9bfa95499b4949a5852859bb7c86f082020a4cb1b4cdcfae2e3cb",
+  "cpppj/src/o/RawPriestPostPopTail.h": "06aa53969765fa079e263ef3bf2127fa3c2365e184dc09697d4d0ecec40dd3ff",
+  "cpppj/src/o/SquidPostPop.cpp": "68bbb6147b7d21fc3d7a9086e892103f0a168712b72d6180b531f652e38b6225",
+  "cpppj/src/o/SquidReward.h": "3a43491cb1549bfe7bd8322377cadf622458d5bf2f2772536c5bcaaca7ffc3bc",
+  "cpppj/src/o/SquidReward.cpp": "8efd06f8deaeb5d6330649ccbd496249dd42757256a3a7972a369a3f22532249",
+  "cpppj/src/client/RawPriestWorldBindings.cpp": "cf55305fdf9a50bf29acb2cd790d0c4eae8b926865bb3e5bcd9f61c526c384ce",
+  "cpppj/src/client/RawCampaignSession.cpp": "86ff5da6400c2f35a5e7274bb9fbed26ff0e8d16722d4351c61239e1ac71af72",
+  "cpppj/tests/PriestPostPopCurrentTests.cpp": "4fd7f2e4da3eea867a957aa727fe1c6561aa43357a9b1c5992c9a1619c0c11ea",
+  "cpppj/tests/PriestPostPopTests.cpp": "1a31f6ab81f51db1a852be5e7d1664e85f42be96406505fa153076731693f465",
+  "cpppj/tests/PriestPostPopTailTests.cpp": "a80f1ad0d0153ce9c28d227a2209be24882ce4df8ed3c288eb8f76b8dd8a2d58",
+  "cpppj/tests/CMakeLists.txt": "d6044250fc40a4418664fc1f8a06a0e9a7336a0b35b0577514eb87da4bbcb413",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "be6c1a05754acfaa8dc534972371cedaa50871d55723668fd408248beb6da737"
+ },
+ "scope": [
+  "PATCH 004950f0 접두의 일괄 Validate/AllocatedBytes 제거와 물리 슬롯 읽기",
+  "00414450 signed count/capacity 관문·현재 count 재조회·처음 count 저장 위치",
+  "회복 분자 HP의 고정 TYPE158을 005412d0/CD0051cbbc 현재 DWORD로 교체하고 SquidReward 1/4 비교도 같은 DWORD로 연결",
+  "PATCH 접두/후반의 도달 장치만 요구, 구성 시 훅 사전 요구는 CD 계약에만 유지",
+  "PATCH SquidPostPop::HandlesPriest를 실제 VT 0050f210만으로 분배",
+  "실제 Session의 RawPriestWorldState::movement.priest를 접두와 rewardState에 연결"
+ ],
+ "staticEvidence": {
+  "sha256": {
+   "extracted/cpp-resume-862/originals-004950f0.c": "114cb19cffb78465c0fd10c3dca80ab27555a1d212f65619c1f495c62761efa1",
+   "extracted/cpp-resume-862/originals-00414450.c": "7121ba72f224355ab281efe0fc2bdf405775ca1d6a1ffbca62152ce4518a8ce2",
+   "extracted/cpp-resume-862/originals-0049a840.c": "35f5bd048da6014a58a1ec91febe31549aee0f9f88d61b729ff7f4b57d8fac69",
+   "extracted/cpp-resume-862/originals-0049fce0.c": "704e31f76c5df4c78f20a93f73c524a52eb5684de67cd44076b100baf6525dad",
+   "extracted/cpp-resume-862/originals-004adcb0.c": "f3e51f986aac652d981ac3e02d849f32ff79fd649270f2342374e8eab2581b60",
+   "extracted/cpp-resume-862/originals-004afb40.c": "530bbc1d18207b65dbd201950e4ce3692efaebd34e360783843ffbfdf7812689",
+   "extracted/cpp-resume-862/originals-00427720.c": "b80d19517eb53ad25aba0acac475fcc238341d8a27fe61b5b69f7a2d356e943f",
+   "extracted/cpp-resume-862/originals-00427030.c": "6d9a5deee482d3b3a6b9eb22d1263670e4ae4ad8986c521e90f02af93d34a4fa",
+   "extracted/cpp-resume-862/originals-00492090.c": "ecc69fc4a206aacfe3f0483dfe78b84b3902e8a722c04563ad68c6472ac416b7",
+   "extracted/cpp-resume-862/originals-004ad710.c": "81fc48b7f91aa02808d0810c52916528bbe3e13e08da7dae89af84d5ef059151",
+   "extracted/cpp-resume-862/originals-0040d9d0.c": "ea98ebed52ba1e3eb3354c5cd027c6f76ab2c97395fcd917e70972480486157c",
+   "extracted/cpp-resume-862/originalCD-0040c110.c": "ea098bd4707edf5cbd242ceb510246897ad3faed7edac83d5b5fd1427f1dd32e",
+   "extracted/cpp-resume-862/originalCD-00444720.c": "7ecea2b6ff97a93f717f3da229608f0041efc2ff2694095c44e1328ce8a0d762",
+   "extracted/cpp-resume-862/originals-004950f0.asm": "897cb888a9be98d21868104d325f2b09846ea25bb97e854bef74f3facbb21f31",
+   "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "machineCode": "00495110 test al,9(사전 검사 없음) / 00495188 new 성공 뒤 [0x5412d0] 읽기 / 004951bf fild q·fmul 50.0·fstp dword 뒤 004adcb0 / 004951dd fdivr·fstp dword / 00495206 owner 1..8 / 00495236 test bh,8",
+  "cd": "0040c110은 0051cbbc 현재 DWORD로 분자 HP, 00444720도 0051cbbc와 1/4 비교",
+  "writer": "정밀 원문에 005412d0 자체 writer 없음(TYPE 표 +0xdc/+0x1d0 쓰기만 존재)"
+ },
+ "validation": {
+  "cases": 90,
+  "groups": 14,
+  "newCases": 7,
+  "newCasesFirstPassed": 2,
+  "firstFailedNewCases": 5,
+  "firstFailedNewChecks": 10,
+  "firstFailureCause": "검사 장면 주석 삽입으로 raw[10]/소유자/원래 소유자 쓰기가 줄 주석 안에 들어간 검사 입력 오류. 제품 수정0",
+  "firstRunInterruption": "PowerShell 5.1 Stop 설정이 네이티브 stderr를 종료로 처리해 첫 빌드에서는 새 집중 필터만 실행됨. 이후 cmd 리디렉션으로 전체 필터 실행",
+  "temporaryDiagnosticBuild": {
+   "log": "extracted/cpp-resume-862/build-debug.log",
+   "note": "임시 진단 사례로 슬롯 hex 확인 후 사례 제거. 기록용 실행이며 결과 집계에 포함하지 않음"
+  },
+  "existingGroupFirstFailure": {
+   "filter": "PriestPop_",
+   "failedCases": 1,
+   "failedChecks": 2,
+   "cause": "842 이후 PATCH Pop 현재 원문 부모의 노후 guard(사제 후처리 미등록 지점은 862 미도달) + 862 원문 계약상 초과 목록 계속",
+   "correctedFile": "cpppj/tests/PriestPopTests.cpp"
+  },
+  "manualGuardChanges": [
+   "priest_postpop_prefix_rejects_invalid_bindings_before_effects: PATCH는 명시 Validate로 같은 입력을 거부, 구성 시 훅 요구는 CD만",
+   "PriestPostPopTail_RejectsInvalidBindings: 두 판본 루프, 훅 누락 구성 거부는 CD만",
+   "PriestPop_RequiresExplicitWholeHandlerBeforeMutation: 무변경 사전 거부는 CD Pop/PATCH 명시 Validate, PATCH 실제 Pop의 초과 목록 계속 확인 추가"
+  ],
+  "productChangesAfterFirstBuild": 0,
+  "finalFailedCases": 0,
+  "failedChecks": 0,
+  "newNativeObservations": 0,
+  "newFixtures": 0,
+  "existingRows": {
+   "priestpostpop-x86.tsv": 7176,
+   "priestpostpoptail-x86.tsv": 6144,
+   "priestpop-x86.tsv": 3840
+  },
+  "fixtureSha256": {
+   "priestpostpop-x86.tsv": "3924ceb7ffb2315eae4fd8a9a3e89b9bff261994d36c0109ac684c1d89738cdd",
+   "priestpostpoptail-x86.tsv": "3ade3400c400743740f7ff3fd7be37c5613d66bc9817066832a542201b8abbb4",
+   "priestpop-x86.tsv": "842df6144cf66fa75a12e2a23c0db62657a2b442efd1c9c35accb734fe24dd21"
+  },
+  "existingExpectationsChanged": false,
+  "builds": [
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 1176.4980189,
+    "log": "extracted/cpp-resume-862/build-first.log",
+    "sha256": "36101f1235dc31c8c0adab3a74bb03a05ffd34fa769677a3357ffae9f7bc8801",
+    "warningsOrErrors": 0
+   },
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 18.7351103,
+    "log": "extracted/cpp-resume-862/build-corrected.log",
+    "sha256": "eddcc1bc207b78f285781d50c9ecb2b499f549824efbda9ee8d3d1c1e03f974c",
+    "warningsOrErrors": 0
+   },
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 19.908197299999998,
+    "log": "extracted/cpp-resume-862/build-corrected2.log",
+    "sha256": "245b68225735ac08fa767d8f4fe98414fce3d8ab9120612d932821f62bc82bc4",
+    "warningsOrErrors": 0
+   }
+  ],
+  "executionsFirst": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestPostPopCurrent_",
+    "cases": 6,
+    "failedCases": 5,
+    "failedChecks": 10,
+    "exitCode": 1,
+    "log": "extracted/cpp-resume-862/test-priest-current-first.log",
+    "sha256": "3d99e0f1fd433f76cbc4e708b90694f10d7caca96d3e2e6f63111704f1228ffd",
+    "detailLog": "extracted/cpp-resume-862/test-priest-current-first-detail.log"
+   }
+  ],
+  "executions": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestPostPopCurrent_",
+    "cases": 6,
+    "expectedCases": 6,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-current-corrected.log",
+    "sha256": "2285a6bcbadbca369852b6b4cc983925af092c4ebaf243ad2cc5fe1394d3816d"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "PriestPostPopCurrent_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-session-corrected.log",
+    "sha256": "b88ecef3120d27e537280a69b6c06e0f0aded8d09e081a490fde4e6a7fa9c078"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "priest_postpop_",
+    "cases": 6,
+    "expectedCases": 6,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-prefix-native-corrected.log",
+    "sha256": "18ef4b323511f619f13edb35044ca769c37c8c619ad3d653498b88f872aa5ed1"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestOwnerState_",
+    "cases": 2,
+    "expectedCases": 2,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-owner-state-corrected.log",
+    "sha256": "e6bf1fc0bab25be284f7a1f83fe799be22f0793de18b35dacec625545aebfd89"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestPostPopTail_",
+    "cases": 6,
+    "expectedCases": 6,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-tail-native-corrected.log",
+    "sha256": "63bb88dfc178ff54d22570bd9fd11fc2a243770b8cdfeee3d7297c2f16026f51"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestPop_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 1,
+    "failedChecks": 2,
+    "exitCode": 1,
+    "log": "extracted/cpp-resume-862/test-priest-pop-corrected.log",
+    "sha256": "36686e5e377f4916c57558388430d5f0b23ea0ce84440c8dabcc69fc1477c7ce",
+    "note": "842 이후 PATCH Pop 노후 guard 2단언 실패. 862 미도달 지점(사제 후처리 미등록)과 862 원문 계약(초과 목록 계속)을 판본별 계약 위치로 교정"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "rawPriestArrival_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-arrival-corrected.log",
+    "sha256": "c13b68ab456d8e0356efd0e18bde10e7544045a329a85b2a76625f891ff929e3"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "rawPathCleanup_",
+    "cases": 2,
+    "expectedCases": 2,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-path-cleanup-corrected.log",
+    "sha256": "c766ded5894ef1c315046390764ee47709f46f3ba1afaf20fddc589d4c1de03f"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "StateSidLists_",
+    "cases": 9,
+    "expectedCases": 9,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-state-sid-lists-corrected.log",
+    "sha256": "bd0631c15cc6c37c3e6d4c9affa352ca52d4cdc5d949bc34613ea8903c757b25"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestLookup_",
+    "cases": 8,
+    "expectedCases": 8,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-lookup-corrected.log",
+    "sha256": "c53c05bb15a0c5d84acaa1e3d555ccadacb8628feb39c4a2a6dfd39dae917636"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "priest_predestroy_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-predestroy-corrected.log",
+    "sha256": "cfcbf2d8f8f4355ce5e7871bb4e3ffcfcb50d9ddf52cf995f901819b9e5573a7"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "priest_regen_",
+    "cases": 10,
+    "expectedCases": 10,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-regen-corrected.log",
+    "sha256": "8088a1a245f1e8c033313bc4a859277931a928314db44196c9b40243a5be222a"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PostPopCurrent_",
+    "cases": 17,
+    "expectedCases": -1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-post-current-corrected.log",
+    "sha256": "b7dd335f5bb411bbdb89c48ec0066a371e30771660a33dd7b5b6e57bf550b8ae"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "CarrierParentCurrent_",
+    "cases": 12,
+    "expectedCases": -1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-carrier-current-corrected.log",
+    "sha256": "719ecd26d24c285d7d1d94a213494973b2638c5865871a84452256641fcd831d"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestPop_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-862/test-priest-pop-corrected2.log",
+    "sha256": "c8eddaff142a725d9b4539df163a52fc78f3a17601bcec7a4ade2afb9dfc282e"
+   }
+  ]
+ },
+ "protected": {
+  "files": 2761,
+  "fixtures": 941,
+  "unchanged": true,
+  "fixtureExpectationChanges": 0
+ },
+ "checking": {
+  "remaining": 12,
+  "parents": 6,
+  "partial": 3,
+  "multiplayerClassified": 3,
+  "completedParents": 36,
+  "completedPartial": 3,
+  "newCompletedParents": 0
+ },
+ "limits": [
+  "새 Native 관측/fixture 없이 기존 세 판본 원문 재생과 명시 입력/실제 Session으로 대조했다",
+  "005412d0의 실행 중 변경은 원문 writer가 없어 검사 입력으로만 확인했다",
+  "SquidReward/RawPriestState의 TYPE 표 사본·debug assert throw·Raw guard와 altar/dais 등 다른 TYPE 번호 사본은 범위 밖이다",
+  "host double의 x87 확장 정밀도 극단 입력·SEH/부분 할당 실패는 별도 경계다",
+  "실제 게임/GUI·Frame/Process 틱·포획/희생/특정 적 공격/승리·공중3종 전용·신규MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복은 제외했다"
+ ],
+ "next": [
+  "Teleport 다른 유효 생성 함수 분배와 다른 현재 가상20/접두·공유 TYPE/모드 전역(보상/사제 상태의 TYPE 표 사본 포함)을 대조한다",
+  "보호막 Regular의 기존 별도 진단/수명과 전체 Pop 완료 여부를 판정한다",
+  "3절 4번의 군도·Factory·State/파일·checking 잔여를 이어 간다"
+ ]
+}

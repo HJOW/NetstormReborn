@@ -3430,3 +3430,8 @@ target_sources(netstorm_pop_context_tests PRIVATE FieryTailLifetimeTests.cpp Con
 # 섬/표면의 현재 접두와 기존 세 판본의 받침 원문만 게임 없이 집중 대조한다(861).
 target_sources(netstorm_tests PRIVATE IslandCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE IslandCurrentTests.cpp IslandPostPopTests.cpp BridgeConnectTests.cpp)
+
+# 사제 postPop의 현재 물리/signed 목록/현재 사제 TYPE·도달 장치와 기존 세 판본 접두/후반 원문만 게임 없이 집중 대조한다(862).
+target_sources(netstorm_tests PRIVATE PriestPostPopCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE PriestPostPopCurrentTests.cpp PriestPostPopTests.cpp PriestPostPopTailTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE PriestPopTests.cpp PriestPathArrivalHostTests.cpp PathCleanupTests.cpp StateSidListsTests.cpp PriestLookupTests.cpp PriestPreDestroyTests.cpp PriestRegenTests.cpp) # 같은 사제 접두/후반을 쓰는 기존 Pop·경로·정리·회복 소비자 회귀만 선택 실행한다.

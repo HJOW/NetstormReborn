@@ -190,10 +190,11 @@ void SquidPostPop::SetPriestPostPop(const RawPriestPostPopTail* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("사제 Pop/후처리 풀 불일치");
     priestPostPop_=postPop;
 }
-// 원본 사제 postPop 재정의는 사제 자산 타입과 실제 가상 표 둘 다 필요하다.
+// PATCH는 실제 가상 표0050f210만으로 004950f0에 분배하며 현재 TYPE를 추가 관문으로 만들지 않는다(단위862).
+// CD는 기존 사제 자산 타입과 실제 가상 표의 연결 계약을 유지한다.
 bool SquidPostPop::HandlesPriest(Sid sid) const {
-    const auto raw=pool_.Slot(sid);
-    return priestPostPop_ && raw[10]==kPriestType && Vtable(raw)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchPriestVtable : kCdPriestVtable);
+    const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    return priestPostPop_ && (patch || raw[10]==kPriestType) && Vtable(raw)==(patch ? kPatchPriestVtable : kCdPriestVtable);
 }
 // 순환하는 생성/Pop 연결을 인스턴스 구성 뒤에 공급한다.
 void SquidPostPop::SetSurfacePrefix(std::function<void(Sid,std::uint32_t)> prefix) { surfacePrefix_=std::move(prefix); }
