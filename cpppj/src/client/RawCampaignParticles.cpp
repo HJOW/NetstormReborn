@@ -1,6 +1,8 @@
 // 원본 몸체를 현재 Windows 할당과 실제 Renderer의8비트 표면에 연결한다.
 #include "client/RawCampaignParticles.h"
 #include "client/VFXLine.h"
+#include "client/VFXEllipse.h"
+#include "o/RawRiftShapeAccess.h"
 #include "o/ParticleGradient.h"
 #include "o/RawGameAuxState.h"
 #include <bit>
@@ -21,6 +23,7 @@ RawCampaignParticles::RawCampaignParticles(RawWorldCore core,o::GameRandom& rand
     streakHooks.lifetime.reserve=beamHooks.lifetime.reserve;streakHooks.lifetime.createPalette=beamHooks.lifetime.createPalette;streakHooks.lifetime.buildPalette=beamHooks.lifetime.buildPalette;
     streak_=std::make_unique<o::FieryTailVisualSystem>(rendering_,random_,streakLifetime_,frame_,streakColors_,std::move(streakHooks),o::FieryTailVariant::Streak);
     smoke_=std::make_unique<o::SmokeVisualSystem>(rendering_,random_,smokeLifetime_,frame_,smokeColors_,SmokeHooks());
+    evil_=std::make_unique<o::EvilRayVisualSystem>(rendering_,evilLifetime_,frame_,evilColors_,EvilRayHooks());
     if (shrapnel) {
         if (!shrapnel->crt) throw std::invalid_argument("파편 실제 공유 CRT 상태 미연결");auto& crt=*shrapnel->crt;
         dissolve_=std::make_unique<o::DissolveVisualSystem>(rendering_,random_,frame_,DissolveHooks(*shrapnel));
@@ -34,8 +37,9 @@ o::FieryTailVisualProcess* RawCampaignParticles::AddStreak(o::Sid parent) {
     } catch (const std::bad_alloc&) { return nullptr; }
 }
 void RawCampaignParticles::BindTailProcessTypes(const o::RawGameAuxState& state) { // 같은 장기 전역 주소를 공유하고 다른 살아 있는 owner로의 교체를 거부한다.
-    if ((lifetime_.sharedProcessType && lifetime_.sharedProcessType!=&state.FieryTailProcessType()) || (streakLifetime_.sharedProcessType && streakLifetime_.sharedProcessType!=&state.StreakProcessType())) throw std::logic_error("입자 현재 TYPE 소유자 재연결 오류");
+    if ((lifetime_.sharedProcessType && lifetime_.sharedProcessType!=&state.FieryTailProcessType()) || (streakLifetime_.sharedProcessType && streakLifetime_.sharedProcessType!=&state.StreakProcessType()) || (evilLifetime_.sharedProcessType && evilLifetime_.sharedProcessType!=&state.EvilRayProcessType()) || (evilLifetime_.sharedSource && evilLifetime_.sharedSource!=&state.ParticleSource())) throw std::logic_error("입자 현재 TYPE 소유자 재연결 오류");
     lifetime_.sharedProcessType=&state.FieryTailProcessType();streakLifetime_.sharedProcessType=&state.StreakProcessType();
+    evilLifetime_.sharedProcessType=&state.EvilRayProcessType();evilLifetime_.sharedSource=&state.ParticleSource();
 }
 void RawCampaignParticles::CreateTailByConstructor(std::uint32_t address,o::Sid parent,
     const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion) { // 원본 cdecl 생성 함수와 내부 TYPE 전역을 구별하며 호출자가 무시하는 NULL 반환도 원문대로 복귀한다.
@@ -47,7 +51,31 @@ void RawCampaignParticles::CreateTailByConstructor(std::uint32_t address,o::Sid 
     }
     if (address==0x00458760U) { static_cast<void>(AddStreak(parent));return; }
     if (address==0x00458700U) { try { Add(11,parent); }catch (const std::bad_alloc&) {}return; } // 원본 new 실패의 NULL 반환은 호출자가 사용하지 않는다.
+    if (address==0x004536a0U) { static_cast<void>(AddEvilRay(parent));return; } // 같은 caller가 전달한 두 번째 인자는 항상0이며 현재10/원천은 생성자 안에서 따로 읽는다.
     throw std::logic_error("현재 TYPE가 선택한 다른 입자 생성 함수 미복원");
+}
+o::EvilRayVisualProcess* RawCampaignParticles::AddEvilRay(o::Sid parent) { RefreshCamera();try { return evil_->Add(parent); }catch (const std::bad_alloc&) { return nullptr; } } // 원문 확보 실패의NULL만 소비자에게 반환한다.
+void RawCampaignParticles::ConnectEvilRayDevices(CampaignEvilRayDevices devices) { evilDevices_=std::move(devices); } // 도달하지 않는 장치는 강제하지 않으며 다음 호출이 현재 장치를 읽는다.
+o::EvilRaySystemHooks RawCampaignParticles::EvilRayHooks() { // 원문 수치 몸체는 유지하고 같은 실제 메모리/메타데이터/출력에 연결한다.
+    o::EvilRaySystemHooks hooks;hooks.lifetime.reserve=[](std::uint32_t bytes) { if (bytes!=1200 && bytes!=8) throw std::logic_error("EvilRay 실제 확보량 오류");return true; }; // 실제 vector/팔레트 소유자가 확보한다.
+    hooks.lifetime.createPalette=[] { return 4U; };hooks.lifetime.buildPalette=[this](auto token) {
+        if (token!=4) throw std::logic_error("EvilRay 공유 색 토큰 오류");std::array<std::uint32_t,256> logical{}; // 실제 현재256색 RGBX 입력이다.
+        for (std::size_t index=0;index<logical.size();++index) { const auto color=source_.Color(static_cast<std::uint8_t>(index));logical[index]=std::uint32_t(color.red)|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 예약 BYTE는 색 계산에 쓰지 않는다.
+        evilMemory_.Assign(o::BuildEvilRayPalette(logical));evilColors_.count=static_cast<std::int32_t>(evilMemory_.Count());evilColors_.readable=evilMemory_.Snapshot();
+    };
+    const auto assertion=[this](std::string_view expression,std::string_view file,std::uint32_t line) { const auto selected=evilDevices_.assertion;if (!selected) throw std::logic_error("EvilRay 실제 진단 장치 미연결");selected(expression,file,line); }; // 선택 서비스의 자기 연결 반납에도 이번 캡처를 유지한다.
+    hooks.lifetime.assertion=assertion;hooks.frame.assertion=assertion;
+    hooks.frame.shapeWidth=[this,assertion](o::Sid sid) {
+        const auto raw=core_.pool.Slot(sid);const auto type=std::uint32_t(raw[10]);std::uint32_t frame=0;for (std::size_t index=0;index<4;++index) frame|=std::uint32_t(raw[36+index])<<(index*8); // 현재 TYPE/저장frame/abstract의 원문 인자를 읽는다.
+        if (type>=core_.types.size() || type>=core_.shapes.size()) throw std::out_of_range("EvilRay 현재 SHP TYPE 물리 범위");o::RiftShapeAccessHooks access;
+        access.typeNumber=[](auto selected) { return selected.token; };access.assertion=assertion;access.frameError=[this](auto number,auto savedFrame,auto abstract) { const auto selected=evilDevices_.frameError;if (!selected) throw std::logic_error("EvilRay 실제 SHP 상세 장치 미연결");selected(number,savedFrame,abstract); }; // 진단 앞의 실제 Client 상세 owner를 선택한다.
+        access.shape=[this](auto selected,auto currentFrame) { const auto& shape=core_.shapes[selected];if (!shape.loaded || currentFrame<0 || static_cast<std::size_t>(currentFrame)>=shape.frames.size()) throw std::out_of_range("EvilRay 진단 복귀 뒤 SHP 물리 범위");return std::array<float,2>{static_cast<float>(shape.frames[static_cast<std::size_t>(currentFrame)].width),0}; };
+        const auto width=o::ReadRiftShapeFrame({type,core_.types[type].flags1,core_.shapes[type].frameCount,core_.shapes[type].loaded,core_.types[type].maxHitPoints},std::bit_cast<std::int32_t>(frame),raw[40]&1U,access)[0];return static_cast<std::int16_t>(width);
+    };
+    hooks.frame.soundId=[this](auto sid,auto end) { const auto selected=evilDevices_.soundId;if (!selected) throw std::logic_error("EvilRay 실제 TYPE 음향 장치 미연결");return selected(sid,end); };hooks.frame.sound=[this](auto x,auto y,auto id) { const auto selected=evilDevices_.sound;if (!selected) throw std::logic_error("EvilRay 실제 위치 음향 장치 미연결");selected(x,y,id); };
+    hooks.frame.invalidate=[this](auto rect) { Invalidate(rect); };hooks.frame.clip=[this](auto rect) { if (!target_) throw std::logic_error("EvilRay 실제 타원 표면 미연결");evilClip_={rect[0],rect[1],rect[2]+1,rect[3]+1}; }; // 원문 강제pane이며 다른 Sprite의 cut으로 이 clip을 축소하지 않는다.
+    hooks.frame.circle=[this](auto circle) { if (!target_) throw std::logic_error("EvilRay 실제 타원 표면 미연결");DrawVfxEllipse(target_->pixels,target_->pitch,target_->height,evilClip_,{circle.x,circle.y},circle.radius,circle.radius-1,circle.color); };
+    hooks.release=[](o::EvilRayRelease) {};return hooks; // vector/공통 등록/Kernel이 실제 입자/객체를 반납한다.
 }
 // 실제 포인터 배열의 메모리는 RawRenderRegistry의 vector가 소유한다. 중복 외부 확보/반납을 하지 않는다.
 o::RenderRegistryHooks RawCampaignParticles::RegistryHooks() {
@@ -232,7 +260,7 @@ std::vector<RenderSprite> RawCampaignParticles::Sprites(ScreenRect clip) { Refre
 void RawCampaignParticles::Draw(std::uint32_t token,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) { RefreshCamera();
     if (!rendering_.Lookup(token)) return;if (target_) throw std::logic_error("입자 표면 중첩 그리기 오류");
     target_=Target{pixels,pitch,height,clip};
-    try { if (memory_.Count()) colors_.readable=memory_.Snapshot();if (lightningMemory_.Count()) streakColors_.readable=lightningMemory_.Snapshot();if (burningMemory_.Count()) burningColors_.readable=burningMemory_.Snapshot();if (smokeMemory_.Count()) smokeColors_.readable=smokeMemory_.Snapshot();rendering_.DrawToken(token); }
+    try { if (memory_.Count()) colors_.readable=memory_.Snapshot();if (lightningMemory_.Count()) streakColors_.readable=lightningMemory_.Snapshot();if (burningMemory_.Count()) burningColors_.readable=burningMemory_.Snapshot();if (smokeMemory_.Count()) smokeColors_.readable=smokeMemory_.Snapshot();if (evilMemory_.Count()) evilColors_.readable=evilMemory_.Snapshot();rendering_.DrawToken(token); }
     catch (...) { target_.reset();throw; }
     target_.reset();
 }

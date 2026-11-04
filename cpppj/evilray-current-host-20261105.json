@@ -1,0 +1,374 @@
+{
+ "unit": 883,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "b8842f94 / 20261105-16 CP",
+ "exeSha256": "c94f2496d863dd0d942d4478d9f5bcf32378d003ca65b4c48e4520c67635b341",
+ "exeBytes": 10655744,
+ "caseCount": 31,
+ "groups": 9,
+ "newCases": 3,
+ "uniqueCases": [
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ActualTeleportSelectsConstructorAndItsCurrentTypeSource"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ActualVisualFrameNotifyPixelsAndSelfDeletionUseSameHost"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ParentZeroRemainsRenderedWithoutKernelAndOwnerPersists"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionNoFirstSkipsInvalidEffectType"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionSelectedPhysicalOrUnknownConstructorFailsBeforeCommon"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionTailBindingKeepsOriginalOwner"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionUsesCurrentConstructorAndItsOwnTypeGlobal"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_ActualSessionResumesCommonAfterNullAndCurrentTypeMutation"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_ActualSessionThrownDiagnosticKeepsPrefixMutationAndDepth"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_SelectedNullConstructorsKeepExactDiagnosticAndCallableLifetime"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayFrame_ExactZeroDeathSoundPrecedesNextEmptyStopKill"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayFrame_NativeCurrentStateParticlesAndOrderedRequests"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayFrame_ParentDiagnosticUsesSavedPhysicalParentAndDrawDevicesAreLazy"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_CurrentReadOrderAndReachedDeviceFailure"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_NativeCtorPaletteAndDestruction"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_NativeStopDiagnosticsAndWholeDword"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "FieryTailLifetime_Native027f"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "StreakLifetime_NativeConstructorAndSharedPalette"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_CallableSurvivesSelfUnbinding"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_CdDoesNotUsePatchPrefix"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ExplicitPreflightRemainsSeparate"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LateCommonFailureKeepsSelectedCreationAndCurrentTypeCounts"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LifetimeCapturesTypeBeforeRegistryAndParticleAllocation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LifetimeReadsSharedTypeForEachCreation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_MissingSelectedPrefixFailsBeforeCommon"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_NoFirstUsesActualVtableWithoutDeviceOrTypeGate"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_SelectedPrefixKeepsPhysicalMutationsBeforeCommon"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_TailTypeOwnerPersistsAcrossGeneralWorldPreparation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ThrownPrefixKeepsEffectsAndDepth"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "VfxEllipse_Native270WholePixelsSignedRadiiDegenerateLineAndClip"
+  ]
+ ],
+ "protectedCount": 2764,
+ "fixtureCount": 944,
+ "newFixtures": 0,
+ "sourceSha256": {
+  "cpppj/src/CMakeLists.txt": "ac72c0c165ff1a2485c593255618e9db2dcb0afff240d5e8b69173f473bc2c78",
+  "cpppj/src/o/RawGameAuxState.h": "4f3f1310e65d506cbfe1f4e833f8b35679c8fba92b5eaa4362337639aedc197a",
+  "cpppj/src/o/EvilRayVisualSystem.h": "e41303f19144fe31e17ebd4d77f449102812a25b1534e2d76cedca914fc2ad76",
+  "cpppj/src/o/EvilRayVisualSystem.cpp": "b87f122b6acf1f082b35b2ccb1b8f2c494e1f57e36f6e15d53927b8b36b5b08a",
+  "cpppj/src/client/RawCampaignParticles.h": "4c1546b43503c06a0d64bbf5f684229f0ebcdd7a2f29fb02ded79edc4768ef23",
+  "cpppj/src/client/RawCampaignParticles.cpp": "2577b2ea7e9fc23ed211bf77d8e5606408efe6ad5cc23350cf0cf88c4f6dfeea",
+  "cpppj/src/client/RawCampaignSession.cpp": "87f1d185c7ddf3bc5d3b0a41f5e90c4375be4b9e95e0e2be71528e583f176bc1",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "6d0c3bd70cea24d915ac60bbd0082547ff35529810b8305f42489756c5f2053a"
+ },
+ "builds": [
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 483.9810262,
+   "log": "extracted/cpp-resume-883/build-first.log",
+   "logSha256": "36f6c6c2f3679df3f91f7ba66e32b0e1cb7416a625d7d3ddca554f6a058af53f",
+   "warnings": 0,
+   "errors": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 36.1994883,
+   "log": "extracted/cpp-resume-883/build-prepared.log",
+   "logSha256": "af77dc03962dba00d1a747ea94d40f20d44c655143ac422aecfa16819e4268a7",
+   "warnings": 0,
+   "errors": 0
+  }
+ ],
+ "testExecutions": [
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "EvilRayCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-883/test-evilray-current-first.log",
+   "sha256": "0c0676489849190ab84054864e8ae3d17cfa12f35fda76959f1a099321cfdae7"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-883/test-teleport-session-first.log",
+   "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportStubCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-883/test-teleport-stub-first.log",
+   "sha256": "520f80e3d1cc574235cb7b201cf082cbbc2b53b91fbd86bc1cc2a912433e20f7"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "EvilRayFrame_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-883/test-evilray-frame-first.log",
+   "sha256": "57161cd1f6affaaafb287aef77c35f3ebb7094c2a0208859bb03ebc1b49affe5"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "EvilRayLifetime_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-883/test-evilray-lifetime-first.log",
+   "sha256": "68077f2b50fdd2f555a870411ec9c3e252c151cdcddc3f05972e887f6cb38bc6"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "VfxEllipse_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-883/test-vfx-ellipse-first.log",
+   "sha256": "9ba6aaa67c93c1d7815a32e8b714d9495e30487639fdc2339aac6f2e92b7f704"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 12,
+   "expectedCases": 12,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-883/test-teleport-prefix-first.log",
+   "sha256": "1f6ce0bc4dc347ecc104fb401092b4321bafbcadd93ae0790579293194f91bdb"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "FieryTailLifetime_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-883/test-fiery-lifetime-native-first.log",
+   "sha256": "79816adc4be129c5458add107c397eb01c2d8a6dd8eb898e2f99cadb46d717a6"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "StreakLifetime_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-883/test-streak-lifetime-native-first.log",
+   "sha256": "85ee218a211b27a923a4fbedef9943aa45cde423e3d7f9c4f364647431ac6b81"
+  }
+ ],
+ "sourceFirstSha256": {
+  "cpppj/src/CMakeLists.txt": "ac72c0c165ff1a2485c593255618e9db2dcb0afff240d5e8b69173f473bc2c78",
+  "cpppj/src/o/RawGameAuxState.h": "4f3f1310e65d506cbfe1f4e833f8b35679c8fba92b5eaa4362337639aedc197a",
+  "cpppj/src/o/EvilRayVisualSystem.h": "e41303f19144fe31e17ebd4d77f449102812a25b1534e2d76cedca914fc2ad76",
+  "cpppj/src/o/EvilRayVisualSystem.cpp": "b87f122b6acf1f082b35b2ccb1b8f2c494e1f57e36f6e15d53927b8b36b5b08a",
+  "cpppj/src/client/RawCampaignParticles.h": "4c1546b43503c06a0d64bbf5f684229f0ebcdd7a2f29fb02ded79edc4768ef23",
+  "cpppj/src/client/RawCampaignParticles.cpp": "2577b2ea7e9fc23ed211bf77d8e5606408efe6ad5cc23350cf0cf88c4f6dfeea",
+  "cpppj/src/client/RawCampaignSession.cpp": "87f1d185c7ddf3bc5d3b0a41f5e90c4375be4b9e95e0e2be71528e583f176bc1",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "e9e6be8c62ccdaeff1c1f6380102754ea23a73d4aa4a34c0cb80ac81049f0635"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-883/global-initial-values.json": "20de0080f9f2c8d37760caa1a8e0331a1b1c7f396143d257b460efec38031642",
+  "extracted/cpp-resume-883/sound-property-offsets.json": "fec98676d43cfa1a13a4261c24b2a987aaef4cef41d280b4adbd99c101d57447"
+ },
+ "soundPropertyOffsets": [
+  {
+   "property": "activeSound",
+   "offset": "0x6c"
+  },
+  {
+   "property": "fireSound",
+   "offset": "0x70"
+  },
+  {
+   "property": "impactSound",
+   "offset": "0x74"
+  },
+  {
+   "property": "moveSound",
+   "offset": "0x78"
+  },
+  {
+   "property": "pickupSound",
+   "offset": "0x7c"
+  },
+  {
+   "property": "dropSound",
+   "offset": "0x80"
+  },
+  {
+   "property": "fallSound",
+   "offset": "0x84"
+  },
+  {
+   "property": "miscSound0",
+   "offset": "0x88"
+  },
+  {
+   "property": "miscSound1",
+   "offset": "0x88"
+  },
+  {
+   "property": "buildDoneSound",
+   "offset": "0x90"
+  }
+ ],
+ "globalInitialValues": {
+  "0x541098": 10,
+  "0x595128": 0
+ },
+ "scope": [
+  "실제 공통 registry/Host/Kernel과 parent0 별도 소유권·현재 Frame/Notify3/dirty/타원/자기 삭제",
+  "RawGameAuxState의00541098=10/00595128=BSS0 장기 주소를 생성 위치에 대여",
+  "현재 TYPE+1d0의004536a0을 원문 생성자로 분배; 현재10 부착과 sourceDWORD는 생성자 안에서 별도로 조회",
+  "현재 SHP/상세 owner/Client 진단·기존 미사일 메타데이터 fireSound(+70)/impactSound(+74)와 실제 위치 재생 연결"
+ ],
+ "validation": {
+  "firstCompileFailed": false,
+  "firstTestFailedCases": 0,
+  "finalTestFailedCases": 0,
+  "newNativeObservations": 0,
+  "newFixtures": 0,
+  "existingExpectationsChanged": false,
+  "sourceStableDuringBuilds": true,
+  "inputPreparation": "첫 검사 전에 새 시각 Frame 원천만 banner74에서 실제65프레임이 보장된Dude70으로 준비하고 새 검사1곳/파일만 재빌드했다. 제품 수정/기존 기대값 변경0.",
+  "actualSessionsNewCases": 3,
+  "gameOrAiKernelFrames": 0,
+  "isolatedVisualFrames": 3,
+  "physicalAudioPlayback": false,
+  "newMpTests": 0,
+  "newAirThreeTests": 0
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "mp": 3,
+  "completedParents": 38,
+  "completedPartial": 3
+ },
+ "limits": [
+  "전체 Pop/다른 현재 TYPE/모드 writer와 다른 유효 생성 분배는 미완료다. 다른 process11항목(경로8/UI2/timer1) 및 Form/자산 생성자를 별도로 이어간다.",
+  "실제 음향 번호는 기존 Session 미사일 메타데이터의 같은 TYPE 항목을 선택한다. Native TYPE writer/모든 메타데이터 전역 통합 완료로 세지 않는다.",
+  "실제 장치/전체 게임 GUI/물리 PCM·전체 원본 시나리오 동일성은 별도 사용자 확인 범위다.",
+  "32비트 heap/SEH/미정값/부분 확보 실패·원문 포인터 배치의 전체 동일성은 별도 호스트 한계다.",
+  "시각 Frame/통합 픽셀은 원문 대조된 부품 합성 검사이며 새 Native 전체 Scene/GUI 관측이 아니다.",
+  "실제 게임/GUI/의식/포획/희생/공격/승리/공중3종 전용/신규MP/통신/전체71/CTest/34미션/ZIP 검사는 하지 않았다."
+ ],
+ "next": [
+  "다른 유효 생성 함수의 현재 ABI/분배(Form/경로/UI/타이머)와 다른 현재 TYPE/모드/전체Pop 대조",
+  "군도·Factory·State/파일·객체메뉴/Edit·Windows·무검사MP/4~8차 계속"
+ ]
+}

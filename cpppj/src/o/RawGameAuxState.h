@@ -49,6 +49,10 @@ public:
     const std::uint32_t& FieryTailProcessType() const { return fieryTailProcessType_; } // 현재 생성 함수 선택과 별개인 생성자 내부 전역을 보존한다.
     std::uint32_t& StreakProcessType() { return streakProcessType_; } //005410a0: Teleport 생성 함수 선택·표시 부착·도착 삭제가 공유하는 현재 TYPE다.
     const std::uint32_t& StreakProcessType() const { return streakProcessType_; } // Runtime 교체/일반 월드 준비로12의 새 사본을 만들지 않는다.
+    std::uint32_t& EvilRayProcessType() { return evilRayProcessType_; } //00541098의 현재10이며 선택 생성 함수와 생성자 부착 번호를 구분한다.
+    const std::uint32_t& EvilRayProcessType() const { return evilRayProcessType_; } // 실제 생성자의 같은 장기 DWORD를 읽는다.
+    std::uint32_t& ParticleSource() { return particleSource_; } //00595128/FUN00487ee0의 현재 전체 DWORD이며 SID로 줄이지 않는다.
+    const std::uint32_t& ParticleSource() const { return particleSource_; } // 생성자의 공통 등록 뒤 현재 원천을 복사 없이 읽는다.
     std::uint32_t& FlyerProcessType() { return flyerProcessType_; } //005410ec의 현재 비행 프로세스 TYPE를 생성/홈 조회가 같은 주소에서 읽는다.
     const std::uint32_t& FlyerProcessType() const { return flyerProcessType_; } // Session 교체나 일반 월드 준비로31의 새 사본을 만들지 않는다.
     std::uint32_t& AltarType() { return altarType_; } //005412e8의 현재 제단 TYPE를 보상/HP가 같은 주소에서 읽는다.
@@ -104,6 +108,7 @@ private:
     std::int32_t defaultSp_{2000}; // 보호 PE의 signed 기본SP다.
     std::uint32_t geyserType_{122},subscriberMarker_{}; // 보호 PE TYPE122와 별도BSS 표지다.
     std::uint32_t fieryTailProcessType_{11},streakProcessType_{12}; // 보호10.78의 두 TYPE 전역 초기값이며 Session보다 오래 유지한다.
+    std::uint32_t evilRayProcessType_{10},particleSource_{}; // 보호 PE00541098의10과00595128의BSS0이며 일반 fresh에서 덮어쓰지 않는다.
     std::uint32_t flyerProcessType_{31}; // 보호 PE005410ec의 초기 DWORD이며 홈/생성·후속 writer가 공유할 장기 물리다.
     std::uint32_t altarType_{164},daisType_{165}; // 보호 PE005412e8/005412ec의 두 초기 DWORD이며 일반 월드 준비에서 초기화하지 않는다.
     std::uint32_t rainBlockerType_{147},growingRainBlockerType_{150}; //005412a4/005412b0의 현재 두 TYPE 번호이며 TYPE 기록 표와 별개다.

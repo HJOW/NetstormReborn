@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**883 EvilRay 실제 Host/분배:** 같은 registry/Host·Kernel·현재 TYPE/source owner·SHP/Client 진단·음향/타원·004536a0을 연결했다. parent0도 원문 등록으로 보관한다. 고유31개(새3) 첫 실패0·Release2회 경고0·기존 기대값/보호2764개/944fixture 불변이다. 실제 게임/AI/전투 Kernel은 진행하지 않았다. 다른 생성 분배/전체Pop·checking10/완료부모38/부분3은 유지한다. [883 기록](cpp-evilray-current-host-20261105.md).
+
 **882 실제 VFX 타원:** 원문270전체 화면/재관측·보호 바이트와 고유9개(새1) 첫 실패0으로 타원 윤곽/퇴화 선을 대조했다. 새 검사 BYTE 명시 후 Release 경고0·제품 추가 수정/기존 기대값 변경0이다. EvilRay 실제 Host/Session은 미연결이다. 기존2763개/943fixture 불변·새1개→기준2764개/944개·checking10/완료부모38/부분3 유지다. [882 기록](cpp-vfx-ellipse-20261105.md).
 
 **881 EvilRay 독립 Frame/Draw 요청:** 저장 source/현재 형상·전체 delta/등호 조건·음향/꼬리/종료·dirty/clip/타원 요청을 원문36행/재관측·추가2행과 고유8개(새3) 첫 검사 실패0·Release 경고0으로 대조했다. 실제 래스터/Host/Session은 미연결이다. 기존2762개/942fixture 불변·새1개→기준2763개/943개·checking10/완료부모38/부분3 유지다. [881 기록](cpp-evilray-frame-20261105.md).

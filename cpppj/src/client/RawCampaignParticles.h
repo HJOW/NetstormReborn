@@ -13,6 +13,7 @@
 #include "o/DissolveVisualSystem.h"
 #include "o/BurningVisualSystem.h"
 #include "o/SmokeVisualSystem.h" // 실제21 냉각 연기도 같은 공통 표시 수명을 사용한다.
+#include "o/EvilRayVisualSystem.h" // 실제10의 현재 source/3색/Stop/Frame/타원을 같은 목록에 연결한다.
 
 namespace netstorm::o { class RawGameAuxState; } // 같은 Client 수명의 TYPE 전역 소유자를 복사하지 않고 빌린다.
 namespace netstorm::client {
@@ -21,6 +22,13 @@ struct CampaignShrapnelHooks {
     o::ShrapnelLifetimeHooks lifetime; // create/pop/depend/capture는 실제 월드에 연결한다.
     std::function<void(o::Sid)> destroyUnpaired; // 아직 감시 쌍이 없는 dummy의 실제 가상 삭제다.
     o::CrtRandom* crt{}; // 같은 Session의 원본 시드 초기화/지형과 공유하는 실제 CRT 상태다.
+};
+// 실제 Client의 현재 TYPE 음향 번호와 재생/진단만 공급하는 장치 묶음이다.
+struct CampaignEvilRayDevices {
+    std::function<std::uint32_t(o::Sid,bool)> soundId; // 현재 source/부모의 fireSound(+70) 또는 impactSound(+74)다.
+    std::function<void(float,float,std::uint32_t)> sound; // 현재 좌표/같은 이름표 번호의 실제 위치 재생이다.
+    std::function<void(std::uint32_t,std::int32_t,std::uint32_t)> frameError; // 현재 Client 상세 owner에 저장 TYPE/frame/abstract 오류를 기록한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 현재 Client의 정상 복귀 가능한 진단이다.
 };
 // Session의 실제 입자 표시 수명이다. 게임 계산/출력을 빈 효과로 대신하지 않는다.
 class RawCampaignParticles {
@@ -33,7 +41,9 @@ public:
     // 실제 생성한 투사체의 process11을 표시 Pop과 Missile 부착 사이에 붙인다.
     void Add(std::uint32_t type,o::Sid parent);
     o::FieryTailVisualProcess* AddStreak(o::Sid parent); // 건설 마나134의 최초 Pop에서 실제 process12를 붙인다.
-    void BindTailProcessTypes(const o::RawGameAuxState& state); // 소유자는 이 시스템보다 오래 살아야 하며 두 생성자의 현재 TYPE 주소를 한 번 연결한다.
+    o::EvilRayVisualProcess* AddEvilRay(o::Sid parent); //004536a0의 parent/0 생성자를 같은 공통 Host에 연결하며 확보 실패만NULL이다.
+    void ConnectEvilRayDevices(CampaignEvilRayDevices devices); // 다음 실제 메타데이터/음향/진단이 그때 현재 장치를 선택한다.
+    void BindTailProcessTypes(const o::RawGameAuxState& state); // 소유자는 이 시스템보다 오래 살아야 하며 세 생성자의 현재 TYPE/source 주소를 한 번 연결한다.
     void BindTailProcessTypes(const o::RawGameAuxState&&)=delete; // 임시 소유자의 만료된 주소를 보관하지 않는다.
     void CreateTailByConstructor(std::uint32_t address,o::Sid parent,
         const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion={}); // 현재 TYPE+1d0의11/12 생성과13/22의 원문 진단/NULL 반환을 분배한다. 진단은 선택될 때만 요구한다.
@@ -80,6 +90,7 @@ private:
     o::ShrapnelSystemHooks ShrapnelHooks(CampaignShrapnelHooks hooks);
     o::DissolveSystemHooks DissolveHooks(const CampaignShrapnelHooks& hooks); //같은 실제 dummy/캡처/반납과0바이트 입자 확보를 연결한다.
     o::SmokeSystemHooks SmokeHooks(); // 실제12색/200입자·같은 dirty/선 표면의 냉각 표시를 공급한다.
+    o::EvilRaySystemHooks EvilRayHooks(); // 현재 SHP/공유3색·실제 타원/음향/진단을 같은 Host에 공급한다.
     // 현재 dirty 큐와 실제 renderer에 같은 요청을 전달한다.
     void Invalidate(o::FieryTailDirtyRect rect);
     // 장치 연결 전 쌓인 원본 변경 표는 버리지 않고 실제 장치에 전달한다.
@@ -136,5 +147,11 @@ private:
     ParticlePaletteMemory smokeMemory_; // 실제77..88의12색48BYTE 할당과 현재 인접 메모리다.
     o::FieryTailFramePalette smokeColors_; // 실제 색수/읽을 수 있는 메모리 view다.
     std::unique_ptr<o::SmokeVisualSystem> smoke_; // 같은 Host/공통 renderer의 실제21 수명이다.
+    CampaignEvilRayDevices evilDevices_; // 같은 Client의 현재 메타데이터/음향/진단 장치를 선택 위치에서 읽는다.
+    o::EvilRayLifetimeState evilLifetime_; // 원본0055a6f0과 현재 process/source의 비소유 주소다.
+    ParticlePaletteMemory evilMemory_; // 실제3색12BYTE의 공유 색 메모리이며 인접 DWORD를 쓰지 않는다.
+    o::FieryTailFramePalette evilColors_; // 같은 실제3색의 현재 읽기 뷰다.
+    ScreenRect evilClip_{}; // 현재 Draw가 원문0,0,639,479로 설정하는 타원 전용 pane이다.
+    std::unique_ptr<o::EvilRayVisualSystem> evil_; // 참조하는 장치/팔레트/상태보다 먼저 반납하는 실제10 수명이다.
 };
 }
