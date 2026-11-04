@@ -3480,3 +3480,11 @@ target_sources(netstorm_pop_context_tests PRIVATE BombPostPopTests.cpp)
 # 공통 Regular 현재 TYPE/실제 finder와 공유 생성 접두만 검사한다(단위891).
 target_sources(netstorm_tests PRIVATE RegularCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE RegularCurrentTests.cpp)
+
+# 공유 지형의 시드/흩뿌리기와 기존 일반 지형만 검사한다. MP root/세션/패킷은 실행하지 않는다(892).
+target_sources(netstorm_tests PRIVATE TerrainSeedTests.cpp)
+set_source_files_properties(TerrainSeedTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TERRAINSEED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/terrain-seed-x86.tsv\"")
+add_executable(netstorm_terrain_seed_tests FocusedTestMain.cpp TerrainSeedTests.cpp TerrainGrowthTests.cpp TerrainContextTests.cpp NormalTerrainWorldBindingTests.cpp)
+target_link_libraries(netstorm_terrain_seed_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_terrain_seed_tests)

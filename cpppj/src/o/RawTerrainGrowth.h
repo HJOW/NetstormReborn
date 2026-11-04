@@ -1,16 +1,34 @@
 // 실제 일반 초기 지형의 통로·청크별 성장·빈틈 보정을 현재 owned context에 연결한다.
 #pragma once
 #include "o/RawTerrainContext.h"
+#include "o/RawCheckingFlag.h"
+#include <string_view>
 
 namespace netstorm::o {
+// 첫 시드/청크 getter의 원문 진단만 연결한다. 정상 입력은 진단 장치를 요구하지 않는다.
+struct TerrainGrowthDiagnostics {
+    RawCheckingFlag checking{}; // 첫 시드 실패가 그 시점의 전체 checking DWORD를 읽는 비소유 뷰다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 표현식/원본 파일/행을 보존하며 정상 복귀 후 계속한다.
+};
 // 패치004c10a0/CD0049e160의 일반 생성 분기다. archipelago 상위 분기는 별도다.
 class RawTerrainGrowth {
 public:
     // 지도/청크/현재 전역은 이 객체보다 오래 살아야 한다. 두 판본 모두 로컬 난수만 소비한다.
-    RawTerrainGrowth(RawTerrainContext& context,const ChunkMap& chunks,const TerrainContextGlobals& globals);
+    RawTerrainGrowth(RawTerrainContext& context,const ChunkMap& chunks,const TerrainContextGlobals& globals,
+        TerrainGrowthDiagnostics diagnostics={});
     // 원본 Y외부/X내부 통로→현재 전체 청크 성장→두 번 빈틈 보정을 같은 배열에 수행한다.
     void RunNormal();
+    // 004c0e20/CD0049de40: 첫 비noRegion 청크의 raw+5 BYTE를 반환하고 실패 시0x2333을 보존한다.
+    std::uint32_t FirstChunkSeed() const;
+    // 004c13f0/CD0049e4e0: 첫 시드×93의 로컬 난수로 count개의 성공을 흩뿌린다. 중복도 성공이다.
+    void Scatter(std::int32_t count);
 private:
+    // 패치 getter의 mode/범위 진단 뒤 같은 현재 청크를 clamp 조회한다. CD는 보고 없이 조회한다.
+    const ChunkEntry& SeedChunkAt(std::int32_t x,std::int32_t y) const;
+    // 선택된 원문 진단만 보고하며 장치 누락을 무진단 성공으로 숨기지 않는다.
+    void Assert(std::string_view expression,std::string_view file,std::uint32_t line) const;
+    // 원문 range PRNG의 DWORD 차이/덧셈과 비양수 폭에서 난수를 소비하지 않는 동작을 보존한다.
+    std::int32_t NextRange(std::uint32_t& seed,std::int32_t low,std::int32_t high);
     // 실제 지도 저장 범위를 검사하고 X열 우선 주소를 얻는다. 손상 좌표를 clamp하지 않는다.
     static std::size_t Index(std::int32_t x,std::int32_t y);
     // 원본 청크 BYTE를 signed로 읽는다. 현재 섬 목록의 존재 조회와 별개다.
@@ -33,5 +51,6 @@ private:
     const ChunkMap& chunks_;
     // globals_: 선택 지역/빈 청크 비교가 읽는 현재 noRegion 전역이다. constructor 초기값으로 복제하지 않는다.
     const TerrainContextGlobals& globals_;
+    TerrainGrowthDiagnostics diagnostics_; // 현재 checking owner와 선택된 진단 경계를 빌린다.
 };
 }
