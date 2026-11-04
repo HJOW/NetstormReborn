@@ -68,16 +68,16 @@ void RawGraph::ValidateSpace(const SquidHash& hash,std::span<const std::uint8_t>
 }
 // 그래프가 사용하는 필드만 비교한다. 비용·생산 목록은 postPop의 책임이다.
 void RawGraph::ValidateTypes(std::span<const RiftTypeRecord> types) const {
-    if (types.size()!=types_.size()) throw std::invalid_argument("postPop/raw 그래프 타입 크기가 다릅니다");
+    if (types.size()!=CurrentTypes().size()) throw std::invalid_argument("postPop/raw 그래프 타입 크기가 다릅니다");
     // 프레임 연결과 표면 발자국의 의미가 모든 타입에서 같아야 한다.
     for (std::size_t i=0;i<types.size();++i)
-        if (types[i].flags1!=types_[i].flags1 || types[i].flags2!=types_[i].flags2 ||
-            types[i].footX!=types_[i].footX || types[i].footY!=types_[i].footY)
+        if (types[i].flags1!=CurrentTypes()[i].flags1 || types[i].flags2!=CurrentTypes()[i].flags2 ||
+            types[i].footX!=CurrentTypes()[i].footX || types[i].footY!=CurrentTypes()[i].footY)
             throw std::invalid_argument("postPop/raw 그래프 타입이 다릅니다");
 }
 // 원본 일반 SquidFinder는 단계 0..3의 y/x 버킷과 next 체인을 순회하고 매몰 후보만 건너뛴다.
 void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_t> spots,Plan& plan,bool live) const {
-    const auto root=pool_.Slot(sid); const auto& source=types_[root[10]];
+    const auto root=pool_.Slot(sid); const auto& source=CurrentTypes()[root[10]];
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto extraOffset=patch ? 40U : 35U,graphOffset=patch ? 30U : 28U;
     const auto cell=(source.flags1&TypeFlag1::kSurface) ? Coordinate : RegionCoordinate; // 비표면 업그레이드 그림의+0.001 위치도 원본 영역을 통지한다.
@@ -109,14 +109,14 @@ void RawGraph::Region(Sid sid,const RawGraphPop* pop,std::span<const std::uint8_
                     current=static_cast<std::uint16_t>(next);
                     if (bytes[11]&(kFree|kContained)) throw std::logic_error("그래프 영역 후보 상태 오류");
                     if (bytes[extraOffset]&kBuried) continue;
-                    if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size()) throw std::logic_error("그래프 영역 후보 타입 오류");
+                    if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=CurrentTypes().size()) throw std::logic_error("그래프 영역 후보 타입 오류");
                     // 실제 일반 탐색의 비표면은 그래프를 바꾸지 않는다. 이동 객체의 소수 좌표를 표면 정수로 검증하지 않는다.
-                    if (!(types_[bytes[10]].flags1&TypeFlag1::kSurface)) continue;
+                    if (!(CurrentTypes()[bytes[10]].flags1&TypeFlag1::kSurface)) continue;
                     const int ax=Coordinate(pop && candidate==sid ? pop->x : std::bit_cast<float>(Read(bytes,14)));
                     const int ay=Coordinate(pop && candidate==sid ? pop->y : std::bit_cast<float>(Read(bytes,18)));
                     // 원본 패치 일반 탐색은 유효 좌표 밖을 건너뛰고 CD는 assert한다. 이 경로는 정상 입력만 받는다.
                     if (ax<=0 || ay<=0) throw std::out_of_range("그래프 영역 후보의 유효 좌표가 필요합니다");
-                    const auto& type=types_[bytes[10]];
+                    const auto& type=CurrentTypes()[bytes[10]];
                     if (type.footX<1 || type.footY<1 || type.footX>kWorldCells || type.footY>kWorldCells)
                         throw std::out_of_range("그래프 영역 후보 발자국 오류");
                     const int aLeft=ax-type.footX+1,aTop=ay-type.footY+1;
@@ -183,12 +183,12 @@ std::vector<std::uint16_t> RawGraph::DetachConnections(const SurfaceObject& sour
                     chain.push_back(current); const auto bytes=pool_.Slot(Sid{current}); const auto candidate=current;
                     current=static_cast<std::uint16_t>(Read(bytes,4,2));
                     if (bytes[11]&(kFree|kContained|kVoid)) throw std::logic_error("그래프 삭제 후보 상태 오류");
-                    if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size()) throw std::logic_error("그래프 삭제 후보 타입 오류");
+                    if (bytes[10]<kFirstAssetTypeNumber || bytes[10]>=CurrentTypes().size()) throw std::logic_error("그래프 삭제 후보 타입 오류");
                     // CD 일반 finder는 매몰 제외 뒤 모든 후보의 양수 위치를 assert한다. UI 대신 변경 전 거부한다.
                     if (!patch && !(bytes[35]&kBuried) &&
                         (Coordinate(std::bit_cast<float>(Read(bytes,14)))<=0 || Coordinate(std::bit_cast<float>(Read(bytes,18)))<=0))
                         throw std::logic_error("CD 그래프 삭제 후보의 무효 위치");
-                    if ((bytes[11]&kDead) || (bytes[patch ? 40 : 35]&kBuried) || !(types_[bytes[10]].flags1&TypeFlag1::kSurface)) continue;
+                    if ((bytes[11]&kDead) || (bytes[patch ? 40 : 35]&kBuried) || !(CurrentTypes()[bytes[10]].flags1&TypeFlag1::kSurface)) continue;
                     const auto& object=finder.Object(candidate); const auto a=bounds(object);
                     if ((spots_[static_cast<std::size_t>(object.y*kWorldCells+object.x)]&8) ||
                         intersects(a[0]-1,a[1],a[2]+1,a[3])==intersects(a[0],a[1]-1,a[2],a[3]+1)) continue;
@@ -225,8 +225,8 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     const auto root=pool_.Slot(sid); const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto graphOffset=patch ? 30U : 28U,extraOffset=patch ? 40U : 35U,frameOffset=patch ? 36U : 34U;
     if (!global && (sid.value<5 || sid.value>kMaximumId || (root[11]&(kFree|kContained)) ||
-        root[10]<kFirstAssetTypeNumber || root[10]>=types_.size() ||
-        (operation!=Operation::Region && !(types_[root[10]].flags1&TypeFlag1::kSurface))))
+        root[10]<kFirstAssetTypeNumber || root[10]>=CurrentTypes().size() ||
+        (operation!=Operation::Region && !(CurrentTypes()[root[10]].flags1&TypeFlag1::kSurface))))
         throw std::logic_error("raw 그래프 표면 SID 오류");
     if (operation==Operation::Detach && (!(root[11]&kDead) || (target&~3U)))
         throw std::invalid_argument("raw 그래프 삭제 준비의 dead/정책 오류");
@@ -239,8 +239,8 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
         // 원본 GetGraph(position)은 삭제 원천과 독립적으로 0단계 머리 SID의 graph byte를 읽는다.
         if (found<5 || found>kMaximumId || found>=pool_.Capacity()) throw std::out_of_range("raw 그래프 삭제 조회 SID 오류");
         const auto lookup=pool_.Slot(Sid{found});
-        if ((lookup[11]&(kFree|kContained|kVoid)) || lookup[10]<kFirstAssetTypeNumber || lookup[10]>=types_.size() ||
-            !(types_[lookup[10]].flags1&TypeFlag1::kSurface) ||
+        if ((lookup[11]&(kFree|kContained|kVoid)) || lookup[10]<kFirstAssetTypeNumber || lookup[10]>=CurrentTypes().size() ||
+            !(CurrentTypes()[lookup[10]].flags1&TypeFlag1::kSurface) ||
             Coordinate(std::bit_cast<float>(Read(lookup,14)))!=x || Coordinate(std::bit_cast<float>(Read(lookup,18)))!=y)
             throw std::logic_error("raw 그래프 삭제 조회 표면/위치 오류");
         // 원본은 무효/미사용 그래프에서 finder를 만들지 않는다. 손상 이웃도 아직 읽지 않는다.
@@ -250,7 +250,7 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
         detachGraph=number;
     }
     if (pop) {
-        const auto& type=types_[root[10]];
+        const auto& type=CurrentTypes()[root[10]];
         if (operation==Operation::Flood || !pop->type || pop->level<0 || pop->level>3 || type.flags1!=pop->type->flags1 ||
             type.flags2!=pop->type->flags2 || type.footX!=pop->type->footX || type.footY!=pop->type->footY)
             throw std::invalid_argument("Pop/raw 그래프 타입/단계 오류");
@@ -261,7 +261,7 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     std::vector<std::uint16_t> map(hash_.Entries(0).begin(),hash_.Entries(0).end());
     std::vector<std::uint8_t> spots(spots_.begin(),spots_.end());
     if (pop) {
-        const auto& type=types_[root[10]];const auto cell=(type.flags1&TypeFlag1::kSurface) ? Coordinate : RegionCoordinate; // 실제 Pop이 보존한 비표면 소수 위치만 영역 칸으로 절삭한다.
+        const auto& type=CurrentTypes()[root[10]];const auto cell=(type.flags1&TypeFlag1::kSurface) ? Coordinate : RegionCoordinate; // 실제 Pop이 보존한 비표면 소수 위치만 영역 칸으로 절삭한다.
         const int x=cell(pop->x),y=cell(pop->y);
         if (pop->level==0) map[static_cast<std::size_t>(y*kWorldCells+x)]=sid.value;
         if (!(root[extraOffset]&kBuried)) {
@@ -284,7 +284,7 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
         if (id<5 || id>kMaximumId || id>=pool_.Capacity()) throw std::out_of_range("raw 그래프 해시 SID 오류");
         const auto candidate=pool_.Slot(Sid{id});
         // 로컬 표면 스냅샷에만 비표면 필터를 적용한다. 살아 있는 실제 해시/좌표/다음 링크는 변경하지 않는다.
-        if (!(candidate[11]&(kFree|kContained|kVoid)) && candidate[10]>=kFirstAssetTypeNumber && candidate[10]<types_.size() && !(types_[candidate[10]].flags1&TypeFlag1::kSurface)) { id=0;continue; }
+        if (!(candidate[11]&(kFree|kContained|kVoid)) && candidate[10]>=kFirstAssetTypeNumber && candidate[10]<CurrentTypes().size() && !(CurrentTypes()[candidate[10]].flags1&TypeFlag1::kSurface)) { id=0;continue; }
         required[id]=true;
     }
     std::vector<SurfaceObject> objects; std::vector<GraphMembership> members;
@@ -301,11 +301,11 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
             if (required[id]) throw std::logic_error("raw 그래프 후보 타입 오류");
             continue;
         }
-        if (bytes[10]>=types_.size()) {
+        if (bytes[10]>=CurrentTypes().size()) {
             if (required[id] || fullPool) throw std::logic_error("raw 그래프 후보 타입 오류");
             continue;
         }
-        const auto& type=types_[bytes[10]]; const bool surface=(type.flags1&TypeFlag1::kSurface)!=0;
+        const auto& type=CurrentTypes()[bytes[10]]; const bool surface=(type.flags1&TypeFlag1::kSurface)!=0;
         if (!surface && !required[id]) continue;
         if (id>kMaximumId || ((currentState&kContained) && (!fullPool || required[id])) || (fullPool && (currentState&kVoid) && required[id]))
             throw std::out_of_range("raw 그래프 후보 상태/SID 범위 오류");
@@ -330,8 +330,8 @@ RawGraph::Plan RawGraph::Calculate(Sid sid,Operation operation,std::uint8_t targ
     else if (operation==Operation::Detach) {
         auto source=finder.Object(sid.value);bool sourceFrameValid=true; // 치환 정보에서 실제 방향 코드가 필요한지 후보마다 판정한다.
         if (sourceType) {
-            if (*sourceType>=types_.size()) throw std::out_of_range("raw 그래프 삭제 치환 타입 오류");
-            const auto& replacement=types_[*sourceType];const auto frame=Read(root,frameOffset,patch ? 4U : 1U);
+            if (*sourceType>=CurrentTypes().size()) throw std::out_of_range("raw 그래프 삭제 치환 타입 오류");
+            const auto& replacement=CurrentTypes()[*sourceType];const auto frame=Read(root,frameOffset,patch ? 4U : 1U);
             if (!(replacement.flags1&TypeFlag1::kSurface)) throw std::out_of_range("raw 그래프 삭제 치환 표면 오류");
             if (replacement.footX<1 || replacement.footY<1 || replacement.footX>kWorldCells || replacement.footY>kWorldCells)
                 throw std::out_of_range("raw 그래프 삭제 치환 발자국 오류");
@@ -393,28 +393,28 @@ void RawGraph::Free(std::uint8_t graph) {
 FrameCode RawGraph::Frame(Sid sid) const {
     const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto number=raw[10];const auto index=Read(raw,patch ? 36 : 34,patch ? 4U : 1U);
-    if (number<kFirstAssetTypeNumber || number>=types_.size() || index>=frames_[number].size())
+    if (number<kFirstAssetTypeNumber || number>=CurrentTypes().size() || index>=frames_[number].size())
         throw std::out_of_range("raw 그래프 프레임 조회 오류");
     return frames_[number][index];
 }
 // post의 일반 탐색 순서에 따라 이전 Add의 번호/표/스택을 다음 Add가 읽는다.
 RawGraph::Plan RawGraph::CalculatePostDestroy(Sid sid) const {
     const auto root=pool_.Slot(sid);
-    if (sid.value<5 || (root[11]&(kFree|kContained)) || root[10]<kFirstAssetTypeNumber || root[10]>=types_.size())
+    if (sid.value<5 || (root[11]&(kFree|kContained)) || root[10]<kFirstAssetTypeNumber || root[10]>=CurrentTypes().size())
         throw std::logic_error("raw 그래프 postDestroy 자산 오류");
-    const auto& type=types_[root[10]];const auto cell=(type.flags1&TypeFlag1::kSurface) ? Coordinate : RegionCoordinate; // 예측 그림 삭제 후의 표면 재연결도 같은 원본 발자국 칸을 사용한다.
+    const auto& type=CurrentTypes()[root[10]];const auto cell=(type.flags1&TypeFlag1::kSurface) ? Coordinate : RegionCoordinate; // 예측 그림 삭제 후의 표면 재연결도 같은 원본 발자국 칸을 사용한다.
     const int x=cell(std::bit_cast<float>(Read(root,14))),y=cell(std::bit_cast<float>(Read(root,18)));
     if (type.footX<1 || type.footY<1 || type.footX>kWorldCells || type.footY>kWorldCells)
         throw std::out_of_range("raw 그래프 postDestroy 발자국 오류");
     const int left=std::clamp(x-type.footX+1,1,kWorldCells-1),top=std::clamp(y-type.footY+1,1,kWorldCells-1);
     const SquidSearchArea area{left,top,x>0 && y>0 ? x : left,x>0 && y>0 ? y : top};
-    auto nextPool=pool_;RawGraph next(nextPool,hash_,spots_,types_,frames_,records_,stack_,recovery_);
-    RawSquidFinder finder(nextPool,hash_,types_);
+    auto nextPool=pool_;RawGraph next(nextPool,hash_,spots_,CurrentTypes(),frames_,records_,stack_,recovery_);
+    RawSquidFinder finder(nextPool,hash_,CurrentTypes());
     // Begin는 첫 Next까지 수행한다. 반환 직전 next 저장과 단계/y/x 순서를 그대로 사용한다.
     for (auto candidate=finder.Begin(area);candidate.value;candidate=finder.Next()) {
         const auto raw=nextPool.Slot(candidate);
-        if (raw[10]>=types_.size()) throw std::out_of_range("raw 그래프 postDestroy 후보 타입 오류");
-        if (types_[raw[10]].flags1&TypeFlag1::kSurface) next.Add(candidate);
+        if (raw[10]>=CurrentTypes().size()) throw std::out_of_range("raw 그래프 postDestroy 후보 타입 오류");
+        if (CurrentTypes()[raw[10]].flags1&TypeFlag1::kSurface) next.Add(candidate);
     }
     Plan plan{next.records_,next.stack_,{},0};const auto offset=pool_.Edition()==OriginalEdition::Patch1078 ? 30U : 28U;
     // 실제 raw 필드 중 graph byte의 변경분만 원본 풀에 반영할 계획에 넣는다.
@@ -463,4 +463,10 @@ void RawGraph::PostPop(Sid sid,bool invalidate,bool add) {
 std::span<const GraphRecord> RawGraph::Records() const { return records_; }
 // 사용 후 스택 흔적을 다음 연산에도 이어 준다.
 std::span<const std::uint32_t> RawGraph::FloodStack() const { return stack_; }
+}
+
+namespace netstorm::o { //장기World만현재TYPE를대여하며기존독립snapshot계약은유지한다.
+std::span<const RiftTypeRecord> RawGraph::CurrentTypes() const { return currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_; } //모든현재속성조회가공유하는한선택이다.
+const RiftTypeRecord& RawGraph::CurrentType(std::size_t type) const { const auto types=CurrentTypes();if (type>=types.size()) throw std::out_of_range("Graph현재TYPE범위오류");return types[type]; } //이전vector.at과같이잘못된번호를거부한다.
+void RawGraph::BindCurrentTypes(std::span<const RiftTypeRecord> types) { if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188)) throw std::invalid_argument("Graph현재TYPE대여의판본/길이오류");currentTypes_=types; } //진단/프레임/기록을다시초기화하지않는다.
 }

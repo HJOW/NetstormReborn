@@ -40,6 +40,7 @@ public:
     // 세로 차이는 단정도로 저장한 값을, 가로 차이는 x87 스택의 값을 쓴다. 크기가 같으면 세로다.
     static int Direction(float fromX,float fromY,float toX,float toY);
     // 풀·해시·타입 표를 같은 판본의 다른 계층에 연결할 때 쓴다.
+    void BindCurrentTypes(std::span<const RiftTypeRecord> types); //실제PATCH World의현재TYPE를빌리고빈span은독립소유사본으로돌린다.
     const SidPool& Pool() const;
     const SquidHash& Hash() const;
     std::span<const RiftTypeRecord> Types() const;
@@ -75,6 +76,8 @@ private:
     std::span<const std::uint8_t> spots_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    std::span<const RiftTypeRecord> currentTypes_; //같은World의주소고정TYPE배열이며프레임코드소유권과구별한다.
+    const RiftTypeRecord& CurrentType(std::size_t type) const; //기존at의물리범위를지키며현재표면플래그를조회한다.
     // frames_: 타입별 프레임 자료.
     std::vector<RiftTypeFrames> frames_;
 };

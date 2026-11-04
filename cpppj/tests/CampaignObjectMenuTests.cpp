@@ -737,3 +737,14 @@ TEST_CASE(SquidActivate_ActualSessionUsesCurrentServiceAfterPostPop) { //Session
     previous=core.bookkeeping.GlobalCounts()[74];core.bookkeeping.depth=2;ready=true;session.World().Pop(source,30,40,0x2000040); //noGraph인기존비멀티일반객체등록만실행하며Frame/공격/의식은호출하지않는다.
     CHECK(diagnoses==1 && core.bookkeeping.depth==2 && !(core.pool.Slot(source)[11]&4U));
 }
+
+TEST_CASE(RiftShapeAccess_ActualSessionRetainsInputFrameAndCurrentCost) { //실제Session의상세/e1뒤SHP와현재후처리비용을같은World에서확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();auto storage=session.World().Storage();
+    auto& type=storage->types[74];type.name="session";type.flags1=0;type.flags2=1;type.footX=type.footY=1;auto& shape=storage->shapes[74];shape.loaded=true;shape.frameCount=1;shape.frames.resize(2);shape.frames[1].cellWidth=shape.frames[1].cellHeight=5;
+    std::array<int,2> point{};for (int y=1;y<256 && !point[0];++y) { //기존실제점유의행을차례로확인한다.
+        for (int x=1;x<256;++x) if (!core.spots[y*256+x]) { point={x,y};break; } //점유를지우지않고현재행의비어있는한칸을찾는다.
+    }
+    CHECK(point[0]!=0);const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);raw[36]=1;std::optional<std::string> detail;std::uint32_t diagnoses{};const auto before=core.bookkeeping.TotalCost();storage->BindChecking(RawCheckingFlag{0});
+    storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(expression=="frameCheck( abstract, frame, false )" && file==R"(..\o\rifttype.h)" && line==0xe1);CHECK(detail=="Frame assertion failed. Asking for type=74 (session) frame=1 abs=0\n\nType has 1 frames\n" && core.spots[point[1]*256+point[0]]==1);++diagnoses;raw[36]=0;type.cost=21; });
+    session.World().Pop(source,float(point[0]),float(point[1]),0x2000040);CHECK(diagnoses==1 && raw[33]==3 && raw[36]==0 && core.hash.Bucket(3,float(point[0]),float(point[1]))==source.value && core.bookkeeping.TotalCost()==before+21 && core.bookkeeping.depth==0);
+}

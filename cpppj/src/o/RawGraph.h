@@ -59,6 +59,7 @@ public:
     void Rebuild(bool resetAll);
     // 원본00462b20의 월드 초기 표를 만든다. Graph0 예약·reserved LOW BYTE·sentinel만 초기화하고 풀/스택은 보존한다.
     void ResetTable();
+    void BindCurrentTypes(std::span<const RiftTypeRecord> types); //실제PATCH World의현재TYPE배열을빌리고빈span은기존snapshot으로돌린다.
     void BindDiagnostics(GraphDiagnostics diagnostics); // 같은 Client의 현재 checking/진단을 연결하며 표/스택/풀은 쓰지 않는다.
     void BindDetachState(RawCheckingFlag enabled,RawCheckingFlag rebuild); // 실제 World의 현재 graphsWork/rebuildGraph를 빌린다. 독립 호출의 인자 정책은 미연결 때만 쓴다.
     void BindClock(std::function<double()> clock); //00460cd0/CD00401130의 두 현재 시각 읽기다. 결과는 원문 지역변수처럼 외부에 쓰지 않는다.
@@ -132,6 +133,9 @@ private:
     std::span<const std::uint8_t> spots_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    std::span<const RiftTypeRecord> currentTypes_; //현재World의주소고정TYPE를명시대여한경우에만참조한다.
+    std::span<const RiftTypeRecord> CurrentTypes() const; //독립사전계산/기존fixture는소유snapshot을유지한다.
+    const RiftTypeRecord& CurrentType(std::size_t type) const; //기존at의물리범위를보존하며현재속성을조회한다.
     // frames_: 타입별 프레임 자료.
     std::vector<std::vector<FrameCode>> frames_;
     RawGraphStorage localStorage_; // 기존 독립 snapshot과 CalculatePostDestroy의 임시 next만 사용하는 실제 사본이다.

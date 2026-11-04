@@ -1,0 +1,819 @@
+{
+  "unit": 844,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCppCommit": "bd36f6e6 / 20261104-27 CP",
+  "exeSha256": "ce2eae8c83c7d67de83164bc3c04c2f27fa2f3946184b55386eab3fc97d14276",
+  "exeBytes": 10515968,
+  "sourceSha256": {
+    "cpppj/src/o/RawRiftShapeAccess.h": "811559e474dfc2f2f373b545679c748c0b475deba6b411f0dfbada1fa0d9052a",
+    "cpppj/src/o/RawRiftShapeAccess.cpp": "fe06716f744c74818d7169286ba5589e65a8318e2e58bf59f8aeff421d10a4d9",
+    "cpppj/src/o/SquidDisplay.cpp": "f61dd85d651619c1637bd0ea9b81de3c11f4767f1fec1b8354089f841257e51f",
+    "cpppj/src/o/SquidPostPop.h": "5bca3942a9c3df03d7847f5086ceac3aca991e2719e99c1f27e6ff1933c1c99b",
+    "cpppj/src/o/SquidPostPop.cpp": "19c4a51f0ccd781d55c4b6fc057ac88868144a5320ef728c4645f6b45b93c200",
+    "cpppj/src/o/RawGraph.h": "6640b24b99efa4c848e757447b0f757969f5353bb94fc49e504268a28b2043e8",
+    "cpppj/src/o/RawGraph.cpp": "3f19f58bdafdf0604dfc34e64f644aeee6b267e760bbc4cb2ae375d3abf83d43",
+    "cpppj/src/o/RawGraphLive.cpp": "50f2fedcb5ae85d01d916a179a392d72e3be0d28ac30d0d67f6912360e886c8f",
+    "cpppj/src/o/RawSquidNeighbors.h": "7493fa83e23e0cc884ddd2e2ae5b7f62889553924bca1df42adf6b53b45faa3e",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "8307577f19198e1092f8f74ae8de82ab2c9f8db07d0ed0ba5efd83eea12b848d",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "ec526f74ca4286acefe3bc0d4c10244fd2c96af2ac5b8c53017488ffe6c2ab27",
+    "cpppj/src/o/CMakeLists.txt": "b08013afcdea0f2b9beb4172fa9dd9c07a30a41478e562c996118c4a7312b139",
+    "cpppj/tests/RiftShapeAccessTests.cpp": "13ab412a7ca39065ce8278ff8bf4dc8072188367c413b4705cddc9ea0c8b135d",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "feb70af4f9dc60b2c8da10df5d5c0db15365988b93d3cb9aaf6296449b2f0bf0",
+    "cpppj/tests/CMakeLists.txt": "12ccc75da0e422e2f6f38968bb932fba143c62e6fcb4f5aff8b79a0885e32d52",
+    "cpppj/tests/RawGraphTests.cpp": "beae423804f9e8e599cfa059e7482a49f266a861f9c1f5bc28cabbe622a03e68"
+  },
+  "firstCompiledSourceSha256": {
+    "cpppj/src/o/RawRiftShapeAccess.h": "811559e474dfc2f2f373b545679c748c0b475deba6b411f0dfbada1fa0d9052a",
+    "cpppj/src/o/RawRiftShapeAccess.cpp": "fe06716f744c74818d7169286ba5589e65a8318e2e58bf59f8aeff421d10a4d9",
+    "cpppj/src/o/SquidDisplay.cpp": "f61dd85d651619c1637bd0ea9b81de3c11f4767f1fec1b8354089f841257e51f",
+    "cpppj/src/o/SquidPostPop.h": "5bca3942a9c3df03d7847f5086ceac3aca991e2719e99c1f27e6ff1933c1c99b",
+    "cpppj/src/o/SquidPostPop.cpp": "19c4a51f0ccd781d55c4b6fc057ac88868144a5320ef728c4645f6b45b93c200",
+    "cpppj/src/o/RawGraph.h": "6640b24b99efa4c848e757447b0f757969f5353bb94fc49e504268a28b2043e8",
+    "cpppj/src/o/RawGraph.cpp": "3f19f58bdafdf0604dfc34e64f644aeee6b267e760bbc4cb2ae375d3abf83d43",
+    "cpppj/src/o/RawGraphLive.cpp": "50f2fedcb5ae85d01d916a179a392d72e3be0d28ac30d0d67f6912360e886c8f",
+    "cpppj/src/o/RawSquidNeighbors.h": "7493fa83e23e0cc884ddd2e2ae5b7f62889553924bca1df42adf6b53b45faa3e",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "8307577f19198e1092f8f74ae8de82ab2c9f8db07d0ed0ba5efd83eea12b848d",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "ec526f74ca4286acefe3bc0d4c10244fd2c96af2ac5b8c53017488ffe6c2ab27",
+    "cpppj/src/o/CMakeLists.txt": "b08013afcdea0f2b9beb4172fa9dd9c07a30a41478e562c996118c4a7312b139",
+    "cpppj/tests/RiftShapeAccessTests.cpp": "13ab412a7ca39065ce8278ff8bf4dc8072188367c413b4705cddc9ea0c8b135d",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "feb70af4f9dc60b2c8da10df5d5c0db15365988b93d3cb9aaf6296449b2f0bf0",
+    "cpppj/tests/CMakeLists.txt": "12ccc75da0e422e2f6f38968bb932fba143c62e6fcb4f5aff8b79a0885e32d52"
+  },
+  "firstGraphTestSourceSha256": "5f5e67c5cc3703492938c6577b5497be0309c30c0326fe350dc02bb493cb99d2",
+  "scope": [
+    "00419850의 signed DWORD 감김/상세/e1 정상 복귀/선택 TYPE와 저장 frame/현재 SHP",
+    "004ace40의 고정 abstract0과 실제 Client 상세·World·비멀티 Session",
+    "실제 World의 PostPop/Graph/이웃 현재 TYPE 대여와 기존 독립 소유 계약"
+  ],
+  "originalEntries": [
+    "00419850",
+    "0049adc0",
+    "00436d40",
+    "004b0d30",
+    "004ad3e0",
+    "004da650",
+    "00490050",
+    "0044f770",
+    "004c25e0",
+    "004c25b0"
+  ],
+  "validation": {
+    "distinctCases": 97,
+    "newCases": 15,
+    "firstCases": 97,
+    "firstFailedCases": 6,
+    "firstFailedChecks": 18,
+    "retestedExecutions": 19,
+    "repairedFailedCases": 1,
+    "repairedFailedChecks": 1,
+    "finalFailedChecks": 0,
+    "productChangedAfterFirstTests": false,
+    "firstFailedNames": [
+      "RawGraph_X86_AllocatedSidPostPopAndProjectedPop",
+      "RawGraph_RecoveryPreflightRejectsOtherVoidAndOutOfRangeTypeBeforePop",
+      "RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop",
+      "RawGraph_ProjectedPopRejectsExhaustionAndFractionalBeforeMutation",
+      "RawGraph_RegionThenAddExhaustionRejectsBeforeAnyPopMutation",
+      "GraphReferenceChecking_ActualRegionReplaysExistingNativeGeometry"
+    ],
+    "renamedCases": {
+      "RawGraph_RecoveryPreflightRejectsOtherVoidAndOutOfRangeTypeBeforePop": "RawGraph_RecoveryPreviewRejectsOtherVoidAndOutOfRangeTypeBeforePop",
+      "RawGraph_ProjectedPopRejectsExhaustionAndFractionalBeforeMutation": "RawGraph_ProjectedPreviewAndActualPopKeepDifferentFailureEffects",
+      "RawGraph_RegionThenAddExhaustionRejectsBeforeAnyPopMutation": "RawGraph_RegionThenAddFailureRetainsEarlierPopMutation"
+    },
+    "firstExecutions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "RiftShapeAccess_",
+        "cases": 9,
+        "expectedCases": 9,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log",
+        "sha256": "40bbc7b8455128e77112175aa1e9a5b36ca103361ba99f54a022e241c0058706"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "CurrentTypeBindings_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-types-first.log",
+        "sha256": "29f5245d8f9a959c21a80a04f8272d6934c16441daf5b28bbc65e0c019622064"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "RiftShapeAccess_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-session-first.log",
+        "sha256": "adbde682ae339fb7b7541f4d89dfa6c2907ba683a8a1e36d1f123eac8e52c5b2"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate-session.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPopParent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log",
+        "sha256": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidPopParent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-session.log",
+        "sha256": "1b833eddadccebfdf64429581e27918e11899c4cd5570c9d600e84b1b2fb0628"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPop_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-fixtures.log",
+        "sha256": "f31bde755e6d76ecc4a4766e16f4145416c3b55edb2a395853389f1e27d98f46"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidSpatial_Coordinates_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-coordinate.log",
+        "sha256": "3a1f05f247f78409fcaf2608aadfa12321376d4f24b9ea17348eb8f099af081e"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "BuildingSpace_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-building-fixtures.log",
+        "sha256": "d6044d09bdcbc8732a0337681cf68081a896a6fc81c9b67dc9ded9199aad4927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-post-pop.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "frame_display_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-frame-display.log",
+        "sha256": "c365548d66b11990fca7873428250267355f9e6fdfaf8c646fb6f8eede47970b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "set_frame_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-set-frame.log",
+        "sha256": "0a45f97a0eeb88a7c1921c00d6cc901668d0e232bc9e654a84a80feadfcd5961"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-menu-open.log",
+        "sha256": "ad5f05af8504a5cb3d57f544c29dca3dafecb8cb38a660ccfe0bd10deadce4da"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-menu-refund.log",
+        "sha256": "feb075621e686b73e66bf794e6c20e552978f87beba247aec77e371f13c7205f"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-menu-form.log",
+        "sha256": "1271d58e49bfc91ba07e8db3c0053b63cff8c77947139c038d91cbcda83c0a40"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "RawGraph_",
+        "cases": 17,
+        "expectedCases": 17,
+        "failedChecks": 17,
+        "exitCode": 1,
+        "passed": false,
+        "log": "extracted/cpp-resume-844/test-graph.log",
+        "sha256": "75a43360fa545e3d3ba848b9ffb11b913935c609ea56bb7f5d853400d15c3673"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphReferenceChecking_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 1,
+        "exitCode": 1,
+        "passed": false,
+        "log": "extracted/cpp-resume-844/test-graph-region.log",
+        "sha256": "3401e4e6ebd52627b0f0dd3706c02eb3be1fc598c0faf7d2daec07f960239062"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphLiveChecking_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-live.log",
+        "sha256": "4ddc8c85aaf1f4d0c5ae2e74d2dfbfed929556844d80b6ceb5ee5f486bdcbc88"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphDetachLive_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-detach.log",
+        "sha256": "921d769f6645a60011e80a7cd8931dcc52b257c076bde2e06929c4e6897b76a5"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "neighbor_",
+        "cases": 4,
+        "expectedCases": 4,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-neighbors.log",
+        "sha256": "ce3b34f604bb2650c18e200c1a756172f8c4d208bd492908333a24c3a124346b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidDisplayParent_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-display-parent.log",
+        "sha256": "501c780bdde761346fc3ee4a8739c3b746ca9169a76c9455904179edfafda4ea"
+      }
+    ],
+    "repairedExecutions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "RawGraph_",
+        "cases": 17,
+        "expectedCases": 17,
+        "failedChecks": 1,
+        "exitCode": 1,
+        "passed": false,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log",
+        "sha256": "df738db4337ef109395f8623f9a0150f61e05ad54e0d8f041646a3d53ee1d9f0"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphReferenceChecking_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-region-repaired.log",
+        "sha256": "145c6697af0624158e19e8358cf8c771ff53d2e523b82c9bd43d81fbb7353c88"
+      }
+    ],
+    "finalExecution": {
+      "target": "netstorm_pop_context_tests",
+      "filter": "RawGraph_RegionThenAddFailureRetainsEarlierPopMutation",
+      "cases": 1,
+      "expectedCases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-844/test-graph-shared-bucket-final.log",
+      "sha256": "8b5002fa31faa2cbcb8ac1a68c4c5337f47e70d2c1bba0cc7d7039b5667c3244"
+    },
+    "finalCaseEvidence": {
+      "RiftShapeAccess_ValidFrameDoesNotReadDiagnosticDevices": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log"
+      },
+      "RiftShapeAccess_RangeErrorKeepsSelectedTypeAndSavedArguments": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log"
+      },
+      "RiftShapeAccess_NullShapeRepairsWithoutFrameDetail": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log"
+      },
+      "RiftShapeAccess_FreedHeaderDiagnosticDoesNotRepeatPredicateAfterReturn": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log"
+      },
+      "RiftShapeAccess_DoubleFrameCountUsesSignedDwordWrap": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log"
+      },
+      "RiftShapeAccess_FrameDetailFailureStopsBeforeAssertionAndPhysicalRead": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log"
+      },
+      "RiftShapeAccess_AbortingAssertionKeepsEarlierDetail": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log"
+      },
+      "RiftShapeAccess_DiagnosticSelfRebindKeepsCurrentCallableAlive": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log"
+      },
+      "RiftShapeAccess_ActualWorldUsesSelectedShapeAfterCurrentDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-first.log"
+      },
+      "CurrentTypeBindings_PostPopUsesCurrentCostAndRegistrationFlags": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-types-first.log"
+      },
+      "CurrentTypeBindings_RejectsWrongLengthWithoutLosingLiveArray": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-types-first.log"
+      },
+      "CurrentTypeBindings_NeighborFootprintDistinguishesOwnedAndBorrowedRows": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-types-first.log"
+      },
+      "CurrentTypeBindings_GraphAddReadsCurrentSurfaceAndFootprint": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-types-first.log"
+      },
+      "CurrentTypeBindings_ActualWorldPostPopReadsCostBeforeCurrentAiNotice": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-types-first.log"
+      },
+      "RiftShapeAccess_ActualSessionRetainsInputFrameAndCurrentCost": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-shape-session-first.log"
+      },
+      "SquidActivate_VoidDiagnosticRepairsCurrentStateBeforeTransmittingCheck": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_ZeroSidDiagnosticResumesSamePhysicalSlot": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_InvalidPhysicalSidFailsAfterOriginalDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_CurrentDepthDiagnosticReturnsWithoutAutomaticRepair": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_AbortingDepthDiagnosticKeepsCompletedEffects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_BalancedDepthWrapDoesNotReadDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_PostFailurePreservesIncrementWithoutFinalDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_DiagnosticSelfRebindReadsNextCurrentCallback": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_ActualCommonPostPopKeepsStatisticsBeforeCurrentDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_ActualWorldUsesCurrentClientDiagnosticWithCheckingOff": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate.log"
+      },
+      "SquidActivate_ActualSessionUsesCurrentServiceAfterPostPop": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-activate-session.log"
+      },
+      "SquidPopParent_EarlyReturnsDoNotReadTypeOrDevices": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_InvalidCoordinateLogsBeforeStoreAndUsesCurrentType": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_MiniMapPreservesInputBoundsAndReadsCurrentLoopType": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_InvalidStartDiagnosesWithCheckingOffAndResumesCellZero": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_GridDiagnosticKeepsCandidateAndLogsCurrentNames": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_MissingSideDeviceKeepsEarlierSpots": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_FrameFailureOccursAfterSpotsBeforeHash": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_OverlapReturnsBeforeUnknownVirtualAndFrame": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_NextDiagnosticKeepsSavedHeadAndCurrentIslandBranch": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_UpdateControlsCurrentFirstPopAndFlags": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_FinalContainedDiagnosticKeepsCompletedEffects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_ActualAdapterTransmittingDiagnosticRunsAfterVoidClear": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_ActualWorldFrameFailurePreservesCoordinatesAndSpots": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_ActualClientWorldDiagnosticAndTraceShareCurrentOwner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-parent.log"
+      },
+      "SquidPopParent_ActualSessionLateFrameLookup": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-session.log"
+      },
+      "SquidPop_X86Fixture_ReplaysActualRawRegistrationLifecycle": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-fixtures.log"
+      },
+      "SquidPop_Vtables_RejectsUnrestoredPostPopOverrides": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-fixtures.log"
+      },
+      "SquidPop_SelectedGuards_PreserveOriginalPartialWrites": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-pop-fixtures.log"
+      },
+      "SquidSpatial_Coordinates_PreservesFractionalBoundaryInBothEditions": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-coordinate.log"
+      },
+      "BuildingSpace_X86Fixture_ReplaysWholeBuildingPopAndUnpop": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-building-fixtures.log"
+      },
+      "BuildingSpace_BindingAndNativeDiagnostic_AreEditionSpecific": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-building-fixtures.log"
+      },
+      "SquidPostPop_X86_CostListsTotalsAndActiveLifecycle": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-post-pop.log"
+      },
+      "SquidPostPop_FirstRegistrationAndProviderDuplicate_PreserveOriginalCounters": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-post-pop.log"
+      },
+      "SquidPostPop_UnsupportedEffectsAndCorruptList_KeepEarlierSpaceWrites": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-post-pop.log"
+      },
+      "SquidPostPop_BridgePrefix_X86_FlagsAndExtra": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-post-pop.log"
+      },
+      "SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-post-pop.log"
+      },
+      "SquidPostPop_TypeCost_LoadsFloatAndRejectsString": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-post-pop.log"
+      },
+      "frame_display_binding_updates_old_new_pixels_and_repop_level": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-frame-display.log"
+      },
+      "frame_display_binding_preserves_shadow_marker_and_suppression": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-frame-display.log"
+      },
+      "frame_display_binding_rejects_bad_current_frame_and_missing_shape": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-frame-display.log"
+      },
+      "frame_display_binding_rejects_mismatched_connections": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-frame-display.log"
+      },
+      "frame_display_shp_size_preserves_double_frames_and_cd_range_rules": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-frame-display.log"
+      },
+      "set_frame_patch_x86_levels_and_effects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-set-frame.log"
+      },
+      "set_frame_cd_x86_levels_and_effects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-set-frame.log"
+      },
+      "set_frame_1037_x86_levels_and_effects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-set-frame.log"
+      },
+      "set_frame_rejects_missing_hooks_and_invalid_flags": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-set-frame.log"
+      },
+      "set_frame_real_unpop_and_pop_move_hash_level_on_next_change": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-set-frame.log"
+      },
+      "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-menu-open.log"
+      },
+      "CampaignObjectMenus_ActualRefundAndUninstalledGuard": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-menu-refund.log"
+      },
+      "CampaignObjectMenus_ActualObjectFormBindingAndClose": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-menu-form.log"
+      },
+      "RawGraph_X86_AllocatedSidPostPopAndProjectedPop": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_X86_DetachGeneralIslandBridgeUnpopAndRelease": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_X86_DetachUsesPositionHeadGraphAndSourceFrame": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_X86_GlobalRebuildAndExhaustedAllocation": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_X86_RecoveryInsideAddDetachPopAndPostPop": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_RecoveryPreviewRejectsOtherVoidAndOutOfRangeTypeBeforePop": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_RebuildRejectsDamageAndFastAllocateDoesNotReadPool": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_PositionHeadEarlyReturnAndPreflightPreserveSource": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_ProjectedPreviewAndActualPopKeepDifferentFailureEffects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_RegionThenAddFailureRetainsEarlierPopMutation": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-shared-bucket-final.log"
+      },
+      "RawGraph_RefreshesFramesMapAndRawMembershipBetweenCalls": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_DetachPreflightRejectsBeforePoolSpaceOrGraphMutation": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_NonSurfaceFractionalRegionPreservesPositionAndNeighbor": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_SharedStorageAndExplicitSnapshotHaveSeparateOwnership": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "RawGraph_SharedPostDestroyValidationKeepsCloneAndCommitSeparate": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-repaired.log"
+      },
+      "GraphReferenceChecking_ActualRegionReplaysExistingNativeGeometry": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-region-repaired.log"
+      },
+      "GraphLiveChecking_ReplaysNativeParentsAndCallbackMutations": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-live.log"
+      },
+      "GraphLiveChecking_ReplaysNativeFreeCandidateAfterTrace": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-live.log"
+      },
+      "GraphLiveChecking_ActualWorldUsesFullPoolAndStorageTrace": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-live.log"
+      },
+      "GraphDetachLive_ReplaysNativeCurrentStateAndValueSource": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-detach.log"
+      },
+      "GraphDetachLive_RegionSetterContinuesAfterFreeAndRetype": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-detach.log"
+      },
+      "GraphDetachLive_ActualWorldBindsCurrentModesAndStorageClock": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-graph-detach.log"
+      },
+      "neighbor_patch_x86_first_and_bridge_event": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-neighbors.log"
+      },
+      "neighbor_cd_x86_first_and_bridge_event": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-neighbors.log"
+      },
+      "neighbor_1037_x86_first_and_bridge_event": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-neighbors.log"
+      },
+      "neighbor_first_stops_before_unvisited_damage_and_does_not_mutate": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-neighbors.log"
+      },
+      "SquidDisplayParent_NativeWholeParent696": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-display-parent.log"
+      },
+      "SquidDisplayParent_NativeNumberAndThreeErrorArguments696": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-display-parent.log"
+      },
+      "SquidDisplayParent_SelectedDevicesAndStableBorrowedFields": {
+        "passed": true,
+        "log": "extracted/cpp-resume-844/test-display-parent.log"
+      }
+    },
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-844/build-first.log",
+        "sha256": "9450ad8287cf713ddf823defd0acba936fa935d2d22dcbb47bd13801f5839506",
+        "exitCode": 0,
+        "sessionId": 69554,
+        "compilerWarnings": 0,
+        "compilerErrors": 0
+      },
+      {
+        "log": "extracted/cpp-resume-844/build-repaired.log",
+        "sha256": "1c5f5b498a6d685485a7543699638abe28d742bbe633cd0af22d4c75ac9f9130",
+        "exitCode": 0,
+        "sessionId": 97428,
+        "compilerWarnings": 0,
+        "compilerErrors": 0
+      },
+      {
+        "log": "extracted/cpp-resume-844/build-final.log",
+        "sha256": "1c5f5b498a6d685485a7543699638abe28d742bbe633cd0af22d4c75ac9f9130",
+        "exitCode": 0,
+        "sessionId": 44279,
+        "compilerWarnings": 0,
+        "compilerErrors": 0
+      }
+    ]
+  },
+  "repairs": [
+    "기존 RawGraph fixture에 현재 TYPE와 원문 grid 오류 로그 장치 연결; 입력/기대값 불변",
+    "명시 projected 무효과 검사를 실제 ValidatePostPop에 유지; 실제 Pop 후처리 실패는 선행 공간/state/depth 쓰기를 보존함을 별도 확인",
+    "교정 검사 하나의 x20/21 별도 버킷 가정을 원문 2칸 해시에 맞게 고침; 새 머리 root/보존 next candidate 확인"
+  ],
+  "protected": {
+    "files": 2759,
+    "fixtures": 939,
+    "changed": 0,
+    "newCpuExecutions": 0,
+    "newFixtureFiles": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayer": 3,
+    "completedParents": 36,
+    "completedPartial": 3
+  },
+  "remaining": [
+    "공통004b0d30의 현재 그래프 enabled/TYPE 재조회·저장 genus·80b 진단 복귀·선행 Validate 제거",
+    "004da650 실제 mouseType/기억 좌표/Select(0,1)/원래 found의 현재 raw extra 재검사",
+    "TYPE 프레임 코드 전체 재적재/공통 Pop 전체·나머지 UI/Edit/수명/파일·MP/4~8차"
+  ],
+  "excluded": [
+    "실제 게임/GUI",
+    "사제 포획/희생·특정 적 공격·시나리오 승리",
+    "사용자 직접 확인",
+    "신규 MP/패킷/실제 통신 검사",
+    "공중3종 전용 검사",
+    "물리 입력/PCM/CD 재시도",
+    "전체71/CTest/34미션/ZIP 반복"
+  ],
+  "rawDirectory": "extracted/cpp-resume-844"
+}

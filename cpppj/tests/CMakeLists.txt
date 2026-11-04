@@ -3398,3 +3398,7 @@ target_sources(netstorm_file_tests PRIVATE FactoryTakeDiagnosticsTests.cpp)
 target_sources(netstorm_tests PRIVATE SquidPopParentTests.cpp SquidActivateTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE SquidPopParentTests.cpp SquidActivateTests.cpp BuildingSpaceTests.cpp PostPopTests.cpp FrameDisplayTests.cpp SetFrameTests.cpp)
 target_compile_definitions(netstorm_pop_context_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# SHP의 실제 진단/현재 TYPE와 기존 비멀티 Graph/이웃 원문 fixture를 집중 대조한다(844).
+target_sources(netstorm_tests PRIVATE RiftShapeAccessTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE RiftShapeAccessTests.cpp RawGraphTests.cpp GraphLiveCheckingTests.cpp GraphDetachLiveTests.cpp NeighborTests.cpp SquidDisplayParentTests.cpp)

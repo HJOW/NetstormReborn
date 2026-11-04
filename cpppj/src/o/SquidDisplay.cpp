@@ -1,5 +1,6 @@
 // 패치 004ad500/004990d0/00498ff0 ↔ CD 004ae380/00456a00/00456930.
 #include "o/SquidDisplay.h"
+#include "o/RawRiftShapeAccess.h"
 #include "o/RawSquidDisplayParent.h"
 #include "o/SquidUnpop.h"
 #include <algorithm>
@@ -91,8 +92,18 @@ std::array<float,2> SquidDisplay::FrameSize(OriginalEdition edition,std::span<co
     if (edition!=edition_) throw std::invalid_argument("프레임 SHP 판본 불일치");
     const auto type=Read(bytes,10,1);
     if (type>=shapes_.size()) throw std::out_of_range("프레임 SHP 타입 번호 범위 오류");
+    if (edition_==OriginalEdition::Patch1078) {
+        RiftShapeAccessHooks hooks;hooks.typeNumber=[](RawSquidDisplayTypeView selected) { return selected.token; };
+        hooks.frameError=[this](auto number,auto savedFrame,auto abstract) { sink_.FrameError(number,savedFrame,abstract); };
+        hooks.assertion=[this](auto expression,auto file,auto line) { sink_.Assertion(expression,file,line); };
+        hooks.shape=[this](std::uint32_t selected,std::int32_t savedFrame) {
+            const auto& current=shapes_[selected];if (!current.loaded || savedFrame<0 || static_cast<std::size_t>(savedFrame)>=current.frames.size()) throw std::out_of_range("진단복귀뒤SHP물리범위오류");
+            const auto& header=current.frames[static_cast<std::size_t>(savedFrame)];return std::array<float,2>{header.cellWidth,header.cellHeight};
+        };
+        return ReadRiftShapeFrame({type,types_[type].flags1,shapes_[type].frameCount,shapes_[type].loaded,types_[type].maxHitPoints},frame,0,hooks); //004ace40은rawabstract대신고정인자0을전달한다.
+    }
     const auto& shape=shapes_[type];
-    if (!shape.loaded || (edition_==OriginalEdition::Patch1078 && !PatchFrameValid(type,frame)))
+    if (!shape.loaded)
         throw std::out_of_range("프레임 SHP 조회 실패(00419850 frameCheck)");
     if (frame<0 || static_cast<std::size_t>(frame)>=shape.frames.size()) throw std::out_of_range("프레임 SHP 물리 범위 오류");
     const auto& header=shape.frames[static_cast<std::size_t>(frame)];

@@ -90,6 +90,7 @@ public:
         std::function<void(Sid)> bridgeConnector={});
     // PATCH004166e0의 실제 현재 Player/brain 통지다. 빈 함수는 수명 종료 때 분리하며 미연결 독립/CD 경로는 기존 검사를 유지한다.
     void BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice);
+    void BindCurrentTypes(std::span<const RiftTypeRecord> types); //실제PATCH World의같은TYPE배열을빌리고빈span은독립소유사본으로돌린다.
     void BindManaDiagnostics(ManaRegistrationDiagnostics diagnostics); // 같은 Client checking과 정상 복귀하는 마나 중복 진단 장치를 빌린다.
     // 다리 postPop(00422150 / CD 00449890)의 접두 부분이다. flag 1은 extra 비트 2를 켜며,
     // flag 1 또는 (flag 4이고 abstract 아님)이면 004213b0/CD 00448b00의 연결 효과를 요청한다.
@@ -186,6 +187,8 @@ private:
     SidPool& pool_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    std::span<const RiftTypeRecord> currentTypes_; //실제World의주소고정TYPE배열이며재할당없이필드만변경할수있다.
+    std::span<const RiftTypeRecord> CurrentTypes() const; //독립기존구성은소유사본을계속사용한다.
     // state_: 처리 중 조회·갱신하는 상태 (SquidPostPopState).
     SquidPostPopState& state_;
     // graph_: 서로 연결된 표면의 Graph 소속을 관리하는 처리기.

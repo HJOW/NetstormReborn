@@ -34,7 +34,7 @@ void RawGraph::Diagnose(std::string_view expression,std::uint32_t line,std::stri
 // PATCH의 raw getter는 TYPE 검사를 무조건 수행하고 CD는 graph BYTE만 읽는다.
 std::uint8_t RawGraph::ReadNumber(Sid sid) const {
     const auto raw=pool_.Slot(sid);const auto type=raw[10];
-    if (pool_.Edition()==OriginalEdition::Patch1078 && !(types_.at(type).flags1&TypeFlag1::kSurface) && type!=kFenceMark && type!=kWindArcher)
+    if (pool_.Edition()==OriginalEdition::Patch1078 && !(CurrentType(type).flags1&TypeFlag1::kSurface) && type!=kFenceMark && type!=kWindArcher)
         Diagnose("getTypeFlags() & TYPE_FLAG_IS_SURFACE || getType() == fencemarkType || getType() == windArcherType",0x739,"\\Ns\\O\\Squid.cpp");
     return pool_.Slot(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 30 : 28];
 }
@@ -42,7 +42,7 @@ std::uint8_t RawGraph::ReadNumber(Sid sid) const {
 void RawGraph::WriteNumber(Sid sid,std::uint8_t graph) const {
     const auto type=pool_.Slot(sid)[10];
     if (pool_.Edition()==OriginalEdition::Patch1078) {
-        if (!(types_.at(type).flags1&TypeFlag1::kSurface) && type!=kFenceMark && type!=kWindArcher)
+        if (!(CurrentType(type).flags1&TypeFlag1::kSurface) && type!=kFenceMark && type!=kWindArcher)
             Diagnose("getTypeFlags() & TYPE_FLAG_IS_SURFACE || type == fencemarkType || type == windArcherType",0x74b,"\\Ns\\O\\Squid.cpp");
         if (graph>=Graph::kCount && graph!=Graph::kInvalid && type!=kFenceMark && type!=kWindArcher)
             Diagnose("( n >=0 && n < MaxGraphs) || ( n==invalidGraphNum) || type == fencemarkType || type == windArcherType",0x750,"\\Ns\\O\\Squid.cpp");
@@ -81,7 +81,7 @@ std::uint32_t RawGraph::ExecuteFlood(Sid sid,std::uint8_t graph,bool inspect) {
     std::vector<RiftTypeFrames> codes;codes.reserve(frames_.size());
     // 원문 프레임 코드를 기존 raw 이웃 탐색기에 연결한다. 번호/상태/지도는 복사하지 않는다.
     for (const auto& frames:frames_) codes.emplace_back(frames);
-    RawSquidNeighbors neighbors(pool_,hash_,spots_,types_,codes);
+    RawSquidNeighbors neighbors(pool_,hash_,spots_,CurrentTypes(),codes);if (!currentTypes_.empty()) neighbors.BindCurrentTypes(currentTypes_);
     stack_[0]=sid.value;std::size_t depth=1;std::uint32_t changed=0;
     // 별도 방문 집합 없이 현재 목적 번호를 읽고 원문 LIFO 중복 push를 유지한다.
     while (depth) {
@@ -116,7 +116,7 @@ void RawGraph::ExecuteRebuild(bool resetAll) {
     // 원문 iterator는 초기1에서 Next 선증가로2부터 시작하고 free만 건너뛴다. surface의 void/dead/contained는 제외하지 않는다.
     for (std::uint32_t id=2;id<firstLimit;++id) {
         const Sid sid{static_cast<std::uint16_t>(id)};const auto raw=pool_.Slot(sid);
-        if (raw[11]&1) continue;const auto& type=types_.at(raw[10]);if (!(type.flags1&TypeFlag1::kSurface)) continue;
+        if (raw[11]&1) continue;const auto& type=CurrentType(raw[10]);if (!(type.flags1&TypeFlag1::kSurface)) continue;
         if (!resetAll && ReadNumber(sid)!=Graph::kInvalid) continue;
         const auto x=GraphCoordinate(raw,14),y=GraphCoordinate(raw,18);
         if (!std::isfinite(x) || !std::isfinite(y) || x<0 || y<0 || x>=256 || y>=256) throw std::out_of_range("Graph 재구성 spot 좌표 범위 오류");
@@ -128,7 +128,7 @@ void RawGraph::ExecuteRebuild(bool resetAll) {
     // 다시 초기1→Next로2부터 읽고 앞 flood가 바꾼 현재 번호를 확인해 다음 성분의 번호를 할당한다.
     for (std::uint32_t id=2;id<secondLimit;++id) {
         const Sid sid{static_cast<std::uint16_t>(id)};const auto raw=pool_.Slot(sid);
-        if (!(raw[11]&1) && (types_.at(raw[10]).flags1&TypeFlag1::kSurface) && ReadNumber(sid)==temporary) {
+        if (!(raw[11]&1) && (CurrentType(raw[10]).flags1&TypeFlag1::kSurface) && ReadNumber(sid)==temporary) {
             const auto number=ExecuteAllocate(true);ExecuteFlood(sid,number);
         }
     }
@@ -149,7 +149,7 @@ void RawGraph::ExecuteAdd(Sid sid) {
     std::vector<RiftTypeFrames> codes;codes.reserve(frames_.size());
     // 원천의 캐시와 각 후보의 현재 frame을 같은 코드 표에 연결한다.
     for (const auto& frames:frames_) codes.emplace_back(frames);
-    RawSquidNeighbors neighbors(pool_,hash_,spots_,types_,codes);RawSquidNeighborWalk walk(neighbors,sid,NeighborFlag::kSurfaceMap);
+    RawSquidNeighbors neighbors(pool_,hash_,spots_,CurrentTypes(),codes);if (!currentTypes_.empty()) neighbors.BindCurrentTypes(currentTypes_);RawSquidNeighborWalk walk(neighbors,sid,NeighborFlag::kSurfaceMap);
     std::array<Sid,64> connections{};std::size_t count=0;
     std::int32_t biggestSize=std::numeric_limits<std::int32_t>::min()+1;std::uint8_t biggest=0; // 원문 0x80000001의 크기 초기값이며 동률에서는 첫 연결을 유지한다.
     // 원문은 번호를 snapshot하지 않고 이미 넣은 SID의 현재 graph BYTE와 중복을 비교한다.
@@ -189,15 +189,15 @@ void RawGraph::ExecuteAdd(Sid sid) {
 // 일반 finder는 다음 raw 체인을 먼저 저장한다. Add의 진단/로그 뒤 다음 후보의 현재 필드를 다시 읽는다.
 void RawGraph::ExecutePostDestroy(Sid sid) {
     ValidatePostDestroy(sid);
-    const auto raw=pool_.Slot(sid);const auto& type=types_.at(raw[10]);
+    const auto raw=pool_.Slot(sid);const auto& type=CurrentType(raw[10]);
     const auto x=GraphCoordinate(raw,14),y=GraphCoordinate(raw,18);
     if (!std::isfinite(x) || !std::isfinite(y) || x<0 || y<0 || x>=256 || y>=256) throw std::out_of_range("Graph postDestroy 좌표 범위 오류");
     const auto left=std::clamp(static_cast<int>(x)-type.footX+1,1,255),top=std::clamp(static_cast<int>(y)-type.footY+1,1,255);
     const SquidSearchArea area{left,top,x>0 && y>0 ? static_cast<int>(x) : left,x>0 && y>0 ? static_cast<int>(y) : top};
-    RawSquidFinder finder(pool_,hash_,types_);
+    RawSquidFinder finder(pool_,hash_,CurrentTypes());
     // 이전 Add가 고친 후보 타입/상태와 현재 hash/next를 읽으며 표면만 Add한다.
     for (auto candidate=finder.Begin(area);candidate.value;candidate=finder.Next()) {
-        if (types_.at(pool_.Slot(candidate)[10]).flags1&TypeFlag1::kSurface) Add(candidate);
+        if (CurrentType(pool_.Slot(candidate)[10]).flags1&TypeFlag1::kSurface) Add(candidate);
     }
 }
 // 원문 삭제 정보는 sentinel 전 인자 값이다. 사전 검사는 기존 안전 계약만 유지하고 효과를 commit하지 않는다.
@@ -207,7 +207,7 @@ void RawGraph::ExecuteDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,s
     std::vector<RiftTypeFrames> codes;codes.reserve(frames_.size());
     // 후보 타입/프레임은 바꾸지 않고 값 원천만 삭제 정보의 타입으로 치환한다.
     for (const auto& frames:frames_) codes.emplace_back(frames);
-    RawSquidNeighbors neighbors(pool_,hash_,spots_,types_,codes);auto source=neighbors.Source(sid);
+    RawSquidNeighbors neighbors(pool_,hash_,spots_,CurrentTypes(),codes);if (!currentTypes_.empty()) neighbors.BindCurrentTypes(currentTypes_);auto source=neighbors.Source(sid);
     if (sourceType) source.type=*sourceType;
     CheckGraphSentinel(records_[Graph::kInvalid],pool_.Edition(),diagnostics_);
     if (!detachEnabled_) return; // GetGraph(position)도 현재 활성 전역을 다시 읽는다.
@@ -231,13 +231,13 @@ void RawGraph::ExecuteDetach(Sid sid,bool rebuild,std::uint8_t removedSurfaces,s
         std::uint8_t current{};
         if (!candidate.value) {
             if (pool_.Edition()==OriginalEdition::Patch1078 && diagnostics_.checking) Diagnose("mySid",0x93);
-        } else if (types_.at(pool_.Slot(candidate)[10]).flags1&TypeFlag1::kSurface) current=ReadNumber(candidate);
+        } else if (CurrentType(pool_.Slot(candidate)[10]).flags1&TypeFlag1::kSurface) current=ReadNumber(candidate);
         else {
             const auto raw=pool_.Slot(candidate);const auto surface=RawPathSurfaceAt(hash_,{GraphCoordinate(raw,14),GraphCoordinate(raw,18)});
             current=surface.value ? ReadNumber(surface) : Graph::kInvalid;
         }
         ValidateFree(current);if (current!=number) continue;
-        if (!rebuilding() && remaining<2) { if (!(types_.at(source.type).flags2&8)) keep=true; }
+        if (!rebuilding() && remaining<2) { if (!(CurrentType(source.type).flags2&8)) keep=true; }
         else { const auto allocated=ExecuteAllocate(recovery_==GraphRecovery::FullPool);ExecuteFlood(candidate,allocated); }
     }
     if (count) original.surfaces=GraphWord(original.surfaces-removedSurfaces);

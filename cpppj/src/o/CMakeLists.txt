@@ -231,7 +231,7 @@ target_sources(netstorm PRIVATE
     SquidFormDispatch.cpp SquidFormDispatch.h
     SquidUnpop.cpp SquidUnpop.h UnpopVtables.inc
     SquidPop.cpp SquidPop.h PopVtables.inc
-    RawSquidPopParent.cpp RawSquidPopParent.h RawSquidActivate.cpp RawSquidActivate.h RawSquidTransmission.cpp RawSquidTransmission.h #현재Pop/Activate/실제writer의같은물리연결이다(842~843).
+    RawSquidPopParent.cpp RawSquidPopParent.h RawRiftShapeAccess.cpp RawRiftShapeAccess.h RawSquidActivate.cpp RawSquidActivate.h RawSquidTransmission.cpp RawSquidTransmission.h #현재Pop/Activate/실제writer의같은물리연결이다(842~843).
     RawBuildingSpace.cpp RawBuildingSpace.h
     SquidDisplay.cpp SquidDisplay.h
     SquidFrame.cpp SquidFrame.h

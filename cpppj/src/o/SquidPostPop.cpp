@@ -215,7 +215,7 @@ void SquidPostPop::BridgePrefix(SidPool& pool,Sid sid,std::uint32_t flags,const 
 }
 // 패치는 trunc(cost+type*23)-type*23, CD는 원본 float cost를 누적하고 절삭한다.
 std::int32_t SquidPostPop::TotalCost(std::size_t type) const {
-    const double cost=types_[type].cost; double value=cost;
+    const double cost=CurrentTypes()[type].cost; double value=cost;
     if (!std::isfinite(cost)) throw std::invalid_argument("postPop 유한 비용이 필요합니다");
     if (pool_.Edition()==OriginalEdition::Patch1078) {
         const auto bias=static_cast<std::int64_t>(type)*kCostBias;
@@ -232,7 +232,7 @@ std::int32_t SquidPostPop::TotalCost(std::size_t type) const {
 // 실제 원본 분기가 미복원 함수를 요구할 때만 거부한다. 표시/통계 억제면 타입 효과를 읽지 않는다.
 void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) const {
     const auto bytes=pool_.Slot(sid);
-    if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size())
+    if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=CurrentTypes().size())
         throw std::logic_error("postPop raw 자산 상태 오류");
     if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesDerived(sid)) throw std::logic_error("파생 postPop 미복원");
     if (HandlesPriest(sid)) priestPostPop_->Validate(sid);
@@ -250,10 +250,10 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
 // 파생 몸체의 명시적 공통 호출용 검사다. 자동 가상 분배의 지원 검사는 Validate에 남긴다.
 void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* pop) const {
     const auto bytes=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=types_.size())
+    if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=CurrentTypes().size())
         throw std::logic_error("postPop raw 자산 상태 오류");
     if (state_.suppressed) return;
-    const auto& type=types_[bytes[10]];
+    const auto& type=CurrentTypes()[bytes[10]];
     if (state_.graphsEnabled) {
         const bool region=(type.flags2&kRegionMask) && (flags&3) && !(flags&kNoGraph);
         const bool add=(type.flags1&TypeFlag1::kSurface) && (flags&kGraphChange) && !(flags&kNoGraph);
@@ -370,7 +370,7 @@ void SquidPostPop::PostPop(Sid sid,std::uint32_t flags) {
 void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
     ValidateBase(sid,flags);
     if (state_.suppressed) { --state_.depth; return; }
-    const auto bytes=pool_.Slot(sid); const auto number=bytes[10]; const auto& type=types_[number];
+    const auto bytes=pool_.Slot(sid); const auto number=bytes[10]; const auto& type=CurrentTypes()[number];
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (state_.graphsEnabled && graph_)
         graph_->PostPop(sid,(type.flags2&kRegionMask) && (flags&3) && !(flags&kNoGraph),
@@ -388,7 +388,7 @@ void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
             Append(state_.Factories(),sid); ++state_.productionDirty;
         }
         if (aiNotice_) aiNotice_(pool_.Slot(sid)[34],sid,true); // 원본의 생산 목록 뒤·통계 앞에 현재 owner로004166e0을 호출한다.
-        const auto current=pool_.Slot(sid);const auto currentType=current[10];if (currentType>=types_.size()) throw std::out_of_range("AI 생성 통지 뒤 현재 TYPE 범위");
+        const auto current=pool_.Slot(sid);const auto currentType=current[10];if (currentType>=CurrentTypes().size()) throw std::out_of_range("AI 생성 통지 뒤 현재 TYPE 범위");
         // 통지의 실제 하위가 바꾼 현재 owner/type을 다시 읽는다. 소유자0도 로컬 번호0과 비교한다.
         if (current[patch ? 34 : 32]==state_.localOwner) { ++state_.LocalCounts()[currentType];++state_.LocalSecondaryCounts()[currentType]; }
         ++state_.GlobalCounts()[currentType];
@@ -407,4 +407,9 @@ void SquidPostPop::ValidateSpace(const SquidHash& hash,std::span<const std::uint
 
 namespace netstorm::o { // 같은 수명의 진단 뷰를 복사하며 Session 임시 구조체를 참조하지 않는다.
 void SquidPostPop::BindManaDiagnostics(ManaRegistrationDiagnostics diagnostics) { manaDiagnostics_=std::move(diagnostics); } // 다음 등록 호출부터 현재 owner를 읽는다.
+}
+
+namespace netstorm::o { //현재데이터대여와기존독립사본의수명계약을구별한다.
+std::span<const RiftTypeRecord> SquidPostPop::CurrentTypes() const { return currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_; } //소비시점마다같은배열을선택한다.
+void SquidPostPop::BindCurrentTypes(std::span<const RiftTypeRecord> types) { if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188)) throw std::invalid_argument("postPop현재TYPE대여의판본/길이오류");currentTypes_=types; } //실제필드는복사하거나덮어쓰지않는다.
 }

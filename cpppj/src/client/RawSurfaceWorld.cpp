@@ -123,12 +123,14 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             throw std::out_of_range("raw 표면 월드 타입 번호 오류");
         bookkeeping.localOwner=1;if (!prepared) ownerMode={false,true,false};else mode.editor=true;eventState.bridgeType=links.bridgeType; // 준비 대여는 ExistingEditor 전용이며 새 지역 장부/붕괴 소비자만 구성한다.
         graph=std::make_unique<o::RawGraph>(pool,hash,spots,types,codes,storage->graph,o::GraphRecovery::FullPool); // 실제 전체 풀은 원문 소진 재구성을 허용한다. 생성 자체는 현재 물리를 쓰지 않는다.
+        if (edition==o::OriginalEdition::Patch1078) graph->BindCurrentTypes(types); //현재World속성변경을같은실제Graph가즉시읽는다.
         graph->BindDiagnostics({storage->Checking(),[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // 첫 Session 이전에도 같은 장기 Client 진단을 영역 참조 감소에 제공한다.
         graph->BindTrace([owner=storage.get()](auto level,auto text) { owner->TraceGraph(level,text); }); // 재구성/병합의 실제 level0x20도 같은 현재 Client writer를 소비한다.
         graph->BindDetachState(bookkeeping.graphsEnabled,deletion.rebuildGraph); // preDestroy와 내부 각 분할이 같은 현재 World 상태를 읽는다.
         graph->BindClock([owner=storage.get()] { return owner->ReadGraphClock(); }); // 두 지역 시각 읽기도 장기 Client 장치를 거친다.
         display=std::make_unique<o::SquidDisplay>(edition,types,shapes,*this,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
         postPop=std::make_unique<o::SquidPostPop>(pool,types,bookkeeping,graph.get(),[this](o::Sid sid) { connect->Connect(sid); });
+        if (edition==o::OriginalEdition::Patch1078) postPop->BindCurrentTypes(types); //후처리비용/플래그도같은실제TYPE배열을읽는다.
         postPop->BindManaDiagnostics({storage->Checking(),[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // 첫 Session 이전에도 실제 Client의 현재 진단 장치로 복귀한다.
         postPop->SetIslandPrefix([this](o::Sid sid,std::uint32_t flags) { connect->IslandPostPopPrefix(sid,flags); });
         postPop->SetSurfacePrefix([this](o::Sid sid,std::uint32_t flags) { surface->Prefix(sid,flags); });
@@ -163,6 +165,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         frame=std::make_unique<o::SquidFrame>(pool,types,o::MakeSquidFrameHooks(pool,types,*display,*unpop,*pop));
         owner=std::make_unique<o::SquidOwner>(pool,types,bookkeeping,ownerMode);
         neighbors=std::make_unique<o::RawSquidNeighbors>(pool,hash,spots,types,frames);
+        if (edition==o::OriginalEdition::Patch1078) neighbors->BindCurrentTypes(types); //실제이웃과Graph가같은현재발자국/플래그를쓴다.
         o::BridgeConnectHooks objects;
         // 생성/소유자/프레임 변경은 표시 억제 상태와 무관하게 논리 변경을 알린다.
         objects.create=[this](std::uint32_t type,std::uint32_t flags) { changed=true;return factory->Create(type,flags); };

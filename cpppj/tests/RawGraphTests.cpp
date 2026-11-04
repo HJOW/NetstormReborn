@@ -1,4 +1,4 @@
-// 실제 SID 풀과 공통 postPop/Pop을 연결한 독립 x86 기대값·쓰기 전 보호를 검증한다.
+// 실제 SID 풀과 공통 postPop/Pop의 독립 x86 기대값·명시 사전 계산·부분 쓰기를 검증한다.
 #include "TestSupport.h"
 #include "o/RawGraph.h"
 #include "o/SquidFactory.h"
@@ -113,6 +113,11 @@ void Node(o::SidPool& pool,o::Sid sid,std::uint8_t number,const std::vector<int>
 }
 // 성공/예외를 확인하는 새 호스트 보호 경로다.
 template<class F> bool Throws(F operation) { try { operation(); } catch (const std::exception&) { return true; } return false; }
+// 기존 원문 입력을 그대로 유지하고 새 Pop 부모가 요구하는 현재 TYPE와 실제 grid 오류 로그만 연결한다.
+void BindGraphFixturePop(o::SquidPop& pop,std::span<const o::RiftTypeRecord> types) {
+    o::SquidPopDiagnostics diagnostics;diagnostics.types=types;diagnostics.trace=[](auto level,std::string_view text) { CHECK(level==29 && text.starts_with("ERROR: gridSid ") && text.ends_with("\n")); };
+    pop.BindDiagnostics(std::move(diagnostics));
+}
 // 전체 표와 전체 스택의 stale 영역을 검사한다.
 std::array<std::uint32_t,2> GraphHashes(const o::RawGraph& graph) {
     std::vector<std::uint8_t> records,stack;
@@ -216,6 +221,7 @@ static void ReplayRawGraph(const char* path,int expectedBegins,int expectedCalls
             post=std::make_unique<o::SquidPostPop>(*pool,types,state,graph.get());
             display=std::make_unique<o::SquidDisplay>(pool->Edition(),types,shapes,*sink,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
             pop=std::make_unique<o::SquidPop>(*pool,*hash,spots,display.get(),post.get());
+            BindGraphFixturePop(*pop,types); // 기존 fixture의 flags/슬롯/geometry/장부 기대값은 바꾸지 않는다.
             unpop=std::make_unique<o::SquidUnpop>(*pool,*hash,spots,display.get());
         } else {
             const auto args=Rows(row[1]);
@@ -299,8 +305,8 @@ TEST_CASE(RawGraph_X86_RecoveryInsideAddDetachPopAndPostPop) {
     ReplayRawGraph(NETSTORM_GRAPHRECOVERY_FIXTURE,6,192,true,true,o::GraphRecovery::FullPool);
 }
 
-// 전체 풀 복구를 선택한 Pop도 다른 void 표면의 손상 프레임/범위 밖 타입을 쓰기 전에 거부한다.
-TEST_CASE(RawGraph_RecoveryPreflightRejectsOtherVoidAndOutOfRangeTypeBeforePop) {
+// 명시 projected 사전 계산은 다른 void 표면의 손상 프레임/타입을 실제 Pop 없이 검출한다.
+TEST_CASE(RawGraph_RecoveryPreviewRejectsOtherVoidAndOutOfRangeTypeBeforePop) {
     auto types=Types(o::OriginalEdition::Patch1078); types[74].flags1=types[75].flags1=o::TypeFlag1::kSurface;
     std::vector<std::vector<o::FrameCode>> frames(types.size()); frames[74]=frames[75]={{65,80,1,0}};
     o::SidPool pool(o::OriginalEdition::Patch1078,32768,false); o::SquidFactory factory(pool,types);
@@ -317,7 +323,8 @@ TEST_CASE(RawGraph_RecoveryPreflightRejectsOtherVoidAndOutOfRangeTypeBeforePop) 
     for (int scenario=0;scenario<2;++scenario) {
         auto bytes=pool.AllocatedBytes(other); if (scenario) { Put(bytes,36,0); bytes[10]=255; }
         const std::vector<std::uint8_t> saved(pool.Bytes().begin(),pool.Bytes().end()); const auto before=GraphHashes(graph);
-        CHECK(Throws([&]{pop.Pop(root,types[74],1,1,20,20,0x200);}));
+        const o::RawGraphPop projected{20,20,1,&types[74]}; // 실제 Pop과 구별하는 무효과 사전 계산의 명시 입력이다.
+        CHECK(Throws([&]{graph.ValidatePostPop(root,false,true,&projected);}));
         CHECK(GraphHashes(graph)==before && std::equal(saved.begin(),saved.end(),pool.Bytes().begin()));
         CHECK(hash.Bucket(0,20,20)==0 && state.depth==0 && state.totalCost==0);
         CHECK(std::all_of(spots.begin(),spots.end(),[](auto v){return !v;}));
@@ -402,8 +409,8 @@ TEST_CASE(GraphReferenceChecking_ActualRegionReplaysExistingNativeGeometry) {
     ReplayRawGraph(NETSTORM_REGIONGRAPH_FIXTURE,6,1536,true,false,o::GraphRecovery::Reject,true);
 }
 
-// void 해제 전 옛 좌표로 시험하면 놓칠 그래프 소진/소수 좌표를 Pop 쓰기 전에 잡는다.
-TEST_CASE(RawGraph_ProjectedPopRejectsExhaustionAndFractionalBeforeMutation) {
+// projected 사전 계산은 무효과이며 실제 Pop의 후처리 실패는 이미 쓴 공간/활성화 깊이를 남긴다.
+TEST_CASE(RawGraph_ProjectedPreviewAndActualPopKeepDifferentFailureEffects) {
     const auto edition=o::OriginalEdition::Patch1078; auto types=Types(edition); types[74].flags1=o::TypeFlag1::kSurface;
     std::vector<std::vector<o::FrameCode>> frames(types.size()); frames[74]={{65,80,1,0}};
     o::SidPool pool(edition,32768,false); o::SquidFactory factory(pool,types); const auto sid=factory.Create(74,2);
@@ -414,13 +421,17 @@ TEST_CASE(RawGraph_ProjectedPopRejectsExhaustionAndFractionalBeforeMutation) {
     o::RawGraph graph(pool,hash,spots,types,frames,records); o::SquidPostPopState state; state.graphsEnabled=true;
     o::SquidPostPop post(pool,types,state,&graph); o::SquidPop pop(pool,hash,spots,nullptr,&post);
     const std::vector<std::uint8_t> raw(pool.Bytes().begin(),pool.Bytes().end()); const auto before=GraphHashes(graph);
-    CHECK(Throws([&]{pop.Pop(sid,types[74],1,1,20,20);})); CHECK(Throws([&]{pop.Pop(sid,types[74],1,1,20.25f,20);}));
+    for (const auto x:{20.0F,20.25F}) { const o::RawGraphPop projected{x,20,1,&types[74]};CHECK(Throws([&]{graph.ValidatePostPop(sid,false,true,&projected);})); } // 각 사전 계산은 현재 void 객체에 쓰지 않는다.
     CHECK(std::equal(raw.begin(),raw.end(),pool.Bytes().begin())); CHECK(GraphHashes(graph)==before); CHECK(state.depth==0); CHECK(state.totalCost==0);
     CHECK(hash.Bucket(1,20,20)==0); CHECK(std::all_of(spots.begin(),spots.end(),[](auto byte){return byte==0;}));
+    CHECK(Throws([&]{pop.Pop(sid,types[74],1,1,20,20);})); //004b02d0/004ac560은 후처리 실패 전에 공간과 state/depth를 쓴다.
+    const auto current=pool.Slot(sid);CHECK(current[11]==0 && current[33]==1 && current[40]==0x80 && hash.Bucket(1,20,20)==sid.value && state.depth==1 && state.totalCost==0);
+    CHECK(std::bit_cast<float>(static_cast<std::uint32_t>(current[14])|(std::uint32_t(current[15])<<8)|(std::uint32_t(current[16])<<16)|(std::uint32_t(current[17])<<24))==20.0F && GraphHashes(graph)==before);
+    const auto failedRaw=std::vector<std::uint8_t>(pool.Bytes().begin(),pool.Bytes().end());CHECK(pop.Pop(sid,types[74],1,1,20.25F,20)==o::RawPopResult::Unchanged && std::equal(failedRaw.begin(),failedRaw.end(),pool.Bytes().begin()) && state.depth==1);
 }
 
-// 영역 후보를 감소시켜도 표가 소진되면 Pop의 좌표/spot/후처리까지 전부 쓰기 전에 거부한다.
-TEST_CASE(RawGraph_RegionThenAddExhaustionRejectsBeforeAnyPopMutation) {
+// 실제 Pop의 영역/Add 사전 계산 실패도 앞선 좌표/점유/해시/활성화 쓰기를 되돌리지 않는다.
+TEST_CASE(RawGraph_RegionThenAddFailureRetainsEarlierPopMutation) {
     const auto edition=o::OriginalEdition::Patch1078; auto types=Types(edition);
     types[74].flags1=types[75].flags1=o::TypeFlag1::kSurface; types[74].flags2=8;
     types[74].footX=types[74].footY=3; types[75].footX=3;
@@ -437,10 +448,12 @@ TEST_CASE(RawGraph_RegionThenAddExhaustionRejectsBeforeAnyPopMutation) {
     o::RawGraph graph(pool,hash,spots,types,frames,records); o::SquidPostPopState state; state.graphsEnabled=true;
     o::SquidPostPop post(pool,types,state,&graph); o::SquidPop pop(pool,hash,spots,nullptr,&post);
     const std::vector<std::uint8_t> raw(pool.Bytes().begin(),pool.Bytes().end()),beforeSpots=spots;
-    const auto before=GraphHashes(graph); const auto oldHead=hash.Bucket(1,20,20);
+    const auto before=GraphHashes(graph); const auto oldHead=hash.Bucket(1,20,20);CHECK(oldHead==candidate.value); //1단계의x20/21은같은2칸버킷이다.
     CHECK(Throws([&]{pop.Pop(root,types[74],1,1,20,20,0x201);}));
-    CHECK(std::equal(raw.begin(),raw.end(),pool.Bytes().begin())); CHECK(spots==beforeSpots); CHECK(GraphHashes(graph)==before);
-    CHECK(hash.Bucket(1,20,20)==oldHead); CHECK(state.depth==0); CHECK(state.totalCost==0);
+    const auto current=pool.Slot(root);CHECK(current[11]==0 && current[33]==1 && current[40]==0x80 && current[4]==oldHead && current[5]==0 && hash.Bucket(1,20,20)==root.value && state.depth==1 && state.totalCost==0);
+    auto expectedSpots=beforeSpots;for (int y=18;y<=20;++y) for (int x=18;x<=20;++x) expectedSpots[y*256+x]|=8; // 원문 최초 발자국의 실제 점유 쓰기만 독립 기대값에 반영한다.
+    CHECK(spots==expectedSpots && GraphHashes(graph)==before && pool.Slot(candidate)[30]==0 && hash.Bucket(1,21,20)==root.value); //같은버킷의새머리는root이며이전candidate는root의next로보존된다.
+    const auto offset=static_cast<std::size_t>(pool.Slot(candidate).data()-pool.Bytes().data());CHECK(std::equal(pool.Slot(candidate).begin(),pool.Slot(candidate).end(),raw.begin()+offset));
 }
 
 // 프레임/지도 변경은 각 호출에서 다시 읽고 graph byte 외의 raw 필드는 유지한다.

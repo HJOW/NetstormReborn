@@ -42,7 +42,7 @@ const SidPool& RawSquidNeighbors::Pool() const { return pool_; }
 // 일반 사각형 탐색을 같은 해시에 연결할 때 쓴다.
 const SquidHash& RawSquidNeighbors::Hash() const { return hash_; }
 // 복사해 둔 타입 표다. 이 객체가 살아 있는 동안 유효하다.
-std::span<const RiftTypeRecord> RawSquidNeighbors::Types() const { return types_; }
+std::span<const RiftTypeRecord> RawSquidNeighbors::Types() const { return currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_; }
 // 004ade70/0049ae80의 발자국과 004adea0의 중심을 저장한 float 정밀도로 읽는다.
 RawSquidNeighbors::Object RawSquidNeighbors::ReadObject(Sid sid,bool readFrame) const { return ReadObject(Source(sid),readFrame,false); }
 // 실제 슬롯의 정보만 포착하며 프레임 코드나 후보를 아직 읽지 않는다.
@@ -54,8 +54,8 @@ SquidNeighborSource RawSquidNeighbors::Source(Sid sid) const {
 // 값 원천의 보정 발자국/중심을 만들고 필요한 프레임만 판독한다. 후보의 같은 타입 자료는 바꾸지 않는다.
 RawSquidNeighbors::Object RawSquidNeighbors::ReadObject(const SquidNeighborSource& source,bool readFrame,bool lazyFrame) const {
     const auto number=source.type;
-    if (number<kFirstAssetTypeNumber || number>=types_.size()) throw std::out_of_range("raw 이웃 자산 타입 오류");
-    const auto& type=types_[number];const float x=source.x,y=source.y;
+    if (number<kFirstAssetTypeNumber || number>=Types().size()) throw std::out_of_range("raw 이웃 자산 타입 오류");
+    const auto& type=Types()[number];const float x=source.x,y=source.y;
     if (!std::isfinite(x) || !std::isfinite(y) ||
         type.footX<1 || type.footY<1 || type.footX>kWorldCells || type.footY>kWorldCells)
         throw std::out_of_range("raw 이웃 좌표/발자국 오류 TYPE="+std::to_string(number)+" x="+std::to_string(x)+" y="+std::to_string(y)+" foot="+std::to_string(type.footX)+","+std::to_string(type.footY));
@@ -104,7 +104,7 @@ bool RawSquidNeighbors::Interior(const Object& source) const {
 // 004b1e80 ↔ CD 004ec040: 일반 finder의 기하 교차와 flags8 지도 후보를 구별하고 현재 프레임/상태/spot을 검사한다.
 bool RawSquidNeighbors::Accept(Sid candidate,const Object& source,std::uint32_t flags) const {
     const auto raw=pool_.Slot(candidate); const auto number=raw[kType];
-    if ((types_.at(number).flags1&TypeFlag1::kSurface)==0 && (flags&NeighborFlag::kAnyType)==0) return false;
+    if ((CurrentType(number).flags1&TypeFlag1::kSurface)==0 && (flags&NeighborFlag::kAnyType)==0) return false;
     const auto object=ReadObject(candidate,false);
     // 0041d9b0 ↔ CD 0043fe10: 후보 사각형을 축별로 한 칸 넓혀 source와 교차하며 정확히 한 축만 겹쳐야 한다.
     const auto intersects=[&source](float left,float top,float right,float bottom) {
@@ -119,7 +119,7 @@ bool RawSquidNeighbors::Accept(Sid candidate,const Object& source,std::uint32_t 
         const auto framed=ReadObject(candidate,true);
         // 후보 중심에서 source 중심을 보는 방향으로 두 프레임의 접합을 검사한다.
         const int direction=Direction(framed.centerX,framed.centerY,source.centerX,source.centerY);
-        if (!Bridge::Connects(framed.frame,types_[number].flags2,source.frame,types_[source.type].flags2,direction)) return false;
+        if (!Bridge::Connects(framed.frame,Types()[number].flags2,source.frame,Types()[source.type].flags2,direction)) return false;
     }
     if (raw[kState]&kDead) return false;
     if ((flags&NeighborFlag::kSkipAbstract)!=0 && (raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&kAbstract)!=0) return false;
@@ -140,7 +140,7 @@ RawSquidNeighborWalk::RawSquidNeighborWalk(const RawSquidNeighbors& neighbors,Si
     :RawSquidNeighborWalk(neighbors,neighbors.Source(source),flags) {}
 // 삭제 값 인자와 일반 SID 생성자가 같은 현재 후보 필터/커서를 사용한다.
 RawSquidNeighborWalk::RawSquidNeighborWalk(const RawSquidNeighbors& neighbors,const SquidNeighborSource& source,std::uint32_t flags,bool lazyFrame)
-    :finder_(neighbors.pool_,neighbors.hash_,neighbors.types_) {
+    :finder_(neighbors.pool_,neighbors.hash_,neighbors.Types()) {
     if ((flags&~NeighborFlag::kSupported)!=0) throw std::invalid_argument("raw 이웃 flags 범위 오류");
     const auto object=neighbors.ReadObject(source,true,lazyFrame);
     if (neighbors.Interior(object)) return;
@@ -182,4 +182,9 @@ Sid RawSquidNeighborWalk::Next() {
     if (current_.value!=0) current_=surfaceNext_ ? surfaceNext_() : finder_.Next();
     return current_;
 }
+}
+
+namespace netstorm::o { //실제World의현재필드와기존독립자료의소유사본을구별한다.
+const RiftTypeRecord& RawSquidNeighbors::CurrentType(std::size_t type) const { const auto types=Types();if (type>=types.size()) throw std::out_of_range("이웃현재TYPE범위오류");return types[type]; } //원문의선택된현재레코드만반환한다.
+void RawSquidNeighbors::BindCurrentTypes(std::span<const RiftTypeRecord> types) { if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188)) throw std::invalid_argument("이웃현재TYPE대여의판본/길이오류");currentTypes_=types; } //풀/해시/코드를교체하지않는다.
 }
