@@ -56,6 +56,25 @@ std::unique_ptr<o::RawPathProcess> RawCampaignPathBindings::Create(bool priest) 
 std::unique_ptr<o::RawPathProcess> RawCampaignPathBindings::CreateType(std::uint32_t type) {
     const bool priest=type==processState_.priestProcess,flying=type==processState_.flyProcess,worm=type==processState_.wormProcess,balloon=type==processState_.balloonProcess,dude=type==processState_.dudeProcess,bulf=type==processState_.bulfProcess,walker=type==processState_.walkerProcess;
     if (!priest && !flying && !worm && !balloon && !dude && !bulf && !walker && type!=processState_.teleportProcess) throw std::logic_error("다른 캠페인 경로 생성자 미연결");
+    return CreateVariant(priest,flying,worm,balloon,dude,bulf,walker);
+}
+// 함수 주소가 고정한 클래스를 현재 프로세스 번호 비교로 다시 바꾸지 않는다.
+std::unique_ptr<o::RawPathProcess> RawCampaignPathBindings::CreateByConstructor(std::uint32_t address) {
+    if (core_.pool.Edition()!=o::OriginalEdition::Patch1078) return nullptr;
+    switch (address) {
+    case 0x48be40: return CreateVariant(false,false,false,false,false,false,false);
+    case 0x48be70: return CreateVariant(false,false,false,true,false,false,false);
+    case 0x48bea0: return CreateVariant(false,true,false,false,false,false,false);
+    case 0x48bed0: return CreateVariant(false,false,false,false,false,false,true);
+    case 0x48bf00: return CreateVariant(false,false,false,false,false,true,false);
+    case 0x48bf30: return CreateVariant(false,false,false,false,true,false,false);
+    case 0x48bf60: return CreateVariant(true,false,false,false,false,false,false);
+    case 0x48bf90: return CreateVariant(false,false,true,false,false,false,false);
+    default: return nullptr;
+    }
+}
+// 기존 명령과 직접 cdecl 생성자가 같은 월드/cleanup/halt/arrival 장치를 사용한다.
+std::unique_ptr<o::RawPathProcess> RawCampaignPathBindings::CreateVariant(bool priest,bool flying,bool worm,bool balloon,bool dude,bool bulf,bool walker) {
     o::RawPathProcessHooks hooks;
     hooks.assertion=effects_.assertion; // 같은 현재 Client 장치를 경로의 독립 수명 복귀 부모로 복사한다.
     hooks.unpop=[this](o::Sid sid,std::uint32_t flags) { world_.Unpop(sid,flags); };

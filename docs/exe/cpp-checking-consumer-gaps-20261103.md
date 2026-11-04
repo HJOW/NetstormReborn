@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**885 경로8 cdecl:** 고정 함수 클래스/미부착 수명과 같은 Teleport 공통 복귀를 연결했다. 원문32행+NULL8/재관측·고유27개(새3) 최종 실패0·Release2회 경고0이다. 첫 미설치 접근 뒤 관문/새 입력을 교정했고 기존2765개/945fixture 불변·새1개→2766개/946개이며 checking10/완료부모38/부분3은 유지한다. UI2/timer1·자산/전체Pop은 잔여다. [885 기록](cpp-path-constructor-current-20261105.md).
+
 **884 기본 Form cdecl:** 네 생성자의 지정 물리 SID/단일 VT DWORD를 원문56행/재관측과 실제 Teleport 공통 복귀에 연결했다. 고유24개(새2) 첫 실패0·Release1회 경고0·추가 교정/기존 기대값 변경0이다. 기존2764개/944fixture 불변·새1개→2765개/945개이며 checking10/완료부모38/부분3은 유지한다. [884 기록](cpp-form-constructor-current-20261105.md).
 
 **883 EvilRay 실제 Host/분배:** 같은 registry/Host·Kernel·현재 TYPE/source owner·SHP/Client 진단·음향/타원·004536a0을 연결했다. parent0도 원문 등록으로 보관한다. 고유31개(새3) 첫 실패0·Release2회 경고0·기존 기대값/보호2764개/944fixture 불변이다. 실제 게임/AI/전투 Kernel은 진행하지 않았다. 다른 생성 분배/전체Pop·checking10/완료부모38/부분3은 유지한다. [883 기록](cpp-evilray-current-host-20261105.md).

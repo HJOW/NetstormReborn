@@ -3458,3 +3458,6 @@ target_sources(netstorm_tests PRIVATE VFXEllipseTests.cpp) # 원문 타원270개
 target_sources(netstorm_pop_context_tests PRIVATE VFXEllipseTests.cpp) # 게임/창 없이 실제 타원/퇴화 선 래스터만 실행한다(882).
 target_sources(netstorm_tests PRIVATE FormConstructorTests.cpp) # 양판본 네 원문 cdecl 생성자의 단일DWORD 저장을 대조한다(884).
 target_sources(netstorm_pop_context_tests PRIVATE FormConstructorTests.cpp) # 게임/할당/MP 없이 지정 물리 슬롯만 검사한다(884).
+
+target_sources(netstorm_tests PRIVATE PathConstructorTests.cpp) # 원문 경로 cdecl32행과 실제 Session의 부착 없는 생성을 대조한다(885).
+target_sources(netstorm_pop_context_tests PRIVATE PathConstructorTests.cpp) # 게임/경로 프레임/MP 없이 같은 생성 부품만 검사한다(885).

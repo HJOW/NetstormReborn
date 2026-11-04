@@ -64,6 +64,9 @@ public:
     // 외부 도착/프로토콜 모듈이 다른 월드 경로를 연결하지 않게 실제 풀을 제공한다.
     o::RawPathStart& Starter() const; // 의식 이동도 같은 원본 Start/BFS/Prepare/Host를 직접 재사용한다.
     const o::SidPool& Pool() const;
+    // PATCH cdecl 함수 주소의 고정 클래스를 생성한다. 미지원은nullptr이며 Init/Attach/Frame은 하지 않는다.
+    // 반환 객체는 이 연결부보다 먼저 해제하고, 실제 할당 실패는 caller가 원문 NULL 경계로 처리한다.
+    std::unique_ptr<o::RawPathProcess> CreateByConstructor(std::uint32_t address);
 private:
     // 실제 현재 parent의 raw 타입/가상 표와 살아 있는 자산 상태를 검사한다.
     void ValidatePriest(o::Sid parent) const;
@@ -71,6 +74,8 @@ private:
     // Process hook은 공간/부모/cleanup 실제 모듈을 호출하고 탐색만 기존 BFS에 연결한다.
     std::unique_ptr<o::RawPathProcess> Create(bool priest);
     std::unique_ptr<o::RawPathProcess> CreateType(std::uint32_t type); // 실제23/39/54 생성자를 구분한다.
+    // 현재 번호와 별개인 원문 가상 클래스의 같은 실제 효과를 조립한다. true는 한 종류만 허용한다.
+    std::unique_ptr<o::RawPathProcess> CreateVariant(bool priest,bool flying,bool worm,bool balloon,bool dude,bool bulf,bool walker);
     void ValidateConstruction(o::Sid parent) const; // 타입뿐 아니라 현재 정확한 생성자 VT를 함께 확인한다.
     void ValidateCarrier(o::Sid parent) const; // 133/40·135/41·벌룬42의 정확한 부모 VT와 이동 번호를 검사한다.
     RawSurfaceWorld& world_; // 실제 가상 Pop/Unpop/Repop과 유일한 Kernel을 소유한 월드다.

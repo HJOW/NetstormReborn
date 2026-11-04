@@ -593,6 +593,8 @@ public:
     // 실제 기준점/Factory/Owner/Pop/TYPE/현재 전역/Regular 및 같은 에너지 목록을 연결한다.
     // 접근점·경로 시작·속도 적용은 caller가 실제 몸체로 공급하며 반환 객체/State는 Session보다 먼저 해제한다.
     std::unique_ptr<o::RawConstructionBuilder> MakeConstructionBuilder(o::ConstructionBuilderState& state,o::ConstructionBuilderHooks hooks);
+    // 현재 월드의 주소별 cdecl 생성만 수행한다. 미지원은nullptr이며 반환 객체는 Session보다 먼저 해제한다.
+    std::unique_ptr<o::RawPathProcess> MakeUnstartedPath(std::uint32_t constructorAddress);
     o::RawPathProcess* StartConstructionMovement(o::RawPathStartRequest request); // 같은 월드의 실제134/105를 각각23/39 경로로 움직인다.
     o::RawPathProcess* StartCarrierMovement(o::RawPathStartRequest request); // 같은 실제 썬 워커133의40 경로를 시작한다.다른Halt는 별도 경계다.
     o::RawPathProcess* StartDudeMovement(o::RawPathStartRequest request); //같은 실제 Dude70의24 경로와 현재 속도·부모 효과를 연결한다.
