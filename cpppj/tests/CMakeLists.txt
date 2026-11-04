@@ -3413,3 +3413,6 @@ target_sources(netstorm_pop_context_tests PRIVATE CarrierParentCurrentTests.cpp 
 target_sources(netstorm_pop_context_tests PRIVATE FactoryPostPopTests.cpp) # 일반 Factory만 선택 실행하며 기존 혼합 아웃포스트 검사는 실행하지 않는다.
 target_sources(netstorm_pop_context_tests PRIVATE AssetPostPopTests.cpp) # 거주 구역/간헐천과 기존 비공중·비멀티 몸체만 선택 실행한다.
 target_compile_definitions(netstorm_pop_context_tests PRIVATE NETSTORM_CARRIERPOSTPOP_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrierpostpop-x86.tsv")
+set_source_files_properties(BuildingNotifyCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BRIDGE_NOTIFY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridge-notify-x86.tsv\"") # 새 두 PE 정밀 몸체의 독립 입력/관측이다.
+target_sources(netstorm_tests PRIVATE BuildingNotifyCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE BuildingNotifyCurrentTests.cpp)

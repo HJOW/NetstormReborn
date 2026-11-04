@@ -3,6 +3,8 @@
 #include "o/RawCheckingFlag.h" // 현재 checking DWORD를 빌리는 상태 뷰다.
 #include "o/SidPool.h"
 #include "o/SquidHash.h"
+#include <functional>
+#include <string_view>
 
 namespace netstorm::o {
 // 원본 타입 전역과 현재 debug 전역이다. 섬 확인은 영역 번호나 소유자를 조회하지 않는다.
@@ -17,6 +19,9 @@ struct BuildingSpaceState {
 class RawBuildingSpace {
 public:
     void BindChecking(const std::int32_t& value) { state_.debug.Bind(value); } // 현재 물리 실행기가 원문 진단 DWORD를 직접 빌린다.
+    void BindCurrentBridgeType(const std::uint32_t& value) { currentBridgeType_=&value; } // 같은 World의 현재 TYPE DWORD를 빌리며 값의 owner는 처리기보다 오래 살아야 한다.
+    void BindCurrentBridgeType(std::uint32_t&&)=delete;void BindCurrentBridgeType(const std::uint32_t&&)=delete; // 임시 TYPE의 주소를 보관하지 않는다.
+    void BindNotifyDiagnostics(RawCheckingFlag checking,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion); // 현재 checking 뷰와 선택된 원문 진단의 정상 복귀 장치를 함께 연결한다.
     // 사용 순서: 실제 풀/해시/타입으로 생성하고 같은 SquidPop/Unpop에 SetBuildingSpace로 등록한다.
     RawBuildingSpace(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,BuildingSpaceState& state);
     // 0040da00/CD 004abac0: 지도 밖이면 0, 그 외 해당 칸의 WORD SID를 반환한다.
@@ -27,7 +32,7 @@ public:
     void PopSide(int x,int y,float buildingX,float buildingY) const;
     // Unpop의 옆면 한 칸이다. 표면 플래그 검사 없이 유효 SID의 낮은 BYTE 비트 1/2를 지운다.
     void UnpopSide(int x,int y) const;
-    // 004214a0/CD 00448c10: 실제 무상태 다리 수명 진단이다. debug 오류는 호스트 예외로 보고한다.
+    // 004214a0/CD 00448c10: PATCH는 현재 TYPE/extra/checking/nibble 뒤 진단 복귀를 보존하고 CD는 버려지는 포인터 계산만 한다.
     void NotifySurface(Sid sid) const;
     // 서로 다른 풀/해시의 혼용을 구성 단계에서 거부한다.
     void ValidateSpace(const SidPool& pool,const SquidHash& hash) const;
@@ -42,5 +47,7 @@ private:
     std::span<const RiftTypeRecord> types_;
     // state_: 원본 타입 전역과 현재 debug 전역이다. 섬 확인은 영역 번호나 소유자를 조회하지 않는다 (BuildingSpaceState).
     BuildingSpaceState& state_;
+    const std::uint32_t* currentBridgeType_{}; // 미연결 독립 입력만 state의 기존 값 사본을 사용한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> notifyAssertion_; // 같은 Client/독립 호출자의 실제 진단 장치다. 도달 시에만 요구한다.
 };
 }

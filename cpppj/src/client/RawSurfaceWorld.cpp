@@ -147,6 +147,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         unpop->BindContainedUnpop([this](o::Sid sid) { if (const auto current=sessionContainedUnpop.lock()) current->Unpop(sid);else containedUnpop->Unpop(sid); }); // 일반 Unpop의 void 선행 뒤 실제 종단만 이어 실행한다.
         buildingState={terrainType,links.bridgeType,false};
         building=std::make_unique<o::RawBuildingSpace>(pool,hash,types,buildingState);
+        building->BindCurrentBridgeType(links.bridgeType); // WORD setter/연결과 같은 현재 TYPE를 읽고 초기 사본을 고정하지 않는다.
+        building->BindNotifyDiagnostics(storage->Checking(),[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }); // 첫 Session 전에도 같은 장기 Client 장치를 매 진단에서 사용한다.
         pop->SetBuildingSpace(building.get());unpop->SetBuildingSpace(building.get());
         factory=std::make_unique<o::SquidFactory>(pool,types,false,unpop.get());
         factory->BindDiagnostics({types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); },[owner=storage.get()](auto text) { owner->RecordAssertionDetail(text); }}); // Take의 상세/정상 복귀와 공통 postTake가 같은 현재 TYPE·Client owner를 빌린다.

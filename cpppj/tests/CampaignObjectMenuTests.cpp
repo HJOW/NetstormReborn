@@ -837,3 +837,11 @@ TEST_CASE(AssetParentsCurrent_ActualSessionUsesSharedListsAndRealRegulars) { // 
     }
     for (std::size_t owner=1;owner<9;++owner) std::copy(savedAi[owner-1].begin(),savedAi[owner-1].end(),players.begin()+owner*0xb4+0xb0); // 같은 실제 Player 포인터 DWORD 입력을 복구한다.
 }
+
+TEST_CASE(BuildingNotifyCurrent_ActualSessionReadsCurrentTypeAndService) { // 같은 Session은 현재 TYPE/checking과 실제 서비스의 진단 정상 복귀를 사용한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();auto gameplay=std::make_shared<ClientGameplayGlobals>();services.gameplayGlobals=gameplay;std::function<void(std::string_view)> current;std::uint32_t calls{};
+    services.ai.assertion=[&](auto expression) { if (!current) throw std::logic_error("명시 Session 진단 입력 전 호출");current(expression); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);const auto saved=std::vector<std::uint8_t>(raw.begin(),raw.end());const auto savedBridge=core.bridgeState.bridgeType;auto& checking=gameplay->AiDebug().Checking();const auto savedChecking=checking;
+    raw[12]=0x7f;raw[40]=0;core.bridgeState.bridgeType=74;checking=6;current=[&](auto expression) { CHECK(expression=="num >= 0 && num <= 7");++calls;raw[10]=75;raw[11]=9;raw[12]=0x40;core.bridgeState.bridgeType=75;checking=0; };core.building.NotifySurface(source);CHECK(calls==1 && raw[11]==9 && raw[12]==0x40 && checking==0);
+    current=[&](auto expression) { CHECK(expression=="num >= 0 && num <= 7");++calls; };checking=std::bit_cast<std::int32_t>(0x80000000U);core.building.NotifySurface(source);CHECK(calls==2 && raw[11]==9 && core.bridgeState.bridgeType==75 && checking==std::bit_cast<std::int32_t>(0x80000000U));
+    std::copy(saved.begin(),saved.end(),raw.begin());core.bridgeState.bridgeType=savedBridge;checking=savedChecking; // 명시 입력만 복구하며 Frame/공격/포획/희생/승리는 실행하지 않는다.
+}

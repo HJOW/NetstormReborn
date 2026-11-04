@@ -3,6 +3,7 @@
 #include <cmath>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::o {
 namespace {
@@ -56,13 +57,19 @@ void RawBuildingSpace::UnpopSide(int x,int y) const {
     Bytes(sid)[kWord]&=0xf9;
     NotifySurface(sid);
 }
-// 전역 debug가 꺼지면 다리 수명 nibble이 잘못돼도 원본처럼 쓰기/추가 효과가 없다.
+void RawBuildingSpace::BindNotifyDiagnostics(RawCheckingFlag checking,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) { state_.debug=checking;notifyAssertion_=std::move(assertion); } // 수명 없는 뷰 객체 주소를 빌리지 않고 원래 checking owner와 callable을 보관한다.
+// 현재 TYPE/extra를 지난 뒤 원문처럼 먼저 BYTE의 nibble을 읽고 checking의 비영 조건으로 진단을 선택한다.
 void RawBuildingSpace::NotifySurface(Sid sid) const {
     // CD는 raw 포인터 산술만 반환하며 쓰기나 debug 진단이 없다. 호출자가 반환값을 버린다.
     if (pool_.Edition()==OriginalEdition::Cd1072) return;
     const auto raw=pool_.Slot(sid);
-    if (raw[kType]==state_.bridgeType && !(raw[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&8) &&
-        state_.debug && ((raw[kWord]>>3)&15)>7) throw std::logic_error("다리 수명 진단: num >= 0 && num <= 7");
+    const auto bridge=currentBridgeType_ ? *currentBridgeType_ : state_.bridgeType;
+    if (raw[kType]!=bridge || (raw[40]&8U)) return;
+    const auto number=(raw[kWord]>>3)&15U;
+    if (state_.debug && number>7U) {
+        const auto assertion=notifyAssertion_;if (!assertion) throw std::logic_error("지면 통지의 선택된 원문 진단 장치 미연결");
+        assertion("num >= 0 && num <= 7","\\Ns\\O\\Bridge.cpp",0xff); // 이 callback이 현재 필드를 바꾸거나 자신의 연결을 반납해도 정상 복귀 뒤 바로 반환한다.
+    }
 }
 // 수명과 표면 지도 identity를 크기가 같은 다른 저장소로 대체할 수 없다.
 void RawBuildingSpace::ValidateSpace(const SidPool& pool,const SquidHash& hash) const {

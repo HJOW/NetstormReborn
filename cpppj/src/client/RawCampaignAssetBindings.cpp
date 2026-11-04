@@ -64,7 +64,7 @@ struct RawCampaignAssetBindings::Impl {
         if ((assets.sharedAuthority && assets.sharedAuthority!=authority) || (globals.gun.sharedAuthority && globals.gun.sharedAuthority!=authority) || (globals.regular.sharedAuthority && globals.regular.sharedAuthority!=authority)) throw std::invalid_argument("캠페인 자산 실제 권한 소유자 불일치"); // 다른 실행기의 이미 연결한 권한 참조를 몰래 바꾸지 않는다.
         assets.sharedAuthority=authority;globals.gun.sharedAuthority=authority;globals.regular.sharedAuthority=authority; // 실제 조립은 한 owner만 연결하며 기존 bool 사본으로 동기화하지 않는다.
         if (assets.currentBridgeType && assets.currentBridgeType!=&core.bridgeState.bridgeType) throw std::invalid_argument("캠페인 자산 현재 Bridge TYPE 소유자 불일치");
-        assets.currentBridgeType=&core.bridgeState.bridgeType; // WORD setter는 같은 World BridgeState의 현재 번호를 사용한다. Building 자체 TYPE 공유/진단 복귀는 후속 대조 대상이다.
+        assets.currentBridgeType=&core.bridgeState.bridgeType; // WORD setter와 Building.NotifySurface가 같은 World BridgeState의 현재 TYPE를 읽는다.
         gun=std::make_unique<o::RawGunProcess>(core.pool,core.types,globals.gun,GunHooks());
         postPop=std::make_unique<o::RawAssetPostPop>(core.pool,core.types,core.postPop,damageable,assets,PostHooks());
         postPop->BindPlayerRecords(players,&playerState.battleOwner);
