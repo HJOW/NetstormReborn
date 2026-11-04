@@ -61,6 +61,7 @@ target_sources(netstorm PRIVATE client/RawEdgeScroll.cpp client/RawEdgeScroll.h)
 target_sources(netstorm PRIVATE client/ScreenPresentation.cpp) # 원본과 다른 Windows10/11 전체화면 비율/입력 계산이다.
 target_sources(netstorm PRIVATE o/RawSmokeEffect.cpp o/RawSmokeEffect.h) # 실제 냉각 연기 생성/프레임/색/소멸이다.
 target_sources(netstorm PRIVATE o/RawEvilRayLifetime.cpp o/RawEvilRayLifetime.h) # 실제 EvilRay 생성/3색/중단/소멸이며 Frame/표시 연결은 후속 범위다(880).
+target_sources(netstorm PRIVATE o/RawEvilRayFrame.cpp o/RawEvilRayFrame.h) # 원문 Frame/Draw의 독립 상태·음향/dirty/타원 요청이며 실제 Host/래스터 연결은 후속 범위다(881).
 target_sources(netstorm PRIVATE o/SmokeVisualSystem.cpp o/SmokeVisualSystem.h) # 같은 Host/Kernel·공통 표시 목록의 실제21 수명이다.
 target_sources(netstorm PRIVATE o/RawIceRicochet.cpp o/RawIceRicochet.h) # 원본 반사점/표적 선택과 후속 Missile 생성 요청이다.
 target_sources(netstorm PRIVATE o/RawGameAuxState.h) # 같은 실제 게임17보조 전역 owner다.

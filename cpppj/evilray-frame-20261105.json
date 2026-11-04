@@ -1,0 +1,194 @@
+{
+ "unit": 881,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "8eebe34b / 20261105-14 CP",
+ "exeSha256": "6a72c8b66de585b6a3d8bf4d243859ed74137daa045b1ca4d290f77b5a31f2f4",
+ "exeBytes": 10615808,
+ "caseCount": 8,
+ "groups": 4,
+ "newCases": 3,
+ "uniqueCases": [
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayFrame_ExactZeroDeathSoundPrecedesNextEmptyStopKill"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayFrame_NativeCurrentStateParticlesAndOrderedRequests"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayFrame_ParentDiagnosticUsesSavedPhysicalParentAndDrawDevicesAreLazy"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_CurrentReadOrderAndReachedDeviceFailure"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_NativeCtorPaletteAndDestruction"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_NativeStopDiagnosticsAndWholeDword"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "FieryTailLifetime_Native027f"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "StreakLifetime_NativeConstructorAndSharedPalette"
+  ]
+ ],
+ "originalProtectedUnchanged": 2762,
+ "protectedCount": 2763,
+ "fixtureCount": 943,
+ "newFixtures": 1,
+ "nativeRows": 36,
+ "nativeFrameRows": 20,
+ "nativeDrawRows": 16,
+ "nativePrecisionDifferences": 0,
+ "nativeExactZeroRows": 2,
+ "sourceSha256": {
+  "cpppj/src/CMakeLists.txt": "d3d0c6505ad6017d37e95f1af596285ed4538b1c1b000f007f5f63d115104719",
+  "cpppj/tests/CMakeLists.txt": "beb1cff1be8700354fe50f5d20e6855346e770cef2fcabefd6070ee3c16dd921",
+  "cpppj/src/o/RawEvilRayFrame.h": "4755618bab9f9a155fc587c087b7a99d904fad69a9058f1ac4096e41233be848",
+  "cpppj/src/o/RawEvilRayFrame.cpp": "4ddf891680c65d17026e947fbe4c48fe8884db8b29d7aeab7dc30a6fd6549154",
+  "cpppj/tests/EvilRayFrameTests.cpp": "9fc01ad3f5ae208cdb992210077cf86637ed730cbc7e322d1fc8bf381e23d53f",
+  "tools/decomp_evilray_frame.py": "d40fb1ce70bf7e8bf77aae83fec28c4041f5239c4d98cd0768a0afff2cd42eac",
+  "cpppj/tests/fixtures/evilray-frame-x86.tsv": "61b89ebb871203fba624c5461bd66095ca8531fe3ebc8c12bd1dc163a789e566"
+ },
+ "build": {
+  "exitCode": 0,
+  "elapsedSeconds": 43.053778,
+  "log": "extracted/cpp-resume-881/build-first.log",
+  "logSha256": "1b3fe9585f209b0d454126097b987abb6fcc462d54a6050ff0d28d9c07f380a5",
+  "warnings": 0,
+  "errors": 0
+ },
+ "testExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "EvilRayFrame_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-881/test-evilray-frame-first.log",
+   "sha256": "57161cd1f6affaaafb287aef77c35f3ebb7094c2a0208859bb03ebc1b49affe5"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "EvilRayLifetime_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-881/test-evilray-lifetime-first.log",
+   "sha256": "68077f2b50fdd2f555a870411ec9c3e252c151cdcddc3f05972e887f6cb38bc6"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "FieryTailLifetime_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-881/test-fiery-lifetime-native-first.log",
+   "sha256": "79816adc4be129c5458add107c397eb01c2d8a6dd8eb898e2f99cadb46d717a6"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "StreakLifetime_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-881/test-streak-lifetime-native-first.log",
+   "sha256": "85ee218a211b27a923a4fbedef9943aa45cde423e3d7f9c4f364647431ac6b81"
+  }
+ ],
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-881/native-corrected.log": "9d96d42efa4afab75a644c7b9f5ae1032b58e5c682a44230cda30e41be5ea0a9",
+  "extracted/cpp-resume-881/native-diagnostic-detail.log": "d5ee2d286b1962b3710a55d073f1cb48e679789b6c05c38403832d205cf26a60",
+  "extracted/cpp-resume-881/native-exact-zero.json": "829fd42ef225d5ad2ee937916b5d661d7b30020b5032939866d0b26a9e60d158",
+  "extracted/cpp-resume-881/native-first.log": "08c7fc2030028a84cd90bdc61b128dd107c3120a267d32493d1f55792be47137",
+  "extracted/cpp-resume-881/native-reobserved.log": "02fa666915301351a4b9678511fdccfe1d77b1c06f1ebbdf9967040d7eafabee",
+  "extracted/cpp-resume-881/originals-00418400.c": "0ef27920e264e1a17083eb37c1e7b39d10def3bf4122c7b737daaa0e07d72397",
+  "extracted/cpp-resume-881/originals-00418430.c": "25c325bcba21cbcf301e6e90a835f793b51427026c86adb5cd5e814684d1b36e",
+  "extracted/cpp-resume-881/originals-00453040.c": "9e6916156ca209a0c63dc05ba9de1151ca97584e7f7efdbda9f620098805b090",
+  "extracted/cpp-resume-881/originals-00453290-bounded.asm": "0272c619dd98fec3ea5c771079b3bf13a9ebf6f841f8e5ce6b31802e4dce36f9",
+  "extracted/cpp-resume-881/originals-00453540-bounded.asm": "7441ace0872938365605f83e5a2aa5b5fc95d1274c0113c25f5b6f3d393faabd",
+  "extracted/cpp-resume-881/originals-00487ba0.c": "dbe8004b893eb41bb03f1508676dc954970f94e8a36a470c7505b5f1c537aad1",
+  "extracted/cpp-resume-881/originals-004dae20.c": "5e6fff6e9fc6ebcb1f891a3ff2cf5a7b251437e3c8d05041f233ea01f3c6eb7f"
+ },
+ "exactZeroNative": {
+  "inputRaw": "808e5000d2040000330000000000444100005c410000f44100000e4200000000e7ffffff030000000200000000001012000000000000f03f5f633937dd9abf3f0080f6420040e4c301000000a5a5a5a50000c8423200000001000000a5a5a5a5",
+  "inputParticles": "ffffcf41fffff7410000003e0000a0bfcdcccc3d0000fecaffffd741ffffef410000003e0000a0bfcdcccc3d0100fecaffffdf41ffffe7410000003e0000a0bfcdcccc3d0200feca",
+  "inputState": "295c8fc2f528f03f0000403f0000a03f9a99993e0000803e000000bf",
+  "results": [
+   {
+    "control": 639,
+    "fields": "d204000033000000000045410000a84100000c420000184200000000e7ffffff0300000002000000295c8fc2f528f03fb0b19c6b3b9acc3fcdcccc3d90c2f53c010000000000c8423200000001000000",
+    "particles": "ad07d04132b3f7410000003e0000a0bf000000000000fecaad07d84132b3ef410000003e0000a0bf000000000100fecaffffdf41ffffe7410000003e0000a0bfcdcccc3d0200feca",
+    "events": "M:71:1:124;T:51:1;S:0000b64133339f411f0000000000000000000000;T:51:1;S:0000b64133339f411f0000000000000000000000;D:0b0000000d0000001f0000002500000000000000;D:0b00000014000000230000002700000000000000;C:0,0,639,479"
+   },
+   {
+    "control": 895,
+    "fields": "d204000033000000000045410000a84100000c420000184200000000e7ffffff0300000002000000295c8fc2f528f03fb0b19c6b3b9acc3fcdcccc3d90c2f53c010000000000c8423200000001000000",
+    "particles": "ad07d04132b3f7410000003e0000a0bf000000000000fecaad07d84132b3ef410000003e0000a0bf000000000100fecaffffdf41ffffe7410000003e0000a0bfcdcccc3d0200feca",
+    "events": "M:71:1:124;T:51:1;S:0000b64133339f411f0000000000000000000000;T:51:1;S:0000b64133339f411f0000000000000000000000;D:0b0000000d0000001f0000002500000000000000;D:0b00000014000000230000002700000000000000;C:0,0,639,479"
+   }
+  ],
+  "gameExecutions": 0
+ },
+ "scope": [
+  "00453290의 저장 source 물리/현재 SHP·전체 delta·등호 포함 방출 기한/음향·끝에만 추가·현재 꼬리/끝 음향·종료/dirty",
+  "00453540의 원문 입자 수 진단→640x480clip→저장 전/후 정수화·실제 반지름·현재3색 타원 요청",
+  "0041bfb0의 부모 head 진단 복귀 뒤 저장 부모/current metadata 보존"
+ ],
+ "validation": {
+  "firstCompileFailed": false,
+  "firstTestFailedCases": 0,
+  "reobservedNativeRows": 36,
+  "additionalNativeExactZeroRows": 2,
+  "cppPrimaryRows": 18,
+  "comparisonPrecisionRows": 18,
+  "existingEvilRayLifetimeRows": 34,
+  "existingFieryRows": 62,
+  "existingStreakRows": 8,
+  "existingExpectationsChanged": false,
+  "newFixtureOverwritten": false,
+  "sourceStableDuringBuild": true,
+  "gameExecutions": 0,
+  "sessionIntegrationAdded": false,
+  "probeCorrection": "첫 관측에서 부모 head0이 Baseprocess.cpp:a4 진단을 발생시켰다. 첫/상세 로그를 보존하고 명시 부모 입력의 head1을 준비한 뒤 처음 fixture를 생성했다. Native 대조로 발견한 부모 getter 진단과 <= 기한/수명 조건은 첫 C++ 빌드 전에 복원했다. 기존 fixture/기대값 수정0."
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "mp": 3,
+  "completedParents": 38,
+  "completedPartial": 3
+ },
+ "limits": [
+  "881은 독립 Frame/Draw 요청 몸체이며 실제 타원 래스터/공통 Host/장기 source/process owner/Session·Teleport 분배는 미연결이다.",
+  "원문32비트 포인터 감김/물리 배열 밖 접근은 명시 호스트 범위 경계이며 이를 원본 전체 동일성으로 세지 않는다.",
+  "타원은004dae20의 인자까지 대조했다. 실제VFX00405071의 픽셀은 미복원/미검증이다.",
+  "실제 게임/GUI/의식/포획/희생/공격/승리/공중3종 전용/신규MP/통신/전체71/CTest/34미션/ZIP 검사는 실행하지 않았다."
+ ],
+ "next": [
+  "실제 VFX 타원 래스터·공통 Host/장기 source/process owner·Teleport 생성 분배 연결",
+  "다른 현재 TYPE/모드·전체Pop·군도·Factory·State/파일·객체메뉴/Edit·Windows·무검사MP/4~8차 계속"
+ ]
+}

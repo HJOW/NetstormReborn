@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**881 EvilRay 독립 Frame/Draw 요청:** 저장 source/현재 형상·전체 delta/등호 조건·음향/꼬리/종료·dirty/clip/타원 요청을 원문36행/재관측·추가2행과 고유8개(새3) 첫 검사 실패0·Release 경고0으로 대조했다. 실제 래스터/Host/Session은 미연결이다. 기존2762개/942fixture 불변·새1개→기준2763개/943개·checking10/완료부모38/부분3 유지다. [881 기록](cpp-evilray-frame-20261105.md).
+
 **880 EvilRay 독립 수명:** 현재 TYPE/source 위치·50입자/공유3색·Stop/소멸을 원문34행/재관측·고유5개(새3) 첫 실패0·Release 경고0으로 대조했다. 실제 Session/Host/Frame/Draw는 미연결이다. 기존2761개/941fixture 불변·새1개 추가 후 기준2762개/942개·checking10/완료부모38/부분3 유지다. [880 기록](cpp-evilray-lifetime-20261105.md).
 
 **879 Teleport NULL 생성자:** 현재 TYPE13/22의 원문 진단/NULL 복귀와 실제 Client·공통 부모를 연결했다. 고유21개/5묶음(새3) 첫 검사 실패0·새 검사 SID식 한 곳 교정 후 Release 경고0·기존 기대값/보호2761개 불변이다. 다른process12항목과 전체Pop은 잔여이며 checking10/완료부모38/부분3 유지다. [879 기록](cpp-teleport-null-constructors-20261105.md).
