@@ -3454,3 +3454,5 @@ target_sources(netstorm_tests PRIVATE EvilRayLifetimeTests.cpp) # 원문 EvilRay
 target_sources(netstorm_pop_context_tests PRIVATE EvilRayLifetimeTests.cpp) # 게임/공중3종/MP 전용 실행 없이 같은 제품 몸체를 검사한다(880).
 target_sources(netstorm_tests PRIVATE EvilRayFrameTests.cpp) # 실제 PE 프레임/그리기 요청과 현재 진단 복귀를 격리 대조한다(881).
 target_sources(netstorm_pop_context_tests PRIVATE EvilRayFrameTests.cpp) # 같은 제품 몸체의 입력/출력만 검사하고 실제 게임/Host/MP를 구동하지 않는다(881).
+target_sources(netstorm_tests PRIVATE VFXEllipseTests.cpp) # 원문 타원270개 전체 화면의 독립 입력을 대조한다(882).
+target_sources(netstorm_pop_context_tests PRIVATE VFXEllipseTests.cpp) # 게임/창 없이 실제 타원/퇴화 선 래스터만 실행한다(882).

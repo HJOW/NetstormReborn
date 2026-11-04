@@ -1,0 +1,212 @@
+{
+ "unit": 882,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "d4652e85 / 20261105-15 CP",
+ "exeSha256": "cd755b5dec31e811687c8aeab14f35defc4c77fe18dfc8237dfeefd60845683b",
+ "exeBytes": 10615808,
+ "caseCount": 9,
+ "groups": 5,
+ "testExecutionsCount": 6,
+ "newCases": 1,
+ "uniqueCases": [
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayFrame_ExactZeroDeathSoundPrecedesNextEmptyStopKill"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayFrame_NativeCurrentStateParticlesAndOrderedRequests"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayFrame_ParentDiagnosticUsesSavedPhysicalParentAndDrawDevicesAreLazy"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_CurrentReadOrderAndReachedDeviceFailure"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_NativeCtorPaletteAndDestruction"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_NativeStopDiagnosticsAndWholeDword"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "FieryTailLifetime_Native027f"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "StreakLifetime_NativeConstructorAndSharedPalette"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "VfxEllipse_Native270WholePixelsSignedRadiiDegenerateLineAndClip"
+  ]
+ ],
+ "originalProtectedUnchanged": 2763,
+ "protectedCount": 2764,
+ "fixtureCount": 944,
+ "newFixtures": 1,
+ "nativePixelRows": 270,
+ "nativeReobservedRows": 270,
+ "sourceSha256": {
+  "cpppj/src/CMakeLists.txt": "2a82bde81f76feb9a61abe763b930e31e16c13c7a17fc91996afad29176419b2",
+  "cpppj/tests/CMakeLists.txt": "23ddbb7dd30d262a1337d327dff07750c9f21a30951c5601086ef0825853132b",
+  "cpppj/src/client/VFXEllipse.h": "07c9d57bb58026b0730e518ca0634ad0a7a293d66c147da4f51845f5005232c7",
+  "cpppj/src/client/VFXEllipse.cpp": "6f0e070500be4943a73b4544fe578fd91bb85e0021ec9d1962d5a024af038083",
+  "cpppj/tests/VFXEllipseTests.cpp": "bef8d7435815085261395a8e2e3726d69391e2d3a6b711dfe46f5c8d602edd4a",
+  "tools/decomp_vfx_ellipse.py": "a34bbdaad21277d3c2e60434a2260f9110098a0666b0903b5cadb0bc639f318c",
+  "cpppj/tests/fixtures/vfx-ellipse-x86.tsv": "ce77c06050a05b6e3fbe7412e9b219e64c7be7628c5f952c03f8cc8c264aa207"
+ },
+ "builds": [
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 30.7141289,
+   "log": "extracted/cpp-resume-882/build-first.log",
+   "logSha256": "2c93e42b44bd62fa3feb2119ecad5f42aacab6061cc22673c2e2c06308766f9e",
+   "warningRecords": 14,
+   "warningCodes": [
+    "C4244"
+   ],
+   "errors": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 18.5394224,
+   "log": "extracted/cpp-resume-882/build-corrected.log",
+   "logSha256": "ea07f9a2599837d9e02199ba16e295fa0c5d4e6a330067fa937612dbd5fb52c4",
+   "warningRecords": 0,
+   "warningCodes": [],
+   "errors": 0
+  }
+ ],
+ "testExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "VfxEllipse_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-882/test-vfx-ellipse-first.log",
+   "sha256": "9ba6aaa67c93c1d7815a32e8b714d9495e30487639fdc2339aac6f2e92b7f704"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "EvilRayFrame_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-882/test-evilray-frame-first.log",
+   "sha256": "57161cd1f6affaaafb287aef77c35f3ebb7094c2a0208859bb03ebc1b49affe5"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "EvilRayLifetime_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-882/test-evilray-lifetime-first.log",
+   "sha256": "68077f2b50fdd2f555a870411ec9c3e252c151cdcddc3f05972e887f6cb38bc6"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "FieryTailLifetime_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-882/test-fiery-lifetime-native-first.log",
+   "sha256": "79816adc4be129c5458add107c397eb01c2d8a6dd8eb898e2f99cadb46d717a6"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "StreakLifetime_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-882/test-streak-lifetime-native-first.log",
+   "sha256": "85ee218a211b27a923a4fbedef9943aa45cde423e3d7f9c4f364647431ac6b81"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "VfxEllipse_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-882/test-vfx-ellipse-corrected.log",
+   "sha256": "9ba6aaa67c93c1d7815a32e8b714d9495e30487639fdc2339aac6f2e92b7f704"
+  }
+ ],
+ "sourceFirstSha256": {
+  "cpppj/src/CMakeLists.txt": "2a82bde81f76feb9a61abe763b930e31e16c13c7a17fc91996afad29176419b2",
+  "cpppj/tests/CMakeLists.txt": "23ddbb7dd30d262a1337d327dff07750c9f21a30951c5601086ef0825853132b",
+  "cpppj/src/client/VFXEllipse.h": "07c9d57bb58026b0730e518ca0634ad0a7a293d66c147da4f51845f5005232c7",
+  "cpppj/src/client/VFXEllipse.cpp": "6f0e070500be4943a73b4544fe578fd91bb85e0021ec9d1962d5a024af038083",
+  "cpppj/tests/VFXEllipseTests.cpp": "1f6ef14d9b0bcbdbb0159544bdb698e9ac9db3a6024659181308b3fceb223411",
+  "tools/decomp_vfx_ellipse.py": "a34bbdaad21277d3c2e60434a2260f9110098a0666b0903b5cadb0bc639f318c",
+  "cpppj/tests/fixtures/vfx-ellipse-x86.tsv": "ce77c06050a05b6e3fbe7412e9b219e64c7be7628c5f952c03f8cc8c264aa207"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-882/native-first.log": "a41df9d44bc905b528402b18629b9353aecdcf212928c10364b039b60eefa2d1",
+  "extracted/cpp-resume-882/native-reobserved.log": "dc7e85359d3c603ad74a520520ab0a6277ab0dc5a86ccbaaf97a7aecd78b7794",
+  "extracted/cpp-resume-882/originalCD-00468a51.c": "a8680c434aafc1e7dcedb44b6617dd1f71524c5271a79ecd6d6c9de77d8fdb2f",
+  "extracted/cpp-resume-882/originals-00405071-complete-ranges.asm": "76b5a3d822dfd9a7ddfa5b2fb7f7fc550518d17ad24017c9f0708feb368290ef",
+  "extracted/cpp-resume-882/originals-00405071.c": "7e1dc95a65daae5587a20c373533c03f78bd15569c2aac355a7ac20246543e6c"
+ },
+ "scope": [
+  "VFX00405071의8비트 단색 윤곽·DWORD 제곱/차분·signed 비교·두 SAR·두 구간·네 대칭점",
+  "0반경은 기존 원문 VFXLine 경로·음수 반경의 원문 do/while·절대 중심/clip원점 상쇄·현재8bit 표면",
+  "실제 PE270전체 화면과 앞뒤 보호 바이트·재관측270행"
+ ],
+ "validation": {
+  "firstCompileFailed": false,
+  "firstTestFailedCases": 0,
+  "finalTestFailedCases": 0,
+  "replayedNativePixelBytes": 829440,
+  "cppNewCases": 1,
+  "correctedTestExecutions": 1,
+  "warningCorrection": "새 검사 std::fill의 int199→BYTE 변환 C4244(문맥14행)를 std::uint8_t{199} 한 곳으로 명시했다. 제품/fixture/기대값 변경0. 교정 빌드 경고0 뒤 바뀐 검사1개만 재실행해 통과했다.",
+  "existingExpectationsChanged": false,
+  "newFixtureOverwritten": false,
+  "sourceStableDuringBuilds": true,
+  "gameExecutions": 0,
+  "sessionIntegrationAdded": false
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "mp": 3,
+  "completedParents": 38,
+  "completedPartial": 3
+ },
+ "limits": [
+  "882는 독립 래스터 부품이며 실제 EvilRay 공통 Host/장기 source/process owner/Session·Teleport 분배는 미연결이다.",
+  "8bit/1BYTE 표면의 픽셀을 복원했다. Native 반환레지스터/다른BPP/오류코드는 현재 void API의 범위가 아니다.",
+  "32비트 파손/과도한 반복 입력에 호스트100만회 상한이 있다. 실제 EvilRay의 작은 반경과 구별한다.",
+  "정밀 함수 전체347명령 범위를 증거로 쓴다. 첫 RET405146에서 잘린 탐색용 bounded자료는 전체 몸체 증거에서 제외했다.",
+  "CD00468a51은 정적 비교이며 신규CD/GUI/게임/의식/공중3종/MP/전체71/CTest/34미션/ZIP 검사는 하지 않았다."
+ ],
+ "next": [
+  "실제 EvilRay 공통 Host/Kernel·장기 source/process owner·현재 metadata/음향·타원 출력/Teleport 분배 연결",
+  "다른 현재 TYPE/모드·전체Pop·군도·Factory·State/파일·객체메뉴/Edit·Windows·무검사MP/4~8차 계속"
+ ]
+}
