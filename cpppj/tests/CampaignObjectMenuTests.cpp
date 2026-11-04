@@ -877,3 +877,12 @@ TEST_CASE(AssetTailCurrent_ActualSessionSharesGrowthAndNuggetRegulars) { // 실�
         else { auto* first=core.processes.FindEvent(source,1);auto* second=core.processes.FindEvent(source,3);CHECK(first && second);if (first && second) CHECK(first->Payload()>=0 && first->Payload()<=.3F && second->Payload()>=0 && second->Payload()<=.5F && first->Time()==core.processState.Now() && second->Time()==core.processState.Now()); }
     }
 }
+
+TEST_CASE(VortexCurrent_ActualSessionDiagnosticWritesCurrentPlayerRecord) { // 같은 실제 Session 서비스의 진단 복귀 뒤 변경된 owner의 Player BYTE에 새 신전 두 DWORD를 쓴다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();std::function<void(std::string_view)> current;std::uint32_t calls{}; // 명시 장면 이전에는 추가 진단 입력을 만들지 않는다.
+    services.ai.assertion=[&](auto expression) { if (!current) throw std::logic_error("명시 Vortex 진단 입력 전 호출");current(expression); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);const auto savedRaw=std::vector<std::uint8_t>(raw.begin(),raw.end());auto records=session.PlayerRecords();const auto offset=8U*0xb4+0x84;std::array<std::uint8_t,8> savedFields;std::copy_n(records.begin()+offset,8,savedFields.begin());
+    const auto write=[&](std::size_t at,std::uint32_t value) { for (std::size_t index=0;index<4;++index) raw[at+index]=static_cast<std::uint8_t>(value>>(index*8)); }; // 이 새 일반 슬롯의 원문 가상 표와 현재 owner0만 공급한다.
+    const auto read=[&](std::size_t at) { std::uint32_t value{};for (std::size_t index=0;index<4;++index) value|=std::uint32_t(records[at+index])<<(index*8);return value; }; // 실제 Player 네 BYTE를 직접 읽는다.
+    write(0,0x5196f0);raw[11]=raw[40]=raw[34]=0;current=[&](auto expression) { CHECK(expression=="getPlayerId() != INVALID_PLAYER_ID");++calls;raw[34]=8;raw[11]=9; };++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000002);CHECK(calls==1 && raw[11]==9 && read(offset)==source.value && read(offset+4)==source.value && core.bookkeeping.depth==0);
+    std::copy(savedRaw.begin(),savedRaw.end(),raw.begin());std::copy(savedFields.begin(),savedFields.end(),records.begin()+offset); // 실제 Slot/Player의 명시 입력을 복구하며 의식·공격·승리는 실행하지 않는다.
+}

@@ -1,0 +1,482 @@
+{
+  "unit": 854,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "e7427079 / 20261104-38 CP",
+  "exeSha256": "fc8862fd3e29288f814fcb7bca5f27c28d5eed76eda12ccd7f4a6fd75844689a",
+  "exeBytes": 10555392,
+  "initialSourceSha256": {
+    "cpppj/src/o/RawAssetPostPop.cpp": "af6cafec1d3029de2f220293f911fc632193b46c47392560d8fad4f23baa4603",
+    "cpppj/tests/AssetPostPopTests.cpp": "12a04df58562151619b68d96a4179db228306fc2d019416130922a22e1526093",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "bcfbcb84298038cdc11f71746a315a8960a048685fccea56e2a77d48daef7839",
+    "tools/decomp_vortex_current.py": "b4546d7c7e64dca4673ccee3203441bd3c478b43d86136a661b7b52f845174e5"
+  },
+  "finalSourceSha256": {
+    "cpppj/src/o/RawAssetPostPop.cpp": "af6cafec1d3029de2f220293f911fc632193b46c47392560d8fad4f23baa4603",
+    "cpppj/tests/AssetPostPopTests.cpp": "51d04a80dad6f338fa5db02195c9c8c79ed5fe92ee9195af5f99944ab73c54dd",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "bcfbcb84298038cdc11f71746a315a8960a048685fccea56e2a77d48daef7839",
+    "tools/decomp_vortex_current.py": "b4546d7c7e64dca4673ccee3203441bd3c478b43d86136a661b7b52f845174e5"
+  },
+  "correctedSources": [
+    "cpppj/tests/AssetPostPopTests.cpp"
+  ],
+  "scope": [
+    "PATCH004dc700/세 wrapper의 도달 장치와 원문 owner0/없는 섬 진단 정상 복귀·현재 Player0~8 기록",
+    "WORD의 현재 Bridge 통지·현재 signed 중복 목록/선택 Form 전체 SID/TYPE 물리 경계",
+    "물리 프레임 쓰기와 미리 선택한 iterator next·현재 권한/로딩 소비 순서",
+    "실제 Session 서비스 복귀 뒤 현재 owner8의 같은 Player 두 DWORD 쓰기와 입력 복구",
+    "명시 Validate/Activate와 CD의 기존 사전/진단 중단 계약은 유지한다"
+  ],
+  "staticEvidence": {
+    "sha256": {
+      "extracted/cpp-resume-854/originals-0040eb40.c": "d1cc0fe1a2c6a9195b3f4520418cf30e7fae32efa44d137a67656502a5312e5e",
+      "extracted/cpp-resume-854/originals-00414450.c": "74544c8863f58b6268d9f3df11f380a7b73909c4378073c3dc818c0542396312",
+      "extracted/cpp-resume-854/originals-00414490.c": "a550fad5a3ccf6d8880548ce829c667c010cb8a57647e5d812ff18483d5cb384",
+      "extracted/cpp-resume-854/originals-0046ee30.c": "10f52c51dc353513a56727bb4b21db948ac35813cac652ac61d6bff0f3d4284b",
+      "extracted/cpp-resume-854/originals-0049a840.c": "f55ea7757a34810e4ed2a47f75790ced0eb4ef748faecc1c385aa6bd210528d9",
+      "extracted/cpp-resume-854/originals-004dc700.c": "e49718389c237fab4c04b6eb087af3149d863219cec2b3595fbb4ff79f481979",
+      "extracted/cpp-resume-854/originals-004dce40.c": "30b7b3449b3d4da60b437ba2da2a2d892e3916e89ad595e6b7322c0586451a39",
+      "extracted/cpp-resume-854/originals-004dd020.c": "9538b8bb5d8eb33a67fb84db531a208d812497580f255c7edc1224acf5738fe1",
+      "extracted/cpp-resume-854/originals-004dd1f0.c": "01bba4a45a921ed758392a8e17a4b70ac4489c798b3438a56b41634157c02f8f"
+    },
+    "patch": [
+      "004dc700",
+      "004dce40",
+      "004dd020",
+      "004dd1f0",
+      "00414450",
+      "00414490",
+      "0040eb40",
+      "0046ee30",
+      "0049a840"
+    ],
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "currentFunctionsSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+  },
+  "validation": {
+    "cases": 161,
+    "newCases": 20,
+    "firstPassedCases": 160,
+    "firstFailedCases": 1,
+    "firstFailedChecks": 1,
+    "replayedCases": 1,
+    "replayedFailedChecks": 0,
+    "finalFailedCases": 0,
+    "totalCaseExecutions": 162,
+    "firstFailure": "새 Native 재생 장치가 앞선 free 슬롯을 AllocatedBytes로 다시 준비하고 명시 Owner 장치에도 같은 할당 관문을 적용했다. 각 원문 입력의 초기화와 물리 BYTE 장치로 교정했다",
+    "productChangesAfterFirstBuild": 0,
+    "expectationChanges": 0,
+    "native": {
+      "host": "HJOW-Athlon",
+      "entries": [
+        "004dce40",
+        "004dd020",
+        "004dd1f0",
+        "004dc700",
+        "00414450",
+        "004ac220"
+      ],
+      "cases": 936,
+      "observations": 1872,
+      "normalReturns": 723,
+      "assertionStops": 213,
+      "diagnosticInputs": 426,
+      "tsvSha256": "8f7ae62fd72c778d5b03f460115534b2d3091c88a9deb1e074a1740ce6b27638",
+      "boundaries": [
+        "외부 Damageable/음향·섬/현재 소유자·내용물·예약/진단 장치는 명시 입력이다",
+        "WORD setter/중복 목록과 세 wrapper/공통 부모는 실제 원문이다",
+        "실제 게임/Frame·Process 틱/공격·의식·MP/진단 UI 실행 없음"
+      ]
+    },
+    "reobservedCases": 936,
+    "reobservedIdentical": true,
+    "totalNativeObservations": 3744,
+    "nativePreparationFailures": [
+      "옛 owner 추출 경로 부재로 초기화 실패: 현재 정밀 범위 직접 로딩으로 교정",
+      "선택 Form의49a840 실행 범위 누락: 해당 실제 정밀 범위만 추가"
+    ],
+    "nativeFailureEvidenceSha256": {
+      "native-first.log": "b4f669d4ddfbec9e89e5b8777c0fd283a9462ff987f223171b61fdef7bcf00c1",
+      "native-second.log": "1873631a45ccb6357aea340e0bc293aa6701f8f1b9603bf052b88cf726e4ee9d",
+      "native-source-first.py": "8edd55410f41e530314fc7ce711da5a8969b9380a6bf04faf7b05e98e39c470e",
+      "native-source-second.py": "71cefa1d68d929edc83255ef9e01242ffc2b832d056e78a413c2e5a32e2a022b",
+      "native-source-third.py": "b4546d7c7e64dca4673ccee3203441bd3c478b43d86136a661b7b52f845174e5"
+    },
+    "fixtureSha256": "8f7ae62fd72c778d5b03f460115534b2d3091c88a9deb1e074a1740ce6b27638",
+    "existingVortexRows": 528,
+    "existingMutablePlayerRows": 576,
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-854/build-first.log",
+        "sha256": "fa582e1dcfda7577ae06b46dcc5f9087c72b6812908197ea3dba59f9817ce69a",
+        "exitCode": 0,
+        "elapsedSeconds": 67.6943886,
+        "execSession": 71486,
+        "childProcessesExited": true
+      },
+      {
+        "log": "extracted/cpp-resume-854/build-second.log",
+        "sha256": "6a9d6b056788262318d8783238297e0f016c55e74ceeaff0e0f3a41fe98af1ea",
+        "exitCode": 0,
+        "elapsedSeconds": 22.176484,
+        "execSession": 69770,
+        "childProcessesExited": true
+      }
+    ],
+    "firstExecutions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "VortexCurrent_",
+        "cases": 19,
+        "expectedCases": 19,
+        "failedChecks": 1,
+        "exitCode": 1,
+        "passed": false,
+        "log": "extracted/cpp-resume-854/test-vortex-current-first.log",
+        "sha256": "17965b124733ce650df369c09d95d2700869e560c47a682f66934fbd9abb01e3"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "VortexCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-vortex-session-first.log",
+        "sha256": "483d31e1ab34630e7b3aef161b8daaf9fa713834e0b8d7acc5d19642df8a6403"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetPostPop_PatchMutablePlayerNativeRecords",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-mutable-patch-first.log",
+        "sha256": "95867838db4af4ea9158e8ca95ab2c4690feb558d418760398b6bd5b08b3d772"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetPostPop_CdMutablePlayerNativeRecords",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-mutable-cd-first.log",
+        "sha256": "d710a6c2a924c00493ff7fd531e76cc9e911802d20031ac024263c34309957b2"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetPostPop_MissingEffectsBeforeMutation",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-explicit-preflight-first.log",
+        "sha256": "82859995fa80e71557efedd1cac0ce68f9efb624d1e602fec8f43f13fac1cd27"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetTailCurrent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-asset-tail-first.log",
+        "sha256": "4aafe8c426c388446548e737e1840edf284aba36de1d620d5231f84bb3704031"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "AssetTailCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-asset-tail-session-first.log",
+        "sha256": "8b6058b9c5a5f4c7f7b4f4863fc4ed6c15693ce8c6e1c2f98f8d9236e01c8141"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "FencePostPop_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-fence-native-first.log",
+        "sha256": "99f759e33f4228eaabb050e761d7bd558b2507412d8496ce234d49b4332174c8"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "NuggetPostPop_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-nugget-native-first.log",
+        "sha256": "e8cf3b8de820cfe13fcf94e8106629977f8ba1acfd7312436d96e919e613c845"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetFenceCurrent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-asset-fence-first.log",
+        "sha256": "59f69989127ead773ecd354419f643e6154e5e295c36d0ce38d246a80b6e6ff0"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "AssetFenceCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-asset-fence-session-first.log",
+        "sha256": "67d63ecd41095b336d3f9f9816e0971bcf51c51ec38ec02c435e1721610e0133"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetGunCurrent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-asset-gun-first.log",
+        "sha256": "f26293ece6367136f8af9fd443036437f26d80f6dc7a88c97e4a48688602f579"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "AssetGunCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-asset-gun-session-first.log",
+        "sha256": "5ac075cf405c8c0457f37b4eb5841852b0d2be2f20b543731627dcb24f48a0c1"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GunPostPop_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-gun-native-first.log",
+        "sha256": "6902d189eb17d97a0658acf474889af60360ed74b23679e77458c6ae3f1a443d"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetParentsCurrent_",
+        "cases": 20,
+        "expectedCases": 20,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-asset-current-first.log",
+        "sha256": "805ca3009179fd84174abc6ff1f7eb3faf1c192217912ef6686aee2c2cebb1d3"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "AssetParentsCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-asset-session-first.log",
+        "sha256": "8753d5f942b2295dc7778ffafa044b9da003ae877017b430cbfbfe8af695dee2"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "BuildingNotifyCurrent_",
+        "cases": 8,
+        "expectedCases": 8,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-building-notify-first.log",
+        "sha256": "c6ae583f415c00e322f0c469e62b1eea4fb7efbd657de6dae025fc3e9d762eca"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "BuildingNotifyCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-building-notify-session-first.log",
+        "sha256": "d753b716230f73403f07b63bdd62e37f2a2a142248351b03bb1227fb8cc35898"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 11,
+        "expectedCases": 11,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-post-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-activate-session-first.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "CarrierParentCurrent_",
+        "cases": 12,
+        "expectedCases": 12,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-carrier-current-first.log",
+        "sha256": "719ecd26d24c285d7d1d94a213494973b2638c5865871a84452256641fcd831d"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CarrierParentCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-carrier-session-first.log",
+        "sha256": "2ba62782fee3f667382d503f4c59a3ccce7c5a6155212a9fce08b3798dfe1b2a"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "carrier_postpop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-carrier-native-first.log",
+        "sha256": "ec6a577449fdba8802a48991131c15ffbfbdf0c229ef1fd37abf328c737aa465"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "frame_display_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-frame-display-first.log",
+        "sha256": "c365548d66b11990fca7873428250267355f9e6fdfaf8c646fb6f8eede47970b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "set_frame_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-set-frame-first.log",
+        "sha256": "0a45f97a0eeb88a7c1921c00d6cc901668d0e232bc9e654a84a80feadfcd5961"
+      }
+    ],
+    "correctedExecution": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "VortexCurrent_NativeDiagnosticsAndReturn936Rows",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-854/test-vortex-native-second.log",
+        "sha256": "d47a94ca645e6adedfcb9aaa4a41cccdf11bbb59e2252bbc31c565acccfa335c"
+      }
+    ]
+  },
+  "protected": {
+    "existingFiles": 2760,
+    "existingFixtures": 940,
+    "unchanged": true,
+    "addedFixtures": 1,
+    "totalFiles": 2761,
+    "totalFixtures": 941,
+    "expectationChanges": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 36,
+    "completedPartial": 3,
+    "newCompletedParents": 0,
+    "separateSubordinateParent": "004dc700은 기존779의51함수 밖 부속 진단이다"
+  },
+  "limits": [
+    "외부 Damageable·음향/섬/소유자·내용물/예약/진단은 Native 명시 장치다",
+    "실제 Session은 flags2의 Player 기록 쓰기만 실행했으며 섬 등록/다른 신전 삭제/의식·승리 재현은 아니다",
+    "다른 TYPE/모드 전역 전체 공유와 다른 현재 가상20/전체 Pop은 미완료다",
+    "게임·Frame/Process 틱·공격/포획/희생/승리·공중3종 전용·신규MP/통신·진단 UI·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복을 제외한다"
+  ],
+  "next": [
+    "공중3종 생산 시설의 현재 후처리는 코드/정적 분석만 진행하고 전용 검사를 추가하지 않는다",
+    "다른 현재 가상20/전체 Pop·TYPE/모드 전역 및 LEFT_JOBS의 객체 메뉴/커서·Edit·State/파일/군도·Windows·무검사MP/4~8차를 이어간다"
+  ]
+}

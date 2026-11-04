@@ -62,11 +62,22 @@ void SetAssetWord(SidPool& pool,Sid sid,std::uint32_t value,const AssetPostPopSt
 }
 // 현재 float 좌표의 비트 패턴을 읽는다.
 float Position(std::span<const std::uint8_t> raw,std::size_t offset) { return std::bit_cast<float>(Read(raw,offset)); }
-// 원본 전체 목록은 capacity가 남아 있는 경우만 덧붙인다.
-void Add(SquidPostPopList& list,Sid sid,bool unique) {
-    const auto items=list.Items();
-    if (list.count<list.entries.size() && (!unique || std::ranges::find(items,sid.value)==items.end()))
-        list.entries[list.count++]=sid.value;
+//00414450은 signed count/capacity 관문 뒤에만 중복을 검색하고 저장에는 처음 읽은 count를 사용한다.
+void AppendUniqueAssetList(SquidPostPopList& list,Sid sid) {
+    const auto used=list.Count();const auto capacity=list.Capacity(); // 현재 실제 목록의 두 DWORD다.
+    if (capacity>0xffffffffU) throw std::out_of_range("신전 목록 DWORD 용량 물리 범위 오류");
+    if (std::bit_cast<std::int32_t>(used)>=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(capacity))) return;
+    if (std::bit_cast<std::int32_t>(used)>0) {
+        const auto storage=list.Storage();std::uint32_t index{}; // 원문이 검색 시작 때 저장한 포인터와 현재 검색 번호다.
+        do { // 첫 항목은 최초 양수 count로 선택하며 이후 반복은 현재 count와 비교한다.
+            if (index>=storage.size()) throw std::out_of_range("신전 중복 검색 물리 배열 범위 오류");
+            if (storage[index]==sid.value) return;
+            ++index;
+        }while (std::bit_cast<std::int32_t>(index)<std::bit_cast<std::int32_t>(list.Count()));
+    }
+    if (std::bit_cast<std::int32_t>(used)<0) throw std::out_of_range("신전 목록 음수 저장 위치");
+    const auto storage=list.Storage();if (used>=storage.size()) throw std::out_of_range("신전 목록 실제 저장 범위 오류");
+    storage[used]=sid.value;list.SetCount(list.Count()+1U);
 }
 // CRT ftol의 유한 signed64 범위에서 low DWORD를 반환한다.
 std::uint32_t Truncate(float value) {
@@ -247,29 +258,38 @@ void RawAssetPostPop::VortexBase(Sid sid,std::uint32_t flags) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto ownerOffset=patch ? 34U : 32U,extraOffset=patch ? 40U : 35U;
     damageable_.DamageablePostPop(sid,flags);
     if (flags&2) {
-        const auto owner=pool_.Slot(sid)[ownerOffset];if (!owner || owner>kPlayerCount) throw std::logic_error("Vortex postPop 새 신전 소유자 assert");
-        SetPlayerTemple(owner,2,sid.value);SetPlayerTemple(owner,3,sid.value);
+        if (!pool_.Slot(sid)[ownerOffset]) {
+            if (!patch) throw std::logic_error("CD Vortex postPop 새 신전 소유자 assert");
+            AssetNeed(hooks_.assertion)("getPlayerId() != INVALID_PLAYER_ID","\\Ns\\O\\Vortex.cpp",0x259);
+        }
+        const auto owner=pool_.Slot(sid)[ownerOffset];SetPlayerTemple(owner,2,sid.value); // 진단 복귀 뒤 현재 owner0 기록도 원문처럼 물리 범위 안에서 허용한다.
+        const auto copyOwner=pool_.Slot(sid)[ownerOffset];SetPlayerTemple(copyOwner,3,PlayerTemple(copyOwner,2));
     }
     if (!(flags&1)) return;
     ++state_.templeCount;
     if (!(pool_.Slot(sid)[extraOffset]&8)) {
-        hooks_.playImpactSound(hooks_.typeDword(sid,0x74));Write(pool_.AllocatedBytes(sid),12,0,2);
+        const auto sound=AssetNeed(hooks_.typeDword)(sid,0x74);AssetNeed(hooks_.playImpactSound)(sound);SetAssetWord(pool_,sid,0,state_,hooks_);
         const auto owner=pool_.Slot(sid)[ownerOffset];
         if (owner && owner<=kPlayerCount && !PlayerTemple(owner,0) && !(pool_.Slot(sid)[extraOffset]&1)) {
             SetPlayerTemple(owner,0,sid.value);SetPlayerTemple(owner,1,sid.value);
         }
     }
     if (!(pool_.Slot(sid)[extraOffset]&9)) {
-        Add(state_.Temples(),sid,true);Add(state_.Residences(),sid,true);
+        AppendUniqueAssetList(state_.Temples(),sid);AppendUniqueAssetList(state_.Residences(),sid);
         if (state_.selected && pool_.Slot(sid)[ownerOffset]==LocalOwner()) {
+            if (state_.selected>std::numeric_limits<std::uint16_t>::max()) throw std::out_of_range("신전 선택 SID의 물리 범위 오류");
             const auto form=pool_.Slot(Sid{static_cast<std::uint16_t>(state_.selected)});const auto type=Read(form,18,2);
-            if (type<types_.size() && (types_[type].flags2&0x200)) hooks_.clearPlacement();
+            if (type>=types_.size()) throw std::out_of_range("신전 선택 Form의 현재 TYPE 물리 범위 오류");
+            if (types_[type].flags2&0x200) AssetNeed(hooks_.clearPlacement)();
         }
-        Write(pool_.AllocatedBytes(sid),patch ? 36U : 34U,hooks_.typeDword(sid,0x130),patch ? 4U : 1U);
-        const auto raw=pool_.Slot(sid);const auto island=hooks_.islandNumber(Position(raw,14),Position(raw,18));
-        if (!hooks_.islandExists(island)) throw std::logic_error("Vortex postPop islandList.exists assert");
-        if (!patch && hooks_.islandTemple(island).value) throw std::logic_error("CD Vortex postPop 기존 신전 assert");
-        hooks_.registerTemple(island,sid);hooks_.setOwner(sid,pool_.Slot(sid)[ownerOffset]);
+        const auto frame=AssetNeed(hooks_.typeDword)(sid,0x130);Write(AssetSlot(pool_,sid),patch ? 36U : 34U,frame,patch ? 4U : 1U);
+        const auto raw=pool_.Slot(sid);const auto island=AssetNeed(hooks_.islandNumber)(Position(raw,14),Position(raw,18));
+        if (!AssetNeed(hooks_.islandExists)(island)) {
+            if (!patch) throw std::logic_error("CD Vortex postPop islandList.exists assert");
+            AssetNeed(hooks_.assertion)("islandList.exists( islandId )","\\Ns\\O\\Vortex.cpp",0x281);
+        }
+        if (!patch && AssetNeed(hooks_.islandTemple)(island).value) throw std::logic_error("CD Vortex postPop 기존 신전 assert");
+        AssetNeed(hooks_.registerTemple)(island,sid);AssetNeed(hooks_.setOwner)(sid,pool_.Slot(sid)[ownerOffset]);
         if (state_.Boss()) {
             auto current=2U;
             // 최초 번호는 해제 슬롯을 건너뛰며 첫 할당 자산/Form을 그대로 반환한다.
@@ -279,22 +299,22 @@ void RawAssetPostPop::VortexBase(Sid sid,std::uint32_t flags) const {
                 const auto other=Sid{static_cast<std::uint16_t>(current)};auto next=current+1;
                 // 가상 삭제의 외부 효과가 다음 슬롯을 바꾸어도 원본 iterator의 현재 번호를 유지한다.
                 while (next<pool_.Capacity() && (pool_.Slot(Sid{static_cast<std::uint16_t>(next)})[11]&1)) ++next;
-                const auto otherRaw=pool_.Slot(other);const auto type=otherRaw[10];
-                if (!(otherRaw[extraOffset]&8) && type<types_.size() && (types_[type].flags2&0x200) && other!=sid) {
+                const auto otherRaw=pool_.Slot(other);
+                if (!(otherRaw[extraOffset]&8) && (Type(other).flags2&0x200) && other!=sid) {
                     auto x=Position(otherRaw,14),y=Position(otherRaw,18);
                     if (!patch) {
                         x=static_cast<float>(std::bit_cast<std::int32_t>(Truncate(x))/16);
                         y=static_cast<float>(std::bit_cast<std::int32_t>(Truncate(y))/16);
                     }
-                    if (hooks_.regionNumber(x,y)==island) hooks_.destroy(other,0x100000);
+                    if (AssetNeed(hooks_.regionNumber)(x,y)==island) AssetNeed(hooks_.destroy)(other,0x100000);
                 }
                 current=next;
             }
         }
     }
     if (!state_.loadingDepth && !(pool_.Slot(sid)[extraOffset]&9)) {
-        if (!hooks_.hasContent(sid,state_.slotType)) hooks_.createSlot(sid,state_.slotType);
-        hooks_.refreshProduction();
+        if (!AssetNeed(hooks_.hasContent)(sid,state_.slotType)) AssetNeed(hooks_.createSlot)(sid,state_.slotType);
+        AssetNeed(hooks_.refreshProduction)();
     }
 }
 // 공통몸체가 현재 raw 값을 바꾼 다음 원소별 초기 추가 extra와 Regular 예약을 수행한다.
@@ -302,14 +322,14 @@ void RawAssetPostPop::Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) con
     VortexBase(sid,flags);
     if (flags&1) {
         const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-        if (kind!=kVortexWind) Write(pool_.AllocatedBytes(sid),patch ? 36U : 34U,hooks_.typeDword(sid,0x134),patch ? 4U : 1U);
+        if (kind!=kVortexWind) { const auto frame=AssetNeed(hooks_.typeDword)(sid,0x134);Write(AssetSlot(pool_,sid),patch ? 36U : 34U,frame,patch ? 4U : 1U); }
         Regular(sid,1,kind==kVortexThunder ? 0.1f : 0.08f);
     }
 }
 // 가상 표마다 복원한 몸체만 호출한다. 각 몸체는 공통 장부를 내부에서 정확히 한 번 호출한다.
 void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     const auto kind=Kind(sid);
-    if (pool_.Edition()!=OriginalEdition::Patch1078 || !((kind>=kGenerator && kind<=kGeyser) || kind==kArcSpire || kind==kAcidFence || kind==kSunFence || kind==kNugget || kind==kGrowingIce)) Validate(sid,flags); // 대조한 PATCH 몸체는 도달한 장치만 요구한다. 나머지 파생/CD의 별도 사전 계약은 유지한다.
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || !((kind>=kGenerator && kind<=kVortexThunder) || kind==kArcSpire || kind==kAcidFence || kind==kSunFence || kind==kNugget || kind==kGrowingIce)) Validate(sid,flags); // 대조한 PATCH 몸체는 도달한 장치만 요구한다. 나머지 파생/CD의 별도 사전 계약은 유지한다.
     if (kind==kSunAviary) hooks_.sunAviaryPostPop(sid,flags);
     else if (kind==kNugget) AssetNeed(hooks_.nuggetPostPop)(sid,flags);
     else if (kind==kRainAviary) hooks_.rainAviaryPostPop(sid,flags);

@@ -625,3 +625,101 @@ TEST_CASE(AssetTailCurrent_NuggetLateMissingRandomKeepsLookupAndAllocation) { //
 TEST_CASE(AssetTailCurrent_NuggetLateMissingConstructorKeepsRandomAndWrites) { // 첫 난수 뒤 생성자 누락은 콜백이 바꾼 현재 슬롯도 보존한다.
     AssetScene scene(OriginalEdition::Patch1078);PrepareAssetTail(scene,2);RawNuggetPostPop nugget(scene.pool,NuggetPostPopHooks{[&](Sid,auto) { scene.events.push_back("H");return false; },[&] { scene.events.push_back("A");return true; },[&](float low,float high) { CHECK(low==0 && high==.3F);scene.events.push_back("R");AssetCurrentSlot(scene)[11]=9;return .25F; },{},{}});auto hooks=scene.Hooks();hooks.nuggetPostPop=[&](Sid sid,auto flags) { nugget.PostPop(sid,flags); };AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events==(std::vector<std::string>{"H","A","R"}) && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==1);
 }
+
+namespace { // 신전 진단에서 주는 변경 입력과 관측 문자열만 준비한다.
+void MutateVortexCurrent(AssetScene& scene,std::uint32_t& bridge,std::uint32_t mutation) { // 원문 결과를 계산하지 않고 진단/음향 콜백의 명시 쓰기를 공급한다.
+    auto raw=AssetCurrentSlot(scene);
+    if (mutation==1) { raw[34]=8;raw[11]=9;raw[40]=9;Put(raw,12,0x4567,2);Put(raw,36,0x6789);scene.state.loadingDepth=1;bridge=75;raw[10]=75; }
+    else if (mutation==2) { raw[34]=0;scene.state.localOwner=8;bridge=70;Put(raw,12,0x7777,2); }
+    else if (mutation>=3 && mutation<=5) { raw[10]=75;raw[11]=9;raw[40]=0;raw[34]=mutation>=4 ? 8 : 1;scene.state.loadingDepth=0;if (mutation==4) { scene.state.selected=62;scene.state.localOwner=8; }if (mutation==5) bridge=75; }
+}
+}
+TEST_CASE(VortexCurrent_NativeDiagnosticsAndReturn936Rows) { // 새 관측은 원문 몸체/WORD/중복 목록이며 외부 장치의 반환/변경 입력만 공급한다.
+    const auto path=(std::filesystem::path(NETSTORM_ASSETPOSTPOP_FIXTURE).parent_path()/"vortex-current-x86.tsv").string();AssetScene scene(OriginalEdition::Patch1078);std::size_t count{}; // 실제 선택된 관측 행 수다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) { // 저장된 Native 기대값을 바꾸지 않는다.
+        CHECK(row.size()==13);const auto input=Split(row[0],','),control=Split(row[1],',');CHECK(input.size()==14 && control.size()==5);std::vector<std::string> legacy(21,"0");legacy[0]="originals";std::copy(input.begin(),input.end(),legacy.begin()+1);AssetCurrentSlot(scene)[11]=0;scene.Prepare(legacy);AssetCurrentSlot(scene)[34]=static_cast<std::uint8_t>(Number(control[0]));scene.types[75].flags2=0x200;std::uint32_t bridge=Number(control[4]);scene.state.currentBridgeType=&bridge;std::vector<std::uint8_t> records(9*0xb4);const auto mutation=Number(control[3]);auto hooks=scene.Hooks();const auto sound=hooks.playImpactSound; // Native는 각 입력의 풀을 새로 준비하므로 앞선 행의 free 입력을 먼저 해제한다.
+        hooks.playImpactSound=[&](auto value) { if (mutation==5) MutateVortexCurrent(scene,bridge,5);sound(value); };hooks.islandExists=[&](auto) { return Number(control[1])!=0; };
+        hooks.setOwner=[&](Sid sid,auto owner) { scene.events.push_back("O:"+std::to_string(sid.value)+':'+std::to_string(owner));AssetCurrentSlot(scene,sid)[34]=static_cast<std::uint8_t>(owner); }; // Native의 명시 Owner 장치는 free/contained와 무관하게 같은 BYTE만 쓴다.
+        hooks.assertion=[&](std::string_view expression,std::string_view file,auto line) { scene.events.push_back("X:"+Hex({reinterpret_cast<const std::uint8_t*>(expression.data()),expression.size()})+':'+Hex({reinterpret_cast<const std::uint8_t*>(file.data()),file.size()})+':'+std::to_string(line));if (mutation>=1 && mutation<=4) MutateVortexCurrent(scene,bridge,mutation);if (!Number(control[2])) throw std::runtime_error("명시 Vortex 진단 중단"); };AssetCurrentBody body(scene,std::move(hooks));body.assets.BindPlayerRecords(records);std::string outcome="return";
+        try { body.Run(Number(input[1])); }catch (const std::runtime_error& error) { if (std::string_view(error.what())!="명시 Vortex 진단 중단") throw;outcome="assertion"; }
+        const auto output=scene.Output();std::string fields;
+        for (const auto owner:{0U,1U,8U}) { // 세 관측 Player의 네 DWORD와 전체9기록 Adler를 함께 확인한다.
+            for (const auto offset:{0x7cU,0x80U,0x84U,0x88U}) { if (!fields.empty()) fields+=',';fields+=std::to_string(Get(records,owner*0xb4+offset)); } // 비활성 필드도 그대로 관측한다.
+        }
+        CHECK(output[0]==row[2] && output[1]==row[3] && output[2]==row[4] && output[4]==row[5]);CHECK(Adler(records)==Number(row[6]) && fields==row[7]);CHECK(scene.state.loadingDepth==Number(row[8]) && scene.state.selected==Number(row[9]) && scene.state.localOwner==Number(row[10]) && bridge==Number(row[11]) && outcome==row[12] && scene.baseState.depth==0);++count;
+    }
+    CHECK(count==936);
+}
+TEST_CASE(VortexCurrent_BothEditionExisting528Rows) { // 기존 양판본 세 wrapper528행의 전체 raw/목록/Player/예약을 그대로 재생한다.
+    std::size_t count{}; // 기존 입력 중 실제로 선택한 행만 센다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // CD의 기존 사전 계약도 유지한다.
+        AssetScene scene(edition);
+        for (const auto& row:Rows()) { // 신전 세 부류 이외의 생산/공중/MP는 선택하지 않는다.
+            if (row[0]!=(scene.patch ? "originals" : "originalCD") || Number(row[1])<9) continue;scene.Prepare(row);AssetCurrentBody body(scene,scene.Hooks());if (scene.patch) body.Run(Number(row[2]));else body.base.Activate(kSource,Number(row[2]));CHECK(scene.Output()==std::vector<std::string>(row.begin()+15,row.end()) && scene.baseState.depth==0);++count;
+        }
+    }
+    CHECK(count==528);
+}
+TEST_CASE(VortexCurrent_NoFirstSkipsUnboundDevicesAndType) { // 세 실제 몸체는 flags0에서 공통 부모 뒤 앞단 TYPE/장치를 요구하지 않는다.
+    for (const auto kind:{9U,10U,11U}) { // 잘못된 TYPE와 과거 목록을 미도달 입력으로 공급한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,kind,0);AssetCurrentSlot(scene)[10]=255;scene.state.temples.count=99;AssetCurrentBody body(scene,{});body.Run(0);CHECK(scene.events==std::vector<std::string>{"D:0"} && scene.baseState.depth==0 && scene.state.templeCount==4);
+    }
+}
+TEST_CASE(VortexCurrent_MissingOwnerDiagnosticFollowsCommon) { // owner0 진단 누락은 이미 실행한 Damageable/공통 깊이 감소를 되돌리지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9,2);AssetCurrentSlot(scene)[34]=0;AssetCurrentBody body(scene,{});CHECK(Throws([&] { body.Run(2); }) && scene.events==std::vector<std::string>{"D:2"} && scene.baseState.depth==0 && scene.state.players[0].newTemple==0);
+}
+TEST_CASE(VortexCurrent_MissingIslandDiagnosticKeepsListsAndFrame) { // 섬 존재 진단 장치가 없으면 앞선 WORD/Player/두 목록/프레임은 남는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);auto hooks=scene.Hooks();hooks.islandExists=[](auto) { return false; };AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.baseState.depth==0 && scene.state.templeCount==5 && scene.state.temples.count==1 && scene.state.residences.count==1 && Get(scene.pool.Slot(kSource),36)==27 && Get(scene.pool.Slot(kSource),12,2)==0 && scene.state.players[1].initialTemple==50);
+}
+TEST_CASE(VortexCurrent_MissingSoundKeepsParentAndCounter) { // 선택 음향 누락은 TYPE의 sound 조회 뒤이며 WORD/목록 앞에서 중단한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);auto hooks=scene.Hooks();hooks.typeDword=[&](Sid,auto offset) { CHECK(offset==0x74);scene.events.push_back("F");return 17U; };hooks.playImpactSound={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events==(std::vector<std::string>{"D:1","F"}) && scene.state.templeCount==5 && Get(scene.pool.Slot(kSource),12,2)==0xabcd && scene.state.temples.count==0 && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_MissingBridgeNoticeKeepsZeroWordBeforePlayer) { // 현재 다리 TYPE의 WORD0 저장 뒤 통지가 없으면 Player 최초 신전보다 먼저 중단한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);scene.state.bridgeType=70;auto hooks=scene.Hooks();hooks.notifySurface={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && Get(scene.pool.Slot(kSource),12,2)==0 && scene.state.players[1].initialTemple==0 && scene.state.templeCount==5 && scene.state.temples.count==0 && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_BoundUniqueStoresCurrentListsAndKeepsDuplicatesOut) { // 같은 두 현재 배열/count에 저장하고 두 번째 최초 통지에서도 SID 중복을 만들지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);std::array<std::uint32_t,4> temples{7,8,9,10},residences{11,12,13,14};std::uint32_t templeCount{},residenceCount{},stores{};SquidPostPopList first,second;
+    first.BindCurrent({[&] { return std::span(temples); },[] { return 4U; },[&] { return templeCount; },[&](auto value) { CHECK(temples[templeCount]==50);++stores;templeCount=value; }});second.BindCurrent({[&] { return std::span(residences); },[] { return 4U; },[&] { return residenceCount; },[&](auto value) { CHECK(residences[residenceCount]==50);++stores;residenceCount=value; }});scene.state.sharedTemples=&first;scene.state.sharedResidences=&second;AssetCurrentBody body(scene,scene.Hooks());body.Run();body.Run();CHECK(stores==2 && templeCount==1 && residenceCount==1 && temples==(std::array<std::uint32_t,4>{50,8,9,10}) && residences==(std::array<std::uint32_t,4>{50,12,13,14}) && scene.state.temples.count==0 && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_SignedFullUniqueListSkipsStorage) { // 원문 signed count>=capacity는 과거 포인터/중복 검색/저장을 모두 생략한다.
+    for (const auto pair:{std::array<std::uint32_t,2>{4,4},std::array<std::uint32_t,2>{0,0xffffffffU},std::array<std::uint32_t,2>{0x80000000U,0x80000000U}}) { // 두 높은 비트 입력도 signed DWORD로 비교한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);SquidPostPopList list;list.BindCurrent({[]()->std::span<std::uint32_t> { throw std::logic_error("가득 찬 신전 목록의 미도달 물리"); },[&] { return pair[1]; },[&] { return pair[0]; },[](auto) { throw std::logic_error("가득 찬 목록의 미도달 쓰기"); }});scene.state.sharedTemples=&list;AssetCurrentBody body(scene,scene.Hooks());body.Run();CHECK(scene.state.residences.count==1 && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(VortexCurrent_NegativeUniqueStoreFailsAfterEarlierEffects) { // 음수 실제 저장 위치는 앞선 음향/WORD/Player 뒤 물리 경계에서 실패한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);SquidPostPopList list;list.BindCurrent({[]()->std::span<std::uint32_t> { throw std::logic_error("음수 저장 앞의 미도달 배열"); },[] { return 4U; },[] { return 0xffffffffU; },[](auto) { throw std::logic_error("미도달 count 쓰기"); }});scene.state.sharedTemples=&list;AssetCurrentBody body(scene,scene.Hooks());bool physical{};try { body.Run(); }catch (const std::out_of_range& error) { physical=std::string_view(error.what()).find("음수 저장")!=std::string_view::npos; }CHECK(physical && scene.state.residences.count==0 && scene.state.players[1].initialTemple==50 && Get(scene.pool.Slot(kSource),12,2)==0 && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_SelectedDwordAndTypeRejectOnlyAfterLists) { // 선택 SID 상위 비트를 잘라 유효 Form으로 바꾸거나 잘못된 WORD TYPE를 조용히 무시하지 않는다.
+    for (const bool wide:{false,true}) { // 두 물리 오류 모두 실제 선택 Form 소비 위치에서만 발생한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);scene.state.selected=wide ? 65598U : 62U;Put(AssetCurrentSlot(scene,Sid{62}),18,wide ? 70U : 255U,2);AssetCurrentBody body(scene,scene.Hooks());CHECK(Throws([&] { body.Run(); }) && scene.state.temples.count==1 && scene.state.residences.count==1 && Get(scene.pool.Slot(kSource),36)==25 && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(VortexCurrent_MissingPlacementClearKeepsBothLists) { // 실제 선택 Form이 신전이면 배치 취소 장치를 두 목록 뒤/프레임 앞에서 요구한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);scene.state.selected=62;auto hooks=scene.Hooks();hooks.clearPlacement={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.state.temples.count==1 && scene.state.residences.count==1 && Get(scene.pool.Slot(kSource),36)==25 && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_OwnerEffectChangesBossBeforeIteration) { // 같은 가상 Owner 효과 뒤 현재 boss가 꺼지면 미도달 iterator 장치를 요구하지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);scene.state.boss=true;auto hooks=scene.Hooks();const auto owner=hooks.setOwner;hooks.setOwner=[&](Sid sid,auto value) { owner(sid,value);scene.state.boss=false; };hooks.regionNumber={};hooks.destroy={};AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.state.temples.count==1 && scene.events.back().starts_with("R:50:1:") && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_MissingDestroyKeepsRegistrationAndOwner) { // 일치하는 다른 신전에서만 삭제 장치를 요구하며 앞선 섬 등록/소유자 효과를 유지한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);scene.state.boss=true;AssetCurrentSlot(scene,Sid{60})[10]=70;auto hooks=scene.Hooks();hooks.destroy={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.state.temples.count==1 && scene.events.back()=="O:50:1" && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_IteratorKeepsNextCachedBeforeDestroyEffect) { // 다음 SID는 삭제 전에 선택하며 그 효과로 free가 된 다음 후보도 원문의 현 위치에서 처리한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);scene.state.boss=true;
+    for (const auto sid:{Sid{60},Sid{61},Sid{62}}) AssetCurrentSlot(scene,sid)[10]=70; // 원문 iterator에 명시 후보 세 개만 공급한다.
+    std::vector<std::uint16_t> destroyed;auto hooks=scene.Hooks();hooks.destroy=[&](Sid sid,auto flags) { CHECK(flags==0x100000);destroyed.push_back(sid.value);if (sid.value==60) { AssetCurrentSlot(scene,Sid{61})[11]=1;AssetCurrentSlot(scene,Sid{62})[11]=1; } };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(destroyed==(std::vector<std::uint16_t>{60,61}) && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_ExistingContentSkipsCreateButNeedsRefresh) { // 내용물이 있으면 생성자 없이 갱신으로 가며 선택된 갱신 누락은 그 자리에서 실패한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);auto hooks=scene.Hooks();hooks.hasContent=[&](Sid,auto type) { CHECK(type==133);scene.events.push_back("H");return true; };hooks.createSlot={};hooks.refreshProduction={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events.back()=="H" && Get(scene.pool.Slot(kSource),36)==27 && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_MissingContentCreateKeepsLookupAndBaseWrites) { // 내용물 없음 뒤 생성 누락은 앞선 현재 조회/등록/프레임을 보존한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);auto hooks=scene.Hooks();hooks.hasContent=[&](Sid,auto) { scene.events.push_back("H");return false; };hooks.createSlot={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events.back()=="H" && scene.state.temples.count==1 && Get(scene.pool.Slot(kSource),36)==27 && scene.baseState.depth==0);
+}
+TEST_CASE(VortexCurrent_WrapperUsesPhysicalFrameAfterCommonExtra8) { // 공통 extra8 생략 뒤 원소 wrapper의 독립 프레임/예약은 실행하며 free 변경을 거부하지 않는다.
+    for (const auto kind:{9U,10U,11U}) { // Wind wrapper는 TYPE+134 조회가 없다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,kind);AssetCurrentSlot(scene)[40]=8;auto hooks=scene.Hooks();hooks.typeDword={};hooks.reserveRegular=[&] { scene.events.push_back("A");return false; };hooks.addRegular={};
+        if (kind!=10) hooks.typeDword=[&](Sid sid,auto offset) { CHECK(offset==0x134);scene.events.push_back("F");AssetCurrentSlot(scene,sid)[11]=9;return 0x87654321U; };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.events==(kind==10 ? std::vector<std::string>{"D:1","A"} : std::vector<std::string>{"D:1","F","A"}) && Get(scene.pool.Slot(kSource),36)==(kind==10 ? 25U : 0x87654321U) && scene.state.templeCount==5 && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(VortexCurrent_RegistrationChangesLoadingBeforeContentGate) { // 섬 등록 효과 뒤 현재 로딩을 읽어 미도달 내용물/갱신 장치를 생략한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,9);auto hooks=scene.Hooks();const auto registration=hooks.registerTemple;hooks.registerTemple=[&](auto island,Sid sid) { registration(island,sid);scene.state.loadingDepth=1; };hooks.hasContent={};hooks.createSlot={};hooks.refreshProduction={};AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.state.loadingDepth==1 && scene.state.temples.count==1 && scene.baseState.depth==0);
+}
