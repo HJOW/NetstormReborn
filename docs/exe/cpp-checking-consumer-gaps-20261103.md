@@ -1,6 +1,8 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
-**851 후속 연결:**Gun·제네레이터·장식의 실제 가상 진입에서 선택 장치/부분 효과·물리 WORD/현재 Bridge 통지와 같은 Session Graph TYPE 진단/복귀를 연결했다. 집중105개(새15) 첫 실패0·여섯 몸체636행/Gun 진단1344행 등 기존 기대값·보호2760개 불변이며 새 Native/fixture0이다. 다른 가상20/전체Pop·TYPE/모드 전역은852 이후다. checking12·완료부모36/부분3 유지다. [851 기록](cpp-asset-gun-current-20261104.md).
+**852 후속 연결:**바리케이드·아크 스파이어·애시드 펜스의 실제 가상 진입에서 선택 장치/부분 효과·직접 Damageable와 같은 Session 예약을 확인했다. 집중120개(새15) 첫 실패0·기존 Blocker96행/두 펜스 P 후처리100행과 보호2760개 불변이다. 공격/수신/통신 행·새 Native/fixture는0이다. 다른 가상20/전체Pop·TYPE/모드 전역은853 이후이며 checking12·완료부모36/부분3 유지다. [852 기록](cpp-asset-fence-current-20261104.md).
+
+**851 후속 연결 이력:**Gun·제네레이터·장식의 실제 가상 진입에서 선택 장치/부분 효과·물리 WORD/현재 Bridge 통지와 같은 Session Graph TYPE 진단/복귀를 연결했다. 집중105개(새15) 첫 실패0·여섯 몸체636행/Gun 진단1344행 등 기존 기대값·보호2760개 불변이며 새 Native/fixture0이다. 다른 가상20/전체Pop·TYPE/모드 전역은852 이후다. checking12·완료부모36/부분3 유지다. [851 기록](cpp-asset-gun-current-20261104.md).
 
 **850 부속 연결 이력:**004214a0 NotifySurface의 현재 TYPE/checking·진단 정상 복귀와 같은 실제 World/Session·Client 장치를 연결했다. 원문2264행/재관측·집중119개(새9) 첫 실패0이며 기존 파일 불변/새fixture1개다. CD의 포인터 계산/미접근 차이도 유지했다. 기존779의51함수와 별도 부속 완료이므로 checking12·완료부모36/부분3 유지다. 다른 현재 가상20 파생/전체Pop은851 이후다. [850 기록](cpp-building-notify-current-20261104.md).
 

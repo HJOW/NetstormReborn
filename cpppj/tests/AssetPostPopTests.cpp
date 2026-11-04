@@ -488,3 +488,92 @@ TEST_CASE(AssetGunCurrent_SunBridgeNoticeReturnsWithMutatedCurrentLife) { // 통
 TEST_CASE(AssetGunCurrent_SunLoadingBacksUpCurrentWordAfterCreate) { // 생성 효과 뒤 현재 로딩/TYPE와 WORD를 읽어 DWORD 백업→WORD setter→통지 순서로 진행한다.
     AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,3);scene.state.inBattle=true;auto hooks=scene.Hooks();hooks.createGunProcess=[&](Sid sid) { scene.events.push_back("P");scene.state.loadingDepth=1;auto raw=AssetCurrentSlot(scene,sid);raw[10]=75;raw[11]=9;Put(raw,12,0x8765,2);scene.types[75].flags1=0x1000;scene.state.bridgeType=75; };hooks.notifySurface=[&](Sid sid) { CHECK(Get(scene.pool.Slot(sid),36)==0x8765 && Get(scene.pool.Slot(sid),12,2)==0x8765);scene.events.push_back("N"); };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.events==(std::vector<std::string>{"P","N","D:1"}) && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==0);
 }
+
+namespace { // 일반 바리케이드와 두 펜스의 명시 가상 표 입력만 준비한다.
+void PrepareAssetFence(AssetScene& scene,std::size_t kind,std::uint32_t flags=1) { // 실제 TYPE 번호와 후처리 VT를 구별하며 공격 처리는 연결하지 않는다.
+    constexpr std::array<std::uint32_t,3> tables{0x50e940,0x50e668,0x50e738}; // 바리케이드/아크 스파이어/애시드 펜스 순서다.
+    PrepareAssetCurrent(scene,7,flags);Put(AssetCurrentSlot(scene),0,tables.at(kind));
+}
+}
+TEST_CASE(AssetFenceCurrent_BlockerNative96Rows) { // 양판본의 기존 바리케이드 부모96행을 기대값 수정 없이 대조한다.
+    std::size_t count{}; // 실제로 읽어 실행한 원문 입력 개수다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // CD는 기존 사전 검사 계약을 실행한다.
+        AssetScene scene(edition);
+        for (const auto& row:Rows()) { // 다른 종류의 공격·공중·신전 원문은 선택하지 않는다.
+            if (row[0]!=(scene.patch ? "originals" : "originalCD") || row[1]!="7") continue;
+            scene.Prepare(row);AssetCurrentBody body(scene,scene.Hooks());if (scene.patch) body.Run(Number(row[2]));else body.base.Activate(kSource,Number(row[2]));CHECK(scene.Output()==std::vector<std::string>(row.begin()+15,row.end()) && scene.baseState.depth==0);++count;
+        }
+    }
+    CHECK(count==96);
+}
+TEST_CASE(AssetFenceCurrent_TwoFenceNativePostPop100Rows) { // 두 동결 원문의 P 후처리100행만 선택하며 공격·수신·통신 행을 실행하지 않는다.
+    std::size_t count{}; // 실제 선택된 P 행 개수다.
+    for (std::size_t kind=1;kind<=2;++kind) { // 원문별 기존 외부 경계 trace와 물리 무변경을 확인한다.
+        const auto name=kind==1 ? "arc-spire-x86.tsv" : "acid-fence-x86.tsv";const auto path=(std::filesystem::path(NETSTORM_ASSETPOSTPOP_FIXTURE).parent_path()/name).string();
+        AssetScene scene(OriginalEdition::Patch1078);
+        for (const auto& row:LoadFixture(path.c_str()).rows) { // 부모 예약 전용 입력만 소비한다.
+            if (row[0]!="P") continue;const auto values=Split(row[1],',');CHECK(values.size()==3);if (values.size()!=3) throw std::logic_error("펜스 원문 P 입력 필드 오류");
+            const auto flags=Number(values[0]);PrepareAssetFence(scene,kind,flags);AssetCurrentSlot(scene)[40]=static_cast<std::uint8_t>(Number(values[1]));const auto before=std::vector<std::uint8_t>(scene.pool.Slot(kSource).begin(),scene.pool.Slot(kSource).end());auto hooks=scene.Hooks();
+            hooks.reserveRegular=[&] { scene.events.push_back("N:40");return Number(values[2])!=0; };hooks.addRegular=[&](Sid sid,auto event,float delay) { scene.events.push_back("R:"+std::to_string(event)+':'+std::to_string(sid.value)+':'+std::to_string(std::bit_cast<std::uint32_t>(delay))); };AssetCurrentBody body(scene,std::move(hooks));body.Run(flags);CHECK(scene.Output()[0]==row[2] && std::ranges::equal(before,scene.pool.Slot(kSource)) && scene.baseState.depth==0);++count;
+        }
+    }
+    CHECK(count==100);
+}
+TEST_CASE(AssetFenceCurrent_NoFirstSkipsUnboundDevicesAndType) { // 세 부모 모두 flags0에서는 앞단 미도달 장치/TYPE 전수 검사를 추가하지 않는다.
+    for (std::size_t kind=0;kind<3;++kind) { // 실제 현재 VT+20과 공통 깊이를 사용한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,kind,0);AssetCurrentSlot(scene)[10]=255;scene.state.temples.count=99;AssetCurrentBody body(scene,{});body.Run(0);CHECK(scene.events==std::vector<std::string>{"D:0"} && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(AssetFenceCurrent_BlockerNonServerOrLoadingSkipsNotify) { // 서버가 아니거나 로딩 중이면 통지를 요구하지 않는다.
+    for (const bool server:{false,true}) { // 서버 입력은 로딩1로 차단하고 extra9는 추가 관문으로 사용하지 않는다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,0);scene.state.inBattle=server;scene.state.loadingDepth=server ? 1 : 0;AssetCurrentSlot(scene)[40]=9;AssetCurrentBody body(scene,{});body.Run();CHECK(scene.events==std::vector<std::string>{"D:1"} && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(AssetFenceCurrent_BlockerMissingSelectedNotifyStopsBeforeParent) { // 실제 통지 위치의 누락은 Damageable/공통 깊이 감소 전에 중단한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,0);scene.state.inBattle=true;AssetCurrentBody body(scene,{});CHECK(Throws([&] { body.Run(); }) && scene.events.empty() && scene.baseState.depth==1);
+}
+TEST_CASE(AssetFenceCurrent_BlockerNoticeMutationKeepsPhysicalLife) { // 통지 뒤 현재 TYPE/free/extra와 전역을 복구하지 않고 같은 직접 부모를 실행한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,0);scene.state.inBattle=true;auto hooks=scene.Hooks();hooks.startBlocker=[&](Sid sid) { scene.events.push_back("B");auto raw=AssetCurrentSlot(scene,sid);raw[10]=75;raw[11]=9;raw[40]=9;scene.state.inBattle=false;scene.state.loadingDepth=1; };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.events==(std::vector<std::string>{"B","D:1"}) && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetFenceCurrent_BlockerAliasesIgnoreExtraAtNotifyGate) { // 세 실제 가상 표의 공통 몸체는 extra9여도 서버 최초 통지를 실행한다.
+    for (const auto table:{0x50e940U,0x50ea08U,0x50ead0U}) { // 바리케이드·불워크 계열의 같은 부모를 검사한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,0);Put(AssetCurrentSlot(scene),0,table);AssetCurrentSlot(scene)[40]=9;scene.state.inBattle=true;AssetCurrentBody body(scene,scene.Hooks());body.Run();CHECK(scene.events==(std::vector<std::string>{"K:50","D:1"}) && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(AssetFenceCurrent_Extra9SkipsUnboundReservation) { // 두 펜스의 extra1/8/9는 예약 앞단을 생략하고 직접 부모만 실행한다.
+    for (std::size_t kind=1;kind<=2;++kind) { // 공격 함수는 호출하지 않는다.
+        for (const auto extra:{1U,8U,9U}) { // 원문 bit9 마스크의 각각과 조합을 확인한다.
+            AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,kind);AssetCurrentSlot(scene)[40]=static_cast<std::uint8_t>(extra);AssetCurrentBody body(scene,{});body.Run();CHECK(scene.events==std::vector<std::string>{"D:1"} && scene.baseState.depth==0);
+        }
+    }
+}
+TEST_CASE(AssetFenceCurrent_FailedReserveSkipsMissingRegularAfterLifeMutation) { // 확보가 실패하면 생성자를 요구하지 않고 변경된 물리 슬롯의 부모를 계속한다.
+    for (std::size_t kind=1;kind<=2;++kind) { // 두 원문의 같은 new 실패 분기를 검사한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,kind);auto hooks=scene.Hooks();hooks.reserveRegular=[&] { scene.events.push_back("A");auto raw=AssetCurrentSlot(scene);raw[10]=75;raw[11]=9;return false; };hooks.addRegular={};AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.events==(std::vector<std::string>{"A","D:1"}) && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(AssetFenceCurrent_MissingReserveStopsAtSelectedBoundary) { // 선택된 확보가 없으면 아직 생성/직접 부모를 실행하지 않는다.
+    for (std::size_t kind=1;kind<=2;++kind) { // 잘못된 TYPE도 앞선 예약 장치 실패를 덮지 않는다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,kind);AssetCurrentSlot(scene)[10]=255;AssetCurrentBody body(scene,{});bool missing{};try { body.Run(); }catch (const std::logic_error& error) { missing=std::string_view(error.what()).find("실제 하위")!=std::string_view::npos; }CHECK(missing && scene.events.empty() && scene.baseState.depth==1);
+    }
+}
+TEST_CASE(AssetFenceCurrent_MissingRegularPreservesSuccessfulReserve) { // 확보 뒤 생성자가 없으면 앞선 부수효과를 유지하고 부모는 미도달이다.
+    for (std::size_t kind=1;kind<=2;++kind) { // 같은 확보 입력으로만 비교한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,kind);auto hooks=scene.Hooks();hooks.addRegular={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events==std::vector<std::string>{"A:40"} && scene.allocated==1 && scene.baseState.depth==1);
+    }
+}
+TEST_CASE(AssetFenceCurrent_ReserveMutationDoesNotRecheckExtraGate) { // 확보 중 extra9로 바뀌어도 이미 선택한 생성자와 원문 지연을 전달한다.
+    for (std::size_t kind=1;kind<=2;++kind) { // 아크1초와 애시드0.3초를 각각 검사한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,kind);auto hooks=scene.Hooks();hooks.reserveRegular=[&] { scene.events.push_back("A");AssetCurrentSlot(scene)[40]=9;return true; };hooks.addRegular=[&](Sid sid,auto event,float delay) { CHECK(sid==kSource && event==0 && delay==(kind==1 ? 1.0F : .3F));scene.events.push_back("R"); };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.events==(std::vector<std::string>{"A","R","D:1"}) && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(AssetFenceCurrent_RegularFailureKeepsReserveAndWrites) { // 생성 콜백의 명시 실패 뒤 앞선 확보/콜백 쓰기를 보존한다.
+    for (std::size_t kind=1;kind<=2;++kind) { // 다른 예외 복구나 원문 SEH의 전체 구현으로 확대하지 않는다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,kind);auto hooks=scene.Hooks();hooks.addRegular=[&](Sid sid,auto,float) { scene.events.push_back("R");AssetCurrentSlot(scene,sid)[11]=9;throw std::logic_error("명시 펜스 생성 중단"); };AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events==(std::vector<std::string>{"A:40","R"}) && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==1);
+    }
+}
+TEST_CASE(AssetFenceCurrent_BadTypeAtParentKeepsEarlierRegular) { // 생성 효과가 TYPE를 범위 밖으로 바꾸면 뒤 부모의 실제 조회에서만 실패한다.
+    for (std::size_t kind=1;kind<=2;++kind) { // 원문의 외부 경계 이후 읽기 순서를 확인한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,kind);auto hooks=scene.Hooks();hooks.addRegular=[&](Sid sid,auto,float) { scene.events.push_back("R");AssetCurrentSlot(scene,sid)[10]=255; };AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events==(std::vector<std::string>{"A:40","R"}) && scene.baseState.depth==1);
+    }
+}

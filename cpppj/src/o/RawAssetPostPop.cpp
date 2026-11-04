@@ -309,7 +309,7 @@ void RawAssetPostPop::Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) con
 // 가상 표마다 복원한 몸체만 호출한다. 각 몸체는 공통 장부를 내부에서 정확히 한 번 호출한다.
 void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     const auto kind=Kind(sid);
-    if (pool_.Edition()!=OriginalEdition::Patch1078 || !((kind>=kGenerator && kind<=kResidence) || kind==kGeyser)) Validate(sid,flags); // 대조한 PATCH 몸체는 도달한 장치만 요구한다. 나머지 파생/CD의 별도 사전 계약은 유지한다.
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || !((kind>=kGenerator && kind<=kGeyser) || kind==kArcSpire || kind==kAcidFence)) Validate(sid,flags); // 대조한 PATCH 몸체는 도달한 장치만 요구한다. 나머지 파생/CD의 별도 사전 계약은 유지한다.
     if (kind==kSunAviary) hooks_.sunAviaryPostPop(sid,flags);
     else if (kind==kNugget) hooks_.nuggetPostPop(sid,flags);
     else if (kind==kRainAviary) hooks_.rainAviaryPostPop(sid,flags);
@@ -322,7 +322,7 @@ void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     else if (kind>=kGunAngle && kind<=kGunArcher) Gun(sid,flags,kind);
     else if (kind==kGunDecoration) { if (flags&1) Regular(sid,0,0.05f);base_.PostPopBase(sid,flags); }
     else if (kind==kResidence) Residence(sid,flags);
-    else if (kind==kBlocker) { if (state_.Server() && (flags&1) && !state_.loadingDepth) hooks_.startBlocker(sid);damageable_.DamageablePostPop(sid,flags); }
+    else if (kind==kBlocker) { if (state_.Server() && (flags&1) && !state_.loadingDepth) AssetNeed(hooks_.startBlocker)(sid);damageable_.DamageablePostPop(sid,flags); }
     else if (kind==kGeyser) Geyser(sid,flags);
     else Vortex(sid,flags,kind);
 }

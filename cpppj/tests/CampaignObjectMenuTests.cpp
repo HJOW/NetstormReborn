@@ -855,3 +855,13 @@ TEST_CASE(AssetGunCurrent_ActualSessionGraphDiagnosticReturnsToPhysicalSlot) { /
     CHECK(calls==1 && raw[10]==75 && raw[11]==9 && raw[30]==1 && core.bookkeeping.depth==0); // Frame/Process 틱·생산·발사·적 공격·통신을 실행하지 않는다.
     raw[11]=raw[40]=0; // Session 반납 시 같은 새 슬롯의 명시 수명 입력을 복구한다.
 }
+
+TEST_CASE(AssetFenceCurrent_ActualSessionCreatesOnlySelectedRegulars) { // 같은 Session의 두 펜스 부모가 실제 예약 Form을 만들며 바리케이드 flags0은 앞단을 생략한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();auto storage=session.World().Storage();core.postPop.BindPatchAiNotice([](auto,Sid,bool) {}); // 공통 부모의 외부 통지 경계만 제공한다.
+    for (std::size_t kind=0;kind<3;++kind) { // 일반 슬롯에 명시 VT를 넣고 실제 공격/Process·Frame 틱은 실행하지 않는다.
+        constexpr std::array<std::uint32_t,3> tables{0x50e940,0x50e668,0x50e738}; // 현재 부모의 실제 원문 가상 표다.
+        const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);const auto write=[&](std::size_t offset,std::uint32_t value) { for (std::size_t index=0;index<4;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); }; // 이 새 슬롯의 VT만 명시한다.
+        write(0,tables[kind]);raw[11]=raw[40]=0;raw[34]=1;storage->types[74].flags1=storage->types[74].flags2=0;++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000U+(kind ? 1U : 0U));auto* process=core.processes.FindEvent(source,0);CHECK(core.bookkeeping.depth==0);
+        if (kind) { CHECK(process);if (process) CHECK(process->Payload()==(kind==1 ? 1.0F : .3F) && process->Count()==0 && process->Time()==core.processState.Now()); }else CHECK(!process);
+    }
+}
