@@ -72,6 +72,7 @@ public:
     o::RawCheckingFlag Checking() const { return checking_; } // 호출위치에서현재owner를읽을수있는같은뷰다.
     void BindDisplayDiagnostics(std::optional<std::string>& detail,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion); // 첫 World 이전에 같은 Client 상세/진단 수명을 연결한다.
     void RecordDisplayFrameError(std::uint32_t type,std::int32_t frame,std::uint32_t abstract); //현재 같은 TYPE/shape로43d40의 상세를 저장한다.
+    void RecordAssertionDetail(std::string_view text); // 00436d20처럼 전달된 문구를 같은 Client 상세 소유자에 복사하며 원문 포인터를 보관하지 않는다.
     void AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const; // 선택된 원문 진단 장치가 복귀하면 caller도 계속한다.
     void BindGraphTrace(std::function<void(std::int32_t,std::string_view)> trace); // 첫 World 전에 현재 Client의 로그 writer를 연결한다.
     void UpdateAmbientWind(o::GameRandom& random); // 같은 Client 난수를 한 번/선택 시 두 번 소비하며 현재 세 바람 전역을 갱신한다.

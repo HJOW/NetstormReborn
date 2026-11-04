@@ -15,6 +15,10 @@ constexpr std::size_t kCells=65536; // 원본256×256 spot 배열의 실제 바�
 }
 // Client 수명의 현재 상세와 진단 장치만 빌리며 짧은 World/Session 포인터를 저장하지 않는다.
 void RawSurfaceStorage::BindDisplayDiagnostics(std::optional<std::string>& detail,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) { displayAssertionDetail_=&detail;displayAssertion_=std::move(assertion); }
+// 00436d20의 문구 복사를 같은 Client 상세 owner에 연결한다. 장치가 없는 독립 저장소는 선택 시 명시 실패한다.
+void RawSurfaceStorage::RecordAssertionDetail(std::string_view text) {
+    if (!displayAssertionDetail_) throw std::logic_error("오류 상세 Client owner 미연결");*displayAssertionDetail_=std::string(text);
+}
 //43d40의 현재 타입/shape와 세 인자를 같은 Client 상세 owner에 기록한다.
 void RawSurfaceStorage::RecordDisplayFrameError(std::uint32_t type,std::int32_t frame,std::uint32_t abstract) {
     if (!displayAssertionDetail_) throw std::logic_error("표시 오류 상세 Client owner 미연결");*displayAssertionDetail_=o::BuildSquidFrameAssertionDetail(types,shapes,type,frame,abstract);

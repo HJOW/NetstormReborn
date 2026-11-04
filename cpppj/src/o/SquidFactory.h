@@ -8,7 +8,8 @@ namespace netstorm::o {
 class SquidUnpop;
 struct SquidFactoryDiagnostics { // 같은 World/Session의 현재 TYPE와 정상 복귀 가능한 원문 진단을 빌린다.
     std::span<const RiftTypeRecord> types; // 비어 있으면 기존 독립 생성자의 TYPE 사본을 사용한다.
-    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // PostTake의 원문 식/파일/줄을 실제 진단 장치에 전달한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // Take/PostTake의 원문 식/파일/줄을 실제 진단 장치에 전달한다.
+    std::function<void(std::string_view)> detail; // 00436d20의 TYPE 불일치 문구를 같은 Client의005e4798 소유자에 복사한다.
 };
 // SID 슬롯을 할당하고 타입별 생성자 필드를 초기화하는 팩토리이다.
 class SquidFactory {

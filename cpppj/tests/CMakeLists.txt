@@ -3389,3 +3389,7 @@ target_sources(netstorm_menu_session_tests PRIVATE CurrentCountGetterTests.cpp)
 # 다이스 checking의 읽기/실패 경계만 선택 실행하고 기존 의식 fixture 장치 연결도 같은 빌드에서 확인한다.
 target_sources(netstorm_tests PRIVATE DaisCheckingParentsTests.cpp)
 target_sources(netstorm_menu_session_tests PRIVATE DaisCheckingParentsTests.cpp TempleRitualTests.cpp DaisRegularTests.cpp AltarSacrificeTests.cpp)
+
+# Take의 진단 복귀/상세 소유자와 기존 생성 fixture는 창·게임·통신 없이 같은 집중 대상에서 검사한다.
+target_sources(netstorm_tests PRIVATE FactoryTakeDiagnosticsTests.cpp)
+target_sources(netstorm_file_tests PRIVATE FactoryTakeDiagnosticsTests.cpp)

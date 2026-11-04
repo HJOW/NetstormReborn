@@ -145,7 +145,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         building=std::make_unique<o::RawBuildingSpace>(pool,hash,types,buildingState);
         pop->SetBuildingSpace(building.get());unpop->SetBuildingSpace(building.get());
         factory=std::make_unique<o::SquidFactory>(pool,types,false,unpop.get());
-        factory->BindDiagnostics({types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // Take/공통 postTake도 현재 TYPE와 같은 Client 진단 장치를 사용한다.
+        factory->BindDiagnostics({types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); },[owner=storage.get()](auto text) { owner->RecordAssertionDetail(text); }}); // Take의 상세/정상 복귀와 공통 postTake가 같은 현재 TYPE·Client owner를 빌린다.
         factory->BindWeakenedMana(storage->GameAux()->PriestQuarterHp()); // State 직접 쓰기와 첫 객체 생성이 같은 현재005ca8f0을 읽는다.
         frame=std::make_unique<o::SquidFrame>(pool,types,o::MakeSquidFrameHooks(pool,types,*display,*unpop,*pop));
         owner=std::make_unique<o::SquidOwner>(pool,types,bookkeeping,ownerMode);

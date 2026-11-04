@@ -1,0 +1,206 @@
+{
+  "unit": 841,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCppCommit": "da27e191 / 20261104-22 CP",
+  "exeSha256": "a084af24ce1576da8a14648d493f20d4523bb01b0e0f892cbf5ac1d0d6d971f8",
+  "exeBytes": 10461184,
+  "sourceSha256": {
+    "cpppj/src/o/SquidFactory.cpp": "dd95ac16aaea535a2054a33715c8f08d32b039d5f52f443d74ab1c2ca1c6d3a7",
+    "cpppj/src/o/SquidFactory.h": "22a3a78594e7d673d882a9d70fc61fdec236cbc76a2942753a4073662432ca49",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "fd1f5c52dcdf388295e01b524105f91443386892da3c3f973b629593ae1a77a5",
+    "cpppj/src/client/RawSurfaceWorld.h": "8e4b1d7362fb3f8efdf8abdc68440609036bc8fee633b92184e0144c3da5fb19",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "d4f42bbe26469027edfff10ee2a801f3f463b21e788028d077467d081d70d8e8",
+    "cpppj/src/client/RawCampaignSession.cpp": "309e8c26e185e6ca3f810f869e22159a8d00299fadb347486f5c42fa817fa6cc",
+    "cpppj/tests/FactoryTakeDiagnosticsTests.cpp": "97ebc820700ed42a7716ba10808cad4c0f994118c62f39e523e75580bd5500fc",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "97cd5be25815738ffc8100a3fda62be951c0afeff041de673572bce72f214965",
+    "cpppj/tests/CMakeLists.txt": "42410e716950c22a6b3fc5044eccde0e36650034d091ac5891171e9308ac8e8b"
+  },
+  "scope": [
+    "10.78 Take SID1a7 진단 복귀 뒤 현재 물리 범위 조회",
+    "TYPE불일치의 현재 두 TYPE 이름/상세 복사/문자열0 1ba 진단 복귀",
+    "현재 가상Unpop 및 진단 뒤 현재 생성자/상태/후단",
+    "실제 Client 상세 owner·World2대여·비멀티 Session 진단 서비스"
+  ],
+  "originalEntries": {
+    "patch": "004af610",
+    "detailWriter": "00436d20",
+    "detailOwner": "005e4798",
+    "assertionLiteralVa": "0050161c",
+    "assertionLiteral": "0",
+    "cd": "004ab440"
+  },
+  "staticReviewBeforeFirstTest": [
+    "CD의 진입 시 TYPE 참조 보존",
+    "새 World 검사에서 실제 Client AiDebug.AssertionDetail 관찰"
+  ],
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-841/build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "99e8890377b9987612cdcd8feecc45fc9bcfe3dab90a08c66fde3a0d9fa9165c"
+    },
+    {
+      "log": "extracted/cpp-resume-841/build-final.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "5aa71037d4d6b91bef1cf2c0753150fa01e3b6a39a7822b818f1249f9b16f81f"
+    }
+  ],
+  "testExecutions": [
+    {
+      "target": "netstorm_file_tests",
+      "filter": "FactoryTakeDiagnostics_",
+      "cases": 7,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-841/test-diagnostics-first.log",
+      "sha256": "d24c8c0cd1272a7a12d89b1197add71ba896ea4ea231c0dec1daa2469c026082",
+      "expectedCases": 7,
+      "passed": true
+    },
+    {
+      "target": "netstorm_menu_session_tests",
+      "filter": "FactoryTakeDiagnostics_",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-841/test-session-first.log",
+      "sha256": "ceae9fb6ab143db2b4ec9f073c59a355ad1f716ebe40eeac145f3811adaca1bf",
+      "expectedCases": 1,
+      "passed": true
+    },
+    {
+      "target": "netstorm_file_tests",
+      "filter": "FactoryTakeChecking_",
+      "cases": 8,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-841/test-existing-take.log",
+      "sha256": "d7777e881146aa28f8c2e4c4d616d96745fb8d6e182e81f242b29d75e8ae5920",
+      "expectedCases": 8,
+      "passed": true
+    },
+    {
+      "target": "netstorm_file_tests",
+      "filter": "SquidFactory_X86Fixture_",
+      "cases": 2,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-841/test-creation-fixtures.log",
+      "sha256": "909055fb48b68d70874e478845972b4ba7abe9e5dbe0b85fb823c2b77a9326c5",
+      "expectedCases": 2,
+      "passed": true
+    },
+    {
+      "target": "netstorm_file_tests",
+      "filter": "SquidFactory_TakeGuards_",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-841/test-cd-guards.log",
+      "sha256": "992b786b587178deb28af349bd08517b33e901695f304aea570af3918a852aca",
+      "expectedCases": 1,
+      "passed": true
+    },
+    {
+      "target": "netstorm_file_tests",
+      "filter": "SquidFactory_AnimTake_",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-841/test-anim-take.log",
+      "sha256": "31453d60980216082e1c8008260e64afc8d44cc028d69a1744351fac3b54b34e",
+      "expectedCases": 1,
+      "passed": true
+    },
+    {
+      "target": "netstorm_file_tests",
+      "filter": "SquidFactory_DerivedGuards_",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-841/test-constructor-guards.log",
+      "sha256": "9cb3a904a246c7d929ea326b7f43943645869bca7e1200d721e93dac39c01a83",
+      "expectedCases": 1,
+      "passed": true
+    },
+    {
+      "target": "netstorm_file_tests",
+      "filter": "TypeConstructors_X86Table_",
+      "cases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-841/test-constructor-table.log",
+      "sha256": "c5cede489e8132c677e338c18b477f6d49ec7e32844ced0c9d65b072f34b799d",
+      "expectedCases": 1,
+      "passed": true
+    },
+    {
+      "target": "netstorm_menu_session_tests",
+      "filter": "CurrentCountVtable_",
+      "cases": 5,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted/cpp-resume-841/test-count-regression.log",
+      "sha256": "f3e680edea11abac03cd9eb9d96c0294fefdb6f76c9640bc427b15ebc8d9e082",
+      "expectedCases": 5,
+      "passed": true
+    }
+  ],
+  "testCases": 27,
+  "newTestCases": 8,
+  "firstTestFailures": 0,
+  "existingFixtureRows": {
+    "creation": 964,
+    "derivedConstructors": 6028,
+    "constructorAddresses": 359
+  },
+  "protected": {
+    "files": 2759,
+    "fixtures": 939,
+    "unchanged": true,
+    "afterLog": "extracted/cpp-resume-841/protected-after.json"
+  },
+  "newCpuExecutions": 0,
+  "newFixtures": 0,
+  "gameGuiExecutions": 0,
+  "newMultiplayerTests": 0,
+  "communicationsTests": 0,
+  "excluded": [
+    "실제 포획/희생/특정 적 공격/승리",
+    "사용자 직접 확인",
+    "신규MP/실제 통신",
+    "공중3종 전용",
+    "물리/PCM/CD삽입 재시도",
+    "전체71/CTest/34미션/ZIP 반복"
+  ],
+  "remaining": [
+    "checking12=부모6+부분3+MP3 유지",
+    "CD Take/contained/Form 및 Factory 나머지 부모/쓰기",
+    "공통 Pop·객체 메뉴/커서·Edit·State/파일·Windows 환경 한계·MP/4~8차"
+  ],
+  "rawDirectory": "extracted/cpp-resume-841",
+  "pushes": 0,
+  "dotnetWebChangesIncluded": false,
+  "compiledSourceSha256": {
+    "cpppj/src/o/SquidFactory.cpp": "dd95ac16aaea535a2054a33715c8f08d32b039d5f52f443d74ab1c2ca1c6d3a7",
+    "cpppj/src/o/SquidFactory.h": "22a3a78594e7d673d882a9d70fc61fdec236cbc76a2942753a4073662432ca49",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "fd1f5c52dcdf388295e01b524105f91443386892da3c3f973b629593ae1a77a5",
+    "cpppj/src/client/RawSurfaceWorld.h": "8e4b1d7362fb3f8efdf8abdc68440609036bc8fee633b92184e0144c3da5fb19",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "d4f42bbe26469027edfff10ee2a801f3f463b21e788028d077467d081d70d8e8",
+    "cpppj/src/client/RawCampaignSession.cpp": "309e8c26e185e6ca3f810f869e22159a8d00299fadb347486f5c42fa817fa6cc",
+    "cpppj/tests/FactoryTakeDiagnosticsTests.cpp": "53cdf2e6b85232bea2ee7ccfc8f7af928b83a7f04b3c0e10791411b54d82f1a9",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "97cd5be25815738ffc8100a3fda62be951c0afeff041de673572bce72f214965",
+    "cpppj/tests/CMakeLists.txt": "42410e716950c22a6b3fc5044eccde0e36650034d091ac5891171e9308ac8e8b"
+  },
+  "nonSemanticCleanupAfterTests": {
+    "cpppj/tests/FactoryTakeDiagnosticsTests.cpp": "git diff --check의 파일 끝 빈 줄만 제거. 실행 코드 변경 없음."
+  }
+}

@@ -703,3 +703,14 @@ TEST_CASE(CampaignFactory_WorkshopDuplicatePreservesWarningAndDeletesOld) {
 
 #include "CampaignDetonateInputTests.inc" // 같은 실제 메뉴/자산 장치를 사용해 Detonate 입력을 확인한다.
 #include "CampaignEditorCheatMenuTests.inc" // 실제 controlled 메뉴의 편집 전용 CHEAT 노출과 원문 추가 조건을 확인한다(725).
+
+TEST_CASE(FactoryTakeDiagnostics_ActualSessionUsesSameStorageDetail) { // 실제 비멀티 Session 설치 뒤 같은 Storage 상세와 서비스 진단을 사용한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();
+    std::optional<std::string> detail;std::uint32_t assertions{};RawCampaignSession* current{};Sid object{};
+    services.ai.assertion=[&](auto expression) { CHECK(current && expression=="0" && detail.has_value());CHECK(current->Core().pool.Slot(object)[10]==75);++assertions; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));current=&session;session.Load();
+    session.World().Storage()->BindDisplayDiagnostics(detail,[](auto,auto,auto) { throw std::logic_error("Session은 실제 서비스 진단을 사용해야 한다"); });
+    auto& factory=session.Core().factory;object=factory.Create(74);auto bytes=session.Core().pool.AllocatedBytes(object);bytes[10]=75;
+    const auto expected=std::string("Invalid take. Server type ")+session.Core().types[74].name+", client type "+session.Core().types[75].name;
+    CHECK(factory.Take(74,object)==object && assertions==1 && detail==expected && bytes[10]==74);
+}

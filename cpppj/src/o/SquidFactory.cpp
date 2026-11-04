@@ -87,8 +87,9 @@ const RiftTypeRecord& SquidFactory::Type(std::uint32_t number,bool requireSuppor
 }
 // 진단 장치가 돌아오면 원문 다음 위치에서 현재 타입/상태를 다시 읽는다.
 void SquidFactory::Assert(std::string_view expression,std::uint32_t line) const {
-    if (!diagnostics_.assertion) throw std::logic_error("Factory의 선택된 원문 진단 장치 미연결");
-    diagnostics_.assertion(expression,"\\Ns\\O\\Squid.cpp",line);
+    const auto assertion=diagnostics_.assertion; // 진단이 장치를 재연결해도 실행 중인 callable의 수명을 보존한다.
+    if (!assertion) throw std::logic_error("Factory의 선택된 원문 진단 장치 미연결");
+    assertion(expression,"\\Ns\\O\\Squid.cpp",line);
 }
 // Take로 받은 예측 머리도 원본 범위 안이다. 일반 Allocate의 예약 검사와 분리한다.
 std::span<std::uint8_t> SquidFactory::LiveBytes(Sid sid) {
@@ -169,18 +170,34 @@ Sid SquidFactory::CreateGumpForm(std::uint32_t flags) {
 // PATCH는 모든 !free 슬롯의 실제 Unpop 뒤 현재 상태/TYPE를 읽고 생성자→타입→void 순서로 수신한다.
 Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    const auto& initial=Type(type,!patch); // PATCH의 실제 생성자 지원 판단은 Unpop/현재 상태 해제 뒤로 유지한다.
-    if (sid.value<pool_.layout_.serverFirst) throw std::out_of_range("Take는 서버 영역 SID만 받습니다");
-    const auto offset=pool_.Offset(sid);
+    const RiftTypeRecord* cdInitial{}; // CD는 기존 진입 시 선택한 TYPE 참조를 Unpop/생성자까지 유지한다.
+    if (patch) {
+        if (sid.value<pool_.layout_.serverFirst || sid.value>=pool_.Capacity())
+            Assert("(FIRST_SERVER_SID <= sid && sid < numSquids)",0x1a7);
+    } else {
+        cdInitial=&Type(type,true); // CD의 기존 지원 경계와 TYPE 선택 시점을 PATCH 진단 복원과 구별한다.
+        if (sid.value<pool_.layout_.serverFirst) throw std::out_of_range("Take는 서버 영역 SID만 받습니다");
+    }
+    const auto offset=pool_.Offset(sid); // 진단 복귀 뒤에도 실제 풀 밖 접근은 호스트 경계로 거부한다.
     auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride);
     if (!patch && (bytes[kState]&kContained)) throw std::logic_error("contained 객체의 CD base Take는 지원하지 않습니다");
     if (!(bytes[kState]&kFree)) {
-        if (bytes[kType]!=type) throw std::logic_error("Take 타입이 기존 객체와 다릅니다");
-        if (patch ? !SupportsConstructedVtable(pool_.Edition(),Vtable(bytes)) : Vtable(bytes)!=ConstructorVtable(initial))
+        if (bytes[kType]!=type) {
+            if (!patch) throw std::logic_error("Take 타입이 기존 객체와 다릅니다");
+            const auto clientType=bytes[kType]; // 두 TYPE 이름은 상세 writer와 assertion보다 먼저 고정한다.
+            const auto name=[](const RiftTypeRecord& record) { return record.name.substr(0,record.name.find('\0')); }; // TYPE+4의 첫NUL까지 읽고 번역 설명을 쓰지 않는다.
+            const auto detail=std::string("Invalid take. Server type ")+name(TypeRecord(type))+", client type "+name(TypeRecord(clientType));
+            if (detail.size()>=256) throw std::length_error("Take 원문 상세256BYTE 범위");
+            const auto recordDetail=diagnostics_.detail; // writer가 진단 연결을 교체해도 현재 호출은 유효하다.
+            if (!recordDetail) throw std::logic_error("Take의 실제 오류 상세 장치 미연결");
+            recordDetail(detail);Assert("0",0x1ba); // 보호PE0050161c는 문자열0이다. 정상 복귀 뒤 TYPE 일치를 재검사하지 않는다.
+            bytes=std::span(pool_.bytes_).subspan(pool_.Offset(sid),pool_.layout_.stride);
+        }
+        if (patch ? !SupportsConstructedVtable(pool_.Edition(),Vtable(bytes)) : Vtable(bytes)!=ConstructorVtable(*cdInitial))
             throw std::logic_error("Take의 미복원 가상/공간 해제 효과가 필요합니다");
         if (patch || !(bytes[kState]&kVoid)) {
             if (!unpop_) throw std::logic_error("Take의 선택된 실제 공간 해제 연결이 없습니다");
-            unpop_->Unpop(sid,initial,0);
+            unpop_->Unpop(sid,patch ? TypeRecord(bytes[kType]) : *cdInitial,0); // PATCH는 진단 뒤 현재 TYPE, CD는 기존에 선택한 TYPE 참조로 해제한다.
         }
     }
     if (patch) {
@@ -192,7 +209,7 @@ Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
         bytes[kState]|=kVoid;
     } else {
         bytes[kState]=static_cast<std::uint8_t>((bytes[kState]&0xfc)|kVoid);
-        ApplyConstructor(bytes,initial);
+        ApplyConstructor(bytes,*cdInitial);
         bytes[kType]=static_cast<std::uint8_t>(type);
     }
     PostTake(sid);
