@@ -73,11 +73,11 @@ struct DaisRegularHooks {
 // 기존 조회·프레임·Host·PathStart를 같은 풀에 재사용하는 Dais 실제 상위 몸체다.
 class RawDaisRegular {
 public:
-    // 모든 참조/필수 효과는 이 객체보다 오래 살아야 하며 서로 다른 SID 풀은 구성에서 거부한다.
+    // 참조는 더 오래 살아야 한다. PATCH 장치는 도달할 때 요구하고 CD의 기존 생성 계약/같은 풀 검사는 유지한다.
     RawDaisRegular(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
         const RawTempleRitual& ritual,const RawRunePostPop& rune,const RawCarrierPreDestroy& carrier,SquidProcessHost& host,
         const RawContainedLookup& lookup,RawPathStart& path,DaisRegularState& state,DaisRegularHooks hooks);
-    bool Handles(Sid sid) const; // 실제 Rune/Dais 타입과 각각의 실제 가상표를 함께 확인한다.
+    bool Handles(Sid sid) const; // PATCH는 실제 Rune/Dais VT만 사용하며 CD는 기존 TYPE/VT 계약을 유지한다.
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const; // Rune304/Dais305·306·307 및 기존 fallback의 전체 분배다.
     void Progress(Sid dais) const; // 현재 stage/사제604 취소→다음 목표/collapse 또는 희생 음향/시작·altar 이탈이다.
     void StopPriestRitual(Sid priest) const; // 현재K..O이면 첫604를 실제로 지우고 현재 타입E 첫 프레임을 지정한다.

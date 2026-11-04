@@ -12,7 +12,7 @@ struct AltarSacrificeState {
     float struggleSeconds{3.0F}; // patch00532698/CD0052e344의 현재 지연이다.
     std::int32_t escapePercent{40}; // patch0053269c/CD0052e348: 0..100000 난수/1000과 비교한다.
 };
-// 파생 가상 공간/삭제 및 실제 UI·음향·난수 경계다. 빈 효과는 생성 단계에서 거부한다.
+// 파생 공간/삭제 및 UI·음향·난수 경계다. PATCH는 선택 시, CD는 기존 생성 단계에서 필수 효과를 요구한다.
 struct AltarSacrificeHooks {
     std::function<void(Sid,std::int32_t,std::uint32_t)> setFrame; // 같은 실제 SquidFrame의 지정이다.
     std::function<void(Sid,std::uint32_t)> destroy; // 실제 파생+10 분배다. Dais400000/포획사제8/altar48을 구분한다.

@@ -167,3 +167,20 @@ TEST_CASE(TempleHelperCurrent_PatchEarlyReturnSkipsUnusedDevicesAndInvalidPriest
         CHECK(rejected==!scene.Patch()); // PATCH의 미도달 device를 생성 시 전수 요구하거나 사제를 먼저 읽으면 실패한다.
     }
 }
+
+TEST_CASE(RitualDeviceCurrent_DaisLazyEligibilityAndNoEffectRegularKeepCdContract) { // PATCH는 무효과 Rune 반환/자격 조회에서 없는 음향·생성 장치를 요구하지 않는다. 실제 의식은 실행하지 않는다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // CD의 기존 생성 시 필수 장치 계약은 그대로다.
+        DaisParentScene scene(edition);bool rejected=false;
+        try { RawDaisRegular helper(scene.pool,scene.hash,scene.types,scene.frames,*scene.ritual,*scene.rune,*scene.carrier,*scene.host,*scene.lookup,*scene.path,scene.state,{});CHECK(scene.Patch());scene.templeState.sharedPriestType=&scene.canonicalPriestType;scene.canonicalPriestType=74;Put(scene.Raw(Sid{10}),18,74,2);CHECK(helper.CanBridge(Sid{5},Sid{6}) && scene.effects==0); // hook 부재의 fallback도 공유 사제 번호74를 읽고 사본158을 사용하지 않는다.
+            auto raw=scene.Raw(Sid{5});Put(raw,0,kPatchRuneVtable);raw[10]=70;raw[11]=1;CHECK(helper.Handles(Sid{5}) && helper.Handle(Sid{5},99,0,.25F)==.25F);Put(raw,0,kPatchDaisVtable);raw[10]=166;bool missing=false;try { static_cast<void>(helper.Handle(Sid{5},99,0,.25F)); }catch (const std::logic_error&) { missing=true; }CHECK(missing && scene.effects==0); // 실제 Dais 가지가 도달한 Damageable 장치만 그 지점에서 요구한다.
+        }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected==!scene.Patch());
+    }
+}
+TEST_CASE(RitualDeviceCurrent_AltarReadsTypedPositionBeforeSelectedFallback) { // 제단23은 순수 조회 뒤 payload를 반환하고 다른 사건은 같은 조회 뒤 선택한 fallback을 요구한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // CD는 빈 효과 생성을 거부하며 PATCH만 지연 선택을 허용한다.
+        DaisLifecycleCurrentScene scene(edition);bool rejected=false;
+        try { RawAltarSacrifice helper(scene.pool,scene.hash,scene.types,scene.frames,*scene.footprint,*scene.rune,*scene.ritual,*scene.carrier,*scene.dais,*scene.advance,*scene.host,*scene.damage,scene.state,scene.altarState,{});CHECK(scene.Patch());auto raw=scene.Raw(Sid{7});Put(raw,0,kPatchAltarVtable);raw[10]=70;raw[11]=1;CHECK(helper.Handles(Sid{7}) && helper.Handle(Sid{7},23,0,.5F)==.5F);bool missing=false;try { static_cast<void>(helper.Handle(Sid{7},99,0,.5F)); }catch (const std::logic_error&) { missing=true; }CHECK(missing && scene.effects==0);
+            Put(raw,14,0x7fc00000);bool position=false;try { static_cast<void>(helper.Handle(Sid{7},23,0,.5F)); }catch (const std::out_of_range&) { position=true; }CHECK(position && scene.effects==0); // 사용하지 않는 장치나23의 반환을 앞세워 원문의 첫 위치 조회를 생략하지 않는다.
+        }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected==!scene.Patch());
+    }
+}
