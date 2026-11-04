@@ -29,7 +29,8 @@ void RunSquidPostPopParent(const SidPool& pool,Sid sid,std::uint32_t flags,std::
         if (PostNeed(hooks.type)(raw[10]).flags1&0x10000000U) PostNeed(hooks.provider)(sid);
         if (savedGenus&0x4200U) { PostNeed(hooks.ownerFactory)(raw[34],sid);PostNeed(hooks.factory)(sid); }
         PostNeed(hooks.aiNotice)(raw[34],sid);
-        if (raw[34]==PostNeed(hooks.localOwner)()) PostNeed(hooks.localCount)(raw[10]);
+        const auto savedOwner=raw[34];const auto localOwner=PostNeed(hooks.localOwner)(); //004b0f5b의owner읽기를004b0f5f의로컬owner읽기보다먼저수행한다.
+        if (savedOwner==localOwner) PostNeed(hooks.localCount)(raw[10]);
         PostNeed(hooks.globalCount)(raw[10]);PostNeed(hooks.recheckSelection)();
     }
     --depth;

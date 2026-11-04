@@ -12,6 +12,7 @@ namespace {
 constexpr std::size_t kType=10,kState=11,kX=14,kY=18;
 constexpr std::uint32_t kClaimGround=0x400;
 constexpr std::uint8_t kFreeContained=9,kAbstractBuried=9;
+template<class F> F CarrierNeed(const F& function) { if (!function) throw std::logic_error("Carrier후처리의선택된실제장치미연결");return function; } //자기연결변경중에도현재callable의수명을보존한다.
 // 정렬되지 않은 좌표의 IEEE float를 네 바이트로 읽는다.
 float Float(std::span<const std::uint8_t> raw,std::size_t offset) {
     std::uint32_t bits=0;
@@ -20,11 +21,11 @@ float Float(std::span<const std::uint8_t> raw,std::size_t offset) {
     return std::bit_cast<float>(bits);
 }
 }
-// 효과와 타입 표를 모두 연결한 경우만 인스턴스를 구성한다.
+// 판본/타입물리크기를확인하며실제PATCH장치는도달시에만요구한다.
 RawCarrierPostPop::RawCarrierPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,const CarrierPostPopState& state,CarrierPostPopHooks hooks)
     :pool_(pool),types_(types.begin(),types.end()),state_(state),hooks_(std::move(hooks)) {
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U)) throw std::invalid_argument("carrier postPop 타입 판본/크기 오류");
-    if (!hooks_.carrierCheck || !hooks_.claimGround || !hooks_.validateBase || !hooks_.base)
+    if (pool.Edition()!=OriginalEdition::Patch1078 && (!hooks_.carrierCheck || !hooks_.claimGround || !hooks_.validateBase || !hooks_.base))
         throw std::invalid_argument("carrier postPop 효과 누락");
 }
 // 일반 Pop의 지원 범위를 바꾸지 않고 직접 base 호출 계약만 확인한다.
@@ -36,22 +37,25 @@ void RawCarrierPostPop::Validate(Sid sid,std::uint32_t flags) const {
 }
 // 원본의 carrier 확인은 extra 차단과 무관하며 최초 flag가 있을 때는 호출하지 않는다.
 void RawCarrierPostPop::PostPop(Sid sid,std::uint32_t flags) const {
-    Validate(sid,flags);
-    if (!(flags&1) && !state_.Boss()) hooks_.carrierCheck(sid);
+    if (pool_.Edition()!=OriginalEdition::Patch1078) Validate(sid,flags);
+    if (!(flags&1) && !state_.Boss()) CarrierNeed(hooks_.carrierCheck)(sid);
     RunDamageable(sid,flags);
 }
 // Damageable의 직접 호출은 carrier 가상 확인을 거치지 않는다.
 void RawCarrierPostPop::DamageablePostPop(Sid sid,std::uint32_t flags) const {
-    Validate(sid,flags);RunDamageable(sid,flags);
+    if (pool_.Edition()!=OriginalEdition::Patch1078) Validate(sid,flags);RunDamageable(sid,flags);
 }
 // 첫 flag의 genus & 0x130000 조회는 원본에서도 반환값을 쓰지 않는 순수 읽기다.
 void RawCarrierPostPop::RunDamageable(Sid sid,std::uint32_t flags) const {
     const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (state_.loadingDepth && raw[kType]!=state_.GeyserType() && !(raw[patch ? 40 : 35]&kAbstractBuried)
-        && (types_.at(raw[kType]).flags1&kClaimGround))
-        hooks_.claimGround(Float(raw,kX),Float(raw,kY),raw[patch ? 34 : 32]);
-    hooks_.base(sid,flags);
+    if (patch && (flags&1U)) static_cast<void>(CurrentType(raw[kType]).flags2&0x130000U); //004ad080의반환은버려도현재TYPE접근자체는먼저수행한다.
+    if (state_.LoadingDepth() && raw[kType]!=state_.GeyserType() && !(raw[patch ? 40 : 35]&kAbstractBuried)
+        && (CurrentType(raw[kType]).flags1&kClaimGround))
+        CarrierNeed(hooks_.claimGround)(Float(raw,kX),Float(raw,kY),raw[patch ? 34 : 32]);
+    CarrierNeed(hooks_.base)(sid,flags);
 }
+const RiftTypeRecord& RawCarrierPostPop::CurrentType(std::uint32_t number) const { const auto types=currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_;if (number>=types.size()) throw std::out_of_range("Carrier후처리현재TYPE물리범위오류");return types[number]; } //낮은프로세스TYPE도원문처럼물리범위안이면허용한다.
+void RawCarrierPostPop::BindCurrentTypes(std::span<const RiftTypeRecord> types) { if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188)) throw std::invalid_argument("Carrier후처리현재TYPE대여의판본/길이오류");currentTypes_=types; } //잘못된대여는기존연결을바꾸기전에거부한다.
 // 자동 가상 등록 없이 공통 body와 그 보호 검사를 연결한다.
 CarrierPostPopHooks MakeCarrierPostPopHooks(SidPool& pool,SquidPostPop& base,
     std::function<void(Sid)> carrierCheck,std::function<void(float,float,std::uint8_t)> claimGround) {

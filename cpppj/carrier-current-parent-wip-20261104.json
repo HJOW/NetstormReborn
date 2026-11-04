@@ -1,0 +1,243 @@
+{
+  "unit": 846,
+  "date": "2026-11-04",
+  "state": "사용자요청으로빌드전중단·미완료작성본",
+  "requestedAction": "인수인계/로컬커밋뒤목표일시중지",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCppCommit": "99ff1a5f / 20261104-29 CP",
+  "lastVerifiedProduct": 845,
+  "lastVerifiedVersion": "11.01",
+  "lastVerifiedExeSha256": "f880f31ca5f8c92a0db64071fc3068075851341cf4257f17d1311df9d75c9f9f",
+  "lastVerifiedCases": 130,
+  "sourceSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "d7df0acb3627afdd97b90c94ca63d2bdcd575b992ec05438b1ed075d6a934f83",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "44c8f25de0a5a41557467d1eeab59db2819c05a95e36c8239c4131b820453467",
+    "cpppj/src/o/RawCarrierPostPop.cpp": "251f3917fb4c5716b59d24c7689dfc9768faa458afa3a6799fc7614208c050c0",
+    "cpppj/src/o/RawCarrierPostPop.h": "17c7f6c792eab42bb7f3f96b904786bb1d9d3475ec33a645ffbc254756d94280",
+    "cpppj/src/o/RawSquidPostPopParent.cpp": "38a52ad31cdeb4946a417c64629f757e4442a87a62668f7b1bc82927d45efc22",
+    "cpppj/tests/CarrierPostPopTests.cpp": "a1c78ec8736c608bdbc78a0af33d0bfdc7908ad2713044350118bf4466e4ec53",
+    "cpppj/tests/PostPopCurrentTests.cpp": "63cf4cf8ded419972697fae9fad446ed8ab7f29c155110de52de9270ab055899",
+    "cpppj/tests/CarrierParentCurrentTests.cpp": "511785f94d89bc0a7fef49fcb7c99f1cf7c0123c73bc652b511e63544f508eb3"
+  },
+  "currentValidation": {
+    "builds": 0,
+    "testExecutions": 0,
+    "nativeCpuExecutions": 0,
+    "guiRuns": 0,
+    "newCarrierTestDefinitions": 12,
+    "newCarrierDefinitionsRegisteredInCmake": 0,
+    "newOwnerOrderTestDefinitions": 1,
+    "newOwnerOrderTestRegisteredButNotBuilt": true,
+    "actualSessionTestWritten": false
+  },
+  "staticEvidence": {
+    "vtables": 83,
+    "entryGroups": {
+      "0041c150": [
+        "00501ea0"
+      ],
+      "0041f870": [
+        "00502c38"
+      ],
+      "0041f920": [
+        "00502cf0"
+      ],
+      "0041fab0": [
+        "00502db0"
+      ],
+      "00422150": [
+        "005034c8"
+      ],
+      "00427720": [
+        "00503d80",
+        "00503e50",
+        "0050e568"
+      ],
+      "0042abb0": [
+        "00503f20",
+        "00503ff0"
+      ],
+      "0042ac90": [
+        "005040c0"
+      ],
+      "0042aed0": [
+        "00504198"
+      ],
+      "004421c0": [
+        "00506d98"
+      ],
+      "004423b0": [
+        "00506f08"
+      ],
+      "004429f0": [
+        "005070c0"
+      ],
+      "00448930": [
+        "005075d8"
+      ],
+      "00448ad0": [
+        "005076b8"
+      ],
+      "00448d20": [
+        "00507770"
+      ],
+      "00449320": [
+        "00507950"
+      ],
+      "0044bf80": [
+        "0050a820",
+        "0050a8e8"
+      ],
+      "00450cd0": [
+        "00508cc8"
+      ],
+      "004538f0": [
+        "00509148"
+      ],
+      "004557c0": [
+        "00509210"
+      ],
+      "00457560": [
+        "00509470"
+      ],
+      "0045e810": [
+        "0050a050"
+      ],
+      "0045ec50": [
+        "00509930"
+      ],
+      "0045ed10": [
+        "005099e8"
+      ],
+      "0045edf0": [
+        "00509aa0"
+      ],
+      "0045ef30": [
+        "0050a1e8"
+      ],
+      "0045fac0": [
+        "0050a388"
+      ],
+      "00462170": [
+        "0050a748"
+      ],
+      "004694b0": [
+        "0050b570"
+      ],
+      "0046a520": [
+        "0050b6e8"
+      ],
+      "0046a600": [
+        "0050b7c0"
+      ],
+      "0046a810": [
+        "0050b888"
+      ],
+      "0046aca0": [
+        "0050b9b8",
+        "0050bad0"
+      ],
+      "00484f90": [
+        "0050dc30"
+      ],
+      "004852e0": [
+        "0050da88"
+      ],
+      "0048c080": [
+        "0050e668"
+      ],
+      "0048c7a0": [
+        "0050e738"
+      ],
+      "0048ead0": [
+        "0050e888"
+      ],
+      "0048eda0": [
+        "0050e940",
+        "0050ea08",
+        "0050ead0"
+      ],
+      "004905d0": [
+        "0050ee08"
+      ],
+      "004950f0": [
+        "0050f210"
+      ],
+      "0049a2b0": [
+        "0050f540"
+      ],
+      "004b0d30": [
+        "00501dd0",
+        "00502370",
+        "00502448",
+        "00502510",
+        "005025d8",
+        "005026a0",
+        "00502778",
+        "00502840",
+        "00502908",
+        "005029d0",
+        "00502aa8",
+        "00502b70",
+        "00502e68",
+        "00502f30",
+        "00502ff8",
+        "005030c0",
+        "00503188",
+        "00503360",
+        "00506e50",
+        "005092d0",
+        "00509388",
+        "005096a0",
+        "00509758",
+        "00509810",
+        "00509b98",
+        "0050c3b0",
+        "0050c9f0",
+        "0050cc08",
+        "0050db78",
+        "0050eb98"
+      ],
+      "004dce40": [
+        "005196f0"
+      ],
+      "004dd020": [
+        "005197a8",
+        "00519860"
+      ],
+      "004dd1f0": [
+        "00519918"
+      ]
+    },
+    "carrierCc": {
+      "00503d80": "00426fc0",
+      "00503e50": "00426fc0",
+      "0050e568": "00426fc0"
+    },
+    "decompiledEntries": 6,
+    "editionPairs": 2,
+    "assemblyFiles": 4
+  },
+  "protected": {
+    "files": 2759,
+    "fixtures": 939,
+    "changed": 0,
+    "newFixtureFiles": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayer": 3,
+    "completedParents": 36,
+    "completedPartial": 3
+  },
+  "remaining": [
+    "현재작성본검토/테스트CMake연결/실제Session검사작성/관련단일빌드와허용집중검사",
+    "846완료뒤현재가상20의나머지파생분배/자체Validate·하위부모대조",
+    "LEFT_JOBS.md의나머지비멀티1~4/Windows7·무검사MP8·요구4~8차"
+  ],
+  "rawDirectory": "extracted/cpp-resume-846"
+}

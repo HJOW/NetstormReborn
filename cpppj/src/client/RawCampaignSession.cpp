@@ -874,6 +874,7 @@ struct RawCampaignSession::Impl {
         missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
         motionState.carrier.sharedAllowAlliedPickup=&gameplayGlobals->GameAux()->AllowAnyCapture();motionState.carrier.sharedGeyserType=&geyserType;carrierState.sharedGeyserType=&geyserType;constructionState.geyser.sharedGeyserType=&geyserType; // 실제 생성/로딩/도착을 같은 TYPE에 연결한다.
         carrierState.sharedBoss=&gameplayGlobals->Authority()->boss;contentFinder.sharedBoss=&gameplayGlobals->Authority()->boss; // 공통 캐리어와 생산·Damageable 검색도 사제 네 소비자와 같은 실제 권한을 빌린다.
+        carrierState.sharedLoadingDepth=&objectState.loadingDepth;priestState.carrier.sharedLoadingDepth=&objectState.loadingDepth;priestState.carrier.sharedGeyserType=&geyserType; //두실제Carrier몸체가같은로딩/간헐천TYPE DWORD를읽는다.
         priestDamageState.sharedBoss=damageablePostState.sharedBoss=contentLifetimeState.sharedBoss=&gameplayGlobals->Authority()->boss; // 피격·삭제·중첩 커서 취소가 같은 현재 권한을 읽는다.
         constructionState.place.sharedAuthority=constructionState.clear.sharedAuthority=constructionState.notice.sharedAuthority=constructionState.geyser.sharedBoss=&gameplayGlobals->Authority()->boss; // 건설 하위 네 몸체는 Prepare 사본을 기다리지 않는다.
         buildingState.sharedBoss=geyserMinedState.sharedBoss=&gameplayGlobals->Authority()->boss; // 진행·표시·음향 효과 뒤에도 같은 현재 boss를 조회한다.
@@ -1048,6 +1049,7 @@ struct RawCampaignSession::Impl {
         ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,revision,terrainType,gameplayGlobals->GameAux()->EdgeFarmType(),std::move(ownerEffects)); // 진단과 같은 현재 두 TYPE를 설치 시점에 읽는다.
         carrier=std::make_unique<RawCarrierPostPop>(core.pool,core.types,carrierState,
             MakeCarrierPostPopHooks(core.pool,core.postPop,[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); },[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); }));
+        carrier->BindCurrentTypes(core.types); //생성뒤수정된실제TYPE속성도현재Damageable하위에서소비한다.
         BalloonBodyHooks balloon;balloon.frames=[this](std::uint32_t type) { return static_cast<std::int32_t>(core.frames[type].Codes().size()); };
         balloon.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };balloon.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         balloon.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };balloon.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };balloon.check=[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); };

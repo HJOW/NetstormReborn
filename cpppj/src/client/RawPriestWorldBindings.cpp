@@ -117,6 +117,7 @@ struct RawPriestWorldBindings::Impl {
             o::MakePriestFallWalker(core.pool,*fall,effects.otherWalkerFall));
         carrierPost=std::make_unique<o::RawCarrierPostPop>(core.pool,core.types,state.carrier,
             o::MakeCarrierPostPopHooks(core.pool,core.postPop,[this](o::Sid sid) { static_cast<void>(check->Check(sid)); },effects.claimGround));
+        if (core.pool.Edition()==o::OriginalEdition::Patch1078) carrierPost->BindCurrentTypes(core.types); //사제wrapper의직접Carrier부모도같은현재TYPE배열을읽는다.
         prefix=std::make_unique<o::RawPriestPostPop>(core.pool,core.reward,state.priests,o::PriestPostPopHooks{
             [this](o::Sid sid,std::uint32_t event) { return Host().FindEvent(sid,event)!=nullptr; },effects.reserveRegular,
             [this](o::Sid sid,std::uint32_t event,float payload) { Host().AddRegular(sid,event,payload); }});

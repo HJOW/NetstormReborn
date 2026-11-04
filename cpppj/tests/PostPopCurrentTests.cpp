@@ -80,3 +80,8 @@ TEST_CASE(PostPopCurrent_ActualManaDiagnosticRetainsSavedFactoryGenusAndCurrentO
     post.BindPatchSelectionRecheck([&] { ++rechecks;CHECK(state.globalCounts[75]==1 && state.localCounts[75]==1 && state.depth==1); });post.PostPopBase(scene.sid,1);
     CHECK(diagnoses==1 && rechecks==1 && state.providers.count==1 && state.factories.count==1 && state.ownerFactories[3].count==1 && state.productionDirty==2 && state.depth==0);
 }
+
+TEST_CASE(PostPopCurrent_OwnerReadPrecedesCurrentLocalOwnerGetter) { //원문두mov의순서를C++비교피연산자의미정평가순서에맡기지않는다.
+    PostParentScene scene;scene.hooks.localOwner=[&] { scene.Raw()[34]=2;return 1U; };scene.Run(1);
+    CHECK(scene.Raw()[34]==2 && scene.events==(std::vector<std::string>{"cost","ai:1","local:74","global:74","selection"}) && scene.depth==1);
+}

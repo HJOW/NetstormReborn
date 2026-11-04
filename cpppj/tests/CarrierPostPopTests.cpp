@@ -58,20 +58,20 @@ struct CarrierScene {
     CarrierPostPopHooks Hooks() {
         return {
             [this](Sid sid) {
-                CHECK(validations==1);events.push_back("C:"+std::to_string(sid.value));
+                CHECK(validations==(patch ? 0U : 1U));events.push_back("C:"+std::to_string(sid.value)); //실제PATCH는공통전체사전검사를호출하지않는다.
                 if (afterType>=0) {
                     auto raw=pool.AllocatedBytes(sid);raw[10]=static_cast<std::uint8_t>(afterType);raw[Extra()]=static_cast<std::uint8_t>(afterExtra);
                     raw[Owner()]=static_cast<std::uint8_t>(afterOwner);Put(raw,14,0x41f20000);Put(raw,18,0x41fc0000);
                 }
             },
             [this](float x,float y,std::uint8_t owner) {
-                CHECK(validations==1);
+                CHECK(validations==(patch ? 0U : 1U));
                 events.push_back("G:"+std::to_string(std::bit_cast<std::uint32_t>(x))+':'+std::to_string(std::bit_cast<std::uint32_t>(y))+':'+std::to_string(owner));
                 if (groundOwner>=0) pool.AllocatedBytes(kSource)[Owner()]=static_cast<std::uint8_t>(groundOwner);
             },
             [this](Sid sid,std::uint32_t) { CHECK(sid==kSource);++validations; },
             [this](Sid sid,std::uint32_t flags) {
-                CHECK(validations==1);const auto raw=pool.Slot(sid);
+                CHECK(validations==(patch ? 0U : 1U));const auto raw=pool.Slot(sid);
                 events.push_back("B:"+std::to_string(sid.value)+':'+std::to_string(flags)+':'+std::to_string(raw[10])+':'+
                     std::to_string(raw[Extra()])+':'+std::to_string(raw[Owner()]));
             }
@@ -111,10 +111,10 @@ TEST_CASE(carrier_postpop_cd_x86_full_body) { Replay("originalCD"); }
 // 추가 10.37 PE 관찰은 별도로 재생한다.
 TEST_CASE(carrier_postpop_1037_x86_full_body) { Replay("original1037"); }
 
-// 손상 raw/타입/누락 경계와 공통 사전 검사의 실패가 첫 효과 전에 거부되는지 확인한다.
-TEST_CASE(carrier_postpop_rejects_invalid_inputs_before_external_effects) {
-    // 두 판본의 같은 보호 계약을 확인한다.
-    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+// CD의기존전체사전검사계약이다. PATCH의도달성/부분효과는새CarrierParentCurrent검사에서확인한다.
+TEST_CASE(carrier_postpop_cd_rejects_invalid_inputs_before_external_effects) {
+    // 실제PATCH에원문에없는사전검사를다시넣지않고CD호환경계만유지한다.
+    for (const auto edition:{OriginalEdition::Cd1072}) {
         CarrierScene scene(edition);scene.Prepare(Fixture().front());
         CHECK(Throws([&] { RawCarrierPostPop invalid(scene.pool,scene.types,scene.state,{}); }));
         CHECK(Throws([&] { RawCarrierPostPop invalid(scene.pool,std::span(scene.types).first(100),scene.state,scene.Hooks()); }));
@@ -142,7 +142,9 @@ TEST_CASE(carrier_postpop_direct_base_preserves_virtual_guards_and_bookkeeping) 
         scene.Prepare(row);scene.types[kPriestType].cost=123.75f;
         SquidPostPopState state;state.localOwner=1;state.totalCost=10;state.depth=1;SquidPostPop base(scene.pool,scene.types,state);
         CHECK(Throws([&] { base.Validate(kSource,1); }));CHECK(Throws([&] { base.Activate(kSource,1); }));
-        CHECK(Throws([&] { base.PostPop(kSource,1); }));CHECK(state.depth==1 && state.totalCost==10);
+        if (scene.patch) { //직접공통호출과가상/명시Activate지원범위를구별한다.
+            SquidPostPopState direct;direct.localOwner=1;direct.totalCost=10;direct.depth=1;SquidPostPop common(scene.pool,scene.types,direct);common.PostPop(kSource,1);CHECK(direct.depth==0 && direct.totalCost==133 && direct.globalCounts[kPriestType]==1);
+        } else CHECK(Throws([&] { base.PostPop(kSource,1); }));CHECK(state.depth==1 && state.totalCost==10);
         int claimed=0;std::uint32_t xbits=0,ybits=0;
         auto hooks=MakeCarrierPostPopHooks(scene.pool,base,[](Sid) {},[&](float x,float y,std::uint8_t owner) {
             ++claimed;xbits=std::bit_cast<std::uint32_t>(x);ybits=std::bit_cast<std::uint32_t>(y);CHECK(owner==1);
@@ -151,11 +153,11 @@ TEST_CASE(carrier_postpop_direct_base_preserves_virtual_guards_and_bookkeeping) 
         CHECK(claimed==1 && xbits==Number(row[11]) && ybits==Number(row[12]));
         CHECK(state.depth==0 && state.totalCost==133 && state.localCounts[kPriestType]==1 && state.localSecondaryCounts[kPriestType]==1);
         CHECK(state.globalCounts[kPriestType]==1 && state.providers.count==0 && state.factories.count==0);
-        // AI 미복원 보호는 지면/가상 효과 전에 적용한다.
+        // 실제PATCH의AI실패앞에는지면/비용을이미기록하며CD의기존사전검사는유지한다.
         state.aiAttached[1]=true;state.depth=1;CHECK(Throws([&] { carrier.PostPop(kSource,1); }));
-        CHECK(claimed==1 && state.depth==1 && state.totalCost==133 && state.globalCounts[kPriestType]==1);
+        CHECK(claimed==(scene.patch ? 2 : 1) && state.depth==1 && state.totalCost==(scene.patch ? 256 : 133) && state.globalCounts[kPriestType]==1);
         // 억제된 공통 몸체도 한 번만 깊이를 줄인다. 억제는 damageable 지면 효과를 끄지 않는다.
-        state.suppressed=true;carrier.DamageablePostPop(kSource,1);CHECK(claimed==2 && state.depth==0 && state.totalCost==133);
+        state.suppressed=true;carrier.DamageablePostPop(kSource,1);CHECK(claimed==(scene.patch ? 3 : 2) && state.depth==0 && state.totalCost==(scene.patch ? 256 : 133));
         SidPool other(edition,kCapacity,false);
         CHECK(Throws([&] { MakeCarrierPostPopHooks(other,base,[](Sid) {},[](float,float,std::uint8_t) {}); }));
     }
@@ -200,6 +202,6 @@ TEST_CASE(CarrierPostPop_SharedBossChangesBetweenCallsAndKeepsFirstFlag) {
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 두 판본의 같은 현재 권한 관문을 검사한다.
         CarrierScene scene(edition);auto raw=scene.pool.AllocatedBytes(kSource);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=158;bool boss=false;scene.state.sharedBoss=&boss;scene.state.boss=true;std::size_t checks{},bases{};
         CarrierPostPopHooks hooks{[&](Sid sid) { CHECK(sid==kSource);++checks; },[](float,float,std::uint8_t) { throw std::logic_error("로딩0에서 지면 claim 미도달"); },[&](Sid,std::uint32_t) { ++scene.validations; },[&](Sid,std::uint32_t) { ++bases; }};
-        RawCarrierPostPop post(scene.pool,scene.types,scene.state,std::move(hooks));post.PostPop(kSource,0);CHECK(checks==1 && bases==1);boss=true;post.PostPop(kSource,0);CHECK(checks==1 && bases==2);boss=false;post.PostPop(kSource,1);CHECK(checks==1 && bases==3 && scene.validations==3);
+        RawCarrierPostPop post(scene.pool,scene.types,scene.state,std::move(hooks));post.PostPop(kSource,0);CHECK(checks==1 && bases==1);boss=true;post.PostPop(kSource,0);CHECK(checks==1 && bases==2);boss=false;post.PostPop(kSource,1);CHECK(checks==1 && bases==3 && scene.validations==(scene.patch ? 0U : 3U));
     }
 }

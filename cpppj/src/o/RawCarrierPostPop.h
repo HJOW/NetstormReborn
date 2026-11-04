@@ -12,12 +12,14 @@ struct CarrierPostPopState {
     std::uint32_t GeyserType() const { return sharedGeyserType ? *sharedGeyserType : geyserType; } // 로딩 중 비교 위치에서 현재 TYPE를 읽는다.
     const bool* sharedBoss{}; // 실제 Client boss를 빌리며 독립 Native fixture는 기존 값형 boss를 유지한다.
     bool Boss() const { return sharedBoss ? *sharedBoss : boss; } // 최초 flag 관문 뒤 같은 현재 권한을 조회한다.
+    const std::uint32_t* sharedLoadingDepth{}; //실제Session의현재로딩DWORD를빌리며독립입력은기존값을쓴다.
+    std::uint32_t LoadingDepth() const { return sharedLoadingDepth ? *sharedLoadingDepth : loadingDepth; } //Carrier확인뒤현재로딩관문에서조회한다.
 };
 // 캐리어 후처리 Pop 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct CarrierPostPopHooks {
     std::function<void(Sid)> carrierCheck; // vtable +0xcc. 원본은 반환값을 사용하지 않는다.
     std::function<void(float,float,std::uint8_t)> claimGround; // 0044bd20 / CD 00461f00: 지면/받침 소유자 갱신 경계다.
-    std::function<void(Sid,std::uint32_t)> validateBase; // 효과 전에 공통 후처리의 상태/Graph/장부를 검사한다.
+    std::function<void(Sid,std::uint32_t)> validateBase; //CD의기존사전검사다. 실제PATCH는이경계를호출하지않는다.
     std::function<void(Sid,std::uint32_t)> base; // 같은 flags로 SquidPostPop의 비가상 몸체를 부른다.
 };
 // Carrier 확인→Damageable 지면 처리→공통 장부를 직접 호출한다. 파생 가상 지원은 별도다.
@@ -30,6 +32,7 @@ public:
     void PostPop(Sid sid,std::uint32_t flags) const;
     // 0044bf80 / CD 004621c0: 로딩 중 조건이 맞으면 지면 소유자 갱신, 이후 항상 공통 postPop이다.
     void DamageablePostPop(Sid sid,std::uint32_t flags) const;
+    void BindCurrentTypes(std::span<const RiftTypeRecord> types); //실제PATCH World의현재TYPE를빌리고빈span으로기존소유사본에복귀한다.
     // 사제 후처리 조합에서 다른 월드의 Carrier 연결을 거부한다.
     const SidPool& Pool() const;
 private:
@@ -41,6 +44,8 @@ private:
     SidPool& pool_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    std::span<const RiftTypeRecord> currentTypes_; //실제World에서대여한주소고정배열이며재할당하지않는다.
+    const RiftTypeRecord& CurrentType(std::uint32_t number) const; //최초genus/로딩중flags1을실제소비지점에서조회한다.
     // state_: 처리 중 조회·갱신하는 상태 (const CarrierPostPopState).
     const CarrierPostPopState& state_;
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (CarrierPostPopHooks).
