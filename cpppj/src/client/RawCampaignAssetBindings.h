@@ -17,6 +17,7 @@ struct RawCampaignAssetGlobals {
     o::GunProcessState& gun; // 같은 GameClock 시각과 서버/동맹/총 상태를 상위 월드가 소유한다.
     std::span<const std::int32_t> elements; // 실제 TYPE+98의 현재 원소 자료이며 타입 전체와 같은 번호순이다.
     std::uint32_t& archerNoticeCommand; // PATCH5429b4/CD512b3c의 현재 명령 토큰이다. 두 PE 초기값030000b0이다.
+    o::FactoryPostPopTypes factoryTypes{}; // 실제 Session은 세 장기 TYPE DWORD를 빌리며 독립 설치는 기존 초기값 사본을 유지한다.
 };
 // UI/음향/미복원 하위는 호출자가 실제 소비자를 공급한다. 누락된 선택 효과는 예외로 거부한다.
 struct RawCampaignAssetEffects {

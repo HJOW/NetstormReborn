@@ -196,6 +196,41 @@ TEST_CASE(FactoryParentCurrent_PhysicalTypeReadIsReachedAfterCommon) { // flags0
     ++scene.baseState.depth;CHECK(FactoryFailed([&] { factory.PostPop(kSource,0); }));CHECK(scene.events==std::vector<std::string>{"D:0"} && scene.baseState.depth==0);
     FactoryPostPopTypes numbers;numbers.fixedFrame=255;RawFactoryPostPop fixed(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,{},numbers);++scene.baseState.depth;fixed.PostPop(kSource,0);CHECK(scene.baseState.depth==0 && Get(scene.pool.Slot(kSource),36)==7);
 }
+TEST_CASE(FactoryGlobalsCurrent_FirstTimerKeepsFullDwordAndCurrentValue) { // BYTE TYPE와 전체 DWORD 비교를 유지하며 생성 후 변경한 현재 값을 읽는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,1,0,0,0,0,7,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);std::uint32_t first=341,second=342,fixed=127;
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,scene.Hooks(),{85,87,126,&first,&second,&fixed});
+    ++scene.baseState.depth;factory.PostPop(kSource,1);CHECK(scene.events==(std::vector<std::string>{"A:40","R:50:5:1056964608","D:1"}));
+    first=85;second=87;scene.events.clear();scene.alloc=0;++scene.baseState.depth;factory.PostPop(kSource,1);CHECK(scene.events==(std::vector<std::string>{"A:40","R:50:2:1090519040","A:40","R:50:5:1056964608","D:1"}));
+}
+TEST_CASE(FactoryGlobalsCurrent_ConstructorChangesNextTimerGlobal) { // 첫 Regular 생성 콜백이 바꾼 두 번째 TYPE DWORD를 다음 비교에서 읽는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,1,0,0,0,0,7,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);std::uint32_t first=85,second=86,fixed=127;
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();const auto add=hooks.addRegular;
+    hooks.addRegular=[&](Sid sid,auto event,auto delay) { add(sid,event,delay);if (event==2) second=85; };
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks),{85,87,126,&first,&second,&fixed});++scene.baseState.depth;factory.PostPop(kSource,1);
+    CHECK(second==85 && scene.alloc==3 && scene.events.size()==7 && scene.events[1]=="R:50:2:1090519040" && scene.events[3]=="R:50:1:1056964608" && scene.events.back()=="D:1");
+}
+TEST_CASE(FactoryGlobalsCurrent_FailedReservationChangesNextTimerGlobal) { // 첫 할당 실패의 콜백 변경도 다음 TYPE 비교에서 보존한다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,1,0,0,0,0,7,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);std::uint32_t first=85,second=86,fixed=127,calls{};
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();hooks.reserveRegular=[&] { scene.events.push_back("A");if (++calls==1) { second=85;return false; }return true; };
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks),{85,87,126,&first,&second,&fixed});++scene.baseState.depth;factory.PostPop(kSource,1);
+    CHECK(scene.events==(std::vector<std::string>{"A","A","R:50:1:1056964608","A","R:50:5:1056964608","D:1"}) && scene.baseState.depth==0);
+}
+TEST_CASE(FactoryGlobalsCurrent_CommonChangesFrameExclusionBeforeCount) { // 일반 Factory의 공통 콜백 뒤 현재 제외 TYPE가 같으면 가상80/프레임 장치를 선택하지 않는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,0,0,0,0,7,0,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);std::uint32_t first=85,second=87,fixed=127;auto carrier=scene.DamageableHooks(base);const auto common=carrier.base;
+    carrier.base=[&](Sid sid,auto flags) { common(sid,flags);fixed=85; };RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,std::move(carrier));auto hooks=scene.Hooks();hooks.setFrame={};hooks.virtualCount=[](Sid)->std::uint32_t { throw std::logic_error("현재 제외된 일반 Factory는 Count하지 않는다"); };
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks),{85,87,126,&first,&second,&fixed});++scene.baseState.depth;factory.PostPop(kSource,0);CHECK(scene.events==std::vector<std::string>{"D:0"} && Get(scene.pool.Slot(kSource),36)==7 && scene.baseState.depth==0);
+}
+TEST_CASE(FactoryGlobalsCurrent_OwnedNumbersRetainIndependentCopy) { // 장기 참조를 지정하지 않은 기존 독립 호출자는 생성 때 값 사본을 유지한다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,1,0,0,0,0,7,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);FactoryPostPopTypes numbers;
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,scene.Hooks(),numbers);numbers.firstTimerFactory=86;numbers.secondTimer=85;
+    ++scene.baseState.depth;factory.PostPop(kSource,1);CHECK(scene.alloc==2 && scene.events[1]=="R:50:2:1090519040" && scene.events[3]=="R:50:5:1056964608" && scene.baseState.depth==0);
+}
+TEST_CASE(FactoryGlobalsCurrent_FrameExclusionKeepsFullDword) { // 제외 번호도 BYTE로 좁히지 않으며 다음 helper 호출에서 현재 DWORD를 다시 읽는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,0,0,0,0,7,0,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);std::uint32_t first=85,second=87,fixed=341,reads{};
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();hooks.virtualCount=[&](Sid) { ++reads;return 0U; };
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks),{85,87,126,&first,&second,&fixed});factory.AdjustFrame(kSource);CHECK(reads==2 && Get(scene.pool.Slot(kSource),36)==0);
+    fixed=85;Put(scene.pool.AllocatedBytes(kSource),36,7);factory.AdjustFrame(kSource);CHECK(reads==2 && Get(scene.pool.Slot(kSource),36)==7);
+}
 // 실제 기계어가 만든 독립 행을 같은 C++ 풀/해시의 전체 출력과 비교한다.
 TEST_CASE(factoryPostPop_native_body_and_dynamic_finder) {
     const auto rows=LoadFixture(NETSTORM_FACTORYPOSTPOP_FIXTURE).rows;std::size_t checked=0;

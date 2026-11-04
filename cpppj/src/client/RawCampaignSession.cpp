@@ -712,7 +712,8 @@ struct RawCampaignSession::Impl {
     std::uint32_t freeTechnologyType{153},templeProduct{133}; // PATCH005412bc/0054126c의 현재 생산 TYPE 전역이다.
     std::unique_ptr<RawCampaignProductionBindings> production; // 같은 현재 Factory/기술 내용물/허용 표를 조합한다.
     std::unique_ptr<RawProductionSync> productionSync; // 현재Deck과 같은 기술 부모의 실제teleport 내용물을 동기화한다.
-    std::uint32_t flareType{106},researchOutpost{126}; // PATCH00541200/00541250의 실제 효과/제외 타입이다.
+    std::uint32_t flareType{106}; // PATCH00541200의 실제 효과 TYPE다.
+    std::uint32_t& researchOutpost{gameplayGlobals->OutpostType()}; //00541250은 Factory 프레임과 AI 제외/연구/업그레이드가 같은 Client 장기 DWORD를 빌린다.
     std::unique_ptr<RawFlare> flare; // 같은 난수/Kernel/공간/표시/삭제를 사용하는 실제 효과다.
     std::unique_ptr<void,void(*)(void*)> pendingFlareRegular{nullptr,[](void* storage) { ::operator delete(storage); }}; // 실제 new40 예약부터 Regular 생성까지의 단일 메모리다.
     std::unique_ptr<RawFactoryResearch> factoryResearch; // 같은 내용물/생산 Deck/현재 권한과58h 송신을 연결한다.
@@ -1351,7 +1352,7 @@ struct RawCampaignSession::Impl {
         assetEffects.postPop.rainAviaryPostPop=[this](Sid sid,std::uint32_t flags) { rainAviary->PostPop(sid,flags); }; // 같은 실제 TYPE143의 가상 후처리다.
         assetEffects.postPop.windAviaryPostPop=[this](Sid sid,std::uint32_t flags) { windAviary->PostPop(sid,flags); }; // TYPE139의실제45edf0이다.
         assetEffects.postPop.sunFencePostPop=[this](Sid sid,std::uint32_t flags) { fencePostPop->PostPop(sid,flags); }; // 공간 쓰기 전에 전체 펜스 후처리를 조립한다.
-        assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand},std::move(assetEffects));assetBindings->ActivatePostPop();
+        assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand,{85,87,126,&gameplayGlobals->FirstTimerFactoryType(),&gameplayGlobals->SecondTimerFactoryType(),&researchOutpost}},std::move(assetEffects));assetBindings->ActivatePostPop(); // 세 TYPE는 같은 실제 Client 주소를 빌리고 Session 사본으로 바꾸지 않는다.
         RawWorldRuntimeHooks worldHooks;
         worldHooks.squidPacket=services.formPacket; //일반Squid와Form은같은버퍼/현재방송분배기를사용한다.
         worldHooks.formTransmit=services.dependencyTransmit;

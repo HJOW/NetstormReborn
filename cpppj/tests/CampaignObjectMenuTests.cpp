@@ -786,3 +786,23 @@ TEST_CASE(FactoryParentCurrent_ActualSessionRedispatchesCountAfterCommon) { // �
     write(0,0x509148);write(36,0);++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000);CHECK(core.bookkeeping.depth==0 && raw[36]==0 && notices==1);
     std::copy(saved.begin(),saved.end(),raw.begin());type.flags1=savedFlags;type.flags2=savedGenus;storage->frames[74]=savedFrames; // 실제 Frame 틱·생산·전투·의식·멀티플레이는 실행하지 않는다.
 }
+
+TEST_CASE(FactoryGlobalsCurrent_ActualTimersShareClientAcrossSessions) { // 실제 일반 Factory의 예약 생성자가 같은 Client의 현재 두 TYPE DWORD를 미션 교체 뒤에도 사용한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto gameplay=std::make_shared<ClientGameplayGlobals>();CHECK(gameplay->FirstTimerFactoryType()==85 && gameplay->SecondTimerFactoryType()==87 && gameplay->OutpostType()==126);auto* firstAddress=&gameplay->FirstTimerFactoryType();gameplay->FirstTimerFactoryType()=74;gameplay->SecondTimerFactoryType()=75;
+    for (std::uint32_t index=0;index<2;++index) { // 서로 다른 실제 Session의 같은 장기 저장소 주소와 예약 Form을 확인하고 틱은 실행하지 않는다.
+        MenuServices external;auto services=external.Make();services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();CHECK(&gameplay->FirstTimerFactoryType()==firstAddress && gameplay->FirstTimerFactoryType()==(index ? 75U : 74U) && gameplay->SecondTimerFactoryType()==(index ? 74U : 75U));
+        const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);const auto write=[&](std::size_t offset,std::uint32_t value) { for (std::size_t byte=0;byte<4;++byte) raw[offset+byte]=static_cast<std::uint8_t>(value>>(byte*8)); }; // 새 일반 슬롯의 명시 VT와 프레임 DWORD를 준비한다.
+        write(0,0x509148);write(36,0);raw[11]=raw[40]=0;raw[34]=1;auto storage=session.World().Storage();storage->types[74].flags1=storage->types[74].flags2=0;storage->frames[74]=RiftTypeFrames(std::vector<FrameCode>{{'A','A',0,0}});core.postPop.BindPatchAiNotice([](auto,Sid,bool) {});
+        ++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000001);auto* chosen=core.processes.FindEvent(source,index ? 1U : 2U);CHECK(chosen && core.processes.FindEvent(source,5) && !core.processes.FindEvent(source,index ? 2U : 1U) && core.bookkeeping.depth==0);
+        if (chosen) CHECK(chosen->Payload()==(index ? 0.5F : 8.0F) && chosen->Count()==0 && chosen->Time()==core.processState.Now());
+        gameplay->FirstTimerFactoryType()=75;gameplay->SecondTimerFactoryType()=74; // 첫 Session 반납 뒤에도 새85/87을 쓰지 않도록 현재값을 보존한다.
+    }
+    CHECK(gameplay->FirstTimerFactoryType()==75 && gameplay->SecondTimerFactoryType()==74); // 실제 생산/행동·전투·의식·통신은 실행하지 않았다.
+}
+TEST_CASE(FactoryGlobalsCurrent_ActualFrameHelperReadsSharedTypeAfterCommon) { // 일반 Factory의 공통 콜백이 바꾼 현재 제외 DWORD를 실제 프레임 helper가 같은 호출에서 읽는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto gameplay=std::make_shared<ClientGameplayGlobals>();auto services=external.Make();services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);
+    const auto write=[&](std::size_t offset,std::uint32_t value) { for (std::size_t index=0;index<4;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); }; // 일반 Factory VT이며 아웃포스트 wrapper를 선택하지 않는다.
+    write(0,0x509148);write(36,7);raw[11]=raw[40]=0;raw[34]=1;auto storage=session.World().Storage();storage->types[74].flags1=storage->types[74].flags2=0;storage->frames[74]=RiftTypeFrames(std::vector<FrameCode>{{'A','A',0,0}});std::uint32_t notices{};
+    core.postPop.BindPatchAiNotice([&](auto,Sid sid,bool) { CHECK(sid==source);++notices;gameplay->OutpostType()=74;write(0,0); });++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000001);CHECK(notices==1 && core.bookkeeping.depth==0 && raw[36]==7 && gameplay->OutpostType()==74);
+    gameplay->OutpostType()=126;write(0,0x509148);write(36,0);++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000);CHECK(core.bookkeeping.depth==0 && raw[36]==0 && notices==1); // 현재 값을 돌린 뒤 일반 Count에 복귀하며 MP/Frame 틱은 실행하지 않는다.
+}

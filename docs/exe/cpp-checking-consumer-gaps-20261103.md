@@ -1,6 +1,8 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
-**847 후속 연결:**Factory의 선택 장치/앞선 부분 효과와 현재 가상80→TYPE/저장 프레임·같은 실제 Session을 연결했다. 집중77개(새13) 첫 실패0·일반 Factory Native372행/Carrier7344행/보호파일 불변이다. Factory 타입번호 전역 공유와 다른 현재 가상20 파생 자체 검사/분배는848 이후다. 전체 Pop 완료로 세지 않아 checking12·완료부모36/부분3 유지다. [847 기록](cpp-factory-current-parent-20261104.md).
+**848 후속 연결:**Factory 세 TYPE DWORD의 현재 공유/전체 폭과 같은 실제 Client 두 Session의 예약 Form·공통 뒤 프레임 제외를 연결했다. 집중85개(새8) 첫 실패0·일반 Factory372행/Carrier7344행·보호파일 불변이다. 다른 현재 가상20 파생 자체 검사/부모·전체Pop과 다른 TYPE 소비자는849 이후다. checking12·완료부모36/부분3 유지다. [848 기록](cpp-factory-type-globals-20261104.md).
+
+**847 후속 연결 이력:**Factory의 선택 장치/앞선 부분 효과와 현재 가상80→TYPE/저장 프레임·같은 실제 Session을 연결했다. 집중77개(새13) 첫 실패0·일반 Factory Native372행/Carrier7344행/보호파일 불변이다. Factory 타입번호 전역 공유와 다른 현재 가상20 파생 자체 검사/분배는848 이후다. 전체 Pop 완료로 세지 않아 checking12·완료부모36/부분3 유지다. [847 기록](cpp-factory-current-parent-20261104.md).
 
 **846 후속 연결 이력:**사용자재개뒤Carrier/Damageable의현재TYPE/로딩·선택장치·실패앞부분효과와같은실제Session을연결했다. 집중135개(새14)첫실행실패0·기존Carrier7344행/보호파일불변이다. Factory/나머지현재가상20·비가상부모/자체Validate는다음847이다. 전체Pop완료로세지않아checking12·완료부모36/부분3을유지한다. [846 기록](cpp-carrier-current-parent-20261104.md).
 

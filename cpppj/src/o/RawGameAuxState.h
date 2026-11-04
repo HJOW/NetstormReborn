@@ -45,6 +45,12 @@ public:
     const std::int32_t& DefaultSp() const { return defaultSp_; } // 미션 AI의 별도 시작SP와 합치지 않는다.
     std::uint32_t& GeyserType() { return geyserType_; } //00541240: 실제 현재 간헐천 TYPE이며 Host pollType도 이 주소를 pin한다.
     const std::uint32_t& GeyserType() const { return geyserType_; } // 옵션/생성/목록의 같은 현재 TYPE다.
+    std::uint32_t& FirstTimerFactoryType() { return firstTimerFactoryType_; } //005411ac의 현재 DWORD를 Factory 최초 event2가 읽는다.
+    const std::uint32_t& FirstTimerFactoryType() const { return firstTimerFactoryType_; } // Runtime을 교체해도 같은85 초기값의 주소를 유지한다.
+    std::uint32_t& SecondTimerFactoryType() { return secondTimerFactoryType_; } //005411b4의 현재 DWORD를 Factory 최초 event1이 읽는다.
+    const std::uint32_t& SecondTimerFactoryType() const { return secondTimerFactoryType_; } // 첫 예약 콜백 뒤에도 같은 현재87 저장소를 읽는다.
+    std::uint32_t& OutpostType() { return outpostType_; } //00541250의 현재 제외 TYPE를 Factory 프레임·연구·업그레이드가 공유한다.
+    const std::uint32_t& OutpostType() const { return outpostType_; } //126 초기값을 미션 생성/반납에서 새로 쓰지 않는다.
     std::uint32_t& TerrainType() { return terrainType_; } //005411dc의 같은 현재 지면 TYPE를 영역 조회/진단이 빌린다.
     const std::uint32_t& TerrainType() const { return terrainType_; } // Session 교체로97의 새 사본을 만들지 않는다.
     std::uint32_t& EdgeFarmType() { return edgeFarmType_; } //0054123c의 같은 현재 가장자리 농장 TYPE다.
@@ -77,6 +83,7 @@ private:
     float lostX_{},lostY_{}; // 최초BSS+0이며 cleanup의-10000 입력과 구별한다.
     std::int32_t defaultSp_{2000}; // 보호 PE의 signed 기본SP다.
     std::uint32_t geyserType_{122},subscriberMarker_{}; // 보호 PE TYPE122와 별도BSS 표지다.
+    std::uint32_t firstTimerFactoryType_{85},secondTimerFactoryType_{87},outpostType_{126}; // 보호10.78 PE의 세 TYPE DWORD 초기값이며 일반 Runtime 초기화와 구별한다.
     std::uint32_t terrainType_{97},edgeFarmType_{121}; // 보호 PE 두 TYPE 전역이며 현재 Runtime 대여/반납은 초기화하지 않는다.
     std::int32_t worldGeyserMargin_{2}; //보호 PE00542654의 실제 초기 DWORD다.
     std::array<std::uint32_t,4> worldDecorationTypes_{100,184,101,185}; //실제 treeTwo/RUIN/treeThree/Monument 타입 순서다.

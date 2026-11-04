@@ -66,7 +66,7 @@ struct RawCampaignAssetBindings::Impl {
         gun=std::make_unique<o::RawGunProcess>(core.pool,core.types,globals.gun,GunHooks());
         postPop=std::make_unique<o::RawAssetPostPop>(core.pool,core.types,core.postPop,damageable,assets,PostHooks());
         postPop->BindPlayerRecords(players,&playerState.battleOwner);
-        factory=std::make_unique<o::RawFactoryPostPop>(core.pool,core.hash,core.types,core.frames,core.postPop,damageable,assets,FactoryHooks());
+        factory=std::make_unique<o::RawFactoryPostPop>(core.pool,core.hash,core.types,core.frames,core.postPop,damageable,assets,FactoryHooks(),globals.factoryTypes);
         auto assertion=effects.levelAssertion;RejectMissing(assertion,"캠페인 Factory 실제 Level 진단 미연결");
         level=std::make_unique<o::RawSquidLevel>(core.pool,core.types,std::move(assertion));
         regular=std::make_unique<o::RawAssetRegular>(core.pool,core.hash,core.types,core.frames,globals.elements,core.frame,advance,random,assets,globals.regular,RegularHooks());

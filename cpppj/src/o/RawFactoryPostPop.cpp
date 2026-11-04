@@ -74,7 +74,7 @@ void RawFactoryPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* 
 }
 // raw currentType/state/frame을 효과 후 다시 읽고 원본 signed DWORD 덧셈 감김을 유지한다.
 void RawFactoryPostPop::AdjustFrame(Sid sid) const {
-    if (pool_.Slot(sid)[10]==numbers_.fixedFrame) return;
+    if (pool_.Slot(sid)[10]==numbers_.FixedFrame()) return;
     const auto frame=pool_.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(pool_.Slot(sid),36)) : pool_.Slot(sid)[34];
     const auto count=Count(sid);if (count<0 || count>=16) throw std::out_of_range("Factory 현재 프레임 글자 물리 범위 오류");
     const auto run=CurrentFrames(sid).Run(static_cast<std::uint8_t>('A'+count)); // 00453798 가상80 뒤 004ac550의 현재 TYPE 조회 순서다.
@@ -97,8 +97,8 @@ void RawFactoryPostPop::PostPop(Sid sid,std::uint32_t flags) const {
         FactoryNeed(hooks_.regionOwnership)(Position(pool_.Slot(sid),14),Position(pool_.Slot(sid),18));
     }
     if (flags&1) {
-        if (pool_.Slot(sid)[10]==numbers_.firstTimerFactory) Regular(sid,2,8.0f);
-        if (pool_.Slot(sid)[10]==numbers_.secondTimer) Regular(sid,1,0.5f);
+        if (pool_.Slot(sid)[10]==numbers_.FirstTimer()) Regular(sid,2,8.0f);
+        if (pool_.Slot(sid)[10]==numbers_.SecondTimer()) Regular(sid,1,0.5f);
         if (patch) Regular(sid,5,0.5f);
     }
     damageable_.DamageablePostPop(sid,flags);AdjustFrame(sid);

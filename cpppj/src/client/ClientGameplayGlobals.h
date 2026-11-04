@@ -73,6 +73,12 @@ public:
     const std::shared_ptr<o::RawGameAuxState>& GameAux() const { return gameAux_; } // Storage와 같은17필드 owner 정체성을 빌린다.
     std::uint32_t& GeyserType() { return gameAux_->GeyserType(); } // Host/옵션/게임이 같은 TYPE DWORD를 직접 사용한다.
     const std::uint32_t& GeyserType() const { return gameAux_->GeyserType(); } // 현재 타입을 복사하지 않는다.
+    std::uint32_t& FirstTimerFactoryType() { return gameAux_->FirstTimerFactoryType(); } // 현재 Factory event2 TYPE의 Client 장기 저장소를 빌린다.
+    const std::uint32_t& FirstTimerFactoryType() const { return gameAux_->FirstTimerFactoryType(); } // Session이 교체돼도 같은 전체 DWORD를 읽는다.
+    std::uint32_t& SecondTimerFactoryType() { return gameAux_->SecondTimerFactoryType(); } // 현재 Factory event1 TYPE의 같은 주소다.
+    const std::uint32_t& SecondTimerFactoryType() const { return gameAux_->SecondTimerFactoryType(); } // 예약 콜백 중 변경도 다음 비교에 즉시 반영한다.
+    std::uint32_t& OutpostType() { return gameAux_->OutpostType(); } // Factory 프레임 제외와 기존 연구/업그레이드가 같은00541250을 사용한다.
+    const std::uint32_t& OutpostType() const { return gameAux_->OutpostType(); } // bool이나 TYPE BYTE로 좁히지 않는다.
     const std::shared_ptr<o::RawAuthorityState>& Authority() const { return authority_; } // 같은 두 bool의 장기 소유자 정체성을 직접 제공한다.
     std::uint32_t& LocalAddress() { return localAddress_; } //005953fc의 현재 주소DWORD를 PlayerFinder/객체메뉴가 같은 Client 수명에 빌린다.
     const std::uint32_t& LocalAddress() const { return localAddress_; } //미션/메뉴 교체 뒤에도 같은 현재 주소를 읽는다.
