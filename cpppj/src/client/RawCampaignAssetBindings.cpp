@@ -63,6 +63,8 @@ struct RawCampaignAssetBindings::Impl {
         const auto authority=world.Storage()->Authority().get(); // 같은 World가 모듈보다 오래 소유하는 두 bool의 실제 주소다.
         if ((assets.sharedAuthority && assets.sharedAuthority!=authority) || (globals.gun.sharedAuthority && globals.gun.sharedAuthority!=authority) || (globals.regular.sharedAuthority && globals.regular.sharedAuthority!=authority)) throw std::invalid_argument("캠페인 자산 실제 권한 소유자 불일치"); // 다른 실행기의 이미 연결한 권한 참조를 몰래 바꾸지 않는다.
         assets.sharedAuthority=authority;globals.gun.sharedAuthority=authority;globals.regular.sharedAuthority=authority; // 실제 조립은 한 owner만 연결하며 기존 bool 사본으로 동기화하지 않는다.
+        if (assets.currentBridgeType && assets.currentBridgeType!=&core.bridgeState.bridgeType) throw std::invalid_argument("캠페인 자산 현재 Bridge TYPE 소유자 불일치");
+        assets.currentBridgeType=&core.bridgeState.bridgeType; // WORD setter는 같은 World BridgeState의 현재 번호를 사용한다. Building 자체 TYPE 공유/진단 복귀는 후속 대조 대상이다.
         gun=std::make_unique<o::RawGunProcess>(core.pool,core.types,globals.gun,GunHooks());
         postPop=std::make_unique<o::RawAssetPostPop>(core.pool,core.types,core.postPop,damageable,assets,PostHooks());
         postPop->BindPlayerRecords(players,&playerState.battleOwner);
@@ -152,6 +154,7 @@ struct RawCampaignAssetBindings::Impl {
         hooks.notifySurface=[this](o::Sid sid) { core.building.NotifySurface(sid); };
         hooks.geyserRegistration=[this](o::Sid sid,std::uint32_t state) { geyser.Register(sid.value,state); };
         hooks.atPosition=[this](float x,float y) { return AtPosition(x,y); };
+        hooks.visitAtPosition=o::MakeAssetPostPopFinder(core.pool,core.hash,core.types); // 간헐천은 Unpop/Repop 효과 뒤 실제 일반 finder의 현재 Next를 소비한다.
         hooks.unpop=[this](o::Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.repop=[this](o::Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
         const auto typeDword=hooks.typeDword;
         hooks.typeDword=[this,typeDword](o::Sid sid,std::uint32_t offset) { const auto type=static_cast<std::size_t>(core.pool.Slot(sid)[10]);if (type>=core.frames.size()) throw std::out_of_range("캠페인 자산 현재TYPE 프레임 표 오류");if (offset==0x130 || offset==0x134) return std::bit_cast<std::uint32_t>(core.frames[type].Run(offset==0x130 ? 'A' : 'B').first);if (!typeDword) throw std::logic_error("캠페인 자산 실제 TYPE 추가DWORD 미연결");return typeDword(sid,offset); };

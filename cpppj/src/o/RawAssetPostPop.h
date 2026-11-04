@@ -7,6 +7,7 @@
 #include <span>
 
 namespace netstorm::o {
+class SquidHash; // 간헐천의 현재 일반 finder 연결에서 실제 네 공간 해시를 빌린다.
 // 원본 Player의 신전 네 필드를 유지한다. 복사본을 읽지 않도록 실행 월드가 이 저장소를 공유한다.
 struct AssetPostPopPlayer {
     // initialTemple: 초기 신전.
@@ -57,6 +58,9 @@ struct AssetPostPopState {
     const SquidPostPopList& Geysers() const { return sharedGeysers ? *sharedGeysers : geysers; } //AI/채집도 같은 활성 목록을 읽는다.
     SquidPostPopList& Outposts() { return sharedOutposts ? *sharedOutposts : outposts; } //지역 소유권과 캐리어의 현재 아웃포스트다.
     const SquidPostPopList& Outposts() const { return sharedOutposts ? *sharedOutposts : outposts; } //원본의 별도100칸 정체성을 보존한다.
+    std::uint32_t bridgeType{82}; // WORD setter004ac220/CD004abb00이 통지를 선택하는 독립 TYPE DWORD다.
+    const std::uint32_t* currentBridgeType{}; // 실제 World의 같은 현재 BridgeState TYPE를 빌리며 owner는 처리기보다 오래 살아야 한다.
+    std::uint32_t BridgeType() const { return currentBridgeType ? *currentBridgeType : bridgeType; } // WORD 저장 뒤 현재 TYPE 비교에서만 전체 DWORD를 읽는다.
 };
 // 외부 몸체를 생략하지 않고 호출 순서대로 연결하는 명시 경계다. 필요한 경계가 없으면 사전 검사에서 거부한다.
 struct AssetPostPopHooks {
@@ -94,6 +98,7 @@ struct AssetPostPopHooks {
     std::function<void(Sid,std::uint32_t)> sunFencePostPop; // 실제00457560의 이웃/연결선/Regular/Damageable 전체 몸체다.
     std::function<void(Sid,std::uint32_t)> nuggetPostPop; // 실제484f90의 조회/두 할당/게임 난수/Regular/Damageable 전체 몸체다.
     std::function<void(Sid,std::uint32_t)> growingIcePostPop; //150의48ead0/실제new40와현재numFrames/공통후처리다.
+    std::function<void(float,float,const std::function<void(Sid)>&)> visitAtPosition; // 간헐천의 현재 finder를 효과와 번갈아 전진한다. 동기 visitor만 허용하며 독립 입력은 기존 atPosition 벡터를 유지한다.
 };
 // 실제 PE 가상 표 +0x20에 따라 초기 요새 건물의 전용 몸체를 분배한다.
 class RawAssetPostPop {
@@ -156,4 +161,6 @@ private:
     // localOwner_: 효과 콜백이 변경할 수 있는 현재 원본 소유자 DWORD의 장기 주소다.
     const std::uint32_t* localOwner_{};
 };
+// 같은 풀/해시/현재 TYPE를 빌리는 일반 finder를 만든다. 각 visitor 뒤 Next를 실행하며 외부 저장소는 반환한 장치보다 오래 살아야 한다.
+std::function<void(float,float,const std::function<void(Sid)>&)> MakeAssetPostPopFinder(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types);
 }

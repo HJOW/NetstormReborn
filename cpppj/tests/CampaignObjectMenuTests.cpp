@@ -806,3 +806,34 @@ TEST_CASE(FactoryGlobalsCurrent_ActualFrameHelperReadsSharedTypeAfterCommon) { /
     core.postPop.BindPatchAiNotice([&](auto,Sid sid,bool) { CHECK(sid==source);++notices;gameplay->OutpostType()=74;write(0,0); });++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000001);CHECK(notices==1 && core.bookkeeping.depth==0 && raw[36]==7 && gameplay->OutpostType()==74);
     gameplay->OutpostType()=126;write(0,0x509148);write(36,0);++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000);CHECK(core.bookkeeping.depth==0 && raw[36]==0 && notices==1); // 현재 값을 돌린 뒤 일반 Count에 복귀하며 MP/Frame 틱은 실행하지 않는다.
 }
+
+TEST_CASE(AssetParentsCurrent_ActualSessionUsesSharedListsAndRealRegulars) { // 실제 Session의 두 부모가 같은 장기 목록/현재 비용과 실제 예약 Form을 사용한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();auto storage=session.World().Storage();std::array<int,2> point{};
+    for (int y=2;y<254 && !point[0];++y) { // 기존 지형을 바꾸지 않고 실제 finder의 네 단계가 모두 빈 위치를 찾는다.
+        for (int x=2;x<254;++x) { // 각 단계에서 방문하는 최대 네 버킷이 비었는지 확인한다.
+            bool empty=true;
+            for (int level=0;level<4 && empty;++level) { // 현재 일반 finder와 같은 단계별 좌표를 사용한다.
+                const auto scale=SquidHash::kScales[level],last=SquidHash::Side(level)-1;const auto left=x/scale,top=y/scale;
+                for (int by=top;by<=std::min(top+1,last) && empty;++by) { // 실제 Next가 보는 두 행만 읽는다.
+                    for (int bx=left;bx<=std::min(left+1,last);++bx) if (core.hash.Cell(level,bx,by)) empty=false; // 현재 머리를 수정하지 않는다.
+                }
+            }
+            if (empty) { point={x,y};break; }
+        }
+    }
+    CHECK(point[0]!=0);if (!point[0]) throw std::logic_error("자산 부모 검사의 실제 빈 해시 위치 없음");
+    auto players=session.PlayerRecords();std::array<std::array<std::uint8_t,4>,8> savedAi{};
+    for (std::size_t owner=1;owner<9;++owner) { // 원문이 지원하는 null AI 입력으로 등록 순회만 실행하며 실제 AI/적 행동은 실행하지 않는다.
+        const auto offset=owner*0xb4+0xb0;std::copy_n(players.begin()+offset,4,savedAi[owner-1].begin());std::fill_n(players.begin()+offset,4,std::uint8_t{});
+    }
+    core.postPop.BindPatchAiNotice([](auto,Sid,bool) {}); // 공통 부모의 외부 통지 경계이며 Geyser의 실제 null-AI 순회와 구별한다.
+    for (const auto typeNumber:{74U,122U}) { // 명시 일반 Residence VT와 실제 간헐천 TYPE의 첫 예약만 만들고 Process/Frame 틱은 실행하지 않는다.
+        const bool residence=typeNumber==74;auto& list=residence ? storage->sidLists.residences : storage->sidLists.geysers;const auto before=list.Count();const auto source=core.factory.Create(typeNumber);auto raw=core.pool.AllocatedBytes(source);
+        const auto write=[&](std::size_t offset,std::uint32_t value) { for (std::size_t index=0;index<4;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); }; // 이 새 슬롯의 VT/좌표/프레임만 명시한다.
+        write(0,residence ? 0x50f540U : 0x50da88U);write(14,std::bit_cast<std::uint32_t>(float(point[0])));write(18,std::bit_cast<std::uint32_t>(float(point[1])));write(36,5);raw[11]=raw[40]=0;raw[34]=1;storage->types[typeNumber].flags1=storage->types[typeNumber].flags2=0;storage->types[typeNumber].cost=123.75F;
+        ++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000001);CHECK(core.bookkeeping.depth==0 && list.Count()==before+1 && std::ranges::find(list.Items(),source.value)!=list.Items().end());
+        if (residence) CHECK(core.processes.FindEvent(source,0) && core.processes.FindEvent(source,1) && core.processes.FindEvent(source,3) && raw[42]==5);
+        else { auto* process=core.processes.FindEvent(source,0);CHECK(process && raw[12]==123 && raw[13]==0);if (process) CHECK(process->Payload()==0.1F && process->Count()==0); }
+    }
+    for (std::size_t owner=1;owner<9;++owner) std::copy(savedAi[owner-1].begin(),savedAi[owner-1].end(),players.begin()+owner*0xb4+0xb0); // 같은 실제 Player 포인터 DWORD 입력을 복구한다.
+}

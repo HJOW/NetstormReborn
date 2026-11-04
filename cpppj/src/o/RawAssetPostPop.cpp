@@ -2,6 +2,7 @@
 #include "o/RawAssetPostPop.h"
 #include "o/RawArcSpire.h"
 #include "o/RawAcidFence.h"
+#include "o/RawSquidFinder.h"
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -11,6 +12,16 @@
 
 namespace netstorm::o {
 namespace {
+template<class F> F AssetNeed(const F& function) { if (!function) throw std::logic_error("자산 후처리의 선택된 실제 장치 미연결");return function; } // 도달한 장치만 요구하며 콜백 중 callable의 수명을 유지한다.
+std::span<std::uint8_t> AssetSlot(SidPool& pool,Sid sid) { const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // 현재 free/contained와 무관하게 원문의 같은 물리 슬롯을 쓰며 SID 범위는 Slot이 확인한다.
+void AppendAssetList(SquidPostPopList& list,Sid sid) { // 원문 signed count/capacity 비교 뒤에만 실제 배열을 해석하고 store→inc 순서를 유지한다.
+    const auto used=list.Count();const auto capacity=list.Capacity();
+    if (capacity>0xffffffffU) throw std::out_of_range("자산 목록의 DWORD 용량 물리 범위 오류");
+    if (std::bit_cast<std::int32_t>(used)>=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(capacity))) return;
+    if (std::bit_cast<std::int32_t>(used)<0) throw std::out_of_range("자산 목록의 음수 저장 위치");
+    const auto storage=list.Storage();if (used>=storage.size()) throw std::out_of_range("자산 목록의 실제 저장 배열 범위 오류");
+    storage[used]=sid.value;list.SetCount(list.Count()+1U);
+}
 // 실제 후처리 몸체의 분류다. 숫자는 호스트 분배용이며 원본 타입 번호와 다르다.
 constexpr std::uint32_t kGenerator=1,kGunAngle=2,kGunFirst=3,kGunSun=4,kGunArcher=5,kGunDecoration=6,
     kResidence=7,kBlocker=8,kGeyser=9,kVortexRain=10,kVortexWind=11,kVortexThunder=12,kSunAviary=13,kSunFence=14,kRainAviary=15,kNugget=16,kWindAviary=17,kArcSpire=18,kAcidFence=19,kGrowingIce=20;
@@ -135,7 +146,7 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
     if (!hooks_.reserveRegular || !hooks_.addRegular) throw std::invalid_argument("자산 postPop Regular 경계 누락");
     if (kind==kResidence && (!hooks_.surface || !hooks_.setOwner || !hooks_.notifySurface))
         throw std::invalid_argument("거주 구역 지면/소유자/연결 경계 누락");
-    if (kind==kGeyser && (!hooks_.geyserRegistration || !hooks_.atPosition || !hooks_.unpop || !hooks_.repop))
+    if (kind==kGeyser && (!hooks_.geyserRegistration || (!hooks_.atPosition && !hooks_.visitAtPosition) || !hooks_.unpop || !hooks_.repop))
         throw std::invalid_argument("간헐천 등록/공간 경계 누락");
     if (kind>=kVortexRain && (!hooks_.typeDword || !hooks_.playImpactSound || !hooks_.setOwner || !hooks_.islandNumber ||
         !hooks_.islandExists || !hooks_.registerTemple || !hooks_.regionNumber || !hooks_.destroy || !hooks_.hasContent ||
@@ -145,7 +156,7 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
 }
 // 각각의 확보가 실패해도 뒤의 다음 확보/공통 후처리를 계속한다.
 void RawAssetPostPop::Regular(Sid sid,std::uint32_t event,float delay) const {
-    if (hooks_.reserveRegular()) hooks_.addRegular(sid,event,delay);
+    if (AssetNeed(hooks_.reserveRegular)()) AssetNeed(hooks_.addRegular)(sid,event,delay);
 }
 // 원문 assertion의 식과 정확한 파일/행을 현재 장치로 전달하며 성공을 합성하지 않는다.
 void RawAssetPostPop::GunAssertion(std::string_view expression,std::uint32_t line) const {
@@ -188,11 +199,11 @@ void RawAssetPostPop::Gun(Sid sid,std::uint32_t flags,std::uint32_t kind) const 
 void RawAssetPostPop::Residence(Sid sid,std::uint32_t flags) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (flags&1) {
-        const auto raw=pool_.Slot(sid);const auto surface=hooks_.surface(Position(raw,14),Position(raw,18));
-        if (surface.value) { const auto owner=pool_.Slot(surface)[patch ? 34 : 32];if (owner) hooks_.setOwner(sid,owner); }
-        Add(state_.Residences(),sid,false);Regular(sid,0,0);Regular(sid,1,0);
+        const auto raw=pool_.Slot(sid);const auto surface=AssetNeed(hooks_.surface)(Position(raw,14),Position(raw,18));
+        if (surface.value) { const auto owner=pool_.Slot(surface)[patch ? 34 : 32];if (owner) AssetNeed(hooks_.setOwner)(sid,owner); }
+        AppendAssetList(state_.Residences(),sid);Regular(sid,0,0);Regular(sid,1,0);
         if (patch) Regular(sid,3,0);
-        pool_.AllocatedBytes(sid)[12]&=0xf0;hooks_.notifySurface(sid);
+        AssetSlot(pool_,sid)[12]&=0xf0;AssetNeed(hooks_.notifySurface)(sid);
         if (patch) {
             auto value=std::bit_cast<std::int32_t>(Read(pool_.Slot(sid),36));
             if (state_.residenceAnimation) {
@@ -200,7 +211,7 @@ void RawAssetPostPop::Residence(Sid sid,std::uint32_t flags) const {
                 const auto group=value<6 ? 0 : value<12 ? 1 : value<18 ? 2 : 3;
                 value=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)-static_cast<std::uint32_t>(group*6));
             }
-            Write(pool_.AllocatedBytes(sid),42,std::bit_cast<std::uint32_t>(value),4);
+            Write(AssetSlot(pool_,sid),42,std::bit_cast<std::uint32_t>(value),4);
         }
     }
     base_.PostPopBase(sid,flags);
@@ -209,15 +220,22 @@ void RawAssetPostPop::Residence(Sid sid,std::uint32_t flags) const {
 void RawAssetPostPop::Geyser(Sid sid,std::uint32_t flags) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if ((flags&1) && !(pool_.Slot(sid)[patch ? 40 : 35]&9)) {
-        Add(state_.Geysers(),sid,false);hooks_.geyserRegistration(sid,1);
-        Write(pool_.AllocatedBytes(sid),12,Truncate(Type(sid).cost),2);Regular(sid,0,0.1f);
-        const auto raw=pool_.Slot(sid);const auto neighbors=hooks_.atPosition(Position(raw,14),Position(raw,18));
-        // 현재 지점에 걸린 섬 받침/종유석만 중립 프레임으로 다시 등록한다.
-        for (const auto neighbor:neighbors) {
+        AppendAssetList(state_.Geysers(),sid);AssetNeed(hooks_.geyserRegistration)(sid,1);
+        Write(AssetSlot(pool_,sid),12,Truncate(Type(sid).cost),2);
+        if (pool_.Slot(sid)[10]==state_.BridgeType()) AssetNeed(hooks_.notifySurface)(sid); //004ac220은 WORD 저장 뒤 현재 Bridge TYPE면004214a0을 먼저 호출한다.
+        Regular(sid,0,0.1f);
+        const auto raw=pool_.Slot(sid);
+        const auto visit=[this](Sid neighbor) { // 현재 후보의 TYPE를 읽고 Unpop→같은 물리 프레임→현재 가상 Repop 순서를 실행한다.
             const auto type=pool_.Slot(neighbor)[10];
             if (type==state_.islandType || type==state_.stalagType) {
-                hooks_.unpop(neighbor,0);Write(pool_.AllocatedBytes(neighbor),patch ? 36U : 34U,8,patch ? 4U : 1U);hooks_.repop(neighbor,0x40);
+                const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+                AssetNeed(hooks_.unpop)(neighbor,0);Write(AssetSlot(pool_,neighbor),patch ? 36U : 34U,8,patch ? 4U : 1U);AssetNeed(hooks_.repop)(neighbor,0x40);
             }
+        };
+        if (hooks_.visitAtPosition) AssetNeed(hooks_.visitAtPosition)(Position(raw,14),Position(raw,18),visit);
+        else { // 독립 입력의 기존 벡터 경계는 실제 현재 finder와 구별하여 유지한다.
+            const auto neighbors=AssetNeed(hooks_.atPosition)(Position(raw,14),Position(raw,18));
+            for (const auto neighbor:neighbors) visit(neighbor); // 실제 후속 후보 TYPE는 각 효과 뒤 다시 읽는다.
         }
     }
     damageable_.DamageablePostPop(sid,flags);
@@ -288,7 +306,8 @@ void RawAssetPostPop::Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) con
 }
 // 가상 표마다 복원한 몸체만 호출한다. 각 몸체는 공통 장부를 내부에서 정확히 한 번 호출한다.
 void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
-    Validate(sid,flags);const auto kind=Kind(sid);
+    const auto kind=Kind(sid);
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || (kind!=kResidence && kind!=kGeyser)) Validate(sid,flags); // 대조한 두 실제 PATCH 몸체만 전수 사전 검사 없이 실행하며 나머지 파생은 별도로 이어 대조한다.
     if (kind==kSunAviary) hooks_.sunAviaryPostPop(sid,flags);
     else if (kind==kNugget) hooks_.nuggetPostPop(sid,flags);
     else if (kind==kRainAviary) hooks_.rainAviaryPostPop(sid,flags);
@@ -307,4 +326,10 @@ void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
 }
 // 일반 Pop 분배와 같은 raw 저장소인지 검사하도록 반환한다.
 const SidPool& RawAssetPostPop::Pool() const { return pool_; }
+std::function<void(float,float,const std::function<void(Sid)>&)> MakeAssetPostPopFinder(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types) { //0041def0의 plain 정수화와 실제 일반 finder를 공유한다.
+    return [&pool,&hash,types](float x,float y,const std::function<void(Sid)>& visitor) {
+        const auto action=AssetNeed(visitor);const auto cellX=std::bit_cast<std::int32_t>(Truncate(x)),cellY=std::bit_cast<std::int32_t>(Truncate(y));RawSquidFinder finder(pool,hash,types);
+        for (auto sid=finder.Begin({cellX,cellY,cellX,cellY});sid.value;sid=finder.Next()) action(sid); // 후보 next 저장과 각 효과 뒤 현재 링크/버킷 전진 순서를 보존한다.
+    };
+}
 }

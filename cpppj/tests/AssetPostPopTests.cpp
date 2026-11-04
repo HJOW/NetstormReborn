@@ -321,3 +321,107 @@ TEST_CASE(GunPostPop_MissingSelectedDiagnosticAfterCreation) {
     scene.events.clear();hooks.checkForms=[](Sid) { return false; };RawAssetPostPop missingAssertion(scene.pool,scene.types,base,damageable,scene.state,hooks);
     CHECK(Throws([&] { missingAssertion.PostPop(kSource,1); }));CHECK(scene.events.size()==2 && scene.events.back()=="P:50");
 }
+
+namespace { // 현재 두 부모의 실제 PATCH 진입과 공유 물리 입력을 묶는다.
+void PrepareAssetCurrent(AssetScene& scene,std::uint32_t kind,std::uint32_t flags=1) { // 기대값을 만들지 않고 기존 장면에 명시 일반 입력만 공급한다.
+    auto row=Rows().front();row[1]=std::to_string(kind);row[2]=std::to_string(flags);row[3]="0";row[4]="0";row[5]="0";row[6]="0";row[7]="7";row[8]="0";row[9]="25";row[10]="0";row[11]="1000";row[12]="0";row[13]="0";row[14]="0";scene.Prepare(row);
+}
+std::span<std::uint8_t> AssetCurrentSlot(AssetScene& scene,Sid sid=kSource) { const auto raw=scene.pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // free 변경 뒤에도 같은 물리 바이트를 관찰한다.
+struct AssetCurrentBody { // 같은 장면의 공통·Damageable·가상 분배를 실제 제품 몸체로 구성한다.
+    AssetScene& scene; // 모든 처리기보다 오래 사는 입력/관찰 저장소다.
+    SquidPostPop base; // 정확히 한 번 감소해야 하는 실제 공통 깊이다.
+    RawCarrierPostPop damageable; // 간헐천의 직접 Damageable 부모다.
+    RawAssetPostPop assets; // 거주 구역/간헐천의 실제 전체 몸체다.
+    AssetCurrentBody(AssetScene& source,AssetPostPopHooks hooks):scene(source),base(scene.pool,scene.types,scene.baseState),damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base)),assets(scene.pool,scene.types,base,damageable,scene.state,std::move(hooks)) { base.SetAssetPostPop(&assets); } // 외부 효과만 입력으로 공급한다.
+    void Run(std::uint32_t flags=1) { ++scene.baseState.depth;base.PostPopVirtual(kSource,flags); } // 실제 상위가 증가시킨 깊이와 현재 VT+20을 사용한다.
+};
+}
+TEST_CASE(AssetParentsCurrent_ResidenceAndGeyserNative376Rows) { // 두 판본의 해당 두 원문 몸체만 전체 출력과 대조하며 다른 파생/공중/MP를 실행하지 않는다.
+    std::size_t count{};
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 판본별 기존 입력·기대값을 그대로 읽는다.
+        AssetScene scene(edition);
+        for (const auto& row:Rows()) { // 거주 구역6/간헐천8 이외의 몸체는 선택하지 않는다.
+            if (row[0]!=(scene.patch ? "originals" : "originalCD") || (row[1]!="6" && row[1]!="8")) continue;
+            scene.Prepare(row);SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,scene.Hooks());base.SetAssetPostPop(&assets);
+            if (scene.patch) { ++scene.baseState.depth;base.PostPopVirtual(kSource,Number(row[2])); }else base.Activate(kSource,Number(row[2]));
+            const auto output=scene.Output();const auto expected=std::vector<std::string>(row.begin()+15,row.end());CHECK(output==expected && scene.baseState.depth==0);++count;
+        }
+    }
+    CHECK(count==376);
+}
+TEST_CASE(AssetParentsCurrent_NoFirstFlagSkipsUnboundFrontDevices) { // 두 실제 부모 모두 최초가 아니면 TYPE/목록/예약 전수 검사를 추가하지 않는다.
+    for (const auto kind:{6U,8U}) { // 간헐천은 뒤 Damageable가 flags0을 읽는 것만 관측한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,kind,0);AssetCurrentSlot(scene)[10]=255;scene.state.temples.count=99;AssetCurrentBody body(scene,{});body.Run(0);CHECK(scene.baseState.depth==0 && scene.state.residences.count==0 && scene.state.geysers.count==0);
+        CHECK(scene.events==(kind==6 ? std::vector<std::string>{} : std::vector<std::string>{"D:0"}));
+    }
+}
+TEST_CASE(AssetParentsCurrent_MissingSurfaceStopsBeforeListAndRegular) { // 첫 거주 구역의 선택된 지면 장치가 없으면 앞선 쓰기는 없다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);auto hooks=scene.Hooks();hooks.surface={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.state.residences.count==0 && scene.allocated==0 && scene.baseState.depth==1 && scene.events.empty());
+}
+TEST_CASE(AssetParentsCurrent_OnlyNonzeroSurfaceOwnerRequiresSetter) { // 지면 없음/owner0은 소유자 장치를 선택하지 않고 owner2만 그 위치에서 중단한다.
+    for (const auto owner:{0U,2U}) { // 두 독립 입력의 부분 결과를 섞지 않는다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);AssetCurrentSlot(scene,Sid{60})[34]=static_cast<std::uint8_t>(owner);auto hooks=scene.Hooks();hooks.setOwner={};AssetCurrentBody body(scene,std::move(hooks));
+        if (owner) CHECK(Throws([&] { body.Run(); }) && scene.state.residences.count==0 && scene.allocated==0 && scene.baseState.depth==1);
+        else { body.Run();CHECK(scene.state.residences.count==1 && scene.allocated==3 && scene.baseState.depth==0); }
+    }
+}
+TEST_CASE(AssetParentsCurrent_FailedAllocationsSkipMissingConstructorAndExtraGate) { // 거주 구역은 extra9여도 최초 앞단을 실행하며 세 확보 실패는 생성자 누락을 요구하지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);scene.reserveMask=0;AssetCurrentSlot(scene)[40]=9;scene.state.temples.count=99;auto hooks=scene.Hooks();hooks.surface=[](float,float) { return Sid{}; };hooks.setOwner={};hooks.addRegular={};AssetCurrentBody body(scene,std::move(hooks));body.Run();
+    CHECK(scene.events==(std::vector<std::string>{"A:40","A:40","A:40","N:50"}) && scene.state.residences.count==1 && scene.baseState.depth==0 && Get(scene.pool.Slot(kSource),42)==25 && scene.pool.Slot(kSource)[12]==0xc0);
+}
+TEST_CASE(AssetParentsCurrent_LateNotifyFailureRetainsListReservationsAndNibble) { // 지면 통지가 없을 때 앞선 목록/예약/하위 nibble 쓰기를 보존하고 잔여 프레임/공통은 미도달이다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);auto hooks=scene.Hooks();hooks.surface=[](float,float) { return Sid{}; };hooks.notifySurface={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }));CHECK(scene.state.residences.count==1 && scene.allocated==3 && scene.events.size()==6 && scene.pool.Slot(kSource)[12]==0xc0 && Get(scene.pool.Slot(kSource),42)==0 && scene.baseState.depth==1);
+}
+TEST_CASE(AssetParentsCurrent_NotifyChangesCurrentFrameNibbleAndAnimation) { // 통지 뒤 현재 프레임·nibble·애니메이션 플래그로 잔여 값을 계산한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);scene.reserveMask=0;auto hooks=scene.Hooks();hooks.surface=[](float,float) { return Sid{}; };hooks.notifySurface=[&](Sid sid) { auto raw=AssetCurrentSlot(scene,sid);raw[12]|=5;Put(raw,36,17);scene.state.residenceAnimation=true; };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(Get(scene.pool.Slot(kSource),42)==3 && Get(scene.pool.Slot(kSource),36)==17 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetParentsCurrent_OwnerCallbackKeepsPhysicalFreeContainedSlot) { // 소유자 콜백이 free/contained와 TYPE를 바꿔도 같은 물리 슬롯의 원문 쓰기를 유지한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);scene.reserveMask=0;auto hooks=scene.Hooks();hooks.setOwner=[&](Sid sid,auto owner) { auto raw=AssetCurrentSlot(scene,sid);raw[34]=static_cast<std::uint8_t>(owner);raw[11]=9;raw[10]=255; };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.pool.Slot(kSource)[11]==9 && scene.pool.Slot(kSource)[10]==255 && scene.pool.Slot(kSource)[12]==0xc0 && Get(scene.pool.Slot(kSource),42)==25 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetParentsCurrent_SignedFullListSkipsUnneededStorage) { // signed count>=capacity면 과거 배열 포인터와 쓰기 장치를 해석하지 않는다.
+    for (const auto pair:{std::array<std::uint32_t,2>{7,4},{0,0xffffffffU},{0xffffffffU,0xfffffffeU}}) { // 양수 초과와 두 음수 용량 비교를 실제 jge에 맞춰 공급한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);scene.reserveMask=0;SquidPostPopList current;current.BindCurrent({[]()->std::span<std::uint32_t> { throw std::logic_error("가득 찬 목록의 미도달 저장소"); },[&] { return pair[1]; },[&] { return pair[0]; },[](auto) { throw std::logic_error("가득 찬 목록의 미도달 쓰기"); }});scene.state.sharedResidences=&current;
+        auto hooks=scene.Hooks();hooks.surface=[](float,float) { return Sid{}; };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.allocated==3 && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(AssetParentsCurrent_NegativeStoreRejectsOnlyAtPhysicalWrite) { // signed 음수 위치가 실제 저장을 선택하면 앞선 지면 효과 뒤 호스트 물리 범위 오류로 중단한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);SquidPostPopList current;current.BindCurrent({[]()->std::span<std::uint32_t> { throw std::logic_error("음수 위치의 미도달 저장소"); },[] { return 4U; },[] { return 0xffffffffU; },[](auto) { throw std::logic_error("미도달 쓰기"); }});scene.state.sharedResidences=&current;auto hooks=scene.Hooks();hooks.surface=[&](float,float) { scene.events.push_back("S");return Sid{}; };AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events==std::vector<std::string>{"S"} && scene.allocated==0 && scene.baseState.depth==1);
+}
+TEST_CASE(AssetParentsCurrent_BoundListStoresBeforeIncrementAndKeepsDuplicates) { // 같은 현재 배열/count를 쓰며 중복 SID와 비활성 꼬리를 보존한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);scene.reserveMask=0;std::array<std::uint32_t,3> values{7,8,9};std::uint32_t count{};SquidPostPopList current;current.BindCurrent({[&] { return std::span(values); },[] { return 3U; },[&] { return count; },[&](auto value) { CHECK(values[count]==50);count=value; }});scene.state.sharedResidences=&current;auto hooks=scene.Hooks();hooks.surface=[](float,float) { return Sid{}; };AssetCurrentBody body(scene,std::move(hooks));body.Run();body.Run();CHECK(count==2 && values==(std::array<std::uint32_t,3>{50,50,9}) && scene.state.residences.count==0 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetParentsCurrent_MissingGeyserRegistrationRetainsList) { // 실제 등록 장치 앞의 간헐천 목록 추가를 사전 누락 검사로 지우지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);auto hooks=scene.Hooks();hooks.geyserRegistration={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.state.geysers.count==1 && scene.state.geysers.entries[0]==50 && scene.allocated==0 && scene.baseState.depth==1);
+}
+TEST_CASE(AssetParentsCurrent_GeyserExtraGateSkipsUnboundFront) { // extra9는 목록/등록/예약/이웃을 생략하고 실제 Damageable만 호출한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);AssetCurrentSlot(scene)[40]=9;AssetCurrentBody body(scene,{});body.Run();CHECK(scene.events==std::vector<std::string>{"D:1"} && scene.state.geysers.count==0 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetParentsCurrent_GeyserRegistrationChangesCurrentTypeCost) { // 등록 콜백 뒤 현재 TYPE의 비용을 WORD로 저장하고 확보 실패 뒤에도 이웃/공통으로 진행한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);scene.reserveMask=0;auto hooks=scene.Hooks();hooks.geyserRegistration=[&](Sid sid,auto value) { CHECK(value==1);scene.events.push_back("G");AssetCurrentSlot(scene,sid)[10]=75;scene.types[75].cost=513.875F; };hooks.addRegular={};hooks.atPosition=[&](float,float) { scene.events.push_back("P");return std::vector<Sid>{}; };hooks.unpop={};hooks.repop={};AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(Get(scene.pool.Slot(kSource),12,2)==513 && scene.events==(std::vector<std::string>{"G","A:40","P","D:1"}) && scene.baseState.depth==0);
+}
+TEST_CASE(AssetParentsCurrent_GeyserMissingRepopRetainsUnpopAndFrame) { // 현재 이웃 Unpop이 free로 바꾼 뒤에도 프레임8은 저장되며 미연결 Repop 위치에서 중단한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);auto hooks=scene.Hooks();hooks.unpop=[&](Sid sid,auto flags) { CHECK(sid==Sid{60} && flags==0);scene.events.push_back("U");AssetCurrentSlot(scene,sid)[11]=1; };hooks.repop={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }));CHECK(scene.state.geysers.count==1 && Get(scene.pool.Slot(kSource),12,2)==1000 && scene.pool.Slot(Sid{60})[11]==1 && Get(scene.pool.Slot(Sid{60}),36)==8 && Get(scene.pool.Slot(Sid{61}),36)==0 && scene.events.back()=="U" && scene.baseState.depth==1);
+}
+TEST_CASE(AssetParentsCurrent_GeyserBadCurrentTypeFollowsRegistration) { // 현재 TYPE 오류는 목록/등록 뒤 실제 비용 조회에서만 거부한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);auto hooks=scene.Hooks();hooks.geyserRegistration=[&](Sid sid,auto) { scene.events.push_back("G");AssetCurrentSlot(scene,sid)[10]=255; };AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.state.geysers.count==1 && scene.events==std::vector<std::string>{"G"} && scene.allocated==0 && scene.baseState.depth==1);
+}
+TEST_CASE(AssetParentsCurrent_GeyserNoIslandSkipsUnboundSpaceDevices) { // 현재 후보가 받침 TYPE가 아니면 Unpop/Repop 장치를 요구하지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);AssetCurrentSlot(scene,Sid{60})[10]=75;auto hooks=scene.Hooks();hooks.atPosition=[](float,float) { return std::vector<Sid>{Sid{60}}; };hooks.unpop={};hooks.repop={};AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.baseState.depth==0 && scene.events.back()=="D:1");
+}
+TEST_CASE(AssetParentsCurrent_GeyserLiveFinderFollowsEffectsBetweenCandidates) { // 실제 일반 finder는 첫 효과가 바꾼 다음 후보의 링크를 이후 Next에서 읽는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);SquidHash hash;hash.Cell(1,25,26)=60;
+    for (const auto sid:{Sid{60},Sid{61},Sid{62},Sid{63}}) { // 입력 체인은60→61→62이며 같은 위치/발자국의63은 아직 체인 밖이다.
+        auto raw=AssetCurrentSlot(scene,sid);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=sid.value==60 ? 94 : 95;Put(raw,4,sid.value==60 ? 61U : sid.value==61 ? 62U : 0U,2);Put(raw,14,std::bit_cast<std::uint32_t>(50.0F));Put(raw,18,std::bit_cast<std::uint32_t>(52.0F));
+    }
+    scene.types[94].footX=scene.types[94].footY=scene.types[95].footX=scene.types[95].footY=1;auto hooks=scene.Hooks();hooks.visitAtPosition=MakeAssetPostPopFinder(scene.pool,hash,scene.types);hooks.atPosition={};
+    hooks.unpop=[&](Sid sid,auto) { scene.events.push_back("U"+std::to_string(sid.value));if (sid.value==60) Put(AssetCurrentSlot(scene,Sid{61}),4,63,2); };hooks.repop=[&](Sid sid,auto flags) { CHECK(flags==0x40 && Get(scene.pool.Slot(sid),36)==8);scene.events.push_back("V"+std::to_string(sid.value)); };
+    AssetCurrentBody body(scene,std::move(hooks));body.assets.Validate(kSource,1);CHECK(scene.events.empty());body.Run();CHECK(scene.events==(std::vector<std::string>{"G:50:1","A:40","R:50:0:1036831949","U60","V60","U61","V61","U63","V63","D:1"}) && Get(scene.pool.Slot(Sid{62}),36)==0 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetParentsCurrent_GeyserWordSetterNotifiesCurrentBridgeBeforeRegular) { // 현재 다리 번호와 같으면 WORD 저장 뒤 통지를 실행하고 그 콜백 뒤 새 TYPE/좌표로 진행한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);std::uint32_t bridge=70;scene.state.currentBridgeType=&bridge;auto hooks=scene.Hooks();
+    hooks.notifySurface=[&](Sid sid) { CHECK(Get(scene.pool.Slot(sid),12,2)==1000);scene.events.push_back("H");AssetCurrentSlot(scene,sid)[10]=75;Put(AssetCurrentSlot(scene,sid),14,std::bit_cast<std::uint32_t>(40.0F));scene.types[75].cost=12; };
+    hooks.atPosition=[&](float x,float y) { CHECK(x==40.0F && y==52.0F);scene.events.push_back("P");return std::vector<Sid>{}; };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.events==(std::vector<std::string>{"G:50:1","H","A:40","R:50:0:1036831949","P","D:1"}) && Get(scene.pool.Slot(kSource),12,2)==1000 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetParentsCurrent_GeyserMissingBridgeNoticeRetainsWord) { // 선택된 다리 통지가 없으면 이미 끝난 목록/등록/WORD를 보존하고 예약 전에 중단한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);scene.state.bridgeType=70;auto hooks=scene.Hooks();hooks.notifySurface={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.state.geysers.count==1 && Get(scene.pool.Slot(kSource),12,2)==1000 && scene.events==std::vector<std::string>{"G:50:1"} && scene.allocated==0 && scene.baseState.depth==1);
+}
