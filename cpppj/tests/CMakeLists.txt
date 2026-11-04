@@ -3443,6 +3443,7 @@ target_sources(netstorm_tests PRIVATE MissileCheckingTests.cpp)
 target_sources(netstorm_tests PRIVATE RewardTypeNumberTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE RewardTypeNumberTests.cpp DamageablePostDestroyTests.cpp DamageablePostDestroyHostTests.cpp) # 현재 보상/삭제 TYPE 번호와 기존 비멀티 수치·수명만 선택 실행한다(단위869).
 target_sources(netstorm_pop_context_tests PRIVATE GeyserMinedTests.cpp ContentLifetimeTests.cpp ConstructionPlaceTests.cpp PathRetargetTests.cpp) # 현재 너겟 번호의 공통 단가/비용과 기존 비멀티 부품만 선택하며 패킷/통신/의식 효과 검사는 실행하지 않는다(단위871).
+target_sources(netstorm_pop_context_tests PRIVATE InventoryAboutMenuTests.cpp NuggetRegularTests.cpp) # 생산 정보 현재 번호와 너겟 실제 VT·기존 독립 수치만 선택한다(단위872).
 target_sources(netstorm_pop_context_tests PRIVATE MissileCheckingTests.cpp MissileTests.cpp ArcherMissileTests.cpp CrossbowMissileTests.cpp ThunderMissileTests.cpp IceMissileInitialTests.cpp) # 비멀티 투사체의 현재 진단/Host와 기존 수치 원문만 선택 실행한다(단위867).
 target_compile_definitions(netstorm_pop_context_tests PRIVATE
     NETSTORM_REWARD_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/reward-x86.tsv"

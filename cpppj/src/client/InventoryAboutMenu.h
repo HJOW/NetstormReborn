@@ -7,6 +7,12 @@ namespace netstorm::client {
 struct InventoryAboutState {
     std::uint32_t suppressedClass{122},none{164},dais{165},fullValue{154}; // 회수 제외 클래스/개수 보정 종류/전액 종류다.
     std::uint32_t salvageCommand{0x0200005d},helpCommand{0x02000017}; // 실제 회수와 Quick Help 명령이다.
+    const std::uint32_t* sharedSuppressedClass{};const std::uint32_t* sharedAltarType{}; // 실제00541240/005412e8의 현재 간헐천 클래스와 제단 번호다.
+    const std::uint32_t* sharedDaisType{};const std::uint32_t* sharedNuggetType{}; //005412ec/005412c0을 같은 Client의 장기 owner에서 빌린다.
+    const std::uint32_t& SuppressedClass() const { return sharedSuppressedClass ? *sharedSuppressedClass : suppressedClass; } // 편집 관문이 돌아온 뒤 현재 회수 제외 클래스를 읽는다.
+    const std::uint32_t& AltarType() const { return sharedAltarType ? *sharedAltarType : none; } // 정수 비용 조회 뒤 개수0의 제단 보정을 선택한다.
+    const std::uint32_t& DaisType() const { return sharedDaisType ? *sharedDaisType : dais; } // 같은 현재 번호로 다이스의 개수0 합을 선택한다.
+    const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : fullValue; } // 현재 너겟만1/4 배율을 생략하고 독립 입력의 기존 필드는 유지한다.
 };
 // 게임 조회와 메뉴 작성/가상 부착을 실제 현재 소비자에 연결한다.
 struct InventoryAboutHooks {

@@ -1634,7 +1634,7 @@ struct RawCampaignSession::Impl {
     // 썬 바리케이드의 특수457990 전처리는 다른 일반 Damageable에 적용하지 않는다.
     bool SunFence(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==136 && Read(raw,0)==0x509470; }
     // 보호50dc30의+14는484f80→44b4b0 thunk이며+18/+10도기존Damageable/공통삭제다. 메뉴 범위와는 별개다.
-    bool Nugget(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==154 && Read(raw,0)==0x50dc30U; }
+    bool Nugget(Sid sid) const { return Read(core.pool.Slot(sid),0)==0x50dc30U; } // 원문 파생 가상표의 삭제/후처리이며 표시 TYPE154 사본을 추가로 요구하지 않는다.
     // 실제 사제 보호막167/507770의 공통 수명만 추가한다. 펜스 보호막170과 구별한다.
     bool PriestForcefield(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==167 && Read(raw,0)==0x507770U; }
     // 다섯 직접 Carrier의 +14=426890/+18=44b9e0이다. 5040c0은 별도42ae80이므로 포함하지 않는다.

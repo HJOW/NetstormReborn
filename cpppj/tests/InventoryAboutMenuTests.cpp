@@ -2,6 +2,7 @@
 #include "GumpRawSupport.h"
 #include "RawSceneSupport.h"
 #include "client/InventoryAboutMenu.h"
+#include "o/RawGameAuxState.h" // 실제 Client와 같은 현재 TYPE 번호 owner를 메뉴 콜백에 빌린다.
 using namespace netstorm::client;
 using namespace netstorm::test::gumpraw;
 namespace {
@@ -56,3 +57,16 @@ void Native(const char* fixture,bool withClass,std::size_t expected) {
 TEST_CASE(InventoryAboutMenu_Native1296) { Native(NETSTORM_INVENTORY_ABOUT_FIXTURE,false,1296); }
 // 실제 내용물 클래스6과 회수 제외122의2592행이다.
 TEST_CASE(InventoryAboutMenu_NativeClasses2592) { Native(NETSTORM_INVENTORY_ABOUT_CLASS_FIXTURE,true,2592); }
+
+// 비용 장치가 돌아온 뒤 현재 제단/다이스/너겟 번호를 읽어 회수 문구를 계산한다(단위872).
+TEST_CASE(NuggetMenuCurrent_RefundReadsCurrentNumbersAfterCost) {
+    AboutScene scene({"6","70","32","0","1000",std::to_string(std::bit_cast<std::uint32_t>(2000.F)),"2"},true);netstorm::o::RawGameAuxState owner;scene.state.sharedAltarType=&owner.AltarType();scene.state.sharedDaisType=&owner.DaisType();scene.state.sharedNuggetType=&owner.NuggetType();std::uint32_t costs=0;std::vector<std::string> salvage;auto hooks=scene.Hooks();
+    hooks.cost=[&](auto kind) { CHECK(kind==70);if (++costs==2) owner.NuggetType()=70;return 1000; };hooks.entry=[&](std::optional<std::string_view> text,auto command,auto,auto,auto,auto) { if (command==scene.state.salvageCommand) { CHECK(text.has_value());if (text) salvage.emplace_back(*text); } };
+    InventoryAboutMenu menu(scene.pool,scene.state,std::move(hooks));CHECK(menu.Open(scene.item,{17,-9})==1);owner.AltarType()=70;CHECK(menu.Open(scene.item,{17,-9})==1);owner.AltarType()=164;owner.DaisType()=70;CHECK(menu.Open(scene.item,{17,-9})==1);owner.DaisType()=165;owner.NuggetType()=154;CHECK(menu.Open(scene.item,{17,-9})==1);
+    CHECK(costs==8 && salvage==std::vector<std::string>({"Salvage for 1000~[IfortGump.3]","Salvage for 0~[IfortGump.3]","Salvage for 0~[IfortGump.3]","Salvage for 250~[IfortGump.3]"}));
+}
+TEST_CASE(NuggetMenuCurrent_SuppressedClassReadsOwnerAfterEditorGate) { // 편집 관문 뒤의 현재 클래스와 독립 fallback 필드를 구별한다.
+    AboutScene scene({"6","70","32","0","1000",std::to_string(std::bit_cast<std::uint32_t>(2000.F)),"2"},true);netstorm::o::RawGameAuxState owner;scene.state.sharedSuppressedClass=&owner.GeyserType();std::uint32_t salvage=0;bool change=true;auto hooks=scene.Hooks();
+    hooks.editor=[&] { if (change) owner.GeyserType()=6;return false; };hooks.entry=[&](auto,auto command,auto,auto,auto,auto) { if (command==scene.state.salvageCommand) ++salvage; };InventoryAboutMenu menu(scene.pool,scene.state,std::move(hooks));CHECK(menu.Open(scene.item,{17,-9})==1 && salvage==0);
+    change=false;owner.GeyserType()=122;scene.state.suppressedClass=6;CHECK(menu.Open(scene.item,{17,-9})==1 && salvage==1); // 연결된 owner122가 기존 사본6보다 우선한다.
+}

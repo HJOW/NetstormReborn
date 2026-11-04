@@ -70,6 +70,14 @@ TEST_CASE(NuggetRegular_NativeAnimationFallGroundAndRandom) {
 // 초기count와정상분배/명시늦은효과누락은서로구별한다.
 TEST_CASE(NuggetRegular_LazyBoundariesAndExactVtable) {
     NuggetRegularScene scene;scene.Prepare({0,0,1,0x3e99999aU,1,4,0,0x41a40000U,0x41aa0000U,1,0,1,0,0,0});RawNuggetRegular logic(scene.pool,scene.counts,scene.spots,scene.boss,{});
-    CHECK(logic.Handles(Sid{50}));CHECK(logic.Handle(Sid{50},2,0,0.3F)==0.3F);Put(scene.Raw(),0,0xdeadbeefU);CHECK(!logic.Handles(Sid{50}));Put(scene.Raw(),0,kNativeVt);scene.Raw()[10]=155;CHECK(!logic.Handles(Sid{50}));
+    CHECK(logic.Handles(Sid{50}));CHECK(logic.Handle(Sid{50},2,0,0.3F)==0.3F);Put(scene.Raw(),0,0xdeadbeefU);CHECK(!logic.Handles(Sid{50}));Put(scene.Raw(),0,kNativeVt);scene.Raw()[10]=155;CHECK(logic.Handles(Sid{50}));
     bool rejected{};try { static_cast<void>(logic.Handle(Sid{50},2,1,0.3F)); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected);
+}
+
+// 실제 VT 진입 뒤 현재 TYPE의 A구간을 사용하며 초기count는 하위 장치를 요구하지 않는다(단위872).
+TEST_CASE(NuggetMenuCurrent_RegularUsesActualVtableAndCurrentTypeFrames) {
+    NuggetRegularScene scene;scene.Prepare({0,1,1,0x3e800000U,1,99,6,0x41a40000U,0x41aa0000U,1,0,0,0,0,0});scene.Raw()[10]=70;scene.counts[70]=3;std::uint32_t frames=0,refreshes=0,reservations=0;NuggetRegularHooks hooks;
+    hooks.setFrame=[&](Sid sid,auto frame,auto flags) { CHECK(sid==Sid{50} && frame==2 && flags==0);++frames;Put(scene.Raw(),36,std::bit_cast<std::uint32_t>(frame)); };hooks.refresh=[&](Sid sid) { CHECK(sid==Sid{50} && scene.Raw()[10]==70);++refreshes; };hooks.allocate=[&] { ++reservations;return false; };
+    RawNuggetRegular regular(scene.pool,scene.counts,scene.spots,scene.boss,std::move(hooks));CHECK(regular.Handles(Sid{50}) && regular.Handle(Sid{50},1,1,0)==0.1F);CHECK(frames==1 && refreshes==1 && Get(scene.Raw(),36)==2);CHECK(regular.Handle(Sid{50},1,1,0)==0 && reservations==1);
+    CHECK(regular.Handle(Sid{50},2,0,.25F)==.25F);Put(scene.Raw(),0,0x501dd0);scene.Raw()[10]=154;CHECK(!regular.Handles(Sid{50})); // TYPE154여도 다른 가상표는 너겟 분배 대상이 아니다.
 }

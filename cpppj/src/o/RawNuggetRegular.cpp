@@ -26,7 +26,7 @@ RawNuggetRegular::RawNuggetRegular(SidPool& pool,std::span<const std::int32_t> a
     :pool_(pool),aFrameCounts_(aFrameCounts),spots_(spots),boss_(boss),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || aFrameCounts.size()!=188 || spots.size()!=65536) throw std::invalid_argument("너겟Regular는PATCH188TYPE/65536spot이필요합니다");
 }
-bool RawNuggetRegular::Handles(Sid sid) const { const auto raw=pool_.Slot(sid);return raw[10]==154 && Read(raw,0)==0x50dc30U; }
+bool RawNuggetRegular::Handles(Sid sid) const { return Read(pool_.Slot(sid),0)==0x50dc30U; } // 실제 가상 진입은 현재 TYPE/할당 상태를 새 선행 조건으로 사용하지 않는다.
 bool RawNuggetRegular::CanFall(Sid sid) const {
     const auto raw=pool_.Slot(sid);const auto y=Cell(std::bit_cast<float>(Read(raw,18))),x=Cell(std::bit_cast<float>(Read(raw,14)));const auto index=(y<<8)+x;
     if (index>=spots_.size()) throw std::out_of_range("너겟지면조회가원본지도물리범위를벗어났습니다");

@@ -11,7 +11,7 @@ InventoryAboutMenu::InventoryAboutMenu(const o::SidPool& pool,InventoryAboutStat
 std::uint32_t InventoryAboutMenu::Word(o::Sid sid,std::size_t offset) const { const auto raw=pool_.Slot(sid);return raw[offset]|(std::uint32_t(raw[offset+1])<<8); }
 //43cb53/43cb57은 정수 비용을 먼저 float로 저장한다. 개수0의 합/quarter에는 그 저장값을 승격한다.
 std::int32_t InventoryAboutMenu::Refund(std::uint32_t kind) const {
-    const float cost=static_cast<float>(hooks_.cost(kind));double sum=(kind==state_.none || kind==state_.dais) ? 0. : static_cast<double>(cost);if (kind!=state_.fullValue) sum*=0.25;
+    const float cost=static_cast<float>(hooks_.cost(kind));double sum=(kind==state_.AltarType() || kind==state_.DaisType()) ? 0. : static_cast<double>(cost);if (kind!=state_.NuggetType()) sum*=0.25;
     return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(sum)));
 }
 // 설명/비용/부족 머리/선택 회수/Help/현재 루트 부착/음향의 원본 순서다.
@@ -20,7 +20,7 @@ std::uint32_t InventoryAboutMenu::Open(const InventoryItemNode& item,ScreenPoint
     const auto owner=hooks_.templateOwner();hooks_.describe(Word(content,18),0,owner,0xffffffffU);
     const auto kind=Word(content,18);const auto costPattern=hooks_.translate("Cost: ~i%d~[IfortGump.3]~.\n");const auto cost=hooks_.cost(kind);hooks_.header(hooks_.print(costPattern,cost));
     if (!hooks_.affordable(content)) hooks_.header(hooks_.translate("~r~ENeed more Storm Power to Build!\n"));
-    if (!hooks_.editor() && (Word(content,20)&0x20) && pool_.Slot(content)[10]!=state_.suppressedClass) {
+    if (!hooks_.editor() && (Word(content,20)&0x20) && pool_.Slot(content)[10]!=state_.SuppressedClass()) {
         const auto pattern=hooks_.translate("Salvage for %d~[IfortGump.3]");const auto refund=Refund(Word(content,18));const auto label=hooks_.print(pattern,refund);hooks_.entry(label,state_.salvageCommand,item.object,true,true,false);
     }
     const auto helpKind=Word(content,18);const auto help=hooks_.helpWord();hooks_.entry(help ? std::optional<std::string_view>(*help) : std::nullopt,state_.helpCommand,helpKind,true,true,false);

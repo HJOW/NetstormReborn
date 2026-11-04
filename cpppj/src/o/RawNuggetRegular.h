@@ -18,7 +18,7 @@ struct NuggetRegularHooks {
 class RawNuggetRegular {
 public:
     RawNuggetRegular(SidPool& pool,std::span<const std::int32_t> aFrameCounts,std::span<const std::uint8_t> spots,const bool& boss,NuggetRegularHooks hooks); // PATCH188TYPE/65536spot과현재권한을받는다.
-    bool Handles(Sid sid) const; // 실제154/50dc30쌍의485230만자동분배한다.
+    bool Handles(Sid sid) const; // 현재 VT50dc30의 실제 가상5c=485230을 분배하며 TYPE는 각 몸체의 읽기 위치에서 사용한다.
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const; // count0초기지연뒤실제0/1/2/3사건을처리한다.
     bool CanFall(Sid sid) const; // 485fe0: 실제ftol하위DWORD/감긴지도색인에서spot&6이없으면참이다.
     const SidPool& Pool() const; // 다른Session의상태와실제예약을혼합하지않게한다.

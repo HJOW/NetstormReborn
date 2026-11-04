@@ -1,0 +1,368 @@
+{
+ "unit": 872,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "0d82e448 / 20261105-05 CP",
+ "exeSha256": "302c9c97bb968e22b1bff7ebc1003ad7126808d70625f33dffa21382dce614cd",
+ "exeBytes": 10592768,
+ "scope": [
+  "InventoryAboutState의 현재 간헐천/제단/다이스/너겟 번호와 실제 OpenProduction 장기 owner 연결",
+  "비용/편집 콜백 뒤 현재 번호 조회",
+  "RawNuggetRegular 및 Session 삭제/후처리의 실제 VT 단독 분배"
+ ],
+ "sourceSha256": {
+  "cpppj/src/client/CampaignObjectMenuClient.cpp": "b3799f43b0c1011f4d958288d7575f4e0788753986ab2c184d5a8f13d90d60b6",
+  "cpppj/src/client/InventoryAboutMenu.cpp": "0df55fd8b3bb73d1700d280b051d45d776f4e74ea3f829d7d47e9ac7bd377dd0",
+  "cpppj/src/client/InventoryAboutMenu.h": "921a9c844be67576c5fccd1bcc850096c6db67e958c451732f7b42376f765bc3",
+  "cpppj/src/client/RawCampaignSession.cpp": "8cc3daba9b87917b5637a986f57d2ba416067969e6560ff6a6aa584787d340f7",
+  "cpppj/src/o/RawNuggetRegular.cpp": "c75c22e8273b1113187c25770ef4134410b4d72aa2b672796015d23ea23ecbc7",
+  "cpppj/src/o/RawNuggetRegular.h": "5193471888436c4836376f25a04047a7982846988d164cfb3ecbc38fc3695691",
+  "cpppj/tests/CMakeLists.txt": "e09f5abc12c3b15971badff3178527c820c02d5d3fe557c27d9f61587d377e37",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "679356e73f210158c8e1b21e04fc68929bef4cce2d642c5dc9e4369ff25a4f2f",
+  "cpppj/tests/InventoryAboutMenuTests.cpp": "79ef1b20b19a5f56a3c8c1dcfd3f4e3e8d88020bb29f1f431704aec1d7d108b0",
+  "cpppj/tests/NuggetRegularTests.cpp": "4a18ff39da2bce92e6601af87449e0d04eab1a133837980b600bfb885450eabf"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/client/CampaignObjectMenuClient.cpp": "b3799f43b0c1011f4d958288d7575f4e0788753986ab2c184d5a8f13d90d60b6",
+  "cpppj/src/client/InventoryAboutMenu.cpp": "0df55fd8b3bb73d1700d280b051d45d776f4e74ea3f829d7d47e9ac7bd377dd0",
+  "cpppj/src/client/InventoryAboutMenu.h": "921a9c844be67576c5fccd1bcc850096c6db67e958c451732f7b42376f765bc3",
+  "cpppj/src/client/RawCampaignSession.cpp": "8cc3daba9b87917b5637a986f57d2ba416067969e6560ff6a6aa584787d340f7",
+  "cpppj/src/o/RawNuggetRegular.cpp": "c75c22e8273b1113187c25770ef4134410b4d72aa2b672796015d23ea23ecbc7",
+  "cpppj/src/o/RawNuggetRegular.h": "5193471888436c4836376f25a04047a7982846988d164cfb3ecbc38fc3695691",
+  "cpppj/tests/CMakeLists.txt": "e09f5abc12c3b15971badff3178527c820c02d5d3fe557c27d9f61587d377e37",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "fc98eb6dd4f378058ab4e53f49d7cd02174e5a6acf6154f3335981db6d7b7725",
+  "cpppj/tests/InventoryAboutMenuTests.cpp": "79ef1b20b19a5f56a3c8c1dcfd3f4e3e8d88020bb29f1f431704aec1d7d108b0",
+  "cpppj/tests/NuggetRegularTests.cpp": "4a18ff39da2bce92e6601af87449e0d04eab1a133837980b600bfb885450eabf"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-872/originals-0043cb30.c": "11557846e00a8c39bb29b497fc389d8032b888f6b10bfa0204d76d8fe4b1255f",
+  "extracted/cpp-resume-872/originals-0043d330.c": "4126b03f0a3ff51e5103f304ded4d2d370ffd6323b24d138c358f932ed2aa0cf",
+  "extracted/cpp-resume-872/originals-004850a0.c": "1273b76198483afdd3072d257ed12937aeeace97a0be14f4f02eda476450d8e2",
+  "extracted/cpp-resume-872/originals-00485170.c": "813bb1640b1d513444b127186c6cdd5e9e86f18d6ddbe46333ed8c9475816e36",
+  "extracted/cpp-resume-872/originals-00485230.c": "06f99ee39856ce80640a2a0dda03017659a0a9b55b89d6a1723db88a8851aa31"
+ },
+ "peVtable": {
+  "vtable": "0050dc30",
+  "slot": "5c",
+  "function": "00485230",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+ },
+ "builds": [
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 138.6346196,
+   "log": "extracted/cpp-resume-872/build-first.log",
+   "logSha256": "0e8c009b3081abc265fdc4329a7c72915b06ad959e9395975364d29642918147",
+   "warningCount": 0,
+   "errorCount": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 35.518967499999995,
+   "log": "extracted/cpp-resume-872/build-corrected.log",
+   "logSha256": "e09b094dfa3b2e4048a7f3eba0be262339267df77698812ea837a06d918afd98",
+   "warningCount": 0,
+   "errorCount": 0
+  }
+ ],
+ "firstTestExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "NuggetMenuCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-menu-nugget-current-first.log",
+   "sha256": "88a9ffe725e68e6b7dfcb678e8df7e788b010b9ef9956f0e7e8c062aa68df9a4"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "NuggetMenuCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 1,
+   "failedChecks": 1,
+   "exitCode": 1,
+   "log": "extracted/cpp-resume-872/test-nugget-vtable-session-first.log",
+   "sha256": "8e8eba6a1165b8f39245f91223cdfe90ebc9bb58ed2ceffd1a8b20ce6b6a9477"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "InventoryAboutMenu_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-inventory-native-first.log",
+   "sha256": "8df505b0787fc43605548149e6be02406fdcd17ebdd39f0a111cda039732f396"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "NuggetRegular_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-native-first.log",
+   "sha256": "5cb0d61badbdfa441ed5b8a9b22c0308a7c4abe7d37929cf30abe73f5d257ab8"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "CampaignContentPreview_RealNuggetInitialRegulars",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-initial-first.log",
+   "sha256": "c9e335c753c15c7cbf341194af2fb1a81cff81ce0e36bdd7c25ec4f61f5e7bfd"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "CampaignNuggetRegular_ActualAnimationAndFallLifecycle",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-lifecycle-first.log",
+   "sha256": "1181682bb3e371c0634285eb3e907cd921190c24bf8278a5ff5f4f3fda890eb4"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "AssetTailCurrent_ActualSessionSharesGrowthAndNuggetRegulars",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-tail-first.log",
+   "sha256": "8b6058b9c5a5f4c7f7b4f4863fc4ed6c15693ce8c6e1c2f98f8d9236e01c8141"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "NuggetTypeNumber_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-number-session-first.log",
+   "sha256": "45b1e98987573811500039e98c9ae23427180cbd39d962f2ce9175c92679175a"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-rune-session-first.log",
+   "sha256": "d05ccbcfe6bd015163388cb8a7cf8c62f73bfdb46c21a078facb93d8b7eb3943"
+  }
+ ],
+ "finalTestExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "NuggetMenuCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-menu-nugget-current-corrected.log",
+   "sha256": "88a9ffe725e68e6b7dfcb678e8df7e788b010b9ef9956f0e7e8c062aa68df9a4"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "NuggetMenuCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-vtable-session-corrected.log",
+   "sha256": "2d064c3e23f39100189dfc9a1c41050b166905da68a4840d3eeae8b17be61f1c"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "InventoryAboutMenu_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-inventory-native-corrected.log",
+   "sha256": "8df505b0787fc43605548149e6be02406fdcd17ebdd39f0a111cda039732f396"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "NuggetRegular_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-native-corrected.log",
+   "sha256": "5cb0d61badbdfa441ed5b8a9b22c0308a7c4abe7d37929cf30abe73f5d257ab8"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "CampaignContentPreview_RealNuggetInitialRegulars",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-initial-corrected.log",
+   "sha256": "c9e335c753c15c7cbf341194af2fb1a81cff81ce0e36bdd7c25ec4f61f5e7bfd"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "CampaignNuggetRegular_ActualAnimationAndFallLifecycle",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-lifecycle-corrected.log",
+   "sha256": "1181682bb3e371c0634285eb3e907cd921190c24bf8278a5ff5f4f3fda890eb4"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "AssetTailCurrent_ActualSessionSharesGrowthAndNuggetRegulars",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-tail-corrected.log",
+   "sha256": "8b6058b9c5a5f4c7f7b4f4863fc4ed6c15693ce8c6e1c2f98f8d9236e01c8141"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "NuggetTypeNumber_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-nugget-number-session-corrected.log",
+   "sha256": "45b1e98987573811500039e98c9ae23427180cbd39d962f2ce9175c92679175a"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-872/test-rune-session-corrected.log",
+   "sha256": "d05ccbcfe6bd015163388cb8a7cf8c62f73bfdb46c21a078facb93d8b7eb3943"
+  }
+ ],
+ "uniqueCases": [
+  [
+   "netstorm_menu_session_tests",
+   "AssetTailCurrent_ActualSessionSharesGrowthAndNuggetRegulars"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "CampaignContentPreview_RealNuggetInitialRegulars"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "CampaignNuggetRegular_ActualAnimationAndFallLifecycle"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "NuggetMenuCurrent_ActualSessionSchedulesSuccessorWithActualVtable"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "NuggetTypeNumber_ActualSessionChoiceGetterReadsCurrentNuggetOwner"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneTypeNumber_ActualSessionChoiceGetterReadsCurrentDaisOwner"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "InventoryAboutMenu_Native1296"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "InventoryAboutMenu_NativeClasses2592"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "NuggetMenuCurrent_RefundReadsCurrentNumbersAfterCost"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "NuggetMenuCurrent_RegularUsesActualVtableAndCurrentTypeFrames"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "NuggetMenuCurrent_SuppressedClassReadsOwnerAfterEditorGate"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "NuggetRegular_LazyBoundariesAndExactVtable"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "NuggetRegular_NativeAnimationFallGroundAndRandom"
+  ]
+ ],
+ "newCases": 4,
+ "uniqueCaseCount": 13,
+ "groups": 9,
+ "firstFailedCases": 1,
+ "firstFailedChecks": 1,
+ "corrections": [
+  "빌드 전 기존 수동 너겟 TYPE155 거부 단언1곳을 실제 VT 근거로 수락으로 교정. 원문 fixture 변경0.",
+  "최초 실제 Session 검사 입력 raw[11]=4는 Regular 미배치 관문에서 반환하므로0으로 교정. 제품코드 추가 수정0. 기존/새 기대값 추가 수정0."
+ ],
+ "changedAfterFirstBuild": [
+  "cpppj/tests/CampaignObjectMenuTests.cpp"
+ ],
+ "existingNativeRows": {
+  "inventoryAbout": 3888,
+  "nuggetRegular": 9019
+ },
+ "newNativeRows": 0,
+ "newFixtures": 0,
+ "fixtureExpectationsChanged": 0,
+ "manualAssertionsCorrectedBeforeFirstBuild": 1,
+ "protectedFiles": 2761,
+ "protectedFixtureFiles": 941,
+ "protectedChanged": 0,
+ "protectedAfterSha256": "f762a5e5138d30748d8dc97d07d20266e33c8b0b02afaa1f8f231869fbb60dea",
+ "checkingRemaining": {
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "total": 10
+ },
+ "checkingCompleted": {
+  "parents": 38,
+  "partial": 3
+ },
+ "limitations": [
+  "실제 게임/GUI/포획/희생/특정 적 공격/승리와 신규MP/패킷/통신 검사0",
+  "공중3종 전용/물리입력/PCM/CD/전체71/CTest/34미션/ZIP 반복0",
+  "새 실제 Session은 합성 너겟의 첫 예약 끝점과 후속 Regular 생성/반납만 실행. 전체 메뉴 GUI/전체 Pop 검증 아님.",
+  "다이스/제단 다른 가상 진입/현재모드/전체 Pop 및 LEFT_JOBS의 전체 목표 미완료"
+ ],
+ "nextUnit": 873
+}

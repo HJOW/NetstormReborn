@@ -156,6 +156,8 @@ std::uint32_t CampaignObjectMenuClient::OpenProduction(GameWorld& world,const In
     Clear();auto& s=*impl_;s.world=&world;std::uint32_t accepted{};
     s.buttons.Menus()->OpenAttached([&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& raw) {
         s.chain=world.Session().MakeObjectMenus(s.Ui(widgets,controls,raw));InventoryAboutState state;InventoryAboutHooks h;
+        const auto currentTypes=world.Session().World().Storage()->GameAux(); // 메뉴 콜백 중에도 같은 장기 owner의 주소 수명을 유지한다.
+        state.sharedSuppressedClass=&currentTypes->GeyserType();state.sharedAltarType=&currentTypes->AltarType();state.sharedDaisType=&currentTypes->DaisType();state.sharedNuggetType=&currentTypes->NuggetType(); // 비용/편집 장치가 돌아온 뒤 실제 현재 번호를 읽는다.
         h.begin=[&] { s.root=widgets.BeginFancy();return s.root; };h.root=[&s] { return s.buttons.RegisteredGump(0); };h.templateOwner=[&] { return world.Session().TemplateOwner(); };h.editor=[&] { return world.Session().Editor()!=0; };
         h.cost=[&](auto kind) { return world.Session().HitPoints().TypeCostUnits(kind); };h.affordable=affordable;
         h.helpWord=[&s]()->std::optional<std::string> { std::string word;if (!s.client.Configuration().ReadString("helpWord",word)) return std::nullopt;const auto bytes=o::EncodeOriginalText(word);return std::string(bytes.begin(),bytes.end()); };
