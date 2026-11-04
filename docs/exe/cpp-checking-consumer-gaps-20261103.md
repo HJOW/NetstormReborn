@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**864 보호막 Regular 현재 접속:**PATCH 도달 장치·현재 사제 TYPE/실제 typed finder·VT 분배와 checking 진단 정상 복귀를 연결했다. 고유31개/6묶음(새10) 최종 실패0·Release2회 종료0·보호2761개 불변이다. 기존 노후 Pop guard1개/2단언은 검사만 교정했다. 다음865는 공통 후처리 별도 비용 캐시이며 checking12·완료부모36/부분3 유지다. [864 기록](cpp-forcefield-regular-current-20261104.md).
+
 **863 현재 TYPE 표의 보상HP/사제상태:**실제 PATCH Session/사제 World에 같은188TYPE 대여를 연결하고 독립/CD 사본 및 별도 정수 비용 캐시를 보존했다. 집중49개/9묶음(새6) 첫 실패0·Release2회 종료0·보호2761개 불변이다. 다른 TYPE 번호·보호막 Regular·Teleport/전체 Pop은864 이후이며 checking12·완료부모36/부분3 유지다. [863 기록](cpp-reward-current-types-20261104.md).
 
 **862 사제 postPop 현재 접두:**PATCH 004950f0의 일괄 Validate/할당 확인을 제거해 물리 슬롯·00414450 signed 목록·도달 장치만 요구하고, 회복 분자와 0049fce0 1/4 비교를 현재 사제 TYPE DWORD(005412d0/CD0051cbbc)에 연결했다. PATCH 가상 분배는 실제 VT만 쓴다. 고유90개/14묶음 최종 실패0·새7개(최초 검사 입력 오류5개 교정)·기존 접두7176/후반6144/Pop3840행·보호2761개 불변이다. 다른 현재 가상20/공유 TYPE 사본·전체 Pop은 863 이후이며 checking12·완료부모36/부분3 유지다. [862 기록](cpp-priest-postpop-current-20261104.md).

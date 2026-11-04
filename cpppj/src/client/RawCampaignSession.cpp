@@ -987,6 +987,8 @@ struct RawCampaignSession::Impl {
             IslandRuntimeHooks{[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); },SessionMissing<void,IslandRuntimeAssertion>()});
         // 일반 Acquire의 fresh 호환 준비 또는 실제 앞 cleanup/prefix가 같은 섬 물리를 준비한다. prepared 생성자는 다시 Reset하지 않는다.
         auto priestEffects=services.priest;
+        priestEffects.forcefieldAssertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { const auto assertion=services.ai.assertion;if (!assertion) throw std::logic_error("보호막 Regular 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }; // 원문 진단이 정상 복귀하면0 반환을 계속한다(단위864).
+        priestEffects.findTypeAt=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); }; // 같은 현재 TYPE/해시와 원문 타입별 단계 선택을 공유한다.
         priestEffects.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         priestEffects.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
         priestEffects.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };

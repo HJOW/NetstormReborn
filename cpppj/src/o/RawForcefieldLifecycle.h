@@ -5,6 +5,7 @@
 #include "o/RawPriestPostPop.h"
 #include "o/RawSquidFinder.h"
 #include "o/SquidProcess.h"
+#include <string_view>
 
 namespace netstorm::o {
 // 보호막이 사용하는 실제 타입/가상 표와 두 Regular 사건 번호다. 주소는 실행하지 않는다.
@@ -37,13 +38,22 @@ private:
     ForcefieldPostPopHooks hooks_;
 };
 // 사제 타입 DWORD는 매 검사 때 읽는다. 소유자는 존재 검사의 조건이 아니다.
-struct ForcefieldRegularState { /* priestType: 사제 자산을 타입 표에서 찾는 번호. */ std::uint32_t priestType{kPriestType};/* debug: 원본 assert 경계와 진단 출력을 검사할지. */ RawCheckingFlag debug{}; };
+struct ForcefieldRegularState {
+    std::uint32_t priestType{kPriestType}; // 독립 재생이 공급하는 현재 사제 TYPE 번호다.
+    RawCheckingFlag debug{}; // 실제 checking DWORD의 현재 비영 여부를 읽는다.
+    const std::uint32_t* sharedPriestType{}; // 실제 PATCH의005412d0을 빌리며 원래 소유자는 더 오래 살아야 한다(단위864).
+    std::uint32_t PriestType() const { return sharedPriestType ? *sharedPriestType : priestType; } // 사건2의 검색 요청 시점에 현재 DWORD 전체를 읽는다.
+};
 // 프레임 진행/가상 삭제만 외부 효과이며 위치의 일반 finder는 실제 모듈을 사용한다.
 struct ForcefieldRegularHooks {
     // advance: 대상의 프레임 진행과 후속 변경을 실행하는 콜백.
     std::function<void(Sid,std::int32_t,std::uint32_t)> advance;
     // destroy: 대상의 실제 삭제 경로를 실행하는 콜백.
     std::function<void(Sid,std::uint32_t)> destroy;
+    // PATCH 미지원 사건의 원문 진단이다. 정상 복귀하면0 반환을 계속하며 선택될 때만 필요하다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion;
+    // 실제004b1fa0/CD004eb4b0의 타입별 단계 선택을 재사용한다. 독립 기존 재생은 비어 있을 때 기존 finder 입력 계약을 쓴다.
+    std::function<Sid(float,float,std::uint32_t)> findTypeAt;
 };
 // 사용: Handle을 Regular 처리기에 연결하고 advance/destroy를 같은 월드의 실제 모듈로 공급한다.
 class RawForcefieldRegular {
@@ -52,7 +62,8 @@ public:
     RawForcefieldRegular(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
         const ForcefieldRegularState& state,ForcefieldRegularHooks hooks);
     // 사건 1은 (1,0) 진행 뒤 0.08f, 사건 2는 사제가 있으면 0.01f/없으면 destroy(0) 뒤 -1이다.
-    // 다른 사건은 0이며 패치 debug 모드에서는 원본 assert 대신 예외로 진단한다. count/payload는 읽지 않는다.
+    // 다른 사건은0이며 PATCH checking의 선택 진단이 정상 복귀하면 계속0을 반환한다. count/payload는 읽지 않는다.
+    // PATCH는 도달 장치만 요구하고 객체 사전 검사를 넣지 않는다. CD의 기존 구성/객체 계약은 유지한다(단위864).
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const;
     // 풀/프레임 진행 어댑터의 연결을 확인한다.
     const SidPool& Pool() const;

@@ -105,6 +105,10 @@ struct RawPriestWorldEffects {
     o::PriestRegenHooks regen;
     // otherWalkerFall: 사제 이외 이동 유닛의 실제 추락 경로를 호출하는 콜백.
     std::function<bool(o::Sid)> otherWalkerFall;
+    // 보호막 Regular의 현재 checking 진단을 실제 Client로 전달한다. 미지원 사건에서 선택될 때만 요구한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> forcefieldAssertion;
+    // 보호막의 현재 사제 TYPE 검색을 월드의 실제004b1fa0에 연결한다. 독립 구성의 기존 finder는 선택 입력으로 유지한다.
+    std::function<o::Sid(float,float,std::uint32_t)> findTypeAt;
 };
 // 사용 순서: 생성→ProcessHost(RegularHandler/DestroyHooks) 생성→BindProcesses→후속 모듈 Bind다.
 // 로딩 Pop 전에 BindProcesses가 필요하며, 삭제/해방 전에는 Damageable/Placement도 연결해야 한다.

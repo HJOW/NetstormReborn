@@ -31,7 +31,7 @@ void ValidateObject(const SidPool& pool,Sid sid) {
         throw std::invalid_argument("보호막 타입/가상 표 불일치");
 }
 // 실제로 선택된 예약/생성 장치만 요구하며 호출 동안 callable의 사본을 유지한다.
-template<class Function> Function PrefixNeed(const Function& function) { if (!function) throw std::logic_error("보호막 postPop 선택 예약 효과 미연결");return function; }
+template<class Function> Function PrefixNeed(const Function& function) { if (!function) throw std::logic_error("보호막 선택 효과 미연결");return function; }
 }
 // PATCH의 효과는 실제 호출 위치에서 확인하며 CD의 기존 구성 사전 계약은 유지한다.
 RawForcefieldPostPop::RawForcefieldPostPop(const SidPool& pool,ForcefieldPostPopHooks hooks):pool_(pool),hooks_(std::move(hooks)) {
@@ -51,27 +51,35 @@ const SidPool& RawForcefieldPostPop::Pool() const { return pool_; }
 // 현재 타입 표를 참조하며 조회마다 독립 finder를 만든다.
 RawForcefieldRegular::RawForcefieldRegular(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
     const ForcefieldRegularState& state,ForcefieldRegularHooks hooks):pool_(pool),hash_(hash),types_(types),state_(state),hooks_(std::move(hooks)) {
-    if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || !hooks_.advance || !hooks_.destroy)
+    if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) ||
+        (pool.Edition()!=OriginalEdition::Patch1078 && (!hooks_.advance || !hooks_.destroy)))
         throw std::invalid_argument("보호막 Regular 타입/효과 연결 오류");
 }
 // 후보의 소유자/HP/state는 별도 필터가 아니다. 일반 finder의 매장 제외/발자국 조건만 적용한다.
 Sid RawForcefieldRegular::FindPriest(Sid sid) const {
+    // 실제 월드는 같은 typed finder에 raw float와 현재 사제 DWORD를 전달한다. 해당 원문 helper가 TYPE별 단계/좌표를 처리한다.
+    if (const auto find=hooks_.findTypeAt) {
+        const auto type=state_.PriestType();const auto raw=pool_.Slot(sid);
+        const auto y=std::bit_cast<float>(Read(raw,18)),x=std::bit_cast<float>(Read(raw,14));
+        return find(x,y,type);
+    }
     const auto raw=pool_.Slot(sid);const int x=Cell(std::bit_cast<float>(Read(raw,14))),y=Cell(std::bit_cast<float>(Read(raw,18)));
     RawSquidFinder finder(pool_,hash_,types_);
     // 현재 해시 체인의 순서를 유지하며 DWORD 타입을 BYTE로 줄이지 않는다.
     for (Sid current=finder.Begin({x,y,x,y});current.value;current=finder.Next())
-        if (pool_.Slot(current)[10]==state_.priestType) return current;
+        if (pool_.Slot(current)[10]==state_.PriestType()) return current;
     return {};
 }
 // 삭제 효과가 실행 중인 Regular도 지울 수 있으므로 이후 그 객체/슬롯을 다시 쓰지 않는다.
 float RawForcefieldRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t,float) const {
-    ValidateObject(pool_,sid);
-    if (event==kForcefieldFrameEvent) { hooks_.advance(sid,1,0);return kFrameInterval; }
+    if (pool_.Edition()!=OriginalEdition::Patch1078) ValidateObject(pool_,sid);
+    if (event==kForcefieldFrameEvent) { PrefixNeed(hooks_.advance)(sid,1,0);return kFrameInterval; }
     if (event==kForcefieldCheckEvent) {
         if (FindPriest(sid).value) return kCheckInterval;
-        hooks_.destroy(sid,0);return -1.0f;
+        PrefixNeed(hooks_.destroy)(sid,0);return -1.0f;
     }
-    if (pool_.Edition()==OriginalEdition::Patch1078 && state_.debug) throw std::logic_error("보호막 Regular 미지원 사건 assert");
+    // 진단이 처리기나 부모를 삭제해도 선택 callable의 사본으로 호출을 마치며 이후 슬롯/상태를 읽지 않는다.
+    if (pool_.Edition()==OriginalEdition::Patch1078 && state_.debug) PrefixNeed(hooks_.assertion)("0",".\\Dais.cpp",0x479);
     return 0.0f;
 }
 // 실제 프레임 진행의 같은 월드 연결을 확인한다.

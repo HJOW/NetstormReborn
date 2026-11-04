@@ -1,0 +1,279 @@
+{
+ "unit": 864,
+ "date": "2026-11-04",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "2c25ad04 / 20261104-51 CP",
+ "exeSha256": "c83b6833fd20e265c1db208a495e023d849ce417911a8c2b436806a970abdf40",
+ "exeBytes": 10586112,
+ "scope": [
+  "PATCH 보호막 Regular의 일괄 객체 검사 제거와 도달 advance/destroy/진단 장치만 요구",
+  "현재 checking DWORD·진단0/.\\Dais.cpp:0x479의 정상 복귀 뒤0 반환",
+  "사제 TYPE는 같은 movement.priest 현재 DWORD를 검색 요청 때 읽음",
+  "실제 Session typed finder/실제 VT만의 보호막 Regular 분배",
+  "독립 기존 finder/CD 구성·객체 사전 계약 보존"
+ ],
+ "sourceSha256": {
+  "cpppj/src/o/RawForcefieldLifecycle.h": "c387e19cfa1e1ab2e3303d3747e2d28b7a16013146dadaad3f97bba6e7169526",
+  "cpppj/src/o/RawForcefieldLifecycle.cpp": "f9e2413e8e8b0a388f8edfa8fa48355bcfc4425cd6094c638bc7cae3968b5bbd",
+  "cpppj/src/client/RawPriestWorldBindings.h": "ca209b9725a35b8f5d6580d397810b4a7fb28269bd41d5ddec5abdcb12fdd67b",
+  "cpppj/src/client/RawPriestWorldBindings.cpp": "64e608d384fc25334b5693313e40cf852d3ac4bb4ef411e5d2960a9f2f43d84b",
+  "cpppj/src/client/RawCampaignSession.cpp": "fa44c5749b918db37c1ec8ef0df3795c53f116d03985ed26b304b54cd280df0c",
+  "cpppj/tests/ForcefieldRegularCurrentTests.cpp": "3d3488a20d800c8fafce35af18e4111bfbe80e988e451e579d98e48d65422665",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "0ad92f2d34fa0b00d345b641b3e8104bd7011a026530cf5d2327f5cfbb693d4a",
+  "cpppj/tests/CMakeLists.txt": "be52a6a4b1b1c35752295700c626b915c8c531899edefbfb92718f41bb6b3875",
+  "cpppj/tests/ForcefieldLifecycleTests.cpp": "33073760d747854872a3a6ac3df4a76fc2db8c0a37f576d56b8650a1f0599668"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/o/RawForcefieldLifecycle.h": "c387e19cfa1e1ab2e3303d3747e2d28b7a16013146dadaad3f97bba6e7169526",
+  "cpppj/src/o/RawForcefieldLifecycle.cpp": "f9e2413e8e8b0a388f8edfa8fa48355bcfc4425cd6094c638bc7cae3968b5bbd",
+  "cpppj/src/client/RawPriestWorldBindings.h": "ca209b9725a35b8f5d6580d397810b4a7fb28269bd41d5ddec5abdcb12fdd67b",
+  "cpppj/src/client/RawPriestWorldBindings.cpp": "64e608d384fc25334b5693313e40cf852d3ac4bb4ef411e5d2960a9f2f43d84b",
+  "cpppj/src/client/RawCampaignSession.cpp": "fa44c5749b918db37c1ec8ef0df3795c53f116d03985ed26b304b54cd280df0c",
+  "cpppj/tests/ForcefieldRegularCurrentTests.cpp": "3d3488a20d800c8fafce35af18e4111bfbe80e988e451e579d98e48d65422665",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "0ad92f2d34fa0b00d345b641b3e8104bd7011a026530cf5d2327f5cfbb693d4a",
+  "cpppj/tests/CMakeLists.txt": "be52a6a4b1b1c35752295700c626b915c8c531899edefbfb92718f41bb6b3875"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-864/originalCD-004848c0.c": "240a94011f3565b4d35c645eed1e38c99f9e6d31c46f493bad40e3d8a417714e",
+  "extracted/cpp-resume-864/originalCD-004eb4b0.c": "5345bba0ea08406e29e26a1fc9cca260520cbf7c4a65555a9887f2c104e7a649",
+  "extracted/cpp-resume-864/originals-00448e00.c": "70838d413dd3f0771aa0ab0c2204d2a8a5a877c4987324648e0b7c08d8ff49fa",
+  "extracted/cpp-resume-864/originals-004b1fa0.c": "90f409c653a5ac99c6517d218a7224354ddf638bb2d5ff7aa3f1dbb6e6aa9f27"
+ },
+ "assertionString": {
+  "address": "0050161c",
+  "bytes": "3000",
+  "expression": "0"
+ },
+ "validation": {
+  "cases": 31,
+  "groups": 6,
+  "newCases": 10,
+  "firstFailedCases": 1,
+  "firstFailedChecks": 2,
+  "finalFailedCases": 0,
+  "failedChecks": 0,
+  "productChangesAfterFirstBuild": 0,
+  "newNativeObservations": 0,
+  "newFixtures": 0,
+  "existingExpectationsChanged": false,
+  "manualGuardCorrection": "기존 ForcefieldLifecycle_RequiresBindingAndDiagnosesInvalidEvents의 PATCH Pop 무변경 기대를 명시 base.Validate로 옮겼다. 두 최초 실패는 Regular 구성 전 842 이후 Pop 부분 효과에서 발생하여 이번 제품 변경 미도달이다. 기존 fixture/기대값 변경0.",
+  "builds": [
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 651.640549,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-864/build-first.log",
+    "sha256": "5aa2f67577a43ffaddbf69869e95db5de706162362dd03bd47b040b2cd217c76",
+    "targets": [
+     "NetstormCpp",
+     "netstorm_pop_context_tests",
+     "netstorm_menu_session_tests"
+    ]
+   },
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 11.325390299999999,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-864/build-corrected.log",
+    "sha256": "5ab7c3d2c4e8a9ab2ccb276f570b7d1560c6b7aa2e7ab35b35c62911a104d65d",
+    "targets": [
+     "netstorm_pop_context_tests"
+    ]
+   }
+  ],
+  "executionsFirst": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "ForcefieldRegularCurrent_",
+    "cases": 8,
+    "expectedCases": 8,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-current-regular-first.log",
+    "sha256": "8be852b04ed64016362cc96be68e70da253c6c7f5c556bcec37fa326f0d319ba"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "ForcefieldRegularCurrent_",
+    "cases": 2,
+    "expectedCases": 2,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-current-session-first.log",
+    "sha256": "f2aabf5ada4eb68c6b64eab50dfb0074964a15206393d6d80909e7442973add8"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "ForcefieldLifecycle_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 1,
+    "failedChecks": 2,
+    "exitCode": 1,
+    "log": "extracted/cpp-resume-864/test-lifecycle-existing-first.log",
+    "sha256": "ff3d6b17b0b4ac656c33ce6511826892c1821702d7e61373e86c928f28b66d2c"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PostPrefixCurrent_Forcefield",
+    "cases": 9,
+    "expectedCases": 9,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-prefix-existing-first.log",
+    "sha256": "642b1085f0ec890cb3eabec4ff1c12fb5d8ee884cd535ab506f5068bc7560a40"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestPostPopCurrent_",
+    "cases": 6,
+    "expectedCases": 6,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-priest-prefix-existing-first.log",
+    "sha256": "2285a6bcbadbca369852b6b4cc983925af092c4ebaf243ad2cc5fe1394d3816d"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "PriestPostPopCurrent_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-priest-session-existing-first.log",
+    "sha256": "b88ecef3120d27e537280a69b6c06e0f0aded8d09e081a490fde4e6a7fa9c078"
+   }
+  ],
+  "executions": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "ForcefieldRegularCurrent_",
+    "cases": 8,
+    "expectedCases": 8,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-current-regular-first.log",
+    "sha256": "8be852b04ed64016362cc96be68e70da253c6c7f5c556bcec37fa326f0d319ba"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "ForcefieldRegularCurrent_",
+    "cases": 2,
+    "expectedCases": 2,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-current-session-first.log",
+    "sha256": "f2aabf5ada4eb68c6b64eab50dfb0074964a15206393d6d80909e7442973add8"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "ForcefieldLifecycle_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-lifecycle-existing-corrected.log",
+    "sha256": "168cb06bf799b191b892da0edd5fd79411e69538214152cbde044dfbde7dfcc8"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PostPrefixCurrent_Forcefield",
+    "cases": 9,
+    "expectedCases": 9,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-prefix-existing-first.log",
+    "sha256": "642b1085f0ec890cb3eabec4ff1c12fb5d8ee884cd535ab506f5068bc7560a40"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PriestPostPopCurrent_",
+    "cases": 6,
+    "expectedCases": 6,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-priest-prefix-existing-first.log",
+    "sha256": "2285a6bcbadbca369852b6b4cc983925af092c4ebaf243ad2cc5fe1394d3816d"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "PriestPostPopCurrent_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-864/test-priest-session-existing-first.log",
+    "sha256": "b88ecef3120d27e537280a69b6c06e0f0aded8d09e081a490fde4e6a7fa9c078"
+   }
+  ],
+  "fixtures": {
+   "forcefieldpostpop-x86.tsv": {
+    "sha256": "001ee50b7a9f42e6e834a3c0bf271ccf7ea9af33ea7682a7ef50aa2416189355",
+    "rows": 3624
+   },
+   "priestpostpop-x86.tsv": {
+    "sha256": "3924ceb7ffb2315eae4fd8a9a3e89b9bff261994d36c0109ac684c1d89738cdd",
+    "rows": 7176
+   }
+  }
+ },
+ "protection": {
+  "count": 2761,
+  "fixtures": 941,
+  "unchanged": true,
+  "snapshot": "extracted/cpp-resume-864/protected-after.json"
+ },
+ "checking": {
+  "remaining": 12,
+  "parents": 6,
+  "partial": 3,
+  "multiplayer": 3,
+  "completedParents": 36,
+  "completedPartial": 3
+ },
+ "limits": [
+  "실제 Session은 같은 바인딩의 RegularHandler 직접 호출이며 전체 Host 틱/GUI/모든 파생 분배 완료가 아니다",
+  "독립 기존 finder는 기존 flags0 계약이며 실제 Session typed finder의 TYPE별 단계 선택과 구별한다",
+  "CD의 원문에 없는 기존 구성/객체 사전 검사는 유지한다",
+  "신규 MP/통신·실제 포획/희생/특정 적 공격/승리·공중3종 전용·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복 제외"
+ ],
+ "next": {
+  "unit": 865,
+  "scope": "SquidPostPop::TotalCost PATCH 별도 정수 비용표와 현재 TYPE float 분리",
+  "evidence": "extracted/cpp-resume-864/next-cost-cache.json",
+  "assemblySha256": "e5d8b7d5f39240ddd62afcf6ee393a5b6dbf8fea677dba2d1dd5dba5115df71f"
+ },
+ "remaining": [
+  "다른 TYPE 번호 사본(altar/dais/너겟/두 rainBlocker)",
+  "Teleport 다른 유효 생성 함수/다른 현재 Regular·가상20/전체 Pop",
+  "군도/Factory/State·파일 및 LEFT_JOBS 전체 잔여"
+ ],
+ "sourceCorrectedBuildSha256": {
+  "cpppj/src/o/RawForcefieldLifecycle.h": "c387e19cfa1e1ab2e3303d3747e2d28b7a16013146dadaad3f97bba6e7169526",
+  "cpppj/src/o/RawForcefieldLifecycle.cpp": "f9e2413e8e8b0a388f8edfa8fa48355bcfc4425cd6094c638bc7cae3968b5bbd",
+  "cpppj/src/client/RawPriestWorldBindings.h": "ca209b9725a35b8f5d6580d397810b4a7fb28269bd41d5ddec5abdcb12fdd67b",
+  "cpppj/src/client/RawPriestWorldBindings.cpp": "64e608d384fc25334b5693313e40cf852d3ac4bb4ef411e5d2960a9f2f43d84b",
+  "cpppj/src/client/RawCampaignSession.cpp": "fa44c5749b918db37c1ec8ef0df3795c53f116d03985ed26b304b54cd280df0c",
+  "cpppj/tests/ForcefieldRegularCurrentTests.cpp": "3d3488a20d800c8fafce35af18e4111bfbe80e988e451e579d98e48d65422665",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "0ad92f2d34fa0b00d345b641b3e8104bd7011a026530cf5d2327f5cfbb693d4a",
+  "cpppj/tests/CMakeLists.txt": "be52a6a4b1b1c35752295700c626b915c8c531899edefbfb92718f41bb6b3875",
+  "cpppj/tests/ForcefieldLifecycleTests.cpp": "6446fdc2fe4ac132a06c56a2ddff2dffc0b9f64c035715ad499fd44559d77d58"
+ },
+ "lineEndingRestoredAfterTests": [
+  "cpppj/tests/ForcefieldLifecycleTests.cpp"
+ ]
+}

@@ -178,11 +178,11 @@ TEST_CASE(ForcefieldLifecycle_ComposesSpaceProcessesAndSelfDeletion) {
     }
 }
 
-// 미연결 보호막/다른 풀과 잘못된 raw를 공간/예약 효과 전에 거부한다.
+// 명시 Validate의 무변경 거부·다른 풀 연결 거부와 실제 Pop/Regular의 도달 효과를 구별한다(단위864).
 TEST_CASE(ForcefieldLifecycle_RequiresBindingAndDiagnosesInvalidEvents) {
     ForcefieldScene scene(OriginalEdition::Patch1078);scene.Prepare(Fixture().front());std::vector<std::uint8_t> spots(65536);scene.pool.AllocatedBytes(kShield)[11]=4;
     SquidPostPopState book;SquidPostPop base(scene.pool,scene.types,book);SquidPop pop(scene.pool,scene.hash,spots,nullptr,&base);int calls=0;
-    const auto before=Hex(scene.pool.Slot(kShield));CHECK(Throws([&] { pop.Pop(kShield,scene.types[kForcefieldType],1,1,20.75f,21.9f); }) && before==Hex(scene.pool.Slot(kShield)));
+    const auto before=Hex(scene.pool.Slot(kShield));CHECK(Throws([&] { base.Validate(kShield,1); }) && before==Hex(scene.pool.Slot(kShield)) && book.depth==0); // 842 이후 PATCH 무변경 거부는 명시 Validate 위치의 계약이다.
     RawForcefieldPostPop prefix(scene.pool,{[&] { ++calls;return false; },[](Sid,std::uint32_t,float) { CHECK(false); }});
     SidPool other(OriginalEdition::Patch1078,kCapacity,false);SquidPostPop otherBase(other,scene.types,book);CHECK(Throws([&] { otherBase.SetForcefieldPostPop(&prefix); }));
     base.SetForcefieldPostPop(&prefix);CHECK(pop.Pop(kShield,scene.types[kForcefieldType],1,1,20.75f,21.9f)==RawPopResult::Registered && calls==2 && book.depth==0);

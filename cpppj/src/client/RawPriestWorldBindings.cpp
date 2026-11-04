@@ -132,8 +132,13 @@ struct RawPriestWorldBindings::Impl {
                 o::PriestPreDestroyHooks{{},effects.destroy,{},{}})));
         fieldPost=std::make_unique<o::RawForcefieldPostPop>(core.pool,o::ForcefieldPostPopHooks{
             effects.reserveRegular,[this](o::Sid sid,std::uint32_t event,float payload) { Host().AddRegular(sid,event,payload); }});
+        if (core.pool.Edition()==o::OriginalEdition::Patch1078) {
+            if (state.forcefieldRegular.sharedPriestType && state.forcefieldRegular.sharedPriestType!=&state.movement.priest)
+                throw std::logic_error("보호막 Regular 현재 사제 TYPE 소유자 불일치");
+            state.forcefieldRegular.sharedPriestType=&state.movement.priest; // 접두/HP와 같은 장기005412d0을 검색 시점에 읽는다(단위864).
+        }
         fieldRegular=std::make_unique<o::RawForcefieldRegular>(core.pool,core.hash,core.types,state.forcefieldRegular,
-            o::MakeForcefieldFrameHooks(core.pool,*advance,o::ForcefieldRegularHooks{{},effects.destroy}));
+            o::MakeForcefieldFrameHooks(core.pool,*advance,o::ForcefieldRegularHooks{{},effects.destroy,effects.forcefieldAssertion,effects.findTypeAt}));
         contained=std::make_unique<o::RawContainedLookup>(core.pool,effects.destroy);
         auto regeneration=effects.regen;
         regeneration.damageable=[this](o::Sid sid) { DamageableRefresh(sid); };
@@ -270,7 +275,7 @@ o::RegularHandler RawPriestWorldBindings::RegularHandler(o::RegularHandler fallb
             if (fallback) return fallback(sid,event,count,payload);
             throw std::invalid_argument("사제 월드 미복원 Regular 사건");
         }
-        if (raw[10]==o::kForcefieldType && table==(patch ? o::kPatchForcefieldVtable : o::kCdForcefieldVtable))
+        if ((patch || raw[10]==o::kForcefieldType) && table==(patch ? o::kPatchForcefieldVtable : o::kCdForcefieldVtable))
             return implementation->fieldRegular->Handle(sid,event,count,payload);
         if (fallback) return fallback(sid,event,count,payload);
         return payload;
