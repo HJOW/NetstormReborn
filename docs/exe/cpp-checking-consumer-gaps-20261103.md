@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**886 timer57 기본 cdecl:** Init 없는 빈100칸/기한0·명시heap flags와 실제 Session/Teleport 미부착 수명을 연결했다. 원문12행+NULL4/재관측·시각조회0·고유29개(새3) 첫 실패0·기존 수치Frame4416행·Release1회 경고0이다. 기존2766개/946fixture 불변·새1개→2767개/947개·checking10 유지이며 UI2/자산·전체Pop은 잔여다. [886 기록](cpp-bomb-timer-constructor-current-20261105.md).
+
 **885 경로8 cdecl:** 고정 함수 클래스/미부착 수명과 같은 Teleport 공통 복귀를 연결했다. 원문32행+NULL8/재관측·고유27개(새3) 최종 실패0·Release2회 경고0이다. 첫 미설치 접근 뒤 관문/새 입력을 교정했고 기존2765개/945fixture 불변·새1개→2766개/946개이며 checking10/완료부모38/부분3은 유지한다. UI2/timer1·자산/전체Pop은 잔여다. [885 기록](cpp-path-constructor-current-20261105.md).
 
 **884 기본 Form cdecl:** 네 생성자의 지정 물리 SID/단일 VT DWORD를 원문56행/재관측과 실제 Teleport 공통 복귀에 연결했다. 고유24개(새2) 첫 실패0·Release1회 경고0·추가 교정/기존 기대값 변경0이다. 기존2764개/944fixture 불변·새1개→2765개/945개이며 checking10/완료부모38/부분3은 유지한다. [884 기록](cpp-form-constructor-current-20261105.md).

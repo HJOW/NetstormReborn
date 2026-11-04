@@ -60,6 +60,8 @@
 #include "client/RawCampaignParticles.h"
 namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; struct FortObjectLoadState; class RawFortBadgesGlobals; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::o { class RawConnectionRegistry; } //실제 Client와 로컬 양끝이 빌리는 같은 연결표다.
+namespace netstorm::o { class BombEffectTimerProcess; } // 기본 생성 결과의 실제 클래스이며 호출자는 사용 전에 본문 헤더를 포함한다.
+
 namespace netstorm::client {
 struct RitualChoiceInputHooks; //실제 Carrier.cpp의 같은선택제단과전송을일반입력에빌린다.
 struct TechnologyListMenuHooks; //HTML 원소별 기술 목록의 GUI는 실제 현재 controlled 메뉴가 공급한다.
@@ -593,6 +595,8 @@ public:
     // 실제 기준점/Factory/Owner/Pop/TYPE/현재 전역/Regular 및 같은 에너지 목록을 연결한다.
     // 접근점·경로 시작·속도 적용은 caller가 실제 몸체로 공급하며 반환 객체/State는 Session보다 먼저 해제한다.
     std::unique_ptr<o::RawConstructionBuilder> MakeConstructionBuilder(o::ConstructionBuilderState& state,o::ConstructionBuilderHooks hooks);
+    // 00420ad0의 빈 타이머를 부착 없이 생성한다. 반환 객체는 Session보다 먼저 해제한다.
+    std::unique_ptr<o::BombEffectTimerProcess> MakeUnstartedBombTimer();
     // 현재 월드의 주소별 cdecl 생성만 수행한다. 미지원은nullptr이며 반환 객체는 Session보다 먼저 해제한다.
     std::unique_ptr<o::RawPathProcess> MakeUnstartedPath(std::uint32_t constructorAddress);
     o::RawPathProcess* StartConstructionMovement(o::RawPathStartRequest request); // 같은 월드의 실제134/105를 각각23/39 경로로 움직인다.

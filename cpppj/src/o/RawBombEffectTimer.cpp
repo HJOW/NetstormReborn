@@ -16,6 +16,8 @@ RawBombEffectTimer::RawBombEffectTimer(SidPool& pool,std::span<const RiftTypeRec
     :pool_(pool),types_(types),now_(now),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188) throw std::invalid_argument("상태 효과 타이머 PATCH 풀/188TYPE 필요");
 }
+// 원문이 초기화하지 않은 flags는 caller의 heap 입력으로 남기며 Init 기한을 계산하지 않는다.
+BombEffectTimerFields RawBombEffectTimer::ConstructEmpty(std::uint32_t initialFlags) const { BombEffectTimerFields result;result.members.reserve(100);result.flags=initialFlags;return result; }
 // 원본의 signed 지연을 현재 double 시각에 더하며 대상 중복이나 inactive 상태를 미리 제외하지 않는다.
 BombEffectTimerFields RawBombEffectTimer::Construct(std::int32_t delay,std::span<const std::uint32_t> members,std::uint32_t flags) const {
     BombEffectTimerFields result;result.members.reserve(100);result.endTime=static_cast<double>(delay)+now_;result.members.assign(members.begin(),members.begin()+std::min<std::size_t>(100,members.size()));result.flags=flags;return result;
@@ -45,6 +47,9 @@ void RawBombEffectTimer::Frame(BombEffectTimerFields& fields,const std::function
     }
     Need(finish)();
 }
+// 독립 cdecl 기본 생성은 목록 확보 뒤에도 기한0을 유지한다.
+BombEffectTimerProcess::BombEffectTimerProcess(SidPool& pool,std::span<const RiftTypeRecord> types,const double& now,BombEffectTimerHooks hooks,std::uint32_t initialFlags)
+    :logic_(pool,types,now,std::move(hooks)),fields_(logic_.ConstructEmpty(initialFlags)) {}
 BombEffectTimerProcess::BombEffectTimerProcess(SidPool& pool,std::span<const RiftTypeRecord> types,const double& now,std::int32_t delay,std::span<const std::uint32_t> members,std::uint32_t flags,BombEffectTimerHooks hooks)
     :logic_(pool,types,now,std::move(hooks)),fields_(logic_.Construct(delay,members,flags)) {}
 // 삭제 뒤 필드나 this를 다시 읽지 않는다. 원본41bf10의 권한 판단은 같은 Host가 수행한다.

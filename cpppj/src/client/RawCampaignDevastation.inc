@@ -15,6 +15,8 @@ BombEffectTimerHooks MakeBombTimerHooks() {
     BombEffectTimerHooks hooks;hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
     hooks.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid),0); };hooks.fence=[this](Sid sid) { DispatchFenceType(sid,FenceTypeOperation::Rebuild); };return hooks;
 }
+// 현재 장치만 연결한 cdecl 기본 생성이다. 수신/시전의 별도 Init 경로와 구분한다.
+std::unique_ptr<BombEffectTimerProcess> MakeEmptyBombTimer() { return std::make_unique<BombEffectTimerProcess>(core.pool,core.types,core.processState.Now(),MakeBombTimerHooks()); }
 // 7d는 현재 free Form에 새 타이머를 읽고 같은 Host의 지정 SID 부착으로 전달한다.
 void ReceiveBombTimer(std::span<const std::uint8_t> packet) {
     const std::uint32_t boss=assetState.Boss();BombTimerReceiveHooks hooks;

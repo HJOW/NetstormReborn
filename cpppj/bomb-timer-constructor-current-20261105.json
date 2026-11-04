@@ -1,0 +1,273 @@
+{
+ "unit": 886,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "38742606 / 20261105-19 CP",
+ "exeSha256": "afe3fba5b7385b3ad32a497fd307f7a0cb3a36ebb53262bb97dc9a588ccae5ac",
+ "exeBytes": 10660864,
+ "caseCount": 29,
+ "groups": 9,
+ "newCases": 3,
+ "uniqueCases": [
+  [
+   "netstorm_menu_session_tests",
+   "BombTimerConstructorCurrent_ActualSessionCreatesUnattachedBeforeLoadWithoutClockDeadline"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "BombTimerConstructorCurrent_ActualTeleportSelectsEmptyUnattachedConstructor"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ActualTeleportSelectsConstructorAndItsCurrentTypeSource"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ActualVisualFrameNotifyPixelsAndSelfDeletionUseSameHost"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ParentZeroRemainsRenderedWithoutKernelAndOwnerPersists"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "FormConstructorCurrent_ActualTeleportUsesSelectedSlotConstructorThenCommon"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "PathConstructorCurrent_ActualSessionCreatesFixedClassesWithoutInitOrAttach"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "PathConstructorCurrent_ActualTeleportUsesAliasedTypeFunctionWithoutStartingPath"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionNoFirstSkipsInvalidEffectType"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionSelectedPhysicalOrUnknownConstructorFailsBeforeCommon"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionTailBindingKeepsOriginalOwner"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionUsesCurrentConstructorAndItsOwnTypeGlobal"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_ActualSessionResumesCommonAfterNullAndCurrentTypeMutation"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_ActualSessionThrownDiagnosticKeepsPrefixMutationAndDepth"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_SelectedNullConstructorsKeepExactDiagnosticAndCallableLifetime"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BombEffectTimer_IndependentNative4416"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "BombTimerConstructorCurrent_Native12EmptyListZeroDeadlineAndUnwrittenFlags"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_CallableSurvivesSelfUnbinding"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_CdDoesNotUsePatchPrefix"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ExplicitPreflightRemainsSeparate"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LateCommonFailureKeepsSelectedCreationAndCurrentTypeCounts"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LifetimeCapturesTypeBeforeRegistryAndParticleAllocation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LifetimeReadsSharedTypeForEachCreation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_MissingSelectedPrefixFailsBeforeCommon"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_NoFirstUsesActualVtableWithoutDeviceOrTypeGate"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_SelectedPrefixKeepsPhysicalMutationsBeforeCommon"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_TailTypeOwnerPersistsAcrossGeneralWorldPreparation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ThrownPrefixKeepsEffectsAndDepth"
+  ]
+ ],
+ "testExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "BombTimerConstructorCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-886/test-timer-constructor-native-first.log",
+   "sha256": "93ac9174175cd3607d20a335a5d64bf9e2032bbeb9e1f09e5553d237b0967776"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "BombTimerConstructorCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-886/test-timer-constructor-session-first.log",
+   "sha256": "fd7bd616f1ba26c10e3d0a140e7171cb6ecbd1eb494933d7b4ba1728df503a64"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "BombEffectTimer_IndependentNative4416",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-886/test-timer-frame-first.log",
+   "sha256": "a75262117d65fd81d10ee6cb15eca86544df6e5396634efe51a5109afce067e1"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "PathConstructorCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-886/test-path-constructor-session-first.log",
+   "sha256": "8ac8305a7dd55cc521581d1bc7ba7f8b0d26be27de971c5ad75e71b7e9ea4e56"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "FormConstructorCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-886/test-form-constructor-session-first.log",
+   "sha256": "3e31419c5a8af61e3801e2f96f51df858600643c5cf495296e552d8a37b0f513"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "EvilRayCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-886/test-evilray-current-first.log",
+   "sha256": "0c0676489849190ab84054864e8ae3d17cfa12f35fda76959f1a099321cfdae7"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-886/test-teleport-session-first.log",
+   "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportStubCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-886/test-teleport-stub-first.log",
+   "sha256": "520f80e3d1cc574235cb7b201cf082cbbc2b53b91fbd86bc1cc2a912433e20f7"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 12,
+   "expectedCases": 12,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-886/test-teleport-prefix-first.log",
+   "sha256": "1f6ce0bc4dc347ecc104fb401092b4321bafbcadd93ae0790579293194f91bdb"
+  }
+ ],
+ "build": {
+  "exitCode": 0,
+  "elapsedSeconds": 280.3150798,
+  "log": "extracted/cpp-resume-886/build-first.log",
+  "logSha256": "c12bdf253064498e0795708d78714bd127125b2cd555a88588090ce2e5e1c590",
+  "warnings": 0,
+  "errors": 0
+ },
+ "sourceSha256": {
+  "cpppj/src/o/RawBombEffectTimer.h": "e53cfdbd3af748dd180194412d75915c339f5b4dbc15079e74aad08c1b377e84",
+  "cpppj/src/o/RawBombEffectTimer.cpp": "bbbcda8110c646c1f72b9b2834be56c1fe374d69ce5ab0917de807ea261e379d",
+  "cpppj/src/client/RawCampaignSession.h": "d8a4b52c1909d1416fd9aa206f80590953b32fb8d353e795a55ef87de5feaff6",
+  "cpppj/src/client/RawCampaignSession.cpp": "ae75ec270baca29a0b98882ca724f1119fef1f3bc9fce742318e0a2240ba3dc1",
+  "cpppj/src/client/RawCampaignDevastation.inc": "af80aaceb7d5d80441eb46b928d1055cabb4a9ad03cab6f1b700dcec120f6551",
+  "cpppj/tests/CMakeLists.txt": "d4d7ae23fce78b4475795a52d1244a8cd816e3e76557d318ad01acf866e12977",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "93734f71246908a64b36f7d0b63efb540dffc21ae891ce9b6f845e081d00ed78",
+  "cpppj/tests/BombTimerConstructorTests.cpp": "81a6a0cf15b7cc20889969db827457e4aac73f71363b042ce194800de0945d44",
+  "tools/decomp_bomb_timer_constructor.py": "6f83ebaa0d7a45e7fc86ab2b5525db6b8e511ea8389dc132fbc053db1d7e5fce",
+  "cpppj/tests/fixtures/bomb-timer-constructor-x86.tsv": "127c1ce9b3817321138e8224b7099b7413318545c26d0bd8894b6a3cd6908f95"
+ },
+ "originalProtectedUnchanged": 2766,
+ "protectedCount": 2767,
+ "fixtureCount": 947,
+ "newFixtures": 1,
+ "nativeRows": 12,
+ "nativeReobservedRows": 12,
+ "nativeNullAllocationObservations": 4,
+ "nativeNullAllocationReobserved": 4,
+ "nativeClockReads": 0,
+ "firstFailureCount": 0,
+ "cppFields": "empty vector/reserve100/logicalcapacity100/endTime0/explicitinitialheapFlags/parent0/form0; actualfactoryflags0",
+ "nativeScope": "PATCH00420ad0/00420960 full real PE, operator new external; object40/fullunwrittenmembers400+stack+SEH+guards; noHostcall/clockread",
+ "cdStatic": "0045f760 inline commonBaseVT00500d68->timerVT005025d0/new40/new400/emptycapacity100/endTime0/flagsuntouched; noCDexecutionorC++timerport",
+ "boundaries": [
+  "Actual physicalallocationfailure not induced; Native innernewNULL returns objectwithcapacity100/nullmembers whereasC++vector throwsbad_alloc and cdecladapter ignoresNULL result",
+  "Native +24/padding and reserved member bytes not represented/read by semanticC++ fields; flags explicitheapinput default0",
+  "MP7d receive retains previous initializedconstructor for phase3 review; no MPcodechangeornewMPtests",
+  "Remainingprocess2=UI50/51; assets70+, fullPop andothercurrentglobals remain",
+  "No GUI/game/globalAI/combatKernel/spell/capture/sacrifice/specificattack/win/air3/MP/whole71/CTest/34/ZIP runs"
+ ]
+}

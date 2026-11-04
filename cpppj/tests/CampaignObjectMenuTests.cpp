@@ -22,6 +22,7 @@
 #include "client/RawChatWindowContext.h" //제품 Player 하위메뉴가 조회하는 실제 빈 Chat 입력버퍼를 같은 트리에 생성한다.
 #include "client/ScriptCommand.h" //Chat 공장이 빌리는 실제80칸 문자열 고리의 수명을 검사 안에 유지한다.
 #include "o/OriginalText.h"
+#include "o/RawBombEffectTimer.h" // Init 없는 timer cdecl의 실제 필드를 조회한다.
 #include "o/RawContentPreviewProcess.h"
 #include "client/VFXEllipse.h" // 실제 표시 통합의 원문 대조된 타원 소비자를 사용한다.
 #include <cmath>
@@ -1116,4 +1117,11 @@ TEST_CASE(PathConstructorCurrent_ActualSessionCreatesFixedClassesWithoutInitOrAt
         CHECK(expected.size()==path->Runtime().Bytes().size());CHECK(&path->Pool()==&core.pool && path->Parent()==Sid{} && path->Form()==Sid{} && path->MovementType()==std::stoul(row[0]) && std::equal(path->Runtime().Bytes().begin(),path->Runtime().Bytes().end(),expected.begin()) && core.pool.FreeCount()==free && core.kernel.Size()==kernel);++count;
     } // 각 현재 함수 주소가 고정한 클래스의 원문 전체 이미지와 비교한다.
     CHECK(count==8 && !session.MakeUnstartedPath(0) && !session.MakeUnstartedPath(0x4536a0)); // 다른 생성자를 경로 기본 클래스로 대체하지 않는다.
+}
+
+TEST_CASE(BombTimerConstructorCurrent_ActualSessionCreatesUnattachedBeforeLoadWithoutClockDeadline) { // 현재 월드 장치를 빌리되 설치/부모/시각 초기화 없이 빈 생성만 수행한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());auto core=session.Core();core.processState.Now()=100.25;const auto kernel=core.kernel.Size();const auto free=core.pool.FreeCount();auto timer=session.MakeUnstartedBombTimer();CHECK(timer && timer->Parent()==Sid{} && timer->Form()==Sid{} && timer->Fields().members.empty() && timer->Fields().members.capacity()>=100 && timer->Fields().capacity==100 && timer->Fields().endTime==0 && timer->Fields().flags==0 && core.kernel.Size()==kernel && core.pool.FreeCount()==free);core.processState.Now()=9999.5;CHECK(timer->Fields().endTime==0); // 타이머는 Session보다 먼저 소멸하며 Frame/효과/패킷은 실행하지 않는다.
+}
+TEST_CASE(BombTimerConstructorCurrent_ActualTeleportSelectsEmptyUnattachedConstructor) { // TYPE61의 함수 주소만 timer57로 바꾸며 현재 시각의 Init이나 Form 부착을 추가하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();auto gameplay=std::make_shared<ClientGameplayGlobals>();services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();auto storage=session.World().Storage();storage->types[61].constructorAddress=storage->types[57].constructorAddress;CHECK(storage->types[61].constructorAddress==0x420ad0U);gameplay->GameAux()->StreakProcessType()=61;storage->types[74].flags1=storage->types[74].flags2=0;const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);netstorm::test::rawscene::Put(raw,0,0x5070c0);raw[11]=raw[40]=0;raw[34]=1;const auto before=core.kernel.Size(),rendered=session.Particles().Rendering().Size();const auto free=core.pool.FreeCount(),count=core.bookkeeping.GlobalCounts()[74];++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000001);CHECK(netstorm::test::rawscene::Get(raw,0)==0x5070c0 && raw[10]==74 && core.bookkeeping.depth==0 && core.bookkeeping.GlobalCounts()[74]==count+1 && core.kernel.Size()==before && session.Particles().Rendering().Size()==rendered && core.pool.FreeCount()==free); // 버린 결과는 Session이 소유하며 글로벌 Kernel을 진행하지 않는다.
 }

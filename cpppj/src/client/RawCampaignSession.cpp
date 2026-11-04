@@ -795,6 +795,7 @@ struct RawCampaignSession::Impl {
     RawPathStartState start; // 같은 현재 시계/이동 타입을 참조한다.
     RawPathProcessState process; // 같은 Host의 경로 프로세스 전역이다.
     std::unique_ptr<RawCampaignMotionBindings> motion; // 실제 Start/BFS/도착/cleanup의 모듈 소유자다.
+    std::vector<std::unique_ptr<BombEffectTimerProcess>> unstartedBombTimers; // 버린 cdecl 기본 생성 결과를 Init/부착 없이 보관하고 실제 모듈보다 먼저 반납한다.
     std::vector<std::unique_ptr<RawPathProcess>> unstartedPaths; // cdecl 반환값을 무시한 원문 객체를 보관한다. 부착/시작 없이 motion보다 먼저 해제한다.
     ConstructionProcessState buildingState; // 같은 현재 게임 시각/권한/로컬 소유자의 실제30 전역이다.
     ConstructionEffectsState buildingEffectsState; // 완료 밀어내기가 현재 방향별 동맹을 읽는 저장소다.
@@ -1254,7 +1255,7 @@ struct RawCampaignSession::Impl {
         CampaignEvilRayDevices evilDevices;evilDevices.soundId=[this](Sid sid,bool end) { const auto type=core.pool.Slot(sid)[10];if (type>=missileTypes.size()) throw std::out_of_range("EvilRay 현재 음향 TYPE 물리 범위");return end ? missileTypes[type].impactSound : missileTypes[type].firingSound; }; // 원문Rifttype parser의+70=fireSound/+74=impactSound이며 stepSound가 아니다.
         evilDevices.sound=[this](float x,float y,std::uint32_t sound) { const auto selected=services.sound.playOnceAt;if (!selected) throw std::logic_error("EvilRay 실제 위치 재생 장치 미연결");static_cast<void>(selected(x,y,sound,0,0)); };evilDevices.frameError=[this](auto number,auto frame,auto abstract) { world.Storage()->RecordAssertionDetail(BuildSquidFrameAssertionDetail(core.types,core.shapes,number,frame,abstract)); }; // 같은 현재 Client 상세 저장소다.
         evilDevices.assertion=[this](std::string_view expression,std::string_view,std::uint32_t) { const auto selected=services.ai.assertion;if (!selected) throw std::logic_error("EvilRay 실제 Client 진단 장치 미연결");selected(expression); };particles->ConnectEvilRayDevices(std::move(evilDevices)); // 첫 Pop 전에 실제 장치를 설치한다.
-        core.postPop.SetTeleportPrefix([this](Sid sid,std::uint32_t flags) { if (!(flags&1U)) return;const auto type=gameplayGlobals->GameAux()->StreakProcessType();if (type>=core.types.size()) throw std::out_of_range("Teleport 현재 process TYPE 표 물리 범위");const auto address=core.types[type].constructorAddress;if (motion) { try { if (auto path=motion->Paths().CreateByConstructor(address)) { unstartedPaths.push_back(std::move(path));return; } }catch (const std::bad_alloc&) { return; } }particles->CreateTailByConstructor(address,sid,[this](auto expression,auto,auto line) { const auto assertion=services.ai.assertion;if (!assertion) throw std::logic_error("Teleport 생성 함수 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }); }); // 원문4429f0의 현재 TYPE+1d0 호출이며 현재 객체 TYPE134나 고정process12에 묶지 않는다.
+        core.postPop.SetTeleportPrefix([this](Sid sid,std::uint32_t flags) { if (!(flags&1U)) return;const auto type=gameplayGlobals->GameAux()->StreakProcessType();if (type>=core.types.size()) throw std::out_of_range("Teleport 현재 process TYPE 표 물리 범위");const auto address=core.types[type].constructorAddress;if (address==0x420ad0U) { try { unstartedBombTimers.push_back(MakeEmptyBombTimer()); }catch (const std::bad_alloc&) {}return; }if (motion) { try { if (auto path=motion->Paths().CreateByConstructor(address)) { unstartedPaths.push_back(std::move(path));return; } }catch (const std::bad_alloc&) { return; } }particles->CreateTailByConstructor(address,sid,[this](auto expression,auto,auto line) { const auto assertion=services.ai.assertion;if (!assertion) throw std::logic_error("Teleport 생성 함수 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }); }); // 원문4429f0의 현재 TYPE+1d0 호출이며 현재 객체 TYPE134나 고정process12에 묶지 않는다.
         particles->BindWind(world.Storage()->wind.x); // 같은 Client 수명의 현재 바람X를 입자별 가속 지점에서 읽는다.
         particles->BindWeakenedMana(gameplayGlobals->GameAux()->PriestQuarterHp()); // 연소점 선택도 Frame 준비 사본을 기다리지 않는다.
         auto combatEffects=services.archer;
@@ -4824,6 +4825,8 @@ std::unique_ptr<RawConstructionBuilder> RawCampaignSession::MakeConstructionBuil
     if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 운반 연결");return impl_->MakeBuilder(state,std::move(hooks));
 }
 // 화면과 입력은 같은 살아 있는 상태를 읽는다.
+// 현재 실제 월드 장치를 빌리지만 원문 기본 생성에 없는 Init/부착은 하지 않는다.
+std::unique_ptr<BombEffectTimerProcess> RawCampaignSession::MakeUnstartedBombTimer() { return impl_->MakeEmptyBombTimer(); }
 // 부착/초기화/게임 진행을 추가하지 않는 같은 원문 주소별 생성 접근점이다.
 std::unique_ptr<RawPathProcess> RawCampaignSession::MakeUnstartedPath(std::uint32_t constructorAddress) { if (!impl_->motion) throw std::logic_error("경로 cdecl 생성 전 실제 이동 모듈 설치 필요");return impl_->motion->Paths().CreateByConstructor(constructorAddress); }
 RawPathProcess* RawCampaignSession::StartConstructionMovement(RawPathStartRequest request) {

@@ -22,6 +22,8 @@ struct BombEffectTimerHooks {
 class RawBombEffectTimer {
 public:
     RawBombEffectTimer(SidPool& pool,std::span<const RiftTypeRecord> types,const double& now,BombEffectTimerHooks hooks); // 같은 PATCH 풀/188TYPE/게임 시계를 빌린다.
+    // 00420960의 빈100칸/기한0이다. 쓰지 않는+20 flags는 명시 heap 입력으로 보존하며 실제 C++ 생성 입력은0이다.
+    BombEffectTimerFields ConstructEmpty(std::uint32_t initialFlags=0) const;
     BombEffectTimerFields Construct(std::int32_t delay,std::span<const std::uint32_t> members,std::uint32_t flags) const; // 원본 초기100칸을 확보하고 목록·현재 기한을 복사한다.
     void Frame(BombEffectTimerFields& fields,const std::function<void()>& finish) const; // 갱신→현재 기한→효과 해제→현재 가상 갱신→자기 삭제 순서다.
 private:
@@ -34,6 +36,8 @@ private:
 // Kernel57의 실제 현재 필드와 기존 ProcessForm 수명을 함께 소유한다.
 class BombEffectTimerProcess final : public SquidProcess {
 public:
+    // 00420ad0/00420960의 Init 없는 cdecl 생성이다. 현재 시각/부모를 읽거나 Host에 부착하지 않는다.
+    BombEffectTimerProcess(SidPool& pool,std::span<const RiftTypeRecord> types,const double& now,BombEffectTimerHooks hooks,std::uint32_t initialFlags=0);
     BombEffectTimerProcess(SidPool& pool,std::span<const RiftTypeRecord> types,const double& now,std::int32_t delay,std::span<const std::uint32_t> members,std::uint32_t flags,BombEffectTimerHooks hooks); // 단일 목록/기한을 생성한다.
     void RunFrame() override; // 기존 Host의 실제 삭제에 원본 Frame을 연결한다.
     void Notify(std::uint32_t,std::uint32_t,std::uint32_t) override; // VT50330c+1c의480260은 ret12인 빈 통지다.
