@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**868 비행 홈 코드 연결 완료:**0045c100의 현재TYPE/공유005410ec/checking·두진단복귀와실제AI 두caller를연결했다. 제품빌드1회/경고0·보호2761개 불변이며공중전용 신규검사/Native/행동0이다. 기능검증완료와구별한다. checking구현잔여10=부모4+부분3+MP3·완료부모38/부분3이다. [868 기록](cpp-flyer-home-checking-20261105.md).
+
 **867 투사체 현재 진단 완료:**00482340의 두 관문·항상참0041be80과 같은Client/Host·저장 표시/후반 발사자 재조회를 연결했다. 고유28개/4묶음(새8) 첫 실패0·제품빌드1회/경고0·새Native/fixture0·보호2761개 불변이다. checking11=부모5+부분3+MP3·완료부모37/부분3이며 다음868은 비행 홈 코드/정적 대조다. [867 기록](cpp-missile-checking-20261104.md).
 
 **866 신전 event4 범위 정정:**004dc220의 현재 전역은curServer, 조회는fort signed territory이며0x02000013은Descend/State19다. 생성입구004dbac0/0x030000a7과 함께8번MP/메타맵에 미완료 이월한다. 직접inSingle 관문 부재를 단독 전체 미도달 증명으로 확대하지 않는다. 제품865·빌드/기능/MP 검사0·checking12/완료부모36/부분3 유지. [866 기록](cpp-temple-descend-scope-20261104.md).
@@ -538,6 +540,8 @@ LAB_004259a2:
 - `"fence.getType() == sunFenceType","\\Ns\\O\\Fence.cpp",0x602)`
 
 ## FUN_0045c100 @ 0045c100
+
+**868 코드/정적 연결 완료:** 현재 TYPE/공유 프로세스 타입/checking과 genus/processSid의 정상진단복귀를 실제 두AI caller에 연결했다. 제품컴파일만 확인하고 전용 신규검사/게임은0이다. 아래 미복원 문구는779 당시 분류이며 [868 기록](cpp-flyer-home-checking-20261105.md)을 따른다.
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 

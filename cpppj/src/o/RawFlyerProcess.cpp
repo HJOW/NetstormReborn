@@ -24,7 +24,7 @@ std::uint32_t FrameSum(std::int32_t frames,std::span<const std::uint8_t> raw) { 
 Sid FlyerProcessFields::Form() const { return Sid{static_cast<std::uint16_t>(Read(bytes,kForm))}; } // inner Form의 현재 하위WORD다.
 Sid FlyerProcessFields::Parent() const { return Sid{static_cast<std::uint16_t>(Read(bytes,kParent))}; } // inner 부모의 현재 하위WORD다.
 Sid FlyerProcessFields::Home() const { return Sid{static_cast<std::uint16_t>(Read(bytes,kHome,2))}; } // 홈은 원문 WORD다.
-RawFlyerProcess::RawFlyerProcess(SidPool& pool,std::span<const RiftTypeRecord> types,FlyerProcessGlobals globals,FlyerProcessHooks hooks):pool_(pool),types_(types.begin(),types.end()),globals_(globals),hooks_(std::move(hooks)) {
+RawFlyerProcess::RawFlyerProcess(SidPool& pool,std::span<const RiftTypeRecord> types,FlyerProcessGlobals globals,FlyerProcessHooks hooks):pool_(pool),types_(types),globals_(globals),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188) throw std::invalid_argument("비행 프로세스는 PATCH188 타입만 복원했습니다");
 }
 // 기본 생성자의 실제 부착은 맨 오 워 전용 표 쓰기보다 먼저다.
@@ -44,9 +44,19 @@ void RawFlyerProcess::SpecializeSun(FlyerProcessFields& fields) {
 }
 // 첫 실제 nondead Form만 갱신하며 없으면 원문처럼 자연 반환한다.
 void RawFlyerProcess::Bind(Sid flyer,Sid home) const {
-    if (!(types_.at(pool_.Slot(flyer)[10]).flags2&0x100000U)) Need(hooks_.assertion)(0x904);
+    const auto type=pool_.Slot(flyer)[10];if (type>=types_.size()) throw std::out_of_range("비행 홈 연결 TYPE 범위 오류");
+    if (!(types_[type].flags2&0x100000U)) Need(hooks_.assertion)(0x904);
     const auto form=Need(hooks_.findProcess)(flyer,globals_.processType);if (!form.value) return;
     auto& fields=Need(hooks_.fields)(form);fields.bytes[kDirty]|=2;Put(fields.bytes,kHome,home.value,2);
+}
+// genus 진단은 무조건 선택되며 dead/free 판단과 finder 뒤 checking은 정상 복귀 이후의 현재값을 읽는다.
+Sid RawFlyerProcess::Home(Sid flyer) const {
+    const auto type=pool_.Slot(flyer)[10];if (type>=types_.size()) throw std::out_of_range("비행 홈 조회 TYPE 범위 오류");
+    if (!(types_[type].flags2&0x100000U)) Need(hooks_.assertion)(0x8ee);
+    if (pool_.Slot(flyer)[11]&3U) return Sid{};
+    const auto form=Need(hooks_.findProcess)(flyer,globals_.processType); // 실제 첫 타입 조회 결과는 진단 중 새 Form이 생겨도 다시 찾지 않는다.
+    if (!form.value) { if (globals_.checking) Need(hooks_.assertion)(0x8f5);return Sid{}; }
+    return Need(hooks_.fields)(form).Home(); // 원문 NULL inner의 주소+a 접근은 호스트 장치 오류로 남기며 가짜 홈0으로 성공시키지 않는다.
 }
 void RawFlyerProcess::Frame(FlyerProcessFields& fields) const { Need(hooks_.frame)(fields); } // 아직 미복원인 큰 Frame을 조용히 생략하지 않는다.
 void RawFlyerProcess::Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const { Need(hooks_.notify)(fields,message,info1,info2); } // 실제 선택 통지를 유지한다.

@@ -778,7 +778,7 @@ struct RawCampaignSession::Impl {
     std::uint32_t flyerProcessEnd{63},flyerDependType{1}; // PATCH의 실제 프로세스 상한/의존 타입 전역이다.
     std::uint32_t windFlyerType{138}; // PATCH00541280의 현재 더스트 데빌 타입이다.
     std::unique_ptr<RawFlyerPostPop> flyerPostPop; // 맨 오 워/훨리기그의 실제 생성·그림자·압축 시각 후처리다.
-    std::uint32_t flyerProcessType{31}; // PATCH005410ec의 현재 공통 비행 프로세스 타입이다.
+    std::uint32_t& flyerProcessType{gameplayGlobals->GameAux()->FlyerProcessType()}; // PATCH005410ec를 같은 Client의 장기 owner에서 직접 빌린다.
     std::array<std::uint8_t,64> flyerPacket{};bool writingFlyer{}; // 실제0x39 상태 writer와 송신의 단일 버퍼/선택 표식이다.
     std::unique_ptr<FlyerProcess> pendingFlyer; // 기본 생성자의 부착 경계까지 단일 프로세스 소유권을 보관한다.
     std::uint32_t rainAviaryType{60},rainFlyerType{144}; // PATCH00541160/00541298의 현재 원본 타입 전역이다.
@@ -1132,10 +1132,7 @@ struct RawCampaignSession::Impl {
         hitEffects.priest.defaultFrame=[this](Sid sid) { return projectileTypes[core.pool.Slot(sid)[10]].defaultFrame; };
         AiDamageHooks aiDamageEffects; // 현재 비행 홈과 실제 로그 출력만 외부 경계에 연결한다.
         aiDamageEffects.home=[this](Sid sid) {
-            const auto raw=core.pool.Slot(sid);if (raw[11]&3U) return Sid{};
-            const auto form=FindAttachedProcess(core.pool,sid,31);if (!form.value) return Sid{};
-            auto* process=dynamic_cast<FlyerProcess*>(core.processes.FromForm(form));
-            if (!process) throw std::logic_error("AI 피격 비행 홈의 실제 프로세스31 미연결");return process->Fields().Home();
+            if (!flyer) throw std::logic_error("AI 피격의 실제 비행 홈 조회 설치 전 호출");return flyer->Home(sid); // 두 실제 AI caller가 현재 TYPE/프로세스/checking·진단 복귀를 공유한다.
         };
         aiDamageEffects.log=[this](std::uint32_t token,const AiDamageLog& value) {
             if (value.type>=core.types.size()) throw std::out_of_range("AI 피격 로그 현재 TYPE 범위 오류");
@@ -1837,7 +1834,10 @@ struct RawCampaignSession::Impl {
     }
     // 같은 현재 Host에 기본 비행 생성자와 맨 오 워 전체 Pop을 연결한다.
     void ConnectFlyer() {
-        FlyerProcessHooks hooks;hooks.assertion=SessionMissing<void,std::uint32_t>();
+        FlyerProcessHooks hooks;hooks.assertion=[assertion=services.ai.assertion](std::uint32_t line) {
+            if (!assertion) throw std::logic_error("실제 비행 프로세스 진단 장치 미연결 "+std::to_string(line));
+            switch (line) { case 0x2e3:case 0x41d:assertion("server");return;case 0x904:case 0x8ee:assertion("flyer.getGenus() & gFLYER");return;case 0x8f5:assertion("processSid");return;default:throw std::out_of_range("비행 프로세스의 다른 진단 위치"); } // 확인한 Flyer.cpp 위치만 같은 현재 Client 서비스로 전달한다.
+        };
         hooks.findProcess=[this](Sid sid,std::uint32_t type) { return FindAttachedProcess(core.pool,sid,type); };
         hooks.fields=[this](Sid form)->FlyerProcessFields& { auto* process=dynamic_cast<FlyerProcess*>(core.processes.FromForm(form));if (!process) throw std::logic_error("비행 Form의 현재 PID/원문 미연결");return process->Fields(); };
         hooks.attach=[this](FlyerProcessFields& fields,Sid parent,std::uint32_t type,std::uint32_t flags) {
@@ -1853,7 +1853,7 @@ struct RawCampaignSession::Impl {
         hooks.parentDying=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) sunFlyerFrame->ParentDying(fields);else flyerFrame->ParentDying(fields); };
         hooks.pieces=[this](Sid parent) { static_cast<void>(particles->AddShrapnel(parent,ShrapnelKind::Explosion)); };
         hooks.destroy=[this](Sid parent,std::uint32_t flags) { static_cast<void>(world.Destroy(parent,flags)); };
-        flyer=std::make_unique<RawFlyerProcess>(core.pool,core.types,FlyerProcessGlobals{core.processState.Server(),core.processState.Now(),flyerProcessType},std::move(hooks));
+        flyer=std::make_unique<RawFlyerProcess>(core.pool,core.types,FlyerProcessGlobals{core.processState.Server(),core.processState.Now(),flyerProcessType,RawCheckingFlag{gameplayGlobals->AiDebug().Checking()}},std::move(hooks));
         ConnectFlyerFrame(); // 최초 Pop/Kernel보다 먼저 현재 같은 Frame 소비자를 설치한다.
         FlyerPostPopHooks post;post.allocateRainProcess=[this] {
             auto* allocation=std::malloc(0x70);if (!allocation) return false;FlyerProcessFields fields;std::memcpy(fields.bytes.data(),allocation,0x70);std::free(allocation);

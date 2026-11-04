@@ -1,0 +1,91 @@
+{
+ "unit": 868,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "a24cdcf4 / 20261105-01 CP",
+ "exeSha256": "1a6f95e89c81e0f3f28d8f538e1d39b01292964bc9e1116ef400f26cb984b5fe",
+ "exeBytes": 10592256,
+ "scope": [
+  "PATCH0045c100의 현재 TYPE/genus·free/dead·저장 Form·finder 뒤 현재 checking과 진단 복귀",
+  "RawGameAuxState의 현재005410ec/31 장기 owner와 생성/홈 getter 공유",
+  "실제 AI 두 호출자와 현재 Client assertion 서비스 연결",
+  "기존 Bind genus도 현재 TYPE 대여를 사용"
+ ],
+ "sourceSha256": {
+  "cpppj/src/o/RawFlyerProcess.h": "a208390d758495633a5a86dc67475670db35c96b320261f7932bdac705c34f30",
+  "cpppj/src/o/RawFlyerProcess.cpp": "6bd00d30fb46fb198debb4ab176c63b0a67dae56b807375eb355dcdb39c5d363",
+  "cpppj/src/o/RawGameAuxState.h": "8d6136aee842373f711abbe2ddd284c324bf0c0bb03f5cc2bad9481b92b3d039",
+  "cpppj/src/client/RawCampaignSession.cpp": "574fac19b14ce2515d916758d94b5a1446f737c478fae1e9df20eda8427a5afd"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/o/RawFlyerProcess.h": "a208390d758495633a5a86dc67475670db35c96b320261f7932bdac705c34f30",
+  "cpppj/src/o/RawFlyerProcess.cpp": "6bd00d30fb46fb198debb4ab176c63b0a67dae56b807375eb355dcdb39c5d363",
+  "cpppj/src/o/RawGameAuxState.h": "8d6136aee842373f711abbe2ddd284c324bf0c0bb03f5cc2bad9481b92b3d039",
+  "cpppj/src/client/RawCampaignSession.cpp": "574fac19b14ce2515d916758d94b5a1446f737c478fae1e9df20eda8427a5afd"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-868/originalCD-0049a650.c": "d4ffb85837cfae319fc753363630d5af205fae93c7779f77dd311241aefb561e",
+  "extracted/cpp-resume-868/originals-0045bc30.c": "15851a37c251083efc06fd050cd02ef7ec2a00c283993c99aa211bfcf5a948f4",
+  "extracted/cpp-resume-868/originals-0045c100.c": "869dbd743033913622cfa656fd520ebbad643cf27e540f887988e6d22b8c5dbf",
+  "extracted/cpp-resume-868/originals-0045c1b0.c": "e2f18724b388db53590e3e0d6ca7120adeed8d84c7e092812f3fcab707456ba4",
+  "extracted/cpp-resume-868/originals-0045c340.c": "12ea63969ef3e72a788c7fa5ff1da311e84490e20b135d4bdae5d18f6edcecf7",
+  "extracted/cpp-resume-868/originals-004ae2d0.c": "aed19c0bf3e856ef42a765f0e3ea665016d7b3ce43e8c12c55d84adab7eb801e"
+ },
+ "assemblySha256": "067c219f86b8cb172b42055346ae41f537e202c404e008ce512e2d0ddf4e59e7",
+ "peInitialGlobal": {
+  "address": "005410ec",
+  "value": 31,
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+ },
+ "validation": {
+  "mode": "코드/정적 연결·제품 컴파일만, 동작 검사 생략",
+  "newCases": 0,
+  "executions": [],
+  "newNativeObservations": 0,
+  "newFixtures": 0,
+  "fixtureExpectationsChanged": false,
+  "sourceChangesAfterFirstBuild": 0,
+  "builds": [
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 326.73613589999997,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-868/build-first.log",
+    "sha256": "63ecc1219e2d9fe14f3d82d53b62b28a286922b48ca2e7984dd94bf951e8a5f8",
+    "targets": [
+     "NetstormCpp"
+    ]
+   }
+  ],
+  "lastFocusedTests": "867 제품의28개 첫 통과이며868의 결과로 합산하지 않는다"
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "completedParents": 38,
+  "completedPartial": 3,
+  "completedParent": "0045c100",
+  "completionMeaning": "현재 본체/Client 연결 코드 완료. 공중 전용 검사를 생략했으므로 기능 검증 완료가 아니다"
+ },
+ "protection": {
+  "count": 2761,
+  "fixtures": 941,
+  "unchanged": true,
+  "snapshot": "extracted/cpp-resume-868/protected-after.json"
+ },
+ "limits": [
+  "TYPE 표 소유자가 처리기보다 오래 살아야 한다. 유효188TYPE 밖과 NULL inner/없는 C++ process는 호스트 오류다",
+  "CD0049a650은 genus0x6ab이며 PATCH processSid checking이 없다. CD 전체 구현으로 확대하지 않는다",
+  "Client expression API의 전체 원문 파일/행 GUI 표시는 미검증",
+  "공중3종 전용 신규 단위/Native/생성/행동·실제 공격/포획/희생/승리·MP/통신·GUI/물리/PCM/CD·전체71/CTest/34미션/ZIP 반복 제외"
+ ],
+ "next": {
+  "unit": 869,
+  "scope": "보상 및 일반 삭제의 altar/dais/너겟/두 rainBlocker 현재 번호를 장기 owner에 연결. 다른 의식/운반 소비자는 후속 잔여로 명시한다."
+ }
+}

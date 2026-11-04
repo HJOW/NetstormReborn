@@ -1,6 +1,7 @@
 // 공통 비행 프로세스의 원문 생성/상태 전송/홈 연결과 맨 오 워의 최초 후처리를 복원한다.
 #pragma once
 #include "o/SquidProcess.h"
+#include "o/RawCheckingFlag.h" // 홈 조회의 현재 processSid 진단 관문을 빌린다.
 #include <array>
 
 namespace netstorm::o {
@@ -17,6 +18,7 @@ struct FlyerProcessGlobals {
     const bool& server; // 00540bc0의 현재 서버다.
     const double& now; // 0055b4d0의 단일 게임 시각이다.
     const std::uint32_t& processType; // 005410ec의 현재 공통 비행 타입31이다.
+    RawCheckingFlag checking; //0045c100의 finder 뒤 processSid 진단이며 genus 진단은 이 관문 밖이다.
 };
 // 실제 부착/조회와 아직 별도로 복원할 큰 비행 몸체의 명시 경계다.
 struct FlyerProcessHooks {
@@ -38,6 +40,7 @@ public:
     static void SpecializeRain(FlyerProcessFields& fields); // 부착이 끝난 뒤0045fac0의 맨 오 워 추가 쓰기다.
     static void SpecializeSun(FlyerProcessFields& fields); // 부착 뒤45ef30의 전용 표/104·112·120 타이머와84 필드만 쓴다.
     void Bind(Sid flyer,Sid home) const; // 0045c1b0의 genus 검사/첫 Form 조회/dirty2/홈 WORD 쓰기다.
+    Sid Home(Sid flyer) const; //0045c100의 현재 genus/상태·저장 Form/현재 checking 진단 뒤 같은 outer+a WORD를 읽는다.
     void Frame(FlyerProcessFields& fields) const; // 실제 미복원 Frame은 명시 하위 오류다.
     void Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const; // 원본 notify를 명시 소비자로 전달한다.
     void ParentDying(FlyerProcessFields& fields) const; // 원본 홈의 부모 사망 통지를 전달한다.
@@ -46,7 +49,7 @@ public:
     const SidPool& Pool() const; // 다른 Host의 필드와 혼합하지 않도록 검사한다.
 private:
     SidPool& pool_; // 같은 자산과 Form을 담는 단일 풀이다.
-    std::vector<RiftTypeRecord> types_; // 현재 불변 TYPE의 genus 표다.
+    std::span<const RiftTypeRecord> types_; // 같은 현재 TYPE의 genus를 빌리며 표 소유자가 이 처리기보다 오래 살아야 한다.
     FlyerProcessGlobals globals_; // 현재 장기 전역 참조다.
     FlyerProcessHooks hooks_; // 선택된 실제 큰 몸체 경계다.
 };

@@ -49,6 +49,8 @@ public:
     const std::uint32_t& FieryTailProcessType() const { return fieryTailProcessType_; } // 현재 생성 함수 선택과 별개인 생성자 내부 전역을 보존한다.
     std::uint32_t& StreakProcessType() { return streakProcessType_; } //005410a0: Teleport 생성 함수 선택·표시 부착·도착 삭제가 공유하는 현재 TYPE다.
     const std::uint32_t& StreakProcessType() const { return streakProcessType_; } // Runtime 교체/일반 월드 준비로12의 새 사본을 만들지 않는다.
+    std::uint32_t& FlyerProcessType() { return flyerProcessType_; } //005410ec의 현재 비행 프로세스 TYPE를 생성/홈 조회가 같은 주소에서 읽는다.
+    const std::uint32_t& FlyerProcessType() const { return flyerProcessType_; } // Session 교체나 일반 월드 준비로31의 새 사본을 만들지 않는다.
     std::uint32_t& SupportTypeWas() { return supportTypeWas_; } //0054d4e4: 불완전한 받침 상세가 읽는 현재 DWORD다. MP 수신 writer 연결은 별도 잔여다.
     const std::uint32_t& SupportTypeWas() const { return supportTypeWas_; } // 일반 월드 준비/Session 교체로 현재 진단 문맥을 초기화하지 않는다.
     std::uint32_t& FirstTimerFactoryType() { return firstTimerFactoryType_; } //005411ac의 현재 DWORD를 Factory 최초 event2가 읽는다.
@@ -90,6 +92,7 @@ private:
     std::int32_t defaultSp_{2000}; // 보호 PE의 signed 기본SP다.
     std::uint32_t geyserType_{122},subscriberMarker_{}; // 보호 PE TYPE122와 별도BSS 표지다.
     std::uint32_t fieryTailProcessType_{11},streakProcessType_{12}; // 보호10.78의 두 TYPE 전역 초기값이며 Session보다 오래 유지한다.
+    std::uint32_t flyerProcessType_{31}; // 보호 PE005410ec의 초기 DWORD이며 홈/생성·후속 writer가 공유할 장기 물리다.
     std::uint32_t supportTypeWas_{}; //0054d4e4의 최초 BSS0이며 진단 소비자와 이후 수신 writer가 공유할 장기 물리다.
     std::uint32_t firstTimerFactoryType_{85},secondTimerFactoryType_{87},outpostType_{126}; // 보호10.78 PE의 세 TYPE DWORD 초기값이며 일반 Runtime 초기화와 구별한다.
     std::uint32_t terrainType_{97},edgeFarmType_{121}; // 보호 PE 두 TYPE 전역이며 현재 Runtime 대여/반납은 초기화하지 않는다.
