@@ -1,0 +1,857 @@
+{
+ "unit": 889,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "0d163f6e / 20261105-22 CP",
+ "exeSha256": "81f84b67df6f49a78cd0a821ece8a60b2ab59eb0d475f463a09a08c2fc463998",
+ "exeBytes": 10664448,
+ "logicalCaseCount": 21,
+ "newCases": 4,
+ "filterExecutions": 8,
+ "caseExecutions": 23,
+ "initialFailedCases": 1,
+ "finalFailedCases": 0,
+ "caseRenames": {
+  "RiftShapeAccess_ActualSessionRetainsInputFrameAndCurrentCost": "RiftShapeAccess_ActualSessionRetainsInputFrameAndLoadedCost"
+ },
+ "finalCases": [
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "CursorConstructorCurrent_ActualTeleportUsesFixedBodyAndItsCurrentAttachType",
+   "passed": true,
+   "executedName": "CursorConstructorCurrent_ActualTeleportUsesFixedBodyAndItsCurrentAttachType",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-cursor-constructor-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse",
+   "passed": true,
+   "executedName": "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse",
+   "phase": "corrected",
+   "log": "extracted/cpp-resume-889/test-session-loaded-cost-nonzero-corrected.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "PopWorldBounds_ActualSessionUsesSameCurrentClientSizeAsCursorAndCamera",
+   "passed": true,
+   "executedName": "PopWorldBounds_ActualSessionUsesSameCurrentClientSizeAsCursorAndCamera",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-world-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "RiftShapeAccess_ActualSessionRetainsInputFrameAndLoadedCost",
+   "passed": true,
+   "executedName": "RiftShapeAccess_ActualSessionRetainsInputFrameAndLoadedCost",
+   "phase": "corrected",
+   "log": "extracted/cpp-resume-889/test-session-loaded-cost-shape-corrected.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "PopWorldBounds_ActualParentClampsUnorderedAndRechecksLimitAfterMiniMap",
+   "passed": true,
+   "executedName": "PopWorldBounds_ActualParentClampsUnorderedAndRechecksLimitAfterMiniMap",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-world-bounds-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "PopWorldBounds_Native260OrderedPointAndPopFrontFloatSnapshot",
+   "passed": true,
+   "executedName": "PopWorldBounds_Native260OrderedPointAndPopFrontFloatSnapshot",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-world-bounds-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "PopWorldBounds_SelectedGetterSurvivesSelfUnbindingAndInvalidXSkipsIt",
+   "passed": true,
+   "executedName": "PopWorldBounds_SelectedGetterSurvivesSelfUnbindingAndInvalidXSkipsIt",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-world-bounds-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_ActualAdapterTransmittingDiagnosticRunsAfterVoidClear",
+   "passed": true,
+   "executedName": "SquidPopParent_ActualAdapterTransmittingDiagnosticRunsAfterVoidClear",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_ActualClientWorldDiagnosticAndTraceShareCurrentOwner",
+   "passed": true,
+   "executedName": "SquidPopParent_ActualClientWorldDiagnosticAndTraceShareCurrentOwner",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_ActualWorldFrameFailurePreservesCoordinatesAndSpots",
+   "passed": true,
+   "executedName": "SquidPopParent_ActualWorldFrameFailurePreservesCoordinatesAndSpots",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_EarlyReturnsDoNotReadTypeOrDevices",
+   "passed": true,
+   "executedName": "SquidPopParent_EarlyReturnsDoNotReadTypeOrDevices",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_FinalContainedDiagnosticKeepsCompletedEffects",
+   "passed": true,
+   "executedName": "SquidPopParent_FinalContainedDiagnosticKeepsCompletedEffects",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_FrameFailureOccursAfterSpotsBeforeHash",
+   "passed": true,
+   "executedName": "SquidPopParent_FrameFailureOccursAfterSpotsBeforeHash",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_GridDiagnosticKeepsCandidateAndLogsCurrentNames",
+   "passed": true,
+   "executedName": "SquidPopParent_GridDiagnosticKeepsCandidateAndLogsCurrentNames",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_InvalidCoordinateLogsBeforeStoreAndUsesCurrentType",
+   "passed": true,
+   "executedName": "SquidPopParent_InvalidCoordinateLogsBeforeStoreAndUsesCurrentType",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_InvalidStartDiagnosesWithCheckingOffAndResumesCellZero",
+   "passed": true,
+   "executedName": "SquidPopParent_InvalidStartDiagnosesWithCheckingOffAndResumesCellZero",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_MiniMapPreservesInputBoundsAndReadsCurrentLoopType",
+   "passed": true,
+   "executedName": "SquidPopParent_MiniMapPreservesInputBoundsAndReadsCurrentLoopType",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_MissingSideDeviceKeepsEarlierSpots",
+   "passed": true,
+   "executedName": "SquidPopParent_MissingSideDeviceKeepsEarlierSpots",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_NextDiagnosticKeepsSavedHeadAndCurrentIslandBranch",
+   "passed": true,
+   "executedName": "SquidPopParent_NextDiagnosticKeepsSavedHeadAndCurrentIslandBranch",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_OverlapReturnsBeforeUnknownVirtualAndFrame",
+   "passed": true,
+   "executedName": "SquidPopParent_OverlapReturnsBeforeUnknownVirtualAndFrame",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "SquidPopParent_UpdateControlsCurrentFirstPopAndFlags",
+   "passed": true,
+   "executedName": "SquidPopParent_UpdateControlsCurrentFirstPopAndFlags",
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log"
+  }
+ ],
+ "testExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "PopWorldBounds_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-889/test-pop-world-bounds-first.log",
+   "sha256": "970ec4f695da074c090dafa4aa06341ba9fe68c061f94dd51b509025b18e3513",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "PopWorldBounds_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-889/test-pop-world-session-first.log",
+   "sha256": "090ecf0fb2119ee7e66cec4783ef1476579cbee951425bc2722cb35db0980aed",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "SquidPopParent_",
+   "cases": 14,
+   "expectedCases": 14,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-889/test-pop-parent-first.log",
+   "sha256": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "CursorConstructorCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-889/test-cursor-constructor-session-first.log",
+   "sha256": "208e0a7f169c007bb1100ef8fbc741e2a8eb7a6d179926f0afd5792a698f81e6",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RiftShapeAccess_ActualSessionRetainsInputFrameAndCurrentCost",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 1,
+   "failedChecks": 1,
+   "exitCode": 1,
+   "log": "extracted/cpp-resume-889/test-session-current-shape-first.log",
+   "sha256": "482b924884f9039451029b00ff029984937fad759e8655b9c677be1bc231a72d",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RiftShapeAccess_ActualSessionRetainsInputFrameAndCurrentCost",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 1,
+   "failedChecks": 1,
+   "exitCode": 1,
+   "phase": "diagnostic",
+   "log": "extracted/cpp-resume-889/test-session-current-shape-diagnostic.log",
+   "sha256": "439a2adad718ed241a8bdf6a6bc197e779f492a4939953a2c85cce692a2f093c"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RiftShapeAccess_ActualSessionRetainsInputFrameAndLoadedCost",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-889/test-session-loaded-cost-shape-corrected.log",
+   "sha256": "2d37801948ac45fd97c8fa30f70ca8640e72b397e5b8cc2f26fb4068cc861bbe",
+   "phase": "corrected"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "LoadedCostTable_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-889/test-session-loaded-cost-nonzero-corrected.log",
+   "sha256": "b7cc4d9114c429788bdc6b8f76507cab78825941876cba878fa9b34b26d8de19",
+   "phase": "corrected"
+  }
+ ],
+ "builds": [
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 435.5978637,
+   "phase": "first",
+   "log": "extracted/cpp-resume-889/build-first.log",
+   "logSha256": "06338d754d59bf4f31648fe667131ca4a6b19384981bc11133c06ab2fc9829a8",
+   "warnings": 0,
+   "errors": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 33.2878957,
+   "phase": "diagnostic",
+   "log": "extracted/cpp-resume-889/build-diagnostic.log",
+   "logSha256": "1acdb4e4662b617488404449a4b868feb9cc766ed7e81e870f488bf4d7dddc89",
+   "warnings": 0,
+   "errors": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 33.540914799999996,
+   "phase": "corrected",
+   "log": "extracted/cpp-resume-889/build-corrected.log",
+   "logSha256": "1acdb4e4662b617488404449a4b868feb9cc766ed7e81e870f488bf4d7dddc89",
+   "warnings": 0,
+   "errors": 0
+  }
+ ],
+ "sourceSha256": {
+  "cpppj/src/o/RawSquidPopParent.h": "e41f587d64b7a65bb955205b042f242449e5f0601d4828f04aba18efea2e4996",
+  "cpppj/src/o/RawSquidPopParent.cpp": "4b14586e0784a78d8095f39a6d1f9a749fc2d509f63e6f7adb10b59faae351f2",
+  "cpppj/src/o/SquidPop.cpp": "7b1436f1658d52c9c8ab7b52c38565b3d5374f71d56625a9da99ef691548077b",
+  "cpppj/src/client/RawCampaignSession.cpp": "3a13945acfd6f5357970b0391936c2f48d1b9cdf9ff6185dfbe9b6057059de1c",
+  "cpppj/tests/CMakeLists.txt": "e583565581889f5e06ff4db99530374200b694f780518b91e6ac41ec95f3d8fc",
+  "cpppj/tests/SquidPopParentTests.cpp": "459d4f398a3fc456d5544c64f09e5a15e547ecee1e621b89bab3f92f970a166c",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "b74e021997c5a3078e818511ded20cfd49d1e2480c7e968ba41a00163cf21a0c",
+  "cpppj/tests/PopWorldBoundsTests.cpp": "251c9700fa29d210af124ce14741f6c951b439c5c6a81262c9d58f67a63365ef",
+  "tools/decomp_pop_world_bounds.py": "3f4c41cc9fd7893a6e00040450e9e9c7932dbb19a596701340fed1145e311e7c",
+  "cpppj/tests/fixtures/pop-world-bounds-x86.tsv": "f7266004f4a79668af5ad08bbe8fd62afe19dca5f793c1107d0f26e274ec7a50"
+ },
+ "productAfterFirstBuildCorrections": 0,
+ "oldManualExpectationCorrections": {
+  "case": "RiftShapeAccess_ActualSessionRetainsInputFrameAndCurrentCost",
+  "nativeCostProof": "865004b0e72..004b0e97 reads separate0059ab50[type] andsubtractstype23;0049c2e0 initialcache",
+  "observed": {
+   "diagnoses": 1,
+   "level": 3,
+   "frame": 0,
+   "costDelta": 0,
+   "liveCost": 21,
+   "loadedCost": 0,
+   "depth": 0
+  },
+  "newExpectation": "originalBannerloadedcost0/currentfloat21 keptseparate; inputframe1 sizesstillusedaftermutationframe0",
+  "nonzeroRegression": "existingactualSessionloadedSunCannon400casepassed"
+ },
+ "fixtureExpectedChanges": 0,
+ "originalProtectedUnchanged": 2768,
+ "protectedCount": 2769,
+ "fixtureCount": 949,
+ "newFixtures": 1,
+ "nativeRows": 260,
+ "nativeReobservedRows": 260,
+ "nativeFunctionObservations": 1040,
+ "nativeFunctionReobservations": 1040,
+ "nativeScope": "whole0040e800 and004b02d0frontuntilbefore004210a0 only, bothCW027f037f; not fullPop/SetPosition execution",
+ "nativeWorldLimitReadInstructions": [
+  "004b0321",
+  "0040e810"
+ ],
+ "nativeFloatStoreInstructions": [
+  "004b0327",
+  "0040e816"
+ ],
+ "staticVtableAudit": {
+  "vtableCount": 83,
+  "plus20Families": {
+   "004b0d30": 30,
+   "0041c150": 1,
+   "0041f870": 1,
+   "0041f920": 1,
+   "0041fab0": 1,
+   "00422150": 1,
+   "00427720": 3,
+   "0042abb0": 2,
+   "0042ac90": 1,
+   "0042aed0": 1,
+   "004421c0": 1,
+   "004423b0": 1,
+   "004429f0": 1,
+   "00448930": 1,
+   "00448ad0": 1,
+   "00448d20": 1,
+   "00449320": 1,
+   "00450cd0": 1,
+   "004538f0": 1,
+   "004557c0": 1,
+   "00457560": 1,
+   "0045ec50": 1,
+   "0045ed10": 1,
+   "0045edf0": 1,
+   "0045e810": 1,
+   "0045ef30": 1,
+   "0045fac0": 1,
+   "00462170": 1,
+   "0044bf80": 2,
+   "004694b0": 1,
+   "0046a520": 1,
+   "0046a600": 1,
+   "0046a810": 1,
+   "0046aca0": 2,
+   "004852e0": 1,
+   "00484f90": 1,
+   "0048c080": 1,
+   "0048c7a0": 1,
+   "0048ead0": 1,
+   "0048eda0": 3,
+   "004905d0": 1,
+   "004950f0": 1,
+   "0049a2b0": 1,
+   "004dce40": 1,
+   "004dd020": 2,
+   "004dd1f0": 1
+  },
+  "plus30Families": {
+   "004ad470": 83
+  },
+  "rows": [
+   {
+    "vt": "00501dd0",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00501ea0",
+    "plus20": "0041c150",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502370",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502448",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502510",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005025d8",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005026a0",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502778",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502840",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502908",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005029d0",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502aa8",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502b70",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502c38",
+    "plus20": "0041f870",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502cf0",
+    "plus20": "0041f920",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502db0",
+    "plus20": "0041fab0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502e68",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502f30",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00502ff8",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005030c0",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00503188",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00503360",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005034c8",
+    "plus20": "00422150",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00503d80",
+    "plus20": "00427720",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00503e50",
+    "plus20": "00427720",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00503f20",
+    "plus20": "0042abb0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00503ff0",
+    "plus20": "0042abb0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005040c0",
+    "plus20": "0042ac90",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00504198",
+    "plus20": "0042aed0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00506d98",
+    "plus20": "004421c0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00506e50",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00506f08",
+    "plus20": "004423b0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005070c0",
+    "plus20": "004429f0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005075d8",
+    "plus20": "00448930",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005076b8",
+    "plus20": "00448ad0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00507770",
+    "plus20": "00448d20",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00507950",
+    "plus20": "00449320",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00508cc8",
+    "plus20": "00450cd0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00509148",
+    "plus20": "004538f0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00509210",
+    "plus20": "004557c0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005092d0",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00509388",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00509470",
+    "plus20": "00457560",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005096a0",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00509758",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00509810",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00509930",
+    "plus20": "0045ec50",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005099e8",
+    "plus20": "0045ed10",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00509aa0",
+    "plus20": "0045edf0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00509b98",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050a050",
+    "plus20": "0045e810",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050a1e8",
+    "plus20": "0045ef30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050a388",
+    "plus20": "0045fac0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050a748",
+    "plus20": "00462170",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050a820",
+    "plus20": "0044bf80",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050a8e8",
+    "plus20": "0044bf80",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050b570",
+    "plus20": "004694b0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050b6e8",
+    "plus20": "0046a520",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050b7c0",
+    "plus20": "0046a600",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050b888",
+    "plus20": "0046a810",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050b9b8",
+    "plus20": "0046aca0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050bad0",
+    "plus20": "0046aca0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050c3b0",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050c9f0",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050cc08",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050da88",
+    "plus20": "004852e0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050db78",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050dc30",
+    "plus20": "00484f90",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050e568",
+    "plus20": "00427720",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050e668",
+    "plus20": "0048c080",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050e738",
+    "plus20": "0048c7a0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050e888",
+    "plus20": "0048ead0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050e940",
+    "plus20": "0048eda0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050ea08",
+    "plus20": "0048eda0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050ead0",
+    "plus20": "0048eda0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050eb98",
+    "plus20": "004b0d30",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050ee08",
+    "plus20": "004905d0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050f210",
+    "plus20": "004950f0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "0050f540",
+    "plus20": "0049a2b0",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005196f0",
+    "plus20": "004dce40",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "005197a8",
+    "plus20": "004dd020",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00519860",
+    "plus20": "004dd020",
+    "plus30": "004ad470"
+   },
+   {
+    "vt": "00519918",
+    "plus20": "004dd1f0",
+    "plus30": "004ad470"
+   }
+  ]
+ },
+ "metamapGenericGaps": [
+  {
+   "vt": "0050c9f0",
+   "types": [
+    108,
+    109
+   ]
+  },
+  {
+   "vt": "0050cc08",
+   "types": [
+    161
+   ]
+  }
+ ],
+ "checkingRemaining": 10,
+ "boundaries": [
+  "Physicalmap256x256 distinct fromcurrentlogicallimit; outofphysicalhash/spot memory remainhosterrors",
+  "IndependentnoGetteruseslegacy256; actualSessiongetterowns sameClientGameplayGlobals andreadsWorldCellsateachentry/startcall",
+  "No allcurrentgenus/pixelGlobalwriterintegrationorfullPop closureclaimed; plus20/explicitValidate audit remains",
+  "LegacySHPtest expectation corrected fromexistingNativecostcache evidence, no productcost/fixturechanges",
+  "No GUI/game/AI/combatKernel/user-manual/capture/sacrifice/specificattack/win/air3/MP/whole71/CTest/34/ZIP runs"
+ ]
+}

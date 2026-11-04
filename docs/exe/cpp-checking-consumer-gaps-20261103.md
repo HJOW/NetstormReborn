@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**889 Pop 현재 크기/ordered 비교:** 같은 Client 세계 크기·한 번float저장·NaN 보정/늦은 시작점 조회를 연결했다. Native260행×4관측/재관측·새4/고유21논리사례 최종 실패0·옛 비용 기대1개를 원문캐시로 교정·Release3회 경고0·기존2768개/948fixture 불변·새1개→2769개/949개다. 파생+20/Validate 전체 감사는 잔여·checking10 유지다. [889 기록](cpp-pop-world-bounds-current-20261105.md).
+
 **888 자산 bare cdecl:** 같은 물리 recipe/NULL/진단 후 저장과 실제 Session/Teleport를 연결했다. 원문1036행/재관측·고유32개(새4) 최종 실패0·새 입력2곳 교정·제품/기대값 불변·Release3회 경고0이다. 기존2767개/947fixture 불변·새1개→2768개/948개이며 checking10 유지다. 파생+20/전체Pop·현재TYPE writer는 잔여다. [888 기록](cpp-asset-constructor-current-20261105.md).
 
 **887 UI50/51 cdecl:** 실제 표시/현재 부착 TYPE·Host와 Teleport 공통 복귀를 연결했다. wrapper32행/재관측(Construct 외부 경계)·기존 UI642/593행·고유30개(새1) 첫 실패0·Release1회 경고0·보호2767개/947fixture 불변이다. 최초0~69 비영21행/고유20주소의 정적 분배는 연결됐으며 자산/전체Pop은 잔여·checking10 유지다. [887 기록](cpp-cursor-constructor-current-20261105.md).
@@ -1504,7 +1506,7 @@ LAB_004ad54f:
 
 ## FUN_004b02d0 @ 004b02d0
 
-**842~845 부분 연결:**현재 공간/firstPop/Activate·실제writer/SHP·공통004b0d30과실제004da650을같은World/Session에연결했다. 실제PATCH공통앞전체사전검사를제거했고진단정상복귀와부분효과를유지한다. 파생+20현재분배/자체Validate경계는잔여이며이부모전체완료로집계하지않는다.
+**842~845 부분 연결·889 현재 크기 보완:**입구/시작점의 실제00531928·float저장·ordered NaN 비교는889에서 같은Client에 연결했다. 현재 공간/firstPop/Activate·실제writer/SHP·공통004b0d30과실제004da650을같은World/Session에연결했다. 실제PATCH공통앞전체사전검사를제거했고진단정상복귀와부분효과를유지한다. 파생+20현재분배/자체Validate경계는잔여이며이부모전체완료로집계하지않는다.
 
 기존 현재 gate/부모 미복원: 아래 후속 묶음에서 조건/효과/원문 assertion 재개 순서를 복원할 대상
 

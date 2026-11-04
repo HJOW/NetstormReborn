@@ -96,6 +96,7 @@ RawPopResult SquidPop::PopPatch(Sid sid,float x,float y,std::uint32_t flags,cons
         if (display_) { const auto raw=pool_.Slot(object);return display_->FrameSize(pool_.Edition(),raw,std::bit_cast<std::int32_t>(Read(raw,36))); }
         if (!fallback) throw std::logic_error("Pop 현재 SHP 조회 미연결");return size; // 독립 입력의 치수는 실제 SHP 장치가 없는 경우에만 사용한다.
     };
+    effects.worldCells=[this] { const auto current=diagnostics_.worldCells;return current ? current() : 256; }; // 실제 장기 Client getter 또는 독립 원문 입력만 읽는다.
     effects.metamap=[this] { const auto current=diagnostics_.metamap;return current ? current() : true; }; // 기존 독립 원문 fixture는00594fc8=1의 무로그 입력이다.
     effects.trace=[this](auto level,auto text) { const auto current=diagnostics_.trace;if (!current) throw std::logic_error("Pop 실제 원문 로그 미연결");current(level,text); };
     effects.assertion=[this](auto expression,auto file,auto line) { const auto current=diagnostics_.assertion;if (!current) throw std::logic_error("Pop 실제 원문 진단 미연결 "+std::to_string(line));current(expression,file,line); };

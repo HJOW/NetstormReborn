@@ -16,6 +16,7 @@ struct SquidPopDiagnostics { // World/Session이 실제 Client의 현재 조회�
     std::function<bool()> metamap; // 00594fc8의 현재 값이며 잘못된 좌표의 로그만 생략한다.
     std::function<void(std::int32_t,std::string_view)> trace; // 원문 수준29와 완성된 로그 바이트를 같은 writer에 전달한다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 진단 정상 복귀 뒤 현재 상태로 계속한다.
+    std::function<std::int32_t()> worldCells; // 같은 Client00531928의 현재 signed값이다. 독립 미연결 입력만256을 사용한다.
 };
 struct SquidPopParentHooks { // 도달한 실제 경계를 요구하며 하위 결과를 성공 상수로 만들지 않는다.
     std::function<const RiftTypeRecord&(std::uint8_t)> type; // 초기 TYPE 참조와 반복문의 현재 TYPE를 조회한다.
@@ -28,7 +29,11 @@ struct SquidPopParentHooks { // 도달한 실제 경계를 요구하며 하위 �
     std::function<std::uint32_t(Sid)> firstPop; // 표시 뒤 현재 가상30을 한 번 호출한다.
     std::function<void(Sid,std::uint32_t)> activate; // firstPop을 합친 원문 flags로004ac560을 호출한다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 원문 식/파일/줄을 보존한다.
+    std::function<std::int32_t()> worldCells; // 입구/시작점 검사마다 현재 세계 크기를 한 번 읽고 float로 저장한다.
 };
+// 원문0040e800 및 Pop 입구의 ordered 비교다. x>0 뒤에만 현재 크기를 float로 한 번 저장하고 두 축에 공유한다.
+// NaN/무한값도 원문의 비교 결과를 유지하며 미연결 getter는 기존 독립256 입력이다.
+bool IsCurrentPopPointValid(float x,float y,const std::function<std::int32_t()>& worldCells={});
 // 부분 좌표/spot/해시 변경을 되돌리지 않는다. CD판은 기존 별도 몸체를 유지한다.
 RawPopResult RunSquidPopParent(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,Sid sid,
     float x,float y,std::uint32_t flags,RawCheckingFlag checking,const SquidPopParentHooks& hooks);

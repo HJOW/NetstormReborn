@@ -50,12 +50,19 @@ void PopGridLog(const SquidPopParentHooks& hooks,Sid sid,std::string_view name,S
 }
 }
 
+// fild signedDWORD→fstp float의 저장과 NaN unordered 실패를 원문과 같은 순서로 적용한다.
+bool IsCurrentPopPointValid(float x,float y,const std::function<std::int32_t()>& worldCells) {
+    if (!(x>0.0F)) return false;
+    const auto selected=worldCells; // 자기 연결을 해제한 getter도 이번 한 번의 조회 끝까지 유지한다.
+    const auto limit=static_cast<float>(selected ? selected() : 256);
+    return x<limit && y>0.0F && y<limit;
+}
+
 RawPopResult RunSquidPopParent(SidPool& pool,SquidHash& hash,std::span<std::uint8_t> spots,Sid sid,float x,float y,std::uint32_t flags,RawCheckingFlag checking,const SquidPopParentHooks& hooks) { // 실제004b02d0의 전체 외부 호출 순서를 따른다.
     if (pool.Edition()!=OriginalEdition::Patch1078 || spots.size()!=65536) throw std::invalid_argument("현재 Pop 부모의 PATCH/전체 spot 필요");
     if (!sid.value || sid.value>=pool.Capacity()) return RawPopResult::Unchanged;
     auto raw=PopRaw(pool,sid);if (!(raw[11]&4U) || (raw[11]&8U)) return RawPopResult::Unchanged;
-    if (!std::isfinite(x) || !std::isfinite(y)) throw std::invalid_argument("Pop의 유한 좌표 필요");
-    if (x<=0 || y<=0 || x>=256 || y>=256) {
+    if (!IsCurrentPopPointValid(x,y,hooks.worldCells)) {
         if (!NeedPop(hooks.metamap)()) {
             const auto name=PopName(NeedPop(hooks.type)(raw[10]));std::array<char,512> text{};
             const auto count=std::snprintf(text.data(),text.size(),"Error %s popped to( %5.1f,%5.1f). Set to( 10,10)\n",name.c_str(),double(x),double(y));
@@ -70,7 +77,7 @@ RawPopResult RunSquidPopParent(SidPool& pool,SquidHash& hash,std::span<std::uint
     if ((genus&6U) && !(raw[40]&8U)) NeedPop(hooks.miniMap)(sid,genus);
     if (((genus&(kBuildingMask|0x400ffU)) || (NeedPop(hooks.type)(raw[10]).flags1&0x800U)) && !(raw[40]&8U) && !(raw[11]&8U)) {
         const auto right=PopInteger(x),bottom=PopInteger(y),left=PopStart(right,initial.footX),top=PopStart(bottom,initial.footY); // 외부 미니맵이 raw 좌표를 바꿔도 원문 인자 좌표 범위는 유지한다.
-        if (!(left>0 && left<256 && top>0 && top<256)) PopAssert(hooks,"start.isValid()",0x6b7);
+        if (!IsCurrentPopPointValid(static_cast<float>(left),static_cast<float>(top),hooks.worldCells)) PopAssert(hooks,"start.isValid()",0x6b7);
         for (std::int32_t cy=top;cy<=bottom;++cy) { // 진단 복귀 뒤에도 처음 저장한 행 범위를 유지한다.
             for (std::int32_t cx=left;cx<=right;++cx) { // 매 칸의 effective genus와 표면 여부는 현재 TYPE/좌표를 다시 읽는다.
                 if (cx<0 || cy<0 || cx>=256 || cy>=256) throw std::out_of_range("Pop spot의 물리 지도 범위");

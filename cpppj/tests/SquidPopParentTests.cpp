@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <bit>
 #include <filesystem>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -182,4 +183,10 @@ TEST_CASE(SquidPopParent_ActualClientWorldDiagnosticAndTraceShareCurrentOwner) {
     world.Pop(source,30,40,0x40);
     CHECK(assertions==1 && checking==0 && logs==(std::vector<std::string>{"ERROR: gridSid 15000( source) replacing 9( surface)\n"}));
     CHECK(core.hash.Bucket(1,30,40)==source.value && !(core.pool.Slot(source)[11]&4U));
+}
+
+TEST_CASE(PopWorldBounds_ActualParentClampsUnorderedAndRechecksLimitAfterMiniMap) { // 처음 비교의float저장과 미니맵 뒤 시작점의 현재 크기를 같은 부모에서 확인한다.
+    PopParentScene clamped;std::int32_t limit=32;std::uint32_t reads=0;clamped.hooks.worldCells=[&] { ++reads;return limit; };CHECK(clamped.Run(40,20)==RawPopResult::Registered);CHECK(clamped.Coordinate(14)==10 && clamped.Coordinate(18)==10 && reads==2 && clamped.lines.empty()); // 입구/시작점은 각각 한 번 읽는다.
+    PopParentScene unordered;std::uint32_t nanReads=0;unordered.hooks.worldCells=[&] { ++nanReads;return 32; };CHECK(unordered.Run(std::numeric_limits<float>::quiet_NaN(),20)==RawPopResult::Registered);CHECK(unordered.Coordinate(14)==10 && unordered.Coordinate(18)==10 && nanReads==1 && unordered.lines.empty()); // NaN x는 입구의 크기를 읽지 않고 시작점만 읽는다.
+    PopParentScene current;current.types[74].flags2=2;limit=64;reads=0;current.hooks.worldCells=[&] { ++reads;return limit; };current.onMiniMap=[&] { limit=16; };CHECK(current.Run(40,20)==RawPopResult::Registered);CHECK(current.Coordinate(14)==40 && current.Coordinate(18)==20 && reads==2 && current.lines==std::vector<std::uint32_t>{0x6b7} && current.spots[20*256+40]==2 && current.activations==1); // 현재 시작점 진단 뒤에도 실제 물리 지도/원래 저장 범위로 계속한다.
 }

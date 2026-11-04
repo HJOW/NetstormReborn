@@ -3469,3 +3469,6 @@ target_sources(netstorm_pop_context_tests PRIVATE CursorManaTests.cpp CursorRang
 
 target_sources(netstorm_tests PRIVATE AssetConstructorCurrentTests.cpp) # 공중3종/Outpost를 제외한 물리 생성1036행과 진단 수명을 대조한다(888).
 target_sources(netstorm_pop_context_tests PRIVATE AssetConstructorCurrentTests.cpp) # 게임/의식/MP 없이 같은 생성 원문/전체 슬롯만 실행한다(888).
+
+target_sources(netstorm_tests PRIVATE PopWorldBoundsTests.cpp) # 원문260개 현재크기/NaN/float저장을 대조한다(889).
+target_sources(netstorm_pop_context_tests PRIVATE PopWorldBoundsTests.cpp) # 게임/공중3종/MP 없이 좌표 검사와 같은 Pop 부모만 실행한다(889).
