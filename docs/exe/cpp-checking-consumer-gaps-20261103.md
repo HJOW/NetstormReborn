@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**880 EvilRay 독립 수명:** 현재 TYPE/source 위치·50입자/공유3색·Stop/소멸을 원문34행/재관측·고유5개(새3) 첫 실패0·Release 경고0으로 대조했다. 실제 Session/Host/Frame/Draw는 미연결이다. 기존2761개/941fixture 불변·새1개 추가 후 기준2762개/942개·checking10/완료부모38/부분3 유지다. [880 기록](cpp-evilray-lifetime-20261105.md).
+
 **879 Teleport NULL 생성자:** 현재 TYPE13/22의 원문 진단/NULL 복귀와 실제 Client·공통 부모를 연결했다. 고유21개/5묶음(새3) 첫 검사 실패0·새 검사 SID식 한 곳 교정 후 Release 경고0·기존 기대값/보호2761개 불변이다. 다른process12항목과 전체Pop은 잔여이며 checking10/완료부모38/부분3 유지다. [879 기록](cpp-teleport-null-constructors-20261105.md).
 
 **878 내용물 부모 알림:** PATCH 선택 장치·효과 전 반환/현재 kind 뒤 위치 조회를 연결하고 CD 생성 계약을 유지했다. 고유29개/11묶음(새2) 첫 실패0·Release1회 경고0·기존 기대값/보호2761개 불변이다. 실제 포획 알림 효과는 코드/정적이며 새 검사는 앞단 조회뿐이다. checking10/완료부모38/부분3 유지다. [878 기록](cpp-content-notice-current-20261105.md).

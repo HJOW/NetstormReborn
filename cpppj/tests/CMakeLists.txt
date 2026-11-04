@@ -3450,3 +3450,5 @@ target_compile_definitions(netstorm_pop_context_tests PRIVATE
     NETSTORM_PRIESTSTATE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/prieststate-x86.tsv")
 
 target_sources(netstorm_pop_context_tests PRIVATE DaisLifecycleTests.cpp) # 다이스의 기존 독립 수명 접두/Player 기록만 대조하며 실제 희생/포획 몸체는 실행하지 않는다(단위873).
+target_sources(netstorm_tests PRIVATE EvilRayLifetimeTests.cpp) # 원문 EvilRay의 생성/색/Stop만 격리 대조한다(880).
+target_sources(netstorm_pop_context_tests PRIVATE EvilRayLifetimeTests.cpp) # 게임/공중3종/MP 전용 실행 없이 같은 제품 몸체를 검사한다(880).

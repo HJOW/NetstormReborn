@@ -1,0 +1,154 @@
+{
+ "unit": 880,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "f409d3f2 / 20261105-13 CP",
+ "exeSha256": "8c16bef04706060ba7e5eef63f9b833b75899596e0a79197646c0a12c19900ac",
+ "exeBytes": 10615808,
+ "caseCount": 5,
+ "groups": 3,
+ "newCases": 3,
+ "uniqueCases": [
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_CurrentReadOrderAndReachedDeviceFailure"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_NativeCtorPaletteAndDestruction"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "EvilRayLifetime_NativeStopDiagnosticsAndWholeDword"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "FieryTailLifetime_Native027f"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "StreakLifetime_NativeConstructorAndSharedPalette"
+  ]
+ ],
+ "originalProtectedUnchanged": 2761,
+ "protectedCount": 2762,
+ "fixtureCount": 942,
+ "newFixtures": 1,
+ "nativeRows": 34,
+ "nativeCreateRows": 24,
+ "nativeStopRows": 10,
+ "nativeCreatePrecisionDifferences": 0,
+ "sourceSha256": {
+  "cpppj/src/CMakeLists.txt": "3ee86c58412b0683c6a342d0c583ee459041f25afb9ebac469a14d9837a9a1be",
+  "cpppj/tests/CMakeLists.txt": "3448ca2d067a6bf37edbf42579103f05f12e70c33d043ddcda1586f1a5c6fef4",
+  "cpppj/src/o/RawEvilRayLifetime.h": "2e6cfeb0af6066d9924fd8d575b34db4e44956a939d229fef893310eba0c99b9",
+  "cpppj/src/o/RawEvilRayLifetime.cpp": "6d8d77488a1671e111b8af4b5c40d265ab81f408202ca4a503e10b46a999e03a",
+  "cpppj/tests/EvilRayLifetimeTests.cpp": "7712e279f3d7bdc88c0514dcdbf2e814dedd7ea48784475088b60f53d16f1037",
+  "tools/decomp_evilray_lifetime.py": "60d3dc7e6701d6240f257ea603e6415e30435001ced66a2cfb673bd6fb0d0e66",
+  "cpppj/tests/fixtures/evilray-lifetime-x86.tsv": "cbd1c9b8d9efd41ca95a04f69d25bc8a7877adb40ea0a150694c4a5f1c212b1e"
+ },
+ "build": {
+  "exitCode": 0,
+  "elapsedSeconds": 35.8289704,
+  "log": "extracted/cpp-resume-880/build-first.log",
+  "logSha256": "cc51b8b118c448f1130e041d7b5ae530040507c3bea8a5f433068e025a7628a1",
+  "warnings": 0,
+  "errors": 0
+ },
+ "testExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "EvilRayLifetime_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-880/test-evilray-lifetime-first.log",
+   "sha256": "68077f2b50fdd2f555a870411ec9c3e252c151cdcddc3f05972e887f6cb38bc6"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "FieryTailLifetime_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-880/test-fiery-lifetime-native-first.log",
+   "sha256": "79816adc4be129c5458add107c397eb01c2d8a6dd8eb898e2f99cadb46d717a6"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "StreakLifetime_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-880/test-streak-lifetime-native-first.log",
+   "sha256": "85ee218a211b27a923a4fbedef9943aa45cde423e3d7f9c4f364647431ac6b81"
+  }
+ ],
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-880/native-constants.json": "33841e99a8f1a683e7aafb1369a299c85da82ca0c7931a87d49d8efbf7cd4e6a",
+  "extracted/cpp-resume-880/native-first.log": "6262db5b9c07f91242cf969b45ebd291492cd39988b7c4bbd3b8e51a9304bd3d",
+  "extracted/cpp-resume-880/native-reobserved.log": "de65b6395151a46cff7195b0d323a90f49bf45d8c71dd377e169834d48717f9b",
+  "extracted/cpp-resume-880/originalCD-004b3080.c": "27eeb3732ed12a312593d672c0041a6abd74528fcd9d02c0f9b2ef44d2b5b628",
+  "extracted/cpp-resume-880/originalCD-004b3230.c": "f57478e1cb6e6fcd3d92e9690c1416701fe52e17a2049d015bcf9c5e9c229d66",
+  "extracted/cpp-resume-880/originals-004530b0-bounded.asm": "87420a396a03c05c2a19f1f403d66aebc2d05d5c1a057dbb327b36c9ded9ea08",
+  "extracted/cpp-resume-880/originals-004530b0.c": "0e810c5ac24de70a11ec957fcafa5215b746548ef23a543ef5207c00a5eeca05",
+  "extracted/cpp-resume-880/originals-00453240-bounded.asm": "944279540b2e1298306bdb92021d79d9121b9ab01843aad4aee2c24d240e1d42",
+  "extracted/cpp-resume-880/originals-00453240.c": "055020f74a0ef9ddbc20d6f00f502629ddc6db6dbfe5adf27a593db4490cd26d",
+  "extracted/cpp-resume-880/originals-00453290-bounded.asm": "0272c619dd98fec3ea5c771079b3bf13a9ebf6f841f8e5ce6b31802e4dce36f9",
+  "extracted/cpp-resume-880/originals-00453540-bounded.asm": "7441ace0872938365605f83e5a2aa5b5fc95d1274c0113c25f5b6f3d393faabd",
+  "extracted/cpp-resume-880/originals-00487ee0.c": "3530ca4fa4414b88206d3b8759961e97e655bdfac29283de58da5aacd8dc424f",
+  "extracted/cpp-resume-880/originals-00488100.c": "533154a33d4552949aa164fd8b49b67bc77119d88f9774bb2771bc937f8090f6",
+  "extracted/cpp-resume-880/originals-00488190.c": "ff93ef77d86332e2df87b93cd8697da8e70f1b51784bdfb0ba831ea98c2d5179",
+  "extracted/cpp-resume-880/originals-004882c0.c": "0d7e15f6d5a76218dee6a57e27e35ca4ad6675f7c5aa24b1804accc947dc96cd"
+ },
+ "scope": [
+  "PATCH004530b0의 현재 TYPE snapshot→공통 등록→현재 sourceDWORD→50입자→첫3색 생성의 독립 raw 몸체",
+  "실제 RGB binary64와 원문 단일3색 gradient/병합; sourceSID 축소 없음",
+  "00453240의 mode3·원문 진단 정상 복귀와4882c0 공통 소멸 순서"
+ ],
+ "validation": {
+  "firstCompileFailed": false,
+  "firstTestFailedCases": 0,
+  "reobservedNativeRows": 34,
+  "nativeInputsDerivedFromCpp": false,
+  "cppPrimaryCreateRows": 12,
+  "cppPrimaryStopRows": 5,
+  "comparisonPrecisionCreateRows": 12,
+  "comparisonPrecisionStopRows": 5,
+  "existingFieryRows": 62,
+  "existingStreakRows": 8,
+  "existingExpectationsChanged": false,
+  "newFixtureOverwritten": false,
+  "sourceStableDuringBuild": true,
+  "gameExecutions": 0,
+  "sessionIntegrationAdded": false
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "mp": 3,
+  "completedParents": 38,
+  "completedPartial": 3
+ },
+ "limits": [
+  "단위880은 독립 수명 부품이다. 실제 RawCampaignParticles/Session 분배·공통 Host/Frame/Draw는 미연결이며 게임 행동 변경 완료로 합산하지 않는다.",
+  "실제 공유 Client source/process owner 바인딩과 다른 유효 생성 분배는 잔여다.",
+  "실제 heap/SEH/부분 할당 실패·전체 원본 메모리 배치 일치는 별도 호스트 한계다.",
+  "CD 생성/Stop은 정적 비교만 하며 PATCH 구현을 CD에 확장하지 않았다.",
+  "실제 게임/GUI/의식/포획/희생/공격/승리/공중3종 전용/신규MP/통신/전체71/CTest/34미션/ZIP 검사는 실행하지 않았다."
+ ],
+ "next": [
+  "EvilRay의 실제 Frame00453290/Draw00453540·공통Host/현재 source/process 장기owner/Teleport 생성 분배를 원문과 대조",
+  "다른 현재 TYPE/모드·전체Pop·군도·Factory·State/파일·객체메뉴/Edit·Windows·무검사MP/4~8차 계속"
+ ]
+}
