@@ -329,11 +329,11 @@ void RawAssetPostPop::Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) con
 // 가상 표마다 복원한 몸체만 호출한다. 각 몸체는 공통 장부를 내부에서 정확히 한 번 호출한다.
 void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     const auto kind=Kind(sid);
-    if (pool_.Edition()!=OriginalEdition::Patch1078 || !((kind>=kGenerator && kind<=kVortexThunder) || kind==kArcSpire || kind==kAcidFence || kind==kSunFence || kind==kNugget || kind==kGrowingIce)) Validate(sid,flags); // 대조한 PATCH 몸체는 도달한 장치만 요구한다. 나머지 파생/CD의 별도 사전 계약은 유지한다.
-    if (kind==kSunAviary) hooks_.sunAviaryPostPop(sid,flags);
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || !kind) Validate(sid,flags); // 확인한 PATCH20부류는 실제 가상 진입에서 도달한 장치만 요구한다. 명시 Validate와 CD의 사전 계약은 유지한다.
+    if (kind==kSunAviary) AssetNeed(hooks_.sunAviaryPostPop)(sid,flags);
     else if (kind==kNugget) AssetNeed(hooks_.nuggetPostPop)(sid,flags);
-    else if (kind==kRainAviary) hooks_.rainAviaryPostPop(sid,flags);
-    else if (kind==kWindAviary) hooks_.windAviaryPostPop(sid,flags);
+    else if (kind==kRainAviary) AssetNeed(hooks_.rainAviaryPostPop)(sid,flags);
+    else if (kind==kWindAviary) AssetNeed(hooks_.windAviaryPostPop)(sid,flags);
     else if (kind==kSunFence) AssetNeed(hooks_.sunFencePostPop)(sid,flags);
     else if (kind==kArcSpire) PostPopArcSpire(pool_,sid,flags,hooks_.reserveRegular,hooks_.addRegular,[this](Sid parent,std::uint32_t mode) { damageable_.DamageablePostPop(parent,mode); });
     else if (kind==kAcidFence) PostPopAcidFence(pool_,sid,flags,hooks_.reserveRegular,hooks_.addRegular,[this](Sid parent,std::uint32_t mode) { damageable_.DamageablePostPop(parent,mode); });

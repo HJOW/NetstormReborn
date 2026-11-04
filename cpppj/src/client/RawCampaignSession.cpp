@@ -1348,9 +1348,9 @@ struct RawCampaignSession::Impl {
             return name && !name->empty() ? soundNames.Lookup(*name) : 0U;
         };
         FillMissing(assetEffects.postPop.playImpactSound);FillMissing(assetEffects.queueCommand);FillMissing(assetEffects.sendGunPacket);
-        assetEffects.postPop.sunAviaryPostPop=[this](Sid sid,std::uint32_t flags) { sunAviary->PostPop(sid,flags); }; // 첫 실제 Pop 전에 아래에서 전체 몸체를 연결한다.
-        assetEffects.postPop.rainAviaryPostPop=[this](Sid sid,std::uint32_t flags) { rainAviary->PostPop(sid,flags); }; // 같은 실제 TYPE143의 가상 후처리다.
-        assetEffects.postPop.windAviaryPostPop=[this](Sid sid,std::uint32_t flags) { windAviary->PostPop(sid,flags); }; // TYPE139의실제45edf0이다.
+        assetEffects.postPop.sunAviaryPostPop=[this](Sid sid,std::uint32_t flags) { if (!sunAviary) throw std::logic_error("현재 훨리베이스 PostPop 미설치");sunAviary->PostPop(sid,flags); }; // 첫 실제 Pop 전에 아래에서 전체 몸체를 연결한다.
+        assetEffects.postPop.rainAviaryPostPop=[this](Sid sid,std::uint32_t flags) { if (!rainAviary) throw std::logic_error("현재 맨오워 풀 PostPop 미설치");rainAviary->PostPop(sid,flags); }; // 같은 실제 TYPE143의 가상 후처리다.
+        assetEffects.postPop.windAviaryPostPop=[this](Sid sid,std::uint32_t flags) { if (!windAviary) throw std::logic_error("현재 데빌메이커 PostPop 미설치");windAviary->PostPop(sid,flags); }; // TYPE139의실제45edf0이다.
         assetEffects.postPop.sunFencePostPop=[this](Sid sid,std::uint32_t flags) { fencePostPop->PostPop(sid,flags); }; // 공간 쓰기 전에 전체 펜스 후처리를 조립한다.
         assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand,{85,87,126,&gameplayGlobals->FirstTimerFactoryType(),&gameplayGlobals->SecondTimerFactoryType(),&researchOutpost}},std::move(assetEffects));assetBindings->ActivatePostPop(); // 세 TYPE는 같은 실제 Client 주소를 빌리고 Session 사본으로 바꾸지 않는다.
         RawWorldRuntimeHooks worldHooks;
@@ -1679,7 +1679,7 @@ struct RawCampaignSession::Impl {
             if (!fields) throw std::bad_alloc();static_cast<void>(core.processes.Attach(std::make_unique<WindAviaryProcess>(*windAviary,std::move(*fields)),type,sid,8));
         };
         hooks.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
-        hooks.assertion=SessionMissing<void,std::uint32_t>();
+        hooks.assertion=[this](std::uint32_t line) { if (line!=0x275) return SessionMissing<void,std::uint32_t>()(line);if (!services.ai.assertion) throw std::logic_error("데빌메이커 PostPop 중복 진단 장치 미연결");const auto assertion=services.ai.assertion;assertion("!findProcess( getSid(), windAviaryProcessType, 0 )"); }; // Flyer.cpp:275의 정상 복귀 뒤 이미 선택한 확보/부착을 계속한다. 다른 상태 진단은 별도 잔여다.
         hooks.setFrame=[this](Sid sid,std::int32_t frame) { core.frame.Set(sid,frame,0); };
         hooks.checkFrame=[this](Sid sid,std::int32_t frame,std::uint32_t line) {
             const auto type=core.pool.Slot(sid)[10];const auto count=core.frames[type].Codes().size();
@@ -1718,7 +1718,7 @@ struct RawCampaignSession::Impl {
             if (!fields) throw std::bad_alloc(); // 원본 NULL inner 부착은 주소0 쓰기 경로라 정상 성공으로 처리하지 않는다.
             static_cast<void>(core.processes.Attach(std::make_unique<SunAviaryProcess>(*sunAviary,std::move(*fields)),type,parent,flags));
         };
-        hooks.damageable=[this](Sid parent,std::uint32_t flags) { carrier->DamageablePostPop(parent,flags); };hooks.assertion=SessionMissing<void,std::uint32_t>();
+        hooks.damageable=[this](Sid parent,std::uint32_t flags) { carrier->DamageablePostPop(parent,flags); };hooks.assertion=[this](std::uint32_t line) { if (line!=0x1e2) return SessionMissing<void,std::uint32_t>()(line);if (!services.ai.assertion) throw std::logic_error("훨리베이스 PostPop 중복 진단 장치 미연결");const auto assertion=services.ai.assertion;assertion("!findProcess( getSid(), sunAviaryProcessType, 0 )"); }; // Flyer.cpp:1e2의 실제 Client 진단이며 복귀 시 현재 생성자/부착 전역을 다시 읽는다.
         hooks.setFrame=[this](Sid sid,std::int32_t frame) { core.frame.Set(sid,frame,0); };
         hooks.sound=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("훨리베이스 실제 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
         hooks.checkFrame=[this](Sid sid,std::int32_t frame,std::uint32_t line) {
@@ -1749,7 +1749,7 @@ struct RawCampaignSession::Impl {
             if (!fields) throw std::bad_alloc(); // 원본 NULL inner 부착은 주소0 쓰기 경로라 정상 성공으로 처리하지 않는다.
             static_cast<void>(core.processes.Attach(std::make_unique<RainAviaryProcess>(*rainAviary,std::move(*fields)),type,parent,flags));
         };
-        hooks.damageable=[this](Sid parent,std::uint32_t flags) { carrier->DamageablePostPop(parent,flags); };hooks.assertion=SessionMissing<void,std::uint32_t>();
+        hooks.damageable=[this](Sid parent,std::uint32_t flags) { carrier->DamageablePostPop(parent,flags); };hooks.assertion=[this](std::uint32_t line) { if (line!=0x257) return SessionMissing<void,std::uint32_t>()(line);if (!services.ai.assertion) throw std::logic_error("맨오워 풀 PostPop 중복 진단 장치 미연결");const auto assertion=services.ai.assertion;assertion("!findProcess( getSid(), rainAviaryProcessType, 0 )"); }; // Flyer.cpp:257의 정상 복귀 뒤 현재 생성자/부착과 직접 Damageable을 이어간다.
         hooks.setFrame=[this](Sid sid,std::int32_t frame) { core.frame.Set(sid,frame,0); };
         hooks.sound=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("맨 오 워 풀 실제 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
         hooks.checkFrame=[this](Sid sid,std::int32_t frame,std::uint32_t line) {

@@ -1,0 +1,451 @@
+{
+  "unit": 855,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "b9831cc4 / 20261104-39 CP",
+  "exeSha256": "7bfa793e40d37f69c4fec39f22be9abe01fb1c9d1f02b6592cc2b3775d5ccb4f",
+  "exeBytes": 10558464,
+  "sourceSha256": {
+    "cpppj/src/o/RawAssetPostPop.cpp": "123d1414149835b22b1ccf62d18dab8273841d4f0083d396c6a2e716f99d66f4",
+    "cpppj/src/client/RawCampaignSession.cpp": "5951ce77110d4778c390f7aa0671a6f9da56265b66853f58d77841cae20ecb88"
+  },
+  "unchangedStaticInputsSha256": {
+    "cpppj/src/o/RawSunAviaryProcess.cpp": "9da6f8ae3136c558f6efb3911660c7b30fbfb8953db5d0d47b5b11440bace7da",
+    "cpppj/src/o/RawSunAviaryProcess.h": "fffbe8da911e19ad5d6d2ef42887503e30b56bf9a88c330216618fc9090d4219",
+    "cpppj/src/o/RawRainAviaryProcess.cpp": "9f3b3cdcf0f8a19396eae69ec938c58097fcf44455d284f10c69e730d7a42d06",
+    "cpppj/src/o/RawRainAviaryProcess.h": "f5bd1a2ce98efecd57e6a8859151149b7abec3faddd86b64a942de7b5b85e225",
+    "cpppj/src/o/RawWindAviaryProcess.cpp": "468b39893bc464abfc5b246e4afdd72b59aa1076e0d0359cca0c5f7c9ec69789",
+    "cpppj/src/o/RawWindAviaryProcess.h": "e6c474d3f7be8239a5980cc5d3f26d772885a1cd8bca3be45a52d45939942e7d",
+    "cpppj/src/o/RawWindAviaryState.cpp": "00121b2dc81c66ef2a13e79e3fb7dd1d73b91cf88e1fc1179b7634b4e1c45009"
+  },
+  "scope": [
+    "PATCH 세 공중 생산 시설의 실제 가상 진입에서 일괄 사전 검사를 제거하고 도달한 전체 몸체만 요구한다",
+    "현재 Session의 선택 미설치 몸체는 명시 실패하고 중복 진단 세 식을 실제 Client 서비스에 연결한다",
+    "알려진 RawAssetPostPop20부류의 선택 실행 분배 코드 연결이며 전체 Pop/공중 행동 검증 완료는 아니다",
+    "명시 Validate/Activate·CD의 기존 사전 계약과 NULL inner 부착의 명시 실패 한계는 유지한다"
+  ],
+  "staticEvidence": {
+    "sha256": {
+      "extracted/cpp-resume-855/originalCD-0049b420.c": "2ecda6049356d34fb30a7ad0fcc889d8979c11abcfc10b8cb557745501656cea",
+      "extracted/cpp-resume-855/originalCD-0049b680.c": "ba24c1f0ca7d09ee436d269d2f6a8627152cd7433ebf7bd30aeba318aa12814c",
+      "extracted/cpp-resume-855/originalCD-0049b810.c": "17152b09ffaccdd8bce6ae7cdaf750db39b2a6dc7e28ee343918ed90672c81e8",
+      "extracted/cpp-resume-855/originals-0045ec50.c": "0f9950ef0b6db915a4496bb9084d728fbed4ae4b06f8208fee1db4321c86b685",
+      "extracted/cpp-resume-855/originals-0045ed10.c": "acae6e22009f753929df02383a0a996da0520a6d8006f65134bd6373aa2abe74",
+      "extracted/cpp-resume-855/originals-0045edf0.c": "48c81d04a66a98555d052360c63109e8cfc7366ab0c4bae84a775e25df58c974"
+    },
+    "patch": [
+      {
+        "entry": "0045ec50",
+        "kind": "훨리베이스",
+        "gate": "server && first",
+        "assertionLine": 482,
+        "assertionExpression": "!findProcess( getSid(), sunAviaryProcessType, 0 )",
+        "allocationBytes": 48,
+        "innerOffset": 32
+      },
+      {
+        "entry": "0045ed10",
+        "kind": "맨오워 풀",
+        "gate": "server && !(fort && !friendlyFire) && first",
+        "assertionLine": 599,
+        "assertionExpression": "!findProcess( getSid(), rainAviaryProcessType, 0 )",
+        "allocationBytes": 48,
+        "innerOffset": 32
+      },
+      {
+        "entry": "0045edf0",
+        "kind": "데빌메이커",
+        "gate": "first && !(fort && !friendlyFire) && server",
+        "assertionLine": 629,
+        "assertionExpression": "!findProcess( getSid(), windAviaryProcessType, 0 )",
+        "allocationBytes": 80,
+        "innerOffset": 56
+      }
+    ],
+    "cd": {
+      "entries": [
+        "0049b420",
+        "0049b680",
+        "0049b810"
+      ],
+      "assertionLines": [
+        383,
+        440,
+        470
+      ],
+      "allocationBytes": [
+        48,
+        48,
+        72
+      ],
+      "innerOffsets": [
+        32,
+        32,
+        56
+      ],
+      "implementationComplete": false
+    },
+    "file": "\\Ns\\O\\Flyer.cpp",
+    "clientServiceContract": "현재 서비스는 원문 식을 받는다. 파일/행은 소스의 선택 분기와 정적 표에 기록한다"
+  },
+  "validation": {
+    "cases": 161,
+    "newCases": 0,
+    "firstFailedCases": 0,
+    "firstFailedChecks": 0,
+    "airDedicatedTests": 0,
+    "newNativeObservations": 0,
+    "newFixtures": 0,
+    "airBehaviorVerified": false,
+    "scope": "기존 비공중 필터만 회귀했으며 세 공중 시설의 새 전용 생성/생산/입력/행동/원문 에뮬레이션은 추가하지 않았다",
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-855/build-first.log",
+        "sha256": "08ca0e928f2fbd2a3b9f7b5f1fb8550e4ef4b012265f3bff038d561f3436be82",
+        "exitCode": 0,
+        "elapsedSeconds": 116.6290626,
+        "execSession": 54815,
+        "childProcessesExited": true
+      }
+    ],
+    "executions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "VortexCurrent_",
+        "cases": 19,
+        "expectedCases": 19,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-vortex-current-first.log",
+        "sha256": "153b26da8c39d0d31d09c8b38d4d5be64070ebd6f09b7af568650903619c9ccf"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "VortexCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-vortex-session-first.log",
+        "sha256": "483d31e1ab34630e7b3aef161b8daaf9fa713834e0b8d7acc5d19642df8a6403"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetPostPop_PatchMutablePlayerNativeRecords",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-mutable-patch-first.log",
+        "sha256": "95867838db4af4ea9158e8ca95ab2c4690feb558d418760398b6bd5b08b3d772"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetPostPop_CdMutablePlayerNativeRecords",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-mutable-cd-first.log",
+        "sha256": "d710a6c2a924c00493ff7fd531e76cc9e911802d20031ac024263c34309957b2"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetPostPop_MissingEffectsBeforeMutation",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-explicit-preflight-first.log",
+        "sha256": "82859995fa80e71557efedd1cac0ce68f9efb624d1e602fec8f43f13fac1cd27"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetTailCurrent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-asset-tail-first.log",
+        "sha256": "4aafe8c426c388446548e737e1840edf284aba36de1d620d5231f84bb3704031"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "AssetTailCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-asset-tail-session-first.log",
+        "sha256": "8b6058b9c5a5f4c7f7b4f4863fc4ed6c15693ce8c6e1c2f98f8d9236e01c8141"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "FencePostPop_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-fence-native-first.log",
+        "sha256": "99f759e33f4228eaabb050e761d7bd558b2507412d8496ce234d49b4332174c8"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "NuggetPostPop_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-nugget-native-first.log",
+        "sha256": "e8cf3b8de820cfe13fcf94e8106629977f8ba1acfd7312436d96e919e613c845"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetFenceCurrent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-asset-fence-first.log",
+        "sha256": "59f69989127ead773ecd354419f643e6154e5e295c36d0ce38d246a80b6e6ff0"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "AssetFenceCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-asset-fence-session-first.log",
+        "sha256": "67d63ecd41095b336d3f9f9816e0971bcf51c51ec38ec02c435e1721610e0133"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetGunCurrent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-asset-gun-first.log",
+        "sha256": "f26293ece6367136f8af9fd443036437f26d80f6dc7a88c97e4a48688602f579"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "AssetGunCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-asset-gun-session-first.log",
+        "sha256": "5ac075cf405c8c0457f37b4eb5841852b0d2be2f20b543731627dcb24f48a0c1"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GunPostPop_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-gun-native-first.log",
+        "sha256": "6902d189eb17d97a0658acf474889af60360ed74b23679e77458c6ae3f1a443d"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "AssetParentsCurrent_",
+        "cases": 20,
+        "expectedCases": 20,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-asset-current-first.log",
+        "sha256": "805ca3009179fd84174abc6ff1f7eb3faf1c192217912ef6686aee2c2cebb1d3"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "AssetParentsCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-asset-session-first.log",
+        "sha256": "8753d5f942b2295dc7778ffafa044b9da003ae877017b430cbfbfe8af695dee2"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "BuildingNotifyCurrent_",
+        "cases": 8,
+        "expectedCases": 8,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-building-notify-first.log",
+        "sha256": "c6ae583f415c00e322f0c469e62b1eea4fb7efbd657de6dae025fc3e9d762eca"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "BuildingNotifyCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-building-notify-session-first.log",
+        "sha256": "d753b716230f73403f07b63bdd62e37f2a2a142248351b03bb1227fb8cc35898"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 11,
+        "expectedCases": 11,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-post-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-activate-session-first.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "CarrierParentCurrent_",
+        "cases": 12,
+        "expectedCases": 12,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-carrier-current-first.log",
+        "sha256": "719ecd26d24c285d7d1d94a213494973b2638c5865871a84452256641fcd831d"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CarrierParentCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-carrier-session-first.log",
+        "sha256": "2ba62782fee3f667382d503f4c59a3ccce7c5a6155212a9fce08b3798dfe1b2a"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "carrier_postpop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-carrier-native-first.log",
+        "sha256": "ec6a577449fdba8802a48991131c15ffbfbdf0c229ef1fd37abf328c737aa465"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "frame_display_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-frame-display-first.log",
+        "sha256": "c365548d66b11990fca7873428250267355f9e6fdfaf8c646fb6f8eede47970b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "set_frame_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-855/test-set-frame-first.log",
+        "sha256": "0a45f97a0eeb88a7c1921c00d6cc901668d0e232bc9e654a84a80feadfcd5961"
+      }
+    ]
+  },
+  "protected": {
+    "files": 2761,
+    "fixtures": 941,
+    "unchanged": true,
+    "expectationChanges": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 36,
+    "completedPartial": 3,
+    "newCompletedParents": 0
+  },
+  "limits": [
+    "공중3종 동작/생산/상태/픽셀과 원문 전체 동일성은 검증하지 않았다",
+    "다른 Frame/부모 머리/상태 진단은 여전히 미복원이며 선택 시 명시 실패한다",
+    "다른 TYPE/모드 전역 전체 공유와 다른 실제 가상20/전체 Pop은 미완료다",
+    "CD의 Wind72BYTE/PATCH80BYTE 차이를 정적으로 기록했고 CD 시설을 구현/실행한 것은 아니다",
+    "실제 게임·Frame/Process 틱·공격/포획/희생/승리·진단 UI·신규MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복을 제외한다"
+  ],
+  "next": [
+    "Bridge/보호막·Rune/Player/buried/Dude 등 다른 실제 가상20/접두의 현재 부모와 사전 계약을 대조한다",
+    "다른 TYPE/모드 전역·객체 메뉴/커서·Edit·State/파일/군도·Windows·무검사MP 및4~8차 전체 잔여를 이어간다"
+  ]
+}
