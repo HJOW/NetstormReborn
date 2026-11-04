@@ -1,0 +1,481 @@
+{
+ "unit": 873,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "4398ba2c / 20261105-06 CP",
+ "exeSha256": "8e4d09458b527ec4d66734c82e9ee954da31cf0cd37b051c75503b939591e867",
+ "exeBytes": 10597888,
+ "scope": [
+  "PATCH Rune/Dais/Altar 실제 VT 단독 분배와 함수 부류 선택. CD/명시Validate 기존 계약 보존",
+  "DaisLifecycle 도달 장치/현재 mission·boss·loading·가상80/물리 plain 쓰기",
+  "Count 앞 Player 쓰기 주소(PATCH) 및 owner(CD) 저장 순서",
+  "실제 Session의 현재 세 getter 연결과 Rune 가상 삭제 분배",
+  "Altar PreDestroy의 server 대신 원문 boss 권한 코드/정적 교정"
+ ],
+ "sourceSha256": {
+  "cpppj/src/client/RawCampaignRitual.inc": "3b80a846d7aa0c33862b5b1d861ca54d8fb8a62f701235e67d8ceaea62c5b248",
+  "cpppj/src/client/RawCampaignSession.cpp": "e3d13b3914a7d49f8f5ed9710432ac485380967112ff37f8ca780102f4d26cd7",
+  "cpppj/src/o/RawAltarSacrifice.cpp": "2e3e5c92622e7dc1403b89975cc71dc9cde6c7ff29333ebc0db636a56098ec4c",
+  "cpppj/src/o/RawAltarSacrifice.h": "ae9cb35a105b104b9614f1d2f4659d689d6a165fb33c4b27e61e1fc532db6515",
+  "cpppj/src/o/RawDaisLifecycle.cpp": "666da40acb7ed68fd19fd6bf57cbd542294a9360b6906fdddd029c3932fcf31e",
+  "cpppj/src/o/RawDaisLifecycle.h": "a37e436f156c2bfeb83bf5d7ba016bf0dfec194a3e3cd2a1d1683e61e4a179dc",
+  "cpppj/src/o/RawDaisRegular.cpp": "08c967739f24a722a3258be21c4876acd18e018ebefa141f0ed8a781b90a6ddf",
+  "cpppj/src/o/RawDaisRegular.h": "58517f5c9c8ae08d5728efd39a7d9bf98225649132df0513b23359d39abd9909",
+  "cpppj/tests/CMakeLists.txt": "e4be3a57acd3217601773551d6db9a9e4327cea41c1e34064d2ddd23c8331e6b",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "2f9c4f5bdced5e7dd03dfdbe1dca0ee8cfbd39d417226f8e60753414304d838b",
+  "cpppj/tests/DaisCheckingParentsTests.cpp": "2196223844e38841076894ac7e1082827d70a9691df41f9f63befb2a8784c272",
+  "cpppj/tests/DaisLifecycleTests.cpp": "06cf96944e6ffc37637522eca8cc8c231bb2d06b5e0cfc72915e277f1e1616cb"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/client/RawCampaignRitual.inc": "3b80a846d7aa0c33862b5b1d861ca54d8fb8a62f701235e67d8ceaea62c5b248",
+  "cpppj/src/client/RawCampaignSession.cpp": "e3d13b3914a7d49f8f5ed9710432ac485380967112ff37f8ca780102f4d26cd7",
+  "cpppj/src/o/RawAltarSacrifice.cpp": "2e3e5c92622e7dc1403b89975cc71dc9cde6c7ff29333ebc0db636a56098ec4c",
+  "cpppj/src/o/RawAltarSacrifice.h": "ae9cb35a105b104b9614f1d2f4659d689d6a165fb33c4b27e61e1fc532db6515",
+  "cpppj/src/o/RawDaisLifecycle.cpp": "7bc4309718b5ca9ac5166a449bf88cc1a21106030f000792ab86a05e5887791e",
+  "cpppj/src/o/RawDaisLifecycle.h": "a37e436f156c2bfeb83bf5d7ba016bf0dfec194a3e3cd2a1d1683e61e4a179dc",
+  "cpppj/src/o/RawDaisRegular.cpp": "08c967739f24a722a3258be21c4876acd18e018ebefa141f0ed8a781b90a6ddf",
+  "cpppj/src/o/RawDaisRegular.h": "58517f5c9c8ae08d5728efd39a7d9bf98225649132df0513b23359d39abd9909",
+  "cpppj/tests/CMakeLists.txt": "e4be3a57acd3217601773551d6db9a9e4327cea41c1e34064d2ddd23c8331e6b",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "2f9c4f5bdced5e7dd03dfdbe1dca0ee8cfbd39d417226f8e60753414304d838b",
+  "cpppj/tests/DaisCheckingParentsTests.cpp": "2196223844e38841076894ac7e1082827d70a9691df41f9f63befb2a8784c272",
+  "cpppj/tests/DaisLifecycleTests.cpp": "30f2901c1e18d470e8b45ed3fb334ccd30774c0f6cefb1118ff9b886f46927b7"
+ },
+ "sourceFirstBuildNote": "최초 변경11소스를 보존. 최초에는 변경 없던 DaisLifecycleTests.cpp는 교정 후 HEAD 동일 원문을 source-first에 보존했다.",
+ "sourceCorrectedBuildSha256": {
+  "cpppj/src/client/RawCampaignRitual.inc": "3b80a846d7aa0c33862b5b1d861ca54d8fb8a62f701235e67d8ceaea62c5b248",
+  "cpppj/src/client/RawCampaignSession.cpp": "e3d13b3914a7d49f8f5ed9710432ac485380967112ff37f8ca780102f4d26cd7",
+  "cpppj/src/o/RawAltarSacrifice.cpp": "2e3e5c92622e7dc1403b89975cc71dc9cde6c7ff29333ebc0db636a56098ec4c",
+  "cpppj/src/o/RawAltarSacrifice.h": "ae9cb35a105b104b9614f1d2f4659d689d6a165fb33c4b27e61e1fc532db6515",
+  "cpppj/src/o/RawDaisLifecycle.cpp": "7bc4309718b5ca9ac5166a449bf88cc1a21106030f000792ab86a05e5887791e",
+  "cpppj/src/o/RawDaisLifecycle.h": "a37e436f156c2bfeb83bf5d7ba016bf0dfec194a3e3cd2a1d1683e61e4a179dc",
+  "cpppj/src/o/RawDaisRegular.cpp": "08c967739f24a722a3258be21c4876acd18e018ebefa141f0ed8a781b90a6ddf",
+  "cpppj/src/o/RawDaisRegular.h": "58517f5c9c8ae08d5728efd39a7d9bf98225649132df0513b23359d39abd9909",
+  "cpppj/tests/CMakeLists.txt": "e4be3a57acd3217601773551d6db9a9e4327cea41c1e34064d2ddd23c8331e6b",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "2f9c4f5bdced5e7dd03dfdbe1dca0ee8cfbd39d417226f8e60753414304d838b",
+  "cpppj/tests/DaisCheckingParentsTests.cpp": "2196223844e38841076894ac7e1082827d70a9691df41f9f63befb2a8784c272",
+  "cpppj/tests/DaisLifecycleTests.cpp": "06cf96944e6ffc37637522eca8cc8c231bb2d06b5e0cfc72915e277f1e1616cb"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-873/originalCD-00481310.c": "a00c9701e16a7b2ff4589feef6074e40818d2d6169067c44410f454a93a1bd92",
+  "extracted/cpp-resume-873/originalCD-00481360.c": "7bba5fbdc3997b1662c08a2a555fa3babce32d3173e63394bd07696d4eaa7b2d",
+  "extracted/cpp-resume-873/originalCD-00481620.c": "5a4e8f11e754843bde3b7ab522fe794de7c9b9f252d411a507e53c65f79deeb3",
+  "extracted/cpp-resume-873/originalCD-004821e0.c": "535b9df1095e6a96627a5e23309ae56ad5947f543e3323cb6ed8d5ab37e4c8d2",
+  "extracted/cpp-resume-873/originalCD-00482c40.c": "9557870243d16b7300f5161c2270be2796fe83e102059287488a5d87b758fbce",
+  "extracted/cpp-resume-873/originalCD-004835c0.c": "3e54844a2be372cbd66b7a8de0017541ab5c14f2e1f5d4e20a29a1fd65da77aa",
+  "extracted/cpp-resume-873/originalCD-00483660.c": "d2a262116235910075b7c2ed86ffb7ec015e418d31673949878c0224e1b43bf7",
+  "extracted/cpp-resume-873/originalCD-004836b0.c": "88351e9e6343aa5b2490ae67f54f127556205d5bd69a426db7a7103c75dd5b1b",
+  "extracted/cpp-resume-873/originalCD-00483800.c": "e45982f0ac707360d2af6a8633c0c67ef06d56102adbd94ad32f7154192b71d5",
+  "extracted/cpp-resume-873/originalCD-00484520.c": "135ce357193fa71b0559d0f7f42b7b3e2615f2dfe54665dce786522416017bb1",
+  "extracted/cpp-resume-873/originalCD-004846b0.c": "812c03d2a2e5c37e8e921a2c16b9779606b6b39e2d2df2fc186d8041633d6669",
+  "extracted/cpp-resume-873/originalCD-004ab7e0.c": "ef894e4ae62926833e910c938ae594d284ed1cf896e05c5f14b71bb4117916fb",
+  "extracted/cpp-resume-873/originalCD-004ace00.c": "98034817aeaaac1f7ca205f5d045948291cbbf418e565e278d767427d7ce2175",
+  "extracted/cpp-resume-873/originalCD-004adbe0.c": "1afd84bd99697ab39a066d6d638284e3db6ce13f1e4336b44cc9f872c1d8f7f5",
+  "extracted/cpp-resume-873/originalCD-004add20.c": "165a86447486f75ce2374649a8e2c75c274e1de42082b571156cf632b4b3128e",
+  "extracted/cpp-resume-873/originals-004478f0.c": "e66eef73cef9cbc38205671cde44891d181289fc7e2d7141535c77a74e6e53f0",
+  "extracted/cpp-resume-873/originals-00448930.c": "0edf910107f695b62e79a88602491b9e63032f010cc05d3a1eccfef536f58d4c",
+  "extracted/cpp-resume-873/originals-00448ad0.c": "ffac96bb2e8b1515b3229f78cc8ff295426b148e0e7943408ec391aa00c110c9",
+  "extracted/cpp-resume-873/originals-00448b60.c": "8661305d841f24d414591cfeeae240f5a02647660fbd85125bc28b5ba9b696b8",
+  "extracted/cpp-resume-873/originals-00449320.c": "82e91355443ff4e66250674d7b2eba0a95a742f35e002826b0f263dfa7c97baf",
+  "extracted/cpp-resume-873/originals-0044a3a0.c": "ff76fa08750e54d53e6bc8879f8f6d516e1f1c846bcdae716fc01bb2cc608ede",
+  "extracted/cpp-resume-873/originals-0044a480.c": "fa5b5015c998b6aeb26b48ee7ade3a9cbe6f07f6b5c7330475157d56d1295780",
+  "extracted/cpp-resume-873/originals-0044a4d0.c": "e7e69b1ea5f01688570d7f6046257e028def55b1492a035873d9a8af4def1d6c",
+  "extracted/cpp-resume-873/originals-0044a5e0.c": "8e65aec7b90c54831f3a5ec7a8fb89a3e02015862673e5aca0ff4494b8137d90",
+  "extracted/cpp-resume-873/originals-0044afd0.c": "0d217e65a364a2b9f3b7bff612b858a41b197f685948e692a011932955c0052b",
+  "extracted/cpp-resume-873/originals-0044b150.c": "ce3ca620d25f441ca586261aad7ce73241bfbae83c7cb0259195ac57fb78e5f6",
+  "extracted/cpp-resume-873/originals-004ad0f0.c": "11e6dedf71ac78491f2f409ecc096b38ee0f225f0b1fc21020852bff78335f76",
+  "extracted/cpp-resume-873/originals-004af780.c": "a94edc37b2264b5590c9f080a55e383ae55ad8728653cbb0c13ada8fb3a8a7ee",
+  "extracted/cpp-resume-873/originals-004b0840.c": "c115c6e06180c2759ecb4671fd6d31dfb869123d07c8541e2d47cd4fec510d0c",
+  "extracted/cpp-resume-873/originals-004b0950.c": "fd0d3b9bb060ab889c574feeb042e0f37833e1c6d266b515fe1898ad50001f9f"
+ },
+ "peVtables": {
+  "originals": {
+   "rune": {
+    "vtable": "005075d8",
+    "slots": {
+     "10": "004af780",
+     "18": "004b0840",
+     "20": "00448930",
+     "5c": "0044a3a0",
+     "80": "004ad0f0",
+     "14": "004b0950"
+    }
+   },
+   "altar": {
+    "vtable": "005076b8",
+    "slots": {
+     "10": "004af780",
+     "18": "00448b60",
+     "20": "00448ad0",
+     "5c": "0044a5e0",
+     "80": "0044a480",
+     "14": "0044a4d0"
+    }
+   },
+   "dais": {
+    "vtable": "00507950",
+    "slots": {
+     "10": "004af780",
+     "18": "00449580",
+     "20": "00449320",
+     "5c": "0044b150",
+     "80": "004478f0",
+     "14": "0044afd0"
+    }
+   }
+  },
+  "originalCD": {
+   "rune": {
+    "vtable": "00504148",
+    "slots": {
+     "10": "004ab7e0",
+     "18": "004adbe0",
+     "20": "00484520",
+     "5c": "004846b0",
+     "80": "004ace00",
+     "14": "004add20"
+    }
+   },
+   "altar": {
+    "vtable": "00504200",
+    "slots": {
+     "10": "004ab7e0",
+     "18": "00483660",
+     "20": "004835c0",
+     "5c": "00483800",
+     "80": "00483670",
+     "14": "004836b0"
+    }
+   },
+   "dais": {
+    "vtable": "00504090",
+    "slots": {
+     "10": "004ab7e0",
+     "18": "00481620",
+     "20": "00481360",
+     "5c": "00482c40",
+     "80": "00481310",
+     "14": "004821e0"
+    }
+   }
+  }
+ },
+ "nativeSourceMap": {
+  "originals": {
+   "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+   "missingDecompile": [
+    "00449580"
+   ]
+  },
+  "originalCD": {
+   "peSha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+   "missingDecompile": [
+    "00483670"
+   ]
+  }
+ },
+ "daisPostDestroyMachineEvidence": {
+  "log": "extracted/cpp-resume-873/originals-00449580-bounded.asm",
+  "sha256": "5d44732ea6d6f3bcebdfe768134a2725672a36ddc3f0518c7a7702f307241dae",
+  "range": "00449580..0044965b의 tail jump 포함, 다음 함수 제외"
+ },
+ "builds": [
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 163.8187147,
+   "log": "extracted/cpp-resume-873/build-first.log",
+   "sha256": "0e39212a5ff626b7ca62a9a1ed4e3c13fe7f9d27cdd11e64893da2a7a425345a",
+   "warnings": 0,
+   "errors": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 23.5271843,
+   "log": "extracted/cpp-resume-873/build-corrected.log",
+   "sha256": "9ed0720e9542962b241c22fa9142d22128c5af95692938d835e4df62f685d0d5",
+   "warnings": 0,
+   "errors": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 24.3820721,
+   "log": "extracted/cpp-resume-873/build-final.log",
+   "sha256": "59c5399d8cae153796f70a53d481dffcff8d87a02110ca0a92f8a18a48ef113a",
+   "warnings": 0,
+   "errors": 0
+  }
+ ],
+ "firstTestExecutions": [
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisClassCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-dais-current-first.log",
+   "sha256": "6de8607702ee31f4142d3274227fb51da80872338c83d3379cefcb52e62f2f79"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisCheckingParents_",
+   "cases": 6,
+   "expectedCases": 6,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-dais-checking-parents-first.log",
+   "sha256": "82bf392350ec6caf21df19d5d3c7f0fcc9867d465c62552a1639ca514d85a20f"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "rawDaisLifecycle_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 2,
+   "failedChecks": 2,
+   "exitCode": 1,
+   "log": "extracted/cpp-resume-873/test-dais-lifecycle-native-first.log",
+   "sha256": "bcfebc003a0ef4fa88e8d15fe6efeb6ccbc261d6e931c72426ec9e609556e551"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-rune-number-session-first.log",
+   "sha256": "d05ccbcfe6bd015163388cb8a7cf8c62f73bfdb46c21a078facb93d8b7eb3943"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-rune-number-first.log",
+   "sha256": "533b95a4db499eeeac1a6a1889bcd22eeb5c89a7d3763e56093968bac970a6dd"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "BuriedRuneCurrent_ActualSessionVtablesAndRuneRegular",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-rune-vtable-session-first.log",
+   "sha256": "48748021ebe446d3596cd0f8437766168ac032c6ec95175d598aead68d272aed"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "NuggetMenuCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-nugget-vtable-session-first.log",
+   "sha256": "2d064c3e23f39100189dfc9a1c41050b166905da68a4840d3eeae8b17be61f1c"
+  }
+ ],
+ "finalTestExecutions": [
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisClassCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-dais-current-final.log",
+   "sha256": "6de8607702ee31f4142d3274227fb51da80872338c83d3379cefcb52e62f2f79"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisCheckingParents_",
+   "cases": 6,
+   "expectedCases": 6,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-dais-checking-parents-final.log",
+   "sha256": "82bf392350ec6caf21df19d5d3c7f0fcc9867d465c62552a1639ca514d85a20f"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "rawDaisLifecycle_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-dais-lifecycle-native-final.log",
+   "sha256": "97c1cb01fe458df50d6d2d7f6dacfc113b83c7d6c48e535efa5ea0e88a99414e"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-rune-number-session-final.log",
+   "sha256": "d05ccbcfe6bd015163388cb8a7cf8c62f73bfdb46c21a078facb93d8b7eb3943"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-rune-number-final.log",
+   "sha256": "533b95a4db499eeeac1a6a1889bcd22eeb5c89a7d3763e56093968bac970a6dd"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "BuriedRuneCurrent_ActualSessionVtablesAndRuneRegular",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-rune-vtable-session-final.log",
+   "sha256": "48748021ebe446d3596cd0f8437766168ac032c6ec95175d598aead68d272aed"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "NuggetMenuCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-873/test-nugget-vtable-session-final.log",
+   "sha256": "2d064c3e23f39100189dfc9a1c41050b166905da68a4840d3eeae8b17be61f1c"
+  }
+ ],
+ "uniqueCases": [
+  [
+   "netstorm_menu_session_tests",
+   "BuriedRuneCurrent_ActualSessionVtablesAndRuneRegular"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_BridgeUsesCurrentBossAndNullPathDiagnosticReturns"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_CanBridgeCurrentAllianceAndCdNoPatchDiagnostic"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_CanBridgeCurrentFinderAndMetadataAfterDiagnostic"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_DeadParentDiagnosticPrecedesCurrentHeadRead"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_DepthDiagnosticsReturnCurrentRuntimeValue"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_StageUsesOneVirtualCountAndSavedInitialFrame"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_ActualSessionDispatchesReadOnlyRegularsByVtable"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_CountKeepsEditionSpecificPlayerDestination"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_LifecycleLazyDevicesAndPartialPlayerCleanup"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_RegularKeepsVtableFunctionIdentity"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "NuggetMenuCurrent_ActualSessionSchedulesSuccessorWithActualVtable"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneTypeNumber_ActualSessionChoiceGetterReadsCurrentDaisOwner"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_CurrentFinderAndDurationUseBoundNumbers"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_ReferencesForParticipationAndAiKeepOriginalOwner"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_ReservationChangesCurrentNumbersBeforeFindAndDuration"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "rawDaisLifecycle_native_bound_player_records"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "rawDaisLifecycle_native_initial_pop_player_pairs_and_delete_prefix"
+  ]
+ ],
+ "uniqueCaseCount": 18,
+ "groups": 7,
+ "newCases": 4,
+ "firstFailedCases": 2,
+ "firstFailedChecks": 2,
+ "corrections": [
+  "기존 수명2개의 PATCH 원문 경계를 validateBase 대신 실제 base에서 관측. RawCarrierPostPop의 HEAD가 이미 PATCH Validate를 생략했으며 제품/fixture 기대값 교정 아님.",
+  "두 번째 빌드 뒤 읽은 실제+14 함수0044a4d0에서 boss 전역을 확인해 제품의 server 사용 한 곳을 현재 Boss()로 교정. 이 효과는 코드/정적 근거이며 실행하지 않았다."
+ ],
+ "existingNativeRows": {
+  "lifecycleUnique": 1928,
+  "lifecycleReplays": 2
+ },
+ "newNativeRows": 0,
+ "newFixtures": 0,
+ "fixtureExpectationsChanged": 0,
+ "manualAssertionsCorrected": 0,
+ "protectedFiles": 2761,
+ "protectedFixtureFiles": 941,
+ "protectedChanged": 0,
+ "protectedAfterSha256": "f762a5e5138d30748d8dc97d07d20266e33c8b0b02afaa1f8f231869fbb60dea",
+ "checkingRemaining": {
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "total": 10
+ },
+ "checkingCompleted": {
+  "parents": 38,
+  "partial": 3
+ },
+ "limitations": [
+  "새 실제 Session은 세 가상 함수의 무효과 반환/지원 조회만 실행. 틱/예약/가상삭제/의식/명령/패킷0",
+  "기존 수명 원문은 마지막 Damageable 진입에서 중단하는 독립 효과 요청 재생이며 실제 전체 파괴/희생/해방 검증 아님",
+  "Dais/Altar PreDestroy 변경은 코드/정적/컴파일 근거. 실제 포획/희생/특정 적 공격/승리0",
+  "신규 MP/패킷/통신·공중3종 전용·물리입력/PCM/CD/전체71/CTest/34미션/ZIP 반복0",
+  "현재 Rune 번호/미션 상태 사본과 다른 선택 장치·전체 Pop/Factory/군도/메뉴/Edit/State/파일/Windows/후속 단계는 남음"
+ ],
+ "nextUnit": 874
+}

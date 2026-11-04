@@ -45,7 +45,7 @@ public:
         const RawSquidNeighbors& footprint,const RawRunePostPop& rune,const RawTempleRitual& temple,const RawCarrierPreDestroy& carrier,
         const RawDaisRegular& dais,const RawFrameAdvance& advance,SquidProcessHost& host,const RawDamageablePreDestroy& damageable,
         DaisRegularState& daisState,AltarSacrificeState& state,AltarSacrificeHooks hooks);
-    bool Handles(Sid altar) const; // 실제 제단 타입/가상표만 분배한다.
+    bool Handles(Sid altar) const; // PATCH는 실제 제단 VT만, CD는 기존 TYPE/VT로 분배한다.
     Sid DaisAt(Sid sid) const; // 기준점의 일반 typed Dais 조회다. 원본 buried/버킷 조건을 사용한다.
     std::uint32_t Count(Sid altar) const; // 같은 기준점의 Dais 가상 개수, 없으면0이다.
     float Handle(Sid altar,std::uint32_t event,std::uint32_t count,float payload) const; // 실제20/21/22/23/24의 지연/부작용 순서다.

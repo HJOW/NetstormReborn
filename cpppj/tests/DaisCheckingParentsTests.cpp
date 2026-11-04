@@ -1,6 +1,7 @@
 // 다이스 자격·진단 복귀·읽기 getter만 검사한다. 실제 의식/포획/희생/전투/성공 이동은 실행하지 않는다.
 #include "RawSceneSupport.h"
 #include "o/RawDaisRegular.h"
+#include "o/RawDaisLifecycle.h"
 #include "o/SquidUnpop.h"
 #include <memory>
 
@@ -106,4 +107,43 @@ TEST_CASE(DaisCheckingParents_StageUsesOneVirtualCountAndSavedInitialFrame) { //
         scene.countValue=4;bool failed=false;try { scene.ritual->Stage(Sid{5},3); }catch (const std::out_of_range&) { failed=true; }CHECK(failed && scene.effects==0); // 가상 count가 표를 벗어나면 명시 실패한다.
         scene.countValue=1;scene.FrameInput(Sid{5},25);scene.onCount=[&] { scene.FrameInput(Sid{5},3); };const auto reads=scene.countReads;CHECK(scene.ritual->Stage(Sid{5})==2 && scene.countReads==reads+1 && scene.effects==0); // callback이 바꾼 프레임3 대신 최초25에서 count1 첫3을 뺀다.
     }
+}
+
+namespace { // 현재 가상 분배/일반 후처리만 관찰하며 희생/해방/소리/공격은 모든 장치에서 거부한다.
+struct DaisLifecycleCurrentScene : DaisParentScene { // 기존 읽기 장면의 같은 Pool/Host/Temple을 수명 객체에 연결한다.
+    CarrierPostPopState loading;DamageablePreDestroyState damageState;AltarSacrificeState altarState; // 가상 분배의 독립 입력 상태다.
+    double loginEnd{1};DaisLifecycleState lifeState{loginEnd,loading};std::size_t common{},validations{}; // 최초 프레임 초기화가 없는 시각과 공통 진입 횟수다.
+    std::unique_ptr<RawDamageablePreDestroy> damage;std::unique_ptr<RawCarrierPostPop> carrierPost;std::unique_ptr<RawFrameAdvance> advance;std::unique_ptr<RawAltarSacrifice> altar; // 실제 같은 풀의 의존 몸체를 검사보다 오래 유지한다.
+    template<class R,class... A> std::function<R(A...)> Ban() { return [this](A...)->R { Forbidden(); }; } // 실행 금지 효과는 빈 성공 대신 관측 가능한 실패를 낸다.
+    explicit DaisLifecycleCurrentScene(OriginalEdition edition=OriginalEdition::Patch1078):DaisParentScene(edition) { // 실제 게임/틱 없이 가상 진입에 필요한 동일 풀의 몸체만 설치한다.
+        DamageablePreDestroyHooks d;d.collapse=Ban<void,Sid>();d.explosion=d.collapse;d.sound=Ban<void,const DamageableSoundEvent&>();d.releaseContained=d.collapse;d.validateBase=Ban<void,Sid,std::uint32_t>();d.base=d.validateBase;damage=std::make_unique<RawDamageablePreDestroy>(pool,spots,finderState,damageState,std::move(d));
+        CarrierPostPopHooks c;c.carrierCheck=Ban<void,Sid>();c.claimGround=Ban<void,float,float,std::uint8_t>();c.validateBase=[this](Sid,std::uint32_t) { ++validations; };c.base=[this](Sid,std::uint32_t) { ++common; };carrierPost=std::make_unique<RawCarrierPostPop>(pool,types,loading,std::move(c));advance=std::make_unique<RawFrameAdvance>(pool,frames,*frame);
+        AltarSacrificeHooks a;a.setFrame=Ban<void,Sid,std::int32_t,std::uint32_t>();a.destroy=Ban<void,Sid,std::uint32_t>();a.reserveShared=Ban<bool>();a.addShared=Ban<void,Sid,std::uint32_t,float>();a.randomInt=Ban<std::int32_t,std::int32_t,std::int32_t>();a.randomFloat=Ban<float,float,float>();a.playAt=Ban<void,float,float,std::string_view,std::uint32_t>();a.playGlobal=Ban<void,std::string_view,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t>();a.removeAnimation=Ban<void,Sid>();a.unpop=a.destroy;a.repop=a.destroy;a.create=Ban<Sid,std::uint32_t,std::uint32_t>();a.setOwner=a.destroy;a.pop=Ban<void,Sid,float,float,std::uint32_t>();a.escapeEffect=Ban<void,Sid,float,std::uint32_t>();a.refreshOwner=Ban<void,std::uint32_t>();a.damageable=Ban<float,Sid,std::uint32_t,std::uint32_t,float>();altar=std::make_unique<RawAltarSacrifice>(pool,hash,types,frames,*footprint,*rune,*ritual,*carrier,*dais,*advance,*host,*damage,state,altarState,std::move(a));
+    }
+    DaisLifecycleHooks FullHooks() { // CD의 기존 필수 장치 계약을 만족시키되 선택되지 않아야 할 효과는 모두 거부한다.
+        DaisLifecycleHooks h;h.setFrame=Ban<void,Sid,std::int32_t,std::uint32_t>();h.unpop=Ban<void,Sid,std::uint32_t>();h.repop=h.unpop;h.create=Ban<Sid,std::uint32_t,std::uint32_t>();h.setOwner=h.unpop;h.pop=Ban<void,Sid,float,float,std::uint32_t>();h.reserveRegular=Ban<bool>();h.addRegular=Ban<void,Sid,std::uint32_t,float>();h.surface=Ban<Sid,float,float>();h.hasIsland=Ban<bool,Sid>();h.islandNumber=Ban<std::uint32_t,Sid>();h.option=Ban<bool,std::string_view>();h.chat=Ban<void,std::string_view>();h.destroy=h.unpop;h.damageablePostDestroy=h.unpop;return h;
+    }
+    std::unique_ptr<RawDaisLifecycle> Make(DaisLifecycleHooks h) { return std::make_unique<RawDaisLifecycle>(pool,hash,types,*footprint,*ritual,*altar,*carrierPost,*damage,state,altarState,lifeState,std::move(h)); } // 실제 동일 풀 검증을 우회하지 않는다.
+};
+}
+TEST_CASE(DaisClassCurrent_RegularKeepsVtableFunctionIdentity) { // PATCH의 Rune/Dais 분기는 표시 TYPE가 아니라 실제 가상 함수로 정한다. CD 기존 계약도 확인한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 같은 두 입력에서 판본별 허용 계약을 분리한다.
+        DaisParentScene scene(edition);auto raw=scene.Raw(Sid{5});Put(raw,0,scene.Patch() ? kPatchRuneVtable : kCdRuneVtable);raw[10]=165;CHECK(scene.dais->Handles(Sid{5})==scene.Patch());
+        if (scene.Patch()) CHECK(scene.dais->Handle(Sid{5},99,0,.25F)==.25F && scene.effects==0);
+        raw[10]=166;CHECK(scene.dais->Handles(Sid{5}) && scene.dais->Handle(Sid{5},99,0,.5F)==.5F && scene.effects==0);
+        Put(raw,0,scene.Patch() ? kPatchDaisVtable : kCdDaisVtable);raw[10]=166;CHECK(scene.dais->Handles(Sid{5})==scene.Patch());
+        if (scene.Patch()) { bool selected=false;try { static_cast<void>(scene.dais->Handle(Sid{5},99,0,.25F)); }catch (const std::logic_error&) { selected=true; }CHECK(selected && scene.effects==1); } // 실제 의식 대신 선택된 일반 Damageable 경계에서 중단한다.
+    }
+}
+TEST_CASE(DaisClassCurrent_CountKeepsEditionSpecificPlayerDestination) { // 가상 Count가 owner/Player 저장소를 바꿔도 원문 판본별 주소 저장 순서를 유지한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // PATCH는 주소를 먼저, CD는 owner만 먼저 고정한다.
+        DaisLifecycleCurrentScene scene(edition);const auto stride=scene.Patch() ? 0xb4U : 0xacU,offset=scene.Patch() ? 0x71U : 0x69U;std::vector<std::uint8_t> before(9*stride,0xa5),after(9*stride,0xb6);scene.state.BindPlayerRecords(edition,before);auto h=scene.FullHooks();std::size_t counts{};h.suppressed=[] { return false; };h.count=[&](Sid sid) { CHECK(sid==Sid{5});++counts;scene.Owner(sid,2);scene.state.BindPlayerRecords(edition,after);return 3U; };auto life=scene.Make(std::move(h));life->PostPop(Sid{5},0);
+        CHECK(counts==1 && scene.common==1 && scene.effects==0);CHECK(before[stride+offset]==(scene.Patch() ? 2 : 0xa5));CHECK(after[stride+offset]==(scene.Patch() ? 0xb6 : 2));CHECK(after[2*stride+offset]==0xb6); // 새 owner2로 쓰거나 PATCH에서 새 저장소로 쓰면 실패한다.
+    }
+}
+TEST_CASE(DaisClassCurrent_LifecycleLazyDevicesAndPartialPlayerCleanup) { // 미배치/표시 TYPE70에서도 실제 VT 후처리는 선택 장치와 도달 전 부분 효과를 보존한다.
+    DaisLifecycleCurrentScene scene;scene.Raw(Sid{5})[10]=70;scene.Raw(Sid{5})[11]=1;scene.Owner(Sid{5},0);DaisLifecycleHooks h;h.suppressed=[] { return true; };auto life=scene.Make(std::move(h));CHECK(life->Handles(Sid{5}));life->PostPop(Sid{5},0);CHECK(scene.common==1 && scene.effects==0);
+    bool explicitRejected=false;try { life->Validate(Sid{5},0); }catch (const std::invalid_argument&) { explicitRejected=true; }CHECK(explicitRejected); // 명시 preflight의 기존 TYPE 계약은 실제 가상 진입과 구별한다.
+    Put(scene.Raw(Sid{7}),0,kPatchAltarVtable);scene.Raw(Sid{7})[10]=165;CHECK(scene.altar->Handles(Sid{7}) && life->Handles(Sid{7}));life->PostPop(Sid{7},0);CHECK(scene.common==2 && scene.effects==0); // Altar VT는 표시 TYPE165여도 Count/모드 장치에 진입하지 않는다.
+    scene.Owner(Sid{5},1);scene.lifeState.players[1]={Sid{5},Sid{123},Sid{7},Sid{124},0};bool missing=false;try { life->PostDestroy(Sid{5},0x123); }catch (const std::logic_error&) { missing=true; }const auto& p=scene.lifeState.players[1];CHECK(missing && p.first.value==0 && p.firstMirror.value==0 && p.second==Sid{7} && p.secondMirror==Sid{124} && scene.effects==0); // 선택된 공통 장치 부재 앞의 SID쌍 쓰기를 되돌리지 않는다.
 }

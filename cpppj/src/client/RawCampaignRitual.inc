@@ -44,6 +44,7 @@ void ConnectDaisLifecycle() {
     altarSacrifice=std::make_unique<RawAltarSacrifice>(core.pool,core.hash,core.types,core.frames,core.neighbors,*runePostPop,*templeRitual,priests->Carrier(),*daisRegular,*ritualAdvance,core.processes,*damageablePre,*daisState,altarState,std::move(altar));
     daisLifecycleState=std::make_unique<DaisLifecycleState>(DaisLifecycleState{loginEnd,carrierState});
     DaisLifecycleHooks life; // 같은 현재 Player 기록과 실제 공간·생성·예약의 수명 효과다.
+    life.suppressed=[this] { return globals.missionPost; };life.boss=[this] { return assetState.Boss(); };life.count=[this](Sid sid) { return VirtualCount(sid); }; // 각 원문 소비 지점에서 현재 모드/권한/가상80을 읽는다.
     life.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
     life.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };life.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
     life.create=[this](std::uint32_t type,std::uint32_t flags) { return core.factory.Create(type,flags); };life.setOwner=[this](Sid sid,std::uint32_t owner) { core.owner.Set(sid,owner); };life.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };

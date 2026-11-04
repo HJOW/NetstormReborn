@@ -1038,3 +1038,8 @@ TEST_CASE(PriestPostPopCurrent_ActualSessionVirtualPrefixListRegularAndMobileQue
     CHECK(previous<priests.Capacity() && priests.Count()==previous+1);if (previous<priests.Storage().size()) CHECK(priests.Storage()[previous]==priest.value);
     std::copy(entries.begin(),entries.end(),priests.Storage().begin());priests.SetCount(previous);owners=ownerBefore; // 명시 등록으로 바꾼 장기 목록/소유자 칸을 Session 정리 전에 복구한다.
 }
+
+TEST_CASE(DaisClassCurrent_ActualSessionDispatchesReadOnlyRegularsByVtable) { // 단위873: 실제 Session의 세 가상 진입에서 무효과 반환만 조회한다. 의식/예약/틱/삭제는 호출하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();const auto source=core.pool.Allocate(2);auto raw=core.pool.AllocatedBytes(source);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=70;raw[11]=4;const auto baseline=core.kernel.Size();auto handler=session.Priests().RegularHandler();
+    Put(raw,0,0x5075d8);CHECK(!core.postPop.HandlesDais(source) && handler(source,99,0,.25F)==.25F);Put(raw,0,0x507950);CHECK(core.postPop.HandlesDais(source) && handler(source,99,0,.5F)==.5F);Put(raw,0,0x5076b8);CHECK(core.postPop.HandlesDais(source) && handler(source,23,0,.75F)==.75F);CHECK(core.kernel.Size()==baseline);core.pool.Release(source); // 합성 슬롯은 가상 삭제 효과 없이 직접 반납한다.
+}

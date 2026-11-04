@@ -34,6 +34,7 @@ void DaisRegularState::BindPlayerRecords(OriginalEdition edition,std::span<std::
 std::uint8_t DaisRegularState::GrantFlag(std::uint32_t owner) const {
     if (owner>kPlayerCount) throw std::out_of_range("다이스 grant Player 범위");return playerRecords.empty() ? grantFlags[owner] : playerRecords[owner*(playerEdition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU)+(playerEdition==OriginalEdition::Patch1078 ? 0x71U : 0x69U)];
 }
+std::uint8_t& DaisRegularState::GrantFlagSlot(std::uint32_t owner) { if (owner>kPlayerCount) throw std::out_of_range("다이스 grant 쓰기 Player 범위");return playerRecords.empty() ? grantFlags[owner] : playerRecords[owner*(playerEdition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU)+(playerEdition==OriginalEdition::Patch1078 ? 0x71U : 0x69U)]; } // PATCH Count 앞의 실제 Player 쓰기 주소를 저장할 때만 사용한다.
 // 실제 BYTE 하나만 쓰며 독립 검사의 배열 동작은 그대로 유지한다.
 void DaisRegularState::SetGrantFlag(std::uint32_t owner,std::uint8_t value) {
     if (owner>kPlayerCount) throw std::out_of_range("다이스 grant Player 범위");if (playerRecords.empty()) grantFlags[owner]=value;else playerRecords[owner*(playerEdition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU)+(playerEdition==OriginalEdition::Patch1078 ? 0x71U : 0x69U)]=value;
@@ -78,6 +79,7 @@ std::int32_t RawDaisRegular::First(Sid sid,std::uint8_t letter) const { return f
 // 실제 Rune/Dais 생성자의 가상표만 받아 일반 모형의 base vtable로 대체하지 않는다.
 bool RawDaisRegular::Handles(Sid sid) const {
     const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto vtable=Read(raw,0);
+    if (patch) return vtable==kPatchRuneVtable || vtable==kPatchDaisVtable;
     return (raw[10]==state_.rune.runeType && vtable==(patch ? kPatchRuneVtable : kCdRuneVtable)) || (raw[10]==state_.rune.DaisType() && vtable==(patch ? kPatchDaisVtable : kCdDaisVtable));
 }
 // Dais wrapper의allowDead1과CanBridge의0을 기존 공통 선택몸체에 전달한다.
@@ -96,7 +98,7 @@ Sid RawDaisRegular::FindDaisAt(Sid sid) const {
 // 실제 Regular 분배의 반환 지연을 원본 float 비트대로 유지한다.
 float RawDaisRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
     if (!Handles(sid)) throw std::invalid_argument("Dais/Rune Handle 타입/가상표 오류");
-    if (pool_.Slot(sid)[10]==state_.rune.runeType) {
+    if (pool_.Edition()==OriginalEdition::Patch1078 ? Read(pool_.Slot(sid),0)==kPatchRuneVtable : pool_.Slot(sid)[10]==state_.rune.runeType) {
         if (event!=0x304) return payload;const auto dais=rune_.FindOwnedDais(sid);if (dais.value && dais.value<pool_.Capacity()) Progress(dais);hooks_.destroy(sid,0x48);return -1.0F;
     }
     if (event==0x305) { const auto frame=CurrentFrame(sid);const auto next=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(frame)+1);const auto nextStage=ritual_.Stage(sid,next),stage=ritual_.Stage(sid,frame);hooks_.setFrame(sid,next,0);return stage==nextStage ? kCollapseDelay : 0; }

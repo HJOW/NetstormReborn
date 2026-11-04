@@ -8,6 +8,7 @@
 
 namespace netstorm::o {
 namespace {
+template<class F> F LifecycleNeed(const F& function) { if (!function) throw std::logic_error("다이스 수명의 선택된 실제 장치 미연결");return function; } // 선택한 callable을 복사해 재진입으로 원래 연결이 바뀌어도 호출 수명을 지킨다.
 constexpr std::array<std::int32_t,4> kNextFirst{{3,64,120,0}},kStageFirst{{0,3,64,120}}; // 원본00532624/CD0052e2b8 및 count표00532620/CD0052e2b4다.
 // 비정렬 현재raw필드를지정폭으로만읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
@@ -26,7 +27,7 @@ RawDaisLifecycle::RawDaisLifecycle(SidPool& pool,const SquidHash& hash,std::span
     DaisRegularState& daisState,AltarSacrificeState& altarState,DaisLifecycleState& state,DaisLifecycleHooks hooks)
     :pool_(pool),hash_(hash),types_(types),footprint_(footprint),temple_(temple),altar_(altar),postPop_(postPop),preDestroy_(preDestroy),daisState_(daisState),altarState_(altarState),state_(state),hooks_(std::move(hooks)) {
     if (&pool!=&footprint.Pool() || &pool!=&temple.Pool() || &pool!=&altar.Pool() || &pool!=&postPop.Pool() || &pool!=&preDestroy.Pool() || types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U)
-        || !hooks_.setFrame || !hooks_.unpop || !hooks_.repop || !hooks_.create || !hooks_.setOwner || !hooks_.pop || !hooks_.reserveRegular || !hooks_.addRegular || !hooks_.surface || !hooks_.hasIsland || !hooks_.islandNumber || !hooks_.option || !hooks_.chat || !hooks_.destroy || !hooks_.damageablePostDestroy)
+        || (pool.Edition()!=OriginalEdition::Patch1078 && (!hooks_.setFrame || !hooks_.unpop || !hooks_.repop || !hooks_.create || !hooks_.setOwner || !hooks_.pop || !hooks_.reserveRegular || !hooks_.addRegular || !hooks_.surface || !hooks_.hasIsland || !hooks_.islandNumber || !hooks_.option || !hooks_.chat || !hooks_.destroy || !hooks_.damageablePostDestroy)))
         throw std::invalid_argument("다이스 수명의 실제공통몸체/필수효과/같은풀 연결누락");
 }
 // 효과뒤항상현재ownerBYTE를사용한다.
@@ -47,10 +48,14 @@ void RawDaisLifecycle::SetPlayerField(std::uint32_t owner,std::size_t field,std:
     for (std::size_t index=0;index<4;++index) daisState_.playerRecords[at+index]=static_cast<std::uint8_t>(value>>(index*8)); // 현재 DWORD의 네 바이트만 바꾼다.
 }
 // 원본최종VT에없는파생수명은허용하지않는다.
-bool RawDaisLifecycle::Handles(Sid sid) const { const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto vt=Read(raw,0);return (raw[10]==daisState_.rune.DaisType() && vt==(patch ? kPatchDaisVtable : kCdDaisVtable)) || (raw[10]==daisState_.rune.AltarType() && vt==(patch ? kPatchAltarVtable : kCdAltarVtable)); }
+bool RawDaisLifecycle::Handles(Sid sid) const { const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto vt=Read(raw,0);if (patch) return vt==kPatchDaisVtable || vt==kPatchAltarVtable;return (raw[10]==daisState_.rune.DaisType() && vt==kCdDaisVtable) || (raw[10]==daisState_.rune.AltarType() && vt==kCdAltarVtable); }
+bool RawDaisLifecycle::IsDais(Sid sid) const { const auto raw=pool_.Slot(sid);return pool_.Edition()==OriginalEdition::Patch1078 ? Read(raw,0)==kPatchDaisVtable : raw[10]==daisState_.rune.DaisType(); } // 실제 PATCH 가상 진입은 표시 TYPE가 바뀌어도 선택한 함수 부류를 유지한다.
+bool RawDaisLifecycle::Suppressed() const { return hooks_.suppressed ? hooks_.suppressed() : daisState_.rune.suppressDuration; } // 앞선 표시/설정 효과 뒤 같은 현재 미션 상태를 다시 읽는다.
+bool RawDaisLifecycle::Boss() const { return hooks_.boss ? hooks_.boss() : daisState_.ritual.boss; } // 실제 Client 권한을 현재 소비 지점에서 조회한다.
+std::uint32_t RawDaisLifecycle::Count(Sid sid) const { if (hooks_.count) return hooks_.count(sid);if (Read(pool_.Slot(sid),0)!=(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchDaisVtable : kCdDaisVtable)) throw std::logic_error("다이스 수명의 현재 가상80 미연결");return temple_.Count(sid); } // 독립 입력의 실제 Dais 이외 가상표를 Count로 바꾸지 않는다.
 // 실제 최초 Pop의 타입과 초기 Player 범위를 공간쓰기 전에 검사한다.
 void RawDaisLifecycle::Validate(Sid sid,std::uint32_t flags) const {
-    if (!Handles(sid)) throw std::invalid_argument("다이스/제단 Pop 검사 타입/가상표 오류");
+    const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto vt=Read(raw,0);if (!((raw[10]==daisState_.rune.DaisType() && vt==(patch ? kPatchDaisVtable : kCdDaisVtable)) || (raw[10]==daisState_.rune.AltarType() && vt==(patch ? kPatchAltarVtable : kCdAltarVtable)))) throw std::invalid_argument("다이스/제단 Pop 검사 타입/가상표 오류");
     if (pool_.Slot(sid)[10]!=daisState_.rune.DaisType()) return;
     Player(Owner(sid));
     if (!daisState_.rune.suppressDuration && state_.gameTime==0 && (flags&7) && daisState_.GrantFlag(Owner(sid))>=kNextFirst.size())
@@ -58,39 +63,44 @@ void RawDaisLifecycle::Validate(Sid sid,std::uint32_t flags) const {
 }
 // 로딩초기화에서는setter표시를추가하지않고정확한원본폭만쓴다.
 void RawDaisLifecycle::WriteFrame(Sid sid,std::int32_t frame) const {
-    auto raw=pool_.AllocatedBytes(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto bits=std::bit_cast<std::uint32_t>(frame);const std::size_t offset=patch ? 36 : 34,width=patch ? 4 : 1;
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto physical=pool_.Slot(sid);auto raw=patch ? std::span<std::uint8_t>(const_cast<std::uint8_t*>(physical.data()),physical.size()) : pool_.AllocatedBytes(sid);const auto bits=std::bit_cast<std::uint32_t>(frame);const std::size_t offset=patch ? 36 : 34,width=patch ? 4 : 1;
     // 정확한프레임필드의바이트만쓴다.
     for (std::size_t index=0;index<width;++index) raw[offset+index]=static_cast<std::uint8_t>(bits>>(index*8));
 }
 // player개수갱신뒤의현재owner와로딩상태가최초생성/경고조건을결정한다.
 void RawDaisLifecycle::DaisPostPop(Sid sid,std::uint32_t flags) const {
-    if (!daisState_.rune.suppressDuration) { Player(Owner(sid));if (state_.gameTime==0 && (flags&7)) { const auto saved=daisState_.GrantFlag(Owner(sid));if (saved>=kNextFirst.size()) throw std::out_of_range("다이스 로딩개수첫번호범위");hooks_.setFrame(sid,kNextFirst[saved],0); }Player(Owner(sid));daisState_.SetGrantFlag(Owner(sid),static_cast<std::uint8_t>(temple_.Count(sid)-1)); }
+    if (!Suppressed()) {
+        Player(Owner(sid));if (state_.gameTime==0 && (flags&7)) { const auto saved=daisState_.GrantFlag(Owner(sid));if (saved>=kNextFirst.size()) throw std::out_of_range("다이스 로딩개수첫번호범위");LifecycleNeed(hooks_.setFrame)(sid,kNextFirst[saved],0); }
+        const auto owner=Owner(sid);Player(owner); // 두 판본 모두 가상 Count 앞에서 owner를 저장한다.
+        if (pool_.Edition()==OriginalEdition::Patch1078) { auto& destination=daisState_.GrantFlagSlot(owner);const auto count=Count(sid);destination=static_cast<std::uint8_t>(count-1); } // PATCH는 Player 주소도 앞에서 고정한다.
+        else { const auto count=Count(sid);daisState_.SetGrantFlag(owner,static_cast<std::uint8_t>(count-1)); } // CD는 가상 복귀 뒤 현재 Player 저장소에 쓴다.
+    }
     if ((flags&2) && Owner(sid)) { Player(Owner(sid));SetPlayerField(Owner(sid),2,sid.value);SetPlayerField(Owner(sid),3,sid.value); }
     if ((flags&1) && Owner(sid)) { Player(Owner(sid));SetPlayerField(Owner(sid),0,sid.value);SetPlayerField(Owner(sid),1,sid.value); }
     if (flags&1) {
-        if (daisState_.ritual.boss) {
-            if (state_.loading.loadingDepth && temple_.Stage(sid)!=0) { hooks_.unpop(sid,0);const auto count=temple_.Count(sid);if (count>=kStageFirst.size()) throw std::out_of_range("다이스 현재단계첫번호범위");WriteFrame(sid,kStageFirst[count]);hooks_.repop(sid,0); }
-            const auto created=hooks_.create(daisState_.rune.AltarType(),0);hooks_.setOwner(created,Owner(sid));const auto raw=pool_.Slot(sid);hooks_.pop(created,std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),0);
+        if (Boss()) {
+            if (state_.loading.LoadingDepth() && temple_.Stage(sid)!=0) { LifecycleNeed(hooks_.unpop)(sid,0);const auto count=Count(sid);if (count>=kStageFirst.size()) throw std::out_of_range("다이스 현재단계첫번호범위");WriteFrame(sid,kStageFirst[count]);LifecycleNeed(hooks_.repop)(sid,0); }
+            const auto created=LifecycleNeed(hooks_.create)(daisState_.rune.AltarType(),0);LifecycleNeed(hooks_.setOwner)(created,Owner(sid));const auto raw=pool_.Slot(sid);LifecycleNeed(hooks_.pop)(created,std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),0);
         }
-        if (Owner(sid)==daisState_.localOwner && !state_.loading.loadingDepth) { const auto raw=pool_.Slot(sid);const auto surface=hooks_.surface(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));if (surface.value && surface.value<pool_.Capacity() && hooks_.hasIsland(surface)) { Player(Owner(sid));if (hooks_.islandNumber(surface)!=PlayerField(Owner(sid),4) && !hooks_.option("noShowWarnCantUpgrade") && !daisState_.rune.suppressDuration) hooks_.chat("WarnCantUpgradeAltarOffHomeIsland"); } }
+        if (Owner(sid)==daisState_.localOwner && !state_.loading.LoadingDepth()) { const auto raw=pool_.Slot(sid);const auto surface=LifecycleNeed(hooks_.surface)(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));if (surface.value && surface.value<pool_.Capacity() && LifecycleNeed(hooks_.hasIsland)(surface)) { Player(Owner(sid));if (LifecycleNeed(hooks_.islandNumber)(surface)!=PlayerField(Owner(sid),4) && !LifecycleNeed(hooks_.option)("noShowWarnCantUpgrade") && !Suppressed()) LifecycleNeed(hooks_.chat)("WarnCantUpgradeAltarOffHomeIsland"); } }
     }
     postPop_.DamageablePostPop(sid,flags);
 }
 // 제단의21은로컬전용이며최초예약뒤항상공통Damageable후처리를실행한다.
 void RawDaisLifecycle::PostPop(Sid sid,std::uint32_t flags) const {
-    if (!Handles(sid)) throw std::invalid_argument("다이스 수명 Pop 타입/가상표오류");if (pool_.Slot(sid)[10]==daisState_.rune.DaisType()) { DaisPostPop(sid,flags);return; }if ((flags&1) && hooks_.reserveRegular()) hooks_.addRegular(sid,21,altarState_.struggleSeconds);postPop_.DamageablePostPop(sid,flags);
+    if (!Handles(sid)) throw std::invalid_argument("다이스 수명 Pop 타입/가상표오류");if (IsDais(sid)) { DaisPostPop(sid,flags);return; }if ((flags&1) && LifecycleNeed(hooks_.reserveRegular)()) LifecycleNeed(hooks_.addRegular)(sid,21,altarState_.struggleSeconds);postPop_.DamageablePostPop(sid,flags);
 }
 // 제단삭제가같은살아있는다이스삭제를요청해도공통Destroy의dead재진입차단을재사용한다.
 void RawDaisLifecycle::AltarPreDestroy(Sid altar,std::uint32_t flags) const {
-    if (!Handles(altar) || pool_.Slot(altar)[10]!=daisState_.rune.AltarType()) throw std::invalid_argument("제단 파생전처리 타입/가상표오류");if (!(flags&0x400000)) { const auto dais=altar_.DaisAt(altar);if (dais.value && dais.value<pool_.Capacity() && !(pool_.Slot(dais)[11]&2)) hooks_.destroy(dais,flags); }
+    if (!Handles(altar) || IsDais(altar)) throw std::invalid_argument("제단 파생전처리 타입/가상표오류");if (!(flags&0x400000)) { const auto dais=altar_.DaisAt(altar);if (dais.value && dais.value<pool_.Capacity() && !(pool_.Slot(dais)[11]&2)) LifecycleNeed(hooks_.destroy)(dais,flags); }
     const auto area=footprint_.Footprint(altar);RawSquidFinder finder(pool_,hash_,types_);
-    // 다음링크저장/현재extra/서버또는client번호권한의원본순서다.
-    for (auto current=finder.Begin({Cell(area.left),Cell(area.top),Cell(area.right),Cell(area.bottom)},0);current.value;current=finder.Next()) if (pool_.Slot(current)[10]==daisState_.ritual.runeType && (pool_.Slot(current)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&1) && (pool_.IsServer() || (current.value>4 && current.value<pool_.Layout().serverFirst))) hooks_.destroy(current,0);
+    // 다음링크저장/현재extra/boss또는client번호권한의원본순서다.
+    for (auto current=finder.Begin({Cell(area.left),Cell(area.top),Cell(area.right),Cell(area.bottom)},0);current.value;current=finder.Next()) if (pool_.Slot(current)[10]==daisState_.ritual.runeType && (pool_.Slot(current)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&1) && (Boss() || (current.value>4 && current.value<pool_.Layout().serverFirst))) LifecycleNeed(hooks_.destroy)(current,0);
     preDestroy_.PreDestroy(altar,flags);
 }
 // 현재owner와정확히일치하는SID쌍만지운다. 마지막전체Damageable의flags는그대로전달한다.
 void RawDaisLifecycle::PostDestroy(Sid sid,std::uint32_t flags) const {
-    if (!Handles(sid)) throw std::invalid_argument("다이스 수명 삭제후처리 타입/가상표오류");if (pool_.Slot(sid)[10]==daisState_.rune.DaisType() && Owner(sid)) { Player(Owner(sid));if (PlayerField(Owner(sid),2)==sid.value) { SetPlayerField(Owner(sid),2,0);SetPlayerField(Owner(sid),3,0); }if (PlayerField(Owner(sid),0)==sid.value) { SetPlayerField(Owner(sid),0,0);SetPlayerField(Owner(sid),1,0); } }hooks_.damageablePostDestroy(sid,flags);
+    if (!Handles(sid)) throw std::invalid_argument("다이스 수명 삭제후처리 타입/가상표오류");if (IsDais(sid) && Owner(sid)) { Player(Owner(sid));if (PlayerField(Owner(sid),2)==sid.value) { SetPlayerField(Owner(sid),2,0);SetPlayerField(Owner(sid),3,0); }if (PlayerField(Owner(sid),0)==sid.value) { SetPlayerField(Owner(sid),0,0);SetPlayerField(Owner(sid),1,0); } }LifecycleNeed(hooks_.damageablePostDestroy)(sid,flags);
 }
 // 후속가상등록의같은풀검증이다.
 const SidPool& RawDaisLifecycle::Pool() const { return pool_; }

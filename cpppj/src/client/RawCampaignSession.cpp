@@ -1630,7 +1630,7 @@ struct RawCampaignSession::Impl {
     // TYPE155 생성자422720의503360은+10/+14/+18이 각각 공통4af780/4b0950/4b0840이다.
     bool BridgeConnector(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==core.bridgeState.connectorType && Read(raw,0)==0x503360U; }
     // Rune166/VT5075d8의+14/+18은 공통4b0950/4b0840이다. Damageable 전처리/드롭으로 대체하지 않는다.
-    bool RuneLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==runeState.runeType && Read(raw,0)==0x5075d8U; }
+    bool RuneLifetime(Sid sid) const { return Read(core.pool.Slot(sid),0)==0x5075d8U; } // 실제 Rune의 가상 삭제/후처리는 현재 표시 TYPE와 독립적으로 분배한다.
     // 썬 바리케이드의 특수457990 전처리는 다른 일반 Damageable에 적용하지 않는다.
     bool SunFence(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==136 && Read(raw,0)==0x509470; }
     // 보호50dc30의+14는484f80→44b4b0 thunk이며+18/+10도기존Damageable/공통삭제다. 메뉴 범위와는 별개다.

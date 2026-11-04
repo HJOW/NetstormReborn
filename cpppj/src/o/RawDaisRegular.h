@@ -28,6 +28,7 @@ struct DaisRegularState {
     const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 의식 요청처럼 참조를 보관하는 소비자에 임시 값을 반환하지 않는다.
     void BindPlayerRecords(OriginalEdition edition,std::span<std::uint8_t> records); // 정확9기록을 같은 다이스 수명/획득이 공유한다.
     std::uint8_t GrantFlag(std::uint32_t owner) const; // 현재+71/CD+69 BYTE를 효과 뒤 다시 읽는다.
+    std::uint8_t& GrantFlagSlot(std::uint32_t owner); // Count가 재진입해 기록을 바꿔도 앞에서 선택한 실제 BYTE 주소를 유지한다.
     void SetGrantFlag(std::uint32_t owner,std::uint8_t value); // 같은 현재 BYTE만 쓰고 다른 필드를 보존한다.
     void SetPlayerResult(std::uint32_t owner,std::uint32_t value); // 현재+a0/CD+98 결과 DWORD를 같은 기록에 쓴다.
 };
