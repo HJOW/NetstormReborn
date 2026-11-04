@@ -3410,4 +3410,5 @@ target_sources(netstorm_pop_context_tests PRIVATE PostPopCurrentTests.cpp MouseS
 # 두공유부모의현재TYPE/로딩/부분효과와기존세판본7344행을함께집중대조한다(846).
 target_sources(netstorm_tests PRIVATE CarrierParentCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE CarrierParentCurrentTests.cpp CarrierPostPopTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE FactoryPostPopTests.cpp) # 일반 Factory만 선택 실행하며 기존 혼합 아웃포스트 검사는 실행하지 않는다.
 target_compile_definitions(netstorm_pop_context_tests PRIVATE NETSTORM_CARRIERPOSTPOP_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/carrierpostpop-x86.tsv")

@@ -22,6 +22,7 @@ struct FactoryPostPopHooks {
     std::function<void(Sid,std::int32_t,std::int32_t)> warnDuplicate; // 중복 워크샾 삭제 직전의 원본 경고 로그다.
     std::function<void(Sid,std::uint32_t)> destroy; // 실제 같은 풀의 가상 +0x10 삭제이며 flags0을 전달한다.
     std::function<void(Sid)> updateState; // 가상84의 Level 저장 후 실제 가상88 기본 표시 갱신이다. 상태 프레임 보정과 구별한다.
+    std::function<std::uint32_t(Sid)> virtualCount; // 프레임 보정의 각 가상80 호출을 현재 VT로 다시 분배한다. 독립 입력은 확인된 네 Factory 표의 base getter를 사용한다.
 };
 // 실제 vtable +0x20과 +0x80이 검증된 Factory 부류만 받아 공통 깊이를 한 번 줄인다.
 class RawFactoryPostPop {
@@ -32,7 +33,7 @@ public:
         AssetPostPopState& state,FactoryPostPopHooks hooks,FactoryPostPopTypes numbers={});
     // 타입 이름 대신 실제 가상 표가 Factory/아웃포스트 몸체를 가리키는지 판단한다.
     bool Handles(Sid sid) const;
-    // 공간 쓰기 전에 현재 분기의 필수 외부 효과와 공통 장부를 확인한다.
+    // 독립 사전 검사와 CD 계약이다. 실제 PATCH 몸체는 도달한 하위 장치만 확인한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // wrapper 등록→최초 예약→Damageable→프레임→현재 일반 finder/중복 삭제 순서를 실행한다.
     void PostPop(Sid sid,std::uint32_t flags) const;
@@ -45,8 +46,9 @@ public:
 private:
     // 0은 미복원, 1은 Factory, 2는 아웃포스트 wrapper다.
     std::uint32_t Kind(Sid sid) const;
-    // base 가상 +0x80은 raw 상태 상위 세 비트를 반환한다. 해당 네 가상 표에서만 사용한다.
+    // 현재 가상80을 호출하며 미연결 독립 입력은 확인된 네 Factory 표의 base getter만 허용한다.
     std::int32_t Count(Sid sid) const;
+    const RiftTypeFrames& CurrentFrames(Sid sid) const; // Count 콜백 뒤 현재 TYPE로 프레임 표를 읽고 물리 범위를 확인한다.
     // 독립 할당 실패를 보존하며 다음 예약이나 공통 몸체를 계속한다.
     void Regular(Sid sid,std::uint32_t event,float delay) const;
     SidPool& pool_; // 모든 객체를 조회·수정하는 실제 SID 풀이다.

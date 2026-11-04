@@ -1,6 +1,8 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
-**846 후속 연결:**사용자재개뒤Carrier/Damageable의현재TYPE/로딩·선택장치·실패앞부분효과와같은실제Session을연결했다. 집중135개(새14)첫실행실패0·기존Carrier7344행/보호파일불변이다. Factory/나머지현재가상20·비가상부모/자체Validate는다음847이다. 전체Pop완료로세지않아checking12·완료부모36/부분3을유지한다. [846 기록](cpp-carrier-current-parent-20261104.md).
+**847 후속 연결:**Factory의 선택 장치/앞선 부분 효과와 현재 가상80→TYPE/저장 프레임·같은 실제 Session을 연결했다. 집중77개(새13) 첫 실패0·일반 Factory Native372행/Carrier7344행/보호파일 불변이다. Factory 타입번호 전역 공유와 다른 현재 가상20 파생 자체 검사/분배는848 이후다. 전체 Pop 완료로 세지 않아 checking12·완료부모36/부분3 유지다. [847 기록](cpp-factory-current-parent-20261104.md).
+
+**846 후속 연결 이력:**사용자재개뒤Carrier/Damageable의현재TYPE/로딩·선택장치·실패앞부분효과와같은실제Session을연결했다. 집중135개(새14)첫실행실패0·기존Carrier7344행/보호파일불변이다. Factory/나머지현재가상20·비가상부모/자체Validate는다음847이다. 전체Pop완료로세지않아checking12·완료부모36/부분3을유지한다. [846 기록](cpp-carrier-current-parent-20261104.md).
 
 **845 후속 연결 이력:**842~845에서 공통 Pop 현재 공간/Activate/writer·SHP 진단 복귀/현재 TYPE와 공통 후처리·기억한 선택 재검사를 연결했다. 845 집중130개(새17) 첫 실행 실패0이며 현재 가상+20 파생 분배/자체 Validate·실제 부모는 다음846이었다. 전체 Pop 완료로 세지 않아 잔여12=부모6+부분3+MP3·완료부모36/부분3을 유지한다. 새 /goal로 계속 진행 중이며 아래840의 일시 정지는 당시 이력이다. [845 기록](cpp-post-pop-current-parent-20261104.md).
 

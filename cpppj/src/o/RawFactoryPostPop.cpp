@@ -9,6 +9,7 @@
 
 namespace netstorm::o {
 namespace {
+template<class F> F FactoryNeed(const F& function) { if (!function) throw std::logic_error("Factory 후처리의 선택된 장치 미연결");return function; } // 도달한 장치만 요구하며 콜백 중 원본 callable의 수명을 보존한다.
 // 정렬되지 않은 little endian DWORD를 현재 슬롯에서 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
     std::uint32_t value=0;
@@ -48,8 +49,14 @@ std::uint32_t RawFactoryPostPop::Kind(Sid sid) const {
     if (table==(patch ? 0x509210U : 0x503358U)) return 2;
     return 0;
 }
-// 해당 네 vtable의 가상 +0x80은 같은 base 상태 getter다. 원본의 항상 참 OR 조건도 반영한다.
-std::int32_t RawFactoryPostPop::Count(Sid sid) const { return pool_.Slot(sid)[11]>>5; }
+// 가상 호출은 매번 현재 VT로 분배한다. 독립 네 표의 004ad0f0도 Has의 현재 TYPE 접근을 먼저 한다.
+std::int32_t RawFactoryPostPop::Count(Sid sid) const {
+    if (hooks_.virtualCount) return std::bit_cast<std::int32_t>(FactoryNeed(hooks_.virtualCount)(sid));
+    if (!Kind(sid)) throw std::logic_error("Factory 프레임의 현재 가상80 미연결");
+    if (pool_.Slot(sid)[10]>=types_.size()) throw std::out_of_range("Factory Count의 현재 TYPE 물리 범위 오류");
+    return pool_.Slot(sid)[11]>>5;
+}
+const RiftTypeFrames& RawFactoryPostPop::CurrentFrames(Sid sid) const { const auto type=pool_.Slot(sid)[10];if (type>=frames_.size()) throw std::out_of_range("Factory 현재 프레임 TYPE 물리 범위 오류");return frames_[type]; } // 각 가상 호출이 바꾼 TYPE를 사용한다.
 // 원본 타입 이름이 일치해도 다른 가상 표의 wrapper는 허용하지 않는다.
 bool RawFactoryPostPop::Handles(Sid sid) const { return Kind(sid)!=0; }
 // 실제 흐름에서 쓰는 효과만 요구하되 callback 뒤 분기 변화도 필수 경계로 유지한다.
@@ -69,23 +76,25 @@ void RawFactoryPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* 
 void RawFactoryPostPop::AdjustFrame(Sid sid) const {
     if (pool_.Slot(sid)[10]==numbers_.fixedFrame) return;
     const auto frame=pool_.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(pool_.Slot(sid),36)) : pool_.Slot(sid)[34];
-    const auto run=frames_[pool_.Slot(sid)[10]].Run(static_cast<std::uint8_t>('A'+Count(sid)));
+    const auto count=Count(sid);if (count<0 || count>=16) throw std::out_of_range("Factory 현재 프레임 글자 물리 범위 오류");
+    const auto run=CurrentFrames(sid).Run(static_cast<std::uint8_t>('A'+count)); // 00453798 가상80 뒤 004ac550의 현재 TYPE 조회 순서다.
     if (run.first<=frame) {
-        const auto current=frames_[pool_.Slot(sid)[10]].Run(static_cast<std::uint8_t>('A'+Count(sid)));
+        const auto nextCount=Count(sid);if (nextCount<0 || nextCount>=16) throw std::out_of_range("Factory 현재 프레임 개수 글자 물리 범위 오류");
+        const auto current=CurrentFrames(sid).Run(static_cast<std::uint8_t>('A'+nextCount));
         const auto end=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(run.first)+static_cast<std::uint32_t>(current.count));
         if (frame<end) return;
     }
-    hooks_.setFrame(sid,run.first,0);
+    FactoryNeed(hooks_.setFrame)(sid,run.first,0);
 }
 // 각각의 실패는 해당 예약만 건너뛰며 다음 호출 순서는 유지한다.
-void RawFactoryPostPop::Regular(Sid sid,std::uint32_t event,float delay) const { if (hooks_.reserveRegular()) hooks_.addRegular(sid,event,delay); }
+void RawFactoryPostPop::Regular(Sid sid,std::uint32_t event,float delay) const { if (FactoryNeed(hooks_.reserveRegular)()) FactoryNeed(hooks_.addRegular)(sid,event,delay); }
 // wrapper 목록·예약·공통 몸체·프레임·현재 공간 순서가 원본과 같다.
 void RawFactoryPostPop::PostPop(Sid sid,std::uint32_t flags) const {
-    Validate(sid,flags);
+    if (pool_.Edition()!=OriginalEdition::Patch1078) Validate(sid,flags);
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto extra=patch ? 40U : 35U;
     if (Kind(sid)==2 && (flags&1) && !(pool_.Slot(sid)[extra]&9)) {
         AddUnique(state_.Outposts(),sid);AddUnique(state_.Residences(),sid);
-        hooks_.regionOwnership(Position(pool_.Slot(sid),14),Position(pool_.Slot(sid),18));
+        FactoryNeed(hooks_.regionOwnership)(Position(pool_.Slot(sid),14),Position(pool_.Slot(sid),18));
     }
     if (flags&1) {
         if (pool_.Slot(sid)[10]==numbers_.firstTimerFactory) Regular(sid,2,8.0f);
@@ -100,8 +109,8 @@ void RawFactoryPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     while (candidate.value) {
         if (candidate!=sid && pool_.Slot(candidate)[10]==pool_.Slot(sid)[10] &&
             !((pool_.Slot(candidate)[extra]^pool_.Slot(sid)[extra])&8)) {
-            hooks_.warnDuplicate(candidate,Truncate(Position(pool_.Slot(candidate),14)),Truncate(Position(pool_.Slot(candidate),18)));
-            hooks_.destroy(candidate,0);
+            FactoryNeed(hooks_.warnDuplicate)(candidate,Truncate(Position(pool_.Slot(candidate),14)),Truncate(Position(pool_.Slot(candidate),18)));
+            FactoryNeed(hooks_.destroy)(candidate,0);
         }
         candidate=finder.Next();
     }

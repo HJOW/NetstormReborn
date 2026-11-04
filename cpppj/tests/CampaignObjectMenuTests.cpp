@@ -775,3 +775,14 @@ TEST_CASE(CarrierParentCurrent_ActualSessionUsesCurrentTypeLoadingAndGeyser) { /
     gameplay->GeyserType()=74;run();CHECK(!session.World().TakeChanged());gameplay->GeyserType()=savedGeyser;session.World().SetLoadingDepth(0);run();CHECK(!session.World().TakeChanged());
     std::copy(saved.begin(),saved.end(),raw.begin());type.flags1=savedFlags;type.flags2=savedGenus;CHECK(core.bookkeeping.depth==0); //명시VT/상태/TYPE/전역변경을돌리고실제소유권변경검증으로확대하지않는다.
 }
+
+TEST_CASE(FactoryParentCurrent_ActualSessionRedispatchesCountAfterCommon) { // 같은 Session의 공통 효과 뒤 프레임 보정이 현재 VT의 가상80을 다시 선택한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();
+    const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);const auto saved=std::vector<std::uint8_t>(raw.begin(),raw.end());auto storage=session.World().Storage();auto& type=storage->types[74];const auto savedFlags=type.flags1,savedGenus=type.flags2;const auto savedFrames=storage->frames[74];
+    const auto write=[&](std::size_t offset,std::uint32_t value) { for (std::size_t index=0;index<4;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); }; // 새 일반 슬롯의 명시 VT·프레임 DWORD만 쓴다.
+    write(0,0x509148);write(36,7);raw[11]=raw[40]=0;raw[34]=1;type.flags1=type.flags2=0;storage->frames[74]=RiftTypeFrames(std::vector<FrameCode>{{'A','A',0,0}});std::uint32_t notices{};
+    core.postPop.BindPatchAiNotice([&](auto owner,Sid sid,bool added) { CHECK(owner==1 && sid==source && added);++notices;write(0,0); }); // 공통 부모의 도달한 콜백에서만 현재 VT를 바꾼다.
+    ++core.bookkeeping.depth;CHECK(Throws([&] { core.postPop.PostPopVirtual(source,0x2000001); }));CHECK(notices==1 && core.bookkeeping.depth==0 && raw[36]==7);
+    write(0,0x509148);write(36,0);++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000);CHECK(core.bookkeeping.depth==0 && raw[36]==0 && notices==1);
+    std::copy(saved.begin(),saved.end(),raw.begin());type.flags1=savedFlags;type.flags2=savedGenus;storage->frames[74]=savedFrames; // 실제 Frame 틱·생산·전투·의식·멀티플레이는 실행하지 않는다.
+}

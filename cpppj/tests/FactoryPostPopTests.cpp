@@ -107,6 +107,95 @@ struct FactoryScene {
     }
 };
 }
+
+namespace { // 현재 부모 검사는 실제 PATCH 진입점과 원문에서 선택한 하위만 관측한다.
+template<class F> bool FactoryFailed(F&& action) { try { action(); }catch (const std::exception&) { return true; }return false; } // 실패 직전의 예약·장부·프레임 효과를 대조한다.
+}
+
+TEST_CASE(FactoryParentCurrent_OrdinaryNativeRowsKeepCompleteExpectedOutput) { // 기존 원문 출력에서 일반 Factory 372행만 골라 아웃포스트를 실행하지 않는다.
+    const auto rows=LoadFixture(NETSTORM_FACTORYPOSTPOP_FIXTURE).rows;std::size_t checked{};
+    for (const bool patch:{true,false}) { // 양 판본의 일반 몸체만 같은 실제 풀로 재생한다.
+        FactoryScene scene(patch);
+        for (const auto& row:rows) { // 기존 입력·기대값과 행 순서를 변경하지 않는다.
+            if (row[0]!=(patch ? "originals" : "originalCD")) continue;std::vector<std::uint32_t> input;
+            for (const auto& value:Split(row[1],',')) input.push_back(Number(value)); // 원문 실행기의 입력만 공급한다.
+            if (input[0]!=0 || input[1]==126) continue;
+            scene.Prepare(input);SquidPostPop base(scene.pool,scene.types,scene.baseState);
+            RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));
+            RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,scene.Hooks());base.SetFactoryPostPop(&factory);
+            if (patch) { ++scene.baseState.depth;base.PostPopVirtual(kSource,input[2]); }else base.Activate(kSource,input[2]);
+            const auto expected=std::vector<std::string>(row.begin()+2,row.end());CHECK(scene.Output()==expected);CHECK(scene.baseState.depth==0);++checked;
+        }
+    }
+    CHECK(checked==372);
+}
+TEST_CASE(FactoryParentCurrent_UnselectedDevicesAreOptional) { // 최초가 아니고 현재 프레임도 유효하면 예약·프레임·중복·지역 장치를 요구하지 않는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,0,0,0,0,0,0,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,{});
+    base.SetFactoryPostPop(&factory);++scene.baseState.depth;base.PostPopVirtual(kSource,0);CHECK(scene.events==std::vector<std::string>{"D:0"} && scene.baseState.depth==0);
+}
+TEST_CASE(FactoryParentCurrent_FailedReservationSkipsMissingConstructor) { // 두 new 실패는 미연결 생성자를 호출하지 않고 공통 부모까지 진행한다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,1,0,0,0,0,0,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();hooks.addRegular={};hooks.setFrame={};
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));++scene.baseState.depth;factory.PostPop(kSource,1);
+    CHECK(scene.events==(std::vector<std::string>{"A:40","A:40","D:1"}) && scene.alloc==2 && scene.baseState.depth==0);
+}
+TEST_CASE(FactoryParentCurrent_MissingConstructorFollowsSuccessfulReservation) { // 첫 확보 성공 효과는 뒤 생성자 장치가 없을 때도 남는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,1,0,0,0,0,1,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();hooks.addRegular={};
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));++scene.baseState.depth;CHECK(FactoryFailed([&] { factory.PostPop(kSource,1); }));
+    CHECK(scene.events==std::vector<std::string>{"A:40"} && scene.alloc==1 && scene.baseState.depth==1);
+}
+TEST_CASE(FactoryParentCurrent_LateFrameFailureRetainsReservationsAndCommon) { // 프레임 장치 누락 전에 실행한 두 예약과 공통 깊이 감소를 되돌리지 않는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,1,0,0,0,7,7,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();hooks.setFrame={};
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));base.SetFactoryPostPop(&factory);++scene.baseState.depth;CHECK(FactoryFailed([&] { base.PostPopVirtual(kSource,1); }));
+    CHECK(scene.events==(std::vector<std::string>{"A:40","R:50:2:1090519040","A:40","R:50:5:1056964608","D:1"}) && scene.baseState.depth==0 && Get(scene.pool.Slot(kSource),36)==7);
+}
+TEST_CASE(FactoryParentCurrent_CurrentTypeAndBossFollowCommonCallback) { // 공통 부모가 바꾼 TYPE·레벨·boss를 뒤 프레임/중복 분기가 다시 읽는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,86,0,0,0,0,7,0,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);auto carrier=scene.DamageableHooks(base);
+    carrier.base=[&](Sid sid,std::uint32_t flags) { scene.events.push_back("D");scene.pool.AllocatedBytes(sid)[10]=87;scene.pool.AllocatedBytes(sid)[11]=1<<5;scene.pool.AllocatedBytes(Sid{60})[10]=87;scene.state.boss=true;base.PostPopBase(sid,flags); };
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,std::move(carrier));RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,scene.Hooks());
+    ++scene.baseState.depth;factory.PostPop(kSource,0);CHECK(scene.events==(std::vector<std::string>{"D","F:2:0","W:50:52","X:60:0"}) && scene.baseState.depth==0);
+}
+TEST_CASE(FactoryParentCurrent_WarningPrecedesMissingDestroy) { // 중복 경고가 같은 후보를 바꾼 효과는 뒤 삭제 장치 누락에도 보존한다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,0,0,1,0,0,0,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();hooks.destroy={};
+    hooks.warnDuplicate=[&](Sid sid,auto,auto) { scene.events.push_back("W");scene.pool.AllocatedBytes(sid)[11]=0x10; };
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));++scene.baseState.depth;CHECK(FactoryFailed([&] { factory.PostPop(kSource,0); }));
+    CHECK(scene.events==(std::vector<std::string>{"D:0","W"}) && scene.pool.Slot(Sid{60})[11]==0x10 && scene.baseState.depth==0);
+}
+TEST_CASE(FactoryParentCurrent_NoDuplicateSkipsMissingDiagnostics) { // boss여도 실제 일치 후보가 없으면 경고·삭제 장치를 선택하지 않는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,0,0,1,0,0,0,0,0,0});scene.pool.AllocatedBytes(Sid{60})[10]=86;SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();hooks.warnDuplicate={};hooks.destroy={};hooks.setFrame={};hooks.regionOwnership={};
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));++scene.baseState.depth;factory.PostPop(kSource,0);CHECK(scene.events==std::vector<std::string>{"D:0"} && scene.baseState.depth==0);
+}
+TEST_CASE(FactoryParentCurrent_TwoCountsReadCurrentTypeAndRetainSavedFrame) { // 두 가상80 뒤 TYPE를 각각 읽고 최초 프레임/첫 구간은 저장값을 유지한다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,0,0,0,0,6,0,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();std::uint32_t calls{};
+    hooks.virtualCount=[&](Sid sid) { ++calls;scene.events.push_back("C"+std::to_string(calls));auto raw=scene.pool.AllocatedBytes(sid);raw[10]=static_cast<std::uint8_t>(calls==1 ? 86 : 87);Put(raw,36,100);return calls==1 ? 1U : 7U; };
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));++scene.baseState.depth;factory.PostPop(kSource,0);
+    CHECK(scene.events==(std::vector<std::string>{"D:0","C1","C2","F:2:0"}) && calls==2 && Get(scene.pool.Slot(kSource),36)==2);
+}
+TEST_CASE(FactoryParentCurrent_SecondRunUsesCurrentFramesWithSavedFirst) { // 두 번째 TYPE의 개수와 첫 TYPE의 시작을 더하며 콜백이 쓴 현재 프레임을 비교에 섞지 않는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,0,0,0,0,6,0,0,0,0});std::vector<FrameCode> codes(3,FrameCode{'A','A',0,0});
+    for (std::uint8_t index=0;index<10;++index) codes.push_back({'H','A',index,0}); // 두 번째 표에 다른 시작/개수를 명시 입력한다.
+    scene.frames[87]=RiftTypeFrames(std::move(codes));SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();std::uint32_t calls{};hooks.setFrame={};
+    hooks.virtualCount=[&](Sid sid) { ++calls;scene.pool.AllocatedBytes(sid)[10]=static_cast<std::uint8_t>(calls==1 ? 86 : 87);Put(scene.pool.AllocatedBytes(sid),36,100);return calls==1 ? 1U : 7U; };
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));++scene.baseState.depth;factory.PostPop(kSource,0);
+    CHECK(calls==2 && Get(scene.pool.Slot(kSource),36)==100 && scene.events==std::vector<std::string>{"D:0"});
+}
+TEST_CASE(FactoryParentCurrent_CountFailureFollowsCommon) { // 선택된 가상80의 실패는 이미 끝난 공통 효과를 지우지 않는다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,85,0,0,0,0,7,0,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();hooks.virtualCount=[&](Sid)->std::uint32_t { scene.events.push_back("C");throw std::logic_error("명시 가상80 중단"); };
+    RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));++scene.baseState.depth;CHECK(FactoryFailed([&] { factory.PostPop(kSource,0); }));CHECK(scene.events==(std::vector<std::string>{"D:0","C"}) && scene.baseState.depth==0 && Get(scene.pool.Slot(kSource),36)==7);
+}
+TEST_CASE(FactoryParentCurrent_PhysicalTypeReadIsReachedAfterCommon) { // flags0/로딩0이면 물리 TYPE 오류는 공통 억제 뒤 실제 Count에서만 나타난다.
+    FactoryScene scene(true);scene.Prepare(std::array<std::uint32_t,11>{0,255,0,0,0,0,7,0,0,0,0});SquidPostPop base(scene.pool,scene.types,scene.baseState);
+    RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,scene.Hooks());
+    ++scene.baseState.depth;CHECK(FactoryFailed([&] { factory.PostPop(kSource,0); }));CHECK(scene.events==std::vector<std::string>{"D:0"} && scene.baseState.depth==0);
+    FactoryPostPopTypes numbers;numbers.fixedFrame=255;RawFactoryPostPop fixed(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,{},numbers);++scene.baseState.depth;fixed.PostPop(kSource,0);CHECK(scene.baseState.depth==0 && Get(scene.pool.Slot(kSource),36)==7);
+}
 // 실제 기계어가 만든 독립 행을 같은 C++ 풀/해시의 전체 출력과 비교한다.
 TEST_CASE(factoryPostPop_native_body_and_dynamic_finder) {
     const auto rows=LoadFixture(NETSTORM_FACTORYPOSTPOP_FIXTURE).rows;std::size_t checked=0;

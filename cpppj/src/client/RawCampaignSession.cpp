@@ -1329,6 +1329,7 @@ struct RawCampaignSession::Impl {
         assetEffects.gun=combat->GunHooks(std::move(assetEffects.gun));
         assetEffects.gun.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("GunProcess 통지 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 같은 Client 서비스가 복귀하면 통지 부모의 현재 필드 재판정을 계속한다.
         FillMissing(assetEffects.factory.warnDuplicate); //4538f0의 경고 뒤 삭제가 계속되도록 실제 Client 로그를 보존하고 선택된 누락만 진단한다.
+        assetEffects.factory.virtualCount=[this](Sid sid) { return VirtualCount(sid); }; // Factory 보정의 첫/두 번째 가상80도 콜백 이후 같은 현재 Session VT로 재분배한다.
         assetEffects.levelAssertion=MakeSquidLevelAssertion(core.pool.Edition(),
             [this](std::string_view expression,std::string_view,std::uint32_t) { if (!services.ai.assertion) throw std::logic_error("Factory level 실제 진단 장치 미연결");services.ai.assertion(expression); }); // 같은 현재 Client 서비스의 복귀 뒤 Factory 표시 갱신도 계속한다.
         assetEffects.factory.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
