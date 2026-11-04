@@ -61,7 +61,7 @@ RawDaisRegular::RawDaisRegular(SidPool& pool,const SquidHash& hash,std::span<con
 void RawDaisRegular::Assert(std::string_view expression,std::string_view file,std::uint32_t line) const {
     if (!hooks_.assertion) throw std::logic_error("Dais의 선택된 실제 원문 진단 장치 미연결");hooks_.assertion(expression,file,line);
 }
-bool RawDaisRegular::Boss() const { return hooks_.boss ? hooks_.boss() : state_.ritual.boss; } // 실제 Client의 현재 권한과 기존 독립 입력을 구별한다.
+bool RawDaisRegular::Boss() const { return hooks_.boss ? hooks_.boss() : state_.ritual.Boss(); } // 실제 Client의 현재 권한과 기존 독립 입력을 구별한다.
 std::int32_t RawDaisRegular::Alliance(std::uint32_t row,std::uint32_t column) const { // 원문 방향별9×9 행/열을 바꾸지 않는다.
     Player(row);Player(column);return hooks_.alliance ? hooks_.alliance(row,column) : state_.alliances[row*(kPlayerCount+1)+column];
 }

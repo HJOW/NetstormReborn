@@ -155,3 +155,15 @@ TEST_CASE(RuneSharedCurrent_TempleLookupReadsTypeAfterVirtualCount) { // 두 원
         CHECK(scene.ritual->RuneAt(Sid{5},{40.75F,41.25F})==Sid{8} && owner.RuneType()==71 && scene.countReads==1);CHECK(scene.ritual->HasAbstractRune(Sid{5}));owner.RuneType()=70;CHECK(!scene.ritual->HasAbstractRune(Sid{5}) && scene.effects==0); // 사본166 또는 Count 전 번호70으로 검색하면 결과가 달라진다.
     }
 }
+
+TEST_CASE(TempleHelperCurrent_ReadOnlyPriestLookupAndBossUseBoundOwner) { // 별도 Prepare 사본 갱신 없이 현재 번호/권한 주소를 조회하며 실제 사제 행동은 호출하지 않는다.
+    DaisParentScene scene;scene.templeState.sharedPriestType=&scene.canonicalPriestType;scene.templeState.sharedBoss=&scene.currentBoss;scene.templeState.priestType=158;scene.templeState.boss=false;scene.Object(Sid{6},74,40.75F,41.25F);scene.Owner(Sid{6},1);Put(scene.Raw(Sid{6}),26,100);auto& head=scene.hash.Bucket(1,40.75F,41.25F);Put(scene.Raw(Sid{6}),4,head,2);head=6;const auto before=std::vector<std::uint8_t>(scene.pool.Bytes().begin(),scene.pool.Bytes().end());
+    CHECK(scene.templeState.Boss() && scene.ritual->FindStrongOwnedPriest(Sid{5})==Sid{});scene.canonicalPriestType=74;CHECK(scene.ritual->FindStrongOwnedPriest(Sid{5})==Sid{6});scene.currentBoss=false;CHECK(!scene.templeState.Boss());scene.templeState.sharedPriestType=nullptr;CHECK(scene.ritual->FindStrongOwnedPriest(Sid{5})==Sid{} && scene.effects==0 && std::equal(before.begin(),before.end(),scene.pool.Bytes().begin())); // 기본 필드158과 빌린 번호74를 구별한다.
+}
+TEST_CASE(TempleHelperCurrent_PatchEarlyReturnSkipsUnusedDevicesAndInvalidPriest) { // stage5는 사제 슬롯이나 효과 장치에 도달하지 않고 원문처럼 자연 반환한다. CD의 기존 생성 계약은 유지한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 같은 단계 입력으로 실제 선택 장치 계약만 구별한다.
+        DaisParentScene scene(edition);scene.FrameInput(Sid{5},58);bool rejected=false;
+        try { RawTempleRitual helper(scene.pool,scene.hash,scene.types,scene.frames,scene.shapes,scene.spots,*scene.footprint,*scene.reward,*scene.actions,scene.templeState,{});CHECK(scene.Patch());helper.Ritual(Sid{5},Sid{65535},0);CHECK(scene.effects==0 && scene.kernel.Size()==0); }catch (const std::invalid_argument&) { rejected=true; }
+        CHECK(rejected==!scene.Patch()); // PATCH의 미도달 device를 생성 시 전수 요구하거나 사제를 먼저 읽으면 실패한다.
+    }
+}

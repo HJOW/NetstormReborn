@@ -51,7 +51,7 @@ void RawDaisLifecycle::SetPlayerField(std::uint32_t owner,std::size_t field,std:
 bool RawDaisLifecycle::Handles(Sid sid) const { const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto vt=Read(raw,0);if (patch) return vt==kPatchDaisVtable || vt==kPatchAltarVtable;return (raw[10]==daisState_.rune.DaisType() && vt==kCdDaisVtable) || (raw[10]==daisState_.rune.AltarType() && vt==kCdAltarVtable); }
 bool RawDaisLifecycle::IsDais(Sid sid) const { const auto raw=pool_.Slot(sid);return pool_.Edition()==OriginalEdition::Patch1078 ? Read(raw,0)==kPatchDaisVtable : raw[10]==daisState_.rune.DaisType(); } // 실제 PATCH 가상 진입은 표시 TYPE가 바뀌어도 선택한 함수 부류를 유지한다.
 bool RawDaisLifecycle::Suppressed() const { return hooks_.suppressed ? hooks_.suppressed() : daisState_.rune.SuppressDuration(); } // 앞선 표시/설정 효과 뒤 같은 현재 미션 상태를 다시 읽는다.
-bool RawDaisLifecycle::Boss() const { return hooks_.boss ? hooks_.boss() : daisState_.ritual.boss; } // 실제 Client 권한을 현재 소비 지점에서 조회한다.
+bool RawDaisLifecycle::Boss() const { return hooks_.boss ? hooks_.boss() : daisState_.ritual.Boss(); } // 실제 Client 권한을 현재 소비 지점에서 조회한다.
 std::uint32_t RawDaisLifecycle::Count(Sid sid) const { if (hooks_.count) return hooks_.count(sid);if (Read(pool_.Slot(sid),0)!=(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchDaisVtable : kCdDaisVtable)) throw std::logic_error("다이스 수명의 현재 가상80 미연결");return temple_.Count(sid); } // 독립 입력의 실제 Dais 이외 가상표를 Count로 바꾸지 않는다.
 // 실제 최초 Pop의 타입과 초기 Player 범위를 공간쓰기 전에 검사한다.
 void RawDaisLifecycle::Validate(Sid sid,std::uint32_t flags) const {

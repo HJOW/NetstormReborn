@@ -12,6 +12,8 @@
 
 namespace netstorm::o {
 namespace {
+template<class F> F TempleNeed(const F& function) { if (!function) throw std::logic_error("의식 helper의 선택된 실제 장치 미연결");return function; } // 도달한 장치만 복사해 호출 중 자신의 연결 교체에도 수명을 유지한다.
+std::span<std::uint8_t> TempleRaw(SidPool& pool,Sid sid) { const auto bytes=pool.Slot(sid);return {const_cast<std::uint8_t*>(bytes.data()),bytes.size()}; } // PATCH 진단/HP/Count 복귀 뒤에도 같은 물리 슬롯을 쓴다.
 constexpr std::array<std::int32_t,4> kCountFirst{{1,3,64,120}}; // PATCH00532620의 실제 네 DWORD다. 가상 count0도 저장된 첫 값1을 사용한다.
 constexpr std::array<std::int32_t,4> kCdCountFirst{{10611,3,64,120}}; // CD0052e2b4의 실제 네 DWORD이며 count0의 인접 문자열 바이트도 임의0으로 바꾸지 않는다.
 constexpr std::uint32_t kPatchCountVtable=0x00507950U,kCdCountVtable=0x00504090U; // 독립 입력에서 직접 Count로 연결할 수 있는 두 판본의 실제 Dais VT다.
@@ -33,7 +35,7 @@ int Cell(double value) {
     return static_cast<int>(value);
 }
 }
-// 모든 하위 효과와 같은 풀/해시/판본 목록 크기를 첫 요청 전에 확인한다.
+// 같은 풀/해시/판본 목록은 먼저 확인하고 PATCH 효과는 실제 도달한 위치에서 요구한다.
 RawTempleRitual::RawTempleRitual(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
     std::span<const RiftTypeFrames> frames,std::span<const SquidDisplayShape> shapes,std::span<const std::uint8_t> spots,
     const RawSquidNeighbors& footprint,const SquidReward& hitPoints,const RawPriestRitualActions& actions,
@@ -42,7 +44,7 @@ RawTempleRitual::RawTempleRitual(SidPool& pool,const SquidHash& hash,std::span<c
     const auto count=pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U;
     if (&pool!=&footprint.Pool() || &hash!=&footprint.Hash() || &pool!=&hitPoints.Pool() || &pool!=&actions.Pool() ||
         types.size()!=count || frames.size()!=count || shapes.size()!=count || spots.size()!=kWorldCells*kWorldCells ||
-        !hooks_.create || !hooks_.setHitPoints || !hooks_.setOwner || !hooks_.pop || !hooks_.playAt || !hooks_.reserveShared || !hooks_.addShared)
+        (pool.Edition()!=OriginalEdition::Patch1078 && (!hooks_.create || !hooks_.setHitPoints || !hooks_.setOwner || !hooks_.pop || !hooks_.playAt || !hooks_.reserveShared || !hooks_.addShared)))
         throw std::invalid_argument("신전 의식 실제 하위/판본 연결 누락");
 }
 // 패치 signedDWORD/CDBYTE의 현재 프레임을 원본 폭대로 읽는다.
@@ -64,7 +66,7 @@ std::uint32_t RawTempleRitual::Count(Sid temple) const {
 }
 // 가상 조회가 생략된 독립 입력도 현재 VT가 실제 Dais일 때만 같은 직접 몸체를 선택한다.
 std::uint32_t RawTempleRitual::VirtualCount(Sid temple) const {
-    if (hooks_.count) return hooks_.count(temple);
+    if (hooks_.count) return TempleNeed(hooks_.count)(temple);
     if (Read(pool_.Slot(temple),0)!=(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchCountVtable : kCdCountVtable))
         throw std::logic_error("의식 Stage의 현재 가상80 분배 장치 미연결");
     return Count(temple);
@@ -120,7 +122,7 @@ Sid RawTempleRitual::FindStrongOwnedPriest(Sid temple) const {
     auto area=footprint_.Footprint(temple);area.left-=1;area.top-=1;area.right+=1;area.bottom+=1;RawSquidFinder finder(pool_,hash_,types_);
     // 일반finder 순서에서 현재 type/owner/HP를 읽는다. 사제 자체extra/state는 조건이 아니다.
     for (auto sid=finder.Begin(SearchArea(area));sid.value;sid=finder.Next()) {
-        const auto raw=pool_.Slot(sid);if (raw[10]!=state_.priestType || Owner(sid)!=Owner(temple)) continue;
+        const auto raw=pool_.Slot(sid);if (raw[10]!=state_.PriestType() || Owner(sid)!=Owner(temple)) continue;
         const auto hp=pool_.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(raw,26)) : static_cast<std::int32_t>(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(Read(raw,26,2))));
         if (hp>=hitPoints_.MaxHitPoints(sid)/2) return sid;
     }
@@ -135,10 +137,10 @@ bool RawTempleRitual::HasAbstractRune(Sid temple) const {
 }
 // HP/소유자 효과 이후 각각현재 단계를 다시읽는 실제Rune 생성 순서다.
 void RawTempleRitual::SpawnRune(Sid temple) const {
-    const auto rune=hooks_.create(state_.RuneType(),0);if (!rune.value || rune.value>=pool_.Capacity()) throw std::out_of_range("신전 의식Rune 생성SID 오류");hooks_.setHitPoints(rune,0);const auto stage=Stage(temple);auto raw=pool_.AllocatedBytes(rune);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const auto rune=TempleNeed(hooks_.create)(state_.RuneType(),0);if (!rune.value || rune.value>=pool_.Capacity()) throw std::out_of_range("신전 의식Rune 생성SID 오류");TempleNeed(hooks_.setHitPoints)(rune,0);const auto stage=Stage(temple);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;auto raw=patch ? TempleRaw(pool_,rune) : pool_.AllocatedBytes(rune);
     // 원본 패치DWORD/CDBYTE 프레임만 쓰고 옆필드는 보존한다.
     for (std::size_t i=0;i<(patch ? 4U : 1U);++i) raw[(patch ? 36U : 34U)+i]=static_cast<std::uint8_t>(stage>>(8*i));
-    if (!(raw[11]&4)) throw std::logic_error("신전 의식Rune isVoid assert");raw[patch ? 40 : 35]|=1;hooks_.setOwner(rune,Owner(temple));const auto point=StageAnchor(temple,Stage(temple));hooks_.pop(rune,point.x,point.y,0);
+    if (!(raw[11]&4)) { if (patch) TempleNeed(hooks_.assertion)("isVoid()","c:\\ns\\o\\squid.h",0x282);else throw std::logic_error("신전 의식Rune isVoid assert"); }raw[patch ? 40 : 35]|=1;TempleNeed(hooks_.setOwner)(rune,Owner(temple));const auto point=StageAnchor(temple,Stage(temple));TempleNeed(hooks_.pop)(rune,point.x,point.y,0);
 }
 // 초기단계는 mode0 음향/지연에 유지하고후속mode는각효과뒤현재값을재조회한다.
 void RawTempleRitual::Ritual(Sid temple,Sid priest,std::uint32_t mode) const {
@@ -146,11 +148,11 @@ void RawTempleRitual::Ritual(Sid temple,Sid priest,std::uint32_t mode) const {
     if (actual.x!=expected.x || actual.y!=expected.y) { if (stage>=4) return;expected=StagePoint(temple,stage+1);actual=Position(priest);if (actual.x!=expected.x || actual.y!=expected.y) return; }
     if (RuneAt(temple,Position(priest)).value) return;
     if (!mode) {
-        actions_.Begin(priest.value,stage);actual=Position(priest);hooks_.playAt(actual.x,actual.y,kStageSounds[stage],0);
-        if (hooks_.reserveShared()) hooks_.addShared(temple,kRitualEvent,kStageDelays[stage]);return;
+        actions_.Begin(priest.value,stage);actual=Position(priest);TempleNeed(hooks_.playAt)(actual.x,actual.y,kStageSounds[stage],0);
+        if (TempleNeed(hooks_.reserveShared)()) TempleNeed(hooks_.addShared)(temple,kRitualEvent,kStageDelays[stage]);return;
     }
     const auto found=FindStrongOwnedPriest(temple);if (found.value && found.value<pool_.Capacity()) actions_.Continue(found.value,Stage(temple));
-    if (state_.boss && !HasAbstractRune(temple)) SpawnRune(temple);
+    if (state_.Boss() && !HasAbstractRune(temple)) SpawnRune(temple);
 }
 // 실제 PathCleanup/Factory/owner/Host와같은풀연결임을검사한다.
 const SidPool& RawTempleRitual::Pool() const { return pool_; }

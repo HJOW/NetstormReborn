@@ -1,7 +1,6 @@
 // Impl 안에 포함하며 기존 의식/내용물/Path/Kernel을 단일 현재 월드에 연결한다.
 void PrepareRitual() {
     for (std::uint32_t owner=0;owner<=kPlayerCount;++owner) runeState.playerFlags[owner]=players[owner*0xb4+0x50]; // 룬 건설시간도 같은 현재 Player flag를 읽는다.
-    ritualState.boss=assetState.Boss();ritualState.priestType=priestState.movement.priest;
     for (std::size_t index=0;index<alliances.size();++index) daisState->alliances[index]=std::bit_cast<std::int32_t>(alliances[index]); // 현재 방향별 DWORD 비트를 부호 변환 없이 공유한다.
 }
 // 원본 new0x28 한 번의 성공을 실제 Regular 저장 공간 한 번의 확보로 보존한다.
@@ -65,6 +64,7 @@ void ConnectDaisLifecycle() {
 }
 // 의식 자격/이동/룬 진행과 로컬 기술 획득을 연결한다. 나머지 보상/UI 미복원은 명시 오류로 남긴다.
 void ConnectRitual() {
+    ritualState.sharedPriestType=&priestState.movement.priest;ritualState.sharedBoss=&assetState.Boss(); // 의존 모듈 설치가 끝난 실제 현재 사제 번호/장기 권한 주소를 빌린다.
     ritualLookup=std::make_unique<RawContainedLookup>(core.pool,[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });
     PriestRitualFrameHooks frame; // 실제 같은 Host/Frame/위치 소리로604를 처리한다.
     frame.setFrame=[this](Sid sid,std::int32_t value,std::uint32_t flags) { core.frame.Set(sid,value,flags); };
@@ -76,6 +76,7 @@ void ConnectRitual() {
     action.reserveShared=[this] { return ReserveRitualRegular(); };action.addShared=[this](Sid sid,std::uint32_t event,float payload) { AddRitualRegular(sid,event,payload,61); };
     ritualActions=std::make_unique<RawPriestRitualActions>(core.pool,core.frames,std::move(action));
     TempleRitualHooks temple; // 실제 생성/HP/owner/Pop과 위치 음향/307 예약이다.
+    temple.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("의식 helper의 현재 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 진단 정상 복귀 뒤 같은 물리 슬롯과 현재 owner/Stage로 이어간다.
     temple.count=[this](Sid sid) { return VirtualCount(sid); }; // Stage가 저장한 프레임 뒤 현재 VT+80을 정확히 한 번 조회한다.
     temple.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
     temple.playAt=[this](float x,float y,std::string_view name,std::uint32_t flags) { if (!services.sound.playOnceAt) throw std::logic_error("의식 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };

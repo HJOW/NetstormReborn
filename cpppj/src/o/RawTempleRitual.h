@@ -16,6 +16,9 @@ struct TempleRitualState {
     std::uint32_t priestType{158},runeType{166}; // 005412d0/005412f0 ↔ CD0051cbbc/0051cbdc의 현재 타입 번호다.
     float pixelScaleX{16},pixelScaleY{11}; // 0059a92c/930 ↔ CD00565c44/48: SHP 정수 핫스폿을 월드 좌표로 바꾼다.
     const std::uint32_t* sharedRuneType{}; // RunePostPop/주변 정리와 같은 현재005412f0의 장기 owner다.
+    const std::uint32_t* sharedPriestType{};const bool* sharedBoss{}; // 같은 Client의 현재 사제 TYPE와 권한 주소이며 독립/CD 입력은 기존 필드를 사용한다.
+    const std::uint32_t& PriestType() const { return sharedPriestType ? *sharedPriestType : priestType; } // 일반 finder의 각 현재 후보에서 번호를 읽는다.
+    bool Boss() const { return sharedBoss ? *sharedBoss : boss; } // 사제 후속 효과가 돌아온 뒤 Rune 생성 가지의 현재 권한을 읽는다.
     const std::uint32_t& RuneType() const { return sharedRuneType ? *sharedRuneType : runeType; } // 함수가 번호를 저장하는 위치는 기존 본문에 유지한다.
 };
 // 새 좌표 자료형은 원본의 단정도 저장 x/y 두 개다.
@@ -32,6 +35,7 @@ struct TempleRitualHooks {
     std::function<bool()> reserveShared; // 위치 음향 뒤 원본 new0x28 성공 여부를 공급한다.
     std::function<void(Sid,std::uint32_t,float)> addShared; // 같은 Host.AddSharedRegular(신전,0x307,단계별지연)이다.
     std::function<std::uint32_t(Sid)> count; // Stage가 저장한 프레임 뒤 현재 대상의 가상+80을 한 번 조회한다. Count 자체의 직접 방향 계산과 구별한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // PATCH isVoid 진단이 정상 복귀하면 plain extra 쓰기/소유자/Pop을 계속한다.
 };
 // 기존 실제 Footprint/방향 프레임/최대HP/사제 의식 동작을 같은 풀에서 재사용한다.
 // 사용: PathCleanup의 ritual 경계와 신전0x307 후속에서 Ritual을 호출한다. 하위 효과와 참조는 더 오래 살아야 한다.

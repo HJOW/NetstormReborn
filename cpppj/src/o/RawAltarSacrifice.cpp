@@ -39,7 +39,7 @@ RawAltarSacrifice::RawAltarSacrifice(SidPool& pool,const SquidHash& hash,std::sp
         throw std::invalid_argument("제단 실제 하위 몸체/같은 풀/필수 효과 연결 누락");
 }
 // 실제 월드의 권한 getter를 우선하고 독립 호출자의 기존 상태도 유지한다.
-bool RawAltarSacrifice::Boss() const { return hooks_.boss ? hooks_.boss() : daisState_.ritual.boss; }
+bool RawAltarSacrifice::Boss() const { return hooks_.boss ? hooks_.boss() : daisState_.ritual.Boss(); }
 // 원본은 free/dead를 isValid 조건에 추가하지 않는다.
 bool RawAltarSacrifice::Valid(Sid sid) const { return sid.value>0 && sid.value<pool_.Capacity(); }
 // 패치 signed DWORD와 CD BYTE를 구분한다.
