@@ -367,7 +367,9 @@ void SquidPostPop::DispatchPostPop(Sid sid,std::uint32_t flags) {
     // 보호막의 두 Regular 예약을 마친 뒤 자기 공통 장부/깊이를 한 번 처리한다.
     else if (HandlesForcefield(sid)) forcefieldPostPop_->Prefix(sid,flags);
     // 원본4429f0은 flags bit0에서만12를 만들고 이어 공통4b0d30으로 내려간다.
-    else if (teleportPrefix_ && pool_.Edition()==OriginalEdition::Patch1078 && pool_.Slot(sid)[10]==134 && Vtable(pool_.Slot(sid))==0x5070c0U) teleportPrefix_(sid,flags);
+    else if (pool_.Edition()==OriginalEdition::Patch1078 && Vtable(pool_.Slot(sid))==0x5070c0U) {
+        if (flags&1U) { const auto selected=teleportPrefix_;if (!selected) throw std::logic_error("Teleport 선택 생성 접두 미연결");selected(sid,flags); } // 실제 VT는 현재 TYPE와 무관하며 최초에만 현재 장치를 요구하고 자기 연결 반납 중 callable 수명을 보존한다.
+    }
     else if (!SquidPop::Supports(pool_.Edition(),Vtable(pool_.Slot(sid)),flags)) throw std::logic_error("현재가상후처리몸체미복원"); //지원하지않는실제가상함수를공통몸체로가장하지않는다.
     PostPop(sid,flags);
 }

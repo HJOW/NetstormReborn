@@ -124,6 +124,9 @@ TEST_CASE(ConstructionArrival_RequiresCurrentWorldAndEffects) {
     auto shortTypes=std::span<const RiftTypeRecord>(scene.types).first(171);
     CHECK(Throws([&] { RawConstructionArrival bad(scene.pool,scene.hash,shortTypes,scene.state,scene.Hooks()); }));
 }
+TEST_CASE(TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion) { // 예측 대상만 있을 때 실제 finder 뒤 삭제가 도달한 위치에서 공유 TYPE를 읽는다.
+    ArrivalScene scene(OriginalEdition::Patch1078);auto candidate=scene.slots.at(60);candidate[10]=100;candidate[11]=0;candidate[scene.Extra()]=1;Write(candidate,14,std::bit_cast<std::uint32_t>(20.0F));Write(candidate,18,std::bit_cast<std::uint32_t>(21.0F));Write(scene.slots.at(kBuilder.value),14,std::bit_cast<std::uint32_t>(20.0F));Write(scene.slots.at(kBuilder.value),18,std::bit_cast<std::uint32_t>(21.0F));scene.types[100].footX=scene.types[100].footY=1;scene.types[100].flags1=0x8000;scene.hash.Bucket(1,20.0F,21.0F)=60;std::uint32_t current=56;scene.state.streakProcessType=12;scene.state.sharedStreakProcessType=&current;RawConstructionArrival arrival(scene.pool,scene.hash,scene.types,scene.state,scene.Hooks());CHECK(arrival.Arrive(kBuilder)==1002 && scene.events=="R:50:56:0:1");scene.events.clear();current=57;CHECK(arrival.Arrive(kBuilder)==1002 && scene.events=="R:50:57:0:1"); // finder가 허용하는 양수 좌표에서 실제 예측 대상을 찾는다.
+}
 // 실제105 검색/도착의 독립101행과 선택한 외부 효과 전체를 같은 raw/해시에서 대조한다.
 TEST_CASE(ManaBoltArrival_ReplaysActualFinderAndArrival) {
     ArrivalScene scene(OriginalEdition::Patch1078);ManaBoltArrivalState state;std::ifstream file(NETSTORM_MANA_BOLT_ARRIVAL_FIXTURE);CHECK(file.good());std::string line;std::size_t count=0;

@@ -1,6 +1,7 @@
 // 실제 PE 생성·등록·색 초기화·삭제의 의미 필드와 사건 순서를 대조한다.
 #include "TestSupport.h"
 #include "o/RawFieryTailLifetime.h"
+#include "o/RawGameAuxState.h"
 #include "o/ParticleGradient.h"
 #include <bit>
 #include <fstream>
@@ -136,4 +137,15 @@ TEST_CASE(StreakLifetime_NativeConstructorAndSharedPalette) {
         CHECK(Fields(fields,fields.particles.size())==Hex(row[3]));CHECK(beamPalette==1 && state.palette==999 && fields.particles.size()==120);++count;
     }
     CHECK(count==8);
+}
+TEST_CASE(TeleportCurrent_LifetimeCapturesTypeBeforeRegistryAndParticleAllocation) { // 생성자 내부 TYPE 인자는 등록/확보 콜백보다 먼저 읽은 값으로 부착한다.
+    for (const auto variant:{FieryTailVariant::Fiery,FieryTailVariant::Streak}) { // 생성자 부류의 필드와 현재 TYPE DWORD가 서로 독립임을 확인한다.
+        SidPool pool(OriginalEdition::Patch1078,32768,false);std::uint32_t type=56,attached=0;RenderRegistryHooks registration;registration.reserve=[&](auto) { type=57;return true; };registration.releaseArray=[] {};registration.attach=[&](auto& fields,auto current,auto parent,auto flags) { CHECK(parent==Sid{50} && flags==16 && type==57);attached=current;fields.parent=50;fields.form=7; };RawRenderRegistry registry(pool,std::move(registration));FieryTailLifetimeState state{1,nullptr,&type};FieryTailLifetimeHooks hooks;hooks.reserve=[&](auto bytes) { CHECK(bytes==2880);type=58;return true; };RawFieryTailLifetime body(pool,registry,state,std::move(hooks),variant);FieryTailFrameFields fields;body.Initialize(fields,1,Sid{50});CHECK(attached==56 && type==58 && fields.particles.size()==120 && fields.maximumLife==(variant==FieryTailVariant::Streak ? 2 : 4));body.Destroy(fields,1,[](auto) {});
+    }
+}
+TEST_CASE(TeleportCurrent_LifetimeReadsSharedTypeForEachCreation) { // 같은 시스템의 다음 생성은 처음의 TYPE 사본 대신 그때의 현재 주소를 읽는다.
+    SidPool pool(OriginalEdition::Patch1078,32768,false);std::uint32_t type=56;std::vector<std::uint32_t> attached;RenderRegistryHooks registration;registration.reserve=[](auto) { return true; };registration.releaseArray=[] {};registration.attach=[&](auto& fields,auto value,auto,auto) { attached.push_back(value);fields.parent=50;fields.form=7; };RawRenderRegistry registry(pool,std::move(registration));FieryTailLifetimeState state{1,nullptr,&type};FieryTailLifetimeHooks hooks;hooks.reserve=[](auto) { return true; };RawFieryTailLifetime body(pool,registry,state,std::move(hooks),FieryTailVariant::Streak);FieryTailFrameFields first,second;body.Initialize(first,1,Sid{50});type=57;body.Initialize(second,2,Sid{50});CHECK(attached.size()==2 && attached[0]==56 && attached[1]==57 && first.maximumLife==2 && second.maximumLife==2);body.Destroy(first,1,[](auto) {});body.Destroy(second,1,[](auto) {});
+}
+TEST_CASE(TeleportCurrent_TailTypeOwnerPersistsAcrossGeneralWorldPreparation) { // 두 Native TYPE 전역의 초기값/주소는 Runtime 준비와 별도로 장기 소유한다.
+    RawGameAuxState owner;CHECK(owner.FieryTailProcessType()==11 && owner.StreakProcessType()==12);const auto* fiery=&owner.FieryTailProcessType();const auto* streak=&owner.StreakProcessType();owner.FieryTailProcessType()=56;owner.StreakProcessType()=57;owner.ResetForGeneralWorld();CHECK(fiery==&owner.FieryTailProcessType() && streak==&owner.StreakProcessType() && *fiery==56 && *streak==57);
 }

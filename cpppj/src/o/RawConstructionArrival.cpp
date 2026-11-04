@@ -49,7 +49,7 @@ std::uint32_t RawConstructionArrival::Arrive(Sid builder) const {
         }
     }
     if (!started && found) {
-        if (!state_.checking) hooks_.removeContained(builder,state_.streakProcessType);
+        if (!state_.checking) hooks_.removeContained(builder,state_.CurrentStreakProcessType());
         return kWaiting;
     }
     hooks_.destroy(builder,0);return kFinished;

@@ -20,8 +20,9 @@ RawFieryTailLifetime::RawFieryTailLifetime(const SidPool& pool,RawRenderRegistry
 }
 // 공통 등록이 끝나야 System 필드를 초기화한다. 생성 중 프레임 재진입은 상위 호스트가 차단한다.
 void RawFieryTailLifetime::Initialize(FieryTailFrameFields& fields,std::uint32_t token,Sid parent) const {
-    const bool streak=variant_==FieryTailVariant::Streak; // 00458680은 공통 등록에 실제 process12를 전달한다.
-    registry_.Construct(fields.registration,token,parent,streak ? 12U : kProcessType);
+    const bool streak=variant_==FieryTailVariant::Streak; // 생성 함수 부류와 생성자 내부의 현재 process TYPE를 구별한다.
+    const auto type=state_.sharedProcessType ? *state_.sharedProcessType : streak ? 12U : kProcessType; // 등록/확보 콜백 전에 원문 인자의 현재 DWORD를 한 번 읽는다.
+    registry_.Construct(fields.registration,token,parent,type);
     fields.particles.clear();fields.total=0;fields.lastTime=fields.elapsed=0;fields.first=false;
     fields.previousX=fields.previousY=0;
     if (!hooks_.reserve(kParticleCount*kParticleBytes)) throw std::bad_alloc();

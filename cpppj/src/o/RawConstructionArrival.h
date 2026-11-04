@@ -10,6 +10,8 @@ struct ConstructionArrivalState {
     RawCheckingFlag checking{}; // 005e4794 / CD 00531454: 예측 대기에서 streak contained 정리를 생략하는 debug 전역이다.
     std::uint32_t streakProcessType{12}; // 005410a0 / CD 0051c990: 예측 대기 때 첫 contained에서 지우는 실제 타입이다.
     float duration{0.6F}; // 005325c0 / CD 0053fc38: 확정 대상에 전달하는 건설 지속 시간이다.
+    const std::uint32_t* sharedStreakProcessType{}; // 실제 Session은 표시 생성/부착과 같은005410a0을 빌린다.
+    std::uint32_t CurrentStreakProcessType() const { return sharedStreakProcessType ? *sharedStreakProcessType : streakProcessType; } // 삭제가 선택된 위치에서만 현재 TYPE를 읽고 독립 구성의 기존 입력을 유지한다.
 };
 // 도착 몸체가 요청하는 하위 효과다. 현재 raw/전역/해시를 바꿀 수 있으며 다음 후보는 현재 상태를 읽는다.
 struct ConstructionArrivalHooks {

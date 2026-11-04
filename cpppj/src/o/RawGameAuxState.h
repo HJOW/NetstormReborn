@@ -45,6 +45,10 @@ public:
     const std::int32_t& DefaultSp() const { return defaultSp_; } // 미션 AI의 별도 시작SP와 합치지 않는다.
     std::uint32_t& GeyserType() { return geyserType_; } //00541240: 실제 현재 간헐천 TYPE이며 Host pollType도 이 주소를 pin한다.
     const std::uint32_t& GeyserType() const { return geyserType_; } // 옵션/생성/목록의 같은 현재 TYPE다.
+    std::uint32_t& FieryTailProcessType() { return fieryTailProcessType_; } //0054109c: 불꽃 생성자가 공통 부착에 전달하는 현재 TYPE다.
+    const std::uint32_t& FieryTailProcessType() const { return fieryTailProcessType_; } // 현재 생성 함수 선택과 별개인 생성자 내부 전역을 보존한다.
+    std::uint32_t& StreakProcessType() { return streakProcessType_; } //005410a0: Teleport 생성 함수 선택·표시 부착·도착 삭제가 공유하는 현재 TYPE다.
+    const std::uint32_t& StreakProcessType() const { return streakProcessType_; } // Runtime 교체/일반 월드 준비로12의 새 사본을 만들지 않는다.
     std::uint32_t& FirstTimerFactoryType() { return firstTimerFactoryType_; } //005411ac의 현재 DWORD를 Factory 최초 event2가 읽는다.
     const std::uint32_t& FirstTimerFactoryType() const { return firstTimerFactoryType_; } // Runtime을 교체해도 같은85 초기값의 주소를 유지한다.
     std::uint32_t& SecondTimerFactoryType() { return secondTimerFactoryType_; } //005411b4의 현재 DWORD를 Factory 최초 event1이 읽는다.
@@ -83,6 +87,7 @@ private:
     float lostX_{},lostY_{}; // 최초BSS+0이며 cleanup의-10000 입력과 구별한다.
     std::int32_t defaultSp_{2000}; // 보호 PE의 signed 기본SP다.
     std::uint32_t geyserType_{122},subscriberMarker_{}; // 보호 PE TYPE122와 별도BSS 표지다.
+    std::uint32_t fieryTailProcessType_{11},streakProcessType_{12}; // 보호10.78의 두 TYPE 전역 초기값이며 Session보다 오래 유지한다.
     std::uint32_t firstTimerFactoryType_{85},secondTimerFactoryType_{87},outpostType_{126}; // 보호10.78 PE의 세 TYPE DWORD 초기값이며 일반 Runtime 초기화와 구별한다.
     std::uint32_t terrainType_{97},edgeFarmType_{121}; // 보호 PE 두 TYPE 전역이며 현재 Runtime 대여/반납은 초기화하지 않는다.
     std::int32_t worldGeyserMargin_{2}; //보호 PE00542654의 실제 초기 DWORD다.

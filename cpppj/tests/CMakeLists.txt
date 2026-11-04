@@ -3425,3 +3425,4 @@ target_sources(netstorm_pop_context_tests PRIVATE ForcefieldLifecycleTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE BuriedPostPopTests.cpp RunePostPopTests.cpp) # buried/Rune의 현재 접두와 기존 원문 재생만 선택 실행한다.
 target_sources(netstorm_pop_context_tests PRIVATE PlayerWorldTests.cpp) # Player 현재 부모와 기존 양판본 원문/실제 Host만 선택 실행한다.
 target_sources(netstorm_pop_context_tests PRIVATE DudeSpawnTests.cpp) # Dude 현재 부모/생성과 기존 양판본 원문만 선택 실행한다.
+target_sources(netstorm_pop_context_tests PRIVATE FieryTailLifetimeTests.cpp ConstructionArrivalTests.cpp) # Teleport 현재 TYPE와 기존 생성자/도착 원문만 선택 실행한다.

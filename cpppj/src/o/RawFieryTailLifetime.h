@@ -10,6 +10,7 @@ struct FieryTailLifetimeState {
     std::uint32_t palette{}; // 첫 생성 때 채우고 후속 효과에서 재사용하는 색 표 토큰이다.
     std::uint32_t* sharedPalette{}; // 건설 마나는 빔과 같은0055a758을 빌리며 일반 불꽃은 자체0055a750을 사용한다.
     std::uint32_t& CurrentPalette() { return sharedPalette ? *sharedPalette : palette; } // 공유 시 실제 장기 owner에 직접 읽고 쓴다.
+    const std::uint32_t* sharedProcessType{}; //00457ea0/00458680이 공통 등록 전에 읽는 현재0054109c/a0이며 독립 구성은 판본 기본값을 쓴다.
 };
 // 실제 메모리 확보와 기존 RGB 색 띠 몸체를 호출하는 경계다.
 struct FieryTailLifetimeHooks {

@@ -324,6 +324,33 @@ TEST_CASE(PostPrefixCurrent_BridgeThrownEffectKeepsPrefixAndCallbackWrites) { //
     o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);auto raw=BridgeCurrentSlot(pool);raw[40]=0;CHECK(Throws([&] { o::SquidPostPop::BridgePrefix(pool,o::Sid{50},1,[&](o::Sid) { CHECK(raw[40]==2);raw[11]=9;throw std::runtime_error("명시 다리 연결 중단"); }); }) && raw[40]==2 && raw[11]==9);
 }
 
+TEST_CASE(TeleportCurrent_NoFirstUsesActualVtableWithoutDeviceOrTypeGate) { // flags0/2/4는 현재 TYPE/free와 무관한 실제 VT 몸체에서 미선택 접두를 생략한다.
+    for (const auto flags:{0U,2U,4U}) { // 최초 비트가 없는 세 입력은 같은 물리 슬롯을 읽는 공통 부모로만 간다.
+        auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,0x5070c0);raw[10]=255;raw[11]=9;raw[40]=8;const auto before=Hex(raw);body.PostPopVirtual(o::Sid{50},flags);CHECK(state.depth==0 && Hex(raw)==before);
+    }
+}
+TEST_CASE(TeleportCurrent_MissingSelectedPrefixFailsBeforeCommon) { // 최초 생성 장치 누락은 공통 부모 앞에서 실패하고 raw를 쓰지 않는다.
+    auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,0x5070c0);const auto before=Hex(raw);CHECK(Throws([&] { body.PostPopVirtual(o::Sid{50},1); }) && state.depth==1 && Hex(raw)==before);
+}
+TEST_CASE(TeleportCurrent_SelectedPrefixKeepsPhysicalMutationsBeforeCommon) { // 현재 객체 TYPE134를 요구하지 않고 선택 콜백 뒤 수명/TYPE/VT를 되돌리지 않는다.
+    auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,0x5070c0);raw[10]=74;raw[11]=1;raw[40]=8;std::uint32_t calls=0;body.SetTeleportPrefix([&](auto sid,auto flags) { CHECK(sid==o::Sid{50} && flags==3 && state.depth==1);++calls;raw[10]=255;raw[11]=9;Put(raw,0,0); });body.PostPopVirtual(o::Sid{50},3);CHECK(calls==1 && state.depth==0 && raw[10]==255 && raw[11]==9);
+}
+TEST_CASE(TeleportCurrent_CallableSurvivesSelfUnbinding) { // 접두가 자기 연결을 반납해도 현재 callable의 캡처는 호출 종료까지 살아 있다.
+    auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);Put(BridgeCurrentSlot(pool),0,0x5070c0);auto owner=std::make_shared<int>(7);std::weak_ptr<int> weak=owner;body.SetTeleportPrefix([owner,&body,&weak](auto,auto) { body.SetTeleportPrefix({});CHECK(*owner==7 && !weak.expired()); });owner.reset();body.PostPopVirtual(o::Sid{50},1);CHECK(weak.expired() && state.depth==0);
+}
+TEST_CASE(TeleportCurrent_ThrownPrefixKeepsEffectsAndDepth) { // 명시 생성 실패 뒤 앞선 콜백 쓰기는 남고 공통 깊이는 아직 줄지 않는다.
+    auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,0x5070c0);body.SetTeleportPrefix([&](auto,auto) { raw[34]=8;throw std::runtime_error("명시 생성 중단"); });CHECK(Throws([&] { body.PostPopVirtual(o::Sid{50},1); }) && raw[34]==8 && state.depth==1);
+}
+TEST_CASE(TeleportCurrent_LateCommonFailureKeepsSelectedCreationAndCurrentTypeCounts) { // 접두가 바꾼 현재 TYPE의 공통 통계 뒤 선택 재검사 실패까지 앞선 효과를 보존한다.
+    auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.depth=1;state.pendingPlacement=true;state.localOwner=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x5070c0);raw[10]=74;raw[34]=1;std::uint32_t calls=0;body.SetTeleportPrefix([&](auto,auto) { ++calls;raw[10]=75; });CHECK(Throws([&] { body.PostPopVirtual(o::Sid{50},0x2000001); }) && calls==1 && state.GlobalCounts()[75]==1 && state.GlobalCounts()[74]==0 && state.depth==1);
+}
+TEST_CASE(TeleportCurrent_ExplicitPreflightRemainsSeparate) { // 명시 Validate의 raw 수명 거부는 실제 가상 몸체의 앞에 삽입하지 않는다.
+    auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,0x5070c0);raw[10]=74;raw[11]=1;std::uint32_t calls=0;body.SetTeleportPrefix([&](auto,auto) { ++calls; });CHECK(Throws([&] { body.Validate(o::Sid{50},1); }) && calls==0);body.PostPopVirtual(o::Sid{50},1);CHECK(calls==1 && state.depth==0);
+}
+TEST_CASE(TeleportCurrent_CdDoesNotUsePatchPrefix) { // CD 기존 지원/사전 계약에 PATCH Teleport 접두를 임의 이식하지 않는다.
+    auto types=Types(o::OriginalEdition::Cd1072);o::SidPool pool(o::OriginalEdition::Cd1072,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);const auto view=pool.Slot(o::Sid{50});auto raw=std::span<std::uint8_t>(const_cast<std::uint8_t*>(view.data()),view.size());std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x5070c0);raw[10]=134;std::uint32_t calls=0;body.SetTeleportPrefix([&](auto,auto) { ++calls; });try { body.PostPopVirtual(o::Sid{50},1); }catch (const std::exception&) {}CHECK(calls==0);
+}
+
 // 실제 .type 속성을 float cost로 읽으며 누락/중복/문자열 비용의 원본 규칙을 유지한다.
 TEST_CASE(SquidPostPop_TypeCost_LoadsFloatAndRejectsString) {
     const auto edition=o::OriginalEdition::Patch1078; const auto order=o::TypeLoadOrder(edition);

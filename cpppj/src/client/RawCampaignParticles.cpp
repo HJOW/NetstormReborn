@@ -2,6 +2,7 @@
 #include "client/RawCampaignParticles.h"
 #include "client/VFXLine.h"
 #include "o/ParticleGradient.h"
+#include "o/RawGameAuxState.h"
 #include <bit>
 #include <cmath>
 #include <limits>
@@ -31,6 +32,15 @@ o::FieryTailVisualProcess* RawCampaignParticles::AddStreak(o::Sid parent) {
     RefreshCamera();try {
         auto* process=streak_->Add(parent);streakColors_.count=static_cast<std::int32_t>(lightningMemory_.Count());streakColors_.readable=lightningMemory_.Snapshot();return process;
     } catch (const std::bad_alloc&) { return nullptr; }
+}
+void RawCampaignParticles::BindTailProcessTypes(const o::RawGameAuxState& state) { // 같은 장기 전역 주소를 공유하고 다른 살아 있는 owner로의 교체를 거부한다.
+    if ((lifetime_.sharedProcessType && lifetime_.sharedProcessType!=&state.FieryTailProcessType()) || (streakLifetime_.sharedProcessType && streakLifetime_.sharedProcessType!=&state.StreakProcessType())) throw std::logic_error("입자 현재 TYPE 소유자 재연결 오류");
+    lifetime_.sharedProcessType=&state.FieryTailProcessType();streakLifetime_.sharedProcessType=&state.StreakProcessType();
+}
+void RawCampaignParticles::CreateTailByConstructor(std::uint32_t address,o::Sid parent) { // 원본 cdecl 생성 함수 주소와 실제 시스템의 생성자 내부 TYPE 전역을 구별한다.
+    if (address==0x00458760U) { static_cast<void>(AddStreak(parent));return; }
+    if (address==0x00458700U) { try { Add(11,parent); }catch (const std::bad_alloc&) {}return; } // 원본 new 실패의 NULL 반환은 호출자가 사용하지 않는다.
+    throw std::logic_error("현재 TYPE가 선택한 다른 입자 생성 함수 미복원");
 }
 // 실제 포인터 배열의 메모리는 RawRenderRegistry의 vector가 소유한다. 중복 외부 확보/반납을 하지 않는다.
 o::RenderRegistryHooks RawCampaignParticles::RegistryHooks() {

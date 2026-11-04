@@ -1,0 +1,537 @@
+{
+  "unit": 860,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "654ee45a / 20261104-44 CP",
+  "exeSha256": "d5a7f9d29bcf40f634dbee24ef4a013eb1b02b59db7879bb464682a5fbc5416e",
+  "exeBytes": 10567168,
+  "sourceSha256": {
+    "cpppj/src/o/RawGameAuxState.h": "753ae0eeb05afc23ad46d74c40d0c087bd6ae55a1aa504855657d2698ece4a50",
+    "cpppj/src/o/RawFieryTailLifetime.h": "1932d6304bd1d4f951656e797cc43520362a6e18596c45c7c517add10af92a6e",
+    "cpppj/src/o/RawFieryTailLifetime.cpp": "cb7bec3329e741de19685bcf62e79b31f07321f3fd1dad81087d9c30db950445",
+    "cpppj/src/o/RawConstructionArrival.h": "70f66c73215f21dba139bcc7fed7782885ab11546ec92b4f446c1f538f992554",
+    "cpppj/src/o/RawConstructionArrival.cpp": "b974664dc24e5a4de6789f77f097588bb2f2d9f4a2f247935437159ba617892d",
+    "cpppj/src/client/RawCampaignParticles.h": "702ed6f5d1b5be43b853ead991f7c0e6867fbca8318c031557960699d2c491ef",
+    "cpppj/src/client/RawCampaignParticles.cpp": "4778056c8817f2b881fb41a54fa97cc00a888c8b8ac206f540f5fca937eed63b",
+    "cpppj/src/client/RawCampaignSession.cpp": "467f07375a5f0f77353ed055c92fca8dbeb7614cb4125341735931b995582f35",
+    "cpppj/src/o/SquidPostPop.cpp": "c3de51f5d5331ddf6f5d6d4eadc7a50c4dcb37fe711bbccfe80201e8d7ac6b76",
+    "cpppj/tests/PostPopTests.cpp": "21956e43e21ae5d7ecc382eca53ee51bbacfa772f3ed41cddca3ba176d6d8706",
+    "cpppj/tests/FieryTailLifetimeTests.cpp": "2c9f5f8a048255b92e4aae326bf82af74f5b5b5f7281f61c91445a7693ec3835",
+    "cpppj/tests/ConstructionArrivalTests.cpp": "2730a429c596823d4153c0f0321e08d9e6b84c2640b73f17f80c77ebf37a64e9",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "82da9f72ecf13335ab386c30ce052f51a7dc1a900f0745fdda43f7817990cc1d",
+    "cpppj/tests/CMakeLists.txt": "2db5d1ab7d6c627e811e2b8b7c2f3a88fd0d3e92881a1891310f62843644f7ea"
+  },
+  "sourceFirstSha256": {
+    "cpppj/src/o/RawGameAuxState.h": "753ae0eeb05afc23ad46d74c40d0c087bd6ae55a1aa504855657d2698ece4a50",
+    "cpppj/src/o/RawFieryTailLifetime.h": "1932d6304bd1d4f951656e797cc43520362a6e18596c45c7c517add10af92a6e",
+    "cpppj/src/o/RawFieryTailLifetime.cpp": "cb7bec3329e741de19685bcf62e79b31f07321f3fd1dad81087d9c30db950445",
+    "cpppj/src/o/RawConstructionArrival.h": "70f66c73215f21dba139bcc7fed7782885ab11546ec92b4f446c1f538f992554",
+    "cpppj/src/o/RawConstructionArrival.cpp": "b974664dc24e5a4de6789f77f097588bb2f2d9f4a2f247935437159ba617892d",
+    "cpppj/src/client/RawCampaignParticles.h": "702ed6f5d1b5be43b853ead991f7c0e6867fbca8318c031557960699d2c491ef",
+    "cpppj/src/client/RawCampaignParticles.cpp": "4778056c8817f2b881fb41a54fa97cc00a888c8b8ac206f540f5fca937eed63b",
+    "cpppj/src/client/RawCampaignSession.cpp": "467f07375a5f0f77353ed055c92fca8dbeb7614cb4125341735931b995582f35",
+    "cpppj/src/o/SquidPostPop.cpp": "c3de51f5d5331ddf6f5d6d4eadc7a50c4dcb37fe711bbccfe80201e8d7ac6b76",
+    "cpppj/tests/PostPopTests.cpp": "21956e43e21ae5d7ecc382eca53ee51bbacfa772f3ed41cddca3ba176d6d8706",
+    "cpppj/tests/FieryTailLifetimeTests.cpp": "2c9f5f8a048255b92e4aae326bf82af74f5b5b5f7281f61c91445a7693ec3835",
+    "cpppj/tests/ConstructionArrivalTests.cpp": "a68f75fdcefd400ec44180d8d41d760895f767406a1a92bbc6e875c775f06ae5",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "6c3ac6897219975f82d33e56d2ab1e607ee002e2dab86e0ca172b0eae6fb97e2",
+    "cpppj/tests/CMakeLists.txt": "2db5d1ab7d6c627e811e2b8b7c2f3a88fd0d3e92881a1891310f62843644f7ea"
+  },
+  "scope": [
+    "PATCH Teleport 실제 VT/최초 도달 장치·callable 수명→현재 TYPE+1d0 생성 함수 선택→공통 부모",
+    "선택된00458760/00458700은 기존 Streak/Fiery 실제 시스템으로 분배하며 다른 생성 함수는 명시 미복원 경계",
+    "같은 장기0054109c/a0을 생성자 등록/부착과 도착 삭제가 도달 위치에서 읽는다",
+    "명시 Validate/CD 기존 지원/사전 계약과 독립11/12/state 입력을 유지한다"
+  ],
+  "staticEvidence": {
+    "sha256": {
+      "extracted/cpp-resume-860/originals-004421c0.c": "80edb69f5ffe13e911e28915d6d6baf7a2933a1f281f47a0a3e8dcc5ee7dc121",
+      "extracted/cpp-resume-860/originals-004429f0.c": "b513de5bc0dd0754a5823eea4dcabb7e67efd1ef2cf0f4f073ad35de8b9fe122",
+      "extracted/cpp-resume-860/originals-00444080.c": "24de0e9e375829368a082c144ce736b8f4d1696f031853ee0f33ec93c2612f45",
+      "extracted/cpp-resume-860/originals-00457ea0.c": "edb12335daf7e76cb92c9e93f9a2b9350973511e098835dfa62874ffb2102c2d",
+      "extracted/cpp-resume-860/originals-00458680.c": "b0ebdabb468737915b38c64a84af63da6c82e82a19b175d3e37dbda1a5ce5a90",
+      "extracted/cpp-resume-860/originals-00458700.c": "91cc7012128ed0f7708a187b331c149aa46cbb5de1f852df70e514500d2c0a2b",
+      "extracted/cpp-resume-860/originals-00458760.c": "aa2d6b142835ce255092dd18e18cf6daef5acb051d57fb3333429d53f3bbd71c",
+      "extracted/cpp-resume-860/originals-00487fd0.c": "36e34d3144c4cbef1fd05e54a35ea0b15abd260fbdcff8b65df52f0b1073cfd4",
+      "extracted/cpp-resume-860/originals-00488190.c": "ff93ef77d86332e2df87b93cd8697da8e70f1b51784bdfb0ba831ea98c2d5179",
+      "extracted/cpp-resume-860/originals-004429f0.asm": "f2e0da28b74ceece79f5cded96ffa785d7b11ba21dcf2b1a0ad88f539966c23a",
+      "extracted/cpp-resume-860/originals-00458680.asm": "952b130c46ca20ddd98be8611edf34e59c2213e905823bd7570d10b7480b5b75",
+      "extracted/cpp-resume-860/originals-00458760.asm": "626addcdacc41b75e52d9354036825538fc704ac35e69acd914fd1c72d638d4a"
+    },
+    "patch": [
+      "004429f0",
+      "00458760",
+      "00458700",
+      "00458680",
+      "00457ea0",
+      "00488190",
+      "00487fd0",
+      "00444080"
+    ],
+    "nextIslandReference": "004421c0은 후속 섬 참고로만 보존했으며 이번 제품 변경은 아니다"
+  },
+  "validation": {
+    "cases": 50,
+    "newCases": 16,
+    "firstFailedCases": 1,
+    "firstFailedChecks": 2,
+    "finalFailedCases": 0,
+    "correctedTestExecutions": 1,
+    "firstCompileErrors": 1,
+    "compileCorrection": "Session 검사 도우미가 Kernel BaseProcess의 Parent를 조회한 C2039 한 건이었다. 실제 파생 타입을 먼저 확인하도록 도우미1개만 교정했고 제품 추가 수정0이다.",
+    "inputCorrection": {
+      "test": "TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion",
+      "firstFailedCases": 1,
+      "firstFailedChecks": 2,
+      "reason": "새 검사 입력0,0은 실제 RawSquidFinder의 x>0/y>0 조건에서 제외돼 예측 대상을 찾지 못했다. 기존 Native 입력과 같은 유효 양수 좌표20,21로 준비만 교정했다.",
+      "expectedEffectsChanged": false,
+      "productChangesAfterFirstBuild": 0,
+      "fixturesChanged": 0,
+      "correctedSha256": {
+        "cpppj/tests/ConstructionArrivalTests.cpp": "2730a429c596823d4153c0f0321e08d9e6b84c2640b73f17f80c77ebf37a64e9"
+      }
+    },
+    "newNativeObservations": 0,
+    "newFixtures": 0,
+    "existingStreakRows": 8,
+    "existingFieryRows": 62,
+    "existingConstructionArrivalRows": 306,
+    "fixtureSha256": {
+      "streak-lifetime-x86.tsv": "0bb4a0361ae204b9995b9c377f8d0a0159d8ce6c2afe2b757b11faed7c320b16",
+      "fierytail-lifetime-x86.tsv": "0bdf2958f9e393cb06c926544ca4364b7cae2611e3899fab74186b93fb40570e",
+      "constructionarrival-x86.tsv": "de99e6d0f8d2816101d30b6245603a7caffffe64b9b5c7fda505af252a9da691"
+    },
+    "existingExpectationsChanged": false,
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-860/build-first.log",
+        "sha256": "9e10860d470f2bd91d0593b21eae062c56865e7f58baadd07c95aa0f8a09101f",
+        "exitCode": 1,
+        "elapsedSeconds": 305.180194,
+        "execSession": 33282,
+        "childProcessesExited": true
+      },
+      {
+        "log": "extracted/cpp-resume-860/build-corrected.log",
+        "sha256": "01ff3c8ed0d87fbe97efd28e3966e2a1bbce2d55f451c163696ead272a2a47af",
+        "exitCode": 0,
+        "elapsedSeconds": 23.3880794,
+        "execSession": 58640,
+        "childProcessesExited": true
+      },
+      {
+        "log": "extracted/cpp-resume-860/build-arrival-corrected.log",
+        "sha256": "cac4ddcfb19ae527b84202c6760dd6792472318cd96724138dd87b3192bc3dd0",
+        "exitCode": 0,
+        "elapsedSeconds": 10.47795,
+        "execSession": 71805,
+        "childProcessesExited": true
+      }
+    ],
+    "executions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "TeleportCurrent_",
+        "cases": 12,
+        "expectedCases": 12,
+        "failedChecks": 2,
+        "exitCode": 1,
+        "passed": false,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "TeleportCurrent_",
+        "cases": 4,
+        "expectedCases": 4,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-session-first.log",
+        "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "FieryTailLifetime_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-fiery-lifetime-native-first.log",
+        "sha256": "79816adc4be129c5458add107c397eb01c2d8a6dd8eb898e2f99cadb46d717a6"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "StreakLifetime_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-streak-lifetime-native-first.log",
+        "sha256": "85ee218a211b27a923a4fbedef9943aa45cde423e3d7f9c4f364647431ac6b81"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "ConstructionArrival_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-construction-arrival-native-first.log",
+        "sha256": "fe6cdc26f75bfcc8882e056089a2cd11d8287571231dff5cf174021df24208f4"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 11,
+        "expectedCases": 11,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-session-first.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-arrival-corrected.log",
+        "sha256": "edc359e909d082951724df79743dc4f808f5c1fb7a6463103a67f61185d361df"
+      }
+    ],
+    "finalUniqueCases": {
+      "TeleportCurrent_NoFirstUsesActualVtableWithoutDeviceOrTypeGate": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_MissingSelectedPrefixFailsBeforeCommon": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_SelectedPrefixKeepsPhysicalMutationsBeforeCommon": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_CallableSurvivesSelfUnbinding": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_ThrownPrefixKeepsEffectsAndDepth": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_LateCommonFailureKeepsSelectedCreationAndCurrentTypeCounts": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_ExplicitPreflightRemainsSeparate": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_CdDoesNotUsePatchPrefix": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_LifetimeCapturesTypeBeforeRegistryAndParticleAllocation": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_LifetimeReadsSharedTypeForEachCreation": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_TailTypeOwnerPersistsAcrossGeneralWorldPreparation": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-current-first.log",
+        "sha256": "934ea42a59555268f7d6ab5d1ac75bed10019b0975c7b27b0327cda82d5613b5"
+      },
+      "TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-arrival-corrected.log",
+        "sha256": "edc359e909d082951724df79743dc4f808f5c1fb7a6463103a67f61185d361df"
+      },
+      "TeleportCurrent_ActualSessionNoFirstSkipsInvalidEffectType": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-session-first.log",
+        "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51"
+      },
+      "TeleportCurrent_ActualSessionUsesCurrentConstructorAndItsOwnTypeGlobal": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-session-first.log",
+        "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51"
+      },
+      "TeleportCurrent_ActualSessionSelectedPhysicalOrUnknownConstructorFailsBeforeCommon": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-session-first.log",
+        "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51"
+      },
+      "TeleportCurrent_ActualSessionTailBindingKeepsOriginalOwner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-teleport-session-first.log",
+        "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51"
+      },
+      "FieryTailLifetime_Native027f": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-fiery-lifetime-native-first.log",
+        "sha256": "79816adc4be129c5458add107c397eb01c2d8a6dd8eb898e2f99cadb46d717a6"
+      },
+      "StreakLifetime_NativeConstructorAndSharedPalette": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-streak-lifetime-native-first.log",
+        "sha256": "85ee218a211b27a923a4fbedef9943aa45cde423e3d7f9c4f364647431ac6b81"
+      },
+      "ConstructionArrival_ReplaysPatch": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-construction-arrival-native-first.log",
+        "sha256": "fe6cdc26f75bfcc8882e056089a2cd11d8287571231dff5cf174021df24208f4"
+      },
+      "ConstructionArrival_ReplaysCd": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-construction-arrival-native-first.log",
+        "sha256": "fe6cdc26f75bfcc8882e056089a2cd11d8287571231dff5cf174021df24208f4"
+      },
+      "ConstructionArrival_RequiresCurrentWorldAndEffects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-construction-arrival-native-first.log",
+        "sha256": "fe6cdc26f75bfcc8882e056089a2cd11d8287571231dff5cf174021df24208f4"
+      },
+      "PostPopCurrent_SuppressedReturnsBeforeSlotOrTypeAndWrapsDepth": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_RegionDisabledBranchDoesNotRecheckGraphs": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_RegionCallbackDisablesAddBeforeLedger": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_DestroyDiagnosticResumesWithCurrentType": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_AbortingDiagnosticKeepsDepthAndEarlierRegion": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_NoGraphSurfaceUsesResetBeforeCost": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_CurrentTypeAndSavedGenusHaveIndependentRoles": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_AbstractExtraSkipsLedgerButStillFinishesGraph": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_SelectionFailureKeepsAllEarlierStatisticsAndDepth": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_ActualManaDiagnosticRetainsSavedFactoryGenusAndCurrentOwner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_OwnerReadPrecedesCurrentLocalOwnerGetter": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "SquidPostPop_X86_CostListsTotalsAndActiveLifecycle": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_FirstRegistrationAndProviderDuplicate_PreserveOriginalCounters": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_UnsupportedEffectsAndCorruptList_KeepEarlierSpaceWrites": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_BridgePrefix_X86_FlagsAndExtra": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_TypeCost_LoadsFloatAndRejectsString": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidActivate_VoidDiagnosticRepairsCurrentStateBeforeTransmittingCheck": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_ZeroSidDiagnosticResumesSamePhysicalSlot": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_InvalidPhysicalSidFailsAfterOriginalDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_CurrentDepthDiagnosticReturnsWithoutAutomaticRepair": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_AbortingDepthDiagnosticKeepsCompletedEffects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_BalancedDepthWrapDoesNotReadDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_PostFailurePreservesIncrementWithoutFinalDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_DiagnosticSelfRebindReadsNextCurrentCallback": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_ActualCommonPostPopKeepsStatisticsBeforeCurrentDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_ActualWorldUsesCurrentClientDiagnosticWithCheckingOff": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "PostPopCurrent_ActualSessionUsesCurrentOwnerAndRememberedSelection": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-post-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      "SquidActivate_ActualSessionUsesCurrentServiceAfterPostPop": {
+        "passed": true,
+        "log": "extracted/cpp-resume-860/test-activate-session-first.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      }
+    }
+  },
+  "protected": {
+    "files": 2761,
+    "fixtures": 941,
+    "unchanged": true,
+    "expectationChanges": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 36,
+    "completedPartial": 3,
+    "newCompletedParents": 0
+  },
+  "limits": [
+    "현재 분배기는 대조한 Streak/Fiery 두 cdecl 생성 함수만 지원하며 다른 유효 생성 함수의 실제 분배는 미완료다",
+    "현재 계약 검사/기존 fixture 재생/원문 정적 대조이며 새 Native 실행 관측은 아니다",
+    "Session의 TYPE56/57/58은 검사 안의 로컬 입자 별칭이다. 실제 client Form/필드를 읽고 MP/통신을 실행하지 않았다",
+    "새로운 Frame/Process 틱·Draw·행동/포획/희생/특정 적 공격/승리·실제 게임·공중3종 전용·신규MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복을 제외했다",
+    "heap/SEH/부분 할당 실패 전체 동일성·섬/표면/다른 가상20/전체 Pop과 후속 단계는 미완료다"
+  ],
+  "next": [
+    "섬/표면 접두의 현재 타입/로딩/프레임/진단 복귀·같은 World/Session 연결을 대조한다",
+    "Teleport가 선택할 다른 유효 생성 함수의 실제 분배를 임의12 성공으로 대체하지 않고 이어 복원한다",
+    "객체 메뉴/커서·Edit·State/파일/군도·Windows 한계·무검사MP 및4~8차를 계속한다"
+  ]
+}
