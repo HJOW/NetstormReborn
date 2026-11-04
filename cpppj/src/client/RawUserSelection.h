@@ -54,6 +54,7 @@ public:
     void ExtendSelection(std::uint32_t sid,std::uint32_t forceSelect) const; //004da39a..40e의 Shift 클릭 관문이며 최초 단일 선택과 추가 토글을 구별한다.
     void MoveMultiple(std::uint32_t x,std::uint32_t y,const std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)>& move) const; //004d5500: enabled0→현재 목록 전송→enabled1→실제 다중 정리다. 기본 선택은 호출자가 뒤에서 전송한다.
     void Remember(std::uint32_t x,std::uint32_t y,std::uint32_t type) const; // 4d5440: flags2&30000일 때만 좌표와 TYPE를 기억한다.
+    void RecheckMouse(const std::function<std::uint32_t(std::uint32_t,std::uint32_t,std::uint32_t)>& find) const; //004da650:현재기억점/TYPE로찾고Select(0,1)뒤원래found의현재extra를다시읽는다.
     std::uint32_t CarrierMenu(o::Sid sid,const InputEvent& event,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) const; // 4268c0/492080: Select(sid,0,0) 뒤 실제 공통+ac다.
     std::uint32_t ArcherMenu(o::Sid sid,const InputEvent& event,const std::function<std::uint32_t(o::Sid,const InputEvent&)>& common) const; // 41e660: 셋째 인자만1이며 둘째는0이다.
 private:

@@ -41,7 +41,7 @@ const RiftTypeFrames& RawSquidNeighbors::Frames(std::uint32_t type) const {
 const SidPool& RawSquidNeighbors::Pool() const { return pool_; }
 // 일반 사각형 탐색을 같은 해시에 연결할 때 쓴다.
 const SquidHash& RawSquidNeighbors::Hash() const { return hash_; }
-// 복사해 둔 타입 표다. 이 객체가 살아 있는 동안 유효하다.
+// 실제World의현재대여표또는기존독립소유사본이다. 배열은실행기보다오래살아야한다.
 std::span<const RiftTypeRecord> RawSquidNeighbors::Types() const { return currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_; }
 // 004ade70/0049ae80의 발자국과 004adea0의 중심을 저장한 float 정밀도로 읽는다.
 RawSquidNeighbors::Object RawSquidNeighbors::ReadObject(Sid sid,bool readFrame) const { return ReadObject(Source(sid),readFrame,false); }

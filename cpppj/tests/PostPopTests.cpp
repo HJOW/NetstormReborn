@@ -205,9 +205,9 @@ TEST_CASE(SquidPostPop_UnsupportedEffectsAndCorruptList_KeepEarlierSpaceWrites) 
     prepare();state.providers.count=0;state.aiAttached[1]=true;
     CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); }));partial();CHECK(state.totalCost==0);
     prepare();state.aiAttached[1]=false;state.pendingPlacement=true;
-    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); }));partial();
+    CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); }));partial();CHECK(state.globalCounts[74]==1 && state.productionDirty==2 && state.providers.count==1); //선택재검사실패앞의등록/통계는이미기록됐다.
     prepare();state.pendingPlacement=false;state.suppressed=true;
-    CHECK(pop.Pop(sid,types[74],1,1,20,20)==o::RawPopResult::Registered); CHECK(state.globalCounts[74]==0); CHECK(state.depth==0);
+    CHECK(pop.Pop(sid,types[74],1,1,20,20)==o::RawPopResult::Registered); CHECK(state.globalCounts[74]==1); CHECK(state.depth==0);
     // 표면 그래프 생성은 거부하고 noGraph 리셋 경로만 허용한다.
     auto graphTypes=types; graphTypes[74].flags1=o::TypeFlag1::kSurface;
     o::SquidPostPopState graphState; graphState.graphsEnabled=true;

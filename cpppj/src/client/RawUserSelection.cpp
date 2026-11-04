@@ -64,6 +64,12 @@ void RawUserSelection::ClearPrevious(o::Sid sid) const {
 void RawUserSelection::Remember(std::uint32_t x,std::uint32_t y,std::uint32_t type) const {
     if (Type(type).flags2&0x30000U) { state_.rememberedPoint={x,y};state_.mouseType=type; }
 }
+void RawUserSelection::RecheckMouse(const std::function<std::uint32_t(std::uint32_t,std::uint32_t,std::uint32_t)>& find) const { //선택거부의반환값이나재지정된SID로원래found를대체하지않는다.
+    if (!state_.mouseType) return;
+    const auto found=Need(find)(state_.rememberedPoint[0],state_.rememberedPoint[1],state_.mouseType);
+    if (!found || (state_.selected && state_.selected!=found)) return;
+    static_cast<void>(Select(found,0,1));if (!(Raw(found)[40]&9U)) state_.mouseType=0;
+}
 // forceSelect는 flags1&08000000의 선택 허용, activateMove는 모드5 활성화에만 관여한다.
 std::uint32_t RawUserSelection::Select(std::uint32_t number,std::uint32_t forceSelect,std::uint32_t activateMove) const {
     // dais가 같은 위치의 유효 제단으로 위임하면 최초 관문과 다중 선택 정리부터 다시 수행한다.

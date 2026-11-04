@@ -430,7 +430,7 @@ TEST_CASE(RawGraph_ProjectedPreviewAndActualPopKeepDifferentFailureEffects) {
     const auto failedRaw=std::vector<std::uint8_t>(pool.Bytes().begin(),pool.Bytes().end());CHECK(pop.Pop(sid,types[74],1,1,20.25F,20)==o::RawPopResult::Unchanged && std::equal(failedRaw.begin(),failedRaw.end(),pool.Bytes().begin()) && state.depth==1);
 }
 
-// 실제 Pop의 영역/Add 사전 계산 실패도 앞선 좌표/점유/해시/활성화 쓰기를 되돌리지 않는다.
+// 실제영역실행뒤Add실패도앞선공간/활성화와영역의그래프변경을되돌리지않는다.
 TEST_CASE(RawGraph_RegionThenAddFailureRetainsEarlierPopMutation) {
     const auto edition=o::OriginalEdition::Patch1078; auto types=Types(edition);
     types[74].flags1=types[75].flags1=o::TypeFlag1::kSurface; types[74].flags2=8;
@@ -452,8 +452,9 @@ TEST_CASE(RawGraph_RegionThenAddFailureRetainsEarlierPopMutation) {
     CHECK(Throws([&]{pop.Pop(root,types[74],1,1,20,20,0x201);}));
     const auto current=pool.Slot(root);CHECK(current[11]==0 && current[33]==1 && current[40]==0x80 && current[4]==oldHead && current[5]==0 && hash.Bucket(1,20,20)==root.value && state.depth==1 && state.totalCost==0);
     auto expectedSpots=beforeSpots;for (int y=18;y<=20;++y) for (int x=18;x<=20;++x) expectedSpots[y*256+x]|=8; // 원문 최초 발자국의 실제 점유 쓰기만 독립 기대값에 반영한다.
-    CHECK(spots==expectedSpots && GraphHashes(graph)==before && pool.Slot(candidate)[30]==0 && hash.Bucket(1,21,20)==root.value); //같은버킷의새머리는root이며이전candidate는root의next로보존된다.
-    const auto offset=static_cast<std::size_t>(pool.Slot(candidate).data()-pool.Bytes().data());CHECK(std::equal(pool.Slot(candidate).begin(),pool.Slot(candidate).end(),raw.begin()+offset));
+    CHECK(spots==expectedSpots && GraphHashes(graph)!=before && pool.Slot(candidate)[30]==254 && hash.Bucket(1,21,20)==root.value); //영역이먼저후보를제거하고같은버킷의root/next체인은보존한다.
+    auto expectedRecords=records;expectedRecords[0].surfaces=1;for (std::size_t index=0;index<expectedRecords.size();++index) { const auto actual=graph.Records()[index],expected=expectedRecords[index];CHECK(actual.surfaces==expected.surfaces && actual.inUse==expected.inUse && actual.reserved==expected.reserved); } //전체표에서감소한surface WORD하나만달라야한다.
+    const auto offset=static_cast<std::size_t>(pool.Slot(candidate).data()-pool.Bytes().data());auto expectedCandidate=std::vector<std::uint8_t>(raw.begin()+offset,raw.begin()+offset+pool.Slot(candidate).size());expectedCandidate[30]=254;CHECK(std::equal(pool.Slot(candidate).begin(),pool.Slot(candidate).end(),expectedCandidate.begin()));
 }
 
 // 프레임/지도 변경은 각 호출에서 다시 읽고 graph byte 외의 raw 필드는 유지한다.

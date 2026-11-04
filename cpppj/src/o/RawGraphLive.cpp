@@ -49,6 +49,7 @@ void RawGraph::WriteNumber(Sid sid,std::uint8_t graph) const {
     }
     pool_.bytes_[pool_.Offset(sid)+(pool_.Edition()==OriginalEdition::Patch1078 ? 30 : 28)]=graph;
 }
+void RawGraph::SetNumber(Sid sid,std::uint8_t graph) const { WriteNumber(sid,graph); } //공통postPop의noGraph리셋도같은현재TYPE/진단/쓰기몸체를사용한다.
 // 로그 장치가 없으면 독립 입력의 기존 무출력 계약을 유지한다. 실제 Client는 자체 필터/FILE writer를 연결한다.
 void RawGraph::TraceInUse() const {
     if (!trace_) return;

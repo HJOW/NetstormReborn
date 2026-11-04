@@ -1,0 +1,441 @@
+{
+  "unit": 845,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCppCommit": "5626fa85 / 20261104-28 CP",
+  "exeSha256": "f880f31ca5f8c92a0db64071fc3068075851341cf4257f17d1311df9d75c9f9f",
+  "exeBytes": 10537472,
+  "sourceSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "d574cc65c6bc90656d9b717060633b3aa95479ed4fc80c0d2da4f6ec29769cf2",
+    "cpppj/src/client/RawUserSelection.cpp": "e636d00bfc12d834efe042b625f22f2f2ca1e0f7dd398c0f125b3dab6c6414a3",
+    "cpppj/src/client/RawUserSelection.h": "5cad8e87dc64db2d388264db96d5f93ba0fea82d04e658cb36fdc4bf8991be45",
+    "cpppj/src/o/CMakeLists.txt": "b6b3b3030f34f99fc249d88eaa8d26ab8389ac70445a64934d02ce90021d4aa3",
+    "cpppj/src/o/RawGraph.h": "3a450a874f971c961920255c4cd9dacc578a3d138a04328cb0402a9ee533fa4e",
+    "cpppj/src/o/RawGraphLive.cpp": "d6f4bfa85d971ad1cb3e98b89e7ae6edc33b9da4a0a698cb5edc2372528f8fe1",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "1588d7273c9c0da1cdfce3a081c7f6dda43ad05c36bd7e39e450c0e47388a9f7",
+    "cpppj/src/o/SquidPostPop.cpp": "9b51c844a979867f65cf2ae490fd58a859b115c9785261bc930691d5306b357d",
+    "cpppj/src/o/SquidPostPop.h": "a511fb9ad0c2632b316940e06a21a28d2784626b137b6d8252a1e694187f088b",
+    "cpppj/src/o/RawSquidPostPopParent.cpp": "9bb9438c0774828baf0d2eea2231371637553eef1569130783a5f8c22a233c5e",
+    "cpppj/src/o/RawSquidPostPopParent.h": "944c7475f032bbaab6caae723f63ff1617bff110950c76a1abfd3bc0bf71438b",
+    "cpppj/src/o/SquidPostPopPatch.cpp": "b6ffe3dc814fe33bfe2e93ff315e254a1fc215a94ebecd09d42333b91fe0f7c7",
+    "cpppj/tests/CMakeLists.txt": "eebf075d6255cc1928b3288f9e7773e0054716240a3c2a3e8f1dc54353be5f62",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "c03d25d650cf6d5a0a2d782688bf67161215d32069ae229f36a40129f922c12c",
+    "cpppj/tests/PostPopCurrentTests.cpp": "a454d997e71152e1dcdc800fed847d0583a13d72e5590319000dbcf97407922d",
+    "cpppj/tests/MouseSelectionRecheckTests.cpp": "05a3551f55cc5d66876db9e9bfedf046c915ff23be772a7b528d1d95f4325297",
+    "cpppj/tests/PostPopTests.cpp": "1a9e34d9cfec95a80d10c9ebe41c7be4f97bb413a201c8320108a7b75ec99fcb",
+    "cpppj/tests/RawGraphTests.cpp": "7eab1800ca8e8b6a174c4c2b350dc629cc5cac7a1bc7512eba157f077bb00f91"
+  },
+  "firstCompiledSourceSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "c730af61319da0866d1527056fbd64ec44ae72ceab6df6ebc0fc9c9e895d9914",
+    "cpppj/src/client/RawUserSelection.cpp": "e636d00bfc12d834efe042b625f22f2f2ca1e0f7dd398c0f125b3dab6c6414a3",
+    "cpppj/src/client/RawUserSelection.h": "5cad8e87dc64db2d388264db96d5f93ba0fea82d04e658cb36fdc4bf8991be45",
+    "cpppj/src/o/CMakeLists.txt": "b6b3b3030f34f99fc249d88eaa8d26ab8389ac70445a64934d02ce90021d4aa3",
+    "cpppj/src/o/RawGraph.h": "3a450a874f971c961920255c4cd9dacc578a3d138a04328cb0402a9ee533fa4e",
+    "cpppj/src/o/RawGraphLive.cpp": "d6f4bfa85d971ad1cb3e98b89e7ae6edc33b9da4a0a698cb5edc2372528f8fe1",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "1588d7273c9c0da1cdfce3a081c7f6dda43ad05c36bd7e39e450c0e47388a9f7",
+    "cpppj/src/o/SquidPostPop.cpp": "9b51c844a979867f65cf2ae490fd58a859b115c9785261bc930691d5306b357d",
+    "cpppj/src/o/SquidPostPop.h": "a511fb9ad0c2632b316940e06a21a28d2784626b137b6d8252a1e694187f088b",
+    "cpppj/src/o/RawSquidPostPopParent.cpp": "9bb9438c0774828baf0d2eea2231371637553eef1569130783a5f8c22a233c5e",
+    "cpppj/src/o/RawSquidPostPopParent.h": "944c7475f032bbaab6caae723f63ff1617bff110950c76a1abfd3bc0bf71438b",
+    "cpppj/src/o/SquidPostPopPatch.cpp": "b6ffe3dc814fe33bfe2e93ff315e254a1fc215a94ebecd09d42333b91fe0f7c7",
+    "cpppj/tests/CMakeLists.txt": "eebf075d6255cc1928b3288f9e7773e0054716240a3c2a3e8f1dc54353be5f62",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "c366ab1821f85c060360b29c4c0dac92ce88ffa9ce372d09ccb0fd39256b92f9",
+    "cpppj/tests/PostPopCurrentTests.cpp": "a454d997e71152e1dcdc800fed847d0583a13d72e5590319000dbcf97407922d",
+    "cpppj/tests/MouseSelectionRecheckTests.cpp": "05a3551f55cc5d66876db9e9bfedf046c915ff23be772a7b528d1d95f4325297"
+  },
+  "pretestOriginalSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "c730af61319da0866d1527056fbd64ec44ae72ceab6df6ebc0fc9c9e895d9914",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "c366ab1821f85c060360b29c4c0dac92ce88ffa9ce372d09ccb0fd39256b92f9",
+    "cpppj/tests/PostPopTests.cpp": "f8d90162c4e4d307c5c63a24d502f2d07b3773b6c1dfdd79ce8175be47175863",
+    "cpppj/tests/RawGraphTests.cpp": "beae423804f9e8e599cfa059e7482a49f266a861f9c1f5bc28cabbe622a03e68"
+  },
+  "originalEntries": [
+    "004b0d30",
+    "004ad3e0",
+    "004da650",
+    "00490050",
+    "0044f770",
+    "004c25e0",
+    "004c25b0"
+  ],
+  "scope": [
+    "공통004b0d30의메타맵선행/그래프현재활성/TYPE재조회·저장genus/80b정상복귀",
+    "같은실제Graph/비용/공급/공장/AI/현재owner·TYPE통계/선택/깊이순서",
+    "004da650의현재기억점/finder/Select(0,1)/원래found현재extra",
+    "실제PATCH공통앞전체Validate제거·독립명시preview/Activate와CD보존·Session현재owner/UI수명반납"
+  ],
+  "validation": {
+    "cases": 130,
+    "newCases": 17,
+    "firstFailedCases": 0,
+    "firstFailedChecks": 0,
+    "executions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-post-current-first.log",
+        "sha256": "7bfec49af1bdf2f1588a747b2516361d67e812108e8f906f28241c734aa6a57c"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "MouseSelectionRecheck_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-mouse-recheck-first.log",
+        "sha256": "7f17b8057afb1f8a67ac15473acc03235ecb3aefeb614ab99eda74f3a5398cff"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-post-current-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      {
+        "target": "netstorm_multiple_selection_tests",
+        "filter": "UserSelection_",
+        "cases": 7,
+        "expectedCases": 7,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-user-selection-native.log",
+        "sha256": "2f180f2a4cfc2f15390a1a5935dc6bea3e7e3d16c689c42773eaf7cde84cc701"
+      },
+      {
+        "target": "netstorm_multiple_selection_tests",
+        "filter": "UserSelectionGlobals_",
+        "cases": 7,
+        "expectedCases": 7,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-selection-globals.log",
+        "sha256": "96102e19c1fe5776e82ee6c8c36179a2ade75b87ff37fcfde4b1fef16648d179"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignUserSelection_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-selection-session.log",
+        "sha256": "fd1e5e388b1e477bc9793e9c746aa6e661cb85dd0f2ceda3b9f5e68f419777a0"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "RiftShapeAccess_",
+        "cases": 9,
+        "expectedCases": 9,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-shape-first.log",
+        "sha256": "40bbc7b8455128e77112175aa1e9a5b36ca103361ba99f54a022e241c0058706"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "CurrentTypeBindings_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-types-first.log",
+        "sha256": "29f5245d8f9a959c21a80a04f8272d6934c16441daf5b28bbc65e0c019622064"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "RiftShapeAccess_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-shape-session-first.log",
+        "sha256": "adbde682ae339fb7b7541f4d89dfa6c2907ba683a8a1e36d1f123eac8e52c5b2"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-activate.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-activate-session.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPopParent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-pop-parent.log",
+        "sha256": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidPopParent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-pop-session.log",
+        "sha256": "1b833eddadccebfdf64429581e27918e11899c4cd5570c9d600e84b1b2fb0628"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPop_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-pop-fixtures.log",
+        "sha256": "f31bde755e6d76ecc4a4766e16f4145416c3b55edb2a395853389f1e27d98f46"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidSpatial_Coordinates_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-coordinate.log",
+        "sha256": "3a1f05f247f78409fcaf2608aadfa12321376d4f24b9ea17348eb8f099af081e"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "BuildingSpace_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-building-fixtures.log",
+        "sha256": "d6044d09bdcbc8732a0337681cf68081a896a6fc81c9b67dc9ded9199aad4927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-post-pop.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "frame_display_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-frame-display.log",
+        "sha256": "c365548d66b11990fca7873428250267355f9e6fdfaf8c646fb6f8eede47970b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "set_frame_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-set-frame.log",
+        "sha256": "0a45f97a0eeb88a7c1921c00d6cc901668d0e232bc9e654a84a80feadfcd5961"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-menu-open.log",
+        "sha256": "ad5f05af8504a5cb3d57f544c29dca3dafecb8cb38a660ccfe0bd10deadce4da"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-menu-refund.log",
+        "sha256": "feb075621e686b73e66bf794e6c20e552978f87beba247aec77e371f13c7205f"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-menu-form.log",
+        "sha256": "1271d58e49bfc91ba07e8db3c0053b63cff8c77947139c038d91cbcda83c0a40"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "RawGraph_",
+        "cases": 17,
+        "expectedCases": 17,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-graph.log",
+        "sha256": "6d7b77092a6bf2d8056cd603885c442513e9d55434cf83798347ffe92049b43c"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphReferenceChecking_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-graph-region.log",
+        "sha256": "145c6697af0624158e19e8358cf8c771ff53d2e523b82c9bd43d81fbb7353c88"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphLiveChecking_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-graph-live.log",
+        "sha256": "4ddc8c85aaf1f4d0c5ae2e74d2dfbfed929556844d80b6ceb5ee5f486bdcbc88"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "GraphDetachLive_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-graph-detach.log",
+        "sha256": "921d769f6645a60011e80a7cd8931dcc52b257c076bde2e06929c4e6897b76a5"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "neighbor_",
+        "cases": 4,
+        "expectedCases": 4,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-neighbors.log",
+        "sha256": "ce3b34f604bb2650c18e200c1a756172f8c4d208bd492908333a24c3a124346b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidDisplayParent_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-845/test-display-parent.log",
+        "sha256": "501c780bdde761346fc3ee4a8739c3b746ca9169a76c9455904179edfafda4ea"
+      }
+    ],
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-845/build-first.log",
+        "sha256": "ddf4951c4ccfa1cac4fc55d84038a6166fd4bfba285a0a7130414b11cbaa1436",
+        "exitCode": 0,
+        "sessionId": 87278,
+        "compilerWarnings": 0,
+        "compilerErrors": 0
+      },
+      {
+        "log": "extracted/cpp-resume-845/build-pretest.log",
+        "sha256": "314c521b7a1012e580f9e2760cce5c7b02fd9e143e06b7744c26b0b9c04182e7",
+        "exitCode": 0,
+        "sessionId": 1567,
+        "compilerWarnings": 0,
+        "compilerErrors": 0,
+        "childProcessesExited": true
+      }
+    ]
+  },
+  "pretestStaticCorrections": [
+    "최초16소스빌드종료뒤UI미연결시원문finder/다른selected조기반환을Select장치요구앞에연결",
+    "같은실제Session의weak UI반납/다른선택무요구를기존새사례에추가",
+    "옛RawGraph의전체무효과가정을영역실행→Add실패의실제표/후보번호부분효과로교정",
+    "옛PostPop의선택실패앞공급등록/통계보존을확인;원문fixture입력/기대값불변"
+  ],
+  "protected": {
+    "files": 2759,
+    "fixtures": 939,
+    "changed": 0,
+    "newCpuExecutions": 0,
+    "newFixtureFiles": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayer": 3,
+    "completedParents": 36,
+    "completedPartial": 3
+  },
+  "remaining": [
+    "현재VT+20파생분배와파생몸체자체Validate/부모·쓰기경계의원문대조",
+    "공통Pop전체완료여부는실제현재하위/가상분배를추가대조후판정",
+    "전체프레임코드재적재·UI/Edit/State/파일/군도·MP/4~8차"
+  ],
+  "excluded": [
+    "실제게임/GUI",
+    "포획/희생·특정적공격·시나리오승리",
+    "사용자직접확인",
+    "신규MP/패킷/통신검사",
+    "공중3종전용검사",
+    "물리/PCM/CD재시도",
+    "전체71/CTest/34미션/ZIP반복"
+  ],
+  "rawDirectory": "extracted/cpp-resume-845"
+}

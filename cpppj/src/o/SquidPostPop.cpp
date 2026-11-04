@@ -1,4 +1,4 @@
-// 실제 공통 후처리에서 선택한 효과만 구현하며 미복원 호출을 변경 전에 거부한다.
+// 공통후처리의현재실행과독립명시Validate를구별하고파생몸체를분배한다.
 #include "o/SquidPostPop.h"
 #include "o/RawPriestPostPopTail.h"
 #include "o/RawForcefieldLifecycle.h"
@@ -280,7 +280,7 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) { //독립기존fixture
     Validate(sid,flags);const auto before=state_.depth;++state_.depth;DispatchPostPop(sid,flags);
     if (state_.depth!=before) throw std::logic_error("독립후처리의공통깊이불일치");
 }
-void SquidPostPop::PostPopVirtual(Sid sid,std::uint32_t flags) { Validate(sid,flags);DispatchPostPop(sid,flags); } //실제부모의증가뒤선택한가상몸체만실행한다.
+void SquidPostPop::PostPopVirtual(Sid sid,std::uint32_t flags) { if (pool_.Edition()!=OriginalEdition::Patch1078) Validate(sid,flags);DispatchPostPop(sid,flags); } //실제PATCH부모는가상몸체앞에전체공통사전검사를삽입하지않는다.
 std::uint32_t& SquidPostPop::ActivationDepth() { return state_.depth; } //현재공통장부주소를빌리며사본깊이를만들지않는다.
 // 파생가상몸체가반환한뒤의깊이진단은현재실제Activate부모한곳에서수행한다.
 void SquidPostPop::DispatchPostPop(Sid sid,std::uint32_t flags) {
@@ -359,15 +359,17 @@ void SquidPostPop::DispatchPostPop(Sid sid,std::uint32_t flags) {
     else if (HandlesForcefield(sid)) forcefieldPostPop_->Prefix(sid,flags);
     // 원본4429f0은 flags bit0에서만12를 만들고 이어 공통4b0d30으로 내려간다.
     else if (teleportPrefix_ && pool_.Edition()==OriginalEdition::Patch1078 && pool_.Slot(sid)[10]==134 && Vtable(pool_.Slot(sid))==0x5070c0U) teleportPrefix_(sid,flags);
+    else if (!SquidPop::Supports(pool_.Edition(),Vtable(pool_.Slot(sid)),flags)) throw std::logic_error("현재가상후처리몸체미복원"); //지원하지않는실제가상함수를공통몸체로가장하지않는다.
     PostPop(sid,flags);
 }
 // 공통 후처리의 순서: 영역 무효화→그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.
 void SquidPostPop::PostPop(Sid sid,std::uint32_t flags) {
-    Validate(sid,flags);
+    if (pool_.Edition()!=OriginalEdition::Patch1078) Validate(sid,flags);
     PostPopBase(sid,flags);
 }
 // 직접 base 호출도 공통 상태·효과의 검사와 깊이 감소를 그대로 수행한다.
 void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
+    if (pool_.Edition()==OriginalEdition::Patch1078) { PostPopPatch(sid,flags);return; }
     ValidateBase(sid,flags);
     if (state_.suppressed) { --state_.depth; return; }
     const auto bytes=pool_.Slot(sid); const auto number=bytes[10]; const auto& type=CurrentTypes()[number];

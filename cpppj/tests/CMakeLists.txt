@@ -3402,3 +3402,7 @@ target_compile_definitions(netstorm_pop_context_tests PRIVATE ${_netstorm_menu_s
 # SHP의 실제 진단/현재 TYPE와 기존 비멀티 Graph/이웃 원문 fixture를 집중 대조한다(844).
 target_sources(netstorm_tests PRIVATE RiftShapeAccessTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE RiftShapeAccessTests.cpp RawGraphTests.cpp GraphLiveCheckingTests.cpp GraphDetachLiveTests.cpp NeighborTests.cpp SquidDisplayParentTests.cpp)
+
+# 현재공통후처리/마우스재검사는비멀티명시입력과실제Session으로대조한다(845).
+target_sources(netstorm_tests PRIVATE PostPopCurrentTests.cpp MouseSelectionRecheckTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE PostPopCurrentTests.cpp MouseSelectionRecheckTests.cpp)

@@ -38,6 +38,7 @@ public:
     void PostPop(Sid sid,bool invalidate,bool add);
     // 원문 진단 복귀 뒤 현재 슬롯/표/이웃을 직접 소비한다. ValidateAdd의 사전 계산과 구별한다.
     void Add(Sid sid);
+    void SetNumber(Sid sid,std::uint8_t graph) const; //004ad3e0의진단복귀뒤같은graph BYTE쓰기이며사전계산하지않는다.
     // 원천의 위치/타입/프레임과 0단계 머리 SID의 그래프 번호를 구별한다. 빈 머리는 자연 반환한다.
     // dead 원천의 이웃 분할·1/특수 9 감소를 계산하며 Unpop/반납과 별도로 호출한다.
     // sourceType은 삭제 위치 정보만 치환한다. raw 타입과 소진 복구의 전체 풀 입력은 보존한다.

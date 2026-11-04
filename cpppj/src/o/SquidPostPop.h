@@ -91,7 +91,9 @@ public:
     // PATCH004166e0의 실제 현재 Player/brain 통지다. 빈 함수는 수명 종료 때 분리하며 미연결 독립/CD 경로는 기존 검사를 유지한다.
     void BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice);
     void BindCurrentTypes(std::span<const RiftTypeRecord> types); //실제PATCH World의같은TYPE배열을빌리고빈span은독립소유사본으로돌린다.
-    void BindManaDiagnostics(ManaRegistrationDiagnostics diagnostics); // 같은 Client checking과 정상 복귀하는 마나 중복 진단 장치를 빌린다.
+    void BindManaDiagnostics(ManaRegistrationDiagnostics diagnostics); // 같은Client checking/마나중복·공통80b의정상복귀진단장치를빌린다.
+    void BindPatchSelectionRecheck(std::function<void()> recheck); //장부뒤현재마우스선택재검사이며Session종료때분리한다.
+    void BindPatchLocalOwner(std::function<std::uint32_t()> owner); //AI통지후현재Client로컬owner를읽으며독립구성은state를쓴다.
     // 다리 postPop(00422150 / CD 00449890)의 접두 부분이다. flag 1은 extra 비트 2를 켜며,
     // flag 1 또는 (flag 4이고 abstract 아님)이면 004213b0/CD 00448b00의 연결 효과를 요청한다.
     // 연결 효과는 명시적 외부 경계이며 누락되면 쓰기 전에 거부한다.
@@ -158,10 +160,10 @@ public:
     bool HandlesBalloon(Sid sid) const; //다른 비행 파생을 일반 Carrier로 합치지 않는다.
     // 같은 현재 가상 표의 파생 몸체가 연결됐는지 확인한다. CD의 사전 검사도 이 조회를 사용한다.
     bool HandlesDerived(Sid sid) const;
-    // 선택된 가상 몸체에서 그래프·영역/AI/배치 효과·목록·비용의 현재 호스트 경계를 확인한다.
+    // 명시무효과사전계산/CD호환진입의검사다. 실제PATCH가상부모앞에는이전체검사를삽입하지않는다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // 복원한 파생 몸체가 공통 함수를 직접 부르기 전에 검사한다. 가상 표의 전체 postPop 지원 여부만 제외한다.
-    // Pop/Activate의 가상 분배는 계속 Validate를 사용한다.
+    // 명시독립Activate/CD는계속사용하며실제PATCH공통실행은도달한하위를순차호출한다.
     void ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // 선택한 raw Graph가 Pop과 같은 해시·spot을 읽는지 공간 변경 전에 확인한다.
     void ValidateSpace(const SquidHash& hash,std::span<const std::uint8_t> spots) const;
@@ -172,11 +174,14 @@ public:
     // 004b0d30 ↔ CD 004ae180의 공통 몸체. 명시적인 직접 호출은 depth를 한 단계 감소시킨다.
     void PostPop(Sid sid,std::uint32_t flags);
     // 004b0d30 / CD 004ae180의 비가상 직접 호출이다. 파생 흐름의 일부만 복원한 호스트에서도 호출할 수 있다.
-    // raw/Graph/장부 보호 검사는 유지하며 Pop의 허용 가상 표를 늘리지 않는다.
+    // PATCH는소비지점의물리범위를검사하며CD의기존전체사전검사와가상표지원범위는유지한다.
     void PostPopBase(Sid sid,std::uint32_t flags);
     // Pop과 다른 풀을 연결하지 않도록 소유자를 제공한다.
     const SidPool& Pool() const;
 private:
+    void PostPopPatch(Sid sid,std::uint32_t flags); //실제004b0d30의현재조회/선행부분효과를같은장부에분배한다.
+    std::function<void()> selectionRecheck_; //현재UI의같은선택몸체/기억좌표에대한대여다.
+    std::function<std::uint32_t()> localOwner_; //통지중변경될수있는현재Client owner getter다.
     void DispatchPostPop(Sid sid,std::uint32_t flags); //선택된실제파생또는공통몸체를호출하며깊이는호출자가소유한다.
     const RawFlyerPostPop* flyerPostPop_{}; // 같은 현재 server/TYPE/공통 장부를 쓰는 장기 몸체다.
     const RawBalloonBody* balloonPostPop_{}; //벌룬의 그림자 재귀 Pop 뒤 공통 깊이를 한 번 끝낸다.

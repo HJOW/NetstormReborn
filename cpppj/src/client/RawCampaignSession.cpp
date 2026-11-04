@@ -2382,6 +2382,14 @@ struct RawCampaignSession::Impl {
         }; // 기존 피해 로그와 같은 원본 종류29/현재 Player 장치를 사용한다.
         aiObjects=std::make_unique<RawAiObjectNotice>(aiMemory,core.pool,core.types,players,core.processState.Now(),researchOutpost,[this] { return core.ownerMode.challenge; },std::move(objects));
         core.postPop.BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); });world.CommonDeletion().BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); }); // 두 원본 통지 지점이 같은 현재 본체에 도달한다.
+        core.postPop.BindPatchLocalOwner([owner=gameplayGlobals] { return owner->player.battleOwner; }); //AI하위통지후Prepare사본대신같은Client현재owner를읽는다.
+        core.postPop.BindPatchSelectionRecheck([this] { //같은현재선택의수명은weak토큰으로확인하고Session정리뒤대여를반납한다.
+            const auto link=activeSelection.lock();if (link && link->selection) { link->selection->RecheckMouse([this](auto x,auto y,auto type) { return world.Find(std::bit_cast<float>(x),std::bit_cast<float>(y),type).value; });return; }
+            const auto& current=gameplayGlobals->selection;if (!current.mouseType) return;
+            const auto found=world.Find(std::bit_cast<float>(current.remembered[0]),std::bit_cast<float>(current.remembered[1]),current.mouseType);
+            if (!found.value || (current.selected && current.selected!=found.value)) return; //원문이실제로Select를요구할때만살아있는UI몸체를요구한다.
+            throw std::logic_error("공통후처리현재선택몸체수명미연결");
+        });
         AiWorldRegistrationHooks registration;
         registration.center=[this](Sid sid) { return gunTarget->Center(sid); }; //004112b0/004152b0은 같은 신전 발 중심을 사용한다.
         registration.fartherGeyser=[this](auto token,auto sid) { const auto raw=aiMemory.Bytes(token);if (!Read(raw,0xb00)) return;if (!services.player.log) throw std::logic_error("AI 간헐천 거리 로그 미연결");services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(raw,0x260)))+": Not closer to geyser "+std::to_string(std::bit_cast<std::int32_t>(sid))+".\n\n"); };
@@ -3381,6 +3389,7 @@ struct RawCampaignSession::Impl {
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
         world.BindContainedUnpop({});containedUnpop.reset(); // 실제 Kernel 정리 뒤 파생 부모/UI 수명을 반납하고 World 기본 종단으로 복귀한다.
         core.postPop.BindPatchAiNotice({});world.CommonDeletion().BindPatchAiNotice({}); // AI 본체/통지 처리기를 해제하기 전에 외부 공통 몸체의 참조를 분리한다.
+        core.postPop.BindPatchSelectionRecheck({});core.postPop.BindPatchLocalOwner({}); //외부World에이전Session/UI주소를남기지않는다.
         core.postPop.SetDudePostPop(nullptr); // 생성/최초 Pop 모듈보다 먼저 파생 분배를 반납한다.
         core.postPop.SetCarrierStealPostPop(nullptr); // 장기 크랩 몸체보다 먼저 가상 분배를 반납한다.
         core.postPop.SetPlayerPostPop(nullptr);
