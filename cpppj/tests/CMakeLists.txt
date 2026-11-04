@@ -3438,6 +3438,7 @@ target_sources(netstorm_pop_context_tests PRIVATE PriestPopTests.cpp PriestPathA
 # 현재 TYPE 표 공유와 기존 HP/보상 원문 재생만 선택한다. 실제 포획/희생이나 게임 틱은 실행하지 않는다(단위863).
 target_sources(netstorm_pop_context_tests PRIVATE RewardCurrentTypesTests.cpp RewardTests.cpp PriestStateTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE ForcefieldRegularCurrentTests.cpp) # 보호막 현재 Regular의 선택 장치와 진단 복귀만 검사한다(단위864).
+target_sources(netstorm_pop_context_tests PRIVATE LoadedCostTableTests.cpp) # PATCH 별도 정수 비용 캐시와 현재 TYPE를 구별한다(단위865).
 target_compile_definitions(netstorm_pop_context_tests PRIVATE
     NETSTORM_REWARD_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/reward-x86.tsv"
     NETSTORM_PRIESTSTATE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/prieststate-x86.tsv")

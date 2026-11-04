@@ -65,6 +65,8 @@ public:
     // 실제 PATCH 월드의 주소가 고정된 TYPE 표를 빌린다. 호출자는 표를 더 오래 유지하고 재할당하지 않아야 한다.
     // 빈 표는 생성 시 소유한 사본으로 복귀한다. 독립 재생과 CD의 기존 계약은 그대로 유지한다(단위863).
     void BindCurrentTypes(std::span<const RiftTypeRecord> types);
+    // PATCH 별도 정수 비용표의 최초 로딩 기록을 빌린다. 표는 변경/재할당 없이 더 오래 살아야 하며 빈 표는 생성 시 비용 사본으로 복귀한다.
+    void BindLoadedCosts(std::span<const RiftTypeRecord> types);
     // 상태를 바꾸지 않고 비용/지급액을 계산한다. 손상 입력은 여기서 거부한다.
     SquidRewardResult Plan(Sid sid,std::uint32_t recipient,bool salvage) const;
     // 0044c2f0 / 004626d0. salvage는 원본 세 번째 인자로, 거짓이면 삭제 보상 비율, 참이면 남은 HP 비례 환불이다.
@@ -110,6 +112,8 @@ private:
     std::vector<RiftTypeRecord> types_;
     // 실제 PATCH 월드의 현재 TYPE 표다. 독립 구성에서는 비어 있고 types_ 사본을 사용한다.
     std::span<const RiftTypeRecord> currentTypes_;
+    // 실제 Client의 불변 GameAssets 표다. 현재 TYPE와 Session 교체 뒤에도 로딩 비용 캐시 초기값을 구별한다(단위865).
+    std::span<const RiftTypeRecord> loadedCostTypes_;
     // 조회 시점마다 현재 표를 선택한다. TYPE 번호는 실제 역참조 위치에서 범위를 검사한다.
     std::span<const RiftTypeRecord> CurrentTypes() const;
     // 현재 표의 지정 TYPE 기록을 읽고 물리 범위 밖 번호는 예외로 보고한다.

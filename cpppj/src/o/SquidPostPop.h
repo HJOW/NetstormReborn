@@ -91,6 +91,9 @@ public:
     // PATCH004166e0의 실제 현재 Player/brain 통지다. 빈 함수는 수명 종료 때 분리하며 미연결 독립/CD 경로는 기존 검사를 유지한다.
     void BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice);
     void BindCurrentTypes(std::span<const RiftTypeRecord> types); //실제PATCH World의같은TYPE배열을빌리고빈span은독립소유사본으로돌린다.
+    // PATCH의 별도 정수 비용표 초기값으로 최초 로딩 표를 빌린다. 표는 변경/재할당 없이 실행기보다 오래 살아야 한다.
+    // 현재 TYPE의 플래그/발자국 대여와 분리하며 빈 표는 생성 시 사본의 비용으로 복귀한다(단위865).
+    void BindLoadedCosts(std::span<const RiftTypeRecord> types);
     void BindManaDiagnostics(ManaRegistrationDiagnostics diagnostics); // 같은Client checking/마나중복·공통80b의정상복귀진단장치를빌린다.
     void BindPatchSelectionRecheck(std::function<void()> recheck); //장부뒤현재마우스선택재검사이며Session종료때분리한다.
     void BindPatchLocalOwner(std::function<std::uint32_t()> owner); //AI통지후현재Client로컬owner를읽으며독립구성은state를쓴다.
@@ -193,6 +196,7 @@ private:
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
     std::span<const RiftTypeRecord> currentTypes_; //실제World의주소고정TYPE배열이며재할당없이필드만변경할수있다.
+    std::span<const RiftTypeRecord> loadedCostTypes_; // PATCH0059ab50의 로딩 초기값을 제공하는 불변 표다. 실제 Client는 최초 GameAssets 표를 빌린다.
     std::span<const RiftTypeRecord> CurrentTypes() const; //독립기존구성은소유사본을계속사용한다.
     // state_: 처리 중 조회·갱신하는 상태 (SquidPostPopState).
     SquidPostPopState& state_;

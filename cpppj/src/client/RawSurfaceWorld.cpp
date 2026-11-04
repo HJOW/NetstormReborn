@@ -1,5 +1,6 @@
 // 호스트 통합이다. 개별 몸체의 원본 근거는 surface-graph-integration 및 각 raw 모듈 문서를 따른다.
 #include "client/RawSurfaceWorld.h"
+#include "client/GameAssets.h" // 최초 로딩 비용표는 수정 가능한 World TYPE와 별개인 불변 자산 표에서 읽는다(단위865).
 #include "o/RawBridgeFallParent.h" // 실제낙하예약이원문현재checking/TYPE진단부모를거친다.
 #include "o/RawBridgeEvents.h"
 #include "o/RawIslandPostPop.h"
@@ -130,7 +131,10 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         graph->BindClock([owner=storage.get()] { return owner->ReadGraphClock(); }); // 두 지역 시각 읽기도 장기 Client 장치를 거친다.
         display=std::make_unique<o::SquidDisplay>(edition,types,shapes,*this,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
         postPop=std::make_unique<o::SquidPostPop>(pool,types,bookkeeping,graph.get(),[this](o::Sid sid) { connect->Connect(sid); });
-        if (edition==o::OriginalEdition::Patch1078) postPop->BindCurrentTypes(types); //후처리비용/플래그도같은실제TYPE배열을읽는다.
+        if (edition==o::OriginalEdition::Patch1078) {
+            postPop->BindCurrentTypes(types); // 후처리 플래그는 실제 현재 TYPE를 읽는다. 별도 비용 캐시와 혼합하지 않는다(단위865).
+            if (const auto source=storage->Source()) postPop->BindLoadedCosts(source->TypeTable().Types()); // World 교체 뒤 변한float를 최초 로딩 캐시로 다시 해석하지 않는다.
+        }
         postPop->BindManaDiagnostics({storage->Checking(),[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // 첫 Session 이전에도 실제 Client의 현재 진단 장치로 복귀한다.
         postPop->SetIslandPrefix([this](o::Sid sid,std::uint32_t flags) { connect->IslandPostPopPrefix(sid,flags); });
         postPop->SetSurfacePrefix([this](o::Sid sid,std::uint32_t flags) { surface->Prefix(sid,flags); });

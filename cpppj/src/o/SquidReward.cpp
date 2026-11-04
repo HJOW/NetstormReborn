@@ -58,6 +58,12 @@ void SquidReward::BindCurrentTypes(std::span<const RiftTypeRecord> types) {
         throw std::invalid_argument("보상 현재 TYPE 대여의 판본/길이 오류");
     currentTypes_=types;
 }
+// 최초 비용표만 대여하고 현재 HP/플래그 표의 주소와 독립적으로 보존한다.
+void SquidReward::BindLoadedCosts(std::span<const RiftTypeRecord> types) {
+    if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188))
+        throw std::invalid_argument("보상 로딩 비용표 대여의 판본/길이 오류");
+    loadedCostTypes_=types;
+}
 // span에는 at이 없으므로 기존 vector::at과 같은 범위 거부를 역참조 직전에 유지한다.
 const RiftTypeRecord& SquidReward::TypeRecord(std::uint32_t type) const {
     const auto types=CurrentTypes();
@@ -72,8 +78,10 @@ std::span<const std::uint8_t> SquidReward::Raw(Sid sid) const {
 }
 // 로더의 ftol(cost + 번호*23)을 그대로 따라 한 뒤 읽는 쪽의 감산까지 합친 값이다. CD판은 float 비용을 그대로 쓰므로 호출하지 않는다.
 std::int32_t SquidReward::TypeCostUnits(std::uint32_t type) const {
-    // PATCH 0059ab50의 단가는 TYPE+c4 float와 별도이며 로드 시 사본으로 캐시 초기값을 보존한다(단위863).
-    const double encoded=static_cast<double>(types_.at(type).cost)+static_cast<double>(type*kCostBias);
+    // PATCH0059ab50은 TYPE+c4 float와 별도다. 실제 Session은 최초 로딩 표, 독립 재생은 생성 시 사본을 사용한다(단위865).
+    const auto costs=loadedCostTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : loadedCostTypes_;
+    if (type>=costs.size()) throw std::out_of_range("보상 로딩 비용표 번호 범위 오류");
+    const double encoded=static_cast<double>(costs[type].cost)+static_cast<double>(type*kCostBias);
     if (encoded<-2147483648.0 || encoded>=2147483648.0) throw std::out_of_range("보상 패치 비용 표 범위 오류");
     return Wrap(static_cast<std::int64_t>(encoded)-static_cast<std::int64_t>(type)*kCostBias);
 }

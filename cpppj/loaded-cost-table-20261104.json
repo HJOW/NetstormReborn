@@ -1,0 +1,312 @@
+{
+ "unit": 865,
+ "date": "2026-11-04",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "fcf47cc2 / 20261104-52 CP",
+ "exeSha256": "a7931f4b7aaa471744af77d5c171c5dc50bd4f9a0d7f4d59bb46923bc59ba8e4",
+ "exeBytes": 10586624,
+ "scope": [
+  "PATCH공통후처리 TotalCost의 현재float 재인코딩을 최초 정수 비용 캐시로 분리",
+  "SquidPostPop/SquidReward의 BindLoadedCosts와 실제 GameAssets 최초 표 공유",
+  "World/Session 재대여 뒤에도 변한float를 비용 캐시로 다시 만들지 않음",
+  "현재 HP/등록 플래그·CD/독립 구성 계약 보존"
+ ],
+ "sourceSha256": {
+  "cpppj/src/o/SquidPostPop.h": "e2e474269ac0fc502613bbe5e68d884278fef0e9f340215074556aa1d51a67b7",
+  "cpppj/src/o/SquidPostPop.cpp": "d045090bb3bee1232e5858046d936978b888f8cceb6c191635e91b69e20e47bc",
+  "cpppj/src/o/SquidReward.h": "ad83ed6060708e98f363e1158e4e8303c84dce1bc8d25a166ed628b4ea37bae9",
+  "cpppj/src/o/SquidReward.cpp": "3c0cc8e12f02da18a2b11478390e4a5e059ca457e70149ce19dfe63affa5bc0f",
+  "cpppj/src/client/RawSurfaceWorld.cpp": "dc09b930d5b0b49a411a3d2fea7134e4abf50c1798cc3ad804406ecb670de4fb",
+  "cpppj/src/client/RawCampaignSession.cpp": "35dbe863d20a382ff4ae1466c4adbc8f56d2b1780a5c24fa56970bad0c0b294a",
+  "cpppj/tests/LoadedCostTableTests.cpp": "e5022024c7fd0cde2577240bfa1b379c265ba09b0d3737ebed4624148604a6ad",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "e55b55128cfe1d3413cbdab451a4f204d81961a7a8470a23c238f2278daa5c5a",
+  "cpppj/tests/CMakeLists.txt": "e504ab25faeb3d78066e5d687c0cf5d1bc1fdadb3c30e92adbc92626f41ee020",
+  "cpppj/tests/RiftShapeAccessTests.cpp": "946d50e9e17380aba9e53a7872f5bbbbc6a17dc0fd890d3f4316cc834420d3c6"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/o/SquidPostPop.h": "e2e474269ac0fc502613bbe5e68d884278fef0e9f340215074556aa1d51a67b7",
+  "cpppj/src/o/SquidPostPop.cpp": "d045090bb3bee1232e5858046d936978b888f8cceb6c191635e91b69e20e47bc",
+  "cpppj/src/o/SquidReward.h": "ad83ed6060708e98f363e1158e4e8303c84dce1bc8d25a166ed628b4ea37bae9",
+  "cpppj/src/o/SquidReward.cpp": "3c0cc8e12f02da18a2b11478390e4a5e059ca457e70149ce19dfe63affa5bc0f",
+  "cpppj/src/client/RawSurfaceWorld.cpp": "dc09b930d5b0b49a411a3d2fea7134e4abf50c1798cc3ad804406ecb670de4fb",
+  "cpppj/src/client/RawCampaignSession.cpp": "35dbe863d20a382ff4ae1466c4adbc8f56d2b1780a5c24fa56970bad0c0b294a",
+  "cpppj/tests/LoadedCostTableTests.cpp": "e5022024c7fd0cde2577240bfa1b379c265ba09b0d3737ebed4624148604a6ad",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "cbac92556dc199ca72f72517c4ef120dd0e58a957334d42ddd8765e6dca7acbd",
+  "cpppj/tests/CMakeLists.txt": "e504ab25faeb3d78066e5d687c0cf5d1bc1fdadb3c30e92adbc92626f41ee020",
+  "cpppj/tests/RiftShapeAccessTests.cpp": "13ab412a7ca39065ce8278ff8bf4dc8072188367c413b4705cddc9ea0c8b135d"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-865/originalCD-004147c0.c": "793690fe9c07e0d4d081281d89f30da8a65935fa8623fa3807ae14fe5e997723",
+  "extracted/cpp-resume-865/originals-0044b220.c": "f4fae2b4bbfe63038f1db980c02269b0474c711745a4758e58d9513ce1cfea80",
+  "extracted/cpp-resume-865/originals-0049c2e0.c": "3d680c3e8d4239c06c6f39717be0e4a09294c060057a55d0f5d2d19110404075",
+  "extracted/cpp-resume-865/originals-004b0d30.c": "caa4bcf3a543c2b4e3b732d339c00c8dd7d6c37be82e697a396f3457c0c895e3",
+  "extracted/cpp-resume-865/originals-004b4900.c": "d2eb6eb1fe313d7fa89e1d26820b2e31cec3df95d3d6e95d2a347f026cb1ae81"
+ },
+ "assemblySha256": "e5d8b7d5f39240ddd62afcf6ee393a5b6dbf8fea677dba2d1dd5dba5115df71f",
+ "validation": {
+  "cases": 44,
+  "uniqueCasesVerifiedFromNames": true,
+  "groups": 8,
+  "newCases": 5,
+  "firstFailedCases": 4,
+  "firstFailedChecks": 5,
+  "firstFailedNewCases": 1,
+  "firstFailedManualCases": 3,
+  "finalFailedCases": 0,
+  "failedChecks": 0,
+  "productChangesAfterFirstBuild": 0,
+  "newNativeObservations": 0,
+  "newFixtures": 0,
+  "fixtureExpectationsChanged": false,
+  "manualExpectationCorrections": {
+   "cases": 3,
+   "checks": 4,
+   "file": "cpppj/tests/RiftShapeAccessTests.cpp",
+   "reason": "최초 로딩 비용0과 현재float7/9/11→99를 구별한다. 공급/공장/현재owner/통지 후 TYPE75 카운터 기대는 유지한다."
+  },
+  "newCaseCorrection": "새 실제 Session 검사의 첫 비용 조회/공통 누적400은 통과했으나 명시 슬롯을 Release할 때 void bit4를 복구하지 않아 정리 예외1건. 검사만 void로 반납하도록 교정 후 두Session 모두 통과.",
+  "builds": [
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 1064.3372987,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-865/build-first.log",
+    "sha256": "a9a810a90619aaeae239af15df731bfa33ae3029b013befd9e73268d06d1ba78",
+    "targets": [
+     "NetstormCpp",
+     "netstorm_pop_context_tests",
+     "netstorm_menu_session_tests"
+    ]
+   },
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 56.893767999999994,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-865/build-corrected.log",
+    "sha256": "7a1a9c39c4e6f37ae79929c24e6566ea27ca0808ca994fd2faea26dcb33244dc",
+    "targets": [
+     "netstorm_pop_context_tests",
+     "netstorm_menu_session_tests"
+    ]
+   }
+  ],
+  "executionsFirst": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "LoadedCostTable_",
+    "cases": 4,
+    "expectedCases": 4,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-loaded-cost-first.log",
+    "sha256": "dface785aed9a54251d27fdbc74f44c05a65acc0e1c413acbbcbb996f1dd2e4b"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "LoadedCostTable_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 1,
+    "failedChecks": 1,
+    "exitCode": 1,
+    "log": "extracted/cpp-resume-865/test-loaded-session-first.log",
+    "sha256": "a9f706547bd47f720fd83ae21b12a56bbfb0d2acd8972c71b6bfee0bfdec85d6"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "CurrentTypeBindings_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 3,
+    "failedChecks": 4,
+    "exitCode": 1,
+    "log": "extracted/cpp-resume-865/test-current-bindings-first.log",
+    "sha256": "dcd233f27da605140c7f6b69cdf67870431fed5aee0431e04df34ab0bd9d1ee5"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PostPopCurrent_",
+    "cases": 17,
+    "expectedCases": 17,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-post-current-first.log",
+    "sha256": "b7dd335f5bb411bbdb89c48ec0066a371e30771660a33dd7b5b6e57bf550b8ae"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "SquidPostPop_X86_CostListsTotalsAndActiveLifecycle",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-post-native-first.log",
+    "sha256": "b2661f2a3bf22024d13ca80c5b28192826961de1da69fe7c911ced6b79b0f08d"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "reward_",
+    "cases": 9,
+    "expectedCases": 9,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-reward-native-first.log",
+    "sha256": "b74226b7552ec6720cacb596c7b85fff225bed018315f844f2468df88d403220"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "RewardCurrentTypes_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-reward-current-first.log",
+    "sha256": "c1ce5a43fdf88d0d98cbd932a21671280b93cb1cb4a17af3ccc701efe04a3c57"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "GameAux_Reward",
+    "cases": 2,
+    "expectedCases": 2,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-reward-globals-first.log",
+    "sha256": "0444c9ecdbffbc89b6be1554f3e77be7dc8c685bde5eaa1320ce20387303c6ce"
+   }
+  ],
+  "executions": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "LoadedCostTable_",
+    "cases": 4,
+    "expectedCases": 4,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-loaded-cost-first.log",
+    "sha256": "dface785aed9a54251d27fdbc74f44c05a65acc0e1c413acbbcbb996f1dd2e4b"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "LoadedCostTable_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-loaded-session-corrected.log",
+    "sha256": "b7cc4d9114c429788bdc6b8f76507cab78825941876cba878fa9b34b26d8de19"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "CurrentTypeBindings_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-current-bindings-corrected.log",
+    "sha256": "ece793bb5eb9f67fda159acbe184e503b5cc85a911f1c7cfb71a9f7440dbb1ab"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PostPopCurrent_",
+    "cases": 17,
+    "expectedCases": 17,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-post-current-first.log",
+    "sha256": "b7dd335f5bb411bbdb89c48ec0066a371e30771660a33dd7b5b6e57bf550b8ae"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "SquidPostPop_X86_CostListsTotalsAndActiveLifecycle",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-post-native-first.log",
+    "sha256": "b2661f2a3bf22024d13ca80c5b28192826961de1da69fe7c911ced6b79b0f08d"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "reward_",
+    "cases": 9,
+    "expectedCases": 9,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-reward-native-first.log",
+    "sha256": "b74226b7552ec6720cacb596c7b85fff225bed018315f844f2468df88d403220"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "RewardCurrentTypes_",
+    "cases": 5,
+    "expectedCases": 5,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-reward-current-first.log",
+    "sha256": "c1ce5a43fdf88d0d98cbd932a21671280b93cb1cb4a17af3ccc701efe04a3c57"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "GameAux_Reward",
+    "cases": 2,
+    "expectedCases": 2,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-865/test-reward-globals-first.log",
+    "sha256": "0444c9ecdbffbc89b6be1554f3e77be7dc8c685bde5eaa1320ce20387303c6ce"
+   }
+  ],
+  "fixtureSha256": {
+   "postpop-x86.tsv": "9ddeab230d993a9fbe77b0e46f2786900d9b28a3639a8a2cc02a4ed200dcac62",
+   "reward-x86.tsv": "a1fedbc77eca2e3f73976138aec2ea15d10a50b90967400b1f0ca6f6e5a8879c"
+  }
+ },
+ "protection": {
+  "count": 2761,
+  "fixtures": 941,
+  "unchanged": true,
+  "snapshot": "extracted/cpp-resume-865/protected-after.json"
+ },
+ "checking": {
+  "remaining": 12,
+  "parents": 6,
+  "partial": 3,
+  "multiplayer": 3,
+  "completedParents": 36,
+  "completedPartial": 3
+ },
+ "limits": [
+  "GameAssets가 없는 독립 구성은 생성 시 비용 사본이며 별도 최초 표를 원하면 BindLoadedCosts를 명시한다",
+  "현재 TYPE 대여와 최초 비용 대여의 수명/변경 금지 계약은 호출자가 보장한다",
+  "기존 ftol/물리 범위/비유한 비용/거대 비용곡선 경계는 유지한다",
+  "실제 게임/GUI·포획/희생/특정 적 공격/승리·공중3종 전용·신규 MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복 제외"
+ ],
+ "next": {
+  "unit": 866,
+  "scope": "신전 Handle004dc220의 실제 checking 소비자와 현재 curServer/지역 조회/입력명령 큐 연결 대조",
+  "evidence": "extracted/cpp-resume-865/next-temple-server-selection.json",
+  "importantCorrection": "AssetRegularState::regionGeneration 임시명은 실제0054db4c curServer이며 ClientNsInfoGlobals::serverSelection 현재 저장소가 이미 존재한다."
+ },
+ "remaining": [
+  "다른 TYPE 번호 사본(altar/dais/너겟/두 rainBlocker)",
+  "Teleport 다른 유효 생성 함수/다른 Regular·가상20/전체 Pop",
+  "군도/Factory/State·파일 및 LEFT_JOBS 전체 잔여"
+ ]
+}

@@ -78,16 +78,16 @@ TEST_CASE(RiftShapeAccess_DiagnosticSelfRebindKeepsCurrentCallableAlive) { // �
     ShapeAccessScene scene;scene.hooks.assertion=[&](auto,auto,auto) { ++scene.assertions;scene.hooks.assertion={};scene.size={8,9}; };
     CHECK(scene.Run(3)==(std::array<float,2>{8,9}) && scene.assertions==1 && scene.reads==1);
 }
-TEST_CASE(CurrentTypeBindings_PostPopUsesCurrentCostAndRegistrationFlags) { // 생성 뒤 변경한 같은 TYPE의 비용·공급/공장군을 실제 후처리에서 읽는다.
+TEST_CASE(CurrentTypeBindings_PostPopKeepsLoadedCostAndUsesCurrentRegistrationFlags) { // 최초 로딩 비용0을 유지하고 생성 뒤 변경한 같은 TYPE의 공급/공장군 플래그만 현재 표에서 읽는다(단위865).
     CurrentTypeScene scene;SquidPostPopState state;state.localOwner=2;state.providers.entries.resize(1);state.factories.entries.resize(1);state.ownerFactories[2].entries.resize(1);SquidPostPop post(scene.pool,scene.types,state);post.BindCurrentTypes(scene.types);
     scene.types[74].cost=7;scene.types[74].flags1=0x10000000;scene.types[74].flags2=0x4200;post.Activate(scene.sid,1);
-    CHECK(state.totalCost==7 && state.providers.count==1 && state.factories.count==1 && state.ownerFactories[2].count==1 && state.productionDirty==2 && state.globalCounts[74]==1 && state.localCounts[74]==1 && state.depth==0);
+    CHECK(state.totalCost==0 && state.providers.count==1 && state.factories.count==1 && state.ownerFactories[2].count==1 && state.productionDirty==2 && state.globalCounts[74]==1 && state.localCounts[74]==1 && state.depth==0);
 }
 TEST_CASE(CurrentTypeBindings_RejectsWrongLengthWithoutLosingLiveArray) { // 잘못된 새 대여를 거부해도 기존 실제 대여와 물리를 유지한다.
     CurrentTypeScene scene;std::vector<std::vector<FrameCode>> codes(188,std::vector<FrameCode>{{'A','0',0,0}});std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({{'A','0',0,0}}));SquidPostPopState state;SquidPostPop post(scene.pool,scene.types,state);RawGraph graph(scene.pool,scene.hash,scene.spots,scene.types,codes);RawSquidNeighbors neighbors(scene.pool,scene.hash,scene.spots,scene.types,frames);
     post.BindCurrentTypes(scene.types);graph.BindCurrentTypes(scene.types);neighbors.BindCurrentTypes(scene.types);const auto wrong=std::span<const RiftTypeRecord>(scene.types).first(187);
     CHECK(ShapeFailed([&] { post.BindCurrentTypes(wrong); }) && ShapeFailed([&] { graph.BindCurrentTypes(wrong); }) && ShapeFailed([&] { neighbors.BindCurrentTypes(wrong); }));
-    scene.types[74].cost=9;scene.types[74].footX=3;graph.ValidateTypes(scene.types);CHECK(neighbors.Footprint(scene.sid).left==28);post.Activate(scene.sid,1);CHECK(state.totalCost==9 && scene.pool.Slot(scene.sid)[10]==74);
+    scene.types[74].cost=9;scene.types[74].footX=3;graph.ValidateTypes(scene.types);CHECK(neighbors.Footprint(scene.sid).left==28);post.Activate(scene.sid,1);CHECK(state.totalCost==0 && scene.pool.Slot(scene.sid)[10]==74); // 현재float9와 별도인 최초 비용 캐시0을 유지한다(단위865).
 }
 TEST_CASE(CurrentTypeBindings_NeighborFootprintDistinguishesOwnedAndBorrowedRows) { // 기존 독립 snapshot은 유지하고 명시 대여만 현재 발자국을 소비한다.
     CurrentTypeScene scene;std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));RawSquidNeighbors neighbors(scene.pool,scene.hash,scene.spots,scene.types,frames);scene.types[74].footX=3;scene.types[74].footY=2;
@@ -97,10 +97,10 @@ TEST_CASE(CurrentTypeBindings_GraphAddReadsCurrentSurfaceAndFootprint) { // 생�
     CurrentTypeScene scene;std::vector<std::vector<FrameCode>> codes(188,std::vector<FrameCode>{{'A','0',0,0}});RawGraph graph(scene.pool,scene.hash,scene.spots,scene.types,codes);graph.BindCurrentTypes(scene.types);scene.types[74].flags1=0x800;scene.types[74].flags2=2;scene.hash.Cell(0,30,40)=scene.sid.value;
     graph.Add(scene.sid);const auto number=scene.pool.Slot(scene.sid)[30];CHECK(number==0 && graph.Records()[0].inUse==1 && graph.Records()[0].surfaces==1);
 }
-TEST_CASE(CurrentTypeBindings_ActualWorldPostPopReadsCostBeforeCurrentAiNotice) { // 실제 World의 현재 비용을 소비하고 AI 통지 뒤에는 이미 쓴 비용을 다시 계산하지 않는다.
+TEST_CASE(CurrentTypeBindings_ActualWorldPostPopKeepsLoadedCostBeforeCurrentAiNotice) { // 실제 World는 최초 비용 캐시0을 소비하며 현재float11/AI 통지 뒤99를 비용으로 재해석하지 않는다(단위865).
     auto types=CurrentTypeRows();std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);shapes[74].loaded=true;shapes[74].frameCount=1;shapes[74].frames.resize(1);shapes[74].frames[0].cellWidth=shapes[74].frames[0].cellHeight=1;
     RawSurfaceWorld world(OriginalEdition::Patch1078,types,frames,shapes,ShapeLinks(),83);auto core=world.Core();auto& current=world.Storage()->types;current[74].cost=11;const auto sid=world.Create(74);core.pool.AllocatedBytes(sid)[34]=1;
-    core.postPop.BindPatchAiNotice([&](auto,Sid object,bool) { CHECK(object==sid && core.bookkeeping.TotalCost()==11);current[74].cost=99;core.pool.AllocatedBytes(sid)[10]=75; });world.Pop(sid,30,40,0x40);CHECK(core.bookkeeping.TotalCost()==11 && core.bookkeeping.GlobalCounts()[75]==1 && current[74].cost==99 && core.bookkeeping.depth==0);
+    core.postPop.BindPatchAiNotice([&](auto,Sid object,bool) { CHECK(object==sid && core.bookkeeping.TotalCost()==0);current[74].cost=99;core.pool.AllocatedBytes(sid)[10]=75; });world.Pop(sid,30,40,0x40);CHECK(core.bookkeeping.TotalCost()==0 && core.bookkeeping.GlobalCounts()[75]==1 && current[74].cost==99 && core.bookkeeping.depth==0);
 }
 TEST_CASE(RiftShapeAccess_ActualWorldUsesSelectedShapeAfterCurrentDiagnostic) { // checking0의 실제 Client 상세/e1 뒤 raw TYPE/frame 변경과 선택 SHP/frame을 구별한다.
     ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;Client client(std::move(options));auto types=CurrentTypeRows();types[74].name="source";types[74].flags2=1;std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);

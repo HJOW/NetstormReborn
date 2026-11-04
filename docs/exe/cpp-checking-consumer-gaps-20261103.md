@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**865 최초 비용표 분리:**PATCH 공통후처리/보상에 최초 GameAssets 비용을 별도 대여해 현재TYPE float와 World/Session 재대여를 구별했다. 고유44개/8묶음(새5) 최종 실패0·Release2회 종료0·보호2761개 불변이며 새 정리/기존 비용 기대는 검사만 교정했다. 다음866은 신전004dc220의 현재 curServer/지역/명령 큐 대조다. checking12·완료부모36/부분3 유지. [865 기록](cpp-loaded-cost-table-20261104.md).
+
 **864 보호막 Regular 현재 접속:**PATCH 도달 장치·현재 사제 TYPE/실제 typed finder·VT 분배와 checking 진단 정상 복귀를 연결했다. 고유31개/6묶음(새10) 최종 실패0·Release2회 종료0·보호2761개 불변이다. 기존 노후 Pop guard1개/2단언은 검사만 교정했다. 다음865는 공통 후처리 별도 비용 캐시이며 checking12·완료부모36/부분3 유지다. [864 기록](cpp-forcefield-regular-current-20261104.md).
 
 **863 현재 TYPE 표의 보상HP/사제상태:**실제 PATCH Session/사제 World에 같은188TYPE 대여를 연결하고 독립/CD 사본 및 별도 정수 비용 캐시를 보존했다. 집중49개/9묶음(새6) 첫 실패0·Release2회 종료0·보호2761개 불변이다. 다른 TYPE 번호·보호막 Regular·Teleport/전체 Pop은864 이후이며 checking12·완료부모36/부분3 유지다. [863 기록](cpp-reward-current-types-20261104.md).

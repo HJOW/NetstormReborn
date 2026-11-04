@@ -221,9 +221,12 @@ void SquidPostPop::BridgePrefix(SidPool& pool,Sid sid,std::uint32_t flags,const 
     if (flags&1) pool.AllocatedBytes(sid)[extraOffset]|=2;
     if (connect) connector(sid);
 }
-// 패치는 trunc(cost+type*23)-type*23, CD는 원본 float cost를 누적하고 절삭한다.
+// 패치는 최초 비용표의 trunc(cost+type*23)-type*23을 읽고 CD는 기존 float 비용을 누적한다.
 std::int32_t SquidPostPop::TotalCost(std::size_t type) const {
-    const double cost=CurrentTypes()[type].cost; double value=cost;
+    // PATCH 정수 비용표는 현재 TYPE+c4 float 쓰기로 바뀌지 않는다. 실제 Client의 최초 로딩 표는 World 교체 뒤에도 동일하다(단위865).
+    const auto costs=pool_.Edition()==OriginalEdition::Patch1078 ? (loadedCostTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : loadedCostTypes_) : CurrentTypes();
+    if (type>=costs.size()) throw std::out_of_range("postPop 로딩 비용표 번호 범위 오류");
+    const double cost=costs[type].cost; double value=cost;
     if (!std::isfinite(cost)) throw std::invalid_argument("postPop 유한 비용이 필요합니다");
     if (pool_.Edition()==OriginalEdition::Patch1078) {
         const auto bias=static_cast<std::int64_t>(type)*kCostBias;
@@ -431,5 +434,11 @@ void SquidPostPop::BindManaDiagnostics(ManaRegistrationDiagnostics diagnostics) 
 
 namespace netstorm::o { //현재데이터대여와기존독립사본의수명계약을구별한다.
 std::span<const RiftTypeRecord> SquidPostPop::CurrentTypes() const { return currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_; } //소비시점마다같은배열을선택한다.
+// 현재 플래그 표와 다른 최초 비용표를 빌리며 잘못된 새 대여는 기존 대여를 보존한다.
+void SquidPostPop::BindLoadedCosts(std::span<const RiftTypeRecord> types) {
+    if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188))
+        throw std::invalid_argument("postPop 로딩 비용표 대여의 판본/길이 오류");
+    loadedCostTypes_=types;
+}
 void SquidPostPop::BindCurrentTypes(std::span<const RiftTypeRecord> types) { if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188)) throw std::invalid_argument("postPop현재TYPE대여의판본/길이오류");currentTypes_=types; } //실제필드는복사하거나덮어쓰지않는다.
 }
