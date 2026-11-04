@@ -1,0 +1,308 @@
+{
+ "unit": 878,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "36dbd660 / 20261105-11 CP",
+ "exeSha256": "a3e7536b149e5d4e4f6c1d887648093c73eb12948b5426b3f833770cdb758e68",
+ "exeBytes": 10614272,
+ "scope": [
+  "RawDaisContentNotice PATCH 장치를 실제 unpop/repop/cue 호출 위치에서 요구하며 callable 수명 유지",
+  "같은 풀/프레임 물리와 CD의 기존 생성 계약 보존",
+  "reason2·다른 kind/제단 없는 외국 owner의 효과 전 반환과 현재 kind 뒤 위치 조회 보존"
+ ],
+ "sourceSha256": {
+  "cpppj/src/o/RawDaisContentNotice.cpp": "9967c1c4c9f8161744e7f6e4e2fa8ec3255d74840b59e7243d1bee56425ad601",
+  "cpppj/src/o/RawDaisContentNotice.h": "b88ee31dbac16a8b0225b4387282001d078f00edac36a621a5c4c38896d192a4",
+  "cpppj/tests/DaisCheckingParentsTests.cpp": "6f00d906a8429269eed0685ac9790331ad888e52c93fccb81e72d3b465d58284"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-878/originalCD-004816c0.c": "84f7f7d46a47ab98a1d8136b0cd6aafea8ae288f821e459a580a428e8bfc3276",
+  "extracted/cpp-resume-878/originals-00449660-bounded.asm": "e7c4552abcc16518fe3076311a75796e17adb85635371b11034591ad2f7374ad"
+ },
+ "build": {
+  "exitCode": 0,
+  "elapsedSeconds": 117.7669971,
+  "warnings": 0,
+  "errors": 0,
+  "log": "extracted/cpp-resume-878/build-first.log",
+  "logSha256": "532ccd42a7a4b4b3b56e46a6926589fe059a4d4315db0d672988688f97f6eeaf"
+ },
+ "testExecutions": [
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "ContentNoticeCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-content-notice-current-first.log",
+   "sha256": "3d03c981922c7cb0c1a60ea0064b5072874075453e2e5096a07a72852eb51457"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RitualStorageCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-ritual-storage-current-first.log",
+   "sha256": "9c0ce612be198f1b4db9ed34537c9336cc31d4f4a3baa9ac3351ce469b8c6884"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RitualDeviceCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-ritual-devices-current-first.log",
+   "sha256": "9a671d142e4fef70cf44fd58fdcd0ae8207bb37ef7b215dec96836348781a91f"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TempleHelperCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-temple-current-first.log",
+   "sha256": "9618e8be9583a25693ad816e2d35c49e9c65c89875868332d053de60c917baca"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisCheckingParents_",
+   "cases": 6,
+   "expectedCases": 6,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-dais-checking-parents-first.log",
+   "sha256": "82bf392350ec6caf21df19d5d3c7f0fcc9867d465c62552a1639ca514d85a20f"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "DaisClassCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-dais-class-current-first.log",
+   "sha256": "6de8607702ee31f4142d3274227fb51da80872338c83d3379cefcb52e62f2f79"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneSharedCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-rune-shared-menu-first.log",
+   "sha256": "371741f08f33464ff84ad4ac8f68a7e9227494028c3c25fda751167ac225bc2f"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "RuneSharedCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-rune-shared-prefix-first.log",
+   "sha256": "343bc756429316708bd7082722fbe22447fe32116ed5afd01eebdb0f2d616efe"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-rune-number-first.log",
+   "sha256": "533b95a4db499eeeac1a6a1889bcd22eeb5c89a7d3763e56093968bac970a6dd"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RuneTypeNumber_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-rune-number-session-first.log",
+   "sha256": "d05ccbcfe6bd015163388cb8a7cf8c62f73bfdb46c21a078facb93d8b7eb3943"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "rawDaisLifecycle_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-878/test-dais-lifecycle-native-first.log",
+   "sha256": "97c1cb01fe458df50d6d2d7f6dacfc113b83c7d6c48e535efa5ea0e88a99414e"
+  }
+ ],
+ "uniqueCases": [
+  [
+   "netstorm_menu_session_tests",
+   "ContentNoticeCurrent_NoAltarForeignOwnerSkipsDevicesAndCurrentKindPrecedesLookup"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "ContentNoticeCurrent_RemoveAndDifferentKindSkipInvalidFormAndPosition"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_BridgeUsesCurrentBossAndNullPathDiagnosticReturns"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_CanBridgeCurrentAllianceAndCdNoPatchDiagnostic"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_CanBridgeCurrentFinderAndMetadataAfterDiagnostic"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_DeadParentDiagnosticPrecedesCurrentHeadRead"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_DepthDiagnosticsReturnCurrentRuntimeValue"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisCheckingParents_StageUsesOneVirtualCountAndSavedInitialFrame"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_ActualSessionDispatchesReadOnlyRegularsByVtable"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_CountKeepsEditionSpecificPlayerDestination"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_LifecycleLazyDevicesAndPartialPlayerCleanup"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "DaisClassCurrent_RegularKeepsVtableFunctionIdentity"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualDeviceCurrent_AltarReadsTypedPositionBeforeSelectedFallback"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualDeviceCurrent_DaisLazyEligibilityAndNoEffectRegularKeepCdContract"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualStorageCurrent_InvalidCurrentTypeStopsBeforeAnyAltarAnimationEffect"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualStorageCurrent_PlayerResultDestinationKeepsOriginalRecordAndDwordWidth"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RitualStorageCurrent_WordStoresBeforeCurrentBridgeNotificationAndMissingDevice"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneSharedCurrent_ActualSessionPreflightUsesCurrentRuneOwnerWithoutEffects"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneSharedCurrent_TempleLookupReadsTypeAfterVirtualCount"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "RuneTypeNumber_ActualSessionChoiceGetterReadsCurrentDaisOwner"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TempleHelperCurrent_PatchEarlyReturnSkipsUnusedDevicesAndInvalidPriest"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TempleHelperCurrent_ReadOnlyPriestLookupAndBossUseBoundOwner"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneSharedCurrent_OwnerAndMissionModeRemainLiveAfterGeneralReset"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneSharedCurrent_ReservationChangesBoundMissionBeforeDurationRead"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_CurrentFinderAndDurationUseBoundNumbers"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_ReferencesForParticipationAndAiKeepOriginalOwner"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "RuneTypeNumber_ReservationChangesCurrentNumbersBeforeFindAndDuration"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "rawDaisLifecycle_native_bound_player_records"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "rawDaisLifecycle_native_initial_pop_player_pairs_and_delete_prefix"
+  ]
+ ],
+ "uniqueCaseCount": 29,
+ "groups": 11,
+ "newCases": 2,
+ "firstFailedCases": 0,
+ "firstFailedChecks": 0,
+ "postBuildCorrections": 0,
+ "expectationsChanged": 0,
+ "existingNativeRows": {
+  "daisLifecycleUnique": 1928,
+  "replays": 2
+ },
+ "newNativeRows": 0,
+ "newFixtures": 0,
+ "protectedFiles": 2761,
+ "protectedFixtureFiles": 941,
+ "protectedChanged": 0,
+ "protectedAfterSha256": "f762a5e5138d30748d8dc97d07d20266e33c8b0b02afaa1f8f231869fbb60dea",
+ "checkingRemaining": {
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "total": 10
+ },
+ "checkingCompleted": {
+  "parents": 38,
+  "partial": 3
+ },
+ "limitations": [
+  "새2개는 효과 전 반환/현재 kind·위치 조회만 실행한다. 실제 포획 알림·unpop/repop/cue 본체0",
+  "효과 장치 연결은 코드/정적/컴파일 근거이며 모든 callback 부모 자기 삭제 검증 아님",
+  "새 실제 Session/Native/fixture0·실제 게임/GUI/포획/해방/희생/특정 적 공격/승리·신규 MP/패킷/통신·공중3종 전용·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복0",
+  "Teleport 다른 생성 함수/공통Pop·TYPE 초기화 writer·다른 TYPE/모드·Factory/군도/메뉴/Edit/State/파일/Windows/후속 단계는 남음"
+ ],
+ "nextUnit": 879
+}

@@ -4,6 +4,7 @@
 #include "o/RawDaisLifecycle.h"
 #include "o/RawGameAuxState.h"
 #include "o/RawSquidWord.h"
+#include "o/RawDaisContentNotice.h"
 #include "o/SquidUnpop.h"
 #include <memory>
 
@@ -202,4 +203,16 @@ TEST_CASE(RitualStorageCurrent_PlayerResultDestinationKeepsOriginalRecordAndDwor
 TEST_CASE(RitualStorageCurrent_InvalidCurrentTypeStopsBeforeAnyAltarAnimationEffect) { // 표 밖 TYPE는 실제 메모리를 배열 밖으로 읽지 않고 선택한 방향 조회에서 명시 실패한다.
     DaisLifecycleCurrentScene scene;scene.hash.Bucket(1,40.75F,41.25F)=0;auto raw=scene.Raw(Sid{7});Put(raw,0,kPatchAltarVtable);raw[10]=255;RawAltarSacrifice helper(scene.pool,scene.hash,scene.types,scene.frames,*scene.footprint,*scene.rune,*scene.ritual,*scene.carrier,*scene.dais,*scene.advance,*scene.host,*scene.damage,scene.state,scene.altarState,{});const auto before=std::vector<std::uint8_t>(scene.pool.Bytes().begin(),scene.pool.Bytes().end());bool rejected=false;
     try { static_cast<void>(helper.Handle(Sid{7},20,1,.5F)); }catch (const std::out_of_range&) { rejected=true; }CHECK(rejected && scene.effects==0 && std::equal(before.begin(),before.end(),scene.pool.Bytes().begin())); // 프레임 진행/소리/희생 효과에는 도달하지 않는다.
+}
+
+TEST_CASE(ContentNoticeCurrent_RemoveAndDifferentKindSkipInvalidFormAndPosition) { // 제거/다른 kind는 포획 효과를 실행하지 않고 앞단에서 자연 반환한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // PATCH는 미도달 효과를 생략하고 CD의 기존 생성 계약은 유지한다.
+        DaisParentScene scene(edition);DaisContentNoticeState state{scene.canonicalPriestType,scene.localOwner,0x020000d7};bool rejected=false;
+        try { RawDaisContentNotice notice(scene.pool,scene.frames,*scene.rune,state,{});CHECK(scene.Patch());scene.Raw(Sid{5})[10]=255;scene.Raw(Sid{5})[11]=1;Put(scene.Raw(Sid{5}),14,0x7fc00000);Put(scene.Raw(Sid{10}),18,74,2);const auto before=std::vector<std::uint8_t>(scene.pool.Bytes().begin(),scene.pool.Bytes().end());notice.Notice(Sid{5},Sid{65535},2);notice.Notice(Sid{5},Sid{10},1);CHECK(scene.effects==0 && std::equal(before.begin(),before.end(),scene.pool.Bytes().begin())); // reason2는 form도, 다른kind는 현재 제단 위치도 읽지 않는다.
+        }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected==!scene.Patch());
+    }
+}
+TEST_CASE(ContentNoticeCurrent_NoAltarForeignOwnerSkipsDevicesAndCurrentKindPrecedesLookup) { // 실제 알림 효과 없이 typed 조회 뒤 외국 owner 반환과 다음 현재 kind/위치 읽기만 확인한다.
+    DaisParentScene scene;DaisContentNoticeState state{scene.canonicalPriestType,scene.localOwner,0x020000d7};RawDaisContentNotice notice(scene.pool,scene.frames,*scene.rune,state,{});scene.hash.Bucket(1,40.75F,41.25F)=0;scene.Owner(Sid{5},2);const auto before=std::vector<std::uint8_t>(scene.pool.Bytes().begin(),scene.pool.Bytes().end());notice.Notice(Sid{5},Sid{10},1);CHECK(scene.effects==0 && std::equal(before.begin(),before.end(),scene.pool.Bytes().begin()));
+    Put(scene.Raw(Sid{5}),14,0x7fc00000);scene.canonicalPriestType=74;notice.Notice(Sid{5},Sid{10},1);Put(scene.Raw(Sid{10}),18,74,2);bool position=false;try { notice.Notice(Sid{5},Sid{10},1); }catch (const std::out_of_range&) { position=true; }CHECK(position && scene.effects==0); // current kind가 일치한 다음에만 잘못된 위치를 실제 finder가 조회한다.
 }

@@ -21,7 +21,7 @@ struct DaisContentNoticeHooks {
 // ContentFormHost의 reason1/2를 실제 Dais vtable+24 몸체로 전달한다.
 class RawDaisContentNotice {
 public:
-    // 공유 전역/프레임/typedAltar와 모든 효과는 이 객체보다 오래 살아야 한다.
+    // 공유 전역/프레임/typedAltar는 더 오래 살아야 한다. PATCH 장치는 도달할 때, CD는 기존 생성 시 요구한다.
     RawDaisContentNotice(SidPool& pool,std::span<const RiftTypeFrames> frames,const RawRunePostPop& rune,
         const DaisContentNoticeState& state,DaisContentNoticeHooks hooks);
     bool Handles(Sid dais) const; // 실제 다이스 생성자 VT를 검사하며 원본 body에 없는 타입 필터를 넣지 않는다.
