@@ -57,10 +57,10 @@ void RawAltarSacrifice::WriteFrame(Sid sid,std::int32_t value) const {
 // 호출 뒤 좌표가 바뀌었으면 다음 위치 효과는 새 값을 읽는다.
 std::array<float,2> RawAltarSacrifice::Position(Sid sid) const { const auto raw=pool_.Slot(sid);return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))}; }
 // 실제 최종 가상표를 쓰는 제단만 처리한다.
-bool RawAltarSacrifice::Handles(Sid altar) const { const auto raw=pool_.Slot(altar);return raw[10]==daisState_.rune.altarType && Read(raw,0)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchAltarVtable : kCdAltarVtable); }
+bool RawAltarSacrifice::Handles(Sid altar) const { const auto raw=pool_.Slot(altar);return raw[10]==daisState_.rune.AltarType() && Read(raw,0)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchAltarVtable : kCdAltarVtable); }
 // 기준점typed helper00448bb0/CD00483c50은 추가 owner/dead/free 필터를 적용하지 않는다.
 Sid RawAltarSacrifice::DaisAt(Sid sid) const {
-    const auto point=Position(sid);const auto type=daisState_.rune.daisType;if (type>=types_.size()) throw std::out_of_range("제단 현재 다이스 타입 범위");const int x=Cell(point[0]),y=Cell(point[1]);RawSquidFinder finder(pool_,hash_,types_);
+    const auto point=Position(sid);const auto type=daisState_.rune.DaisType();if (type>=types_.size()) throw std::out_of_range("제단 현재 다이스 타입 범위");const int x=Cell(point[0]),y=Cell(point[1]);RawSquidFinder finder(pool_,hash_,types_);
     // 일반 finder의 현재 버킷과 buried 조건을 재사용한다.
     for (auto current=finder.Begin({x,y,x,y},(types_[type].flags2&6)==0 ? 1U : 0U);current.value;current=finder.Next()) if (pool_.Slot(current)[10]==type) return current;
     return {};
@@ -129,12 +129,12 @@ void RawAltarSacrifice::FinishOnAltarForms(Sid dais,Sid altar) const {
 }
 // 다이스 파생 전처리는extra를최초한번만검사하며 마지막 공통 몸체는 항상 호출한다.
 void RawAltarSacrifice::DaisPreDestroy(Sid dais,std::uint32_t flags) const {
-    const auto raw=pool_.AllocatedBytes(dais);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;if (raw[10]!=daisState_.rune.daisType || Read(raw,0)!=(patch ? kPatchDaisVtable : kCdDaisVtable)) throw std::invalid_argument("다이스 파생 전처리 타입/가상표 오류");
+    const auto raw=pool_.AllocatedBytes(dais);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;if (raw[10]!=daisState_.rune.DaisType() || Read(raw,0)!=(patch ? kPatchDaisVtable : kCdDaisVtable)) throw std::invalid_argument("다이스 파생 전처리 타입/가상표 오류");
     if (!(raw[patch ? 40 : 35]&9)) {
         if (flags&kSacrificeDestroy) { const auto altar=rune_.AltarAt(dais);if (!Valid(altar)) throw std::logic_error("다이스 삭제의 제단 프로세스 부모 누락");FinishOnAltarForms(dais,altar); }
         const auto priest=temple_.FindStrongOwnedPriest(dais);if (Valid(priest)) dais_.StopPriestRitual(priest);const auto area=footprint_.Footprint(dais);RawSquidFinder finder(pool_,hash_,types_);
         // float 발자국을 원본 CRT로 절삭하고 각현재제단을 실제 파생삭제한다.
-        for (auto current=finder.Begin({Cell(area.left),Cell(area.top),Cell(area.right),Cell(area.bottom)},0);current.value;current=finder.Next()) if (pool_.Slot(current)[10]==daisState_.rune.altarType) hooks_.destroy(current,kAltarDestroy);
+        for (auto current=finder.Begin({Cell(area.left),Cell(area.top),Cell(area.right),Cell(area.bottom)},0);current.value;current=finder.Next()) if (pool_.Slot(current)[10]==daisState_.rune.AltarType()) hooks_.destroy(current,kAltarDestroy);
         // 원본의1..8 현재 플레이어 갱신 순서다.
         for (std::uint32_t owner=1;owner<=kPlayerCount;++owner) hooks_.refreshOwner(owner);
     }

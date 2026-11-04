@@ -872,6 +872,7 @@ struct RawCampaignSession::Impl {
         rewardState.sharedPriestQuarterHp=&gameplayGlobals->GameAux()->PriestQuarterHp(); // State 직접 쓰기와 기존 HP setter/최대HP가 같은 현재 전역을 쓴다.
         rewardState.sharedPriestType=&priestState.movement.priest; // 0049fce0의 1/4 비교와 사제 회복 분자가 같은 장기005412d0을 읽는다(단위862).
         rewardState.sharedAltarType=&gameplayGlobals->GameAux()->AltarType();rewardState.sharedDaisType=&gameplayGlobals->GameAux()->DaisType(); // 비용 곡선/다이스HP의 현재 두 TYPE 번호를 같은 장기 owner에서 빌린다.
+        runeState.sharedAltarType=rewardState.sharedAltarType;runeState.sharedDaisType=rewardState.sharedDaisType; // Rune/다이스·참여자·AI/메뉴가 보상과 같은 현재 두 DWORD를 빌리며 임시 getter 값의 주소를 남기지 않는다.
         rewardState.sharedSilentType=damageablePostState.sharedSilentSurfaceType=&gameplayGlobals->GameAux()->RainBlockerType(); // 보상과 일반 삭제의 같은005412a4를 연결한다.
         rewardState.sharedAliasType=&gameplayGlobals->GameAux()->GrowingRainBlockerType();rewardState.sharedNuggetType=&gameplayGlobals->GameAux()->NuggetType(); // 별칭 비용/환불의 현재 성장형·너겟 번호다.
         hp.BindCurrentTypes(core.types); // 실제 PATCH의 최대HP/HP 플래그가 World의 같은 현재 TYPE 표를 읽는다. 별도 정수 비용 캐시는 유지한다(단위863).
@@ -1029,7 +1030,7 @@ struct RawCampaignSession::Impl {
         priests->BindProcesses(core.processes);priests->BindAuthority(*gameplayGlobals->Authority());priests->BindPlayerRecords(players);priests->SetLocalPlayer(1); // 현재 boss와 Player 신전 SID를 같은 장기 주소에서 읽고 Prepare의 복사를 기다리지 않는다.
         // 첫객체전에같은실제Carrier/목록과현재타입참조만연결하며ownerState는여기서갱신하지않는다.
         priestParticipation=std::make_unique<RawPriestParticipation>(core.pool,core.hash,core.types,priests->Priests(),priests->Carrier(),
-            PriestParticipationState{priestState.movement.priest,runeState.altarType,runeState.daisType});
+            PriestParticipationState{priestState.movement.priest,runeState.AltarType(),runeState.DaisType()});
         PlayerWorldHooks playerHooks;
         playerHooks.assertion=[this](PlayerWorldAssertion kind) { const auto assertion=services.ai.assertion;if (!assertion) throw std::logic_error("Player 실제 진단 장치 미연결");assertion(kind==PlayerWorldAssertion::PlayerAlreadyExists ? "!findSquid(bc,playerType)" : "playerIdKnown"); }; // 같은 Client 진단이 복귀하면 생성/명시 Technology 조회를 원문 위치에서 계속한다.
         playerHooks.find=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); }; //004b1fa0의 현재 타입 genus에 따른 시작 단계와 같은 typed finder를 재사용한다.
@@ -2180,7 +2181,7 @@ struct RawCampaignSession::Impl {
             case FortObjectSaveGlobal::Version:return objectState.version;
             case FortObjectSaveGlobal::LocalOwner:return playerState.battleOwner;
             case FortObjectSaveGlobal::BridgeType:return objectState.bridgeType;
-            case FortObjectSaveGlobal::LocalOnlyType:return runeState.daisType;
+            case FortObjectSaveGlobal::LocalOnlyType:return runeState.DaisType();
             case FortObjectSaveGlobal::BattleMask:return objectState.battleSavedMask;
             case FortObjectSaveGlobal::OwnerMask:return objectState.ownerSavedMask;
             }throw std::logic_error("Fort 저장 전역 분배 누락");
@@ -2454,7 +2455,7 @@ struct RawCampaignSession::Impl {
         AiDrySpotHooks dry;dry.energy=[this](std::string& text,float x,float y,auto type,auto owner) { return energySupply->Evaluate(text,x,y,type,owner); };dry.log=[this](auto token,bool fake) { if (!services.player.log) throw std::logic_error("AI DrySpot 실제 로그 미연결");services.player.log(aiDrySpotLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+(fake ? "Killed Fake Dry Spot\n" : "Killed Dry Spot\n")+"\n"); };
         aiDrySpots=std::make_unique<RawAiDrySpots>(aiMemory,core.pool,std::move(dry));
         AiBuildChoiceHooks choice;choice.captured=[this](auto owner) { return AiPriestCaptured(owner); };choice.dead=[this](auto owner) { return AiPriestDead(owner); };choice.canAfford=[this](auto token,auto type) { return aiDeployment->CanAfford(token,type); };choice.wallet=[this](auto owner) { return aiWallet->Balance(owner); };choice.storedSp=[this](auto owner) { return std::bit_cast<float>(sp.Get(owner)); };choice.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 건설 선택 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
-        AiBuildChoiceGlobals choiceGlobals{playerState.battleOwner,playerState.playerKnown,templeProduct,runeState.daisType,aiWorkshops,[this](auto theme) { return tutorialTypes.at(0x541244U+theme*4U); }};aiBuildChoice=std::make_unique<RawAiBuildChoice>(aiMemory,core.types,std::move(choiceGlobals),std::move(choice));
+        AiBuildChoiceGlobals choiceGlobals{playerState.battleOwner,playerState.playerKnown,templeProduct,runeState.DaisType(),aiWorkshops,[this](auto theme) { return tutorialTypes.at(0x541244U+theme*4U); }};aiBuildChoice=std::make_unique<RawAiBuildChoice>(aiMemory,core.types,std::move(choiceGlobals),std::move(choice));
     }
     // caller가 공급한 원본 임시XY만 빌려 같은 살아 있는 본체의 다리 진행을 조립한다.
     RawAiBridgePath AiBridgePath(RawPathPoint* endpointScratch) {
@@ -2527,7 +2528,7 @@ struct RawCampaignSession::Impl {
         AiDropTargetHooks scores;scores.captive=[this](Sid target) { return FindContainedGenus(core.pool,priestState.contained,core.types,target,0x20,0x200000,0); };scores.rate=[this](Sid target) { return hitTypes.at(core.pool.Slot(target)[10]).damagePerSecond; };scores.maxHitPoints=[this](Sid target) { return hp.MaxHitPoints(target); };
         scores.ground=[this](float x,float y,auto type,auto owner) { return aiGroundTarget->Find(x,y,type,owner); };
         scores.gun=[this](float x,float y,auto type,auto direction,auto owner) { return gunTarget->FindTarget(x,y,type,direction,owner); };scores.blockers=[this](auto owner,RawPathPoint point,auto capacity) { return gunBlocker->Collect(owner,{point.x,point.y},capacity); };scores.center=[this](Sid target) { const auto center=core.neighbors.Center(target);return RawPathPoint{center[0],center[1]}; };scores.assertion=[this](std::string_view text,auto line) { if (!services.ai.assertion) throw std::logic_error("AI 배치 표적 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
-        aiDropTargets=std::make_unique<RawAiDropTargets>(aiMemory,core.pool,core.types,AiDropTargetGlobals{runeState.altarType,constructionState.confirm.patternTypes[7]},std::move(scores));
+        aiDropTargets=std::make_unique<RawAiDropTargets>(aiMemory,core.pool,core.types,AiDropTargetGlobals{runeState.AltarType(),constructionState.confirm.patternTypes[7]},std::move(scores));
         AiDropEvaluationHooks evaluation;evaluation.collect=[this](std::string& text,float x,float y,auto type,auto owner,auto theme) { energySupply->Collect(text,x,y,type,owner,theme); };evaluation.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };evaluation.energy=[this](std::string& text,float x,float y,auto type,auto owner) { return energySupply->Evaluate(text,x,y,type,owner); };evaluation.dry=[this](auto token,float x,float y,auto type) { return aiDrySpots->Add(token,x,y,type); };
         evaluation.unsupported=[this](auto token,auto type) { if (!services.player.log) throw std::logic_error("AI 배치 평가 TYPE 진단 로그 미연결");services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": I don't know how to make evaluations for "+core.types[type].name+"\n\n"); };evaluation.dryLog=[this](auto token,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 배치 후보 부족좌표 로그 미연결");services.player.log(aiDrySpotLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Dry Spot at ("+std::to_string(x)+","+std::to_string(y)+")\n\n"); };
         aiDropEvaluation=std::make_unique<RawAiDropEvaluation>(aiMemory,core.pool,core.types,*aiDropTargets,AiDropEvaluationGlobals{cursorManaGlobals.radiusLimit,aiManaProbeType},std::move(evaluation));
@@ -2558,9 +2559,9 @@ struct RawCampaignSession::Impl {
         };
         aiDropActions=std::make_unique<RawAiDropActions>(aiMemory,core.pool,core.types,random,AiDropActionGlobals{core.processState.Now(),cursorManaGlobals.mapLimit,gunState.checking},std::move(drops));
         AiPriestActionHooks priest;priest.scan=[this](auto token,auto budgeted) { aiBuildSearch->Scan(token,budgeted); };priest.vulnerable=[this](Sid actor) { return aiCollectors->Vulnerable(actor); };priest.busy=[this](Sid actor) { return core.processes.FindEvent(actor,0x493)!=nullptr; };priest.path=[this](Sid actor) { return aiMovement->MovementForm(actor); };priest.maxHitPoints=[this](Sid actor) { return hp.MaxHitPoints(actor); };priest.ritual=[this](Sid actor) { return AiPriestInRitual(core.pool,core.frames,actor); };
-        priest.altarEnemy=[this](auto enemy,Sid dais) { return AiAltarContainsEnemy(core.pool,dais,enemy,runeState.altarType,[this](float x,float y,auto type) { return world.Find(x,y,type); }); };priest.target=[this](auto token,Sid actor,Sid target,auto sacrifice) { aiMovement->ToTarget(token,actor,target,sacrifice); };priest.distance=[this](RawPathPoint point,Sid dais) { return AiDistanceToFootprint(point,core.neighbors.Footprint(dais)); };priest.select=[this](auto token) { return aiBuildChoice->Select(token); };priest.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };priest.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };
+        priest.altarEnemy=[this](auto enemy,Sid dais) { return AiAltarContainsEnemy(core.pool,dais,enemy,runeState.AltarType(),[this](float x,float y,auto type) { return world.Find(x,y,type); }); };priest.target=[this](auto token,Sid actor,Sid target,auto sacrifice) { aiMovement->ToTarget(token,actor,target,sacrifice); };priest.distance=[this](RawPathPoint point,Sid dais) { return AiDistanceToFootprint(point,core.neighbors.Footprint(dais)); };priest.select=[this](auto token) { return aiBuildChoice->Select(token); };priest.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };priest.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };
         priest.deploy=[this](auto token,auto type,RawPathPoint point) { aiCollectors->DeployWithNotice(token,type,point.x,point.y,0,0); };priest.begin=[this](auto token,const AiPriestSearchRequest& request) { aiBuildSearch->Initialize(token,request.type,request.bounds,request.avoid,request.owner); };priest.point=[this](auto token,Sid actor,RawPathPoint point) { aiMovement->ToPoint(token,actor,point,0); };priest.enemyLowFunds=[this](auto token) { return aiBuildChoice->EnemyLowFunds(token); };priest.salvage=[this](Sid target) { salvageCommand->Request(target.value); };
-        aiPriestActions=std::make_unique<RawAiPriestActions>(aiMemory,core.pool,AiPriestActionGlobals{core.processState.Now(),cursorManaGlobals.mapLimit,runeState.daisType},std::move(priest));
+        aiPriestActions=std::make_unique<RawAiPriestActions>(aiMemory,core.pool,AiPriestActionGlobals{core.processState.Now(),cursorManaGlobals.mapLimit,runeState.DaisType()},std::move(priest));
         ConnectAiRuntime();
     }
     // 사용자이동/대상접근/AI가같은489080종류별실제BFS/Host시작을공유한다.
@@ -3299,7 +3300,7 @@ struct RawCampaignSession::Impl {
         FillMissing(effects.path.stepSound);
         motion=std::make_unique<RawCampaignMotionBindings>(world,*priests,*islands,*contained,*anchor,hp,metadata.frames,motionState,start,process,std::move(effects));
         ConnectPriestPanic();ConnectRitual();
-        salvageState=std::make_unique<SalvageCommandState>(SalvageCommandState{playerState.battleOwner,missionStart.DenySalvage(),gunState.checking,globals.missionPost,assetState.Boss(),runeState.altarType,runeState.daisType,motionState.carrier.nuggetType});
+        salvageState=std::make_unique<SalvageCommandState>(SalvageCommandState{playerState.battleOwner,missionStart.DenySalvage(),gunState.checking,globals.missionPost,assetState.Boss(),runeState.AltarType(),runeState.DaisType(),motionState.carrier.nuggetType});
         SalvageCommandHooks salvage; // 요청은 전송만 하고 실제 서버 수신에서 기존 몸체를 호출한다.
         salvage.daisAt=[this](Sid sid) { return altarSacrifice->DaisAt(sid); };
         salvage.tell=[this](std::string_view key) { if (!services.priest.shield.tell) throw std::logic_error("회수 금지의 실제 Tell 소비자 미연결");services.priest.shield.tell(key); };
@@ -3637,7 +3638,7 @@ void RawCampaignSession::RefreshCurrentPlayerCore() {
         if (type>=s.core.types.size()) throw std::out_of_range("현재Core갱신의실제TYPE기술bit물리범위");
         return s.core.types[type].techBitIndex;
     };
-    hooks.playerType=[&s] { return s.runeState.daisType; }; //005412ec정상165이며Player152의005412b8과다르다.
+    hooks.playerType=[&s] { return s.runeState.DaisType(); }; //005412ec정상165이며Player152의005412b8과다르다.
     hooks.owner=[&s] { return s.playerState.battleOwner; };
     hooks.level=[&s](PlayerCoreRefreshForm form)->std::int32_t { // 캡처한 실제 객체의 현재 가상80을 공통 분배기로 선택한다.
         const auto bytes=s.core.pool.Bytes(); // 앞선가상효과뒤현재Pool과현재물리를다시확인한다.
@@ -4612,7 +4613,7 @@ std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState&
 //일반선택요청은Carrier.cpp의실제005453dc와동일한inputState를읽는다.보상지급과구별한다.
 RitualChoiceInputHooks RawCampaignSession::RitualChoiceInputs() {
     if (!impl_->loaded) throw std::logic_error("설치 전 의식 선택 입력 요청");auto* current=impl_.get();RitualChoiceInputHooks hooks;
-    hooks.dais=[current] { return current->inputState.dais; };hooks.nuggetType=[current] { return current->daisState->nuggetType; };hooks.daisType=[current] { return current->runeState.daisType; };
+    hooks.dais=[current] { return current->inputState.dais; };hooks.nuggetType=[current] { return current->daisState->nuggetType; };hooks.daisType=[current] { return current->runeState.DaisType(); };
     hooks.construct=ConstructRitualChoicePacket;hooks.assertion=[](auto line) { std::clog<<"의식 선택 UserInput.cpp 대상 진단 "<<line<<'\n'; };hooks.send=[this](auto target,auto packet) { SendLocalPacket(target,packet); };return hooks;
 }
 //원문은미션에서는레벨/문자열/UI를조회하지않으며비미션에서만세인자의현재Tell을연다.
@@ -4740,7 +4741,7 @@ std::unique_ptr<RawObjectMenuOpen> RawCampaignSession::MakeObjectMenuOpen(Object
     if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 공통 객체 메뉴 요청");
     auto* current=impl_.get(); // 반환몸체가빌리는현재게임의고정주소다.
     hooks.altar=[current](Sid sid) {
-        const auto raw=current->core.pool.Slot(sid);return current->world.Find(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),current->runeState.altarType);
+        const auto raw=current->core.pool.Slot(sid);return current->world.Find(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),current->runeState.AltarType());
     };
     hooks.project=[current](float x,float y) { return ProjectCameraView(current->gameplayGlobals->Camera().Snapshot(),x,y); };
     hooks.content=[current](Sid sid) { return current->priests->Carrier().FindContained(sid,1,0,0); };
@@ -4754,7 +4755,7 @@ std::unique_ptr<RawUserSelection> RawCampaignSession::MakeUserSelection(UserSele
     if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 선택 요청");auto* current=impl_.get(); // 반환 몸체가 빌리는 같은 장기 Session이다.
     hooks.blocked=[current] { return current->services.missionOutcome.demo()!=0 ? 1U : 0U; }; // 원본463b50은 현재 Guide+68의 demo이며 콘솔/missionPost나 생성 시점의 값이 아니다.
     hooks.localOwner=[current] { return current->playerState.battleOwner; };hooks.editor=[current] { return current->globals.editor; };
-    hooks.dais=[current] { return current->runeState.daisType; };hooks.manaProcess=[current] { return current->cursorManaGlobals.processType; };hooks.rangeProcess=[current] { return current->cursorRangeGlobals.processType; };
+    hooks.dais=[current] { return current->runeState.DaisType(); };hooks.manaProcess=[current] { return current->cursorManaGlobals.processType; };hooks.rangeProcess=[current] { return current->cursorRangeGlobals.processType; };
     hooks.refresh=[current](Sid sid) { current->core.display.Update(current->core.pool.Slot(sid)); };
     const auto marks=std::make_shared<RawSquidSelection>(current->core.pool,hooks.refresh); // 실제+7c의 표시 전 비트와 반환 몸체의 수명을 함께 유지한다.
     hooks.selectNotice=[marks](Sid sid,std::uint32_t on) { marks->Mark(sid,on); };
@@ -4763,7 +4764,7 @@ std::unique_ptr<RawUserSelection> RawCampaignSession::MakeUserSelection(UserSele
     hooks.showRange=[current](Sid parent,std::uint32_t form) { if (form>65535U) throw std::out_of_range("선택 사정거리 Form WORD 오류");static_cast<void>(CreateCursorRangeProcess(current->core.processes,*current->cursorRange,parent,Sid{static_cast<std::uint16_t>(form)})); };
     hooks.rangeType=[current](std::uint32_t type) { if (type>=current->core.types.size()) throw std::out_of_range("선택 사정거리 TYPE 오류");return SelectionUsesRange(current->core.types[type]) ? 1U : 0U; };
     hooks.content=[current](Sid parent) { return current->priests->Carrier().FindContained(parent,1,0,0); };
-    hooks.altar=[current](Sid parent) { const auto raw=current->core.pool.Slot(parent);return current->world.Find(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),current->runeState.altarType); };
+    hooks.altar=[current](Sid parent) { const auto raw=current->core.pool.Slot(parent);return current->world.Find(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),current->runeState.AltarType()); };
     hooks.moving=[current](Sid parent) { return current->core.processes.FindEvent(parent,0x493)!=nullptr ? 1U : 0U; };
     const auto previewAssertion=hooks.previewAssertion; // 서로 다른 원본 진단을 selectedSid 진단으로 합치지 않는다.
     hooks.movementPreview=[current,previewAssertion](Sid parent) { StartSelectionContentPreview(current->core.pool,parent,current->objectState.loadingDepth,[current](Sid sid,std::uint32_t event,float payload) { static_cast<void>(current->core.processes.AddRegular(sid,event,payload)); },previewAssertion); };

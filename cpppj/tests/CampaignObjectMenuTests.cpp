@@ -17,6 +17,7 @@
 #include "client/UserInput.h" //편집 좌클릭을 메서드 직접 호출이 아닌 실제 입력 부모로 전달한다.
 #include "client/CampaignObjectMenuClient.h" //제품과 같은 객체메뉴 반환을 창없는 트리에서 검사한다.
 #include "client/RawObjectMenuOpen.h" //실제가상ac의 성공/거부와 열기음향 부모를 함께 검사한다.
+#include "client/RitualChoiceInput.h" // 현재 다이스 번호 getter만 읽으며 전송/의식 명령은 실행하지 않는다.
 #include "client/ClientDiagnostics.h" //현재로그버퍼와 깊이를 관찰하여 직접진단/Form재귀를 구별한다.
 #include "client/RawChatWindowContext.h" //제품 Player 하위메뉴가 조회하는 실제 빈 Chat 입력버퍼를 같은 트리에 생성한다.
 #include "client/ScriptCommand.h" //Chat 공장이 빌리는 실제80칸 문자열 고리의 수명을 검사 안에 유지한다.
@@ -969,6 +970,10 @@ TEST_CASE(TeleportCurrent_ActualSessionSelectedPhysicalOrUnknownConstructorFails
 }
 TEST_CASE(TeleportCurrent_ActualSessionTailBindingKeepsOriginalOwner) { // 이미 연결한 현재 TYPE 주소는 재연결 실패 뒤에도 원래 장기 소유자를 읽는다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();auto gameplay=std::make_shared<ClientGameplayGlobals>();services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();session.Particles().BindTailProcessTypes(*gameplay->GameAux());netstorm::o::RawGameAuxState other;bool rejected=false;try { session.Particles().BindTailProcessTypes(other); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected);auto core=session.Core();session.World().Storage()->types[57]=session.World().Storage()->types[12];gameplay->GameAux()->StreakProcessType()=57;const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);netstorm::test::rawscene::Put(raw,0,0x5070c0);raw[11]=raw[40]=0;session.World().Storage()->types[74].flags1=session.World().Storage()->types[74].flags2=0;++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000001);auto* tail=TeleportCurrentTail(core,source);CHECK(tail && core.bookkeeping.depth==0);if (tail) CHECK(core.pool.Slot(tail->Form())[10]==57);
+}
+TEST_CASE(RuneTypeNumber_ActualSessionChoiceGetterReadsCurrentDaisOwner) { // 단위870: 실제 설치 후 만든 입력 getter가 같은 현재 번호를 읽는지만 확인하고 명령/패킷/의식은 호출하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();auto gameplay=std::make_shared<ClientGameplayGlobals>();services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto hooks=session.RitualChoiceInputs();auto& current=gameplay->GameAux()->DaisType();const auto saved=current;
+    CHECK(hooks.daisType()==saved);current=70;CHECK(hooks.daisType()==70);current=71;CHECK(hooks.daisType()==71);current=saved; // Session 해제 전에 합성 번호 입력을 복원한다.
 }
 TEST_CASE(RewardTypeNumber_ActualSessionsBorrowSameCurrentOwnerWithoutLoad) { // 단위869: 실제 Session 보상 연결의 다섯 현재 번호와 재대여를 조회만으로 확인한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto gameplay=std::make_shared<ClientGameplayGlobals>();auto storage=MakeRawSurfaceStorage(assets.game,gameplay->Authority(),gameplay->GameAux());auto& owner=*gameplay->GameAux();owner.AltarType()=70;owner.DaisType()=71;owner.NuggetType()=128;owner.RainBlockerType()=128;

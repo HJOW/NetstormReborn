@@ -45,12 +45,12 @@ std::uint32_t RawRunePostPop::Owner(Sid sid) const { return pool_.Slot(sid)[pool
 Sid RawRunePostPop::FindOwnedDais(Sid rune) const {
     const auto point=Position(rune);const auto x=Cell(static_cast<double>(point[0])+kFinderBias),y=Cell(static_cast<double>(point[1])+kFinderBias);RawSquidFinder finder(pool_,hash_,types_);
     // free/dead/abstract는추가필터가아니며genericfinder가buried를제외한다.
-    for (auto sid=finder.Begin({x-1,y-1,x+1,y+1});sid.value;sid=finder.Next()) if (pool_.Slot(sid)[10]==state_.daisType && Owner(sid)==Owner(rune)) return sid;
+    for (auto sid=finder.Begin({x-1,y-1,x+1,y+1});sid.value;sid=finder.Next()) if (pool_.Slot(sid)[10]==state_.DaisType() && Owner(sid)==Owner(rune)) return sid;
     return {};
 }
 // 기존 시간 helper의 typed altar 조회 본문을 같은 풀의 의식 소비자에 공개한다.
 Sid RawRunePostPop::AltarAt(Sid rune) const {
-    const auto type=state_.altarType;if (type>=types_.size()) throw std::out_of_range("Rune 현재altar 타입범위");const auto point=Position(rune);const auto x=Cell(point[0]),y=Cell(point[1]);RawSquidFinder finder(pool_,hash_,types_);Sid altar;
+    const auto type=state_.AltarType();if (type>=types_.size()) throw std::out_of_range("Rune 현재altar 타입범위");const auto point=Position(rune);const auto x=Cell(point[0]),y=Cell(point[1]);RawSquidFinder finder(pool_,hash_,types_);Sid altar;
     // 현재타입genus&6에따른시작단계와원본첫타입일치를재사용한다.
     for (auto sid=finder.Begin({x,y,x,y},(types_[type].flags2&6)==0 ? 1U : 0U);sid.value;sid=finder.Next()) if (pool_.Slot(sid)[10]==type) { altar=sid;break; }
     return altar;

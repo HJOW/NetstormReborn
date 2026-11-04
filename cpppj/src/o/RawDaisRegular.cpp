@@ -78,7 +78,7 @@ std::int32_t RawDaisRegular::First(Sid sid,std::uint8_t letter) const { return f
 // 실제 Rune/Dais 생성자의 가상표만 받아 일반 모형의 base vtable로 대체하지 않는다.
 bool RawDaisRegular::Handles(Sid sid) const {
     const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto vtable=Read(raw,0);
-    return (raw[10]==state_.rune.runeType && vtable==(patch ? kPatchRuneVtable : kCdRuneVtable)) || (raw[10]==state_.rune.daisType && vtable==(patch ? kPatchDaisVtable : kCdDaisVtable));
+    return (raw[10]==state_.rune.runeType && vtable==(patch ? kPatchRuneVtable : kCdRuneVtable)) || (raw[10]==state_.rune.DaisType() && vtable==(patch ? kPatchDaisVtable : kCdDaisVtable));
 }
 // Dais wrapper의allowDead1과CanBridge의0을 기존 공통 선택몸체에 전달한다.
 Sid RawDaisRegular::Contained(Sid dais,std::uint32_t mask,std::uint32_t kind,bool allowDead) const { return carrier_.FindContained(dais,mask,kind,0,allowDead); }
@@ -88,7 +88,7 @@ std::uint32_t RawDaisRegular::CapturedWord(Sid dais) const { const auto captured
 void RawDaisRegular::Player(std::uint32_t owner) const { if (owner>kPlayerCount) throw std::out_of_range("Dais 현재 플레이어 범위"); }
 // altar 이탈이 결과를 버리는 Dais typed lookup도 동일한 일반 finder에서 수행한다.
 Sid RawDaisRegular::FindDaisAt(Sid sid) const {
-    const auto point=Position(sid);const auto type=state_.rune.daisType;if (type>=types_.size()) throw std::out_of_range("Dais 현재 타입 범위");const auto x=Integer(point.x),y=Integer(point.y);RawSquidFinder finder(pool_,hash_,types_);
+    const auto point=Position(sid);const auto type=state_.rune.DaisType();if (type>=types_.size()) throw std::out_of_range("Dais 현재 타입 범위");const auto x=Integer(point.x),y=Integer(point.y);RawSquidFinder finder(pool_,hash_,types_);
     // buried 제외/버킷순서는기존일반몸체이며추가free/dead/owner필터를넣지않는다.
     for (auto current=finder.Begin({x,y,x,y},(types_[type].flags2&6)==0 ? 1U : 0U);current.value;current=finder.Next()) if (pool_.Slot(current)[10]==type) return current;
     return {};

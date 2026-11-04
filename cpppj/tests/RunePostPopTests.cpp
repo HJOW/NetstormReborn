@@ -10,6 +10,10 @@
 #include "o/SquidPop.h"
 #include "o/SquidProcess.h"
 #include "o/SquidUnpop.h"
+#include "o/RawGameAuxState.h" // 현재 제단/다이스 번호의 장기 owner를 실제 연결과 같은 형식으로 빌린다.
+#include "o/RawPriestParticipation.h" // 참조형 참여자 입력에 getter 임시값을 남기지 않는지 확인한다.
+#include "o/RawAiBuildChoice.h" // AI가 보관하는 같은 다이스 번호 참조를 확인한다.
+#include "o/RawAiDropTargets.h" // 배치 AI의 제단 번호 참조를 확인한다.
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -131,4 +135,24 @@ TEST_CASE(rawRunePostPop_real_pop_construction_complete_and_304) {
         CHECK(post.HandlesRune(rune) && !SquidPop::Supports(edition,Get(runeRaw,0),0));CHECK(pop.Pop(rune,types[166],1,1,40.75F,41.25F,0)==RawPopResult::Registered);CHECK(begun==1 && kernel.Size()==1 && !host.FindEvent(rune,0x304));const Sid form{static_cast<std::uint16_t>(Get(runeRaw,6,2))};auto* process=dynamic_cast<ConstructionProcess*>(host.FromForm(form));CHECK(process && process->Fields().start==2 && process->Fields().end==9);
         process->RunFrame();CHECK(Get(pool.Slot(rune),26,patch ? 4 : 2)==200 && !(pool.Slot(rune)[patch ? 40 : 35]&1));CHECK(spatial==2 && refreshes==2 && completedSounds==1 && book.depth==0 && book.globalCounts[166]==1 && !sink.dirty.empty());const auto* pending=host.FindEvent(rune,0x304);CHECK(pending && pending->Payload()==0.01F && pending->Time()==2 && pending->Count()==0 && kernel.Size()==1);kernel.Clear();
     }
+}
+
+// 참조형 소비자가 원래 owner를 계속 읽으며 fallback 필드와 섞이지 않는지 검사한다(단위870).
+TEST_CASE(RuneTypeNumber_ReferencesForParticipationAndAiKeepOriginalOwner) {
+    RawGameAuxState owner;RunePostPopState state;const std::uint32_t priest=158,local=1,known=0,collector=133,directional=140;const std::array<std::uint32_t,1> workshops{75};
+    CHECK(&state.AltarType()==&state.altarType && &state.DaisType()==&state.daisType);state.sharedAltarType=&owner.AltarType();state.sharedDaisType=&owner.DaisType();
+    PriestParticipationState participation{priest,state.AltarType(),state.DaisType()};AiDropTargetGlobals drop{state.AltarType(),directional};AiBuildChoiceGlobals build{local,known,collector,state.DaisType(),workshops,[](auto) { return 128U; }};
+    owner.AltarType()=70;owner.DaisType()=71;state.altarType=72;state.daisType=73;CHECK(participation.altarType==70 && participation.daisType==71 && drop.altarType==70 && build.daisType==71);
+    CHECK(&participation.altarType==&owner.AltarType() && &build.daisType==&owner.DaisType());state.sharedAltarType=state.sharedDaisType=nullptr;CHECK(state.AltarType()==72 && state.DaisType()==73 && participation.altarType==70 && build.daisType==71); // 이미 보관한 참조는 원래 owner의 수명 계약을 유지한다.
+}
+TEST_CASE(RuneTypeNumber_CurrentFinderAndDurationUseBoundNumbers) { // 실제 일반 finder/typed altar 조회와 시간 선택만 실행한다.
+    RuneCurrentScene scene;RawGameAuxState owner;scene.state.sharedAltarType=&owner.AltarType();scene.state.sharedDaisType=&owner.DaisType();RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,{});
+    CHECK(rune.FindOwnedDais(Sid{5})==Sid{6} && rune.ConstructionSeconds(Sid{5})==7);owner.DaisType()=70;CHECK(rune.FindOwnedDais(Sid{5})==Sid{});
+    scene.slots[6][10]=70;scene.types[70].footX=scene.types[70].footY=1;scene.state.daisType=75;CHECK(rune.FindOwnedDais(Sid{5})==Sid{6});owner.AltarType()=71;CHECK(rune.AltarAt(Sid{5})==Sid{});
+    scene.slots[7][10]=71;scene.types[71].footX=scene.types[71].footY=1;scene.state.playerFlags[1]=1;CHECK(rune.AltarAt(Sid{5})==Sid{7} && rune.ConstructionSeconds(Sid{5})==25);owner.AltarType()=188;CHECK(Throws([&] { rune.ConstructionSeconds(Sid{5}); }));
+}
+TEST_CASE(RuneTypeNumber_ReservationChangesCurrentNumbersBeforeFindAndDuration) { // 예약 실패가 돌아온 뒤의 현재 번호를 finder/시간 helper에 전달한다.
+    RuneCurrentScene scene;RawGameAuxState owner;scene.state.sharedAltarType=&owner.AltarType();scene.state.sharedDaisType=&owner.DaisType();auto hooks=scene.Hooks();
+    hooks.reserveRegular=[&] { scene.events.push_back("N");owner.DaisType()=70;owner.AltarType()=71;scene.slots[6][10]=70;scene.slots[7][10]=71;scene.types[70].footX=scene.types[70].footY=scene.types[71].footX=scene.types[71].footY=1;scene.state.playerFlags[1]=1;return false; };
+    RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));rune.PostPop(Sid{5},3);CHECK(RuneEffects(scene.events)=="N;C25" && scene.book.depth==0); // 건설 hook의 인자 관찰이며 실제 건설/의식/프레임 틱은 실행하지 않는다.
 }

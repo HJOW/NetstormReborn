@@ -12,6 +12,9 @@ struct RunePostPopState {
     std::uint32_t runeType{166},daisType{165},altarType{164}; // 원본 현재타입 번호이며 각조회시다시읽는다.
     bool suppressDuration{}; // 00594fa4/CD0052e170: altar/player 시간선택을끄고10초로반환한다.
     std::array<std::uint32_t,kPlayerCount+1> playerFlags{}; // patchPlayer+50/CDPlayer+50의현재bit1을읽는다. 원래ownerWORD가index다.
+    const std::uint32_t* sharedAltarType{};const std::uint32_t* sharedDaisType{}; // 같은 Client005412e8/005412ec의 현재 번호이며 독립 구성은 위 초기값을 쓴다.
+    const std::uint32_t& AltarType() const { return sharedAltarType ? *sharedAltarType : altarType; } // 보상/의식/참여자/AI의 장기 참조를 같은 실제 DWORD에 연결하며 임시 값을 반환하지 않는다.
+    const std::uint32_t& DaisType() const { return sharedDaisType ? *sharedDaisType : daisType; } // finder는 현재 값을 복사하고 참조형 소비자는 원래 owner 수명을 그대로 빌린다.
 };
 // 예약/건설/공통후처리는 모두 실제호스트/몸체로 연결해야 한다.
 struct RunePostPopHooks {

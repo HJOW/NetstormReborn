@@ -1,0 +1,181 @@
+{
+ "unit": 870,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "9754c62c / 20261105-03 CP",
+ "exeSha256": "0eb96ad0ea895eb02058733f76abc01fa47ce4213e5e6bd1232769eb73676f6d",
+ "exeBytes": 10592768,
+ "scope": [
+  "RunePostPopState의 같은 제단/다이스 owner 대여와 const 참조 getter",
+  "Rune·다이스/제단의 finder/분류/수명·참여자/AI/저장/메뉴·선택 소비자 연결",
+  "getter 임시 값을 참조 멤버에 보관하지 않고 장기 DWORD 주소 유지",
+  "기존 실제 가상표/TYPE 사전 계약과 의식 효과/전체 Pop 잔여는 별도 유지"
+ ],
+ "sourceSha256": {
+  "cpppj/src/o/RawRunePostPop.h": "5d2770dfb8bd1a3e87a7048564c45454eaf59959a19b8edb70b1b668bfc2228a",
+  "cpppj/src/o/RawRunePostPop.cpp": "a74678140cc1c8eadf6c84b78ca43ad41b88c289924b0f8ac36fb19431dff522",
+  "cpppj/src/o/RawDaisRegular.cpp": "c53383150f0fbf03c3fa34706f8a2e4ec104ca6333b63fffdb0eee82295eedba",
+  "cpppj/src/o/RawDaisLifecycle.cpp": "fab310dcf0d9665581b04b2452cf43ba4b283c430407c5d38ec1fd526fb9cacf",
+  "cpppj/src/o/RawAltarSacrifice.cpp": "13578f54278d433bd51abc79e1da2828d0f9594f12c7cd9b18a08dff699249ee",
+  "cpppj/src/client/RawCampaignSession.cpp": "c2033ca31e345652dddbde51d6fcdc762df69c7663519821f8919a6c33e692e0",
+  "cpppj/tests/RunePostPopTests.cpp": "c5e62868064e25c1af6afcbd7b07dc3918c2455075c63da1eebd21bcadd8a6e2",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "8ecd3b2bb631987b3dbad65a6da8ef0bce5570e0fcb27219966af5e4bc10fa65"
+ },
+ "sourceFirstBuildSha256": {
+  "cpppj/src/o/RawRunePostPop.h": "5d2770dfb8bd1a3e87a7048564c45454eaf59959a19b8edb70b1b668bfc2228a",
+  "cpppj/src/o/RawRunePostPop.cpp": "a74678140cc1c8eadf6c84b78ca43ad41b88c289924b0f8ac36fb19431dff522",
+  "cpppj/src/o/RawDaisRegular.cpp": "c53383150f0fbf03c3fa34706f8a2e4ec104ca6333b63fffdb0eee82295eedba",
+  "cpppj/src/o/RawDaisLifecycle.cpp": "fab310dcf0d9665581b04b2452cf43ba4b283c430407c5d38ec1fd526fb9cacf",
+  "cpppj/src/o/RawAltarSacrifice.cpp": "13578f54278d433bd51abc79e1da2828d0f9594f12c7cd9b18a08dff699249ee",
+  "cpppj/src/client/RawCampaignSession.cpp": "c2033ca31e345652dddbde51d6fcdc762df69c7663519821f8919a6c33e692e0",
+  "cpppj/tests/RunePostPopTests.cpp": "c5e62868064e25c1af6afcbd7b07dc3918c2455075c63da1eebd21bcadd8a6e2",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "8ecd3b2bb631987b3dbad65a6da8ef0bce5570e0fcb27219966af5e4bc10fa65"
+ },
+ "staticEvidenceSha256": {
+  "extracted/cpp-resume-870/originalCD-00482990.c": "467e680c8c775e6d42792eafc9e669f42afa7c91dc681091b00fd1b469456f3d",
+  "extracted/cpp-resume-870/originalCD-00484520.c": "135ce357193fa71b0559d0f7f42b7b3e2615f2dfe54665dce786522416017bb1",
+  "extracted/cpp-resume-870/originals-00448340.c": "1b75c5f676d9f5e56d908a81b4eaa4def73941cf5d081cee2f519be9b0d7ad43",
+  "extracted/cpp-resume-870/originals-00448930.c": "0edf910107f695b62e79a88602491b9e63032f010cc05d3a1eccfef536f58d4c",
+  "extracted/cpp-resume-870/originals-00448a20.c": "d1f4f79265e9fc7f3f44171007c3f164eedb888c443382859972ab14604383a5",
+  "extracted/cpp-resume-870/originals-00448bb0.c": "a719cff46e68d2f575e41141b1402388a6c4510be4da45095821198490061c85",
+  "extracted/cpp-resume-870/originals-00449710.c": "dbfdd8803b7a2c77fe6207396b167cb4d92688f9ca630a80683949a8913cbf04",
+  "extracted/cpp-resume-870/originals-00449900.c": "46159121888a75b98ae396a606d83514213e8581f89770fe62f6a86654c42e94"
+ },
+ "staticConsumerAudit": {
+  "remainingOldRuneStateReads": []
+ },
+ "validation": {
+  "cases": 30,
+  "uniqueCasesVerifiedFromNames": true,
+  "groups": 6,
+  "newCases": 4,
+  "newPureCases": 3,
+  "newActualSessionGetterCases": 1,
+  "firstFailedCases": 0,
+  "finalFailedCases": 0,
+  "failedChecks": 0,
+  "productOrTestChangesAfterFirstBuild": 0,
+  "newNativeObservations": 0,
+  "newFixtures": 0,
+  "fixtureExpectationsChanged": false,
+  "manualExpectationCorrections": 0,
+  "builds": [
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 168.0809223,
+    "warningsOrErrors": 0,
+    "log": "extracted/cpp-resume-870/build-first.log",
+    "sha256": "491f29d8a404a580c0dd8cb12b8d72e835e8d6000845311740407479b865d9ca",
+    "targets": [
+     "NetstormCpp",
+     "netstorm_pop_context_tests",
+     "netstorm_menu_session_tests"
+    ]
+   }
+  ],
+  "executions": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "RuneTypeNumber_",
+    "cases": 3,
+    "expectedCases": 3,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-870/test-rune-numbers-first.log",
+    "sha256": "533b95a4db499eeeac1a6a1889bcd22eeb5c89a7d3763e56093968bac970a6dd"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "RuneTypeNumber_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-870/test-rune-session-first.log",
+    "sha256": "d05ccbcfe6bd015163388cb8a7cf8c62f73bfdb46c21a078facb93d8b7eb3943"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "BuriedRuneCurrent_",
+    "cases": 18,
+    "expectedCases": 18,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-870/test-rune-current-first.log",
+    "sha256": "88eeba611d9dbc3d15a8f61e434c06c7753b9ea47ed98a2aa722176343177307"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "rawRunePostPop_native_regular_owned_dais_and_duration",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-870/test-rune-native-first.log",
+    "sha256": "62c537bb7aaa147d9565b46f4ec99d7f076938294ddbf2c0230474d3ef00cdb5"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "RewardTypeNumber_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-870/test-reward-session-first.log",
+    "sha256": "bf1d5c16e78310f7d4716c80b71b909091fcb5be80edbd1e21a13e8f17fba07f"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "DaisCheckingParents_",
+    "cases": 6,
+    "expectedCases": 6,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-870/test-dais-reading-first.log",
+    "sha256": "82bf392350ec6caf21df19d5d3c7f0fcc9867d465c62552a1639ca514d85a20f"
+   }
+  ],
+  "fixtureSha256": {
+   "runepostpop-x86.tsv": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99"
+  },
+  "newActualSessionScope": "Load 뒤 선택 입력의 다이스 TYPE getter만 읽고 원래 값을 복원. 명령/패킷/의식/프레임 틱0."
+ },
+ "protection": {
+  "count": 2761,
+  "fixtures": 941,
+  "unchanged": true,
+  "snapshot": "extracted/cpp-resume-870/protected-after.json"
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "completedParents": 38,
+  "completedPartial": 3,
+  "note": "번호/참조 연결이며 legacy51 집계 감소0. 868 공중 전용 동작 검사는 여전히 생략 상태다."
+ },
+ "limits": [
+  "독립/CD는 포인터가 없으면 기존 state 필드의 수명/값을 유지한다",
+  "DaisLifecycle/AltarSacrifice의 기존 VT/TYPE 사전 계약·전체 가상Pop 및 의식 효과는 이번 단위의 전체 복원/실행 증거가 아니다",
+  "다른 너겟/메뉴 번호 사본과 Literal154의 실제 TYPE/바이트오프셋/색표 분류는 후속 잔여다",
+  "실제 게임/GUI·포획/희생/특정 적 공격/승리·공중3종 전용·신규 MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복 제외"
+ ],
+ "next": {
+  "unit": 871,
+  "scope": "현재 너겟 번호의 운반/내용물·채집/건설/덱/의식 요청 참조 연결. 실제 포획/희생 효과는 실행하지 않는다.",
+  "inventory": "extracted/cpp-resume-870/next-nugget-consumers.json",
+  "currentMatches": 54,
+  "literal154Matches": 6,
+  "literalClassification": "RawNuggetRegular/Session Nugget의 TYPE+VT guard와 InventoryAboutMenuTypes는 실제 후보. MenuGumpDraw/MetaImageList는 오프셋, OwnerColorMaps는 고정 색표 값이므로 TYPE 번호로 바꾸지 않는다."
+ }
+}
