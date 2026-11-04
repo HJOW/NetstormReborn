@@ -1,0 +1,884 @@
+{
+ "unit": 887,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "9a4a01ea / 20261105-20 CP",
+ "exeSha256": "2e9d8f21077d1fe400220aed62fb3787c23f7b1a16310589a84361b366f672b7",
+ "exeBytes": 10660864,
+ "caseCount": 30,
+ "groups": 10,
+ "newCases": 1,
+ "uniqueCases": [
+  [
+   "netstorm_menu_session_tests",
+   "BombTimerConstructorCurrent_ActualSessionCreatesUnattachedBeforeLoadWithoutClockDeadline"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "BombTimerConstructorCurrent_ActualTeleportSelectsEmptyUnattachedConstructor"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "CursorConstructorCurrent_ActualTeleportUsesFixedBodyAndItsCurrentAttachType"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ActualTeleportSelectsConstructorAndItsCurrentTypeSource"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ActualVisualFrameNotifyPixelsAndSelfDeletionUseSameHost"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "EvilRayCurrent_ParentZeroRemainsRenderedWithoutKernelAndOwnerPersists"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "FormConstructorCurrent_ActualTeleportUsesSelectedSlotConstructorThenCommon"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "PathConstructorCurrent_ActualSessionCreatesFixedClassesWithoutInitOrAttach"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "PathConstructorCurrent_ActualTeleportUsesAliasedTypeFunctionWithoutStartingPath"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionNoFirstSkipsInvalidEffectType"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionSelectedPhysicalOrUnknownConstructorFailsBeforeCommon"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionTailBindingKeepsOriginalOwner"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportCurrent_ActualSessionUsesCurrentConstructorAndItsOwnTypeGlobal"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_ActualSessionResumesCommonAfterNullAndCurrentTypeMutation"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_ActualSessionThrownDiagnosticKeepsPrefixMutationAndDepth"
+  ],
+  [
+   "netstorm_menu_session_tests",
+   "TeleportStubCurrent_SelectedNullConstructorsKeepExactDiagnosticAndCallableLifetime"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "CursorMana_NativeConstructorFrameNotifyDestructor642"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "CursorRange_NativeBodiesAndFullState"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_CallableSurvivesSelfUnbinding"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_CdDoesNotUsePatchPrefix"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ExplicitPreflightRemainsSeparate"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LateCommonFailureKeepsSelectedCreationAndCurrentTypeCounts"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LifetimeCapturesTypeBeforeRegistryAndParticleAllocation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_LifetimeReadsSharedTypeForEachCreation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_MissingSelectedPrefixFailsBeforeCommon"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_NoFirstUsesActualVtableWithoutDeviceOrTypeGate"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_SelectedPrefixKeepsPhysicalMutationsBeforeCommon"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_TailTypeOwnerPersistsAcrossGeneralWorldPreparation"
+  ],
+  [
+   "netstorm_pop_context_tests",
+   "TeleportCurrent_ThrownPrefixKeepsEffectsAndDepth"
+  ]
+ ],
+ "testExecutions": [
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "CursorConstructorCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-cursor-constructor-session-first.log",
+   "sha256": "208e0a7f169c007bb1100ef8fbc741e2a8eb7a6d179926f0afd5792a698f81e6"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "CursorMana_NativeConstructor",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-cursor-mana-native-first.log",
+   "sha256": "fad62cff86143268e5a9d127429b589ca4aeb810a252685fa4441cd1a729cccd"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "CursorRange_NativeBodies",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-cursor-range-native-first.log",
+   "sha256": "d290b173614fee14e1b47285782788c4c4c68e5866fffba01512f5b34fe79d60"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "BombTimerConstructorCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-timer-constructor-session-first.log",
+   "sha256": "fd7bd616f1ba26c10e3d0a140e7171cb6ecbd1eb494933d7b4ba1728df503a64"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "PathConstructorCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-path-constructor-session-first.log",
+   "sha256": "8ac8305a7dd55cc521581d1bc7ba7f8b0d26be27de971c5ad75e71b7e9ea4e56"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "FormConstructorCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-form-constructor-session-first.log",
+   "sha256": "3e31419c5a8af61e3801e2f96f51df858600643c5cf495296e552d8a37b0f513"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "EvilRayCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-evilray-current-first.log",
+   "sha256": "0c0676489849190ab84054864e8ae3d17cfa12f35fda76959f1a099321cfdae7"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-teleport-session-first.log",
+   "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportStubCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-teleport-stub-first.log",
+   "sha256": "520f80e3d1cc574235cb7b201cf082cbbc2b53b91fbd86bc1cc2a912433e20f7"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 12,
+   "expectedCases": 12,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-887/test-teleport-prefix-first.log",
+   "sha256": "1f6ce0bc4dc347ecc104fb401092b4321bafbcadd93ae0790579293194f91bdb"
+  }
+ ],
+ "build": {
+  "exitCode": 0,
+  "elapsedSeconds": 135.6356283,
+  "log": "extracted/cpp-resume-887/build-first.log",
+  "logSha256": "ad800d36d628f772d76142c2fe2b5b871b8ed86c982542e9fac850e59f02e9a5",
+  "warnings": 0,
+  "errors": 0
+ },
+ "sourceSha256": {
+  "cpppj/src/client/RawCampaignSession.cpp": "d23628d2995f0170f999fd3ea4faef107592c5390f23bba266aad1d91acb48e9",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "a63f4fed3b433a8560ee1c7559db9259e254888d2aa19ca3dc5b54352648627c",
+  "cpppj/tests/CMakeLists.txt": "3ab6ca94d616a5d9e53fc54402de71afe1ec5d14163831afdbf1ece684716eee",
+  "tools/decomp_cursor_constructor_abi.py": "44fe5d4e64611fe4f659f01a58d36f94d460da1ec9441d4c05ca42d1f8e351c4"
+ },
+ "originalProtectedUnchanged": 2767,
+ "protectedCount": 2767,
+ "fixtureCount": 947,
+ "newFixtures": 0,
+ "nativeWrapperObservations": {
+  "observations": [
+   {
+    "entry": "004741d0",
+    "parent": 0,
+    "form": 0,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      224
+     ],
+     [
+      "body",
+      4667376,
+      0,
+      0
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 0,
+    "form": 0,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      224
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 0,
+    "form": 65535,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      224
+     ],
+     [
+      "body",
+      4667376,
+      0,
+      65535
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 0,
+    "form": 65535,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      224
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 5,
+    "form": 0,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      224
+     ],
+     [
+      "body",
+      4667376,
+      5,
+      0
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 5,
+    "form": 0,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      224
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 5,
+    "form": 65535,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      224
+     ],
+     [
+      "body",
+      4667376,
+      5,
+      65535
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 5,
+    "form": 65535,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      224
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 50,
+    "form": 0,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      224
+     ],
+     [
+      "body",
+      4667376,
+      50,
+      0
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 50,
+    "form": 0,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      224
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 50,
+    "form": 65535,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      224
+     ],
+     [
+      "body",
+      4667376,
+      50,
+      65535
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 50,
+    "form": 65535,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      224
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 65535,
+    "form": 0,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      224
+     ],
+     [
+      "body",
+      4667376,
+      65535,
+      0
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 65535,
+    "form": 0,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      224
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 65535,
+    "form": 65535,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      224
+     ],
+     [
+      "body",
+      4667376,
+      65535,
+      65535
+     ]
+    ]
+   },
+   {
+    "entry": "004741d0",
+    "parent": 65535,
+    "form": 65535,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      224
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 0,
+    "form": 0,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      512
+     ],
+     [
+      "body",
+      4670752,
+      0,
+      0
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 0,
+    "form": 0,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      512
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 0,
+    "form": 65535,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      512
+     ],
+     [
+      "body",
+      4670752,
+      0,
+      65535
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 0,
+    "form": 65535,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      512
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 5,
+    "form": 0,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      512
+     ],
+     [
+      "body",
+      4670752,
+      5,
+      0
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 5,
+    "form": 0,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      512
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 5,
+    "form": 65535,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      512
+     ],
+     [
+      "body",
+      4670752,
+      5,
+      65535
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 5,
+    "form": 65535,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      512
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 50,
+    "form": 0,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      512
+     ],
+     [
+      "body",
+      4670752,
+      50,
+      0
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 50,
+    "form": 0,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      512
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 50,
+    "form": 65535,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      512
+     ],
+     [
+      "body",
+      4670752,
+      50,
+      65535
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 50,
+    "form": 65535,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      512
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 65535,
+    "form": 0,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      512
+     ],
+     [
+      "body",
+      4670752,
+      65535,
+      0
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 65535,
+    "form": 0,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      512
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 65535,
+    "form": 65535,
+    "allocationNull": false,
+    "events": [
+     [
+      "new",
+      512
+     ],
+     [
+      "body",
+      4670752,
+      65535,
+      65535
+     ]
+    ]
+   },
+   {
+    "entry": "00474900",
+    "parent": 65535,
+    "form": 65535,
+    "allocationNull": true,
+    "events": [
+     [
+      "new",
+      512
+     ]
+    ]
+   }
+  ],
+  "count": 32,
+  "bodyExecutions": 0,
+  "guiGameExecutions": 0,
+  "scope": "actual wrapper only; Construct and operator new are external boundary"
+ },
+ "nativeWrapperReobservedRows": 32,
+ "existingCppBodyFixtureRows": {
+  "cursorMana": 642,
+  "cursorRange": 593
+ },
+ "staticKnownConstructorCoverage": {
+  "patchNonzero0to69Rows": [
+   {
+    "type": 1,
+    "address": "004ae760",
+    "codeCovered": true
+   },
+   {
+    "type": 2,
+    "address": "004ae3d0",
+    "codeCovered": true
+   },
+   {
+    "type": 3,
+    "address": "004ae9f0",
+    "codeCovered": true
+   },
+   {
+    "type": 6,
+    "address": "004aea40",
+    "codeCovered": true
+   },
+   {
+    "type": 10,
+    "address": "004536a0",
+    "codeCovered": true
+   },
+   {
+    "type": 11,
+    "address": "00458700",
+    "codeCovered": true
+   },
+   {
+    "type": 12,
+    "address": "00458760",
+    "codeCovered": true
+   },
+   {
+    "type": 13,
+    "address": "00470b00",
+    "codeCovered": true
+   },
+   {
+    "type": 22,
+    "address": "00487ef0",
+    "codeCovered": true
+   },
+   {
+    "type": 23,
+    "address": "0048be40",
+    "codeCovered": true
+   },
+   {
+    "type": 24,
+    "address": "0048bf30",
+    "codeCovered": true
+   },
+   {
+    "type": 38,
+    "address": "0048bed0",
+    "codeCovered": true
+   },
+   {
+    "type": 39,
+    "address": "0048bea0",
+    "codeCovered": true
+   },
+   {
+    "type": 40,
+    "address": "0048bf90",
+    "codeCovered": true
+   },
+   {
+    "type": 41,
+    "address": "0048bf00",
+    "codeCovered": true
+   },
+   {
+    "type": 42,
+    "address": "0048be70",
+    "codeCovered": true
+   },
+   {
+    "type": 50,
+    "address": "004741d0",
+    "codeCovered": true
+   },
+   {
+    "type": 51,
+    "address": "00474900",
+    "codeCovered": true
+   },
+   {
+    "type": 54,
+    "address": "0048bf60",
+    "codeCovered": true
+   },
+   {
+    "type": 56,
+    "address": "00458700",
+    "codeCovered": true
+   },
+   {
+    "type": 57,
+    "address": "00420ad0",
+    "codeCovered": true
+   }
+  ],
+  "nonzeroCount": 21,
+  "uniqueConstructorAddresses": 20,
+  "knownConstructorAddressCoverage": 20,
+  "missing": [],
+  "assetNonzeroCount": 101,
+  "assetUniqueAddresses": 84,
+  "scope": "static address routing only, not all bodies/inputs/MP/air/manual/fullPop complete"
+ },
+ "firstFailureCount": 0,
+ "boundaries": [
+  "Native wrapper tool executes actual wrapper only; allocator and existingConstruct body are external boundaries, not new fullbodyPE observations",
+  "Existing Native642/593 input fixtures are unchanged and replayed by C++; no new UI fixture or wholeNativebody reexecution",
+  "Current UIprocessType is existing shared Session display state; all Native currentTYPEwriters/longowner persistence still separate backlog",
+  "OnlysyntheticTYPE74metadata/real marker103/104 andforms57/58; no source movement/frame/AI/combatKernel",
+  "Known nonzero0to69 address routing complete does not mean all TYPE70+ or fullPop/MP/currentglobals complete",
+  "No GUI/game/user-manual/capture/sacrifice/specificattack/win/air3/MP/whole71/CTest/34/ZIP runs"
+ ]
+}

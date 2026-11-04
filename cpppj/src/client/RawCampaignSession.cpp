@@ -1255,7 +1255,23 @@ struct RawCampaignSession::Impl {
         CampaignEvilRayDevices evilDevices;evilDevices.soundId=[this](Sid sid,bool end) { const auto type=core.pool.Slot(sid)[10];if (type>=missileTypes.size()) throw std::out_of_range("EvilRay 현재 음향 TYPE 물리 범위");return end ? missileTypes[type].impactSound : missileTypes[type].firingSound; }; // 원문Rifttype parser의+70=fireSound/+74=impactSound이며 stepSound가 아니다.
         evilDevices.sound=[this](float x,float y,std::uint32_t sound) { const auto selected=services.sound.playOnceAt;if (!selected) throw std::logic_error("EvilRay 실제 위치 재생 장치 미연결");static_cast<void>(selected(x,y,sound,0,0)); };evilDevices.frameError=[this](auto number,auto frame,auto abstract) { world.Storage()->RecordAssertionDetail(BuildSquidFrameAssertionDetail(core.types,core.shapes,number,frame,abstract)); }; // 같은 현재 Client 상세 저장소다.
         evilDevices.assertion=[this](std::string_view expression,std::string_view,std::uint32_t) { const auto selected=services.ai.assertion;if (!selected) throw std::logic_error("EvilRay 실제 Client 진단 장치 미연결");selected(expression); };particles->ConnectEvilRayDevices(std::move(evilDevices)); // 첫 Pop 전에 실제 장치를 설치한다.
-        core.postPop.SetTeleportPrefix([this](Sid sid,std::uint32_t flags) { if (!(flags&1U)) return;const auto type=gameplayGlobals->GameAux()->StreakProcessType();if (type>=core.types.size()) throw std::out_of_range("Teleport 현재 process TYPE 표 물리 범위");const auto address=core.types[type].constructorAddress;if (address==0x420ad0U) { try { unstartedBombTimers.push_back(MakeEmptyBombTimer()); }catch (const std::bad_alloc&) {}return; }if (motion) { try { if (auto path=motion->Paths().CreateByConstructor(address)) { unstartedPaths.push_back(std::move(path));return; } }catch (const std::bad_alloc&) { return; } }particles->CreateTailByConstructor(address,sid,[this](auto expression,auto,auto line) { const auto assertion=services.ai.assertion;if (!assertion) throw std::logic_error("Teleport 생성 함수 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }); }); // 원문4429f0의 현재 TYPE+1d0 호출이며 현재 객체 TYPE134나 고정process12에 묶지 않는다.
+        // 원문4429f0의 현재 TYPE+1d0 함수를 ABI에 맞춰 선택하며 객체TYPE134/고정process12로 대체하지 않는다.
+        core.postPop.SetTeleportPrefix([this](Sid sid,std::uint32_t flags) {
+            if (!(flags&1U)) return;
+            const auto type=gameplayGlobals->GameAux()->StreakProcessType();
+            if (type>=core.types.size()) throw std::out_of_range("Teleport 현재 process TYPE 표 물리 범위");
+            const auto address=core.types[type].constructorAddress;
+            // 두 cdecl은 부모SID/미지정Form0을 그대로 전달하고 실제 현재 표시 TYPE로 Host에 부착한다.
+            if (address==0x4741d0U) { static_cast<void>(CreateCursorManaProcess(core.processes,*cursorMana,sid,Sid{}));return; }
+            if (address==0x474900U) { static_cast<void>(CreateCursorRangeProcess(core.processes,*cursorRange,sid,Sid{}));return; }
+            if (address==0x420ad0U) { try { unstartedBombTimers.push_back(MakeEmptyBombTimer()); }catch (const std::bad_alloc&) {}return; }
+            if (motion) { try { if (auto path=motion->Paths().CreateByConstructor(address)) { unstartedPaths.push_back(std::move(path));return; } }catch (const std::bad_alloc&) { return; } }
+            particles->CreateTailByConstructor(address,sid,[this](auto expression,auto,auto line) {
+                const auto assertion=services.ai.assertion;
+                if (!assertion) throw std::logic_error("Teleport 생성 함수 실제 진단 장치 미연결 "+std::to_string(line));
+                assertion(expression);
+            });
+        });
         particles->BindWind(world.Storage()->wind.x); // 같은 Client 수명의 현재 바람X를 입자별 가속 지점에서 읽는다.
         particles->BindWeakenedMana(gameplayGlobals->GameAux()->PriestQuarterHp()); // 연소점 선택도 Frame 준비 사본을 기다리지 않는다.
         auto combatEffects=services.archer;

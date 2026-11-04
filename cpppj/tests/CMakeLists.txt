@@ -3464,3 +3464,5 @@ target_sources(netstorm_pop_context_tests PRIVATE PathConstructorTests.cpp) # �
 
 target_sources(netstorm_tests PRIVATE BombTimerConstructorTests.cpp) # 실제 기본 생성자12행과 기한0/미작성flags를 대조한다(886).
 target_sources(netstorm_pop_context_tests PRIVATE BombTimerConstructorTests.cpp BombEffectTimerTests.cpp) # 비멀티 순수 생성과 기존 수치Frame만 실행하고 수신/송신은 검사하지 않는다(886).
+
+target_sources(netstorm_pop_context_tests PRIVATE CursorManaTests.cpp CursorRangeTests.cpp) # 기존 비멀티 표시의642/593 원문 몸체만 선택 실행한다(887).
