@@ -1,0 +1,209 @@
+{
+  "unit": 858,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "eae6fd03 / 20261104-42 CP",
+  "exeSha256": "32b715ad55714dd70cbe8f414308d7285e585c152f36f63d0c3b8dfd28eeb422",
+  "exeBytes": 10564608,
+  "sourceSha256": {
+    "cpppj/src/o/RawPlayerWorld.cpp": "132b532da44c1eeaf2e7dccb8571d19489c0e691dd1e100d9baf328ca92e8167",
+    "cpppj/src/o/RawPlayerWorld.h": "1667a98894d477cf5c0e2f7053ee2a0e5de8adf61d8a87791d0ef888da862294",
+    "cpppj/tests/PlayerWorldTests.cpp": "9f754ab5689ed2162b44962d74b8400c89748e81a4557b21dc5184d7a3e6e833",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "6b3f0820a3796115eee2b20d62fc730e3875305f5fdaf9de55e73f67006e71fb",
+    "cpppj/tests/CMakeLists.txt": "83e0e317253400e8a0ea551adfaa952b597fdc2c571627f80e0518c1b3a6bb05",
+    "cpppj/src/client/RawCampaignSession.cpp": "ae44ad87e8d940eb4f7a0502384d718817fc993ffb34aa978665af295c20f200"
+  },
+  "scope": [
+    "PATCH Player의 실제 VT/물리9기록 SID 저장→선택 확보/성공한 Regular1·5초→현재 special 직접 frame1→공통 부모",
+    "PATCH Create의 현재 진단/type/Owner 뒤 물리 frame0와 저장한 좌표의 Pop·현재 두 getter/선택 장치",
+    "Session의 같은 World typed Find 및 Client expression 진단 정상 복귀 연결",
+    "명시 Validate/CD 기존 구성·할당 경계 및 물리9기록 범위 유지"
+  ],
+  "staticEvidence": {
+    "sha256": {
+      "extracted/cpp-resume-858/originalCD-00406d90.c": "5f268a7f4e0d641a3b66256f3994c0560aef9384973c9d9de9f7dcedf29fe49c",
+      "extracted/cpp-resume-858/originalCD-00406dc0.c": "13ec5f14981cdbbbeba605164f909bbe32c3d8281378e783f2b3931bc6b44309",
+      "extracted/cpp-resume-858/originalCD-00407400.c": "fee5449ccc59e831f04341ecf42bedcef9696cb0513f1abd7f18392f8a4bd480",
+      "extracted/cpp-resume-858/originalCD-00407cc0.c": "f20c36a8217c1806a913634e041b1816006d33e92bb2e784af04f71e19fcd8fe",
+      "extracted/cpp-resume-858/originals-0048fc60.c": "29cbbecc674f1086ce7fc3ca129f1bc9e530ddb6b6020b45094138442d46a55b",
+      "extracted/cpp-resume-858/originals-0048fc90.c": "f2f0c8922a79acf403f79a2bb2e8c136412e9acb203554d38ecfaca8a9f21fee",
+      "extracted/cpp-resume-858/originals-00490250.c": "cf8c744ab656f417936fefd80f7ff8374889ab0912b0a9be0c9ed9a60525b39c",
+      "extracted/cpp-resume-858/originals-004905d0.c": "38a9f9555ed4b7c763de71a83ebd39c0b29a8de5252d8e5b24033745bc0f44d5"
+    },
+    "patch": [
+      "004905d0",
+      "00490250",
+      "0048fc60",
+      "0048fc90"
+    ],
+    "cd": [
+      "00407cc0",
+      "00407400",
+      "00406d90",
+      "00406dc0"
+    ]
+  },
+  "validation": {
+    "cases": 67,
+    "newCases": 16,
+    "firstFailedChecks": 0,
+    "newNativeObservations": 0,
+    "newFixtures": 0,
+    "existingPlayerRows": 1680,
+    "existingExpectationsChanged": false,
+    "fixtureSha256": {
+      "player-world-x86.tsv": "c53c5f89f6734cbc89535199a69d0348f5f051192ce9e7c339c55565caa5c53b"
+    },
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-858/build-first.log",
+        "sha256": "a5ec3f0c3ac116244ef5b2724260dd43893def533f3fb29cc153ccf7b00b7d15",
+        "exitCode": 0,
+        "elapsedSeconds": 528.3839485,
+        "execSession": 56452,
+        "childProcessesExited": true
+      }
+    ],
+    "executions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PlayerParentCurrent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-player-current-first.log",
+        "sha256": "34c2c290464b38a11bf95ea4e9a51eafa69afb6f69711c16bf92c3d9594290c2"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PlayerParentCurrent_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-player-session-first.log",
+        "sha256": "66a2f70f2131b4752bb51b776d910ef65e550d75e6fff2e410553f2480d2aa05"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PlayerWorld_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-player-native-first.log",
+        "sha256": "c6ecdcde54152ab2350476f63ce585ffc72f557faa315bdfe2daa4c0eb3aee3a"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "BuriedRuneCurrent_",
+        "cases": 18,
+        "expectedCases": 18,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-buried-rune-current-first.log",
+        "sha256": "88eeba611d9dbc3d15a8f61e434c06c7753b9ea47ed98a2aa722176343177307"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "BuriedRuneCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-buried-rune-session-first.log",
+        "sha256": "48748021ebe446d3596cd0f8437766168ac032c6ec95175d598aead68d272aed"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 11,
+        "expectedCases": 11,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-post-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-858/test-activate-session-first.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      }
+    ]
+  },
+  "protected": {
+    "files": 2761,
+    "fixtures": 941,
+    "unchanged": true,
+    "expectationChanges": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 36,
+    "completedPartial": 3,
+    "newCompletedParents": 0
+  },
+  "limits": [
+    "기존 양판본1680행 재생/현재 계약과 코드 정적 대조이며 새 원문 실행 관측은 아니다",
+    "Client 진단 서비스는 expression만 전달하므로 원문 파일/행 표시 전체 일치는 미확인이다",
+    "Session은 명시 Player 후처리/5초 예약·진단 뒤 생성만 관측하고 Frame/Process 틱/Regular 처리는 실행하지 않았다",
+    "실제 게임·포획/희생/특정 적 공격/승리·공중3종 전용·신규MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복을 제외했다",
+    "Dude·섬/표면/Teleport 등 현재 가상20/전체 Pop 및 전체 후속 단계는 미완료다"
+  ],
+  "next": [
+    "Dude00450cd0의 현재 QA/Bridge 통지·signed population/프레임/선택 부모를 대조한다",
+    "객체 메뉴/커서·Edit·State/파일/군도·Windows 한계·무검사MP 및4~8차를 계속한다"
+  ]
+}

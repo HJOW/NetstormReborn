@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**858 Player 현재 부모:**실제 VT/물리9기록·선택 예약/직접 프레임과 현재 생성/진단/typed Find를 같은 Session에 연결했다. 집중67개(새16) 첫 실패0·Player1680행/실제 Host·보호2761개 불변이다. 명시 Validate/CD 계약을 구별하고 Client expression API를 원문 파일/행 표시 전체 일치로 확대하지 않는다. checking12·완료부모36/부분3 유지이며 Dude 등은859 이후다. [858 기록](cpp-player-current-parent-20261104.md).
+
 **857 현재 후처리:**buried의 물리 QA/현재 Bridge 통지와 Rune의 실제 VT/선택 장치·현재 finder/시간 전역을 같은 Session에 연결했다. 집중52개(새19) 첫 실패0·기존 buried580/Rune1920행·보호2761개 불변이다. 명시 Validate/CD 계약은 구별하며 Session 건설 진행/시간 관측은 아니다. checking12·완료부모36/부분3 유지이고 Player/Dude 등 나머지는858 이후다. [857 기록](cpp-buried-rune-current-20261104.md).
 
 **856 접두 연결:**다리·보호막의 실제 PATCH VT 분배/도달 장치와 실패 앞 부분 효과·공통 부모/같은 Session 예약을 연결했다. 집중178개(새17) 첫 실패0·기존 다리240행/보호막 Prefix384행과 보호2761개 불변이다. 옛 수동 guard 단언1개만 원문 bit2 쓰기로 교정했고 fixture 기대값·새 Native/fixture는0이다. 다른 실제 가상20/접두·TYPE/모드 전역/전체 Pop은857 이후이며 checking12·완료부모36/부분3 유지다. [856 기록](cpp-post-prefix-current-20261104.md).

@@ -1023,8 +1023,8 @@ struct RawCampaignSession::Impl {
         priestParticipation=std::make_unique<RawPriestParticipation>(core.pool,core.hash,core.types,priests->Priests(),priests->Carrier(),
             PriestParticipationState{priestState.movement.priest,runeState.altarType,runeState.daisType});
         PlayerWorldHooks playerHooks;
-        playerHooks.assertion=SessionMissing<void,PlayerWorldAssertion>();
-        playerHooks.find=[this](float x,float y,std::uint32_t type) { RawSquidFinder finder(core.pool,core.hash,core.types);return finder.Begin({static_cast<int>(x),static_cast<int>(y),static_cast<int>(x),static_cast<int>(y)},0,[this,type](Sid sid) { return core.pool.Slot(sid)[10]==type; }); };
+        playerHooks.assertion=[this](PlayerWorldAssertion kind) { const auto assertion=services.ai.assertion;if (!assertion) throw std::logic_error("Player 실제 진단 장치 미연결");assertion(kind==PlayerWorldAssertion::PlayerAlreadyExists ? "!findSquid(bc,playerType)" : "playerIdKnown"); }; // 같은 Client 진단이 복귀하면 생성/명시 Technology 조회를 원문 위치에서 계속한다.
+        playerHooks.find=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); }; //004b1fa0의 현재 타입 genus에 따른 시작 단계와 같은 typed finder를 재사용한다.
         playerHooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         playerHooks.setOwner=[this](Sid sid,std::uint32_t owner) { core.owner.Set(sid,owner); };
         playerHooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };

@@ -7,6 +7,8 @@
 namespace netstorm::o {
 namespace {
 constexpr std::uint32_t kPatchPlayerVtable=0x50ee08,kCdPlayerVtable=0x5002a8; // 실제 Player152 생성자가 쓰는 두 PE 가상표다.
+template<class Function> Function PlayerNeed(const Function& function) { if (!function) throw std::logic_error("Player의 선택된 실제 하위 미연결");return function; } // 도달한 장치만 요구하며 콜백의 현재 호출 수명을 보존한다.
+std::span<std::uint8_t> PlayerSlot(SidPool& pool,Sid sid) { const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // 원문의 같은 물리 슬롯을 free/contained와 무관하게 읽고 쓴다.
 // 정렬되지 않은 원본 little endian 필드의 정확한 폭을 쓰고 주변 바이트를 보존한다.
 void PlayerWrite(std::span<std::uint8_t> raw,std::size_t field,std::uint32_t value,std::size_t width=4) {
     // 원본이 지정한 낮은 BYTE부터 필드 폭만큼 저장한다.
@@ -20,13 +22,13 @@ std::uint32_t PlayerRead(std::span<const std::uint8_t> raw,std::size_t field) {
     return value;
 }
 }
-// 동일 월드와 모든 필수 하위 경계를 확인해 실제9기록을 참조한다.
+// 같은 풀/실제9기록을 확인하며 CD의 기존 전수 장치 계약은 유지한다.
 RawPlayerWorld::RawPlayerWorld(SidPool& pool,SquidPostPop& base,std::span<std::uint8_t> playerRecords,
     PlayerWorldState& state,PlayerWorldHooks hooks)
     :pool_(pool),base_(base),players_(playerRecords),state_(state),hooks_(std::move(hooks)) {
     const auto stride=pool.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 현재 PE의 실제 Player 한 기록 크기다.
-    if (&base.Pool()!=&pool || players_.size()!=9U*stride || !hooks_.assertion || !hooks_.find || !hooks_.create ||
-        !hooks_.setOwner || !hooks_.pop || !hooks_.reserveRegular || !hooks_.addRegular)
+    if (&base.Pool()!=&pool || players_.size()!=9U*stride || (pool.Edition()==OriginalEdition::Cd1072 && (!hooks_.assertion || !hooks_.find || !hooks_.create ||
+        !hooks_.setOwner || !hooks_.pop || !hooks_.reserveRegular || !hooks_.addRegular)))
         throw std::invalid_argument("Player 실제 동일Pool/9기록/필수효과 누락");
 }
 // 원본 wrapper에는 owner 범위 진단이 없으므로 안전한 현재9기록 범위 밖은 명시 계약 오류다.
@@ -36,18 +38,18 @@ std::size_t RawPlayerWorld::TechnologyOffset(std::uint32_t owner) const {
 }
 // 실제 Create(type,2) 뒤 가상Owner/첫 공간Pop을 순서대로 연결한다.
 Sid RawPlayerWorld::Create(std::int32_t owner) const {
-    if (!state_.playerKnown) hooks_.assertion(PlayerWorldAssertion::PlayerIdKnown);
+    if (!state_.playerKnown) PlayerNeed(hooks_.assertion)(PlayerWorldAssertion::PlayerIdKnown);
     const auto sum=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(owner)+10U); // 원본 signed32 좌표의 감김 덧셈을 보존한다.
     const float x=static_cast<float>(sum),y=state_.special ? 10.0f : 1.0f;
-    if (hooks_.find(x,y,state_.playerType).value) hooks_.assertion(PlayerWorldAssertion::PlayerAlreadyExists);
-    const auto sid=hooks_.create(state_.playerType,2);hooks_.setOwner(sid,static_cast<std::uint32_t>(owner));
-    PlayerWrite(pool_.AllocatedBytes(sid),pool_.Edition()==OriginalEdition::Patch1078 ? 36U : 34U,0,
+    if (PlayerNeed(hooks_.find)(x,y,state_.playerType).value) PlayerNeed(hooks_.assertion)(PlayerWorldAssertion::PlayerAlreadyExists);
+    const auto sid=PlayerNeed(hooks_.create)(state_.playerType,2);PlayerNeed(hooks_.setOwner)(sid,static_cast<std::uint32_t>(owner));
+    PlayerWrite(pool_.Edition()==OriginalEdition::Patch1078 ? PlayerSlot(pool_,sid) : pool_.AllocatedBytes(sid),pool_.Edition()==OriginalEdition::Patch1078 ? 36U : 34U,0,
         pool_.Edition()==OriginalEdition::Patch1078 ? 4U : 1U);
-    hooks_.pop(sid,x,y,0);return sid;
+    PlayerNeed(hooks_.pop)(sid,x,y,0);return sid;
 }
 // 실제 생성자의 VT만 분배 대상으로 인정한다.
 bool RawPlayerWorld::Handles(Sid sid) const {
-    const auto raw=pool_.AllocatedBytes(sid);return PlayerRead(raw,0)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchPlayerVtable : kCdPlayerVtable);
+    const auto raw=pool_.Edition()==OriginalEdition::Patch1078 ? pool_.Slot(sid) : pool_.AllocatedBytes(sid);return PlayerRead(raw,0)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchPlayerVtable : kCdPlayerVtable);
 }
 // 현재 owner의 실제기록과 비가상 공통 장부를 공간 효과 전에 확인한다.
 void RawPlayerWorld::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) const {
@@ -56,12 +58,12 @@ void RawPlayerWorld::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop
 }
 // 현재 원본 owner/SID를 기록한 뒤 실제 new 성공 조건과 마지막 공통Post를 유지한다.
 void RawPlayerWorld::PostPop(Sid sid,std::uint32_t flags) const {
-    Validate(sid,flags);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;auto raw=pool_.AllocatedBytes(sid);
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;if (!patch) Validate(sid,flags);auto raw=patch ? PlayerSlot(pool_,sid) : pool_.AllocatedBytes(sid);
     PlayerWrite(players_,TechnologyOffset(raw[patch ? 34U : 32U]),sid.value);
     if ((flags&1U) && raw[patch ? 34U : 32U]==state_.battleOwner && !state_.fortMode) {
-        if (hooks_.reserveRegular()) hooks_.addRegular(sid,1,5.0f);
+        if (PlayerNeed(hooks_.reserveRegular)()) PlayerNeed(hooks_.addRegular)(sid,1,5.0f);
     }
-    if ((flags&1U) && state_.special) PlayerWrite(pool_.AllocatedBytes(sid),patch ? 36U : 34U,1,patch ? 4U : 1U);
+    if ((flags&1U) && state_.special) PlayerWrite(patch ? PlayerSlot(pool_,sid) : pool_.AllocatedBytes(sid),patch ? 36U : 34U,1,patch ? 4U : 1U);
     base_.PostPopBase(sid,flags);
 }
 // 아직 Player 번호가 알려지지 않았으면 원본처럼 실제기록을 조회하지 않고0을 반환한다.
@@ -70,7 +72,7 @@ std::uint32_t RawPlayerWorld::CurrentTechnology() const {
 }
 // 명시 owner 조회는 원본 PlayerKnown 진단 후 같은9기록 DWORD를 읽는다.
 std::uint32_t RawPlayerWorld::Technology(std::int32_t owner) const {
-    if (!state_.playerKnown) hooks_.assertion(PlayerWorldAssertion::PlayerIdKnown);
+    if (!state_.playerKnown) PlayerNeed(hooks_.assertion)(PlayerWorldAssertion::PlayerIdKnown);
     return PlayerRead(players_,TechnologyOffset(static_cast<std::uint32_t>(owner)));
 }
 // 같은 Pool 분배/Host 연결을 검증할 때 참조를 제공한다.

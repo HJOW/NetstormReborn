@@ -19,7 +19,7 @@ struct PlayerWorldState {
     bool fortMode{}; // PATCH594fb8/CD540a1c: local 최초 Regular1을 생략하는 조건이다.
     std::uint32_t special{}; // PATCH55a480/CD537e8c의원시DWORD다. DebugSwitch의29/99와생성y=10/직접frame1의비영조건을함께보존한다.
 };
-// 실제 Factory/Owner/Pop/예약을 빠짐없이 연결한다. 선택 효과를 기본값으로 대체하지 않는다.
+// 실제 Factory/Owner/Pop/예약을 도달 위치에서 요구한다. 선택 효과를 기본값으로 대체하지 않는다.
 struct PlayerWorldHooks {
     std::function<void(PlayerWorldAssertion)> assertion; // 원본 assert 후 계속 수행하는 진단 경계다.
     std::function<Sid(float,float,std::uint32_t)> find; // PATCH4b1fa0/CD4eb4b0의 같은 Pool/Hash 현재 타입 검색이다.
@@ -39,7 +39,7 @@ public:
     Sid Create(std::int32_t owner) const;
     // PATCH4905d0/CD407cc0: 현재 owner의SID→조건부예약→special 직접frame1→비가상공통Post다.
     void PostPop(Sid sid,std::uint32_t flags) const;
-    // 가상 분배기가 실제 Player VT인지 확인한다. 타입 번호만 보고 다른 몸체를 덮지 않는다.
+    // 실제 Player VT를 확인한다. PATCH는 물리 슬롯을 읽으며 CD는 기존 할당 경계를 유지한다.
     bool Handles(Sid sid) const;
     // Player 기록/공통Post와 선택된 실제예약을 공간 변경 전에 검사한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
