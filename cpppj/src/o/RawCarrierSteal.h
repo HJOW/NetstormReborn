@@ -32,7 +32,7 @@ public:
     //현재로컬DWORD의임시값/다른폭변환은장기참조로보관하지않는다.
     RawCarrierSteal(const SidPool&,const SquidHash&,std::span<const RiftTypeRecord>,const bool&,const std::uint32_t&,std::uint32_t&&,std::span<const std::uint32_t>,const std::uint32_t&,const std::uint32_t&,const FormPacketHeader&,std::uint32_t&,CarrierStealHooks)=delete;
     RawCarrierSteal(const SidPool&,const SquidHash&,std::span<const RiftTypeRecord>,const bool&,const std::uint32_t&,const std::uint32_t&&,std::span<const std::uint32_t>,const std::uint32_t&,const std::uint32_t&,const FormPacketHeader&,std::uint32_t&,CarrierStealHooks)=delete;
-    bool Handles(Sid parent) const; // 실제크랩VT503f20만 전용 배치 후처리로 받는다.
+    bool Handles(Sid parent) const; // 같은42abb0을쓰는크랩503f20/예약187의503ff0을받는다.
     void PostPop(Sid parent,std::uint32_t flags) const; //42abb0의492 예약/현재check/Damageable 사슬이다.
     std::uint32_t Halt(Sid parent) const; //42ab80의 공유signed 나머지4와 포획/공통 분배다.
     std::uint32_t Try(Sid parent) const; //429ed0: 실제 포획 뒤12, 나머지10이다.

@@ -4,6 +4,7 @@
 #include "o/RawForcefieldLifecycle.h"
 #include "o/RawCarrierPostPop.h"
 #include "o/RawCarrierSteal.h"
+#include "o/RawBombPostPop.h"
 #include "o/RawBalloonBody.h"
 #include "o/RawAssetPostPop.h"
 #include "o/RawFactoryPostPop.h"
@@ -103,7 +104,7 @@ bool SquidPostPop::HandlesIsland(Sid sid) const {
     return (pool_.Edition()==OriginalEdition::Patch1078 || islandPrefix_) && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
-bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesCarrierSteal(sid) || HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid) || HandlesFlyer(sid) || HandlesBalloon(sid); }
+bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesBomb(sid) || HandlesCarrierSteal(sid) || HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid) || HandlesFlyer(sid) || HandlesBalloon(sid); }
 // 정확한5040c0과 같은 풀의 장기 몸체를 확인한다.
 void SquidPostPop::SetBalloonPostPop(const RawBalloonBody* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("벌룬 PostPop/공통 풀 불일치");balloonPostPop_=postPop; }
 bool SquidPostPop::HandlesBalloon(Sid sid) const { return balloonPostPop_ && balloonPostPop_->Handles(sid); } //동일 생성자 표 이외는 처리하지 않는다.
@@ -160,6 +161,9 @@ bool SquidPostPop::HandlesAsset(Sid sid) const { return assetPostPop_ && assetPo
 void SquidPostPop::SetCarrierStealPostPop(const RawCarrierSteal* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("크랩 PostPop/공통 풀 불일치");carrierStealPostPop_=postPop; }
 // 실제 등록한 같은풀/정확한가상표만 지원한다.
 bool SquidPostPop::HandlesCarrierSteal(Sid sid) const { return carrierStealPostPop_ && carrierStealPostPop_->Handles(sid); }
+// 같은 풀의 세 효과 접두만 등록하며 공통 장부는 이 분배가 계속 소유한다.
+void SquidPostPop::SetBombPostPop(const RawBombPostPop* postPop) { if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("주문 효과 Pop/공통 풀 불일치");bombPostPop_=postPop; }
+bool SquidPostPop::HandlesBomb(Sid sid) const { return bombPostPop_ && bombPostPop_->Handles(sid); } // 표시 TYPE 대신 실제 가상 표를 조회한다.
 // 기존 직접 호출 몸체를 같은 월드의 가상 분배에 연결한다. 주소 표만으로 미연결 효과를 허용하지 않는다.
 void SquidPostPop::SetCarrierPostPop(const RawCarrierPostPop* postPop) {
     if (postPop && &postPop->Pool()!=&pool_) throw std::invalid_argument("Carrier Pop/후처리 풀 불일치");
@@ -365,7 +369,8 @@ void SquidPostPop::DispatchPostPop(Sid sid,std::uint32_t flags) {
 
         return;
     }
-    if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);
+    if (HandlesBomb(sid)) bombPostPop_->Prefix(sid,flags); // 세 접두는 공통4b0d30을 스스로 호출하지 않으므로 아래에서 한 번만 처리한다.
+    else if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);
     // 섬 받침은 접두(종유석·연결 순회) 뒤에 같은 flags로 공통 후처리를 부른다.
     else if (HandlesIsland(sid)) {
         if (pool_.Edition()!=OriginalEdition::Patch1078 || (flags&1U)) { const auto selected=islandPrefix_;if (!selected) throw std::logic_error("섬 선택 접두 미연결");selected(sid,flags); } // 현재 콜백이 연결을 반납해도 복사한 callable은 호출 끝까지 유지한다.

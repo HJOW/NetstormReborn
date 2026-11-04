@@ -3472,3 +3472,7 @@ target_sources(netstorm_pop_context_tests PRIVATE AssetConstructorCurrentTests.c
 
 target_sources(netstorm_tests PRIVATE PopWorldBoundsTests.cpp) # 원문260개 현재크기/NaN/float저장을 대조한다(889).
 target_sources(netstorm_pop_context_tests PRIVATE PopWorldBoundsTests.cpp) # 게임/공중3종/MP 없이 좌표 검사와 같은 Pop 부모만 실행한다(889).
+
+# 주문 효과 접두와 예약187 주소만 대조하며 실제 시전/포획/MP는 실행하지 않는다(단위890).
+target_sources(netstorm_tests PRIVATE BombPostPopTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE BombPostPopTests.cpp)

@@ -104,7 +104,7 @@ TEST_CASE(CarrierSteal_LazyBoundariesAndPacketBounds) {
     CarrierStealScene scene;RawCarrierSteal steal(scene.pool,scene.hash,scene.types,scene.boss,scene.editor,scene.owner,scene.alliances,scene.carrierType,scene.priestType,scene.header,scene.haltCounter,{});CHECK(steal.Try(Sid{50})==10);CHECK(&steal.Pool()==&scene.pool);
     std::vector<Sid> parents;CarrierStealHooks hooks;hooks.commonHalt=[&](Sid parent) { parents.push_back(parent);return 11U; };RawCarrierSteal shared(scene.pool,scene.hash,scene.types,scene.boss,scene.editor,scene.owner,scene.alliances,scene.carrierType,scene.priestType,scene.header,scene.haltCounter,std::move(hooks));
     CHECK(shared.Halt(Sid{50})==11 && shared.Halt(Sid{60})==11 && shared.Halt(Sid{50})==11 && shared.Halt(Sid{60})==10);CHECK(scene.haltCounter==0 && (parents==std::vector<Sid>{Sid{50},Sid{60},Sid{50}}));
-    Put(scene.Raw(Sid{50}),0,0x503f20);CHECK(shared.Handles(Sid{50}));Put(scene.Raw(Sid{50}),0,0x503ff0);CHECK(!shared.Handles(Sid{50}));
+    Put(scene.Raw(Sid{50}),0,0x503f20);CHECK(shared.Handles(Sid{50}));Put(scene.Raw(Sid{50}),0,0x503ff0);CHECK(shared.Handles(Sid{50})); // PE의두+20은같은42abb0이며Halt는서로다르다.
     scene.boss=true;bool rejected{};try { static_cast<void>(steal.Try(Sid{50})); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected);
     std::array<std::uint8_t,7> packet{};rejected=false;try { steal.Receive(0,0,packet); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
 }

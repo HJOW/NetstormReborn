@@ -197,6 +197,7 @@ target_sources(netstorm PRIVATE o/RawCarrierEscape.cpp o/RawCarrierEscape.h)
 
 # 실제 크리스탈 크랩 포획과60h 수신 몸체다.
 target_sources(netstorm PRIVATE o/RawCarrierSteal.cpp o/RawCarrierSteal.h)
+target_sources(netstorm PRIVATE o/RawBombPostPop.cpp o/RawBombPostPop.h) # 세 주문 효과의 실제 가상20 예약 접두다.
 
 # 일반운반체의실제4f 요청/서버객체내용물변환이다.
 target_sources(netstorm PRIVATE o/RawCarrierPickup.cpp o/RawCarrierPickup.h)

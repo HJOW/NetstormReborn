@@ -107,6 +107,7 @@
 #include "o/RawGeyserLifetime.h"
 #include "o/RawCarrierEscape.h"
 #include "o/RawCarrierSteal.h"
+#include "o/RawBombPostPop.h"
 #include "o/RawCarrierPickup.h"
 #include "o/RawCarrierMove.h"
 #include "o/RawSalvageCommand.h"
@@ -663,6 +664,8 @@ struct RawCampaignSession::Impl {
     std::uint32_t stealHaltCounter{}; // 모든 크랩이 공유하는00545428이다.
     FormPacketHeader stealHeader{0x60,1,10}; // 실제40acf0의 현재 포획 헤더다.
     std::unique_ptr<RawCarrierSteal> carrierSteal; // 같은 내용물/공간/방향 동맹/이동/전역 음향의 실제 포획이다.
+    std::unique_ptr<RawBombPostPop> bombPostPop; // 같은 장기 난수와 실제 Host를 사용하는 세 주문 효과 접두다.
+    std::unique_ptr<RegularProcess> pendingBombPopRegular; // new0x28 성공 뒤 생성/부착할 같은 메모리를 보관한다.
     AcidZapState acidZapState; //현재 제단/성장 중 아이스 타워의 수신 제외TYPE다.
     FormPacketHeader acidZapHeader{0x61,1,11}; //52ee42의message/protocol/선언길이다. wire는01/61 순서다.
     std::unique_ptr<RawAcidZap> acidZap; //실제18 캡처와 같은 가상 삭제를 사용하는 포획 수신이다.
@@ -1412,6 +1415,7 @@ struct RawCampaignSession::Impl {
         ConnectDamageable(); // 같은 공통 삭제와 신전/사제 해방의 파생 하위를 첫 객체 전에 연결한다.
         ConnectIceTower(); //첫147/150 Pop 전에전용재생성/성장을같은월드에연결한다.
         ConnectCarrierSteal(); // 최초 크랩 Pop의 실제492예약/공통 장부다.
+        ConnectBombPostPop(); // 첫 효과174/176/177 Pop 전에 중복 조회/예약을 실제 Host에 연결한다.
         ConnectAcidZap(); //최초61h 수신 전에 실제 분해18/현재 가상 삭제를 연결한다.
         ConnectAcidFence(); //첫145 Pop 전에 전용 주기/포획의 같은 세계를 연결한다.
         ConnectCarrierRegular(); // 첫491예약/프레임 전에 같은 내용물 그림과 만료 삭제를 연결한다.
@@ -2061,6 +2065,17 @@ struct RawCampaignSession::Impl {
         steal.damageablePostPop=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
         carrierSteal=std::make_unique<RawCarrierSteal>(core.pool,core.hash,core.types,assetState.Boss(),globals.editor,playerState.battleOwner,alliances,motionState.halt.carrierType,motionState.carrier.priestType,stealHeader,stealHaltCounter,std::move(steal));
         core.postPop.SetCarrierStealPostPop(carrierSteal.get());
+    }
+    // 세 효과의 최초 예약만 연결한다. 시전/공격 Frame은 기존 주기 분배가 담당한다.
+    void ConnectBombPostPop() {
+        BombPostPopHooks post; // 중복과 할당 실패에서는 게임 난수와 생성자를 실행하지 않는다.
+        post.hasRegular=[this](Sid sid,std::uint32_t event) { return core.processes.FindEvent(sid,event)!=nullptr; };
+        post.reserveRegular=[this] { if (pendingBombPopRegular) throw std::logic_error("주문 효과 Regular 중복 예약");try { pendingBombPopRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
+        post.addRegular=[this](Sid sid,std::uint32_t event,float delay) {
+            if (!pendingBombPopRegular) throw std::logic_error("주문 효과 Regular 확보 누락");auto* reserved=pendingBombPopRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay); // 난수 계산 뒤에도 확보한 같은 메모리를 사용한다.
+            auto* process=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingBombPopRegular),46,sid,0x50));process->ResetTask(event,core.processState.Now());
+        };
+        bombPostPop=std::make_unique<RawBombPostPop>(core.pool,random,std::move(post));core.postPop.SetBombPostPop(bombPostPop.get());
     }
     // 원본48bfe0의음향→현재픽셀캡처/18→같은대상의가상삭제를연결한다.
     void ConnectAcidZap() {
@@ -3435,6 +3450,7 @@ struct RawCampaignSession::Impl {
         core.postPop.BindPatchSelectionRecheck({});core.postPop.BindPatchLocalOwner({}); //외부World에이전Session/UI주소를남기지않는다.
         core.postPop.SetDudePostPop(nullptr); // 생성/최초 Pop 모듈보다 먼저 파생 분배를 반납한다.
         core.postPop.SetCarrierStealPostPop(nullptr); // 장기 크랩 몸체보다 먼저 가상 분배를 반납한다.
+        core.postPop.SetBombPostPop(nullptr); // 주문 효과 접두의 Session/난수 참조를 모듈 해제 전에 반납한다.
         core.postPop.SetPlayerPostPop(nullptr);
         core.postPop.SetBuriedPostPop(nullptr); // 장기 모듈 해제 뒤 파생 포인터를 남기지 않는다.
         core.postPop.SetFlyerPostPop(nullptr); // 비행 장기 몸체 해제 뒤 공통 분배에 포인터를 남기지 않는다.

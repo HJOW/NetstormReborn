@@ -32,8 +32,8 @@ RawCarrierSteal::RawCarrierSteal(const SidPool& pool,const SquidHash& hash,std::
     alliances_(alliances),carrierType_(carrierType),priestType_(priestType),header_(header),haltCounter_(haltCounter),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || alliances.size()!=81) throw std::invalid_argument("크리스탈 크랩 포획 판본/현재표 오류");
 }
-// 타입번호가 같아도 다른 가상 표를 이 전용 몸체로 자동 분배하지 않는다.
-bool RawCarrierSteal::Handles(Sid parent) const { return Read(pool_.Slot(parent),0)==0x503f20U; }
+// 크랩과 예약187의 두 실제 +20은 모두42abb0이다. TYPE/가상Halt 재정의는 이 주소 판단에 섞지 않는다.
+bool RawCarrierSteal::Handles(Sid parent) const { const auto table=Read(pool_.Slot(parent),0);return table==0x503f20U || table==0x503ff0U; }
 // 최초의extra/flags 관문 뒤 현재boss를 읽으며 파생예약 뒤 공통 장부를 한 번 실행한다.
 void RawCarrierSteal::PostPop(Sid parent,std::uint32_t flags) const {
     if (!(pool_.Slot(parent)[40]&9) && (flags&1) && Need(hooks_.allocateRegular)()) Need(hooks_.regular)(parent,0x492,1.0F);

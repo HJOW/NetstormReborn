@@ -1,0 +1,881 @@
+{
+ "unit": 890,
+ "date": "2026-11-05",
+ "status": "unit-complete-overall-goal-in-progress",
+ "scope": "10.78 가상20 정적83표 대조와 누락효과3/예약187연결",
+ "lastPreciseDecompile": {
+  "host": "HJOW-Athlon",
+  "date": "2026-11-03"
+ },
+ "staticDispatch": {
+  "vtableCount": 83,
+  "nativePostPopFunctionCount": 46,
+  "nativeFirstPopFunctionCount": 1,
+  "classifiedCode": 81,
+  "deferredMetamap": 2,
+  "rows": [
+   {
+    "vtable": "00501dd0",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00501ea0",
+    "nativePostPop": "0041c150",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502370",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502448",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502510",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005025d8",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005026a0",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502778",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502840",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502908",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005029d0",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502aa8",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502b70",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502c38",
+    "nativePostPop": "0041f870",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "bombEffect",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502cf0",
+    "nativePostPop": "0041f920",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "bombEffect",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502db0",
+    "nativePostPop": "0041fab0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "bombEffect",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502e68",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502f30",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00502ff8",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005030c0",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00503188",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00503360",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005034c8",
+    "nativePostPop": "00422150",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "bridge",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00503d80",
+    "nativePostPop": "00427720",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "carrier",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00503e50",
+    "nativePostPop": "00427720",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "carrier",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00503f20",
+    "nativePostPop": "0042abb0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "carrierSteal",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00503ff0",
+    "nativePostPop": "0042abb0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "carrierSteal",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005040c0",
+    "nativePostPop": "0042ac90",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "balloon",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00504198",
+    "nativePostPop": "0042aed0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "balloon",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00506d98",
+    "nativePostPop": "004421c0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "island",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00506e50",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00506f08",
+    "nativePostPop": "004423b0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "surface",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005070c0",
+    "nativePostPop": "004429f0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "teleport",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005075d8",
+    "nativePostPop": "00448930",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "rune",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005076b8",
+    "nativePostPop": "00448ad0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "dais",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00507770",
+    "nativePostPop": "00448d20",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "forcefield",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00507950",
+    "nativePostPop": "00449320",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "dais",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00508cc8",
+    "nativePostPop": "00450cd0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "dude",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00509148",
+    "nativePostPop": "004538f0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "factory",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00509210",
+    "nativePostPop": "004557c0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "factory",
+    "scope": "code-only-MP-Outpost"
+   },
+   {
+    "vtable": "005092d0",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00509388",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00509470",
+    "nativePostPop": "00457560",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005096a0",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00509758",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00509810",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00509930",
+    "nativePostPop": "0045ec50",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005099e8",
+    "nativePostPop": "0045ed10",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00509aa0",
+    "nativePostPop": "0045edf0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00509b98",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050a050",
+    "nativePostPop": "0045e810",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "flyer",
+    "scope": "code-only-air3"
+   },
+   {
+    "vtable": "0050a1e8",
+    "nativePostPop": "0045ef30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "flyer",
+    "scope": "code-only-air3"
+   },
+   {
+    "vtable": "0050a388",
+    "nativePostPop": "0045fac0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "flyer",
+    "scope": "code-only-air3"
+   },
+   {
+    "vtable": "0050a748",
+    "nativePostPop": "00462170",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "buried",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050a820",
+    "nativePostPop": "0044bf80",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "damageable",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050a8e8",
+    "nativePostPop": "0044bf80",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "damageable",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050b570",
+    "nativePostPop": "004694b0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050b6e8",
+    "nativePostPop": "0046a520",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050b7c0",
+    "nativePostPop": "0046a600",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050b888",
+    "nativePostPop": "0046a810",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050b9b8",
+    "nativePostPop": "0046aca0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050bad0",
+    "nativePostPop": "0046aca0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050c3b0",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050c9f0",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": null,
+    "scope": "MP-metamap-deferred"
+   },
+   {
+    "vtable": "0050cc08",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": null,
+    "scope": "MP-metamap-deferred"
+   },
+   {
+    "vtable": "0050da88",
+    "nativePostPop": "004852e0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050db78",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050dc30",
+    "nativePostPop": "00484f90",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050e568",
+    "nativePostPop": "00427720",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "carrier",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050e668",
+    "nativePostPop": "0048c080",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050e738",
+    "nativePostPop": "0048c7a0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050e888",
+    "nativePostPop": "0048ead0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050e940",
+    "nativePostPop": "0048eda0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050ea08",
+    "nativePostPop": "0048eda0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050ead0",
+    "nativePostPop": "0048eda0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050eb98",
+    "nativePostPop": "004b0d30",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "common",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050ee08",
+    "nativePostPop": "004905d0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "player",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050f210",
+    "nativePostPop": "004950f0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "priest",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "0050f540",
+    "nativePostPop": "0049a2b0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005196f0",
+    "nativePostPop": "004dce40",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "005197a8",
+    "nativePostPop": "004dd020",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00519860",
+    "nativePostPop": "004dd020",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   },
+   {
+    "vtable": "00519918",
+    "nativePostPop": "004dd1f0",
+    "nativeFirstPop": "004ad470",
+    "cppBody": "asset",
+    "scope": "non-MP-code"
+   }
+  ],
+  "boundary": "PE정적읽기와C++실제분배검토. 모든몸체/전체Pop실행아님. 공중3종/Outpost는코드만,2메타맵미연결. 새효과3/예약187연결.",
+  "sha256": {
+   "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+   "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+   "cpppj/src/o/PopVtables.inc": "7e1989b0f2d13457b72388c7df9d231411b556aa7c47e1130e1616a3d5a7de16",
+   "cpppj/src/o/SquidPostPop.cpp": "8e26d019508f81556ff11cea730e70befd41e1f40023f13e45283c6a045ee53d",
+   "cpppj/src/o/RawBombPostPop.cpp": "b0b558d1b9040147658f96f0a97a8bb474aa236fc580f88ec7ebff1f13d28a6c",
+   "cpppj/src/o/RawCarrierSteal.cpp": "1a8c3ed35a4d0be17563137d9f55617fa80512591d68c37368576c6053881f85",
+   "cpppj/src/client/RawCampaignSession.cpp": "bfdf3374214b03a6a5fd69467205b113481578068bf86f7fbf2c5b19b940b035"
+  }
+ },
+ "nativeFirst": {
+  "host": "HJOW-Athlon",
+  "date": "2026-11-05",
+  "lastPreciseDecompile": {
+   "host": "HJOW-Athlon",
+   "date": "2026-11-03"
+  },
+  "cases": 432,
+  "observations": 864,
+  "instructions": 27840,
+  "verify": false,
+  "boundaries": "41f870/41f920/41fab0 및455930 전체. 4afb40/new28/496e80/4b0d30은 명시 인자/반환 경계. 실제 시전/공격/게임/MP0.",
+  "sha256": {
+   "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+   "cpppj/tests/fixtures/bomb-postpop-x86.tsv": "392fd34c28870eec31ad5c1104ce2ea397ca6b0d5df57f788666095c46a25725",
+   "tools/decomp_bomb_postpop.py": "02c4c27331a32034b43721a1df2ac673ededb0b1f6891beadc4f2f671cfdaf5d"
+  }
+ },
+ "nativeVerify": {
+  "host": "HJOW-Athlon",
+  "date": "2026-11-05",
+  "lastPreciseDecompile": {
+   "host": "HJOW-Athlon",
+   "date": "2026-11-03"
+  },
+  "cases": 432,
+  "observations": 864,
+  "instructions": 27840,
+  "verify": true,
+  "boundaries": "41f870/41f920/41fab0 및455930 전체. 4afb40/new28/496e80/4b0d30은 명시 인자/반환 경계. 실제 시전/공격/게임/MP0.",
+  "sha256": {
+   "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+   "cpppj/tests/fixtures/bomb-postpop-x86.tsv": "392fd34c28870eec31ad5c1104ce2ea397ca6b0d5df57f788666095c46a25725",
+   "tools/decomp_bomb_postpop.py": "02c4c27331a32034b43721a1df2ac673ededb0b1f6891beadc4f2f671cfdaf5d"
+  }
+ },
+ "validateAudit": {
+  "edition": "10.78",
+  "actualRoute": [
+   "SquidPop.Pop/PopCurrent→PopPatch",
+   "RunSquidPopParent→RunSquidActivate",
+   "current.postPop→SquidPostPop.PostPopVirtual→DispatchPostPop",
+   "derivedPrefix/body→PostPop/PostPopBase→PostPopPatch"
+  ],
+  "legacyRoute": "SquidPop.Pop의PATCH조기return뒤CD본문만postPop.Validate/Activate를호출한다. 독립Activate는명시Validate계약을유지한다.",
+  "changedLegacyAssertion": "CarrierSteal_LazyBoundariesAndPacketBounds의VT503ff0지원기대만PE+20근거로변경. 패킷을포함한이기존검사는새로실행하지않고새순수지원주소사례만실행한다.",
+  "remaining": "전체Pop현재대여/다른mode 및Host.FindEvent의현재Regular TYPE00541128/00541164를별도감사한다. 83VT정적분배만으로checking전체완료를세지않는다."
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "completedParents": 38,
+  "completedPartial": 3
+ },
+ "excluded": [
+  "게임/GUI/진단 UI",
+  "실제 시전/특정 적 공격/포획/희생/승리",
+  "신규 MP/패킷/통신",
+  "공중3종 전용",
+  "전체71/CTest/34미션/ZIP반복"
+ ],
+ "build": {
+  "exitCode": 0,
+  "elapsedSeconds": 952.7283821,
+  "warnings": 0,
+  "errors": 0
+ },
+ "verification": {
+  "uniqueLogicalCases": 24,
+  "newLogicalCases": 4,
+  "filterExecutions": 7,
+  "caseExecutions": 24,
+  "failedChecks": 0,
+  "firstRunPassed": true,
+  "protectedBefore": 2769,
+  "fixturesBefore": 949,
+  "protectedAfter": 2770,
+  "fixturesAfter": 950,
+  "existingProtectedChanges": 0,
+  "newFixtures": 1,
+  "compiledSourceSnapshotFiles": 14,
+  "sourceChangesDuringBuild": 0,
+  "product": {
+   "path": "cpppj/build/bin/Release/Netstorm.exe",
+   "sha256": "d35a7534f476852bb8cc475d3f771c8edf0432fe13e5ad3e456743dfcc7d0f63",
+   "size": 10670080,
+   "version": "11.01"
+  },
+  "tests": [
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "BombPostPop_",
+    "cases": 3,
+    "expectedCases": 3,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-890/test-bomb-postpop-first.log",
+    "sha256": "cb289b7e3de514f74bd8df96e42684c6db5a1d6a79bc039e2381a5d178cb9563"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "BombPostPop_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-890/test-bomb-session-first.log",
+    "sha256": "22d388efb3d8c051d3c40ffc3fb0daa58a52b2240ad3ce8dce349c00eaf71d29"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "SquidPopParent_",
+    "cases": 14,
+    "expectedCases": 14,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-890/test-pop-parent-first.log",
+    "sha256": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27"
+   },
+   {
+    "target": "netstorm_pop_context_tests",
+    "filter": "PopWorldBounds_",
+    "cases": 3,
+    "expectedCases": 3,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-890/test-pop-world-first.log",
+    "sha256": "970ec4f695da074c090dafa4aa06341ba9fe68c061f94dd51b509025b18e3513"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "PopWorldBounds_",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-890/test-pop-world-session-first.log",
+    "sha256": "090ecf0fb2119ee7e66cec4783ef1476579cbee951425bc2722cb35db0980aed"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "RiftShapeAccess_ActualSessionRetainsInputFrameAndLoadedCost",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-890/test-session-loaded-cost-first.log",
+    "sha256": "2d37801948ac45fd97c8fa30f70ca8640e72b397e5b8cc2f26fb4068cc861bbe"
+   },
+   {
+    "target": "netstorm_menu_session_tests",
+    "filter": "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse",
+    "cases": 1,
+    "expectedCases": 1,
+    "failedCases": 0,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-890/test-loaded-cost-reuse-first.log",
+    "sha256": "b7cc4d9114c429788bdc6b8f76507cab78825941876cba878fa9b34b26d8de19"
+   }
+  ],
+  "logicalCaseNames": [
+   [
+    "netstorm_pop_context_tests",
+    "BombPostPop_Native432PrefixesAndCommonDepth"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "BombPostPop_LazySelectedDevicesAndSavedVtable"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "BombPostPop_Reserved187UsesSameCarrierPostPopAddress"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "BombPostPop_ActualSessionSharesRandomAndDeduplicatesRealRegular"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_EarlyReturnsDoNotReadTypeOrDevices"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_InvalidCoordinateLogsBeforeStoreAndUsesCurrentType"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_MiniMapPreservesInputBoundsAndReadsCurrentLoopType"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_InvalidStartDiagnosesWithCheckingOffAndResumesCellZero"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_GridDiagnosticKeepsCandidateAndLogsCurrentNames"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_MissingSideDeviceKeepsEarlierSpots"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_FrameFailureOccursAfterSpotsBeforeHash"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_OverlapReturnsBeforeUnknownVirtualAndFrame"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_NextDiagnosticKeepsSavedHeadAndCurrentIslandBranch"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_UpdateControlsCurrentFirstPopAndFlags"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_FinalContainedDiagnosticKeepsCompletedEffects"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_ActualAdapterTransmittingDiagnosticRunsAfterVoidClear"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_ActualWorldFrameFailurePreservesCoordinatesAndSpots"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_ActualClientWorldDiagnosticAndTraceShareCurrentOwner"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "PopWorldBounds_ActualParentClampsUnorderedAndRechecksLimitAfterMiniMap"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "PopWorldBounds_Native260OrderedPointAndPopFrontFloatSnapshot"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "PopWorldBounds_SelectedGetterSurvivesSelfUnbindingAndInvalidXSkipsIt"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "PopWorldBounds_ActualSessionUsesSameCurrentClientSizeAsCursorAndCamera"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "RiftShapeAccess_ActualSessionRetainsInputFrameAndLoadedCost"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse"
+   ]
+  ]
+ },
+ "productUnit": 890,
+ "nextUnit": 891,
+ "next": "Host.FindEvent 및 Regular/SharedRegular 생성자의 현재 TYPE00541128/00541164/장기 owner와 실제 Pop 재진입을 대조한다. MP메타맵2표/전체Pop은 잔여다."
+}
