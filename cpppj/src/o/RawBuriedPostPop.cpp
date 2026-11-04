@@ -8,11 +8,11 @@ namespace netstorm::o {
 namespace {
 constexpr std::uint32_t kBuriedVtable=0x0050a748; // PATCH 생성자004625f0이 기록하는 실제 가상 표다.
 // 선택된 미연결 하위만 명시 거부하고 앞서 실행한 원문 효과는 보존한다.
-template<class Function> const Function& Need(const Function& function) { if (!function) throw std::logic_error("buried PostPop의 실제 하위 소비자 미연결");return function; }
+template<class Function> Function Need(const Function& function) { if (!function) throw std::logic_error("buried PostPop의 실제 하위 소비자 미연결");return function; }
 }
 // 현재 boss/로딩 주소를 빌리며 다른 판본을 동일하게 동작한다고 가정하지 않는다.
-RawBuriedPostPop::RawBuriedPostPop(SidPool& pool,const bool& boss,const std::uint32_t& loading,BuriedPostPopHooks hooks)
-    :pool_(pool),boss_(boss),loading_(loading),hooks_(std::move(hooks)) {
+RawBuriedPostPop::RawBuriedPostPop(SidPool& pool,const bool& boss,const std::uint32_t& loading,BuriedPostPopHooks hooks,const std::uint32_t& bridgeType)
+    :pool_(pool),boss_(boss),loading_(loading),bridgeType_(bridgeType),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("buried PostPop은 PATCH10.78만 복원했습니다");
 }
 // 가상 표 DWORD를 호스트 포인터로 실행하지 않는다.
@@ -28,16 +28,16 @@ void RawBuriedPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* p
 }
 // boss가 꺼져도 최초 예약은 수행하며 로딩 조건은 보상 재추첨만 억제한다.
 void RawBuriedPostPop::PostPop(Sid sid,std::uint32_t flags) const {
-    Validate(sid,flags);
     if ((flags&1U) && boss_ && loading_==0) {
-        const auto type=Need(hooks_.chooseType)(5);auto raw=pool_.AllocatedBytes(sid); // 원본 setQA는 반환값의 낮은 WORD만 저장한다.
-        raw[12]=static_cast<std::uint8_t>(type);raw[13]=static_cast<std::uint8_t>(type>>8);
+        const auto type=Need(hooks_.chooseType)(5);const auto raw=pool_.Slot(sid); // 원본 setQA는 현재 free/contained와 무관하게 낮은 WORD만 저장한다.
+        auto* bytes=const_cast<std::uint8_t*>(raw.data());bytes[12]=static_cast<std::uint8_t>(type);bytes[13]=static_cast<std::uint8_t>(type>>8);
+        if (pool_.Slot(sid)[10]==bridgeType_) Need(hooks_.notifySurface)(sid);
     }
     if (flags&1U) {
         if (Need(hooks_.reserveRegular)()) Need(hooks_.addRegular)(sid,0,0);
         if (Need(hooks_.reserveRegular)()) Need(hooks_.addRegular)(sid,1,std::bit_cast<float>(std::uint32_t{0x3c23d70a}));
     }
-    // 004acd10→0049a840은 QA로 주소를 계산하지만 반환 주소를 사용하지 않고 메모리도 쓰지 않는다.
+    const auto raw=pool_.Slot(sid);[[maybe_unused]] const auto qa=std::uint32_t(raw[12])|(std::uint32_t(raw[13])<<8); // 항상 현재 QA WORD를 읽는다. 뒤의0049a840은 사용하지 않는 주소만 계산하므로 TYPE 표를 역참조하거나 QA 범위를 검사하지 않는다.
     Need(hooks_.base)(sid,flags);
 }
 // 동일 풀의 파생 분배에만 등록할 수 있도록 참조를 돌려준다.

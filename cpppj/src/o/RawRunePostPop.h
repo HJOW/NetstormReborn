@@ -18,13 +18,15 @@ struct RunePostPopHooks {
     std::function<bool()> reserveRegular; // 최초flags1의new0x28 성공/실패다.
     std::function<void(Sid,std::uint32_t,float)> addRegular; // Host.AddRegular(Rune,0x304,0.01F)의로컬예약이다.
     std::function<void(Sid,float)> startConstruction; // 가까운같은owner신전이있으면기존Construction.Start(Rune,7/10/25)를호출한다.
+    std::function<bool()> suppressDuration; // 연결된 실제 월드는 시간 helper가 도달한 위치에서 현재00594fa4를 읽는다. 독립 구성은 state를 사용한다.
+    std::function<std::uint32_t(std::uint32_t)> playerFlags; // 같은 현재 Player 저장소의 owner별+50을 읽으며 독립 구성은 state 배열을 사용한다.
 };
 // 실제 Rune166 postPop 전체몸체다. generic Pop에는 같은SquidPostPop의명시등록으로만연결한다.
 class RawRunePostPop {
 public:
     // 풀/해시/현재표/상태/공통몸체/효과참조는이객체보다오래살아야한다.
     RawRunePostPop(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,RunePostPopState& state,SquidPostPop& base,RunePostPopHooks hooks);
-    // 실제Rune타입/가상표와이모듈등록여부를판단한다. free/void를지원주소판단과섞지않는다.
+    // PATCH는 실제 가상 표만, CD는 기존 타입/가상 표로 판단한다. free/void는 지원 주소 판단과 구별한다.
     bool Handles(Sid sid) const;
     // Pop의공간쓰기전에Rune타입/가상표/공통장부조건을검사한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* projected=nullptr) const;

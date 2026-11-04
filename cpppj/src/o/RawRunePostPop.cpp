@@ -11,6 +11,7 @@ namespace netstorm::o {
 namespace {
 constexpr float kRunePayload=0.01F,kFinderBias=0.9999899864196777F; //304예약payload와좌표almostceil의원본float다.
 constexpr std::uint32_t kRuneEvent=0x304; //두PE의최초Rune Regular사건번호다.
+template<class Function> Function RuneNeed(const Function& function) { if (!function) throw std::logic_error("Rune 후처리의 선택된 실제 하위 미연결");return function; } // 도달한 장치만 요구하며 자기 연결 반납 중 callable 수명을 유지한다.
 // 정렬되지않은littleendian필드를지정폭만읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
     std::uint32_t value=0;
@@ -23,18 +24,18 @@ int Cell(double value) {
     if (!std::isfinite(value) || value<-2147483648.0 || value>=2147483648.0) throw std::out_of_range("Rune 후처리 절삭 좌표 범위");return static_cast<int>(value);
 }
 }
-// 모든실제하위연결을효과전에검사한다.
+// 같은 풀/물리 타입 표를 확인하며 CD의 기존 전수 장치 계약만 유지한다.
 RawRunePostPop::RawRunePostPop(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,RunePostPopState& state,SquidPostPop& base,RunePostPopHooks hooks)
     :pool_(pool),hash_(hash),types_(types),state_(state),base_(base),hooks_(std::move(hooks)) {
-    if (&pool!=&base.Pool() || types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || !hooks_.reserveRegular || !hooks_.addRegular || !hooks_.startConstruction) throw std::invalid_argument("Rune 후처리 실제몸체/판본 연결 누락");
+    if (&pool!=&base.Pool() || types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || (pool.Edition()==OriginalEdition::Cd1072 && (!hooks_.reserveRegular || !hooks_.addRegular || !hooks_.startConstruction))) throw std::invalid_argument("Rune 후처리 실제몸체/판본 연결 누락");
 }
-// Rune생성자의실제가상표와현재타입번호둘다필요하다.
+// PATCH 가상 진입은 현재 TYPE와 무관하며 CD의 기존 분류는 유지한다.
 bool RawRunePostPop::Handles(Sid sid) const {
-    const auto raw=pool_.Slot(sid);return raw[10]==state_.runeType && Read(raw,0)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchRuneVtable : kCdRuneVtable);
+    const auto raw=pool_.Slot(sid);return (pool_.Edition()==OriginalEdition::Patch1078 || raw[10]==state_.runeType) && Read(raw,0)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchRuneVtable : kCdRuneVtable);
 }
 // 공통장부의원래예외/Graph조건도공간쓰기전에그대로검사한다.
 void RawRunePostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* projected) const {
-    if (!Handles(sid)) throw std::invalid_argument("Rune 후처리 타입/가상표 오류");base_.ValidateBase(sid,flags,projected);
+    if (!Handles(sid) || pool_.Slot(sid)[10]!=state_.runeType) throw std::invalid_argument("Rune 후처리 타입/가상표 오류");base_.ValidateBase(sid,flags,projected);
 }
 // 현재raw좌표를효과뒤에도각조회시다시읽는다.
 std::array<float,2> RawRunePostPop::Position(Sid sid) const { const auto raw=pool_.Slot(sid);return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))}; }
@@ -57,14 +58,16 @@ Sid RawRunePostPop::AltarAt(Sid rune) const {
 // patch의char7/10/25와CD의int7/10/25를동일정수로반환한다.
 std::int32_t RawRunePostPop::ConstructionSeconds(Sid rune) const {
     const auto altar=AltarAt(rune);
-    if (!altar.value) return 10;const auto originalOwner=Read(pool_.Slot(altar),12,2);if (!originalOwner || state_.suppressDuration) return 10;
+    if (!altar.value) return 10;const auto originalOwner=Read(pool_.Slot(altar),12,2);if (!originalOwner || (hooks_.suppressDuration ? RuneNeed(hooks_.suppressDuration)() : state_.suppressDuration)) return 10;
+    if (hooks_.playerFlags) return (RuneNeed(hooks_.playerFlags)(originalOwner)&1) ? 25 : 7;
     if (originalOwner>=state_.playerFlags.size()) throw std::out_of_range("Rune altar 원래ownerWORD/player범위");return (state_.playerFlags[originalOwner]&1) ? 25 : 7;
 }
 // 예약확보가실패해도신전/건설/공통후처리를계속한다.
 // 발견한 Dais가 시간 helper의 this다. Rune의 위치로 대신 계산하지 않는다(두 판본의 실제 ECX 추적 확인).
 void RawRunePostPop::PostPop(Sid rune,std::uint32_t flags) const {
-    Validate(rune,flags);if ((flags&1) && hooks_.reserveRegular()) hooks_.addRegular(rune,kRuneEvent,kRunePayload);
-    if (flags&2) { const auto dais=FindOwnedDais(rune);if (dais.value && dais.value<pool_.Capacity()) hooks_.startConstruction(rune,static_cast<float>(ConstructionSeconds(dais))); }
+    if (pool_.Edition()==OriginalEdition::Cd1072) Validate(rune,flags);
+    if ((flags&1) && RuneNeed(hooks_.reserveRegular)()) RuneNeed(hooks_.addRegular)(rune,kRuneEvent,kRunePayload);
+    if (flags&2) { const auto dais=FindOwnedDais(rune);if (dais.value && dais.value<pool_.Capacity()) { const auto seconds=static_cast<float>(ConstructionSeconds(dais));RuneNeed(hooks_.startConstruction)(rune,seconds); } }
     base_.PostPopBase(rune,flags);
 }
 // 등록/어댑터에동일한실제풀을제공한다.

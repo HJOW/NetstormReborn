@@ -3422,3 +3422,4 @@ target_sources(netstorm_pop_context_tests PRIVATE FencePostPopTests.cpp NuggetPo
 
 # 다리/보호막 접두의 선택 장치와 기존 비공중 원문 접두만 집중 선택한다(856).
 target_sources(netstorm_pop_context_tests PRIVATE ForcefieldLifecycleTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE BuriedPostPopTests.cpp RunePostPopTests.cpp) # buried/Rune의 현재 접두와 기존 원문 재생만 선택 실행한다.

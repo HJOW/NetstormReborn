@@ -1,0 +1,227 @@
+{
+  "unit": 857,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "42e8f1bc / 20261104-41 CP",
+  "exeSha256": "4d09e165c97795a2e625ba377f4c6043665fb076e6024d2d0e53696d68333aea",
+  "exeBytes": 10564608,
+  "sourceSha256": {
+    "cpppj/src/o/RawBuriedPostPop.h": "059c50e54ea6f4aca8841aac6a47f950077728dddca1339cfbf9d1f1a16c5ba2",
+    "cpppj/src/o/RawBuriedPostPop.cpp": "9c227534460cc1f6e6eca096a51ed07eeb3421279ae37483011165be19f6f57d",
+    "cpppj/src/o/RawRunePostPop.h": "096a746c0425e97ebe6277ca3185cc384e700a4744e79989ace37df19808a786",
+    "cpppj/src/o/RawRunePostPop.cpp": "8bd5871c87d204d7a557a0a208f0a89fea6eabe444a7e4f7303156ebe8a95c42",
+    "cpppj/src/client/RawCampaignSession.cpp": "412c5cd42560f5554eacc3a8ec3553c4c80eff844ea084220eef629f9d3c63f1",
+    "cpppj/src/client/RawCampaignRitual.inc": "6e9966ee044b56150322bfcfed484f36a692d626baa1339507313f9f0fc905e9",
+    "cpppj/tests/BuriedPostPopTests.cpp": "5bd4d5db147e0b93202c361dd9f3a84ea89d7bf840957bcd6c948facbe455972",
+    "cpppj/tests/RunePostPopTests.cpp": "293383d2fccf363b1be5b83a3481859d43fcd856edf18757658aac571bc58315",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "0fd21a4a33e5a04122e5ec86a5be0817f7d96e0ab248b1ea37db93324e341f33",
+    "cpppj/tests/CMakeLists.txt": "1a4ec172acc9cba0281310320f349fc1966a1b14ee2b295ffffe11260efc81fc"
+  },
+  "scope": [
+    "PATCH buried의 실제 몸체·물리 QA 저장/항상 읽기·현재 Bridge DWORD 조건부 통지·독립 두 확보와 도달 생성자",
+    "PATCH Rune의 실제 VT 분배/도달 장치와 현재 finder·시간 helper 뒤 건설 순서",
+    "Session은 현재 missionPost와 같은 Player+50 BYTE를 helper 도달 위치에서 읽는다",
+    "명시 Validate 및 CD Rune 기존 구성/타입 사전 계약과 CD buried 미지원 경계를 구별한다"
+  ],
+  "staticEvidence": {
+    "sha256": {
+      "extracted/cpp-resume-857/originalCD-00482990.c": "467e680c8c775e6d42792eafc9e669f42afa7c91dc681091b00fd1b469456f3d",
+      "extracted/cpp-resume-857/originalCD-00484520.c": "135ce357193fa71b0559d0f7f42b7b3e2615f2dfe54665dce786522416017bb1",
+      "extracted/cpp-resume-857/originals-00448340.c": "1b75c5f676d9f5e56d908a81b4eaa4def73941cf5d081cee2f519be9b0d7ad43",
+      "extracted/cpp-resume-857/originals-00448930.c": "0edf910107f695b62e79a88602491b9e63032f010cc05d3a1eccfef536f58d4c",
+      "extracted/cpp-resume-857/originals-00448a20.c": "d1f4f79265e9fc7f3f44171007c3f164eedb888c443382859972ab14604383a5",
+      "extracted/cpp-resume-857/originals-00462170.c": "eb9d40701f0196e5d264dda23baef7b2507e12a614316364fa5d9fea3d5803ff",
+      "extracted/cpp-resume-857/originals-004ac220.c": "97c28cbbba9f4dbb9c8b5a33e1e04ac19c239db4f1f3c5e4ed82afd3370dc020",
+      "extracted/cpp-resume-857/originals-004acd10.c": "396105aa6ec3b5d31ed5b18055f20fb71138993f92af21eed4e622250030c198"
+    },
+    "patch": [
+      "00462170",
+      "004ac220",
+      "004acd10",
+      "00448930",
+      "00448a20",
+      "00448340"
+    ],
+    "cd": [
+      "00484520",
+      "00482990"
+    ]
+  },
+  "validation": {
+    "cases": 52,
+    "newCases": 19,
+    "firstFailedChecks": 0,
+    "newNativeObservations": 0,
+    "newFixtures": 0,
+    "existingBuriedRows": 580,
+    "existingRuneRows": 1920,
+    "existingGuardCorrection": "buried의 잘못된 VT 거부 단언1개는 실제 PostPop 대신 별도 Validate를 호출하도록 API 계약을 교정했다. fixture 입력/기대값 불변이다",
+    "fixtureSha256": {
+      "buried-postpop-x86.tsv": "76e346fc32bfe640f615ced94d4d497198e0abc483f17de8bfbdd9fbe6517bf4",
+      "runepostpop-x86.tsv": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99"
+    },
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-857/build-first.log",
+        "sha256": "e9aa71507051b867bfc1dc6125d174ecbb2c4bb85fd8965b5634d028168e31e3",
+        "exitCode": 0,
+        "elapsedSeconds": 125.7380182,
+        "execSession": 98445,
+        "childProcessesExited": true
+      }
+    ],
+    "executions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "BuriedRuneCurrent_",
+        "cases": 18,
+        "expectedCases": 18,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-buried-rune-current-first.log",
+        "sha256": "88eeba611d9dbc3d15a8f61e434c06c7753b9ea47ed98a2aa722176343177307"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "BuriedRuneCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-buried-rune-session-first.log",
+        "sha256": "48748021ebe446d3596cd0f8437766168ac032c6ec95175d598aead68d272aed"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "BuriedPostPop_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-buried-native-first.log",
+        "sha256": "c51517b518aa18743c974a2e24e6b15f5f1406406f86afe0cb0f4c4947c56aac"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "rawRunePostPop_native_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-rune-native-first.log",
+        "sha256": "62c537bb7aaa147d9565b46f4ec99d7f076938294ddbf2c0230474d3ef00cdb5"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 11,
+        "expectedCases": 11,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-post-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-activate-session-first.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPrefixCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-857/test-prefix-session-first.log",
+        "sha256": "a0d119928cb3bae12c23101aa8a69be72ef0825192abc4492f9a68f4283f7332"
+      }
+    ],
+    "cmakeLineEndings": "빌드/검사 뒤 CMakeLists.txt의 기존 혼합 줄바꿈만 보존해 무관한 줄바꿈 diff를 제거했다. LF 정규화한 첫 빌드 내용과 동일하며 다른9개 소스 바이트는 불변이다."
+  },
+  "protected": {
+    "files": 2761,
+    "fixtures": 941,
+    "unchanged": true,
+    "expectationChanges": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 36,
+    "completedPartial": 3,
+    "newCompletedParents": 0
+  },
+  "limits": [
+    "새 원문 실행 관측이 아니라 기존 fixture 재생과 현재 계약 검사/원문 정적 대조다",
+    "실제 Session은 TYPE74의 buried flags0·Rune304 최초 예약만 관측했다. Session 건설 시간/진행 관측이 아니다",
+    "Frame/Process 틱·의식/포획/희생/특정 적 공격/승리·실제 게임·공중3종 전용·신규MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복을 제외했다",
+    "Player/Dude·섬/표면/Teleport와 다른 현재 가상20/접두·전체 Pop·후속 단계는 미완료다"
+  ],
+  "next": [
+    "Player/Dude의 현재 가상20/사전 계약·물리 읽기/쓰기와 실제 Session 연결을 대조한다",
+    "객체 메뉴/커서·Edit·State/파일/군도·Windows 한계·무검사MP 및4~8차를 계속한다"
+  ],
+  "sourceFirstSha256": {
+    "cpppj/src/o/RawBuriedPostPop.h": "059c50e54ea6f4aca8841aac6a47f950077728dddca1339cfbf9d1f1a16c5ba2",
+    "cpppj/src/o/RawBuriedPostPop.cpp": "9c227534460cc1f6e6eca096a51ed07eeb3421279ae37483011165be19f6f57d",
+    "cpppj/src/o/RawRunePostPop.h": "096a746c0425e97ebe6277ca3185cc384e700a4744e79989ace37df19808a786",
+    "cpppj/src/o/RawRunePostPop.cpp": "8bd5871c87d204d7a557a0a208f0a89fea6eabe444a7e4f7303156ebe8a95c42",
+    "cpppj/src/client/RawCampaignSession.cpp": "412c5cd42560f5554eacc3a8ec3553c4c80eff844ea084220eef629f9d3c63f1",
+    "cpppj/src/client/RawCampaignRitual.inc": "6e9966ee044b56150322bfcfed484f36a692d626baa1339507313f9f0fc905e9",
+    "cpppj/tests/BuriedPostPopTests.cpp": "5bd4d5db147e0b93202c361dd9f3a84ea89d7bf840957bcd6c948facbe455972",
+    "cpppj/tests/RunePostPopTests.cpp": "293383d2fccf363b1be5b83a3481859d43fcd856edf18757658aac571bc58315",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "0fd21a4a33e5a04122e5ec86a5be0817f7d96e0ab248b1ea37db93324e341f33",
+    "cpppj/tests/CMakeLists.txt": "4a2977364ca0f1ebc83d7432cdf8f35622931c45db1a67224a11168e8fe93766"
+  }
+}

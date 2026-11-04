@@ -1393,7 +1393,8 @@ struct RawCampaignSession::Impl {
         buried.addRegular=[this](Sid sid,std::uint32_t event,float delay) { SessionCheck(core.processes.AddRegular(sid,event,delay)!=nullptr); };
         buried.validateBase=[this](Sid sid,std::uint32_t flags,const RawGraphPop* projected) { core.postPop.ValidateBase(sid,flags,projected); };
         buried.base=[this](Sid sid,std::uint32_t flags) { core.postPop.PostPopBase(sid,flags); };
-        buriedPostPop=std::make_unique<RawBuriedPostPop>(core.pool,assetState.Boss(),objectState.loadingDepth,std::move(buried));core.postPop.SetBuriedPostPop(buriedPostPop.get()); // 00462170의 실제00540bc4는 현재 boss이며 별도 server/전투 조건을 사용하지 않는다.
+        buried.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); }; // QA를 먼저 저장한 뒤 현재 Bridge TYPE와 같을 때만 실제 통지를 실행한다.
+        buriedPostPop=std::make_unique<RawBuriedPostPop>(core.pool,assetState.Boss(),objectState.loadingDepth,std::move(buried),core.bridgeState.bridgeType);core.postPop.SetBuriedPostPop(buriedPostPop.get()); // 00462170의 실제00540bc4는 현재 boss이며 별도 server/전투 조건을 사용하지 않는다.
         worldHooks.assets=construction->DestroyHooks(lifetime->DestroyHooks(hits->DestroyHooks(std::move(worldHooks.assets))));
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.

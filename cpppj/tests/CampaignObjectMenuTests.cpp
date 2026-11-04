@@ -895,3 +895,11 @@ TEST_CASE(PostPrefixCurrent_ActualSessionBridgeNoFirstAndForcefieldRegulars) { /
         if (forcefield) { CHECK(first && second);if (first && second) CHECK(first->Payload()==.08F && second->Payload()==.01F && first->Count()==0 && second->Count()==0 && first->Time()==core.processState.Now() && second->Time()==core.processState.Now()); }else CHECK(!first && !second && raw[40]==0);
     }
 }
+TEST_CASE(BuriedRuneCurrent_ActualSessionVtablesAndRuneRegular) { // 실제 Session의 별도 TYPE 슬롯으로 buried·Rune 가상 진입과304 예약만 확인하며 틱/의식/전투를 실행하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();auto storage=session.World().Storage();
+    for (const bool rune:{false,true}) { // 명시한 두 VT의 접두만 같은 Host/공통 깊이에 연결한다.
+        const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);const auto table=rune ? 0x5075d8U : 0x50a748U;for (std::size_t index=0;index<4;++index) raw[index]=static_cast<std::uint8_t>(table>>(index*8)); // 현재 TYPE74는 유지하고 실제 가상 후처리만 선택한다.
+        raw[11]=raw[40]=0;raw[34]=1;storage->types[74].flags1=storage->types[74].flags2=0;++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000U+(rune ? 1U : 0U));const auto* regular=core.processes.FindEvent(source,0x304);CHECK(core.bookkeeping.depth==0);
+        if (rune) { CHECK(regular);if (regular) CHECK(regular->Payload()==.01F && regular->Count()==0 && regular->Time()==core.processState.Now()); }else CHECK(!regular && raw[10]==74);
+    }
+}

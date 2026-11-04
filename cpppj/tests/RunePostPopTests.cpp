@@ -56,6 +56,55 @@ TEST_CASE(rawRunePostPop_native_regular_owned_dais_and_duration) {
     CHECK(checked>1000);
 }
 
+namespace { // 실제 finder/시간 helper/공통 부모를 작은 독립 현재 월드에 연결한다.
+struct RuneCurrentScene {
+    SidPool pool{OriginalEdition::Patch1078,24000,true};SquidHash hash; // 현재 세 물리 슬롯과 실제 일반 finder 해시다.
+    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188);RunePostPopState state; // 현재 타입 표와 독립 시간 전역이다.
+    SquidPostPopState book;SquidPostPop base{pool,types,book}; // 같은 공통 부모와 원본 깊이다.
+    std::array<std::span<std::uint8_t>,8> slots{};std::vector<std::string> events; // 세 슬롯 뷰와 실제 도달 효과의 관찰이다.
+    RuneCurrentScene() { // finder 입력만 준비하고 Rune 제품의 선택 결과는 계산하지 않는다.
+        for (std::uint16_t value=5;value<=7;++value) { // Rune5·Dais6·Altar7을 같은 위치에 준비한다.
+            CHECK(pool.Allocate(2)==Sid{value});auto raw=pool.AllocatedBytes(Sid{value});slots[value]=raw;std::fill(raw.begin(),raw.end(),std::uint8_t{});const auto type=value==5 ? 166U : value==6 ? 165U : 164U;raw[10]=static_cast<std::uint8_t>(type);raw[34]=1;Put(raw,14,std::bit_cast<std::uint32_t>(40.75F));Put(raw,18,std::bit_cast<std::uint32_t>(41.25F));types[type].footX=types[type].footY=1;Put(raw,0,value==5 ? kPatchRuneVtable : kVtable);
+            if (value!=5) { auto& head=hash.Bucket(1,40.75F,41.25F);Put(raw,4,head,2);head=value; }
+        }
+        Put(slots[7],12,1,2);book.depth=1;book.suppressed=true;base.BindCurrentTypes(types);
+    }
+    RunePostPopHooks Hooks() { // 호출의 인자/순서만 관찰하고 finder·시간 계산은 실제 제품에 맡긴다.
+        RunePostPopHooks hooks;hooks.reserveRegular=[this] { events.push_back("N");return true; };hooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { CHECK(sid==Sid{5} && event==0x304 && payload==.01F);events.push_back("R"); };hooks.startConstruction=[this](Sid sid,float seconds) { CHECK(sid==Sid{5});events.push_back("C"+std::to_string(static_cast<int>(seconds))); };return hooks;
+    }
+};
+}
+TEST_CASE(BuriedRuneCurrent_RuneActualVtableWithDifferentTypeAndMissingUnusedDevices) { // 실제 PATCH VT 진입은 TYPE/free 사전 검사를 추가하지 않고 공통 부모로 간다.
+    RuneCurrentScene scene;auto raw=scene.slots[5];raw[10]=74;raw[11]=1;raw[40]=8;RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,{});scene.base.SetRunePostPop(&rune);CHECK(rune.Handles(Sid{5}) && Throws([&] { rune.Validate(Sid{5},0); }));scene.base.PostPopVirtual(Sid{5},0);CHECK(scene.book.depth==0 && scene.events.empty());
+}
+TEST_CASE(BuriedRuneCurrent_RuneMissingReservePrecedesFinderAndBase) { // 최초 확보가 없으면 뒤의 좌표 오류나 공통 부모보다 먼저 실패한다.
+    RuneCurrentScene scene;Put(scene.slots[5],14,0x7fc00000);auto hooks=scene.Hooks();hooks.reserveRegular={};RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));CHECK(Throws([&] { rune.PostPop(Sid{5},3); }) && scene.events.empty() && scene.book.depth==1);
+}
+TEST_CASE(BuriedRuneCurrent_RuneFailedAllocationSkipsMissingConstructor) { // 최초 확보 실패는 미연결 생성자를 요구하지 않고 flags2의 현재 Dais/시간을 계속한다.
+    RuneCurrentScene scene;auto hooks=scene.Hooks();hooks.reserveRegular=[&] { scene.events.push_back("N");return false; };hooks.addRegular={};RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));rune.PostPop(Sid{5},3);CHECK(RuneEffects(scene.events)=="N;C7" && scene.book.depth==0);
+}
+TEST_CASE(BuriedRuneCurrent_RuneMissingConstructorPreservesReservation) { // 확보 성공 뒤 생성자 실패는 뒤 finder/시간/공통 부모를 실행하지 않는다.
+    RuneCurrentScene scene;Put(scene.slots[5],14,0x7fc00000);auto hooks=scene.Hooks();hooks.addRegular={};RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));CHECK(Throws([&] { rune.PostPop(Sid{5},3); }) && RuneEffects(scene.events)=="N" && scene.book.depth==1);
+}
+TEST_CASE(BuriedRuneCurrent_RuneRegularMutationUsesCurrentDaisOwnerAndPhysicalSlot) { // 304 생성 효과 뒤 현재 Dais TYPE/소유자를 읽고 free/VT 변경을 재검사하지 않는다.
+    RuneCurrentScene scene;auto hooks=scene.Hooks();hooks.addRegular=[&](auto,auto,auto) { scene.events.push_back("R");scene.slots[5][11]=1;scene.slots[5][10]=255;scene.slots[5][34]=2;Put(scene.slots[5],0,0);scene.slots[6][34]=2;scene.slots[6][10]=74;scene.state.daisType=74;scene.types[74].footX=scene.types[74].footY=1; };RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));rune.PostPop(Sid{5},3);CHECK(RuneEffects(scene.events)=="N;R;C7" && scene.book.depth==0 && scene.slots[5][11]==1 && scene.slots[5][10]==255);
+}
+TEST_CASE(BuriedRuneCurrent_RuneNoDaisSkipsMissingConstruction) { // 후보가 없으면 사용하지 않는 현재 Dais DWORD와 건설 장치를 미리 검사하지 않는다.
+    RuneCurrentScene scene;scene.state.daisType=65535;auto hooks=scene.Hooks();hooks.startConstruction={};RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));rune.PostPop(Sid{5},2);CHECK(scene.events.empty() && scene.book.depth==0);
+}
+TEST_CASE(BuriedRuneCurrent_RuneDurationReadPrecedesMissingConstruction) { // 원문 helper의 현재 타입 표 역참조 오류가 도달할 건설 장치 검사보다 앞선다.
+    RuneCurrentScene scene;scene.state.altarType=188;auto hooks=scene.Hooks();hooks.startConstruction={};RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));bool physical=false;try { rune.PostPop(Sid{5},2); }catch (const std::out_of_range&) { physical=true; }CHECK(physical && scene.book.depth==1 && scene.events.empty());
+}
+TEST_CASE(BuriedRuneCurrent_RuneDurationReadsBoundGlobalsAfterReservation) { // 독립 사본과 다른 실제 저장소를 예약 효과 뒤에 읽어25초를 선택한다.
+    RuneCurrentScene scene;bool suppressed=true;std::uint32_t flags=0;scene.state.suppressDuration=true;auto hooks=scene.Hooks();hooks.reserveRegular=[&] { scene.events.push_back("N");suppressed=false;flags=1;return false; };hooks.suppressDuration=[&] { scene.events.push_back("S");return suppressed; };hooks.playerFlags=[&](auto owner) { CHECK(owner==1);scene.events.push_back("P");return flags; };RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));rune.PostPop(Sid{5},3);CHECK(RuneEffects(scene.events)=="N;S;P;C25" && scene.book.depth==0);
+}
+TEST_CASE(BuriedRuneCurrent_RuneDurationSuppressionSkipsInvalidOwnerRecord) { // 현재 억제 전역은 원래 owner WORD의 Player 접근보다 먼저 선택된다.
+    RuneCurrentScene scene;Put(scene.slots[7],12,65535,2);auto hooks=scene.Hooks();hooks.suppressDuration=[&] { scene.events.push_back("S");return true; };hooks.playerFlags=[](auto)->std::uint32_t { throw std::out_of_range("접근하지 않을 Player"); };RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));rune.PostPop(Sid{5},2);CHECK(RuneEffects(scene.events)=="S;C10" && scene.book.depth==0);
+}
+TEST_CASE(BuriedRuneCurrent_RuneCdKeepsConstructorAndTypePreflight) { // CD의 기존 전수 연결/TYPE 계약을 PATCH 수정과 구별한다.
+    SidPool pool(OriginalEdition::Cd1072,24000,true);SquidHash hash;std::vector<RiftTypeRecord> types(171);RunePostPopState state;SquidPostPopState book;SquidPostPop base(pool,types,book);CHECK(Throws([&] { RawRunePostPop missing(pool,hash,types,state,base,{}); }));CHECK(pool.Allocate(2)==Sid{5});auto raw=pool.AllocatedBytes(Sid{5});Put(raw,0,kCdRuneVtable);raw[10]=74;RunePostPopHooks hooks;hooks.reserveRegular=[] { return false; };hooks.addRegular=[](auto,auto,auto) {};hooks.startConstruction=[](auto,auto) {};RawRunePostPop rune(pool,hash,types,state,base,std::move(hooks));CHECK(!rune.Handles(Sid{5}) && Throws([&] { rune.PostPop(Sid{5},0); }));
+}
+
 // 실제Rune생성자→abstract Pop→Construction부착/진행/완료→실제Repop→304Regular를같은공간에서실행한다.
 TEST_CASE(rawRunePostPop_real_pop_construction_complete_and_304) {
     // 두판본의서버Rune과clientProcessForm을같은풀에등록한다.

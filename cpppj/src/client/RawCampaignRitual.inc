@@ -88,6 +88,7 @@ void ConnectRitual() {
     RunePostPopHooks rune; // 같은 실제30 건설과 로컬304 예약을 사용한다.
     rune.reserveRegular=[this] { return ReserveRitualRegular(); };rune.addRegular=[this](Sid sid,std::uint32_t event,float payload) { AddRitualRegular(sid,event,payload,46); };
     rune.startConstruction=[this](Sid sid,float duration) { PrepareBuilding(core.processState.Now());building->Start(sid,duration); };
+    rune.suppressDuration=[this] { return globals.missionPost; };rune.playerFlags=[this](std::uint32_t owner) { if (owner>kPlayerCount || owner*0xb4U+0x50U>=players.size()) throw std::out_of_range("Rune 현재 Player 기록 물리 범위");return players[owner*0xb4U+0x50U]; }; // 예약/생성 효과 뒤 시간 helper가 도달한 위치에서 같은 현재 전역/Player BYTE를 읽는다.
     runePostPop=std::make_unique<RawRunePostPop>(core.pool,core.hash,core.types,runeState,core.postPop,std::move(rune));core.postPop.SetRunePostPop(runePostPop.get());
     daisState=std::make_unique<DaisRegularState>(DaisRegularState{ritualState,runeState,core.processState,rewardState,playerState.battleOwner});
     daisState->debug.Bind(gameplayGlobals->AiDebug().Checking()); // 지연 생성 뒤에도 현재 checking을 매 소비 위치에서 읽는다.
