@@ -1,5 +1,6 @@
 // 실제 단일 Kernel.Clear와 호스트 최종 소멸을 구분하며 현재 World의 함수만 짧게 빌린다.
 #include "client/RawProcessHostStorage.h"
+#include "o/RawGameAuxState.h"
 #include <stdexcept>
 #include <utility>
 
@@ -11,8 +12,11 @@ struct ClearCall {
     ~ClearCall() { --runtime->activeCalls; } // 실제 Kernel.Clear 호출이 끝난 뒤에만 반납을 허용한다.
 };
 }
-RawProcessHostStorage::RawProcessHostStorage(o::SidPool& pool,std::span<const o::RiftTypeRecord> types,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<std::uint32_t> pollType)
-    :pool_(pool),types_(types),authority_(std::move(authority)),state_{.sharedAuthority=authority_.get()},pollType_(std::move(pollType)) { state_.sharedPollType=pollType_.get(); } // 권한의 원본 주소를 직접 빌린다.
+RawProcessHostStorage::RawProcessHostStorage(o::SidPool& pool,std::span<const o::RiftTypeRecord> types,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<std::uint32_t> pollType,std::shared_ptr<o::RawGameAuxState> gameAux)
+    :pool_(pool),types_(types),authority_(std::move(authority)),state_{.sharedAuthority=authority_.get()},pollType_(std::move(pollType)),gameAux_(std::move(gameAux)) { // 장기 권한/타입의 원래 주소를 빌리며 CD의 독립 계약은 유지한다.
+    state_.sharedPollType=pollType_.get();
+    if (gameAux_ && pool.Edition()==o::OriginalEdition::Patch1078) { state_.currentRegularType=&gameAux_->RegularProcessType();state_.currentSharedRegularType=&gameAux_->SharedRegularProcessType();state_.currentProcessTypeEnd=&gameAux_->ProcessTypeEnd(); }
+}
 // 게임 중 Native 효과는 이 경로를 사용하지 않는다. 마지막 물리 소유권만 실제 프로세스를 반납한다.
 RawProcessHostStorage::~RawProcessHostStorage() {
     if (kernel_ && host_) {

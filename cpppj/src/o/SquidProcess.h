@@ -7,6 +7,7 @@
 #include "o/SquidForms.h"
 #include <functional>
 #include <memory>
+#include <string_view>
 
 namespace netstorm::o {
 class SquidProcessHost;
@@ -88,6 +89,13 @@ struct SquidProcessState {
     const bool& Boss() const { return sharedAuthority ? sharedAuthority->boss : boss; } // const 조회도 같은 물리값을 읽는다.
     bool& Server() { return sharedAuthority ? sharedAuthority->server : server; } // Form 통지/서버 상태 출력이 현재 주소를 직접 사용한다.
     const bool& Server() const { return sharedAuthority ? sharedAuthority->server : server; } // fallback 동기화 사본을 만들지 않는다.
+    std::uint32_t regularType{46},sharedRegularType{61},processTypeEnd{63}; // 독립 PATCH 입력의 현재 일반/공유 번호와 signed 상한 비트다.
+    const std::uint32_t* currentRegularType{};const std::uint32_t* currentSharedRegularType{};const std::uint32_t* currentProcessTypeEnd{}; // 실제 Client의 같은 장기 세 DWORD를 빌린다.
+    const std::uint32_t& RegularType() const { return currentRegularType ? *currentRegularType : regularType; } // getter 호출마다 현재 전체 번호를 읽는다.
+    const std::uint32_t& SharedRegularType() const { return currentSharedRegularType ? *currentSharedRegularType : sharedRegularType; } // 생성/조회가 같은 공유 번호를 사용한다.
+    const std::uint32_t& ProcessTypeEnd() const { return currentProcessTypeEnd ? *currentProcessTypeEnd : processTypeEnd; } // 상한을 읽기 전에 signed 변환/정규화를 하지 않는다.
+    std::uint32_t postPopDepth{}; // 독립 SharedRegular 생성의 현재 basePostPop 입력이며 실제 World는 아래 대여 getter를 사용한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 독립 진단 정상 복귀/실패를 명시하며 기본 깊이0에서는 요구하지 않는다.
 };
 // 부모 객체의 이벤트 처리기(vtable +0x5c)다. 원본 base(00496e70)는 payload를 그대로 돌려준다.
 using RegularHandler=std::function<float(Sid parent,std::uint32_t event,std::uint32_t count,float payload)>;
@@ -106,6 +114,8 @@ struct ProcessHostRuntimeBindings {
     SquidDestroyHooks asset; // 같은 현재 가상 분배기의 자산 선택/삭제/공간 효과다.
     ProcessFormTransmission transmit; // 현재 실제 Form 직렬화와 송신 경계다.
     std::size_t activeCalls{}; // 선택된 Host 효과의 C++ 대여 수이며 진행 중 Native 반납을 거부한다.
+    std::function<std::uint32_t()> postPopDepth; // 실제 현재 World의 공통 Pop 깊이를 생성 위치에서 읽는다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // SharedRegular의 checking 무관70 진단을 같은 Client로 전달한다.
 };
 // 현재 World 대여를 호출 위치에서 얻으며 반환된 공유 뷰는 외부 효과 호출 중 바인딩 자체의 수명을 유지한다.
 using ProcessHostRuntimeGetter=std::function<std::shared_ptr<ProcessHostRuntimeBindings>()>;
@@ -120,7 +130,7 @@ public:
     SquidProcessHost(SidPool& pool,std::span<const RiftTypeRecord> types,Kernel& kernel,SquidProcessState& state,ProcessHostRuntimeGetter current);
     bool Owns(const BaseProcess& process) const; // 잔류 객체가 실제로 이 Host를 빌리는지 조회하며 PID나 SID를 정규화하지 않는다.
     void DrainRuntimeBindings(const std::shared_ptr<ProcessHostRuntimeBindings>& runtime); // 독립 World의 최종 fallback만 자기 현재 대여를 정리하며 이전 Native 잔류는 보존한다.
-    bool HasOnlyRegularProcesses() const; // 현재 Host의 잔류 중46/61 C++ Regular 이외 수명은 별도 복원을 요구한다.
+    bool HasOnlyRegularProcesses() const; // 현재 Host의 잔류 중 C++ Regular 이외 수명은 별도 복원을 요구한다. 표시 TYPE와 C++ 실행 클래스는 구별한다.
     // 0041bd20 ↔ CD 0048f590: Kernel 등록 → ProcessForm 생성/지정 슬롯 Take → 타입/pid 기록 → 부모 부착 → OnAttached.
     // 패치판은 부모가 free/dead이면 등록하지 않고 null을 반환한다. CD판의 그 경로(assert 뒤 계속)는 지원하지 않는다.
     // form=0은 기존 번호 할당이다. 신규 포인터의 지정 form은 free 서버 번호를 받고 raw payload·풀 목록/카운터를 보존한다.
@@ -136,6 +146,7 @@ public:
     // 일반 Regular와 같은 실행 몸체를 타입 61로 부착한다. 시각은 부착 후 현재 시각이다.
     // 원본: SharedRegular 생성자 00496f00 / CD 0048f1d0. 네트워크 저장 가상 함수는 별도 미복원이다.
     RegularProcess* AddSharedRegular(Sid parent,std::uint32_t event,float payload);
+    RegularProcess* AttachRegular(std::unique_ptr<RegularProcess> process,Sid parent,bool shared=false,std::uint32_t flags=0x50); // 같은 확보 메모리에 현재 번호/공유 진단/부착 뒤 현재 시각을 적용한다. caller의 추가 계수/기한 쓰기는 유지한다.
     // 모듈을 연결할 때 다른 월드의 풀을 섞지 않도록 참조를 제공한다.
     const SidPool& Pool() const;
     // 월드 파생 사건을 등록할 때 기존 fallback을 합성한 실제 처리기를 교체한다. 다음 Regular 호출은 현재 처리기를 읽는다.

@@ -1,6 +1,7 @@
 // 객체 부착 프로세스의 form 생성/부착/해제와 Regular 이벤트 실행을 원본 쓰기 순서대로 복원한다.
 #include "o/SquidProcess.h"
 #include "o/SquidForms.h"
+#include <bit>
 #include <cmath>
 #include <stdexcept>
 #include <utility>
@@ -16,7 +17,7 @@ constexpr std::uint8_t kFree=1,kDead=2,kVoid=4,kContained=8;
 // 타입 번호: ProcessForm, 프로세스 타입의 첫 번호, Regular/SharedRegular, form으로 취급하는 마지막 번호.
 constexpr std::uint32_t kProcessFormType=2,kFirstProcessType=10,kRegularType=46,kSharedRegularType=61,kLastFormType=0x45;
 // 판본별 프로세스 타입 끝(패치 DAT_0054116c, CD DAT_0051ca58)과 ProcessForm 가상 표의 실제 주소 기록값.
-constexpr std::uint32_t kPatchProcessEnd=63,kCdProcessEnd=62,kPatchFormVtable=0x512098,kCdFormVtable=0x505990;
+constexpr std::uint32_t kCdProcessEnd=62,kPatchFormVtable=0x512098,kCdFormVtable=0x505990;
 // 부착 flags: 0x10 client 번호로 form 할당, 0x10|0x40 전송 억제, 0x80 부모 변경 허용(pfPROCESS_DEBUG).
 constexpr std::uint32_t kClientForm=0x10,kLocalMask=0x50,kProcessDebug=0x80;
 // form을 넣을 수 없는 부모 genus(emplacement·vortex·factory)와 abstract여도 실행하는 genus.
@@ -92,7 +93,7 @@ bool SquidProcessHost::HasOnlyRegularProcesses() const {
         const auto* process=kernel_.Get(id);if (process && Owns(*process) && !dynamic_cast<const RegularProcess*>(process)) return false;
     }return true;
 }
-std::uint32_t SquidProcessHost::ProcessTypeEnd() const { return pool_.Edition()==OriginalEdition::Patch1078 ? kPatchProcessEnd : kCdProcessEnd; }
+std::uint32_t SquidProcessHost::ProcessTypeEnd() const { return pool_.Edition()==OriginalEdition::Patch1078 ? state_.ProcessTypeEnd() : kCdProcessEnd; } // PATCH는 같은 현재0054116c의 signed 상한 비트를 반환한다.
 std::uint32_t SquidProcessHost::FormVtable() const { return pool_.Edition()==OriginalEdition::Patch1078 ? kPatchFormVtable : kCdFormVtable; }
 std::uint16_t SquidProcessHost::Word(Sid sid,std::size_t offset) const {
     const auto raw=pool_.Slot(sid);
@@ -105,7 +106,7 @@ void SquidProcessHost::PutWord(Sid sid,std::size_t offset,std::uint16_t value) {
 bool SquidProcessHost::IsProcessForm(Sid sid) const {
     if (sid.value==0 || sid.value>=pool_.Capacity()) return false;
     const auto type=pool_.Slot(sid)[kType];
-    return type>=kFirstProcessType && type<ProcessTypeEnd();
+    return type>=kFirstProcessType && static_cast<std::int32_t>(type)<std::bit_cast<std::int32_t>(ProcessTypeEnd());
 }
 // form의 가상 setPrev는 +0xe, contained 자산의 것은 +0x10에 쓴다.
 void SquidProcessHost::SetPrevious(Sid sid,std::uint16_t previous) {
@@ -145,7 +146,7 @@ SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std
     if (!process) throw std::invalid_argument("부착할 프로세스가 없습니다");
     // 이미 소유한 포인터를 받은 경우 중복 unique_ptr 소멸을 막고 동일 포인터 재수신으로 넘긴다.
     if (kernel_.Find(*process)) { auto* existing=process.release();return Reattach(*existing,processType,parent,flags,form); }
-    if (processType<kFirstProcessType || processType>=ProcessTypeEnd()) throw std::invalid_argument("프로세스 타입 번호 오류");
+    if (processType<kFirstProcessType || std::bit_cast<std::int32_t>(ProcessTypeEnd())<=0 || processType>=ProcessTypeEnd()) throw std::invalid_argument("프로세스 타입 번호 오류");
     if (parent.value==0 || parent.value>=pool_.Capacity()) throw std::out_of_range("프로세스 부착 SID 범위 오류");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (pool_.Slot(parent)[kState]&(kFree|kDead)) {
@@ -194,7 +195,7 @@ SquidProcess* SquidProcessHost::Reattach(SquidProcess& process,std::uint32_t pro
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.
     const auto existing=kernel_.Find(process);
     if (!existing || (process.host_ && process.host_!=this)) throw std::invalid_argument("재수신 프로세스의 Kernel/host 불일치");
-    if (processType<kFirstProcessType || processType>=ProcessTypeEnd()) throw std::invalid_argument("재수신 프로세스 타입 번호 오류");
+    if (processType<kFirstProcessType || std::bit_cast<std::int32_t>(ProcessTypeEnd())<=0 || processType>=ProcessTypeEnd()) throw std::invalid_argument("재수신 프로세스 타입 번호 오류");
     if (!parent.value || parent.value>=pool_.Capacity() || !form.value || form.value>=pool_.Capacity())
         throw std::out_of_range("재수신 프로세스 SID 범위 오류");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
@@ -231,16 +232,28 @@ SquidProcess* SquidProcessHost::Reattach(SquidProcess& process,std::uint32_t pro
     process.OnAttached();return &process;
 }
 RegularProcess* SquidProcessHost::AddRegular(Sid parent,std::uint32_t event,float payload,std::uint32_t flags) {
-    auto* attached=static_cast<RegularProcess*>(Attach(std::make_unique<RegularProcess>(event,payload),kRegularType,parent,flags));
-    // 생성자는 부착 뒤 시각을 현재 시각으로 둔다. 첫 호출은 다음 Kernel 프레임이다.
-    if (attached) attached->time_=state_.Now();
-    return attached;
+    return AttachRegular(std::make_unique<RegularProcess>(event,payload),parent,false,flags); // 첫 실행은 현재 시각 이후의 Kernel 프레임이다.
 }
 // 같은 Regular 객체를 공유 타입으로 부착한다. 부모 체인/Kernel/예약 규칙을 재사용한다.
 // 원본: 00496f00 / CD 0048f1d0. 실행 vtable +0x18은 일반 Regular와 동일하다.
 RegularProcess* SquidProcessHost::AddSharedRegular(Sid parent,std::uint32_t event,float payload) {
-    auto* attached=static_cast<RegularProcess*>(Attach(std::make_unique<RegularProcess>(event,payload),kSharedRegularType,parent,0x50));
-    if (attached) attached->time_=state_.Now();
+    return AttachRegular(std::make_unique<RegularProcess>(event,payload),parent,true); // 공유 생성자도 같은 부착 뒤 시각 저장을 사용한다.
+}
+// 이미 확보한 예약은 같은 현재 생성자 번호로 부착하며 SharedRegular의 원문 진단 후에도 현재 값을 다시 읽는다.
+RegularProcess* SquidProcessHost::AttachRegular(std::unique_ptr<RegularProcess> process,Sid parent,bool shared,std::uint32_t flags) {
+    if (shared && pool_.Edition()==OriginalEdition::Patch1078) {
+        const auto runtime=currentRuntime_ ? Runtime() : nullptr;RuntimeCall call(runtime); // 진단이 대여 반납을 시도해도 호출 중 World를 보존한다.
+        const auto depth=runtime ? runtime->postPopDepth : std::function<std::uint32_t()>{};
+        if (runtime && !depth) throw std::logic_error("SharedRegular 현재 Pop 깊이 미연결");
+        if (depth ? depth()!=0 : state_.postPopDepth!=0) {
+            const auto assertion=runtime ? runtime->assertion : state_.assertion; // 정상 복귀 중 연결 교체에도 실행 중 callable은 유지한다.
+            if (!assertion) throw std::logic_error("SharedRegular 원문 진단 장치 미연결");
+            assertion("basePostPop == 0",R"(\Ns\O\Regular.cpp)",0x70);
+        }
+    }
+    const auto type=pool_.Edition()==OriginalEdition::Patch1078 ? (shared ? state_.SharedRegularType() : state_.RegularType()) : (shared ? kSharedRegularType : kRegularType); // 공유 진단 다음의 현재 전체 DWORD를 선택한다.
+    auto* attached=static_cast<RegularProcess*>(Attach(std::move(process),type,parent,flags));
+    if (attached) attached->time_=state_.Now(); // 원문496e80/496f00은 부착 호출이 돌아온 뒤 현재double시각을 읽는다.
     return attached;
 }
 // 실제 부착과 사제 낙하 연결이 같은 풀인지 검사할 때 사용한다.
@@ -318,12 +331,15 @@ template<class Predicate> RegularProcess* SquidProcessHost::Find(Sid parent,Pred
     while (current) {
         if (current>=pool_.Capacity() || ++guard>pool_.Capacity()) throw std::logic_error("종속 체인 손상");
         const auto raw=pool_.Slot(Sid{current});const auto next=Word(Sid{current},kNext);
-        if (raw[kType]==kRegularType || raw[kType]==kSharedRegularType) {
+        const auto type=raw[kType];const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+        const bool process=!patch || (type>=kFirstProcessType && type<=kLastFormType && static_cast<std::int32_t>(type)<std::bit_cast<std::int32_t>(ProcessTypeEnd())); // 원문의 프로세스 finder는 자산/일반 Form을 먼저 건너뛴다.
+        if (process && (type==(patch ? state_.RegularType() : kRegularType) || type==(patch ? state_.SharedRegularType() : kSharedRegularType))) {
             ProcessId pid=0;
             // 정렬되지 않은 DWORD를 낮은 바이트부터 읽는다.
             for (std::size_t i=0;i<4;++i) pid|=static_cast<ProcessId>(raw[kFormPid+i])<<(8*i);
             auto* regular=dynamic_cast<RegularProcess*>(kernel_.Get(pid));
-            if (regular && match(*regular)) return regular;
+            if (!regular) throw std::logic_error("현재 Regular 종속의 Kernel PID/실제 클래스 미연결"); // 원문은현재예약의포인터+18을읽는다. 미등록/다른클래스를빈검색으로숨기지않는다.
+            if (match(*regular)) return regular;
         }
         current=next;
     }

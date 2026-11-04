@@ -29,7 +29,7 @@ Sid RawManaBoltArrival::Target(Sid bolt) const {
 // 부모 삭제가 경로 자신도 지울 수 있으므로 가상 삭제 뒤에는 현재 객체를 읽지 않는다.
 std::uint32_t RawManaBoltArrival::Arrive(Sid bolt) const {
     const auto raw=pool_.Slot(bolt);Need(hooks_.sound)(Coordinate(raw,14),Coordinate(raw,18),"sunCannonRaiseLower5.wav");
-    if (Target(bolt).value) { Need(hooks_.removeProcesses)(bolt,state_.regularType);Need(hooks_.removeProcesses)(bolt,state_.sharedRegularType);if (Need(hooks_.reserveRegular)()) Need(hooks_.addRegular)(bolt,1,state_.delay);return 1000; }
+    if (Target(bolt).value) { Need(hooks_.removeProcesses)(bolt,state_.RegularType());Need(hooks_.removeProcesses)(bolt,state_.SharedRegularType());if (Need(hooks_.reserveRegular)()) Need(hooks_.addRegular)(bolt,1,state_.delay);return 1000; } // 도달한 각 제거 위치의 같은 현재 번호를 읽으며 첫 제거 뒤 변경도 반영한다.
     Need(hooks_.destroy)(bolt,0);return 1001;
 }
 // 연결 시 같은 풀의 정체성을 확인한다.

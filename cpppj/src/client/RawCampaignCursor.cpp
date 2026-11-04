@@ -82,7 +82,7 @@ struct RawCampaignCursor::Impl {
         returnHooks.createTimer=[this](o::Sid parent,std::uint32_t event,float duration) {
             if (!pendingTimer) throw std::logic_error("조각 반환 실제 타이머 예약 누락");
             auto* memory=pendingTimer.release();std::destroy_at(memory);std::construct_at(memory,event,duration);
-            auto* attached=static_cast<o::RegularProcess*>(core.processes.Attach(std::unique_ptr<o::RegularProcess>(memory),46,parent,0x50));
+            auto* attached=static_cast<o::RegularProcess*>(core.processes.AttachRegular(std::unique_ptr<o::RegularProcess>(memory),parent));
             if (!attached) throw std::logic_error("조각 반환 실제 Regular 부착 실패");attached->ResetTask(event,core.processState.Now());
         };
         returnHooks.productTimers=game.productTimers;returnHooks.unitRate=game.unitRate;

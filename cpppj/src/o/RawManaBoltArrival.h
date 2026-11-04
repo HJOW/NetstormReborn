@@ -6,6 +6,9 @@ namespace netstorm::o {
 struct ManaBoltArrivalState {
     std::uint32_t regularType{46},sharedRegularType{61}; // 00541128/00541164의 실제 두 프로세스 타입이다.
     float delay{0.05f}; // 00532750의 event1 예약 payload다.
+    const std::uint32_t* currentRegularType{};const std::uint32_t* currentSharedRegularType{}; // 실제 Session은 같은 장기00541128/00541164를 빌린다.
+    const std::uint32_t& RegularType() const { return currentRegularType ? *currentRegularType : regularType; } // 첫 제거 직전의 현재 전체 번호다.
+    const std::uint32_t& SharedRegularType() const { return currentSharedRegularType ? *currentSharedRegularType : sharedRegularType; } // 첫 제거의 외부 효과 뒤 공유 번호를 다시 읽는다.
 };
 // 도착 계산 밖의 음향/같은 Host/가상 삭제 효과다. 선택된 경계만 필요하다.
 struct ManaBoltArrivalHooks {

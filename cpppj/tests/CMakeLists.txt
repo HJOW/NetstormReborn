@@ -3476,3 +3476,7 @@ target_sources(netstorm_pop_context_tests PRIVATE PopWorldBoundsTests.cpp) # 게
 # 주문 효과 접두와 예약187 주소만 대조하며 실제 시전/포획/MP는 실행하지 않는다(단위890).
 target_sources(netstorm_tests PRIVATE BombPostPopTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE BombPostPopTests.cpp)
+
+# 공통 Regular 현재 TYPE/실제 finder와 공유 생성 접두만 검사한다(단위891).
+target_sources(netstorm_tests PRIVATE RegularCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE RegularCurrentTests.cpp)

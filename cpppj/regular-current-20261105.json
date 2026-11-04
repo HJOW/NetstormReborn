@@ -1,0 +1,792 @@
+{
+ "unit": 891,
+ "date": "2026-11-05",
+ "status": "unit-complete-overall-goal-in-progress",
+ "lastPreciseDecompile": {
+  "host": "HJOW-Athlon",
+  "date": "2026-11-03"
+ },
+ "scope": "같은 장기 Regular/SharedRegular/프로세스 상한, 실제 finder/생성 접두/현재 부착 시각/실제 Pop 재진입",
+ "nativeFirst": {
+  "host": "HJOW-Athlon",
+  "date": "2026-11-05",
+  "lastPreciseDecompile": {
+   "host": "HJOW-Athlon",
+   "date": "2026-11-03"
+  },
+  "fixtures": [
+   {
+    "path": "cpppj/tests/fixtures/regular-current-find-x86.tsv",
+    "cases": 1232,
+    "sha256": "073724a72d2b0f619ea85ec07ff9f476d38def76f9f63ae288f7f331067efa49"
+   },
+   {
+    "path": "cpppj/tests/fixtures/regular-current-constructor-x86.tsv",
+    "cases": 64,
+    "sha256": "f2922ac64a94c4115d4cbe7d980d05db5d06d3e4025b82516beec5736ec9324e"
+   }
+  ],
+  "instructions": 172992,
+  "verify": false,
+  "boundaries": "4afb40/4afbe0/iterator3/4b1bf0/predicateThunk/471aa0 및496e80/496f00 전체. 생성자41bd20/4e0620만 인자/정상복귀/현재변경 명시 경계다. 게임/MP/시전/포획/공중3종0.",
+  "sourceSha256": "cf3c6412294489cd9e26e8a1dd6d742735d33a3efe7d4cb9ac175ef2e07cf314",
+  "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+ },
+ "nativeVerify": {
+  "host": "HJOW-Athlon",
+  "date": "2026-11-05",
+  "lastPreciseDecompile": {
+   "host": "HJOW-Athlon",
+   "date": "2026-11-03"
+  },
+  "fixtures": [
+   {
+    "path": "cpppj/tests/fixtures/regular-current-find-x86.tsv",
+    "cases": 1232,
+    "sha256": "073724a72d2b0f619ea85ec07ff9f476d38def76f9f63ae288f7f331067efa49"
+   },
+   {
+    "path": "cpppj/tests/fixtures/regular-current-constructor-x86.tsv",
+    "cases": 64,
+    "sha256": "f2922ac64a94c4115d4cbe7d980d05db5d06d3e4025b82516beec5736ec9324e"
+   }
+  ],
+  "instructions": 172992,
+  "verify": true,
+  "boundaries": "4afb40/4afbe0/iterator3/4b1bf0/predicateThunk/471aa0 및496e80/496f00 전체. 생성자41bd20/4e0620만 인자/정상복귀/현재변경 명시 경계다. 게임/MP/시전/포획/공중3종0.",
+  "sourceSha256": "cf3c6412294489cd9e26e8a1dd6d742735d33a3efe7d4cb9ac175ef2e07cf314",
+  "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+ },
+ "cdStatic": {
+  "0048efd0": [
+   "uVar2 = DAT_0051ca18;",
+   "FUN_0048f590(this,uVar2,param_3,0,0x50);",
+   "uVar2 = DAT_005484ac;",
+   "*puVar1 = DAT_005484a8;"
+  ],
+  "0048f1d0": [
+   "FUN_00490040(s_basePostPop____0_0053116c,s__ns_o_regular_cpp_00531158,0x67);",
+   "FUN_0048f590(this,DAT_0051ca54,param_3,0,0x50);",
+   "uVar2 = DAT_005484ac;",
+   "uVar1 = DAT_005484a8;"
+  ],
+  "004ac890": [
+   "if ((DAT_0051ca18 == uVar3) || (DAT_0051ca54 == uVar3)) {"
+  ],
+  "004ac9c0": [
+   "if ((DAT_0051ca18 == uVar1) || (DAT_0051ca54 == uVar1)) {"
+  ]
+ },
+ "checking": {
+  "remaining": 10,
+  "parents": 4,
+  "partial": 3,
+  "multiplayer": 3,
+  "completedParents": 38,
+  "completedPartial": 3
+ },
+ "boundaries": [
+  "finder1232행은 실제 iterator/predicate/Kernel getter 전체를 실행한 반환 및 방문열이다. C++은 반환/현재 분류만 대조하며 방문 횟수를 합성하지 않는다.",
+  "생성자64행 중 외부 부착 장치 시각 변경이 없는32행을 실제 C++Host로 대조한다. 나머지32행은 Native 외부 경계 관찰이다.",
+  "CD 현재 번호/공유 진단 전체 이식은 이번 범위가 아니며 기존 CD 독립 계약을 유지한다.",
+  "공중3종 상한 owner 연결은 정적/코드만이며 전용 실행은 하지 않는다."
+ ],
+ "excluded": [
+  "게임/GUI/진단 UI",
+  "실제 시전/공격/포획/희생/승리",
+  "신규 MP/패킷/통신",
+  "공중3종 전용",
+  "전체71/CTest/34미션/ZIP반복"
+ ],
+ "nativeFinalVerify": {
+  "host": "HJOW-Athlon",
+  "date": "2026-11-05",
+  "lastPreciseDecompile": {
+   "host": "HJOW-Athlon",
+   "date": "2026-11-03"
+  },
+  "fixtures": [
+   {
+    "path": "cpppj/tests/fixtures/regular-current-find-x86.tsv",
+    "cases": 1232,
+    "sha256": "073724a72d2b0f619ea85ec07ff9f476d38def76f9f63ae288f7f331067efa49"
+   },
+   {
+    "path": "cpppj/tests/fixtures/regular-current-constructor-x86.tsv",
+    "cases": 64,
+    "sha256": "f2922ac64a94c4115d4cbe7d980d05db5d06d3e4025b82516beec5736ec9324e"
+   }
+  ],
+  "nativeMissingPidRead": [
+   {
+    "instruction": "004afbb1",
+    "address": "00000018",
+    "size": 4
+   }
+  ],
+  "instructions": 173093,
+  "verify": true,
+  "boundaries": "4afb40/4afbe0/iterator3/4b1bf0/predicateThunk/471aa0 및496e80/496f00 전체. 생성자41bd20/4e0620만 인자/정상복귀/현재변경 명시 경계다. 미등록PID는실제4afbb1/null+18읽기직전중단한다. 게임/MP/시전/포획/공중3종0.",
+  "sourceSha256": "85bec88a84106543d4b29eac8661ca15ac05a5e82ec99c840cabb221dbe018ca",
+  "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+ },
+ "nativeMissingPid": {
+  "nativeMissingPidRead": [
+   {
+    "instruction": "004afbb1",
+    "address": "00000018",
+    "size": 4
+   }
+  ],
+  "method": "실제4afb40/iterator/predicate/471aa0전체. Kernelgetter진입직전현재슬롯을0으로설정. null+18읽기직전중단. 격리FS0페이지때문에가려질실제OS의미정의읽기를정상빈검색으로해석하지않는다.",
+  "cppPrior": "kernel.Get(pid)==nullptr이면continue하던기존동작",
+  "required": "현재예약의PID/실제클래스미연결은명시호스트오류이며일반자산/다른종속은원문필터로정상건너뛴다."
+ },
+ "firstBuild": {
+  "exitCode": 0,
+  "elapsedSeconds": 932.9217064
+ },
+ "firstTestExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "RegularCurrent_",
+   "cases": 11,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-891/test-regular-current-first.log",
+   "sha256": "42734efe48e37a26329d2068493b097466391b68e379bb9c9c0ddd1f544bcfc6"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "RegularCurrent_",
+   "cases": 5,
+   "expectedCases": 3,
+   "failedCases": 1,
+   "failedChecks": 1,
+   "exitCode": 1,
+   "log": "extracted/cpp-resume-891/test-regular-current-session-first.log",
+   "sha256": "5c9867f2ffb6da3adcbf3ab851521f53b72b75470d3386e20d508c4dfee8bcad"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "BombPostPop_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-891/test-bomb-postpop-first.log",
+   "sha256": "cb289b7e3de514f74bd8df96e42684c6db5a1d6a79bc039e2381a5d178cb9563"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "BombPostPop_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-891/test-bomb-postpop-session-first.log",
+   "sha256": "22d388efb3d8c051d3c40ffc3fb0daa58a52b2240ad3ce8dce349c00eaf71d29"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "SquidPopParent_",
+   "cases": 14,
+   "expectedCases": 14,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-891/test-pop-parent-first.log",
+   "sha256": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "PopWorldBounds_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-891/test-pop-world-first.log",
+   "sha256": "970ec4f695da074c090dafa4aa06341ba9fe68c061f94dd51b509025b18e3513"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "PopWorldBounds_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-891/test-pop-world-session-first.log",
+   "sha256": "090ecf0fb2119ee7e66cec4783ef1476579cbee951425bc2722cb35db0980aed"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-891/test-loaded-cost-world-reuse-first.log",
+   "sha256": "b7cc4d9114c429788bdc6b8f76507cab78825941876cba878fa9b34b26d8de19"
+  }
+ ],
+ "corrections": {
+  "changedAfterFirstBuild": [
+   "cpppj/src/o/SquidProcess.cpp",
+   "cpppj/tests/CampaignObjectMenuTests.cpp",
+   "cpppj/tests/RegularCurrentTests.cpp",
+   "tools/decomp_regular_current.py"
+  ],
+  "reason": "제품PID오류경계추가/새장치연결검사교정/새PID검사1/Native도구재현관측추가. 기존fixture변경0.",
+  "buildCadenceCorrection": "줄끝보존정리에서같은바이트도write해mtime을갱신했으므로교정빌드에서헤더의존소스도재컴파일했다. 이후동일bytes면write하지않는다."
+ },
+ "staticCurrentLinks": {
+  "directReservedCallers": {
+   "cpppj/src/client/RawCampaignSession.cpp": 14,
+   "cpppj/src/client/RawCampaignCursor.cpp": 1
+  },
+  "sharedDepth": {
+   "expression": "basePostPop == 0",
+   "file": "\\Ns\\O\\Regular.cpp",
+   "line": 112,
+   "checkingGated": false
+  },
+  "owner": "RawGameAuxState→RawProcessHostStorage pin→SquidProcessState const DWORD references",
+  "runtime": "RawSurfaceWorld current binding supplies depth getter and same Storage/Client assertion; active RuntimeCall preserves selected world during diagnostic",
+  "airScope": "flyerProcessEnd reference shares same owner; source/static only, no dedicated execution",
+  "sha256": {
+   "cpppj/src/o/SquidProcess.cpp": "65b4f040ce317c1d92265eeb0d4799bcee459a9a78e6c83b9666110641ea903e",
+   "cpppj/src/o/SquidProcess.h": "e78bff61fbca9eeb82e209a8545e12409ff2d1a4b6b91046e37c96da0abe90b5",
+   "cpppj/src/o/RawGameAuxState.h": "2111ef76399d89828aacb628ed82bc18549a6c2045dca8ffdd38390392a84028",
+   "cpppj/src/client/RawProcessHostStorage.cpp": "35bd80028f4906bb622193302c831f96bae42d5c0cc77f2f2333fc24296bf89d",
+   "cpppj/src/client/RawSurfaceStorage.cpp": "489664cf5bedd8400b123c04849761d6b614c6313e7ce76d777fe0a588289862",
+   "cpppj/src/client/RawSurfaceWorld.cpp": "58230df75b6fc9db6bcd8b75b058cfc6fda84f18fb49b0df6c9bf4a1e8f53856",
+   "cpppj/src/client/RawCampaignSession.cpp": "ffce4d8ff6efb840923121caa30b6ad997119d1b1648f5cefd986b46d26bd44c",
+   "cpppj/src/client/RawCampaignCursor.cpp": "5bf9c67ad65c1f683217b42fecbf5eba914960ab21131b923fd61726dd47bab9",
+   "cpppj/src/o/RawManaBoltArrival.cpp": "2a18aa31af82aa5c8ede4bffbff05c9eb6072613cbab6e68e66b61d92e011fb7"
+  }
+ },
+ "productUnit": 891,
+ "nextUnit": 892,
+ "verification": {
+  "uniqueLogicalCases": 40,
+  "newLogicalCases": 7,
+  "filterExecutions": 17,
+  "caseExecutions": 91,
+  "firstCases": 39,
+  "firstFailedChecks": 1,
+  "firstFilterCountMismatches": 2,
+  "correctedCases": 40,
+  "warningOnlyRecheckedCases": 12,
+  "finalFailedChecks": 0,
+  "finalWarningDiagnostics": 0,
+  "protectedBefore": 2770,
+  "fixturesBefore": 950,
+  "protectedAfter": 2772,
+  "fixturesAfter": 952,
+  "existingProtectedChanges": 0,
+  "newFixtures": 2,
+  "sourceSnapshotFiles": 17,
+  "productUnchangedByTestWarningFix": true,
+  "product": {
+   "path": "cpppj/build/bin/Release/Netstorm.exe",
+   "sha256": "5abbdd578c919017a0b0a80de213db0098a8d614858c94bcafd9edecc91a6f1b",
+   "size": 10675200,
+   "version": "11.01"
+  },
+  "builds": [
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 932.9217064,
+    "tag": "first",
+    "warningDiagnosticCount": 2,
+    "warningContextLines": 14,
+    "errors": 0
+   },
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 952.2773678,
+    "tag": "corrected",
+    "warningDiagnosticCount": 2,
+    "warningContextLines": 14,
+    "errors": 0
+   },
+   {
+    "exitCode": 0,
+    "elapsedSeconds": 15.1470286,
+    "tag": "warning-fixed",
+    "warningDiagnosticCount": 0,
+    "warningContextLines": 0,
+    "errors": 0
+   }
+  ],
+  "testExecutions": {
+   "first": [
+    {
+     "target": "netstorm_pop_context_tests",
+     "filter": "RegularCurrent_",
+     "cases": 11,
+     "expectedCases": 3,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-regular-current-first.log",
+     "sha256": "42734efe48e37a26329d2068493b097466391b68e379bb9c9c0ddd1f544bcfc6"
+    },
+    {
+     "target": "netstorm_menu_session_tests",
+     "filter": "RegularCurrent_",
+     "cases": 5,
+     "expectedCases": 3,
+     "failedCases": 1,
+     "failedChecks": 1,
+     "exitCode": 1,
+     "log": "extracted/cpp-resume-891/test-regular-current-session-first.log",
+     "sha256": "5c9867f2ffb6da3adcbf3ab851521f53b72b75470d3386e20d508c4dfee8bcad"
+    },
+    {
+     "target": "netstorm_pop_context_tests",
+     "filter": "BombPostPop_",
+     "cases": 3,
+     "expectedCases": 3,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-bomb-postpop-first.log",
+     "sha256": "cb289b7e3de514f74bd8df96e42684c6db5a1d6a79bc039e2381a5d178cb9563"
+    },
+    {
+     "target": "netstorm_menu_session_tests",
+     "filter": "BombPostPop_",
+     "cases": 1,
+     "expectedCases": 1,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-bomb-postpop-session-first.log",
+     "sha256": "22d388efb3d8c051d3c40ffc3fb0daa58a52b2240ad3ce8dce349c00eaf71d29"
+    },
+    {
+     "target": "netstorm_pop_context_tests",
+     "filter": "SquidPopParent_",
+     "cases": 14,
+     "expectedCases": 14,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-pop-parent-first.log",
+     "sha256": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27"
+    },
+    {
+     "target": "netstorm_pop_context_tests",
+     "filter": "PopWorldBounds_",
+     "cases": 3,
+     "expectedCases": 3,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-pop-world-first.log",
+     "sha256": "970ec4f695da074c090dafa4aa06341ba9fe68c061f94dd51b509025b18e3513"
+    },
+    {
+     "target": "netstorm_menu_session_tests",
+     "filter": "PopWorldBounds_",
+     "cases": 1,
+     "expectedCases": 1,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-pop-world-session-first.log",
+     "sha256": "090ecf0fb2119ee7e66cec4783ef1476579cbee951425bc2722cb35db0980aed"
+    },
+    {
+     "target": "netstorm_menu_session_tests",
+     "filter": "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse",
+     "cases": 1,
+     "expectedCases": 1,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-loaded-cost-world-reuse-first.log",
+     "sha256": "b7cc4d9114c429788bdc6b8f76507cab78825941876cba878fa9b34b26d8de19"
+    }
+   ],
+   "corrected": [
+    {
+     "target": "netstorm_pop_context_tests",
+     "filter": "RegularCurrent_",
+     "cases": 12,
+     "expectedCases": 12,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-regular-current-corrected.log",
+     "sha256": "40e0a4a24533cacdbe26bc18efe84933fb09d868f8d249c0c092b7f16f3288c1"
+    },
+    {
+     "target": "netstorm_menu_session_tests",
+     "filter": "RegularCurrent_",
+     "cases": 5,
+     "expectedCases": 5,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-regular-current-session-corrected.log",
+     "sha256": "1c0a0dc9beaeb72103482884a305899883e9849ee03eec5d836ad4277f5782b2"
+    },
+    {
+     "target": "netstorm_pop_context_tests",
+     "filter": "BombPostPop_",
+     "cases": 3,
+     "expectedCases": 3,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-bomb-postpop-corrected.log",
+     "sha256": "cb289b7e3de514f74bd8df96e42684c6db5a1d6a79bc039e2381a5d178cb9563"
+    },
+    {
+     "target": "netstorm_menu_session_tests",
+     "filter": "BombPostPop_",
+     "cases": 1,
+     "expectedCases": 1,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-bomb-postpop-session-corrected.log",
+     "sha256": "22d388efb3d8c051d3c40ffc3fb0daa58a52b2240ad3ce8dce349c00eaf71d29"
+    },
+    {
+     "target": "netstorm_pop_context_tests",
+     "filter": "SquidPopParent_",
+     "cases": 14,
+     "expectedCases": 14,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-pop-parent-corrected.log",
+     "sha256": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27"
+    },
+    {
+     "target": "netstorm_pop_context_tests",
+     "filter": "PopWorldBounds_",
+     "cases": 3,
+     "expectedCases": 3,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-pop-world-corrected.log",
+     "sha256": "970ec4f695da074c090dafa4aa06341ba9fe68c061f94dd51b509025b18e3513"
+    },
+    {
+     "target": "netstorm_menu_session_tests",
+     "filter": "PopWorldBounds_",
+     "cases": 1,
+     "expectedCases": 1,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-pop-world-session-corrected.log",
+     "sha256": "090ecf0fb2119ee7e66cec4783ef1476579cbee951425bc2722cb35db0980aed"
+    },
+    {
+     "target": "netstorm_menu_session_tests",
+     "filter": "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse",
+     "cases": 1,
+     "expectedCases": 1,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-loaded-cost-world-reuse-corrected.log",
+     "sha256": "b7cc4d9114c429788bdc6b8f76507cab78825941876cba878fa9b34b26d8de19"
+    }
+   ],
+   "warning-fixed": [
+    {
+     "target": "netstorm_pop_context_tests",
+     "filter": "RegularCurrent_",
+     "cases": 12,
+     "expectedCases": 12,
+     "failedCases": 0,
+     "failedChecks": 0,
+     "exitCode": 0,
+     "log": "extracted/cpp-resume-891/test-regular-current-warning-fixed.log",
+     "sha256": "40e0a4a24533cacdbe26bc18efe84933fb09d868f8d249c0c092b7f16f3288c1"
+    }
+   ]
+  },
+  "logicalCaseNames": [
+   [
+    "netstorm_pop_context_tests",
+    "ForcefieldRegularCurrent_UnknownEventSkipsRawAndUnselectedDevices"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "ForcefieldRegularCurrent_AdvanceOnlyAndCallbackCanReleaseHandler"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "ForcefieldRegularCurrent_CurrentDwordAndRawFloatsReachTypedFinder"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "ForcefieldRegularCurrent_MissingDestroyPreservesCompletedFindEffect"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "ForcefieldRegularCurrent_DestroyCallbackCanReleaseHandler"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "ForcefieldRegularCurrent_DiagnosticReadsCurrentCheckingAndReturnsAfterRelease"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "ForcefieldRegularCurrent_MissingSelectedDiagnosticFailsWithoutRawMutation"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "ForcefieldRegularCurrent_CdKeepsPreflightAndNoDiagnosticForUnknownEvent"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "RegularCurrent_Native1232FinderReturnsRespectFullDwordAndSignedProcessRange"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "RegularCurrent_Native32ConstructorAttachmentsAndSharedDiagnosticReturn"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "RegularCurrent_SharedDiagnosticStopsBeforeRegistrationAndSurvivesSelfUnbinding"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "RegularCurrent_MissingPidIsNotSilentlySkippedBeforeLaterValidReservation"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "ForcefieldRegularCurrent_ActualSessionUsesVtableAndCurrentClientDiagnostic"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "ForcefieldRegularCurrent_ActualSessionSearchesWithCurrentWorldTypes"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "RegularCurrent_ActualSessionNumbersAndHostSurviveWorldReuse"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "RegularCurrent_ActualPopUsesCurrentTypeAndKeepsOneEffectReservation"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "RegularCurrent_ActualSharedConstructorUsesClientDiagnosticThenCurrentType"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "BombPostPop_Native432PrefixesAndCommonDepth"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "BombPostPop_LazySelectedDevicesAndSavedVtable"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "BombPostPop_Reserved187UsesSameCarrierPostPopAddress"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "BombPostPop_ActualSessionSharesRandomAndDeduplicatesRealRegular"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_EarlyReturnsDoNotReadTypeOrDevices"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_InvalidCoordinateLogsBeforeStoreAndUsesCurrentType"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_MiniMapPreservesInputBoundsAndReadsCurrentLoopType"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_InvalidStartDiagnosesWithCheckingOffAndResumesCellZero"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_GridDiagnosticKeepsCandidateAndLogsCurrentNames"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_MissingSideDeviceKeepsEarlierSpots"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_FrameFailureOccursAfterSpotsBeforeHash"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_OverlapReturnsBeforeUnknownVirtualAndFrame"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_NextDiagnosticKeepsSavedHeadAndCurrentIslandBranch"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_UpdateControlsCurrentFirstPopAndFlags"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_FinalContainedDiagnosticKeepsCompletedEffects"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_ActualAdapterTransmittingDiagnosticRunsAfterVoidClear"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_ActualWorldFrameFailurePreservesCoordinatesAndSpots"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "SquidPopParent_ActualClientWorldDiagnosticAndTraceShareCurrentOwner"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "PopWorldBounds_ActualParentClampsUnorderedAndRechecksLimitAfterMiniMap"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "PopWorldBounds_Native260OrderedPointAndPopFrontFloatSnapshot"
+   ],
+   [
+    "netstorm_pop_context_tests",
+    "PopWorldBounds_SelectedGetterSurvivesSelfUnbindingAndInvalidXSkipsIt"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "PopWorldBounds_ActualSessionUsesSameCurrentClientSizeAsCursorAndCamera"
+   ],
+   [
+    "netstorm_menu_session_tests",
+    "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse"
+   ]
+  ]
+ },
+ "finalNative": {
+  "host": "HJOW-Athlon",
+  "date": "2026-11-05",
+  "lastPreciseDecompile": {
+   "host": "HJOW-Athlon",
+   "date": "2026-11-03"
+  },
+  "fixtures": [
+   {
+    "path": "cpppj/tests/fixtures/regular-current-find-x86.tsv",
+    "cases": 1232,
+    "sha256": "073724a72d2b0f619ea85ec07ff9f476d38def76f9f63ae288f7f331067efa49"
+   },
+   {
+    "path": "cpppj/tests/fixtures/regular-current-constructor-x86.tsv",
+    "cases": 64,
+    "sha256": "f2922ac64a94c4115d4cbe7d980d05db5d06d3e4025b82516beec5736ec9324e"
+   }
+  ],
+  "nativeMissingPidRead": [
+   {
+    "instruction": "004afbb1",
+    "address": "00000018",
+    "size": 4
+   }
+  ],
+  "instructions": 173093,
+  "verify": true,
+  "boundaries": "4afb40/4afbe0/iterator3/4b1bf0/predicateThunk/471aa0 및496e80/496f00 전체. 생성자41bd20/4e0620만 인자/정상복귀/현재변경 명시 경계다. 미등록PID는실제4afbb1/null+18읽기직전중단한다. 게임/MP/시전/포획/공중3종0.",
+  "sourceSha256": "85bec88a84106543d4b29eac8661ca15ac05a5e82ec99c840cabb221dbe018ca",
+  "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+ },
+ "nextArchipelagoSource": {
+  "004c0e20": {
+   "characters": 995,
+   "directFunctions": [
+    "00432180",
+    "004c0e20",
+    "004e0620"
+   ]
+  },
+  "004c13f0": {
+   "characters": 1506,
+   "directFunctions": [
+    "004322e0",
+    "00432300",
+    "004bca60",
+    "004c0e20",
+    "004c13f0",
+    "004e49c0"
+   ]
+  },
+  "004c1510": {
+   "characters": 3759,
+   "directFunctions": [
+    "0041ca10",
+    "00432050",
+    "0046ee50",
+    "004bca60",
+    "004c02d0",
+    "004c0390",
+    "004c0640",
+    "004c0800",
+    "004c09a0",
+    "004c0ad0",
+    "004c0cf0",
+    "004c0db0",
+    "004c0e20",
+    "004c0fe0",
+    "004c10a0",
+    "004c13f0",
+    "004c1510",
+    "004c2630"
+   ]
+  }
+ },
+ "nextPopMetamapBoundary": {
+  "rows": [
+   {
+    "vtable": "0050c9f0",
+    "functions": {
+     "20": "004b0d30",
+     "30": "004ad470",
+     "88": "004787c0",
+     "8c": "004ad670"
+    },
+    "currentDisplaySupportMask": 0,
+    "scope": "MP-metamap-deferred-code-not-executed"
+   },
+   {
+    "vtable": "0050cc08",
+    "functions": {
+     "20": "004b0d30",
+     "30": "004ad470",
+     "88": "004791b0",
+     "8c": "004ad670"
+    },
+    "currentDisplaySupportMask": 0,
+    "scope": "MP-metamap-deferred-code-not-executed"
+   }
+  ],
+  "conclusion": "메타맵2표는공통+20/+30만같고현재표시지원mask0이다. 주소목록만넓혀전체Pop을완료로주장하지않으며8번MP와함께복원한다.",
+  "nextNonMp": "군도004c0e20/004c13f0/004c1510의원문/실제상위와다음48fb30비멀티분기를대조한다."
+ },
+ "next": "군도004c0e20/004c13f0/004c1510의첫시드/흩뿌리기/성장과실제상위연결을진행한다. 이후48fb30비멀티·Factory/State/파일/UI/Edit/Windows·무검사MP/4~8차는계속미완료다."
+}

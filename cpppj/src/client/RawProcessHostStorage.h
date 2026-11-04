@@ -3,6 +3,7 @@
 #include "o/GameClock.h"
 #include "o/SquidProcess.h"
 #include <memory>
+namespace netstorm::o { class RawGameAuxState; } // 실제 세 TYPE DWORD의 장기 소유자를 전방 선언한다.
 
 namespace netstorm::client { // 실행 모듈을 복제하지 않고 실제 공통 Host의 수명만 소유한다.
 class RawProcessHostStorage {
@@ -39,7 +40,7 @@ public:
         explicit Returned(std::shared_ptr<o::Kernel> kernel) noexcept; // 실제 대여가 끝난 뒤 같은 Kernel 소유권을 유지한다.
         std::shared_ptr<o::Kernel> kernel_; // 잔류가 old World보다 오래 살아도 Kernel 자체가 먼저 사라지지 않는다.
     };
-    RawProcessHostStorage(o::SidPool& pool,std::span<const o::RiftTypeRecord> types,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<std::uint32_t> pollType={}); // Pool/TYPE는 이 owner보다 오래 살아야 한다.
+    RawProcessHostStorage(o::SidPool& pool,std::span<const o::RiftTypeRecord> types,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<std::uint32_t> pollType={},std::shared_ptr<o::RawGameAuxState> gameAux={}); // Pool/TYPE는 이 owner보다 오래 살아야 하며 실제 TYPE owner도 pin한다.
     ~RawProcessHostStorage(); // 최종 물리 소멸에서만 잔류를 반납하며 Host/Pool은 그때까지 유지한다.
     RawProcessHostStorage(const RawProcessHostStorage&)=delete;RawProcessHostStorage& operator=(const RawProcessHostStorage&)=delete; // Host가 캡처한 주소를 고정한다.
     RawProcessHostStorage(RawProcessHostStorage&&)=delete;RawProcessHostStorage& operator=(RawProcessHostStorage&&)=delete; // 실제 Host가 캡처한 owner 주소를 이동하지 않는다.
@@ -57,6 +58,7 @@ private:
     std::weak_ptr<o::ProcessHostRuntimeBindings> current_; // 현재 짧은 대여만 조회하며 World를 숨겨서 붙잡지 않는다.
     std::unique_ptr<o::SquidProcessHost> host_; // Kernel의 최종 소멸보다 오래 살아 있어야 한다.
     std::shared_ptr<o::FrameTime> clock_;std::shared_ptr<std::uint32_t> pollType_; // 스칼라 포인터의 실제 소유자를 pin한다.
+    std::shared_ptr<o::RawGameAuxState> gameAux_; // 일반/공유/상한 참조가 Host의 최종 반납까지 유효하도록 소유자를 유지한다.
     std::shared_ptr<o::Kernel> kernel_; // Host보다 먼저 반납하며 독립 Kernel도 잔류보다 먼저 사라지지 않는다.
     bool external_{}; // 같은 명시 외부 장치와 독립 최종 종료 정책만 구별한다.
 };

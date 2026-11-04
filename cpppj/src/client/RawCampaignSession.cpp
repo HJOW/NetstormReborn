@@ -778,7 +778,7 @@ struct RawCampaignSession::Impl {
     std::uint32_t sunBombType{163}; // PATCH005412e4의 현재 훨리기그 폭탄 번호다.
     std::unique_ptr<RawFlyerTarget> flyerTarget; // 같은 현재 풀/의존/실제 공간 검색의 표적 선택·경쟁·포위다.
     std::unique_ptr<RawSquidFinder> flyerFinder; // 한 비행체 표적 검색의 같은 일반 finder 커서를 보관한다.
-    std::uint32_t flyerProcessEnd{63},flyerDependType{1}; // PATCH의 실제 프로세스 상한/의존 타입 전역이다.
+    const std::uint32_t& flyerProcessEnd{gameplayGlobals->GameAux()->ProcessTypeEnd()};std::uint32_t flyerDependType{1}; // PATCH의 실제 프로세스 상한/의존 타입 전역이다.
     std::uint32_t windFlyerType{138}; // PATCH00541280의 현재 더스트 데빌 타입이다.
     std::unique_ptr<RawFlyerPostPop> flyerPostPop; // 맨 오 워/훨리기그의 실제 생성·그림자·압축 시각 후처리다.
     std::uint32_t& flyerProcessType{gameplayGlobals->GameAux()->FlyerProcessType()}; // PATCH005410ec를 같은 Client의 장기 owner에서 직접 빌린다.
@@ -814,7 +814,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawConstructionBuilder> buildingMover; // 같은 실제 기준점/23/39/현재 경로 시각의 통지용 Builder다.
     ConstructionArrivalState buildArrivalState; // 실제134의 예측 대기/서버 건설 시작 전역이다.
     std::unique_ptr<RawConstructionArrival> buildArrival; // 같은 풀/해시에서 건설 대상을 찾는다.
-    ManaBoltArrivalState manaArrivalState; // 실제105의 도착 뒤 두 프로세스 종류/예약 간격이다.
+    ManaBoltArrivalState manaArrivalState{.currentRegularType=&gameplayGlobals->GameAux()->RegularProcessType(),.currentSharedRegularType=&gameplayGlobals->GameAux()->SharedRegularProcessType()}; // 실제105의 도착 뒤 두 프로세스 종류/예약 간격이다.
     std::unique_ptr<RawManaBoltArrival> manaArrival; // 같은 풀에서 비행 도착의 실제 분기를 실행한다.
     ManaBoltRegularState manaRegularState; // 실제105 주기의 현재0.05/간격16 전역이다.
     std::unique_ptr<RawManaBoltRegular> manaRegular; // 같은 Target/Frame/현재 카메라/가상 공간을 연결한다.
@@ -1074,7 +1074,7 @@ struct RawCampaignSession::Impl {
         balloon.allocateRegular=[this] { if (pendingCloudRegular) throw std::logic_error("클라우드 플로터 Regular 중복 예약");pendingCloudRegular.reset(::operator new(sizeof(RegularProcess),std::nothrow));return pendingCloudRegular!=nullptr; };
         balloon.constructRegular=[this](Sid parent,std::uint32_t event,float delay) {
             if (!pendingCloudRegular) throw std::logic_error("클라우드 플로터 Regular 실제 예약 누락");auto* storage=pendingCloudRegular.release();auto* process=new(storage) RegularProcess(event,delay);
-            auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(process),46,parent,0x50));if (attached) attached->ResetTask(event,core.processState.Now());
+            auto* attached=static_cast<RegularProcess*>(core.processes.AttachRegular(std::unique_ptr<RegularProcess>(process),parent));if (attached) attached->ResetTask(event,core.processState.Now());
         }; // 실제496e80은 부착 후 현재 시각을 쓴다.
         balloonBody=std::make_unique<RawBalloonBody>(core.pool,core.types,core.spots,assetState.Boss(),*carrier,priests->Carrier(),std::move(balloon));core.postPop.SetBalloonPostPop(balloonBody.get());
         // 빈/내장 타입을 포함해 실제 TYPE+98의 판본 초기값과 파싱값을 같은 번호의 모든 소비자에게 전달한다.
@@ -1582,7 +1582,7 @@ struct RawCampaignSession::Impl {
         hooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) {
             if (!pendingFlareRegular) throw std::logic_error("플레어 Regular 실제 예약 누락");auto* storage=pendingFlareRegular.release();RegularProcess* process{};
             try { process=new(storage) RegularProcess(event,payload); }catch (...) { ::operator delete(storage);throw; }
-            auto* attached=dynamic_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(process),46,sid,0x50));if (!attached) throw std::logic_error("플레어 Regular 실제 부착 실패");attached->SetNextTime(core.processState.Now());
+            auto* attached=dynamic_cast<RegularProcess*>(core.processes.AttachRegular(std::unique_ptr<RegularProcess>(process),sid));if (!attached) throw std::logic_error("플레어 Regular 실제 부착 실패");attached->SetNextTime(core.processState.Now());
         };
         hooks.frame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         hooks.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
@@ -1639,7 +1639,7 @@ struct RawCampaignSession::Impl {
         lifetimeHooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };lifetimeHooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
         lifetimeHooks.rebuild=[this](Sid sid) { fenceRebuild->Rebuild(sid); };
         lifetimeHooks.reserveRegular=[this] { try { fencePendingRegular=std::make_unique<RegularProcess>(2,0.10000000149011612f);return true; }catch (const std::bad_alloc&) { return false; } };
-        lifetimeHooks.addRegular=[this](Sid sid,std::uint32_t event,float) { if (!fencePendingRegular) throw std::logic_error("펜스 실제 예약 객체 누락");auto* process=dynamic_cast<RegularProcess*>(core.processes.Attach(std::move(fencePendingRegular),46,sid,0x50));if (!process) throw std::logic_error("펜스 Regular 부모 부착 실패");process->ResetTask(event,core.processState.Now()); };
+        lifetimeHooks.addRegular=[this](Sid sid,std::uint32_t event,float) { if (!fencePendingRegular) throw std::logic_error("펜스 실제 예약 객체 누락");auto* process=dynamic_cast<RegularProcess*>(core.processes.AttachRegular(std::move(fencePendingRegular),sid));if (!process) throw std::logic_error("펜스 Regular 부모 부착 실패");process->ResetTask(event,core.processState.Now()); };
         lifetimeHooks.damageable=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };fenceLifetime=std::make_unique<RawFenceLifetime>(core.pool,std::move(lifetimeHooks));
     }
     // 가상 주소를 호출하지 않고 검증한 일반 Damageable의 실제 표만 선택한다.
@@ -1822,7 +1822,7 @@ struct RawCampaignSession::Impl {
         hooks.reserveRegular=[this] { try { pendingIceRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
         hooks.regular=[this](Sid sid,std::uint32_t event,float period) {
             if (!pendingIceRegular) throw std::logic_error("성장형 아이스 Regular 예약 누락");auto* reserved=pendingIceRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,period);
-            auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingIceRegular),46,sid,0x50));if (!task) throw std::logic_error("성장형 아이스 Regular 부착 실패");task->ResetTask(event,core.processState.Now());
+            auto* task=static_cast<RegularProcess*>(core.processes.AttachRegular(std::move(pendingIceRegular),sid));if (!task) throw std::logic_error("성장형 아이스 Regular 부착 실패");task->ResetTask(event,core.processState.Now());
         };
         hooks.basePop=[this](Sid sid,std::uint32_t flags) { core.postPop.PostPopBase(sid,flags); };
         hooks.grid=[this](float x,float y) {
@@ -1857,7 +1857,7 @@ struct RawCampaignSession::Impl {
         hooks.reserveRegular=[this] { try { pendingAcidRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
         hooks.regular=[this](Sid sid,std::uint32_t event,float delay) {
             if (!pendingAcidRegular) throw std::logic_error("애시드 Regular 예약 누락");auto* reserved=pendingAcidRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay);
-            auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingAcidRegular),46,sid,0x50));if (!task) throw std::logic_error("애시드 Regular 부착 실패");task->ResetTask(event,core.processState.Now());
+            auto* task=static_cast<RegularProcess*>(core.processes.AttachRegular(std::move(pendingAcidRegular),sid));if (!task) throw std::logic_error("애시드 Regular 부착 실패");task->ResetTask(event,core.processState.Now());
         };
         hooks.damage=hits->DamageHooks({}).damage;
         hooks.broadcast=[this](std::span<std::uint8_t> packet) { broadcast->Send(packet); };
@@ -1922,7 +1922,7 @@ struct RawCampaignSession::Impl {
         post.allocateWindRegular=[this] { if (pendingWindRegular) throw std::logic_error("더스트 데빌Regular 중복예약");try { pendingWindRegular=std::make_unique<RegularProcess>(0,0.25f);return true; }catch (const std::bad_alloc&) { return false; } };
         post.createWindRegular=[this](Sid sid,std::uint32_t event,float period) {
             if (!pendingWindRegular || event!=0 || period!=0.25f) throw std::logic_error("더스트 데빌Regular 확보/인수불일치");
-            static_cast<void>(core.processes.Attach(std::move(pendingWindRegular),46,sid,0x50));
+            static_cast<void>(core.processes.AttachRegular(std::move(pendingWindRegular),sid));
         };
         std::vector<FlyerPostPopType> details(core.types.size()); // 실제 불변 TYPE의 speed/전체 물리 프레임 수다.
         for (const auto& asset:assets.game.Types()) {
@@ -2060,7 +2060,7 @@ struct RawCampaignSession::Impl {
         };
         steal.commonHalt=[this](Sid sid) { if (!motion) throw std::logic_error("이동 설치 전 크랩 정지");return motion->CommonHalt(sid); };
         steal.allocateRegular=[this] { try { pendingCarrierTask=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
-        steal.regular=[this](Sid sid,std::uint32_t event,float delay) { if (!pendingCarrierTask || delay!=1.0F) throw std::logic_error("크랩 Regular 예약 누락");auto* reserved=pendingCarrierTask.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay);auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingCarrierTask),46,sid,0x50));task->ResetTask(event,core.processState.Now()); };
+        steal.regular=[this](Sid sid,std::uint32_t event,float delay) { if (!pendingCarrierTask || delay!=1.0F) throw std::logic_error("크랩 Regular 예약 누락");auto* reserved=pendingCarrierTask.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay);auto* task=static_cast<RegularProcess*>(core.processes.AttachRegular(std::move(pendingCarrierTask),sid));task->ResetTask(event,core.processState.Now()); };
         steal.check=[this](Sid sid) { static_cast<void>(priests->CarrierCheck().Check(sid)); };
         steal.damageablePostPop=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
         carrierSteal=std::make_unique<RawCarrierSteal>(core.pool,core.hash,core.types,assetState.Boss(),globals.editor,playerState.battleOwner,alliances,motionState.halt.carrierType,motionState.carrier.priestType,stealHeader,stealHaltCounter,std::move(steal));
@@ -2073,7 +2073,7 @@ struct RawCampaignSession::Impl {
         post.reserveRegular=[this] { if (pendingBombPopRegular) throw std::logic_error("주문 효과 Regular 중복 예약");try { pendingBombPopRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
         post.addRegular=[this](Sid sid,std::uint32_t event,float delay) {
             if (!pendingBombPopRegular) throw std::logic_error("주문 효과 Regular 확보 누락");auto* reserved=pendingBombPopRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay); // 난수 계산 뒤에도 확보한 같은 메모리를 사용한다.
-            auto* process=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingBombPopRegular),46,sid,0x50));process->ResetTask(event,core.processState.Now());
+            auto* process=static_cast<RegularProcess*>(core.processes.AttachRegular(std::move(pendingBombPopRegular),sid));process->ResetTask(event,core.processState.Now());
         };
         bombPostPop=std::make_unique<RawBombPostPop>(core.pool,random,std::move(post));core.postPop.SetBombPostPop(bombPostPop.get());
     }
@@ -2099,7 +2099,7 @@ struct RawCampaignSession::Impl {
         nugget.construct=[this](Sid sid,std::uint32_t event,float payload) {
             if (!pendingNuggetRegular) throw std::logic_error("너겟 Regular 생성 전 확보 메모리 없음");
             auto* reserved=pendingNuggetRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,payload); // 확보한 객체를 같은 주소에서 실제 인자로 생성하며 두 번째 할당을 하지 않는다.
-            auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingNuggetRegular),46,sid,0x50));if (attached) attached->ResetTask(event,core.processState.Now());
+            auto* attached=static_cast<RegularProcess*>(core.processes.AttachRegular(std::move(pendingNuggetRegular),sid));if (attached) attached->ResetTask(event,core.processState.Now());
         };
         nugget.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
         NuggetRegularHooks nuggetEvents;nuggetEvents.allocate=nugget.allocate;nuggetEvents.construct=nugget.construct; // 같은확보메모리/Host를PostPop과왕복끝점에서공유한다.
@@ -2164,7 +2164,7 @@ struct RawCampaignSession::Impl {
         task.allocate=[this] { if (pendingCarrierTask) throw std::logic_error("캐리어 task 확보 메모리 중복");try { pendingCarrierTask=std::make_unique<RegularProcess>(0,0.0F); }catch (const std::bad_alloc&) { return false; }return true; };
         task.construct=[this](Sid sid,std::uint32_t event,bool shared) {
             if (!pendingCarrierTask) throw std::logic_error("캐리어 task 생성 전 확보 메모리 없음");auto* reserved=pendingCarrierTask.get();std::destroy_at(reserved);std::construct_at(reserved,event,5.0F);
-            return static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingCarrierTask),shared ? 61U : 46U,sid,0x50));
+            return static_cast<RegularProcess*>(core.processes.AttachRegular(std::move(pendingCarrierTask),sid,shared));
         };
         task.assertion=[] { throw std::logic_error("원본 Carrier.cpp407 낙하 task 교체 진단"); };
         carrierTask=std::make_unique<RawCarrierTask>(core.pool,core.processState.Now(),std::move(task));
@@ -2475,7 +2475,7 @@ struct RawCampaignSession::Impl {
         aiEconomy=std::make_unique<RawAiEconomy>(aiMemory,sp,core.processState.Now(),std::move(economy));
         AiDeploymentHooks deployment;deployment.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };deployment.technology=[this](auto owner) { const auto parent=player->Technology(std::bit_cast<std::int32_t>(owner));if (parent>65535 || parent>=core.pool.Capacity()) throw std::out_of_range("AI 배치 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(parent)}; };
         deployment.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };deployment.reserveRegular=[this] { try { aiPendingRegular=std::make_unique<RegularProcess>(0U,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
-        deployment.addRegular=[this](Sid parent,float duration) { if (!aiPendingRegular) throw std::logic_error("AI 배치 실제 Regular 예약 누락");auto* memory=aiPendingRegular.release();std::destroy_at(memory);std::construct_at(memory,0U,duration);auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(memory),46,parent,0x50));if (!attached) throw std::logic_error("AI 배치 실제 Regular 부착 실패");attached->ResetTask(0U,core.processState.Now()); };
+        deployment.addRegular=[this](Sid parent,float duration) { if (!aiPendingRegular) throw std::logic_error("AI 배치 실제 Regular 예약 누락");auto* memory=aiPendingRegular.release();std::destroy_at(memory);std::construct_at(memory,0U,duration);auto* attached=static_cast<RegularProcess*>(core.processes.AttachRegular(std::unique_ptr<RegularProcess>(memory),parent));if (!attached) throw std::logic_error("AI 배치 실제 Regular 부착 실패");attached->ResetTask(0U,core.processState.Now()); };
         deployment.request=[this](const ConstructionConfirmRequest& request) { PrepareConstruction();static_cast<void>(construction->Request(request)); };deployment.localPlace=[this](ConstructionLocalRequest request) { if (!cursor) throw std::logic_error("AI 배치 실제 로컬4433b0 미설치");cursor->PlaceLocal(request); };
         deployment.demo=[this] { return services.missionOutcome.demo()!=0; };deployment.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 배치 원본 진단 미연결");services.ai.assertion(text); };
         aiDeployment=std::make_unique<RawAiDeployment>(aiMemory,core.pool,core.types,*contained,AiDeploymentGlobals{assetState.Boss(),constructionState.notice.moveLocalBuilder,core.processState.Now()},std::move(deployment));
@@ -2749,7 +2749,7 @@ struct RawCampaignSession::Impl {
         research.upgradeReceive=[this](std::span<const std::uint8_t> packet) { if (!factoryUpgradeCommand) throw std::logic_error("Factory 업그레이드 실제 수신 미설치");factoryUpgradeCommand->Receive(packet); };
         factoryResearch=std::make_unique<RawFactoryResearch>(core.pool,core.types,FactoryResearchState{objectState.loadingDepth,core.bookkeeping.productionDirty,assetState.Boss(),core.processState.Now(),researchOutpost},std::move(research));
         FactoryUpgradeCommandHooks upgrade;upgrade.cost=[this](auto type) { return hp.TypeCostUnits(type); };upgrade.addSp=[this](auto owner,float delta) { hp.AddSp(owner,delta); };
-        upgrade.reserveShared=[this] { try { factoryUpgradePending=std::make_unique<RegularProcess>(0U,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };upgrade.addShared=[this](Sid parent,auto event,float delay) { if (!factoryUpgradePending) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 예약 누락");auto* memory=factoryUpgradePending.release();std::destroy_at(memory);std::construct_at(memory,event,delay);auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(memory),61,parent,0x50));if (!attached) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 부착 실패");attached->ResetTask(event,core.processState.Now()); };
+        upgrade.reserveShared=[this] { try { factoryUpgradePending=std::make_unique<RegularProcess>(0U,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };upgrade.addShared=[this](Sid parent,auto event,float delay) { if (!factoryUpgradePending) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 예약 누락");auto* memory=factoryUpgradePending.release();std::destroy_at(memory);std::construct_at(memory,event,delay);auto* attached=static_cast<RegularProcess*>(core.processes.AttachRegular(std::unique_ptr<RegularProcess>(memory),parent,true));if (!attached) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 부착 실패");attached->ResetTask(event,core.processState.Now()); };
         upgrade.send=[this](auto target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("Factory 업그레이드 실제 요청 송신 미연결");services.carrierRequest(static_cast<std::int32_t>(target),packet); };upgrade.broadcast=[this](std::span<const std::uint8_t> packet) { broadcast->Send(packet); };upgrade.log=[this](auto kind,std::string_view text) { if (!services.player.log) throw std::logic_error("Factory 업그레이드 실제 로그 미연결");services.player.log(kind,text); };upgrade.assertion=[](std::string_view text) { std::fprintf(stderr,"Factory 업그레이드 원본 진단: %.*s\n",static_cast<int>(text.size()),text.data()); };
         factoryUpgradeCommand=std::make_unique<RawFactoryUpgradeCommand>(core.pool,core.types,FactoryUpgradeCommandState{assetState.Boss(),gunState.checking,core.processState.Now()},std::move(upgrade));
         ConnectFactoryUpgrade();
@@ -2985,7 +2985,7 @@ struct RawCampaignSession::Impl {
     hooks.reserveTimer=[current] { try { current->builderPendingRegular=std::make_unique<RegularProcess>(0,0.05f);return true; }catch (const std::bad_alloc&) { return false; } };
     hooks.addTimer=[current](Sid sid,std::uint32_t event,float payload) {
         if (!current->builderPendingRegular || payload!=0.05f) throw std::logic_error("건설 운반의 실제 예약 객체/payload 오류");
-        auto* process=dynamic_cast<RegularProcess*>(current->core.processes.Attach(std::move(current->builderPendingRegular),46,sid,0x50));if (!process) throw std::logic_error("건설 운반의 실제 Regular 부착 실패");process->ResetTask(event,current->core.processState.Now());
+        auto* process=dynamic_cast<RegularProcess*>(current->core.processes.AttachRegular(std::move(current->builderPendingRegular),sid));if (!process) throw std::logic_error("건설 운반의 실제 Regular 부착 실패");process->ResetTask(event,current->core.processState.Now());
     };
     ConstructionBuilderReads reads;reads.builderType=[current] { return current->start.teleportType; };reads.carrierType=[current] { return current->start.manaBoltType; };reads.bridgeType=[current] { return current->core.bridgeState.bridgeType; };reads.approachMask=[current] { return current->builderApproachMask; };reads.timerPayload=[] { return 0.05f; };reads.now=[current] { return current->core.processState.Now(); };
     return std::make_unique<RawConstructionBuilder>(current->core.pool,current->core.types,current->builderTypes,state,std::move(hooks),current->energySupply.get(),std::move(reads));
@@ -3205,7 +3205,7 @@ struct RawCampaignSession::Impl {
         manaHooks.sound=[this](float x,float y,std::string_view name) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
         manaHooks.removeProcesses=[this](Sid sid,std::uint32_t type) { RemoveAttachedProcesses(core.processes,sid,type); };
         manaHooks.reserveRegular=[this] { try { manaPendingRegular=std::make_unique<RegularProcess>(1,manaArrivalState.delay);return true; }catch (const std::bad_alloc&) { return false; } };
-        manaHooks.addRegular=[this](Sid sid,std::uint32_t event,float delay) { if (!manaPendingRegular || delay!=manaArrivalState.delay) throw std::logic_error("마나 볼트 Regular 예약 누락");auto* regular=static_cast<RegularProcess*>(core.processes.Attach(std::move(manaPendingRegular),manaArrivalState.regularType,sid,0x50));regular->ResetTask(event,core.processState.Now()); };
+        manaHooks.addRegular=[this](Sid sid,std::uint32_t event,float delay) { if (!manaPendingRegular || delay!=manaArrivalState.delay) throw std::logic_error("마나 볼트 Regular 예약 누락");auto* regular=static_cast<RegularProcess*>(core.processes.AttachRegular(std::move(manaPendingRegular),sid));regular->ResetTask(event,core.processState.Now()); };
         manaHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         manaArrival=std::make_unique<RawManaBoltArrival>(core.pool,core.hash,core.types,manaArrivalState,std::move(manaHooks));
         ManaBoltRegularHooks regularHooks;

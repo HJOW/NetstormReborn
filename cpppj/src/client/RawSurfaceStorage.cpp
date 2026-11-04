@@ -49,7 +49,7 @@ RawSurfaceStorage::RawSurfaceStorage(o::OriginalEdition edition,std::span<const 
 // 장기 process owner는 실제 Pool/TYPE가 살아 있는 동안 최종 소유권을 반납한다.
 RawSurfaceStorage::~RawSurfaceStorage()=default;
 RawProcessHostStorage& RawSurfaceStorage::Processes() {
-    if (!processes_) processes_=std::make_unique<RawProcessHostStorage>(pool,types,authority_,std::shared_ptr<std::uint32_t>(GameAux(),&GameAux()->GeyserType()));return *processes_;
+    if (!processes_) processes_=std::make_unique<RawProcessHostStorage>(pool,types,authority_,std::shared_ptr<std::uint32_t>(GameAux(),&GameAux()->GeyserType()),GameAux());return *processes_;
 } // 한 번 만든 상태/Host 주소는 다음 World에서도 유지한다.
 // 동시 설치를 거부한 뒤에만 이전 물리를 초기화한다. TYPE/삭제 기록과 배열 주소는 유지한다.
 std::unique_ptr<RawSurfaceStorage::Use> RawSurfaceStorage::Acquire() {
