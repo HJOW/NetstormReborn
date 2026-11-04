@@ -21,11 +21,11 @@ struct ForcefieldPostPopHooks {
 // 사용: 같은 풀의 실제 예약 훅을 구성한 뒤 SquidPostPop::SetForcefieldPostPop에 등록한다.
 class RawForcefieldPostPop {
 public:
-    // 풀/효과 대상은 이 객체보다 오래 살아야 하며 두 필수 효과의 누락은 거부한다.
+    // 풀/효과 대상은 이 객체보다 오래 살아야 한다. PATCH는 도달 장치만 요구하고 CD는 기존 구성 사전 계약을 유지한다.
     RawForcefieldPostPop(const SidPool& pool,ForcefieldPostPopHooks hooks);
     // 공간 쓰기 전에 실제 타입/가상 표를 확인하며 예약/장부는 변경하지 않는다.
     void Validate(Sid sid) const;
-    // flags 1일 때만 사건 1(0.08f), 사건 2(0.01f)를 순서대로 예약한다. 공통 base는 호출자가 이어 준다.
+    // flags 1일 때만 사건 1(0.08f), 사건 2(0.01f)를 순서대로 예약한다. PATCH는 객체 사전 검사를 삽입하지 않고 공통 base는 호출자가 이어 준다.
     // 원본: 00448d20 / CD 004847d0의 공통 후처리 직전 접두다.
     void Prefix(Sid sid,std::uint32_t flags) const;
     // 다른 월드의 일반 Pop에 등록되지 않도록 구성 단계에서 확인한다.

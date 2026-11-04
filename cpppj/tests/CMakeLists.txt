@@ -3419,3 +3419,6 @@ target_sources(netstorm_pop_context_tests PRIVATE BuildingNotifyCurrentTests.cpp
 
 # 실제 비공중 후처리의 기존 원문 자료와 썬 바리케이드 현재 물리 쓰기를 집중 대조한다(853).
 target_sources(netstorm_pop_context_tests PRIVATE FencePostPopTests.cpp NuggetPostPopTests.cpp)
+
+# 다리/보호막 접두의 선택 장치와 기존 비공중 원문 접두만 집중 선택한다(856).
+target_sources(netstorm_pop_context_tests PRIVATE ForcefieldLifecycleTests.cpp)

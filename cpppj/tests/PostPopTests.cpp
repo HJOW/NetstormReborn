@@ -265,7 +265,7 @@ TEST_CASE(SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon) {
         o::SquidPostPop missing(pool,types,state); o::SquidPop guarded(pool,hash,spots,nullptr,&missing);
         const auto initial=std::vector(pool.Slot(sid).begin(),pool.Slot(sid).end());const auto before=Hex(initial);
         const auto prepare=[&] { auto raw=pool.AllocatedBytes(sid);std::copy(initial.begin(),initial.end(),raw.begin());hash.Reset();std::fill(spots.begin(),spots.end(),std::uint8_t{});state.depth=0; }; // 서로 독립인 실패/성공 호출의 초기 입력만 복원한다.
-        const auto partial=[&](std::span<const std::uint8_t> input,bool activated) { auto expected=std::vector(input.begin(),input.end());Put(expected,14,std::bit_cast<std::uint32_t>(20.0F));Put(expected,18,std::bit_cast<std::uint32_t>(20.0F));Put(expected,22,320,2);Put(expected,24,220,2);Put(expected,4,0,2);expected[33]=0;if (activated) { expected[40]|=0x80;expected[11]&=0xfb; }return Hex(expected); }; // 원문에서 실패 전에 완료한 고정 입력20,20의 정확한 raw 저장 폭을 확인한다.
+        const auto partial=[&](std::span<const std::uint8_t> input,bool activated) { auto expected=std::vector(input.begin(),input.end());Put(expected,14,std::bit_cast<std::uint32_t>(20.0F));Put(expected,18,std::bit_cast<std::uint32_t>(20.0F));Put(expected,22,320,2);Put(expected,24,220,2);Put(expected,4,0,2);expected[33]=0;if (activated) { expected[40]|=0x82;expected[11]&=0xfb; }return Hex(expected); }; // 최초 연결 누락 앞 공간/Activate와 다리 비트2 저장까지 원문 순서대로 남는다. fixture 기대값은 바꾸지 않는다.
         CHECK(Throws([&] { guarded.Pop(sid,types[82],1,1,20,20); }));
         if (edition==o::OriginalEdition::Patch1078) {
             CHECK(Hex(pool.Slot(sid))==partial(initial,true) && hash.Bucket(0,20,20)==sid.value);
@@ -288,10 +288,40 @@ TEST_CASE(SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon) {
         CHECK(pop.Pop(sid,types[82],1,1,20,20)==o::RawPopResult::Registered);
         CHECK((connected==std::vector<o::Sid>{sid})); CHECK(raw[edition==o::OriginalEdition::Patch1078 ? 40 : 35]&2);
         CHECK(state.depth==0); CHECK(state.globalCounts[82]==0); CHECK(state.totalCost==0);
-        // 콜백 누락은 접두 비트를 쓰기 전에 거부한다.
+        // 콜백 누락으로 실패해도 이미 켜진 접두 비트2는 유지한다.
         const auto active=Hex(raw);
         CHECK(Throws([&] { o::SquidPostPop::BridgePrefix(pool,sid,1,{}); })); CHECK(Hex(raw)==active);
     }
+}
+
+namespace { // 다리 접두의 실제 물리 슬롯과 명시 현재 장치를 준비한다.
+std::span<std::uint8_t> BridgeCurrentSlot(o::SidPool& pool,o::Sid sid=o::Sid{50}) { const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // free/contained 이후에도 원문이 쓰는 같은 배열이다.
+}
+TEST_CASE(PostPrefixCurrent_BridgeNoSelectedFlagSkipsRawAndDevice) { // flags0/2는 원문 접두에서 슬롯이나 연결 장치를 읽지 않는다.
+    o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);
+    for (const auto flags:{0U,2U,0x20000U}) o::SquidPostPop::BridgePrefix(pool,o::Sid{65000},flags,{}); // 미도달 SID를 먼저 검증하지 않는다.
+    CHECK(true);
+}
+TEST_CASE(PostPrefixCurrent_BridgeMissingConnectorKeepsFirstBitAndLife) { // 최초 비트2 저장은 연결 누락보다 먼저이며 현재 물리 수명/TYPE를 추가 거부하지 않는다.
+    for (const auto life:{1U,8U,9U}) { // free·contained·두 비트 조합을 독립 입력으로 준다.
+        o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);auto raw=BridgeCurrentSlot(pool);raw[10]=255;raw[11]=static_cast<std::uint8_t>(life);raw[40]=0x10;auto expected=std::vector(raw.begin(),raw.end());expected[40]=0x12;CHECK(Throws([&] { o::SquidPostPop::BridgePrefix(pool,o::Sid{50},1,{}); }) && std::ranges::equal(raw,expected));
+    }
+}
+TEST_CASE(PostPrefixCurrent_BridgeFlag4ReadsOnlyCurrentAbstractGate) { // flags4의 abstract1은 장치 없이 반환하고 그 외는 쓰기 없이 장치를 요구한다.
+    o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);auto raw=BridgeCurrentSlot(pool);raw[40]=1;o::SquidPostPop::BridgePrefix(pool,o::Sid{50},4,{});CHECK(raw[40]==1);raw[40]=0;CHECK(Throws([&] { o::SquidPostPop::BridgePrefix(pool,o::Sid{50},4,{}); }) && raw[40]==0);
+}
+TEST_CASE(PostPrefixCurrent_BridgeReturnKeepsCallbackCurrentSlot) { // 선택 연결의 정상 복귀 뒤 TYPE/free/extra/VT를 재검사하거나 비트2를 다시 쓰지 않는다.
+    o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);auto raw=BridgeCurrentSlot(pool);raw[40]=0;std::uint32_t calls{};o::SquidPostPop::BridgePrefix(pool,o::Sid{50},1,[&](o::Sid sid) { CHECK(sid==o::Sid{50} && raw[40]==2);++calls;raw[10]=255;raw[11]=9;raw[40]=0;Put(raw,0,0); });CHECK(calls==1 && raw[11]==9 && raw[40]==0 && raw[10]==255);
+}
+TEST_CASE(PostPrefixCurrent_BridgeCallableSurvivesSelfUnbinding) { // 실행 중 콜백이 자기 연결을 반납해도 현재 callable의 대여 상태를 유지한다.
+    o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);std::function<void(o::Sid)> connector;auto owner=std::make_shared<int>(7);std::weak_ptr<int> weak=owner;connector=[owner,&connector,&weak](o::Sid) { connector={};CHECK(!weak.expired() && *owner==7); };owner.reset();o::SquidPostPop::BridgePrefix(pool,o::Sid{50},1,connector);CHECK(weak.expired() && !connector);
+}
+TEST_CASE(PostPrefixCurrent_BridgeVirtualVtableAndExplicitPreflightDiffer) { // 실제 PATCH VT 분배는 도달하지 않는 TYPE/연결을 강제하지 않으며 명시 사전 검사는 무효과다.
+    auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,0x5034c8);raw[10]=255;raw[11]=9;raw[40]=0;CHECK(body.HandlesBridge(o::Sid{50}));++state.depth;body.PostPopVirtual(o::Sid{50},0);CHECK(state.depth==0);
+    ++state.depth;CHECK(Throws([&] { body.PostPopVirtual(o::Sid{50},1); }) && raw[40]==2 && state.depth==1);raw[10]=74;raw[11]=raw[40]=0;state.depth=0;const auto before=Hex(raw);CHECK(Throws([&] { body.Validate(o::Sid{50},1); }) && Hex(raw)==before && state.depth==0);
+}
+TEST_CASE(PostPrefixCurrent_BridgeThrownEffectKeepsPrefixAndCallbackWrites) { // 연결 장치의 명시 중단 뒤 최초 쓰기/장치 쓰기를 되돌리지 않는다.
+    o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);auto raw=BridgeCurrentSlot(pool);raw[40]=0;CHECK(Throws([&] { o::SquidPostPop::BridgePrefix(pool,o::Sid{50},1,[&](o::Sid) { CHECK(raw[40]==2);raw[11]=9;throw std::runtime_error("명시 다리 연결 중단"); }); }) && raw[40]==2 && raw[11]==9);
 }
 
 // 실제 .type 속성을 float cost로 읽으며 누락/중복/문자열 비용의 원본 규칙을 유지한다.

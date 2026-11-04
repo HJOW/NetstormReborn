@@ -90,10 +90,10 @@ SquidPostPop::SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,S
     if (graph_ && &graph_->Pool()!=&pool_) throw std::invalid_argument("postPop/Graph SID 풀이 다릅니다");
     if (graph_) graph_->ValidateTypes(types);
 }
-// 실제 vtable과 명시적인 연결 효과 둘 다 있어야 다리의 파생 후처리를 사용할 수 있다.
+// PATCH는 실제 VT로 몸체를 고르고 연결 장치는 원문 호출 위치에서 요구한다. CD의 기존 사전 계약은 유지한다.
 bool SquidPostPop::HandlesBridge(Sid sid) const {
     const auto expected=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchBridgeVtable : kCdBridgeVtable;
-    return bridgeConnector_ && Vtable(pool_.Slot(sid))==expected;
+    return (pool_.Edition()==OriginalEdition::Patch1078 || bridgeConnector_) && Vtable(pool_.Slot(sid))==expected;
 }
 // 접두 효과는 생성 뒤에 연결한다(연결 계층이 Pop을 거쳐 이 객체를 다시 부르기 때문이다).
 void SquidPostPop::SetIslandPrefix(std::function<void(Sid,std::uint32_t)> prefix) { islandPrefix_=std::move(prefix); }
@@ -183,7 +183,7 @@ void SquidPostPop::SetForcefieldPostPop(const RawForcefieldPostPop* postPop) {
 // 보호막도 공통 firstPop/Pop을 공유하지만 postPop 재정의는 반드시 연결해야 한다.
 bool SquidPostPop::HandlesForcefield(Sid sid) const {
     const auto raw=pool_.Slot(sid);
-    return forcefieldPostPop_ && raw[10]==kForcefieldType && Vtable(raw)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchForcefieldVtable : kCdForcefieldVtable);
+    return forcefieldPostPop_ && (pool_.Edition()==OriginalEdition::Patch1078 || raw[10]==kForcefieldType) && Vtable(raw)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchForcefieldVtable : kCdForcefieldVtable);
 }
 // 완성한 후처리와 같은 풀인지 구성 시 확인한다. 전역 지원 vtable 표는 확장하지 않는다.
 void SquidPostPop::SetPriestPostPop(const RawPriestPostPopTail* postPop) {
@@ -207,6 +207,13 @@ bool SquidPostPop::HandlesSurface(Sid sid) const {
 // 00422150 ↔ CD 00449890. 공통 postPop을 호출하기 전에 수행하는 부분만 복원한다.
 void SquidPostPop::BridgePrefix(SidPool& pool,Sid sid,std::uint32_t flags,const std::function<void(Sid)>& connector) {
     const auto extraOffset=pool.Edition()==OriginalEdition::Patch1078 ? 40U : 35U;
+    if (pool.Edition()==OriginalEdition::Patch1078) {
+        if (flags&1U) { const auto raw=pool.Slot(sid);const_cast<std::uint8_t*>(raw.data())[extraOffset]|=2U; } // 원문 첫 저장은 연결 장치 요구보다 앞이며 free/contained를 추가 검사하지 않는다.
+        else if (!(flags&4U) || (pool.Slot(sid)[extraOffset]&1U)) return;
+        const auto selected=connector; // 콜백이 자기 연결을 해제해도 실행 중 callable의 수명을 보존한다.
+        if (!selected) throw std::logic_error("다리 postPop 선택 연결 효과 미연결");
+        selected(sid);return;
+    }
     const auto extra=pool.Slot(sid)[extraOffset];
     const bool connect=(flags&1)!=0 || ((flags&4)!=0 && (extra&1)==0);
     if (connect && !connector) throw std::invalid_argument("다리 postPop 연결 효과 누락");
@@ -234,6 +241,8 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
     const auto bytes=pool_.Slot(sid);
     if (sid.value<5 || (bytes[11]&(kFree|kContained)) || bytes[10]<kFirstAssetTypeNumber || bytes[10]>=CurrentTypes().size())
         throw std::logic_error("postPop raw 자산 상태 오류");
+    if (pool_.Edition()==OriginalEdition::Patch1078 && HandlesBridge(sid) && !bridgeConnector_ && ((flags&1U) || ((flags&4U) && !(bytes[40]&1U))))
+        throw std::logic_error("명시 다리 postPop 사전 검사의 연결 효과 미연결"); // 독립 Validate/Activate의 무효과 사전 계약을 실제 접두 실행과 구별한다.
     if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesDerived(sid)) throw std::logic_error("파생 postPop 미복원");
     if (HandlesPriest(sid)) priestPostPop_->Validate(sid);
     if (HandlesRune(sid)) runePostPop_->Validate(sid,flags,pop);

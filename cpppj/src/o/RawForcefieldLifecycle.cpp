@@ -30,19 +30,21 @@ void ValidateObject(const SidPool& pool,Sid sid) {
     if (sid.value<5 || (raw[11]&9) || raw[10]!=kForcefieldType || Read(raw,0)!=(pool.Edition()==OriginalEdition::Patch1078 ? kPatchForcefieldVtable : kCdForcefieldVtable))
         throw std::invalid_argument("보호막 타입/가상 표 불일치");
 }
+// 실제로 선택된 예약/생성 장치만 요구하며 호출 동안 callable의 사본을 유지한다.
+template<class Function> Function PrefixNeed(const Function& function) { if (!function) throw std::logic_error("보호막 postPop 선택 예약 효과 미연결");return function; }
 }
-// 두 확보/생성 효과는 첫 Pop 전에 모두 연결되어야 한다.
+// PATCH의 효과는 실제 호출 위치에서 확인하며 CD의 기존 구성 사전 계약은 유지한다.
 RawForcefieldPostPop::RawForcefieldPostPop(const SidPool& pool,ForcefieldPostPopHooks hooks):pool_(pool),hooks_(std::move(hooks)) {
-    if (!hooks_.reserveRegular || !hooks_.addRegular) throw std::invalid_argument("보호막 예약 효과 누락");
+    if (pool.Edition()!=OriginalEdition::Patch1078 && (!hooks_.reserveRegular || !hooks_.addRegular)) throw std::invalid_argument("보호막 예약 효과 누락");
 }
 // 사전 검사는 현재 공간/효과를 바꾸지 않는다.
 void RawForcefieldPostPop::Validate(Sid sid) const { ValidateObject(pool_,sid); }
 // 첫 확보 실패 여부와 무관하게 두 번째 확보를 실행한다. 기존 사건은 검색하지 않는다.
 void RawForcefieldPostPop::Prefix(Sid sid,std::uint32_t flags) const {
-    Validate(sid);
+    if (pool_.Edition()!=OriginalEdition::Patch1078) Validate(sid);
     if (!(flags&1)) return;
-    if (hooks_.reserveRegular()) hooks_.addRegular(sid,kForcefieldFrameEvent,kFrameInterval);
-    if (hooks_.reserveRegular()) hooks_.addRegular(sid,kForcefieldCheckEvent,kCheckInterval);
+    if (PrefixNeed(hooks_.reserveRegular)()) PrefixNeed(hooks_.addRegular)(sid,kForcefieldFrameEvent,kFrameInterval);
+    if (PrefixNeed(hooks_.reserveRegular)()) PrefixNeed(hooks_.addRegular)(sid,kForcefieldCheckEvent,kCheckInterval);
 }
 // 일반 Pop의 풀 연결을 읽기 전용으로 확인한다.
 const SidPool& RawForcefieldPostPop::Pool() const { return pool_; }

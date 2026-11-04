@@ -92,6 +92,44 @@ struct ForcefieldSink final:SquidDisplaySink {
 }
 // 패치판의 실제 후처리/Regular/타입 finder 관찰을 재생한다.
 TEST_CASE(ForcefieldLifecycle_ReplaysOriginals) { Replay("originals"); }
+
+namespace { // 보호막 접두의 물리 쓰기/현재 입력만 제공한다.
+std::span<std::uint8_t> ForcePrefixSlot(const SidPool& pool,Sid sid=Sid{50}) { const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // 타입/수명 조건은 실제 본문이 읽는 위치에서만 검사한다.
+}
+TEST_CASE(PostPrefixCurrent_ForcefieldNativePrefixes384Rows) { // 기존 세 PE의 Prefix384행만 재생하고 Regular/finder/삭제 사건은 실행하지 않는다.
+    std::size_t count{}; // 실제로 선택한 원문 접두 입력 수다.
+    for (const auto edition:{"originals","originalCD","original1037"}) { // CD/10.37은 같은 원문 배치의 기존 C++ 계약을 사용한다.
+        ForcefieldScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);
+        for (const auto& row:Fixture()) { // 기존 trace/raw 기대값을 수정하지 않는다.
+            if (row[0]!=edition || row[1]!="Prefix") continue;scene.Prepare(row);std::size_t allocations{};RawForcefieldPostPop prefix(scene.pool,{[&] { scene.events.push_back("A:40");return Number(row[allocations++ ? 4 : 3])!=0; },[&](Sid sid,auto event,float payload) { scene.events.push_back("R:"+std::to_string(sid.value)+':'+std::to_string(event)+':'+std::to_string(std::bit_cast<std::uint32_t>(payload))); }});prefix.Prefix(kShield,Number(row[2]));SquidPostPopState book;book.suppressed=true;book.depth=1;SquidPostPop base(scene.pool,scene.types,book);scene.events.push_back("B:50:"+row[2]);base.PostPopBase(kShield,Number(row[2]));CHECK(scene.Events()==row[13] && Hex(scene.pool.Slot(kShield))==row[15] && book.depth==0);++count;
+        }
+    }
+    CHECK(count==384);
+}
+TEST_CASE(PostPrefixCurrent_ForcefieldNoFirstSkipsUnboundDevicesAndRaw) { // PATCH 구성/flags0에는 예약/생성/TYPE/VT/슬롯 접근이 필요 없다.
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);RawForcefieldPostPop body(pool,{});body.Prefix(Sid{65000},0);body.Prefix(Sid{65000},2);CHECK(true);
+}
+TEST_CASE(PostPrefixCurrent_ForcefieldTwoFailedReservesSkipConstructor) { // 독립 두 확보가 실패하면 생성자 누락을 요구하지 않고 다음 확보를 계속한다.
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);auto raw=ForcePrefixSlot(pool);raw[10]=255;raw[11]=9;std::uint32_t calls{};RawForcefieldPostPop body(pool,{[&] { ++calls;return false; },{}});body.Prefix(kShield,1);CHECK(calls==2 && raw[11]==9);
+}
+TEST_CASE(PostPrefixCurrent_ForcefieldMissingConstructorKeepsReserveMutation) { // 첫 확보 성공 뒤 생성 누락은 앞선 콜백 쓰기를 보존하고 두 번째 확보는 미도달이다.
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);auto raw=ForcePrefixSlot(pool);std::uint32_t calls{};RawForcefieldPostPop body(pool,{[&] { ++calls;raw[11]=9;return true; },{}});CHECK(Throws([&] { body.Prefix(kShield,1); }) && calls==1 && raw[11]==9);
+}
+TEST_CASE(PostPrefixCurrent_ForcefieldSecondReserveFailureKeepsFirstRegular) { // 두 번째 확보의 명시 실패는 이미 생성한 event1을 취소하지 않는다.
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);std::uint32_t calls{};std::vector<std::uint32_t> events;RawForcefieldPostPop body(pool,{[&] { if (++calls==2) throw std::runtime_error("명시 두 번째 보호막 확보 중단");return true; },[&](Sid sid,auto event,float delay) { CHECK(sid==kShield && delay==.08F);events.push_back(event); }});CHECK(Throws([&] { body.Prefix(kShield,1); }) && calls==2 && events==std::vector<std::uint32_t>{1});
+}
+TEST_CASE(PostPrefixCurrent_ForcefieldFirstConstructorMutationKeepsSecond) { // 첫 생성자가 수명/TYPE/VT를 바꿔도 두 번째 예약 앞에 객체 재검사를 삽입하지 않는다.
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);auto raw=ForcePrefixSlot(pool);std::vector<std::uint32_t> events;RawForcefieldPostPop body(pool,{[] { return true; },[&](Sid sid,auto event,float delay) { CHECK(sid==kShield && delay==(event==1 ? .08F : .01F));events.push_back(event);raw[10]=255;raw[11]=9;Put(raw,0,0); }});body.Prefix(kShield,1);CHECK(events==(std::vector<std::uint32_t>{1,2}) && raw[11]==9);
+}
+TEST_CASE(PostPrefixCurrent_ForcefieldVirtualUsesVtableAndDirectCommon) { // PATCH 가상 진입은 같은 VT면 잘못된 TYPE/free도 앞단에서 거부하지 않고 공통 부모로 간다.
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);std::vector<RiftTypeRecord> types(188);SquidPostPopState book;book.suppressed=true;SquidPostPop base(pool,types,book);auto raw=ForcePrefixSlot(pool);Put(raw,0,kPatchForcefieldVtable);raw[10]=255;raw[11]=9;RawForcefieldPostPop empty(pool,{});base.SetForcefieldPostPop(&empty);CHECK(base.HandlesForcefield(kShield));++book.depth;base.PostPopVirtual(kShield,0);CHECK(book.depth==0 && Throws([&] { empty.Validate(kShield); }));std::uint32_t calls{};RawForcefieldPostPop ready(pool,{[&] { ++calls;return false; },{}});base.SetForcefieldPostPop(&ready);++book.depth;base.PostPopVirtual(kShield,1);CHECK(calls==2 && book.depth==0 && raw[11]==9);
+}
+TEST_CASE(PostPrefixCurrent_ForcefieldCdKeepsConstructionAndObjectPreflight) { // CD의 기존 별도 구성/객체 검사를 PATCH의 현재 실행과 혼동하지 않는다.
+    SidPool pool(OriginalEdition::Cd1072,kCapacity,false);CHECK(Throws([&] { RawForcefieldPostPop missing(pool,{}); }));std::uint32_t calls{};RawForcefieldPostPop body(pool,{[&] { ++calls;return false; },[](Sid,auto,float) { CHECK(false); }});CHECK(Throws([&] { body.Prefix(kShield,0); }) && calls==0);
+}
+TEST_CASE(PostPrefixCurrent_ForcefieldMissingReserveStopsBeforeCommon) { // 선택된 첫 확보가 없으면 공통 깊이를 감소하거나 슬롯을 바꾸지 않는다.
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);std::vector<RiftTypeRecord> types(188);SquidPostPopState book;book.suppressed=true;SquidPostPop base(pool,types,book);auto raw=ForcePrefixSlot(pool);Put(raw,0,kPatchForcefieldVtable);raw[10]=74;raw[11]=0;const auto before=Hex(raw);RawForcefieldPostPop body(pool,{});base.SetForcefieldPostPop(&body);++book.depth;CHECK(Throws([&] { base.PostPopVirtual(kShield,1); }) && Hex(raw)==before && book.depth==1);
+}
 // CD의 BYTE 프레임/소유자 배치를 같은 실제 모듈에 대조한다.
 TEST_CASE(ForcefieldLifecycle_ReplaysCd) { Replay("originalCD"); }
 // 추가 10.37 PE도 독립 관찰로 대조한다.

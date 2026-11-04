@@ -96,9 +96,9 @@ public:
     void BindPatchLocalOwner(std::function<std::uint32_t()> owner); //AI통지후현재Client로컬owner를읽으며독립구성은state를쓴다.
     // 다리 postPop(00422150 / CD 00449890)의 접두 부분이다. flag 1은 extra 비트 2를 켜며,
     // flag 1 또는 (flag 4이고 abstract 아님)이면 004213b0/CD 00448b00의 연결 효과를 요청한다.
-    // 연결 효과는 명시적 외부 경계이며 누락되면 쓰기 전에 거부한다.
+    // PATCH의 선택 연결 누락은 비트2 저장 뒤 호출 위치에서 거부한다. 명시 Validate와 CD의 기존 사전 계약은 별도다.
     static void BridgePrefix(SidPool& pool,Sid sid,std::uint32_t flags,const std::function<void(Sid)>& connector);
-    // 다리 전용 후처리는 connector가 연결된 인스턴스만 지원한다. 다른 파생 가상 함수를 허용하지 않는다.
+    // PATCH는 실제 다리 VT로 분배하고 도달한 connector만 요구한다. CD는 기존 연결 인스턴스 계약을 유지한다.
     bool HandlesBridge(Sid sid) const;
     // 섬 받침 postPop(004421c0 / CD 004d01d0)의 접두(종유석 생성·소유자·Pop·연결 순회)를 연결한다.
     // 인자는 섬 받침 번호와 Activate가 넘긴 flags다. 연결한 인스턴스만 섬 받침의 가상 표를 받는다.
@@ -117,7 +117,7 @@ public:
     bool HandlesPriest(Sid sid) const;
     // 보호막의 최초 Regular 예약 접두를 같은 풀에 명시 등록한다. nullptr은 해제한다.
     void SetForcefieldPostPop(const RawForcefieldPostPop* postPop);
-    // 실제 보호막 타입/가상 표이며 전용 접두가 등록돼 있는가.
+    // PATCH는 실제 보호막 VT/등록 접두로 분배한다. CD는 기존 TYPE 조건도 유지한다.
     bool HandlesForcefield(Sid sid) const;
     // 실제 +0x20이 Damageable/Carrier 몸체인 가상 표를 같은 풀의 완성한 몸체에 연결한다.
     // 해당 몸체의 base 경계는 이 객체의 PostPopBase여야 하며 nullptr은 연결을 해제한다.

@@ -886,3 +886,12 @@ TEST_CASE(VortexCurrent_ActualSessionDiagnosticWritesCurrentPlayerRecord) { // �
     write(0,0x5196f0);raw[11]=raw[40]=raw[34]=0;current=[&](auto expression) { CHECK(expression=="getPlayerId() != INVALID_PLAYER_ID");++calls;raw[34]=8;raw[11]=9; };++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000002);CHECK(calls==1 && raw[11]==9 && read(offset)==source.value && read(offset+4)==source.value && core.bookkeeping.depth==0);
     std::copy(savedRaw.begin(),savedRaw.end(),raw.begin());std::copy(savedFields.begin(),savedFields.end(),records.begin()+offset); // 실제 Slot/Player의 명시 입력을 복구하며 의식·공격·승리는 실행하지 않는다.
 }
+
+TEST_CASE(PostPrefixCurrent_ActualSessionBridgeNoFirstAndForcefieldRegulars) { // 같은 Session의 VT 분배로 다리 미도달 연결과 보호막의 실제 두 예약만 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();auto storage=session.World().Storage();
+    for (const bool forcefield:{false,true}) { // 새 일반 슬롯의 명시 VT만 바꾸며 Frame/Process 틱·보호막 유지/공격 검사는 하지 않는다.
+        const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);const auto table=forcefield ? 0x507770U : 0x5034c8U;for (std::size_t index=0;index<4;++index) raw[index]=static_cast<std::uint8_t>(table>>(index*8)); // 이 슬롯의 +20 후처리 표만 명시한다.
+        raw[11]=raw[40]=0;raw[34]=1;storage->types[74].flags1=storage->types[74].flags2=0;++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000U+(forcefield ? 1U : 0U));auto* first=core.processes.FindEvent(source,1);auto* second=core.processes.FindEvent(source,2);CHECK(core.bookkeeping.depth==0);
+        if (forcefield) { CHECK(first && second);if (first && second) CHECK(first->Payload()==.08F && second->Payload()==.01F && first->Count()==0 && second->Count()==0 && first->Time()==core.processState.Now() && second->Time()==core.processState.Now()); }else CHECK(!first && !second && raw[40]==0);
+    }
+}
