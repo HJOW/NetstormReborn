@@ -1336,7 +1336,7 @@ struct RawCampaignSession::Impl {
         assetEffects.factory.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
         assetEffects.postPop.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
         assetEffects.postPop.gunFrame=[this](std::int32_t frame) { return static_cast<std::int32_t>(PatchGunGraphFromFrame(frame,gunState.checking,[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("Gunanim 인덱스 원문 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); })); }; // 실제00467610의 현재 checking/진단 복귀 뒤 같은 지역 인덱스로 표를 읽는다.
-        assetEffects.postPop.setGraph=[this](Sid sid,std::int32_t number) { core.pool.AllocatedBytes(sid)[30]=static_cast<std::uint8_t>(number); }; // 실제004ad3e0은 Graph BYTE만 쓴다.
+        assetEffects.postPop.setGraph=[this](Sid sid,std::int32_t number) { core.graph.SetNumber(sid,static_cast<std::uint8_t>(number)); }; //00467610의 반환은0..3이며 같은 현재 Graph의 TYPE 진단 복귀 뒤 물리 BYTE를 쓴다.
         // PATCH0040d980은 현재float를절삭한 뒤16으로 나눈 청크의 실제 BYTE를 읽는다.
         assetEffects.postPop.regionNumber=[this](float x,float y) { return static_cast<std::int32_t>(chunks.At(static_cast<int>(x)/16,static_cast<int>(y)/16).island); };
         assetEffects.postPop.hasContent=[this](Sid parent,std::uint32_t type) { return priests->Carrier().FindContained(parent,0x10,type,0).value!=0; }; // 실제004acac0의 같은 내용물/마스크/종류 조회다.

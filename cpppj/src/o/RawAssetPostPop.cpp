@@ -55,6 +55,11 @@ void Write(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value,st
     // 지정한 필드 폭 바깥의 payload를 보존한다.
     for (std::size_t i=0;i<width;++i) raw[offset+i]=static_cast<std::uint8_t>(value>>(8*i));
 }
+//004ac220/CD004abb00의 WORD 저장 뒤 현재 다리 TYPE 조건부 통지를 같은 물리 슬롯에 적용한다.
+void SetAssetWord(SidPool& pool,Sid sid,std::uint32_t value,const AssetPostPopState& state,const AssetPostPopHooks& hooks) {
+    Write(AssetSlot(pool,sid),12,value,2);
+    if (pool.Slot(sid)[10]==state.BridgeType()) AssetNeed(hooks.notifySurface)(sid);
+}
 // 현재 float 좌표의 비트 패턴을 읽는다.
 float Position(std::span<const std::uint8_t> raw,std::size_t offset) { return std::bit_cast<float>(Read(raw,offset)); }
 // 원본 전체 목록은 capacity가 남아 있는 경우만 덧붙인다.
@@ -160,21 +165,20 @@ void RawAssetPostPop::Regular(Sid sid,std::uint32_t event,float delay) const {
 }
 // 원문 assertion의 식과 정확한 파일/행을 현재 장치로 전달하며 성공을 합성하지 않는다.
 void RawAssetPostPop::GunAssertion(std::string_view expression,std::uint32_t line) const {
-    if (!hooks_.assertion) throw std::logic_error("Gun postPop 현재 진단 장치 미연결 "+std::to_string(line));
-    hooks_.assertion(expression,"\\Ns\\O\\Gunprocess.cpp",line);
+    AssetNeed(hooks_.assertion)(expression,"\\Ns\\O\\Gunprocess.cpp",line);
 }
 // 실제 외부 효과 뒤 현재 extra/타입/HP를 읽어 원본 분기 순서를 유지한다.
 void RawAssetPostPop::Gun(Sid sid,std::uint32_t flags,std::uint32_t kind) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto extra=patch ? 40U : 35U,word=patch ? 36U : 34U;
     if (kind==kGunAngle && (flags&7)) {
         const auto angle=patch ? std::bit_cast<std::int32_t>(Read(pool_.Slot(sid),word)) : pool_.Slot(sid)[word];
-        const auto graph=hooks_.gunFrame(angle);hooks_.setGraph(sid,graph);
+        const auto graph=AssetNeed(hooks_.gunFrame)(angle);AssetNeed(hooks_.setGraph)(sid,graph);
     }
     const bool branch=kind==kGunAngle ? (flags&7)!=0 : (flags&1)!=0;
     if (branch && (kind!=kGunSun || !(pool_.Slot(sid)[extra]&1))) {
         if (state_.Server() && !(pool_.Slot(sid)[extra]&1)) {
-            if (kind==kGunArcher) hooks_.removeAnimation(sid);
-            hooks_.createGunProcess(sid);
+            if (kind==kGunArcher) AssetNeed(hooks_.removeAnimation)(sid);
+            AssetNeed(hooks_.createGunProcess)(sid);
             if (patch) {
                 // 생성/애니메이션 제거가 바꾼 현재 로딩·편집 상태를 읽는다. 진단은 checking과 독립이다.
                 if (kind==kGunSun && !state_.loadingDepth && ((flags&0x50U) || (sid.value>4 && sid.value<15000)))
@@ -182,17 +186,16 @@ void RawAssetPostPop::Gun(Sid sid,std::uint32_t flags,std::uint32_t kind) const 
                 if (kind==kGunArcher && !state_.fortMode && ((flags&0x50U) || (sid.value>4 && sid.value<15000)))
                     GunAssertion("inFortMode || ( !(popFlags &( pfDONT_TRANSMIT|pfCLIENT_POP)) && !isClientSid() )",0x3c8);
                 if (state_.checkingForms) {
-                    if (!hooks_.checkForms) throw std::logic_error("Gun postPop 현재 Form 판정 미연결");
                     // getter가 checking을 꺼도 이미 선택한 실패 진단은 취소하지 않는다.
-                    if (!hooks_.checkForms(sid)) GunAssertion("checkForms()",kind==kGunAngle ? 0x347U : kind==kGunFirst ? 0x361U : kind==kGunSun ? 0x32bU : 0x3c9U);
+                    if (!AssetNeed(hooks_.checkForms)(sid)) GunAssertion("checkForms()",kind==kGunAngle ? 0x347U : kind==kGunFirst ? 0x361U : kind==kGunSun ? 0x32bU : 0x3c9U);
                 }
             }
         }
         if (kind==kGunSun && state_.loadingDepth && (Type(sid).flags1&0x1000))
-            Write(pool_.AllocatedBytes(sid),word,Read(pool_.Slot(sid),12,2),patch ? 4U : 1U);
+            Write(AssetSlot(pool_,sid),word,Read(pool_.Slot(sid),12,2),patch ? 4U : 1U);
     }
     if (kind==kGunSun && (Type(sid).flags1&0x1000))
-        Write(pool_.AllocatedBytes(sid),12,Read(pool_.Slot(sid),word,patch ? 4U : 1U),2);
+        SetAssetWord(pool_,sid,Read(pool_.Slot(sid),word,patch ? 4U : 1U),state_,hooks_);
     damageable_.DamageablePostPop(sid,flags);
 }
 // Residence의 extra 차단은 없다. patch event3와 +42의 잔여 프레임은 CD에 없는 처리다.
@@ -221,8 +224,7 @@ void RawAssetPostPop::Geyser(Sid sid,std::uint32_t flags) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if ((flags&1) && !(pool_.Slot(sid)[patch ? 40 : 35]&9)) {
         AppendAssetList(state_.Geysers(),sid);AssetNeed(hooks_.geyserRegistration)(sid,1);
-        Write(AssetSlot(pool_,sid),12,Truncate(Type(sid).cost),2);
-        if (pool_.Slot(sid)[10]==state_.BridgeType()) AssetNeed(hooks_.notifySurface)(sid); //004ac220은 WORD 저장 뒤 현재 Bridge TYPE면004214a0을 먼저 호출한다.
+        SetAssetWord(pool_,sid,Truncate(Type(sid).cost),state_,hooks_);
         Regular(sid,0,0.1f);
         const auto raw=pool_.Slot(sid);
         const auto visit=[this](Sid neighbor) { // 현재 후보의 TYPE를 읽고 Unpop→같은 물리 프레임→현재 가상 Repop 순서를 실행한다.
@@ -307,7 +309,7 @@ void RawAssetPostPop::Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) con
 // 가상 표마다 복원한 몸체만 호출한다. 각 몸체는 공통 장부를 내부에서 정확히 한 번 호출한다.
 void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     const auto kind=Kind(sid);
-    if (pool_.Edition()!=OriginalEdition::Patch1078 || (kind!=kResidence && kind!=kGeyser)) Validate(sid,flags); // 대조한 두 실제 PATCH 몸체만 전수 사전 검사 없이 실행하며 나머지 파생은 별도로 이어 대조한다.
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || !((kind>=kGenerator && kind<=kResidence) || kind==kGeyser)) Validate(sid,flags); // 대조한 PATCH 몸체는 도달한 장치만 요구한다. 나머지 파생/CD의 별도 사전 계약은 유지한다.
     if (kind==kSunAviary) hooks_.sunAviaryPostPop(sid,flags);
     else if (kind==kNugget) hooks_.nuggetPostPop(sid,flags);
     else if (kind==kRainAviary) hooks_.rainAviaryPostPop(sid,flags);
@@ -316,7 +318,7 @@ void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     else if (kind==kArcSpire) PostPopArcSpire(pool_,sid,flags,hooks_.reserveRegular,hooks_.addRegular,[this](Sid parent,std::uint32_t mode) { damageable_.DamageablePostPop(parent,mode); });
     else if (kind==kAcidFence) PostPopAcidFence(pool_,sid,flags,hooks_.reserveRegular,hooks_.addRegular,[this](Sid parent,std::uint32_t mode) { damageable_.DamageablePostPop(parent,mode); });
     else if (kind==kGrowingIce) hooks_.growingIcePostPop(sid,flags);
-    else if (kind==kGenerator) damageable_.DamageablePostPop(sid,flags);
+    else if (kind==kGenerator) { if (flags&1U) static_cast<void>(Type(sid).theme);damageable_.DamageablePostPop(sid,flags); } //004ac970의 최초 현재 theme 조회는 반환값이 버려져도 먼저 수행한다.
     else if (kind>=kGunAngle && kind<=kGunArcher) Gun(sid,flags,kind);
     else if (kind==kGunDecoration) { if (flags&1) Regular(sid,0,0.05f);base_.PostPopBase(sid,flags); }
     else if (kind==kResidence) Residence(sid,flags);

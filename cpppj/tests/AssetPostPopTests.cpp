@@ -425,3 +425,66 @@ TEST_CASE(AssetParentsCurrent_GeyserWordSetterNotifiesCurrentBridgeBeforeRegular
 TEST_CASE(AssetParentsCurrent_GeyserMissingBridgeNoticeRetainsWord) { // 선택된 다리 통지가 없으면 이미 끝난 목록/등록/WORD를 보존하고 예약 전에 중단한다.
     AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,8);scene.state.bridgeType=70;auto hooks=scene.Hooks();hooks.notifySurface={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.state.geysers.count==1 && Get(scene.pool.Slot(kSource),12,2)==1000 && scene.events==std::vector<std::string>{"G:50:1"} && scene.allocated==0 && scene.baseState.depth==1);
 }
+
+TEST_CASE(AssetGunCurrent_SixBodiesNative636Rows) { // 기존 두 PE의 여섯 비공중 몸체 입력/기대값을 실제 PATCH 가상 진입과 대조한다.
+    std::size_t count{}; // 원문 자료에서 실제로 선택한 행 수다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // CD는 기존 명시 사전 검사 계약을 유지한다.
+        AssetScene scene(edition);
+        for (const auto& row:Rows()) { // 제네레이터·네 Gun·장식만 선택한다.
+            if (row[0]!=(scene.patch ? "originals" : "originalCD") || Number(row[1])>=6) continue;
+            scene.Prepare(row);AssetCurrentBody body(scene,scene.Hooks());
+            if (scene.patch) body.Run(Number(row[2]));else body.base.Activate(kSource,Number(row[2]));
+            CHECK(scene.Output()==std::vector<std::string>(row.begin()+15,row.end()) && scene.baseState.depth==0);++count;
+        }
+    }
+    CHECK(count==636);
+}
+TEST_CASE(AssetGunCurrent_NoFirstSkipsUnboundDevicesAndType) { // GunSun만 남기는 필수 TYPE 조회를 제외하고 미도달 전수 검사를 추가하지 않는다.
+    for (const auto kind:{0U,1U,2U,4U,5U}) { // 같은 실제 PATCH 부모로 flags0과 잘못된 TYPE를 공급한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,kind,0);AssetCurrentSlot(scene)[10]=255;scene.state.temples.count=99;AssetCurrentBody body(scene,{});body.Run(0);CHECK(scene.baseState.depth==0 && scene.allocated==0);
+    }
+}
+TEST_CASE(AssetGunCurrent_AngleMissingGetterAndLateSetter) { // 그래프 setter가 없으면 이미 실행한 현재 각도 getter의 효과를 보존한다.
+    for (const bool getter:{false,true}) { // 실패 위치별 앞선 효과를 구별한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,1,2);auto hooks=scene.Hooks();hooks.setGraph={};if (!getter) hooks.gunFrame={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(2); }));CHECK(scene.events==(getter ? std::vector<std::string>{"F:25"} : std::vector<std::string>{}) && scene.baseState.depth==1 && scene.allocated==0);
+    }
+}
+TEST_CASE(AssetGunCurrent_AngleGraphChangesCurrentServerAndPhysicalLife) { // 그래프 효과 뒤 서버/extra/TYPE가 바뀌면 현재 관문을 읽고 같은 물리 슬롯을 유지한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,1,2);scene.state.inBattle=true;auto hooks=scene.Hooks();hooks.createGunProcess={};hooks.setGraph=[&](Sid sid,auto number) { CHECK(number==2);scene.events.push_back("Q");auto raw=AssetCurrentSlot(scene,sid);raw[30]=static_cast<std::uint8_t>(number);raw[10]=255;raw[11]=9;scene.state.inBattle=false; };AssetCurrentBody body(scene,std::move(hooks));body.Run(2);CHECK(scene.events==(std::vector<std::string>{"F:25","Q","D:2"}) && scene.pool.Slot(kSource)[30]==2 && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetGunCurrent_MissingCreatePreservesGraphOrAnimation) { // 선택된 생성 장치 누락은 각도 설정 또는 애니메이션 제거 뒤 그 위치에서 중단한다.
+    for (const auto kind:{1U,4U}) { // 원문 분기를 선택한 뒤 이미 발생한 효과를 확인한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,kind);scene.state.inBattle=true;scene.state.fortMode=true;auto hooks=scene.Hooks();hooks.createGunProcess={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }));CHECK(scene.events==(kind==1 ? std::vector<std::string>{"F:25","Q:2"} : std::vector<std::string>{"M:50"}) && scene.baseState.depth==1 && scene.allocated==0);
+    }
+}
+TEST_CASE(AssetGunCurrent_NonServerAndExtraSkipUnboundCreate) { // 선택되지 않은 서버/extra 가지는 생성·제거·진단 장치를 요구하지 않는다.
+    for (const auto kind:{1U,2U,3U,4U}) { // 네 Gun의 최초 몸체만 직접 실행하며 발사나 Process 틱은 없다.
+        for (const bool server:{false,true}) { // 서버인 입력은 extra1로 차단한다.
+            AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,kind);scene.state.inBattle=server;AssetCurrentSlot(scene)[40]=server ? 1 : 0;auto hooks=scene.Hooks();hooks.createGunProcess={};hooks.removeAnimation={};hooks.checkForms={};hooks.assertion={};AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.allocated==0 && scene.events.back()=="D:1" && scene.baseState.depth==0);
+        }
+    }
+}
+TEST_CASE(AssetGunCurrent_ArcherRemovalKeepsSelectedCreateAfterMutation) { // 제거 콜백이 서버/extra를 바꿔도 이미 선택한 생성 분기를 취소하지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,4);scene.state.inBattle=true;scene.state.fortMode=true;auto hooks=scene.Hooks();hooks.removeAnimation=[&](Sid sid) { scene.events.push_back("M");scene.state.inBattle=false;AssetCurrentSlot(scene,sid)[40]=1; };hooks.createGunProcess=[&](Sid) { scene.events.push_back("P"); };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.events==(std::vector<std::string>{"M","P","D:1"}) && scene.baseState.depth==0);
+}
+TEST_CASE(AssetGunCurrent_DecorationFailedReserveSkipsMissingConstructor) { // 장식은 확보가 실패하면 생성자 누락을 요구하지 않고 공통 깊이를 감소한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,5);scene.reserveMask=0;AssetCurrentSlot(scene)[10]=255;auto hooks=scene.Hooks();hooks.addRegular={};AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.events==std::vector<std::string>{"A:40"} && scene.allocated==1 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetGunCurrent_DecorationMissingConstructorKeepsReserve) { // 확보 성공 뒤 선택 생성자가 없으면 앞선 확보를 지우거나 공통 몸체를 실행하지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,5);auto hooks=scene.Hooks();hooks.addRegular={};AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }));CHECK(scene.events==std::vector<std::string>{"A:40"} && scene.allocated==1 && scene.baseState.depth==1);
+}
+TEST_CASE(AssetGunCurrent_SunNoFirstStillReadsTypeAndRestoresPhysicalWord) { // 최초가 아니어도 현재 속성에 따라 free/contained 물리 슬롯의 WORD를 복원한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,3,0);scene.types[70].flags1=0x1000;auto raw=AssetCurrentSlot(scene);raw[11]=9;Put(raw,36,0x12345678);AssetCurrentBody body(scene,{});body.Run(0);CHECK(Get(scene.pool.Slot(kSource),12,2)==0x5678 && scene.pool.Slot(kSource)[11]==9 && scene.events==std::vector<std::string>{"D:0"} && scene.baseState.depth==0);
+}
+TEST_CASE(AssetGunCurrent_SunInvalidTypeStopsAtFinalLookup) { // flags0에서도 원문의 마지막 TYPE 접근을 생략하지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,3,0);AssetCurrentSlot(scene)[10]=255;AssetCurrentBody body(scene,{});CHECK(Throws([&] { body.Run(0); }) && scene.events.empty() && scene.baseState.depth==1);
+}
+TEST_CASE(AssetGunCurrent_SunMissingBridgeNoticeKeepsWord) { // 현재 다리 DWORD가 일치하면 WORD 저장 뒤 통지 장치를 요구한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,3,0);scene.types[70].flags1=0x1000;std::uint32_t bridge=70;scene.state.currentBridgeType=&bridge;Put(AssetCurrentSlot(scene),36,0x9876);AssetCurrentBody body(scene,{});CHECK(Throws([&] { body.Run(0); }));CHECK(Get(scene.pool.Slot(kSource),12,2)==0x9876 && scene.events.empty() && scene.baseState.depth==1);
+}
+TEST_CASE(AssetGunCurrent_SunBridgeNoticeReturnsWithMutatedCurrentLife) { // 통지 복귀 뒤 현재 TYPE/free/WORD를 원래 사본으로 되돌리거나 재검사하지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,3,0);scene.types[70].flags1=0x1000;scene.state.bridgeType=70;auto hooks=scene.Hooks();hooks.notifySurface=[&](Sid sid) { CHECK(Get(scene.pool.Slot(sid),12,2)==25);scene.events.push_back("N");auto raw=AssetCurrentSlot(scene,sid);raw[10]=255;raw[11]=9;Put(raw,12,0x4321,2); };AssetCurrentBody body(scene,std::move(hooks));body.Run(0);CHECK(scene.events==(std::vector<std::string>{"N","D:0"}) && Get(scene.pool.Slot(kSource),12,2)==0x4321 && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetGunCurrent_SunLoadingBacksUpCurrentWordAfterCreate) { // 생성 효과 뒤 현재 로딩/TYPE와 WORD를 읽어 DWORD 백업→WORD setter→통지 순서로 진행한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,3);scene.state.inBattle=true;auto hooks=scene.Hooks();hooks.createGunProcess=[&](Sid sid) { scene.events.push_back("P");scene.state.loadingDepth=1;auto raw=AssetCurrentSlot(scene,sid);raw[10]=75;raw[11]=9;Put(raw,12,0x8765,2);scene.types[75].flags1=0x1000;scene.state.bridgeType=75; };hooks.notifySurface=[&](Sid sid) { CHECK(Get(scene.pool.Slot(sid),36)==0x8765 && Get(scene.pool.Slot(sid),12,2)==0x8765);scene.events.push_back("N"); };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.events==(std::vector<std::string>{"P","N","D:1"}) && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==0);
+}
