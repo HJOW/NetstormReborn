@@ -2,6 +2,7 @@
 // 근거: docs/exe/cpp-islandpostpop-reconstruction.md. 생성·소유자·Pop·연결·표시 효과는 기존 raw 모듈로 연결한다.
 #pragma once
 #include "o/RawBridgeConnect.h"
+#include <string_view>
 
 namespace netstorm::o {
 // noIsland의 실제 가상 표 주소 기록값. 호스트에서 역참조하지 않는다.
@@ -21,6 +22,9 @@ struct IslandPostPopHooks {
     std::function<Sid(float,float,std::uint32_t)> findTypeAt; // 004b1fa0 / CD 004eb4b0: 받침·종유석 조회.
     std::function<void(Sid)> updateDisplay; // 가상 표 +0x88: 소유자를 지정한 직후 표시 갱신.
     std::function<void(bool,bool,bool)> incompleteSupport; // 표면 칸/받침/종유석 누락 시 원본의 진단·assert 경계. 이미 수행한 소유자 효과는 유지한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // PATCH의 원문 식/파일/줄을 전달하며 정상 복귀 뒤 현재 물리로 계속한다.
+    std::function<void(std::string_view)> detail; // PATCH 받침 진단의 현재 문자열을 실제 Client 상세 소유자에 복사한다. 생략한 독립 기존 입력은 incompleteSupport를 쓴다.
+    std::function<std::uint32_t()> typeWas; //0054d4e4의 현재 DWORD이며 생략한 독립 입력은 최초 BSS0이다. MP 수신 writer 연결은 별도 잔여다.
 };
 // noIsland postPop(004423b0 / CD 004d2790)과 3×3 받침 소유자 전파(0044bd20 / CD 00461f00)를 복원한다.
 class RawIslandPostPop {
@@ -40,7 +44,7 @@ public:
     void SetSupportOwner(float x,float y,std::uint32_t owner) const;
 private:
     // 현재 프레임 코드의 방향 글자를 검증해 읽는다.
-    std::uint8_t Letter(Sid sid) const;
+    int Letter(Sid sid) const;
     // 지도 밖은 0, 지도 안은 머리 SID 그대로다(Next 체인을 순회하지 않는다).
     Sid SurfaceAt(int x,int y,std::span<const std::uint16_t> map) const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.

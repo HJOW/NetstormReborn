@@ -68,7 +68,7 @@ TEST_CASE(island_postpop_validates_hooks_maps_and_missing_upper_left) {
     IslandPostPopHooks hooks{objects,[&](Sid sid) { connect.Connect(sid); },
         [&](float x,float y,std::uint32_t type) { return connect.FindTypeAt(x,y,type); },
         [](Sid) {},[](bool,bool,bool) {}};
-    CHECK(Throws([&] { auto broken=hooks;broken.updateDisplay={};RawIslandPostPop invalid(scene.pool,scene.hash.Entries(0),scene.types,scene.frames,scene.state,state,broken); }));
+    { auto partial=hooks;partial.updateDisplay={};RawIslandPostPop selected(scene.pool,scene.hash.Entries(0),scene.types,scene.frames,scene.state,state,partial);selected.Prefix(kSource,0);CHECK(scene.events.empty()); } // PATCH 비최초 경로는 도달하지 않은 표시 장치를 요구하지 않는다.
     CHECK(Throws([&] { RawIslandPostPop invalid(scene.pool,{},scene.types,scene.frames,scene.state,state,hooks); }));
     RawIslandPostPop surface(scene.pool,scene.hash.Entries(0),scene.types,scene.frames,scene.state,state,hooks);
     CHECK(surface.SurfaceLetter(-1,30)==0 && surface.SurfaceLetter(30,256)==0 && surface.SurfaceLetter(30,30)=='H');
@@ -171,7 +171,7 @@ TEST_CASE(island_postpop_real_raw_modules_build_support_and_propagate_owner) {
         for (int y=28;y<=30;++y) {
             // 처음 F의 소유자만 3, 나머지는 0으로 시작해 H의 전파를 확인한다.
             for (int x=28;x<=30;++x) {
-                const Sid sid=factory.Create(noIslandType);cells.push_back(sid);
+                const Sid sid=factory.Create(noIslandType,2);cells.push_back(sid); // 독립 기하 입력은 client 전용 SID로 원문 Activate의 비전송 가지를 선택한다.
                 owner.Set(sid,cells.size()==1 ? 3U : 0U);
                 CHECK(pop.Pop(sid,types[noIslandType],1,1,static_cast<float>(x),static_cast<float>(y))==RawPopResult::Registered);
                 CHECK(Get(pool.Slot(sid),frameOffset,frameWidth)==cells.size()-1);
@@ -187,10 +187,12 @@ TEST_CASE(island_postpop_real_raw_modules_build_support_and_propagate_owner) {
             CHECK(Get(pool.Slot(island),frameOffset,frameWidth)==2 && Get(pool.Slot(stalag),frameOffset,frameWidth)==2);
         }
         CHECK(bookkeeping.globalCounts[noIslandType]==9 && bookkeeping.globalCounts[islandType]==1 && bookkeeping.globalCounts[stalagType]==1);
-        // 접두 연결을 제거하면 다음 Pop은 공간 변경 전에 거부한다.
-        postPop.SetSurfacePrefix({});const Sid rejected=factory.Create(noIslandType);
+        // 명시 Validate는 무효과 사전 계약이며 실제 PATCH Pop의 뒤늦은 접두 실패와 구별한다.
+        postPop.SetSurfacePrefix({});const Sid rejected=factory.Create(noIslandType,2);
         const auto before=hash.Bucket(0,40,40);
+        CHECK(Throws([&] { postPop.Validate(rejected,1); }) && hash.Bucket(0,40,40)==before && (pool.Slot(rejected)[11]&4)!=0);
         CHECK(Throws([&] { pop.Pop(rejected,types[noIslandType],1,1,40,40); }));
-        CHECK(hash.Bucket(0,40,40)==before && (pool.Slot(rejected)[11]&4)!=0);
+        if (patch) CHECK(hash.Bucket(0,40,40)==rejected.value && (pool.Slot(rejected)[11]&4)==0 && bookkeeping.depth==1); // 원문 Pop/Activate의 해시·void·깊이 효과가 접두 장치 실패 앞에 남는다.
+        else CHECK(hash.Bucket(0,40,40)==before && (pool.Slot(rejected)[11]&4)!=0);
     }
 }

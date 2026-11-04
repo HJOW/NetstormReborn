@@ -1,6 +1,7 @@
 // 실제 세션의 사제/Carrier/객체/Player 메뉴를 같은 원본 Gump 입력과 커서 취득에 연결한다.
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignSession.h"
+#include "client/ClientLocalStateGlobals.h"
 #include "client/RawCampaignCursor.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -925,6 +926,31 @@ netstorm::o::FieryTailVisualProcess* TeleportCurrentTail(RawWorldCore& core,Sid 
     for (netstorm::o::ProcessId pid=1;pid<=core.kernel.Capacity();++pid) { auto* tail=dynamic_cast<netstorm::o::FieryTailVisualProcess*>(core.kernel.Get(pid));if (tail && tail->Parent()==parent) return tail; } // 등록 순서로 실제 파생 타입을 확인한 뒤 그 부모를 읽는다.
     return nullptr;
 }
+}
+namespace { // 실제 Session의 기존 표면 머리를 지우지 않고 비어 있는 작은 영역을 찾는다.
+std::array<int,2> IslandCurrentEmptyPoint(const RawWorldCore& core) { // 5×5 범위가 비었으면 연결/전투 없는 진단 입력을 그 가운데 둔다.
+    for (int y=3;y<253;++y) { // 행 우선으로 기존 현재 지도를 읽는다.
+        for (int x=3;x<253;++x) { bool empty=true; // 후보마다 주변 표면의 현재 머리를 확인한다.
+            for (int dy=-2;dy<=2;++dy) for (int dx=-2;dx<=2;++dx) if (core.hash.Cell(0,x+dx,y+dy)) empty=false; // 주변 두 축의 기존 머리는 변경하지 않는다.
+            if (empty) return {x,y};
+        }
+    }
+    throw std::logic_error("표면 진단 입력의 빈 영역이 없다");
+}
+}
+TEST_CASE(IslandCurrent_ActualSessionNonFirstPhysicalVtablesUseCommon) { // 같은 World의 두 실제 VT에서 비최초는 TYPE74/free/contained를 허용하고 자식을 만들지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();auto storage=session.World().Storage();storage->types[74].flags1=storage->types[74].flags2=0;
+    for (const auto vtable:{0x506d98U,0x506f08U}) { // 두 현재 가상 몸체의 실제 상위 연결을 별도로 확인한다.
+        const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);netstorm::test::rawscene::Put(raw,0,vtable);raw[11]=1;raw[40]=8;const auto count=core.pool.FreeCount();const auto processes=core.kernel.Size();++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000);CHECK(core.bookkeeping.depth==0 && raw[11]==1 && core.pool.FreeCount()==count && core.kernel.Size()==processes);raw[11]=0;raw[40]=0;
+    }
+}
+TEST_CASE(IslandCurrent_ActualSessionMissingUpperLeftDiagnosisReturnsToCommon) { // 실제 Client 저장 게임 주소/진단과 World의 H 접두·공통 깊이 복귀를 틱 없이 연결한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();auto local=std::make_shared<ClientLocalStateGlobals>();services.localStateGlobals=local;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();auto storage=session.World().Storage();const auto point=IslandCurrentEmptyPoint(core);const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);storage->types[74].flags1=storage->types[74].flags2=0;storage->frames[74]=netstorm::o::RiftTypeFrames(std::vector<netstorm::o::FrameCode>{{'H','P',1,0}});netstorm::test::rawscene::Put(raw,0,0x506f08);netstorm::test::rawscene::Put(raw,36,0);netstorm::test::rawscene::Put(raw,14,std::bit_cast<std::uint32_t>(static_cast<float>(point[0])));netstorm::test::rawscene::Put(raw,18,std::bit_cast<std::uint32_t>(static_cast<float>(point[1])));raw[11]=raw[40]=0;raw[34]=0;local->SavedGame()=false;session.World().SetLoadingDepth(0);std::optional<std::string> detail;std::uint32_t diagnoses{};
+    storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(expression=="gSid" && file==R"(\Ns\O\Construction.cpp)" && line==0x10a && core.bookkeeping.depth==1);++diagnoses; });++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000001);CHECK(diagnoses==1 && !detail && core.bookkeeping.depth==0);
+}
+TEST_CASE(IslandCurrent_ActualWorldRecordsSupportDetailWithSharedTypeWas) { // 같은 실제 World의 소유자/표시 뒤 상세 Client 소유자와 현재 TYPE 문맥을 전달한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();auto gameplay=std::make_shared<ClientGameplayGlobals>();services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();auto storage=session.World().Storage();const auto point=IslandCurrentEmptyPoint(core);const auto source=core.factory.Create(storage->links.noIslandType);auto raw=core.pool.AllocatedBytes(source);const auto before=std::vector<std::uint8_t>(raw.begin(),raw.end());raw[11]=raw[40]=0;netstorm::test::rawscene::Put(raw,14,std::bit_cast<std::uint32_t>(static_cast<float>(point[0])));netstorm::test::rawscene::Put(raw,18,std::bit_cast<std::uint32_t>(static_cast<float>(point[1])));netstorm::test::rawscene::Put(raw,36,0);core.hash.Cell(0,point[0],point[1])=source.value;gameplay->GameAux()->SupportTypeWas()=0xffffffffU;std::optional<std::string> detail;std::uint32_t diagnoses{};
+    storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(expression=="0" && file==R"(\Ns\O\Damageable.cpp)" && line==0x18b);CHECK(detail && *detail=="--------X (No islandSid)  (No islandStalagSid)  TypeWas -1" && raw[34]==5);++diagnoses; });session.World().SetSupportOwner(static_cast<float>(point[0]),static_cast<float>(point[1]),5);CHECK(diagnoses==1 && storage->GameAux()==gameplay->GameAux());core.hash.Cell(0,point[0],point[1])=0;std::copy(before.begin(),before.end(),raw.begin()); // 명시 진단 입력의 임시 지도/물리만 Session 정리 전에 원래 void 상태로 돌린다.
 }
 TEST_CASE(TeleportCurrent_ActualSessionNoFirstSkipsInvalidEffectType) { // 다른 현재 객체 TYPE/free에서도 flags0은 잘못된 process TYPE 표를 읽지 않는다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();auto gameplay=std::make_shared<ClientGameplayGlobals>();services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);netstorm::test::rawscene::Put(raw,0,0x5070c0);raw[11]=1;raw[40]=8;session.World().Storage()->types[74].flags1=session.World().Storage()->types[74].flags2=0;gameplay->GameAux()->StreakProcessType()=188;const auto before=core.kernel.Size();++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000);CHECK(core.bookkeeping.depth==0 && core.kernel.Size()==before && raw[11]==1);raw[11]=0;raw[40]=0;

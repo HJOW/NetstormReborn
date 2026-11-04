@@ -206,9 +206,10 @@ void RawBridgeConnect::IslandPostPopPrefix(Sid island, std::uint32_t flags) cons
     Connect(island);
 }
 void RawBridgeConnect::IslandPostPop(Sid island, std::uint32_t flags, const std::function<void(Sid, std::uint32_t)>& base) const {
-    if (!base) throw std::invalid_argument("섬 받침 postPop의 공통 후처리 훅 누락");
+    if (pool_.Edition()!=OriginalEdition::Patch1078 && !base) throw std::invalid_argument("섬 받침 postPop의 공통 후처리 훅 누락");
     IslandPostPopPrefix(island, flags);
-    base(island, flags);
+    const auto selected=base; // PATCH는 생성/소유자/Pop/연결 뒤 도달한 공통 장치만 요구하며 앞선 효과를 되돌리지 않는다.
+    if (!selected) throw std::invalid_argument("섬 받침 postPop의 공통 후처리 훅 누락");selected(island, flags);
 }
 // 실제 연결 객체 생성 대상의 동일성을 상위 조립에서 확인한다.
 const SidPool& RawBridgeConnect::Pool() const { return pool_; }

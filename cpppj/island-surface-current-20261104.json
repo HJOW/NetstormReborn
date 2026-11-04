@@ -1,0 +1,660 @@
+{
+  "unit": 861,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "fa80cc90 / 20261104-45 CP",
+  "exeSha256": "6b5cc08eb6d0e65267396b27d963ac8aba9d77965d542b20c4fba5584daec40f",
+  "exeBytes": 10578432,
+  "sourceSha256": {
+    "cpppj/src/o/RawIslandPostPop.h": "739b9a8d062845942e2349fe4d9f03b32b6998de58001d07ffe20fdee8ae6cf6",
+    "cpppj/src/o/RawIslandPostPop.cpp": "795f1a0cb677a7f6aa298c06271373cbfbb3841c19b80d1c1705b3344fe9007c",
+    "cpppj/src/o/RawGameAuxState.h": "c09cabbc07ac64d8952b24ac3b18262dcce4cfed023e2791f56ba512f92218dc",
+    "cpppj/src/o/RawBridgeConnect.cpp": "be9a0a8565cdf8bf72ec8df0cf8bb9248790b808e9d9b08f64a0b4df87ec64a5",
+    "cpppj/src/o/SquidPostPop.cpp": "b439b81acb11a2390a718079170de12ddcd3a236f4370faca7e06062d555b244",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "18a2384d31a4f1df0efc14157883bb9cd8011c790640cc2b0a9bd3ca25ab8d6f",
+    "cpppj/tests/IslandPostPopTests.cpp": "6ca27830ef32be03ec072626a2aebf104da44d2865e43ab71072ed81e1aa093e",
+    "cpppj/tests/BridgeConnectTests.cpp": "6d46c296561ce8e36a80d1a8d455473835a86ee5966957d852318d2fb7014953",
+    "cpppj/tests/PostPopTests.cpp": "9b0e20e5d65cd2630cc54abb146afafe5c1b230c77dd3f269a6a9420fd249a74",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "9edd5a2d13ae6cd907f4fea095621a0cf9a8e6d62f18433c64ddefffb3c3810b",
+    "cpppj/tests/CMakeLists.txt": "b526080a3ab56ef40723e93ddf92a2416ab6564405b0151bf008de7f37c87817",
+    "cpppj/tests/IslandCurrentTests.cpp": "f8708267bf4de8efd389866d6925fcb144edea255da797c4c46816651419950b"
+  },
+  "sourceFirstBuildSha256": {
+    "cpppj/src/o/RawIslandPostPop.h": "739b9a8d062845942e2349fe4d9f03b32b6998de58001d07ffe20fdee8ae6cf6",
+    "cpppj/src/o/RawIslandPostPop.cpp": "795f1a0cb677a7f6aa298c06271373cbfbb3841c19b80d1c1705b3344fe9007c",
+    "cpppj/src/o/RawGameAuxState.h": "c09cabbc07ac64d8952b24ac3b18262dcce4cfed023e2791f56ba512f92218dc",
+    "cpppj/src/o/RawBridgeConnect.cpp": "be9a0a8565cdf8bf72ec8df0cf8bb9248790b808e9d9b08f64a0b4df87ec64a5",
+    "cpppj/src/o/SquidPostPop.cpp": "b439b81acb11a2390a718079170de12ddcd3a236f4370faca7e06062d555b244",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "18a2384d31a4f1df0efc14157883bb9cd8011c790640cc2b0a9bd3ca25ab8d6f",
+    "cpppj/tests/IslandPostPopTests.cpp": "cacf65b8b7ae1c4ac3d2f8fbbc9cd5abf821ec75832807d880cfde754d25553e",
+    "cpppj/tests/BridgeConnectTests.cpp": "710130380a8d7c3f9d598eb57575fba1d3209bacac22b440b5ecd4223867d4a0",
+    "cpppj/tests/PostPopTests.cpp": "9b0e20e5d65cd2630cc54abb146afafe5c1b230c77dd3f269a6a9420fd249a74",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "9edd5a2d13ae6cd907f4fea095621a0cf9a8e6d62f18433c64ddefffb3c3810b",
+    "cpppj/tests/CMakeLists.txt": "b526080a3ab56ef40723e93ddf92a2416ab6564405b0151bf008de7f37c87817",
+    "cpppj/tests/IslandCurrentTests.cpp": "f8708267bf4de8efd389866d6925fcb144edea255da797c4c46816651419950b"
+  },
+  "sourcePreparedSha256": {
+    "cpppj/src/o/RawIslandPostPop.h": "739b9a8d062845942e2349fe4d9f03b32b6998de58001d07ffe20fdee8ae6cf6",
+    "cpppj/src/o/RawIslandPostPop.cpp": "795f1a0cb677a7f6aa298c06271373cbfbb3841c19b80d1c1705b3344fe9007c",
+    "cpppj/src/o/RawGameAuxState.h": "c09cabbc07ac64d8952b24ac3b18262dcce4cfed023e2791f56ba512f92218dc",
+    "cpppj/src/o/RawBridgeConnect.cpp": "be9a0a8565cdf8bf72ec8df0cf8bb9248790b808e9d9b08f64a0b4df87ec64a5",
+    "cpppj/src/o/SquidPostPop.cpp": "b439b81acb11a2390a718079170de12ddcd3a236f4370faca7e06062d555b244",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "18a2384d31a4f1df0efc14157883bb9cd8011c790640cc2b0a9bd3ca25ab8d6f",
+    "cpppj/tests/IslandPostPopTests.cpp": "cacf65b8b7ae1c4ac3d2f8fbbc9cd5abf821ec75832807d880cfde754d25553e",
+    "cpppj/tests/BridgeConnectTests.cpp": "710130380a8d7c3f9d598eb57575fba1d3209bacac22b440b5ecd4223867d4a0",
+    "cpppj/tests/PostPopTests.cpp": "9b0e20e5d65cd2630cc54abb146afafe5c1b230c77dd3f269a6a9420fd249a74",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "9edd5a2d13ae6cd907f4fea095621a0cf9a8e6d62f18433c64ddefffb3c3810b",
+    "cpppj/tests/CMakeLists.txt": "b526080a3ab56ef40723e93ddf92a2416ab6564405b0151bf008de7f37c87817",
+    "cpppj/tests/IslandCurrentTests.cpp": "3a5b3d4edbdc86d607abaece8d90ec70a7a0cb781fd0a3f05301503361b456cf"
+  },
+  "scope": [
+    "PATCH 실제 Island/noIsland VT의 최초 선택 장치와 비최초 공통 복귀·콜백 반납 수명",
+    "004423b0의 현재 서/북 좌표·필수 프레임 진단→물리 DWORD 저장→현재 orientation/진단 복귀",
+    "F의 생성 뒤 현재 TYPE 주소 선택→소유자 뒤 현재 foot/좌표·DEC DWORD 순환·H 누락 진단 정상 복귀",
+    "0044bd20의 현재 지도/TYPE·소유자/표시 뒤 상세 문자열과 같은 Client 상세/진단/장기 TypeWas 읽기",
+    "RawBridgeConnect PATCH 전체 진입의 접두 뒤 공통 장치 요구·별도 명시 Validate/Activate/CD 계약 유지"
+  ],
+  "staticEvidence": {
+    "sha256": {
+      "extracted/cpp-resume-861/originalCD-00461f00.c": "475659badb59150503f0e668c43749d35a0288ec83c0e08b710987ab539590bd",
+      "extracted/cpp-resume-861/originalCD-004d01d0.c": "bf9309685f52b18af17b6581277ef06e24197e654e84a24100fbe613d310e701",
+      "extracted/cpp-resume-861/originalCD-004d2790.c": "127aebd537b087009f4bbc9d9cdb0c63bbd4003d9b9aead7a789a256925db2b0",
+      "extracted/cpp-resume-861/originals-0040eaf0.c": "8990231b226a793f807a9bf47cc4912ce3f3f4a77050a372374e7129107670b3",
+      "extracted/cpp-resume-861/originals-00433c30.c": "c875ab01a2a75d0df60584fd7d1afdae516efcbfa234f7698169d456bf003d10",
+      "extracted/cpp-resume-861/originals-004421c0.c": "80edb69f5ffe13e911e28915d6d6baf7a2933a1f281f47a0a3e8dcc5ee7dc121",
+      "extracted/cpp-resume-861/originals-00442350.c": "2086e00200f28a3c41eb1ab363d98588939686cd60713dfc091c7961fbc09897",
+      "extracted/cpp-resume-861/originals-004423b0.c": "6c650c717466edd565849232e375d3405afed19385877d020a54abda155ba212",
+      "extracted/cpp-resume-861/originals-0044bd20.c": "fbd7bdb9f8397de2ad5a6e4e20a898e51c2ff21c30bb3f98e0950616a6412b7f",
+      "extracted/cpp-resume-861/originals-0049a840.c": "f55ea7757a34810e4ed2a47f75790ced0eb4ef748faecc1c385aa6bd210528d9",
+      "extracted/cpp-resume-861/originals-0049a940.c": "c674b310365f6b8b7cddf623ddce5c752c85bf8a553f13a359ae32303eb088bb",
+      "extracted/cpp-resume-861/originals-0049a9a0.c": "89414ac6a1da0a31d0cac16c6a83ac256003469074fb3a429aaf6e527e017732",
+      "extracted/cpp-resume-861/originals-004a8a00.c": "5eb183f66186d4818faee90049c91bb3a1e1de94db08bd79c7b31d6b11c67c19",
+      "extracted/cpp-resume-861/originals-004ac550.c": "2e055b44d04f3202841e016f52935778f172c735c3f1c915bb16a60205555576",
+      "extracted/cpp-resume-861/originals-004ac560.c": "b51191cb8b1ab7eb8c8ad03f2ba553b9b3b58fbc70e0bfb2d698c6727d8a1371",
+      "extracted/cpp-resume-861/originals-004ad680.c": "6dbd72aa6d327f428a5c632fb65c6156f2b09b03da6dd9a21d402a4eac352948",
+      "extracted/cpp-resume-861/originals-004b02d0.c": "61175aa7597f7d852b273eafeacc1e4a5b325f976f16ce724bd864642ce6c0b7",
+      "extracted/cpp-resume-861/originals-004b1c20.c": "9b12cf6d0d78c49b5bcaa8649670b58a05fd3a7427227aef15dde26814f379af",
+      "extracted/cpp-resume-861/originals-004421c0.asm": "820bfc1a205e4962372f0bb400287cdbec08169787bd77e5c050813774217b23",
+      "extracted/cpp-resume-861/originals-004423b0.asm": "11dd7fad95c195889ed037532f056f95e4754118ba8d90bdbf675393377d8d3e",
+      "extracted/cpp-resume-861/originals-0044bd20.asm": "91adebcfaf71420b17492cc3b25e28b5ead969f2682bc590402f5354b176f65e",
+      "extracted/cpp-resume-861/originals-004ad680.asm": "8945e23af9d9a6ce43f408d3a77aa35d5ce2a61b87425946c191ee70fb38f435"
+    },
+    "patch": [
+      "004423b0",
+      "0044bd20",
+      "004421c0",
+      "00442350",
+      "004ad680",
+      "0049a940",
+      "0049a9a0",
+      "0040eaf0",
+      "004ac550",
+      "0049a840",
+      "004a8a00"
+    ],
+    "multiplayerWriterReference": "00433c30의 TypeWas 쓰기는 정적 참고만 했으며 실제 MP 수신 writer는 잔여다",
+    "cd": [
+      "004d2790",
+      "00461f00",
+      "004d01d0"
+    ]
+  },
+  "validation": {
+    "cases": 63,
+    "newCases": 20,
+    "newCasesFirstPassed": 20,
+    "firstFailedCases": 3,
+    "firstFailedChecks": 3,
+    "finalFailedCases": 0,
+    "failedChecks": 0,
+    "correctedExecutions": 4,
+    "firstCompileErrors": 0,
+    "preparedInputReview": "첫 스냅샷 뒤 실제 빌드 전에 새 도우미의 SID 인수 폭을 WORD로 명시했다. 준비 스냅샷과 실제 빌드 입력을 별도로 보존했다.",
+    "inputCorrection": {
+      "firstFailedCases": 3,
+      "firstFailedChecks": 3,
+      "productChangesAfterFirstBuild": 0,
+      "correctedFiles": [
+        "cpppj/tests/IslandPostPopTests.cpp",
+        "cpppj/tests/BridgeConnectTests.cpp"
+      ],
+      "reason": "기존 독립 real 모듈 검사 둘의 초기 서버 SID가 현재 Activate의 실제 전송 장치를 요구했다. client 전용 SID로 비전송 기하 가지를 선택한다. 이웃 flag8은 지원이므로 미지원 0x10의 호스트 guard를 검사한다. 뒤늦은 접두 실패의 원문 Pop/Activate 부분 효과와 명시 Validate를 구별한다.",
+      "expectedFixtureChanges": 0,
+      "originalEvidence": [
+        "004ac560",
+        "004b02d0",
+        "004b1c20"
+      ],
+      "firstExeSha256": "6b5cc08eb6d0e65267396b27d963ac8aba9d77965d542b20c4fba5584daec40f"
+    },
+    "intermediateCorrection": "첫 교정3개 중2개 통과/기존 두 번째 다리 생성의 서버 SID1개를 놓쳐1개 실패였다. 같은 생성 입력도 client 전용으로 고친 뒤 해당1개만 재실행했다. 제품 추가 수정0이다.",
+    "newNativeObservations": 0,
+    "newFixtures": 0,
+    "existingIslandRows": 1656,
+    "existingBridgeRows": 10800,
+    "fixtureSha256": {
+      "islandpostpop-x86.tsv": "e6282ce1dc8385a6c8ecafc6a18a1175f882f57d03610e4d36f7ca2eb88ecfcc",
+      "bridgeconnect-x86.tsv": "90319a6bfd80f2325843638e63b59c6096b36afc1ea5514b01ca54b14f845d15"
+    },
+    "existingExpectationsChanged": false,
+    "manualGuardChanges": [
+      "PATCH 미도달 updateDisplay의 구성 거부를 비최초 장치 생략으로 교정했다",
+      "기존 무효과 장면의 공통 장치 누락은 flags0으로 분리하고 새 flags1 장면에서 종유석 생성/소유자/Pop 보존을 대조했다",
+      "현재 지원 flag8의 거부 대신 미지원0x10 호스트 경계를 확인하고 실제 PATCH Pop의 늦은 실패 앞 해시/void/깊이를 명시 Validate와 구별했다"
+    ],
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-861/build-first.log",
+        "sha256": "78934a3ac61163addbe6e379a0e5144929e373e18d871a78ccd286c5a53a0efe",
+        "exitCode": 0,
+        "elapsedSeconds": 327.4714462,
+        "childProcessesExited": true,
+        "execSession": 62743
+      },
+      {
+        "log": "extracted/cpp-resume-861/build-corrected.log",
+        "sha256": "022f3c5f9ab9f098f04d677b9338d288f8b866201298f198d70c84fec527d19a",
+        "exitCode": 0,
+        "elapsedSeconds": 14.0689208,
+        "childProcessesExited": true,
+        "execSession": 72374
+      },
+      {
+        "log": "extracted/cpp-resume-861/build-corrected-final.log",
+        "sha256": "0c7585d69e2c49d5e0058f51477745e92555a59a8a37f3a4203d20e49d583d88",
+        "exitCode": 0,
+        "elapsedSeconds": 12.8707321,
+        "childProcessesExited": true,
+        "execSession": 56701
+      }
+    ],
+    "executions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "IslandCurrent_",
+        "cases": 17,
+        "expectedCases": 17,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "IslandCurrent_",
+        "cases": 3,
+        "expectedCases": 3,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-session-first.log",
+        "sha256": "945d40ed9e7c955cd76a3feb2018a84fb89cf9dbff37bf7e256ea44c5b6cbe9d"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "island_postpop_",
+        "cases": 7,
+        "expectedCases": 7,
+        "failedChecks": 1,
+        "exitCode": 1,
+        "passed": false,
+        "log": "extracted/cpp-resume-861/test-island-native-first.log",
+        "sha256": "192fdab6bf08ae22922e192b7da5a58534df00717ae4c969257dd4fea89f38ca"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "bridge_connect_",
+        "cases": 7,
+        "expectedCases": 7,
+        "failedChecks": 2,
+        "exitCode": 1,
+        "passed": false,
+        "log": "extracted/cpp-resume-861/test-bridge-native-first.log",
+        "sha256": "85ef070d8f6dae9121fde2a7d8be6cdb0ad1a0bc02748f609a99c9a7f947b21b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 11,
+        "expectedCases": 11,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-session-first.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "island_postpop_real_raw_modules_build_support_and_propagate_owner",
+        "cases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island_postpop_real_raw_modules_build_support_and_propagate_owner-corrected.log",
+        "sha256": "7730ad1f3b23bd5b75f5e624d3c4a4ca6ab9c022bebf0b3627b5ef654bc58bca"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "bridge_connect_rejects_missing_hooks_and_invalid_inputs",
+        "cases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-bridge_connect_rejects_missing_hooks_and_invalid_inputs-corrected.log",
+        "sha256": "9460a670b46b561ebaac04c01b19f5ad37bec7471cbe49808642a12687b8e9b1"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "bridge_connect_real_raw_modules_capture_neutral_island",
+        "cases": 1,
+        "failedChecks": 1,
+        "exitCode": 1,
+        "passed": false,
+        "log": "extracted/cpp-resume-861/test-bridge_connect_real_raw_modules_capture_neutral_island-corrected.log",
+        "sha256": "63e56a97d0e9d74fe7302267007b117bce409014b19ac93bc575f345e7c489ca"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "bridge_connect_real_raw_modules_capture_neutral_island",
+        "cases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-bridge_connect_real_raw_modules_capture_neutral_island-corrected-final.log",
+        "sha256": "6b271ba819fd4a9e3d399a09feb03c086fb1e5122d9d6dbe4208190cf6e5482c"
+      }
+    ],
+    "finalUniqueCases": {
+      "IslandCurrent_DispatchNonFirstSkipsMissingPrefixAndPhysicalType": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_DispatchFirstRequiresSelectedPrefixBeforeCommon": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_DispatchKeepsSelectedCallableDuringSelfUnbinding": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_NonFirstSkipsInvalidGlobalsAndAllDevices": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_OrdinaryLetterNeedsOnlyReachedConnection": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_LoadingStoresPhysicalFrameBeforeLateDeviceFailure": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_RequiredFrameDiagnosisReturnsMinusOneWithoutRetry": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_OrientationDiagnosisRereadsAndContinuesAfterMismatch": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_LoadingRereadsCoordinatesAfterWestDiagnosis": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_CreateThenCaptureTypeBeforeOwnerAndReadFieldsAfterOwner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_InvalidCurrentTypeFailsAfterCreationBeforeOwner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_FootprintDecrementWrapsBeforeCoordinateAddition": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_MissingUpperLeftDiagnosisReturnsThenConnects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_SupportDetailUsesLiveMapTypeAndCurrentSignedTypeWas": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_SupportEffectsSurviveMissingLateDiagnosis": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_TypeWasOwnerSurvivesGeneralWorldReset": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_BridgeCommonFailureRetainsEarlierStalagEffects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-current-first.log",
+        "sha256": "dece5b6a57f921ec841bafebf9a1323e80b8ba22072d94502c3cdcc55ecba9ec"
+      },
+      "IslandCurrent_ActualSessionNonFirstPhysicalVtablesUseCommon": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-session-first.log",
+        "sha256": "945d40ed9e7c955cd76a3feb2018a84fb89cf9dbff37bf7e256ea44c5b6cbe9d"
+      },
+      "IslandCurrent_ActualSessionMissingUpperLeftDiagnosisReturnsToCommon": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-session-first.log",
+        "sha256": "945d40ed9e7c955cd76a3feb2018a84fb89cf9dbff37bf7e256ea44c5b6cbe9d"
+      },
+      "IslandCurrent_ActualWorldRecordsSupportDetailWithSharedTypeWas": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-session-first.log",
+        "sha256": "945d40ed9e7c955cd76a3feb2018a84fb89cf9dbff37bf7e256ea44c5b6cbe9d"
+      },
+      "island_postpop_matches_originals_x86": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-native-first.log",
+        "sha256": "192fdab6bf08ae22922e192b7da5a58534df00717ae4c969257dd4fea89f38ca"
+      },
+      "island_postpop_matches_original_cd_x86": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-native-first.log",
+        "sha256": "192fdab6bf08ae22922e192b7da5a58534df00717ae4c969257dd4fea89f38ca"
+      },
+      "island_postpop_matches_original_1037_x86": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-native-first.log",
+        "sha256": "192fdab6bf08ae22922e192b7da5a58534df00717ae4c969257dd4fea89f38ca"
+      },
+      "island_postpop_validates_hooks_maps_and_missing_upper_left": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-native-first.log",
+        "sha256": "192fdab6bf08ae22922e192b7da5a58534df00717ae4c969257dd4fea89f38ca"
+      },
+      "island_postpop_shared_saved_game_reads_current_owner_gate": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-native-first.log",
+        "sha256": "192fdab6bf08ae22922e192b7da5a58534df00717ae4c969257dd4fea89f38ca"
+      },
+      "island_postpop_cd_uses_separate_owner_surface_map": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island-native-first.log",
+        "sha256": "192fdab6bf08ae22922e192b7da5a58534df00717ae4c969257dd4fea89f38ca"
+      },
+      "island_postpop_real_raw_modules_build_support_and_propagate_owner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-island_postpop_real_raw_modules_build_support_and_propagate_owner-corrected.log",
+        "sha256": "7730ad1f3b23bd5b75f5e624d3c4a4ca6ab9c022bebf0b3627b5ef654bc58bca"
+      },
+      "bridge_connect_patch_x86_walk_link_owner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-bridge-native-first.log",
+        "sha256": "85ef070d8f6dae9121fde2a7d8be6cdb0ad1a0bc02748f609a99c9a7f947b21b"
+      },
+      "bridge_connect_cd_x86_walk_link_owner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-bridge-native-first.log",
+        "sha256": "85ef070d8f6dae9121fde2a7d8be6cdb0ad1a0bc02748f609a99c9a7f947b21b"
+      },
+      "bridge_connect_1037_x86_walk_link_owner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-bridge-native-first.log",
+        "sha256": "85ef070d8f6dae9121fde2a7d8be6cdb0ad1a0bc02748f609a99c9a7f947b21b"
+      },
+      "bridge_connect_preview_append_is_visible_before_next_creation": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-bridge-native-first.log",
+        "sha256": "85ef070d8f6dae9121fde2a7d8be6cdb0ad1a0bc02748f609a99c9a7f947b21b"
+      },
+      "bridge_connect_rejects_missing_hooks_and_invalid_inputs": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-bridge_connect_rejects_missing_hooks_and_invalid_inputs-corrected.log",
+        "sha256": "9460a670b46b561ebaac04c01b19f5ad37bec7471cbe49808642a12687b8e9b1"
+      },
+      "bridge_connect_walk_reads_live_chain_between_next_calls": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-bridge-native-first.log",
+        "sha256": "85ef070d8f6dae9121fde2a7d8be6cdb0ad1a0bc02748f609a99c9a7f947b21b"
+      },
+      "bridge_connect_real_raw_modules_capture_neutral_island": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-bridge_connect_real_raw_modules_capture_neutral_island-corrected-final.log",
+        "sha256": "6b271ba819fd4a9e3d399a09feb03c086fb1e5122d9d6dbe4208190cf6e5482c"
+      },
+      "PostPopCurrent_SuppressedReturnsBeforeSlotOrTypeAndWrapsDepth": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_RegionDisabledBranchDoesNotRecheckGraphs": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_RegionCallbackDisablesAddBeforeLedger": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_DestroyDiagnosticResumesWithCurrentType": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_AbortingDiagnosticKeepsDepthAndEarlierRegion": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_NoGraphSurfaceUsesResetBeforeCost": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_CurrentTypeAndSavedGenusHaveIndependentRoles": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_AbstractExtraSkipsLedgerButStillFinishesGraph": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_SelectionFailureKeepsAllEarlierStatisticsAndDepth": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_ActualManaDiagnosticRetainsSavedFactoryGenusAndCurrentOwner": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "PostPopCurrent_OwnerReadPrecedesCurrentLocalOwnerGetter": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      "SquidPostPop_X86_CostListsTotalsAndActiveLifecycle": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_FirstRegistrationAndProviderDuplicate_PreserveOriginalCounters": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_UnsupportedEffectsAndCorruptList_KeepEarlierSpaceWrites": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_BridgePrefix_X86_FlagsAndExtra": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidPostPop_TypeCost_LoadsFloatAndRejectsString": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      "SquidActivate_VoidDiagnosticRepairsCurrentStateBeforeTransmittingCheck": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_ZeroSidDiagnosticResumesSamePhysicalSlot": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_InvalidPhysicalSidFailsAfterOriginalDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_CurrentDepthDiagnosticReturnsWithoutAutomaticRepair": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_AbortingDepthDiagnosticKeepsCompletedEffects": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_BalancedDepthWrapDoesNotReadDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_PostFailurePreservesIncrementWithoutFinalDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_DiagnosticSelfRebindReadsNextCurrentCallback": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_ActualCommonPostPopKeepsStatisticsBeforeCurrentDiagnostic": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "SquidActivate_ActualWorldUsesCurrentClientDiagnosticWithCheckingOff": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      "PostPopCurrent_ActualSessionUsesCurrentOwnerAndRememberedSelection": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-post-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      "SquidActivate_ActualSessionUsesCurrentServiceAfterPostPop": {
+        "passed": true,
+        "log": "extracted/cpp-resume-861/test-activate-session-first.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      }
+    }
+  },
+  "protected": {
+    "files": 2761,
+    "fixtures": 941,
+    "unchanged": true,
+    "fixtureExpectationChanges": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 36,
+    "completedPartial": 3,
+    "newCompletedParents": 0
+  },
+  "limits": [
+    "새 Native 관측이 아닌 현재 계약 검사/기존 세 PE fixture 재생/정밀 원문과 기계어 정적 대조다",
+    "실제 Session은 틱 없이 빈 영역의 진단 입력과 비최초 공통 복귀만 실행했다. 잠깐 배치한 진단 지도/슬롯은 원래 void 상태로 반납했다",
+    "TypeWas의 실제 MP 수신 writer와 Teleport의 다른 유효 생성 함수 분배는 미완료다",
+    "host double은 x87 전체 확장 정밀도의 모든 극단 입력·SEH/부분 할당 실패를 보증하지 않는다",
+    "실제 게임/GUI·Frame/Process 틱·포획/희생/특정 적 공격/승리·사용자 직접 확인·공중3종 전용·신규MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복을 제외했다"
+  ],
+  "next": [
+    "다른 현재 가상20/접두와 공유 TYPE/모드·명시 사전 계약을 대조하고 전체 Pop 완료 여부를 확인한다",
+    "Teleport 다른 선택 생성 함수와 실제 Client의 원문 종단을 빈 성공으로 대체하지 않고 이어 복원한다",
+    "객체 메뉴/커서·Edit·State/파일/군도·Windows 한계·무검사MP 및4~8차 전체 잔여를 계속한다"
+  ]
+}

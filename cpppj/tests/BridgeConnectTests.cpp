@@ -159,7 +159,7 @@ TEST_CASE(bridge_connect_rejects_missing_hooks_and_invalid_inputs) {
     CHECK(Throws([&] { auto broken=hooks;broken.create={};RawBridgeConnect invalid(scene.pool,*scene.neighbors,scene.state,broken); }));
     Scene other(OriginalEdition::Patch1078);
     CHECK(Throws([&] { RawBridgeConnect invalid(other.pool,*scene.neighbors,scene.state,hooks); }));
-    CHECK(Throws([&] { RawSquidNeighborWalk invalid(*scene.neighbors,kSource,8); }));
+    CHECK(Throws([&] { RawSquidNeighborWalk invalid(*scene.neighbors,kSource,0x10); })); // 원문 지도 순회의8은 현재 지원한다. 이 단언은 미지원 다섯째 비트의 호스트 계약이다.
     CHECK(Throws([&] { OwnerColorFrame(scene.state,9); }));
     CHECK(Throws([&] { SetIslandOwner(scene.pool,scene.state,kSource,1,{}); }));
     CHECK(Throws([&] { MakeOwnerDispatch(scene.pool,scene.state,{}); }));
@@ -168,12 +168,16 @@ TEST_CASE(bridge_connect_rejects_missing_hooks_and_invalid_inputs) {
     // 원본 assert("newPlayerId != INVALID_PLAYER_ID") 경로: 훅을 부르거나 풀을 바꾸기 전에 예외다.
     CHECK(Throws([&] { connect.PropagateOwner(kSource,Sid{70}); }));
     CHECK(scene.events.empty() && std::equal(before.begin(),before.end(),scene.pool.Bytes().begin()));
-    CHECK(Throws([&] { connect.IslandPostPop(kSource,1,{}); }));
+    CHECK(Throws([&] { connect.IslandPostPop(kSource,0,{}); })); // 비최초의 공통 장치 실패만 이 무효과 장면에서 확인한다. 최초 부분 효과는 별도 장면에서 검사한다.
     CHECK(Throws([&] { connect.FindTypeAt(20.0f,21.0f,5000); }));
     // 소유자가 있으면 같은 장면에서 받침의 소유자와 색 프레임(전투 모드, 소유자 4 → 색 표 4 - 1)이 바뀐다.
     scene.pool.AllocatedBytes(kSource)[scene.OwnerOffset()]=4;
     connect.PropagateOwner(kSource,Sid{70});
     CHECK(scene.Events()=="O:71:4;S:71:3:0");
+}
+
+TEST_CASE(IslandCurrent_BridgeCommonFailureRetainsEarlierStalagEffects) { // 공통 장치 누락 앞에 실제 원문 접두의 생성/소유자/Pop 효과가 남는다.
+    Scene scene(OriginalEdition::Patch1078);scene.Prepare({"50,91,0,0,1106247680,1106247680,3,3,671088643,16777216,0,0","-","0","50,3","82,1,0,0,1,2,3,4,5,6,7,8,1"});auto hooks=scene.Hooks();RawBridgeConnect connect(scene.pool,*scene.neighbors,scene.state,hooks);CHECK(Throws([&] { connect.IslandPostPop(kSource,1,{}); }));CHECK(scene.born==1 && scene.Events()=="C:92:2;O:100:3;P:100:1106247680:1106247680:0");
 }
 
 // 순회 도중 호출자가 뒤쪽 버킷에 새 객체를 등록하면 원본처럼 그 뒤의 Next가 그 객체를 읽는다(여기서는 표면 타입이라 이웃이 된다).
@@ -261,7 +265,7 @@ TEST_CASE(bridge_connect_real_raw_modules_capture_neutral_island) {
         hooks.notifySurface=[&](Sid) { ++notified; };
         RawBridgeConnect connect(pool,neighbors,state,std::move(hooks));linker=&connect;
         // 1. 중립 섬 받침(소유자 0, 프레임 8)을 (30,30)에 등록한다. 파생 postPop이 같은 자리에 종유석을 만든다.
-        const Sid island=factory.Create(islandType);
+        const Sid island=factory.Create(islandType,2); // 독립 기하 입력은 client 전용 SID를 사용해 원문 Activate의 비전송 가지를 선택한다.
         Put(pool.AllocatedBytes(island),frameOffset,8,frameWidth);
         CHECK(pop.Pop(island,types[islandType],3,3,30.0f,30.0f)==RawPopResult::Registered);
         CHECK(created.size()==1);
@@ -271,7 +275,7 @@ TEST_CASE(bridge_connect_real_raw_modules_capture_neutral_island) {
         CHECK(connect.FindTypeAt(29.0f,28.0f,islandType)==island);
         // 2. 이미 생성된 받침의 다리 점령만 분리해 확인하려고 noIsland 둘의 기존 배치 상태를 직접 입력한다.
         const auto surface=[&](float x,float y) {
-            const Sid sid=factory.Create(noIslandType);auto raw=pool.AllocatedBytes(sid);
+            const Sid sid=factory.Create(noIslandType,2);auto raw=pool.AllocatedBytes(sid);
             raw[11]=static_cast<std::uint8_t>(raw[11]&~4);
             Put(raw,14,std::bit_cast<std::uint32_t>(x));Put(raw,18,std::bit_cast<std::uint32_t>(y));
             auto& head=hash.Bucket(0,x,y);Put(raw,4,head,2);head=sid.value;
@@ -280,7 +284,7 @@ TEST_CASE(bridge_connect_real_raw_modules_capture_neutral_island) {
         };
         const Sid east=surface(30.0f,29.0f),inner=surface(29.0f,30.0f);
         // 3. 소유자 3의 다리(동서 방향 K 프레임)를 받침 동쪽 바깥 (31,29)에 등록한다.
-        const Sid bridge=factory.Create(bridgeType);owner.Set(bridge,3);
+        const Sid bridge=factory.Create(bridgeType,2);owner.Set(bridge,3);
         Put(pool.AllocatedBytes(bridge),frameOffset,static_cast<std::uint32_t>(bridgeFrames.Run('K').first),frameWidth);
         CHECK(pop.Pop(bridge,types[bridgeType],1,1,31.0f,29.0f)==RawPopResult::Registered);
         // 다리 postPop 접두가 extra 비트 2를 켜고 연결 순회를 불렀다. 연결 객체가 하나 생겼다.
@@ -299,7 +303,7 @@ TEST_CASE(bridge_connect_real_raw_modules_capture_neutral_island) {
         // 받침과 종유석의 프레임 지정은 해시 단계가 그대로라 제자리 경로(표시 갱신 두 번씩)이고 등록 위치는 바뀌지 않는다.
         CHECK(frameUpdates==4 && connect.FindTypeAt(30.0f,30.0f,islandType)==island && connect.FindTypeAt(30.0f,30.0f,stalagType)==stalag);
         // 4. 이미 주인이 있는 받침은 다른 소유자의 다리가 닿아도 바뀌지 않는다. 연결 객체만 더 생긴다.
-        const Sid second=factory.Create(bridgeType);owner.Set(second,5);
+        const Sid second=factory.Create(bridgeType,2);owner.Set(second,5); // 두 번째 다리도 같은 독립 비전송 입력을 유지한다.
         Put(pool.AllocatedBytes(second),frameOffset,static_cast<std::uint32_t>(bridgeFrames.Run('J').first),frameWidth);
         CHECK(pop.Pop(second,types[bridgeType],1,1,29.0f,31.0f)==RawPopResult::Registered);
         CHECK(created.size()==3 && pool.Slot(island)[ownerOffset]==3 && pool.Slot(inner)[ownerOffset]==3);

@@ -329,6 +329,24 @@ TEST_CASE(TeleportCurrent_NoFirstUsesActualVtableWithoutDeviceOrTypeGate) { // f
         auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,0x5070c0);raw[10]=255;raw[11]=9;raw[40]=8;const auto before=Hex(raw);body.PostPopVirtual(o::Sid{50},flags);CHECK(state.depth==0 && Hex(raw)==before);
     }
 }
+TEST_CASE(IslandCurrent_DispatchNonFirstSkipsMissingPrefixAndPhysicalType) { // 두 실제 VT는 현재 TYPE/free와 무관하며 비최초에서 접두 장치 없이 공통으로 간다.
+    for (const auto vtable:{0x506d98U,0x506f08U}) { // 서로 다른 실제 섬/표면 재정의를 같은 비최초 규칙으로 대조한다.
+        auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,vtable);raw[10]=255;raw[11]=9;
+        for (const auto flags:{0U,2U,4U}) { state.depth=1;body.PostPopVirtual(o::Sid{50},flags);CHECK(state.depth==0 && raw[11]==9); } // 공통 suppressed 경로만 호출하고 접두를 읽지 않는다.
+    }
+}
+TEST_CASE(IslandCurrent_DispatchFirstRequiresSelectedPrefixBeforeCommon) { // 최초 접두 미설치는 같은 깊이/물리를 유지한 채 공통 앞에서 명시 실패한다.
+    for (const auto vtable:{0x506d98U,0x506f08U}) { // 섬과 표면의 각 선택 장치를 따로 확인한다.
+        auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,vtable);const auto before=Hex(raw);CHECK(Throws([&] { body.PostPopVirtual(o::Sid{50},1); }) && state.depth==1 && Hex(raw)==before);
+    }
+}
+TEST_CASE(IslandCurrent_DispatchKeepsSelectedCallableDuringSelfUnbinding) { // 현재 접두가 자기 연결과 타입을 바꾸어도 실행 캡처는 공통 호출 직전까지 유효하다.
+    for (const bool surface:{false,true}) { // 두 장치 모두 설치 시점의 캡처를 안전하게 빌린다.
+        auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,surface ? 0x506f08 : 0x506d98);raw[10]=74;auto owner=std::make_shared<int>(7);std::weak_ptr<int> weak=owner;
+        std::function<void(o::Sid,std::uint32_t)> selected=[&,owner](auto,auto flags) { CHECK(flags==1);if (surface) body.SetSurfacePrefix({});else body.SetIslandPrefix({});CHECK(*owner==7 && !weak.expired());raw[10]=255; };
+        if (surface) body.SetSurfacePrefix(std::move(selected));else body.SetIslandPrefix(std::move(selected));owner.reset();body.PostPopVirtual(o::Sid{50},1);CHECK(state.depth==0 && weak.expired() && raw[10]==255);
+    }
+}
 TEST_CASE(TeleportCurrent_MissingSelectedPrefixFailsBeforeCommon) { // 최초 생성 장치 누락은 공통 부모 앞에서 실패하고 raw를 쓰지 않는다.
     auto types=Types(o::OriginalEdition::Patch1078);o::SidPool pool(o::OriginalEdition::Patch1078,kBridgePoolCapacity,false);o::SquidPostPopState state;state.suppressed=true;state.depth=1;o::SquidPostPop body(pool,types,state);auto raw=BridgeCurrentSlot(pool);Put(raw,0,0x5070c0);const auto before=Hex(raw);CHECK(Throws([&] { body.PostPopVirtual(o::Sid{50},1); }) && state.depth==1 && Hex(raw)==before);
 }

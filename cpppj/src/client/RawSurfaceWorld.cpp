@@ -180,7 +180,10 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             objects,[this](o::Sid sid) { connect->Connect(sid); },
             [this](float x,float y,std::uint32_t type) { return connect->FindTypeAt(x,y,type); },
             [this](o::Sid sid) { changed=true;display->Update(pool.Slot(sid)); },
-            [](bool,bool,bool) { throw std::logic_error("raw 표면 월드의 불완전한 받침 묶음"); }});
+            [](bool,bool,bool) { throw std::logic_error("raw 표면 월드의 불완전한 받침 묶음"); },
+            [owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); },
+            [owner=storage.get()](auto text) { owner->RecordAssertionDetail(text); },
+            [owner=storage.get()] { return owner->GameAux()->SupportTypeWas(); }}); // 같은 Client의 현재 상세/진단/TYPE 문맥이며 정상 복귀 뒤 연결을 계속한다.
         baseDestroy=std::make_unique<o::RawSquidDestroy>(pool,*unpop,types);
         virtualDestroy=std::make_unique<o::RawSquidDestroyDispatch>(*baseDestroy,*neighbors,mode,graph.get());
         virtualDestroy->BindCurrentModes(*storage->Authority()); //다른 효과에서 boss가 바뀌어도 다음 가상 삭제가 같은 현재 주소를 읽는다.

@@ -97,10 +97,10 @@ bool SquidPostPop::HandlesBridge(Sid sid) const {
 }
 // 접두 효과는 생성 뒤에 연결한다(연결 계층이 Pop을 거쳐 이 객체를 다시 부르기 때문이다).
 void SquidPostPop::SetIslandPrefix(std::function<void(Sid,std::uint32_t)> prefix) { islandPrefix_=std::move(prefix); }
-// 실제 vtable과 명시적인 접두 효과 둘 다 있어야 섬 받침의 파생 후처리를 사용할 수 있다.
+// PATCH는 실제 VT로 분배하고 최초에만 접두 장치를 요구한다. CD의 기존 연결 계약은 유지한다.
 bool SquidPostPop::HandlesIsland(Sid sid) const {
     const auto expected=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchIslandVtable : kCdIslandVtable;
-    return islandPrefix_ && Vtable(pool_.Slot(sid))==expected;
+    return (pool_.Edition()==OriginalEdition::Patch1078 || islandPrefix_) && Vtable(pool_.Slot(sid))==expected;
 }
 // 파생 표는 서로 다른 주소이므로 한 종류만 참이 된다.
 bool SquidPostPop::HandlesDerived(Sid sid) const { return HandlesCarrierSteal(sid) || HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid) || HandlesPriest(sid) || HandlesForcefield(sid) || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesRune(sid) || HandlesDais(sid) || HandlesDude(sid) || HandlesPlayer(sid) || HandlesBuried(sid) || HandlesFlyer(sid) || HandlesBalloon(sid); }
@@ -199,10 +199,10 @@ bool SquidPostPop::HandlesPriest(Sid sid) const {
 void SquidPostPop::SetSurfacePrefix(std::function<void(Sid,std::uint32_t)> prefix) { surfacePrefix_=std::move(prefix); }
 // 같은 풀을 가진 상위 Session만 실제12 생성자를 연결하며 빈 값은 해제한다.
 void SquidPostPop::SetTeleportPrefix(std::function<void(Sid,std::uint32_t)> prefix) { teleportPrefix_=std::move(prefix); }
-// 가상 표와 명시적 접두가 둘 다 있어야 noIsland 후처리를 허용한다.
+// PATCH는 현재 TYPE/장치 설치 여부로 실제 표면 VT를 가리지 않는다. CD의 기존 연결 계약은 유지한다.
 bool SquidPostPop::HandlesSurface(Sid sid) const {
     const auto expected=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchNoIslandVtable : kCdNoIslandVtable;
-    return surfacePrefix_ && Vtable(pool_.Slot(sid))==expected;
+    return (pool_.Edition()==OriginalEdition::Patch1078 || surfacePrefix_) && Vtable(pool_.Slot(sid))==expected;
 }
 // 00422150 ↔ CD 00449890. 공통 postPop을 호출하기 전에 수행하는 부분만 복원한다.
 void SquidPostPop::BridgePrefix(SidPool& pool,Sid sid,std::uint32_t flags,const std::function<void(Sid)>& connector) {
@@ -243,6 +243,8 @@ void SquidPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) 
         throw std::logic_error("postPop raw 자산 상태 오류");
     if (pool_.Edition()==OriginalEdition::Patch1078 && HandlesBridge(sid) && !bridgeConnector_ && ((flags&1U) || ((flags&4U) && !(bytes[40]&1U))))
         throw std::logic_error("명시 다리 postPop 사전 검사의 연결 효과 미연결"); // 독립 Validate/Activate의 무효과 사전 계약을 실제 접두 실행과 구별한다.
+    if (pool_.Edition()==OriginalEdition::Patch1078 && (flags&1U) && ((HandlesIsland(sid) && !islandPrefix_) || (HandlesSurface(sid) && !surfacePrefix_)))
+        throw std::logic_error("명시 섬/표면 postPop 사전 검사의 접두 미연결"); // 명시 사전 검사에서의 무효과 실패를 실제 도달한 호출과 분리한다.
     if (!SquidPop::Supports(pool_.Edition(),Vtable(bytes),flags) && !HandlesDerived(sid)) throw std::logic_error("파생 postPop 미복원");
     if (HandlesPriest(sid)) priestPostPop_->Validate(sid);
     if (HandlesRune(sid)) runePostPop_->Validate(sid,flags,pop);
@@ -361,9 +363,13 @@ void SquidPostPop::DispatchPostPop(Sid sid,std::uint32_t flags) {
     }
     if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);
     // 섬 받침은 접두(종유석·연결 순회) 뒤에 같은 flags로 공통 후처리를 부른다.
-    else if (HandlesIsland(sid)) islandPrefix_(sid,flags);
+    else if (HandlesIsland(sid)) {
+        if (pool_.Edition()!=OriginalEdition::Patch1078 || (flags&1U)) { const auto selected=islandPrefix_;if (!selected) throw std::logic_error("섬 선택 접두 미연결");selected(sid,flags); } // 현재 콜백이 연결을 반납해도 복사한 callable은 호출 끝까지 유지한다.
+    }
     // 표면 칸 접두가 만든 받침/종유석의 중첩 postPop을 마친 뒤 자기 공통 장부를 갱신한다.
-    else if (HandlesSurface(sid)) surfacePrefix_(sid,flags);
+    else if (HandlesSurface(sid)) {
+        if (pool_.Edition()!=OriginalEdition::Patch1078 || (flags&1U)) { const auto selected=surfacePrefix_;if (!selected) throw std::logic_error("표면 선택 접두 미연결");selected(sid,flags); }
+    }
     // 보호막의 두 Regular 예약을 마친 뒤 자기 공통 장부/깊이를 한 번 처리한다.
     else if (HandlesForcefield(sid)) forcefieldPostPop_->Prefix(sid,flags);
     // 원본4429f0은 flags bit0에서만12를 만들고 이어 공통4b0d30으로 내려간다.

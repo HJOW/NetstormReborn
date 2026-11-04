@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**861 섬·표면 현재 접두:**실제 VT/선택 장치·현재 로딩/프레임/TYPE/좌표·필수 검색/방향/H 누락 진단 복귀·같은 World 받침 상세/TypeWas 읽기를 연결했다. 집중 고유63개(새20) 최종 실패0·최초 기존3개/3단언은 검사2파일만 교정·기존 표면1656/연결10800행·보호2761개 불변이다. MP 수신 writer와 Teleport 다른 생성 함수·다른 현재 가상20/전체 Pop은862 이후이며 checking12·완료부모36/부분3 유지다. [861 기록](cpp-island-surface-current-20261104.md).
+
 **860 Teleport 현재 생성:**실제 VT/최초 현재 TYPE+1d0 선택과 두 입자 생성 함수·표시/도착의 공유 TYPE를 연결했다. 고유50개(새16) 최종 실패0·최초 검사 도우미/좌표 준비 오류만 교정·제품 추가 수정0·Streak8/Fiery62/도착306행·보호2761개 불변이다. 다른 유효 생성 함수 분배와 섬/표면/전체 Pop은861 이후이며 checking12·완료부모36/부분3 유지다. [860 기록](cpp-teleport-current-constructor-20261104.md).
 
 **859 Dude 현재 부모/생성:**물리 QA/현재 Bridge 통지·signed population/현재 프레임과 생성 관문을 같은 Session에 연결했다. 집중95개(새19) 첫 실패0·Dude288행·보호2761개 불변이다. 명시 Validate/CD 계약과 실제 Frame::Set 호출/Frame·Process 틱을 구별한다. checking12·완료부모36/부분3 유지이고 섬/표면/Teleport 등은860 이후다. [859 기록](cpp-dude-current-parent-20261104.md).

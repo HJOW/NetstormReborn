@@ -3426,3 +3426,7 @@ target_sources(netstorm_pop_context_tests PRIVATE BuriedPostPopTests.cpp RunePos
 target_sources(netstorm_pop_context_tests PRIVATE PlayerWorldTests.cpp) # Player 현재 부모와 기존 양판본 원문/실제 Host만 선택 실행한다.
 target_sources(netstorm_pop_context_tests PRIVATE DudeSpawnTests.cpp) # Dude 현재 부모/생성과 기존 양판본 원문만 선택 실행한다.
 target_sources(netstorm_pop_context_tests PRIVATE FieryTailLifetimeTests.cpp ConstructionArrivalTests.cpp) # Teleport 현재 TYPE와 기존 생성자/도착 원문만 선택 실행한다.
+
+# 섬/표면의 현재 접두와 기존 세 판본의 받침 원문만 게임 없이 집중 대조한다(861).
+target_sources(netstorm_tests PRIVATE IslandCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE IslandCurrentTests.cpp IslandPostPopTests.cpp BridgeConnectTests.cpp)
