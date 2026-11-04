@@ -49,6 +49,8 @@ public:
     // 원본 context의 생성 요청 소유자/대상 지역이다. 후속 wrapper는 현재 값을 읽어야 한다.
     std::uint32_t Owner() const;
     std::int32_t Region() const;
+    // 청크 getter/첫 시드의 패치 진단과 CD의 무진단 경계를 선택한다.
+    OriginalEdition Edition() const;
 private:
     // 손상 범위의 배열 밖 읽기를 정상 지도 접근으로 바꾸지 않는다.
     static std::size_t Index(std::int32_t x,std::int32_t y);

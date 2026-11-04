@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::o {
 namespace {
@@ -11,8 +12,65 @@ constexpr std::uint32_t kRawChunkSeedStep=0x10e3;
 constexpr std::int32_t kRawGrowthFailures=1000;
 }
 // 실제 조회 자료의 수명만 빌리며 constructor는 지도/난수를 변경하지 않는다.
-RawTerrainGrowth::RawTerrainGrowth(RawTerrainContext& context,const ChunkMap& chunks,const TerrainContextGlobals& globals)
-    :context_(context),chunks_(chunks),globals_(globals) {}
+RawTerrainGrowth::RawTerrainGrowth(RawTerrainContext& context,const ChunkMap& chunks,const TerrainContextGlobals& globals,
+    TerrainGrowthDiagnostics diagnostics)
+    :context_(context),chunks_(chunks),globals_(globals),diagnostics_(std::move(diagnostics)) {}
+// 일반 성장과 다른 첫 시드 경계에서만 원문 전체 진단 인자를 전달한다.
+void RawTerrainGrowth::Assert(std::string_view expression,std::string_view file,std::uint32_t line) const {
+    if (!diagnostics_.assertion) throw std::logic_error("초기 지형 시드 진단 장치 누락");
+    diagnostics_.assertion(expression,file,line);
+}
+// 첫 진단의 효과로 mode/청크가 바뀌어도 뒤의 검사와 getter는 현재 저장소를 다시 읽는다.
+const ChunkEntry& RawTerrainGrowth::SeedChunkAt(std::int32_t x,std::int32_t y) const {
+    if (context_.Edition()==OriginalEdition::Patch1078) {
+        if (!chunks_.Mode()) Assert("isValid()","\\Ns\\O\\Chunkmap.cpp",0xb7);
+        if (x<0 || y<0 || x>=chunks_.XLength() || y>=chunks_.YLength())
+            Assert("cc.x>=0 && cc.y>=0 && cc.x<xLen && cc.y<yLen","\\Ns\\O\\Chunkmap.cpp",0xb8);
+    }
+    return chunks_.At(x,y);
+}
+// CD만 noRegion을 진입 때 캐시한다. 패치는 각 getter의 효과 뒤 현재 전체 DWORD와 비교한다.
+std::uint32_t RawTerrainGrowth::FirstChunkSeed() const {
+    const auto cdNoRegion=globals_.noRegion;
+    // 원본 청크 범위는 Y행이 외부이며, 진단 복귀 뒤 right/bottom을 다시 읽는다.
+    for (auto y=context_.Chunks().top;y<context_.Chunks().bottom;++y)
+        // 현재 행의 left에서 시작하고 첫 비어 있지 않은 raw 청크만 반환한다.
+        for (auto x=context_.Chunks().left;x<context_.Chunks().right;++x) {
+            const auto& chunk=SeedChunkAt(x,y);
+            const auto noRegion=context_.Edition()==OriginalEdition::Patch1078 ? globals_.noRegion : cdNoRegion;
+            if (std::bit_cast<std::int8_t>(chunk.island)!=noRegion) return chunk.record[3];
+        }
+    if (context_.Edition()==OriginalEdition::Patch1078 && diagnostics_.checking)
+        Assert("0","\\Ns\\O\\Terrainbuilder.cpp",0x25f);
+    return 0x2333;
+}
+// limit<=0에서 시드도 그대로인 원문 range helper를 기존 양수 limit helper와 구별한다.
+std::int32_t RawTerrainGrowth::NextRange(std::uint32_t& seed,std::int32_t low,std::int32_t high) {
+    const auto width=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(high)-static_cast<std::uint32_t>(low));
+    if (width<1) return low;
+    return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(low)+static_cast<std::uint32_t>(Next(seed,static_cast<std::uint32_t>(width))));
+}
+// 일반 RunNormal에는 호출을 추가하지 않는다. 실제 군도 상위가 같은 context에서 호출하는 별도 몸체다.
+void RawTerrainGrowth::Scatter(std::int32_t count) {
+    auto seed=FirstChunkSeed()*0x5dU;auto remaining=static_cast<std::uint32_t>(count);
+    // 거부된 칸은 count를 줄이지 않는다. 원문에 없는 재시도 제한이나 중복 제거는 넣지 않는다.
+    while (remaining!=0) {
+        const auto& bounds=context_.Map().bounds;
+        const auto x=NextRange(seed,std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(bounds[0])+2U),
+            std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(bounds[2])-2U));
+        const auto y=NextRange(seed,std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(bounds[1])+2U),
+            std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(bounds[3])-2U));
+        const auto coordinate=[this](std::int32_t value) { // 패치 float32→ftol 하위DWORD와 CD 정수의 0방향 나눗셈이다.
+            if (context_.Edition()==OriginalEdition::Cd1072) return value/16;
+            const auto rounded=static_cast<std::int64_t>(static_cast<float>(value));
+            return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(rounded))/16;
+        };
+        const auto chunkX=coordinate(x),chunkY=coordinate(y);
+        const auto hasIsland=std::bit_cast<std::int8_t>(SeedChunkAt(chunkX,chunkY).island)!=globals_.noRegion;
+        if (hasIsland && SeedChunkAt(chunkX,chunkY).island!=0) continue;
+        const auto index=Index(x,y);context_.Codes()[index]='x';context_.Regions()[index]=0;--remaining;
+    }
+}
 // 현재 배열 바깥의 원본 손상 접근을 정상 칸으로 바꾸지 않는다.
 std::size_t RawTerrainGrowth::Index(std::int32_t x,std::int32_t y) {
     if (x<0 || y<0 || x>=256 || y>=256) throw std::out_of_range("초기 성장 지도 범위 오류");
