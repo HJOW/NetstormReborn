@@ -816,10 +816,10 @@ struct RawCampaignSession::Impl {
     RawPathDataHeader pathHeader; // 실제 경로 writer가 사용하는 현재 프로토콜 header다.
     std::array<std::uint8_t,16384> pathBuffer{}; // 원본 경로 직렬화의 현재 송신 버퍼다.
     std::unique_ptr<RawBattleBroadcast> broadcast; // 동일 Player9와 실제 현재 연결 표를 사용하는 송신 분배기다.
-    FormPacketHeaders formHeaders; // 원본 현재 감시/내용물/삭제 헤더 전역이다.
-    FormDeletionStamp deletionStamp; // 실제 삭제 writer가 한 번 소비하는 최근 명령 표식이다.
+    FormPacketHeaders& formHeaders{world.Storage()->GameAux()->SquidTransmission().forms}; // 원본 현재 감시/내용물/삭제 헤더 전역이다.
+    FormDeletionStamp& deletionStamp{world.Storage()->GameAux()->SquidTransmission().deletion}; // 실제 삭제 writer가 한 번 소비하는 최근 명령 표식이다.
     std::unique_ptr<RawFormPacket> formWriter; // 동일 Pool의 실제 가상+54/+58 직렬화 몸체다.
-    std::array<std::uint8_t,2048> formBuffer{}; // 감시/내용물/삭제 요청이 공유하는 원본 크기의 현재 송신 버퍼다.
+    std::array<std::uint8_t,2048>& formBuffer{world.Storage()->GameAux()->SquidTransmission().buffer}; // 감시/내용물/삭제 요청이 공유하는 원본 크기의 현재 송신 버퍼다.
     RawCampaignConstructionState constructionState; //실제 받침/로컬 수량 실행 상태이며 최근 이력만 더 긴 Client 장부를 빌린다.
     SquidPostPopList recentGeysers; // 00595094/98의 전용 최근5목록이며 전체 assetState.Geysers()와 분리한다.
     std::uint8_t geyserMapSize{}; // 실제0052f7e6 초기BYTE0이며 PlayerBounds가 현재 참조로 읽는다.
@@ -1350,6 +1350,7 @@ struct RawCampaignSession::Impl {
         assetEffects.postPop.sunFencePostPop=[this](Sid sid,std::uint32_t flags) { fencePostPop->PostPop(sid,flags); }; // 공간 쓰기 전에 전체 펜스 후처리를 조립한다.
         assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand},std::move(assetEffects));assetBindings->ActivatePostPop();
         RawWorldRuntimeHooks worldHooks;
+        worldHooks.squidPacket=services.formPacket; //일반Squid와Form은같은버퍼/현재방송분배기를사용한다.
         worldHooks.formTransmit=services.dependencyTransmit;
         FillMissing(worldHooks.formTransmit);
         worldHooks.assets=services.deletion;FillMissing(worldHooks.assets.selected);

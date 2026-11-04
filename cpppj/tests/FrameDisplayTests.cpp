@@ -1,5 +1,6 @@
 // 실제 프레임 훅·표시 계산·Renderer 변경 표와 공간 재등록을 같은 raw 풀로 검사한다.
 #include "RawSceneSupport.h"
+#include "TestSquidTransmission.h"
 #include "o/SquidFrameBinding.h"
 #include "o/SquidFactory.h"
 #include "client/SquidRenderer.h"
@@ -49,6 +50,7 @@ void Run(OriginalEdition edition,bool shadow) {
     SidPool pool(edition,32768,true);auto types=Types(edition,shadow);auto shapes=Shapes(types.size(),shadow);Sink sink(pool);
     SquidDisplay display(edition,types,shapes,sink,{0,0,65536,{0,0,640,480}});SquidHash hash;std::vector<std::uint8_t> spots(65536);
     SquidUnpop unpop(pool,hash,spots,&display);SquidPop pop(pool,hash,spots,&display);SquidFactory factory(pool,types,false,&unpop);
+    netstorm::test::BindNoPeerSquidTransmission(pop,pool,types); //같은서버입력의실제writer를공급하며픽셀/프레임기대값은유지한다.
     const Sid object=factory.Create(kType);sink.object=object;
     if (shadow) pool.AllocatedBytes(object)[patch ? 40 : 35]|=4;
     std::vector<std::uint8_t> pixels(640*480);sink.Flush(pixels,7);
@@ -96,6 +98,7 @@ TEST_CASE(frame_display_binding_rejects_bad_current_frame_and_missing_shape) {
     const auto edition=OriginalEdition::Patch1078;SidPool pool(edition,32768,true);auto types=Types(edition);auto shapes=Shapes(types.size());Sink sink(pool);
     SquidDisplay display(edition,types,shapes,sink,{0,0,65536,{0,0,640,480}});SquidHash hash;std::vector<std::uint8_t> spots(65536);
     SquidUnpop unpop(pool,hash,spots,&display);SquidPop pop(pool,hash,spots,&display);SquidFactory factory(pool,types,false,&unpop);
+    netstorm::test::BindNoPeerSquidTransmission(pop,pool,types); //같은서버입력의실제writer를공급하며픽셀/프레임기대값은유지한다.
     const Sid sid=factory.Create(kType);sink.object=sid;Put(pool.AllocatedBytes(sid),36,4);
     SquidFrame frame(pool,types,MakeSquidFrameHooks(pool,types,display,unpop,pop));const auto before=Hex(pool.Slot(sid));
     CHECK(Throws([&] { frame.Set(sid,0,0); }) && Hex(pool.Slot(sid))==before && sink.notices.empty());

@@ -84,6 +84,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     // pop: 객체를 공간 지도에 등록하는 Pop 처리기.
     std::unique_ptr<o::SquidPop> pop;/* factory: 타입에 맞는 객체를 생성하는 처리기. */ std::unique_ptr<o::SquidFactory> factory;
     // building: 일반 건물의 공간 등록·해제를 반영하는 처리기 또는 상태.
+    std::unique_ptr<o::RawSquidTransmission> squidTransmission; //같은GameAux의공통버퍼/압축전역을쓰는장기writer다.
     std::unique_ptr<o::RawBuildingSpace> building;
     // frame: 사용할 그림 프레임 또는 프레임 처리 자료.
     std::unique_ptr<o::SquidFrame> frame;/* owner: 소유 플레이어 번호 또는 소유권 처리 자료. */ std::unique_ptr<o::SquidOwner> owner;
@@ -147,6 +148,17 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         pop->SetBuildingSpace(building.get());unpop->SetBuildingSpace(building.get());
         factory=std::make_unique<o::SquidFactory>(pool,types,false,unpop.get());
         factory->BindDiagnostics({types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); },[owner=storage.get()](auto text) { owner->RecordAssertionDetail(text); }}); // Take의 상세/정상 복귀와 공통 postTake가 같은 현재 TYPE·Client owner를 빌린다.
+        if (edition==o::OriginalEdition::Patch1078) {
+            o::RawSquidTransmissionHooks transmission;
+            transmission.type=[owner=storage.get()](std::uint8_t number)->const o::RiftTypeRecord& { return owner->types.at(number); };
+            transmission.defaultType=[this] { return links.bridgeType; };
+            transmission.maxHp=[owner=storage.get()](std::uint8_t number) { const auto hp=owner->types.at(number).maxHitPoints;return owner->GameAux()->PriestQuarterHp() && number==158 ? hp/4 : hp; }; //0049fce0의현재사제쿼터조건이며이미HAS_HP인선택분기만호출한다.
+            transmission.broadcast=[this](auto packet) { if (!runtimeBound) return;if (!runtime.squidPacket) throw std::logic_error("현재월드의Squid방송장치미연결");const auto send=runtime.squidPacket;send(packet); }; //독립World는연결표가없고실제Session은동일broadcast를설치한다.
+            transmission.trace=[owner=storage.get()](auto level,auto text) { owner->TraceGraph(level,text); };
+            transmission.assertion=[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); };
+            squidTransmission=std::make_unique<o::RawSquidTransmission>(pool,storage->GameAux()->SquidTransmission(),std::move(transmission));
+            pop->BindTransmission([this](o::Sid sid,std::uint32_t flags) { squidTransmission->Pop(sid,flags); });
+        }
         factory->BindWeakenedMana(storage->GameAux()->PriestQuarterHp()); // State 직접 쓰기와 첫 객체 생성이 같은 현재005ca8f0을 읽는다.
         frame=std::make_unique<o::SquidFrame>(pool,types,o::MakeSquidFrameHooks(pool,types,*display,*unpop,*pop));
         owner=std::make_unique<o::SquidOwner>(pool,types,bookkeeping,ownerMode);

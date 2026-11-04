@@ -199,8 +199,8 @@ TEST_CASE(SquidPostPop_UnsupportedEffectsAndCorruptList_KeepEarlierSpaceWrites) 
     pool.AllocatedBytes(sid)[34]=1; o::SquidPostPopState state; state.providers.entries.resize(1); state.providers.count=2;
     o::SquidPostPop post(pool,types,state); o::SquidHash hash; std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells);
     o::SquidPop pop(pool,hash,spots,nullptr,&post);
-    const auto prepare=[&] { auto raw=pool.AllocatedBytes(sid);raw[11]=4;raw[40]=0;hash.Reset(); }; // 각 실패를 독립 void 입력에서 시작한다.
-    const auto partial=[&] { const auto raw=pool.Slot(sid);CHECK(raw[22]==0x40 && raw[23]==1 && raw[24]==0xdc && raw[25]==0);CHECK(raw[11]==0 && (raw[40]&0x80U) && hash.Bucket(1,20,20)==sid.value && state.depth==0); }; // 후처리 진입 전에 완료한 공간/firstPop/void 변경을 확인한다.
+    const auto prepare=[&] { auto raw=pool.AllocatedBytes(sid);raw[11]=4;raw[40]=0;hash.Reset();state.depth=0; }; // 각 실패를 독립 void 입력에서 시작한다.
+    const auto partial=[&] { const auto raw=pool.Slot(sid);CHECK(raw[22]==0x40 && raw[23]==1 && raw[24]==0xdc && raw[25]==0);CHECK(raw[11]==0 && (raw[40]&0x80U) && hash.Bucket(1,20,20)==sid.value && state.depth==1); }; // 후처리 진입 전에 완료한 공간/firstPop/void 변경을 확인한다.
     CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); }));partial();
     prepare();state.providers.count=0;state.aiAttached[1]=true;
     CHECK(Throws([&]{ pop.Pop(sid,types[74],1,1,20,20); }));partial();CHECK(state.totalCost==0);
@@ -264,12 +264,12 @@ TEST_CASE(SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon) {
         o::SquidHash hash; std::vector<std::uint8_t> spots(o::kWorldCells*o::kWorldCells);
         o::SquidPostPop missing(pool,types,state); o::SquidPop guarded(pool,hash,spots,nullptr,&missing);
         const auto initial=std::vector(pool.Slot(sid).begin(),pool.Slot(sid).end());const auto before=Hex(initial);
-        const auto prepare=[&] { auto raw=pool.AllocatedBytes(sid);std::copy(initial.begin(),initial.end(),raw.begin());hash.Reset();std::fill(spots.begin(),spots.end(),std::uint8_t{}); }; // 서로 독립인 실패/성공 호출의 초기 입력만 복원한다.
+        const auto prepare=[&] { auto raw=pool.AllocatedBytes(sid);std::copy(initial.begin(),initial.end(),raw.begin());hash.Reset();std::fill(spots.begin(),spots.end(),std::uint8_t{});state.depth=0; }; // 서로 독립인 실패/성공 호출의 초기 입력만 복원한다.
         const auto partial=[&](std::span<const std::uint8_t> input,bool activated) { auto expected=std::vector(input.begin(),input.end());Put(expected,14,std::bit_cast<std::uint32_t>(20.0F));Put(expected,18,std::bit_cast<std::uint32_t>(20.0F));Put(expected,22,320,2);Put(expected,24,220,2);Put(expected,4,0,2);expected[33]=0;if (activated) { expected[40]|=0x80;expected[11]&=0xfb; }return Hex(expected); }; // 원문에서 실패 전에 완료한 고정 입력20,20의 정확한 raw 저장 폭을 확인한다.
         CHECK(Throws([&] { guarded.Pop(sid,types[82],1,1,20,20); }));
         if (edition==o::OriginalEdition::Patch1078) {
             CHECK(Hex(pool.Slot(sid))==partial(initial,true) && hash.Bucket(0,20,20)==sid.value);
-            CHECK(spots[20*256+20]==4 && std::count_if(spots.begin(),spots.end(),[](auto bit) { return bit!=0; })==1 && state.depth==0);
+            CHECK(spots[20*256+20]==4 && std::count_if(spots.begin(),spots.end(),[](auto bit) { return bit!=0; })==1 && state.depth==1);
         } else {
             CHECK(Hex(pool.Slot(sid))==before && hash.Bucket(0,20,20)==0);
             CHECK(std::all_of(spots.begin(),spots.end(),[](auto bit) { return bit==0; }));

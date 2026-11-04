@@ -1,5 +1,6 @@
 // 게임 보조 전역의 실제 폭만 소유하며 Runtime/목록/Host를 포함하지 않는다.
 #pragma once
+#include "o/RawSquidTransmission.h" // 같은Client의공통버퍼/압축전역을World/Session과공유한다.
 #include <bit>
 #include <array>
 #include <cstdint>
@@ -56,6 +57,8 @@ public:
     const std::uint32_t& SubscriberMarker() const { return subscriberMarker_; } // 다른 Subscriber ID와 합치지 않는다.
     bool& PriestQuarterHp() { return priestQuarterHp_; } //005ca8f0의 같은 현재 0/1을 생성·HP·연소와 State 정리가 공유한다.
     const bool& PriestQuarterHp() const { return priestQuarterHp_; } // Session을 교체하거나 Frame을 기다리지 않고 현재값을 읽는다.
+    RawSquidTransmissionState& SquidTransmission() { return squidTransmission_; } //005c7c50/00531850/0054d8e4등의현재전송물리다.
+    const RawSquidTransmissionState& SquidTransmission() const { return squidTransmission_; } //상태조회는같은물리를읽으며세션교체로지우지않는다.
     void ResetForGeneralWorld() { // 기존 지역 Runtime의 fresh 입력만 호환하며 Native cleanup 전체가 아니다.
         ordinaryGeysers_=0;totalCost_=0;resourcePool_=0;refundPercent_=25;allowAnyCapture_=0;archipelago_=0;lostX_=0.0F;lostY_=0.0F;geyserType_=122;priestQuarterHp_=false;
     }
@@ -63,6 +66,7 @@ public:
         lostY_=std::bit_cast<float>(0xc61c4000U);lostX_=std::bit_cast<float>(0xc61c4000U);
     }
 private:
+    RawSquidTransmissionState squidTransmission_; //최초한번의PE/BSS초기값이며일반월드fresh와별개로유지한다.
     bool priestQuarterHp_{}; // 원문 최초 BSS0이며 일반 fresh의 기존0만 호환한다. prepared와 반납은 현재값을 보존한다.
     std::uint32_t ordinaryGeysers_{},geyserFrameFlag_{},savedGeyserCount_{}; // 실제 세 BSS DWORD다.
     double geyserDeadline_{},cleanupDeadline_{},secondaryGeyserDeadline_{},scheduledDrawDeadline_{}; // 실제 서로 다른 네 BSS double이다.

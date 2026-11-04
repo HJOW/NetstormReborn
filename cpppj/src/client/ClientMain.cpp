@@ -207,7 +207,7 @@ Client::Client(ClientOptions options)
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("highPriorityValue",highPriority_);InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretMonitorOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 우선순위/회전 방향/입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { configuration_.ReadInt("cs",gameplayGlobals_->GameAux()->SquidTransmission().compress);if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("highPriorityValue",highPriority_);InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretMonitorOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 우선순위/회전 방향/입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -611,6 +611,7 @@ void Client::InterpretLanguageOptions() {
 }
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(네트워크 등)의 전체 부모 순서는 후속이다.
 void Client::InterpretOptions() {
+    configuration_.ReadInt("cs",gameplayGlobals_->GameAux()->SquidTransmission().compress); //00531850의현재값을같은writer와공유하며누락설정은보존한다.
     InterpretMonitorOptions(); // 최초 설정 적재도 같은 monitor/alert 현재값을 읽는다.
     configuration_.ReadInt("tracelevel",trace_->log.level); // 원문00542658의 같은 장기 필터를 읽으며 덤프 부모의 임시30과 구별한다.
     rendererFrame_->ReadOptions(); //같은 원문 showSoftAsserts의 현재값을 실제 Renderer 진단 관문에 적용한다.

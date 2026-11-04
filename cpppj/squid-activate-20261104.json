@@ -1,0 +1,740 @@
+{
+  "unit": 843,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCppCommit": "f60de2a8 / 20261104-26 CP",
+  "exeSha256": "d67f6ad93ae703e1c40a80d1b8fc0786193d57bcb21c62be4ef634aa8844b71f",
+  "exeBytes": 10510848,
+  "sourceSha256": {
+    "cpppj/src/o/RawSquidActivate.h": "e6cd53dd3327f35c97ec6de4ffc0cec9db9bc797a566e975020610378be12987",
+    "cpppj/src/o/RawSquidActivate.cpp": "fa485f272e253d55f76e08a47d7fa944e72fc42a7eeb483a74f273ae607e83b1",
+    "cpppj/src/o/RawSquidTransmission.h": "12d8f5f91f733e3c617da28d95b2e132964a759776c67599888e16a90c4b58f7",
+    "cpppj/src/o/RawSquidTransmission.cpp": "63eed7f16fa8e72f6395ef051acd565327c7d90bde07c9e7ac775c36c94cdc65",
+    "cpppj/src/o/RawGameAuxState.h": "b9bcfe8154ab849f8cfb07850f38023c5036eb66988d83b0f5ee14dca9515555",
+    "cpppj/src/o/SquidPostPop.h": "ee5ab86f458e98f15406973735a12ae707bcc0b1ddcc3102b9996e5c1e78207f",
+    "cpppj/src/o/SquidPostPop.cpp": "0786396f362cb82e1515f918e1c5810be8f9fbfb410fb5161b77a716ce556496",
+    "cpppj/src/o/SquidPop.h": "6f95a20cb56d1a3027aca4bf492c0ac933433e88ad664a44b7cd08e09e58fa26",
+    "cpppj/src/o/SquidPop.cpp": "7053e3989f02cea5b73d0d7fa0be24616f08f84fa8f1e99d3580546a4345bb50",
+    "cpppj/src/o/CMakeLists.txt": "63836f004a28e9202956461bcb770c95a7e0251b7f1842f7b876c28f0a94314d",
+    "cpppj/src/client/RawSurfaceWorld.h": "0a8bdf9e3527e6c10df28755224ca012c4250b086254e75719b9cbdcac7945b5",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "8556053e0d9761dc5bc4b3e916e505ad445bb98d5687fb382593216f67ac6439",
+    "cpppj/src/client/RawCampaignSession.cpp": "5063240adcb8c7a9a67211d5b3688419bd77e00052d44d3baaf1e912cfcd9b2c",
+    "cpppj/src/client/ClientMain.cpp": "3ee9de918f777186862bdf5a383c429073ea5f7c293ba86074d389a82018d38a",
+    "cpppj/tests/SquidActivateTests.cpp": "45a19e53ba32e4d88cd8155cbe7bbf27c4e3ac248410cf6bbb7c518c68b5cf73",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "01a0d0459de3ba5b8a7fa693cb4876c65a70c04efd0c36cc22ac8c9cd12a4b27",
+    "cpppj/tests/PostPopTests.cpp": "f8d90162c4e4d307c5c63a24d502f2d07b3773b6c1dfdd79ce8175be47175863",
+    "cpppj/tests/CMakeLists.txt": "1a39867043a48517ec669f06959d0d8c7efad561a7c0b48b33385e74bcac6747",
+    "cpppj/tests/FrameDisplayTests.cpp": "9365fd750e42f60cb4e1a9a1751ccb1a2fe9118e617310b817faf55f0981a4b9",
+    "cpppj/tests/SetFrameTests.cpp": "f27b9dd3d5cbd8feb9db8e97f995f31438d95894ffa04e8f7b2ae71cbab3cb03",
+    "cpppj/tests/TestSquidTransmission.h": "8d02c71204bf0355b3f158299d458571026a10935bb8b6fec617e76848dabae1"
+  },
+  "firstCompiledSourceSha256": {
+    "cpppj/src/o/RawSquidActivate.h": "e6cd53dd3327f35c97ec6de4ffc0cec9db9bc797a566e975020610378be12987",
+    "cpppj/src/o/RawSquidActivate.cpp": "fa485f272e253d55f76e08a47d7fa944e72fc42a7eeb483a74f273ae607e83b1",
+    "cpppj/src/o/RawSquidTransmission.h": "b1fa820213bd4d4c81690c5d88c797e3b9b7f5e39c1179507ccacdd5fa4b2d77",
+    "cpppj/src/o/RawSquidTransmission.cpp": "bff11e9cfa5133f88cebb895d5ee0fff9e8349ff2fdfa400c29ad874669a37d9",
+    "cpppj/src/o/RawGameAuxState.h": "b9bcfe8154ab849f8cfb07850f38023c5036eb66988d83b0f5ee14dca9515555",
+    "cpppj/src/o/SquidPostPop.h": "ee5ab86f458e98f15406973735a12ae707bcc0b1ddcc3102b9996e5c1e78207f",
+    "cpppj/src/o/SquidPostPop.cpp": "0786396f362cb82e1515f918e1c5810be8f9fbfb410fb5161b77a716ce556496",
+    "cpppj/src/o/SquidPop.h": "6f95a20cb56d1a3027aca4bf492c0ac933433e88ad664a44b7cd08e09e58fa26",
+    "cpppj/src/o/SquidPop.cpp": "7053e3989f02cea5b73d0d7fa0be24616f08f84fa8f1e99d3580546a4345bb50",
+    "cpppj/src/o/CMakeLists.txt": "63836f004a28e9202956461bcb770c95a7e0251b7f1842f7b876c28f0a94314d",
+    "cpppj/src/client/RawSurfaceWorld.h": "0a8bdf9e3527e6c10df28755224ca012c4250b086254e75719b9cbdcac7945b5",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "8556053e0d9761dc5bc4b3e916e505ad445bb98d5687fb382593216f67ac6439",
+    "cpppj/src/client/RawCampaignSession.cpp": "5063240adcb8c7a9a67211d5b3688419bd77e00052d44d3baaf1e912cfcd9b2c",
+    "cpppj/src/client/ClientMain.cpp": "3ee9de918f777186862bdf5a383c429073ea5f7c293ba86074d389a82018d38a",
+    "cpppj/tests/SquidActivateTests.cpp": "45a19e53ba32e4d88cd8155cbe7bbf27c4e3ac248410cf6bbb7c518c68b5cf73",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "01a0d0459de3ba5b8a7fa693cb4876c65a70c04efd0c36cc22ac8c9cd12a4b27",
+    "cpppj/tests/PostPopTests.cpp": "f8d90162c4e4d307c5c63a24d502f2d07b3773b6c1dfdd79ce8175be47175863",
+    "cpppj/tests/CMakeLists.txt": "1a39867043a48517ec669f06959d0d8c7efad561a7c0b48b33385e74bcac6747"
+  },
+  "frameFixtureWiringBeforeFirstTest": {
+    "sites": 3,
+    "files": [
+      "cpppj/tests/FrameDisplayTests.cpp",
+      "cpppj/tests/SetFrameTests.cpp",
+      "cpppj/tests/TestSquidTransmission.h"
+    ],
+    "inputAndExpectedChanges": 0,
+    "actualWriterAndExplicitNullPeerTable": true,
+    "originalSourceSha256": {
+      "cpppj/tests/FrameDisplayTests.cpp": "0aec60168eb918bdb26035cdeae48932ff6956ec06a2a54304a4143babdef816",
+      "cpppj/tests/SetFrameTests.cpp": "726e1abc6552843c5d29176debdfc9d21fe2ccb1e95a698bc62e71e68b6ff26b"
+    }
+  },
+  "scope": [
+    "004ac560의void/현재권한/SID별플래그/전송전후상태/현재깊이와392진단복귀",
+    "실제World/Session과가상+20의같은깊이/Client진단소유자",
+    "004ad170의35BYTE/00432fe0압축과실제양수방송분배연결",
+    "일반Squid/Form의같은장기2048BYTE버퍼/현재헤더/삭제표식/압축설정/owner캐시/누적"
+  ],
+  "originalEntries": {
+    "activate": "004ac560",
+    "transmitPop": "004ac260",
+    "ordinaryWriter": "004ad170",
+    "emptyWriter": "00455ae0",
+    "encoder": "00432fe0",
+    "encoderField": "00432a10",
+    "broadcast": "004e2e30"
+  },
+  "staticWriterProof": {
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tables": 83,
+    "commonWriter": "004ad170",
+    "commonWriterTables": 82,
+    "emptyWriter": "00455ae0",
+    "emptyWriterTable": "005092d0",
+    "commonUncompressedBytes": 35,
+    "commonDeclaredLength": 27,
+    "compressedDefault": 1,
+    "configKey": "cs",
+    "decompileListMissing": [
+      "004ad170"
+    ],
+    "staticPreparationCorrections": [
+      "자동목록에서004ad170을찾지못해정적추출중단",
+      "누락함수의0반환가정을PE에서기각하고실제35BYTE/압축호출복원",
+      "첫빌드뒤실행검사전에압축선언길이를원래DWORD폭으로보강;고정update선언길이는WORD유지"
+    ],
+    "newCpuExecutions": 0,
+    "compressedLengthBits": 32,
+    "fixedLengthBits": 16
+  },
+  "staticVtableWriters": {
+    "00501dd0": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00501ea0": {
+      "20": "0041c150",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502370": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502448": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502510": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005025d8": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005026a0": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502778": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502840": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502908": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005029d0": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502aa8": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502b70": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502c38": {
+      "20": "0041f870",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502cf0": {
+      "20": "0041f920",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502db0": {
+      "20": "0041fab0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502e68": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502f30": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00502ff8": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005030c0": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00503188": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00503360": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005034c8": {
+      "20": "00422150",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00503d80": {
+      "20": "00427720",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00503e50": {
+      "20": "00427720",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00503f20": {
+      "20": "0042abb0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00503ff0": {
+      "20": "0042abb0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005040c0": {
+      "20": "0042ac90",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00504198": {
+      "20": "0042aed0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00506d98": {
+      "20": "004421c0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00506e50": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00506f08": {
+      "20": "004423b0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005070c0": {
+      "20": "004429f0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005075d8": {
+      "20": "00448930",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005076b8": {
+      "20": "00448ad0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00507770": {
+      "20": "00448d20",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00507950": {
+      "20": "00449320",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00508cc8": {
+      "20": "00450cd0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00509148": {
+      "20": "004538f0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00509210": {
+      "20": "004557c0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005092d0": {
+      "20": "004b0d30",
+      "54": "00455ae0",
+      "58": "004ac340"
+    },
+    "00509388": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00509470": {
+      "20": "00457560",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005096a0": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00509758": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00509810": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00509930": {
+      "20": "0045ec50",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005099e8": {
+      "20": "0045ed10",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00509aa0": {
+      "20": "0045edf0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00509b98": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050a050": {
+      "20": "0045e810",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050a1e8": {
+      "20": "0045ef30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050a388": {
+      "20": "0045fac0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050a748": {
+      "20": "00462170",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050a820": {
+      "20": "0044bf80",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050a8e8": {
+      "20": "0044bf80",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050b570": {
+      "20": "004694b0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050b6e8": {
+      "20": "0046a520",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050b7c0": {
+      "20": "0046a600",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050b888": {
+      "20": "0046a810",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050b9b8": {
+      "20": "0046aca0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050bad0": {
+      "20": "0046aca0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050c3b0": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050c9f0": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050cc08": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050da88": {
+      "20": "004852e0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050db78": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050dc30": {
+      "20": "00484f90",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050e568": {
+      "20": "00427720",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050e668": {
+      "20": "0048c080",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050e738": {
+      "20": "0048c7a0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050e888": {
+      "20": "0048ead0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050e940": {
+      "20": "0048eda0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050ea08": {
+      "20": "0048eda0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050ead0": {
+      "20": "0048eda0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050eb98": {
+      "20": "004b0d30",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050ee08": {
+      "20": "004905d0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050f210": {
+      "20": "004950f0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "0050f540": {
+      "20": "0049a2b0",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005196f0": {
+      "20": "004dce40",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "005197a8": {
+      "20": "004dd020",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00519860": {
+      "20": "004dd020",
+      "54": "004ad170",
+      "58": "004ac340"
+    },
+    "00519918": {
+      "20": "004dd1f0",
+      "54": "004ad170",
+      "58": "004ac340"
+    }
+  },
+  "staticWidthReviewAfterFirstBuild": {
+    "changedSources": [
+      "cpppj/src/o/RawSquidTransmission.h",
+      "cpppj/src/o/RawSquidTransmission.cpp"
+    ],
+    "fixedHeaderLengthBits": 16,
+    "compressedHeaderLengthBits": 32,
+    "runtimeTestsBeforeReview": 0
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-843/build-first.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "5b4f08b9f66dc397bf4d0f732c7467829325c6a798279744cd88fd6838375d2a"
+    },
+    {
+      "log": "extracted/cpp-resume-843/build-final.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "6097784f639bfd2882d3eede2306a15332d141dc4c3978764f29f3619c5d0895"
+    },
+    {
+      "log": "extracted/cpp-resume-843/build-tests.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "3d6c89e7c81ba65e8ed995ecebaf6a08ba1cb47a4689d1920799dfb9771e3a41"
+    }
+  ],
+  "testExecutions": [
+    {
+      "target": "netstorm_pop_context_tests",
+      "filter": "SquidActivate_",
+      "cases": 10,
+      "expectedCases": 10,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-activate-first.log",
+      "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+    },
+    {
+      "target": "netstorm_menu_session_tests",
+      "filter": "SquidActivate_",
+      "cases": 1,
+      "expectedCases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-activate-session-first.log",
+      "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+    },
+    {
+      "target": "netstorm_pop_context_tests",
+      "filter": "SquidPopParent_",
+      "cases": 14,
+      "expectedCases": 14,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-pop-parent.log",
+      "sha256": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27"
+    },
+    {
+      "target": "netstorm_menu_session_tests",
+      "filter": "SquidPopParent_",
+      "cases": 1,
+      "expectedCases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-pop-session.log",
+      "sha256": "1b833eddadccebfdf64429581e27918e11899c4cd5570c9d600e84b1b2fb0628"
+    },
+    {
+      "target": "netstorm_pop_context_tests",
+      "filter": "SquidPop_",
+      "cases": 3,
+      "expectedCases": 3,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-pop-fixtures.log",
+      "sha256": "f31bde755e6d76ecc4a4766e16f4145416c3b55edb2a395853389f1e27d98f46"
+    },
+    {
+      "target": "netstorm_pop_context_tests",
+      "filter": "SquidSpatial_Coordinates_",
+      "cases": 1,
+      "expectedCases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-coordinate.log",
+      "sha256": "3a1f05f247f78409fcaf2608aadfa12321376d4f24b9ea17348eb8f099af081e"
+    },
+    {
+      "target": "netstorm_pop_context_tests",
+      "filter": "BuildingSpace_",
+      "cases": 2,
+      "expectedCases": 2,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-building-fixtures.log",
+      "sha256": "d6044d09bdcbc8732a0337681cf68081a896a6fc81c9b67dc9ded9199aad4927"
+    },
+    {
+      "target": "netstorm_pop_context_tests",
+      "filter": "SquidPostPop_",
+      "cases": 6,
+      "expectedCases": 6,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-post-pop.log",
+      "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+    },
+    {
+      "target": "netstorm_pop_context_tests",
+      "filter": "frame_display_",
+      "cases": 5,
+      "expectedCases": 5,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-frame-display.log",
+      "sha256": "c365548d66b11990fca7873428250267355f9e6fdfaf8c646fb6f8eede47970b"
+    },
+    {
+      "target": "netstorm_pop_context_tests",
+      "filter": "set_frame_",
+      "cases": 5,
+      "expectedCases": 5,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-set-frame.log",
+      "sha256": "0a45f97a0eeb88a7c1921c00d6cc901668d0e232bc9e654a84a80feadfcd5961"
+    },
+    {
+      "target": "netstorm_menu_session_tests",
+      "filter": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "cases": 1,
+      "expectedCases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-menu-open.log",
+      "sha256": "ad5f05af8504a5cb3d57f544c29dca3dafecb8cb38a660ccfe0bd10deadce4da"
+    },
+    {
+      "target": "netstorm_menu_session_tests",
+      "filter": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+      "cases": 1,
+      "expectedCases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-menu-refund.log",
+      "sha256": "feb075621e686b73e66bf794e6c20e552978f87beba247aec77e371f13c7205f"
+    },
+    {
+      "target": "netstorm_menu_session_tests",
+      "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "cases": 1,
+      "expectedCases": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "passed": true,
+      "log": "extracted/cpp-resume-843/test-menu-form.log",
+      "sha256": "1271d58e49bfc91ba07e8db3c0053b63cff8c77947139c038d91cbcda83c0a40"
+    }
+  ],
+  "testCases": 51,
+  "newTestCases": 11,
+  "firstTestFailures": 0,
+  "existingFixtures": {
+    "popLifecycleSteps": 4600,
+    "popVtableRows": 151,
+    "buildingSequences": 128,
+    "buildingStepsMinimum": 240,
+    "setFrameEditions": 3
+  },
+  "protected": {
+    "files": 2759,
+    "fixtures": 939,
+    "unchanged": true,
+    "afterLog": "extracted/cpp-resume-843/protected-after.json"
+  },
+  "newCpuExecutions": 0,
+  "newFixtures": 0,
+  "gameGuiExecutions": 0,
+  "newMultiplayerTests": 0,
+  "newDedicatedPacketTests": 0,
+  "communicationsTests": 0,
+  "packetValidationScope": "새패킷/MP/통신전용검사는0. 원문/PE정적대조와컴파일이며비멀티Session회귀중의일반호출을패킷바이트/통신검증으로세지않는다.",
+  "excluded": [
+    "실제포획/희생/특정적공격/승리",
+    "사용자직접확인",
+    "신규MP/패킷전용/통신",
+    "공중3종전용",
+    "물리/PCM/CD삽입재시도",
+    "전체71/CTest/34미션/ZIP반복"
+  ],
+  "remaining": [
+    "checking12=부모6+부분3+MP3 유지",
+    "00419850의상세/e1진단복귀·현재SHP와공통postPop의현재TYPE/나머지하위",
+    "전송의별도수신자/삭제선택·프로세스writer/수신decoder·재동기화부모와실제MP",
+    "객체메뉴/커서·Edit·State/파일·Windows한계·MP/4~8차"
+  ],
+  "rawDirectory": "extracted/cpp-resume-843",
+  "pushes": 0,
+  "dotnetWebChangesIncluded": false
+}

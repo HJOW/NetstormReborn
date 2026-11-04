@@ -727,3 +727,13 @@ TEST_CASE(SquidPopParent_ActualSessionLateFrameLookup) { // 실제 Session이 �
     CHECK(core.spots[point[1]*256+point[0]]==1 && raw[11]==4 && !(raw[40]&0x80U));
     CHECK(std::bit_cast<float>(std::uint32_t(raw[14])|(std::uint32_t(raw[15])<<8)|(std::uint32_t(raw[16])<<16)|(std::uint32_t(raw[17])<<24))==float(point[0]));
 }
+
+TEST_CASE(SquidActivate_ActualSessionUsesCurrentServiceAfterPostPop) { //Session이재연결한실제진단서비스와공통장부의현재깊이를확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make();RawCampaignSession* current{};Sid source{};std::uint32_t diagnoses{},previous{};bool ready{};
+    services.ai.assertion=[&](auto expression) { CHECK(ready && current && expression=="curPostPop == basePostPop");if (!ready || !current) throw std::logic_error("부모검사전의예상밖Session진단");auto core=current->Core();CHECK(core.bookkeeping.depth==8 && core.bookkeeping.GlobalCounts()[74]==previous+1);++diagnoses;core.bookkeeping.depth=2; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));current=&session;session.Load();auto core=session.Core();
+    auto& type=session.World().Storage()->types[74];type.flags1=type.flags2=0;type.footX=type.footY=1;source=core.factory.Create(74);core.pool.AllocatedBytes(source)[34]=1;
+    core.postPop.BindPatchAiNotice([&](auto,Sid sid,bool) { CHECK(sid==source && core.bookkeeping.depth==3);core.bookkeeping.depth=9; });
+    previous=core.bookkeeping.GlobalCounts()[74];core.bookkeeping.depth=2;ready=true;session.World().Pop(source,30,40,0x2000040); //noGraph인기존비멀티일반객체등록만실행하며Frame/공격/의식은호출하지않는다.
+    CHECK(diagnoses==1 && core.bookkeeping.depth==2 && !(core.pool.Slot(source)[11]&4U));
+}

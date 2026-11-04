@@ -1,5 +1,6 @@
 // Squid 프레임 지정을 원본 기계어 기대값으로 검사하고 실제 표시 없는 Unpop/Pop에 이어 본다.
 #include "TestSupport.h"
+#include "TestSquidTransmission.h"
 #include "o/SquidFrame.h"
 #include "o/SquidFactory.h"
 #include "o/SquidPop.h"
@@ -229,6 +230,7 @@ TEST_CASE(set_frame_real_unpop_and_pop_move_hash_level_on_next_change) {
         const std::array<std::array<float,2>,3> sizes{{{1.0f,1.0f},{2.0f,1.5f},{5.0f,5.0f}}};
         SquidUnpop unpop(pool,hash,spots);SquidPop pop(pool,hash,spots);
         SquidFactory factory(pool,types,false,&unpop);
+        netstorm::test::BindNoPeerSquidTransmission(pop,pool,types); //초기Pop의기존서버입력을실제writer에연결한다.
         std::vector<std::string> order;
         SquidFrameHooks hooks;
         hooks.frameSize=[&](Sid,std::int32_t frame) { return sizes.at(static_cast<std::size_t>(frame)); };

@@ -155,17 +155,19 @@ public:
     bool HandlesFlyer(Sid sid) const; // 실제0050a388만 전체 몸체로 분배한다.
     void SetBalloonPostPop(const RawBalloonBody* postPop); //같은 풀의5040c0 전체 몸체이며 nullptr은 해제한다.
     bool HandlesBalloon(Sid sid) const; //다른 비행 파생을 일반 Carrier로 합치지 않는다.
-    // 이 인스턴스가 처리할 수 있는 파생 postPop인가. Pop이 공간 변경 전에 묻는다.
+    // 같은 현재 가상 표의 파생 몸체가 연결됐는지 확인한다. CD의 사전 검사도 이 조회를 사용한다.
     bool HandlesDerived(Sid sid) const;
-    // 공간 변경 전 연결된 그래프의 최종 Pop 상태·미복원 영역/AI/배치 효과·목록·비용을 확인한다.
+    // 선택된 가상 몸체에서 그래프·영역/AI/배치 효과·목록·비용의 현재 호스트 경계를 확인한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // 복원한 파생 몸체가 공통 함수를 직접 부르기 전에 검사한다. 가상 표의 전체 postPop 지원 여부만 제외한다.
     // Pop/Activate의 가상 분배는 계속 Validate를 사용한다.
     void ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // 선택한 raw Graph가 Pop과 같은 해시·spot을 읽는지 공간 변경 전에 확인한다.
     void ValidateSpace(const SquidHash& hash,std::span<const std::uint8_t> spots) const;
-    // 비전투 Activate에서 postPop을 호출하는 깊이 증가/감소를 보존한다. flags는 Pop이 정규화한다.
+    // 기존 독립 fixture의 후처리 호환 진입이다. 실제 PATCH Pop은 별도 Activate 부모가 깊이와 진단을 맡는다.
     void Activate(Sid sid,std::uint32_t flags);
+    void PostPopVirtual(Sid sid,std::uint32_t flags); //실제Activate부모가깊이를올린뒤현재가상+20을호출한다.
+    std::uint32_t& ActivationDepth(); //005c8488의같은현재DWORD를실제부모와공통/파생몸체가공유한다.
     // 004b0d30 ↔ CD 004ae180의 공통 몸체. 명시적인 직접 호출은 depth를 한 단계 감소시킨다.
     void PostPop(Sid sid,std::uint32_t flags);
     // 004b0d30 / CD 004ae180의 비가상 직접 호출이다. 파생 흐름의 일부만 복원한 호스트에서도 호출할 수 있다.
@@ -174,6 +176,7 @@ public:
     // Pop과 다른 풀을 연결하지 않도록 소유자를 제공한다.
     const SidPool& Pool() const;
 private:
+    void DispatchPostPop(Sid sid,std::uint32_t flags); //선택된실제파생또는공통몸체를호출하며깊이는호출자가소유한다.
     const RawFlyerPostPop* flyerPostPop_{}; // 같은 현재 server/TYPE/공통 장부를 쓰는 장기 몸체다.
     const RawBalloonBody* balloonPostPop_{}; //벌룬의 그림자 재귀 Pop 뒤 공통 깊이를 한 번 끝낸다.
     const RawBuriedPostPop* buriedPostPop_{}; // 장기 현재 전투/로딩과 같은 공통 장부를 사용하는 전용 몸체다.

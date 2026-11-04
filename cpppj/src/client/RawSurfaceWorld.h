@@ -6,6 +6,7 @@
 #include "o/GameClock.h"
 #include "client/RawProcessHostStorage.h"
 #include "o/RawAuthorityState.h"
+#include "o/RawBattleBroadcast.h" // 같은현재연결표를사용하는Squid패킷송신경계다.
 #include "o/RawCheckingFlag.h" // Editor/Session이같은Client진단owner를빌린다.
 #include "o/RawGameAuxState.h"
 #include "o/RawBoardTarget.h"
@@ -192,6 +193,7 @@ struct RawWorldRuntimeHooks {
     std::function<void(std::uint32_t)> loadingDepth;
     // formTransmit: 실제 DependForm 서버 Pop의 현재 raw Form/flags 전송 요청 경계다.
     o::FormPopTransmit formTransmit;
+    o::BattlePacketSend squidPacket; //일반Squid writer가완성한현재패킷을같은실제방송분배기로보낸다.
     o::DependFormNotice dependencyNotice; // watcher의 실제 가상+34다. 누락 시 기존 ProcessForm 통지를 사용한다.
     std::function<void(const o::BridgeLifecycleEvent&)> bridgeEffect; // 실제 세션의 다리 파편/위치 소리 소비자이며 runtime 설치 전에 필수로 공급한다.
 };

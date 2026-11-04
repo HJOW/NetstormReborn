@@ -276,72 +276,78 @@ void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* p
     }
 }
 // 성공한 공간 Pop의 flags로 가상 후처리를 분배한다. 전체 사제 wrapper는 자기 공통 깊이를 감소시킨다.
-void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
-    Validate(sid,flags);const auto before=state_.depth; ++state_.depth;
+void SquidPostPop::Activate(Sid sid,std::uint32_t flags) { //독립기존fixture의가상후처리호환진입이며전체Activate부모는RawSquidActivate다.
+    Validate(sid,flags);const auto before=state_.depth;++state_.depth;DispatchPostPop(sid,flags);
+    if (state_.depth!=before) throw std::logic_error("독립후처리의공통깊이불일치");
+}
+void SquidPostPop::PostPopVirtual(Sid sid,std::uint32_t flags) { Validate(sid,flags);DispatchPostPop(sid,flags); } //실제부모의증가뒤선택한가상몸체만실행한다.
+std::uint32_t& SquidPostPop::ActivationDepth() { return state_.depth; } //현재공통장부주소를빌리며사본깊이를만들지않는다.
+// 파생가상몸체가반환한뒤의깊이진단은현재실제Activate부모한곳에서수행한다.
+void SquidPostPop::DispatchPostPop(Sid sid,std::uint32_t flags) {
     // 벌룬의 재귀 그림자 Pop은 내부 Damageable을 통해 각 공통 깊이를 끝낸다.
-    if (HandlesBalloon(sid)) { balloonPostPop_->PostPop(sid,flags);if (state_.depth!=before) throw std::logic_error("벌룬 Activate 공통 깊이 불일치");return; }
+    if (HandlesBalloon(sid)) { balloonPostPop_->PostPop(sid,flags);return; }
     // 맨 오 워는 자신의 그림자 재귀 Pop과 Damageable 뒤 공통 깊이를 한 번 줄인다.
     if (HandlesFlyer(sid)) {
         flyerPostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("비행 Activate 공통 깊이 불일치");return;
+        return;
     }
     // Player는 현재9기록/SID와 조건부예약 뒤 자기 몸체에서 공통 장부를 한 번 호출한다.
     if (HandlesPlayer(sid)) {
         playerPostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("Player Activate 공통 깊이 불일치");
+
         return;
     }
     // buried도 QA/예약 뒤 같은 공통 장부를 내부에서 한 번 호출한다.
     if (HandlesBuried(sid)) {
         buriedPostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("buried Activate 공통 깊이 불일치");
+
         return;
     }
     // Dude는 idle/population/I 프레임 뒤 자기 전체 몸체에서 공통 장부를 한 번 호출한다.
     if (HandlesDude(sid)) {
         dudePostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("Dude Activate 공통 깊이 불일치");
+
         return;
     }
     // 다이스/제단은 자기 전체 몸체 안에서 Damageable와 공통 장부를 한 번 호출한다.
     if (HandlesDais(sid)) {
         daisPostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("다이스/제단 Activate 공통 깊이 불일치");
+
         return;
     }
     // Rune은304예약/건설후공통몸체를자신의내부에서한번호출한다.
     if (HandlesRune(sid)) {
         runePostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("Rune Activate 공통 깊이 불일치");
+
         return;
     }
     if (HandlesPriest(sid)) {
         priestPostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("사제 Activate 공통 깊이 불일치");
+
         return;
     }
     // 크랩은492예약/현재검사뒤자체내부에서공통장부를한번실행한다.
     if (HandlesCarrierSteal(sid)) {
         carrierStealPostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("크랩 Activate 공통 깊이 불일치");return;
+        return;
     }
     // 두 직접 몸체도 같은 flags의 공통 장부를 내부에서 한 번 호출한다.
     if (HandlesCarrier(sid) || HandlesDamageable(sid)) {
         if (HandlesCarrier(sid)) carrierPostPop_->PostPop(sid,flags);
         else carrierPostPop_->DamageablePostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("Carrier/Damageable Activate 공통 깊이 불일치");
+
         return;
     }
     // 자산 전용 재정의는 Damageable/base를 내부에서 실행하므로 접두처럼 다시 장부를 호출하지 않는다.
     if (HandlesAsset(sid)) {
         assetPostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("자산 Activate 공통 깊이 불일치");
+
         return;
     }
     // Factory도 Damageable와 공통 장부를 내부에서 실행하므로 중복 호출하지 않는다.
     if (HandlesFactory(sid)) {
         factoryPostPop_->PostPop(sid,flags);
-        if (state_.depth!=before) throw std::logic_error("Factory Activate 공통 깊이 불일치");
+
         return;
     }
     if (HandlesBridge(sid)) BridgePrefix(pool_,sid,flags,bridgeConnector_);

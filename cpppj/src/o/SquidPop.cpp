@@ -1,6 +1,7 @@
 // 공간 쓰기 순서와 판본별 좌표/충돌 차이를 보존한다. 미복원 효과는 호출하지 않는다.
 #include "o/SquidPop.h"
 #include "o/SquidFactory.h"
+#include "o/RawSquidActivate.h"
 #include "o/RawMetadisplayDirty.h"
 #include "o/SquidUnpop.h"
 #include "o/Squid.h"
@@ -71,6 +72,8 @@ bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32
     for (auto value:values) if (value==vtable) return SquidUnpop::SupportsDisplay(edition,vtable,flags);
     return false;
 }
+// 전송을생략하는flags에서는미연결writer를검사하지않는다.
+void SquidPop::BindTransmission(std::function<void(Sid,std::uint32_t)> transmission) { transmission_=std::move(transmission); }
 // 실제 현재 TYPE는 같은 길이의 표를 빌리며 호출 중에는 선택된 장치만 요구한다.
 void SquidPop::BindDiagnostics(SquidPopDiagnostics diagnostics) {
     if (!diagnostics.types.empty() && diagnostics.types.size()!=(pool_.Edition()==OriginalEdition::Patch1078 ? 188U : 171U)) throw std::invalid_argument("Pop 현재 TYPE의 판본/길이 오류");
@@ -107,12 +110,14 @@ RawPopResult SquidPop::PopPatch(Sid sid,float x,float y,std::uint32_t flags,cons
         const auto extra=raw[40];return (extra&9U)==0 ? 1U : ((extra&1U) ? 2U : 0U)|((extra&8U) ? 4U : 0U); // 보호83VT의+30은 모두004ad470이다. TYPE 생성자 쌍을 강제하지 않는다.
     };
     effects.activate=[this,&effects](Sid object,std::uint32_t requested) {
-        const auto view=pool_.Slot(object);auto raw=std::span<std::uint8_t>{const_cast<std::uint8_t*>(view.data()),view.size()};
-        if (!(raw[11]&4U)) effects.assertion("isVoid()","\\Ns\\O\\Squid.cpp",0x35c);
-        const auto state=raw[11];raw[11]&=0xfb;if (state&0x10U) effects.assertion("!xmitJustCreatedFlag","\\Ns\\O\\Squid.cpp",0x35f);
-        if (!(requested&8U)) requested|=0x10; // 기존 비전투 정규화다. 실제 서버 송신/현재 깊이 진단은 별도 잔여이며 이번 부모 완료로 숨기지 않는다.
-        if (postPop_) postPop_->Activate(object,requested);
-        else if (!Supports(pool_.Edition(),Read(raw,0),requested)) throw std::logic_error("Pop 현재 가상 후처리 미복원");
+        std::uint32_t isolatedDepth{};auto& depth=postPop_ ? postPop_->ActivationDepth() : isolatedDepth; //독립fixture의명시억제모드만지역깊이를쓴다.
+        SquidActivateHooks current;current.server=[this] { return pool_.IsServer(); };current.assertion=effects.assertion;
+        current.transmit=[this](Sid sid,std::uint32_t flags) { const auto send=transmission_;if (!send) throw std::logic_error("현재Squid Pop의실제전송미연결");send(sid,flags); };
+        current.postPop=[this,&depth](Sid sid,std::uint32_t flags) {
+            if (postPop_) postPop_->PostPopVirtual(sid,flags);
+            else { if (!Supports(pool_.Edition(),Read(pool_.Slot(sid),0),flags)) throw std::logic_error("Pop현재가상후처리미복원");--depth; } //표시/장부를생략한기존독립구성의억제계약이다.
+        };
+        RunSquidActivate(pool_,object,requested,depth,current);
     };
     return RunSquidPopParent(pool_,hash_,spots_,sid,x,y,flags,diagnostics_.checking,effects);
 }

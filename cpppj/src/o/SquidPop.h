@@ -21,6 +21,7 @@ public:
     // PATCH는 도달한 지점에서 현재 TYPE/프레임/효과를 조회하며 앞선 부분 변경을 유지한다. CD는 기존 사전 검사를 유지한다.
     RawPopResult Pop(Sid sid,const RiftTypeRecord& type,float frameWidth,float frameHeight,
         float x,float y,std::uint32_t flags=0);
+    void BindTransmission(std::function<void(Sid,std::uint32_t)> transmission); //실제현재writer와방송을연결하며도달시에만요구한다.
     void BindDiagnostics(SquidPopDiagnostics diagnostics); // 같은 현재 TYPE/Client 진단과 선택적 지연 SHP 조회를 연결한다.
     RawPopResult PopCurrent(Sid sid,float x,float y,std::uint32_t flags=0); // 실제 PATCH World는 사전 TYPE/SHP 조회 없이 같은 현재 표와 실제 표시기를 사용한다.
     // 원본 가상 주소를 메타데이터로 비교한다. 호스트 포인터로 호출하지 않는다.
@@ -34,6 +35,7 @@ public:
     bool ReleaseMetadisplayDirty(const RawMetadisplayDirty* expected); // 같은 관측자 대여만 끊는다. 이후 연결한 새 미니맵의 대여는 유지한다.
 private:
     RawPopResult PopPatch(Sid sid,float x,float y,std::uint32_t flags,const RiftTypeRecord* fallback,std::array<float,2> size); // 독립 명시 입력과 실제 현재 World를 같은 원문 부모로 실행한다.
+    std::function<void(Sid,std::uint32_t)> transmission_; //World수명의직렬화기를빌리며Session의임시this를보관하지않는다.
     SquidPopDiagnostics diagnostics_; // 전체 TYPE/장치의 수명은 이 실행기보다 길어야 한다.
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;

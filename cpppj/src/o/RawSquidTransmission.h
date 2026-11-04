@@ -1,0 +1,43 @@
+// 공통 Squid 전송의 같은2048BYTE 버퍼·현재 헤더·압축 상태와 실제 가상 writer를 보관한다.
+#pragma once
+#include "o/RawFormPacket.h"
+#include <array>
+#include <functional>
+#include <string_view>
+
+namespace netstorm::o { // Client와 World/Session이 동일한 원문 전역 물리를 공유한다.
+struct SquidCompressedPacketHeader { //가변패킷의00544c90은고정헤더WORD와달리DWORD입력이다.
+    std::uint8_t message{0x7a},protocol{1}; //0052ee92/93의현재두BYTE다.
+    std::uint32_t length{}; //00432fe0이읽는실제DWORD이며최소4비교뒤낮은WORD를쓴다.
+};
+struct RawSquidTransmissionState { // 초기 PE 값과 BSS0을 보존하며 World 대여/반납에서 초기화하지 않는다.
+    std::array<std::uint8_t,2048> buffer{}; //005c7c50의 공통 송신 버퍼이며 반환 크기 뒤를 지우지 않는다.
+    FormPacketHeaders forms; // 기존 감시/내용물/삭제 writer의 현재 헤더다.
+    FormDeletionStamp deletion; // 삭제 writer의 한 번 소비 표식이다.
+    FormPacketHeader update{0x2c,1,27}; //0052edc0의고정WORD선언길이는35BYTE반환과별개다.
+    SquidCompressedPacketHeader compressed; //00544c90의DWORD선언길이를Word로미리자르지않는다.
+    std::int32_t compress{1}; //00531850의 초기1이며 Config의 현재 signed DWORD를 보존한다.
+    std::uint32_t clientSidAllowed{}; //005c7a78의 초기BSS0이며 재동기화 부모의 임시 허용 관문이다.
+    std::uint32_t sameOwnerEnabled{},lastOwner{},compressedCount{},compressedBytes{}; //0054d8e8/e4/ec/f0의 서로 다른 현재 DWORD다.
+};
+struct RawSquidTransmissionHooks { // 직렬화에 필요한 현재 조회와 양수 반환의 실제 송신 장치다.
+    std::function<const RiftTypeRecord&(std::uint8_t)> type; // 압축할 저장 TYPE의 현재 속성을 선택한다.
+    std::function<std::uint32_t()> defaultType; //005411a0의 현재 bridge TYPE다.
+    std::function<std::int32_t(std::uint8_t)> maxHp; //0049fce0의 현재 weakened-priest 조건을 포함한다.
+    std::function<void(std::span<const std::uint8_t>)> broadcast; // 양수 반환이면 현재1..8의 실제 연결을 순회한다.
+    std::function<void(std::int32_t,std::string_view)> trace; // 압축 누적255 경계의 실제 수준4 로그다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 원문 전송 진단 정상 복귀를 허용한다.
+};
+// 실제 현재 VT+54와 두 Form writer를 분배한다. 새 MP 검사는 하지 않고 원문/PE로 대조한다.
+class RawSquidTransmission {
+public:
+    RawSquidTransmission(const SidPool& pool,RawSquidTransmissionState& state,RawSquidTransmissionHooks hooks); // 같은 물리와 장기 장치만 빌린다.
+    void Pop(Sid sid,std::uint32_t flags) const; //004ac260의(-1,-1,0,flags) 호출이며 일반+54에는 원문 인자0을 전달한다.
+private:
+    std::int32_t Write(Sid sid) const; // 현재+54를 선택해 원문 크기를 반환한다.
+    std::int32_t Compress(std::span<const std::uint8_t> input) const; //00432fe0의16필드 인코딩과 현재 owner/누적을 실행한다.
+    const SidPool& pool_; // 현재 슬롯과 현재 서버를 조회하는 같은 풀이다.
+    RawSquidTransmissionState& state_; // 실제 공통 버퍼/헤더/압축 전역이다.
+    RawSquidTransmissionHooks hooks_; // 같은 World 수명 동안 유효한 현재 장치다.
+};
+}
