@@ -37,7 +37,14 @@ void RawCampaignParticles::BindTailProcessTypes(const o::RawGameAuxState& state)
     if ((lifetime_.sharedProcessType && lifetime_.sharedProcessType!=&state.FieryTailProcessType()) || (streakLifetime_.sharedProcessType && streakLifetime_.sharedProcessType!=&state.StreakProcessType())) throw std::logic_error("입자 현재 TYPE 소유자 재연결 오류");
     lifetime_.sharedProcessType=&state.FieryTailProcessType();streakLifetime_.sharedProcessType=&state.StreakProcessType();
 }
-void RawCampaignParticles::CreateTailByConstructor(std::uint32_t address,o::Sid parent) { // 원본 cdecl 생성 함수 주소와 실제 시스템의 생성자 내부 TYPE 전역을 구별한다.
+void RawCampaignParticles::CreateTailByConstructor(std::uint32_t address,o::Sid parent,
+    const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion) { // 원본 cdecl 생성 함수와 내부 TYPE 전역을 구별하며 호출자가 무시하는 NULL 반환도 원문대로 복귀한다.
+    if (address==0x00470b00U || address==0x00487ef0U) {
+        const auto selected=assertion; // 진단이 자기 연결을 반납해도 현재 호출의 캡처 수명은 종료까지 보존한다.
+        if (!selected) throw std::logic_error("현재 TYPE 생성 함수의 원문 진단 장치 미연결");
+        selected("0",address==0x00470b00U ? ".\\Kaboom.cpp" : ".\\Particle.cpp",address==0x00470b00U ? 0xbcU : 0x1b0U);
+        return; // 두 원본 함수는 진단 복귀 뒤 확보/등록 없이 NULL을 반환하며 Teleport caller는 이를 사용하지 않는다.
+    }
     if (address==0x00458760U) { static_cast<void>(AddStreak(parent));return; }
     if (address==0x00458700U) { try { Add(11,parent); }catch (const std::bad_alloc&) {}return; } // 원본 new 실패의 NULL 반환은 호출자가 사용하지 않는다.
     throw std::logic_error("현재 TYPE가 선택한 다른 입자 생성 함수 미복원");

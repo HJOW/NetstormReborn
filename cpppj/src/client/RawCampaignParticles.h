@@ -35,7 +35,8 @@ public:
     o::FieryTailVisualProcess* AddStreak(o::Sid parent); // 건설 마나134의 최초 Pop에서 실제 process12를 붙인다.
     void BindTailProcessTypes(const o::RawGameAuxState& state); // 소유자는 이 시스템보다 오래 살아야 하며 두 생성자의 현재 TYPE 주소를 한 번 연결한다.
     void BindTailProcessTypes(const o::RawGameAuxState&&)=delete; // 임시 소유자의 만료된 주소를 보관하지 않는다.
-    void CreateTailByConstructor(std::uint32_t address,o::Sid parent); // 현재 TYPE+1d0이 선택한 원본11/12 생성 함수로 분배하며 다른 주소를 임의12로 바꾸지 않는다.
+    void CreateTailByConstructor(std::uint32_t address,o::Sid parent,
+        const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion={}); // 현재 TYPE+1d0의11/12 생성과13/22의 원문 진단/NULL 반환을 분배한다. 진단은 선택될 때만 요구한다.
     // 실제 wrapper의 생존 검사 뒤 공유 빔을 같은 Host/표시 목록에 생성한다. NULL 파일명은 무음이다.
     o::LightningCreateResult AddBeam(o::Sid parent,o::Sid target,std::optional<std::string> sound);
     // 실제472770의화면좌표→현재카메라→직접좌표빔을같은Host/표시수명에생성한다.

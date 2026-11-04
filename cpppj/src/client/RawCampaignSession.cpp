@@ -1250,7 +1250,7 @@ struct RawCampaignSession::Impl {
         },std::move(shrapnel));
         particles->BindCameraView(gameplayGlobals->Camera().Snapshot()); // 생성 직후부터 같은 전역 현재값을 사용한다.
         particles->BindTailProcessTypes(*gameplayGlobals->GameAux());buildArrivalState.sharedStreakProcessType=&gameplayGlobals->GameAux()->StreakProcessType(); // 생성 함수 선택/생성자 부착/도착 삭제가 같은 현재005410a0을 읽는다.
-        core.postPop.SetTeleportPrefix([this](Sid sid,std::uint32_t flags) { if (!(flags&1U)) return;const auto type=gameplayGlobals->GameAux()->StreakProcessType();if (type>=core.types.size()) throw std::out_of_range("Teleport 현재 process TYPE 표 물리 범위");const auto address=core.types[type].constructorAddress;particles->CreateTailByConstructor(address,sid); }); // 원문4429f0의 현재 TYPE+1d0 호출이며 현재 객체 TYPE134나 고정process12에 묶지 않는다.
+        core.postPop.SetTeleportPrefix([this](Sid sid,std::uint32_t flags) { if (!(flags&1U)) return;const auto type=gameplayGlobals->GameAux()->StreakProcessType();if (type>=core.types.size()) throw std::out_of_range("Teleport 현재 process TYPE 표 물리 범위");const auto address=core.types[type].constructorAddress;particles->CreateTailByConstructor(address,sid,[this](auto expression,auto,auto line) { const auto assertion=services.ai.assertion;if (!assertion) throw std::logic_error("Teleport 생성 함수 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }); }); // 원문4429f0의 현재 TYPE+1d0 호출이며 현재 객체 TYPE134나 고정process12에 묶지 않는다.
         particles->BindWind(world.Storage()->wind.x); // 같은 Client 수명의 현재 바람X를 입자별 가속 지점에서 읽는다.
         particles->BindWeakenedMana(gameplayGlobals->GameAux()->PriestQuarterHp()); // 연소점 선택도 Frame 준비 사본을 기다리지 않는다.
         auto combatEffects=services.archer;
