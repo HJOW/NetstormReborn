@@ -865,3 +865,15 @@ TEST_CASE(AssetFenceCurrent_ActualSessionCreatesOnlySelectedRegulars) { // 같�
         if (kind) { CHECK(process);if (process) CHECK(process->Payload()==(kind==1 ? 1.0F : .3F) && process->Count()==0 && process->Time()==core.processState.Now()); }else CHECK(!process);
     }
 }
+
+TEST_CASE(AssetTailCurrent_ActualSessionSharesGrowthAndNuggetRegulars) { // 실제 세 하위 몸체를 같은 가상 진입/Host/현재 시계에 연결하고 틱은 실행하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Make());session.Load();auto core=session.Core();auto storage=session.World().Storage();core.postPop.BindPatchAiNotice([](auto,Sid,bool) {}); // 공통 부모의 외부 통지 경계를 고정한다.
+    for (std::size_t kind=0;kind<3;++kind) { // 일반 새 슬롯의 명시 VT와 전용 예약만 검사하며 성장/생산/행동은 실행하지 않는다.
+        constexpr std::array<std::uint32_t,3> tables{0x50e888,0x509470,0x50dc30}; // 성장 아이스/썬 바리케이드/너겟의 실제 가상 표다.
+        const auto source=core.factory.Create(74);auto raw=core.pool.AllocatedBytes(source);const auto write=[&](std::size_t offset,std::uint32_t value) { for (std::size_t index=0;index<4;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); }; // 새 슬롯의 VT와 필수 입력만 명시한다.
+        write(0,tables[kind]);raw[11]=raw[40]=0;raw[34]=1;storage->types[74].flags1=storage->types[74].flags2=0;storage->frames[74]=RiftTypeFrames(std::vector<FrameCode>(4,FrameCode{'A','A',0,0}));++core.bookkeeping.depth;core.postPop.PostPopVirtual(source,0x2000000U+(kind==1 ? 0U : 1U));CHECK(core.bookkeeping.depth==0);
+        if (kind==0) { auto* process=core.processes.FindEvent(source,0x3a6);CHECK(process);if (process) CHECK(process->Payload()==10.0F && process->Count()==0 && process->Time()==core.processState.Now()); }
+        else if (kind==1) CHECK(!core.processes.FindEvent(source,0) && !core.processes.FindEvent(source,2));
+        else { auto* first=core.processes.FindEvent(source,1);auto* second=core.processes.FindEvent(source,3);CHECK(first && second);if (first && second) CHECK(first->Payload()>=0 && first->Payload()<=.3F && second->Payload()>=0 && second->Payload()<=.5F && first->Time()==core.processState.Now() && second->Time()==core.processState.Now()); }
+    }
+}

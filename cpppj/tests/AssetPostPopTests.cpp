@@ -1,6 +1,8 @@
 // 초기 요새 건물의 실제 postPop body와 두 PE가 정한 사건·raw·목록·Player 결과를 비교한다.
 #include "RawSceneSupport.h"
 #include "o/RawAssetPostPop.h"
+#include "o/RawIceTower.h"
+#include "o/RawNuggetPostPop.h"
 #include <cstdio>
 #include <filesystem>
 
@@ -576,4 +578,50 @@ TEST_CASE(AssetFenceCurrent_BadTypeAtParentKeepsEarlierRegular) { // 생성 효�
     for (std::size_t kind=1;kind<=2;++kind) { // 원문의 외부 경계 이후 읽기 순서를 확인한다.
         AssetScene scene(OriginalEdition::Patch1078);PrepareAssetFence(scene,kind);auto hooks=scene.Hooks();hooks.addRegular=[&](Sid sid,auto,float) { scene.events.push_back("R");AssetCurrentSlot(scene,sid)[10]=255; };AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events==(std::vector<std::string>{"A:40","R"}) && scene.baseState.depth==1);
     }
+}
+
+namespace { // 이미 선택된 비공중 후처리의 가상 진입 입력이다.
+void PrepareAssetTail(AssetScene& scene,std::size_t kind,std::uint32_t flags=1) { // 성장 아이스/썬 바리케이드/너겟의 원문 VT만 공급한다.
+    constexpr std::array<std::uint32_t,3> tables{0x50e888,0x509470,0x50dc30}; // 실제 +20 몸체는48ead0/457560/484f90이다.
+    PrepareAssetCurrent(scene,0,flags);Put(AssetCurrentSlot(scene),0,tables.at(kind));
+}
+}
+TEST_CASE(AssetTailCurrent_ActualVirtualNoFirstSkipsFrontTypeCheck) { // 상위 현재 VT 분배는 도달하지 않는 TYPE/목록 전수 검사를 추가하지 않는다.
+    for (std::size_t kind=0;kind<3;++kind) { // 실제 하위는 flags0에서 같은 직접/공통 부모만 호출한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetTail(scene,kind,0);AssetCurrentSlot(scene)[10]=255;scene.state.temples.count=99;SquidPostPop* parent{};auto hooks=scene.Hooks();const auto finish=[&](Sid sid,auto flags) { scene.events.push_back("P");parent->PostPopBase(sid,flags); }; // 첫 몸체 선택 뒤에는 TYPE를 다시 검증하지 않는다.
+        std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));RawNuggetPostPop nugget(scene.pool,NuggetPostPopHooks{{},{},{},{},finish});
+        hooks.growingIcePostPop=[&](Sid sid,auto flags) { PostPopGrowingIce(scene.pool,frames,sid,flags,{},{},finish); };hooks.sunFencePostPop=finish;hooks.nuggetPostPop=[&](Sid sid,auto flags) { nugget.PostPop(sid,flags); };AssetCurrentBody body(scene,std::move(hooks));parent=&body.base;body.Run(0);CHECK(scene.events==std::vector<std::string>{"P"} && scene.baseState.depth==0);
+    }
+}
+TEST_CASE(AssetTailCurrent_MissingWholeBodyFailsAtDispatch) { // 상위에 빈 하위 성공을 설치하지 않고 선택한 몸체 누락만 명시 실패한다.
+    for (std::size_t kind=0;kind<3;++kind) { // raw TYPE 오류보다 먼저 실제 몸체 연결을 요구한다.
+        AssetScene scene(OriginalEdition::Patch1078);PrepareAssetTail(scene,kind,0);AssetCurrentSlot(scene)[10]=255;AssetCurrentBody body(scene,{});CHECK(Throws([&] { body.Run(0); }) && scene.events.empty() && scene.baseState.depth==1);
+    }
+}
+TEST_CASE(AssetTailCurrent_GrowingNativePostPop212Rows) { // 기존 원문의 P 예약212행만 실행하며 성장/재생성/공격 행은 선택하지 않는다.
+    const auto path=(std::filesystem::path(NETSTORM_ASSETPOSTPOP_FIXTURE).parent_path()/"ice-tower-x86.tsv").string();AssetScene scene(OriginalEdition::Patch1078);std::size_t count{}; // 실제 읽은 P 행만 센다.
+    for (const auto& row:LoadFixture(path.c_str()).rows) { // 독립 Native trace를 기대값 재계산 없이 대조한다.
+        if (row[0]!="P") continue;const auto values=Split(row[1],',');CHECK(values.size()==5);const auto flags=Number(values[0]);PrepareAssetTail(scene,0,flags);AssetCurrentSlot(scene)[40]=static_cast<std::uint8_t>(Number(values[1]));std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));
+        for (const auto pair:{std::pair{70U,Number(values[2])},std::pair{75U,9U}}) { // 원문150/151의 현재 프레임 수 입력을 일반 TYPE70/75에 공급한다.
+            std::vector<FrameCode> codes;for (std::uint32_t index=0;index<pair.second;++index) codes.push_back({'A',0,static_cast<std::uint8_t>(index),0}); // 분기를 계산하지 않고 개수만 공급한다.
+            frames[pair.first]=RiftTypeFrames(std::move(codes));
+        }
+        auto hooks=scene.Hooks();SquidPostPop* parent{};hooks.growingIcePostPop=[&](Sid sid,auto mode) { PostPopGrowingIce(scene.pool,frames,sid,mode,[&] { scene.events.push_back("N:40");if (Number(values[4])==1) AssetCurrentSlot(scene)[10]=75;return Number(values[3])!=0; },[&](Sid current,auto event,float delay) { scene.events.push_back("R:"+std::to_string(event)+':'+std::to_string(current.value)+':'+std::to_string(std::bit_cast<std::uint32_t>(delay))); },[&](Sid current,auto value) { scene.events.push_back("P:"+std::to_string(value));parent->PostPopBase(current,value); }); };AssetCurrentBody body(scene,std::move(hooks));parent=&body.base;body.Run(flags);CHECK(scene.Output()[0]==row[2] && scene.baseState.depth==0);++count;
+    }
+    CHECK(count==212);
+}
+TEST_CASE(AssetTailCurrent_GrowingFailedReserveSkipsTypeAndConstructor) { // 확보 실패는 현재 TYPE/프레임과 생성자 조회를 건너뛰고 같은 공통 깊이를 감소한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetTail(scene,0);AssetCurrentSlot(scene)[10]=255;std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));SquidPostPop* parent{};auto hooks=scene.Hooks();hooks.growingIcePostPop=[&](Sid sid,auto flags) { PostPopGrowingIce(scene.pool,frames,sid,flags,[&] { scene.events.push_back("A");AssetCurrentSlot(scene)[11]=9;return false; },{},[&](Sid current,auto value) { scene.events.push_back("P");parent->PostPopBase(current,value); }); };AssetCurrentBody body(scene,std::move(hooks));parent=&body.base;body.Run();CHECK(scene.events==(std::vector<std::string>{"A","P"}) && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==0);
+}
+TEST_CASE(AssetTailCurrent_GrowingReadsCurrentFramesBeforeMissingConstructor) { // 확보 성공 뒤 원문 TYPE 조회가 생성자 진입보다 먼저 발생한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetTail(scene,0);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));auto hooks=scene.Hooks();hooks.growingIcePostPop=[&](Sid sid,auto flags) { PostPopGrowingIce(scene.pool,frames,sid,flags,[&] { scene.events.push_back("A");AssetCurrentSlot(scene)[10]=255;return true; },{},{}); };AssetCurrentBody body(scene,std::move(hooks));bool typeFailure{};try { body.Run(); }catch (const std::out_of_range& error) { typeFailure=std::string_view(error.what()).find("현재 프레임TYPE")!=std::string_view::npos; }CHECK(typeFailure && scene.events==std::vector<std::string>{"A"} && scene.baseState.depth==1);
+}
+TEST_CASE(AssetTailCurrent_NuggetAllocationFailureSkipsRandomAndConstruct) { // 독립된 두 확보가 실패하면 난수/생성 장치를 요구하지 않고 직접 부모로 간다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetTail(scene,2);AssetCurrentBody* parent{};RawNuggetPostPop nugget(scene.pool,NuggetPostPopHooks{[&](Sid,auto event) { CHECK(event==1);scene.events.push_back("H");return false; },[&] { scene.events.push_back("A");return false; },{},{},[&](Sid sid,auto flags) { parent->damageable.DamageablePostPop(sid,flags); }});auto hooks=scene.Hooks();hooks.nuggetPostPop=[&](Sid sid,auto flags) { nugget.PostPop(sid,flags); };AssetCurrentBody body(scene,std::move(hooks));parent=&body;body.Run();CHECK(scene.events==(std::vector<std::string>{"H","A","A","D:1"}) && scene.baseState.depth==0);
+}
+TEST_CASE(AssetTailCurrent_NuggetLateMissingRandomKeepsLookupAndAllocation) { // 첫 확보 뒤 난수가 없으면 앞선 조회/확보를 유지하고 두 번째 예약에 도달하지 않는다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetTail(scene,2);RawNuggetPostPop nugget(scene.pool,NuggetPostPopHooks{[&](Sid,auto) { scene.events.push_back("H");return false; },[&] { scene.events.push_back("A");return true; },{},{},{}});auto hooks=scene.Hooks();hooks.nuggetPostPop=[&](Sid sid,auto flags) { nugget.PostPop(sid,flags); };AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events==(std::vector<std::string>{"H","A"}) && scene.baseState.depth==1);
+}
+TEST_CASE(AssetTailCurrent_NuggetLateMissingConstructorKeepsRandomAndWrites) { // 첫 난수 뒤 생성자 누락은 콜백이 바꾼 현재 슬롯도 보존한다.
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetTail(scene,2);RawNuggetPostPop nugget(scene.pool,NuggetPostPopHooks{[&](Sid,auto) { scene.events.push_back("H");return false; },[&] { scene.events.push_back("A");return true; },[&](float low,float high) { CHECK(low==0 && high==.3F);scene.events.push_back("R");AssetCurrentSlot(scene)[11]=9;return .25F; },{},{}});auto hooks=scene.Hooks();hooks.nuggetPostPop=[&](Sid sid,auto flags) { nugget.PostPop(sid,flags); };AssetCurrentBody body(scene,std::move(hooks));CHECK(Throws([&] { body.Run(); }) && scene.events==(std::vector<std::string>{"H","A","R"}) && scene.pool.Slot(kSource)[11]==9 && scene.baseState.depth==1);
 }

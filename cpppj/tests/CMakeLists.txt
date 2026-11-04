@@ -3416,3 +3416,6 @@ target_compile_definitions(netstorm_pop_context_tests PRIVATE NETSTORM_CARRIERPO
 set_source_files_properties(BuildingNotifyCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BRIDGE_NOTIFY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridge-notify-x86.tsv\"") # 새 두 PE 정밀 몸체의 독립 입력/관측이다.
 target_sources(netstorm_tests PRIVATE BuildingNotifyCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE BuildingNotifyCurrentTests.cpp)
+
+# 실제 비공중 후처리의 기존 원문 자료와 썬 바리케이드 현재 물리 쓰기를 집중 대조한다(853).
+target_sources(netstorm_pop_context_tests PRIVATE FencePostPopTests.cpp NuggetPostPopTests.cpp)

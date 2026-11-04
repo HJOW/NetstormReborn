@@ -18,10 +18,12 @@ void WriteFence(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t val
     for (std::size_t index=0;index<4;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); // 낮은 바이트부터 저장한다.
 }
 // 미연결 효과는 선택 위치에서 실패시키며 앞선 쓰기와 예약을 보존한다.
-template<class Function> const Function& NeedFence(const Function& function) {
+template<class Function> Function NeedFence(const Function& function) {
     if (!function) throw std::logic_error("썬 바리케이드 후처리의 실제 하위 소비자 미연결");
     return function;
 }
+// 원문이 계속 쓰는 같은 물리 슬롯을 대여하며 효과가 바꾼 free/contained를 새 관문으로 검사하지 않는다.
+std::span<std::uint8_t> FenceSlot(SidPool& pool,Sid sid) { const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; }
 }
 // CD의 다른 펜스 동작을 PATCH로 간주하지 않는다.
 RawFencePostPop::RawFencePostPop(SidPool& pool,FencePostPopHooks hooks):pool_(pool),hooks_(std::move(hooks)) {
@@ -46,16 +48,16 @@ void RawFencePostPop::ClearPair(Sid first,Sid second) const {
 }
 // flags1에서만 최초 사건과 연결 수를 준비하고 모든 flags에서 같은 Damageable로 끝난다.
 void RawFencePostPop::PostPop(Sid sid,std::uint32_t flags) const {
-    Validate(sid,flags);
+    // 실제 가상 진입은 선택된 몸체를 바로 실행하며 명시 Validate의 별도 사전 계약을 삽입하지 않는다.
     if (flags&1U) {
         if (NeedFence(hooks_.theme)(sid)==3) Regular(sid,0);
         std::array<Sid,4> neighbors{}; // 원문 local_1c는 네 방향을 모두 조회한 뒤 두 쌍에서 재사용한다.
         for (std::uint32_t direction=0;direction<8;direction+=2) neighbors[direction/2]=NeedFence(hooks_.neighbor)(sid,direction); // 방향 순서를0/2/4/6으로 고정한다.
-        WriteFence(pool_.AllocatedBytes(sid),42,pool_.Slot(sid)[34]);
+        WriteFence(FenceSlot(pool_,sid),42,pool_.Slot(sid)[34]);
         if (neighbors[0].value && neighbors[2].value) { Regular(neighbors[0],3);Regular(neighbors[2],3);ClearPair(neighbors[0],neighbors[2]); }
         if (neighbors[1].value && neighbors[3].value) { Regular(neighbors[1],3);Regular(neighbors[3],3);ClearPair(neighbors[1],neighbors[3]); }
         const auto count=NeedFence(hooks_.connections)(sid); // 조회의 외부 효과 뒤 반환값만 원본+2e에 기록한다.
-        WriteFence(pool_.AllocatedBytes(sid),46,count);Regular(sid,2);
+        WriteFence(FenceSlot(pool_,sid),46,count);Regular(sid,2);
     }
     NeedFence(hooks_.damageable)(sid,flags);
 }

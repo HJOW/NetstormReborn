@@ -57,5 +57,27 @@ TEST_CASE(FencePostPop_RequiredBoundariesAndPartialWrites) {
     CHECK(Get(scene.pool.Slot(Sid{50}),42)==1 && Get(scene.pool.Slot(Sid{50}),46)==0xa5a5a5a5 && scene.allocations==0);
     hooks=scene.Hooks();hooks.damageable={};RawFencePostPop missingBase(scene.pool,hooks);CHECK(Throws([&] { missingBase.PostPop(Sid{50},1); }));
     CHECK(Get(scene.pool.Slot(Sid{50}),46)==4 && scene.allocations==1);
-    Put(scene.pool.AllocatedBytes(Sid{50}),0,0x509930);CHECK(!missingBase.Handles(Sid{50}) && Throws([&] { missingBase.PostPop(Sid{50},1); }));
+    Put(scene.pool.AllocatedBytes(Sid{50}),0,0x509930);CHECK(!missingBase.Handles(Sid{50}) && Throws([&] { missingBase.Validate(Sid{50},1); })); // 명시 사전 계약과 이미 선택된 원문 몸체의 실제 실행을 구별한다.
+}
+
+namespace { // 현재 free/contained 변경 뒤에도 원문이 쓰는 같은 슬롯을 검사에 제공한다.
+std::span<std::uint8_t> FenceCurrentSlot(FenceScene& scene,Sid sid=Sid{50}) { const auto raw=scene.pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // 물리 범위만 Slot이 확인한다.
+}
+TEST_CASE(AssetTailCurrent_FenceDoesNotRunExplicitPreflight) { // 기존 사전 장치가 실패하더라도 실제 본문에는 해당 호출이 없다.
+    FenceScene scene(Split("1,0,0,0,4,0",','));auto hooks=scene.Hooks();hooks.validateBase=[](Sid,auto,const RawGraphPop*) { throw std::logic_error("명시 사전 장치"); };RawFencePostPop body(scene.pool,std::move(hooks));CHECK(Throws([&] { body.Validate(Sid{50},1); }) && scene.trace.empty());body.PostPop(Sid{50},1);CHECK(Get(scene.pool.Slot(Sid{50}),42)==1 && Get(scene.pool.Slot(Sid{50}),46)==4 && scene.trace.ends_with("Base,1"));
+}
+TEST_CASE(AssetTailCurrent_FenceNoFirstReadsNeitherVtableNorType) { // 이미 선택된 함수는 flags0에서 앞단 TYPE/VT/장치를 요구하지 않는다.
+    FenceScene scene(Split("0,0,0,0,0,0",','));auto raw=FenceCurrentSlot(scene);Put(raw,0,0);raw[10]=255;raw[11]=9;FencePostPopHooks hooks;hooks.damageable=[&](Sid sid,auto flags) { CHECK(sid==Sid{50} && flags==0);scene.Event("D"); };RawFencePostPop body(scene.pool,std::move(hooks));CHECK(!body.Handles(Sid{50}) && Throws([&] { body.Validate(Sid{50},0); }));body.PostPop(Sid{50},0);CHECK(scene.trace=="D" && scene.pool.Slot(Sid{50})[11]==9);
+}
+TEST_CASE(AssetTailCurrent_FenceNeighborMutationUsesPhysicalOwnerWrite) { // 네 방향 모두 조회한 뒤 현재 owner를 DWORD로 쓰며 콜백의 free/VT 변경을 보존한다.
+    FenceScene scene(Split("1,0,0,0,4,0",','));auto hooks=scene.Hooks();hooks.neighbor=[&](Sid sid,auto direction) { scene.Event("N"+std::to_string(direction));if (direction==6) { auto raw=FenceCurrentSlot(scene,sid);raw[11]=9;raw[34]=7;Put(raw,0,0); }return Sid{}; };RawFencePostPop body(scene.pool,std::move(hooks));body.PostPop(Sid{50},1);CHECK(scene.trace.starts_with("Theme,50;N0;N2;N4;N6;") && Get(scene.pool.Slot(Sid{50}),42)==7 && Get(scene.pool.Slot(Sid{50}),46)==4 && scene.pool.Slot(Sid{50})[11]==9);
+}
+TEST_CASE(AssetTailCurrent_FenceConnectionMutationKeepsFullDwordAndLife) { // 연결 getter가 부모 수명을 바꿔도 반환DWORD를 현재 물리에 저장하고 다음 예약을 실행한다.
+    FenceScene scene(Split("1,0,0,0,4,0",','));auto hooks=scene.Hooks();hooks.connections=[&](Sid sid) { scene.Event("C");auto raw=FenceCurrentSlot(scene,sid);raw[11]=9;raw[34]=8;Put(raw,0,0);return 0x89abcdefU; };RawFencePostPop body(scene.pool,std::move(hooks));body.PostPop(Sid{50},1);CHECK(Get(scene.pool.Slot(Sid{50}),42)==1 && Get(scene.pool.Slot(Sid{50}),46)==0x89abcdefU && scene.trace.ends_with("C;Reserve,40;Base,1") && scene.pool.Slot(Sid{50})[11]==9);
+}
+TEST_CASE(AssetTailCurrent_FenceMissingClearKeepsPairReservationsAndOwner) { // 두 확보 실패 뒤에도 선택된 연결선 삭제를 요구하고 앞선 owner 쓰기를 유지한다.
+    FenceScene scene(Split("1,0,5,0,4,0",','));auto hooks=scene.Hooks();hooks.clearLine={};RawFencePostPop body(scene.pool,std::move(hooks));CHECK(Throws([&] { body.PostPop(Sid{50},1); }));CHECK(scene.allocations==2 && Get(scene.pool.Slot(Sid{50}),42)==1 && Get(scene.pool.Slot(Sid{50}),46)==0xa5a5a5a5 && scene.trace.find("Connections")==std::string::npos);
+}
+TEST_CASE(AssetTailCurrent_FenceMissingFinalReserveKeepsConnectionDword) { // 이웃 쌍이 없고 theme0이면 마지막 확보 누락은 두 DWORD 저장 뒤 드러난다.
+    FenceScene scene(Split("1,0,0,0,4,0",','));auto hooks=scene.Hooks();hooks.reserveRegular={};RawFencePostPop body(scene.pool,std::move(hooks));CHECK(Throws([&] { body.PostPop(Sid{50},1); }));CHECK(Get(scene.pool.Slot(Sid{50}),42)==1 && Get(scene.pool.Slot(Sid{50}),46)==4 && scene.trace.ends_with("Connections,50"));
 }

@@ -309,15 +309,15 @@ void RawAssetPostPop::Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) con
 // 가상 표마다 복원한 몸체만 호출한다. 각 몸체는 공통 장부를 내부에서 정확히 한 번 호출한다.
 void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     const auto kind=Kind(sid);
-    if (pool_.Edition()!=OriginalEdition::Patch1078 || !((kind>=kGenerator && kind<=kGeyser) || kind==kArcSpire || kind==kAcidFence)) Validate(sid,flags); // 대조한 PATCH 몸체는 도달한 장치만 요구한다. 나머지 파생/CD의 별도 사전 계약은 유지한다.
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || !((kind>=kGenerator && kind<=kGeyser) || kind==kArcSpire || kind==kAcidFence || kind==kSunFence || kind==kNugget || kind==kGrowingIce)) Validate(sid,flags); // 대조한 PATCH 몸체는 도달한 장치만 요구한다. 나머지 파생/CD의 별도 사전 계약은 유지한다.
     if (kind==kSunAviary) hooks_.sunAviaryPostPop(sid,flags);
-    else if (kind==kNugget) hooks_.nuggetPostPop(sid,flags);
+    else if (kind==kNugget) AssetNeed(hooks_.nuggetPostPop)(sid,flags);
     else if (kind==kRainAviary) hooks_.rainAviaryPostPop(sid,flags);
     else if (kind==kWindAviary) hooks_.windAviaryPostPop(sid,flags);
-    else if (kind==kSunFence) hooks_.sunFencePostPop(sid,flags);
+    else if (kind==kSunFence) AssetNeed(hooks_.sunFencePostPop)(sid,flags);
     else if (kind==kArcSpire) PostPopArcSpire(pool_,sid,flags,hooks_.reserveRegular,hooks_.addRegular,[this](Sid parent,std::uint32_t mode) { damageable_.DamageablePostPop(parent,mode); });
     else if (kind==kAcidFence) PostPopAcidFence(pool_,sid,flags,hooks_.reserveRegular,hooks_.addRegular,[this](Sid parent,std::uint32_t mode) { damageable_.DamageablePostPop(parent,mode); });
-    else if (kind==kGrowingIce) hooks_.growingIcePostPop(sid,flags);
+    else if (kind==kGrowingIce) AssetNeed(hooks_.growingIcePostPop)(sid,flags);
     else if (kind==kGenerator) { if (flags&1U) static_cast<void>(Type(sid).theme);damageable_.DamageablePostPop(sid,flags); } //004ac970의 최초 현재 theme 조회는 반환값이 버려져도 먼저 수행한다.
     else if (kind>=kGunAngle && kind<=kGunArcher) Gun(sid,flags,kind);
     else if (kind==kGunDecoration) { if (flags&1) Regular(sid,0,0.05f);base_.PostPopBase(sid,flags); }

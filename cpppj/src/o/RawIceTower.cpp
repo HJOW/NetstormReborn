@@ -21,7 +21,11 @@ std::int32_t FrameCount(const SidPool& pool,std::span<const RiftTypeFrames> fram
 void PostPopGrowingIce(const SidPool& pool,std::span<const RiftTypeFrames> frames,Sid parent,std::uint32_t flags,
     const std::function<bool()>& reserve,const std::function<void(Sid,std::uint32_t,float)>& regular,const std::function<void(Sid,std::uint32_t)>& base) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || frames.size()!=188) throw std::invalid_argument("성장형 아이스 후처리 판본/프레임 오류");
-    if ((flags&1U) && Need(reserve)()) Need(regular)(parent,kGrowthEvent,kGrowthSeconds/static_cast<float>(FrameCount(pool,frames,parent)));Need(base)(parent,flags);
+    if ((flags&1U) && Need(reserve)()) {
+        const auto period=kGrowthSeconds/static_cast<float>(FrameCount(pool,frames,parent)); // 확보 뒤 현재 TYPE/프레임을 먼저 읽고 그 다음 생성자 경계를 요구한다.
+        Need(regular)(parent,kGrowthEvent,period);
+    }
+    Need(base)(parent,flags);
 }
 // 소유자/공간/프레임과 전투상태를 현재 세션에 연결한다.
 RawIceTower::RawIceTower(SidPool& pool,std::span<const RiftTypeFrames> frames,const IceTowerTypes& types,
