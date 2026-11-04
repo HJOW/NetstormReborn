@@ -1,14 +1,14 @@
-"""cpppj 의 원본 생성자 표(.inc)에서 10.78 부분만 골라 C# 데이터 파일(OriginalConstructors.Data.cs)을 만든다.
+"""cpppj 의 원본 생성자 표(.inc)에서 10.78 부분과 CD 10.72 생성자 몫을 골라 C# 데이터 파일(OriginalConstructors.Data.cs)을 만든다.
 
 사용법 (저장소 루트에서 실행):
   python -X utf8 dotnetpj/tools/gen_original_constructors.py            파일을 다시 만든다
   python -X utf8 dotnetpj/tools/gen_original_constructors.py --check    만든 결과가 현재 파일과 같은지만 확인한다 (다르면 종료 코드 1)
 
 입력은 cpppj/src/o/TypeConstructors.inc 와 DerivedConstructors.inc 이며 읽기만 한다.
-생성자 주소 표만 CD 10.72 몫(kCdConstructors)도 옮긴다(F1 타입 표가 두 판본의 생성자 주소를 채운다). 파생 생성자 쓰기 표는 10.78만 옮긴다.
+생성자 주소 표는 CD 10.72 몫(kCdConstructors)도 옮긴다(F1 타입 표가 두 판본의 생성자 주소를 채운다). 파생 생성자 쓰기 표는 10.78 몫에 CD 10.72 몫(kCdRecipes)도 옮긴다(F2c-11 CD 단일 배치·군집이 CD 생성자를 실행한다).
 결과 표의 정확성은 원본 기계어 기대값
 constructors-x86.tsv(주소 표)와 derived-x86.tsv(쓰기 결과)를 읽는 C# 검사가 확인한다.
-(2026-10-16 W02 첫 조각으로 추가, 2026-11-02 F1에서 CD 주소 표 추가)
+(2026-10-16 W02 첫 조각으로 추가, 2026-11-02 F1에서 CD 주소 표 추가, 2026-11-04 F2c-11에서 CD 쓰기 표 추가)
 """
 
 from pathlib import Path
@@ -31,6 +31,8 @@ PATCH_TYPE_COUNT = 188
 CD_TYPE_COUNT = 171
 # 10.78 파생 생성자 수.
 PATCH_RECIPE_COUNT = 82
+# CD 10.72 파생 생성자 수. (F2c-11, 2026-11-04)
+CD_RECIPE_COUNT = 71
 
 
 def sha256_lf(path: Path) -> str:
@@ -68,9 +70,9 @@ def parse_addresses(text: str, name: str = "kPatchConstructors", expected: int =
     return values
 
 
-def parse_recipes(text: str) -> list[tuple[int, int, list[tuple[int, int, bool, int]]]]:
-    """kPatchRecipes 의 (주소, 최종 vtable, 순서 있는 쓰기 목록)을 읽는다. 쓰기는 (오프셋, 폭, OR 여부, 값)이다."""
-    body = block_of(text, "kPatchRecipes")
+def parse_recipes(text: str, name: str = "kPatchRecipes", expected: int = PATCH_RECIPE_COUNT) -> list[tuple[int, int, list[tuple[int, int, bool, int]]]]:
+    """`name` 표(기본 kPatchRecipes)의 (주소, 최종 vtable, 순서 있는 쓰기 목록)을 읽는다. 쓰기는 (오프셋, 폭, OR 여부, 값)이다."""
+    body = block_of(text, name)
     recipes = []
     # 항목은 한 줄에 하나다: {주소,vtable,개수,{{{쓰기},{쓰기}}}}
     for line in body.splitlines():
@@ -82,8 +84,8 @@ def parse_recipes(text: str) -> list[tuple[int, int, list[tuple[int, int, bool, 
         if len(writes) != int(match.group(3)):
             raise ValueError(f"쓰기 개수 불일치: {line.strip()}")
         recipes.append((parse_int(match.group(1)), parse_int(match.group(2)), writes))
-    if len(recipes) != PATCH_RECIPE_COUNT:
-        raise ValueError(f"10.78 파생 생성자가 {len(recipes)}개다 (기대 {PATCH_RECIPE_COUNT})")
+    if len(recipes) != expected:
+        raise ValueError(f"{name} 파생 생성자가 {len(recipes)}개다 (기대 {expected})")
     return recipes
 
 
@@ -92,13 +94,15 @@ def render() -> str:
     constructors_text = TYPE_CONSTRUCTORS.read_text(encoding="utf-8")
     addresses = parse_addresses(constructors_text)
     cd_addresses = parse_addresses(constructors_text, "kCdConstructors", CD_TYPE_COUNT)
-    recipes = parse_recipes(DERIVED_CONSTRUCTORS.read_text(encoding="utf-8"))
+    derived_text = DERIVED_CONSTRUCTORS.read_text(encoding="utf-8")
+    recipes = parse_recipes(derived_text)
+    cd_recipes = parse_recipes(derived_text, "kCdRecipes", CD_RECIPE_COUNT)
     lines = [
         "// 이 파일은 dotnetpj/tools/gen_original_constructors.py 가 만든다. 직접 고치지 말고 도구를 다시 실행한다.",
         f"// 입력(cpppj, 읽기 전용): TypeConstructors.inc sha256={sha256_lf(TYPE_CONSTRUCTORS)}",
         f"//                         DerivedConstructors.inc sha256={sha256_lf(DERIVED_CONSTRUCTORS)}",
-        "// 파생 생성자 쓰기 표는 10.78 부분만 옮겼고 타입 번호별 주소 표는 CD 10.72 몫도 옮겼다.",
-        "// 결과는 원본 기계어 기대값 constructors-x86.tsv·derived-x86.tsv 로 검사한다 (W02 첫 조각, 2026-10-16. CD 주소 표는 F1, 2026-11-02).",
+        "// 파생 생성자 쓰기 표는 10.78 몫과 CD 10.72 몫(kCdRecipes)을 함께 옮겼다.",
+        "// 결과는 원본 기계어 기대값 constructors-x86.tsv·derived-x86.tsv 로 검사한다 (W02 첫 조각, 2026-10-16. CD 주소 표는 F1, 2026-11-02. CD 쓰기 표는 F2c-11, 2026-11-04).",
         "namespace Netstorm.Core.Original;",
         "",
         "/// <summary>타입 번호별 생성자 원본 주소와 생성 절차(10.78)를 담는 데이터 전용 클래스다. RawSquidFactory 가 Recipe·BaseVtable 로 읽는다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 첫 조각 2026-10-16 생성, 2026-10-20 summary 추가)</summary>",
@@ -130,6 +134,17 @@ def render() -> str:
     ]
     # 생성자마다 한 줄씩 쓴다.
     for address, vtable, writes in recipes:
+        items = ", ".join(f"new({o}, {w}, {'true' if flag else 'false'}, 0x{v:08X})" for o, w, flag, v in writes)
+        lines.append(f"        new(0x{address:08X}, 0x{vtable:08X}, [{items}]),")
+    lines += [
+        "    ];",
+        "",
+        f"    /// <summary>지원하는 파생 생성자 {CD_RECIPE_COUNT}개(CD 10.72)의 주소·최종 가상 표 값·순서 있는 필드 쓰기. (F2c-11, 2026-11-04)</summary>",
+        "    private static readonly ConstructorRecipe[] CdRecipeTable =",
+        "    [",
+    ]
+    # 생성자마다 한 줄씩 쓴다.
+    for address, vtable, writes in cd_recipes:
         items = ", ".join(f"new({o}, {w}, {'true' if flag else 'false'}, 0x{v:08X})" for o, w, flag, v in writes)
         lines.append(f"        new(0x{address:08X}, 0x{vtable:08X}, [{items}]),")
     lines += ["    ];", "}", ""]

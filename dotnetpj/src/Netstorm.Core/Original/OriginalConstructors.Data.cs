@@ -1,8 +1,8 @@
 // 이 파일은 dotnetpj/tools/gen_original_constructors.py 가 만든다. 직접 고치지 말고 도구를 다시 실행한다.
 // 입력(cpppj, 읽기 전용): TypeConstructors.inc sha256=bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27
 //                         DerivedConstructors.inc sha256=fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00
-// 파생 생성자 쓰기 표는 10.78 부분만 옮겼고 타입 번호별 주소 표는 CD 10.72 몫도 옮겼다.
-// 결과는 원본 기계어 기대값 constructors-x86.tsv·derived-x86.tsv 로 검사한다 (W02 첫 조각, 2026-10-16. CD 주소 표는 F1, 2026-11-02).
+// 파생 생성자 쓰기 표는 10.78 몫과 CD 10.72 몫(kCdRecipes)을 함께 옮겼다.
+// 결과는 원본 기계어 기대값 constructors-x86.tsv·derived-x86.tsv 로 검사한다 (W02 첫 조각, 2026-10-16. CD 주소 표는 F1, 2026-11-02. CD 쓰기 표는 F2c-11, 2026-11-04).
 namespace Netstorm.Core.Original;
 
 /// <summary>타입 번호별 생성자 원본 주소와 생성 절차(10.78)를 담는 데이터 전용 클래스다. RawSquidFactory 가 Recipe·BaseVtable 로 읽는다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 첫 조각 2026-10-16 생성, 2026-10-20 summary 추가)</summary>
@@ -149,5 +149,81 @@ public static partial class OriginalConstructors
         new(0x004DD0A0, 0x00519860, [new(0, 4, false, 0x00519860), new(40, 1, true, 0x00000002)]),
         new(0x004DD0D0, 0x005197A8, [new(0, 4, false, 0x005197A8)]),
         new(0x004DD280, 0x00519918, [new(0, 4, false, 0x00519918), new(40, 1, true, 0x00000002)]),
+    ];
+
+    /// <summary>지원하는 파생 생성자 71개(CD 10.72)의 주소·최종 가상 표 값·순서 있는 필드 쓰기. (F2c-11, 2026-11-04)</summary>
+    private static readonly ConstructorRecipe[] CdRecipeTable =
+    [
+        new(0x00401BF0, 0x00500030, [new(0, 4, false, 0x00500030)]),
+        new(0x00407950, 0x005002A8, [new(0, 4, false, 0x005002A8)]),
+        new(0x0040D790, 0x005003E0, [new(0, 4, false, 0x005003E0)]),
+        new(0x00414C20, 0x005006A8, [new(0, 4, false, 0x005006A8)]),
+        new(0x00414D50, 0x00500760, [new(0, 4, false, 0x00500760)]),
+        new(0x00415D10, 0x00500818, [new(0, 4, false, 0x00500818)]),
+        new(0x00416AA0, 0x005009A0, [new(0, 4, false, 0x005009A0)]),
+        new(0x00416D60, 0x00500A58, [new(0, 4, false, 0x00500A58)]),
+        new(0x00416D80, 0x00500B10, [new(0, 4, false, 0x00500B10)]),
+        new(0x00435F40, 0x00501120, [new(0, 4, false, 0x00501120)]),
+        new(0x00435F60, 0x005011E8, [new(0, 4, false, 0x005011E8)]),
+        new(0x00435F80, 0x005012B0, [new(0, 4, false, 0x005012B0)]),
+        new(0x00435FA0, 0x00501378, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x00501378)]),
+        new(0x00435FD0, 0x00501440, [new(0, 4, false, 0x00501440)]),
+        new(0x00435FF0, 0x005014F8, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x005014F8)]),
+        new(0x004487A0, 0x005019F8, [new(0, 4, false, 0x005019F8)]),
+        new(0x004491A0, 0x00501AB0, [new(0, 4, false, 0x00501AB0)]),
+        new(0x0044A4C0, 0x00501B90, [new(0, 4, false, 0x00501B90)]),
+        new(0x0044FD70, 0x00501D28, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x00501D28)]),
+        new(0x0044FDA0, 0x00501DE0, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x00501DE0)]),
+        new(0x0044FDD0, 0x00501E98, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x00501E98)]),
+        new(0x00459EB0, 0x005022F8, [new(0, 4, false, 0x005022F8)]),
+        new(0x004601A0, 0x005026B8, [new(0, 4, false, 0x005025F0), new(0, 4, false, 0x005026B8)]),
+        new(0x004601D0, 0x005026B8, [new(0, 4, false, 0x005025F0), new(0, 4, false, 0x005026B8)]),
+        new(0x00460200, 0x005026B8, [new(0, 4, false, 0x005025F0), new(0, 4, false, 0x005026B8)]),
+        new(0x00460230, 0x005026B8, [new(0, 4, false, 0x005025F0), new(0, 4, false, 0x005026B8)]),
+        new(0x00460260, 0x00502780, [new(0, 4, false, 0x005025F0), new(0, 4, false, 0x00502780)]),
+        new(0x00460290, 0x00502848, [new(0, 4, false, 0x005025F0), new(0, 4, false, 0x00502848)]),
+        new(0x004602C0, 0x00502910, [new(0, 4, false, 0x005025F0), new(0, 4, false, 0x00502910)]),
+        new(0x004602F0, 0x005029D8, [new(0, 4, false, 0x005025F0), new(0, 4, false, 0x005029D8)]),
+        new(0x00460320, 0x00502AA0, [new(0, 4, false, 0x005025F0), new(0, 4, false, 0x00502AA0)]),
+        new(0x0046DE00, 0x00502C98, [new(35, 1, true, 0x00000002), new(8, 2, false, 0x00000000), new(0, 4, false, 0x00502C98)]),
+        new(0x0046DE30, 0x00502C98, [new(35, 1, true, 0x00000002), new(8, 2, false, 0x00000000), new(0, 4, false, 0x00502C98)]),
+        new(0x0046DE60, 0x00502D50, [new(35, 1, true, 0x00000002), new(8, 2, false, 0x00000000), new(0, 4, false, 0x00502D50), new(26, 2, false, 0x00000000)]),
+        new(0x004783C0, 0x00503008, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x00503008)]),
+        new(0x004783F0, 0x005030C0, [new(0, 4, false, 0x005030C0)]),
+        new(0x00478410, 0x005031B0, [new(0, 4, false, 0x005031B0)]),
+        new(0x0047A190, 0x00503298, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x00503298)]),
+        new(0x0047B540, 0x00503358, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x00503298), new(0, 4, false, 0x00503358)]),
+        new(0x0047C5A0, 0x00503A78, [new(0, 4, false, 0x00503A78)]),
+        new(0x0047C880, 0x00503B30, [new(0, 4, false, 0x00503B30)]),
+        new(0x0047CA20, 0x00503BE8, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x00503BE8)]),
+        new(0x0047FD90, 0x00503EE8, [new(0, 4, false, 0x00503EE8)]),
+        new(0x00483500, 0x00504090, [new(0, 4, false, 0x00504090)]),
+        new(0x00483560, 0x00504148, [new(0, 4, false, 0x00504148)]),
+        new(0x00483D80, 0x00504200, [new(0, 4, false, 0x00504200)]),
+        new(0x00483DA0, 0x005042B8, [new(0, 4, false, 0x005042B8)]),
+        new(0x0048AEB0, 0x005044F8, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x005044F8)]),
+        new(0x00491420, 0x005046F8, [new(0, 4, false, 0x005046F8)]),
+        new(0x00491440, 0x005047C8, [new(0, 4, false, 0x005047C8)]),
+        new(0x00497910, 0x00504C00, [new(0, 4, false, 0x00504C00)]),
+        new(0x00497930, 0x00504CD8, [new(0, 4, false, 0x00504CD8)]),
+        new(0x00497950, 0x00504DB0, [new(35, 1, true, 0x00000002), new(0, 4, false, 0x00504DB0)]),
+        new(0x00497980, 0x00504E68, [new(0, 4, false, 0x00504E68)]),
+        new(0x004979A0, 0x00504F20, [new(0, 4, false, 0x00504F20)]),
+        new(0x004979C0, 0x00504FD8, [new(0, 4, false, 0x00504FD8)]),
+        new(0x004990F0, 0x005050F0, [new(0, 4, false, 0x005050F0)]),
+        new(0x004C07B0, 0x005060B0, [new(0, 4, false, 0x005060B0)]),
+        new(0x004C07D0, 0x00506168, [new(0, 4, false, 0x00506168)]),
+        new(0x004C07F0, 0x00506230, [new(0, 4, false, 0x00506230)]),
+        new(0x004C0810, 0x005062F8, [new(0, 4, false, 0x005062F8)]),
+        new(0x004D0330, 0x00506960, [new(0, 4, false, 0x00506960)]),
+        new(0x004D0380, 0x00506A18, [new(0, 4, false, 0x00506A18)]),
+        new(0x004D0400, 0x00506AD0, [new(0, 4, false, 0x00506AD0)]),
+        new(0x004D0C80, 0x00506BB0, [new(0, 4, false, 0x00506BB0)]),
+        new(0x004E7920, 0x00506EA0, [new(0, 4, false, 0x00506EA0)]),
+        new(0x004E7940, 0x00506F70, [new(0, 4, false, 0x00506F70)]),
+        new(0x004E7960, 0x00507040, [new(0, 4, false, 0x00507040)]),
+        new(0x004E7BC0, 0x00507110, [new(0, 4, false, 0x00507110)]),
+        new(0x004E7BE0, 0x005071E0, [new(0, 4, false, 0x005071E0)]),
+        new(0x004E8B10, 0x005072F0, [new(0, 4, false, 0x005072F0)]),
     ];
 }

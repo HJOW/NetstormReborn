@@ -27,6 +27,7 @@ public interface IRawUnpop
 /// 생산 칸 contained Form 과 GumpForm 의 생성은 Form 모듈(W03)에서 옮긴다.
 /// 근거: docs/exe/cpp-creation-reconstruction.md, docs/exe/cpp-derived-reconstruction.md, cpppj/src/o/SquidFactory.cpp (W02 첫 조각, 2026-10-16; Retype·생성자 표 명시 오류는 R0-4 재대조, 2026-10-28).
 /// 최종 가상 표 판별(SupportsConstructedVtable)과 약화 전역 공유(BindWeakenedMana)는 판본·세션 소유 문제라 R4·R6에서 연결한다.
+/// 생성·타입 변경·최초 Pop 플래그의 판본별 표·위치는 F2c-11에서 이었다. Take·공통 postCreate의 나머지 CD 분기는 별도 범위다.
 /// </summary>
 public sealed class RawSquidFactory
 {
@@ -44,6 +45,9 @@ public sealed class RawSquidFactory
 
     /// <summary>슬롯 안 추가 비트 바이트의 위치. 받침의 abstract 비트(1)와 최초 Pop 의 매립 비트(8)를 담는다.</summary>
     private const int ExtraOffset = 40;
+
+    /// <summary>슬롯 안 추가 비트 바이트의 위치(CD 10.72). (F2c-11, 2026-11-04)</summary>
+    private const int CdExtraOffset = 35;
 
     /// <summary>상태 바이트의 contained 비트(생산 칸에 들어 있는 내용물).</summary>
     private const byte ContainedBit = 8;
@@ -249,7 +253,7 @@ public sealed class RawSquidFactory
     }
 
     /// <summary>
-    /// 최초 Pop 의 공통 플래그를 추가 비트에서 읽는다(원본 004ad470). 추가 비트(+40)의 1·8 이 모두 꺼져 있으면 1,
+    /// 최초 Pop 의 공통 플래그를 추가 비트에서 읽는다(원본 004ad470). 추가 비트(패치 +40·CD +35)의 1·8 이 모두 꺼져 있으면 1,
     /// 아니면 1 비트(abstract)가 2, 8 비트(매립)가 4 를 더한다.
     /// </summary>
     /// <param name="sid">대상 슬롯 번호.</param>
@@ -261,7 +265,7 @@ public sealed class RawSquidFactory
         {
             throw new InvalidOperationException("firstPop 가상 표 오류");
         }
-        byte extra = bytes[ExtraOffset];
+        byte extra = bytes[_pool.Edition == OriginalEdition.Patch1078 ? ExtraOffset : CdExtraOffset];
         return (extra & 9) == 0 ? 1U : (((extra & 1) != 0 ? 2U : 0U) | ((extra & 8) != 0 ? 4U : 0U));
     }
 
@@ -312,7 +316,7 @@ public sealed class RawSquidFactory
             throw new ArgumentOutOfRangeException(nameof(number), number, "base 오브젝트 타입 번호 오류");
         }
         OriginalTypeRecord type = _types[(int)number];
-        if (requireSupported && type.ConstructorAddress != 0 && OriginalConstructors.Recipe(type.ConstructorAddress) is null)
+        if (requireSupported && type.ConstructorAddress != 0 && OriginalConstructors.Recipe(_pool.Edition, type.ConstructorAddress) is null)
         {
             throw new InvalidOperationException("null/assert 또는 미복원 생성자는 지원하지 않습니다");
         }
@@ -336,18 +340,18 @@ public sealed class RawSquidFactory
     }
 
     /// <summary>
-    /// 타입의 최종 가상 표 값. 생성자 주소가 0 이면 기본 Squid, 아니면 표의 파생 생성자가 마지막에 쓰는 값이다.
+    /// 타입의 최종 가상 표 값. 생성자 주소가 0 이면 판본별 기본 Squid, 아니면 판본별 표의 파생 생성자가 마지막에 쓰는 값이다.
     /// 표에 없는 생성자 주소는 원문처럼 명시 오류로 거부한다(호스트 역참조 전에 검사한다).
-    /// 근거: cpppj/src/o/SquidFactory.cpp ConstructorVtable (R0-4 재대조, 2026-10-28).
+    /// 근거: cpppj/src/o/SquidFactory.cpp ConstructorVtable (R0-4 재대조, 2026-10-28; 판본별 표 F2c-11, 2026-11-04).
     /// </summary>
     /// <param name="type">타입 레코드.</param>
-    private static uint ConstructorVtable(OriginalTypeRecord type)
+    private uint ConstructorVtable(OriginalTypeRecord type)
     {
         if (type.ConstructorAddress == 0)
         {
-            return OriginalConstructors.BaseVtable;
+            return OriginalConstructors.BaseVtableFor(_pool.Edition);
         }
-        ConstructorRecipe? recipe = OriginalConstructors.Recipe(type.ConstructorAddress);
+        ConstructorRecipe? recipe = OriginalConstructors.Recipe(_pool.Edition, type.ConstructorAddress);
         if (recipe is null)
         {
             throw new InvalidOperationException("현재 TYPE의 미등록 생성자 가상 표 조회");
@@ -356,20 +360,20 @@ public sealed class RawSquidFactory
     }
 
     /// <summary>
-    /// 타입의 생성자 쓰기를 슬롯에 순서대로 적용한다. 주소가 0 이면 기본 가상 표 하나만 쓴다.
+    /// 타입의 생성자 쓰기를 슬롯에 순서대로 적용한다. 주소가 0 이면 판본별 기본 가상 표 하나만 쓴다.
     /// OR 쓰기는 같은 폭의 기존 바이트를 읽어 합치며 이웃 필드는 건드리지 않는다. 호출 전에 지원 여부를 검사해야 한다.
     /// </summary>
     /// <param name="bytes">대상 슬롯 바이트.</param>
     /// <param name="type">타입 레코드.</param>
-    private static void ApplyConstructor(Span<byte> bytes, OriginalTypeRecord type)
+    private void ApplyConstructor(Span<byte> bytes, OriginalTypeRecord type)
     {
         if (type.ConstructorAddress == 0)
         {
-            Put(bytes, VtableOffset, OriginalConstructors.BaseVtable, 4);
+            Put(bytes, VtableOffset, OriginalConstructors.BaseVtableFor(_pool.Edition), 4);
             return;
         }
         // 쓰기 순서와 폭을 유지해 섬 번호·플래그·anim HP 처리를 원본대로 한다
-        foreach (ConstructorWrite write in OriginalConstructors.Recipe(type.ConstructorAddress)!.Writes)
+        foreach (ConstructorWrite write in OriginalConstructors.Recipe(_pool.Edition, type.ConstructorAddress)!.Writes)
         {
             uint value = write.Value;
             if (write.OrBits)

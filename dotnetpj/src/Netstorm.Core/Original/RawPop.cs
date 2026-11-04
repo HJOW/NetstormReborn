@@ -96,6 +96,7 @@ public enum RawPopResult
 /// 겹침 반환 때는 좌표·화면 좌표 쓰기와 그때까지의 spot·건물 옆면·미니맵 알림이 남는다.
 /// 원본은 손상된 머리·잘못된 발자국·미복원 효과(건물 옆면·표시 갱신의 파생 가상 표)를 <b>풀·공간을 바꾸기 전에</b> 예외로 거부한다.
 /// 기준 판본은 10.78 뿐이다(CD 10.72 는 무효 void 를 조용히 넘기는 등 달라서 옮기지 않았다).
+/// CD 판본의 표시 지원·추가 비트·단계 위치 분기는 F2c-11에서 이었다. 무효 void·겹침 분기는 별도 범위다.
 /// 근거: cpppj/src/o/SquidPop.cpp (W02 Pop 조각, 2026-10-20).
 /// </summary>
 public sealed class RawPop
@@ -118,8 +119,14 @@ public sealed class RawPop
     /// <summary>슬롯 안 저장 단계 바이트의 위치(10.78).</summary>
     private const int LevelOffset = 33;
 
+    /// <summary>슬롯 안 저장 단계 바이트의 위치(CD 10.72). (F2c-11, 2026-11-04)</summary>
+    private const int CdLevelOffset = 31;
+
     /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
     private const int ExtraOffset = 40;
+
+    /// <summary>슬롯 안 추가 비트 바이트의 위치(CD 10.72). (F2c-11, 2026-11-04)</summary>
+    private const int CdExtraOffset = 35;
 
     /// <summary>상태 바이트의 전송 중(transmitting) 비트. 이 비트가 켜진 슬롯의 Pop 은 거부한다.</summary>
     private const byte TransmittingBit = 16;
@@ -267,14 +274,17 @@ public sealed class RawPop
             x = FallbackCoordinate;
             y = FallbackCoordinate;
         }
-        bool buried = (old[ExtraOffset] & BuriedBit) != 0;
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        int extraOffset = patch ? ExtraOffset : CdExtraOffset;
+        int levelOffset = patch ? LevelOffset : CdLevelOffset;
+        bool buried = (old[extraOffset] & BuriedBit) != 0;
         if (!buried && (type.Flags2 & OriginalTypeRecord.BuildingMask) != 0 && _building is null)
         {
             throw new InvalidOperationException("Pop 건물 부착 공간이 연결되지 않았습니다");
         }
         uint vtable = Read(old, 0, 4);
-        if (!OriginalPopDisplay.Supports(vtable, flags)
-            && !(_postPop is not null && _postPop.HandlesDerived(sid) && OriginalUnpopDisplay.Supports(vtable, flags)))
+        if (!OriginalPopDisplay.Supports(_pool.Edition, vtable, flags)
+            && !(_postPop is not null && _postPop.HandlesDerived(sid) && OriginalUnpopDisplay.Supports(_pool.Edition, vtable, flags)))
         {
             throw new InvalidOperationException("Pop 파생 등록 효과를 아직 지원하지 않습니다");
         }
@@ -304,9 +314,9 @@ public sealed class RawPop
         }
         _display?.Validate(old, flags);
         uint normalized = flags;
-        if ((old[ExtraOffset] & FirstPopBit) == 0)
+        if ((old[extraOffset] & FirstPopBit) == 0)
         {
-            normalized |= FirstPopBits(old[ExtraOffset]);
+            normalized |= FirstPopBits(old[extraOffset]);
         }
         if ((normalized & DeactivateBit) == 0)
         {
@@ -348,7 +358,7 @@ public sealed class RawPop
                 }
             }
         }
-        bytes[LevelOffset] = (byte)level;
+        bytes[levelOffset] = (byte)level;
         Put(bytes, RawSidPool.NextOffset, head, 2);
         head = (ushort)sid;
         if (level == 0 && (type.Flags2 & BridgeBit) == 0)
@@ -357,10 +367,10 @@ public sealed class RawPop
         }
         // 머리를 연결한 뒤, 최초 Pop·void 해제 전에 이전 위치의 표시를 갱신한다
         _display?.Update(bytes, flags);
-        if ((bytes[ExtraOffset] & FirstPopBit) == 0)
+        if ((bytes[extraOffset] & FirstPopBit) == 0)
         {
-            flags |= FirstPopBits(bytes[ExtraOffset]);
-            bytes[ExtraOffset] |= FirstPopBit;
+            flags |= FirstPopBits(bytes[extraOffset]);
+            bytes[extraOffset] |= FirstPopBit;
         }
         bytes[RawSidPool.StateOffset] &= unchecked((byte)~RawSidPool.VoidBit);
         if ((flags & DeactivateBit) == 0)

@@ -34,8 +34,14 @@ public static partial class OriginalConstructors
     /// <summary>기본 Squid 객체가 슬롯 +0 에 쓰는 가상 표 값(10.78). 호스트 포인터가 아니라 클래스 식별 값이다.</summary>
     public const uint BaseVtable = 0x00501DD0;
 
+    /// <summary>기본 Squid 객체가 슬롯 +0 에 쓰는 가상 표 값(CD 10.72). (F2c-11, 2026-11-04)</summary>
+    public const uint CdBaseVtable = 0x005058D8;
+
     /// <summary>생성자 주소로 파생 생성자를 찾는 사전. 같은 주소가 여럿이면 표에서 먼저 나온 항목을 쓴다(원본 조회와 같다).</summary>
     private static readonly Dictionary<uint, ConstructorRecipe> RecipesByAddress = [];
+
+    /// <summary>CD 생성자 주소로 파생 생성자를 찾는 사전. (F2c-11, 2026-11-04)</summary>
+    private static readonly Dictionary<uint, ConstructorRecipe> CdRecipesByAddress = [];
 
     /// <summary>
     /// 파생 생성자 표에서 주소 사전을 채운다. 표(RecipeTable)는 부분 클래스의 다른 파일에 있고 정적 필드 초기화 순서는 파일 사이에 정해져 있지 않으므로,
@@ -47,6 +53,11 @@ public static partial class OriginalConstructors
         foreach (ConstructorRecipe recipe in RecipeTable)
         {
             RecipesByAddress.TryAdd(recipe.Address, recipe);
+        }
+        // CD 표도 같은 방식으로 채운다
+        foreach (ConstructorRecipe recipe in CdRecipeTable)
+        {
+            CdRecipesByAddress.TryAdd(recipe.Address, recipe);
         }
     }
 
@@ -74,6 +85,25 @@ public static partial class OriginalConstructors
     /// <summary>생성자 주소에 대응하는 검증된 파생 생성자를 찾는다. 표에 없으면(미복원·null·assert 생성자) null 이다.</summary>
     /// <param name="address">타입의 생성자 주소.</param>
     public static ConstructorRecipe? Recipe(uint address) => RecipesByAddress.GetValueOrDefault(address);
+
+    /// <summary>판본별 생성자 주소에 대응하는 검증된 파생 생성자를 찾는다(cpppj <c>Recipe</c>). 표에 없으면 null 이다.</summary>
+    /// <param name="edition">원본 판본.</param>
+    /// <param name="address">타입의 생성자 주소.</param>
+    /// <remarks>2026-11-04 F2c-11에서 추가했다.</remarks>
+    public static ConstructorRecipe? Recipe(OriginalEdition edition, uint address)
+    {
+        return edition == OriginalEdition.Cd1072
+            ? CdRecipesByAddress.GetValueOrDefault(address)
+            : RecipesByAddress.GetValueOrDefault(address);
+    }
+
+    /// <summary>판본별 기본 Squid 객체의 슬롯 +0 최종 가상 표 값이다(cpppj <c>SquidFactory::BaseVtable</c>).</summary>
+    /// <param name="edition">원본 판본.</param>
+    /// <remarks>2026-11-04 F2c-11에서 추가했다.</remarks>
+    public static uint BaseVtableFor(OriginalEdition edition)
+    {
+        return edition == OriginalEdition.Cd1072 ? CdBaseVtable : BaseVtable;
+    }
 
     /// <summary>지원하는 파생 생성자 목록을 읽기 전용으로 돌려준다. 검사와 도구가 개수와 주소를 확인하는 데 쓴다.</summary>
     public static IReadOnlyList<ConstructorRecipe> Recipes => RecipeTable;

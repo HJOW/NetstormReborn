@@ -1,13 +1,14 @@
 namespace Netstorm.Core.Original;
 
 /// <summary>
-/// 공간 등록(Pop)이 파생 firstPop/postPop 효과를 호출해도 되는지 가리는 가상 표(클래스 식별 값)의 지원 표(10.78).
+/// 공간 등록(Pop)이 파생 firstPop/postPop 효과를 호출해도 되는지 가리는 가상 표(클래스 식별 값)의 지원 표(10.78·CD 10.72).
 /// 표에 없는 클래스는 파생 공간 등록 효과가 아직 복원되지 않았으므로 Pop 이 상태를 바꾸기 전에 거부한다.
 /// 표 자료(.Data.cs)는 dotnetpj/tools/gen_original_pop_vtables.py 가 cpppj 목록에서 만들고,
 /// 원본 기계어 기대값 pop-vtables.tsv 의 10.78 83행으로 검증한다.
 /// 판정은 원본 SquidPop::Supports(004b02d0, 10.78)와 같다: 마나 대체 주소 3개는 앞 분기로 가리고,
 /// 0x50C3B0·0x509810 은 원본 표시 지원의 무조건 지원 분기로 true, 0x5070C0 과 표 26개는
 /// 공통 표시 지원(<see cref="OriginalUnpopDisplay.Supports"/>)으로 가린다.
+/// CD 판본은 판본별 표와 판본별 공통 표시 지원으로 가린다(F2c-11, 2026-11-04).
 /// 근거: cpppj/src/o/SquidPop.cpp (W02 Pop 조각, 2026-10-20).
 /// </summary>
 public static partial class OriginalPopDisplay
@@ -49,6 +50,32 @@ public static partial class OriginalPopDisplay
             if (candidate == vtable)
             {
                 return OriginalUnpopDisplay.Supports(vtable, flags);
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 판본별 가상 표가 이 호출 플래그에서 Pop 의 파생 효과를 지원하는지 돌려준다(cpppj <c>SquidPop::Supports</c>).
+    /// </summary>
+    /// <param name="edition">원본 판본.</param>
+    /// <param name="vtable">슬롯 +0 의 가상 표 값.</param>
+    /// <param name="flags">Pop 호출 플래그. 소용돌이 비트(0x2000)가 켜지면 소용돌이 경로 지원을 요구한다.</param>
+    /// <remarks>2026-11-04 F2c-11에서 추가했다.</remarks>
+    public static bool Supports(OriginalEdition edition, uint vtable, uint flags)
+    {
+        // 패치판 마나 3개는 원본처럼 판본별 공통 표시 지원으로 가린다
+        if (edition == OriginalEdition.Patch1078 && (vtable == ManaVtable0 || vtable == ManaVtable1 || vtable == ManaVtable2))
+        {
+            return OriginalUnpopDisplay.Supports(edition, vtable, flags);
+        }
+        uint[] values = edition == OriginalEdition.Patch1078 ? Table : CdTable;
+        // 찾은 표 항목도 판본별 공통 표시 지원으로 가린다
+        foreach (uint candidate in values)
+        {
+            if (candidate == vtable)
+            {
+                return OriginalUnpopDisplay.Supports(edition, vtable, flags);
             }
         }
         return false;

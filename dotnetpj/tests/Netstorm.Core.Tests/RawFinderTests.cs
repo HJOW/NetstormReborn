@@ -250,4 +250,56 @@ public sealed class RawFinderTests
         Write(pool.AllocatedBytes(50), 14, 0, 4);
         Assert.NotEqual(50, finder.Begin(new SquidSearchArea(20, 21, 20, 21)));
     }
+
+    /// <summary>
+    /// CD 판본은 0 초과 1 미만 좌표를 건너뛰지 않고 assert로 멈춘다. 패치는 같은 후보를 계속 검사한다.
+    /// </summary>
+    /// <remarks>2026-11-04 F2c-11에서 추가했다. CD 매립 바이트·좌표 분기의 직접 경계다.</remarks>
+    [Fact]
+    public void CdCoordinatesInUnitIntervalThrow()
+    {
+        // CD 풀에 x 0.5 후보를 둔다
+        RawSidPool cdPool = new(24000, false, null, OriginalEdition.Cd1072);
+        Assert.Equal(5, cdPool.Allocate(SidAllocation.Client));
+        RawSquidHash cdHash = new();
+        OriginalTypeRecord[] cdTypes = new OriginalTypeRecord[256];
+        // 256개 타입 번호 범위의 빈 타입 레코드를 채운다
+        for (int index = 0; index < cdTypes.Length; index++)
+        {
+            cdTypes[index] = new OriginalTypeRecord();
+        }
+        cdTypes[74].FootX = 1;
+        cdTypes[74].FootY = 1;
+        Span<byte> cdRaw = cdPool.AllocatedBytes(5);
+        cdRaw.Clear();
+        cdRaw[RawSidPool.TypeOffset] = 74;
+        Write(cdRaw, 14, BitConverter.SingleToUInt32Bits(0.5f), 4);
+        Write(cdRaw, 18, BitConverter.SingleToUInt32Bits(20f), 4);
+        cdHash.Cell(1, 0, 10) = 5;
+        RawSquidFinder cdFinder = new(cdPool, cdHash, cdTypes);
+        // 1 미만 x는 CD assert로 멈춘다
+        ArgumentOutOfRangeException error = Assert.Throws<ArgumentOutOfRangeException>(
+            () => cdFinder.Begin(new SquidSearchArea(0, 20, 0, 20), 1));
+        Assert.Equal("sid", error.ParamName);
+        // 패치 풀의 같은 후보는 assert 없이 겹침까지 검사한다
+        RawSidPool patchPool = new(24000, false, null, OriginalEdition.Patch1078);
+        Assert.Equal(5, patchPool.Allocate(SidAllocation.Client));
+        RawSquidHash patchHash = new();
+        OriginalTypeRecord[] patchTypes = new OriginalTypeRecord[256];
+        // 256개 타입 번호 범위의 빈 타입 레코드를 채운다
+        for (int index = 0; index < patchTypes.Length; index++)
+        {
+            patchTypes[index] = new OriginalTypeRecord();
+        }
+        patchTypes[74].FootX = 1;
+        patchTypes[74].FootY = 1;
+        Span<byte> patchRaw = patchPool.AllocatedBytes(5);
+        patchRaw.Clear();
+        patchRaw[RawSidPool.TypeOffset] = 74;
+        Write(patchRaw, 14, BitConverter.SingleToUInt32Bits(0.5f), 4);
+        Write(patchRaw, 18, BitConverter.SingleToUInt32Bits(20f), 4);
+        patchHash.Cell(1, 0, 10) = 5;
+        RawSquidFinder patchFinder = new(patchPool, patchHash, patchTypes);
+        Assert.Equal(5, patchFinder.Begin(new SquidSearchArea(0, 20, 0, 20), 1));
+    }
 }

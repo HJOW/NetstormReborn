@@ -52,12 +52,13 @@ public struct SquidSearchState
 }
 
 /// <summary>
-/// 원본 사각형 탐색기의 4단계 해시·적 raw 체인(원본 RawSquidFinder, 10.78).
+/// 원본 사각형 탐색기의 4단계 해시·적 raw 체인(원본 RawSquidFinder, 10.78·CD 10.72).
 /// Begin 으로 사각형·플래그·필터를 정하고 Next 로 후보를 하나씩 받는다.
 /// 반환된 후보의 다음 체인은 먼저 확보하고, 필터·호출 중 변경은 다음 후보의 변경된 값으로 읽는다.
 /// 매립은 제외하고 free·dead·void 는 호출자 필터의 몫으로 남긴다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 좌표 assert·추가 바이트 위치가 달라서 옮기지 않았다).
-/// 근거: cpppj/src/o/RawSquidFinder.cpp (W02 탐색 조각, 2026-10-20).
+/// CD 판본은 매립 바이트 위치(35)와 물리 범위 밖 좌표 assert가 다르며 F2c-11에서 이었다.
+/// 발자국 검증은 기존 직접 검사(<c>RawFinderTests.FootprintValidationRejectsBadFeet</c>)가 0을 거부하므로 원문 조건 그대로 두지 않았다.
+/// 근거: cpppj/src/o/RawSquidFinder.cpp (W02 탐색 조각, 2026-10-20; CD 분기 F2c-11, 2026-11-04).
 /// </summary>
 public sealed class RawSquidFinder
 {
@@ -75,6 +76,9 @@ public sealed class RawSquidFinder
 
     /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
     private const int ExtraOffset = 40;
+
+    /// <summary>슬롯 안 추가 비트 바이트의 위치(CD 10.72).</summary>
+    private const int CdExtraOffset = 35;
 
     /// <summary>추가 비트의 매립(buried) 비트. 켜진 후보는 건너뛴다.</summary>
     private const byte BuriedBit = 8;
@@ -206,8 +210,9 @@ public sealed class RawSquidFinder
             }
             ReadOnlySpan<byte> raw = _pool.Slot(_state.Current);
             _state.Next = (int)Read(raw, NextOffset, 2);
-            // 매립 후보는 건너뛴다
-            if ((raw[ExtraOffset] & BuriedBit) != 0)
+            // 매립 후보는 건너뛴다. 판본별 추가 바이트 위치가 다르다
+            int extra = _pool.Edition == OriginalEdition.Patch1078 ? ExtraOffset : CdExtraOffset;
+            if ((raw[extra] & BuriedBit) != 0)
             {
                 continue;
             }
@@ -261,6 +266,7 @@ public sealed class RawSquidFinder
 
     /// <summary>
     /// 현재 후보의 발자국이 탐색 사각형과 겹치는지 본다. 보드 밖·0 이하 좌표는 건너뛰고, 타입·발자국이 깨지면 거부한다.
+    /// CD 판본은 유효 구간 안의 1 미만 좌표도 assert로 멈춘다.
     /// </summary>
     /// <param name="sid">후보 번호.</param>
     private bool Intersects(int sid)
@@ -268,9 +274,16 @@ public sealed class RawSquidFinder
         ReadOnlySpan<byte> raw = _pool.Slot(sid);
         float x = BitConverter.UInt32BitsToSingle(Read(raw, XOffset));
         float y = BitConverter.UInt32BitsToSingle(Read(raw, YOffset));
-        // 보드 밖·0 이하 좌표는 건너뛴다
-        if (!float.IsFinite(x) || !float.IsFinite(y) || x <= 0 || y <= 0 || x >= RawSquidHash.WorldCells || y >= RawSquidHash.WorldCells)
+        // 패치는 0 초과면 유효하고 CD는 1 미만도 assert다
+        bool valid = float.IsFinite(x) && float.IsFinite(y) && x > 0 && y > 0 && x < RawSquidHash.WorldCells && y < RawSquidHash.WorldCells
+            && (_pool.Edition == OriginalEdition.Patch1078 || (x >= 1 && y >= 1));
+        if (!valid)
         {
+            // 보드 밖·0 이하 좌표는 건너뛴다
+            if (_pool.Edition == OriginalEdition.Cd1072)
+            {
+                throw new ArgumentOutOfRangeException(nameof(sid), sid, "CD 원시 찾기 좌표 오류");
+            }
             return false;
         }
         uint number = raw[TypeOffset];

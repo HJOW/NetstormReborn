@@ -1,12 +1,12 @@
-"""cpppj 의 Unpop 표시 지원 표(.inc)에서 10.78 부분만 골라 C# 데이터 파일(OriginalUnpopDisplay.Data.cs)을 만든다.
+"""cpppj 의 Unpop 표시 지원 표(.inc)에서 10.78 몫과 CD 10.72 몫을 골라 C# 데이터 파일(OriginalUnpopDisplay.Data.cs)을 만든다.
 
 사용법 (저장소 루트에서 실행):
   python -X utf8 dotnetpj/tools/gen_original_unpop_vtables.py            파일을 다시 만든다
   python -X utf8 dotnetpj/tools/gen_original_unpop_vtables.py --check    만든 결과가 현재 파일과 같은지만 확인한다 (다르면 종료 코드 1)
 
-입력은 cpppj/src/o/UnpopVtables.inc 이며 읽기만 한다. CD 10.72 표(kCdDisplayVtables)는 기준 판본이 아니므로 옮기지 않는다.
+입력은 cpppj/src/o/UnpopVtables.inc 이며 읽기만 한다. CD 10.72 표(kCdDisplayVtables)도 옮긴다(F2c-11 CD 단일 배치·군집이 CD 가상 표를 Pop 한다).
 결과 표의 정확성은 원본 기계어 기대값 unpop-vtables.tsv(10.78 83행)를 읽는 C# 검사가 확인한다.
-(2026-10-16 W02 Unpop 조각으로 추가. gen_original_constructors.py 와 같은 방식이다.)
+(2026-10-16 W02 Unpop 조각으로 추가. gen_original_constructors.py 와 같은 방식이다. 2026-11-04 F2c-11에서 CD 표 추가)
 """
 
 from pathlib import Path
@@ -23,6 +23,8 @@ UNPOP_VTABLES = ROOT / "cpppj" / "src" / "o" / "UnpopVtables.inc"
 OUTPUT = ROOT / "dotnetpj" / "src" / "Netstorm.Core" / "Original" / "OriginalUnpopDisplay.Data.cs"
 # 10.78 표의 항목 수. 입력의 길이가 이와 다르면 입력이 바뀐 것이므로 중단한다.
 PATCH_ENTRY_COUNT = 83
+# CD 10.72 표의 항목 수. (F2c-11, 2026-11-04)
+CD_ENTRY_COUNT = 68
 
 
 def sha256_lf(path: Path) -> str:
@@ -32,26 +34,33 @@ def sha256_lf(path: Path) -> str:
 
 def parse_patch_entries(text: str) -> list[tuple[int, int]]:
     """kPatchDisplayVtables 의 (가상 표 주소, 지원 비트) 목록을 읽는다. 지원 비트는 1(일반)·2(소용돌이 경로)의 합이다."""
-    start = text.index("kPatchDisplayVtables")
+    return parse_entries(text, "kPatchDisplayVtables", PATCH_ENTRY_COUNT)
+
+
+def parse_entries(text: str, name: str, expected: int) -> list[tuple[int, int]]:
+    """`name` 표의 (가상 표 주소, 지원 비트) 목록을 읽는다. 지원 비트는 1(일반)·2(소용돌이 경로)의 합이다."""
+    start = text.index(name)
     begin = text.index("{{", start)
     end = text.index("}}", begin)
     entries = [(int(address, 16), int(mask))
                for address, mask in re.findall(r"\{(0x[0-9A-Fa-f]+)U,(\d+)\}", text[begin:end])]
-    if len(entries) != PATCH_ENTRY_COUNT:
-        raise ValueError(f"10.78 표시 지원 표가 {len(entries)}개다 (기대 {PATCH_ENTRY_COUNT})")
+    if len(entries) != expected:
+        raise ValueError(f"{name} 표시 지원 표가 {len(entries)}개다 (기대 {expected})")
     return entries
 
 
 def render() -> str:
     """읽은 표로 C# 데이터 파일의 전체 내용을 만든다 (LF, UTF-8)."""
-    entries = parse_patch_entries(UNPOP_VTABLES.read_text(encoding="utf-8"))
+    text = UNPOP_VTABLES.read_text(encoding="utf-8")
+    entries = parse_patch_entries(text)
+    cd_entries = parse_entries(text, "kCdDisplayVtables", CD_ENTRY_COUNT)
     lines = [
         "// 이 파일은 dotnetpj/tools/gen_original_unpop_vtables.py 가 만든다. 직접 고치지 말고 도구를 다시 실행한다.",
         f"// 입력(cpppj, 읽기 전용): UnpopVtables.inc sha256={sha256_lf(UNPOP_VTABLES)}",
-        "// 10.78 부분만 옮겼다. 결과는 원본 기계어 기대값 unpop-vtables.tsv 로 검사한다 (W02 Unpop 조각, 2026-10-16).",
+        "// 10.78 몫과 CD 10.72 몫(kCdDisplayVtables)을 함께 옮겼다. 결과는 원본 기계어 기대값 unpop-vtables.tsv 로 검사한다 (W02 Unpop 조각, 2026-10-16. CD 표는 F2c-11, 2026-11-04).",
         "namespace Netstorm.Core.Original;",
         "",
-        "/// <summary>Unpop 의 공통 표시 경로를 쓰는 가상 표 주소와 지원 비트(10.78)를 담는 데이터 전용 클래스다. RawUnpop 이 Supports 조회에 쓴다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 Unpop 조각 2026-10-16 생성, 2026-10-20 summary 추가)</summary>",
+        "/// <summary>Unpop 의 공통 표시 경로를 쓰는 가상 표 주소와 지원 비트(10.78·CD 10.72)를 담는 데이터 전용 클래스다. RawUnpop 이 Supports 조회에 쓴다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 Unpop 조각 2026-10-16 생성, 2026-10-20 summary 추가)</summary>",
         "public static partial class OriginalUnpopDisplay",
         "{",
         f"    /// <summary>공통 표시 경로(update88/update8c)를 쓰는 가상 표 {PATCH_ENTRY_COUNT}개(10.78)와 지원 비트(1 일반, 2 소용돌이 경로). 호스트 포인터가 아니라 클래스 식별 값이다.</summary>",
@@ -60,6 +69,16 @@ def render() -> str:
     ]
     # 항목마다 한 줄씩 쓴다.
     for address, mask in entries:
+        lines.append(f"        new(0x{address:08X}, {mask}),")
+    lines += [
+        "    ];",
+        "",
+        f"    /// <summary>공통 표시 경로를 쓰는 가상 표 {CD_ENTRY_COUNT}개(CD 10.72)와 지원 비트. (F2c-11, 2026-11-04)</summary>",
+        "    private static readonly DisplayVtable[] CdTable =",
+        "    [",
+    ]
+    # 항목마다 한 줄씩 쓴다.
+    for address, mask in cd_entries:
         lines.append(f"        new(0x{address:08X}, {mask}),")
     lines += ["    ];", "}", ""]
     return "\n".join(lines)

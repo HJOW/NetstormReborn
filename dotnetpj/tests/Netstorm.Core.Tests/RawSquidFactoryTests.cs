@@ -260,4 +260,55 @@ public sealed class RawSquidFactoryTests
         Assert.Throws<ArgumentException>(() => new RawSquidFactory(pool, new OriginalTypeRecord[10]));
         Assert.Same(pool, new RawSquidFactory(pool, Types()).Pool);
     }
+
+    /// <summary>CD 판본의 주소 0 생성자는 CD 기본 가상 표를 쓴다.</summary>
+    /// <remarks>2026-11-04 F2c-11에서 추가했다. CD 생성자 판본 분기의 직접 경계다.</remarks>
+    [Fact]
+    public void ConstructWritesCdBaseVtableWhenAddressIsZero()
+    {
+        var pool = new RawSidPool(32768, false, null, OriginalEdition.Cd1072);
+        OriginalTypeRecord[] types = Types();
+        types[121].ConstructorAddress = 0;
+        var factory = new RawSquidFactory(pool, types);
+        int sid = pool.Allocate(SidAllocation.Client);
+        Assert.Equal(sid, factory.Construct(121, sid));
+        // CD 기본 가상 표다
+        Assert.Equal(0x005058D8u, BitConverter.ToUInt32(pool.Slot(sid).Slice(0, 4).ToArray(), 0));
+    }
+
+    /// <summary>CD 판본의 0 아닌 생성자 주소는 CD 쓰기 표를 적용한다.</summary>
+    /// <remarks>2026-11-04 F2c-11에서 추가했다. CD 생성자 판본 분기의 직접 경계다.</remarks>
+    [Fact]
+    public void ConstructAppliesCdRecipeWrites()
+    {
+        var pool = new RawSidPool(32768, false, null, OriginalEdition.Cd1072);
+        OriginalTypeRecord[] types = Types();
+        types[121].ConstructorAddress = OriginalConstructors.Address(OriginalEdition.Cd1072, 121);
+        Assert.Equal(0x00416D80u, types[121].ConstructorAddress);
+        var factory = new RawSquidFactory(pool, types);
+        int sid = pool.Allocate(SidAllocation.Client);
+        Assert.Equal(sid, factory.Construct(121, sid));
+        // CD 파생 생성자의 최종 가상 표다
+        Assert.Equal(0x00500B10u, BitConverter.ToUInt32(pool.Slot(sid).Slice(0, 4).ToArray(), 0));
+    }
+
+    /// <summary>CD 최초 Pop 플래그는 +35 추가 비트를 읽는다.</summary>
+    /// <remarks>2026-11-04 F2c-11에서 추가했다. CD 생성자 판본 분기의 직접 경계다.</remarks>
+    [Theory]
+    [InlineData(0, 1u)]
+    [InlineData(1, 2u)]
+    [InlineData(8, 4u)]
+    [InlineData(9, 6u)]
+    public void FirstPopFlagsReadsCdExtraByte(int extra, uint expected)
+    {
+        var pool = new RawSidPool(32768, false, null, OriginalEdition.Cd1072);
+        OriginalTypeRecord[] types = Types();
+        types[74].ConstructorAddress = 0;
+        var factory = new RawSquidFactory(pool, types);
+        int sid = pool.Allocate(SidAllocation.Client);
+        factory.Construct(74, sid);
+        pool.AllocatedBytes(sid)[RawSidPool.TypeOffset] = 74;
+        pool.AllocatedBytes(sid)[35] = (byte)extra;
+        Assert.Equal(expected, factory.FirstPopFlags(sid));
+    }
 }

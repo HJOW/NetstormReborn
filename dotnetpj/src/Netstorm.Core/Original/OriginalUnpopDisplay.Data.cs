@@ -1,9 +1,9 @@
 // 이 파일은 dotnetpj/tools/gen_original_unpop_vtables.py 가 만든다. 직접 고치지 말고 도구를 다시 실행한다.
 // 입력(cpppj, 읽기 전용): UnpopVtables.inc sha256=118ba9490b81c09f9a3ee5154917a5fa83cdbd7b3f3098bb433669961d31ca0b
-// 10.78 부분만 옮겼다. 결과는 원본 기계어 기대값 unpop-vtables.tsv 로 검사한다 (W02 Unpop 조각, 2026-10-16).
+// 10.78 몫과 CD 10.72 몫(kCdDisplayVtables)을 함께 옮겼다. 결과는 원본 기계어 기대값 unpop-vtables.tsv 로 검사한다 (W02 Unpop 조각, 2026-10-16. CD 표는 F2c-11, 2026-11-04).
 namespace Netstorm.Core.Original;
 
-/// <summary>Unpop 의 공통 표시 경로를 쓰는 가상 표 주소와 지원 비트(10.78)를 담는 데이터 전용 클래스다. RawUnpop 이 Supports 조회에 쓴다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 Unpop 조각 2026-10-16 생성, 2026-10-20 summary 추가)</summary>
+/// <summary>Unpop 의 공통 표시 경로를 쓰는 가상 표 주소와 지원 비트(10.78·CD 10.72)를 담는 데이터 전용 클래스다. RawUnpop 이 Supports 조회에 쓴다. 값은 이 도구가 만들며 직접 고치지 않는다. (W02 Unpop 조각 2026-10-16 생성, 2026-10-20 summary 추가)</summary>
 public static partial class OriginalUnpopDisplay
 {
     /// <summary>공통 표시 경로(update88/update8c)를 쓰는 가상 표 83개(10.78)와 지원 비트(1 일반, 2 소용돌이 경로). 호스트 포인터가 아니라 클래스 식별 값이다.</summary>
@@ -92,5 +92,78 @@ public static partial class OriginalUnpopDisplay
         new(0x005197A8, 3),
         new(0x00519860, 3),
         new(0x00519918, 3),
+    ];
+
+    /// <summary>공통 표시 경로를 쓰는 가상 표 68개(CD 10.72)와 지원 비트. (F2c-11, 2026-11-04)</summary>
+    private static readonly DisplayVtable[] CdTable =
+    [
+        new(0x00500030, 3),
+        new(0x005002A8, 3),
+        new(0x005003E0, 3),
+        new(0x005006A8, 3),
+        new(0x00500760, 3),
+        new(0x00500818, 3),
+        new(0x005009A0, 3),
+        new(0x00500A58, 3),
+        new(0x00500B10, 3),
+        new(0x00501120, 3),
+        new(0x005011E8, 3),
+        new(0x005012B0, 3),
+        new(0x00501378, 3),
+        new(0x00501440, 3),
+        new(0x005014F8, 3),
+        new(0x005019F8, 3),
+        new(0x00501AB0, 3),
+        new(0x00501B90, 3),
+        new(0x00501D28, 3),
+        new(0x00501DE0, 3),
+        new(0x00501E98, 3),
+        new(0x005022F8, 3),
+        new(0x005026B8, 3),
+        new(0x00502780, 3),
+        new(0x00502848, 3),
+        new(0x00502910, 3),
+        new(0x005029D8, 3),
+        new(0x00502AA0, 3),
+        new(0x00502C98, 0),
+        new(0x00502D50, 0),
+        new(0x00503008, 3),
+        new(0x005030C0, 3),
+        new(0x005031B0, 3),
+        new(0x00503298, 3),
+        new(0x00503358, 3),
+        new(0x00503A78, 3),
+        new(0x00503B30, 3),
+        new(0x00503BE8, 0),
+        new(0x00503EE8, 3),
+        new(0x00504090, 3),
+        new(0x00504148, 3),
+        new(0x00504200, 3),
+        new(0x005042B8, 3),
+        new(0x005044F8, 0),
+        new(0x005046F8, 3),
+        new(0x005047C8, 3),
+        new(0x00504C00, 3),
+        new(0x00504CD8, 3),
+        new(0x00504DB0, 3),
+        new(0x00504E68, 3),
+        new(0x00504F20, 3),
+        new(0x00504FD8, 3),
+        new(0x005050F0, 3),
+        new(0x005058D8, 3),
+        new(0x005060B0, 3),
+        new(0x00506168, 3),
+        new(0x00506230, 3),
+        new(0x005062F8, 3),
+        new(0x00506960, 3),
+        new(0x00506A18, 3),
+        new(0x00506AD0, 3),
+        new(0x00506BB0, 3),
+        new(0x00506EA0, 3),
+        new(0x00506F70, 3),
+        new(0x00507040, 3),
+        new(0x00507110, 3),
+        new(0x005071E0, 3),
+        new(0x005072F0, 3),
     ];
 }
