@@ -45,6 +45,18 @@ void Put(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value,st
     // CD HP는 2바이트이고 패치 HP는 4바이트다.
     for (std::size_t i=0;i<width;++i) bytes[offset+i]=static_cast<std::uint8_t>(value>>(i*8));
 }
+// 선택된 검증 recipe의 순서/폭/OR를 같은 물리 슬롯에 적용한다. TYPE 조회나 할당은 하지 않는다.
+void ApplyRecipe(std::span<std::uint8_t> bytes,const ConstructorRecipe& recipe) {
+    // 쓰기 순서와 폭을 유지하여 섬 번호·플래그·anim HP의 판본 차이를 보존한다.
+    for (std::size_t i=0;i<recipe.count;++i) {
+        const auto& write=recipe.writes[i]; auto value=write.value;
+        if (write.orBits) {
+            // OR에 필요한 기존 바이트만 읽는다. 이웃 필드는 보존한다.
+            for (std::size_t j=0;j<write.width;++j) value|=static_cast<std::uint32_t>(bytes[write.offset+j])<<(j*8);
+        }
+        Put(bytes,write.offset,value,write.width);
+    }
+}
 // 이전 vtable이 실제 base 객체인지 raw 기록값만 읽는다.
 std::uint32_t Vtable(std::span<const std::uint8_t> bytes) {
     std::uint32_t value=0;
@@ -114,16 +126,25 @@ bool SquidFactory::SupportsConstructedVtable(OriginalEdition edition,std::uint32
 // 원본의 짧은 생성자는 같은 raw 슬롯에 mov/OR를 적용한다. CD Bomb 보조 생성자도 포함한다.
 void SquidFactory::ApplyConstructor(std::span<std::uint8_t> bytes,const RiftTypeRecord& type) const {
     if (!type.constructorAddress) { Put(bytes,0,BaseVtable(),4); return; }
-    const auto& recipe=*Recipe(pool_.Edition(),type.constructorAddress);
-    // 쓰기 순서와 폭을 유지하여 섬 번호·플래그·anim HP의 판본 차이를 보존한다.
-    for (std::size_t i=0;i<recipe.count;++i) {
-        const auto& write=recipe.writes[i]; auto value=write.value;
-        if (write.orBits) {
-            // OR에 필요한 기존 바이트만 읽는다. 이웃 필드는 보존한다.
-            for (std::size_t j=0;j<write.width;++j) value|=static_cast<std::uint32_t>(bytes[write.offset+j])<<(j*8);
-        }
-        Put(bytes,write.offset,value,write.width);
+    ApplyRecipe(bytes,*Recipe(pool_.Edition(),type.constructorAddress));
+}
+// 주소별 cdecl은 기존 슬롯의 TYPE/free/dead/예약 상태를 다시 해석하거나 새 객체를 할당하지 않는다.
+bool SquidFactory::ConstructByAddress(std::uint32_t address,Sid sid) {
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (patch && address==0x4429e0U) return true; // 원문 NULL 함수는 SID/풀조차 조회하지 않는다.
+    const auto* recipe=Recipe(pool_.Edition(),address);
+    const bool dais=patch && address==0x44a420U;
+    if (!recipe && !dais) return false; // 직접 NULL 함수 포인터0을 base 생성자로 대체하지 않는다.
+    if (dais) {
+        const auto assertion=diagnostics_.assertion; // 콜백이 자기 연결을 반납해도 선택한 진단은 호출 끝까지 살아 있다.
+        if (!assertion) throw std::logic_error("Dais 보조 생성자의 실제 진단 장치 미연결");
+        assertion("false",".\\Dais.cpp",0x484);
     }
+    const auto offset=pool_.Offset(sid); // 진단 정상 복귀 뒤에만 물리 주소를 조회한다.
+    auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride);
+    if (recipe) ApplyRecipe(bytes,*recipe);
+    else Put(bytes,0,0x507950U,4); // 진단이 돌아온 원문169는 이DWORD만 쓴다.
+    return true;
 }
 // 생성자 자체는 type 번호·상태·가상 초기화를 쓰지 않는다. 독립 검증과 재초기화에 사용한다.
 Sid SquidFactory::Construct(std::uint32_t type,Sid sid) {

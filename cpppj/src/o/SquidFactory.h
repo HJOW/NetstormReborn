@@ -32,6 +32,9 @@ public:
     void BindWeakenedMana(const bool&&)=delete; // const 임시 bool도 같은 장기 참조 계약을 적용한다.
     // 이미 확보된 슬롯에 생성자 쓰기만 적용한다. type/상태/풀 목록은 덮지 않는다.
     Sid Construct(std::uint32_t type,Sid sid);
+    // bare cdecl 주소의 원문 쓰기만 물리 SID에 적용한다. 미지원은false이며 TYPE/할당/가상 초기화를 추가하지 않는다.
+    // PATCH NULL 함수는 SID를 읽지 않고true, Dais 보조 진단은 정상 복귀 뒤 같은 슬롯에 VT를 저장한다.
+    bool ConstructByAddress(std::uint32_t address,Sid sid);
     void Retype(Sid sid,std::uint32_t type,const std::function<void(std::uint32_t)>& assertion={}); //004b1620의 void/foot 진단→TYPE BYTE→생성자만 실행한다. HP/소유자/할당은 보존한다.
     // 004af610 ↔ CD 004ab440의 지원 자산 수신 경로다. free list/freeCount는 변경하지 않는다.
     // PATCH의 모든 !free 슬롯은 void 여부와 무관하게 실제 Unpop을 호출한다. CD의 기존 공간 해제 경로도 유지한다.

@@ -1,0 +1,492 @@
+{
+ "unit": 888,
+ "date": "2026-11-05",
+ "version": "11.01",
+ "host": "HJOW-Athlon",
+ "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+ "decompiledSourcesChanged": false,
+ "previousCommit": "a1c820a5 / 20261105-21 CP",
+ "exeSha256": "5dd55f8efa83f999b366457f642c78f7ef0d2a8edb5b6568c9fd79f83b034da1",
+ "exeBytes": 10661888,
+ "caseCount": 32,
+ "newCases": 4,
+ "filterExecutions": 12,
+ "initialFilterExecutions": 10,
+ "caseExecutions": 34,
+ "initialFailedCases": 2,
+ "finalFailedCases": 0,
+ "uniqueCases": [
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "AssetConstructorCurrent_ActualFactoryUsesClientDiagnosticBeforePhysicalDaisStore",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-asset-constructor-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "AssetConstructorCurrent_ActualTeleportUsesFunctionAddressWithoutRetypingOrAllocation",
+   "passed": true,
+   "phase": "corrected",
+   "log": "extracted/cpp-resume-888/test-asset-constructor-teleport-corrected.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "BombTimerConstructorCurrent_ActualSessionCreatesUnattachedBeforeLoadWithoutClockDeadline",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-timer-constructor-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "BombTimerConstructorCurrent_ActualTeleportSelectsEmptyUnattachedConstructor",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-timer-constructor-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "CursorConstructorCurrent_ActualTeleportUsesFixedBodyAndItsCurrentAttachType",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-cursor-constructor-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "EvilRayCurrent_ActualTeleportSelectsConstructorAndItsCurrentTypeSource",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-evilray-current-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "EvilRayCurrent_ActualVisualFrameNotifyPixelsAndSelfDeletionUseSameHost",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-evilray-current-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "EvilRayCurrent_ParentZeroRemainsRenderedWithoutKernelAndOwnerPersists",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-evilray-current-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "FormConstructorCurrent_ActualTeleportUsesSelectedSlotConstructorThenCommon",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-form-constructor-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "PathConstructorCurrent_ActualSessionCreatesFixedClassesWithoutInitOrAttach",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-path-constructor-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "PathConstructorCurrent_ActualTeleportUsesAliasedTypeFunctionWithoutStartingPath",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-path-constructor-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "TeleportCurrent_ActualSessionNoFirstSkipsInvalidEffectType",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "TeleportCurrent_ActualSessionSelectedPhysicalOrUnknownConstructorFailsBeforeCommon",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "TeleportCurrent_ActualSessionTailBindingKeepsOriginalOwner",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "TeleportCurrent_ActualSessionUsesCurrentConstructorAndItsOwnTypeGlobal",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-session-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "TeleportStubCurrent_ActualSessionResumesCommonAfterNullAndCurrentTypeMutation",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-stub-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "TeleportStubCurrent_ActualSessionThrownDiagnosticKeepsPrefixMutationAndDepth",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-stub-first.log"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "name": "TeleportStubCurrent_SelectedNullConstructorsKeepExactDiagnosticAndCallableLifetime",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-stub-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "AssetConstructorCurrent_Native1036PhysicalSlotsAndSelectedDiagnosticReturn",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-asset-constructor-native-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "AssetConstructorCurrent_NullUnknownAndDiagnosticCallableLifetimeStayPhysical",
+   "passed": true,
+   "phase": "corrected",
+   "log": "extracted/cpp-resume-888/test-asset-constructor-contract-corrected.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_CallableSurvivesSelfUnbinding",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_CdDoesNotUsePatchPrefix",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_ExplicitPreflightRemainsSeparate",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_LateCommonFailureKeepsSelectedCreationAndCurrentTypeCounts",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_LifetimeCapturesTypeBeforeRegistryAndParticleAllocation",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_LifetimeReadsSharedTypeForEachCreation",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_MissingSelectedPrefixFailsBeforeCommon",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_NoFirstUsesActualVtableWithoutDeviceOrTypeGate",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_SelectedPrefixKeepsPhysicalMutationsBeforeCommon",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_TailTypeOwnerPersistsAcrossGeneralWorldPreparation",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "name": "TeleportCurrent_ThrownPrefixKeepsEffectsAndDepth",
+   "passed": true,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log"
+  }
+ ],
+ "testExecutions": [
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "AssetConstructorCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 1,
+   "failedChecks": 1,
+   "exitCode": 1,
+   "log": "extracted/cpp-resume-888/test-asset-constructor-native-first.log",
+   "sha256": "a23120acd00afe957d5409f061d6e91f632b91c6c0c5f36a2871dd3fd7f6bfb9",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "AssetConstructorCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 1,
+   "failedChecks": 1,
+   "exitCode": 1,
+   "log": "extracted/cpp-resume-888/test-asset-constructor-session-first.log",
+   "sha256": "28e6a8ecd56581aa69fd661709c2467f84366f7f0c1937579e34bd9afe852c69",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "CursorConstructorCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-cursor-constructor-session-first.log",
+   "sha256": "208e0a7f169c007bb1100ef8fbc741e2a8eb7a6d179926f0afd5792a698f81e6",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "BombTimerConstructorCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-timer-constructor-session-first.log",
+   "sha256": "fd7bd616f1ba26c10e3d0a140e7171cb6ecbd1eb494933d7b4ba1728df503a64",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "PathConstructorCurrent_",
+   "cases": 2,
+   "expectedCases": 2,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-path-constructor-session-first.log",
+   "sha256": "8ac8305a7dd55cc521581d1bc7ba7f8b0d26be27de971c5ad75e71b7e9ea4e56",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "FormConstructorCurrent_",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-form-constructor-session-first.log",
+   "sha256": "3e31419c5a8af61e3801e2f96f51df858600643c5cf495296e552d8a37b0f513",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "EvilRayCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-evilray-current-first.log",
+   "sha256": "0c0676489849190ab84054864e8ae3d17cfa12f35fda76959f1a099321cfdae7",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 4,
+   "expectedCases": 4,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-teleport-session-first.log",
+   "sha256": "b9b8b2dd496738bb165654fc79d0215f8d3351415a114b0c1a2deb87a4650d51",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "TeleportStubCurrent_",
+   "cases": 3,
+   "expectedCases": 3,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-teleport-stub-first.log",
+   "sha256": "520f80e3d1cc574235cb7b201cf082cbbc2b53b91fbd86bc1cc2a912433e20f7",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "TeleportCurrent_",
+   "cases": 12,
+   "expectedCases": 12,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-teleport-prefix-first.log",
+   "sha256": "1f6ce0bc4dc347ecc104fb401092b4321bafbcadd93ae0790579293194f91bdb",
+   "phase": "first"
+  },
+  {
+   "target": "netstorm_pop_context_tests",
+   "filter": "AssetConstructorCurrent_NullUnknownAndDiagnosticCallableLifetimeStayPhysical",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-asset-constructor-contract-corrected.log",
+   "sha256": "f8e16ec82200ebcdf0e796554cc9c0860b374992258b263d45b1601c14ad4528",
+   "phase": "corrected"
+  },
+  {
+   "target": "netstorm_menu_session_tests",
+   "filter": "AssetConstructorCurrent_ActualTeleportUsesFunctionAddressWithoutRetypingOrAllocation",
+   "cases": 1,
+   "expectedCases": 1,
+   "failedCases": 0,
+   "failedChecks": 0,
+   "exitCode": 0,
+   "log": "extracted/cpp-resume-888/test-asset-constructor-teleport-corrected.log",
+   "sha256": "0d3ce31567daaf8e2d80a2dd7b9bc95633fd3e789ea75f727cd1dc5663b0a360",
+   "phase": "corrected"
+  }
+ ],
+ "builds": [
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 897.8333398999999,
+   "phase": "first",
+   "log": "extracted/cpp-resume-888/build-first.log",
+   "logSha256": "38a21893cdea6779ccfcc37bae03da08bb4a2f9bc5dbde7753d6dcbd6db142f7",
+   "warnings": 0,
+   "errors": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 29.7053424,
+   "phase": "prepared",
+   "log": "extracted/cpp-resume-888/build-prepared.log",
+   "logSha256": "1acdb4e4662b617488404449a4b868feb9cc766ed7e81e870f488bf4d7dddc89",
+   "warnings": 0,
+   "errors": 0
+  },
+  {
+   "exitCode": 0,
+   "elapsedSeconds": 43.8477855,
+   "phase": "corrected",
+   "log": "extracted/cpp-resume-888/build-corrected.log",
+   "logSha256": "a83a0f688cbfb9a8e0e55014fd31d95832b64e77f23c95fbbc9b308e5a5857c6",
+   "warnings": 0,
+   "errors": 0
+  }
+ ],
+ "sourceSha256": {
+  "cpppj/src/o/SquidFactory.h": "7775fd527da06256864cc8feb39aadee86faf09631b138255372ab7fc6dfb087",
+  "cpppj/src/o/SquidFactory.cpp": "f5a4134b1e892cb9de8f37d8b4ac96085334ffcfe477a1bddf6fa3ff928a9530",
+  "cpppj/src/client/RawCampaignSession.cpp": "514b917726be647c1d121b5a0be7d6b1ef02cdfa47239103b8910edb49af576c",
+  "cpppj/tests/CMakeLists.txt": "ca9b85c5182097e1de23015b679584ebe26bc46e5900e1e44760cc33ddeb872c",
+  "cpppj/tests/CampaignObjectMenuTests.cpp": "2499e2f31729e1e463e0f65a13e4256df018d12bde58d7f73719521b0dd5c7d0",
+  "cpppj/tests/AssetConstructorCurrentTests.cpp": "6eff02436943583a9939fe52b8f34add39230dd53df8f9cb691ea106a37c7039",
+  "tools/decomp_asset_constructor.py": "6b17aa2d1d40d8fb57fdca969978f6550b2416a5f6def1e8750bc5b237c66a70",
+  "cpppj/tests/fixtures/asset-constructor-current-x86.tsv": "5e93ca7e6d29e75b3bc47f92a295570c4ea7163dab7d3a2ecd7058d83d56c4c8"
+ },
+ "productAfterFirstBuildCorrections": 0,
+ "newTestCorrections": [
+  "Beforefirsttests heap-owned Client diagnostic probe callback, test-onlypreparedbuild",
+  "Afterfirsttests pool64->24000; integrationselectedinvalidbareaddress0(TYPE74)->validresidence89; nonzeroinputguard"
+ ],
+ "fixtureExpectedChanges": 0,
+ "originalProtectedUnchanged": 2767,
+ "protectedCount": 2768,
+ "fixtureCount": 948,
+ "newFixtures": 1,
+ "nativeRows": 1036,
+ "nativeReobservedRows": 1036,
+ "extraNativeNullInvalidSid": 1,
+ "extraNativeNullInvalidSidReobserved": 1,
+ "nativeScope": {
+  "patchAssetNonzeroRows": 101,
+  "patchAssetUniqueAddresses": 84,
+  "recipeAddresses": 82,
+  "specialAddresses": [
+   "004429e0",
+   "0044a420"
+  ],
+  "allKnownAssetAddressesRecognized": true,
+  "newCpuExcluded": {
+   "originals": [
+    "00454de0",
+    "0045fbb0",
+    "0045fbd0",
+    "0045fbf0"
+   ],
+   "originalCD": [
+    "0047b540",
+    "00497910",
+    "00497930",
+    "004979c0"
+   ]
+  },
+  "nativeRows": 1036,
+  "nativeReobservedRows": 1036,
+  "extraNullInvalidSidObservedAndReobserved": 1,
+  "cppPureExpectedRows": 1036,
+  "nativeDaisDiagnostic": [
+   "false",
+   ".\\Dais.cpp",
+   1156
+  ],
+  "cdUnsupportedSpecialAddresses": [
+   "00414110",
+   "0044bfb0",
+   "00483520"
+  ],
+  "legacyTypedFactory": "Create/Construct/Retype/Take preflight contracts retained; newbareprimitive not newtypedCreate support for NULL/diagnostic invalidclasses",
+  "remaining": "full Pop currentvirtual+20/explicitValidate boundary, TYPE initializer writer0049ebb0/CD004434d0, archipelago004c0e20 and otherCurrent/lifetime/UI/Edit/Win/MP/stages4to8"
+ },
+ "firstFailureRecord": "extracted/cpp-resume-888/first-test-failures.json",
+ "boundaries": [
+  "SourcepassedNative1036 andClientdiagnostic cases retained; onlytwofailednewinputcases reexecuted aftertest-onlycorrection",
+  "NativeSID0mayoverwritefreelisthead; onlyoutsideactualconstructorwrites andcount preserved, nosemanticheadrepair",
+  "No new air3/Outpost native or dedicated C++ tests; their recipes onlysharedgenericcode/static",
+  "Bare constructor addresses complete forknownPATCH84assets, not typedCreate/Take changes or fullPop/currentTYPEwriter completion",
+  "CD generic71recipes recognized; CD three specialctor addresses remainunsupported/future10.72scope",
+  "No GUI/game/AI/combatKernel/ritual/capture/sacrifice/specificattack/win/manual/air3/MP/whole71/CTest/34/ZIP runs"
+ ]
+}

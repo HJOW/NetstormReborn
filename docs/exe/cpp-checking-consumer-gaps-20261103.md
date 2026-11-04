@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**888 자산 bare cdecl:** 같은 물리 recipe/NULL/진단 후 저장과 실제 Session/Teleport를 연결했다. 원문1036행/재관측·고유32개(새4) 최종 실패0·새 입력2곳 교정·제품/기대값 불변·Release3회 경고0이다. 기존2767개/947fixture 불변·새1개→2768개/948개이며 checking10 유지다. 파생+20/전체Pop·현재TYPE writer는 잔여다. [888 기록](cpp-asset-constructor-current-20261105.md).
+
 **887 UI50/51 cdecl:** 실제 표시/현재 부착 TYPE·Host와 Teleport 공통 복귀를 연결했다. wrapper32행/재관측(Construct 외부 경계)·기존 UI642/593행·고유30개(새1) 첫 실패0·Release1회 경고0·보호2767개/947fixture 불변이다. 최초0~69 비영21행/고유20주소의 정적 분배는 연결됐으며 자산/전체Pop은 잔여·checking10 유지다. [887 기록](cpp-cursor-constructor-current-20261105.md).
 
 **886 timer57 기본 cdecl:** Init 없는 빈100칸/기한0·명시heap flags와 실제 Session/Teleport 미부착 수명을 연결했다. 원문12행+NULL4/재관측·시각조회0·고유29개(새3) 첫 실패0·기존 수치Frame4416행·Release1회 경고0이다. 기존2766개/946fixture 불변·새1개→2767개/947개·checking10 유지이며 UI2/자산·전체Pop은 잔여다. [886 기록](cpp-bomb-timer-constructor-current-20261105.md).

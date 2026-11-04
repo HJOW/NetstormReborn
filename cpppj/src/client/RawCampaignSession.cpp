@@ -1266,6 +1266,7 @@ struct RawCampaignSession::Impl {
             if (address==0x474900U) { static_cast<void>(CreateCursorRangeProcess(core.processes,*cursorRange,sid,Sid{}));return; }
             if (address==0x420ad0U) { try { unstartedBombTimers.push_back(MakeEmptyBombTimer()); }catch (const std::bad_alloc&) {}return; }
             if (motion) { try { if (auto path=motion->Paths().CreateByConstructor(address)) { unstartedPaths.push_back(std::move(path));return; } }catch (const std::bad_alloc&) { return; } }
+            if (core.factory.ConstructByAddress(address,sid)) return; // 자산 bare 생성자는 기존 물리 슬롯의 원문 쓰기만 수행한다.
             particles->CreateTailByConstructor(address,sid,[this](auto expression,auto,auto line) {
                 const auto assertion=services.ai.assertion;
                 if (!assertion) throw std::logic_error("Teleport 생성 함수 실제 진단 장치 미연결 "+std::to_string(line));
