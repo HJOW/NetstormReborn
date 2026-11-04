@@ -116,3 +116,78 @@ void ReplaySpawn(std::string_view edition) {
 TEST_CASE(DudeSpawn_PatchNativeCreationAndInitialPop) { ReplaySpawn("originals"); }
 // CD10.72의 frame BYTE와 실제130물리프레임/빈 발자국 순회를 대조한다.
 TEST_CASE(DudeSpawn_CdNativeCreationAndInitialPop) { ReplaySpawn("originalCD"); }
+
+namespace { // 현재 목록/물리 슬롯/타입 Run과 실제 Factory/Owner/공통 부모를 조립한다.
+struct DudeCurrentScene {
+    SidPool pool{OriginalEdition::Patch1078,24000,true};std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 같은 PATCH 풀과 현재 TYPE 표다.
+    SquidPostPopList population;DudeSpawnState state{population}; // 최초 등록/생성이 공유하는 현재 목록과 전역이다.
+    std::vector<RiftTypeFrames> frames=std::vector<RiftTypeFrames>(188,RiftTypeFrames({})); // 현재 TYPE+150의 I 첫 프레임 입력이다.
+    SquidPostPopState book;SquidPostPop base{pool,types,book};SquidOwnerMode mode; // 같은 공통 깊이/장부와 Owner 모드다.
+    SquidFactory factory{pool,types};SquidOwner owner{pool,types,book,mode}; // Spawn의 실제 생성자/소유자 쓰기를 재사용한다.
+    std::span<std::uint8_t> raw;std::vector<std::string> events; // 대상5의 현재 뷰와 실제 도달 경계의 호출 관찰이다.
+    DudeCurrentScene() { CHECK(pool.Allocate(2)==Sid{5});raw=pool.AllocatedBytes(Sid{5});std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x508cc8);raw[10]=74;raw[34]=1;Put(raw,12,0xbeef,2);frames[74]=RiftTypeFrames({{'A','A',0,0},{'I','A',0,0}});frames[75]=RiftTypeFrames({{'A','A',0,0},{'A','A',1,0},{'I','A',0,0}});population.entries={0xaaaa0000,0xbbbb0000};book.suppressed=true;book.depth=1;base.BindCurrentTypes(types); } // 출력은 계산하지 않고 현재 raw/프레임/목록의 입력만 준비한다.
+    DudePostPopHooks Hooks() { // Frame 장치의 인자와 공통 부모만 관찰하며 제품의 QA/목록 쓰기를 대신하지 않는다.
+        DudePostPopHooks hooks;hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { CHECK(sid==Sid{5} && flags==0);events.push_back("F"+std::to_string(frame));Put(raw,36,std::bit_cast<std::uint32_t>(frame)); };hooks.validateBase=[](auto,auto) { throw std::logic_error("별도 사전 검사"); };hooks.base=[this](Sid sid,auto flags) { events.push_back("B");base.PostPopBase(sid,flags); };return hooks;
+    }
+};
+}
+TEST_CASE(DudeParentCurrent_NoFirstSkipsRawPopulationAndFrameDevices) { // 실제 몸체의 flags0/2/4는 물리 슬롯/목록/프레임 장치 없이 공통 부모만 실행한다.
+    for (const auto flags:{0U,2U,4U}) { // 최초 비트가 없는 독립 입력은 잘못된 SID도 몸체 안에서 먼저 읽지 않는다.
+        DudeCurrentScene scene;auto hooks=scene.Hooks();hooks.setFrame={};RawDudePostPop body(scene.pool,{},scene.state,std::move(hooks));body.PostPop(Sid{24000},flags);CHECK(scene.events==std::vector<std::string>{"B"} && scene.book.depth==0 && scene.population.count==0 && Get(scene.raw,12,2)==0xbeef);
+    }
+}
+TEST_CASE(DudeParentCurrent_ActualVtableAcceptsDifferentTypeAndPhysicalSlot) { // PATCH VT로 선택한 free/contained 슬롯도 QA/등록/현재 Run/공통 부모를 원문 순서로 실행한다.
+    DudeCurrentScene scene;scene.raw[11]=1;scene.raw[40]=8;RawDudePostPop body(scene.pool,scene.frames,scene.state,scene.Hooks());scene.base.SetDudePostPop(&body);CHECK(body.Handles(Sid{5}) && Throws([&] { body.Validate(Sid{5},1); }));scene.base.PostPopVirtual(Sid{5},1);CHECK(Get(scene.raw,12,2)==0x5101 && scene.population.count==1 && scene.population.entries[0]==5 && scene.population.entries[1]==0xbbbb0000 && Get(scene.raw,36)==1 && scene.book.depth==0 && scene.raw[11]==1 && scene.raw[40]==8);
+}
+TEST_CASE(DudeParentCurrent_MissingBridgeNoticeKeepsQaBeforePopulation) { // 현재 Bridge 통지에 도달한 실패 앞에 QA만 남고 목록/프레임/부모를 실행하지 않는다.
+    DudeCurrentScene scene;std::uint32_t bridge=74;RawDudePostPop body(scene.pool,scene.frames,scene.state,scene.Hooks(),bridge);CHECK(Throws([&] { body.PostPop(Sid{5},1); }) && Get(scene.raw,12,2)==0x5101 && scene.population.count==0 && scene.population.entries[0]==0xaaaa0000 && scene.events.empty());
+}
+TEST_CASE(DudeParentCurrent_BridgeNoticeMutationUsesCurrentTypeAndNoIFrame) { // 통지 복귀 뒤 현재 슬롯/TYPE의 Run을 읽으며 없는 I의 -1도 실제 프레임 장치에 전달한다.
+    DudeCurrentScene scene;std::uint32_t bridge=74;auto hooks=scene.Hooks();hooks.notifySurface=[&](Sid sid) { CHECK(sid==Sid{5} && Get(scene.raw,12,2)==0x5101);scene.events.push_back("N");scene.raw[10]=75;scene.raw[11]=1;scene.raw[40]=8;Put(scene.raw,0,0);scene.frames[75]=RiftTypeFrames({}); };RawDudePostPop body(scene.pool,scene.frames,scene.state,std::move(hooks),bridge);body.PostPop(Sid{5},1);CHECK(scene.events.size()==3 && scene.events[0]=="N" && scene.events[1]=="F-1" && scene.events[2]=="B" && scene.population.count==1 && Get(scene.raw,36)==0xffffffffU && scene.raw[11]==1);
+}
+TEST_CASE(DudeParentCurrent_BridgeComparisonUsesFullDword) { // BYTE TYPE74를 현재 DWORD330으로 줄여 비교하지 않는다.
+    DudeCurrentScene scene;std::uint32_t bridge=74+256;RawDudePostPop body(scene.pool,scene.frames,scene.state,scene.Hooks(),bridge);body.PostPop(Sid{5},1);CHECK(scene.population.count==1 && scene.events.size()==2 && scene.events[0]=="F1" && scene.book.depth==0);
+}
+TEST_CASE(DudeParentCurrent_FullAndSignedNegativeCapacitySkipStorage) { // 원문 signed jge에서 가득 찼거나 음수 용량이면 배열을 읽지 않고 프레임/부모를 계속한다.
+    for (const auto input:{std::array<std::uint32_t,2>{1,1},std::array<std::uint32_t,2>{2,1},std::array<std::uint32_t,2>{0,0x80000000U}}) { // unsigned 비교와 전수 count 검사를 구별하는 세 현재 입력이다.
+        DudeCurrentScene scene;scene.population.entries.clear();scene.population.BindCurrent({[]()->std::span<std::uint32_t> { throw std::logic_error("미선택 배열"); },[&] { return input[1]; },[&] { return input[0]; },[](auto) { throw std::logic_error("미선택 개수 쓰기"); }});RawDudePostPop body(scene.pool,scene.frames,scene.state,scene.Hooks());body.PostPop(Sid{5},1);CHECK(scene.events.size()==2 && scene.events[0]=="F1" && scene.book.depth==0 && Get(scene.raw,12,2)==0x5101);
+    }
+}
+TEST_CASE(DudeParentCurrent_CapturedIndexStoreThenCurrentCountIncrement) { // 배열 조회 효과 뒤 저장 index는 보존하고 inc는 그때의 현재 개수를 읽는다.
+    DudeCurrentScene scene;scene.population.entries.clear();std::array<std::uint32_t,2> storage{0xaaaa0000,0xbbbb0000};std::uint32_t count=0;scene.population.BindCurrent({[&]()->std::span<std::uint32_t> { count=7;scene.raw[10]=75;return storage; },[] { return 2U; },[&] { return count; },[&](auto value) { CHECK(storage[0]==5);count=value; }});RawDudePostPop body(scene.pool,scene.frames,scene.state,scene.Hooks());body.PostPop(Sid{5},1);CHECK(count==8 && storage[0]==5 && storage[1]==0xbbbb0000 && scene.events[0]=="F2" && Get(scene.raw,36)==2 && scene.book.depth==0);
+}
+TEST_CASE(DudeParentCurrent_NegativeIndexFailsOnlyAtSelectedStore) { // 음수 개수는 signed 비교를 통과한 뒤 실제 저장 위치에서 거부하며 QA를 되돌리지 않는다.
+    DudeCurrentScene scene;scene.population.count=0xffffffffU;RawDudePostPop body(scene.pool,scene.frames,scene.state,scene.Hooks());CHECK(Throws([&] { body.PostPop(Sid{5},1); }) && Get(scene.raw,12,2)==0x5101 && scene.population.count==0xffffffffU && scene.events.empty() && scene.population.entries[0]==0xaaaa0000);
+}
+TEST_CASE(DudeParentCurrent_ShortPhysicalArrayFailsAfterQa) { // 선택한 배열의 호스트 범위 오류는 최초 QA 뒤에만 확인한다.
+    DudeCurrentScene scene;scene.population.entries.clear();scene.population.BindCurrent({[] { return std::span<std::uint32_t>{}; },[] { return 1U; },[] { return 0U; },[](auto) { throw std::logic_error("도달하지 않을 개수 쓰기"); }});RawDudePostPop body(scene.pool,scene.frames,scene.state,scene.Hooks());CHECK(Throws([&] { body.PostPop(Sid{5},1); }) && Get(scene.raw,12,2)==0x5101 && scene.events.empty());
+}
+TEST_CASE(DudeParentCurrent_MissingFrameKeepsQaAndPopulation) { // 도달한 프레임 장치가 없으면 앞선 QA/목록 store와 count 증가를 보존한다.
+    DudeCurrentScene scene;auto hooks=scene.Hooks();hooks.setFrame={};RawDudePostPop body(scene.pool,scene.frames,scene.state,std::move(hooks));CHECK(Throws([&] { body.PostPop(Sid{5},1); }) && Get(scene.raw,12,2)==0x5101 && scene.population.count==1 && scene.population.entries[0]==5 && scene.events.empty() && scene.book.depth==1);
+}
+TEST_CASE(DudeParentCurrent_CurrentTypeReadPrecedesMissingFrameDevice) { // TYPE+150의 물리 표 읽기가 프레임 장치 요구보다 앞선다.
+    DudeCurrentScene scene;auto hooks=scene.Hooks();hooks.setFrame={};RawDudePostPop body(scene.pool,std::span(scene.frames).first(74),scene.state,std::move(hooks));bool physical=false;try { body.PostPop(Sid{5},1); }catch (const std::out_of_range&) { physical=true; }CHECK(physical && scene.population.count==1 && scene.population.entries[0]==5 && Get(scene.raw,12,2)==0x5101 && scene.events.empty());
+}
+TEST_CASE(DudeParentCurrent_MissingBaseKeepsFrameAndRegistration) { // 공통 부모 연결 실패 앞에 실제 QA/등록/프레임 장치 효과가 남는다.
+    DudeCurrentScene scene;auto hooks=scene.Hooks();hooks.base={};RawDudePostPop body(scene.pool,scene.frames,scene.state,std::move(hooks));CHECK(Throws([&] { body.PostPop(Sid{5},1); }) && scene.population.count==1 && Get(scene.raw,36)==1 && scene.events==std::vector<std::string>{"F1"} && scene.book.depth==1);
+}
+TEST_CASE(DudeParentCurrent_ExplicitValidateAndCdConstructorStaySeparate) { // 명시 사전 검사와 CD 구성 계약은 실제 PATCH 호출의 앞에 삽입하지 않는다.
+    DudeCurrentScene scene;RawDudePostPop body(scene.pool,scene.frames,scene.state,scene.Hooks());CHECK(Throws([&] { body.Validate(Sid{5},1); }) && Get(scene.raw,12,2)==0xbeef && scene.population.count==0);SidPool cd(OriginalEdition::Cd1072,24000,true);CHECK(Throws([&] { RawDudePostPop missing(cd,{},scene.state,{}); }));
+}
+TEST_CASE(DudeParentCurrent_FirstPhysicalSidFailurePrecedesBase) { // flags1의 QA 저장은 풀 밖 SID를 거부하고 그 뒤 부모를 실행하지 않는다.
+    DudeCurrentScene scene;RawDudePostPop body(scene.pool,scene.frames,scene.state,scene.Hooks());CHECK(Throws([&] { body.PostPop(Sid{24000},1); }) && scene.events.empty() && scene.population.count==0);
+}
+TEST_CASE(DudeParentCurrent_SpawnCurrentSignedGateDoesNotReadStorageOrType) { // 생성 거부 관문은 실제 현재 signed 개수/용량만 읽고 TYPE/좌표/배열을 미리 검사하지 않는다.
+    for (const auto input:{std::array<std::uint32_t,2>{0,0},std::array<std::uint32_t,2>{2,1},std::array<std::uint32_t,2>{0,0x80000000U}}) { // 가득 참/초과/음수 용량은 실제 Factory에 도달하지 않는다.
+        DudeCurrentScene scene;scene.population.entries.clear();scene.state.dudeType=188;scene.population.BindCurrent({[]()->std::span<std::uint32_t> { throw std::logic_error("미선택 생성 배열"); },[&] { return input[1]; },[&] { return input[0]; },[](auto) { throw std::logic_error("미선택 생성 개수 쓰기"); }});RawDudeSpawn spawn(scene.pool,scene.factory,scene.owner,scene.state,{});const auto before=scene.pool.FreeCount();CHECK(spawn.Spawn(std::bit_cast<float>(0x7fc12345U),0,9999)==Sid{} && scene.pool.FreeCount()==before);
+    }
+}
+TEST_CASE(DudeParentCurrent_SpawnReadsBlockedAfterCurrentCapacity) { // 현재 용량 조회 효과가 바꾼 차단 전역을 그 뒤에 읽는다.
+    DudeCurrentScene scene;scene.population.entries.clear();scene.state.dudeType=188;scene.population.BindCurrent({[] { return std::span<std::uint32_t>{}; },[&] { scene.state.blocked=true;return 2U; },[] { return 0U; },[](auto) {}});RawDudeSpawn spawn(scene.pool,scene.factory,scene.owner,scene.state,{});CHECK(spawn.Spawn(1,2,1)==Sid{} && scene.state.blocked);
+}
+TEST_CASE(DudeParentCurrent_SpawnMissingPopKeepsGenericCreationOwnerAndFrame) { // 현재 TYPE74의 실제 Factory/Owner와 frame0 뒤에만 미연결 Pop이 실패하며 NaN을 선행 거부하지 않는다.
+    DudeCurrentScene scene;scene.state.dudeType=74;RawDudeSpawn spawn(scene.pool,scene.factory,scene.owner,scene.state,{});CHECK(Throws([&] { spawn.Spawn(std::bit_cast<float>(0x7fc12345U),12.5F,8); }));const auto born=scene.pool.Slot(Sid{6});CHECK(born[10]==74 && !(born[11]&1U) && born[34]==8 && Get(born,36)==0 && scene.population.count==0);
+}
+TEST_CASE(DudeParentCurrent_SpawnNegativeCountReachesActualFactoryAndSelectedPop) { // 음수 개수는 생성 관문만 통과하며 배열 저장은 실제 Pop 하위에 맡긴다.
+    DudeCurrentScene scene;scene.population.count=0xffffffffU;scene.state.dudeType=74;std::uint32_t calls=0;DudeSpawnHooks hooks;hooks.pop=[&](Sid sid,float x,float y,auto flags) { CHECK(sid==Sid{6} && std::bit_cast<std::uint32_t>(x)==0x7fc12345U && y==12.5F && flags==0 && scene.pool.Slot(sid)[34]==8 && Get(scene.pool.Slot(sid),36)==0);++calls; };RawDudeSpawn spawn(scene.pool,scene.factory,scene.owner,scene.state,std::move(hooks));CHECK(spawn.Spawn(std::bit_cast<float>(0x7fc12345U),12.5F,8)==Sid{6} && calls==1 && scene.population.count==0xffffffffU);
+}

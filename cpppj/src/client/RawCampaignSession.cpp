@@ -2197,7 +2197,8 @@ struct RawCampaignSession::Impl {
     void ConnectDamageable() {
         if (dudeDrop) throw std::logic_error("실제 Dude 드롭 중복 연결");
         dudeSpawn=std::make_unique<RawDudeSpawn>(core.pool,core.factory,core.owner,dudeSpawnState,DudeSpawnHooks{[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); }});
-        dudePostPop=std::make_unique<RawDudePostPop>(core.pool,core.frames,dudeSpawnState,MakeDudePostPopHooks(core.pool,core.frame,core.postPop));core.postPop.SetDudePostPop(dudePostPop.get());
+        auto dudePostHooks=MakeDudePostPopHooks(core.pool,core.frame,core.postPop);dudePostHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); }; // QA 저장 뒤에만 현재 Bridge 통지와 실제 프레임/공통 부모를 같은 World에 연결한다.
+        dudePostPop=std::make_unique<RawDudePostPop>(core.pool,core.frames,dudeSpawnState,std::move(dudePostHooks),core.bridgeState.bridgeType);core.postPop.SetDudePostPop(dudePostPop.get());
         DudeTaskHooks task;task.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };dudeTask=std::make_unique<RawDudeTask>(core.pool,DudeTaskState{core.processState,core.bridgeState.bridgeType},MakeDudeTaskHostHooks(core.pool,core.processes,std::move(task)));
         DudeBehaviorHooks behavior; // 450e80/450960/450920의 효과는 모두 기존 같은 Session 몸체다.
         behavior.task=[this](Sid sid,std::uint32_t event,float delay) { dudeTask->Set(sid,event,delay); };

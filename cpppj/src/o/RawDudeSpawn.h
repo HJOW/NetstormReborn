@@ -5,6 +5,7 @@
 #include "o/SquidFrame.h"
 
 namespace netstorm::o {
+inline constexpr std::uint32_t kDudeInitialBridgeType=82; // 독립 구성의 원본 초기 Bridge 번호이며 실제 월드는 현재 DWORD를 따로 빌린다.
 // 원본 population 포인터/capacity/count와 생성 차단 전역을 공유하는 상태다.
 struct DudeSpawnState {
     SquidPostPopList& population; // 생성 한도와 최초 Pop 등록이 같은 DWORD 목록을 사용한다.
@@ -36,13 +37,14 @@ struct DudePostPopHooks {
     std::function<void(Sid,std::int32_t,std::uint32_t)> setFrame; // 실제004acee0/CD004acbc0의 I 첫 프레임 쓰기다.
     std::function<void(Sid,std::uint32_t)> validateBase; // 같은 공통 후처리의 미연결 효과를 검사한다.
     std::function<void(Sid,std::uint32_t)> base; // 실제004b0d30/CD004ae180 공통 후처리 호출이다.
+    std::function<void(Sid)> notifySurface; // 최초 QA5101 저장 뒤 현재 TYPE가 Bridge일 때만004214a0을 호출한다.
 };
 // 00450cd0/CD004e9230의 직접 전체 몸체다. 공유 Pop의 가상 분배 등록은 별도 연결한다.
 class RawDudePostPop {
 public:
-    // frames의 현재 I Run과 population은 같은 월드 자료이며 객체보다 오래 살아야 한다.
-    RawDudePostPop(SidPool& pool,std::span<const RiftTypeFrames> frames,DudeSpawnState& state,DudePostPopHooks hooks);
-    // 실제 Dude 타입과 생성자 가상 표 둘 다 일치하는 경우에만 파생 분배가 가능하다.
+    // frames의 현재 I Run·population·Bridge DWORD는 같은 월드 자료이며 객체보다 오래 살아야 한다.
+    RawDudePostPop(SidPool& pool,std::span<const RiftTypeFrames> frames,DudeSpawnState& state,DudePostPopHooks hooks,const std::uint32_t& bridgeType=kDudeInitialBridgeType);
+    // PATCH는 실제 가상 표로 분배하며 CD는 기존 Dude 타입/가상 표 계약을 유지한다.
     bool Handles(Sid sid) const;
     // 최초 쓰기 전에 현재 Run/목록과 실제 공통 후처리 연결을 확인한다.
     void Validate(Sid sid,std::uint32_t flags) const;
@@ -54,6 +56,7 @@ private:
     SidPool& pool_; // 최초 task WORD와 population SID가 공유하는 저장소다.
     std::span<const RiftTypeFrames> frames_; // 현재 TYPE+150과 같은 I 첫 프레임 Run이다.
     DudeSpawnState& state_; // 생성 한도와 같은 mutable DWORD 목록이다.
+    const std::uint32_t& bridgeType_; // QA를 저장한 직후 읽는005411a0의 현재 DWORD이며 콜백 뒤 TYPE와 함께 판정한다.
     DudePostPopHooks hooks_; // 실제 프레임/공통 후처리 연결이다.
 };
 // 직접 후처리를 기존 실제 Frame/Base에 연결하며 자동 가상 표 확장은 하지 않는다.

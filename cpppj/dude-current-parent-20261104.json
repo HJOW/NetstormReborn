@@ -1,0 +1,256 @@
+{
+  "unit": 859,
+  "date": "2026-11-04",
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "decompiledSourcesChanged": false,
+  "previousCommit": "fe3d121d / 20261104-43 CP",
+  "exeSha256": "92a0dd7f7b60d57ccbf5a0fc1fe43a18c99993e768dd0c6a103d3b3e02949f85",
+  "exeBytes": 10567680,
+  "sourceSha256": {
+    "cpppj/src/o/RawDudeSpawn.cpp": "4e5b4b66b299f14e3bf99fcae9c9c539ce5e1823961c1019353507e8747d827b",
+    "cpppj/src/o/RawDudeSpawn.h": "080fecb516a475bd62d16eb31ea74a5d6d9c97170e4f4c89ac0be49df30732e2",
+    "cpppj/src/client/RawCampaignSession.cpp": "eb55bc5db63157dc44b7b4ced201fdc7223b0ca5da6f2dc9a8219fea9df6b42e",
+    "cpppj/tests/DudeSpawnTests.cpp": "dabb56645bbc05ec414ef2bb0f7acd99caaf3a66adeaa4f5ffc126ecbe5a6b2a",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "a8c13999846bcf8e12e4e424cc78c6f4dfb331b88425d0eab10d43dc0397bdf8",
+    "cpppj/tests/CMakeLists.txt": "42ed88b7deb766c7a586ac184b2972998e9feea305bf0470e21092b6e99e1504"
+  },
+  "scope": [
+    "PATCH Dude 실제 VT/물리 QA5101→현재 Bridge 통지→signed population/보존 index store·현재 count 증가→현재 I Run 프레임 장치→공통 부모",
+    "PATCH 생성의 현재 signed 목록/차단 관문과 실제 Factory→직접 frame0→Owner→선택 Pop 순서",
+    "Session의 같은 현재 Bridge DWORD/NotifySurface·population/실제 Frame/공통 부모 연결",
+    "명시 Validate 및 CD 기존 구성/동작 계약과 선택된 역참조의 호스트 물리 범위 유지"
+  ],
+  "staticEvidence": {
+    "sha256": {
+      "extracted/cpp-resume-859/originalCD-004e8b30.c": "e22343523847ad15c6b75c1139c3880af268301e18ebf1da7fbfff196497ce47",
+      "extracted/cpp-resume-859/originalCD-004e9230.c": "29ac3596b89e06c4b9e34cc67f437c5ca9d80b72ea3e5344047acbecb5a0deb4",
+      "extracted/cpp-resume-859/originals-00450a20.c": "7369afd0e7c63204f39b45ecae6d7087357e9697632f5187fea3d0529ef1d497",
+      "extracted/cpp-resume-859/originals-00450cd0.c": "7eeee5b72c8a739d6817f2aa990f6786fc230608aa5513fc2ef92c7f812971b2",
+      "extracted/cpp-resume-859/originals-00450d40.c": "ef73ab09ee9b75171966881dc220b409bbd0704aef8855807f985abc8ce117e0",
+      "extracted/cpp-resume-859/originals-004ac220.c": "97c28cbbba9f4dbb9c8b5a33e1e04ac19c239db4f1f3c5e4ed82afd3370dc020",
+      "extracted/cpp-resume-859/originals-004ac550.c": "2e055b44d04f3202841e016f52935778f172c735c3f1c915bb16a60205555576",
+      "extracted/cpp-resume-859/originals-00450a20.asm": "c79033f96c6e67bf048dd749e525d05fe5b3eeed5d68b5d7363416f04275d454",
+      "extracted/cpp-resume-859/originals-00450cd0.asm": "a5bbbc396cf24e080efa923ff2981e4572b3bb9909627648bb54f02ca80876da",
+      "extracted/cpp-resume-859/originals-00450d40.asm": "ed5317bc517b81555624278c987e937eb9a753cbf0106e59b585d8f9e85faf18"
+    },
+    "patch": [
+      "00450a20",
+      "00450cd0",
+      "00450d40",
+      "004ac220",
+      "004ac550"
+    ],
+    "cd": [
+      "004e8b30",
+      "004e9230"
+    ],
+    "signedCompare": "생성00450a2b/post00450cf4의 jge이며 post00450d17은 captured index store,00450d1a는 현재 전역 inc다"
+  },
+  "validation": {
+    "cases": 95,
+    "newCases": 19,
+    "firstFailedChecks": 0,
+    "newNativeObservations": 0,
+    "newFixtures": 0,
+    "existingDudeRows": 288,
+    "fixtureSha256": {
+      "dudespawn-x86.tsv": "c365fb07b0f887b399119d77cb2b71b654439efcd677442cd2fc1b155ba70041"
+    },
+    "existingExpectationsChanged": false,
+    "builds": [
+      {
+        "log": "extracted/cpp-resume-859/build-first.log",
+        "sha256": "96664b28a407b9db304970abb53cecf5d753541531b7db9d5b46a58f3ab95dc4",
+        "exitCode": 0,
+        "elapsedSeconds": 115.8294077,
+        "execSession": 93947,
+        "childProcessesExited": true
+      }
+    ],
+    "executions": [
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "DudeParentCurrent_",
+        "cases": 18,
+        "expectedCases": 18,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-dude-current-first.log",
+        "sha256": "2de64158b03297e56308c6e52c77b5bdf0eaef83350a7edc4064317b0d0e34e8"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "DudeParentCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-dude-session-first.log",
+        "sha256": "3e9af4ceca6024e97aae2c5cadac7ca1f5e358012ff940159071597e389161bd"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "DudeSpawn_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-dude-native-first.log",
+        "sha256": "a92d8595f6486a58882a571bd9950f8dd582a5730eac8c8f4bd02e93085d7141"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PlayerParentCurrent_",
+        "cases": 14,
+        "expectedCases": 14,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-player-current-first.log",
+        "sha256": "34c2c290464b38a11bf95ea4e9a51eafa69afb6f69711c16bf92c3d9594290c2"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PlayerParentCurrent_",
+        "cases": 2,
+        "expectedCases": 2,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-player-session-first.log",
+        "sha256": "66a2f70f2131b4752bb51b776d910ef65e550d75e6fff2e410553f2480d2aa05"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "BuriedRuneCurrent_",
+        "cases": 18,
+        "expectedCases": 18,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-buried-rune-current-first.log",
+        "sha256": "88eeba611d9dbc3d15a8f61e434c06c7753b9ea47ed98a2aa722176343177307"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "BuriedRuneCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-buried-rune-session-first.log",
+        "sha256": "48748021ebe446d3596cd0f8437766168ac032c6ec95175d598aead68d272aed"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 11,
+        "expectedCases": 11,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-post-current-first.log",
+        "sha256": "28b518bc6d6a411e16d15cae0a690d096b22f514c7b69fafc31f0a14792500d3"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidPostPop_",
+        "cases": 6,
+        "expectedCases": 6,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-post-pop-first.log",
+        "sha256": "8aa03401b50f4b2cc2dbea14055bb8722ae4027a020f6bd53ff9b021cda67927"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "SquidActivate_",
+        "cases": 10,
+        "expectedCases": 10,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-activate-first.log",
+        "sha256": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "frame_display_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-frame-display-first.log",
+        "sha256": "c365548d66b11990fca7873428250267355f9e6fdfaf8c646fb6f8eede47970b"
+      },
+      {
+        "target": "netstorm_pop_context_tests",
+        "filter": "set_frame_",
+        "cases": 5,
+        "expectedCases": 5,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-set-frame-first.log",
+        "sha256": "0a45f97a0eeb88a7c1921c00d6cc901668d0e232bc9e654a84a80feadfcd5961"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "PostPopCurrent_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-post-session-first.log",
+        "sha256": "1136a2c0f0ef036a34592c98d63fc086914a0ff846fc6d2efcc0b44fdf13c29d"
+      },
+      {
+        "target": "netstorm_menu_session_tests",
+        "filter": "SquidActivate_",
+        "cases": 1,
+        "expectedCases": 1,
+        "failedChecks": 0,
+        "exitCode": 0,
+        "passed": true,
+        "log": "extracted/cpp-resume-859/test-activate-session-first.log",
+        "sha256": "1a14cd0835ca6e936b3e714db4ba7bf0651350e344e8ef20490e509a3bf4694f"
+      }
+    ]
+  },
+  "protected": {
+    "files": 2761,
+    "fixtures": 941,
+    "unchanged": true,
+    "expectationChanges": 0
+  },
+  "checking": {
+    "remaining": 12,
+    "parents": 6,
+    "partial": 3,
+    "multiplayerClassified": 3,
+    "completedParents": 36,
+    "completedPartial": 3,
+    "newCompletedParents": 0
+  },
+  "limits": [
+    "기존 양판본288행 재생·현재 계약 검사와 원문 정적 대조이며 새 Native 실행 관측은 아니다",
+    "순수 프레임 장치 검사는 현재 I 첫 값/-1 전달이며 SetFrame 전체 의미를 새로 증명하는 것은 아니다",
+    "Session은 명시 flags0 물리 VT와 Dude 최초 QA/population/I64 Frame만 관측했다. 행동·Frame/Process 틱·의식/포획/희생/공격/승리는 실행하지 않았다",
+    "Session Bridge 통지 선택 자체는 새 실행하지 않고 순수 계약/기존850와 QA setter 원문 근거로 대조했다",
+    "실제 게임·사용자 직접 확인·공중3종 전용·신규MP/통신·물리/PCM/CD·전체71/CTest/34미션/ZIP 반복을 제외했다",
+    "섬/표면/Teleport 등 다른 현재 가상20/전체 Pop과 후속 단계는 미완료다"
+  ],
+  "next": [
+    "섬/표면/Teleport 등 다른 실제 가상20/접두의 현재 타입/전역·선택 장치와 실제 World/Session 연결을 대조한다",
+    "객체 메뉴/커서·Edit·State/파일/군도·Windows 한계·무검사MP 및4~8차를 계속한다"
+  ]
+}

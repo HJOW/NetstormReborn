@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**859 Dude 현재 부모/생성:**물리 QA/현재 Bridge 통지·signed population/현재 프레임과 생성 관문을 같은 Session에 연결했다. 집중95개(새19) 첫 실패0·Dude288행·보호2761개 불변이다. 명시 Validate/CD 계약과 실제 Frame::Set 호출/Frame·Process 틱을 구별한다. checking12·완료부모36/부분3 유지이고 섬/표면/Teleport 등은860 이후다. [859 기록](cpp-dude-current-parent-20261104.md).
+
 **858 Player 현재 부모:**실제 VT/물리9기록·선택 예약/직접 프레임과 현재 생성/진단/typed Find를 같은 Session에 연결했다. 집중67개(새16) 첫 실패0·Player1680행/실제 Host·보호2761개 불변이다. 명시 Validate/CD 계약을 구별하고 Client expression API를 원문 파일/행 표시 전체 일치로 확대하지 않는다. checking12·완료부모36/부분3 유지이며 Dude 등은859 이후다. [858 기록](cpp-player-current-parent-20261104.md).
 
 **857 현재 후처리:**buried의 물리 QA/현재 Bridge 통지와 Rune의 실제 VT/선택 장치·현재 finder/시간 전역을 같은 Session에 연결했다. 집중52개(새19) 첫 실패0·기존 buried580/Rune1920행·보호2761개 불변이다. 명시 Validate/CD 계약은 구별하며 Session 건설 진행/시간 관측은 아니다. checking12·완료부모36/부분3 유지이고 Player/Dude 등 나머지는858 이후다. [857 기록](cpp-buried-rune-current-20261104.md).
