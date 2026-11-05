@@ -27,8 +27,9 @@ const colors = resources.colors;
 const fonts = resources.fonts;
 
 // 새 게임 데이터를 만든다(Tell 목록이 설정 객체를 등록하므로 검사마다 따로 만든다). (2026-10-28 WB03-D)
-function newData() {
-    return GameData.build({ files, language: 'english', options: { soundVolume: 3, musicVolume: 2 } });
+// product 가 false 면 제품 표기(11.01·세 번째 Patch Credits 행) 없이 원본 10.78 표기로 만든다(원본 스크린샷 대조용). (2026-11-05 WB03-AC)
+function newData({ product = true } = {}) {
+    return GameData.build({ files, language: 'english', options: { soundVolume: 3, musicVolume: 2 }, product });
 }
 
 // 기본 글자 문맥(슬롯 0, 흰색, 효과 없음)이다. (2026-10-28 WB03-D)
@@ -171,8 +172,9 @@ test('다중 줄 본문: 줄 나눔과 크기 맞춤', () => {
 
 // 화면에 대화상자를 그려 8비트 표면과 창을 돌려준다(원본 구름·타이틀 위, 메인 메뉴 버튼은 숨김). (2026-10-28 WB03-D)
 // original 이 true 면 웹 제외 목록 객체(User Made Campaigns)를 빼지 않고 원본과 같은 목록으로 만든다(원본 스크린샷 대조용). (2026-10-30 WB03-I)
+// original 이면 제품 표기도 끈다: Credits 가 원본처럼 두 행이다. (2026-11-05 WB03-AC)
 function renderDialog(name, width = 1024, height = 768, { original = false } = {}) {
-    const data = newData();
+    const data = newData({ product: !original });
     const surface = new IndexedSurface(width, height);
     surface.tile(resources.clouds);
     const position = titlePosition(width, height, resources.title);
@@ -187,8 +189,9 @@ function renderDialog(name, width = 1024, height = 768, { original = false } = {
 }
 
 // 대화상자 배치: Credits·Demo·Campaign 의 패널·본문·목록·버튼 좌표와 크기(원본 스크린샷 정렬로 확인한 값). (2026-10-28 WB03-D)
+// Credits 는 원본 스크린샷과 같은 두 행 배치(제품 표기 끔)로 확인한다. 제품의 세 행 배치는 tests/product.test.mjs 가 확인한다. (2026-11-05 WB03-AC)
 test('대화상자 배치: Credits·Demo·Campaign 크기와 좌표', () => {
-    const credits = renderDialog('Credits').window;
+    const credits = renderDialog('Credits', 1024, 768, { original: true }).window;
     assert.deepEqual(credits.bounds(), { left: 395, top: 304, right: 629, bottom: 463 });
     assert.deepEqual([credits.baseWidth, credits.baseHeight], [234, 159]);
     assert.deepEqual(credits.body.bounds(), { left: 447, top: 324, right: 576, bottom: 374 });
@@ -221,7 +224,7 @@ test('대화상자 배치: Credits·Demo·Campaign 크기와 좌표', () => {
     assert.equal(web.buttons[0].bounds().top - web.menu.bounds().bottom, campaign.buttons[0].bounds().top - campaign.menu.bounds().bottom);
     assert.equal(web.menu.bounds().bottom - web.menu.bounds().top, campaign.menu.bounds().bottom - campaign.menu.bounds().top - 33);
     // 다른 화면 크기에서는 가운데로 다시 놓인다(논리 높이 768, 16:9 폭 1366).
-    const wide = renderDialog('Credits', 1366, 768).window;
+    const wide = renderDialog('Credits', 1366, 768, { original: true }).window;
     assert.equal(wide.bounds().left, 395 + (1366 - 1024) / 2);
     assert.equal(wide.bounds().top, 304);
 });

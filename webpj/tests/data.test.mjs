@@ -105,7 +105,10 @@ test('텍스트 해독: Windows-1252 와 UTF-8', () => {
 test('게임 데이터: 경로 지정값·언어 대체·Tell 섹션 조회', () => {
     const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]);
     const data = GameData.build({ files, language: 'english', options: { soundVolume: 3, musicVolume: 2 } });
-    assert.equal(data.get('version'), 'v10.78');
+    // 웹 판본의 제품 표기는 11.01 이다(선행 0 보존). 원본 대조용(product: false)은 원본 10.78 그대로이다. (2026-11-05 WB03-AC)
+    assert.equal(data.get('version'), 'v11.01');
+    assert.equal(data.substitute('{MAJOR_VERSION}.{MINOR_VERSION}'), '11.1');
+    assert.equal(GameData.build({ files, language: 'english', product: false }).get('version'), 'v10.78');
     assert.equal(data.get('soundVolume'), '3');
     assert.equal(data.get('currentLanguage'), 'english');
     assert.equal(data.pathSpec('missionSpec', 'tell'), '\\D\\tell.english');

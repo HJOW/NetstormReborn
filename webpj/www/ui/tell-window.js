@@ -447,6 +447,7 @@ export class TellWindow {
 //  1) BLANK(대소문자 무시)는 창을 만들지 않는 조기 분기이다({ blank: true }). 이름도 기록하지 않는다.
 //  2) 지역 설정 객체 `param` 을 등록하고 대상의 인자를 `1="값"`… 줄로 넣는다(본문의 `{param.1}`). param 은 본문 처리가 끝날 때까지만 살아 있다.
 //  3) 섹션 이름을 현재 Tell 이름으로 기록하고(이름이 바뀌면 이전 이름이 `global.priorTell`) 섹션 본문을 찾는다. 없으면 { missing: true } 이다(원본: `TELL cannot find "이름".` 로그).
+//     찾은 본문에는 제품 표기(gameData.presentTellBody: 메인 Credits 의 세 번째 11.01 Patch Credits 행)를 적용한다. (2026-11-05 WB03-AC)
 //  4) 본문을 설정 치환·변환해 창을 만든다. 조건 태그(`<?식>`)는 평가하고, 본문의 스크립트 명령(`<$config,키=값>` 등)은 실행하지 않고 inlineCommands 로 순서대로 돌려준다
 //     (원본도 즉시 실행하지 않고 명령 큐에 넣어 다음 입력에서 처리하므로, 호출자가 창을 올린 뒤 실행한다).
 //  5) 본문의 링크(`<a href="목적지">`)는 링크 표(LinkTable)에 모아 StyleText 태그 `~[T번호]` 로 바꾼다. 링크를 누르면 창의 onLink(목적지)가 불린다.
@@ -469,8 +470,10 @@ export function createTellWindow({ gameData, resources, name, screen, nowSeconds
             if (error instanceof RangeError) return { window: null, empty: false, missing: true, blank: false, inlineCommands };
             throw error;
         }
-        const body = gameData.findTellSection(sectionName);
-        if (body === null) return { window: null, empty: false, missing: true, blank: false, inlineCommands };
+        const found = gameData.findTellSection(sectionName);
+        if (found === null) return { window: null, empty: false, missing: true, blank: false, inlineCommands };
+        // 제품 표기(메인 Credits 의 세 번째 Patch Credits 행)를 원문 본문에 적용한다. 같은 HTML 창·메뉴·입력 경로를 그대로 쓴다(cpppj UberGump 의 ProductTellBody 자리). (2026-11-05 WB03-AC)
+        const body = gameData.presentTellBody(sectionName, found);
         // 본문 변환·지시문 추출에 쓰는 훅이다: `@`·`#` 파일 목록은 설정 객체를 등록해 행을 만들고, 조건 태그는 설정 값으로 평가하며,
         // 스크립트 명령은 모아 두고, 링크는 링크 표에 모으며, 지원하지 않는 기능은 onUnsupported 로 알린다.
         const links = new LinkTable();

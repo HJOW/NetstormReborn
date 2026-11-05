@@ -295,7 +295,9 @@ test('한국어 Tell 창: 환영·팁·캠페인 문구와 단추 라벨', () =>
     assert.ok(bodyText(open('Tips', { tipNumber: 4 })).includes('F5'), '팁 4 본문');
     assert.ok(bodyText(open('Tips', { tipNumber: 40 })).includes('더 이상 팁이 없습니다!'), '없는 팁 번호의 기본 문구');
     assert.deepEqual(labels(open('Credits')), ['취소']);
-    assert.deepEqual(open('Credits').menu.items.map((item) => item.label), ['NetStorm 10.72 패치 크레딧', 'NetStorm 오리지널 크레딧']);
+    // 세 번째 행은 제품 11.01 Patch Credits 의 한국어 행이다(원본 두 행 뒤). (2026-11-05 WB03-AC)
+    assert.deepEqual(open('Credits').menu.items.map((item) => item.label), ['NetStorm 10.72 패치 크레딧', 'NetStorm 오리지널 크레딧', 'NetStorm 11.01 패치 크레딧']);
+    assert.deepEqual(labels(open('Patch1101.Credits')), ['뒤로', '취소']);
     assert.deepEqual(labels(open('CreditsNew')), ['더 보기', '뒤로', '취소']);
     assert.deepEqual(labels(open('About')), ['확인']);
     // 기본 확인 단추(OkButton)는 한국어 용어표에서 온다: 단추가 없는 섹션(영어에 `$Button` 이 없는 `Blank` 가 아닌 본문만 있는 경우)에 쓰인다.

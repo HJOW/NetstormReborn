@@ -9,10 +9,12 @@
 // Tell 섹션은 파일뿐 아니라 섹션 단위로도 대체한다: 한국어 tell 파일은 웹에서 닿는 섹션만 번역한 부분 파일이라 없는 섹션은 영어 tell 파일에서 찾는다(2026-10-31 WB03-O).
 // 설정 값 쓰기(원본 Config::Set, 004404e0)는 set() 이 맡는다: 같은 키의 줄을 모두 지우고 `키 = "값"` 줄을 전역 설정 버퍼 끝에 덧붙인다.
 // 원본은 메인 루프가 변경 표시를 보고 options.cfg 를 저장하지만, 웹 판본은 쓸 때마다 호스트가 넘긴 onChange 훅을 불러 로컬 저장소에 저장하게 한다(platform/progress.js·settings.js).
+// 제품 표기(11.01 버전 줄·세 번째 Patch Credits)는 product.js 의 경계를 따르며, product 가 false 이면 원본 10.78 표기 그대로 둔다(원본 스크린샷·자료 대조용).
 // 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
-// (2026-10-28 WB02-D: 메뉴 대화상자 본문 조회를 위해 추가. 2026-10-30 WB03-H: 값 쓰기와 변경 통지 추가)
+// (2026-10-28 WB02-D: 메뉴 대화상자 본문 조회를 위해 추가. 2026-10-30 WB03-H: 값 쓰기와 변경 통지 추가. 2026-11-05 WB03-AC: 제품 11.01 표기와 Patch Credits 객체 추가)
 import { Config, ConfigRegistry, asciiLower, sectionRange } from './config.js';
 import { GameFiles } from './game-files.js';
+import { PRODUCT_CREDITS_OBJECT, PRODUCT_MAJOR_VERSION, PRODUCT_MINOR_VERSION, PRODUCT_VERSION_VALUE, productCreditsText, productTellBody } from './product.js';
 import { decodeOriginalText } from './text-encoding.js';
 
 // 데이터 폴더 기준 TAFF 아카이브 경로이다. (2026-10-28 WB02-D)
@@ -21,9 +23,10 @@ export const ARCHIVE_PATH = 'netstorm.tarc';
 // 데이터 폴더 기준 원본 기본 설정 파일 경로이다(인코딩된 파일). (2026-10-28 WB02-D)
 export const SETUP_PATH = 'd/setup.cfg';
 
-// 게임 버전이다(10.78 패치판). 전역 설정 앞머리의 MAJOR_VERSION·MINOR_VERSION·version 줄이 된다. (2026-10-28 WB02-D)
-const MAJOR_VERSION = 10;
-const MINOR_VERSION = 78;
+// 원본 게임 버전이다(10.78 패치판). product 가 false 인 원본 대조용 GameData 의 MAJOR_VERSION·MINOR_VERSION·version 줄이 된다.
+// 웹 판본의 실제 표시는 product.js 의 제품 표기(11.01)를 쓴다. (2026-10-28 WB02-D, 2026-11-05 WB03-AC: 원본 대조 전용으로 한정)
+const ORIGINAL_MAJOR_VERSION = 10;
+const ORIGINAL_MINOR_VERSION = 78;
 
 // 영어(대체 언어)의 이름이다. 모르는 언어와 없는 언어 파일은 영어로 대체한다. (2026-10-28 WB02-D)
 export const FALLBACK_LANGUAGE = 'english';
@@ -34,12 +37,16 @@ export const TELL_NAME_BYTES = 256;
 // 게임 데이터 조회 객체이다.
 // 사용: const data = GameData.build({ files: 적재기가 준 경로 → 바이트 Map, language: 'english', options: { soundVolume: 3 } });
 //       data.tellSection('Credits') → 섹션 본문 문자열, data.substitute('{H2}'), data.pathSpec('missionSpec', 'tutorial1'). (2026-10-28 WB02-D)
+//       원본 스크린샷·자료와 대조할 때는 GameData.build({ …, product: false }) 로 원본 10.78 표기·두 행 Credits 를 쓴다. (2026-11-05 WB03-AC)
 export class GameData {
     // 파일 조회 계층과 언어를 받아 설정 객체 층을 구성한다. 직접 부르기보다 GameData.build 를 쓴다.
     // onChange(키, 값)는 set() 으로 값을 쓸 때마다 불리는 선택적 통지 훅이다(저장 연결용).
-    constructor({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null }) {
+    // product 는 제품 표기(11.01 버전 줄·Patch1101 Credits 객체·세 번째 Credits 행) 적용 여부이며 기본값 true 이다. (2026-11-05 WB03-AC)
+    constructor({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null, product = true }) {
         // 값 쓰기 통지 훅이다. 호스트가 값을 저장소에 옮기는 데 쓴다. 없으면 통지하지 않는다. (2026-10-30 WB03-H)
         this.onChange = onChange;
+        // 제품 표기 적용 여부이다. false 이면 원본 10.78 표기 그대로이다(원본 대조 검사용). (2026-11-05 WB03-AC)
+        this.product = Boolean(product);
         // 파일 조회 계층이다.
         this.files = files;
         // 현재 언어 이름이다(파일 확장자로 쓰임). 'english' 이외는 대응 파일이 없으면 영어 파일로 대체한다.
@@ -62,11 +69,18 @@ export class GameData {
         this._fallbackTellText = undefined;
         this._loadConfiguration(options);
         this._loadLanguage();
+        // 제품 Credits 를 담는 등록 설정 객체(`Patch1101`)이다. Tell `Patch1101.Credits` 가 이 객체의 [Credits] 섹션을 찾는다. 제품 표기가 아니면 null 이다.
+        // 게임 데이터와 수명이 같다(cpppj 는 UI 수명의 등록 Config). 언어는 현재 언어의 tell 파일이 실제로 있을 때만 그 언어이고, 영어로 대체된 화면에서는 영어이다. (2026-11-05 WB03-AC)
+        this.productCredits = null;
+        if (this.product) {
+            this.productCredits = new Config(this.registry, PRODUCT_CREDITS_OBJECT);
+            this.productCredits.append(productCreditsText(this.productLanguage));
+        }
     }
 
     // 데이터 폴더 파일 Map(경로 → 바이트)으로 GameData 를 만든다. netstorm.tarc 는 아카이브로 등록하고 모든 파일은 느슨한 파일로도 등록한다.
-    // files 에 아카이브나 setup.cfg 가 없으면 어떤 파일이 빠졌는지 알리는 오류를 던진다.
-    static build({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null }) {
+    // files 에 아카이브나 setup.cfg 가 없으면 어떤 파일이 빠졌는지 알리는 오류를 던진다. product 는 생성자와 같다. (2026-11-05 WB03-AC: product 전달)
+    static build({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null, product = true }) {
         const archiveBytes = files.get(ARCHIVE_PATH);
         if (!archiveBytes) throw new Error(`필수 자산이 없습니다: ${ARCHIVE_PATH}`);
         if (!files.get(SETUP_PATH)) throw new Error(`필수 자산이 없습니다: ${SETUP_PATH}`);
@@ -74,19 +88,36 @@ export class GameData {
         loose.delete(ARCHIVE_PATH);
         const gameFiles = new GameFiles({ loose });
         gameFiles.addArchive(archiveBytes);
-        return new GameData({ files: gameFiles, language, options, onChange });
+        return new GameData({ files: gameFiles, language, options, onChange, product });
+    }
+
+    // 제품 표기 문구에 쓸 언어이다. 현재 언어의 tell 파일이 실제로 있으면 현재 언어, 없어 영어로 대체되는 경우는 영어이다.
+    // 한국어 묶음을 받지 못해 영어 Tell·영어 글꼴로 계속하는 화면에 한국어 행이 섞이지 않게 한다. (2026-11-05 WB03-AC)
+    get productLanguage() {
+        if (this.language === FALLBACK_LANGUAGE) return FALLBACK_LANGUAGE;
+        return this.files.read(this.pathSpec('missionSpec', 'tell')) ? this.language : FALLBACK_LANGUAGE;
+    }
+
+    // Tell 창이 표시할 섹션 본문에 제품 표기를 적용한다. 제품 표기일 때 메인 Credits 본문에만 세 번째 행을 덧붙이고, 그 밖에는 원문 그대로 돌려준다.
+    // name 은 지역 인자를 뗀 섹션 이름이다. tellSection/findTellSection 의 원문 조회 결과는 바꾸지 않는다(원본 자료 대조 유지).
+    // 사용: const body = data.presentTellBody('Credits', data.findTellSection('Credits')). (2026-11-05 WB03-AC)
+    presentTellBody(name, body) {
+        return this.product ? productTellBody(name, body, this.productLanguage) : body;
     }
 
     // 전역 설정 버퍼를 원본 시작 순서(00441790 → 00440e00)대로 채운다. options 는 웹 사용자 설정(키 → 값)이며 setup.cfg 보다 앞에 놓여 우선한다.
-    // 언어는 options 에 없으면 currentLanguage 로 넣는다.
+    // 언어는 options 에 없으면 currentLanguage 로 넣는다. 버전 줄은 제품 표기면 11·1·"v11.01"(선행 0 보존), 아니면 원본 10·78·"v10.78" 이다.
+    // (2026-11-05 WB03-AC: cpppj ApplyProductVersion 과 같은 제품 값을 처음부터 같은 자리에 쓴다. 같은 키 줄이 하나뿐이라 조회 결과가 같다)
     _loadConfiguration(options) {
         const configuration = this.configuration;
         configuration.environmentEnabled = true;
         configuration.clear();
         configuration.append('[ARGS]');
-        configuration.append(`MAJOR_VERSION=${MAJOR_VERSION}`);
-        configuration.append(`MINOR_VERSION=${MINOR_VERSION}`);
-        configuration.append(`version="v${MAJOR_VERSION}.${MINOR_VERSION}"`);
+        const major = this.product ? PRODUCT_MAJOR_VERSION : ORIGINAL_MAJOR_VERSION;
+        const minor = this.product ? PRODUCT_MINOR_VERSION : ORIGINAL_MINOR_VERSION;
+        configuration.append(`MAJOR_VERSION=${major}`);
+        configuration.append(`MINOR_VERSION=${minor}`);
+        configuration.append(`version="${this.product ? PRODUCT_VERSION_VALUE : `v${ORIGINAL_MAJOR_VERSION}.${ORIGINAL_MINOR_VERSION}`}"`);
         configuration.append('[options.cfg]');
         const values = { currentLanguage: this.language, ...options };
         // 웹 사용자 설정을 `키 = "값"` 줄로 넣는다.
