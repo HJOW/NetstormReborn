@@ -422,3 +422,12 @@ TEST_CASE(ProductionInitialContext_ToggleBottomScriptKeepsDraggedChatGeometry) {
     toggle();CHECK(divider->y==480 && globals.chatY==216);toggle();CHECK(divider->y==216 && scene.buttons.MapViewRect().bottom==216);
     CHECK(uber.Current() && scene.buttons.RootToken()==root && parent->chat==chat && parent->production==production && scene.Count()==count); // 숨김/드래그 뒤에도 같은 자식과 저장소 수명을 유지한다.
 }
+
+TEST_CASE(HudChatDockUi_HiddenResizeRestoresSavedBottomDistance) { // 화면 전환 중 숨겨 둔 Chat도 다시 열 때 마지막 표시 위치의 하단 간격을 보존해야 한다.
+    InitialUberGlobals globals;InitialProductionScene scene;auto& uber=scene.buttons.EnableUberRoot(InitialUberContext(scene,globals));uber.Replace();const auto root=scene.buttons.RootToken();scene.buttons.HandleGump(root,0x0200003dU,3,0);const auto* parent=static_cast<UberRootNode*>(uber.Node(root));CHECK(parent);if (!parent) return;const auto chat=parent->chat,production=parent->production,count=scene.Count();auto* divider=uber.Node(parent->chatDivider);CHECK(divider && divider->y==384);if (!divider) return;
+    const std::array<std::array<std::int32_t,2>,4> screens{{{800,600},{1280,720},{1024,768},{640,480}}}; // 기존 지원 화면비 사이를 왕복하며 같은 숨김/표시 수명을 반복한다.
+    for (const auto& size:screens) { // 새 화면마다 먼저 숨긴 뒤 실제 SetControls/Reflow와 같은 입력 부모로 다시 표시한다.
+        const auto previousBottom=static_cast<float>(globals.height)-divider->y;scene.buttons.HandleGump(root,0x02000088U,0,0);CHECK(divider->y==globals.height && globals.chatY==globals.height-previousBottom);globals.width=size[0];globals.height=size[1];const auto& asset=scene.assets.game.Find("fortGump");const auto metrics=scene.assets.game.Shapes().SquidMetrics(asset.block,0);scene.buttons.SetControls({}, {},globals.width,globals.height,{static_cast<std::uint32_t>(asset.block+70),0,metrics.width,metrics.height,{}},true);uber.Reflow();CHECK(divider->y==globals.height && scene.buttons.MapViewRect().bottom==globals.height);
+        scene.buttons.HandleGump(root,0x02000088U,0,2);CHECK(divider->y==static_cast<float>(globals.height)-previousBottom && scene.buttons.MapViewRect().bottom==globals.height-static_cast<std::int32_t>(previousBottom));CHECK(uber.Current() && scene.buttons.RootToken()==root && parent->chat==chat && parent->production==production && scene.Count()==count);std::printf("HIDDEN CHAT resize=%d,%d restored=%g bottom=%g\n",globals.width,globals.height,divider->y,previousBottom);
+    }
+}

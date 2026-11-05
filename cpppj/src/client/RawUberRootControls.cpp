@@ -73,12 +73,13 @@ RawUberRootControls::~RawUberRootControls() {
     s.menus.UnregisterExternalGumps(s.drawRegistration);
 } // 살아 있는 다른 HUD의 출력은 반납하지 않는다.
 void RawUberRootControls::Replace() { auto& s=*impl_;s.root->Replace();s.previousWidth=s.common.create.screenWidth;s.previousHeight=s.common.create.screenHeight; } // 전체 생성자와 원문 교체 본체를 그대로 호출한다.
-// 새로운 화면 크기의 확장은 원본 세 구분선의 같은 Move/Attach/슬레이브 몸체로 처리한다.
+// 화면 크기 변경 시 실제 구분선과 숨긴 Chat 복원 위치의 하단 간격을 유지한다. 고정 해상도 원본에 없는 Windows 호환 재배치다.
 void RawUberRootControls::Reflow() {
     auto& s=*impl_;if (!Current()) throw std::logic_error("실제 전체 HUD 없는 화면 재배치");
     const auto width=s.common.create.screenWidth,height=s.common.create.screenHeight;if (width==s.previousWidth && height==s.previousHeight) return;
     const auto token=s.common.create.entries[0];auto* node=s.Root(token);const auto delta=static_cast<double>(height)-s.previousHeight;
     const auto miniY=static_cast<float>(s.Divider(node->minimapDivider)->y+delta),chatY=static_cast<float>(s.Divider(node->chatDivider)->y+delta); // 사용자 드래그/숨김 뒤의 현재 하단 거리를 유지한다.
+    if (s.Divider(node->chatDivider)->y>=s.previousHeight) s.context.globals.savedChatY=static_cast<float>(static_cast<double>(s.context.globals.savedChatY)+delta); // 숨김 중에는 화면 끝으로 옮긴 구분선 대신 마지막 표시 위치도 같은 높이 차이만큼 이동해야 다음 Toggle이 이전 해상도로 돌아가지 않는다.
     auto* vertical=s.Divider(node->vertical);vertical->baseHeight=static_cast<float>(height);vertical->height=static_cast<float>(static_cast<double>(height)*vertical->scale);
     auto* mini=s.Divider(node->minimapDivider);mini->minY=height-123;mini->maxY=height;auto* chat=s.Divider(node->chatDivider);chat->maxY=height-25;
     s.common.lifetime.Cleanup();s.common.tree.Move(node->vertical,vertical->x,vertical->y,0);s.common.lifetime.Cleanup();

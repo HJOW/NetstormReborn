@@ -1,0 +1,107 @@
+{
+  "unit": 921,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "status": "완료·전체 목표 진행 중",
+  "productUnit": 921,
+  "productCodeChanges": true,
+  "productVersion": "11.01",
+  "productSha256": "fca9945c0f858e6d9088680ad359fd948ab4106d6dba0ce31ad2d47b5620dcd0",
+  "productBytes": 10787840,
+  "initialFailedChecks": 4,
+  "initialFailureReason": "숨긴 Chat savedChatY가 화면 높이 변경 뒤 이전 높이 좌표에 남음",
+  "fix": "Reflow에서 숨김 중 savedChatY에도 현재 화면 높이 차이를 더함",
+  "screens": [
+    [
+      800,
+      600
+    ],
+    [
+      1280,
+      720
+    ],
+    [
+      1024,
+      768
+    ],
+    [
+      640,
+      480
+    ]
+  ],
+  "restoredChatY": [
+    504,
+    624,
+    672,
+    384
+  ],
+  "bottomDistance": 96,
+  "tests": [
+    {
+      "filter": "HudChatDockUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-921/test-HudChatDockUi_.log"
+    },
+    {
+      "filter": "ProductionInitialContext_FullUber",
+      "exit": 0,
+      "log": "extracted/cpp-resume-921/test-ProductionInitialContext_FullUber.log"
+    },
+    {
+      "filter": "ProductionInitialContext_ToggleBottomScript",
+      "exit": 0,
+      "log": "extracted/cpp-resume-921/test-ProductionInitialContext_ToggleBottomScript.log"
+    },
+    {
+      "filter": "ProductionInitialContext_FullDeckOwnerMoves",
+      "exit": 0,
+      "log": "extracted/cpp-resume-921/test-ProductionInitialContext_FullDeckOwnerMoves.log"
+    },
+    {
+      "filter": "ProductionInitialContext_AtomicHudMode",
+      "exit": 0,
+      "log": "extracted/cpp-resume-921/test-ProductionInitialContext_AtomicHudMode.log"
+    },
+    {
+      "filter": "HudDock_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-921/test-HudDock_.log"
+    },
+    {
+      "filter": "ChatWindowClient_EnterTypingToggle",
+      "exit": 0,
+      "log": "extracted/cpp-resume-921/test-ChatWindowClient_EnterTypingToggle.log"
+    },
+    {
+      "filter": "ChatWindowClient_RealGeometryInputAndStyledPixels",
+      "exit": 0,
+      "log": "extracted/cpp-resume-921/test-ChatWindowClient_RealGeometryInputAndStyledPixels.log"
+    }
+  ],
+  "names": [
+    "HudChatDockUi_HiddenResizeRestoresSavedBottomDistance",
+    "ProductionInitialContext_FullUberUsesActualChildrenAndDock",
+    "ProductionInitialContext_FullUberReplacementMovesOldChildren",
+    "ProductionInitialContext_FullUberReflowsExistingScreen",
+    "ProductionInitialContext_ToggleBottomScriptKeepsDraggedChatGeometry",
+    "ProductionInitialContext_FullDeckOwnerMovesActualHudDivider",
+    "ProductionInitialContext_AtomicHudModeFinishesNative1024Layout",
+    "HudDock_IndependentNativeBodiesAndNestedViewport",
+    "ChatWindowClient_EnterTypingToggleAndCurrentOptionRequest",
+    "ChatWindowClient_RealGeometryInputAndStyledPixels"
+  ],
+  "uniqueCases": 10,
+  "newCases": 1,
+  "finalFailedChecks": 0,
+  "nativeDockInputs": 2150,
+  "buildCommands": 2,
+  "msbuildInvocations": 3,
+  "warnings": 0,
+  "errors": 0,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "protectedUnchanged": true,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "newNetworkTests": 0
+}
