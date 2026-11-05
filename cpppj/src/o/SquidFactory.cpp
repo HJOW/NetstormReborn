@@ -3,6 +3,7 @@
 #include "o/SquidUnpop.h"
 #include "o/SquidForms.h"
 #include "o/RawRiftHitPoints.h"
+#include "o/RawSquidCreation.h" // 원문 생성 부모가 같은 실제 풀/TYPE/생성자/가상 초기화를 호출한다.
 #include <stdexcept>
 #include <utility>
 
@@ -124,7 +125,11 @@ std::span<std::uint8_t> SquidFactory::LiveBytes(Sid sid) {
 std::uint32_t SquidFactory::BaseVtable() const { return pool_.Edition()==OriginalEdition::Patch1078 ? kPatchVtable : kCdVtable; }
 // 각 생성자의 최종 vtable만 읽는다. 중간 vtable은 ApplyConstructor에서 원본 순서로 쓴다.
 std::uint32_t SquidFactory::ConstructorVtable(const RiftTypeRecord& type) const {
-    if (!type.constructorAddress) return BaseVtable();const auto recipe=Recipe(pool_.Edition(),type.constructorAddress);if (!recipe) throw std::logic_error("현재 TYPE의 미등록 생성자 가상 표 조회");return recipe->vtable;
+    if (!type.constructorAddress) return BaseVtable();
+    for (const auto formType:{1U,2U,3U,6U}) { // 일반Create도 네Form의 원문 생성자/VT를 사용한다.
+        if (type.constructorAddress==TypeConstructorAddress(pool_.Edition(),formType)) return SquidForms(pool_).Vtable(formType);
+    }
+    const auto recipe=Recipe(pool_.Edition(),type.constructorAddress);if (!recipe) throw std::logic_error("현재 TYPE의 미등록 생성자 가상 표 조회");return recipe->vtable;
 }
 // 원본 생성자 표를 재사용하므로 가상 분배용83개 목록을 별도로 복제하지 않는다.
 bool SquidFactory::SupportsConstructedVtable(OriginalEdition edition,std::uint32_t table) {
@@ -162,27 +167,55 @@ Sid SquidFactory::Construct(std::uint32_t type,Sid sid) {
     if (sid.value<5 || (bytes[kState]&(kFree|kContained))) throw std::logic_error("생성자 슬롯 상태 오류");
     ApplyConstructor(bytes,record); return sid;
 }
+// 현재 원문 cdecl 주소를 타입/상태 선행 검사 없이 같은 물리 슬롯에 적용한다.
+Sid SquidFactory::ConstructRaw(std::uint32_t address,Sid sid,bool requireObject) {
+    if (!address) { Put(std::span(pool_.bytes_).subspan(pool_.Offset(sid),pool_.layout_.stride),0,BaseVtable(),4);return sid; }
+    // 네 Form 생성자는 TYPE/부모/목록을 쓰지 않고 VT DWORD만 남긴다.
+    for (const auto formType:{1U,2U,3U,6U}) {
+        if (address==TypeConstructorAddress(pool_.Edition(),formType)) { SquidForms(pool_).ConstructVtableAt(formType,sid);return sid; }
+    }
+    if (!ConstructByAddress(address,sid)) throw std::logic_error("Create/현재 TYPE의 선택된 cdecl 생성자 미연결");
+    if (requireObject && pool_.Edition()==OriginalEdition::Patch1078 && address==0x4429e0U)
+        throw std::logic_error("void NULL 생성자는 Create의 반환 객체를 제공하지 않습니다");
+    return sid;
+}
+void SquidFactory::ConstructCurrent(Sid sid) { // 원문은 free/dead/contained/예약 SID를 선행 제외하거나 TYPE/HP를 쓰지 않는다.
+    const auto address=TypeRecord(pool_.Slot(sid)[kType]).constructorAddress;
+    ConstructRaw(address,sid,false);
+}
+void SquidFactory::VirtualPostCreate(Sid sid,std::uint32_t table) { // 실제 VT를 사용하고 원래 TYPE와의 쌍 일치를 요구하지 않는다.
+    const SquidForms forms(pool_);
+    for (const auto formType:{1U,2U,3U,6U}) { // 네 Form의+28은 PATCH4437f0/CD4b0470의 빈 함수다.
+        if (table==forms.Vtable(formType)) return;
+    }
+    if (!SupportsConstructedVtable(pool_.Edition(),table)) throw std::logic_error("Create의 선택된 실제 VT+28 미연결");
+    PostCreate(sid);
+}
 // 10.78의 타입 변경은 진단 복귀 뒤에도 계속하며 free/dead/예약 SID를 추가로 제외하지 않는다.
 void SquidFactory::Retype(Sid sid,std::uint32_t type,const std::function<void(std::uint32_t)>& assertion) {
     if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("타입 변경4b1620은10.78만 복원했습니다");
     const auto diagnose=[&](std::uint32_t line) { if (!assertion) throw std::logic_error("타입 변경의 실제 원문 진단 미연결");assertion(line); }; // 원문 세 진단을 선택된 위치에서만 요구한다.
     if (!(pool_.Slot(sid)[kState]&kVoid)) diagnose(0x22d);
-    if (Type(pool_.Slot(sid)[kType],false).footX!=Type(type,false).footX) diagnose(0x22e);
-    if (Type(pool_.Slot(sid)[kType],false).footY!=Type(type,false).footY) diagnose(0x22f);
+    if (TypeRecord(pool_.Slot(sid)[kType]).footX!=TypeRecord(type).footX) diagnose(0x22e);
+    if (TypeRecord(pool_.Slot(sid)[kType]).footY!=TypeRecord(type).footY) diagnose(0x22f);
     const auto offset=pool_.Offset(sid);auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride);
-    bytes[kType]=static_cast<std::uint8_t>(type);ApplyConstructor(bytes,Type(bytes[kType],true)); // 원본4af720은 BYTE 쓰기 뒤 현재 TYPE의 실제 생성자를 다시 조회한다.
+    bytes[kType]=static_cast<std::uint8_t>(type);ConstructCurrent(sid); // 원본4af720은 BYTE 쓰기 뒤 현재 TYPE의 실제 생성자를 다시 조회한다.
 }
-// 기존 SID 할당→파생/base 생성자→type→공통 postCreate를 원본 순서로 적용한다.
+// 실제 부모가 진단→할당→현재 생성자→반환 객체 TYPE→실제VT+28을 선택한다.
 Sid SquidFactory::Create(std::uint32_t type,std::uint32_t flags) {
-    const auto& record=Type(type,true);
-    if (pool_.Edition()==OriginalEdition::Patch1078 && type==kFakeSurface)
-        throw std::logic_error("패치판 fakeThreeByThreeSurface는 생성할 수 없습니다");
-    const auto sid=pool_.Allocate(flags);
-    auto bytes=pool_.AllocatedBytes(sid);
-    ApplyConstructor(bytes,record);
-    bytes[kType]=static_cast<std::uint8_t>(type);
-    PostCreate(sid);
-    return sid;
+    RawSquidCreationHooks hooks;
+    hooks.fakeSurfaceType=[this] { return sharedFakeSurfaceType_ ? *sharedFakeSurfaceType_ : kFakeSurface; };
+    hooks.assertion=[this](auto expression,auto file,auto line) { const auto selected=diagnostics_.assertion;if (!selected) throw std::logic_error("Factory Create의 실제 진단 장치 미연결");selected(expression,file,line); };
+    hooks.allocate=[this](auto flags) { return pool_.Allocate(flags).value; };
+    hooks.constructor=[this](auto number) { return TypeRecord(number).constructorAddress; };
+    hooks.construct=[this](auto address,auto number) { // 원문 DWORD SID를 호스트 WORD로 자르기 전에 물리 범위를 확인한다.
+        if (number>=pool_.Capacity()) throw std::out_of_range("Create 생성자의 실제 물리 SID 범위");
+        return std::uint32_t(ConstructRaw(address,Sid{static_cast<std::uint16_t>(number)},true).value);
+    };
+    hooks.vtable=[this](auto object) { return Vtable(pool_.Slot(Sid{static_cast<std::uint16_t>(object)})); };
+    hooks.storeType=[this](auto object,auto value) { std::span(pool_.bytes_).subspan(pool_.Offset(Sid{static_cast<std::uint16_t>(object)}),pool_.layout_.stride)[kType]=value; };
+    hooks.postCreate=[this](auto object,auto table) { VirtualPostCreate(Sid{static_cast<std::uint16_t>(object)},table); };
+    return Sid{static_cast<std::uint16_t>(CreateRawSquid(pool_.Edition(),type,flags,hooks))};
 }
 // 할당/생성 연결에서 월드 혼합을 거부하기 위한 참조다.
 const SidPool& SquidFactory::Pool() const { return pool_; }
@@ -193,6 +226,9 @@ void SquidFactory::BindWeakenedMana(const bool& current) {
 void SquidFactory::BindHitPointTypes(const std::uint32_t* priest,const std::uint32_t* dais) { // 같은 owner의 수명보다 공장이 오래 살지 않도록 실제 World가 장기 주소를 공급한다.
     if (!priest || !dais || (sharedPriestType_ && sharedPriestType_!=priest) || (sharedDaisType_ && sharedDaisType_!=dais)) throw std::invalid_argument("생성 HP의 특별 TYPE 주소 연결 오류");
     sharedPriestType_=priest;sharedDaisType_=dais;
+}
+void SquidFactory::BindFakeSurfaceType(const std::uint32_t& current) { // Session을 바꿔도 동일 owner의 현재 DWORD를 읽는다.
+    if (sharedFakeSurfaceType_ && sharedFakeSurfaceType_!=&current) throw std::invalid_argument("Create fakeSurface TYPE의 중복 다른 주소 연결");sharedFakeSurfaceType_=&current;
 }
 Sid SquidFactory::CreateContained(std::uint32_t flags) {
     return SquidForms(pool_).Create(kContainedType,flags);

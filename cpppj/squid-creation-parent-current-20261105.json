@@ -1,0 +1,409 @@
+{
+  "unit": 899,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastPreciseHost": "HJOW-Athlon",
+  "lastPreciseDate": "2026-11-03",
+  "status": "unit-complete-overall-goal-in-progress",
+  "scope": "양판본 Create 부모의 실제 진단·할당·현재 생성자·반환 객체·VT 순서와 현재 TYPE 생성자/장기 fake TYPE 연결",
+  "nativeFunctions": {
+    "originals": [
+      {
+        "entry": "4af530",
+        "name": "FUN_004af530",
+        "size": "209",
+        "ranges": "4af530-4af600",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "78",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "40dde0,40e4ef,410548,415bd6,415c0c,415cfa,415f3d,415f6b,41bd99,41ec6e,41ee59,41ef9e,41f17e,41f33e,41f6bc,4210ff,421701,426798,426cf3,42a8b7,42accb,42b420,42b765,4421d6,44250a,44308f,443267,443483,443587,444656,444ddc,445bb4,445f04,445fa7,447cb0,4485f1,4494a4,44b43a,44b7b5,44c6e1,44e3f6,44ebf0,44ed08,450a40,4549f5,455db3,45663a,45a302,45a510,45a7af,45d552,45db33,45dfc3,45e6eb,45f22f,45f765,46212d,4644f5,473909,473a59,474396,474478,47e109,481f4c",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "49a840,4af1d0,4b0c60,4e0620",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_004af530()"
+      },
+      {
+        "entry": "4af720",
+        "name": "FUN_004af720",
+        "size": "92",
+        "ranges": "4af720-4af77b",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__thiscall",
+        "call_refs": "1",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "4b16c3",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "49a840",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "1",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __thiscall FUN_004af720(void * this)"
+      }
+    ],
+    "originalCD": [
+      {
+        "entry": "4ab390",
+        "name": "FUN_004ab390",
+        "size": "166",
+        "ranges": "4ab390-4ab435",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "77",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "40748f,40bfe5,41584f,416a55,41aea5,41d672,4283fa,42c686,42cd0c,42d100,43d030,43d398,43d438,4487cf,44902b,449bd0,44b108,45cd13,45cded,46156c,4618ee,462c6f,46eec1,478631,4790f8,47acee,47c425,47c64a,47c901,4814cb,481e5f,482f6c,48b053,48b1a5,48bc93,48bfd3,48d0f3,48d33c,48f638,492f95,49951d,499cc7,499ff2,49a4a3,49abc2,49aebe,49bae7,49d3b1,49d512,4a4a3b,4a5304,4a5425,4ac506,4af9a0,4af9b1,4c0b02,4c0d48,4d01ec,4d1015,4d11b0,4d1383,4d157b,4d1688,4d21c0",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "490040,4aae40,4ae040",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_004ab390()"
+      },
+      {
+        "entry": "4ab770",
+        "name": "FUN_004ab770",
+        "size": "97",
+        "ranges": "4ab770-4ab7d0",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__thiscall",
+        "call_refs": "1",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "4ab765",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "1",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __thiscall FUN_004ab770(void * this)"
+      }
+    ]
+  },
+  "implemented": {
+    "create": "현재 fake TYPE 진단(PATCH)→실제 할당→signed SID 진단→현재 전체DWORD TYPE 생성자→실제 반환 객체의 VT DWORD 저장→TYPE BYTE→저장VT의+28",
+    "constructCurrent": "현재 raw TYPE의 cdecl/bare 쓰기만 실행하고 반환 객체 무시. free/dead/contained/예약/Form 번호 사전 제외 없음. 실제 Retype 꼬리 연결.",
+    "forms": "일반 Create의1/2/3/6과 자산 번호에 연결된 Form 생성자도 실제 VT의 빈+28 선택.",
+    "owner": "RawGameAuxState.FakeSurfaceType 최초162, 현재005412e0의 같은 장기 주소를 World 공장에 연결. 일반 준비·World 재대여로 초기화하지 않음.",
+    "unsupported": "미연결 생성자는 선행 할당 후 명시 오류. void NULL의 입력 SID를 반환 객체로 위조하지 않음. 외부 힙 Process/전체 주소 영역은 미복원."
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "mode": "first",
+      "samples": 588,
+      "editions": {
+        "originals": {
+          "samples": 294,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+        },
+        "originalCD": {
+          "samples": 294,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+        }
+      },
+      "fixtureSha256": "8bbc69366eae3d6ae4ba1a333eeb988c2ea1bdc558379c427adb3677bed1e26a",
+      "toolSha256": "0169f84b1cad3bb6e656e2f5177a7274d8284f461e3be3709531c8e2cd580683",
+      "boundaries": [
+        "allocator return/current TYPE mutation",
+        "cdecl return object/initial VT",
+        "virtual +28 observation",
+        "diagnostic UI return",
+        "external VT mutation during TYPE store"
+      ]
+    },
+    "verify": {
+      "host": "HJOW-Athlon",
+      "mode": "verify",
+      "samples": 588,
+      "editions": {
+        "originals": {
+          "samples": 294,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+        },
+        "originalCD": {
+          "samples": 294,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+        }
+      },
+      "fixtureSha256": "8bbc69366eae3d6ae4ba1a333eeb988c2ea1bdc558379c427adb3677bed1e26a",
+      "toolSha256": "0169f84b1cad3bb6e656e2f5177a7274d8284f461e3be3709531c8e2cd580683",
+      "boundaries": [
+        "allocator return/current TYPE mutation",
+        "cdecl return object/initial VT",
+        "virtual +28 observation",
+        "diagnostic UI return",
+        "external VT mutation during TYPE store"
+      ]
+    },
+    "samples": 588,
+    "perEdition": 294,
+    "completeObservations": 2,
+    "completeExecutions": 1176,
+    "fixture": "cpppj/tests/fixtures/squid-creation-parent-x86.tsv",
+    "fixtureBytes": 148872,
+    "childBodiesVerifiedByThisOracle": false,
+    "virtual28Audit": {
+      "originals": {
+        "assetVtables": 83,
+        "assetVirtual28Targets": [
+          "0x4b0c60"
+        ],
+        "forms": [
+          {
+            "table": "0x512110",
+            "virtual28": "0x4437f0",
+            "code": "c3"
+          },
+          {
+            "table": "0x512098",
+            "virtual28": "0x4437f0",
+            "code": "c3"
+          },
+          {
+            "table": "0x512188",
+            "virtual28": "0x4437f0",
+            "code": "c3"
+          },
+          {
+            "table": "0x512208",
+            "virtual28": "0x4437f0",
+            "code": "c3"
+          }
+        ]
+      },
+      "originalCD": {
+        "assetVtables": 68,
+        "assetVirtual28Targets": [
+          "0x4ae040"
+        ],
+        "forms": [
+          {
+            "table": "0x505a08",
+            "virtual28": "0x4b0470",
+            "code": "c3"
+          },
+          {
+            "table": "0x505990",
+            "virtual28": "0x4b0470",
+            "code": "c3"
+          },
+          {
+            "table": "0x505a80",
+            "virtual28": "0x4b0470",
+            "code": "c3"
+          },
+          {
+            "table": "0x505b00",
+            "virtual28": "0x4b0470",
+            "code": "c3"
+          }
+        ]
+      }
+    }
+  },
+  "validation": {
+    "product": {
+      "unit": 899,
+      "file": "cpppj/build/bin/Release/Netstorm.exe",
+      "bytes": 10712576,
+      "sha256": "85979e0ce847c2c35c3f9e571c5dfbb623d7ac195b83ecc619cc8b722b9c82f1",
+      "displayVersion": "11.01",
+      "fileVersion": "11.01",
+      "productVersion": "11.01"
+    },
+    "builds": [
+      {
+        "log": "build-first.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "log": "build-final.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "log": "build-corrected.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "tests": {
+      "test-": [
+        {
+          "filter": "SquidCreationParent_",
+          "cases": 6,
+          "failedChecks": 294,
+          "failedCases": 1
+        },
+        {
+          "filter": "SquidFactory_",
+          "cases": 8,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "FactoryPostCreate_",
+          "cases": 6,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "ObjectConversion_",
+          "cases": 5,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "SquidRetype_",
+          "cases": 1,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "TypeConstructors_",
+          "cases": 1,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "RiftHitPointCurrent_",
+          "cases": 5,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "FortObjectSaveFactory_",
+          "cases": 1,
+          "failedChecks": 0,
+          "failedCases": 0
+        }
+      ],
+      "test-final-": [
+        {
+          "filter": "SquidCreationParent_",
+          "cases": 6,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "SquidFactory_",
+          "cases": 8,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "FactoryPostCreate_",
+          "cases": 6,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "ObjectConversion_",
+          "cases": 5,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "SquidRetype_",
+          "cases": 1,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "TypeConstructors_",
+          "cases": 1,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "RiftHitPointCurrent_",
+          "cases": 5,
+          "failedChecks": 0,
+          "failedCases": 0
+        },
+        {
+          "filter": "FortObjectSaveFactory_",
+          "cases": 1,
+          "failedChecks": 0,
+          "failedCases": 0
+        }
+      ]
+    },
+    "normalizedSourceFiles": 2851,
+    "sourceChangesAfterFinalSnapshot": []
+  },
+  "testAccounting": {
+    "uniqueCases": 33,
+    "newCases": 6,
+    "existingCases": 27,
+    "commands": 16,
+    "executions": 66,
+    "firstFailedCases": 1,
+    "firstFailedChecks": 294,
+    "finalFailedCases": 0,
+    "finalFailedChecks": 0,
+    "correction": "CD 디컴파일 C의 표시 순서 대신 ASM004ab426/428/42a/42d에 따라 VT DWORD를 TYPE BYTE 전에 읽도록 수정. 기대 fixture 변경0.",
+    "existingGuardAssumptionsCorrected": 2
+  },
+  "buildProvenance": "첫 줄바꿈 보존 도우미와 빌드의 종료 확인 누락으로 중첩 발생. 의미 변경 없이 정규화 소스2,851개를 고정하고 둘 종료 후두번째 빌드. 이후 CD 수정은 빌드 종료 후수행, 별도 snapshot과 세번째 빌드/최종 검사 완료.",
+  "protection": {
+    "previousFiles": 2776,
+    "unchanged": 2776,
+    "changed": [],
+    "currentFiles": 2777,
+    "currentFixtures": 957,
+    "added": [
+      "cpppj/tests/fixtures/squid-creation-parent-x86.tsv"
+    ]
+  },
+  "checking": {
+    "pending": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4
+  },
+  "excluded": [
+    "실제 게임/GUI/진단 UI",
+    "포획/희생/특정 적 공격/승리/사용자 직접 확인",
+    "신규 MP/패킷/실제 통신 검사",
+    "공중3종 전용 검사",
+    "전체 검사/34미션/ZIP/물리 입력/PCM/CD 재시도"
+  ],
+  "remaining": [
+    "보상/전송/정보 등 다른 HP caller의 현재 getter/진단 연결",
+    "CD Take/contained/Form 및 고정 Form 편의 경로의 현재 TYPE 계약",
+    "외부 Process 생성자의 Create 반환 객체와 할당 실패 UI",
+    "State/파일/객체UI/Edit/Windows",
+    "무검사 MP와4~8차"
+  ],
+  "nextUnit": 900,
+  "next": "SquidReward TYPE HP 조회를 공유 getter/현재 checking·진단에 연결하고 다른 HP caller를 추적한다.",
+  "rawEvidence": "extracted/cpp-resume-899/ (Git 제외/현재 PC 전용)"
+}

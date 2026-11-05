@@ -169,6 +169,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         }
         factory->BindWeakenedMana(storage->GameAux()->PriestQuarterHp()); // State 직접 쓰기와 첫 객체 생성이 같은 현재005ca8f0을 읽는다.
         factory->BindHitPointTypes(&storage->GameAux()->PriestType(),&storage->GameAux()->DaisType()); // HP 예외/약화 비교가 같은 장기 TYPE 주소를 읽는다.
+        factory->BindFakeSurfaceType(storage->GameAux()->FakeSurfaceType()); // 생성 입구 진단도 같은Client 수명의 현재TYPE를 읽는다.
         frame=std::make_unique<o::SquidFrame>(pool,types,o::MakeSquidFrameHooks(pool,types,*display,*unpop,*pop));
         owner=std::make_unique<o::SquidOwner>(pool,types,bookkeeping,ownerMode);
         neighbors=std::make_unique<o::RawSquidNeighbors>(pool,hash,spots,types,frames);

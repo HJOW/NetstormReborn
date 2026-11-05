@@ -33,8 +33,12 @@ public:
     void BindWeakenedMana(bool&&)=delete; // 임시 bool의 주소를 보관해 수명이 끝나는 연결은 컴파일 시 거부한다.
     void BindWeakenedMana(const bool&&)=delete; // const 임시 bool도 같은 장기 참조 계약을 적용한다.
     void BindHitPointTypes(const std::uint32_t* priest,const std::uint32_t* dais); // 같은 장기 TYPE 두 주소를 빌린다. 독립 미연결 입력만 기존158/165를 사용한다.
+    void BindFakeSurfaceType(const std::uint32_t& current); // Create가 같은 장기005412e0을 읽는다. 임시/다른 주소는 연결하지 않는다.
+    void BindFakeSurfaceType(std::uint32_t&&)=delete; // 임시 DWORD의 수명 밖 참조를 거부한다.
+    void BindFakeSurfaceType(const std::uint32_t&&)=delete; // const 임시도 장기 owner가 아니다.
     // 이미 확보된 슬롯에 생성자 쓰기만 적용한다. type/상태/풀 목록은 덮지 않는다.
     Sid Construct(std::uint32_t type,Sid sid);
+    void ConstructCurrent(Sid sid); //004af720/CD004ab770: 현재 raw TYPE의 생성자만 실행하고 반환 객체는 무시한다.
     // bare cdecl 주소의 원문 쓰기만 물리 SID에 적용한다. 미지원은false이며 TYPE/할당/가상 초기화를 추가하지 않는다.
     // PATCH NULL 함수는 SID를 읽지 않고true, Dais 보조 진단은 정상 복귀 뒤 같은 슬롯에 VT를 저장한다.
     bool ConstructByAddress(std::uint32_t address,Sid sid);
@@ -62,6 +66,8 @@ private:
     std::span<std::uint8_t> LiveBytes(Sid sid);
     // 원본 생성자의 쓰기 순서/폭/OR 비트를 보존한다. 호출 전에 지원 여부를 검사한다.
     void ApplyConstructor(std::span<std::uint8_t> bytes,const RiftTypeRecord& type) const;
+    Sid ConstructRaw(std::uint32_t address,Sid sid,bool requireObject); // base/자산/Form의 bare 쓰기를 실행하며 void NULL의 반환을 SID로 위조하지 않는다.
+    void VirtualPostCreate(Sid sid,std::uint32_t table); // 실제 생성자가 남긴VT의+28을 선택한다. 네 Form은 원문 빈 함수다.
     // 원본 32비트 vtable 값은 기록할 뿐 호스트에서 역참조하지 않는다.
     std::uint32_t BaseVtable() const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
@@ -73,6 +79,7 @@ private:
     bool weakenedMana_{};
     const bool* sharedWeakenedMana_{}; // 생성자 HP 쓰기가 읽는 현재 장기 전역이며 기존 값형 검사는 미연결이다.
     const std::uint32_t* sharedPriestType_{};const std::uint32_t* sharedDaisType_{}; // TYPE HP가 호출 위치에서 읽는 같은 장기 두 DWORD다.
+    const std::uint32_t* sharedFakeSurfaceType_{}; // 같은 Client 수명의 현재 fakeThreeByThreeSurface TYPE이며 독립 미연결만162다.
     // unpop_: 객체의 공간 등록을 해제하는 Unpop 처리기.
     SquidUnpop* unpop_{};
 };

@@ -126,15 +126,17 @@ TEST_CASE(SquidFactory_X86Fixture_ReplaysDerivedConstructorsAndVoidTake) {
     Replay(NETSTORM_DERIVED_FIXTURE,8,6028);
 }
 
-// 미복원 파생/잘못된 타입/클라이언트 권한/패치 금지 타입을 슬롯 할당 전에 거부한다.
-TEST_CASE(SquidFactory_CreateGuards_LeavePoolUnchanged) {
+// 진단 장치 누락은 할당 전, 범위/미복원 생성자 오류는 원문 할당 뒤에 보고한다.
+TEST_CASE(SquidFactory_CreateGuards_PreserveEffectsAtSelectedBoundary) {
     SidPool pool(OriginalEdition::Patch1078,32768,false); auto types=Types(pool.Edition());
     SquidFactory factory(pool,types); const auto before=std::vector(pool.Bytes().begin(),pool.Bytes().end());
-    CHECK(Throws([&] { factory.Create(1,2); })); CHECK(Throws([&] { factory.Create(188,2); }));
-    CHECK(Throws([&] { factory.Create(153,2); })); CHECK(Throws([&] { factory.Create(162,2); }));
+    CHECK(Throws([&] { factory.Create(162,2); }));
     CHECK(Throws([&] { factory.Create(74,0); }));
     CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));
     CHECK(pool.FreeCount()==32763 && pool.PredictableCursor()==1);
+    CHECK(factory.Create(1,2).value==5); // Form의 빈+28에 자산용 진단/HP를 추가하지 않는다.
+    CHECK(Throws([&] { factory.Create(188,2); }));CHECK(Throws([&] { factory.Create(153,2); }));
+    CHECK(pool.FreeCount()==32760 && pool.Slot(Sid{6})[11]==4 && pool.Slot(Sid{7})[11]==4);
 }
 
 // non-void·타입 불일치·파생 vtable·contained 수신은 변경 전에 거부한다. 정상 Take는 카운터를 조정하지 않는다.
@@ -180,8 +182,8 @@ TEST_CASE(SquidFactory_TypeLoader_ConnectsHpDepthAndConstructorMetadata) {
     }
 }
 
-// null/assert/미확인 주소는 할당·생성자·수신 전에 거부하여 기존 데이터가 유지된다.
-TEST_CASE(SquidFactory_DerivedGuards_RejectNullAssertAndUnknownAddressBeforeWrites) {
+// 독립Construct/Take의 기존 경계와 Create의 원문 선행 할당 효과를 구별한다.
+TEST_CASE(SquidFactory_DerivedGuards_CreateAllocatesBeforeMissingConstructor) {
     // CD null 생성자 둘과 패치의 공유 null 생성자를 각각 타입 번호로 확인한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         SidPool pool(edition,32768); auto types=Types(edition);
@@ -190,12 +192,14 @@ TEST_CASE(SquidFactory_DerivedGuards_RejectNullAssertAndUnknownAddressBeforeWrit
         const auto free=pool.FreeCount(); const auto cursor=pool.PredictableCursor();
         // 잘못된 생성자로 갈 모든 진입 경로에서 변경 전 거부를 확인한다.
         for (const auto type:{82U,153U,159U,169U}) {
-            CHECK(Throws([&] { factory.Create(type); }));
             CHECK(Throws([&] { factory.Construct(type,sid); }));
             CHECK(Throws([&] { factory.Take(type,sid); }));
         }
         CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));
         CHECK(pool.FreeCount()==free && pool.PredictableCursor()==cursor);
+        for (const auto type:{82U,153U,159U,169U}) { // 미지원/void 반환/미연결 진단은 Allocate를 되돌리지 않는다.
+            const auto previous=pool.FreeCount();CHECK(Throws([&] { factory.Create(type); }));CHECK(pool.FreeCount()==previous-1);
+        }
     }
 }
 

@@ -368,3 +368,6 @@ target_sources(netstorm PRIVATE o/RawFenceTypeParent.cpp o/RawFenceTypeParent.h)
 
 # TYPE HP의 현재 진단 복귀/선택된 this와 현재 표 기준 계산을 공유한다(898).
 target_sources(netstorm PRIVATE o/RawRiftHitPoints.cpp o/RawRiftHitPoints.h)
+
+# 같은 실제 공장에 원문 Create의 진단/할당/현재 생성자/VT 순서를 연결한다(899).
+target_sources(netstorm PRIVATE o/RawSquidCreation.cpp o/RawSquidCreation.h)
