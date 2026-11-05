@@ -288,6 +288,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     login.configInt=[&client](std::string_view key,std::int32_t fallback) { client.Configuration().ReadInt(key,fallback);return fallback; };
     login.wallSeconds=[&client] { return client.WallSeconds(); };login.clock=[] { return static_cast<std::uint32_t>(std::clock()); };
     login.refresh=[&client] { client.GetRenderer().InvalidateAll(); };
+    login.initializeChat=[&client] { InitializeClientChatManager(client); }; // 현재 Core/manager·명령표·Config를 실제 원문 수명으로 재구성한다.
     login.playerUiBusy=[&controls] { return controls.Menus() && controls.Menus()->HasMenus(); };
     login.playerNotice=[&client](std::uint32_t kind,std::uint32_t owner,std::uint32_t value) { std::clog<<"Player UI "<<kind<<' '<<owner<<' '<<value<<'\n';client.GetRenderer().InvalidateAll(); };
     login.log=[](std::string_view text) { std::clog<<text; };services.localLogin=std::move(login);

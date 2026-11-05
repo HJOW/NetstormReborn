@@ -115,6 +115,17 @@ struct RawCampaignSession::Impl::Login {
         hooks.refreshFort=s.services.install.refreshWindowTitle;hooks.loginTimer=[this](bool start) { timer->Run(start); };hooks.inputMode=[this](bool mode) { inputMode=mode;Need(effects.refresh)(); };
         return hooks;
     }
+    // 같은 장기9기록/현재 Player base를 실제 복원 부모에 연결하고 선택된 Chat만 재초기화한다.
+    void RestoreCoreData(std::uint32_t owner) {
+        PlayerCoreRestoreHooks hooks;
+        hooks.assertion=[this](std::string_view expression,std::string_view file,std::uint32_t line) { // 원문 진단 복귀 뒤 현재 base와 owner를 다시 읽게 한다.
+            if (!s.services.ai.assertion) throw std::logic_error("CoreData 실제 진단 장치 미연결 "+std::string(file)+":"+std::to_string(line));s.services.ai.assertion(expression);
+        };
+        hooks.initializeChat=effects.initializeChat;
+        const std::uint32_t metamap=s.core.ownerMode.challenge ? 1U : 0U; // Restore는 이 getter 관문을 호출하지 않으며 같은 globals 형식만 빌린다.
+        s.coreDataGlobals->Restore(s.core.pool.Edition(),s.playerState,metamap,
+            {s.globals.missionPost,saved,RawCheckingFlag{s.gameplayGlobals->AiDebug().Checking()}},owner,hooks);
+    }
     //현재 원본 로그인/패킷/상태/타이머 모듈을 같은 저장소로 조립한다.
     Login(Impl& owner,CampaignLoginServices device,std::function<void()> load):s(owner),effects(std::move(device)),install(std::move(load)) {
         // 첫 실제 접속/설치 전에 Init의22개 기본 옵션/색과 예약 영역 보존을 같은87BYTE에 적용한다.
@@ -130,11 +141,11 @@ struct RawCampaignSession::Impl::Login {
         MissionLoginHooks serverHooks;serverHooks.send=send;serverHooks.broadcast=[this](std::span<const std::uint8_t> bytes) { s.broadcast->Send(bytes); };serverHooks.flush=[this] { transport->Flush(); };serverHooks.wallSeconds=effects.wallSeconds;serverHooks.clock=effects.clock;serverHooks.spBits=[this](std::uint32_t player) { return s.sp.Get(player); };
         serverHooks.applyOptions=[this](std::span<const std::uint8_t> bytes) { client->Receive(0,transport->Server(),bytes); };serverHooks.clearTypes=[this] { options->ClearTypes(); };
         serverHooks.sendPlayer=[this](std::uint32_t player,std::uint32_t target) { metadata->SendPlayer(player,static_cast<std::int32_t>(target)); };serverHooks.sendFortMetadata=[this](std::uint32_t target) { metadata->SendMetadata(static_cast<std::int32_t>(target)); };
-        serverHooks.loadCurrentFort=[this](std::uint32_t player) { Reload(player); };serverHooks.sendFort=[this](std::uint32_t player,std::uint32_t target,std::uint32_t count) { static_cast<void>(forts->SendFort(player,static_cast<std::int32_t>(target),count)); };serverHooks.loadWorld=install;serverHooks.sendSettings=[this](std::uint32_t target) { settings->Send(static_cast<std::int32_t>(target)); };
+        serverHooks.loadCurrentFort=[this](std::uint32_t player) { Reload(player); };serverHooks.sendFort=[this](std::uint32_t player,std::uint32_t target,std::uint32_t count) { static_cast<void>(forts->SendFort(player,static_cast<std::int32_t>(target),count)); };serverHooks.loadWorld=install;serverHooks.sendSettings=[this](std::uint32_t target) { settings->Send(static_cast<std::int32_t>(target)); };serverHooks.restoreCoreData=[this](std::uint32_t player) { RestoreCoreData(player); }; // 두 원문 caller가 같은 장기 Core 복원 몸체를 사용한다.
         server=std::make_unique<RawMissionLogin>(s.players,*s.participation,MissionLoginGlobals{s.core.processState.Server(),s.assetState.Boss(),simul,s.objectState.mission,s.globals.missionPost,s.core.ownerMode.challenge,s.playerState,s.globals.mySubscriber,fortCount,lastPlayer,predictable,begin,beginSeed,battleSeed,burst,clockStamp,baseClock,captureEnd,currentCore,cachedCore,Zone(),s.battleOptions,&s.gameplayGlobals->GameAux()->ResourcePool()},std::move(serverHooks));
         MissionClientPacketHooks receive;receive.clock=effects.clock;receive.wallSeconds=effects.wallSeconds;receive.runState=[this] { state->Run(); };receive.resetCamera=s.services.install.resetCamera;receive.refreshSp=effects.refresh;
         receive.updateRange=[this] { options->UpdateRange(); };receive.requiredEnergy=[this] { return options->TypeCost(); };receive.setEnergyType=[this](float value) { options->SetSelectedTypeCost(value); };receive.readOptionValue=[this] { return options->CurrentValue(); };
-        receive.addChat=s.services.ai.participation.addChat;receive.playerUiBusy=effects.playerUiBusy;receive.playerNotice=effects.playerNotice;receive.send=send;receive.sendReady=[this](std::uint32_t target) { server->SendReady(target); };
+        receive.addChat=s.services.ai.participation.addChat;receive.playerUiBusy=effects.playerUiBusy;receive.playerNotice=effects.playerNotice;receive.send=send;receive.sendReady=[this](std::uint32_t target) { server->SendReady(target); };receive.restoreCoreData=[this](std::uint32_t player) { RestoreCoreData(player); }; // 004912d0의 실제 후처리도 같은 복원 부모와 Player/캐시를 빌린다.
         client=std::make_unique<RawMissionClientPackets>(s.players,*s.participation,s.sp,MissionClientPacketState{s.core.processState.Server(),s.assetState.Boss(),s.globals.missionPost,saved,s.core.ownerMode.challenge,s.assetState.inBattle,s.globals.editor,outpost,s.playerState,beginSeed,battleSeed,s.revision,optionValue,begin,clockStamp,baseClock,blocks[1][0],blocks[3][0],blocks[3][14],blocks[4][0],source,coreActive,captureEnd,s.loginEnd,currentCore,cachedCore,Zone(),s.battleOptions,s.handle,s.hiddenPlayers,&s.gameplayGlobals->GameAux()->ResourcePool()},std::move(receive));
         MissionLoginTimerHooks timing;timing.configInt=[this](std::string_view key) { return Need(effects.configInt)(key,30); };timing.wallSeconds=effects.wallSeconds;timing.clock=effects.clock;timing.broadcast=[this](std::span<const std::uint8_t> bytes) { if (effects.observePacket) Need(effects.log)("Timer broadcast local"+std::to_string(s.assetState.localOwner)+"\n");s.broadcast->Send(bytes); };timing.priestRefresh=[this](std::uint32_t player) { s.priestParticipation->Refresh(player); };
         timing.connection=[this](std::int32_t peer) { return peer==9 && transport->HasClientConnection(); }; //004e2b10은 flags2/IsOpen이 아닌 현재 Client9 객체 존재를 조회한다.

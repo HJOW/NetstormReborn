@@ -103,7 +103,7 @@ void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,
     if (!owner) { const auto bytes=Reply(0,0);Need(hooks_.pendingReply)(connection,bytes);return; }
     if (globals_.simulconnect) throw std::logic_error("미션 로그인 simulconnect 분기 미복원");
     const auto previous=(Read(owner,kFlags)>>1)&1U; //CheckLogin 이전의 사람 참여 bit2를 끝까지 보존한다.
-    // missionPost가1인0048fb30은 자연 반환한다. generic cached CoreData 복원을 호출하지 않는다.
+    if (!globals_.missionPost) Need(hooks_.restoreCoreData)(owner); // 원문0048fb30의 현재 missionPost1 자연 반환은 미사용 장치를 요구하지 않는다.
     participation_.CheckLogin(pending,static_cast<std::int32_t>(owner));Need(hooks_.flush)();SendBegin(owner);Need(hooks_.flush)();
     auto options=Packet(0x67,94,0xff);options[4]=0;Write(options,5,87,2);std::copy(globals_.battleOptions.begin(),globals_.battleOptions.end(),options.begin()+7);
     Need(hooks_.send)(static_cast<std::int32_t>(owner),options);if (counts_.Participating()<2) Need(hooks_.applyOptions)(options);Need(hooks_.flush)();

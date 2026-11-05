@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**895 현재 집계/코드 연결:** 0048fb30/CD00406a90의 9기록 복원·현재 checking/두 진단 복귀·저장 BYTE/Chat과 같은 Client 두 caller를 연결했다. 제품/기존 getter·장부 8사례 첫 실패0·경고/오류0·새 복원/MP/Native 검사0·보호2774개/954fixture 불변이다. 004c0e20은892 부품/원문378행과894 실제 두 caller/같은 checking 연결을 재대조해 완료 부모로 정정했다. 현재 **8=부모3(004a7510/004b02d0/004dc220)+부분2(004b54e0/004b8cb0)+MP3(0042bc10/004b4df0/004b8b20)**, 완료 부모39/부분4=완료43+잔여8/기준51이다. 코드/정적 완료를 MP 동작 검증으로 합산하지 않는다. [895 기록](cpp-player-core-restore-current-20261105.md).
+
 **891 현재 Regular/상한·finder/진단 복귀:** 같은 장기3DWORD와 실제 finder의 선행 프로세스 분류·공유 생성 진단/현재 부착 시각·예약15caller/실제 Pop을 연결했다. 미등록 PID의null+18 원문읽기 근거로 조용한 누락을 명시적 호스트 오류로 고쳤다. Native1232/64행 재관측·고유40사례(새7) 최종 실패0·마지막 검사 빌드 경고0·보호2770개/950fixture 불변·새2개→2772개/952개다. 최초 장치 실패1/필터 오집계와 검사 경고2 교정을 보존했다. 전체 Pop/MP메타맵 표시·군도 등은 잔여·checking10 유지다. [891 기록](cpp-regular-current-20261105.md).
 
 **890 주문 효과 예약/83VT 감사:** +20은 정확46종/+30은 모두004ad470이다. 누락효과174/176/177과예약187을현재분배/실제Host·공유난수에연결했다. Native432행×2/동일재관측·새4/고유24사례 첫실패0·Release952.728초/경고0·기존2769개/949fixture불변·새1개→2770개/950개다. 현재81표코드대응/MP메타맵2미연결이며실제PATCH와독립명시Validate/CD경계를구분했다. Host/Regular현재TYPE·다른대여/전체Pop은잔여·checking10유지다. [890 기록](cpp-bomb-postpop-dispatch-20261105.md).
@@ -1310,6 +1312,8 @@ LAB_00472fc1:
 
 ## FUN_0048fb30 @ 0048fb30
 
+**895 코드/정적 연결 완료:** 현재 missionPost/known/checking·active1 앞 checking 캡처·진단21f/224 뒤 Player base 재조회·4/4/2 복원·local 현재 myPlayer/current·저장 BYTE 뒤 실제 Chat과 두 caller를 연결했다. CD는 처음 base/owner와172BYTE/무진단·무Chat을 유지한다. 기존 getter/장부8사례 첫 실패0·새복원/MP/Native 검사0·보호2774개 불변이다. 부분 완료 누적4/잔여8이며 아래는779 당시 분류다. [895 기록](cpp-player-core-restore-current-20261105.md).
+
 별도 부모 후속: MissionClientPackets는SP/MP공통수신이다.기존수신부모의checking관문은정적으로후속대조하고신규MP검사는하지않음
 
 현재 주소 언급: cpppj\src\o\RawMissionClientPackets.h, cpppj\src\o\RawMissionLogin.cpp
@@ -1657,6 +1661,8 @@ LAB_004ad54f:
 - `"!reloadFile",".\\State.cpp",0xf24)`
 
 ## FUN_004c0e20 @ 004c0e20
+
+**895 집계 정정/892~894 코드 연결 완료:** 892에서 실제 첫 raw+5/record[3]·현재 checking/진단 정상 복귀와 흩뿌리기를 원문378행/재관측으로 대조했고894에서 실제 두 caller와 같은 Client checking/장치를 연결했다. 827의 미완료 조건이 해소돼 이번에 완료 부모39에 포함했다. 새 실행은 없으며 일반 성장에 첫 시드를 추가하지 않았다. MP/군도 root 실행 검증은 제외했다. 아래827은 당시 이력이다. [895 기록](cpp-player-core-restore-current-20261105.md).
 
 **827 범위 정정(미완료):** 반환은 첫 영역이 아닌 첫 유효 청크 raw+5/record[3] 시드다. 두caller004c13fe/004c1661은 모두군도004c1510분기다. 현재 일반 성장에 원문에 없는 조회를 넣지 않고 군도 상위/두 실제caller와 함께 복원한다. 제품/빌드/단위·Native 실행0,완료 추가0이며 checking20을 유지했다. [827 기록](cpp-terrain-first-seed-scope-20261104.md).
 

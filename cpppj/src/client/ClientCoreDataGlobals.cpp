@@ -39,4 +39,9 @@ std::span<std::uint8_t> ClientCoreDataGlobals::Read(o::PlayerWorldState& player,
 void ClientCoreDataGlobals::Select(o::PlayerWorldState& player,const std::uint32_t& metamap,std::uint32_t owner,std::uint32_t templateOwner) {
     o::SelectPlayerCoreData(Borrow(player,metamap),owner,templateOwner);
 }
+// lastKnown10이 아닌 같은 실제9기록을 빌리며 Player base/owner는 원문 위치에서 재조회한다.
+void ClientCoreDataGlobals::Restore(o::OriginalEdition edition,o::PlayerWorldState& player,const std::uint32_t& metamap,
+    o::PlayerCoreRestoreState state,std::uint32_t owner,const o::PlayerCoreRestoreHooks& hooks) {
+    o::RestorePlayerCoreData(edition,Borrow(player,metamap),{records_,0},state,owner,hooks);
+}
 }

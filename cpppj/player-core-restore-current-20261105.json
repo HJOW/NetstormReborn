@@ -1,0 +1,202 @@
+{
+  "unit": 895,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastPreciseHost": "HJOW-Athlon",
+  "lastPreciseDate": "2026-11-03",
+  "scope": "0048fb30/CD00406a90 Core 복원/현재checking·같은장기Client/두caller와실제Chat서비스의코드/정적연결. 새복원/MP/패킷/통신실행검사는제외.",
+  "staticSources": {
+    "index": {
+      "originals": [
+        {
+          "entry": "48fb30",
+          "name": "FUN_0048fb30",
+          "size": "298",
+          "ranges": "48fb30-48fc59",
+          "noreturn": "0",
+          "thunk": "0",
+          "cc": "__cdecl",
+          "call_refs": "2",
+          "data_refs": "0",
+          "jump_refs": "0",
+          "callers": "49143c,4a796c",
+          "data_ref_from": "",
+          "jump_ref_from": "",
+          "calls": "42e050,4e0620",
+          "has_ret": "1",
+          "indirect_jumps": "",
+          "param_count": "0",
+          "sig_source": "DEFAULT",
+          "signature": "undefined __cdecl FUN_0048fb30()"
+        },
+        {
+          "entry": "42e050",
+          "name": "FUN_0042e050",
+          "size": "393",
+          "ranges": "42e050-42e1d8",
+          "noreturn": "0",
+          "thunk": "0",
+          "cc": "__cdecl",
+          "call_refs": "5",
+          "data_refs": "0",
+          "jump_refs": "0",
+          "callers": "439840,48fc51,4b4485,4c9670,4c96f0",
+          "data_ref_from": "",
+          "jump_ref_from": "",
+          "calls": "42e000,43f660,441300,4e0620,4e4391,4e51f0,4e58e9",
+          "has_ret": "1",
+          "indirect_jumps": "",
+          "param_count": "0",
+          "sig_source": "DEFAULT",
+          "signature": "undefined __cdecl FUN_0042e050()"
+        }
+      ],
+      "originalCD": [
+        {
+          "entry": "406a90",
+          "name": "FUN_00406a90",
+          "size": "176",
+          "ranges": "406a90-406b3f",
+          "noreturn": "0",
+          "thunk": "0",
+          "cc": "__cdecl",
+          "call_refs": "2",
+          "data_refs": "0",
+          "jump_refs": "0",
+          "callers": "406cef,4c1b6e",
+          "data_ref_from": "",
+          "jump_ref_from": "",
+          "calls": "",
+          "has_ret": "1",
+          "indirect_jumps": "",
+          "param_count": "0",
+          "sig_source": "DEFAULT",
+          "signature": "undefined __cdecl FUN_00406a90()"
+        }
+      ]
+    },
+    "indexSha256": "31f4e9ede8b822ad6f0121e60166f108fd4de7370c18e9e9c1cd8f810d33e7d5",
+    "excerpts": {
+      "originalCD-00406a90.asm.txt": "140f285d52a28556edc47833209d4053b01ee27365a6e14de8baea31dad0bd49",
+      "originalCD-00406a90.c.txt": "a3423cd68aaf01371465822b783211693e036297f6f20b937f5d63c11fe81904",
+      "originals-0042e050.c.txt": "ac7bafc7255a58977328ae62ec47248ca2cfd120c259264ada1174d3a7f66243",
+      "originals-0048fb30.asm.txt": "5584b1c8434322f8b704a52bf8c697381d15369139b73dfa4fdfe13ddfa19c36",
+      "originals-0048fb30.c.txt": "69ec2dee3949b9e8a75eff6d757253a0428c2221fc226cb23387b960951b6a5b"
+    }
+  },
+  "build": {
+    "log": "build-first.log",
+    "exitCode": 0,
+    "warnings": [],
+    "errors": [],
+    "sha256": "8e3db29c1047b3e1edd2f178df8051972b25240c606634a637532a06c6c2a8dc"
+  },
+  "tests": {
+    "logical": 8,
+    "new": 0,
+    "commands": 1,
+    "caseExecutions": 8,
+    "failedChecks": 0,
+    "logSha256": "4bbb6954de6847cfd6a80cdf25dae481e7993ca135151f528102fd0eef93b83d",
+    "replayedExistingPeRows": {
+      "coreGetterSelect": 804,
+      "coreRecords": 186
+    },
+    "restoreBodyExecutions": 0,
+    "networkExecutions": 0
+  },
+  "sourceBeforeBuild": {
+    "cpppj/src/client/CampaignClientServices.cpp": "44acb8e6b2d816b34a216da3bd70f9756e14f334ad8ac3d66ed1bcf67ac9129e",
+    "cpppj/src/client/CampaignLoginServices.h": "ff3492d56010c3992fac0285fea4662f393f1036ec61dbd08639615ac69300f7",
+    "cpppj/src/client/ClientCoreDataGlobals.cpp": "b3a7de2cb1220b17f8910502a54f438f4528024dd49388ed46efad3e0b1a66ef",
+    "cpppj/src/client/ClientCoreDataGlobals.h": "49e42fdd95112b058d7fbe7249dcdfbd36ee7b89e4391dee4e9ceeb5663ebd3a",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "818f0f99b829ef5a04bac86be7b8704655417ed11db05ff659b87241f5d49f5f",
+    "cpppj/src/o/RawMissionLogin.cpp": "3db748af80c07595b1df85d8d6ed8e6ffcb028d90a390244624785cb51a0431b",
+    "cpppj/src/o/RawMissionLogin.h": "3ae47d8d734f15edec807d0c84045a4347a39601b6ac774fe87966966ba240dd",
+    "cpppj/src/o/RawPlayerCoreData.cpp": "c026186fec646eda11a71655f4234d3c42006f5fa2a5c4b40861d2a1b2162d5a",
+    "cpppj/src/o/RawPlayerCoreData.h": "76df0ae2586d5ecd3a32bd43826193e4807caac6c9fa2ea1ead708c5eeba47bb",
+    "cpppj/tests/CMakeLists.txt": "85d99062e621cc13dce7e3d2a48f541c13b7b37a8e066d815e0f81e64d67f01e"
+  },
+  "sourceFinal": {
+    "cpppj/src/client/CampaignClientServices.cpp": "44acb8e6b2d816b34a216da3bd70f9756e14f334ad8ac3d66ed1bcf67ac9129e",
+    "cpppj/src/client/CampaignLoginServices.h": "ff3492d56010c3992fac0285fea4662f393f1036ec61dbd08639615ac69300f7",
+    "cpppj/src/client/ClientCoreDataGlobals.cpp": "b3a7de2cb1220b17f8910502a54f438f4528024dd49388ed46efad3e0b1a66ef",
+    "cpppj/src/client/ClientCoreDataGlobals.h": "49e42fdd95112b058d7fbe7249dcdfbd36ee7b89e4391dee4e9ceeb5663ebd3a",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "818f0f99b829ef5a04bac86be7b8704655417ed11db05ff659b87241f5d49f5f",
+    "cpppj/src/o/RawMissionLogin.cpp": "3db748af80c07595b1df85d8d6ed8e6ffcb028d90a390244624785cb51a0431b",
+    "cpppj/src/o/RawMissionLogin.h": "3ae47d8d734f15edec807d0c84045a4347a39601b6ac774fe87966966ba240dd",
+    "cpppj/src/o/RawPlayerCoreData.cpp": "c026186fec646eda11a71655f4234d3c42006f5fa2a5c4b40861d2a1b2162d5a",
+    "cpppj/src/o/RawPlayerCoreData.h": "76df0ae2586d5ecd3a32bd43826193e4807caac6c9fa2ea1ead708c5eeba47bb",
+    "cpppj/tests/CMakeLists.txt": "85d99062e621cc13dce7e3d2a48f541c13b7b37a8e066d815e0f81e64d67f01e"
+  },
+  "protection": {
+    "protected_before": 2774,
+    "fixtures_before": 954,
+    "protected_after": 2774,
+    "fixtures_after": 954,
+    "existing_changed": [],
+    "new_fixtures": 0
+  },
+  "product": {
+    "unit": 895,
+    "fileVersion": "11.01",
+    "productVersion": "11.01",
+    "size": 10696704,
+    "sha256": "24a2373d030cadee64e39fdbc5cf20cea15ab2bc6ce81766a1f8127f8766c5f0"
+  },
+  "checking": {
+    "baseline": 51,
+    "remaining": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4,
+    "pending": {
+      "parents": [
+        "004a7510",
+        "004b02d0",
+        "004dc220"
+      ],
+      "partial": [
+        "004b54e0",
+        "004b8cb0"
+      ],
+      "multiplayer": [
+        "0042bc10",
+        "004b4df0",
+        "004b8b20"
+      ]
+    },
+    "newlyCompletedPartial": "0048fb30: 본문/실제두caller/현재checking·진단복귀·선택Chat의코드/정적연결",
+    "reconciledCompletedParent": "004c0e20: 892원문378행/부품+894실제두caller/같은checking연결을근거로895에서잔여집계정정. 추가실행없음."
+  },
+  "targetInventory": {
+    "activeSolutionProjects": 74,
+    "applications": 69,
+    "testNamedApplications": 64,
+    "gameApplications": 1,
+    "probeDumpApplications": 4,
+    "libraries": 2,
+    "utilities": 3,
+    "source": "최신NetstormCpp.slnx의활성Project와각vcxproj ConfigurationType. 남은stale프로젝트파일수와구별한다."
+  },
+  "excluded": {
+    "game": 0,
+    "gui": 0,
+    "newRestoreTests": 0,
+    "newNative": 0,
+    "newFixtures": 0,
+    "multiplayerTests": 0,
+    "packets": 0,
+    "communication": 0,
+    "captureSacrificeAttackVictory": 0,
+    "airThreeDedicated": 0,
+    "fullAllCtest34Zip": 0
+  },
+  "limits": [
+    "실제Core복원/Chat·MP호출을실행검증한것이아니다. 주변일반로그인/MP부모의기존미복원관문을유지했다.",
+    "원문범위밖메모리/호스트에서표현할수없는current10BYTE주소는기존C++물리범위오류다. 전체SEH/진단UI동일성을주장하지않는다."
+  ],
+  "next": "896: 공통Pop004b02d0의비멀티현재분배/부모잔여를정적으로재감사하고MP메타맵2표등은8절과구별한다. 이후Factory/State/파일·객체UI/Edit·Windows·무검사MP·4~8차를계속한다."
+}

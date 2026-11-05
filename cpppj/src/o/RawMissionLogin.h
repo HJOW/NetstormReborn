@@ -58,6 +58,7 @@ struct MissionLoginHooks {
     std::function<void()> loadWorld; // 새 로그인의004b5300이며 같은 Session.Load를 이 위치에 연결한다.
     std::function<void(std::uint32_t)> sendSettings; // 0044dbc0의 현재7DWORD 설정 패킷이다.
     std::function<void(std::string_view)> assertion; // 원본 진단 후 계속하는 assertion 경계다.
+    std::function<void(std::uint32_t)> restoreCoreData; //004a796c의 같은0048fb30 부모다. missionPost1은 하위의 자연 반환과 같이 생략한다.
 };
 // 정상 missionWorld/missionPost 경로와 실제 CheckLogin을 조립하며 전투 섬 분기는 명시적으로 거부한다.
 class RawMissionLogin {

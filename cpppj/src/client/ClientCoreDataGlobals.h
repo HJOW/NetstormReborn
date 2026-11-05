@@ -29,6 +29,7 @@ public:
     o::PlayerCoreDataGlobals Borrow(o::PlayerWorldState& player,const std::uint32_t& metamap); //실제 두owner/known/모드를 같은 Rawhelper에 빌린다.
     std::span<std::uint8_t> Read(o::PlayerWorldState& player,const std::uint32_t& metamap,const o::PlayerCoreDataHooks& hooks); //0048f0d0 실제진단/현재재조회를 직접 실행한다.
     void Select(o::PlayerWorldState& player,const std::uint32_t& metamap,std::uint32_t owner,std::uint32_t templateOwner); //0048f3b0 실제선택/4·4·2정리를 실행한다.
+    void Restore(o::OriginalEdition edition,o::PlayerWorldState& player,const std::uint32_t& metamap,o::PlayerCoreRestoreState state,std::uint32_t owner,const o::PlayerCoreRestoreHooks& hooks); //0048fb30의 같은 실제9기록/Player/active/current와 선택 진단·Chat을 연결한다.
 private:
     std::span<std::uint8_t> current_; // 최초NULL이며 Session 생성/파괴 때 임의 reset하지 않는다.
     std::uint32_t active_{}; // 원시00595348의 최초0이다.

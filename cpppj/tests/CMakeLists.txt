@@ -3492,3 +3492,8 @@ set_source_files_properties(TerrainSeedTests.cpp PROPERTIES COMPILE_DEFINITIONS
 add_executable(netstorm_terrain_seed_tests FocusedTestMain.cpp TerrainSeedTests.cpp TerrainGrowthTests.cpp TerrainArchHelpersTests.cpp TerrainContextTests.cpp NormalTerrainWorldBindingTests.cpp FortWorldLoadBindingTests.cpp)
 target_link_libraries(netstorm_terrain_seed_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_terrain_seed_tests)
+
+# 기존 getter/선택·9기록·장기owner 검사만 실행한다. 새 복원/MP/패킷/통신 전용 검사는 추가하지 않는다(895).
+add_executable(netstorm_core_data_tests FocusedTestMain.cpp PlayerCoreDataTests.cpp PlayerCoreRecordsTests.cpp ClientCoreRecordsStorageTests.cpp)
+target_link_libraries(netstorm_core_data_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_core_data_tests)
