@@ -7,7 +7,8 @@
     "original-x86": "cpppj 가 보호된 원본 10.78 실행 파일의 함수를 제한 x86 으로 격리 실행해 기록한 관측값(읽기 전용)",
     "independent": "원본 자산을 웹과 다른 독립 구현(Python 도구)으로 계산한 기대값",
     "screenshot": "원본 게임 화면 캡처(창 테두리 포함, screenShots/)",
-    "source": "cpppj/dotnetpj 의 상수·자료를 교차 확인하는 소스(계속 바뀌므로 해시 미기록)"
+    "source": "cpppj/dotnetpj 의 상수·자료를 교차 확인하는 소스(계속 바뀌므로 해시 미기록)",
+    "original-binary": "보호 원본 실행 파일의 정적 자료(.data 초기값 등)를 파일 읽기로만 대조한다. 실행하지 않는다"
   },
   "entries": [
     {
@@ -310,7 +311,7 @@
       "bytes": 198602,
       "lines": 731,
       "fixtureCommit": "8085cd03",
-      "webCommit": "worktree",
+      "webCommit": "176ef6e7",
       "cpppjBasis": {
         "cpppj/src/o/RawTerrainStamp.cpp": "b76adf95",
         "cpppj/src/o/RawFrameChoose.cpp": "5c2d0a1e",
@@ -676,7 +677,7 @@
       "bytes": 4988,
       "lines": 97,
       "fixtureCommit": "a24db9dc",
-      "webCommit": "worktree",
+      "webCommit": "176ef6e7",
       "cpppjBasis": {
         "cpppj/src/o/RawGameRandomSeed.cpp": "a24db9dc",
         "cpppj/src/o/CrtRandom.cpp": "954d1942",
@@ -709,10 +710,39 @@
       "bytes": 75181,
       "lines": 139,
       "fixtureCommit": "adb9739e",
-      "webCommit": "worktree",
+      "webCommit": "176ef6e7",
       "cpppjBasis": {
         "cpppj/src/o/GameClock.cpp": "adb9739e",
         "cpppj/src/o/GameClock.h": "adb9739e"
+      }
+    },
+    {
+      "id": "original-pe-data",
+      "path": "originals/Netstorm.exe",
+      "kind": "original-binary",
+      "edition": "10.78",
+      "required": false,
+      "producer": "보호 원본 10.78 실행 파일(읽기 전용). PE 섹션 표로 원본 주소를 파일 위치로 바꿔 .data 초기값/BSS 0 을 읽음",
+      "consumers": [
+        "webpj/tests/game-aux-state.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/game-aux-state.js"
+      ],
+      "unit": "WB04-C2",
+      "doc": "docs/webpj-game-aux-state-20261105.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGameAuxState.h"
+      ],
+      "scope": "게임 보조 전역 47필드+장식 4칸의 초기값. 실행 중 writer(타입 적재·Start·정리)의 값 변화는 각 소비자 단위에서 대조",
+      "text": false,
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "bytes": 1552384,
+      "lines": null,
+      "fixtureCommit": "2f80430a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGameAuxState.h": "886f2d23"
       }
     },
     {

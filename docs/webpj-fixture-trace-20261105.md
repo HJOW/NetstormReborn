@@ -17,7 +17,7 @@
 | 칸 | 관리 | 의미 |
 | --- | --- | --- |
 | `id`·`path` | 사람 | 고유 이름, 저장소 상대 경로 |
-| `kind` | 사람 | `original-x86`(cpppj가 원본10.78 함수를 제한 x86으로 격리 실행한 관측) / `independent`(Python 등 독립 구현 기대값) / `screenshot`(원본 캡처) / `source`(cpppj·dotnetpj 교차 확인 소스, 해시 미기록) |
+| `kind` | 사람 | `original-x86`(cpppj가 원본10.78 함수를 제한 x86으로 격리 실행한 관측) / `independent`(Python 등 독립 구현 기대값) / `screenshot`(원본 캡처) / `source`(cpppj·dotnetpj 교차 확인 소스, 해시 미기록) / `original-binary`(보호 원본 실행 파일의 정적 자료를 파일 읽기로만 대조, 2026-11-05 WB04-C2 추가) |
 | `edition`·`required` | 사람 | 원본 판본(현재 모두 10.78), 없으면 실패할 필수 자료인지(webpj 기대값만 필수, cpppj fixture·스크린샷은 없으면 건너뜀) |
 | `producer`·`consumers`·`modules`·`unit`·`doc` | 사람 | 생성 방법, 소비 검사, 이식한 웹 모듈, 단위 번호, 단위 문서 |
 | `cpppjSources`·`scope` | 사람 | 웹 모듈이 옮긴 cpppj 복원 소스, 실제 반영 범위와 미연결 경계 |
