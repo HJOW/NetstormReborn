@@ -56,6 +56,7 @@ private:
     // fallback_: emit은 같은 풀을 바꿀 수 있다. 종속 next는 ReleaseDependent 전에 저장한다 (SquidDestroyHooks).
     SquidDestroyHooks fallback_;
     // forms_: 객체에 부착된 Form의 생성·통지·수명 처리기.
+    FormPopTransmit transmit_; // 독립/실제 생성에서 같은 명시 Pop 전송을 공통 부모에 전달한다.
     SquidForms forms_;
 };
 }

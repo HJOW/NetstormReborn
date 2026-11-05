@@ -74,29 +74,8 @@ void GumpFormHost::ValidatePop(Sid form,std::uint32_t flags) const {
     } else if (!(flags&kClientPop)) flags|=kServerPop;
     if (!(flags&(kClientPop|kDependentPop))) throw std::logic_error("서버 GumpForm의 Pop 전송은 미복원입니다");
 }
-// 004af160은 004ac800 thunk이고 CD 004b04e0도 같은 공통 부착을 호출한다. 부모 변경 debug 조건은 없다.
-void GumpFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
-    if (!parent.value) {
-        if (pool_.Edition()==OriginalEdition::Patch1078) return;
-        throw std::logic_error("CD GumpForm의 부모 0 부착은 지원하지 않습니다");
-    }
-    const auto raw=Form(form);
-    if (types_.at(raw[kType]).flags2&kNoContainerGenus) throw std::logic_error("GumpForm contained genus 오류");
-    if (parent.value<5 || parent.value==pool_.Layout().predictableFirst || parent.value>=pool_.Capacity()
-        || (pool_.Slot(parent)[kState]&(kFree|kDead)) || parent==form)
-        throw std::logic_error("GumpForm 부착 부모 상태 오류");
-    ValidatePop(form,flags);
-    const auto head=Word(parent,kHead);
-    if (head==form.value || head>=pool_.Capacity() || (head && (head<5 || head==pool_.Layout().predictableFirst
-        || (pool_.Slot(Sid{head})[kState]&kFree)))) throw std::logic_error("GumpForm 부모 종속 머리 오류");
-    // 부모 기록→이전 머리를 next로 기록→이전 머리의 prev→부모 head→자신 prev→contained→Pop 순서다.
-    Put(form,kParent,parent.value,2);Put(form,kNext,head,2);
-    if (head) SetPrevious(Sid{head},form.value);
-    Put(parent,kHead,form.value,2);Put(form,kPrevious,0,2);
-    pool_.AllocatedBytes(form)[kState]|=kContained;
-    pool_.AllocatedBytes(form)[kState]&=static_cast<std::uint8_t>(~kVoid);
-    // GumpForm postPop은 증가시킨 공통 깊이를 즉시 감소시키는 빈 몸체이므로 외부 효과가 없다.
-}
+// Gump의 실제 +74 thunk는 같은 현재 공장의 공통 부착 부모로 바로 진입한다.
+void GumpFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const { factory_.AttachForm(form,parent,flags); }
 // 살아 있는 부모에서는 링크를 고치지만 부모 삭제 중에는 저장한 next로 계속 순회하게 체인을 유지한다.
 void GumpFormHost::Unpop(Sid form) const {
     factory_.UnpopForm(form);

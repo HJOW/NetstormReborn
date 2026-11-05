@@ -240,6 +240,13 @@ Sid SquidFactory::CreateGumpForm(std::uint32_t flags) {
     return Create(kGumpFormType,flags);
 }
 void SquidFactory::BindFormDetach(std::function<void(Sid)> detach) { formDetach_=std::move(detach); } // 새 대여는 이후 선택된 Form 해제부터 사용한다.
+void SquidFactory::BindFormAttach(std::function<std::uint32_t()> contentType,FormPopTransmit transmit) { formContentType_=std::move(contentType);formTransmit_=std::move(transmit); } // 죽은 Session 주소를 공장에 저장하지 않는다.
+void SquidFactory::AttachForm(Sid form,Sid parent,std::uint32_t flags,FormPopTransmit transmit) {
+    SquidForms forms(pool_,{},transmit ? std::move(transmit) : formTransmit_);FormAttachHooks hooks;
+    hooks.genus=[this](std::uint8_t number) { return TypeRecord(number).flags2; }; // 각 호출에서 현재 빌린 TYPE 표를 읽는다.
+    hooks.contentType=formContentType_ ? formContentType_ : std::function<std::uint32_t()>([] { return 6U; }); // 독립 공장의 명시 초기 번호다.
+    hooks.assertion=diagnostics_.assertion;forms.BindAttach(std::move(hooks));forms.Attach(form,parent,flags);
+}
 void SquidFactory::UnpopForm(Sid sid) { // 공통 진단의 현재 장치와 같은 풀의 종속 분리만 호출한다.
     FormUnpopHooks hooks;hooks.detach=formDetach_;hooks.assertion=diagnostics_.assertion;SquidForms(pool_,{}, {},std::move(hooks)).Unpop(sid);
 }

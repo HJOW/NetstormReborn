@@ -33,6 +33,8 @@ bool FormLinkLayout(const SidPool& pool,Sid sid) { // 타입으로 추정하지 
 }
 Sid CommonContainedParent(const SidPool& pool,Sid sid) { const bool form=FormLinkLayout(pool,sid);return Sid{LinkWord(pool.Slot(sid),form ? 16U : 14U)}; } // 같은 현재 VT의 부모 WORD getter다.
 Sid CommonContainedPrevious(const SidPool& pool,Sid sid) { const bool form=FormLinkLayout(pool,sid);return Sid{LinkWord(pool.Slot(sid),form ? 14U : 16U)}; } // 같은 현재 VT의 이전 WORD getter다.
+void CommonContainedSetParent(SidPool& pool,Sid sid,Sid parent) { const bool form=FormLinkLayout(pool,sid);PutLink(pool,sid,form ? 16U : 14U,parent.value); } // 확인한 실제 VT+8의 하위 WORD만 바꾼다.
+std::uint32_t RawSquidContainedUnpop::ContentFormType() const { return state_.contentFormType; } // 약한 Session 대여가 살아 있는 동안 현재 DWORD를 읽는다.
 void CommonContainedSetPrevious(SidPool& pool,Sid sid,Sid previous) { const bool form=FormLinkLayout(pool,sid);PutLink(pool,sid,form ? 14U : 16U,previous.value); } // 공통 자산의+0xe DWORD 상위WORD 쓰기와 동일한 비트 결과다.
 RawSquidContainedUnpop::RawSquidContainedUnpop(SidPool& pool,SquidContainedUnpopState state,SquidContainedUnpopHooks hooks)
     :pool_(pool),state_(std::move(state)),hooks_(std::move(hooks)) {} // 생성 중에는 선택하지 않은 장치를 요구하거나 풀을 수정하지 않는다.

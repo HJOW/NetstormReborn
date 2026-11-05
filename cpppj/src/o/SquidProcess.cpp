@@ -126,7 +126,6 @@ void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.
     // 004b1440: 부모가 바뀌는 부착은 프로세스 디버그 flag가 있어야 한다. 새 form의 부모 필드는 0이다.
     if (Word(form,kFormParent)!=parent.value && !(flags&kProcessDebug)) throw std::logic_error("프로세스 form 부모 변경 flag 누락");
-    if (Type(pool_.Slot(form)[kType]).flags2&kNoContainerGenus) throw std::logic_error("프로세스 form genus 오류");
     // 서버는 부모/체인을 쓰기 전에 파생 WriteData를 호출한다. 양수 버퍼만 송신하고 공통 Form Pop 전송은 억제한다.
     if (pool_.IsServer()) {
         if (!(flags&kLocalMask)) {
@@ -138,18 +137,11 @@ void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
         }
         flags|=0x40;
     }
-    // 004ac800: 부모 기록 → 기존 머리 앞에 연결 → 머리 교체 → 이전 항목 0 → contained.
-    PutWord(form,kFormParent,parent.value);
-    const auto head=Word(parent,kHead);
-    if (head==form.value) throw std::logic_error("프로세스 form 종속 체인 자기 참조");
-    PutWord(form,kNext,head);
-    if (head) SetPrevious(Sid{head},form.value);
-    PutWord(parent,kHead,form.value);
-    PutWord(form,kFormPrevious,0);
-    auto raw=pool_.AllocatedBytes(form);
-    raw[kState]|=kContained;
-    // 서버의 위 경계가 전송을 완료했으므로 공통 Form Pop은 void 해제/flags 정규화만 수행한다.
-    SquidForms(pool_).Pop(form,flags|0x100);
+    const auto apply=[&](SquidFactory& factory) { factory.AttachForm(form,parent,flags); }; // 파생 직렬화 접두 뒤에만 공통 현재 genus/링크/Pop 진단을 실행한다.
+    if (currentRuntime_) { const auto runtime=Runtime();if (!runtime->factory) throw std::logic_error("현재 World의 공통 Form 부착 공장 미연결");apply(*runtime->factory); }
+    else if (directFormFactory_) apply(*directFormFactory_);
+    else { SquidFactory independent(pool_,types_);independent.BindDiagnostics({types_,state_.assertion,{}});apply(independent); } // 독립 입력도 같은 현재 표/진단 부모를 쓴다.
+
 }
 SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.

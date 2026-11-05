@@ -157,6 +157,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         factory=std::make_unique<o::SquidFactory>(pool,types,false,unpop.get());
         factory->BindDiagnostics({types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); },[owner=storage.get()](auto text) { owner->RecordAssertionDetail(text); },storage->Checking()}); // Take의 상세/정상 복귀와 공통 postTake가 같은 현재 TYPE·Client owner를 빌린다.
         factory->BindFormDetach([this](o::Sid sid) { if (const auto current=sessionContainedUnpop.lock()) current->Detach(sid);else containedUnpop->Detach(sid); }); // Form은 자신의 UI 검색을 추가하지 않고 같은 현재 종속 분리만 사용한다.
+        factory->BindFormAttach([this] { if (const auto current=sessionContainedUnpop.lock()) return current->ContentFormType();return containedType; },[this](o::Sid sid,std::uint32_t flags) { if (!runtime.formTransmit) throw std::logic_error("현재 공통 Form Pop 전송 미연결");runtime.formTransmit(sid,flags); }); // 같은 현재 Session의 번호와 World 전송만 짧게 빌린다.
         if (edition==o::OriginalEdition::Patch1078) {
             o::RawSquidTransmissionHooks transmission;
             transmission.type=[owner=storage.get()](std::uint8_t number)->const o::RiftTypeRecord& { return owner->types.at(number); };

@@ -1,6 +1,7 @@
 // Squid.cpp의 내장 Form 생성·지정 Take와 공통 종속 해제를 같은 raw SID 풀에 연결한다.
 #pragma once
 #include "o/SidPool.h"
+#include "o/RawFormAttach.h" // 실제 공통 부착 부모의 선택된 장치를 연결한다.
 #include <functional>
 #include <string_view>
 
@@ -19,6 +20,7 @@ class SquidForms {
 public:
     // 풀은 이 객체보다 오래 살아야 한다. ContentForm의 live 부모 제거에는 notice가 필요하다.
     explicit SquidForms(SidPool& pool,FormRemovalNotice notice={},FormPopTransmit transmit={},FormUnpopHooks unpop={});
+    void BindAttach(FormAttachHooks hooks); // 실제 현재 TYPE/번호/진단을 빌리며 setter/Pop 미지정은 같은 풀 기본 장치를 사용한다.
     void BindUnpop(FormUnpopHooks hooks); // 실제 World의 현재 종속 분리/진단을 같은 수명 안에서 빌린다.
     // 판본별1/2/3/6의 실제 cdecl 생성자는 지정 물리 SID의 가상 표DWORD만 쓴다. 할당/타입BYTE/다른 바이트는 쓰지 않는다.
     void ConstructVtableAt(std::uint32_t type,Sid sid) const; // Take/Create를 실행하지 않으며 SID0/free/dead도 원문 물리 범위 안이면 그대로 쓴다.
@@ -60,6 +62,7 @@ private:
     FormRemovalNotice notice_;
     // transmit_: Form 데이터 작성과 송신을 연결하는 전송 경계.
     FormPopTransmit transmit_;
+    FormAttachHooks attach_; // 독립 입력은 명시 genus0/content6을 사용하고 실제 공장은 현재 TYPE/전역을 공급한다.
     FormUnpopHooks unpop_; // 미연결 독립 입력은 같은 공통 분리와 명시 ContentForm 알림을 사용한다.
 };
 }

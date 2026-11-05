@@ -104,25 +104,17 @@ void SquidForms::Pop(Sid form,std::uint32_t flags) const {
         Raw(form)[kState]&=static_cast<std::uint8_t>(~0x10);
     }
 }
-// 기본 Form은 정렬 없이 부모의 첫 종속 항목으로 부착한다. 부모0의 패치 조기 반환을 보존한다.
+// 실제 공통 +74 몸체는 클래스/상태 선행 guard 없이 현재 가상 setter와 직접 Pop을 호출한다.
 void SquidForms::Attach(Sid form,Sid parent,std::uint32_t flags) const {
-    if (!parent.value) {
-        if (pool_.Edition()==OriginalEdition::Patch1078) return;
-        throw std::logic_error("CD Form 부모0 부착 금지");
-    }
-    const auto raw=Form(form);
-    if (Read(form,0,4)==Vtable(kContentForm)) throw std::logic_error("ContentForm 정렬 부착기 필요"); // 실제+74가 정렬 부착인 클래스는 TYPE 번호와 별도로 구별한다.
-    if (parent.value<5 || parent.value>=pool_.Capacity() || parent==form || (pool_.Slot(parent)[kState]&(kFree|kDead)))
-        throw std::logic_error("Form 부착 부모 상태 오류");
-    ValidatePop(form,flags);
-    const auto head=static_cast<std::uint16_t>(Read(parent,kHead,2));
-    if (head==form.value || head>=pool_.Capacity() || (head && (pool_.Slot(Sid{head})[kState]&kFree)))
-        throw std::logic_error("Form 부착 종속 머리 오류");
-    Put(form,kParent,parent.value,2);Put(form,kNext,head,2);
-    if (head) SetPrevious(Sid{head},form.value);
-    Put(parent,kHead,form.value,2);Put(form,kPrevious,0,2);Raw(form)[kState]|=kContained;
-    Pop(form,flags|0x100);
+    auto hooks=attach_;
+    if (!hooks.genus) hooks.genus=[](std::uint8_t) { return 0U; }; // 독립 편의 입력에는 TYPE 표가 없으며 실제 공장은 현재 getter를 제공한다.
+    if (!hooks.contentType) hooks.contentType=[] { return 6U; }; // 독립 입력의 명시 초기 번호다.
+    if (!hooks.setParent) hooks.setParent=[this](Sid sid,std::uint32_t,Sid value) { CommonContainedSetParent(pool_,sid,value); }; // 실제 현재 VT+8을 선택한다.
+    if (!hooks.setPrevious) hooks.setPrevious=[this](Sid sid,std::uint32_t,Sid value) { CommonContainedSetPrevious(pool_,sid,value); }; // raw TYPE 비교로 필드 배치를 추정하지 않는다.
+    if (!hooks.pop) hooks.pop=[this](Sid sid,std::uint32_t value) { Pop(sid,value); }; // 기존 공통 Pop의 guard는 이 자식 위치에서만 적용한다.
+    AttachCommonForm(pool_,form,parent,flags,hooks);
 }
+void SquidForms::BindAttach(FormAttachHooks hooks) { attach_=std::move(hooks); } // 다음 부착부터 현재 getter/진단을 사용한다.
 // 가상 setPrev는 이웃의 현재 타입에 따라 Form/자산의 서로 다른 위치를 쓴다.
 void SquidForms::SetPrevious(Sid sid,std::uint16_t previous) const {
     Put(sid,pool_.Slot(sid)[kType]<kFirstAssetTypeNumber ? kPrevious : kAssetPrevious,previous,2);

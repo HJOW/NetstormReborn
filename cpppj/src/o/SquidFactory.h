@@ -1,6 +1,7 @@
 // 원본 Squid.cpp의 자산 생성/void Take와 공통 가상 초기화를 raw SID 풀에 연결한다.
 #pragma once
 #include "o/SidPool.h"
+#include "o/SquidForms.h" // 공통 부착의 실제 Pop 전송 장치 타입을 공유한다.
 #include "o/RawCheckingFlag.h"
 #include <functional>
 #include <string_view>
@@ -30,6 +31,8 @@ public:
     const SidPool& Pool() const;
     void BindDiagnostics(SquidFactoryDiagnostics diagnostics); // 같은 판본 길이의 현재 TYPE와 실제 진단 장치를 연결한다.
     void BindFormDetach(std::function<void(Sid)> detach); // 현재 World/Session의 공통 종속 분리만 대여하며 UI 검색을 추가하지 않는다.
+    void BindFormAttach(std::function<std::uint32_t()> contentType,FormPopTransmit transmit={}); // 현재 Session 번호/전송을 선택 위치에서 빌린다.
+    void AttachForm(Sid form,Sid parent,std::uint32_t flags,FormPopTransmit transmit={}); // 파생 +74 접두 뒤 공통 부모만 실행한다.
     void UnpopForm(Sid sid); // 실제 Form VT+48의 진단/void/현재 getter와 부모 free 관문을 실행한다.
     void BindWeakenedMana(const bool& current); // 실제005ca8f0 주소만 빌린다. 다른 주소 재연결은 거부하며 대상은 이 공장보다 오래 살아야 한다.
     void BindWeakenedMana(bool&&)=delete; // 임시 bool의 주소를 보관해 수명이 끝나는 연결은 컴파일 시 거부한다.
@@ -85,6 +88,8 @@ private:
     const std::uint32_t* sharedFakeSurfaceType_{}; // 같은 Client 수명의 현재 fakeThreeByThreeSurface TYPE이며 독립 미연결만162다.
     // unpop_: 객체의 공간 등록을 해제하는 Unpop 처리기.
     SquidUnpop* unpop_{};
+    std::function<std::uint32_t()> formContentType_; // 약한 현재 Session 또는 World 기본 번호 getter다.
+    FormPopTransmit formTransmit_; // 실제 World의 현재 Form Pop 전송이며 호출자 명시 장치가 있으면 그것을 사용한다.
     std::function<void(Sid)> formDetach_; // 실제 소비자는 현재 Session의 약한 대여 또는 World 기본 종단을 호출한다.
 };
 }

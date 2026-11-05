@@ -17,7 +17,7 @@ constexpr std::uint8_t kFree=1,kDead=2,kDepend=1;
 // 다른 풀의 삭제기가 우연히 같은 번호를 처리하지 못하도록 생성 시 확인한다.
 DependFormHost::DependFormHost(SidPool& pool,RawSquidDestroy& destroy,DependFormNotice notice,
     SquidDestroyHooks fallback,FormPopTransmit transmit)
-    :pool_(pool),destroy_(destroy),notice_(std::move(notice)),fallback_(std::move(fallback)),forms_(pool,{},std::move(transmit)) {
+    :pool_(pool),destroy_(destroy),notice_(std::move(notice)),fallback_(std::move(fallback)),transmit_(transmit),forms_(pool,{},std::move(transmit)) {
     if (&destroy.Pool()!=&pool) throw std::invalid_argument("DependForm 삭제 SID 풀 불일치");
 }
 void DependFormHost::BindUnpop(std::function<void(Sid)> unpop) { unpop_=std::move(unpop); } // 공통 삭제에서도 현재 Factory의 진단/분리 순서를 사용한다.
@@ -63,9 +63,9 @@ DependFormPair DependFormHost::Create(Sid watched,Sid watcher) const {
     hooks.sid=[](auto token) { return token; }; // 실제 풀 어댑터의 객체 토큰은 같은 물리 SID다.
     hooks.word=[this,object](auto token,auto offset,auto value) { const auto slot=pool_.Slot(object(token));auto* raw=const_cast<std::uint8_t*>(slot.data());raw[offset]=static_cast<std::uint8_t>(value);raw[offset+1]=static_cast<std::uint8_t>(value>>8); }; // 원문 WORD 저장에 할당/free 선행 검사를 추가하지 않는다.
     hooks.vtable=[this,object](auto token) { const auto raw=pool_.Slot(object(token));return std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24); }; // Create/첫 부착 이후의 현재 VT를 조회한다.
-    hooks.attach=[this,object](auto token,auto table,auto parent,auto flags) { // 알려진 공통 Form 세 VT의 실제+74만 같은 부착 몸체로 보낸다.
-        bool common{};for (const auto type:{1U,2U,3U}) if (table==forms_.Vtable(type)) common=true; // Content 정렬/다른 미연결 가상 진입은 선택 시 명시 실패한다.
-        if (!common) throw std::logic_error("Depend 생성의 선택된 실제 VT+74 미연결");forms_.Attach(object(token),object(parent),flags);
+    hooks.attach=[this,object,&factory](auto token,auto table,auto parent,auto flags) { // 1/3/6은 실제 공통 thunk이며 Process2는 별도 직렬화 접두다.
+        bool common{};for (const auto type:{1U,3U,6U}) if (table==forms_.Vtable(type)) common=true; // Content도 공통 몸체를 실행한 뒤 현재 번호 진단을 받는다.
+        if (!common) throw std::logic_error("Depend 생성의 선택된 실제 VT+74 미연결");factory.AttachForm(object(token),object(parent),flags,transmit_);
     };
     const auto pair=CreateDependForms(pool_.Edition(),watched.value,watcher.value,hooks);return {object(pair.watched),object(pair.watcher)};
 }

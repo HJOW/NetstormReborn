@@ -2,6 +2,8 @@
 
 감시 Form 쌍 생성은 각 Create 직전의 현재 전체 타입 번호와 현재 공통 Factory 생성자를 사용한다. 원문 부모의 client 범위/서버 진단과 판본별 WORD/VT 순서, 실제 World의 장기 번호/클래스 수명을 함께 연결한다. 다른 Form 부착/Factory/Pop 부모와 전체 목표는 진행 중이다.
 
+**911 후속 정정:** PE의 실제 VT+74는 Content6도 공통 thunk이며 Process2만 별도 접두다. 이 문서의 당시 Content 정렬 VT 분류와 미연결 검사 입력은 [911 기록](cpp-form-attach-current-20261105.md)의 정정을 따른다. 910 최초 관측 fixture는 변경하지 않는다.
+
 ## 원문과 범위
 
 - 마지막 전체 정밀 디컴파일과 현재 작업 호스트는 HJOW-Athlon / 2026-11-03이다. 정밀 산출물은 수정하지 않았다.

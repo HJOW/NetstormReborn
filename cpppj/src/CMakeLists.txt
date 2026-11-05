@@ -386,3 +386,6 @@ target_sources(netstorm PRIVATE o/RawSquidTake.cpp o/RawSquidTake.h)
 
 # 감시 Form 쌍도 현재 두 Create/WORD·VT/가상 부착의 원문 부모를 사용한다(910).
 target_sources(netstorm PRIVATE o/RawDependCreate.cpp o/RawDependCreate.h)
+
+# 현재 TYPE/VT와 부분 쓰기의 공통 부착 부모다(911).
+target_sources(netstorm PRIVATE o/RawFormAttach.cpp o/RawFormAttach.h)

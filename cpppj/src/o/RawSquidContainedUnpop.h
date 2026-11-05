@@ -25,6 +25,7 @@ struct SquidContainedUnpopHooks { // 원문 가상 호출과 큐/진단의 선�
 // 두 PE의 생성자 VT에서 확인한 공통 부모/이전 getter를 실행한다. 모르는 VT는 거부한다.
 Sid CommonContainedParent(const SidPool& pool,Sid sid);
 Sid CommonContainedPrevious(const SidPool& pool,Sid sid); // Form의+0xe와 자산의+0x10 WORD를 실제 VT로 구별한다.
+void CommonContainedSetParent(SidPool& pool,Sid sid,Sid parent); // 현재 VT+8의 Form+10/자산+e WORD를 쓴다.
 void CommonContainedSetPrevious(SidPool& pool,Sid sid,Sid previous); // 같은 실제 VT의 setPrev 쓰기 폭을 보존한다.
 class RawSquidContainedUnpop { // PATCH004ac6b0→004ad230/CD004ac160→004acf40의 실제 종단이다.
 public:
@@ -32,6 +33,7 @@ public:
     void Detach(Sid sid) const; // void를 다시 쓰지 않고 종속 체인/현재 contained와 부모 통지만 처리한다.
     void NotifyUi(Sid sid) const; // 이 객체 자신의 종속 Form에 GumpForm이 있으면 현재 사건을 한 번 큐에 넣는다.
     void Unpop(Sid sid) const; // 분리가 정상 반환하면 부모 dead 여부와 무관하게 자신의 UI 종속을 조회한다.
+    std::uint32_t ContentFormType() const; // 실제 부착 꼬리가 같은 Session의 현재 전체 번호를 읽는다.
     const SidPool& Pool() const; // World/Session 연결기가 같은 실제 풀인지 확인한다.
 private:
     void Assert(std::string_view expression,std::uint32_t patchLine,std::uint32_t cdLine) const; // 판본별 Squid.cpp 진단 위치를 보존한다.

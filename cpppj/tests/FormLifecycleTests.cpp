@@ -155,12 +155,13 @@ TEST_CASE(FormLifecycle_ContentCreateAndCurrentCaptureState) {
     content.Unpop(form);CHECK(reasons.back()==2);CHECK(Read(pool,parent,6)==0);
 }
 
-// 원본의 금지 상태/필수 전송 경계가 누락될 때 변경 전에 실패하는지 확인한다.
+// 공통 부착은 링크 완료 뒤 필수 Pop 장치에서 실패하며 명시 복구 뒤 같은 부모 감시 쌍도 해제한다.
 TEST_CASE(FormLifecycle_ContractsAndSameParentPair) {
     SidPool pool(OriginalEdition::Patch1078,kCapacity);SquidForms forms(pool);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);SquidFactory factory(pool,types);
     SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
     const auto parent=factory.Create(90,2),form=forms.Create(1,0);const auto before=Hex(pool.Slot(form));
-    CHECK(Throws([&] { forms.Attach(form,parent); }));CHECK(Hex(pool.Slot(form))==before);
+    CHECK(Throws([&] { forms.Attach(form,parent); }));CHECK(Hex(pool.Slot(form))!=before && pool.Slot(form)[11]==12 && Read(pool,form,16)==parent.value && Read(pool,parent,6)==form.value);
+    forms.Pop(form,0x10);forms.Unpop(form);CHECK(pool.Slot(form)[11]==4 && Read(pool,parent,6)==0); // 실제 링크/contained 쓰기를 유지한 뒤 명시 로컬 Pop/분리로 복구한다.
     DependFormHost depend(pool,destroy);const auto pair=depend.Create(parent,parent);CHECK(depend.Has(parent,parent));
     depend.Destroy(pair.watchedForm,0x10);CHECK(Read(pool,parent,6)==0);CHECK(destroy.PreDepth()==0);
     ContentFormHost content(pool,types,[](Sid,Sid,std::uint32_t) {});const auto value=factory.CreateContained(2);Put(pool,value,20,0x80);
