@@ -117,10 +117,10 @@ void RawFactoryPostPop::PostPop(Sid sid,std::uint32_t flags) const {
 }
 // 분배기의 동일 풀 계약에 사용한다.
 const SidPool& RawFactoryPostPop::Pool() const { return pool_; }
-// PATCH00475290/CD0042b230의 baseLevel→실제 가상88 표시 순서다. 상태 프레임 보정은 PostPop의 별도 helper다.
+// PATCH00475290/CD0042b230의 baseLevel 저장 뒤 실제 가상88 표시를 호출한다. 표시 장치는 저장 후 호출 지점에서 요구하며 상태 프레임 보정은 별도 helper다.
 void RawFactoryPostPop::SetState(const RawSquidLevel& level,Sid sid,std::uint32_t value) const {
-    if (&level.Pool()!=&pool_ || !Handles(sid) || !hooks_.updateState) throw std::invalid_argument("Factory State의 같은 Pool/가상 표/표시 경계 불일치");
-    level.Set(sid,value);hooks_.updateState(sid);
+    if (&level.Pool()!=&pool_ || !Handles(sid)) throw std::invalid_argument("Factory State의 같은 Pool/가상 표 경계 불일치");
+    level.Set(sid,value);FactoryNeed(hooks_.updateState)(sid);
 }
 // 다른 풀의 가상 프레임 효과를 거부하며 실제 dirty/공간 순서를 그대로 호출한다.
 FactoryPostPopHooks MakeFactoryPostPopHooks(const SidPool& pool,SquidFrame& frame,FactoryPostPopHooks hooks) {

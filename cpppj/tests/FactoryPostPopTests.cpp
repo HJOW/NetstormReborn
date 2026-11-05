@@ -322,3 +322,13 @@ TEST_CASE(factoryPostPop_level_diagnostic_return_and_current_service) {
         rejected=false;try { factory.SetState(missing,kSource,8); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected);
     }
 }
+
+TEST_CASE(FactorySetterCurrent_MissingDisplayFailsAfterLevelWrittenPrefix) { // 양판본 Factory+84는 base 레벨 저장을 마친 뒤 표시 호출에서 실패하므로 먼저 쓴 상태 BYTE가 남아야 한다.
+    for (const bool patch:{true,false}) { // PATCH/CD의 같은 두 가상 Factory 표를 기존 실제 풀/부모와 연결한다.
+        FactoryScene scene(patch);const std::array<std::uint32_t,11> input{0,86,0,0,0,1,7,7,0,0,0};scene.Prepare(input);SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.DamageableHooks(base));auto hooks=scene.Hooks();hooks.updateState={};RawFactoryPostPop factory(scene.pool,scene.hash,scene.types,scene.frames,base,damageable,scene.state,std::move(hooks));std::size_t diagnostics{};RawSquidLevel level(scene.pool,scene.types,[&](SquidLevelAssertion) { ++diagnostics;scene.pool.AllocatedBytes(kSource)[11]=0x14; }); // 기존 Prepare가 읽는 실제11DWORD 입력을 span보다 오래 유지한다.
+        for (const auto value:{3U,8U}) { // 정상 레벨과 진단 복귀 뒤 저장 모두 실제 표시 호출보다 먼저 남는지 확인한다.
+            scene.pool.AllocatedBytes(kSource)[11]=0;bool failed{};try { factory.SetState(level,kSource,value); }catch (const std::logic_error&) { failed=true; }CHECK(failed && scene.pool.Slot(kSource)[11]==(value==3 ? 0x60 : 0x14));
+        }
+        CHECK(diagnostics==1); // 표시 장치 누락이 원문 앞선 범위 진단/쓰기를 건너뛰게 해서는 안 된다.
+    }
+}

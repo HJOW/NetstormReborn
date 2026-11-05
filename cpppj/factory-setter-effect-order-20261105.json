@@ -1,0 +1,80 @@
+{
+  "unit": 924,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "status": "완료·전체 목표 진행 중",
+  "productUnit": 924,
+  "productCodeChanges": true,
+  "productVersion": "11.01",
+  "productSha256": "5d127d7834ac8fd9df92bc2c6691cbecc27b7965e54e99a0ab31c0d7dbb0b6ae",
+  "productBytes": 10787840,
+  "initialCompileErrors": 1,
+  "compileCorrection": "Prepare span 입력을 수명이 있는 std::array로 공급",
+  "initialProductFailedChecks": 6,
+  "fix": "같은 Pool/VT 경계 뒤 base 레벨 저장을 실행하고 표시 장치를 실제 호출 시점에 요구",
+  "newCases": 1,
+  "setterFailurePrefixes": 4,
+  "uniqueCases": 11,
+  "tests": [
+    {
+      "filter": "FactorySetterCurrent_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-924/test-FactorySetterCurrent_.log"
+    },
+    {
+      "filter": "factoryPostPop_level_diagnostic_return_and_current_service",
+      "exit": 0,
+      "log": "extracted/cpp-resume-924/test-factoryPostPop_level_diagnostic_return_and_current_service.log"
+    },
+    {
+      "filter": "factoryPostPop_actual_frame_effect_and_pool_contract",
+      "exit": 0,
+      "log": "extracted/cpp-resume-924/test-factoryPostPop_actual_frame_effect_and_pool_contract.log"
+    },
+    {
+      "filter": "CampaignMotion_ReplaysActualLevelNativeBothEditions",
+      "exit": 0,
+      "log": "extracted/cpp-resume-924/test-CampaignMotion_ReplaysActualLevelNativeBothEditions.log"
+    },
+    {
+      "filter": "BuildingObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-924/test-BuildingObjectUi_.log"
+    },
+    {
+      "filter": "BuildingUpgradeUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-924/test-BuildingUpgradeUi_.log"
+    },
+    {
+      "filter": "CurrentLevelSetter_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-924/test-CurrentLevelSetter_.log"
+    }
+  ],
+  "names": [
+    "FactorySetterCurrent_MissingDisplayFailsAfterLevelWrittenPrefix",
+    "factoryPostPop_level_diagnostic_return_and_current_service",
+    "factoryPostPop_actual_frame_effect_and_pool_contract",
+    "CampaignMotion_ReplaysActualLevelNativeBothEditions",
+    "BuildingObjectUi_FourWorkshopsUseCurrentOwnerLevelMoneyAndEditor",
+    "BuildingObjectUi_WorkshopClickInsufficientFundsAndCycleCurrentFrame",
+    "BuildingObjectUi_GeneratorsUseStrictHalfHpAndMissionOwnerGates",
+    "BuildingObjectUi_ConstructionBlocksMenusWithoutAllocatingForms",
+    "BuildingUpgradeUi_FourThemesCompleteAndReopenAtEveryLevel",
+    "CurrentLevelSetter_PhysicalFreeAndReservedSlotsPreservePoolLists",
+    "CurrentLevelSetter_DiagnosticReleaseKeepsCurrentByteAndWrittenPrefix"
+  ],
+  "finalFailedChecks": 0,
+  "nativeLevelRows": 96,
+  "buildCommands": 3,
+  "msbuildInvocations": 5,
+  "finalWarnings": 0,
+  "finalErrors": 0,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "protectedUnchanged": true,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "newNetworkTests": 0
+}
