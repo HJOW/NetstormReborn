@@ -63,6 +63,8 @@
 
 `node webpj/tools/fixture-manifest.mjs` 기본 검사가 보고한 7곳이다(작성 시 HEAD `f07c4a0b`). 실패가 아니라 재검토 알림이다. 이번 단위에서는 diff 크기와 커밋 제목으로 영향을 분류만 했고 이식은 하지 않았다.
 
+**2026-11-05 사용자 결정:** cpppj는 진행 중이므로 webpj는 단위 착수 시점의 cpppj 현재 버전을 참고해 구현하고, 그 뒤의 cpppj 변경은 **별도 재반영 과정**으로 다시 반영한다. 아래 7곳은 그 재반영 목록의 첫 대상이며, 절차와 상태 표는 [LEFT_JOBS.webpj.md 3.5절](../LEFT_JOBS.webpj.md)에서 관리한다. 이 도구의 "cpppj 변경" 보고가 재반영 대상을 찾는 기본 수단이다.
+
 | cpppj 소스 | basis 이후 | 내용과 웹 영향 판단 |
 | --- | --- | --- |
 | `o/Config.cpp` | 1커밋 `2ca39d0b` | `LoadBytes`를 `AppendDecodedBytes`로 나눈 구조 변경과 `@파일` 인자 적재 훅 추가. 서명/BOM/NUL 처리 의미는 같아 보임. 웹은 `@파일` 인자 경로를 쓰지 않음 → 영향 낮음 |
