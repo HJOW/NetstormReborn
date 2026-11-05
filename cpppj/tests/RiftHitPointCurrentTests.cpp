@@ -1,4 +1,5 @@
 // TYPE HP 원문/진단 복귀와 실제 공장·장기 번호만 검사한다. 게임/의식/공중3종/MP는 실행하지 않는다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/RawSurfaceWorld.h"
 #include "client/RawPriestWorldBindings.h"
@@ -50,7 +51,7 @@ TEST_CASE(RiftHitPointCurrent_FactoryKeepsSelectedTypeAcrossRebasedDiagnosis) { 
 }
 
 TEST_CASE(RiftHitPointCurrent_SelectedMissingDiagnosticKeepsEarlierFactoryWrites) { // HP 앞의owner/zOrder와 아직 쓰지 않은HP를 구별한다.
-    SidPool pool(OriginalEdition::Patch1078,32768);std::vector<RiftTypeRecord> types(188);types[74].flags2=0x400000;types[74].zOrder=0x123;types[74].maxHitPoints=91;
+    SidPool pool(OriginalEdition::Patch1078,32768);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[74].flags2=0x400000;types[74].zOrder=0x123;types[74].maxHitPoints=91;
     SquidFactory factory(pool,types);std::uint32_t checking=1;factory.BindDiagnostics({types,{},{},checking});const auto sid=pool.Allocate();auto raw=pool.AllocatedBytes(sid);raw[10]=74;raw[40]=1;raw[34]=9;Put(raw,26,0x12345678);
     CHECK(HpFails([&] { factory.PostCreate(sid); }) && raw[35]==0x23 && raw[34]==0 && Get(raw,26)==0x12345678);
     RiftTypeRecord type;type.maxHitPoints=-7;std::uint32_t priest=74,dais=74;CHECK(ReadRiftHitPoints(OriginalEdition::Patch1078,type,{false,false,priest,dais},{})==-7);
@@ -58,7 +59,7 @@ TEST_CASE(RiftHitPointCurrent_SelectedMissingDiagnosticKeepsEarlierFactoryWrites
 }
 
 TEST_CASE(RiftHitPointCurrent_ActualWorldsUseSameLongLivedPriestAndDais) { // World 재대여와 실제 이동/회복 참조가 동일한 현재 번호를 보존한다.
-    std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
     auto globals=std::make_shared<RawGameAuxState>();globals->PriestType()=74;globals->DaisType()=74;globals->PriestQuarterHp()=true;
     auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes,nullptr,std::shared_ptr<RawAuthorityState>{},globals);
     std::uint32_t checking=0x80000000,diagnostics{};std::optional<std::string> detail;storage->BindChecking(checking);

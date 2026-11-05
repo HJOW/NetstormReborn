@@ -1,4 +1,5 @@
 // 두 원본 일반 task setter와 같은 실제 Host의 Regular 재사용/생성을 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawDudeTask.h"
 #include <cstdio>
@@ -26,7 +27,7 @@ struct TaskScene {
     const std::vector<std::string>& row; // 기대값과 분리된 현재 입력행 참조다.
     // 실제 client 할당으로 원본 Regular 생성 번호83 직전까지 확보한다.
     explicit TaskScene(const std::vector<std::string>& input)
-        :pool(input[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,kCapacity,true),spots(65536),types(input[0]=="originals" ? 188 : 171),unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,clock,[](Sid,std::uint32_t,std::uint32_t,float) { return 1.0f; }),row(input) {
+        :pool(input[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,kCapacity,true),spots(65536),types(::netstorm::test::MakeFormTypeInputs(input[0]=="originals" ? 188 : 171)),unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,clock,[](Sid,std::uint32_t,std::uint32_t,float) { return 1.0f; }),row(input) {
         // 원본 입력번호와 같은 일반 client 슬롯을 실제 확보한다.
         for (std::uint16_t id=5;id<=82;++id) CHECK(pool.Allocate(2)==Sid{id});
         auto raw=pool.AllocatedBytes(kSource);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=static_cast<std::uint8_t>(Number(row[6]));Put(raw,12,Number(row[3]),2);Put(raw,14,std::bit_cast<std::uint32_t>(20.75f));Put(raw,18,std::bit_cast<std::uint32_t>(21.9f));

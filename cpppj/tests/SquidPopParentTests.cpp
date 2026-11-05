@@ -1,4 +1,5 @@
 // Pop의 부분 변경·현재 읽기·진단 정상 복귀와 실제 World 연결을 창/게임/통신 없이 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "TestSupport.h"
 #include "o/RawSquidPopParent.h"
 #include "o/SquidPop.h"
@@ -23,7 +24,7 @@ struct PopParentScene {
     SidPool pool{OriginalEdition::Patch1078,24000,false}; // 원본50BYTE 물리 슬롯이며 게임 유닛을 생성하지 않는다.
     SquidHash hash; // 원문과 같은 네 공간 해시다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); // 부분 OR를 관찰하는 전체 점유 지도다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 현재 TYPE와 처음 선택한 TYPE 참조를 함께 보관한다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); // 현재 TYPE와 처음 선택한 TYPE 참조를 함께 보관한다.
     Sid source{50}; // 명시 입력의 대상 슬롯이다.
     std::int32_t checking{1}; // 원문 관문이 다시 읽는 현재 DWORD다.
     bool metamap{true}; // 기존 원문 fixture처럼 좌표 오류 로그를 기본으로 억제한다.
@@ -160,7 +161,7 @@ TEST_CASE(SquidPopParent_ActualAdapterTransmittingDiagnosticRunsAfterVoidClear) 
 }
 
 TEST_CASE(SquidPopParent_ActualWorldFrameFailurePreservesCoordinatesAndSpots) { // 실제 World의 사전 SHP 조회를 제거해 같은 부모의 부분 변경을 확인한다.
-    std::vector<RiftTypeRecord> types(188);types[74].flags2=1;types[74].footX=types[74].footY=1;
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[74].flags2=1;types[74].footX=types[74].footY=1;
     std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);shapes[74].loaded=true;shapes[74].frameCount=1;shapes[74].frames.resize(1);
     BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;
     RawSurfaceWorld world(OriginalEdition::Patch1078,types,frames,shapes,links,83);auto core=world.Core();const auto source=world.Create(74);auto raw=core.pool.AllocatedBytes(source);
@@ -172,7 +173,7 @@ TEST_CASE(SquidPopParent_ActualWorldFrameFailurePreservesCoordinatesAndSpots) { 
 
 TEST_CASE(SquidPopParent_ActualClientWorldDiagnosticAndTraceShareCurrentOwner) { // 실제 Client checking과 World 진단/수준29 로그가 같은 현재 상태를 사용한다.
     ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;Client client(std::move(options));
-    std::vector<RiftTypeRecord> types(188);types[74].name="source";types[74].flags1=0x800;types[74].footX=types[74].footY=1;types[75].name="surface";
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[74].name="source";types[74].flags1=0x800;types[74].footX=types[74].footY=1;types[75].name="surface";
     std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);shapes[74].loaded=true;shapes[74].frameCount=1;shapes[74].frames.resize(1);shapes[74].frames[0].cellWidth=shapes[74].frames[0].cellHeight=1;
     auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes);auto& checking=client.GameplayGlobals()->AiDebug().Checking();checking=1;storage->BindChecking(RawCheckingFlag{checking});
     std::uint32_t assertions{};std::vector<std::string> logs;

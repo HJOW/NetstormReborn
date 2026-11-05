@@ -1,4 +1,5 @@
 // 두 원본의 공급원 등록과 실제 Client/World의 같은 목록/진단/카운터를 화면 없이 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawManaRegistration.h"
 #include "client/RawSurfaceWorld.h"
@@ -54,7 +55,7 @@ TEST_CASE(ManaRegistration_SelectedDevicesAndPartialEffects) {
 }
 // 실제 World의 공통 postPop이 같은 Client checking/장기 공급원/현재 카운터를 두 대여에서 사용한다.
 TEST_CASE(ManaRegistration_ActualClientWorldCurrentOwnerAndPostPopContinuation) {
-    const auto edition=OriginalEdition::Patch1078;ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;Client client(std::move(options));std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);types[74].flags1=0x10000000;types[74].cost=3.75f;types[75].flags2=0x4200;
+    const auto edition=OriginalEdition::Patch1078;ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;Client client(std::move(options));std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);types[74].flags1=0x10000000;types[74].cost=3.75f;types[75].flags2=0x4200;
     auto storage=std::make_shared<RawSurfaceStorage>(edition,types,frames,shapes);storage->BindChecking(client.GameplayGlobals()->AiDebug().Checking());std::optional<std::string> detail;std::uint32_t diagnostics{};RawWorldCore* current{};Sid victim{};const auto* address=storage->sidLists.providers.Storage().data();
     storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(expression=="!alreadyThere" && file=="\\Ns\\O\\Mana.cpp" && line==0x44 && current);++diagnostics;client.GameplayGlobals()->AiDebug().Checking()=0;storage->sidLists.providers.SetCount(0);current->bookkeeping.productionDirty=0xffffffff;auto raw=current->pool.AllocatedBytes(victim);raw[10]=75;raw[34]=2;current->bookkeeping.localOwner=2; }); // 원문 진단 뒤에도 저장한 중복/TYPE flags2를 쓰고 현재 owner/type 통계를 읽는다.
     BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;

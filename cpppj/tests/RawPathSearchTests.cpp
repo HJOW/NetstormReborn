@@ -1,4 +1,5 @@
 // 두 원본 PE의 BFS/Graph/접합/전체 작업 배열을 같은 실제 raw 입력으로 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPathSearch.h"
 #include "o/RawPathProcess.h"
@@ -39,7 +40,7 @@ struct SearchScene {
     // destination: 경로에 저장되는 두 float 좌표다. 런타임의 double 좌표와 섞지 않는다 (RawPathPoint).
     RawPathPoint start,destination;
     // 원본 관찰의 parent5/surface6..30을 명시 client 입력으로 확보한다.
-    explicit SearchScene(bool chosen):patch(chosen),pool(chosen ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,32768,false),types(chosen ? 188 : 171),
+    explicit SearchScene(bool chosen):patch(chosen),pool(chosen ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,32768,false),types(::netstorm::test::MakeFormTypeInputs(chosen ? 188 : 171)),
         frames(types.size(),RiftTypeFrames({})),path(pool.Edition()) {
         // 실제 allocated raw 슬롯에만 장면 필드를 공급한다.
         for (std::uint16_t sid=5;sid<32;++sid) CHECK(pool.Allocate(2)==Sid{sid});

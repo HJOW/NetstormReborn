@@ -1,4 +1,5 @@
 // 원문 부모와 실제 공장 연결만 창 없이 대조한다. 게임/의식/공중3종/MP 실행은 하지 않는다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/RawSquidCreation.h"
@@ -49,7 +50,7 @@ TEST_CASE(SquidCreationParent_Native588BothEditionsAndReturnedObjectOrder) { // 
 
 TEST_CASE(SquidCreationParent_ActualFactoryUsesCurrentConstructorAndRealFormVtable) { // 자산 TYPE도 생성자의 실제 Form VT면 빈+28을 선택한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 같은 실제 풀에서 두 판본의 네 Form을 생성한다.
-        SidPool pool(edition,32768);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
+        SidPool pool(edition,32768);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);
         SquidFactory factory(pool,types);factory.BindDiagnostics({types,{},{},{}});
         for (const auto type:{1U,2U,3U,6U}) { // 일반Create를 통해 VT/type/void만 쓰고 자산HP/깊이를 추가하지 않는다.
             types[type].constructorAddress=TypeConstructorAddress(edition,type);types[type].zOrder=99;types[type].flags1=16;types[type].maxHitPoints=777;
@@ -62,7 +63,7 @@ TEST_CASE(SquidCreationParent_ActualFactoryUsesCurrentConstructorAndRealFormVtab
 }
 
 TEST_CASE(SquidCreationParent_DiagnosisResumesBeforeAllocationAndCurrentLookup) { // fake TYPE 진단의 정상 복귀를 실패로 바꾸지 않고 같은 현재 표를 읽는다.
-    SidPool pool(OriginalEdition::Patch1078,32768);std::vector<RiftTypeRecord> types(188);SquidFactory factory(pool,types);std::uint32_t fake=74,calls{};factory.BindFakeSurfaceType(fake);
+    SidPool pool(OriginalEdition::Patch1078,32768);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);SquidFactory factory(pool,types);std::uint32_t fake=74,calls{};factory.BindFakeSurfaceType(fake);
     factory.BindDiagnostics({types,[&](auto expression,auto file,auto line) {
         CHECK(expression=="type != fakeThreeByThreeSurfaceType" && file=="\\Ns\\O\\Squid.cpp" && line==0x189 && pool.FreeCount()==32763);
         ++calls;types[74].constructorAddress=TypeConstructorAddress(pool.Edition(),3);
@@ -75,7 +76,7 @@ TEST_CASE(SquidCreationParent_DiagnosisResumesBeforeAllocationAndCurrentLookup) 
 
 TEST_CASE(SquidCreationParent_ConstructCurrentHasNoStateOrAssetGuard) { //004af720은 할당/TYPE/가상 후처리 없이 현재 생성자의 bare 쓰기만 한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 원문 물리 범위의 free/contained/예약 슬롯도 그대로 처리한다.
-        SidPool pool(edition,32768);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);SquidFactory factory(pool,types);factory.BindDiagnostics({types,{},{},{}});const auto free=pool.FreeCount();
+        SidPool pool(edition,32768);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);SquidFactory factory(pool,types);factory.BindDiagnostics({types,{},{},{}});const auto free=pool.FreeCount();
         for (const auto sid:{Sid{0},Sid{5},Sid{17}}) { // 각 상태 입력의 VT 밖 모든 바이트를 보존한다.
             auto raw=Physical(pool,sid);
             for (const auto state:{1U,2U,8U,12U}) { // free/dead/contained/void를 선행 거부하지 않는다.
@@ -100,7 +101,7 @@ TEST_CASE(SquidCreationParent_MissingDevicesPreserveEarlierParentEffects) { // �
 }
 
 TEST_CASE(SquidCreationParent_ActualWorldKeepsLongLivedFakeTypeAcrossReuse) { // 실제 World의 공장이 같은 장기005412e0을 빌린다.
-    std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
     auto globals=std::make_shared<RawGameAuxState>();globals->FakeSurfaceType()=74;auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes,nullptr,std::shared_ptr<RawAuthorityState>{},globals);
     std::optional<std::string> detail;std::uint32_t calls{};storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(expression=="type != fakeThreeByThreeSurfaceType" && file=="\\Ns\\O\\Squid.cpp" && line==0x189);++calls; });
     BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;

@@ -1,4 +1,5 @@
 // 세 PE의 종속 조회/삭제 관찰과 실제 건설 진행음·Kernel·form 삭제 연결을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionNoticeSupport.h"
 #include "o/RawContainedLookup.h"
 #include "o/RawConstructionProcess.h"
@@ -118,7 +119,7 @@ TEST_CASE(ContainedLookup_ConstructionStopsActualSoundAndKeepsOtherProcess) {
     // 두 판본 모두 실제 건설/소리 프로세스·host·삭제·form Unpop·SID 반납을 거친다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,true);SquidHash hash;
-        std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(patch ? 188 : 171);
+        std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);
         SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState clock;
         SquidProcessHost host(pool,types,kernel,destroy,clock);std::vector<std::string> events;SoundProcessState soundState;
         SoundProcessHooks soundHooks;

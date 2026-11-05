@@ -1,4 +1,5 @@
 // Take의 원문 진단 복귀와 실제 World/Session 상세 소유자를 창·게임·통신 없이 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "TestSupport.h"
 #include <filesystem>
 #include "client/ClientMain.h"
@@ -20,7 +21,7 @@ struct TakeDiagnosticScene {
     SidPool pool{OriginalEdition::Patch1078,32768}; // 전체 물리 SID와 기존 자유 목록을 보유한다.
     SquidHash hash; // void Unpop이 보존해야 하는 실제 네 단계 해시다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); // 별도 가상 지도 대신 실제 공간 배열을 쓴다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 진단 callback이 수정할 현재 TYPE 표다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); // 진단 callback이 수정할 현재 TYPE 표다.
     SquidUnpop unpop{pool,hash,spots}; // Take가 호출하는 실제 공통 해제 부모다.
     SquidFactory factory{pool,types,false,&unpop}; // 생성자 뒤 현재 TYPE와 진단 장치를 연결한다.
     Sid source{},client{}; // 서버/클라이언트 영역의 실제 할당 번호다.
@@ -100,7 +101,7 @@ TEST_CASE(FactoryTakeDiagnostics_AssertionAbortKeepsCopiedDetailAndOldType) { //
 }
 
 TEST_CASE(FactoryTakeDiagnostics_ActualWorldsShareClientDetailOwner) { // 두 번 대여한 실제 World의 공장이 같은 Client 상세와 현재 TYPE를 사용한다.
-    std::vector<RiftTypeRecord> types(188);types[74].name="server";types[75].name="client";
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[74].name="server";types[75].name="client";
     std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
     ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;Client client(std::move(options));
     auto& detail=client.GameplayGlobals()->AiDebug().AssertionDetail(); // 실제 Client가 기존 표시 오류와 공유하는005e4798 소유자다. Run/창/네트워크는 실행하지 않는다.

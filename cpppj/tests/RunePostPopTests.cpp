@@ -1,4 +1,5 @@
 // Rune 실제예약/신전조회/건설시간과 같은Host·공간·Construction완료를 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawRunePostPop.h"
 #include "o/RawConstructionProcess.h"
@@ -41,7 +42,7 @@ TEST_CASE(rawRunePostPop_native_regular_owned_dais_and_duration) {
     // 각입력은독립pool/hash/player표를사용해이전기대값을재사용하지않는다.
     for (const auto& row:fixture.rows) {
         CHECK(row.size()==7);const auto input=Split(row[1],',');CHECK(input.size()==8);const auto flags=Number(input[0]),profile=Number(input[1]),reserve=Number(input[2]),word=Number(input[3]),playerFlag=Number(input[4]),suppress=Number(input[5]),mutation=Number(input[6]),extra=Number(input[7]);const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;const bool patch=edition==OriginalEdition::Patch1078;
-        SidPool pool(edition,24000,true);SquidHash hash;std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::array<std::span<std::uint8_t>,9> slots;
+        SidPool pool(edition,24000,true);SquidHash hash;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);std::array<std::span<std::uint8_t>,9> slots;
         // 후보세개의사용하지않는필드까지native와같은0초기값으로만든다.
         for (std::uint16_t sid=5;sid<=8;++sid) { CHECK(pool.Allocate(2)==Sid{sid});slots[sid]=pool.AllocatedBytes(Sid{sid});std::fill(slots[sid].begin(),slots[sid].end(),std::uint8_t{}); }
         const auto add=[&](Sid sid,std::uint32_t type,float x,float y,std::uint32_t currentExtra,std::uint32_t rawState,std::int32_t foot) { auto raw=slots[sid.value];Put(raw,0,kVtable);raw[10]=static_cast<std::uint8_t>(type);raw[11]=static_cast<std::uint8_t>(rawState);raw[patch ? 40 : 35]=static_cast<std::uint8_t>(currentExtra);Put(raw,14,std::bit_cast<std::uint32_t>(x));Put(raw,18,std::bit_cast<std::uint32_t>(y));types[type].footX=types[type].footY=foot;auto& head=hash.Bucket(1,x,y);Put(raw,4,head,2);head=sid.value; };
@@ -63,7 +64,7 @@ TEST_CASE(rawRunePostPop_native_regular_owned_dais_and_duration) {
 namespace { // 실제 finder/시간 helper/공통 부모를 작은 독립 현재 월드에 연결한다.
 struct RuneCurrentScene {
     SidPool pool{OriginalEdition::Patch1078,24000,true};SquidHash hash; // 현재 세 물리 슬롯과 실제 일반 finder 해시다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188);RunePostPopState state; // 현재 타입 표와 독립 시간 전역이다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);RunePostPopState state; // 현재 타입 표와 독립 시간 전역이다.
     SquidPostPopState book;SquidPostPop base{pool,types,book}; // 같은 공통 부모와 원본 깊이다.
     std::array<std::span<std::uint8_t>,8> slots{};std::vector<std::string> events; // 세 슬롯 뷰와 실제 도달 효과의 관찰이다.
     RuneCurrentScene() { // finder 입력만 준비하고 Rune 제품의 선택 결과는 계산하지 않는다.
@@ -106,14 +107,14 @@ TEST_CASE(BuriedRuneCurrent_RuneDurationSuppressionSkipsInvalidOwnerRecord) { //
     RuneCurrentScene scene;Put(scene.slots[7],12,65535,2);auto hooks=scene.Hooks();hooks.suppressDuration=[&] { scene.events.push_back("S");return true; };hooks.playerFlags=[](auto)->std::uint32_t { throw std::out_of_range("접근하지 않을 Player"); };RawRunePostPop rune(scene.pool,scene.hash,scene.types,scene.state,scene.base,std::move(hooks));rune.PostPop(Sid{5},2);CHECK(RuneEffects(scene.events)=="S;C10" && scene.book.depth==0);
 }
 TEST_CASE(BuriedRuneCurrent_RuneCdKeepsConstructorAndTypePreflight) { // CD의 기존 전수 연결/TYPE 계약을 PATCH 수정과 구별한다.
-    SidPool pool(OriginalEdition::Cd1072,24000,true);SquidHash hash;std::vector<RiftTypeRecord> types(171);RunePostPopState state;SquidPostPopState book;SquidPostPop base(pool,types,book);CHECK(Throws([&] { RawRunePostPop missing(pool,hash,types,state,base,{}); }));CHECK(pool.Allocate(2)==Sid{5});auto raw=pool.AllocatedBytes(Sid{5});Put(raw,0,kCdRuneVtable);raw[10]=74;RunePostPopHooks hooks;hooks.reserveRegular=[] { return false; };hooks.addRegular=[](auto,auto,auto) {};hooks.startConstruction=[](auto,auto) {};RawRunePostPop rune(pool,hash,types,state,base,std::move(hooks));CHECK(!rune.Handles(Sid{5}) && Throws([&] { rune.PostPop(Sid{5},0); }));
+    SidPool pool(OriginalEdition::Cd1072,24000,true);SquidHash hash;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(171);RunePostPopState state;SquidPostPopState book;SquidPostPop base(pool,types,book);CHECK(Throws([&] { RawRunePostPop missing(pool,hash,types,state,base,{}); }));CHECK(pool.Allocate(2)==Sid{5});auto raw=pool.AllocatedBytes(Sid{5});Put(raw,0,kCdRuneVtable);raw[10]=74;RunePostPopHooks hooks;hooks.reserveRegular=[] { return false; };hooks.addRegular=[](auto,auto,auto) {};hooks.startConstruction=[](auto,auto) {};RawRunePostPop rune(pool,hash,types,state,base,std::move(hooks));CHECK(!rune.Handles(Sid{5}) && Throws([&] { rune.PostPop(Sid{5},0); }));
 }
 
 // 실제Rune생성자→abstract Pop→Construction부착/진행/완료→실제Repop→304Regular를같은공간에서실행한다.
 TEST_CASE(rawRunePostPop_real_pop_construction_complete_and_304) {
     // 두판본의서버Rune과clientProcessForm을같은풀에등록한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(patch ? 188 : 171);
+        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);
         // 실제타입별생성자와합성HP/한칸프레임자료를분리해입력한다.
         for (const auto type:{164U,165U,166U}) { types[type].constructorAddress=TypeConstructorAddress(edition,type);types[type].footX=types[type].footY=1;types[type].flags1=16;types[type].maxHitPoints=200; }
         std::vector<SquidDisplayShape> shapes(types.size());shapes[166].loaded=true;shapes[166].frameCount=6;shapes[166].frames.assign(6,SquidDisplayFrame{16,11,0,0,1,1});RuneDisplaySink sink;SquidDisplay display(edition,types,shapes,sink,SquidDisplayView{0,0,65536,{0,0,4096,4096}});SquidPostPopState book;book.localOwner=1;SquidPostPop post(pool,types,book);SquidPop pop(pool,hash,spots,&display,&post);SquidUnpop unpop(pool,hash,spots,&display);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel(32);SquidProcessState clock;clock.now=2;SquidProcessHost host(pool,types,kernel,destroy,clock);SquidFactory factory(pool,types);SquidOwnerMode ownerMode;SquidOwner owner(pool,types,book,ownerMode);

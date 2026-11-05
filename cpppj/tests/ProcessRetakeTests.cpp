@@ -1,4 +1,5 @@
 // 지정 ProcessForm 재수신·Kernel 중복 포인터/삭제 순서를 저장된 두 실제 PE 관찰과 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionSupport.h"
 #include "o/SquidForms.h"
 #include "o/SquidProcess.h"
@@ -53,7 +54,7 @@ struct RetakeScene {
     SquidProcessHost host; // 실제 지정 재수신과 가상 Form 삭제 분배를 연결한다.
     // 판본과 원본 동일한 크기를 공급하며 게임/창을 열지 않는다.
     explicit RetakeScene(OriginalEdition edition):pool(edition,kRetakeCapacity,false),
-        types(edition==OriginalEdition::Patch1078 ? 188 : 171),unpop(pool,hash,spots),destroy(pool,unpop,types),
+        types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),unpop(pool,hash,spots),destroy(pool,unpop,types),
         kernel(edition==OriginalEdition::Patch1078 ? kProcessCapacity : kCdProcessCapacity),host(pool,types,kernel,destroy,state) {}
     // 원하는 뒤 슬롯에 객체를 등록하고 앞 임시 객체를 제거해 원본 합성 포인터 배치를 만든다.
     RetakeProcess* Stage(std::uint32_t slot,std::uint32_t index) {

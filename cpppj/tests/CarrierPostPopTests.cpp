@@ -1,4 +1,5 @@
 // 실제 세 PE의 carrier/damageable 전체 몸체와 사제 예약·공통 장부의 합성을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawCarrierPostPop.h"
 #include "o/RawPriestPostPop.h"
@@ -35,7 +36,7 @@ struct CarrierScene {
     bool patch{};
     // 관찰 SID 50을 확보한다. 실제 client 번호 영역을 사용한다.
     explicit CarrierScene(OriginalEdition edition):pool(edition,kCapacity,false),
-        types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {
+        types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),patch(edition==OriginalEdition::Patch1078) {
         // 최초 client 번호부터 대상까지 확보한다.
         for (std::uint16_t id=5;id<=kSource.value;++id) CHECK(pool.Allocate(2)==Sid{id});
     }
@@ -168,7 +169,7 @@ TEST_CASE(carrier_postpop_composes_priest_prefix_process_and_real_common_body) {
     // 두 슬롯 배치의 server/client 생성 번호 경로를 모두 검사한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) for (const bool server:{false,true}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,32768,server);
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);auto& type=types[kPriestType];
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);auto& type=types[kPriestType];
         type.constructorAddress=TypeConstructorAddress(edition,kPriestType);type.flags1=0x00069012;type.flags2=0x00210000;
         type.maxHitPoints=200;type.cost=123.75f;SquidFactory factory(pool,types);const auto priest=factory.Create(kPriestType,server ? 0U : 2U);
         SquidPostPopState book;book.localOwner=1;book.totalCost=10;book.depth=1;

@@ -1,4 +1,5 @@
 // 독립 두 PE의 Missile 생성/이동/충돌 필드를 외부 경계까지 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawMissile.h"
 #include "o/RawGunHit.h"
@@ -30,7 +31,7 @@ struct MissileScene {
     // patch: 원본 판본별 필드 폭을 구별한다.
     bool patch;
     // 실제 raw 입력 SID를 미리 확보한다.
-    explicit MissileScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),missileTypes(types.size()),patch(edition==OriginalEdition::Patch1078) {
+    explicit MissileScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),missileTypes(types.size()),patch(edition==OriginalEdition::Patch1078) {
         // 실제 입력 번호 5~100의 슬롯을 유지한다.
         for (std::uint16_t id=5;id<=100;++id) CHECK(pool.Allocate(2)==Sid{id});
     }
@@ -119,7 +120,7 @@ TEST_CASE(Missile_MissingRealFlightEffectRejected) {
 TEST_CASE(Missile_ActualFactorySpaceKernelAndDelete) {
     // 두 판본의 자산/ProcessForm 필드와 동일한 실제 수명을 모두 방문한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,false);std::vector<RiftTypeRecord> types(patch ? 188 : 171);types[128].group=1;
+        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,false);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);types[128].group=1;
         types[80].footX=types[80].footY=1;types[128].footX=types[128].footY=1;types[71].footX=types[71].footY=1;
         SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidPostPopState bookkeeping;bookkeeping.suppressed=true;SquidOwnerMode ownerMode;SquidOwner owner(pool,types,bookkeeping,ownerMode);
         SquidPostPop postPop(pool,types,bookkeeping);SquidPop pop(pool,hash,spots,nullptr,&postPop);SquidUnpop unpop(pool,hash,spots);SquidFactory factory(pool,types,false,&unpop);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState clock;clock.now=10;

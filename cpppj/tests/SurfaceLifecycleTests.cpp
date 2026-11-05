@@ -1,4 +1,5 @@
 // 섬 생성부터 삭제·Regular 낙하·끝 칸 교체·연결 객체 정리까지 실제 raw 모듈로 이어 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/Bridge.h"
 #include "o/RawBridgeEvents.h"
@@ -69,7 +70,7 @@ void Run(OriginalEdition edition,Scenario scenario,bool removeSurfaceBefore=fals
     const bool patch=edition==OriginalEdition::Patch1078;
     const std::size_t ownerOffset=patch ? 34 : 32,frameOffset=patch ? 36 : 34,frameWidth=patch ? 4 : 1,extraOffset=patch ? 40 : 35;
     SidPool pool(edition,capacity,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);
-    std::vector<RiftTypeRecord> types(patch ? 188 : 171);
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);
     // 실제 생성자·플래그·발자국을 입력하고 다리만 검사 비용 5를 둔다.
     const auto define=[&](std::uint32_t number,std::uint32_t flags1,std::uint32_t flags2,int foot) {
         auto& type=types[number];type.constructorAddress=TypeConstructorAddress(edition,number);
@@ -297,7 +298,7 @@ TEST_CASE(surface_lifecycle_graph_active_replacement_isolation_hard_and_keep) {
 // 미연결 효과를 구성 때 거부하고 공통 선택/form 계약과 실제 가상 표 분배를 유지한다.
 TEST_CASE(surface_lifecycle_rejects_missing_hooks_and_preserves_common_dispatch) {
     SidPool pool(OriginalEdition::Patch1078,32768,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);
-    std::vector<RiftTypeRecord> types(188);auto frames=FrameTable(types.size());
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);auto frames=FrameTable(types.size());
     RawSquidNeighbors neighbors(pool,hash,spots,types,frames);int baseCalls=0,formCalls=0;
     SquidDestroyHooks common{[&](const SquidDestroyEvent&) { ++baseCalls; },[] { return Sid{9}; },[&](Sid) { ++formCalls; }};
     // 잘못된 분배가 곧바로 드러나는 외부 경계를 공급한다.

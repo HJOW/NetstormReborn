@@ -1,4 +1,5 @@
 // 객체 부착 프로세스(ProcessForm)·Kernel 슬롯·Regular 이벤트를 저장된 독립 기계어 관찰과 비교한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "TestSupport.h"
 #include "o/SquidProcess.h"
 #include <algorithm>
@@ -55,7 +56,7 @@ std::uint32_t LogAdler(const SidPool& pool) {
 }
 // 합성 부모 타입의 genus(flags2)는 생성기와 같다.
 std::vector<RiftTypeRecord> SceneTypes(bool patch) {
-    std::vector<RiftTypeRecord> types(patch ? 188 : 171);
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);
     types[82].flags2=0;types[90].flags2=0x4000;types[122].flags2=0x10000010;types[100].flags2=0x400000;
     return types;
 }

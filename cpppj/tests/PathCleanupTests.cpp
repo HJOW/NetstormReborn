@@ -1,4 +1,5 @@
 // 실제 PE cleanup 이후 몸체와 기존 공간 접두·같은 Kernel 예약 소비자를 연결해 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPathCleanup.h"
 #include "o/RawCarrierPreDestroy.h"
@@ -36,7 +37,7 @@ struct CleanupScene {
     std::unique_ptr<RawPathCleanup> cleanup; // 새 cleanup 이후 몸체다.
 
     // native와 같은 슬롯/타입/버킷/종속 입력만 만든다. 기대 출력은 계산하지 않는다.
-    CleanupScene(OriginalEdition selected,std::array<std::uint32_t,8> values):edition(selected),pool(selected,24000,true),types(selected==OriginalEdition::Patch1078 ? 188 : 171),runtime(selected,true,0xaa),input(values) {
+    CleanupScene(OriginalEdition selected,std::array<std::uint32_t,8> values):edition(selected),pool(selected,24000,true),types(::netstorm::test::MakeFormTypeInputs(selected==OriginalEdition::Patch1078 ? 188 : 171)),runtime(selected,true,0xaa),input(values) {
         // 5..11을 실제 client free list에서 확보한 뒤 입력 바이트를0으로 채운다.
         for (std::uint16_t sid=5;sid<=11;++sid) { CHECK(pool.Allocate(2)==Sid{sid});slots[sid]=pool.AllocatedBytes(Sid{sid});std::fill(slots[sid].begin(),slots[sid].end(),std::uint8_t{}); }
         const auto profile=input[0],coordinate=input[7];const auto point=kCleanupCoordinates.at(coordinate);const bool helper=profile==1 || profile==2 || profile==3 || profile==4 || profile==5 || profile==6 || profile==7 || profile==14 || profile==15 || profile==16;

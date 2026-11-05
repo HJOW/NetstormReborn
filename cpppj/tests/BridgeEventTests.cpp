@@ -1,4 +1,5 @@
 // 다리 이벤트 처리기·끝 칸 변환·글자별 프레임 구간 표를 저장된 실제 PE 제한 x86 관찰과 비교한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "TestSupport.h"
 #include "o/RawBridgeEvents.h"
 #include "o/SquidOwner.h"
@@ -300,7 +301,7 @@ TEST_CASE(bridge_event_runs_from_scheduled_fall_through_regular_process) {
     SidPool pool(OriginalEdition::Patch1078, capacity, true);
     SquidHash hash;
     std::vector<std::uint8_t> spots(65536);
-    std::vector<RiftTypeRecord> types(188);
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);
     types[kBridgeType].flags2 = 4;
     SquidUnpop unpop(pool, hash, spots);
     RawSquidDestroy destroy(pool, unpop, types);
@@ -392,7 +393,7 @@ TEST_CASE(bridge_event_real_raw_conversion_replaces_space_and_removes_its_proces
             // 실제 raw 생성자/프로세스가 요구하는 원본 전체 슬롯 수다.
             constexpr std::uint32_t capacity=32768;
             SidPool pool(edition,capacity,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);
-            std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
+            std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);
             auto& type=types[kBridgeType];type.constructorAddress=TypeConstructorAddress(edition,kBridgeType);
             type.flags1=TypeFlag1::kSurface;type.flags2=TypeFlag2::kBridge;type.footX=type.footY=1;type.cost=5.0f;
             const auto frames=RealBridgeFrames();std::vector<RiftTypeFrames> allFrames(types.size(),RiftTypeFrames({}));allFrames[kBridgeType]=frames;

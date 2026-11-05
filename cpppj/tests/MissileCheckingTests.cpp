@@ -1,4 +1,5 @@
 // 단위867: 투사체의 현재 checking/항상참 Baseprocess 진단과 같은 Host 자기 삭제를 게임 없이 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawMissile.h"
 #include "o/SquidUnpop.h"
@@ -17,7 +18,7 @@ struct MissileCheckingScene { // 비충돌 직선 이동과 사거리 종료만 
     std::vector<std::string> events; // 순서와 SID를 포함한 실제 외부 요청이다.
     bool patch; // CD의 다른 필드 위치와 진단 부재를 구별한다.
     explicit MissileCheckingScene(OriginalEdition edition=OriginalEdition::Patch1078)
-        :pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),supplement(types.size()),patch(edition==OriginalEdition::Patch1078) {
+        :pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),supplement(types.size()),patch(edition==OriginalEdition::Patch1078) {
         for (std::uint16_t id=5;id<=16;++id) { CHECK(pool.Allocate(2)==Sid{id});auto raw=pool.AllocatedBytes(Sid{id});std::fill(raw.begin(),raw.end(),std::uint8_t{}); } // 원문 입력 세 자산과 후반 재조회 대상을 실제 할당한다.
         pool.AllocatedBytes(Sid{10})[10]=128;pool.AllocatedBytes(Sid{11})[10]=71;pool.AllocatedBytes(Sid{12})[10]=80;pool.AllocatedBytes(Sid{12})[34]=3;
         types[128].group=1;types[0].group=7;supplement[0].damagePerSecond=10;state.now=1;state.checking.Bind(checking);

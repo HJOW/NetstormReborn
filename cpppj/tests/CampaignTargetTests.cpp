@@ -1,4 +1,5 @@
 // 실제 설치된 캠페인 총/사제와 동일 Kernel의 감시 Form 교체·제거를 확인한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "CampaignInstallSupport.h"
 #include "o/RawGunProcess.h"
 #include "RawSceneSupport.h"
@@ -32,7 +33,7 @@ private:
 };
 // 한 판본의 실제 ProcessForm/PID/서버 조건 통지를 독립 원본 fixture와 비교한다.
 void CheckCampaignNotifyNative(OriginalEdition edition) {
-    std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);
     std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());
     RawSurfaceWorld world(edition,types,frames,shapes,CampaignLinks(),97);auto core=world.Core();
     const auto parent=core.pool.Allocate(2);core.pool.AllocatedBytes(parent)[10]=74;

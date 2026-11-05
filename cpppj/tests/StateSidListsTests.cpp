@@ -1,4 +1,5 @@
 // 제품 이전의 실제 PE 관측과 장기 SID 목록의 대여·정리 범위를 검증한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "DudeSpawnSupport.h"
 #include "client/ClientMain.h"
 #include "client/ClientGameplayGlobals.h"
@@ -117,7 +118,7 @@ TEST_CASE(StateSidLists_GeneralFreshAndPreparedPreserveDistinctPolicies) {
 
 // 실제 사제 접두의 용량 관문은16번째까지 등록하고17번째부터 SID/count를 보존한다.
 TEST_CASE(StateSidLists_ActualPriestPrefixUsesSixteenAndSharedLookup) {
-    RawStateSidLists lists;PriestPostPopState state;state.sharedPriests=&lists.priests;SidPool pool(OriginalEdition::Patch1078,32768,false);GameRandom random;ScrambledSpStore sp(random,[] { return 1U; });SquidPostPopState book;SquidRewardState mode;std::vector<RiftTypeRecord> types(188);SquidReward hp(pool,types,book,mode,&sp);std::uint32_t searched{},reserved{};
+    RawStateSidLists lists;PriestPostPopState state;state.sharedPriests=&lists.priests;SidPool pool(OriginalEdition::Patch1078,32768,false);GameRandom random;ScrambledSpStore sp(random,[] { return 1U; });SquidPostPopState book;SquidRewardState mode;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);SquidReward hp(pool,types,book,mode,&sp);std::uint32_t searched{},reserved{};
     RawPriestPostPop prefix(pool,hp,state,{[&](Sid,std::uint32_t) { ++searched;return false; },[&] { ++reserved;return false; },[](Sid,std::uint32_t,float) { CHECK(false); }}); //외부 예약 실패를 명시해 HP/프로세스 생성 생략도 검증한다.
     std::vector<std::uint32_t> created;
     for (std::uint32_t index=0;index<17;++index) { //원본 실제 가상 표/owner를 가진17개 raw 사제를 차례로 최초 등록한다.

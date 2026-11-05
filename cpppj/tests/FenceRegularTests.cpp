@@ -1,4 +1,5 @@
 // 원본 Handle의 외부 효과 입력/현재 재조회/전체250BYTE를 같은 실제 Frame과 비교한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawFenceRegular.h"
 #include <cstdio>
@@ -15,7 +16,7 @@ RiftTypeFrames FenceRegularCodes() {
 // 선언한 명시 하위만 관찰하고 실제 부모 판단과 Frame 지정은 제품 모듈로 실행한다.
 struct FenceRegularScene {
     SidPool pool{OriginalEdition::Patch1078,kCapacity,false}; //부모50/이웃51~54와 실제 고정 예측 free list를 포함한다.
-    std::vector<RiftTypeRecord> types{188}; //같은 실제 Frame 지정기의 TYPE 입력이다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); //같은 실제 Frame 지정기의 TYPE 입력이다.
     std::vector<RiftTypeFrames> frames{188,FenceRegularCodes()}; //현재 글자/개수 표다.
     std::vector<std::uint32_t> input; //원본 관찰이 제공한12개 입력 비트다.
     std::string trace; //실제 경계의 호출 순서다.

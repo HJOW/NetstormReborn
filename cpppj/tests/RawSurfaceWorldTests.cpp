@@ -1,4 +1,5 @@
 // GUI가 소유하는 raw 월드의 시각·정지·장치 교체·예약 수명을 원본 파일 없이 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/RawSurfaceWorld.h"
 #include "client/ClientBridgeDecay.h"
@@ -42,7 +43,7 @@ struct Inputs {
     // links: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (BridgeConnectState).
     BridgeConnectState links;
     // 실제 생성자/플래그와 작은 합성 SHP를 사용한다. 실제 SHP는 GUI 스모크에서 별도 확인한다.
-    explicit Inputs(OriginalEdition edition):types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+    explicit Inputs(OriginalEdition edition):types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),
         frames(types.size(),RiftTypeFrames({})),shapes(types.size()) {
         const auto define=[&](std::uint32_t type,std::uint32_t flags1,std::uint32_t flags2,int foot) {
             auto& value=types[type];value.constructorAddress=TypeConstructorAddress(edition,type);

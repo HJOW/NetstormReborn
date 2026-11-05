@@ -1,4 +1,5 @@
 // 제품 전 관측한0크기 후보의 전체 커서와 실제 Dude24 실패·겹침·재시도를 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPathStart.h"
 #include "client/RawPriestWorldBindings.h"
@@ -22,7 +23,7 @@ struct ZeroScene {
     std::vector<RiftTypeRecord> types; // 현재0/양수 발자국과genus 입력이다.
     std::vector<int> heights; // 같은 타입의 확장 높이 입력이다.
     // fixture에 쓰인 번호5..64만 실제 client free list에서 확보한다.
-    explicit ZeroScene(OriginalEdition edition):pool(edition,24000,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),heights(types.size()) {
+    explicit ZeroScene(OriginalEdition edition):pool(edition,24000,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),heights(types.size()) {
         // 후보 raw 입력은 실제 할당된 번호에만 쓴다.
         for (std::uint16_t sid=5;sid<=64;++sid) CHECK(pool.Allocate(2)==Sid{sid});
     }

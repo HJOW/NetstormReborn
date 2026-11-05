@@ -1,4 +1,5 @@
 // 초기화 이후 실제 공통 Fire와 두 파생의 전체 이미지/슬롯/효과를 원문 기대값과 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawCannonFire.h"
 #include <cstdio>
@@ -10,7 +11,7 @@ const std::vector<std::vector<std::string>>& Rows() { static const auto rows=Loa
 // 실제 슬롯과 원본 코드 입력·외부 효과를 공유하는 독립 입력 장면이다.
 struct CannonScene {
     SidPool pool{OriginalEdition::Patch1078,kCapacity,false}; // 실제50BYTE 슬롯의 단일 풀이다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 현재 표적 HP 플래그다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); // 현재 표적 HP 플래그다.
     std::vector<PriestPlainCanonType> frames=std::vector<PriestPlainCanonType>(188); // 실제 문자별 구간을 만들 코드 입력이다.
     CannonFireState state; // 현재 mutable 게임 시각/가상 getter/소리 차이다.
     GunAnimationFields fields; // 실제 원본64BYTE 이미지다.
@@ -100,7 +101,7 @@ TEST_CASE(CannonFire_MissingMissileRejected) {
 
 // 실제 GunProcess 통지/패킷·Kernel/Host kill이 자기 삭제 뒤 재접근 없이 완료되어야 한다.
 TEST_CASE(CannonFire_ActualHostNotifyAndLifetime) {
-    SidPool pool(OriginalEdition::Patch1078,kCapacity,true);std::vector<RiftTypeRecord> types(188);types[131].group=1;std::vector<PriestPlainCanonType> frames(188);frames[131].frames=RiftTypeFrames({FrameCode{'A',0,0,0}});
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,true);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[131].group=1;std::vector<PriestPlainCanonType> frames(188);frames[131].frames=RiftTypeFrames({FrameCode{'A',0,0,0}});
     for (std::uint16_t id=5;id<=60;++id) CHECK(pool.Allocate(2)==Sid{id}); // 실제 원본 번호까지 같은 풀을 확보한다.
     auto parent=pool.AllocatedBytes(kSource);std::fill(parent.begin(),parent.end(),std::uint8_t{});parent[10]=131;auto target=pool.AllocatedBytes(Sid{60});target[10]=158;target[11]=2;
     SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState hostState;hostState.now=10;GunProcessState gunState;gunState.now=10;gunState.boss=false;std::array<std::uint8_t,64> packet{};std::size_t packets=0;ProcessFormTransmission transmit;

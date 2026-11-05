@@ -1,4 +1,5 @@
 // 실제 프레임 진행 관찰과 표시/공간/사제 낙하 예약의 모듈 합성을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawFrameAdvance.h"
 #include "o/SquidFrameBinding.h"
@@ -36,7 +37,7 @@ void Replay(const char* edition) {
     SidPool pool(patch ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,kCapacity,false);
     // 원본 SID 50이 실제 풀의 활성 할당 범위에 들도록 확보한다.
     for (std::uint16_t sid=5;sid<=kObject.value;++sid) CHECK(pool.Allocate(2)==Sid{sid});
-    std::vector<RiftTypeRecord> types(patch ? 188 : 171);
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);
     std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));
     std::size_t count=0;CHECK(Fixture().size()==kRows*3);
     // 저장된 기대값을 다시 계산하지 않고 입력을 생산 코드에 넘긴다.
@@ -104,7 +105,7 @@ TEST_CASE(FrameAdvance_ComposesRealDisplayAndSpace) {
     // DWORD/BYTE 두 배치에서 실제 생성자와 공간 모듈을 사용한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,true);
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);
         // 원본에서 일반 Pop/postPop 경로가 확인된 연결 타입이다.
         constexpr std::uint32_t type=155;
         types[type].constructorAddress=TypeConstructorAddress(edition,type);types[type].flags1=0x28000002;
@@ -138,7 +139,7 @@ TEST_CASE(FrameAdvance_ComposesPriestFallSchedulingAndLanding) {
         for (std::uint16_t sid=5;sid<=kObject.value;++sid) CHECK(pool.Allocate(2)==Sid{sid});
         // 원본 priest 타입과 가상 표의 주소 기록값이다.
         constexpr std::uint32_t priest=158;
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);types[priest].maxHitPoints=200;
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);types[priest].maxHitPoints=200;
         types[priest].flags1=0x69012;types[priest].flags2=0x210000;types[priest].footX=types[priest].footY=1;
         std::vector<RiftTypeFrames> codes(types.size(),RiftTypeFrames({}));codes[priest]=Codes("AABJJJ");
         std::vector<PriestFallFrames> choices(types.size());choices[priest]={3,0};
@@ -188,7 +189,7 @@ TEST_CASE(FrameAdvance_RejectsInvalidBindingsAndReadsCurrentFrames) {
     SidPool pool(OriginalEdition::Patch1078,kCapacity,false),other(OriginalEdition::Patch1078,kCapacity,false);
     // 두 풀에 같은 숫자 SID가 있어도 참조가 다르면 연결할 수 없다.
     for (std::uint16_t sid=5;sid<=kObject.value;++sid) { CHECK(pool.Allocate(2)==Sid{sid});CHECK(other.Allocate(2)==Sid{sid}); }
-    std::vector<RiftTypeRecord> types(188);types[kType].flags2=4;
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[kType].flags2=4;
     std::vector<RiftTypeFrames> codes(types.size(),RiftTypeFrames({}));codes[kType]=Codes("AAAB");int updates=0;
     SquidFrameHooks hooks{[](Sid,std::int32_t) { return std::array<float,2>{1,1}; },[&](Sid,std::uint32_t) { ++updates; },
         [](Sid,std::uint32_t) { CHECK(false); },[](Sid,float,float,std::uint32_t) { CHECK(false); }};

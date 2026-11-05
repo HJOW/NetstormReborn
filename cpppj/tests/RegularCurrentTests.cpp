@@ -1,4 +1,5 @@
 // 실제 Host의 현재 번호/프로세스 finder와 공유 생성 진단을 원문 입력으로 비교한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/SquidProcess.h"
 #include <filesystem>
@@ -8,7 +9,7 @@ using namespace netstorm::test::rawscene;
 namespace { // 실제 Kernel/풀/Host만 사용하며 게임/전투 Frame은 실행하지 않는다.
 struct RegularCurrentScene {
     SidPool pool{OriginalEdition::Patch1078,24000,false}; // 로컬 Form 번호를 실제 client 영역에서 할당한다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 현재 부착의 물리 TYPE 표다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); // 현재 부착의 물리 TYPE 표다.
     SquidHash hash;std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); // 공통 삭제기의 실제 공간이다.
     SquidUnpop unpop{pool,hash,spots};RawSquidDestroy destroy{pool,unpop,types}; // 같은 풀의 Form 반납을 담당한다.
     Kernel kernel{16};SquidProcessState state;SquidProcessHost host{pool,types,kernel,destroy,state}; // 프레임 없이 부착/조회만 수행한다.

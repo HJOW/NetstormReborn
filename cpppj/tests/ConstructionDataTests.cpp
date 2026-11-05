@@ -1,4 +1,5 @@
 // 세 PE의 독립 패킷 관찰과 실제 Start→전송→시각 재설정→수신→Kernel 완료를 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionData.h"
 #include "o/RawPacketDispatch.h"
@@ -51,7 +52,7 @@ struct DataScene {
     ConstructionProcessState state; // 건설 프레임이 읽는 현재 전역이다.
     RawConstructionProcess logic; // Start/ResetEnd/완료의 복원 몸체다.
     // 실제 부모를 준비하되 관찰하지 않는 효과는 빈 경계로 연결한다.
-    explicit DataScene(OriginalEdition edition,bool server=false):pool(edition,kCapacity,server),types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+    explicit DataScene(OriginalEdition edition,bool server=false):pool(edition,kCapacity,server),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),
         unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,clock),logic(pool,types,state,Hooks(),&host) {
         auto raw=InputRaw(pool,Sid{20000});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=100;raw[edition==OriginalEdition::Patch1078 ? 40 : 35]=1;
     }

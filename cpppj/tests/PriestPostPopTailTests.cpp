@@ -1,4 +1,5 @@
 // 사제 postPop 전체 wrapper의 원본 관찰과 실제 회복/장부/보호막 모듈 결합을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestPostPopTail.h"
 #include "o/SquidFactory.h"
@@ -45,7 +46,7 @@ struct TailScene {
     std::uint32_t change{};
     // 같은 클라이언트 풀의 입력 SID 50까지 확보하고 고정 크기 표를 만든다.
     explicit TailScene(OriginalEdition edition):pool(edition,kCapacity,false),store(random,[] { return 1U; }),
-        types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({})),spots(65536),
+        types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),frames(types.size(),RiftTypeFrames({})),spots(65536),
         patch(edition==OriginalEdition::Patch1078) {
         // 실제 풀 할당으로 예약 번호/자산 번호 정책을 유지한다.
         for (std::uint16_t id=5;id<=kSource.value;++id) CHECK(pool.Allocate(2)==Sid{id});

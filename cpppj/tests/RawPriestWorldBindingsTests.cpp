@@ -1,4 +1,5 @@
 // 사제와 보호막의 실제 풀/공간/Regular/삭제를 하나의 월드에서 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/RawPriestWorldBindings.h"
 #include "o/SquidFrameBinding.h"
@@ -114,7 +115,7 @@ struct PriestWorld {
     Kernel kernel;
     // 두 판본의 실제 생성자/타입 분류와 작은 SHP 입력을 사용한다.
     explicit PriestWorld(OriginalEdition chosen):edition(chosen),patch(chosen==OriginalEdition::Patch1078),pool(chosen,kWorldCapacity,true),
-        types(patch ? 188 : 171),frames(types.size(),RiftTypeFrames({})),shapes(types.size()),store(random,[] { return 1U; }) {
+        types(::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171)),frames(types.size(),RiftTypeFrames({})),shapes(types.size()),store(random,[] { return 1U; }) {
         auto& priest=types[kPriestType];priest.maxHitPoints=200;priest.flags1=0x69012;priest.flags2=0x210000;
         priest.footX=priest.footY=1;priest.constructorAddress=TypeConstructorAddress(chosen,kPriestType);
         auto& field=types[kForcefieldType];field.footX=field.footY=1;field.constructorAddress=TypeConstructorAddress(chosen,kForcefieldType);

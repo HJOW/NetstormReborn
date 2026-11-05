@@ -1,4 +1,5 @@
 // 초기 도장의 외부 슬롯 모형을 실제 Factory/Owner/Pop/표시/지역 소비자로 교체해 같은 저장소를 확인한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/RawTerrainWorldBinding.h"
 
@@ -33,7 +34,7 @@ struct TerrainWorldScene {
     // diagnostics: 정상 연결에서는 원본 assertion 요청이 없어야 한다.
     std::uint32_t diagnostics{};
     // 원본 지면 생성자와 합성 SHP를 같은 실제 월드에 공급한다.
-    explicit TerrainWorldScene(OriginalEdition edition):types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+    explicit TerrainWorldScene(OriginalEdition edition):types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),
         frames(types.size(),RiftTypeFrames({})),shapes(types.size()) {
         auto& terrain=types[kBoundIsle];terrain.constructorAddress=TypeConstructorAddress(edition,kBoundIsle);
         terrain.flags1=0x28000803;terrain.flags2=2;terrain.footX=terrain.footY=1;

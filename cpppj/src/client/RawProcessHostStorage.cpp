@@ -1,6 +1,7 @@
 // 실제 단일 Kernel.Clear와 호스트 최종 소멸을 구분하며 현재 World의 함수만 짧게 빌린다.
 #include "client/RawProcessHostStorage.h"
 #include "o/RawGameAuxState.h"
+#include "o/SquidFactory.h" // 현재 World 공장의 실제 Pool을 대여 전에 검증한다.
 #include <stdexcept>
 #include <utility>
 
@@ -15,6 +16,7 @@ struct ClearCall {
 RawProcessHostStorage::RawProcessHostStorage(o::SidPool& pool,std::span<const o::RiftTypeRecord> types,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<std::uint32_t> pollType,std::shared_ptr<o::RawGameAuxState> gameAux)
     :pool_(pool),types_(types),authority_(std::move(authority)),state_{.sharedAuthority=authority_.get()},pollType_(std::move(pollType)),gameAux_(std::move(gameAux)) { // 장기 권한/타입의 원래 주소를 빌리며 CD의 독립 계약은 유지한다.
     state_.sharedPollType=pollType_.get();
+    if (gameAux_) state_.currentProcessFormType=&gameAux_->ProcessFormType(); // 두 판본의 같은 장기 Form 번호를 생성/수신 위치에서 읽는다.
     if (gameAux_ && pool.Edition()==o::OriginalEdition::Patch1078) { state_.currentRegularType=&gameAux_->RegularProcessType();state_.currentSharedRegularType=&gameAux_->SharedRegularProcessType();state_.currentProcessTypeEnd=&gameAux_->ProcessTypeEnd(); }
 }
 // 게임 중 Native 효과는 이 경로를 사용하지 않는다. 마지막 물리 소유권만 실제 프로세스를 반납한다.
@@ -41,6 +43,7 @@ o::SquidProcessHost& RawProcessHostStorage::Host() {
 o::SquidProcessState& RawProcessHostStorage::State() { return state_; } // 같은 scalar와 현재 외부 참조다.
 std::unique_ptr<RawProcessHostStorage::Use> RawProcessHostStorage::Bind(std::shared_ptr<o::ProcessHostRuntimeBindings> runtime) {
     if (!runtime || !runtime->destroy || &runtime->destroy->Pool()!=&pool_ || !current_.expired()) throw std::invalid_argument("ProcessHost의 실제 현재 World 단일 대여 계약");
+    if (runtime->factory && &runtime->factory->Pool()!=&pool_) throw std::invalid_argument("ProcessHost 현재 공장의 다른 Pool 대여"); // 미선택 공장 부재는 생성/수신 위치에서만 보고한다.
     static_cast<void>(Host());return std::unique_ptr<Use>(new Use(*this,std::move(runtime)));
 } // 모든 거부는 기존 current를 변경하기 전에 수행한다.
 RawProcessHostStorage::Use::Use(RawProcessHostStorage& owner,std::shared_ptr<o::ProcessHostRuntimeBindings> runtime):owner_(&owner),runtime_(std::move(runtime)) { owner.current_=runtime_; } // 실제 대여가 현재 처리기를 공개한다.

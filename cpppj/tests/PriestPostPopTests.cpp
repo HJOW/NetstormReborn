@@ -1,4 +1,5 @@
 // 사제 postPop prefix를 세 실제 PE 관찰과 실제 최대 HP/ProcessHost 합성으로 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestPostPop.h"
 #include "o/SquidFactory.h"
@@ -41,7 +42,7 @@ struct PrefixScene {
     bool found{},allocated{},patch{};
     // 콘솔 전용 입력 SID와 읽기만 하는 HP 모듈을 준비한다.
     explicit PrefixScene(OriginalEdition edition):pool(edition,kCapacity,false),store(rng,[] { return 1U; }),
-        types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {
+        types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),patch(edition==OriginalEdition::Patch1078) {
         // 실제 client 영역에서 관찰 SID까지 할당한다.
         for (std::uint16_t id=5;id<=kSource.value;++id) CHECK(pool.Allocate(2)==Sid{id});
     }
@@ -173,7 +174,7 @@ TEST_CASE(priest_postpop_prefix_binds_real_process_host_and_owner) {
     // 실제 두 슬롯 배치와 server/client 생성 경로를 각각 합성한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) for (const bool server:{false,true}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,32768,server);
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);auto& type=types[kPriestType];
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);auto& type=types[kPriestType];
         type.constructorAddress=TypeConstructorAddress(edition,kPriestType);type.flags1=0x00069012;type.flags2=0x00210000;type.maxHitPoints=200;
         SquidFactory factory(pool,types);const auto priest=factory.Create(kPriestType,server ? 0U : 2U);
         SquidPostPopState bookkeeping;SquidOwnerMode mode;mode.battle=true;PriestOwnerState ownerState{1,1,1};

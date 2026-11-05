@@ -1,4 +1,5 @@
 // 실제 Host/Kernel과 공통 표시 목록에서 빔의 생성·소리·소진/부모 삭제를 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionSupport.h"
 #include "o/LightningVisualSystem.h"
 #include "o/FieryTailVisualSystem.h"
@@ -7,7 +8,7 @@ using namespace netstorm::test::construction;
 namespace {
 // 이 통합 검사의 명시 HP 보유 부모 타입이다. 실제 TYPE/SHP 원문 대조와 구별한다.
 std::vector<RiftTypeRecord> Types() {
-    std::vector<RiftTypeRecord> types(188);types[100].flags1=0x10;types[100].maxHitPoints=100;types[100].footX=types[100].footY=1;return types;
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[100].flags1=0x10;types[100].maxHitPoints=100;types[100].footX=types[100].footY=1;return types;
 }
 // 같은 raw 풀/공통 삭제/Kernel/Host에서 다른 표시와 빔을 함께 사용한다.
 struct LightningScene {

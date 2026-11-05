@@ -1,4 +1,5 @@
 // 독립 원본 preDestroy 관찰과 실제 공통 삭제·회복 form/Kernel 정리를 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestPreDestroy.h"
 #include "o/RawPriestForcefield.h"
@@ -135,7 +136,7 @@ TEST_CASE(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping
     // 두 판본과 server/client SID의 깊이/전파 분기를 각각 검사한다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) for (bool server:{false,true}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,32768,server);const auto initialFree=pool.FreeCount();
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);auto& type=types[kPriestType];
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);auto& type=types[kPriestType];
         type.constructorAddress=TypeConstructorAddress(edition,kPriestType);type.flags1=0x69012;type.flags2=0x210000;type.maxHitPoints=200;type.cost=123;
         type.footX=type.footY=1;types[kForcefieldType].cost=20;types[kForcefieldType].footX=types[kForcefieldType].footY=1;
         SquidFactory factory(pool,types);const auto root=factory.Create(kPriestType,server ? 0U : 2U);

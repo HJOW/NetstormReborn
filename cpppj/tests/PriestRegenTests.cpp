@@ -1,4 +1,5 @@
 // 실제 원본 0x25a 관찰·HP 변경·원본 생성자/ProcessForm/Kernel 합성을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestRegen.h"
 #include "o/SquidFactory.h"
@@ -48,7 +49,7 @@ struct RegenScene {
     double measurement{};
     // 관찰의 client SID를 실제 풀에서 할당한다.
     explicit RegenScene(OriginalEdition edition):pool(edition,kCapacity,false),store(random,[] { return 1U; }),
-        types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {
+        types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),patch(edition==OriginalEdition::Patch1078) {
         // 각 관찰이 같은 SID와 stale 슬롯 내용으로 시작한다.
         for (std::uint16_t id=5;id<=kSource.value;++id) CHECK(pool.Allocate(2)==Sid{id});
     }
@@ -168,7 +169,7 @@ TEST_CASE(priest_regen_binds_factory_postpop_process_and_kernel) {
     // 두 판본의 server/client 생성자를 각각 확인한다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) for (bool server:{false,true}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,32768,server);
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);auto& type=types[kPriestType];
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);auto& type=types[kPriestType];
         type.constructorAddress=TypeConstructorAddress(edition,kPriestType);type.flags1=0x69012;type.flags2=0x210000;type.maxHitPoints=200;
         SquidFactory factory(pool,types);const auto sid=factory.Create(kPriestType,server ? 0U : 2U);
         auto raw=pool.AllocatedBytes(sid);raw[11]=0;raw[patch ? 34 : 32]=1;Put(raw,26,80,patch ? 4 : 2);

@@ -1,4 +1,5 @@
 // 의식 사제 wrapper의 원본 현재타입/프레임/예약 순서와 실제 같은풀 소비자를 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestRitualActions.h"
 #include "o/SquidFrame.h"
@@ -34,7 +35,7 @@ TEST_CASE(rawPriestRitualActions_native_current_type_frame_and_604) {
     // 모든 고유 입력마다 새 원본 폭의 풀/프레임 표를 구성한다.
     for (const auto& row:fixture.rows) {
         CHECK(row.size()==4);const auto values=Split(row[1],',');CHECK(values.size()==8);const auto mode=Number(values[0]),sid=Number(values[1]),stage=Number(values[2]),profile=Number(values[3]),type=Number(values[4]),reserve=Number(values[5]),mutation=Number(values[6]),rawState=Number(values[7]);
-        const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;SidPool pool(edition,24000,true);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);SquidFactory factory(pool,types);
+        const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;SidPool pool(edition,24000,true);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);SquidFactory factory(pool,types);
         const Sid dataSid{static_cast<std::uint16_t>(sid>0 && sid<24000 ? sid : 5)};
         // SID5는 client 목록에서 생성하고, 서버 영역 SID23999만 실제 수신 Take로 확보한다.
         CHECK((dataSid==Sid{5} ? factory.Create(type,2) : factory.Take(type,dataSid))==dataSid);auto raw=pool.AllocatedBytes(dataSid);std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,kVtable);raw[10]=static_cast<std::uint8_t>(type);raw[11]=static_cast<std::uint8_t>(rawState);
@@ -55,7 +56,7 @@ TEST_CASE(rawPriestRitualActions_native_current_type_frame_and_604) {
 TEST_CASE(rawPriestRitualActions_real_frame_and_shared_consumer) {
     // 두 판본에서 같은 의식 요청/중복 예약을 별도 새 월드로 수행한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);types[158].flags2=0x210000;types[158].constructorAddress=TypeConstructorAddress(edition,158);SquidFactory factory(pool,types);const auto parent=factory.Create(158,2);auto raw=pool.AllocatedBytes(parent);raw[11]=0;raw[edition==OriginalEdition::Patch1078 ? 33 : 31]=1;
+        SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);types[158].flags2=0x210000;types[158].constructorAddress=TypeConstructorAddress(edition,158);SquidFactory factory(pool,types);const auto parent=factory.Create(158,2);auto raw=pool.AllocatedBytes(parent);raw[11]=0;raw[edition==OriginalEdition::Patch1078 ? 33 : 31]=1;
         std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));frames[158]=RiftTypeFrames(RitualCodes(1));std::uint32_t updates=0,reserved=0;SquidFrameHooks frameHooks;
         frameHooks.frameSize=[&](Sid sid,std::int32_t index) { CHECK(sid==parent && index>=0 && static_cast<std::size_t>(index)<frames[158].Codes().size());return std::array<float,2>{1,1}; };
         frameHooks.update=[&](Sid sid,std::uint32_t flags) { CHECK(sid==parent && flags==0);++updates; };

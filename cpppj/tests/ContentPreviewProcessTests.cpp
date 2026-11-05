@@ -1,4 +1,5 @@
 // 내용물 표시 타이머의 독립 원문과 같은 Host의 실제 삭제 수명을 확인한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawContentPreviewProcess.h"
 #include <bit>
@@ -26,7 +27,7 @@ void PreviewEvent(std::string& trace,std::string_view name,std::initializer_list
 struct PreviewHostScene {
     SidPool pool{OriginalEdition::Patch1078,24000,true}; // 실제 부모와 ProcessForm의 같은 풀이다.
     SquidHash hash; // 실제 Unpop이 공유하는 해시다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 명시 타입 표이며 자산의 void 삭제만 관찰한다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); // 명시 타입 표이며 자산의 void 삭제만 관찰한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); // 같은 공간 지도다.
     SquidUnpop unpop{pool,hash,spots}; // 공통 공간 해제다.
     RawSquidDestroy destroy{pool,unpop,types}; // 실제 종속/깊이/반납 몸체다.

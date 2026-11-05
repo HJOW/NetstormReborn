@@ -1,4 +1,5 @@
 // 보호PE에서 얻은 독립 아이스80BYTE 입력/출력을 같은 실제 공통 Fire와 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawIceCannonFire.h"
 #include <cstdio>
@@ -7,7 +8,7 @@ using namespace netstorm::test::rawscene; // 기존 독립 fixture 판독기만 
 namespace { // 이 자료의 명시 입력과 관찰을 다른 검사에서 분리한다.
 struct IceScene { // 같은 실제 풀/타입/필드와 선언한 외부 효과의 독립 장면이다.
     SidPool pool{OriginalEdition::Patch1078,kCapacity,false}; // 현재50BYTE 슬롯이다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 현재 표적 HP 입력이다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); // 현재 표적 HP 입력이다.
     std::vector<PriestPlainCanonType> frames=std::vector<PriestPlainCanonType>(188); // 실제 문자 구간 입력이다.
     CannonFireState state; // 현재 게임 시각과 가상 getter 입력이다.
     IceCannonFireFields fields; // 공통64BYTE와 전용16BYTE/padding이다.
@@ -72,7 +73,7 @@ TEST_CASE(IceCannonFire_ReplaysNativeStepCurrentFields) { Replay(2); } // 별도
 TEST_CASE(IceCannonFire_ReplaysNativeLaunchGetters) { Replay(3); } // 실제 아이스130/속도/표적 생존과 getter 재조회를 대조한다.
 
 TEST_CASE(IceCannonFire_ActualHostNotifyAndSelfDeletion) { // 실제 GunProcess/Kernel의 완료 통지와 자기 삭제 뒤 재접근이 없는지 검사한다.
-    SidPool pool(OriginalEdition::Patch1078,kCapacity,true);std::vector<RiftTypeRecord> types(188);types[129].group=1;std::vector<PriestPlainCanonType> frames(188);frames[129].frames=RiftTypeFrames({FrameCode{'A',0,0,0},FrameCode{'A',0,0,0}});
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,true);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[129].group=1;std::vector<PriestPlainCanonType> frames(188);frames[129].frames=RiftTypeFrames({FrameCode{'A',0,0,0},FrameCode{'A',0,0,0}});
     for (std::uint16_t id=5;id<=60;++id) CHECK(pool.Allocate(2)==Sid{id}); // 원문과 같은 실제 SID까지 할당한다.
     auto parent=pool.AllocatedBytes(kSource);std::fill(parent.begin(),parent.end(),std::uint8_t{});parent[10]=129;auto target=pool.AllocatedBytes(Sid{60});target[10]=158;target[11]=2;
     SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState hostState;hostState.now=10;GunProcessState gunState;gunState.now=10;gunState.boss=false;std::array<std::uint8_t,64> packet{};std::size_t packets{};ProcessFormTransmission transmit;

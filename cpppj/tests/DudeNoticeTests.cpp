@@ -1,4 +1,5 @@
 // 실제두PE DudeNotice/nearest/point 출력과같은실제Host Regular재사용을대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawDudeNotice.h"
 #include <cstdio>
@@ -11,7 +12,7 @@ namespace {
 const std::vector<std::vector<std::string>>& DudeRows() { static const auto rows=LoadFixture(NETSTORM_DUDENOTICE_FIXTURE).rows;return rows; }
 // Host가 생성 시 복사하는 타입 표에도 같은 현재 genus와 발자국 입력을 공급한다.
 std::vector<RiftTypeRecord> DudeTypes(bool patch) {
-    std::vector<RiftTypeRecord> types(patch ? 188 : 171);types[70].flags2=0x400;types[70].footX=types[70].footY=1;types[89].flags2=0x40000000;types[89].footX=types[89].footY=3;return types;
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);types[70].flags2=0x400;types[70].footX=types[70].footY=1;types[89].flags2=0x40000000;types[89].footX=types[89].footY=3;return types;
 }
 // 같은raw/현재타입/실제Regular와명시burning/path 요청경계를소유하는독립장면이다.
 struct DudeScene {

@@ -1,4 +1,5 @@
 // 독립 원본 소리 재생 계층 관찰을 재생하고, 보호막 소리가 소리 프로세스→재생 계층→장치 호출로 이어지는지 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/SoundProcess.h"
 #include "o/RawForcefieldLifecycle.h"
@@ -170,7 +171,7 @@ TEST_CASE(SoundPlay_DrivesDeviceFromShieldLifecycle) {
     // 두 raw 배치에서 원본 생성자/가상 표와 실제 공간/프로세스/삭제/재생 모듈을 사용한다. 장치만 상태표다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,false);SquidHash hash;
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);types[kForcefieldType].constructorAddress=TypeConstructorAddress(edition,kForcefieldType);
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);types[kForcefieldType].constructorAddress=TypeConstructorAddress(edition,kForcefieldType);
         types[kForcefieldType].maxHitPoints=100;types[kForcefieldType].cost=37;types[kForcefieldType].footX=types[kForcefieldType].footY=1;
         types[kPriestType].footX=types[kPriestType].footY=1;types[kPriestType].flags2=0x210000;std::vector<std::uint8_t> spots(65536);
         const Sid priest=pool.Allocate(2);auto raw=pool.AllocatedBytes(priest);std::fill(raw.begin(),raw.end(),std::uint8_t{});
@@ -232,7 +233,7 @@ TEST_CASE(SoundPlay_DrivesDeviceFromConstructionLifecycle) {
     // 두 판본에서 실제 프로세스 host/Kernel/공통 삭제와 실제 이름 표/재생 계층을 쓴다. 장치만 상태표다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
         Kernel kernel;SquidProcessState clock;SquidProcessHost host(pool,types,kernel,destroy,clock);
         // 서버 번호의 abstract 부모다. 로컬 소유이며 화면 안 좌표에 있다.
         const Sid parent=pool.Allocate(0);auto raw=pool.AllocatedBytes(parent);raw[10]=100;raw[11]=0;raw[patch ? 34 : 32]=1;raw[patch ? 40 : 35]=1;

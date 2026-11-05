@@ -58,6 +58,8 @@ public:
     std::uint32_t& StreakProcessType() { return streakProcessType_; } //005410a0: Teleport 생성 함수 선택·표시 부착·도착 삭제가 공유하는 현재 TYPE다.
     const std::uint32_t& StreakProcessType() const { return streakProcessType_; } // Runtime 교체/일반 월드 준비로12의 새 사본을 만들지 않는다.
     std::uint32_t& RegularProcessType() { return regularProcessType_; } //00541128: 일반 예약 생성과 종속 조회가 공유하는 현재 DWORD다.
+    std::uint32_t& ProcessFormType() { return processFormType_; } //00541078/CD0051c968: 공통 Process 부모의 Create/Take가 읽는 현재 DWORD다.
+    const std::uint32_t& ProcessFormType() const { return processFormType_; } // World 교체 뒤에도 같은 주소를 유지하며 BYTE로 줄이지 않는다.
     const std::uint32_t& RegularProcessType() const { return regularProcessType_; } // Session 교체 중에도 같은 주소를 빌린다.
     std::uint32_t& SharedRegularProcessType() { return sharedRegularProcessType_; } //00541164: 공유 예약의 현재 번호이며 일반 예약과 별개다.
     const std::uint32_t& SharedRegularProcessType() const { return sharedRegularProcessType_; } // getter에서 BYTE로 줄이지 않고 전체 DWORD를 반환한다.
@@ -129,6 +131,7 @@ private:
     std::uint32_t geyserType_{122},subscriberMarker_{}; // 보호 PE TYPE122와 별도BSS 표지다.
     std::uint32_t fieryTailProcessType_{11},streakProcessType_{12}; // 보호10.78의 두 TYPE 전역 초기값이며 Session보다 오래 유지한다.
     std::uint32_t regularProcessType_{46},sharedRegularProcessType_{61},processTypeEnd_{63}; // 일반/공유 예약과 프로세스 상한의 실제 초기 DWORD 세 개다.
+    std::uint32_t processFormType_{2}; // 두 보호 PE의 최초 ProcessForm 번호이며 일반 World 준비에서도 유지한다.
     std::uint32_t evilRayProcessType_{10},particleSource_{}; // 보호 PE00541098의10과00595128의BSS0이며 일반 fresh에서 덮어쓰지 않는다.
     std::uint32_t flyerProcessType_{31}; // 보호 PE005410ec의 초기 DWORD이며 홈/생성·후속 writer가 공유할 장기 물리다.
     std::uint32_t altarType_{164},daisType_{165}; // 보호 PE005412e8/005412ec의 두 초기 DWORD이며 일반 월드 준비에서 초기화하지 않는다.

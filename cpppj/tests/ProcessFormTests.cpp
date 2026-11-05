@@ -1,4 +1,5 @@
 // 지정 free ProcessForm의 주변 바이트와 단일 분배의 저장 독립 PE 관찰을 재생한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionSupport.h"
 #include "o/RawPacketDispatch.h"
 
@@ -31,7 +32,7 @@ struct FormScene {
     SquidProcessHost host; // 실제 Take/부모 연결을 실행한다.
     std::vector<std::string> events; // 가상 통지 순서다.
     // 부모 상태 외에는 Allocate를 실행하지 않고 fixture 입력만 넣는다.
-    explicit FormScene(OriginalEdition edition):pool(edition,kFormCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+    explicit FormScene(OriginalEdition edition):pool(edition,kFormCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),
         unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,state) {
         auto parent=InputRaw(pool,Sid{20000});std::fill(parent.begin(),parent.end(),std::uint8_t{});parent[10]=100;
     }

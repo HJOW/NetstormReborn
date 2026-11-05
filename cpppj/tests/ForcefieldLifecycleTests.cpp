@@ -1,4 +1,5 @@
 // 독립 원본 후처리/Regular 관찰과 실제 보호막 공간·form·Kernel 삭제 수명을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawForcefieldLifecycle.h"
 #include "o/RawPriestShield.h"
@@ -21,7 +22,7 @@ struct ForcefieldScene {
     // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀. 입력 구성 또는 실행 결과 대조에 사용한다.
     SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<RiftTypeRecord> types;/* patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool patch;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;
     // 목표/후보 SID를 실제 client 할당 정책으로 확보한다.
-    explicit ForcefieldScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {
+    explicit ForcefieldScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),patch(edition==OriginalEdition::Patch1078) {
         // 입력 후보 61까지 실제 할당을 유지한다.
         for (std::uint16_t sid=5;sid<=61;++sid) CHECK(pool.Allocate(2)==Sid{sid});
     }
@@ -122,13 +123,13 @@ TEST_CASE(PostPrefixCurrent_ForcefieldFirstConstructorMutationKeepsSecond) { // 
     SidPool pool(OriginalEdition::Patch1078,kCapacity,false);auto raw=ForcePrefixSlot(pool);std::vector<std::uint32_t> events;RawForcefieldPostPop body(pool,{[] { return true; },[&](Sid sid,auto event,float delay) { CHECK(sid==kShield && delay==(event==1 ? .08F : .01F));events.push_back(event);raw[10]=255;raw[11]=9;Put(raw,0,0); }});body.Prefix(kShield,1);CHECK(events==(std::vector<std::uint32_t>{1,2}) && raw[11]==9);
 }
 TEST_CASE(PostPrefixCurrent_ForcefieldVirtualUsesVtableAndDirectCommon) { // PATCH 가상 진입은 같은 VT면 잘못된 TYPE/free도 앞단에서 거부하지 않고 공통 부모로 간다.
-    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);std::vector<RiftTypeRecord> types(188);SquidPostPopState book;book.suppressed=true;SquidPostPop base(pool,types,book);auto raw=ForcePrefixSlot(pool);Put(raw,0,kPatchForcefieldVtable);raw[10]=255;raw[11]=9;RawForcefieldPostPop empty(pool,{});base.SetForcefieldPostPop(&empty);CHECK(base.HandlesForcefield(kShield));++book.depth;base.PostPopVirtual(kShield,0);CHECK(book.depth==0 && Throws([&] { empty.Validate(kShield); }));std::uint32_t calls{};RawForcefieldPostPop ready(pool,{[&] { ++calls;return false; },{}});base.SetForcefieldPostPop(&ready);++book.depth;base.PostPopVirtual(kShield,1);CHECK(calls==2 && book.depth==0 && raw[11]==9);
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);SquidPostPopState book;book.suppressed=true;SquidPostPop base(pool,types,book);auto raw=ForcePrefixSlot(pool);Put(raw,0,kPatchForcefieldVtable);raw[10]=255;raw[11]=9;RawForcefieldPostPop empty(pool,{});base.SetForcefieldPostPop(&empty);CHECK(base.HandlesForcefield(kShield));++book.depth;base.PostPopVirtual(kShield,0);CHECK(book.depth==0 && Throws([&] { empty.Validate(kShield); }));std::uint32_t calls{};RawForcefieldPostPop ready(pool,{[&] { ++calls;return false; },{}});base.SetForcefieldPostPop(&ready);++book.depth;base.PostPopVirtual(kShield,1);CHECK(calls==2 && book.depth==0 && raw[11]==9);
 }
 TEST_CASE(PostPrefixCurrent_ForcefieldCdKeepsConstructionAndObjectPreflight) { // CD의 기존 별도 구성/객체 검사를 PATCH의 현재 실행과 혼동하지 않는다.
     SidPool pool(OriginalEdition::Cd1072,kCapacity,false);CHECK(Throws([&] { RawForcefieldPostPop missing(pool,{}); }));std::uint32_t calls{};RawForcefieldPostPop body(pool,{[&] { ++calls;return false; },[](Sid,auto,float) { CHECK(false); }});CHECK(Throws([&] { body.Prefix(kShield,0); }) && calls==0);
 }
 TEST_CASE(PostPrefixCurrent_ForcefieldMissingReserveStopsBeforeCommon) { // 선택된 첫 확보가 없으면 공통 깊이를 감소하거나 슬롯을 바꾸지 않는다.
-    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);std::vector<RiftTypeRecord> types(188);SquidPostPopState book;book.suppressed=true;SquidPostPop base(pool,types,book);auto raw=ForcePrefixSlot(pool);Put(raw,0,kPatchForcefieldVtable);raw[10]=74;raw[11]=0;const auto before=Hex(raw);RawForcefieldPostPop body(pool,{});base.SetForcefieldPostPop(&body);++book.depth;CHECK(Throws([&] { base.PostPopVirtual(kShield,1); }) && Hex(raw)==before && book.depth==1);
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);SquidPostPopState book;book.suppressed=true;SquidPostPop base(pool,types,book);auto raw=ForcePrefixSlot(pool);Put(raw,0,kPatchForcefieldVtable);raw[10]=74;raw[11]=0;const auto before=Hex(raw);RawForcefieldPostPop body(pool,{});base.SetForcefieldPostPop(&body);++book.depth;CHECK(Throws([&] { base.PostPopVirtual(kShield,1); }) && Hex(raw)==before && book.depth==1);
 }
 // CD의 BYTE 프레임/소유자 배치를 같은 실제 모듈에 대조한다.
 TEST_CASE(ForcefieldLifecycle_ReplaysCd) { Replay("originalCD"); }
@@ -140,7 +141,7 @@ TEST_CASE(ForcefieldLifecycle_ComposesSpaceProcessesAndSelfDeletion) {
     // 두 raw 배치에서 원본 생성자/가상 표와 실제 공간/프로세스 모듈을 사용한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,false);SquidHash hash;
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);types[kForcefieldType].constructorAddress=TypeConstructorAddress(edition,kForcefieldType);
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);types[kForcefieldType].constructorAddress=TypeConstructorAddress(edition,kForcefieldType);
         types[kForcefieldType].maxHitPoints=100;types[kForcefieldType].cost=37;types[kForcefieldType].footX=types[kForcefieldType].footY=1;
         types[kPriestType].footX=types[kPriestType].footY=1;types[kPriestType].flags2=0x210000;std::vector<std::uint8_t> spots(65536);
         const Sid priest=pool.Allocate(2);auto raw=pool.AllocatedBytes(priest);std::fill(raw.begin(),raw.end(),std::uint8_t{});

@@ -1,4 +1,5 @@
 // 두 원본 PE의 독립 Handle 관찰과 같은 풀의 실제 Frame/Finder/Advance·Regular 재예약을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawAssetRegular.h"
 #include "o/SquidPostPop.h"
@@ -39,7 +40,7 @@ struct AssetRegularScene {
     RawFrameAdvance advance; // 실제 방향별 한 번 감싸기를 실행한다.
     std::unique_ptr<RawAssetRegular> regular; // 이번 Scene 참조를 읽는 생산 모듈이다.
     // 실제 SID 50/60..62를 할당하고 frame/update를 같은 풀에 구성한다.
-    explicit AssetRegularScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+    explicit AssetRegularScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),
         frames(types.size(),Codes()),elements(types.size()),patch(edition==OriginalEdition::Patch1078),
         setter(pool,types,{[](Sid,std::int32_t) { return std::array<float,2>{1,1}; },
             [this](Sid sid,std::uint32_t flags) {

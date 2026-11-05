@@ -1,4 +1,5 @@
 // 세 원본 PE의 생성·이동/공급원 소비 관찰과 실제 factory/소유자/Regular 연결을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionBuilder.h"
 #include "o/RawEnergySupply.h"
@@ -31,7 +32,7 @@ struct BuilderScene {
     std::uint16_t born{}; // 합성 factory가 반환한 새 객체 개수다.
     bool patch; // 판본별 raw 쓰기 위치와 원본 경로 인자 수를 고른다.
     // 원본 실행기의 합성 SID를 미리 확보한다. 행마다 다시 할당할 필요가 없다.
-    explicit BuilderScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+    explicit BuilderScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),
         metadata(types.size()),patch(edition==OriginalEdition::Patch1078) {
         // 생성/직접 쓰기의 호스트 계약을 만족하도록 입력 슬롯을 실제로 확보한다.
         for (std::uint16_t sid=5;sid<=127;++sid) CHECK(pool.Allocate(2)==Sid{sid});

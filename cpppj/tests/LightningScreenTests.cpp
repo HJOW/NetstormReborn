@@ -1,4 +1,5 @@
 // 빔의 실제 생성/공유 색/경로 소유/반납 전체 원문을 같은 입력으로 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawLightningLifetime.h"
 #include "o/RawBombPreDestroy.h"
@@ -60,7 +61,7 @@ TEST_CASE(LightningScreen_NativeBodies) {
         // 두정밀도 전체원문을 빠뜨리지 않고 비교한다.
         for (std::size_t i=1;i<=11;++i) CHECK(row[i]==row[i+11]);
         if (args[0]==2) {
-            SidPool pool(OriginalEdition::Patch1078,24000,false);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(188);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState clock;SquidProcessHost host(pool,types,kernel,destroy,clock); // 실제타이머필드를소유할SoundProcess의같은Host다.
+            SidPool pool(OriginalEdition::Patch1078,24000,false);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState clock;SquidProcessHost host(pool,types,kernel,destroy,clock); // 실제타이머필드를소유할SoundProcess의같은Host다.
             netstorm::client::SoundProcessState state;netstorm::client::SoundProcessHooks hooks;std::size_t reads{};bool wrong{};const auto now=std::bit_cast<double>((std::uint64_t(args[18])<<32)|args[17]); // 장치시각만명시입력이다.
             hooks.wallSeconds=[&] { ++reads;return now; };hooks.playLoopAt=[&](auto,auto,auto,auto) { wrong=true;return 0U; };hooks.playOnceAt=[&](auto,auto,auto,auto,auto) { wrong=true;return 0U; };hooks.play=[&](auto,auto,auto,auto,auto,auto) { wrong=true;return 0U; };hooks.stop=[&](auto) { wrong=true; };hooks.isPlaying=[&](auto) { wrong=true;return 0U; };
             netstorm::client::SoundProcessSystem system(host,state,std::move(hooks));netstorm::client::SoundProcess sound(system,123,0,12);sound.Delay(std::bit_cast<float>(args[14]));std::vector<std::uint8_t> bytes;Append(bytes,std::bit_cast<std::uint64_t>(sound.StartTime()),8); // 원본418070의실제QWORD와비교한다.

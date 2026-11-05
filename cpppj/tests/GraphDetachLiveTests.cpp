@@ -1,4 +1,5 @@
 // 실제 Detach의 현재 정책/진단/로그/타이머 복귀와 전체 raw 물리를 PE432행에 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawGraph.h"
 #include "o/RawSquidNeighbors.h"
@@ -23,7 +24,7 @@ struct DetachLiveScene {
     std::string scene,events; // 입력 장면 이름과 실제 진단/로그/시각 호출 순서다.
     // 원문 행의 초기 입력만 조립한다. 최종 번호/표/stack은 fixture에서 읽는다.
     explicit DetachLiveScene(const std::vector<std::string>& row):pool(row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,32768,true),
-        types(pool.Edition()==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size()),checking(Number(row[2])),action(Number(row[3])) {
+        types(::netstorm::test::MakeFormTypeInputs(pool.Edition()==OriginalEdition::Patch1078 ? 188 : 171)),frames(types.size()),checking(Number(row[2])),action(Number(row[3])) {
         const auto separator=row[1].find(':');scene=row[1].substr(0,separator);rebuild=Number(row[1].substr(separator+1));enabled=scene=="Disabled" ? 0 : 1;
         const std::array<std::array<float,2>,6> positions{{{20,20},{19,20},{21,20},{22,20},{20,21},{20,19}}}; // 원문 입력 순서다.
         // 동일 raw 슬롯/타입/위치와 네 일반 지도 중0단계만 채운다.
@@ -137,7 +138,7 @@ TEST_CASE(GraphDetachLive_RegionSetterContinuesAfterFreeAndRetype) {
 // 실제 World의 현재 활성/분할 상태와 장기 Storage의 같은 Client 시계 장치가 유지되는지 확인한다.
 TEST_CASE(GraphDetachLive_ActualWorldBindsCurrentModesAndStorageClock) {
     using namespace netstorm::client;
-    const auto edition=OriginalEdition::Patch1078;std::vector<RiftTypeRecord> types(188);
+    const auto edition=OriginalEdition::Patch1078;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);
     std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
     types[74].flags1=TypeFlag1::kSurface;types[74].flags2=4;types[74].footX=types[74].footY=1;frames[74]=RiftTypeFrames({{'A','P',1,0}});
     std::size_t clocks=0;auto storage=std::make_shared<RawSurfaceStorage>(edition,types,frames,shapes);storage->BindGraphClock([&] { ++clocks;return 17.25; });

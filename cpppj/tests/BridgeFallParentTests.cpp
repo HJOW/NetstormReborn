@@ -1,4 +1,5 @@
 // 현재checking/다리타입의원문부모·실제예약/대여수명을대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "TestSupport.h"
 #include "RawSceneSupport.h"
 #include "o/RawBridgeFallParent.h"
@@ -33,7 +34,7 @@ TEST_CASE(BridgeFallParent_Native200CurrentCheckingArgumentsAndResume) { // 모�
     CHECK(rows==200);
 }
 TEST_CASE(BridgeFallParent_ActualHostChecksBeforeRegistrationAndKeepsChild) { // 진단실패는등록전이며복귀/정상예약은기존포장과Regular부착을쓴다.
-    SidPool pool(OriginalEdition::Patch1078,32768,true);std::vector<RiftTypeRecord> types(188);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState state;state.now=9;SquidProcessHost host(pool,types,kernel,destroy,state);
+    SidPool pool(OriginalEdition::Patch1078,32768,true);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState state;state.now=9;SquidProcessHost host(pool,types,kernel,destroy,state);
     const auto parent=pool.Allocate();auto raw=pool.AllocatedBytes(parent);raw[10]=82;raw[11]=0;raw[40]=0;std::int32_t word{};RawCheckingFlag checking{word};
     auto* first=ScheduleBridgeFallChecked(host,pool,types,parent,20.75F,21.9F,checking);CHECK(first && first->Event()==kBridgeFallEvent && first->Payload()==5396.0F && first->Time()==9 && first->Count()==0 && kernel.Size()==1);
     word=1;const auto free=pool.FreeCount();CHECK(Failed([&] { ScheduleBridgeFallChecked(host,pool,types,parent,20,21,checking); }) && kernel.Size()==1 && pool.FreeCount()==free); // checking0에서허용한같은현재타입을다음호출은다시진단한다.

@@ -1,6 +1,7 @@
 // 객체 부착 프로세스의 form 생성/부착/해제와 Regular 이벤트 실행을 원본 쓰기 순서대로 복원한다.
 #include "o/SquidProcess.h"
 #include "o/SquidForms.h"
+#include "o/SquidFactory.h" // ProcessForm도 현재 공통 생성자/가상 수신 부모를 사용한다.
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -15,7 +16,7 @@ constexpr std::size_t kFormPrevious=14,kFormParent=16,kFormPid=18,kAssetPrevious
 // 상태 비트: free·dead·void·contained.
 constexpr std::uint8_t kFree=1,kDead=2,kVoid=4,kContained=8;
 // 타입 번호: ProcessForm, 프로세스 타입의 첫 번호, Regular/SharedRegular, form으로 취급하는 마지막 번호.
-constexpr std::uint32_t kProcessFormType=2,kFirstProcessType=10,kRegularType=46,kSharedRegularType=61,kLastFormType=0x45;
+constexpr std::uint32_t kFirstProcessType=10,kRegularType=46,kSharedRegularType=61,kLastFormType=0x45;
 // 판본별 프로세스 타입 끝(패치 DAT_0054116c, CD DAT_0051ca58)과 ProcessForm 가상 표의 실제 주소 기록값.
 constexpr std::uint32_t kCdProcessEnd=62,kPatchFormVtable=0x512098,kCdFormVtable=0x505990;
 // 부착 flags: 0x10 client 번호로 form 할당, 0x10|0x40 전송 억제, 0x80 부모 변경 허용(pfPROCESS_DEBUG).
@@ -79,6 +80,15 @@ const RiftTypeRecord& SquidProcessHost::Type(std::size_t type) const { if (type>
 RegularHandler SquidProcessHost::Regular() const { return currentRuntime_ ? Runtime()->regular : handler_; } // 현재 사건 함수만 짧게 빌린다.
 SquidDestroyHooks SquidProcessHost::Asset() const { return currentRuntime_ ? Runtime()->asset : asset_; } // 현재 자산 효과를 복사해 호출 중 수명을 지킨다.
 ProcessFormTransmission SquidProcessHost::Transmission() const { return currentRuntime_ ? Runtime()->transmit : transmit_; } // 원문 재조회 위치를 유지한다.
+void SquidProcessHost::BindFormFactory(SquidFactory& factory) { // 장기 Host의 옛 World 주소 저장과 다른 Pool 연결을 거부한다.
+    if (currentRuntime_ || &factory.Pool()!=&pool_ || (directFormFactory_ && directFormFactory_!=&factory)) throw std::invalid_argument("ProcessForm 직접 공장 연결의 같은 수명/Pool 계약");directFormFactory_=&factory;
+}
+Sid SquidProcessHost::CreateOrTakeForm(std::uint32_t flags,Sid form) { // 인자 계산 뒤 현재 번호를 읽고 실제 선택 장치만 요구한다.
+    const auto apply=[&](SquidFactory& factory) { if (&factory.Pool()!=&pool_) throw std::invalid_argument("ProcessForm 공장의 실제 Pool 불일치");const auto type=state_.ProcessFormType();if (form.value) { factory.Take(type,form);return form; }return factory.Create(type,(flags&kClientForm) ? 2U : 0U); }; // 지정 슬롯의 Take 반환은 원문처럼 무시하고 원래 SID를 후단에 사용한다.
+    if (currentRuntime_) { const auto runtime=Runtime();if (!runtime->factory) throw std::logic_error("현재 World의 ProcessForm 공장 미연결");return apply(*runtime->factory); }
+    if (directFormFactory_) return apply(*directFormFactory_);
+    SquidFactory independent(pool_,types_);independent.BindDiagnostics({types_,state_.assertion,{}});return apply(independent); // 독립 입력의 명시 TYPE snapshot에도 같은 공통 부모를 적용한다.
+}
 bool SquidProcessHost::Owns(const BaseProcess& process) const { const auto* squid=dynamic_cast<const SquidProcess*>(&process);return squid && squid->host_==this; } // 같은 실제 Host 포인터를 비교한다.
 // 이것은 World 최종 C++ 반납이며 Native Kernel.Clear의 단일 순회를 대신하지 않는다.
 void SquidProcessHost::DrainRuntimeBindings(const std::shared_ptr<ProcessHostRuntimeBindings>& runtime) {
@@ -173,9 +183,7 @@ SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std
     if (patch) state_.typeRotation=(state_.typeRotation+1)%static_cast<std::uint32_t>(TypeCount());
     try {
         // 지정 번호에서는 Allocate를 부르지 않는다. Take의 postTake도 ProcessForm에서는 빈 함수다.
-        SquidForms forms(pool_);
-        if (form.value) form=forms.Take(kProcessFormType,form);
-        else form=forms.Create(kProcessFormType,(flags&kClientForm) ? 2U : 0U);
+        form=CreateOrTakeForm(flags,form);
     } catch (...) {
         // 번호 소진이면 등록을 되돌려 form 없는 프로세스가 남지 않게 한다.
         kernel_.Remove(pid);state_.typeRotation=rotation;
@@ -223,7 +231,7 @@ SquidProcess* SquidProcessHost::Reattach(SquidProcess& process,std::uint32_t pro
     // 패치 Kernel의 타입 순환 helper는 중복 포인터 검색보다 먼저 실행된다.
     if (patch) state_.typeRotation=(state_.typeRotation+1)%static_cast<std::uint32_t>(TypeCount());
     if (free) {
-        SquidForms(pool_).Take(kProcessFormType,form);
+        form=CreateOrTakeForm(flags,form);
         auto raw=pool_.AllocatedBytes(form);raw[kType]=static_cast<std::uint8_t>(processType);
         // 원본의 정렬되지 않은 PID DWORD만 기록해 그 뒤 payload를 보존한다.
         for (std::size_t i=0;i<4;++i) raw[kFormPid+i]=static_cast<std::uint8_t>(pid>>(8*i));

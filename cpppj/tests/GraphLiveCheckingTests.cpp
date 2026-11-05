@@ -1,4 +1,5 @@
 // 실제 Graph 부모의 진단/로그 재진입을 독립 PE의 전체 표/stack/슬롯과 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawGraph.h"
 #include "client/RawSurfaceWorld.h"
@@ -22,7 +23,7 @@ struct LiveGraphScene {
     std::string events; // 실제 진단과 로그의 호출 순서를 보관한다.
     // 원문 위치/기록/stack 입력만 조립하며 최종 기대값은 fixture에서 읽는다.
     explicit LiveGraphScene(const std::vector<std::string>& row):pool(row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,32768,true),
-        types(pool.Edition()==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size()),checking(Number(row[2])),action(Number(row[3])) {
+        types(::netstorm::test::MakeFormTypeInputs(pool.Edition()==OriginalEdition::Patch1078 ? 188 : 171)),frames(types.size()),checking(Number(row[2])),action(Number(row[3])) {
         const std::array<std::array<float,2>,6> positions{{{20,20},{19,20},{21,20},{22,20},{20,21},{20,19}}}; // Native 장면의 입력 좌표다.
         const std::array<std::uint8_t,6> numbers{{row[1]=="Flood" ? std::uint8_t{3} : std::uint8_t{254},3,4,4,5,6}}; // Native가 준 시작 graph BYTE다.
         // 원문 객체를 실제 할당 슬롯에만 기록하고 주변 발자국 지도도 같은 입력으로 만든다.
@@ -131,7 +132,7 @@ TEST_CASE(GraphLiveChecking_ReplaysNativeFreeCandidateAfterTrace) { ReplayGraphL
 // 실제 World의 전체 풀 소진 복구와 장기 Storage→Client 로그 장치 연결을 창 없이 검증한다.
 TEST_CASE(GraphLiveChecking_ActualWorldUsesFullPoolAndStorageTrace) {
     using namespace netstorm::client;
-    const auto edition=OriginalEdition::Patch1078;std::vector<RiftTypeRecord> types(188);
+    const auto edition=OriginalEdition::Patch1078;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);
     std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
     types[74].flags1=TypeFlag1::kSurface;types[74].flags2=4;types[74].footX=types[74].footY=1;frames[74]=RiftTypeFrames({{'A','P',1,0}});
     auto storage=std::make_shared<RawSurfaceStorage>(edition,types,frames,shapes);

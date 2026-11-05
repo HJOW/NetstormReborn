@@ -1,4 +1,5 @@
 // 두 실제 PE가 정한 GunProcess raw/padding/사건/packet과 복원 몸체를 독립 비교한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawGunProcess.h"
 #include <cstdio>
@@ -34,7 +35,7 @@ struct GunScene {
     // random: 난수 선택에 사용하는 생성기. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t random{};
     // native에 등장하는 raw SID만 확보하며 전체 풀 최소 크기는 원본 레이아웃을 따른다.
-    explicit GunScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {
+    explicit GunScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),patch(edition==OriginalEdition::Patch1078) {
         // native의 관찰 번호를 client 영역에 확보한다.
         for (std::uint16_t id=5;id<128;++id) CHECK(pool.Allocate(2)==Sid{id});
     }
@@ -195,7 +196,7 @@ TEST_CASE(GunProcess_ClearNaturalZeroBoundary) {
 TEST_CASE(GunProcess_ActualHostTransmitAndLifetime) {
     // 두 판본에서 같은 호스트 수명과 서로 다른 서버 SID 영역을 방문한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        SidPool pool(edition,kCapacity,true);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);types[128].group=1;
+        SidPool pool(edition,kCapacity,true);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);types[128].group=1;
         Sid parent;
         // 부모 입력을 native와 같은 SID50에 확보한다.
         for (std::uint16_t id=5;id<=50;++id) parent=pool.Allocate(2);

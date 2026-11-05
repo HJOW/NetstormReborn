@@ -1,11 +1,12 @@
 // 실제 Host/Kernel·공통 목록의 냉각 연기 생성/출력·자기 삭제/생성 실패 정리를 검증한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionSupport.h"
 #include "o/SmokeVisualSystem.h"
 
 using namespace netstorm::test::construction;
 namespace { // 장치 출력만 관찰하고 실제 Form/Kernel/등록 수명을 사용하는 조립 장면이다.
 // 부모129의 원문 HP/group과 그 외 기본 프로세스 자료다.
-std::vector<RiftTypeRecord> SmokeVisualTypes() { std::vector<RiftTypeRecord> result(188);result[129].flags1=0x10;result[129].group=1;result[129].maxHitPoints=600;result[129].footX=result[129].footY=3;return result; }
+std::vector<RiftTypeRecord> SmokeVisualTypes() { std::vector<RiftTypeRecord> result=::netstorm::test::MakeFormTypeInputs(188);result[129].flags1=0x10;result[129].group=1;result[129].maxHitPoints=600;result[129].footX=result[129].footY=3;return result; }
 // 단일 실제 풀/Host와 같은 공통 renderer를 가진 연기 조립 장면이다.
 struct SmokeVisualScene {
     SidPool pool{OriginalEdition::Patch1078,32768,true}; // 같은 부모/프로세스 저장소다.

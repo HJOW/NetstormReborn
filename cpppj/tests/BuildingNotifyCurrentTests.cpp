@@ -1,4 +1,5 @@
 // NotifySurface의 원문 관문·진단 복귀와 같은 현재 World 연결을 창 없이 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/RawBuildingSpace.h"
@@ -19,7 +20,7 @@ struct NotifyScene { // 같은 물리 슬롯과 현재 DWORD를 실제 몸체보
     BuildingSpaceState state{97,82,false}; // 기존 독립 번호/진단 사본 계약이다.
     std::uint32_t bridge{82},checking{}; // 현재 TYPE와 전체 비영 checking DWORD 입력이다.
     RawBuildingSpace body; // 원문과 비교하는 실제 제품 몸체다.
-    explicit NotifyScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),body(pool,hash,types,state) { body.BindCurrentBridgeType(bridge);body.BindNotifyDiagnostics(RawCheckingFlag{checking},{}); } // 대여 이후 각 입력이 현재값만 바꾼다.
+    explicit NotifyScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),body(pool,hash,types,state) { body.BindCurrentBridgeType(bridge);body.BindNotifyDiagnostics(RawCheckingFlag{checking},{}); } // 대여 이후 각 입력이 현재값만 바꾼다.
     std::span<std::uint8_t> Raw(Sid sid=kSource) { const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // free/예약 SID도 같은 물리를 쓴다.
     std::span<std::uint8_t> Prefix() { const auto bytes=pool.Bytes();return {const_cast<std::uint8_t*>(bytes.data()),kNotifyPrefix*pool.Layout().stride}; } // 이전 외부 상태를 다음 입력에 남기지 않는다.
     void Prepare(Sid sid,std::uint8_t type=82,std::uint16_t word=0xab7f) { auto raw=Raw(sid);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=type;Put(raw,12,word,2);bridge=82;checking=6; } // 특정 객체 생성/행동을 실행하지 않는 물리 입력이다.
@@ -56,7 +57,7 @@ TEST_CASE(BuildingNotifyCurrent_OnlySelectedAssertionRequiresDevice) { // TYPE/e
     std::uint32_t calls{};scene.bridge=255;scene.Raw()[10]=255;scene.Raw()[12]=0x40;scene.body.BindNotifyDiagnostics(RawCheckingFlag{scene.checking},[&](auto expression,auto file,auto line) { CHECK(expression=="num >= 0 && num <= 7" && file=="\\Ns\\O\\Bridge.cpp" && line==0xff);++calls; });scene.body.NotifySurface(kSource);CHECK(calls==1 && scene.checking==0x80000000U);
 }
 TEST_CASE(BuildingNotifyCurrent_CurrentAndIndependentTypeContracts) { // 독립 상태는 기존 값 참조를 유지하고 명시 대여 뒤에는 현재 DWORD가 우선한다.
-    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);SquidHash hash;std::vector<RiftTypeRecord> types(188);BuildingSpaceState state{97,82,true};RawBuildingSpace body(pool,hash,types,state);auto raw=const_cast<std::uint8_t*>(pool.Slot(kSource).data());raw[10]=82;raw[12]=0x7f;raw[40]=0;std::uint32_t calls{},bridge=338;body.BindNotifyDiagnostics(state.debug,[&](auto,auto,auto) { ++calls; });
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);SquidHash hash;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);BuildingSpaceState state{97,82,true};RawBuildingSpace body(pool,hash,types,state);auto raw=const_cast<std::uint8_t*>(pool.Slot(kSource).data());raw[10]=82;raw[12]=0x7f;raw[40]=0;std::uint32_t calls{},bridge=338;body.BindNotifyDiagnostics(state.debug,[&](auto,auto,auto) { ++calls; });
     body.NotifySurface(kSource);state.bridgeType=83;body.NotifySurface(kSource);CHECK(calls==1);body.BindCurrentBridgeType(bridge);state.bridgeType=82;body.NotifySurface(kSource);CHECK(calls==1);bridge=82;body.NotifySurface(kSource);CHECK(calls==2);
 }
 TEST_CASE(BuildingNotifyCurrent_RebindingKeepsInvokedCallableAlive) { // 진단 중 자신의 연결을 반납해도 실행 중인 callable은 복귀까지 살아 있다.
@@ -75,7 +76,7 @@ TEST_CASE(BuildingNotifyCurrent_CdDoesNotDereferenceUnusedSidOrDevice) { // CD �
     NotifyScene scene(OriginalEdition::Cd1072);scene.body.BindNotifyDiagnostics(RawCheckingFlag{scene.checking},[](auto,auto,auto) { throw std::logic_error("CD의 미도달 진단"); });scene.body.NotifySurface(Sid{65000});
 }
 TEST_CASE(BuildingNotifyCurrent_ActualWorldUsesCurrentTypeCheckingAndClientDevice) { // 장기 Storage를 빌리는 실제 World도 TYPE/현재 checking/진단 장치 교체를 바로 소비한다.
-    using namespace netstorm::client;std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames(std::vector<FrameCode>{}));std::vector<SquidDisplayShape> shapes(188);BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.noIslandType=157;links.connectorType=155;
+    using namespace netstorm::client;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames(std::vector<FrameCode>{}));std::vector<SquidDisplayShape> shapes(188);BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.noIslandType=157;links.connectorType=155;
     std::int32_t checking{};std::optional<std::string> detail;std::uint32_t calls{};auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes);storage->BindChecking(RawCheckingFlag{checking});storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(expression=="num >= 0 && num <= 7" && file=="\\Ns\\O\\Bridge.cpp" && line==0xff);++calls; });
     { RawSurfaceWorld world(OriginalEdition::Patch1078,types,frames,shapes,links,97,nullptr,storage);auto core=world.Core();const auto sid=core.pool.Allocate(2);auto raw=core.pool.AllocatedBytes(sid);raw[10]=74;raw[12]=0x7f;raw[40]=0;core.bridgeState.bridgeType=74;core.building.NotifySurface(sid);CHECK(calls==0);checking=std::bit_cast<std::int32_t>(0x80000000U);core.building.NotifySurface(sid);CHECK(calls==1);
       storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(expression=="num >= 0 && num <= 7" && file=="\\Ns\\O\\Bridge.cpp" && line==0xff);calls+=2; });core.building.NotifySurface(sid);CHECK(calls==3 && checking==std::bit_cast<std::int32_t>(0x80000000U)); }

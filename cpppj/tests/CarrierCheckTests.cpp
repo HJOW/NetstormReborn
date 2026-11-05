@@ -1,4 +1,5 @@
 // Carrier 지면 조회·사제 가상 낙하와 실제 표면 삭제→finder→공유 Regular 연결을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawCarrierCheck.h"
 #include "o/RawPriestFall.h"
@@ -51,7 +52,7 @@ struct CheckScene {
     std::uint32_t change{},reply{};
     // 실제 클라이언트 풀로 SID 50까지 확보하고 정상 사제/HP 입력을 구성한다.
     explicit CheckScene(OriginalEdition edition):pool(edition,kCapacity,false),store(random,[] { return 1U; }),
-        types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({})),
+        types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),frames(types.size(),RiftTypeFrames({})),
         choices(types.size()),spots(65536),surfaces(65536),patch(edition==OriginalEdition::Patch1078) {
         // 원본 번호 정책을 유지하며 예약 슬롯을 건너뛴다.
         for (std::uint16_t sid=5;sid<=kSource.value;++sid) CHECK(pool.Allocate(2)==Sid{sid});

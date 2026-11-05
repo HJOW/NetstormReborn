@@ -1,4 +1,5 @@
 // 실제CPU의 두 원문 Wind/Random/각도 시퀀스와 장기 Storage owner를 비교한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawAmbientWind.h"
 #include "client/RawSurfaceWorld.h"
@@ -38,7 +39,7 @@ TEST_CASE(AmbientWind_ReplaysNativeCpuSequencesAndSharedRandom) {
 }
 // 실제 Client Storage/난수 owner는 World 대여와 반납에서 바람/난수를 재생성하지 않는다.
 TEST_CASE(AmbientWind_StoragePreservesStateAcrossWorldLeases) {
-    using namespace netstorm::client;std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
+    using namespace netstorm::client;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
     RawSurfaceStorage storage(OriginalEdition::Patch1078,types,frames,shapes);ClientRandomGlobals random;const auto* address=&storage.wind;
     CHECK(std::bit_cast<std::uint32_t>(storage.wind.x)==0 && storage.wind.y==1 && std::bit_cast<std::uint32_t>(storage.wind.angle)==0);
     storage.UpdateAmbientWind(random.Game());CHECK(Matches(storage.wind,random.Game(),InitialSequence(1)));const auto once=random.Game().State();

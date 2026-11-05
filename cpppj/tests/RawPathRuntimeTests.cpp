@@ -1,4 +1,5 @@
 // 원본 Path의 전체 생성자 이미지·시간표·한 단계씩 움직이는 보간을 독립 native 결과와 비교한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPathProcess.h"
 #include "o/SquidFactory.h"
@@ -30,7 +31,7 @@ double Double(const std::string& value) { return std::bit_cast<double>(static_ca
 OriginalEdition Edition(const std::string& value) { return value=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072; }
 // 실제 타입 번호와 글자 구간/부모 입력이다. 네이티브의 합성 부모와 같은 값을 준비한다.
 std::vector<RiftTypeRecord> ProcessTypes(OriginalEdition edition) {
-    std::vector<RiftTypeRecord> result(edition==OriginalEdition::Patch1078 ? 188 : 171);
+    std::vector<RiftTypeRecord> result=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);
     result[134].footX=result[134].footY=result[158].footX=result[158].footY=1;return result;
 }
 // 부모의 외부 가상 이벤트는 native 입력 스크립트다. 실제 공간/Kernel/Form 수명은 복원된 모듈들을 사용한다.

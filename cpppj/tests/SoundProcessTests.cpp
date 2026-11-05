@@ -1,4 +1,5 @@
 // 독립 원본 소리 프로세스/이름 표 관찰과 보호막 생성→소리 재생→삭제 때 정지의 실제 모듈 연결을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/SoundProcess.h"
 #include "o/RawForcefieldLifecycle.h"
@@ -36,7 +37,7 @@ struct SoundScene {
     // state: 검사 입력과 실행 뒤 결과를 보관할 상태.
     SoundProcessState state;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;/* reply: 응답. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::uint32_t reply{};/* now: 현재 판정에 사용하는 시각(초). 입력 구성 또는 실행 결과 대조에 사용한다. */ double now{};/* system: 소리 프로세스들이 함께 쓰는 전역과 외부 효과를 묶고, 프로세스를 만들어 부모 객체에 붙인다 (SoundProcessSystem). */ SoundProcessSystem system;
     // 실행기 풀과 같은 번호 5~127을 client 번호로 확보한다. form은 그 뒤 번호를 받는다.
-    explicit SoundScene(OriginalEdition edition):patch(edition==OriginalEdition::Patch1078),pool(edition,kCapacity,false),types(patch ? 188 : 171),
+    explicit SoundScene(OriginalEdition edition):patch(edition==OriginalEdition::Patch1078),pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171)),
         unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,clock),system(host,state,Hooks()) {
         // 입력 부모 번호가 모두 유효한 할당 슬롯이 되게 한다.
         for (std::uint16_t sid=5;sid<=kLastSid;++sid) CHECK(pool.Allocate(2)==Sid{sid});
@@ -172,7 +173,7 @@ TEST_CASE(SoundProcess_FollowsShieldCreationAndDeletion) {
     // 두 raw 배치에서 원본 생성자/가상 표와 실제 공간/프로세스/삭제 모듈을 사용한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,false);SquidHash hash;
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);types[kForcefieldType].constructorAddress=TypeConstructorAddress(edition,kForcefieldType);
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);types[kForcefieldType].constructorAddress=TypeConstructorAddress(edition,kForcefieldType);
         types[kForcefieldType].maxHitPoints=100;types[kForcefieldType].cost=37;types[kForcefieldType].footX=types[kForcefieldType].footY=1;
         types[kPriestType].footX=types[kPriestType].footY=1;types[kPriestType].flags2=0x210000;std::vector<std::uint8_t> spots(65536);
         const Sid priest=pool.Allocate(2);auto raw=pool.AllocatedBytes(priest);std::fill(raw.begin(),raw.end(),std::uint8_t{});

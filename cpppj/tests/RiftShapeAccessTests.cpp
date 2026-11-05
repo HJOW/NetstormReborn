@@ -1,4 +1,5 @@
 // 원문 SHP 진단 복귀와 현재 TYPE 배열의 실제 후처리/그래프/이웃 연결을 창 없이 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "TestSupport.h"
 #include "o/RawRiftShapeAccess.h"
 #include "o/RawGraph.h"
@@ -35,7 +36,7 @@ struct ShapeAccessScene { // 저장된 TYPE/frame과 진단이 변경할 현재 
     }
     std::array<float,2> Run(std::int32_t frame=0,std::uint32_t abs=0) { return ReadRiftShapeFrame({token,flags,count,loaded,header},frame,abs,hooks); } // 같은 현재 필드 참조와 저장된 인자를 부모에 전달한다.
 };
-std::vector<RiftTypeRecord> CurrentTypeRows() { std::vector<RiftTypeRecord> rows(188);for (auto& row:rows) row.footX=row.footY=1;return rows; } // 명시 기본 발자국만 준비한다.
+std::vector<RiftTypeRecord> CurrentTypeRows() { std::vector<RiftTypeRecord> rows=::netstorm::test::MakeFormTypeInputs(188);for (auto& row:rows) row.footX=row.footY=1;return rows; } // 명시 기본 발자국만 준비한다.
 struct CurrentTypeScene { // 타입 복사와 현재 대여의 결과를 같은 실제 슬롯에서 비교한다.
     SidPool pool{OriginalEdition::Patch1078,24000,false}; // 서버/통신을 사용하지 않는 실제 raw 풀이다.
     Sid sid; // 한 번 확보한 client 슬롯이다.

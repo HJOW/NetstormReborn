@@ -1,4 +1,5 @@
 // 실제 Dais Bridge 명령을 같은 PathStart/BFS/Host/cleanup과 독립 PE 전체 경로 비트에 연결한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/RawPriestWorldBindings.h"
 #include "o/RawDaisRegular.h"
@@ -52,7 +53,7 @@ TEST_CASE(rawDaisBridge_native_actual_path_start_prepare_depth_and_host) {
         CHECK(row.size()==7);std::map<std::string,std::string> input;
         // 원본 입력 JSON의 정수만 읽으며 결과 경로를 재계산하지 않는다.
         for (const auto& field:Split(std::string_view(row[1]).substr(1,row[1].size()-2),',')) { const auto split=field.find(':');input.emplace(field.substr(1,split-2),field.substr(split+1)); }
-        const auto number=[&](const char* name) { return Number(input.at(name)); };const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;const bool patch=edition==OriginalEdition::Patch1078,boss=number("boss")!=0,legacy=number("legacy")!=0;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());BridgeAssets(types,frames,shapes);
+        const auto number=[&](const char* name) { return Number(input.at(name)); };const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;const bool patch=edition==OriginalEdition::Patch1078,boss=number("boss")!=0,legacy=number("legacy")!=0;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());BridgeAssets(types,frames,shapes);
         // Native의 모든 입력 SID를 실제 client free list에서 확보한다.
         for (std::uint16_t sid=5;sid<221;++sid) { CHECK(pool.Allocate(2)==Sid{sid});auto raw=pool.AllocatedBytes(Sid{sid});std::fill(raw.begin(),raw.end(),std::uint8_t{}); }
         // Native 합성 VT는 C++ 표시 분배에서 판본별 일반 VT로 준비하고 실제 Dais VT는 아래에서 유지한다.

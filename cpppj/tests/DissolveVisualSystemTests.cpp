@@ -1,4 +1,5 @@
 // 분해가 대상 삭제 후 같은 실제 Kernel/Host/표시 목록에서 소진되는지 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/DissolveVisualSystem.h"
 #include "o/DependFormHost.h"
@@ -10,7 +11,7 @@ namespace {
 // 캡처/Pop의 장치 경계는 명시 입력이며 실제 미션/SHP 대조를 대신하지 않는다.
 struct DissolveScene {
     SidPool pool{OriginalEdition::Patch1078,32768}; //객체/Form/감시 쌍이 공유하는 실제 풀이다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); //원본 타입 범위의 명시 합성 메타다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); //원본 타입 범위의 명시 합성 메타다.
     SquidFactory factory{pool,types}; //같은110 더미의 실제 생성자다.
     SquidHash hash; //같은 공통 공간 해제기가 참조한다.
     std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); //공통 삭제의 spot 저장소다.

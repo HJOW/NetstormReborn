@@ -1,4 +1,5 @@
 // 독립 PE 관찰과 실제 Host의 완료 통지·Form 삭제를 검증한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawGunAnimation.h"
 #include <cstdio>
@@ -27,7 +28,7 @@ struct AnimationScene {
     // patch: 현재 입력의 판본이다.
     bool patch;
     // native 입력 번호 5~100을 실제 풀에서 확보한다.
-    explicit AnimationScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),patch(edition==OriginalEdition::Patch1078) {
+    explicit AnimationScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),patch(edition==OriginalEdition::Patch1078) {
         // 다음 입력의 raw 슬롯을 안정적으로 확보한다.
         for (std::uint16_t id=5;id<=100;++id) CHECK(pool.Allocate(2)==Sid{id});
     }
@@ -110,7 +111,7 @@ TEST_CASE(GunAnimation_MissingMissileIsExplicit) {
 TEST_CASE(GunAnimation_ActualHostNotifyAndLifetime) {
     // 두 판본에서 actual host와 원본 필드 폭의 차이를 모두 방문한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        SidPool pool(edition,kCapacity,true);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);types[128].group=1;const bool patch=edition==OriginalEdition::Patch1078;
+        SidPool pool(edition,kCapacity,true);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);types[128].group=1;const bool patch=edition==OriginalEdition::Patch1078;
         Sid parent;
         // native와 같은 부모/표적 SID를 실제 풀에 확보한다.
         for (std::uint16_t id=5;id<=60;++id) { const auto sid=pool.Allocate(2);if (id==50) parent=sid; }

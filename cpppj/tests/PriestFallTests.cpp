@@ -1,4 +1,5 @@
 // 원본 낙하 요청/0x25b 관찰과 실제 공유 Form·Kernel·보호막·회복 분배 결합을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestFall.h"
 #include "o/RawPriestRegen.h"
@@ -49,7 +50,7 @@ struct FallScene {
     std::uint32_t change{};
     // 예약 번호 5부터 원본 관찰 SID 50까지 실제 풀로 확보한다.
     explicit FallScene(OriginalEdition edition):pool(edition,kCapacity,false),store(random,[] { return 1U; }),
-        types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({})),
+        types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),frames(types.size(),RiftTypeFrames({})),
         choices(types.size()),spots(65536),surfaces(65536),patch(edition==OriginalEdition::Patch1078) {
         // 서버/클라이언트 번호 정책을 재사용한다.
         for (std::uint16_t id=5;id<=kSource.value;++id) CHECK(pool.Allocate(2)==Sid{id});

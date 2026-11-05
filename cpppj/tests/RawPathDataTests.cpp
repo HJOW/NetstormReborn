@@ -1,4 +1,5 @@
 // 서버 Path의 실제 PE 패킷과 flags0 부착을 동일 raw 풀·공유 버퍼 위에서 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPathData.h"
 #include "o/RawPathProcess.h"
@@ -62,7 +63,7 @@ TEST_CASE(rawPathData_server_flags0_host_and_required_boundaries) {
     // 각 판본의 서버 Host를 실제 factory/pop/unpop/destroy/kernel 위에서 조립한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         SidPool pool(edition,32768,true);SquidHash hash;
-        std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);types[134].footX=types[134].footY=1;
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);types[134].footX=types[134].footY=1;
         std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());std::vector<std::uint8_t> spots(65536);
         SquidPostPopState book;book.suppressed=true;SquidPostPop postPop(pool,types,book);SquidUnpop unpop(pool,hash,spots);SquidPop pop(pool,hash,spots,nullptr,&postPop);
         RawSquidDestroy destroy(pool,unpop,types);Kernel kernel(32);SquidProcessState clock;clock.boss=true;
@@ -110,7 +111,7 @@ TEST_CASE(rawPathData_native_process_prepare_override_editions) {
     for (const auto& row:fixture.rows) {
         CHECK(row.size()==6);const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;
         SidPool pool(edition,32768,true);SquidHash hash;
-        std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);
         std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());std::vector<std::uint8_t> spots(65536);
         SquidProcessState clock;clock.now=std::bit_cast<double>(static_cast<std::uint64_t>(std::stoull(row[4])));RawPathProcessState state{clock};RawPathProcessHooks hooks;
         hooks.unpop=hooks.repop=[](Sid,std::uint32_t) { throw std::logic_error("Prepare 검사에서 공간 변경 미실행"); };

@@ -1,4 +1,5 @@
 // 실제CPU 공간 변경 전체와 현재 Client/World의 진단 복귀를 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawSquidUnpopParent.h"
 #include "o/RawBuildingSpace.h"
@@ -11,7 +12,7 @@ using namespace netstorm::test::rawscene;
 namespace { // 부모 결과를 만들지 않고 원문과 같은 외부 입력만 공급한다.
 struct UnpopCheckingScene { // 같은 원시 풀·네 해시·전체 점유 지도를 관측한다.
     SidPool pool{OriginalEdition::Patch1078,24000};SquidHash hash;std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); // 원문 물리 자료다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188);BuildingSpaceState state{83,82,false};RawBuildingSpace building{pool,hash,types,state}; // 옆면 BYTE 쓰기는 기존 실제 몸체를 사용한다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);BuildingSpaceState state{83,82,false};RawBuildingSpace building{pool,hash,types,state}; // 옆면 BYTE 쓰기는 기존 실제 몸체를 사용한다.
     std::uint32_t source{},checking{},flags{},action{};bool notified{};std::string events;SquidUnpopParentHooks hooks; // 현재 입력/명시 경계/실제 요청이다.
     std::span<std::uint8_t> Raw(std::uint32_t sid) { const auto raw=pool.Slot(Sid{static_cast<std::uint16_t>(sid)});return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // 예약0/진단 뒤 상태도 물리 슬롯으로 읽고 쓴다.
     void Type(std::uint32_t number,std::uint32_t first,std::uint32_t genus,std::uint32_t width,std::uint32_t height) { auto& type=types[number];type.flags1=first;type.flags2=genus;type.footX=static_cast<int>(width);type.footY=static_cast<int>(height); } // 원문 TYPE 입력만 구성한다.
@@ -59,7 +60,7 @@ TEST_CASE(SquidUnpopChecking_SelectedDiagnosticPreservesPartialEffects) { // 체
     UnpopCheckingScene missingContained(row);missingContained.Raw(50)[11]=8;missingContained.hooks.contained={};missingContained.hooks.assertion=[](auto,auto,auto) {};CHECK(Throws([&] { missingContained.Run(); }) && missingContained.Raw(50)[11]==12); // 미연결 종단을 성공으로 대체하지 않는다.
 }
 TEST_CASE(SquidUnpopChecking_ActualClientWorldCurrentDiagnosticAndSavedSpot) { // 실제 두 World 대여와 같은 Client 현재 DWORD/서비스를 사용한다.
-    ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;Client client(std::move(options));std::vector<RiftTypeRecord> types(188);types[74].footX=types[74].footY=types[75].footX=types[75].footY=1;types[74].flags2=4;types[75].flags2=1;std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes);storage->BindChecking(client.GameplayGlobals()->AiDebug().Checking());std::optional<std::string> detail;RawWorldCore* current{};Sid victim{};std::uint32_t variant{},diagnostics{};
+    ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;Client client(std::move(options));std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[74].footX=types[74].footY=types[75].footX=types[75].footY=1;types[74].flags2=4;types[75].flags2=1;std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes);storage->BindChecking(client.GameplayGlobals()->AiDebug().Checking());std::optional<std::string> detail;RawWorldCore* current{};Sid victim{};std::uint32_t variant{},diagnostics{};
     storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(current && file=="\\Ns\\O\\Squid.cpp");CHECK(line==(variant==0 ? 0x617U : variant==1 ? 0x629U : 0x65dU));CHECK(expression==(variant==0 ? "(flags & effectiveGenus) == ( unsigned char)effectiveGenus" : variant==1 ? "getGridSid( (float)fx, (float)fy) == getSid()" : "found"));++diagnostics;client.GameplayGlobals()->AiDebug().Checking()=0;current->pool.AllocatedBytes(victim)[10]=75;if (!variant) current->spots[20*256+16]=0xf0; });
     BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;
     for (std::uint32_t generation=0;generation<2;++generation) for (variant=0;variant<3;++variant) { // 다시 대여 후에도 같은 진단 주소와 실제 공간을 사용한다.

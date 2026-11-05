@@ -1,4 +1,5 @@
 // Dais 초기 하위 범위의 독립 PE 출력과 실제604 Host 삭제를 같은 풀에서 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawDaisRegular.h"
 #include "o/RawSquidHitPoints.h"
@@ -36,7 +37,7 @@ TEST_CASE(rawDaisRegular_core_native_frames_604_and_eligibility) {
     // 입력마다 실제 free list/해시/Host를 새로 만들어 이전 행의 결과를 사용하지 않는다.
     for (const auto& row:fixture.rows) {
         CHECK(row.size()==5);const auto input=Split(row[1],',');CHECK(input.size()==11);const auto mode=input[0];const auto currentFrame=Number(input[1]),priestFrame=Number(input[3]),eventExists=Number(input[4]),reserve=Number(input[5]),altarExists=Number(input[6]),captured=Number(input[7]),genus=Number(input[8]),priestOwner=Number(input[9]),alliance=Number(input[10]);const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;const bool patch=edition==OriginalEdition::Patch1078;
-        SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());DaisAssets(types,frames,shapes,input[2][0]);std::array<std::span<std::uint8_t>,13> slots;
+        SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());DaisAssets(types,frames,shapes,input[2][0]);std::array<std::span<std::uint8_t>,13> slots;
         // 네 비교 슬롯 외의 unused 슬롯도 원본의 zero 입력으로 둔다.
         for (std::uint16_t sid=5;sid<=11;++sid) { CHECK(pool.Allocate(2)==Sid{sid});slots[sid]=pool.AllocatedBytes(Sid{sid});std::fill(slots[sid].begin(),slots[sid].end(),std::uint8_t{}); }
         const auto insert=[&](Sid sid,std::uint32_t type) { auto raw=slots[sid.value];Put(raw,0,kVtable);raw[10]=static_cast<std::uint8_t>(type);Put(raw,14,std::bit_cast<std::uint32_t>(40.75F));Put(raw,18,std::bit_cast<std::uint32_t>(41.25F));auto& head=hash.Bucket(1,40.75F,41.25F);Put(raw,4,head,2);head=sid.value; };

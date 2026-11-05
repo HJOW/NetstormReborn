@@ -1,4 +1,5 @@
 // 실제 사제 Pop/Activate의 원본 관찰과 회복/낙하/프레임/공간의 명시 분배 연결을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestPostPopTail.h"
 #include "o/RawPriestFall.h"
@@ -27,7 +28,7 @@ struct PriestPopScene {
     PriestPostPopState priests;/* hash: 좌표별 객체 후보를 찾는 공간 해시. 입력 구성 또는 실행 결과 대조에 사용한다. */ SquidHash hash;/* patch: 10.78 패치판의 상태 또는 패치판 검사용 자료. 입력 구성 또는 실행 결과 대조에 사용한다. */ bool patch;/* events: 발생한 이벤트 또는 이벤트 처리기. 입력 구성 또는 실행 결과 대조에 사용한다. */ std::vector<std::string> events;
     // 원본 client SID와 사제 타입/HP/비용 입력을 준비한다.
     explicit PriestPopScene(OriginalEdition edition):pool(edition,kCapacity,false),store(random,[] { return 1U; }),
-        types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({})),spots(65536),patch(edition==OriginalEdition::Patch1078) {
+        types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),frames(types.size(),RiftTypeFrames({})),spots(65536),patch(edition==OriginalEdition::Patch1078) {
         // 번호 50까지 실제 client 할당 정책을 유지한다.
         for (std::uint16_t sid=5;sid<=kObject.value;++sid) CHECK(pool.Allocate(2)==Sid{sid});
         types[kPriestType].maxHitPoints=200;types[kPriestType].cost=123;types[kPriestType].flags1=0x69012;

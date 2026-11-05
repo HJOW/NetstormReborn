@@ -215,9 +215,10 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             [this](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) { return virtualDestroy->Destroy(sid,flags,hooks); });
         if (sharedProcessHost) {
             auto binding=std::make_shared<o::ProcessHostRuntimeBindings>();binding->destroy=baseDestroy.get();binding->regular=o::MakeBridgeRegularHandler(pool,*events);binding->asset=formDispatch->Hooks(); // 실제 현재 World의 가상 부모만 짧게 빌린다.
+            binding->factory=factory.get(); // 같은 World의 공장만 현재 대여에 보관하며 장기 Storage Host에 직접 남기지 않는다.
             binding->postPopDepth=[this] { return bookkeeping.depth; };binding->assertion=[this](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 공통 깊이는 짧은 World 대여, 진단은 같은 장기 Client 장치를 사용한다.
             processUse=storage->Processes().Bind(std::move(binding));host=&storage->Processes().Host();
-        } else { legacyHost=std::make_unique<o::SquidProcessHost>(pool,types,kernel,*baseDestroy,processState,o::MakeBridgeRegularHandler(pool,*events),formDispatch->Hooks());host=legacyHost.get(); } // raw 외부 Kernel의 기존 fixture 경로는 같은 호출자 수명을 요구한다.
+        } else { legacyHost=std::make_unique<o::SquidProcessHost>(pool,types,kernel,*baseDestroy,processState,o::MakeBridgeRegularHandler(pool,*events),formDispatch->Hooks());legacyHost->BindFormFactory(*factory);host=legacyHost.get(); } // 직접 Host와 공장은 같은 World 수명이며 대여 밖으로 참조를 남기지 않는다.
         formDispatch->Bind(*host);
         dependencies=std::make_unique<o::DependFormHost>(pool,*baseDestroy,
             [this](o::Sid watcher,o::Sid watched,o::Sid form) {

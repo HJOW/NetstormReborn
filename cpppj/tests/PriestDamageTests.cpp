@@ -1,4 +1,5 @@
 // 두PE의실제사제Hit+HPsetter+rank보정+burning 숫자몸체를독립관찰과대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawPriestDamage.h"
 #include <cstdio>
@@ -34,7 +35,7 @@ struct DamageScene {
     // patch: 현재판본의raw저장폭을선택한다.
     bool patch;
     // 검사SID50만실제확보하고기존SP모듈은HP조회만수행한다.
-    explicit DamageScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({FrameCode{65,0,0,0}})),store(random,[] { return 1U; }),patch(edition==OriginalEdition::Patch1078) {
+    explicit DamageScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),frames(types.size(),RiftTypeFrames({FrameCode{65,0,0,0}})),store(random,[] { return 1U; }),patch(edition==OriginalEdition::Patch1078) {
         // 이후독립입력들이같은원본번호를사용한다.
         for (std::uint16_t id=5;id<=50;++id) CHECK(pool.Allocate(2)==Sid{id});
     }
@@ -115,7 +116,7 @@ TEST_CASE(PriestDamage_MissingNonzeroBurningRejected) {
 TEST_CASE(PriestDamage_ActualRegularKernelAndDependChain) {
     // 두판본의실제프로세스부착과의존쌍삭제폭을모두사용한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,false);std::vector<RiftTypeRecord> types(patch ? 188 : 171);types[158].constructorAddress=TypeConstructorAddress(edition,158);types[158].maxHitPoints=200;types[158].flags1=0x69012;types[158].flags2=0x210000;std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({FrameCode{65,0,0,0}}));SquidFactory factory(pool,types,false);const auto victim=factory.Create(158,2),firstWatcher=factory.Create(90,2),secondWatcher=factory.Create(91,2);
+        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,false);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);types[158].constructorAddress=TypeConstructorAddress(edition,158);types[158].maxHitPoints=200;types[158].flags1=0x69012;types[158].flags2=0x210000;std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({FrameCode{65,0,0,0}}));SquidFactory factory(pool,types,false);const auto victim=factory.Create(158,2),firstWatcher=factory.Create(90,2),secondWatcher=factory.Create(91,2);
         // 아직공간Pop을주장하지않는독립live 입력으로사제피격몸체를준비한다.
         auto raw=pool.AllocatedBytes(victim);raw[11]=0;raw[patch ? 34U : 32U]=1;Put(raw,26,150,patch ? 4U : 2U);Put(raw,14,std::bit_cast<std::uint32_t>(20.75f));Put(raw,18,std::bit_cast<std::uint32_t>(21.9f));Put(raw,patch ? 36U : 34U,0,patch ? 4U : 1U);
         SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState clock;SquidProcessHost host(pool,types,kernel,destroy,clock);

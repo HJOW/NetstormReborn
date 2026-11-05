@@ -1,4 +1,5 @@
 // 실제 SquidDisplay/Storage가 현재 Client 진단/타입/상세 owner를 사용하는지 창 없이 확인한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/RawSurfaceWorld.h"
@@ -19,7 +20,7 @@ struct DisplayLiveSink final:SquidDisplaySink {
     void Assertion(std::string_view expression,std::string_view file,std::uint32_t line) override { CHECK(expression=="getTypeStruct()->frameCheck( isAbstract(), theFrame, true )" && file=="\\Ns\\O\\Squid.cpp" && line==0x846);events.push_back("D");if (assertionEffect) assertionEffect(); } // 복귀 뒤 실제 부모가 타입을 재조회한다.
 };
 struct DisplayLiveScene { // 실제 공통88과 서로 다른 두 타입/프레임의 최소 물리 입력이다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188);std::vector<SquidDisplayShape> shapes=std::vector<SquidDisplayShape>(188);std::array<std::uint8_t,50> raw{}; // 같은 표시 부모가 직접 읽는다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);std::vector<SquidDisplayShape> shapes=std::vector<SquidDisplayShape>(188);std::array<std::uint8_t,50> raw{}; // 같은 표시 부모가 직접 읽는다.
     DisplayLiveSink sink{types,shapes};SquidDisplay display{OriginalEdition::Patch1078,types,shapes,sink,{0,0,65536,{0,0,640,480}}}; // 모형 표시 계산을 만들지 않고 실제 표시기를 호출한다.
     DisplayLiveScene() {
         types[70].name="oldType";types[71].name="newType";shapes[70].loaded=shapes[71].loaded=true;shapes[70].frameCount=1;shapes[71].frameCount=3;shapes[70].frames.resize(1);shapes[71].frames.resize(3);shapes[71].frames[0].width=10;shapes[71].frames[0].height=12;shapes[71].frames[2].width=20;shapes[71].frames[2].height=6;
@@ -49,7 +50,7 @@ TEST_CASE(SquidDisplayLive_SuppressionFollowsParentAndInvalidTypeDetail) {
 
 // 실제 World sink/Storage가 Client의 동일한 진단/상세 주소를 쓰고 표시 뷰 교체로 끊기지 않는다.
 TEST_CASE(SquidDisplayLive_ActualStorageAndClientDetailSurviveWorldView) {
-    ClientGameplayGlobals globals;std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames(std::vector<FrameCode>{}));std::vector<SquidDisplayShape> shapes(188);types[70].name="liveType";shapes[70].loaded=true;shapes[70].frameCount=1;shapes[70].frames.resize(1);shapes[70].frames[0].width=10;shapes[70].frames[0].height=12;std::uint32_t diagnostics{}; // 순수 창 없는 실제 World의 최소 배열이다.
+    ClientGameplayGlobals globals;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames(std::vector<FrameCode>{}));std::vector<SquidDisplayShape> shapes(188);types[70].name="liveType";shapes[70].loaded=true;shapes[70].frameCount=1;shapes[70].frames.resize(1);shapes[70].frames[0].width=10;shapes[70].frames[0].height=12;std::uint32_t diagnostics{}; // 순수 창 없는 실제 World의 최소 배열이다.
     auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes);storage->BindChecking(RawCheckingFlag{globals.AiDebug().Checking()});storage->BindDisplayDiagnostics(globals.AiDebug().AssertionDetail(),[&](auto,auto,auto line) { CHECK(line==0x846);++diagnostics;globals.AiDebug().Checking()=0; });globals.AiDebug().Checking()=1;
     BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;RawSurfaceWorld world(OriginalEdition::Patch1078,types,frames,shapes,links,70,nullptr,storage);const auto sid=storage->pool.Allocate(2);auto raw=storage->pool.AllocatedBytes(sid);Put(raw,0,0x501dd0);raw[10]=70;raw[40]=1;Put(raw,36,0xffffffffU);std::uint32_t invalidates{};world.SetDisplay({0,0,65536,{0,0,640,480}},{[] { return false; },[&](auto,auto) { ++invalidates; }});world.Core().display.Update(raw);
     CHECK(diagnostics==1 && invalidates==0);CHECK(globals.AiDebug().AssertionDetail()=="Frame assertion failed. Asking for type=70 (liveType) frame=-1 abs=1\n\nType has 1 frames\n");Put(raw,36,0);world.SetDisplay({0,0,65536,{0,0,640,480}},{[] { return false; },[&](auto,auto) { ++invalidates; }});world.Core().display.Update(raw);CHECK(diagnostics==1 && invalidates==1 && globals.AiDebug().AssertionDetail().has_value());

@@ -1,0 +1,837 @@
+{
+  "unit": 907,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "scope": {
+    "process": "Attach 생성/지정과Reattach free의세위치가현재ProcessForm 번호/공통Create·Take 사용. 원문처럼Take반환무시/요청슬롯유지.",
+    "currentWorld": "현재RuntimeBindings.factory를선택위치에서대여. 장기Host에옛World주소저장없음. 바인딩시Pool정체성검증/선택된부재명시오류/activeCalls보존.",
+    "directAndIndependent": "직접World Host는같은수명공장명시연결. 독립Host도TYPE snapshot의공통Factory 사용. 고정VT생성분기없음.",
+    "globals": "GameAux.ProcessFormType 초기2/현재00541078·CD0051c968 주소를양판본Storage가빌림. 일반World준비에도유지.",
+    "gump": "GumpFormHost.Take도같은실제Factory.Take/현재생성자·저장VT+2c사용."
+  },
+  "native": {
+    "newObservations": 0,
+    "newFixtures": 0,
+    "expectationsModified": false
+  },
+  "inputMetadata": {
+    "files": 82,
+    "tables": 127,
+    "existingAssertionsUnchanged": 2387,
+    "testNamesChanged": 0,
+    "details": [
+      {
+        "file": "cpppj/tests/AltarSacrificeTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 16,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ArcherAnimationTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 16,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/AmbientWindTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 8,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/AssetRegularTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 25,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/BoardAngleCheckingTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 10,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/BridgeEventTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 62,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/BuildingNotifyCurrentTests.cpp",
+        "inputTables": 3,
+        "existingAssertions": 27,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/BridgeFallParentTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 16,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/CampaignLifetimeTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 29,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/CampaignTargetTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 12,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/CannonFireTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 15,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/CarrierCheckTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 44,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/CarrierPostPopTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 41,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ConstructionBuilderTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 42,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ConstructionDataTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 62,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ConstructionProcessTests.cpp",
+        "inputTables": 3,
+        "existingAssertions": 43,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ConstructionTimeTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 22,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ContainedLookupTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 22,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ContentPreviewProcessTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 21,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/DaisBridgeTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 22,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/DaisLifecycleTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 12,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/DaisRegularTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 11,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/DaisProgressTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 17,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/DissolveVisualSystemTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 23,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/DudeFootprintTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 16,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/DudeNoticeTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 11,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/DudeTaskTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 11,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/FactoryUpgradeTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 34,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/FactoryTakeDiagnosticsTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 29,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/FenceRegularTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 49,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/FieryTailVisualSystemTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 33,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ForcefieldLifecycleTests.cpp",
+        "inputTables": 4,
+        "existingAssertions": 47,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/FortMoneyLoadTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 20,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/FrameAdvanceTests.cpp",
+        "inputTables": 4,
+        "existingAssertions": 50,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/GraphDetachLiveTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 10,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/GraphLiveCheckingTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 9,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/GunAnimationTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 12,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/GunProcessTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 50,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/GunImpactTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 35,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/IceCannonFireTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 11,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/IslandLifecycleTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 12,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/LightningScreenTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 18,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/LightningVisualSystemTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 28,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/MissileTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 14,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/MissileCheckingTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 27,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ManaRegistrationTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 14,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PathCleanupTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 28,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PlayerWorldTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 35,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PriestDamageTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 22,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PriestFallTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 24,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PriestPopTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 26,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PriestPostPopTailTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 25,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PriestPostPopTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 40,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PriestPreDestroyTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 36,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PriestRitualActionsTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 18,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PriestRegenTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 47,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ProcessFormTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 25,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ProcessRetakeTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 17,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ProcessTransmitTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 5,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ProcessTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 50,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RawPathDataTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 39,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RawPathRuntimeTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 78,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RawPathSearchTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 34,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RawPathStartTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 34,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RawPriestWorldBindingsTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 65,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RawSurfaceWorldTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 67,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RegularCurrentTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 15,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RiftShapeAccessTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 27,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RiftHitPointCurrentTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 22,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/RunePostPopTests.cpp",
+        "inputTables": 4,
+        "existingAssertions": 64,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SmokeVisualSystemTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 33,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SoundPlayTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 36,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SoundProcessTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 38,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SquidActivateTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 31,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SquidCreationParentTests.cpp",
+        "inputTables": 4,
+        "existingAssertions": 26,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SquidDisplayLiveTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 16,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SquidPopParentTests.cpp",
+        "inputTables": 3,
+        "existingAssertions": 67,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SquidUnpopCheckingTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 11,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/StateSidListsTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 44,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SurfaceLifecycleTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 52,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/TempleRitualTests.cpp",
+        "inputTables": 2,
+        "existingAssertions": 21,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/TerrainWorldBindingTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 11,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      }
+    ],
+    "expectedValuesChanged": false,
+    "additionalFocusedSources": [
+      "AltarSacrificeTests.cpp",
+      "AmbientWindTests.cpp",
+      "ArcherAnimationTests.cpp",
+      "AssetRegularTests.cpp",
+      "BoardAngleCheckingTests.cpp",
+      "BridgeEventTests.cpp",
+      "BridgeFallParentTests.cpp",
+      "CampaignLifetimeTests.cpp",
+      "CampaignTargetTests.cpp",
+      "CannonFireTests.cpp",
+      "CarrierCheckTests.cpp",
+      "ConstructionBuilderTests.cpp",
+      "ConstructionDataTests.cpp",
+      "ConstructionProcessTests.cpp",
+      "ConstructionTimeTests.cpp",
+      "ContainedLookupTests.cpp",
+      "ContentPreviewProcessTests.cpp",
+      "DaisBridgeTests.cpp",
+      "DaisProgressTests.cpp",
+      "DaisRegularTests.cpp",
+      "DissolveVisualSystemTests.cpp",
+      "DudeFootprintTests.cpp",
+      "DudeNoticeTests.cpp",
+      "DudeTaskTests.cpp",
+      "FactoryUpgradeTests.cpp",
+      "FenceRegularTests.cpp",
+      "FieryTailVisualSystemTests.cpp",
+      "FortMoneyLoadTests.cpp",
+      "FrameAdvanceTests.cpp",
+      "GunAnimationTests.cpp",
+      "GunImpactTests.cpp",
+      "GunProcessTests.cpp",
+      "IceCannonFireTests.cpp",
+      "IslandLifecycleTests.cpp",
+      "LightningScreenTests.cpp",
+      "LightningVisualSystemTests.cpp",
+      "ManaRegistrationTests.cpp",
+      "PriestDamageTests.cpp",
+      "PriestFallTests.cpp",
+      "PriestRitualActionsTests.cpp",
+      "ProcessFormTests.cpp",
+      "ProcessHostStorageTests.cpp",
+      "ProcessRetakeTests.cpp",
+      "ProcessTests.cpp",
+      "ProcessTransmitTests.cpp",
+      "RawPathDataTests.cpp",
+      "RawPathRuntimeTests.cpp",
+      "RawPathSearchTests.cpp",
+      "RawPriestWorldBindingsTests.cpp",
+      "RawSurfaceWorldTests.cpp",
+      "SmokeVisualSystemTests.cpp",
+      "SoundPlayTests.cpp",
+      "SoundProcessTests.cpp",
+      "SquidDisplayLiveTests.cpp",
+      "SquidUnpopCheckingTests.cpp",
+      "SurfaceLifecycleTests.cpp",
+      "TempleRitualTests.cpp",
+      "TerrainWorldBindingTests.cpp"
+    ]
+  },
+  "validation": {
+    "buildCommands": 1,
+    "buildExits": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "uniqueCases": 55,
+    "newCases": 4,
+    "existingCases": 51,
+    "testCommands": 19,
+    "testExecutions": 55,
+    "firstTestFailures": 0,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "ProcessCreationCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_patch_x86_fixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_cd_x86_fixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_1037_x86_fixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_default_handler_repeats_with_payload_period",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_delayed_fall_event_registers_and_ends",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_handler_may_kill_its_own_process",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_dependent_chain_order_and_unlink",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_form_unpop_keeps_chain_while_parent_is_dying",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_attach_guards",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "process_form_root_requires_unpop_hook",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ProcessHostStorage_",
+        "cases": 11,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FormCreationCurrent_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FormTake_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "SquidCreationParent_",
+        "cases": 6,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "SquidTakeParentCurrent_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "TypeConstructors_X86Table_",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FormConstructorCurrent_",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "RegularCurrent_",
+        "cases": 12,
+        "failedChecks": 0,
+        "exit": 0
+      }
+    ],
+    "normalizedSourceFiles": 2870,
+    "sourceChangesAfterSnapshot": [],
+    "sourceBuildOverlap": false
+  },
+  "product": {
+    "unit": 907,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10745856,
+    "sha256": "2e24596466f63da3269df6b119948df2d401b43d7268851ae87a85d4aa3044f3",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "protection": {
+    "previousFiles": 2782,
+    "unchanged": 2782,
+    "changed": [],
+    "currentFiles": 2782,
+    "currentFixtures": 962,
+    "added": []
+  },
+  "checking": {
+    "pending": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4
+  },
+  "excluded": [
+    "실제게임/GUI/진단UI/포획/희생/특정적공격/승리/사용자확인",
+    "새의식/공중/수신/패킷/송신/MP/통신검사",
+    "전체검사/34미션/ZIP/물리입력/PCM/CD재시도"
+  ],
+  "remaining": [
+    "Form1/2/3/6 해제의현재TYPE·VT/진단·부모알림과CDUnpop",
+    "Baseprocess기존선행guard/실패rollback/다른필드·가상부착·전체Factory/HP caller",
+    "State/파일/객체UI/Edit/Windows·무검사MP와4~8차"
+  ],
+  "nextUnit": 908,
+  "next": "실제Form Unpop 공통몸체/진단/부모알림과CD Unpop 경계를이어대조한다.",
+  "rawEvidence": "extracted/cpp-resume-907/ (Git 제외/현재 PC 전용)"
+}

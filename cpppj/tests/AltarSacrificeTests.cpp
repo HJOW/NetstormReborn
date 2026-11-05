@@ -1,4 +1,5 @@
 // 제단 사건/해방과 다이스 전처리의 독립 PE 출력을 같은 풀·실제 FrameAdvance/Host에서 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawAltarSacrifice.h"
 #include "o/RawSquidHitPoints.h"
@@ -47,7 +48,7 @@ TEST_CASE(rawAltarSacrifice_native_events_release_and_predestroy_prefix) {
         // fixture의 평평한 JSON은 명시 문자/정수 입력만 포함한다.
         for (const auto& field:Split(std::string_view(row[1]).substr(1,row[1].size()-2),',')) { const auto split=field.find(':');const auto key=field.substr(1,split-2);auto value=field.substr(split+1);if (!value.empty() && value.front()=='"') value=value.substr(1,value.size()-2);input.emplace(key,std::move(value)); }
         const auto number=[&](const char* name) { return Number(input.at(name)); };const auto mode=input.at("mode");const auto currentFrame=number("daisFrame"),priestFrame=number("altarFrame"),reserve=number("reserve"),captured=number("captured"),priestOwner=1U,alliance=number("alliance");const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;const bool patch=edition==OriginalEdition::Patch1078;
-        SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());AltarAssets(types,frames,shapes,'A');std::array<std::span<std::uint8_t>,13> slots;
+        SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());AltarAssets(types,frames,shapes,'A');std::array<std::span<std::uint8_t>,13> slots;
         // 네 비교 슬롯 외의 unused 슬롯도 원본의 zero 입력으로 둔다.
         for (std::uint16_t sid=5;sid<=11;++sid) { CHECK(pool.Allocate(2)==Sid{sid});slots[sid]=pool.AllocatedBytes(Sid{sid});std::fill(slots[sid].begin(),slots[sid].end(),std::uint8_t{}); }
         const auto insert=[&](Sid sid,std::uint32_t type) { auto raw=slots[sid.value];Put(raw,0,kVtable);raw[10]=static_cast<std::uint8_t>(type);Put(raw,14,std::bit_cast<std::uint32_t>(40.75F));Put(raw,18,std::bit_cast<std::uint32_t>(41.25F));auto& head=hash.Bucket(1,40.75F,41.25F);Put(raw,4,head,2);head=sid.value; };

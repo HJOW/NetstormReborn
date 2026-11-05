@@ -1,4 +1,5 @@
 // 섬 받침 preDestroy와 noIsland postDestroy 재정의를 원본 기계어 기대값으로 검사하고 실제 지연 낙하 예약에 이어 본다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/Kernel.h"
 #include "o/RawBridgeLifecycle.h"
@@ -91,7 +92,7 @@ TEST_CASE(island_lifecycle_real_process_schedules_bridge_falls) {
     // 실제 타입 번호: bridge 82, isle 97, island 94.
     constexpr std::uint32_t bridgeType=82,isleType=97,islandType=94;
     SidPool pool(OriginalEdition::Patch1078,capacity,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);
-    std::vector<RiftTypeRecord> types(188);
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);
     types[bridgeType].flags1=0x00000802;types[bridgeType].flags2=0x00000004;types[bridgeType].footX=types[bridgeType].footY=1;
     types[isleType].flags1=0x28000803;types[isleType].flags2=0x00000002;types[isleType].footX=types[isleType].footY=1;
     types[islandType].flags1=0x28000003;types[islandType].flags2=0x01000000;types[islandType].footX=types[islandType].footY=3;

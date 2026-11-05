@@ -1,4 +1,5 @@
 // 실제두PE SunArcher 회전/각상태발사/helper/ctor와생성인자관찰을독립대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawArcherAnimation.h"
 #include <cstdio>
@@ -26,7 +27,7 @@ struct ArcherScene {
     // patch: 판본별frame/raw폭을선택한다.
     bool patch;
     // 원본 SID50/60/70을 실제로 확보한다.
-    explicit ArcherScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),data(types.size()),patch(edition==OriginalEdition::Patch1078) {
+    explicit ArcherScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),data(types.size()),patch(edition==OriginalEdition::Patch1078) {
         // 각독립행은동일한원본번호를사용한다.
         for (std::uint16_t id=5;id<=70;++id) CHECK(pool.Allocate(2)==Sid{id});
     }
@@ -117,7 +118,7 @@ TEST_CASE(ArcherAnimation_MissingRealMissileRejected) {
 TEST_CASE(ArcherAnimation_ActualHostNotifyAndLifetime) {
     // 실제 서버 풀과 GunProcess 패킷 송신에서 두 판본의 Form/부모 연결과 Kill을 방문한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        SidPool pool(edition,kCapacity,true);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);types[71].group=0;std::vector<ArcherTypeData> data(types.size());data[71]={20,40};const bool patch=edition==OriginalEdition::Patch1078;
+        SidPool pool(edition,kCapacity,true);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);types[71].group=0;std::vector<ArcherTypeData> data(types.size());data[71]={20,40};const bool patch=edition==OriginalEdition::Patch1078;
         // 실제 동일 SID50/60까지 풀을 확보한다.
         for (std::uint16_t id=5;id<=60;++id) CHECK(pool.Allocate(2)==Sid{id});
         auto parent=pool.AllocatedBytes(kSource);std::fill(parent.begin(),parent.end(),std::uint8_t{});parent[10]=71;parent[12]=0xa5;Put(parent,patch ? 36U : 34U,0,patch ? 4U : 1U);auto target=pool.AllocatedBytes(Sid{60});target[10]=158;types[158].flags1=0x10;

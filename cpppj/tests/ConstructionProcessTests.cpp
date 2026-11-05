@@ -1,5 +1,6 @@
 // 세 원본 PE의 건설 프로세스 시작/진행/완료/form 삭제 통지 관찰과 실제 host·Kernel·보상 모듈 연결을 검사한다.
 // 이력: 2026-10-11 추가.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionProcess.h"
 #include "o/SpStore.h"
@@ -31,7 +32,7 @@ struct ProcessScene {
     std::uint32_t hpCalls{}; // 최대 HP 경계를 부른 횟수다.
     bool patch; // 판본별 raw 위치와 밀어내기 인자 수를 고른다.
     // 부모 슬롯은 행마다 raw 입력으로 공급하므로 미리 할당하지 않는다.
-    explicit ProcessScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+    explicit ProcessScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),
         patch(edition==OriginalEdition::Patch1078) {}
     // 판본별 소유자/extra(abstract) 바이트와 HP 폭이다.
     std::size_t OwnerOffset() const { return patch ? 34 : 32; }
@@ -175,7 +176,7 @@ std::vector<std::uint32_t> DefaultInput() {
 }
 // 실제 모듈 장면의 타입 표다. 타입 100은 HP 300의 factory genus다. host와 보상 모듈이 생성 때 표를 복사하므로 먼저 채운다.
 std::vector<RiftTypeRecord> RealTypes(bool patch) {
-    std::vector<RiftTypeRecord> types(patch ? 188 : 171);
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);
     types[100].flags1=kHasHp;types[100].flags2=0x4000;types[100].maxHitPoints=300;types[100].footX=types[100].footY=1;
     return types;
 }
@@ -235,7 +236,7 @@ TEST_CASE(ConstructionProcess_RejectsMissingHooksAndForeignHost) {
     ProcessScene scene(OriginalEdition::Patch1078);scene.Prepare(DefaultInput(),true);auto hooks=scene.Hooks();
     hooks.push={};CHECK(Throws([&] { RawConstructionProcess invalid(scene.pool,scene.types,scene.state,hooks); }));
     hooks=scene.Hooks();hooks.attach={};CHECK(Throws([&] { RawConstructionProcess invalid(scene.pool,scene.types,scene.state,hooks); }));
-    std::vector<RiftTypeRecord> cdTypes(171);CHECK(Throws([&] { RawConstructionProcess invalid(scene.pool,cdTypes,scene.state,scene.Hooks()); }));
+    std::vector<RiftTypeRecord> cdTypes=::netstorm::test::MakeFormTypeInputs(171);CHECK(Throws([&] { RawConstructionProcess invalid(scene.pool,cdTypes,scene.state,scene.Hooks()); }));
     RealScene real(OriginalEdition::Patch1078);
     CHECK(Throws([&] { RawConstructionProcess invalid(scene.pool,scene.types,scene.state,hooks,&real.host); }));
     CHECK(!Throws([&] { RawConstructionProcess valid(real.pool,real.types,real.state,hooks,&real.host); }));

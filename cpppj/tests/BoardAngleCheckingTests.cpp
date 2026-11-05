@@ -1,4 +1,5 @@
 // 실제 CRT fmod와 현재 checking의 양판본 원문 출력을 이진 double 전체로 비교한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawBoardAngle.h"
 #include "client/RawSurfaceWorld.h"
@@ -34,7 +35,7 @@ TEST_CASE(BoardAngleChecking_ReplaysNativeRealFmodAndCurrentGate) {
 }
 // 실제 Storage가 만든 같은 현재 Client 뷰는 생성 뒤 checking 변경과 진단 복귀를 그대로 전달한다.
 TEST_CASE(BoardAngleChecking_StorageViewUsesCurrentOwnerAndOriginalDiagnostic) {
-    using namespace netstorm::client;std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
+    using namespace netstorm::client;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);
     RawSurfaceStorage storage(OriginalEdition::Patch1078,types,frames,shapes);std::int32_t checking=0;storage.BindChecking(RawCheckingFlag{checking});
     std::optional<std::string> detail;std::size_t assertions=0;storage.BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) {
         CHECK(expression=="angle < 361.0f" && file=="\\Ns\\O\\Boardcoord.cpp" && line==0xb3);++assertions;checking=0;

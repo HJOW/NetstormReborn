@@ -1,4 +1,5 @@
 // 원본 ProcessForm 서버 부착/갱신의 WriteData·송신·체인/Pop 순서를 독립 PE 관찰과 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionSupport.h"
 #include "o/SquidProcess.h"
 #include "o/SquidUnpop.h"
@@ -46,7 +47,7 @@ struct TransmitScene {
     std::int32_t size{};
     // 모든 전송 경계는 raw 쓰기 전 현재 필드를 읽는다. 기대 출력은 fixture만 제공한다.
     TransmitScene(OriginalEdition edition,bool server,std::int32_t length):pool(edition,kTransmitCapacity,server),
-        types(edition==OriginalEdition::Patch1078 ? 188 : 171),unpop(pool,hash,spots),destroy(pool,unpop,types),
+        types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),unpop(pool,hash,spots),destroy(pool,unpop,types),
         host(pool,types,kernel,destroy,state,{}, {},Transmission()),size(length) {}
     // WriteData와 버퍼 송신 경계를 원본이 호출한 순서 그대로 기록한다.
     ProcessFormTransmission Transmission() {

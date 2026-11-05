@@ -1,4 +1,5 @@
 // 실제 두 PE 충돌 효과/anim Handle/Kernel/Regular 상태를 복원 소비자와 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawGunImpact.h"
 #include "o/SquidDestroyLifecycle.h"
@@ -39,7 +40,7 @@ std::vector<RiftTypeFrames> ImpactFrames(std::size_t count) {
 }
 // 실제 Regular 생성/부착의 공개 상태를 원본의 관찰된 의미 필드와 대조한다.
 std::string RegularState(OriginalEdition edition,std::uint32_t event,float payload) {
-    SidPool pool(edition,kCapacity,false);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
+    SidPool pool(edition,kCapacity,false);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);
     // Native attach 관찰 경계가 제공한 Form71/부모50을 같은 실제 풀에서 확보한다.
     for (std::uint16_t id=5;id<=70;++id) CHECK(pool.Allocate(2)==Sid{id});
     auto raw=pool.AllocatedBytes(kSource);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=160;
@@ -60,7 +61,7 @@ struct ImpactScene {
     std::array<std::uint8_t,8> point{}; // 직접 Clamp 수신자의 raw 좌표다.
     bool patch; // 현재 frame DWORD/CD BYTE 및 한도를 선택한다.
     // 원본 SID50을 실제 할당해 쓰기 계약을 유지한다.
-    explicit ImpactScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),frames(ImpactFrames(types.size())),setter(pool,types,FrameHooks()),patch(edition==OriginalEdition::Patch1078) {
+    explicit ImpactScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),frames(ImpactFrames(types.size())),setter(pool,types,FrameHooks()),patch(edition==OriginalEdition::Patch1078) {
         // 반복 입력에서도 할당 상태를 바꾸지 않고 현재 원본 slot을 재작성한다.
         for (std::uint16_t id=5;id<=50;++id) CHECK(pool.Allocate(2)==Sid{id});
     }

@@ -1,4 +1,5 @@
 // 비멀티 공통 Activate의 진단 복귀/부분 효과/깊이와 실제 World의 현재 진단을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "TestSupport.h"
 #include "o/RawSquidActivate.h"
 #include "o/SquidPop.h"
@@ -83,7 +84,7 @@ TEST_CASE(SquidActivate_DiagnosticSelfRebindReadsNextCurrentCallback) { //첫진
 }
 
 TEST_CASE(SquidActivate_ActualCommonPostPopKeepsStatisticsBeforeCurrentDiagnostic) { //실제AI통지와공통통계/감소뒤의같은깊이를부모에서관찰한다.
-    ActivateScene scene;std::vector<RiftTypeRecord> types(188);types[74].cost=3;types[74].footX=types[74].footY=1;auto raw=scene.Raw();raw[10]=74;raw[34]=1;
+    ActivateScene scene;std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[74].cost=3;types[74].footX=types[74].footY=1;auto raw=scene.Raw();raw[10]=74;raw[34]=1;
     for (std::size_t index=0;index<4;++index) raw[index]=static_cast<std::uint8_t>(0x501dd0U>>(index*8)); //실제공통가상표를명시입력한다.
     SquidPostPopState state;state.depth=2;state.localOwner=1;SquidPostPop post(scene.pool,types,state);post.BindPatchAiNotice([&](auto owner,Sid sid,bool made) { CHECK(owner==1 && sid==scene.source && made && state.depth==3);state.depth=9;raw[10]=75; });
     SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidPop pop(scene.pool,hash,spots,nullptr,&post);std::uint32_t diagnoses{};SquidPopDiagnostics diagnostics;diagnostics.types=types;
@@ -93,7 +94,7 @@ TEST_CASE(SquidActivate_ActualCommonPostPopKeepsStatisticsBeforeCurrentDiagnosti
 
 TEST_CASE(SquidActivate_ActualWorldUsesCurrentClientDiagnosticWithCheckingOff) { //실제통지가교체한같은Client장치를후처리반환뒤읽으며checking0에서도진단한다.
     ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;Client client(std::move(options));
-    std::vector<RiftTypeRecord> types(188);types[74].footX=types[74].footY=1;std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);shapes[74].loaded=true;shapes[74].frameCount=1;shapes[74].frames.resize(1);shapes[74].frames[0].cellWidth=shapes[74].frames[0].cellHeight=1;
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);types[74].footX=types[74].footY=1;std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(188);shapes[74].loaded=true;shapes[74].frameCount=1;shapes[74].frames.resize(1);shapes[74].frames[0].cellWidth=shapes[74].frames[0].cellHeight=1;
     auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes);auto& checking=client.GameplayGlobals()->AiDebug().Checking();checking=0;storage->BindChecking(RawCheckingFlag{checking});
     storage->BindDisplayDiagnostics(client.GameplayGlobals()->AiDebug().AssertionDetail(),[](auto,auto,auto) { throw std::logic_error("교체전진단장치호출금지"); });
     BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;RawSurfaceWorld world(OriginalEdition::Patch1078,types,frames,shapes,links,83,nullptr,storage);auto core=world.Core();const auto source=world.Create(74);core.pool.AllocatedBytes(source)[34]=1;core.bookkeeping.depth=2;std::uint32_t diagnoses{};

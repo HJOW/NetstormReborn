@@ -1,4 +1,5 @@
 // 실제Player통지와같은월드의공통삭제/Content수명후설치를검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionSupport.h"
 #include "client/RawCampaignLifetimeBindings.h"
 #include "o/RawContainedCreate.h"
@@ -31,7 +32,7 @@ void NoticeSlots(SidPool& pool,std::uint32_t layout) {
 }
 // 같은풀에서실제factory/Pop/장부를쓸최소월드자산입력이다.
 struct LifetimeAssets {
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 원본번호를직접쓰는현재타입표다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); // 원본번호를직접쓰는현재타입표다.
     std::vector<RiftTypeFrames> frames=std::vector<RiftTypeFrames>(188,RiftTypeFrames({})); // 같은번호의실제프레임저장소다.
     std::vector<SquidDisplayShape> shapes=std::vector<SquidDisplayShape>(188); // 공간등록에쓸명시SHP치수다.
     // 실제empty84는base생성자이며다른현재타입은이검사에서Pop하지않는다.

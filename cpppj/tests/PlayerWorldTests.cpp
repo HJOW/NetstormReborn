@@ -1,4 +1,5 @@
 // 실제 Player wrapper/Post/getter를 보호 자료와 같은 Pool/Host에 연결해 전체 원본 상태를 비교한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "DudeSpawnSupport.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/RawPlayerWorld.h"
@@ -125,7 +126,7 @@ TEST_CASE(PlayerWorld_SameSurfaceCoreRecordsAndInitialRegular) {
 
 namespace { // 실제9기록/물리 슬롯/공통 부모에 선택 효과만 연결한다.
 struct PlayerCurrentScene {
-    SidPool pool{OriginalEdition::Patch1078,24000,true};std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); // 현재 PATCH 물리 슬롯과 공통 타입 표다.
+    SidPool pool{OriginalEdition::Patch1078,24000,true};std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); // 현재 PATCH 물리 슬롯과 공통 타입 표다.
     SquidPostPopState book;SquidPostPop base{pool,types,book}; // 같은 공통 부모와 실제 중첩 깊이다.
     std::vector<std::uint8_t> records=std::vector<std::uint8_t>(9*0xb4);PlayerWorldState state; // 같은 현재9기록과 예약/생성 전역이다.
     std::span<std::uint8_t> raw;std::vector<std::string> events; // 관찰 대상5의 현재 뷰와 도달한 하위 순서다.
@@ -177,5 +178,5 @@ TEST_CASE(PlayerParentCurrent_TechnologyDiagnosticReturnsCurrentExplicitRecord) 
     PlayerCurrentScene scene;PlayerWorldHooks hooks;hooks.assertion=[&](auto kind) { CHECK(kind==PlayerWorldAssertion::PlayerIdKnown);scene.events.push_back("A");Put(scene.records,8*0xb4+0x9c,0x12345678);scene.state.battleOwner=1; };RawPlayerWorld body(scene.pool,scene.base,scene.records,scene.state,std::move(hooks));CHECK(body.Technology(8)==0x12345678 && scene.events.size()==1 && body.CurrentTechnology()==0);
 }
 TEST_CASE(PlayerParentCurrent_CdAndPhysicalStorageContractsRemain) { // CD 구성의 전수 장치와 PATCH 실제 저장 크기 경계를 유지한다.
-    PlayerCurrentScene scene;CHECK(Throws([&] { RawPlayerWorld invalid(scene.pool,scene.base,std::span(scene.records).first(8*0xb4),scene.state,{}); }));SidPool pool(OriginalEdition::Cd1072,24000,true);std::vector<RiftTypeRecord> types(171);SquidPostPopState book;SquidPostPop base(pool,types,book);std::vector<std::uint8_t> records(9*0xac);CHECK(Throws([&] { RawPlayerWorld missing(pool,base,records,scene.state,{}); }));
+    PlayerCurrentScene scene;CHECK(Throws([&] { RawPlayerWorld invalid(scene.pool,scene.base,std::span(scene.records).first(8*0xb4),scene.state,{}); }));SidPool pool(OriginalEdition::Cd1072,24000,true);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(171);SquidPostPopState book;SquidPostPop base(pool,types,book);std::vector<std::uint8_t> records(9*0xac);CHECK(Throws([&] { RawPlayerWorld missing(pool,base,records,scene.state,{}); }));
 }

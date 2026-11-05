@@ -1,4 +1,5 @@
 // 신전 의식의 원본 전체 출력/조회와 기존 공통HP/실제프레임/공유예약 소비자를 대조한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawTempleRitual.h"
 #include "o/RawSquidHitPoints.h"
@@ -41,7 +42,7 @@ TEST_CASE(rawTempleRitual_native_stage_positions_queries_and_effects) {
     // 입력마다같은상태저장소를새로만들어앞선행의예측결과/예약을남기지않는다.
     for (const auto& row:fixture.rows) {
         CHECK(row.size()==7);const auto input=Split(row[1],',');CHECK(input.size()==9);const auto mode=Number(input[0]),currentFrame=Number(input[1]),profile=Number(input[3]),boss=Number(input[4]),reserve=Number(input[5]),spot=Number(input[6]),mutation=Number(input[8]);const auto xy=Split(row[2],',');CHECK(xy.size()==4);
-        const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536,static_cast<std::uint8_t>(spot));std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());TempleAssets(types,frames,shapes,input[2][0]);std::array<std::span<std::uint8_t>,9> slots;
+        const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536,static_cast<std::uint8_t>(spot));std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());TempleAssets(types,frames,shapes,input[2][0]);std::array<std::span<std::uint8_t>,9> slots;
         // 네raw슬롯의초기바이트는native와같고누락Rune도0이미지로유지한다.
         for (std::uint16_t sid=5;sid<=8;++sid) { CHECK(pool.Allocate(2)==Sid{sid});slots[sid]=pool.AllocatedBytes(Sid{sid});std::fill(slots[sid].begin(),slots[sid].end(),std::uint8_t{}); }
         const auto add=[&](Sid sid,std::uint32_t type,float x,float y,std::uint32_t extra,std::uint32_t rawState) { auto raw=slots[sid.value];Put(raw,0,kVtable);raw[10]=static_cast<std::uint8_t>(type);raw[11]=static_cast<std::uint8_t>(rawState);raw[patch ? 40 : 35]=static_cast<std::uint8_t>(extra);Put(raw,14,std::bit_cast<std::uint32_t>(x));Put(raw,18,std::bit_cast<std::uint32_t>(y));auto& head=hash.Bucket(1,x,y);Put(raw,4,head,2);head=sid.value; };
@@ -72,7 +73,7 @@ TEST_CASE(rawTempleRitual_native_stage_positions_queries_and_effects) {
 TEST_CASE(rawTempleRitual_real_frame_and_307_shared_consumer) {
     // 각판본의실제타입별생성자와공통HP폭을공유한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());TempleAssets(types,frames,shapes,'A');
+        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());TempleAssets(types,frames,shapes,'A');
         // 165/158/166의실제생성자주소를입력으로공급하고base vtable로대체하지않는다.
         for (const auto type:{158U,165U,166U}) types[type].constructorAddress=TypeConstructorAddress(edition,type);
         SquidPostPopState book;SquidOwnerMode ownerMode;SquidOwner owner(pool,types,book,ownerMode);SquidFactory factory(pool,types);const auto temple=factory.Create(165,2),priest=factory.Create(158,2);owner.Set(temple,1);owner.Set(priest,1);SetRawSquidHitPoints(pool,priest,100);auto templeRaw=pool.AllocatedBytes(temple),priestRaw=pool.AllocatedBytes(priest);

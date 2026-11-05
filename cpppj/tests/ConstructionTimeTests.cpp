@@ -1,4 +1,5 @@
 // 끝 시각 재설정의 세 PE 관찰과 실제 form→Kernel 조회·건설 진행 연결을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionProcess.h"
 
@@ -31,7 +32,7 @@ struct TimeScene {
     ConstructionProcess* process{}; // host가 소유한 실제 건설 프로세스다.
     std::unique_ptr<RawConstructionProcess> logic; // 실제 Kernel 프레임을 실행하는 동안 유지하는 복원 몸체다.
     // 입력 타입 수와 실제 삭제/host를 판본에 맞춰 연결한다.
-    explicit TimeScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171),
+    explicit TimeScene(OriginalEdition edition):pool(edition,kCapacity,false),types(::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)),
         unpop(pool,hash,spots),destroy(pool,unpop,types),host(pool,types,kernel,destroy,clock) {}
     // 현재 부모 SID다. fixture의 실제 원본 입력 범위 안에서만 사용한다.
     Sid ParentSid() const { return Sid{static_cast<std::uint16_t>(input[Parent])}; }

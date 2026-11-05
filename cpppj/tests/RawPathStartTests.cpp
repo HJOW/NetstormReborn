@@ -1,4 +1,5 @@
 // 두 실제 PE의 시작/Init/BFS/Prepare/사제 통지를 같은 raw 풀·Host·공유 서버 패킷으로 재생한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "client/RawPriestWorldBindings.h"
 #include "o/RawPathStart.h"
@@ -53,7 +54,7 @@ struct StartScene {
     std::uint32_t dude{70},teleport{134},mana{105},priest{158},geyser{122}; // 원본 mutable 부모 및 간헐천 타입 번호다.
     bool snap{},retry{}; // 목적지 스냅과 실패 재귀 guard를 참조로 공유한다.
     // 원본과 같은 client5..53 번호를 장면 입력으로 확보하며 결과를 계산하지 않는다.
-    explicit StartScene(OriginalEdition chosen):edition(chosen),pool(chosen,32768,true),types(chosen==OriginalEdition::Patch1078 ? 188 : 171),frames(types.size(),RiftTypeFrames({})),shapes(types.size()),pathState{clock} {
+    explicit StartScene(OriginalEdition chosen):edition(chosen),pool(chosen,32768,true),types(::netstorm::test::MakeFormTypeInputs(chosen==OriginalEdition::Patch1078 ? 188 : 171)),frames(types.size(),RiftTypeFrames({})),shapes(types.size()),pathState{clock} {
         // 사용 중인 raw 입력 슬롯을 실제 client free list에서 순서대로 확보한다.
         for (std::uint16_t id=5;id<=53;++id) CHECK(pool.Allocate(2)==Sid{id});
     }
@@ -95,7 +96,7 @@ TEST_CASE(rawPathStart_native_process_type_priority) {
     // 각 실제 PE의 전체 타입 번호와 balloon genus 교차를 기존 단일 선택 몸체로 대조한다.
     for (const auto& row:fixture.rows) {
         CHECK(row.size()==5);const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;
-        std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);const auto type=Number(row[1]);types[type].flags2=Number(row[2]);netstorm::client::RawMovementProcessTypes state;
+        std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);const auto type=Number(row[1]);types[type].flags2=Number(row[2]);netstorm::client::RawMovementProcessTypes state;
         if (Number(row[4])) CHECK(Throws([&] { netstorm::client::SelectMovementProcessType(edition,types,state,type); }));
         else CHECK(netstorm::client::SelectMovementProcessType(edition,types,state,type)==Number(row[3]));++checked;
     }

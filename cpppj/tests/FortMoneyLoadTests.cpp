@@ -1,4 +1,5 @@
 // 실제양판본 Money/SP전수와같은월드장부·분산저장소·게임난수 연결을검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawFortMoneyLoad.h"
 #include "client/RawSurfaceWorld.h"
@@ -93,7 +94,7 @@ TEST_CASE(FortMoneyLoad_ReplaysCdNative) { ReplayMoney("originalCD"); }
 // 실제RawSurfaceWorld의장부와같은store/random을참조하여현재owner/모드가즉시반영됨을확인한다.
 TEST_CASE(FortMoneyLoad_SharesCurrentWorldOwnerStoreAndRandom) {
     constexpr auto edition=OriginalEdition::Patch1078; // 패치SP 저장을선택하는현재판본이다.
-    std::vector<RiftTypeRecord> types(188); // Money가읽지않는world형식의타입표이며실제자산대조로세지않는다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188); // Money가읽지않는world형식의타입표이며실제자산대조로세지않는다.
     std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({})); // Money소비자에필요한정상길이의미사용프레임표다.
     std::vector<SquidDisplayShape> shapes(188); // 이검사에서는렌더/Pop을실행하지않는다.
     BridgeConnectState bridges; // 동일월드연결의실제타입번호이며이검사에서표면을생성하지않는다.

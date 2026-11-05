@@ -1,4 +1,5 @@
 // 업그레이드 예측 그림/완료·실제 Host 정리의 합성 검사다. 작성·컴파일만 하며 실행하지 않는다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "o/RawFactoryUpgrade.h"
 #include "RawSceneSupport.h"
 #include <map>
@@ -8,7 +9,7 @@ namespace {
 // 같은 원문/Host와 명시 가상·장치 효과를 준비한다.
 struct UpgradeScene {
     SidPool pool{OriginalEdition::Patch1078,32768,true};SquidHash hash; //현재 원문과 실제 공간 해제 저장소다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188);std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); //실제 Host가 요구하는 TYPE/spot이다.
+    std::vector<RiftTypeRecord> types=::netstorm::test::MakeFormTypeInputs(188);std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); //실제 Host가 요구하는 TYPE/spot이다.
     SquidUnpop unpop{pool,hash,spots};RawSquidDestroy destroy{pool,unpop,types};Kernel kernel;SquidProcessState process; //같은 실제 예약/삭제 수명이다.
     SquidProcessHost host{pool,types,kernel,destroy,process,{},SquidDestroyHooks{[this](const SquidDestroyEvent& event) { if (event.effect==SquidDestroyEffect::PreDestroy) destroy.CompletePreDestroy();else if (event.effect==SquidDestroyEffect::PostDestroy) destroy.CompletePostDestroy(); },[] { return Sid{}; },{}}}; //ProcessForm에는 실제 Host 가상 삭제를 쓴다.
     std::uint32_t outpost{126},dependType{1},local{2};bool checking{},challenge{},boss{true},ai{}; //현재 참조 전역/AI 입력이다.

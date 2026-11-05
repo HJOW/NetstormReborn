@@ -11,6 +11,7 @@
 
 namespace netstorm::o {
 class SquidProcessHost;
+class SquidFactory; // 현재 World가 빌려주는 공통 생성/수신 부모의 타입이다.
 struct ProcessHostRuntimeBindings; // 짧은 World 대여의 C++ 반납만 식별하며 원문 process 필드로 직렬화하지 않는다.
 // 원본 BaseProcess(+4 formSid, +8 attachToSid). 프로세스마다 ProcessForm 타입의 SID 하나가 부모 객체 안에 들어간다.
 class SquidProcess : public BaseProcess {
@@ -96,6 +97,9 @@ struct SquidProcessState {
     const std::uint32_t& ProcessTypeEnd() const { return currentProcessTypeEnd ? *currentProcessTypeEnd : processTypeEnd; } // 상한을 읽기 전에 signed 변환/정규화를 하지 않는다.
     std::uint32_t postPopDepth{}; // 독립 SharedRegular 생성의 현재 basePostPop 입력이며 실제 World는 아래 대여 getter를 사용한다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 독립 진단 정상 복귀/실패를 명시하며 기본 깊이0에서는 요구하지 않는다.
+    std::uint32_t processFormType{2}; // 독립 입력의 원문 최초 ProcessForm DWORD다.
+    const std::uint32_t* currentProcessFormType{}; // 실제 Client GameAux의 같은 장기 번호 주소를 빌린다.
+    std::uint32_t ProcessFormType() const { return currentProcessFormType ? *currentProcessFormType : processFormType; } // 각 생성/Take 위치마다 현재 전체 번호를 읽는다.
 };
 // 부모 객체의 이벤트 처리기(vtable +0x5c)다. 원본 base(00496e70)는 payload를 그대로 돌려준다.
 using RegularHandler=std::function<float(Sid parent,std::uint32_t event,std::uint32_t count,float payload)>;
@@ -116,6 +120,7 @@ struct ProcessHostRuntimeBindings {
     std::size_t activeCalls{}; // 선택된 Host 효과의 C++ 대여 수이며 진행 중 Native 반납을 거부한다.
     std::function<std::uint32_t()> postPopDepth; // 실제 현재 World의 공통 Pop 깊이를 생성 위치에서 읽는다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // SharedRegular의 checking 무관70 진단을 같은 Client로 전달한다.
+    SquidFactory* factory{}; // 현재 World의 같은 Pool 공장이다. 장기 Host 자체에 이 주소를 저장하지 않는다.
 };
 // 현재 World 대여를 호출 위치에서 얻으며 반환된 공유 뷰는 외부 효과 호출 중 바인딩 자체의 수명을 유지한다.
 using ProcessHostRuntimeGetter=std::function<std::shared_ptr<ProcessHostRuntimeBindings>()>;
@@ -128,6 +133,7 @@ public:
         SquidProcessState& state,RegularHandler handler={},SquidDestroyHooks asset={},ProcessFormTransmission transmit={});
     // 장기 Pool/Kernel/상태를 빌리고 현재 World의 가상 처리기만 선택 위치에서 조회한다.
     SquidProcessHost(SidPool& pool,std::span<const RiftTypeRecord> types,Kernel& kernel,SquidProcessState& state,ProcessHostRuntimeGetter current);
+    void BindFormFactory(SquidFactory& factory); // 같은 수명의 직접 Host에만 공장을 연결한다. 장기 Host는 현재 대여의 factory를 소비 위치에서 조회한다.
     bool Owns(const BaseProcess& process) const; // 잔류 객체가 실제로 이 Host를 빌리는지 조회하며 PID나 SID를 정규화하지 않는다.
     void DrainRuntimeBindings(const std::shared_ptr<ProcessHostRuntimeBindings>& runtime); // 독립 World의 최종 fallback만 자기 현재 대여를 정리하며 이전 Native 잔류는 보존한다.
     bool HasOnlyRegularProcesses() const; // 현재 Host의 잔류 중 C++ Regular 이외 수명은 별도 복원을 요구한다. 표시 TYPE와 C++ 실행 클래스는 구별한다.
@@ -202,6 +208,7 @@ private:
     RegularHandler Regular() const; // 호출 중 현재 대여 반납이 있어도 복사한 외부 함수의 수명을 지킨다.
     SquidDestroyHooks Asset() const; // 현재 자산 가상 분배를 원래 효과 직전에 조회한다.
     ProcessFormTransmission Transmission() const; // 직렬화와 송신의 각 소비 위치에서 현재 경계를 얻는다.
+    Sid CreateOrTakeForm(std::uint32_t flags,Sid form); // 현재 번호와 같은 공장의 원문 Create/Take를 사용한다. 독립 입력도 고정 VT를 합성하지 않는다.
     ProcessHostRuntimeGetter currentRuntime_; // 장기 owner만 캡처하며 old World 구현 주소는 저장하지 않는다.
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
@@ -212,6 +219,7 @@ private:
     Kernel& kernel_;
     // destroy_: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     RawSquidDestroy* destroy_{}; // 기존 독립 생성자의 직접 대여이며 장기 Host에서는 사용하지 않는다.
+    SquidFactory* directFormFactory_{}; // 직접 Host와 같은 World 수명일 때만 빌린다. 장기 현재 대여 경로에는 쓰지 않는다.
     // state_: 프로세스 계층이 읽거나 바꾸는 원본 전역이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidProcessState).
     SquidProcessState& state_;
     // handler_: 외부 이벤트·프로세스 동작을 실제 코드에 전달하는 처리기.

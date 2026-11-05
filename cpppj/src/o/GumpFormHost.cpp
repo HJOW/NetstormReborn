@@ -25,7 +25,7 @@ GumpFormHost::GumpFormHost(SidPool& pool,SquidFactory& factory,std::span<const R
 // 같은 공장의 현재 TYPE3 생성자와 실제 반환 VT+28을 사용하는 공통 Create에 연결한다.
 Sid GumpFormHost::Create(std::uint32_t flags) const { return factory_.CreateGumpForm(flags); }
 // 같은 raw 풀의 지정 Take를 사용하여 부착된 Form의 링크 정리도 실제로 수행한다.
-Sid GumpFormHost::Take(Sid form) const { return SquidForms(pool_).Take(kGumpFormType,form); }
+Sid GumpFormHost::Take(Sid form) const { return factory_.Take(kGumpFormType,form); }
 // 메뉴/수명 연결기가 실제 판본과 풀을 확인할 수 있게 제공한다.
 const SidPool& GumpFormHost::Pool() const { return pool_; }
 // 타입 바이트는 반납 뒤에도 보존된다. dead 검사/중첩 삭제를 위해 free 여부는 여기서 제외한다.

@@ -1,4 +1,5 @@
 // 실제 Host/Kernel에 건설과 Fiery Tail을 함께 붙여 공통 목록/수명/출력 요청을 검사한다.
+#include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "ConstructionSupport.h"
 #include "o/ConstructionVisualSystem.h"
 #include "o/FieryTailVisualSystem.h"
@@ -10,7 +11,7 @@ namespace {
 constexpr std::uint32_t kExplicitAdjacent=0xabcdef01;
 // 원본 몸체에 공급할 합성 HP 보유 부모 타입이다. 실제 미션/SHP 대조를 대신하지 않는다.
 std::vector<RiftTypeRecord> VisualTypes() {
-    std::vector<RiftTypeRecord> result(188);result[100].flags1=0x10;result[100].maxHitPoints=100;
+    std::vector<RiftTypeRecord> result=::netstorm::test::MakeFormTypeInputs(188);result[100].flags1=0x10;result[100].maxHitPoints=100;
     result[100].footX=result[100].footY=1;return result;
 }
 // 독립 fixture의 바이트만 읽으며 기대 영역을 재계산하지 않는다.
