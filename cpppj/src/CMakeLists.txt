@@ -377,3 +377,6 @@ target_sources(netstorm PRIVATE client/SpriteHitPointBar.cpp client/SpriteHitPoi
 
 # 연소점 목표 행의 원문 DWORD 감김/나눗셈을 같은 실제 선택 부모에 연결한다(902).
 target_sources(netstorm PRIVATE o/RawBurningSourceCount.cpp o/RawBurningSourceCount.h)
+
+# 회복 HP의 순서 부모와 월드 설치 전후의 현재 TYPE HP reader를 공유한다(903).
+target_sources(netstorm PRIVATE o/RawPriestRegenHitPoints.cpp o/RawPriestRegenHitPoints.h client/CurrentTypeHitPoints.cpp client/CurrentTypeHitPoints.h)

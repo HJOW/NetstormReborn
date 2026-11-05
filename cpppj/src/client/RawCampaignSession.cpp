@@ -886,6 +886,7 @@ struct RawCampaignSession::Impl {
         hp.BindCurrentTypes(core.types); // 실제 PATCH의 최대HP/HP 플래그가 World의 같은 현재 TYPE 표를 읽는다. 별도 정수 비용 캐시는 유지한다(단위863).
         hp.BindLoadedCosts(assets.game.TypeTable().Types()); // Session 교체 뒤에도 최초 로딩 비용표를 읽고 현재 TYPE+c4 float 쓰기와 분리한다(단위865).
         priestState.regen.patch.sharedChangedSample=&gameplayGlobals->PatchDiagnostic();motionState.search.sharedPolicySelector=&gameplayGlobals->PatchDiagnostic(); // 최초 객체 생성 전에 추적 writer와 BFS가 같은 장기005318ec을 직접 빌린다.
+        priestState.regen.sharedPriestType=&gameplayGlobals->GameAux()->PriestType(); // 회복 증분도 이동/일반HP와 같은 장기 현재 사제 TYPE를 매 조회에서 읽는다.
         missionStart.sharedDenySalvage=&gameplayGlobals->DenySalvage();missionStart.sharedDenyAscend=&gameplayGlobals->DenyAscend(); // Start·회수·메뉴와 World 없는 Guide 해제가 같은 장기 전역을 빌린다. 근거: docs/exe/cpp-guide-release-20261101.md.
         missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
         motionState.carrier.sharedAllowAlliedPickup=&gameplayGlobals->GameAux()->AllowAnyCapture();motionState.carrier.sharedGeyserType=&geyserType;carrierState.sharedGeyserType=&geyserType;constructionState.geyser.sharedGeyserType=&geyserType; // 실제 생성/로딩/도착을 같은 TYPE에 연결한다.

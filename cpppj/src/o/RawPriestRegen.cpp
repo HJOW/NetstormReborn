@@ -1,5 +1,6 @@
 // 원본 회복 분기와 가상 효과 뒤 재조회, 패치 전용 추적 필드 폭을 유지한다.
 #include "o/RawPriestRegen.h"
+#include "o/RawPriestRegenHitPoints.h" // 실제 Getter의 부작용 사이에서 각 판본의 읽기 순서를 유지한다.
 #include <bit>
 #include <stdexcept>
 
@@ -52,7 +53,7 @@ float RawPriestRegen::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
     (void)count;
     if (event!=kPriestRegenEvent) throw std::invalid_argument("미복원 사제 이벤트");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    const auto current=priest_.CurrentHitPoints(sid);const auto raw=pool_.Slot(sid);
+    const auto raw=pool_.Slot(sid);
     if (raw[10]!=kPriestType || Vtable(raw)!=(patch ? kPatchPriestVtable : kCdPriestVtable))
         throw std::invalid_argument("사제 회복 타입/가상 표 오류");
     if (patch) {
@@ -61,11 +62,11 @@ float RawPriestRegen::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
         sequence=Add(sequence,3);
         if (sequence>kSequenceLimit) sequence=Add(sequence,-kSequenceLimit);
     }
-    if (current<hp_.MaxHitPoints(sid)) {
-        const auto candidate=Add(priest_.CurrentHitPoints(sid),hp_.TypeHitPoints(kPriestType)/6);
-        const auto value=candidate>hp_.MaxHitPoints(sid) ? hp_.MaxHitPoints(sid) :
-            Add(priest_.CurrentHitPoints(sid),hp_.TypeHitPoints(kPriestType)/6);
-        priest_.SetHitPoints(sid,value,mode_,space_);
+    PriestRegenHitPointHooks hpHooks;
+    hpHooks.current=[&] { return priest_.CurrentHitPoints(sid); };hpHooks.maximum=[&] { return hp_.MaxHitPoints(sid); };
+    hpHooks.priestType=[this] { return state_.PriestType(); };hpHooks.typeMaximum=[this](auto type) { return hp_.TypeHitPoints(type); };
+    if (const auto value=ReadPriestRegenHitPoints(pool_.Edition(),hpHooks)) {
+        priest_.SetHitPoints(sid,*value,mode_,space_);
         hooks_.refresh(sid);hooks_.damageable(sid);
     }
     if (patch) hooks_.patchAudit();

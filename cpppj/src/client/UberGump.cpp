@@ -9,6 +9,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/CurrentTypeHitPoints.h" // Help도 같은 Client의 현재 TYPE/전역/진단을 읽는다.
 #include "client/CreateAtInput.h" //현재 문자열 고리와 실제 생성 Session을 공유한다.
 #include "client/DataManagerFileRead.h" //명시 Native Template만 현재 FILE 전체 읽기를 사용한다.
 #include "client/DrawWater.h" //후단 표시와 일반 명령이 같은 장기 상태를 공유한다.
@@ -347,7 +348,8 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     help.typeName=[this](auto type) { const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("Help 현재 TYPE 이름 범위");return types[type].name; };help.lookup=[this](auto name) { return client_.Assets().TypeTable().Find(name); };
     help.type=[this](auto type) { return world_ ? world_->Session().HelpTypeInfo(type) : ReadAssetQuickHelpType(client_.Assets(),type); };
     help.description=[this](auto type) { const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("Help 현재 TYPE 설명 범위");return FontBytes(client_.Translate(types[type].description)); };
-    help.hitPoints=[this](auto type) { if (world_) return world_->Session().HitPoints().TypeHitPoints(type);const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("월드 설치 전 Help HP 범위");return types[type].maxHitPoints; };
+    const auto hpStorage=client_.SurfaceStorage();const auto hpGlobals=client_.GameplayGlobals(); // Client 초기화가 메뉴 전에 만든 같은 장기 TYPE/게임 전역을 pin한다.
+    help.hitPoints=MakeCurrentTypeHitPoints(client_.Assets().Edition(),[hpStorage,hpGlobals]()->std::span<const o::RiftTypeRecord> { if (!hpStorage || hpStorage->GameAux()!=hpGlobals->GameAux()) throw std::logic_error("Help 현재 TYPE/게임 전역 저장소 불일치");return hpStorage->types; },{o::RawCheckingFlag{hpGlobals->AiDebug().Checking()},o::RawCheckingFlag{hpGlobals->GameAux()->PriestQuarterHp()},hpGlobals->GameAux()->PriestType(),hpGlobals->GameAux()->DaisType()},[hpStorage](auto expression,auto file,auto line) { if (!hpStorage) throw std::logic_error("Help HP의 실제 진단 장치 미설치");hpStorage->AssertDisplay(expression,file,line); }); // World가 없어도 현재 약화/특별 번호와 정상 진단 복귀를 생략하지 않는다.
     help.helpFrame=[this](auto type) { const auto types=client_.Assets().Types();if (type<o::kFirstAssetTypeNumber || type-o::kFirstAssetTypeNumber>=types.size()) return -1;return types[type-o::kFirstAssetTypeNumber].definition.specialFrames.helpFrame; };help.nearestColor=[this](auto r,auto g,auto b) { return client_.GetScreen().FindColor(r,g,b); };
     help.queue=[this](auto command,auto first,auto second) { const auto x=scriptStrings_.Store(first),y=scriptStrings_.Store(second);client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); };
     help.script=[this](auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{DialogScriptCode,[](auto name) { std::clog<<"도움말 스크립트 명령 미연결: "<<name<<'\n'; }}); };

@@ -23,6 +23,8 @@ struct PriestRegenState {
     bool modeBlocked{}; // 00594fa4 / CD 0052e170: 두 번째 차단 전역이다. 게임 내 의미는 미확정이다.
     // patch: 10.78 패치판의 상태 또는 패치판 검사용 자료.
     PriestRegenPatchState patch;
+    const std::uint32_t* sharedPriestType{}; // 실제 Client의 장기005412d0/CD0051cbbc 주소다. 독립 입력만 최초158을 사용한다.
+    std::uint32_t PriestType() const { return sharedPriestType ? *sharedPriestType : kPriestType; } // 증분마다 현재 TYPE를 읽고 Actor의 raw TYPE와 구별한다.
 };
 // 실제 SP 전역을 각 원본 읽기 지점에서 조회한다. 독립 fixture의 값형 상태와 구분한다.
 struct PriestRegenSpReads {

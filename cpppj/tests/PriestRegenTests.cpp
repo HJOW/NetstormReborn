@@ -152,6 +152,17 @@ TEST_CASE(priest_regen_binding_and_dispatch_guards) {
     CHECK(handler(kSource,0x25b,0,2)==2);
 }
 
+TEST_CASE(priest_regen_current_type_uses_global_numerator_with_same_actor) { // 실제 회복 처리기는 Actor158을 유지하며 증분의 현재 TYPE만74/75로 바꾼다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 두 판본 모두 기존 Setter/표시/후처리 본체를 사용한다.
+        RegenScene scene(edition);scene.Prepare(Fixture().front());scene.types[158].maxHitPoints=200;scene.types[74].maxHitPoints=60;scene.types[74].flags1=16;scene.types[75].maxHitPoints=120;scene.types[75].flags1=16;scene.hpMode.priestQuarterHp=false;
+        scene.hp=std::make_unique<SquidReward>(scene.pool,scene.types,scene.book,scene.hpMode,scene.patch ? &scene.store : nullptr);scene.priest=std::make_unique<RawPriestState>(scene.pool,*scene.hp,scene.types,scene.spots);
+        auto raw=scene.pool.AllocatedBytes(kSource);Put(raw,26,20,scene.patch ? 4 : 2);raw[scene.patch ? 34 : 32]=1;raw[scene.patch ? 40 : 35]=0;scene.mode.authority=true;scene.mode.recoveryAllowed.fill(true);scene.state.neutralBlocked=true;scene.state.patch.remaining=0;scene.after="-";scene.auditChange=false;
+        std::uint32_t currentType=74;scene.state.sharedPriestType=&currentType;RawPriestRegen regen(scene.pool,*scene.hp,*scene.priest,scene.mode,scene.Space(),scene.random,scene.state,scene.Hooks());
+        regen.Handle(kSource,kPriestRegenEvent,0,8.25F);CHECK(scene.priest->CurrentHitPoints(kSource)==30 && raw[10]==158);
+        currentType=75;regen.Handle(kSource,kPriestRegenEvent,0,8.25F);CHECK(scene.priest->CurrentHitPoints(kSource)==50 && raw[10]==158);
+    }
+}
+
 // 실제 생성자와 Regular/Kernel을 연결해 HP 회복과 절반 경계의 재등록 호출을 확인한다.
 TEST_CASE(priest_regen_binds_factory_postpop_process_and_kernel) {
     // 두 판본의 server/client 생성자를 각각 확인한다.

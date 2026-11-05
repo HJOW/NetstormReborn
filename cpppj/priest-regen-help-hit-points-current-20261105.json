@@ -1,0 +1,228 @@
+{
+  "unit": 903,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "scope": {
+    "regen": "PATCH00494580/CD0040ccd0 내부HP부모의현재사제번호와판본별번호/HP/TYPE getter 순서·반복getter·signed ADD 감김. 실제회복/Session연결.",
+    "help": "메뉴전설치된Client SurfaceStorage/GameplayGlobals를함께pin한현재TYPE HP reader. 같은선택TYPE this/진단/현재base·전역사용.",
+    "legacy": "독립158 fallback과실제Actor158/VT확인유지. 다른Help속성공급자/전체Factory/Pop완료아님."
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "mode": "first",
+      "samples": 864,
+      "editions": {
+        "originals": {
+          "samples": 432,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+          "root": 4801920,
+          "start": 4802030,
+          "skip": 4802179,
+          "maximum": 4906160,
+          "typeMaximum": 4848864,
+          "setter": 4801200,
+          "base": 5876512,
+          "priest": 5509840,
+          "width": 4,
+          "stride": 500,
+          "helpers": [
+            4827200
+          ]
+        },
+        "originalCD": {
+          "samples": 432,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+          "root": 4246736,
+          "start": 4246805,
+          "skip": 4246954,
+          "maximum": 4910384,
+          "typeMaximum": 4474656,
+          "setter": 4246080,
+          "base": 5359968,
+          "priest": 5360572,
+          "width": 2,
+          "stride": 468,
+          "helpers": []
+        }
+      },
+      "fixtureSha256": "1e10b6d2fd324225a3b8a7c3b25a7cadf5b5dae35f7c09c89f56f423649efca4",
+      "toolSha256": "60a18396e935dad9d7ab368083755df5ac14ad0ee4aa58a0bafe45cd5f9b708e",
+      "boundaries": [
+        "HP分기 내부 시작",
+        "Actor/TYPE getter 반환·HP/현재번호변경",
+        "Setter인자/회복없는후단관측"
+      ],
+      "fullHandler": false,
+      "actualGetter": false,
+      "actualSetter": false
+    },
+    "verify": {
+      "host": "HJOW-Athlon",
+      "mode": "verify",
+      "samples": 864,
+      "editions": {
+        "originals": {
+          "samples": 432,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+          "root": 4801920,
+          "start": 4802030,
+          "skip": 4802179,
+          "maximum": 4906160,
+          "typeMaximum": 4848864,
+          "setter": 4801200,
+          "base": 5876512,
+          "priest": 5509840,
+          "width": 4,
+          "stride": 500,
+          "helpers": [
+            4827200
+          ]
+        },
+        "originalCD": {
+          "samples": 432,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+          "root": 4246736,
+          "start": 4246805,
+          "skip": 4246954,
+          "maximum": 4910384,
+          "typeMaximum": 4474656,
+          "setter": 4246080,
+          "base": 5359968,
+          "priest": 5360572,
+          "width": 2,
+          "stride": 468,
+          "helpers": []
+        }
+      },
+      "fixtureSha256": "1e10b6d2fd324225a3b8a7c3b25a7cadf5b5dae35f7c09c89f56f423649efca4",
+      "toolSha256": "a0884ce16f6ad231549e35613a3644b3353bd53d5210d34b8d95fdae174d2ac7",
+      "boundaries": [
+        "HP 분기 내부 시작",
+        "Actor/TYPE getter 반환·HP/현재번호변경",
+        "Setter인자/회복없는후단관측"
+      ],
+      "fullHandler": false,
+      "actualGetter": false,
+      "actualSetter": false
+    },
+    "samples": 864,
+    "perEdition": 432,
+    "completeObservations": 2,
+    "completeExecutions": 1728,
+    "fixture": "cpppj/tests/fixtures/priest-regen-hit-points-current-x86.tsv",
+    "fixtureBytes": 91564,
+    "preparationFailures": 0,
+    "toolTextCorrection": "최초관측뒤주석/보고서경계설명의한자표기2곳을한국어로변경. 실행명령/입력/fixture불변. 두tool SHA를각각보존.",
+    "existingReaderRows": 1158,
+    "actualGetter": false,
+    "actualSetter": false,
+    "fullHandler": false
+  },
+  "validation": {
+    "buildCommands": 1,
+    "buildExits": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "uniqueCases": 23,
+    "newCases": 4,
+    "existingCases": 19,
+    "testCommands": 6,
+    "testExecutions": 23,
+    "firstTestFailures": 0,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "PriestRegenHitPointCurrent_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "CurrentTypeHitPointReader_",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "priest_regen_",
+        "cases": 11,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "QuickHelpHtml_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "QuickHelpRequest_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "RiftHitPointCurrent_",
+        "cases": 5,
+        "failedChecks": 0,
+        "exit": 0
+      }
+    ],
+    "normalizedSourceFiles": 2863,
+    "sourceChangesAfterSnapshot": [],
+    "sourceBuildOverlap": false
+  },
+  "product": {
+    "unit": 903,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10733056,
+    "sha256": "cafc290cf5d8979db4825f07c11d051f5cd9d906cbd88e4791e05daabfc474cd",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "protection": {
+    "previousFiles": 2779,
+    "unchanged": 2779,
+    "changed": [],
+    "currentFiles": 2780,
+    "currentFixtures": 960,
+    "added": [
+      "cpppj/tests/fixtures/priest-regen-hit-points-current-x86.tsv"
+    ]
+  },
+  "checking": {
+    "pending": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4
+  },
+  "excluded": [
+    "실제게임/GUI/진단UI/포획/희생/특정적공격/승리/사용자확인",
+    "신규MP/패킷/통신검사",
+    "공중3종전용검사",
+    "전체검사/34미션/ZIP/물리입력/PCM/CD재시도"
+  ],
+  "remaining": [
+    "다른HP caller의실제공급자/남은부모",
+    "CD Take/contained/Form/고정Form·나머지Factory·State/파일/객체UI/Edit/Windows",
+    "무검사MP와4~8차"
+  ],
+  "nextUnit": 904,
+  "next": "CD Take/공통PostTake 및현재Form 생성경로를정밀원문과대조한다.",
+  "rawEvidence": "extracted/cpp-resume-903/ (Git 제외/현재 PC 전용)"
+}

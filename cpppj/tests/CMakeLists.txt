@@ -3540,3 +3540,9 @@ target_sources(netstorm_tests PRIVATE BurningSourceCountCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE BurningSourceCountCurrentTests.cpp BurningSourcesTests.cpp BurningSourcesCornerTests.cpp BurningVictimParentTests.cpp)
 set_source_files_properties(BurningSourceCountCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BURNING_SOURCE_COUNT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-source-count-current-x86.tsv\"")
+
+# 회복의 현재 TYPE/읽기 순서와 초기 UI HP reader를 원문·기존소비자에 대조한다(903).
+target_sources(netstorm_tests PRIVATE PriestRegenHitPointCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE PriestRegenHitPointCurrentTests.cpp QuickHelpHtmlTests.cpp QuickHelpRequestTests.cpp)
+set_source_files_properties(PriestRegenHitPointCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_REGEN_HP_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priest-regen-hit-points-current-x86.tsv\";NETSTORM_UI_HP_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rifttype-hit-points-x86.tsv\"")
