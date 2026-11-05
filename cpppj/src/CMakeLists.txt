@@ -380,3 +380,6 @@ target_sources(netstorm PRIVATE o/RawBurningSourceCount.cpp o/RawBurningSourceCo
 
 # 회복 HP의 순서 부모와 월드 설치 전후의 현재 TYPE HP reader를 공유한다(903).
 target_sources(netstorm PRIVATE o/RawPriestRegenHitPoints.cpp o/RawPriestRegenHitPoints.h client/CurrentTypeHitPoints.cpp client/CurrentTypeHitPoints.h)
+
+# 공통 Take의 현재 가상 해제와 반환 객체 순서를 같은 공장에 연결한다(905).
+target_sources(netstorm PRIVATE o/RawSquidTake.cpp o/RawSquidTake.h)

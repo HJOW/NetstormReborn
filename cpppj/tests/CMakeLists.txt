@@ -3552,3 +3552,9 @@ target_sources(netstorm_tests PRIVATE FactoryInitializationCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE FactoryInitializationCurrentTests.cpp FactoryTakeDiagnosticsTests.cpp)
 set_source_files_properties(FactoryInitializationCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FACTORY_INITIALIZATION_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-initialization-current-x86.tsv\"")
+
+# 순수 공통 Take 부모/실제 CD 진단을 대조하며 새 수신·패킷·MP 검사는 실행하지 않는다(905).
+target_sources(netstorm_tests PRIVATE SquidTakeParentCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE SquidTakeParentCurrentTests.cpp)
+set_source_files_properties(SquidTakeParentCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SQUID_TAKE_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-take-parent-current-x86.tsv\"")

@@ -139,7 +139,7 @@ TEST_CASE(SquidFactory_CreateGuards_PreserveEffectsAtSelectedBoundary) {
     CHECK(pool.FreeCount()==32760 && pool.Slot(Sid{6})[11]==4 && pool.Slot(Sid{7})[11]==4);
 }
 
-// non-void·타입 불일치·파생 vtable·contained 수신은 변경 전에 거부한다. 정상 Take는 카운터를 조정하지 않는다.
+// 실제 해제/진단 장치 없는 경계는 변경 전에 실패한다. 정상 Take는 같은 공간 장치를 요구하며 카운터를 조정하지 않는다.
 TEST_CASE(SquidFactory_TakeGuards_PreservePayloadAndPoolAccounting) {
     SidPool pool(OriginalEdition::Cd1072,32768); auto types=Types(pool.Edition()); SquidFactory factory(pool,types);
     const auto sid=factory.Create(74); const auto free=pool.FreeCount();
@@ -153,10 +153,11 @@ TEST_CASE(SquidFactory_TakeGuards_PreservePayloadAndPoolAccounting) {
     CHECK(Throws([&] { factory.Take(74,sid); })); CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));
     PutVtable(bytes,0x5058d8); bytes[11]=12; before=std::vector(pool.Bytes().begin(),pool.Bytes().end());
     CHECK(Throws([&] { factory.Take(74,sid); })); CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));
+    SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);SquidFactory connected(pool,types,false,&unpop); // CD도 void 객체의 실제 가상 해제에 진입하므로 같은 물리 장치를 연결한다.
     bytes[11]=6; bytes[26]=0xa1; bytes[27]=0xb2; bytes[32]=9;
-    CHECK(factory.Take(74,sid)==sid && bytes[11]==4 && bytes[26]==0xa1 && bytes[27]==0xb2 && bytes[32]==9);
+    CHECK(connected.Take(74,sid)==sid && bytes[11]==4 && bytes[26]==0xa1 && bytes[27]==0xb2 && bytes[32]==9);
     CHECK(pool.FreeCount()==free && pool.FirstFree(false).value==6001);
-    CHECK(factory.Take(74,Sid{14000}).value==14000); CHECK(pool.FreeCount()==free);
+    CHECK(connected.Take(74,Sid{14000}).value==14000); CHECK(pool.FreeCount()==free);
 }
 
 // .type의 HP/깊이 읽기와 실제 constructor=0 선택이 새 SID 초기화에 연결되는지 검사한다.

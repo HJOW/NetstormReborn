@@ -1,0 +1,184 @@
+{
+  "unit": 905,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "scope": {
+    "parent": "PATCH004af610/CD004ab440: signed SID진단→현재 VT+48→free/dead 쓰기→현재 생성자→반환 객체→저장 VT+2c. CD두상태쓰기/void→TYPE와PATCH상태snapshot/TYPE→void순서.",
+    "actualFactory": "같은물리/현재TYPE·상세/진단·ConstructRaw/공통PostTake를연결. CD선행TYPE고정/부모contained거부/void해제생략제거. 알려진FormVT의빈+2c분배.",
+    "construction": "실제MakeConstructionPlaceHooks가같은Factory.Take를사용. 새로운수신/패킷/통신검사가아닌공통순수객체부모를검사.",
+    "childBoundaries": "CDUnpop의contained사전거부와Form하위의기존TYPE/VT·void/부모알림계약은잔여. 미연결외부힙/NULL반환을정상객체로합성하지않음."
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "mode": "first",
+      "samples": 720,
+      "editions": {
+        "originals": {
+          "samples": 360,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+        },
+        "originalCD": {
+          "samples": 360,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+        }
+      },
+      "fixtureSha256": "9f40fe7ddf0b219f3eafbca0f5dc7a740efa89ed07ac1585ba625bddc2098302",
+      "toolSha256": "aa8ff5db3d671c50b495e763036be0f8f2ad83bbd3c458320e0e8dcbbd0b040b",
+      "actualVirtualChildren": false,
+      "actualConstructor": false,
+      "game": false,
+      "multiplayer": false
+    },
+    "verify": {
+      "host": "HJOW-Athlon",
+      "mode": "verify",
+      "samples": 720,
+      "editions": {
+        "originals": {
+          "samples": 360,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+        },
+        "originalCD": {
+          "samples": 360,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+        }
+      },
+      "fixtureSha256": "9f40fe7ddf0b219f3eafbca0f5dc7a740efa89ed07ac1585ba625bddc2098302",
+      "toolSha256": "aa8ff5db3d671c50b495e763036be0f8f2ad83bbd3c458320e0e8dcbbd0b040b",
+      "actualVirtualChildren": false,
+      "actualConstructor": false,
+      "game": false,
+      "multiplayer": false
+    },
+    "samples": 720,
+    "perEdition": 360,
+    "completeObservations": 2,
+    "completeExecutions": 1440,
+    "fixture": "cpppj/tests/fixtures/squid-take-parent-current-x86.tsv",
+    "fixtureBytes": 325827,
+    "preparationFailures": 0,
+    "actualVirtualChildren": false,
+    "actualConstructor": false,
+    "poolMapping": "각SID의실제산술주소를유효합성두객체에대응시키도록입력pool base를조정. 실제Factory풀밖허용검증아님."
+  },
+  "validation": {
+    "buildCommands": 1,
+    "buildExits": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "uniqueCases": 34,
+    "newCases": 3,
+    "existingCases": 31,
+    "testCommands": 8,
+    "testExecutions": 34,
+    "firstTestFailures": 0,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "SquidTakeParentCurrent_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FactoryTakeDiagnostics_",
+        "cases": 7,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "SquidFactory_",
+        "cases": 8,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "SquidCreationParent_",
+        "cases": 6,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FactoryInitializationCurrent_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FactoryPostCreate_",
+        "cases": 6,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ConstructionPlace_ChargesStoredSpAndPlacesRealObjects",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ConstructionPlace_SetsBridgeQualityAndTakesServerSids",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      }
+    ],
+    "normalizedSourceFiles": 2867,
+    "sourceChangesAfterSnapshot": [],
+    "sourceBuildOverlap": false
+  },
+  "product": {
+    "unit": 905,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10745344,
+    "sha256": "c7d16499fa316e22d853152c7f41d411aeb971714cf59a68037a76ba6afd15e5",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "protection": {
+    "previousFiles": 2781,
+    "unchanged": 2781,
+    "changed": [],
+    "currentFiles": 2782,
+    "currentFixtures": 962,
+    "added": [
+      "cpppj/tests/fixtures/squid-take-parent-current-x86.tsv"
+    ]
+  },
+  "checking": {
+    "pending": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4
+  },
+  "testInputCorrection": "기존CD Take guard검사의성공2호출에같은물리SquidUnpop연결. 새로복원한void가상해제에필요한입력장치이며기존기대값/fixture수정0.",
+  "excluded": [
+    "실제게임/GUI/진단UI/포획/희생/특정적공격/승리/사용자확인",
+    "신규MP/패킷/통신검사",
+    "공중3종전용검사",
+    "전체검사/34미션/ZIP/물리입력/PCM/CD재시도"
+  ],
+  "remaining": [
+    "실제Form편의Create/Take·Process caller의현재생성자/진단연결",
+    "Form/contained가상해제종단과CD Unpop/나머지Factory·HP caller",
+    "State/파일/객체UI/Edit/Windows·무검사MP와4~8차"
+  ],
+  "nextUnit": 906,
+  "next": "6/3고정Form/Process caller의현재생성경로와Form·CD contained해제경계를이어대조한다.",
+  "rawEvidence": "extracted/cpp-resume-905/ (Git 제외/현재 PC 전용)"
+}
