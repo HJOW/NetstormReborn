@@ -150,6 +150,7 @@ std::int32_t ThemeNumber(std::string_view text,OriginalEdition edition) {
 
 // 0049c3b0/CD004460f0의 플래그·속성 부분: 정의에서 타입 구조체의 필드를 채운다.
 void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition,OriginalEdition edition) {
+    type.defaultFrame=definition.specialFrames.defaultFrame; // 파싱이 선택한+128을 같은 현재 TYPE 표에 보관하여 실제 표시 소비자에게 전달한다.
     type.footX = 1;
     type.footY = 1;
     type.flags1 = 0;

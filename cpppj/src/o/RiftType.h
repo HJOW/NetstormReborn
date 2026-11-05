@@ -179,6 +179,7 @@ struct RiftTypeRecord {
     std::int32_t footX{}, footY{};      // 패치 +0x1d4/+0x1d8, CD +0x1b4/+0x1b8. .type 타입의 기본값은 1.
     bool fromAsset{};                   // .type 파일에서 읽은 타입인가.
     std::int32_t hotspotX{},hotspotY{};  // 패치 +0x1dc/+0x1e0, CD +0x1bc/+0x1c0. 초기값은 0이다.
+    std::int32_t defaultFrame{};       // 양판본+0x128: 가상78이 읽는 현재 기본 외형이다. 정의의 별도 baseFrame(+0x134)과 구별한다.
 };
 
 // .type 한 개를 타입 표에 넣을 때 쓰는 입력.

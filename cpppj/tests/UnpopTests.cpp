@@ -149,7 +149,8 @@ TEST_CASE(SquidUnpop_VtableMetadata_MatchesActualCommonDisplayPaths) {
         const bool vortex=edition==OriginalEdition::Patch1078 ?
             alternate==0x4dcda0U || alternate==0x4dcf80U || alternate==0x4dd150U || alternate==0x4dbcd0U :
             alternate==0x44feb0U || alternate==0x450140U || alternate==0x450320U;
-        CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0x2000)==(((mask&2)!=0) || vortex || mana)); ++rows;
+        const bool geyser=edition==OriginalEdition::Patch1078 && vtable==0x50da88U && alternate==0x4854b0U; // 897의 독립432행으로 복원한 간헐천 부분표시다. 기존 metadata fixture는 보존한다.
+        CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0x2000)==(((mask&2)!=0) || vortex || mana || geyser)); ++rows;
     }
     CHECK(rows==151); CHECK(!SquidUnpop::SupportsDisplay(OriginalEdition::Patch1078,0,0));
 }

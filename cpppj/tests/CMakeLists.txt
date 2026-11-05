@@ -3501,3 +3501,12 @@ netstorm_apply_compiler_options(netstorm_core_data_tests)
 # 공통 생성 후처리의 진단 복귀와 기존 양판본 생성 fixture만 검사한다(896).
 target_sources(netstorm_tests PRIVATE FactoryPostCreateTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE FactoryPostCreateTests.cpp CreationTests.cpp)
+
+# 간헐천 실제 부분표시/공간 재등록과 기존 일반·신전 표시만 실행한다(897).
+target_sources(netstorm_tests PRIVATE GeyserPartialDisplayTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE GeyserPartialDisplayTests.cpp VortexDisplayTests.cpp DisplayTests.cpp)
+set_source_files_properties(GeyserPartialDisplayTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_GEYSER_PARTIAL_DISPLAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geyser-partial-display-x86.tsv\"")
+
+# 동결 지원표와 새 간헐천 override의 관계를 같은 집중 대상에서 확인한다(897).
+target_sources(netstorm_pop_context_tests PRIVATE UnpopTests.cpp)

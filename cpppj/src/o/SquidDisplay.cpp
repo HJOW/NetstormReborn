@@ -15,6 +15,8 @@ namespace {
 // 표시 레이어와 extra의 선택/표식 비트다.
 constexpr std::uint32_t kDoubleFrames=0x440000,kShadow=0x40000,kMarker=0x10;
 constexpr std::uint32_t kPatchManaVtable=0x50c3b0; // 실제 마나 update88=473770이며8c는 같은88로 가상 꼬리 호출한다.
+constexpr std::uint32_t kPatchGeyserVtable=0x50da88; // 부분8c=004854b0이며 일반88과 다른 고정 외형 프레임을 사용한다.
+constexpr int kGeyserVerticalInset=50; // 원문 lazy 사각형의 위/아래 픽셀 여백이다. 확대율을 곱하지 않는다.
 // WORD0인 신전 가상8c는 실제 rune 사각형의 네 inset으로 본그림만 갱신한다. 썬 신전은 기본88의 thunk다.
 std::optional<std::array<int,4>> VortexInsets(OriginalEdition edition,std::uint32_t table) {
     const bool patch=edition==OriginalEdition::Patch1078;
@@ -119,6 +121,12 @@ bool SquidDisplay::PatchFrameValid(std::size_t type,int frame) const {
 void SquidDisplay::Validate(OriginalEdition edition,std::span<const std::uint8_t> bytes,std::uint32_t flags) const {
     if (edition!=edition_) throw std::invalid_argument("표시 판본 불일치");
     if (!SquidUnpop::SupportsDisplay(edition_,Read(bytes,0),flags)) throw std::logic_error("파생 표시 갱신 미복원");
+    if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==kPatchGeyserVtable && (flags&0x2000U)) {
+        const auto type=Read(bytes,10,1);if (type>=types_.size()) throw std::out_of_range("간헐천 고정 외형 TYPE 범위 오류");
+        const auto frame=types_[type].defaultFrame; // 실제 가상78은 표시 억제보다 먼저 현재 TYPE+128을 읽는다.
+        if (!sink_.Suppressed()) static_cast<void>(Bounds(type,frame,std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18))));
+        return; // 현재 애니메이션 프레임/WORD/extra/그림자는 이 경로의 입력이 아니다.
+    }
     // 마나의 WORD0 경로는 TYPE/SHP/프레임을 읽지 않는다. WORD 비영점도 억제 중이면 bounds에 진입하지 않는다.
     if (edition_==OriginalEdition::Patch1078 && (Read(bytes,0)==kPatchManaVtable || Read(bytes,0)==0x509810)) {
         if ((Read(bytes,0)==0x509810 || Read(bytes,12,2)!=0) && !sink_.Suppressed()) static_cast<void>(Bounds(Read(bytes,10,1),std::bit_cast<std::int32_t>(Read(bytes,36)),std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18))));return;
@@ -152,8 +160,18 @@ SquidDisplayRect SquidDisplay::Bounds(std::size_t type,int frame,float x,float y
     return {left,top,Coordinate(static_cast<std::int64_t>(left)+Scale(header.width,view_.zoom)+1),
         Coordinate(static_cast<std::int64_t>(top)+Scale(header.height,view_.zoom)+1)};
 }
-// update8c는 update88로 가상 꼬리 호출하므로 지원 표에서 확인한 공통 경로를 공유한다.
+// 현재 VT의 특수8c를 먼저 분배하고 나머지 확인된 가상 경로만 공통 표시 부모에 전달한다.
 void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flags) {
+    if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==kPatchGeyserVtable && (flags&0x2000U)) {
+        const auto type=Read(bytes,10,1);if (type>=types_.size()) throw std::out_of_range("간헐천 고정 외형 TYPE 범위 오류");
+        const auto frame=types_[type].defaultFrame; // 004acfe0은 현재 raw TYPE의 고정 외형을 반환하며 frameCheck 부모를 호출하지 않는다.
+        if (sink_.Suppressed()) return;
+        auto rect=Bounds(type,frame,std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18)));
+        rect.top=Coordinate(static_cast<std::int64_t>(rect.top)+kGeyserVerticalInset);
+        rect.bottom=Coordinate(static_cast<std::int64_t>(rect.bottom)-kGeyserVerticalInset);
+        rect=Clip(rect,view_.viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);
+        return; // 원문의 유일한 cache 소비자/작성자가 고정한 (0,50,0,50)을 같은 픽셀 순서로 적용한다.
+    }
     const auto table=Read(bytes,0);const bool patchParent=edition_==OriginalEdition::Patch1078 && table!=kPatchManaVtable && table!=0x509810; // 파생 마나/볼트 부분 표시는 기존 몸체다.
     const bool vortexPart=patchParent && (flags&0x2000) && Read(bytes,12,2)==0 && VortexInsets(edition_,table).has_value(); // 신전 부분 갱신도 기본88 부모를 호출하지 않는다.
     if (patchParent && !vortexPart) {

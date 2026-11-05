@@ -66,7 +66,7 @@ constexpr std::array<DisplayVtable,83> kPatchDisplayVtables{{
     {0x0050c3b0U,0},
     {0x0050c9f0U,0},
     {0x0050cc08U,0},
-    {0x0050da88U,1},
+    {0x0050da88U,3}, // 간헐천의 고정 외형 부분8c도 실제 별도 몸체로 처리한다.
     {0x0050db78U,3},
     {0x0050dc30U,3},
     {0x0050e568U,3},
