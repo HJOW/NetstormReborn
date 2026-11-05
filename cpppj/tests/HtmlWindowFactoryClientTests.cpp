@@ -1,5 +1,7 @@
 // 실제 보호 자산/Config/두 번 파서·링크/공통 UI에 전체 HTML 공장을 연결한다.
 #include "DudeSpawnSupport.h"
+#include "QuickHelpFileReadTestSupport.h"
+#include "client/GameMenuCommands.h"
 #include "client/ClientMain.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -27,7 +29,7 @@ struct FactoryScene { // UI callback이 참조하는 모든 실제 장치를 UI�
     std::uint32_t screenWidth{640},screenHeight{480};ScreenRect mapView{0,0,640,480}; // 재사용한 콜백도 현재 출력과 지도 영역을 다시 읽는다.
     InputEvent pointer{InputCode::kRelease,0,0};RawButtonAssets buttonAssets; // 실제 입력 폴링과 재합성도 같은 준비된 버튼 자산을 빌린다.
     RawButtonControls buttons{OriginalEdition::Patch1078,{[this] { return now; },[this](auto) { return pointer; }}};RawMenuControls* menus{}; // 같은 공통 등록표/수명/실제 파생 UI다.
-    FactoryScene() { // 실제 팔레트/원문 글꼴/공통 루트를 준비한다.
+    explicit FactoryScene(ClientOptions options=FactoryOptions()):client(std::move(options)) { // 실제 팔레트/원문 글꼴/공통 루트를 준비한다.
         std::array<std::uint32_t,256> logical{};for (std::size_t index=0;index<logical.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 실제 색 채널을 원문 순서로 공급한다.
         config.Set("OkButton","$Button=Okay,Config,0 ");RawMenuHooks hooks;hooks.command=[this](auto code,auto id,auto parameter) { input.PushCommand(code,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter)); };hooks.readInt=[](auto,std::int32_t& value) { value=0; };hooks.sound=[](auto) {};hooks.poll=[this](auto) { return pointer; };hooks.cursor=[](auto) {};menus=&buttons.EnableMenus(assets.game,fonts,std::move(hooks));menus->SetPalette(BuildPaletteColorTable(logical));
         const auto& fort=assets.game.Find("fortGump");const auto frame=assets.game.FrameIndex(fort,"A01",0);const auto size=assets.game.Shapes().SquidMetrics(fort.block,frame);buttonAssets={static_cast<std::uint32_t>(fort.block+70),static_cast<std::uint32_t>(frame),size.width,size.height,{}};buttons.SetControls({}, {},640,480,buttonAssets);
@@ -216,4 +218,56 @@ TEST_CASE(MissionLoadingClient_FactoryEffectChangesCurrentCreatedOwner) {
     FactoryScene scene;auto context=scene.Context();std::uint32_t older{};context.factory.html.command=[&](auto&,auto) { scene.client.HtmlWindowGlobals()->window.createdSerial=older; };older=scene.menus->ShowHtmlWindow(std::move(context),"Older window",0,400,30);const auto oldRoot=scene.buttons.SerialGump(older),oldBody=scene.Root(oldRoot).body;
     const auto current=scene.menus->ShowMissionLoading(scene.Context(),"<$switch>New route\n$ButtonInstant=Travel,Warning,9",{}),newRoot=scene.buttons.SerialGump(current);const auto& state=scene.client.HtmlWindowGlobals()->window;
     CHECK(newRoot && newRoot!=oldRoot && state.createdSerial==older && state.transientSerial==current && state.instances==2 && scene.Root(oldRoot).body!=oldBody && scene.Root(oldRoot).controls[0].command==kScriptWarning && scene.Root(newRoot).controls[0].command==kScriptWarning && scene.Root(oldRoot).updateDepth==0 && scene.Root(newRoot).updateDepth==0);
+}
+
+
+// 현재 Client의 TARC/느슨한 파일과 동적 Config 조회를 실제 HTML 메뉴 클릭/지연 설정 쓰기까지 연결한다.
+TEST_CASE(HtmlWindowFactoryClient_DynamicArchiveLooseConfigWriterAndParamLifetime) {
+    namespace file = netstorm::test::helpread; // 검사 소유의 UTF-8 파일/TAFF 입력 생성기만 빌린다.
+    const auto directory=file::Work(),archivePath=directory/"one.tarc"; // 보호 자료와 다른 실제 임시 파일 경로다.
+    const std::string archived="[Entry]\n<h2>Archive</h2><${@control.inline},\"marker={param.1}\">\n$Menu=Apply,{@control.menu},marker={param.1}\n[END]\n"; // 두 명령 이름 모두 현재 별도 파일에서 동적으로 읽는다.
+    file::Write(archivePath,file::Archive("d/tell.english",{reinterpret_cast<const std::uint8_t*>(archived.data()),archived.size()},true));
+    file::Text(directory/"d/control.english","inline=Config\nmenu=Config\n");
+    FactoryScene scene(file::Options(directory));auto& current=scene.client;auto& config=current.Configuration();config.Configuration().Assign("missionSpec=\"d/{local.1}.english\"\nmarker=OLD\n");
+    const auto objectCount=config.Registry().Objects().size();const auto gumpCount=scene.Count(); // 실제 Client 등록부와 실제 공통 UI의 원래 수를 독립적으로 기록한다.
+    std::vector<std::string> unknown; // 이름 조회 실패를 큐 성공으로 간주하지 않기 위한 관측이다.
+    for (const auto& value:{std::string("FIRST"),std::string("SECOND"),std::string("THIRD")}) { // TARC→느슨한 파일→TARC 복귀를 같은 장기 Client에서 진행한다.
+        if (value=="SECOND") file::Text(directory/"d/tell.english","[Entry]\n<h2>Loose</h2><${@control.inline},\"marker={param.1}\">\n$Menu=Apply,{@control.menu},marker={param.1}\n[END]\n");
+        if (value=="THIRD") std::filesystem::remove(directory/"d/tell.english");
+        auto context=scene.Context();context.metadata.commands={HtmlScriptCommandValue,[&](auto name) { unknown.emplace_back(name); }};
+        context.factory.substitute=[&](auto text,auto capacity) { CHECK(capacity==8192);return config.SubstituteLocal(text); };
+        BindHtmlConditionConfig(context.factory.html,config,OriginalEdition::Patch1078);
+        context.factory.html.command=[&](auto&,auto text) { CHECK(config.Registry().Objects().size()==objectCount+1);QueueScriptCommand(text,scene.input,scene.strings,{HtmlScriptCommandValue,[&](auto name) { unknown.emplace_back(name); }}); };
+        const auto result=ShowTellInConfig(current.HtmlWindowGlobals()->tell,"Entry("+value+")",0,config,{},[&](auto body,auto suppress,auto width,auto height) {
+            CHECK(body.find(value=="SECOND" ? "Loose" : "Archive")!=body.npos);return scene.menus->ShowHtmlWindow(context,body,suppress,width,height);
+        }); // 임시 tell은 조회 뒤, param은 전체 HTML 생성 뒤 반납하는 실제 부모 순서를 사용한다.
+        CHECK(result.found && result.serial && unknown.empty() && config.Registry().Objects().size()==objectCount && !config.Registry().FindByName("param") && !config.Registry().FindByName("control") && !config.Registry().FindByName("tell"));
+        CHECK(config.Configuration().Get("marker")==(value=="FIRST" ? "OLD" : value=="SECOND" ? "FIRST" : "SECOND"));
+        const auto inlineEvent=scene.input.Pop(false);CHECK(inlineEvent.code==kScriptConfig && inlineEvent.x==inlineEvent.y && scene.input.Empty());
+        CHECK(scene.strings.Resolve(std::bit_cast<std::uint32_t>(inlineEvent.y))=="marker="+value);
+        ApplyScriptConfig(scene.strings.Resolve(std::bit_cast<std::uint32_t>(inlineEvent.y)),config);CHECK(config.Configuration().Get("marker")==value);
+        CHECK(config.Set("marker","BEFORE_CLICK"));scene.Click("Apply");CHECK(!scene.input.Empty());const auto selected=scene.input.Pop(false);
+        CHECK(selected.code==kScriptConfig && scene.input.Empty() && scene.strings.Resolve(std::bit_cast<std::uint32_t>(selected.y))=="marker="+value);
+        ApplyScriptConfig(scene.strings.Resolve(std::bit_cast<std::uint32_t>(selected.y)),config);CHECK(config.Configuration().Get("marker")==value);
+        scene.buttons.CleanupGumps();CHECK(scene.Count()==gumpCount && !scene.buttons.DialogCount() && !scene.client.HtmlWindowGlobals()->window.instances && scene.input.Empty());
+    }
+}
+
+// 같은 등록부의 동적 미션 참조가 실패해도 임시 Config를 반납하고 다음 화면을 다시 생성하는지 확인한다.
+TEST_CASE(HtmlWindowFactoryClient_DynamicConfigReadFailureReleasesTemporaryOwners) {
+    FactoryScene scene;std::vector<std::string> paths; // 실패 지점까지의 실제 파일 선택 순서만 기록한다.
+    bool fail=true; // 첫 동적 참조에만 명시적인 읽기 실패를 반환하는 검사 장치다.
+    netstorm::o::ConfigInterface config([&](auto path)->std::optional<std::vector<std::uint8_t>> {
+        paths.emplace_back(path);if (fail) throw std::runtime_error("동적 시나리오 읽기 경계 실패");const std::string text="command=Config\n";return std::vector<std::uint8_t>(text.begin(),text.end());
+    });
+    config.Configuration().Assign("missionSpec=\"d/{local.1}.english\"\n");netstorm::o::Config book(config.Registry(),"book");book.Assign("[Entry]\n<h2>Dynamic</h2>\n$Button=Continue,{@control.command},7\n[END]\n");
+    const auto objectCount=config.Registry().Objects().size();const auto gumpCount=scene.Count();auto context=scene.Context();context.metadata.commands.lookup=HtmlScriptCommandValue;
+    context.factory.substitute=[&](auto text,auto) { return config.SubstituteLocal(text); };bool failed{};
+    const auto show=[&](auto body,auto mode,auto width,auto height) { return scene.menus->ShowHtmlWindow(context,body,mode,width,height); }; // 예외도 같은 실제 HTML 생성 부모를 통과한다.
+    try { ShowTellInConfig(scene.client.HtmlWindowGlobals()->tell,"book.Entry(value)",0,config,{},show); }catch (const std::runtime_error&) { failed=true; }
+    if (!failed || paths!=std::vector<std::string>{"d/CONTROL.english"} || config.Registry().Objects().size()!=objectCount || config.Registry().FindByName("param") || config.Registry().FindByName("control") || !scene.input.Empty()) { std::fprintf(stderr,"dynamic failure caught=%d objects=%zu expected=%zu param=%p control=%p empty=%d paths=",failed,config.Registry().Objects().size(),objectCount,static_cast<const void*>(config.Registry().FindByName("param")),static_cast<const void*>(config.Registry().FindByName("control")),scene.input.Empty());for (const auto& path:paths) std::fprintf(stderr,"[%s]",path.c_str());std::fprintf(stderr,"\n"); } // 실패한 관측을 먼저 남겨 제품/기대값을 근거 없이 바꾸지 않는다.
+    CHECK(failed && paths==std::vector<std::string>{"d/CONTROL.english"} && config.Registry().Objects().size()==objectCount && !config.Registry().FindByName("param") && !config.Registry().FindByName("control") && scene.input.Empty());
+    scene.menus->CloseHtmlWindows();CHECK(scene.Count()==gumpCount && !scene.client.HtmlWindowGlobals()->window.instances);
+    fail=false;const auto recovered=ShowTellInConfig(scene.client.HtmlWindowGlobals()->tell,"book.Entry(value)",0,config,{},show);CHECK(recovered.found && recovered.serial && config.Registry().Objects().size()==objectCount);
+    scene.buttons.RouteInput({0x02000038U,0,0});const auto selected=scene.input.Pop(false);CHECK(selected.code==kScriptConfig && selected.x==7 && selected.y==7 && scene.input.Empty());scene.buttons.CleanupGumps();CHECK(scene.Count()==gumpCount);
 }

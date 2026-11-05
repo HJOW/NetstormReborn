@@ -1,0 +1,653 @@
+{
+  "unit": 940,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "documents": 549,
+  "dynamicCommandNames": {},
+  "dynamicArgumentCommands": {
+    "ChalForceJoinBattle": {
+      "count": 2,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2325,
+          "kind": "Button",
+          "command": "ChalForceJoinBattle",
+          "argument": "BattleMaster,{param.1}"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2631,
+          "kind": "Button",
+          "command": "ChalForceJoinBattle",
+          "argument": "OK,{param.1}"
+        }
+      ]
+    },
+    "ChalJoinBattleNoWarning": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2632,
+          "kind": "Button",
+          "command": "ChalJoinBattleNoWarning",
+          "argument": "Don't Show This Again,{param.1}"
+        }
+      ]
+    },
+    "ChalSailJoinBattle": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 1899,
+          "kind": "Button",
+          "command": "ChalSailJoinBattle",
+          "argument": "Yes,{param.1}"
+        }
+      ]
+    },
+    "ChalSailPos": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 1892,
+          "kind": "Button",
+          "command": "ChalSailPos",
+          "argument": "Yes,{param.1}"
+        }
+      ]
+    },
+    "Config": {
+      "count": 383,
+      "examples": [
+        {
+          "source": "tarc:\\d\\bc1menu76.english",
+          "line": 40,
+          "kind": "inline",
+          "command": "Config",
+          "argument": ",Done{mission.fileName}=1"
+        },
+        {
+          "source": "tarc:\\d\\bc2bridging76.english",
+          "line": 42,
+          "kind": "inline",
+          "command": "Config",
+          "argument": ",Done{mission.fileName}=1"
+        },
+        {
+          "source": "tarc:\\d\\bc3acid_bar76.english",
+          "line": 49,
+          "kind": "inline",
+          "command": "Config",
+          "argument": ",Done{mission.fileName}=1"
+        },
+        {
+          "source": "tarc:\\d\\bc4bow_rush76.english",
+          "line": 61,
+          "kind": "inline",
+          "command": "Config",
+          "argument": ",Done{mission.fileName}=1"
+        },
+        {
+          "source": "tarc:\\d\\bc5walkers76.english",
+          "line": 40,
+          "kind": "inline",
+          "command": "Config",
+          "argument": ",Done{mission.fileName}=1"
+        },
+        {
+          "source": "tarc:\\d\\bc6mows76.english",
+          "line": 84,
+          "kind": "inline",
+          "command": "Config",
+          "argument": ",Done{mission.fileName}=1"
+        },
+        {
+          "source": "tarc:\\d\\bc7sun_bars76.english",
+          "line": 78,
+          "kind": "inline",
+          "command": "Config",
+          "argument": ",Done{mission.fileName}=1"
+        },
+        {
+          "source": "tarc:\\d\\bc8fury76.english",
+          "line": 131,
+          "kind": "inline",
+          "command": "Config",
+          "argument": ",Done{mission.fileName}=1"
+        }
+      ]
+    },
+    "ConfirmAlliance": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2024,
+          "kind": "Button",
+          "command": "ConfirmAlliance",
+          "argument": "Yes,{param.3}"
+        }
+      ]
+    },
+    "DecendToChalLevel": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 1885,
+          "kind": "Button",
+          "command": "DecendToChalLevel",
+          "argument": "Yes,{param.1}"
+        }
+      ]
+    },
+    "DoNothing": {
+      "count": 3,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2062,
+          "kind": "Menu",
+          "command": "DoNothing",
+          "argument": "*TECHLIST*,{param.1}"
+        },
+        {
+          "source": "originals/d/sh3.english",
+          "line": 41,
+          "kind": "Checked",
+          "command": "DoNothing",
+          "argument": "~B~xWaited for Klod Jandor</?><?{Donesh3_y_n_1}>$Checked=~B~xWaited for Klod Jandor</?>,0"
+        },
+        {
+          "source": "originals/d/sh3.english",
+          "line": 43,
+          "kind": "Checked",
+          "command": "DoNothing",
+          "argument": "~B~xRecruited into Evil King's forces</?><?{Donesh3_y_y_1}>$Checked=~B~xRecruited into Evil King's forces</?>,0"
+        }
+      ]
+    },
+    "GetTechnology": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "originals/d/Wizards.english",
+          "line": 54,
+          "kind": "Button",
+          "command": "GetTechnology",
+          "argument": "~{Ibulf.1]Thunder,135"
+        }
+      ]
+    },
+    "MissinBegin": {
+      "count": 2,
+      "examples": [
+        {
+          "source": "originals/d/guiderahn.english",
+          "line": 58,
+          "kind": "Checked",
+          "command": "MissinBegin",
+          "argument": "9 Invasion,tnron82,{tnron82},{Donetnron8ex} </?></?>"
+        },
+        {
+          "source": "originals/d/tnronb2.english",
+          "line": 28,
+          "kind": "Checked",
+          "command": "MissinBegin",
+          "argument": "6 Invasion,tnron82,{tnron82},{Donetnron8ex}"
+        }
+      ]
+    },
+    "MissionBegin": {
+      "count": 439,
+      "examples": [
+        {
+          "source": "tarc:\\d\\offical1.english",
+          "line": 12,
+          "kind": "Checked",
+          "command": "MissionBegin",
+          "argument": "1 Bridge the Gap,Tutorial1,{DoneTutorial1},1"
+        },
+        {
+          "source": "tarc:\\d\\offical1.english",
+          "line": 13,
+          "kind": "Checked",
+          "command": "MissionBegin",
+          "argument": "2 Secret Workshop,Tutorial2,{DoneTutorial2},{DoneTutorial1}"
+        },
+        {
+          "source": "tarc:\\d\\offical1.english",
+          "line": 14,
+          "kind": "Checked",
+          "command": "MissionBegin",
+          "argument": "3 Capture The Priest,Tutorial3,{DoneTutorial3},{DoneTutorial2}"
+        },
+        {
+          "source": "tarc:\\d\\offical1.english",
+          "line": 15,
+          "kind": "Checked",
+          "command": "MissionBegin",
+          "argument": "4 Tactical Combat,Tutorial4,{DoneTutorial4},{DoneTutorial3}"
+        },
+        {
+          "source": "tarc:\\d\\offical1.english",
+          "line": 16,
+          "kind": "Checked",
+          "command": "MissionBegin",
+          "argument": "5 Subtle Defense,Tutorial5,{DoneTutorial5},{DoneTutorial4}"
+        },
+        {
+          "source": "tarc:\\d\\offical1.english",
+          "line": 17,
+          "kind": "Checked",
+          "command": "MissionBegin",
+          "argument": "6 Raw Power,Tutorial6,{DoneTutorial6},{DoneTutorial5}"
+        },
+        {
+          "source": "tarc:\\d\\offical2.english",
+          "line": 12,
+          "kind": "Checked",
+          "command": "MissionBegin",
+          "argument": "Menu,bc1menu76,{Donebc1menu76},1"
+        },
+        {
+          "source": "tarc:\\d\\offical2.english",
+          "line": 13,
+          "kind": "Checked",
+          "command": "MissionBegin",
+          "argument": "Bridging,bc2bridging76,{Donebc2bridging76},2"
+        }
+      ]
+    },
+    "Salvage": {
+      "count": 2,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 542,
+          "kind": "Button",
+          "command": "Salvage",
+          "argument": "Salvage It,{global.salvageSid}"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 554,
+          "kind": "Button",
+          "command": "Salvage",
+          "argument": "Salvage It!,{global.salvageSid}"
+        }
+      ]
+    },
+    "ScreenModeAbsChange": {
+      "count": 3,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2577,
+          "kind": "Timeout",
+          "command": "ScreenModeAbsChange",
+          "argument": "15,{param.1}"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2579,
+          "kind": "Button",
+          "command": "ScreenModeAbsChange",
+          "argument": "Cancel,{param.1}"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2077,
+          "kind": "inline",
+          "command": "ScreenModeAbsChange",
+          "argument": ",{workingFullScreenFlags}"
+        }
+      ]
+    },
+    "SendAllBucks": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2398,
+          "kind": "Button",
+          "command": "SendAllBucks",
+          "argument": "Yes,{param.1}"
+        }
+      ]
+    },
+    "StartDemo": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "originals/d/GuideFW1.english",
+          "line": 28,
+          "kind": "Checked",
+          "command": "StartDemo",
+          "argument": "DEMO of Part II: Offensive Strike,DEMOFw,{DoneDEMOFw},1"
+        }
+      ]
+    },
+    "Tell": {
+      "count": 21,
+      "examples": [
+        {
+          "source": "tarc:\\d\\offical6.english",
+          "line": 9,
+          "kind": "Menu",
+          "command": "Tell",
+          "argument": "%{userSpec},{cur.file}.overview"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 38,
+          "kind": "Button",
+          "command": "Tell",
+          "argument": "Yes,ZSEND(GUILDNEW,{GUILDPARAM1},{GUILDPARAM2})"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 164,
+          "kind": "Button",
+          "command": "Tell",
+          "argument": "Back,PlayerInfo({param.1},{param.2},{param.3},{param.4})"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 178,
+          "kind": "Menu",
+          "command": "Tell",
+          "argument": "#{param.1},PreiverProfile({cur.file})"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 189,
+          "kind": "Button",
+          "command": "Tell",
+          "argument": "Activate,SetProfile({param.1})"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 244,
+          "kind": "Button",
+          "command": "Tell",
+          "argument": "Yes,SetSize2({param.1},{param.2})"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 354,
+          "kind": "Button",
+          "command": "Tell",
+          "argument": "OK,{global.priorTell}"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 764,
+          "kind": "Menu",
+          "command": "Tell",
+          "argument": "@{guideSpec},{cur.file}.overview"
+        }
+      ]
+    },
+    "URL": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 630,
+          "kind": "Button",
+          "command": "URL",
+          "argument": "View,file:///{InstallDir}{GifOutSpec}"
+        }
+      ]
+    },
+    "Warning": {
+      "count": 9,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 636,
+          "kind": "inline",
+          "command": "Warning",
+          "argument": ",~B~E~a{param.5}{param.3} ~aPriest Has Been Captured By {param.4}{param.2}~a!"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 639,
+          "kind": "inline",
+          "command": "Warning",
+          "argument": ",~B~E~a Your Priest Has Been Captured By {param.4}{param.2}~a!"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 644,
+          "kind": "inline",
+          "command": "Warning",
+          "argument": ",~B~E~a A Neutral Priest has been captured by {param.5}{param.2}~a!"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 1835,
+          "kind": "inline",
+          "command": "Warning",
+          "argument": ",\"~B~E~yYour priest has been sacrificed by {param.1}{param.2}\""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 1855,
+          "kind": "inline",
+          "command": "Warning",
+          "argument": ",\"~B~E~y{param.1}{param.2}'s~y Priest has been sacrificed by {param.3}{param.4}\""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2047,
+          "kind": "inline",
+          "command": "Warning",
+          "argument": ",\"~B~E~wAlliance Broken With {param.2}{param.1}\""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2668,
+          "kind": "inline",
+          "command": "Warning",
+          "argument": ",~B~E~rWarning: Player {param.1} attempted to cheat and was denied."
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 2674,
+          "kind": "inline",
+          "command": "Warning",
+          "argument": ",~B~E~rWarning:{param.1} has cheated. Because he or his ally is server, he can get away with it this time."
+        }
+      ]
+    },
+    "adminbcast": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 277,
+          "kind": "inline",
+          "command": "adminbcast",
+          "argument": ",{param.1}"
+        }
+      ]
+    },
+    "adminmcast": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 285,
+          "kind": "inline",
+          "command": "adminmcast",
+          "argument": ",{param.1}"
+        }
+      ]
+    },
+    "adminsetTag": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 21,
+          "kind": "inline",
+          "command": "adminsetTag",
+          "argument": ",{param.1}"
+        }
+      ]
+    },
+    "adminsetzone": {
+      "count": 1,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 15,
+          "kind": "inline",
+          "command": "adminsetzone",
+          "argument": ",{param.1}"
+        }
+      ]
+    },
+    "config": {
+      "count": 78,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 93,
+          "kind": "inline",
+          "command": "config",
+          "argument": ",theammode={param.1}"
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 193,
+          "kind": "inline",
+          "command": "config",
+          "argument": ",MenuTitleColor=\"{{param.1}.MenuTitleColor}\""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 194,
+          "kind": "inline",
+          "command": "config",
+          "argument": ",MenuTitleBGColor=\"{{param.1}.MenuTitleBGColor}\""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 195,
+          "kind": "inline",
+          "command": "config",
+          "argument": ",MenuHeaderColor=\"{{param.1}.MenuHeaderColor}\""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 196,
+          "kind": "inline",
+          "command": "config",
+          "argument": ",MenuHeaderBGColor=\"{{param.1}.MenuHeaderBGColor}\""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 197,
+          "kind": "inline",
+          "command": "config",
+          "argument": ",MenuColor=\"{{param.1}.MenuColor}\""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 198,
+          "kind": "inline",
+          "command": "config",
+          "argument": ",MenuBGColor=\"{{param.1}.MenuBGColor}\""
+        },
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 199,
+          "kind": "inline",
+          "command": "config",
+          "argument": ",MenuCheckedColor=\"{{param.1}.MenuCheckedColor}\""
+        }
+      ]
+    },
+    "tell": {
+      "count": 25,
+      "examples": [
+        {
+          "source": "tarc:\\d\\tell.english",
+          "line": 170,
+          "kind": "inline",
+          "command": "tell",
+          "argument": ",ShowProfileList({ProfileSpec})"
+        },
+        {
+          "source": "originals/d/TpV_t1.english",
+          "line": 35,
+          "kind": "Checked",
+          "command": "tell",
+          "argument": "Wind,Wind,0,{TpVc21}"
+        },
+        {
+          "source": "originals/d/TpV_t1.english",
+          "line": 36,
+          "kind": "Checked",
+          "command": "tell",
+          "argument": "Rain,Rain,0,{TpVc31}"
+        },
+        {
+          "source": "originals/d/TpV_t1.english",
+          "line": 37,
+          "kind": "Checked",
+          "command": "tell",
+          "argument": "Sun,Sun,0,{TpVc11}"
+        },
+        {
+          "source": "originals/d/TpV_t1.english",
+          "line": 38,
+          "kind": "Checked",
+          "command": "tell",
+          "argument": "Thunder,thunder,0,{TpVc41}"
+        },
+        {
+          "source": "originals/d/TpV_t2.english",
+          "line": 37,
+          "kind": "Checked",
+          "command": "tell",
+          "argument": "Sun,Sun,0,{TpVc11}"
+        },
+        {
+          "source": "originals/d/TpV_t2.english",
+          "line": 38,
+          "kind": "Checked",
+          "command": "tell",
+          "argument": "Wind,Wind,0,{TpVc21}"
+        },
+        {
+          "source": "originals/d/TpV_t2.english",
+          "line": 39,
+          "kind": "Checked",
+          "command": "tell",
+          "argument": "Rain,Rain,0,{TpVc31}"
+        }
+      ]
+    }
+  },
+  "allOccurrencesSha256": "39d6f15855605243f4406809f4ce76d0eefa1062b6c9b8725e27fe462bdbd732",
+  "sourceManifestSha256": "a7bbf11c929e96b7e571477118aaf6a405aaab899eae61e5cc9a6a09bc8ab8fb",
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "limits": [
+    "보호 영문 문서의 정적 템플릿 조사이며 실제 Config 확장·가림·조건·동적 실행 전체를 증명하지 않는다.",
+    "임의 사용자 파일과 설정에서 새로 만드는 명령 이름은 이 목록으로 제한하지 않는다.",
+    "기존687/715의 전체 리터럴 표를 대체하지 않으며 원본 오자를 자동 수정하지 않는다."
+  ]
+}

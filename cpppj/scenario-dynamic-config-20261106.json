@@ -1,0 +1,39 @@
+{
+  "unit": 940,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 939,
+  "tests": {
+    "total": 28,
+    "new": 2,
+    "failed": 0,
+    "htmlFactory": 17,
+    "htmlNames": 2,
+    "scriptQueue": 2,
+    "configLive": 7
+  },
+  "initialIssues": [
+    "새검사의 auto size_t/uint32_t 혼합 선언2건",
+    "새검사의 중복Client구성",
+    "새검사의 대문자 경로 기대 불일치"
+  ],
+  "protected": {
+    "count": 2787,
+    "fixtures": 967,
+    "changed": 0,
+    "newFixtures": 0
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "cpppj/tests/HtmlWindowFactoryClientTests.cpp": "3c7c70b6b8d840b22e38a7a7908bf84ab546657c6d362c520e024dff54eb5918",
+    "tools/cpp_scenario_dynamic_inventory.py": "ab0e11a7dd21d18d79e774d6eee2b924dbb4dff4b118ef4fc0a584433fc68511",
+    "cpppj/scenario-dynamic-inventory-20261106.json": "993b2bb8c472d3bea310d9edcc4b488f02293ddd78129d15de12bbf1813437c7",
+    "docs/exe/cpp-scenario-dynamic-config-20261106.md": "82b8cc9d0f818e407a240636bde8b0f5e4db70501745dd3cdfc621c38597ec57"
+  },
+  "next": "941: LEFT_JOBS 3절2번 둘째 항목"
+}
