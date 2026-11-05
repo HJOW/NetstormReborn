@@ -41,6 +41,9 @@ struct MenuClient {
     std::uint32_t cursor{}; // 제목 입력이 선택한 실제 커서 번호다.
     double gameSeconds{}; // 비용 표시는 벽시계 대신 이 현재 게임 시각을 읽는다.
     double wallSeconds{}; //메인 활동/버튼 Idle의 실제 벽시각 입력이며 게임 시각과 분리한다.
+    bool failNextMainClock{}; //메인 부모가 등록된 뒤 현재 시각 장치에서 한 번 실패하도록 하는 검사 입력이다.
+    std::size_t mainRedrawFailureDelay{},remainingRedraws{}; //부모 시각 조회 뒤 지정한 재그리기 요청에서 한 번 실패시킨다.
+    void CheckMainRedrawFailure() { if (remainingRedraws && !--remainingRedraws) throw std::runtime_error("메인 부분 생성의 명시 재그리기 실패"); } //실패 뒤 정리 과정에서는 같은 장치가 다시 실패하지 않는다.
     HtmlTextParserGlobals helpGlobals;ScriptStringRing helpStrings;std::unique_ptr<ConfigInterface> helpConfig; // 창 조립에 쓰는 실제 HTML 전역/80칸 고리/조건 설정이다.
     std::shared_ptr<ClientHtmlWindowGlobals> htmlOwner=std::make_shared<ClientHtmlWindowGlobals>();ScreenRect htmlView{};int screenWidth{},screenHeight{}; // 실제 장기 HTML 상태와 현재 출력/지도 경계다.
     ~MenuClient() { menus->CloseHtmlWindows(); } // 외부 관측/Config 수명보다 먼저 같은 부모를 반납한다.
@@ -51,7 +54,7 @@ struct MenuClient {
     }
     // 게임/창을 열지 않고 실제 보호 자산과 모든 복원 모듈을 조립한다.
     explicit MenuClient(OriginalEdition edition=OriginalEdition::Patch1078,std::uint32_t* sharedFullRefresh=nullptr):root(std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals"),files(root),assets(Register(),edition),fonts(files,"Arial"),
-        buttons(edition,{[this] { return wallSeconds; },[this](auto) { return poll; },[] {},{},[this](auto rect,auto flags) { redrawRectangles.emplace_back(rect,flags); },[this] { ++fullRequests; }},sharedFullRefresh) {
+        buttons(edition,{[this] { if (mainRedrawFailureDelay) { remainingRedraws=mainRedrawFailureDelay;mainRedrawFailureDelay=0; }if (failNextMainClock) { failNextMainClock=false;throw std::runtime_error("메인 생성 시각 장치의 명시 실패"); }return wallSeconds; },[this](auto) { return poll; },[] {},{},[this](auto rect,auto flags) { CheckMainRedrawFailure();redrawRectangles.emplace_back(rect,flags); },[this] { CheckMainRedrawFailure();++fullRequests; }},sharedFullRefresh) {
         RawMenuHooks hooks;hooks.command=[this](auto command,auto id,auto argument) { commands.push_back({command,id,argument}); };
         hooks.readInt=[](std::string_view,std::int32_t& value) { value=0; };hooks.sound=[this](std::string_view name) { sounds.emplace_back(name); };
         hooks.poll=[this](auto) { return poll; };hooks.cursor=[this](auto value) { cursor=value; };

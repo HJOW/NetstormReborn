@@ -244,6 +244,12 @@ struct RawButtonControls::Impl {
         }
         if (!deferCleanup) lifetime->Cleanup();if (!preserveWorldUi) { CloseMinimaps();CloseProduction();if (menus) { menus->CloseMovies();menus->CloseHtmlWindows();menus->CloseBackgroundGifs();menus->CloseChatWindows();menus->CloseNsInfo();menus->CloseTextEntries(); } }if (keptMain) std::erase_if(controls,[&](const auto& value) { const auto* node=Node(value.second);return !node || node->parent!=keptMain; });else { controls.clear();commonButtonNodes.clear(); }activated.reset();
     }
+    void AbandonMainCreation(std::uint32_t previousToken) { // 생성에 실패한 새 가족만 Kill하고 기존 HTML의 지연 삭제 큐는 그대로 보존한다.
+        for (const auto token:create.entries) if (token>previousToken && !(Node(token)->flags&0x10000U)) lifetime->Kill(token); // 아직 부모에 붙지 않은 버튼/배경도 실제 등록표에서 찾아 같은 공통 수명으로 반납한다.
+        const auto unregistered=[&](const auto& entry) { return entry.first>previousToken && std::find(create.entries.begin(),create.entries.end(),entry.first)==create.entries.end(); }; // 기본 생성 이전 할당 실패의 저장소만 즉시 반납한다.
+        std::erase_if(mainMenus,unregistered);std::erase_if(stones,unregistered);std::erase_if(backgrounds,unregistered);std::erase_if(bases,unregistered);
+        if (mainMenu>previousToken) mainMenu=0; // 원문 생성자 EH와 달리 호스트의 다음 화면 재합성이 미완성 부모를 재사용하지 않도록 한다.
+    }
 };
 // 구현 주소는 생성 이후 이동하지 않아 순환 훅이 안정된 처리기를 조회한다.
 RawButtonControls::RawButtonControls(o::OriginalEdition edition,RawButtonHooks hooks,std::uint32_t* sharedFullRefresh):impl_(std::make_unique<Impl>(edition,std::move(hooks),sharedFullRefresh)) {}
@@ -266,6 +272,8 @@ void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::s
     state.create.screenWidth=width;state.create.screenHeight=height;auto& root=*state.Node(state.root);
     root.baseWidth=root.width=static_cast<float>(width);root.baseHeight=root.height=static_cast<float>(height);
     if (existingMain) { auto& node=*state.Node(existingMain);node.baseWidth=node.width=static_cast<float>(width);node.baseHeight=node.height=static_cast<float>(height);state.Changed();return; } //재합성/안내창 복귀는 같은 부모와 버튼을 재사용해45초 기한을 새로 시작하지 않는다.
+    const auto previousToken=state.nextToken; // 메인 생성 전의 다른 UI와 이번 부분 가족을 구별한다.
+    try {
     if (mainMenuParent) {
         if (!state.menus || state.create.collection.edition!=o::OriginalEdition::Patch1078 || (controls.size()!=8 && controls.size()!=9)) throw std::invalid_argument("원문 메인 부모 생성 계약");
         const auto token=++state.nextToken;state.mainMenus.emplace(token,std::make_unique<MainMenuNode>());state.mainMenu=token;state.factory->Construct(token,0,0,0,1);auto& node=*state.mainMenus.at(token);node.vtable=0x515fd4U;node.command=62; //보호00540459의3e이며 유지를 허용하는 타입11로 바꾸지 않는다.
@@ -284,6 +292,7 @@ void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::s
     }
     if (mainMenuParent) { state.lifetime->SetIdle(state.mainMenu,true);state.menus->SetMainMenuSerial(state.Node(state.mainMenu)->serial);state.menus->SetGumpModal(state.mainMenu,true); } //생성자의 같은 serial을 Help 허용 조회에 쓴 뒤 실제 모달을 연다.
     state.Changed();
+    }catch (...) { if (mainMenuParent) state.AbandonMainCreation(previousToken);throw; } // 정상 원문 순서는 유지하며 실패한 호스트 부모만 재사용 대상에서 제외한다.
 }
 // 명령은 부모 가상 통지 시에만 생성된다. release의 화면 위치만으로 새 명령을 만들지 않는다.
 std::optional<int> RawButtonControls::Event(InputEvent event) { return RouteInput(event).activated; }

@@ -42,6 +42,21 @@ TEST_CASE(RawMenuControls_MainParentActivityRealIdleAndPopup) {
     client.wallSeconds=133.99;client.buttons.IdleGumps();CHECK(!queues && client.buttons.MainMenuToken()==parent);client.wallSeconds=134;client.buttons.IdleGumps();CHECK(queues==1 && !client.buttons.MainMenuToken() && !client.buttons.CurrentDialog());client.buttons.IdleGumps();CHECK(queues==1);client.buttons.CleanupGumps();
 }
 
+// 기본 부모 등록 이후 실패한 생성은 재사용 가능한 메인 메뉴가 아니며 새 요청으로 다시 구성해야 한다.
+TEST_CASE(RawMenuControls_MainParentConstructionFailureReleasesAndRebuilds) {
+    for (const std::size_t delay:{0U,1U,5U,15U,30U}) { // 기본 등록 직후 시각과 가족 구성 중 서로 다른 재그리기 접두에서 중단한다.
+    MenuClient client;client.failNextMainClock=delay==0;client.mainRedrawFailureDelay=delay;bool failed{};
+    try { InstallTestMain(client); }catch (const std::runtime_error&) { failed=true; }
+    CHECK(failed && !client.buttons.MainMenuToken() && !client.buttons.CurrentDialog() && !client.buttons.DialogCount());
+    client.buttons.CleanupGumps();std::istringstream report(client.buttons.Report());std::string tag;std::uint32_t controlCount{},registered{};report>>tag>>controlCount>>registered;CHECK(tag=="RawButtons" && !controlCount && registered==1); //부분 가족의 미부착 노드까지 정리한 뒤 공통 루트 하나만 남아야 한다.
+    const auto controls=InstallTestMain(client);const auto parent=client.buttons.MainMenuToken();CHECK(parent && client.buttons.CurrentDialog()==parent && client.buttons.DialogCount()==1);
+    for (std::size_t index=0;index<controls.size();++index) { // 재시도는 빠진 버튼 없이 전체 가족과 원문 깊이를 새로 구성한다. 적중은 아래 실제 모달 Route로 검사한다.
+        const auto token=client.buttons.ControlGump(static_cast<int>(index));CHECK(token && client.buttons.GumpDepth(token)==std::uint32_t(-83));
+    }
+    client.Click({controls[0].rect.left+10,controls[0].rect.top+10});CHECK(!client.buttons.MainMenuToken() && !client.buttons.CurrentDialog());client.buttons.CleanupGumps();CHECK(!client.buttons.ControlGump(0));
+    }
+}
+
 // 원본 글꼴의 최대 맞춤 폭75와 004ce940에서 읽은 여섯 해상도의 위치를 실제 버튼/입력 경계에 대조한다.
 TEST_CASE(RawMenuControls_MainLayoutMeasuredWidthAndSixResolutions) {
     const std::array<std::array<int,4>,6> cases{{{640,480,164,215},{800,600,244,255},{1024,768,356,311},{1280,720,484,295},{1280,800,484,321},{1366,768,527,311}}}; // 각 행은 화면 폭/높이와 첫 행의 원문 x/y다. font 파일의 Multiplayer 폭63+12=75다.
