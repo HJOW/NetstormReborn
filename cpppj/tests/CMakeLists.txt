@@ -3631,3 +3631,9 @@ target_sources(netstorm_tests PRIVATE McpPartsTests.cpp)
 add_executable(netstorm_mcp_parts_tests FocusedTestMain.cpp McpPartsTests.cpp)
 target_link_libraries(netstorm_mcp_parts_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_mcp_parts_tests)
+
+# 4차 와이드 해상도 선택 목록(최대 1920x1080)의 계약을 게임 없이 확인한다(937).
+target_sources(netstorm_tests PRIVATE ScreenResolutionTests.cpp)
+add_executable(netstorm_screen_resolution_tests FocusedTestMain.cpp ScreenResolutionTests.cpp)
+target_link_libraries(netstorm_screen_resolution_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_screen_resolution_tests)

@@ -326,7 +326,10 @@ void RawButtonControls::LayoutMainMenuControls(std::span<GumpControl> controls) 
         const auto end=start==0 ? std::size_t{4} : controls.size();float total{};
         for (auto index=start;index<end;++index) total=static_cast<float>(static_cast<double>(total)+s.Node(ControlGump(controls[index].id))->baseWidth+4.0); // 원문은 존재하는 버튼에만 간격을 더한다.
         float x=static_cast<float>((static_cast<double>(s.Node(s.create.entries[0])->baseWidth)-(static_cast<double>(total)-4.0))*0.5);
-        const auto y=static_cast<float>(s.create.screenHeight/3+(start ? 78 : 55));
+        // 원본은 y=SCREENH/3+55(+78)다. 1024x768에서 로고 그림(640x480, 가운데 배치) 아래 167이다. 4차 와이드(높이 800 초과)에서는 같은 식이 버튼을 로고 위로 올리므로
+        // 그림 기준 같은 위치((H-480)/2+112+55)를 쓴다. 800 이하는 기존 원문/호환 값 그대로다. 원본과 다른 Windows10/11 와이드 호환 처리다.
+        const int baseline=s.create.screenHeight>800 ? (s.create.screenHeight-480)/2+112 : s.create.screenHeight/3;
+        const auto y=static_cast<float>(baseline+(start ? 78 : 55));
         for (auto index=start;index<end;++index) { // 같은 실제 버튼을 재부착하고 그 결과 경계로 클릭 위치도 갱신한다.
             auto& control=controls[index];const auto token=ControlGump(control.id);const auto depth=s.Node(token)->depth;
             s.tree->Push(token); // 원본 부모는 미부착 자식을 받지만 현재 호스트는 이미 임시 배치를 마쳤으므로 기존 형제 링크를 먼저 해제한다.

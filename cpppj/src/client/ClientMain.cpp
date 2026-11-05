@@ -16,6 +16,7 @@
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
 #include "client/ConstructionHistoryKey.h" //최초 map mode 뒤 최근 건설 위치 다섯 칸을 한 번 초기화한다.
 #include "client/SavedCameraKey.h" //원문 최초 저장 위치10칸 초기화를 최근 위치5칸보다 먼저 실행한다.
+#include "client/ScreenResolutions.h" //해상도 변경이 허용 목록(원본 3개+호환 추가)을 공유한다.
 #include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
 #include "client/LanguageRequest.h" //SetLanguage는같은현재언어/설정/입력큐와공유카운터를사용한다.
 #include "o/RawXlat.h" //시작 때 함께 읽은 세 언어의 번역을 선택 변경 뒤에도 보존한다.
@@ -915,8 +916,8 @@ void Client::ClearThunderFlashes() {
 std::size_t Client::ThunderFlashCount() const { return thunderProcesses_.size(); }
 // 원본 세 논리 해상도를 바꾸되 Windows10/11 호환 전체화면 선택은 같은 모드로 유지한다.
 void Client::ChangeResolution(int width, int height) {
-    if (!((width == 640 && height == 480) || (width == 800 && height == 600) || (width == 1024 && height == 768)))
-        throw std::invalid_argument("Unsupported original resolution");
+    if (!IsSupportedScreenResolution(width, height)) // 원본 세 해상도와 Windows10/11 호환 추가 해상도(4차 와이드 포함)만 허용한다.
+        throw std::invalid_argument("Unsupported resolution");
     if (screenWidth_ == width && screenHeight_ == height) return;
     ClearThunderFlashes();
     const auto mode=screen_->Flags(); // 재생성 전 실제 모드를 보존한다.

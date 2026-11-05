@@ -1604,7 +1604,9 @@ void UberGump::Execute(const DialogAction& action) {
         popup_.clear(); ClearPage(); if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
     }
     if (command == "resolution") {
-        const int width = o::ConfigParseLong(action.argument), height = width == 640 ? 480 : width == 800 ? 600 : 768;
+        const int width = o::ConfigParseLong(action.argument); // 폭만 받는 옛 명령이므로 목록에서 같은 폭의 첫 행 높이를 쓴다(원본 세 폭은 4:3 높이).
+        int height = 768;
+        for (const auto& size : kScreenResolutionChoices) if (static_cast<int>(size[0]) == width) { height = static_cast<int>(size[1]); break; }
         client_.ChangeResolution(width, height); popup_.clear(); ClearPage(); if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false); RebuildControls(); return;
     }
     throw std::runtime_error("Command pending: " + action.command);

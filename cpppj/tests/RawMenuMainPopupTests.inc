@@ -59,7 +59,7 @@ TEST_CASE(RawMenuControls_MainParentConstructionFailureReleasesAndRebuilds) {
 
 // 원본 글꼴의 최대 맞춤 폭75와 004ce940에서 읽은 여섯 해상도의 위치를 실제 버튼/입력 경계에 대조한다.
 TEST_CASE(RawMenuControls_MainLayoutMeasuredWidthAndSixResolutions) {
-    const std::array<std::array<int,4>,6> cases{{{640,480,164,215},{800,600,244,255},{1024,768,356,311},{1280,720,484,295},{1280,800,484,321},{1366,768,527,311}}}; // 각 행은 화면 폭/높이와 첫 행의 원문 x/y다. font 파일의 Multiplayer 폭63+12=75다.
+    const std::array<std::array<int,4>,8> cases{{{640,480,164,215},{800,600,244,255},{1024,768,356,311},{1280,720,484,295},{1280,800,484,321},{1366,768,527,311},{1600,900,644,377},{1920,1080,804,467}}}; // 각 행은 화면 폭/높이와 첫 행의 원문 x/y다. font 파일의 Multiplayer 폭63+12=75다.
     const std::array<std::string,8> labels{{"Campaign","Multiplayer","Demo","Help","Edit","Credits","Options","Quit"}}; // Intro 없는 원본의 실제 표시 순서다.
     for (const auto& entry:cases) { // 창 없이 같은 실제 글꼴·트리로 각 해상도의 측정/부착/적중을 확인한다.
         MenuClient client;client.Resize(entry[0],entry[1]);std::array<GumpControl,8> controls{};
