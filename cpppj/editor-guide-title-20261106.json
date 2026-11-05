@@ -1,0 +1,294 @@
+{
+  "unit": 950,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 950,
+  "version": "11.01",
+  "exeSha256": "9ac4a32bd849b6c6f464fb18a08e9f217c4102407193a7cd53f1915ed14da577",
+  "exeBytes": 11248128,
+  "previousProduct": 949,
+  "previousExeSha256": "b51f2aca2093d92acb4f8019316eab25e9fc388b1771f2ed7a7ff25088b1173c",
+  "gameExecutions": 3,
+  "controls": {
+    "control-v1": {
+      "passed": false,
+      "exitCode": 0,
+      "error": "AssertionError({'content': [{'text': '입력 실행 오류: UI control not found: TEST01\\n{\"frame\":22,\"page\":\"LoadEditable\",\"phase\":\"1\",\"screen\":{\"height\":768,\"width\":1024}}', 'type': 'text'}], 'isError': True})",
+      "dataUnchanged": true
+    },
+    "control-v2": {
+      "passed": false,
+      "exitCode": 1,
+      "error": "RuntimeError(\"서버가 응답 없이 종료됨: State 42\\nState 41\\nState 3\\nPalette 29 init palette\\nState 4\\nState 1\\nPalette 29 init palette\\nState 4\\n실제 세션 하위 소비자 미연결: H:\\\\Workspace\\\\git\\\\NetstormReborn\\\\cpppj\\\\src\\\\client\\\\RawCampaignSession.cpp:1585: unsigned int __cdecl netstorm::client::`anonymous-namespace'::SessionMissing::<lambda_1>::operator ()(void) const\")",
+      "dataUnchanged": true
+    }
+  },
+  "accepted": {
+    "passed": true,
+    "exitCode": 0,
+    "actions": 13,
+    "observations": [
+      {
+        "label": "main-0",
+        "title": "MAIN",
+        "phase": [
+          [
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "main"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "map-list",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "LoadEditable"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "editor-0",
+        "title": "EDITOR:TEST01",
+        "phase": [
+          [
+            "4"
+          ]
+        ],
+        "page": [
+          [
+            "editor"
+          ]
+        ],
+        "mission": null,
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "mission-0",
+        "title": "TEST:TEST01",
+        "phase": [
+          [
+            "3"
+          ]
+        ],
+        "page": [
+          [
+            "A."
+          ]
+        ],
+        "mission": [
+          [
+            "TEST01",
+            "Tutorial",
+            "7263"
+          ]
+        ],
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "mission-1",
+        "title": "TEST:TEST01",
+        "phase": [
+          [
+            "4"
+          ]
+        ],
+        "page": [
+          [
+            "mission"
+          ]
+        ],
+        "mission": [
+          [
+            "TEST01",
+            "Tutorial",
+            "7263"
+          ]
+        ],
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "editor-0",
+        "title": "EDITOR:TEST01",
+        "phase": [
+          [
+            "4"
+          ]
+        ],
+        "page": [
+          [
+            "editor"
+          ]
+        ],
+        "mission": null,
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "leave-editor",
+        "title": "EDITOR:TEST01",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "LeaveEditMode"
+          ]
+        ],
+        "mission": null,
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "main-0",
+        "title": "MAIN",
+        "phase": [
+          [
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "main"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      }
+    ],
+    "dataUnchanged": true,
+    "sourceFiles": 1395,
+    "fullReportFiles": 6
+  },
+  "cppTests": {
+    "existing": 3,
+    "new": 0,
+    "failedChecks": 0,
+    "nativeRowsPerEdition": 576
+  },
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_product_ui_tests"
+    ],
+    "exitCode": 0,
+    "warnings": 0
+  },
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "screenshots": {
+    "editor.png": {
+      "sha256": "a203cdda0e79c83838945fc5e411d79a38761837b47239628ddc9249a52385cc",
+      "width": 1024,
+      "height": 768
+    },
+    "main.png": {
+      "sha256": "0ac693f6e10689599cbf61dcc9b4f3d00ed0865b5d200f647e3cbde8319d2c0b",
+      "width": 1024,
+      "height": 768
+    },
+    "returned-editor.png": {
+      "sha256": "33d74682cebe4d1245a7a8300f2ff071d7c5d61d873807630f0a19a306f052d5",
+      "width": 1024,
+      "height": 768
+    },
+    "test-battle.png": {
+      "sha256": "ca9922e32e7617de73ad5303b3d54a80dad164d8cdd6415ffaaf691355e01da5",
+      "width": 1024,
+      "height": 768
+    }
+  },
+  "launchToolSha256": "297526a797a81d8238c3af82bcef835178e391e44405a30e46f94993cb8794e1",
+  "committedToolSha256": "a957dac909a73006bc248d15f9c7b9d089a02f56a9fd5dc3f9312e7d9f732e11",
+  "postRunToolChange": "보고 파일명 고유 인덱스/메타데이터만 추가. 같은 라벨의 최초 전체 보고2개는 갱신됐으나 선택 관측8개/PNG4개 보존. 실제 입력/판정/제품 변경 및 재실행 없음.",
+  "files": {
+    "cpppj/src/client/UberGump.cpp": "719e24b61aa377b4f03cd8901333517f050bf0fbda2d8217fce2767431ad97cd",
+    "cpppj/src/client/UberEditor.inc": "f73d4385909bab48fd65d58679e39ca1714dd193f5d9f66edc23c3eda2fd8d09",
+    "tools/mcp_cpp_editor_title_smoke.py": "a957dac909a73006bc248d15f9c7b9d089a02f56a9fd5dc3f9312e7d9f732e11",
+    "cpppj/README.md": "83bd176f1f42d25c64a2ac90c7e5a83d519acfbf923332fef360e295e6c404f4",
+    "docs/exe/cpp-editor-guide-title-20261106.md": "70d8610ff2a49dc6deb39e6393809a44916f40e3243310c6b2023e40f0a882d3"
+  },
+  "raw": {
+    "build.log": "5ebb105e3606c1906ce7e067e2c1af6ee4f38381b5c64c187761ef438c686453",
+    "title-tests.log": "006a2c4ce2398b7ecad50b590108b02518ebfaa42a2dee735d3995220b7c5594",
+    "control-v1/summary.json": "5605ad73b2ac60c4c8c0d70f22edbd2df8e9ff9f43aaf92402ebd2fc5f9fe265",
+    "control-v2/summary.json": "9f1400417098f6327859bf3b689751f8ceb21f424e0214f437c65d7107191ee6",
+    "fixed-v1/summary.json": "db151d42ae271d8e79ded39bd8f89d7dabefdf052e52731d36df288ce659f060"
+  },
+  "next": "951: 3절3번 Native3/State1/단독State7/LeaveBattle 잔여"
+}

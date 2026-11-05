@@ -71,6 +71,7 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     //호스트 Session은 준비된 물리만 빌리고 파일 설치/Template 변경은 아래 실제 checkpoint의 위치까지 지연한다.
     const std::string pending(client_.FortGlobals()->Pending()); // 실제 이름 선택/기본 이름은 checkpoint가 수행하므로 여기서는 파일을 조회하거나 파싱하지 않는다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }});
+    services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; // 편집 세션도 원문 Guide의 현재 +68을 조회하며 미션이 없으면 0을 반환한다.
     services.installMode=CampaignInstallMode::ExistingEditor;services.deferExistingEditorFile=true;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.localLogin.reset();
     services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.editorTransport=e.transport;services.fortMission=FortMissionSaveEffects();
     services.fortBadges=client_.FortBadges();services.fortTypeConversion=client_.FortTypeConversion(); //기존 파일의 실제 장부/변환표를 캠페인과 같은 Client owner에서 빌린다.

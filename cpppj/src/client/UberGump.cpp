@@ -659,7 +659,7 @@ void UberGump::RefreshWindowTitle() {
     WindowTitleState state; // 현재 메뉴는 요새 없음이며 데모 여부는 같은 실제 미션 필드다.
     if (mission_) { state.fortName=missionRuntime_ && missionRuntime_->guided ? std::string(client_.FortGlobals()->Current()) : mission_->FortName();state.mission=true; } // 원문 Init이 연결된 미션은 같은 실제 현재 Fort를 읽는다. 다른 기존 로더의 이름 계약은 유지한다.
     if (world_ && client_.GameplayGlobals()->world.editor) { state.fortName=std::string(client_.FortGlobals()->Current());state.editor=true; } //실제 Editor 파일 설치 중의 제목도 같은 현재 이름과 EditorWindowName을 사용한다.
-    if (missionRuntime_) state.demo=missionRuntime_->gate.demo!=0;
+    if (missionRuntime_) { state.demo=missionRuntime_->gate.demo!=0;state.testBattle=missionRuntime_->mode64!=0; } // 현재 미션의 +68/+64를 함께 읽어 데모 우선과 Test Battle 제목 선택을 보존한다.
     netstorm::client::RefreshWindowTitle(state,{
         [this](std::string_view key,std::optional<std::string_view> argument) { return client_.Configuration().PathSpec(key,argument); },
         [this] { return mission_ ? mission_->Get("title").value_or(std::string()) : std::string(); },
