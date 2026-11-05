@@ -14,6 +14,7 @@ std::span<std::uint8_t> CountInput(SidPool& pool,Sid sid) { const auto raw=pool.
 void CountPut(std::span<std::uint8_t> raw,std::size_t at,std::uint32_t value,std::size_t width) { // 판본별 실제 필드 폭으로 입력을 쓴다.
     for (std::size_t byte=0;byte<width;++byte) raw[at+byte]=static_cast<std::uint8_t>(value>>(byte*8)); // 인접 CD extra와 stale 바이트를 보존한다.
 }
+
 template<class Function> bool CountRangeFailed(Function function) { try { function(); }catch (const std::out_of_range&) { return true; }return false; } // 일반 실패와 물리 TYPE/프레임 범위 오류를 구별한다.
 struct ReadOnlyDaisCount { // 의식은 실행하지 않고 기존 Count의 실제 의존 모듈만 같은 풀에 구성한다.
     SidPool pool; // 두 판본의 실제 raw 슬롯 폭/예약 영역을 보유한다.
@@ -111,5 +112,23 @@ TEST_CASE(CurrentCountGetter_TypeAndFrameBoundsFailWithoutWritesOrEffects) { // 
             CountPut(raw,patch ? 36U : 34U,frame,patch ? 4U : 1U);const auto expected=std::vector<std::uint8_t>(scene.pool.Bytes().begin(),scene.pool.Bytes().end());CHECK(CountRangeFailed([&] { scene.ritual->Count(sid); }));CHECK(std::equal(expected.begin(),expected.end(),scene.pool.Bytes().begin()));
         }
         raw[10]=75;CountPut(raw,patch ? 36U : 34U,0,patch ? 4U : 1U);const auto expected=std::vector<std::uint8_t>(scene.pool.Bytes().begin(),scene.pool.Bytes().end());CHECK(CountRangeFailed([&] { scene.ritual->Count(sid); }));CHECK(std::equal(expected.begin(),expected.end(),scene.pool.Bytes().begin()) && scene.effects==0 && !scene.store->Initialized()); // 정상 TYPE라도 코드 배열이 비어 있으면 명시 범위 실패다.
+    }
+}
+
+TEST_CASE(CurrentLevelSetter_PhysicalFreeAndReservedSlotsPreservePoolLists) { // 원문 base+84는 유효한 물리 슬롯이면 예약/반납 상태에도 상태 BYTE만 쓰고 자유 목록은 갱신하지 않는다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 양판본의 같은 +b 쓰기와 서로 다른 풀 배치에서 확인한다.
+        SidPool pool(edition,24000);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188U : 171U);RawSquidLevel level(pool,types,[](SquidLevelAssertion) { throw std::logic_error("정상 물리 레벨 쓰기의 예상 밖 진단"); });
+        for (const auto number:{0U,1U,4U,5U,pool.Layout().serverFirst,pool.Layout().predictableFirst,pool.Capacity()-1}) { // 예약0/1/4·반납5·서버/예측 경계·마지막 슬롯의 실제 번호만 사용한다.
+            const Sid sid{static_cast<std::uint16_t>(number)};auto raw=CountInput(pool,sid);raw[10]=82;raw[11]=1;auto expected=std::vector<std::uint8_t>(pool.Bytes().begin(),pool.Bytes().end());expected[static_cast<std::size_t>(number)*pool.Layout().stride+11]=0x61;const auto free=pool.FreeCount();const auto first=pool.FirstFree(false),client=pool.FirstFree(true),tail=pool.Tail(false);level.Set(sid,3);CHECK(pool.Slot(sid)[11]==0x61 && level.Get(sid)==3);CHECK(std::equal(expected.begin(),expected.end(),pool.Bytes().begin()) && pool.FreeCount()==free && pool.FirstFree(false)==first && pool.FirstFree(true)==client && pool.Tail(false)==tail);
+        }
+        const Sid last{static_cast<std::uint16_t>(pool.Capacity()-1)};CountInput(pool,last)[10]=255;CHECK(CountRangeFailed([&] { level.Set(last,3); }));CHECK(CountRangeFailed([&] { level.Set(Sid{static_cast<std::uint16_t>(pool.Capacity())},3); })); // 물리 TYPE/SID 범위는 원문 대응 배열의 호스트 경계로 유지한다.
+    }
+}
+
+TEST_CASE(CurrentLevelSetter_DiagnosticReleaseKeepsCurrentByteAndWrittenPrefix) { // 범위 진단 뒤 반납된 같은 슬롯에 현재 하위 비트를 읽어 쓰며 Has/TYPE를 다시 검사하지 않는다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 원문 두 진단 파일/행을 유지한 채 실제 Release 뒤 상태를 확인한다.
+        SidPool pool(edition,24000);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188U : 171U);const auto sid=pool.Allocate(2);auto raw=pool.AllocatedBytes(sid);raw[10]=82;raw[11]=4;const auto free=pool.FreeCount();std::size_t calls{};std::vector<std::uint8_t> expected;
+        RawSquidLevel level(pool,types,MakeSquidLevelAssertion(edition,[&](std::string_view expression,std::string_view file,std::uint32_t line) { CHECK(expression=="0 <= n && n < 8" && file==(edition==OriginalEdition::Patch1078 ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp") && line==(edition==OriginalEdition::Patch1078 ? 0x579U : 0x562U));++calls;pool.Release(sid);CHECK(pool.Slot(sid)[11]==3);CountInput(pool,sid)[10]=255;expected.assign(pool.Bytes().begin(),pool.Bytes().end());expected[static_cast<std::size_t>(sid.value)*pool.Layout().stride+11]=0xe3; })); // 실제 일반 반납의 free|dead 두 비트3을 원문대로 보존한다.
+        level.Set(sid,0xffffffffU);CHECK(calls==1 && pool.FreeCount()==free+1 && pool.Slot(sid)[10]==255 && pool.Slot(sid)[11]==0xe3 && std::equal(expected.begin(),expected.end(),pool.Bytes().begin()));
     }
 }

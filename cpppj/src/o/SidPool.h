@@ -77,6 +77,7 @@ private:
     friend class RawBridgeEditor; //원문 전체 품질 순회는 예약/free 여부를 다시 검사하지 않고 같은 물리 슬롯에 WORD/프레임을 직접 쓴다.
     friend class RawBridgeDecay; //붕괴의 WORD/프레임 직접 쓰기는 칸 효과 뒤 새 free/예약 관문을 추가하지 않는다.
     friend class RawGraph; // 원문 Graph setter는 진단 복귀 뒤 현재 물리 슬롯의 graph BYTE를 쓰며 새 free 관문을 추가하지 않는다.
+    friend class RawSquidLevel; // 원문 base+84는 예약/free 슬롯과 진단 뒤 반납된 슬롯에도 현재 상태 BYTE만 쓰며 풀 목록은 갱신하지 않는다.
     // 원본 short next 필드를 little endian으로 읽거나 쓴다. serverHead는 0번 슬롯+14의 겹친 객체다.
     std::uint16_t ReadNext(std::size_t offset) const;
     void WriteNext(std::size_t offset,std::uint16_t next);

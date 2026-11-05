@@ -27,10 +27,10 @@ bool RawSquidLevel::Has(Sid sid) const {
 }
 // base 가상80의 BYTE 상위비트만 읽는다.
 std::uint32_t RawSquidLevel::Get(Sid sid) const { return Has(sid) ? pool_.Slot(sid)[11]>>5 : 0; }
-// 진단 callback이 같은 슬롯의 하위비트를 바꾸어도 실제 저장 직전에 현재 값을 다시 읽는다.
+// 양판본 base+84처럼 물리 슬롯의 상태 BYTE만 쓴다. 진단 뒤 반납돼도 현재 하위5비트를 보존하며 자유 목록/카운터는 바꾸지 않는다.
 void RawSquidLevel::Set(Sid sid,std::uint32_t value) const {
     (void)Has(sid);if (std::bit_cast<std::int32_t>(value)<0 || value>=8) assertion_(SquidLevelAssertion::OutOfRange);
-    auto raw=pool_.AllocatedBytes(sid);raw[11]=static_cast<std::uint8_t>((raw[11]&31U)|((value&7U)<<5));
+    auto& state=pool_.bytes_[pool_.Offset(sid)+11];state=static_cast<std::uint8_t>((state&31U)|((value&7U)<<5)); // hasLevel과 범위 진단은 위에서 한 번만 수행하고 원문 마지막 저장 직전에 현재 BYTE를 읽는다.
 }
 // 실제 연결의 동일 Pool을 확인한다.
 const SidPool& RawSquidLevel::Pool() const { return pool_; }

@@ -1,0 +1,105 @@
+{
+  "unit": 923,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "status": "완료·전체 목표 진행 중",
+  "productUnit": 923,
+  "productCodeChanges": true,
+  "productVersion": "11.01",
+  "productSha256": "6ad67843d420b318b2cf4bb57b04a19a8952ec211346d79b479413d0b419e636",
+  "productBytes": 10787840,
+  "initialCompileErrors": 2,
+  "compileCorrection": "새 검사 위치를 CountRangeFailed 선언 뒤로 이동",
+  "initialProductFailedCases": 2,
+  "testExpectationFailedChecks": 2,
+  "testCorrection": "실제 Release의 free|dead=3을 원문대로 보존하는 E3으로 새 검사 기대 교정",
+  "fix": "RawSquidLevel.Set만 실제 Pool의 현재 +b BYTE를 쓰도록 좁은 friend로 연결",
+  "physicalWrites": 14,
+  "diagnosticReleaseWrites": 2,
+  "typeSidRangeFailures": 4,
+  "nativeLevelRows": 96,
+  "existingReadOnlyInputs": 5504,
+  "tests": [
+    {
+      "filter": "CurrentLevelSetter_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-923/test-corrected-current-level.log"
+    },
+    {
+      "filter": "CurrentCountGetter_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-923/test-CurrentCountGetter_.log"
+    },
+    {
+      "filter": "BuildingObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-923/test-BuildingObjectUi_.log"
+    },
+    {
+      "filter": "ProductionObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-923/test-ProductionObjectUi_.log"
+    },
+    {
+      "filter": "StateObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-923/test-StateObjectUi_.log"
+    },
+    {
+      "filter": "BuildingUpgradeUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-923/test-BuildingUpgradeUi_.log"
+    },
+    {
+      "filter": "CampaignMotion_BaseLevelKeepsLowBitsAfterAssertion",
+      "exit": 0,
+      "log": "extracted/cpp-resume-923/test-CampaignMotion_BaseLevelKeepsLowBitsAfterAssertion.log"
+    },
+    {
+      "filter": "CampaignMotion_ReplaysActualLevelNativeBothEditions",
+      "exit": 0,
+      "log": "extracted/cpp-resume-923/test-CampaignMotion_ReplaysActualLevelNativeBothEditions.log"
+    },
+    {
+      "filter": "factoryPostPop_level_diagnostic_return_and_current_service",
+      "exit": 0,
+      "log": "extracted/cpp-resume-923/test-factoryPostPop_level_diagnostic_return_and_current_service.log"
+    }
+  ],
+  "names": [
+    "CurrentLevelSetter_PhysicalFreeAndReservedSlotsPreservePoolLists",
+    "CurrentLevelSetter_DiagnosticReleaseKeepsCurrentByteAndWrittenPrefix",
+    "CurrentCountGetter_BaseLevelAllStatesAndReservedSlotsAreReadOnly",
+    "CurrentCountGetter_DaisCurrentTypesDirectionsAndBoundariesHaveNoEffects",
+    "CurrentCountGetter_TypeAndFrameBoundsFailWithoutWritesOrEffects",
+    "BuildingObjectUi_FourWorkshopsUseCurrentOwnerLevelMoneyAndEditor",
+    "BuildingObjectUi_WorkshopClickInsufficientFundsAndCycleCurrentFrame",
+    "BuildingObjectUi_GeneratorsUseStrictHalfHpAndMissionOwnerGates",
+    "BuildingObjectUi_ConstructionBlocksMenusWithoutAllocatingForms",
+    "ProductionObjectUi_FourThemesKeepDuplicateRowsAndDistinctSlots",
+    "ProductionObjectUi_DisallowedExcludedAndAllProducedRemainDifferent",
+    "ProductionObjectUi_ClientPredictionAndServerGapsUseFirstMatchingForm",
+    "ProductionObjectUi_SalvageUsesCurrentOwnerEditorDenyAndConfirmation",
+    "StateObjectUi_DamagedSalvageReadsCurrentBattleMode",
+    "StateObjectUi_AltarDaisDelegationUsesCurrentFramesOwnersAndEditor",
+    "StateObjectUi_EmptyAltarStatusHeadersAndLevelClampReleaseMenus",
+    "StateObjectUi_EditorDestroyClickReleasesPairAndPopupWithoutTransmission",
+    "BuildingUpgradeUi_FourThemesCompleteAndReopenAtEveryLevel",
+    "CampaignMotion_BaseLevelKeepsLowBitsAfterAssertion",
+    "CampaignMotion_ReplaysActualLevelNativeBothEditions",
+    "factoryPostPop_level_diagnostic_return_and_current_service"
+  ],
+  "uniqueCases": 21,
+  "newCases": 2,
+  "finalFailedChecks": 0,
+  "buildCommands": 4,
+  "msbuildInvocations": 6,
+  "finalWarnings": 0,
+  "finalErrors": 0,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "protectedUnchanged": true,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "newNetworkTests": 0
+}

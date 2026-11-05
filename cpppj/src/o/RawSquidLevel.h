@@ -20,12 +20,12 @@ public:
     bool Has(Sid sid) const;
     // 현재 상태BYTE의 상위3비트를 zero-extend한다.
     std::uint32_t Get(Sid sid) const;
-    // signed 범위 진단 뒤 현재BYTE의 하위5비트를 보존하고 n의 하위3비트를 저장한다.
+    // signed 범위 진단 뒤 현재BYTE의 하위5비트와 n의 하위3비트를 저장한다. 물리 범위 안 예약/free도 허용하며 풀 할당/반납은 하지 않는다.
     void Set(Sid sid,std::uint32_t value) const;
     // 다른 월드의 상태 setter 연결을 거부하는 실제 참조다.
     const SidPool& Pool() const;
 private:
-    SidPool& pool_; // 실제 할당된 자산 슬롯 저장소다.
+    SidPool& pool_; // 원문 예약/반납 영역까지 포함하는 실제 물리 슬롯 저장소다.
     std::span<const RiftTypeRecord> types_; // 현재 raw type의 원본 TYPE 조회 범위를 확인한다.
     std::function<void(SquidLevelAssertion)> assertion_; // 원본 진단 후 현재 슬롯 변경도 보존한다.
 };
