@@ -1,0 +1,72 @@
+{
+  "unit": 925,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "status": "완료·전체 목표 진행 중",
+  "productUnit": 924,
+  "productCodeChanges": false,
+  "productSha256": "5d127d7834ac8fd9df92bc2c6691cbecc27b7965e54e99a0ab31c0d7dbb0b6ae",
+  "newCases": 1,
+  "uniqueCases": 8,
+  "barRoots": 4,
+  "clicks": 8,
+  "ownerSpChecks": 36,
+  "firstRuntimePassed": true,
+  "initialCompileErrors": 3,
+  "compileCorrection": "두 auto 선언의 서로 다른 형식을 분리; 파생 lambda 진단도 해소",
+  "tests": [
+    {
+      "filter": "StateGameBarUi_",
+      "exit": 0,
+      "log": "extracted\\cpp-resume-925\\test-first.log"
+    },
+    {
+      "filter": "StateGameUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-925/test-StateGameUi_.log"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "exit": 0,
+      "log": "extracted/cpp-resume-925/test-CampaignObjectMenus_ActualObjectFormBindingAndClose.log"
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+      "exit": 0,
+      "log": "extracted/cpp-resume-925/test-CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup.log"
+    },
+    {
+      "filter": "GameMenuBar_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-925/test-GameMenuBar_.log"
+    },
+    {
+      "filter": "GameMenus_Native918",
+      "exit": 0,
+      "log": "extracted/cpp-resume-925/test-GameMenus_Native918.log"
+    }
+  ],
+  "names": [
+    "StateGameBarUi_ActualChildrenTrackingAndAboutReleaseTogether",
+    "StateGameUi_GameAndViewUseCurrentMissionEditorAndDemo",
+    "StateGameUi_OptionsCurrentConfigDeviceAndDisplayFlags",
+    "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+    "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+    "GameMenuBar_Native510",
+    "GameMenuBar_MissingChildIsExplicit",
+    "GameMenus_Native918"
+  ],
+  "nativeBarRows": 510,
+  "nativeMenuRows": 918,
+  "finalFailedChecks": 0,
+  "buildCommands": 2,
+  "msbuildInvocations": 3,
+  "finalWarnings": 0,
+  "finalErrors": 0,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "protectedUnchanged": true,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "newNetworkTests": 0
+}
