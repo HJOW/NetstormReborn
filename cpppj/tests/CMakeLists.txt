@@ -430,6 +430,7 @@ add_executable(netstorm_tests
     DamageableHitTests.cpp
     FarmClusterTests.cpp
     TerrainGrowthTests.cpp
+    TerrainArchHelpersTests.cpp
     GunImpactTests.cpp
     SquidDefenseTests.cpp
     NormalTerrainWorldBindingTests.cpp
@@ -1163,6 +1164,9 @@ set_source_files_properties(FarmClusterTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FARMCLUSTER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/farmcluster-x86.tsv\"")
 set_source_files_properties(TerrainGrowthTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TERRAINGROWTH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/terraingrowth-x86.tsv\"")
+# 군도 공유 helper의 독립 PE 관측을 해당 검사에만 공급한다.
+set_source_files_properties(TerrainArchHelpersTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TERRAIN_ARCH_HELPERS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/terrain-arch-helpers-x86.tsv\"")
 
 # 실제 충돌/기본방어 입력과 기존Ascend Count40개의 live3204바이트 재사용 검사다.
 set_source_files_properties(GunImpactTests.cpp PROPERTIES COMPILE_DEFINITIONS
@@ -3485,6 +3489,6 @@ target_sources(netstorm_pop_context_tests PRIVATE RegularCurrentTests.cpp)
 target_sources(netstorm_tests PRIVATE TerrainSeedTests.cpp)
 set_source_files_properties(TerrainSeedTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TERRAINSEED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/terrain-seed-x86.tsv\"")
-add_executable(netstorm_terrain_seed_tests FocusedTestMain.cpp TerrainSeedTests.cpp TerrainGrowthTests.cpp TerrainContextTests.cpp NormalTerrainWorldBindingTests.cpp)
+add_executable(netstorm_terrain_seed_tests FocusedTestMain.cpp TerrainSeedTests.cpp TerrainGrowthTests.cpp TerrainArchHelpersTests.cpp TerrainContextTests.cpp NormalTerrainWorldBindingTests.cpp)
 target_link_libraries(netstorm_terrain_seed_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_terrain_seed_tests)

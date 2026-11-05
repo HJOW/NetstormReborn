@@ -93,12 +93,13 @@ std::int32_t RawTerrainGrowth::Fill(std::int32_t left,std::int32_t top,std::int3
         }
     return added;
 }
-// 일반 분기는 원본 archipelago flag0이므로 현재 청크 지역이 요청과 같아야 한다.
+// 같은 현재 군도 DWORD가 비영일 때만 청크 지역 조회를 건너뛴다.
 bool RawTerrainGrowth::Put(std::int32_t x,std::int32_t y,std::uint8_t region) {
     const auto& bounds=context_.Map().bounds;
     if (x<bounds[0] || y<bounds[1] || x>bounds[2] || y>bounds[3]) return false;
     const auto index=Index(x,y);
-    if (context_.Codes()[index]=='x' || ChunkRegion(x/16,y/16)!=std::bit_cast<std::int8_t>(region)) return false;
+    if (context_.Codes()[index]=='x') return false;
+    if (!context_.ArchipelagoMode() && ChunkRegion(x/16,y/16)!=std::bit_cast<std::int8_t>(region)) return false;
     context_.Regions()[index]=region;context_.Codes()[index]='x';return true;
 }
 // 실제 두 판본의 같은 caller 로컬 난수를 사용하며 게임 전역 난수를 소비하지 않는다.
@@ -107,12 +108,24 @@ std::int32_t RawTerrainGrowth::Next(std::uint32_t& seed,std::uint32_t limit) {
 }
 // 원본은 X/Y 난수와 limit1 호출을 모두 소비한 뒤 현재x/지역을 읽는다.
 void RawTerrainGrowth::Grow(std::int32_t island,std::int32_t x,std::int32_t y,std::int32_t target,std::uint32_t& seed) {
+    GrowRectangle(island,{x,y,x+1,y+1},target,seed);
+}
+// 원문 bottom 인자는 난수폭 계산에 사용하지 않는다. X폭을 Y높이로 바꾸지 않는다.
+void RawTerrainGrowth::GrowRectangle(std::int32_t island,ChunkRect bounds,std::int32_t target,std::uint32_t& seed) {
+    const auto cell=[](std::int32_t value) { // 원본 signed DWORD 왼쪽 shift의 하위32비트를 보존한다.
+        return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)<<4);
+    };
+    const auto width=std::bit_cast<std::int32_t>((static_cast<std::uint32_t>(bounds.right)-static_cast<std::uint32_t>(bounds.left))*16U-1U);
+    const auto add=[](std::int32_t left,std::int32_t right) { // 좌표 덧셈도 호스트 signed overflow 없이 원본 감김을 보존한다.
+        return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(left)+static_cast<std::uint32_t>(right));
+    };
     auto failures=kRawGrowthFailures;
     // 성공이 없는 연속1000회 또는 목표 추가량 소진에서 종료한다.
     while (target>0 && failures!=0) {
-        --failures;const auto cx=x*16+Next(seed,15),cy=y*16+Next(seed,15);Next(seed,1);
+        --failures;const auto cx=add(cell(bounds.left),NextRange(seed,0,width)),cy=add(cell(bounds.top),NextRange(seed,0,width));Next(seed,1);
         const auto index=Index(cx,cy);
-        if (context_.Codes()[index]!='x' || std::bit_cast<std::int8_t>(context_.Regions()[index])!=island) continue;
+        if (context_.Codes()[index]!='x' || (!context_.ArchipelagoMode() &&
+            context_.Regions()[index]!=static_cast<std::uint8_t>(island))) continue;
         const auto before=target;
         // 현재 원본3×3은 Y행을 먼저 순회한다.
         for (auto ny=cy-1;ny<=cy+1;++ny)
@@ -121,6 +134,47 @@ void RawTerrainGrowth::Grow(std::int32_t island,std::int32_t x,std::int32_t y,st
                 if (Put(nx,ny,static_cast<std::uint8_t>(island))) --target;
         if (target<before) failures=kRawGrowthFailures;
     }
+}
+// 현재 칸이 x일 때만 여덟 이웃을 읽으며 지역BYTE의 일치 여부는 점수 조건이 아니다.
+bool RawTerrainGrowth::RemoveSparseCell(std::int32_t x,std::int32_t y,std::int32_t threshold) {
+    const auto index=Index(x,y);if (context_.Codes()[index]!='x') return false;
+    std::int32_t weight=0;
+    // 북부터 시계방향으로 읽으며 짝수 방향의 직교 이웃에만 추가 가중치를 준다.
+    for (std::size_t direction=0;direction<kNeighborCells.size();++direction) {
+        const auto [dx,dy]=kNeighborCells[direction];
+        if (context_.Codes()[Index(x+dx,y+dy)]=='x') weight+=(direction&1U) ? 1 : 2;
+    }
+    if (weight>threshold) return false;
+    context_.Regions()[index]=static_cast<std::uint8_t>(globals_.noRegion);context_.Codes()[index]='.';return true;
+}
+// 제거된 앞 칸을 같은 pass의 뒤 칸이 즉시 읽는다. 원문에 없는 동시 갱신 버퍼를 만들지 않는다.
+void RawTerrainGrowth::RemoveSparse() {
+    bool changed;
+    do {
+        changed=false;
+        // 원문 내부 Y행 끝은 bottom-1 직전이다.
+        for (auto y=context_.Map().bounds[1]+1;y<context_.Map().bounds[3]-1;++y)
+            // 현재 right를 각 칸 뒤 다시 읽고 임계값4로 지운다.
+            for (auto x=context_.Map().bounds[0]+1;x<context_.Map().bounds[2]-1;++x)
+                changed=RemoveSparseCell(x,y,4) || changed;
+    } while (changed);
+}
+// 첫 좌표는 float32 저장 뒤 ftol 하위DWORD이며 반복 비교는 정확한 정수와 float32 끝값 사이에서 한다.
+void RawTerrainGrowth::ClearPlacement(ChunkRect bounds) {
+    const auto cell=[](std::int32_t value) { // 원본32비트 shift 후 float32 저장 지점을 보존한다.
+        return static_cast<float>(std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)<<4));
+    };
+    const auto first=[](float value) { // 이 범위의 float32는 int64 안에 들어가며 ftol의 하위DWORD만 사용한다.
+        return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(value)));
+    };
+    const auto left=cell(bounds.left),top=cell(bounds.top),right=cell(bounds.right),bottom=cell(bounds.bottom);
+    // Y행을 먼저 진행하며 원문 context의 현재 bounds로 잘라내지 않는다.
+    for (auto y=first(top);static_cast<double>(y)<bottom;++y)
+        // 각 행의 시작X는 변환된 같은 left이며 오른쪽 경계는 포함하지 않는다.
+        for (auto x=first(left);static_cast<double>(x)<right;++x) {
+            const auto index=Index(x,y);context_.Regions()[index]=static_cast<std::uint8_t>(globals_.noRegion);
+            context_.Codes()[index]='.';
+        }
 }
 // 방향0부터12까지 같은8이웃을 순환하며 변경된 앞선 칸도 현재 배열에서 읽는다.
 void RawTerrainGrowth::FixCell(std::int32_t x,std::int32_t y) {

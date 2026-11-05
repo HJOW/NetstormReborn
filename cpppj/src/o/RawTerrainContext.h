@@ -51,6 +51,8 @@ public:
     std::int32_t Region() const;
     // 청크 getter/첫 시드의 패치 진단과 CD의 무진단 경계를 선택한다.
     OriginalEdition Edition() const;
+    // 군도 root가 켜는 원본 DWORD다. 성장과 Put이 같은 현재 값을 읽도록 참조로 제공한다.
+    std::uint32_t& ArchipelagoMode();
 private:
     // 손상 범위의 배열 밖 읽기를 정상 지도 접근으로 바꾸지 않는다.
     static std::size_t Index(std::int32_t x,std::int32_t y);
@@ -63,6 +65,8 @@ private:
     std::int32_t region_;
     // chunks_: 제한 후 청크 범위이며 map_.bounds의 칸 범위와 합치지 않는다.
     ChunkRect chunks_{};
+    // archipelago_: 일반0/군도비영인 context의 성장·청크 지역 검사 선택값이다.
+    std::uint32_t archipelago_{};
     // codes_/regions_: 원본 X열 우선 두65,536BYTE 지도다.
     std::array<std::uint8_t,65536> codes_{},regions_{};
     // mapping_/aliases_: 원본 문자별256DWORD의 현재 대응표다.

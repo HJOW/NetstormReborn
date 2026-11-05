@@ -85,4 +85,6 @@ std::uint32_t RawTerrainContext::Owner() const { return owner_; }
 std::int32_t RawTerrainContext::Region() const { return region_; }
 // 생성 때 선택한 원본 판본을 보존하며 현재 모드에서 새로 추측하지 않는다.
 OriginalEdition RawTerrainContext::Edition() const { return edition_; }
+// 생성 시0인 같은 DWORD를 군도 상위와 성장 helper가 공유한다.
+std::uint32_t& RawTerrainContext::ArchipelagoMode() { return archipelago_; }
 }

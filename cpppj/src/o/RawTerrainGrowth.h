@@ -22,6 +22,14 @@ public:
     std::uint32_t FirstChunkSeed() const;
     // 004c13f0/CD0049e4e0: 첫 시드×93의 로컬 난수로 count개의 성공을 흩뿌린다. 중복도 성공이다.
     void Scatter(std::int32_t count);
+    // 004c0800/CD0049d690: 청크 사각형의 X폭을 두 좌표 난수에 사용하고 caller의 시드를 갱신한다.
+    void GrowRectangle(std::int32_t island,ChunkRect bounds,std::int32_t target,std::uint32_t& seed);
+    // 004c0b30/CD0049da00: 현재 x의 직교2/대각1 가중 이웃 합이 threshold 이하이면 제거한다.
+    bool RemoveSparseCell(std::int32_t x,std::int32_t y,std::int32_t threshold);
+    // 004c0db0/CD0049dbb0: 내부 칸을 Y외부/X내부로 즉시 제거하며 변화가 없을 때까지 반복한다.
+    void RemoveSparse();
+    // 004c0fe0/CD0049e030: 플레이어 청크 사각형을 float32 칸 경계로 바꿔 code/지역을 지운다.
+    void ClearPlacement(ChunkRect bounds);
 private:
     // 패치 getter의 mode/범위 진단 뒤 같은 현재 청크를 clamp 조회한다. CD는 보고 없이 조회한다.
     const ChunkEntry& SeedChunkAt(std::int32_t x,std::int32_t y) const;
