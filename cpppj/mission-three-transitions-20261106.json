@@ -1,0 +1,35 @@
+{
+  "unit": 944,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 939,
+  "tests": {
+    "total": 7,
+    "new": 1,
+    "failed": 0,
+    "guideNative": 1,
+    "lifecycle": 2,
+    "world": 4,
+    "consecutiveGenerations": 3
+  },
+  "initialBuildIssue": "MSVC C1128→CampaignSessionTests.cpp only /bigobj",
+  "protected": {
+    "count": 2787,
+    "fixtures": 967,
+    "changed": 0,
+    "newFixtures": 0
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "cpppj/tests/CampaignGuideWorldLifetimeTests.inc": "7bda7f92e029dc6ec326113bb0a365db606cb1732dfa92e2274c61fbad547392",
+    "cpppj/tests/CMakeLists.txt": "82d2b933fbc12cba2a13060b1ef80b0edf802d3774aaa5823a9e8065f36b3eef",
+    "docs/exe/cpp-mission-three-transitions-20261106.md": "39ba92f2e045181b5f283b584a5732776955de020fbfcc106fca969325799798"
+  },
+  "exeSha256": "06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098",
+  "next": "945: LEFT_JOBS 3절3번 실제Abort메뉴/나머지전환"
+}

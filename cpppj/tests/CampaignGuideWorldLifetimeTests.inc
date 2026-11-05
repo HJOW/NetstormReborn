@@ -94,3 +94,24 @@ TEST_CASE(CampaignGuideWorldLifetime_RequestReleaseKeepsSessionOwnedImageAlive) 
     State pending;auto request=std::make_shared<MissionFortLoadRequest>();auto sessionOwner=request;std::weak_ptr<MissionFortLoadRequest> weak=request;pending.Post({"LoadMissionWorld",{}});
     ReleaseMissionFortLoad(pending,request);CHECK(!request && !pending.Pending() && !weak.expired());sessionOwner.reset();CHECK(weak.expired());
 }
+
+
+// Guide 교체/재시작/분기/닫기 뒤 실제 Init→State 정리→재적재를 세 번 이어 참조·타이머·공유 owner 수명을 확인한다.
+TEST_CASE(CampaignGuideWorldLifetime_ThreeConsecutiveTransitionsKeepOwnersUntilStateCleanup) {
+    GuideWorldScene484 scene;const auto objectCount=scene.input.config.Registry().Objects().size(); // 같은 등록부의 미션 Config 수명 기준이다.
+    for (std::uint32_t pass=0;pass<3;++pass) { // 승패/공격 없이 같은 작업본으로 세대만 세 번 교체한다.
+        auto* prior=scene.session.get();const auto players=scene.client.PlayerRecords()->Base();const auto kernel=scene.client.GetKernel().Size();const auto islands=scene.session->IslandCount();const auto images=scene.templates->OwnedImages();
+        auto& local=*scene.client.LocalStateGlobals();const std::array<double,4> deadlines{local.CaptureEnd(),local.LoginEnd(),local.ConnectEnd(),local.ActivityEnd()}; // Guide 반납과 Native State 정리의 기한 변경 시점을 구별한다.
+        auto hooks=scene.Guide();std::uint32_t mode=99,demo=99;hooks.mode=[&](auto value) { mode=value; };hooks.demo=[&](auto value) { demo=value; };hooks.get=[&](auto key) { return scene.mission->Get(key).value_or(""); };
+        BeginGuideMission("WorkingReload483",hooks);const auto reload=CaptureMissionReload(scene.mission->Name(),pass&1U,0);RestartGuideMission(reload,hooks);CHECK(mode==(pass&1U) && demo==0);
+        scene.mission->Set("fork1","WorkingReload483");ForkGuideMission(1,hooks);CloseGuideMission(hooks);CHECK(!scene.mission && !scene.surface->links.mission && scene.input.config.Registry().Objects().size()+1==objectCount);
+        BeginGuideMission("WorkingReload483",hooks);CHECK(scene.mission && scene.mission->Loaded() && scene.input.config.Registry().Objects().size()==objectCount);
+        CHECK(scene.session.get()==prior && scene.surface->Borrowed() && scene.client.GameplayGlobals()->Borrowed() && scene.client.PlayerRecords()->Base()==players && scene.client.GetKernel().Size()==kernel && scene.session->IslandCount()==islands && scene.templates->OwnedImages()==images);
+        CHECK((std::array<double,4>{local.CaptureEnd(),local.LoginEnd(),local.ConnectEnd(),local.ActivityEnd()})==deadlines); // Guide 함수만으로 기존 월드의 네 기한을 초기화하지 않는다.
+        scene.Init();CHECK(scene.session.get()==prior && scene.templates->OwnedImages()==0 && scene.client.GetKernel().Size()==kernel && scene.session->IslandCount()==islands);
+        auto request=scene.request;scene.Cleanup(1);CHECK(!scene.session && !scene.surface->Borrowed() && !scene.client.GameplayGlobals()->Borrowed() && scene.request==request && !request->consumed);
+        const auto queued=scene.pending.Take();CHECK(queued && queued->command=="LoadMissionFort" && queued->argument=="WorkingReload483");scene.Load();
+        CHECK(request->consumed && request->zone.empty() && scene.session->IslandCount()>0 && scene.templates->OwnedImages()>0 && scene.session->Core().bookkeeping.depth==0);
+        CHECK(scene.retirements==pass+1 && scene.rendererInitializations==pass+1 && scene.startingNotifications==pass+1 && scene.paletteRequests==pass+1 && scene.closedProgress==2*(pass+1) && scene.uiModes.size()==2*(pass+1));
+    }
+}

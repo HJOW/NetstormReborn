@@ -3649,3 +3649,8 @@ target_sources(netstorm_tests PRIVATE FsrConstantsTests.cpp GpuPresenterTests.cp
 add_executable(netstorm_fsr_tests FocusedTestMain.cpp FsrConstantsTests.cpp GpuPresenterTests.cpp)
 target_link_libraries(netstorm_fsr_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_fsr_tests)
+
+# 많은 실제 Session 검사/람다를 묶는 이 번역 단위만 MSVC COFF 섹션 한도를 확장한다(944).
+if(MSVC)
+    set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_OPTIONS /bigobj)
+endif()
