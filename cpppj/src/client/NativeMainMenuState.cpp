@@ -35,7 +35,7 @@ o::LocalMissionParentResult InstallNativeMainMenuState(NativeMainMenuStateGlobal
     NotifyNativeFortEntryLeave(g.state,g.battle,h.leaveBattle);
     Need(h.prefix)();Need(h.hudPrefix)();
     if (!g.pendingName.empty()) g.pendingName[0]=0;if (g.currentName.empty()) throw std::out_of_range("Native State3 현재 Fort 첫BYTE 물리 부족");g.currentName[0]=0;
-    Need(h.title)();if (g.state.current[0]!=3) { Need(h.changedState)();throw std::logic_error("Native State3 제목 뒤 다른 설치 분기의 복귀"); }
+    Need(h.title)();if (g.state.current[0]!=3) return Need(h.changedState)(); // 다른 Fort 설치의 결과를 보존하고 메인 전용 Guide/안내/tail을 중복 실행하지 않는다.
     Need(h.closeGuide)();
     if (!Need(h.configInt)("WelcomeGiven")) Need(h.tell)("Welcome");
     else {

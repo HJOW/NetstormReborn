@@ -141,7 +141,7 @@ o::LocalMissionParentResult UberGump::InstallMainMenuNativeState(std::uint32_t s
     hooks.title=[this] { RefreshWindowTitle(); };hooks.closeGuide=[this] { ReleaseCurrentGuideMission(); };
     hooks.tell=[this](auto section) { Tell(std::string(section)); };hooks.startup=[this] { return o::CheckStartupState(EditorStartupStateHooks()); };
     hooks.editorPlayers=[this] { client_.Configuration().Set("lastEditFort",client_.FortGlobals()->Current());if (!world_) throw std::logic_error("State3 Tell 뒤 선택된 EditorPlayers의 실제 Session 없음");world_->Session().InstallExistingEditorPlayers(MakeEditorPlayerClientHooks(client_)); };
-    hooks.changedState=[] { throw std::logic_error("State3 제목 갱신 뒤 선택된 다른 기존 맵 설치 분기 미연결"); };
+    hooks.changedState=[]()->o::LocalMissionParentResult { throw std::logic_error("State3 제목 갱신 뒤 선택된 다른 기존 맵 설치 분기 미연결"); };
     hooks.tail=[this,&local] {
         ExistingEditorAfterCheckpointEffects tail;tail.hud=[this](auto command) { rawButtons_->NotifyHudMode(command,1); };tail.wallSeconds=[this] { return client_.WallSeconds(); };
         tail.requestMusic=[this](auto name) { client_.WorldAudio().RequestMusic(name); };tail.fortPalette=[this] { const auto name=client_.Configuration().PathSpec("fortPal");client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); };

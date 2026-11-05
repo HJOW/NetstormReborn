@@ -32,7 +32,8 @@ struct NativeMainMenuStateHooks {
     std::function<void()> title,closeGuide; //현재/pending 첫BYTE0 뒤 제목 갱신과 그 뒤 Guide 소멸이다.
     std::function<void(std::string_view)> tell; //004cf960의 실제 고정 Tell 섹션이며 임시 Host MainMenu를 호출하지 않는다.
     std::function<std::uint32_t()> startup; //004b5ba0의 실제 reader/벽시각/질문 부모다.
-    std::function<void()> editorPlayers,tail,changedState; //Tell 뒤 실제 Editor 분기/공통 후반/제목 callback이 State를 바꾼 경우의 원문 다른 경로다.
+    std::function<void()> editorPlayers,tail; //Tell 뒤 실제 Editor 분기와 일반 메인 공통 후반이다.
+    std::function<o::LocalMissionParentResult()> changedState; // 제목 뒤 선택된 Fort 설치의 정상 확정/미션 조기 반환을 원래 분배기에 전달한다.
 };
 // 모든 선택 효과가 정상 복귀한 경우만 공통 commit으로 반환한다. intro0은 실제 immediate39를 예약한다.
 o::LocalMissionParentResult InstallNativeMainMenuState(NativeMainMenuStateGlobals globals,const NativeMainMenuStateHooks& hooks);

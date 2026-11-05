@@ -108,3 +108,54 @@ TEST_CASE(NativeMainMenuState_RetiredValidationPreservesOtherStartupBranches) {
         CHECK(scene.first==(welcome ? 0U : first));
     }
 }
+
+
+namespace { // 실제 원문 공통 분배기에 선택된 continuation 결과를 연결하는 검사 장치다.
+// 큰 설치 본문은 명시 callback이며 State3 선택과 다섯 블록 확정은 제품 부모가 수행한다.
+void RunMainMenuContinuation(MainMenuScene& scene,const NativeMainMenuStateHooks& selected) {
+    LocalMissionStateHooks hooks;hooks.logState=[](auto) {};
+    hooks.parentState=[&](auto state) { CHECK(state==3);return InstallNativeMainMenuState(scene.Globals(),selected); };
+    RawLocalMissionState state(OriginalEdition::Patch1078,scene.local.State(),{scene.server,scene.boss,scene.battle,scene.post,scene.saved,scene.mission,scene.simul,scene.meta,scene.player,scene.zone,scene.ticks,scene.source,scene.seed,scene.local.State().immediate[33],scene.refresh,scene.rebuild,reinterpret_cast<std::uint8_t&>(scene.background[0]),scene.battleByte,scene.end,scene.local.ActivityEnd(),scene.seconds,scene.wall},std::move(hooks));
+    state.Run();
+}
+}
+
+// 원문의 파일/월드 정상 복귀는 공통 확정으로, 미션 요청 ret는 이전 phase를 유지한 채 반환해야 한다.
+TEST_CASE(NativeMainMenuContinuation_ReturnsSelectedParentResult) {
+    for (const auto result:{LocalMissionParentResult::Commit,LocalMissionParentResult::ReturnWithoutCommit}) { // 두 실제 반환 계약을 같은 Native 물리에서 별도로 확인한다.
+        MainMenuScene scene;auto state=scene.local.State();const auto previous=state.phase,old=state.old;auto hooks=scene.Hooks();
+        hooks.title=[&] { CHECK(!scene.current[0] && !scene.pending[0]);scene.trace.emplace_back("title");state.current[0]=2; };
+        hooks.changedState=[&] { scene.trace.emplace_back("continuation");state.current[1]=0xabcddcba;state.next[0]=result==LocalMissionParentResult::Commit?4U:7U;return result; };
+        RunMainMenuContinuation(scene,hooks);
+        CHECK(scene.trace==std::vector<std::string>({"intro","prefix","hud1","title","continuation"}));
+        CHECK(scene.first==1 && scene.startups==0 && scene.islands==0 && scene.input.Empty());
+        if (result==LocalMissionParentResult::Commit) {
+            CHECK(state.old==previous && state.phase[0]==2 && state.phase[1]==0xabcddcba && state.phase[2]==0x50607080);
+            CHECK(!state.current[0] && state.current[1]==0xabcddcba && state.next[0]==4 && !state.phase[33]);
+        } else {
+            CHECK(state.old==old && state.phase==previous && state.current[0]==2 && state.current[1]==0xabcddcba && state.next[0]==7);
+        }
+        CHECK(!state.current[33] && !state.immediate[33] && !state.next[33]);
+    }
+}
+
+// 선택된 실제 설치 장치가 없으면 정상 메뉴/tail이나 commit으로 바꾸지 않고 앞선 prefix만 남긴다.
+TEST_CASE(NativeMainMenuContinuation_MissingBodyKeepsPriorEffects) {
+    MainMenuScene scene;auto state=scene.local.State();const auto previous=state.phase;auto hooks=scene.Hooks();
+    hooks.title=[&] { scene.trace.emplace_back("title");state.current[0]=2; };
+    bool rejected{};try { RunMainMenuContinuation(scene,hooks); }catch (const std::logic_error&) { rejected=true; }
+    CHECK(rejected && state.phase==previous && state.current[0]==2 && !state.next[0]);
+    CHECK(!scene.current[0] && !scene.pending[0] && !scene.editor && scene.first==1 && scene.startups==0);
+    CHECK(scene.trace==std::vector<std::string>({"intro","prefix","hud1","title"}));
+}
+
+// 설치 도중의 예외는 선택 callback의 부분 쓰기를 보존하고 공통 확정/메인 안내를 실행하지 않는다.
+TEST_CASE(NativeMainMenuContinuation_BodyFailureKeepsPartialWrites) {
+    MainMenuScene scene;auto state=scene.local.State();const auto previous=state.phase;auto hooks=scene.Hooks();
+    hooks.title=[&] { scene.trace.emplace_back("title");state.current[0]=2; };
+    hooks.changedState=[&]()->LocalMissionParentResult { scene.trace.emplace_back("partial");state.current[2]=0x12345678;state.next[0]=7;throw MainMenuStop{}; };
+    bool rejected{};try { RunMainMenuContinuation(scene,hooks); }catch (const MainMenuStop&) { rejected=true; }
+    CHECK(rejected && state.phase==previous && state.current[0]==2 && state.current[2]==0x12345678 && state.next[0]==7);
+    CHECK(scene.first==1 && scene.startups==0 && scene.input.Empty());
+    CHECK(scene.trace==std::vector<std::string>({"intro","prefix","hud1","title","partial"}));
+}

@@ -83,7 +83,7 @@ struct Native3FixtureScene {
         h.tell=[this](auto name) { Event("tell:"+std::string(name));if (name=="UserNotUpdated" && mutation=="tips0") tips=0;if (name=="Blank" && mutation=="updated1") updated=1; };
         h.startup=[this] { Event("startup");if (mutation=="first0") first=0;if (mutation=="tips1") tips=1;if (mutation=="editor1" || mutation=="editor1-stop") editor=1;return values[2]; };
         h.editorPlayers=[this] { Event("editorPlayers");if (mutation=="editor1-stop") throw Native3Stop{"stop:editorPlayers"}; };
-        h.changedState=[this] { Event("changedState");throw Native3Stop{"changedState"}; };h.tail=[this] { Tail(); };return h;
+        h.changedState=[this]()->LocalMissionParentResult { Event("changedState");throw Native3Stop{"changedState"}; };h.tail=[this] { Tail(); };return h;
     }
     // 기존 실제 공통 Run을 사용해 intro39/정상 ret/외부 예외의 다섯 블록을 관측한다.
     std::string Run() {

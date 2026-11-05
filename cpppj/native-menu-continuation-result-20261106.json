@@ -1,0 +1,50 @@
+{
+  "unit": 951,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 951,
+  "version": "11.01",
+  "exeSha256": "9ac79063e175d869148b81ecd23eba2bf72a48efd6b583c38d2159b34e437298",
+  "exeBytes": 11249152,
+  "previousProduct": 950,
+  "cppTests": {
+    "new": 3,
+    "existing": 8,
+    "total": 11,
+    "failedChecks": 0,
+    "existingNativeFixtureRows": 82
+  },
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_mission_entry_tests"
+    ],
+    "exitCode": 0,
+    "warnings": 0
+  },
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "multiplayerTestsExecuted": false,
+  "actualHostContinuationConnected": false,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "newFixtures": 0,
+  "files": {
+    "cpppj/src/client/NativeMainMenuState.cpp": "ec6455a5ff36df51869f0c451c33b94f975669e53b5c9f75b5f1a3dee906cf0d",
+    "cpppj/src/client/NativeMainMenuState.h": "0d3dc299b72559bb326ebe1c57a8aa8d057b84dc0001d08598bc0baf6054280c",
+    "cpppj/src/client/UberEditor.inc": "c11c262d8a18f353dcbc8edd966272f8a57c9751126101fbfc9e9249019f906c",
+    "cpppj/tests/NativeMainMenuStateTests.cpp": "b081d7edbea1ed2b3930d74a427fd42c0e1d6a683e5d4ed92efeab251a2e7a3b",
+    "cpppj/tests/NativeMainMenuStateNativeTests.cpp": "9b1141b76b0c4cd5eeb8f15e695c50dbb3af5d5d8e0cf96ed88123ed6ad2a56d",
+    "cpppj/README.md": "4262c441e7f2674a9ec22ed20391b9e2025639f85beac3848d46d10b5e912682",
+    "docs/exe/cpp-native-menu-continuation-result-20261106.md": "c0b65410adeee7519b19ec35ec643b9c492f6ba121f4bcdc4a08437b4505d374"
+  },
+  "raw": {
+    "build.log": "07475be8595815b049243ecc5e3c884f8bce3479891590755813d98d9fa8e116",
+    "native-menu-tests.log": "18951803eb4dfad9ae08519a5daf9481331ae053f952151f047efee7ccdefb99"
+  },
+  "next": "952: 3절3번 실제 Fort continuation 접합 및 나머지 Native/State/LeaveBattle"
+}
