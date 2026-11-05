@@ -93,7 +93,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
     // 선택도 같은 GameWorld가 소유한다. 설치 중에는0이며 삭제의 실제 ClearSelection에서 같은 표시를 갱신한다.
     services.deletion.selected=[this] { return o::Sid{static_cast<std::uint16_t>(selected_)}; };
     services.deletion.emit=[this,other=std::move(services.deletion.emit)](const o::SquidDestroyEvent& event) {
-        if (event.effect==o::SquidDestroyEffect::ClearSelection) { Select(0);return; }
+        if (event.effect==o::SquidDestroyEffect::ClearSelection) { ClearSelection();return; } // 원문004af780은 종속 반납 뒤004d5c60만 호출한다. Select(0)의 이미 반납된 ProcessForm 재조회는 실행하지 않는다.
         if (!other) throw std::logic_error("GameWorld의 다른 파생 삭제 효과 미연결");
         other(event);
     };

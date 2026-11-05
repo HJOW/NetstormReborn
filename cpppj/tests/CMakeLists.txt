@@ -3592,3 +3592,6 @@ target_sources(netstorm_tests PRIVATE FormPopCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE FormPopCurrentTests.cpp)
 set_source_files_properties(FormPopCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     NETSTORM_FORM_POP_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/form-pop-current-x86.tsv")
+
+# 객체 메뉴 삭제가 사용하는 원문 선택/별도 Clear 부모의 기존 관측을 함께 선택 실행한다(913).
+target_sources(netstorm_menu_session_tests PRIVATE UserSelectionTests.cpp)

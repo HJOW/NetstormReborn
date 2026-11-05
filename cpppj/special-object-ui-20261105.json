@@ -1,0 +1,199 @@
+{
+  "unit": 913,
+  "previousCpCommit": "09ad72b0",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "priority": "LEFT_JOBS.md 3절1번 대상별 커서·오브젝트 우클릭·게임 UI",
+  "bug": "선택된 스펠 삭제의 종속 프로세스 반납 뒤 GameWorld가 Select(0)로 같은 ProcessForm을 재조회",
+  "fix": "삭제 ClearSelection 효과는 별도 GameWorld::ClearSelection/RawUserSelection::Clear로 전달",
+  "peEvidence": {
+    "originals": {
+      "destroy": "004af780",
+      "actualSelectionCall": {
+        "address": "004af9c2",
+        "target": "004d5c60"
+      },
+      "unrelatedSelect": "004d5c90",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+    },
+    "originalCD": {
+      "destroy": "004ab7e0",
+      "actualSelectionCall": {
+        "address": "004ab9e1",
+        "target": "0041ed70"
+      },
+      "unrelatedSelect": "0041eda0",
+      "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    }
+  },
+  "acceptedUiScope": {
+    "directMenuOpens": 22,
+    "actualControlClicks": 16,
+    "crystalModeOwnerInputs": 8,
+    "spellConversionInputs": 8,
+    "owners": [
+      0,
+      1,
+      2,
+      8
+    ],
+    "crystalType": 154,
+    "obeliskType": 112,
+    "spellType": 114,
+    "sourceSidCoordinatesOwnerHpPreservedAcrossConversions": true,
+    "sourceParentDeletionAndDeferredPopupCleanup": true,
+    "selectedSpellDeletionClearsSameGlobals": true,
+    "naturalGameplayStateReachability": false,
+    "osWindowOrPhysicalMouse": false,
+    "pixelIdentity": false,
+    "forcedSpecialOrDigUp": false
+  },
+  "validation": {
+    "buildCommands": 5,
+    "builds": [
+      {
+        "phase": "first",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "phase": "second",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "phase": "third",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "phase": "fourth",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "phase": "fifth",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "uniqueCases": 20,
+    "newCases": 4,
+    "existingCases": 16,
+    "finalPassedCases": 20,
+    "finalFailedChecks": 0,
+    "priorTestCommands": 4,
+    "priorCaseExecutions": 10,
+    "priorFailedChecks": 4,
+    "totalTestCommands": 18,
+    "totalCaseExecutions": 30,
+    "totalFailedChecks": 4,
+    "sourceSnapshotCount": 2881,
+    "sourceSnapshotUnchanged": true,
+    "sourceEditsDuringBuild": false,
+    "concurrentBuilds": false,
+    "existingTestPrefixUnchanged": true,
+    "newMenuOpensInAcceptedRun": 22
+  },
+  "testHistory": [
+    {
+      "phase": "first-new",
+      "cases": 3,
+      "failedChecks": 1
+    },
+    {
+      "phase": "second-new",
+      "cases": 3,
+      "failedChecks": 1
+    },
+    {
+      "phase": "third-new",
+      "cases": 3,
+      "failedChecks": 1
+    },
+    {
+      "phase": "fourth-transition",
+      "cases": 1,
+      "failedChecks": 1
+    },
+    {
+      "phase": "fifth-new",
+      "cases": 4,
+      "failedChecks": 0
+    }
+  ],
+  "preFixFailures": [
+    {
+      "phase": "first-new",
+      "kind": "검사 입력",
+      "reason": "스펠 +ac에 필요한 선택 장치 미설치"
+    },
+    {
+      "phase": "second-new",
+      "kind": "검사 입력",
+      "reason": "창 없는 독립 Client의 진단 dump가 미초기화 Client 물리를 조회",
+      "fix": "실제 선택/강조/범위 계산은 유지하고 dump만 현재 SID 관측 장치로 공급"
+    },
+    {
+      "phase": "third-new/fourth-transition",
+      "kind": "제품",
+      "reason": "삭제 후 Select(0)의 반납된 ProcessForm/PID 재조회",
+      "fix": "원문 별도 Clear 경로로 수정"
+    }
+  ],
+  "newTestRefinement": "선택 표시의 합법적 Form 할당을 회수/전환 할당으로 세지 않도록 freeCount는 UI 닫기 뒤 명령 직전에 저장한다. 기존 검사/fixture 기대값은 변경하지 않았다.",
+  "protection": {
+    "existingProtectedUnchanged": 2787,
+    "existingFixtures": 967,
+    "newFixtures": 0,
+    "currentProtected": 2787,
+    "currentFixtures": 967,
+    "sourceSnapshotUnchanged": 2881
+  },
+  "product": {
+    "unit": 913,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10787328,
+    "sha256": "82e4d74d5e4f673325ab67ad0cbb519b92e6791f2be76ea6283686539a743741",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "selectedNames": [
+    "SpecialObjectUi_CrystalOwnersAndEditorUseActualMenuAndRelease",
+    "SpecialObjectUi_ObeliskSpellRoundTripFromActualMenuClick",
+    "SpecialObjectUi_CrystalParentDeletionDefersActualPopupCleanup",
+    "SpecialObjectUi_SelectedSpellDeletionClearsWithoutRevisitingReleasedRange",
+    "ObjectMenu_NativeBase478",
+    "ObjectMenu_NativeDamageable478",
+    "ObjectMenu_NativeSalvage478",
+    "ObjectMenu_RequiresReachedDependencies",
+    "ObjectMenuVariants_Native1024",
+    "UserSelection_NativeThreeArgumentsAndCurrentEffects",
+    "UserSelection_ClearNativeEnabledAndCurrentEffects",
+    "UserSelection_ClearLazyBoundaryAndWrittenPrefix",
+    "UserSelectionGlobals_FirstMenuClearKeepsMouseTypeAndNegativeCountTail",
+    "UserSelectionGlobals_DisabledClearPreservesAllCurrentDwords",
+    "UserSelection_EscapeNative154MatchesZeroSelection",
+    "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+    "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+    "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+    "CampaignObjectMenus_ActualSummaryUsesCurrentIdentityAndAlliance",
+    "CampaignUserSelection_SamePoolMarksRegularAndManaNotice"
+  ],
+  "newNativeFixtures": 0,
+  "checkingRemaining": 8,
+  "activeSolutionProjects": 74,
+  "remaining": [
+    "일반 건물/제단의 나머지 타입·소유자·레벨·손상·건설/생산 상태별 메뉴/명령",
+    "운반체/커서·ESC/View·Chat/Console·모달 잔여",
+    "UI1 이후 Edit2·미션3·내부4·Windows/무검사 MP/4~8차"
+  ],
+  "gameProcess": false,
+  "multiplayerTests": false
+}
