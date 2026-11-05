@@ -1,0 +1,242 @@
+{
+  "unit": 915,
+  "previousCpCommit": "2f1a8b7c",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "priority": "LEFT_JOBS.md 3절1번 대상별 커서·오브젝트 우클릭·게임 UI",
+  "change": "실제 생산 내용물/Deck·현재 생산/지식 하위 메뉴와 회수 조건 검증. 제품 소스 변경 없음.",
+  "scope": {
+    "acceptedMenus": 117,
+    "fourThemes": {
+      "workshops": [
+        85,
+        86,
+        87,
+        88
+      ],
+      "stages": "비생산 내용물/서버 중복2개/서로 다른2종/서로 다른3종",
+      "capacity": 2,
+      "remainingSlots": [
+        2,
+        1,
+        0,
+        -1
+      ],
+      "menus": 32,
+      "researchClicks": "양수8명령/0·음수8비활성 클릭. 요청 실행0",
+      "productionHelpClicks": 12
+    },
+    "prediction": {
+      "menus": 2,
+      "finding": "클라이언트 중복 제거로 순서1만 남으면 새 서버 내용물이 빈 순서0에 삽입된다. 첫 검색이 자신이면 뒤의 클라이언트 항목은 유지된다. 후속 서버 중복까지 세 행/한 슬롯을 확인.",
+      "serverAttachFlags": "0x40 pfDONT_TRANSMIT",
+      "clientAttachFlags": "0x10"
+    },
+    "restrictions": {
+      "menus": 3,
+      "states": [
+        "허용 금지로 현재 생산 표시를 숨겨도 Deck/슬롯에는 포함",
+        "생성 제외 목록은 표시 include만 제어하며 빈 하위 창은 모든 생산 완료와 구별",
+        "모든 후보가 실제 생산 중이면 비활성 완료 안내 하나"
+      ]
+    },
+    "salvage": {
+      "menus": 80,
+      "kinds": [
+        "제네레이터75",
+        "썬 캐논128",
+        "워크샾85",
+        "원래 미션의 신전124",
+        "간헐천122"
+      ],
+      "owners": [
+        0,
+        1,
+        2,
+        8
+      ],
+      "editor": [
+        0,
+        1
+      ],
+      "denySalvage": [
+        0,
+        1
+      ],
+      "effects": "직접 회수 SID/금지·워크샾·신전 확인 섹션을 실제 클릭 큐에서 확인. 실제 회수/삭제 요청0."
+    }
+  },
+  "staticEvidence": {
+    "originals": {
+      "004752b0": {
+        "lines": 78,
+        "metadata": "// [신뢰도 A] · 호출자 4 · 포인터 0 · CD판 FUN_0042b270@0042b270 (string/strong 0.81)"
+      },
+      "004540d0": {
+        "lines": 118,
+        "metadata": "// [신뢰도 A] · 호출자 1 · 포인터 0 · CD판 FUN_0047b0d0@0047b0d0 (string/strong 0.779)"
+      },
+      "0044cbd0": {
+        "lines": 25,
+        "metadata": "// [신뢰도 A] · 호출자 5 · 포인터 20 · CD판 FUN_00462a70@00462a70 (callers/strong 0.601)"
+      },
+      "00453b50": {
+        "lines": 25,
+        "metadata": "// [신뢰도 A] · 호출자 0 · 포인터 2 · CD판 FUN_0047a6c0@0047a6c0 (gapfill/strong 0.675)"
+      }
+    },
+    "originalCD": {
+      "0042b270": {
+        "lines": 80,
+        "metadata": "// [신뢰도 A] · 호출자 4 · 포인터 0 · 패치판 FUN_004752b0@004752b0 (string/strong 0.81)"
+      },
+      "0047a6c0": {
+        "lines": 25,
+        "metadata": "// [신뢰도 A] · 호출자 0 · 포인터 2 · 복구 출처 prologue+pointer · 패치판 FUN_00453b50@00453b50 (gapfill/strong 0.675)"
+      }
+    }
+  },
+  "finalTests": {
+    "uniqueCases": 23,
+    "new": 4,
+    "existing": 19,
+    "commands": 10,
+    "executions": 23,
+    "failedChecks": 0,
+    "names": [
+      "BuildingObjectUi_ConstructionBlocksMenusWithoutAllocatingForms",
+      "BuildingObjectUi_FourWorkshopsUseCurrentOwnerLevelMoneyAndEditor",
+      "BuildingObjectUi_GeneratorsUseStrictHalfHpAndMissionOwnerGates",
+      "BuildingObjectUi_WorkshopClickInsufficientFundsAndCycleCurrentFrame",
+      "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+      "CampaignObjectMenus_ActualSummaryUsesCurrentIdentityAndAlliance",
+      "FactoryMenu_Native32Mana5Slots",
+      "FactoryMenu_Native39FullOpen",
+      "ObjectMenuVariants_Native1024",
+      "ObjectMenu_NativeBase478",
+      "ObjectMenu_NativeDamageable478",
+      "ObjectMenu_NativeSalvage478",
+      "ObjectMenu_RequiresReachedDependencies",
+      "ProductionObjectUi_ClientPredictionAndServerGapsUseFirstMatchingForm",
+      "ProductionObjectUi_DisallowedExcludedAndAllProducedRemainDifferent",
+      "ProductionObjectUi_FourThemesKeepDuplicateRowsAndDistinctSlots",
+      "ProductionObjectUi_SalvageUsesCurrentOwnerEditorDenyAndConfirmation",
+      "SpecialObjectUi_CrystalOwnersAndEditorUseActualMenuAndRelease",
+      "SpecialObjectUi_CrystalParentDeletionDefersActualPopupCleanup",
+      "SpecialObjectUi_ObeliskSpellRoundTripFromActualMenuClick",
+      "SpecialObjectUi_SelectedSpellDeletionClearsWithoutRevisitingReleasedRange"
+    ],
+    "factoryFixture": "기존 FactoryMenu2사례/76행 재생. 새 Native 실행/fixture0."
+  },
+  "history": {
+    "commands": 16,
+    "executions": 44,
+    "failedChecks": 54,
+    "attempts": [
+      {
+        "log": "extracted/cpp-resume-915/test-first-production.log",
+        "cases": 3,
+        "failedChecks": 3
+      },
+      {
+        "log": "extracted/cpp-resume-915/test-second-production.log",
+        "cases": 3,
+        "failedChecks": 34
+      },
+      {
+        "log": "extracted/cpp-resume-915/test-third-production.log",
+        "cases": 3,
+        "failedChecks": 13
+      },
+      {
+        "log": "extracted/cpp-resume-915/test-fourth-production.log",
+        "cases": 4,
+        "failedChecks": 2
+      },
+      {
+        "log": "extracted/cpp-resume-915/test-fifth-production.log",
+        "cases": 4,
+        "failedChecks": 2
+      },
+      {
+        "log": "extracted/cpp-resume-915/test-sixth-production.log",
+        "cases": 4,
+        "failedChecks": 0
+      }
+    ],
+    "corrections": [
+      "현재 설정 reader 누락/잘못된 로딩·섬 참조를 검사 입력/장치에서 교정",
+      "하위 메뉴 클릭 전에 실제 Gump idle 확장 완료",
+      "예측 내용물 중복 교정과 서버 중복을 구별·제외 목록 저장 용량 설치",
+      "서버 내용물의 잘못된 attachFlags0에서 Form 전송 앞 client SID 진단2회. 이후0x40으로 통신 없는 실제 부착만 수행",
+      "신규 순서 빈자리 사례의 삭제/두 행 예상2단언을 원문 첫 검색/실제 순서0·1·2와 세 행으로 교정. 기존 검사 기대/fixture 불변"
+    ]
+  },
+  "builds": [
+    {
+      "log": "build-first.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "build-second.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "build-third.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "build-fourth.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "build-fifth.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "build-sixth.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "protection": {
+    "existing": 2787,
+    "fixtures": 967,
+    "unchanged": true,
+    "newFixtures": 0,
+    "newNativeRuns": 0
+  },
+  "sourceCount": 2881,
+  "sourceMatchesFinalBuild": true,
+  "product": {
+    "unit": 913,
+    "bytes": 10787328,
+    "sha256": "82e4d74d5e4f673325ab67ad0cbb519b92e6791f2be76ea6283686539a743741"
+  },
+  "checking": {
+    "remaining": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3
+  },
+  "limitations": [
+    "PATCH의 창 없는 실제 Client/Session/Gump 검사. 자연 도달/픽셀/물리 입력 검증 아님",
+    "일반 생산 Form 생성/부모 통지는 검사했으나 연구/업그레이드/회수 요청·패킷 수신·실제 통신은 실행하지 않음",
+    "실제 게임/포획/희생/특정 적 공격/승리·공중3종 새 전용·MP·전체/34/ZIP 검사 미실행",
+    "성공 업그레이드·손상 회수·제단/다른 대상 상태와 운반체/커서·다른 게임 UI는 잔여"
+  ],
+  "rawDirectory": "extracted/cpp-resume-915"
+}

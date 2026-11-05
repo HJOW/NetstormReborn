@@ -3595,3 +3595,6 @@ set_source_files_properties(FormPopCurrentTests.cpp PROPERTIES COMPILE_DEFINITIO
 
 # 객체 메뉴 삭제가 사용하는 원문 선택/별도 Clear 부모의 기존 관측을 함께 선택 실행한다(913).
 target_sources(netstorm_menu_session_tests PRIVATE UserSelectionTests.cpp)
+
+# 생산 하위 메뉴의 실제 UI와 같은 원문 작성/문자열 fixture를 선택 실행한다(915).
+target_sources(netstorm_menu_session_tests PRIVATE FactoryMenuTests.cpp)
