@@ -1,0 +1,44 @@
+{
+  "unit": 945,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 939,
+  "gameExecutions": 7,
+  "finalPassedProcesses": 1,
+  "final": {
+    "cycles": 2,
+    "entries": 4,
+    "actions": 37,
+    "observations": 26,
+    "exitCode": 0,
+    "dataUnchanged": true
+  },
+  "initialToolIssues": [
+    "표시명/리소스ID 혼동(v1/v2,수정명령문법실패포함)",
+    "언어확장자에번호1입력(v3)",
+    "Welcome/Welcome2/Tips기대누락(v4/v5/v6)"
+  ],
+  "protected": {
+    "count": 2787,
+    "fixtures": 967,
+    "changed": 0,
+    "newFixtures": 0
+  },
+  "multiplayerTests": 0,
+  "newCppBuilds": 0,
+  "sha256": {
+    "tools/mcp_cpp_mission_abort_smoke.py": "92400490bf343c0274fa100f6ef7a2627f5f350c094160a9a75c50f0b2bcc727",
+    "docs/exe/cpp-mission-abort-replay-20261106.md": "6d383191b455f17df7469e5764a6821349c3db74424e77a3d7be5eee117ab175"
+  },
+  "exeSha256": "06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098",
+  "screenshots": {
+    "final-main.png": "30898a718e58d5af6d69beb00d0cdf2bb84e6c537b998a5b3da4d483187367ab",
+    "mission-0.png": "738a905ec0ff3ca3e509455b3c2a770fac9b2b1516d5ca34cbb32cacd6fc1d93",
+    "mission-1.png": "d506ff772922bc54e394aa1850ca95f488440d391c8e02a7b83cd398e97abf79"
+  },
+  "next": "946: LEFT_JOBS 3절3번 데모두번째360초/주기·정리"
+}
