@@ -1,0 +1,94 @@
+{
+  "unit": 928,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "status": "완료·전체 목표 진행 중",
+  "productUnit": 927,
+  "productCodeChanges": false,
+  "productSha256": "fd7a0ec48076bcf6cebd5a657cded1530347a6f7c79f757803d00a6e0f5c5508",
+  "newCases": 1,
+  "uniqueCases": 13,
+  "carrierTypes": 8,
+  "graphPairs": [
+    [
+      7,
+      7
+    ],
+    [
+      7,
+      9
+    ],
+    [
+      9,
+      7
+    ],
+    [
+      254,
+      254
+    ],
+    [
+      254,
+      7
+    ],
+    [
+      7,
+      254
+    ]
+  ],
+  "polls": 96,
+  "directEvaluations": 48,
+  "firstTestWrongHistoryFailedChecks": 40,
+  "finalFailedChecks": 0,
+  "nativeInputRows": 454,
+  "nativeMenuRows": 628,
+  "buildCommands": 2,
+  "warnings": 0,
+  "errors": 0,
+  "tests": [
+    {
+      "filter": "CarrierObjectUi_",
+      "log": "extracted/cpp-resume-928/test-CarrierObjectUi_.log",
+      "exit": 0
+    },
+    {
+      "filter": "CarrierInput_",
+      "log": "extracted/cpp-resume-928/test-CarrierInput_.log",
+      "exit": 0
+    },
+    {
+      "filter": "CarrierMenu_",
+      "log": "extracted/cpp-resume-928/test-CarrierMenu_.log",
+      "exit": 0
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "log": "extracted/cpp-resume-928/test-CampaignObjectMenus_ActualObjectFormBindingAndClose.log",
+      "exit": 0
+    },
+    {
+      "filter": "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+      "log": "extracted/cpp-resume-928/test-CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup.log",
+      "exit": 0
+    }
+  ],
+  "names": [
+    "CarrierObjectUi_AllEightTypesUseActualProjectionAndTargetCursors",
+    "CarrierObjectUi_CargoAndCrystalKeepNativeGroundCursorHistory",
+    "CarrierObjectUi_CurrentOwnerEditorParalysisAndRealGroupOverride",
+    "CarrierObjectUi_AllEightCargoMenusUseActualDisabledFlagsAndSid",
+    "CarrierObjectUi_SelfCellCrystalAndCargoUseCurrentCandidateGraph",
+    "CarrierObjectUi_PriestHalfHpAndUnsupportedGroundBlockHover",
+    "CarrierObjectUi_EmptyDaisUsesOffsetWithoutSacrificeRequest",
+    "CarrierObjectUi_CurrentSurfaceGraphsKeepGroundHistoryAndFlyingCandidate",
+    "CarrierInput_Native454WholeParentsAndCurrentEffects",
+    "CarrierMenu_Native628",
+    "CarrierMenu_RequiresReachedDependenciesAndPriestBinding",
+    "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+    "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup"
+  ],
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "newNetworkTests": 0
+}

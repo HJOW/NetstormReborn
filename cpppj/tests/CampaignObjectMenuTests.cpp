@@ -1518,6 +1518,18 @@ TEST_CASE(CarrierObjectUi_EmptyDaisUsesOffsetWithoutSacrificeRequest) { // 원�
     }
 }
 
+TEST_CASE(CarrierObjectUi_CurrentSurfaceGraphsKeepGroundHistoryAndFlyingCandidate) { // 같은 실제 앵커가 매 폴링의 현재 Graph BYTE를 읽으며 지상/벌룬의 후보 관문을 구별한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const std::array<std::array<std::uint8_t,2>,6> numbers{{{7,7},{7,9},{9,7},{254,254},{254,7},{7,254}}}; // 정상 같은/다른 번호와 원문 무효254 동등 경계를 입력한다.
+    for (const auto type:kCarrierUiTypes) { // 여덟 운반체의 크리스탈 강조만 검사하며 집기/이동/포획 요청을 호출하지 않는다.
+        SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();const auto source=CarrierUiActor(scene,type);const auto raw=core.pool.Slot(source);const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));const auto from=core.building.Surface(static_cast<int>(x),static_cast<int>(y)),to=core.building.Surface(102,102);CHECK(from.value && to.value && from!=to);if (!from.value || !to.value || from==to) throw std::logic_error("Graph UI의서로다른실제표면필요");
+        const auto fromGraph=core.pool.Slot(from)[30],toGraph=core.pool.Slot(to)[30];const auto crystal=session.World().Create(154,2);session.World().SetLoadingDepth(1);session.World().Pop(crystal,102,102,0x10);session.World().SetLoadingDepth(0);scene.world->SetMousePoint(CarrierUiCell(scene,x,y));scene.world->Select(source.value);const auto before=Hex(core.pool.Slot(source)),target=Hex(core.pool.Slot(crystal));const auto free=core.pool.FreeCount();const auto kernel=core.kernel.Size();
+        for (const auto& number:numbers) { // 실제 setter로 BYTE만 바꾼 명시 상태이며 Graph 레코드/flood를 새로 구성하지 않는다.
+            core.graph.SetNumber(from,number[0]);core.graph.SetNumber(to,number[1]);const bool flying=(core.types[type].flags2&0x20000U)!=0;const auto previous=flying || number[0]==254 ? 18U : 6U;PollCarrierUiWorld(scene,20,20,previous);const auto expected=flying || number[0]==number[1] ? 13U : previous;PollCarrierUiWorld(scene,102,102,expected);auto input=session.MakeCarrierInput({});RawPathPoint point{102,102};CHECK(input->Evaluate(source,point)==expected && point.x==102 && point.y==102);CHECK(Hex(core.pool.Slot(source))==before && Hex(core.pool.Slot(crystal))==target && core.pool.FreeCount()==free && core.kernel.Size()==kernel); // 자기 셀의 직접 반환6은5453d8을 갱신하지 않으므로 후보 없는 점에서 원문 이력을 쓴 뒤 비교한다.
+        }
+        core.graph.SetNumber(from,fromGraph);core.graph.SetNumber(to,toGraph);scene.world->Select(0); // 원래 표면 번호를 복구한 뒤 선택과 월드 대여를 반납한다.
+    }
+}
+
 TEST_CASE(BuildingUpgradeUi_FourThemesCompleteAndReopenAtEveryLevel) { // 실제 event3의 그림 생성/완료가 현재 메뉴의 레벨·업그레이드 항목·Form 수명과 함께 바뀌는지 확인한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
     for (const auto type:{85U,86U,87U,88U}) for (const auto level:{0U,1U,2U}) { // 네 테마의 세 정상 레벨을 각각 새 Session에서 확인하며 요청/패킷은 실행하지 않는다.
