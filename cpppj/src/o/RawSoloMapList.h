@@ -9,12 +9,18 @@
 #include <vector>
 
 namespace netstorm::o {
-// 005cab90/005cac58/005cad20의 같은 50칸 저장소다. 빈 문자열도 존재하는 포인터와 구별한다.
+// 원본 목록의 최대 개수다. 005cab90/005cac58/005cad20이 같은 50칸 저장소를 쓴다.
+inline constexpr std::int32_t kOriginalSoloMapLimit=50;
+// 005cab90/005cac58/005cad20의 같은 저장소다. 원문은 고정 50칸이지만 5차의 무제한 목록을 위해 벡터로 바꾸고 최대 개수(limit)를 둔다.
+// limit의 기본값은 원문의 50이며 사용자 홈 정책의 Client가 무제한(int32 최대)으로 올린다. 빈 문자열도 존재하는 포인터와 구별한다.
 struct SoloMapListState {
-    std::array<std::optional<std::string>,50> names; // 실제 strdup 문자열의 소유자이며 null은 없는 포인터다.
-    std::array<std::uint32_t,50> flags{}; // 원본 읽기 실패/손상/다른 구독자/예약 비트를 그대로 보관한다.
+    std::vector<std::optional<std::string>> names=std::vector<std::optional<std::string>>(kOriginalSoloMapLimit); // 실제 strdup 문자열의 소유자이며 null은 없는 포인터다. 처음 50칸이고 limit이 허용하면 필요한 만큼 늘어난다.
+    std::vector<std::uint32_t> flags=std::vector<std::uint32_t>(kOriginalSoloMapLimit); // 원본 읽기 실패/손상/다른 구독자/예약 비트를 그대로 보관한다. names와 같은 길이다.
     std::int32_t count{}; // 원본의 부호 있는 현재 목록 개수다.
     std::uint32_t dirty{}; // 00542678의 현재 캐시 정리 요청이다.
+    std::int32_t limit{kOriginalSoloMapLimit}; // 5차: 열거해 담을 최대 개수다. 원문 50이며 Edit 목록의 무제한 요구는 Client가 int32 최대로 올린다.
+    std::int32_t windowFirst{}; // 5차: 스크롤되는 메뉴 표시 창의 첫 목록 번호다. 목록 데이터가 아니라 표시 상태이며 새로 열 때 0으로 돌아간다.
+    bool keepCache{}; // 5차: 스크롤 이동 뒤 같은 대화창을 다시 열 때 목록을 다시 열거하지 않고 캐시를 재사용하도록 요청하는 일회성 표시다.
 };
 // 실제 파일 열거/Template 읽기와 표시 장치를 호출 순서대로 제공한다.
 struct SoloMapListHooks {

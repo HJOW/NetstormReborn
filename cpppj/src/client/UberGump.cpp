@@ -147,6 +147,7 @@
 #include "o/RawSavedStateRead.h" //startupStateCheck의 실제 저장 파일 부재 관문도 원문 reader에서 판정한다.
 #include "client/SavedStateFiles.h" //State1/3의 같은 저장파일 이름/State3 정리를 실제 설치 경로에 연결한다.
 #include <algorithm>
+#include <limits>
 #include <sstream>
 #include <stdexcept>
 #include <bit>
@@ -191,7 +192,7 @@ std::uint32_t DialogScriptCode(std::string_view name) {
 }
 // 실제 HTML 메뉴가 선택하는 현재 복원 명령도 같은 원본 메뉴 큐를 사용할 수 있다.
 bool IsTellMenuCommand(std::uint32_t command) {
-    if (command==kAskEditFortCommand || command==kReadFortCommand) return true; // HTML 맵 행을 임시 DialogAction 번호로 바꾸지 않는다.
+    if (command==kAskEditFortCommand || command==kReadFortCommand || command==kScrollMapListCommand) return true; // HTML 맵 행과 5차 스크롤 행을 임시 DialogAction 번호로 바꾸지 않는다.
     static constexpr std::array<std::string_view,12> names{"Tell","DoNothing","StartDemo","Config","Warning","MissionBegin","MissionRestart","MissionAbort","LeaveBattle","MissionFork","MissionEnd","SetOwner"}; // 같은 실제 이름 조회와 숫자 코드를 공유한다.
     for (const auto name:names) if (command==DialogScriptCode(name)) return true; // 별도 호스트 Action 번호로 바꾸지 않는다.
     return false;
@@ -285,6 +286,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     mapEffects.enumeratePaths=[this](auto pattern) { return editorCatalog_->Enumerate(pattern); }; //최초 loose 이관 뒤 같은 writable 폴더의 실제 OS 순서만 원문 목록에 전달한다.
     mapEffects.readFile=[this](auto path) { return editorCatalog_->Read(path); }; //분류/메타의 현재 읽기가 같은 durable 삭제 상태를 지키며 원본으로 부활시키지 않는다.
     mapCatalog_=std::make_unique<SoloMapCatalog>(client_.Files(),config,std::move(mapEffects));
+    if (client_.UserData()) mapCatalog_->Window().limit=std::numeric_limits<std::int32_t>::max(); // 5차: 사용자 홈 정책의 제품은 Edit 목록 개수 제한(원문 50)을 없앤다. 긴 목록은 50행 창으로 스크롤한다.
     title_ = DecodeGif(client_.Files().Read(config.PathSpec("BackgroundGifSpec", "titleMenu")));
     clouds_ = DecodeGif(client_.Files().Read(config.PathSpec("CloudFileSpec")));
     const auto& type = client_.Assets().Find("fortGump");
@@ -560,9 +562,23 @@ FortSelectionHooks UberGump::FortEditEffects() {
     hooks.notify=[this](auto slot) { if (!world_) throw std::logic_error("편집 복귀의 실제 Notify Session 없음");world_->Session().BindFortCurrentName({}).notify(slot); };
     return hooks;
 }
+// 5차: 이전/다음 행의 인자(이동할 행 수)만큼 표시 창을 옮기고 같은 Tell 대화창을 목록 재열거 없이 다시 연다.
+// 범위 보정은 다음 메뉴 작성(AppendTellMapMenus)이 한다. 같은 대화창이 없으면 아무것도 열지 않는다.
+bool UberGump::ScrollMapList(const InputEvent& event) {
+    if (event.code&InputCode::kRelease) return false;
+    std::int32_t delta=0; // 이동할 행 수이며 음수는 이전 창이다.
+    try { delta=std::stoi(std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)))); }
+    catch (const std::exception&) { return true; } // 잘못된 인자는 목록을 바꾸지 않는다.
+    auto& window=mapCatalog_->Window();
+    window.windowFirst=std::max<std::int32_t>(0,window.windowFirst+delta);window.keepCache=true;
+    if (lastTellTarget_.empty()) return true;
+    const auto target=lastTellTarget_; // Tell이 lastTellTarget_을 다시 쓰므로 먼저 복사한다.
+    ClearPage();Tell(target);return true;
+}
 //현재Guide/Gump가 소비하지 않은 원문 사건만 받고 숫자State 예약을 선착순UI큐와 분리한다.
 bool UberGump::FortSelectionEvent(const InputEvent& event) {
     const auto command=event.code&0x03ffffffU;
+    if (command==kScrollMapListCommand) return ScrollMapList(event); // 5차: 원본에 없는 목록 스크롤 행이며 ReadFort/AskEditFort 분배와 독립이다.
     if (command!=kAskEditFortCommand && command!=kReadFortCommand) return false;
     auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;
     const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U; //원문 진입의 첫 관문만 캡처하고 owner/State는 같은 현재 저장소를 빌린다.
@@ -601,6 +617,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
         });
     if (!result.found) return false;rebuild_=true;
     if (!result.serial) return true; // 빈 부모/창 생략은 기존 표시 부모나 phase를 교체하지 않는다.
+    lastTellTarget_=target; // 5차: 실제 창을 만든 섹션만 기억한다(맵 목록 스크롤의 재표시 대상).
     state_.phase=briefing ? ClientPhase::Briefing : ClientPhase::Dialog;pageName_=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(client_.HtmlWindowGlobals()->tell.current.data()),std::char_traits<char>::length(client_.HtmlWindowGlobals()->tell.current.data())});popup_.clear();
     if (mission_ && !(missionRuntime_ && missionRuntime_->tutorial)) client_.Pause(true);
     if (windowCreated) *windowCreated=true;RebuildControls();return true;

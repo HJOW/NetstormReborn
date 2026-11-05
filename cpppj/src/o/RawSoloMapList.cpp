@@ -37,15 +37,18 @@ const std::string& RawSoloMapList::Name(std::int32_t value) const {
 // dirty 정리는 이름이 존재하는 칸의 flags만 지운다. 정상 캐시는 mode가 달라도 원본처럼 재사용한다.
 std::int32_t RawSoloMapList::Refresh(std::int32_t mode) const {
     if (state_.dirty) {
-        for (std::size_t index=0;index<state_.names.size();++index) { // 원본50개 포인터 순서로 소유 문자열과 같은 flags를 정리한다.
+        for (std::size_t index=0;index<state_.names.size();++index) { // 원본50개 포인터 순서로 소유 문자열과 같은 flags를 정리한다. 5차 무제한 목록은 늘어난 칸도 같은 규칙으로 정리한다.
             if (state_.names[index]) { state_.names[index].reset();state_.flags[index]=0; }
-        }state_.count=0;state_.dirty=0;
+        }
+        if (state_.names.size()>static_cast<std::size_t>(kOriginalSoloMapLimit)) { state_.names.resize(kOriginalSoloMapLimit);state_.flags.resize(kOriginalSoloMapLimit); } // 늘어난 칸은 모두 비웠으므로 원래 크기로 되돌린다.
+        state_.count=0;state_.dirty=0;
     }
     const auto mayEdit=Need(hooks_.mayEditMissions)();if (state_.names[0]) return state_.count;
     const auto files=Need(hooks_.enumerate)();
-    for (const auto& file:files) { // 원본 열거 순서대로 검사하며 수락한 이름만50개까지 담는다.
-        if (state_.count>=50) break;const auto kind=Need(hooks_.kind)(file);const auto selected=state_.count;
+    for (const auto& file:files) { // 원본 열거 순서대로 검사하며 수락한 이름만 limit(원문 50, 5차 무제한)개까지 담는다.
+        if (state_.count>=state_.limit) break;const auto kind=Need(hooks_.kind)(file);const auto selected=state_.count;
         if (kind!=mode && !(mayEdit && mode==2 && kind==1)) continue;
+        if (selected>=0 && static_cast<std::size_t>(selected)>=state_.names.size()) { state_.names.resize(static_cast<std::size_t>(selected)+1);state_.flags.resize(static_cast<std::size_t>(selected)+1); } // 5차: limit이 50을 넘을 때만 새 칸을 만든다.
         const auto slot=Index(selected);state_.names[slot]=file.substr(0,file.find('\0'));Need(hooks_.construct)();Need(hooks_.load)(Name(state_.count));
         if (!Need(hooks_.present)()) state_.flags[slot]|=1U;
         else {

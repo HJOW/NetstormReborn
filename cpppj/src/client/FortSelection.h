@@ -9,6 +9,7 @@
 
 namespace netstorm::client {
 inline constexpr std::uint32_t kAskEditFortCommand=0x020000c9U; // 원본 명령 표의 AskEditFort다. 인자를 사용하지 않는다.
+inline constexpr std::uint32_t kScrollMapListCommand=0x02000134U; // 5차 새 명령: 맵 목록 메뉴의 이전/다음 창 이동 행이다. 인자는 이동할 행 수의 10진 문자열이며 원본에는 없다.
 inline constexpr std::uint32_t kReadFortCommand=0x020000caU; // 원본 ReadFort다. 맵 이름은 사건의 y 문자열 토큰이다.
 // 콜백 복귀마다 원본이 다시 읽는 실제 전역을 빌린다. 다음 상태의 부가 인자는 바꾸지 않는다.
 struct FortSelectionGlobals {

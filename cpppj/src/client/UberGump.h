@@ -120,6 +120,7 @@ private:
     void RebuildControls();
     // 대기 중인 명령을 실행한다. 지원하지 않는 명령은 실제 동작으로 가장하지 않는다.
     void Execute(const DialogAction& action);
+    bool ScrollMapList(const InputEvent& event); // 5차: 맵 목록의 이전/다음 이동 행을 처리한다. 표시 창 첫 번호를 바꾸고 같은 대화창을 캐시 재사용으로 다시 연다.
     bool FortSelectionEvent(const InputEvent& event); // 실제 AskEditFort/ReadFort를 같은 pending 이름·목록·숫자 nextState에 분배한다.
     void SelectCurrentFortName(std::string_view name); // 원문 MissionFortRequest.selectFort 위치에서 전체 현재 이름 부모를 실제 Client/Template에 연결한다.
     EditorFortFileDevices& EnsureEditorFortFiles(); // World/State 설치 전에 실제 현재 파일 경계가 필요할 때만 장기 작업본 장치를 준비한다.
@@ -213,6 +214,7 @@ private:
     std::string mapUserName_; // 원본 초기 빈 사용자 이름이며 두 Fort 이름 버퍼와 다르다.
     std::uint32_t& fortSelectionMode_; // 같은 Client005cae84이며 Ask의2와 진행State1을 구별한다.
     HtmlTextParserGlobals& htmlGlobals_; //Client 장기565e70 배경과565ec0 P 억제를 Tell/Help/로그인 상태가 같은 주소로 사용한다.
+    std::string lastTellTarget_; // 5차: 마지막으로 실제 창을 만든 Tell 섹션 이름이다. 맵 목록 스크롤이 같은 대화창을 다시 열 때 쓴다.
     ScreenRect htmlMapView_{};std::string htmlCurrentFortName_; // 각 조회에서 현재 뷰와 반환 문자열의 수명을 보존한다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 버튼 배경 생성자에 전달할 fortGump/A01 타입·프레임 번호다.
     // scripts_: 스크립트.

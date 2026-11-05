@@ -3620,3 +3620,8 @@ target_sources(netstorm_tests PRIVATE UserDataRootTests.cpp)
 add_executable(netstorm_user_data_root_tests FocusedTestMain.cpp UserDataRootTests.cpp)
 target_link_libraries(netstorm_user_data_root_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_user_data_root_tests)
+
+# 맵 목록 한도(무제한)와 50행 스크롤 창(934)이 기존 원문 목록 fixture·메뉴 분할 검사를 깨뜨리지 않는지 집중 확인한다.
+add_executable(netstorm_solo_map_list_tests FocusedTestMain.cpp SoloMapListTests.cpp TellMapMenusTests.cpp)
+target_link_libraries(netstorm_solo_map_list_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_solo_map_list_tests)

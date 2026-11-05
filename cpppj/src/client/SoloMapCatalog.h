@@ -42,6 +42,7 @@ public:
     std::optional<o::SoloMapRow> Row(std::int32_t index,std::string_view current,std::string_view fallback) const; // 현재 선택 문자열로 원본 표시 행을 조회한다.
     void Invalidate(); // 다음 Refresh의 원본 dirty 정리를 예약한다. 즉시 캐시를 바꾸지 않는다.
     const o::SoloMapListState& Cached() const; // 실제 목록 상태를 읽기 전용으로 조회한다.
+    o::SoloMapListState& Window(); // 5차: 스크롤 표시 창(windowFirst)과 캐시 재사용 표시(keepCache)를 바꾸기 위한 같은 목록 상태다.
 private:
     struct Impl; // 임시 실제 manager와 State getter의 고정 수명을 함께 소유한다.
     std::unique_ptr<Impl> impl_; // 복원한 목록과 그 하위 장치를 같은 주소에서 유지한다.

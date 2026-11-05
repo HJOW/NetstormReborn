@@ -89,10 +89,21 @@ struct EditorCatalogWorkspace::Impl {
         if (read.at!=bytes->size()) throw std::runtime_error("편집 이관 장부 끝 범위 손상");entries=std::move(current);loaded=true;
     }
     // durable 갱신 실패 뒤는 현재 owner도 계속 성공 처리하지 못하도록 loaded를 먼저 내린다.
-    void State(const std::string& key,std::uint8_t state) {
-        auto next=entries;next[o::AsciiLower(key)]=state;std::vector<std::uint8_t> bytes(kMagic.begin(),kMagic.end());Text(bytes,Identity(sourceRoot));Text(bytes,Identity(files->RootPath()));if (next.size()>std::numeric_limits<std::uint32_t>::max()) throw std::length_error("편집 이관 장부 항목 수 범위");Word(bytes,static_cast<std::uint32_t>(next.size()));
+    // 5차 배치: ImportDisk가 수백 개 파일을 이관할 때 항목마다 장부를 durable로 쓰면(쓰기 두 번×flush) 수십 초가 걸린다.
+    // 배치 중에는 메모리 장부만 갱신하고 배치가 끝날 때(오류 포함) 한 번 durable로 쓴다. 중단되면 복사된 파일은 다음 열기에서 "대상 있음, 장부 없음"으로 완료 처리된다.
+    unsigned batchDepth{}; //중첩 배치 깊이이며 0이면 항목마다 즉시 durable로 쓴다(기존 동작).
+    bool batchDirty{}; //배치 중 메모리 장부가 디스크 장부보다 앞서 있는지 나타낸다.
+    // 현재 장부를 durable로 쓴다. 실패하면 owner를 poison하는 기존 규칙을 그대로 따른다.
+    void Persist(std::map<std::string,std::uint8_t> next) {
+        std::vector<std::uint8_t> bytes(kMagic.begin(),kMagic.end());Text(bytes,Identity(sourceRoot));Text(bytes,Identity(files->RootPath()));if (next.size()>std::numeric_limits<std::uint32_t>::max()) throw std::length_error("편집 이관 장부 항목 수 범위");Word(bytes,static_cast<std::uint32_t>(next.size()));
         for (const auto& [name,value]:next) { Text(bytes,name);Word(bytes,value); } //정렬된 장부는 OS 목록 순서와 별개이며 단순 durable 직렬화다.
         loaded=false;poisoned=true;metadata.WriteAtomic(kLedger,bytes);entries=std::move(next);loaded=true;poisoned=false;
+    }
+    // 배치 중 쌓인 메모리 장부를 한 번 durable로 쓴다. 쓸 것이 없으면 아무 일도 하지 않는다.
+    void FlushBatch() { if (!batchDirty) return;Persist(entries);batchDirty=false; }
+    void State(const std::string& key,std::uint8_t state) {
+        if (batchDepth) { entries[o::AsciiLower(key)]=state;batchDirty=true;return; } //배치 중에는 메모리 장부만 갱신한다.
+        auto next=entries;next[o::AsciiLower(key)]=state;Persist(std::move(next)); //항목마다 즉시 durable로 쓰는 기존 경로이며 직렬화는 Persist가 공유한다.
     }
     // 한번 완료된 경로가 사라져도 복사하지 않는다. 중단 Pending은 실제 대상이 있을 때만 완료한다.
     void Import(const std::string& key,const std::optional<std::vector<std::uint8_t>>& archive=std::nullopt) {
@@ -117,7 +128,10 @@ std::filesystem::path EditorCatalogWorkspace::Resolve(std::string_view configure
 void EditorCatalogWorkspace::ImportDisk(std::string_view configuredPattern) {
     const auto pattern=impl_->Key(configuredPattern);auto requested=PathFromUtf8(pattern);requested.make_preferred();const o::BaseFileSystem source(impl_->sourceRoot); // 현대 장부의 '/' 키만 native로 바꿔 원문 FileSpec이 같은 하위 폴더 접두를 유지한다.
     if (PathToUtf8(requested.filename()).find_first_of("*?")!=std::string::npos && std::filesystem::is_directory(impl_->SourcePath(PathToUtf8(requested.parent_path())))) impl_->files->EnsureDirectory(PathToUtf8(requested.parent_path())); //빈 source 폴더의 . / .. OS 후보도 실제 빈 작업 폴더에서 열거한다.
-    for (const auto& path:source.MatchDisk(PathToUtf8(requested))) { const auto leaf=PathToUtf8(PathFromUtf8(path).filename());if (leaf=="." || leaf=="..") continue;impl_->Import(impl_->Key(path)); } //점 두 후보는 복사/장부를 만들지 않고 실제 work 열거가 그대로 돌려준다.
+    ++impl_->batchDepth; //5차: 한 목록의 수백 파일 이관은 장부를 배치로 한 번만 durable로 쓴다.
+    try { for (const auto& path:source.MatchDisk(PathToUtf8(requested))) { const auto leaf=PathToUtf8(PathFromUtf8(path).filename());if (leaf=="." || leaf=="..") continue;impl_->Import(impl_->Key(path)); } } //점 두 후보는 복사/장부를 만들지 않고 실제 work 열거가 그대로 돌려준다.
+    catch (...) { --impl_->batchDepth;try { impl_->FlushBatch(); } catch (...) {} throw; } //오류 전에 복사한 파일의 장부 상태도 최대한 남기고 원래 오류를 전달한다.
+    --impl_->batchDepth;impl_->FlushBatch();
 }
 std::filesystem::path EditorCatalogWorkspace::Prepare(std::string_view configuredPath) {
     const auto key=impl_->Key(configuredPath);impl_->Import(key);if (impl_->entries.contains(o::AsciiLower(key)) || std::filesystem::exists(impl_->files->ResolvePath(key))) return impl_->files->ResolvePath(key);

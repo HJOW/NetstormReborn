@@ -110,4 +110,5 @@ std::optional<o::SoloMapRow> SoloMapCatalog::Row(std::int32_t index,std::string_
 void SoloMapCatalog::Invalidate() { impl_->cache.dirty=1; }
 // 복사본 대신 같은 원본 목록을 읽는다.
 const o::SoloMapListState& SoloMapCatalog::Cached() const { return impl_->cache; }
+o::SoloMapListState& SoloMapCatalog::Window() { return impl_->cache; } // 5차: 목록 데이터는 건드리지 않고 표시 창 필드만 바꾸는 호출자용이다.
 }

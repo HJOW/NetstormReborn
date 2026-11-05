@@ -4,6 +4,8 @@
 #include "client/BitmapFont.h"
 #include "client/ClientMain.h"
 #include "client/HelpListDisk.h"
+#include "client/TellMapMenus.h"
+#include "o/RawSoloMapList.h"
 #include "client/ClientOptionsDisk.h"
 #include "client/ClientStaticStrings.h"
 #include "client/EditorFiles.h"
@@ -16,6 +18,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <fstream>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -243,4 +246,107 @@ TEST_CASE(HelpList_UserPolicyCreatesPieceListUnderUserCache) {
     hooks.destruct(file);
     CHECK(ReadAll(userRoot.Cache() / "NetStormPieceList.html") == "<html></html>");
     CHECK(!std::filesystem::exists(install / "NetStormPieceList.html") && std::filesystem::is_empty(install));
+}
+
+namespace { // 맵 목록 검사용 가짜 파일 장치다. 게임 계산은 하지 않고 이름/종류/구독자 입력만 명시한다.
+// 120개처럼 긴 목록을 항상 종류2·정상 Template로 돌려주는 장치를 만든다.
+netstorm::o::SoloMapListHooks MapListHooks(std::vector<std::string>& names) {
+    netstorm::o::SoloMapListHooks hooks;
+    hooks.mayEditMissions = [] { return 1; };
+    hooks.enumerate = [&names] { return names; };
+    hooks.kind = [](auto) { return std::uint8_t{2}; };
+    hooks.construct = [] {};
+    hooks.load = [](auto) {};
+    hooks.present = [] { return true; };
+    hooks.subscriber = [] { return std::string("me"); };
+    hooks.stateByte = [] { return std::uint8_t{0}; };
+    hooks.userName = [] { return std::string("me"); };
+    hooks.reserved = [] { return 0U; };
+    hooks.translate = [](auto key) { return std::string(key); };
+    return hooks;
+}
+// 0부터 count-1까지의 이름을 만든다.
+std::vector<std::string> MapNames(int count) {
+    std::vector<std::string> names;
+    for (int index = 0; index < count; ++index) names.push_back("Map" + std::to_string(1000 + index)); // 반복마다 정렬 가능한 같은 폭의 이름 하나를 만든다.
+    return names;
+}
+// AppendTellMapMenus의 호출을 기록하는 가짜 메뉴 장치다.
+struct MenuProbe {
+    std::int32_t total{};                              // 현재 목록 개수다.
+    std::int32_t first{};                              // 표시 창 첫 번호다.
+    bool keep{};                                       // 다음 호출이 캐시 재사용인지다.
+    std::vector<std::int32_t> rows;                    // 추가된 맵 행 번호다.
+    std::vector<std::pair<std::string, std::int32_t>> scrolls; // 추가된 이동 행(문구, 이동 행 수)이다.
+    int columns{};                                     // 만들어진 세로 열 수다.
+    int invalidated{};                                 // invalidate 호출 횟수다.
+    int reused{};                                      // 캐시 재사용(reuseCache) 호출 횟수다.
+    netstorm::client::TellMapMenuHooks Hooks() {
+        netstorm::client::TellMapMenuHooks hooks;
+        hooks.beginVertical = [this](auto) { ++columns; };
+        hooks.invalidate = [this] { ++invalidated; };
+        hooks.reuseCache = [this] { ++reused; };
+        hooks.selectFileSpec = [](bool) {};
+        hooks.refresh = [](auto) {};
+        hooks.count = [this] { return total; };
+        hooks.appendRow = [this](auto index) { if (index >= total) return false; rows.push_back(index); return true; };
+        hooks.windowFirst = [this] { return first; };
+        hooks.setWindowFirst = [this](auto value) { first = value; };
+        hooks.takeKeepCache = [this] { const bool value = keep; keep = false; return value; };
+        hooks.appendScroll = [this](auto label, auto delta) { scrolls.emplace_back(std::string(label), delta); };
+        return hooks;
+    }
+};
+}
+
+// 목록 한도가 원문 50일 때는 50개에서 멈추고, 한도를 올리면 필요한 만큼 늘어나며 다시 비우면 처음 크기로 돌아온다.
+TEST_CASE(MapList_LimitKeepsOriginalFiftyAndUnlimitedGrowsAndShrinks) {
+    auto names = MapNames(120);
+    netstorm::o::SoloMapListState original;
+    CHECK(original.limit == 50 && original.names.size() == 50);
+    CHECK(netstorm::o::RawSoloMapList(original, MapListHooks(names)).Refresh(2) == 50 && original.names.size() == 50); // 기본값은 원문과 같다.
+    netstorm::o::SoloMapListState unlimited;
+    unlimited.limit = std::numeric_limits<std::int32_t>::max();
+    const netstorm::o::RawSoloMapList list(unlimited, MapListHooks(names));
+    CHECK(list.Refresh(2) == 120 && unlimited.names.size() == 120 && unlimited.flags.size() == 120);
+    const auto last = list.Row(119, "", "");
+    CHECK(last && last->name == "Map1119" && last->enabled); // 50을 넘는 칸도 같은 행 규칙을 쓴다.
+    unlimited.dirty = 1;
+    names = MapNames(70);
+    CHECK(list.Refresh(2) == 70 && unlimited.names.size() == 70); // 다시 열거하면 새 목록 길이를 따른다.
+    unlimited.dirty = 1;
+    names = MapNames(3);
+    CHECK(list.Refresh(2) == 3 && unlimited.names.size() == 50 && !unlimited.names[3]); // 비운 뒤 늘어난 칸은 처음 50칸으로 줄어든다.
+}
+
+// 50행 이하는 원문처럼 두 열로 한 번에, 더 길면 50행 창과 이전/다음 이동 행이 나오고 마지막 창은 꽉 채운다.
+TEST_CASE(MapList_TellMenuScrollsFiftyRowWindowsAndKeepsCacheOnScroll) {
+    using netstorm::client::AppendTellMapMenus;
+    std::uint32_t menus = 0;
+    MenuProbe shortList;
+    shortList.total = 30;
+    CHECK(AppendTellMapMenus("*FORTLIST*", menus, shortList.Hooks()) && shortList.rows.size() == 30 && shortList.scrolls.empty() && shortList.columns == 2); // 15개를 넘으므로 원문처럼 반으로 나눈다.
+    MenuProbe list;
+    list.total = 130;
+    list.first = 77; // 새로 열 때는 이전 창 위치를 버리고 0에서 시작해야 한다.
+    menus = 0;
+    CHECK(AppendTellMapMenus("*FORTLIST*", menus, list.Hooks()));
+    CHECK(list.invalidated == 1 && list.first == 0 && list.rows.size() == 50 && list.rows.front() == 0 && list.rows.back() == 49);
+    CHECK(list.columns == 2 && list.scrolls.size() == 1 && list.scrolls[0].second == 50 && list.scrolls[0].first.find("Next") != std::string::npos); // 첫 창에는 다음 행만 있다.
+    MenuProbe second;
+    second.total = 130;
+    second.first = 50;
+    second.keep = true; // 스크롤 이동 뒤 재표시다.
+    menus = 0;
+    CHECK(AppendTellMapMenus("*FORTLIST*", menus, second.Hooks()));
+    CHECK(second.invalidated == 0 && second.reused == 1 && list.reused == 0 && second.rows.size() == 50 && second.rows.front() == 50 && second.rows.back() == 99); // 목록을 다시 열거하지 않는다.
+    CHECK(second.scrolls.size() == 2 && second.scrolls[0].second == -50 && second.scrolls[1].second == 50);
+    MenuProbe tail;
+    tail.total = 130;
+    tail.first = 400; // 범위를 넘는 요청이다.
+    tail.keep = true;
+    menus = 0;
+    CHECK(AppendTellMapMenus("*FORTLIST*", menus, tail.Hooks()));
+    CHECK(tail.first == 80 && tail.rows.front() == 80 && tail.rows.back() == 129 && tail.rows.size() == 50); // 마지막 창은 항상 50행이다.
+    CHECK(tail.scrolls.size() == 1 && tail.scrolls[0].second == -50 && tail.scrolls[0].first.find("Previous") != std::string::npos);
 }
