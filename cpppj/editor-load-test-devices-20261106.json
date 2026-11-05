@@ -1,0 +1,38 @@
+{
+  "unit": 942,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 939,
+  "tests": {
+    "total": 15,
+    "newTestCases": 0,
+    "failed": 0,
+    "fortObject": 5,
+    "defaultName": 3,
+    "deferredFile": 2,
+    "stateUi": 3,
+    "guideRelease": 2
+  },
+  "initialIssues": [
+    "검사필수Pop콜백누락",
+    "검사TYPE6생성자주소0"
+  ],
+  "protected": {
+    "count": 2787,
+    "fixtures": 967,
+    "changed": 0,
+    "newFixtures": 0
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "cpppj/tests/FortObjectLoadTests.cpp": "bdaad310e1aee797bf8a42045e701b15afdbdaebd0165a527af8ed23041bf4a1",
+    "docs/exe/cpp-editor-load-test-devices-20261106.md": "fc85a4fe6ca8e18c37db74fb6ddd8dea9aa7a5be9830e95a079b81139fa1965c"
+  },
+  "exeSha256": "06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098",
+  "next": "943: LEFT_JOBS 3절2번 남은편집도구/LeaveEditMode"
+}

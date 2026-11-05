@@ -162,8 +162,10 @@ TEST_CASE(FortObjectLoad_ActualFactoryOwnerHpPopAndContent) {
     // 두 판본 모두 실제 일반 Pop/서버 SID 생성·ContentForm 정렬 부착을 실행한다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         auto values=Inputs(Fixture().front()[2]);values[Version]=2;values[Flags1]=0x23030;values[Flags2]=0;values[ContentsInput]=1;values[Mission]=1;
-        FortLoadScene scene(edition,values);SquidFactory factory(scene.pool,scene.types);SquidOwnerMode mode;mode.battle=true;SquidOwner owner(scene.pool,scene.types,scene.books,mode);
+        FortLoadScene scene(edition,values);scene.types[6].constructorAddress=TypeConstructorAddress(edition,6); // 실제 내용물 적재는 주소0의 base 대체가 아니라 원문 Form 생성자를 명시한다.
+        SquidFactory factory(scene.pool,scene.types);SquidOwnerMode mode;mode.battle=true;SquidOwner owner(scene.pool,scene.types,scene.books,mode);
         std::vector<std::uint8_t> spots(65536);SquidPop pop(scene.pool,scene.hash,spots);std::vector<Sid> notices;std::size_t transmits=0;
+        std::size_t popTransmits{};pop.BindTransmission([&](Sid sid,std::uint32_t flags) { CHECK(scene.patch && sid.value==scene.pool.Layout().serverFirst && flags==9);++popTransmits; }); // 실제 패킷/통신 대신 필수 Pop 자식 도달만 관측한다. 내용물 통지와는 별개다.
         ContentFormHost content(scene.pool,scene.types,[&](Sid parent,Sid form,std::uint32_t reason) { CHECK(reason==1 && !(scene.pool.Slot(parent)[11]&4));notices.push_back(form); },
             [&](Sid,std::uint32_t) { ++transmits; });
         ContainedCreateState containedState;RawContainedCreate contained(scene.pool,containedState,content.BindCreate(factory,ContainedCreateHooks{{},[&](Sid sid) { scene.Event('N',{sid.value}); },{}}));
@@ -172,6 +174,7 @@ TEST_CASE(FortObjectLoad_ActualFactoryOwnerHpPopAndContent) {
         RawFortObjectLoad loader(scene.pool,scene.hash,scene.types,scene.frames,scene.random,scene.state,hooks);const auto sid=loader.Object(Record(values),16,32,2);
         CHECK(sid.value==scene.pool.Layout().serverFirst && scene.pool.Slot(sid)[scene.patch ? 34 : 32]==2);
         CHECK(Read(scene.pool.Slot(sid),26,scene.patch ? 4 : 2)==803 && notices.size()==2 && transmits==0);
+        CHECK(popTransmits==(scene.patch ? 1U : 0U)); // PATCH의 현재 Activate만 이 장치를 호출하며 기존 CD 독립 Pop 경계를 바꾸지 않는다.
         CHECK(scene.hash.Cell(1,15,17)==sid.value); // 현재 위치(30,35)의 실제1단계 해시 머리다.
         CHECK(notices.size()==2 && SquidForms(scene.pool).Parent(notices[0])==sid && SquidForms(scene.pool).Parent(notices[1])==sid);
     }

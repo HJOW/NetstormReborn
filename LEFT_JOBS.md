@@ -2,25 +2,25 @@
 
 cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효한 사용자 결정**을 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-04 문서 정리:** 단위861까지의 원문은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261104-through-861)에 보존했다. 완료 범위는2절, 남은 작업은3절을 따른다. **2026-11-06 사용자 재개/순서 정정에 따라3절2번부터 진행 중이다. 940의동적시나리오와941의실제저장공유거부/재시도를대조했고 다음942도2번이다. 제품은939/11.01이다(0.4절).** 전체 cpppj 목표는 미완료다.
+**2026-11-04 문서 정리:** 단위861까지의 원문은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261104-through-861)에 보존했다. 완료 범위는2절, 남은 작업은3절을 따른다. **2026-11-06 사용자 재개/순서 정정에 따라3절2번부터 진행 중이다. 940의동적시나리오와941의실제저장공유거부/재시도를대조했고 942의적재/파일·State경계까지확인했고 다음943도2번이다. 제품은939/11.01이다(0.4절).** 전체 cpppj 목표는 미완료다.
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-06, 단위941 완료·제품939·`/goal` 재개 진행 중·전체 미완료)
+### 0.1 현재 값 (2026-11-06, 단위942 완료·제품939·`/goal` 재개 진행 중·전체 미완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **941 완료(3절2번 실제 편집 저장 공유거부/재시도·재파싱)·제품939(전체 목표 미완료·2026-11-06 사용자 재개 및 순서 정정으로 3절2번부터 진행).** Direct3D 11 후처리 출력기(팔레트 변환→AA→AMD 공식 EASU/RCAS→레터박스), 옵션 Anti-Aliasing/FSR 1.0 Upscaling 토글(기본 꺼짐), FSR 해상도(논리 1920×1080), MCP `presented` 캡처를 구현하고 실제 실행으로 확인했다. 940으로2번 첫 항목,941으로 실제 파일 공유거부/재저장을 마쳤다. 다음942도2번의State1/State7·편집도구다. 6차 남은 것(미션/팁/도움말 `.korean` 본문·한글 버튼 그림·번역 검수)과 7차 미확인(미션/전체화면/4K 실제 표시)은 사용자 확인/후속이다. |
+| 진행 상태 | **942 완료(3절2번 객체 적재 검사 누락장치 교정·파일/State 공개 경계 대조)·제품939(전체 목표 미완료·2026-11-06 사용자 재개 및 순서 정정으로 3절2번부터 진행).** Direct3D 11 후처리 출력기(팔레트 변환→AA→AMD 공식 EASU/RCAS→레터박스), 옵션 Anti-Aliasing/FSR 1.0 Upscaling 토글(기본 꺼짐), FSR 해상도(논리 1920×1080), MCP `presented` 캡처를 구현하고 실제 실행으로 확인했다. 940으로2번 첫 항목,941으로 실제 파일 공유거부/재저장을 마쳤다. 942에서적재검사장치와파일/State경계를대조했다. 다음943도2번의남은편집도구/LeaveEditMode다. 6차 남은 것(미션/팁/도움말 `.korean` 본문·한글 버튼 그림·번역 검수)과 7차 미확인(미션/전체화면/4K 실제 표시)은 사용자 확인/후속이다. |
 | 현재 제품 | **939 / 표시·파일·제품11.01.** 7차 첫 구현(안티앨리어싱/FSR 1.0). 938 6차 첫 구현(한국어). 937 4차 셋째 구현(와이드 16:9 최대 1920×1080). 936 4차 둘째 구현(MCP 소리 포함 녹화), 935 4차 첫 구현(로컬 MCP 서버 `--mcp`), 934 5차 셋째 구현(Edit 목록 무제한·50행 스크롤·장부 배치 쓰기 추가). 933 구현(Editor 작업본/장부·글꼴 캐시·도움말 목록 이관), 932 구현(설정·체크포인트·표식을 `Saved Games/Netstorm/Saves`, 캡처/진단을 `Captures`/`Diagnostics`로 이관, 설정은 사용자 파일 우선 읽기). 이전 927 설명:  메인 생성 실패의새가족을공통Kill로반납하고미완성부모재사용을막았다.924/923/921/916/913수정도유지한다. Edit/미션/내부/후속단계는미완료·checking8이다. |
 | 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반31+데모3의 마지막 전체 진입 검증은 **645의644 제품**이며 현재 제품의 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
 | EXE SHA-256 | `06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098` (939 / 11.01, 11,248,128바이트; 직전 938 `91e10890…`, 937 `06f138c6…`, 936 `445c1807…`, 935 `c40ff1a0…`, 934 `f288e484…`, 933 `E5DEB06B…`, 932 `793dfb55…`, 927 `fd7a0ec4…`) |
-| 최신 빌드·집중 검사 | **941 고유7개(새1/기존6) 첫 통과.** 실제Session 공유거부/재시도·No/Yes·readOnly·writer4개. Release경고/오류0·제품939불변. 940의동적HTML28개통과도유지한다. [941 기록](docs/exe/cpp-editor-save-failure-retry-20261106.md). |
+| 최신 빌드·집중 검사 | **942 고유15개 최종 통과.** 양판본객체적재5·기본이름3·지연파일2·State UI3·Guide반납2. 검사의필수장치/입력누락2곳교정·기존기대값/제품939불변·최종Release경고/오류0. [942 기록](docs/exe/cpp-editor-load-test-devices-20261106.md). |
 | checking 잔여 | **8함수=부모3+부분2+MP분류3.** 779기준51개 중 완료 부모39/부분4다. 917~920은 UI1의 커서/객체/게임 메뉴 검사이며 집계 불변이다. 전체 Factory/파생 수명과 메타맵2표 등은 잔여다. |
 | 마지막 GUI | **794에서 793 제품**의 시작/메인 메뉴를 확인. 815 GUI 통과로 합산하지 않는다 |
 | 전체 검사 기준 | 현재 활성 솔루션74프로젝트=Application69(검사이름64/게임1/probe·dump4)+라이브러리2+Utility3. 895에서 기존 검사8개를 묶은 집중 실행 파일1개를 추가했다. 779당시 기록의 전체71 마지막 컴파일·549의 전체3389중7실패(580단언)·510의508제품3337전체 통과는 당시 이력이다. 현재 집중 통과를 전체 통과로 쓰지 않는다. |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
-| 보호 기준 | **기존2787개/fixture967개 불변·새fixture0개. 현행2787개/fixture967개.** 다음 기준은 `extracted/cpp-resume-941/protected-final.json`이다. |
+| 보호 기준 | **기존2787개/fixture967개 불변·새fixture0개. 현행2787개/fixture967개.** 다음 기준은 `extracted/cpp-resume-942/protected-final.json`이다. |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
@@ -42,7 +42,9 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 - **환경 한계:** 물리 입력/캡처는762의 새 부팅·RDP세션1에서도 두 번 timeout이었다. 실제 환경 변화 전 재시도하지 않는다. 다른 모니터/DPI·실제 앱 전환·실제 PCM/청취·사용자 활성 전체화면의 물리 출력·실제 CD 삽입은 미검증이다.
 - **원문/호스트 경계:** 32비트 FILE/FileSpec/SEH·스택 배치/미정값 자체 일치, 부분 I/O/실제 할당 실패와 전체 진단 UI는 별도 한계다. 612의 반사 입력, VFX signed WORD/정상 표본·양수/회전0/원색의 근거를 전체 입력·픽셀로 확대하지 않는다.
 
-### 0.4 최신 인계 — 단위941 완료(3절2번 실제 저장 공유거부/재시도)·제품939·`/goal` 진행 중
+### 0.4 최신 인계 — 단위942 완료(3절2번 객체 적재/파일·State 경계)·제품939·`/goal` 진행 중
+
+- **942 완료(2번):** 알려진 `FortObjectLoad_ActualFactoryOwnerHpPopAndContent` 실패를재현하고검사의필수Pop관측자와TYPE6원문생성자입력을교정했다. 제품진단/전송관문/기존owner·HP·내용물·해시기대값은불변이다. 양판본적재5·기본이름3·지연파일2·State UI3·Guide반납2의고유15검사최종통과·빌드경고/오류0·제품939/보호2787/fixture967불변. State1→미션요청→State7/예외안내반납은현재코드정적대조이며새패킷/실행검증아니다. [942 기록](docs/exe/cpp-editor-load-test-devices-20261106.md). 다음943도3절2번의남은편집도구/LeaveEditMode다.
 
 - **941 완료(2번 둘째 항목):** 실제 편집 Session의 전체맵 snapshot 뒤 OS 쓰기공유거부에서 next91/phase/디스크바이트 보존·선행 snapshot/난수/Badges 유지, 잠금 해제 후 같은Session 재저장/next3·7섹션 재파싱을 확인했다. 새1/기존6 고유7검사 첫 통과·Release경고/오류0·제품939/보호2787/fixture967불변·게임/신규MP테스트0. [941 기록](docs/exe/cpp-editor-save-failure-retry-20261106.md). 다음942도3절2번의State1/비동기State7·남은도구다.
 
@@ -55,7 +57,7 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 - **937 검증:** `netstorm_screen_resolution_tests` 2/0, 메인 버튼 배치 검사(8개 해상도) 통과, 실제 실행으로 1920×1080 메인 메뉴/옵션 해상도 목록(8개, 현재 표시)/미션 HUD·맵 뷰, 4:3 대비 동일 구성, SETSIZE→재시작 시 저장된 해상도 복원 확인. 빌드 경고/오류 0.
 - **알려진 표시 결함(후속):** 높이 774 초과 해상도에서 좌측 덱 y=774..798에 80×25 검은 직사각형이 보인다(1280×800 기존 항목 포함). 768 기준 좌표의 숨은 요소로 추정하나 Gump를 확정하지 못했다. 사용자 제보 또는 후속 조사로 처리한다.
 - **사용자 확인 필요(설계 결정, 5차):** (a) 작업 루트가 `CustomMaps`라 파일이 `CustomMaps\d\NAME.fort` 구조이고 첫 Edit 목록 때 원본 `d`의 fort 433개가 복사된다. (b) 목록 스크롤은 이동 행 클릭이며 마우스 휠은 입력 경로가 없어 미구현이다. (c) 이동 행 문구는 영어 고정(6차 번역).
-- **미확인 실패(기준선 비교 안 함):** `netstorm_editor_default_name_tests` 2개와 `netstorm_file_tests` 5개, `netstorm_main_popup_tests` 1개(`CampaignSaveGoMain_ActualManagerGateAndSelectedBattleStop`)의 검사가 장치 미연결/기대 불일치로 실패한다(이름은 단위933 기록, 5차 문서). 사용자 정책/해상도 변경과 무관한 경로로 판단하나 직접 비교하지 않았다. **938 전체 집중 검사 관측(68개 실행·48개 완전 통과):** 위 외에 `guide_release`·`world_generation` 각 151(`CampaignSessionTests` 1028의 1024×768 건물 스프라이트 그림 비교 `actual==expected`와 `FocusedTestMain`의 장치 미연결 진단), `pop_context` 29, `menu_session` 3, `mission_entry` 1, `guide_fort_request` 1, `renderer_presentation` 1, `startup_*`/`file_directory`의 `StartupFileNames_ActualClientUnicodeStartupSaveAndReload` 3(경로 고리 `names.Index()`)이 실패한다. **HEAD(1f5b4177) 기준선 빌드와 비교해 `guide_release` 151개와 `startup_file_names` 3개가 6차 변경 전에도 똑같이 실패함을 확인했다(기존 실패).** `world_generation`은 `guide_release`와 같은 `CampaignSessionTests` 1028(건물 스프라이트 그림 비교)과 장치 미연결 진단을 공유하는 같은 계열이고, 나머지(`pop_context`·`menu_session`·`mission_entry`·`guide_fort_request`·`renderer_presentation`)는 장치 미연결 진단/`CampaignSaveGoMain`이라 기준선 개별 비교는 하지 않았다. 원인(1024×768 건물 그림 비교와 시작 경로 고리 `names.Index()`가 이 PC/환경에서 맞지 않음)은 별도 조사 대상이다.
+- **미확인 실패(기준선 비교 안 함):** `netstorm_editor_default_name_tests`의2개중 `FortObjectLoad_ActualFactoryOwnerHpPopAndContent`는942에서검사장치/입력누락을교정해통과했다. 남은 `CampaignSaveGoMain_ActualManagerGateAndSelectedBattleStop`은일반Battle/MP이월경로라제외하며, `netstorm_file_tests` 5개, `netstorm_main_popup_tests` 1개(`CampaignSaveGoMain_ActualManagerGateAndSelectedBattleStop`)의 검사가 장치 미연결/기대 불일치로 실패한다(이름은 단위933 기록, 5차 문서). 사용자 정책/해상도 변경과 무관한 경로로 판단하나 직접 비교하지 않았다. **938 전체 집중 검사 관측(68개 실행·48개 완전 통과):** 위 외에 `guide_release`·`world_generation` 각 151(`CampaignSessionTests` 1028의 1024×768 건물 스프라이트 그림 비교 `actual==expected`와 `FocusedTestMain`의 장치 미연결 진단), `pop_context` 29, `menu_session` 3, `mission_entry` 1, `guide_fort_request` 1, `renderer_presentation` 1, `startup_*`/`file_directory`의 `StartupFileNames_ActualClientUnicodeStartupSaveAndReload` 3(경로 고리 `names.Index()`)이 실패한다. **HEAD(1f5b4177) 기준선 빌드와 비교해 `guide_release` 151개와 `startup_file_names` 3개가 6차 변경 전에도 똑같이 실패함을 확인했다(기존 실패).** `world_generation`은 `guide_release`와 같은 `CampaignSessionTests` 1028(건물 스프라이트 그림 비교)과 장치 미연결 진단을 공유하는 같은 계열이고, 나머지(`pop_context`·`menu_session`·`mission_entry`·`guide_fort_request`·`renderer_presentation`)는 장치 미연결 진단/`CampaignSaveGoMain`이라 기준선 개별 비교는 하지 않았다. 원인(1024×768 건물 그림 비교와 시작 경로 고리 `names.Index()`가 이 PC/환경에서 맞지 않음)은 별도 조사 대상이다.
 - **940 완료:** 실제 Client Config 로더의 암호화 TARC→느슨한 파일→TARC 복귀, 동적 `{@미션.키}` 명령 이름, Tell 지역 param, 실제 HTML 메뉴 클릭/일반 큐/설정 writer와 동적 읽기 실패 뒤 반납/재생성을 대조했다. 영문549문서의 치환 위치980곳을 조사해 비멀티11명령967곳의 기존 연결·MP/관리10명령11곳의8번 이월·원본오자2곳 보존을 확인했다. 고유28검사(새2) 최종0실패·최종 빌드 경고/오류0·제품939/보호2787/fixture967불변. 첫 빌드의 auto선언2오류와 첫 실행의 검사구성/경로기대2실패는 검사만 교정했다. [940 기록](docs/exe/cpp-scenario-dynamic-config-20261106.md). **941에서 실제 저장 공유거부/재시도를 확인했으며 다음942도 3절2번**이다.8차 UI를 선행하지 않는다.
 - **도구 주의:** Edit 도구는 파일 전체의 CRLF를 LF로 바꾼다. 이 문서와 `-text`/CRLF 저장 파일은 바이트 단위 편집만 쓴다. Bash 명령 텍스트의 `\\`가 `\`로, `\n`이 실제 줄바꿈으로 바뀌므로 **역슬래시가 들어가는 C++/Python 편집은 Write 도구로 스크립트 파일을 만들어 실행**한다. Bash의 `/p:` 인자는 경로로 바뀌므로 빌드는 PowerShell로, 필요한 `--target`만 빌드한다(`ClientMain.h` 수정 때 전체 재컴파일 2~10분, 빌드 중 소스 수정 금지). `git diff`는 `-c core.autocrlf=false` 없이 본다. UI 스크립트 TSV는 BOM 없이(bash `printf`) 쓰고, 화면 확인은 BMP를 PIL로 PNG 변환해 이미지로 읽는다. 게임 프로세스를 이름으로 강제 종료하는 명령은 권한 분류기가 거부하므로 시작한 백그라운드 작업만 TaskStop으로 중지한다. 게임 스모크용 Python에는 exe/게임 디렉터리의 **절대 경로**를 넘긴다.
 - **제품/보호:** 제품939/11.01·11,248,128바이트·EXE SHA `06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098`. `originals` 파일 지문은 실행 전후 동일(`4a10a1e1…`). 제외 범위는 0.3절, 마지막 정밀디컴파일은 HJOW-Athlon/2026-11-03이다. 원문은 수정하지 않았다.
@@ -128,6 +130,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 `[x]`는 아래에 적힌 범위의 완료다. 전체 기능·전체 동일성 완료를 뜻하지 않는다. 오래된 “다음/미연결” 대신 후속 단위의 실제 연결 근거를 따른다. 단위별 검사 수·실패/교정·당시 해시는 링크한 단위 문서와 보관본([808까지](LEFT_JOBS.old.md#archive-20261103-through-808), [861까지](LEFT_JOBS.old.md#archive-20261104-through-861))에서 확인한다. 항목 안의 checking 잔여 수는 그 단위 당시 값이며 현재 값은 0.1절이다.
 
 #### 2.1.1 기능·UI·파일 범위
+
+- [x] **942 편집 객체 적재/파일·State 경계:** 기존적재검사의필수Pop관측/TYPE6생성자입력을교정해양판본owner/HP/내용물/해시를유지했다.고유15개최종통과·제품939불변·State1/7정적대조. [기록](docs/exe/cpp-editor-load-test-devices-20261106.md).
 
 - [x] **941 편집 저장 공유거부/재시도:** 실제Session 저장실패의next/phase/기존파일과선행snapshot유지,같은Session재저장/7섹션재파싱을확인했다.고유7개첫통과·제품939불변. [기록](docs/exe/cpp-editor-save-failure-retry-20261106.md).
 
@@ -344,7 +348,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 ## 3. 앞으로 할 작업 (재개 후 권장 순서)
 
-**사용자 작업순서 정정(2026-11-06): 3절을 앞부터 진행한다. 929에서1번 완료,940에서2번 첫 항목 완료,941에서2번 실제 저장공유거부/재시도 확인. 다음942도2번 둘째 항목이며2→3→4→7→8 순서를 지킨다.** 모든 자연 상태/조합·픽셀 동일성은5·6번 사용자 확인을 따르며 단계 전환을 막지 않는다.4번 전체는1·2번의 필수 선행 조건이 아니고, 실제 필요한 내부 문제만 해당 단위에서 해결한다. 비멀티1~4번·Windows10 호환성7번 뒤8번으로 간다. 아래 `[ ]`가 AI 구현 잔여이며 완료 범위는2절이다.
+**사용자 작업순서 정정(2026-11-06): 3절을 앞부터 진행한다. 929에서1번 완료,940에서2번 첫 항목 완료,941에서2번 실제 저장공유거부/재시도 확인. 942에서객체적재/파일·State공개경계도대조했다. 다음943도2번 둘째 항목이며2→3→4→7→8 순서를 지킨다.** 모든 자연 상태/조합·픽셀 동일성은5·6번 사용자 확인을 따르며 단계 전환을 막지 않는다.4번 전체는1·2번의 필수 선행 조건이 아니고, 실제 필요한 내부 문제만 해당 단위에서 해결한다. 비멀티1~4번·Windows10 호환성7번 뒤8번으로 간다. 아래 `[ ]`가 AI 구현 잔여이며 완료 범위는2절이다.
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI — 비멀티 구현/부품 대조 완료(929)
 
@@ -358,7 +362,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 ### 2. Edit 메뉴·커스텀 맵/시나리오
 
 - [x] **시나리오 설정/UI writer·TARC/동적Config·비멀티 명령 연결을 대조했다(940).** 기존687/715의 이름/큐 근거와 실제 현재파일/동적치환/HTML메뉴/설정쓰기·읽기실패반납/재생성을 확인했다. 영문549문서의 치환980곳 중 비멀티11명령967곳은 기존 연결, MP/관리10명령11곳은8번 이월, 원본오자2곳은 보존한다. 임의 사용자 입력의 모든 조합/전체동일성·모든동적실행의 증거로 확대하지 않는다. [940 기록](docs/exe/cpp-scenario-dynamic-config-20261106.md).
-- [ ] 남은 지형·오브젝트·소유자 도구, 작업본 저장/재파싱·이름/목록·미션 전환의 다른 실패 수명, LeaveEditMode/State1/비동기 State7 분기를 점검한다. **941 완료 범위:** 실제Session 저장공유거부/선행snapshot보존/next미예약과같은Session재저장/재파싱. **930 완료 범위:** 새 이름/Save as부분생성8실패·등록/문자반납·재생성8/Cancel. State1/State7·다른저장/전환실패는남는다. 716의 연속 왕복·726의 워크샾 owner 저장·724의 대표 Graph는 반복 미구현으로 세지 않는다.
+- [ ] 남은 지형·오브젝트·소유자 도구, 작업본 저장/재파싱·이름/목록·미션 전환의 다른 실패 수명, LeaveEditMode/State1/비동기 State7 분기를 점검한다. **941 완료 범위:** 실제Session 저장공유거부/선행snapshot보존/next미예약과같은Session재저장/재파싱. **930 완료 범위:** 새 이름/Save as부분생성8실패·등록/문자반납·재생성8/Cancel. **942 완료 범위:** 양판본객체적재의필수검사장치/입력과기본이름·지연파일·UI공개·Guide반납15검사/현재State1→State7정적연결. 다른도구/LeaveEditMode·전환범위정리는다음943이다. 716의 연속 왕복·726의 워크샾 owner 저장·724의 대표 Graph는 반복 미구현으로 세지 않는다.
 - [x] 원문 언어 UI/폰트 재생성·다른 언어 파일 실패 수명을 대조했다(931, [기록](docs/exe/cpp-language-closure-20261105.md)). 번호/Xlat/요청/기존 Chat 알림은 710~712·787 완료이며 `languageChanged` 소비자는 Chat 하나뿐이고 폰트 재생성은 `ChangeFontFace`에만 묶여 있음을 확인했다. 590의 명시 `.french`는 프랑스어 UI 완료가 아니고 한국어는 6차다.
 - 원문 목록 첫 50개 상한은 5차 전까지 유지한다(634). 실제 Fort 433개는 종류2가 432·종류0이 1개다. TEST01/TEST02 원본은 읽기만 하고 저장은 작업본에 한다. 10.78 기본 설명의 `{Text}` 리터럴(494)을10.72와 혼동하지 않는다.
 - `.english` 부재 Test Battle 종료는 원본 복원 단계에서 유지하며 기본파일 자동 생성/시나리오 UI·부재 종료 개선은8차에서 한다.
