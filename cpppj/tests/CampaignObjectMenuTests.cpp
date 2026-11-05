@@ -22,6 +22,8 @@
 #include "client/ClientDiagnostics.h" //현재로그버퍼와 깊이를 관찰하여 직접진단/Form재귀를 구별한다.
 #include "client/RawChatWindowContext.h" //제품 Player 하위메뉴가 조회하는 실제 빈 Chat 입력버퍼를 같은 트리에 생성한다.
 #include "client/ScriptCommand.h" //Chat 공장이 빌리는 실제80칸 문자열 고리의 수명을 검사 안에 유지한다.
+#include "client/MenuGump.h" // 실제 팝업 항목의 명령/활성 플래그를 읽기 전용으로 관측한다.
+#include "o/RawSquidLevel.h" // 메뉴 상태 행의 레벨을 원문 BYTE setter로 입력한다.
 #include "o/OriginalText.h"
 #include "o/RawBombEffectTimer.h" // Init 없는 timer cdecl의 실제 필드를 조회한다.
 #include "o/RawContentPreviewProcess.h"
@@ -1181,8 +1183,12 @@ struct SpecialObjectUiScene { // 특수 대상 메뉴의 현재 모드/소유자
     ActualMenuUi ui; // 실제 Gump/StyleText/입력 큐와 같은 Form 수명이다.
     std::unique_ptr<CampaignObjectMenuClient> menu; // 제품의 실제 VT+a8/+ac 분배와 정적 문자열이다.
     std::vector<Sid> traced; // 창 없는 검사에서 현재 대상 dump 장치가 받은 실제 SID만 관측한다.
+    std::vector<std::string> factoryNotices; // 실제 Factory 입력이 요청한 안내 섹션만 관측하는 출력 장치다.
+    std::vector<Sid> lostNotices; // 실제 삭제가 요청한 손실 음향의 대상 SID만 관측한다.
     explicit SpecialObjectUiScene(const netstorm::test::dudespawn::DudeAssets& source):assets(source),client(SpecialUiOptions(source)),ui(source) {
         client.Configuration().Set("helpWord","About");auto services=external.Make();services.cameraCommit=netstorm::test::camera::CommitScreenless;services.gameplayGlobals=client.GameplayGlobals();services.kencloudGlobals=client.KencloudGlobals();services.coreDataGlobals=client.CoreDataGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.gumpNotice=ui.buttons.ObjectNotice();
+        services.factoryTell=[this](std::string_view section) { factoryNotices.emplace_back(section); }; // 자금 판단은 제품에 맡기고 안내 창의 출력 경계만 기록한다.
+        services.unitLost=[this](Sid sid) { lostNotices.push_back(sid); }; // 삭제 관문/손실 위치는 제품에서 계산하고 실제 소리 장치만 대체한다.
         auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());world=std::make_unique<GameWorld>(assets.game,assets.files,std::move(fort),netstorm::o::MissionPlayers{},"thewarbegins",std::move(services),ScreenPoint{640,480});ui.currentSession=&world->Session();world->Session().Cursor().SetEffects(ui.CursorEffects());UserSelectionHooks selection;selection.paused=[this] { return client.Paused() ? 1U : 0U; };selection.dump=[this](Sid sid) { CHECK(world->Session().Core().pool.Slot(sid).size()==50);traced.push_back(sid); };UserHighlightHooks highlight;highlight.selectCursor=[this](std::uint32_t value) { ui.cursor=value; };CarrierInputHooks carrier;carrier.selectCursor=highlight.selectCursor;world->BindUserInput(std::move(selection),std::move(highlight),std::move(carrier));client.GameplayGlobals()->Camera().ApplyPixelsToRendererAndSnapshot(220*16-320,220*11-240);
         RawChatWindowContext chat;chat.globals=client.ChatWindowGlobals();chat.commands=client.DotCommandGlobals();chat.editor.now=[] { return 0.0; };chat.translate=[](auto text) { return std::string(text); };chat.text=[this](auto token) { return strings.Resolve(token); };chat.storeText=[this](auto text) { return strings.Store(text); };chat.recipient=[](auto)->bool { throw std::logic_error("특수 메뉴의 빈 Chat 예상 밖 접두 검사"); };
         chat.read=[this](auto address)->std::uint32_t { const auto core=world->Session().Core();switch (address) { case 0x594fc8:return core.ownerMode.challenge;case 0x594fbc:return core.ownerMode.battle;case 0x563e38:return ui.buttons.RootToken();case 0x5cae94:return 304;case 0x5cae98:return 229;default:throw std::logic_error("특수 메뉴의 예상 밖 Chat 현재 전역"); } };static_cast<void>(ui.menus->CreateChatWindow(std::move(chat)));menu=std::make_unique<CampaignObjectMenuClient>(client,ui.buttons,[](std::string_view) {});
@@ -1193,6 +1199,20 @@ struct SpecialObjectUiScene { // 특수 대상 메뉴의 현재 모드/소유자
     void Open(Sid object) { Observe(object);CHECK(menu->Open(*world,object,{InputCode::kRightButton,304,229})==1);CHECK(menu->Active()); } // 제품의 실제 우클릭 가상 분배를 실행한다.
     InputEvent Click(std::string_view label) { const auto point=ui.menus->Point(label);CHECK(point.has_value());if (!point) throw std::logic_error("특수 메뉴 실제 클릭 항목 없음");ui.Click(*point);return ui.commands.Pop(false); } // callback 직접 호출 없이 controlled 적중/입력 큐를 통과한다.
 };
+// 실제 대상의 부착 Form에서 팝업 루트를 찾아 현재 명령/인자 항목만 복사한다.
+std::optional<MenuGumpItem> BuildingUiItem(SpecialObjectUiScene& scene,Sid source,std::uint32_t command) {
+    auto& session=scene.world->Session();const Sid form{static_cast<std::uint16_t>(Get(session.Core().pool.Slot(source),6,2))};
+    CHECK(session.GumpForms().IsGumpForm(form));const auto token=scene.ui.buttons.RegisteredGump(session.GumpForms().Owner(form));const auto* base=scene.ui.menus->Node(token);CHECK(base!=nullptr);if (!base) return {};
+    const auto* menu=static_cast<const MenuGumpNode*>(base);
+    for (std::uint32_t index=0;index<menu->itemCount;++index) { // 원문 메뉴의 저장 순서대로 현재 항목을 조회하며 자식 메뉴는 열지 않는다.
+        if (menu->items[index].command==command) return menu->items[index];
+    }
+    return {};
+}
+// 동명이 항목을 문자열 추측 없이 현재 두 DWORD로 실제 controlled 좌표에 연결한다.
+std::string BuildingUiCommand(std::uint32_t command,std::uint32_t parameter) { char text[64]{};std::snprintf(text,sizeof(text),"menu-command:%x,%x",command,parameter);return text; }
+// 팝업의 정상 지연 정리를 마친 뒤 대상의 같은 링크/슬롯 반납을 다음 행에서 재사용한다.
+void CloseBuildingUi(SpecialObjectUiScene& scene) { scene.menu->Clear();scene.ui.menus->CleanupFrame();CHECK(!scene.menu->Active() && !scene.ui.menus->HasMenus()); }
 }
 TEST_CASE(SpecialObjectUi_CrystalOwnersAndEditorUseActualMenuAndRelease) { // 스톰 크리스탈의 raw owner/일반·편집 메뉴와 About 실제 인자를 같은 경로로 확인한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();
@@ -1219,4 +1239,51 @@ TEST_CASE(SpecialObjectUi_CrystalParentDeletionDefersActualPopupCleanup) { // �
 
 TEST_CASE(SpecialObjectUi_SelectedSpellDeletionClearsWithoutRevisitingReleasedRange) { // 선택된 스펠의 종속 삭제 뒤 원문 Clear만 실행하고 실제 팝업을 지연 반납한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);scene.client.GameplayGlobals()->world.editor=1;auto& session=scene.world->Session();auto core=session.Core();const auto source=scene.Create(114,0);scene.Open(source);auto& selected=scene.client.GameplayGlobals()->selection;CHECK(selected.selected==source.value);const Sid form{static_cast<std::uint16_t>(Get(core.pool.Slot(source),6,2))},range{static_cast<std::uint16_t>(Get(core.pool.Slot(form),4,2))};CHECK(range.value && core.pool.Slot(range)[10]==51 && core.processes.FromForm(range));const auto root=scene.ui.buttons.RegisteredGump(session.GumpForms().Owner(form));CHECK(scene.world->Session().World().Destroy(source,0x10));CHECK(selected.selected==0 && selected.multipleCount==0 && selected.mode==0);CHECK((core.pool.Slot(source)[11]&1U) && (core.pool.Slot(form)[11]&1U) && (core.pool.Slot(range)[11]&1U));CHECK(!scene.menu->Active() && scene.ui.menus->Node(root) && (scene.ui.menus->Node(root)->flags&0x10000U));scene.ui.menus->CleanupFrame();CHECK(!scene.ui.menus->Node(root));scene.menu->Clear();CHECK(!scene.ui.menus->HasMenus());
+}
+
+TEST_CASE(BuildingObjectUi_FourWorkshopsUseCurrentOwnerLevelMoneyAndEditor) { // 네 테마의 실제 메뉴/가상 개수와 입력 큐를 같은 제품에서 연결한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();RawSquidLevel levels(core.pool,core.types,[](auto) { throw std::logic_error("정상 메뉴 레벨의 예상 밖 범위 진단"); });
+    for (const auto type:{85U,86U,87U,88U}) for (const auto owner:{0U,1U,2U,8U}) for (const auto editor:{0U,1U}) { // 네 실제 테마×raw 소유자×명시 편집 모드이며 편집 포인터의 소유자 따라가기는 별도 기존 검사다.
+        scene.client.GameplayGlobals()->world.editor=editor;const auto source=scene.Create(type,owner);const auto cost=session.HitPoints().TypeCostUnits(type);CHECK(cost>0);const bool own=owner==session.LocalOwner();
+        for (const auto level:{0U,1U,2U,3U}) for (const auto money:{0.0F,static_cast<float>(cost)}) { // 원문 BYTE setter로 주어진 레벨과 실제 현재 SP의 경계 두 값을 입력한다.
+            levels.Set(source,level);session.SetSp(session.LocalOwner(),money);const auto before=Hex(core.pool.Slot(source));const auto free=core.pool.FreeCount();scene.Open(source);
+            CHECK(scene.ui.menus->Point("View Current Production").has_value()==own);CHECK(scene.ui.menus->Point("Put Knowledge into Production").has_value()==own);CHECK(scene.ui.menus->Point("Destroy").has_value()==(editor!=0));CHECK(scene.ui.menus->Point("Player").has_value()==(owner!=0));
+            const auto upgrade=BuildingUiItem(scene,source,0x03000032U);CHECK(upgrade.has_value()==(own && level<3));
+            if (upgrade) { CHECK(upgrade->parameter==source.value && !(upgrade->flags&0x200U));const auto event=scene.Click(BuildingUiCommand(upgrade->command,upgrade->parameter));CHECK(event.code==0x03000032U && std::bit_cast<std::uint32_t>(event.y)==source.value); } // SP 부족도 활성 항목으로 남고 실제 Factory 입력에서 거부해야 한다.
+            CloseBuildingUi(scene);CHECK(Hex(core.pool.Slot(source))==before && core.pool.FreeCount()==free && session.Sp(session.LocalOwner())==money);
+        }
+        CHECK(session.World().Destroy(source,0x10));
+    }
+}
+
+TEST_CASE(BuildingObjectUi_WorkshopClickInsufficientFundsAndCycleCurrentFrame) { // UI 클릭→같은 가상 입력의 자금 안내와 실제 상태/프레임 setter를 연결하며 패킷 요청은 실행하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();
+    for (const auto type:{85U,86U,87U,88U}) { // 네 실제 Factory의0→1→2→0을 같은 SID에서 연속 입력하고 메뉴를 다시 작성한다.
+        const auto source=scene.Create(type,session.LocalOwner());session.SetSp(session.LocalOwner(),0);CHECK((core.pool.Slot(source)[11]>>5)==0);
+        for (const auto expected:{1U,2U,0U}) { // 레벨 순환의 실제+84와 그림 보정을 거친 뒤 자금 부족 클릭은 상태를 보존한다.
+            scene.client.GameplayGlobals()->world.editor=1;CHECK(session.CommandFactory(source,0x03000063U,source.value)==1);CHECK(std::uint32_t(core.pool.Slot(source)[11]>>5)==expected);scene.client.GameplayGlobals()->world.editor=0;const auto before=Hex(core.pool.Slot(source));const auto kernel=core.kernel.Size();scene.Open(source);const auto item=BuildingUiItem(scene,source,0x03000032U);CHECK(item.has_value());if (!item) throw std::logic_error("워크샾 실제 업그레이드 항목 없음");
+            const auto event=scene.Click(BuildingUiCommand(item->command,item->parameter));const auto notices=scene.factoryNotices.size();CHECK(scene.menu->Command(event));CHECK(scene.factoryNotices.size()==notices+1 && scene.factoryNotices.back()=="upgradeNoBucks");CloseBuildingUi(scene);CHECK(Hex(core.pool.Slot(source))==before && core.kernel.Size()==kernel && session.Sp(session.LocalOwner())==0);
+        }
+        CHECK(session.World().Destroy(source,0x10));
+    }
+}
+
+TEST_CASE(BuildingObjectUi_GeneratorsUseStrictHalfHpAndMissionOwnerGates) { // 세 제네레이터의 실제 최대HP/현재 모드와 비활성 controlled 클릭을 함께 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();
+    for (const auto type:{75U,76U,77U}) for (const auto owner:{0U,1U,2U,8U}) { // 실제 Battery VT인 세 테마만 사용하며 공중3종이나 공격을 실행하지 않는다.
+        const auto source=scene.Create(type,owner);const auto maximum=session.HitPoints().MaxHitPoints(source);CHECK(maximum>2);
+        for (const auto mission:{0U,1U}) for (const auto hp:{maximum/2-1,maximum/2,maximum/2+1,maximum}) { // 자연 상태 도달 대신 명시된 mission/HP 경계에서 메뉴 조건을 분리한다.
+            scene.client.GameplayGlobals()->world.missionPost=mission;Put(core.pool.AllocatedBytes(source),26,std::bit_cast<std::uint32_t>(hp));const auto before=Hex(core.pool.Slot(source));const auto free=core.pool.FreeCount();scene.Open(source);const auto meltdown=BuildingUiItem(scene,source,0x030000f8U);CHECK(meltdown.has_value()==(!mission && owner==session.LocalOwner()));
+            if (meltdown) { CHECK(meltdown->parameter==source.value && ((meltdown->flags&0x200U)==0)==(hp>maximum/2));const auto point=scene.ui.menus->Point("Meltdown!");CHECK(point.has_value());if (!point) throw std::logic_error("제네레이터 실제 Meltdown 항목 없음");scene.ui.Click(*point);if (hp>maximum/2) { const auto event=scene.ui.commands.Pop(false);CHECK(event.code==0x030000f8U && std::bit_cast<std::uint32_t>(event.y)==source.value); }else CHECK(scene.ui.commands.Empty()); } // 활성 클릭도 입력 큐까지만 확인하고 자폭/공격 효과를 실행하지 않는다.
+            CloseBuildingUi(scene);CHECK(Hex(core.pool.Slot(source))==before && core.pool.FreeCount()==free);
+        }
+        CHECK(session.World().Destroy(source,0x10));
+    }
+}
+
+TEST_CASE(BuildingObjectUi_ConstructionBlocksMenusWithoutAllocatingForms) { // 건설 중 extra 비트의 거부가 실제 가상ac에서 UI/선택/풀을 변경하지 않는지 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();
+    for (const auto type:{75U,76U,77U,85U,86U,87U,88U}) { // 제네레이터 공통ac와 네 워크샾 전용ac의 같은 앞단을 대조한다.
+        const auto source=scene.Create(type,session.LocalOwner());auto raw=core.pool.AllocatedBytes(source);raw[40]|=1U;const auto before=Hex(raw);const auto free=core.pool.FreeCount(),selected=scene.client.GameplayGlobals()->selection.selected;CHECK(scene.menu->Open(*scene.world,source,{InputCode::kRightButton,304,229})==0);CHECK(!scene.menu->Active() && !scene.ui.menus->HasMenus() && Hex(raw)==before && core.pool.FreeCount()==free && scene.client.GameplayGlobals()->selection.selected==selected);raw[40]&=~1U;scene.Open(source);CloseBuildingUi(scene);CHECK(session.World().Destroy(source,0x10));
+    }
 }

@@ -1,0 +1,190 @@
+{
+  "unit": 914,
+  "previousCpCommit": "3816b284",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "priority": "LEFT_JOBS.md 3절1번 대상별 커서·오브젝트 우클릭·게임 UI",
+  "change": "일반 건물 상태별 실제 메뉴/입력 연결 검사 추가. 제품 소스 변경 없음.",
+  "scope": {
+    "workshops": {
+      "types": [
+        85,
+        86,
+        87,
+        88
+      ],
+      "owners": [
+        0,
+        1,
+        2,
+        8
+      ],
+      "editor": [
+        0,
+        1
+      ],
+      "levels": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "money": "0/실제 비용",
+      "menus": 256,
+      "queuedUpgradeClicks": 48
+    },
+    "factoryInput": {
+      "cycles": "네 테마 각0→1→2→0",
+      "cycleInputs": 12,
+      "insufficientFundsMenuClicks": 12,
+      "actualDispatcher": "CampaignObjectMenuClient::Command→RawCampaignSession::CommandFactory",
+      "outputDevice": "factoryTell 섹션 기록",
+      "requestsOrPackets": 0
+    },
+    "generators": {
+      "types": [
+        75,
+        76,
+        77
+      ],
+      "owners": [
+        0,
+        1,
+        2,
+        8
+      ],
+      "missionPost": [
+        0,
+        1
+      ],
+      "hp": "maximum/2-1, maximum/2, maximum/2+1, maximum",
+      "menus": 96,
+      "enabledMeltdownClicks": 6,
+      "disabledMeltdownClicks": 6,
+      "meltdownEffectsExecuted": 0
+    },
+    "construction": {
+      "types": [
+        75,
+        76,
+        77,
+        85,
+        86,
+        87,
+        88
+      ],
+      "blocked": 7,
+      "reopened": 7
+    },
+    "totalAcceptedMenus": 371,
+    "controlledClickAttempts": 72,
+    "queuedCommands": 66
+  },
+  "staticEvidence": {
+    "originals": {
+      "Meltdown!": {
+        "function": "// ==== FUN_0041c210 @ 0041c210",
+        "lines": 29
+      },
+      "Upgrade costs %s%d~[IfortGump.3]": {
+        "function": "// ==== FUN_004540d0 @ 004540d0",
+        "lines": 118
+      },
+      "004547d0": {
+        "lines": 75
+      },
+      "004adb30": {
+        "lines": 41
+      },
+      "004754b0": {
+        "lines": 20
+      }
+    },
+    "originalCD": {
+      "status": "정확한 문자열 미검출(-1)을 함수 주소로 쓰지 않음. 잘못 추출한 마지막 함수는 근거 제외. 이번 실제 UI 검사는 PATCH 전용.",
+      "factoryInput": {
+        "function": "0047a870",
+        "finding": "(level+1)%3 뒤0047a1f0 그림 보정. 업그레이드 자금 검사는00414620 helper를 사용하므로 PATCH의 직접 SP/editor 비교와 혼합하지 않음. 정적 확인만."
+      }
+    }
+  },
+  "finalTests": {
+    "uniqueCases": 17,
+    "new": 4,
+    "existing": 13,
+    "commands": 8,
+    "executions": 17,
+    "failedChecks": 0,
+    "names": [
+      "BuildingObjectUi_ConstructionBlocksMenusWithoutAllocatingForms",
+      "BuildingObjectUi_FourWorkshopsUseCurrentOwnerLevelMoneyAndEditor",
+      "BuildingObjectUi_GeneratorsUseStrictHalfHpAndMissionOwnerGates",
+      "BuildingObjectUi_WorkshopClickInsufficientFundsAndCycleCurrentFrame",
+      "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+      "CampaignObjectMenus_ActualSummaryUsesCurrentIdentityAndAlliance",
+      "ObjectMenuVariants_Native1024",
+      "ObjectMenu_NativeBase478",
+      "ObjectMenu_NativeDamageable478",
+      "ObjectMenu_NativeSalvage478",
+      "ObjectMenu_RequiresReachedDependencies",
+      "SpecialObjectUi_CrystalOwnersAndEditorUseActualMenuAndRelease",
+      "SpecialObjectUi_CrystalParentDeletionDefersActualPopupCleanup",
+      "SpecialObjectUi_ObeliskSpellRoundTripFromActualMenuClick",
+      "SpecialObjectUi_SelectedSpellDeletionClearsWithoutRevisitingReleasedRange"
+    ]
+  },
+  "history": {
+    "testCommands": 10,
+    "executions": 25,
+    "initialCases": 4,
+    "initialFailedCases": 3,
+    "initialFailedChecks": 46,
+    "correction": "검사 전용의 잘못된 공통 CommandObject 호출을 실제 메뉴 Factory 분배로 교정하고 unitLost 출력 장치를 관측기로 설치. 기존 기대/fixture 불변.",
+    "secondNewCases": 4,
+    "secondFailedChecks": 0
+  },
+  "builds": [
+    {
+      "log": "build-first.log",
+      "exit": 0,
+      "warnings": 1,
+      "errors": 0
+    },
+    {
+      "log": "build-second.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "protection": {
+    "existing": 2787,
+    "fixtures": 967,
+    "unchanged": true,
+    "newFixtures": 0,
+    "newNativeRuns": 0
+  },
+  "sourceCount": 2881,
+  "sourceMatchesFinalBuild": true,
+  "product": {
+    "unit": 913,
+    "bytes": 10787328,
+    "sha256": "82e4d74d5e4f673325ab67ad0cbb519b92e6791f2be76ea6283686539a743741"
+  },
+  "checking": {
+    "remaining": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3
+  },
+  "limitations": [
+    "PATCH 전용 창 없는 실제 Client/Session/Gump 검사이며 자연 도달/픽셀/물리 입력 검증 아님",
+    "SP 부족/충분에서 항목 활성과 명령을 확인했으며 색상 픽셀은 새로 대조하지 않음",
+    "편집 포인터의 비영 소유자 따라가기는 기존526/747/750 범위이며 이번 명시 모드와 구별",
+    "성공 업그레이드/연구/회수 및 제단·생산 상태 잔여는 다음 UI1 단위",
+    "실제 게임/포획/희생/특정 적 공격/승리·공중3종 새 전용·신규MP/패킷/통신·전체/34/ZIP 검사 미실행"
+  ],
+  "rawDirectory": "extracted/cpp-resume-914"
+}
