@@ -1,0 +1,194 @@
+{
+  "unit": 917,
+  "previousCpCommit": "df2f5fa7",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "priority": "LEFT_JOBS.md 3절1번 대상별 커서·오브젝트 우클릭·게임 UI",
+  "productCodeChanges": false,
+  "status": "이번 문서 반영·로컬 커밋 후 사용자 지시로 목표 일시 정지. 전체 미완료이며 다음918은 시작하지 않음.",
+  "staticEvidence": {
+    "originals": {
+      "004277f0": {
+        "lines": 164,
+        "metadata": "// [신뢰도 A] · 호출자 2 · 포인터 0 · CD판 FUN_004e6f40@004e6f40 (callseq/strong 0.634)"
+      },
+      "004284a0": {
+        "lines": 41,
+        "metadata": "// [신뢰도 A] · 호출자 2 · 포인터 0 · CD판 FUN_004e3930@004e3930 (callers/strong 0.632)"
+      },
+      "004288f0": {
+        "lines": 199,
+        "metadata": "// [신뢰도 A] · 호출자 1 · 포인터 7 · CD판 FUN_004e5180@004e5180 (string/strong 0.79)"
+      },
+      "004971e0": {
+        "lines": 18,
+        "metadata": "// [신뢰도 A] · 호출자 11 · 포인터 0 · CD판 FUN_00455c40@00455c40 (callers/strong 0.976)"
+      },
+      "0041d770": {
+        "lines": 17,
+        "metadata": "// [신뢰도 B] · 호출자 38 · 포인터 0 · CD판 FUN_00440a50@00440a50 (callseq/weak 0.972)"
+      }
+    },
+    "originalCD": {
+      "004e5180": {
+        "lines": 179,
+        "metadata": "// [신뢰도 A] · 호출자 1 · 포인터 7 · 패치판 FUN_004288f0@004288f0 (string/strong 0.79)"
+      }
+    }
+  },
+  "scope": {
+    "types": [
+      111,
+      133,
+      135,
+      137,
+      141,
+      146,
+      156,
+      158
+    ],
+    "actualCarrierSetVerified": true,
+    "hoverPolls": 264,
+    "basicCursors": 72,
+    "cargoCandidateCursors": 80,
+    "ownerStatusGroupCursors": 112,
+    "menus": 64,
+    "menuOwners": [
+      1,
+      2
+    ],
+    "editor": [
+      0,
+      1
+    ],
+    "paralyzed": [
+      false,
+      true
+    ],
+    "enabledDropCommands": 16,
+    "disabledDropClicks": 16,
+    "aboutCommands": 32,
+    "executedRequests": 0
+  },
+  "testInputCorrections": [
+    "화면 셀 경계 대신 원문 역투영 후 같은 칸이 되는 내부 점을 사용",
+    "mode0의 무효과와 실제 모드4→0 초기 화살표 전환을 구별",
+    "신전 저장 좌표의 발자국 경계와 spot8 내부를 별도로 검증"
+  ],
+  "finalTests": {
+    "uniqueCases": 26,
+    "new": 4,
+    "existing": 22,
+    "commands": 9,
+    "executions": 29,
+    "failedChecks": 0,
+    "names": [
+      "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+      "CampaignUserSelection_CurrentMissionDemoBlocksBeforeSelectionEffects",
+      "CampaignUserSelection_SamePoolMarksRegularAndManaNotice",
+      "CarrierInput_Native454WholeParentsAndCurrentEffects",
+      "CarrierMenu_Native628",
+      "CarrierMenu_RequiresReachedDependenciesAndPriestBinding",
+      "CarrierObjectUi_AllEightCargoMenusUseActualDisabledFlagsAndSid",
+      "CarrierObjectUi_AllEightTypesUseActualProjectionAndTargetCursors",
+      "CarrierObjectUi_CargoAndCrystalKeepNativeGroundCursorHistory",
+      "CarrierObjectUi_CurrentOwnerEditorParalysisAndRealGroupOverride",
+      "GameWorldUserSelection_CurrentMissionDemoKeepsResetAndClearDistinct",
+      "UserSelectionGlobals_CurrentMultipleGetterSurvivesReallocationAndCountChanges",
+      "UserSelectionGlobals_DisabledClearPreservesAllCurrentDwords",
+      "UserSelectionGlobals_FirstMenuClearKeepsMouseTypeAndNegativeCountTail",
+      "UserSelectionGlobals_LateArrayFailureKeepsWrittenPrefix",
+      "UserSelectionGlobals_NativeDwordBitsAndDistinctRawMouse",
+      "UserSelectionGlobals_PreparedLifetimeAndLateHighlightFailureKeepCurrentOwner",
+      "UserSelectionGlobals_WideDwordCandidatesAreNotTruncatedToSid",
+      "UserSelection_ClearLazyBoundaryAndWrittenPrefix",
+      "UserSelection_ClearNativeEnabledAndCurrentEffects",
+      "UserSelection_EditionAndTypeContract",
+      "UserSelection_EscapeNative154MatchesZeroSelection",
+      "UserSelection_EscapeRecognizesNativeEventKindAndRelease",
+      "UserSelection_LazyBoundariesAndWrittenPrefix",
+      "UserSelection_NativeThreeArgumentsAndCurrentEffects"
+    ],
+    "overlap": "UserSelection_ 부분문자 필터가 Campaign/GameWorld의3사례도 실행하므로 고유 수에서 중복 제외"
+  },
+  "history": {
+    "commands": 11,
+    "executions": 37,
+    "failedChecks": 85,
+    "attempts": [
+      {
+        "log": "test-first-carrier.log",
+        "cases": 4,
+        "failedChecks": 77
+      },
+      {
+        "log": "test-second-carrier.log",
+        "cases": 4,
+        "failedChecks": 8
+      },
+      {
+        "log": "test-third-carrier.log",
+        "cases": 4,
+        "failedChecks": 0
+      }
+    ]
+  },
+  "validation": {
+    "protectedFiles": 2787,
+    "protectedUnchanged": true,
+    "fixtures": 967,
+    "newFixtures": 0,
+    "newNativeExecutions": 0,
+    "sourceCount": 2881,
+    "sourceMatchesBuild": true,
+    "product": {
+      "unit": 916,
+      "bytes": 10787328,
+      "sha256": "fd3a4816dd744d5171df2833cae9eccd9b94291ace883a7967acc7a9480fa5ba"
+    },
+    "hoverPolls": 264,
+    "menus": 64,
+    "finalCases": 26,
+    "finalExecutions": 29,
+    "builds": [
+      {
+        "log": "build-first.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "log": "build-second.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      {
+        "log": "build-third.log",
+        "exit": 0,
+        "warnings": 0,
+        "errors": 0
+      }
+    ]
+  },
+  "checking": 8,
+  "activeProjects": 74,
+  "versions": {
+    "display": "11.01",
+    "file": "11.01",
+    "product": "11.01"
+  },
+  "boundaries": [
+    "창 없는 실제 Client/Session/선택/Graph/메뉴 연결, 명시 입력 상태",
+    "자연 상태 도달·픽셀/물리 입력 동일성 미검증",
+    "실제 요청/통신·포획/희생·특정 적 공격/승리·공중3종 새 전용·GUI·전체/34/ZIP 제외"
+  ],
+  "remaining": "자기 위치 후보/지면 이동 불가/다이스·다른 현재 상태, 성공 명령 효과와 나머지 UI/Edit/미션/내부/Windows/무검사MP/4~8차",
+  "next": {
+    "unit": 918,
+    "priority": "UI1 계속",
+    "requiresUserResume": true
+  },
+  "rawDirectory": "extracted/cpp-resume-917"
+}

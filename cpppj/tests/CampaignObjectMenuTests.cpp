@@ -1238,6 +1238,20 @@ StateUiAltarPair FindStateUiAltarPair(SpecialObjectUiScene& scene) {
     }
     throw std::logic_error("보호 Fort에 사제 없는 실제 제단/다이스 쌍 없음");
 }
+const std::array<std::uint32_t,8> kCarrierUiTypes{111,133,135,137,141,146,156,158}; // 보호 TYPE의genus30000 전체8종이며 공격 공중3종은 포함하지 않는다.
+// 사제는 원래 미션의 실제 참여자를 사용하고 나머지 운반체는 같은 실제 시작 섬의 빈 점에 배치한다.
+Sid CarrierUiActor(SpecialObjectUiScene& scene,std::uint32_t type) {
+    auto& session=scene.world->Session();auto core=session.Core();Sid source{};
+    if (type==158) { source={static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(source.value); }
+    else { source=session.World().Create(type,2);core.owner.Set(source,1);session.World().SetLoadingDepth(1);session.World().Pop(source,94,110,0x10);session.World().SetLoadingDepth(0); }
+    if (!source.value) throw std::logic_error("운반체 UI의 실제 대상 없음");CHECK(core.pool.Slot(source)[10]==type && core.pool.Slot(source)[34]==1);Put(core.pool.AllocatedBytes(source),26,std::bit_cast<std::uint32_t>(session.HitPoints().MaxHitPoints(source)));return source; // 이동 가능한 현재 최대HP를 입력하며 공격/회복 몸체는 실행하지 않는다.
+}
+// 원문 화면 역투영을 사용하는 현재 마우스 폴링만 진행하고 최종 커서를 관측한다.
+void PollCarrierUi(SpecialObjectUiScene& scene,ScreenPoint point,std::uint32_t expected) { scene.world->SetMousePoint(point);scene.world->UpdateMovementCursor();std::printf("CARRIER cursor=%u expected=%u mouse=%d,%d selected=%u mode=%u\n",scene.ui.cursor,expected,point.x,point.y,scene.world->Selected(),scene.world->InputMode());CHECK(scene.ui.cursor==expected); }
+// 보관 좌표는 셀 우하단이므로 원문4971e0의+16/+11 뒤 같은 셀로 절삭될 내부 픽셀을 사용한다.
+ScreenPoint CarrierUiCell(SpecialObjectUiScene& scene,float x,float y) { const auto corner=scene.world->ToScreen(x,y);return {corner.x-8,corner.y-6}; }
+// 실제 카메라/현재 좌표 변환으로 검사 점을 화면 안에 놓으며 지형/Graph/커서 판단을 주입하지 않는다.
+void PollCarrierUiWorld(SpecialObjectUiScene& scene,float x,float y,std::uint32_t expected) { scene.world->Session().CameraGlobals().ApplyPixelsToRendererAndSnapshot(std::max(0,static_cast<int>(x*16)-320),std::max(0,static_cast<int>(y*11)-240));const auto point=CarrierUiCell(scene,x,y);CHECK(point.x>=0 && point.x<640 && point.y>=0 && point.y<480);PollCarrierUi(scene,point,expected); }
 }
 TEST_CASE(SpecialObjectUi_CrystalOwnersAndEditorUseActualMenuAndRelease) { // 스톰 크리스탈의 raw owner/일반·편집 메뉴와 About 실제 인자를 같은 경로로 확인한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();
@@ -1398,5 +1412,56 @@ TEST_CASE(StateObjectUi_EditorDestroyClickReleasesPairAndPopupWithoutTransmissio
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
     for (const auto clickDais:{false,true}) { // 두 실제 우클릭 진입점마다 보호 Fort를 새로 읽으며 저장 파일은 쓰지 않는다.
         SpecialObjectUiScene scene(assets,"breakingthrough");scene.client.GameplayGlobals()->world.editor=1;auto& session=scene.world->Session();auto core=session.Core();const auto pair=FindStateUiAltarPair(scene);scene.Open(clickDais ? pair.dais : pair.altar);const Sid form{static_cast<std::uint16_t>(Get(core.pool.Slot(pair.altar),6,2))};CHECK(session.GumpForms().IsGumpForm(form));const auto root=scene.ui.buttons.RegisteredGump(session.GumpForms().Owner(form));const auto event=scene.Click("Destroy");CHECK(event.code==0x03000015U && std::bit_cast<std::uint32_t>(event.y)==pair.altar.value);CHECK(session.World().Destroy(Sid{static_cast<std::uint16_t>(event.y)},0x40));CHECK((core.pool.Slot(pair.altar)[11]&1U) && (core.pool.Slot(pair.dais)[11]&1U) && (core.pool.Slot(form)[11]&1U));CHECK(!scene.menu->Active() && scene.ui.menus->Node(root) && (scene.ui.menus->Node(root)->flags&0x10000U));scene.ui.menus->CleanupFrame();CHECK(!scene.ui.menus->Node(root));CloseBuildingUi(scene); // 본체는 server SID이므로 pfDONT_TRANSMIT(40)을 명시한다. 공통 명령의flags0 분배는 기존 원문fixture로 확인하며 통신 효과를 실행하지 않는다.
+    }
+}
+
+TEST_CASE(CarrierObjectUi_AllEightTypesUseActualProjectionAndTargetCursors) { // 보호 운반체 전체의 자기/지면/간헐천·신전/빈 공간 커서를 실제 선택/카메라/폴링에서 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);std::vector<std::uint32_t> discovered;
+    for (std::uint32_t type=70;type<assets.types.size();++type) if (assets.types[type].flags2&0x30000U) discovered.push_back(type); // 실제 로드된188TYPE에서 전체 대상 집합을 확인한다.
+    CHECK(discovered==std::vector<std::uint32_t>(kCarrierUiTypes.begin(),kCarrierUiTypes.end()));
+    for (const auto type:kCarrierUiTypes) { // 판본 자산은 공유하지만 각 타입의 실제 World/선택/이동 상태는 독립시킨다.
+        SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();const auto source=CarrierUiActor(scene,type);const auto raw=core.pool.Slot(source);const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));scene.world->SetMousePoint(CarrierUiCell(scene,x,y));scene.world->Select(source.value);CHECK(scene.world->Selected()==source.value && scene.world->InputMode()==5);const auto before=Hex(core.pool.Slot(source));const auto free=core.pool.FreeCount();const auto kernel=core.kernel.Size();const auto sp=session.Sp(1);
+        for (const auto camera:std::array<std::array<int,2>,2>{{{976,793},{1040,880}}}) { //536의 독립 화면 점을 두 실제 카메라에서 재사용한다.
+            session.CameraGlobals().ApplyPixelsToRendererAndSnapshot(camera[0],camera[1]);PollCarrierUi(scene,{1611-camera[0],1148-camera[1]},3);PollCarrierUi(scene,{1611-camera[0],1115-camera[1]},18);PollCarrierUi(scene,CarrierUiCell(scene,x,y),6);
+        }
+        Sid temple{};for (std::uint32_t number=5;number<core.pool.Capacity();++number) { const Sid candidate{static_cast<std::uint16_t>(number)};const auto item=core.pool.Slot(candidate);if (!(item[11]&3U) && item[10]>=70 && item[34]==1 && (core.types[item[10]].flags2&0x200U)) { temple=candidate;break; } } // 실제 현재 소유자의 원래 신전을 찾는다.
+        CHECK(temple.value);if (!temple.value) throw std::logic_error("운반체 커서의 원래 신전 없음");const auto templeRaw=core.pool.Slot(temple);const auto templeX=std::bit_cast<float>(Get(templeRaw,14)),templeY=std::bit_cast<float>(Get(templeRaw,18));CHECK(core.types[templeRaw[10]].footX>2 && core.types[templeRaw[10]].footY>2); // 신전의 저장 좌표는 발자국 오른쪽 아래 경계이므로 내부8비트와 구별한다.
+        CHECK(!(core.spots[static_cast<std::size_t>(templeY)*256+static_cast<std::size_t>(templeX)]&8U));CHECK(core.spots[(static_cast<std::size_t>(templeY)-1)*256+static_cast<std::size_t>(templeX)-1]&8U);PollCarrierUiWorld(scene,templeX,templeY,18);PollCarrierUiWorld(scene,templeX-1,templeY-1,3);PollCarrierUiWorld(scene,20,20,(core.types[type].flags2&0x20000U) ? 18U : 6U);CHECK(Hex(core.pool.Slot(source))==before && core.pool.FreeCount()==free && core.kernel.Size()==kernel && session.Sp(1)==sp);
+        scene.world->Select(0);
+    }
+}
+
+TEST_CASE(CarrierObjectUi_CargoAndCrystalKeepNativeGroundCursorHistory) { // 실제 너겟 내용물과 후보를 사용해 빈/운반 중·지상/벌룬의 원문 강조 이력을 구별한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto type:kCarrierUiTypes) { // 실제8종에서 포획 대상 사제 없이 스톰 크리스탈만 후보/내용물로 제공한다.
+        SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();const auto source=CarrierUiActor(scene,type);const auto crystal=session.World().Create(154,2);session.World().Pop(crystal,102,102,0x10);const bool flying=(core.types[type].flags2&0x20000U)!=0;
+        for (const auto cargo:{false,true}) { // 클라이언트 내용물은 실제 부모 알림으로 부착하며 게임 Kernel은 진행하지 않는다.
+            scene.world->Select(0);if (cargo) CHECK(session.CreateContained(source,154,25,0x20,0x10,0).value);const auto raw=core.pool.Slot(source);const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));scene.world->SetMousePoint(CarrierUiCell(scene,x,y));scene.world->Select(source.value);const auto before=Hex(core.pool.Slot(source));const auto target=Hex(core.pool.Slot(crystal));const auto free=core.pool.FreeCount();const auto kernel=core.kernel.Size();
+            PollCarrierUiWorld(scene,101,102,18);PollCarrierUiWorld(scene,102,102,cargo ? 18U : 13U);session.CameraGlobals().ApplyPixelsToRendererAndSnapshot(976,793);PollCarrierUi(scene,{635,355},3);PollCarrierUiWorld(scene,102,102,cargo ? (flying ? 18U : 3U) : 13U);PollCarrierUiWorld(scene,x,y,6);CHECK(Hex(core.pool.Slot(source))==before && Hex(core.pool.Slot(crystal))==target && core.pool.FreeCount()==free && core.kernel.Size()==kernel); // 운반 중 지상 후보에서는 이전cursor를 유지하며 벌룬은 직접18을 반환한다.
+        }
+        scene.world->Select(0);
+    }
+}
+
+TEST_CASE(CarrierObjectUi_CurrentOwnerEditorParalysisAndRealGroupOverride) { // 현재 소유자/편집/마비 선택 조건과 실제 Shift 추가 선택의 강제 이동 커서를 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto type:kCarrierUiTypes) { // 현재 selected/여러 선택을 각 실제 World의 같은 장기 전역에 둔다.
+        SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();const auto source=CarrierUiActor(scene,type);const auto extra=core.pool.Slot(source)[40];scene.world->Highlight(4);scene.world->Highlight(0); // 실제 Client의 초기 화살표1을 모드 전환으로 준비하며 같은모드0의 무효과를 유지한다.
+        for (const auto owner:{0U,1U,2U}) for (const auto editor:{0U,1U}) for (const auto paralyzed:{false,true}) { // 편집 포인터의 소유자 따라가기는 기존 검사이며 여기서는 현재 로컬1을 고정한 명시 상태다.
+            scene.world->Select(0);core.owner.Set(source,owner);scene.client.GameplayGlobals()->world.editor=editor;core.pool.AllocatedBytes(source)[40]=static_cast<std::uint8_t>((extra&~0x20U)|(paralyzed ? 0x20U : 0U));const auto raw=core.pool.Slot(source);scene.world->SetMousePoint(CarrierUiCell(scene,std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))));scene.world->Select(source.value);CHECK(scene.world->Selected()==source.value);const bool moving=editor || owner==session.LocalOwner();CHECK(scene.world->InputMode()==(moving ? 5U : 0U));session.CameraGlobals().ApplyPixelsToRendererAndSnapshot(976,793);PollCarrierUi(scene,{635,355},moving ? (paralyzed ? 6U : 3U) : 1U);
+        }
+        scene.world->Select(0);core.owner.Set(source,1);scene.client.GameplayGlobals()->world.editor=0;core.pool.AllocatedBytes(source)[40]=extra;const auto group=session.World().Create(133,2);core.owner.Set(group,1);session.World().SetLoadingDepth(1);session.World().Pop(group,95,110,0x10);session.World().SetLoadingDepth(0);const auto raw=core.pool.Slot(source);scene.world->SetMousePoint(CarrierUiCell(scene,std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))));scene.world->Select(source.value);scene.world->ExtendSelection(group.value,0);CHECK(scene.world->SelectionGlobals().multipleCount>0);session.CameraGlobals().ApplyPixelsToRendererAndSnapshot(976,793);PollCarrierUi(scene,{635,355},18);core.pool.AllocatedBytes(source)[40]|=0x20U;PollCarrierUi(scene,{635,355},18);scene.world->Select(0);core.pool.AllocatedBytes(source)[40]=extra; // 마비보다 다중 강조의18이 우선이며 실제 추가 선택 목록을 정리한다.
+    }
+}
+
+TEST_CASE(CarrierObjectUi_AllEightCargoMenusUseActualDisabledFlagsAndSid) { // 같은 실제 Carrier/사제 메뉴가 운반물·현재 소유자/편집/마비에 맞는Drop 행을 만드는지 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto type:kCarrierUiTypes) { // 여덟 운반체에 스톰 크리스탈 내용물만 실제 부착하며 포획/희생을 하지 않는다.
+        SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();const auto source=CarrierUiActor(scene,type);CHECK(session.CreateContained(source,154,25,0x20,0x10,0).value);const auto extra=core.pool.Slot(source)[40];
+        for (const auto owner:{1U,2U}) for (const auto editor:{0U,1U}) for (const auto paralyzed:{false,true}) { // 일반/명시 편집의 두 소유자와 두 이동 상태에서 같은 실제 팝업을 작성한다.
+            scene.world->Select(0);core.owner.Set(source,owner);scene.client.GameplayGlobals()->world.editor=editor;core.pool.AllocatedBytes(source)[40]=static_cast<std::uint8_t>((extra&~0x20U)|(paralyzed ? 0x20U : 0U));scene.Open(source);const Sid form{static_cast<std::uint16_t>(Get(core.pool.Slot(source),6,2))};CHECK(session.GumpForms().IsGumpForm(form));const auto free=core.pool.FreeCount();const auto about=BuildingUiItem(scene,source,0x02000017U),drop=BuildingUiItem(scene,source,0x03000076U);CHECK(about && about->parameter==type);CHECK(drop.has_value()==(owner==session.LocalOwner()));CHECK(scene.ui.menus->Report().find("Carrying:")!=std::string::npos);
+            if (drop) { CHECK(drop->parameter==source.value && ((drop->flags&0x200U)==0)==!paralyzed);const auto point=scene.ui.menus->Point(BuildingUiCommand(drop->command,drop->parameter));CHECK(point.has_value());if (!point) throw std::logic_error("운반물 실제 Drop 행 없음");scene.ui.Click(*point);if (paralyzed) CHECK(scene.ui.commands.Empty());else { const auto event=scene.ui.commands.Pop(false);CHECK(event.code==0x03000076U && std::bit_cast<std::uint32_t>(event.y)==source.value); } }else { const auto event=scene.Click("About");CHECK(event.code==0x02000017U && std::bit_cast<std::uint32_t>(event.y)==type); }CloseBuildingUi(scene);CHECK((core.pool.Slot(form)[11]&1U) && core.pool.FreeCount()==free+1 && core.pool.Slot(source)[10]==type && core.pool.Slot(source)[34]==owner); // 실제 요청/내려놓기는 실행하지 않고 UI 명령 인자와 반납만 확인한다.
+        }
+        scene.world->Select(0);core.owner.Set(source,1);core.pool.AllocatedBytes(source)[40]=extra;
     }
 }
