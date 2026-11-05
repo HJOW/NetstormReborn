@@ -11,4 +11,6 @@ target_sources(netstorm PRIVATE
     UserDataRoot.cpp UserDataRoot.h
     Json.cpp Json.h
     Png.cpp Png.h
+    AudioLoopback.cpp AudioLoopback.h
+    FrameRecorder.cpp FrameRecorder.h
 )

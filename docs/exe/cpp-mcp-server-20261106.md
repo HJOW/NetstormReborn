@@ -1,6 +1,6 @@
-# 4차 로컬 MCP 서버 — 조작·상태·화면 캡처 (단위935)
+# 4차 로컬 MCP 서버 — 조작·상태·화면 캡처 (단위935), 소리 포함 녹화 (단위936)
 
-2026-11-06, HJOW-Athlon(마지막 전체 정밀 디컴파일과 같은 PC, 실제 게임 실행 확인 면제 호스트). 4차 요구(dotnetpj 분석을 위해 게임 내 모든 조작과 화면 캡처·소리 포함 녹화)의 **첫 구현 묶음**이다. 소리 포함 녹화와 16:9 1920×1080은 남아 있다.
+2026-11-06, HJOW-Athlon(마지막 전체 정밀 디컴파일과 같은 PC, 실제 게임 실행 확인 면제 호스트). 4차 요구(dotnetpj 분석을 위해 게임 내 모든 조작과 화면 캡처·소리 포함 녹화)의 **첫 구현 묶음**이다(단위936에서 소리 포함 녹화를 추가했다). 16:9 1920×1080은 남아 있다.
 
 ## 사용법
 
@@ -22,6 +22,8 @@ stdout은 MCP 전용으로 분리한다(게임의 CRT stdout 출력은 stderr로
 | `netstorm_screenshot` | 현재 논리 화면을 PNG 이미지로 반환(8비트 인덱스 PNG, 원본 팔레트 색 번호 보존) |
 | `netstorm_input` | `actions:[{op,arg}]`를 프레임마다 하나씩 입력 큐에 넣고 `wait_frames`(기본 3) 뒤 상태와 화면을 반환 |
 | `netstorm_wait_frames` | 지정 프레임 수만큼 진행을 기다린 뒤 상태(선택: 화면) 반환 |
+| `netstorm_record_start` | 영상(인덱스 PNG 순번 파일)과 게임 소리(WAV)를 사용자 `Captures\<이름>\`에 녹화 시작(`fps` 1..60 기본 15, `audio` 기본 true, `name`) |
+| `netstorm_record_stop` | 녹화 종료, 폴더/프레임 수/버린 수/소리 통계 반환. `mux:true`이고 PATH에 ffmpeg가 있으면 `recording.mp4`로 합침 |
 | `netstorm_quit` | 게임 창을 닫고 종료 |
 
 입력 동작(`op`)은 기존 UI 스크립트 엔진과 같은 어휘다: `click`(컨트롤 라벨 또는 `screen:x,y`, 라벨 접두 `hud:`/`world:`/`cell:` 등), `click-if`, `down`, `up`, `up-if`, `right`, `outside`, `pointer`, `esc`, `key`/`keyup`(문자, `enter`, `f5`, `shift+a` 등), `script-command`(`Tell,Blank` 같은 원문 명령), `command`. 검사 전용 `test-*` 동작과 상태 합성 동작은 노출하지 않는다. 한 호출은 최대 200동작이다.
@@ -40,8 +42,16 @@ stdout은 MCP 전용으로 분리한다(게임의 CRT stdout 출력은 stderr로
 
 ## 한계와 남은 4차
 
-1. **소리 포함 녹화 미구현**(다음 단위): 게임 믹서 출력과 프레임을 같은 시간축으로 AVI/WAV에 기록해야 한다.
-2. **16:9 최대 1920×1080 해상도 지원 미구현.**
+1. **16:9 최대 1920×1080 해상도 지원 미구현**(다음 단위).
+2. 녹화는 프레임 PNG 순번 파일+WAV+manifest 방식이며 단일 AVI/MP4 파일은 ffmpeg 합성(`mux`)으로만 만든다.
 3. 게임 시계는 벽시각 기반이라 프레임 단위 결정적 진행(step)은 제공하지 않는다. `wait_frames`는 실시간 진행을 기다린다.
 4. 컨트롤 목록 조회 도구는 없다(`report`와 라벨 규칙으로 대체). 필요하면 후속으로 추가한다.
 5. 실제 창이 필요하므로 서버 세션마다 게임 창이 뜬다(AGENTS.md 실행 확인 규칙 적용).
+
+## 단위936 추가 — 소리 포함 녹화
+
+- **영상:** `platform/FrameRecorder`가 매 게임 프레임(`afterFrame`)에서 캡처 주기(fps)가 된 프레임만 논리 화면(8비트)을 복사하고, 작업 스레드가 인덱스 PNG(`frame_000000.png`…)로 저장한다. 프레임마다 그 시점의 팔레트를 PNG `PLTE`에 담아 날씨/플래시 팔레트 변화도 보존한다. 인코더가 밀리면 새 프레임을 버리고 `dropped`로 센다. 종료 때 `manifest.json`(fps, 크기, 프레임 수, 각 프레임 시각 ms, 길이)과 ffmpeg용 `frames.ffconcat`(프레임별 표시 길이, 마지막 파일 반복)을 쓴다.
+- **소리:** `platform/ProcessAudioCapture`가 Windows 10 2004 이상의 **프로세스 단위 WASAPI 루프백**(`ActivateAudioInterfaceAsync`+`AUDIOCLIENT_ACTIVATION_TYPE_PROCESS_LOOPBACK`)으로 게임 프로세스 트리의 출력만 44.1kHz 16비트 스테레오 `audio.wav`에 녹음한다. 다른 앱의 소리는 섞이지 않는다. 소리가 없는 구간은 패킷 QPC 시각으로 무음을 채워 영상과 같은 시간축을 유지한다. 소리를 시작하지 못하면(`audio_error`) 영상만 녹화한다. 새 링크 라이브러리 `mmdevapi`.
+- **저장 위치:** 5차 정책에 따라 사용자 `Captures\<이름>\`(`NETSTORM_USER_DATA` 재정의 가능)다.
+- **검증:** `netstorm_mcp_parts_tests`에 녹화기 검사를 추가해 10개 통과(주기 선택, 순번 PNG, manifest 시각 0/100/210ms, concat 길이, 잘못된 fps 거부). 실제 게임(`tools/mcp_cpp_record_smoke.py`, 소리 켠 상태): 영상 23프레임(10fps, 2.31초, 버린 프레임 0)과 `audio.wav` 101,653프레임(2.305초, 소리 있는 프레임 99,726개 = 메인 메뉴 장면 음악)이 같은 시간축으로 맞았고, `--mux`로 ffmpeg 합성 시 h264 1024×768 2.33초 + aac 2.306초 mp4가 만들어졌다. 기존 MCP 스모크도 재통과했다. 이 PC의 오디오 장치(HD Audio)가 정상이라 실제 PCM 캡처를 확인했다(과거 RDP 환경의 미검증과 다름).
+- **한계:** 게임 믹서 PCM을 직접 가로채지 않고 OS 출력의 프로세스 루프백을 쓰므로 OS 믹서/장치 설정(음량 등)을 따른다. 오디오 장치가 없는 환경에서는 `audio_error`로 영상만 남는다. 해상도가 바뀌면 같은 녹화 안의 프레임 크기가 달라질 수 있다(manifest는 마지막 크기를 적는다).

@@ -1,11 +1,15 @@
 // 4차 로컬 MCP 부품(JSON, zlib/PNG) 검사다. 게임/GUI/통신 없이 순수 함수만 실행한다.
 #include "TestSupport.h"
 #include "app/McpServer.h"
+#include "platform/FrameRecorder.h"
 #include "platform/Json.h"
 #include "platform/Png.h"
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <cstring>
+#include <filesystem>
+#include <fstream>
 #include <span>
 #include <stdexcept>
 #include <string>
@@ -222,7 +226,7 @@ TEST_CASE(McpProtocol_InitializeListPingAndErrors) {
     CHECK(reply);
     std::vector<std::string> names;
     for (const auto& tool : (*reply)["result"]["tools"].Items()) { names.push_back(tool["name"].AsString()); CHECK(tool["inputSchema"]["type"].AsString() == "object" && !tool["description"].AsString().empty()); }
-    CHECK(names == (std::vector<std::string>{"netstorm_status", "netstorm_report", "netstorm_screenshot", "netstorm_input", "netstorm_wait_frames", "netstorm_quit"}));
+    CHECK(names == (std::vector<std::string>{"netstorm_status", "netstorm_report", "netstorm_screenshot", "netstorm_input", "netstorm_wait_frames", "netstorm_record_start", "netstorm_record_stop", "netstorm_quit"}));
     reply = protocol.Handle(*Json::Parse(R"({"jsonrpc":"2.0","id":5,"method":"no/such"})"), none);
     CHECK(reply && (*reply)["error"]["code"].AsInt() == -32601 && !(*reply).Has("result"));
     reply = protocol.Handle(Json(5), none);
@@ -248,4 +252,56 @@ TEST_CASE(McpProtocol_ToolCallsAreQueuedOrRejected) {
     const auto image = McpProtocol::ImageResult(Json(11), "s", png);
     const auto& items = image["result"]["content"].Items();
     CHECK(items.size() == 2 && items[1]["type"].AsString() == "image" && items[1]["mimeType"].AsString() == "image/png" && items[1]["data"].AsString() == "AQID");
+}
+
+// 녹화기는 캡처 주기에 맞는 프레임만 순번 PNG로 저장하고 manifest/ffconcat의 시각과 길이가 일치한다.
+TEST_CASE(McpParts_FrameRecorderWritesPngSequenceManifestAndConcat) {
+    using netstorm::platform::FrameRecorder;
+    using netstorm::platform::FrameRecorderOptions;
+    const auto directory = std::filesystem::path(__FILE__).parent_path().parent_path() / "build/test-data" / ("recorder-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+    FrameRecorder recorder;
+    FrameRecorderOptions options;
+    options.directory = directory;
+    options.fps = 10;
+    std::string error;
+    CHECK(recorder.Start(options, error) && recorder.Running());
+    CHECK(!recorder.Start(options, error)); // 이미 녹화 중이면 거부한다.
+    constexpr std::uint32_t width = 8, height = 6, pitch = 10;
+    std::vector<std::uint8_t> pixels(static_cast<std::size_t>(pitch) * height, 0);
+    std::array<std::uint8_t, 768> palette{};
+    for (std::size_t index = 0; index < 768; ++index) palette[index] = static_cast<std::uint8_t>(index);
+    const auto offer = [&](double time, std::uint8_t fill) { std::fill(pixels.begin(), pixels.end(), fill); return recorder.Offer(width, height, pitch, pixels, palette, time); };
+    CHECK(offer(0.00, 1));   // 첫 프레임은 항상 받는다.
+    CHECK(!offer(0.03, 2));  // 주기(0.1초) 전이다.
+    CHECK(offer(0.10, 3));
+    CHECK(offer(0.21, 4));
+    CHECK(!offer(0.25, 5));
+    const auto result = recorder.Stop();
+    CHECK(!recorder.Running() && result.frames == 3 && result.dropped == 0 && result.width == width && result.height == height);
+    for (int index = 0; index < 3; ++index) { // 프레임 파일은 PNG 서명으로 시작해야 한다.
+        char name[32]; std::snprintf(name, sizeof(name), "frame_%06d.png", index);
+        std::ifstream file(directory / name, std::ios::binary);
+        char signature[4]{};
+        file.read(signature, 4);
+        CHECK(file.good() && static_cast<unsigned char>(signature[0]) == 0x89 && signature[1] == 'P' && signature[2] == 'N' && signature[3] == 'G');
+    }
+    CHECK(!std::filesystem::exists(directory / "frame_000003.png"));
+    std::ifstream manifestFile(result.manifest, std::ios::binary);
+    const std::string manifestText((std::istreambuf_iterator<char>(manifestFile)), std::istreambuf_iterator<char>());
+    const auto manifest = Json::Parse(manifestText);
+    CHECK(manifest && (*manifest)["fps"].AsInt() == 10 && (*manifest)["frames"].AsInt() == 3 && (*manifest)["width"].AsInt() == width && (*manifest)["height"].AsInt() == height);
+    const auto& times = (*manifest)["timestamps_ms"].Items();
+    CHECK(times.size() == 3 && times[0].AsInt() == 0 && times[1].AsInt() == 100 && times[2].AsInt() == 210);
+    CHECK(std::abs((*manifest)["duration_seconds"].AsDouble() - 0.31) < 1e-6); // 마지막 프레임은 한 주기 동안 표시한다.
+    std::ifstream concatFile(result.concat, std::ios::binary);
+    const std::string concat((std::istreambuf_iterator<char>(concatFile)), std::istreambuf_iterator<char>());
+    CHECK(concat.starts_with("ffconcat version 1.0\n") && concat.find("file frame_000000.png\nduration 0.100000\n") != std::string::npos);
+    CHECK(concat.find("file frame_000001.png\nduration 0.110000\n") != std::string::npos && concat.find("file frame_000002.png\nduration 0.100000\nfile frame_000002.png\n") != std::string::npos);
+    CHECK(!offer(1.0, 6)); // 멈춘 뒤에는 받지 않는다.
+    std::string badError;
+    FrameRecorder rejected;
+    FrameRecorderOptions bad;
+    bad.directory = directory / "never";
+    bad.fps = 0;
+    CHECK(!rejected.Start(bad, badError) && !badError.empty() && !std::filesystem::exists(bad.directory)); // fps 범위를 벗어나면 폴더도 만들지 않는다.
 }

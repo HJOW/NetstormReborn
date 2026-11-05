@@ -53,8 +53,8 @@ class McpClient:
         self.process.stdin.write((json.dumps(message) + "\n").encode("utf-8"))
         self.process.stdin.flush()
 
-    def call(self, name, **arguments):
-        reply = self.request("tools/call", {"name": name, "arguments": arguments})
+    def call(self, tool, **arguments):
+        reply = self.request("tools/call", {"name": tool, "arguments": arguments})
         assert "result" in reply, reply
         return reply["result"]
 

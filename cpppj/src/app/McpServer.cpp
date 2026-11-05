@@ -4,6 +4,10 @@
 #include "client/Screen.h"
 #include "client/UberGump.h"
 #include "platform/Png.h"
+#include <cctype>
+#include <chrono>
+#include <ctime>
+#include <filesystem>
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
@@ -23,7 +27,7 @@ constexpr std::size_t kMaxActions = 200;                                        
 // 입력 도구가 허용하는 UI 스크립트 동작이다. 검사 전용(test-*)/상태 합성 동작은 노출하지 않는다.
 const std::set<std::string> kAllowedOperations{"click", "click-if", "down", "up", "up-if", "right", "outside", "pointer", "esc", "key", "keyup", "script-command", "command"};
 // 도구 이름 목록이다(tools/list와 tools/call 검증이 같은 표를 쓴다).
-const std::set<std::string> kToolNames{"netstorm_status", "netstorm_report", "netstorm_screenshot", "netstorm_input", "netstorm_wait_frames", "netstorm_quit"};
+const std::set<std::string> kToolNames{"netstorm_status", "netstorm_report", "netstorm_screenshot", "netstorm_input", "netstorm_wait_frames", "netstorm_record_start", "netstorm_record_stop", "netstorm_quit"};
 
 // 속성 하나의 JSON 스키마 조각을 만든다.
 Json Property(const char* type, const char* description) { Json property; property.Set("type", type).Set("description", description); return property; }
@@ -65,6 +69,11 @@ Json McpProtocol::ToolsList() {
     Json waitProperties; waitProperties.Set("frames", Property("integer", "기다릴 프레임 수(1..36000).")).Set("screenshot", Property("boolean", "true이면 화면 PNG를 함께 돌려준다."));
     Json waitRequired = Json::MakeArray(); waitRequired.Push("frames");
     tools.Push(Tool("netstorm_wait_frames", "지정한 프레임 수만큼 게임이 진행되길 기다린 뒤 상태를 돌려준다.", std::move(waitProperties), std::move(waitRequired)));
+    Json recordProperties;
+    recordProperties.Set("fps", Property("integer", "영상 캡처 속도(1..60, 기본 15).")).Set("audio", Property("boolean", "true이면 게임 프로세스의 소리를 audio.wav로 함께 녹음한다(기본 true).")).Set("name", Property("string", "폴더 이름(영문/숫자/-/_). 생략하면 recording-날짜시각."));
+    tools.Push(Tool("netstorm_record_start", "화면 프레임(인덱스 PNG 순번 파일)과 게임 소리(WAV, 프로세스 루프백)를 사용자 Captures 폴더에 녹화하기 시작한다.", std::move(recordProperties)));
+    Json stopProperties; stopProperties.Set("mux", Property("boolean", "true이고 ffmpeg가 있으면 영상과 소리를 recording.mp4로 합친다."));
+    tools.Push(Tool("netstorm_record_stop", "녹화를 끝내고 폴더/프레임 수/소리 통계를 돌려준다. manifest.json과 frames.ffconcat도 만든다.", std::move(stopProperties)));
     tools.Push(Tool("netstorm_quit", "게임 창을 닫고 서버를 끝낸다.", Json::MakeObject()));
     return tools;
 }
@@ -202,6 +211,71 @@ std::vector<std::uint8_t> McpServer::ScreenPng(client::Client& client) const {
     return png;
 }
 
+Json McpServer::StartRecording(client::Client& client, const Json& arguments) {
+    Json info;
+    if (recorder_.Running()) return info.Set("error", "이미 녹화 중입니다");
+    std::string name = arguments["name"].AsString();
+    if (name.empty()) { // 기본 이름은 시작 시각이다.
+        const auto now = std::time(nullptr); std::tm local{}; localtime_s(&local, &now);
+        char text[40]; std::strftime(text, sizeof(text), "recording-%Y%m%d-%H%M%S", &local); name = text;
+    }
+    for (const char ch : name) if (!(std::isalnum(static_cast<unsigned char>(ch)) || ch == '-' || ch == '_')) return info.Set("error", "name은 영문/숫자/-/_만 허용합니다");
+    const auto base = client.UserData() ? client.UserData()->Captures() : std::filesystem::temp_directory_path() / "netstorm-captures"; // 5차 저장 정책: 설치 폴더가 아닌 사용자 Captures다.
+    platform::FrameRecorderOptions options;
+    options.directory = base / std::filesystem::path(std::u8string(name.begin(), name.end()));
+    options.fps = static_cast<int>(arguments["fps"].AsInt(15));
+    std::string error;
+    if (!recorder_.Start(options, error)) return info.Set("error", error);
+    audioError_.clear();
+    audio_.reset();
+    if (arguments["audio"].AsBool(true)) { // 소리는 실패해도 영상 녹화는 계속한다.
+        auto capture = std::make_unique<platform::ProcessAudioCapture>();
+        if (capture->Start(GetCurrentProcessId(), options.directory / "audio.wav", audioError_)) audio_ = std::move(capture);
+    }
+    const auto text = options.directory.u8string();
+    info.Set("directory", std::string(text.begin(), text.end())).Set("fps", options.fps).Set("audio", audio_ != nullptr);
+    if (!audioError_.empty()) info.Set("audio_error", audioError_);
+    return info;
+}
+Json McpServer::StopRecording(const Json& arguments) {
+    Json info;
+    if (!recorder_.Running()) return info.Set("error", "녹화 중이 아닙니다");
+    platform::AudioCaptureStats audio{};
+    const bool hadAudio = audio_ != nullptr;
+    if (audio_) { audio = audio_->Stop(); audio_.reset(); }
+    const auto directory = recorder_.Directory();
+    const auto result = recorder_.Stop();
+    const auto text = directory.u8string();
+    info.Set("directory", std::string(text.begin(), text.end())).Set("frames", static_cast<std::int64_t>(result.frames)).Set("dropped", static_cast<std::int64_t>(result.dropped)).Set("duration_seconds", result.seconds);
+    info.Set("width", static_cast<std::int64_t>(result.width)).Set("height", static_cast<std::int64_t>(result.height));
+    if (hadAudio) {
+        Json sound; sound.Set("seconds", audio.seconds).Set("frames", static_cast<std::int64_t>(audio.frames)).Set("silence_frames", static_cast<std::int64_t>(audio.silenceFrames)).Set("non_zero_frames", static_cast<std::int64_t>(audio.nonZeroFrames)).Set("sample_rate", static_cast<std::int64_t>(audio.sampleRate));
+        info.Set("audio", std::move(sound));
+    } else if (!audioError_.empty()) info.Set("audio_error", audioError_);
+    if (arguments["mux"].AsBool(false)) { // ffmpeg가 있을 때만 영상+소리를 mp4로 합친다.
+        wchar_t found[MAX_PATH]{};
+        if (!SearchPathW(nullptr, L"ffmpeg.exe", nullptr, MAX_PATH, found, nullptr)) info.Set("mux_error", "ffmpeg.exe를 PATH에서 찾을 수 없음");
+        else {
+            const auto output = directory / "recording.mp4";
+            std::wstring command = std::wstring(L"\"") + found + L"\" -y -loglevel error -f concat -safe 0 -i \"" + (directory / "frames.ffconcat").wstring() + L"\"";
+            if (hadAudio) command += L" -i \"" + (directory / "audio.wav").wstring() + L"\"";
+            command += L" -r 15 -c:v libx264 -pix_fmt yuv420p -vf scale=trunc(iw/2)*2:trunc(ih/2)*2";
+            if (hadAudio) command += L" -c:a aac";
+            command += L" \"" + output.wstring() + L"\"";
+            STARTUPINFOW startup{}; startup.cb = sizeof(startup);
+            PROCESS_INFORMATION process{};
+            if (!CreateProcessW(nullptr, command.data(), nullptr, nullptr, FALSE, CREATE_NO_WINDOW, nullptr, directory.c_str(), &startup, &process)) info.Set("mux_error", "ffmpeg 실행 실패");
+            else {
+                const auto wait = WaitForSingleObject(process.hProcess, 180000);
+                DWORD code = 1; GetExitCodeProcess(process.hProcess, &code);
+                CloseHandle(process.hThread); CloseHandle(process.hProcess);
+                if (wait == WAIT_OBJECT_0 && code == 0 && std::filesystem::exists(output)) { const auto out = output.u8string(); info.Set("mp4", std::string(out.begin(), out.end())); }
+                else info.Set("mux_error", "ffmpeg 합성 실패(종료코드 " + std::to_string(code) + ")");
+            }
+        }
+    }
+    return info;
+}
 void McpServer::ReportInputError(client::Client& client, const std::string& message) {
     const std::uint64_t frame = client.Time().number;
     for (auto& pending : pending_) { // 이번 프레임에 동작을 내보낸 호출만 실패시킨다.
@@ -249,6 +323,8 @@ std::vector<std::pair<std::string, std::string>> McpServer::BeforeInput(client::
                 pending.nextActionFrame = frame; pending.extraFrames = static_cast<std::uint64_t>(std::clamp<std::int64_t>(call.arguments["wait_frames"].AsInt(3), 0, static_cast<std::int64_t>(kMaxWaitFrames)));
                 pending.screenshot = call.arguments["screenshot"].AsBool(true); pending.call = std::move(call); pending_.push_back(std::move(pending));
             }
+            else if (call.name == "netstorm_record_start") { const auto info = StartRecording(client, call.arguments); Send(McpProtocol::TextResult(call.id, info.Dump(), info.Has("error"))); }
+            else if (call.name == "netstorm_record_stop") { const auto info = StopRecording(call.arguments); Send(McpProtocol::TextResult(call.id, info.Dump(), info.Has("error"))); }
             else if (call.name == "netstorm_quit") { Send(McpProtocol::TextResult(call.id, "게임을 닫습니다")); quitCalled_ = true; client.RequestClose(); }
         } catch (const std::exception& error) { Send(McpProtocol::TextResult(call.id, std::string("도구 실행 오류: ") + error.what(), true)); }
     }
@@ -266,6 +342,19 @@ std::vector<std::pair<std::string, std::string>> McpServer::BeforeInput(client::
 
 void McpServer::AfterFrame(client::Client& client) {
     const std::uint64_t frame = client.Time().number;
+    if (recorder_.Running()) { // 녹화 중이면 캡처 주기가 된 프레임만 화면을 복사해 녹화기에 낸다.
+        const double now = std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        if (recorder_.Due(now)) {
+            auto& screen = client.GetScreen();
+            const auto width = static_cast<std::uint32_t>(screen.Width()), height = static_cast<std::uint32_t>(screen.Height()), pitch = static_cast<std::uint32_t>(screen.Pitch());
+            const std::uint8_t* pixels = screen.Lock();
+            std::array<std::uint8_t, 768> palette{};
+            const auto colors = screen.Palette();
+            for (std::size_t index = 0; index < 256 && index < colors.size(); ++index) { palette[index * 3] = colors[index].red; palette[index * 3 + 1] = colors[index].green; palette[index * 3 + 2] = colors[index].blue; }
+            recorder_.Offer(width, height, pitch, {pixels, static_cast<std::size_t>(pitch) * height}, palette, now);
+            screen.Unlock();
+        }
+    }
     for (auto it = pending_.begin(); it != pending_.end();) { // 완료 조건을 채운 호출에 응답한다.
         if (it->actions.empty() && frame >= it->completeFrame) {
             try { Finish(*it, client); } catch (const std::exception& error) { Send(McpProtocol::TextResult(it->call.id, std::string("응답 생성 오류: ") + error.what(), true)); }

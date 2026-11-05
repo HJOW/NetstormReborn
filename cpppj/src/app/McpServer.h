@@ -1,6 +1,8 @@
 // 4차 로컬 MCP 서버다. Netstorm.exe가 stdio(JSON-RPC 2.0, 한 줄 한 메시지)로 MCP 클라이언트에 게임 조작/화면 캡처/상태 조회를 제공한다.
 // dotnetpj 개발을 위한 게임 분석용이며 원본에는 없는 새 기능이다. 입력 어휘는 기존 UI 스크립트 엔진(`--ui-script`)과 같다.
 #pragma once
+#include "platform/AudioLoopback.h"
+#include "platform/FrameRecorder.h"
 #include "platform/Json.h"
 #include <condition_variable>
 #include <cstdint>
@@ -79,6 +81,11 @@ private:
     void Finish(const McpPending& pending, client::Client& client); // 대기 중인 호출에 최종 응답을 보낸다.
     platform::Json StatusJson(client::Client& client) const;   // 게임 상태 요약 객체다.
     std::vector<std::uint8_t> ScreenPng(client::Client& client) const; // 현재 논리 화면을 PNG로 만든다.
+    platform::Json StartRecording(client::Client& client, const platform::Json& arguments); // 녹화 시작(영상+소리)이다. 결과 정보 객체를 돌려준다.
+    platform::Json StopRecording(const platform::Json& arguments);                          // 녹화 종료와 선택적 ffmpeg 합성이다.
+    platform::FrameRecorder recorder_;                     // 영상 프레임 녹화기다(게임 스레드 전용).
+    std::unique_ptr<platform::ProcessAudioCapture> audio_; // 소리 캡처다(녹화 중에만 있다).
+    std::string audioError_;                               // 소리 캡처를 시작하지 못한 이유다(영상만 녹화).
     McpProtocol protocol_;                                 // 프로토콜 처리기다.
     std::thread reader_;                                   // stdin 읽기 스레드다.
     std::mutex queueMutex_;                                // 요청 대기열 보호다.
