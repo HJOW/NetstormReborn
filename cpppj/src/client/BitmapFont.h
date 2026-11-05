@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <string_view>
+#include <filesystem>
 #include <functional>
 #include <optional>
 #include <vector>
@@ -57,6 +58,7 @@ public:
     // 원본 기본 글꼴 슬롯을 초기화한다. 파일 시스템은 이 객체보다 오래 살아야 한다.
     FontStore(const o::BaseFileSystem& files,std::string face,FontFaceEnumeration enumerate={});
     std::optional<std::string_view> FaceAt(std::int32_t index) const; //4a2df0의 현재 목록 인덱스다. 음수는 원문 assert 영역의 호스트 오류, 양수 범위 밖은 NULL이다.
+    void SetUserCacheDirectory(std::filesystem::path directory); // 5차: 글꼴 캐시를 설치 폴더 대신 이 사용자 폴더에 읽고 쓴다. 사용자 캐시가 없으면 설치의 기존 d 캐시를 읽기 전용으로 쓴다.
     void Rebuild(std::optional<std::string_view> face); //같은 참조 아래 전체 캐시를 비운 뒤 재생성하며 NULL/유효 빈 이름을 구별한다.
     std::string_view CurrentFace() const; //4a2e30의 현재32BYTE 중 첫NUL까지이며 생성 완료 뒤에만 바뀐다.
     // 슬롯과 스타일의 캐시를 읽고, 없거나 손상됐으면 같은 GDI 글꼴로 만든다.
@@ -74,5 +76,7 @@ private:
     std::array<char,32> currentFace_{}; //005accd8의 현재 요청 이름이다. GDI가 대신 고른 물리 글꼴 이름과 구별한다.
     // fonts_: 이름·크기로 찾아 재사용하는 글꼴 저장소.
     std::array<std::array<std::unique_ptr<BitmapFont>, 5>, 7> fonts_{};
+    std::filesystem::path userCacheDirectory_; // 5차: 비어 있지 않으면 새 글꼴 캐시를 쓰는 사용자 폴더다.
+    std::shared_ptr<o::BaseFileSystem> userCache_; // 5차: 사용자 캐시 폴더를 루트로 하는 별도 읽기/쓰기 장치이며 원문 경로 고리와 분리한다.
 };
 }

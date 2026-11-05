@@ -14,6 +14,7 @@ class EditorFiles; //기존 canonical/원본 보호/권한/쓰기/삭제 장치�
 struct EditorCatalogSourceDevices { //loose root와 archive-only reader를 분리하여 삭제된 원본 재등장을 막는다.
     std::filesystem::path root; //source 절대 경로의 전체 상대 매핑과 최초 물리 복사에 사용하는 명시 root다.
     std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)> archiveOnly; //등록 순서의 TAFF만 읽으며 disk/secondary fallback을 포함하지 않는다.
+    std::filesystem::path metadataRoot; //5차: 비어 있지 않으면 장부/잠금을 작업 root의 형제 -state 대신 이 명시 폴더(사용자 홈 Editor)에 둔다.
 };
 class EditorCatalogWorkspace { //같은 작업 namespace와 별도 형제-state 장부를 장기 소유한다.
 public:

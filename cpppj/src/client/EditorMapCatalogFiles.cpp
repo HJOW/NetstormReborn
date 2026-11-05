@@ -52,7 +52,7 @@ struct EditorCatalogWorkspace::Impl {
 #ifdef _WIN32
     HANDLE lock{INVALID_HANDLE_VALUE}; //한 metadata namespace의 복수 프로세스 이관을 명시 거부하는 실제 잠금이다.
 #endif
-    Impl(std::shared_ptr<EditorFiles> work,EditorCatalogSourceDevices devices):files(std::move(work)),source(std::move(devices)),sourceRoot(Actual(source.root)),metadata(files->SiblingNamespace("-state")) { //생성은 root만 검증하고 장부/잠금은 첫 I/O까지 열지 않는다.
+    Impl(std::shared_ptr<EditorFiles> work,EditorCatalogSourceDevices devices):files(std::move(work)),source(std::move(devices)),sourceRoot(Actual(source.root)),metadata(source.metadataRoot.empty() ? files->SiblingNamespace("-state"):files->ExplicitNamespace(source.metadataRoot)) { //생성은 root만 검증하고 장부/잠금은 첫 I/O까지 열지 않는다.
         if (Inside(sourceRoot,files->RootPath()) || Inside(files->RootPath(),sourceRoot)) throw std::invalid_argument("편집 source/work root 중첩");
     }
     ~Impl() {

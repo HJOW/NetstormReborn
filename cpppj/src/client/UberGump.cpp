@@ -269,9 +269,9 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
     templateStorage_->BindDiagnosticLog([client=&client_](auto level,auto text) { client->WriteDiagnosticLog(level,text); }); // 지역 Template 덤프도 원본 level29 formatter/FILE/flush/trace→Chat을 같은 Client 수명에서 사용한다.
     auto& config = client_.Configuration();
-    const auto catalogRoot=EditorWorkingRoot(client_.GameDirectory()); //목록의 작업 namespace는 Native 전송/World가 반납된 뒤에도 같은 자산 경로로 계산한다.
-    const auto catalogFiles=std::make_shared<EditorFiles>(catalogRoot,std::vector<std::filesystem::path>{client_.GameDirectory(),catalogRoot.parent_path()/"originals",catalogRoot.parent_path()/"originalCD"},client_.Files().FileNameOwner()); // 생성은보호경로/같은Client경로소유자만연결한다. 목록의Template읽기와실제Editor가같은장치를공유한다.
-    EditorCatalogSourceDevices catalogSource;catalogSource.root=client_.GameDirectory();catalogSource.archiveOnly=[this](auto path) { return client_.Files().TryReadArchiveOnly(path); }; //실제 기존 등록순서의 TAFF만 읽어 완료키 삭제의 disk 우회를 막는다.
+    const auto editorRoots=ResolveEditorRoots(client_.GameDirectory(),client_.UserData()); //목록의 작업 namespace는 Native 전송/World가 반납된 뒤에도 같은 자산 경로로 계산한다. 5차: 사용자 홈 정책이면 CustomMaps/Editor다.
+    const auto catalogFiles=std::make_shared<EditorFiles>(editorRoots.work,editorRoots.protectedRoots,client_.Files().FileNameOwner()); // 생성은보호경로/같은Client경로소유자만연결한다. 목록의Template읽기와실제Editor가같은장치를공유한다.
+    EditorCatalogSourceDevices catalogSource;catalogSource.root=client_.GameDirectory();catalogSource.metadataRoot=editorRoots.metadata;catalogSource.archiveOnly=[this](auto path) { return client_.Files().TryReadArchiveOnly(path); }; //실제 기존 등록순서의 TAFF만 읽어 완료키 삭제의 disk 우회를 막는다.
     editorCatalog_=std::make_shared<EditorCatalogWorkspace>(catalogFiles,std::move(catalogSource)); //한 장기 이관 owner를 목록과 실제 Editor 경로 모두에 공유한다.
     SoloMapCatalogEffects mapEffects; // 현재 실제 장치만 제공하며 목록 분류/행 처리는 기존 몸체를 사용한다.
     mapEffects.sectionNames=templateStorage_->SectionNamesOwner(); // 주Template/분류/메타가같은Client이름표와변환상태를빌린다.
@@ -1216,7 +1216,9 @@ void UberGump::Event(InputEvent event) {
     if (DispatchRecheckCdInput(event,client_.CdGlobals()->RecheckSerial(),{[this](auto serial) { return rawButtons_->SerialGump(serial); },[this](auto token) { rawButtons_->KillGump(token); }})) { rebuild_=true;return; } //4d8b8d: 현재 serial 조회→공통 Kill→0쓰기다. 실제 CD 재탐색(440c60)이나 온라인 검증은 호출하지 않는다(단위696).
     if (DispatchDrawWater(event,client_.GameplayGlobals()->DrawWater(),worldRedraw_)) { rebuild_=true;recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //Guide/Gump/뗌 뒤 HelpOpen/Console/정지 앞이며 모드 관문을 추가하지 않는다.
     if (DispatchCreateHelpList(event,[this] {
-        QuickHelpListContext context;context.file=MakeHelpListDiskHooks(client_.GameDirectory(),&client_.Files()); //원문 전체41b4c0와 같은 현재 파일 소유자다. 기존파일의 r+b tail을 유지한다.
+        std::optional<o::BaseFileSystem> userHelpFiles; // 5차: 사용자 홈 정책이면 목록 HTML을 사용자 Cache에 만든다. 동기 호출 동안만 살며 같은 이름 고리를 공유해 원문의 경로 칸 소비를 유지한다.
+        if (client_.UserData()) { platform::UserDataRoot::EnsureDirectory(client_.UserData()->Cache());userHelpFiles.emplace(client_.UserData()->Cache(),std::filesystem::path{},client_.Files().FileNameOwner()); }
+        QuickHelpListContext context;context.file=MakeHelpListDiskHooks(userHelpFiles ? client_.UserData()->Cache():client_.GameDirectory(),userHelpFiles ? &*userHelpFiles:&client_.Files()); //원문 전체41b4c0와 같은 현재 파일 소유자다. 기존파일의 r+b tail을 유지한다.
         context.typeCount=[this] { const auto size=client_.Assets().TypeTable().Types().size();if (size>0x7fffffffU) throw std::out_of_range("Help 목록의 원문 signed TYPE 개수");return static_cast<std::int32_t>(size); }; //월드/지식/임무 상태로 TYPE 목록을 거르지 않는다.
         context.flags2=[this](auto type) { const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("Help 목록 TYPE flags2 범위");return types[type].flags2; };
         context.typeName=[this](auto type) { const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("Help 목록 TYPE 이름 범위");return types[type].name; };

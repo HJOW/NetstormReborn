@@ -338,6 +338,7 @@ int Client::Run() {
     std::string fontFace;
     configuration_.ReadString("fontFaceName", fontFace);
     fonts_ = std::make_unique<FontStore>(files_, FontFaceFromUtf8(fontFace));
+    if (options_.userData) fonts_->SetUserCacheDirectory(options_.userData->Cache()); // 5차: 글꼴 캐시를 설치 폴더가 아닌 사용자 Cache에 둔다.
     fonts_->Get();
     // "init screen mode": startInFullScreen이면 workingFullScreenFlags, 아니면 windowScreenFlags.
     std::uint32_t flags = static_cast<std::uint32_t>(configuration_.GetInt("workingFullScreenFlags"));

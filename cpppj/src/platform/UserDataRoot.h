@@ -11,6 +11,7 @@ inline constexpr std::string_view kUserSavesFolder = "Saves";          // option
 inline constexpr std::string_view kUserCustomMapsFolder = "CustomMaps"; // Edit 메뉴에서 새로 만든 맵(.fort/.english 등) 폴더 이름이다.
 inline constexpr std::string_view kUserEditorFolder = "Editor";        // Edit 장부(catalog)·잠금 같은 편집 보조 metadata 폴더 이름이다.
 inline constexpr std::string_view kUserCapturesFolder = "Captures";    // GIF 스크린샷·연속 BMP 캡처 폴더 이름이다.
+inline constexpr std::string_view kUserCacheFolder = "Cache";          // 다시 만들 수 있는 글꼴 캐시(!*.chfnt)와 도움말 목록 HTML 같은 생성물 폴더 이름이다.
 inline constexpr std::string_view kUserDiagnosticsFolder = "Diagnostics"; // squids.txt·procSumm.txt 같은 진단 덤프 폴더 이름이다.
 // 개발/검사에서 실제 사용자 홈 대신 임시 폴더를 쓰게 하는 환경 변수 이름이다. 값이 비어 있으면 무시한다.
 inline constexpr std::wstring_view kUserDataOverrideVariable = L"NETSTORM_USER_DATA";
@@ -33,6 +34,8 @@ public:
     std::filesystem::path Editor() const;
     // 캡처(스크린샷/연속 BMP) 폴더(Root\Captures)다.
     std::filesystem::path Captures() const;
+    // 재생성 가능한 캐시/생성물 폴더(Root/Cache)다.
+    std::filesystem::path Cache() const;
     // 진단 덤프 폴더(Root\Diagnostics)다.
     std::filesystem::path Diagnostics() const;
     // 옵션 파일(Root\Saves\options.cfg)이다. 원본의 <설치>\d\options.cfg를 대신한다.

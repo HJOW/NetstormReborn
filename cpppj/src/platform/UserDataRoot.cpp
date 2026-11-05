@@ -52,6 +52,7 @@ std::filesystem::path UserDataRoot::Saves() const { return root_ / std::filesyst
 std::filesystem::path UserDataRoot::CustomMaps() const { return root_ / std::filesystem::path(std::u8string(kUserCustomMapsFolder.begin(), kUserCustomMapsFolder.end())); }
 std::filesystem::path UserDataRoot::Editor() const { return root_ / std::filesystem::path(std::u8string(kUserEditorFolder.begin(), kUserEditorFolder.end())); }
 std::filesystem::path UserDataRoot::Captures() const { return root_ / std::filesystem::path(std::u8string(kUserCapturesFolder.begin(), kUserCapturesFolder.end())); }
+std::filesystem::path UserDataRoot::Cache() const { return root_ / std::filesystem::path(std::u8string(kUserCacheFolder.begin(), kUserCacheFolder.end())); }
 std::filesystem::path UserDataRoot::Diagnostics() const { return root_ / std::filesystem::path(std::u8string(kUserDiagnosticsFolder.begin(), kUserDiagnosticsFolder.end())); }
 std::filesystem::path UserDataRoot::OptionsFile() const { return Saves() / L"options.cfg"; }
 std::filesystem::path UserDataRoot::SavedStateFile() const { return Saves() / L"!state.dat"; }

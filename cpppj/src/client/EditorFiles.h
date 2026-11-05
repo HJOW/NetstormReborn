@@ -9,10 +9,19 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include "platform/UserDataRoot.h" // 5차: 사용자 홈 저장 정책의 작업/장부 루트를 계산한다.
 
 namespace netstorm::o { class RawFileName; } // 실제Client와작업파일장치가같이빌리는원문10칸소유자다.
 namespace netstorm::client {
 struct TemplateFileWriteHooks; //실제 Template 저장 부모가 사용하는 권한/쓰기 경계다.
+// 5차: Editor가 쓰는 작업 루트·장부(metadata) 루트·원본 보호 루트를 한 곳에서 계산한 값이다.
+struct EditorRoots {
+    std::filesystem::path work; // 편집 작업본(복사본/새 맵)을 두는 쓰기 가능 루트다. 사용자 홈 정책에서는 Saved Games 아래 Netstorm의 CustomMaps다.
+    std::filesystem::path metadata; // 이관 장부/잠금을 두는 루트다. 비어 있으면 기존처럼 작업 루트의 형제 -state를 쓴다. 사용자 홈 정책에서는 Editor 폴더다.
+    std::vector<std::filesystem::path> protectedRoots; // 쓰기를 거부할 원본 보호 루트(설치 폴더와 개발 저장소의 originals/originalCD)다.
+};
+// 설치 폴더와 사용자 데이터 정책에서 Editor 루트를 계산한다. userData가 비어 있으면 기존 형제 <이름>-editor 배치이며 파일을 만들지 않는다.
+EditorRoots ResolveEditorRoots(const std::filesystem::path& gameDirectory,const std::optional<platform::UserDataRoot>& userData);
 std::filesystem::path EditorWorkingRoot(const std::filesystem::path& gameDirectory); //실제 자산 디렉터리의 형제 <이름>-editor를 계산한다. 끝 구분자와 ./.. 표기는 같은 작업본을 선택하며 파일을 만들지 않는다.
 // 사용자 작업본과 보호된 원본 경로를 다른 실제 디렉터리로 유지한다.
 class EditorFiles {
@@ -22,6 +31,7 @@ public:
     std::shared_ptr<o::RawFileName> FileNameOwner() const; // 현재공유소유자만빌리며파일이나경로버퍼를조회하지않는다.
     const std::filesystem::path& RootPath() const; //검사된 실제 작업 root를 I/O 장치에만 빌린다. 쓰기 보호 범위를 넓히지 않는다.
     std::filesystem::path RelativePath(std::string_view configuredPath) const; //같은 보호 검사를 통과한 전체 물리 상대 경로를 얻는다. 이름 첫점/파일명으로 축약하지 않는다.
+    EditorFiles ExplicitNamespace(const std::filesystem::path& directory) const; // 5차: 사용자 홈의 명시 metadata 폴더를 현재 작업/보호 root를 모두 보호하는 장치로 만든다. 작업 root와 겹치면 거부하며 파일을 쓰지 않는다.
     EditorFiles SiblingNamespace(std::string_view suffix) const; //현재 보호 roots와 work root를 모두 보호하는 형제 metadata 장치를 만들며 파일을 쓰지 않는다.
     void EnsureDirectory(std::string_view configuredPath) const; //검사된 namespace 안에 필요한 디렉터리만 만들고 생성 뒤 다시 검사한다.
     void CopyMissing(const std::filesystem::path& source,std::string_view configuredPath) const; //검사된 대상에 CopyFileW(TRUE)로 최초 복사한다. source 검사는 명시 source owner가 수행하며 기존 대상과 readonly 속성은 보존한다.

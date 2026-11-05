@@ -63,6 +63,14 @@ std::filesystem::path EditorWorkingRoot(const std::filesystem::path& gameDirecto
     if (!directory.has_filename() || directory==directory.root_path()) throw std::invalid_argument("편집 작업본의 자산 디렉터리 이름이 없습니다");
     auto name=directory.filename();name+="-editor";return directory.parent_path()/name; //같은 실제 이름으로 형제 작업 디렉터리만 선택한다. 원본 보호 검사는 EditorFiles가 계속 수행한다.
 }
+// 5차: 설치 폴더와 사용자 데이터 정책에서 작업/장부/보호 루트를 계산한다. 보호 루트는 기존 형제 배치와 같은 위치를 유지한다.
+EditorRoots ResolveEditorRoots(const std::filesystem::path& gameDirectory,const std::optional<platform::UserDataRoot>& userData) {
+    const auto legacy=EditorWorkingRoot(gameDirectory); //실제 자산 디렉터리의 형제 <이름>-editor이며 이름 없는 루트는 여기서 거부한다.
+    EditorRoots roots;roots.protectedRoots={gameDirectory,legacy.parent_path()/"originals",legacy.parent_path()/"originalCD"}; //설치 폴더와 개발 저장소의 보호 원본은 사용자 홈 정책에서도 쓰기 대상이 아니다.
+    if (userData) { roots.work=userData->CustomMaps();roots.metadata=userData->Editor(); } //5차: 작업본은 CustomMaps, 장부/잠금은 Editor 폴더다. 설치 폴더의 형제에는 아무것도 만들지 않는다.
+    else roots.work=legacy; //기존 배치다. 장부는 SiblingNamespace가 -state 형제로 정한다.
+    return roots;
+}
 // 작업 경로를 원본/CD 아래로 지정한 경우 파일 생성 전에 거부한다.
 EditorFiles::EditorFiles(std::filesystem::path root,std::vector<std::filesystem::path> protectedRoots,std::shared_ptr<o::RawFileName> fileNames):root_(Actual(root)),fileNames_(fileNames?std::move(fileNames):std::make_shared<o::RawFileName>()) {
     if (protectedRoots.empty()) throw std::invalid_argument("편집 파일 장치의 원본 보호 경로 누락");
@@ -92,6 +100,13 @@ std::filesystem::path EditorFiles::RelativePath(std::string_view configuredPath)
     const auto requested=PathFromUtf8(configuredPath);const auto lexical=std::filesystem::absolute(requested.is_absolute() ? requested : root_/requested).lexically_normal(); //키는 실제 디렉터리 안의 물리 이름 전체다.
     if (PathToUtf8(lexical.filename()).find_first_of("*?")==std::string::npos) static_cast<void>(Checked(lexical));else static_cast<void>(Checked(lexical.parent_path()));
     const auto selected=Contains(root_,lexical) ? lexical : Checked(lexical);const auto prefix=PathToUtf8(root_,true),name=PathToUtf8(selected,true);return name.size()==prefix.size() ? std::filesystem::path(".") : PathFromUtf8(name.substr(prefix.size()+1));
+}
+// 5차: 사용자 홈에 둔 명시 metadata 폴더다. 작업 root나 보호 원본과 겹치면 거부하고, 사용자 폴더 자체의 링크(리디렉션된 Saved Games 등)는 실제 경로로 정규화해 사용한다.
+EditorFiles EditorFiles::ExplicitNamespace(const std::filesystem::path& directory) const {
+    if (directory.empty()) throw std::invalid_argument("편집 metadata 폴더 누락");
+    auto roots=protected_;roots.push_back(root_);const auto actual=Actual(directory); //사용자 홈 경로의 junction/리디렉션은 허용하되 아래 겹침 검사는 실제 경로로 수행한다.
+    if (Contains(root_,actual) || Contains(actual,root_)) throw std::invalid_argument("편집 metadata 폴더가 작업 root와 겹칩니다");
+    return EditorFiles(actual,std::move(roots)); //생성자가 모든 보호 원본과의 겹침도 다시 거부한다.
 }
 // metadata가 임의 fortSpec 목록에 끼지 않도록 writable root 밖의 검증된 형제만 허용한다.
 EditorFiles EditorFiles::SiblingNamespace(std::string_view suffix) const {

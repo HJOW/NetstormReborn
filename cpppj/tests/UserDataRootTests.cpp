@@ -1,17 +1,23 @@
 // 5차(사용자 홈 저장) 검사: 설정/체크포인트/전체화면 표식이 설치 폴더가 아닌 Saved Games\Netstorm 아래에만 만들어지는지 확인한다.
 // 실제 게임/GUI는 실행하지 않으며 임시 폴더에서 Client 설정 계층과 파일 장치만 사용한다.
 #include "TestSupport.h"
+#include "client/BitmapFont.h"
 #include "client/ClientMain.h"
+#include "client/HelpListDisk.h"
 #include "client/ClientOptionsDisk.h"
 #include "client/ClientStaticStrings.h"
+#include "client/EditorFiles.h"
+#include "client/EditorMapCatalogFiles.h"
 #include "client/SavedStateFiles.h"
 #include "o/RawFileName.h"
 #include "platform/UserDataRoot.h"
 #include "platform/Utf8Path.h"
+#include <array>
 #include <chrono>
 #include <cstdlib>
 #include <fstream>
 #include <string>
+#include <vector>
 
 namespace { // 이번 검사만 쓰는 새 임시 폴더와 환경 변수 보조다.
 using namespace netstorm;
@@ -143,4 +149,98 @@ TEST_CASE(ClientOptions_LegacyInstallSettingsMigrateAndUserFileTakesPrecedence) 
         CHECK(current.Configuration().GetInt("PhaseFiveProbe") == 22); // 사용자 파일이 설치 파일보다 우선한다.
     }
     CHECK(ReadAll(install / "d" / "options.cfg") == installBytes); // 설치 파일은 끝까지 변하지 않았다.
+}
+
+// 사용자 홈 정책의 Editor 루트는 CustomMaps/Editor이고, 정책이 꺼지면 기존 형제 -editor 배치이며 보호 루트는 같다.
+TEST_CASE(EditorRoots_UserPolicySelectsCustomMapsAndEditorMetadata) {
+    const auto base = UserWork("editor-roots");
+    const auto install = base / "game" / "d2";
+    const platform::UserDataRoot userRoot(base / "Saved Games" / "Netstorm");
+    const auto legacy = client::ResolveEditorRoots(install, std::nullopt);
+    CHECK(legacy.work == client::EditorWorkingRoot(install) && legacy.metadata.empty());
+    const auto user = client::ResolveEditorRoots(install, userRoot);
+    CHECK(user.work == userRoot.CustomMaps() && user.metadata == userRoot.Editor());
+    CHECK(user.protectedRoots == legacy.protectedRoots && user.protectedRoots.size() == 3); // 설치 폴더와 originals/originalCD 보호는 정책과 무관하다.
+    CHECK(!std::filesystem::exists(base)); // 계산만으로는 아무 것도 만들지 않는다.
+}
+
+// 사용자 홈 정책에서 Editor 이관 복사본/장부/잠금/새 맵은 사용자 루트에만 생기고 설치 폴더와 그 형제에는 아무 것도 생기지 않는다.
+TEST_CASE(EditorUserPolicy_CatalogCopiesAndLedgersLiveOnlyUnderUserRoot) {
+    const auto base = UserWork("editor-catalog");
+    const auto install = base / "install";
+    const platform::UserDataRoot userRoot(base / "Saved Games" / "Netstorm");
+    std::filesystem::create_directories(install / "d");
+    WriteAll(install / "d" / "Alpha.fort", "alpha bytes");
+    const auto roots = client::ResolveEditorRoots(install, userRoot);
+    {
+        auto work = std::make_shared<client::EditorFiles>(roots.work, roots.protectedRoots);
+        client::EditorCatalogSourceDevices source{install, [](auto) -> std::optional<std::vector<std::uint8_t>> { return std::nullopt; }, roots.metadata};
+        client::EditorCatalogWorkspace catalog(work, std::move(source));
+        catalog.ImportDisk("d/*.fort"); // 설치의 원본 목록을 사용자 작업 루트로 한 번 복사한다.
+        CHECK(catalog.Enumerate("d/*.fort").size() == 1);
+        const std::vector<std::uint8_t> fresh{'n', 'e', 'w'};
+        const auto saved = work->Prepare("NewMap", fresh); // 새 맵 이름의 작업본은 작업 루트의 d 아래에 만든다.
+        CHECK(std::filesystem::is_regular_file(saved) && client::EditorWorkingRoot(install) != roots.work);
+        CHECK(catalog.Enumerate("d/*.fort").size() == 2);
+    }
+    CHECK(ReadAll(userRoot.CustomMaps() / "d" / "Alpha.fort") == "alpha bytes"); // 이관 복사본이다.
+    CHECK(std::filesystem::is_regular_file(userRoot.CustomMaps() / "d" / "NewMap.fort"));
+    CHECK(std::filesystem::is_regular_file(userRoot.Editor() / "catalog-v1.dat") && std::filesystem::is_regular_file(userRoot.Editor() / "catalog.lock"));
+    CHECK(ReadAll(install / "d" / "Alpha.fort") == "alpha bytes" && !std::filesystem::exists(install / "d" / "NewMap.fort")); // 설치 파일은 불변이고 새 맵은 설치에 없다.
+    CHECK(!std::filesystem::exists(base / "install-editor") && !std::filesystem::exists(base / "install-editor-state")); // 기존 형제 배치를 만들지 않는다.
+    std::size_t installEntries{};
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(install)) { static_cast<void>(entry); ++installEntries; } // 설치 아래 모든 항목(d 폴더와 Alpha.fort)을 센다.
+    CHECK(installEntries == 2);
+}
+
+// 글꼴 캐시는 사용자 Cache에만 새로 만들고 두 번째 FontStore는 같은 파일을 다시 읽는다. 설치의 d 폴더에는 아무 것도 생기지 않는다.
+TEST_CASE(FontCache_UserPolicyWritesOnlyUnderUserCacheAndReloads) {
+    const auto base = UserWork("font-cache");
+    const auto install = base / "install";
+    const platform::UserDataRoot userRoot(base / "Saved Games" / "Netstorm");
+    std::filesystem::create_directories(install / "d");
+    o::BaseFileSystem files(install);
+    std::vector<std::uint8_t> bytes;
+    {
+        client::FontStore first(files, "Arial", [](const auto&) {});
+        first.SetUserCacheDirectory(userRoot.Cache());
+        const auto& font = first.Get();
+        const auto cache = font.CacheBytes(); // 생성된 글꼴의 직렬 캐시 바이트다.
+        bytes.assign(cache.begin(), cache.end());
+        CHECK(font.Measure("Hello") > 0 && !bytes.empty());
+    }
+    std::vector<std::filesystem::path> cached;
+    for (const auto& entry : std::filesystem::directory_iterator(userRoot.Cache())) cached.push_back(entry.path()); // 사용자 Cache의 모든 항목을 모은다.
+    CHECK(cached.size() == 1 && cached[0].extension() == ".chfnt" && cached[0].filename().string().starts_with("!Arial"));
+    CHECK(ReadAll(cached[0]) == std::string(bytes.begin(), bytes.end()));
+    CHECK(std::filesystem::is_empty(install / "d")); // 설치 폴더에는 캐시를 만들지 않는다.
+    const auto written = std::filesystem::last_write_time(cached[0]);
+    {
+        client::FontStore next(files, "Arial", [](const auto&) {});
+        next.SetUserCacheDirectory(userRoot.Cache());
+        const auto cache = next.Get().CacheBytes();
+        CHECK(std::vector<std::uint8_t>(cache.begin(), cache.end()) == bytes); // 사용자 캐시를 읽어 같은 글꼴을 만든다.
+    }
+    CHECK(std::filesystem::last_write_time(cached[0]) == written); // 재사용 때는 파일을 다시 쓰지 않는다.
+}
+
+// 도움말 목록 HTML은 사용자 Cache에 만들어지고 설치 폴더에는 생기지 않는다(원문 열기 인자 1,1은 그대로).
+TEST_CASE(HelpList_UserPolicyCreatesPieceListUnderUserCache) {
+    const auto base = UserWork("help-list");
+    const auto install = base / "install";
+    const platform::UserDataRoot userRoot(base / "Saved Games" / "Netstorm");
+    std::filesystem::create_directories(install);
+    platform::UserDataRoot::EnsureDirectory(userRoot.Cache());
+    o::BaseFileSystem installFiles(install);
+    o::BaseFileSystem cacheFiles(userRoot.Cache(), std::filesystem::path{}, installFiles.FileNameOwner()); // 같은 이름 고리를 공유한다.
+    auto hooks = client::MakeHelpListDiskHooks(userRoot.Cache(), &cacheFiles);
+    std::array<std::uint8_t, 24> storage{};
+    const client::QuickHelpListFile file(storage);
+    hooks.construct(file);
+    hooks.open(file, "NetStormPieceList.html", 1, 1);
+    hooks.write(file, "<html></html>", -1);
+    hooks.close(file);
+    hooks.destruct(file);
+    CHECK(ReadAll(userRoot.Cache() / "NetStormPieceList.html") == "<html></html>");
+    CHECK(!std::filesystem::exists(install / "NetStormPieceList.html") && std::filesystem::is_empty(install));
 }

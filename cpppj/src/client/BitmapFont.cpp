@@ -2,6 +2,7 @@
 #include "client/BitmapFont.h"
 #include "client/NativeFontCacheFile.h" // 현재 FILE과 같은 생성 글리프의 순차 캐시 reader/writer다.
 #include "o/RawFileName.h" // 원문(-2,d,-3,literal)의 같은 이름고리를 사용한다.
+#include "platform/UserDataRoot.h" // 5차: 사용자 글꼴 캐시 폴더를 첫 저장에서만 만든다.
 #include "client/FontFaceEncoding.h" //raw ACP CHFNT 이름은 TAFF에, UTF-8 이름은 디스크에만 사용한다.
 #include <algorithm>
 #include <bit>
@@ -254,6 +255,10 @@ bool FontStore::Available(int slot,FontStyle style) {
         ((slot!=1 && slot!=3 && slot!=4) || style==FontStyle::Normal);
 }
 // 원본 슬롯·스타일 제한과 현재 캐시 읽기/생성 뒤 쓰기 순서를 유지한다. 보호 원본/쓰기불가 설치는 메모리 글꼴을 유지한다.
+// 5차: 사용자 홈 정책의 글꼴 캐시 폴더를 연결한다. 폴더는 첫 저장에서만 만든다.
+void FontStore::SetUserCacheDirectory(std::filesystem::path directory) {
+    userCacheDirectory_=std::move(directory);userCache_=userCacheDirectory_.empty() ? nullptr:std::make_shared<o::BaseFileSystem>(userCacheDirectory_); //원문 경로 고리를 공유하지 않는 독립 장치다.
+}
 const BitmapFont& FontStore::Get(int slot, FontStyle style) {
     const auto index = static_cast<std::size_t>(style);
     if (!Available(slot,style)) throw std::invalid_argument("Unavailable font slot/style");
@@ -261,9 +266,19 @@ const BitmapFont& FontStore::Get(int slot, FontStyle style) {
     if (!font) {
         const std::string face = slot == 1 ? "Courier New" : face_;
         const auto literal="!"+face+"."+kStyles[index]+"."+std::to_string(kHeights[slot])+"."+std::to_string(kWeights[slot])+".chfnt";const std::array<o::FileNamePart,2> parts{{{-2,"d"},{-3,literal}}};const std::string path(files_.FileNameOwner()->Format(parts));
-        try { if (const auto bytes=LoadNativeFontCache(files_,path)) font=std::make_unique<BitmapFont>(*bytes); }
+        if (userCache_) { // 5차: 사용자 캐시를 먼저 읽는다(설치 폴더가 읽기 전용이어도 한 번 만든 글꼴 캐시를 재사용한다).
+            try { if (const auto bytes=LoadNativeFontCache(*userCache_,literal)) font=std::make_unique<BitmapFont>(*bytes); }
+            catch (const std::runtime_error&) { /* 손상된 사용자 캐시는 아래 설치 캐시/GDI 재생성으로 처리하고 지우지 않는다. */ }
+        }
+        try { if (!font) if (const auto bytes=LoadNativeFontCache(files_,path)) font=std::make_unique<BitmapFont>(*bytes); } // 설치에 함께 배포된 기존 d 캐시는 읽기 전용으로 계속 사용한다.
         catch (const std::runtime_error&) { /* 기존 호스트의 손상 캐시 물리/metrics 검증 실패는 같은 GDI 재생성으로 처리한다. */ }
-        if (!font) { font=BitmapFont::Generate(face,kHeights[slot],style==FontStyle::Bold ? kWeights[slot]+(slot==0 ? 100:700):kWeights[slot],style);static_cast<void>(SaveNativeFontCache(files_,path,font->CacheBytes())); } // 생성/설치가 완료된 뒤 같은 파일 순서로 저장한다.
+        if (!font) {
+            font=BitmapFont::Generate(face,kHeights[slot],style==FontStyle::Bold ? kWeights[slot]+(slot==0 ? 100:700):kWeights[slot],style);
+            if (userCache_) { // 5차: 새 캐시는 사용자 폴더에만 쓴다. 쓰기 실패는 이미 만든 메모리 글꼴을 유지한다.
+                try { platform::UserDataRoot::EnsureDirectory(userCacheDirectory_);static_cast<void>(SaveNativeFontCache(*userCache_,literal,font->CacheBytes())); }
+                catch (const std::exception&) { /* 캐시는 성능용이므로 저장 실패가 게임 시작을 막지 않는다. */ }
+            } else static_cast<void>(SaveNativeFontCache(files_,path,font->CacheBytes())); // 생성/설치가 완료된 뒤 같은 파일 순서로 저장한다.
+        }
     }
     return *font;
 }
