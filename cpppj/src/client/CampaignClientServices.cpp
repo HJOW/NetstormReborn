@@ -70,7 +70,7 @@ SoloMapCatalogEffects MakeSoloMapCatalogClientEffects(Client& client,std::functi
     if (!currentName) throw std::invalid_argument("맵 목록의 실제 현재 사용자 이름 미연결");
     SoloMapCatalogEffects effects;effects.typeCount=[&client] { return static_cast<std::int32_t>(client.Assets().TypeTable().Types().size()); };
     effects.allocationBytes=CurrentAllocationBytes;effects.userName=std::move(currentName);
-    effects.translate=[&client](std::string_view source) { const auto bytes=o::EncodeOriginalText(client.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()})));return std::string(bytes.begin(),bytes.end()); };return effects;
+    effects.translate=[&client](std::string_view source) { const auto bytes=o::EncodeDisplayText(client.Translate(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()})));return std::string(bytes.begin(),bytes.end()); };return effects;
 }
 //실제 힙 입력과 게임 시계/화면/카메라·현재 Session의 전체 세계 간헐천 생성을 연결한다.
 CampaignMissionStartEffects MakeCampaignMissionStartEffects(Client& client,GameWorld& world,std::function<void()> refreshCommandGump) {
@@ -99,8 +99,8 @@ CampaignSubscriberServices MakeCampaignSubscriberClientServices(Client& client) 
 // Player SetAlliance의 실제 채널 수정과004410f0(defaultAiName)의 현재 원본 바이트를 같은 Client에 연결한다.
 void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
     ai.names.language=[&client] { return static_cast<std::uint32_t>(client.LanguageNumber()); }; //원본현재언어0/1의이름번역생략관문을공유한다.
-    ai.names.translate=[&client](std::string_view source) { const auto bytes=o::EncodeOriginalText(client.Translate(source));return std::string(bytes.begin(),bytes.end()); };
-    ai.names.substitute=[&client](std::string_view source) { const auto text=client.Configuration().SubstituteLocal(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()}));const auto bytes=o::EncodeOriginalText(text);return std::string(bytes.begin(),bytes.end()); }; //같은현재설정치환과원본좁은문자열을사용한다.
+    ai.names.translate=[&client](std::string_view source) { const auto bytes=o::EncodeDisplayText(client.Translate(source));return std::string(bytes.begin(),bytes.end()); };
+    ai.names.substitute=[&client](std::string_view source) { const auto text=client.Configuration().SubstituteLocal(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()}));const auto bytes=o::EncodeDisplayText(text);return std::string(bytes.begin(),bytes.end()); }; //같은현재설정치환과원본좁은문자열을사용한다.
     // 원본 Clear는 채널 BYTE만 지우고 Add는 현재 자기 subscriber의 자연 -1 반환까지 수행한다.
     ai.participation.clearChat=[&client](std::uint32_t channel) { client.ChatChannels().Clear(channel); };
     ai.participation.addChat=[&client](std::uint32_t subscriber,std::string_view name,std::uint32_t channel) {
@@ -108,14 +108,14 @@ void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
     };
     // Xlat 키로 바꾸지 않는다. 현재 언어 Config/치환 결과를 매 요청마다 원본 Windows-1252로 인코딩한다.
     ai.defaultName=[&client] {
-        const auto bytes=o::EncodeOriginalText(client.Configuration().PathSpec("defaultAiName")); // 현재 언어 교체/설정 변경을 반영한 실제 좁은 바이트다.
+        const auto bytes=o::EncodeDisplayText(client.Configuration().PathSpec("defaultAiName")); // 현재 언어 교체/설정 변경을 반영한 실제 좁은 바이트다.
         return std::string(bytes.begin(),bytes.end());
     };
 }
 // 같은 번역 원문은 다음 번역 조회까지 유지하며 서식 결과는 Client 공유 고리에 둔다.
 o::EditorPlayersHooks MakeEditorPlayerClientHooks(Client& client) {
     o::EditorPlayersHooks hooks;auto translated=std::make_shared<std::vector<std::uint8_t>>(); // 첫 Human 복사가 끝난 뒤에만 다음 번역이 같은 버퍼를 재사용한다.
-    hooks.translate=[&client,translated](auto key)->std::span<const std::uint8_t> { *translated=o::EncodeOriginalText(client.Translate(key));translated->push_back(0);return *translated; };
+    hooks.translate=[&client,translated](auto key)->std::span<const std::uint8_t> { *translated=o::EncodeDisplayText(client.Translate(key));translated->push_back(0);return *translated; };
     hooks.format=[owner=client.StaticStrings()](auto reservation,auto pattern,auto value) { return owner->FormatInteger(reservation,pattern,value); }; // Source와 output의 별도 Native 수명을 유지한다.
     return hooks;
 }
@@ -195,13 +195,13 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     auto you=std::make_shared<std::vector<std::uint8_t>>(); // 원본 부모가 NUL까지 복사하는 동안 유지할 번역 바이트다.
     // 번역은 요청 시 다시 조회한다. 설치 사이에 바뀐 언어를 이전 문자열로 고정하지 않는다.
     services.install.translateYou=[&client,you]() -> std::span<const std::uint8_t> {
-        *you=o::EncodeOriginalText(client.Translate("You"));you->push_back(0);return *you;
+        *you=o::EncodeDisplayText(client.Translate("You"));you->push_back(0);return *you;
     };
     // 원본 strcpy 입력의 첫 NUL까지만 UTF-8 설정 저장소에 넣고 뒤의 물리 바이트는 무시한다.
     services.install.setConfig=[&client](std::string_view key,std::span<const std::uint8_t> bytes) {
         const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{}); // 좁은 문자열의 실제 종료 위치다.
         if (end==bytes.end()) throw std::invalid_argument("캠페인 설정 문자열 NUL 누락");
-        client.Configuration().Set(key,o::DecodeOriginalText(bytes.first(static_cast<std::size_t>(end-bytes.begin()))));
+        client.Configuration().Set(key,o::DecodeDisplayText(bytes.first(static_cast<std::size_t>(end-bytes.begin()))));
     };
     services.install.refreshWindowTitle=std::move(ui.refreshWindowTitle); // 월드 설치 중 현재 미션 제목도 갱신한다.
     // 원본 0047d890의 사건을 같은 실제 Gump 트리로 분배한다. 생산 노드 자체의 구현은 별도다.

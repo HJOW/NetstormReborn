@@ -227,6 +227,11 @@ void Renderer::Text(std::span<std::uint8_t> pixels, int pitch, ScreenRect clip, 
         const auto add=[](int a,int b) { return std::bit_cast<std::int32_t>(std::uint32_t(a)+std::uint32_t(b)); };
         if (!frame.IsSpecial()) DrawIndexedImage(pixels,pitch,height_,Image(shape,0,0),add(at.x,frame.rect.left),add(at.y,frame.rect.top),clip,&map);
     };
+    hooks.extendedGlyph=[&](const FontGlyph& glyph,ScreenPoint at) { // 6차: 한글 글리프도 같은 방식으로 출력한다.
+        const auto& shape=*glyph.shape;const auto& frame=shape.Blocks()[0].frames[0];
+        const auto add=[](int a,int b) { return std::bit_cast<std::int32_t>(std::uint32_t(a)+std::uint32_t(b)); };
+        if (!frame.IsSpecial()) DrawIndexedImage(pixels,pitch,height_,Image(shape,0,0),add(at.x,frame.rect.left),add(at.y,frame.rect.top),clip,&map);
+    };
     const GumpTextContext context{(text.shadow ? 2U : 0U)|(text.outline ? 4U : 0U),0,text.color,0,0,
         text.shadowColor,text.shadowOffset.x,text.shadowOffset.y};
     DrawBitmapGlyphText(text.bytes,text.font,{text.x,text.y},context,hooks,static_cast<std::int32_t>(text.bytes.size()));

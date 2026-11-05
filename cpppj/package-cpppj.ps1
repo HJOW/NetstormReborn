@@ -414,8 +414,8 @@ function New-ReadmeText {
         '========================================================================',
         '',
         '[실행 방법]',
-        '1. 이 압축파일을 쓰기 가능한 폴더에 풉니다. Program Files 같은 보호 폴더는 피하세요.',
-        '   설정이 game\d\options.cfg 에 저장되므로 쓰기 권한이 필요합니다.',
+        '1. 이 압축파일을 원하는 폴더에 풉니다. 설정과 저장 파일은 설치 폴더가 아니라',
+        '   %USERPROFILE%\Saved Games\Netstorm\ 에 저장되므로 폴더 쓰기 권한이 없어도 됩니다.',
         '2. 최상위 Netstorm.exe 를 실행합니다. 저장된 화면 모드 설정(전체화면 포함)을 따릅니다.',
         '   창 모드로 강제 시작하려면 Netstorm.bat 를 실행합니다.',
         '   Netstorm-SavedMode.bat 는 저장된 화면 모드 설정(전체화면 포함)을 따릅니다.',
@@ -430,6 +430,8 @@ function New-ReadmeText {
         '  third-party\libsmacker\  디코더 라이선스와 대응 소스(동봉된 경우)',
         '  Netstorm.bat        창 모드 실행',
         '  Netstorm-SavedMode.bat  저장된 화면 모드로 실행',
+        '  fonts\              한국어 글꼴(D2Coding)과 라이선스',
+        '  lang\               한국어 번역표(xlat.korean). 옵션 > 언어(Language)에서 한국어를 고릅니다.',
         '  game\               게임 데이터 (원본 Netstorm 10.78)',
         '    netstorm.tarc, d\, sound\, music\, MOVIE\ (영상 원천이 있을 때)',
         '    Netstorm.exe      원본 실행 파일. 클론이 아이콘, 커서, 로딩 그림을 읽는 자료로만 쓰며',
@@ -438,7 +440,7 @@ function New-ReadmeText {
         '  LICENSE.txt         라이선스',
         '',
         '[설정 초기화]',
-        'game\d\options.cfg 와 game\fullscreenStateFile.dat 를 지우면 기본 설정으로 돌아갑니다.',
+        '%USERPROFILE%\Saved Games\Netstorm\Saves\options.cfg 와 fullscreenStateFile.dat 를 지우면 기본 설정으로 돌아갑니다.',
         '',
         '[알림]',
         '- 첫 실행의 인트로는 동봉된 원본 언어별 SMK를 사용합니다. ESC/Space/좌우 클릭으로 건너뜁니다.',
@@ -446,12 +448,13 @@ function New-ReadmeText {
         '- 개발 중인 클론이라 원본의 모든 기능이 구현된 것은 아닙니다. 멀티플레이는 포함되지 않습니다.',
         '',
         '[How to run]',
-        '1. Extract the archive to a writable folder (not Program Files). Settings are saved to game\d\options.cfg.',
+        '1. Extract the archive anywhere. Settings and saves go to %USERPROFILE%\Saved Games\Netstorm\, so the install folder may be read-only.',
         '2. Run the top-level Netstorm.exe (saved screen mode). Use Netstorm.bat to force window mode.',
         '3. Requires Windows 10/11 x64. The Visual C++ runtime DLLs are bundled in this folder.',
         '4. game\Netstorm.exe is the original executable. The clone only reads its icon/cursor resources; do not run it directly.',
-        '5. Delete game\d\options.cfg and game\fullscreenStateFile.dat to reset settings.',
-        '6. This is a work-in-progress clone; multiplayer is not included.')
+        '5. Delete %USERPROFILE%\Saved Games\Netstorm\Saves\options.cfg and fullscreenStateFile.dat to reset settings.',
+        '6. Korean: fonts\ (D2Coding) and lang\xlat.korean are bundled; pick Options > Language > Korean.',
+        '7. This is a work-in-progress clone; multiplayer is not included.')
     return (($lines -join "`r`n") + "`r`n")
 }
 
@@ -795,6 +798,18 @@ try {
     if (Test-Path -LiteralPath $licensePath -PathType Leaf) {
         Add-FileItem -Items $items -Entry ($PackageRootName + '/LICENSE.txt') -Source $licensePath
     }
+    # 6차 한국어: D2Coding 글꼴(저장소 fonts 의 가장 새 .ttc 하나)과 라이선스, 한국어 번역표를 실행 파일 옆 fonts\, lang\ 에 넣는다.
+    # 클론은 실행 파일 폴더에서 이 두 폴더를 찾아 한글 글리프와 번역을 읽는다. (2026-11-06 신규)
+    $fontsDir = Join-Path $RepoRoot 'fonts'
+    $koreanFonts = @(Get-ChildItem -LiteralPath $fontsDir -Filter 'D2Coding*.ttc' -File -ErrorAction SilentlyContinue | Sort-Object Name)
+    if (-not $koreanFonts.Count) { throw "한국어 글꼴(D2Coding*.ttc)을 찾을 수 없습니다: ${fontsDir}" }
+    $koreanFont = $koreanFonts[$koreanFonts.Count - 1]
+    Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/' + $koreanFont.Name) -Source $koreanFont.FullName
+    $fontLicense = Join-Path $fontsDir 'License.txt'
+    if (Test-Path -LiteralPath $fontLicense -PathType Leaf) { Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/License.txt') -Source $fontLicense }
+    $koreanTable = Join-Path $RepoRoot 'assets\lang\korean\xlat.korean'
+    if (-not (Test-Path -LiteralPath $koreanTable -PathType Leaf)) { throw "한국어 번역표를 찾을 수 없습니다: ${koreanTable}" }
+    Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/xlat.korean') -Source $koreanTable
 
     # BUILD_INFO.txt 는 게임 항목을 포함한 전체 수를 알아야 해서 게임 항목을 더한 뒤 마지막에 만든다.
     $gameBytes = [long]0

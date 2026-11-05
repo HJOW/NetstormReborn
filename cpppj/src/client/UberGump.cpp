@@ -49,6 +49,7 @@
 #include "client/ConfigurationCommandInput.h" //원문 모드별 palette와 공유 priority/State 일반 명령을 기존 부모에 연결한다.
 #include "client/RendererDiagnostics.h" //명시특수전역뒤원문7/10/13키의현재DWORD만토글한다.
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
+#include "client/LanguageOptions.h" //6차: 옵션 메뉴 Language 하위 메뉴가 한국어 번호(kKoreanLanguageNumber)를 쓴다.
 #include "client/GameMenuActions.h"
 #include "client/ViewKeyInput.h"
 #include "client/PauseKeyInput.h" //Pause 가상키도 같은 일반 Pause 명령 FIFO를 정지 관문 전에 사용한다.
@@ -238,7 +239,11 @@ void Tile(IndexedImage& canvas, const IndexedImage& image, ScreenRect rect) {
 }
 // 설정의 UTF-8 문자열을 원본 글꼴의 Windows-1252 바이트로 되돌린다.
 std::string FontBytes(std::string_view text) {
-    const auto encoded = o::EncodeOriginalText(text); return std::string(encoded.begin(), encoded.end());
+    const auto encoded = o::EncodeDisplayText(text); return std::string(encoded.begin(), encoded.end());
+}
+// 6차 한국어: 옵션 메뉴 Language 하위 메뉴 항목이다. 영어(원문 번호0/1)와 한국어(7)를 각 언어 자신의 이름으로 보이고 현재 언어에 체크한다.
+std::vector<GameMenuLanguage> LanguageMenuChoices(int current) {
+    return {{FontBytes("English"),0U,current==0 || current==1},{FontBytes("한국어"),kKoreanLanguageNumber,current==static_cast<int>(kKoreanLanguageNumber)}};
 }
 // 자동 검사 보고에는 개행/탭을 제거하여 한 항목 한 줄을 유지한다.
 std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t', ' '); std::replace(text.begin(), text.end(), '\n', ' '); std::replace(text.begin(), text.end(), '\r', ' '); return text; }
@@ -281,7 +286,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     mapEffects.typeCount=[this] { return static_cast<std::int32_t>(client_.Assets().TypeTable().Types().size()); };
     mapEffects.allocationBytes=[](auto) { throw std::logic_error("맵 목록의 빈 State 생성에 필요한 현재 미정 할당 바이트 미연결"); }; // 정상 보호 파일은 이 경계를 선택하지 않는다. 미정 바이트를 임의0으로 만들지 않는다.
     mapEffects.userName=[this] { return world_ ? std::string(world_->Session().CurrentHandle()) : mapUserName_; };
-    mapEffects.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
+    mapEffects.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
     mapEffects.fileSpecKey=[this] { return mapFileSpec_.Current(); };
     mapEffects.enumeratePaths=[this](auto pattern) { return editorCatalog_->Enumerate(pattern); }; //최초 loose 이관 뒤 같은 writable 폴더의 실제 OS 순서만 원문 목록에 전달한다.
     mapEffects.readFile=[this](auto path) { return editorCatalog_->Read(path); }; //분류/메타의 현재 읽기가 같은 durable 삭제 상태를 지키며 원본으로 부활시키지 않는다.
@@ -339,7 +344,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     rawButtons_->EnableMenus(client_.Assets(),client_.Fonts(),std::move(menuHooks)).SetPalette(client_.GetScreen().Colors());
     RawHelpHooks help;help.globals=&htmlGlobals_; // Tell과 같은 HTML 전역/Config/입력 고리를 빌린다.
     help.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };help.config=[this](auto key) { return FontBytes(client_.Configuration().PathSpec(key)); };
-    help.substitute=[this](auto text) { const auto decoded=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()});return FontBytes(client_.Configuration().SubstituteLocal(decoded)); };
+    help.substitute=[this](auto text) { const auto decoded=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()});return FontBytes(client_.Configuration().SubstituteLocal(decoded)); };
     help.load=[this](auto name) { return ReadClientQuickHelpFile(client_,name); }; //원문check0/extra2이며LF/NUL/성공cache는기존전용창이소유한다.
     help.text=[this](auto token) { // 메뉴의정적도움말주제는같은소유저장소에서읽고Script고리/별칭과구별한다.
         const auto literal=objectMenus_ ? objectMenus_->StaticText(token) : std::nullopt;
@@ -503,13 +508,13 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
     context.metadata.commands={DialogScriptCode,[](auto name) { std::clog<<"HTML 메타 명령 미연결: "<<name<<'\n'; }};context.metadata.strings=&scriptStrings_;context.metadata.maps=mapCatalog_.get();context.metadata.fileSpec=&mapFileSpec_;context.metadata.fileMenus=fileMenus_;
     context.metadata.currentMap=[this]() -> std::string_view { htmlCurrentFortName_=mission_ ? missionRuntime_ && missionRuntime_->guided ? std::string(client_.FortGlobals()->Current()) : mission_->FortName() : std::string{};return htmlCurrentFortName_; };context.metadata.fallbackMap=[this]() -> std::string_view { return client_.FortGlobals()->Pending(); };
     context.metadata.send=[this](auto first,auto second,auto third) { SendHtmlZsend(first,second,third,[this](auto target,auto packet) { static_cast<void>(client_.ConnectionGlobals()->SendMutable(target,packet,client_.PlayerRecords()->Records())); }); }; //NULL연결은원문처럼아무송신도하지않으며월드/임의새접속/직접수신우회를추가하지않는다.
-    context.metadata.input=[this](auto mode,auto title,auto continuation) { SaveFortNameDialogContext dialog;dialog.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(dialog.editor,textClipboard_);dialog.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };dialog.tell=[this](auto section) { Tell(std::string(section)); };rawButtons_->Menus()->ShowHtmlInputDialog(std::move(dialog),std::bit_cast<std::uint32_t>(mode),title,continuation); }; //원문004d3ed0은mode/제목/다음Tell섹션이며입력제한/설정키가아니다.
+    context.metadata.input=[this](auto mode,auto title,auto continuation) { SaveFortNameDialogContext dialog;dialog.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(dialog.editor,textClipboard_);dialog.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };dialog.tell=[this](auto section) { Tell(std::string(section)); };rawButtons_->Menus()->ShowHtmlInputDialog(std::move(dialog),std::bit_cast<std::uint32_t>(mode),title,continuation); }; //원문004d3ed0은mode/제목/다음Tell섹션이며입력제한/설정키가아니다.
     context.metadata.tech=[this](auto target) { if (!world_) throw std::logic_error("HTML 전체 기술 목록의 현재 Session 없음");rawButtons_->Menus()->AppendTechnology(world_->Session(),target,[this](auto text) { return FontBytes(client_.Translate(text)); }); }; //같은 HTML controlled 열과 실제 대상 Form을 사용한다.
     context.metadata.themeTech=[this](auto target,auto theme) { if (!world_) throw std::logic_error("HTML 원소 기술 목록의 현재 Session 없음");rawButtons_->Menus()->AppendThemeTechnology(world_->Session(),target,theme,[this](auto text) { return FontBytes(client_.Translate(text)); }); }; //같은 실제 HTML의 현재 열·가상 레벨/기술 부모를 사용한다.
     context.factory.globals=&htmlGlobals_;context.factory.html.command=[this](auto&,auto text) { QueueHtmlScriptCommand(text); };
     BindHtmlConditionConfig(context.factory.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(context.factory.html);
     BindHtmlBackground(context.factory.html,htmlGlobals_); // 미션 안내의 전체 HTML도 같은 현재 배경을 쓴다.
-    context.factory.substitute=[this](auto text,auto) { return FontBytes(client_.Configuration().SubstituteLocal(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };context.factory.fallback=[this] { return FontBytes(client_.Configuration().PathSpec("OkButton")); };
+    context.factory.substitute=[this](auto text,auto) { return FontBytes(client_.Configuration().SubstituteLocal(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };context.factory.fallback=[this] { return FontBytes(client_.Configuration().PathSpec("OkButton")); };
     context.read=[this](auto address)->std::uint32_t { const auto map=mission_ && rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current() ? rawButtons_->MapViewRect() : htmlMapView_;switch (address) {
         case 0x531860:case 0x5c78f0:return static_cast<std::uint32_t>(client_.GetScreen().Width());case 0x531864:case 0x5c78f4:return static_cast<std::uint32_t>(client_.GetScreen().Height());
         case 0x5ca9b4:return static_cast<std::uint32_t>(map.right-map.left);case 0x5ca9cc:return std::bit_cast<std::uint32_t>(map.left);case 0x5ca9d0:return std::bit_cast<std::uint32_t>(map.top);case 0x5ca9d4:return std::bit_cast<std::uint32_t>(map.right);case 0x5ca9d8:return std::bit_cast<std::uint32_t>(map.bottom);case 0x563e38:return rawButtons_->RootToken();
@@ -618,7 +623,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
     if (!result.found) return false;rebuild_=true;
     if (!result.serial) return true; // 빈 부모/창 생략은 기존 표시 부모나 phase를 교체하지 않는다.
     lastTellTarget_=target; // 5차: 실제 창을 만든 섹션만 기억한다(맵 목록 스크롤의 재표시 대상).
-    state_.phase=briefing ? ClientPhase::Briefing : ClientPhase::Dialog;pageName_=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(client_.HtmlWindowGlobals()->tell.current.data()),std::char_traits<char>::length(client_.HtmlWindowGlobals()->tell.current.data())});popup_.clear();
+    state_.phase=briefing ? ClientPhase::Briefing : ClientPhase::Dialog;pageName_=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(client_.HtmlWindowGlobals()->tell.current.data()),std::char_traits<char>::length(client_.HtmlWindowGlobals()->tell.current.data())});popup_.clear();
     if (mission_ && !(missionRuntime_ && missionRuntime_->tutorial)) client_.Pause(true);
     if (windowCreated) *windowCreated=true;RebuildControls();return true;
 }
@@ -690,7 +695,7 @@ void UberGump::InitializeMission() {
     TutorialInitHooks hooks;hooks.clearTemplates=[this] { templateStorage_->ClearAll(); }; //원문004c3290 첫 호출은 살아 있는 Editor/Session과 별개로 같은9개 manager를 반납한다. Session은 현재 헤더를 다시 조회하며 Template 참조를 고정 보유하지 않는다.
     hooks.resetOptions=[this] { o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_); };
     hooks.get=[this](std::string_view key,std::optional<std::string_view> fallback) { auto value=FontBytes(mission_->Get(key).value_or(""));if (const auto end=value.find('\0');end!=std::string::npos) value.resize(end);if (value.empty() && fallback) value=*fallback;return value; };
-    hooks.set=[this](auto key,auto value) { const auto text=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});static_cast<void>(mission_->Set(key,text)); };
+    hooks.set=[this](auto key,auto value) { const auto text=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});static_cast<void>(mission_->Set(key,text)); };
     hooks.requestFort=[this](auto name) { RequestMissionFort(name);state_.Post({"LoadMissionFort",missionFortRequest_->fort}); };
     hooks.header=[this] { ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),std::span(*missionRestrictions_)); };
     InitializeTutorialMission(missionRuntime_->init,missionRuntime_->state.flags,missionRuntime_->gate.demo,{missionRuntime_->gate.tutorialNumber,missionNumber_,tutorialSeen_,initLoginSubscriber_,initialSubscriber_},hooks);
@@ -700,7 +705,7 @@ void UberGump::InitializeMission() {
 void UberGump::RequestMissionFort(std::string_view name) {
         if (state_.Pending() || missionFortRequest_) throw std::logic_error("Init 요새 로드 요청 전 다른 전환/이미지가 남아 있음");
         auto request=std::make_shared<MissionFortLoadRequest>();MissionFortRequestHooks effects; // 원본 부모가 쓴 요청과 실제 복제 이미지를 같은 수명으로 소유한다.
-        effects.selectFort=[this,request](auto value) { SelectCurrentFortName(value);const auto current=client_.FortGlobals()->Current();request->fort=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()}); }; // 원문00460980 전체 복귀 뒤 실제 현재 이름을 State 설치 요청에 보유한다.
+        effects.selectFort=[this,request](auto value) { SelectCurrentFortName(value);const auto current=client_.FortGlobals()->Current();request->fort=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()}); }; // 원문00460980 전체 복귀 뒤 실제 현재 이름을 State 설치 요청에 보유한다.
         effects.duplicate=[request](auto& packet) { return CaptureMissionFortZone(*request,packet); };
         const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};std::int32_t configuredPort=6799;client_.Configuration().ReadInt("gameServerPort",configuredPort);const auto port=static_cast<std::uint32_t>(configuredPort); // 원본00513870의9BYTE와 현재005318e8의 Client 설정 경계다.
         auto& next=client_.LocalStateGlobals()->State().next; // 실제005c8878의144BYTE에 쓰며 캡처를 Native 전역 대신 사용하지 않는다.
@@ -716,7 +721,7 @@ void UberGump::RequestCurrentGuideFort(RawCampaignSession& session) {
     effects.handle=[&session] { return session.CurrentHandle(); };effects.duplicate=[request](auto& packet) { return CaptureMissionFortZone(*request,packet); };
     const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};auto& local=*client_.LocalStateGlobals(); // 원문 로컬9BYTE 주소와 기존 일반 Init의 같은 장치 경계다.
     WriteCurrentGuideFortRequest({local.State().next,local.ZonePending(),address,port},effects);request->next=local.State().next;request->sequence=local.ZonePending();
-    const auto name=client_.FortGlobals()->Current();request->fort=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(name.data()),name.size()});missionFortRequest_=std::move(request);
+    const auto name=client_.FortGlobals()->Current();request->fort=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(name.data()),name.size()});missionFortRequest_=std::move(request);
 }
 // Guide-only 조건 없이 실제 현재 Runtime을 읽으며 선택한 미션 수명이 바뀌면 물리 경계로 거부한다.
 o::FortMissionSaveHooks UberGump::FortMissionSaveEffects() {
@@ -791,7 +796,7 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
     if (nativePlayers) {
         services.missionFortFileSelect=[this,select=std::move(fortFileSelect)](auto) {
             const auto current=client_.FortGlobals()->Current();if (current.empty()) throw std::logic_error("현재 Fort 파일 선택의 원문 빈 이름 진단");
-            return select(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()})); //00460680은 각 지역/서버 읽기 시점의 같은 curFort를 재조회하며 최초 요청 이름으로 고정하지 않는다.
+            return select(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()})); //00460680은 각 지역/서버 읽기 시점의 같은 curFort를 재조회하며 최초 요청 이름으로 고정하지 않는다.
         };services.missionFortLoad.readOnly=[this](auto path) { return client_.Files().ReadOnly(path); };
         if (!mission_->FileSource()) services.missionFortLoad=BindDataManagerFileRead(std::move(services.missionFortLoad),client_.Files()); //일반10.78만 연결하며 명시Editor 작업본/삭제 장부 namespace는 유지한다.
         services.missionFortLoad.tooManyTypes=[] { throw std::logic_error("미션 Template 파일의 numTypes<256 진단"); };
@@ -936,9 +941,10 @@ GameMenusHooks UberGump::CurrentGameMenuHooks() {
     };
     hooks.config=[this](auto key) { return client_.Configuration().GetInt(key); };
     hooks.readInt=[this](auto key,std::int32_t& value) { client_.Configuration().ReadInt(key,value); };
-    hooks.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
+    hooks.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
     hooks.editingMission=[this] { return missionRuntime_ ? missionRuntime_->mode64 : 0U; };hooks.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; //원문 Guide getter는 현재 미션이 없으면0을 돌려준다.
     hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른 Windows10/11 호환 화면비 추가이며 기본 원문 세 해상도는 유지한다.
+    hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 옵션 메뉴 Language 하위 메뉴(영어/한국어)다.
     return hooks;
 }
 // 원문004cebf0의 메인 Help/Options를 실제 클릭 버튼과 공통 메뉴/모달/명령 큐에 연결한다.
@@ -974,6 +980,7 @@ void UberGump::OpenGameMenu(bool playerList) {
         hooks.node=[this](auto token) { return rawButtons_->Menus()->Node(token); };
         hooks=session.BindGameMenus(std::move(hooks));const auto globals=hooks.global;const auto translate=hooks.translate; // 바인더가교체한같은현재소유자의getter를빌린다.
         hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른Windows10/11 DIB 호환 화면비만 명시 추가하며 기본 원문 검사는 빈 목록을 유지한다.
+        hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 게임 중 옵션 메뉴에도 같은 Language 하위 메뉴를 둔다.
         RawGameMenus children(std::move(hooks));
         if (playerList) return children.Players(true); // 원본004d8a56은 명령 인자와 무관하게 fancy=1을 넘기며 현재 루트 중앙에 직접 부착한다.
         GameMenuBarHooks bar; // 가로막대만 현재 serial과 실제 미니맵 왼쪽 경계를 사용한다.
@@ -1014,7 +1021,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
         if (event.code&InputCode::kRelease) return true; //원문 공통 뗌은 현재 장기 owner/State/Config 장치를 조회하지 않는다.
         auto& game=*client_.GameplayGlobals();auto& modes=client_.SurfaceStorage()->ownerMode;ConfigurationCommandHooks configured;
         configured.text=[this](auto token) { return scriptStrings_.Resolve(token); };
-        configured.set=[this](auto key,auto value) { static_cast<void>(client_.Configuration().Set(key,o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}))); };
+        configured.set=[this](auto key,auto value) { static_cast<void>(client_.Configuration().Set(key,o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}))); };
         configured.get=[this](auto key) { return FontBytes(client_.Configuration().PathSpec(key)); }; //현재 Config 치환값을 다시 원문 palette 이름 바이트로 넘긴다.
         configured.palette=[this](auto name) { const std::string owned(name);client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(owned.c_str()),owned.size()+1}); }; //공유 설정 고리의 재진입과 별개인 NUL 수명이다.
         configured.thread=[this](auto priority) { client_.SetNativeThreadPriority(priority); };
@@ -1044,7 +1051,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
         if (event.code&InputCode::kRelease) return true;
         if (event.y) {
             ApplyScriptConfig(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)),[this](auto key,auto value) {
-                const auto decode=[](std::string_view bytes) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); }; // 실제 설정의 내부 인코딩 경계만 변환한다.
+                const auto decode=[](std::string_view bytes) { return o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); }; // 실제 설정의 내부 인코딩 경계만 변환한다.
                 return client_.Configuration().Set(decode(key),decode(value));
             });
             client_.ApplyAudioOptions(); // 현재 복원된 옵션 장치에 실제 효과음·음악 값을 반영한다.
@@ -1633,7 +1640,7 @@ void UberGump::Compose() {
     if (world_ && !world_->Connecting() && state_.phase!=ClientPhase::LoadingMission) {
         world_->Resize(width,height);if (!nativeFrame) worldSprites=world_->Sprites(); //10.78은 실제 공통 수집/Draw에서만 가상 표시를 호출하여 부수효과를 중복 실행하지 않는다.
         auto& cursorDisplay=world_->Session().Cursor().Display();cursorDisplay.Settings().gridOption=client_.GetScreen().Flags();
-        cursorDisplay.SetText(client_.Fonts(),[this](std::string_view key) { const auto bytes=o::EncodeOriginalText(client_.Translate(key));return std::string(bytes.begin(),bytes.end()); });
+        cursorDisplay.SetText(client_.Fonts(),[this](std::string_view key) { const auto bytes=o::EncodeDisplayText(client_.Translate(key));return std::string(bytes.begin(),bytes.end()); });
         if (!nativeFrame && !client_.GetRenderer().HasExtraCollection()) client_.GetRenderer().SetExtraCollection([this](ScreenRect clip,std::uint32_t flags) {
             if (!world_ || state_.phase!=ClientPhase::Mission || !popup_.empty()) return std::vector<RenderSprite>{};
             return world_->Session().Cursor().Display().Sprites(clip,flags);
@@ -1740,7 +1747,7 @@ void UberGump::Compose() {
                 [this] { return client_.WallSeconds(); },[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); },
                 [this](std::string_view key) { state_.Post({"Tell",std::string(key)}); },
                 [this](std::string_view key,std::int32_t fallback) { client_.Configuration().ReadInt(key,fallback);return fallback; },
-                [this](std::string_view key) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(key.data()),key.size()}))); },
+                [this](std::string_view key) { return FontBytes(client_.Translate(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(key.data()),key.size()}))); },
                 [this](const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) { if (!world_ || !objectMenus_) throw std::logic_error("생산 정보의 현재 월드 없음");return objectMenus_->OpenProduction(*world_,item,point,affordable); }});
             auto& production=*rawButtons_->Production(); // 같은 미션의 안내/복귀는 예산/등록ID를 재생성하지 않는다.
             production.Resize(height);production.SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());

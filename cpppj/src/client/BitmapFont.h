@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <functional>
 #include <optional>
+#include <unordered_map>
 #include <vector>
 
 namespace netstorm::client {
@@ -23,6 +24,13 @@ struct FontGlyph {
     // shape: 프레임 그림을 찾는 셰이프 식별자 또는 셰이프 자료.
     std::unique_ptr<ShapeDatabase> shape;
 };
+// 6차 한국어: 한글 등 확장 문자(o/OriginalText의 4바이트 시퀀스)를 그릴 GDI 글꼴 명세다. 같은 높이/굵기/스타일로 라틴 글꼴과 맞춘다.
+struct ExtendedFontSpec {
+    std::string face;                // 한글 글리프를 그릴 글꼴 이름이다(예: D2Coding). 비어 있으면 확장 문자를 지원하지 않는다.
+    std::filesystem::path fontFile;  // 글꼴 파일(.ttc/.ttf)이다. 있으면 프로세스 전용으로 한 번 등록한다. 비어 있으면 시스템 글꼴 이름만 쓴다.
+    int height{}, weight{};          // CreateFont의 높이/굵기다(라틴 글꼴과 같은 값).
+    bool italic{}, underline{}, strikeout{}; // 스타일 표시다.
+};
 // 원본 글리프와 GDI 글꼴을 같은 폭 계산·출력 인터페이스로 제공하는 글꼴이다.
 class BitmapFont {
 public:
@@ -34,6 +42,13 @@ public:
     int Measure(std::string_view bytes) const;
     // 원본 글리프와 그리기 전진 폭을 제공한다.
     const FontGlyph& Glyph(std::uint8_t code) const;
+    // 6차: 한글 확장 문자 지원을 설정한다. 이미 만든 확장 글리프는 비운다. face가 비어 있으면 끈다.
+    void ConfigureExtended(ExtendedFontSpec spec);
+    bool HasExtended() const { return !extended_.face.empty(); } // 한글 확장 문자 글꼴이 설정되어 있는지다.
+    // 모노스페이스 한글 글꼴의 확장 문자 한 글자 전진 폭이다(한글/자모/전각 모두 같다). 설정이 없으면 0이다.
+    int ExtendedAdvance() const;
+    // 코드 포인트의 확장 글리프를 처음 요청할 때 GDI로 만들어 보관한다. 설정이 없거나 만들 수 없으면 nullptr이다.
+    const FontGlyph* ExtendedGlyph(std::uint32_t codePoint) const;
     // 캐시가 저장한 전체 글자 높이.
     int Height() const;
     // 기준선 위쪽의 높이.
@@ -48,6 +63,9 @@ private:
     int height_{}, ascent_{}, descent_{};
     // glyphs_: 문자 코드로 찾아 사용할 글리프 표.
     std::array<FontGlyph, 256> glyphs_{};
+    ExtendedFontSpec extended_;                                      // 6차: 확장 문자 글꼴 명세다.
+    mutable std::unordered_map<std::uint32_t, FontGlyph> extendedGlyphs_; // 6차: 요청 때 만든 확장 글리프 캐시다(주 스레드 전용).
+    mutable int extendedAdvance_{-1};                                // 6차: 확장 한 글자 전진 폭 캐시(-1은 미계산)다.
 };
 // 원문 EnumFontFamiliesA가 반환한 이름/종류/charset을 현재 순서로 전달하는 동기 경계다.
 using FontFaceVisitor=std::function<void(std::string_view,std::uint32_t,std::uint8_t)>;
@@ -58,6 +76,7 @@ public:
     // 원본 기본 글꼴 슬롯을 초기화한다. 파일 시스템은 이 객체보다 오래 살아야 한다.
     FontStore(const o::BaseFileSystem& files,std::string face,FontFaceEnumeration enumerate={});
     std::optional<std::string_view> FaceAt(std::int32_t index) const; //4a2df0의 현재 목록 인덱스다. 음수는 원문 assert 영역의 호스트 오류, 양수 범위 밖은 NULL이다.
+    void SetExtendedFace(std::string face, std::filesystem::path fontFile); // 6차: 한글 글꼴을 설정한다. 이후 만드는 모든 글꼴에 적용하고 이미 만든 글꼴도 갱신한다. face가 비면 끈다.
     void SetUserCacheDirectory(std::filesystem::path directory); // 5차: 글꼴 캐시를 설치 폴더 대신 이 사용자 폴더에 읽고 쓴다. 사용자 캐시가 없으면 설치의 기존 d 캐시를 읽기 전용으로 쓴다.
     void Rebuild(std::optional<std::string_view> face); //같은 참조 아래 전체 캐시를 비운 뒤 재생성하며 NULL/유효 빈 이름을 구별한다.
     std::string_view CurrentFace() const; //4a2e30의 현재32BYTE 중 첫NUL까지이며 생성 완료 뒤에만 바뀐다.
@@ -76,6 +95,8 @@ private:
     std::array<char,32> currentFace_{}; //005accd8의 현재 요청 이름이다. GDI가 대신 고른 물리 글꼴 이름과 구별한다.
     // fonts_: 이름·크기로 찾아 재사용하는 글꼴 저장소.
     std::array<std::array<std::unique_ptr<BitmapFont>, 5>, 7> fonts_{};
+    std::string extendedFace_;                 // 6차: 한글 글꼴 이름이다.
+    std::filesystem::path extendedFontFile_;   // 6차: 한글 글꼴 파일 경로다.
     std::filesystem::path userCacheDirectory_; // 5차: 비어 있지 않으면 새 글꼴 캐시를 쓰는 사용자 폴더다.
     std::shared_ptr<o::BaseFileSystem> userCache_; // 5차: 사용자 캐시 폴더를 루트로 하는 별도 읽기/쓰기 장치이며 원문 경로 고리와 분리한다.
 };

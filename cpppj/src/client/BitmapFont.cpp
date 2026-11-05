@@ -2,9 +2,11 @@
 #include "client/BitmapFont.h"
 #include "client/NativeFontCacheFile.h" // 현재 FILE과 같은 생성 글리프의 순차 캐시 reader/writer다.
 #include "o/RawFileName.h" // 원문(-2,d,-3,literal)의 같은 이름고리를 사용한다.
+#include "o/OriginalText.h" // 6차: 확장 문자(한글) 시퀀스를 글자 폭 측정에서 한 글자로 읽는다.
 #include "platform/UserDataRoot.h" // 5차: 사용자 글꼴 캐시 폴더를 첫 저장에서만 만든다.
 #include "client/FontFaceEncoding.h" //raw ACP CHFNT 이름은 TAFF에, UTF-8 이름은 디스크에만 사용한다.
 #include <algorithm>
+#include <mutex>
 #include <bit>
 #include <cstring>
 #include <exception> //Win32 Enum callback의 C++ 실패를 DC 반납 뒤 다시 던진다.
@@ -178,11 +180,77 @@ std::unique_ptr<BitmapFont> BitmapFont::Generate(std::string_view face, int heig
     }
     return std::make_unique<BitmapFont>(cache);
 }
-// 측정 경로는 그리기 경로와 달리 첫 번째 폭 표를 사용한다.
+namespace { // 6차 확장 글리프 보조다.
+// 글꼴 파일을 프로세스 전용으로 한 번만 등록한다. 같은 경로를 다시 요청하면 아무것도 하지 않는다.
+void EnsurePrivateFontFile(const std::filesystem::path& file) {
+    static std::mutex mutex; static std::vector<std::filesystem::path> loaded;
+    if (file.empty()) return;
+    const std::lock_guard lock(mutex);
+    if (std::find(loaded.begin(), loaded.end(), file) != loaded.end()) return;
+    loaded.push_back(file);
+    AddFontResourceExW(file.c_str(), FR_PRIVATE, nullptr); // 실패해도 시스템에 같은 이름의 글꼴이 있으면 그것을 쓴다.
+}
+}
+void BitmapFont::ConfigureExtended(ExtendedFontSpec spec) { extended_ = std::move(spec); extendedGlyphs_.clear(); extendedAdvance_ = -1; }
+const FontGlyph* BitmapFont::ExtendedGlyph(std::uint32_t codePoint) const {
+    if (!HasExtended() || codePoint > 0xffff) return nullptr;
+    if (const auto found = extendedGlyphs_.find(codePoint); found != extendedGlyphs_.end()) return &found->second;
+    EnsurePrivateFontFile(extended_.fontFile);
+    constexpr int canvasWidth = 512, canvasHeight = 256;
+    FontGdi gdi;
+    gdi.dc = CreateCompatibleDC(nullptr);
+    gdi.font = CreateFontW(extended_.height, 0, 0, 0, extended_.weight, extended_.italic, extended_.underline, extended_.strikeout, DEFAULT_CHARSET,
+        OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, std::wstring(extended_.face.begin(), extended_.face.end()).c_str());
+    if (!gdi.dc || !gdi.font) return nullptr;
+    struct FontBitmapInfo { BITMAPINFOHEADER header; RGBQUAD colors[256]; } info{};
+    info.header.biSize = sizeof(BITMAPINFOHEADER); info.header.biWidth = canvasWidth; info.header.biHeight = -canvasHeight;
+    info.header.biPlanes = 1; info.header.biBitCount = 8; info.header.biCompression = BI_RGB;
+    for (int i = 0; i < 256; ++i) info.colors[i] = {static_cast<BYTE>(i), static_cast<BYTE>(i), static_cast<BYTE>(i), 0}; // 라틴 글리프와 같은 회색조 색 번호 표다.
+    void* pixels = nullptr;
+    gdi.bitmap = CreateDIBSection(gdi.dc, reinterpret_cast<BITMAPINFO*>(&info), DIB_RGB_COLORS, &pixels, nullptr, 0);
+    if (!gdi.bitmap || !pixels) return nullptr;
+    gdi.oldBitmap = SelectObject(gdi.dc, gdi.bitmap); gdi.oldFont = SelectObject(gdi.dc, gdi.font);
+    TEXTMETRICW metrics{};
+    if (!GetTextMetricsW(gdi.dc, &metrics)) return nullptr;
+    const wchar_t character = static_cast<wchar_t>(codePoint);
+    ABC abc{};
+    if (!GetCharABCWidthsW(gdi.dc, character, character, &abc)) {
+        int width = 0;
+        if (!GetCharWidth32W(gdi.dc, character, character, &width)) return nullptr;
+        abc = {0, static_cast<UINT>(width), 0};
+    }
+    SetTextAlign(gdi.dc, TA_LEFT | TA_TOP); SetBkMode(gdi.dc, OPAQUE);
+    SetBkColor(gdi.dc, RGB(kFontBackground, kFontBackground, kFontBackground)); SetTextColor(gdi.dc, RGB(kFontInk, kFontInk, kFontInk));
+    // 라틴 글꼴과 같은 기준선에 맞추도록 글자를 (라틴 ascent - 한글 ascent)만큼 아래로 내린다. 음수면 위로 올리지 않고 0으로 둔다.
+    const int shift = std::max(0, ascent_ - static_cast<int>(metrics.tmAscent));
+    const int cell = abc.abcA + static_cast<int>(abc.abcB) + abc.abcC; // 모노스페이스 한 칸의 전체 폭(좌측 여백+잉크+우측 여백)이다.
+    const int width = cell + 2, height = std::max(static_cast<int>(metrics.tmHeight), height_) + 1 + shift;
+    if (cell <= 0 || width > canvasWidth || height >= canvasHeight) return nullptr;
+    std::memset(pixels, kFontBackground, canvasWidth * canvasHeight);
+    RECT rect{0, 0, width - 1, height};
+    if (!ExtTextOutW(gdi.dc, 0, shift, ETO_CLIPPED | ETO_OPAQUE, &rect, &character, 1, nullptr)) return nullptr; // 라틴과 달리 -A 이동 없이 칸 안의 제 위치에 그린다.
+    GdiFlush();
+    FontGlyph glyph;
+    glyph.shape = std::make_unique<ShapeDatabase>(EncodeGlyph(static_cast<const std::uint8_t*>(pixels), canvasWidth, width, height));
+    glyph.advance = cell; glyph.bearing = 0; glyph.drawAdvance = cell; // 칸 전체가 전진 폭이라 모든 한글/자모/전각이 같은 폭이다.
+    if (!glyph.shape->Blocks()[0].frames[0].IsSpecial()) glyph.shape->Decode(0, 0); // 라틴 글리프처럼 미리 해제해 둔다.
+    return &extendedGlyphs_.emplace(codePoint, std::move(glyph)).first->second;
+}
+int BitmapFont::ExtendedAdvance() const {
+    if (!HasExtended()) return 0;
+    if (extendedAdvance_ < 0) { const auto* glyph = ExtendedGlyph(0xac00); extendedAdvance_ = glyph ? glyph->advance : 0; } // 모노스페이스라 대표 글자('가') 하나의 폭이 모든 확장 문자의 폭이다.
+    return extendedAdvance_;
+}
+// 측정 경로는 그리기 경로와 달리 첫 번째 폭 표를 사용한다. 6차: 확장 설정이 있으면 4바이트 시퀀스를 한 글자 폭으로 센다.
 int BitmapFont::Measure(std::string_view bytes) const {
     std::int64_t width = 0;
+    const std::span<const std::uint8_t> raw(reinterpret_cast<const std::uint8_t*>(bytes.data()), bytes.size());
     // 코드 페이지 바이트를 부호 없이 색인한다.
-    for (const unsigned char c : bytes) width += glyphs_[c].advance;
+    for (std::size_t position = 0; position < bytes.size(); ++position) {
+        const unsigned char c = static_cast<unsigned char>(bytes[position]);
+        if (c == o::kExtendedTextLead && HasExtended() && o::DecodeExtendedSequence(raw, position)) { width += ExtendedAdvance(); position += o::kExtendedTextLength - 1; continue; }
+        width += glyphs_[c].advance;
+    }
     if (width < std::numeric_limits<int>::min() || width > std::numeric_limits<int>::max()) throw std::overflow_error("Font width overflow");
     return static_cast<int>(width);
 }
@@ -280,6 +348,15 @@ const BitmapFont& FontStore::Get(int slot, FontStyle style) {
             } else static_cast<void>(SaveNativeFontCache(files_,path,font->CacheBytes())); // 생성/설치가 완료된 뒤 같은 파일 순서로 저장한다.
         }
     }
+    if (!extendedFace_.empty() && !font->HasExtended()) { // 6차: 한글 글꼴을 같은 높이/굵기/스타일로 맞춘다.
+        const int weight = style == FontStyle::Bold ? kWeights[slot] + (slot == 0 ? 100 : 700) : kWeights[slot];
+        font->ConfigureExtended({extendedFace_, extendedFontFile_, kHeights[slot], weight, style == FontStyle::Italic, style == FontStyle::Underline, style == FontStyle::Strikeout});
+    }
     return *font;
+}
+// 6차: 한글 글꼴을 설정하고 이미 만든 글꼴에도 적용한다(다음 Get에서 명세를 다시 맞춘다).
+void FontStore::SetExtendedFace(std::string face, std::filesystem::path fontFile) {
+    extendedFace_ = std::move(face); extendedFontFile_ = std::move(fontFile);
+    for (auto& row : fonts_) for (auto& font : row) if (font) font->ConfigureExtended({}); // 기존 명세를 비워 다음 Get이 새 글꼴로 다시 설정하게 한다.
 }
 }

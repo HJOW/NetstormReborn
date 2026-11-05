@@ -189,10 +189,21 @@ std::optional<BaseFileArchiveOpen> BaseFileSystem::FindArchiveOpen(std::string_v
     }
     return {};
 }
+// 6차 한국어: true이면 EnglishFallbackName이 항상 빈 값을 돌려준다. .korean 파일의 정확한 존재만 확인할 때(영어 대체 없이) 잠시 켠다.
+thread_local bool suppressEnglishFallback=false;
+// 6차 한국어: .korean 확장자 이름을 .english 이름으로 바꾼다(정의는 아래 TryRead 앞). 다른 이름은 빈 값이다.
+std::optional<std::string> EnglishFallbackName(std::string_view name);
 void BaseFileSystem::Open(RawBaseFileState& state,std::string_view name,std::uint32_t mode,std::uint32_t create,const RawBaseFileIOHooks& io) const { // 실제 게임의 현재 root/등록/고리와 caller의 동일 FILE/키 수명을 빌린다.
     OpenWithDiskName(state,name,mode,create,io,{}); // 기존 모든 소비자의 UTF-8/current FILE 계약은 변환 없이 유지한다.
 }
 void BaseFileSystem::OpenWithDiskName(RawBaseFileState& state,std::string_view name,std::uint32_t mode,std::uint32_t create,const RawBaseFileIOHooks& io,const std::function<std::optional<std::string>(std::string_view)>& diskName) const { // 명시 소비자의 disk 이름에만 변환을 한정한다.
+    std::string englishName; // 6차 한국어: 대체한 영어 이름의 수명을 함수 끝까지 유지한다.
+    if (!mode) if (const auto english=EnglishFallbackName(name)) { // 읽기 모드에서 .korean 파일이 없으면 같은 이름의 .english를 연다(쓰기/생성은 대체하지 않는다).
+        suppressEnglishFallback=true;std::uint32_t exists{};
+        try { exists=ProbeWithDiskName(name,diskName); }catch (...) { suppressEnglishFallback=false;throw; }
+        suppressEnglishFallback=false;
+        if (!exists) { englishName=*english;name=englishName; }
+    }
     std::string primary,secondary;BaseFileOpenPolicyHooks hooks; // root 콜백 뒤 반환뷰는 다음 같은 콜백까지 유지한다.
     const auto rootText=[](const std::filesystem::path& root) { auto text=PathText(std::filesystem::absolute(root).lexically_normal());std::replace(text.begin(),text.end(),'/','\\');return text; }; // 원문 getcwd 배열을 Windows10/11 Unicode 게임 root로 대체한다.
     hooks.primaryRoot=[&]()->std::string_view { primary=rootText(base_);return primary; };hooks.secondaryRoot=[&]()->std::string_view { secondary=rootText(secondary_);return secondary; };
@@ -246,13 +257,22 @@ void BaseFileSystem::RegisterArchivesCache(bool secondary) const { // 실제Star
 void BaseFileSystem::SetSecondaryDirectory(std::filesystem::path directory) {
     secondary_=directory.empty()?base_:std::move(directory);
 }
+// 6차 한국어: 원본에 없는 한국어(.korean) 시나리오/도움말/안내 파일이 없을 때 같은 이름의 영어(.english) 파일로 대신하기 위한 이름 변환이다.
+// 확장자가 .korean(대소문자 무시)이면 .english로 바꾼 이름을, 아니면 빈 값을 돌려준다. 한국어 본문 파일이 추가되면 먼저 그 파일을 찾으므로 이 대체는 자동으로 쓰이지 않는다.
+std::optional<std::string> EnglishFallbackName(std::string_view name) {
+    if (suppressEnglishFallback) return std::nullopt; // 정확한 존재 검사 중에는 대체하지 않는다.
+    name=name.substr(0,name.find('\0')); // 첫 NUL 뒤는 원문 C문자열 경계 밖이다.
+    constexpr std::string_view korean=".korean";
+    if (name.size()<korean.size() || AsciiLower(name.substr(name.size()-korean.size()))!=korean) return std::nullopt;
+    return std::string(name.substr(0,name.size()-korean.size()))+".english";
+}
 // 원본 FUN_0041b4c0의 상대 경로 읽기 순서를 복원한다.
 std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_view name) const { return TryReadWithDiskName(name,{}); }
 //이름 인코딩 어댑터는 선택된 디스크query만 바꾸고 archive에는 원래 BYTE를 그대로 전달한다.
 std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryReadWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const {
     auto primary=PathText(std::filesystem::absolute(base_).lexically_normal()),secondary=PathText(std::filesystem::absolute(secondary_).lexically_normal()); //원문 getcwd/CD의 native 구분자를 Windows10/11 UTF-8로 보존한다.
     std::replace(primary.begin(),primary.end(),'/','\\');std::replace(secondary.begin(),secondary.end(),'/','\\');
-    return ReadBaseFileByPolicy(name,primary,[&](BaseFileReadSite site,std::string_view query)->std::optional<std::vector<std::uint8_t>> {
+    auto found=ReadBaseFileByPolicy(name,primary,[&](BaseFileReadSite site,std::string_view query)->std::optional<std::vector<std::uint8_t>> {
         if (site==BaseFileReadSite::PrimaryArchive || site==BaseFileReadSite::SecondaryArchive) return TryReadArchiveOnly(query,site==BaseFileReadSite::SecondaryArchive);
         auto filename=site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk?primary:secondary,query,*fileNames_); // 같은 고리에는 원문 raw query를 먼저 작성하여 바이트 폭/소비를 유지한다.
         if (diskName) {
@@ -270,6 +290,8 @@ std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryReadWithDiskName(std
         }
         return netstorm::o::TryRead(path);
     },fileNames_.get());
+    if (!found) if (const auto english=EnglishFallbackName(name)) return TryReadWithDiskName(*english,diskName); // 6차: .korean 본문이 없으면 영어 본문을 읽는다.
+    return found;
 }
 // 등록 archive만 조회하는 새 읽기 경계이며 기존 TryRead/Read의 disk 우선순위는 바꾸지 않는다.
 std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryReadArchiveOnly(std::string_view name,bool secondary) const {
@@ -290,7 +312,7 @@ std::uint32_t BaseFileSystem::Probe(std::string_view name) const {
     return ProbeWithDiskName(name,{}); // 기존 존재조회 소비자는 새 인코딩 장치를 요구하지 않는다.
 }
 std::uint32_t BaseFileSystem::ProbeWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const { // 존재조회에서도 root는 이미UTF-8이고 query만 명시변환한다.
-    return ProbeBaseFileByPolicy(name,[&](auto site,auto query) {
+    const auto found=ProbeBaseFileByPolicy(name,[&](auto site,auto query) {
         if (site==BaseFileReadSite::PrimaryArchive || site==BaseFileReadSite::SecondaryArchive) return ContainsArchiveOnly(query,site==BaseFileReadSite::SecondaryArchive);
         const auto selectedRoot=site==BaseFileReadSite::DirectDisk ? std::string{}:PathText(std::filesystem::absolute(site==BaseFileReadSite::PrimaryDisk ? base_:secondary_).lexically_normal()); // 도달한 disk root만 읽는다.
         auto selected=selectedRoot.empty() ? std::string(query):JoinBaseFileRoot(selectedRoot,query,*fileNames_); // 같은 원문 raw고리를 변환 전 먼저 작성한다.
@@ -306,6 +328,8 @@ std::uint32_t BaseFileSystem::ProbeWithDiskName(std::string_view name,const std:
 #endif
         if (!file) return false;static_cast<void>(std::fclose(file));return true;
     },fileNames_.get(),FileSpecDirectoryHooks(base_));
+    if (!found) if (const auto english=EnglishFallbackName(name)) return ProbeWithDiskName(*english,diskName); // 6차: .korean 파일이 없으면 영어 파일의 출처를 돌려준다.
+    return found;
 }
 // 찾지 못하면 호출자에게 예외로 알린다.
 std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
@@ -363,6 +387,7 @@ std::vector<std::string> BaseFileSystem::MatchDisk(std::string_view pattern) con
 #ifdef _WIN32
     FileSpecQuery spec(pattern,FileSpecDirectoryHooks(base_));std::vector<std::string> names; // 원래 입력의 첫NUL/접두·slash·UNC와 실패 핸들까지 공통 FileSpec이 소유한다.
     while (spec.Valid()) { names.emplace_back(spec.Text());static_cast<void>(spec.Next()); } // 디렉터리/명시 부재 한 경로와 실제 OS 순서를 그대로 복사하고 같은 핸들을 끝에서 반납한다.
+    if (names.empty() && pattern.find_first_of("*?")!=std::string_view::npos) if (const auto english=EnglishFallbackName(pattern)) return MatchDisk(*english); // 6차: .korean 와일드카드에 일치가 없으면 .english로 대신 나열한다.
     return names;
 #else
     throw std::logic_error("원본 Filespec의 실제 Win32 디스크 열거는 Windows에서만 지원합니다");
@@ -394,6 +419,7 @@ std::vector<std::string> BaseFileSystem::MatchFinder(std::string_view pattern) c
         disk(secondary_);
         for (const auto& archive:secondaryArchives_) for (const auto& entry:archive.Entries()) { const auto name=NativePath(NormalizeGamePath(entry.name));if (name.parent_path()==directory && matches(PathText(name.filename()))) append(entry.name); } //보조 목록도 같은 등록/이름 인덱스 순서이며 기본과의 중복은 append가 제거한다.
     }
+    if (result.empty()) if (const auto english=EnglishFallbackName(pattern)) return MatchFinder(*english); // 6차: .korean 와일드카드에 일치가 없으면 .english로 대신 나열한다.
     return result; //원문은 두 경로 문자열이 같으면 보조 디스크와 TAFF 탐색을 함께 생략한다.
 }
 // 기존 정렬 목록 API다. 실제 Tell은 index 확정 전에 정렬하지 않는 MatchFinder를 사용한다.
@@ -442,6 +468,7 @@ std::vector<std::string> BaseFileSystem::Match(std::string_view pattern) const {
     }
     std::sort(result.begin(), result.end(), [](const std::string& a, const std::string& b) { return AsciiLower(a) < AsciiLower(b); });
     result.erase(std::unique(result.begin(), result.end(), [](const std::string& a, const std::string& b) { return AsciiLower(a) == AsciiLower(b); }), result.end());
+    if (result.empty()) if (const auto english=EnglishFallbackName(pattern)) return Match(*english); // 6차: .korean 와일드카드에 일치가 없으면 .english로 대신 나열한다.
     return result;
 }
 }

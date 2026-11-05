@@ -14,7 +14,7 @@ namespace {
 constexpr std::uint32_t kCursorGuiFlags=0x0200005f,kCursorGuiReceive=0x0200005e;
 // 번역·측정·출력이 같은 원본 Windows-1252 바이트를 사용하게 한다.
 std::string CursorBytes(Client& client,std::string_view key) {
-    const auto bytes=o::EncodeOriginalText(client.Translate(key));return {bytes.begin(),bytes.end()};
+    const auto bytes=o::EncodeDisplayText(client.Translate(key));return {bytes.begin(),bytes.end()};
 }
 }
 // PickTopLevel과 재귀 Dispatch의 반환 토큰을 직접 가상 처리기의 DWORD 반환과 구별한다.

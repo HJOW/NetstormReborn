@@ -1,5 +1,6 @@
 // 측정 폭/ABC A와 출력 전진 폭을 구분하고 빈 문자열에서도 원본의 색 표 설치를 유지한다.
 #include "client/GumpTextDraw.h"
+#include "o/OriginalText.h" // 6차: 확장 문자(한글) 시퀀스 해독이다.
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -32,6 +33,14 @@ void DrawBitmapGlyphText(std::span<const char> bytes,const BitmapFont* font,Scre
         for (std::size_t i=0;i<count;++i) {
             const auto code=static_cast<std::uint8_t>(static_cast<unsigned char>(bytes[i]));
             if (!font) continue;
+            if (code==o::kExtendedTextLead && font->HasExtended()) { // 6차: 4바이트 확장 시퀀스는 한글 글리프 한 글자로 그리고 이동한다.
+                const std::span<const std::uint8_t> raw(reinterpret_cast<const std::uint8_t*>(bytes.data()),count);
+                if (const auto codePoint=o::DecodeExtendedSequence(raw,i)) {
+                    const auto* extended=font->ExtendedGlyph(*codePoint);
+                    if (extended && extended->shape && hooks.extendedGlyph) hooks.extendedGlyph(*extended,at);
+                    at.x=Add(at.x,extended ? extended->drawAdvance : font->ExtendedAdvance());i+=o::kExtendedTextLength-1;continue;
+                }
+            }
             const auto& glyph=font->Glyph(code);
             if (!glyph.shape) continue;
             hooks.glyph(*font,code,at);at.x=Add(at.x,glyph.drawAdvance);
@@ -72,6 +81,10 @@ GumpGlyphHooks MakeGumpGlyphPixelHooks(const GumpPixelTarget& target,GumpGlyphCo
     // 특별 빈 프레임은 실제 포인터/폭을 갖지만 출력 픽셀이 없다. 일반 프레임의 상대 영역만 합성한다.
     hooks.glyph=[&target,&state](const BitmapFont& font,std::uint8_t code,ScreenPoint at) {
         const auto& shape=*font.Glyph(code).shape;const auto& frame=shape.Blocks()[0].frames[0];
+        if (!frame.IsSpecial()) target.Image(shape.Decode(0,0),{Add(at.x,frame.rect.left),Add(at.y,frame.rect.top)},&state.vfxColors);
+    };
+    hooks.extendedGlyph=[&target,&state](const FontGlyph& glyph,ScreenPoint at) { // 6차: 한글 글리프도 같은 색 표로 같은 방식으로 합성한다.
+        const auto& shape=*glyph.shape;const auto& frame=shape.Blocks()[0].frames[0];
         if (!frame.IsSpecial()) target.Image(shape.Decode(0,0),{Add(at.x,frame.rect.left),Add(at.y,frame.rect.top)},&state.vfxColors);
     };
     return hooks;

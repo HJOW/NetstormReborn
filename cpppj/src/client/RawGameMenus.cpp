@@ -117,7 +117,13 @@ std::uint32_t RawGameMenus::Options() const {
         const auto check=Global(0x531860)==size[0] && Global(0x531864)==size[1];const auto label=Text(std::to_string(size[0])+" by "+std::to_string(size[1]));
         Check(check,label,0x542948,std::string("SETSIZE(")+std::to_string(size[0])+','+std::to_string(size[1])+')');
     }
-    auto label=Text("Resolution");auto child=Need(hooks_.take)();Need(hooks_.submenu)(label,child,1,0);Need(hooks_.separator)();
+    auto label=Text("Resolution");auto child=Need(hooks_.take)();Need(hooks_.submenu)(label,child,1,0);
+    if (!hooks_.compatibilityLanguages.empty()) { // 6차 한국어: 원본에 없는 Language 하위 메뉴이며 항목마다 현재 언어에 체크하고 원문 SetLanguage 명령(0x542988)에 언어 번호를 보낸다.
+        Need(hooks_.vertical)();
+        for (const auto& language:hooks_.compatibilityLanguages) Check(language.checked ? 1U : 0U,language.label,0x542988,language.number); // 항목 이름은 번역하지 않고 각 언어 자신의 표기를 쓴다.
+        label=Text("Language");child=Need(hooks_.take)();Need(hooks_.submenu)(label,child,1,0);
+    }
+    Need(hooks_.separator)();
     Toggle("sound","Sound On",0x5c7b14);Toggle("music","Play Music",0x5c7b14);Toggle("playWind","Wind Noise",0x5c7b14);Toggle("swapLeftRightSpeakers","Speaker Swap L/R",0x5c7b14);
     // 각음량하위는현재전역을매행조회하고제목번역뒤현재장치활성을읽는다.
     for (std::uint32_t channel=0;channel<2;++channel) {

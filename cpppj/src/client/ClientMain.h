@@ -333,6 +333,8 @@ private:
     std::unique_ptr<ChatState> chat_; // 메뉴/월드보다 오래 사는 단일100×48바이트이며 미션 수명과 분리한다.
     // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.
     std::optional<o::XlatTable> translations_;
+    std::optional<o::XlatTable> koreanTranslations_; // 6차 한국어: 현재 언어가 korean일 때 xlat.korean(UTF-8)을 읽은 번역표다. 없는 키는 영어 원문을 그대로 쓴다.
+    void LoadKoreanTranslations(); // 6차 한국어: 현재 언어가 korean이면 번역표를 읽고 아니면 비운다. 언어 옵션을 해석할 때마다 호출한다.
     std::unique_ptr<o::RawXlat> nativeTranslations_; //10.78의 모든 언어 표는 선택 변경/월드 교체와 무관하게 Client 종료까지 보존한다.
     // languageNumber_: 현재 언어를 언어 표에서 찾는 번호.
     std::int32_t languageNumber_{-1}; //원문00542384의 공개 번호이며 두 번째 용어표 읽기 뒤 바뀐다.

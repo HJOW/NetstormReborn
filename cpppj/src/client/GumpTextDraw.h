@@ -11,6 +11,7 @@ struct GumpGlyphHooks {
     std::function<void(std::uint8_t)> color;
     // glyph: 한 글자의 그림을 출력하는 콜백.
     std::function<void(const BitmapFont&,std::uint8_t,ScreenPoint)> glyph;
+    std::function<void(const FontGlyph&,ScreenPoint)> extendedGlyph; // 6차 한국어: 확장 문자(한글) 글리프를 출력하는 콜백이다. 생략하면 폭만 전진하고 그리지 않는다.
     std::function<void()> illegalStyle; // 원본의 잘못된 스타일 로그 경계다. 생략해도 normal 슬롯 0으로 대체한다.
 };
 // 004a3f70/CD 004260f0 및 004a3430/CD 00426250의 출력 순서다. nullptr font는 빈 캐시 표다.

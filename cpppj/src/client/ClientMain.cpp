@@ -19,6 +19,8 @@
 #include "client/ScreenResolutions.h" //해상도 변경이 허용 목록(원본 3개+호환 추가)을 공유한다.
 #include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
 #include "client/LanguageRequest.h" //SetLanguage는같은현재언어/설정/입력큐와공유카운터를사용한다.
+#include "client/KoreanResources.h" //6차: 한국어 번역표와 D2Coding 글꼴 파일 탐색이다.
+#include "platform/PortableStartup.h" //6차: 실행 파일 폴더로 클론 데이터(lang, fonts) 위치를 찾는다.
 #include "o/RawXlat.h" //시작 때 함께 읽은 세 언어의 번역을 선택 변경 뒤에도 보존한다.
 #include "client/ProductPresentation.h"
 #include "client/RawCampaignSession.h" //Sleep 뒤의 실제 프레임말 Player 결과 소비에 장기 Session을 빌린다.
@@ -340,6 +342,7 @@ int Client::Run() {
     configuration_.ReadString("fontFaceName", fontFace);
     fonts_ = std::make_unique<FontStore>(files_, FontFaceFromUtf8(fontFace));
     if (options_.userData) fonts_->SetUserCacheDirectory(options_.userData->Cache()); // 5차: 글꼴 캐시를 설치 폴더가 아닌 사용자 Cache에 둔다.
+    fonts_->SetExtendedFace("D2Coding", FindKoreanFontFile(CloneDataRoots(options_.gameDirectory, platform::CurrentExecutableFile().parent_path()))); // 6차 한국어: 한글 글리프는 D2Coding 파일(없으면 같은 이름의 시스템 글꼴)로 요청 때 만든다.
     fonts_->Get();
     // "init screen mode": startInFullScreen이면 workingFullScreenFlags, 아니면 windowScreenFlags.
     std::uint32_t flags = static_cast<std::uint32_t>(configuration_.GetInt("workingFullScreenFlags"));
@@ -620,11 +623,20 @@ void Client::InterpretLanguageOptions() {
     languageOptionsReady_=true;LanguageOptionHooks hooks;
     hooks.read=[this] { std::string name;configuration_.ReadString("currentLanguage",name);return name; };
     hooks.load=[this](auto name) { configuration_.LoadLanguage(name); };
-    if (ApplyOriginalLanguageOption(detectedLanguage_,currentLanguage_,languageNumber_,hooks) && options_.edition!=o::OriginalEdition::Patch1078) {
+    const bool languageChanged=ApplyOriginalLanguageOption(detectedLanguage_,currentLanguage_,languageNumber_,hooks);
+    LoadKoreanTranslations(); // 6차: 현재 언어가 korean이면 번역표를 읽고 다른 언어가 되면 비운다(원문 세 언어 장부는 건드리지 않는다).
+    if (languageChanged && options_.edition!=o::OriginalEdition::Patch1078) {
         translations_.reset(); //CD 어댑터만 기존 단일 표를 사용한다.10.78은 최초 다중 장부를 언어 변경 때 비우지 않는다.
         const auto name=OriginalLanguageName(static_cast<std::uint32_t>(languageNumber_));
         if (const auto bytes=files_.TryRead("d/xlat."+std::string(name))) translations_.emplace(o::DecodeOriginalText(*bytes));
     }
+}
+// 6차 한국어: 현재 언어가 korean이면 xlat.korean(UTF-8)을 읽어 번역표로 쓰고 아니면 비운다. 파일이 없으면 영어 원문을 유지한다.
+void Client::LoadKoreanTranslations() {
+    koreanTranslations_.reset();
+    if (currentLanguage_!=static_cast<std::int32_t>(kKoreanLanguageNumber)) return;
+    auto text=ReadKoreanTranslationFile(CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path())); // 휴대 배포의 lang 또는 개발 저장소의 assets/lang에서 찾는다.
+    if (text) koreanTranslations_.emplace(std::move(*text));
 }
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(네트워크 등)의 전체 부모 순서는 후속이다.
 void Client::InterpretOptions() {
@@ -1255,6 +1267,7 @@ double Client::WallSeconds() const { return clock_.WallSeconds(timeGetTime()); }
 bool Client::Active() const { return active_; }
 // 번역표가 없거나 영어면 원문 그대로다.
 std::string Client::Translate(std::string_view text) const {
+    if (currentLanguage_==static_cast<std::int32_t>(kKoreanLanguageNumber)) return koreanTranslations_ ? koreanTranslations_->Translate(text,currentLanguage_) : std::string(text); // 6차 한국어: 클론 추가 번역표이며 없는 키/파일은 영어 원문이다.
     if (nativeTranslations_) {
         if (currentLanguage_==0 || currentLanguage_==1) return std::string(text); //원문5435b4를 읽으며 아직 갱신 전일 수 있는 공개542384를 쓰지 않는다.
         std::vector<std::uint8_t> bytes;

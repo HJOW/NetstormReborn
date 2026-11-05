@@ -130,3 +130,32 @@ TEST_CASE(PlayerListMenu_QueuesF9AndShiftPause) {
     }
     CHECK(queue.Empty());
 }
+
+namespace { // 6차 한국어: 옵션 메뉴의 Language 하위 메뉴 검사 장치다.
+// 기존 Options 장면에 호환 언어 두 항목(English 체크됨, 한국어 번호 7)만 더한다.
+struct LanguageMenuScene:GameMenusScene {
+    // 원문 SetLanguage 명령 전역(0x542988)과 호환 언어 목록을 추가로 공급한다.
+    explicit LanguageMenuScene(std::string_view values):GameMenusScene(values) { globals[0x542988]=0x020000a5U; }
+    // 기존 훅에 호환 언어 항목만 덧붙인다. 항목 이름은 이미 글꼴 바이트인 문자열이다.
+    GameMenusHooks Hooks() { auto hooks=GameMenusScene::Hooks();hooks.compatibilityLanguages={{"English",0U,true},{"KR",7U,false}};return hooks; }
+    // 덧붙인 훅으로 Options 부모를 실행해 반환 토큰과 전체 호출 순서를 읽는다.
+    std::string Run() { RawGameMenus menus(Hooks());const auto token=menus.Options();CHECK(stack.empty());return std::to_string(token)+'|'+trace; }
+};
+}
+// 호환 언어 목록이 비어 있으면 Language 하위 메뉴가 없고(원문 동작), 있으면 해상도 뒤에 체크 항목 두 개와 하위 메뉴 연결이 생긴다.
+TEST_CASE(GameMenus_OptionsLanguageSubmenuOnlyWithCompatibilityLanguages) {
+    const auto rows=LoadFixture(NETSTORM_GAME_MENUS_FIXTURE).rows;
+    bool checked=false;
+    for (const auto& row:rows) { // 첫 Options 부모 행(kind 3)만 쓴다.
+        if (Number(Split(row[1],',')[0])!=3U) continue;
+        GameMenusScene plain(row[1]);const auto base=plain.Run();
+        LanguageMenuScene with(row[1]);const auto trace=with.Run();
+        const auto english=GameMenusScene::Encoded("English"),korean=GameMenusScene::Encoded("KR"),language=GameMenusScene::Encoded("Language");
+        CHECK(base.find(language)==std::string::npos); // 원문 구성에는 Language 항목이 없다.
+        CHECK(trace.find("K,1,"+english+",33554597,n0,1,1")!=std::string::npos); // 현재 언어(English)는 체크되고 번호 0을 보낸다.
+        CHECK(trace.find("K,0,"+korean+",33554597,n7,1,1")!=std::string::npos); // 한국어는 체크되지 않고 번호 7을 보낸다.
+        CHECK(trace.find(";T,"+language+";Q;S,"+language+',')!=std::string::npos); // 제목 번역 뒤 하위 메뉴를 꺼내 연결한다.
+        checked=true;break;
+    }
+    CHECK(checked);
+}

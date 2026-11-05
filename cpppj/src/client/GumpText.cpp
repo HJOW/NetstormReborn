@@ -1,5 +1,6 @@
 // 원본의 DWORD 폭 감김·signed 길이·슬롯 높이와 그림자 출력 순서를 보존한다.
 #include "client/GumpText.h"
+#include "o/OriginalText.h" // 6차: 확장 문자(한글) 시퀀스 상수와 숫자 판별이다.
 #include "client/StoneButtonGump.h"
 #include <algorithm>
 #include <bit>
@@ -57,6 +58,10 @@ void GumpText::Measure(std::span<const char> bytes,const GumpTextContext& contex
         const auto& font=fonts_.Get(slot,style);
         // 측정은 첫 폭 표만 쓰며 실제 그리기 전진 폭/ABC A와 캐시의 높이를 섞지 않는다.
         for (std::size_t i=0;i<widths.size();++i) widths[i]=font.Glyph(static_cast<std::uint8_t>(i)).advance;
+        if (font.HasExtended()) { // 6차: 확장 시퀀스는 시작 바이트에 한 글자 폭을 주고 숫자 바이트는 폭 0으로 만든다.
+            widths[o::kExtendedTextLead]=font.ExtendedAdvance();
+            for (std::size_t i=0;i<widths.size();++i) if (o::IsExtendedTextDigit(static_cast<std::uint8_t>(i))) widths[i]=0;
+        }
     }
     MeasureGumpText(bytes,widths,logicalHeight,context,width,height,length,edition_);
 }

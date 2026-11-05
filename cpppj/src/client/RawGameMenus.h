@@ -8,6 +8,8 @@
 namespace netstorm::client {
 // 숫자DWORD와 NUL 종료 원문 문자열 인자를 구별한다. 실제 고리는 GUI 바인더가 공급한다.
 using GameMenuParameter=std::variant<std::uint32_t,std::string>;
+// 6차 한국어: 옵션 메뉴 Language 하위 메뉴의 한 항목이다. 표시 이름은 그 언어 자신의 글꼴 바이트이며 number는 원문 SetLanguage 명령의 언어 번호다.
+struct GameMenuLanguage { std::string label; std::uint32_t number; bool checked; };
 // 상위 메뉴가 실제 원문 시점에 조회하는 게임·설정·GUI 의존이다.
 struct GameMenusHooks {
     std::function<std::uint32_t(std::uint32_t)> global; // 주소로 지정한 원본 전역의 현재DWORD/BYTE다. 별도 캐시 모드로 대체하지 않는다.
@@ -32,6 +34,7 @@ struct GameMenusHooks {
     std::function<void(std::string_view,std::uint32_t,std::uint32_t,std::uint32_t)> submenu; //label/token/enabled/checked다.
     std::function<const GumpCreateNode*(std::uint32_t)> node; // fancy배치의현재기본폭/높이를읽는다.
     std::function<void(std::int32_t,std::int32_t,std::uint32_t)> attachCurrent; // 실제가운데좌표/현재루트로controlled메뉴를부착한다.
+    std::vector<GameMenuLanguage> compatibilityLanguages; // 6차: 원본에 없는 Language 하위 메뉴 항목이다. 비어 있으면 하위 메뉴를 만들지 않아 원문 메뉴 구성/조회 순서를 그대로 둔다.
     std::span<const std::array<std::uint32_t,2>> compatibilityResolutions; // Windows10/11 호환 Client만 원문 세 행 뒤에 추가한다. 기본 빈 목록은 원문 동작/조회 순서를 유지한다.
 };
 // 큰 게임helper는 명시경계이고 메뉴부모의조건·조회순서·문구·명령은원본몸체다.

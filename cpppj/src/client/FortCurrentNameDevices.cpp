@@ -32,7 +32,7 @@ FortCurrentNameDevices::FortCurrentNameDevices(ClientFortGlobals& names,Campaign
     };
     hooks_.samePath=[](auto first,auto second) { const std::string left(Text(first)),right(Text(second));return _stricmp(left.c_str(),right.c_str())==0; }; // 원문 CRT의 현재 NUL/대소문자 비교다.
     hooks_.deleteRequest=[this](auto path) { if (!work_) throw std::logic_error("현재 Fort 삭제의 실제 작업 namespace 미연결");work_->Delete(Text(path)); };
-    hooks_.config=[this](auto key,auto value) { const auto text=Text(value);config_.Set(key,o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); }; // 같은 Config의 실제 현재 대상/즉시 해석을 사용한다.
+    hooks_.config=[this](auto key,auto value) { const auto text=Text(value);config_.Set(key,o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); }; // 같은 Config의 실제 현재 대상/즉시 해석을 사용한다.
 }
 void FortCurrentNameDevices::Set(std::span<const std::uint8_t> name) { std::array<std::uint8_t,256> scratch;Set(name,scratch); } // 원문 지역 미작성 scratch이며 선택된 oldPath 복사가 먼저 채운다.
 void FortCurrentNameDevices::Set(std::span<const std::uint8_t> name,std::span<std::uint8_t,256> oldPathScratch) { o::SetCurrentFortName(name,oldPathScratch,globals_,hooks_); } // 두 snapshot/Notify/삭제와 부분 효과는 같은 기존 본체가 소유한다.

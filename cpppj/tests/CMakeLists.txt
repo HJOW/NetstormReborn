@@ -3637,3 +3637,9 @@ target_sources(netstorm_tests PRIVATE ScreenResolutionTests.cpp)
 add_executable(netstorm_screen_resolution_tests FocusedTestMain.cpp ScreenResolutionTests.cpp)
 target_link_libraries(netstorm_screen_resolution_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_screen_resolution_tests)
+
+# 6차 한국어: 한글 확장 시퀀스 부호화의 계약을 게임 없이 확인한다(938).
+target_sources(netstorm_tests PRIVATE KoreanTextTests.cpp)
+add_executable(netstorm_korean_text_tests FocusedTestMain.cpp KoreanTextTests.cpp)
+target_link_libraries(netstorm_korean_text_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_korean_text_tests)

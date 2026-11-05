@@ -5,7 +5,7 @@
 
 namespace netstorm::client { // 실제 Client 전역과 독립 원문 관측이 같은 선택 본체를 사용한다.
 namespace { // 보호 PE005435b8의 이름 순서다.
-constexpr std::array<std::string_view,7> kLanguageNames{"english","english","french","german","spanish","japanese","portuguese"}; //번호0/1은 별칭 합치기 없이 그대로 둔다.
+constexpr std::array<std::string_view,8> kLanguageNames{"english","english","french","german","spanish","japanese","portuguese","korean"}; //번호0/1은 별칭 합치기 없이 그대로 둔다. 6차: 마지막 korean(7)은 원본에 없는 클론 추가 언어이며 앞의 일곱은 원문 순서 그대로다.
 }
 // OS API가 반환한 LANGID의 낮은 WORD만 원문과 같은 분기로 해석한다.
 std::uint32_t DetectOriginalLanguage(std::uint16_t langid) {

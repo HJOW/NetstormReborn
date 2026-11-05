@@ -19,7 +19,7 @@ std::string CaptureNoticeFontBytes(std::string_view text) {
         if (!width || start+width>text.size()) throw std::invalid_argument("Capture 안내의 UTF-8 경계");std::uint32_t code=lead&(width==1 ? 0x7fU:width==2 ? 0x1fU:width==3 ? 0x0fU:0x07U);
         for (unsigned index=1;index<width;++index) { const auto next=static_cast<std::uint8_t>(text[offset++]);if ((next&0xc0U)!=0x80U) throw std::invalid_argument("Capture 안내의 UTF-8 후속 바이트");code=(code<<6)|(next&0x3fU); } //같은코드포인트의전체바이트를소비한다.
         if ((width==2 && code<0x80) || (width==3 && code<0x800) || (width==4 && code<0x10000) || code>0x10ffff || (code>=0xd800 && code<=0xdfff)) throw std::invalid_argument("Capture 안내의 UTF-8 코드포인트");
-        try { const auto bytes=o::EncodeOriginalText(text.substr(start,width));result.append(bytes.begin(),bytes.end()); }
+        try { const auto bytes=o::EncodeDisplayText(text.substr(start,width));result.append(bytes.begin(),bytes.end()); }
         catch (const std::invalid_argument&) { char escaped[16]{};std::snprintf(escaped,sizeof(escaped),"[U+%04X]",static_cast<unsigned>(code));result+=escaped; } //Windows10/11 호환 차이: 원본8비트글꼴의미지원경로문자는식별표기로보여종료예외를막는다. Unicode실제파일명/원문서유럽문자는바꾸지않고한국어UI는6차에구현한다.
     }
     return result;

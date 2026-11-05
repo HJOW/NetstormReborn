@@ -11,8 +11,8 @@ public:
     explicit PhysicalLimitError(const char* message):std::length_error(message) {} // 기존 length_error 계약을 유지하며 ERROR 링크로 성공 대체하지 않는다.
 };
 std::string_view CString(std::string_view value) { return value.substr(0,value.find('\0')); } // 첫NUL 뒤의 입력은 사용하지 않는다.
-std::string Decode(std::string_view value) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}); } // Config로 들어갈 때만 원문 바이트를 변환한다.
-std::string Narrow(std::string_view value) { const auto bytes=o::EncodeOriginalText(value);return {bytes.begin(),bytes.end()}; } // 실제 메뉴/고리에는 원문 글꼴 바이트를 쓴다.
+std::string Decode(std::string_view value) { return o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}); } // Config로 들어갈 때만 원문 바이트를 변환한다.
+std::string Narrow(std::string_view value) { const auto bytes=o::EncodeDisplayText(value);return {bytes.begin(),bytes.end()}; } // 실제 메뉴/고리에는 원문 글꼴 바이트를 쓴다.
 void Limit(std::string_view value,std::size_t capacity) { if (Narrow(value).size()>=capacity) throw PhysicalLimitError("Tell 파일 목록의 원본 지역 NUL 범위 초과"); } // 원문의 물리 오버런 입력만 거부한다.
 std::string FileName(std::string_view path) { //59c40(1)의 첫 점부터 제거와59b20(1)의 마지막 경로 구분자를 보존한다.
     const auto separator=path.find_last_of("\\/:");auto name=std::string(path.substr(separator==path.npos ? 0 : separator+1));const auto dot=name.find('.');if (dot!=name.npos) name.resize(dot);return name;

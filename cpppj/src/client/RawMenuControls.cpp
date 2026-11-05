@@ -640,7 +640,7 @@ std::uint32_t RawMenuControls::ShowEmbeddedTell(std::string_view name,o::ConfigI
     auto& s=*impl_;if (!s.helpBody) throw std::logic_error("내장 TELL의 실제 공통 HtmlBody 처리기 미설치");EmbeddedTellHooks h;
     h.missing=[](auto key) { std::clog<<"TELL cannot find \""<<key<<"\".\n"; };
     h.construct=[&] { s.bodyState.screenWidth=s.common.create.screenWidth;s.bodyState.screenHeight=s.common.create.screenHeight;const auto token=s.AllocateHelp(0x40a4);s.embeddedTells.insert(token);return s.helpBody->Construct(token); };
-    h.setHtml=[&](auto token,auto body) { const auto bytes=o::EncodeOriginalText(body);s.RenderEmbeddedTell(token,{reinterpret_cast<const char*>(bytes.data()),bytes.size()}); };h.serial=[&](auto token) { return s.common.node(token)->serial; };
+    h.setHtml=[&](auto token,auto body) { const auto bytes=o::EncodeDisplayText(body);s.RenderEmbeddedTell(token,{reinterpret_cast<const char*>(bytes.data()),bytes.size()}); };h.serial=[&](auto token) { return s.common.node(token)->serial; };
     return ShowEmbeddedTellInConfig(name,config,std::move(mission),std::move(h));
 }
 // 미부착 상태에서도 현재 등록된 실제 부모를 먼저 Kill하고 자식 우선으로 반납한다.

@@ -7,6 +7,7 @@
 #include "client/GameMenuCommands.h"
 #include "client/DialogExitCommand.h"
 #include "client/ScriptCommand.h"
+#include "o/OriginalText.h" // 6차: 한글 표시 바이트(EncodeDisplayText) 기대값이다.
 #include "platform/Utf8Path.h"
 #include <bit>
 #include <fstream>
@@ -49,7 +50,7 @@ TEST_CASE(CaptureInput_ActualClientOwnerWithoutScreenAndStableStart) {
 TEST_CASE(CaptureInput_ActualSharedReportAndUnicodeWritePath) {
     ClientStaticStrings strings;strings.Initialize(10240);const std::string first(90,'a'),last(91,'b');const auto bytes=strings.FormatCaptureRange(first,last);const auto text=std::string(reinterpret_cast<const char*>(bytes.data()));CHECK(text=="Wrote "+first+" through "+last+".\n" && text.size()>80 && bytes[80]=='a');
     const auto nul=strings.FormatCaptureRange(std::string_view("one\0ignored",11),std::string_view("two\0ignored",11));CHECK(std::string(reinterpret_cast<const char*>(nul.data()))=="Wrote one through two.\n");
-    CHECK(CaptureNoticeFontBytes("plain000.bmp")=="plain000.bmp" && CaptureNoticeFontBytes("한 😀.bmp")=="[U+D55C] [U+1F600].bmp");CHECK(CaptureNoticeFontBytes("é€")==std::string("\xe9\x80",2));bool invalid{};try { CaptureNoticeFontBytes(std::string("\xf0\x80\x80\x80",4)); }catch (const std::invalid_argument&) { invalid=true; }CHECK(invalid);
+    CHECK(CaptureNoticeFontBytes("plain000.bmp")=="plain000.bmp" && CaptureNoticeFontBytes("한 😀.bmp")==[]{ const auto han=netstorm::o::EncodeDisplayText("한");return std::string(han.begin(),han.end())+" [U+1F600].bmp"; }()); // 6차: 한글은 확장 글꼴 바이트로 표시하고 표시할 수 없는 이모지만 [U+코드]로 식별한다.CHECK(CaptureNoticeFontBytes("é€")==std::string("\xe9\x80",2));bool invalid{};try { CaptureNoticeFontBytes(std::string("\xf0\x80\x80\x80",4)); }catch (const std::invalid_argument&) { invalid=true; }CHECK(invalid);
 #ifdef _WIN32
     const std::filesystem::path root(u8"H:/게임 😀"),relative(u8"d/프레임000.bmp");CHECK(ResolveCaptureBitmapPath(root,"d/sequence000.bmp")==root/"d/sequence000.bmp");CHECK(ResolveCaptureBitmapPath(root,netstorm::platform::PathToUtf8(relative))==root/relative);
     const std::filesystem::path absolute(u8"C:/캡처 😀/frame000.bmp");CHECK(ResolveCaptureBitmapPath(root,netstorm::platform::PathToUtf8(absolute))==absolute);CHECK(ResolveCaptureBitmapPath(root,"H:frame000.bmp")==root/"frame000.bmp");CHECK(ResolveCaptureBitmapPath(root,"\\d\\frame000.bmp")==root/"d/frame000.bmp");

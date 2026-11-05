@@ -47,7 +47,7 @@ void InitializeClientChatManager(Client& client) {
         const std::string source(name);client.DotCommandGlobals()->Register({reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1},callback,flag);
     }; // 같은 실제 인접 명령표에 원문 이름/함수 식별자/표시 포인터를 등록한다.
     hooks.readConfig=[&client](auto key)->std::optional<std::string> {
-        std::string value;client.Configuration().ReadString(key,value);const auto bytes=o::EncodeOriginalText(value);return std::string(bytes.begin(),bytes.end());
+        std::string value;client.Configuration().ReadString(key,value);const auto bytes=o::EncodeDisplayText(value);return std::string(bytes.begin(),bytes.end());
     }; // 실제 Config의 UTF8 저장값을 원문 좁은 바이트로 돌려 CRT60/500에 전달한다. 누락/빈 값은 같은 빈 지역 문자열이다.
     o::InitializeChatManager({client.ChatManagerGlobals()->Current(),client.CurrentSubscriber(),client.CoreDataGlobals()->Active()},hooks);
 }
@@ -88,7 +88,7 @@ void BindClientChatRecipients(RawChatWindowContext& context,Client& client,std::
 std::uint32_t ApplyClientChatFormat(Client& client,bool front,std::string_view input) {
     const auto owner=client.ChatManagerGlobals();const auto memory=MakeClientChatManagerHooks(owner);ChatFormatHooks hooks;
     hooks.memory=memory.memory;hooks.copyFormat=memory.copyFormat;hooks.assertion=ChatAssertion;
-    hooks.writeConfig=[&client](auto key,auto value) { const std::span<const std::uint8_t> bytes{reinterpret_cast<const std::uint8_t*>(value.data()),value.size()};client.Configuration().Set(key,o::DecodeOriginalText(bytes)); }; // 같은 좁은 원문 바이트를 기존 UTF8 저장 경계에서만 변환한다.
+    hooks.writeConfig=[&client](auto key,auto value) { const std::span<const std::uint8_t> bytes{reinterpret_cast<const std::uint8_t*>(value.data()),value.size()};client.Configuration().Set(key,o::DecodeDisplayText(bytes)); }; // 같은 좁은 원문 바이트를 기존 UTF8 저장 경계에서만 변환한다.
     hooks.illegalFormat=[&client](auto value) { client.WriteDiagnosticLog(29,"Illegal format \""+std::string(value)+"\"\n"); };
     return ApplyChatFormat(front,{owner->Current(),client.CurrentSubscriber()},input,owner->FormatCapture(),hooks);
 }
