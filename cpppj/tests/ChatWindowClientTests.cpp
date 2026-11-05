@@ -118,6 +118,26 @@ TEST_CASE(ChatWindowClient_ActualHelperMenusPreserveStablePayloadsBeyondInputRin
     scene.buttons.HandleGump(token,0x02000115,0,firstColor);CHECK(scene.Input(token).Text()=="~[C.0]");scene.menus->Close();scene.menus->CloseChatWindows();
 }
 
+TEST_CASE(ChatModeUi_CurrentHelperModesConfigAndConsoleSurviveReopening) { // Chat의 현재 두 모드·설정 재조회와 공통 메뉴 반납이 같은 실제 Console 버퍼를 보존해야 한다.
+    ChatScene scene;auto context=scene.Context();context.config=[&scene](auto key) { return scene.client.Configuration().GetInt(key); };const auto token=scene.menus->CreateChatWindow(std::move(context));scene.menus->Attach(token,10,10,scene.buttons.RootToken(),0);scene.menus->ChatGeometryBackend()->SetInputVisible(token,1);scene.menus->TextEntryControls()->Backend().SetText(scene.Root(token).console,std::span("EVERYONE: kept",15));const auto count=scene.Count(),console=scene.Root(token).console,buffer=scene.Console(token).buffer;const auto serial=scene.menus->Node(scene.Root(token).helper)->serial;
+    const std::array<std::string_view,13> keys{"allowzonesounds","zonebgcolor","zonefgcolor","zoneoffset","ShowEveryone","ShowAllies","ShowObserver","ShowWisper","ShowMyAllies","ShowMyEmenys","ShowMyNeutrals","ShowChatWindow","PlaySoundMessage"}; // 원문 철자와 실제 네 효과/아홉 전투 표시 설정이다.
+    for (const auto battle:{false,true}) for (const auto challenge:{false,true}) for (const auto enabled:{0,1}) { // 한 UI의 현재 모드를 바꿔 여덟 helper를 재개방하며 MP/송신 효과는 실행하지 않는다.
+        scene.battle=battle;scene.storage->ownerMode.challenge=challenge;
+        for (const auto key:keys) scene.client.Configuration().SetInt(key,enabled); // 현재 Client 설정만 바꾸며 예상 메뉴 항목은 제품이 작성한다.
+        scene.buttons.HandleGump(token,0x0200002cU,serial,0);CHECK(scene.menus->HasMenus());auto globals=scene.client.ChatWindowGlobals();std::set<std::string> settings;std::uint32_t formats{};
+        for (std::uint32_t id=1;id<kGumpRegistryCapacity;++id) { // 원문 고정 등록표의 현재 세로 메뉴만 읽고 이전에 반납한 노드는 제외한다.
+            const auto* base=scene.menus->Node(scene.buttons.RegisteredGump(id));if (!base || base->vtable!=0x50c6f0U) continue;const auto& menu=*static_cast<const MenuGumpNode*>(base);
+            for (std::uint32_t index=0;index<menu.itemCount;++index) { // 실제 행의 원문 명령과 장기 문자열 인자·체크 비트를 확인한다.
+                const auto& item=menu.items[index];if (!(item.flags&1U)) continue;if (item.command==0x02000105U || item.command==0x02000106U) { ++formats;CHECK(!item.parameter); }if (item.command!=0x0200006dU) continue;CHECK(globals->strings.contains(item.parameter));const auto text=globals->strings.at(item.parameter);CHECK(text.ends_with(enabled ? "=0" : "=1") && bool(item.flags&4U)==bool(enabled));settings.insert(text.substr(0,text.size()-2));
+            }
+        }
+        CHECK(formats==((battle || challenge) ? 2U : 0U));CHECK(settings.size()==(battle ? 13U : challenge ? 4U : 0U));
+        for (std::size_t index=0;index<keys.size();++index) CHECK(settings.contains(std::string(keys[index]))==(index<4 ? (battle || challenge) : battle)); // 모드마다 포함되는 현재 설정 집합을 독립적으로 확인한다.
+        scene.menus->RequestClosePopups();scene.menus->CleanupFrame();CHECK(!scene.menus->HasMenus() && scene.Count()==count && scene.Root(token).console==console && scene.Console(token).buffer==buffer && scene.Input(token).Text()=="EVERYONE: kept" && (scene.Console(token).flags&1U));std::printf("CHAT MODE battle=%u challenge=%u enabled=%d settings=%zu console=%u\n",battle,challenge,enabled,settings.size(),console);
+    }
+    scene.menus->CloseChatWindows();CHECK(scene.client.ChatWindowGlobals()->window.current==0 && scene.menus->TextEntryControls()->Storage().BufferCount()==0);
+}
+
 // 원문 일반 부착·입력 표시 전환·실제 회색 배경/스타일 로그/선택·클립을 검사한다.
 TEST_CASE(ChatWindowClient_RealGeometryInputAndStyledPixels) {
     ChatScene scene;const auto token=scene.Create();auto& root=scene.Root(token);root.baseWidth=root.width=420;root.baseHeight=root.height=110;scene.menus->Attach(token,30,200,scene.buttons.RootToken(),0);scene.menus->ChatGeometryBackend()->SetInputVisible(token,1);

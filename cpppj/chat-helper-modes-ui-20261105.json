@@ -1,0 +1,90 @@
+{
+  "unit": 922,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "status": "완료·전체 목표 진행 중",
+  "productCodeChanges": false,
+  "productUnit": 921,
+  "productSha256": "fca9945c0f858e6d9088680ad359fd948ab4106d6dba0ce31ad2d47b5620dcd0",
+  "firstRunPassed": true,
+  "newCases": 1,
+  "uniqueCases": 10,
+  "helperMenus": 8,
+  "configurationRows": 60,
+  "formatRows": 12,
+  "tests": [
+    {
+      "filter": "ChatModeUi_",
+      "exit": 0,
+      "log": "extracted\\cpp-resume-922\\test-first.log"
+    },
+    {
+      "filter": "ChatWindow_IndependentNative",
+      "exit": 0,
+      "log": "extracted/cpp-resume-922/test-ChatWindow_IndependentNative.log"
+    },
+    {
+      "filter": "ChatWindowClient_ActualHelperMenus",
+      "exit": 0,
+      "log": "extracted/cpp-resume-922/test-ChatWindowClient_ActualHelperMenus.log"
+    },
+    {
+      "filter": "ChatWindowClient_ConcurrentRoots",
+      "exit": 0,
+      "log": "extracted/cpp-resume-922/test-ChatWindowClient_ConcurrentRoots.log"
+    },
+    {
+      "filter": "ChatWindowClient_EnterTypingToggle",
+      "exit": 0,
+      "log": "extracted/cpp-resume-922/test-ChatWindowClient_EnterTypingToggle.log"
+    },
+    {
+      "filter": "ChatWindowClient_TabLateBinding",
+      "exit": 0,
+      "log": "extracted/cpp-resume-922/test-ChatWindowClient_TabLateBinding.log"
+    },
+    {
+      "filter": "ChatWindowClient_PartialCreation",
+      "exit": 0,
+      "log": "extracted/cpp-resume-922/test-ChatWindowClient_PartialCreation.log"
+    },
+    {
+      "filter": "ChatWindowClient_LocalSubmitEmptyEnter",
+      "exit": 0,
+      "log": "extracted/cpp-resume-922/test-ChatWindowClient_LocalSubmitEmptyEnter.log"
+    },
+    {
+      "filter": "ChatWindowClient_FormatCommandsUseActualConsole",
+      "exit": 0,
+      "log": "extracted/cpp-resume-922/test-ChatWindowClient_FormatCommandsUseActualConsole.log"
+    },
+    {
+      "filter": "ChatWindowClient_RealGeometryInputAndStyledPixels",
+      "exit": 0,
+      "log": "extracted/cpp-resume-922/test-ChatWindowClient_RealGeometryInputAndStyledPixels.log"
+    }
+  ],
+  "names": [
+    "ChatModeUi_CurrentHelperModesConfigAndConsoleSurviveReopening",
+    "ChatWindow_IndependentNativeCreationInputHelperAndLifetime",
+    "ChatWindowClient_ActualHelperMenusPreserveStablePayloadsBeyondInputRing",
+    "ChatWindowClient_ConcurrentRootsSharedLogAndNativeCurrentRetirement",
+    "ChatWindowClient_EnterTypingToggleAndCurrentOptionRequest",
+    "ChatWindowClient_TabLateBindingRealCyclesAndPersistentClientState",
+    "ChatWindowClient_PartialCreationAndSelectedUnboundDevicesAreExplicit",
+    "ChatWindowClient_LocalSubmitEmptyEnterUsesCurrentChallenge",
+    "ChatWindowClient_FormatCommandsUseActualConsoleAndConfig",
+    "ChatWindowClient_RealGeometryInputAndStyledPixels"
+  ],
+  "nativeChatRows": 180,
+  "finalFailedChecks": 0,
+  "releaseBuilds": 1,
+  "warnings": 0,
+  "errors": 0,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "protectedUnchanged": true,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "newNetworkTests": 0
+}

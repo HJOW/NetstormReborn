@@ -2578,6 +2578,8 @@ set_source_files_properties(IssueCommandsTests.cpp PROPERTIES COMPILE_DEFINITION
 add_executable(netstorm_issue_commands_tests FocusedTestMain.cpp IssueCommandsTests.cpp ChatWindowClientTests.cpp ThunderProcessTests.cpp ClientChatRuntimeTests.cpp)
 # 같은 전체 HUD/Chat의 화면 재배치와 기존 원문 도킹 대조를 창 없이 선택 실행한다.
 target_sources(netstorm_issue_commands_tests PRIVATE ProductionInitialContextTests.cpp HudDockTests.cpp)
+# 전체 Chat 부모의 기존 원문 관측도 같은 선택 실행 대상에서 재대조한다.
+target_sources(netstorm_issue_commands_tests PRIVATE ChatWindowTests.cpp)
 target_link_libraries(netstorm_issue_commands_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_issue_commands_tests)
 target_compile_definitions(netstorm_issue_commands_tests PRIVATE ${_netstorm_menu_session_definitions})
