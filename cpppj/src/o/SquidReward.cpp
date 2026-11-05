@@ -1,5 +1,6 @@
 // 삭제/해체 보상의 판본별 x87 연산 순서를 복원한다. PATCH 실제 AI 지갑은 같은 본체 처리기에 연결한다.
 #include "o/SquidReward.h"
+#include "o/RawRiftHitPoints.h" // Factory와 같은 현재 TYPE HP 몸체를 사용한다.
 #include <bit>
 #include <cmath>
 #include <limits>
@@ -58,6 +59,7 @@ void SquidReward::BindCurrentTypes(std::span<const RiftTypeRecord> types) {
         throw std::invalid_argument("보상 현재 TYPE 대여의 판본/길이 오류");
     currentTypes_=types;
 }
+void SquidReward::BindHitPointDiagnostics(std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) { hitPointAssertion_=std::move(assertion); } // 호출 위치에서 선택된 진단만 요구하며 빈 연결은 명시 미연결이다.
 // 최초 비용표만 대여하고 현재 HP/플래그 표의 주소와 독립적으로 보존한다.
 void SquidReward::BindLoadedCosts(std::span<const RiftTypeRecord> types) {
     if (!types.empty() && (pool_.Edition()!=OriginalEdition::Patch1078 || types.size()!=188))
@@ -95,12 +97,11 @@ std::int32_t SquidReward::Count(Sid sid) const {
     return Raw(sid)[kState]>>5;
 }
 std::int32_t SquidReward::TypeHitPoints(std::uint32_t type) const {
-    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    const auto& record=TypeRecord(type);
-    // 패치판 디버그 assert는 HP 비트가 없는 타입(dais 제외)의 조회를 보고한다. 보고 UI는 복원하지 않으므로 거부한다.
-    if (patch && state_.debugAsserts && !(record.flags1&kHasHp) && type!=state_.DaisType())
-        throw std::logic_error("보상 타입 HP assert 위반");
-    return state_.PriestQuarterHp() && type==state_.PriestType() ? record.maxHitPoints/4 : record.maxHitPoints; // 1/4 비교 대상은 현재 사제 TYPE DWORD다(단위862).
+    const auto selectedBase=CurrentTypes();const auto& record=TypeRecord(type); // 진단이 표 기준을 옮겨도 처음 선택한 물리 this를 유지한다.
+    RiftHitPointHooks hooks;
+    hooks.number=[this,selectedBase,&record] { return CurrentRiftTypeNumber(record,selectedBase,CurrentTypes()); }; // 원문 getNum이 소비되는 시점의 현재 base를 읽는다.
+    hooks.assertion=[this](auto expression,auto file,auto line) { const auto selected=hitPointAssertion_;if (!selected) throw std::logic_error("보상 TYPE HP의 실제 진단 장치 미연결");selected(expression,file,line); };
+    return ReadRiftHitPoints(pool_.Edition(),record,{state_.debugAsserts,RawCheckingFlag{state_.sharedPriestQuarterHp ? *state_.sharedPriestQuarterHp : state_.priestQuarterHp},state_.sharedPriestType ? *state_.sharedPriestType : state_.types.priest,state_.sharedDaisType ? *state_.sharedDaisType : state_.types.dais},hooks);
 }
 bool SquidReward::HasHitPoints(Sid sid) const {
     const auto raw=Raw(sid);const auto& type=TypeRecord(raw[kType]);

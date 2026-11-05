@@ -1,0 +1,316 @@
+{
+  "unit": 900,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastPreciseHost": "HJOW-Athlon",
+  "lastPreciseDate": "2026-11-03",
+  "status": "unit-complete-overall-goal-in-progress",
+  "scope": "보상 TYPE HP의 공유 getter/현재 checking·장기 전역·진단 복귀와 실제 Session 연결",
+  "implemented": {
+    "getter": "SquidReward.TypeHitPoints가 같은 ReadRiftHitPoints를 호출하며 선택된 물리TYPE/base를 저장하고 진단 후현재base·quarter·priest와선택this HP를읽는다.",
+    "diagnostics": "선택된 assertion callable을복사해정상복귀/자기연결교체를지원한다. 미연결선택진단은명시오류이며성공HP를위조하지않는다.",
+    "client": "RawCampaignSession이기존services.ai.assertion을연결한다. 기존현재AiDebug checking/GameAux 약화·사제·제단/dais 주소를유지한다.",
+    "contract": "독립생성시사본과CD의BindCurrentTypes기존거부계약은유지한다. 번호API가표밖주소나초기음수getNum을표현한다고주장하지않는다."
+  },
+  "nativeReference": {
+    "fixture": "cpppj/tests/fixtures/rifttype-hit-points-x86.tsv",
+    "fixtureSha256": "58197e3d412b3a01482039fe00930b831ce302ab63c6de319e6bdd7121d5d9e1",
+    "originalRows": 1160,
+    "rewardAdapterRows": 1158,
+    "adapterExcludedInitialNegativeNumberRows": 2,
+    "existingDirectGetterRows": 1160,
+    "newNativeObservations": 0,
+    "newFixtures": 0,
+    "referenceRecord": "cpppj/rifttype-hit-points-current-20261105.json",
+    "quarterRepresentation": "기존보상bool은원문DWORD의영/비영관문만대응. full DWORD 저장동일성주장아님.",
+    "callerAudit": {
+      "originals": {
+        "sites": 19,
+        "parents": 11,
+        "calls": [
+          {
+            "site": "0x40dd26",
+            "entry": "40db90",
+            "name": "FUN_0040db90"
+          },
+          {
+            "site": "0x40de01",
+            "entry": "40db90",
+            "name": "FUN_0040db90"
+          },
+          {
+            "site": "0x40e51d",
+            "entry": "40e2b0",
+            "name": "FUN_0040e2b0"
+          },
+          {
+            "site": "0x42419d",
+            "entry": "424110",
+            "name": "FUN_00424110"
+          },
+          {
+            "site": "0x432e33",
+            "entry": "432a10",
+            "name": "FUN_00432a10"
+          },
+          {
+            "site": "0x432eac",
+            "entry": "432a10",
+            "name": "FUN_00432a10"
+          },
+          {
+            "site": "0x432f89",
+            "entry": "432a10",
+            "name": "FUN_00432a10"
+          },
+          {
+            "site": "0x44c094",
+            "entry": "44c060",
+            "name": "FUN_0044c060"
+          },
+          {
+            "site": "0x494614",
+            "entry": "494580",
+            "name": "FUN_00494580"
+          },
+          {
+            "site": "0x494653",
+            "entry": "494580",
+            "name": "FUN_00494580"
+          },
+          {
+            "site": "0x4951a4",
+            "entry": "4950f0",
+            "name": "FUN_004950f0"
+          },
+          {
+            "site": "0x49899b",
+            "entry": "498220",
+            "name": "FUN_00498220"
+          },
+          {
+            "site": "0x4989b4",
+            "entry": "498220",
+            "name": "FUN_00498220"
+          },
+          {
+            "site": "0x4989ef",
+            "entry": "498220",
+            "name": "FUN_00498220"
+          },
+          {
+            "site": "0x4adce6",
+            "entry": "4adcb0",
+            "name": "FUN_004adcb0"
+          },
+          {
+            "site": "0x4adcff",
+            "entry": "4adcb0",
+            "name": "FUN_004adcb0"
+          },
+          {
+            "site": "0x4b0d04",
+            "entry": "4b0c60",
+            "name": "FUN_004b0c60"
+          },
+          {
+            "site": "0x4c4e98",
+            "entry": "4c4cc0",
+            "name": "FUN_004c4cc0"
+          },
+          {
+            "site": "0x4c4eb5",
+            "entry": "4c4cc0",
+            "name": "FUN_004c4cc0"
+          }
+        ]
+      },
+      "originalCD": {
+        "sites": 19,
+        "parents": 12,
+        "calls": [
+          {
+            "site": "0x40c1f5",
+            "entry": "40c110",
+            "name": "FUN_0040c110"
+          },
+          {
+            "site": "0x40cd3f",
+            "entry": "40ccd0",
+            "name": "FUN_0040ccd0"
+          },
+          {
+            "site": "0x40cd75",
+            "entry": "40ccd0",
+            "name": "FUN_0040ccd0"
+          },
+          {
+            "site": "0x42c5d6",
+            "entry": "42c3d0",
+            "name": "FUN_0042c3d0"
+          },
+          {
+            "site": "0x42c6a7",
+            "entry": "42c3d0",
+            "name": "FUN_0042c3d0"
+          },
+          {
+            "site": "0x42cd3a",
+            "entry": "42cbf0",
+            "name": "FUN_0042cbf0"
+          },
+          {
+            "site": "0x42d132",
+            "entry": "42cf90",
+            "name": "FUN_0042cf90"
+          },
+          {
+            "site": "0x456790",
+            "entry": "455f60",
+            "name": "FUN_00455f60"
+          },
+          {
+            "site": "0x45679c",
+            "entry": "455f60",
+            "name": "FUN_00455f60"
+          },
+          {
+            "site": "0x4624b7",
+            "entry": "462480",
+            "name": "FUN_00462480"
+          },
+          {
+            "site": "0x4897af",
+            "entry": "4891f0",
+            "name": "FUN_004891f0"
+          },
+          {
+            "site": "0x48985e",
+            "entry": "4891f0",
+            "name": "FUN_004891f0"
+          },
+          {
+            "site": "0x489a2c",
+            "entry": "4891f0",
+            "name": "FUN_004891f0"
+          },
+          {
+            "site": "0x4a5d7c",
+            "entry": "4a5d30",
+            "name": "FUN_004a5d30"
+          },
+          {
+            "site": "0x4ae0ba",
+            "entry": "4ae040",
+            "name": "FUN_004ae040"
+          },
+          {
+            "site": "0x4aed56",
+            "entry": "4aed30",
+            "name": "FUN_004aed30"
+          },
+          {
+            "site": "0x4aed7e",
+            "entry": "4aed30",
+            "name": "FUN_004aed30"
+          },
+          {
+            "site": "0x4ce4fb",
+            "entry": "4ce330",
+            "name": "FUN_004ce330"
+          },
+          {
+            "site": "0x4ce507",
+            "entry": "4ce330",
+            "name": "FUN_004ce330"
+          }
+        ]
+      }
+    }
+  },
+  "validation": {
+    "buildCommands": 1,
+    "buildExits": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "testCommands": 4,
+    "testExecutions": 20,
+    "uniqueCases": 20,
+    "newCases": 3,
+    "existingCases": 17,
+    "firstTestFailures": 0,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "RewardHitPointDiagnostics_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "RewardCurrentTypes_",
+        "cases": 5,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "RewardTypeNumber_",
+        "cases": 7,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "RiftHitPointCurrent_",
+        "cases": 5,
+        "failedChecks": 0,
+        "exit": 0
+      }
+    ],
+    "normalizedSourceFiles": 2852,
+    "sourceChangesAfterSnapshot": [],
+    "sourceBuildOverlap": false
+  },
+  "product": {
+    "unit": 900,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10715648,
+    "sha256": "bf13702d217cf22aec0906d5a36af397dcb65e4f42c25dc1fd60cbb249d23a40",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "protection": {
+    "previousFiles": 2777,
+    "unchanged": 2777,
+    "changed": [],
+    "currentFiles": 2777,
+    "currentFixtures": 957,
+    "newFixtures": 0
+  },
+  "checking": {
+    "pending": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4
+  },
+  "excluded": [
+    "실제게임/GUI/진단UI/포획/희생/특정적공격/승리/사용자확인",
+    "신규MP/패킷/통신검사",
+    "공중3종전용검사",
+    "전체검사/34미션/ZIP/물리입력/PCM/CD재시도"
+  ],
+  "remaining": [
+    "전송maxHp lambda/SpriteDraw HP막대/RawBurningSources/월드설치전Help 등다른HP caller",
+    "CD Take/contained/Form 및나머지Factory 부모/경계",
+    "State/파일/객체UI/Edit/Windows",
+    "무검사MP와4~8차"
+  ],
+  "nextUnit": 901,
+  "next": "다른 HP caller의현재전역/공유getter연결. MP전송분기는정적구현만하고신규기능검사생략.",
+  "rawEvidence": "extracted/cpp-resume-900/ (Git 제외/현재 PC 전용)"
+}

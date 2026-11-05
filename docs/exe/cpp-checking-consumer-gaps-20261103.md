@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**900 보상 HP 현재 진단:** 공유 getter/선택된 TYPE this·현재 base/장기 전역과 실제 Session assertion을 연결했다. 기존 원문 어댑터1158행/직접 getter1160행·고유20사례(새3/기존17) 첫 실패0·Release1명령 경고0·보호2777개/957fixture 불변·새 fixture0개다. 전체 HP caller/Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [900 기록](cpp-reward-hit-points-diagnostic-current-20261105.md).
+
 **899 Create/현재 TYPE 생성자:** 양판본생성부모의진단/실제할당/현재생성자/반환객체/VT순서·현재rawTYPE생성자/Retype·장기fakeTYPE를연결했다. Native588행/재관측·고유33사례최종실패0·Release3명령경고0이다. 최초CD추적1사례/294단언은ASM순서로교정했고기존2776/956fixture불변·새1개→2777/957개다. 전체Factory/다른HP caller완료로세지않으며 **checking8/완료부모39·부분4 유지**다. [899 기록](cpp-squid-creation-parent-current-20261105.md).
 
 **898 TYPE HP/현재Factory:** 0049fce0/CD00444720의현재checking·진단1e3복귀/같은TYPE this·현재base/특별TYPE/약화HP와실제Factory caller를연결했다. 사제번호는장기GameAux주소를이동/회복/보상이공유한다. Native1160행/재관측·새5/기존27 고유32사례 첫 실패0·Release2회경고0·기존2775/955fixture불변·새1개→2776/956개다. 다른HP호출점/전체Factory완료로세지않으며 **checking8/완료부모39·부분4 유지**다. [898 기록](cpp-rifttype-hit-points-current-20261105.md).

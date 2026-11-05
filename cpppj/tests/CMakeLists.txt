@@ -3522,3 +3522,9 @@ target_sources(netstorm_tests PRIVATE SquidCreationParentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE SquidCreationParentTests.cpp ObjectConversionTests.cpp)
 set_source_files_properties(SquidCreationParentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SQUID_CREATION_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-creation-parent-x86.tsv\"")
+
+# 보상 HP의 현재 진단 복귀를 기존 독립 getter 관측에 연결한다(900).
+target_sources(netstorm_tests PRIVATE RewardHitPointDiagnosticsTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE RewardHitPointDiagnosticsTests.cpp)
+set_source_files_properties(RewardHitPointDiagnosticsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_REWARD_HP_DIAGNOSTIC_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rifttype-hit-points-x86.tsv\"")

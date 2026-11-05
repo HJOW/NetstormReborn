@@ -7,6 +7,7 @@
 #include <array>
 #include <functional>
 #include <span>
+#include <string_view> // TYPE HP의 원문 식/파일을 실제 진단 장치에 빌린다.
 
 namespace netstorm::o {
 // 원본 타입 번호 전역의 실제 초기값이다(두 PE 공통). 이름은 `--dump-types`의 타입 이름이다.
@@ -73,6 +74,7 @@ public:
     // 실제 PATCH 월드의 주소가 고정된 TYPE 표를 빌린다. 호출자는 표를 더 오래 유지하고 재할당하지 않아야 한다.
     // 빈 표는 생성 시 소유한 사본으로 복귀한다. 독립 재생과 CD의 기존 계약은 그대로 유지한다(단위863).
     void BindCurrentTypes(std::span<const RiftTypeRecord> types);
+    void BindHitPointDiagnostics(std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion); // 공유 TYPE HP의 선택된 원문 진단만 실제 Client 서비스에 연결한다.
     // PATCH 별도 정수 비용표의 최초 로딩 기록을 빌린다. 표는 변경/재할당 없이 더 오래 살아야 하며 빈 표는 생성 시 비용 사본으로 복귀한다.
     void BindLoadedCosts(std::span<const RiftTypeRecord> types);
     // 상태를 바꾸지 않고 비용/지급액을 계산한다. 손상 입력은 여기서 거부한다.
@@ -134,6 +136,7 @@ private:
     ScrambledSpStore* store_{};
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SquidRewardHooks).
     SquidRewardHooks hooks_;
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> hitPointAssertion_; // 현재 TYPE HP 진단 장치이며 자기 연결 교체 중에도 선택한 callable은 복사해 보존한다.
     std::function<void(std::uint32_t,std::int32_t)> creditWallet_; // 실제 PATCH의 현재 Player/brain 지갑 처리기다. 미연결 독립 재생은 기존 값형 경로를 유지한다.
     // virtualCalls_: 가상 호출.
     mutable std::uint32_t virtualCalls_{};
