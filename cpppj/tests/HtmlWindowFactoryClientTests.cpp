@@ -135,6 +135,39 @@ TEST_CASE(HtmlWindowFactoryClient_ActualNestedModalDepthAndInputRestoration) {
     scene.buttons.KillGump(second);scene.buttons.CleanupGumps();CHECK(scene.client.HtmlWindowGlobals()->window.instances==1 && scene.buttons.SerialGump(scene.Root(first).serial)==first);scene.buttons.RouteInput({0x02000038,0,0});const auto selected=scene.input.Pop(false);CHECK(selected.code==kScriptConfig && (scene.Root(first).flags&0x10000));scene.buttons.CleanupGumps();CHECK(scene.Count()==before && scene.client.HtmlWindowGlobals()->window.instances==0);
 }
 
+// 세 모달의 모든 삭제 순서에서 즉시 입력 대상과 지연 OnExit/실제 등록 반납을 구별한다.
+TEST_CASE(HtmlWindowFactoryClient_ThreeDialogsEveryRemovalOrderKeepsCurrentInputAndExit) {
+    const std::array<std::array<std::size_t,3>,6> orders{{{0,1,2},{0,2,1},{1,0,2},{1,2,0},{2,0,1},{2,1,0}}}; // 가운데/맨 아래/맨 위부터 닫는 모든 순열이다.
+    for (const auto& order:orders) { // 각 순서는 같은 초기 공통 루트에서 독립적으로 수행한다.
+        FactoryScene scene;const auto before=scene.Count();std::array<std::uint32_t,3> roots{},serials{},depths{};std::array<bool,3> alive{true,true,true}; // 실제 노드 식별자와 생성 뒤 깊이를 보관한다.
+        for (std::size_t index=0;index<roots.size();++index) { // 서로 다른 명령 인자와 OnExit를 가진 실제 모달을 쌓는다.
+            const auto parameter=std::to_string(index+1);serials[index]=scene.menus->ShowHtmlWindow(scene.Context(),"Dialog "+parameter+"\n$Button=Action"+parameter+",Config,"+parameter+" \n$OnExit=unused,Warning,"+parameter+" \n",0,400,0);roots[index]=scene.buttons.SerialGump(serials[index]);CHECK(roots[index]!=0);depths[index]=scene.Root(roots[index]).depth;
+            CHECK(scene.buttons.DialogCount()==index+1 && scene.buttons.CurrentDialog()==roots[index]);
+        }
+        for (std::size_t step=0;step<order.size();++step) { // Kill은 모달을 즉시 반납하고 Cleanup만 OnExit와 실제 저장소를 반납해야 한다.
+            const auto removed=order[step];scene.buttons.KillGump(roots[removed]);alive[removed]=false;std::uint32_t current{};
+            for (std::size_t index=0;index<roots.size();++index) if (alive[index]) { current=roots[index];CHECK(scene.Root(roots[index]).depth==depths[index]); } // 남은 최신 창을 선택하며 기존 깊이는 재계산하지 않는다.
+            CHECK(scene.buttons.DialogCount()==2-step && scene.buttons.CurrentDialog()==current && scene.input.Empty());CHECK(scene.client.HtmlWindowGlobals()->window.instances==3-step && scene.buttons.SerialGump(serials[removed])==0);
+            if (current) { const auto index=static_cast<std::size_t>(std::find(roots.begin(),roots.end(),current)-roots.begin());CHECK(scene.menus->Point("Action"+std::to_string(index+1)).has_value()); }
+            scene.buttons.CleanupGumps();CHECK(!scene.menus->Node(roots[removed]) && scene.client.HtmlWindowGlobals()->window.instances==2-step);const auto exit=scene.input.Pop(false);CHECK(exit.code==kScriptWarning && exit.x==static_cast<std::int32_t>(removed+1) && exit.y==exit.x && scene.input.Empty());
+        }
+        CHECK(scene.Count()==before && !scene.menus->HtmlWindowsOpen());
+    }
+}
+
+// 선행 버튼/예약 메뉴까지 생성한 실패는 앞선 효과를 유지하고 같은 공통 수명으로 모두 반납한다.
+TEST_CASE(HtmlWindowFactoryClient_PartialButtonsAndReservedMenuFailureCleanup) {
+    for (const bool failAfterMenu:{false,true}) { // 두 번째 버튼 명령 해석과 예약 메뉴의 실제 목록 장치에서 각각 중단한다.
+        FactoryScene scene;const auto before=scene.Count();auto context=scene.Context();const auto lookup=context.metadata.commands.lookup;std::uint32_t lookups{},lists{}; // 생성 전 상태와 도달한 선택 효과를 관측한다.
+        context.metadata.commands.lookup=[&](auto name) { ++lookups;if (!failAfterMenu && name=="Warning") throw std::runtime_error("두 번째 버튼 명령 해석 중단");return lookup(name); };
+        context.metadata.namedList=[&](auto,auto,auto) { ++lists;throw std::runtime_error("예약된 실제 메뉴의 목록 생성 중단"); };
+        bool failed{};try { scene.menus->ShowHtmlWindow(std::move(context),failAfterMenu ? "Body\n$Button=First,Config,1 \n$Menu=@Broken,Config,2 \n" : "Body\n$Button=First,Config,1 \n$Button=Second,Warning,2 \n",0,400,0); }catch (const std::runtime_error&) { failed=true; }
+        const auto root=scene.buttons.SerialGump(scene.client.HtmlWindowGlobals()->window.createdSerial);CHECK(failed && root && lookups==2 && lists==(failAfterMenu ? 1U : 0U));CHECK(scene.client.HtmlWindowGlobals()->window.instances==1 && scene.Root(root).controlCount==1 && scene.Root(root).controls[0].child && scene.Count()>before && !scene.buttons.DialogCount() && !scene.menus->HtmlWindowsOpen());CHECK(scene.Root(root).menuColumns==(failAfterMenu ? 1U : 0U));
+        scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before && !scene.menus->Node(root) && !scene.buttons.CurrentDialog() && scene.input.Empty() && !scene.client.HtmlWindowGlobals()->window.instances);
+        const auto recovered=scene.buttons.SerialGump(scene.menus->ShowHtmlWindow(scene.Context(),"Recovered\n$Button=Continue,Config,3 \n",0,400,0));CHECK(recovered && scene.buttons.CurrentDialog()==recovered);scene.buttons.RouteInput({0x02000038U,0,0});const auto selected=scene.input.Pop(false);CHECK(selected.code==kScriptConfig && selected.x==3 && selected.y==3 && scene.input.Empty());scene.buttons.CleanupGumps();CHECK(scene.Count()==before && !scene.client.HtmlWindowGlobals()->window.instances);
+    }
+}
+
 // 실제 긴 본문·기본 버튼/스크롤·픽셀과 행padding을 검사하고 명시 QA 표면을 기록한다.
 TEST_CASE(HtmlWindowFactoryClient_ActualLongBodyScrollingAndPixels) {
     FactoryScene scene;std::string source;for (int index=0;index<120;++index) source+="Storm islands and bridges require careful planning. "; // 원문8192BYTE 안에서 실제 글꼴 줄바꿈/화면 제한을 선택한다.
