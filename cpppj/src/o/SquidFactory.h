@@ -21,10 +21,10 @@ public:
     // 004af530 ↔ CD 004ab390. 복원된 자산 생성자 또는 constructor=0 fallback을 호출한다.
     Sid Create(std::uint32_t type,std::uint32_t flags=0);
     // 생산 칸 contained Form(타입 6)의 전용 생성이다. 같은 SID 할당 뒤 판본별 가상 표/타입만 쓴다.
-    // 004aea40 / CD 004afe00 생성자와 빈 postCreate를 복원하며 자산 owner/HP 초기화를 적용하지 않는다.
+    // 현재 TYPE6의 cdecl과 반환 VT+28을 조회한다. 정상 원문6 생성자는004aea40/CD004afe00이며+28은 빈 함수다.
     Sid CreateContained(std::uint32_t flags=0);
-    // UI 객체 부착용 GumpForm(타입 3)을 같은 SID 풀에 만든다. 생성자는 가상 표만 쓰고 postCreate는 비어 있다.
-    // 004ae9f0 / CD 004afd60: 자산 owner/HP/zOrder를 쓰지 않으며 메뉴의 기본 할당 flags는 2다.
+    // UI 객체 부착용 GumpForm(타입3)도 같은 현재 Create 부모에 전달한다. 메뉴의 기본 할당 flags는2다.
+    // 정상 원문 생성자004ae9f0/CD004afd60의 VT만 쓰고 빈+28을 호출하며 현재 표의 다른 생성자를 고정 VT로 덮지 않는다.
     Sid CreateGumpForm(std::uint32_t flags=2);
     // 생성 효과 어댑터가 같은 실제 SID 풀을 연결하는지 확인한다.
     const SidPool& Pool() const;

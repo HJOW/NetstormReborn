@@ -1,4 +1,5 @@
 // 기술wrapper/실제contained조회/생성과40개목록을독립원본기계어에대조한다.
+#include "FormTypeInputs.h" // 원문 공통 Create가 읽는 내장 Form 생성자 주소를 입력에 제공한다.
 #include "RawSceneSupport.h"
 #include "DudeSpawnSupport.h"
 #include "o/RawPlayerTechnology.h"
@@ -11,7 +12,7 @@ constexpr std::uint32_t kTechnologyVtable=0x12010000; // 원본격리입력과�
 std::span<std::uint8_t> TechnologyInput(SidPool& pool,Sid sid) { const auto bytes=pool.Slot(sid);return {const_cast<std::uint8_t*>(bytes.data()),bytes.size()}; }
 // 공통Post/Factory는실제PATCH188개표를받고선택기술검사는그앞48개의이름/group입력을사용한다.
 std::vector<RiftTypeRecord> TechnologyTypes() {
-    std::vector<RiftTypeRecord> result(188);
+    std::vector<RiftTypeRecord> result=netstorm::test::MakeFormTypeInputs(188);
     // 기대all목록을계산하지않고실제TYPE속성만준비한다.
     for (std::size_t index=0;index<result.size();++index) { result[index].name="T"+std::to_string(index);result[index].group=index%7==0 ? 10 : static_cast<int>(index%10); }return result;
 }

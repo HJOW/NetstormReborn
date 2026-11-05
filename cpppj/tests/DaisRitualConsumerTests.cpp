@@ -1,4 +1,5 @@
 // 실제 최초 Pop/포획 부모 알림/제단24/전체 파생삭제를 같은 Pool·Host·Kernel에서 이어간다.
+#include "FormTypeInputs.h" // 원문 공통 Create가 읽는 내장 Form 생성자 주소를 입력에 제공한다.
 #include "RawSceneSupport.h"
 #include "o/RawDaisLifecycle.h"
 #include "o/RawDaisContentNotice.h"
@@ -40,7 +41,7 @@ void RitualAssets(OriginalEdition edition,std::vector<RiftTypeRecord>& types,std
 TEST_CASE(rawDaisRitual_real_first_pop_capture_notice_altar24_full_post_and_release) {
     // 각 판본은 새 월드의 실제 할당/생성자/공통 장부를 독립 사용한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());RitualAssets(edition,types,frames,shapes);
+        const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,24000,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());RitualAssets(edition,types,frames,shapes);
         SquidPostPopState book;book.localOwner=1;SquidPostPop post(pool,types,book);SquidPop pop(pool,hash,spots,nullptr,&post);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);SquidFactory factory(pool,types);SquidOwnerMode ownerMode;SquidOwner owner(pool,types,book,ownerMode);Kernel kernel(32);SquidProcessState clock;clock.now=91;
         RawDaisLifecycle* lifecyclePointer=nullptr;RawAltarSacrifice* altarPointer=nullptr;SquidFormDispatch* dispatchPointer=nullptr;std::uint32_t deviceUpdates=0,positionSounds=0,ownerUpdates=0,typeChoices=0,postCalls=0,finishCalls=0;std::vector<std::uint32_t> cues;Sid createdAltar{};
         // 가상 삭제 재진입은 현재 같은 최상위 분배기로 돌아간다.

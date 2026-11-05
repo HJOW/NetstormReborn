@@ -1,4 +1,5 @@
 // 두 PE의 독립 Form 수명 관찰 및 공유 삭제/생산 생성 연결을 검사한다.
+#include "FormTypeInputs.h" // 원문 공통 Create가 읽는 내장 Form 생성자 주소를 입력에 제공한다.
 #include "TestSupport.h"
 #include "o/DependFormHost.h"
 #include "o/ContentFormHost.h"
@@ -76,7 +77,7 @@ TEST_CASE(FormLifecycle_IndependentPeFixture) {
         const auto row=Split(line,'\t');if (row.size()!=12) throw std::runtime_error("Form 수명 fixture 열 수 오류");
         const bool patch=row[0]=="originals";CHECK(patch || row[0]=="originalCD");++counts[patch ? 0 : 1];
         SidPool pool(patch ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,kCapacity,row[5]=="1");
-        Input(pool,row[7]);std::vector<RiftTypeRecord> types(patch ? 188 : 171);SquidHash hash;std::vector<std::uint8_t> spots(65536);
+        Input(pool,row[7]);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);SquidHash hash;std::vector<std::uint8_t> spots(65536);
         SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);std::string events;
         // 부모 알림을 대체한 원본 경계와 같은 전체 바이트를 기록하고 같은 명시 mutation만 수행한다.
         ContentFormHost content(pool,types,[&](Sid parent,Sid form,std::uint32_t reason) {
@@ -120,7 +121,7 @@ TEST_CASE(FormLifecycle_IndependentPeFixture) {
 TEST_CASE(FormLifecycle_DependencyPairAndReentrantNotice) {
     // 두 판본의 일반/client·서버 풀 경계를 각각 사용한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        SidPool pool(edition,kCapacity);SquidForms forms(pool);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
+        SidPool pool(edition,kCapacity);SquidForms forms(pool);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);
         SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
         const auto watched=factory.Create(90,2),watcher=factory.Create(91,2);DependFormHost depend(pool,destroy);
         const auto pair=depend.Create(watched,watcher);CHECK(depend.Has(watched,watcher));CHECK(!depend.Has(watcher,watched));
@@ -140,7 +141,7 @@ TEST_CASE(FormLifecycle_DependencyPairAndReentrantNotice) {
 
 // 기존 contained 생성기의 실제 타입6 생성→필드 저장→부착→사제 포획 알림을 한 저장소에 연결한다.
 TEST_CASE(FormLifecycle_ContentCreateAndCurrentCaptureState) {
-    SidPool pool(OriginalEdition::Patch1078,kCapacity);std::vector<RiftTypeRecord> types(188);types[90].flags2=0x10000;types[80].flags2=0x200000;
+    SidPool pool(OriginalEdition::Patch1078,kCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);types[90].flags2=0x10000;types[80].flags2=0x200000;
     SquidFactory factory(pool,types);const auto parent=factory.Create(90,2);ContentFormState state{true,true};std::vector<std::uint32_t> reasons;std::uint32_t captured=0;
     ContentFormHost content(pool,types,[&](Sid notifiedParent,Sid form,std::uint32_t reason) {
         CHECK(notifiedParent==parent);reasons.push_back(reason);if (reason==1) Put(pool,form,12,0xfe);
@@ -156,7 +157,7 @@ TEST_CASE(FormLifecycle_ContentCreateAndCurrentCaptureState) {
 
 // 원본의 금지 상태/필수 전송 경계가 누락될 때 변경 전에 실패하는지 확인한다.
 TEST_CASE(FormLifecycle_ContractsAndSameParentPair) {
-    SidPool pool(OriginalEdition::Patch1078,kCapacity);SquidForms forms(pool);std::vector<RiftTypeRecord> types(188);SquidFactory factory(pool,types);
+    SidPool pool(OriginalEdition::Patch1078,kCapacity);SquidForms forms(pool);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);SquidFactory factory(pool,types);
     SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
     const auto parent=factory.Create(90,2),form=forms.Create(1,0);const auto before=Hex(pool.Slot(form));
     CHECK(Throws([&] { forms.Attach(form,parent); }));CHECK(Hex(pool.Slot(form))==before);

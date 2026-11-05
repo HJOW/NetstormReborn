@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**906 실제 Form3/6 생성:** 고정 VT를 현재 공통 Create/반환 VT+28로 바꾸고 실제 contained/bridge 번호를 연결했다. 고유44사례(새3/기존41) 첫 실패0·Release3명령 최종 경고0·두 컴파일 오류 교정·기존2782/962fixture/단언370 불변·새 Native/fixture0이다. Process/Gump Take·Form/contained 하위·전체 Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [906 기록](cpp-form-creation-current-20261105.md).
+
 **905 양판본 Take 부모:** 현재 VT+48·생성자 반환 객체·판본별 상태/TYPE 저장·저장 VT+2c를 실제 Factory에 연결했다. Native720행/재관측·고유34사례(새3/기존31) 첫 실패0·Release1명령 경고0·기존2781/961fixture 불변·새1개→2782/962개다. Form/contained 하위·고정 생성·전체 Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [905 기록](cpp-squid-take-parent-current-20261105.md).
 
 **904 양판본 공통 초기화:** CD PostCreate/PostTake의 일괄 거부를 현재 TYPE/진단 복귀·권한/HP WORD·부분 쓰기로 복원했다. Native576행/재관측·고유23사례(새2/기존21) 첫 실패0·Release1명령 경고0·기존2780/960fixture 불변·새1개→2781/961개다. CD Take 앞단/고정 Form·전체 Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [904 기록](cpp-factory-initialization-current-20261105.md).

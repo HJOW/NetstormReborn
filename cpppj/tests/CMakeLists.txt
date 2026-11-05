@@ -3558,3 +3558,8 @@ target_sources(netstorm_tests PRIVATE SquidTakeParentCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE SquidTakeParentCurrentTests.cpp)
 set_source_files_properties(SquidTakeParentCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SQUID_TAKE_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-take-parent-current-x86.tsv\"")
+
+# Form 전용 실제 Create/현재 번호를 검사하고 독립 입력에 원문 생성자 메타데이터를 제공한다(906).
+target_sources(netstorm_tests PRIVATE FormCreationCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE FormCreationCurrentTests.cpp FormLifecycleTests.cpp FormTakeTests.cpp ReturnPieceTests.cpp SessionCursorReturnOptionsTests.cpp ConstructionRequestTests.cpp CursorDropTests.cpp AiBrainInitialUpdateTests.cpp DaisRitualConsumerTests.cpp PlayerTechnologyTests.cpp)
+# 추가로 링크한 Dais/AI 파일은 컴파일만 확인하며 새 의식/공중/MP 전용 검사는 실행하지 않는다.

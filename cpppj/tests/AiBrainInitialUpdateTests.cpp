@@ -1,4 +1,5 @@
 // 실제초기갱신/기술/contained원본133입력을같은AI소유메모리와기존실제하위에대조한다.
+#include "FormTypeInputs.h" // 원문 공통 Create가 읽는 내장 Form 생성자 주소를 입력에 제공한다.
 #include "RawSceneSupport.h"
 #include "o/RawAiBrainInitialUpdate.h"
 #include <set>
@@ -18,7 +19,7 @@ std::vector<std::uint32_t> InitialNodes(int pattern) {
 struct InitialScene {
     std::vector<std::int64_t> input; //독립input7개다.
     SidPool pool{OriginalEdition::Patch1078,32768,true}; //실제clientSID와원본슬롯폭이다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); //공통Post/현재TYPE의실제188개크기다.
+    std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188); //공통Post/현재TYPE의실제188개크기다.
     std::array<std::string,188> energy; //명시TYPE+a0문자열입력이다.
     SquidPostPopState book; //실제Player생성계약의공통장부다.
     SquidPostPop post{pool,types,book}; //같은Pool의기존공통몸체다.

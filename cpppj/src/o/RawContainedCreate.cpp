@@ -21,10 +21,10 @@ Sid RawContainedCreate::Create(Sid parent,std::uint32_t type,std::uint32_t argum
     if (parent.value==0 || parent.value>=pool_.Capacity()) throw std::out_of_range("contained 부모 SID 범위 오류");
     if (flags==0) flags=0x20;
     const std::uint32_t factoryFlags=(attachFlags&0x20) ? 1U : (attachFlags&0x10) ? 2U : 0U;
-    const auto sid=hooks_.create(state_.containedType,factoryFlags);
+    const auto sid=hooks_.create(state_.ContainedType(),factoryFlags);
     if (sid.value<5 || sid.value>=pool_.Capacity()) throw std::out_of_range("contained 생성 SID 범위 오류");
     auto raw=pool_.AllocatedBytes(sid);PutWord(raw,kStoredType,type);PutWord(raw,kArgument,argument);
-    if (raw[kType]==state_.bridgeType) hooks_.notifySurface(sid);
+    if (raw[kType]==state_.BridgeType()) hooks_.notifySurface(sid);
     raw=pool_.AllocatedBytes(sid);
     const auto qualityOffset=pool_.Edition()==OriginalEdition::Patch1078 ? 30U : 26U;
     if (pool_.Edition()==OriginalEdition::Patch1078) {
@@ -38,8 +38,7 @@ const SidPool& RawContainedCreate::Pool() const { return pool_; }
 ContainedCreateHooks MakeContainedCreateHooks(const SidPool& pool,SquidFactory& factory,ContainedCreateHooks hooks) {
     if (&factory.Pool()!=&pool) throw std::invalid_argument("contained 생성/factory SID 풀이 다릅니다");
     hooks.create=[&factory](std::uint32_t type,std::uint32_t flags) {
-        if (type!=6) throw std::invalid_argument("contained 전용 생성 타입은 6이어야 합니다");
-        return factory.CreateContained(flags);
+        return factory.Create(type,flags);
     };
     return hooks;
 }

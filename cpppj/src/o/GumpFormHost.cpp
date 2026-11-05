@@ -22,7 +22,7 @@ GumpFormHost::GumpFormHost(SidPool& pool,SquidFactory& factory,std::span<const R
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U))
         throw std::invalid_argument("GumpForm 타입 표의 판본/크기 오류");
 }
-// 별도 풀을 만들지 않고 기존 Form 생성 계약을 사용한다.
+// 같은 공장의 현재 TYPE3 생성자와 실제 반환 VT+28을 사용하는 공통 Create에 연결한다.
 Sid GumpFormHost::Create(std::uint32_t flags) const { return factory_.CreateGumpForm(flags); }
 // 같은 raw 풀의 지정 Take를 사용하여 부착된 Form의 링크 정리도 실제로 수행한다.
 Sid GumpFormHost::Take(Sid form) const { return SquidForms(pool_).Take(kGumpFormType,form); }

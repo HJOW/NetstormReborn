@@ -1,0 +1,305 @@
+{
+  "unit": 906,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "scope": {
+    "facades": "Factory CreateContained6/CreateGumpForm3도 항상 현재 공통Create/반환VT+28 사용. 실제GumpHost Create 연결. ctor0을 고정VT로 대체하지 않음.",
+    "contained": "현재Contained/Bridge getter와 실제Session의Client finder/World Storage links 참조. type!=6 거부제거/일반Create 사용.",
+    "loader": "실제RiftTypeTable.cpp도 모든constructorAddress를 원문표로 초기화함. 독립입력은 같은 전제조건만 명시.",
+    "uncompleted": "Process Attach/Reattach/Gump Take의 고정편의경로·현재World Factory 대여와 Form/contained/CDUnpop 하위는 잔여."
+  },
+  "native": {
+    "newObservations": 0,
+    "newFixtures": 0,
+    "existingCreationParentRows": 588,
+    "existingFormConstructorRows": 56,
+    "expectationsModified": false
+  },
+  "inputMetadata": {
+    "files": 10,
+    "tables": 23,
+    "existingAssertionsUnchanged": 370,
+    "testNamesChanged": 0,
+    "details": [
+      {
+        "file": "cpppj/tests/AiBrainInitialUpdateTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 18,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ConstructionRequestTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 63,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ContentLifetimeTests.cpp",
+        "inputTables": 9,
+        "existingAssertions": 70,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/DaisRitualConsumerTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 30,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/FormLifecycleTests.cpp",
+        "inputTables": 4,
+        "existingAssertions": 49,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/FormTakeTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 47,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/PlayerTechnologyTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 22,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/ReturnPieceTests.cpp",
+        "inputTables": 3,
+        "existingAssertions": 27,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/SessionCursorReturnOptionsTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 12,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      },
+      {
+        "file": "cpppj/tests/CursorDropTests.cpp",
+        "inputTables": 1,
+        "existingAssertions": 32,
+        "assertionsChanged": 0,
+        "testNamesChanged": 0
+      }
+    ],
+    "expectedValuesChanged": false
+  },
+  "processStaticAudit": {
+    "originals": {
+      "entry": "0041bd20",
+      "createSites": [
+        "piVar4 = (int *)FUN_004af530(DAT_00541078,uVar3);",
+        "FUN_004af610(DAT_00541078,iVar1);"
+      ]
+    },
+    "originalCD": {
+      "entry": "0048f590",
+      "createSites": [
+        "piVar3 = (int *)FUN_004ab390(DAT_0051c968,uVar2);",
+        "FUN_004ab440(DAT_0051c968,iVar4);"
+      ]
+    }
+  },
+  "validation": {
+    "buildCommands": 3,
+    "buildExits": [
+      1,
+      1,
+      0
+    ],
+    "buildLogs": [
+      {
+        "log": "build-first.log",
+        "warnings": 0,
+        "errors": 1
+      },
+      {
+        "log": "build-second.log",
+        "warnings": 0,
+        "errors": 1
+      },
+      {
+        "log": "build-third.log",
+        "warnings": 0,
+        "errors": 0
+      }
+    ],
+    "warnings": 0,
+    "errors": 2,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "firstCompileFailures": 2,
+    "compileCorrections": [
+      "존재하지 않는RawWorldCore.links 참조를 실제world.Storage()->links로 변경",
+      "새 검사에SquidForms 정의 헤더를 명시 추가"
+    ],
+    "uniqueCases": 44,
+    "newCases": 3,
+    "existingCases": 41,
+    "testCommands": 17,
+    "testExecutions": 44,
+    "firstTestFailures": 0,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "FormCreationCurrent_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "TypeConstructors_X86Table_",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "SquidCreationParent_",
+        "cases": 6,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FormConstructorCurrent_",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FormTake_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FormLifecycle_IndependentPeFixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FormLifecycle_DependencyPairAndReentrantNotice",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FormLifecycle_ContractsAndSameParentPair",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ReturnPiece_",
+        "cases": 6,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ReturnOptions_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "CursorDrop_",
+        "cases": 5,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ConstructionRequest_",
+        "cases": 6,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ContentLifetime_IndependentPeFixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ContentLifetime_ActualSpAndWalletIntegration",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ContentLifetime_SharedMixedFormDispatch",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "ContentLifetime_SharedBossRecheckedAfterCursorCancel",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "PlayerTechnology_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0
+      }
+    ],
+    "normalizedSourceFiles": 2869,
+    "sourceSnapshot": "source-before-build-3.json",
+    "sourceChangesAfterSnapshot": [],
+    "sourceBuildOverlap": false
+  },
+  "product": {
+    "unit": 906,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10744832,
+    "sha256": "af991c475eb135b2d3bf11bb11bd8558fbd027d5a4c92f59f0db1837d7979c99",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "protection": {
+    "previousFiles": 2782,
+    "unchanged": 2782,
+    "changed": [],
+    "currentFiles": 2782,
+    "currentFixtures": 962,
+    "added": []
+  },
+  "checking": {
+    "pending": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4
+  },
+  "excluded": [
+    "실제게임/GUI/진단UI/포획/희생/특정적공격/승리/사용자확인",
+    "새Dais/AI전용/MP/패킷/통신검사",
+    "공중3종전용검사",
+    "전체검사/34미션/ZIP/물리입력/PCM/CD재시도"
+  ],
+  "remaining": [
+    "ProcessForm과Gump Take의현재생성/진단·현재World Factory의짧은대여수명",
+    "Form/contained가상해제·CD Unpop·나머지Factory/HP caller",
+    "State/파일/객체UI/Edit/Windows·무검사MP와4~8차"
+  ],
+  "nextUnit": 907,
+  "next": "실제Process/Gump Take caller를현재공통Factory에연결하고장기Host의옛World참조를남기지않는다.",
+  "rawEvidence": "extracted/cpp-resume-906/ (Git 제외/현재 PC 전용)"
+}

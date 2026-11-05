@@ -233,11 +233,11 @@ void SquidFactory::BindFakeSurfaceType(const std::uint32_t& current) { // Sessio
     if (sharedFakeSurfaceType_ && sharedFakeSurfaceType_!=&current) throw std::invalid_argument("Create fakeSurface TYPE의 중복 다른 주소 연결");sharedFakeSurfaceType_=&current;
 }
 Sid SquidFactory::CreateContained(std::uint32_t flags) {
-    return SquidForms(pool_).Create(kContainedType,flags);
+    return Create(kContainedType,flags);
 }
-// 004af530의 GumpForm 경로다. 할당으로 초기화된 슬롯에 가상 표→타입만 쓰며 빈 postCreate를 생략한다.
+// 004af530의 GumpForm 경로도 현재 TYPE 생성자와 반환 객체의 실제+28을 사용한다.
 Sid SquidFactory::CreateGumpForm(std::uint32_t flags) {
-    return SquidForms(pool_).Create(kGumpFormType,flags);
+    return Create(kGumpFormType,flags);
 }
 // 두 판본 모두 실제 VT+48→현재 생성자→반환 객체→저장한 VT+2c의 원문 부모를 사용한다.
 Sid SquidFactory::Take(std::uint32_t type,Sid sid) {

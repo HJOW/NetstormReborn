@@ -1,4 +1,5 @@
 // 원본 반환 몸체가 실제 설정 getter를 생성 전후와 할당 뒤에 읽는 순서를 검사한다.
+#include "FormTypeInputs.h" // 원문 공통 Create가 읽는 내장 Form 생성자 주소를 입력에 제공한다.
 #include "ConstructionSupport.h"
 #include "client/RawCursorReturnPiece.h"
 
@@ -8,7 +9,7 @@ namespace { // 현재 옵션을 바꿀 수 있는 실제 contained 생성/부착
 constexpr Sid kParent{3}; // 외부 부착 경계가 사용할 명시 원본 부모 SID다.
 struct ReturnOptionsScene {
     SidPool pool{OriginalEdition::Patch1078,kCapacity,false}; // 실제 PATCH의 타입6 슬롯을 소유한다.
-    std::vector<RiftTypeRecord> types{188};SquidFactory factory{pool,types}; // 같은 실제 생성기를 사용한다.
+    std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);SquidFactory factory{pool,types}; // 같은 실제 생성기를 사용한다.
     ContainedCreateState containedState;CursorReturnPieceState state;GameRandom random{17}; // 독립 state는 의도적으로 잘못된 초기 Slow를 유지한다.
     std::uint32_t timers{},fort{},flagReads{},modeReads{},rateReads{},allocations{};std::uint8_t rate{2}; // 실제 getter 입력과 호출 수다.
     Sid born{};float duration{};std::uint32_t timerCount{}; // 실제 생성 슬롯과 타이머 요청을 관측한다.

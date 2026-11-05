@@ -1,4 +1,5 @@
 // 서버 요청 전체의 독립 PE 관찰과 실제 MayPlace→확정→통지→정리/배치 연결을 검사한다.
+#include "FormTypeInputs.h" // 원문 공통 Create가 읽는 내장 Form 생성자 주소를 입력에 제공한다.
 #include "ConstructionNoticeSupport.h"
 #include "o/RawConstructionRequest.h"
 #include "o/RawConstructionLocal.h"
@@ -135,7 +136,7 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
     // 두 판본에서 같은 저장소를 공유한 원본 모듈 연결을 검사한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         const bool patch=edition==OriginalEdition::Patch1078;SidPool pool(edition,kCapacity,true);SquidHash hash;
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);std::vector<PriestPlainCanonType> frames(types.size());
+        std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);std::vector<PriestPlainCanonType> frames(types.size());
         types[kTypeNoIsland].footX=types[kTypeNoIsland].footY=1;types[kTypeNoIsland].group=1;frames[kTypeNoIsland]={InputFrames(0),3};
         types[kTypeNoIsland].cost=32.75F;
         std::vector<SquidDisplayShape> shapes(types.size());std::vector<PriestTypeHotspot> hotspots(types.size());

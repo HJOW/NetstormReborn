@@ -1,4 +1,5 @@
 // 특수 내용물 삭제의 실제 PE 출력과 공유 Form 분배/경제 저장소 연결을 검사한다.
+#include "FormTypeInputs.h" // 원문 공통 Create가 읽는 내장 Form 생성자 주소를 입력에 제공한다.
 #include "ConstructionSupport.h"
 #include "o/SquidFormDispatch.h"
 #include "client/ClientGameplayGlobals.h" // 안내 기한의 Client 대여/반납 수명을 게임 실행 없이 확인한다.
@@ -63,7 +64,7 @@ TEST_CASE(ContentLifetime_IndependentPeFixture) {
         const auto row=Split(line,'\t');if (row.size()!=14) throw std::runtime_error("Content 수명 열 수 오류");
         const bool patch=row[0]=="originals";CHECK(patch || row[0]=="originalCD");++counts[patch ? 0 : 1];
         SidPool pool(patch ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072,kPoolCapacity,row[2]=="1");Input(pool,row[8]);
-        std::vector<RiftTypeRecord> types(patch ? 188 : 171);types[154].cost=Float(Number(row[5]));types[90].footX=3;types[90].footY=5;
+        std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(patch ? 188 : 171);types[154].cost=Float(Number(row[5]));types[90].footX=3;types[90].footY=5;
         SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
         const Sid form{80},parent{static_cast<std::uint16_t>(Get(pool.Slot(form),16,2))};
         ContentLifetimeState state{Number(row[6]),154,Number(row[3]),0x1234,row[4]=="1"};
@@ -121,7 +122,7 @@ TEST_CASE(ContentLifetime_IndependentPeFixture) {
 TEST_CASE(ContentLifetime_ActualSpAndWalletIntegration) {
     // 같은 내용물 생성/삭제를 두 판본에서 실행한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
+        SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);
         types[154].cost=50.75f;types[90].footX=3;types[90].footY=5;SquidFactory factory(pool,types);
         SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
         GameRandom random(7);ScrambledSpStore store(random,[] { return 42U; });store.Initialize();store.Set(1,Bits(1000));
@@ -143,7 +144,7 @@ TEST_CASE(ContentLifetime_ActualSpAndWalletIntegration) {
 
 // 일반 내용물 부착은 진단 중 고친 현재 부모/자신 상태로 재판정한 뒤 링크와 부모 알림을 진행한다.
 TEST_CASE(ContentFormAttach_DeadDiagnosticsResumeAtCurrentSlots) {
-    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types(188);SquidFactory factory(pool,types);
+    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);SquidFactory factory(pool,types);
     const auto parent=factory.Create(90,2),form=factory.CreateContained(2);Put(pool.AllocatedBytes(form),18,85,2);
     pool.AllocatedBytes(parent)[11]|=2;pool.AllocatedBytes(form)[11]|=2;
     std::vector<std::uint32_t> events;std::uint32_t checking=0;bool battle=false;ContentFormState state;
@@ -163,7 +164,7 @@ TEST_CASE(ContentFormAttach_DeadDiagnosticsResumeAtCurrentSlots) {
 TEST_CASE(ContentFormAttach_UnrepairedDeadReturnsWithoutLinkWrites) {
     // 두 판본에서 부모/자신/both dead 조합을 일반 생산 타입으로만 확인한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) for (const auto bits:{1U,2U,3U}) {
-        SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);SquidFactory factory(pool,types);
+        SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);SquidFactory factory(pool,types);
         const auto parent=factory.Create(90,2),form=factory.CreateContained(2);Put(pool.AllocatedBytes(form),18,85,2);
         if (bits&1) pool.AllocatedBytes(parent)[11]|=2;if (bits&2) pool.AllocatedBytes(form)[11]|=2;
         const auto parentBefore=Hex(pool.Slot(parent)),formBefore=Hex(pool.Slot(form));std::uint32_t assertions=0,notices=0;ContentFormState state;
@@ -185,7 +186,7 @@ TEST_CASE(ContentFormAttach_PriestTakenDeadlineOwnerSurvivesWorldLeases) {
 
 // 알림 뒤 체인에서 빠진 사제 내용물은 포획 알림을 생략한다. 목록 flags가 0이어도 정상 연결이면 알린다.
 TEST_CASE(ContentLifetime_PriestNoticeUsesCurrentStructuralLinks) {
-    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types(188);types[90].flags2=0x10000;types[80].flags2=0x200000;
+    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);types[90].flags2=0x10000;types[80].flags2=0x200000;
     SquidFactory factory(pool,types);const auto parent=factory.Create(90,2);ContentFormState state{true,false};std::uint32_t notices=0;
     bool detach=true;ContentFormHost* binding=nullptr;
     ContentFormHost forms(pool,types,[&](Sid object,Sid form,std::uint32_t reason) { if (reason==1 && detach) { CHECK(object==parent);binding->Unpop(form); } },{},&state,
@@ -196,7 +197,7 @@ TEST_CASE(ContentLifetime_PriestNoticeUsesCurrentStructuralLinks) {
 
 // 한 부모의 감시·Gump·프로세스·Content가 자기 알림에서 삭제돼도 같은 저장소/깊이/선저장 next를 공유한다.
 TEST_CASE(ContentLifetime_SharedMixedFormDispatch) {
-    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types(188);SquidFactory factory(pool,types);
+    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);SquidFactory factory(pool,types);
     SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
     const auto root=factory.Create(90,2),watcher=factory.Create(91,2);Sid selected=root;std::uint32_t assetRoots=0,dependNotices=0,gumpNotices=0,contentRemovals=0;
     SquidDestroyHooks assets;assets.selected=[&] { return selected; };assets.emit=[&](const SquidDestroyEvent& event) {
@@ -223,7 +224,7 @@ TEST_CASE(ContentLifetime_SharedMixedFormDispatch) {
 
 // 실제 Content 삭제가 커서 취소 뒤 현재 권한을 읽어 원격 수입 알림을 고른다.
 TEST_CASE(ContentLifetime_SharedBossRecheckedAfterCursorCancel) {
-    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types(188);SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);const auto parent=factory.Create(90,2);pool.AllocatedBytes(parent)[34]=2;ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});bool boss=true,nextBoss=false;ContentLifetimeState state;state.localOwner=1;state.sharedBoss=&boss;std::size_t cancelled{},remote{};ContentLifetimeHooks hooks;hooks.cancelCursor=[&] { ++cancelled;boss=nextBoss; };hooks.remoteNotice=[&](std::uint32_t owner) { CHECK(owner==2);++remote; };ContentFormLifetime lifetime(pool,types,forms,destroy,state,std::move(hooks));
+    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);const auto parent=factory.Create(90,2);pool.AllocatedBytes(parent)[34]=2;ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});bool boss=true,nextBoss=false;ContentLifetimeState state;state.localOwner=1;state.sharedBoss=&boss;std::size_t cancelled{},remote{};ContentLifetimeHooks hooks;hooks.cancelCursor=[&] { ++cancelled;boss=nextBoss; };hooks.remoteNotice=[&](std::uint32_t owner) { CHECK(owner==2);++remote; };ContentFormLifetime lifetime(pool,types,forms,destroy,state,std::move(hooks));
     // 두 실제 Form을 차례로 붙이고 공통 삭제 깊이와 부모 링크까지 정상 반납한다.
     for (std::size_t index=0;index<2;++index) {
         const auto form=factory.CreateContained(2);auto raw=pool.AllocatedBytes(form);Put(raw,18,154,2);Put(raw,20,0x20,2);raw[22]=1;forms.Attach(form,parent,0x10);state.cursor=form.value;nextBoss=index!=0;state.boss=!nextBoss;lifetime.Destroy(form,0x10);CHECK(remote==index && cancelled==index+1 && Get(pool.Slot(parent),6,2)==0 && destroy.PreDepth()==0 && destroy.PostDepth()==0);
@@ -236,7 +237,7 @@ TEST_CASE(CursorPreviewDword_ContentComparisonNative56KeepsAllBits) {
     const auto fixturePath=(std::filesystem::path(NETSTORM_CONTENTLIFETIME_FIXTURE).parent_path()/"content-cursor-width-x86.tsv").string();
     const auto rows=LoadFixture(fixturePath.c_str()).rows;std::size_t observations{};
     for (const auto& row:rows) for (const auto getter:{false,true}) { //독립장치fallback과Session의현재getter가같은전체값을비교한다.
-        CHECK(row.size()==7);if (row.size()!=7) continue;const auto edition=row[0]=="originals"?OriginalEdition::Patch1078:OriginalEdition::Cd1072;SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078?188:171);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});const Sid form{50};auto raw=InputRaw(pool,form);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=6;Put(raw,16,Number(row[3]),2);Put(raw,18,85,2);ContentLifetimeState state;state.cursor=Number(row[2]);std::uint32_t cancelled{};ContentLifetimeHooks hooks;hooks.cancelCursor=[&] { ++cancelled; };if (getter) state.currentCursor=[&] { return state.cursor; };
+        CHECK(row.size()==7);if (row.size()!=7) continue;const auto edition=row[0]=="originals"?OriginalEdition::Patch1078:OriginalEdition::Cd1072;SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078?188:171);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});const Sid form{50};auto raw=InputRaw(pool,form);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=6;Put(raw,16,Number(row[3]),2);Put(raw,18,85,2);ContentLifetimeState state;state.cursor=Number(row[2]);std::uint32_t cancelled{};ContentLifetimeHooks hooks;hooks.cancelCursor=[&] { ++cancelled; };if (getter) state.currentCursor=[&] { return state.cursor; };
         ContentFormLifetime lifetime(pool,types,forms,destroy,state,hooks);lifetime.PreDestroy(form);CHECK(cancelled==Number(row[4]) && state.cursor==Number(row[5]) && sizeof(state.cursor)==4);++observations;
     }
     CHECK(observations==112);
@@ -244,7 +245,7 @@ TEST_CASE(CursorPreviewDword_ContentComparisonNative56KeepsAllBits) {
 
 // 커서 취소/안내/지갑 뒤의 서로 다른 현재 너겟 번호가 kind와 각 단가 조회에 반영된다(단위871).
 TEST_CASE(NuggetTypeNumber_ContentReadsCurrentKindAndEachIncomeCost) {
-    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types(188);types[71].cost=99.5F;types[72].cost=125.75F;types[90].footX=2;types[90].footY=4;SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
+    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);types[71].cost=99.5F;types[72].cost=125.75F;types[90].footX=2;types[90].footY=4;SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
     const auto parent=factory.Create(90,2);auto rawParent=pool.AllocatedBytes(parent);rawParent[34]=1;Put(rawParent,14,Bits(40.75F));Put(rawParent,18,Bits(41.25F));ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});ContentLifetimeState state;std::uint32_t current=154;state.sharedNuggetType=&current;std::string events;ContentLifetimeHooks hooks;
     hooks.cancelCursor=[&] { events+='C';current=70; };hooks.localNotice=[&](auto command) { CHECK(command==state.notice && current==70);events+='N';current=71; };
     hooks.wallet=[&](auto owner,auto amount) { CHECK(owner==1 && amount==99);events+='W';current=72; };hooks.addSp=[&](auto owner,float amount,bool local) { CHECK(owner==1 && amount==125.75F && local);events+='S'; };hooks.sound=[&](float x,float y) { CHECK(x==39.75F && y==39.25F);events+='A'; };

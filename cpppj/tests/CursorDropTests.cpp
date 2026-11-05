@@ -1,4 +1,5 @@
 // 커서 내려놓기의 세 PE 관찰·현재 상태 읽기·실제 로컬 배치/SP/소리 연결을 검사한다.
+#include "FormTypeInputs.h" // 같은 실제 생성 부모에 원문 Form 생성자 메타데이터를 공급한다.
 #include "ConstructionSupport.h"
 #include "client/RawCursorDrop.h"
 #include "client/RawCursorReturnPiece.h"
@@ -31,7 +32,7 @@ struct DropScene {
     // sources: 원천. 입력 구성 또는 실행 결과 대조에 사용한다.
     std::uint32_t prepared{},sources{};
     // 타입/풀 주소를 행 사이에서 유지한다.
-    explicit DropScene(OriginalEdition edition):pool(edition,kCapacity,false),types(edition==OriginalEdition::Patch1078 ? 188 : 171) {}
+    explicit DropScene(OriginalEdition edition):pool(edition,kCapacity,false),types(netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171)) {}
     // 사건의 전체 DWORD와 좌표 비트를 같은 순서로 기록한다.
     void Append(char letter,std::initializer_list<std::uint32_t> values) {
         if (!events.empty()) events+=';';events+=letter;

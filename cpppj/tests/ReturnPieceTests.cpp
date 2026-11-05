@@ -1,4 +1,5 @@
 // 생산 칸 반환/contained 생성의 독립 PE 관찰과 실제 factory·Regular·상위 호출 연결을 검사한다.
+#include "FormTypeInputs.h" // 원문 공통 Create가 읽는 내장 Form 생성자 주소를 입력에 제공한다.
 #include "ConstructionSupport.h"
 #include "client/RawCursorReturnPiece.h"
 
@@ -88,7 +89,7 @@ void Replay(std::string_view edition) {
         if (row[1]=="Return") body.Return(v[Flags],kParent.value,v[Quality]);
         else if (row[1]=="Create") result=contained.Create(kParent,v[Type],v[Argument],v[Flags],v[AttachFlags],v[Quality]).value;
         else {
-            scene.pool.Reset();std::vector<RiftTypeRecord> types(scene.pool.Edition()==OriginalEdition::Patch1078 ? 188 : 171);
+            scene.pool.Reset();std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(scene.pool.Edition()==OriginalEdition::Patch1078 ? 188 : 171);
             SquidFactory factory(scene.pool,types);scene.Append('S',{v[Flags]});result=factory.CreateContained(v[Flags]).value;
         }
         const auto raw=scene.pool.Slot(row[1]=="Factory" ? Sid{static_cast<std::uint16_t>(result)} : kBorn);
@@ -117,7 +118,7 @@ TEST_CASE(ReturnPiece_RejectsInvalidContracts) {
     scene.input[Allocation]=0;body.Return(8,kParent.value,3);scene.state.type=82;body.Return(8,kParent.value,3);
     CHECK(&body.Pool()==&scene.pool);auto hooks=scene.ContainedHooks();hooks.create=[](std::uint32_t,std::uint32_t) { return Sid{}; };
     RawContainedCreate invalid(scene.pool,scene.containedState,hooks);CHECK(Throws([&] { invalid.Create(kParent,100,0,0,0,0); }));
-    SidPool other(OriginalEdition::Patch1078,kCapacity);std::vector<RiftTypeRecord> types(188);SquidFactory factory(scene.pool,types);
+    SidPool other(OriginalEdition::Patch1078,kCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);SquidFactory factory(scene.pool,types);
     CHECK(Throws([&] { MakeContainedCreateHooks(other,factory,scene.ContainedHooks()); }));
     CHECK(Throws([&] { MakeReturnPieceHooks(other,body,ConstructionLocalHooks{}); }));CHECK(Throws([&] { MakeReturnPieceHooks(other,body,CursorDropHooks{}); }));
 }
@@ -127,7 +128,7 @@ TEST_CASE(ReturnPiece_ConnectsFactoryAndRegular) {
     // 두 판본의 실제 동일 풀 연결을 검사한다. 가상 Form 부착과 부모 이벤트는 명시 경계다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         SidPool pool(edition,kCapacity,false);SquidHash hash;std::vector<std::uint8_t> spots(65536);
-        std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);SquidFactory factory(pool,types);
+        std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);SquidFactory factory(pool,types);
         SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);Kernel kernel;SquidProcessState processState;processState.now=12.5;
         std::vector<Sid> born;std::size_t handled=0;SquidProcessHost host(pool,types,kernel,destroy,processState,
             [&](Sid parent,std::uint32_t event,std::uint32_t count,float duration) { CHECK(parent==born.back() && event==0 && count==0 && duration==1.0F);++handled;return duration; });

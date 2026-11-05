@@ -9,6 +9,10 @@ struct ContainedCreateState {
     // containedType: 내용물 타입.
     // bridgeType: 다리 자산을 타입 표에서 찾는 번호.
     std::uint32_t containedType{6},bridgeType{82};
+    const std::uint32_t* sharedContainedType{}; // 실제 Session은 같은 Client finder의 현재00541088을 빌린다.
+    const std::uint32_t* sharedBridgeType{}; // 같은 World links의 현재005411a0/CD0051ca8c을 빌리며 독립 입력만82를 사용한다.
+    std::uint32_t ContainedType() const { return sharedContainedType ? *sharedContainedType : containedType; } // 생성 위치마다 현재 전체DWORD를 읽는다.
+    std::uint32_t BridgeType() const { return sharedBridgeType ? *sharedBridgeType : bridgeType; } // 생성/자식 효과 뒤 조건 판정에서 현재 번호를 읽는다.
 };
 // 생성자는 SID를 반환하며 표면 알림과 Form +0x50 부착은 명시 가상 경계다.
 struct ContainedCreateHooks {
@@ -38,6 +42,6 @@ private:
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ContainedCreateHooks).
     ContainedCreateHooks hooks_;
 };
-// 실제 SquidFactory의 타입 6 contained 전용 생성자를 연결한다. 가상 부착은 별도 복원 경계다.
+// 실제 SquidFactory의 현재 TYPE 생성 부모를 연결한다. 타입6 고정 거부는 하지 않으며 가상 부착은 별도 경계다.
 ContainedCreateHooks MakeContainedCreateHooks(const SidPool& pool,SquidFactory& factory,ContainedCreateHooks hooks);
 }

@@ -1,4 +1,5 @@
 // 두 실제 PE의 저장 관찰과 공유 Form 처리기의 기존 UI/프로세스 연결 및 오류 계약을 검사한다.
+#include "FormTypeInputs.h" // 원문 공통 Create가 읽는 내장 Form 생성자 주소를 입력에 제공한다.
 #include "TestSupport.h"
 #include "o/SquidForms.h"
 #include "o/GumpFormHost.h"
@@ -127,7 +128,7 @@ TEST_CASE(FormTake_ResizePreservesRecordsAndRejectsBadCapacity) {
 TEST_CASE(FormTake_GumpAttachmentAndDestroyIntegration) {
     // 같은 연결을 두 판본의 실제 가상 표/stride에서 검사한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        SidPool pool(edition,kCapacity);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
+        SidPool pool(edition,kCapacity);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188 : 171);
         SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);
         SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);GumpFormHost forms(pool,factory,types,destroy);
         const auto parent=factory.Create(90,2),form=forms.Create(0),head=forms.Create(2);
