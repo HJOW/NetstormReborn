@@ -1,0 +1,77 @@
+{
+  "unit": 919,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "status": "완료·전체 목표 진행 중",
+  "productCodeChanges": false,
+  "productUnit": 916,
+  "productSha256": "fd3a4816dd744d5171df2833cae9eccd9b94291ace883a7967acc7a9480fa5ba",
+  "tests": [
+    {
+      "filter": "BuildingUpgradeUi_",
+      "exit": 0,
+      "log": "extracted\\cpp-resume-919\\test-second.log"
+    },
+    {
+      "filter": "BuildingObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-919/test-BuildingObjectUi_.log"
+    },
+    {
+      "filter": "ProductionObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-919/test-ProductionObjectUi_.log"
+    },
+    {
+      "filter": "StateObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-919/test-StateObjectUi_.log"
+    },
+    {
+      "filter": "CarrierObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-919/test-CarrierObjectUi_.log"
+    }
+  ],
+  "names": [
+    "BuildingUpgradeUi_FourThemesCompleteAndReopenAtEveryLevel",
+    "BuildingObjectUi_FourWorkshopsUseCurrentOwnerLevelMoneyAndEditor",
+    "BuildingObjectUi_WorkshopClickInsufficientFundsAndCycleCurrentFrame",
+    "BuildingObjectUi_GeneratorsUseStrictHalfHpAndMissionOwnerGates",
+    "BuildingObjectUi_ConstructionBlocksMenusWithoutAllocatingForms",
+    "ProductionObjectUi_FourThemesKeepDuplicateRowsAndDistinctSlots",
+    "ProductionObjectUi_DisallowedExcludedAndAllProducedRemainDifferent",
+    "ProductionObjectUi_ClientPredictionAndServerGapsUseFirstMatchingForm",
+    "ProductionObjectUi_SalvageUsesCurrentOwnerEditorDenyAndConfirmation",
+    "StateObjectUi_DamagedSalvageReadsCurrentBattleMode",
+    "StateObjectUi_AltarDaisDelegationUsesCurrentFramesOwnersAndEditor",
+    "StateObjectUi_EmptyAltarStatusHeadersAndLevelClampReleaseMenus",
+    "StateObjectUi_EditorDestroyClickReleasesPairAndPopupWithoutTransmission",
+    "CarrierObjectUi_AllEightTypesUseActualProjectionAndTargetCursors",
+    "CarrierObjectUi_CargoAndCrystalKeepNativeGroundCursorHistory",
+    "CarrierObjectUi_CurrentOwnerEditorParalysisAndRealGroupOverride",
+    "CarrierObjectUi_AllEightCargoMenusUseActualDisabledFlagsAndSid",
+    "CarrierObjectUi_SelfCellCrystalAndCargoUseCurrentCandidateGraph",
+    "CarrierObjectUi_PriestHalfHpAndUnsupportedGroundBlockHover",
+    "CarrierObjectUi_EmptyDaisUsesOffsetWithoutSacrificeRequest"
+  ],
+  "uniqueCases": 20,
+  "newCases": 1,
+  "upgradeTransitions": 12,
+  "menus": 48,
+  "controlledDuplicateClicks": 12,
+  "initialFailures": 1,
+  "initialFailureReason": "검사 장치 construction.refresh 미연결",
+  "finalFailedChecks": 0,
+  "releaseBuilds": 2,
+  "warnings": 0,
+  "errors": 0,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "protectedUnchanged": true,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "testSourceSha256": "68a3df67c2ea944236c02569e2bb8a7ca684b790e7adae1205a20a649fbe6047",
+  "requestReceiveAndCostTested": false,
+  "networkTestsExecuted": false
+}
