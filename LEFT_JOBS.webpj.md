@@ -3,24 +3,24 @@
 webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한다. cpppj/공통은 [LEFT_JOBS.md](LEFT_JOBS.md), dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)가 기준이다. 단위별 과거 이력은 보관 문서와 각 `docs/webpj-*.md`를 따른다.
 
 **2026-11-04 정리:** WB04-A까지의 상세 이력과 대체된 초기 계획을 이관했다. 이후 작업은 이 문서의 3절 순서를 따른다.
-**2026-11-05:** 3.1절 선행 보완을 진행한다. WB03-AC(11.01 표기·세 번째 Patch Credits)를 완료했다.
+**2026-11-05:** 3.1절 선행 보완을 진행한다. WB03-AC(11.01 표기·세 번째 Patch Credits)·WB02-E(외부 접속 목록)를 완료했다.
 
 ## 0. 현재 기준과 재개 절차
 
-### 0.1 현재 값 (2026-11-05, WB03-AC 완료)
+### 0.1 현재 값 (2026-11-05, WB02-E 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 마지막 구현 커밋 | **WB03-AC** 제품11.01 표기·세 번째 Patch Credits(`20261105` WB 커밋, 해시는 `git log -- webpj/www/assets/product.js`). 직전 구현은 `0fd343a1 / 20261104-48 WB` SID 풀 |
+| 마지막 구현 커밋 | **WB02-E** 외부 접속 목록·경계 검사(`20261105` WB 커밋, 해시는 `git log -- webpj/tests/external-access.test.mjs`). 그 앞은 `48339f60 / 20261105-43 WB` 제품11.01·Patch Credits, `0fd343a1 / 20261104-48 WB` SID 풀 |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기까지다. **실제 미션 플레이는 아직 불가**다. `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴·대화상자 일부는 원본 스크린샷과 대조했다. Fort/지형·그림·SID 부품은 원본 fixture 또는 독립 계산과 대조했다. **같은 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증**이다 |
 | 완료/미완료 | M1(시작→메인 메뉴) 완료. M2(같은 실제 월드의 정적 화면)는 지형/공통 출력/값형 로더까지 부분 완료. WB04는 SID 풀만 완료이며 실제 생성/검색/Pop/내용물/소유자 마감은 남는다 |
-| 마지막 전체 검사 | WB03-AC의 Node v24.21.0, **285/285 통과·실패/건너뜀0**(신규 product6), 약55.09초 |
+| 마지막 전체 검사 | WB02-E의 Node v24.21.0, **290/290 통과·실패/건너뜀0**(신규 external-access5; WB03-AC는285/285), 약63.98초 |
 | 마지막 e2e | WB03-AC의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도로 임시 Playwright 스크립트로 Credits→세 번째 행→Back/Cancel을 영어/한국어 실제 클릭 확인(Chromium 156.0.8078.4, 오류0). 미션/월드 검사가 아니다 |
 | cpppj 검토 기준 | 공통 인계의 **861 / 11.01**, 마지막 구현 `0c06fa66`. cpppj 문서의 일시 정지 기록을 webpj 중단 지시로 해석하지 않는다. 다음 착수 때 최신 커밋/인계를 다시 확인한다 |
 | 이식 기준의 의미 | WB04-A가 검토한 트리는 `4fa7e89c`; **cpppj 전체를 그 커밋까지 반영했다는 뜻이 아니다.** 파일별 근거/반영 범위는 단위 문서에 있다 |
 | 마지막 전체 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**. 이번 정리 PC도 HJOW-Athlon이며 디컴파일 산출물은 읽지 않았다 |
-| 즉시 요구 | 11.01 표기/세 번째 Patch Credits는 WB03-AC로 완료. **외부 접속 목록 문서화·이식 추적**이 3.1절에 남는다 |
+| 즉시 요구 | 11.01 표기/세 번째 Patch Credits는 WB03-AC, 외부 접속 목록은 WB02-E로 완료. **이식 추적**이 3.1절에 남는다 |
 
 ### 0.2 매 단위 착수/종료
 
@@ -59,6 +59,7 @@ webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한�
 | [x] WB03-Z·AA | CRT 정렬·64바이트 카메라·공통 월드 그림/그림자 출력과 개발용 중립 지형 화면. 실제 Draw/소유자·배경/카메라 정책은 미연결 | [출력](docs/webpj-world-render-20261102.md)·[지형 장면](docs/webpj-terrain-scene-20261102.md) |
 | [x] WB03-AB | 값형 Fort 객체/내용물·Terr→Chaff 순회 로더. 필수 생성/Pop/finder/소유자 장치가 없어 실제 월드에는 미연결 | [객체 로더](docs/webpj-fort-object-load-20261102.md) |
 | [x] WB04-A | 실제50바이트 SID 풀·할당/반납/재초기화·20개 삭제 기록. 원본10.78의1584전이 대조. `slot/bytes/deletions`는 시점 사본, `allocated`만 쓰기 대여이며 양수reset 뒤 재조회 | [SID 풀](docs/webpj-sid-pool-20261104.md) |
+| [x] WB02-E | 웹 런타임 외부 접속 목록: 요청은 `./data/` 같은 출처 자산뿐, 바깥 링크11종은 콘솔 안내만, UserNotUpdated·Technical Help·서버 진단·`$Zsend`/`$Input` 미연결. 소스 정적 감사·manifest/적재 요청·링크·미연결 기능 검사5개 | [외부 접속](docs/webpj-external-access-20261105.md) |
 | [x] WB03-AC | 제품 표기 `v11.01`(설정 version/MAJOR/MINOR)·`Patch1101` 등록 객체·메인 Credits 세 번째 행과 Patch Credits 창(영어/한국어, Back→목록·Cancel→메뉴). 원본 대조는 `GameData.build({product:false})`로 10.78·두 행 유지. AI 문구/한국어 문구는 개발자 검수 대상 | [제품11.01](docs/webpj-product-1101-20261105.md) |
 
 ## 3. 남은 작업의 실행 순서
@@ -68,7 +69,7 @@ webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한�
 ### 3.1 선행 보완 — 제품 요구와 이식 추적
 
 - [x] **11.01/새 Credits (WB03-AC, 2026-11-05):** `www/assets/product.js`·GameData `product` 옵션·Tell 창 본문 적용으로 완료. 목록 세 번째 `Netstorm 11.01 Patch Credits`, 창 제목 `NetStorm 11.01 Patch Credits`, 한국어 `NetStorm 11.01 패치 크레딧`. 원본 자료/fixture는 그대로이며 원본 대조는 `product:false`([문서](docs/webpj-product-1101-20261105.md)).
-- [ ] **외부 접속 문서:** 웹 런타임의 주소/링크 소비자·미연결 기능·외부 실행 억제·자산 요청을 구분해 문서화한다. 현재 `UserNotUpdated` 생략과 외부 링크를 열지 않는 정책은 유지한다. 구 검증 서버 접속이나 성공값을 합성하지 않는다([cpppj 근거](docs/exe/cpp-external-services-20261101.md)).
+- [x] **외부 접속 문서 (WB02-E, 2026-11-05):** [웹 외부 접속 목록](docs/webpj-external-access-20261105.md)과 `tests/external-access.test.mjs`로 완료. `UserNotUpdated` 생략·바깥 링크 미개방 정책 유지, 검증 성공값 합성 없음. 바깥 링크를 새 탭으로 열지, 개발 서버(`server.js`, 모든 인터페이스 수신)를 localhost로 한정할지는 개발자 결정으로 남김.
 - [ ] **이식 추적:** 기존 검사의 원본 fixture·소비 모듈·판본·SHA-256/행 수·cpppj 근거 커밋/실제 반영 범위를 목록화한다. 아직 없는 `webpj/tests/fixtures/manifest.json` 등의 형식을 다음 구현 단위에서 확정한다. dotnetpj 동기화 도구를 웹 검증으로 대신하지 않는다.
 
 이 세 항목은 월드 의존성이 없는 즉시 요구/기반 보완이다. 다음 구현은 이를 먼저 처리하거나 같은 작업 묶음의 독립 단위로 끝낸 뒤 3.2절의 공간 해시로 이어간다. 이번 문서 정리에서 구현한 것은 아니다.
