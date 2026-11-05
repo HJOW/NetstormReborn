@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**904 양판본 공통 초기화:** CD PostCreate/PostTake의 일괄 거부를 현재 TYPE/진단 복귀·권한/HP WORD·부분 쓰기로 복원했다. Native576행/재관측·고유23사례(새2/기존21) 첫 실패0·Release1명령 경고0·기존2780/960fixture 불변·새1개→2781/961개다. CD Take 앞단/고정 Form·전체 Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [904 기록](cpp-factory-initialization-current-20261105.md).
+
 **903 회복/Help HP:** 현재 사제 TYPE·판본별 번호/HP/getter 순서·실제 Session과 초기 Help 공유 getter를 연결했다. Native864행/재관측·고유23사례(새4/기존19) 첫 실패0·Release1명령 경고0·기존2779/959fixture 불변·새1개→2780/960개다. 전체 HP/Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [903 기록](cpp-priest-regen-help-hit-points-current-20261105.md).
 
 **902 연소점 HP/정수 부모:** 사전 HP·현재 TYPE 플래그/장기 전역과 실제 getter·DWORD 감김/IDIV를 연결했다. 원문5652행/재관측·고유17사례(새3/기존14) 첫 실패0·Release1명령 경고0·기존2778/958fixture 불변·새1개→2779/959개다. 전체 HP/Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [902 기록](cpp-burning-source-count-current-20261105.md).

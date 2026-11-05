@@ -1,0 +1,181 @@
+{
+  "unit": 904,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "scope": {
+    "postCreate": "양판본진단3곳정상복귀/현재TYPE·저장this/권한·HP하위를같은공장에연결. CD서버snapshot/zOrder+33/owner+32/HP WORD보존.",
+    "postTake": "양판본Form진단→현재zOrder BYTE→contained진단. CDfree/dead일괄거부제거/부분쓰기·현재진단장치수명보존.",
+    "unmodified": "CD Take본체/가상Unpop/반환객체와SquidForms·6/3고정편의생성은이번변경아님. 일반Create현재생성과독립계약구별."
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "mode": "first",
+      "samples": 576,
+      "editions": {
+        "originals": {
+          "samples": 288,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+        },
+        "originalCD": {
+          "samples": 288,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+        }
+      },
+      "fixtureSha256": "77bf5a1893a8078b6b2b4113ab49315ce8e746d9105ae314a3f8a5282e74cea2",
+      "toolSha256": "914cddcf66b383a5b25344ee736a612ed2a0da665888d606bcedaae2daec6f02",
+      "boundaries": [
+        "진단 UI 정상복귀/명시 TYPE·HP·서버·약화 변경"
+      ],
+      "actualHasHitPoints": true,
+      "actualTypeHitPoints": true,
+      "actualSetter": true,
+      "game": false,
+      "multiplayer": false
+    },
+    "verify": {
+      "host": "HJOW-Athlon",
+      "mode": "verify",
+      "samples": 576,
+      "editions": {
+        "originals": {
+          "samples": 288,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+        },
+        "originalCD": {
+          "samples": 288,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+        }
+      },
+      "fixtureSha256": "77bf5a1893a8078b6b2b4113ab49315ce8e746d9105ae314a3f8a5282e74cea2",
+      "toolSha256": "914cddcf66b383a5b25344ee736a612ed2a0da665888d606bcedaae2daec6f02",
+      "boundaries": [
+        "진단 UI 정상복귀/명시 TYPE·HP·서버·약화 변경"
+      ],
+      "actualHasHitPoints": true,
+      "actualTypeHitPoints": true,
+      "actualSetter": true,
+      "game": false,
+      "multiplayer": false
+    },
+    "samples": 576,
+    "perEdition": 288,
+    "completeObservations": 2,
+    "completeExecutions": 1152,
+    "fixture": "cpppj/tests/fixtures/factory-initialization-current-x86.tsv",
+    "fixtureBytes": 146005,
+    "preparationFailures": 1,
+    "preparationFix": "Oracle.call의인자이름ecx를실제API this로수정후최초동결. 실행실패때fixture생성0.",
+    "actualHasHitPoints": true,
+    "actualTypeHitPoints": true,
+    "actualSetter": true,
+    "virtualTake": false,
+    "formCreate": false
+  },
+  "validation": {
+    "buildCommands": 1,
+    "buildExits": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "uniqueCases": 23,
+    "newCases": 2,
+    "existingCases": 21,
+    "testCommands": 6,
+    "testExecutions": 23,
+    "firstTestFailures": 0,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "FactoryInitializationCurrent_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FactoryPostCreate_",
+        "cases": 6,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FactoryTakeDiagnostics_",
+        "cases": 7,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "SquidFactory_X86Fixture_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "SquidFactory_AnimTake_",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "RiftHitPointCurrent_",
+        "cases": 5,
+        "failedChecks": 0,
+        "exit": 0
+      }
+    ],
+    "normalizedSourceFiles": 2864,
+    "sourceChangesAfterSnapshot": [],
+    "sourceBuildOverlap": false
+  },
+  "product": {
+    "unit": 904,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10732544,
+    "sha256": "7ec416e9a2a336d2dd1cf21a30c6606fb399835d8dda62dd04347503ec63a124",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "protection": {
+    "previousFiles": 2780,
+    "unchanged": 2780,
+    "changed": [],
+    "currentFiles": 2781,
+    "currentFixtures": 961,
+    "added": [
+      "cpppj/tests/fixtures/factory-initialization-current-x86.tsv"
+    ]
+  },
+  "checking": {
+    "pending": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4
+  },
+  "excluded": [
+    "실제게임/GUI/진단UI/포획/희생/특정적공격/승리/사용자확인",
+    "신규MP/패킷/통신검사",
+    "공중3종전용검사",
+    "전체검사/34미션/ZIP/물리입력/PCM/CD재시도"
+  ],
+  "remaining": [
+    "CD Take본체의현재VT Unpop/진단복귀/생성자반환객체·가상PostTake",
+    "contained/Form·고정편의생성의실제caller와나머지Factory/HP caller",
+    "State/파일/객체UI/Edit/Windows·무검사MP와4~8차"
+  ],
+  "nextUnit": 905,
+  "next": "CD Take/가상Unpop과현재Form caller를별도단위로대조한다.",
+  "rawEvidence": "extracted/cpp-resume-904/ (Git 제외/현재 PC 전용)"
+}

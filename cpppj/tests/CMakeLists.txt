@@ -3546,3 +3546,9 @@ target_sources(netstorm_tests PRIVATE PriestRegenHitPointCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE PriestRegenHitPointCurrentTests.cpp QuickHelpHtmlTests.cpp QuickHelpRequestTests.cpp)
 set_source_files_properties(PriestRegenHitPointCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_REGEN_HP_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priest-regen-hit-points-current-x86.tsv\";NETSTORM_UI_HP_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rifttype-hit-points-x86.tsv\"")
+
+# 두 판본 공통 초기화의 현재 진단/HP를 대조하며 수신/MP 검사는 실행하지 않는다(904).
+target_sources(netstorm_tests PRIVATE FactoryInitializationCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE FactoryInitializationCurrentTests.cpp FactoryTakeDiagnosticsTests.cpp)
+set_source_files_properties(FactoryInitializationCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_FACTORY_INITIALIZATION_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-initialization-current-x86.tsv\"")

@@ -112,7 +112,7 @@ const RiftTypeRecord& SquidFactory::Type(std::uint32_t number,bool requireSuppor
 void SquidFactory::Assert(std::string_view expression,std::uint32_t line) const {
     const auto assertion=diagnostics_.assertion; // 진단이 장치를 재연결해도 실행 중인 callable의 수명을 보존한다.
     if (!assertion) throw std::logic_error("Factory의 선택된 원문 진단 장치 미연결");
-    assertion(expression,"\\Ns\\O\\Squid.cpp",line);
+    assertion(expression,pool_.Edition()==OriginalEdition::Patch1078 ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp",line);
 }
 // Take로 받은 예측 머리도 원본 범위 안이다. 일반 Allocate의 예약 검사와 분리한다.
 std::span<std::uint8_t> SquidFactory::LiveBytes(Sid sid) {
@@ -293,47 +293,31 @@ std::uint32_t SquidFactory::FirstPopFlags(Sid sid) {
     const auto extra=bytes[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35];
     return (extra&9)==0 ? 1U : ((extra&1)!=0 ? 2U : 0U)|((extra&8)!=0 ? 4U : 0U);
 }
-// PATCH는 세 진단이 돌아온 위치부터 현재 슬롯으로 계속한다. CD의 기존 독립 계약은 유지한다.
+// 두 판본의 세 진단이 돌아온 위치부터 같은 물리 슬롯/현재 TYPE로 계속한다.
 void SquidFactory::PostCreate(Sid sid) {
-    if (pool_.Edition()==OriginalEdition::Patch1078) {
-        const auto offset=pool_.Offset(sid);auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride); // free/dead/contained를 별도 선행 거부하지 않는 같은 물리 슬롯이다.
-        if (bytes[kType]<kFirstAssetTypeNumber) Assert("!isForm()",0x7d4);
-        if (bytes[kState]&kContained) Assert("!isContained()",0x7d5);
-        const auto selectedBase=CurrentTypes();const auto& initial=TypeRecord(bytes[kType]); // 두 입구 진단 뒤 선택한 TYPE와 그 물리 기준을 저장한다.
-        bytes[35]=static_cast<std::uint8_t>(initial.zOrder);
-        if (pool_.IsServer()) {
-            bytes[34]=0;
-            const bool needsHp=(TypeRecord(bytes[kType]).flags2&kDaisFlag) ? (bytes[40]&1U)!=0 : (TypeRecord(bytes[kType]).flags1&TypeFlag1::kHasHitPoints)!=0;
-            if (needsHp) {
-                const auto hp=TypeHitPoints(initial,selectedBase);
-                Put(bytes,kHp,static_cast<std::uint32_t>(hp),4);
-            }
-        }
-        if (bytes[kState]&kContained) Assert("!isContained()",0x7df); // 비서버도 마지막 현재 상태 진단을 생략하지 않는다.
-        return;
-    }
-    auto bytes=LiveBytes(sid);
-    const auto selectedBase=CurrentTypes();const auto& type=Type(bytes[kType],false); // CD의 기존 진입 계약 뒤 같은 선택 TYPE/base를 유지한다.
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    bytes[patch ? 35 : 33]=static_cast<std::uint8_t>(type.zOrder);
-    if (!pool_.IsServer()) return;
-    bytes[patch ? 34 : 32]=0;
-    const bool needsHp=(type.flags2&kDaisFlag) ? (bytes[patch ? 40 : 35]&1)!=0 : (type.flags1&TypeFlag1::kHasHitPoints)!=0;
-    if (needsHp) {
-        const auto hp=TypeHitPoints(type,selectedBase);
-        Put(bytes,kHp,static_cast<std::uint32_t>(hp),patch ? 4 : 2);
+    const auto offset=pool_.Offset(sid);auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride); // free/dead/contained를 별도 선행 거부하지 않는 같은 물리 슬롯이다.
+    if (bytes[kType]<kFirstAssetTypeNumber) Assert("!isForm()",patch ? 0x7d4 : 0x7a6);
+    if (bytes[kState]&kContained) Assert("!isContained()",patch ? 0x7d5 : 0x7a7);
+    const auto selectedBase=CurrentTypes();const auto& initial=TypeRecord(bytes[kType]); // 두 입구 진단 뒤 선택한 TYPE와 그 물리 기준을 저장한다.
+    const bool cdServer=!patch && pool_.IsServer(); // CD는 zOrder 쓰기 직전에 읽은 서버 플래그를 유지한다.
+    bytes[patch ? 35 : 33]=static_cast<std::uint8_t>(initial.zOrder);
+    if (patch ? pool_.IsServer() : cdServer) {
+        bytes[patch ? 34 : 32]=0;
+        const bool needsHp=(TypeRecord(bytes[kType]).flags2&kDaisFlag) ? (bytes[patch ? 40 : 35]&1U)!=0 : (TypeRecord(bytes[kType]).flags1&TypeFlag1::kHasHitPoints)!=0;
+        if (needsHp) {
+            const auto hp=TypeHitPoints(initial,selectedBase);
+            Put(bytes,kHp,static_cast<std::uint32_t>(hp),patch ? 4 : 2);
+        }
     }
+    if (bytes[kState]&kContained) Assert("!isContained()",patch ? 0x7df : 0x7b1); // 비서버도 마지막 현재 상태 진단을 생략하지 않는다.
 }
-// PATCH의 원문 진단은 현재 zOrder 쓰기 전후에 있고, CD의 기존 독립 수신 계약은 유지한다.
+// 두 판본 모두 Form 진단 복귀 뒤 현재 zOrder를 쓰고 contained를 마지막에 진단한다.
 void SquidFactory::PostTake(Sid sid) {
-    if (pool_.Edition()==OriginalEdition::Patch1078) {
-        if (pool_.Slot(sid)[kType]<kFirstAssetTypeNumber) Assert("!isForm()",0x7f6);
-        const auto zOrder=TypeRecord(pool_.Slot(sid)[kType]).zOrder; // 진단이 고친 현재 TYPE를 다시 읽어 BYTE로 저장한다.
-        std::span(pool_.bytes_).subspan(pool_.Offset(sid),pool_.layout_.stride)[35]=static_cast<std::uint8_t>(zOrder);
-        if (pool_.Slot(sid)[kState]&kContained) Assert("!isContained()",0x7fa);
-        return;
-    }
-    auto bytes=LiveBytes(sid);
-    bytes[33]=static_cast<std::uint8_t>(Type(bytes[kType],false).zOrder);
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (pool_.Slot(sid)[kType]<kFirstAssetTypeNumber) Assert("!isForm()",patch ? 0x7f6 : 0x7c8);
+    const auto zOrder=TypeRecord(pool_.Slot(sid)[kType]).zOrder; // 진단이 고친 현재 TYPE를 다시 읽어 BYTE로 저장한다.
+    std::span(pool_.bytes_).subspan(pool_.Offset(sid),pool_.layout_.stride)[patch ? 35 : 33]=static_cast<std::uint8_t>(zOrder);
+    if (pool_.Slot(sid)[kState]&kContained) Assert("!isContained()",patch ? 0x7fa : 0x7cc);
 }
 }
