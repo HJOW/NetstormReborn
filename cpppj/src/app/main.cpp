@@ -41,6 +41,7 @@
 #include "platform/Bitmap.h"
 #include "platform/FileOutput.h"
 #include "platform/PortableStartup.h"
+#include "platform/UserDataRoot.h"
 
 namespace {
 // 복원의 기준이 되는 원본 판본.
@@ -590,6 +591,7 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
     if (arguments.empty() && !portableRoot) throw std::invalid_argument("Missing game directory");
     options.gameDirectory = portableRoot ? *portableRoot:std::filesystem::path(arguments[0]);
     options.startupFileNames=std::move(startupFileNames);
+    options.userData=netstorm::platform::UserDataRoot::Resolve(); // 5차: 설정/진행/체크포인트를 설치 폴더가 아닌 사용자 홈(Saved Games 아래 Netstorm)에 둔다. 읽기 전용/관리자 권한 설치에서도 동작하기 위한 호환 처리다.
     std::string view;
     bool renderStats = false;
     std::filesystem::path uiScript, uiReport;

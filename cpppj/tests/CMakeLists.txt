@@ -3614,3 +3614,9 @@ target_sources(netstorm_menu_session_tests PRIVATE ObjectCommandTests.cpp) # Des
 
 # 전체 운반체의 실제 커서/운반물 메뉴를 기존 원문 강조·작성 fixture와 함께 선택 실행한다(917).
 target_sources(netstorm_menu_session_tests PRIVATE CarrierInputTests.cpp CarrierMenuTests.cpp)
+
+# 5차 사용자 홈 저장 정책(설정/체크포인트/전체화면 표식)을 임시 폴더에서 집중 확인한다(932).
+target_sources(netstorm_tests PRIVATE UserDataRootTests.cpp)
+add_executable(netstorm_user_data_root_tests FocusedTestMain.cpp UserDataRootTests.cpp)
+target_link_libraries(netstorm_user_data_root_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_user_data_root_tests)

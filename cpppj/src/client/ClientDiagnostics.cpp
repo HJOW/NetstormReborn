@@ -45,11 +45,15 @@ void Client::TraceObject(std::uint32_t sid) { // 현재 물리 소유자를 고�
 void Client::DumpDiagnostics() { //004437f0은 실제 단일RET이며 이어서004d6020→00471890을 호출한다.
     const auto surface=SurfaceStorage();const auto gameplay=GameplayGlobals();
     const ObjectDumpGlobals globals{trace_->suppress,surface->pool.CapacityValue(),gameplay->GameAux()->TerrainType(),gameplay->TerrainBitmaps().fringeType,gameplay->GameAux()->EdgeFarmType()};
-    const auto hooks=MakeObjectDumpDiskHooks(GameDirectory(),[this](auto sid) { TraceObject(sid); },[] { throw std::logic_error("원문 객체 덤프 trace FILE 열기 진단"); },&Files()); // 원문의 빈 prefix/재읽기/재쓰기는 실제 Client의 같은10칸을 사용하고 OS 상대 열기만 가상 게임 CWD로 대체한다.
+    const auto diagnosticsDirectory=UserData() ? UserData()->Diagnostics() : GameDirectory(); // 5차: squids.txt/procSumm.txt는 설치 폴더·CWD가 아닌 사용자 Diagnostics에 쓴다.
+    if (UserData()) platform::UserDataRoot::EnsureDirectory(diagnosticsDirectory);
+    const auto hooks=MakeObjectDumpDiskHooks(diagnosticsDirectory,[this](auto sid) { TraceObject(sid); },[] { throw std::logic_error("원문 객체 덤프 trace FILE 열기 진단"); },&Files()); // 원문의 빈 prefix/재읽기/재쓰기는 실제 Client의 같은10칸을 사용하고 OS 상대 열기만 가상 게임 CWD로 대체한다.
     std::array<std::uint8_t,24> file{};DumpRawObjects(surface->pool,surface->types,trace_->log,globals,DiagnosticLogHooks(),hooks,file);
     o::ProcessSummaryHooks summary;summary.slot=[this](auto slot) { return reinterpret_cast<o::ProcessSummaryHandle>(GetKernel().Get(slot)); };
     summary.form=[](auto handle) { return std::uint32_t(DiagnosticProcess(handle).Form().value); };summary.parent=[](auto handle) { return std::int32_t(DiagnosticProcess(handle).Parent().value); };
-    summary.open=[](auto name,auto mode) { return reinterpret_cast<o::ProcessSummaryHandle>(std::fopen(std::string(name).c_str(),std::string(mode).c_str())); }; // 원문은 고정ASCII procSumm.txt/wb를 현재 작업 폴더에서 연다.
+    summary.open=[diagnosticsDirectory,userPolicy=UserData().has_value()](auto name,auto mode) { // 원문은 고정ASCII procSumm.txt/wb를 현재 작업 폴더에서 연다. 5차: 사용자 홈 정책에서는 Diagnostics 폴더에서 연다(CWD가 읽기 전용 설치여도 동작).
+        const auto path=userPolicy ? diagnosticsDirectory/std::filesystem::path(std::string(name)) : std::filesystem::path(std::string(name));const std::string text(mode);const std::wstring wide(text.begin(),text.end());
+        return reinterpret_cast<o::ProcessSummaryHandle>(userPolicy ? ::_wfopen(path.c_str(),wide.c_str()) : std::fopen(std::string(name).c_str(),text.c_str())); };
     summary.write=[](auto handle,std::string_view row) { static_cast<void>(std::fwrite(row.data(),1,row.size(),DiagnosticFile(handle))); };summary.close=[](auto handle) { std::fclose(DiagnosticFile(handle)); };
     o::WriteRawProcessSummary(surface->pool,surface->types,summary);
 }

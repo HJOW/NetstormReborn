@@ -15,6 +15,7 @@
 #include "o/Kernel.h"
 #include "o/RiftType.h"
 #include "o/Xlat.h"
+#include "platform/UserDataRoot.h"
 namespace netstorm::o { class RawXlat; } //10.78 다중 번역 장부의 Client 소유자다.
 #include <cstdint>
 #include <filesystem>
@@ -92,6 +93,9 @@ struct ClientOptions {
     std::filesystem::path audioReport;     // 새 옵션(검사용): 닫기 직전의 소리·음악 상태를 이 파일에 `이름	값` 줄로 저장한다.
     std::string testBridgePatterns; // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 명시 CLI에서만 지정하고 설정 파일에 저장하지 않는다.
     std::shared_ptr<o::RawFileName> startupFileNames; // 무인자 모듈 위치 탐색이 사용한 고리 소유권을 VFS/설정/전역 문자열까지 넘긴다. 명시 경로는 새 BSS0이다.
+    // 5차 새 옵션: 값이 있으면 설정(options.cfg)·전투 체크포인트(!state.dat)·전체화면 표식을 설치 폴더 대신 이 사용자 데이터 루트(Saved Games 아래 Netstorm)에 둔다.
+    // 비어 있으면 원본처럼 설치 폴더를 쓰는 기존 동작이다(기존 단위 검사가 임시 설치 폴더를 쓰도록 유지). 제품 진입점(RunClient)은 항상 값을 채운다.
+    std::optional<platform::UserDataRoot> userData;
 };
 
 // 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다.
@@ -207,6 +211,8 @@ public:
     const o::BaseFileSystem& Files() const;
     void InitializeNativeSecondaryFiles(std::string_view directory); //00441790의 CD 탐색 뒤 보조 root/TAFF 등록을 같은 장기 VFS에 연결한다. 빈 결과는 기본 root이며 별도 목록은 만들지 않는다.
     StartupFileLocations InitializeNativeStartupFiles(const std::function<std::string()>& findCd); //10.78실제시작과창없는집중검사가같은설정탐색/CD/등록순서를호출한다. 반환검색객체는설정Load뒤반납한다.
+    const std::optional<platform::UserDataRoot>& UserData() const { return options_.userData; } // 5차: 사용자 홈 저장 정책이 켜졌는지와 그 루트를 읽는다(없으면 설치 폴더 동작).
+    std::filesystem::path UserSavedStateFile() const { return options_.userData ? options_.userData->SavedStateFile() : std::filesystem::path{}; } // 5차: !state.dat의 사용자 홈 위치이며 정책이 꺼져 있으면 빈 경로다.
     const std::filesystem::path& GameDirectory() const { return options_.gameDirectory; } //편집 작업본을 읽기 전용 게임 자산의 형제 디렉터리에 배치할 실제 입력 경로다.
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();

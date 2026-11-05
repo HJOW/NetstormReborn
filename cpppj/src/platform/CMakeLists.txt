@@ -8,4 +8,5 @@ target_sources(netstorm PRIVATE
     Bitmap.cpp Bitmap.h
     FileOutput.cpp FileOutput.h
     PortableStartup.cpp PortableStartup.h
+    UserDataRoot.cpp UserDataRoot.h
 )

@@ -73,10 +73,15 @@ ConfigInterface::ConfigInterface(FileReader reader,std::shared_ptr<RawFileName> 
 }
 // 파일이 없으면 아무것도 더하지 않는다.
 void ConfigInterface::LoadFile(Config& config, std::string_view path) {
+    // 5차: 사용자 홈에 저장된 같은 설정 파일이 있으면 설치 폴더 대신 그 바이트를 같은 해독 경로(LoadBytes)로 읽는다.
+    // 사용자 파일이 없을 때만 아래의 기존 읽기(설치 폴더의 옛 설정 포함)로 이어져 자연스럽게 이관된다.
+    if (userFileOverride_) if (const auto userBytes = userFileOverride_(path)) { config.LoadBytes(*userBytes);return; }
     if (fileLoad_.load) { fileLoad_.load(config,path);return; }
     if (!reader_) return;
     if (const auto bytes = reader_(path)) config.LoadBytes(*bytes);
 }
+// 5차: 사용자 홈 설정 우선 읽기 장치를 교체한다. 설정 읽기 동안에만 호출되므로 동기화는 필요 없다.
+void ConfigInterface::SetUserFileOverride(UserFileOverride userFile) { userFileOverride_ = std::move(userFile); }
 // @토큰의바깥존재조회는40410의효과이며안쪽40380도자체Probe를수행한다.
 void ConfigInterface::AppendConfigArguments(Config& config,std::string_view text) {
     if (!fileLoad_.load) { config.AppendArguments(text,reader_);return; }

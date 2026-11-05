@@ -54,7 +54,9 @@ CaptureSequenceHooks ClientCaptureSequence::Hooks() {
     hooks.prefix=[this] { return client_.Configuration().PathSpec("GifSequenceName"); }; //index인자를 붙이지 않는다.
     hooks.bitmap=[this](auto name,auto token,auto x,auto y,auto width,auto height,auto pitch,auto palette) {
         if (palette!=2) throw std::out_of_range("Client 연속 저장의 현재 논리 팔레트 토큰");const auto logical=client_.GetScreen().LogicalPalette();const auto& allocation=allocations_.at(token);IndexedBitmapScratch scratch; //지역 기본0을 원문 미정 스택의 값으로 주장하지 않는다.
-        WriteIndexedBitmapFile(ResolveCaptureBitmapPath(client_.GameDirectory(),name,&client_.StaticStrings()->FileNames()),{allocation.bytes.get(),allocation.size},{x,y,width,height,pitch},{reinterpret_cast<const std::uint8_t*>(logical.data()),logical.size_bytes()},scratch);
+        const auto& userData=client_.UserData(); // 5차: 연속 저장 BMP도 설치 폴더가 아닌 사용자 Captures에 쓴다(장치/절대 이름은 명시 위치 유지).
+        if (userData) platform::UserDataRoot::EnsureDirectory(userData->Captures());
+        WriteIndexedBitmapFile(ResolveCaptureBitmapPath(userData ? userData->Captures() : client_.GameDirectory(),name,&client_.StaticStrings()->FileNames()),{allocation.bytes.get(),allocation.size},{x,y,width,height,pitch},{reinterpret_cast<const std::uint8_t*>(logical.data()),logical.size_bytes()},scratch);
     };
     hooks.report=[this](auto first,auto last) { const auto bytes=client_.StaticStrings()->FormatCaptureRange(first,last);return std::string(reinterpret_cast<const char*>(bytes.data())); }; //공유 고리80예약/전체 서식 뒤 같은 본문을 즉시 전달한다.
     hooks.notice=[this](auto message,auto width,auto height) { auto* menu=client_.Menu();if (!menu) throw std::logic_error("Client 연속 저장의 현재 공통 HTML 미연결");menu->ShowCaptureNotice(message,width,height); };

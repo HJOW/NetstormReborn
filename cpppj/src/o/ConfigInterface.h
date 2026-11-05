@@ -94,6 +94,11 @@ public:
     // 파일 읽기 함수. 미션 스크립트처럼 다른 설정 객체에 파일을 읽어 넣을 때 쓴다.
     const FileReader& Reader() const;
     void LoadFile(Config& config,std::string_view path); //40380명시입구다.Native장치가없으면기존reader를사용하며Fort/Editor의Reader()는바꾸지않는다.
+    // 5차: 설치 폴더 대신 사용자 홈(Saved Games\Netstorm)에 저장된 설정 파일(options.cfg)을 먼저 읽게 하는 호환 장치다.
+    // 경로(원문 FileSpec 결과 문자열)를 받아 사용자 파일의 원본 바이트를 돌려주며, 없으면 빈 값이어서 기존 설치 파일 읽기로 이어진다(기존 설치 설정 이관).
+    using UserFileOverride = std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)>;
+    // 사용자 파일 우선 읽기 장치를 설치한다. 빈 함수를 주면 해제하며 설치하지 않으면 기존 동작(설치 폴더만 읽기)이다.
+    void SetUserFileOverride(UserFileOverride userFile);
     void AppendConfigArguments(Config& config,std::string_view text); //40410의@외부Probe뒤같은40380을호출한다.기본값형FileReader에는기존한번읽기를유지한다.
 private:
 
@@ -102,6 +107,7 @@ private:
     // reader_: 설정·파일 내용을 읽는 공급자.
     FileReader reader_;
     ConfigFileLoadHooks fileLoad_; //실제Config파일전용장치이며Reader()의snapshot/namespace를대체하지않는다.
+    UserFileOverride userFileOverride_; // 5차의 사용자 홈 설정 우선 읽기 장치이며 미설치면 기존 읽기 경로를 그대로 쓴다.
     std::shared_ptr<RawFileName> fileNames_; // 원문 Load의 파일명 getter가 실제 VFS와 같은10칸을 사용한다.
     FileSpecQueryHooks fileSpecHooks_; // 실제 Windows 또는 명시 검색 장치를 현재 파일 읽기 동안 유지한다.
     // language_: 원본 설정 객체(0x18바이트): +0 버퍼, +8 환경 변수 허용, +0xc "이름.", +0x10 이름 길이, +0x14 변경 표시 (Config).

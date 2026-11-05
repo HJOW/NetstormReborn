@@ -205,6 +205,16 @@ Client::Client(ClientOptions options)
     captureSequence_=std::make_unique<ClientCaptureSequence>(*this); //원문BSS0처럼파일/화면 없이 장기 상태만 준비한다.
     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
     configuration_.Registry().environment = Environment;
+    if (options_.userData) { // 5차: 설정은 사용자 홈 Saves의 options.cfg를 먼저 읽고, 없을 때만 설치 폴더의 옛 d\options.cfg를 읽는다(기존 설정 이관, 설치 폴더는 쓰지 않는다).
+        configuration_.SetUserFileOverride([this](std::string_view path) -> std::optional<std::vector<std::uint8_t>> {
+            const auto cut = path.find_last_of("\\/"); // 원문 FileSpec 결과의 마지막 경로 요소만 비교한다.
+            if (o::AsciiLower(cut == std::string_view::npos ? path : path.substr(cut + 1)) != "options.cfg") return std::nullopt; // 다른 설정 파일은 설치 폴더에서만 읽는다.
+            const auto userFile = options_.userData->OptionsFile();
+            std::error_code error; // 존재 확인 실패를 예외로 만들지 않기 위한 코드다.
+            if (!std::filesystem::is_regular_file(userFile, error)) return std::nullopt; // 사용자 파일이 없으면 설치 폴더의 옛 설정으로 이어진다.
+            try { return o::ReadFileBytes(userFile); } catch (const std::exception&) { return std::nullopt; } // 읽기 실패한 사용자 파일은 이번 시작에서만 건너뛰며 지우거나 덮어쓰지 않는다.
+        });
+    }
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
     configuration_.onChanged = [this] { configuration_.ReadInt("cs",gameplayGlobals_->GameAux()->SquidTransmission().compress);if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("highPriorityValue",highPriority_);InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretMonitorOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 우선순위/회전 방향/입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
@@ -542,12 +552,14 @@ void Client::ApplyAudioOptions() {
 // 원본 00441d10·00441de0의 경로 인자는 빈 문자열(00540cec)·"d"(00540cf8)·"options.cfg"다.
 // 원본은 게임 폴더를 작업 폴더로 바꾸고 d\options.cfg를 연다. cpppj는 같은 위치를 절대 경로로 연다.
 void Client::SaveOptions() {
-    SaveClientOptionsInGameDirectory(configuration_,options_.gameDirectory,staticStrings_->FileNames()); //441d10의 한 칸 작성/지역 복사를 실제 저장 전에 수행한다.
+    SaveClientOptionsInGameDirectory(configuration_,options_.gameDirectory,staticStrings_->FileNames(),options_.userData ? options_.userData->OptionsFile() : std::filesystem::path{}); //441d10의 한 칸 작성/지역 복사를 실제 저장 전에 수행한다. 5차: 사용자 홈 정책이면 실제 쓰기 위치만 Saves의 options.cfg다.
 }
 
 // 원본 00436e40은 CRT remove를 부른다. UberGump 004cebf0의 버튼 사건에만 연결되는 함수다.
 void Client::ClearFullScreenState() {
-    ::_wremove((options_.gameDirectory / kFullScreenStateFile).c_str()); // 원본ANSI remove와 달리 Windows10/11의 한글 설치 경로에서도 같은 표식을 제거한다.
+    // 5차: 사용자 홈 저장 정책에서는 표식도 Saves 안에서만 정리한다(설치 폴더는 읽기 전용일 수 있다). 호환판은 이 표식을 만들지 않는다.
+    const auto marker = options_.userData ? options_.userData->FullScreenStateFile() : options_.gameDirectory / kFullScreenStateFile;
+    ::_wremove(marker.c_str()); // 원본ANSI remove와 달리 Windows10/11의 한글 설치 경로에서도 같은 표식을 제거한다.
 }
 
 // 현재 DWORD에서 시작하므로 누락 ReadInt는 이전 값을 보존하며 signed 전체 비트도 바꾸지 않는다.
@@ -759,12 +771,14 @@ void Client::SaveGifScreenshot() { // 원문이 저장하는 고정 primary 색�
     const std::uint8_t* pixels{};ScreenshotSaveHooks hooks; // 잠금에서 빌린 현재 DIB 포인터와 파일 장치다.
     hooks.set=[this](auto key,auto value) { configuration_.Set(key,value); };
     hooks.read=[this](auto key,auto& value) { return configuration_.ReadString(key,value); };
-    hooks.exists=[this](auto path) { return files_.Probe(path)!=0; }; // 원문41ab10의 TAFF메타우선/내용미읽기와 같은 현재고리를 사용하며 번호별 Config 재조회/폴링은 부모에 남긴다.
+    hooks.exists=[this](auto path) { return files_.Probe(path)!=0 || (options_.userData && std::filesystem::exists(ResolveScreenshotDiskPath(options_.userData->Captures(),path))); }; // 5차: 사용자 Captures의 기존 번호 파일도 덮어쓰지 않는다. 원문41ab10의 TAFF메타우선/내용미읽기와 같은 현재고리를 사용하며 번호별 Config 재조회/폴링은 부모에 남긴다.
     hooks.lock=[this,&pixels] { pixels=screen_->Lock(); };
     hooks.gif=[this,&pixels](auto path) {
         const auto rgb=ScreenshotPrimaryPalette(colorSortInput_->Primary()->Bytes()); // 현재flash 팔레트가 아닌555d88의같은 기록이다.
         const auto bytes=EncodeScreenshotGif(static_cast<std::uint32_t>(screenWidth_),static_cast<std::uint32_t>(screenHeight_),static_cast<std::uint32_t>(screen_->Pitch()),{pixels,static_cast<std::size_t>(screen_->Pitch())*screenHeight_},rgb); // 패딩을 보존한 현재 논리 버퍼다.
-        std::ofstream output(ResolveScreenshotDiskPath(options_.gameDirectory,path),std::ios::binary|std::ios::trunc); //41b4c0의 기본 디스크 경로다. 원문 fopen처럼 없는 상위 폴더는 생성하지 않는다.
+        const auto destination=options_.userData ? ResolveScreenshotDiskPath(options_.userData->Captures(),path) : ResolveScreenshotDiskPath(options_.gameDirectory,path); // 5차: 상대 이름은 설치 폴더가 아닌 사용자 Captures에 저장한다. 명시 절대 경로는 그대로 쓴다.
+        if (options_.userData && !std::filesystem::path(std::string(path)).is_absolute()) platform::UserDataRoot::EnsureDirectory(destination.parent_path()); // 첫 저장에서만 사용자 폴더를 만든다.
+        std::ofstream output(destination,std::ios::binary|std::ios::trunc); //41b4c0의 기본 디스크 경로다. 원문 fopen처럼 없는 상위 폴더는 생성하지 않는다(사용자 Captures 제외).
         if (!output || !output.write(reinterpret_cast<const char*>(bytes.data()),static_cast<std::streamsize>(bytes.size())) || !output.flush()) throw std::runtime_error("스크린샷 GIF 파일 저장 실패");
     };
     hooks.unlock=[this] { screen_->Unlock(); };

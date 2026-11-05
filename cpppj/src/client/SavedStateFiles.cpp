@@ -10,14 +10,15 @@
 
 namespace netstorm::client { // 게임 설치 폴더를 프로세스 CWD 변경 없이 사용할 실제 장치다.
 // 원본은 게임 폴더를 CWD로 설정한다. cpppj는 같은 파일을 현재 명시 설치 경로에서 연다.
-std::filesystem::path SavedStateFilePath(const std::filesystem::path& gameDirectory,o::RawFileName& formatter) {
+std::filesystem::path SavedStateFilePath(const std::filesystem::path& gameDirectory,o::RawFileName& formatter,const std::filesystem::path& userFile) {
     const std::array<o::FileNamePart,3> parts{{{-2,""},{-2,"d"},{-3,"!state.dat"}}};const auto path=formatter.Format(parts); // 실제004b5470의 root/d/서식 결과를 같은 고리에 작성한다.
     if (!path.starts_with(".\\")) throw std::logic_error("원문 저장 상태 이름의 상대 접두 불일치");
+    if (!userFile.empty()) return std::filesystem::absolute(userFile); // 5차: 원문 이름 고리는 그대로 소비하되 실제 파일은 사용자 홈 Saves에 둔다. 설치 폴더가 읽기 전용이어도 동작하기 위한 호환 처리다.
     return std::filesystem::absolute(gameDirectory/std::filesystem::path(path.substr(2))); // 원본 chdir 대신 명시 설치 폴더를 사용하며 W 경로의 한글 설치 이름을 그대로 보존한다.
 }
 // 원본 ANSI DeleteFileA와 달리 Windows10/11 한글 설치 경로를 위해 W API를 사용한다. 디렉터리/readonly를 지우거나 속성을 바꾸지 않는다.
-std::int32_t DeleteSavedStateFile(const std::filesystem::path& gameDirectory,o::RawFileName& formatter) {
-    const auto path=SavedStateFilePath(gameDirectory,formatter);
+std::int32_t DeleteSavedStateFile(const std::filesystem::path& gameDirectory,o::RawFileName& formatter,const std::filesystem::path& userFile) {
+    const auto path=SavedStateFilePath(gameDirectory,formatter,userFile);
     if (::DeleteFileW(path.c_str())) return 0;
     const auto error=::GetLastError();if (!error) return 0; // 원문도 실패BOOL 뒤 OS오류0이면 매핑하지 않고0을 돌려준다.
     static_cast<void>(::_set_doserrno(error));errno=o::Win32FileErrorCode(error);return -1;
