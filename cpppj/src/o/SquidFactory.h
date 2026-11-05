@@ -50,6 +50,7 @@ public:
     std::uint32_t FirstPopFlags(Sid sid);
     // 004b0c60 ↔ CD 004ae040. 파생 클래스가 base 초기화를 호출할 때도 사용한다.
     void PostCreate(Sid sid);
+    std::int32_t ReadSelectedHitPoints(const RiftTypeRecord& type,std::span<const RiftTypeRecord> selectedBase) const; // 표시/전송이 저장한 TYPE this를 같은 현재 HP getter와 장기 전역으로 읽는다.
     // 004ad4a0 ↔ CD 004ae120. zOrder만 갱신하며 owner·HP는 보존한다.
     void PostTake(Sid sid);
     // 현재 TYPE 생성자의 실제 최종 VT 기록값이다. 메뉴 등 가상 분배기는 이 값과 현재 raw VT를 먼저 대조한다.

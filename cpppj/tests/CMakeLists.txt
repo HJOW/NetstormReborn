@@ -3528,3 +3528,9 @@ target_sources(netstorm_tests PRIVATE RewardHitPointDiagnosticsTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE RewardHitPointDiagnosticsTests.cpp)
 set_source_files_properties(RewardHitPointDiagnosticsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_REWARD_HP_DIAGNOSTIC_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rifttype-hit-points-x86.tsv\"")
+
+# 원문 HP 막대 부모와 기존 전체 SpriteDraw 관측을 같은 집중 대상에서 검사한다(901).
+target_sources(netstorm_tests PRIVATE SpriteHitPointBarTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE SpriteHitPointBarTests.cpp SpriteDrawTests.cpp)
+set_source_files_properties(SpriteHitPointBarTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SPRITE_HP_BAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sprite-hit-point-bar-x86.tsv\"")

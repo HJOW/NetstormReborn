@@ -160,7 +160,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             o::RawSquidTransmissionHooks transmission;
             transmission.type=[owner=storage.get()](std::uint8_t number)->const o::RiftTypeRecord& { return owner->types.at(number); };
             transmission.defaultType=[this] { return links.bridgeType; };
-            transmission.maxHp=[owner=storage.get()](std::uint8_t number) { const auto hp=owner->types.at(number).maxHitPoints;return owner->GameAux()->PriestQuarterHp() && number==158 ? hp/4 : hp; }; //0049fce0의현재사제쿼터조건이며이미HAS_HP인선택분기만호출한다.
+            transmission.maxHp=[this](std::uint8_t number) { return factory->ReadSelectedHitPoints(types.at(number),types); }; // 같은 World 수명의 전송기가 현재 TYPE/사제번호/약화/진단 getter를 사용한다. 신규 MP 기능 검사는 하지 않는다.
             transmission.broadcast=[this](auto packet) { if (!runtimeBound) return;if (!runtime.squidPacket) throw std::logic_error("현재월드의Squid방송장치미연결");const auto send=runtime.squidPacket;send(packet); }; //독립World는연결표가없고실제Session은동일broadcast를설치한다.
             transmission.trace=[owner=storage.get()](auto level,auto text) { owner->TraceGraph(level,text); };
             transmission.assertion=[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); };

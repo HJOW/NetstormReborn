@@ -1,0 +1,210 @@
+{
+  "unit": 901,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastPreciseHost": "HJOW-Athlon",
+  "lastPreciseDate": "2026-11-03",
+  "status": "unit-complete-overall-goal-in-progress",
+  "scope": "선택 HP 막대의 원문 조회/색 순서와 실제 표시/전송의 현재 공장 HP getter 연결",
+  "implemented": {
+    "patch": "정상색저장→HP1/최대HP1→절반색→HP2/최대HP2→1/4색→HP3/최대HP3→bar 인자. 같은 선택TYPE this의getter를3회호출한다.",
+    "cd": "첫최대값이1이상일때만두번째조회,그외1. 이후signedWORD HP/clamp/현재색을읽는다.",
+    "draw": "SpriteDraw.Selection이같은부모를사용하고HP없는분기는getter를요구하지않는다. CD2차최대값0은배경fill뒤명시division오류다.",
+    "binding": "실제RawCampaignFactoryDisplay가같은core.types의저장TYPE/base를Factory.ReadSelectedHitPoints에전달한다. 현재checking/진단/GameAux특별TYPE·약화를사용한다.",
+    "independent": "미연결독립fixture만기존quarterHitPoints/shadowAliasType를사용하되같은부모순서를거친다.",
+    "multiplayerStaticOnly": "RawSurfaceWorld.transmission.maxHp의158고정을제거하고같은공장getter연결. Factory뒤선언된전송기가먼저파괴된다. 신규MP기능/단위/패킷/통신검사0."
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "mode": "first",
+      "samples": 504,
+      "editions": {
+        "originals": {
+          "samples": 252,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+          "root": 4817440,
+          "start": 4819340,
+          "stop": 4813552,
+          "getter": 4848864,
+          "width": 4,
+          "colors": [
+            5987780,
+            5877720,
+            5987928
+          ]
+        },
+        "originalCD": {
+          "samples": 252,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+          "root": 4546400,
+          "start": 4548489,
+          "stop": 4548621,
+          "getter": 4474656,
+          "width": 2,
+          "colors": [
+            5655500,
+            5619536,
+            5618376
+          ]
+        }
+      },
+      "fixtureSha256": "81d16cc071f6ae3e759a60b1e46b4467289815db0275e1bbb0807fa5be899b87",
+      "toolSha256": "2d2603f1b9f3c0b1b5b22dc95612e02690e785af19460f2f43ba8bc2a1c8dbf4",
+      "boundaries": [
+        "HP 존재 분기 내부 시작 문맥",
+        "최대HP getter 반환/정상 복귀와 raw HP·색 변경",
+        "PATCH bar 호출 인자/CD 기하 전 결과 관측"
+      ],
+      "fullDraw": false,
+      "childGetterBody": false,
+      "pixelOutput": false
+    },
+    "verify": {
+      "host": "HJOW-Athlon",
+      "mode": "verify",
+      "samples": 504,
+      "editions": {
+        "originals": {
+          "samples": 252,
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+          "root": 4817440,
+          "start": 4819340,
+          "stop": 4813552,
+          "getter": 4848864,
+          "width": 4,
+          "colors": [
+            5987780,
+            5877720,
+            5987928
+          ]
+        },
+        "originalCD": {
+          "samples": 252,
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+          "root": 4546400,
+          "start": 4548489,
+          "stop": 4548621,
+          "getter": 4474656,
+          "width": 2,
+          "colors": [
+            5655500,
+            5619536,
+            5618376
+          ]
+        }
+      },
+      "fixtureSha256": "81d16cc071f6ae3e759a60b1e46b4467289815db0275e1bbb0807fa5be899b87",
+      "toolSha256": "2d2603f1b9f3c0b1b5b22dc95612e02690e785af19460f2f43ba8bc2a1c8dbf4",
+      "boundaries": [
+        "HP 존재 분기 내부 시작 문맥",
+        "최대HP getter 반환/정상 복귀와 raw HP·색 변경",
+        "PATCH bar 호출 인자/CD 기하 전 결과 관측"
+      ],
+      "fullDraw": false,
+      "childGetterBody": false,
+      "pixelOutput": false
+    },
+    "samples": 504,
+    "perEdition": 252,
+    "completeObservations": 2,
+    "completeExecutions": 1008,
+    "fixture": "cpppj/tests/fixtures/sprite-hit-point-bar-x86.tsv",
+    "fixtureBytes": 37139,
+    "fullDraw": false,
+    "childGetterBody": false,
+    "pixelOutput": false,
+    "existingReference": "공유 getter1160행과 SpriteDraw 세판본각463행의동결관측을C++에서별도로대조. 새원본실행으로합산하지않음."
+  },
+  "validation": {
+    "buildCommands": 1,
+    "buildExits": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "uniqueCases": 30,
+    "newCases": 5,
+    "existingCases": 25,
+    "testCommands": 4,
+    "testExecutions": 30,
+    "firstTestFailures": 0,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "SpriteHitPointBar_",
+        "cases": 5,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "SpriteDraw_",
+        "cases": 14,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "RiftHitPointCurrent_",
+        "cases": 5,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "FactoryPostCreate_",
+        "cases": 6,
+        "failedChecks": 0,
+        "exit": 0
+      }
+    ],
+    "normalizedSourceFiles": 2855,
+    "sourceChangesAfterSnapshot": [],
+    "sourceBuildOverlap": false
+  },
+  "product": {
+    "unit": 901,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10719744,
+    "sha256": "38196e0e8a2da56403a8a8e8e28c237b288890866fa0f85f27f090cec32dbdd1",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "protection": {
+    "previousFiles": 2777,
+    "unchanged": 2777,
+    "changed": [],
+    "currentFiles": 2778,
+    "currentFixtures": 958,
+    "added": [
+      "cpppj/tests/fixtures/sprite-hit-point-bar-x86.tsv"
+    ]
+  },
+  "checking": {
+    "pending": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4
+  },
+  "excluded": [
+    "실제게임/GUI/진단UI/포획/희생/특정적공격/승리/사용자확인",
+    "신규MP/패킷/통신검사",
+    "공중3종전용검사",
+    "전체검사/34미션/ZIP/물리입력/PCM/CD재시도"
+  ],
+  "remaining": [
+    "RawBurningSources의현재getter/HP사전저장/진단후현재TYPE플래그/32비트식",
+    "월드설치전Help와다른HPcaller의현재번호감사",
+    "CD Take/contained/Form/나머지Factory·State/파일/객체UI/Edit/Windows",
+    "무검사MP와4~8차"
+  ],
+  "nextUnit": 902,
+  "next": "연소점HP getter/장기전역·HP저장순서와부모정수식을복원하고다른HPcaller를감사한다.",
+  "rawEvidence": "extracted/cpp-resume-901/ (Git 제외/현재 PC 전용)"
+}

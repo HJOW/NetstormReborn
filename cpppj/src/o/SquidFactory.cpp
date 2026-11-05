@@ -99,6 +99,7 @@ const RiftTypeRecord& SquidFactory::TypeRecord(std::uint32_t number) const {
     const auto types=CurrentTypes();
     if (number>=types.size()) throw std::out_of_range("Factory 현재 TYPE 번호 오류");return types[number];
 }
+std::int32_t SquidFactory::ReadSelectedHitPoints(const RiftTypeRecord& type,std::span<const RiftTypeRecord> selectedBase) const { return TypeHitPoints(type,selectedBase); } // 번호로 다시 선택하지 않고 같은 물리 TYPE를 공통 getter에 전달한다.
 // 미복원 생성자 호출이나 일반 자산 경로에 Form 가상 메서드를 적용하는 것을 막는다.
 const RiftTypeRecord& SquidFactory::Type(std::uint32_t number,bool requireSupported) const {
     if (number<kFirstAssetTypeNumber) throw std::out_of_range("base Squid 타입 번호 오류");

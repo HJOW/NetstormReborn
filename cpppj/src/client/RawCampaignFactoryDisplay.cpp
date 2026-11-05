@@ -207,7 +207,9 @@ struct RawCampaignFactoryDisplay::Impl {
         const auto sid=collection.Object(entry.token);if (!native && !Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
         state.now=core.processState.Now();state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());state.markerVisible=core.ownerMode.battle; // 원문594fbc의 현재 전투 관문이며 Editor의 fort 모드와 구별한다.
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
-        SpriteDrawHooks rules;rules.virtualFrame=[this,native](o::Sid object) {
+        SpriteDrawHooks rules;
+        rules.typeHitPoints=[this](auto number) { if (number>=core.types.size()) throw std::out_of_range("표시 HP의 선택 TYPE 범위");return core.factory.ReadSelectedHitPoints(core.types[number],core.types); }; // 저장 TYPE this/기준을 같은 현재 checking·진단·장기 전역의 getter에 전달한다.
+        rules.virtualFrame=[this,native](o::Sid object) {
             if (native) return HitFrame(object); //원문498220도+78을 조회한다. 실제83개 VT의 다섯 getter를 지형/다리/일반 자산에 함께 적용한다.
             if (Bomb(object) || ManaBolt(object)) return -1; // 원본 공통 주문/마나볼트의+a0는 빈 본체다.
             if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);

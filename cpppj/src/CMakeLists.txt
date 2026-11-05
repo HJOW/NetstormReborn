@@ -371,3 +371,6 @@ target_sources(netstorm PRIVATE o/RawRiftHitPoints.cpp o/RawRiftHitPoints.h)
 
 # 같은 실제 공장에 원문 Create의 진단/할당/현재 생성자/VT 순서를 연결한다(899).
 target_sources(netstorm PRIVATE o/RawSquidCreation.cpp o/RawSquidCreation.h)
+
+# 선택 막대의 현재HP/최대HP/색 읽기 부모를 실제 표시기에 연결한다(901).
+target_sources(netstorm PRIVATE client/SpriteHitPointBar.cpp client/SpriteHitPointBar.h)

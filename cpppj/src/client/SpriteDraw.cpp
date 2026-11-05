@@ -1,5 +1,6 @@
 // 00498220/00455f60의 호출 순서와 선택 상태를 장치/게임 규칙 조회 경계에서 분리한다.
 #include "client/SpriteDraw.h"
+#include "client/SpriteHitPointBar.h" // 현재 HP와 최대HP/색을 각 원문 호출 위치에서 읽는다.
 #include "client/VFXTransform.h"
 #include "client/SquidRenderer.h"
 #include <algorithm>
@@ -152,18 +153,19 @@ void SpriteDraw::Selection(o::Sid sid,std::uint32_t type,std::uint32_t owner,std
         RequiredSprite(hooks_.fill)({bx,SubSprite(by,4),AddSprite(bx,MulSprite(amount,header.width)/divisor),SubSprite(by,2)},barColor);++row;
     };
     const bool hp=(record.flags2&0x400000U) ? (raw[patch ? 40 : 35]&1U)!=0 : (record.flags1&0x10U)!=0;
-    int maximum=s.quarterHitPoints && type==s.shadowAliasType ? record.maxHitPoints/4 : record.maxHitPoints;
-    int current=patch ? std::bit_cast<std::int32_t>(ReadSprite(raw,26)) : std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(ReadSprite(raw,26,2)));
     if (hp) {
-        if (!patch) { maximum=std::max(maximum,1);current=std::clamp(current,0,maximum); }
-        const auto hpColor=current<=maximum/4 ? s.hitPointColors[2] : current<=maximum/2 ? s.hitPointColors[1] : s.hitPointColors[0];
-        if (patch) bar(hpColor,current,maximum);
+        SpriteHitPointBarHooks hpHooks;
+        hpHooks.current=[&] { return patch ? std::bit_cast<std::int32_t>(ReadSprite(raw,26)) : std::int32_t(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(ReadSprite(raw,26,2)))); };
+        hpHooks.maximum=[&] { if (hooks_.typeHitPoints) return hooks_.typeHitPoints(type);return s.quarterHitPoints && type==s.shadowAliasType ? record.maxHitPoints/4 : record.maxHitPoints; }; // 실제 표시기는 공유 getter, 기존 독립 fixture는 같은 선택 TYPE/상태를 사용한다.
+        const auto hpBar=ReadSpriteHitPointBar(pool_.Edition(),s.hitPointColors,hpHooks);
+        if (patch) bar(hpBar.color,hpBar.current,hpBar.maximum);
         else {
             // CD의 체력 막대는 19픽셀 길이·5픽셀 높이이며 현재 프레임 가운데 위쪽에 놓인다.
             const int bx=AddSprite(SubSprite(header.width/2,header.hotspotX),AddSprite(screen.x,-10));
             const int by=SubSprite(screen.y,header.hotspotY);
             RequiredSprite(hooks_.fill)({SubSprite(bx,1),SubSprite(by,9),AddSprite(bx,20),SubSprite(by,2)},s.barBackground);
-            RequiredSprite(hooks_.fill)({bx,SubSprite(by,8),AddSprite(bx,MulSprite(current,19)/maximum),SubSprite(by,3)},hpColor);
+            if (!hpBar.maximum) throw std::logic_error("CD HP 막대의 선택된 정수0 나눗셈"); // 원문 배경 출력 뒤의 division fault를 성공 최대값1로 바꾸지 않는다.
+            RequiredSprite(hooks_.fill)({bx,SubSprite(by,8),AddSprite(bx,MulSprite(hpBar.current,19)/hpBar.maximum),SubSprite(by,3)},hpBar.color);
         }
     }
     if (!patch) return;

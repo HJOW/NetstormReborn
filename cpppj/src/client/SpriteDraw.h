@@ -109,6 +109,7 @@ struct SpriteDrawHooks {
     std::function<std::optional<std::array<double,3>>(o::Sid,std::uint32_t)> timers;
     // statusProcesses: 선택 막대 직전에 실제 Kernel 순서의 현재 상태 프로세스 목록을 조회한다.
     std::function<std::span<const SpriteStatusProcess>()> statusProcesses;
+    std::function<std::int32_t(std::uint32_t)> typeHitPoints; // 실제 표시기는 저장한 TYPE의 공유 getter를 연결한다. 미연결 독립 입력만 기존 상태 값을 사용한다.
 };
 // 00498220 ↔ CD 00455f60의 분기·프레임·색 선택·표식·선택/상태 막대를 복원한다.
 class SpriteDraw {
