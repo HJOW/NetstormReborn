@@ -80,7 +80,7 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
         Put(form,kNext,0);SetPrevious(form,previous.value);
     }
     pool_.AllocatedBytes(form)[orderOffset]=static_cast<std::uint8_t>(order);Put(form,kParent,parent.value);
-    pool_.AllocatedBytes(form)[kState]|=kContained;forms_.Pop(form,flags|0x100);notice_(parent,form,1);
+    pool_.AllocatedBytes(form)[kState]|=kContained;if (pop_) pop_(form,flags|0x100);else forms_.Pop(form,flags|0x100);notice_(parent,form,1);
     // 부모 알림/전송이 바꾼 현재 내용물 타입·부모 genus·전투 상태를 다시 읽어 사제 포획 알림 조건을 평가한다.
     if ((types_.at(Word(form,kContentType)).flags2&0x200000) &&
         (types_.at(pool_.Slot(parent)[kType]).flags2&0x30000) && state_ && state_->inBattle) {
@@ -96,6 +96,7 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
 }
 // 부모의 dead/free 판정과 알림 시점은 공통 처리기에서 수행한다.
 void ContentFormHost::Unpop(Sid form) const { if (unpop_) unpop_(form);else forms_.Unpop(form); } // 실제 가상 진입 앞에 고정 TYPE/free 검사를 추가하지 않는다.
+void ContentFormHost::BindPop(std::function<void(Sid,std::uint32_t)> pop) { pop_=std::move(pop); } // 같은 Session이 살아 있는 동안 현재 실제 Pop만 사용한다.
 void ContentFormHost::BindUnpop(std::function<void(Sid)> unpop) { unpop_=std::move(unpop); } // 현재 World와 같은 수명의 공통 해제를 연결한다.
 // WORLD 플래그의 원본 assert 경로를 명시적으로 거부한다.
 bool ContentFormHost::Robust(Sid form) const {

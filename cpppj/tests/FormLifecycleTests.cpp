@@ -160,8 +160,8 @@ TEST_CASE(FormLifecycle_ContractsAndSameParentPair) {
     SidPool pool(OriginalEdition::Patch1078,kCapacity);SquidForms forms(pool);std::vector<RiftTypeRecord> types=netstorm::test::MakeFormTypeInputs(188);SquidFactory factory(pool,types);
     SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
     const auto parent=factory.Create(90,2),form=forms.Create(1,0);const auto before=Hex(pool.Slot(form));
-    CHECK(Throws([&] { forms.Attach(form,parent); }));CHECK(Hex(pool.Slot(form))!=before && pool.Slot(form)[11]==12 && Read(pool,form,16)==parent.value && Read(pool,parent,6)==form.value);
-    forms.Pop(form,0x10);forms.Unpop(form);CHECK(pool.Slot(form)[11]==4 && Read(pool,parent,6)==0); // 실제 링크/contained 쓰기를 유지한 뒤 명시 로컬 Pop/분리로 복구한다.
+    CHECK(Throws([&] { forms.Attach(form,parent); }));CHECK(Hex(pool.Slot(form))!=before && pool.Slot(form)[11]==8 && Read(pool,form,16)==parent.value && Read(pool,parent,6)==form.value);
+    forms.Unpop(form);CHECK(pool.Slot(form)[11]==4 && Read(pool,parent,6)==0); // 원문 Pop의 void 해제 뒤 남은 실제 링크를 명시 분리해 복구한다.
     DependFormHost depend(pool,destroy);const auto pair=depend.Create(parent,parent);CHECK(depend.Has(parent,parent));
     depend.Destroy(pair.watchedForm,0x10);CHECK(Read(pool,parent,6)==0);CHECK(destroy.PreDepth()==0);
     ContentFormHost content(pool,types,[](Sid,Sid,std::uint32_t) {});const auto value=factory.CreateContained(2);Put(pool,value,20,0x80);

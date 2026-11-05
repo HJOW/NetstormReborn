@@ -31,6 +31,9 @@ public:
     const SidPool& Pool() const;
     void BindDiagnostics(SquidFactoryDiagnostics diagnostics); // 같은 판본 길이의 현재 TYPE와 실제 진단 장치를 연결한다.
     void BindFormDetach(std::function<void(Sid)> detach); // 현재 World/Session의 공통 종속 분리만 대여하며 UI 검색을 추가하지 않는다.
+    void BindFormPopDepth(std::uint32_t& current); // 실제 World의 같은 postPop DWORD만 빌리며 다른 주소 재연결은 거부한다.
+    void BindFormPopDepth(std::uint32_t&&)=delete; // 임시 깊이의 수명 밖 참조를 막는다.
+    void PopForm(Sid form,std::uint32_t flags,FormPopTransmit transmit={}); // 현재 진단/깊이와 실제 VT+20의 공통 Pop을 실행한다.
     void BindFormAttach(std::function<std::uint32_t()> contentType,FormPopTransmit transmit={}); // 현재 Session 번호/전송을 선택 위치에서 빌린다.
     void AttachForm(Sid form,Sid parent,std::uint32_t flags,FormPopTransmit transmit={}); // 파생 +74 접두 뒤 공통 부모만 실행한다.
     void UnpopForm(Sid sid); // 실제 Form VT+48의 진단/void/현재 getter와 부모 free 관문을 실행한다.
@@ -66,6 +69,7 @@ private:
     // 주소 산술 전에 타입 범위와 원본 생성자 지원 여부를 검증한다.
     const RiftTypeRecord& Type(std::uint32_t number,bool requireSupported) const;
     const RiftTypeRecord& TypeRecord(std::uint32_t number) const; // 진단 복귀 뒤 Form 번호도 포함한 현재 TYPE 한 항목을 읽는다.
+    void BindCurrentFormPop(SquidForms& forms) const; // 같은 공장의 현재 진단/공유 깊이를 Attach와 직접 Pop에 함께 연결한다.
     std::span<const RiftTypeRecord> CurrentTypes() const; // 현재 borrowed 표 또는 기존 독립 소유 표를 복사 없이 읽는다.
     std::int32_t TypeHitPoints(const RiftTypeRecord& type,std::span<const RiftTypeRecord> selectedBase) const; // 같은 TYPE this와 진단 뒤 현재 base/전역으로 원문 HP를 읽는다.
     void Assert(std::string_view expression,std::uint32_t line) const; // 양판본 진단이 정상 복귀하면 현재 raw를 다시 읽어 계속한다.
@@ -88,6 +92,7 @@ private:
     const std::uint32_t* sharedFakeSurfaceType_{}; // 같은 Client 수명의 현재 fakeThreeByThreeSurface TYPE이며 독립 미연결만162다.
     // unpop_: 객체의 공간 등록을 해제하는 Unpop 처리기.
     SquidUnpop* unpop_{};
+    std::uint32_t* formPostPopDepth_{}; // 실제 공장보다 오래 사는 World bookkeeping의 같은 현재 깊이다.
     std::function<std::uint32_t()> formContentType_; // 약한 현재 Session 또는 World 기본 번호 getter다.
     FormPopTransmit formTransmit_; // 실제 World의 현재 Form Pop 전송이며 호출자 명시 장치가 있으면 그것을 사용한다.
     std::function<void(Sid)> formDetach_; // 실제 소비자는 현재 Session의 약한 대여 또는 World 기본 종단을 호출한다.

@@ -389,3 +389,6 @@ target_sources(netstorm PRIVATE o/RawDependCreate.cpp o/RawDependCreate.h)
 
 # 현재 TYPE/VT와 부분 쓰기의 공통 부착 부모다(911).
 target_sources(netstorm PRIVATE o/RawFormAttach.cpp o/RawFormAttach.h)
+
+# 현재 권한/진단 후 상태와 공유 깊이의 공통 Form Pop 부모다(912).
+target_sources(netstorm PRIVATE o/RawFormPop.cpp o/RawFormPop.h)

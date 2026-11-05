@@ -82,7 +82,7 @@ Sid SquidForms::Take(std::uint32_t type,Sid sid) const {
     if (!patch) Raw(sid)[kType]=static_cast<std::uint8_t>(type);
     return sid;
 }
-// client 번호/현재 권한에 따라 서버·로컬 플래그를 보완한다. 원본 assert 경로는 상태 변경 전에 거부한다.
+// 정렬 Content 등 기존 호출자가 쓰는 명시 선행 검증이다. 실제 공통 Pop의 진단/부분 쓰기와 구별한다.
 std::uint32_t SquidForms::ValidatePop(Sid form,std::uint32_t flags) const {
     const auto state=Form(form)[kState];
     if (!(state&kVoid) || (state&(kDead|0x10))) throw std::logic_error("Form Pop 상태 오류");
@@ -95,15 +95,21 @@ std::uint32_t SquidForms::ValidatePop(Sid form,std::uint32_t flags) const {
     } else if (!(flags&8)) flags|=0x10;
     return flags;
 }
-// 004ac560/CD 004abfb0: void 해제→필요한 서버 전송→빈 Form postPop 순서를 유지한다.
+// 현재 권한/진단 복귀와 같은 공유 깊이를 사용하는 실제 공통 Pop 부모다.
 void SquidForms::Pop(Sid form,std::uint32_t flags) const {
-    flags=ValidatePop(form,flags);Raw(form)[kState]&=static_cast<std::uint8_t>(~kVoid);
-    if (pool_.IsServer() && !(flags&0x50)) {
-        if (flags&7) Raw(form)[kState]|=0x10;
-        transmit_(form,flags);
-        Raw(form)[kState]&=static_cast<std::uint8_t>(~0x10);
-    }
+    auto hooks=pop_;
+    if (!hooks.server) hooks.server=[this] { return pool_.IsServer(); }; // 호출 위치의 현재 장기 권한이다.
+    if (!hooks.depth) hooks.depth=[this] { return localPostPopDepth_; }; // 독립 미연결 입력의 명시 지역 깊이다.
+    if (!hooks.setDepth) hooks.setDepth=[this](std::uint32_t value) { localPostPopDepth_=value; }; // 원문 DWORD wrap을 보존한다.
+    if (!hooks.assertion) hooks.assertion=unpop_.assertion; // Content 독립 입력의 같은 원문 진단도 재사용한다.
+    if (!hooks.transmit) hooks.transmit=[this](Sid sid,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t value) { if (!transmit_) throw std::logic_error("현재 공통 Form Pop 전송 미연결");transmit_(sid,value); }; // 원문 고정 -1/-1/0을 쓰는 기존 Form 전송 경계다.
+    if (!hooks.postPop) hooks.postPop=[this,&hooks](Sid,std::uint32_t table,std::uint32_t) { // 현재 실제 VT가 네 Form 빈 후처리인지 선택한다.
+        for (const auto type:kTypes) if (table==Vtable(type)) { hooks.setDepth(hooks.depth()-1U);return; } // PE004ac1d0/CD004abab0의 같은 공유 DWORD 감소다.
+        throw std::logic_error("공통 Form Pop의 선택된 현재 VT+20 미연결");
+    };
+    PopCommonForm(pool_,form,flags,hooks);
 }
+void SquidForms::BindPop(FormPopHooks hooks) { pop_=std::move(hooks); } // 다음 호출부터 현재 World의 깊이/진단을 사용한다.
 // 실제 공통 +74 몸체는 클래스/상태 선행 guard 없이 현재 가상 setter와 직접 Pop을 호출한다.
 void SquidForms::Attach(Sid form,Sid parent,std::uint32_t flags) const {
     auto hooks=attach_;

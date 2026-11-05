@@ -1,0 +1,175 @@
+{
+  "unit": 912,
+  "previousCpCommit": "d678fcad",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "parents": {
+    "originals": "004ac560",
+    "originalCD": "004abfb0"
+  },
+  "postPopPeEvidence": {
+    "originals": {
+      "vt20": {
+        "00512110": "004ac1d0",
+        "00512098": "004ac1d0",
+        "00512188": "004ac1d0",
+        "00512208": "004ac1d0"
+      },
+      "entry": "004ac1d0",
+      "sharedDepth": "005c8488",
+      "body": "ff0d88845c00c20400",
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+    },
+    "originalCD": {
+      "vt20": {
+        "00505a08": "004abab0",
+        "00505990": "004abab0",
+        "00505a80": "004abab0",
+        "00505b00": "004abab0"
+      },
+      "entry": "004abab0",
+      "sharedDepth": "00539600",
+      "body": "ff0d00965300c20400",
+      "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    }
+  },
+  "nativeFirst": {
+    "host": "HJOW-Athlon",
+    "rows": 2560,
+    "rowsPerEdition": 1280,
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "fixtureSha256": "c4cade1a06620b70b0d6bcbcd3384e2c3815329f3839a0f8e59bed3a73ffdc90",
+    "toolSha256": "0d67ab51628de8b640124356795d58973a364df55a6967e4672eb1b70b0a71a0",
+    "mode": "first",
+    "actualChildren": false,
+    "game": false,
+    "multiplayer": false
+  },
+  "nativeVerify": {
+    "host": "HJOW-Athlon",
+    "rows": 2560,
+    "rowsPerEdition": 1280,
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "fixtureSha256": "c4cade1a06620b70b0d6bcbcd3384e2c3815329f3839a0f8e59bed3a73ffdc90",
+    "toolSha256": "0d67ab51628de8b640124356795d58973a364df55a6967e4672eb1b70b0a71a0",
+    "mode": "verify",
+    "actualChildren": false,
+    "game": false,
+    "multiplayer": false
+  },
+  "nativeCommands": 2,
+  "nativeUniqueRows": 2560,
+  "nativeExecutions": 5120,
+  "validation": {
+    "buildCommands": 1,
+    "buildExits": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "uniqueCases": 41,
+    "newCases": 4,
+    "existingCases": 37,
+    "firstCases": 41,
+    "testCommands": 14,
+    "testExecutions": 41,
+    "firstFailedChecks": 0,
+    "finalFailedChecks": 0,
+    "sourceSnapshotCount": 2881,
+    "sourceSnapshotUnchanged": true,
+    "sourceEditsDuringBuild": false,
+    "concurrentBuilds": false
+  },
+  "protection": {
+    "existingProtectedUnchanged": 2786,
+    "existingFixtures": 966,
+    "newFixtures": 1,
+    "currentProtected": 2787,
+    "currentFixtures": 967,
+    "firstNativeFixtureBytesMatch": true
+  },
+  "product": {
+    "unit": 912,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10787328,
+    "sha256": "160b67da80d868f34e1ee243a1c454c837bc7ca1e0466dcef81814b1df79972f",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "selectedNames": [
+    "FormPopCurrent_IndependentPeParentFixture2560",
+    "FormPopCurrent_ActualWorldReadsRepairedVtableAndSharedDepth",
+    "FormPopCurrent_SelectedMissingDevicesKeepVoidAndDepthPrefix",
+    "FormPopCurrent_SortedContentBorrowsSameFactoryDepth",
+    "FormAttachCurrent_IndependentPeParentFixture864",
+    "FormAttachCurrent_WorldUsesLiveGenusAndWeakSessionContentNumber",
+    "FormAttachCurrent_LateContentDiagnosticAndMissingNeighborKeepPrefix",
+    "FormAttachCurrent_ActualVtableSelectsMixedLinkWords",
+    "FormAttachCurrent_ContentVtableReallyUsesCommonThunk",
+    "DependCreateCurrent_IndependentPeParentFixture1620",
+    "DependCreateCurrent_WorldReadsNumberTwiceAndKeepsPreviousClassRoute",
+    "DependCreateCurrent_BindingAndSelectedAttachFailureKeepLinks",
+    "DependCreateCurrent_IndependentHostUsesCurrentInputConstructor",
+    "DependCreateCurrent_UnregisteredClassDoesNotUseDifferentRawTypeRoute",
+    "FormLifecycle_IndependentPeFixture",
+    "FormLifecycle_DependencyPairAndReentrantNotice",
+    "FormLifecycle_ContractsAndSameParentPair",
+    "ContentLifetime_SharedMixedFormDispatch",
+    "DissolveVisualSystem_ActualKernelSourceDeletionAndNaturalExpiry",
+    "DissolveVisualSystem_TransparentAllocationAndCreationFailure",
+    "GraphForms_ActualNativeFullPoolSkipsNonSpatialForms",
+    "GraphForms_HashFormRejectsBeforeGraphOrPoolWrites",
+    "FormCreationCurrent_FacadesUseCurrentConstructorsAndReturnedVtable",
+    "FormCreationCurrent_NullConstructorUsesRealBaseAndSelectedDiagnostics",
+    "FormCreationCurrent_ContainedAdapterUsesBorrowedTypeAndPostCreateBridge",
+    "ProcessCreationCurrent_WorldFactoryCurrentNumberAndSuccessiveLoans",
+    "ProcessCreationCurrent_IndependentHostUsesCommonCreateAndCurrentDword",
+    "ProcessCreationCurrent_GumpTakeUsesCurrentConstructorAndKeepsPayload",
+    "ProcessCreationCurrent_RuntimeMissingAndForeignFactoryAreExplicit",
+    "FormTake_IndependentPeFixture",
+    "FormTake_ResizePreservesRecordsAndRejectsBadCapacity",
+    "FormTake_GumpAttachmentAndDestroyIntegration",
+    "FormTake_ContentNoticeTimingAndPayloadMutation",
+    "FormUnpopCurrent_IndependentPePrefixFixture",
+    "FormUnpopCurrent_WorldTakeUsesCurrentSessionDetachAndReturnsToDefault",
+    "FormUnpopCurrent_MissingNoticeKeepsCompletedLinkWrites",
+    "FormUnpopCurrent_ActualGetterUsesRepairedVtableAfterDiagnostic",
+    "CdUnpopCurrent_NativeParentSpaceAndSide1402",
+    "CdUnpopCurrent_SelectedMissingDevicesKeepPartialEffects",
+    "CdUnpopCurrent_ActualWorldCurrentDiagnosticAndContainedDetach",
+    "CdUnpopCurrent_ContainedDiagnosticPathMatchesProtectedPe"
+  ],
+  "expectationCorrection": {
+    "file": "cpppj/tests/FormLifecycleTests.cpp",
+    "checkTokensBefore": 50,
+    "checkTokensAfter": 50,
+    "reason": "원문 공통 Pop은 선택 전송 장치 부재 전에 void를 끈다. 상태12→8·명시 Unpop만으로 복구",
+    "existingFixtureChanges": 0
+  },
+  "checkingRemaining": 8,
+  "checkingParentsComplete": 39,
+  "checkingPartialComplete": 4,
+  "activeSolutionProjects": 74,
+  "priorityDecision": {
+    "date": "2026-11-05",
+    "userInstruction": "현재 작업 완료 뒤 다음 작업부터 1. 대상별 커서·오브젝트 우클릭·게임 UI 시작",
+    "nextUnit": 913,
+    "nextSection": "LEFT_JOBS.md 3절1번",
+    "internalWorkIsMandatoryPredecessor": false
+  },
+  "remaining": [
+    "Process 접두·가상 분배/상위 guard·rollback",
+    "Content 정렬 부모/현재 번호·다른 Form 수명",
+    "Factory/Baseprocess·파일/State 실패 정책",
+    "UI/Edit·Windows·무검사 MP/4~8차"
+  ],
+  "game": false,
+  "multiplayer": false
+}

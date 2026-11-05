@@ -3586,3 +3586,9 @@ target_sources(netstorm_tests PRIVATE FormAttachCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE FormAttachCurrentTests.cpp)
 set_source_files_properties(FormAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     NETSTORM_FORM_ATTACH_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/form-attach-current-x86.tsv")
+
+# 공통 Pop 부모와 실제 비멀티 수명/깊이만 선택 실행한다(912).
+target_sources(netstorm_tests PRIVATE FormPopCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE FormPopCurrentTests.cpp)
+set_source_files_properties(FormPopCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    NETSTORM_FORM_POP_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/form-pop-current-x86.tsv")

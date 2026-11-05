@@ -240,9 +240,16 @@ Sid SquidFactory::CreateGumpForm(std::uint32_t flags) {
     return Create(kGumpFormType,flags);
 }
 void SquidFactory::BindFormDetach(std::function<void(Sid)> detach) { formDetach_=std::move(detach); } // 새 대여는 이후 선택된 Form 해제부터 사용한다.
+void SquidFactory::BindFormPopDepth(std::uint32_t& current) { if (formPostPopDepth_ && formPostPopDepth_!=&current) throw std::invalid_argument("Form Pop의 다른 공유 깊이 주소 재연결");formPostPopDepth_=&current; } // 호출 중 같은 World 저장소를 바꾸지 않는다.
+void SquidFactory::BindCurrentFormPop(SquidForms& forms) const {
+    FormPopHooks hooks;hooks.assertion=diagnostics_.assertion;
+    if (formPostPopDepth_) { hooks.depth=[this] { return *formPostPopDepth_; };hooks.setDepth=[this](std::uint32_t value) { *formPostPopDepth_=value; }; } // 실제 동일 DWORD를 읽고 쓴다.
+    forms.BindPop(std::move(hooks));
+}
+void SquidFactory::PopForm(Sid form,std::uint32_t flags,FormPopTransmit transmit) { SquidForms forms(pool_,{},transmit ? std::move(transmit) : formTransmit_);BindCurrentFormPop(forms);forms.Pop(form,flags); } // 실제 현재 진단/깊이를 같은 호출 수명으로 빌린다.
 void SquidFactory::BindFormAttach(std::function<std::uint32_t()> contentType,FormPopTransmit transmit) { formContentType_=std::move(contentType);formTransmit_=std::move(transmit); } // 죽은 Session 주소를 공장에 저장하지 않는다.
 void SquidFactory::AttachForm(Sid form,Sid parent,std::uint32_t flags,FormPopTransmit transmit) {
-    SquidForms forms(pool_,{},transmit ? std::move(transmit) : formTransmit_);FormAttachHooks hooks;
+    SquidForms forms(pool_,{},transmit ? std::move(transmit) : formTransmit_);BindCurrentFormPop(forms);FormAttachHooks hooks;
     hooks.genus=[this](std::uint8_t number) { return TypeRecord(number).flags2; }; // 각 호출에서 현재 빌린 TYPE 표를 읽는다.
     hooks.contentType=formContentType_ ? formContentType_ : std::function<std::uint32_t()>([] { return 6U; }); // 독립 공장의 명시 초기 번호다.
     hooks.assertion=diagnostics_.assertion;forms.BindAttach(std::move(hooks));forms.Attach(form,parent,flags);
