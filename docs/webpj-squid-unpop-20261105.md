@@ -36,6 +36,8 @@
 
 ## 4. WB04-D 하위 단위 계획 (2026-11-05 기준, cpppj 진행에 따라 조정)
 
+> 2026-11-05 WB04-D2 완료 뒤의 갱신 계획은 [D2 문서 5절](webpj-squid-destroy-20261105.md)을 따른다. `unpop-x86.tsv`는 Factory가 필요해 D4로 옮겼다. 아래 표는 D1 시점 기록이다.
+
 | 하위 | 범위 | 원본 관측 후보 |
 | --- | --- | --- |
 | [x] D1 | 공통 공간 해제 부모·spot genus·건물 옆면 해제 | `squid-unpop-parent-hardware-x86.tsv`, `hash-x86.tsv` Genus |

@@ -581,7 +581,7 @@
       "bytes": 238949,
       "lines": 4721,
       "fixtureCommit": "ffdc5ddb",
-      "webCommit": "worktree",
+      "webCommit": "41cb8da9",
       "cpppjBasis": {
         "cpppj/src/o/SidPool.cpp": "6035f810",
         "cpppj/src/o/SidPool.h": "b7065914"
@@ -615,7 +615,7 @@
       "bytes": 224284,
       "lines": 4633,
       "fixtureCommit": "65927742",
-      "webCommit": "worktree",
+      "webCommit": "41cb8da9",
       "cpppjBasis": {
         "cpppj/src/o/SquidHash.cpp": "a9af29da",
         "cpppj/src/o/SquidHash.h": "a9af29da",
@@ -770,7 +770,7 @@
         "cpppj/src/o/RawSquidUnpopParent.h",
         "cpppj/src/o/RawBuildingSpace.cpp"
       ],
-      "scope": "1300행 전체. 표시 갱신 vtable 지원표·미니맵 큐·contained 종단은 장치 경계(D2)",
+      "scope": "1300행 전체. 표시 갱신 vtable 지원표·미니맵 큐·contained 종단은 WB04-D2 SquidUnpop 처리기로 연결(unpop-vtables·metadisplay-dirty·squid-destroy 항목)",
       "text": true,
       "sha256": "a4df8f48be831c66ae530cd5fdc21d0e86515f119f9393e07736356694f32ed7",
       "bytes": 419588,
@@ -1196,6 +1196,108 @@
       "fixtureCommit": "d25ad4a1",
       "webCommit": "2f7c2d51",
       "cpppjBasis": {}
+    },
+    {
+      "id": "unpop-vtables",
+      "path": "cpppj/tests/fixtures/unpop-vtables.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 PE 가상 표의 update88/update8c·공통 firstPop 지원 비트(83행 10.78)",
+      "consumers": [
+        "webpj/tests/squid-unpop-handler.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-vtables.js",
+        "webpj/www/core/squid-unpop.js"
+      ],
+      "unit": "WB04-D2",
+      "doc": "docs/webpj-squid-destroy-20261105.md",
+      "cpppjSources": [
+        "cpppj/src/o/UnpopVtables.inc",
+        "cpppj/src/o/SquidUnpop.cpp",
+        "cpppj/src/o/ContentNoticeVtables.inc"
+      ],
+      "scope": "10.78 83행 전체. 마나/볼트·소용돌이 8c·간헐천 부분 8c 는 cpppj 와 같이 추가 허용. 10.78 표의 비트가 0/3 뿐이라 88/8c 구분은 관측상 드러나지 않음",
+      "text": true,
+      "sha256": "d149c425723b9be5f8f1808f37f08e951b93a8f0dca069db4eaffa9fb07f5197",
+      "bytes": 6817,
+      "lines": 152,
+      "fixtureCommit": "a86150db",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/UnpopVtables.inc": "fbc27346",
+        "cpppj/src/o/SquidUnpop.cpp": "ea848459",
+        "cpppj/src/o/ContentNoticeVtables.inc": "68ca4e3a"
+      }
+    },
+    {
+      "id": "metadisplay-dirty",
+      "path": "cpppj/tests/fixtures/metadisplaydirty-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 미니맵 dirty 큐/Refresh x86 관측(고유 등록·활성 표시·view 비교·전체/부분 셀 순서)",
+      "consumers": [
+        "webpj/tests/metadisplay-dirty.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/metadisplay-dirty.js"
+      ],
+      "unit": "WB04-D2",
+      "doc": "docs/webpj-squid-destroy-20261105.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMetadisplayDirty.cpp",
+        "cpppj/src/o/RawMetadisplayDirty.h"
+      ],
+      "scope": "10.78 520행 전체. 실제 셀 그림·표시 재생성 몸체는 장치 경계(WB03-M2 미니맵 표시)",
+      "text": true,
+      "sha256": "7d35f10062f11a39a1609f1b7ea0b605eb3233f5570deda1e7ef99675b2408a0",
+      "bytes": 115773,
+      "lines": 1041,
+      "fixtureCommit": "028bd402",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMetadisplayDirty.cpp": "bae8b702",
+        "cpppj/src/o/RawMetadisplayDirty.h": "bae8b702"
+      }
+    },
+    {
+      "id": "squid-destroy",
+      "path": "cpppj/tests/fixtures/destroy-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 공통 destroy·다리 삭제 훅 x86 관측(사건 순서·슬롯·풀/해시/spot/삭제 기록 Adler·깊이)",
+      "consumers": [
+        "webpj/tests/squid-destroy.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-destroy.js",
+        "webpj/www/core/bridge-lifecycle.js",
+        "webpj/www/core/squid-unpop.js"
+      ],
+      "unit": "WB04-D2",
+      "doc": "docs/webpj-squid-destroy-20261105.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidDestroy.cpp",
+        "cpppj/src/o/RawSquidDestroy.h",
+        "cpppj/src/o/RawBridgeLifecycle.cpp",
+        "cpppj/src/o/SquidUnpop.cpp"
+      ],
+      "scope": "10.78 Destroy 600행·Bridge 64행. 역할1/2 root 준비의 Factory Take 는 D4 전까지 같은 효과의 합성 준비. 10.37/CD 행 제외",
+      "text": true,
+      "sha256": "d304cecad36bc85a910c9ea09f9eab5e6aed341909dce055f5f3ce81e34b7e20",
+      "bytes": 1573181,
+      "lines": 1993,
+      "fixtureCommit": "5edb2b6d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidDestroy.cpp": "f2215dc5",
+        "cpppj/src/o/RawSquidDestroy.h": "886f2d23",
+        "cpppj/src/o/RawBridgeLifecycle.cpp": "5879152b",
+        "cpppj/src/o/SquidUnpop.cpp": "ea848459"
+      }
     }
   ]
 }
