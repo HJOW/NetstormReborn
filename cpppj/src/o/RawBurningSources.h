@@ -11,6 +11,8 @@ struct BurningSourcesState {
     std::uint32_t manaType{158}; // 실제005412d0/CD0051cbbc의 마나/사제 자산 번호다.
     const bool* sharedWeakenedMana{}; // 실제005ca8f0의 주소이며 Frame 준비 사본보다 우선한다.
     BurningVictimState victim; //연소점 부모가 읽는 같은 현재 checking/상세 SID 진단 장치다.
+    std::uint32_t daisType{165}; // 독립 입력의 최초 HP 예외 번호이며 실제 월드는 같은 장기 주소를 빌린다.
+    const std::uint32_t* sharedManaType{};const std::uint32_t* sharedDaisType{}; // 실제 GameAux의 사제/dais DWORD이며 Session 생성·반납으로 바꾸지 않는다.
     bool WeakenedMana() const { return sharedWeakenedMana ? *sharedWeakenedMana : weakenedMana; } // 연소점 선택의 최대HP 조회 위치에서 현재값을 읽는다.
 };
 // 00424110/CD004a5d30의 연소점 선택이며 Step/캡처/팔레트/표시는 별도 연결한다.

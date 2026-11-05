@@ -1,5 +1,7 @@
 // 원본 연소점 추가/제거의 행 표식과 입자 부족 시 순서를 보존한다.
 #include "o/RawBurningSources.h"
+#include "o/RawBurningSourceCount.h" // 원문의 양판본 DWORD 감김/IDIV 순서를 공유한다.
+#include "o/RawRiftHitPoints.h" // 같은 선택 TYPE this와 현재 checking/약화/특별 번호를 읽는다.
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -49,20 +51,25 @@ void RawBurningSources::Select(BurningVisualFields& fields) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;Sid selected=fields.victim;
     if (patch) { const auto victim=RunBurningVictimParent(fields.victim,BurningVictimEntry::Sources,state_.victim.checking,MakeBurningVictimHooks(pool_,types_,state_.victim));if (!victim) return;selected=*victim; }
     else if (!selected.value || selected.value==65535) return;
-    const auto raw=pool_.Slot(selected);const auto type=raw[10]; //HP 진단 뒤에도 같은 선택 슬롯의 현재 TYPE/HP를 다시 읽는다.
+    const auto raw=pool_.Slot(selected);
+    if (!patch) { // CD는 HP가 없는 객체의 정수/최대HP 계산을 실행하지 않는다.
+        const auto number=raw[10];if (number>=types_.size()) throw std::out_of_range("Burning sources 현재 타입 범위 오류");
+        const auto& current=types_[number];const bool hasHp=(current.flags2&0x400000U) ? (raw[35]&1)!=0 : (current.flags1&TypeFlag1::kHasHitPoints)!=0;
+        if (!hasHp) return;
+    }
+    const auto hitPoints=SourceHitPoints(raw,patch); // 원문은 최대HP getter/진단보다 먼저 같은 물리 슬롯의 HP를 저장한다.
+    const auto type=raw[10];
     if (type>=types_.size()) throw std::out_of_range("Burning sources 현재 타입 범위 오류");
-    const auto& record=types_[type];const bool hasHp=(record.flags2&0x400000U) ? (raw[patch ? 40U : 35U]&1)!=0 : (record.flags1&TypeFlag1::kHasHitPoints)!=0;
-    if (!patch && !hasHp) return;
-    const auto maximum=state_.WeakenedMana() && type==state_.manaType ? record.maxHitPoints/4 : record.maxHitPoints;
-    const auto divisor=maximum-maximum/2;
-    if (divisor<=0) throw std::invalid_argument("Burning sources 최대HP 나눗셈 범위 오류");
-    const auto numerator=static_cast<std::int64_t>(SourceHitPoints(raw,patch))*5;
-    if (numerator<std::numeric_limits<std::int32_t>::min() || numerator>std::numeric_limits<std::int32_t>::max()) throw std::out_of_range("Burning sources HP 곱셈 범위 오류");
-    if (fields.image.width<0 || fields.image.height<0 || static_cast<std::int64_t>(fields.image.width)+fields.image.height>std::numeric_limits<std::int32_t>::max()) throw std::invalid_argument("Burning sources 이미지 크기 오류");
-    auto wanted=std::max(1,std::min(6-static_cast<std::int32_t>(numerator)/divisor,(fields.image.width+fields.image.height)/kRowWidth));
-    if (record.flags2&0x400U) wanted=1;
+    const auto& record=types_[type];RiftHitPointHooks hpHooks;
+    hpHooks.number=[&] { return CurrentRiftTypeNumber(record,types_,types_); }; // 고정 물리 표 계약의 같은 선택 TYPE 번호다.
+    hpHooks.assertion=[this](auto expression,auto file,auto line) { const auto selectedAssertion=state_.victim.assertion;if (!selectedAssertion) throw std::logic_error("연소점 TYPE HP의 실제 진단 장치 미연결");selectedAssertion(expression,file,line); };
+    const auto maximum=ReadRiftHitPoints(pool_.Edition(),record,{state_.victim.checking,RawCheckingFlag{state_.sharedWeakenedMana ? *state_.sharedWeakenedMana : state_.weakenedMana},state_.sharedManaType ? *state_.sharedManaType : state_.manaType,state_.sharedDaisType ? *state_.sharedDaisType : state_.daisType},hpHooks);
+    auto wanted=BurningSourceCount(pool_.Edition(),hitPoints,maximum,fields.image.width,fields.image.height);
+    const auto currentType=raw[10];if (currentType>=types_.size()) throw std::out_of_range("연소점 진단 복귀 뒤 현재 TYPE 범위");
+    if (types_[currentType].flags2&0x400U) wanted=1; // 원문4ac200/CD4abae0은 진단 뒤 같은 선택 슬롯의 현재 TYPE를 다시 읽는다.
     if (fields.selected==wanted) return;
     if (fields.image.height<3) { fields.selected=wanted;return; }
+    if (fields.image.width<0 || fields.image.height<0 || static_cast<std::int64_t>(fields.image.width)+fields.image.height>std::numeric_limits<std::int32_t>::max()) throw std::invalid_argument("Burning sources 이미지 크기 오류"); // 실제 픽셀/행 주소가 필요한 경계만 호스트 범위를 확인한다.
     if (fields.total>fields.capacity || fields.particles.size()!=fields.capacity) throw std::invalid_argument("Burning sources 현재 입자 배열 오류");
     const auto rowCount=(fields.image.width+fields.image.height)/kRowWidth;
     if (fields.rows.size()<static_cast<std::size_t>(rowCount)) throw std::out_of_range("Burning sources 행 표식 미연결");

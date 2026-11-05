@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**902 연소점 HP/정수 부모:** 사전 HP·현재 TYPE 플래그/장기 전역과 실제 getter·DWORD 감김/IDIV를 연결했다. 원문5652행/재관측·고유17사례(새3/기존14) 첫 실패0·Release1명령 경고0·기존2778/958fixture 불변·새1개→2779/959개다. 전체 HP/Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [902 기록](cpp-burning-source-count-current-20261105.md).
+
 **901 선택 HP 막대:** 원문 조회/현재 HP·색 순서와 실제 표시/전송의 공장 getter를 연결했다. Native504행/재관측·고유30사례(새5/기존25) 첫 실패0·Release1명령 경고0·기존2777/957fixture 불변·새1개→2778/958개다. 전송은 정적 구현이며 신규 MP 검사는0이다. 전체 HP/Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [901 기록](cpp-sprite-hit-point-bar-current-20261105.md).
 
 **900 보상 HP 현재 진단:** 공유 getter/선택된 TYPE this·현재 base/장기 전역과 실제 Session assertion을 연결했다. 기존 원문 어댑터1158행/직접 getter1160행·고유20사례(새3/기존17) 첫 실패0·Release1명령 경고0·보호2777개/957fixture 불변·새 fixture0개다. 전체 HP caller/Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [900 기록](cpp-reward-hit-points-diagnostic-current-20261105.md).

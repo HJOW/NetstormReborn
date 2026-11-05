@@ -72,6 +72,8 @@ public:
     void BindWeakenedMana(const bool& current); // 같은 Client005ca8f0을 연소점 선택에 빌리며 다른 주소 재연결은 거부한다.
     void BindWeakenedMana(bool&&)=delete; // 연소점 선택보다 먼저 소멸하는 임시 bool을 빌리지 않는다.
     void BindWeakenedMana(const bool&&)=delete; // const 임시값도 동일한 장기 수명 계약으로 거부한다.
+    void BindHitPointTypes(const o::RawGameAuxState& current); // 연소점이 같은 Client의 현재 사제/dais TYPE DWORD를 빌린다.
+    void BindHitPointTypes(const o::RawGameAuxState&&)=delete; // 임시 GameAux의 소멸한 주소를 보관하지 않는다.
     void SetView(SoundView view,SurfaceDisplayHooks display);
     // 같은 원본 수집/깊이 키로 SHP와 함께 정렬할 직접 그리기 항목을 만든다.
     std::vector<RenderSprite> Sprites(ScreenRect clip);

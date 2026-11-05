@@ -1,0 +1,196 @@
+{
+  "unit": 902,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastPreciseHost": "HJOW-Athlon",
+  "lastPreciseDate": "2026-11-03",
+  "status": "unit-complete-overall-goal-in-progress",
+  "scope": "연소점 사전HP/공유getter·장기전역/현재TYPE플래그와원문32비트정수부모",
+  "implemented": {
+    "hp": "선택슬롯의signed HP를getter전에저장하고그시점TYPE this로공유ReadRiftHitPoints조회. 진단뒤피해번호/HP/TYPE변경과저장슬롯·TYPE를구별.",
+    "flags": "목표정수식뒤같은슬롯의현재rawTYPE로flags2를재조회해0x400강제1선택.",
+    "integer": "wrap(max*2)/4와wrap(hp*5),판본별부호있는제수/6가감,wrap(width+height)/5/min·max를원문순서로수행. IDIV0/INTMIN÷-1은선택위치명시오류.",
+    "devices": "같은victim checking/assertion과실제GameAux Priest/Dais/quarter장기주소사용. 실제Session/Particles BindHitPointTypes연결. 지역hp객체수명밖캡처없음.",
+    "imageBoundary": "계산/현재flags뒤selected==wanted/height<3의이른복귀를보존. 픽셀/행주소검사는그메모리가필요한경계에서수행.",
+    "legacy": "독립158/165/값형약화와CD기존유효SID앞단계약유지. 전체픽셀/잘못된SID/원본주소영역복원으로세지않음."
+  },
+  "native": {
+    "first": {
+      "host": "HJOW-Athlon",
+      "mode": "first",
+      "samples": 5652,
+      "editions": {
+        "originals": {
+          "samples": 2826,
+          "outcomes": {
+            "ok": 2370,
+            "overflow": 24,
+            "zero": 432
+          },
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+        },
+        "originalCD": {
+          "samples": 2826,
+          "outcomes": {
+            "ok": 2394,
+            "zero": 432
+          },
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+        }
+      },
+      "fixtureSha256": "49a9912f1aa8bb8967d328c88f368db5d64cc03b3a57ee16a4b0d319f2083d32",
+      "toolSha256": "d5fd90660dd87fec0648a50e08f4c31085a5bd4d57877ef8ada77c84a13e444f",
+      "boundaries": [
+        "robust 반환1",
+        "진단UI 정상복귀/명시HP·TYPE·전역 변경"
+      ],
+      "actualGetter": true,
+      "particleLoops": false,
+      "randomCalls": 0,
+      "pixelAccess": false
+    },
+    "verify": {
+      "host": "HJOW-Athlon",
+      "mode": "verify",
+      "samples": 5652,
+      "editions": {
+        "originals": {
+          "samples": 2826,
+          "outcomes": {
+            "ok": 2370,
+            "overflow": 24,
+            "zero": 432
+          },
+          "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "refinedIndexSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+        },
+        "originalCD": {
+          "samples": 2826,
+          "outcomes": {
+            "ok": 2394,
+            "zero": 432
+          },
+          "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+          "refinedIndexSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+        }
+      },
+      "fixtureSha256": "49a9912f1aa8bb8967d328c88f368db5d64cc03b3a57ee16a4b0d319f2083d32",
+      "toolSha256": "d5fd90660dd87fec0648a50e08f4c31085a5bd4d57877ef8ada77c84a13e444f",
+      "boundaries": [
+        "robust 반환1",
+        "진단UI 정상복귀/명시HP·TYPE·전역 변경"
+      ],
+      "actualGetter": true,
+      "particleLoops": false,
+      "randomCalls": 0,
+      "pixelAccess": false
+    },
+    "samples": 5652,
+    "perEdition": 2826,
+    "completeObservations": 2,
+    "completeExecutions": 11304,
+    "fixture": "cpppj/tests/fixtures/burning-source-count-current-x86.tsv",
+    "fixtureBytes": 652107,
+    "preparationFailures": 2,
+    "preparationFix": "첫#DE뒤다음입력의CPU복귀오류. 매입력초기CPU문맥복원/실제interrupt0위치·제수관측후이른정지로격리. 최초fixture쓰기전수정.",
+    "pureChildren": "실제HasHP/TYPE/flags2/HP/getNum을실행. robust=1과진단UI만명시장치.",
+    "newParticleLoops": false,
+    "newRandomCalls": 0,
+    "newPixelAccess": false,
+    "originalReturnValueCompared": false
+  },
+  "validation": {
+    "buildCommands": 1,
+    "buildExits": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "uniqueCases": 17,
+    "newCases": 3,
+    "existingCases": 14,
+    "testCommands": 5,
+    "testExecutions": 17,
+    "firstTestFailures": 0,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "BurningSourceCountCurrent_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "BurningSources_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "BurningSourcesCorner_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "BurningVictimParent_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0
+      },
+      {
+        "filter": "RiftHitPointCurrent_",
+        "cases": 5,
+        "failedChecks": 0,
+        "exit": 0
+      }
+    ],
+    "normalizedSourceFiles": 2858,
+    "sourceChangesAfterSnapshot": [],
+    "sourceBuildOverlap": false
+  },
+  "product": {
+    "unit": 902,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10722304,
+    "sha256": "f4928b0224ae18e7eb77028764150b0f9f52b7c7e08a43ef29adde36ab7931be",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "protection": {
+    "previousFiles": 2778,
+    "unchanged": 2778,
+    "changed": [],
+    "currentFiles": 2779,
+    "currentFixtures": 959,
+    "added": [
+      "cpppj/tests/fixtures/burning-source-count-current-x86.tsv"
+    ]
+  },
+  "checking": {
+    "pending": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 4
+  },
+  "excluded": [
+    "실제게임/GUI/진단UI/포획/희생/특정적공격/승리/사용자확인",
+    "신규MP/패킷/통신검사",
+    "공중3종전용검사",
+    "전체검사/34미션/ZIP/물리입력/PCM/CD재시도"
+  ],
+  "remaining": [
+    "RawPriestRegen 현재사제TYPE/판본별HP조회순서와월드설치전Help 등다른caller",
+    "CD Take/contained/Form/나머지Factory·State/파일/객체UI/Edit/Windows",
+    "무검사MP와4~8차"
+  ],
+  "nextUnit": 903,
+  "next": "회복의현재TYPE번호와판본별증분/현재HP읽기순서를복원하고월드설치전Help를공유getter에연결한다.",
+  "rawEvidence": "extracted/cpp-resume-902/ (Git 제외/현재 PC 전용)"
+}

@@ -1279,6 +1279,7 @@ struct RawCampaignSession::Impl {
         });
         particles->BindWind(world.Storage()->wind.x); // 같은 Client 수명의 현재 바람X를 입자별 가속 지점에서 읽는다.
         particles->BindWeakenedMana(gameplayGlobals->GameAux()->PriestQuarterHp()); // 연소점 선택도 Frame 준비 사본을 기다리지 않는다.
+        particles->BindHitPointTypes(*gameplayGlobals->GameAux()); // 연소점 HP의 사제/dais 번호도 같은 장기 주소에서 읽는다.
         auto combatEffects=services.archer;
         if (!combatEffects.iceCooling) combatEffects.iceCooling=[this](Sid parent) { static_cast<void>(particles->AddCooling(parent,projectileGeometry->Hotspot(parent))); }; //004a8770의 현재 SHP signed 포인트와 실제21 수명을 연결한다.
         // 반더는 빔 생성 뒤 초기 source/target snapshot으로 피해/회피를 처리한다.

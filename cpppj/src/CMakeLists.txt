@@ -374,3 +374,6 @@ target_sources(netstorm PRIVATE o/RawSquidCreation.cpp o/RawSquidCreation.h)
 
 # 선택 막대의 현재HP/최대HP/색 읽기 부모를 실제 표시기에 연결한다(901).
 target_sources(netstorm PRIVATE client/SpriteHitPointBar.cpp client/SpriteHitPointBar.h)
+
+# 연소점 목표 행의 원문 DWORD 감김/나눗셈을 같은 실제 선택 부모에 연결한다(902).
+target_sources(netstorm PRIVATE o/RawBurningSourceCount.cpp o/RawBurningSourceCount.h)

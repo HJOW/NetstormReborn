@@ -3534,3 +3534,9 @@ target_sources(netstorm_tests PRIVATE SpriteHitPointBarTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE SpriteHitPointBarTests.cpp SpriteDrawTests.cpp)
 set_source_files_properties(SpriteHitPointBarTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SPRITE_HP_BAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sprite-hit-point-bar-x86.tsv\"")
+
+# 연소점 목표/현재 HP 진단과 기존 전체 선택·제거 관측을 집중 대조한다(902).
+target_sources(netstorm_tests PRIVATE BurningSourceCountCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE BurningSourceCountCurrentTests.cpp BurningSourcesTests.cpp BurningSourcesCornerTests.cpp BurningVictimParentTests.cpp)
+set_source_files_properties(BurningSourceCountCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BURNING_SOURCE_COUNT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-source-count-current-x86.tsv\"")

@@ -345,6 +345,10 @@ void RawCampaignParticles::BindWind(const float& current) {
 void RawCampaignParticles::BindWeakenedMana(const bool& current) {
     if (burningSources_.sharedWeakenedMana && burningSources_.sharedWeakenedMana!=&current) throw std::invalid_argument("연소 HP의 약화 전역 중복 다른 주소 연결");burningSources_.sharedWeakenedMana=&current;
 }
+void RawCampaignParticles::BindHitPointTypes(const o::RawGameAuxState& current) { // 입자/Host보다 오래 사는 실제 게임 보조 owner만 연결한다.
+    if ((burningSources_.sharedManaType && burningSources_.sharedManaType!=&current.PriestType()) || (burningSources_.sharedDaisType && burningSources_.sharedDaisType!=&current.DaisType())) throw std::invalid_argument("연소점 HP의 현재 TYPE owner 재연결 오류");
+    burningSources_.sharedManaType=&current.PriestType();burningSources_.sharedDaisType=&current.DaisType();
+}
 SoundView RawCampaignParticles::CurrentView() const { auto view=view_;if (cameraView_) { view.cameraX=cameraView_->pixels[0];view.cameraY=cameraView_->pixels[1]; }return view; }
 void RawCampaignParticles::RefreshCamera() { const auto view=CurrentView();frame_.cameraX=cameraView_ ? std::bit_cast<float>(cameraView_->pixelFloatBits[0]) : static_cast<float>(view.cameraX);frame_.cameraY=cameraView_ ? std::bit_cast<float>(cameraView_->pixelFloatBits[1]) : static_cast<float>(view.cameraY);constructionFrame_.cameraX=burningFrame_.cameraX=frame_.cameraX;constructionFrame_.cameraY=burningFrame_.cameraY=frame_.cameraY; }
 }
