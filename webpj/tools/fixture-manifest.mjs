@@ -72,18 +72,29 @@ export function readManifest() {
     return JSON.parse(fs.readFileSync(path.join(REPO_ROOT, MANIFEST_PATH), 'utf8'));
 }
 
-// 항목 하나의 계산 칸을 채운 새 항목을 만든다. 파일이 없으면 해시 칸은 null 이다. (2026-11-05 WB02-F)
+// 작업 사본 표시이다. 웹 모듈에 커밋하지 않은 변경(새 파일 포함)이 있으면 webCommit 을 이 값으로 두고 cpppj 근거는 현재 HEAD 기준으로 기록한다.
+// 그 단위를 커밋한 뒤 다음 --write 에서 실제 커밋 해시로 바뀐다. (2026-11-05 WB04-B: 새 모듈을 같은 단위에서 등록하기 위해 추가)
+export const WORKTREE = 'worktree';
+
+// 경로들에 커밋하지 않은 변경이 있는지 본다. (2026-11-05 WB04-B)
+function dirty(paths) {
+    return Boolean(git('status', '--porcelain', '--', ...paths));
+}
+
+// 항목 하나의 계산 칸을 채운 새 항목을 만든다. 파일이 없으면 해시 칸은 null 이다. (2026-11-05 WB02-F, WB04-B: 작업 사본 표시)
 function compute(entry) {
     const full = path.join(REPO_ROOT, entry.path);
     const exists = fs.existsSync(full);
     const hashed = exists && !UNHASHED_KINDS.includes(entry.kind) ? measure(fs.readFileSync(full)) : { text: null, sha256: null, bytes: null, lines: null };
-    const webCommit = entry.modules.length > 0 ? lastCommit(entry.modules) : null;
+    const worktree = entry.modules.length > 0 && dirty(entry.modules);
+    const webCommit = entry.modules.length === 0 ? null : worktree ? WORKTREE : lastCommit(entry.modules);
+    const basisRevision = worktree ? 'HEAD' : webCommit;
     return {
         ...entry,
         ...hashed,
         fixtureCommit: lastCommit([entry.path]),
         webCommit,
-        cpppjBasis: Object.fromEntries((entry.cpppjSources ?? []).map((source) => [source, webCommit ? lastCommit([source], webCommit) : null])),
+        cpppjBasis: Object.fromEntries((entry.cpppjSources ?? []).map((source) => [source, basisRevision ? lastCommit([source], basisRevision) : null])),
     };
 }
 
@@ -105,6 +116,8 @@ export function check(manifest = readManifest(), { withDrift = true } = {}) {
             if (current.sha256 !== entry.sha256 || current.bytes !== entry.bytes || current.lines !== entry.lines) mismatches.push({ path: entry.path, recorded: entry.sha256, current: current.sha256 });
         }
         if (!withDrift) continue;
+        // 작업 사본으로 기록한 항목의 모듈이 이제 커밋되었으면 갱신 알림을 남긴다.
+        if (entry.webCommit === WORKTREE && !dirty(entry.modules)) drift.push({ id: entry.id, source: '(webCommit)', basis: WORKTREE, commits: 0 });
         // cpppj 근거 소스별로 basis 이후 변경 커밋 수를 센다.
         for (const [source, basis] of Object.entries(entry.cpppjBasis ?? {})) {
             if (!basis) continue;
@@ -134,7 +147,8 @@ function main(argv) {
         const key = `${item.source}@${item.basis}`;
         if (seen.has(key)) continue;
         seen.add(key);
-        console.log(`cpppj 변경\t${item.source}\t${item.basis} 이후 ${item.commits}커밋\t(${item.id})`);
+        if (item.basis === WORKTREE) console.log(`갱신 필요\t${item.id}\twebCommit 이 작업 사본 표시이나 모듈이 커밋됨(--write 로 실제 해시 기록)`);
+        else console.log(`cpppj 변경\t${item.source}\t${item.basis} 이후 ${item.commits}커밋\t(${item.id})`);
     }
     return result.mismatches.length > 0 ? 1 : 0;
 }

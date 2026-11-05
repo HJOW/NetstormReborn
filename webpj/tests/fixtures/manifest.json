@@ -587,6 +587,69 @@
       }
     },
     {
+      "id": "squid-hash",
+      "path": "cpppj/tests/fixtures/hash-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "consumers": [
+        "webpj/tests/squid-finder.test.mjs"
+      ],
+      "unit": "WB04-B",
+      "doc": "docs/webpj-squid-finder-20261105.md",
+      "producer": "cpppj 원본 SquidHash 초기화(004b28f0)·버킷 주소(004b29a0/004b2a90/004b2b00)·단계 선택(004ace40) x86 관측",
+      "modules": [
+        "webpj/www/core/squid-hash.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/o/SquidHash.cpp",
+        "cpppj/src/o/SquidHash.h"
+      ],
+      "scope": "초기화4·주소807·ObjectLevel605. Genus 3216행(spot 점유)은 WB04-E 범위로 미사용",
+      "text": true,
+      "sha256": "2447ed16982a91260cab70914f44b839ae6aa21083700cc5928fd33152b987a3",
+      "bytes": 224284,
+      "lines": 4633,
+      "fixtureCommit": "65927742",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidHash.cpp": "a9af29da",
+        "cpppj/src/o/SquidHash.h": "a9af29da"
+      }
+    },
+    {
+      "id": "raw-squid-finder",
+      "path": "cpppj/tests/fixtures/rawfinder-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "consumers": [
+        "webpj/tests/squid-finder.test.mjs"
+      ],
+      "unit": "WB04-B",
+      "doc": "docs/webpj-squid-finder-20261105.md",
+      "producer": "cpppj 원본 일반 사각형 탐색기 Begin(004b16d0)/Next(004b1810) x86 관측(세 PE)",
+      "modules": [
+        "webpj/www/core/raw-squid-finder.js",
+        "webpj/www/core/squid-hash.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidFinder.cpp",
+        "cpppj/src/o/RawSquidFinder.h"
+      ],
+      "scope": "10.78 Find 584행(커서·동적 입력). Pre/Post 다리 삭제 훅 24행은 WB04-D/E, CD/10.37 행은 웹 범위 밖",
+      "text": true,
+      "sha256": "f67209295fcedf4e44283ca8a099a48b220a2a4ea556f5cf8cd9a77db224ad16",
+      "bytes": 674895,
+      "lines": 1777,
+      "fixtureCommit": "5879152b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidFinder.cpp": "f58fec2e",
+        "cpppj/src/o/RawSquidFinder.h": "225f2322"
+      }
+    },
+    {
       "id": "shot-main-menu",
       "path": "screenShots/mainMenu.png",
       "kind": "screenshot",
