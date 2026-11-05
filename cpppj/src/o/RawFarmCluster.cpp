@@ -41,7 +41,7 @@ std::uint32_t RawFarmCluster::RegionSeed(std::int32_t region) const {
 void RawFarmCluster::Place(FortRandomRectangle area,std::int32_t region,std::uint32_t quantity) const {
     GameRandom random(RegionSeed(region));std::uint32_t remaining=quantity*kQuantityFactor,force=0;std::int32_t radius=1;
     if (state_.Archipelago() && region==0) {
-        const auto span=std::bit_cast<std::uint32_t>(state_.archipelagoSpan),extension=span*16U;
+        const auto span=std::bit_cast<std::uint32_t>(state_.ArchipelagoSpan()),extension=span*16U;
         const auto start=std::bit_cast<std::int32_t>(extension-16U),end=std::bit_cast<std::int32_t>(extension);
         area.left=static_cast<float>(static_cast<double>(area.left)-start);area.top=static_cast<float>(static_cast<double>(area.top)-start);
         area.right=static_cast<float>(static_cast<double>(area.right)+end);area.bottom=static_cast<float>(static_cast<double>(area.bottom)+end);

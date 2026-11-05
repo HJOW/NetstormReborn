@@ -896,7 +896,7 @@ struct RawCampaignSession::Impl {
         buildingState.sharedBoss=geyserMinedState.sharedBoss=&gameplayGlobals->Authority()->boss; // 진행·표시·음향 효과 뒤에도 같은 현재 boss를 조회한다.
         constructionState.place.sharedServer=buildingEffectsState.sharedServer=&gameplayGlobals->Authority()->server; // Take와 섬 전파는 boss와 독립인 실제 server를 읽는다.
         constructionState.notice.sharedHistory=&gameplayGlobals->Camera().ConstructionHistory(); //같은 실제3f 통지가 Tab과 공유한 Client 장부를 쓰며 Session 교체로 소멸하지 않는다(718).
-        farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088을 빌린다.
+        farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();farm.sharedArchipelagoSpan=&gameplayGlobals->GameAux()->WorldGeyserMargin();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088/542654를 직접 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
         objectState.sharedFullDeck=&fullDeck;constructionState.confirm.sharedFullDeck=&fullDeck;anchorState.sharedFullDeck=&fullDeck; // 하위 모듈 생성 전에 같은 장기 DWORD를 빌리며 Prepare 때 사본을 쓰지 않는다.
         objectState.sharedFortKeepGenus=damageableReleaseState.sharedAllowedGenus=&gameplayGlobals->FortKeepGenus(); //객체 보존과 내용물 해방이 Editor prefix의 같은 현재 마스크를 읽는다.
@@ -1546,6 +1546,30 @@ struct RawCampaignSession::Impl {
         NormalTerrainDiagnostics diagnostics{SessionMissing<void,TerrainContextAssertion>(),SessionMissing<void,TerrainStampAssertion>(),SessionMissing<void,SquidRegionAssert>(),SessionMissing<void,FarmClusterAssertion>(),SessionMissing<void,TerrainFarmPostpassAssertion>()};
         diagnostics.decoderDiagnostics=&metadata.geometry.decoderDiagnostics; // 일반 지형의 패턴 개수 조회도 현재 Canon 진단을 생략하지 않는다.
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
+        auto& terrainAux=*gameplayGlobals->GameAux(); // 생성·Zone·로그인 밀도·간헐천·군집이 공유하는 현재 장기 owner다.
+        TerrainGenerationInputs terrainGeneration{terrainAux.TerrainEnabled(),core.ownerMode.battle,core.bridgeState.mission,
+            [this] { return battleOptions.at(5); },
+            [this] { return static_cast<std::int32_t>(WorldGeyserSpacing(battleOptions.at(6))); },
+            terrainAux.WorldGeyserMargin(),terrainAux.ArchipelagoMinimum(),terrainAux.ArchipelagoMaximum(),
+            terrainAux.ArchipelagoPercent(),terrainAux.Archipelago(),
+            [this](std::int32_t player) { // 원문처럼 현재 Player base를 각 반복에서 다시 선택한다.
+                const auto current=coreDataGlobals->Players();
+                if (player<1 || player>8 || current.size()<9*180) throw std::out_of_range("지형 root의 현재 Player9 물리 범위");
+                return Read(current,static_cast<std::size_t>(player)*0xb4U+0x2cU);
+            },
+            [this](std::int32_t player,std::span<const std::uint8_t,6> record) { // 선택된 군도에서만 실제 건설 부모의 같은 배치를 요구한다.
+                if (!construction) throw std::logic_error("지형 root의 실제 Player 배치 부모 미연결");
+                return construction->PlayerBounds().Placement(player,record);
+            },
+            [this](std::int32_t percent) { // 성장 전 실제1d 로그에 원문 문자열과 signed 비율을 기록한다.
+                if (!services.player.log) throw std::logic_error("지형 root의 실제 백분율 로그 미연결");
+                services.player.log(0x1d,"\nArchipelago Percentage: "+std::to_string(percent)+"\n");
+            },{}};
+        terrainGeneration.growth.checking.Bind(gameplayGlobals->AiDebug().Checking());
+        terrainGeneration.growth.assertion=[assertion=services.ai.assertion](std::string_view expression,std::string_view file,std::uint32_t line) { // 같은 원문 진단의 정상 복귀 뒤 현재 청크/전역 조회를 계속한다.
+            if (!assertion) throw std::logic_error("지형 실제 진단 장치 미연결 "+std::string(file)+":"+std::to_string(line));assertion(expression);
+        };
+        normal->BindGenerationInputs(std::move(terrainGeneration));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.Residences(),finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
         if (services.missionFortFileSelect && services.localLogin) { if (services.missionFortImage) throw std::logic_error("지연 미션 파일 선택에 선행 이미지가 함께 전달됨"); } // 실제10.78은 State9 지역Template 읽기와 서버 수신의 전역 설치까지 파일을 열거나 manager를 공개하지 않는다.
         else if (services.deferExistingEditorFile) deferredEditorFort.emplace(std::move(fort)); //manager를공개하거나현재Slot을Clear하지않고입력/파일요청수명만보유한다.
@@ -2340,7 +2364,7 @@ struct RawCampaignSession::Impl {
     // 같은 현재 모드와 지도/Canon의 원본 보충 부모다. 비미션의 큰 배치는 아직 명시 미연결이다.
     void ReplenishNuggets() const {
         if (!construction) throw std::logic_error("보충 부모의 실제 지도 범위 미설치");
-        RawNuggetReplenish body(construction->PlayerBounds(),{assetState.Boss(),globals.missionPost,core.ownerMode.fort,globals.editor,farm.archipelagoSpan},
+        RawNuggetReplenish body(construction->PlayerBounds(),{assetState.Boss(),globals.missionPost,core.ownerMode.fort,globals.editor,farm.ArchipelagoSpan()},
             {[](std::uint32_t line) { throw std::logic_error("원본 Nugget.cpp 보충 권한 진단 "+std::to_string(line)); },SessionMissing<void,FortRandomRectangle,std::uint32_t>()});
         body.Run();
     }

@@ -30,13 +30,15 @@ public:
     void RemoveSparse();
     // 004c0fe0/CD0049e030: 플레이어 청크 사각형을 float32 칸 경계로 바꿔 code/지역을 지운다.
     void ClearPlacement(ChunkRect bounds);
+    // 원본 군도 root도 같은 로컬 시드와 비양수 폭 계약으로 두 번 밀도를 추출한다.
+    std::int32_t NextRange(std::uint32_t& seed,std::int32_t low,std::int32_t high);
+    // 004c0cf0/CD0049db10: 군도 root의 한 pass와 일반 성장의 두 pass를 같은 몸체로 실행한다.
+    void FixGaps(std::int32_t passes);
 private:
     // 패치 getter의 mode/범위 진단 뒤 같은 현재 청크를 clamp 조회한다. CD는 보고 없이 조회한다.
     const ChunkEntry& SeedChunkAt(std::int32_t x,std::int32_t y) const;
     // 선택된 원문 진단만 보고하며 장치 누락을 무진단 성공으로 숨기지 않는다.
     void Assert(std::string_view expression,std::string_view file,std::uint32_t line) const;
-    // 원문 range PRNG의 DWORD 차이/덧셈과 비양수 폭에서 난수를 소비하지 않는 동작을 보존한다.
-    std::int32_t NextRange(std::uint32_t& seed,std::int32_t low,std::int32_t high);
     // 실제 지도 저장 범위를 검사하고 X열 우선 주소를 얻는다. 손상 좌표를 clamp하지 않는다.
     static std::size_t Index(std::int32_t x,std::int32_t y);
     // 원본 청크 BYTE를 signed로 읽는다. 현재 섬 목록의 존재 조회와 별개다.
@@ -51,8 +53,6 @@ private:
     std::int32_t Next(std::uint32_t& seed,std::uint32_t limit);
     // 004c0c30/CD0049da90: 원래 이웃13개를 읽어 같은 지역 연속5개/대각선 끝에서 빈 칸을 메운다.
     void FixCell(std::int32_t x,std::int32_t y);
-    // 004c0cf0/CD0049db10: Y범위와 X범위의 서로 다른 끝 조건을 보존한다.
-    void FixGaps(std::int32_t passes);
     // context_: 새 지도 사본 없이 실제 code/region/현재 bounds를 쓰는 owned context다.
     RawTerrainContext& context_;
     // chunks_: 원본12바이트 항목의 섬번호/방향/seed/ordinal을 읽는 현재 청크 지도다.

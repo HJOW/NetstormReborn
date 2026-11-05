@@ -2,6 +2,7 @@
 #include "RawSceneSupport.h"
 #include "client/RawFortWorldLoadBinding.h"
 #include "o/RawFortFinishOwner.h"
+#include "o/RawGameAuxState.h" // 현재 원문 생성 전역을 독립 일반 입력에서도 같은 owner로 연결한다.
 #include <filesystem>
 
 using namespace netstorm::o;
@@ -96,7 +97,11 @@ TEST_CASE(FortWorldLoadBinding_ActualSelectedWorldAndTwoRandomStores) {
         TerrainContextGlobals globals;TerrainStampState stamp;FortRandomPlacementState placement;FarmClusterState farm;
         NormalTerrainDiagnostics diagnostics{[](TerrainContextAssertion) { UnrestoredWorldEffect(); },[](TerrainStampAssertion) { UnrestoredWorldEffect(); },
             [](SquidRegionAssert) { UnrestoredWorldEffect(); },[](FarmClusterAssertion) { UnrestoredWorldEffect(); },[](TerrainFarmPostpassAssertion) { UnrestoredWorldEffect(); }};
+        RawGameAuxState terrainAux;terrainAux.TerrainEnabled()=0; // 기존 독립 일반 생성 입력을 원문 부모의 명시 군도 후보 꺼짐으로 표현한다.
         RawNormalTerrainWorldBinding normal(world,chunks,islands,random,crt,globals,stamp,placement,farm,piece,pipeline,hp,carrier,diagnostics);
+        normal.BindGenerationInputs({terrainAux.TerrainEnabled(),core.ownerMode.battle,core.bridgeState.mission,
+            [] { return std::uint8_t{0}; },{},terrainAux.WorldGeyserMargin(),terrainAux.ArchipelagoMinimum(),terrainAux.ArchipelagoMaximum(),
+            terrainAux.ArchipelagoPercent(),terrainAux.Archipelago(),{},{},{},{}});
         FortTemplate fort;fort.territory.resize(120);std::copy_n(std::array<std::uint8_t,6>{3,1,0x11,7,0xaa,0xbb}.begin(),6,fort.territory.begin());
         std::uint32_t serializationVersion{}; // 이독립일반월드장치의실제판본DWORD를상태에명시제공한다.
         std::vector<std::string> effects;FortObjectLoadState objectState{serializationVersion};objectState.loadingDepth=depth;

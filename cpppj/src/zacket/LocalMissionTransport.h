@@ -4,6 +4,7 @@
 #include "o/RawPlayerWorld.h"
 #include "o/RawBattleBroadcast.h"
 #include "o/RawConnectionRegistry.h"
+#include "o/RawCheckingFlag.h" // 같은 생성/Zone DWORD를 bool 사본 없이 현재 비영 관문으로 읽는다.
 #include <deque>
 
 namespace netstorm::zacket {
@@ -37,7 +38,7 @@ struct LocalMissionZoneGlobals {
     std::uint32_t& activeZoneWord; //005c8544에 Zone+10을 쓰는 실제 저장소다.
     std::uint32_t& zoneFlags; //005c86c0의 실제 Zone+4 DWORD다.
     double& earlyCaptureEnd; //005c8618의 실제 double 예약 기한이다.
-    const bool& adjustZoneFlags; //00540a2c의 현재 마스크 보정 모드다.
+    o::RawCheckingFlag adjustZoneFlags; //00540a2c의 현재 전체 DWORD이며 기존 독립 bool 입력도 같은 위치에서 읽는다.
     const bool& missionWorld; //00594fa0의 현재 미션 저장맵 모드다.
     const std::uint8_t& zoneFlagOverride; //005300e8의 하위6비트 보충값이다.
     const bool& metamap; //00594fc8의 현재 coreData 선택 모드다.

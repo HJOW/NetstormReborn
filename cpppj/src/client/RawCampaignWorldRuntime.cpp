@@ -87,8 +87,8 @@ struct RawCampaignWorldRuntime::Impl {
     void CheckSlot(std::uint32_t slot) const { if (slot>=9) throw std::out_of_range("캠페인 현재 Template의9칸 범위 오류"); }
     // 현재 Template 선택은 부모의 callback 뒤 변경된 owner도 반영한다.
     const o::FortTemplate& Template(std::uint32_t slot) const { CheckSlot(slot);return data.templateAt ? data.templateAt(slot) : data.templates[slot]; }
-    // 원본 Builder의 실제 owner/bounds를 같은 일반 지형 소비자에 전달한다.
-    void Generate(const o::RawIslandBuilderState& builder,std::int32_t region) { normal.Generate({builder.owner,builder.bounds,region,NormalTerrainBranch::Normal}); }
+    // 원본 Builder의 실제 owner/bounds를 현재 옵션/모드로 분기하는 같은 지형 상위에 전달한다.
+    void Generate(const o::RawIslandBuilderState& builder,std::int32_t region) { normal.GenerateOriginal(builder.owner,builder.bounds,region); }
 };
 // 공급한 실제 모듈의 참조를 고정 주소 구현에 구성한다.
 RawCampaignWorldRuntime::RawCampaignWorldRuntime(RawSurfaceWorld& world,o::ChunkMap& chunks,o::RawIslandRuntime& islands,

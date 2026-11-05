@@ -14,7 +14,7 @@ o::FortWorldLoadHooks MakeFortWorldLoadBinding(RawSurfaceWorld& world,RawNormalT
         throw std::invalid_argument("Fort 부모의실제정상월드/현재Money선택누락");
     hooks=o::MakeFortWorldChildrenHooks(core.pool,objects,meta,std::move(selectMeta),std::move(metaStream),std::move(hooks));
     hooks.generate=[&normal](const o::RawIslandBuilderState& builder,std::int32_t region) {
-        normal.Generate({builder.owner,builder.bounds,region,NormalTerrainBranch::Normal});
+        normal.GenerateOriginal(builder.owner,builder.bounds,region);
     };
     // 실제 Money 선택은 wrapper의 깊이 증가/진단 뒤에 수행한다. C++ 인수 평가로 먼저 선택하지 않는다.
     hooks.money=[&money,moneyStream=std::move(moneyStream)](const o::FortTemplate& fort,std::uint32_t owner) { money.LoadSelected([&]() -> o::FortMoneyCursor& { return moneyStream(fort,owner); }); };

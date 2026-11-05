@@ -36,6 +36,21 @@ struct NormalTerrainDiagnostics {
     std::function<void(TerrainFarmPostpassAssertion)> postpass; // 상위의 첫 record/Bounds 조회 진단이다.
     const o::CanonDecoderDiagnostics* decoderDiagnostics{}; // 현재 Canon 진단 owner를 같은 섬/지형/설치 수명 동안 빌린다.
 };
+// 실제004c1510/CD0049e620이 읽는 현재 전역과 선택된 군도 하위의 같은 장치를 빌린다.
+struct TerrainGenerationInputs {
+    o::RawCheckingFlag enabled,battle,mission; // 후보 조건의 현재00540a2c/00594fbc/00594fa0을 순서대로 읽는다.
+    std::function<std::uint8_t()> layout; // PATCH는 constructor 뒤 현재0052f7e5를 읽는다. CD root에는 이 관문이 없다.
+    std::function<std::int32_t()> spacing; // PATCH0041ca10을 두 번 따로 호출한다. 첫 결과를 두 번째에 재사용하지 않는다.
+    std::int32_t& span; // 실제00542654/CD00537188이며 간헐천·군집과 같은 장기 owner다.
+    const std::int32_t& minimum; // 밀도 난수의 하한을 만드는 현재15 DWORD다.
+    const std::int32_t& maximum; // 밀도 난수의 상한을 만드는 현재35 DWORD다.
+    const std::uint32_t& percent; // bb4 강제 밀도이며0이면 같은 로컬 난수로 두 번 추출한다.
+    std::uint32_t& archipelago; // 도장/정규화 뒤1을 쓰는 실제bb0이며 일반 분기에서 지우지 않는다.
+    std::function<std::uint32_t(std::int32_t)> subscriber; // 각 플레이어의 현재 base+owner*stride+2c DWORD를 읽는다.
+    std::function<o::ChunkRect(std::int32_t,std::span<const std::uint8_t,6>)> placement; // 같은 실제 PlayerBounds의00432050이다.
+    std::function<void(std::int32_t)> logPercent; // 성장 전에 원문1d 채널로 signed 백분율을 출력한다.
+    o::TerrainGrowthDiagnostics growth; // 첫 시드/청크 getter가 읽는 현재 checking과 진단 복귀 장치다.
+};
 // 기존 전체 배치·Factory·HP getter를 현재 ChunkMap/섬 owner·가상 공간/owner에 연결한다.
 // placement는 이 world.Core()의 types/frames/shapes/spots/hash/장부로 구성해야 한다.
 o::FortRandomPlacementHooks MakeNormalTerrainFarmWorldHooks(RawSurfaceWorld& world,const o::ChunkMap& chunks,
@@ -58,6 +73,10 @@ public:
     // Context→성장→MarkEdges→Stamp→Normalize→context 해제→현재 섬별 군집의 순서다.
     // 마지막 초기 지면 SID는 관찰 편의용이며 군집 반환값1을 새 SID로 해석하지 않는다.
     o::Sid Generate(const NormalTerrainRequest& request);
+    // 현재 장기 전역/Player 장치의 수명은 이 소비자보다 길어야 하며 누락 분기를 일반으로 대신하지 않는다.
+    void BindGenerationInputs(TerrainGenerationInputs inputs);
+    // 실제 상위의 후보 캐시→context→현재 옵션/군도 또는 일반→도장/정규화→해제→군집 순서다.
+    o::Sid GenerateOriginal(std::uint32_t owner,o::ChunkRect bounds,std::int32_t selectedRegion);
     // 이미 초기 지면을 등록한 실제 월드에서 상위의 섬별 후처리만 실행한다. 군도 상태는 거부한다.
     void PostprocessFarms(std::int32_t selectedRegion);
     // 004bfde0/CD0040b9d0: 현재 puzzlePiece 프레임과 기존 CanonDecoder가 통과한 패턴 칸만 센다.
@@ -67,6 +86,12 @@ public:
 private:
     // 현재 normal 전역의 같은 타입/지역 값과 군도 거부 조건을 효과 전에 확인한다.
     void RequireNormal() const;
+    // 일반/군도 공통의 실제 TYPE/프레임/지역 저장소 identity만 검사한다.
+    void RequireStorage() const;
+    // 같은 실제 도장과 정규화 몸체를 일반/군도 양쪽에서 재사용한다.
+    o::Sid StampContext(o::RawTerrainContext& context);
+    // 상위가 선택한 현재bb0/span으로 군집을 실행하며 일반 전용 public 관문과 구별한다.
+    void PostprocessCurrentFarms(std::int32_t selectedRegion);
     // 첫 record는 Y행/X청크 순서로 읽고 CD 진단 뒤 원본의 실제 영 레코드 반환을 보존한다.
     std::array<std::uint8_t,6> FirstRecord(std::int32_t region) const;
     // world_: 현재 실제 Factory/가상 Pop/표시·장부의 소유자다.
@@ -89,6 +114,8 @@ private:
     std::uint32_t& puzzlePieceType_;
     // diagnostics_: 호출자가 원본 진단의 효과를 처리하며 빈 callback은 거부한다.
     NormalTerrainDiagnostics diagnostics_;
+    // generation_: 원문 상위의 비소유 전역 참조/선택 장치 묶음이며 모드나 Player 사본이 아니다.
+    std::unique_ptr<TerrainGenerationInputs> generation_;
     // single_/farms_: 완료된 두 배치 몸체를 같은 풀과 실제 효과에 연결한 인스턴스다.
     std::unique_ptr<o::RawFortRandomPlacement> single_;
     std::unique_ptr<o::RawFarmCluster> farms_;

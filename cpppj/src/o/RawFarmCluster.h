@@ -11,6 +11,8 @@ struct FarmClusterState {
     std::int32_t archipelagoSpan{1}; // 패치00542654/CD00537188의현재섬확장단위다.
     const std::uint32_t* sharedArchipelago{}; // Login.bb4와 다른 bb0을 직접 빌린다.
     bool Archipelago() const { return sharedArchipelago ? *sharedArchipelago!=0 : archipelago; } // bool의 물리 폭으로 대체하지 않는다.
+    const std::int32_t* sharedArchipelagoSpan{}; // 군도 root/간헐천/보충과 같은00542654를 직접 빌린다.
+    const std::int32_t& ArchipelagoSpan() const { return sharedArchipelagoSpan ? *sharedArchipelagoSpan : archipelagoSpan; } // caller가 참조를 저장해도 현재 owner의 같은 DWORD다.
 };
 // CD의지역record조회에서보고하고원본처럼계속진행하는두진단이다.
 enum class FarmClusterAssertion {

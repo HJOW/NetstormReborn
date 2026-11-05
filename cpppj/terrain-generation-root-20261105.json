@@ -1,0 +1,297 @@
+{
+  "unit": 894,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastPreciseHost": "HJOW-Athlon",
+  "lastPreciseDate": "2026-11-03",
+  "scope": "004c1510/CD0049e620 실제 생성 상위와 장기 전역·현재 Player/배치·Session/Fort/Edit caller의 코드/정적 연결. MP 분기 실행 검증 제외.",
+  "staticSources": {
+    "indexSha256": "0ab4965928bcf8b6aeb0a01760925952074d9a506e26b5ce1dfea9df695a812a",
+    "index": {
+      "originals": {
+        "tableSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+        "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+        "selected": [
+          {
+            "entry": "4c1510",
+            "name": "FUN_004c1510",
+            "size": "845",
+            "ranges": "4c1510-4c185c",
+            "noreturn": "0",
+            "thunk": "0",
+            "cc": "__cdecl",
+            "call_refs": "1",
+            "data_refs": "0",
+            "jump_refs": "0",
+            "callers": "46db02",
+            "data_ref_from": "",
+            "jump_ref_from": "",
+            "calls": "41ca10,432050,46ee50,4bca60,4c02d0,4c0390,4c0640,4c0800,4c09a0,4c0ad0,4c0cf0,4c0db0,4c0e20,4c0fe0,4c10a0,4c13f0,4c2630,4e4354,4e4391",
+            "has_ret": "1",
+            "indirect_jumps": "",
+            "param_count": "0",
+            "sig_source": "DEFAULT",
+            "signature": "undefined __cdecl FUN_004c1510()"
+          },
+          {
+            "entry": "41ca10",
+            "name": "FUN_0041ca10",
+            "size": "48",
+            "ranges": "41ca10-41ca3f",
+            "noreturn": "0",
+            "thunk": "0",
+            "cc": "__cdecl",
+            "call_refs": "10",
+            "data_refs": "0",
+            "jump_refs": "0",
+            "callers": "432116,43212f,432145,432153,485c48,485d05,4865a2,486e69,4c15c2,4c15cc",
+            "data_ref_from": "",
+            "jump_ref_from": "",
+            "calls": "",
+            "has_ret": "1",
+            "indirect_jumps": "",
+            "param_count": "0",
+            "sig_source": "DEFAULT",
+            "signature": "undefined __cdecl FUN_0041ca10()"
+          },
+          {
+            "entry": "46ee50",
+            "name": "FUN_0046ee50",
+            "size": "3",
+            "ranges": "46ee50-46ee52",
+            "noreturn": "0",
+            "thunk": "0",
+            "cc": "__thiscall",
+            "call_refs": "34",
+            "data_refs": "0",
+            "jump_refs": "0",
+            "callers": "42b53a,42d400,42dd03,42f010,430126,43014c,430169,43017a,4301f3,4302a6,430346,43036c,43038a,43039a,430413,4304c6,430566,43058c,4305aa,4305ba,430633,4306e6,452026,46db11,46db8b,46e18c,47ff61,4b74d1,4c154c,4c8c02,4c8c21,4cf491,4d868a,4dc5c9",
+            "data_ref_from": "",
+            "jump_ref_from": "",
+            "calls": "",
+            "has_ret": "1",
+            "indirect_jumps": "",
+            "param_count": "1",
+            "sig_source": "DEFAULT",
+            "signature": "undefined __thiscall FUN_0046ee50(void * this)"
+          }
+        ]
+      },
+      "originalCD": {
+        "tableSha256": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+        "sourceSha256": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+        "selected": [
+          {
+            "entry": "49e620",
+            "name": "FUN_0049e620",
+            "size": "729",
+            "ranges": "49e620-49e8f8",
+            "noreturn": "0",
+            "thunk": "0",
+            "cc": "__cdecl",
+            "call_refs": "1",
+            "data_refs": "0",
+            "jump_refs": "0",
+            "callers": "4905ba",
+            "data_ref_from": "",
+            "jump_ref_from": "",
+            "calls": "403e10,48ca70,49cd50,49cdd0,49d690,49db10,49dbb0,49de40,49e030,49e160,49e4c0,49e4e0,49e5e0,4a59f0,4f1650,4f1a50",
+            "has_ret": "1",
+            "indirect_jumps": "",
+            "param_count": "0",
+            "sig_source": "DEFAULT",
+            "signature": "undefined __cdecl FUN_0049e620()"
+          },
+          {
+            "entry": "49e5e0",
+            "name": "FUN_0049e5e0",
+            "size": "51",
+            "ranges": "49e5e0-49e612",
+            "noreturn": "0",
+            "thunk": "0",
+            "cc": "__cdecl",
+            "call_refs": "1",
+            "data_refs": "0",
+            "jump_refs": "0",
+            "callers": "49e63e",
+            "data_ref_from": "",
+            "jump_ref_from": "",
+            "calls": "4bd4f0",
+            "has_ret": "1",
+            "indirect_jumps": "",
+            "param_count": "0",
+            "sig_source": "DEFAULT",
+            "signature": "undefined __cdecl FUN_0049e5e0()"
+          },
+          {
+            "entry": "49e4c0",
+            "name": "FUN_0049e4c0",
+            "size": "30",
+            "ranges": "49e4c0-49e4dd",
+            "noreturn": "0",
+            "thunk": "0",
+            "cc": "__thiscall",
+            "call_refs": "2",
+            "data_refs": "0",
+            "jump_refs": "0",
+            "callers": "49e8c1,49e8db",
+            "data_ref_from": "",
+            "jump_ref_from": "",
+            "calls": "49d2c0,49d890,49d9a0",
+            "has_ret": "1",
+            "indirect_jumps": "",
+            "param_count": "1",
+            "sig_source": "DEFAULT",
+            "signature": "undefined __thiscall FUN_0049e4c0(void * this)"
+          }
+        ]
+      }
+    },
+    "initials": {
+      "originals": {
+        "pe_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "initial_dwords": {
+          "0054264c": 15,
+          "00542650": 35,
+          "00542654": 2,
+          "00540a2c": 1,
+          "005c8bb4": 0
+        }
+      },
+      "originalCD": {
+        "pe_sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+        "initial_dwords": {
+          "0053717c": 15,
+          "00537180": 35,
+          "00537188": 2,
+          "00535ae0": 1,
+          "0053718c": 0
+        }
+      }
+    }
+  },
+  "builds": [
+    {
+      "log": "build-first.log",
+      "exitCode": 0,
+      "warnings": [],
+      "errors": [],
+      "sha256": "f062e4bbce8f490d234745b07d048eba6e7e870936c59c7076e796a3fd12649f"
+    },
+    {
+      "log": "build-corrected.log",
+      "exitCode": 0,
+      "warnings": [],
+      "errors": [],
+      "sha256": "877e56fa1e68c329d35498b9a5192dc1a2e69f5c46e1caa6ffc4e064379683bc"
+    },
+    {
+      "log": "build-selected-device.log",
+      "exitCode": 0,
+      "warnings": [],
+      "errors": [],
+      "sha256": "5794d65ed588dce126661356a846ca22f3486fb64d953f7451e3e92ceaff6065"
+    }
+  ],
+  "tests": {
+    "logical": 16,
+    "new": 0,
+    "commands": 1,
+    "caseExecutions": 16,
+    "failedChecks": 0,
+    "logSha256": "acf1d04359e1ad47d0856645e80f90caace95ee10526688f51ffb2eacee98735",
+    "scope": "기존 공유 지형 부품/일반 지형과 군도 후보0인 기존 Fort 부모 입력. MP root·새 MP/패킷/통신 검사 제외."
+  },
+  "corrections": [
+    "초기 컴파일 뒤 실행 검사 전에 미션 모드 참조를 편집00594fb8에서 실제00594fa0(core.bridgeState.mission)로 교정했다. 같은 독립 일반 Fort 입력도 맞췄다.",
+    "실제 배치 장치는 현재 subscriber가 비영인 반복 안에서만 요구하도록 선택 관문을 교정했다.",
+    "RawCampaignSession.cpp는 명시 eol=lf를 복원했다. 최초/교정/선택장치 빌드와 최초 검사 원시는 모두 보존했다."
+  ],
+  "sourceBeforeBuild": {
+    "cpppj/src/client/RawCampaignSession.cpp": "b5c61a3b4433d982c4b8e1c87064c79450dba5447722b3a216b892ae35e42b50",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "cbdbc408f4f969f8c758504c4a5b8a21dd4bfc5a0e31cd3c635653f11ff125fb",
+    "cpppj/src/client/RawCampaignWorldRuntime.cpp": "c1ca7e2b933c1ef2cde6ee8664d467482fb386f6decf906e23b65560d85afe3a",
+    "cpppj/src/client/RawFortWorldLoadBinding.cpp": "692442eb16929ee47d4f5dcd17ed633c4592052bacdef449db4893c46eb29c55",
+    "cpppj/src/client/RawNormalTerrainWorldBinding.cpp": "c848b594351445d832baefabf3d548f878c20e5e74c0cee1e3bdbc6b01e86b3e",
+    "cpppj/src/client/RawNormalTerrainWorldBinding.h": "d8474da9a2bd8bac89a160f6d9ff33022ace98beb8e6e3130e37b9a4de624756",
+    "cpppj/src/o/RawFarmCluster.cpp": "e574663272cf72d7d1c91e1e7b72e6dc043f7e5148c900d72fd9e41784f56c4c",
+    "cpppj/src/o/RawFarmCluster.h": "6b22e5fcb888979f17e05d11e1192117e33efc866692aded9b9a2abea5527e5f",
+    "cpppj/src/o/RawGameAuxState.h": "518835a318aff1b79c2b53b22e90e01f2b68137f6b7ef0b7276cc1427fd1b2d6",
+    "cpppj/src/o/RawTerrainGrowth.h": "67e8a9e20a6adb0a2586ba5de9772e976e8b7f4732e9f8366903e4e1f3606a16",
+    "cpppj/src/zacket/LocalMissionTransport.h": "76d81f21336c3f0dcbc242ee20489b87ae0661526433eb7597b43c298a409e07",
+    "cpppj/tests/CMakeLists.txt": "74e70aa36bacc0b2f5e987649afa723949caecee2f5c06fa2a54e3ddb229c863",
+    "cpppj/tests/FortWorldLoadBindingTests.cpp": "d3a115eaa91aa8f067a23cafb379112409ff6cbe1f71e5cf03e424502b1d8a4e"
+  },
+  "sourceBeforeCorrectedBuild": {
+    "cpppj/src/client/RawCampaignSession.cpp": "7bdaa3fe0308d91c52d98a502936c57dfcdd8ecd0a780caf3446c4987a3de15d",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "cbdbc408f4f969f8c758504c4a5b8a21dd4bfc5a0e31cd3c635653f11ff125fb",
+    "cpppj/src/client/RawCampaignWorldRuntime.cpp": "c1ca7e2b933c1ef2cde6ee8664d467482fb386f6decf906e23b65560d85afe3a",
+    "cpppj/src/client/RawFortWorldLoadBinding.cpp": "692442eb16929ee47d4f5dcd17ed633c4592052bacdef449db4893c46eb29c55",
+    "cpppj/src/client/RawNormalTerrainWorldBinding.cpp": "c848b594351445d832baefabf3d548f878c20e5e74c0cee1e3bdbc6b01e86b3e",
+    "cpppj/src/client/RawNormalTerrainWorldBinding.h": "d8474da9a2bd8bac89a160f6d9ff33022ace98beb8e6e3130e37b9a4de624756",
+    "cpppj/src/o/RawFarmCluster.cpp": "e574663272cf72d7d1c91e1e7b72e6dc043f7e5148c900d72fd9e41784f56c4c",
+    "cpppj/src/o/RawFarmCluster.h": "6b22e5fcb888979f17e05d11e1192117e33efc866692aded9b9a2abea5527e5f",
+    "cpppj/src/o/RawGameAuxState.h": "518835a318aff1b79c2b53b22e90e01f2b68137f6b7ef0b7276cc1427fd1b2d6",
+    "cpppj/src/o/RawTerrainGrowth.h": "67e8a9e20a6adb0a2586ba5de9772e976e8b7f4732e9f8366903e4e1f3606a16",
+    "cpppj/src/zacket/LocalMissionTransport.h": "76d81f21336c3f0dcbc242ee20489b87ae0661526433eb7597b43c298a409e07",
+    "cpppj/tests/CMakeLists.txt": "74e70aa36bacc0b2f5e987649afa723949caecee2f5c06fa2a54e3ddb229c863",
+    "cpppj/tests/FortWorldLoadBindingTests.cpp": "619ea1f02a784eb7aa27990c1290db84d90463c5c928a25f3ca0c3a675ec20f3"
+  },
+  "sourceFinal": {
+    "cpppj/src/client/RawCampaignSession.cpp": "7bdaa3fe0308d91c52d98a502936c57dfcdd8ecd0a780caf3446c4987a3de15d",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "cbdbc408f4f969f8c758504c4a5b8a21dd4bfc5a0e31cd3c635653f11ff125fb",
+    "cpppj/src/client/RawCampaignWorldRuntime.cpp": "c1ca7e2b933c1ef2cde6ee8664d467482fb386f6decf906e23b65560d85afe3a",
+    "cpppj/src/client/RawFortWorldLoadBinding.cpp": "692442eb16929ee47d4f5dcd17ed633c4592052bacdef449db4893c46eb29c55",
+    "cpppj/src/client/RawNormalTerrainWorldBinding.cpp": "e23a7b656342d8dadeea7dd1517819f7d5c752a2d446a17c86b0c0c8f26b8cbd",
+    "cpppj/src/client/RawNormalTerrainWorldBinding.h": "d8474da9a2bd8bac89a160f6d9ff33022ace98beb8e6e3130e37b9a4de624756",
+    "cpppj/src/o/RawFarmCluster.cpp": "e574663272cf72d7d1c91e1e7b72e6dc043f7e5148c900d72fd9e41784f56c4c",
+    "cpppj/src/o/RawFarmCluster.h": "6b22e5fcb888979f17e05d11e1192117e33efc866692aded9b9a2abea5527e5f",
+    "cpppj/src/o/RawGameAuxState.h": "518835a318aff1b79c2b53b22e90e01f2b68137f6b7ef0b7276cc1427fd1b2d6",
+    "cpppj/src/o/RawTerrainGrowth.h": "67e8a9e20a6adb0a2586ba5de9772e976e8b7f4732e9f8366903e4e1f3606a16",
+    "cpppj/src/zacket/LocalMissionTransport.h": "76d81f21336c3f0dcbc242ee20489b87ae0661526433eb7597b43c298a409e07",
+    "cpppj/tests/CMakeLists.txt": "74e70aa36bacc0b2f5e987649afa723949caecee2f5c06fa2a54e3ddb229c863",
+    "cpppj/tests/FortWorldLoadBindingTests.cpp": "619ea1f02a784eb7aa27990c1290db84d90463c5c928a25f3ca0c3a675ec20f3"
+  },
+  "protection": {
+    "protected_before": 2774,
+    "fixtures_before": 954,
+    "protected_after": 2774,
+    "fixtures_after": 954,
+    "existing_changed": [],
+    "new_fixtures": 0
+  },
+  "product": {
+    "unit": 894,
+    "fileVersion": "11.01",
+    "productVersion": "11.01",
+    "size": 10690560,
+    "sha256": "4b78a8fdeb57c1aa7d3787347c157ace787ae7b1866972c3a6be93897aa9e4a7"
+  },
+  "checking": {
+    "remaining": 10,
+    "parents": 4,
+    "partial": 3,
+    "multiplayer": 3,
+    "completedParents": 38,
+    "completedPartial": 3,
+    "newParentCompletion": 0
+  },
+  "excluded": {
+    "game": 0,
+    "gui": 0,
+    "newNative": 0,
+    "newFixtures": 0,
+    "multiplayerRootExecutions": 0,
+    "multiplayerTests": 0,
+    "packets": 0,
+    "communication": 0,
+    "captureSacrificeAttackVictory": 0,
+    "airThreeDedicated": 0,
+    "full71Ctest34Zip": 0
+  },
+  "limits": [
+    "할당NULL/원문SEH·범위밖주소·전체진단UI는 기존 C++ 호스트 경계다. code/정적 연결을 군도 MP 동작/안정성 검증으로 합산하지 않는다.",
+    "일반전투 State7 004b6dd0의 두 밀도 옵션 getter와 게임 난수/강제밀도 writer, 중앙섬 metadata/전체 MP 부모는 3절8번 잔여다."
+  ],
+  "next": "895: 비멀티/공통0048fb30 현재 CoreData/캐시/Player/진단 정상복귀 부모를 원문 대조한다. 다른 checking/전체Pop·Factory/State/파일·UI/Edit·Windows·무검사MP·4~8차를 계속한다."
+}

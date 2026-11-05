@@ -37,6 +37,14 @@ public:
     const std::int32_t& AllowAnyCapture() const { return allowAnyCapture_; } // bool로 줄이기 전 현재 raw 값을 읽는다.
     std::uint32_t& Archipelago() { return archipelago_; } //005c8bb0: 실제 FarmCluster 모드이며 Login의bb4와 다르다.
     const std::uint32_t& Archipelago() const { return archipelago_; } // 비정규 비영 DWORD도 보존한다.
+    std::uint32_t& TerrainEnabled() { return terrainEnabled_; } //00540a2c/CD00535ae0의 현재 생성/Zone 보정 DWORD다.
+    const std::uint32_t& TerrainEnabled() const { return terrainEnabled_; } // 설정 뒤 최초1이며 Session 교체로 새 값을 쓰지 않는다.
+    std::int32_t& ArchipelagoMinimum() { return archipelagoMinimum_; } //0054264c/CD0053717c의 현재 밀도 하한이다.
+    const std::int32_t& ArchipelagoMinimum() const { return archipelagoMinimum_; } // 난수 범위를 계산하는 시점의 같은 signed DWORD다.
+    std::int32_t& ArchipelagoMaximum() { return archipelagoMaximum_; } //00542650/CD00537180의 현재 밀도 상한이다.
+    const std::int32_t& ArchipelagoMaximum() const { return archipelagoMaximum_; } // 최초35와 이후 원문 writer의 현재값을 구별한다.
+    std::uint32_t& ArchipelagoPercent() { return archipelagoPercent_; } //005c8bb4/CD0053718c의 강제 밀도이며 bb0 결과와 별개다.
+    const std::uint32_t& ArchipelagoPercent() const { return archipelagoPercent_; } // Login metadata와 생성 root가 같은 현재 DWORD를 읽는다.
     float& LostX() { return lostX_; } //005c848c: 공통 삭제가 소리 뒤 기록하는 최근 손실X다.
     const float& LostX() const { return lostX_; } // 카메라/건설 이력과 별개다.
     float& LostY() { return lostY_; } //005c8490: 최근 손실Y이며 cleanup은X보다 먼저 쓴다.
@@ -110,6 +118,8 @@ private:
     std::uint32_t refundPercent_{25}; // 보호 PE의 초기25다.
     std::int32_t allowAnyCapture_{}; // bool과 alias하지 않는 raw 허용 DWORD다.
     std::uint32_t archipelago_{}; // 원본bb0의 별도 모드다.
+    std::uint32_t terrainEnabled_{1},archipelagoPercent_{}; // 보호 PE의 설정 후1과 강제 밀도BSS0을 Client 수명에 보관한다.
+    std::int32_t archipelagoMinimum_{15},archipelagoMaximum_{35}; // 양판본 PE의 최초15/35이며 생성 때 복제하지 않는다.
     float lostX_{},lostY_{}; // 최초BSS+0이며 cleanup의-10000 입력과 구별한다.
     std::int32_t defaultSp_{2000}; // 보호 PE의 signed 기본SP다.
     std::uint32_t geyserType_{122},subscriberMarker_{}; // 보호 PE TYPE122와 별도BSS 표지다.

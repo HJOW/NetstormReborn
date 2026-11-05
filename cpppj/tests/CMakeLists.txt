@@ -3489,6 +3489,6 @@ target_sources(netstorm_pop_context_tests PRIVATE RegularCurrentTests.cpp)
 target_sources(netstorm_tests PRIVATE TerrainSeedTests.cpp)
 set_source_files_properties(TerrainSeedTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TERRAINSEED_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/terrain-seed-x86.tsv\"")
-add_executable(netstorm_terrain_seed_tests FocusedTestMain.cpp TerrainSeedTests.cpp TerrainGrowthTests.cpp TerrainArchHelpersTests.cpp TerrainContextTests.cpp NormalTerrainWorldBindingTests.cpp)
+add_executable(netstorm_terrain_seed_tests FocusedTestMain.cpp TerrainSeedTests.cpp TerrainGrowthTests.cpp TerrainArchHelpersTests.cpp TerrainContextTests.cpp NormalTerrainWorldBindingTests.cpp FortWorldLoadBindingTests.cpp)
 target_link_libraries(netstorm_terrain_seed_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_terrain_seed_tests)
