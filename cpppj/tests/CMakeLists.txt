@@ -3568,6 +3568,10 @@ target_sources(netstorm_pop_context_tests PRIVATE FormCreationCurrentTests.cpp F
 target_sources(netstorm_tests PRIVATE ProcessCreationCurrentTests.cpp)
 target_sources(netstorm_tests PRIVATE FormUnpopCurrentTests.cpp)
 target_sources(netstorm_tests PRIVATE CdUnpopCurrentTests.cpp)
+target_sources(netstorm_tests PRIVATE DependCreateCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE DependCreateCurrentTests.cpp ContentLifetimeTests.cpp GraphFormsTests.cpp)
+set_source_files_properties(DependCreateCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DEPEND_CREATE_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/depend-create-parent-current-x86.tsv\"")
 target_sources(netstorm_pop_context_tests PRIVATE CdUnpopCurrentTests.cpp)
 set_source_files_properties(CdUnpopCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CD_UNPOP_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cd-squid-unpop-current-hardware-x86.tsv\"")

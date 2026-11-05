@@ -4,6 +4,7 @@
 #include "o/RawSquidDestroy.h"
 
 namespace netstorm::o {
+class SquidFactory; // 실제 World의 공통 생성/현재 생성자 표를 짧게 빌리는 전방 선언이다.
 // watched 부모가 삭제될 때 watcher 부모의 가상 +0x34(watched,form)를 호출하는 경계다.
 using DependFormNotice=std::function<void(Sid watcher,Sid watched,Sid form)>;
 // 두 Form이 서로를 참조하는 방향을 명시한다. watchedForm은 watched, watcherForm은 watcher 안에 붙는다.
@@ -12,6 +13,7 @@ struct DependFormPair { /* watchedForm: 암묵적인 런타임 SquidId 변환을
 class DependFormHost {
 public:
     void BindUnpop(std::function<void(Sid)> unpop); // 실제 World 공장의 현재 진단/종속 분리를 연결한다.
+    void BindCreation(SquidFactory& factory,const std::uint32_t& type,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion={}); // 같은 풀의 공장/장기 현재 번호와 원문 진단을 연결한다.
     // 풀·삭제 처리기는 이 객체보다 오래 살아야 한다. 다른 Form/자산의 가상 분배는 fallback으로 보존한다.
     DependFormHost(SidPool& pool,RawSquidDestroy& destroy,DependFormNotice notice={},
         SquidDestroyHooks fallback={},FormPopTransmit transmit={});
@@ -29,12 +31,16 @@ public:
     void Destroy(Sid form,std::uint32_t flags=0) const;
     // 타입1만 처리하고 다른 타입의 기존 분배를 보존한다. 전체 월드의 삭제 분배기로 사용한다.
     SquidDestroyHooks Hooks() const;
-    // 원본 타입1 판정과 공유 풀 조회를 연결기/진단에 제공한다. free는 별도로 확인한다.
+    // 실제 감시 클래스 VT 판정과 공유 풀 조회를 연결기/진단에 제공한다. free는 별도로 확인한다.
     bool IsDependForm(Sid form) const;
     const SidPool& Pool() const;
 private:
     std::function<void(Sid)> unpop_; // 독립 입력의 미연결은 기존 forms_의 같은 공통 해제를 사용한다.
-    // 살아 있거나 삭제 중인 타입1 Form의 현재 raw 상태를 확인한다.
+    SquidFactory* factory_{}; // 실제 World와 같은 수명의 공장이며 독립 입력은 같은 공통 Factory를 호출마다 구성한다.
+    const std::uint32_t* dependType_{}; // 미연결 독립 입력만 원문 초기1을 쓰고 실제 World는 장기 DWORD를 빌린다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> creationAssertion_; // Create 이전 server 진단이 정상 복귀하면 원문 flags0을 유지한다.
+    std::uint32_t DependType() const; // 검색/금지 타입 검사와 각 Create가 같은 현재 전체 번호를 읽는다.
+    // 살아 있거나 삭제 중인 감시 클래스의 현재 raw/VT 상태를 확인한다.
     void Form(Sid form) const;
     // getter/store 폭을 WORD로 제한하여 다른 payload를 보존한다.
     Sid Word(Sid sid,std::size_t offset) const;

@@ -44,6 +44,10 @@ void SquidFormDispatch::SetAssets(SquidDestroyHooks assets,SquidAssetDestroy ass
 }
 // 콜백 뒤 다음 효과는 현재 raw 타입으로 다시 선택한다.
 const SquidDestroyHooks& SquidFormDispatch::Route(Sid sid) const {
+    const auto raw=pool_.Slot(sid);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
+    if (table==(pool_.Edition()==OriginalEdition::Patch1078 ? 0x512110U : 0x505a08U)) {
+        if (!bound_[kDepend]) throw std::logic_error("선택된 실제 감시 클래스 처리기 미등록");return routes_[kDepend]; // 이전/현재 TYPE가 달라도 실제 클래스를 사용하며 다른 raw TYPE 처리기로 대체하지 않는다.
+    }
     const auto type=pool_.Slot(sid)[10];
     if (type>=routes_.size() || !bound_[type]) throw std::logic_error("Form 분배 미등록 타입");return routes_[type];
 }

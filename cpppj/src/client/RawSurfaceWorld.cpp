@@ -231,6 +231,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
                 runtime.formTransmit(form,flags);
             });
         formDispatch->Bind(*dependencies);
+        dependencies->BindCreation(*factory,storage->GameAux()->DependFormType(),[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }); // 장기 현재 번호를 두 번 읽고 같은 World의 공통 생성자/진단을 사용한다.
         dependencies->BindUnpop([this](o::Sid sid) { factory->UnpopForm(sid); }); // 감시 Form 삭제도 같은 현재 World의 진단과 부모 getter를 사용한다.
         if (edition==o::OriginalEdition::Patch1078) {
             o::RawBridgeDecayHooks decay;

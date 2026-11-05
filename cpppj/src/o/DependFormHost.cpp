@@ -1,6 +1,9 @@
 // 감시 삭제의 재진입에서는 dead 비트를 공유하고 현재 상대 링크를 효과 뒤 다시 읽는다.
 #include "o/DependFormHost.h"
+#include "o/RawDependCreate.h" // 두 Create/링크/가상 부착의 실제 순서 부모다.
+#include "o/SquidFactory.h" // 독립 입력도 원문 TYPE 생성자를 사용하는 같은 공장으로 처리한다.
 #include <stdexcept>
+#include <optional>
 #include <unordered_set>
 #include <utility>
 
@@ -18,10 +21,15 @@ DependFormHost::DependFormHost(SidPool& pool,RawSquidDestroy& destroy,DependForm
     if (&destroy.Pool()!=&pool) throw std::invalid_argument("DependForm 삭제 SID 풀 불일치");
 }
 void DependFormHost::BindUnpop(std::function<void(Sid)> unpop) { unpop_=std::move(unpop); } // 공통 삭제에서도 현재 Factory의 진단/분리 순서를 사용한다.
+void DependFormHost::BindCreation(SquidFactory& factory,const std::uint32_t& type,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) {
+    if (&factory.Pool()!=&pool_) throw std::invalid_argument("Depend 생성 공장의 실제 SID 풀 불일치");factory_=&factory;dependType_=&type;creationAssertion_=std::move(assertion); // 반납 후 다른 World 공장을 장기 저장소에 남기지 않는다.
+}
+std::uint32_t DependFormHost::DependType() const { return dependType_ ? *dependType_ : kDepend; } // 각 호출 위치에서 BYTE로 줄이지 않은 현재 번호다.
 // 반납 뒤에도 타입 바이트는 보존되므로 free 필터는 호출자가 적용한다.
 bool DependFormHost::IsDependForm(Sid form) const {
-    return form.value>=5 && form.value<pool_.Capacity() && form.value!=pool_.Layout().predictableFirst
-        && pool_.Slot(form)[kType]==kDepend;
+    if (form.value<5 || form.value>=pool_.Capacity() || form.value==pool_.Layout().predictableFirst) return false;
+    const auto raw=pool_.Slot(form);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
+    return table==forms_.Vtable(kDepend); // 실제 감시 클래스의 가상 진입은 이전/current TYPE BYTE 차이로 거부하지 않는다.
 }
 // 죽는 중의 Form은 재진입 처리에 필요하며 free 슬롯의 가상 필드는 읽지 않는다.
 void DependFormHost::Form(Sid form) const {
@@ -42,20 +50,24 @@ void DependFormHost::Parents(Sid watcher,Sid watched) const {
     for (const auto parent:{watcher,watched})
         if (parent.value<5 || parent.value>=pool_.Capacity() || parent.value==pool_.Layout().predictableFirst || (pool_.Slot(parent)[kState]&kFree))
             throw std::logic_error("DependForm 부모 상태 오류");
-    if (watcher==watched || pool_.Slot(watcher)[kType]==kDepend || pool_.Slot(watched)[kType]<kFirstAssetTypeNumber)
+    if (watcher==watched || pool_.Slot(watcher)[kType]==DependType() || pool_.Slot(watched)[kType]<kFirstAssetTypeNumber)
         throw std::logic_error("DependForm 감시 대상 타입 오류");
 }
 // watcher 쪽을 먼저 생성/부착한다. 원본 생성 인자 순서는 watched→watcher이며 Form 부모도 허용한다.
 DependFormPair DependFormHost::Create(Sid watched,Sid watcher) const {
-    // 생성은 제거 helper의 타입 제한을 추가하지 않는다. 같은 부모 안의 두 Form도 원본처럼 지원한다.
-    for (const auto parent:{watcher,watched})
-        if (parent.value<5 || parent.value>=pool_.Capacity() || parent.value==pool_.Layout().predictableFirst || (pool_.Slot(parent)[kState]&(kFree|kDead)))
-            throw std::logic_error("DependForm 생성 부모 상태 오류");
-    const bool client=watcher.value<pool_.Layout().serverFirst || watched.value<pool_.Layout().serverFirst;
-    if (!client && !pool_.IsServer()) throw std::logic_error("DependForm 서버 쌍 생성 권한 필요");
-    const auto first=forms_.Create(kDepend,client ? 2U : 0U),second=forms_.Create(kDepend,client ? 2U : 0U);
-    Put(first,kWatched,second);Put(first,kWatcher,{});Put(second,kWatcher,first);Put(second,kWatched,{});
-    forms_.Attach(first,watcher);forms_.Attach(second,watched);return {second,first};
+    const auto object=[this](std::uint32_t number) { if (number>=pool_.Capacity()) throw std::out_of_range("Depend 생성의 물리 객체 범위");return Sid{static_cast<std::uint16_t>(number)}; }; // 링크/부착이 실제 소비하는 위치에서만 물리 범위를 확인한다.
+    std::optional<SquidFactory> independent;
+    if (!factory_) { independent.emplace(pool_,destroy_.Types());independent->BindDiagnostics({destroy_.Types(),creationAssertion_}); } // 독립 입력에도 고정 VT 할당 경로를 추가하지 않는다.
+    auto& factory=factory_ ? *factory_ : *independent;DependCreateHooks hooks;hooks.server=[this] { return pool_.IsServer(); };hooks.formType=[this] { return DependType(); };hooks.assertion=creationAssertion_;
+    hooks.create=[&factory](auto type,auto flags) { return std::uint32_t(factory.Create(type,flags).value); }; // 각 현재 번호/생성자는 공통 Create가 다시 읽는다.
+    hooks.sid=[](auto token) { return token; }; // 실제 풀 어댑터의 객체 토큰은 같은 물리 SID다.
+    hooks.word=[this,object](auto token,auto offset,auto value) { const auto slot=pool_.Slot(object(token));auto* raw=const_cast<std::uint8_t*>(slot.data());raw[offset]=static_cast<std::uint8_t>(value);raw[offset+1]=static_cast<std::uint8_t>(value>>8); }; // 원문 WORD 저장에 할당/free 선행 검사를 추가하지 않는다.
+    hooks.vtable=[this,object](auto token) { const auto raw=pool_.Slot(object(token));return std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24); }; // Create/첫 부착 이후의 현재 VT를 조회한다.
+    hooks.attach=[this,object](auto token,auto table,auto parent,auto flags) { // 알려진 공통 Form 세 VT의 실제+74만 같은 부착 몸체로 보낸다.
+        bool common{};for (const auto type:{1U,2U,3U}) if (table==forms_.Vtable(type)) common=true; // Content 정렬/다른 미연결 가상 진입은 선택 시 명시 실패한다.
+        if (!common) throw std::logic_error("Depend 생성의 선택된 실제 VT+74 미연결");forms_.Attach(object(token),object(parent),flags);
+    };
+    const auto pair=CreateDependForms(pool_.Edition(),watched.value,watcher.value,hooks);return {object(pair.watched),object(pair.watcher)};
 }
 // 상대는 Form 부모 getter를 사용하므로 ProcessForm의 원래 타입도 공통 검사를 통과한다.
 Sid DependFormHost::Watcher(Sid form) const {
@@ -69,7 +81,7 @@ bool DependFormHost::Has(Sid watched,Sid watcher) const {
     while (current.value) {
         if (current.value>=pool_.Capacity() || !visited.insert(current.value).second) throw std::logic_error("DependForm 조회 체인 손상");
         const auto next=Word(current,kNext);
-        if (pool_.Slot(current)[kType]==kDepend && Watcher(current)==watcher) return true;
+        if (pool_.Slot(current)[kType]==DependType() && Watcher(current)==watcher) return true;
         current=next;
     }
     return false;
@@ -83,7 +95,7 @@ void DependFormHost::Remove(Sid watcher,Sid watched,std::uint32_t flags) const {
     while (current.value) {
         if (current.value>=pool_.Capacity() || !visited.insert(current.value).second) throw std::logic_error("DependForm 제거 체인 손상");
         const auto next=Word(current,kNext);
-        if (pool_.Slot(current)[kType]==kDepend && Watcher(current)==watcher) Destroy(current,flags);
+        if (pool_.Slot(current)[kType]==DependType() && Watcher(current)==watcher) Destroy(current,flags);
         current=next;
     }
 }

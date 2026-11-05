@@ -1,0 +1,318 @@
+{
+  "unit": 910,
+  "previousCpCommit": "ea848459",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "globals": {
+    "originals": {
+      "dependTypeGlobal": "00541074",
+      "initialDword": 1,
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+    },
+    "originalCD": {
+      "dependTypeGlobal": "0051c964",
+      "initialDword": 1,
+      "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    }
+  },
+  "queryEvidence": {
+    "patchPredicate": "004b1bd0: raw TYPE BYTE == current00541074 DWORD",
+    "hasThunk": "00453740: call004b1bd0;ret4",
+    "hasFinderVtable": "00508f14",
+    "removeFinderAndExplicitPredicate": "004b22d0/004b1bd0"
+  },
+  "productionBypassesBefore": [
+    "DependFormHost::Create -> SquidForms::Create(1) x2"
+  ],
+  "productionBypassesAfter": [],
+  "sourceProofScope": "cpppj/src의 실제 SquidForms Create/Take 호출을 정적으로 대조",
+  "nativeFirst": {
+    "host": "HJOW-Athlon",
+    "rows": 1620,
+    "rowsPerEdition": 810,
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "fixtureSha256": "3cc59aea363466d0a6734d567a5f4d8d0577e4e3f9f2267e210e5a5ba6facd68",
+    "toolSha256": "db7a52885e474136c4e655009051f913b21bdcb544dbad55ec33ed7ce68d668b",
+    "mode": "first",
+    "actualCreate": false,
+    "actualAttach": false,
+    "game": false,
+    "multiplayer": false
+  },
+  "nativeVerify": {
+    "host": "HJOW-Athlon",
+    "rows": 1620,
+    "rowsPerEdition": 810,
+    "binaries": {
+      "originals": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    },
+    "fixtureSha256": "3cc59aea363466d0a6734d567a5f4d8d0577e4e3f9f2267e210e5a5ba6facd68",
+    "toolSha256": "f1e787a6f3fd9c0899f57f352549c25dfb83b543252a43a0a1376aa95b57c018",
+    "mode": "verify",
+    "actualCreate": false,
+    "actualAttach": false,
+    "game": false,
+    "multiplayer": false
+  },
+  "validation": {
+    "buildCommands": 2,
+    "buildExits": [
+      0,
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "uniqueCases": 32,
+    "newCases": 5,
+    "existingCases": 27,
+    "firstRegisteredCases": 29,
+    "firstExecutedCases": 29,
+    "firstFailedChecks": 0,
+    "finalFailedChecks": 0,
+    "testCommands": 23,
+    "testExecutions": 61,
+    "initialDiscovery": {
+      "plannedCases": 31,
+      "registeredCases": 29,
+      "filters": {
+        "DependCreateCurrent_": 4,
+        "FormLifecycle_IndependentPeFixture": 1,
+        "FormLifecycle_DependencyPairAndReentrantNotice": 1,
+        "FormLifecycle_ContractsAndSameParentPair": 1,
+        "ContentLifetime_SharedMixedFormDispatch": 1,
+        "DissolveVisualSystem_": 2,
+        "GraphForms_": 0,
+        "FormCreationCurrent_": 3,
+        "ProcessCreationCurrent_": 4,
+        "FormTake_": 4,
+        "FormUnpopCurrent_": 4,
+        "CdUnpopCurrent_": 4
+      },
+      "missingFilters": [
+        "GraphForms_"
+      ],
+      "firstDiscoveryExit": 1,
+      "firstDiscoveryTestBodies": 0
+    },
+    "first": [
+      {
+        "filter": "DependCreateCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "FormLifecycle_IndependentPeFixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "FormLifecycle_DependencyPairAndReentrantNotice",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "FormLifecycle_ContractsAndSameParentPair",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "ContentLifetime_SharedMixedFormDispatch",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "DissolveVisualSystem_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 2
+      },
+      {
+        "filter": "FormCreationCurrent_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 3
+      },
+      {
+        "filter": "ProcessCreationCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "FormTake_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "FormUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "CdUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      }
+    ],
+    "final": [
+      {
+        "filter": "DependCreateCurrent_",
+        "cases": 5,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 5
+      },
+      {
+        "filter": "FormLifecycle_IndependentPeFixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "FormLifecycle_DependencyPairAndReentrantNotice",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "FormLifecycle_ContractsAndSameParentPair",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "ContentLifetime_SharedMixedFormDispatch",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "DissolveVisualSystem_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 2
+      },
+      {
+        "filter": "GraphForms_",
+        "cases": 2,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 2
+      },
+      {
+        "filter": "FormCreationCurrent_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 3
+      },
+      {
+        "filter": "ProcessCreationCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "FormTake_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "FormUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "CdUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      }
+    ],
+    "sourceFiles": 2875,
+    "sourceChangesDuringBuild": [],
+    "changesBetweenBuilds": [
+      "cpppj/src/o/SquidFormDispatch.cpp",
+      "cpppj/tests/CMakeLists.txt",
+      "cpppj/tests/DependCreateCurrentTests.cpp"
+    ],
+    "reviewChange": "실제 감시 VT가 선택됐는데 클래스가 미등록이면 다른 raw TYPE 처리기로 대체하지 않고 공통 dead/깊이 접두 뒤 명시 실패",
+    "nativeCommands": 2,
+    "nativeExits": [
+      0,
+      0
+    ],
+    "uniqueNativeRows": 1620,
+    "nativeRowExecutions": 3240,
+    "nativeToolCommentOnlyCorrection": "합성의 한국어 주석 한 단어. 첫 소스 보존/재관측 바이트 일치.",
+    "existingAssertionsChanged": 0,
+    "fixtureExpectationChanges": 0
+  },
+  "protection": {
+    "previousFiles": 2784,
+    "unchanged": 2784,
+    "changed": [],
+    "currentFiles": 2785,
+    "currentFixtures": 965,
+    "added": [
+      "cpppj/tests/fixtures/depend-create-parent-current-x86.tsv"
+    ]
+  },
+  "product": {
+    "unit": 910,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10768384,
+    "sha256": "7621193f74e2b3e9243e06448fe09c12bb5b3be27416a3ce9aec6ef8d5d5f149",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "checkingRemaining": {
+    "total": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3
+  },
+  "remaining": [
+    "공통 Form +74 자식의 진단/현재 TYPE/부분 링크와 기존 선행 guard",
+    "Content 정렬/자산 등 다른 선택된 +74와 다른 Form 클래스 수명",
+    "Gump 현재 번호 및 나머지 Factory/Pop/Baseprocess/실패 정책",
+    "State/파일·객체 UI·Edit·Windows·무검사 MP·4~8차"
+  ],
+  "nextUnit": 911
+}

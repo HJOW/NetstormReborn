@@ -13,9 +13,9 @@ constexpr std::array<std::uint32_t,4> kPatchVtables{0x512110,0x512098,0x512188,0
 constexpr std::array<std::uint32_t,4> kCdVtables{0x505a08,0x505990,0x505a80,0x505b00};
 // 두 판본의 Form 공통 필드와 contained 자산의 이전 필드다.
 constexpr std::size_t kNext=4,kHead=6,kType=10,kState=11,kPrevious=14,kParent=16,kAssetPrevious=16;
-// free/dead/void/contained 상태와 ProcessForm·ContentForm 타입 및 프로세스 타입 범위다.
+// free/dead/void/contained 상태와 실제 ContentForm 생성자 번호다.
 constexpr std::uint8_t kFree=1,kDead=2,kVoid=4,kContained=8;
-constexpr std::uint32_t kProcessForm=2,kContentForm=6,kProcessFirst=10,kPatchProcessEnd=63,kCdProcessEnd=62;
+constexpr std::uint32_t kContentForm=6;
 }
 // 알림을 보관하되 다른 객체 수명이나 풀 초기화 효과는 숨기지 않는다.
 SquidForms::SquidForms(SidPool& pool,FormRemovalNotice notice,FormPopTransmit transmit,FormUnpopHooks unpop)
@@ -45,14 +45,12 @@ void SquidForms::Put(Sid sid,std::size_t offset,std::uint32_t value,std::size_t 
     // 지정한 쓰기 폭을 그대로 보존한다.
     for (std::size_t index=0;index<width;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(index*8));
 }
-// 프로세스가 자신의 타입 번호로 바꾼 Form도 생성자 가상 표로 확인한다.
+// 현재 생성자가 남긴 네 Form VT를 확인하며 변경 가능한 TYPE 번호에서 VT를 추정하지 않는다.
 std::span<const std::uint8_t> SquidForms::Form(Sid sid) const {
-    const auto raw=pool_.Slot(sid);const auto type=raw[kType];
+    const auto raw=pool_.Slot(sid);
     if (sid.value<5 || (raw[kState]&kFree)) throw std::logic_error("Form 슬롯 상태 오류");
-    const auto end=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchProcessEnd : kCdProcessEnd;
-    const auto constructorType=type>=kProcessFirst && type<end ? kProcessForm : type;
-    if (Read(sid,0,4)!=Vtable(constructorType)) throw std::logic_error("Form 가상 표 미복원");
-    return raw;
+    const auto table=Read(sid,0,4);for (const auto type:kTypes) if (table==Vtable(type)) return raw; // 실제 생성자 클래스만 지원하며 알 수 없는 VT는 거부한다.
+    throw std::logic_error("Form 가상 표 미복원");
 }
 // 원본 Form의 부모 getter는 WORD 전체를 반환한다.
 Sid SquidForms::Parent(Sid form) const { Form(form);return Sid{static_cast<std::uint16_t>(Read(form,kParent,2))}; }
@@ -113,7 +111,7 @@ void SquidForms::Attach(Sid form,Sid parent,std::uint32_t flags) const {
         throw std::logic_error("CD Form 부모0 부착 금지");
     }
     const auto raw=Form(form);
-    if (raw[kType]==kContentForm) throw std::logic_error("ContentForm 정렬 부착기 필요");
+    if (Read(form,0,4)==Vtable(kContentForm)) throw std::logic_error("ContentForm 정렬 부착기 필요"); // 실제+74가 정렬 부착인 클래스는 TYPE 번호와 별도로 구별한다.
     if (parent.value<5 || parent.value>=pool_.Capacity() || parent==form || (pool_.Slot(parent)[kState]&(kFree|kDead)))
         throw std::logic_error("Form 부착 부모 상태 오류");
     ValidatePop(form,flags);

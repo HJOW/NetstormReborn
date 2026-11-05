@@ -45,6 +45,7 @@ public:
     std::uint32_t PostDepth() const;
     // 공통 훅이 같은 raw 풀을 처리하는지 생성 단계에서 확인한다.
     const SidPool& Pool() const;
+    std::span<const RiftTypeRecord> Types() const { return types_; } // 같은 수명/판본의 독립 생성 어댑터도 원래 입력 TYPE를 현재 공통 Factory에 제공한다.
     // 공통 훅의 Graph와 실제 Unpop이 서로 다른 공간을 갱신하는 연결을 막는다.
     void ValidateGraph(const RawGraph& graph) const;
 private:

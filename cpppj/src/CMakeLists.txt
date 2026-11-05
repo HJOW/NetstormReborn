@@ -383,3 +383,6 @@ target_sources(netstorm PRIVATE o/RawPriestRegenHitPoints.cpp o/RawPriestRegenHi
 
 # 공통 Take의 현재 가상 해제와 반환 객체 순서를 같은 공장에 연결한다(905).
 target_sources(netstorm PRIVATE o/RawSquidTake.cpp o/RawSquidTake.h)
+
+# 감시 Form 쌍도 현재 두 Create/WORD·VT/가상 부착의 원문 부모를 사용한다(910).
+target_sources(netstorm PRIVATE o/RawDependCreate.cpp o/RawDependCreate.h)

@@ -44,7 +44,7 @@ public:
     // 지원 내장 타입의 생성자가 쓰는 판본별 실제 가상 표 기록값이다.
     std::uint32_t Vtable(std::uint32_t type) const;
 private:
-    // 기존 Form의 현재 타입·가상 표를 확인한다. dead는 공통 삭제 중에도 허용한다.
+    // 기존 Form의 현재 가상 표 클래스를 확인한다. 변경 가능한 TYPE 번호로 VT를 추정하지 않으며 dead는 공통 삭제 중에도 허용한다.
     std::span<const std::uint8_t> Form(Sid sid) const;
     // Take는 free/예약 예측 머리도 쓰므로 AllocatedBytes와 분리하여 범위만 확인한다.
     std::span<std::uint8_t> Raw(Sid sid) const;
