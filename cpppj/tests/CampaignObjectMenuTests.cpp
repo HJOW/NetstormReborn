@@ -23,6 +23,8 @@
 #include "client/RawChatWindowContext.h" //제품 Player 하위메뉴가 조회하는 실제 빈 Chat 입력버퍼를 같은 트리에 생성한다.
 #include "client/ScriptCommand.h" //Chat 공장이 빌리는 실제80칸 문자열 고리의 수명을 검사 안에 유지한다.
 #include "client/MenuGump.h" // 실제 팝업 항목의 명령/활성 플래그를 읽기 전용으로 관측한다.
+#include "client/RawGameMenus.h" // 현재 Session의 Game/View/Options를 같은 실제 공통 메뉴에 작성한다.
+#include "client/GameMenuCommands.h" // 원본 명령 전역을 화면 장치 전역과 구별해 읽는다.
 #include "o/RawSquidLevel.h" // 메뉴 상태 행의 레벨을 원문 BYTE setter로 입력한다.
 #include "o/OriginalText.h"
 #include "o/RawBombEffectTimer.h" // Init 없는 timer cdecl의 실제 필드를 조회한다.
@@ -1254,6 +1256,22 @@ void PollCarrierUi(SpecialObjectUiScene& scene,ScreenPoint point,std::uint32_t e
 ScreenPoint CarrierUiCell(SpecialObjectUiScene& scene,float x,float y) { const auto corner=scene.world->ToScreen(x,y);return {corner.x-8,corner.y-6}; }
 // 실제 카메라/현재 좌표 변환으로 검사 점을 화면 안에 놓으며 지형/Graph/커서 판단을 주입하지 않는다.
 void PollCarrierUiWorld(SpecialObjectUiScene& scene,float x,float y,std::uint32_t expected) { scene.world->Session().CameraGlobals().ApplyPixelsToRendererAndSnapshot(std::max(0,static_cast<int>(x*16)-320),std::max(0,static_cast<int>(y*11)-240));const auto point=CarrierUiCell(scene,x,y);CHECK(point.x>=0 && point.x<640 && point.y>=0 && point.y<480);PollCarrierUi(scene,point,expected); }
+// 장치 전역만 명시 공급하고 모드/Player/게임 조회는 실제 BindGameMenus에 맡긴다. 반환 토큰은 현재 공통 메뉴 루트다.
+std::uint32_t OpenStateGameUi(SpecialObjectUiScene& scene,std::uint32_t kind,std::uint32_t displayFlags=0,std::uint32_t soundReady=0,std::uint32_t editing=0) {
+    std::uint32_t root{};scene.ui.menus->OpenAttached([&](const auto& widgets,const auto& controls,const auto& menus) {
+        GameMenusHooks hooks;hooks.global=[&](std::uint32_t address)->std::uint32_t { if (const auto command=GameMenuCommandValue(address)) return *command;switch (address) { case 0x531860:return 640;case 0x531864:return 480;case 0x5c78d4:return displayFlags;case 0x5c7910:return 1;case 0x5c7b14:return soundReady;case 0x531900:return 3;case 0x531904:return 4;case 0x55b4b0:return scene.client.Paused() ? 1U : 0U;case 0x59a8ac:return 0;default:throw std::logic_error("현재 메뉴 UI의 미명시 장치 전역"); } };
+        hooks.config=[&](auto key) { return scene.client.Configuration().GetInt(key); };hooks.readInt=[&](auto key,std::int32_t& value) { static_cast<void>(scene.client.Configuration().ReadInt(key,value)); };hooks.translate=[](auto text) { return std::string(text); };hooks.demo=[&] { return scene.external.demo; };hooks.editingMission=[&] { return editing; };
+        BindGameMenusControls(hooks,widgets,controls,menus,[&](auto text) { return scene.strings.Store(text); });RawGameMenus body(scene.world->Session().BindGameMenus(std::move(hooks)));switch (kind) { case 0:root=body.Game();break;case 1:root=body.View();break;case 2:root=body.Options();break;default:throw std::logic_error("현재 메뉴 UI 종류 범위"); }widgets.Attach(root,100,20,scene.ui.buttons.RootToken(),1);return root;
+    });return root;
+}
+// 대상 객체 없는 공통 메뉴의 저장 행을 현재 명령으로 조회하며 구분선/자식 행은 제외한다.
+std::optional<MenuGumpItem> StateGameUiItem(SpecialObjectUiScene& scene,std::uint32_t root,std::uint32_t command) {
+    const auto* node=static_cast<const MenuGumpNode*>(scene.ui.menus->Node(root));if (!node) throw std::logic_error("현재 게임 UI 메뉴 루트 없음");
+    for (std::uint32_t index=0;index<node->itemCount;++index) { const auto& item=node->items[index];if ((item.flags&1U) && item.command==command) return item; } // 살아 있는 원문 명령 행만 저장 순서로 방문한다.
+    return {};
+}
+// 객체 메뉴가 소유하지 않은 가로/하위 팝업은 실제 공통 입력 부모에 닫기를 예약한 뒤 정리한다.
+void CloseStateGameUi(SpecialObjectUiScene& scene) { scene.ui.menus->RequestClosePopups();scene.ui.menus->CleanupFrame();CHECK(!scene.ui.menus->HasMenus()); }
 }
 TEST_CASE(SpecialObjectUi_CrystalOwnersAndEditorUseActualMenuAndRelease) { // 스톰 크리스탈의 raw owner/일반·편집 메뉴와 About 실제 인자를 같은 경로로 확인한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();
@@ -1509,5 +1527,21 @@ TEST_CASE(BuildingUpgradeUi_FourThemesCompleteAndReopenAtEveryLevel) { // 실제
         scene.Open(source);const auto row=BuildingUiItem(scene,source,0x03000032U);CHECK(row.has_value());if (!row) throw std::logic_error("진행 중 UI 업그레이드 행 없음");const auto event=scene.Click(BuildingUiCommand(row->command,row->parameter));CHECK(scene.menu->Command(event));CHECK(!scene.factoryNotices.empty() && scene.factoryNotices.back()=="alreadyUpgrading");CloseBuildingUi(scene);
         scene.Open(source);const Sid popup{static_cast<std::uint16_t>(Get(core.pool.Slot(source),6,2))};CHECK(session.GumpForms().IsGumpForm(popup));core.processState.now=15;regular->RunFrame();CHECK(std::uint32_t(core.pool.Slot(source)[11]>>5)==level+1 && Get(core.pool.Slot(source),26)==static_cast<std::uint32_t>(session.HitPoints().MaxHitPoints(source)));CHECK(!session.FactoryUpgrading(source) && !core.processes.FindEvent(source,3) && !core.processes.FindEvent(source,4));CHECK((core.pool.Slot(image)[11]&1U) && !core.dependencies.Has(source,image));CHECK(session.GumpForms().IsGumpForm(popup) && !(core.pool.Slot(popup)[11]&1U));CloseBuildingUi(scene);
         scene.Open(source);CHECK(BuildingUiItem(scene,source,0x03000032U).has_value()==(level+1<3));CloseBuildingUi(scene);CHECK(session.Sp(session.LocalOwner())==money && core.pool.Slot(source)[34]==session.LocalOwner() && Get(core.pool.Slot(source),14)==x);std::printf("UPGRADE UI type=%u level=%u->%u completed, popup released\n",type,level,level+1); // 수신/비용 차감은 실행하지 않았으므로 동일 SP가 유지돼야 한다.
+    }
+}
+
+TEST_CASE(StateGameUi_GameAndViewUseCurrentMissionEditorAndDemo) { // 동일 Session의 모드 변경을 실제 controlled 메뉴에서 재조회하고 게임 전환 명령은 실행하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();
+    for (const auto editor:{0U,1U}) for (const auto demo:{0U,1U}) for (const auto editing:{0U,1U}) { // 미션의 편집/데모/편집복귀 여덟 조합은 현재 공유 값으로만 입력한다.
+        scene.client.GameplayGlobals()->world.editor=editor;scene.external.demo=demo;const auto free=core.pool.FreeCount();const auto kernel=core.kernel.Size();const auto game=OpenStateGameUi(scene,0,0,0,editing);CHECK(StateGameUiItem(scene,game,0x020000c2U).has_value()==(editor || editing));CHECK(StateGameUiItem(scene,game,0x02000091U).has_value()==(!editor && !demo));CHECK(StateGameUiItem(scene,game,0x0200008dU).has_value()==!editor);CHECK(StateGameUiItem(scene,game,0x02000094U).has_value());const auto quit=scene.Click("Quit Game");CHECK(quit.code==0x02000094U);CloseStateGameUi(scene);CHECK(!scene.ui.menus->Node(game));
+        scene.client.Configuration().Set("theammode","0");scene.client.Configuration().Set("useBanners","1");const auto view=OpenStateGameUi(scene,1);CHECK(!StateGameUiItem(scene,view,0x02000088U).has_value());CHECK(StateGameUiItem(scene,view,0x020000a0U).has_value()==!editor);CHECK(StateGameUiItem(scene,view,0x020000b8U)->parameter==session.LocalOwner());const auto banner=StateGameUiItem(scene,view,0x0200006dU);CHECK(banner && scene.strings.Resolve(banner->parameter)=="useBanners=0" && (banner->flags&4U));const auto event=scene.Click("View Your Priest - F5");CHECK(event.code==0x020000b8U && std::bit_cast<std::uint32_t>(event.y)==session.LocalOwner());CloseStateGameUi(scene);CHECK(!scene.ui.menus->Node(view) && core.pool.FreeCount()==free && core.kernel.Size()==kernel);
+    }
+}
+
+TEST_CASE(StateGameUi_OptionsCurrentConfigDeviceAndDisplayFlags) { // 실제 설정과 화면/음향 장치 경계가 체크·비활성·반전 인자로 이어지고 반납 뒤 현재 값을 다시 읽는지 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto core=scene.world->Session().Core();
+    for (const auto display:{0U,1U}) for (const auto ready:{0U,1U}) for (const auto enabled:{0U,1U}) { // 창/전체화면·음향 가용성·현재 설정의 여덟 조합을 실제 장치 실행 없이 공급한다.
+        scene.client.Configuration().Set("sound",enabled ? "1" : "0");scene.client.Configuration().Set("music",enabled ? "1" : "0");scene.client.Configuration().Set("edgeScroll",enabled ? "1" : "0");const auto free=core.pool.FreeCount();const auto kernel=core.kernel.Size();const auto root=OpenStateGameUi(scene,2,display,ready);CHECK(StateGameUiItem(scene,root,0x02000030U).has_value()==(display!=0));CHECK(scene.ui.menus->Point(display ? "Adjust Direct Draw" : "Direct Draw / Full Screen").has_value());const auto sound=scene.ui.menus->Point("Sound On");CHECK(sound.has_value());if (!sound) throw std::logic_error("Options 실제 Sound 행 없음");scene.ui.Click(*sound);
+        if (ready) { const auto event=scene.ui.commands.Pop(false);CHECK(event.code==0x0200006dU && scene.strings.Resolve(std::bit_cast<std::uint32_t>(event.y))==(enabled ? "sound=0" : "sound=1")); }else CHECK(scene.ui.commands.Empty());CloseStateGameUi(scene);CHECK(!scene.ui.menus->Node(root));const auto reopened=OpenStateGameUi(scene,2,display,ready);const auto edge=scene.Click("Edge Scroll in Fullscreen");CHECK(edge.code==0x0200006dU && scene.strings.Resolve(std::bit_cast<std::uint32_t>(edge.y))==(enabled ? "edgeScroll=0" : "edgeScroll=1"));CloseStateGameUi(scene);CHECK(!scene.ui.menus->Node(reopened) && core.pool.FreeCount()==free && core.kernel.Size()==kernel);
     }
 }

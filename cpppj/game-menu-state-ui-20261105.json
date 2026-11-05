@@ -1,0 +1,91 @@
+{
+  "unit": 920,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "status": "완료·전체 목표 진행 중",
+  "productUnit": 916,
+  "productCodeChanges": false,
+  "productSha256": "fd3a4816dd744d5171df2833cae9eccd9b94291ace883a7967acc7a9480fa5ba",
+  "newCases": 2,
+  "uniqueCases": 23,
+  "tests": [
+    {
+      "filter": "StateGameUi_",
+      "exit": 0,
+      "log": "extracted\\cpp-resume-920\\test-second.log"
+    },
+    {
+      "filter": "GameMenus_Native918",
+      "exit": 0,
+      "log": "extracted\\cpp-resume-920\\test-native.log"
+    },
+    {
+      "filter": "BuildingObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-920/test-BuildingObjectUi_.log"
+    },
+    {
+      "filter": "ProductionObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-920/test-ProductionObjectUi_.log"
+    },
+    {
+      "filter": "StateObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-920/test-StateObjectUi_.log"
+    },
+    {
+      "filter": "BuildingUpgradeUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-920/test-BuildingUpgradeUi_.log"
+    },
+    {
+      "filter": "CarrierObjectUi_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-920/test-CarrierObjectUi_.log"
+    }
+  ],
+  "names": [
+    "StateGameUi_GameAndViewUseCurrentMissionEditorAndDemo",
+    "StateGameUi_OptionsCurrentConfigDeviceAndDisplayFlags",
+    "GameMenus_Native918",
+    "BuildingObjectUi_FourWorkshopsUseCurrentOwnerLevelMoneyAndEditor",
+    "BuildingObjectUi_WorkshopClickInsufficientFundsAndCycleCurrentFrame",
+    "BuildingObjectUi_GeneratorsUseStrictHalfHpAndMissionOwnerGates",
+    "BuildingObjectUi_ConstructionBlocksMenusWithoutAllocatingForms",
+    "ProductionObjectUi_FourThemesKeepDuplicateRowsAndDistinctSlots",
+    "ProductionObjectUi_DisallowedExcludedAndAllProducedRemainDifferent",
+    "ProductionObjectUi_ClientPredictionAndServerGapsUseFirstMatchingForm",
+    "ProductionObjectUi_SalvageUsesCurrentOwnerEditorDenyAndConfirmation",
+    "StateObjectUi_DamagedSalvageReadsCurrentBattleMode",
+    "StateObjectUi_AltarDaisDelegationUsesCurrentFramesOwnersAndEditor",
+    "StateObjectUi_EmptyAltarStatusHeadersAndLevelClampReleaseMenus",
+    "StateObjectUi_EditorDestroyClickReleasesPairAndPopupWithoutTransmission",
+    "BuildingUpgradeUi_FourThemesCompleteAndReopenAtEveryLevel",
+    "CarrierObjectUi_AllEightTypesUseActualProjectionAndTargetCursors",
+    "CarrierObjectUi_CargoAndCrystalKeepNativeGroundCursorHistory",
+    "CarrierObjectUi_CurrentOwnerEditorParalysisAndRealGroupOverride",
+    "CarrierObjectUi_AllEightCargoMenusUseActualDisabledFlagsAndSid",
+    "CarrierObjectUi_SelfCellCrystalAndCargoUseCurrentCandidateGraph",
+    "CarrierObjectUi_PriestHalfHpAndUnsupportedGroundBlockHover",
+    "CarrierObjectUi_EmptyDaisUsesOffsetWithoutSacrificeRequest"
+  ],
+  "newMenus": 32,
+  "newClicks": 32,
+  "newQueuedCommands": 28,
+  "disabledClicks": 4,
+  "nativeInputs": 918,
+  "firstRunFailedChecks": 8,
+  "firstRunFailureReason": "비활성 행 클릭 뒤 객체 메뉴 정리기로 공통 팝업을 닫으려 한 검사 장치 오류",
+  "finalFailedChecks": 0,
+  "builds": 3,
+  "warnings": 0,
+  "errors": 0,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "protectedUnchanged": true,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "newNetworkTests": 0,
+  "testSourceSha256": "8203d5bfd5ce56b8b249b9700a32df24470539540e7447580304c2c172e8dbfc"
+}
