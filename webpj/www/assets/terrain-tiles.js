@@ -12,6 +12,7 @@
 // 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
 // (2026-11-02 WB03-X: 정적 맵 화면(M2) 3단계(b)로 추가)
 import { EMPTY_TERRAIN, LocalRandom, NEIGHBOR_CELLS, WORLD_CELLS, connectionMask, orientationLetter } from './terrain-mask.js';
+import { CrtRandom } from '../core/random.js';
 
 // 지면 원소 이름이다. 번호 = 후보 4분의 1 구간의 순서이자 3 × 3 그림 묶음의 순서(해·천둥·바람·비)이다. (2026-11-02 WB03-X)
 export const THEME_NAMES = Object.freeze(['sun', 'thunder', 'wind', 'rain']);
@@ -197,21 +198,9 @@ export function chooseTerrainFrame(frames, side, variant, theme, random) {
     return candidates[index];
 }
 
-// CRT(MSVC `rand`) 난수이다: 상태 = 상태 × 0x343fd + 0x269ec3(32비트), 출력 = 상태의 상위 16비트 중 15비트(& 0x7fff).
-// 사용: const crt = new CrtRandom(FIXED_CRT_SEED); crt.next(). (2026-11-02 WB03-X)
-export class CrtRandom {
-    // 시드는 32비트 부호 없는 정수로 다룬다(음수 시간 시드도 같은 비트로 받는다).
-    constructor(seed) {
-        // 현재 상태이다.
-        this.state = seed >>> 0;
-    }
-
-    // 상태를 한 번 전진시키고 0~32767 의 값을 돌려준다.
-    next() {
-        this.state = (Math.imul(this.state, 0x343fd) + 0x269ec3) >>> 0;
-        return (this.state >>> 16) & 0x7fff;
-    }
-}
+// CRT(MSVC `rand`) 난수는 세션 장기 상태와 같은 구현을 쓰도록 core/random.js 로 옮겼다. 기존 소비자를 위해 이 모듈에서도 다시 내보낸다.
+// 사용: const crt = new CrtRandom(FIXED_CRT_SEED); crt.next(). (2026-11-02 WB03-X, 2026-11-05 WB04-C1: core 의 같은 구현으로 통합)
+export { CrtRandom };
 
 // 원본 난수 시드 함수(00455970)를 옮긴 것이다: CRT 상태를 시드로 정하고 100개를 버린 뒤 세 값을 더 뽑아 곱한 32비트 값을 게임 난수의 시작 상태로 쓴다.
 // seed 는 난수 모드 0 이면 고정 시드 0x38d535, 아니면 현재 시각(Unix 초)이다. 반환: { crt(103개를 소비한 CRT 난수), game(LocalRandom: 게임 난수와 같은 생성기), gameSeed }.

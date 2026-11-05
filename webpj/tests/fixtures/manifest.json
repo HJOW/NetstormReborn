@@ -310,7 +310,7 @@
       "bytes": 198602,
       "lines": 731,
       "fixtureCommit": "8085cd03",
-      "webCommit": "310c5ba6",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawTerrainStamp.cpp": "b76adf95",
         "cpppj/src/o/RawFrameChoose.cpp": "5c2d0a1e",
@@ -611,7 +611,7 @@
       "bytes": 224284,
       "lines": 4633,
       "fixtureCommit": "65927742",
-      "webCommit": "worktree",
+      "webCommit": "0563c07f",
       "cpppjBasis": {
         "cpppj/src/o/SquidHash.cpp": "a9af29da",
         "cpppj/src/o/SquidHash.h": "a9af29da"
@@ -643,10 +643,76 @@
       "bytes": 674895,
       "lines": 1777,
       "fixtureCommit": "5879152b",
-      "webCommit": "worktree",
+      "webCommit": "0563c07f",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidFinder.cpp": "f58fec2e",
         "cpppj/src/o/RawSquidFinder.h": "225f2322"
+      }
+    },
+    {
+      "id": "game-random-seed",
+      "path": "cpppj/tests/fixtures/campaign-seed-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "consumers": [
+        "webpj/tests/session-runtime.test.mjs"
+      ],
+      "unit": "WB04-C1",
+      "doc": "docs/webpj-session-runtime-20261105.md",
+      "producer": "cpppj 원본 게임 난수 시드 Initialize(00455970)/Reseed(004559d0) x86 관측(모드·Unix 초·이전 CRT 조합)",
+      "modules": [
+        "webpj/www/core/random.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/o/RawGameRandomSeed.cpp",
+        "cpppj/src/o/CrtRandom.cpp",
+        "cpppj/src/o/SpStore.cpp",
+        "cpppj/src/client/ClientRandomGlobals.h"
+      ],
+      "scope": "96행 전체(모드·게임 상태·CRT 상태·시각 호출 수). SP 저장소(ScrambledSpStore) 결합은 WB06",
+      "text": true,
+      "sha256": "52329ec28d81e0ecfbd1cf301dd94f615ff5b3c059a046277d1e9269fe163cae",
+      "bytes": 4988,
+      "lines": 97,
+      "fixtureCommit": "a24db9dc",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGameRandomSeed.cpp": "a24db9dc",
+        "cpppj/src/o/CrtRandom.cpp": "954d1942",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d",
+        "cpppj/src/client/ClientRandomGlobals.h": "d207940c"
+      }
+    },
+    {
+      "id": "game-clock",
+      "path": "cpppj/tests/fixtures/game-clock-reset-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "consumers": [
+        "webpj/tests/session-runtime.test.mjs"
+      ],
+      "unit": "WB04-C1",
+      "doc": "docs/webpj-session-runtime-20261105.md",
+      "producer": "cpppj 원본 게임 시계(00460cd0~00460e90)·Reset(00460e70) x86 관측(두 x87 정밀도)",
+      "modules": [
+        "webpj/www/core/game-clock.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/o/GameClock.cpp",
+        "cpppj/src/o/GameClock.h"
+      ],
+      "scope": "공개 호출 114행(double 비트). raw 24행(객체 바이트 배치)은 미사용. 초기 시간 오프셋·FPS 통계는 cpppj 미복원",
+      "text": true,
+      "sha256": "3ead4df4c5cc230d93573f70647697b70703f0479a92bd9cb971a071f29d9fd8",
+      "bytes": 75181,
+      "lines": 139,
+      "fixtureCommit": "adb9739e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/GameClock.cpp": "adb9739e",
+        "cpppj/src/o/GameClock.h": "adb9739e"
       }
     },
     {

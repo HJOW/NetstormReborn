@@ -3,20 +3,20 @@
 webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한다. cpppj/공통은 [LEFT_JOBS.md](LEFT_JOBS.md), dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)가 기준이다. 단위별 과거 이력은 보관 문서와 각 `docs/webpj-*.md`를 따른다.
 
 **2026-11-04 정리:** WB04-A까지의 상세 이력과 대체된 초기 계획을 이관했다. 이후 작업은 이 문서의 3절 순서를 따른다.
-**2026-11-05:** 3.1절 선행 보완 세 항목(WB03-AC 11.01 표기·세 번째 Patch Credits, WB02-E 외부 접속 목록, WB02-F 이식 추적 목록)과 3.2절 순서1 WB04-B(공간 해시·일반 사각형 탐색기)를 완료했다. 다음은 3.2절 순서2 WB04-C다.
+**2026-11-05:** 3.1절 선행 보완 세 항목(WB03-AC 11.01 표기·세 번째 Patch Credits, WB02-E 외부 접속 목록, WB02-F 이식 추적 목록)과 3.2절 순서1 WB04-B(공간 해시·일반 사각형 탐색기), 순서2의 첫 하위 단위 WB04-C1(난수·게임 시계·Kernel)을 완료했다. 다음은 WB04-C2다.
 **2026-11-05 사용자 결정(문서만 반영, 코드 미변경):** ① Credits AI 문구는 현행 유지 후 나중에 수정 ② 한국어 행 이름 `NetStorm 11.01 패치 크레딧` 확정 ③ 원본 자료의 바깥 링크는 **새 탭/창으로 연다**(3.1절 미구현 항목) ④ 개발 서버의 다른 PC 접속 제한 불필요 ⑤ cpppj는 진행 중이므로 **현재 버전을 참고해 구현하고, 나중에 cpppj 변경 사항을 다시 반영하는 재반영 과정을 따로 진행**한다(1절 결정·3.5절).
 
 ## 0. 현재 기준과 재개 절차
 
-### 0.1 현재 값 (2026-11-05, WB04-B 완료)
+### 0.1 현재 값 (2026-11-05, WB04-C1 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 마지막 구현 커밋 | **WB04-B** 공간 해시·RawSquidFinder(`20261105` WB 커밋, 해시는 `git log -- webpj/www/core/raw-squid-finder.js`). 그 앞은 `f845d6c5 / 20261105-46 WB` 이식 추적, `f07c4a0b / 20261105-44 WB` 외부 접속, `48339f60 / 20261105-43 WB` 제품11.01, `0fd343a1 / 20261104-48 WB` SID 풀 |
+| 마지막 구현 커밋 | **WB04-C1** 난수·게임 시계·Kernel(`20261105` WB 커밋, 해시는 `git log -- webpj/www/core/kernel.js`). 그 앞은 `0563c07f / 20261105-47 WB` 공간 해시·탐색기, `f845d6c5 / 20261105-46 WB` 이식 추적, `f07c4a0b / 20261105-44 WB` 외부 접속, `48339f60 / 20261105-43 WB` 제품11.01 |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기까지다. **실제 미션 플레이는 아직 불가**다. `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴·대화상자 일부는 원본 스크린샷과 대조했다. Fort/지형·그림·SID 부품은 원본 fixture 또는 독립 계산과 대조했다. **같은 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증**이다 |
-| 완료/미완료 | M1(시작→메인 메뉴) 완료. M2(같은 실제 월드의 정적 화면)는 지형/공통 출력/값형 로더까지 부분 완료. WB04는 SID 풀(A)·공간 해시/일반 탐색기(B) 완료이며 세션 장기 상태(C)·생성/Pop/내용물/소유자 마감(D/E)은 남는다 |
-| 마지막 전체 검사 | WB04-B의 Node v24.21.0, **300/300 통과·실패/건너뜀0**(신규 squid-finder7; WB02-F 293, WB02-E 290, WB03-AC 285), 약27.84초 |
+| 완료/미완료 | M1(시작→메인 메뉴) 완료. M2(같은 실제 월드의 정적 화면)는 지형/공통 출력/값형 로더까지 부분 완료. WB04는 SID 풀(A)·공간 해시/일반 탐색기(B)·세션 장기 상태 1단계(C1: 난수·게임 시계·Kernel) 완료이며 C2/C3·생성/Pop/내용물/소유자 마감(D/E)은 남는다 |
+| 마지막 전체 검사 | WB04-C1의 Node v24.21.0, **307/307 통과·실패/건너뜀0**(신규 session-runtime7; WB04-B 300), 약27.63초 |
 | 마지막 e2e | WB03-AC의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도로 임시 Playwright 스크립트로 Credits→세 번째 행→Back/Cancel을 영어/한국어 실제 클릭 확인(Chromium 156.0.8078.4, 오류0). 미션/월드 검사가 아니다 |
 | cpppj 검토 기준 | 공통 인계의 **861 / 11.01**, 마지막 구현 `0c06fa66`. cpppj 문서의 일시 정지 기록을 webpj 중단 지시로 해석하지 않는다. 다음 착수 때 최신 커밋/인계를 다시 확인한다 |
 | 이식 기준의 의미 | WB04-A가 검토한 트리는 `4fa7e89c`; **cpppj 전체를 그 커밋까지 반영했다는 뜻이 아니다.** 파일별 근거/반영 범위는 단위 문서에 있다 |
@@ -62,6 +62,7 @@ webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한�
 | [x] WB03-Z·AA | CRT 정렬·64바이트 카메라·공통 월드 그림/그림자 출력과 개발용 중립 지형 화면. 실제 Draw/소유자·배경/카메라 정책은 미연결 | [출력](docs/webpj-world-render-20261102.md)·[지형 장면](docs/webpj-terrain-scene-20261102.md) |
 | [x] WB03-AB | 값형 Fort 객체/내용물·Terr→Chaff 순회 로더. 필수 생성/Pop/finder/소유자 장치가 없어 실제 월드에는 미연결 | [객체 로더](docs/webpj-fort-object-load-20261102.md) |
 | [x] WB04-A | 실제50바이트 SID 풀·할당/반납/재초기화·20개 삭제 기록. 원본10.78의1584전이 대조. `slot/bytes/deletions`는 시점 사본, `allocated`만 쓰기 대여이며 양수reset 뒤 재조회 | [SID 풀](docs/webpj-sid-pool-20261104.md) |
+| [x] WB04-C1 | 클라이언트 장기 난수 전역(`ClientRandomGlobals`: CRT 1·게임 난수 55·모드 등)·CRT/게임 난수·시드 Initialize/Reseed, 게임 시계(32비트 밀리초·중첩 정지·Reset·프레임 고정), Kernel(1..39999 현재 슬롯 순서). 시드96·시계 공개114 대조. 지형 `CrtRandom`을 core 구현으로 통합. 앱/세션 연결 전 | [세션 장기 상태1](docs/webpj-session-runtime-20261105.md) |
 | [x] WB04-B | 원본10.78 `SquidHash`(4단계 WORD 머리·주소·단계 선택)와 `RawSquidFinder`(Begin/Next, buried 제외·OR 교차·미리 읽은 next·현재 슬롯 재조회)를 같은 SID 풀에 연결. 초기화4·주소807·Level605·Find584 대조. 실제 타입 발자국·spot 등록·Fort 로더 연결은 남음 | [공간 해시/탐색기](docs/webpj-squid-finder-20261105.md) |
 | [x] WB02-F | 이식 추적 목록 `webpj/tests/fixtures/manifest.json`(35항목: original-x86 12·independent 7·screenshot 13·source 3), 계산/검사 도구 `tools/fixture-manifest.mjs`, 형식·해시·적용 범위 검사3개. 해시는 텍스트 CRLF→LF 정규화 | [이식 추적](docs/webpj-fixture-trace-20261105.md) |
 | [x] WB02-E | 웹 런타임 외부 접속 목록: 요청은 `./data/` 같은 출처 자산뿐, 바깥 링크11종은 콘솔 안내만, UserNotUpdated·Technical Help·서버 진단·`$Zsend`/`$Input` 미연결. 소스 정적 감사·manifest/적재 요청·링크·미연결 기능 검사5개 | [외부 접속](docs/webpj-external-access-20261105.md) |
@@ -85,7 +86,7 @@ webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한�
 | 순서·상태 | 할 일 / 선행 관계 | 완료 기준·근거 |
 | --- | --- | --- |
 | 1 · [x] WB04-B (2026-11-05) | **`SquidHash`→`RawSquidFinder`**를 WB04-A의 같은 풀에 연결. 실제 버킷/next·단계/y/x 순서·buried/교차식·현재 타입/좌표 재조회 보존 | 초기화4·주소807·ObjectLevel605·10.78 Find584 일치([문서](docs/webpj-squid-finder-20261105.md)). Genus(spot)·Pre/Post(다리 삭제 훅)는 D/E. 타입 발자국은 `{footX,footY}` 배열 계약이며 실제 타입 표 연결은 D/E |
-| 2 · [ ] WB04-C **(다음)** | 착수 때 `node webpj/tools/fixture-manifest.mjs --write`로 WB04-B 항목의 `webCommit`(`worktree`)을 실제 커밋으로 갱신. 세션이 장기 소유하는 TYPE/모드·난수/CRT 난수·게임 시계·Kernel/Process/Regular·입력/예약 큐를 필요한 순서로 이식. 표시용 `FrameClock`과 분리 | 같은 시각/시드/입력에서 상태·소비·등록/취소 순서가 일치. 이후 생성/Pop이 요구하는 공유 전역을 여기서 빌림 |
+| 2 · [ ] WB04-C | 세션이 장기 소유하는 TYPE/모드·난수/CRT 난수·게임 시계·Kernel/Process/Regular·입력/예약 큐를 필요한 순서로 이식. 표시용 `FrameClock`과 분리. **하위 단위:** [x] C1 난수·시드·클라이언트 난수 전역·게임 시계·Kernel(2026-11-05, [문서](docs/webpj-session-runtime-20261105.md)) / [ ] **C2 (다음)** 현재 TYPE/모드 전역·Regular 공통 경계 / [ ] C3 `InputQueue`·명령 예약/취소와 프레임 순서. 착수 때 `node webpj/tools/fixture-manifest.mjs --write`로 C1 항목(`game-random-seed`·`game-clock`·`terrain-tiles`)의 `webCommit`(`worktree`)을 실제 커밋으로 갱신 | 같은 시각/시드/입력에서 상태·소비·등록/취소 순서가 일치. 이후 생성/Pop이 요구하는 공유 전역을 여기서 빌림. 앱 수명 연결(`ClientRandomGlobals` 생성·GameClock 입력)은 첫 실제 소비자와 함께 |
 | 3 · [ ] WB04-D | 최신 생성자/가상 배치·Create/Take·Unpop/내용물 해제·Form·종속 삭제/반납. 효과 뒤 현재 TYPE/VT/슬롯과 진단 복귀·부분 쓰기 순서 보존 | `SquidFactory`·실제 World 바인딩과 해당 원본 fixture 대조.841/836의 연결을 Factory 전체 완료로 확대하지 않음. 풀의 상위reset/대여 정리/실패점도 연결 |
 | 4 · [ ] WB04-E | 공간spots/해시 등록·Graph/점유·Pop/PostPop·소유자/지역/장부·HP/프레임·내용물 생성과 소유자 마감. 필요한 Player/기술/SP/Deck 기반은 WB06에서 선행 | `RawSurfaceWorld`와 같은 공유 저장소에 실제 필수 효과를 연결. 공통 Pop/파생 가상 진입은 cpppj 최신 부분 완료 경계를 유지. 필요한 장치를 빈 함수로 채우지 않음 |
 | 5 · [ ] WB05-A/B | **실제 Fort Load→Start**: 기존 판독/영역/지형과 WB03-AB를 같은 월드에 조립. 지형 생성/저장 객체·섬/소유자/원소 마감·Player/동맹/기술/SP/Deck/AI 초기화·Start/Guide를 현재 cpppj 부모의 호출 순서로 연결 | 같은 파일/옵션/시드·같은 Load/Start 지점의 SID/타입/HP/좌표/owner/Graph/장부/난수 L2 비교. 임시 Player/AI/색 번호로 미션 시작 성공을 만들지 않음 |
