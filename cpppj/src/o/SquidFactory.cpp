@@ -243,8 +243,25 @@ std::uint32_t SquidFactory::FirstPopFlags(Sid sid) {
     const auto extra=bytes[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35];
     return (extra&9)==0 ? 1U : ((extra&1)!=0 ? 2U : 0U)|((extra&8)!=0 ? 4U : 0U);
 }
-// base 서버 초기화의 owner와 HP만 갱신하고 나머지 payload는 보존한다.
+// PATCH는 세 진단이 돌아온 위치부터 현재 슬롯으로 계속한다. CD의 기존 독립 계약은 유지한다.
 void SquidFactory::PostCreate(Sid sid) {
+    if (pool_.Edition()==OriginalEdition::Patch1078) {
+        const auto offset=pool_.Offset(sid);auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride); // free/dead/contained를 별도 선행 거부하지 않는 같은 물리 슬롯이다.
+        if (bytes[kType]<kFirstAssetTypeNumber) Assert("!isForm()",0x7d4);
+        if (bytes[kState]&kContained) Assert("!isContained()",0x7d5);
+        const auto& initial=TypeRecord(bytes[kType]); // 두 입구 진단 뒤 선택한 TYPE는 zOrder와 HP 값에 공유한다.
+        bytes[35]=static_cast<std::uint8_t>(initial.zOrder);
+        if (pool_.IsServer()) {
+            bytes[34]=0;
+            const bool needsHp=(TypeRecord(bytes[kType]).flags2&kDaisFlag) ? (bytes[40]&1U)!=0 : (TypeRecord(bytes[kType]).flags1&TypeFlag1::kHasHitPoints)!=0;
+            if (needsHp) {
+                const auto hp=(sharedWeakenedMana_ ? *sharedWeakenedMana_ : weakenedMana_) && bytes[kType]==kManaType ? initial.maxHitPoints/4 : initial.maxHitPoints;
+                Put(bytes,kHp,static_cast<std::uint32_t>(hp),4);
+            }
+        }
+        if (bytes[kState]&kContained) Assert("!isContained()",0x7df); // 비서버도 마지막 현재 상태 진단을 생략하지 않는다.
+        return;
+    }
     auto bytes=LiveBytes(sid);
     const auto& type=Type(bytes[kType],false);
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;

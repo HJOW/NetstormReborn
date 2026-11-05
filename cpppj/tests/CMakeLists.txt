@@ -3497,3 +3497,7 @@ netstorm_apply_compiler_options(netstorm_terrain_seed_tests)
 add_executable(netstorm_core_data_tests FocusedTestMain.cpp PlayerCoreDataTests.cpp PlayerCoreRecordsTests.cpp ClientCoreRecordsStorageTests.cpp)
 target_link_libraries(netstorm_core_data_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_core_data_tests)
+
+# 공통 생성 후처리의 진단 복귀와 기존 양판본 생성 fixture만 검사한다(896).
+target_sources(netstorm_tests PRIVATE FactoryPostCreateTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE FactoryPostCreateTests.cpp CreationTests.cpp)
