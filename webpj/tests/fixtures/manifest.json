@@ -1,0 +1,1004 @@
+{
+  "format": "netstorm-webpj-fixture-manifest",
+  "version": 1,
+  "description": "webpj 검사가 소비하는 원본 대조 자료(fixture)·스크린샷·교차 확인 소스의 이식 추적 목록이다. 계산 칸(sha256·bytes·lines·text·fixtureCommit·webCommit·cpppjBasis)은 webpj/tools/fixture-manifest.mjs --write 가 채운다. 해시는 텍스트면 CRLF→LF 정규화 값이다.",
+  "originalEdition": "10.78",
+  "kinds": {
+    "original-x86": "cpppj 가 보호된 원본 10.78 실행 파일의 함수를 제한 x86 으로 격리 실행해 기록한 관측값(읽기 전용)",
+    "independent": "원본 자산을 웹과 다른 독립 구현(Python 도구)으로 계산한 기대값",
+    "screenshot": "원본 게임 화면 캡처(창 테두리 포함, screenShots/)",
+    "source": "cpppj/dotnetpj 의 상수·자료를 교차 확인하는 소스(계속 바뀌므로 해시 미기록)"
+  },
+  "entries": [
+    {
+      "id": "taff-entries",
+      "path": "webpj/tests/fixtures/taff-entries.tsv",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "tools/taff.py(저장소 루트) 독립 구현의 246개 엔트리 이름·크기·복호화 SHA-256",
+      "consumers": [
+        "webpj/tests/data.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/taff.js",
+        "webpj/www/assets/game-files.js"
+      ],
+      "unit": "WB02-D",
+      "doc": "docs/webpj-data-layer-20261028.md",
+      "cpppjSources": [],
+      "scope": "TAFF 머리·디렉터리·XOR 복호화·이름 비교 전체. 근거는 docs/formats/taff.md(cpppj 소스 없음)",
+      "text": true,
+      "sha256": "355ef54f8d837acb79768f934982e61228ad7ed3f66eee4c89847535b3db1d87",
+      "bytes": 22554,
+      "lines": 249,
+      "fixtureCommit": "3d038e51",
+      "webCommit": "3d038e51",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "config",
+      "path": "cpppj/tests/fixtures/config-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Config 조회·치환 함수 x86 관측",
+      "consumers": [
+        "webpj/tests/config.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/config.js"
+      ],
+      "unit": "WB02-D",
+      "doc": "docs/webpj-data-layer-20261028.md",
+      "cpppjSources": [
+        "cpppj/src/o/Config.cpp",
+        "cpppj/src/o/ConfigInterface.cpp"
+      ],
+      "scope": "키 찾기·값 해석·치환·섹션·등록 층 조회와 Set. 레지스트리 조회는 웹 미사용",
+      "text": true,
+      "sha256": "7306cb4205d76da56616c67fd0e8fdc168e6c756c9c10ef80e437cf638ab003e",
+      "bytes": 459059,
+      "lines": 2443,
+      "fixtureCommit": "0ded2f07",
+      "webCommit": "5e40032b",
+      "cpppjBasis": {
+        "cpppj/src/o/Config.cpp": "0ded2f07",
+        "cpppj/src/o/ConfigInterface.cpp": "2ede4027"
+      }
+    },
+    {
+      "id": "help-links",
+      "path": "cpppj/tests/fixtures/help-links-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 링크 분배 함수(4a00c0) x86 관측",
+      "consumers": [
+        "webpj/tests/link.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/help-link.js"
+      ],
+      "unit": "WB03-K",
+      "doc": "docs/webpj-tell-links-20261031.md",
+      "cpppjSources": [
+        "cpppj/src/client/HelpLinkPolicy.cpp"
+      ],
+      "scope": "접두/본문 토큰·분류(script/help/external)·한도. 바깥 주소 실행은 웹 제외(콘솔 안내)",
+      "text": true,
+      "sha256": "6f2a6d142c01dd87a71bc63cfbfce0335a1ae7e9b20c9cf108bcc4dc89716f9e",
+      "bytes": 19992,
+      "lines": 92,
+      "fixtureCommit": "8f85465d",
+      "webCommit": "8db90513",
+      "cpppjBasis": {
+        "cpppj/src/client/HelpLinkPolicy.cpp": "8f85465d"
+      }
+    },
+    {
+      "id": "script-command",
+      "path": "cpppj/tests/fixtures/script-command-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 스크립트 명령 해석 x86 관측",
+      "consumers": [
+        "webpj/tests/startup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/script-command.js"
+      ],
+      "unit": "WB03-J",
+      "doc": "docs/webpj-startup-dialogs-20261030.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScriptCommand.cpp"
+      ],
+      "scope": "`<$이름,인자>` 이름/인자 분리. 명령 실행은 Config/Tell/TellTip 만 연결",
+      "text": true,
+      "sha256": "34ddbcb593f7f38ffd206aae777438697c7c194f5b1215a2a488f0ff7f878d4d",
+      "bytes": 29665,
+      "lines": 263,
+      "fixtureCommit": "7f1c4740",
+      "webCommit": "404c43ec",
+      "cpppjBasis": {
+        "cpppj/src/client/ScriptCommand.cpp": "2054e074"
+      }
+    },
+    {
+      "id": "tell-parameters",
+      "path": "cpppj/tests/fixtures/tell-parameters-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Tell 지역 인자 해석 x86 관측",
+      "consumers": [
+        "webpj/tests/startup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-parameters.js"
+      ],
+      "unit": "WB03-J",
+      "doc": "docs/webpj-startup-dialogs-20261030.md",
+      "cpppjSources": [
+        "cpppj/src/client/TellParameters.cpp",
+        "cpppj/src/client/TellSection.cpp"
+      ],
+      "scope": "`이름(인자,…)` 해석과 param 객체 줄. 현재 미션 스크립트 조회는 미연결",
+      "text": true,
+      "sha256": "20bd8ba4b7800e7e9474d1324276ef70cb40882e56bc67fce3502df05de3d9b5",
+      "bytes": 266019,
+      "lines": 1071,
+      "fixtureCommit": "5adcf532",
+      "webCommit": "404c43ec",
+      "cpppjBasis": {
+        "cpppj/src/client/TellParameters.cpp": "5adcf532",
+        "cpppj/src/client/TellSection.cpp": "6dd8d803"
+      }
+    },
+    {
+      "id": "tell-tip",
+      "path": "cpppj/tests/fixtures/tell-tip-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 TellTip 명령 x86 관측",
+      "consumers": [
+        "webpj/tests/startup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-tip.js"
+      ],
+      "unit": "WB03-J",
+      "doc": "docs/webpj-startup-dialogs-20261030.md",
+      "cpppjSources": [
+        "cpppj/src/client/TellTip.cpp"
+      ],
+      "scope": "팁 번호 이전/다음/닫기와 tipNumber 쓰기",
+      "text": true,
+      "sha256": "bf710d5bbc4724a9ec15d11e6d2e34e4293128a85d4ceecd37455013dbea2b07",
+      "bytes": 25723,
+      "lines": 389,
+      "fixtureCommit": "b37bd01a",
+      "webCommit": "404c43ec",
+      "cpppjBasis": {
+        "cpppj/src/client/TellTip.cpp": "b37bd01a"
+      }
+    },
+    {
+      "id": "fort-reader",
+      "path": "webpj/tests/fixtures/fort-expected.tsv",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "webpj/tools/make-fort-expected.py 독립 판독(원본 465개 맵)",
+      "consumers": [
+        "webpj/tests/fort.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/fort.js",
+        "webpj/www/assets/type-flags.js"
+      ],
+      "unit": "WB03-U",
+      "doc": "docs/webpj-fort-reader-20261101.md",
+      "cpppjSources": [
+        "cpppj/src/o/Template.cpp",
+        "cpppj/src/o/RiftTypeTable.cpp"
+      ],
+      "scope": ".fort 판독·188타입 플래그·변환. 실제 미션 적재 증거가 아님(독립 구현 일치)",
+      "text": true,
+      "sha256": "de25fb3828f4c50b3ea2033d0b72ffe1360afdf79f6df12648057211cebad238",
+      "bytes": 91725,
+      "lines": 468,
+      "fixtureCommit": "725dabf9",
+      "webCommit": "725dabf9",
+      "cpppjBasis": {
+        "cpppj/src/o/Template.cpp": "03f9dcdf",
+        "cpppj/src/o/RiftTypeTable.cpp": "700475b5"
+      }
+    },
+    {
+      "id": "territory",
+      "path": "webpj/tests/fixtures/territory-expected.tsv",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "webpj/tools/make-territory-expected.py 독립 계산(원본 465개 맵)",
+      "consumers": [
+        "webpj/tests/territory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/territory.js",
+        "webpj/www/assets/territory-patterns.js"
+      ],
+      "unit": "WB03-V",
+      "doc": "docs/webpj-territory-layout-20261101.md",
+      "cpppjSources": [
+        "cpppj/src/o/CanonDecoder.cpp",
+        "cpppj/src/o/ChunkMap.cpp",
+        "cpppj/src/o/Islandbuilder.cpp"
+      ],
+      "scope": "Territory 해석·TerrNN 청크 월드 배치. 회전2/3 실제 저장 사례 없음",
+      "text": true,
+      "sha256": "0f4c4c376be1aff24b230e1ce1316e2ae9ff2a4ec8813087856964dbc93e818e",
+      "bytes": 207615,
+      "lines": 2993,
+      "fixtureCommit": "2f7c2d51",
+      "webCommit": "2f7c2d51",
+      "cpppjBasis": {
+        "cpppj/src/o/CanonDecoder.cpp": "5bdb5bed",
+        "cpppj/src/o/ChunkMap.cpp": "da6c61ae",
+        "cpppj/src/o/Islandbuilder.cpp": "bfb780c4"
+      }
+    },
+    {
+      "id": "terrain-mask",
+      "path": "webpj/tests/fixtures/terrain-expected.tsv",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "webpj/tools/make-terrain-expected.py 독립 계산(원본 465개 맵)",
+      "consumers": [
+        "webpj/tests/terrain.test.mjs",
+        "webpj/tests/terrain-scene.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/terrain-mask.js"
+      ],
+      "unit": "WB03-W",
+      "doc": "docs/webpj-terrain-mask-20261101.md",
+      "cpppjSources": [
+        "cpppj/src/o/TerrainBuilder.cpp",
+        "cpppj/src/o/RawTerrainContext.cpp"
+      ],
+      "scope": "본섬 칸 마스크(통로·성장·틈 보정). 실제 일반 지형 경로(RawTerrainGrowth)의 객체 생성은 미연결",
+      "text": true,
+      "sha256": "b1570b2c076ad20845cc369a8292cc91a39214f58ce63a53472b668f1bbb00da",
+      "bytes": 54949,
+      "lines": 468,
+      "fixtureCommit": "473432cd",
+      "webCommit": "473432cd",
+      "cpppjBasis": {
+        "cpppj/src/o/TerrainBuilder.cpp": "225f2322",
+        "cpppj/src/o/RawTerrainContext.cpp": "552656c0"
+      }
+    },
+    {
+      "id": "terrain-tiles",
+      "path": "webpj/tests/fixtures/terrain-tiles-expected.tsv",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "webpj/tools/make-terrain-tiles-expected.py 독립 계산(원본 465개 맵)",
+      "consumers": [
+        "webpj/tests/terrain-tiles.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/terrain-tiles.js"
+      ],
+      "unit": "WB03-X",
+      "doc": "docs/webpj-terrain-tiles-20261102.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTerrainStamp.cpp",
+        "cpppj/src/o/RawFrameChoose.cpp",
+        "cpppj/src/o/RawRegionPaint.cpp",
+        "cpppj/src/o/RawGameRandomSeed.cpp"
+      ],
+      "scope": "지면 타일 선택(이웃 글자·isle 후보·3×3 그림 표). 게임/CRT 난수는 실제 세션 공유 전",
+      "text": true,
+      "sha256": "ec567a1ae1b2afe866d592f925b1a6b072ed2f69fbd1b05fda28b55703fe4bcf",
+      "bytes": 198602,
+      "lines": 731,
+      "fixtureCommit": "8085cd03",
+      "webCommit": "310c5ba6",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTerrainStamp.cpp": "b76adf95",
+        "cpppj/src/o/RawFrameChoose.cpp": "5c2d0a1e",
+        "cpppj/src/o/RawRegionPaint.cpp": "bae8b702",
+        "cpppj/src/o/RawGameRandomSeed.cpp": "a24db9dc"
+      }
+    },
+    {
+      "id": "terrain-fringe",
+      "path": "webpj/tests/fixtures/terrain-fringe-expected.tsv",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "webpj/tools/make-terrain-fringe-expected.py 독립 계산",
+      "consumers": [
+        "webpj/tests/terrain-fringe.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/terrain-fringe.js"
+      ],
+      "unit": "WB03-Y",
+      "doc": "docs/webpj-terrain-extras-20261102.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTerrainStamp.cpp",
+        "cpppj/src/o/RawFrameChoose.cpp",
+        "cpppj/src/o/RawTerrainContext.cpp"
+      ],
+      "scope": "절벽 fringe 슬롯 선택. 제외 0x10/0x18 선택은 실제 세션에서 확정",
+      "text": true,
+      "sha256": "df511e52e84f057fd8368f068e1b7e7f0ab42a350d4bef91a8e53063460d511c",
+      "bytes": 11213,
+      "lines": 314,
+      "fixtureCommit": "310c5ba6",
+      "webCommit": "310c5ba6",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTerrainStamp.cpp": "b76adf95",
+        "cpppj/src/o/RawFrameChoose.cpp": "5c2d0a1e",
+        "cpppj/src/o/RawTerrainContext.cpp": "552656c0"
+      }
+    },
+    {
+      "id": "terrain-stamp",
+      "path": "cpppj/tests/fixtures/terrainstamp-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Terrainbuilder(004bfe50) 도장 x86 관측",
+      "consumers": [
+        "webpj/tests/terrain-fringe.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/terrain-fringe.js"
+      ],
+      "unit": "WB03-Y",
+      "doc": "docs/webpj-terrain-extras-20261102.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTerrainStamp.cpp"
+      ],
+      "scope": "첫 도장 Stamp 패치 180줄 중 마스크로 표현 가능한 144줄 재생",
+      "text": true,
+      "sha256": "cf6848c4c51c0af2aecf5ed020637c3798011425ca2cb929a3870ebadb7495c6",
+      "bytes": 1061565,
+      "lines": 1561,
+      "fixtureCommit": "b76adf95",
+      "webCommit": "310c5ba6",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTerrainStamp.cpp": "b76adf95"
+      }
+    },
+    {
+      "id": "island-supports",
+      "path": "webpj/tests/fixtures/island-supports-expected.tsv",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "webpj/tools/make-island-supports-expected.py 독립 계산",
+      "consumers": [
+        "webpj/tests/island-supports.test.mjs",
+        "webpj/tests/terrain-scene.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/island-supports.js"
+      ],
+      "unit": "WB03-Y",
+      "doc": "docs/webpj-terrain-extras-20261102.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIslandPostPop.cpp"
+      ],
+      "scope": "작은 받침(island/islandStalag) 배치. 실제 Pop/PostPop 연결 전",
+      "text": true,
+      "sha256": "948eb0299360be15ad971c781d9fac089336fcc76f741e98cccad3df261d3f5f",
+      "bytes": 49548,
+      "lines": 468,
+      "fixtureCommit": "310c5ba6",
+      "webCommit": "310c5ba6",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIslandPostPop.cpp": "deaf73f8"
+      }
+    },
+    {
+      "id": "owner-hsl-colors",
+      "path": "cpppj/tests/fixtures/owner-hsl-colors-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 소유자 HSL 색 계산 x86 관측",
+      "consumers": [
+        "webpj/tests/owner-colors.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/owner-colors.js"
+      ],
+      "unit": "WB03-Y",
+      "doc": "docs/webpj-terrain-extras-20261102.md",
+      "cpppjSources": [
+        "cpppj/src/client/OwnerColorMaps.cpp"
+      ],
+      "scope": "소유자 색 HSL 변환 바이트 대조",
+      "text": true,
+      "sha256": "9a59ed66b04a0eb972ee68b708a28e016d77bdc1f96db5935c40eec38efe0902",
+      "bytes": 169158,
+      "lines": 16,
+      "fixtureCommit": "c7e9e8b3",
+      "webCommit": "310c5ba6",
+      "cpppjBasis": {
+        "cpppj/src/client/OwnerColorMaps.cpp": "0dbfd0c8"
+      }
+    },
+    {
+      "id": "owner-capture",
+      "path": "cpppj/tests/fixtures/owner-capture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 소유자 색표 상태 x86 관측",
+      "consumers": [
+        "webpj/tests/owner-colors.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/owner-colors.js"
+      ],
+      "unit": "WB03-Y",
+      "doc": "docs/webpj-terrain-extras-20261102.md",
+      "cpppjSources": [
+        "cpppj/src/client/OwnerColorTableState.cpp"
+      ],
+      "scope": "소유자→색 변환표 생성 순서. 소유자→색 번호 배정은 실제 세션에서 확정",
+      "text": true,
+      "sha256": "0a0c0475893f2ddc4f0786ac7175138b0591de06094dc31a464f8712e0a7d224",
+      "bytes": 6002696,
+      "lines": 499,
+      "fixtureCommit": "7f192a4a",
+      "webCommit": "310c5ba6",
+      "cpppjBasis": {
+        "cpppj/src/client/OwnerColorTableState.cpp": "0dbfd0c8"
+      }
+    },
+    {
+      "id": "draw-sort",
+      "path": "cpppj/tests/fixtures/drawsort-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 표시 비교(00497900)·CRT qsort x86 관측",
+      "consumers": [
+        "webpj/tests/world-render.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/draw-sort.js"
+      ],
+      "unit": "WB03-Z",
+      "doc": "docs/webpj-world-render-20261102.md",
+      "cpppjSources": [
+        "cpppj/src/client/DrawSort.cpp"
+      ],
+      "scope": "CRT 정렬·비교 순서 전체",
+      "text": true,
+      "sha256": "4cf42c2dbc1f1e2ca93df8157c392fe9dc816e7634f839768282cb6039c7abd8",
+      "bytes": 3643244,
+      "lines": 1156,
+      "fixtureCommit": "687dd2cf",
+      "webCommit": "67aae862",
+      "cpppjBasis": {
+        "cpppj/src/client/DrawSort.cpp": "225f2322"
+      }
+    },
+    {
+      "id": "camera-view",
+      "path": "cpppj/tests/fixtures/camera-view-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Renderer 카메라 64바이트 x86 관측",
+      "consumers": [
+        "webpj/tests/world-render.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/camera-view.js"
+      ],
+      "unit": "WB03-Z",
+      "doc": "docs/webpj-world-render-20261102.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCameraView.cpp"
+      ],
+      "scope": "카메라 상태·좌표 변환. 실제 카메라 시작/제한/스크롤 정책은 미연결",
+      "text": true,
+      "sha256": "fb22a21df5be3ca9201d1c8d635f0e4b49b6f974efbacfe46e012a86536887d0",
+      "bytes": 8139,
+      "lines": 17,
+      "fixtureCommit": "e210c755",
+      "webCommit": "67aae862",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCameraView.cpp": "e210c755"
+      }
+    },
+    {
+      "id": "fort-object-load",
+      "path": "cpppj/tests/fixtures/fortobjectload-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 저장 객체 적용·Terr→Chaff 순회 x86 관측(609입력)",
+      "consumers": [
+        "webpj/tests/fort-object-load.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/fort-object-load.js"
+      ],
+      "unit": "WB03-AB",
+      "doc": "docs/webpj-fort-object-load-20261102.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortObjectLoad.cpp"
+      ],
+      "scope": "값형 로더·내용물 적용. 필수 생성/Pop/finder/소유자 장치가 없어 실제 월드 미연결",
+      "text": true,
+      "sha256": "31fb91aabb4fe3c403e9a9780e0f14f211508cbbce6523cef1b53a5bdf439519",
+      "bytes": 374142,
+      "lines": 1219,
+      "fixtureCommit": "ada85427",
+      "webCommit": "699421d7",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortObjectLoad.cpp": "674e3202"
+      }
+    },
+    {
+      "id": "sid-pool",
+      "path": "cpppj/tests/fixtures/sid-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 SID 풀 x86 관측(8세션·1584전이)",
+      "consumers": [
+        "webpj/tests/sid-pool.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/sid-pool.js"
+      ],
+      "unit": "WB04-A",
+      "doc": "docs/webpj-sid-pool-20261104.md",
+      "cpppjSources": [
+        "cpppj/src/o/SidPool.cpp",
+        "cpppj/src/o/SidPool.h"
+      ],
+      "scope": "50바이트 풀 할당/반납/재초기화·삭제 기록. 상위 월드 초기화 부모는 미이식",
+      "text": true,
+      "sha256": "b45b5726f2860a762fd0fa53fa85949f941baf28e836570b43dfd7a2c9e40eb4",
+      "bytes": 238949,
+      "lines": 4721,
+      "fixtureCommit": "ffdc5ddb",
+      "webCommit": "0fd343a1",
+      "cpppjBasis": {
+        "cpppj/src/o/SidPool.cpp": "6035f810",
+        "cpppj/src/o/SidPool.h": "b7065914"
+      }
+    },
+    {
+      "id": "shot-main-menu",
+      "path": "screenShots/mainMenu.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/main-menu.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/main-menu.js"
+      ],
+      "unit": "WB03-M1",
+      "doc": "docs/webpj-main-menu-20261023.md",
+      "cpppjSources": [],
+      "scope": "메인 메뉴 버튼·제목 위치/픽셀",
+      "text": false,
+      "sha256": "1d9b3a184f1ac89c208d70efca6c73fad7b0c57e8fb103df7c11dc057afafded",
+      "bytes": 944860,
+      "lines": null,
+      "fixtureCommit": "ddfce6c4",
+      "webCommit": "b25f8763",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-credits",
+      "path": "screenShots/mainMenu - Credits.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처(두 행 Credits)",
+      "consumers": [
+        "webpj/tests/dialog.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-window.js",
+        "webpj/www/ui/menu-list.js"
+      ],
+      "unit": "WB03-D",
+      "doc": "docs/webpj-tell-dialog-20261028.md",
+      "cpppjSources": [],
+      "scope": "원본 두 행 배치 대조(product:false). 제품 세 행은 product.test 별도",
+      "text": false,
+      "sha256": "61b72747564ae73e1dce5fedffdad4375173146a0c8da07852b53b9dac5c93cd",
+      "bytes": 901847,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "48339f60",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-demo",
+      "path": "screenShots/mainMenu - Demo.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/dialog.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-window.js",
+        "webpj/www/ui/menu-list.js"
+      ],
+      "unit": "WB03-D",
+      "doc": "docs/webpj-tell-dialog-20261028.md",
+      "cpppjSources": [],
+      "scope": "Demo 목록·본문·버튼 위치/픽셀",
+      "text": false,
+      "sha256": "2d2ce60bab0031c99d0de7c26646ef63767267ce0796e6a47b892f41304480ce",
+      "bytes": 850127,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "48339f60",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-campaign",
+      "path": "screenShots/mainMenu - Campaign.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처(8행)",
+      "consumers": [
+        "webpj/tests/dialog.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-window.js",
+        "webpj/www/ui/tell-lists.js"
+      ],
+      "unit": "WB03-D",
+      "doc": "docs/webpj-tell-dialog-20261028.md",
+      "cpppjSources": [],
+      "scope": "원본 8행 배치 대조. 웹 6행(User Made Campaigns 제외)은 차분 검사",
+      "text": false,
+      "sha256": "05c2585ad736d7028bde4868ec6ce9efd576d9bffecbb39468f406bd921a703b",
+      "bytes": 920155,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "48339f60",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-campaign-early",
+      "path": "screenShots/mainMenu - Campaign - Early Missions.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/dialog.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-lists.js"
+      ],
+      "unit": "WB03-E",
+      "doc": "docs/webpj-campaign-lists-20261029.md",
+      "cpppjSources": [],
+      "scope": "진행 값에 따른 체크/잠김 행과 위치",
+      "text": false,
+      "sha256": "ee3d30b8e8722b338479ad3749b00c3335b825f499ab365e70b7bf97d66557f2",
+      "bytes": 924100,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "45f6fd7b",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-campaign-priest",
+      "path": "screenShots/mainMenu - Campaign - Priest Training.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/dialog.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-lists.js"
+      ],
+      "unit": "WB03-E",
+      "doc": "docs/webpj-campaign-lists-20261029.md",
+      "cpppjSources": [],
+      "scope": "진행 값에 따른 체크/잠김 행과 위치",
+      "text": false,
+      "sha256": "4a035aa3e0be02a7f2cfafbec64ae0ebef3d7298ee00ab46d0b4138fa011199b",
+      "bytes": 1015489,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "45f6fd7b",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-campaign-freedom",
+      "path": "screenShots/mainMenu - Campaign - Struggle For Freedom.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/dialog.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-lists.js"
+      ],
+      "unit": "WB03-E",
+      "doc": "docs/webpj-campaign-lists-20261029.md",
+      "cpppjSources": [],
+      "scope": "진행 값에 따른 체크/잠김 행과 위치",
+      "text": false,
+      "sha256": "062ece8e8431d07a0a8ca523ee43c4e263ccb34baf35e1ea549948efc07e6d65",
+      "bytes": 945808,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "45f6fd7b",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-campaign-nation",
+      "path": "screenShots/mainMenu - Campaign - A Nation Rises.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/dialog.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-lists.js"
+      ],
+      "unit": "WB03-E",
+      "doc": "docs/webpj-campaign-lists-20261029.md",
+      "cpppjSources": [],
+      "scope": "진행 값에 따른 체크/잠김 행과 위치",
+      "text": false,
+      "sha256": "74072505813b384bb04c3b18ee50851652cca2dc62a3aea6065eaa5a2a876990",
+      "bytes": 897606,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "45f6fd7b",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-campaign-victory",
+      "path": "screenShots/mainMenu - Campaign - Complete Victory.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/dialog.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-lists.js"
+      ],
+      "unit": "WB03-E",
+      "doc": "docs/webpj-campaign-lists-20261029.md",
+      "cpppjSources": [],
+      "scope": "진행 값에 따른 잠김 행과 위치(흰 글자 적어 마스크 비교 생략)",
+      "text": false,
+      "sha256": "d45cc7cda2a1ffd57d4338ff60c1a5ea606067887b42beae4ed94a01761e2ee0",
+      "bytes": 874848,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "45f6fd7b",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-options",
+      "path": "screenShots/mainMenu - Options.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/popup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/popup-menu.js",
+        "webpj/www/ui/option-menus.js"
+      ],
+      "unit": "WB03-F",
+      "doc": "docs/webpj-popup-menus-20261029.md",
+      "cpppjSources": [],
+      "scope": "원본 전체 항목(includeAll) 배치. 웹은 해상도·서버 진단 등 제외",
+      "text": false,
+      "sha256": "f8a61d2149ed00eed0a62bd1ceadbdde1e5ea6bc69c4732480eabda7b55b43a1",
+      "bytes": 873500,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "b25f8763",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-options-music",
+      "path": "screenShots/mainMenu - Options - Music Volume.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/popup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/popup-menu.js",
+        "webpj/www/ui/option-menus.js"
+      ],
+      "unit": "WB03-F",
+      "doc": "docs/webpj-popup-menus-20261029.md",
+      "cpppjSources": [],
+      "scope": "음량 하위 목록 배치와 현재 단계 표시",
+      "text": false,
+      "sha256": "88cfc5b525c2572a9c598b0e42b04ceead5b3d7da95cbdb043e2dbeed6b61292",
+      "bytes": 909221,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "b25f8763",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-help-menu",
+      "path": "screenShots/mainMenu - Help.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/popup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/popup-menu.js",
+        "webpj/www/ui/option-menus.js"
+      ],
+      "unit": "WB03-F",
+      "doc": "docs/webpj-popup-menus-20261029.md",
+      "cpppjSources": [],
+      "scope": "Help 펼침 메뉴 배치. 웹은 Technical Help 제외",
+      "text": false,
+      "sha256": "10e9937eee1642b96da132e21f0f9028f2a24eeb1ec8b499e65853edb98a09df",
+      "bytes": 929779,
+      "lines": null,
+      "fixtureCommit": "dc62a9d2",
+      "webCommit": "b25f8763",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "shot-help-window",
+      "path": "screenShots/help - NetStorm Instructions.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": false,
+      "producer": "원본 10.78 창 모드 캡처",
+      "consumers": [
+        "webpj/tests/help.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/help-window.js"
+      ],
+      "unit": "WB03-G",
+      "doc": "docs/webpj-help-window-20261030.md",
+      "cpppjSources": [],
+      "scope": "일반 도움말 창 배치·본문",
+      "text": false,
+      "sha256": "fbf2d15f994832283d76e281b1218c2bc1aa2a3af7615a21d49b2aa47ace1724",
+      "bytes": 814877,
+      "lines": null,
+      "fixtureCommit": "ddfce6c4",
+      "webCommit": "0b81247b",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "src-scrolling-widgets",
+      "path": "cpppj/src/client/ScrollingTextGumpWidgets.cpp",
+      "kind": "source",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 복원 소스(다중 줄 위젯 커서 상수)",
+      "consumers": [
+        "webpj/tests/cursor.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/cursor.js"
+      ],
+      "unit": "WB03-L",
+      "doc": "docs/webpj-cursor-20261031.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScrollingTextGumpWidgets.cpp"
+      ],
+      "scope": "본문 위 커서 번호 상수 교차 확인",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "8661b66b",
+      "webCommit": "db9fd26b",
+      "cpppjBasis": {
+        "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "8661b66b"
+      }
+    },
+    {
+      "id": "src-type-load-order",
+      "path": "cpppj/src/o/TypeLoadOrder.cpp",
+      "kind": "source",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 복원 소스(타입 116개 적재 순서)",
+      "consumers": [
+        "webpj/tests/picture.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/type-table.js"
+      ],
+      "unit": "WB03-T",
+      "doc": "docs/webpj-help-pictures-20261101.md",
+      "cpppjSources": [
+        "cpppj/src/o/TypeLoadOrder.cpp"
+      ],
+      "scope": "TYPE_LOAD_ORDER 116개 교차 확인",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "128f8b95",
+      "webCommit": "725dabf9",
+      "cpppjBasis": {
+        "cpppj/src/o/TypeLoadOrder.cpp": "128f8b95"
+      }
+    },
+    {
+      "id": "src-territory-patterns",
+      "path": "dotnetpj/src/Netstorm.Assets/TerritoryPatterns.json",
+      "kind": "source",
+      "edition": "10.78",
+      "required": false,
+      "producer": "dotnetpj 영역 패턴 자료(교차 확인용, 정답 근거 아님)",
+      "consumers": [
+        "webpj/tests/territory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/territory-patterns.js"
+      ],
+      "unit": "WB03-V",
+      "doc": "docs/webpj-territory-layout-20261101.md",
+      "cpppjSources": [],
+      "scope": "영역 패턴 표 교차 확인",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "d25ad4a1",
+      "webCommit": "2f7c2d51",
+      "cpppjBasis": {}
+    }
+  ]
+}

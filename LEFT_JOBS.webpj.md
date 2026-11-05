@@ -3,24 +3,24 @@
 webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한다. cpppj/공통은 [LEFT_JOBS.md](LEFT_JOBS.md), dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)가 기준이다. 단위별 과거 이력은 보관 문서와 각 `docs/webpj-*.md`를 따른다.
 
 **2026-11-04 정리:** WB04-A까지의 상세 이력과 대체된 초기 계획을 이관했다. 이후 작업은 이 문서의 3절 순서를 따른다.
-**2026-11-05:** 3.1절 선행 보완을 진행한다. WB03-AC(11.01 표기·세 번째 Patch Credits)·WB02-E(외부 접속 목록)를 완료했다.
+**2026-11-05:** 3.1절 선행 보완 세 항목(WB03-AC 11.01 표기·세 번째 Patch Credits, WB02-E 외부 접속 목록, WB02-F 이식 추적 목록)을 모두 완료했다. 다음은 3.2절 순서1 WB04-B다.
 
 ## 0. 현재 기준과 재개 절차
 
-### 0.1 현재 값 (2026-11-05, WB02-E 완료)
+### 0.1 현재 값 (2026-11-05, 3.1절 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 마지막 구현 커밋 | **WB02-E** 외부 접속 목록·경계 검사(`20261105` WB 커밋, 해시는 `git log -- webpj/tests/external-access.test.mjs`). 그 앞은 `48339f60 / 20261105-43 WB` 제품11.01·Patch Credits, `0fd343a1 / 20261104-48 WB` SID 풀 |
+| 마지막 구현 커밋 | **WB02-F** 이식 추적 목록(`20261105` WB 커밋, 해시는 `git log -- webpj/tests/fixtures/manifest.json`). 그 앞은 `f07c4a0b / 20261105-44 WB` 외부 접속 목록, `48339f60 / 20261105-43 WB` 제품11.01·Patch Credits, `0fd343a1 / 20261104-48 WB` SID 풀 |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기까지다. **실제 미션 플레이는 아직 불가**다. `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴·대화상자 일부는 원본 스크린샷과 대조했다. Fort/지형·그림·SID 부품은 원본 fixture 또는 독립 계산과 대조했다. **같은 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증**이다 |
 | 완료/미완료 | M1(시작→메인 메뉴) 완료. M2(같은 실제 월드의 정적 화면)는 지형/공통 출력/값형 로더까지 부분 완료. WB04는 SID 풀만 완료이며 실제 생성/검색/Pop/내용물/소유자 마감은 남는다 |
-| 마지막 전체 검사 | WB02-E의 Node v24.21.0, **290/290 통과·실패/건너뜀0**(신규 external-access5; WB03-AC는285/285), 약63.98초 |
+| 마지막 전체 검사 | WB02-F의 Node v24.21.0, **293/293 통과·실패/건너뜀0**(신규 fixture-manifest3; WB02-E 290, WB03-AC 285), 약27.98초 |
 | 마지막 e2e | WB03-AC의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도로 임시 Playwright 스크립트로 Credits→세 번째 행→Back/Cancel을 영어/한국어 실제 클릭 확인(Chromium 156.0.8078.4, 오류0). 미션/월드 검사가 아니다 |
 | cpppj 검토 기준 | 공통 인계의 **861 / 11.01**, 마지막 구현 `0c06fa66`. cpppj 문서의 일시 정지 기록을 webpj 중단 지시로 해석하지 않는다. 다음 착수 때 최신 커밋/인계를 다시 확인한다 |
 | 이식 기준의 의미 | WB04-A가 검토한 트리는 `4fa7e89c`; **cpppj 전체를 그 커밋까지 반영했다는 뜻이 아니다.** 파일별 근거/반영 범위는 단위 문서에 있다 |
 | 마지막 전체 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**. 이번 정리 PC도 HJOW-Athlon이며 디컴파일 산출물은 읽지 않았다 |
-| 즉시 요구 | 11.01 표기/세 번째 Patch Credits는 WB03-AC, 외부 접속 목록은 WB02-E로 완료. **이식 추적**이 3.1절에 남는다 |
+| 즉시 요구 | 11.01 표기/세 번째 Patch Credits(WB03-AC)·외부 접속 목록(WB02-E)·이식 추적 목록(WB02-F) 완료. 이식 추적 도구가 보고한 cpppj 재검토 후보7곳은 [이식 추적4절](docs/webpj-fixture-trace-20261105.md)에 있다 |
 
 ### 0.2 매 단위 착수/종료
 
@@ -28,7 +28,7 @@ webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한�
 2. cpppj는 **커밋된 복원 소스·원본 fixture·단위 문서·실제 바인딩**을 함께 읽는다. 디컴파일이 꼭 필요하면 마지막 수행 PC와 현재 PC를 먼저 비교하고 AGENTS.md의 재디컴파일 규칙을 따른다.
 3. 원본/클론 게임·analyzeManager·별도 창 실행은 AGENTS.md의 확인/예외 규칙을 적용한다. 단위 검사나 정적 문서 확인을 실제 게임 실행으로 기록하지 않는다.
 4. 현재 단계에 필요한 작은 구현 단위와 같은 입력/기대값을 먼저 고른다. 필요한 공유 장치가 없으면 그것을 선행 이식하고 빈 성공 함수·별도 근사 월드로 우회하지 않는다.
-5. 근거 파일/커밋·연결 fixture/SHA/행 수·검사/실패와 교정·실제 연결/미연결·남은 경계·다음 시작점을 기록한다. 완료 체크 뒤 이번 파일만 `YYYYMMDD-NN WB 요약`으로 로컬 커밋하며 push하지 않는다.
+5. 근거 파일/커밋·연결 fixture/SHA/행 수·검사/실패와 교정·실제 연결/미연결·남은 경계·다음 시작점을 기록한다. 새 원본 대조 자료는 `webpj/tests/fixtures/manifest.json`에 등록하고 `node webpj/tools/fixture-manifest.mjs --write`로 계산 칸을 채운다(2026-11-05 WB02-F). 완료 체크 뒤 이번 파일만 `YYYYMMDD-NN WB 요약`으로 로컬 커밋하며 push하지 않는다.
 
 ## 1. 범위와 유지되는 결정
 
@@ -59,6 +59,7 @@ webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한�
 | [x] WB03-Z·AA | CRT 정렬·64바이트 카메라·공통 월드 그림/그림자 출력과 개발용 중립 지형 화면. 실제 Draw/소유자·배경/카메라 정책은 미연결 | [출력](docs/webpj-world-render-20261102.md)·[지형 장면](docs/webpj-terrain-scene-20261102.md) |
 | [x] WB03-AB | 값형 Fort 객체/내용물·Terr→Chaff 순회 로더. 필수 생성/Pop/finder/소유자 장치가 없어 실제 월드에는 미연결 | [객체 로더](docs/webpj-fort-object-load-20261102.md) |
 | [x] WB04-A | 실제50바이트 SID 풀·할당/반납/재초기화·20개 삭제 기록. 원본10.78의1584전이 대조. `slot/bytes/deletions`는 시점 사본, `allocated`만 쓰기 대여이며 양수reset 뒤 재조회 | [SID 풀](docs/webpj-sid-pool-20261104.md) |
+| [x] WB02-F | 이식 추적 목록 `webpj/tests/fixtures/manifest.json`(35항목: original-x86 12·independent 7·screenshot 13·source 3), 계산/검사 도구 `tools/fixture-manifest.mjs`, 형식·해시·적용 범위 검사3개. 해시는 텍스트 CRLF→LF 정규화 | [이식 추적](docs/webpj-fixture-trace-20261105.md) |
 | [x] WB02-E | 웹 런타임 외부 접속 목록: 요청은 `./data/` 같은 출처 자산뿐, 바깥 링크11종은 콘솔 안내만, UserNotUpdated·Technical Help·서버 진단·`$Zsend`/`$Input` 미연결. 소스 정적 감사·manifest/적재 요청·링크·미연결 기능 검사5개 | [외부 접속](docs/webpj-external-access-20261105.md) |
 | [x] WB03-AC | 제품 표기 `v11.01`(설정 version/MAJOR/MINOR)·`Patch1101` 등록 객체·메인 Credits 세 번째 행과 Patch Credits 창(영어/한국어, Back→목록·Cancel→메뉴). 원본 대조는 `GameData.build({product:false})`로 10.78·두 행 유지. AI 문구/한국어 문구는 개발자 검수 대상 | [제품11.01](docs/webpj-product-1101-20261105.md) |
 
@@ -70,9 +71,9 @@ webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한�
 
 - [x] **11.01/새 Credits (WB03-AC, 2026-11-05):** `www/assets/product.js`·GameData `product` 옵션·Tell 창 본문 적용으로 완료. 목록 세 번째 `Netstorm 11.01 Patch Credits`, 창 제목 `NetStorm 11.01 Patch Credits`, 한국어 `NetStorm 11.01 패치 크레딧`. 원본 자료/fixture는 그대로이며 원본 대조는 `product:false`([문서](docs/webpj-product-1101-20261105.md)).
 - [x] **외부 접속 문서 (WB02-E, 2026-11-05):** [웹 외부 접속 목록](docs/webpj-external-access-20261105.md)과 `tests/external-access.test.mjs`로 완료. `UserNotUpdated` 생략·바깥 링크 미개방 정책 유지, 검증 성공값 합성 없음. 바깥 링크를 새 탭으로 열지, 개발 서버(`server.js`, 모든 인터페이스 수신)를 localhost로 한정할지는 개발자 결정으로 남김.
-- [ ] **이식 추적:** 기존 검사의 원본 fixture·소비 모듈·판본·SHA-256/행 수·cpppj 근거 커밋/실제 반영 범위를 목록화한다. 아직 없는 `webpj/tests/fixtures/manifest.json` 등의 형식을 다음 구현 단위에서 확정한다. dotnetpj 동기화 도구를 웹 검증으로 대신하지 않는다.
+- [x] **이식 추적 (WB02-F, 2026-11-05):** `webpj/tests/fixtures/manifest.json` 형식 v1 확정과 기존 35항목 등록, `tools/fixture-manifest.mjs`(계산/검사), `tests/fixture-manifest.test.mjs`. 새 원본 대조 자료는 같은 단위에서 등록한다([문서](docs/webpj-fixture-trace-20261105.md)). dotnetpj 동기화 도구는 쓰지 않는다.
 
-이 세 항목은 월드 의존성이 없는 즉시 요구/기반 보완이다. 다음 구현은 이를 먼저 처리하거나 같은 작업 묶음의 독립 단위로 끝낸 뒤 3.2절의 공간 해시로 이어간다. 이번 문서 정리에서 구현한 것은 아니다.
+이 세 항목은 월드 의존성이 없는 즉시 요구/기반 보완이며 2026-11-05에 모두 끝났다. 다음 구현은 3.2절 순서1(WB04-B 공간 해시→RawSquidFinder)이다. 착수 때 `node webpj/tools/fixture-manifest.mjs`로 cpppj 변경 보고를 먼저 확인하고, `hash-x86.tsv`·`rawfinder-x86.tsv`를 목록에 등록한다.
 
 ### 3.2 WB04 최소 월드 → M2 → 미션 진입
 
@@ -152,6 +153,8 @@ webpj의 **현재 구현·남은 작업 순서·유효한 결정**을 정리한�
 npm --prefix webpj start
 # Node 내장 전체 검사. 부품 작업 중에는 관련 tests/*.test.mjs만 집중 실행할 수 있다.
 npm --prefix webpj test
+# 이식 추적 목록 검사(해시 비교·cpppj 근거 소스 변경 보고). 자료/모듈을 바꾼 단위는 --write 로 계산 칸을 갱신한다.
+node webpj/tools/fixture-manifest.mjs
 # 준비 자료를 검사한다. 자료 변경이 필요한 단위에서만 prepare-assets로 재생성한다.
 npm --prefix webpj run check-assets
 npm --prefix webpj run prepare-assets
