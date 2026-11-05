@@ -3567,6 +3567,10 @@ target_sources(netstorm_pop_context_tests PRIVATE FormCreationCurrentTests.cpp F
 # 모든 ProcessForm 경로에 같은 현재 Create/Take를 연결하고 관련 입력 메타데이터를 컴파일한다(907).
 target_sources(netstorm_tests PRIVATE ProcessCreationCurrentTests.cpp)
 target_sources(netstorm_tests PRIVATE FormUnpopCurrentTests.cpp)
+target_sources(netstorm_tests PRIVATE CdUnpopCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE CdUnpopCurrentTests.cpp)
+set_source_files_properties(CdUnpopCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CD_UNPOP_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cd-squid-unpop-current-hardware-x86.tsv\"")
 target_sources(netstorm_pop_context_tests PRIVATE FormUnpopCurrentTests.cpp SquidContainedUnpopTests.cpp)
 set_source_files_properties(FormUnpopCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FORM_UNPOP_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/form-unpop-current-x86.tsv\"")

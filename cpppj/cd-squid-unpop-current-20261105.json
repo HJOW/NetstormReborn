@@ -1,0 +1,225 @@
+{
+  "unit": 909,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-11-03",
+  "entry": "004ad0b0",
+  "sharedPatchEntry": "004afe50",
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+    "backend": "Windows x86 CPU / CD004ad0b0와 실제 TYPE·EffectiveGenus·HashBucket·CRT·공간 쓰기",
+    "mode": "first",
+    "rows": 1402,
+    "diagnosticCallsByLine": {
+      "1471": 108,
+      "1479": 108,
+      "1472": 48,
+      "268": 18
+    },
+    "fixtureSha256": "c5c6095dba4d3141038d8510d8a46f4f0e81e2fe4e50ff7a5841621b68196c7c",
+    "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "probeSha256": "a586202e5d0e81357211f4d84d8baf03270031d6d3e92d14c1c5263f8cba357e",
+    "probeSourceSha256": "baf56f940ea4f3b0481fb6baf51c3afeb6232f6db440a08025a5a1cc9405eede",
+    "sharedSourceSha256": "0367a38299715369cdc6dca533dada3acfc3e2844f9bbec0389de21fec0fc7e0",
+    "driverSha256": "112d94907b516bf33b2c087c2585bf3ca39728ad7127fcb0e3d41935ffb0c161",
+    "actualChildren": false,
+    "game": false,
+    "multiplayer": false,
+    "boundary": "미니맵·옆면 통지·가상 표시·진단·종속 분리/UI는 명시 장치이며 실제 자식 실행을 주장하지 않음"
+  },
+  "validation": {
+    "buildCommands": 2,
+    "buildExits": [
+      0,
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "uniqueCases": 40,
+    "newCases": 4,
+    "existingCases": 36,
+    "testCommands": 16,
+    "testExecutions": 80,
+    "firstFailingCases": 3,
+    "firstFailedChecks": 4,
+    "finalFailedChecks": 0,
+    "first": [
+      {
+        "filter": "CdUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 1,
+        "exit": 1,
+        "expected": 4
+      },
+      {
+        "filter": "SquidUnpopChecking_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 3
+      },
+      {
+        "filter": "SquidUnpop_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "SquidContainedUnpop_",
+        "cases": 10,
+        "failedChecks": 3,
+        "exit": 1,
+        "expected": 10
+      },
+      {
+        "filter": "FactoryTakeChecking_",
+        "cases": 7,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 7
+      },
+      {
+        "filter": "FormUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "FormTake_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "ProcessCreationCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      }
+    ],
+    "final": [
+      {
+        "filter": "CdUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "SquidUnpopChecking_",
+        "cases": 3,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 3
+      },
+      {
+        "filter": "SquidUnpop_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "SquidContainedUnpop_",
+        "cases": 10,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 10
+      },
+      {
+        "filter": "FactoryTakeChecking_",
+        "cases": 7,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 7
+      },
+      {
+        "filter": "FormUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "FormTake_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "ProcessCreationCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      }
+    ],
+    "sourceFiles": 2872,
+    "postFirstBuildCorrections": [
+      "cpppj/tests/CdUnpopCurrentTests.cpp",
+      "cpppj/tests/SquidContainedUnpopTests.cpp"
+    ],
+    "productSourceChangesAfterFirstBuild": [],
+    "sourceChangesDuringBuild": [],
+    "nativeProbeBuildCommands": 2,
+    "nativeProbeBuildExits": [
+      null,
+      0
+    ],
+    "nativeProbeFirstBuildExitNote": "첫 빌드 도구의 세션 식별자/종료 코드 출력 누락. EXE/map 생성과 진행 중 cl/link/cmd 부재로 terminal을 확인했고 관측 실행의 주소 배치 guard에서 중단됐다.",
+    "nativeProbeAttempts": 2,
+    "nativeProbeAttemptExits": [
+      1,
+      0
+    ],
+    "nativeProbeFirstFailure": "정적 CRT로 payload 시작이0x443000이 되어0x410000 범위 guard에서 중단. 원문 함수 미진입. /MD로 빌드 뒤 첫 유효1402행을 동결.",
+    "nativeRows": 1402,
+    "firstNativeFixtureBytesUnchanged": true
+  },
+  "protection": {
+    "previousFiles": 2783,
+    "unchanged": 2783,
+    "changed": [],
+    "currentFiles": 2784,
+    "currentFixtures": 964,
+    "added": [
+      "cpppj/tests/fixtures/cd-squid-unpop-current-hardware-x86.tsv"
+    ]
+  },
+  "product": {
+    "unit": 909,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10757120,
+    "sha256": "f9ce2ab75a661a8e726f1776be0be5464239e67d777543c0b6bfc1ee46711526",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "implementation": [
+    "CD의 선행 거부/전수 검사를 제거하고 void 뒤 현재 TYPE·원문 순서의 공간/해시/표시 처리",
+    "CD 없는 spot/grid/found 진단은 실행하지 않음",
+    "SetNext의 원문 정상 복귀 뒤 저장 next WORD 쓰기(PATCH123/CD10c)",
+    "CD 공통 분리 진단 문자열의 실제 소문자 경로",
+    "현재 World·Factory Take와 실제 contained 분리/내용물 UI 종단 연결 재사용"
+  ],
+  "evidenceScope": "Native 원문 부모/EffectiveGenus/HashBucket/CRT·inline spot/side/hash는 실제 CPU. 진단/미니맵/통지/가상표시/contained·UI는 명시 장치. raw4644/해시172544/지도65536은 전체 Adler32와 전역/요청으로 대조.",
+  "legacyDiagnosticAssertionsCorrected": 3,
+  "checkingRemaining": {
+    "total": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3
+  },
+  "remaining": [
+    "고정 Form 편의 Create/Take·Depend 생성의 실제 caller와 현재 번호",
+    "다른 Factory/Pop/Baseprocess 부모/진단·실패 정책",
+    "State/파일·객체 UI·Edit·Windows·무검사 MP·4~8차"
+  ],
+  "nextUnit": 910
+}

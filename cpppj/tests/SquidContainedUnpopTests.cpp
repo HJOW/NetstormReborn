@@ -75,7 +75,7 @@ TEST_CASE(SquidContainedUnpop_DeadAndFreeParentDiagnosticReturn) { // free는 �
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 원문 두 판본의 진단 행 차이도 보존한다.
         for (const auto parentState:{0U,1U,2U,3U}) { // 살아 있음/free/dead/둘 다를 별도 입력으로 확인한다.
             ContainedUnpopScene scene(edition);scene.Raw(scene.parent)[11]=static_cast<std::uint8_t>(parentState);
-            scene.onAssertion=[&](auto expression,auto file,auto line) { CHECK(expression=="!p.isFree()" && file=="\\Ns\\O\\Squid.cpp" && line==(edition==OriginalEdition::Patch1078 ? 0x3a8U : 0x39fU)); }; // free 진단을 빈 생략으로 바꾸지 않는다.
+            scene.onAssertion=[&](auto expression,auto file,auto line) { CHECK(expression=="!p.isFree()" && file==(edition==OriginalEdition::Patch1078 ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp") && line==(edition==OriginalEdition::Patch1078 ? 0x3a8U : 0x39fU)); }; // 두 보호 PE 문자열의 디렉터리 대소문자와 free 진단을 그대로 확인한다.
             RawSquidContainedUnpop unpop(scene.pool,scene.State(),scene.Hooks());unpop.Detach(scene.source);
             CHECK(scene.parentCalls==1 && scene.diagnostics.size()==((parentState&1U) ? 1U : 0U));
             CHECK(scene.previousCalls==((parentState&2U) ? 0U : 1U) && scene.noticeCalls==((parentState&2U) ? 0U : 1U));
@@ -92,7 +92,7 @@ TEST_CASE(SquidContainedUnpop_DiagnosticKeepsSavedNextAndCurrentType) { // 늦�
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 부모 머리와 prev가 모순인 진단 정상 복귀를 두 판본에서 대조한다.
         ContainedUnpopScene scene(edition);scene.previous=Sid{60};scene.Put(scene.source,4,61);scene.Raw(Sid{61})[10]=3;
         scene.onAssertion=[&](auto expression,auto file,auto line) {
-            CHECK(expression=="prev == 0" && file=="\\Ns\\O\\Squid.cpp" && line==(edition==OriginalEdition::Patch1078 ? 0x3c0U : 0x3b7U));
+            CHECK(expression=="prev == 0" && file==(edition==OriginalEdition::Patch1078 ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp") && line==(edition==OriginalEdition::Patch1078 ? 0x3c0U : 0x3b7U)); // 두 보호 PE의 문자열 대소문자를 각각 대조한다.
             CHECK(scene.Word(scene.previous,4)==61 && scene.Word(Sid{61},14)==60); // 앞선 두 링크 쓰기는 진단 이전에 관측되어야 한다.
             scene.Put(scene.source,4,62);scene.Put(scene.parent,6,88);scene.Raw(scene.source)[10]=5;scene.contentFormType=5;scene.Raw(scene.source)[11]=0x8c;
         }; // 후속 부모 head는 저장 next61, 통지는 현재 타입/전역5를 사용해야 한다.
@@ -162,7 +162,7 @@ TEST_CASE(SquidContainedUnpop_PrefixDiagnosticRechecksContainedWithoutSettingVoi
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 두 contained 진단 사이의 현재 BYTE 재조회를 검사한다.
         ContainedUnpopScene scene(edition);scene.Raw(scene.source)[11]=0;
         scene.onAssertion=[&](auto expression,auto file,auto line) {
-            CHECK(expression=="containedFlag" && file=="\\Ns\\O\\Squid.cpp");
+            CHECK(expression=="containedFlag" && file==(edition==OriginalEdition::Patch1078 ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp")); // CD의 소문자 경로를 PATCH 경로로 대체하지 않는다.
             CHECK(line==(scene.diagnostics.size()==1 ? (edition==OriginalEdition::Patch1078 ? 0x3a3U : 0x39aU) : (edition==OriginalEdition::Patch1078 ? 0x3b1U : 0x3a8U)));
             if (scene.diagnostics.size()==2) scene.Raw(scene.source)[11]=0x88; // 두 번째 진단 복귀에서만 contained를 채우고 나머지 상태 비트를 보존한다.
         };

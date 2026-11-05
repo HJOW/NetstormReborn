@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**2026-11-05 단위909:** CD 공간 해제의 현재 진단 복귀/부분 지도·해시·실제 종속 분리를 공통 부모에 연결했다. 새 CD CPU1,402행·기존 PATCH1,300행 등은 첫 검사부터 일치했고 고유40사례 최종 통과다. 관측기 첫 배치 실패/첫 빌드 종료 코드 관측 누락·C++ 최초3사례4단언 실패/입력·경로 교정을 보존했다. Release2명령 종료0·경고0·기존2783/fixture963개 불변·현행2784/fixture964개다. checking 잔여8(부모3/부분2/MP3)/완료 부모39·부분4는 불변이다. [909 기록](cpp-cd-squid-unpop-current-20261105.md).
+
 **2026-11-05 단위908:** 양판본 Form 공통 해제의 현재 진단/VT와 실제 World·Session 종속 분리를 연결했다. 새 Native1,728입력/fixture1개·고유50사례 최종 통과이며 최초3사례/4단언 실패/입력·보호 계약 교정을 보존했다. Release2명령 종료0·경고0·기존2782개/fixture962개 불변·현행2783개/fixture963개다. checking 잔여8(부모3/부분2/MP3)과 완료 부모39/부분4는 변하지 않는다. [908 기록](cpp-form-unpop-current-20261105.md).
 
 **907 Process/Gump 현재 Factory:** 현재 Process Form번호·공통Create/Take와현재World 대여를연결하고장기Host의옛공장참조를남기지않는다. 고유55사례(새4/기존51) 첫 실패0·Release1명령 경고0·기존2782/962fixture/단언2,387 불변·새 Native/fixture0이다. Form·CD Unpop/전체 Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [907 기록](cpp-process-form-current-factory-20261105.md).

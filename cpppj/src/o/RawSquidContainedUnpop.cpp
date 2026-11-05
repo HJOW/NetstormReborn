@@ -37,7 +37,7 @@ void CommonContainedSetPrevious(SidPool& pool,Sid sid,Sid previous) { const bool
 RawSquidContainedUnpop::RawSquidContainedUnpop(SidPool& pool,SquidContainedUnpopState state,SquidContainedUnpopHooks hooks)
     :pool_(pool),state_(std::move(state)),hooks_(std::move(hooks)) {} // 생성 중에는 선택하지 않은 장치를 요구하거나 풀을 수정하지 않는다.
 void RawSquidContainedUnpop::Assert(std::string_view expression,std::uint32_t patchLine,std::uint32_t cdLine) const {
-    NeedContained(hooks_.assertion)(expression,kSquidSource,pool_.Edition()==OriginalEdition::Patch1078 ? patchLine : cdLine);
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;NeedContained(hooks_.assertion)(expression,patch ? kSquidSource : "\\ns\\o\\Squid.cpp",patch ? patchLine : cdLine); // CD 원문 문자열의 소문자 디렉터리도 보존한다.
 }
 void RawSquidContainedUnpop::Detach(Sid sid) const { // getter/통지가 바꾼 현재 슬롯을 각 원문 위치에서 다시 읽는다.
     if (!(pool_.Slot(sid)[11]&kContained)) Assert("containedFlag",0x3a3,0x39a);
