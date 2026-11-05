@@ -3625,3 +3625,9 @@ netstorm_apply_compiler_options(netstorm_user_data_root_tests)
 add_executable(netstorm_solo_map_list_tests FocusedTestMain.cpp SoloMapListTests.cpp TellMapMenusTests.cpp)
 target_link_libraries(netstorm_solo_map_list_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_solo_map_list_tests)
+
+# 4차 로컬 MCP 부품(JSON, zlib/PNG)을 게임 없이 집중 확인한다(935).
+target_sources(netstorm_tests PRIVATE McpPartsTests.cpp)
+add_executable(netstorm_mcp_parts_tests FocusedTestMain.cpp McpPartsTests.cpp)
+target_link_libraries(netstorm_mcp_parts_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_mcp_parts_tests)

@@ -108,6 +108,7 @@ add_subdirectory(platform)
 
 # 게임 실행 파일은 Netstorm.exe로 만들고 기존 빌드 명령의 NetstormCpp 대상 이름은 유지한다.
 target_sources(netstorm PRIVATE app/InspectView.cpp app/InspectView.h)
+target_sources(netstorm PRIVATE app/McpServer.cpp app/McpServer.h) # 4차 로컬 MCP 서버(stdio JSON-RPC)다. 프로토콜 처리는 게임 없이 검사한다.
 target_sources(netstorm PRIVATE app/FrameBindingInspect.cpp app/FrameBindingInspect.h)
 target_sources(netstorm PRIVATE app/CanonMayPlaceInspect.cpp)
 add_executable(NetstormCpp app/main.cpp app/ProductVersion.rc) # 새 제품 버전11.01을 Windows 파일 속성에도 제공한다(사용자 요청).

@@ -9,4 +9,6 @@ target_sources(netstorm PRIVATE
     FileOutput.cpp FileOutput.h
     PortableStartup.cpp PortableStartup.h
     UserDataRoot.cpp UserDataRoot.h
+    Json.cpp Json.h
+    Png.cpp Png.h
 )

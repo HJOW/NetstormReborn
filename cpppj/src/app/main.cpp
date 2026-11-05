@@ -16,6 +16,7 @@
 #include <string_view>
 #include <vector>
 #include "app/InspectView.h"
+#include "app/McpServer.h"
 #include "app/FrameBindingInspect.h"
 #include "client/ClientMain.h"
 #include "client/ClientAudio.h"
@@ -595,6 +596,7 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
     std::string view;
     bool renderStats = false;
     std::filesystem::path uiScript, uiReport;
+    bool mcpMode = false; // 4차 새 옵션: stdio MCP 서버로 게임을 조작/관찰한다(원본에 없는 분석용 기능).
     // 나머지 인자: 원본 명령줄의 "window"에 해당하는 것과 검사용 옵션.
     for (std::size_t i = 1; i < arguments.size(); ++i) {
         const auto& argument = arguments[i];
@@ -612,6 +614,7 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
         else if (argument == "--no-audio") options.noAudio = true;
         else if (argument == "--mute-audio") options.audioMute = true;
         else if (argument == "--audio-report") options.audioReport = value();
+        else if (argument == "--mcp") mcpMode = true;
         else if (argument == "--ui-script") uiScript = value();
         else if (argument == "--ui-report") uiReport = value();
         else if (argument == "--test-bridge-patterns") options.testBridgePatterns=value(); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다.
@@ -620,18 +623,22 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
     if (!view.empty() && !options.mission.empty()) throw std::invalid_argument("--view and --mission cannot be combined");
     // 자동 검사 스크립트가 소리를 내지 않도록 환경 변수로도 끈다(새 검사 기능). 비어 있거나 "0"이면 켜 둔다.
     if (const char* silent = std::getenv("NETSTORM_CPP_NO_AUDIO"); silent && *silent && std::string(silent) != "0") options.noAudio = true;
+    if (mcpMode && (!uiScript.empty() || !view.empty())) throw std::invalid_argument("--mcp cannot be combined with --ui-script or --view");
+    std::unique_ptr<netstorm::app::McpServer> mcp; // 4차: Client가 stdout에 쓰기 전에 stdout을 MCP 전용으로 분리한다.
+    if (mcpMode) { mcp = std::make_unique<netstorm::app::McpServer>(); mcp->Start(); }
     netstorm::client::Client client(std::move(options));
     std::optional<netstorm::app::InspectView> inspect;
     if (!view.empty()) inspect.emplace(client, view);
-    const auto steps = uiScript.empty() ? std::vector<UiStep>() : ReadUiSteps(uiScript);
+    auto steps = uiScript.empty() ? std::vector<UiStep>() : ReadUiSteps(uiScript); // MCP 모드에서는 입력 도구가 프레임마다 단계를 덧붙인다.
     std::size_t next = 0; std::string report;
     // 성공/실패 모두 같은 현재 관측을 보존한다. 이 쓰기는 검사 출력 경로만 사용한다.
     const auto saveUiReport=[&] { if (!uiReport.empty()) netstorm::platform::WriteFileBytes(uiReport,std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(report.data()),report.size())); };
     // UI 스크립트의 마지막 마우스 좌표/왼쪽 버튼 상태다. 실제 커서를 움직이지 않고 폴링과 사건을 일치시킨다.
     std::optional<netstorm::client::InputEvent> scriptPointer;
     UiKernelTell* kernelTell{}; // 커널이 소유한 검사 전용 프로세스다. Client::Run 동안만 사용한다.
-    if (!uiScript.empty()) {
+    if (!uiScript.empty() || mcp) {
         if (!view.empty()) throw std::invalid_argument("UI script cannot be combined with --view");
+        if (mcp) client.inputHookError = [&](const std::string& message) { mcp->ReportInputError(client, message); }; // 잘못된 입력 도구 호출은 응답 오류로 돌리고 게임은 계속한다.
         // UI 검사 마우스는 같은 좌표를 쓴다. 가운데 폴링이 실제 바탕 화면 위치로 커서를 덮지 않게 한다.
         client.inspectPoll=[&](std::uint32_t code) -> std::optional<netstorm::client::InputEvent> {
             using namespace netstorm::client;
@@ -640,6 +647,7 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
             if (code!=(scriptPointer->code&0x00ffffffU)) event.code|=InputCode::kRelease;return event;
         };
         client.beforeInput = [&](netstorm::client::Client& c) {
+            if (mcp) for (auto& action : mcp->BeforeInput(c)) steps.push_back(UiStep{c.Time().number, action.first, action.second}); // 4차: MCP 입력 도구의 이번 프레임 동작을 같은 UI 스크립트 엔진에 넘긴다.
             // 이번 프레임의 입력만 실제 InputQueue에 넣는다.
             for (std::size_t i = next; i < steps.size() && steps[i].frame == c.Time().number; ++i) {
                 auto step = steps[i]; using namespace netstorm::client; // 조건부 검사 입력도 같은 실제 분배기를 사용하며 원래 계획은 변경하지 않는다.
@@ -782,6 +790,7 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
                 // 다음 Tick에서 표시만 갱신하여 버튼 캡처/serial을 보존하는지 검사한다.
                 if (step.operation=="refresh") c.Menu()->Refresh();
             }
+            if (mcp) mcp->AfterFrame(c); // 4차: 대기 중인 MCP 호출(화면 캡처/프레임 대기)을 완료한다.
         };
     }
     int result{}; // 검사 도중 예외도 기존 관측을 보존한 뒤 호출자에게 전달한다.
@@ -879,6 +888,11 @@ int main(int argc, char** argv) {
             auto names=std::make_shared<netstorm::o::RawFileName>();const auto directory=netstorm::platform::PortableGameDirectory(netstorm::platform::CurrentExecutableFile(),names.get()); // 새 휴대 배포 배치이며 원본과 다른 Windows 10/11 경로 어댑터다.
             netstorm::platform::DetachOwnGuiConsole();
             return RunClient({},std::move(names),directory); // 원본과 다른 Windows10/11 호환: 이미 얻은 Unicode 경로를 좁은 명령줄 문자열로 재변환하지 않는다. manifest의UTF-8설정도 유지한다.
+        }
+        if (std::string(argv[1]) == "--mcp") { // 4차: 휴대 배포 배치의 게임을 stdio MCP 서버로 실행한다. 나머지 인자는 --run과 같은 옵션이다.
+            auto names=std::make_shared<netstorm::o::RawFileName>();const auto directory=netstorm::platform::PortableGameDirectory(netstorm::platform::CurrentExecutableFile(),names.get());
+            std::vector<std::string> options{"<portable>","--mcp"};for (int index=2;index<argc;++index) options.push_back(argv[index]); // 첫 항목은 휴대 배치 자리표시자이며 옵션 해석은 둘째부터다.
+            return RunClient(std::move(options),std::move(names),directory);
         }
         if (argc == 2 && std::string(argv[1]) == "--help") { PrintBuildInfo(); return 0; }
         const std::string command = argv[1];

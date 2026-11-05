@@ -163,6 +163,8 @@ public:
     std::function<void(Client&)> ready;
     // 검사 전용 프레임 입력. 일반 실행에서는 비어 있다.
     std::function<void(Client&)> beforeInput;
+    std::function<void(const std::string&)> inputHookError; // 4차 MCP 전용: 값이 있으면 beforeInput의 예외를 게임 종료 대신 이 함수로 알린다(잘못된 도구 입력이 게임을 죽이지 않게 한다). 비어 있으면 예외를 그대로 전달한다.
+    void RequestClose(); // 4차 MCP: 게임 창에 닫기 메시지를 보낸다(원문 종료 경로와 같은 WM_CLOSE).
     // 프레임 그리기 뒤의 상태/화면 관찰. 일반 실행에서는 비어 있다.
     std::function<void(Client&)> afterFrame;
     std::function<void(Client&)> afterPresentation; // 원본에 없는 검사 전용 관찰점이다. Windows10/11 호환 DIB 출력 뒤·다음 프레임용 카메라 버퍼 이동 앞의 같은 논리 화면만 읽으며 일반 실행은 비워 둔다.

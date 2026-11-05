@@ -427,7 +427,10 @@ int Client::Run() {
         // 8. 원본 튜토리얼 안내(FUN_00463f70)의 현재 프레임을 입력보다 먼저 실행한다.
         if (menu_) menu_->MissionFrame();
         // 9. 입력·명령 처리(FUN_004d62b0). 0이 아니면 종료 절차다.
-        if (beforeInput) beforeInput(*this);
+        if (beforeInput) {
+            if (inputHookError) { try { beforeInput(*this); } catch (const std::exception& error) { inputHookError(error.what()); } } // 4차 MCP: 잘못된 입력 도구 호출은 응답 오류로 돌리고 게임은 계속한다.
+            else beforeInput(*this);
+        }
         if ((input && input(*this)) || (!input && menu_ && menu_->Input())) {
             screen_->SetMode(ScreenMode::kFallbackWindowed, windowWidth_, windowHeight_, initWindowPos_);
             SendMessageA(window, WM_CLOSE, 0, 0);
@@ -836,6 +839,8 @@ void Client::ResetGameClock() { clock_.Reset(); }
 // Native State 부모의 정확한 위치에서 기존 설정 해석 본문을 재사용한다.
 void Client::InterpretStateOptions() { InterpretOptions(); }
 // 원본 창 제목을 ANSI 바이트로 적용한다(한국어는 후순위).
+// 4차 MCP: 같은 창에 WM_CLOSE를 비동기로 보낸다. 메시지 루프가 원문 종료 절차를 수행한다.
+void Client::RequestClose() { PostMessageA(static_cast<HWND>(window_), WM_CLOSE, 0, 0); }
 void Client::Title(std::string_view title) { SetWindowTextA(static_cast<HWND>(window_), std::string(title).c_str()); }
 // 기본 UI만 제공한다. 검사 장면의 독립 실행은 기존 연결점을 보존한다.
 UberGump* Client::Menu() { return menu_.get(); }
