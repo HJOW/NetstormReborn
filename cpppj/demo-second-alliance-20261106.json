@@ -1,0 +1,246 @@
+{
+  "unit": 948,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 939,
+  "gameExecutions": 1,
+  "finalPassedProcesses": 1,
+  "accepted": {
+    "elapsedSeconds": 751.0726113000001,
+    "observations": 300,
+    "starts": [
+      [
+        "11.566",
+        "371.566",
+        "230"
+      ],
+      [
+        "372.694",
+        "732.694",
+        "2531"
+      ],
+      [
+        "733.642",
+        "1093.642",
+        "7229"
+      ]
+    ],
+    "transitions": [
+      {
+        "startDifference": 1.1280000000000427,
+        "previousPauseOffset": 0.8359999999999559,
+        "deadlineWall": 372.40199999999993,
+        "observedRestartWall": 374.799,
+        "wallDelay": 2.397000000000048,
+        "naturalSeconds": 360.179
+      },
+      {
+        "startDifference": 0.9480000000000928,
+        "previousPauseOffset": 0.6860000000000355,
+        "deadlineWall": 733.38,
+        "observedRestartWall": 735.155,
+        "wallDelay": 1.7749999999999773,
+        "naturalSeconds": 360.356
+      }
+    ],
+    "guideObservations": [
+      0,
+      0,
+      0
+    ],
+    "windowActivity": [
+      {
+        "active": 145,
+        "inactive": 0
+      },
+      {
+        "active": 145,
+        "inactive": 0
+      },
+      {
+        "active": 7,
+        "inactive": 0
+      }
+    ],
+    "initial": {
+      "frame": 21,
+      "label": "main",
+      "phase": [
+        "0"
+      ],
+      "page": [
+        "main"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mouse_cursor": [
+        "1",
+        "1"
+      ],
+      "html_window_state": [
+        "0",
+        "1",
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_uber": [
+        "19",
+        "1",
+        "3",
+        "0",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_menus": [
+        "0",
+        "0",
+        "0",
+        "13",
+        "13"
+      ],
+      "time": [
+        "10.737",
+        "10.737"
+      ]
+    },
+    "final": {
+      "frame": 9718,
+      "label": "final-main",
+      "phase": [
+        "0"
+      ],
+      "page": [
+        "main"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mouse_cursor": [
+        "1",
+        "1"
+      ],
+      "html_window_state": [
+        "0",
+        "1",
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_uber": [
+        "7588",
+        "1",
+        "3",
+        "0",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_menus": [
+        "0",
+        "0",
+        "0",
+        "13",
+        "13"
+      ],
+      "time": [
+        "750.816",
+        "750.816"
+      ]
+    },
+    "returnCode": 0,
+    "dataUnchanged": true,
+    "gameSha256": "06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098",
+    "toolSha256": "6034e8742ac21e1ab79921c5775f47d60ec8791142a8e5626bee73a0e7625e48",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-948\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=15;sleepPerLoop=1;autoDemo=0;tellTips=0;intro=1;currentLanguage=english"
+    ],
+    "reference": {
+      "mission": "DissolvedAlliance",
+      "seconds": 360,
+      "demoSection": false,
+      "englishSha256": "fcc7fbbef99515c4ad660a11da18318e48bd63b5467b6aeedb6c51a16d1a06e5"
+    }
+  },
+  "guideAudit": {
+    "passed": true,
+    "reference": {
+      "mission": "DissolvedAlliance",
+      "seconds": 360,
+      "demoSection": false,
+      "englishSha256": "fcc7fbbef99515c4ad660a11da18318e48bd63b5467b6aeedb6c51a16d1a06e5"
+    },
+    "timeoutSeconds": null,
+    "generations": [
+      {
+        "start": [
+          "11.566",
+          "371.566"
+        ],
+        "guideAbsent": true
+      },
+      {
+        "start": [
+          "372.694",
+          "732.694"
+        ],
+        "guideAbsent": true
+      },
+      {
+        "start": [
+          "733.642",
+          "1093.642"
+        ],
+        "guideAbsent": true
+      }
+    ]
+  },
+  "thirdPlaying": {
+    "gameSinceStart": 14.338999999999942,
+    "playingWall": 13.552000000000021
+  },
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "gameCppChanged": false,
+  "gameBuilt": false,
+  "cppTestsExecuted": false,
+  "toolUnchangedSinceLaunch": true,
+  "raw": {
+    "states.tsv": "8068f318b0e96a9c4bf52b07e940367a1e8b10588039c2ddd4faa2144dde434e",
+    "result.json": "2e7b94fdba5e0c605376ac7c5e74c3b8ac2bfc99ddcdb85d14765f6387459dcf",
+    "guide-audit.json": "cfcddfc3a414e9845d584ea1f5197a019ee13a2f40a4bce3330946d545b8ef2d",
+    "tool-at-launch.py": "6034e8742ac21e1ab79921c5775f47d60ec8791142a8e5626bee73a0e7625e48"
+  },
+  "screenshots": {
+    "generation-1.png": "39b94e652afc54cb857e5c1d780557f35fda03354f0ecc48e8c18d8bc866f089",
+    "generation-2.png": "bce4fd56ab9b98e5749eea982b12636fed89c2a20dcfe593c28e5f552b3b6a0d",
+    "generation-3.png": "a6648fa869af703b8b476f9f1afbdf1d82f6dc6ea74b7b09dfd84a25d2dd6d20",
+    "main.png": "0ac693f6e10689599cbf61dcc9b4f3d00ed0865b5d200f647e3cbde8319d2c0b",
+    "third-world.png": "31afe6adc93da340e2d8a3c4ff2bce2d16ca793ee1e5ea1e0c7b303a31ed42fa"
+  },
+  "next": "비멀티 Native3/State1/단독State7/LeaveBattle 잔여 대조",
+  "files": {
+    "docs/exe/cpp-demo-second-alliance-20261106.md": "d642badeadf95f6ff014f34e6af54518267f7ad23bb19aa0e4ac093e1f105107",
+    "tools/cpp_demo_second_cycle_smoke.py": "6034e8742ac21e1ab79921c5775f47d60ec8791142a8e5626bee73a0e7625e48",
+    "tools/cpp_demo_guide_audit.py": "90aa49a4bf6b93a2c715e65c1acb5365d540b4f630e394988f201434a6222313"
+  }
+}
