@@ -64,3 +64,32 @@ TEST_CASE(CampaignNoWorldProduction_AdoptsActualClientDeckBeforePrefix) {
     });
     CHECK(CheckpointRejects<std::out_of_range>([&] { static_cast<void>(memory->Bytes(token)); })); //Session 소멸의 실제 링크 부모는 Client가 소유한 같은 블록을 반납한다.
 }
+
+
+// 실제 전체 맵 snapshot 뒤 파일 공유 거부가 나도 다음 상태를 예약하지 않고, 잠금 해제 후 같은 Session으로 다시 저장한다.
+TEST_CASE(CampaignSaveGoMain_ActualFileSharingFailureKeepsStateAndAllowsRetry) {
+#ifdef _WIN32
+    EditorInstallWireScene saveGoWire;std::shared_ptr<CampaignTemplateStorage> saveGoStorage; // 편집용 로컬 장치와 실제 manager를 Session보다 오래 보관한다.
+    WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        RunEditorWireInstallState(session,client,checkpoint,work);auto& owner=*client.LocalStateGlobals();session.CommitExistingEditorInstall(owner);
+        const auto path=work.ResolvePath("d/Checkpoint385.fort");const auto original=ReadFileBytes(path);const auto phase=owner.State().phase; // 파일과 상태 블록을 서로 다른 독립 기준으로 보관한다.
+        session.SetAllBridgeQuality(0);const auto random=client.RandomGlobals()->Game().State();auto& next=owner.State().next[0];next=91;
+        struct SaveLock { // 검사에서 연 읽기 핸들만 반납하며 원본/사용자 핸들을 다루지 않는다.
+            HANDLE value{INVALID_HANDLE_VALUE}; // 실제 CRT 쓰기를 막고 읽기만 공유하는 검사 소유 핸들이다.
+            void Close() { if (value!=INVALID_HANDLE_VALUE) { CHECK(CloseHandle(value)!=0);value=INVALID_HANDLE_VALUE; } } // 재시도 전 잠금을 풀고 중복 닫기를 막는다.
+            ~SaveLock() { Close(); } // 예외가 나도 같은 핸들 하나만 반납한다.
+        } lock{CreateFileW(path.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr)};
+        CHECK(lock.value!=INVALID_HANDLE_VALUE);if (lock.value==INVALID_HANDLE_VALUE) return;
+        bool rejected{};try { static_cast<void>(DispatchEditorSaveGoMain({kSaveGoMainCommand,0,1},next,[&] { session.SaveCurrentMap(); })); }
+        catch (const std::runtime_error& error) { rejected=std::string_view(error.what())=="편집Template작업본파일열기실패"; } // 실제 두 CRT 열기의 공유 거부만 기대한다.
+        CHECK(rejected && next==91 && owner.State().phase==phase && ReadFileBytes(path)==original);
+        CHECK(client.RandomGlobals()->Game().State()!=random && !saveGoStorage->Template(session.TemplateOwner()).Section("Badges").empty()); // 실패 전 끝난 실제 snapshot 효과를 되돌리지 않는다.
+        lock.Close();CHECK(DispatchEditorSaveGoMain({kSaveGoMainCommand,0,1},next,[&] { session.SaveCurrentMap(); }));
+        const auto saved=ReadFileBytes(path);CHECK(next==3 && owner.State().phase==phase && saved!=original && session.Core().bookkeeping.depth==0);
+        const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto restored=FortTemplate::Parse(saved,assets.game.TypeTable());
+        for (const auto name:{"TypeNames","Technology","Territory","Deck","Money","Mission","Badges"}) { // 성공한 실제 파일의 현재 섹션이 같은 manager와 일치하는지 재파싱한다.
+            const auto actual=restored.Section(name),expected=saveGoStorage->Template(session.TemplateOwner()).Section(name);CHECK(actual.size()==expected.size() && std::equal(actual.begin(),actual.end(),expected.begin()));
+        }
+    },true,&saveGoWire,{},[&](Client&,RawCampaignSessionServices& services) { saveGoStorage=services.templateStorage; });
+#endif
+}

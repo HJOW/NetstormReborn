@@ -1,0 +1,30 @@
+{
+  "unit": 941,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 939,
+  "tests": {
+    "total": 7,
+    "new": 1,
+    "failed": 0,
+    "firstPass": true
+  },
+  "protected": {
+    "count": 2787,
+    "fixtures": 967,
+    "changed": 0,
+    "newFixtures": 0
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "cpppj/tests/CampaignSaveGoMainTests.inc": "f608fb9854220c0fe065c7f6ddf0971595af18abe4b348131642e59cc8d44bc6",
+    "docs/exe/cpp-editor-save-failure-retry-20261106.md": "fbd5bdb8f6048dc3b172f6a2f92db02e57e8006e9321af2de5661ead9eecf388"
+  },
+  "exeSha256": "06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098",
+  "next": "942: LEFT_JOBS 3절2번 State1/State7·편집도구"
+}
