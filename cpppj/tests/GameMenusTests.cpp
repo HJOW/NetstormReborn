@@ -159,3 +159,38 @@ TEST_CASE(GameMenus_OptionsLanguageSubmenuOnlyWithCompatibilityLanguages) {
     }
     CHECK(checked);
 }
+
+namespace { // 7차 안티앨리어싱/FSR 1.0: 옵션 메뉴의 FSR 해상도/토글 검사 장치다.
+// 기존 Options 장면에 FSR 해상도 두 행(표시 크기 3840x2160)과 후처리 토글을 켠다.
+struct PostProcessMenuScene:GameMenusScene {
+    inline static constexpr std::array<std::array<std::uint32_t,2>,2> kFsr{{{2560,1440},{3840,2160}}}; // 7차 FSR 해상도다.
+    explicit PostProcessMenuScene(std::string_view values):GameMenusScene(values) {}
+    // 새 설정 키 두 개는 기존 장면의 고정 키 표에 없으므로 이 훅이 직접 값을 준다(AA 꺼짐, FSR 켜짐).
+    GameMenusHooks Hooks() {
+        auto hooks=GameMenusScene::Hooks();hooks.fsrResolutions=kFsr;hooks.presentSize=[] { return std::array<std::uint32_t,2>{3840,2160}; };hooks.postProcessOptions=true;
+        const auto base=hooks.config;
+        hooks.config=[this,base](std::string_view key) { if (key=="antiAliasing" || key=="fsr1") { Add("G,"+std::string(key));return key=="fsr1" ? 1 : 0; }return base(key); };
+        return hooks;
+    }
+    // 덧붙인 훅으로 Options 부모를 실행해 반환 토큰과 전체 호출 순서를 읽는다.
+    std::string Run() { RawGameMenus menus(Hooks());const auto token=menus.Options();CHECK(stack.empty());return std::to_string(token)+'|'+trace; }
+};
+}
+// 후처리 훅이 꺼져 있으면(기본) FSR 해상도/토글이 없고(원문 구성), 켜면 두 해상도와 토글 둘이 현재 표시 크기/설정 값으로 체크되어 나온다.
+TEST_CASE(GameMenus_OptionsPostProcessEntriesOnlyWhenEnabled) {
+    const auto rows=LoadFixture(NETSTORM_GAME_MENUS_FIXTURE).rows;
+    bool checked=false;
+    for (const auto& row:rows) { // 첫 Options 부모 행(kind 3)만 쓴다.
+        if (Number(Split(row[1],',')[0])!=3U) continue;
+        GameMenusScene plain(row[1]);const auto base=plain.Run();
+        PostProcessMenuScene with(row[1]);const auto trace=with.Run();
+        const auto E=[](std::string_view text) { return GameMenusScene::Encoded(text); };
+        CHECK(base.find(E("2560 by 1440"))==std::string::npos && base.find(E("Anti-Aliasing"))==std::string::npos && base.find(E("FSR 1.0 Upscaling"))==std::string::npos); // 기본 구성에는 없다.
+        CHECK(trace.find("K,0,"+E("2560 by 1440")+",33554581,s"+E("SETSIZE(2560,1440)")+",1,1")!=std::string::npos); // 표시 크기가 3840x2160이므로 2560x1440은 체크 안 됨이다.
+        CHECK(trace.find("K,1,"+E("3840 by 2160")+",33554581,s"+E("SETSIZE(3840,2160)")+",1,1")!=std::string::npos); // 현재 표시 크기 행이 체크된다.
+        CHECK(trace.find("K,0,"+E("Anti-Aliasing")+",33554541,s"+E("antiAliasing=1")+",1,1")!=std::string::npos); // 꺼져 있으면 누르면 켜는 설정문을 보낸다.
+        CHECK(trace.find("K,1,"+E("FSR 1.0 Upscaling")+",33554541,s"+E("fsr1=0")+",1,1")!=std::string::npos); // 켜져 있으면 누르면 끄는 설정문을 보낸다.
+        checked=true;break;
+    }
+    CHECK(checked);
+}

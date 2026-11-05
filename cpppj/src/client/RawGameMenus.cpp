@@ -114,7 +114,13 @@ std::uint32_t RawGameMenus::Options() const {
         Check(check,label,0x542948,std::string("SETSIZE(")+std::to_string(size[0])+','+std::to_string(size[1])+')');
     }
     for (const auto& size:hooks_.compatibilityResolutions) { // 원본에 없던 화면비는 같은 현재 폭/높이 체크와 원본 확인·저장·종료 Tell을 사용한다.
-        const auto check=Global(0x531860)==size[0] && Global(0x531864)==size[1];const auto label=Text(std::to_string(size[0])+" by "+std::to_string(size[1]));
+        const auto present=hooks_.presentSize ? hooks_.presentSize() : std::array<std::uint32_t,2>{Global(0x531860),Global(0x531864)}; // 7차: 표시 크기가 있으면 그 값으로 체크한다(논리 크기와 같은 해상도에서는 결과가 같다).
+        const auto check=present[0]==size[0] && present[1]==size[1];const auto label=Text(std::to_string(size[0])+" by "+std::to_string(size[1]));
+        Check(check,label,0x542948,std::string("SETSIZE(")+std::to_string(size[0])+','+std::to_string(size[1])+')');
+    }
+    for (const auto& size:hooks_.fsrResolutions) { // 7차: FSR 해상도는 같은 SETSIZE 흐름을 쓰며 선택하면 논리 1920x1080을 FSR 1.0으로 늘려 표시한다.
+        const auto present=hooks_.presentSize ? hooks_.presentSize() : std::array<std::uint32_t,2>{Global(0x531860),Global(0x531864)};
+        const auto check=present[0]==size[0] && present[1]==size[1];const auto label=Text(std::to_string(size[0])+" by "+std::to_string(size[1]));
         Check(check,label,0x542948,std::string("SETSIZE(")+std::to_string(size[0])+','+std::to_string(size[1])+')');
     }
     auto label=Text("Resolution");auto child=Need(hooks_.take)();Need(hooks_.submenu)(label,child,1,0);
@@ -135,6 +141,7 @@ std::uint32_t RawGameMenus::Options() const {
     Need(hooks_.separator)();Toggle("edgeScroll","Edge Scroll in Fullscreen");
     if (Global(0x594fbc) || Global(0x5c85a4)) Toggle("cursorSnapToGrid","Cursor Snap To Grid");
     Toggle("autoDemo","Auto-Demo");Toggle("tellTips","Tell Tips at Startup");
+    if (hooks_.postProcessOptions) { Toggle("antiAliasing","Anti-Aliasing");Toggle("fsr1","FSR 1.0 Upscaling"); } // 7차: 원문에 없는 선택 후처리이며 기본은 꺼짐(설정값 없음=0)이다.
     if (Global(0x594fa4) || Global(0x5c85a4)) { label=Text("Pause - ~iShift-F9~.");Check(std::bit_cast<std::int32_t>(Global(0x55b4b0))>0,label,0x542a30); }
     Need(hooks_.separator)();
     if (!Global(0x594fb8) && !Global(0x594fc8)) Toggle("rotmode","Counterclockwise Piece Rotation - ~iC~.");

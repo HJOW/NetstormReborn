@@ -19,6 +19,31 @@ target_sources(netstorm PRIVATE client/LanguageRequest.cpp client/LanguageReques
 target_sources(netstorm PRIVATE o/RawXlat.cpp o/RawXlat.h) #10.78 최초 다중 번역 장부와 원문 파일 바이트 수명이다.
 target_sources(netstorm PRIVATE client/LanguageOptions.cpp client/LanguageOptions.h) #언어 옵션의 원문 이름/감지와 두 용어표 읽기 순서다.
 target_sources(netstorm PRIVATE client/KoreanResources.cpp client/KoreanResources.h) #6차 한국어: 클론이 추가한 xlat.korean과 D2Coding 글꼴 파일 탐색이다.
+target_sources(netstorm PRIVATE client/FsrConstants.cpp client/FsrConstants.h) #7차 FSR 1.0: AMD 공식 헤더(third_party/fsr1)의 CPU 경로로 EASU/RCAS 상수를 계산한다.
+set_source_files_properties(client/FsrConstants.cpp PROPERTIES INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/fsr1") # 서드파티 헤더 위치는 이 파일에만 알린다.
+# 7차 FSR 1.0: Direct3D 11 후처리 출력기. 런타임 HLSL 컴파일에 쓸 AMD 헤더 두 개를 빌드 때 C++ 바이트 배열로 바꿔 실행 파일에 넣는다.
+target_sources(netstorm PRIVATE client/GpuPresenter.cpp client/GpuPresenter.h)
+target_link_libraries(netstorm PUBLIC d3d11 dxgi d3dcompiler)
+set(NETSTORM_FSR_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/fsr1")
+set(NETSTORM_FSR_GENERATED "${CMAKE_CURRENT_BINARY_DIR}/generated/FsrShaderHeaders.cpp")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${NETSTORM_FSR_DIR}/ffx_a.h" "${NETSTORM_FSR_DIR}/ffx_fsr1.h") # 헤더가 바뀌면 다시 구성해 생성 파일을 갱신한다.
+if(NOT EXISTS "${NETSTORM_FSR_GENERATED}" OR "${NETSTORM_FSR_DIR}/ffx_a.h" IS_NEWER_THAN "${NETSTORM_FSR_GENERATED}" OR "${NETSTORM_FSR_DIR}/ffx_fsr1.h" IS_NEWER_THAN "${NETSTORM_FSR_GENERATED}")
+    set(NETSTORM_FSR_CODE "// 자동 생성 파일이다(src/CMakeLists.txt). third_party/fsr1의 AMD 헤더 바이트를 그대로 담는다. 직접 고치지 않는다.\nnamespace netstorm::client {\n")
+    foreach(NETSTORM_FSR_ENTRY "ffx_a.h|kEmbeddedFfxA" "ffx_fsr1.h|kEmbeddedFfxFsr1")
+        string(REPLACE "|" ";" NETSTORM_FSR_PARTS "${NETSTORM_FSR_ENTRY}")
+        list(GET NETSTORM_FSR_PARTS 0 NETSTORM_FSR_FILE)
+        list(GET NETSTORM_FSR_PARTS 1 NETSTORM_FSR_SYMBOL)
+        file(READ "${NETSTORM_FSR_DIR}/${NETSTORM_FSR_FILE}" NETSTORM_FSR_HEX HEX)
+        string(LENGTH "${NETSTORM_FSR_HEX}" NETSTORM_FSR_HEX_LENGTH)
+        math(EXPR NETSTORM_FSR_SIZE "${NETSTORM_FSR_HEX_LENGTH} / 2")
+        string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," NETSTORM_FSR_BYTES "${NETSTORM_FSR_HEX}")
+        string(REGEX REPLACE "((0x[0-9a-f][0-9a-f],)(0x[0-9a-f][0-9a-f],)(0x[0-9a-f][0-9a-f],)(0x[0-9a-f][0-9a-f],)(0x[0-9a-f][0-9a-f],)(0x[0-9a-f][0-9a-f],)(0x[0-9a-f][0-9a-f],)(0x[0-9a-f][0-9a-f],))" "\\1\n" NETSTORM_FSR_BYTES "${NETSTORM_FSR_BYTES}")
+        string(APPEND NETSTORM_FSR_CODE "extern const unsigned char ${NETSTORM_FSR_SYMBOL}[] = {\n${NETSTORM_FSR_BYTES}0};\nextern const unsigned long long ${NETSTORM_FSR_SYMBOL}Size = ${NETSTORM_FSR_SIZE};\n")
+    endforeach()
+    string(APPEND NETSTORM_FSR_CODE "}\n")
+    file(WRITE "${NETSTORM_FSR_GENERATED}" "${NETSTORM_FSR_CODE}")
+endif()
+target_sources(netstorm PRIVATE "${NETSTORM_FSR_GENERATED}")
 target_sources(netstorm PRIVATE client/HtmlZsend.cpp client/HtmlZsend.h) #HTML Zsend는실제연결표의11번송신기에원문87h요청을전달한다.신규MP검사는하지않는다.
 target_sources(netstorm PRIVATE client/HtmlInputDialog.cpp client/HtmlInputDialog.h) #HTML문자/숫자입력의후속Tell확인을공통실제창에연결한다.
 target_sources(netstorm PRIVATE client/RitualChoiceInput.cpp client/RitualChoiceInput.h o/RawRitualChoice.cpp o/RawRitualChoice.h) #의식선택6b입력/수신은디컴파일기반사전구현이며신규MP검사는하지않는다.

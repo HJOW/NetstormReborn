@@ -3643,3 +3643,9 @@ target_sources(netstorm_tests PRIVATE KoreanTextTests.cpp)
 add_executable(netstorm_korean_text_tests FocusedTestMain.cpp KoreanTextTests.cpp)
 target_link_libraries(netstorm_korean_text_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_korean_text_tests)
+
+# 7차 FSR 1.0: EASU/RCAS 상수 계산의 계약을 게임/GPU 없이 확인한다(939).
+target_sources(netstorm_tests PRIVATE FsrConstantsTests.cpp GpuPresenterTests.cpp)
+add_executable(netstorm_fsr_tests FocusedTestMain.cpp FsrConstantsTests.cpp GpuPresenterTests.cpp)
+target_link_libraries(netstorm_fsr_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_fsr_tests)

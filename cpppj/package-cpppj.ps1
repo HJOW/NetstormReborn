@@ -430,6 +430,7 @@ function New-ReadmeText {
         '  third-party\libsmacker\  디코더 라이선스와 대응 소스(동봉된 경우)',
         '  Netstorm.bat        창 모드 실행',
         '  Netstorm-SavedMode.bat  저장된 화면 모드로 실행',
+        '  third-party\fsr1\   AMD FidelityFX FSR 1.0 헤더/라이선스(MIT)와 출처 설명',
         '  fonts\              한국어 글꼴(D2Coding)과 라이선스',
         '  lang\               한국어 번역표(xlat.korean). 옵션 > 언어(Language)에서 한국어를 고릅니다.',
         '  game\               게임 데이터 (원본 Netstorm 10.78)',
@@ -438,6 +439,11 @@ function New-ReadmeText {
         '                      직접 실행하지 않습니다.',
         '  BUILD_INFO.txt      이 배포판을 만든 소스와 실행 파일 정보',
         '  LICENSE.txt         라이선스',
+        '',
+        '[안티앨리어싱 / FSR 1.0]',
+        '옵션 메뉴의 Anti-Aliasing, FSR 1.0 Upscaling 항목으로 각각 켤 수 있으며 기본은 꺼짐입니다.',
+        'Direct3D 11 장치가 있으면 해상도 목록에 2560 by 1440, 3840 by 2160도 나옵니다. 이 해상도는 1920x1080으로 그린 화면을 FSR 1.0으로 늘리며 FSR이 자동으로 켜집니다.',
+        '장치를 쓸 수 없거나 환경변수 NETSTORM_NO_GPU=1이면 이 항목들은 숨겨지고 기존 출력이 유지됩니다.',
         '',
         '[설정 초기화]',
         '%USERPROFILE%\Saved Games\Netstorm\Saves\options.cfg 와 fullscreenStateFile.dat 를 지우면 기본 설정으로 돌아갑니다.',
@@ -454,7 +460,8 @@ function New-ReadmeText {
         '4. game\Netstorm.exe is the original executable. The clone only reads its icon/cursor resources; do not run it directly.',
         '5. Delete %USERPROFILE%\Saved Games\Netstorm\Saves\options.cfg and fullscreenStateFile.dat to reset settings.',
         '6. Korean: fonts\ (D2Coding) and lang\xlat.korean are bundled; pick Options > Language > Korean.',
-        '7. This is a work-in-progress clone; multiplayer is not included.')
+        '7. Optional Anti-Aliasing and AMD FidelityFX Super Resolution 1.0 (MIT, see third-party\fsr1\) are in Options (off by default); 2560x1440/3840x2160 appear when a Direct3D 11 device exists.',
+        '8. This is a work-in-progress clone; multiplayer is not included.')
     return (($lines -join "`r`n") + "`r`n")
 }
 
@@ -797,6 +804,13 @@ try {
     $licensePath = Join-Path $RepoRoot 'LICENSE'
     if (Test-Path -LiteralPath $licensePath -PathType Leaf) {
         Add-FileItem -Items $items -Entry ($PackageRootName + '/LICENSE.txt') -Source $licensePath
+    }
+    # 7차 FSR 1.0: 실행 파일에 AMD 공식 셰이더 헤더가 들어 있으므로 MIT 라이선스와 출처 자료를 third-party\fsr1 에 함께 둔다. (2026-11-06 신규)
+    $fsrSource = Join-Path $PSScriptRoot 'third_party/fsr1'
+    foreach ($fsrName in @('LICENSE.txt', 'README.ko.md', 'ffx_a.h', 'ffx_fsr1.h')) {
+        $fsrFile = Join-Path $fsrSource $fsrName
+        if (-not (Test-Path -LiteralPath $fsrFile -PathType Leaf)) { throw "FSR 1.0 자료를 찾을 수 없습니다: ${fsrFile}" }
+        Add-FileItem -Items $items -Entry ($PackageRootName + '/third-party/fsr1/' + $fsrName) -Source $fsrFile
     }
     # 6차 한국어: D2Coding 글꼴(저장소 fonts 의 가장 새 .ttc 하나)과 라이선스, 한국어 번역표를 실행 파일 옆 fonts\, lang\ 에 넣는다.
     # 클론은 실행 파일 폴더에서 이 두 폴더를 찾아 한글 글리프와 번역을 읽는다. (2026-11-06 신규)

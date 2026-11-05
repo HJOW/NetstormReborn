@@ -59,7 +59,8 @@ Json McpProtocol::ToolsList() {
     tools.Push(Tool("netstorm_status", "현재 게임 상태 요약(프레임 번호, 화면 크기, 단계/페이지)을 돌려준다.", Json::MakeObject()));
     Json reportProperties; reportProperties.Set("camera_only", Property("boolean", "true이면 큰 월드 덤프를 생략한 간결한 카메라 관측만 돌려준다."));
     tools.Push(Tool("netstorm_report", "게임 내부 관측 보고서(메뉴/월드/카탈로그/카메라 등 탭 구분 텍스트)를 돌려준다.", std::move(reportProperties)));
-    tools.Push(Tool("netstorm_screenshot", "현재 게임 화면을 PNG 이미지로 돌려준다(논리 화면 버퍼, 원본 팔레트 색 그대로).", Json::MakeObject()));
+    Json screenshotProperties; screenshotProperties.Set("presented", Property("boolean", "true이면 논리 화면 대신 GPU 후처리(안티앨리어싱/FSR 1.0)가 실제로 표시한 클라이언트 영역 전체를 RGBA PNG로 돌려준다. 후처리가 꺼져 있으면 논리 화면이다."));
+    tools.Push(Tool("netstorm_screenshot", "현재 게임 화면을 PNG 이미지로 돌려준다(기본은 논리 화면 버퍼, 원본 팔레트 색 그대로).", std::move(screenshotProperties)));
     Json action; action.Set("type", "object").Set("properties", Json::MakeObject().Set("op", Property("string", "동작: click, click-if, down, up, up-if, right, outside, pointer, esc, key, keyup, script-command, command")).Set("arg", Property("string", "동작 인자. click은 컨트롤 라벨 또는 screen:x,y, key는 문자/키 이름(예: enter, f5, shift+a), script-command는 'Tell,Blank' 같은 원문 명령.")));
     Json actions; actions.Set("type", "array").Set("items", std::move(action)).Set("description", "프레임마다 하나씩 순서대로 실행할 입력 동작 목록이다.");
     Json inputProperties;
@@ -211,6 +212,18 @@ std::vector<std::uint8_t> McpServer::ScreenPng(client::Client& client) const {
     return png;
 }
 
+// 7차: GPU 후처리가 켜져 있으면 실제로 표시한 클라이언트 영역(BGRA)을 RGBA PNG로 만들고, 꺼져 있으면 논리 화면 PNG를 돌려준다.
+std::vector<std::uint8_t> McpServer::PresentedPng(client::Client& client) const {
+    std::vector<std::uint8_t> bgra;
+    int width = 0, height = 0;
+    if (!client.GetScreen().ReadPresented(bgra, width, height)) return ScreenPng(client);
+    std::vector<std::uint8_t> rgba(bgra.size());
+    for (std::size_t offset = 0; offset + 3 < bgra.size(); offset += 4) { // B,G,R,A 순서를 R,G,B,A로 바꾸고 알파는 불투명으로 둔다.
+        rgba[offset] = bgra[offset + 2]; rgba[offset + 1] = bgra[offset + 1]; rgba[offset + 2] = bgra[offset]; rgba[offset + 3] = 255;
+    }
+    return platform::EncodePngRgba(static_cast<std::uint32_t>(width), static_cast<std::uint32_t>(height), rgba);
+}
+
 Json McpServer::StartRecording(client::Client& client, const Json& arguments) {
     Json info;
     if (recorder_.Running()) return info.Set("error", "이미 녹화 중입니다");
@@ -288,7 +301,7 @@ void McpServer::ReportInputError(client::Client& client, const std::string& mess
 void McpServer::Finish(const McpPending& pending, client::Client& client) {
     if (!pending.error.empty()) { Send(McpProtocol::TextResult(pending.call.id, "입력 실행 오류: " + pending.error + "\n" + StatusJson(client).Dump(), true)); return; }
     const auto status = StatusJson(client).Dump();
-    if (pending.screenshot) Send(McpProtocol::ImageResult(pending.call.id, status, ScreenPng(client)));
+    if (pending.screenshot) Send(McpProtocol::ImageResult(pending.call.id, status, pending.call.arguments["presented"].AsBool(false) ? PresentedPng(client) : ScreenPng(client)));
     else Send(McpProtocol::TextResult(pending.call.id, status));
 }
 

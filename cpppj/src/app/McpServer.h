@@ -81,6 +81,7 @@ private:
     void Finish(const McpPending& pending, client::Client& client); // 대기 중인 호출에 최종 응답을 보낸다.
     platform::Json StatusJson(client::Client& client) const;   // 게임 상태 요약 객체다.
     std::vector<std::uint8_t> ScreenPng(client::Client& client) const; // 현재 논리 화면을 PNG로 만든다.
+    std::vector<std::uint8_t> PresentedPng(client::Client& client) const; // 7차: GPU 후처리가 실제 표시한 클라이언트 영역을 RGBA PNG로 만든다(꺼져 있으면 논리 화면).
     platform::Json StartRecording(client::Client& client, const platform::Json& arguments); // 녹화 시작(영상+소리)이다. 결과 정보 객체를 돌려준다.
     platform::Json StopRecording(const platform::Json& arguments);                          // 녹화 종료와 선택적 ffmpeg 합성이다.
     platform::FrameRecorder recorder_;                     // 영상 프레임 녹화기다(게임 스레드 전용).

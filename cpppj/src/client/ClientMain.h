@@ -131,6 +131,12 @@ public:
     void InterpretStateOptions(); //004b2df0 후반의 실제435220을 같은 현재 설정/장치에 재실행한다. State/미션 확정은 하지 않는다.
     // 원본 세 해상도의 창 모드 장치와 Renderer를 다시 만든다.
     void ChangeResolution(int width, int height);
+    // 7차 안티앨리어싱/FSR 1.0: 현재 설정(antiAliasing, fsr1)과 표시 해상도에 맞춰 Screen의 GPU 후처리 출력을 켜거나 끈다. 장치가 없으면 GDI 출력을 유지한다.
+    void ApplyPresentationOptions();
+    // 7차: Direct3D 11 후처리 장치를 쓸 수 있는지다(처음 한 번만 확인한다). 환경변수 NETSTORM_NO_GPU=1이면 항상 거짓이다.
+    bool PostProcessAvailable();
+    int PresentWidth() const { return presentWidth_; }   // 7차: 창/표시 목표 폭이다. FSR 해상도가 아니면 논리 화면 폭과 같다.
+    int PresentHeight() const { return presentHeight_; } // 7차: 창/표시 목표 높이다.
     void ChangeScreenMode(std::uint32_t flags); // 원문 부모의 실제 모드 복구/시작 설정/메타 갱신을 수행한다. 마지막 workingFullScreenFlags는 별도 확인에서만 저장한다.
     void AcceptScreenMode(); // 조정 확인창에서 현재 실제 모드를 다음 실행의 전체화면 선택으로 저장한다.
     std::string ScreenDiagnostics() const; // 실제 창/출력/커서 제한을 짧은 UI 실행의 관측 자료로만 읽는다.
@@ -387,6 +393,8 @@ private:
     std::vector<o::ProcessId> thunderProcesses_; // 커널이 소유한 번개 번호. 파괴 콜백에서 제거하므로 재사용된 슬롯을 지우지 않는다.
     // screenWidth_: 게임 화면의 픽셀 너비.
     int screenWidth_{kDefaultScreenWidth};   // DAT_00531860
+    int presentWidth_{0}, presentHeight_{0}; // 7차: 창/표시 목표 크기다. 0이면 아직 정하지 않았고 FSR 해상도(2560x1440, 3840x2160)에서만 논리 크기(1920x1080)와 다르다.
+    std::optional<bool> postProcessAvailable_; // 7차: GPU 후처리 장치 가용성 캐시다.
     // screenHeight_: 게임 화면의 픽셀 높이.
     int screenHeight_{kDefaultScreenHeight}; // DAT_00531864
     // windowWidth_: Win32 창의 너비.

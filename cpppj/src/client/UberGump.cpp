@@ -245,6 +245,15 @@ std::string FontBytes(std::string_view text) {
 std::vector<GameMenuLanguage> LanguageMenuChoices(int current) {
     return {{FontBytes("English"),0U,current==0 || current==1},{FontBytes("한국어"),kKoreanLanguageNumber,current==static_cast<int>(kKoreanLanguageNumber)}};
 }
+// 7차: 후처리 장치가 있으면 옵션 메뉴 훅에 FSR 해상도, 표시 크기 조회, Anti-Aliasing/FSR 토글을 연결한다. 장치가 없으면 원문 구성 그대로 둔다.
+}
+void UberGump::ConnectPostProcessMenu(GameMenusHooks& hooks) {
+    hooks.presentSize=[this] { return std::array<std::uint32_t,2>{static_cast<std::uint32_t>(client_.PresentWidth()),static_cast<std::uint32_t>(client_.PresentHeight())}; };
+    if (!client_.PostProcessAvailable()) return;
+    hooks.fsrResolutions=kFsrScreenResolutionChoices;
+    hooks.postProcessOptions=true;
+}
+namespace {
 // 자동 검사 보고에는 개행/탭을 제거하여 한 항목 한 줄을 유지한다.
 std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t', ' '); std::replace(text.begin(), text.end(), '\n', ' '); std::replace(text.begin(), text.end(), '\r', ' '); return text; }
 }
@@ -945,6 +954,7 @@ GameMenusHooks UberGump::CurrentGameMenuHooks() {
     hooks.editingMission=[this] { return missionRuntime_ ? missionRuntime_->mode64 : 0U; };hooks.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; //원문 Guide getter는 현재 미션이 없으면0을 돌려준다.
     hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른 Windows10/11 호환 화면비 추가이며 기본 원문 세 해상도는 유지한다.
     hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 옵션 메뉴 Language 하위 메뉴(영어/한국어)다.
+    ConnectPostProcessMenu(hooks); // 7차: 후처리 장치가 있으면 FSR 해상도와 Anti-Aliasing/FSR 토글을 추가한다.
     return hooks;
 }
 // 원문004cebf0의 메인 Help/Options를 실제 클릭 버튼과 공통 메뉴/모달/명령 큐에 연결한다.
@@ -981,6 +991,7 @@ void UberGump::OpenGameMenu(bool playerList) {
         hooks=session.BindGameMenus(std::move(hooks));const auto globals=hooks.global;const auto translate=hooks.translate; // 바인더가교체한같은현재소유자의getter를빌린다.
         hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른Windows10/11 DIB 호환 화면비만 명시 추가하며 기본 원문 검사는 빈 목록을 유지한다.
         hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 게임 중 옵션 메뉴에도 같은 Language 하위 메뉴를 둔다.
+        ConnectPostProcessMenu(hooks); // 7차: 게임 중 옵션 메뉴에도 같은 후처리 항목을 둔다.
         RawGameMenus children(std::move(hooks));
         if (playerList) return children.Players(true); // 원본004d8a56은 명령 인자와 무관하게 fancy=1을 넘기며 현재 루트 중앙에 직접 부착한다.
         GameMenuBarHooks bar; // 가로막대만 현재 serial과 실제 미니맵 왼쪽 경계를 사용한다.
@@ -1055,6 +1066,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
                 return client_.Configuration().Set(decode(key),decode(value));
             });
             client_.ApplyAudioOptions(); // 현재 복원된 옵션 장치에 실제 효과음·음악 값을 반영한다.
+            client_.ApplyPresentationOptions(); // 7차: 안티앨리어싱/FSR 토글도 바로 반영한다.
         }
         ++menuConfigRevision_;worldRedraw_=1;rawButtons_->RouteInput(event);Refresh();return true; // 원본 이 분기의 두 번째466200 호출을 보존한다.
     }
@@ -1063,7 +1075,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
         effects.width=[this] { return client_.GetScreen().Width(); };effects.height=[this] { return client_.GetScreen().Height(); };
         effects.invalidate=[this](auto left,auto top,auto width,auto height,auto flags) { client_.GetRenderer().Invalidate({left,top,width,height},flags);rebuild_=true; }; //새 글꼴을 쓰기 전에 같은 호스트 장면을 재수집한다.
         effects.currentFontFace=[this] { return client_.Fonts().CurrentFace(); };effects.set=[this](auto key,auto value) { client_.Configuration().Set(std::string(key),FontFaceToUtf8(value));client_.ApplyAudioOptions(); }; //4414d0의 현재 Config와 기존 음향 재해석을 동기 사용한다.
-        effects.closeSound=[this] { client_.WorldAudio().Shutdown(); };effects.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration());client_.ApplyAudioOptions(); };
+        effects.closeSound=[this] { client_.WorldAudio().Shutdown(); };effects.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration());client_.ApplyAudioOptions();client_.ApplyPresentationOptions(); };
         effects.sound=[this](auto name,auto a,auto b,auto c,auto d,auto e) { client_.WorldAudio().Sounds().PlayByName(name,a,b,c,d,e); };
         return DispatchPresentationCommandInput(event,effects); //release/정지/모달/실패의 관문은 원문의 해당 부모만 실행한다.
     }
@@ -1083,7 +1095,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
     hooks.command=[](auto command) { const auto value=GameMenuCommandValue(static_cast<std::uint32_t>(command));if (!value) throw std::logic_error("메뉴 명령의 현재 원문 ID 없음");return *value; };
     hooks.queue=[this](auto command,auto first,auto second) { client_.Input().PushCommand(command,first,second); };
     hooks.tell=[this](auto name) { Tell(std::string(name)); };
-    hooks.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration());client_.ApplyAudioOptions(); };
+    hooks.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration());client_.ApplyAudioOptions();client_.ApplyPresentationOptions(); };
     hooks.sound=[this](auto name,auto a,auto b,auto c,auto d,auto e) { client_.WorldAudio().Sounds().PlayByName(name,a,b,c,d,e); };
     hooks.text=[this](auto token) { return scriptStrings_.Resolve(token); }; // 실제 HTML 명령이 저장한 같은 고리 문자열을 PlaySound 소비 순간에 읽는다.
     hooks.paused=[this] { return client_.Paused(); };
@@ -1128,11 +1140,16 @@ void UberGump::OpenMenu(std::string name) {
         add("Edge Scroll in Fullscreen", "Toggle", "edgeScroll", config.GetInt("edgeScroll") != 0);
         add("Auto-Demo", "Toggle", "autoDemo", config.GetInt("autoDemo") != 0);
         add("Tell Tips at Startup", "Toggle", "tellTips", config.GetInt("tellTips") != 0);
+        if (client_.PostProcessAvailable()) { add("Anti-Aliasing", "Toggle", "antiAliasing", config.GetInt("antiAliasing") != 0);add("FSR 1.0 Upscaling", "Toggle", "fsr1", config.GetInt("fsr1") != 0); } // 7차: 후처리 장치가 있을 때만 보인다.
         add("Pass Server Diagnostic", "", "", false, false);
     } else if (popup_ == "resolution") {
         for (const auto& size:kScreenResolutionChoices) { // 두1280폭도 높이까지 대조하고 ESC와 같은 원본 경고→Yes/No→저장/종료 흐름을 사용한다.
             const auto width=std::to_string(size[0]),height=std::to_string(size[1]);
-            add(width+" by "+height,"Tell","SETSIZE("+width+','+height+')',client_.GetScreen().Width()==static_cast<int>(size[0]) && client_.GetScreen().Height()==static_cast<int>(size[1]));
+            add(width+" by "+height,"Tell","SETSIZE("+width+','+height+')',client_.PresentWidth()==static_cast<int>(size[0]) && client_.PresentHeight()==static_cast<int>(size[1]));
+        }
+        if (client_.PostProcessAvailable()) for (const auto& size:kFsrScreenResolutionChoices) { // 7차: FSR 해상도는 후처리 장치가 있을 때만 보이며 같은 SETSIZE 흐름이다.
+            const auto width=std::to_string(size[0]),height=std::to_string(size[1]);
+            add(width+" by "+height,"Tell","SETSIZE("+width+','+height+')',client_.PresentWidth()==static_cast<int>(size[0]) && client_.PresentHeight()==static_cast<int>(size[1]));
         }
     } else if (popup_ == "soundvolume" || popup_ == "musicvolume") {
         const std::string key = popup_ == "soundvolume" ? "soundVolume" : "musicVolume";

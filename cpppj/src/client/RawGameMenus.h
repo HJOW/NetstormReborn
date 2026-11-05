@@ -35,6 +35,9 @@ struct GameMenusHooks {
     std::function<const GumpCreateNode*(std::uint32_t)> node; // fancy배치의현재기본폭/높이를읽는다.
     std::function<void(std::int32_t,std::int32_t,std::uint32_t)> attachCurrent; // 실제가운데좌표/현재루트로controlled메뉴를부착한다.
     std::vector<GameMenuLanguage> compatibilityLanguages; // 6차: 원본에 없는 Language 하위 메뉴 항목이다. 비어 있으면 하위 메뉴를 만들지 않아 원문 메뉴 구성/조회 순서를 그대로 둔다.
+    std::span<const std::array<std::uint32_t,2>> fsrResolutions; // 7차: FSR 1.0으로 만드는 표시 해상도(2560x1440, 3840x2160)이며 후처리 장치가 있을 때만 채운다. 비면 원문 구성 그대로다.
+    std::function<std::array<std::uint32_t,2>()> presentSize; // 7차: 현재 표시(목표) 크기다. 있으면 호환/FSR 해상도의 체크를 논리 화면 크기 대신 이 값으로 한다.
+    bool postProcessOptions{}; // 7차: 참이면 Options에 Anti-Aliasing과 FSR 1.0 토글을 추가한다(후처리 장치가 있을 때만 참).
     std::span<const std::array<std::uint32_t,2>> compatibilityResolutions; // Windows10/11 호환 Client만 원문 세 행 뒤에 추가한다. 기본 빈 목록은 원문 동작/조회 순서를 유지한다.
 };
 // 큰 게임helper는 명시경계이고 메뉴부모의조건·조회순서·문구·명령은원본몸체다.

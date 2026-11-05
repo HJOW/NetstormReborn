@@ -7,10 +7,12 @@
 // Windows10/11 호환성: 원본 DirectDraw 전체화면/flip 대신 같은 DIB의 비율 유지 borderless 출력을 사용한다.
 #include "client/Screen.h"
 #include "client/ScreenPresentation.h"
+#include "client/GpuPresenter.h" // 7차: 선택적 GPU 후처리 출력기다.
 #include "client/ScreenPaletteApply.h"
 #include "client/PaletteFileRead.h" // 같은 saved_에 현재 파일을 직접 읽고 기존 후단 끝에 닫는다.
 #include <algorithm>
 #include <bit>
+#include <cstdio>
 #include <cstring>
 #include <stdexcept>
 #include <utility>
@@ -221,10 +223,13 @@ bool Screen::SetMode(std::uint32_t flags, int windowWidth, int windowHeight, int
     } else if (wasFull && windowedSaved_) RestoreWindowed();
     else {
     LONG style = WS_OVERLAPPEDWINDOW;
-    if (GetSystemMetrics(SM_CXSCREEN) == width_ && GetSystemMetrics(SM_CYSCREEN) == height_) {
+    const int targetWidth = presentWidth_ > 0 ? presentWidth_ : width_, targetHeight = presentHeight_ > 0 ? presentHeight_ : height_; // 7차: 창 클라이언트 영역의 목표 크기다(논리 크기와 같으면 기존 동작이다).
+    bool borderless = false;
+    if (GetSystemMetrics(SM_CXSCREEN) == targetWidth && GetSystemMetrics(SM_CYSCREEN) == targetHeight) {
         // 바탕 화면이 게임 화면과 같은 크기면 테두리 없는 창으로 화면을 덮는다.
         style = static_cast<LONG>(WS_POPUP);
         border_ = {0, 0};
+        borderless = true;
     } else {
         border_.x = GetSystemMetrics(SM_CXFRAME);
         border_.y = GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFRAME) + (menu_ ? GetSystemMetrics(SM_CYMENU) : 0);
@@ -234,7 +239,7 @@ bool Screen::SetMode(std::uint32_t flags, int windowWidth, int windowHeight, int
     position_ = InitialWindowPosition(initWindowPos, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
         windowWidth, windowHeight, position_);
     ShowWindow(window,SW_SHOWNORMAL);
-    SetWindowPos(window,HWND_NOTOPMOST,position_.x,position_.y,windowWidth,windowHeight,SWP_FRAMECHANGED);
+    SetWindowPos(window,HWND_NOTOPMOST,position_.x,position_.y,borderless && presentWidth_>0 ? targetWidth : windowWidth,borderless && presentHeight_>0 ? targetHeight : windowHeight,SWP_FRAMECHANGED); // 7차: 표시 크기를 아는 테두리 없는 창은 프레임 두께를 더하지 않고 표시 크기 그대로 만든다(알 수 없으면 기존 크기).
     }
     UpdateWindow(window);
     SetPalette(0, kPaletteSize, nullptr, true);
@@ -255,11 +260,11 @@ void Screen::RestoreWindowed() {
 }
 // 크기는 디스플레이/DPI/활성 변경 뒤에도 현재 Win32 클라이언트 영역에서 읽는다.
 ScreenRect Screen::PresentationRect() const {
-    if (!(flags_&ScreenMode::kFullScreen)) return {0,0,width_,height_};RECT client{};GetClientRect(static_cast<HWND>(window_),&client);
+    if (!(flags_&ScreenMode::kFullScreen) && !gpu_) return {0,0,width_,height_};RECT client{};GetClientRect(static_cast<HWND>(window_),&client); // 7차: GPU 후처리 창은 클라이언트 크기가 논리 크기와 다를 수 있어 전체화면처럼 비율대로 맞춘다.
     if (client.right<=0 || client.bottom<=0) return {0,0,width_,height_};return FitScreenPresentation(width_,height_,client.right,client.bottom);
 }
 // 창 모드의 기존1:1 입력을 유지하며 호환 전체화면만 배율을 되돌린다.
-ScreenPoint Screen::ToLogicalPoint(ScreenPoint point) const { return flags_&ScreenMode::kFullScreen ? MapScreenPresentationPoint(point,PresentationRect(),width_,height_) : point; }
+ScreenPoint Screen::ToLogicalPoint(ScreenPoint point) const { return (flags_&ScreenMode::kFullScreen) || gpu_ ? MapScreenPresentationPoint(point,PresentationRect(),width_,height_) : point; } // 7차: GPU 후처리 창도 배율을 되돌린다.
 // Win32 커서는 공유 자원이므로 다른 앱으로 전환하기 전에 반드시 제한을 해제한다.
 void Screen::SetActive(bool active) {
     active_=active;const HWND window=static_cast<HWND>(window_);
@@ -450,6 +455,7 @@ void Screen::Update(ScreenRect rect) {
     rect = ClipScreenRect(rect, screen);
     clip_ = screen;
     if (rect.right<=rect.left || rect.bottom<=rect.top) return;
+    if (gpu_ && dibSurface_ && PresentThroughGpu()) return; // 7차: 후처리가 켜져 있으면 변경 영역과 무관하게 완성 프레임 전체를 GPU로 표시한다. 실패하면 아래 GDI 경로로 계속한다.
     if (flags_&ScreenMode::kFullScreen) {
         const HWND window=static_cast<HWND>(window_);
         if (!active_ || IsIconic(window) || !IsWindowVisible(window) || !dibSurface_) return;
@@ -469,6 +475,42 @@ void Screen::Update(ScreenRect rect) {
     }
     if (primarySurface_ && drawSurface_) primarySurface_->BlitFrom(rect.left, rect.top, *drawSurface_, rect.left, rect.top, rect.right, rect.bottom);
 }
+// 7차: 현재 완성 논리 프레임(8비트 팔레트 DIB)과 현재 팔레트를 GPU 후처리 출력기에 넘겨 클라이언트 영역에 비율대로 표시한다.
+// 창이 숨김/최소화 상태면 그릴 곳이 없으므로 성공으로 본다. 출력기가 실패하면 이유를 진단 출력으로 남기고 출력기를 꺼서 GDI 경로로 복귀한다.
+bool Screen::PresentThroughGpu() {
+    const HWND window=static_cast<HWND>(window_);
+    if (!IsWindowVisible(window) || IsIconic(window)) return true;
+    const auto output=PresentationRect();
+    std::array<std::uint32_t,256> palette{}; // 현재 팔레트는 RGBQUAD(B,G,R,예약) 순서 256칸이다.
+    static_assert(sizeof(ScreenColor)==4);
+    std::memcpy(palette.data(),current_.data(),sizeof palette);
+    GpuPresentOptions options;options.fsr=gpuFsr_;options.antiAliasing=gpuAntiAliasing_;
+    if (gpu_->Present(dibSurface_->Pixels(),dibSurface_->Pitch(),width_,height_,palette.data(),{output.left,output.top,output.right,output.bottom},options)) return true;
+    std::fprintf(stderr,"GPU 후처리 출력 실패로 GDI 출력으로 되돌린다: %s\n",gpu_->LastError().c_str());
+    gpu_.reset();gpuFsr_=gpuAntiAliasing_=false;
+    return false;
+}
+// 7차: 후처리 출력기를 켜거나 끈다(자세한 계약은 헤더). 같은 설정이면 아무것도 하지 않는다.
+bool Screen::SetPostProcess(bool fsr, bool antiAliasing, std::string* error) {
+    if (!fsr && !antiAliasing) { // 둘 다 끄면 출력기를 없애고 기존 GDI 경로로 돌아간다. 다음 Update가 창 전체를 다시 그리도록 한다.
+        const bool had=gpu_!=nullptr;gpu_.reset();gpuFsr_=gpuAntiAliasing_=false;
+        if (had && drawSurface_) InvalidateRect(static_cast<HWND>(window_),nullptr,FALSE);
+        return true;
+    }
+    if (gpu_ && gpuFsr_==fsr && gpuAntiAliasing_==antiAliasing) return true; // 이미 같은 후처리가 켜져 있다.
+    if (!gpu_) {
+        std::string reason;
+        gpu_=GpuPresenter::Create(window_,reason);
+        if (!gpu_) { if (error) *error=reason;return false; }
+    }
+    gpuFsr_=fsr;gpuAntiAliasing_=antiAliasing;
+    if (drawSurface_ && dibSurface_) Update({0,0,width_,height_}); // 바뀐 후처리로 현재 프레임을 즉시 다시 표시한다.
+    return true;
+}
+bool Screen::PostProcessActive() const { return gpu_!=nullptr; }
+void Screen::SetPresentSize(int width, int height) { presentWidth_=width;presentHeight_=height; }
+bool Screen::ReadPresented(std::vector<std::uint8_t>& bgra, int& width, int& height) const { return gpu_ && gpu_->ReadBack(bgra,width,height); }
+const std::string& Screen::PostProcessAdapter() const { static const std::string none; return gpu_ ? gpu_->AdapterName() : none; }
 // 원본 004a40d0: 숨김 횟수에 맞춰 Windows의 커서 표시 횟수를 0(보임) 또는 -1(숨김)로 맞춘다.
 void Screen::ShowCursor(bool show) {
     cursorHidden_ += show ? -1 : 1;

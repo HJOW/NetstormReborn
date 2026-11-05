@@ -20,6 +20,7 @@
 #include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
 #include "client/LanguageRequest.h" //SetLanguage는같은현재언어/설정/입력큐와공유카운터를사용한다.
 #include "client/KoreanResources.h" //6차: 한국어 번역표와 D2Coding 글꼴 파일 탐색이다.
+#include "client/GpuPresenter.h" //7차: 후처리 장치 가용성 확인이다.
 #include "platform/PortableStartup.h" //6차: 실행 파일 폴더로 클론 데이터(lang, fonts) 위치를 찾는다.
 #include "o/RawXlat.h" //시작 때 함께 읽은 세 언어의 번역을 선택 변경 뒤에도 보존한다.
 #include "client/ProductPresentation.h"
@@ -325,6 +326,7 @@ int Client::Run() {
 
     // "init screen" → "init palette": fortPal 이름을 GamePalSpec에 넣은 경로의 팔레트.
     screen_ = std::make_unique<Screen>(window_, windowDc_, screenWidth_, screenHeight_,&paletteLoaded_);
+    screen_->SetPresentSize(presentWidth_, presentHeight_); // 7차: 창 클라이언트 영역의 목표 크기(FSR 해상도에서만 논리 크기와 다르다)를 먼저 알린다.
     screen_->Init();
     const auto palettePath = configuration_.PathSpec("GamePalSpec", configuration_.PathSpec("fortPal"));
     screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition);
@@ -361,6 +363,7 @@ int Client::Run() {
     // 원본 004a4fe0의 끝: 정해진 실제 모드를 설정에 적는다. --window는 시작 시에만 적용하고 저장된 사용자 선택을 바꾸지 않는다.
     const auto mode = screen_->Flags();
     PublishScreenMode();screenModeInitialized_=1; //원문004a4fe0의 끝에서 성공을 기록하며 Screen 재생성으로0복제하지 않는다.
+    ApplyPresentationOptions(); // 7차: 설정의 안티앨리어싱/FSR과 FSR 표시 해상도에 맞춰 GPU 후처리 출력을 켠다(기본은 꺼짐이라 기존 GDI 경로 그대로다).
     InitializeNativeAudio(); // 원본 init sound의 기존 위치에서 같은 본체를 실행한다.
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
     gameplayGlobals_->WorldCells()=256; //00438dc0/004395df의 실제 kernel 뒤 명시00531928 store다. Session 생성에서 다시 쓰지 않는다.
@@ -649,15 +652,21 @@ void Client::InterpretOptions() {
     std::int32_t width = 0, height = 0;
     configuration_.ReadInt("SCREENW", width);
     configuration_.ReadInt("SCREENH", height);
-    if (width != screenWidth_ || height != screenHeight_) {
-        screenWidth_ = width;
-        screenHeight_ = height;
+    // 7차: SCREENW/SCREENH는 표시(목표) 크기다. FSR 해상도(2560x1440, 3840x2160)는 논리 1920x1080으로 그려 FSR이 늘리며, 후처리 장치가 없으면 1920x1080으로 낮춘다.
+    if (IsFsrScreenResolution(width, height) && !PostProcessAvailable()) { width = kFsrLogicalWidth; height = kFsrLogicalHeight; }
+    const auto logicalSize = LogicalScreenSize(width, height);
+    const int logicalWidth = static_cast<int>(logicalSize[0]), logicalHeight = static_cast<int>(logicalSize[1]);
+    if (logicalWidth != screenWidth_ || logicalHeight != screenHeight_ || width != presentWidth_ || height != presentHeight_) {
+        screenWidth_ = logicalWidth;
+        screenHeight_ = logicalHeight;
+        presentWidth_ = width;
+        presentHeight_ = height;
         const HWND window = static_cast<HWND>(window_);
         RECT windowRect{}, clientRect{};
         GetWindowRect(window, &windowRect);
         GetClientRect(window, &clientRect);
-        windowWidth_ = ((screenWidth_ - clientRect.right) - windowRect.left) + clientRect.left + windowRect.right;
-        windowHeight_ = ((screenHeight_ - clientRect.bottom) - windowRect.top) + clientRect.top + windowRect.bottom;
+        windowWidth_ = ((presentWidth_ - clientRect.right) - windowRect.left) + clientRect.left + windowRect.right; // 7차: 창 클라이언트 영역은 표시 크기다(FSR 해상도가 아니면 논리 크기와 같다).
+        windowHeight_ = ((presentHeight_ - clientRect.bottom) - windowRect.top) + clientRect.top + windowRect.bottom;
         MoveWindow(window, 0, 0, windowWidth_, windowWidth_, TRUE); // 원본은 높이 자리에도 폭을 넣는다.
     }
     configuration_.ReadInt("highPriorityValue", highPriority_);
@@ -928,9 +937,11 @@ void Client::ClearThunderFlashes() {
 std::size_t Client::ThunderFlashCount() const { return thunderProcesses_.size(); }
 // 원본 세 논리 해상도를 바꾸되 Windows10/11 호환 전체화면 선택은 같은 모드로 유지한다.
 void Client::ChangeResolution(int width, int height) {
-    if (!IsSupportedScreenResolution(width, height)) // 원본 세 해상도와 Windows10/11 호환 추가 해상도(4차 와이드 포함)만 허용한다.
+    if (!IsSupportedScreenResolution(width, height, PostProcessAvailable())) // 원본 세 해상도와 Windows10/11 호환 추가 해상도(4차 와이드 포함)만 허용하며 FSR 해상도(7차)는 후처리 장치가 있을 때만 허용한다.
         throw std::invalid_argument("Unsupported resolution");
-    if (screenWidth_ == width && screenHeight_ == height) return;
+    const auto logicalSize = LogicalScreenSize(width, height); // 7차: FSR 해상도는 논리 1920x1080이다.
+    const int logicalWidth = static_cast<int>(logicalSize[0]), logicalHeight = static_cast<int>(logicalSize[1]);
+    if (screenWidth_ == logicalWidth && screenHeight_ == logicalHeight && presentWidth_ == width && presentHeight_ == height) return;
     ClearThunderFlashes();
     const auto mode=screen_->Flags(); // 재생성 전 실제 모드를 보존한다.
     // 현재 RGBQUAD 256개를 새 장치의 저장 팔레트로도 옮긴다. SetPalette만 하면 SetMode의 기본 팔레트 재적용에서 검정으로 덮인다.
@@ -938,24 +949,45 @@ void Client::ChangeResolution(int width, int height) {
     std::memcpy(palette.data(),screen_->Palette().data(),palette.size());
     sceneVisible_ = false;
     kencloudGlobals_->BindRenderer(nullptr);renderer_.reset(); screen_.reset(); // 장치 재생성은 구름 할당/이름/옵션을 지우지 않는다.
-    screenWidth_ = width; screenHeight_ = height;
-    screen_ = std::make_unique<Screen>(window_, windowDc_, width, height,&paletteLoaded_);
+    screenWidth_ = logicalWidth; screenHeight_ = logicalHeight; presentWidth_ = width; presentHeight_ = height;
+    screen_ = std::make_unique<Screen>(window_, windowDc_, logicalWidth, logicalHeight,&paletteLoaded_);
+    screen_->SetPresentSize(presentWidth_, presentHeight_); // 7차: 표시 크기를 SetMode보다 먼저 알린다.
     screen_->Init(); screen_->InitDibSection();
     screen_->BindColorSortInput([owner=colorSortInput_] { return owner->Logical(); }); //해상도재생성은초기입력을다시캡처하지않는다.
     screen_->LoadPalette(GamePalette(palette),options_.edition);
-    RECT rect{0, 0, width, height};
+    RECT rect{0, 0, presentWidth_, presentHeight_}; // 7차: 창 클라이언트 영역은 표시 크기다.
     AdjustWindowRectEx(&rect, static_cast<DWORD>(GetWindowLongPtrA(static_cast<HWND>(window_), GWL_STYLE)), FALSE, 0);
     windowWidth_ = rect.right - rect.left; windowHeight_ = rect.bottom - rect.top;
     if (!screen_->SetMode(mode, windowWidth_, windowHeight_, initWindowPos_))
         throw std::runtime_error("Unable to change window resolution");
     PublishScreenMode();screenModeInitialized_=1;if ((mode&ScreenMode::kSoftwareMouse) && cursor_) cursor_->BuildSoftware(screen_->Palette());
-    renderer_ = std::make_unique<Renderer>(width, height,options_.edition);
+    renderer_ = std::make_unique<Renderer>(logicalWidth, logicalHeight,options_.edition);
     kencloudGlobals_->BindRenderer(renderer_.get()); // 새 장치를 같은 현재 renderer 전역에 공개한다.
     // 메뉴/독립 검사 화면도 새 화면 크기로 위치 효과음을 계산한다. 미션은 다음 Compose/Resize에서 실제 카메라를 공급한다.
     const auto previous=WorldAudio().View(); // noAudio도 같은 실제 카메라/화면 영역을 유지한다.
-    WorldAudio().SetView({previous.cameraX,previous.cameraY,previous.left,previous.top,width,height});
+    WorldAudio().SetView({previous.cameraX,previous.cameraY,previous.left,previous.top,logicalWidth,logicalHeight});
     sceneVisible_ = true;
-    configuration_.SetInt("SCREENW", width); configuration_.SetInt("SCREENH", height);
+    configuration_.SetInt("SCREENW", width); configuration_.SetInt("SCREENH", height); // 설정에는 표시(목표) 크기를 적는다.
+    ApplyPresentationOptions(); // 7차: 새로 만든 Screen에 후처리 출력을 다시 연결한다.
+}
+// 7차: GPU 후처리 장치(Direct3D 11, 없으면 소프트웨어 WARP) 가용성이다. 처음 한 번만 확인하고 NETSTORM_NO_GPU=1이면 항상 쓸 수 없다고 본다.
+bool Client::PostProcessAvailable() {
+    if (!postProcessAvailable_) {
+        const auto disabled = Environment("NETSTORM_NO_GPU");
+        postProcessAvailable_ = !(disabled && *disabled == "1") && GpuPresenter::Probe();
+    }
+    return *postProcessAvailable_;
+}
+// 7차: 설정 antiAliasing/fsr1과 표시 해상도가 요구하는 후처리를 Screen에 적용한다. 둘 다 필요 없으면 GDI 출력으로 되돌린다.
+void Client::ApplyPresentationOptions() {
+    if (!screen_) return;
+    const bool fsrResolution = IsFsrScreenResolution(presentWidth_, presentHeight_); // FSR 해상도는 FSR이 자동으로 켜진다.
+    const bool antiAliasing = configuration_.GetInt("antiAliasing") != 0;
+    const bool fsr = configuration_.GetInt("fsr1") != 0 || fsrResolution;
+    if (!antiAliasing && !fsr) { screen_->SetPostProcess(false, false); return; }
+    if (!PostProcessAvailable()) { std::clog << "후처리(안티앨리어싱/FSR) 장치를 쓸 수 없어 기존 GDI 출력을 유지한다.\n"; return; }
+    std::string problem;
+    if (!screen_->SetPostProcess(fsr, antiAliasing, &problem)) std::clog << "후처리 출력기를 켤 수 없어 기존 GDI 출력을 유지한다: " << problem << '\n';
 }
 
 // 원본 모드 결과의 전역 이름은 유지하되 Windows10/11 호환 장치가 실제 지원하는 플래그를 공개한다.

@@ -10,7 +10,9 @@
 #include <memory>
 #include <optional>
 #include <span>
+#include <string>
 #include <string_view>
+#include <vector>
 
 namespace netstorm::o { class BaseFileSystem; } // 파일 전용 팔레트 입구가 현재 VFS를 빌린다.
 namespace netstorm::client {
@@ -76,6 +78,7 @@ ScreenPoint InitialWindowPosition(int initWindowPos, int desktopWidth, int deskt
 
 // Win32 핸들(HWND·HDC·HMENU 등)을 헤더에서 <windows.h> 없이 넘기기 위한 형식.
 using NativeHandle = void*;
+class GpuPresenter; // 7차: 안티앨리어싱/FSR 1.0 후처리용 Direct3D 11 출력기다(client/GpuPresenter.h).
 
 // 원본 표면 객체(0x8c바이트, 생성 004a05a0). 종류 1 = DIB 섹션, 2 = 이미 있는 장치 문맥(창).
 // 종류 3·4·5(DirectDraw 주·보조·오프스크린 표면)는 옮기지 않았다.
@@ -134,7 +137,14 @@ public:
     // 원본 FUN_004a4fe0: 화면 모드를 정한다. 창 모드면 창 모양·위치를 맞추고 팔레트를 적용한다.
     // windowWidth·windowHeight는 클라이언트 영역이 화면 크기가 되는 창 크기(DAT_00542390·DAT_00542394)다.
     bool SetMode(std::uint32_t flags, int windowWidth, int windowHeight, int initWindowPos);
-    ScreenRect PresentationRect() const; // Windows10/11 호환 전체화면의 현재 실제 클라이언트 출력 범위다.
+    ScreenRect PresentationRect() const; // Windows10/11 호환 전체화면(또는 7차 GPU 후처리 창)의 현재 실제 클라이언트 출력 범위다.
+    // 7차 안티앨리어싱/FSR 1.0: 후처리 출력을 켜거나 끈다. fsr/antiAliasing 중 하나라도 참이면 Direct3D 11 출력기를 만들어(없으면) 이후 Update가 GDI 대신 이 경로로 표시한다.
+    // 둘 다 거짓이면 출력기를 없애 기존 GDI 경로로 돌아간다. 출력기를 만들 수 없으면 거짓을 돌려주고 error에 이유를 적으며 GDI 경로를 유지한다.
+    bool SetPostProcess(bool fsr, bool antiAliasing, std::string* error = nullptr);
+    void SetPresentSize(int width, int height); // 7차: 창 클라이언트 영역(표시)의 목표 크기다. FSR 해상도에서만 논리 크기와 다르며 0이면 논리 크기를 쓴다. SetMode보다 먼저 호출한다.
+    bool PostProcessActive() const; // GPU 후처리 출력기가 켜져 있는지다.
+    bool ReadPresented(std::vector<std::uint8_t>& bgra, int& width, int& height) const; // 마지막으로 GPU가 표시한 클라이언트 영역 전체(BGRA)다. 후처리가 꺼져 있으면 거짓이다.
+    const std::string& PostProcessAdapter() const; // 후처리 출력기가 쓰는 그래픽 장치 이름이다(꺼져 있으면 빈 문자열).
     ScreenPoint ToLogicalPoint(ScreenPoint point) const; // 확대/레터박스를 실제 입력과 일치시킨다.
     void SetActive(bool active); // 활성 전체화면에서만 커서를 출력 안에 두고 다른 앱으로 나가면 반납한다.
     void RelayoutFullscreen(); // 디스플레이/DPI 변경 뒤 같은 모니터를 다시 덮고 입력 제한을 갱신한다.
@@ -246,5 +256,9 @@ private:
     ScreenRect windowedBounds_{}; // 호환 전체화면 진입 전의 실제 창 위치/크기다.
     std::intptr_t windowedStyle_{}; // 복귀할 원래 창 스타일이며 Win32 포인터 폭을 유지한다.
     bool windowedSaved_{},active_{},cursorClipped_{}; // 저장된 창/활성 상태와 이 Screen이 소유한 커서 제한이다.
+    bool PresentThroughGpu(); // 7차: 현재 완성 프레임을 GPU 후처리 출력기로 표시한다. 실패하면 출력기를 끄고 거짓이다.
+    std::unique_ptr<GpuPresenter> gpu_; // 7차: 후처리 출력기이며 꺼져 있으면 비어 있다(기본).
+    int presentWidth_{}, presentHeight_{}; // 7차: 창 클라이언트 영역의 목표 크기이며 0이면 논리 크기다.
+    bool gpuFsr_{}, gpuAntiAliasing_{}; // 7차: 현재 켠 후처리 종류다.
 };
 }
