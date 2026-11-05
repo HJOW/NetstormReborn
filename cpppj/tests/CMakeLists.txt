@@ -3510,3 +3510,9 @@ set_source_files_properties(GeyserPartialDisplayTests.cpp PROPERTIES COMPILE_DEF
 
 # 동결 지원표와 새 간헐천 override의 관계를 같은 집중 대상에서 확인한다(897).
 target_sources(netstorm_pop_context_tests PRIVATE UnpopTests.cpp)
+
+# TYPE HP 숫자/현재 공장과 기존 이동 종류 선택만 검사한다. 실제 게임/의식/MP는 실행하지 않는다(898).
+target_sources(netstorm_tests PRIVATE RiftHitPointCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE RiftHitPointCurrentTests.cpp RawPathStartTests.cpp)
+set_source_files_properties(RiftHitPointCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_RIFT_HIT_POINT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/rifttype-hit-points-x86.tsv\"")

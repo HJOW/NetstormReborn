@@ -9,13 +9,25 @@
 #include "o/RawPriestRegen.h"
 #include "o/RawAuthorityState.h"
 #include <memory>
+#include <tuple>
 
 namespace netstorm::client {
 // 00488fe0/CD 0047d020의 현재 타입/프로세스 전역이다. 초기 번호는 두 보호 PE의 DWORD와 같다.
 // gameplay에서 전역을 바꿔도 다음 조회가 이 상태를 다시 읽는다.
 struct RawMovementProcessTypes {
+private:
+    std::uint32_t localPriest_{o::kPriestType}; // 독립 입력의 기존158 값이며 실제 Session은 장기 owner 주소를 빌린다.
+public:
+    RawMovementProcessTypes(std::uint32_t* sharedPriest=nullptr):priest(sharedPriest ? *sharedPriest : localPriest_) {} // 초기값을 장기 전역에 다시 쓰지 않고 현재 주소만 연결한다.
+    RawMovementProcessTypes(const RawMovementProcessTypes& source):RawMovementProcessTypes() { *this=source; } // 값 사본은 독립 저장소를 가지며 원래 지역 참조를 남기지 않는다.
+    RawMovementProcessTypes& operator=(const RawMovementProcessTypes& source) { // 명시 값 대입은 목적지의 주소 연결을 유지하면서 값만 복사한다.
+        std::tie(sunWalker,empty,windWalker,rainWalker,teleport,bulf,dude,priest,manaBolt,wormProcess,walkerProcess,balloonProcess,teleportProcess,bulfProcess,dudeProcess,priestProcess,flyProcess)=
+            std::tie(source.sunWalker,source.empty,source.windWalker,source.rainWalker,source.teleport,source.bulf,source.dude,source.priest,source.manaBolt,source.wormProcess,source.walkerProcess,source.balloonProcess,source.teleportProcess,source.bulfProcess,source.dudeProcess,source.priestProcess,source.flyProcess);
+        return *this;
+    }
     // 자산 타입 전역: sunWalker/빈 타입/windWalker/rainWalker/teleportEffect/bulf/dude/사제/manabolt 순서다.
-    std::uint32_t sunWalker{133},empty{187},windWalker{137},rainWalker{156},teleport{134},bulf{135},dude{70},priest{o::kPriestType},manaBolt{105};
+    std::uint32_t sunWalker{133},empty{187},windWalker{137},rainWalker{156},teleport{134},bulf{135},dude{70},manaBolt{105};
+    std::uint32_t& priest; // 실제 Session의 같은005412d0/CD0051cbbc 또는 독립localPriest_의 주소다.
     // 내장 프로세스 타입 전역: worm/simpleWalker/balloon/teleport/bulf/dude/priest/simpleFly 순서다.
     std::uint32_t wormProcess{40},walkerProcess{38},balloonProcess{42},teleportProcess{23},bulfProcess{41},
         dudeProcess{24},priestProcess{54},flyProcess{39};
@@ -54,6 +66,7 @@ struct RawPriestWorldCore {
 // 실제 전역을 보관하는 공유 상태다. 사제 목록 저장소 크기는 월드 초기화에서 명시 설정한다.
 // MissionOutcome/조회도 priests를 직접 공유하며 별도 사제 복사 목록을 만들지 않는다.
 struct RawPriestWorldState {
+    RawPriestWorldState(std::uint32_t* sharedPriest=nullptr):movement(sharedPriest) {} // 실제 HP/이동/회복이 같은 장기 사제 번호를 빌린다. 독립 기본 구성은 기존 값을 보유한다.
     // priests: 사제.
     o::PriestPostPopState priests;
     // owner: 소유 플레이어 번호 또는 소유권 처리 자료.

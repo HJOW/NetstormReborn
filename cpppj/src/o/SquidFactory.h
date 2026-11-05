@@ -1,6 +1,7 @@
 // 원본 Squid.cpp의 자산 생성/void Take와 공통 가상 초기화를 raw SID 풀에 연결한다.
 #pragma once
 #include "o/SidPool.h"
+#include "o/RawCheckingFlag.h"
 #include <functional>
 #include <string_view>
 
@@ -10,6 +11,7 @@ struct SquidFactoryDiagnostics { // 같은 World/Session의 현재 TYPE와 정�
     std::span<const RiftTypeRecord> types; // 비어 있으면 기존 독립 생성자의 TYPE 사본을 사용한다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // Take/PostTake의 원문 식/파일/줄을 실제 진단 장치에 전달한다.
     std::function<void(std::string_view)> detail; // 00436d20의 TYPE 불일치 문구를 같은 Client의005e4798 소유자에 복사한다.
+    RawCheckingFlag checking{}; // TYPE HP의 선택된 진단에서 현재005e4794를 읽는다.
 };
 // SID 슬롯을 할당하고 타입별 생성자 필드를 초기화하는 팩토리이다.
 class SquidFactory {
@@ -30,6 +32,7 @@ public:
     void BindWeakenedMana(const bool& current); // 실제005ca8f0 주소만 빌린다. 다른 주소 재연결은 거부하며 대상은 이 공장보다 오래 살아야 한다.
     void BindWeakenedMana(bool&&)=delete; // 임시 bool의 주소를 보관해 수명이 끝나는 연결은 컴파일 시 거부한다.
     void BindWeakenedMana(const bool&&)=delete; // const 임시 bool도 같은 장기 참조 계약을 적용한다.
+    void BindHitPointTypes(const std::uint32_t* priest,const std::uint32_t* dais); // 같은 장기 TYPE 두 주소를 빌린다. 독립 미연결 입력만 기존158/165를 사용한다.
     // 이미 확보된 슬롯에 생성자 쓰기만 적용한다. type/상태/풀 목록은 덮지 않는다.
     Sid Construct(std::uint32_t type,Sid sid);
     // bare cdecl 주소의 원문 쓰기만 물리 SID에 적용한다. 미지원은false이며 TYPE/할당/가상 초기화를 추가하지 않는다.
@@ -53,6 +56,8 @@ private:
     // 주소 산술 전에 타입 범위와 원본 생성자 지원 여부를 검증한다.
     const RiftTypeRecord& Type(std::uint32_t number,bool requireSupported) const;
     const RiftTypeRecord& TypeRecord(std::uint32_t number) const; // 진단 복귀 뒤 Form 번호도 포함한 현재 TYPE 한 항목을 읽는다.
+    std::span<const RiftTypeRecord> CurrentTypes() const; // 현재 borrowed 표 또는 기존 독립 소유 표를 복사 없이 읽는다.
+    std::int32_t TypeHitPoints(const RiftTypeRecord& type,std::span<const RiftTypeRecord> selectedBase) const; // 같은 TYPE this와 진단 뒤 현재 base/전역으로 원문 HP를 읽는다.
     void Assert(std::string_view expression,std::uint32_t line) const; // PATCH PostTake 진단이 정상 복귀하면 현재 raw를 다시 읽어 계속한다.
     std::span<std::uint8_t> LiveBytes(Sid sid);
     // 원본 생성자의 쓰기 순서/폭/OR 비트를 보존한다. 호출 전에 지원 여부를 검사한다.
@@ -67,6 +72,7 @@ private:
     // weakenedMana_: 약화된 마나 여부.
     bool weakenedMana_{};
     const bool* sharedWeakenedMana_{}; // 생성자 HP 쓰기가 읽는 현재 장기 전역이며 기존 값형 검사는 미연결이다.
+    const std::uint32_t* sharedPriestType_{};const std::uint32_t* sharedDaisType_{}; // TYPE HP가 호출 위치에서 읽는 같은 장기 두 DWORD다.
     // unpop_: 객체의 공간 등록을 해제하는 Unpop 처리기.
     SquidUnpop* unpop_{};
 };

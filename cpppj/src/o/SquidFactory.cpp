@@ -2,6 +2,7 @@
 #include "o/SquidFactory.h"
 #include "o/SquidUnpop.h"
 #include "o/SquidForms.h"
+#include "o/RawRiftHitPoints.h"
 #include <stdexcept>
 #include <utility>
 
@@ -12,6 +13,7 @@ constexpr std::size_t kType=10,kState=11,kHp=26;
 constexpr std::uint8_t kFree=1,kVoid=4,kContained=8;
 // 원본 타입 번호와 dais의 HP 필요성 플래그다. 두 판본의 PE 초기값/로딩 순서로 대조했다.
 constexpr std::uint32_t kManaType=158,kFakeSurface=162,kDaisFlag=0x400000;
+constexpr std::uint32_t kDaisType=165; // 독립 입력의 초기 예외 번호이며 실제 월드는 같은 현재 DWORD 주소를 명시 연결한다.
 // 호스트 포인터로 사용하지 않는 실제 32비트 base vtable 기록값이다.
 constexpr std::uint32_t kPatchVtable=0x501dd0,kCdVtable=0x5058d8;
 // 생산 칸 contained Form의 내장 타입 번호다. 생성자 기록값은 공통 SquidForms가 제공한다.
@@ -85,8 +87,15 @@ void SquidFactory::BindDiagnostics(SquidFactoryDiagnostics diagnostics) {
     diagnostics_=std::move(diagnostics);
 }
 // PostTake 진단 복귀 뒤에는 Form 타입도 같은 실제 표에서 읽으며 배열 밖 접근만 거부한다.
+std::span<const RiftTypeRecord> SquidFactory::CurrentTypes() const { return diagnostics_.types.empty() ? std::span<const RiftTypeRecord>(types_) : diagnostics_.types; } // 진단 뒤에도 같은 현재 표를 조회한다.
+std::int32_t SquidFactory::TypeHitPoints(const RiftTypeRecord& type,std::span<const RiftTypeRecord> selectedBase) const { // 선택한 TYPE의 현재 HP를 두 판본의 실제 getter에 연결한다.
+    RiftHitPointHooks hooks;
+    hooks.number=[this,selectedBase,&type] { return CurrentRiftTypeNumber(type,selectedBase,CurrentTypes()); }; // 진단 뒤 현재 base에 대한 같은 TYPE this의 번호를 다시 계산한다.
+    hooks.assertion=[this](auto expression,auto file,auto line) { const auto selected=diagnostics_.assertion;if (!selected) throw std::logic_error("생성 TYPE HP의 실제 진단 장치 미연결");selected(expression,file,line); };
+    return ReadRiftHitPoints(pool_.Edition(),type,{diagnostics_.checking,RawCheckingFlag{sharedWeakenedMana_ ? *sharedWeakenedMana_ : weakenedMana_},sharedPriestType_ ? *sharedPriestType_ : kManaType,sharedDaisType_ ? *sharedDaisType_ : kDaisType},hooks);
+}
 const RiftTypeRecord& SquidFactory::TypeRecord(std::uint32_t number) const {
-    const auto types=diagnostics_.types.empty() ? std::span<const RiftTypeRecord>(types_) : diagnostics_.types;
+    const auto types=CurrentTypes();
     if (number>=types.size()) throw std::out_of_range("Factory 현재 TYPE 번호 오류");return types[number];
 }
 // 미복원 생성자 호출이나 일반 자산 경로에 Form 가상 메서드를 적용하는 것을 막는다.
@@ -181,6 +190,10 @@ const SidPool& SquidFactory::Pool() const { return pool_; }
 void SquidFactory::BindWeakenedMana(const bool& current) {
     if (sharedWeakenedMana_ && sharedWeakenedMana_!=&current) throw std::invalid_argument("생성 HP의 약화 전역 중복 다른 주소 연결");sharedWeakenedMana_=&current;
 }
+void SquidFactory::BindHitPointTypes(const std::uint32_t* priest,const std::uint32_t* dais) { // 같은 owner의 수명보다 공장이 오래 살지 않도록 실제 World가 장기 주소를 공급한다.
+    if (!priest || !dais || (sharedPriestType_ && sharedPriestType_!=priest) || (sharedDaisType_ && sharedDaisType_!=dais)) throw std::invalid_argument("생성 HP의 특별 TYPE 주소 연결 오류");
+    sharedPriestType_=priest;sharedDaisType_=dais;
+}
 Sid SquidFactory::CreateContained(std::uint32_t flags) {
     return SquidForms(pool_).Create(kContainedType,flags);
 }
@@ -249,13 +262,13 @@ void SquidFactory::PostCreate(Sid sid) {
         const auto offset=pool_.Offset(sid);auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride); // free/dead/contained를 별도 선행 거부하지 않는 같은 물리 슬롯이다.
         if (bytes[kType]<kFirstAssetTypeNumber) Assert("!isForm()",0x7d4);
         if (bytes[kState]&kContained) Assert("!isContained()",0x7d5);
-        const auto& initial=TypeRecord(bytes[kType]); // 두 입구 진단 뒤 선택한 TYPE는 zOrder와 HP 값에 공유한다.
+        const auto selectedBase=CurrentTypes();const auto& initial=TypeRecord(bytes[kType]); // 두 입구 진단 뒤 선택한 TYPE와 그 물리 기준을 저장한다.
         bytes[35]=static_cast<std::uint8_t>(initial.zOrder);
         if (pool_.IsServer()) {
             bytes[34]=0;
             const bool needsHp=(TypeRecord(bytes[kType]).flags2&kDaisFlag) ? (bytes[40]&1U)!=0 : (TypeRecord(bytes[kType]).flags1&TypeFlag1::kHasHitPoints)!=0;
             if (needsHp) {
-                const auto hp=(sharedWeakenedMana_ ? *sharedWeakenedMana_ : weakenedMana_) && bytes[kType]==kManaType ? initial.maxHitPoints/4 : initial.maxHitPoints;
+                const auto hp=TypeHitPoints(initial,selectedBase);
                 Put(bytes,kHp,static_cast<std::uint32_t>(hp),4);
             }
         }
@@ -263,14 +276,14 @@ void SquidFactory::PostCreate(Sid sid) {
         return;
     }
     auto bytes=LiveBytes(sid);
-    const auto& type=Type(bytes[kType],false);
+    const auto selectedBase=CurrentTypes();const auto& type=Type(bytes[kType],false); // CD의 기존 진입 계약 뒤 같은 선택 TYPE/base를 유지한다.
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     bytes[patch ? 35 : 33]=static_cast<std::uint8_t>(type.zOrder);
     if (!pool_.IsServer()) return;
     bytes[patch ? 34 : 32]=0;
     const bool needsHp=(type.flags2&kDaisFlag) ? (bytes[patch ? 40 : 35]&1)!=0 : (type.flags1&TypeFlag1::kHasHitPoints)!=0;
     if (needsHp) {
-        const auto hp=(sharedWeakenedMana_ ? *sharedWeakenedMana_ : weakenedMana_) && bytes[kType]==kManaType ? type.maxHitPoints/4 : type.maxHitPoints;
+        const auto hp=TypeHitPoints(type,selectedBase);
         Put(bytes,kHp,static_cast<std::uint32_t>(hp),patch ? 4 : 2);
     }
 }
