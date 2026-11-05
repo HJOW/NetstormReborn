@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**2026-11-05 단위908:** 양판본 Form 공통 해제의 현재 진단/VT와 실제 World·Session 종속 분리를 연결했다. 새 Native1,728입력/fixture1개·고유50사례 최종 통과이며 최초3사례/4단언 실패/입력·보호 계약 교정을 보존했다. Release2명령 종료0·경고0·기존2782개/fixture962개 불변·현행2783개/fixture963개다. checking 잔여8(부모3/부분2/MP3)과 완료 부모39/부분4는 변하지 않는다. [908 기록](cpp-form-unpop-current-20261105.md).
+
 **907 Process/Gump 현재 Factory:** 현재 Process Form번호·공통Create/Take와현재World 대여를연결하고장기Host의옛공장참조를남기지않는다. 고유55사례(새4/기존51) 첫 실패0·Release1명령 경고0·기존2782/962fixture/단언2,387 불변·새 Native/fixture0이다. Form·CD Unpop/전체 Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [907 기록](cpp-process-form-current-factory-20261105.md).
 
 **906 실제 Form3/6 생성:** 고정 VT를 현재 공통 Create/반환 VT+28로 바꾸고 실제 contained/bridge 번호를 연결했다. 고유44사례(새3/기존41) 첫 실패0·Release3명령 최종 경고0·두 컴파일 오류 교정·기존2782/962fixture/단언370 불변·새 Native/fixture0이다. Process/Gump Take·Form/contained 하위·전체 Factory 완료로 세지 않으며 **checking8/완료 부모39·부분4 유지**다. [906 기록](cpp-form-creation-current-20261105.md).

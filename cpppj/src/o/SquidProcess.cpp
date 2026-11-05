@@ -282,7 +282,10 @@ void SquidProcessHost::RefreshForm(SquidProcess& process) {
     UnpopForm(form);AttachForm(form,parent,0);
 }
 void SquidProcessHost::UnpopForm(Sid form) {
-    SquidForms(pool_).Unpop(form);
+    const auto runtime=currentRuntime_ ? Runtime() : nullptr;RuntimeCall call(runtime); // 실제 분리/진단이 돌아올 때까지 현재 World를 보존한다.
+    if (runtime) { if (!runtime->factory) throw std::logic_error("Process Unpop의 현재 공장 미연결");runtime->factory->UnpopForm(form);return; }
+    if (directFormFactory_) { directFormFactory_->UnpopForm(form);return; }
+    FormUnpopHooks hooks;hooks.assertion=state_.assertion;SquidForms(pool_,{}, {},std::move(hooks)).Unpop(form); // 독립 Host도 같은 공통 해제/진단 순서를 사용한다.
 }
 void SquidProcessHost::FormPreDestroy(Sid form,std::uint32_t flags) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.

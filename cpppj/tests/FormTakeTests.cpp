@@ -147,7 +147,9 @@ TEST_CASE(FormTake_ContentNoticeTimingAndPayloadMutation) {
     SidPool pool(OriginalEdition::Patch1078,kCapacity);SquidForms forms(pool);
     const auto parent=forms.Create(1,2),form=forms.Create(6,0);
     Put(pool,parent,6,form.value,2);Put(pool,form,16,parent.value,2);pool.AllocatedBytes(form)[11]=8;
-    const auto before=Hex(pool.Slot(form));CHECK(Throws([&] { forms.Take(6,form); }));CHECK(Hex(pool.Slot(form))==before);
+    auto detached=std::vector<std::uint8_t>(pool.Slot(form).begin(),pool.Slot(form).end());detached[11]=4; // 원문004ac6b0은 부모 알림 전에 void/contained와 부모 head를 이미 쓴다. 나머지 전체 바이트는 보존한다.
+    CHECK(Throws([&] { forms.Take(6,form); }));CHECK(Hex(pool.Slot(form))==Hex(detached) && Read(pool,parent,6,2)==0);
+    Put(pool,parent,6,form.value,2);pool.AllocatedBytes(form)[11]=8; // 다음 알림/payload 사례는 별도의 동일한 정상 부착 입력에서 시작한다.
     std::uint32_t notices=0;
     // 부모 가상 +24 경계에서 현재 해제 상태를 읽고 payload를 바꾼다.
     SquidForms bound(pool,[&](Sid notifiedParent,Sid notifiedForm) {

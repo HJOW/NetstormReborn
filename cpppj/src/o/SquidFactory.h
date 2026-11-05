@@ -29,6 +29,8 @@ public:
     // 생성 효과 어댑터가 같은 실제 SID 풀을 연결하는지 확인한다.
     const SidPool& Pool() const;
     void BindDiagnostics(SquidFactoryDiagnostics diagnostics); // 같은 판본 길이의 현재 TYPE와 실제 진단 장치를 연결한다.
+    void BindFormDetach(std::function<void(Sid)> detach); // 현재 World/Session의 공통 종속 분리만 대여하며 UI 검색을 추가하지 않는다.
+    void UnpopForm(Sid sid); // 실제 Form VT+48의 진단/void/현재 getter와 부모 free 관문을 실행한다.
     void BindWeakenedMana(const bool& current); // 실제005ca8f0 주소만 빌린다. 다른 주소 재연결은 거부하며 대상은 이 공장보다 오래 살아야 한다.
     void BindWeakenedMana(bool&&)=delete; // 임시 bool의 주소를 보관해 수명이 끝나는 연결은 컴파일 시 거부한다.
     void BindWeakenedMana(const bool&&)=delete; // const 임시 bool도 같은 장기 참조 계약을 적용한다.
@@ -83,5 +85,6 @@ private:
     const std::uint32_t* sharedFakeSurfaceType_{}; // 같은 Client 수명의 현재 fakeThreeByThreeSurface TYPE이며 독립 미연결만162다.
     // unpop_: 객체의 공간 등록을 해제하는 Unpop 처리기.
     SquidUnpop* unpop_{};
+    std::function<void(Sid)> formDetach_; // 실제 소비자는 현재 Session의 약한 대여 또는 World 기본 종단을 호출한다.
 };
 }

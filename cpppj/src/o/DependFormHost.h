@@ -11,6 +11,7 @@ struct DependFormPair { /* watchedForm: 암묵적인 런타임 SquidId 변환을
 // watcher/watched 쌍 생성·조회·제거·가상 preDestroy와 부모 통지를 복원한다.
 class DependFormHost {
 public:
+    void BindUnpop(std::function<void(Sid)> unpop); // 실제 World 공장의 현재 진단/종속 분리를 연결한다.
     // 풀·삭제 처리기는 이 객체보다 오래 살아야 한다. 다른 Form/자산의 가상 분배는 fallback으로 보존한다.
     DependFormHost(SidPool& pool,RawSquidDestroy& destroy,DependFormNotice notice={},
         SquidDestroyHooks fallback={},FormPopTransmit transmit={});
@@ -32,6 +33,7 @@ public:
     bool IsDependForm(Sid form) const;
     const SidPool& Pool() const;
 private:
+    std::function<void(Sid)> unpop_; // 독립 입력의 미연결은 기존 forms_의 같은 공통 해제를 사용한다.
     // 살아 있거나 삭제 중인 타입1 Form의 현재 raw 상태를 확인한다.
     void Form(Sid form) const;
     // getter/store 폭을 WORD로 제한하여 다른 payload를 보존한다.

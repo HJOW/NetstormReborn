@@ -239,6 +239,10 @@ Sid SquidFactory::CreateContained(std::uint32_t flags) {
 Sid SquidFactory::CreateGumpForm(std::uint32_t flags) {
     return Create(kGumpFormType,flags);
 }
+void SquidFactory::BindFormDetach(std::function<void(Sid)> detach) { formDetach_=std::move(detach); } // 새 대여는 이후 선택된 Form 해제부터 사용한다.
+void SquidFactory::UnpopForm(Sid sid) { // 공통 진단의 현재 장치와 같은 풀의 종속 분리만 호출한다.
+    FormUnpopHooks hooks;hooks.detach=formDetach_;hooks.assertion=diagnostics_.assertion;SquidForms(pool_,{}, {},std::move(hooks)).Unpop(sid);
+}
 // 두 판본 모두 실제 VT+48→현재 생성자→반환 객체→저장한 VT+2c의 원문 부모를 사용한다.
 Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
     const auto object=[this](std::uint32_t number) { if (number>=pool_.Capacity()) throw std::out_of_range("Take의 실제 물리 SID 범위");return Sid{static_cast<std::uint16_t>(number)}; }; // DWORD 토큰을 WORD로 자르기 전에 물리 범위를 확인한다.
@@ -251,9 +255,9 @@ Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
         if (detail.size()>=256) throw std::length_error("Take 원문 상세256BYTE 범위");const auto writer=diagnostics_.detail;if (!writer) throw std::logic_error("Take의 실제 오류 상세 장치 미연결");writer(detail);
     };
     hooks.assertion=[this](auto expression,auto,auto line) { Assert(expression,line); };
-    hooks.unpop=[this,object,raw](auto number,auto table) { // 공통 자산은 현재 VT로 분배한다. Form 하위의 기존 내부 검사는 별도 계약이다.
+    hooks.unpop=[this,object,raw](auto number,auto table) { // 현재 VT가 선택한 Form/자산의 공통 진단 복귀와 종속 분리로 이어진다.
         const SquidForms forms(pool_);
-        for (const auto formType:{1U,2U,3U,6U}) { if (table==forms.Vtable(formType)) { forms.Unpop(object(number));return; } } // 알려진 Form의 실제 공통 해제다. 필요한 부모 알림 부재는 그 종단에서 실패한다.
+        for (const auto formType:{1U,2U,3U,6U}) { if (table==forms.Vtable(formType)) { UnpopForm(object(number));return; } } // 현재 진단/공통 종속 분리로 이어지는 실제 Form 해제다.
         if (!SupportsConstructedVtable(pool_.Edition(),table)) throw std::logic_error("Take의 선택된 실제 VT+48 미연결");
         if (!unpop_) throw std::logic_error("Take의 선택된 실제 공간 해제 연결이 없습니다");unpop_->Unpop(object(number),TypeRecord(raw(number)[kType]),0);
     };

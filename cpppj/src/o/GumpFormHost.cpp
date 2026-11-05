@@ -99,7 +99,7 @@ void GumpFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
 }
 // 살아 있는 부모에서는 링크를 고치지만 부모 삭제 중에는 저장한 next로 계속 순회하게 체인을 유지한다.
 void GumpFormHost::Unpop(Sid form) const {
-    Form(form);SquidForms(pool_).Unpop(form);
+    factory_.UnpopForm(form);
 }
 // 부모 삭제 인자는 사용하지 않는다. UI 콜백 전 현재 소유 ID/부모를 모두 읽고 콜백 뒤 Form을 읽지 않는다.
 void GumpFormHost::Notify(Sid form) const {

@@ -2738,6 +2738,7 @@ struct RawCampaignSession::Impl {
         unpopHooks.assertion=[assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("종속 Unpop의 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }; // 정상 복귀 뒤 원문의 현재 필드 재조회를 계속한다.
         containedUnpop=std::make_shared<RawSquidContainedUnpop>(core.pool,SquidContainedUnpopState{contentFinder.containedType,contentGumpType,contentUnpopEvent,RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},[this] { return core.ownerMode.challenge; },[this] { return gameplayGlobals->Authority()->boss; }},std::move(unpopHooks));
         world.BindContainedUnpop(containedUnpop); // 첫 객체 생성 전 같은 World의 일반 Unpop에 현재 Session 종단을 대여한다.
+        contentForms->BindUnpop([this](Sid sid) { core.factory.UnpopForm(sid); }); // Form6도 현재 번호/부모 알림을 같은 World 공장에서 조회한다.
         ContainedCreateHooks createHooks;createHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         contentState.sharedContainedType=&contentFinder.containedType;contentState.sharedBridgeType=&world.Storage()->links.bridgeType; // 생성/검색과 실제 다리 소비자가 같은 현재 번호 주소를 사용한다.
         contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(createHooks)));

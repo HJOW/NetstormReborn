@@ -1,5 +1,6 @@
 // Form 수신은 기존 바이트를 보존하고 공통 Unpop은 부모 삭제 중의 체인을 유지한다.
 #include "o/SquidForms.h"
+#include "o/RawSquidContainedUnpop.h" // Form도 같은 현재 가상 링크와 공통 종속 분리를 사용한다.
 #include <array>
 #include <stdexcept>
 #include <utility>
@@ -17,8 +18,9 @@ constexpr std::uint8_t kFree=1,kDead=2,kVoid=4,kContained=8;
 constexpr std::uint32_t kProcessForm=2,kContentForm=6,kProcessFirst=10,kPatchProcessEnd=63,kCdProcessEnd=62;
 }
 // 알림을 보관하되 다른 객체 수명이나 풀 초기화 효과는 숨기지 않는다.
-SquidForms::SquidForms(SidPool& pool,FormRemovalNotice notice,FormPopTransmit transmit)
-    :pool_(pool),notice_(std::move(notice)),transmit_(std::move(transmit)) {}
+SquidForms::SquidForms(SidPool& pool,FormRemovalNotice notice,FormPopTransmit transmit,FormUnpopHooks unpop)
+    :pool_(pool),notice_(std::move(notice)),transmit_(std::move(transmit)),unpop_(std::move(unpop)) {}
+void SquidForms::BindUnpop(FormUnpopHooks hooks) { unpop_=std::move(hooks); } // 이후 호출 위치에서 현재 대여를 선택한다.
 // 타입 검사는 Allocate/Take로 슬롯을 바꾸기 전에 끝낸다.
 std::uint32_t SquidForms::Vtable(std::uint32_t type) const {
     // 고정된 네 타입 외의 생성자 fallback은 자산 factory의 책임이다.
@@ -127,33 +129,29 @@ void SquidForms::Attach(Sid form,Sid parent,std::uint32_t flags) const {
 void SquidForms::SetPrevious(Sid sid,std::uint16_t previous) const {
     Put(sid,pool_.Slot(sid)[kType]<kFirstAssetTypeNumber ? kPrevious : kAssetPrevious,previous,2);
 }
-// 부모 free/dead 분기를 보존하고 live 부모에서 빠진 ContentForm만 부모에 통지한다.
+// 두 판본의 진단 복귀 뒤 현재 TYPE/VT를 사용하고 void 쓰기 뒤 선택한 실제 종속 분리를 실행한다.
 void SquidForms::Unpop(Sid form) const {
-    const auto raw=Form(form);if (raw[kState]&kVoid) throw std::logic_error("void Form Unpop 금지");
-    const auto parent=Parent(form);
-    if (!parent.value || parent.value>=pool_.Capacity()) throw std::logic_error("Form 부모 번호 오류");
-    const auto parentState=pool_.Slot(parent)[kState];
-    const bool notify=raw[kType]==kContentForm && !(parentState&(kFree|kDead));
-    if (notify && !notice_) throw std::invalid_argument("ContentForm 부모 제거 알림 미연결");
+    const auto hooks=unpop_;const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const auto assertion=[&](std::string_view expression,std::uint32_t patchLine,std::uint32_t cdLine) { // 선택한 진단만 요구하고 정상 복귀 뒤 현재 바이트를 다시 읽는다.
+        if (!hooks.assertion) throw std::logic_error("Form Unpop 원문 진단 장치 미연결");hooks.assertion(expression,patch ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp",patch ? patchLine : cdLine);
+    };
+    if (Raw(form)[kType]>0x45U) assertion("isForm()",0xa59,0xa10);
+    if (!form.value || form.value>=pool_.Capacity()) assertion("isValid()",0xa5a,0xa11);
+    if (Raw(form)[kState]&kVoid) assertion("!isVoid()",0xa5b,0xa12);
+    auto table=patch ? 0U : Read(form,0,4); // CD는 OR 앞에서 VT를 저장하고 PATCH는 OR 뒤에서 읽는다.
     Raw(form)[kState]|=kVoid;
-    if (parentState&kFree) return;
-    if (!(Raw(form)[kState]&kContained)) throw std::logic_error("Form contained 누락");
-    if (parentState&kDead) return;
-    const auto next=static_cast<std::uint16_t>(Read(form,kNext,2)),previous=Previous(form).value;
-    // 손상 번호는 배열 밖 쓰기 전에 거부한다. 원본 assert 뒤의 잘못된 접근은 호스트 계약 밖이다.
-    for (const auto neighbor:{next,previous}) {
-        if (neighbor && (neighbor<5 || neighbor>=pool_.Capacity() || neighbor==form.value || (pool_.Slot(Sid{neighbor})[kState]&kFree)))
-            throw std::logic_error("Form 이웃 링크 오류");
-    }
-    if (previous && previous==next) throw std::logic_error("Form 종속 체인 순환");
-    if (previous) Put(Sid{previous},kNext,next,2);
-    if (next) SetPrevious(Sid{next},previous);
-    if (Read(parent,kHead,2)==form.value) {
-        if (previous) throw std::logic_error("Form 머리 이전 항목 오류");
-        Put(parent,kHead,next,2);
-    }
-    Raw(form)[kState]&=static_cast<std::uint8_t>(~kContained);
-    if (notify) notice_(parent,form);
+    if (patch) table=Read(form,0,4);
+    const auto parent=hooks.parent ? hooks.parent(form,table) : CommonContainedParent(pool_,form);
+    if (pool_.Slot(parent)[kState]&kFree) return;
+    if (hooks.detach) { hooks.detach(form);return; }
+    const std::uint32_t contentType=6,gumpType=3,event=0; // 독립 입력의 원문 초기 번호이며 실제 World는 현재 전역의 종단을 대여한다.
+    SquidContainedUnpopHooks detach;
+    detach.parent=[this](Sid sid) { return CommonContainedParent(pool_,sid); }; // 분리 몸체는 현재 getter를 다시 호출한다.
+    detach.previous=[this](Sid sid) { return CommonContainedPrevious(pool_,sid); }; // 다음 번호 저장 뒤 현재 이전 getter를 읽는다.
+    detach.setPrevious=[this](Sid sid,Sid previous) { CommonContainedSetPrevious(pool_,sid,previous); }; // 다음 객체의 실제 VT가 정한 WORD만 쓴다.
+    detach.parentNotice=[this](Sid parent,Sid sid,std::uint32_t) { if (!notice_) throw std::invalid_argument("ContentForm 부모 제거 알림 미연결");notice_(parent,sid); }; // 선택된 알림 부재는 앞선 링크 쓰기를 취소하지 않는다.
+    detach.assertion=hooks.assertion;
+    RawSquidContainedUnpop(pool_,{contentType,gumpType,event,{}, {}, {}},std::move(detach)).Detach(form);
 }
 // 처리기 연결 시 실제 월드를 확인할 수 있게 제공한다.
 const SidPool& SquidForms::Pool() const { return pool_; }

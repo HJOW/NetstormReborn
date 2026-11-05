@@ -31,6 +31,7 @@ public:
     void Attach(Sid form,Sid parent,std::uint32_t flags=0) const;
     // 공통 Form Unpop 뒤 살아 있는 부모에 제거2를 알린다. 부모 dead/free의 링크는 원본대로 보존한다.
     void Unpop(Sid form) const;
+    void BindUnpop(std::function<void(Sid)> unpop); // 실제 World의 공통 Factory가 현재 번호/부모 알림을 선택하도록 대여한다.
     // 가상 +0x60: WORLD(0x80) 목록은 assert 경로이며 0x34 중 하나라도 있으면 true다.
     bool Robust(Sid form) const;
     // 004ae080/CD 004af1c0: 부모 head에서 모든 next를 따라가 자기 SID 포함 여부를 검사한다.
@@ -64,5 +65,6 @@ private:
     const ContentFormState* state_{};
     // captured_: 포획된 사제 또는 현재 포획 상태 자료.
     ContentPriestNotice captured_;
+    std::function<void(Sid)> unpop_; // 미연결 독립 Host는 같은 공통 Form 분리와 입력 notice를 사용한다.
 };
 }

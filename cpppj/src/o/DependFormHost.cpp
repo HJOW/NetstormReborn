@@ -17,6 +17,7 @@ DependFormHost::DependFormHost(SidPool& pool,RawSquidDestroy& destroy,DependForm
     :pool_(pool),destroy_(destroy),notice_(std::move(notice)),fallback_(std::move(fallback)),forms_(pool,{},std::move(transmit)) {
     if (&destroy.Pool()!=&pool) throw std::invalid_argument("DependForm 삭제 SID 풀 불일치");
 }
+void DependFormHost::BindUnpop(std::function<void(Sid)> unpop) { unpop_=std::move(unpop); } // 공통 삭제에서도 현재 Factory의 진단/분리 순서를 사용한다.
 // 반납 뒤에도 타입 바이트는 보존되므로 free 필터는 호출자가 적용한다.
 bool DependFormHost::IsDependForm(Sid form) const {
     return form.value>=5 && form.value<pool_.Capacity() && form.value!=pool_.Layout().predictableFirst
@@ -106,7 +107,7 @@ SquidDestroyHooks DependFormHost::Hooks() const {
     SquidDestroyHooks hooks;hooks.selected=fallback_.selected ? fallback_.selected : std::function<Sid()>([] { return Sid{}; });
     // Form 공통 Unpop은 부모 dead의 링크를 보존한다.
     hooks.unpopForm=[this](Sid sid) {
-        if (IsDependForm(sid)) forms_.Unpop(sid);
+        if (IsDependForm(sid)) { if (unpop_) unpop_(sid);else forms_.Unpop(sid); }
         else { if (!fallback_.unpopForm) throw std::invalid_argument("DependForm 외 Unpop 경계 필요");fallback_.unpopForm(sid); }
     };
     // preDestroy는 watched→현재 watcher 순서로 재조회하여 삭제하고 마지막에 공통 깊이를 반납한다.

@@ -1,0 +1,350 @@
+{
+  "unit": 908,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "prefix": {
+    "patch": {
+      "entry": "004ae140",
+      "endExclusive": "004ae1d4",
+      "diagnostics": [
+        "isForm()@0xa59",
+        "isValid()@0xa5a",
+        "!isVoid()@0xa5b"
+      ],
+      "vtableRead": "after void store"
+    },
+    "cd": {
+      "entry": "004af270",
+      "endExclusive": "004af30a",
+      "missingFromRefinedIndex": true,
+      "diagnostics": [
+        "isForm()@0xa10",
+        "isValid()@0xa11",
+        "!isVoid()@0xa12"
+      ],
+      "vtableRead": "before void store"
+    },
+    "both": {
+      "virtualOffset": "0",
+      "parentFree": "skip Detach",
+      "detachPatch": "004ac6b0",
+      "detachCd": "004ac160",
+      "uiFinder": false
+    }
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "mode": "first",
+    "samples": 1728,
+    "editions": {
+      "originals": {
+        "samples": 864,
+        "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+      },
+      "originalCD": {
+        "samples": 864,
+        "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+      }
+    },
+    "fixtureSha256": "acfa309114c45b9c415b1fd7ef1a5d3aa1e0f1b61fe9e63be0ad107cf9334060",
+    "toolSha256": "a4654fb64b429f1ffc71435938b2a46b18a3e2a3c6faf427b69beaacea8549e4",
+    "actualChildren": false,
+    "game": false,
+    "multiplayer": false
+  },
+  "actualBindings": [
+    "Factory::Take -> UnpopForm -> current World/Session Detach",
+    "GumpFormHost::Unpop -> Factory",
+    "SquidProcessHost::UnpopForm -> current runtime factory / direct factory",
+    "DependFormHost common destroy -> current World Factory",
+    "ContentFormHost::Unpop -> current World Factory"
+  ],
+  "remaining": [
+    "CD spatial Unpop body",
+    "CD contained diagnostic file path case",
+    "fixed convenience Form Create/Take and Depend Create",
+    "other Attach/Pop guards and parent callers",
+    "all UI/Edit/State/Windows/later stages"
+  ],
+  "validation": {
+    "buildCommands": 2,
+    "buildExits": [
+      0,
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "firstCompileFailures": 0,
+    "uniqueCases": 50,
+    "newCases": 4,
+    "existingCases": 46,
+    "testCommands": 32,
+    "testExecutions": 100,
+    "firstFailingCases": 3,
+    "firstFailedChecks": 4,
+    "finalFailedChecks": 0,
+    "sourceFiles": 2871,
+    "sourceChangesDuringBuild": [],
+    "postFirstBuildCorrections": [
+      "new ContentForm tests: explicit already-attached input",
+      "FormTake legacy preflight expectation: original full-byte partial-write contract"
+    ],
+    "productSourceChangesAfterFirstBuild": [],
+    "first": [
+      {
+        "filter": "FormUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 2,
+        "exit": 1,
+        "expected": 4
+      },
+      {
+        "filter": "SquidContainedUnpop_",
+        "cases": 10,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 10
+      },
+      {
+        "filter": "FactoryTakeChecking_",
+        "cases": 7,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 7
+      },
+      {
+        "filter": "FormTake_",
+        "cases": 4,
+        "failedChecks": 2,
+        "exit": 1,
+        "expected": 4
+      },
+      {
+        "filter": "ProcessCreationCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "ProcessHostStorage_",
+        "cases": 11,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 11
+      },
+      {
+        "filter": "process_patch_x86_fixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_cd_x86_fixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_1037_x86_fixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_default_handler_repeats_with_payload_period",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_delayed_fall_event_registers_and_ends",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_handler_may_kill_its_own_process",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_dependent_chain_order_and_unlink",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_form_unpop_keeps_chain_while_parent_is_dying",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_attach_guards",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_form_root_requires_unpop_hook",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      }
+    ],
+    "final": [
+      {
+        "filter": "FormUnpopCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "SquidContainedUnpop_",
+        "cases": 10,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 10
+      },
+      {
+        "filter": "FactoryTakeChecking_",
+        "cases": 7,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 7
+      },
+      {
+        "filter": "FormTake_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "ProcessCreationCurrent_",
+        "cases": 4,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 4
+      },
+      {
+        "filter": "ProcessHostStorage_",
+        "cases": 11,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 11
+      },
+      {
+        "filter": "process_patch_x86_fixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_cd_x86_fixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_1037_x86_fixture",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_default_handler_repeats_with_payload_period",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_delayed_fall_event_registers_and_ends",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_handler_may_kill_its_own_process",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_dependent_chain_order_and_unlink",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_form_unpop_keeps_chain_while_parent_is_dying",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_attach_guards",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      },
+      {
+        "filter": "process_form_root_requires_unpop_hook",
+        "cases": 1,
+        "failedChecks": 0,
+        "exit": 0,
+        "expected": 1
+      }
+    ]
+  },
+  "product": {
+    "unit": 908,
+    "file": "cpppj/build/bin/Release/Netstorm.exe",
+    "bytes": 10758144,
+    "sha256": "264799dd73b6a9404880454970503fe712f339d31460993cd4fcdb08ddc73b52",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "protection": {
+    "previousFiles": 2782,
+    "unchanged": 2782,
+    "changed": [],
+    "currentFiles": 2783,
+    "currentFixtures": 963,
+    "added": [
+      "cpppj/tests/fixtures/form-unpop-current-x86.tsv"
+    ]
+  },
+  "checkingRemaining": {
+    "total": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3
+  },
+  "lastFullDecompilationHost": "HJOW-Athlon",
+  "lastFullDecompilationDate": "2026-11-03",
+  "nextUnit": 909
+}

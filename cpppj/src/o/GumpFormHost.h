@@ -33,7 +33,7 @@ public:
     // 비영 부모는 종속 머리 앞에 넣고 void를 끈다.
     // client SID의 메뉴 경로와 전송 억제 flags를 지원한다. 서버 Form의 실제 Pop 직렬화/전송은 후속이다.
     void Attach(Sid form,Sid parent,std::uint32_t flags=0) const;
-    // 004ae140/CD 004af270: void를 켜고 살아 있는 부모의 체인에서 뺀다. 부모 free/dead이면 링크/contained를 보존한다.
+    // 004ae140/CD 004af270: Factory의 현재 진단/VT/종속 분리로 이어지며 부모 free/dead의 링크 보존 순서를 유지한다.
     void Unpop(Sid form) const;
     // 가상 +0x1c와 +0x78은 같은 알림이다. 호출 인자로 받은 삭제 부모 대신 Form의 현재 부모를 보낸다.
     void Notify(Sid form) const;

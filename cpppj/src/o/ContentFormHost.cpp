@@ -18,6 +18,7 @@ ContentFormHost::ContentFormHost(SidPool& pool,std::span<const RiftTypeRecord> t
     :pool_(pool),types_(types.begin(),types.end()),notice_(std::move(notice)),
      forms_(pool,[this](Sid parent,Sid form) { notice_(parent,form,2); },std::move(transmit)),state_(state),captured_(std::move(captured)) {
     if (!notice_) throw std::invalid_argument("ContentForm 부모 알림 경계 필요");
+    if (state_) { FormUnpopHooks hooks;hooks.assertion=state_->assertion;forms_.BindUnpop(std::move(hooks)); } // 독립 입력도 제공된 원문 진단의 정상 복귀를 허용한다.
     if (types_.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U)) throw std::invalid_argument("ContentForm 타입 판본/크기 오류");
 }
 // 선택한 원문 진단의 복귀 뒤 현재 전역과 슬롯 판정을 계속한다.
@@ -94,7 +95,8 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
     }
 }
 // 부모의 dead/free 판정과 알림 시점은 공통 처리기에서 수행한다.
-void ContentFormHost::Unpop(Sid form) const { Form(form);forms_.Unpop(form); }
+void ContentFormHost::Unpop(Sid form) const { if (unpop_) unpop_(form);else forms_.Unpop(form); } // 실제 가상 진입 앞에 고정 TYPE/free 검사를 추가하지 않는다.
+void ContentFormHost::BindUnpop(std::function<void(Sid)> unpop) { unpop_=std::move(unpop); } // 현재 World와 같은 수명의 공통 해제를 연결한다.
 // WORLD 플래그의 원본 assert 경로를 명시적으로 거부한다.
 bool ContentFormHost::Robust(Sid form) const {
     Form(form);const auto flags=Word(form,kFlags);if (flags&kWorld) throw std::logic_error("WORLD ContentForm Robust 금지");

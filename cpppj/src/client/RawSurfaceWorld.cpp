@@ -156,6 +156,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         pop->SetBuildingSpace(building.get());unpop->SetBuildingSpace(building.get());
         factory=std::make_unique<o::SquidFactory>(pool,types,false,unpop.get());
         factory->BindDiagnostics({types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); },[owner=storage.get()](auto text) { owner->RecordAssertionDetail(text); },storage->Checking()}); // Take의 상세/정상 복귀와 공통 postTake가 같은 현재 TYPE·Client owner를 빌린다.
+        factory->BindFormDetach([this](o::Sid sid) { if (const auto current=sessionContainedUnpop.lock()) current->Detach(sid);else containedUnpop->Detach(sid); }); // Form은 자신의 UI 검색을 추가하지 않고 같은 현재 종속 분리만 사용한다.
         if (edition==o::OriginalEdition::Patch1078) {
             o::RawSquidTransmissionHooks transmission;
             transmission.type=[owner=storage.get()](std::uint8_t number)->const o::RiftTypeRecord& { return owner->types.at(number); };
@@ -230,6 +231,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
                 runtime.formTransmit(form,flags);
             });
         formDispatch->Bind(*dependencies);
+        dependencies->BindUnpop([this](o::Sid sid) { factory->UnpopForm(sid); }); // 감시 Form 삭제도 같은 현재 World의 진단과 부모 getter를 사용한다.
         if (edition==o::OriginalEdition::Patch1078) {
             o::RawBridgeDecayHooks decay;
             decay.destroy=[this](o::Sid sid,std::uint32_t flags) { static_cast<void>(Destroy(sid,flags)); };
