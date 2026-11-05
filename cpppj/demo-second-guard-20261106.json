@@ -1,0 +1,255 @@
+{
+  "unit": 947,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 939,
+  "gameExecutions": 1,
+  "finalPassedProcesses": 1,
+  "accepted": {
+    "elapsedSeconds": 796.2435130000003,
+    "observations": 362,
+    "starts": [
+      [
+        "11.618",
+        "371.618",
+        "230"
+      ],
+      [
+        "387.586",
+        "747.586",
+        "4616"
+      ],
+      [
+        "763.573",
+        "1123.573",
+        "9226"
+      ]
+    ],
+    "transitions": [
+      {
+        "startDifference": 15.968000000000018,
+        "previousPauseOffset": 15.754999999999995,
+        "deadlineWall": 387.373,
+        "observedRestartWall": 388.436,
+        "wallDelay": 1.0629999999999882,
+        "naturalSeconds": 360.54499999999996
+      },
+      {
+        "startDifference": 15.986999999999966,
+        "previousPauseOffset": 15.773000000000025,
+        "deadlineWall": 763.359,
+        "observedRestartWall": 764.376,
+        "wallDelay": 1.016999999999939,
+        "naturalSeconds": 360.804
+      }
+    ],
+    "guideObservations": [
+      21,
+      22,
+      22
+    ],
+    "windowActivity": [
+      {
+        "active": 164,
+        "inactive": 0
+      },
+      {
+        "active": 166,
+        "inactive": 0
+      },
+      {
+        "active": 29,
+        "inactive": 0
+      }
+    ],
+    "initial": {
+      "frame": 21,
+      "label": "main",
+      "phase": [
+        "0"
+      ],
+      "page": [
+        "main"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mouse_cursor": [
+        "1",
+        "1"
+      ],
+      "html_window_state": [
+        "0",
+        "1",
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_uber": [
+        "19",
+        "1",
+        "3",
+        "0",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_menus": [
+        "0",
+        "0",
+        "0",
+        "13",
+        "13"
+      ],
+      "time": [
+        "10.793",
+        "10.793"
+      ]
+    },
+    "final": {
+      "frame": 11777,
+      "label": "final-main",
+      "phase": [
+        "0"
+      ],
+      "page": [
+        "main"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mouse_cursor": [
+        "1",
+        "1"
+      ],
+      "html_window_state": [
+        "0",
+        "1",
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_uber": [
+        "9612",
+        "1",
+        "3",
+        "0",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_menus": [
+        "0",
+        "0",
+        "0",
+        "13",
+        "13"
+      ],
+      "time": [
+        "795.809",
+        "795.809"
+      ]
+    },
+    "returnCode": 0,
+    "dataUnchanged": true,
+    "gameSha256": "06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098",
+    "toolSha256": "6034e8742ac21e1ab79921c5775f47d60ec8791142a8e5626bee73a0e7625e48",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-947\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=15;sleepPerLoop=1;autoDemo=0;tellTips=0;intro=1;currentLanguage=english"
+    ],
+    "reference": {
+      "mission": "GuardMyBack",
+      "seconds": 360,
+      "demoSection": true,
+      "englishSha256": "5296e6b52312585f3beca8341b37fe26aedad60b19fca5dc21f6b464d452163e"
+    }
+  },
+  "guideAudit": {
+    "passed": true,
+    "reference": {
+      "mission": "GuardMyBack",
+      "seconds": 360,
+      "demoSection": true,
+      "englishSha256": "5296e6b52312585f3beca8341b37fe26aedad60b19fca5dc21f6b464d452163e"
+    },
+    "timeoutSeconds": 15,
+    "generations": [
+      {
+        "start": [
+          "11.618",
+          "371.618"
+        ],
+        "guideFirstWall": 13.017,
+        "guideLastWall": 26.841,
+        "resumedWall": 27.891,
+        "observedDuration": 14.873999999999999
+      },
+      {
+        "start": [
+          "387.586",
+          "747.586"
+        ],
+        "guideFirstWall": 388.436,
+        "guideLastWall": 402.773,
+        "resumedWall": 403.572,
+        "observedDuration": 15.136000000000024
+      },
+      {
+        "start": [
+          "763.573",
+          "1123.573"
+        ],
+        "guideFirstWall": 764.376,
+        "guideLastWall": 778.79,
+        "resumedWall": 779.971,
+        "observedDuration": 15.595000000000027
+      }
+    ]
+  },
+  "thirdPlaying": {
+    "gameSinceStart": 14.394999999999982,
+    "playingWall": 13.678999999999974
+  },
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "gameCppChanged": false,
+  "gameBuilt": false,
+  "cppTestsExecuted": false,
+  "toolUnchangedSinceLaunch": true,
+  "raw": {
+    "states.tsv": "0c30fa55ff89e64162040a376d137bc518e8d1bd7579e9d1ee421f7f3ec679af",
+    "result.json": "4b040d6215379eca385e8dc31844c1d51b27e3e17a5e82fe00e2fe728960208d",
+    "guide-audit.json": "0f2ec79e80ce9070cc299bfcc129031d13f34a53c70ae72680526c70d5b8178a",
+    "tool-at-launch.py": "6034e8742ac21e1ab79921c5775f47d60ec8791142a8e5626bee73a0e7625e48"
+  },
+  "screenshots": {
+    "generation-1.png": "e893102dea09bfcf969bb8b0592cac4f566295bc129c46e0b0880200360267b3",
+    "generation-2.png": "4ccc77636ae65be2b98f2d572e3b97aa893013892639eb43f68d3aebeba14d36",
+    "generation-3.png": "46728693cdf74ba8f926bcc19cb9e1e35b4f26cfac7554f30452645772f31fc1",
+    "main.png": "0ac693f6e10689599cbf61dcc9b4f3d00ed0865b5d200f647e3cbde8319d2c0b",
+    "third-world.png": "dd7e7e342a6e54457e91a9000f38b562bd5ea15d1517035d75bb8a279f776730"
+  },
+  "next": "DissolvedAlliance 두 번째360초/세 번째 월드/정리",
+  "files": {
+    "docs/exe/cpp-demo-second-guard-20261106.md": "133094ef49377a696a50470c253b76be0634af2eb2686b49d8937549229941c5",
+    "tools/cpp_demo_second_cycle_smoke.py": "6034e8742ac21e1ab79921c5775f47d60ec8791142a8e5626bee73a0e7625e48",
+    "tools/cpp_demo_guide_audit.py": "90aa49a4bf6b93a2c715e65c1acb5365d540b4f630e394988f201434a6222313"
+  }
+}
