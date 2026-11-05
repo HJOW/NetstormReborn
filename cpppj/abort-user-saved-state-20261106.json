@@ -1,0 +1,102 @@
+{
+  "unit": 949,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 949,
+  "version": "11.01",
+  "previousProduct": 939,
+  "previousExeSha256": "06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098",
+  "exeSha256": "b51f2aca2093d92acb4f8019316eab25e9fc388b1771f2ed7a7ff25088b1173c",
+  "exeBytes": 11248128,
+  "gameExecutions": 2,
+  "control": {
+    "checks": [],
+    "userStateExists": true,
+    "installStateExists": false,
+    "expectedInstallSha256": "0eff9279a4f5aff283c8df168284e52ac58f946e985178c9027de4db02965439",
+    "installSha256": null,
+    "dataUnchanged": false,
+    "exitCode": 1
+  },
+  "fixed": {
+    "checks": [
+      {
+        "cycle": 0,
+        "userRemoved": true,
+        "installExists": true,
+        "installSha256": "0eff9279a4f5aff283c8df168284e52ac58f946e985178c9027de4db02965439"
+      },
+      {
+        "cycle": 1,
+        "userRemoved": true,
+        "installExists": true,
+        "installSha256": "0eff9279a4f5aff283c8df168284e52ac58f946e985178c9027de4db02965439"
+      }
+    ],
+    "userStateExists": false,
+    "installStateExists": true,
+    "expectedInstallSha256": "0eff9279a4f5aff283c8df168284e52ac58f946e985178c9027de4db02965439",
+    "installSha256": "0eff9279a4f5aff283c8df168284e52ac58f946e985178c9027de4db02965439",
+    "dataUnchanged": true,
+    "exitCode": 0
+  },
+  "accepted": {
+    "entries": 4,
+    "cycles": 2,
+    "actions": 35,
+    "observations": 24,
+    "exitCode": 0
+  },
+  "cppTests": {
+    "existing": 15,
+    "new": 0,
+    "failedChecks": 0
+  },
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_user_data_root_tests",
+      "netstorm_file_path_client_tests"
+    ],
+    "exitCode": 0,
+    "warnings": 0
+  },
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "screenshots": {
+    "final-main.png": {
+      "sha256": "0ac693f6e10689599cbf61dcc9b4f3d00ed0865b5d200f647e3cbde8319d2c0b",
+      "width": 1024,
+      "height": 768
+    },
+    "mission-0.png": {
+      "sha256": "e26a3b70b9f51554a2cb718f737dadf6e554c3ca8a594494e01997e0e7e4a66f",
+      "width": 1024,
+      "height": 768
+    },
+    "mission-1.png": {
+      "sha256": "314f64158cfa88a4ed1847dda6467d2888b0f712524dac518238a0cb2363ffc7",
+      "width": 1024,
+      "height": 768
+    }
+  },
+  "files": {
+    "cpppj/src/client/UberGump.cpp": "4d57ba685d15d3d5211997280d7868d7e37545c8c88a59cd4c062c211bfd2d6e",
+    "tools/mcp_cpp_mission_abort_smoke.py": "e8c6b6d03947c41d866b354bbf89f61ca946e9a1739cbf81ebe5b626acc45419",
+    "cpppj/README.md": "7725e97c1a979581f7627ca70feddd4d1cf6213edd731d258e3abdc12532a520",
+    "docs/exe/cpp-abort-user-saved-state-20261106.md": "922f72b3ecd27e6e7a3606d2aa2a6f731716177a9503ee9de5fee8a476a36cf5"
+  },
+  "raw": {
+    "build.log": "5ad97162fefd6b845a7b61aff419a86c9770f85dd826d67098a2493b0911a724",
+    "user-data-tests.log": "30f3b7541a7c5d7d09417d05f7480ecd2a764c5d058469f3886da0644bebd091",
+    "saved-state-tests.log": "f7c8ab82ac0a835fe29e7bcfb96dfce57a890b26e62848a0995c1f4fc24e7af9",
+    "control-v1/saved-state-audit.json": "5f9fafcbb60ff2b3186cb9d5a39721a0f971def302c410b5b8c6dc29cd154782",
+    "fixed-v1/saved-state-audit.json": "a6d359f6cbafe740f14be44c27abccc63ec4a7530e4a031cea75e0e1bf93482a",
+    "fixed-v1/summary.json": "f220b44b5d52b12951dc17cbabc3437eda616d85ff104601b41d35f100cf14fe"
+  },
+  "next": "950: 3절3번 Native3/State1/단독State7/LeaveBattle 잔여"
+}

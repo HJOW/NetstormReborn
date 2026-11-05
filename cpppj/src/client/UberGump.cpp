@@ -1456,7 +1456,7 @@ void UberGump::Event(InputEvent event) {
             if (event.y==2) RequestMainMenuAfterLeave(local.State()); // Guide의 직접 복귀는 저장 삭제/공통 abort 예약을 실행하지 않는다.
             else {
                 if (event.y==3 || event.y==9) { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile()));local.SourceType()=0; } //원문은 이 두 이유에서 선행 삭제 뒤 공통 부모의 삭제를 한 번 더 실행한다.
-                PrepareBattleAbortState({local.State(),local.AbortPending(),client_.WorldAudio().ResultState(),game.world.missionPost,game.world.editor,surface.ownerMode.challenge,surface.ownerMode.battle},[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames())); });
+                PrepareBattleAbortState({local.State(),local.AbortPending(),client_.WorldAudio().ResultState(),game.world.missionPost,game.world.editor,surface.ownerMode.challenge,surface.ownerMode.battle},[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); }); // 공통 중단도 현재 사용자 Saves만 삭제하고 설치 폴더의 옛 상태 파일은 보존한다.
             }
             return; //실제 다음 Poll의 State3에 종료 통지·정리·메뉴를 맡기며 사건 수신 중 World를 반납하지 않는다.
         }

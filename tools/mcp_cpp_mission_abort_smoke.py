@@ -26,10 +26,21 @@ def main():
     parser.add_argument('--exe', type=Path, required=True)
     parser.add_argument('--game', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--check-saved-state-delete', action='store_true', help='중단 뒤 사용자 저장 상태 삭제와 설치 파일 보존을 검사한다')
     args = parser.parse_args()
     output = args.output.resolve()
-    output.mkdir(parents=True, exist_ok=False)
     game = args.game.resolve()
+    if args.check_saved_state_delete:
+        root = Path(__file__).resolve().parents[1]
+        for name in ('originals', 'originalCD'):  # 추가 검사 자료를 보호 원본 아래에 만들거나 지우지 않는다.
+            protected = (root / name).resolve()
+            assert all(path != protected and protected not in path.parents for path in (game, output)), '격리 실행 자료와 출력 폴더 필요'
+    output.mkdir(parents=True, exist_ok=False)
+    (output / 'tool-at-launch.py').write_bytes(Path(__file__).read_bytes())
+    legacy = game / 'd' / '!state.dat' if args.check_saved_state_delete else None
+    if legacy is not None and not legacy.exists():
+        legacy.write_bytes(b'949-install-saved-state-must-survive')  # 검사 사본에 없는 파일만 새로 만들고 기존 파일은 읽기만 한다.
+    legacy_sha = hashlib.sha256(legacy.read_bytes()).hexdigest() if legacy is not None else None
     before = file_manifest(game)
     user_data = output / 'user-data'  # 기존 Saved Games와 분리한 검사 전용 저장 루트다.
     env = dict(os.environ, NETSTORM_USER_DATA=str(user_data))
@@ -39,6 +50,8 @@ def main():
     watchdog.start()
     observations = []  # 실제 보고의 단계/월드 존재 여부를 순서대로 보관한다.
     actions = []  # 실행한 앱 내부 메뉴 입력이며 물리 입력으로 세지 않는다.
+    saved_checks = []  # 실제 중단 명령 전후의 사용자 파일과 설치 파일을 구별한다.
+    user_state = user_data / 'Saves' / '!state.dat'  # 실제 Client의 사용자 정책과 같은 검사 전용 위치다.
 
     def call(name, **arguments):
         """MCP 오류 응답을 정상 게임 단계로 오인하지 않는다."""
@@ -124,7 +137,16 @@ def main():
             action('click', 'Replay Mission')
             ready('replayed-' + str(cycle))
             abort('abort-main-' + str(cycle))
+            if args.check_saved_state_delete:
+                assert not user_state.exists(), '검사 전에 실제 사용자 저장 상태가 이미 있음'
+                user_state.parent.mkdir(parents=True, exist_ok=True)
+                user_state.write_bytes(('949-user-saved-state-cycle-' + str(cycle)).encode('utf-8'))  # 초기 Startup reader 뒤에만 삭제 검사용 파일을 준비한다.
             action('click', 'Main Menu')
+            if args.check_saved_state_delete:
+                check = dict(cycle=cycle, userRemoved=not user_state.exists(), installExists=legacy.exists(),
+                             installSha256=hashlib.sha256(legacy.read_bytes()).hexdigest() if legacy.exists() else None)
+                saved_checks.append(check)
+                assert check['userRemoved'] and check['installSha256'] == legacy_sha, check
             call('netstorm_wait_frames', frames=20, screenshot=False)
             main_menu('main-' + str(cycle))
         screenshot('final-main')
@@ -132,7 +154,8 @@ def main():
         code = client.process.wait(timeout=30)
         assert code == 0, code
         assert file_manifest(game) == before, '실행 자료가 변경됨'
-        result = dict(passed=True, unit=945, processes=1, exitCode=code, cycles=2, entries=4, actions=actions, observations=observations,
+        result = dict(passed=True, unit=949 if args.check_saved_state_delete else 945, processes=1, exitCode=code, cycles=2, entries=4, actions=actions, observations=observations,
+                      savedStateChecks=saved_checks,
                       dataUnchanged=True, exeSha256=hashlib.sha256(args.exe.read_bytes()).hexdigest(), userData=str(user_data))
         (output / 'summary.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         print(json.dumps(dict(passed=True, cycles=2, entries=4, exitCode=code, observations=len(observations)), ensure_ascii=False))
@@ -143,6 +166,11 @@ def main():
             client.process.wait(timeout=10)
         (output / 'stderr.log').write_text('\n'.join(client.stderr_lines), encoding='utf-8')
         (output / 'actions.json').write_text(json.dumps(actions, ensure_ascii=False, indent=2), encoding='utf-8')
+        if args.check_saved_state_delete:
+            audit = dict(checks=saved_checks, userStateExists=user_state.exists(), installStateExists=legacy.exists(),
+                         expectedInstallSha256=legacy_sha, installSha256=hashlib.sha256(legacy.read_bytes()).hexdigest() if legacy.exists() else None,
+                         dataUnchanged=file_manifest(game)==before, exitCode=client.process.returncode)
+            (output / 'saved-state-audit.json').write_text(json.dumps(audit, ensure_ascii=False, indent=2), encoding='utf-8')  # 실패/종료 예외에서도 실제 파일 상태를 남긴다.
 
 
 if __name__ == '__main__':
