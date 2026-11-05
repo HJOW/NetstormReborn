@@ -1,0 +1,872 @@
+{
+  "unit": 929,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "kind": "실제 원본 PE/현재 소스 정적 대조 및 UI 잔여 분류",
+  "productUnit": 927,
+  "productCodeChanges": false,
+  "productSha256": "fd7a0ec48076bcf6cebd5a657cded1530347a6f7c79f757803d00a6e0f5c5508",
+  "vtables": 83,
+  "nonMultiplayerVtables": 81,
+  "populateRoutes": [
+    {
+      "originalBody": "0041c210",
+      "vtables": 1,
+      "consumer": "Meltdown",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 47,
+        "text": "case 0x41c210:"
+      }
+    },
+    {
+      "originalBody": "00420b30",
+      "vtables": 16,
+      "consumer": "Spell",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 79,
+        "text": "case 0x420b30:"
+      }
+    },
+    {
+      "originalBody": "00422000",
+      "vtables": 1,
+      "consumer": "Bridge",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 54,
+        "text": "case 0x422000:"
+      }
+    },
+    {
+      "originalBody": "004288f0",
+      "vtables": 7,
+      "consumer": "OpenCarrier",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 116,
+        "text": "case 0x4288f0:"
+      }
+    },
+    {
+      "originalBody": "0044cbd0",
+      "vtables": 20,
+      "consumer": "OpenDamageable",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 117,
+        "text": "case 0x44cbd0:"
+      }
+    },
+    {
+      "originalBody": "00454c00",
+      "vtables": 2,
+      "consumer": "OpenFactory",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 114,
+        "text": "case 0x454c00:"
+      }
+    },
+    {
+      "originalBody": "00462390",
+      "vtables": 1,
+      "consumer": "Buried",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 62,
+        "text": "case 0x462390:"
+      }
+    },
+    {
+      "originalBody": "00462550",
+      "vtables": 2,
+      "consumer": "Help",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 66,
+        "text": "case 0x462550:"
+      }
+    },
+    {
+      "originalBody": "00485600",
+      "vtables": 1,
+      "consumer": "Geyser",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 69,
+        "text": "case 0x485600:"
+      }
+    },
+    {
+      "originalBody": "0048eca0",
+      "vtables": 1,
+      "consumer": "IceTowerGrowth",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 72,
+        "text": "case 0x48eca0:"
+      }
+    },
+    {
+      "originalBody": "00494870",
+      "vtables": 1,
+      "consumer": "OpenPriest",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 115,
+        "text": "case 0x494870:"
+      }
+    },
+    {
+      "originalBody": "004b1270",
+      "vtables": 26,
+      "consumer": "OpenObject",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 118,
+        "text": "case 0x4b1270:"
+      }
+    },
+    {
+      "originalBody": "004dcca0",
+      "vtables": 4,
+      "consumer": "Temple",
+      "source": {
+        "path": "cpppj/src/client/RawObjectMenuVariants.cpp",
+        "line": 75,
+        "text": "case 0x4dcca0:"
+      }
+    }
+  ],
+  "openRoutes": [
+    {
+      "originalBody": "0041e660",
+      "vtables": 16,
+      "consumer": "OpenSelectionMenu(true)",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 132,
+        "text": "case 0x41e660:"
+      }
+    },
+    {
+      "originalBody": "004268c0",
+      "vtables": 7,
+      "consumer": "OpenSelectionMenu(false)",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 131,
+        "text": "case 0x4268c0:"
+      }
+    },
+    {
+      "originalBody": "004754b0",
+      "vtables": 2,
+      "consumer": "OpenFactory",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 129,
+        "text": "case 0x4754b0:"
+      }
+    },
+    {
+      "originalBody": "00492080",
+      "vtables": 1,
+      "consumer": "OpenSelectionMenu(false)",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 131,
+        "text": "case 0x492080:"
+      }
+    },
+    {
+      "originalBody": "004adb30",
+      "vtables": 55,
+      "consumer": "Open",
+      "source": {
+        "path": "cpppj/src/client/CampaignObjectMenuClient.cpp",
+        "line": 130,
+        "text": "case 0x4adb30:"
+      }
+    }
+  ],
+  "deferredOpenRoutes": [
+    {
+      "originalBody": "004789b0",
+      "vtables": 1,
+      "consumer": "MP Metadisplay Battle/Challenge",
+      "path": "extracted/refined/originals/Netstorm.c",
+      "line": 98971,
+      "status": "3차 MP 무시험 사전 구현으로 이월; 현재 Client에 미연결"
+    },
+    {
+      "originalBody": "00479390",
+      "vtables": 1,
+      "consumer": "MP Challenge Area",
+      "path": "extracted/refined/originals/Netstorm.c",
+      "line": 99328,
+      "status": "3차 MP 무시험 사전 구현으로 이월; 현재 Client에 미연결"
+    }
+  ],
+  "variantCommands": [
+    {
+      "global": "00542ad4",
+      "command": "030000f8",
+      "label": "Meltdown",
+      "sources": [
+        {
+          "path": "cpppj/src/client/ScenarioObjectInput.cpp",
+          "line": 14,
+          "text": "0x030000f8U"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 4236,
+          "text": "current.meltdown->Command"
+        }
+      ]
+    },
+    {
+      "global": "00542b5c",
+      "command": "02000125",
+      "label": "Set as Cracked",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1291,
+          "text": "transitionCode>=0x02000125U"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 3996,
+          "text": "RawCampaignSession::SetBridgeQuality"
+        }
+      ]
+    },
+    {
+      "global": "00542b60",
+      "command": "02000126",
+      "label": "Set as Normal",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1291,
+          "text": "transitionCode<=0x02000127U"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 3996,
+          "text": "RawCampaignSession::SetBridgeQuality"
+        }
+      ]
+    },
+    {
+      "global": "00542b64",
+      "command": "02000127",
+      "label": "Set as Hard",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1292,
+          "text": "transitionCode-0x02000125U"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 3996,
+          "text": "RawCampaignSession::SetBridgeQuality"
+        }
+      ]
+    },
+    {
+      "global": "00542a2c",
+      "command": "030000ce",
+      "label": "Turn To Spell/Obelisk",
+      "sources": [
+        {
+          "path": "cpppj/src/client/ScenarioObjectInput.cpp",
+          "line": 14,
+          "text": "0x030000ceU"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 4247,
+          "text": "RawObjectConversion(current.core.pool"
+        }
+      ]
+    },
+    {
+      "global": "005427ac",
+      "command": "0200002d",
+      "label": "CHEAT Dig Up",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1295,
+          "text": "transitionCode==0x0200002dU"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1298,
+          "text": "GemReward().Reveal"
+        }
+      ]
+    },
+    {
+      "global": "005428c8",
+      "command": "03000074",
+      "label": "Detonate",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1322,
+          "text": "DispatchDetonateInput(event"
+        },
+        {
+          "path": "cpppj/src/client/DetonateInput.cpp",
+          "line": 12,
+          "text": "objectInput(target,event.code)"
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "line": 4247,
+          "text": "RawObjectConversion(current.core.pool"
+        }
+      ]
+    },
+    {
+      "global": "00542754",
+      "command": "02000017",
+      "label": "About/Help",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1230,
+          "text": "transitionCode==0x02000017U"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 771,
+          "text": "Menus()->OpenHelp"
+        }
+      ]
+    },
+    {
+      "global": "00542974",
+      "command": "020000a0",
+      "label": "Knowledge",
+      "sources": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1396,
+          "text": "transitionCode==kShowTechnologyCommand"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "line": 1397,
+          "text": "OpenKnowledge(world_->Session()"
+        }
+      ]
+    }
+  ],
+  "unclassifiedRegisteredRoutes": [],
+  "currentSlotInventory": {
+    "slots": 83,
+    "populateBodies": [
+      "0041c210",
+      "00420b30",
+      "00422000",
+      "004288f0",
+      "0044cbd0",
+      "00454c00",
+      "00462390",
+      "00462550",
+      "00485600",
+      "0048eca0",
+      "00494870",
+      "004b1270",
+      "004dcca0"
+    ],
+    "directBodies": [
+      "004288f0",
+      "0044cbd0",
+      "00454c00",
+      "00494870",
+      "004b1270"
+    ],
+    "variantBodies": [
+      "0041c210",
+      "00420b30",
+      "00422000",
+      "00462390",
+      "00462550",
+      "00485600",
+      "0048eca0",
+      "004dcca0"
+    ],
+    "openBodies": [
+      "0041e660",
+      "004268c0",
+      "004754b0",
+      "00492080",
+      "004adb30"
+    ],
+    "missingPopulate": [],
+    "missingOpen": [
+      4688304,
+      4690832
+    ],
+    "rows": [
+      {
+        "vtable": "00501dd0",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00501ea0",
+        "populate": "0041c210",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00502370",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502448",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502510",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "005025d8",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "005026a0",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502778",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502840",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502908",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "005029d0",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502aa8",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502b70",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502c38",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00502cf0",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00502db0",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00502e68",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502f30",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00502ff8",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "005030c0",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00503188",
+        "populate": "00420b30",
+        "open": "0041e660"
+      },
+      {
+        "vtable": "00503360",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "005034c8",
+        "populate": "00422000",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00503d80",
+        "populate": "004288f0",
+        "open": "004268c0"
+      },
+      {
+        "vtable": "00503e50",
+        "populate": "004288f0",
+        "open": "004268c0"
+      },
+      {
+        "vtable": "00503f20",
+        "populate": "004288f0",
+        "open": "004268c0"
+      },
+      {
+        "vtable": "00503ff0",
+        "populate": "004288f0",
+        "open": "004268c0"
+      },
+      {
+        "vtable": "005040c0",
+        "populate": "004288f0",
+        "open": "004268c0"
+      },
+      {
+        "vtable": "00504198",
+        "populate": "004288f0",
+        "open": "004268c0"
+      },
+      {
+        "vtable": "00506d98",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00506e50",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00506f08",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "005070c0",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "005075d8",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "005076b8",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00507770",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00507950",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00508cc8",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00509148",
+        "populate": "00454c00",
+        "open": "004754b0"
+      },
+      {
+        "vtable": "00509210",
+        "populate": "00454c00",
+        "open": "004754b0"
+      },
+      {
+        "vtable": "005092d0",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00509388",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00509470",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "005096a0",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00509758",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00509810",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00509930",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "005099e8",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00509aa0",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00509b98",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050a050",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050a1e8",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050a388",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050a748",
+        "populate": "00462390",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050a820",
+        "populate": "00462550",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050a8e8",
+        "populate": "00462550",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050b570",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050b6e8",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050b7c0",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050b888",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050b9b8",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050bad0",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050c3b0",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050c9f0",
+        "populate": "004b1270",
+        "open": "004789b0"
+      },
+      {
+        "vtable": "0050cc08",
+        "populate": "004b1270",
+        "open": "00479390"
+      },
+      {
+        "vtable": "0050da88",
+        "populate": "00485600",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050db78",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050dc30",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050e568",
+        "populate": "004288f0",
+        "open": "004268c0"
+      },
+      {
+        "vtable": "0050e668",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050e738",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050e888",
+        "populate": "0048eca0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050e940",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050ea08",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050ead0",
+        "populate": "0044cbd0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050eb98",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050ee08",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "0050f210",
+        "populate": "00494870",
+        "open": "00492080"
+      },
+      {
+        "vtable": "0050f540",
+        "populate": "004b1270",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "005196f0",
+        "populate": "004dcca0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "005197a8",
+        "populate": "004dcca0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00519860",
+        "populate": "004dcca0",
+        "open": "004adb30"
+      },
+      {
+        "vtable": "00519918",
+        "populate": "004dcca0",
+        "open": "004adb30"
+      }
+    ]
+  },
+  "sha256": {
+    "AGENTS.md": "3134d0a2b9482da6655c48d2816a371374fc39be0136c79dda452a68cfbb2716",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "b3799f43b0c1011f4d958288d7575f4e0788753986ab2c184d5a8f13d90d60b6",
+    "cpppj/src/client/DetonateInput.cpp": "f29efed386d779fe643e13c9fdb6b5ed70bc0c21201027dded04c6dd06c8479d",
+    "cpppj/src/client/ObjectMenuSlots.inc": "ee1214ffc3274c031cb041919fba70daca695141c9cf8113496ee542387c0e3e",
+    "cpppj/src/client/RawCampaignSession.cpp": "d7cd2125dd4f06d5b2114dccd92ef70d078f4c226ac8fb1573689ea8f64b4a5f",
+    "cpppj/src/client/RawObjectMenuVariants.cpp": "8a904b1c49febbae9f03de679cfc50b763c32c4a527b6c3724714eb57285e531",
+    "cpppj/src/client/ScenarioObjectInput.cpp": "520d9cebfe510b040280f0f4f798308ceff2216b6a64086c8d13e63333d43707",
+    "cpppj/src/client/UberGump.cpp": "da3dd0983a60a8f9591fe37ee0f36b614d98e414ec51f50ab5d8a7e96060e9db",
+    "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/cpp_object_menu_wiring_audit.py": "02ce4961d79ad00c5ffd9c7d9a0e7c824933ee5469054f7b8df9338e87178e39"
+  },
+  "collectorFixedMetadata": {
+    "date": "2026-11-01",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23"
+    },
+    "explanation": "기존 도구의 고정 과거 메타데이터이며 이번 실행의 날짜/디컴파일 기준은 상위 필드다."
+  },
+  "builds": 0,
+  "newCppTests": 0,
+  "nativeExecutions": 0,
+  "gameExecutions": 0,
+  "networkTests": 0,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "conclusion": "비멀티 UI 구현/부품 대조는 종료하고 Edit2로 전환한다. 전체 조합·외관·자연 플레이 검증 완료를 뜻하지 않는다."
+}
