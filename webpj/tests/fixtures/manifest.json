@@ -581,7 +581,7 @@
       "bytes": 238949,
       "lines": 4721,
       "fixtureCommit": "ffdc5ddb",
-      "webCommit": "0fd343a1",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SidPool.cpp": "6035f810",
         "cpppj/src/o/SidPool.h": "b7065914"
@@ -594,28 +594,32 @@
       "edition": "10.78",
       "required": false,
       "consumers": [
-        "webpj/tests/squid-finder.test.mjs"
+        "webpj/tests/squid-finder.test.mjs",
+        "webpj/tests/squid-unpop.test.mjs"
       ],
       "unit": "WB04-B",
       "doc": "docs/webpj-squid-finder-20261105.md",
       "producer": "cpppj 원본 SquidHash 초기화(004b28f0)·버킷 주소(004b29a0/004b2a90/004b2b00)·단계 선택(004ace40) x86 관측",
       "modules": [
-        "webpj/www/core/squid-hash.js"
+        "webpj/www/core/squid-hash.js",
+        "webpj/www/core/squid-space.js"
       ],
       "cpppjSources": [
         "cpppj/src/o/SquidHash.cpp",
-        "cpppj/src/o/SquidHash.h"
+        "cpppj/src/o/SquidHash.h",
+        "cpppj/src/o/Squid.cpp"
       ],
-      "scope": "초기화4·주소807·ObjectLevel605. Genus 3216행(spot 점유)은 WB04-E 범위로 미사용",
+      "scope": "초기화4·주소807·ObjectLevel605(WB04-B), Genus 3216행 effectiveGenus(WB04-D1)",
       "text": true,
       "sha256": "2447ed16982a91260cab70914f44b839ae6aa21083700cc5928fd33152b987a3",
       "bytes": 224284,
       "lines": 4633,
       "fixtureCommit": "65927742",
-      "webCommit": "0563c07f",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidHash.cpp": "a9af29da",
-        "cpppj/src/o/SquidHash.h": "a9af29da"
+        "cpppj/src/o/SquidHash.h": "a9af29da",
+        "cpppj/src/o/Squid.cpp": "65927742"
       }
     },
     {
@@ -743,6 +747,40 @@
       "webCommit": "e993112b",
       "cpppjBasis": {
         "cpppj/src/o/RawGameAuxState.h": "886f2d23"
+      }
+    },
+    {
+      "id": "squid-unpop-parent",
+      "path": "cpppj/tests/fixtures/squid-unpop-parent-hardware-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 공통 공간 해제 부모(004afe50) x86 관측(진단 복귀·부분 변경·풀/해시/spot Adler·요청 순서)",
+      "consumers": [
+        "webpj/tests/squid-unpop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-unpop.js",
+        "webpj/www/core/squid-space.js"
+      ],
+      "unit": "WB04-D1",
+      "doc": "docs/webpj-squid-unpop-20261105.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidUnpopParent.cpp",
+        "cpppj/src/o/RawSquidUnpopParent.h",
+        "cpppj/src/o/RawBuildingSpace.cpp"
+      ],
+      "scope": "1300행 전체. 표시 갱신 vtable 지원표·미니맵 큐·contained 종단은 장치 경계(D2)",
+      "text": true,
+      "sha256": "a4df8f48be831c66ae530cd5fdc21d0e86515f119f9393e07736356694f32ed7",
+      "bytes": 419588,
+      "lines": 1300,
+      "fixtureCommit": "6ff267a1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459",
+        "cpppj/src/o/RawSquidUnpopParent.h": "6ff267a1",
+        "cpppj/src/o/RawBuildingSpace.cpp": "edc7db85"
       }
     },
     {

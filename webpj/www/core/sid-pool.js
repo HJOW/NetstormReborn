@@ -188,6 +188,14 @@ export class SidPool {
         return this.#bytes.subarray(offset, offset + LAYOUT.stride);
     }
 
+    // 상태와 무관한 물리 슬롯 쓰기 대여이다(free/예약 슬롯 포함, 물리 범위 0..capacity-1). 원본 공간 해제·건물 옆면 몸체가
+    // 진단 복귀 뒤 free 슬롯이나 표면 후보를 그대로 읽고 쓰는 경로에만 쓴다(cpppj 의 SquidUnpop/RawBuildingSpace friend 접근과 같음).
+    // 일반 객체 쓰기는 allocated 를 쓴다. 양수 reset 뒤에는 다시 빌려야 한다. (2026-11-05 WB04-D1: 공통 공간 해제 이식으로 추가)
+    physical(sid) {
+        const offset = this.#offset(sid);
+        return this.#bytes.subarray(offset, offset + LAYOUT.stride);
+    }
+
     // 읽기 전용span에 해당하는 독립 사본이다. free/예약 슬롯도 물리 범위 안이면 읽는다.
     slot(sid) {
         const offset = this.#offset(sid);
