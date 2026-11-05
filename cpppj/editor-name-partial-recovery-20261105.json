@@ -1,0 +1,51 @@
+{
+  "unit": 930,
+  "date": "2026-11-05",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "productUnit": 927,
+  "productCodeChanges": false,
+  "productSha256": "fd7a0ec48076bcf6cebd5a657cded1530347a6f7c79f757803d00a6e0f5c5508",
+  "newCases": 1,
+  "uniqueCases": 10,
+  "nameModes": 2,
+  "failurePrefixesPerMode": 4,
+  "partialFailurePaths": 8,
+  "reopenedDialogs": 8,
+  "firstBuildPassed": true,
+  "firstRuntimePassed": true,
+  "nativeConfirmCancelRows": 288,
+  "nativeHtmlInputRows": 109,
+  "finalFailedChecks": 0,
+  "warnings": 0,
+  "errors": 0,
+  "tests": [
+    {
+      "log": "extracted/cpp-resume-930/test-SaveFortNameDialog_.log",
+      "filter": "SaveFortNameDialog_",
+      "exit": 0
+    },
+    {
+      "log": "extracted/cpp-resume-930/test-HtmlInputDialog_.log",
+      "filter": "HtmlInputDialog_",
+      "exit": 0
+    }
+  ],
+  "names": [
+    "SaveFortNameDialog_ReplaysNativeConfirmAndCancel288",
+    "SaveFortNameDialog_PreservesReadonlyPrefixOnSetFailure",
+    "SaveFortNameDialog_ActualModalTextEntryEnterAndRetirement",
+    "SaveFortNameDialog_ActualDuplicateEmptyEscapeAndCancel",
+    "SaveFortNameDialog_ActualMouseUsesSerialAfterPriorGumpRetirement",
+    "SaveFortNameDialog_FirstTextContextClipboardRoutesToMouseSaveAndRetirement",
+    "SaveFortNameDialog_PartialConstructionCleanupAndNewOrSaveAsRecovery",
+    "HtmlInputDialog_IndependentNative",
+    "HtmlInputDialog_MetadataActualTextAndTell",
+    "HtmlInputDialog_ActualNumberModeLimitAndCancel"
+  ],
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "networkTests": 0
+}

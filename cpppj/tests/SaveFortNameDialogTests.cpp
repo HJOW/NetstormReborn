@@ -9,6 +9,7 @@
 #include "client/PaletteShade.h"
 #include <cctype>
 #include <filesystem>
+#include <sstream>
 
 using namespace netstorm::client;
 using namespace netstorm::test::rawscene;
@@ -133,4 +134,18 @@ TEST_CASE(MoneyConfirmChecking_ActualDialogCurrentTargetAndLifetime) {
     context.sendMoney=[&](const auto& owner,auto text) { CHECK(&owner==&root->fortMode);return ConfirmSendMoney(owner,text,hooks); };const auto token=scene.menus->ShowSendMoneyDialog(std::move(context),2);root=const_cast<SaveFortNameDialogNode*>(scene.menus->SaveFortNameNode(token));CHECK(root); // 같은 실제 창의+d4를 외부 조회/진단 입력에서만 변경한다.
     for (const auto ch:std::string("700")) scene.buttons.RouteInput({static_cast<std::uint32_t>(ch),0,0}); // 선택된0을 같은 문자 부모로 바꾼다.
     scene.buttons.RouteInput({13,0,0});CHECK(reads==2 && diagnostics==1 && target==3 && root->fortMode==8 && debit==-700 && (root->flags&0x10000U));scene.buttons.CleanupGumps();CHECK(!scene.buttons.CurrentDialog() && !scene.menus->SaveFortNameNode(token));
+}
+
+// 두 이름 창의 문자/제목/버튼 부분 생성 실패도 같은 소유 목록으로 반납하고 재생성할 수 있어야 한다.
+TEST_CASE(SaveFortNameDialog_PartialConstructionCleanupAndNewOrSaveAsRecovery) {
+    for (const std::uint32_t mode:{0U,1U}) for (const std::uint32_t stage:{0U,1U,2U,3U}) { // 새 이름/Save as 각각 현재 시각·제목·OK·Cancel의 네 접두에서 한 번 중단한다.
+        SaveNameScene scene;auto context=scene.Context();bool clockFailed{},failed{};std::uint32_t translated{},reads{};const auto beforeHeader=scene.header;const auto seed=scene.work.TryRead("d/Seed.fort"); // 실제 작업 파일과 이름 변경이 아직 발생하지 않은 기준이다.
+        context.editor.now=[&] { if (stage==0 && !clockFailed) { clockFailed=true;throw std::runtime_error("이름 창의 문자 생성 시각 중단"); }return 0.0; };
+        context.translate=[&](auto text) { ++translated;if (stage && translated==stage) throw std::runtime_error("이름 창의 제목 또는 버튼 번역 중단");return std::string(text); };context.readFort=[&](auto) { ++reads; };
+        try { scene.menus->ShowSaveFortNameDialog(std::move(context),mode,1,"Failure930"); }catch (const std::runtime_error&) { failed=true; }
+        CHECK(failed && translated==stage && scene.header==beforeHeader && scene.saved.empty() && !reads && !scene.pathCalls && !scene.buttons.CurrentDialog() && !scene.buttons.DialogCount());
+        scene.menus->CloseSaveFortNameDialogs();const auto* entries=scene.menus->TextEntryControls();CHECK(entries && !entries->Storage().BufferCount());std::istringstream report(scene.buttons.Report());std::string tag;std::uint32_t controls{},registered{};report>>tag>>controls>>registered;CHECK(tag=="RawButtons" && !controls && registered==1 && scene.work.TryRead("d/Seed.fort")==seed); // 미부착 부모/자식까지 정리하면 공통 루트 한 개만 남아야 한다.
+        auto recovered=scene.Context();recovered.readFort=[&](auto) { ++reads; };const auto root=scene.menus->ShowSaveFortNameDialog(std::move(recovered),mode,1,"Recovered930");const auto* node=scene.menus->SaveFortNameNode(root);CHECK(node && scene.buttons.CurrentDialog()==root && scene.buttons.DialogCount()==1);if (!node) throw std::logic_error("실패 뒤 이름 창 재생성 없음");
+        scene.buttons.HandleGump(root,0x0200002cU,scene.menus->Node(node->cancel)->serial,0);CHECK(!scene.buttons.CurrentDialog());scene.buttons.CleanupGumps();CHECK(!scene.menus->SaveFortNameNode(root) && !entries->Storage().BufferCount() && scene.header==beforeHeader && scene.saved.empty() && !reads && !scene.pathCalls); // 실제 Cancel 부모와 지연 삭제를 거치고 저장 효과는 실행하지 않는다.
+    }
 }
