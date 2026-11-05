@@ -1,0 +1,256 @@
+{
+  "unit": 916,
+  "previousCpCommit": "012702c4",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "priority": "LEFT_JOBS.md 3절1번 대상별 커서·오브젝트 우클릭·게임 UI",
+  "bug": "실제 Session의 손상 회수 계산이 초기 false인 halfHealthMode만 읽어 현재 전투 모드의 HP 절반 미만 환불0을 적용하지 않음",
+  "fix": "SquidRewardState에 현재 World battle의 비소유 bool 참조와 getter를 추가하고 실제 Session에 연결. 독립 값형/판본 fixture의 기존 bool은 유지.",
+  "reproduction": [
+    {
+      "type": 75,
+      "hp": 349,
+      "maxHp": 700,
+      "levels": [
+        0,
+        2
+      ]
+    },
+    {
+      "type": 86,
+      "hp": 1999,
+      "maxHp": 4000,
+      "levels": [
+        0,
+        2
+      ]
+    }
+  ],
+  "staticEvidence": {
+    "originals": {
+      "0044c240": {
+        "lines": 36,
+        "metadata": "// [신뢰도 A] · 호출자 2 · 포인터 0 · CD판 FUN_00462610@00462610 (callseq/strong 0.882)"
+      },
+      "0044a480": {
+        "lines": 26,
+        "metadata": "// [신뢰도 B] · 호출자 0 · 포인터 1 · 복구 출처 prologue+pointer · CD판 대응 없음"
+      },
+      "004478f0": {
+        "lines": 28,
+        "metadata": "// [신뢰도 B] · 호출자 0 · 포인터 1 · 복구 출처 adjacent · CD판 대응 없음"
+      },
+      "004adb30": {
+        "lines": 41,
+        "metadata": "// [신뢰도 A] · 호출자 2 · 포인터 55 · CD판 FUN_004aebf0@004aebf0 (gapfill/strong 0.815)"
+      },
+      "004ada70": {
+        "lines": 34,
+        "metadata": "// [신뢰도 A] · 호출자 2 · 포인터 0 · CD판 FUN_004aeb30@004aeb30 (string/strong 0.879)"
+      }
+    },
+    "originalCD": {
+      "00462610": {
+        "lines": 30,
+        "metadata": "// [신뢰도 A] · 호출자 2 · 포인터 0 · 패치판 FUN_0044c240@0044c240 (callseq/strong 0.882)"
+      }
+    }
+  },
+  "scope": {
+    "menus": 130,
+    "damage": {
+      "menus": 48,
+      "types": [
+        75,
+        86
+      ],
+      "levels": [
+        0,
+        2
+      ],
+      "hp": "max/2−1, max/2, max/2+1, max",
+      "battleSequence": [
+        false,
+        true,
+        false
+      ],
+      "effects": "현재 HP/모드를 입력하고 직접 회수/워크샾 확인의 실제 금액 라벨·명령/SID·반납을 확인. 회수 요청은 실행하지 않음."
+    },
+    "altarPair": {
+      "menus": 48,
+      "fort": "breakingthrough",
+      "frames": [
+        3,
+        64,
+        120
+      ],
+      "levels": [
+        "I",
+        "II",
+        "III"
+      ],
+      "owners": [
+        0,
+        1,
+        2,
+        8
+      ],
+      "editor": [
+        0,
+        1
+      ],
+      "targets": [
+        "altar",
+        "dais"
+      ],
+      "finding": "사제 내용물 없는 원래 쌍의 실제 frame setter→Dais Count→Altar 제목/회수 인자. 다이스 우클릭은 같은 제단에 GumpForm 부착."
+    },
+    "emptyAltar": {
+      "menus": 32,
+      "owners": [
+        0,
+        1,
+        2,
+        8
+      ],
+      "editor": [
+        0,
+        1
+      ],
+      "statusBytes": [
+        0,
+        16,
+        32,
+        48
+      ],
+      "finding": "다이스 없는 Count0의 Level I clamp·Invisible/Paralyzed 안내·회수0·About/반납"
+    },
+    "deletion": {
+      "menus": 2,
+      "finding": "두 우클릭 진입점의 Destroy 명령/SID를 큐에서 확인한 뒤 pfDONT_TRANSMIT(0x40)으로 같은 가상 삭제를 실행해 한 쌍/Form/팝업의 지연 반납 확인",
+      "normalCommandDispatch": "별도 기존 ObjectCommand 원문 fixture의flags0 분배로 검증. 실제 flags0 전송을 포함한 단일 UI 실행으로 합산하지 않음",
+      "capturedPriests": 0,
+      "sacrificeOrAttackFrames": 0
+    }
+  },
+  "finalTests": {
+    "uniqueCases": 36,
+    "new": 4,
+    "existing": 32,
+    "commands": 18,
+    "executions": 36,
+    "failedChecks": 0,
+    "names": [
+      "BuildingObjectUi_ConstructionBlocksMenusWithoutAllocatingForms",
+      "BuildingObjectUi_FourWorkshopsUseCurrentOwnerLevelMoneyAndEditor",
+      "BuildingObjectUi_GeneratorsUseStrictHalfHpAndMissionOwnerGates",
+      "BuildingObjectUi_WorkshopClickInsufficientFundsAndCycleCurrentFrame",
+      "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+      "CampaignObjectMenus_ActualSummaryUsesCurrentIdentityAndAlliance",
+      "FactoryMenu_Native32Mana5Slots",
+      "FactoryMenu_Native39FullOpen",
+      "ObjectCommand_CurrentModeAndLazyBoundaries",
+      "ObjectCommand_Native160Inputs",
+      "ObjectMenuInfo_NativeWholeParentsAndStringHelpers",
+      "ObjectMenuInfo_SelectedBoundariesAndEditionContract",
+      "ObjectMenuVariants_Native1024",
+      "ObjectMenu_NativeBase478",
+      "ObjectMenu_NativeDamageable478",
+      "ObjectMenu_NativeSalvage478",
+      "ObjectMenu_RequiresReachedDependencies",
+      "ProductionObjectUi_ClientPredictionAndServerGapsUseFirstMatchingForm",
+      "ProductionObjectUi_DisallowedExcludedAndAllProducedRemainDifferent",
+      "ProductionObjectUi_FourThemesKeepDuplicateRowsAndDistinctSlots",
+      "ProductionObjectUi_SalvageUsesCurrentOwnerEditorDenyAndConfirmation",
+      "SpecialObjectUi_CrystalOwnersAndEditorUseActualMenuAndRelease",
+      "SpecialObjectUi_CrystalParentDeletionDefersActualPopupCleanup",
+      "SpecialObjectUi_ObeliskSpellRoundTripFromActualMenuClick",
+      "SpecialObjectUi_SelectedSpellDeletionClearsWithoutRevisitingReleasedRange",
+      "StateObjectUi_AltarDaisDelegationUsesCurrentFramesOwnersAndEditor",
+      "StateObjectUi_DamagedSalvageReadsCurrentBattleMode",
+      "StateObjectUi_EditorDestroyClickReleasesPairAndPopupWithoutTransmission",
+      "StateObjectUi_EmptyAltarStatusHeadersAndLevelClampReleaseMenus",
+      "reward_1037_x86_fixture",
+      "reward_cd_x86_fixture",
+      "reward_lifecycle_flags_gate_refund",
+      "reward_lifecycle_pays_recipient_and_updates_geyser_pool",
+      "reward_patch_x86_fixture"
+    ],
+    "regression": "기존 PATCH/CD/10.37 보상3·삭제 보상2·메뉴 정보2·공통 명령2·기존 UI23"
+  },
+  "history": {
+    "commands": 21,
+    "executions": 45,
+    "failedChecks": 6,
+    "attempts": [
+      {
+        "log": "extracted/cpp-resume-916/test-first-damage.log",
+        "cases": 1,
+        "failedChecks": 4
+      },
+      {
+        "log": "extracted/cpp-resume-916/test-second-state.log",
+        "cases": 4,
+        "failedChecks": 2
+      },
+      {
+        "log": "extracted/cpp-resume-916/test-third-state.log",
+        "cases": 4,
+        "failedChecks": 0
+      }
+    ],
+    "interpretation": "첫 실패4는 실제 제품 오류. 두 번째 삭제 guard2는 로더가 만든 본체의 server SID를 클라이언트로 가정한 검사 조건이며 전송 없는 가상 삭제/기존 명령 분배 검증으로 교정. 기존 기대/fixture 불변."
+  },
+  "builds": [
+    {
+      "log": "build-first.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "build-second.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "build-third.log",
+      "exit": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "buildWorkflow": "세 번째는 검사 수정만 필요했지만 정규화가 동일 제품 헤더의mtime도 갱신해 재컴파일을 늘렸다. 원인/같은 제품 소스 해시를 기록했고 이후 동일 바이트 파일은 쓰지 않는 normalize-changed.py를 마련했다. 실제 종료 뒤에만 source를 편집했고 동시 빌드는 없었다.",
+  "protection": {
+    "existing": 2787,
+    "fixtures": 967,
+    "unchanged": true,
+    "newFixtures": 0,
+    "newNativeRuns": 0
+  },
+  "sourceCount": 2881,
+  "sourceMatchesFinalBuild": true,
+  "product": {
+    "unit": 916,
+    "bytes": 10787328,
+    "sha256": "fd3a4816dd744d5171df2833cae9eccd9b94291ace883a7967acc7a9480fa5ba",
+    "displayVersion": "11.01",
+    "fileVersion": "11.01",
+    "productVersion": "11.01"
+  },
+  "checking": {
+    "remaining": 8,
+    "parents": 3,
+    "partial": 2,
+    "multiplayer": 3
+  },
+  "limitations": [
+    "PATCH의 창 없는 실제 Client/Session/Gump 검사이며 자연 도달·물리 입력·픽셀 동일성은 미검증",
+    "실제 포획/희생/특정 적 공격/승리·공중3종 새 전용·신규MP/패킷/통신·실제 게임/GUI·전체/34/ZIP 검사는 미실행",
+    "성공 업그레이드/연구/회수 요청과 다른 상태·운반체/커서·다른 게임 UI는 전체 잔여에 유지"
+  ],
+  "rawDirectory": "extracted/cpp-resume-916"
+}

@@ -162,7 +162,7 @@ std::int32_t SquidReward::SalvageRefund(Sid sid,std::uint32_t type,std::int32_t 
                                 : static_cast<std::int16_t>(raw[kHp]|(static_cast<std::uint16_t>(raw[kHp+1])<<8));
     const auto max=MaxHitPoints(sid);
     // 절반 미만이면 환불 없음. 반 값은 부호 있는 2 나눗셈(0방향)이다.
-    if (state_.halfHealthMode && hp<max/2) return 0;
+    if (state_.HalfHealthMode() && hp<max/2) return 0;
     // 최대 HP 0은 x87에서 무한대/NaN이 되고 절삭 변환이 정수 불확정값의 하위 DWORD 0을 돌려준다(두 판본 기계어 확인).
     if (max==0) return 0;
     if (patch) {

@@ -27,6 +27,8 @@ struct SquidRewardState {
     std::int32_t geyserPool{};           // 보상하지 않은 가치의 누적(DAT_00595088 / CD 00512110). 샘 생성 비교에 쓰인다.
     bool fixedSpA{},fixedSpB{};          // SP를 고정값으로 만드는 두 전역(DAT_00594fb8,DAT_005c85a4 / CD 00540a1c,00518904).
     bool halfHealthMode{};               // 해체 환불을 HP 절반 미만에서 0으로 만드는 전역(DAT_00594fbc / CD 00540a20).
+    const bool* sharedHalfHealthMode{}; // 실제 Session은 같은 World의 현재00594fbc 전투 모드를 빌리며 독립 fixture는 기존 bool을 유지한다.
+    bool HalfHealthMode() const { return sharedHalfHealthMode ? *sharedHalfHealthMode : halfHealthMode; } // 환불의 HP 절반 관문에서 현재 모드를 읽는다. 메뉴와 실제 보상이 같은 값 원천을 사용한다.
     bool aiMirrorDisabled{};             // AI 지갑 갱신을 끄는 전역(DAT_00594fc8 / CD 00540a24).
     bool walletClamp{};                  // 지갑을 0x4a6 이상으로 올리는 객체 조건(DAT_005634a0->+0x68 / CD 00549a08->+0x68).
     bool priestQuarterHp{};              // priest 최대 HP 1/4 전역(DAT_005ca8f0 / CD 00511c90).

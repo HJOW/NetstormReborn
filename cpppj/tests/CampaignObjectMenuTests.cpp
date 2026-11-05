@@ -1185,12 +1185,12 @@ struct SpecialObjectUiScene { // 특수 대상 메뉴의 현재 모드/소유자
     std::vector<Sid> traced; // 창 없는 검사에서 현재 대상 dump 장치가 받은 실제 SID만 관측한다.
     std::vector<std::string> factoryNotices; // 실제 Factory 입력이 요청한 안내 섹션만 관측하는 출력 장치다.
     std::vector<Sid> lostNotices; // 실제 삭제가 요청한 손실 음향의 대상 SID만 관측한다.
-    explicit SpecialObjectUiScene(const netstorm::test::dudespawn::DudeAssets& source):assets(source),client(SpecialUiOptions(source)),ui(source) {
+    explicit SpecialObjectUiScene(const netstorm::test::dudespawn::DudeAssets& source,std::string_view mission="thewarbegins"):assets(source),client(SpecialUiOptions(source)),ui(source) { // 기존 기본 맵 또는 명시한 보호 Fort를 읽기만 하며 게임/창은 실행하지 않는다.
         client.Configuration().Set("helpWord","About");auto services=external.Make();services.cameraCommit=netstorm::test::camera::CommitScreenless;services.gameplayGlobals=client.GameplayGlobals();services.kencloudGlobals=client.KencloudGlobals();services.coreDataGlobals=client.CoreDataGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.gumpNotice=ui.buttons.ObjectNotice();
         services.factoryTell=[this](std::string_view section) { factoryNotices.emplace_back(section); }; // 자금 판단은 제품에 맡기고 안내 창의 출력 경계만 기록한다.
         services.unitLost=[this](Sid sid) { lostNotices.push_back(sid); }; // 삭제 관문/손실 위치는 제품에서 계산하고 실제 소리 장치만 대체한다.
         services.production.effects.configInt=[this](std::string_view key) { std::int32_t value{};static_cast<void>(client.Configuration().ReadInt(key,value));return value; }; // 생산 재계산도 같은 Client의 실제 설정 reader와 선택적0 기본값을 사용한다.
-        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());world=std::make_unique<GameWorld>(assets.game,assets.files,std::move(fort),netstorm::o::MissionPlayers{},"thewarbegins",std::move(services),ScreenPoint{640,480});ui.currentSession=&world->Session();world->Session().Cursor().SetEffects(ui.CursorEffects());UserSelectionHooks selection;selection.paused=[this] { return client.Paused() ? 1U : 0U; };selection.dump=[this](Sid sid) { CHECK(world->Session().Core().pool.Slot(sid).size()==50);traced.push_back(sid); };UserHighlightHooks highlight;highlight.selectCursor=[this](std::uint32_t value) { ui.cursor=value; };CarrierInputHooks carrier;carrier.selectCursor=highlight.selectCursor;world->BindUserInput(std::move(selection),std::move(highlight),std::move(carrier));client.GameplayGlobals()->Camera().ApplyPixelsToRendererAndSnapshot(220*16-320,220*11-240);
+        auto fort=FortTemplate::Parse(assets.files.Read("d/"+std::string(mission)+".fort"),assets.game.TypeTable());world=std::make_unique<GameWorld>(assets.game,assets.files,std::move(fort),netstorm::o::MissionPlayers{},std::string(mission),std::move(services),ScreenPoint{640,480});ui.currentSession=&world->Session();world->Session().Cursor().SetEffects(ui.CursorEffects());UserSelectionHooks selection;selection.paused=[this] { return client.Paused() ? 1U : 0U; };selection.dump=[this](Sid sid) { CHECK(world->Session().Core().pool.Slot(sid).size()==50);traced.push_back(sid); };UserHighlightHooks highlight;highlight.selectCursor=[this](std::uint32_t value) { ui.cursor=value; };CarrierInputHooks carrier;carrier.selectCursor=highlight.selectCursor;world->BindUserInput(std::move(selection),std::move(highlight),std::move(carrier));client.GameplayGlobals()->Camera().ApplyPixelsToRendererAndSnapshot(220*16-320,220*11-240);
         RawChatWindowContext chat;chat.globals=client.ChatWindowGlobals();chat.commands=client.DotCommandGlobals();chat.editor.now=[] { return 0.0; };chat.translate=[](auto text) { return std::string(text); };chat.text=[this](auto token) { return strings.Resolve(token); };chat.storeText=[this](auto text) { return strings.Store(text); };chat.recipient=[](auto)->bool { throw std::logic_error("특수 메뉴의 빈 Chat 예상 밖 접두 검사"); };
         chat.read=[this](auto address)->std::uint32_t { const auto core=world->Session().Core();switch (address) { case 0x594fc8:return core.ownerMode.challenge;case 0x594fbc:return core.ownerMode.battle;case 0x563e38:return ui.buttons.RootToken();case 0x5cae94:return 304;case 0x5cae98:return 229;default:throw std::logic_error("특수 메뉴의 예상 밖 Chat 현재 전역"); } };static_cast<void>(ui.menus->CreateChatWindow(std::move(chat)));menu=std::make_unique<CampaignObjectMenuClient>(client,ui.buttons,[](std::string_view) {});
     }
@@ -1226,6 +1226,18 @@ std::vector<MenuGumpItem> ProductionUiItems(SpecialObjectUiScene& scene,Sid sour
 std::size_t ProductionUiCount(const std::vector<MenuGumpItem>& items,std::uint32_t command,std::uint32_t parameter) { return static_cast<std::size_t>(std::count_if(items.begin(),items.end(),[=](const auto& item) { return (item.flags&1U) && item.command==command && item.parameter==parameter; })); }
 // 하위 메뉴의 원문 확장 애니메이션만 충분히 진행한다. 게임 Kernel/공격/생산 시각은 진행하지 않는다.
 void FinishProductionUiExpansion(SpecialObjectUiScene& scene) { for (int frame=0;frame<64;++frame) static_cast<void>(scene.ui.buttons.IdleGumps()); } // 실제 Client와 같은 Gump idle이며 노드의 크기/flags를 직접 보정하지 않는다.
+struct StateUiAltarPair { Sid altar{},dais{}; }; // 같은 원래 좌표의 실제 제단/사제 없는 다이스 SID를 보관하며 소유권을 복제하지 않는다.
+// 보호 Fort에서 실제 로드된 한 쌍을 찾는다. 포획/희생 상태를 만들거나 해당 행동을 진행하지 않는다.
+StateUiAltarPair FindStateUiAltarPair(SpecialObjectUiScene& scene) {
+    auto& session=scene.world->Session();auto core=session.Core();
+    for (std::uint32_t number=5;number<core.pool.Capacity();++number) { // 실제 풀의 살아 있는 다이스만 읽고 사제 내용물이 있는 대상은 선택하지 않는다.
+        const Sid dais{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(dais);if ((raw[11]&3U) || raw[10]!=165 || session.Priests().Carrier().FindContained(dais,0,158,0,false).value) continue;
+        for (std::uint32_t other=5;other<core.pool.Capacity();++other) { // 좌표 DWORD가 같은 실제 제단을 연결하며 가상표/해시를 조작하지 않는다.
+            const Sid altar{static_cast<std::uint16_t>(other)};const auto target=core.pool.Slot(altar);if (!(target[11]&3U) && target[10]==164 && Get(target,14)==Get(raw,14) && Get(target,18)==Get(raw,18)) return {altar,dais};
+        }
+    }
+    throw std::logic_error("보호 Fort에 사제 없는 실제 제단/다이스 쌍 없음");
+}
 }
 TEST_CASE(SpecialObjectUi_CrystalOwnersAndEditorUseActualMenuAndRelease) { // 스톰 크리스탈의 raw owner/일반·편집 메뉴와 About 실제 인자를 같은 경로로 확인한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();
@@ -1344,5 +1356,47 @@ TEST_CASE(ProductionObjectUi_SalvageUsesCurrentOwnerEditorDenyAndConfirmation) {
         CHECK(direct.has_value()==(own && !deny && (type==75 || type==128)));if (direct) { const auto event=scene.Click(BuildingUiCommand(direct->command,direct->parameter));CHECK(event.code==0x0200005dU && std::bit_cast<std::uint32_t>(event.y)==source.value); }
         if (own && (deny || type==85 || type==123)) { CHECK(tell.has_value());if (!tell) throw std::logic_error("회수 안내의 실제 Tell 항목 없음");const auto expected=deny ? "DenySalvage" : (type==85 ? "SalvageInf" : "SalvageVortex");CHECK(scene.menu->StaticText(tell->parameter)==expected);const auto event=scene.Click(BuildingUiCommand(tell->command,tell->parameter));CHECK(event.code==0x02000095U && std::bit_cast<std::uint32_t>(event.y)==tell->parameter); }
         CloseBuildingUi(scene);CHECK(Hex(core.pool.Slot(source))==before && core.pool.FreeCount()==free);if (type==123) core.owner.Set(source,savedOwner);else CHECK(session.World().Destroy(source,0x10)); // 미션의 원래 신전은 소유자를 복원하며 새 검사 대상만 반납한다.
+    }
+}
+
+TEST_CASE(StateObjectUi_DamagedSalvageReadsCurrentBattleMode) { // 실제 메뉴가 현재 전투 모드를 읽어 HP 절반 미만의 환불만0으로 바꾸는지 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();RawSquidLevel levels(core.pool,core.types,[](auto) { throw std::logic_error("정상 손상 메뉴 레벨의 예상 밖 진단"); });const auto savedBattle=core.ownerMode.battle;
+    for (const auto type:{75U,86U}) for (const auto level:{0U,2U}) { // 직접 회수/워크샾 확인의 두 명령과 원문 비용 곡선의 첫/세 번째 레벨을 사용한다.
+        const auto source=scene.Create(type,session.LocalOwner());levels.Set(source,level);const auto maximum=session.HitPoints().MaxHitPoints(source),cost=session.HitPoints().TypeCostUnits(type);CHECK(maximum>2 && cost>0);
+        for (const auto hp:{maximum/2-1,maximum/2,maximum/2+1,maximum}) for (const auto battle:{false,true,false}) { // 같은 세계에서0→1→0을 바꾸어 초기 모드 사본이 아닌 현재 값을 요구한다.
+            core.ownerMode.battle=battle;Put(core.pool.AllocatedBytes(source),26,std::bit_cast<std::uint32_t>(hp));const auto before=Hex(core.pool.Slot(source));const auto free=core.pool.FreeCount();scene.Open(source);const auto normal=static_cast<std::int32_t>((std::int64_t(cost)*(level+1)*hp)/(4*maximum));const auto amount=battle && hp<maximum/2 ? 0 : normal;CHECK(normal>0);const auto label="Salvage gains "+std::to_string(amount);const auto point=scene.ui.menus->Point(label);CHECK(point.has_value());if (!point) std::printf("DAMAGE type=%u level=%u hp=%d maximum=%d battle=%u expected=%d\n%s",type,level,hp,maximum,battle ? 1U : 0U,amount,scene.ui.menus->Report().c_str());
+            if (point) { const auto event=scene.Click(label);CHECK(event.code==(type==75 ? 0x0200005dU : 0x02000095U));if (type==75) CHECK(std::bit_cast<std::uint32_t>(event.y)==source.value);else CHECK(scene.menu->StaticText(std::bit_cast<std::uint32_t>(event.y))=="SalvageInf"); }CloseBuildingUi(scene);CHECK(Hex(core.pool.Slot(source))==before && core.pool.FreeCount()==free);
+        }
+        core.ownerMode.battle=savedBattle;CHECK(session.World().Destroy(source,0x10));
+    }
+}
+
+TEST_CASE(StateObjectUi_AltarDaisDelegationUsesCurrentFramesOwnersAndEditor) { // 사제 없는 원래 제단/다이스의 실제 프레임 setter와 가상ac 재분배·제목·인자를 연결한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets,"breakingthrough");auto& session=scene.world->Session();auto core=session.Core();const auto pair=FindStateUiAltarPair(scene);const auto savedFrame=Get(core.pool.Slot(pair.dais),36);const auto altarOwner=core.pool.Slot(pair.altar)[34],daisOwner=core.pool.Slot(pair.dais)[34];
+    const std::array<std::pair<std::int32_t,std::string_view>,3> frames{{{3,"I"},{64,"II"},{120,"III"}}}; // 원문 세 레벨의 실제 첫 프레임이며 의식/희생 단계 진행은 실행하지 않는다.
+    for (const auto& [frame,level]:frames) for (const auto owner:{0U,1U,2U,8U}) for (const auto editor:{0U,1U}) { // 프레임3×현재 소유자4×명시 편집2의 같은 실제 한 쌍을 재사용한다.
+        core.frame.Set(pair.dais,frame,0);core.owner.Set(pair.altar,owner);core.owner.Set(pair.dais,owner);scene.client.GameplayGlobals()->world.editor=editor;CHECK(!session.Priests().Carrier().FindContained(pair.dais,0,158,0,false).value);
+        for (const auto source:{pair.altar,pair.dais}) { // 다이스 우클릭도 같은 제단에 메뉴 Form을 붙이고 About은 TYPE164를 전달해야 한다.
+            const auto beforeAltar=Hex(core.pool.Slot(pair.altar)),beforeDais=Hex(core.pool.Slot(pair.dais));const auto free=core.pool.FreeCount();scene.Open(source);CHECK(scene.ui.menus->Report().find("Altar Level "+std::string(level))!=std::string::npos);const auto about=BuildingUiItem(scene,pair.altar,0x02000017U),salvage=BuildingUiItem(scene,pair.altar,0x0200005dU);CHECK(about && about->parameter==164);CHECK(salvage.has_value()==(owner==session.LocalOwner() && !editor));if (salvage) CHECK(salvage->parameter==pair.altar.value);CHECK(scene.ui.menus->Point("Destroy").has_value()==(editor!=0));CHECK(scene.ui.menus->Point("Player").has_value()==(owner!=0));const auto event=scene.Click("About");CHECK(event.code==0x02000017U && event.y==164);CloseBuildingUi(scene);CHECK(Hex(core.pool.Slot(pair.altar))==beforeAltar && Hex(core.pool.Slot(pair.dais))==beforeDais && core.pool.FreeCount()==free);
+        }
+    }
+    core.owner.Set(pair.altar,altarOwner);core.owner.Set(pair.dais,daisOwner);core.frame.Set(pair.dais,std::bit_cast<std::int32_t>(savedFrame),0);
+}
+
+TEST_CASE(StateObjectUi_EmptyAltarStatusHeadersAndLevelClampReleaseMenus) { // 다이스 없는 제단의Count0 표시와 두 상태 안내를 효과/포획 없이 현재 raw 입력에서 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();
+    for (const auto owner:{0U,1U,2U,8U}) for (const auto editor:{0U,1U}) { // 원래 빈 좌표에 제단 본체만 배치하며 다이스나 사제를 만들지 않는다.
+        scene.client.GameplayGlobals()->world.editor=editor;const auto source=scene.Create(164,owner);const auto extra=core.pool.Slot(source)[40];
+        for (const auto status:{0U,0x10U,0x20U,0x30U}) { // 미적용/투명/마비/두 상태의 안내 BYTE만 명시 입력으로 제공한다.
+            core.pool.AllocatedBytes(source)[40]=static_cast<std::uint8_t>((extra&~0x30U)|status);const auto before=Hex(core.pool.Slot(source));const auto free=core.pool.FreeCount();scene.Open(source);const auto report=scene.ui.menus->Report();CHECK(report.find("Altar Level I")!=std::string::npos);CHECK((report.find("Invisible!")!=std::string::npos)==((status&0x10U)!=0));CHECK((report.find("Paralyzed!")!=std::string::npos)==((status&0x20U)!=0));if (owner==session.LocalOwner() && !editor) CHECK(scene.ui.menus->Point("Salvage gains 0").has_value());const auto event=scene.Click("About");CHECK(event.code==0x02000017U && event.y==164);CloseBuildingUi(scene);CHECK(Hex(core.pool.Slot(source))==before && core.pool.FreeCount()==free);
+        }
+        core.pool.AllocatedBytes(source)[40]=extra;CHECK(session.World().Destroy(source,0x10)); // 상태 효과의 적용/해제 몸체를 실행하지 않고 UI 입력을 복원한 뒤 반납한다.
+    }
+}
+
+TEST_CASE(StateObjectUi_EditorDestroyClickReleasesPairAndPopupWithoutTransmission) { // 편집 메뉴의 실제 명령/SID와 전송을 생략한 같은 가상 삭제/팝업 지연 반납을 확인한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto clickDais:{false,true}) { // 두 실제 우클릭 진입점마다 보호 Fort를 새로 읽으며 저장 파일은 쓰지 않는다.
+        SpecialObjectUiScene scene(assets,"breakingthrough");scene.client.GameplayGlobals()->world.editor=1;auto& session=scene.world->Session();auto core=session.Core();const auto pair=FindStateUiAltarPair(scene);scene.Open(clickDais ? pair.dais : pair.altar);const Sid form{static_cast<std::uint16_t>(Get(core.pool.Slot(pair.altar),6,2))};CHECK(session.GumpForms().IsGumpForm(form));const auto root=scene.ui.buttons.RegisteredGump(session.GumpForms().Owner(form));const auto event=scene.Click("Destroy");CHECK(event.code==0x03000015U && std::bit_cast<std::uint32_t>(event.y)==pair.altar.value);CHECK(session.World().Destroy(Sid{static_cast<std::uint16_t>(event.y)},0x40));CHECK((core.pool.Slot(pair.altar)[11]&1U) && (core.pool.Slot(pair.dais)[11]&1U) && (core.pool.Slot(form)[11]&1U));CHECK(!scene.menu->Active() && scene.ui.menus->Node(root) && (scene.ui.menus->Node(root)->flags&0x10000U));scene.ui.menus->CleanupFrame();CHECK(!scene.ui.menus->Node(root));CloseBuildingUi(scene); // 본체는 server SID이므로 pfDONT_TRANSMIT(40)을 명시한다. 공통 명령의flags0 분배는 기존 원문fixture로 확인하며 통신 효과를 실행하지 않는다.
     }
 }

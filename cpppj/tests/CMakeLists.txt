@@ -3598,3 +3598,8 @@ target_sources(netstorm_menu_session_tests PRIVATE UserSelectionTests.cpp)
 
 # 생산 하위 메뉴의 실제 UI와 같은 원문 작성/문자열 fixture를 선택 실행한다(915).
 target_sources(netstorm_menu_session_tests PRIVATE FactoryMenuTests.cpp)
+
+# 손상 회수의 현재 모드 연결을 기존 세 판본 보상 fixture와 함께 선택 실행한다(916).
+target_sources(netstorm_menu_session_tests PRIVATE RewardTests.cpp)
+target_sources(netstorm_menu_session_tests PRIVATE ObjectMenuInfoTests.cpp) # 제단 제목/상태 안내의 기존 원문 기대를 같은 집중 대상에서 확인한다(916).
+target_sources(netstorm_menu_session_tests PRIVATE ObjectCommandTests.cpp) # Destroy 명령의 기존 원문 분배를 실제 전송 없이 대조한다(916).

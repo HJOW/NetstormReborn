@@ -874,6 +874,7 @@ struct RawCampaignSession::Impl {
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
         if (services.editorTransport && !services.connectionRegistry) services.connectionRegistry=services.editorTransport->Registry(); //검증 후 소유한 독립 서비스에 실제 wire의 같은 표를 보관한다.
         rewardState.sharedPercent=&gameplayGlobals->GameAux()->RefundPercent();rewardState.sharedGeyserPool=&gameplayGlobals->GameAux()->ResourcePool(); // 실제 Reward/LocalGeyser의 같은 물리다.
+        rewardState.sharedHalfHealthMode=&core.ownerMode.battle; // 회수 메뉴/실제 환불은 초기 false 사본 대신 현재 World의 전투 모드00594fbc를 같은 관문에서 읽는다.
         rewardState.sharedPriestQuarterHp=&gameplayGlobals->GameAux()->PriestQuarterHp(); // State 직접 쓰기와 기존 HP setter/최대HP가 같은 현재 전역을 쓴다.
         rewardState.sharedPriestType=&priestState.movement.priest; // 0049fce0의 1/4 비교와 사제 회복 분자가 같은 장기005412d0을 읽는다(단위862).
         rewardState.sharedAltarType=&gameplayGlobals->GameAux()->AltarType();rewardState.sharedDaisType=&gameplayGlobals->GameAux()->DaisType(); // 비용 곡선/다이스HP의 현재 두 TYPE 번호를 같은 장기 owner에서 빌린다.
