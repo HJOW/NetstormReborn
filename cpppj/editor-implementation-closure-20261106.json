@@ -1,0 +1,35 @@
+{
+  "unit": 943,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 939,
+  "tests": {
+    "total": 12,
+    "newTestCases": 0,
+    "failed": 0
+  },
+  "newBuilds": 0,
+  "protected": {
+    "count": 2787,
+    "fixtures": 967,
+    "changed": 0,
+    "newFixtures": 0
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "sha256": {
+    "cpppj/src/client/RawGameMenus.cpp": "6bdb27b0ed5e2a074b0d856f9dce3c511670604f747cb761ae483751cd0912af",
+    "cpppj/src/client/UberGump.cpp": "2ee04f21c09f71ecebd1292c1d0419e63803219cf59c2b1d5c939d947c651bda",
+    "cpppj/src/client/UberEditor.inc": "c6ed21108a51fff88e0b5361b69e1e0983a00cba8cccb40bede01655f4e3df41",
+    "cpppj/src/client/UserInput.cpp": "690091b6ecd568d7c63c93f33e4c086ff412ba9b048611cd7c10e6a6c87cc4a8",
+    "cpppj/src/client/EditorTestBattle.cpp": "e7361342e1c9209f216724b39ce5a25f04c32673a136ebaefc3c446b640f55dd",
+    "cpppj/src/client/EditorSaveGoMain.cpp": "62358e74366e6885abf4c16c5ef07eb2f4c5fc92ee3666ee3b27c2268a69517d",
+    "docs/exe/cpp-editor-implementation-closure-20261106.md": "c9957cecca98e86ea898cd0e336c05b60706d49d668dfa83a93675455a6bae2c"
+  },
+  "exeSha256": "06030769a5f21dcdbe37cae9a1d40522be02f1e0b6a3246dc103f926eeea5098",
+  "next": "944: LEFT_JOBS 3절3번 Retry/Next Tutorial/Next Mission/Abort"
+}
