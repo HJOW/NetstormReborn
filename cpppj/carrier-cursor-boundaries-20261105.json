@@ -1,0 +1,61 @@
+{
+  "unit": 918,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "2026-11-03",
+  "status": "완료·목표 진행 중",
+  "productUnit": 916,
+  "productCodeChanges": false,
+  "productSha256": "fd3a4816dd744d5171df2833cae9eccd9b94291ace883a7967acc7a9480fa5ba",
+  "buildExit": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "tests": [
+    {
+      "filter": "CarrierObjectUi_",
+      "log": "extracted\\cpp-resume-918\\test-first.log",
+      "exit": 0
+    },
+    {
+      "filter": "CarrierInput_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-918/test-CarrierInput_.log"
+    },
+    {
+      "filter": "CarrierMenu_",
+      "exit": 0,
+      "log": "extracted/cpp-resume-918/test-CarrierMenu_.log"
+    }
+  ],
+  "cases": [
+    "CarrierObjectUi_AllEightTypesUseActualProjectionAndTargetCursors",
+    "CarrierObjectUi_CargoAndCrystalKeepNativeGroundCursorHistory",
+    "CarrierObjectUi_CurrentOwnerEditorParalysisAndRealGroupOverride",
+    "CarrierObjectUi_AllEightCargoMenusUseActualDisabledFlagsAndSid",
+    "CarrierObjectUi_SelfCellCrystalAndCargoUseCurrentCandidateGraph",
+    "CarrierObjectUi_PriestHalfHpAndUnsupportedGroundBlockHover",
+    "CarrierObjectUi_EmptyDaisUsesOffsetWithoutSacrificeRequest",
+    "CarrierInput_Native454WholeParentsAndCurrentEffects",
+    "CarrierMenu_Native628",
+    "CarrierMenu_RequiresReachedDependenciesAndPriestBinding"
+  ],
+  "uniqueCases": 10,
+  "newCases": 3,
+  "failedChecks": 0,
+  "firstRunPassed": true,
+  "newHoverPolls": 28,
+  "newDirectEvaluations": 8,
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "protectedUnchanged": true,
+  "newFixtures": 0,
+  "checkingRemaining": 8,
+  "newSourceSha256": "aaa9756d70a9dc6179fcf098f52cda3075254088fe224572eb046a02eba4db5a",
+  "skipped": [
+    "실제 게임/GUI",
+    "포획/희생/공격/승리",
+    "공중3종 전용",
+    "신규MP/통신",
+    "물리입력/PCM/CD",
+    "전체검사/34미션/ZIP"
+  ]
+}

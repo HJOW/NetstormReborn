@@ -1465,3 +1465,30 @@ TEST_CASE(CarrierObjectUi_AllEightCargoMenusUseActualDisabledFlagsAndSid) { // �
         scene.world->Select(0);core.owner.Set(source,1);core.pool.AllocatedBytes(source)[40]=extra;
     }
 }
+
+TEST_CASE(CarrierObjectUi_SelfCellCrystalAndCargoUseCurrentCandidateGraph) { // 원문4277f0의 자기 셀은 같은 Graph의 크리스탈 후보일 때8이며 운반 중에는6이다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto type:kCarrierUiTypes) { // 여덟 실제 운반체에서 자신과 겹치는 크리스탈만 제공하고 집기 요청은 실행하지 않는다.
+        SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();const auto source=CarrierUiActor(scene,type);const auto raw=core.pool.Slot(source);const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));const auto crystal=session.World().Create(154,2);session.World().SetLoadingDepth(1);session.World().Pop(crystal,x,y,0x10);session.World().SetLoadingDepth(0);
+        scene.world->SetMousePoint(CarrierUiCell(scene,x,y));scene.world->Select(source.value);const auto before=Hex(core.pool.Slot(source)),target=Hex(core.pool.Slot(crystal));const auto free=core.pool.FreeCount();const auto kernel=core.kernel.Size();
+        CHECK(!(core.types[type].flags1&0x1000000U));PollCarrierUiWorld(scene,x,y,8);CHECK(Hex(core.pool.Slot(source))==before && Hex(core.pool.Slot(crystal))==target && core.pool.FreeCount()==free && core.kernel.Size()==kernel);
+        CHECK(session.CreateContained(source,154,25,0x20,0x10,0).value);const auto loaded=Hex(core.pool.Slot(source));const auto loadedFree=core.pool.FreeCount();const auto loadedKernel=core.kernel.Size();PollCarrierUiWorld(scene,x,y,6);CHECK(Hex(core.pool.Slot(source))==loaded && Hex(core.pool.Slot(crystal))==target && core.pool.FreeCount()==loadedFree && core.kernel.Size()==loadedKernel);
+    }
+}
+
+TEST_CASE(CarrierObjectUi_PriestHalfHpAndUnsupportedGroundBlockHover) { // 원문492090의 HP 절반·현재 지면 조건을 같은 선택의 폴링에서 읽고 손상/회복 행동은 실행하지 않는다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();const auto source=CarrierUiActor(scene,158);auto raw=core.pool.AllocatedBytes(source);const auto hp=Get(raw,26);const auto half=session.HitPoints().MaxHitPoints(source)/2;const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));scene.world->SetMousePoint(CarrierUiCell(scene,x,y));scene.world->Select(source.value);const auto free=core.pool.FreeCount();const auto kernel=core.kernel.Size();
+    for (const auto value:{half-1,half,half+1}) { // 절반 바로 아래만 정지하고 절반 이상은 실제 지면의 간헐천 커서3을 유지한다.
+        Put(raw,26,std::bit_cast<std::uint32_t>(value));const auto before=Hex(raw);session.CameraGlobals().ApplyPixelsToRendererAndSnapshot(976,793);PollCarrierUi(scene,{635,355},value<half ? 6U : 3U);CHECK(Hex(raw)==before && core.pool.FreeCount()==free && core.kernel.Size()==kernel);
+    }
+    Put(raw,26,hp);session.World().Unpop(source,0x10);session.World().SetLoadingDepth(1);session.World().Pop(source,20,20,0x10);session.World().SetLoadingDepth(0);CHECK(!(core.spots[20*256+20]&6U));CHECK(session.Priests().PriestState().GroundImmobile(source));const auto before=Hex(core.pool.Slot(source));PollCarrierUiWorld(scene,101,102,6);CHECK(Hex(core.pool.Slot(source))==before);
+}
+
+TEST_CASE(CarrierObjectUi_EmptyDaisUsesOffsetWithoutSacrificeRequest) { // 원문449710의 사제 없는 다이스를 가리키면 의식17 대신 일반 접근3과 좌표−3을 사용한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto type:kCarrierUiTypes) { // 실제 빈 다이스와 여덟 운반체를 같은 지면에 두고 평가만 수행한다.
+        SpecialObjectUiScene scene(assets);auto& session=scene.world->Session();auto core=session.Core();const auto source=CarrierUiActor(scene,type);const auto dais=session.World().Create(165,2);core.owner.Set(dais,1);session.World().SetLoadingDepth(1);session.World().Pop(dais,102,102,0x10);session.World().SetLoadingDepth(0);CHECK(!session.Priests().Carrier().FindContained(dais,0,158,0,false).value);
+        const auto raw=core.pool.Slot(source);scene.world->SetMousePoint(CarrierUiCell(scene,std::bit_cast<float>(Get(raw,14)),std::bit_cast<float>(Get(raw,18))));scene.world->Select(source.value);const auto before=Hex(core.pool.Slot(source)),target=Hex(core.pool.Slot(dais));const auto free=core.pool.FreeCount();const auto kernel=core.kernel.Size();PollCarrierUiWorld(scene,102,102,3);
+        auto input=session.MakeCarrierInput({});RawPathPoint point{102,102};CHECK(input->Evaluate(source,point)==3 && point.x==99 && point.y==99);CHECK(Hex(core.pool.Slot(source))==before && Hex(core.pool.Slot(dais))==target && core.pool.FreeCount()==free && core.kernel.Size()==kernel);
+    }
+}
