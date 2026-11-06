@@ -8,7 +8,7 @@
 namespace netstorm::o {
 // 처리 도중 바뀔 수 있는 원본 전역은 같은 수명의 참조로 읽는다.
 struct WindAviaryGlobals {
-    const bool& fort; const bool& friendlyFire; const bool& server; // 편집/친군 사격/서버의 실제 관문이다.
+    const bool& fort; RawCheckingFlag friendlyFire; const bool& server; // 편집/서버 참조와 현재55a490 친군 사격 뷰다. 임시 bool 주소를 저장하지 않는다.
     const bool& boss; const std::uint32_t& editor; RawCheckingFlag checking; // 같은 세션의 현재 생성 권한/편집 차단/개발자 진단이다.
     const double& now; // 모든 생산 단계가 사용하는 현재 게임 시각이다.
     const std::uint32_t& processType; const std::uint32_t& flyerType; const std::uint32_t& aviaryType; // 59/138/139의 현재 타입이다.

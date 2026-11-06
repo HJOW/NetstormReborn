@@ -937,6 +937,9 @@ struct RawCampaignSession::Impl {
         carrierState.sharedBoss=&gameplayGlobals->Authority()->boss;contentFinder.sharedBoss=&gameplayGlobals->Authority()->boss; // 공통 캐리어와 생산·Damageable 검색도 사제 네 소비자와 같은 실제 권한을 빌린다.
         carrierState.sharedLoadingDepth=&objectState.loadingDepth;priestState.carrier.sharedLoadingDepth=&objectState.loadingDepth;priestState.carrier.sharedGeyserType=&geyserType; //두실제Carrier몸체가같은로딩/간헐천TYPE DWORD를읽는다.
         priestDamageState.sharedBoss=damageablePostState.sharedBoss=contentLifetimeState.sharedBoss=&gameplayGlobals->Authority()->boss; // 피격·삭제·중첩 커서 취소가 같은 현재 권한을 읽는다.
+        priestDamageState.invulnerable.Bind(gameplayGlobals->GameAux()->MissionSettings()[2]); // 사제/일반 피해가 같은55a48c를 실제 피해 판정 시점에 읽는다.
+        gunTargetState.friendlyFire.Bind(gameplayGlobals->GameAux()->MissionSettings()[3]);gunState.friendlyFire.Bind(gameplayGlobals->GameAux()->MissionSettings()[3]); // 표적/총·배리어/지상 사격과 파생 아비어리·애시드가 같은55a490을 빌린다.
+        placement.placement.sharedForcePlacement=gameplayPlacement.placement.sharedForcePlacement=&gameplayGlobals->GameAux()->MissionSettings()[1]; // 두 실제49b510 파이프라인이 현재55a488을 초기 관문에서 읽는다.
         constructionState.place.sharedAuthority=constructionState.clear.sharedAuthority=constructionState.notice.sharedAuthority=constructionState.geyser.sharedBoss=&gameplayGlobals->Authority()->boss; // 건설 하위 네 몸체는 Prepare 사본을 기다리지 않는다.
         buildingState.sharedBoss=geyserMinedState.sharedBoss=&gameplayGlobals->Authority()->boss; // 진행·표시·음향 효과 뒤에도 같은 현재 boss를 조회한다.
         buildingState.currentProcessType=&gameplayGlobals->GameAux()->ConstructionProcessType(); // 생성/수신/볼텍스의 같은 현재005410e8을 Session보다 긴 owner에서 빌린다.
@@ -4214,7 +4217,7 @@ std::unique_ptr<RawProductionMaintenance> RawCampaignSession::MakeProductionMain
     reads.active=[current] { return current->loaded && (current->core.ownerMode.fort || current->core.ownerMode.battle) && !current->core.ownerMode.challenge; };
     reads.technology=[current] { return current->player->CurrentTechnology(); };reads.templateTechnology=[current] { return current->player->Technology(static_cast<std::int32_t>(current->playerState.templateOwner)); };
     reads.temple=[current] { return Read(current->players,current->playerState.templateOwner*0xb4U+0x7c); };reads.editor=[this] { return Editor(); };
-    reads.generatorTimer=[current] { return current->login ? current->login->settingValues[0] : 1U; };reads.stockRate=[current] { return current->battleOptions.at(2); };
+    reads.generatorTimer=[current] { return current->gameplayGlobals->GameAux()->MissionSettings()[0]; };reads.stockRate=[current] { return current->battleOptions.at(2); };
     reads.artificial=[current](Sid parent) { const auto owner=current->core.pool.Slot(parent)[34];if (owner>=9) throw std::out_of_range("생산 유지 현재 AI 소유자 범위");return owner && Read(current->players,owner*0xb4U+0xb0)!=0; };
     ProductionMaintenanceHooks hooks;hooks.wallSeconds=std::move(wall);hooks.gameSeconds=[current] { return current->core.processState.Now(); };hooks.money=[this] { return PlayerKnown() ? Sp(LocalOwner()) : 0.0F; };
     hooks.touchDeck=[current] { static_cast<void>(current->productionDeck->Get(current->playerState.templateOwner)); };

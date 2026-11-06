@@ -1,5 +1,6 @@
 // 실제 사제 피격의 회복 취소·HP1 제한·소유자 통지·HP1 감시 해제를 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 피해 억제도 현재 DWORD 비영 뷰를 재사용하여 bool 사본을 만들지 않는다.
 #include "o/RawGunHit.h"
 #include "o/DependFormHost.h"
 #include "o/RawPathAnimation.h"
@@ -11,7 +12,7 @@ namespace netstorm::o {
 // 원본 플레이어 레벨 보정과 피격 권한/전역을 같은 월드에서 공유한다.
 struct PriestDamageState {
     // invulnerable: 원본NoDamage 전역이며 true면 피격량을0으로 만든다.
-    bool invulnerable{};
+    RawCheckingFlag invulnerable{}; // 실제55a48c의 현재 DWORD를 빌리며 독립 bool 입력의 기존 비영 관문도 유지한다.
     // boss: HP1 사제의 현재 의존 감시를 끊는 원본 권한이다.
     bool boss{true};
     // levelCorrectionDisabled: 원본00594fa4/CD0052e170이0아니면 레벨 피해 보정을 생략한다.

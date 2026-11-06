@@ -29,7 +29,7 @@ struct GunTargetType {
 };
 // 실제 전역/Player 표를 조회하는 상태다. 호출자는 같은 월드의 현재 값으로 갱신한다.
 struct GunTargetState {
-    bool friendlyFire{}; // shootMyFriends 전역: 동맹 후보의 배제를 해제한다.
+    RawCheckingFlag friendlyFire{}; // 현재55a490 DWORD의 비영 뷰다. 실제 표적 검사마다 읽고 독립 bool 입력도 유지한다.
     RawCheckingFlag checking{}; // 패치의 미지원 group에 대한 flyer 원본 assert를 적용한다.
     bool showRanges{}; // 원본 진단 사각형 그리기를 켠다. 필요한 sink가 없으면 예외다.
     std::uint32_t sunCannonType{128},sunFenceType{136},windArcherType{140},thunderArcherType{148}; // 원본 전역 타입 번호다.

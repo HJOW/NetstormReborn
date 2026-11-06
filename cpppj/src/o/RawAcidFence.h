@@ -1,5 +1,6 @@
 // 애시드145의 전용 주기·양축 이웃과13개 높이 영역의 포획을 복원한다.
 #pragma once
+#include "o/RawCheckingFlag.h" // 친군 사격의 현재 DWORD 또는 독립 bool 입력 수명을 값형 뷰로 빌린다.
 #include "o/RawArcSpire.h"
 #include "o/RawAcidZap.h"
 
@@ -29,7 +30,7 @@ class RawAcidFence {
 public:
     RawAcidFence(const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
         std::span<const std::uint8_t> spots,std::span<const std::uint32_t> alliances,const bool& boss,const std::uint32_t& editor,
-        const bool& friendlyFire,const std::uint32_t& localOwner,const AcidFenceTypes& special,const RawAcidZap& zap,AcidFenceHooks hooks); //10.78의188타입/81동맹/256² 지도를 빌린다.
+        RawCheckingFlag friendlyFire,const std::uint32_t& localOwner,const AcidFenceTypes& special,const RawAcidZap& zap,AcidFenceHooks hooks); //10.78의188타입/81동맹/256² 지도와 현재 친군 사격 뷰를 빌린다.
     float Handle(Sid parent,std::uint32_t event,std::uint32_t count,float period) const; //48ea30은count0에도공격하고공통Regular로위임하지않는다.
     void Attack(Sid parent) const; //48c830의 +X/+Y 첫 양방향 동맹과 본체 애니메이션이다.
     void Strike(Sid parent,std::span<const Sid> neighbors,std::int32_t xOriented) const; //48ca70의 이웃별 예약/13영역/40개 중복/송신·수신이다.
@@ -43,7 +44,7 @@ private:
     std::span<const RiftTypeFrames> frames_; //현재 numFrames를 읽는다.
     std::span<const std::uint8_t> spots_; //실제 표면bit1이다.
     std::span<const std::uint32_t> alliances_; //방향 있는81개 현재값이다.
-    const bool& boss_; const std::uint32_t& editor_; const bool& friendlyFire_; //피해 후보의 현재 권한/편집/친군사격 관문이다.
+    const bool& boss_; const std::uint32_t& editor_; RawCheckingFlag friendlyFire_; //피해 후보의 현재 권한/편집과 같은55a490 비영 뷰다.
     const std::uint32_t& localOwner_; //48bfe0을 호출할 때의 현재 로컬 번호다.
     const AcidFenceTypes& special_; //13영역의 현재 비교TYPE다.
     const RawAcidZap& zap_; //기존 실제40ad30/48bfe0과 같은 패킷/수신이다.

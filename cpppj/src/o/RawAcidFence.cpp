@@ -32,7 +32,7 @@ void PostPopAcidFence(const SidPool& pool,Sid parent,std::uint32_t flags,const s
 // 다른 월드/판본/부분지도를 섞지 않는다.
 RawAcidFence::RawAcidFence(const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
     std::span<const std::uint8_t> spots,std::span<const std::uint32_t> alliances,const bool& boss,const std::uint32_t& editor,
-    const bool& friendlyFire,const std::uint32_t& localOwner,const AcidFenceTypes& special,const RawAcidZap& zap,AcidFenceHooks hooks)
+    RawCheckingFlag friendlyFire,const std::uint32_t& localOwner,const AcidFenceTypes& special,const RawAcidZap& zap,AcidFenceHooks hooks)
     :pool_(pool),types_(types),frames_(frames),spots_(spots),alliances_(alliances),boss_(boss),editor_(editor),friendlyFire_(friendlyFire),localOwner_(localOwner),special_(special),zap_(zap),hooks_(std::move(hooks)),neighbors_(pool,types,frames,spots,alliances,editor,NeighborHooks(hooks_)) {}
 // 원래 부모/이웃 번호의 현재 float 좌표다.
 std::array<float,2> RawAcidFence::Position(Sid sid) const { const auto raw=pool_.Slot(sid);return {Coordinate(raw,14),Coordinate(raw,18)}; }

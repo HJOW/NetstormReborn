@@ -20,7 +20,7 @@ struct RainAviaryProcessFields {
 // 모든 참조는 처리기보다 오래 살아야 하며 선택 효과 뒤 현재 값을 다시 읽는다.
 struct RainAviaryProcessGlobals {
     const bool& fort; // 00594fb8의 현재 편집 모드다.
-    const bool& friendlyFire; // 0055a490의 현재 shootMyFriends이며 fort 프로세스 허용에 쓰인다.
+    RawCheckingFlag friendlyFire; // 0055a490의 같은 현재 비영 뷰이며 fort 프로세스 허용마다 다시 읽는다.
     const bool& server; // 00540bc0이며 boss와 구별한다.
     const std::uint32_t& editor; // 005c85a4이며 비제로는 Frame을 생략한다.
     RawCheckingFlag checking; // 005e4794의 개발자 프레임 진단이다.

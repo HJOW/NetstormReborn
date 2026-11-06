@@ -1,0 +1,86 @@
+{
+  "unit": 1034,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "현재32h 설정7DWORD의 Client 수명과 강제 배치/피해 무효화/친군 사격/생산 타이머 소비자 연결",
+  "sourceFunctions1078": [
+    "0044dbc0",
+    "0044dc20",
+    "0049b510",
+    "00494380",
+    "004add10",
+    "0045ed10",
+    "0045edf0",
+    "00469590",
+    "0046af80",
+    "0046b400",
+    "0046b540",
+    "0046b830",
+    "0048ca70"
+  ],
+  "referenceFunctions1072": [
+    "004a58f0",
+    "004a5960"
+  ],
+  "initialSettings": [
+    {
+      "address": "0x5326cc",
+      "initial": 1
+    },
+    {
+      "address": "0x55a488",
+      "initial": 0
+    },
+    {
+      "address": "0x55a48c",
+      "initial": 0
+    },
+    {
+      "address": "0x55a490",
+      "initial": 0
+    },
+    {
+      "address": "0x55a494",
+      "initial": 0
+    },
+    {
+      "address": "0x5326d0",
+      "initial": 1
+    },
+    {
+      "address": "0x5326d4",
+      "initial": 8
+    }
+  ],
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1034\\build.log",
+    "exeSize": 12070912,
+    "exeSha256": "81e34f75740ae75ce097f10b8ecc997540643ebf5b0a184a581574ce3bc5eef5"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "dedicatedAirUnitTests": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1034\\protected-before.json"
+  },
+  "remaining": [
+    "31h 실제 디버그 해석기/명령별 효과와 입력·전파 및 비Login/Editor32h 등록 연결",
+    "나머지 실제 수신·전송/재동기화·Activate 수신자·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

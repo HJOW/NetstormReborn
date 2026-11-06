@@ -12,6 +12,8 @@ struct PriestPlacementState {
     std::uint32_t forcePlacement{}; // 0055a488 / CD 00537e98: 모든 배치를 즉시 허용한다.
     std::int32_t localPlayer{}; // 00540c70 / CD 0050f6c8: 부호 있는 owner BYTE와 비교하는 DWORD다.
     std::uint32_t blockedRelation{}; // 0059ab2c / CD 0051cbfc: 검사 진입마다 0으로 지운다.
+    const std::uint32_t* sharedForcePlacement{}; // 실제 Client의55a488을 빌리며 독립 원문 입력은 기존 forcePlacement를 사용한다.
+    std::uint32_t ForcePlacement() const { return sharedForcePlacement ? *sharedForcePlacement : forcePlacement; } // 초기 blockedRelation0 뒤 즉시 허용 관문에서 현재 전체 DWORD를 읽는다.
 };
 // 사제 배치 검사 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestPlacementHooks {

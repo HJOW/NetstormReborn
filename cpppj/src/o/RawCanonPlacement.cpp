@@ -43,7 +43,7 @@ bool RawCanonPlacement::MayPlace(CanonPlacementQuery query) const {
     if (query.type<kFirstAssetTypeNumber || query.type>=types_.size()) throw std::invalid_argument("일반 배치 타입 범위 오류");
     if (!std::isfinite(query.x) || !std::isfinite(query.y)) throw std::invalid_argument("일반 배치의 비유한 지도 좌표");
     state_.blockedRelation=0;
-    if (state_.forcePlacement || (types_[query.type].flags2&kAnywhere)) return true;
+    if (state_.ForcePlacement() || (types_[query.type].flags2&kAnywhere)) return true;
     const auto byte=static_cast<std::uint8_t>(query.owner);
     const auto owner=byte<128 ? static_cast<std::int32_t>(byte) : static_cast<std::int32_t>(byte)-256;
     const bool localOwner=owner==state_.localPlayer;

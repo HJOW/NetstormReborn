@@ -43,7 +43,7 @@ struct RawCampaignSession::Impl::Login {
     double& captureEnd{s.localStateGlobals->CaptureEnd()};double& connectEnd{s.localStateGlobals->ConnectEnd()}; // 서로 다른 원본 벽시각 기한을 직접 빌린다.
     double wall{};std::int32_t timeout{}; // 로그인 장치의 현재 벽시각 입력과 설정 값이다.
     double& activityEnd{s.localStateGlobals->ActivityEnd()}; // Editor가 쓴 같은00544d58도 Session 전환에서 보존한다.
-    std::array<std::uint32_t,7> settingValues{1,0,0,0,0,1,8}; //실제초기7DWORD이며현재패널/디버그전역을서로별개로보존한다.
+    std::array<std::uint32_t,7>& settingValues{s.gameplayGlobals->GameAux()->MissionSettings()}; // 실제 Client의 현재7DWORD를 수명째 빌리며 새 Login이 재설정하지 않는다.
     std::vector<std::uint8_t> wireTypes; //실제수신한패킷종류의 진단기록이며 분기를 대신하지 않는다.
     //선택한 실제 장치가 빠지면 그 지점에서 명시 오류를 보인다.
     template<class F> static const F& Need(const F& hook) { if (!hook) throw std::logic_error("실제 미션 로그인 장치 미연결");return hook; }
@@ -210,7 +210,7 @@ struct RawCampaignSession::Impl::Login {
         packets.surroundedCentral=[this] { SurroundedCentral(); }; // layout2도 실제 원문 고정 자산/지역 Template/전체 배치 부모에 연결한다.
         metadata=std::make_unique<RawMissionServerPackets>(s.players,MissionServerPacketState{s.core.processState.Server(),s.core.ownerMode.challenge,s.playerState.battleOwner,central,archipelago,Zone()},std::move(packets));
         forts=std::make_unique<RawMissionLoginPackets>(OriginalEdition::Patch1078,s.players,MissionFortPacketReads{[this](std::uint32_t player)->const FortTemplate* { return player<9 && Get(s.headers,player*20) ? &s.templateStorage->Template(player) : nullptr; },[] { return std::uint16_t{4}; }},FortImageHooks{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}},MissionFortPacketHooks{[this](std::uint32_t,std::int32_t) { Need(effects.log)("로컬 Fort 전송\n"); },send,{}});
-        MissionSettingsPacketHooks setting;setting.current=[this](MissionSettingsField field) { return settingValues.at(static_cast<std::size_t>(field)); };setting.setCurrent=[this](MissionSettingsField field,std::uint32_t value) { settingValues.at(static_cast<std::size_t>(field))=value;if (field==MissionSettingsField::ShootMyFriends) s.gunTargetState.friendlyFire=value!=0; };setting.send=send;settings=std::make_unique<RawMissionSettingsPacket>(OriginalEdition::Patch1078,std::move(setting));
+        MissionSettingsPacketHooks setting;setting.current=[this](MissionSettingsField field) { return settingValues.at(static_cast<std::size_t>(field)); };setting.setCurrent=[this](MissionSettingsField field,std::uint32_t value) { settingValues.at(static_cast<std::size_t>(field))=value; };setting.send=send;settings=std::make_unique<RawMissionSettingsPacket>(OriginalEdition::Patch1078,std::move(setting));
         ClockSynchronizationHooks synchronization;synchronization.gameSeconds=effects.gameSeconds;synchronization.wallSeconds=effects.wallSeconds;
         synchronization.send=[this](auto token,auto packet) { transport.registry->SendDirect(token,packet); }; // 원문 Commander의 고정 this token을 사용하고 Player ID를 재선택하지 않는다.
         synchronization.reply=[this](auto& connection,auto packet,const auto* address) {
