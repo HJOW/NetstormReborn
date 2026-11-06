@@ -9,6 +9,7 @@
 #include <bit>
 #include <algorithm> // 실제 작성 버퍼 복사와 헤더 최소 길이에 사용한다.
 #include <cmath>
+#include <new> // 수신 공유 생성자의 실패 시 NULL 반환을 같은 배정 경계에서 보존한다.
 #include <stdexcept>
 #include <utility>
 
@@ -171,6 +172,13 @@ RegularProcess* SquidProcessHost::AddRegular(Sid parent,std::uint32_t event,floa
 // 원본: 00496f00 / CD 0048f1d0. 실행 vtable +0x18은 일반 Regular와 동일하다.
 RegularProcess* SquidProcessHost::AddSharedRegular(Sid parent,std::uint32_t event,float payload) {
     return AttachRegular(std::make_unique<RegularProcess>(event,payload),parent,true); // 공유 생성자도 같은 부착 뒤 시각 저장을 사용한다.
+}
+RegularProcess* SquidProcessHost::ReceiveSharedRegular(std::span<const std::uint8_t> packet) { // 원문 full 생성자는 일반 공유 생성자의 깊이 진단/현재 시각 저장을 호출하지 않는다.
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || packet.size()<28) throw std::invalid_argument("공유 Regular 수신의 PATCH28BYTE 계약");
+    const auto read=[packet](std::size_t offset,std::size_t width) { std::uint64_t value{};for (std::size_t i=0;i<width;++i) value|=std::uint64_t(packet[offset+i])<<(i*8);return value; }; // 반복은 WORD/DWORD/double의 원래 비트만 읽는다.
+    const Sid parent{static_cast<std::uint16_t>(read(6,2))};auto process=std::unique_ptr<RegularProcess>(new(std::nothrow) RegularProcess(static_cast<std::uint32_t>(read(16,4)),std::bit_cast<float>(static_cast<std::uint32_t>(read(20,4)))));if (!process) return nullptr;
+    process->time_=std::bit_cast<double>(read(8,8));process->count_=static_cast<std::uint32_t>(read(24,4));process->shared_=true;process->parent_=parent;
+    return static_cast<RegularProcess*>(Attach(std::move(process),state_.SharedRegularType(),parent,0x50)); // 같은 실제41bd20 부모를 사용하고 패킷+4의 미작성 SID를 읽지 않는다.
 }
 // 이미 확보한 예약은 같은 현재 생성자 번호로 부착하며 SharedRegular의 원문 진단 후에도 현재 값을 다시 읽는다.
 RegularProcess* SquidProcessHost::AttachRegular(std::unique_ptr<RegularProcess> process,Sid parent,bool shared,std::uint32_t flags) {

@@ -1,0 +1,48 @@
+{
+  "unit": 1025,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "감시65h/공유 Regular7eh 전체 수신을 같은 Form·Kernel·현재 writer 수명에 연결",
+  "sourceFunctions1078": [
+    "00432850",
+    "004af160",
+    "004ac800",
+    "00497030",
+    "00496fa0",
+    "0041bd20"
+  ],
+  "reference1072": {
+    "scope": "7eh PATCH 전체 생성자는 CD 대응 없음. 기존 공통 부착의 CD 비교 근거는 유지"
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1025\\build.log",
+    "exeSize": 12005376,
+    "exeSha256": "b4cfb4c6b3db3cfe8eb775f63d02b65e69491127e0469ca90303ded54c6c2c44"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1025\\protected-before.json"
+  },
+  "remaining": [
+    "나머지 파생 프로세스 전체 decoder",
+    "재동기화 허용/owner cache·Activate 수신자 부모",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

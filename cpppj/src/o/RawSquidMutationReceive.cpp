@@ -26,4 +26,9 @@ void ReceiveDeletedSquid(const SidPool& pool,std::span<const std::uint8_t> packe
     } else if (raw[10]!=NeedMutation(hooks.dependType)()) NeedMutation(hooks.log)(0x1d,"~rdouble destroy");
     NeedMutation(hooks.auditSp)();
 }
+void ReceiveDependencySquid(SidPool& pool,std::span<const std::uint8_t> packet,const SquidMutationHooks& hooks) { //65h는 firstPop/소유자 지정 없이 현재 감시 가상74를 호출한다.
+    if (pool.Edition()!=OriginalEdition::Patch1078 || packet.size()<13) throw std::invalid_argument("감시 수신의 PATCH13BYTE 계약");const auto object=NeedMutation(hooks.take)(NeedMutation(hooks.dependType)(),Sid{MutationWord(packet,4)});
+    const auto slot=pool.Slot(object);auto raw=std::span(const_cast<std::uint8_t*>(slot.data()),slot.size());raw[11]=packet[8];MutationPutWord(raw,18,MutationWord(packet,9));MutationPutWord(raw,20,MutationWord(packet,11));raw[11]|=4U;
+    NeedMutation(hooks.dependencyAttach)(object,Sid{MutationWord(packet,6)},0);
+}
 }

@@ -325,7 +325,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,25> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e}; // 내용물/삭제도 같은 Session 등록/해제 수명을 따른다.
+constexpr std::array<std::uint32_t,27> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e}; // 감시/공유 Regular도 같은 Session 등록/해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -4519,12 +4519,13 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     };
     dispatch.Observe(0x4a,{});dispatch.Version(0x4a,1,0);dispatch.RequireLength(0x4a,7);dispatch.Register(0x4a,[verify](auto,auto&,auto packet) { verify(packet,true); });
     dispatch.Observe(0x4b,{});dispatch.Version(0x4b,1,0);dispatch.RequireLength(0x4b,6);dispatch.Register(0x4b,[verify](auto,auto&,auto packet) { verify(packet,false); });
-    const auto mutation=[this,assertion](auto packet,bool deletion) { // 실제 현재 World 장치와 원문 파생 가상을 선택한다.
+    const auto mutation=[this,assertion](auto packet,std::uint32_t kind) { //0내용물/1삭제/2감시의 실제 현재 World 장치와 원문 가상을 선택한다.
         auto& s=*impl_;SquidMutationHooks hooks;hooks.assertion=assertion;hooks.boss=[&s] { return s.core.processState.Boss(); };hooks.log=s.services.player.log;
         hooks.contentType=[&s] { return s.gameplayGlobals->finder.containedType; };hooks.dependType=[&s] { return s.gameplayGlobals->GameAux()->DependFormType(); };hooks.take=[&s](auto type,auto sid) { return s.core.factory.Take(type,sid); };
         hooks.word=[&s](auto sid,auto word) { SetRawSquidWord(s.core.pool,sid,word,s.core.bridgeState.bridgeType,[&s](auto value) { s.core.building.NotifySurface(value); }); };
         hooks.firstPop=[&s](auto sid) { const auto table=Read(s.core.pool.Slot(sid),0);const SquidForms forms(s.core.pool);for (const auto type:{1U,2U,3U,6U}) if (table==forms.Vtable(type)) return 1U; /* 네 Form VT+30은435060의1 반환이다. */ if (!SquidFactory::SupportsConstructedVtable(OriginalEdition::Patch1078,table)) throw std::logic_error("내용물 수신의 현재 가상30 미연결");return s.core.factory.FirstPopFlags(sid); };
         hooks.attach=[&s](auto sid,auto parent,auto flags) { const auto table=Read(s.core.pool.Slot(sid),0);const SquidForms forms(s.core.pool);if (table==forms.Vtable(6)) { s.contentForms->Attach(sid,parent,flags);return; }for (const auto type:{1U,2U,3U}) if (table==forms.Vtable(type)) { s.core.factory.AttachForm(sid,parent,flags);return; } /* 반복은 현재 네 Form 가상50만 선택한다. */ if (!SquidFactory::SupportsConstructedVtable(OriginalEdition::Patch1078,table)) throw std::logic_error("내용물 수신의 현재 가상50 미연결");s.world.AttachBaseAsset(sid,parent,flags); };
+        hooks.dependencyAttach=[&s](auto sid,auto parent,auto flags) { const SquidForms forms(s.core.pool);if (Read(s.core.pool.Slot(sid),0)!=forms.Vtable(1)) throw std::logic_error("감시 수신의 현재 가상74 미연결");s.core.factory.AttachForm(sid,parent,flags); }; // 실제4af160은4ac800으로 직접 점프한다.
         hooks.refund=[&s](auto sid,auto owner) { static_cast<void>(s.hp.Refund(sid,owner,true)); };hooks.destroy=[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); };
         hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range("삭제 수신의 현재 TYPE 물리 범위");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\0')); };
         hooks.auditSp=[&s] { //33170 꼬리는 첫 sample을 보관하고 조건부 SP 조회 뒤에만 새 sample을 읽는다.
@@ -4532,10 +4533,12 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
             if (patch.remaining) { if (s.playerState.playerKnown) { const auto money=std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner));fallback=patch.sample;if (money>7000.0F) diagnostic=fallback; }--patch.remaining; }
             if (!s.sp.FirstPoolCurrent()) diagnostic=fallback;if (s.sp.Permutation()[0]==-1) diagnostic=fallback;
         };
-        if (deletion) ReceiveDeletedSquid(s.core.pool,packet,hooks);else ReceiveContentSquid(s.core.pool,packet,hooks);
+        if (kind==1) ReceiveDeletedSquid(s.core.pool,packet,hooks);else if (kind==2) ReceiveDependencySquid(s.core.pool,packet,hooks);else ReceiveContentSquid(s.core.pool,packet,hooks);
     };
-    dispatch.Observe(0x2d,{});dispatch.Version(0x2d,1,0);dispatch.RequireLength(0x2d,18);dispatch.Register(0x2d,[mutation](auto,auto&,auto packet) { mutation(packet,false); });
-    dispatch.Observe(0x2e,{});dispatch.Version(0x2e,1,0);dispatch.RequireLength(0x2e,8);dispatch.Register(0x2e,[mutation](auto,auto&,auto packet) { mutation(packet,true); });
+    dispatch.Observe(0x2d,{});dispatch.Version(0x2d,1,0);dispatch.RequireLength(0x2d,18);dispatch.Register(0x2d,[mutation](auto,auto&,auto packet) { mutation(packet,0); });
+    dispatch.Observe(0x2e,{});dispatch.Version(0x2e,1,0);dispatch.RequireLength(0x2e,8);dispatch.Register(0x2e,[mutation](auto,auto&,auto packet) { mutation(packet,1); });
+    dispatch.Observe(0x65,{});dispatch.Version(0x65,1,0);dispatch.RequireLength(0x65,13);dispatch.Register(0x65,[mutation](auto,auto&,auto packet) { mutation(packet,2); });
+    dispatch.Observe(0x7e,{});dispatch.Version(0x7e,1,0);dispatch.RequireLength(0x7e,28);dispatch.Register(0x7e,[this](auto,auto&,auto packet) { static_cast<void>(impl_->core.processes.ReceiveSharedRegular(packet)); }); // 원문 배정 실패는 새 객체 없이 정상 복귀한다.
     dispatch.ObservePacket(0x7a,[assertion](auto packet,auto sending) { ObserveCompressedSquid(packet,sending,assertion); });dispatch.Version(0x7a,1,0);dispatch.RequireLength(0x7a,0xffff);
     dispatch.Register(0x7a,[this,assertion](auto,auto&,auto packet) { auto& s=*impl_;SquidCompressedReceiveHooks hooks;hooks.assertion=assertion;hooks.defaultType=[&s] { return s.core.bridgeState.bridgeType; };
         hooks.type=[&s](std::uint32_t type)->const RiftTypeRecord& { if (type>=s.core.types.size()) throw std::out_of_range("압축 객체의 현재 TYPE 물리 범위");return s.core.types[type]; };hooks.maximumHp=[&s](const RiftTypeRecord& selected) { return s.core.factory.ReadSelectedHitPoints(selected,s.core.types); };

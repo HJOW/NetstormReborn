@@ -13,6 +13,7 @@ struct SquidMutationHooks {
     std::function<void(Sid,std::uint16_t)> word; // 같은004ac220 WORD setter다.
     std::function<std::uint32_t(Sid)> firstPop; // 현재 가상+30이다.
     std::function<void(Sid,Sid,std::uint32_t)> attach; // 현재 가상+50의 실제 파생 부착이다.
+    std::function<void(Sid,Sid,std::uint32_t)> dependencyAttach; // 감시 수신의 현재 가상+74(parent,0)다. 소유자 setter와 다르다.
     std::function<void(Sid,std::uint32_t)> refund; //0044c2f0(sid,owner,1)의 실제 HP 비례 환불이다.
     std::function<void(Sid,std::uint32_t)> destroy; // 현재 가상+10의 실제 삭제다.
     std::function<std::string(Sid)> typeName; // 로그의 현재 TYPE+4 이름이다.
@@ -22,4 +23,5 @@ struct SquidMutationHooks {
 };
 void ReceiveContentSquid(SidPool& pool,std::span<const std::uint8_t> packet,const SquidMutationHooks& hooks); //004327b0의 PATCH18BYTE 내용물 수신이다.
 void ReceiveDeletedSquid(const SidPool& pool,std::span<const std::uint8_t> packet,const SquidMutationHooks& hooks); //00433170/CD00488270 비교의 PATCH8BYTE 삭제 수신이다.
+void ReceiveDependencySquid(SidPool& pool,std::span<const std::uint8_t> packet,const SquidMutationHooks& hooks); //00432850의65h13BYTE 감시 Form 수신이다.
 }
