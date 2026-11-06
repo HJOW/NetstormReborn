@@ -16,6 +16,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { readMap, reviewedBase } from './port-map.mjs';
 
 // 저장소 루트의 절대 경로이다. (2026-11-05 WB02-F)
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -62,6 +63,23 @@ function git(...args) {
     }
 }
 
+// ancestor 커밋이 descendant 커밋의 조상(또는 같은 커밋)인지 본다. git 이 없거나 커밋이 없으면 false 이다. (2026-11-06 WB02-G)
+function isAncestor(ancestor, descendant) {
+    try {
+        execFileSync('git', ['merge-base', '--is-ancestor', ancestor, descendant], { cwd: REPO_ROOT, stdio: 'ignore' });
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+// cpppj 근거 소스의 재검토 기준 커밋이다. 이식 대응표(PORT_MAP.tsv)의 base 가 basis 뒤 커밋이면 그 판정 이후만 변경으로 센다.
+// 대응표 base 는 기준선 뒤 변경을 ①/②/③으로 판정한 커밋이므로, 판정한 변경을 매번 다시 보고하지 않기 위해서다. (2026-11-06 WB02-G)
+function reviewRevision(source, basis, map) {
+    const reviewed = reviewedBase(source, map);
+    return reviewed && reviewed !== basis && isAncestor(basis, reviewed) ? reviewed : basis;
+}
+
 // 경로들을 마지막으로 바꾼 커밋(짧은 해시)이다. revision 을 주면 그 커밋까지의 기록에서 찾는다. (2026-11-05 WB02-F)
 function lastCommit(paths, revision = null) {
     return git('log', '-1', '--format=%h', ...(revision ? [revision] : []), '--', ...paths);
@@ -99,11 +117,13 @@ function compute(entry) {
 }
 
 // 검사: 해시 칸이 있는 항목의 현재 파일 값이 기록과 같은지 본다. 반환: { mismatches[], missing[], drift[] }.
-// drift 는 cpppj 근거 소스가 basis 커밋 뒤 HEAD 까지 바뀐 커밋 수이다(재검토 후보 알림이며 실패가 아니다). (2026-11-05 WB02-F)
+// drift 는 cpppj 근거 소스가 basis 커밋(대응표 base 가 더 뒤면 그 커밋) 뒤 HEAD 까지 바뀐 커밋 수이다(재검토 후보 알림이며 실패가 아니다).
+// (2026-11-05 WB02-F, 2026-11-06 WB02-G: 대응표 판정 커밋을 재검토 기준으로 사용)
 export function check(manifest = readManifest(), { withDrift = true } = {}) {
     const mismatches = [];
     const missing = [];
     const drift = [];
+    const portMap = withDrift ? readMap() : null;
     // 항목마다 파일과 기록을 비교한다.
     for (const entry of manifest.entries) {
         const full = path.join(REPO_ROOT, entry.path);
@@ -118,11 +138,12 @@ export function check(manifest = readManifest(), { withDrift = true } = {}) {
         if (!withDrift) continue;
         // 작업 사본으로 기록한 항목의 모듈이 이제 커밋되었으면 갱신 알림을 남긴다.
         if (entry.webCommit === WORKTREE && !dirty(entry.modules)) drift.push({ id: entry.id, source: '(webCommit)', basis: WORKTREE, commits: 0 });
-        // cpppj 근거 소스별로 basis 이후 변경 커밋 수를 센다.
+        // cpppj 근거 소스별로 재검토 기준(basis 또는 대응표 판정 커밋) 이후 변경 커밋 수를 센다.
         for (const [source, basis] of Object.entries(entry.cpppjBasis ?? {})) {
             if (!basis) continue;
-            const count = Number(git('rev-list', '--count', `${basis}..HEAD`, '--', source) ?? 0);
-            if (count > 0) drift.push({ id: entry.id, source, basis, commits: count });
+            const since = reviewRevision(source, basis, portMap);
+            const count = Number(git('rev-list', '--count', `${since}..HEAD`, '--', source) ?? 0);
+            if (count > 0) drift.push({ id: entry.id, source, basis: since, commits: count });
         }
     }
     return { mismatches, missing, drift };

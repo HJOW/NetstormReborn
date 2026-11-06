@@ -84,7 +84,8 @@ test('이식 추적 목록: 검사가 쓰는 fixture·스크린샷·교차 확�
                 .filter((parts) => !parts.includes('fixtures'))
                 .map((parts) => parts[parts.length - 1]),
         ]);
-        for (const name of names) if (!consumersByName.get(name)?.has(consumer)) missing.push(`${consumer}: ${name}`);
+        // 이식 대응표(PORT_MAP.tsv)는 원본 대조 자료가 아니라 tools/port-map.mjs 가 검사하는 대응표이므로 뺀다. (2026-11-06 WB02-G)
+        for (const name of names) if (name !== 'PORT_MAP.tsv' && !consumersByName.get(name)?.has(consumer)) missing.push(`${consumer}: ${name}`);
     }
     assert.deepEqual(missing, []);
 });
