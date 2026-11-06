@@ -7,11 +7,9 @@
 namespace netstorm::o {
 namespace {
 // 두 판본의 공통 raw 필드다. Form의 부모/이전은 contained 자산과 위치가 반대다.
-constexpr std::size_t kNext=4,kHead=6,kType=10,kState=11,kPrevious=14,kParent=16,kOwner=18,kAssetPrevious=16;
-// 공통 free/dead/void/contained/생성 전파 중 상태 비트다.
-constexpr std::uint8_t kFree=1,kDead=2,kVoid=4,kContained=8,kTransmitting=0x10;
-// Pop의 서버/client/종속 전송 억제 비트와 Form 부착을 막는 emplacement·vortex·factory genus다.
-constexpr std::uint32_t kServerPop=8,kClientPop=0x10,kDependentPop=0x40,kNoContainerGenus=0x44200;
+constexpr std::size_t kType=10,kState=11,kParent=16,kOwner=18;
+// 현재클래스/소유필드조회가실제로사용하는반납상태비트다.
+constexpr std::uint8_t kFree=1;
 }
 // 삭제/생성과 같은 풀을 사용하는지 확인하며 타입 메타데이터는 호출자 수명과 분리한다.
 GumpFormHost::GumpFormHost(SidPool& pool,SquidFactory& factory,std::span<const RiftTypeRecord> types,
@@ -62,21 +60,6 @@ std::uint32_t GumpFormHost::Owner(Sid form) const {
 Sid GumpFormHost::Parent(Sid form) const { Form(form);return Sid{Word(form,kParent)}; }
 // 생성 후 소유 ID 쓰기는 아직 부모에 붙기 전에도 허용한다.
 void GumpFormHost::SetOwner(Sid form,std::uint32_t owner) const { Form(form);Put(form,kOwner,owner,4); }
-// 종속 체인에는 Form과 contained 자산이 섞일 수 있으며 각 가상 setPrev의 위치가 다르다.
-void GumpFormHost::SetPrevious(Sid sid,std::uint16_t previous) const {
-    Put(sid,pool_.Slot(sid)[kType]<kFirstAssetTypeNumber ? kPrevious : kAssetPrevious,previous,2);
-}
-// 메뉴는 client SID여서 기본 flags 0에서도 전송하지 않는다. 서버 Form 전송 경로는 별도 복원이 필요하다.
-void GumpFormHost::ValidatePop(Sid form,std::uint32_t flags) const {
-    const auto state=Form(form)[kState];
-    if (!(state&kVoid) || (state&(kDead|kTransmitting))) throw std::logic_error("GumpForm Pop 상태 오류");
-    if (!pool_.IsServer()) return;
-    if (form.value<pool_.Layout().serverFirst) {
-        if (flags&kServerPop) throw std::logic_error("client GumpForm의 서버 Pop 금지");
-        flags|=kClientPop;
-    } else if (!(flags&kClientPop)) flags|=kServerPop;
-    if (!(flags&(kClientPop|kDependentPop))) throw std::logic_error("서버 GumpForm의 Pop 전송은 미복원입니다");
-}
 // Gump의 실제 +74 thunk는 같은 현재 공장의 공통 부착 부모로 바로 진입한다.
 void GumpFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const { factory_.AttachForm(form,parent,flags); }
 // 살아 있는 부모에서는 링크를 고치지만 부모 삭제 중에는 저장한 next로 계속 순회하게 체인을 유지한다.

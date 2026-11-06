@@ -115,14 +115,6 @@ void SquidFactory::Assert(std::string_view expression,std::uint32_t line) const 
     if (!assertion) throw std::logic_error("Factory의 선택된 원문 진단 장치 미연결");
     assertion(expression,pool_.Edition()==OriginalEdition::Patch1078 ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp",line);
 }
-// Take로 받은 예측 머리도 원본 범위 안이다. 일반 Allocate의 예약 검사와 분리한다.
-std::span<std::uint8_t> SquidFactory::LiveBytes(Sid sid) {
-    const auto offset=pool_.Offset(sid);
-    auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride);
-    if (sid.value<5 || (bytes[kState]&(kFree|kContained))) throw std::logic_error("base 초기화의 SID 상태 오류");
-    Type(bytes[kType],false);
-    return bytes;
-}
 // 판본별 실제 base vtable의 기록값이다.
 std::uint32_t SquidFactory::BaseVtable() const { return pool_.Edition()==OriginalEdition::Patch1078 ? kPatchVtable : kCdVtable; }
 // 각 생성자의 최종 vtable만 읽는다. 중간 vtable은 ApplyConstructor에서 원본 순서로 쓴다.
@@ -283,10 +275,9 @@ Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
     };
     return object(TakeRawSquid(pool_.Edition(),type,sid.value,hooks));
 }
-// 모든 지원 자산의 공통 firstPop은 type/풀을 쓰지 않고 extra의 두 비트만 읽는다.
+// 원문 공통 firstPop의 직접 몸체는 TYPE/상태/VT를 조회하지 않고 판본별extra BYTE의1/8비트만 읽는다.
 std::uint32_t SquidFactory::FirstPopFlags(Sid sid) {
-    const auto bytes=LiveBytes(sid); const auto& type=Type(bytes[kType],true);
-    if (Vtable(bytes)!=ConstructorVtable(type)) throw std::logic_error("firstPop vtable 오류");
+    const auto bytes=pool_.Slot(sid); // 물리범위밖접근만호스트에서거부하고원문의무쓰기/단일BYTE소비를보존한다.
     const auto extra=bytes[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35];
     return (extra&9)==0 ? 1U : ((extra&1)!=0 ? 2U : 0U)|((extra&8)!=0 ? 4U : 0U);
 }

@@ -54,7 +54,7 @@ public:
     // 004af610 ↔ CD 004ab440의 지원 자산 수신 경로다. free list/freeCount는 변경하지 않는다.
     // 두 판본의 모든 !free 슬롯은 void 여부와 무관하게 실제 VT+48을 호출하고 현재 생성자 반환 객체를 사용한다.
     Sid Take(std::uint32_t type,Sid sid);
-    // 004ad470 ↔ CD 004ae0f0. abstract/buried 비트에 따른 공통 최초 Pop 플래그를 읽는다.
+    // 004ad470 ↔ CD 004ae0f0의직접몸체다. TYPE/상태/VT없이extra의abstract/buried두비트만읽는다.
     std::uint32_t FirstPopFlags(Sid sid);
     // 004b0c60 ↔ CD 004ae040. 파생 클래스가 base 초기화를 호출할 때도 사용한다.
     void PostCreate(Sid sid);
@@ -73,7 +73,6 @@ private:
     std::span<const RiftTypeRecord> CurrentTypes() const; // 현재 borrowed 표 또는 기존 독립 소유 표를 복사 없이 읽는다.
     std::int32_t TypeHitPoints(const RiftTypeRecord& type,std::span<const RiftTypeRecord> selectedBase) const; // 같은 TYPE this와 진단 뒤 현재 base/전역으로 원문 HP를 읽는다.
     void Assert(std::string_view expression,std::uint32_t line) const; // 양판본 진단이 정상 복귀하면 현재 raw를 다시 읽어 계속한다.
-    std::span<std::uint8_t> LiveBytes(Sid sid);
     // 원본 생성자의 쓰기 순서/폭/OR 비트를 보존한다. 호출 전에 지원 여부를 검사한다.
     void ApplyConstructor(std::span<std::uint8_t> bytes,const RiftTypeRecord& type) const;
     Sid ConstructRaw(std::uint32_t address,Sid sid,bool requireObject); // base/자산/Form의 bare 쓰기를 실행하며 void NULL의 반환을 SID로 위조하지 않는다.

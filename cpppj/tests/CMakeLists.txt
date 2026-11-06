@@ -3731,3 +3731,8 @@ target_sources(netstorm_pop_context_tests PRIVATE RawFormLinkedTests.cpp)
 # Kernel의 현재 단언/소진 접합과 기존 프로세스 요약 원문20행을 같은 집중 대상에서 선택한다(973).
 target_sources(netstorm_tests PRIVATE KernelDiagnosticCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE KernelDiagnosticCurrentTests.cpp ProcessSummaryTests.cpp)
+
+# 공통firstPop의양판본512BYTE/실제물리프로필을현재공장과집중대조한다(975).
+target_sources(netstorm_tests PRIVATE FactoryFirstPopCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE FactoryFirstPopCurrentTests.cpp)
+set_source_files_properties(FactoryFirstPopCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FIRST_POP_FLAGS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/first-pop-flags-x86.tsv\"")

@@ -1,0 +1,236 @@
+{
+  "unit": 975,
+  "date": "2026-11-06",
+  "host": "HJOW-ATHLON",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 975,
+  "version": "11.01",
+  "scope": "Factory 공통 부모 함수별 대조·직접 firstPop의 단일 BYTE 소비와 미사용 Gump 보조 코드 정리",
+  "exeSha256": "b6232ba43945042e0a18025cd5e20842252ede2478c4e147992fadce1e8f863e",
+  "exeBytes": 11373056,
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-11-03",
+    "uniqueInputs": 512,
+    "nativeObservations": 512,
+    "proof": [
+      {
+        "edition": "originals",
+        "entry": "004ad470",
+        "offset": 40,
+        "codeHex": "8a49288ad133c080e201750bf6c1087506b801000000c384d27405b802000000f6c108740383c804c3cccccccccccccc",
+        "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "inputs": 256,
+        "singleByteReads": true,
+        "unchanged": true
+      },
+      {
+        "edition": "originalCD",
+        "entry": "004ae0f0",
+        "offset": 35,
+        "codeHex": "33c08a51238aca80e101750bf6c2087506b801000000c384c97405b802000000f6c208740383c804c38da42400000000",
+        "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+        "inputs": 256,
+        "singleByteReads": true,
+        "unchanged": true
+      }
+    ],
+    "fixtureSha256": "f7962700854608e7783a01d1bac0abd1a9220defce9eb918098f2334d93d62c6",
+    "boundary": "실제4ad470/4ae0f0의0x30바이트만 실행. 매입력extra BYTE1개읽기/무쓰기/코드·입력불변/정상복귀 확인. PATCH4ad470은canonical 함수 누락이어서보호PE/VT+30 근거를사용."
+  },
+  "vtableStatic": [
+    {
+      "edition": "originals",
+      "table": "00501dd0",
+      "slot": "20",
+      "entry": "004b0d30"
+    },
+    {
+      "edition": "originals",
+      "table": "00501dd0",
+      "slot": "28",
+      "entry": "004b0c60"
+    },
+    {
+      "edition": "originals",
+      "table": "00501dd0",
+      "slot": "2c",
+      "entry": "004ad4a0"
+    },
+    {
+      "edition": "originals",
+      "table": "00501dd0",
+      "slot": "30",
+      "entry": "004ad470"
+    },
+    {
+      "edition": "originalCD",
+      "table": "005058d8",
+      "slot": "20",
+      "entry": "004ae180"
+    },
+    {
+      "edition": "originalCD",
+      "table": "005058d8",
+      "slot": "28",
+      "entry": "004ae040"
+    },
+    {
+      "edition": "originalCD",
+      "table": "005058d8",
+      "slot": "2c",
+      "entry": "004ae120"
+    },
+    {
+      "edition": "originalCD",
+      "table": "005058d8",
+      "slot": "30",
+      "entry": "004ae0f0"
+    }
+  ],
+  "currentAudit": {
+    "factoryFirstPopBody": "const auto bytes=pool_.Slot(sid); // 물리범위밖접근만호스트에서거부하고원문의무쓰기/단일BYTE소비를보존한다.\n    const auto extra=bytes[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35];\n    return (extra&9)==0 ? 1U : ((extra&1)!=0 ? 2U : 0U)|((extra&8)!=0 ? 4U : 0U);",
+    "gumpActualAttach": true,
+    "gumpActualUnpop": true,
+    "obsoletePrivateHelpersAbsent": true,
+    "directFirstPopRuntimeCallers": []
+  },
+  "before": {
+    "tests": 2,
+    "failedChecks": 2560,
+    "rawProfiles": 6,
+    "nativeInputs": 512
+  },
+  "finalTests": [
+    {
+      "filter": "BaseProcessAttachCurrent_",
+      "count": 5,
+      "failedChecks": 0
+    },
+    {
+      "filter": "ContentFieldCurrent_",
+      "count": 5,
+      "failedChecks": 0
+    },
+    {
+      "filter": "FactoryFirstPopCurrent_",
+      "count": 2,
+      "failedChecks": 0
+    },
+    {
+      "filter": "FactoryInitializationCurrent_",
+      "count": 2,
+      "failedChecks": 0
+    },
+    {
+      "filter": "FormAttachCurrent_ActualVtableSelectsMixedLinkWords",
+      "count": 1,
+      "failedChecks": 0
+    },
+    {
+      "filter": "FormAttachCurrent_ContentVtableReallyUsesCommonThunk",
+      "count": 1,
+      "failedChecks": 0
+    },
+    {
+      "filter": "FormAttachCurrent_LateContentDiagnosticAndMissingNeighborKeepPrefix",
+      "count": 1,
+      "failedChecks": 0
+    },
+    {
+      "filter": "FormAttachCurrent_WorldUsesLiveGenusAndWeakSessionContentNumber",
+      "count": 1,
+      "failedChecks": 0
+    },
+    {
+      "filter": "FormClassLifetime_",
+      "count": 1,
+      "failedChecks": 0
+    },
+    {
+      "filter": "FormCreationCurrent_",
+      "count": 3,
+      "failedChecks": 0
+    },
+    {
+      "filter": "FormPopCurrent_ActualWorldReadsRepairedVtableAndSharedDepth",
+      "count": 1,
+      "failedChecks": 0
+    },
+    {
+      "filter": "ProcessClassCurrent_",
+      "count": 3,
+      "failedChecks": 0
+    },
+    {
+      "filter": "ProcessCreationCurrent_",
+      "count": 4,
+      "failedChecks": 0
+    },
+    {
+      "filter": "SquidCreationParent_",
+      "count": 6,
+      "failedChecks": 0
+    },
+    {
+      "filter": "SquidTakeParentCurrent_",
+      "count": 3,
+      "failedChecks": 0
+    }
+  ],
+  "uniqueTests": 39,
+  "newTests": 2,
+  "existingTests": 37,
+  "rawCalls": 3072,
+  "existingNativeRows": {
+    "create": 588,
+    "take": 720,
+    "initialization": 576,
+    "localBaseAttach": 48
+  },
+  "newNativeRows": 512,
+  "builds": [
+    {
+      "log": "build-before-prepared.log",
+      "warnings": 0,
+      "errors": 0,
+      "exitCode": 0
+    },
+    {
+      "log": "build-before.log",
+      "warnings": 0,
+      "errors": 0,
+      "exitCode": 0
+    },
+    {
+      "log": "build-final.log",
+      "warnings": 0,
+      "errors": 0,
+      "exitCode": 0
+    }
+  ],
+  "protected": {
+    "previousFiles": 2797,
+    "previousFixtures": 977,
+    "previousUnchanged": true,
+    "newFixtures": 1,
+    "nextFiles": 2798,
+    "nextFixtures": 978
+  },
+  "scopeCompletion": "공통 Create/ConstructCurrent/Take/초기화/직접 firstPop/고정 Form3·6/공통 Form 부착·해제 부모 대조 완료. 전체 Factory 외부 소유권/가상 효과와 구별.",
+  "remaining": [
+    "외부 heap 반환/할당 실패 UI·원문의 실제 caller와 파일·비멀티 미연결 소비자",
+    "다른 Regular/전체 팔레트·Chat·시스템뉴스와 전체 자산/프로세스 가상 callee",
+    "메타맵2표/checking8/MP는8번으로 유지",
+    "전체 Factory/우선순위4는 미완료"
+  ],
+  "checkingRemaining": 8,
+  "solutionProjects": 83,
+  "guiRuns": 0,
+  "lastGuiUnit": 968,
+  "multiplayerTests": 0,
+  "rawDirectory": "extracted/cpp-resume-975"
+}

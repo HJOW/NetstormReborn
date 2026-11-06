@@ -48,10 +48,6 @@ private:
     std::uint16_t Word(Sid sid,std::size_t offset) const;
     // raw little endian 쓰기는 할당된 슬롯에만 적용한다.
     void Put(Sid sid,std::size_t offset,std::uint32_t value,std::size_t width) const;
-    // 가상 setPrev의 Form +0xe/contained 자산 +0x10 위치를 구분한다.
-    void SetPrevious(Sid sid,std::uint16_t previous) const;
-    // 원본 Pop의 서버/client flags를 계산하고 미복원 전송을 부착 쓰기 전에 거부한다.
-    void ValidatePop(Sid form,std::uint32_t flags) const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
     // factory_: 타입에 맞는 객체를 생성하는 처리기.
