@@ -90,6 +90,7 @@ public:
     // ProcessForm 부착 뒤의 실제 번호를 이미지에 기록한다.
     void SetAttachment(Sid form,Sid parent);
 private:
+    friend class RawPathData; // 실제 네트워크 decoder만 같은 raw 배열/부분 쓰기와 진단 순서를 직접 복원한다.
     // 정렬되지 않은 little endian 필드의 읽기/쓰기를 한곳에서 처리한다.
     std::uint64_t Read(std::size_t offset,std::size_t width=4) const;
     void Write(std::size_t offset,std::uint64_t value,std::size_t width=4);

@@ -55,7 +55,7 @@ RawPathProcess* RawPathStart::Start(RawPathStartRequest request) {
         request.destination=CeilPoint(request.destination);request.destination.x-=kHalfCell;request.destination.y-=kHalfCell;
     }
     auto start=Position(request.parent);std::uint32_t first=0,second=0;
-    if (state_.clock.boss) {
+    if (state_.clock.Boss()) {
         const auto oldForm=lookup_.Find(request.parent,processType);
         if (oldForm.value) {
             auto* old=dynamic_cast<RawPathProcess*>(host_.FromForm(oldForm));

@@ -1,0 +1,69 @@
+{
+  "unit": 1032,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "Path30h 전체 decoder/실제 생성자·명시 Form/송신 observer와 네 현재 boss 조회 연결",
+  "sourceFunctions1078": [
+    "00489ee0",
+    "00489a10",
+    "004882e0",
+    "00488e20",
+    "0040a660",
+    "004895b0",
+    "00488fe0",
+    "00447b30",
+    "00426d90",
+    "00489080"
+  ],
+  "referenceFunctions1072": [
+    "0047da90",
+    "0047e0f0",
+    "0040a200"
+  ],
+  "staticPe": {
+    "timeDecodeScale": 0.125,
+    "stageSnapDistance": 1.5,
+    "pathTraceLevel": 99,
+    "patchCapacity": 5000,
+    "cdCapacity": 600
+  },
+  "build": {
+    "firstExitCode": 0,
+    "firstWarnings": 0,
+    "firstErrors": 0,
+    "followup": "같은 이동 본체의 네 stale boss 읽기를 실제 공유 authority getter에 교정",
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted\\cpp-resume-1032\\build-first.log",
+      "extracted\\cpp-resume-1032\\build.log"
+    ],
+    "exeSize": 12063232,
+    "exeSha256": "7fa766361f88b3b4d3d28ac296c1749202d610a8225a1b0e94a7b1d8238fb116"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "dedicatedAirUnitTests": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1032\\protected-before.json"
+  },
+  "remaining": [
+    "나머지 프로세스/33h 위치 등 실제 수신·전송 감사",
+    "재동기화 허용/owner cache·Activate 수신자/삭제 선택",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

@@ -66,6 +66,7 @@ public:
     std::uint32_t& GunProcessType() { return gunProcessType_; } //005410f8의 현재 총 프로세스 TYPE를 신규 생성/전체 수신이 함께 읽는다.
     std::uint32_t& ConstructionProcessType() { return constructionProcessType_; } //005410e8의 현재30이며 일반 생성/수신/볼텍스가 같은 DWORD를 읽는다.
     std::span<std::uint8_t,2> ConstructionHeader() { return constructionHeader_; } //005325b8/b9의 현재 메시지/프로토콜BYTE를 그대로 빌린다.
+    std::int32_t& PathTraceLevel() { return pathTraceLevel_; } //00540c68의 현재 경로 수신 로그 수준이며 FILE 포인터와 다르다.
     std::uint32_t& FireAnimationProcessType() { return fireAnimationProcessType_; } //005410fc의 현재35를 전체 발사 수신 부모가 조회한다.
     std::uint32_t& RotateAnimationProcessType() { return rotateAnimationProcessType_; } //00541100의 현재36이며 발사와 별개인 장기 DWORD다.
     std::uint32_t& SunArcherType() { return sunArcherType_; } //00541174의 현재71이며 수신 공장의 첫 발사 TYPE 비교다.
@@ -165,6 +166,7 @@ private:
     std::uint32_t gunProcessType_{34}; // 보호 PE005410f8의 초기 DWORD다. World/Session 교체에서 새34를 쓰지 않는다.
     std::uint32_t constructionProcessType_{30}; // 보호 PE005410e8의 최초30이며 World/Session 교체에서 초기화하지 않는다.
     std::array<std::uint8_t,2> constructionHeader_{0x37,1}; // 보호 PE005325b8/b9의 최초 두BYTE다. 선언 길이는 별도 값으로 추가하지 않는다.
+    std::int32_t pathTraceLevel_{99}; // 보호 PE00540c68의 초기99이며 실제 공통 로그의 현재 임계값과 별개다.
     std::uint32_t fireAnimationProcessType_{35},rotateAnimationProcessType_{36}; // 보호 PE의 서로 다른 두 TYPE이며 World 교체에서 초기화하지 않는다.
     std::uint32_t sunArcherType_{71},sunCannonType_{128},windArcherType_{140}; // 수신 공장의 실제 세 비교 전역 초기값이며 기본 생성자 선택과 구별한다.
     std::array<std::uint8_t,2> rotateAnimationHeader_{0x3c,1},fireAnimationHeader_{0x3b,1}; // 보호 PE의 두 현재 헤더이며 World/Session 교체에서 초기화하지 않는다.

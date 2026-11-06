@@ -327,7 +327,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,35> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37}; // 건설37h 수신도 같은 Session 등록/해제 수명을 따른다.
+constexpr std::array<std::uint32_t,36> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30}; // Path30h 수신도 같은 Session 등록/해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -3503,6 +3503,7 @@ struct RawCampaignSession::Impl {
         auto effects=services.motion;
         effects.carrier.currentAlliance=[this](std::uint32_t first,std::uint32_t second) { if (first>=9 || second>=9) throw std::out_of_range("운반 도착 현재 동맹 번호 범위");return alliances[first*9+second]; }; // 로그인/수신/AI가 공유하는 현재 DWORD를 읽고 별도 빈 사본으로 대신하지 않는다.
         effects.path.assertion=[this](std::string_view expression,std::string_view file,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("경로 현재 원문 진단 장치 미연결: "+std::string(file)+":"+std::to_string(line));services.ai.assertion(expression); }; // 정상 복귀를 같은 현재 Client 서비스에 연결한다.
+        effects.path.stagePoint=[this](Sid temple,std::uint32_t stage) { if (!templeRitual) throw std::logic_error("Path 수신의 실제 의식 목표점 미설치");PrepareRitual();const auto point=templeRitual->StagePoint(temple,stage);return RawPathPoint{point.x,point.y}; }; // 같은447b30의 Rune SHP/현재 지면 보정을 재사용한다.
         effects.path.balloonFlame=[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("벌룬 화염 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("balloonFlame.wav"),0,0); };
         effects.path.bulfRandom=[this](std::int32_t low,std::int32_t high) { if (high<=low) throw std::invalid_argument("Bulf 공용 난수 범위 오류");return static_cast<std::int32_t>(random.Next(static_cast<std::uint32_t>(high-low)))+low; };
         effects.path.bulfSound=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("Bulf 발소리 장치 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
@@ -4590,6 +4591,7 @@ void RawCampaignSession::Impl::ReceiveFlyerPacket(std::span<const std::uint8_t> 
 // 실제 초기 등록과 같은 버전/정책과 각 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");
+    dispatch.ObservePacket(0x30,[storage=impl_->world.Storage()](auto packet,auto sending) { ObservePathData(packet,sending,[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); });dispatch.Version(0x30,1,0);dispatch.RequireLength(0x30,0xffff);dispatch.Register(0x30,[this](auto,auto&,auto packet) { if (!impl_->motion) throw std::logic_error("Path 수신의 실제 이동 본체 미연결");impl_->motion->Paths().ReceivePacket(packet); }); //40a660 observer와489ee0 receiver를 같은 실제 등록표에 연결한다.
     dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);dispatch.Register(0x2c,[this](auto,auto&,auto packet) { impl_->ReceiveSquid(packet); });
     dispatch.Observe(0x3a,{});dispatch.Version(0x3a,1,0);dispatch.RequireLength(0x3a,0xffff);dispatch.Register(0x3a,[this](auto,auto&,auto packet) { impl_->ReceiveGunPacket(packet); }); // 원문3ah는 observer NULL/버전1/정책0이다.
     dispatch.Observe(0x39,{});dispatch.Version(0x39,1,0);dispatch.RequireLength(0x39,0xffff);dispatch.Register(0x39,[this](auto,auto&,auto packet) { impl_->ReceiveFlyerPacket(packet); }); // 원문39h도 observer NULL/버전1/정책0/가변 길이다.

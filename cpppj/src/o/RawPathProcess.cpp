@@ -86,7 +86,7 @@ void RawPathProcess::Prepare(float speedOverride,float speed,float turningSpeed)
     runtime_.Prepare(state_.clock.Now(),state_.clock.Now(),effective,turningSpeed,runtime_.Direction(0));
 }
 // 클라이언트 범위는 현재 풀 판본의 실제 serverFirst다.
-bool RawPathProcess::MayMutate() const { return state_.clock.boss || (Form().value>4 && Form().value<pool_.Layout().serverFirst); }
+bool RawPathProcess::MayMutate() const { return state_.clock.Boss() || (Form().value>4 && Form().value<pool_.Layout().serverFirst); }
 // 패치는 두 현재 SID의 범위 진단 후 항상참이며 CD의 기존 호스트 검사는 유지한다.
 bool RawPathProcess::Robust() const {
     if (pool_.Edition()==OriginalEdition::Patch1078) {
@@ -101,7 +101,7 @@ bool RawPathProcess::Halt() {
         const auto watch=alive_;PathHaltParentHooks effects; // 자기 삭제 뒤에도 진단/수명 조회의 복사본만 남긴다.
         effects.parent=[this] { return Parent(); };effects.halt=hooks_.halt;effects.alive=[watch] { return *watch; };effects.assertion=hooks_.assertion;
         effects.forcedStop=[this](Sid parent) { return (pool_.Slot(parent)[40]&0x20U)!=0; };effects.mayKill=[this] { return MayMutate(); };effects.kill=[this] { Host()->Kill(*this,0); };
-        effects.boss=[this] { return state_.clock.boss; };effects.carrier=[this](Sid parent) { return (types_[pool_.Slot(parent)[10]].flags2&0x30000U)!=0; };effects.hasTargets=[this] { return runtime_.TargetB()!=0 || runtime_.TargetA()!=0; };
+        effects.boss=[this] { return state_.clock.Boss(); };effects.carrier=[this](Sid parent) { return (types_[pool_.Slot(parent)[10]].flags2&0x30000U)!=0; };effects.hasTargets=[this] { return runtime_.TargetB()!=0 || runtime_.TargetA()!=0; };
         effects.retarget=[this](Sid parent) { if (!hooks_.retarget) throw std::logic_error("실제 운반 재탐색 몸체 미복원 경계");hooks_.retarget(runtime_,parent); };
         effects.armWatch=[this] { runtime_.SetDeathWatchToken(1); };effects.clearWatch=[this] { runtime_.SetDeathWatchToken(0); }; // 원문 지역 watch의 활성 의미만 raw 필드에도 남긴다.
         return RunPathHaltParent(state_.checking,effects);
@@ -111,7 +111,7 @@ bool RawPathProcess::Halt() {
     if (result==10 && (pool_.Slot(parent)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&0x20)!=0) result=11;
     if (result==11) { if (MayMutate()) Host()->Kill(*this,0);return true; }
     const auto type=pool_.Slot(parent)[10];
-    if (state_.clock.boss && (types_[type].flags2&0x30000)!=0 && (runtime_.TargetA()!=0 || runtime_.TargetB()!=0)) {
+    if (state_.clock.Boss() && (types_[type].flags2&0x30000)!=0 && (runtime_.TargetA()!=0 || runtime_.TargetB()!=0)) {
         if (!hooks_.retarget) throw std::logic_error("실제 운반 재탐색 몸체 미복원 경계");
         hooks_.retarget(runtime_,parent);if (!*watch) return true;
     }

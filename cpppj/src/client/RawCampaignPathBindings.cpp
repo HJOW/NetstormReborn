@@ -1,5 +1,8 @@
 // 기존 원본 복원 몸체를 조립하며 별도 좌표 캐시·지면 사본·걷기 loop를 만들지 않는다.
 #include "client/RawCampaignPathBindings.h"
+#include "o/RawGameAuxState.h" // 같은 현재00540c68 로그 수준을 수신 trace에서 읽는다.
+#include <bit>
+#include <cstdio>
 #include <stdexcept>
 #include <utility>
 
@@ -158,6 +161,21 @@ o::ProcessFormTransmission RawCampaignPathBindings::Transmission(o::RawPathDataH
 }
 // root가 소유한 모든 도착/운반 모듈은 이 풀 참조로 혼합 연결을 확인할 수 있다.
 const o::SidPool& RawCampaignPathBindings::Pool() const { return core_.pool; }
+// 원문은free Form만 새 경로로 복원하며 live Form은 상세 진단 뒤 그대로 반환한다.
+void RawCampaignPathBindings::ReceivePacket(std::span<const std::uint8_t> packet) {
+    const auto storage=world_.Storage();if (core_.pool.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("Path 수신의 실제 PATCH 연결 필요");
+    if (packet.size()<6) throw std::out_of_range("Path 수신의 실제 Form WORD 부족");if (core_.processState.Boss()) storage->AssertDisplay("!boss","\\Ns\\O\\Pathprocess.cpp",0x224);
+    const auto word=[&](std::size_t at) { if (at>packet.size() || 2U>packet.size()-at) throw std::out_of_range("Path 수신의 선택된 WORD 부족");return static_cast<std::uint16_t>(std::uint16_t(packet[at])|(std::uint16_t(packet[at+1])<<8)); }; // 현재 실제 WORD만 읽으며 헤더 길이를 대신 사용하지 않는다.
+    const o::Sid form{word(4)};if (!form.value || form.value>=core_.pool.Capacity()) throw std::out_of_range("Path 수신의 명시 Form 물리 범위");const auto raw=core_.pool.Slot(form);
+    if (!(raw[11]&1U)) { const auto type=raw[10];if (type>=core_.types.size()) throw std::out_of_range("Path 기존 Form의 현재 TYPE 범위");std::array<char,256> detail{};std::snprintf(detail.data(),detail.size(),"Receiving an invalid update for a path process. Client thinks the form is a %s.\n",core_.types[type].name.c_str());storage->RecordAssertionDetail(detail.data());storage->AssertDisplay("0","\\Ns\\O\\Pathprocess.cpp",0x24f);return; }
+    const o::Sid parent{word(6)};if (parent.value>=core_.pool.Capacity()) throw std::out_of_range("Path 수신의 부모 물리 범위");const auto movement=priests_.MovementProcessType(core_.pool.Slot(parent)[10]);if (movement>=core_.types.size()) throw std::out_of_range("Path 수신의 현재 이동 TYPE 범위");auto pending=CreateByConstructor(core_.types[movement].constructorAddress);if (!pending) throw std::logic_error("Path 수신의 실제 TYPE 생성자 미연결");
+    o::RawPathDataReadHooks hooks;hooks.stagePoint=effects_.stagePoint;hooks.metadata=[this](o::Sid sid) { const auto type=effects_.metadata(sid);return std::array<float,2>{type.speed,type.turningSpeed}; };hooks.now=[this] { return core_.processState.Now(); };
+    hooks.assertion=[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); };hooks.trace=[storage](auto text) { storage->TraceGraph(storage->GameAux()->PathTraceLevel(),text); }; // 현재99와 실제 공통 로그 임계값을 각각 소비한다.
+    hooks.clearAnimation=[this](o::Sid sid) { if (auto* process=core_.processes.FindEvent(sid,0x5105)) core_.processes.Kill(*process,0x40); }; //426d90의 첫 해당 Regular만 삭제한다.
+    o::RawPathData(core_.pool.Edition()).Read(pending->Runtime(),packet,core_.pool,core_.types,hooks);
+    const auto count=pending->Runtime().Count();const auto first=count ? pending->Runtime().Point(0) : o::RawPathPoint{}; // 부착이 부모 free/dead로 거절되면 원문의 미소유 객체 값만 보존한다.
+    auto* attached=o::RawPathProcess::Attach(core_.processes,std::move(pending),parent,0,form);if ((attached ? attached->Runtime().Count() : count)!=0) { world_.Unpop(parent,0);const auto point=attached ? attached->Runtime().Point(0) : first;world_.Pop(parent,point.x,point.y,0); } // 기존 가상 Attach의 종류별 효과 뒤 현재 첫점으로 부모를 재배치한다.
+}
 // 의식의 추가 Prepare/끝점/깊이 처리가 기존 현재 시작 몸체를 재사용한다.
 o::RawPathStart& RawCampaignPathBindings::Starter() const { return *start_; }
 // 기존 경로를 지우거나 새 경로를 부착하지 않고 원본 후보용 임시 Path만 채운다.

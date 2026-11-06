@@ -28,6 +28,7 @@ struct RawCampaignPathEffects {
     std::function<std::uint32_t(o::Sid)> dudeHalt; //70/508cc8 부모+38의 현재 지면·Fall 판정이다.
     std::function<std::uint32_t(o::Sid)> dudeArrival; //같은 부모+3c의 task별 실제 삭제·반환이다. 자신과 Path를 지울 수 있다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 같은 현재 Client의 실제 경로 진단이며 정상 복귀를 유지한다.
+    std::function<o::RawPathPoint(o::Sid,std::uint32_t)> stagePoint; // 수신 decoder가 같은447b30 의식 목표점을 필요할 때만 읽는다.
 };
 // 경로 계산과 프레임 실행을 새 이동 모형으로 대체하지 않는 같은 월드 연결부다.
 // 참조하는 월드/사제/도착/cleanup/상태/effects는 이 객체 및 부착한 Path보다 오래 살아야 한다.
@@ -67,6 +68,7 @@ public:
     // PATCH cdecl 함수 주소의 고정 클래스를 생성한다. 미지원은nullptr이며 Init/Attach/Frame은 하지 않는다.
     // 반환 객체는 이 연결부보다 먼저 해제하고, 실제 할당 실패는 caller가 원문 NULL 경계로 처리한다.
     std::unique_ptr<o::RawPathProcess> CreateByConstructor(std::uint32_t address);
+    void ReceivePacket(std::span<const std::uint8_t> packet); //489ee0의free Form/실제 constructor/decoder/가상 Attach·부모 재배치와 live 진단을 실행한다.
 private:
     // 실제 현재 parent의 raw 타입/가상 표와 살아 있는 자산 상태를 검사한다.
     void ValidatePriest(o::Sid parent) const;
