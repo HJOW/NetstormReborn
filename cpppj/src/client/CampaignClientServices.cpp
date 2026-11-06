@@ -137,6 +137,7 @@ void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& cont
     login.showTimerProgress=[&client](auto text) { if (!client.Menu()) throw std::logic_error("일반 대기 안내의 실제 UberGump 미연결");return client.Menu()->ShowLoginWaiting(text); };
     login.closeTimerProgress=[&client,&controls] { if (!controls.Menus()) throw std::logic_error("일반 대기 안내의 실제 메뉴 미설치");controls.Menus()->CloseHtmlSerial(client.LocalStateGlobals()->LoginProgressSerial()); };
     login.reconnectFile=MakeSavedStateFileWriteHooks(client); // 실제 open은 writer의 현재 관문/진단 뒤에만 수행한다.
+    login.selectReconnectFort=[&client] { if (!client.Menu()) throw std::logic_error("복구 Fort 이름 선택의 실제 UberGump 미설치");client.Menu()->SelectReconnectFortForState(); }; //00460980의 현재 이름/manager 부모이며 파일Reload로 대신하지 않는다.
     login.clearStatus=[&controls](auto kind,auto player,auto parameter) { if (!controls.Warnings()) throw std::logic_error("서버 인수의 실제 MessageBoard 미설치");controls.Warnings()->Remove(kind,player,parameter); }; // 같은 종류/Player/parameter의 표시0이며 새 안내를 만들지 않는다.
 }
 // 현재 Native 요청을 Init 캡처로 되돌리지 않으며 실제 분모/시각/출처와 제목 물리만 선택 위치에서 바꾼다.

@@ -155,6 +155,7 @@ struct RawCampaignSession::Impl::Login {
         hooks.listenServer=[this] { Need(transport.listen)(std::bit_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799))); }; // 서버 권한과 별개인 simulconnect의 실제 listener만 연다.
         hooks.initializeDensity=[this] { auto& aux=*s.gameplayGlobals->GameAux();options->InitializeDensity(s.random,aux.ArchipelagoMinimum(),aux.ArchipelagoMaximum(),aux.ArchipelagoPercent()); }; // metadata/지형 root와 같은 현재 세 DWORD·게임 난수다.
         hooks.clearChat=s.services.ai.participation.clearChat;hooks.progress=effects.progress;
+        hooks.loadReconnectFort=effects.selectReconnectFort; // 기존 일반 State7 몸체도 같은00460980 이름/manager 부모를 사용한다.
         hooks.takeServer=[this] { TakeServer(); }; //State15도 현재 같은 Login/World를 보유하고 원문 공통부에 즉시16을 요청한다.
         hooks.closeConnection=[this](auto id) { Need(transport.close)(id); };hooks.renameConnection=[this](auto pending,auto owner) { Need(transport.assign)(pending,owner); };
         hooks.logConnection=[this](auto line,auto value) { Need(effects.log)("연결 진단 "+std::to_string(line)+":"+std::to_string(value)+"\n"); };

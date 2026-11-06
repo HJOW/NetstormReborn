@@ -601,6 +601,10 @@ void UberGump::SelectCurrentFortName(std::string_view name) {
     FortCurrentNameDevices devices(names,*templateStorage_,client_.Configuration(),std::move(globals),std::move(hooks),work,[this](auto configured) { return editorCatalog_->Resolve(configured); }); //절대 source FileSpec도 old/new snapshot/삭제의 같은 작업 namespace로 매핑한다.
     const std::string source(name.substr(0,name.find('\0')));devices.Set({reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1}); // 현재 요청의 안정된 NUL 입력을 동기 부모가 끝날 때까지 유지한다.
 }
+// 일반 복구State7도 실제 pending/current 버퍼와 기존 전체 이름 부모를 사용한다.
+void UberGump::SelectReconnectFortForState() {
+    const auto native=client_.LocalStateGlobals()->State();if (native.current[0]!=7 || !native.current[33]) throw std::logic_error("복구 Fort 이름 선택의 실제 State7/재접속 표식 누락");SelectCurrentFortName(client_.FortGlobals()->Pending());
+}
 //같은 현재 이름/파일 장치와 실제 Session의 State/섬 검색/Notify를 원문 선택 위치에 제공한다.
 FortSelectionHooks UberGump::FortEditEffects() {
     FortSelectionHooks hooks;hooks.resolveString=[this](auto token) { return scriptStrings_.Resolve(token); };

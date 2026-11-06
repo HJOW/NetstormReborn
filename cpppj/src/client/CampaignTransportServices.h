@@ -5,6 +5,7 @@
 #include "o/RawBattleBroadcast.h"
 #include <memory>
 #include <string>
+#include <string_view>
 
 namespace netstorm::zacket { class LocalMissionTransport; } // 기존 단독 미션의 실제 두 끝 owner다.
 namespace netstorm::client { // 이 API 생성만으로 listener/소켓/게임 상태를 만들지 않는다.

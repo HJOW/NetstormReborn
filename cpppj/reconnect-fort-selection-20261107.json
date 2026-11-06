@@ -1,0 +1,44 @@
+{
+  "unit": 1013,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "복구State7의 pending Fort 선택을 기존00460980 이름/Template snapshot·Notify·제목·dirty 부모에 연결",
+  "sourceFunctions1078": [
+    "00460980",
+    "004b6dd0 case7"
+  ],
+  "referenceFunctions1072": [
+    "004ca6a0"
+  ],
+  "build": {
+    "firstExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1013\\build.log",
+    "exeSize": 11864576,
+    "exeSha256": "447dc6606d13814be2a59ba5708d4869a163ec025059f829e2cbd392e6415e5e"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "liveFileRenames": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1013\\protected-before.json"
+  },
+  "remaining": [
+    "StateReconnect/ForceServerDeath/004b8cb0 실제 caller·복구State7 요청/선택 인계",
+    "일반 프레임486bc0/스펠·전체 파생 writer/decoder·메타·Outpost/checking6",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

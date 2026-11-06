@@ -57,7 +57,7 @@ struct LocalMissionStateHooks {
     std::function<void(std::uint32_t)> installZone,freeZone; std::function<void()> installMapHandlers; // 004b4be0/free/004c1e70이다. ZoneDWORD는호스트가해석하는핸들이다.
     std::function<void()> initializeRenderer; std::function<void(std::uint32_t)> uiMode; // Renderer 초기화004993c0/00466280(mode,0,1)의 실제 효과다. 커서 갱신으로 대체하지 않는다.
     std::function<double()> wallSeconds; // 00460d70의현재벽시각이다.
-    std::function<void()> loadReconnectFort; // 큰00460980의현재재접속파일읽기다.
+    std::function<void()> loadReconnectFort; //00460980의현재pending Fort 이름/manager snapshot·Notify 부모다. 파일Reload로 바꾸지 않는다.
     std::function<void(LocalMissionProgress,std::int32_t)> progress; // 실제진행창을만들거나갱신한다.
     std::function<std::uint32_t()> battlePalette; std::function<void(std::uint32_t)> applyPalette; // 004410f0("battlePal")→004b6100이다.
     std::function<void(std::span<const std::uint8_t>,std::uint32_t)> connectServer; // 004e2620(9,current+54,current+7c,0)이다.
