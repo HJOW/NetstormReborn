@@ -45,7 +45,7 @@ double ArcherAnimationFields::Time() const { return std::bit_cast<double>(static
 // 동일판본의동적방향수/물리프레임과실제경계수명을검사한다.
 RawArcherAnimation::RawArcherAnimation(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const ArcherTypeData> animationTypes,
     ArcherAnimationState& state,ArcherAnimationHooks hooks):pool_(pool),types_(types),animationTypes_(animationTypes),state_(state),hooks_(std::move(hooks)) {
-    if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || animationTypes.size()!=types.size() || state.type>=types.size()) throw std::invalid_argument("Archer Animation 타입/방향자료 오류");
+    if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || animationTypes.size()!=types.size() || state.Type()>=types.size()) throw std::invalid_argument("Archer Animation 타입/방향자료 오류");
 }
 // 원본기본초기화뒤Host부착이현재form/parent를채운다.
 void RawArcherAnimation::Initialize(ArcherAnimationFields& fields,bool fire,Sid gunForm,Sid target) const {
@@ -54,7 +54,7 @@ void RawArcherAnimation::Initialize(ArcherAnimationFields& fields,bool fire,Sid 
 }
 // 실제부모현재타입을매조회에서검사한다.
 std::span<const std::uint8_t> RawArcherAnimation::Parent(const ArcherAnimationFields& fields) const {
-    const auto sid=fields.Parent();if (!sid.value || sid.value>=pool_.Capacity()) throw std::out_of_range("Archer 부모 SID 오류");const auto raw=pool_.Slot(sid);if (raw[10]!=state_.type) throw std::logic_error("Archer 미복원 부모 타입");return raw;
+    const auto sid=fields.Parent();if (!sid.value || sid.value>=pool_.Capacity()) throw std::out_of_range("Archer 부모 SID 오류");const auto raw=pool_.Slot(sid);if (raw[10]!=state_.Type()) throw std::logic_error("Archer 미복원 부모 타입");return raw;
 }
 // 현재물리프레임의원본판본폭이다.
 std::int32_t RawArcherAnimation::Frame(Sid parent) const { const bool patch=pool_.Edition()==OriginalEdition::Patch1078;return static_cast<std::int32_t>(ReadArcher(pool_.Slot(parent),patch ? 36U : 34U,patch ? 4U : 1U)); }
@@ -126,7 +126,7 @@ void RawArcherAnimation::Fire(ArcherAnimationFields& fields) const {
 }
 // 동일월드adapter가읽는현재풀과타입전역이다.
 const SidPool& RawArcherAnimation::Pool() const { return pool_; }
-std::uint32_t RawArcherAnimation::Type() const { return state_.type; }
+std::uint32_t RawArcherAnimation::Type() const { return state_.Type(); }
 // 실제파생객체의원본이미지/종류를소유한다.
 ArcherAnimation::ArcherAnimation(const RawArcherAnimation& logic,ArcherAnimationFields fields,bool fire):logic_(logic),fields_(std::move(fields)),fire_(fire) {}
 // 실제 Kernel 틱에서 원본 회전 또는 발사 몸체를 선택한다.
@@ -142,7 +142,7 @@ ArcherAnimationHooks MakeArcherAnimationHostHooks(SquidProcessHost& host,ArcherA
 }
 // 실제부착뒤Firector 나머지를수행해원본출력통지순서를유지한다.
 ArcherAnimation* CreateArcherAnimation(SquidProcessHost& host,const RawArcherAnimation& logic,std::uint32_t stage,Sid gunForm,Sid target) {
-    if (&host.Pool()!=&logic.Pool()) throw std::invalid_argument("Archer/Host SID 풀 불일치");auto* gun=dynamic_cast<GunProcess*>(host.FromForm(gunForm));if (!gun || host.Pool().Slot(gun->Parent())[10]!=logic.Type() || (stage!=2 && stage!=5)) throw std::logic_error("Archer factory 단계/부모 오류");ArcherAnimationFields fields;logic.Initialize(fields,stage==5,gunForm,target);auto* animation=dynamic_cast<ArcherAnimation*>(host.Attach(std::make_unique<ArcherAnimation>(logic,std::move(fields),stage==5),stage==5 ? 35U : 36U,gun->Parent(),0x10));if (animation && stage==5) logic.InitializeFire(animation->Fields());return animation;
+    if (&host.Pool()!=&logic.Pool()) throw std::invalid_argument("Archer/Host SID 풀 불일치");auto* gun=dynamic_cast<GunProcess*>(host.FromForm(gunForm));if (!gun || host.Pool().Slot(gun->Parent())[10]!=logic.Type() || (stage!=2 && stage!=5)) throw std::logic_error("Archer factory 단계/부모 오류");ArcherAnimationFields fields;logic.Initialize(fields,stage==5,gunForm,target);auto* animation=dynamic_cast<ArcherAnimation*>(host.Attach(std::make_unique<ArcherAnimation>(logic,std::move(fields),stage==5),host.AnimationProcessType(stage==5),gun->Parent(),0x10));if (animation && stage==5) logic.InitializeFire(animation->Fields());return animation;
 }
 // 첫부모type조회로새분기를선택하며기존캐논callback수명을보존한다.
 GunProcessHooks MakeArcherAnimationProcessHooks(SquidProcessHost& host,const RawArcherAnimation& logic,GunProcessHooks hooks) {

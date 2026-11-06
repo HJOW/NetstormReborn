@@ -12,6 +12,10 @@ enum class GunAnimationReceiveKind { SunFire,SunRotate,ArcherFire,ArcherRotate }
 void InitializeReceivedGunAnimation(std::span<std::uint8_t> outer,GunAnimationReceiveKind kind);
 // 00466cc0의 공통 outer+20 decoder다. 부모DWORD는 별도 반환하고 선택된 WORD/8BYTE만 복사한다.
 std::uint32_t ReadGunAnimationProcessData(std::span<std::uint8_t> outer,std::span<const std::uint8_t> packet);
+// 현재 outer VT+8의 실제467f40/467f80 선택이다. 미연결 VT는 임의 패킷으로 보내지 않는다.
+bool GunAnimationUsesFirePacket(std::span<const std::uint8_t> outer);
+// 두 원문 wrapper와466ac0/466c20의 공통 직렬화다. 선택된 현재 헤더BYTE와 비영 부모/dirty만 쓴다.
+std::uint16_t WriteGunAnimationProcessData(std::span<std::uint8_t> outer,std::span<std::uint8_t> packet,bool includeParent,bool force,std::uint8_t message,std::uint8_t protocol=1);
 // 원본 0x38/0x40 객체의 필드와 미초기화 padding을 보존한다.
 struct GunAnimationFields {
     // bytes: 직접 필드 이미지이며 조회/직렬화는 원본 쓰기 폭을 사용한다.
@@ -46,6 +50,8 @@ struct GunAnimationState {
     double now{};
     // sunCannonType/displayType/effectType: 판본의 실제 타입 표에서 공급한다.
     std::uint32_t sunCannonType{128},displayType{80},effectType{11};
+    const std::uint32_t* currentSunCannonType{}; // 실제 Client의00541258을 빌리며 기존 독립 입력은 위 값을 사용한다.
+    std::uint32_t SunCannonType() const { return currentSunCannonType ? *currentSunCannonType : sunCannonType; } // 매 조회마다 같은 현재 DWORD를 읽는다.
 };
 // 실제 월드 효과 경계다. 필요한 callback이 없으면 성공이나 완료로 우회하지 않는다.
 struct GunAnimationHooks {

@@ -28,7 +28,7 @@ std::uint32_t RawIceCannonFire::Step(IceCannonFireFields& fields,std::int32_t fr
         Put(fields.extra,0,1);Deadline(fields,state_.now+4.0);
     }
     const auto parent=fields.common.Parent();if (!parent.value || parent.value>=pool_.Capacity()) throw std::out_of_range("아이스 캐논 현재 부모 범위");const auto raw=pool_.Slot(parent);
-    if (raw[10]!=state_.type) throw std::logic_error("아이스 캐논 현재 부모 TYPE");const auto current=Read(raw,36);const auto& table=frames_[raw[10]].frames;const auto codes=table.Codes();if (current>=codes.size()) throw std::out_of_range("아이스 캐논 현재 프레임 코드");const auto run=table.Run(codes[current].side);
+    if (raw[10]!=state_.Type()) throw std::logic_error("아이스 캐논 현재 부모 TYPE");const auto current=Read(raw,36);const auto& table=frames_[raw[10]].frames;const auto codes=table.Codes();if (current>=codes.size()) throw std::out_of_range("아이스 캐논 현재 프레임 코드");const auto run=table.Run(codes[current].side);
     const auto last=std::bit_cast<std::int32_t>(std::uint32_t(run.first)+std::uint32_t(run.count)-1);const auto next=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(frame)+1);
     if (next>last) return static_cast<std::uint32_t>(run.first);
     if (!hooks_.context) throw std::logic_error("아이스 캐논 실제8DWORD 문맥 미연결");const auto context=hooks_.context(fields.common.Parent()); // context 효과 뒤의 현재 target을 읽는다.
@@ -38,7 +38,7 @@ std::uint32_t RawIceCannonFire::Step(IceCannonFireFields& fields,std::int32_t fr
 void RawIceCannonFire::Frame(IceCannonFireFields& fields) const { common_.FrameWithStep(fields.common,[this,&fields](auto frame) { return Step(fields,frame); }); } // 기존 공통 추적/공간/완료를 그대로 사용한다.
 bool RawIceCannonFire::Launch(IceCannonFireFields& fields) const { return common_.Launch(fields.common); } // 현재 display130/effect0/속도 getter는 같은 상태를 읽는다.
 const SidPool& RawIceCannonFire::Pool() const { return pool_; } // factory가 같은 실제 풀을 검사한다.
-std::uint32_t RawIceCannonFire::Type() const { return state_.type; } // 현재 원본 부모 TYPE다.
+std::uint32_t RawIceCannonFire::Type() const { return state_.Type(); } // 현재 원본 부모 TYPE다.
 IceCannonFire::IceCannonFire(const RawIceCannonFire& logic,IceCannonFireFields fields):logic_(logic),fields_(std::move(fields)) {} // 장기 논리와 실제 필드만 보유한다.
 void IceCannonFire::RunFrame() { logic_.Frame(fields_); } // 같은 Kernel의 현재 시각을 사용한다.
 void IceCannonFire::OnAttached() { Put(fields_.common.bytes,4,Form().value);Put(fields_.common.bytes,8,Parent().value); } // Host가 확정한 두DWORD다.
@@ -48,6 +48,6 @@ GunAnimationHooks MakeIceCannonFireHostHooks(SquidProcessHost& host,GunAnimation
     hooks.kill=[&host](Sid form,std::uint32_t flags) { auto* fire=dynamic_cast<IceCannonFire*>(host.FromForm(form));if (!fire) throw std::logic_error("아이스 발사 완료 Process 없음");host.Kill(*fire,flags); };return hooks;
 }
 IceCannonFire* CreateIceCannonFire(SquidProcessHost& host,const RawIceCannonFire& logic,Sid gunForm,Sid target) { // 실제 원본 부모에35/flags10을 부착한다.
-    if (&host.Pool()!=&logic.Pool()) throw std::invalid_argument("아이스 발사 Host/Pool 불일치");auto* gun=dynamic_cast<GunProcess*>(host.FromForm(gunForm));if (!gun || host.Pool().Slot(gun->Parent())[10]!=logic.Type()) throw std::logic_error("아이스 발사 factory 부모 오류");IceCannonFireFields fields;logic.Initialize(fields,gunForm,target);return dynamic_cast<IceCannonFire*>(host.Attach(std::make_unique<IceCannonFire>(logic,std::move(fields)),35,gun->Parent(),0x10));
+    if (&host.Pool()!=&logic.Pool()) throw std::invalid_argument("아이스 발사 Host/Pool 불일치");auto* gun=dynamic_cast<GunProcess*>(host.FromForm(gunForm));if (!gun || host.Pool().Slot(gun->Parent())[10]!=logic.Type()) throw std::logic_error("아이스 발사 factory 부모 오류");IceCannonFireFields fields;logic.Initialize(fields,gunForm,target);return dynamic_cast<IceCannonFire*>(host.Attach(std::make_unique<IceCannonFire>(logic,std::move(fields)),host.AnimationProcessType(true),gun->Parent(),0x10));
 }
 }

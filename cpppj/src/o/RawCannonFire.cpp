@@ -28,7 +28,7 @@ std::array<float,2> Point(const GunAnimationFields& fields,std::size_t offset) {
 RawCannonFire::RawCannonFire(SidPool& pool,std::span<const RiftTypeRecord> types,
     std::span<const PriestPlainCanonType> frames,CannonFireState& state,GunAnimationHooks hooks,CannonBeamHooks beam)
     :pool_(pool),types_(types),frames_(frames),state_(state),hooks_(std::move(hooks)),beam_(std::move(beam)) {
-    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=types.size() || state.type>=types.size()) throw std::invalid_argument("캐논 발사 실제 판본/타입 자료 오류");
+    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=types.size() || state.Type()>=types.size()) throw std::invalid_argument("캐논 발사 실제 판본/타입 자료 오류");
 }
 // 썬00468460과 썬더004684d0의 공통 접두·파생 가상 표를 보존한다.
 void RawCannonFire::Initialize(GunAnimationFields& fields,Sid gunForm,Sid target) const {
@@ -38,7 +38,7 @@ void RawCannonFire::Initialize(GunAnimationFields& fields,Sid gunForm,Sid target
 }
 // 범위 밖/미복원 TYPE는 현재 원본 슬롯을 수정하기 전에 거부한다.
 Sid RawCannonFire::Parent(const GunAnimationFields& fields) const {
-    const auto parent=fields.Parent();if (!parent.value || parent.value>=pool_.Capacity() || pool_.Slot(parent)[10]!=state_.type) throw std::logic_error("캐논 발사 미복원 부모 TYPE/번호");return parent;
+    const auto parent=fields.Parent();if (!parent.value || parent.value>=pool_.Capacity() || pool_.Slot(parent)[10]!=state_.Type()) throw std::logic_error("캐논 발사 미복원 부모 TYPE/번호");return parent;
 }
 // 가상 단계에서 부모가 바뀔 수 있으므로 같은 getter를 다시 조회한다.
 void RawCannonFire::SetFrame(GunAnimationFields& fields,std::uint32_t frame) const {
@@ -91,7 +91,7 @@ void RawCannonFire::FrameWithStep(GunAnimationFields& fields,const std::function
 }
 // 동일 실제 풀과 복원 TYPE를 factory 계약에 제공한다.
 const SidPool& RawCannonFire::Pool() const { return pool_; }
-std::uint32_t RawCannonFire::Type() const { return state_.type; }
+std::uint32_t RawCannonFire::Type() const { return state_.Type(); }
 // 실제 원본 이미지와 장기 처리기만 보존한다.
 CannonFire::CannonFire(const RawCannonFire& logic,GunAnimationFields fields):logic_(logic),fields_(std::move(fields)) {}
 // 같은 Kernel의 실제 공통 발사 프레임을 실행한다.
@@ -107,6 +107,6 @@ GunAnimationHooks MakeCannonFireHostHooks(SquidProcessHost& host,GunAnimationHoo
 }
 // 실제 부모에35/flags0x10을 부착하며 새 풀이나 대체 GunProcess를 만들지 않는다.
 CannonFire* CreateCannonFire(SquidProcessHost& host,const RawCannonFire& logic,Sid gunForm,Sid target) {
-    if (&host.Pool()!=&logic.Pool()) throw std::invalid_argument("캐논 발사 Host/Pool 불일치");auto* gun=dynamic_cast<GunProcess*>(host.FromForm(gunForm));if (!gun || host.Pool().Slot(gun->Parent())[10]!=logic.Type()) throw std::logic_error("캐논 발사 factory 부모 오류");GunAnimationFields fields;logic.Initialize(fields,gunForm,target);return dynamic_cast<CannonFire*>(host.Attach(std::make_unique<CannonFire>(logic,std::move(fields)),35,gun->Parent(),0x10));
+    if (&host.Pool()!=&logic.Pool()) throw std::invalid_argument("캐논 발사 Host/Pool 불일치");auto* gun=dynamic_cast<GunProcess*>(host.FromForm(gunForm));if (!gun || host.Pool().Slot(gun->Parent())[10]!=logic.Type()) throw std::logic_error("캐논 발사 factory 부모 오류");GunAnimationFields fields;logic.Initialize(fields,gunForm,target);return dynamic_cast<CannonFire*>(host.Attach(std::make_unique<CannonFire>(logic,std::move(fields)),host.AnimationProcessType(true),gun->Parent(),0x10));
 }
 }

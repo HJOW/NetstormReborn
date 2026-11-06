@@ -10,8 +10,8 @@
 
 namespace netstorm::client {
 namespace {
-// 초기 총과 원본 fire/rotate ProcessForm 번호이며 Flags는 실제 factory에 둔다.
-constexpr std::uint32_t kFireProcess=35,kRotateProcess=36,kNoIsland=127;
+// 일반 세계의 noIsland 번호이며 애니메이션은 현재 장기 TYPE를 사용한다.
+constexpr std::uint32_t kNoIsland=127;
 // 비정렬 원본 BYTE/WORD/DWORD를 현재 raw 원문에서 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
     std::uint32_t value=0;
@@ -120,7 +120,7 @@ struct RawCampaignAssetBindings::Impl {
         // 원본 첫일치 순서를 보존하며 손상된 무한체인은 유한풀 경계에서 거부한다.
         while (sid.value) {
             if (sid.value>=core.pool.Capacity() || ++visited>=core.pool.Capacity()) throw std::logic_error("캠페인 총 현재 Animation Form 체인 오류");
-            const auto raw=core.pool.Slot(sid);if (raw[10]==kFireProcess || raw[10]==kRotateProcess) return sid;sid=o::Sid{static_cast<std::uint16_t>(Read(raw,4,2))};
+            const auto raw=core.pool.Slot(sid);if (raw[10]==core.processState.FireAnimationType() || raw[10]==core.processState.RotateAnimationType()) return sid;sid=o::Sid{static_cast<std::uint16_t>(Read(raw,4,2))};
         }
         return {};
     }
@@ -138,7 +138,7 @@ struct RawCampaignAssetBindings::Impl {
         };
         hooks.repopForm=[this](o::GunProcessFields& fields) { core.processes.RefreshForm(CurrentGun(fields)); };
         hooks.animationForm=[this](o::Sid parent) { return AnimationForm(parent); };
-        hooks.killAnimation=[this](o::Sid form,std::uint32_t flags) { auto* process=core.processes.FromForm(form);if (!process || (core.pool.Slot(form)[10]!=kFireProcess && core.pool.Slot(form)[10]!=kRotateProcess)) throw std::logic_error("캠페인 총 Animation 현재 Host 오류");core.processes.Kill(*process,flags); };
+        hooks.killAnimation=[this](o::Sid form,std::uint32_t flags) { auto* process=core.processes.FromForm(form);if (!process || (core.pool.Slot(form)[10]!=core.processState.FireAnimationType() && core.pool.Slot(form)[10]!=core.processState.RotateAnimationType())) throw std::logic_error("캠페인 총 Animation 현재 Host 오류");core.processes.Kill(*process,flags); };
         hooks.parentBlocked=[this](o::Sid parent) { return (core.pool.Slot(parent)[core.pool.Edition()==o::OriginalEdition::Patch1078 ? 40U : 35U]&0x20U)!=0; };
         hooks.randomBetween=[this](float low,float high) { return static_cast<double>(random.Next(65536))*(1.0/65536.0)*std::abs(static_cast<double>(high)-low)+low; };
         RejectMissing(hooks.removeDependency,"캠페인 총 실제 표적감시 제거 미연결");RejectMissing(hooks.addDependency,"캠페인 총 실제 표적감시 생성 미연결");RejectMissing(hooks.refreshRange,"캠페인 총 현재시각 압축/공간통지 미연결");RejectMissing(hooks.targetingMode,"캠페인 총 현재 공격방향 getter 미연결");RejectMissing(hooks.findTarget,"캠페인 총 실제 표적 finder 미연결");RejectMissing(hooks.startAnimation,"캠페인 총 실제 파생 Animation factory 미연결");RejectMissing(hooks.validateIslandOwners,"캠페인 총 현재 지면소유자 진단 미연결");RejectMissing(hooks.checkForms,"캠페인 총 현재 Form 진단 미연결");RejectMissing(hooks.shotContext,"캠페인 총 현재8DWORD 발사문맥 미연결");RejectMissing(hooks.shoot,"캠페인 총 실제 MayFire 미연결");RejectMissing(hooks.firingInterval,"캠페인 총 실제 TYPE 발사간격 미연결");RejectMissing(hooks.attach,"캠페인 총 단독 Construct 대신 실제 CreateGunProcess가 필요합니다");return hooks;

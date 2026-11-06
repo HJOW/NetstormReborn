@@ -9,6 +9,16 @@
 #include <stdexcept>
 
 namespace netstorm::client {
+namespace { // 수신과 송신이 동일한 실제 객체 접두를 빌리며 필드 사본을 만들지 않는다.
+std::span<std::uint8_t> AnimationFields(o::SquidProcess* process) { // 원문 공통 outer+20을 가진 현재 다섯 C++ 클래스만 선택한다.
+    if (auto* value=dynamic_cast<o::GunAnimation*>(process)) return value->Fields().bytes;
+    if (auto* value=dynamic_cast<o::CannonFire*>(process)) return value->Fields().bytes;
+    if (auto* value=dynamic_cast<o::ArcherAnimation*>(process)) return value->Fields().bytes;
+    if (auto* value=dynamic_cast<o::CrossbowAnimation*>(process)) return value->Fields().bytes;
+    if (auto* value=dynamic_cast<o::IceCannonFire*>(process)) return value->Fields().common.bytes;
+    return {};
+}
+}
 // 현재 Core와 기존 실제 Archer/Missile 몸체의 참조만 조립한다.
 struct RawCampaignArcherBindings::Impl {
     RawSurfaceWorld& world; // 모든 자산 공간과 삭제가 사용하는 같은 월드다.
@@ -35,12 +45,14 @@ struct RawCampaignArcherBindings::Impl {
     std::unique_ptr<o::RawArcherAnimation> crossbowRotate; //00467940의 실제 공통 회전만 재사용한다.
     std::unique_ptr<o::RawCrossbowAnimation> crossbow; // 별도004674c0의 크로스보우 발사 본체다.
     std::unique_ptr<o::RawDiscRegular> disc; // 실제 투사체 예약의 방향별 modulo 처리기다.
+    bool writingAnimation{}; // 직전 실제 writer의 공통 버퍼 선택이며 다른 파생의 fallback 버퍼와 구별한다.
     // 모든 실제 공간/Host를 구성한 뒤 같은 원본 모듈에 공급한다.
     Impl(RawSurfaceWorld& input,const o::RawGunTarget& finder,o::GameRandom& rng,
         std::span<const o::ArcherTypeData> animationTypes,std::span<const o::PriestPlainCanonType> frameTypes,std::span<const o::MissileTypeData> missileTypes,
         o::ArcherAnimationState& animationGlobals,o::MissileState& missileGlobals,RawCampaignArcherEffects effects)
         :world(input),core(input.Core()),target(finder),random(rng),animationState(animationGlobals),missileState(missileGlobals) {
         if (&target.Pool()!=&core.pool) throw std::invalid_argument("캠페인 Archer 현재 표적 Pool 불일치");
+        auto& aux=*world.Storage()->GameAux();animationState.currentType=&aux.SunArcherType();cannonState.currentSunCannonType=&aux.SunCannonType();sunFireState.currentType=&aux.SunCannonType();crossbowRotateState.currentType=&aux.WindArcherType();crossbowState.currentType=&aux.WindArcherType(); // 수신 공장과 일반 생성/프레임의 현재 세 TYPE를 같은 장기 주소로 빌린다.
         disc=std::make_unique<o::RawDiscRegular>(core.pool,animationTypes,core.frame);
         auto flight=std::move(effects.missile);
         flight.randomInteger=[this](auto low,auto high) { if (high<=low) throw std::invalid_argument("투사체 정수 난수 구간 오류");return low+static_cast<std::int32_t>(random.Next(static_cast<std::uint32_t>(high-low))); }; // 같은 게임 난수의 원문 min포함/max제외 변환이다.
@@ -137,14 +149,6 @@ void RawCampaignArcherBindings::ReceiveAnimationPacket(std::uint32_t message,std
     const auto sid=[this](std::uint32_t value) { if (value>65535U || value>=impl_->core.pool.Capacity()) throw std::out_of_range("애니메이션 수신의 DWORD SID 물리 범위");return o::Sid{static_cast<std::uint16_t>(value)}; }; // 부모0은 원문 공장/부착 위치에서 조회한다.
     if (!number) throw std::out_of_range("애니메이션 수신의 명시 Form0");const auto form=sid(number);const bool fire=message==0x3bU;const auto file=fire ? "c:\\ns\\o\\_p_fireanimprocessdata.cpp" : "c:\\ns\\o\\_p_rotateanimprocessdata.cpp";
     const auto storage=impl_->world.Storage();auto& aux=*storage->GameAux();const auto raw=impl_->core.pool.Slot(form);
-    const auto fields=[](o::SquidProcess* process)->std::span<std::uint8_t> { // 실제 공통 outer+20 접두를 가진 현재 객체만 빌리며 새 객체로 대체하지 않는다.
-        if (auto* value=dynamic_cast<o::GunAnimation*>(process)) return value->Fields().bytes;
-        if (auto* value=dynamic_cast<o::CannonFire*>(process)) return value->Fields().bytes;
-        if (auto* value=dynamic_cast<o::ArcherAnimation*>(process)) return value->Fields().bytes;
-        if (auto* value=dynamic_cast<o::CrossbowAnimation*>(process)) return value->Fields().bytes;
-        if (auto* value=dynamic_cast<o::IceCannonFire*>(process)) return value->Fields().common.bytes;
-        return {};
-    };
     if (raw[11]&1U) {
         if (packet[8]!=0xffU) storage->AssertDisplay("*(( char *)((char *)zacket+8) ) == (char)0xFFFFFFFF",file,0x42);
         const auto type=impl_->core.pool.Slot(sid(read(9)))[10];std::unique_ptr<o::SquidProcess> pending;
@@ -152,9 +156,19 @@ void RawCampaignArcherBindings::ReceiveAnimationPacket(std::uint32_t message,std
         else if (type==aux.SunCannonType()) { o::GunAnimationFields value;o::InitializeReceivedGunAnimation(value.bytes,fire ? o::GunAnimationReceiveKind::SunFire : o::GunAnimationReceiveKind::SunRotate);if (fire) pending=std::make_unique<o::CannonFire>(*impl_->sunFire,std::move(value));else pending=std::make_unique<o::GunAnimation>(*impl_->cannon,std::move(value),o::GunAnimationKind::SunRotate); }
         else if (!fire && type==aux.WindArcherType()) { o::ArcherAnimationFields value;o::InitializeReceivedGunAnimation(value.bytes,o::GunAnimationReceiveKind::ArcherRotate);pending=std::make_unique<o::ArcherAnimation>(*impl_->crossbowRotate,std::move(value),false); }
         else storage->AssertDisplay("false","\\Ns\\O\\Gunanim.cpp",fire ? 0x23bU : 0x248U); // 알 수 없는 TYPE는 원문의 NULL 반환 뒤 선택 필드 저장/부착 실패로 드러낸다.
-        const auto parent=o::ReadGunAnimationProcessData(fields(pending.get()),packet);static_cast<void>(impl_->core.processes.Attach(std::move(pending),fire ? aux.FireAnimationProcessType() : aux.RotateAnimationProcessType(),sid(parent),0x10,form));return;
+        const auto parent=o::ReadGunAnimationProcessData(AnimationFields(pending.get()),packet);static_cast<void>(impl_->core.processes.Attach(std::move(pending),fire ? aux.FireAnimationProcessType() : aux.RotateAnimationProcessType(),sid(parent),0x10,form));return;
     }
     if (packet[8]&1U) storage->AssertDisplay("(*(char *)(( (char *)zacket+8) ) & 1) == 0",file,0x4d);
-    static_cast<void>(o::ReadGunAnimationProcessData(fields(impl_->core.processes.FromForm(form)),packet)); // live 수신은 공장을 재실행하거나 부착/현재 시각을 덮어쓰지 않는다.
+    static_cast<void>(o::ReadGunAnimationProcessData(AnimationFields(impl_->core.processes.FromForm(form)),packet)); // live 수신은 공장을 재실행하거나 부착/현재 시각을 덮어쓰지 않는다.
+}
+// 실제 일반/강제 writer가 작성한 같은 공통 버퍼를 packet 조회와 방송에 그대로 인계한다.
+o::ProcessFormTransmission RawCampaignArcherBindings::Transmission(std::function<void(std::span<const std::uint8_t>)> send,o::ProcessFormTransmission fallback) {
+    const auto write=[this](std::span<std::uint8_t> fields,bool parentChanged,bool force) { auto& aux=*impl_->world.Storage()->GameAux();const auto header=o::GunAnimationUsesFirePacket(fields) ? aux.FireAnimationHeader() : aux.RotateAnimationHeader();return static_cast<std::int32_t>(o::WriteGunAnimationProcessData(fields,aux.SquidTransmission().buffer,parentChanged,force,header[0],header[1])); }; // 현재 VT와 두 헤더BYTE를 실제 직렬화 위치에서 조회한다.
+    o::ProcessFormTransmission hooks;
+    hooks.writeData=[this,write,fallback](o::SquidProcess& process,bool parentChanged) { const auto fields=AnimationFields(&process);impl_->writingAnimation=!fields.empty();if (impl_->writingAnimation) return write(fields,parentChanged,false);if (!fallback.writeData) throw std::logic_error("다른 프로세스의 실제 일반 writer 미연결");return fallback.writeData(process,parentChanged); };
+    hooks.writeFullData=[this,write,fallback](o::SquidProcess& process,std::uint32_t force) { const auto fields=AnimationFields(&process);impl_->writingAnimation=!fields.empty();if (impl_->writingAnimation) return write(fields,false,force!=0);if (!fallback.writeFullData) throw std::logic_error("다른 프로세스의 실제 전체 writer 미연결");return fallback.writeFullData(process,force); };
+    hooks.packet=[this,fallback](std::int32_t length)->std::span<const std::uint8_t> { if (!impl_->writingAnimation) { if (!fallback.packet) throw std::logic_error("다른 프로세스의 실제 작성 버퍼 미연결");return fallback.packet(length); }const auto& buffer=impl_->world.Storage()->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("애니메이션의 실제 작성 버퍼 범위");return std::span(buffer).first(static_cast<std::size_t>(length)); };
+    hooks.transmit=[this,send,fallback](std::int32_t length) { if (!impl_->writingAnimation) { if (!fallback.transmit) throw std::logic_error("다른 프로세스의 실제 송신 미연결");fallback.transmit(length);return; }if (!send) throw std::logic_error("애니메이션의 실제 송신 장치 미연결");const auto& buffer=impl_->world.Storage()->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("애니메이션의 실제 송신 길이 범위");send(std::span(buffer).first(static_cast<std::size_t>(length))); };
+    return hooks;
 }
 }

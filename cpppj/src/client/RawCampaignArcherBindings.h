@@ -36,6 +36,8 @@ public:
     o::RegularHandler Handler(o::RegularHandler fallback={}) const;
     // 3bh/3ch의 실제 기본 생성 공장/같은 PID decoder/명시 Form 부착을 같은 World에 연결한다.
     void ReceiveAnimationPacket(std::uint32_t message,std::span<const std::uint8_t> packet);
+    // 실제 파생들의 같은 공통 필드/버퍼와 일반·강제 writer/현재 packet/송신을 연결한다. 다른 프로세스는 기존 경계를 사용한다.
+    o::ProcessFormTransmission Transmission(std::function<void(std::span<const std::uint8_t>)> send,o::ProcessFormTransmission fallback={});
     // 후속 실제 전투/검사가 같은 생성/프레임 처리기를 재사용한다.
     const o::RawArcherAnimation& Animation() const;
     const o::RawMissile& Missile() const;

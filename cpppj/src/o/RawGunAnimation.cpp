@@ -66,6 +66,24 @@ std::uint32_t ReadGunAnimationProcessData(std::span<std::uint8_t> outer,std::spa
     }
     return parent;
 }
+// 보호 PE의 실제 outer+8이 동일한 두 wrapper인 파생만 분배한다.
+bool GunAnimationUsesFirePacket(std::span<const std::uint8_t> outer) {
+    if (outer.size()<4) throw std::out_of_range("애니메이션 writer의 실제 outer VT 부족");
+    switch (Read(outer,0)) {
+    case 0x50b0d0:case 0x50b120:case 0x50b170:case 0x50b1c0:case 0x50b318:case 0x50b370:case 0x50b3f0:case 0x505480:case 0x5054d0:return true; // PATCH 발사7개와 기존 CD의 두 발사 VT다.
+    case 0x50b210:case 0x50b260:case 0x50b2c8:case 0x50b450:case 0x505520:case 0x505660:case 0x505570:return false; // 회전/원위치의 실제 공통 writer다.
+    default:throw std::logic_error("애니메이션의 현재 가상 writer 미연결");
+    }
+}
+// force/부모 선택/원래 폭의 쓰기 뒤 dirty0까지 실제 공통 writer의 순서를 따른다.
+std::uint16_t WriteGunAnimationProcessData(std::span<std::uint8_t> outer,std::span<std::uint8_t> packet,bool includeParent,bool force,std::uint8_t message,std::uint8_t protocol) {
+    if (outer.size()<56) throw std::out_of_range("애니메이션 writer의 실제 공통 접두 부족");const auto parent=includeParent || force ? Read(outer,kParent) : 0U;const auto dirty=force ? 0xffU : outer[kDirty];
+    const auto length=9U+(parent ? 4U : 0U)+((dirty&2U) ? 2U : 0U)+((dirty&4U) ? 2U : 0U)+((dirty&8U) ? 8U : 0U);if (packet.size()<length) throw std::out_of_range("애니메이션 writer의 실제 버퍼 부족");
+    if (force) outer[kDirty]=0xff;packet[0]=protocol;packet[1]=message;Put(packet,4,Read(outer,kForm));std::size_t offset=9;
+    if (parent) { outer[kDirty]|=1;Put(packet,offset,parent);offset+=4; } // 비영 부모 인자만 기록하며 기존 dirty1을 임의로 지우지 않는다.
+    for (const auto [bit,source,width]:{std::array<std::size_t,3>{2,kGun,2},{4,kTarget,2},{8,kTime,8}}) if (outer[kDirty]&bit) { std::copy_n(outer.begin()+source,width,packet.begin()+offset);offset+=width; } // 각 선택 필드를 계산 없이 원래 WORD/8BYTE 비트로 복사한다.
+    Put(packet,2,static_cast<std::uint32_t>(offset),2);packet[8]=outer[kDirty];outer[kDirty]=0;return static_cast<std::uint16_t>(offset); // 원문은 전역 선언 길이를 읽거나 새로 쓰지 않는다.
+}
 // 원본 필드 이미지의 직접 조회다.
 Sid GunAnimationFields::Form() const { return Sid{static_cast<std::uint16_t>(Read(bytes,kForm))}; }
 Sid GunAnimationFields::Parent() const { return Sid{static_cast<std::uint16_t>(Read(bytes,kParent))}; }
@@ -92,7 +110,7 @@ void RawGunAnimation::Initialize(GunAnimationFields& fields,GunAnimationKind kin
 std::int32_t RawGunAnimation::CurrentFrame(Sid parent) const {
     if (!parent.value || parent.value>=pool_.Capacity()) throw std::out_of_range("GunAnimation 부모 범위 오류");
     const auto raw=pool_.Slot(parent);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (raw[10]!=state_.sunCannonType) throw std::logic_error("GunAnimation 미복원 부모 파생 타입");
+    if (raw[10]!=state_.SunCannonType()) throw std::logic_error("GunAnimation 미복원 부모 파생 타입");
     return static_cast<std::int32_t>(Read(raw,patch ? 36U : 34U,patch ? 4U : 1U));
 }
 // 실제 공간 효과 경계가 모두 연결된 경우에만 부모 프레임을 바꾼다.
@@ -155,18 +173,11 @@ void RawGunAnimation::Frame(GunAnimationFields& fields,GunAnimationKind kind) co
 }
 // 원본 dirty 접두 packet은 회전0x3c/발사0x3b 메시지를 가상 표로 구별한다.
 std::uint16_t RawGunAnimation::WritePacket(GunAnimationFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force,std::uint8_t protocol) {
-    const auto dirty=force ? 0xffU : fields.bytes[kDirty];const auto length=9U+((includeParent || force) ? 4U : 0U)+((dirty&2) ? 2U : 0U)+((dirty&4) ? 2U : 0U)+((dirty&8) ? 8U : 0U);
-    if (packet.size()<length) throw std::out_of_range("GunAnimation packet 크기 오류");
-    if (force) fields.bytes[kDirty]=0xff;const auto outer=Read(fields.bytes,0);packet[0]=protocol;packet[1]=static_cast<std::uint8_t>((outer==0x50b318U || outer==0x505480U) ? 0x3b : 0x3c);Put(packet,4,Read(fields.bytes,kForm));std::size_t cursor=9;
-    if (includeParent || force) { fields.bytes[kDirty]|=1;Put(packet,cursor,Read(fields.bytes,kParent));cursor+=4; }
-    // dirty가 선택한 WORD/WORD/double을 현재 raw 폭 그대로 복사한다.
-    for (const auto [bit,offset,width]:{std::array<std::size_t,3>{2,kGun,2},{4,kTarget,2},{8,kTime,8}})
-        if (fields.bytes[kDirty]&bit) { std::copy_n(fields.bytes.begin()+static_cast<std::ptrdiff_t>(offset),width,packet.begin()+static_cast<std::ptrdiff_t>(cursor));cursor+=width; }
-    Put(packet,2,static_cast<std::uint32_t>(cursor),2);packet[8]=fields.bytes[kDirty];fields.bytes[kDirty]=0;return static_cast<std::uint16_t>(cursor);
+    return WriteGunAnimationProcessData(fields.bytes,packet,includeParent,force,static_cast<std::uint8_t>(GunAnimationUsesFirePacket(fields.bytes) ? 0x3bU : 0x3cU),protocol); // 독립 API의 기존 헤더 입력과 실제 공통 writer를 공유한다.
 }
 // 어댑터가 같은 풀/부모 타입을 검사하도록 실제 자료를 제공한다.
 const SidPool& RawGunAnimation::Pool() const { return pool_; }
-std::uint32_t RawGunAnimation::SunCannonType() const { return state_.sunCannonType; }
+std::uint32_t RawGunAnimation::SunCannonType() const { return state_.SunCannonType(); }
 // 원본 파생 선택과 raw 필드를 실제 Kernel 객체가 소유한다.
 GunAnimation::GunAnimation(const RawGunAnimation& logic,GunAnimationFields fields,GunAnimationKind kind):logic_(logic),fields_(std::move(fields)),kind_(kind) {}
 void GunAnimation::RunFrame() { logic_.Frame(fields_,kind_); }
@@ -190,7 +201,7 @@ GunAnimation* CreateGunAnimation(SquidProcessHost& host,const RawGunAnimation& l
     const auto kind=stage==2 ? GunAnimationKind::SunRotate : stage==5 ? GunAnimationKind::SunFire : GunAnimationKind::SunRest;
     if (stage!=2 && stage!=5 && stage!=8) throw std::out_of_range("GunAnimation factory 단계 오류");
     GunAnimationFields fields;logic.Initialize(fields,kind,gunForm,target);auto process=std::make_unique<GunAnimation>(logic,std::move(fields),kind);
-    return dynamic_cast<GunAnimation*>(host.Attach(std::move(process),stage==2 || stage==8 ? 36U : 35U,gun->Parent(),0x10));
+    return dynamic_cast<GunAnimation*>(host.Attach(std::move(process),host.AnimationProcessType(stage!=2 && stage!=8),gun->Parent(),0x10));
 }
 // GunProcess의 미복원 생성 경계를 같은 월드의 실제 animation factory로 교체한다.
 GunProcessHooks MakeGunAnimationProcessHooks(SquidProcessHost& host,const RawGunAnimation& logic,GunProcessHooks hooks) {

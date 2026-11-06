@@ -1,0 +1,64 @@
+{
+  "unit": 1030,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "발사/회전 공통 writer와 실제 전송/공유 버퍼·장기 TYPE/현재 헤더 통합",
+  "sourceFunctions1078": [
+    "00466ac0",
+    "00466c20",
+    "00467f40",
+    "00467f80",
+    "00468830",
+    "00468900",
+    "0041bd20"
+  ],
+  "referenceFunctions1072": [
+    "004a2ec0",
+    "004a3240",
+    "004a0e80",
+    "004a0ca0"
+  ],
+  "staticPe": {
+    "patchWriterSlot8": {
+      "fire": 7,
+      "rotate": 4
+    },
+    "cdWriterSlot8": {
+      "fire": 2,
+      "rotate": 3
+    },
+    "headers": "PATCH00540468/69=3c01,0054046e/6f=3b01;CD005373cc/d0=3c/01,005373d8/dc=3b/01"
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1030\\build.log",
+    "exeSize": 12033536,
+    "exeSha256": "8732407ce98d3f951d175f96efe5693c18049f700bdb3e07064a3c4d3d3fce32"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1030\\protected-before.json"
+  },
+  "remaining": [
+    "건설37h 실제 Session 수신/송신·진단 복귀/현재 TYPE·나머지 decoder 감사",
+    "Player 내용물 통지00595344의 실제 PlayerKnown binding 교정",
+    "재동기화 허용/owner cache·Activate 수신자 부모",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

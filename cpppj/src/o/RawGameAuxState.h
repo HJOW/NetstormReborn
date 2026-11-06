@@ -69,6 +69,8 @@ public:
     std::uint32_t& SunArcherType() { return sunArcherType_; } //00541174의 현재71이며 수신 공장의 첫 발사 TYPE 비교다.
     std::uint32_t& SunCannonType() { return sunCannonType_; } //00541258의 현재128이며 발사/회전 수신이 같은 번호를 읽는다.
     std::uint32_t& WindArcherType() { return windArcherType_; } //00541288의 현재140이며 회전 수신 공장의 두 번째 비교다.
+    std::span<std::uint8_t,2> RotateAnimationHeader() { return rotateAnimationHeader_; } //00540468/69의 현재 메시지/프로토콜 두BYTE만 빌린다. 선언 길이는 이 writer가 읽지 않는다.
+    std::span<std::uint8_t,2> FireAnimationHeader() { return fireAnimationHeader_; } //0054046e/6f의 현재 두BYTE이며 회전 헤더와 합치지 않는다.
     std::uint32_t& SunAviaryProcessType() { return sunAviaryProcessType_; } //005410f0의 현재 훨리베이스 프로세스 TYPE다.
     std::uint32_t& WindAviaryProcessType() { return windAviaryProcessType_; } //0054115c의 현재 데빌메이커 프로세스 TYPE다.
     std::uint32_t& RainAviaryProcessType() { return rainAviaryProcessType_; } //00541160의 현재 맨 오 워 메이커 프로세스 TYPE다.
@@ -161,6 +163,7 @@ private:
     std::uint32_t gunProcessType_{34}; // 보호 PE005410f8의 초기 DWORD다. World/Session 교체에서 새34를 쓰지 않는다.
     std::uint32_t fireAnimationProcessType_{35},rotateAnimationProcessType_{36}; // 보호 PE의 서로 다른 두 TYPE이며 World 교체에서 초기화하지 않는다.
     std::uint32_t sunArcherType_{71},sunCannonType_{128},windArcherType_{140}; // 수신 공장의 실제 세 비교 전역 초기값이며 기본 생성자 선택과 구별한다.
+    std::array<std::uint8_t,2> rotateAnimationHeader_{0x3c,1},fireAnimationHeader_{0x3b,1}; // 보호 PE의 두 현재 헤더이며 World/Session 교체에서 초기화하지 않는다.
     std::uint32_t sunAviaryProcessType_{32},windAviaryProcessType_{59},rainAviaryProcessType_{60}; // 보호 PE의 서로 다른 세 DWORD다. 생성·검색·수신이 같은 장기 주소를 쓴다.
     std::uint32_t altarType_{164},daisType_{165}; // 보호 PE005412e8/005412ec의 두 초기 DWORD이며 일반 월드 준비에서 초기화하지 않는다.
     std::uint32_t priestType_{158}; // 두 보호 PE의 최초158이며 실제 HP/이동 소비자가 같은 장기 주소를 빌린다.

@@ -103,6 +103,10 @@ struct SquidProcessState {
     std::uint32_t processFormType{2}; // 독립 입력의 원문 최초 ProcessForm DWORD다.
     const std::uint32_t* currentProcessFormType{}; // 실제 Client GameAux의 같은 장기 번호 주소를 빌린다.
     std::uint32_t ProcessFormType() const { return currentProcessFormType ? *currentProcessFormType : processFormType; } // 각 생성/Take 위치마다 현재 전체 번호를 읽는다.
+    std::uint32_t fireAnimationType{35},rotateAnimationType{36}; // 기존 독립 입력의 두 애니메이션 프로세스 번호다.
+    const std::uint32_t* currentFireAnimationType{};const std::uint32_t* currentRotateAnimationType{}; // 실제 Client의005410fc/00541100 장기 주소를 빌린다.
+    std::uint32_t FireAnimationType() const { return currentFireAnimationType ? *currentFireAnimationType : fireAnimationType; } // 일반 생성/조회와 전체 수신이 같은 현재 번호를 사용한다.
+    std::uint32_t RotateAnimationType() const { return currentRotateAnimationType ? *currentRotateAnimationType : rotateAnimationType; } // 발사와 별개인 회전 DWORD를 복사 없이 읽는다.
 };
 // 부모 객체의 이벤트 처리기(vtable +0x5c)다. 원본 base(00496e70)는 payload를 그대로 돌려준다.
 using RegularHandler=std::function<float(Sid parent,std::uint32_t event,std::uint32_t count,float payload)>;
@@ -188,6 +192,7 @@ public:
     // 판본의 프로세스 타입 번호 범위 끝(패치 63, CD 62)과 form의 실제 가상 표 기록값이다.
     std::uint32_t ProcessTypeEnd() const;
     std::uint32_t FormVtable() const;
+    std::uint32_t AnimationProcessType(bool fire) const { return fire ? state_.FireAnimationType() : state_.RotateAnimationType(); } // 실제 공장들이 같은 장기35/36을 각 부착 위치에서 조회한다.
 private:
     bool AttachBase(SquidProcess& process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form,std::unique_ptr<SquidProcess>* owned); // 같은 상위 원문 부모에서 실제 신규/기존 Kernel 등록을 선택한다.
     friend class RegularProcess;

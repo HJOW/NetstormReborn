@@ -1590,7 +1590,7 @@ struct RawCampaignSession::Impl {
             }
             catch (...) { std::fprintf(stderr,"실제 Regular 실패 SID%u TYPE%u event%u count%u payload%08x\n",sid.value,sid.value<core.pool.Capacity() ? core.pool.Slot(sid)[10] : 0xffffU,event,count,std::bit_cast<std::uint32_t>(payload));throw; }
         };
-        worldHooks.transmit=AviaryTransmission(assetBindings->Transmission());worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
+        worldHooks.transmit=AviaryTransmission(combat->Transmission(services.formPacket,assetBindings->Transmission()));worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
         worldHooks.bridgeEffect=[this](const BridgeLifecycleEvent& event) {
             if (event.effect==BridgeLifecycleEffect::NotifyRemoval) { static_cast<void>(particles->AddShrapnel(event.sid,ShrapnelKind::Variant2));return; } // 실제460600은 source와 종류2를4604a0에 전달한다.
             if (event.effect==BridgeLifecycleEffect::FallSound) { if (!services.sound.playOnceAt) throw std::logic_error("실제 다리 낙하 위치 소리 미연결");services.sound.playOnceAt(event.x,event.y,soundNames.Lookup("bridgeFall.wav"),0,0);return; }
@@ -3642,7 +3642,7 @@ struct RawCampaignSession::Impl {
             if (length<=0 || static_cast<std::size_t>(length)>pathBuffer.size()) throw std::logic_error("세션 Path 송신 길이 오류");
             services.pathPacket(std::span<const std::uint8_t>(pathBuffer).first(static_cast<std::size_t>(length)));
         });
-        core.processes.SetFormTransmit(AviaryTransmission(assetBindings->Transmission(std::move(pathTx))));
+        core.processes.SetFormTransmit(AviaryTransmission(combat->Transmission(services.formPacket,assetBindings->Transmission(std::move(pathTx)))));
         BridgeCarrierHooks bridgeHooks;
         bridgeHooks.graphFor=[this](Sid sid) { return anchor->GraphFor(sid.value); };
         bridgeHooks.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };

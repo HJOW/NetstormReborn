@@ -18,6 +18,7 @@ RawProcessHostStorage::RawProcessHostStorage(o::SidPool& pool,std::span<const o:
     state_.sharedPollType=pollType_.get();
     if (gameAux_) state_.currentProcessFormType=&gameAux_->ProcessFormType(); // 두 판본의 같은 장기 Form 번호를 생성/수신 위치에서 읽는다.
     if (gameAux_ && pool.Edition()==o::OriginalEdition::Patch1078) { state_.currentRegularType=&gameAux_->RegularProcessType();state_.currentSharedRegularType=&gameAux_->SharedRegularProcessType();state_.currentProcessTypeEnd=&gameAux_->ProcessTypeEnd(); }
+    if (gameAux_ && pool.Edition()==o::OriginalEdition::Patch1078) { state_.currentFireAnimationType=&gameAux_->FireAnimationProcessType();state_.currentRotateAnimationType=&gameAux_->RotateAnimationProcessType(); } // 일반 생성/조회와 전체 수신의 같은 두 장기 주소다.
 }
 // 게임 중 Native 효과는 이 경로를 사용하지 않는다. 마지막 물리 소유권만 실제 프로세스를 반납한다.
 RawProcessHostStorage::~RawProcessHostStorage() {

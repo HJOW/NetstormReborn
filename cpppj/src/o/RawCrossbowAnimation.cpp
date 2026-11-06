@@ -29,7 +29,7 @@ std::array<float,2> Point(const GunAnimationFields& fields,std::size_t offset) {
 RawCrossbowAnimation::RawCrossbowAnimation(SidPool& pool,std::span<const RiftTypeRecord> types,
     std::span<const ArcherTypeData> animationTypes,CrossbowAnimationState& state,GunAnimationHooks hooks)
     :pool_(pool),types_(types),animationTypes_(animationTypes),state_(state),hooks_(std::move(hooks)) {
-    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || animationTypes.size()!=types.size() || state.type>=types.size()) throw std::invalid_argument("크로스보우 실제 판본/TYPE 자료 오류");
+    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || animationTypes.size()!=types.size() || state.Type()>=types.size()) throw std::invalid_argument("크로스보우 실제 판본/TYPE 자료 오류");
 }
 // 00468050은64BYTE 중 지정한 필드만 초기화하며 공통 Host 부착이 Form/Parent를 채운다.
 void RawCrossbowAnimation::Initialize(GunAnimationFields& fields,Sid gunForm,Sid target) const {
@@ -38,7 +38,7 @@ void RawCrossbowAnimation::Initialize(GunAnimationFields& fields,Sid gunForm,Sid
 }
 // 실제 부모 번호/TYPE가 이 몸체의 현재 입력인지 확인한다.
 Sid RawCrossbowAnimation::Parent(const GunAnimationFields& fields) const {
-    const auto parent=fields.Parent();if (!parent.value || parent.value>=pool_.Capacity() || pool_.Slot(parent)[10]!=state_.type) throw std::logic_error("크로스보우 미복원 부모 TYPE/번호");return parent;
+    const auto parent=fields.Parent();if (!parent.value || parent.value>=pool_.Capacity() || pool_.Slot(parent)[10]!=state_.Type()) throw std::logic_error("크로스보우 미복원 부모 TYPE/번호");return parent;
 }
 // 실제 함수는 최초 부모 snapshot과 별개로 프레임 변경 시 부모를 다시 조회한다.
 void RawCrossbowAnimation::SetFrame(GunAnimationFields& fields,std::int32_t frame) const {
@@ -70,7 +70,7 @@ void RawCrossbowAnimation::Frame(GunAnimationFields& fields) const {
 }
 // 현재 adapter는 같은 풀과 TYPE 계약을 그대로 사용한다.
 const SidPool& RawCrossbowAnimation::Pool() const { return pool_; }
-std::uint32_t RawCrossbowAnimation::Type() const { return state_.type; }
+std::uint32_t RawCrossbowAnimation::Type() const { return state_.Type(); }
 // 원본 필드와 처리기 참조만 실제 프로세스에 저장한다.
 CrossbowAnimation::CrossbowAnimation(const RawCrossbowAnimation& logic,GunAnimationFields fields):logic_(logic),fields_(std::move(fields)) {}
 // Kernel의 실제 발사 프레임을 한 번 처리한다.
@@ -86,6 +86,6 @@ GunAnimationHooks MakeCrossbowAnimationHostHooks(SquidProcessHost& host,GunAnima
 }
 // 실제 크로스보우 GunProcess 부모에 TYPE35/flags0x10으로 원본 발사를 부착한다.
 CrossbowAnimation* CreateCrossbowAnimation(SquidProcessHost& host,const RawCrossbowAnimation& logic,Sid gunForm,Sid target) {
-    if (&host.Pool()!=&logic.Pool()) throw std::invalid_argument("크로스보우 Host/Pool 불일치");auto* gun=dynamic_cast<GunProcess*>(host.FromForm(gunForm));if (!gun || host.Pool().Slot(gun->Parent())[10]!=logic.Type()) throw std::logic_error("크로스보우 factory 부모 오류");GunAnimationFields fields;logic.Initialize(fields,gunForm,target);return dynamic_cast<CrossbowAnimation*>(host.Attach(std::make_unique<CrossbowAnimation>(logic,std::move(fields)),35,gun->Parent(),0x10));
+    if (&host.Pool()!=&logic.Pool()) throw std::invalid_argument("크로스보우 Host/Pool 불일치");auto* gun=dynamic_cast<GunProcess*>(host.FromForm(gunForm));if (!gun || host.Pool().Slot(gun->Parent())[10]!=logic.Type()) throw std::logic_error("크로스보우 factory 부모 오류");GunAnimationFields fields;logic.Initialize(fields,gunForm,target);return dynamic_cast<CrossbowAnimation*>(host.Attach(std::make_unique<CrossbowAnimation>(logic,std::move(fields)),host.AnimationProcessType(true),gun->Parent(),0x10));
 }
 }

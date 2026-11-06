@@ -24,6 +24,8 @@ struct CannonFireState {
     std::int32_t growlOffset{5},roarOffset{1}; // 마지막 프레임에서 소리를 내는 실제 두 전역 차이다.
     std::uint32_t vanderType{148},floaterType{146}; // 공통 launch의 즉시 빔과 Cloud Floater 비교 전역이다.
     std::int32_t avoidanceCutoff{800}; // 실제 signed DWORD와 RandomFloat(0,1000)를 비교한다.
+    const std::uint32_t* currentType{}; // 실제 Sun 파생은00541258을 빌리며 다른 파생의 기존 입력도 유지한다.
+    std::uint32_t Type() const { return currentType ? *currentType : type; } // 생성/부모 검증이 현재 전체 DWORD를 사용한다.
 };
 // 원본 Sun/Thunder Fire의64BYTE 몸체이며 Ice의80BYTE 파생과 구별한다.
 class RawCannonFire {

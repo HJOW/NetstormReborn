@@ -8,6 +8,8 @@ struct CrossbowAnimationState {
     double now{}; // 같은 Kernel이 공급하는 현재 게임 시각이다.
     std::uint32_t type{140},displayType{81}; // 실제 windArcher와 arrow의 원본 TYPE다.
     float speed{35},delay{0.2f}; // 0050b168/00508d98에서 읽은 발사 속도와 지연이다.
+    const std::uint32_t* currentType{}; // 실제00541288을 수신 공장과 공유하는 장기 주소다.
+    std::uint32_t Type() const { return currentType ? *currentType : type; } // 기존 독립 입력의140은 대여가 없을 때만 사용한다.
 };
 // 004674c0/00468050의 64BYTE 발사 객체와00466f50의 일반 투사체 분기다.
 class RawCrossbowAnimation {

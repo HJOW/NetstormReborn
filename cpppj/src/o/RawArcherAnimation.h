@@ -33,6 +33,8 @@ struct ArcherAnimationState {
     // finishSpeed/finishAngle/finishTolerance: 실제회전종료의각속도/위치/오차조건이다.
     float finishSpeed{180},finishAngle{270},finishTolerance{30};
     BoardAngleDiagnostics angles; // 같은 Client checking/원문 Boardcoord 진단 장치를 빌린다.
+    const std::uint32_t* currentType{}; // 실제 Client의 Sun/Wind Archer TYPE를 빌리며 독립 입력의type은 보존한다.
+    std::uint32_t Type() const { return currentType ? *currentType : type; } // 생성/부모 검증/가상 getter가 같은 현재 번호를 읽는다.
 };
 // 실제공통공간/표적/완료/생성경계를재사용하고캐논프레임표를혼용하지않는다.
 struct ArcherAnimationHooks {
