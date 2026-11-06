@@ -122,6 +122,7 @@ struct RawPriestWorldEffects {
     std::function<void(std::string_view,std::string_view,std::uint32_t)> forcefieldAssertion;
     // 보호막의 현재 사제 TYPE 검색을 월드의 실제004b1fa0에 연결한다. 독립 구성의 기존 finder는 선택 입력으로 유지한다.
     std::function<o::Sid(float,float,std::uint32_t)> findTypeAt;
+    std::function<void(o::Sid,std::uint32_t)> nonPriestOwner; // 실제 Session은 World의 표면/생산/중립 재정의를 연결한다. 빈 독립 입력은 기존 공통 부모다.
 };
 // 사용 순서: 생성→ProcessHost(RegularHandler/DestroyHooks) 생성→BindProcesses→후속 모듈 Bind다.
 // 로딩 Pop 전에 BindProcesses가 필요하며, 삭제/해방 전에는 Damageable/Placement도 연결해야 한다.

@@ -171,9 +171,11 @@ struct RawPriestWorldBindings::Impl {
         const auto field=lookup->Find(sid);
         if (field.value>0 && field.value<core.pool.Capacity()) effects.destroy(field,0);
     }
-    // 사제 가상 소유자와 공통 소유자의 같은 풀을 유지한다.
+    // 사제 가상 소유자와 나머지 실제 자산 분배기의 같은 풀을 유지한다.
     void SetOwner(o::Sid sid,std::uint32_t player) const {
-        if (owner->Handles(sid)) owner->Set(sid,player);else core.owner.Set(sid,player);
+        if (owner->Handles(sid)) owner->Set(sid,player);
+        else if (effects.nonPriestOwner) effects.nonPriestOwner(sid,player);
+        else core.owner.Set(sid,player);
     }
     // 00488fe0/CD 0047d020는 모양 번호가 아니라 이동 ProcessForm 타입 번호를 선택한다.
     std::uint32_t MovementProcessType(std::uint32_t type) const {

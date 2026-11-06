@@ -584,3 +584,6 @@ target_sources(netstorm PRIVATE RawSquidUnpopParent.h RawSquidUnpopParent.cpp)
 
 # 공통 contained 해제의 실제 종속 링크/부모 통지와 Form UI 큐를 연결한다.
 target_sources(netstorm PRIVATE RawSquidContainedUnpop.h RawSquidContainedUnpop.cpp)
+
+# 자산 소유자의 생산 접두/고정 중립을 실제 표면 분배기와 합성한다.
+target_sources(netstorm PRIVATE RawAssetOwner.h RawAssetOwner.cpp)

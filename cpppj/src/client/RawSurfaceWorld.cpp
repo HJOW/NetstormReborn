@@ -12,6 +12,7 @@
 #include "o/SquidFactory.h"
 #include "o/SquidFrameBinding.h"
 #include "o/SquidOwner.h"
+#include "o/RawAssetOwner.h" // 생산/중립/표면 재정의를 현재 VT로 분배한다.
 #include "o/SquidFormDispatch.h"
 #include "o/RawObjectConversion.h" // 비석/주문의정확한가상표만읽기전용예약진단대상으로구별한다.
 #include "o/RawBuildingSpace.h"
@@ -89,6 +90,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::unique_ptr<o::RawBuildingSpace> building;
     // frame: 사용할 그림 프레임 또는 프레임 처리 자료.
     std::unique_ptr<o::SquidFrame> frame;/* owner: 소유 플레이어 번호 또는 소유권 처리 자료. */ std::unique_ptr<o::SquidOwner> owner;
+    std::function<void(o::Sid,std::uint32_t)> assetOwner; // 같은 Pool/생산 장부/표면 전역을 빌리는 현재 소유자 분배다.
     // neighbors: 발자국에 인접한 표면·객체를 조회하는 검색기.
     std::unique_ptr<o::RawSquidNeighbors> neighbors;/* connect: 연결. */ std::unique_ptr<o::RawBridgeConnect> connect;
     // surface: 표면.
@@ -181,7 +183,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         o::BridgeConnectHooks objects;
         // 생성/소유자/프레임 변경은 표시 억제 상태와 무관하게 논리 변경을 알린다.
         objects.create=[this](std::uint32_t type,std::uint32_t flags) { changed=true;return factory->Create(type,flags); };
-        objects.setOwner=o::MakeOwnerDispatch(pool,links,[this](o::Sid sid,std::uint32_t player) { owner->Set(sid,player);changed=true; });
+        assetOwner=o::MakeAssetOwnerDispatch(pool,links,bookkeeping.productionDirty,[this](o::Sid sid,std::uint32_t player) { owner->Set(sid,player); });
+        objects.setOwner=[this](o::Sid sid,std::uint32_t player) { assetOwner(sid,player);changed=true; }; // 고정 중립 경로도 실제 변경으로 알린다.
         objects.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { Pop(sid,x,y,flags); };
         objects.setFrame=[this](o::Sid sid,std::int32_t number,std::uint32_t flags) { frame->Set(sid,number,flags);changed=true; };
         objects.notifySurface=[this](o::Sid sid) { building->NotifySurface(sid); }; // 실제 판본별 무상태 진단 몸체다.
@@ -406,7 +409,7 @@ void RawSurfaceWorld::Load(std::span<const SurfaceSeed> seeds) {
     BeginLoad();
     // 실제 생성자·가상 소유자·Pop을 사용하며 아직 Graph를 변경하지 않는다.
     for (const auto& seed:sorted) {
-        const auto sid=state.factory->Create(seed.type);state.owner->Set(sid,seed.owner);
+        const auto sid=state.factory->Create(seed.type);SetAssetOwner(sid,seed.owner);
         Write(state.pool.AllocatedBytes(sid),state.edition==o::OriginalEdition::Patch1078 ? 36 : 34,static_cast<std::uint32_t>(seed.frame),state.edition==o::OriginalEdition::Patch1078 ? 4 : 1);
         state.Pop(sid,seed.x,seed.y,0);
     }
@@ -442,6 +445,8 @@ o::Sid RawSurfaceWorld::Find(float x,float y,std::uint32_t type) const { return 
 bool RawSurfaceWorld::Destroy(o::Sid sid,std::uint32_t flags) { return impl_->Destroy(sid,flags); }
 // 받침/종유석/9칸 소유자 갱신은 복원된 원본 몸체를 사용한다.
 void RawSurfaceWorld::SetSupportOwner(float x,float y,std::uint32_t owner) { impl_->surface->SetSupportOwner(x,y,owner);impl_->changed=true; }
+// 상위 사제/신전 분배 뒤의 나머지 자산은 같은 현재 VT와 생산 장부를 사용한다.
+void RawSurfaceWorld::SetAssetOwner(o::Sid sid,std::uint32_t owner) { impl_->assetOwner(sid,owner);impl_->changed=true; }
 // GUI 렌더링에 임시 객체의 옛 프레임/좌표를 복사하지 않는다.
 std::vector<SurfaceSnapshot> RawSurfaceWorld::Objects() const {
     std::vector<SurfaceSnapshot> result;const bool patch=impl_->edition==o::OriginalEdition::Patch1078;

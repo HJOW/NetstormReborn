@@ -5402,3 +5402,16 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
 #include "CampaignMakeAiTests.inc" //실제 battle0/기존brain만 검사하며 전략/owner0 양성 전이를 실행하지 않는다.
 
 #include "CampaignAiDebugTests.inc" //실제현재brain/반납과동일진단전역writer의회귀다.
+
+// 실제 Session의 신전/사제 다음 분배가 Factory 생산 접두·젬 중립·표면 색을 유지하는지 확인한다.
+TEST_CASE(AssetOwnerCurrent_ActualSessionUsesWorldDispatch) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+    const auto initialPackets=external.packets.size(),initialAlliances=external.allianceRequests.size(); // 기존 적재의 요청 수를 보존하고 이번 로컬 소유자 호출이 새 통신을 만들지 않는지 확인한다.
+    for (const auto type:{85U,126U,121U,94U,95U}) { // 정적인 생성/소유자 변경만 수행하고 전투 프레임/패킷/공중3종은 실행하지 않는다.
+        const auto sid=session.World().Create(type,2);auto raw=core.pool.AllocatedBytes(sid);core.bookkeeping.productionDirty=37;Put(raw,36,7);
+        session.SetObjectOwner(sid,2);CHECK(raw[34]==(type==121 ? 0 : 2));CHECK(core.bookkeeping.productionDirty==((type==85 || type==126) ? 38U : 37U));
+        if (type==94 || type==95) CHECK(Get(raw,36)==std::bit_cast<std::uint32_t>(OwnerColorFrame(core.bridgeState,2)));
+    }
+    CHECK(external.packets.size()==initialPackets && external.allianceRequests.size()==initialAlliances);
+}

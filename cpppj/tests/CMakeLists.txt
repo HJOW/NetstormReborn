@@ -3693,3 +3693,9 @@ set_source_files_properties(BaseProcessAttachCurrentTests.cpp PROPERTIES COMPILE
 set_source_files_properties(ProcessAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     NETSTORM_PROCESS_ATTACH_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/process-attach-current-local-x86.tsv")
 set_source_files_properties(ContentAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CONTENT_ATTACH_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/content-attach-current-x86.tsv\"") # 최초 원문41행만 기대값으로 사용한다.
+
+# 파생 Owner의 실제 PE128행과 현재 생산 장부/생성자 수명을 같은 집중 대상에서 대조한다(962).
+target_sources(netstorm_tests PRIVATE AssetOwnerCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE AssetOwnerCurrentTests.cpp)
+set_source_files_properties(AssetOwnerCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    NETSTORM_ASSET_OWNER_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/asset-owner-current-local-x86.tsv")

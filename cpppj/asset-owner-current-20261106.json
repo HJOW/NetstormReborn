@@ -1,0 +1,172 @@
+{
+  "unit": 962,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 962,
+  "version": "11.01",
+  "exeSha256": "c1fe5ff5de4000e3349b62f067dcb192f8429b9e55d8076c10224d314d71cf0e",
+  "exeBytes": 11321856,
+  "scope": "현재 자산 VT의 생산 갱신 접두/고정 중립과 섬 받침/종유석 분배를 실제 World/Session에 연결. 사제/신전 전용 몸체는 기존 상위 순서를 유지.",
+  "native": {
+    "unit": 962,
+    "rows": 128,
+    "scope": "생산접두/중립owner 실제 wrapper/ret4, 공통 부모 명시장치. 게임/MP 없음.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_asset_owner_current.py": "45fa873441ec94a79b18bcb5831dad798085bcfa577589ec119d045edbca1c1f",
+      "cpppj/tests/fixtures/asset-owner-current-local-x86.tsv": "daa7b30762b24f9a3b71759ea6c63ea1efc126d5c46aee0c452af645b7cd3e0f"
+    }
+  },
+  "nativeReobserve": {
+    "rows": 128,
+    "differentRows": 0
+  },
+  "initialIssues": [
+    {
+      "log": "tests-new.log",
+      "reason": "독립 World의 필수 표면 TYPE 전역 누락",
+      "failedChecks": 1
+    },
+    {
+      "log": "tests-session.log",
+      "reason": "적재 전송 기록과 새 로컬 소유자 호출 기록의 경계를 분리하지 않음",
+      "failedChecks": 1
+    },
+    {
+      "log": "tests-old-0.log",
+      "reason": "OwnerCurrent_ 필터가 AssetOwnerCurrent_ 새3개에도 일치. 중복은 최종 합계 제외."
+    }
+  ],
+  "finalBuild": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_pop_context_tests",
+      "netstorm_world_generation_tests"
+    ],
+    "configuration": "Release",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-resume-962/build-fixed.log"
+  },
+  "tests": [
+    {
+      "log": "extracted/cpp-resume-962/tests-final-new.log",
+      "cases": 3,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-962/tests-final-session.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-962/tests-final-old-0.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-962/tests-final-old-1.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-962/tests-final-old-2.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-962/tests-final-old-3.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-962/tests-final-old-4.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-962/tests-final-old-5.log",
+      "cases": 2,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-962/tests-final-old-6.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-962/tests-final-old-7.log",
+      "cases": 1,
+      "failedChecks": 0
+    }
+  ],
+  "uniqueTests": 13,
+  "newTests": 4,
+  "existingTests": 9,
+  "live": {
+    "summary": "extracted/cpp-resume-962/live/summary.json",
+    "toolTagUnit": 945,
+    "product": 962,
+    "entries": 4,
+    "cycles": 2,
+    "actions": 37,
+    "observations": 26,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "capturePixels": [
+      800,
+      600
+    ],
+    "visuallyChecked": [
+      "mission-0.png",
+      "final-main.png"
+    ]
+  },
+  "sourceSha256": {
+    "cpppj/src/o/RawAssetOwner.cpp": "ee2f54d1298022c0273614958992ca71fa4ea8484ab7c56445ae6a6133d7303e",
+    "cpppj/src/o/RawAssetOwner.h": "94729afe65f0d566b79c7cea4bbe64a76b408d2dbcc08fa3d3876fc15acc8d23",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "5d68260f1586c9f2fbdb8bc8f1c68e7a32609ce1dc90fe82afd9605bcb69fdae",
+    "cpppj/src/client/RawSurfaceWorld.h": "7ae302c4181f275da083f0291e0cb6b121c749cea1dbd9d4612cfb39b9d42992",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "d3bec3501a38fc6f7fd09e884ecc12cd9dc75768e039565d4407e242e1586076",
+    "cpppj/src/client/RawPriestWorldBindings.h": "88ec4f1563f80bd824de860c080096e6affa28683d743c8bb1061da36de12430",
+    "cpppj/src/client/RawCampaignSession.cpp": "103d850b5fcd31acff0c564455864733937a428f4c5d28af6a834a2abc7436dc",
+    "cpppj/tests/AssetOwnerCurrentTests.cpp": "0886ab8245fdcf6499e12faf75b7e80577c83784a62d0b4e3d34fd137d982ea7",
+    "cpppj/tests/CampaignSessionTests.cpp": "aadb4cfec5e03b236168704b269ad88979754e6fedb746117938618d76920eb0"
+  },
+  "protection": {
+    "existingUnchanged": 2793,
+    "newFixtures": 1,
+    "nextFiles": 2794,
+    "nextFixtures": 974,
+    "baseline": "extracted/cpp-resume-962/protected-final.json"
+  },
+  "checking": {
+    "remaining": 8,
+    "parents": 3,
+    "partial": 2,
+    "mp": 3,
+    "completedParents": 39,
+    "completedPartial": 4,
+    "unchanged": true
+  },
+  "excluded": [
+    "실제 사제 포획/희생/특정 적 공격/시나리오 승리",
+    "공중3종 전용",
+    "신규 MP/통신",
+    "물리 입력/PCM/CD",
+    "전체 CTest/34미션/ZIP 반복"
+  ],
+  "remaining": [
+    "같은 3절4번의 사제 Owner 현재 진단/부분효과와 파생 전체 범위",
+    "Factory 외부 heap/파일/부분 I/O 등 남은 수명",
+    "7번 환경/사용자 확인 경계 뒤 8번 후속 구현"
+  ],
+  "nextUnit": 963,
+  "goalComplete": false
+}

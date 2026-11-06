@@ -262,6 +262,8 @@ public:
     bool Destroy(o::Sid sid,std::uint32_t flags=0);
     // 저장 건물의 소유자를 받침에 반영하는 기존 초기 월드 어댑터의 경계다.
     void SetSupportOwner(float x,float y,std::uint32_t owner);
+    // 사제/신전의 전용 몸체를 상위에서 선택한 뒤 나머지 자산 +74를 현재 표로 호출한다.
+    void SetAssetOwner(o::Sid sid,std::uint32_t owner);
     // 표시/검사에 현재 살아 있는 자산만 제공한다. ProcessForm은 제외한다.
     std::vector<SurfaceSnapshot> Objects() const;
     // 변경 요청은 한 번만 소비한다. 원본 표시가 전체 갱신으로 억제되어도 논리 변경은 남긴다.

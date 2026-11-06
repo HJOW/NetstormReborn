@@ -1,0 +1,11 @@
+{
+  "unit": 962,
+  "rows": 128,
+  "scope": "생산접두/중립owner 실제 wrapper/ret4, 공통 부모 명시장치. 게임/MP 없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_asset_owner_current.py": "45fa873441ec94a79b18bcb5831dad798085bcfa577589ec119d045edbca1c1f",
+    "cpppj/tests/fixtures/asset-owner-current-local-x86.tsv": "daa7b30762b24f9a3b71759ea6c63ea1efc126d5c46aee0c452af645b7cd3e0f"
+  }
+}
