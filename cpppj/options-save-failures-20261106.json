@@ -1,0 +1,96 @@
+{
+  "unit": 966,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 966,
+  "version": "11.01",
+  "exeSha256": "500f5879450328d6e8ae31a6538b0bb012c51f5f4e1a3cfc4a8116a0fdb499d7",
+  "exeBytes": 11326976,
+  "scope": "실제 제품 CRT 종료/교체 복구 함수 추출. 목표 부재 판정과 복원 실패 진단 교정. 실제 파이프 부분 전달/두 볼륨 복구 상태 대조.",
+  "initialBuild": {
+    "exitCode": 1,
+    "kind": "컴파일 전 잘못된 대상명 NetstormGame/MSB1009",
+    "log": "extracted/cpp-resume-966/build.log"
+  },
+  "build": {
+    "exitCode": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_options_disk_tests"
+    ],
+    "configuration": "Release",
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-resume-966/build-correct-target.log"
+  },
+  "focused": {
+    "exitCode": 0,
+    "uniqueTests": 11,
+    "newTests": 4,
+    "existingTests": 7,
+    "failedChecks": 0,
+    "log": "extracted/cpp-resume-966/focused.log",
+    "partialPipe": {
+      "submittedBytes": 65570,
+      "receivedBytes": 1024,
+      "prefixMatches": true,
+      "writerThrows": true,
+      "changedPreserved": true,
+      "handleClosed": true,
+      "physicalDiskFailure": false
+    },
+    "recovery": {
+      "volumes": [
+        "C:",
+        "H:"
+      ],
+      "statesPerVolume": 5,
+      "originalErrorCodes": [
+        1176,
+        1177
+      ],
+      "originalErrorInjected": true,
+      "actualReplaceFileReturnedThoseCodes": false,
+      "actualMoveSharingViolation": 32,
+      "existingTargetAndFreshBytesPreserved": true
+    },
+    "bufferedBrokenPipe": true,
+    "normalAndDurableUnicodeFile": true
+  },
+  "protection": {
+    "files": 2796,
+    "fixtures": 976,
+    "unchanged": true,
+    "newFixtures": 0,
+    "next": "extracted/cpp-resume-966/protected-final.json"
+  },
+  "limits": [
+    "물리 디스크 고갈/장치 고장에 의한 부분쓰기·commit/close 실패는 미관측",
+    "OS ReplaceFile 자체의1176/1177 반환은 미관측; 해당 상태를 명시 구성",
+    "전체 FILE/FileSpec/SEH·Factory·비멀티 수명은 미완료"
+  ],
+  "executions": {
+    "newGame": 0,
+    "newGui": 0,
+    "newMultiplayer": 0,
+    "newProtocol": 0,
+    "newNative": 0,
+    "fullCTest": 0,
+    "full34": 0,
+    "zip": 0
+  },
+  "sha256": {
+    "cpppj/src/client/ClientOptionsDisk.cpp": "f47cc50b477d5df84b7ae39fdf9027bb6af7f51742ee3e0ea12cd110f27031f6",
+    "cpppj/src/client/ClientOptionsSaveIO.h": "f1aecfc5202eb9b528b2caa9f15c0f7daa83fb5915456b639e07c5d24a751a92",
+    "cpppj/src/client/CMakeLists.txt": "39439f4a5bb60026453462bf893a53e5200d1cd27ec766d9b6a8748fe759ddf5",
+    "cpppj/tests/ClientOptionsDiskTests.cpp": "c4bc68b7623560a03edb2fef530822ab973e9ca793ca1412a3a93615cc77649c",
+    "cpppj/src/client/ClientOptionsFile.cpp": "ff5ff2e4c1bdeea8b8c9909ed2044c627f770de1edcb2c2ca15c67f8589e1f56",
+    "extracted/cpp-resume-966/build.log": "74de454bb96cd3c8757df77fc4804e3547f5391d5626772ef6ade5dcbda36fbb",
+    "extracted/cpp-resume-966/build-correct-target.log": "9b43e67e32625fa7c5c2b17068fa7cb7499c2e1d7cb5eac46791f9fb9f5ac151",
+    "extracted/cpp-resume-966/focused.log": "ac58953016bc3eaeb9bcc827909d8da65bb218612972fe4c030f99f4a69de510"
+  }
+}

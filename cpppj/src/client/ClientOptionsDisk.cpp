@@ -1,6 +1,7 @@
 // 원본은 매번 w+b로 설정을 잘랐다. Windows10/11에서 다른 프로세스가 파일을 매핑했을 때의1224만 교체 저장으로 보완한다.
 #include "client/ClientOptionsDisk.h"
 #include "client/ClientOptionsFile.h"
+#include "client/ClientOptionsSaveIO.h"
 #include "o/RawBaseFileReadPolicy.h"
 #include "platform/Utf8Path.h"
 #include "platform/UserDataRoot.h"
@@ -18,6 +19,32 @@
 #include <vector>
 
 namespace netstorm::client { // 제품 설정 저장의 실제 OS 경계이며 인코딩과 changed 수명은 기존 호출자가 담당한다.
+namespace options_detail { // 일반 저장과 매핑 교체가 공유하는 실제 CRT/Windows 실패 경계다.
+// 스트림의 바이트/flush/close를 모두 확인한다. 실패해도 전달받은 FILE을 한 번 닫는다.
+void FinishOptionsStream(FILE* file,std::span<const std::uint8_t> bytes,bool durable) {
+    const auto written=std::fwrite(bytes.data(),1,bytes.size(),file); // 짧은 쓰기는 정상 저장으로 취급하지 않는다.
+    const int flushed=std::fflush(file); // 교체용 파일은 버퍼를 먼저 비운 뒤 실제 디스크 flush를 요청한다.
+    const int committed=durable && written==bytes.size() && flushed==0 ? ::_commit(::_fileno(file)) : 0;
+    const int closed=std::fclose(file); // 앞선 실패 여부와 무관하게 같은 FILE을 한 번 반납한다.
+    if (written!=bytes.size() || flushed!=0 || committed!=0 || closed!=0) throw std::runtime_error("Unable to write d/options.cfg");
+}
+
+// 1176/1177 등의 실패 상태에서 기존 이름만 복구한다. 조회 오류를 파일 부재로 오인하거나 다른 파일을 덮지 않는다.
+[[noreturn]] void ThrowOptionsReplacementFailure(const std::filesystem::path& path,const std::filesystem::path& previous,
+    const std::filesystem::path& directory,unsigned long error) {
+    const auto attributes=::GetFileAttributesW(path.c_str()); // 복원할 목표 이름이 실제로 없는지 먼저 판정한다.
+    const auto lookupError=attributes==INVALID_FILE_ATTRIBUTES ? ::GetLastError():ERROR_SUCCESS; // 뒤의 백업 조회가 원인을 덮지 않게 한다.
+    unsigned long restoreError=ERROR_SUCCESS; // 복원 시도 자체가 실패했을 때의 별도 진단이며 원래 교체 오류를 대신하지 않는다.
+    if (attributes==INVALID_FILE_ATTRIBUTES && (lookupError==ERROR_FILE_NOT_FOUND || lookupError==ERROR_PATH_NOT_FOUND)
+        && ::GetFileAttributesW(previous.c_str())!=INVALID_FILE_ATTRIBUTES) {
+        if (!::MoveFileExW(previous.c_str(),path.c_str(),MOVEFILE_WRITE_THROUGH)) restoreError=::GetLastError(); // 교체 플래그 없이 경합 중 생긴 목표도 보존한다.
+    }
+    const auto bytes=directory.u8string(); // 복구 경로를 ANSI 변환 없이 진단한다.
+    std::string message="Replace mapped options; recovery files: "+std::string(bytes.begin(),bytes.end()); // 원래 예외의 복구 폴더 안내다.
+    if (restoreError!=ERROR_SUCCESS) message+="; restore error: "+std::to_string(restoreError);
+    throw std::system_error(static_cast<int>(error),std::system_category(),message);
+}
+}
 namespace { // 교체 파일은 같은 볼륨의 독립 임시 폴더 안에서만 만들고 원본 파일을 직접 지우지 않는다.
 // 충돌 없는 임시 폴더 이름을 현재 프로세스 안에서 구분한다. 파일 내용/게임 난수와 관계없는 호스트 값이다.
 std::atomic<std::uint64_t> nextOptionsSave{};
@@ -55,15 +82,6 @@ std::string DiskPathText(const std::filesystem::path& path) {
     return {bytes.begin(),bytes.end()};
 }
 
-// 스트림의 바이트/flush/close를 모두 확인한다. 실패해도 FILE을 닫고 원래 오류를 호출자에게 전달한다.
-void FinishOptionsStream(FILE* file,std::span<const std::uint8_t> bytes,bool durable) {
-    const auto written=std::fwrite(bytes.data(),1,bytes.size(),file); // 짧은 쓰기는 정상 저장으로 취급하지 않는다.
-    const int flushed=std::fflush(file); // 교체용 파일은 버퍼를 먼저 비운 뒤 실제 디스크 flush를 요청한다.
-    const int committed=durable && written==bytes.size() && flushed==0 ? ::_commit(::_fileno(file)) : 0;
-    const int closed=std::fclose(file); // 앞선 실패 여부와 무관하게 같은 FILE을 한 번 반납한다.
-    if (written!=bytes.size() || flushed!=0 || committed!=0 || closed!=0) throw std::runtime_error("Unable to write d/options.cfg");
-}
-
 // 같은 부모 안에 충돌 없는 폴더를 만든다. 부모 자체는 만들지 않으며 기존 폴더나 파일을 재사용하지 않는다.
 std::filesystem::path MakeOptionsSaveDirectory(const std::filesystem::path& path) {
     for (unsigned attempt=0;attempt<64;++attempt) { // 다른 프로세스/이전 중단과 이름이 겹칠 때만 새 번호를 시도한다.
@@ -97,14 +115,11 @@ void ReplaceMappedOptions(const std::filesystem::path& path,std::span<const std:
     OptionsSaveFiles files(path); // 교체 전 오류에서는 원래 파일이 그대로 남는다.
     FILE* output=::_wfopen(files.next.c_str(),L"w+b"); // 새 임시 파일만 원문 모드로 연다.
     if (!output) throw std::system_error(errno,std::generic_category(),"Open replacement options");
-    FinishOptionsStream(output,bytes,true);
+    options_detail::FinishOptionsStream(output,bytes,true);
     if (::ReplaceFileW(path.c_str(),files.next.c_str(),files.previous.c_str(),0,nullptr,nullptr)) return;
     const auto error=::GetLastError(); // 원래 ReplaceFile 오류를 복구 시도의 오류와 혼동하지 않는다.
     files.retain=true; // 드문1176/1177에서도 이전/다음 바이트를 버리지 않는다.
-    // ReplaceFile이 이전 파일을 백업 이름으로 옮긴 뒤 실패했으면, 사라진 목표 이름만 덮어쓰기 없이 복원한다.
-    if (::GetFileAttributesW(path.c_str())==INVALID_FILE_ATTRIBUTES && ::GetFileAttributesW(files.previous.c_str())!=INVALID_FILE_ATTRIBUTES)
-        static_cast<void>(::MoveFileExW(files.previous.c_str(),path.c_str(),MOVEFILE_WRITE_THROUGH));
-    throw std::system_error(static_cast<int>(error),std::system_category(),"Replace mapped options; recovery files: "+DiskPathText(files.directory));
+    options_detail::ThrowOptionsReplacementFailure(path,files.previous,files.directory,error);
 }
 }
 void SaveClientOptionsInGameDirectory(o::ConfigInterface& config,const std::filesystem::path& gameDirectory,o::RawFileName& names,const std::filesystem::path& userFile) { // 원본 chdir/ANSI 대신 Windows10/11의 Unicode 설치 경로를 W 파일 장치에 전달한다.
@@ -122,7 +137,7 @@ void SaveClientOptionsInGameDirectory(o::ConfigInterface& config,const std::file
 void WriteClientOptionsDisk(const std::filesystem::path& path,std::span<const std::uint8_t> bytes) {
     completedOptionsSaves.Collect(); // 이전 저장의 매핑이 해제됐다면 다음 일반 저장에서도 같은 전용 폴더를 정리한다.
     FILE* file=::_wfopen(path.c_str(),L"w+b"); // Windows10/11의 한글/보충 문자 경로를 보존하는 기존 호환 열기다.
-    if (file) { FinishOptionsStream(file,bytes,false);return; }
+    if (file) { options_detail::FinishOptionsStream(file,bytes,false);return; }
     const auto lastError=::GetLastError(); // CRT가 갱신하지 않았을 수 있으므로 별도 보조 진단으로만 기록한다.
     const int openError=errno; // 뒤의 진단/API 전에 CRT 오류를 보존한다.
     unsigned long dosError{}; // _get_doserrno 성공 여부와 실제 Windows 오류를 구별한다.

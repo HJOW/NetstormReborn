@@ -2,17 +2,23 @@
 #include "TestSupport.h"
 #include "client/ClientOptionsDisk.h"
 #include "client/ClientOptionsFile.h"
+#include "client/ClientOptionsSaveIO.h"
 #include "o/ConfigInterface.h"
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <cstdio>
 #include <fstream>
 #include <iterator>
+#include <fcntl.h>
+#include <io.h>
+#include <memory>
 #include <stdexcept>
 #include <system_error>
+#include <thread>
 #include <vector>
 
 namespace { // 검사 파일은 OS 임시 폴더와 작업공간 extracted의 새 전용 폴더에만 만든다.
@@ -76,6 +82,30 @@ void CheckOriginalMappedFailure(const std::filesystem::path& path) {
     unsigned long error{};const auto status=::_get_doserrno(&error); // 다른 API 전에 실제 실패 원인을 보존한다.
     if (original) std::fclose(original);
     CHECK(!original && status==0 && error==ERROR_USER_MAPPED_FILE);
+}
+
+// 실제 파이프 핸들을 한 번만 닫는다. CRT로 소유권을 넘긴 쓰기 핸들은 이 소유자에서 해제한다.
+struct OptionsPipeHandle {
+    HANDLE value{INVALID_HANDLE_VALUE}; // 이 검사만 소유한 읽기/쓰기 장치다.
+    ~OptionsPipeHandle() { if (value!=INVALID_HANDLE_VALUE) ::CloseHandle(value); } // 예외 경로에서도 읽기 끝을 닫아 쓰기 대기를 해제한다.
+    HANDLE Release() { const auto released=value;value=INVALID_HANDLE_VALUE;return released; } // CRT 또는 읽기 스레드에 소유권을 한 번 넘긴다.
+};
+
+// Windows 쓰기 핸들을 실제 CRT FILE로 바꾸며 실패 시 중간 fd까지 반납한다.
+std::unique_ptr<FILE,decltype(&std::fclose)> OpenOptionsPipe(OptionsPipeHandle& read,OptionsPipeHandle& write) {
+    if (!::CreatePipe(&read.value,&write.value,nullptr,4096)) throw std::runtime_error("옵션 검사 파이프 생성 실패");
+    const auto fd=::_open_osfhandle(reinterpret_cast<intptr_t>(write.value),_O_WRONLY|_O_BINARY); // 성공한 fd부터 CRT가 같은 핸들을 소유한다.
+    if (fd<0) throw std::runtime_error("옵션 검사 파이프 fd 생성 실패");
+    write.Release();
+    FILE* stream=::_fdopen(fd,"wb"); // 제품과 같은 fwrite/fflush/fclose 장치를 사용한다.
+    if (!stream) { ::_close(fd);throw std::runtime_error("옵션 검사 파이프 FILE 생성 실패"); }
+    return {stream,&std::fclose};
+}
+
+// 제품 함수가 FILE을 닫은 뒤 OS 핸들도 남지 않았는지 확인한다.
+void CheckOptionsHandleClosed(HANDLE handle) {
+    DWORD flags{};::SetLastError(ERROR_SUCCESS); // 핸들 조회 실패 원인을 직전 API와 구분한다.
+    CHECK(!::GetHandleInformation(handle,&flags) && ::GetLastError()==ERROR_INVALID_HANDLE);
 }
 }
 
@@ -146,5 +176,85 @@ TEST_CASE(ClientOptionsDisk_OtherErrorsDoNotCreateFallbackOrClearChanges) {
         CHECK(failed && config.Configuration().changed && ReadOptionsDisk(path)==original);
         CHECK(::SetFileAttributesW(path.c_str(),FILE_ATTRIBUTE_NORMAL)); // 정리 전에 이번 속성을 반납한다.
         CHECK(std::distance(std::filesystem::directory_iterator(directory.path),std::filesystem::directory_iterator())==1);
+    }
+}
+
+// 같은 제품 종료 함수를 일반/내구성 저장에 직접 적용해 Unicode 경로의 바이트와 실제 핸들 반납을 확인한다.
+TEST_CASE(ClientOptionsDisk_StreamOwnerClosesNormalAndDurableFiles) {
+    for (const auto& root:OptionsDiskRoots()) { // 두 실제 볼륨을 구분한다.
+        OptionsDiskDirectory directory(root);const auto path=directory.path/u8"설정😀.cfg"; // 이번 검사만의 Unicode 파일이다.
+        const std::vector<std::uint8_t> bytes{0,1,2,3,0xff,0xfe}; // 텍스트/빈문자 처리로 바뀌면 안 되는 원시 값이다.
+        for (const bool durable:{false,true}) { // 일반 저장과 교체 전 commit을 각각 실행한다.
+            FILE* stream=::_wfopen(path.c_str(),L"w+b");if (!stream) throw std::runtime_error("옵션 검사 FILE 열기 실패");
+            const auto handle=reinterpret_cast<HANDLE>(::_get_osfhandle(::_fileno(stream))); // 제품에 넘기기 전의 같은 OS 핸들이다.
+            options_detail::FinishOptionsStream(stream,bytes,durable);
+            CheckOptionsHandleClosed(handle);CHECK(ReadOptionsDisk(path)==bytes);
+        }
+    }
+}
+
+// 실제 파이프에 접두 바이트가 전달된 뒤 읽기 끝을 닫아 CRT 쓰기 실패와 changed/FILE 수명을 확인한다.
+TEST_CASE(ClientOptionsDisk_ActualPartialPipeWriteKeepsChangesAndClosesStream) {
+    OptionsPipeHandle read,write;auto stream=OpenOptionsPipe(read,write); // 디스크 공간이나 보호 파일을 손상하지 않는 실제 OS 장치다.
+    if (std::setvbuf(stream.get(),nullptr,_IONBF,0)!=0) throw std::runtime_error("옵션 검사 무버퍼 설정 실패");
+    const auto handle=reinterpret_cast<HANDLE>(::_get_osfhandle(::_fileno(stream.get()))); // fclose 뒤 반납을 확인할 값만 빌린다.
+    netstorm::o::ConfigInterface config({});config.Startup({});config.Set("InstallDir",std::string(65536,'x')); // 파이프 용량보다 큰 실제 설정을 만든다.
+    std::vector<std::uint8_t> submitted,received(1024);DWORD count{};BOOL readOk{}; // 본문 전체와 실제 읽힌 접두를 구분한다.
+    const auto readerHandle=read.Release(); // 읽기 스레드가 이 핸들을 독점 반납한다.
+    std::jthread reader([&] { // 한 번의 실제 부분 읽기 뒤 닫아 진행 중인 큰 동기 쓰기가 실패하도록 한다.
+        readOk=::ReadFile(readerHandle,received.data(),static_cast<DWORD>(received.size()),&count,nullptr);
+        ::CloseHandle(readerHandle);
+    });
+    bool failed=false; // 제품 예외와 실제 전달량을 별도로 관측한다.
+    try { SaveClientOptions(config,[&](auto,auto bytes) { // changed 수명도 실제 저장 부모를 거친다.
+        submitted.assign(bytes.begin(),bytes.end());options_detail::FinishOptionsStream(stream.release(),bytes,false);
+    }); }catch (const std::runtime_error&) { failed=true; }
+    stream.reset();reader.join(); // 예외가 writer 진입 전에 발생해도 쓰기 끝을 닫은 뒤 읽기 스레드를 회수한다.
+    CHECK(failed && config.Configuration().changed && readOk && count>0 && count<submitted.size());
+    if (count<=submitted.size()) CHECK(std::equal(received.begin(),received.begin()+count,submitted.begin()));
+    CheckOptionsHandleClosed(handle);
+    std::printf("Actual options pipe: submitted=%zu received=%lu failed=%d changed=%d\n",submitted.size(),count,failed?1:0,config.Configuration().changed?1:0);
+}
+
+// 닫힌 읽기 끝과 실제 CRT 버퍼로 flush 실패를 만들고 제품의 실패/핸들 반납을 확인한다.
+TEST_CASE(ClientOptionsDisk_BufferedBrokenPipeFailsAndClosesStream) {
+    OptionsPipeHandle read,write;auto stream=OpenOptionsPipe(read,write); // FILE은 성공 경로와 같은 실제 CRT 구현이다.
+    const auto handle=reinterpret_cast<HANDLE>(::_get_osfhandle(::_fileno(stream.get()))); // 최종 fclose의 OS 반납을 확인한다.
+    std::array<char,8192> buffer{}; // Finish 함수가 돌아올 때까지 살아 있는 출력 버퍼다.
+    if (std::setvbuf(stream.get(),buffer.data(),_IOFBF,buffer.size())!=0) throw std::runtime_error("옵션 검사 버퍼 설정 실패");
+    ::CloseHandle(read.Release());const std::vector<std::uint8_t> bytes(32,0x5a);bool failed=false; // 버퍼보다 작은 입력과 이미 닫힌 장치다.
+    try { options_detail::FinishOptionsStream(stream.release(),bytes,false); }catch (const std::runtime_error&) { failed=true; }
+    CHECK(failed);CheckOptionsHandleClosed(handle);
+}
+
+// 문서의1176/1177 파일 이름 상태를 실제 두 볼륨에 구성한다. ReplaceFile 자체의 해당 오류 발생을 주장하지 않는다.
+TEST_CASE(ClientOptionsDisk_ReplacementFailureStatesPreserveOriginalErrorAndBytes) {
+    for (const auto& root:OptionsDiskRoots()) { // C/H의 실제 이동/공유거부 의미를 각각 실행한다.
+        for (unsigned state=0;state<5;++state) { // 기존목표/백업복원/둘다존재/복원공유거부/둘다부재를 구분한다.
+            OptionsDiskDirectory directory(root);const auto target=directory.path/u8"설정😀.cfg",previous=directory.path/"previous.cfg",next=directory.path/"next.cfg"; // 독립 복구 이름이다.
+            const std::vector<std::uint8_t> old{1,2,3},fresh{9,8,7,6},other{5,4}; // 기존/새/경합 목표를 바이트로 구분한다.
+            WriteClientOptionsDisk(next,fresh);
+            if (state==0) WriteClientOptionsDisk(target,old);
+            if (state>=1 && state<=3) WriteClientOptionsDisk(previous,old);
+            if (state==2) WriteClientOptionsDisk(target,other);
+            OptionsPipeHandle locked; // 복원 공유거부 사례에서만 실제 백업 파일 핸들을 소유한다.
+            if (state==3) {
+                locked.value=::CreateFileW(previous.c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
+                if (locked.value==INVALID_HANDLE_VALUE) throw std::runtime_error("옵션 복구 백업 잠금 실패");
+            }
+            const unsigned long originalError=state==0?ERROR_UNABLE_TO_MOVE_REPLACEMENT:ERROR_UNABLE_TO_MOVE_REPLACEMENT_2; // Windows 문서의 원래 교체 오류를 명시 주입한다.
+            bool failed=false; // 복원 성공도 저장 성공으로 바꾸면 안 된다.
+            try { options_detail::ThrowOptionsReplacementFailure(target,previous,directory.path,originalError); }
+            catch (const std::system_error& error) {
+                failed=true;CHECK(error.code()==std::error_code(static_cast<int>(originalError),std::system_category()));
+                if (state==3) CHECK(std::string(error.what()).find("restore error: 32")!=std::string::npos);
+            }
+            CHECK(failed && ReadOptionsDisk(next)==fresh);
+            if (state==0 || state==1) CHECK(ReadOptionsDisk(target)==old);
+            if (state==1) CHECK(!std::filesystem::exists(previous)); // 성공한 이름 복원은 기존 바이트를 목표로 이동한다.
+            if (state==2) CHECK(ReadOptionsDisk(target)==other && ReadOptionsDisk(previous)==old);
+            if (state==3) CHECK(!std::filesystem::exists(target) && ReadOptionsDisk(previous)==old);
+            if (state==4) CHECK(!std::filesystem::exists(target) && !std::filesystem::exists(previous));
+        }
     }
 }
