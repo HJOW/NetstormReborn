@@ -81,6 +81,7 @@ struct RawCampaignWorldRuntime::Impl {
             [this](std::uint32_t slot)->const o::FortTemplate& { return Template(slot); },
             [this](const o::FortTemplate& input,std::uint32_t slot) { if (data.campaignObjects) data.campaignObjects(*objects,slot);else objects->Load(input,static_cast<std::int32_t>(slot)); }, // 실제 캠페인 Session은 원문의004be610을 같은 현재 stream으로 실행한다.
             [this](bool mode) { core.graph.Rebuild(mode); },effects.resetCamera,effects.decoderDiagnostics};
+        campaignHooks.preparePriests=effects.preparePriests;
         campaign=std::make_unique<o::RawCampaignWorldLoad>(chunks,islands,core.frames,puzzlePiece,noRegion,*territory,player,globals,data.headers,data.handle,std::move(campaignHooks));
     }
     // 현재 Template 번호를 매 하위 호출 직전에 실제9칸 범위로 검사한다.

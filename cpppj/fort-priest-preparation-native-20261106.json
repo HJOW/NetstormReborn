@@ -1,0 +1,13 @@
+{
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": "HJOW-Athlon/2026-11-03",
+  "observations": 13,
+  "gameExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_fort_priest_preparation.py": "f1c71418e78ed41533874c0756ea1e08f8a495f82cf7c9b4439caabb990771ac",
+    "cpppj/tests/fixtures/fort-priest-preparation-x86.tsv": "a0f6ad61f5af90432b27c3265f84b1f1126f1b34a0415eb1bace5e2da0a56be2"
+  }
+}

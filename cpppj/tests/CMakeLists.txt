@@ -3654,3 +3654,10 @@ netstorm_apply_compiler_options(netstorm_fsr_tests)
 if(MSVC)
     set_property(SOURCE CampaignSessionTests.cpp APPEND PROPERTY COMPILE_OPTIONS /bigobj)
 endif()
+
+# 실제 Fort 사제 부모의 독립 PE13행과 선택 실패만 기존 집중 대상에 추가한다.
+target_sources(netstorm_guide_fort_request_tests PRIVATE FortPriestPreparationTests.cpp)
+set_source_files_properties(FortPriestPreparationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FORT_PRIEST_PREPARATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-priest-preparation-x86.tsv\"")
+
+# missionPost1의 기존 양판본65행도 같은 집중 대상에서 회귀 대조한다.
+target_sources(netstorm_guide_fort_request_tests PRIVATE CampaignWorldLoadTests.cpp)

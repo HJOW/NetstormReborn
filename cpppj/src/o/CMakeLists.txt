@@ -181,7 +181,7 @@ target_sources(netstorm PRIVATE
     RawPlayerWorld.cpp RawPlayerWorld.h
     RawPlayerIdentity.cpp RawPlayerIdentity.h
     # 실제 캠페인 부모와 Player 예약·저장 State 및 Burning 프레임 복원이다.
-    RawCampaignWorldLoad.cpp RawCampaignWorldLoad.h
+    RawCampaignWorldLoad.cpp RawCampaignWorldLoad.h RawFortPriestPreparation.cpp RawFortPriestPreparation.h
     RawPlayerRegular.cpp RawPlayerRegular.h
     RawPlayerTemplateState.cpp RawPlayerTemplateState.h
     RawTemplateLifetime.cpp RawTemplateLifetime.h

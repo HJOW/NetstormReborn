@@ -55,6 +55,7 @@ struct CampaignWorldLoadHooks {
     std::function<void(bool)> rebuildGraph; // 실제 Graph.Rebuild(false)를 정확히 한 번 요청한다.
     std::function<void()> resetCamera; // PATCH4340d0/CD488f50의 미복원 카메라/UI 경계다.
     const CanonDecoderDiagnostics* decoderDiagnostics{}; // 현재 Canon 진단 owner를 같은 섬/지형/설치 수명 동안 빌린다.
+    std::function<void()> preparePriests; // missionPost0에서 실제004923e0 부모를 선택한다. 자연 mission1은 이 장치를 요구하지 않는다.
 };
 // PATCH4b5300/CD4322e0은 Money/Badges/Technology를 호출하지 않는 실제 미션 설치 부모다.
 class RawCampaignWorldLoad {
@@ -65,7 +66,7 @@ public:
         CampaignWorldGlobals& globals,std::span<std::uint8_t> templateHeaders,std::span<std::uint8_t> currentHandle,CampaignWorldLoadHooks hooks);
     // 실제 prologue→Player→Builder/Territory/PlaceAll→Generate→Objects→Graph0→mission finish→Camera→현재이름 순서다.
     void Load() const;
-    // 실제923e0/CD40daf0의 mission1 자연 반환만 복원한다. 다른 큰 분기는 명시 거부한다.
+    // 실제923e0/CD40daf0의 mission1 자연 반환과 선택된 현재 기술/사제 부모를 호출한다.
     void FinishMissionPriests() const;
     // 실제 소비자의 동일 Pool 연결을 확인한다.
     const SidPool& Pool() const;

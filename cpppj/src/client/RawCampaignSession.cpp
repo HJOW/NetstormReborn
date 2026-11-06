@@ -54,6 +54,8 @@
 #include "client/EditorSaveGoMain.h" //현재 Template manager 관문과 저장 순서를 같은 실제 Session에 연결한다.
 #include "o/RawFortSnapshotParent.h"
 #include "o/RawFortCoreWrite.h"
+#include "o/RawFortPriestPreparation.h"
+#include "o/RawIslandPopulation.h"
 #include "o/RawFortSpWrite.h"
 #include "o/RawFortMoneySave.h"
 #include "o/RawNewFort.h"
@@ -2971,9 +2973,58 @@ struct RawCampaignSession::Impl {
         const FortDeckLoadGlobals deckGlobals{objectState.loadingDepth,fortTypeConversion->Current(),fullDeck}; // 현재global을 원문위치에서 직접조회한다.
         try { LoadFortDeck(static_cast<std::int32_t>(slot),deckGlobals,hooks); }catch (...) { UnwindFortDeckLoad(deckGlobals,hooks);throw; }
     }
+    // 원문0040e2b0의 초기 사제 배치는 기존 실제 배치/Factory/가상 owner/HP/Pop 장치를 사용한다.
+    void PopulateInitialFortPriest(std::int32_t region) {
+        auto& s=*this;
+    auto singleHooks=MakeNormalTerrainFarmWorldHooks(s.world,s.chunks,*s.islands,*s.pipeline,s.hp);
+    singleHooks.mayPlace=[&s](const o::CanonPlacementQuery& query) { return s.MayPlaceGameplay(query); }; // 현재 Editor/Player/동맹/섬·Graph를 읽는 실제 전체 MayPlace다. 생성 시 고정된 초기 관문을 재사용하지 않는다.
+    o::RawFortRandomPlacement single(s.core.pool,s.core.hash,s.core.spots,s.core.types,s.core.frames,s.random,s.randomPlacement,std::move(singleHooks));
+    o::FortFinishOwnerHooks finishHooks;
+    finishHooks.regionBounds=[&s](auto region) { const auto b=s.islands->Bounds(region);return o::FortRandomRectangle{b.left,b.top,b.right,b.bottom}; };
+    finishHooks.wallSeconds=[&s] { if (!s.services.sound.wallSeconds) throw std::logic_error("Fort 사제 준비의 실제 벽시각 미연결");return s.services.sound.wallSeconds(); };
+    finishHooks.invalidType=SessionMissing<void>();finishHooks=o::MakeFortSinglePlacementHook(s.core.pool,single,std::move(finishHooks));
+    o::RawFortFinishOwner localFinish(s.core.pool,s.core.types,s.assetState.Residences(),s.finishState,std::move(finishHooks));localFinish.BindPlayerRecords(s.players);
+    o::IslandPopulationHooks population;
+    population.assertion=[](auto reason) { throw std::logic_error("Fort 사제 준비 원문 population 진단:"+std::to_string(static_cast<std::uint32_t>(reason))); }; // 원문 선택된 진단을 숨기지 않고 지역/권한/배치 실패의 종류를 보존한다.
+    population.wallSeconds=[&s] { if (!s.services.sound.wallSeconds) throw std::logic_error("Fort 사제 준비 교체의 실제 벽시각 미연결");return s.services.sound.wallSeconds(); };
+    population.position=[&s](auto sid) { return s.core.neighbors.Center(sid); };
+    population.destroy=[&s](auto sid,auto flags) { s.world.Destroy(sid,flags); };
+    population.create=[&s](auto type,auto flags) { return s.world.Create(type,flags); };
+    population.defaultFrame=[&s](auto type) { if (type<70 || type-70>=s.assets.game.Types().size()) throw std::out_of_range("Fort 사제 준비 현재 TYPE 기본 프레임 범위");return s.assets.game.Types()[type-70].definition.specialFrames.defaultFrame; };
+    population.typeHitPoints=[&s](auto type) { return s.hp.TypeHitPoints(type); };population.hasHitPoints=[&s](auto sid) { return s.hp.HasHitPoints(sid); };
+    population.setOwner=[&s](auto sid,auto owner) { s.ownership->SetOwner(sid,owner); };
+    population.pop=[&s](auto sid,float x,float y,auto flags) { s.world.Pop(sid,x,y,flags); };
+    population.refreshProduction=[&s] { if (!s.services.ownership.refreshProduction) throw std::logic_error("Fort 사제 준비 실제 생산 통지 미연결");s.services.ownership.refreshProduction(); };
+    o::RawIslandPopulation fill(s.core.pool,s.chunks,s.chunks,*s.islands,localFinish,
+        {s.gameplayGlobals->Authority()->boss,s.core.ownerMode.fort,s.finishState.residenceType,s.tutorialArcherType,s.templeProduct,s.rewardState.types.priest},std::move(population));
+        const auto rect=s.chunks.Bounds(region);const auto cell=[](std::int32_t value) { return static_cast<float>(std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)<<4)); }; //0040d900의 DWORD 감김16배 뒤 float32 저장이다.
+        fill.ReplaceInitial({cell(rect.left),cell(rect.top),cell(rect.right),cell(rect.bottom)},region);
+    }
+    // 실제 Runtime이 현재 모드에서 선택한004923e0을 같은 Player/목록/Template에 연결한다.
+    void PrepareExistingFortPriests() {
+        FortPriestPreparationHooks hooks;
+        hooks.baseType=[this](auto index) { return index==0 ? templeProduct : index==1 ? tutorialArcherType : tutorialTypes.at(0x541258); };
+        hooks.themeType=[this](auto theme) { return tutorialTypes.at(0x541184+theme*4U); };hooks.technology=[this] { return player->CurrentTechnology(); };
+        const auto sid=[this](std::uint32_t value) { if (value>65535 || value>=core.pool.Capacity()) throw std::out_of_range("Fort 사제 준비 현재 SID 범위");return Sid{static_cast<std::uint16_t>(value)}; }; // 원문의 전체 DWORD 입력을 실제 접근 위치에서 검증한다.
+        hooks.contains=[this,sid](auto parent,auto type) { const auto found=priests->Carrier().FindContained(sid(parent),4,type,0);if (!found.value) return 0U;const auto raw=core.pool.Slot(found);return std::uint32_t(raw[18])|(std::uint32_t(raw[19])<<8); }; //004acac0은 후보 SID가 아닌 종류WORD를 반환한다.
+        hooks.createTechnology=[this,sid](auto parent,auto type) { static_cast<void>(contained->Create(sid(parent),type,0,4,0x10,0)); };
+        hooks.templatePresent=[this](auto owner) { if (owner>=9) throw std::out_of_range("Fort 사제 준비 현재 Template owner");return Read(templateStorage->Headers(),owner*20)!=0; };
+        hooks.state=[this](auto owner) { return templateState->Get(owner); };hooks.territory=[this](auto owner,auto bytes) { runtime->ReadTerritory(owner,bytes); };
+        hooks.island=[this](auto owner,auto index) { return FindFortTerritoryIsland(islands->Bytes(),core.ownerMode.fort,std::bit_cast<std::int32_t>(owner),std::bit_cast<std::int32_t>(index)); };
+        hooks.region=[this](float x,float y) { const auto integer=[](double value) { if (!std::isfinite(value) || value<-2147483648.0 || value>=2147483648.0) throw std::out_of_range("Fort 사제 지역 좌표 signed 범위");return static_cast<std::int32_t>(value); };const auto snap=[integer](float value) { return integer(static_cast<float>(integer(double(value)+0.99999F))); };return std::bit_cast<std::int32_t>(motion->Terrain().RegionAt(snap(x),snap(y))); }; // 원문0046f530의0041d7a0 저장/절삭 경계를 유지한다.hooks.setOwner=[this,sid](auto value,auto owner) { ownership->SetOwner(sid(value),owner); };
+        hooks.populate=[this](auto region) { PopulateInitialFortPriest(region); };
+        hooks.tellPriests=[this](auto count) {
+            if (!services.editorPlayerUi.translate || !services.install.setConfig) throw std::logic_error("Fort 사제 수의 실제 번역/설정 장치 미연결");
+            const auto bytes=services.editorPlayerUi.translate("%d Priest%s");const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});if (end==bytes.end()) throw std::out_of_range("Fort 사제 수 번역의 실제 NUL 범위");
+            const std::string format(reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin()));std::array<char,256> text{}; // 원문256BYTE 지역 형식화 버퍼다.
+            const auto length=std::snprintf(text.data(),text.size(),format.c_str(),static_cast<int>(count),count==1 ? "" : "s");if (length<0 || static_cast<std::size_t>(length)>=text.size()) throw std::out_of_range("Fort 사제 수의 원문256BYTE 범위");
+            services.install.setConfig("global.priests",std::span(reinterpret_cast<const std::uint8_t*>(text.data()),static_cast<std::size_t>(length)+1));
+        };
+        RawFortPriestPreparation(core.pool,priestState.priests,{globals.missionPost,globals.editor,globals.mySubscriber,playerState.templateOwner,playerState.battleOwner},std::move(hooks)).Run();
+    }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
     std::unique_ptr<RawCampaignWorldRuntime> MakeRuntime() {
-        auto hooks=services.install;hooks.decoderDiagnostics=&metadata.geometry.decoderDiagnostics; // 최초 Fort/캠페인 지형 적재도 같은 현재 owner를 사용한다.
+        auto hooks=services.install;hooks.preparePriests=[this] { PrepareExistingFortPriests(); };hooks.decoderDiagnostics=&metadata.geometry.decoderDiagnostics; // 최초 Fort/캠페인 지형 적재도 같은 현재 owner를 사용한다.
         FillMissing(hooks.translateYou);FillMissing(hooks.setConfig);
         FillMissing(hooks.refreshWindowTitle);FillMissing(hooks.resetCamera);
         hooks.builderAssertion=SessionMissing<void,RawIslandBuilderAssertion>();hooks.territoryAssertion=SessionMissing<void,FortWorldLoadAssertion>();

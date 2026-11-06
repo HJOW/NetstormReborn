@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **952 / 표시 버전11.01**이다. Native State3의 다른 Fort 설치를 기존 파일/미션/월드 본문에 연결하고, 편집 모드를 켜지 않는 실제 준비 대여와 CoreData 일반 읽기를 추가했다. 일반 Fort는 실제 월드/Deck 뒤 비미션 사제 후처리가 아직 미복원이므로 정상 설치 전체는 미완료다. 최종 Release 경고/오류0·집중23검사(새4/기존19) 통과·실제 Edit/Test Battle/복귀/메인 왕복 종료0·보호2787/fixture967 불변이다. 다음953도 같은3절3번의 사제 부모/나머지다. [952 기록](../docs/exe/cpp-native-fort-continuation-20261106.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
+현재 실행 제품은 **953 / 표시 버전11.01**이다. 일반 Fort의 기본 기술/지역 사제 후처리를 원문대로 연결해 실제 Session의 파일/월드/사제/checkpoint/UI/State 정상 확정과 입력 공개까지 확인했다. 새 독립 PE13행·재관측 차이0, 최종 집중13검사(기존 양판본 부모130행 포함)·Release 경고/오류0이다. 기존 보호2787/fixture967 불변·새fixture1개로 현행2788/fixture968이다. State3 특이 분기의 자연 GUI 도달은 미입증이며 다음954도 같은3절3번의 Native/State/LeaveBattle 잔여를 진행한다. 마지막 실제 GUI는952다. [953 기록](../docs/exe/cpp-fort-priest-preparation-20261106.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 

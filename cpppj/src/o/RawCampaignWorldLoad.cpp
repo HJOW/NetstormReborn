@@ -28,9 +28,9 @@ std::span<std::uint8_t> RawCampaignWorldLoad::CurrentPlayer() const {
     if (owner>=9) throw std::out_of_range("캠페인 현재battleOwner의 실제9기록 범위 오류");
     const auto stride=Pool().Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU;return player_.Records().subspan(owner*stride,stride);
 }
-// 실제 selected mission1에서는923e0/40daf0의 두조건이 모두 false이므로 자연 반환한다.
+// mission1은 자연 반환하고 그 밖에는 실제 현재 기본 기술/지역 사제 부모를 선택한다.
 void RawCampaignWorldLoad::FinishMissionPriests() const {
-    if (!globals_.missionPost) throw std::logic_error("캠페인 비미션 Technology/Priest 후처리 전체 미복원");
+    if (!globals_.missionPost) { if (!hooks_.preparePriests) throw std::logic_error("Fort 실제 기술/사제 준비 부모 미연결");hooks_.preparePriests(); }
 }
 // 본문순서를 보존하고 기존 하위 body를 다시 구현하지 않는다.
 void RawCampaignWorldLoad::Load() const {

@@ -1,26 +1,25 @@
 // State3 제목 뒤의 외부 재선택 입력으로 실제 Session 설치를 잇는다. 자연 UI 도달을 합성하지 않는다.
 #include "client/NativeMainMenuState.h"
 
-// 실제 비편집 파일/월드/Deck은 설치하고 다음 미복원 사제 부모의 명시 중단과 앞선 효과를 확인한다.
-TEST_CASE(CampaignNativeFortContinuation_ActualNonEditorWorldReachesPriestBoundary) {
+// 실제 비편집 파일/월드/Deck/기술·사제 뒤 UI와 공통 State 확정까지 이어간다.
+TEST_CASE(CampaignNativeFortContinuation_ActualNonEditorWorldCommitsAfterPriests) {
     for (const auto target:{1U,2U}) { // 원문 공통 Fort의 두 비멀티 선택을 각각 독립 Client에서 확인한다.
         WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
             EditorInstallStateContext scene(client,3);std::uint32_t prefix{},hud{},titles{},continuations{},outcome{},first{1};
             std::array<char,256> background{};std::array<std::uint8_t,256> current{},pending{}; // Native의 첫 BYTE 쓰기와 파일 이름 장치 입력은 별도 명시 물리다.
-            const auto previous=scene.owner.State().phase,old=scene.owner.State().old;
+            const auto previous=scene.owner.State().phase;InputQueue input;std::uint32_t tailCalls{};const auto tail=EditorInstallTail(session,tailCalls);
             NativeMainMenuStateHooks native;native.configInt=[](auto key) { CHECK(key=="intro");return 1; };
             native.prefix=[&] { ++prefix; };native.hudPrefix=[&] { ++hud; };native.title=[&] { ++titles;scene.owner.State().current[0]=target; };
-            native.changedState=[&]()->LocalMissionParentResult { ++continuations;session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);throw std::logic_error("미복원 사제 부모를 넘어선 잘못된 성공"); };
+            native.changedState=[&] { ++continuations;CHECK(session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work));session.WithExistingEditorInstallUi(scene.owner,input,tail,[&] { static_cast<void>(session.Cursor());session.SynchronizeProductionContents(); });return LocalMissionParentResult::Commit; };
             LocalMissionStateHooks stateHooks;stateHooks.logState=[](auto value) { CHECK(value==3); };stateHooks.parentState=[&](auto selected) {
                 CHECK(selected==3);return InstallNativeMainMenuState({scene.owner.State(),scene.source,outcome,first,scene.battle,client.GameplayGlobals()->world.editor,background,current,pending,{},[] { return 0U; }},native);
             };
-            RawLocalMissionState state(OriginalEdition::Patch1078,scene.owner.State(),scene.Globals(),std::move(stateHooks));bool stopped{};
-            try { state.Run(); }catch (const std::logic_error& error) { stopped=std::string_view(error.what())=="캠페인 비미션 Technology/Priest 후처리 전체 미복원"; }
-            CHECK(stopped && prefix==1 && hud==1 && titles==1 && continuations==1 && first==1);
-            CHECK(scene.owner.State().phase==previous && scene.owner.State().old==old && scene.owner.State().current[0]==target && scene.owner.State().next[0]==0);
-            CHECK(!client.GameplayGlobals()->world.editor && !client.GameplayGlobals()->world.missionPost && !session.ExistingEditorCheckpointReady());
+            RawLocalMissionState state(OriginalEdition::Patch1078,scene.owner.State(),scene.Globals(),std::move(stateHooks));state.Run();
+            CHECK(prefix==1 && hud==1 && titles==1 && continuations==1 && first==1 && tailCalls==5);
+            CHECK(scene.owner.State().phase[0]==target && scene.owner.State().old==previous && scene.owner.State().current[0]==0 && scene.owner.State().next[0]==4);
+            CHECK(!client.GameplayGlobals()->world.editor && !client.GameplayGlobals()->world.missionPost && session.ExistingEditorCheckpointReady());
             CHECK(session.IslandCount()>0 && session.CurrentTechnologyParent()!=0 && session.Core().bookkeeping.depth==0);
-            CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }) && CheckpointRejects<std::logic_error>([&] { session.Cursor(); }));
+            CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); }));session.CommitExistingEditorInstall(scene.owner);static_cast<void>(session.Cursor());
             CHECK(!ReadFileBytes(work.ResolvePath("d/Checkpoint385.fort")).empty());
         },true,nullptr,{},[](Client& client,RawCampaignSessionServices& services) {
             services.adoptMainMenuFort=true;client.LocalStateGlobals()->State().current[0]=2;
@@ -53,10 +52,10 @@ TEST_CASE(CampaignNativeFortContinuation_ActualGuideEarlyReturnKeepsPriorPhase) 
     },true,nullptr,[](RawSurfaceStorage& surface) { surface.links.mission=true; },[](Client& client,RawCampaignSessionServices& services) { services.adoptMainMenuFort=true;client.LocalStateGlobals()->State().current[0]=2; client.GameplayGlobals()->world.editor=0;client.GameplayGlobals()->world.missionPost=false; });
 }
 
-// 명시 CoreData 섹션 입력의 10BYTE/seed/무결성 세 블록을 실제 설치 도중 읽고 사제 경계까지 확인한다.
+// 명시 CoreData 입력을 실제로 읽은 값은 후속 CoreWrite 전에 관측하고 전체 checkpoint도 정상 복귀한다.
 TEST_CASE(CampaignNativeFortContinuation_ActualCoreReadSeedAndLocalIntegrity) {
     for (const bool corrupt:{false,true}) { // 정상 인코딩과 첫 랭크 비트 불일치를 별도 Session에서 확인한다.
-        std::shared_ptr<CampaignTemplateStorage> storage;
+        std::shared_ptr<CampaignTemplateStorage> storage;std::array<std::uint8_t,10> observed{};std::uint32_t observedActive{},observedSeed{},observedDiagnostic{};
         WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
             auto selected=checkpoint;std::uint32_t titles{};client.RandomGlobals()->FortCoreSeed()=0xa55a0000U;
             selected.file.title=[&] {
@@ -70,14 +69,15 @@ TEST_CASE(CampaignNativeFortContinuation_ActualCoreReadSeedAndLocalIntegrity) {
                 }
                 storage->WriteSection(storage->CreateSection(1,"CoreData"),bytes);
             };
-            bool stopped{};try { session.InstallExistingEditorCheckpoint(selected,client.ReadOnlyForts(),work); }catch (const std::logic_error& error) { stopped=std::string_view(error.what())=="캠페인 비미션 Technology/Priest 후처리 전체 미복원"; }
-            CHECK(stopped && titles==2 && session.IslandCount()>0 && !session.ExistingEditorCheckpointReady());
-            const auto core=client.CoreDataGlobals()->Current();CHECK(core.size()==10 && core[0]==3 && core[1]==0 && core[2]==5 && core[3]==0 && core[4]==(corrupt ? 1 : 2) && core[5]==0x71 && core[9]==0x75);
-            CHECK(client.CoreDataGlobals()->Active()==1 && client.RandomGlobals()->FortCoreSeed()==0xa55a1234U);
-            CHECK(client.GameplayGlobals()->PatchDiagnostic()==(corrupt ? 0U : 6U) && session.Core().bookkeeping.depth==0);
+            CHECK(session.InstallExistingEditorCheckpoint(selected,client.ReadOnlyForts(),work));
+            CHECK(titles==2 && session.IslandCount()>0 && session.ExistingEditorCheckpointReady());
+            const auto core=std::span<const std::uint8_t>(observed);CHECK(core.size()==10 && core[0]==3 && core[1]==0 && core[2]==5 && core[3]==0 && core[4]==(corrupt ? 1 : 2) && core[5]==0x71 && core[9]==0x75);
+            CHECK(observedActive==1 && observedSeed==0xa55a1234U);
+            CHECK(observedDiagnostic==(corrupt ? 0U : 6U) && session.Core().bookkeeping.depth==0);
             CHECK(!client.GameplayGlobals()->world.editor && !client.GameplayGlobals()->world.missionPost);
         },true,nullptr,{},[&](Client& client,RawCampaignSessionServices& services) {
             services.adoptMainMenuFort=true;storage=services.templateStorage;client.LocalStateGlobals()->State().current[0]=2;
+            services.install.resetCamera=[&client,&observed,&observedActive,&observedSeed,&observedDiagnostic] { const auto core=client.CoreDataGlobals()->Current();std::copy_n(core.begin(),10,observed.begin());observedActive=client.CoreDataGlobals()->Active();observedSeed=client.RandomGlobals()->FortCoreSeed();observedDiagnostic=client.GameplayGlobals()->PatchDiagnostic(); }; // 실제 사제 후처리 뒤/새 CoreWrite 전의 외부 카메라 호출 위치에서 읽기만 한다.
             client.GameplayGlobals()->world.editor=0;client.GameplayGlobals()->world.missionPost=false;client.GameplayGlobals()->FullDeck()=0;
         });
     }

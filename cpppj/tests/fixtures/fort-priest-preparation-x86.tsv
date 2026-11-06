@@ -1,0 +1,14 @@
+# label / actual trace / final missionPost
+mission		1
+editor	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77	0
+state17	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77	0
+no-record	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77;territory	0
+marked	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77;territory;island:0;owner:1:0;owner:3:0;tell:2	0
+fallback	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77;territory;island:0;owner:1:7;owner:2:0;owner:3:0;tell:2	0
+duplicates	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77;territory;island:0;owner:2:0;tell:1	0
+populate	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77;territory;island:0;populate:1	0
+missing-island	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77;territory;island:0	0
+two-regions	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77;territory;island:0;owner:1:7;owner:2:0;tell:1;island:1;owner:3:7	0
+shorten-list	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77;territory;island:0;owner:1:7	0
+post-change	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77	1
+full-capacity	tech;find:133;create:133;tech;find:71;tech;find:128;create:128;tech;find:77;territory;island:0;owner:1:7;owner:2:0;owner:3:0;owner:4:0;owner:5:0;owner:6:0;owner:7:0;owner:8:0;owner:9:0;owner:10:0;owner:11:0;owner:12:0;owner:13:0;owner:14:0;owner:15:0;owner:16:0;owner:17:0;owner:18:0;owner:19:0;owner:20:0;tell:19	0
