@@ -2991,15 +2991,15 @@ struct RawCampaignSession::Impl {
         const FortTypeNamesLoadGlobals typeNameGlobals{objectState.loadingDepth,fortTypeConversion->Current()}; // 기존 Objects/Technology/Deck과 같은 실제전역이다.
         try { LoadFortTypeNames(static_cast<std::int32_t>(slot),typeNameGlobals,hooks); }catch (...) { UnwindFortTypeNamesLoad(typeNameGlobals,hooks);throw; }
     }
-    // 원문004beca0의 일반 Fort 인자0 경로를 실행한다. 재접속의 인자1 최소값 병합은 별도 후속 경로다.
-    void ReadExistingFortCoreData(std::uint32_t slot) {
+    // 원문004beca0의 현재 CoreData 적재이며 인자1은 같은 lastKnown과 랭크/승패의 최소값을 병합한다.
+    void ReadExistingFortCoreData(std::uint32_t slot,bool minimum=false) {
         if (globals.missionPost || globals.editor) return;
         ++objectState.loadingDepth;world.SetLoadingDepth(objectState.loadingDepth);
         try {
             if (slot>=9) throw std::out_of_range("Fort CoreData의 실제9슬롯 범위");
             if (!Read(templateStorage->Headers(),slot*20)) throw std::logic_error("Fort CoreData Template.cpp1151 진단");
             const auto stream=templateStorage->SelectSection(slot,"CoreData",1); // 같은 노드의 writable 선택과 pos0을 원문 시점에 수행한다.
-            templateStorage->AccessSection(stream,[this,slot](auto fields,const auto& memory) {
+            templateStorage->AccessSection(stream,[this,slot,minimum](auto fields,const auto& memory) {
                 if (!Read(fields,0) || !Read(fields,8)) return;
                 if ((slot>=1 && slot<=8 ? slot : 0U)!=playerState.battleOwner) throw std::logic_error("Fort CoreData Template.cpp1156 진단");
                 coreDataGlobals->Active()=1;
@@ -3008,6 +3008,17 @@ struct RawCampaignSession::Impl {
                 if (target.size()<10 || position>source.size() || 10>source.size()-position) throw std::out_of_range("Fort CoreData10BYTE의 실제 물리 범위");
                 std::copy_n(source.begin()+position,10,target.begin());Put(fields,4,Read(fields,4)+10U);
                 if (std::bit_cast<std::int32_t>(Read(fields,4))>std::bit_cast<std::int32_t>(Read(fields,8))) throw std::logic_error("Fort CoreData MemStream46 진단");
+                if (minimum) {
+                    const auto readValue=[](std::span<const std::uint8_t> bytes,std::size_t at,std::size_t width) { // 현재 Core의 unsigned BYTE/WORD만 읽으며 호스트 물리 범위 밖 입력은 거부한다.
+                        if (at>bytes.size() || width>bytes.size()-at) throw std::out_of_range("CoreData 최소 병합의 현재 필드 범위");return std::uint32_t(bytes[at])|(width==2 ? std::uint32_t(bytes[at+1])<<8 : 0U);
+                    };
+                    const auto mergeMinimum=[&](std::size_t at,std::size_t width) { // 원문 비교/선택/저장마다 현재 포인터를 재조회하고 unsigned BYTE/WORD만 대조한다.
+                        const auto cached=readValue(coreDataGlobals->Cached(),at,width);const auto current=readValue(currentCore(),at,width);
+                        const auto selected=current<cached ? readValue(currentCore(),at,width) : readValue(coreDataGlobals->Cached(),at,width);auto destination=currentCore();
+                        if (at>destination.size() || width>destination.size()-at) throw std::out_of_range("CoreData 최소 병합의 현재 쓰기 범위");destination[at]=static_cast<std::uint8_t>(selected);if (width==2) destination[at+1]=static_cast<std::uint8_t>(selected>>8);
+                    };
+                    mergeMinimum(4,1);mergeMinimum(0,2);mergeMinimum(2,2); // 원문 랭크 BYTE→승리 WORD→패배 WORD 순서를 보존한다.
+                }
                 if (!services.fortTechnologyUi) throw std::logic_error("Fort CoreData의 실제 Chat 랭크 갱신 미연결");services.fortTechnologyUi();
                 // 원문 인라인 BYTE/WORD/DWORD 읽기는 저장 후 WORD/DWORD만 논리 end를 진단한다.
                 const auto readWord=[&](std::uint32_t width) {

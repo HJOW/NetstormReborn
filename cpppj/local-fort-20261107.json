@@ -1,0 +1,24 @@
+{
+  "unit": 991,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "client2a 자기 일반 Fort의 파일·배지·Player·Core 최소 병합·기술·덱 연결",
+  "sourceFunctions1078": ["004b3d30", "004beca0", "004be8e0", "004beee0", "004bf190", "00490250"],
+  "referenceFunctions1072": ["004307f0", "00429200", "00428fc0", "004293d0", "00429670", "00407400"],
+  "build": {
+    "firstExitCode": 1,
+    "firstErrors": 6,
+    "correction": "DWORD 전용 Read/Put 오호출을 unsigned BYTE/WORD 직접 접근으로 교정",
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "firstLog": "extracted/cpp-resume-991/build.log",
+    "finalLog": "extracted/cpp-resume-991/build-final.log",
+    "exeSize": 11625472,
+    "exeSha256": "7e1d3643741a08420e8aadacee83e60fafa33c9b5c3ef6b6991d27a5da6991bf"
+  },
+  "excluded": { "newMultiplayerTests": 0, "unitTestRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-991/protected-before.json" },
+  "remaining": ["일반 State/Commander/roster/LAN UI", "전체 파생 writer/decoder", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}

@@ -91,6 +91,15 @@ struct RawCampaignSession::Impl::Login {
         if (owner>=9) throw std::out_of_range("현재 미션 Template의 실제9슬롯 범위");const auto selected=SelectFile();if (selected.fileName.empty()) throw std::runtime_error("미션 파일 선택기의 실제 파일 이름 누락");
         s.templateStorage->LoadFile(owner,{},selected.fileName,FileHooks(selected));
     }
+    //004b3d30의 자기 ordinary Fort는 고정 헤더를 유지하되 Player 생성 번호는 배지 적재 뒤 현재 값을 다시 읽는다.
+    void LocalFort(std::uint32_t owner) {
+        Reload(owner);if (!s.runtime || !s.player) throw std::logic_error("자기 일반 Fort의 실제 World/Player 부모 미연결");
+        auto children=s.MakeExistingFortChildren(s.runtime->Objects());
+        children.selectMeta(s.templateStorage->Template(owner),owner,false);children.meta->LoadBadgesSelected([&]()->FortMetaStream& { return children.metaStream(s.templateStorage->Template(owner),false); });
+        static_cast<void>(s.player->Create(std::bit_cast<std::int32_t>(s.playerState.battleOwner)));s.ReadExistingFortCoreData(owner,true);
+        children.selectMeta(s.templateStorage->Template(owner),owner,true);children.meta->LoadTechnologySelected([&]()->FortMetaStream& { return children.metaStream(s.templateStorage->Template(owner),true); });
+        s.ReadExistingFortDeck(owner); // 수신 이미지 병합/전투섬 생성은 외곽 수신기의 현재 server/hidden 관문 뒤에만 수행한다.
+    }
     // 원문004606d0→004bfba0의 원격 준비만 실행한다. 자기 Fort의 Load/선택과 수신 이미지 병합을 앞당기지 않는다.
     void OpenRemoteFort(std::uint32_t owner) {
         if (!s.services.remoteFortFiles) throw std::logic_error("원격 Fort의 사용자 작업 namespace 미연결");
@@ -206,6 +215,7 @@ struct RawCampaignSession::Impl::Login {
         };
         server=std::make_unique<RawMissionLogin>(s.players,*s.participation,MissionLoginGlobals{s.core.processState.Server(),s.assetState.Boss(),simul,s.objectState.mission,s.globals.missionPost,s.core.ownerMode.challenge,s.playerState,s.globals.mySubscriber,fortCount,lastPlayer,predictable,begin,beginSeed,battleSeed,burst,clockStamp,baseClock,captureEnd,currentCore,cachedCore,Zone(),s.battleOptions,&s.gameplayGlobals->GameAux()->ResourcePool(),&saved,&s.assetState.inBattle},std::move(serverHooks)); // 실제 저장게임/전투 bool 주소를 빌리며 일반 모드를 강제로 켜지 않는다.
         MissionClientPacketHooks receive;receive.clock=effects.clock;receive.wallSeconds=effects.wallSeconds;receive.runState=[this] { state->Run(); };receive.resetCamera=s.services.install.resetCamera;receive.refreshSp=effects.refresh;
+        receive.localFort=[this](auto owner) { LocalFort(owner); }; // savedGame 여부와 무관한 !missionPost의 실제 자기 Fort 사슬이다.
         receive.openFortImage=[this](auto owner) { OpenRemoteFort(owner); };receive.readFortImage=[this](auto owner,auto image) { ReadRemoteFort(owner,image); }; // packet2a는 두 선택을 분리해 manager를 중복 생성하지 않는다.
         receive.buildFort=[this](auto owner) { s.BuildBattleIsland(owner); }; // 비서버 packet2a의 현재 이미지 뒤 실제 전투섬을 만든다. boss가 아니면 Objects를 자연 생략한다.
         receive.updateRange=[this] { options->UpdateRange(); };receive.requiredEnergy=[this] { return options->TypeCost(); };receive.setEnergyType=[this](float value) { options->SetSelectedTypeCost(value); };receive.readOptionValue=[this] { return options->CurrentValue(); };
