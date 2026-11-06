@@ -1,0 +1,55 @@
+{
+  "unit": 1028,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "39h 비행 전체 수신·임시 Sun 해석/테마별 기본 생성자/재해석·명시 Form 부착 및 같은 PID 갱신",
+  "sourceFunctions1078": [
+    "0045e2b0",
+    "0045afb0",
+    "0045c280",
+    "0045e130",
+    "0045e180",
+    "0045e280",
+    "004ac970",
+    "00480260",
+    "0045c2f0",
+    "0045ae40",
+    "0041bd00"
+  ],
+  "reference1072": {
+    "scope": "PATCH 수신 부모/decoder이며 CD 별도 ABI와 혼합하지 않음"
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1028\\build.log",
+    "exeSize": 12019200,
+    "exeSha256": "d0f85f2102d708e2d0da5527d5b82721aa9053865b112f5266d9fd3c61873e88"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "dedicatedAirUnitTests": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1028\\protected-before.json"
+  },
+  "remaining": [
+    "애니메이션3bh·3ch 등 나머지 프로세스 전체 decoder",
+    "재동기화 허용/owner cache·Activate 수신자 부모",
+    "내용물 통지 PlayerKnown 실제 binding 대조",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

@@ -1,5 +1,6 @@
 // 비행 프로세스의 실제 원문 폭과 생성·전송·후처리 순서를 보존한다.
 #include "o/RawFlyerProcess.h"
+#include "o/RawWindFlyer.h" // 수신용 Wind leaf도 기존의 정확한 전용 VT/추가 필드 쓰기를 재사용한다.
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -8,6 +9,8 @@
 namespace netstorm::o {
 namespace {
 constexpr std::size_t kDirty=8,kHome=10,kInner=48,kForm=52,kParent=56; // 원본 outer/inner의 실제 바이트 위치다.
+constexpr std::array<std::size_t,7> kDataOffsets{10,12,16,20,24,32,40}; // dirty2..80의 실제 전송 필드 순서다.
+constexpr std::array<std::size_t,7> kDataWidths{2,2,4,4,4,8,8}; // 두 WORD/세 DWORD/두8BYTE의 독립 폭이다.
 // 원본 비정렬 WORD/DWORD를 little endian으로 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t at,std::size_t width=4) { std::uint32_t value=0;for (std::size_t i=0;i<width;++i) value|=std::uint32_t(raw[at+i])<<(8*i);return value; }
 // 선택한 폭만 써 padding과 인접 필드를 보존한다.
@@ -20,6 +23,9 @@ template<class Function> const Function& Need(const Function& function) { if (!f
 float Position(std::span<const std::uint8_t> raw,std::size_t at) { return std::bit_cast<float>(Read(raw,at)); }
 // 프레임 덧셈의 low DWORD 감김을 보존한다.
 std::uint32_t FrameSum(std::int32_t frames,std::span<const std::uint8_t> raw) { return std::bit_cast<std::uint32_t>(frames)+Read(raw,36); }
+void ObserveFlyerData(const FlyerProcessFields& fields) { // 네 실제 outer VT0은 모두480260의 ret12다. 미등록 가상을 같은 빈 몸체로 대체하지 않는다.
+    const auto table=Read(fields.bytes,0);if (table!=0x509cc8U && table!=0x509f24U && table!=0x509f60U && table!=0x509f98U) throw std::logic_error("비행 데이터의 현재 가상0 observer 미연결");
+}
 }
 Sid FlyerProcessFields::Form() const { return Sid{static_cast<std::uint16_t>(Read(bytes,kForm))}; } // inner Form의 현재 하위WORD다.
 Sid FlyerProcessFields::Parent() const { return Sid{static_cast<std::uint16_t>(Read(bytes,kParent))}; } // inner 부모의 현재 하위WORD다.
@@ -42,6 +48,19 @@ void RawFlyerProcess::SpecializeSun(FlyerProcessFields& fields) {
     Put(fields.bytes,0,0x509f24);Put(fields.bytes,kInner,0x509f04);Time(fields,104,0);
     std::fill_n(fields.sunTail.begin(),16,std::uint8_t{});Put(fields.bytes,84,0);
 }
+void RawFlyerProcess::InitializeReceived(FlyerProcessFields& fields,std::int32_t theme) { // 기본 ctor는 미작성 home/위치/속도와 padding을 보존한다.
+    Time(fields,32,0);Time(fields,40,0);fields.bytes[kDirty]=0xff;Put(fields.bytes,kInner,0x5019ec);Put(fields.bytes,kParent,0);Put(fields.bytes,kForm,0);
+    Put(fields.bytes,0,0x509cc8);Put(fields.bytes,kInner,0x509ca8);Time(fields,64,0);Time(fields,72,0);Put(fields.bytes,12,0,2);Put(fields.bytes,84,0);
+    if (theme==1) SpecializeRain(fields);else if (!theme) RawWindFlyer::Specialize(fields);else SpecializeSun(fields); // 각 leaf의 추가 타이머만 초기화하며 첫Frame 초기화는 호출하지 않는다.
+}
+std::uint32_t RawFlyerProcess::ReadData(FlyerProcessFields& fields,std::span<const std::uint8_t> packet) {
+    std::uint32_t parent{};if (packet.size()<9) throw std::out_of_range("비행 수신의 실제9BYTE 머리 부족");const auto dirty=packet[8];std::size_t offset=9;ObserveFlyerData(fields); // before의 sign-extend dirty/1/0 인자는 빈 observer에서 소비하지 않는다.
+    const auto require=[&](std::size_t width) { if (offset>packet.size() || width>packet.size()-offset) throw std::out_of_range("비행 수신의 선택된 dirty 필드 부족"); }; // 앞선 부분 쓰기는 예외에서도 유지한다.
+    if (dirty&1U) { require(4);parent=Read(packet,offset);offset+=4; }
+    for (std::size_t index=0;index<kDataOffsets.size();++index) if (dirty&(2U<<index)) { require(kDataWidths[index]);std::copy_n(packet.begin()+offset,kDataWidths[index],fields.bytes.begin()+kDataOffsets[index]);offset+=kDataWidths[index]; } // 반복은 원문 WORD/DWORD/8BYTE의 순서/비트만 복원한다.
+    ObserveFlyerData(fields);return parent; // after observer도 현재 VT를 다시 선택하며 dirty/inner 소유권은 보존한다.
+}
+void RawFlyerProcess::DestructFields(FlyerProcessFields& fields) { Put(fields.bytes,kInner,0x5019ec);Put(fields.bytes,kForm,0xffffcfc7U);Put(fields.bytes,kParent,0xffffcfc7U); } // Native−12345 두DWORD는 WORD로 줄이지 않는다.
 // 첫 실제 nondead Form만 갱신하며 없으면 원문처럼 자연 반환한다.
 void RawFlyerProcess::Bind(Sid flyer,Sid home) const {
     const auto type=pool_.Slot(flyer)[10];if (type>=types_.size()) throw std::out_of_range("비행 홈 연결 TYPE 범위 오류");
@@ -69,12 +88,11 @@ void RawFlyerProcess::Finish(FlyerProcessFields& fields) const {
 std::uint16_t RawFlyerProcess::WriteProcess(FlyerProcessFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force,std::uint8_t protocol,std::uint8_t message) {
     const auto parent=(includeParent || force) ? Read(fields.bytes,kParent) : 0U;const auto dirty=force ? 0xffU : fields.bytes[kDirty];
     std::size_t required=9+(parent ? 4U : 0U); // 실제 선택 필드들의 총 길이를 쓰기 전에 검사한다.
-    for (std::uint32_t bit=2;bit<=128;bit<<=1) if (dirty&bit) required+=bit<=4 ? 2U : bit<=32 ? 4U : 8U; // 원문의 WORD2/DWORD3/double2 폭이다.
+    for (std::size_t index=0;index<kDataWidths.size();++index) if (dirty&(2U<<index)) required+=kDataWidths[index]; // 수신과 같은 원문의 WORD2/DWORD3/8BYTE2 폭이다.
     if (packet.size()<required) throw std::out_of_range("비행 프로세스 상태 패킷 크기 오류");if (force) fields.bytes[kDirty]=0xff;
     packet[0]=protocol;packet[1]=message;Put(packet,4,Read(fields.bytes,kForm));std::size_t at=9;
     if (parent) { fields.bytes[kDirty]|=1;Put(packet,at,parent);at+=4; }
-    constexpr std::array<std::size_t,7> offsets{10,12,16,20,24,32,40}; // bit2..128에 대응하는 실제 원문 필드다.
-    for (std::size_t i=0;i<offsets.size();++i) if (fields.bytes[kDirty]&(2U<<i)) { const auto width=i<2 ? 2U : i<5 ? 4U : 8U;std::copy_n(fields.bytes.begin()+static_cast<std::ptrdiff_t>(offsets[i]),width,packet.begin()+static_cast<std::ptrdiff_t>(at));at+=width; } // 바이트 복사로 NaN/미정 double도 보존한다.
+    for (std::size_t index=0;index<kDataOffsets.size();++index) if (fields.bytes[kDirty]&(2U<<index)) { std::copy_n(fields.bytes.begin()+static_cast<std::ptrdiff_t>(kDataOffsets[index]),kDataWidths[index],packet.begin()+static_cast<std::ptrdiff_t>(at));at+=kDataWidths[index]; } // 같은 메타데이터의 바이트 복사로 NaN/미정8BYTE도 보존한다.
     Put(packet,2,static_cast<std::uint32_t>(at),2);packet[8]=fields.bytes[kDirty];fields.bytes[kDirty]=0;return static_cast<std::uint16_t>(at);
 }
 const SidPool& RawFlyerProcess::Pool() const { return pool_; } // 실제 Host와 같은 풀이다.

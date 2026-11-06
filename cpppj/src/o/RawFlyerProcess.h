@@ -37,6 +37,9 @@ class RawFlyerProcess {
 public:
     RawFlyerProcess(SidPool& pool,std::span<const RiftTypeRecord> types,FlyerProcessGlobals globals,FlyerProcessHooks hooks); // PATCH 자료의 수명/크기를 확인한다.
     void Construct(FlyerProcessFields& fields,Sid parent,Sid home,std::uint32_t speed,float parameter) const; // 0045c340의 쓰기와 inner 부착 순서다.
+    static void InitializeReceived(FlyerProcessFields& fields,std::int32_t theme); //45c280 뒤 theme0/1/그 외의45e280/45e180/45e130 기본 생성자만 실행한다. 위치/부착/첫Frame은 추가하지 않는다.
+    static std::uint32_t ReadData(FlyerProcessFields& fields,std::span<const std::uint8_t> packet); //45afb0의 같은 두 빈 observer와 WORD/DWORD/8BYTE 선택 쓰기이며 별도 부모DWORD를 반환한다.
+    static void DestructFields(FlyerProcessFields& fields); //45ae40→41bd00의 inner VT/두−12345 표식이다. 임시 수신 객체를 해제하기 직전에 사용한다.
     static void SpecializeRain(FlyerProcessFields& fields); // 부착이 끝난 뒤0045fac0의 맨 오 워 추가 쓰기다.
     static void SpecializeSun(FlyerProcessFields& fields); // 부착 뒤45ef30의 전용 표/104·112·120 타이머와84 필드만 쓴다.
     void Bind(Sid flyer,Sid home) const; // 0045c1b0의 genus 검사/첫 Form 조회/dirty2/홈 WORD 쓰기다.
