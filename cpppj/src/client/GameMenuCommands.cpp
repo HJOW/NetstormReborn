@@ -104,6 +104,8 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
     if (key=="serverforcebattlestart") return 0x020000f5U; //PE00543330 이름표/00542ac8의 실제 일반 명령이다.
     if (key=="delstatefile") return 0x020000acU; //PE005430e8→005429a4의 실제 저장상태 삭제 명령이다.
+    if (key=="statereconnect") return 0x020000abU; //PE005430e0→005429a0의 실제 저장 복구 명령이다.
+    if (key=="forceserverdeath") return 0x020000a9U; //PE005430d0→00542998의 실제 서버 이전 명령이다.
     if (key=="setlanguage") return kSetLanguageCommand;
     if (key=="languagechanged") return kLanguageChangedCommand;
     if (key=="playintro") return kPlayIntroCommand;

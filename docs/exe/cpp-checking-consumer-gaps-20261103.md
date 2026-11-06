@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**2026-11-07 단위1014 현재 집계:**004b8cb0의 실제 reader/flags별 서버 후보·현재15/다음7·3·checking f24 정상 복귀·실패 안내/삭제와 두 일반 입력을 연결했다. checking잔여5=부모2(004b02d0/004dc220)+부분0+MP3(0042bc10/004b4df0/004b8b20),완료부모40/부분6=46+5/51이다. 신규MP/단위/게임/통신검사0이며 자동004b9010 caller 등 전체 MP 완료는 아니다.[1014 기록](cpp-battle-reconnect-selection-20261107.md).
+
 **2026-11-06 단위957 재개 대조:** 사용자 순서대로 UI/미션1~3번을 정리한 뒤4번으로 돌아왔다. 현재공통Pop/World·Session장치와83표/후처리46종·실효표시81지원/메타2잔여를대조했고기존31검사/집중Release경고오류0이다. 897의간헐천복원을반영하며전체checking8(부모3/부분2/MP3)·완료부모39/부분4는유지한다. 전체8함수/모든파생몸체실행완료가아니다. 전체잔여는LEFT_JOBS8번,Process·Content/Form/Factory공유수명은4번에서계속한다. 새코드/검사/CPU/fixture/게임/GUI/MP실행없음·제품956불변·마지막정밀HJOW-Athlon/2026-11-03. [957 기록](cpp-pop-current-scope-20261106.md).
 
 **2026-11-05 단위912:** 공통 Form Pop 부모의 진단 정상 복귀/현재 권한·부분 상태/공유 깊이와 실제 VT+20을 같은 Factory·실제 Session Content 후단에 연결했다. 새 Native2,560입력/재관측 일치·고유41사례 첫 통과·14명령41실행/실패 단언0이다. Release1명령 종료0·경고0·기존2786/fixture966개 불변·현행2787/fixture967개다. checking8/완료 부모39·부분4는 불변이며 Process/정렬·상위 실패 정책은 잔여다. **사용자 지시로 다음913부터 UI1번을 우선**한다. [912 기록](cpp-form-pop-current-20261105.md).
@@ -1677,6 +1679,8 @@ LAB_004ad54f:
 - `"currState.state == S_META_CHAL_CONNECTED || currState.state == S_META_CHAL_CONNECTED_MONITOR" ,".\\State.cpp",0xe39)`
 
 ## FUN_004b8cb0 @ 004b8cb0
+
+**2026-11-07 단위1014 현재 집계:**004b8cb0의 실제 reader/flags별 서버 후보·현재15/다음7·3·checking f24 정상 복귀·실패 안내/삭제와 두 일반 입력을 연결했다. checking잔여5=부모2(004b02d0/004dc220)+부분0+MP3(0042bc10/004b4df0/004b8b20),완료부모40/부분6=46+5/51이다. 신규MP/단위/게임/통신검사0이며 자동004b9010 caller 등 전체 MP 완료는 아니다.[1014 기록](cpp-battle-reconnect-selection-20261107.md).
 
 **831 범위 분류(미완료):**실제 두 수동 caller는ForceServerDeath/StateReconnect 인자0/1이고 자동004b9010은서버 연결 장애 뒤다. 저장검증/연결 Player·서버 subscriber 선택/State15·재접속State7/NotRestart 전체 부모로8번MP에 이월한다. 단독 상태에 임의 진단을 넣지 않으며 직접inSingle 관문 부재를 모든 단독 도달불가 증명으로 확대하지 않는다. 부분3/잔여17·제품830 유지,새 빌드/기능·MP 검사0이다. [831 기록](cpp-state-reconnect-scope-20261104.md).
 

@@ -222,6 +222,8 @@ private:
     void PollLanLobby(); // TCP callback 밖에서 완료 요청을 다음 호스트 Tick에 예약한다.
     void CloseLanLobby(); // 자기 대기실/창만 닫고 이미 인계한 State7 요청은 보존한다.
     void RequestLanBattle(LanLobbyBattle battle); // 실제 명단을 Native next7과 같은 요청 owner에 인계한다.
+    void RequestBattleReconnect(bool reloadFile); //004b8cb0의 실제 reader/서버 선택과 동기15·다음7/3을 일반 입력에서 수행한다.
+    void QueueReconnectBattleWorld(); // 원문 next7/문자열40BYTE/복구 표식을 보존해 다음 Tick의 같은 일반 World 설치에 인계한다.
     void LoadLanBattleWorld(); // Client 수명의 State7 공통 부모가 이전/새 World를 끝까지 소유한다.
     void LoadLanBattleWorldBody(); // 실제 cleanup/전투 prefix와 일반 Session 후반을 연결한다.
     void FinishLanBattleWorld(); // 실제 phase14/Player 참여 뒤에만 사용자 입력·커서·표시를 연다.
