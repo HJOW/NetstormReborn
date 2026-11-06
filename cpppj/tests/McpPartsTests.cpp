@@ -181,7 +181,9 @@ TEST_CASE(McpParts_JsonParsesAndDumpsDeterministically) {
     CHECK(list.size() == 7 && list[0].AsInt() == 1 && list[1].AsInt() == -2 && list[2].AsDouble() == 3.5 && list[3].AsBool() && !list[4].AsBool(true) && list[5].IsNull());
     CHECK(list[6].AsString() == std::string("x\ny\xc3\xa9\xf0\x9f\x98\x80")); // \u00e9와 대리쌍 U+1F600이 UTF-8로 풀린다.
     const auto dumped = parsed->Dump();
-    CHECK(dumped.starts_with(R"({"a":{"k":"v"},"b":[1,-2,3.5,true,false,null,"x\ny)")); // 키 사전순으로 고정된다.
+    // 키 사전순 출력의 접두부다. raw 문자열을 CHECK의 문자열화 대상에서 분리한다.
+    constexpr char expectedPrefix[] = R"({"a":{"k":"v"},"b":[1,-2,3.5,true,false,null,"x\ny)";
+    CHECK(dumped.starts_with(expectedPrefix));
     const auto again = Json::Parse(dumped);
     CHECK(again && again->Dump() == dumped);
     Json built;
@@ -189,7 +191,9 @@ TEST_CASE(McpParts_JsonParsesAndDumpsDeterministically) {
     Json oneItem = Json::MakeArray();
     oneItem.Push(1);
     built.Set("list", oneItem);
-    CHECK(built.Dump() == R"({"list":[1],"n":5,"text":"a\"b\\c\t"})");
+    // 따옴표·역슬래시·탭의 JSON 이스케이프 기대값이다. 매크로 밖에서 원문 바이트를 유지한다.
+    constexpr char expectedDump[] = R"({"list":[1],"n":5,"text":"a\"b\\c\t"})";
+    CHECK(built.Dump() == expectedDump);
     CHECK(!built["missing"].AsBool(false) && built["missing"].IsNull() && built["text"].AsInt(7) == 7); // 종류가 다른 읽기는 fallback이다.
 }
 

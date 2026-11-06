@@ -1,0 +1,141 @@
+{
+  "unit": 983,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 982,
+  "version": "11.01",
+  "exeSha256": "fc7af27c36624128b586787918b4e1fc72e8972992029ee524cdb7881795d6b7",
+  "exeBytes": 11396608,
+  "reportedLocation": "cpppj/tests/McpPartsTests.cpp:192:5",
+  "cause": "MSVC 14.44 전통 전처리기의 CHECK #condition 문자열화에서 이스케이프 포함 raw JSON이 깨져 192행 연쇄 구문 오류 발생",
+  "change": "이스케이프 포함 기대 raw 문자열 두 개를 CHECK 밖 constexpr char 배열로 분리; 기대 바이트와 비교 의미 보존",
+  "syntaxChecks": [
+    {
+      "toolset": "14.51",
+      "source": "before",
+      "preprocessor": "traditional",
+      "exitCode": 0,
+      "errorCodes": []
+    },
+    {
+      "toolset": "14.51",
+      "source": "before",
+      "preprocessor": "conformant",
+      "exitCode": 0,
+      "errorCodes": []
+    },
+    {
+      "toolset": "14.51",
+      "source": "after",
+      "preprocessor": "traditional",
+      "exitCode": 0,
+      "errorCodes": []
+    },
+    {
+      "toolset": "14.51",
+      "source": "after",
+      "preprocessor": "conformant",
+      "exitCode": 0,
+      "errorCodes": []
+    },
+    {
+      "toolset": "14.44",
+      "source": "before",
+      "preprocessor": "traditional",
+      "exitCode": 2,
+      "errorCodes": [
+        "C2017",
+        "C3688",
+        "C2146",
+        "C2660",
+        "C2146",
+        "C2065",
+        "C2146",
+        "C2065",
+        "C2143",
+        "C2059"
+      ]
+    },
+    {
+      "toolset": "14.44",
+      "source": "before",
+      "preprocessor": "conformant",
+      "exitCode": 0,
+      "errorCodes": []
+    },
+    {
+      "toolset": "14.44",
+      "source": "after",
+      "preprocessor": "traditional",
+      "exitCode": 0,
+      "errorCodes": []
+    },
+    {
+      "toolset": "14.44",
+      "source": "after",
+      "preprocessor": "conformant",
+      "exitCode": 0,
+      "errorCodes": []
+    }
+  ],
+  "focusedBuilds": [
+    {
+      "source": "before",
+      "target": "netstorm_mcp_parts_tests",
+      "configuration": "Release",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "rebuiltSources": 2
+    },
+    {
+      "source": "after",
+      "target": "netstorm_mcp_parts_tests",
+      "configuration": "Release",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "rebuiltSources": 2
+    }
+  ],
+  "tests": {
+    "newCases": 0,
+    "executedCases": 10,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "cases": [
+      "McpParts_ChecksumsMatchStandardVectors",
+      "McpParts_ZlibRoundTripsAndShrinksRepeatedData",
+      "McpParts_IndexedPngHasValidStructureAndPixels",
+      "McpParts_RgbaPngRoundTripsPixels",
+      "McpParts_JsonParsesAndDumpsDeterministically",
+      "McpParts_JsonRejectsMalformedInput",
+      "McpProtocol_Base64MatchesStandardVectors",
+      "McpProtocol_InitializeListPingAndErrors",
+      "McpProtocol_ToolCallsAreQueuedOrRejected",
+      "McpParts_FrameRecorderWritesPngSequenceManifestAndConcat"
+    ]
+  },
+  "interruptedBuilds": {
+    "count": 2,
+    "reason": "최초 전체 대상과 SelectedFiles 시도 모두 광범위 재컴파일이어서 자체 빌드 트리만 중단하고 집중 대상으로 전환",
+    "fullSuiteCompileVerified": false,
+    "fullSuiteRun": false
+  },
+  "setupCorrection": "VS 18의 14.44 디렉터리는 불완전 설치라 최초 cl 9009; 실제 VS 2022 BuildTools 경로로 바꾼 뒤 위 행렬을 재현",
+  "protected": {
+    "files": 2800,
+    "fixtures": 980,
+    "unchanged": true,
+    "new": []
+  },
+  "gameRuns": 0,
+  "multiplayerTests": 0,
+  "checkingRemaining": 8,
+  "lastGuiUnit": 981,
+  "next": "984: 기존 8번 공유 Registration/복합 전송/Session 수명 준비본을 검토하고 실제 Client 접합 계속; 신규 MP 검사는 제외"
+}
