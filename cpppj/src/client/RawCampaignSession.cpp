@@ -1,3 +1,4 @@
+#include "o/RawVortexOwnerDiagnostic.h" // 신전 상세/진단의 실제 Client 경계다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "o/RawSidRobust.h" // 상세 SID 진단의 실제 부모다.
@@ -1071,7 +1072,12 @@ struct RawCampaignSession::Impl {
         auto ownerEffects=services.ownership;
         ownerEffects.otherOwner=[this](Sid sid,std::uint32_t owner) { priests->SetOwner(sid,owner); };
         FillMissing(ownerEffects.refreshProduction);FillMissing(ownerEffects.themeMode);
-        ownerEffects.missingIsland=SessionMissing<void,Sid,std::int32_t,std::uint32_t>();
+        ownerEffects.missingIsland=[this](Sid sid,std::int32_t island,std::uint32_t owner) {
+            auto& storage=*world.Storage(); // 현재 World의 같은 Client 상세/진단을 사용한다.
+            ReportVortexOwnerMissingIsland(core.pool,sid,island,owner,islands->Count(),{
+                [&storage](auto text) { storage.RecordAssertionDetail(text); },
+                [&storage](auto expression,auto file,auto line) { storage.AssertDisplay(expression,file,line); }});
+        }; // 진단이 정상 복귀하면 기존 신전 부모의 IslandList/지역/공통Owner 후단을 계속한다.
         ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,revision,terrainType,gameplayGlobals->GameAux()->EdgeFarmType(),std::move(ownerEffects)); // 진단과 같은 현재 두 TYPE를 설치 시점에 읽는다.
         carrier=std::make_unique<RawCarrierPostPop>(core.pool,core.types,carrierState,
             MakeCarrierPostPopHooks(core.pool,core.postPop,[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); },[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); }));

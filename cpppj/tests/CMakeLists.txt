@@ -3708,3 +3708,12 @@ netstorm_apply_compiler_options(netstorm_priest_owner_current_tests)
 target_compile_definitions(netstorm_priest_owner_current_tests PRIVATE NETSTORM_PRIESTOWNER_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestowner-x86.tsv")
 set_source_files_properties(PriestOwnerCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     NETSTORM_PRIEST_OWNER_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priest-owner-current-local-x86.tsv")
+
+# 신전 Owner 진단 접두의 두 PE96행과 기존 현재 Player/목록을 집중 대조한다(964).
+target_sources(netstorm_tests PRIVATE VortexOwnerDiagnosticTests.cpp)
+add_executable(netstorm_vortex_owner_diagnostic_tests FocusedTestMain.cpp VortexOwnerDiagnosticTests.cpp VortexOwnerTests.cpp)
+target_link_libraries(netstorm_vortex_owner_diagnostic_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_vortex_owner_diagnostic_tests)
+target_compile_definitions(netstorm_vortex_owner_diagnostic_tests PRIVATE NETSTORM_VORTEXOWNER_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortex-owner-x86.tsv")
+set_source_files_properties(VortexOwnerDiagnosticTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    NETSTORM_VORTEX_OWNER_DIAGNOSTIC_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortex-owner-diagnostic-local-x86.tsv")

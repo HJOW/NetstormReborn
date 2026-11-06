@@ -5428,3 +5428,15 @@ TEST_CASE(PriestOwnerCurrent_ActualSessionUsesClientDiagnosticAndCurrentLoading)
     CHECK(diagnostics==1 && raw[34]==3 && Get(raw,12,2)==0xab01 && external.notices==notices+1 && external.packets.size()==packets);
     session.World().Storage()->BindDisplayDiagnostics(detail,{});core.ownerMode=oldMode; // 검사 장치의 참조가 지역 관측 값보다 오래 남지 않게 한다.
 }
+
+// 실제 Session의 신전 missingIsland가 같은 Client 상세를 먼저 기록하고 원문 진단을 호출하는지 확인한다.
+TEST_CASE(VortexOwnerDiagnostic_ActualSessionReportsSameClientDetail) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;std::optional<std::string> detail;std::uint32_t diagnostics{};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+    const auto sid=session.World().Create(123,2);auto raw=core.pool.AllocatedBytes(sid);const auto original=std::vector<std::uint8_t>(raw.begin(),raw.end());raw[11]&=static_cast<std::uint8_t>(~4U);raw[34]=3;Put(raw,14,std::bit_cast<std::uint32_t>(-20.75F));Put(raw,18,std::bit_cast<std::uint32_t>(300.5F));
+    session.World().Storage()->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) {
+        CHECK(expression=="0" && file=="\\Ns\\O\\Vortex.cpp" && line==0x235);++diagnostics;CHECK(detail && detail->find("pos=(-20,300)\noldPlayerId=3\nnewPlayerId=2\n")!=std::string::npos);throw std::string("diagnostic");
+    }); // 원문 진단 진입에서만 멈추며 부모의 선행 상세를 관측한다.
+    bool stopped=false;try { session.SetObjectOwner(sid,2); }catch (const std::string&) { stopped=true; }CHECK(stopped && diagnostics==1 && raw[34]==3);
+    session.World().Storage()->BindDisplayDiagnostics(detail,{});std::copy(original.begin(),original.end(),raw.begin()); // 명시 입력과 지역 장치 참조를 원복하고 실제 객체 수명은 Session에 맡긴다.
+}

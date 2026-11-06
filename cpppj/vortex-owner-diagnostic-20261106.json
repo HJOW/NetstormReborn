@@ -1,0 +1,144 @@
+{
+  "unit": 964,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 964,
+  "version": "11.01",
+  "exeSha256": "54cad8f52f8a261b7e8d0fdc5cd4bcbc297b3281d8b4ec04948d12626869c9d6",
+  "exeBytes": 11326464,
+  "scope": "신전 Owner missingIsland의 현재 count/좌표/owner 상세→원문 식/파일/행과 실제 Client 저장/진단 연결. 앞선 Player 신전 해제 보존.",
+  "native": {
+    "unit": 964,
+    "rows": 96,
+    "scope": "실제 신전 부모/CRT ftol, 섬/printf/상세/진단은 명시장치. printf는 원문 형식과 실제 인자만 포맷. 진단 진입까지이며 정상 ret4/전체 부모/게임/MP 실행 아님.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_vortex_owner_diagnostic.py": "295dbb92cff9186c617652022313dd7b07344791d8e487fee85530c9f5b115b8",
+      "cpppj/tests/fixtures/vortex-owner-diagnostic-local-x86.tsv": "f38a3da225499fc1a9a980bb53fa7501ea6655976e57e2b5a0d084a1f7924f13"
+    }
+  },
+  "nativeReobserve": {
+    "rows": 96,
+    "differentRows": 0
+  },
+  "initialComparison": {
+    "log": "extracted/cpp-resume-964/tests-new.log",
+    "cases": 2,
+    "failedChecks": 96,
+    "cause": "제품의 진단 파일 경로 역슬래시 이중 표기. Native 실제 바이트에 맞춰 제품과 같은 오류가 있던 Session 기대를 교정. fixture/상세/부분상태 기대는 변경하지 않음."
+  },
+  "finalBuild": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_vortex_owner_diagnostic_tests",
+      "netstorm_world_generation_tests"
+    ],
+    "configuration": "Release",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-resume-964/build-fixed.log"
+  },
+  "tests": [
+    {
+      "log": "extracted/cpp-resume-964/tests-final-new.log",
+      "cases": 2,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-964/tests-final-session.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-964/tests-final-old-vortex.log",
+      "cases": 4,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-964/tests-final-old-session-0.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-964/tests-final-old-session-1.log",
+      "cases": 1,
+      "failedChecks": 0
+    }
+  ],
+  "uniqueTests": 9,
+  "newTests": 3,
+  "existingTests": 6,
+  "legacyReplay": {
+    "path": "cpppj/tests/fixtures/vortex-owner-x86.tsv",
+    "sha256": "6793098e34d190f6b25e794a34145756ccfc34a04f74b045c4f1a4316f192e70",
+    "patchRows": 864,
+    "cdRows": 864,
+    "fixtureUnchanged": true
+  },
+  "sourceSha256": {
+    "cpppj/src/o/RawVortexOwnerDiagnostic.cpp": "bb3ad6c027f5ed0e12f6f7764280b2e962327ad360ea486f3029787997d960df",
+    "cpppj/src/o/RawVortexOwnerDiagnostic.h": "7e9357b5004b4f5a9dbd3d2f2a6f4d9d687b24ae403cba7109e2943dde572a7a",
+    "cpppj/src/client/RawCampaignSession.cpp": "5c186747423ac6521c068e45fa2746836bd4c9d6d21c64ff6649dad82caf5822",
+    "cpppj/tests/VortexOwnerDiagnosticTests.cpp": "d91ddee02f8269bd9f146b2026a88a3e34367467eb00d2170e70c7fceb28ad70",
+    "cpppj/tests/CampaignSessionTests.cpp": "18fee113fa2da7c001d9fed5045bb554f4b6479ec5e4d8c5c7125f26d215fef7"
+  },
+  "protection": {
+    "existingUnchanged": 2795,
+    "newFixtures": 1,
+    "nextFiles": 2796,
+    "nextFixtures": 976,
+    "baseline": "extracted/cpp-resume-964/protected-final.json"
+  },
+  "solutionInventory": {
+    "projects": 82,
+    "kinds": {
+      "Utility": 3,
+      "Application": 77,
+      "DynamicLibrary": 1,
+      "StaticLibrary": 1
+    },
+    "testNamed": 72,
+    "otherApplications": [
+      "NetstormCpp",
+      "netstorm_cloud_probe",
+      "netstorm_cloud_render_probe",
+      "netstorm_help_probe",
+      "netstorm_smacker_dump"
+    ]
+  },
+  "checking": {
+    "remaining": 8,
+    "parents": 3,
+    "partial": 2,
+    "mp": 3,
+    "completedParents": 39,
+    "completedPartial": 4,
+    "unchanged": true
+  },
+  "lastGui": {
+    "product": 962,
+    "entries": 4,
+    "newProductGuiVerified": false
+  },
+  "excluded": [
+    "새 게임/GUI",
+    "실제 사제 포획/희생/특정 적 공격/승리",
+    "신규 MP/통신",
+    "공중3종 전용",
+    "물리 입력/PCM/CD",
+    "전체 CTest/34미션/ZIP 반복"
+  ],
+  "remaining": [
+    "3절4번 Factory 외부 heap/할당 실패·파일/부분 I/O 수명",
+    "현재 파생 전체 범위와 State/팔레트/Chat 등 남은 소비자",
+    "7번 사용자/환경 확인 경계 뒤 8번 후속 구현"
+  ],
+  "nextUnit": 965,
+  "goalComplete": false
+}

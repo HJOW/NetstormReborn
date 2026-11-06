@@ -1,0 +1,11 @@
+{
+  "unit": 964,
+  "rows": 96,
+  "scope": "실제 신전 부모/CRT ftol, 섬/printf/상세/진단은 명시장치. printf는 원문 형식과 실제 인자만 포맷. 진단 진입까지이며 정상 ret4/전체 부모/게임/MP 실행 아님.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_vortex_owner_diagnostic.py": "295dbb92cff9186c617652022313dd7b07344791d8e487fee85530c9f5b115b8",
+    "cpppj/tests/fixtures/vortex-owner-diagnostic-local-x86.tsv": "f38a3da225499fc1a9a980bb53fa7501ea6655976e57e2b5a0d084a1f7924f13"
+  }
+}

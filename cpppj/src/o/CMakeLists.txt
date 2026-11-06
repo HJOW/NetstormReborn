@@ -587,3 +587,6 @@ target_sources(netstorm PRIVATE RawSquidContainedUnpop.h RawSquidContainedUnpop.
 
 # 자산 소유자의 생산 접두/고정 중립을 실제 표면 분배기와 합성한다.
 target_sources(netstorm PRIVATE RawAssetOwner.h RawAssetOwner.cpp)
+
+# 신전 소유자의 missingIsland 상세와 실제 Client 진단 순서를 공유한다.
+target_sources(netstorm PRIVATE RawVortexOwnerDiagnostic.h RawVortexOwnerDiagnostic.cpp)
