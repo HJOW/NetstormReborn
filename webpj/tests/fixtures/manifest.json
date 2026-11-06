@@ -745,7 +745,7 @@
       "bytes": 1552384,
       "lines": null,
       "fixtureCommit": "2f80430a",
-      "webCommit": "worktree",
+      "webCommit": "410beda4",
       "cpppjBasis": {
         "cpppj/src/o/RawGameAuxState.h": "886f2d23",
         "cpppj/src/o/RawSquidContainedUnpop.h": "f83db66c"
@@ -1277,7 +1277,8 @@
       "modules": [
         "webpj/www/core/squid-destroy.js",
         "webpj/www/core/bridge-lifecycle.js",
-        "webpj/www/core/squid-unpop.js"
+        "webpj/www/core/squid-unpop.js",
+        "webpj/www/core/squid-factory.js"
       ],
       "unit": "WB04-D2",
       "doc": "docs/webpj-squid-destroy-20261105.md",
@@ -1287,13 +1288,13 @@
         "cpppj/src/o/RawBridgeLifecycle.cpp",
         "cpppj/src/o/SquidUnpop.cpp"
       ],
-      "scope": "10.78 Destroy 600행·Bridge 64행. 역할1/2 root 준비의 Factory Take 는 D4 전까지 같은 효과의 합성 준비. 10.37/CD 행 제외",
+      "scope": "10.78 Destroy 600행·Bridge 64행. 역할1/2 root 준비는 실제 SquidFactory.take(74)(2026-11-06 WB04-D4 에서 합성 준비 교체). 10.37/CD 행 제외",
       "text": true,
       "sha256": "d304cecad36bc85a910c9ea09f9eab5e6aed341909dce055f5f3ce81e34b7e20",
       "bytes": 1573181,
       "lines": 1993,
       "fixtureCommit": "5edb2b6d",
-      "webCommit": "3ef1d18b",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidDestroy.cpp": "f2215dc5",
         "cpppj/src/o/RawSquidDestroy.h": "886f2d23",
@@ -1326,7 +1327,7 @@
       "bytes": 11062,
       "lines": 57,
       "fixtureCommit": "7a4ef74b",
-      "webCommit": "worktree",
+      "webCommit": "410beda4",
       "cpppjBasis": {
         "cpppj/src/o/SquidForms.cpp": "09ad72b0",
         "cpppj/src/o/SquidForms.h": "09ad72b0"
@@ -1357,7 +1358,7 @@
       "bytes": 420097,
       "lines": 865,
       "fixtureCommit": "d678fcad",
-      "webCommit": "worktree",
+      "webCommit": "410beda4",
       "cpppjBasis": {
         "cpppj/src/o/RawFormAttach.cpp": "d678fcad",
         "cpppj/src/o/RawFormAttach.h": "d678fcad"
@@ -1388,7 +1389,7 @@
       "bytes": 542706,
       "lines": 2561,
       "fixtureCommit": "09ad72b0",
-      "webCommit": "worktree",
+      "webCommit": "410beda4",
       "cpppjBasis": {
         "cpppj/src/o/RawFormPop.cpp": "09ad72b0",
         "cpppj/src/o/RawFormPop.h": "09ad72b0"
@@ -1419,7 +1420,7 @@
       "bytes": 410922,
       "lines": 1729,
       "fixtureCommit": "36777e48",
-      "webCommit": "worktree",
+      "webCommit": "410beda4",
       "cpppjBasis": {
         "cpppj/src/o/SquidForms.cpp": "09ad72b0",
         "cpppj/src/o/RawSquidContainedUnpop.cpp": "f83db66c"
@@ -1451,10 +1452,289 @@
       "bytes": 366794,
       "lines": 601,
       "fixtureCommit": "a466b2a6",
-      "webCommit": "worktree",
+      "webCommit": "410beda4",
       "cpppjBasis": {
         "cpppj/src/o/SquidForms.cpp": "09ad72b0",
         "cpppj/src/o/SidPool.cpp": "435cfa1d"
+      }
+    },
+    {
+      "id": "type-constructors",
+      "path": "cpppj/tests/fixtures/constructors-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 타입별 생성자 주소 대입 구간 x86 결과(0 은 base)",
+      "consumers": [
+        "webpj/tests/squid-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-constructors.js"
+      ],
+      "unit": "WB04-D4",
+      "doc": "docs/webpj-squid-factory-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/TypeConstructors.inc"
+      ],
+      "scope": "10.78 188행 전체(비0 122). CD 171행 제외",
+      "text": true,
+      "sha256": "c92412152abb65808a2037c30b2e5df4dfc783b891d52e995a4313cda527218e",
+      "bytes": 7166,
+      "lines": 360,
+      "fixtureCommit": "078ea3e8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/TypeConstructors.inc": "078ea3e8"
+      }
+    },
+    {
+      "id": "asset-constructor-current",
+      "path": "cpppj/tests/fixtures/asset-constructor-current-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 자산 bare 생성자 x86 관측(물리 슬롯 전체·다이스 보조 생성자 진단 정상 복귀)",
+      "consumers": [
+        "webpj/tests/squid-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-factory.js",
+        "webpj/www/core/squid-constructors.js"
+      ],
+      "unit": "WB04-D4",
+      "doc": "docs/webpj-squid-factory-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/DerivedConstructors.inc",
+        "cpppj/src/o/SquidFactory.cpp"
+      ],
+      "scope": "10.78 567행 전체. 공중3종/Outpost 새 실행은 원본 관측에서도 제외됨",
+      "text": true,
+      "sha256": "5e93ca7e6d29e75b3bc47f92a295570c4ea7163dab7d3a2ecd7058d83d56c4c8",
+      "bytes": 220690,
+      "lines": 1037,
+      "fixtureCommit": "0d163f6e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/DerivedConstructors.inc": "f7675661",
+        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
+      }
+    },
+    {
+      "id": "squid-creation-parent",
+      "path": "cpppj/tests/fixtures/squid-creation-parent-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Create 부모(004af530) x86 관측(fakeSurface/signed SID 진단·할당·생성자·반환 객체 VT 캐시·TYPE·+28 순서)",
+      "consumers": [
+        "webpj/tests/squid-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-factory.js"
+      ],
+      "unit": "WB04-D4",
+      "doc": "docs/webpj-squid-factory-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidCreation.cpp"
+      ],
+      "scope": "10.78 294행 전체. 할당/cdecl/+28 은 명시 장치",
+      "text": true,
+      "sha256": "8bbc69366eae3d6ae4ba1a333eeb988c2ea1bdc558379c427adb3677bed1e26a",
+      "bytes": 148872,
+      "lines": 589,
+      "fixtureCommit": "e6259e97",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidCreation.cpp": "e6259e97"
+      }
+    },
+    {
+      "id": "squid-take-parent",
+      "path": "cpppj/tests/fixtures/squid-take-parent-current-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Take 부모(004af610) x86 관측(SID 진단·상세·가상 Unpop·상태 저장·현재 생성자·반환 객체·+2c 순서)",
+      "consumers": [
+        "webpj/tests/squid-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-factory.js"
+      ],
+      "unit": "WB04-D4",
+      "doc": "docs/webpj-squid-factory-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidTake.cpp"
+      ],
+      "scope": "10.78 360행 전체. 상세/Unpop/cdecl/+2c 는 명시 장치",
+      "text": true,
+      "sha256": "9f40fe7ddf0b219f3eafbca0f5dc7a740efa89ed07ac1585ba625bddc2098302",
+      "bytes": 325827,
+      "lines": 721,
+      "fixtureCommit": "e1a617ac",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidTake.cpp": "e1a617ac"
+      }
+    },
+    {
+      "id": "factory-initialization",
+      "path": "cpppj/tests/fixtures/factory-initialization-current-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 공통 PostCreate/PostTake·TYPE HP x86 관측(진단 정상 복귀·현재 TYPE/서버/1/4 HP/사제 TYPE 재조회)",
+      "consumers": [
+        "webpj/tests/squid-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-factory.js",
+        "webpj/www/core/game-aux-state.js"
+      ],
+      "unit": "WB04-D4",
+      "doc": "docs/webpj-squid-factory-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidFactory.cpp",
+        "cpppj/src/o/RawRiftHitPoints.cpp"
+      ],
+      "scope": "10.78 288행 전체. 1/4 HP·사제 TYPE 은 같은 GameAuxState(bindGameAux)로 빌림",
+      "text": true,
+      "sha256": "77bf5a1893a8078b6b2b4113ab49315ce8e746d9105ae314a3f8a5282e74cea2",
+      "bytes": 146005,
+      "lines": 577,
+      "fixtureCommit": "21da8875",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
+        "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a5"
+      }
+    },
+    {
+      "id": "first-pop-flags",
+      "path": "cpppj/tests/fixtures/first-pop-flags-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 공통 firstPop 직접 몸체(004ad470) x86 관측(extra BYTE 256값의 반환)",
+      "consumers": [
+        "webpj/tests/squid-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-factory.js"
+      ],
+      "unit": "WB04-D4",
+      "doc": "docs/webpj-squid-factory-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidFactory.cpp"
+      ],
+      "scope": "10.78 256행 전체를 6 물리 입력(예약·free·다른 VT)에 적용, 풀 무쓰기",
+      "text": true,
+      "sha256": "f7962700854608e7783a01d1bac0abd1a9220defce9eb918098f2334d93d62c6",
+      "bytes": 8250,
+      "lines": 513,
+      "fixtureCommit": "cf4bdec8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
+      }
+    },
+    {
+      "id": "factory-creation",
+      "path": "cpppj/tests/fixtures/creation-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 base 생성/초기화와 void Take x86 관측(반환 SID·풀 카운터/머리/꼬리/Adler·결과 슬롯)",
+      "consumers": [
+        "webpj/tests/squid-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-factory.js",
+        "webpj/www/core/squid-constructors.js",
+        "webpj/www/core/sid-pool.js"
+      ],
+      "unit": "WB04-D4",
+      "doc": "docs/webpj-squid-factory-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidFactory.cpp"
+      ],
+      "scope": "10.78 2블록 482단계 전체. CD 블록 제외",
+      "text": true,
+      "sha256": "3a95581e93b42548eaba0618c576d97750633a6d6caa075835ab84e5d669d379",
+      "bytes": 164662,
+      "lines": 1649,
+      "fixtureCommit": "078ea3e8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
+      }
+    },
+    {
+      "id": "factory-derived",
+      "path": "cpppj/tests/fixtures/derived-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 파생 생성자 전체와 TYPE 연결의 생성/Construct/Take/초기화 x86 관측(서버/클라이언트·약화 HP)",
+      "consumers": [
+        "webpj/tests/squid-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-factory.js",
+        "webpj/www/core/squid-constructors.js",
+        "webpj/www/core/sid-pool.js"
+      ],
+      "unit": "WB04-D4",
+      "doc": "docs/webpj-squid-factory-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidFactory.cpp",
+        "cpppj/src/o/DerivedConstructors.inc"
+      ],
+      "scope": "10.78 4블록 3300단계 전체. CD 블록 제외",
+      "text": true,
+      "sha256": "abb2c721cf93f3aca230a4bf6772e952d3e37434090f8784297ce47f608159ab",
+      "bytes": 975424,
+      "lines": 7469,
+      "fixtureCommit": "f7675661",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
+        "cpppj/src/o/DerivedConstructors.inc": "f7675661"
+      }
+    },
+    {
+      "id": "factory-unpop",
+      "path": "cpppj/tests/fixtures/unpop-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 일반 non-void Unpop·Take·반납·공통 firstPop x86 관측(풀/삭제 기록/네 단계 해시/spot Adler·대상 슬롯)",
+      "consumers": [
+        "webpj/tests/squid-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-factory.js",
+        "webpj/www/core/squid-unpop.js",
+        "webpj/www/core/sid-pool.js"
+      ],
+      "unit": "WB04-D4",
+      "doc": "docs/webpj-squid-factory-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidFactory.cpp",
+        "cpppj/src/o/SquidUnpop.cpp",
+        "cpppj/src/o/RawSquidUnpopParent.cpp"
+      ],
+      "scope": "10.78 9블록 1809단계 전체(cpppj 의 3618단계 중 CD 절반 제외). 표시 비활성, 실제 Pop/월드 미실행",
+      "text": true,
+      "sha256": "76c693fe249b31249fbd011cc5cafadd32d6aa7f016952cc63b2acdda275585b",
+      "bytes": 862447,
+      "lines": 8423,
+      "fixtureCommit": "a86150db",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
+        "cpppj/src/o/SquidUnpop.cpp": "ea848459",
+        "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459"
       }
     }
   ]

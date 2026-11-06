@@ -2,7 +2,7 @@
 //  - cpppj/tests/fixtures/destroy-x86.tsv 의 10.78(originals) Destroy 600행·Bridge 64행(두 x87 정밀도 639/895): 외부 효과 순서, 대상/주변 일곱 슬롯 바이트,
 //    풀 카운터·두 free 머리·두 꼬리, 풀 전체·네 단계 해시·spot·삭제 기록의 Adler-32, 선택, pre/post 깊이.
 //    장면 구성과 외부 효과 대체는 cpppj tests/RawDestroyTests.cpp 와 같다(기대값은 웹이 만들지 않는다).
-//  - 역할 1/2(서버/예측 SID root)의 준비는 cpppj 가 실제 Factory Take(74)를 쓰지만, Take 는 D4 범위라 아래 syntheticTake 로 같은 효과를 낸다.
+//  - 역할 1/2(서버/예측 SID root)의 준비는 cpppj 와 같이 실제 SquidFactory.take(74)를 쓴다(2026-11-06 WB04-D4: D2 의 syntheticTake 대체를 교체).
 //    free 슬롯에 대한 원본 Take(004af610)는 그 슬롯의 VT·TYPE·상태·zOrder 만 쓰고 free 목록/카운터를 바꾸지 않으며, 장면이 곧바로 50바이트 전체를 덮어쓴다.
 // (2026-11-05 WB04-D2: 공통 삭제기 이식과 함께 추가)
 import test from 'node:test';
@@ -16,6 +16,7 @@ import { RawSquidFinder } from '../www/core/raw-squid-finder.js';
 import { SquidUnpop } from '../www/core/squid-unpop.js';
 import { RawSquidDestroy, SQUID_DESTROY_EFFECT } from '../www/core/squid-destroy.js';
 import { RawBridgeLifecycle, BRIDGE_LIFECYCLE_EFFECT, makeBridgeLifecycleHooks } from '../www/core/bridge-lifecycle.js';
+import { SquidFactory } from '../www/core/squid-factory.js';
 
 // 원본 관측 파일이다. (2026-11-05 WB04-D2)
 const DESTROY_FIXTURE = path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'destroy-x86.tsv');
@@ -27,17 +28,6 @@ const CAPACITY = 32768;
 
 // 장면 좌표(20.75f, 21.9f)이다. (2026-11-05 WB04-D2)
 const X = Math.fround(20.75), Y = Math.fround(21.9);
-
-// 원본 Take(004af610, 10.78)가 free 슬롯에 남기는 효과만 같은 순서로 쓴다: 상태 &0xfc → base 생성자 VT → TYPE → 상태|4 → PostTake zOrder(+35).
-// VT+48(Unpop)은 free 슬롯이라 부르지 않고, free 목록/카운터는 바꾸지 않는다. D4 에서 실제 Factory Take 로 바꾼다. (2026-11-05 WB04-D2)
-function syntheticTake(pool, sid, type, zOrder) {
-    const raw = pool.physical(sid);
-    raw[11] &= 0xfc;
-    put(raw, 0, 0x501dd0);
-    raw[10] = type;
-    raw[11] |= 4;
-    raw[35] = zOrder & 0xff;
-}
 
 // cpppj RawDestroyTests Scene 과 같은 입력 장면이다. 외부 가상 훅만 명시적으로 대체하고 공간 해제/반납은 실제 웹 구현을 부른다. (2026-11-05 WB04-D2)
 class DestroyScene {
@@ -60,7 +50,8 @@ class DestroyScene {
         for (const expected of IDS) assert.equal(this.pool.allocate(2), expected);
         const layout = this.pool.layout;
         this.root = role === 0 ? IDS[0] : (role === 1 ? layout.serverFirst + 9 : layout.predictableFirst + 1);
-        if (role) syntheticTake(this.pool, this.root, 74, this.types[74].zOrder);
+        // 서버/예측 root 는 실제 Take(004af610)로 free 슬롯을 수신한다(VT+48 은 free 라 부르지 않음).
+        if (role) new SquidFactory(this.pool, this.types, { unpop: this.unpop }).take(74, this.root);
         const active = [this.root, ...IDS.filter((sid) => sid !== this.root)];
         this.selected = inputCase % 2 ? this.root : 0;
         // fixture 의 합성 raw/타입/등록 입력만 옮긴다.

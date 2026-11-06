@@ -1,6 +1,6 @@
 // 공통 contained 해제 종단(RawSquidContainedUnpop)의 링크·진단 복귀·UI 큐 계약을 명시 입력으로 검사한다(WB04-D2).
 // 원본 x86 관측 표가 없는 모듈이라 cpppj tests/SquidContainedUnpopTests.cpp 의 계약 검사 중 10.78 부분을 옮겼다(기대값은 그 검사와 같다).
-// 새 CPU 관측이나 실제 플레이 검사가 아니다. Take 상위 경로(FactoryTakeChecking)는 Factory(D4)와 함께 옮긴다.
+// 새 CPU 관측이나 실제 플레이 검사가 아니다. Take 상위 경로(FactoryTakeChecking)는 2026-11-06 WB04-D4 에서 tests/squid-factory-contract.test.mjs 로 옮겼다.
 // (2026-11-05 WB04-D2: 공통 contained 종단 이식과 함께 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';

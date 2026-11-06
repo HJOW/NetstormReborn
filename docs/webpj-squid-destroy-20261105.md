@@ -61,4 +61,4 @@
 
 D3/D4의 cpppj 소스는 착수 시점의 커밋본을 기준으로 하고 이후 변경은 3.5절에서 반영한다.
 
-**2026-11-06 갱신:** D3는 공통 Form 층과 Form 종속 전역으로 완료했고, Form 호스트는 Factory 뒤로 옮겨 D4(Factory)·D5(Form 호스트·Process/Regular·분배)로 다시 나눴다. 현행 계획은 [공통 Form 층 문서 5절](webpj-squid-forms-20261106.md)을 따른다.
+**2026-11-06 갱신:** D3는 공통 Form 층과 Form 종속 전역으로 완료했고, Form 호스트는 Factory 뒤로 옮겨 D4(Factory)·D5(Form 호스트·Process/Regular·분배)로 다시 나눴다. 현행 계획은 [공통 Form 층 문서 5절](webpj-squid-forms-20261106.md)을 따른다. 같은 날 WB04-D4에서 이 문서 검사의 합성 Take(`syntheticTake`)와 Unpop 경계 장면의 allocate+base VT를 실제 `SquidFactory.take(74)`/`create(82)`로 교체했다([SquidFactory 문서](webpj-squid-factory-20261106.md)).

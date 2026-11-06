@@ -2,8 +2,8 @@
 //  - 원본 관측(cpppj/tests/fixtures, 10.78 행만): form-constructor 28행·form-attach-current 432행·form-pop-current 1280행·form-unpop-current 864행·formtake 300행.
 //    각 행의 합성 입력·명시 장치는 cpppj 검사(FormConstructorTests·FormAttachCurrentTests·FormPopCurrentTests·FormUnpopCurrentTests·FormTakeTests)와 같고 기대값은 fixture 에서 읽는다.
 //  - 계약: cpppj 의 SquidForms 단독 검사(Take 통지 시점·풀 재확보, Unpop 통지 부재·진단 뒤 현재 VT, Pop 장치 부재, 부착 꼬리 진단·이웃 VT 부재·혼합 링크 WORD)를 옮겼다.
-//    그 검사의 Factory.Create(74) 부모/이웃은 D4 범위라 같은 할당과 base 생성자 VT(0x501dd0)·TYPE 74 만 쓰는 합성 준비로 대신한다(링크 WORD 만 관측한다).
-//    CreateGumpForm/CreateContained 는 Form 생성 경로가 VT→TYPE 만 쓰므로 SquidForms.create(3/6) 와 바이트가 같다.
+//    그 검사의 Factory.Create(74) 부모/이웃은 실제 생성자 주소 표를 넣은 SquidFactory.create(74)로 만든다(2026-11-06 WB04-D4: D3 의 base VT 합성 준비를 교체).
+//    CreateGumpForm/CreateContained 는 Form 생성 경로가 VT→TYPE 만 쓰므로 SquidForms.create(3/6) 와 바이트가 같다(Factory 경로는 squid-factory-contract 검사).
 //  - GameAuxState 연결: 부착 꼬리 진단과 contained 종단이 0054107c·00541088·005427dc 를 호출 시점마다 읽는지 확인한다(웹 단위 계약, 원본 관측 아님).
 // 실제 게임·브라우저 실행이 아니다. (2026-11-06 WB04-D3: 공통 Form 층 이식과 함께 추가)
 import test from 'node:test';
@@ -14,6 +14,8 @@ import { readRows, put, get, adler32 } from './raw-support.mjs';
 import { SidPool } from '../www/core/sid-pool.js';
 import { SQUID_BASE_VTABLE, SQUID_FORM_VTABLES } from '../www/core/squid-vtables.js';
 import { GameAuxState } from '../www/core/game-aux-state.js';
+import { SquidFactory } from '../www/core/squid-factory.js';
+import { PATCH_TYPE_CONSTRUCTORS } from '../www/core/squid-constructors.js';
 import {
     RawSquidContainedUnpop, commonContainedParent, commonContainedPrevious, commonContainedSetParent, commonContainedSetPrevious,
 } from '../www/core/squid-contained-unpop.js';
@@ -52,13 +54,9 @@ function fillPattern(raw, sid) {
     for (let offset = 0; offset < raw.length; offset += 1) raw[offset] = ((sid * raw.length + offset) * 37 + 19) & 0xff;
 }
 
-// D4 Factory.Create(74) 대신 같은 할당과 base 생성자 VT·TYPE 74 만 쓰는 합성 부모/이웃이다(링크 WORD 관측용). (2026-11-06 WB04-D3)
-function syntheticAsset(pool, flags = 0) {
-    const sid = pool.allocate(flags);
-    const raw = pool.physical(sid);
-    put(raw, 0, SQUID_BASE_VTABLE);
-    raw[10] = 74;
-    return sid;
+// 실제 생성자 주소 표를 넣은 SquidFactory.create(74)로 부모/이웃 자산을 만든다(cpppj Factory.Create(74)). (2026-11-06 WB04-D3, WB04-D4 에서 합성 준비를 실제 Factory 로 교체)
+function createAsset(pool, flags = 0) {
+    return new SquidFactory(pool, PATCH_TYPE_CONSTRUCTORS.map((address) => ({ constructorAddress: address }))).create(74, flags);
 }
 
 // 이미 부착된 단일 내용물 Form 의 명시 링크 입력이다(cpppj ContentAttachmentInput). (2026-11-06 WB04-D3)
@@ -409,7 +407,7 @@ test('SquidForms: 풀 재확보 뒤 같은 처리기와 삭제 기록 보존', (
 // Unpop 통지 부재: 선택된 부모 알림이 없으면 앞선 링크/void 쓰기를 남긴 채 멈춘다(cpppj FormUnpopCurrent_MissingNoticeKeepsCompletedLinkWrites).
 test('SquidForms.unpop: 통지 부재는 완료된 링크 쓰기를 남긴다', () => {
     const pool = new SidPool(32768);
-    const parent = syntheticAsset(pool);
+    const parent = createAsset(pool);
     const forms = new SquidForms(pool);
     const form = forms.create(6, 0);
     contentAttachmentInput(pool, form, parent);
@@ -426,7 +424,7 @@ test('SquidForms.unpop: 통지 부재는 완료된 링크 쓰기를 남긴다', 
 // (cpppj FormUnpopCurrent_ActualGetterUsesRepairedVtableAfterDiagnostic).
 test('SquidForms.unpop: 진단 뒤 현재 VT 와 부모 free/dead 분기', () => {
     const pool = new SidPool(32768);
-    const parent = syntheticAsset(pool);
+    const parent = createAsset(pool);
     const forms = new SquidForms(pool);
     const form = forms.create(3, 0);
     forms.attach(form, parent, 0x10);
@@ -489,7 +487,7 @@ test('SquidForms.pop: 선택된 장치 부재는 void·깊이 쓰기를 남긴�
 test('SquidForms.attach: 늦은 꼬리 진단·이웃 VT 부재는 앞선 쓰기를 남긴다', () => {
     const pool = new SidPool(32768);
     const forms = new SquidForms(pool);
-    const parent = syntheticAsset(pool, 2);
+    const parent = createAsset(pool, 2);
     const content = forms.create(6, 2);
     const free = pool.freeCount;
     // TYPE 6 == 독립 contentType 6 이라 꼬리 진단이 선택되는데 진단 장치가 없다.
@@ -499,7 +497,7 @@ test('SquidForms.attach: 늦은 꼬리 진단·이웃 VT 부재는 앞선 쓰기
     assert.equal(get(pool.slot(parent), 6, 2), content);
     assert.equal(pool.freeCount, free);
     const form = forms.create(3, 2);
-    const neighbor = syntheticAsset(pool, 2);
+    const neighbor = createAsset(pool, 2);
     const raw = pool.physical(form);
     put(pool.physical(parent), 6, neighbor, 2);
     put(pool.physical(neighbor), 0, 0xdeadbeef);
@@ -512,8 +510,8 @@ test('SquidForms.attach: 늦은 꼬리 진단·이웃 VT 부재는 앞선 쓰기
 test('SquidForms.attach: 현재 VT 가 자산/Form 링크 WORD 위치를 고른다', () => {
     const pool = new SidPool(32768);
     const forms = new SquidForms(pool);
-    const parent = syntheticAsset(pool, 2);
-    const asset = syntheticAsset(pool, 2);
+    const parent = createAsset(pool, 2);
+    const asset = createAsset(pool, 2);
     const form = forms.create(3, 2);
     const assetRaw = pool.physical(asset);
     const formRaw = pool.physical(form);
@@ -542,7 +540,7 @@ test('SquidForms.attach: GameAuxState 의 현재 contentFormType 을 호출마�
     assert.deepEqual([globals.contentFormType(), globals.gumpFormType(), globals.uiEvent()], [6, 3, 0x02000039]);
     const flags2 = new Uint32Array(188);
     const forms = new SquidForms(pool);
-    const parent = syntheticAsset(pool, 2);
+    const parent = createAsset(pool, 2);
     let raw = null;
     const lines = [];
     forms.bindAttach({
@@ -607,7 +605,7 @@ test('SquidForms.unpop: 빌린 contained 종단이 GameAuxState 의 현재 Form 
     });
     const forms = new SquidForms(pool);
     forms.bindUnpop({ detach: (sid) => contained.detach(sid) });
-    const parent = syntheticAsset(pool, 0);
+    const parent = createAsset(pool, 0);
     const form = forms.create(6, 0);
     // TYPE 7 이 현재 내용물 TYPE 이면 부모 통지(이유 2)가 분리 뒤 온다.
     pool.physical(form)[10] = 7;

@@ -1,8 +1,8 @@
 // Unpop 처리기(SquidUnpop)·표시 갱신 vtable 지원표·미니맵/contained 연결을 검사한다(WB04-D2).
 //  - cpppj/tests/fixtures/unpop-vtables.tsv 의 10.78 83행: 실제 PE 가상 표의 update88/update8c 가 공통 경로인지(mask)와 웹 지원표가 같다.
 //    따로 복원한 마나(103)·볼트(105)·소용돌이 8c·간헐천 부분 8c 는 cpppj 검사와 같이 추가 허용한다.
-//  - 부분 변경 경계: cpppj tests/UnpopTests.cpp 의 Guards 검사를 옮겼다. 그 검사의 Factory Create(82) 두 번은 D4 범위라
-//    같은 서버 할당(allocate(0))과 base 생성자 VT(0x501dd0)로 대신한다(검사는 그 뒤 초기 바이트 대비 변화만 본다).
+//  - 부분 변경 경계: cpppj tests/UnpopTests.cpp 의 Guards 검사를 옮겼다. 그 검사의 Factory Create(82) 두 번은 실제 생성자 주소 표를 넣은 SquidFactory.create(82)로 한다
+//    (2026-11-06 WB04-D4: D2 의 allocate(0)+base VT 대체를 실제 Factory 로 교체, 검사는 그 뒤 초기 바이트 대비 변화만 본다).
 //  - 미니맵/contained 연결: cpppj MetadisplayDirtyTests 의 Unpop 부분과 SquidContainedUnpopTests 의 Take→Unpop→종속 해제 경로 중 Unpop 부분을 같은 풀로 검사한다.
 // (2026-11-05 WB04-D2: Unpop 처리기 이식과 함께 추가)
 import test from 'node:test';
@@ -16,6 +16,8 @@ import { SquidUnpop, supportsUnpopDisplay } from '../www/core/squid-unpop.js';
 import { SQUID_ASSET_VTABLES, SQUID_BASE_VTABLE } from '../www/core/squid-vtables.js';
 import { RawMetadisplayDirty, createMetadisplayDirtyState } from '../www/core/metadisplay-dirty.js';
 import { RawSquidContainedUnpop, commonContainedParent, commonContainedPrevious, commonContainedSetPrevious } from '../www/core/squid-contained-unpop.js';
+import { SquidFactory } from '../www/core/squid-factory.js';
+import { PATCH_TYPE_CONSTRUCTORS } from '../www/core/squid-constructors.js';
 
 // 원본 관측 파일이다. (2026-11-05 WB04-D2)
 const VTABLE_FIXTURE = path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'unpop-vtables.tsv');
@@ -49,21 +51,18 @@ test('supportsUnpopDisplay: 원본10.78 vtable 83행과 같다', { skip: !vtable
     assert.equal(supportsUnpopDisplay(SQUID_BASE_VTABLE, 0), true);
 });
 
-// Guards 장면이다: 서버 풀 두 객체(TYPE 82, base VT), 대상은 (20,20), spot 0xff. reset 은 같은 초기 바이트·빈 해시·초기 spot 으로 되돌린다. (2026-11-05 WB04-D2)
+// Guards 장면이다: 서버 풀 두 객체(실제 Factory.create(82), 다리 생성자 VT), 대상은 (20,20), spot 0xff. reset 은 같은 초기 바이트·빈 해시·초기 spot 으로 되돌린다.
+// (2026-11-05 WB04-D2, 2026-11-06 WB04-D4: 생성을 실제 SquidFactory 로 교체)
 function guardScene() {
     const pool = new SidPool(32768);
     const hash = new SquidHash();
     const spots = new Uint8Array(65536).fill(0xff);
     const unpop = new SquidUnpop(pool, hash, spots);
     const list = types();
-    const sid = pool.allocate(0);
-    const other = pool.allocate(0);
-    // 같은 서버 할당 뒤 TYPE 82 와 base 생성자 VT 를 둔다(Factory Create 대체).
-    for (const object of [sid, other]) {
-        const raw = pool.allocated(object);
-        put(raw, 0, SQUID_BASE_VTABLE);
-        raw[10] = 82;
-    }
+    // cpppj Types 처럼 실제 생성자 주소 표를 넣은 TYPE 입력으로 두 객체를 만든다.
+    const factory = new SquidFactory(pool, list.map((record, number) => ({ ...record, constructorAddress: PATCH_TYPE_CONSTRUCTORS[number] })));
+    const sid = factory.create(82);
+    const other = factory.create(82);
     const bytes = pool.allocated(sid);
     bytes[11] = 0;
     put(bytes, 14, floatToBits(20));

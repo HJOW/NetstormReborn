@@ -64,3 +64,5 @@
 | [ ] D5 | Form 호스트(Depend/Gump/Content·ContentLifetime)·`SquidProcessHost`와 Regular(`AddRegular`/`FindEvent`)·`SquidFormDispatch`, `ValidatePop`·`RawFormLinked` | `formlifecycle-x86.tsv`, `depend-create-parent-current-x86.tsv`, `content-attach-current-x86.tsv`, `regular-current-*-x86.tsv`, `form-linked-parent-x86.tsv` 등 |
 
 D4/D5의 cpppj 소스는 착수 시점의 커밋본을 기준으로 하고, 이후 변경은 3.5절 재반영에서 반영한다.
+
+**2026-11-06 WB04-D4 완료:** D4(SquidFactory)를 [SquidFactory 문서](webpj-squid-factory-20261106.md)로 마쳤다. 위 계약 검사의 합성 부모(base VT)는 실제 `SquidFactory.create(74)`로 교체했다. 다음은 D5다.
