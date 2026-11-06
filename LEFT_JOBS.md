@@ -2,25 +2,25 @@
 
 cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효한 사용자 결정**을 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-04 문서 정리:** 단위861까지 원문은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261104-through-861)에 보존했다. **2026-11-06 단위981: 4번980마감뒤7번와이드덱검은띠를수정/실제1920픽셀검증했다. 제품981/11.01이며이제8번LAN TCP/일반전투·한국어·시나리오UI를계속한다. 전체목표진행중이며MP검사는건너뛴다.**
+**2026-11-04 문서 정리:** 단위861까지 원문은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261104-through-861)에 보존했다. **2026-11-06 단위982: 4번980/7번981뒤8번LAN TCP부품을컴파일했다. 제품982/11.01이며실제Client/Login/UI미접합·MP동작미검증이다. 다음983은공유Registration/전역순서복합전송과현재Session대여부터계속한다. 전체목표진행중이다.**
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-06, 단위981 완료·제품981·8번 진행)
+### 0.1 현재 값 (2026-11-06, 단위982 부품 컴파일·제품982·8번 진행)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **981 완료·제품981·8번 진행.** 와이드덱의검정25행재타일을확장부본문반복으로수정했다.4번980마감/7번구현잔여해소뒤환경·사용자확인은제외하고8번LAN TCP부터계속한다. |
-| 현재 제품 | **981 / 표시·파일·제품11.01.** fortGump A02첫774행보존/이후749본문반복·실제1920검정띠2000→0픽셀을확인했다.8번MP/한국어/시나리오UI는남아있다. |
+| 진행 상태 | **982 LAN TCP부품컴파일·제품982·8번진행.** 프레이밍/실제nonblocking OS부품을등록했다. 실제Client/Login/UI는미접합이며다음983공유표/복합전송·Session대여를진행한다. MP검사는제외한다. |
+| 현재 제품 | **982 / 표시·파일·제품11.01.** LocalTcpTransport.obj 컴파일/게임재링크이며현재EXE는미참조부품/WS2import0·UI동작은981경로다. 실제멀티플레이완료가아니다. |
 | 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반31+데모3의 마지막 전체 진입 검증은 **645의644 제품**이며 현재 제품의 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | `31afb2ee316b76c0acf77b2f55f266b3e1bae1373682b7c37532a751197ce771` (981 / 11.01, 11,396,608바이트) |
-| 최신 빌드·집중 검사 | **981 최종Release종료0·경고/오류0·고유15검사통과(새3/기존12).** 최초검사include누락교정/원시보존·첫774전체/dirty/명암/다른메트릭/guard와기존원문fixture통과. [981기록](docs/exe/cpp-wide-deck-background-20261106.md). |
+| EXE SHA-256 | `fc7af27c36624128b586787918b4e1fc72e8972992029ee524cdb7881795d6b7` (982 / 11.01, 11,396,608바이트) |
+| 최신 빌드·집중 검사 | **982 Release첫명령종료0·경고/오류0.** LAN TCP부품컴파일/의존성등록·EXE재링크,새MP/패킷/소켓/통신/게임검사0이다. 최신부품집중은981의15검사이며982전체통과로세지않는다. [982기록](docs/exe/cpp-lan-tcp-transport-20261106.md). |
 | checking 잔여 | **8함수=부모3+부분2+MP분류3.** 완료부모39/부분4이며현재비멀티수명/FILE범위는980에서마감했다. 메타맵2표/재접속/Descend 등은3절8번 잔여다. |
 | 마지막 GUI | **981 실제MCP 수정전/후각1실행:** 979baseline/981after의tutorial1진입·비정지100프레임대기·창종료0·설치/보호불변.1920×1080의x0..79/y774..798 검정2000→0/17색·수정후PNG확인. 각입력5/관측7이며MP/공격/포획/희생/승리/물리입력검증이아니다. |
 | 전체 검사 기준 | 현재활성솔루션83프로젝트=Application78(검사이름73/게임1/probe·dump4)+라이브러리2+Utility3.967에서색표FILE집중대상1개추가/생성slnx/vcxproj직접확인.과거963의82분류·779전체71/549전체3389중7실패/510제품508의3337통과는당시이력이며현재집중을전체통과로쓰지않는다. |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
-| 보호 기준 | **기존2800개/fixture980개불변·새fixture없음.** 다음기준은`extracted/cpp-resume-981/protected-final.json`이다. |
+| 보호 기준 | **기존2800개/fixture980개불변·새fixture없음.** 다음기준은`extracted/cpp-resume-982/protected-final.json`이다. |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
@@ -42,7 +42,9 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 - **환경 한계:** 물리 입력/캡처는762의 새 부팅·RDP세션1에서도 두 번 timeout이었다. 실제 환경 변화 전 재시도하지 않는다. 다른 모니터/DPI·실제 앱 전환·청취·사용자 활성 전체화면의 물리 출력·실제 CD 삽입은 미검증이다. 실제 PCM 캡처는936에서후속성공했다(3절7번).
 - **원문/호스트 경계:** 32비트 FILE/FileSpec/SEH·스택 배치/미정값 자체 일치, 부분 I/O/실제 할당 실패와 전체 진단 UI는 별도 한계다. 612의 반사 입력, VFX signed WORD/정상 표본·양수/회전0/원색의 근거를 전체 입력·픽셀로 확대하지 않는다.
 
-### 0.4 최신 인계 — 단위981 완료(와이드 덱)·제품981·8번 LAN TCP
+### 0.4 최신 인계 — 단위982 TCP 부품 컴파일·제품982·실제 접합 진행
+
+- **982 부품 컴파일:** LocalTcpTransport의원문4BYTE/부분stream·buffered/실제Status·pending/normal·OS close/free·LAN literal 제한을정적라이브러리에등록했다. Release첫명령경고오류0·새MP/단위/소켓/통신/게임실행0·보호2800/fixture980불변·마지막정밀HJOW-Athlon/2026-11-03이다. [982기록](docs/exe/cpp-lan-tcp-transport-20261106.md). **실제caller가없어EXEWS2import0이며현재Client/Login/UI미접합이다. 다음983은extracted/cpp-mp-login-preparation/pending-new의공유Registration/Session핀/per-ID복합순서를검토·반영한다. 이후실제Client owner/roster/ordinaryState/LAN UI·메타/저장/재접속/Outpost/checking8을연결해야한다. 한국어44자산/표시/IME와Scenario모델은각pending인계에준비돼있지만제품완료로세지않는다.**
 
 - **981 완료:** PATCH fortGump A02의실제불투명검정선두25행을첫774행뒤재타일하지않고본문749행만반복하도록수정했다. 새3/기존12검사통과·최종Release경고오류0·최초검사include누락교정/원시보존이다. 수정전979/수정후981 각각실제1920tutorial1진입/대기/종료0·crop검정2000→0/17색·설치/보호불변이다. [981기록](docs/exe/cpp-wide-deck-background-20261106.md). 제품981/11.01·보호2800/fixture980·마지막정밀HJOW-Athlon/2026-11-03. **4번980/7번구체표시결함을마쳤으므로다음982는8번의LocalTcpTransport준비본정적검토·CMake등록/빌드다. MP신규단위/소켓/통신/게임검사는하지않는다. 이후공유Registration/per-ID composite→실제Login/일반State/roster/UI/Outpost와한국어·시나리오UI를연결해야한다. 준비본/인계는extracted/cpp-tcp-preparation,cpp-mp-login-preparation,cpp-korean-preparation,cpp-editor-scenario-preparation에있다.**
 
@@ -204,6 +206,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 ## 2. 현재까지 완료한 범위와 검증 한계
 
 ### 2.1 완료 목록 — 부분 완료 범위를 명시
+
+- [x] **982 LAN TCP 전송 부품컴파일(실제MP미접합):** 원문프레이밍/OS수명/현재표부품을등록했으며새MP검사0이다. 실제Client/Login/UI와복합전송은8번잔여다. [982기록](docs/exe/cpp-lan-tcp-transport-20261106.md).
 
 - [x] **981 와이드 덱 검은띠:** 원문첫774행/기존배경보존·확장부749행본문반복과실제1920crop2000→0을확인했다. [981기록](docs/exe/cpp-wide-deck-background-20261106.md).
 
@@ -540,7 +544,7 @@ AI 미완료 체크 항목이 아니며 단계 전환을 막지 않는다. 부�
 
 ### 8. 멀티플레이·배포·후속 단계
 
-- [ ] **3차 TCP/IP 로컬 멀티플레이·Outpust**를 원문 근거로 사전 구현한다. 신규 단위/게임/통신 검사는 하지 않는다. 공식 서버 복구·구 클라이언트 유효성 검사는 연결하지 않는다. **폐기CD확인7f/80(42cd10)은965의검증비활성화정책에따라복원하지않는다.**
+- [ ] **3차 TCP/IP 로컬 멀티플레이·Outpust:** 982에서LocalTcpTransport부품컴파일을마쳤지만실제Client/Login/UI미접합이다. 다음공유Registration/현재Session대여/per-ID복합전송→일반roster/State6·7/원격Fort/Commander→LAN UI→메타·저장/재접속/Outpost/checking8을원문근거로사전구현한다. 신규 단위/게임/통신 검사는 하지 않는다. 공식 서버 복구·구 클라이언트 유효성 검사는 연결하지 않는다. **폐기CD확인7f/80(42cd10)은965의검증비활성화정책에따라복원하지않는다.**
 - checking전체잔여8(957재대조,완료부모39/부분4불변): 부모004a7510·004b02d0의메타맵표시0050c9f0/0050cc08·004dc220(event4/Descend),부분004b54e0/004b8cb0,MP분류0042bc10/004b4df0/004b8b20. 기존분류이며직접inSingle관문부재를모든단독도달불가증명으로확대하지않는다. 신규MP검사없이원문구현을이어간다.
 - MP 이월 목록: 공통+20 미연결VT0050c9f0(TYPE108/109)/0050cc08(TYPE161), 시스템뉴스0042e470/0042e4d0/0042e4f0·endpoint/UI·설정저장, RequestMenu 전송 `004d712e..004d717c`, 메타맵 열기 `004789b0/00479390`·번개 `00479650`·Challenge 이미지/텍스트 `00478d10`/참가자 삭제 `0042bc10`, c6/db·ChalSailPos 모드6·선행클릭/항해 메뉴·desc, 비미션 의식/랭크·조기 희생 안내, PlayerNoMake writer `00433c30`, frame22/주기64·timeout/UI·endpoint/server/boss·리슨/수락/22칸 송신, Activate의 별도 수신자/삭제 선택·프로세스 writer 전체/decoder·재동기화의 허용/owner 캐시 부모(843), 섬·표면 TypeWas의 MP 수신 writer(861).
 - 신전 `004dc220` event4의fort territory0046f650/0046f5a0·curServer0054db4c·Descend0x02000013→004b3760/004b3620/State19와 생성입구004dbac0/0x030000a7을 포함한다(866). 기존 removeAnimation/regionGeneration 임시명은 실제 의미가 아니며 원문 부모 전체를 사전 구현할 잔여다. 직접inSingle 관문이 없으므로 단독 전체 미도달을 증명한 것은 아니다.

@@ -54,3 +54,7 @@ NativeMainMenuState의 기본 정책 `referenceValidationNotice=false`와 실제
 ## 2026-11-06 추가 — CD 바이트 확인7f/80 (965)
 
 785의 미분류 파일 소비자0042cd10은0040b4b0/0040c26d에서7f로 등록되고, 패킷에서 CD 파일명/offset을 풀어4BYTE를 읽어 논리수신자11에 응답80을 보내는 경로로 확인했다. 클라이언트 검증 용도 분류는 동작과 사용자 정책에 근거한 판단이며 고정 도메인/업데이트 검증 전체와의 동일성을 주장하지 않는다. 제품의 LocalMissionTransport/Editor 공유 단일·집합 수신과 송신에서7f/80을 제외했다. 실제 CD 조회·응답 본문·검증성공은 연결하지 않는다. 새 MP/프로토콜/통신 검사 없이 코드/컴파일과 일반 싱글 진입만 확인했다. [965 기록](cpp-retired-cd-validation-20261106.md)·[정적 출처/제품 위치](../../cpppj/retired-cd-validation-static-20261106.json)를 따른다. 위684의 당시 제품/5분류/목적지 목록은 당시 기록으로 보존한다.
+
+## 2026-11-06 추가 — LAN TCP 부품(982)
+
+`LocalTcpTransport`의 명시 Listen/Connect/accept만 WinSock2를 사용하도록 컴파일했다. 목적지/수락 상대는127/8·RFC1918·169.254/16의 IPv4 숫자 주소이며 bind0.0.0.0은 리슨 주소다. DNS/공식·master/root·인터넷 진단·검증7f/80은 연결하지 않는다. 생성 자체는 무소켓이며 아직 실제 Login/UI caller가 없어 현재982 EXE에는 WS2_32 import도 없다. 부품 컴파일과 활성 연결/기능 검증을 구별한다. 새 MP/소켓/통신/게임 검사는 실행하지 않았다. [982 범위와 다음 접합](cpp-lan-tcp-transport-20261106.md)을 따른다.

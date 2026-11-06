@@ -12,6 +12,9 @@
 add_library(netstorm STATIC)
 # 메모리 실패의 원문 부모와 실제 Run 등록 수명·Client 종료 연결을 함께 빌드한다(979).
 target_sources(netstorm PRIVATE o/RawAllocationFailure.cpp o/RawAllocationFailure.h client/ClientAllocationFailure.cpp platform/ScopedNewHandler.h)
+# 원문 TCP 프레이밍/현재 연결표를 사용하는 LAN 전송 부품을 컴파일한다. 실제 Login/UI 접합은 후속 단위다(982).
+target_sources(netstorm PRIVATE client/LocalTcpTransport.cpp client/LocalTcpTransport.h)
+target_link_libraries(netstorm PUBLIC ws2_32)
 target_sources(netstorm PRIVATE client/ScreenModeTransition.cpp client/ScreenModeTransition.h) #원문 화면 변경 부모의 실패 복구/설정/공유 갱신 순서다(746).
 target_sources(netstorm PRIVATE client/SavedCameraKey.cpp client/SavedCameraKey.h) #숫자/Shift 기호와 현재 Renderer 중심의 저장 카메라다(719).
 target_sources(netstorm PRIVATE client/LostPositionKey.cpp client/LostPositionKey.h) #U/u는 공통 삭제가 기록한 현재 손실 위치로 즉시 이동한다(751).

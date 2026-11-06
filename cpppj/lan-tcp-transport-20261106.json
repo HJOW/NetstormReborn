@@ -1,0 +1,61 @@
+{
+  "unit": 982,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 982,
+  "version": "11.01",
+  "scope": "원문 LAN TCP 전송 부품 정적 라이브러리 등록/컴파일; 실제 Client/Login/UI 미접합",
+  "exeSha256": "fc7af27c36624128b586787918b4e1fc72e8972992029ee524cdb7881795d6b7",
+  "exeBytes": 11396608,
+  "build": {
+    "releaseCommands": 1,
+    "exitCodes": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "objectSha256": "96425f332cbdf33af35dc703e58cad78bbeaaaf03447e1a765b7bf5e7728a7ae",
+    "objectBytes": 576732,
+    "socketImports": []
+  },
+  "tests": {
+    "newCases": 0,
+    "executedCases": 0,
+    "reason": "사용자 지시로 신규 MP/패킷/소켓/통신/게임 검사를 작성·실행하지 않음"
+  },
+  "protected": {
+    "files": 2800,
+    "fixtures": 980,
+    "unchanged": true,
+    "new": []
+  },
+  "solutionProjects": 83,
+  "checkingRemaining": 8,
+  "lastGuiUnit": 981,
+  "behavior": "기존 단독/Edit 내부 전송 유지. 실제 TCP caller 없음·생성도 무소켓. 현재EXE미참조부품이라전체기호활성링크/동작검증주장없음.",
+  "localPolicy": {
+    "ipv4": [
+      "127/8",
+      "10/8",
+      "172.16/12",
+      "192.168/16",
+      "169.254/16"
+    ],
+    "wildcardListen": true,
+    "dns": false,
+    "retiredValidationTypes": [
+      "0x7f",
+      "0x80"
+    ]
+  },
+  "next": [
+    "공유Registration/세대별Session대여",
+    "전역pending/normal0..21순서의per-ID복합전송",
+    "실제Client owner/Login/ordinaryState/roster/LAN UI",
+    "메타맵/일반저장·재접속/Outpost/checking8"
+  ]
+}
