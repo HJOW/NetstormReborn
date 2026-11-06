@@ -1,0 +1,1400 @@
+{
+  "unit": 957,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 956,
+  "version": "11.01",
+  "productUnchanged": true,
+  "exeSha256": "23d356438e3d85b998965b9f49831574530f554e95447ed1510e8c19616f7b77",
+  "exeBytes": 11281408,
+  "sourceCodeChanged": false,
+  "staticInventory": {
+    "unit": 957,
+    "host": "HJOW-Athlon",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "kind": "static PE/current metadata inventory, not execution or full derived-body verification",
+    "vtableCount": 83,
+    "postPopFunctions": 46,
+    "fullDisplayCode": 81,
+    "metamapDeferred": 2,
+    "codeOnlyAirOrOutpost": 4,
+    "rows": [
+      {
+        "vtable": "00501dd0",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00501ea0",
+        "currentPe": {
+          "20": "0041c150",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502370",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502448",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502510",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005025d8",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005026a0",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502778",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502840",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502908",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005029d0",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502aa8",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502b70",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502c38",
+        "currentPe": {
+          "20": "0041f870",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "bombEffect",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502cf0",
+        "currentPe": {
+          "20": "0041f920",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "bombEffect",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502db0",
+        "currentPe": {
+          "20": "0041fab0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "bombEffect",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502e68",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502f30",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00502ff8",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005030c0",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00503188",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00503360",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005034c8",
+        "currentPe": {
+          "20": "00422150",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "bridge",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00503d80",
+        "currentPe": {
+          "20": "00427720",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "carrier",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00503e50",
+        "currentPe": {
+          "20": "00427720",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "carrier",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00503f20",
+        "currentPe": {
+          "20": "0042abb0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "carrierSteal",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00503ff0",
+        "currentPe": {
+          "20": "0042abb0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "carrierSteal",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005040c0",
+        "currentPe": {
+          "20": "0042ac90",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "balloon",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00504198",
+        "currentPe": {
+          "20": "0042aed0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "balloon",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00506d98",
+        "currentPe": {
+          "20": "004421c0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "island",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00506e50",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00506f08",
+        "currentPe": {
+          "20": "004423b0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "surface",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005070c0",
+        "currentPe": {
+          "20": "004429f0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "teleport",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005075d8",
+        "currentPe": {
+          "20": "00448930",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "rune",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005076b8",
+        "currentPe": {
+          "20": "00448ad0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "dais",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00507770",
+        "currentPe": {
+          "20": "00448d20",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "forcefield",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00507950",
+        "currentPe": {
+          "20": "00449320",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "dais",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00508cc8",
+        "currentPe": {
+          "20": "00450cd0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "dude",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00509148",
+        "currentPe": {
+          "20": "004538f0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "factory",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00509210",
+        "currentPe": {
+          "20": "004557c0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "factory",
+        "scope": "code-only-MP-Outpost",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005092d0",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00509388",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00509470",
+        "currentPe": {
+          "20": "00457560",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005096a0",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00509758",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00509810",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "0045ac90",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 0,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00509930",
+        "currentPe": {
+          "20": "0045ec50",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005099e8",
+        "currentPe": {
+          "20": "0045ed10",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00509aa0",
+        "currentPe": {
+          "20": "0045edf0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00509b98",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050a050",
+        "currentPe": {
+          "20": "0045e810",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "flyer",
+        "scope": "code-only-air3",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050a1e8",
+        "currentPe": {
+          "20": "0045ef30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "flyer",
+        "scope": "code-only-air3",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050a388",
+        "currentPe": {
+          "20": "0045fac0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "flyer",
+        "scope": "code-only-air3",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050a748",
+        "currentPe": {
+          "20": "00462170",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "buried",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050a820",
+        "currentPe": {
+          "20": "0044bf80",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "damageable",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050a8e8",
+        "currentPe": {
+          "20": "0044bf80",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "damageable",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050b570",
+        "currentPe": {
+          "20": "004694b0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050b6e8",
+        "currentPe": {
+          "20": "0046a520",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050b7c0",
+        "currentPe": {
+          "20": "0046a600",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050b888",
+        "currentPe": {
+          "20": "0046a810",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050b9b8",
+        "currentPe": {
+          "20": "0046aca0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050bad0",
+        "currentPe": {
+          "20": "0046aca0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050c3b0",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "00473770",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 0,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050c9f0",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004787c0",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 0,
+        "effectiveDisplayMask": 0,
+        "catalogueBody": null,
+        "scope": "MP-metamap-deferred",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050cc08",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004791b0",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 0,
+        "effectiveDisplayMask": 0,
+        "catalogueBody": null,
+        "scope": "MP-metamap-deferred",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050da88",
+        "currentPe": {
+          "20": "004852e0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004854b0"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050db78",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050dc30",
+        "currentPe": {
+          "20": "00484f90",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050e568",
+        "currentPe": {
+          "20": "00427720",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "carrier",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050e668",
+        "currentPe": {
+          "20": "0048c080",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050e738",
+        "currentPe": {
+          "20": "0048c7a0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050e888",
+        "currentPe": {
+          "20": "0048ead0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050e940",
+        "currentPe": {
+          "20": "0048eda0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050ea08",
+        "currentPe": {
+          "20": "0048eda0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050ead0",
+        "currentPe": {
+          "20": "0048eda0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050eb98",
+        "currentPe": {
+          "20": "004b0d30",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "common",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050ee08",
+        "currentPe": {
+          "20": "004905d0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "player",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050f210",
+        "currentPe": {
+          "20": "004950f0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "priest",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "0050f540",
+        "currentPe": {
+          "20": "0049a2b0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004ad670"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005196f0",
+        "currentPe": {
+          "20": "004dce40",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004dcda0"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "005197a8",
+        "currentPe": {
+          "20": "004dd020",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004dbcd0"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00519860",
+        "currentPe": {
+          "20": "004dd020",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004dcf80"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      },
+      {
+        "vtable": "00519918",
+        "currentPe": {
+          "20": "004dd1f0",
+          "28": "004b0c60",
+          "30": "004ad470",
+          "88": "004ad500",
+          "8c": "004dd150"
+        },
+        "metadataDisplayMask": 3,
+        "effectiveDisplayMask": 3,
+        "catalogueBody": "asset",
+        "scope": "non-MP-code",
+        "classificationSource": "cpppj/bomb-postpop-dispatch-20261105.json (890) + current source read; static inventory only"
+      }
+    ],
+    "sha256": {
+      "cpppj/src/o/RawSquidPopParent.cpp": "4b14586e0784a78d8095f39a6d1f9a749fc2d509f63e6f7adb10b59faae351f2",
+      "cpppj/src/o/RawSquidActivate.cpp": "fa485f272e253d55f76e08a47d7fa944e72fc42a7eeb483a74f273ae607e83b1",
+      "cpppj/src/o/RawSquidPostPopParent.cpp": "38a52ad31cdeb4946a417c64629f757e4442a87a62668f7b1bc82927d45efc22",
+      "cpppj/src/o/SquidPop.cpp": "7b1436f1658d52c9c8ab7b52c38565b3d5374f71d56625a9da99ef691548077b",
+      "cpppj/src/o/SquidPostPop.cpp": "8e26d019508f81556ff11cea730e70befd41e1f40023f13e45283c6a045ee53d",
+      "cpppj/src/o/SquidPostPopPatch.cpp": "b6ffe3dc814fe33bfe2e93ff315e254a1fc215a94ebecd09d42333b91fe0f7c7",
+      "cpppj/src/o/SquidUnpop.cpp": "6ce38be031d0223e3b105926e1fe7395242371d57a67f45f4d8b3fc6683a18f0",
+      "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+      "cpppj/src/o/UnpopVtables.inc": "70042228d64736a46ecad61f8d0c944e8f2cab6ed605bf0e2289bb72aec98384",
+      "cpppj/src/o/PopVtables.inc": "7e1989b0f2d13457b72388c7df9d231411b556aa7c47e1130e1616a3d5a7de16",
+      "cpppj/src/client/RawSurfaceWorld.cpp": "eb67877e29ca98ce7b42410f2f8191e71fa0d51427295dd8350815568f01e0ca",
+      "cpppj/src/client/RawCampaignSession.cpp": "06b510133083e2999e1f70f7469a010af9d8edeff39b24880b3f07faceed1d7e",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/bomb-postpop-dispatch-20261105.json": "497aedff57017f6a810edf3738d163606c923b1bc413c0c27476622bc36a1081"
+    }
+  },
+  "build": {
+    "target": "netstorm_pop_context_tests",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "cppTests": {
+    "new": 0,
+    "existing": 31,
+    "total": 31,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "SquidPopParent_",
+        "tests": 14,
+        "summary": [
+          [
+            "14",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "filter": "SquidActivate_",
+        "tests": 10,
+        "summary": [
+          [
+            "10",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "filter": "PopWorldBounds_",
+        "tests": 3,
+        "summary": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "filter": "GeyserPartialDisplay_",
+        "tests": 4,
+        "summary": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      }
+    ]
+  },
+  "checking": {
+    "remaining": 8,
+    "parents": 3,
+    "partial": 2,
+    "mpClassified": 3,
+    "completedParents": 39,
+    "completedPartial": 4,
+    "wholeFunctionCountUnchanged": true,
+    "deferredSection8": [
+      "004a7510",
+      "004b02d0 (metamap display 0050c9f0/0050cc08)",
+      "004dc220",
+      "004b54e0",
+      "004b8cb0",
+      "0042bc10",
+      "004b4df0",
+      "004b8b20"
+    ],
+    "scope": "4번의 현재 비멀티 Pop 연결/현재 대여 대조 정리. 전체8함수나 모든 입력/파생 몸체 실행 완료가 아니다. 기존 MP 분류의 단독 도달불가 증명으로 확대하지 않음."
+  },
+  "nextConcreteSources": {
+    "process": "SquidProcessHost.Attach/Reattach 및 Process004b1440/CD004af380 접두/가상 Attach",
+    "content": "ContentFormHost.Attach의 선행 ValidatePop/체인/부분 쓰기",
+    "factory": "상위 생성/할당/외부 heap/실패 처리"
+  },
+  "protected": {
+    "existing": 2789,
+    "fixtures": 969,
+    "unchanged": true,
+    "newFixtures": 0,
+    "snapshot": "extracted/cpp-resume-957/protected-final.json"
+  },
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "newNativeCpuExecution": false,
+  "multiplayerTestsExecuted": false,
+  "next": "958: 3절4번 Factory/Process·Content/Form의 실제 부모와 선행 guard/실패 수명. 이후4→7→8 유지.",
+  "rawSha256": {
+    "build.log": "ae0e91c9244d9a04f406175b1c146bc5efdea98d031697e92ab1c26cdf623153",
+    "GeyserPartialDisplay-final.log": "bc245e90f0f80f4283056043990c33824ba7e82efaa2b5ec69563925079896c5",
+    "pop-current-inventory.json": "f2a521ecd47395b5260287ea15828ec1a1394be49e1cb7a362c5f47516ab7676",
+    "PopWorldBounds-final.log": "970ec4f695da074c090dafa4aa06341ba9fe68c061f94dd51b509025b18e3513",
+    "protected-before.json": "4d868e9cfd337aec79ff657773fd5592af7c3e2c09ec7626ea2c551b6c301809",
+    "protected-final.json": "4d868e9cfd337aec79ff657773fd5592af7c3e2c09ec7626ea2c551b6c301809",
+    "SquidActivate-final.log": "01a9727d794578a874bb3d6b6b9084d3bc8cd0694595e282cfa9f66983ec9e9c",
+    "SquidPopParent-final.log": "e06e7622ef923375ab9a53ec86fd879a52355732896d3161b8c74c4acbcc8d27",
+    "tests-final.json": "f655a575e10e3e2ced1ae4561c20801ab3da88b9bc2025bafb7cf7a49f85f216"
+  }
+}

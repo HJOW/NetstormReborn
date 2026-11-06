@@ -1,5 +1,7 @@
 # 미복원 checking 부모의 함수별 조건·현재 예외 한계
 
+**2026-11-06 단위957 재개 대조:** 사용자 순서대로 UI/미션1~3번을 정리한 뒤4번으로 돌아왔다. 현재공통Pop/World·Session장치와83표/후처리46종·실효표시81지원/메타2잔여를대조했고기존31검사/집중Release경고오류0이다. 897의간헐천복원을반영하며전체checking8(부모3/부분2/MP3)·완료부모39/부분4는유지한다. 전체8함수/모든파생몸체실행완료가아니다. 전체잔여는LEFT_JOBS8번,Process·Content/Form/Factory공유수명은4번에서계속한다. 새코드/검사/CPU/fixture/게임/GUI/MP실행없음·제품956불변·마지막정밀HJOW-Athlon/2026-11-03. [957 기록](cpp-pop-current-scope-20261106.md).
+
 **2026-11-05 단위912:** 공통 Form Pop 부모의 진단 정상 복귀/현재 권한·부분 상태/공유 깊이와 실제 VT+20을 같은 Factory·실제 Session Content 후단에 연결했다. 새 Native2,560입력/재관측 일치·고유41사례 첫 통과·14명령41실행/실패 단언0이다. Release1명령 종료0·경고0·기존2786/fixture966개 불변·현행2787/fixture967개다. checking8/완료 부모39·부분4는 불변이며 Process/정렬·상위 실패 정책은 잔여다. **사용자 지시로 다음913부터 UI1번을 우선**한다. [912 기록](cpp-form-pop-current-20261105.md).
 
 **2026-11-05 단위911:** 공통 Form 부착 부모의 현재 TYPE/VT·저장 링크·진단 정상 복귀와 실제 Factory/Gump/Depend/Process 후단을 연결했다. 실제 Session content 번호는 약한 대여로 읽는다. 새 Native864입력/재관측 일치·고유37사례 최종 통과·26명령72실행/실패 단언0이다. Content 공통 thunk 분류/기존 수동 검사2곳을 원문으로 교정했다. Release2명령 종료0·경고0·기존2785/fixture965개 불변·현행2786/fixture966개다. 공통 Pop/Process 접두·상위 guard 등은 잔여이며 checking8/완료 부모39·부분4는 불변이다. [911 기록](cpp-form-attach-current-20261105.md).
