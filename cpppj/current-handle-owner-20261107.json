@@ -1,0 +1,42 @@
+{
+  "unit": 1011,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "현재 사용자 handle을 Client 수명으로 옮겨 기존 Fort/미션/일반 Login/저장·재접속이 같은 물리를 빌리도록 연결",
+  "nativeGlobal": "PTR_DAT_00540ca8",
+  "sourceFunctions1078": [
+    "004b2df0",
+    "004b54e0",
+    "004b8cb0"
+  ],
+  "build": {
+    "firstExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1011\\build.log",
+    "exeSize": 11859968,
+    "exeSha256": "1c828e3c564b9bc3e3a688585f55befac317934dd346557d9211750ee4507ccc"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1011\\protected-before.json"
+  },
+  "remaining": [
+    "StateReconnect/ForceServerDeath/004b8cb0 실제 caller·복구State7 선택/인계",
+    "일반 프레임486bc0/스펠·전체 파생 writer/decoder·메타·Outpost/checking6",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

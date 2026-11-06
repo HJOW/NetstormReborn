@@ -805,7 +805,7 @@ struct RawCampaignSession::Impl {
     std::array<std::uint8_t,64> rainAviaryPacket{};bool writingRainAviary{}; // 실제0x73 writer와 송신이 공유하는 버퍼/분배 표식이다.
     std::uint32_t sunAviaryType{32},sunFlyerType{73}; // PATCH005410f0/0054117c의 현재 원본 타입 전역이다.
     std::array<std::uint8_t,64> sunAviaryPacket{};bool writingSunAviary{}; // 현재 writer/송신이 공유하는 패킷과 분배 표식이다.
-    std::array<std::uint8_t,64> handle{}; // 현재 이름을 쓸 실제 저장소다.
+    std::array<std::uint8_t,64> localHandle{};std::array<std::uint8_t,64>& handle{services.subscriberGlobals ? services.subscriberGlobals->Handle():localHandle}; // 실제 Client는 같은 장기PTR00540ca8을 빌리고 독립 Session만 기존 지역64BYTE를 소유한다.
     std::unique_ptr<RawCampaignWorldRuntime> runtime; // 위 실제 하위를 단일 캠페인 부모에 연결한다.
     PlayerPlacementAnchorState anchorState; // 현재 같은 Graph의 배치/도착 조회 전역이다.
     std::unique_ptr<RawPlayerPlacementAnchor> anchor; // 같은 hash0/장부를 직접 읽는 getter다.
