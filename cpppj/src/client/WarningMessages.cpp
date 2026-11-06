@@ -44,7 +44,7 @@ struct WarningMessages::Impl {
         MessageBoardHooks hooks;hooks.suppressed=std::move(suppressed);hooks.lookup=[this](auto serial) { return Lookup(serial); };
         hooks.kill=[this](auto token) { common.lifetime.Kill(token);common.changed(); };
         hooks.createText=[this](auto kind,auto player,auto parameter,std::optional<std::string_view> source) {
-            if (kind!=17 && kind!=11 && kind!=16) throw std::logic_error("다른 원본 메시지 생성자 미연결");
+            if (kind!=17 && kind!=11 && kind!=16 && kind!=7 && kind!=9) throw std::logic_error("다른 원본 메시지 생성자 미연결");
             const auto token=common.token();auto& node=*messages.emplace(token,std::make_unique<WarningNode>()).first->second;
             try { message->Construct(token,kind,player,parameter,source); } //kind17도 공통 Text/필드/이름 뒤의 음향·번역·서식·Style·기한·Idle·Fit 순서를 사용한다.
             catch (...) {
@@ -104,6 +104,8 @@ void WarningMessages::AddNull() { impl_->board->ShowText(17,0,true,0,std::nullop
 void WarningMessages::PauseStatus(bool enabled) { impl_->board->Show(11,0,enabled,0,""); }
 //기존serial/직계자식검색과0.1초기한/Idle을그대로사용하고별도메시지캐시를만들지않는다.
 void WarningMessages::GameTimeStatus() { impl_->board->Show(16,1,true,0,""); }
+// 원문 동맹/시작 안내도 같은 실제20칸/부모 생성/10초 기한을 사용한다.
+void WarningMessages::BattleStatus(std::int32_t kind,std::int32_t player,std::int32_t parameter) { impl_->board->Show(kind,player,true,parameter,""); }
 // 같은 현재 직계 자식 검색 뒤 공통 지연 Kill을 실행한다.
 void WarningMessages::Remove(std::int32_t kind,std::int32_t player,std::int32_t parameter) { impl_->board->Show(kind,player,false,parameter,""); }
 // 기본/텍스트 가상 분배에 같은 안정된 파생 주소를 빌린다.

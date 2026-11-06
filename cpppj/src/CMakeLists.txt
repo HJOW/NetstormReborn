@@ -450,3 +450,4 @@ target_sources(netstorm PRIVATE o/RawBaseProcessAttach.cpp o/RawBaseProcessAttac
 
 # 공통 Owner의 현재 값/진단과 늦은 목록 선택을 복원한다(961).
 target_sources(netstorm PRIVATE o/RawCommonOwner.cpp o/RawCommonOwner.h)
+target_sources(netstorm PRIVATE o/RawOrdinaryBattleStart.cpp o/RawOrdinaryBattleStart.h) # 일반 Login 완료의 현재 Core/Player/스펠/팀 입력을 조립한다.

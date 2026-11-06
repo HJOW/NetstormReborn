@@ -20,6 +20,7 @@
 #include "client/ClientChatWindowGlobals.h"
 #include "client/RawChatRelay.h"
 #include "client/RawBattleLeave.h"
+#include "o/RawOrdinaryBattleStart.h" // 일반 로그인 완료도 현재 Core/Player/옵션과 실제 게임 모듈을 사용한다.
 #include "client/SendMoneyInput.h"
 #include "o/RawBridgeCarriers.h"
 #include "o/RawIceRicochet.h" // 실제 아이스 반사점/선택도 같은 풀·HP·해시·게임 난수를 사용한다.
@@ -540,6 +541,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPriestSacrificeRequest> sacrificeRequest; // 사용자 입력과 서버40h가 공유하는 wrapper다.
     std::function<void(std::uint32_t)> learnNewTechnology; //고정 Session 소유자가 Impl 생성 뒤 연결하는 같은492a30 진입이다. 실제 이벤트는 생성 완료 뒤 호출한다.
     std::function<void()> refreshLocalRitual; //고정 Session의 실제 Core/CoreData/snapshot을 Impl 생성 뒤 묶는 완료 분기다.
+    std::function<void(std::uint32_t)> writeCurrentFortCore; // 일반 시작의004beb30을 고정 외곽 Session에 연결한다.
+    std::function<void()> createWorldGeysers; // 일반 타이머의00486440을 같은 실제 Session/세계 생성 부모에 연결한다.
     std::unique_ptr<void,void(*)(void*)> pendingRitualSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // Dais 지연 소리의 new40 확보 한 번을 같은 Sound47 생성까지 보관한다.
     std::unique_ptr<RegularProcess> pendingRitualRegular; // 실제 확보 한 번을 예약/생성/부착까지 유지한다.
     PlayerWorldState& playerState{gameplayGlobals->player}; // 현재 두 owner/known을 초기 HUD와 같은 주소에서 읽고 쓴다.
@@ -3769,6 +3772,8 @@ bool RawCampaignSession::LocalConnectionReady() const {
     if (!impl_->login || !impl_->loaded || impl_->login->blocks[1][0]!=14 || !impl_->playerState.playerKnown) return false;
     return impl_->playerState.battleOwner<9 && (impl_->players[impl_->playerState.battleOwner*0xb4+0x50]&1)!=0;
 }
+//02000122의 실제 highWORD/lowBYTE를 같은 고정 헤더에 넣고 일반 서버9에 예약한다.
+void RawCampaignSession::RequestForcedAlliance(std::uint32_t packed) { if (!impl_->loaded || !impl_->login) throw std::logic_error("실제 Login 없는 강제 동맹 요청");const std::array<std::uint8_t,6> packet{1,0x78,6,0,static_cast<std::uint8_t>(packed>>16),static_cast<std::uint8_t>(packed)};impl_->login->Send(9,packet); }
 // 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.
 void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 연구 수신 등록");o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
 // 현재 메뉴 부모와 signedWORD 종류를 원문 입력 몸체에 전달한다.
@@ -3800,6 +3805,7 @@ void RawCampaignSession::SendMutableLocalPacket(std::int32_t target,std::span<st
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) {
     impl_->learnNewTechnology=[this](auto type) { LearnNewTechnology(type); }; //복사/이동되지 않는 Session 주소를 실제 로컬 획득과 Help가 공유한다.
+    impl_->writeCurrentFortCore=[this](auto owner) { WriteFortCoreDataBody(owner); };impl_->createWorldGeysers=[this] { GenerateWorldGeysers(); }; // 같은 외곽 주소가 완성된 뒤에만 실제 일반 시작 장치를 공개한다.
     impl_->refreshLocalRitual=[this] { //실제 호출 시점의 owner/모드를 빌리며 완료 전에 필드를 복사하지 않는다.
         o::RitualRefreshHooks hooks;hooks.core=[this] { RefreshCurrentPlayerCore(); };hooks.templateOwner=[this] { return impl_->playerState.templateOwner; };
         hooks.coreData=[this](auto owner) { WriteFortCoreDataBody(owner); };

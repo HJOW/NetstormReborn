@@ -394,6 +394,11 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
         static_cast<void>(world_->Session().PlayerRecords().subspan(static_cast<std::size_t>(owner)*180U+12U)); // 반환 이름은 종류11에서 읽지 않는다.
     };
     pauseContext.challengePlayerName=[](auto) { throw std::logic_error("Challenge 메시지 현재 이름 관리자 미연결"); };
+    pauseContext.playerText=[this](std::int32_t owner)->std::span<const char> {
+        static constexpr std::array<char,1> empty{}; // 원문 범위 밖48f480이 반환하는 실제 빈 NUL 문자열이다.
+        if (owner<=0 || owner>=9) return empty;if (!world_) throw std::logic_error("동맹 이름의 현재 Session 없음");const auto name=world_->Session().PlayerRecords().subspan(static_cast<std::size_t>(owner)*180U+12U,32);return {reinterpret_cast<const char*>(name.data()),name.size()};
+    }; // 이름 내용을 미리 복제하지 않고 원문 서식 시점의 현재 NUL까지 읽는다.
+    pauseContext.challengePlayerText=[](auto)->std::span<const char> { throw std::logic_error("Challenge 동맹 이름의 실제 관리자 미연결"); };
     pauseContext.gameTimeSeconds=[this] { auto& game=*client_.GameplayGlobals();return ReadGameTimeSeconds(game.BattleClockStamp(),game.BattleClockOrigin(),[] { return static_cast<std::uint32_t>(std::clock()); }); }; //기존로그인과같은CRT경계/현재두DWORD를사용한다.
     pauseContext.translate=[this](auto value) { return FontBytes(client_.Translate(value)); };
     warnings_=&rawButtons_->EnableWarnings([this] { return client_.WallSeconds(); },[this] {
@@ -1351,6 +1356,7 @@ void UberGump::Event(InputEvent event) {
     }
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
     if (MultiplayerOptionsEvent(event)) return; // 일반 옵션의 이름/연결 예약도 같은 Guide/Gump 뒤 일반 입력 큐에서 소비한다.
+    if (transitionCode==0x02000122U) { if (!(event.code&InputCode::kRelease)) { if (!world_) throw std::logic_error("강제 동맹 일반 입력의 현재 World 없음");world_->Session().RequestForcedAlliance(std::bit_cast<std::uint32_t>(event.y)); }return; } // 원문 팀 시작/동맹 요청도 같은 일반 입력 위치에서78h만 송신한다.
     if (DispatchTellTip(event,client_.LocalStateGlobals()->TipNumber(),{
         [](std::int32_t value) { char text[32]{};std::snprintf(text,sizeof(text),"%d",value);return std::string(text); }, //원문 호출자의 지역 버퍼와 signed 정수 서식만 사용한다.
         [this](auto key,auto value) { client_.Configuration().Set(std::string(key),std::string(value)); }, //동기 옵션 재해석도 같은 현재 TipNumber를 갱신한다.

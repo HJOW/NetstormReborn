@@ -29,5 +29,8 @@ struct CampaignLoginServices {
     std::function<void()> selectReconnectFort; // 일반 State7의 재접속 표식 뒤00460980 현재 이름 선택이다. 파일 Reload로 대신하지 않는다.
     std::optional<CampaignTransportServices> transport; // 명시 LAN/공통 전송만 주입하며 없으면 기존 내부 미션 양끝을 사용한다.
     std::function<void(std::uint32_t)> attachCommander; // 비서버 State13의 실제 Commander 연결이며 누락은 해당 선택 위치에서 명시 거부한다.
+    std::function<void(std::uint32_t)> queueAlliance; // 팀 구성의 packed owner/target을 원문02000122의 실제 일반 입력 고리에 두 번 같은 인자로 예약한다.
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> status; // 종류/Player/parameter의 실제 표시1/빈문자열 MessageBoard 안내다.
+    std::function<void()> abortBattle; // 로그인 타이머 Abort가 같은004b6350/사용자 저장 파일 삭제를 실행한다.
 };
 }

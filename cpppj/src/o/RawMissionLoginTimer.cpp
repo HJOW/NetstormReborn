@@ -112,8 +112,10 @@ void RawMissionLoginTimer::Run(bool start) const {
     }
     if (reads_.missionPost() || state_.begin!=0) {
         if (!reads_.savedGame()) {
-            if (!reads_.mission()) throw std::logic_error("로그인 일반 전투 초기화004b4a20 사슬은 아직 복원되지 않음");
-            if (reads_.initialGeysers() && !reads_.mission()) throw std::logic_error("로그인 일반 랜덤 간헐천 초기화는 아직 복원되지 않음");
+            if (!reads_.mission()) Need(hooks_.initializeGeneral,"로그인 일반 전투 초기화 부모 미연결")();
+            if (reads_.initialGeysers() && !reads_.mission()) {
+                Need(hooks_.log,"일반 초기 간헐천 로그 미연결")(MissionLoginTimerLog::Status,"Creating initial geysers\n");Need(hooks_.createInitialGeysers,"일반 초기 간헐천 실제 부모 미연결")();Need(hooks_.log,"일반 초기 간헐천 완료 로그 미연결")(MissionLoginTimerLog::Status,"Done\n");
+            }
         }
         Need(hooks_.log,"로그인 사제 상태 로그 미연결")(MissionLoginTimerLog::Status,"Seting Priest State\n");
         // 같은 현재 Player/사제 상태의 실제 owner1..8을 원본 순서로 재조회한다.

@@ -17,6 +17,10 @@ public:
     const std::uint32_t& GeyserFrameFlag() const { return geyserFrameFlag_; } // 미복원 부모를 상수0으로 대신하지 않는다.
     std::uint32_t& SavedGeyserCount() { return savedGeyserCount_; } //00595090:SavedStateRead.tail[0]의 현재 출력 저장소다.
     const std::uint32_t& SavedGeyserCount() const { return savedGeyserCount_; } // 저장 reader 연결 전에도 동일 값을 보존한다.
+    std::uint32_t& SpellCount() { return savedGeyserCount_; } //00595090은0041cab0/00485f50의 스펠 수다. 기존 저장 reader의 역사적 getter와 같은 DWORD를 빌린다.
+    const std::uint32_t& SpellCount() const { return savedGeyserCount_; } // 같은 실제 DWORD의 현재 의미를 별도 사본 없이 읽는다.
+    double& SpellDeadline() { return spellDeadline_; } //005950d0: 일반 초기화가 현재 게임 시각+180을 쓰는 별도 예약이다.
+    const double& SpellDeadline() const { return spellDeadline_; } // b8/c0/c8 기한과 합치지 않는다.
     double& GeyserDeadline() { return geyserDeadline_; } //005950b8: 게임 시각의 별도8BYTE 기한이다.
     const double& GeyserDeadline() const { return geyserDeadline_; } // 다른0 기한과 합치지 않는다.
     double& CleanupDeadline() { return cleanupDeadline_; } //005950c0: 원문 cleanup이 쓰는 별도8BYTE다.
@@ -125,6 +129,7 @@ private:
     bool priestQuarterHp_{}; // 원문 최초 BSS0이며 일반 fresh의 기존0만 호환한다. prepared와 반납은 현재값을 보존한다.
     std::uint32_t ordinaryGeysers_{},geyserFrameFlag_{},savedGeyserCount_{}; // 실제 세 BSS DWORD다.
     double geyserDeadline_{},cleanupDeadline_{},secondaryGeyserDeadline_{},scheduledDrawDeadline_{}; // 실제 서로 다른 네 BSS double이다.
+    double spellDeadline_{}; //005950d0의 실제 별도 BSS double이며 Session 교체로 초기화하지 않는다.
     std::int32_t totalCost_{},resourcePool_{}; // 같은 signed 비용/자원 DWORD다.
     std::uint32_t refundPercent_{25}; // 보호 PE의 초기25다.
     std::int32_t allowAnyCapture_{}; // bool과 alias하지 않는 raw 허용 DWORD다.

@@ -1,4 +1,6 @@
 #include "client/MessageGump.h"
+#include <algorithm> // 이름 주소의 현재 첫 NUL을 실제 필드 범위 안에서 찾는다.
+#include <array> // 원문64색 서식의 두 인덱스가 같은8색 표를 사용한다.
 #include <cstdio>
 #include <stdexcept>
 #include <utility>
@@ -9,8 +11,21 @@ constexpr std::uint32_t kMessageVtable=0x00517b60U; // 보호10.78의 메시지 
 constexpr std::int32_t kWarning=17; //원문Script Warning의실제메시지종류다.
 constexpr std::int32_t kGameTime=16; //원문게임시간메시지의실제종류다.
 constexpr std::int32_t kPause=11; // 원문 분배기와 생성자가 사용하는 실제 Pause 종류다.
+constexpr std::int32_t kAllied=7,kStarted=9; //0048f880의 동맹 안내와004b4a20의 실제 게임 시작 안내다.
+constexpr std::array<char,8> kAlliedColors{'b','r','w','g','m','y','l','o'}; // PE004d0f94..1db7의64서식에서 확인한 행/열 색이다.
 constexpr std::string_view kGameTimeText="~E~yGame Time~r:~w %d:%02d:%02d"; //PE00516024의원문번역서식이다.
 constexpr std::string_view kPauseText="~E~wGame Paused!"; // PE00516010의 현재 원문 번역 키다.
+// 원문 이름 포인터의 현재 첫 NUL까지만 읽고 호스트 필드 밖의 접근은 거부한다.
+std::string CurrentMessageName(std::span<const char> bytes) { const auto end=std::find(bytes.begin(),bytes.end(),'\0');if (end==bytes.end()) throw std::out_of_range("메시지 실제 이름 NUL 범위");return {bytes.begin(),end}; }
+// 두 실제 문자열 인자를 같은 순서로 CRT에 전달하고 원문 지역256BYTE 밖 쓰기를 거부한다.
+std::string AlliedMessage(std::string_view format,std::span<const char> first,std::span<const char> second) {
+    std::size_t strings{};for (std::size_t index=0;index<format.size();++index) if (format[index]=='%') { // 실제 두 문자열 인자 외의 미공급 CRT 인자를 요구하는 번역 서식은 거부한다.
+        if (++index>=format.size()) throw std::invalid_argument("동맹 안내의 잘린 서식");if (format[index]=='%') continue;if (format[index]=='-') ++index;while (index<format.size() && format[index]>='0' && format[index]<='9') ++index; // 원문 문자열 폭은 유지한다.
+        if (index<format.size() && format[index]=='.') { ++index;while (index<format.size() && format[index]>='0' && format[index]<='9') ++index; } // 문자열 정밀도도 BYTE 단위로 CRT에 위임한다.
+        if (index>=format.size() || format[index]!='s' || ++strings>2) throw std::invalid_argument("동맹 안내의 두 문자열 외 서식");
+    }
+    const auto left=CurrentMessageName(first),right=CurrentMessageName(second);const std::string pattern(format);char output[256];const auto count=std::snprintf(output,sizeof(output),pattern.c_str(),left.c_str(),right.c_str());if (count<0 || static_cast<std::size_t>(count)>=sizeof(output)) throw std::length_error("동맹 안내 원문256BYTE 서식 범위");return {output,static_cast<std::size_t>(count)};
+}
 }
 // 한문자열서식의폭/정밀도/리터럴%만실제CRT로처리한다.원문에미공급된추가인자는합성하지않는다.
 std::string FormatWarningMessage(std::string_view pattern,std::optional<std::string_view> source) {
@@ -49,18 +64,30 @@ MessageGumpNode& MessageGump::Node(std::uint32_t token) const {
 }
 // Pause는 시계/음향/idle을 호출하지 않고 기한0의 영구 메시지를 측정한다.
 std::uint32_t MessageGump::Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter,std::optional<std::string_view> source) const {
-    if (kind!=kPause && kind!=kGameTime && kind!=kWarning) throw std::logic_error("다른 원본 메시지 종류의 생성 분기 미복원");
+    if (kind!=kPause && kind!=kGameTime && kind!=kWarning && kind!=kAllied && kind!=kStarted) throw std::logic_error("다른 원본 메시지 종류의 생성 분기 미복원");
     hooks_.constructText(token);
     Node(token).vtable=kMessageVtable;
     Node(token).deadline=0.0;
     Node(token).kind=kind;
     Node(token).player=player;
     Node(token).parameter=parameter;
-    if (hooks_.challenge()) {
+    std::span<const char> firstName; // 동맹 종류만 원문 첫 이름 주소를 후속 서식까지 보유한다.
+    if (kind==kAllied) {
+        const auto& name=hooks_.challenge() ? hooks_.challengePlayerText : hooks_.playerText;if (!name) throw std::logic_error("동맹 안내의 실제 이름 주소 미연결");firstName=name(player);
+    } else if (hooks_.challenge()) {
         if (!hooks_.challengePlayerName) throw std::logic_error("Challenge 메시지의 실제42bbb0 이름 조회 미연결");
         hooks_.challengePlayerName(player);
     } else hooks_.playerName(player);
-    if (Node(token).kind==kGameTime) {
+    if (Node(token).kind==kAllied || Node(token).kind==kStarted) {
+        if (Node(token).kind==kStarted) { const auto text=hooks_.translate("~E~wGame started!");hooks_.style(token,text); }
+        else {
+            if (!hooks_.warningSound) throw std::logic_error("동맹 안내의 실제 경고 음향 미연결");hooks_.warningSound();const auto row=Node(token).player,column=Node(token).parameter;
+            if (row>=1 && row<=8 && column>=1 && column<=8) { // 원문 두 switch의 유효1..8에서만 번역/두 번째 이름/Style을 수행한다.
+                const auto pattern=std::string("~E~")+kAlliedColors[static_cast<std::size_t>(row-1)]+"%s~w and ~"+kAlliedColors[static_cast<std::size_t>(column-1)]+"%s~w are now Allies";const auto translated=hooks_.translate(pattern);if (!hooks_.playerText) throw std::logic_error("동맹 안내의 실제 두 번째 Player 이름 미연결");const auto second=hooks_.playerText(Node(token).parameter);hooks_.style(token,AlliedMessage(translated,firstName,second)); // PE는 번역 뒤 현재+b8을 재조회하며 앞서 고른 서식 열과 구별한다.
+            }
+        }
+        if (!hooks_.wallSeconds || !hooks_.idle) throw std::logic_error("일반 전투 안내의 실제 기한/Idle 미연결");const auto now=hooks_.wallSeconds();Node(token).deadline=now+10.0;hooks_.idle(token,true);
+    } else if (Node(token).kind==kGameTime) {
         if (!hooks_.gameTimeSeconds) throw std::logic_error("게임시간메시지의현재CRT시계미연결");
         const auto seconds=hooks_.gameTimeSeconds(); //원문은이위치의signed정수초에서시/분/초를계산한다.
         const auto hours=(seconds/60)/60,minutes=(seconds/60)%60,remainder=(seconds%60)%60; //IDIV의음수절삭/나머지도보존한다.

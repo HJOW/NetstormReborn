@@ -1,0 +1,57 @@
+{
+  "unit": 1001,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "일반 로그인 완료 초기화/팀 동맹/스펠 예약·실제78h/MessageBoard7·9·중단/카메라 연결",
+  "sourceFunctions1078": [
+    "004b67c0",
+    "004b4a20",
+    "004b6250",
+    "00485f50",
+    "0041cab0",
+    "00486440",
+    "0048f880",
+    "004d0600"
+  ],
+  "referenceFunctions1072": [
+    "004336e0",
+    "004317b0",
+    "004336a0",
+    "00415af0",
+    "00415a30",
+    "004c8b40"
+  ],
+  "build": {
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "firstLog": "extracted\\cpp-resume-1001\\build.log",
+    "finalLog": "extracted\\cpp-resume-1001\\build-final.log",
+    "exeSize": 11785216,
+    "exeSha256": "415082285d60364dcf0116cc78e07dcfa2672af776ee9a71a7ceca47fd4b2256"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1001\\protected-before.json"
+  },
+  "remaining": [
+    "일반 로그인 진행 대기 UI/ServerForceBattleStart",
+    "재접속 저장/복구·일반 프레임/스펠 예약 소비",
+    "전체 파생 writer/decoder·메타·재접속·Outpost/checking8",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

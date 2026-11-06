@@ -56,6 +56,7 @@ struct MissionLoginTimerHooks {
     std::function<void()> progress; // 아직 미복원인 일반 진행 UI 꼬리004b68d6..004b6ba1의 명시 경계다.
     std::function<void()> serverAssertion; // Begin의 checkingAssertions&&!server 진단 후 계속 실행한다.
     std::function<void(MissionLoginTimerLog,std::string_view)> log; // 원본 시작/상태 로그를 해당 위치에서 전달한다.
+    std::function<void()> initializeGeneral,createInitialGeysers; // !savedGame의 현재 !mission 초기화와 뒤의 현재 boss&&!mission 간헐천 생성이다.
 };
 // 실제 타이머와 Begin/Abort는 직접 계산한다. 큰 일반 전투 초기화는 도달 시 명시 거부한다.
 class RawMissionLoginTimer {

@@ -27,6 +27,7 @@ public:
     // 같은20칸 표에서 원본 Pause(kind11)의 영구 안내를 생성하거나 지연 삭제한다.
     void PauseStatus(bool enabled);
     void GameTimeStatus(); //원문메인루프의kind16/player1/enabled1/parameter0을같은20칸에요청한다.
+    void BattleStatus(std::int32_t kind,std::int32_t player,std::int32_t parameter); // 일반 kind7/9의 표시1/빈문자열을 같은 MessageBoard에 요청한다.
     // 원본 Show의 enabled=false로 같은 종류/플레이어/매개변수 메시지를 지연 삭제한다.
     void Remove(std::int32_t kind,std::int32_t player,std::int32_t parameter);
     MessageGumpNode* Node(std::uint32_t token) const; // 공통 기본/텍스트 분배에 같은 안정된 파생 주소를 빌린다.

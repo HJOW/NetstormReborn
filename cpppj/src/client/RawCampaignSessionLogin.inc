@@ -183,6 +183,13 @@ struct RawCampaignSession::Impl::Login {
         s.coreDataGlobals->Restore(s.core.pool.Edition(),s.playerState,metamap,
             {s.globals.missionPost,saved,RawCheckingFlag{s.gameplayGlobals->AiDebug().Checking()}},owner,hooks);
     }
+    // 일반 완료의 실제 Core/Player/옵션을 같은 Template/메시지/입력 장치에 연결한다.
+    void InitializeGeneral() {
+        OrdinaryBattleStartHooks hooks;hooks.core=[this] { const std::uint32_t metamap=s.core.ownerMode.challenge;PlayerCoreDataHooks diagnostic;diagnostic.assertion=[this](auto) { Need(s.services.ai.assertion)("_myCoreData == &lastKnownCoreData"); };return s.coreDataGlobals->Read(s.playerState,metamap,diagnostic); };
+        hooks.writeCore=s.writeCurrentFortCore;hooks.touchFort=[this](auto owner) { s.templateState->Changed(owner); };hooks.status=effects.status;hooks.queueAlliance=effects.queueAlliance;hooks.gameSeconds=[this] { return s.core.processState.Now(); };hooks.log=s.services.player.log;
+        hooks.broadcastPlayer=[this](auto owner) { for (std::uint32_t target=1;target<9;++target) if (Get(s.players,target*180U+0x50U,1)&1U) metadata->SendPlayer(owner,static_cast<std::int32_t>(target)); }; // 원문00491270처럼 현재 실제 접속자만 송신 대상으로 재조회한다.
+        auto& aux=*s.gameplayGlobals->GameAux();RawOrdinaryBattleStart({s.players,s.battleOptions,s.core.processState.Server(),s.core.ownerMode.battle,s.playerState.templateOwner,s.playerState.battleOwner,aux.SpellCount(),aux.SpellDeadline()},std::move(hooks)).Run();
+    }
     //현재 원본 로그인/패킷/상태/타이머 모듈을 같은 저장소로 조립한다.
     Login(Impl& owner,CampaignLoginServices device,std::function<void()> load):s(owner),effects(std::move(device)),install(std::move(load)) {
         // 첫 실제 접속/설치 전에 Init의22개 기본 옵션/색과 예약 영역 보존을 같은87BYTE에 적용한다.
@@ -237,6 +244,7 @@ struct RawCampaignSession::Impl::Login {
         timing.connection=[this](std::int32_t peer) { return peer==9 && Need(transport.exists)(9); }; //004e2b10은 flags2/IsOpen이 아닌 현재 Client9 객체 존재를 조회한다.
         timing.remoteStatus=[this](std::int32_t peer,std::uint32_t,std::uint32_t) { s.connectionActivity->Receive(peer); }; //004b6180의 wire 수신과 같은 몸체이며 미사용 두 Native 인자를 합성하지 않는다.
         timing.saveReconnect=[this] { if (!s.globals.missionPost) throw std::logic_error("일반전투 재접속 저장 미연결"); };timing.closeProgress=[this] { CloseProgress(); };timing.log=[this](MissionLoginTimerLog,std::string_view text) { Need(effects.log)(text); };
+        timing.initializeGeneral=[this] { InitializeGeneral(); };timing.createInitialGeysers=s.createWorldGeysers;timing.abortBattle=effects.abortBattle;timing.resetCamera=s.services.install.resetCamera;timing.serverAssertion=[this] { Need(s.services.ai.assertion)("server"); }; // 미션의 자연 관문은 유지하고 선택된 일반 초기화/중단/카메라만 실제 부모를 요구한다.
         timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{s.loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.Server(); },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.Boss(); },[this] { return s.gunState.checking; }},std::move(timing));
         RegisterMissionLogin((*transport.dispatch),*server);RegisterMissionClientPackets((*transport.dispatch),*client);RegisterMissionMetadata((*transport.dispatch),*metadata);RegisterMissionSettingsPacket((*transport.dispatch),*settings);
         RegisterConnectionActivity((*transport.dispatch),*s.connectionActivity); // 실제64h/version1/정책0/빈 observer를 같은 일반 수신 분배기에 등록한다.
@@ -248,6 +256,10 @@ struct RawCampaignSession::Impl::Login {
             // 모든 backend는 callback 동안 소유한 mutable 수신 frame을 제공한다. 같은 실제 버퍼에 원본 self bit를 쓴다.
             s.participation->ReceiveAlliance({const_cast<std::uint8_t*>(bytes.data()),bytes.size()},[this](std::span<const std::uint8_t> packet) { s.broadcast->Send(packet); });
         });
+        (*transport.dispatch).Observe(0x78,{});(*transport.dispatch).Version(0x78,1,0);(*transport.dispatch).RequireLength(0x78,6);
+        (*transport.dispatch).Register(0x78,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) {
+            const auto owner=std::uint32_t(packet[4]),target=std::uint32_t(packet[5]);if (s.assetState.Boss()) { s.participation->AddAlly(owner,target);s.participation->AddAlly(target,owner);s.broadcast->Send(packet); }Need(effects.status)(7,owner,target);
+        }); //0048f880은 현재 boss에서 양방향 AddAlly/전체분배를 하고 모든 수신자가 실제 종류7 안내를 연다.
         rollback.armed=false; // 정상 생성 뒤에는 Login 소멸자가 하위 처리기보다 먼저 같은 대여를 반납한다.
     }
     MissionLoginPlayerCounts counts{OriginalEdition::Patch1078,s.players}; //같은 Player9의 현재 집계를 타이머에 공급한다.

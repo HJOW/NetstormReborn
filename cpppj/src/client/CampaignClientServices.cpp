@@ -19,6 +19,9 @@
 #include "client/ClientConnectionGlobals.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
+#include "client/WarningMessages.h" // 일반 로그인/동맹의 실제 종류9/7 안내도 같은 MessageBoard를 사용한다.
+#include "client/RawBattleLeave.h" // 로그인 Abort도 같은 Native 상태 예약/부분 효과를 공유한다.
+#include "client/SavedStateFiles.h" // 실제 사용자 저장 namespace의!state.dat 삭제 장치다.
 #include "client/RawChatChannels.h"
 #include "client/ScriptCommand.h"
 #include "o/OriginalText.h"
@@ -294,6 +297,9 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     login.playerUiBusy=[&controls] { return controls.Menus() && controls.Menus()->HasMenus(); };
     login.playerNotice=[&client](std::uint32_t kind,std::uint32_t owner,std::uint32_t value) { std::clog<<"Player UI "<<kind<<' '<<owner<<' '<<value<<'\n';client.GetRenderer().InvalidateAll(); };
     login.log=[](std::string_view text) { std::clog<<text; };services.localLogin=std::move(login);
+    services.localLogin->queueAlliance=[&client](auto packed) { const auto value=std::bit_cast<std::int32_t>(packed);client.Input().PushCommand(0x02000122U,value,value); };
+    services.localLogin->status=[&controls](auto kind,auto owner,auto parameter) { auto* messages=controls.Warnings();if (!messages) throw std::logic_error("일반 전투의 실제 MessageBoard 미연결");messages->BattleStatus(static_cast<std::int32_t>(kind),static_cast<std::int32_t>(owner),static_cast<std::int32_t>(parameter)); };
+    services.localLogin->abortBattle=[&client] { auto& local=*client.LocalStateGlobals();auto& game=*client.GameplayGlobals();auto& surface=*client.SurfaceStorage();PrepareBattleAbortState({local.State(),local.AbortPending(),client.WorldAudio().ResultState(),game.world.missionPost,game.world.editor,surface.ownerMode.challenge,surface.ownerMode.battle},[&client] { static_cast<void>(DeleteSavedStateFile(client.GameDirectory(),client.StaticStrings()->FileNames(),client.UserSavedStateFile())); }); };
     return services;
 }
 }
