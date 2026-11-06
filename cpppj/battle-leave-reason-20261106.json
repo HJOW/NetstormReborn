@@ -1,0 +1,117 @@
+{
+  "unit": 955,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 955,
+  "version": "11.01",
+  "exeSha256": "19fd9ba91650eb976a4d43a350b6a07d798ee806dbc2b9126e36ef5d60d912be",
+  "exeBytes": 11281408,
+  "build": {
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "initialTestByteFillWarning": "C4244; 이후 uint8_t 명시로 교정"
+  },
+  "cppTests": {
+    "new": 2,
+    "existing": 19,
+    "total": 21,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "filter": "BattleLeaveReason_",
+        "tests": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "RetreatConfirmation_",
+        "tests": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "NativeMainMenu",
+        "tests": 11,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "StatePollAction_",
+        "tests": 4,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "MissionLifecycle_",
+        "tests": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      }
+    ]
+  },
+  "native": {
+    "newRows": 22,
+    "firstInstructions": 620,
+    "replayDifferences": 0,
+    "actualParents": [
+      "004d803e-004d80d9",
+      "004b3540",
+      "004b5880",
+      "004b6350"
+    ],
+    "externalDevices": [
+      "004b5470 path",
+      "004e58e4 CRT remove"
+    ],
+    "gameStarted": false,
+    "remoteBranchExecuted": false
+  },
+  "protected": {
+    "existing": 2788,
+    "existingFixtures": 968,
+    "existingUnchanged": true,
+    "new": [
+      "cpppj/tests/fixtures/battle-leave-reason-x86.tsv"
+    ],
+    "after": 2789,
+    "afterFixtures": 969,
+    "snapshot": "extracted/cpp-resume-955/protected-final.json"
+  },
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "multiplayerTestsExecuted": false,
+  "cdScope": "0041ae80 양수 이유/0042fd70/0042fd90/00432a00 원문 정적 비교만. CD 호스트 fallback/전체 Native 이관 미완료이며 10.78 제품 동작으로 세지 않음.",
+  "scope": "실제 10.78 입력의 기존 양수 이유 본문을 같은 전역/삭제 장치의 공용 함수로 추출하고 원문 부분 효과를 대조. 새 결함 수정이나 전체3절3번 완료가 아니다. 원격 페널티/State6/State7 일반전투는8번 이월·검사 제외.",
+  "next": "956: 같은3절3번 Native3/State1·단독State7·cleanup Tick 나머지 판정. 이후4→7→8 순서.",
+  "sourceSha256": {
+    "cpppj/src/client/RawBattleLeave.cpp": "d32091804b28f1f7f2e3a7a78635d608e34ac0fc394fcf484aecf2bb645634f0",
+    "cpppj/src/client/RawBattleLeave.h": "71c59cd240a373993c11e13be0042c59bc49cf1bcf9886c129deb7c69fb7af96",
+    "cpppj/src/client/UberGump.cpp": "5e2173b86281214789f5247bd7ff1a1614d974770a53a9a9cf8ea2d9c65da832",
+    "cpppj/tests/BattleLeaveReasonTests.cpp": "a1aa7f1cca86e56b78bb9807122b2d38f1e9266856c785fc976d4a13282d8480",
+    "cpppj/tests/CMakeLists.txt": "b52a257d557803f3c15cbe6335287994064a531663b3b38afdf1a61d937ffa62",
+    "tools/decomp_battle_leave_reason.py": "c588238454cca15e031d76e35093f61ffa43f3828c9c642854f276b513bd47df",
+    "cpppj/tests/fixtures/battle-leave-reason-x86.tsv": "9b82e520c0fe4a7864f7d64e283381170503df262d008b60de46bd22a53ff969",
+    "cpppj/battle-leave-reason-native-20261106.json": "eb9fd7e9126352d786fd2ee123e3248a1a5afeadc92ba0a30793eff4012b9a8b",
+    "extracted/refined/originalCD/NETSTORM.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb"
+  },
+  "rawSha256": {
+    "BattleLeaveReason-final.log": "1a32b84a36ddce213cf96bc9bb047397914bffee7b5c147ea3d6303750fa336b",
+    "build-final.log": "246dcac5910c27459acb2915812acce3a1bb4ad13d5632e99bf539f30d7b85d7",
+    "build.log": "be755b0a1ef01ee65526d1c845e95d8b3ac35d895fbaf1cfec64089b9c5d016a",
+    "cd-leave-source.txt": "e743c7fcb71c477f8bc05d19eaa412dad95ab7cbbd8aeaf68da3cf607cc4143a",
+    "leave-disassembly.txt": "1883d1d81e1ef6d5b0634d04bb55490e5c41f343798d372dab3f41de70dfb174",
+    "MissionLifecycle-final.log": "191acc9c99d83ddafd1064a330b71a0aecb602bd95cc95fcad444bef7594f69a",
+    "native-verify.log": "0c1729f41e2895034085eb064d60c75e39953444c96ad64089dcbf79966016a0",
+    "NativeMainMenu-final.log": "18951803eb4dfad9ae08519a5daf9481331ae053f952151f047efee7ccdefb99",
+    "protected-before.json": "e91b18470a48fd841ccdaf6e80b7ede772bd71f1d5d45f2b9f44fd38fea386d0",
+    "protected-final.json": "4d868e9cfd337aec79ff657773fd5592af7c3e2c09ec7626ea2c551b6c301809",
+    "RetreatConfirmation-final.log": "85fff8bb7f20852b59b50db7ab206b4e15bdc1e993fe4c60aceb358402d39c31",
+    "StatePollAction-final.log": "d611e2b8bd13096075d8c7a30cc15b5ce8fa5da2a3a8534cfb5bd222f3c11a21",
+    "tests-final.json": "0232d60f5af3f94970f72ab026b769a0670d74bb5252ebc78e7464b71219e829"
+  }
+}

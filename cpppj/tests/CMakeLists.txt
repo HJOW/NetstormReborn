@@ -3664,3 +3664,8 @@ target_sources(netstorm_guide_fort_request_tests PRIVATE CampaignWorldLoadTests.
 
 # 실제 Native 조기 ret와 호스트 Tick의 새 예약/취소/실패 수명을 함께 대조한다.
 target_sources(netstorm_mission_entry_tests PRIVATE StatePollActionTests.cpp)
+
+# 비멀티 양수 LeaveBattle 부모의 독립22행과 기존 확인 관문을 같은 집중 대상에서 대조한다.
+target_sources(netstorm_tests PRIVATE BattleLeaveReasonTests.cpp)
+target_sources(netstorm_mission_entry_tests PRIVATE BattleLeaveReasonTests.cpp RetreatConfirmationTests.cpp)
+set_source_files_properties(BattleLeaveReasonTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BATTLE_LEAVE_REASON_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/battle-leave-reason-x86.tsv\"")

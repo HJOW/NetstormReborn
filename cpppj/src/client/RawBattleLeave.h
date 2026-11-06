@@ -19,6 +19,15 @@ struct BattleAbortStateGlobals { //004b6350이 실제로 읽고 쓰는 같은 Cl
     const bool& missionPost;const std::uint32_t& editor;const bool& metamap;const bool& battle; //00594fa4/005c85a4/00594fc8/00594fbc의 현재 모드다. 실제 Editor는 DWORD 그대로 빌린다.
 };
 void PrepareBattleAbortState(BattleAbortStateGlobals globals,const std::function<void()>& deleteSavedState); //직접 store 뒤 실제 경로 계산/삭제 장치를 호출한다. 선택된 장치 중단도 앞선 쓰기를 보존한다.
+struct BattleLeaveStateGlobals { //004d803e의 양수 이유가 공통 중단에 전달하는 같은 현재 전역이다.
+    BattleAbortStateGlobals abort; //공통 부모의 다섯 상태/모드/결과를 그대로 빌린다.
+    std::uint32_t& scriptBreak; //00542544의 스크립트 중단 표식이며 먼저 선택된 원격 처리 뒤에만1을 쓴다.
+    std::uint32_t& sourceType; //0055a420은 이유3/9의 선행 삭제가 정상 복귀한 뒤0을 쓴다.
+    const std::uint32_t& playerKnown; //00595344의 현재 번호 확정 여부다. 복사본으로 원격 선택을 판정하지 않는다.
+};
+// signed 양수 이유만 처리하며 이유2는 직접next3, 이유3/9는 선행 삭제 뒤 공통 부모를 실행한다.
+// 원격 처리가 선택되면 필수 장치를 요구한다. 이 장치의 구현/검사는 후순위 MP 범위이며 빈 성공으로 대체하지 않는다.
+void PrepareBattleLeaveState(std::int32_t reason,BattleLeaveStateGlobals globals,const std::function<void()>& deleteSavedState,const std::function<void()>& remoteLeave={});
 // LeaveBattle의 뗌은 소비하고 signed 이유가0 이하이면 실제 ConfirmRetreat 안내만 연다.
 // 양수 이유/다른 명령은 false로 남겨 기존 Native 예약 본문이 처리한다. Tell 실패도 현재 전투를 반납하지 않는다.
 bool DispatchBattleRetreatConfirmation(const InputEvent& event,const std::function<void(std::string_view)>& tell);

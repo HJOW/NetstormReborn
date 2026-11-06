@@ -1,0 +1,26 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-11-06",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-11-03",
+  "rows": 22,
+  "instructions": 620,
+  "native": [
+    "004d803e-004d80d9",
+    "004b3540",
+    "004b5880",
+    "004b6350"
+  ],
+  "scope": "양수 비멀티 이유/ScriptBreak/선행 삭제/공통 abort·144BYTE5개/부분 중단. 파일 I/O는 명시 장치. 원격 페널티·State6·게임/창/통신 실행 없음.",
+  "gameStarted": false,
+  "multiplayerTestsExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_battle_leave_reason.py": "c588238454cca15e031d76e35093f61ffa43f3828c9c642854f276b513bd47df",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_native_main_menu_state.py": "f5ef26d3275036739d0a3022ba28ad62da43a8b25d958fe430dd32f25509a710",
+    "cpppj/tests/fixtures/battle-leave-reason-x86.tsv": "9b82e520c0fe4a7864f7d64e283381170503df262d008b60de46bd22a53ff969"
+  }
+}

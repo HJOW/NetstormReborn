@@ -1456,13 +1456,7 @@ void UberGump::Event(InputEvent event) {
         if (event.code&InputCode::kRelease) return; // Guide가 소비한 Abort와 달리 실제 Leave는 원본 일반 입력의 key-up 거부 뒤에 실행한다.
         if (event.y>=1 && client_.Assets().Edition()==o::OriginalEdition::Patch1078) {
             auto& local=*client_.LocalStateGlobals();auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
-            if (game.player.playerKnown && surface.ownerMode.battle && !game.world.missionPost && event.y!=2 && event.y!=3) throw std::logic_error("LeaveBattle의 원격 전투 페널티/재접속 처리 미연결"); // 선택된 원문 미복원 자식을 즉시 메뉴 복귀로 대체하지 않는다.
-            local.ScriptBreak()=1;
-            if (event.y==2) RequestMainMenuAfterLeave(local.State()); // Guide의 직접 복귀는 저장 삭제/공통 abort 예약을 실행하지 않는다.
-            else {
-                if (event.y==3 || event.y==9) { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile()));local.SourceType()=0; } //원문은 이 두 이유에서 선행 삭제 뒤 공통 부모의 삭제를 한 번 더 실행한다.
-                PrepareBattleAbortState({local.State(),local.AbortPending(),client_.WorldAudio().ResultState(),game.world.missionPost,game.world.editor,surface.ownerMode.challenge,surface.ownerMode.battle},[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); }); // 공통 중단도 현재 사용자 Saves만 삭제하고 설치 폴더의 옛 상태 파일은 보존한다.
-            }
+            PrepareBattleLeaveState(event.y,{{local.State(),local.AbortPending(),client_.WorldAudio().ResultState(),game.world.missionPost,game.world.editor,surface.ownerMode.challenge,surface.ownerMode.battle},local.ScriptBreak(),local.SourceType(),game.player.playerKnown},[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); }); // 실제 양수 부모의 이유2/3/9·두 삭제/부분 효과를 공유하며 다음 Tick에 정리한다.
             return; //실제 다음 Poll의 State3에 종료 통지·정리·메뉴를 맡기며 사건 수신 중 World를 반납하지 않는다.
         }
         MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false);return; //CD판은 기존 호스트 경로다.10.78의 확인 요청/양수 이탈은 위의 별도 원문 경로가 처리한다.

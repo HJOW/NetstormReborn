@@ -37,6 +37,19 @@ void PrepareBattleAbortState(BattleAbortStateGlobals g,const std::function<void(
     g.state.next[33]=0;g.state.immediate[33]=0;g.state.current[33]=0;
     if (!deleteSavedState) throw std::logic_error("전투 종료의 실제 저장 경로/삭제 장치 미연결");deleteSavedState();
 }
+// 실제 원문 양수 부모의 선택/직접 쓰기를 공유하며 큰 파일/원격 장치는 선택된 위치에서만 실행한다.
+void PrepareBattleLeaveState(std::int32_t reason,BattleLeaveStateGlobals g,const std::function<void()>& deleteSavedState,const std::function<void()>& remoteLeave) {
+    if (reason<1) throw std::invalid_argument("전투 이탈 양수 이유 계약 오류");
+    if (g.playerKnown && g.abort.battle && !g.abort.missionPost && reason!=2 && reason!=3) {
+        if (!remoteLeave) throw std::logic_error("LeaveBattle의 원격 전투 페널티/재접속 처리 미연결");remoteLeave();
+    }
+    g.scriptBreak=1;
+    if (reason==2) { RequestMainMenuAfterLeave(g.abort.state);return; } //이유2는 공통abort/저장삭제/+84 지우기를 실행하지 않는다.
+    if (reason==3 || reason==9) {
+        if (!deleteSavedState) throw std::logic_error("전투 이탈의 선행 저장 삭제 장치 미연결");deleteSavedState();g.sourceType=0;
+    }
+    PrepareBattleAbortState(g.abort,deleteSavedState); //같은 장기 전역을 다시 읽으며 두 번째 삭제의 부분 효과도 보존한다.
+}
 // 원문004d8035의 signed JL을 보존한다. 이유0은 이탈 실행이 아니라 확인창 요청이다.
 bool DispatchBattleRetreatConfirmation(const InputEvent& event,const std::function<void(std::string_view)>& tell) {
     if ((event.code&0x03ffffffU)!=kLeaveBattleCommand) return false;
