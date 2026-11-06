@@ -168,7 +168,7 @@ cpppj는 아직 진행 중이므로 webpj 단위는 착수 시점의 cpppj 현�
 | Tell/언어 | `<background>`는 이름만 보관(`nsisles` 자료/사용 근거 미확정). 현재 미션·`{@미션.키}`·브리핑/안내 `.korean`·스크립트 도움말 Back은 순서5/9에서 연결. 한국어 영어대체/긴 줄/고DPI도 해당 화면과 확인 |
 | 메뉴 확장 | 두 열 메뉴는 범위 내 실제 소비자가 필요할 때 원본 계약으로 이식. `%{userSpec}`·User Made Campaigns는 제외이며 새 과제로 돌리지 않음 |
 | 입력/오디오/환경 | 실제 스피커 청취·모든 브라우저/GUI Linux·고DPI/모니터 이동은 미확인. 일부 Edge/Chromium 기록을 전체 플랫폼 지원으로 쓰지 않음 |
-| README 일괄 갱신 | 기존 문서의 WB03-O 이후 상태가 미반영. WB03-P~AB·WB04-A와 이후 확정 범위를 공통 문서 갱신 시 반영; 이번에는 수정하지 않음 |
+| [x] README 일괄 갱신 | **2026-11-06 완료(CM 커밋):** README.md·README.en.md의 webpj 상태를 WB04-D5a(검사 429개) 기준으로 갱신했다(WB03-P~AC·WB02-E/F·WB04-A~D5a 반영). 이후 단위의 README 반영은 다음 공통 문서 일괄 갱신 때 한다 |
 | Credits AI 문구 | 2026-11-05 사용자 결정: 현행 문구(`OpenAI Codex, ChatGPT and Anthropic Claude Code`, 한국어 동일 취지)를 **유지하고 나중에 수정**한다. cpppj/dotnetpj 문구(Codex·ChatGPT만)와 다르며, 수정 지시가 오면 `www/assets/product.js`의 영어/한국어 섹션과 `tests/product.test.mjs`의 문구 검사를 함께 고친다. 한국어 행 이름 `NetStorm 11.01 패치 크레딧`은 확정 |
 
 ## 5. 검증과 완료 판정
