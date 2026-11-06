@@ -1,0 +1,60 @@
+{
+  "unit": 1019,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "실제70h 원격 Tell writer/송신 관찰기/현재 Tell 수신과 같은 Session 등록 수명을 연결",
+  "sourceFunctions1078": [
+    "004c9150",
+    "004c9200",
+    "0040b090",
+    "004cf980",
+    "0040a6f0",
+    "004df590"
+  ],
+  "referenceFunctions1072": [
+    "004c3ec0",
+    "0040b300",
+    "0040b340",
+    "00418b60"
+  ],
+  "build": {
+    "firstExitCode": 1,
+    "firstErrors": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\client\\RawCampaignSession.cpp(4469,192): error C3861: 'DecodeDisplayText': 식별자를 찾을 수 없습니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]",
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\client\\RawCampaignSession.cpp(4469,5): error C2664: 'void netstorm::o::RegisterRemoteTellPacket(netstorm::o::RawPacketDispatch &,std::function<void (std::string_view)>,netstorm::o::RemoteTellAssertion)': 인수 2을(를) 'netstorm::client::RawCampaignSession::RegisterCarrierCommands::<lambda_1>'에서 'std::function<void (std::string_view)>'(으)로 변환할 수 없습니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
+    ],
+    "correction": "표시 문자열 변환 OriginalText 헤더 누락 한 원인 교정",
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted\\cpp-resume-1019\\build-first.log",
+      "extracted\\cpp-resume-1019\\build.log"
+    ],
+    "exeSize": 11924480,
+    "exeSha256": "b853500339f78afe875e25f7cd9da29210aab217725dadc54fdb8f699517f4e4"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "liveRemoteTells": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1019\\protected-before.json"
+  },
+  "remaining": [
+    "기존ChargeShortfall 본체의70h 비용 안내 장치/6ch caller 접합·SP/취소 전송 장치",
+    "전체 파생 writer/decoder·메타·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

@@ -136,6 +136,8 @@
 #include "o/RawBattleNuggetPlacement.h" // 비미션 보충도 원문 지역 난수와 실제 Factory/배치/Pop을 사용한다.
 #include "o/RawBattleResourceOptions.h" // 주기 SP 통지 검증도 같은 현재87BYTE와 원문 표를 조회한다.
 #include "o/RawBattleResourceFrame.h" // 일반 게임 프레임의 스펠/SP/간헐천을 같은 실제 장치에 연결한다.
+#include "o/RawRemoteTellPacket.h" // 비용 부족/메타 안내의 실제70h를 같은 공유 등록표와 현재 Tell에 연결한다.
+#include "o/OriginalText.h" // 실제 원격 Tell의 표시 바이트를 같은 UI UTF-8 경계에서 변환한다.
 #include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
 #include "o/RawBombActivation.h"
@@ -316,7 +318,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,17> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c}; // 의식선택6b와송금6c도 같은 Session의 등록과 해제 수명을 따른다.
+constexpr std::array<std::uint32_t,18> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70}; // 실제70h도같은Session의등록/해제수명을따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -3824,6 +3826,11 @@ void RawCampaignSession::SendLocalPacket(std::int32_t target,std::span<const std
     else if (impl_->services.editorTransport) static_cast<void>(impl_->services.editorTransport->Send(target,packet));
     else throw std::logic_error("실제 로컬 Login/Editor 전송 없는 원본 패킷 송신"); // sender/owner/protocol/선언길이를 바꾸거나 처리기를 동기 호출하지 않는다.
 }
+// 원문 단일 대상/대상 제외8행의 실제 원격 Tell 송신 부모다.
+void RawCampaignSession::SendPlayerTell(std::uint32_t owner,std::string_view section,bool others) {
+    auto& s=*impl_;const auto packet=WriteRemoteTellPacket(section,[storage=s.world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); },others ? 0x4fbU:0x4efU);
+    if (others) { for (std::uint32_t player=1;player<9;++player) if (player!=owner) SendLocalPacket(static_cast<std::int32_t>(player),packet); }else SendLocalPacket(std::bit_cast<std::int32_t>(owner),packet); // Native대상번호/flags/NULL과observer는같은기존전송이판정한다.
+}
 // 실제 원시 패킷의 길이 확정과 기존 로컬 큐 경계를 외부 UI에 제공한다.
 void RawCampaignSession::SendMutableLocalPacket(std::int32_t target,std::span<std::uint8_t> packet) { impl_->SendChatMutable(target,packet); }
 // 현재 실제 자산/Template/서비스를 보관하고 모든 하위 모듈을 구성한다.
@@ -4460,6 +4467,7 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
 // 실제 초기 등록과 같은 버전/정책/빈 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");RegisterGeyserMined(dispatch,*impl_->geyserMined);
+    RegisterRemoteTellPacket(dispatch,[this](auto text) { if (!impl_->services.factoryTell) throw std::logic_error("원격 Tell의 실제 현재 cf730 미연결");impl_->services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); // 표시부호화는현재실제UI의UTF-8경계에서만변환한다.
     dispatch.Register(0x5b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveGeyserMined(packet); });
     dispatch.Observe(0x40,{});dispatch.Version(0x40,1,0);dispatch.RequireLength(0x40,18);
     dispatch.Register(0x40,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierMove->Receive(owner,packet); });

@@ -316,6 +316,7 @@ public:
     void SaveServerFailure(); //004b6560의 서버 flags 변경→같은 실제976BYTE 저장 writer를 실행한다.
     void RunConnectionLoginTimer(); // 실제 Client439ae3의 동일 타이머이며 Editor에는 Login을 만들지 않는다.
     void RunBattleResources(); //00486bc0 전체 스펠/SP 주기/일반 간헐천을 같은 실제 현재 월드로 실행한다.
+    void SendPlayerTell(std::uint32_t owner,std::string_view section,bool others=false); //004c9150/4c9200의 실제70h를현재대상또는해당대상을뺀1..8에보낸다.
     //프레임마다현재실제송신/수신큐와로그인타이머를진행한다.
     void PumpLocalConnection();
     //현재연결상태/실제수신패킷은진단전용읽기다. 별도성공flag를만들지않는다.
