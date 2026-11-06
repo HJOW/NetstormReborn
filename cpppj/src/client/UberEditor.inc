@@ -64,9 +64,9 @@ void UberGump::PrepareNativeFortState(bool editing) {
     client_.InitializeNativeRendererView();surface.chunks.Reset();surface.chunks.Mode()=1;
     o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_);game.StateAuxFC4()=0;
 }
-//현재 State가1일 때만 실제 Editor 외곽을 준비하며 State 확정은 호출한 RawLocalMissionState에 남긴다.
+//현재 State가1/2일 때 같은 실제 Editor 외곽을 준비하며 State 확정은 호출한 RawLocalMissionState에 남긴다.
 o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t selected) {
-    if (selected!=1 || !editor_) throw std::logic_error("실제 Edit State1 외곽 계약");
+    if ((selected!=1 && selected!=2) || !editor_) throw std::logic_error("실제 Edit State1/2 외곽 계약");
     PrepareNativeFortState(true);return InstallPreparedFortState(true);
 }
 // 이미 실행한 Native prefix를 반복하지 않고 State1/2의 실제 파일·월드·UI 꼬리만 잇는다.
@@ -190,10 +190,10 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
     hooks.request=[this](auto next) { editor_->state->Request(next); };
     return netstorm::client::InstallNativeIntroState({client_.LocalStateGlobals()->State(),surface.ownerMode.fort,game.Server(),game.Boss(),client_.FortGlobals()->PendingBytes()},hooks);
 }
-// 미션 Login은 기존 분배기에 남기고 Edit1/메인3/인트로39~42과 다음4를 같은 분배기로 처리한다.
+// 미션 Login은 기존 분배기에 남기고 Edit1/2·메인3·인트로39~42과 다음4를 같은 분배기로 처리한다.
 void UberGump::PollEditorState() {
-    auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];
-    if (next!=1 && next!=3 && !(next>=39 && next<=42) && !(editor_ && next==4)) return; // PlayIntro는 Editor 장치가 아직 없어도 같은 Native 부모를 처음 구성한다.
+    auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2; //원문 두 Editor 선택은 같은 prefix/파일/확정을 사용한다.
+    if (!fort && next!=3 && !(next>=39 && next<=42) && !(editor_ && next==4)) return; // PlayIntro는 Editor 장치가 아직 없어도 같은 Native 부모를 처음 구성한다.
     if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
     if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
         auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
@@ -201,14 +201,14 @@ void UberGump::PollEditorState() {
         hooks.invalidState=[](auto state) { throw std::logic_error("Editor/메인 분배기의 선택된 Native State 미연결:"+std::to_string(state)); };
         editor_->state=std::make_unique<o::RawLocalMissionState>(client_.Assets().Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),surface.ownerMode.battle,game.world.missionPost,local.SavedGame(),surface.links.mission,local.Simulconnect(),surface.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.CdPresent(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(htmlGlobals_.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client_.Time().game,client_.Time().wall},std::move(hooks));
     }
-    if (next==1 || next==3) editor_->committed=false;editor_->state->Poll();
+    if (fort || next==3) editor_->committed=false;editor_->state->Poll();
     if (next>=39 && next<=42) {
         if (local.State().phase[0]==3 && local.State().next[0]==4) PublishNativeMainMenuState();
         return; // 영상이 살아 있는 State40은 다음 Poll까지 유지하며 메인 메뉴를 먼저 공개하지 않는다.
     }
     if (next==3 && local.State().phase[0]==3 && local.State().next[0]==4) { PublishNativeMainMenuState();return; }
-    if ((next==1 || next==3) && local.State().next[0]==7) return; // 두 진입의 실제 Guide 요청은 입력/loaded 공개 없이 다음 Tick의 지연 미션 부모가 소비한다.
-    if ((next==1 || next==3) && !editor_->committed) {
+    if ((fort || next==3) && local.State().next[0]==7) return; // 두 진입의 실제 Guide 요청은 입력/loaded 공개 없이 다음 Tick의 지연 미션 부모가 소비한다.
+    if ((fort || next==3) && !editor_->committed) {
         world_->CompleteFortInstall(local); //공통 확정 뒤 실제 loaded 공개가 끝나야 호스트 사용자 입력 몸체를 만들 수 있다.
         BindCampaignUserInputServices(client_,*world_,editor_->selectCursor);userInput_=std::make_unique<UserInput>(client_,*world_);
         editor_->committed=true;state_.phase=ClientPhase::Mission;pageName_=client_.GameplayGlobals()->world.editor ? "editor" : "mission";page_={};popup_.clear();RebuildControls();

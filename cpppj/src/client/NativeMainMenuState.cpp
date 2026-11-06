@@ -16,9 +16,9 @@ void Background(std::span<char> target,std::string_view name) {
 std::uint32_t ReadNativeFortEntrySource(std::uint32_t phase,std::uint32_t& sourceType) { if (std::bit_cast<std::int32_t>(phase)<=6 || phase==11) sourceType=0;return sourceType; }
 // 앞선 배경/음악 callback 뒤 바뀐 현재 모드와 이전phase도 호출 순간에 다시 조회한다.
 void NotifyNativeFortEntryLeave(o::LocalMissionStateStorage state,const bool& battle,const std::function<void()>& leave) { if (battle && state.phase[0]==14) { if (!leave) throw std::logic_error("Fort 진입의 이전 Battle14 실제 통지 미연결");leave(); } }
-// Editor 진입은 공통 출처/첫BYTE/통지만 실행하고 결과/음악/전체 배경은 그대로 둔다.
+// State1/2의 Editor 진입은 공통 출처/첫BYTE/통지만 실행하고 결과/음악/전체 배경은 그대로 둔다.
 void PrepareNativeEditorEntry(o::LocalMissionStateStorage state,std::uint32_t& sourceType,std::span<char> background,const bool& battle,const std::function<void()>& leave) {
-    if (state.current[0]!=1) throw std::logic_error("Native Editor 앞단의 실제 current1 계약");static_cast<void>(ReadNativeFortEntrySource(state.phase[0],sourceType));if (background.empty()) throw std::out_of_range("Native Editor 배경 첫BYTE 물리 부족");background[0]=0;NotifyNativeFortEntryLeave(state,battle,leave);
+    if (state.current[0]!=1 && state.current[0]!=2) throw std::logic_error("Native Editor 앞단의 실제 current1/2 계약");static_cast<void>(ReadNativeFortEntrySource(state.phase[0],sourceType));if (background.empty()) throw std::out_of_range("Native Editor 배경 첫BYTE 물리 부족");background[0]=0;NotifyNativeFortEntryLeave(state,battle,leave);
 }
 // Native State 공통144BYTE 확정과 다음 Poll은 이 부모 밖의 기존 RawLocalMissionState가 수행한다.
 o::LocalMissionParentResult InstallNativeMainMenuState(NativeMainMenuStateGlobals g,const NativeMainMenuStateHooks& h) {

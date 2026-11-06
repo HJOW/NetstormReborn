@@ -16,6 +16,7 @@
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
 #include "client/ExistingEditorAfterCheckpoint.h"
+#include "client/NativeMainMenuState.h" //State1/2의 공통 출처/배경 앞단도 실제 부모로 대조한다.
 #include "client/EditorLocalTransport.h"
 #include "o/RawPathProcess.h"
 #include "o/RawPriestState.h" // 같은 실제 사제의 HP/지면 이동 불가 조회 선언을 직접 사용한다.
@@ -654,16 +655,36 @@ TEST_CASE(CampaignExistingEditorPrefix_FailureClosesScopeWithoutPublishingRuntim
     },true);
 }
 
-// 미준비 Session 및 State2는 State1 prefix의 우회 설치 통로를 열지 않아야 한다.
-TEST_CASE(CampaignExistingEditorPrefix_RequiresPreparedOwnerAndCurrentState1) {
+// 미준비 Session 및 Editor 외 State3는 공통 State1/2 prefix의 우회 설치 통로를 열지 않아야 한다.
+TEST_CASE(CampaignExistingEditorPrefix_RequiresPreparedOwnerAndCurrentFortState) {
     WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
         auto& owner=*client.LocalStateGlobals();owner.State().current[0]=1;
         CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorPrefixUi(owner,[] {}); }));
     });
     WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
-        auto& owner=*client.LocalStateGlobals();owner.State().current[0]=2;
+        auto& owner=*client.LocalStateGlobals();owner.State().current[0]=3;
         CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorPrefixUi(owner,[] {}); }));
         CHECK(CheckpointRejects<std::logic_error>([&] { session.SynchronizeProductionContents(); }));
+    },true);
+}
+
+// State2도 원문 State1과 같은 실제 prefix/파일/Deck/State 확정을 거쳐야 하며 미완료 입력은 닫혀 있다.
+TEST_CASE(CampaignExistingEditorPrefix_State2SharesActualDeckAndCommit) {
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        EditorInstallStateContext scene(client,2);InputQueue input;std::uint32_t calls{},prefix{};auto tail=EditorInstallTail(session,calls);
+        std::array<char,80> background;background.fill('#');std::uint32_t source=133;bool battle=false;
+        LocalMissionStateHooks hooks;hooks.logState=[](auto selected) { CHECK(selected==2 || selected==4); };
+        hooks.parentState=[&](auto selected) {
+            CHECK(selected==2);PrepareNativeEditorEntry(scene.owner.State(),source,background,battle,{});
+            CHECK(!background[0] && background[1]=='#' && source==133);
+            session.WithExistingEditorPrefixUi(scene.owner,[&] { ++prefix;session.SynchronizeProductionContents();CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); })); });
+            CHECK(session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work));
+            session.WithExistingEditorInstallUi(scene.owner,input,tail,[] {});CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }));
+            return LocalMissionParentResult::Commit;
+        };
+        const auto requested=scene.owner.State().current;RawLocalMissionState state(OriginalEdition::Patch1078,scene.owner.State(),scene.Globals(),std::move(hooks));state.Run();
+        CHECK(prefix==1 && calls==5 && scene.owner.State().phase==requested && !scene.owner.State().current[0] && scene.owner.State().next[0]==4);
+        session.CommitExistingEditorInstall(scene.owner);static_cast<void>(session.Cursor());state.Poll();CHECK(scene.owner.State().old==requested && scene.owner.State().phase[0]==4);
     },true);
 }
 

@@ -1,0 +1,347 @@
+{
+  "unit": 956,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 956,
+  "version": "11.01",
+  "exeSha256": "23d356438e3d85b998965b9f49831574530f554e95447ed1510e8c19616f7b77",
+  "exeBytes": 11281408,
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_mission_entry_tests",
+      "netstorm_guide_fort_request_tests",
+      "netstorm_guide_release_tests"
+    ],
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "cppTests": {
+    "new": 1,
+    "existing": 37,
+    "total": 38,
+    "failedChecks": 0,
+    "filters": [
+      {
+        "binary": "netstorm_guide_fort_request_tests",
+        "filter": "CampaignExistingEditorPrefix_",
+        "expectedTests": 4,
+        "summary": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "binary": "netstorm_guide_fort_request_tests",
+        "filter": "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+        "expectedTests": 1,
+        "summary": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "binary": "netstorm_guide_fort_request_tests",
+        "filter": "CampaignNativeFortContinuation_",
+        "expectedTests": 4,
+        "summary": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "binary": "netstorm_guide_fort_request_tests",
+        "filter": "CampaignFortFrameLease_",
+        "expectedTests": 1,
+        "summary": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "binary": "netstorm_mission_entry_tests",
+        "filter": "NativeMainMenu",
+        "expectedTests": 11,
+        "summary": [
+          [
+            "11",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "binary": "netstorm_mission_entry_tests",
+        "filter": "StatePollAction_",
+        "expectedTests": 4,
+        "summary": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "binary": "netstorm_mission_entry_tests",
+        "filter": "MissionLifecycle_",
+        "expectedTests": 2,
+        "summary": [
+          [
+            "2",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "binary": "netstorm_guide_release_tests",
+        "filter": "StateRuntimeCoordinator_",
+        "expectedTests": 4,
+        "summary": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "binary": "netstorm_guide_release_tests",
+        "filter": "CampaignGuideWorldLifetime_",
+        "expectedTests": 4,
+        "summary": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      },
+      {
+        "binary": "netstorm_guide_release_tests",
+        "filter": "CampaignSession_StateRuntimeRetirement_",
+        "expectedTests": 3,
+        "summary": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "exitCode": 0
+      }
+    ]
+  },
+  "beforeFixControl": {
+    "sourceProduct": 955,
+    "cases": 1,
+    "failedChecks": 1,
+    "reason": "State2를 실제 current1 계약에서 거부",
+    "log": "extracted/cpp-resume-956/state2-control.log"
+  },
+  "audit": {
+    "host": "HJOW-Athlon",
+    "lastPreciseDecompile": "2026-11-03",
+    "kind": "static source inventory, not runtime verification",
+    "cleanupEffects": [
+      "CloseAllConnections",
+      "EndConnections",
+      "ResumeGame",
+      "ResumeAudio",
+      "Clear446e70",
+      "Clear4c1f20",
+      "ResetClock",
+      "Clear42b1b0",
+      "RefreshSp",
+      "ClearTemplates",
+      "LeaveMetamap",
+      "Clear445140",
+      "ClearCursor",
+      "ClearPlayerLinks",
+      "ClearKernel",
+      "KillGumps",
+      "CleanupGumps",
+      "ReplaceUber",
+      "Clear43b540",
+      "Reset422490",
+      "Clear4c2450",
+      "MapMode",
+      "SceneMusic",
+      "Clear472830",
+      "Clear4b2b50",
+      "Clear4328a0",
+      "Clear4ab940",
+      "Reset568b60",
+      "Reset54c8a0",
+      "ResetGraph",
+      "Clear4a9e50",
+      "InitializePlayers",
+      "ResetZone",
+      "InterpretOptions"
+    ],
+    "boundCases": [
+      "CloseAllConnections",
+      "EndConnections",
+      "ResumeGame",
+      "ResumeAudio",
+      "Clear446e70",
+      "Clear4c1f20",
+      "ResetClock",
+      "Clear42b1b0",
+      "RefreshSp",
+      "ClearTemplates",
+      "LeaveMetamap",
+      "Clear445140",
+      "ClearCursor",
+      "ClearPlayerLinks",
+      "ClearKernel",
+      "KillGumps",
+      "CleanupGumps",
+      "ReplaceUber",
+      "Clear43b540",
+      "Reset422490",
+      "Clear4c2450",
+      "Clear472830",
+      "Clear4b2b50",
+      "Clear4328a0",
+      "Clear4ab940",
+      "Reset568b60",
+      "Reset54c8a0",
+      "ResetGraph",
+      "MapMode",
+      "SceneMusic",
+      "Clear4a9e50",
+      "InitializePlayers",
+      "ResetZone",
+      "InterpretOptions"
+    ],
+    "remainingSelectedDevices": {
+      "saveBattle": "비mission battle phase14 -> section8",
+      "leaveMetamap": "metamap -> section8"
+    },
+    "nativeState2": {
+      "jumpTable": {
+        "switch": "004b6e5b",
+        "table": "004b874c",
+        "disassembly": "004b6e30: push 0x50cdbc\n004b6e35: mov dword ptr [0x5c8878], ebp\n004b6e3b: mov dword ptr [0x5c86c8], ebp\n004b6e41: call 0x45ad00\n004b6e46: mov ecx, dword ptr [0x5c87e8]\n004b6e4c: lea eax, [ecx - 1]\n004b6e4f: add esp, 8\n004b6e52: cmp eax, 0x29\n004b6e55: ja 0x4b86a6\n004b6e5b: jmp dword ptr [eax*4 + 0x4b874c]\n004b6e62: push ebp\n004b6e63: call 0x4a40d0\n004b6e68: call 0x4ab3e0\n004b6e6d: push 0x29",
+        "entries": [
+          "004b6fa9",
+          "004b6fa9",
+          "004b6fa9",
+          "004b86bd",
+          "004b86a6",
+          "004b6fa9",
+          "004b74f1",
+          "004b7710",
+          "004b77ce",
+          "004b7918",
+          "004b7aa5",
+          "004b86bd",
+          "004b7962",
+          "004b86bd",
+          "004b7ad1",
+          "004b86bd",
+          "004b7cd5",
+          "004b7cf3",
+          "004b7d07",
+          "004b8159",
+          "004b8163",
+          "004b81ce",
+          "004b821f",
+          "004b823c",
+          "004b824b",
+          "004b82ac",
+          "004b86bd",
+          "004b833b",
+          "004b83fc",
+          "004b864e",
+          "004b866e",
+          "004b867a",
+          "004b8457",
+          "004b7e75",
+          "004b7f1a",
+          "004b7fca",
+          "004b8026",
+          "004b80f3",
+          "004b6ebd",
+          "004b6f69",
+          "004b6f90",
+          "004b6e62"
+        ],
+        "exeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+      },
+      "naturalWriterObserved": false,
+      "scope": "정적 분배 복원/실제 Session 명시 입력 검사; GUI 현재State 강제 주입 없음"
+    },
+    "sources": {
+      "cpppj/src/client/NativeMainMenuState.cpp": "b0caacb2a99d86980b11332c29fd4556955e969d1e342ce453b1c638d6994d9f",
+      "cpppj/src/client/NativeMainMenuState.h": "90c5d01cc8e74354c2ff1dfe1a622da52809869f61737227f92796bd71ca2613",
+      "cpppj/src/client/UberEditor.inc": "a99711d890a53fab65af46d61667002480cad5758977b831939343fa945f58a3",
+      "cpppj/src/client/UberGump.cpp": "5e2173b86281214789f5247bd7ff1a1614d974770a53a9a9cf8ea2d9c65da832",
+      "cpppj/src/client/RawCampaignSession.cpp": "06b510133083e2999e1f70f7469a010af9d8edeff39b24880b3f07faceed1d7e",
+      "cpppj/src/client/CampaignClientServices.cpp": "fc96c2b0913a1c3a4b63127a01874e632724ee2335855188473c0a68cc92d549",
+      "cpppj/src/client/ClientStateWorldCleanup.cpp": "d22738552127f4cc996eb7d34524b0fd309f1b1f19d91eb67f7fbc661aa10e7c",
+      "cpppj/src/client/ClientStateRuntimeRetirement.cpp": "15cf6b15b032b67af54c28a23f65a8fbd7c175af103d8702def92c07d0a2ca23",
+      "cpppj/src/o/RawStateWorldCleanup.cpp": "f91b9f8d7500ddf5e66c82d0e5a24399dd03b781e8313406bc826f079647c7ea",
+      "cpppj/src/client/ClientStateWorldGlobals.cpp": "1cc4b63761dd6ad0e6d87650834b374cd7d549d6083b8eaaa8862d090ebb71f1",
+      "cpppj/src/client/ClientStateStorageCleanup.cpp": "35bab8f2137fa02d03fa665e4edb39dd258392d8bd1dbf2df491336df1d44151"
+    }
+  },
+  "protected": {
+    "existing": 2789,
+    "fixtures": 969,
+    "unchanged": true,
+    "newFixtures": 0,
+    "snapshot": "extracted/cpp-resume-956/protected-final.json"
+  },
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "newNativeCpuExecution": false,
+  "multiplayerTestsExecuted": false,
+  "scope": "3절3번 비멀티 Native3/State1·2/단독State7/Tick/연속정리의 구현·대조 정리. State2 자연UI도달·State3 특이 자연 분기와 모든 시나리오 완주/전체동일성은 미확인이다. 원격/State6/Zone0/저장복구·메타맵은8번, 큰 내부/진단·파일 잔여는4번이다.",
+  "next": "957: LEFT_JOBS3절4번 첫 미완료 checking/내부 수명부터. 이후7→8 순서를 유지한다.",
+  "changedSourceSha256": {
+    "cpppj/src/client/NativeMainMenuState.cpp": "b0caacb2a99d86980b11332c29fd4556955e969d1e342ce453b1c638d6994d9f",
+    "cpppj/src/client/NativeMainMenuState.h": "90c5d01cc8e74354c2ff1dfe1a622da52809869f61737227f92796bd71ca2613",
+    "cpppj/src/client/UberEditor.inc": "a99711d890a53fab65af46d61667002480cad5758977b831939343fa945f58a3",
+    "cpppj/src/client/RawCampaignSession.cpp": "06b510133083e2999e1f70f7469a010af9d8edeff39b24880b3f07faceed1d7e",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp": "6061f4e9f7c3aa14e2ee400fd5b46fe744335cb04936bb7c125b108684bae59b"
+  },
+  "rawSha256": {
+    "audit-current.json": "541faf58a2f466d428ad668f2699be0b96f20ca0d59e4d67ee46b4e3b15227fb",
+    "build-control.log": "abb501f7bf7ef121df6b76a6af761a47ef8d7074c74928ed797b213cea6fc9ad",
+    "build-final.log": "e7e1623d618ae08a5388cf1e66a8200ac46b20a9f8bc1ecd4168e7a596869355",
+    "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn-final.log": "6e630237d9bacdadc0cf195ed07ae70ce0bc1e578c2506fadc71fe4be735c259",
+    "CampaignExistingEditorPrefix-final.log": "0e8f570fffe7b6494a394cfe6b19710a5ca4f0ddb2f2df7f9e17ebe08fcc5d64",
+    "CampaignFortFrameLease-final.log": "a6c8e611471dbd20bcde4d2cfe64f921fa6282196fc7afc8f6ed48debdb24dde",
+    "CampaignGuideWorldLifetime-final.log": "c591e8b7f55bae0a4b1db3513a4c698841b8fc78d4ff97844cea8bf76963ed1c",
+    "CampaignNativeFortContinuation-final.log": "7a4b401ca237a0cc81ddfa640af89e9555a42a2a41dd84cf4eae73d044714cc8",
+    "CampaignSession_StateRuntimeRetirement-final.log": "a81420e1ba6d3d22bcc751c447348119948f35dbced406a8c04c7301c3ac1549",
+    "MissionLifecycle-final.log": "191acc9c99d83ddafd1064a330b71a0aecb602bd95cc95fcad444bef7594f69a",
+    "native-switch.json": "5a58aef7fe441aa4ad80791d7ec7d4aa88b8869db26963b17df6bb3763bae470",
+    "NativeMainMenu-final.log": "18951803eb4dfad9ae08519a5daf9481331ae053f952151f047efee7ccdefb99",
+    "protected-before.json": "4d868e9cfd337aec79ff657773fd5592af7c3e2c09ec7626ea2c551b6c301809",
+    "protected-final.json": "4d868e9cfd337aec79ff657773fd5592af7c3e2c09ec7626ea2c551b6c301809",
+    "state2-control.log": "a729b9824448d127d97388bca3e2a7a2793740441b4c9eed91de47c3acdcb1e4",
+    "StatePollAction-final.log": "d611e2b8bd13096075d8c7a30cc15b5ce8fa5da2a3a8534cfb5bd222f3c11a21",
+    "StateRuntimeCoordinator-final.log": "d48ae2a117d0af367b185053cdadbea62dc85a5a8babf97f60288c76faad4255",
+    "tests-final.json": "d62aeafe1a79650bebaf884df5d4768dff1ccf0c611a30a0d00589e01fa54d43"
+  }
+}

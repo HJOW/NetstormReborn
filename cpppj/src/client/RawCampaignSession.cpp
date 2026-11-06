@@ -3751,10 +3751,10 @@ bool RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingE
         s.editorCheckpointReady=true;s.editorCheckpointRunning=false;return true; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
     }catch (...) { s.editorCheckpointRunning=false;throw; } //동기진입guard만반납한다.manager/State/Config/파일/객체/난수는rollback하지않는다.
 }
-// 실제 State1의 준비 대여가 파일 전 HUD를 한 번 분배할 때 생산 동기화만 같은 실제 Deck에 허용한다.
+// 실제 State1/2의 준비 대여가 파일 전 HUD를 한 번 분배할 때 생산 동기화만 같은 실제 Deck에 허용한다.
 void RawCampaignSession::WithExistingEditorPrefixUi(ClientLocalStateGlobals& owner,std::function<void()> prepareUi) {
     auto& s=*impl_;
-    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.adoptPreparedWorld || s.services.localStateGlobals.get()!=&owner || owner.State().current[0]!=1 || s.loaded || s.editorCheckpointStarted || s.editorPrefixUiStarted || !prepareUi) throw std::logic_error("기존 Editor prefix의 같은 State1/준비 대여/한번 HUD 계약");
+    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.adoptPreparedWorld || s.services.localStateGlobals.get()!=&owner || (owner.State().current[0]!=1 && owner.State().current[0]!=2) || s.loaded || s.editorCheckpointStarted || s.editorPrefixUiStarted || !prepareUi) throw std::logic_error("기존 Editor prefix의 같은 State1·2/준비 대여/한번 HUD 계약");
     s.editorPrefixUiStarted=true;s.editorPrefixUiInstalling=true;
     try { prepareUi();s.editorPrefixUiInstalling=false; }catch (...) { s.editorPrefixUiInstalling=false;throw; } //이미 만들어진 실제 Deck/표시 효과는 남기고 동기 scope만 닫는다.
 }

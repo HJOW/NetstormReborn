@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **955 / 표시 버전11.01**이다. LeaveBattle 양수 이유의 기존 처리를 실제 공용 함수로 묶고 원본 기계어22행으로 직접 복귀·두 저장 삭제·장치 중단의 부분 효과를 대조했다. 고유21검사(새2/기존19)·독립 재관측 차이0·최종 Release 경고/오류0이다. 새 게임 실행은 없고 마지막 실제 GUI는954 당시 제품의 State1→7/Editor 왕복이다. CD판 차이는 문서화했고 원격 페널티/State6은8번 이월·검사 제외다. 기존 보호2788/fixture968 불변·새1개 뒤2789/969다. 다음956도 같은3절3번의 Native/State/cleanup 잔여를 진행한다. [955 기록](../docs/exe/cpp-battle-leave-reason-20261106.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
+현재 실행 제품은 **956 / 표시 버전11.01**이다. 원문에서 State1과 같은 본문을 쓰는 State2의 호스트 Poll/진입/HUD 제한을 연결했다. 수정 전 실제 거부 검사→수정 후 실제 Client/Session/파일/Deck/UI/State 확정이 통과했고, 최종 고유38검사(새1/기존37)·4개 Release 대상 경고/오류0이다. Native3/단독State7/cleanup34개 효과와 연속 수명 범위를 정리해 LEFT_JOBS 3절3번의 비멀티 구현·대조를 마쳤다. 자연 도달·전체 동일성은 미확인이고 MP/State6은8번 이월이다. 새 게임/GUI/CPU/fixture 없음·보호2789/fixture969 불변이다. 다음957은 순서대로3절4번 첫 미완료부터 진행한다. [956 기록](../docs/exe/cpp-mission-state-scope-20261106.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 
