@@ -39,7 +39,10 @@ struct LocalMissionStateGlobals {
 // 큰부모상태의원문early return은공통phase확정과명확히구분한다.
 enum class LocalMissionParentResult { Commit,ReturnWithoutCommit };
 // 원본의큰진행창문구선택이다. 실제표시/번역/창수명은필수소비자가처리한다.
-enum class LocalMissionProgress { MissionStarting,ReconnectStarting,ConnectingCountdown,ReconnectCountdown,ServerLost };
+enum class LocalMissionProgress {
+    MissionStarting,ReconnectStarting,ConnectingCountdown,ReconnectCountdown,ServerLost, // 기존 미션 초기화·재접속·초 단위 대기·서버 상실 안내다.
+    ConnectingStarting,Connecting,Reconnecting,Transferring,ReconnectTransferring,MissionTransferring // 일반 State7/8과 로그인 송신 뒤 실제 전송 안내다.
+};
 // 작은상태알고리즘이선택하는외부몸체다. 도달한경계의누락은성공이아니다.
 struct LocalMissionStateHooks {
     std::function<void(std::uint32_t)> logState; // 0045ad00의현재상태진입로그다.
@@ -49,6 +52,8 @@ struct LocalMissionStateHooks {
     std::function<void()> selectDefaultDenominator; std::function<void(std::uint32_t)> cleanupBattle; // 004978d0(0)의 기본 배경 시차 분모 선택과004b2df0의 실제 정리다.
     std::function<std::uint32_t()> cdPresent; std::function<void()> refreshCommands; std::function<void()> stopMusic; // CD 확인00440c60/명령 숨김0042e440/음악 정리00469fc0다.
     std::function<void()> refreshMission; // missionWorld&&missionPost의00463a40가상+28이다.
+    std::function<void()> listenServer,initializeDensity; // simulconnect의 현재 포트 listener와 일반 서버의 두 난수 밀도 writer다.
+    std::function<void(std::uint32_t)> clearChat; // 일반 State7의 현재 채널40h/80h를 순서대로 지운다.
     std::function<void(std::uint32_t)> installZone,freeZone; std::function<void()> installMapHandlers; // 004b4be0/free/004c1e70이다. ZoneDWORD는호스트가해석하는핸들이다.
     std::function<void()> initializeRenderer; std::function<void(std::uint32_t)> uiMode; // Renderer 초기화004993c0/00466280(mode,0,1)의 실제 효과다. 커서 갱신으로 대체하지 않는다.
     std::function<double()> wallSeconds; // 00460d70의현재벽시각이다.

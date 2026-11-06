@@ -499,6 +499,26 @@ void UberGump::ShowCaptureNotice(std::string_view body,std::uint32_t width,std::
     if (!serial) return;state_.phase=ClientPhase::Dialog;pageName_="capturewritten";popup_.clear();
     if (missionRuntime_ && missionRuntime_->tutorial) missionRuntime_->tutorial->Gate().PauseForDialog();else if (mission_) client_.Pause(true);RebuildControls();
 } //같은 전체HTML의기존모달/닫기수명을사용하며별도Tell섹션으로치환하지않는다.
+// 원문은 주소 formatter의 지역 결과와 별개로 빈 %s를 넘긴다. 번역 뒤의 실제 두 치환만 수행한다.
+void UberGump::ShowLoginProgress(o::LocalMissionProgress kind,std::int32_t remaining) {
+    std::string_view source;
+    switch (kind) {
+    case o::LocalMissionProgress::MissionStarting:source="Initializing.";break;
+    case o::LocalMissionProgress::ReconnectStarting:source="Game Server disconnected.  Reconnecting to new Game Server.";break;
+    case o::LocalMissionProgress::ConnectingCountdown:source="Connecting to Game Server %s - Countdown %d.";break;
+    case o::LocalMissionProgress::ReconnectCountdown:source="Reconnecting to Game Server %s - Countdown %d.";break;
+    case o::LocalMissionProgress::ServerLost:source="Connection to Game Server lost.";break;
+    case o::LocalMissionProgress::ConnectingStarting:source="Connecting to Game Server. %s";break;
+    case o::LocalMissionProgress::Connecting:source="Connecting to Game Server %s";break;
+    case o::LocalMissionProgress::Reconnecting:source="Reconnecting to Game Server %s";break;
+    case o::LocalMissionProgress::Transferring:source="Connected to server %s - Transferring.";break;
+    case o::LocalMissionProgress::ReconnectTransferring:source="Reconnecting to new Game Server. Transferring.";break;
+    case o::LocalMissionProgress::MissionTransferring:source="Starting Mission...";break;
+    default:throw std::out_of_range("현재 로그인 안내 종류 범위");
+    }
+    auto text=client_.Translate(source);const auto address=text.find("%s");if (address!=std::string::npos) text.erase(address,2);const auto countdown=text.find("%d");if (countdown!=std::string::npos) text.replace(countdown,2,std::to_string(remaining));
+    rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext(CurrentMapView()),FontBytes(text),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true; // 현재 loading serial의 갱신만 예약하며 Compose/프레임 대기/State 확정을 중첩하지 않는다.
+}
 // 테스트 전용: 현재 모달 Gump의 실제 serial을 읽는다. 값을 바꾸지 않으며 열린 모달이 없으면 0이다(단위696).
 std::uint32_t UberGump::CurrentDialog() const { return rawButtons_->CurrentDialog(); } // 날씨도 소리 요청 뒤의 현재 모달을 읽는다.
 std::uint32_t UberGump::CurrentDialogSerial() const { const auto token=rawButtons_->CurrentDialog();const auto* node=token ? rawButtons_->Menus()->Node(token):nullptr;return node ? node->serial:0U; }

@@ -1,5 +1,6 @@
 // x87 비교의 unordered 선택과 실제 TYPE 비용 필드의 현재 쓰기를 보존한다.
 #include "o/RawMissionBattleOptions.h"
+#include "o/SpStore.h" // 지형/경제와 같은 실제 GameRandom의 상위16비트 난수를 사용한다.
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -9,6 +10,7 @@ namespace {
 constexpr std::array<std::uint8_t,22> kInitialOptions{0,2,2,0,3,0,2,1,1,0,0,1,0,1,1,2,2,1,2,2,0,0}; // PE0052f5e0부터24BYTE 간격의 실제 기본 선택 BYTE22개다.
 constexpr std::array<std::int32_t,4> kTypeCosts{1000,2000,3000,5000}; //0041c8b0의실제스택표다.
 constexpr std::array<std::uint32_t,6> kValues{0,25,50,75,100,150}; //0041ca70의실제스택표다.
+constexpr std::array<std::int32_t,4> kMinimumDensity{10,15,20,25},kMaximumDensity{30,35,40,45}; //0041c9b0/0041c9e0의 서로 다른 현재 선택표다.
 //004b4867의FLD/FSTP32는signaling NaN을quiet로저장한다. 다른비트는보존한다.
 float StoreX87Float(float value) {
     auto bits=std::bit_cast<std::uint32_t>(value);if ((bits&0x7f800000U)==0x7f800000U && (bits&0x007fffffU)) bits|=0x00400000U;return std::bit_cast<float>(bits);
@@ -42,6 +44,16 @@ std::int32_t RawMissionBattleOptions::TypeCost() const {
 // 이후 설정 변경을 이전 파생값 캐시로 가리지 않는다.
 std::uint32_t RawMissionBattleOptions::CurrentValue() const {
     const auto index=state_.options[0xf];if (index>=kValues.size()) throw std::out_of_range("미션 파생값 옵션 인덱스");return kValues[index];
+}
+// 원문 옵션 BYTE를 매 getter마다 다시 읽으며 잘못된 인덱스의 스택 외부 읽기는 호스트 오류로 구별한다.
+std::int32_t RawMissionBattleOptions::MinimumDensity() const { const auto index=state_.options[7];if (index>=kMinimumDensity.size()) throw std::out_of_range("일반 전투 최소 밀도 옵션 범위");return kMinimumDensity[index]; }
+// 상한 조회를 하한 조회의 선택값으로 고정하지 않는다.
+std::int32_t RawMissionBattleOptions::MaximumDensity() const { const auto index=state_.options[7];if (index>=kMaximumDensity.size()) throw std::out_of_range("일반 전투 최대 밀도 옵션 범위");return kMaximumDensity[index]; }
+// PE004b7666..769e의 signed 반값·두004558f0 호출과 현재 공유 전역 쓰기를 그대로 연결한다.
+void RawMissionBattleOptions::InitializeDensity(GameRandom& random,std::int32_t& minimum,std::int32_t& maximum,std::uint32_t& percent) const {
+    minimum=MinimumDensity();maximum=MaximumDensity();
+    const auto sample=[&] { const auto low=minimum/2,high=maximum/2;return random.Next(static_cast<std::uint32_t>(high)-static_cast<std::uint32_t>(low))+static_cast<std::uint32_t>(low); }; // 각 호출이 같은 현재 한계를 다시 읽고 원문 DWORD 범위 차이/합계 감김을 보존한다.
+    const auto first=sample();const auto second=sample();percent=first+second;
 }
 // 원본0049a840의현재번호를쓰기직전에확인한다.
 void RawMissionBattleOptions::SetSelectedTypeCost(float cost) const {

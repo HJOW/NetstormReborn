@@ -5,6 +5,7 @@
 #include <optional>
 #include <functional>
 #include <string_view>
+namespace netstorm::o { enum class LocalMissionProgress; } // 진행 종류만 빌리며 상태 분배기를 서비스에 소유하지 않는다.
 namespace netstorm::client {
 struct CampaignLoginServices {
     std::function<std::int32_t(std::string_view,std::int32_t)> configInt; //현재 원본 설정값과 누락 기본값이다.
@@ -22,6 +23,7 @@ struct CampaignLoginServices {
     std::function<void()> closeProgress; // 실제 State13/로그인 타이머의4c8dc0을 같은 현재 안내 serial/공통 Kill에 연결한다.
     std::function<void()> startingProgress; // State7의 인자20/즉시8 예약 뒤 전투 팔레트보다 앞서 현재 미션 진행 안내를 만든다. 실제 Client에는 필수다.
     std::function<void()> creatingIslands; // 중앙섬 metadata의 번역 안내를 같은 현재 transient HTML 창에 재설정한다.
+    std::function<void(o::LocalMissionProgress,std::int32_t)> progress; // State7/8/9·송신 뒤 안내를 실제 번역/공유 HTML 창으로 전달한다.
     std::function<void()> initializeChat; //0048fb30의 저장게임 복원 뒤 같은 Client의 실제0042e050을 재실행한다.
     std::optional<CampaignTransportServices> transport; // 명시 LAN/공통 전송만 주입하며 없으면 기존 내부 미션 양끝을 사용한다.
     std::function<void(std::uint32_t)> attachCommander; // 비서버 State13의 실제 Commander 연결이며 누락은 해당 선택 위치에서 명시 거부한다.

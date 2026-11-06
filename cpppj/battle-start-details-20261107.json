@@ -1,0 +1,18 @@
+{
+  "unit": 992,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "일반 State7 밀도 옵션·두 게임 난수·Chat/동시 listener 및 State8/9 실제 연결 안내",
+  "sourceFunctions1078": ["004b6dd0", "0041c9b0", "0041c9e0", "004558f0", "004b6090"],
+  "referenceFunctions1072": ["0042d630", "004331c0"],
+  "build": {
+    "exitCode": 0, "warnings": 0, "errors": 0,
+    "log": "extracted/cpp-resume-992/build.log",
+    "exeSize": 11632640,
+    "exeSha256": "2abd3ae3119d059ba961bc177ef230b26239f9749c12bc39ee157cffae899a7c"
+  },
+  "excluded": { "newMultiplayerTests": 0, "unitTestRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-992/protected-before.json" },
+  "remaining": ["일반 State7 호스트 진입/World 교체 부모", "일반 State6/Commander/roster/LAN UI", "전체 파생 writer/decoder", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}

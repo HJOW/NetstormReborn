@@ -151,6 +151,9 @@ struct RawCampaignSession::Impl::Login {
         hooks.connectServer=[this](auto address,auto port) { Connect(address,port); };
         hooks.connectionStatus=[this](std::int32_t owner) { return Need(transport.status)(owner); }; // buffered bit2와 실제 연결 완료를 구별한다.
         hooks.connectionOpen=[this](std::int32_t owner) { return Need(transport.isOpen)(owner); };
+        hooks.listenServer=[this] { Need(transport.listen)(std::bit_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799))); }; // 서버 권한과 별개인 simulconnect의 실제 listener만 연다.
+        hooks.initializeDensity=[this] { auto& aux=*s.gameplayGlobals->GameAux();options->InitializeDensity(s.random,aux.ArchipelagoMinimum(),aux.ArchipelagoMaximum(),aux.ArchipelagoPercent()); }; // metadata/지형 root와 같은 현재 세 DWORD·게임 난수다.
+        hooks.clearChat=s.services.ai.participation.clearChat;hooks.progress=effects.progress;
         hooks.closeConnection=[this](auto id) { Need(transport.close)(id); };hooks.renameConnection=[this](auto pending,auto owner) { Need(transport.assign)(pending,owner); };
         hooks.logConnection=[this](auto line,auto value) { Need(effects.log)("연결 진단 "+std::to_string(line)+":"+std::to_string(value)+"\n"); };
         hooks.serverConnection=[this] { return transport.registry->Cleanup().transceivers[9]; };hooks.attachCommander=effects.attachCommander; // 실제 비서버 Commander 몸체가 없으면 State13의 기존 Need가 거부한다.
@@ -160,7 +163,7 @@ struct RawCampaignSession::Impl::Login {
                 return RawFortImage(OriginalEdition::Patch1078,s.templateStorage->Template(s.playerState.templateOwner),{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}}).Save(); // 기존 독립 합성 입력의 부분 프로토콜 검사는 파일 장치를 요구하지 않는다.
             }();const auto packet=netstorm::zacket::MakeLocalMissionLogin(s.globals.mySubscriber,{reinterpret_cast<const char*>(s.handle.data())},image.Bytes());Send(9,packet.Bytes());
         };
-        hooks.connectedProgress=effects.refresh;hooks.closeProgress=[this] { CloseProgress(); };
+        hooks.connectedProgress=[this] { if (effects.progress) effects.progress(s.globals.missionPost ? LocalMissionProgress::MissionTransferring : saved ? LocalMissionProgress::ReconnectTransferring : LocalMissionProgress::Transferring,0);else Need(effects.refresh)(); };hooks.closeProgress=[this] { CloseProgress(); }; // 실제 Client는004b6090의 안내를 쓰고 기존 독립 부분 입력만 refresh를 유지한다.
         hooks.fortAvailable=[this](std::uint32_t owner) { return owner<9 && Get(s.headers,owner*20)!=0; };hooks.loadCurrentFort=[this] { Reload(s.playerState.templateOwner); };
         hooks.fortCore=[this](std::uint32_t owner) { return s.templateState->Get(owner); };hooks.touchFort=[this](std::uint32_t owner) { s.templateState->Changed(owner); };
         hooks.localAddress=[this] { return Address(); };hooks.uiMode=[this](std::uint32_t mode) { SetUiMode(mode); };

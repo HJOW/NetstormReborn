@@ -53,13 +53,17 @@ void RawLocalMissionState::Starting() {
     RestoreLocalMissionStarting(state_.current,saved,globals_.gameTicks,globals_.sourceType);
     globals_.inBattle=true;Need(hooks_.stopMusic,"음악정리미연결")();
     if (globals_.missionWorld && globals_.missionPost) Need(hooks_.refreshMission,"현재미션가상갱신미연결")();
-    if (globals_.simulconnect) throw std::logic_error("simulconnect서버분기는선택단독미션범위밖");
+    if (globals_.simulconnect) Need(hooks_.listenServer,"동시 접속의 실제 listener 미연결")();
     if (saved.zonePending) { Need(hooks_.installZone,"현재Zone설치미연결")(state_.current[0x80/4]);Need(hooks_.freeZone,"현재Zone해제미연결")(state_.current[0x80/4]);state_.current[0x80/4]=0;state_.next[0x80/4]=0;Need(hooks_.installMapHandlers,"실제맵처리기등록미연결")(); }
     Need(hooks_.initializeRenderer,"현재Renderer초기화미연결")();globals_.player.playerKnown=0;Need(hooks_.uiMode,"현재UI모드미연결")(2);
     ResetAmbientSoundDeadline(globals_.activityEnd,hooks_.wallSeconds);state_.immediate[1]=20;Request(8);
     if (state_.current[0x84/4]) { globals_.savedGame=true;Need(hooks_.loadReconnectFort,"재접속Fort읽기미연결")();Need(hooks_.progress,"재접속진행창미연결")(LocalMissionProgress::ReconnectStarting,0); }
     else if (globals_.missionPost) Need(hooks_.progress,"미션진행창미연결")(LocalMissionProgress::MissionStarting,0);
-    else throw std::logic_error("일반전투연결UI분기는선택단독미션범위밖");
+    else {
+        if (globals_.server) Need(hooks_.initializeDensity,"일반 전투의 실제 밀도 writer 미연결")();
+        Need(hooks_.clearChat,"일반 전투의 현재 Chat 채널 미연결")(0x40);Need(hooks_.clearChat,"일반 전투의 현재 Chat 채널 미연결")(0x80);
+        Need(hooks_.progress,"일반 전투 연결 안내 미연결")(LocalMissionProgress::ConnectingStarting,0);
+    }
     const auto palette=Need(hooks_.battlePalette,"현재battlePal조회미연결")();Need(hooks_.applyPalette,"실제팔레트적용미연결")(palette);
 }
 // original13의Template작은필드는직접쓰고큰파일/Builder/UI몸체는필수소비자로남긴다.
@@ -80,7 +84,7 @@ bool RawLocalMissionState::Step() {
     switch (state_.current[0]) {
     case 7: Starting();break;
     case 8:
-        if (globals_.connectEnd==0.0) { const auto now=Need(hooks_.wallSeconds,"연결현재벽시각미연결")();globals_.connectEnd=now+30.0;if (!globals_.missionPost) throw std::logic_error("일반전투연결문구는선택범위밖"); }
+        if (globals_.connectEnd==0.0) { const auto now=Need(hooks_.wallSeconds,"연결현재벽시각미연결")();globals_.connectEnd=now+30.0;if (!globals_.missionPost) Need(hooks_.progress,"일반 연결/재접속 안내 미연결")(globals_.savedGame ? LocalMissionProgress::Reconnecting : LocalMissionProgress::Connecting,0); }
         Need(hooks_.connectServer,"실제서버연결미연결")(std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(state_.current.data())+0x54,20),state_.current[0x7c/4]);state_.next[0]=9;break;
     case 9: {
         auto connected=Need(hooks_.connectionStatus,"현재연결상태미연결")(9);

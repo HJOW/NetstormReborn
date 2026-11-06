@@ -127,6 +127,7 @@ void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& cont
     login.uiMode=[&client,&controls](auto mode) { static_cast<void>(controls.NotifyHudMode(client.LocalStateGlobals()->HudModeCommand(),mode)); }; // 현재 명령·현재 mode·둘째0·숨김 포함1의 실제 캡처/modal/루트 분배다.
     login.battlePalette=[&client] { const auto name=client.Configuration().PathSpec("battlePal");client.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); }; // 최초 서비스 생성 시의 경로를 캐시하지 않고 NUL을 포함해 기존 전체 부모에 전달한다.
     login.closeProgress=[&controls] { if (!controls.Menus()) throw std::logic_error("로그인 진행 안내의 실제 메뉴 미설치");controls.Menus()->CloseMissionLoading(); }; // 원문처럼 Kill/현재 serial0이며 실제 소멸은 일반 Gump 정리까지 유지한다.
+    login.progress=[&client](auto kind,auto remaining) { if (!client.Menu()) throw std::logic_error("현재 로그인 안내의 실제 UberGump 미연결");client.Menu()->ShowLoginProgress(kind,remaining); }; // 생성 시 메뉴/창을 요구하지 않고 원문 진행 안내 시점에 현재 부모를 조회한다.
 }
 // 현재 Native 요청을 Init 캡처로 되돌리지 않으며 실제 분모/시각/출처와 제목 물리만 선택 위치에서 바꾼다.
 void PrepareCampaignMissionStarting(Client& client,MissionFortLoadRequest& request) {
