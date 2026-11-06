@@ -27,11 +27,13 @@ void CompositeMissionTransport::Serve(std::uint32_t port) {
     if (editor_) { editor_->Open(port);return; }
     if (!server_) throw std::logic_error("서버 권한 없는 내부/LAN host listener 요청");
     if (tcp_) ListenLan(port); // 원문 TCP listener를 먼저 만들고 실제 수락은 다음 Poll에 남긴다.
-    try { internal_->Open(port,false); }catch (...) { if (tcp_) tcp_->StopListening();throw; }
+    if (!internal_->IsOpen()) internal_->Open(port,false); //004e2430의 같은 내부 listener도 기존 존재를 유지한다. 뒤 생성 실패가 앞서 열린 TCP를 되돌리지 않는다.
 }
 // 원문 simulconnect Serve가 비서버에서도 선택할 수 있는 실제 수신 listener만 연다.
 void CompositeMissionTransport::ListenLan(std::uint32_t port,std::string_view bindAddress) {
-    const auto pin=shared_from_this();if (!tcp_) throw std::logic_error("LAN 역할 아닌 전송의 TCP listener 요청");tcp_->Listen(port,bindAddress);
+    const auto pin=shared_from_this();if (!tcp_) throw std::logic_error("LAN 역할 아닌 전송의 TCP listener 요청");
+    if (tcp_->IsListening()) return; //004e2430은 전역 listener가 이미 존재하면 다시 만들지 않는다. simulconnect 뒤 Zone Serve도 같은 실제 listener를 유지한다.
+    tcp_->Listen(port,bindAddress);
 }
 // host 자기 로그인은 내부 끝을 만들고 원격 client만 실제 TCP 주소/포트를 사용한다.
 void CompositeMissionTransport::Connect(std::span<const std::uint8_t> address,std::uint32_t port) {

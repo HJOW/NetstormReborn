@@ -236,6 +236,7 @@ void LocalTcpTransport::CollectRetired() {
 // 원문4BYTE header와 선언 길이를 TCP stream에서 정확히 한 프레임만 모은다.
 bool LocalTcpTransport::ReceiveOne(Node& node,bool* consumed) {
     if (consumed) *consumed=false;if (!CompleteConnection(node)) return false;
+    Drain(node);if (node.retired || (node.connection.flags&kClosed)) return false; // 아직 음수 pending인 unbuffered 가상 송신의 partial tail도 다음 실제 수신 폴링에서 전진시킨다. 정상22칸 Flush의 범위를 늘리지 않는다.
     for (;;) { // header/body가 나뉘어 오면 현재 부분 버퍼를 다음 Poll에 그대로 남긴다.
         std::size_t required=kHeader;if (node.input.size()>=kHeader) { required=Read(node.input,2,2);if (required<kHeader || required>kWireLimit) { Fail(node,WSAEMSGSIZE);return false; } }
         if (node.input.size()<required) {

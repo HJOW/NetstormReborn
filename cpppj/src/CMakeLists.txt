@@ -14,6 +14,7 @@ add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE o/RawAllocationFailure.cpp o/RawAllocationFailure.h client/ClientAllocationFailure.cpp platform/ScopedNewHandler.h)
 # 원문 TCP 프레이밍/현재 연결표를 사용하는 LAN 전송 부품을 컴파일한다. 실제 Login/UI 접합은 후속 단위다(982).
 target_sources(netstorm PRIVATE client/LocalTcpTransport.cpp client/LocalTcpTransport.h)
+target_sources(netstorm PRIVATE client/LanBattleLobby.cpp client/LanBattleLobby.h) # 폐기 공식 매칭을 대체하는 로컬 명단/시작 합의이며 Native 게임 전송과 수명을 구별한다.
 target_sources(netstorm PRIVATE o/RawPeerWorldSync.cpp o/RawPeerWorldSync.h) # 원문 참가자별 지형/종속 송신과 walker 재등록 순서를 연결하며 MP 검사는 실행하지 않는다.
 target_sources(netstorm PRIVATE o/RawBattleIsland.cpp o/RawBattleIsland.h) # 일반 전투의 현재 Fort 영역/지형/권한별 객체 적재 부모다. 신규 MP 검사는 하지 않는다.
 target_sources(netstorm PRIVATE o/RawCentralIsland.cpp o/RawCentralIsland.h o/RawIslandPartition.cpp o/RawIslandPartition.h) # 일반 중앙섬/군도 지역 분리를 실제 같은 월드 부모에 연결한다. MP 검사는 실행하지 않는다.
