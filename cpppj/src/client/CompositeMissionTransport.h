@@ -15,7 +15,7 @@ public:
     ~CompositeMissionTransport(); // backend가 실제 자기 노드/소켓만 반납한다. Player/등록 성공을 합성하지 않는다.
     CompositeMissionTransport(const CompositeMissionTransport&)=delete; // 현재 노드/대여 수명을 복제하지 않는다.
     CompositeMissionTransport& operator=(const CompositeMissionTransport&)=delete; // 같은 장기 표 주소를 대입하지 않는다.
-    void Serve(std::uint32_t port); // LAN host는 TCP listener와 내부 listener만 연다. accept/client9는 실제 뒤 단계다.
+    void Serve(std::uint32_t port); // 실제 서버 권한이 새로 주어진 LAN client도 같은 TCP/등록표를 유지해 host로 전환하고 두 listener를 연다. accept/client9는 뒤 단계다.
     void ListenLan(std::uint32_t port,std::string_view bindAddress="0.0.0.0"); // simulconnect의 LAN client도 실제 TCP listener만 명시 열 수 있다. 게임 서버 권한을 쓰지 않는다.
     void Connect(std::span<const std::uint8_t> address,std::uint32_t port); // host 자기끝/단독은 내부 client9, LAN client는 실제20BYTE TCP다.
     void Assign(std::int32_t pending,std::int32_t owner); // 현재 accepted 노드를 실제 소유 backend에서 재배치한다.
@@ -46,6 +46,7 @@ private:
     o::TransportPollResult ReceiveOne(std::int32_t id); // 선택 backend의 한 실제 프레임만 받는다.
     CompositeTransportRole role_; // API 호출이 다른 역할을 조용히 성공시키지 않게 하는 선택값이다.
     const bool& server_; // 원문 현재 서버 권한이며 값을 강제로 변경하지 않는다.
+    std::span<const std::uint8_t> players_;o::PacketDispatchHooks dispatchHooks_; // 서버 이전 때 같은 실제 Player/장치로 내부 끝을 늦게 만들며 별도 등록표를 초기화하지 않는다.
     std::shared_ptr<void> globalsLifetime_; // Player/server/시계·진단 hooks의 실제 장기 물리를 유지한다.
     std::shared_ptr<o::RawConnectionRegistry> registry_; // 모든 backend와 State가 함께 쓰는 고정 표다.
     std::shared_ptr<o::PacketRegistrationTable> registrations_; // 한 번만 초기화한 실제 전역 등록표다.

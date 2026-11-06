@@ -11,7 +11,7 @@ std::shared_ptr<CompositeMissionTransport> CompositeMissionTransport::Create(Com
 }
 // 실제 Player9/Server/Registry owner를 확인하고 backend는 같은 표만 빌린다.
 CompositeMissionTransport::CompositeMissionTransport(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<void> globalsLifetime)
-    :role_(role),server_(server),globalsLifetime_(std::move(globalsLifetime)),registry_(std::move(registry)),registrations_(std::make_shared<o::PacketRegistrationTable>(o::OriginalEdition::Patch1078)) {
+    :role_(role),server_(server),players_(players),dispatchHooks_(hooks),globalsLifetime_(std::move(globalsLifetime)),registry_(std::move(registry)),registrations_(std::make_shared<o::PacketRegistrationTable>(o::OriginalEdition::Patch1078)) {
     if (!globalsLifetime_ || !registry_ || players.size()!=9U*180U) throw std::invalid_argument("복합 전송의 실제 Client 물리/Registry/Player9 누락");
     if (role_!=CompositeTransportRole::InternalMission && role_!=CompositeTransportRole::Editor && role_!=CompositeTransportRole::LanHost && role_!=CompositeTransportRole::LanClient) throw std::invalid_argument("지원하지 않는 복합 전송 역할");
     if (role_==CompositeTransportRole::Editor) editor_=std::make_shared<EditorLocalTransport>(players,server_,hooks,registry_,registrations_);
@@ -23,7 +23,11 @@ CompositeMissionTransport::~CompositeMissionTransport()=default;
 // LAN host도 실제 서버 권한과 준비된 등록만 사용하고 게임 상태를 쓰지 않는다.
 void CompositeMissionTransport::Serve(std::uint32_t port) {
     const auto pin=shared_from_this();
-    if (role_==CompositeTransportRole::LanClient) throw std::logic_error("LAN client 역할에서 서버 listener 열기 금지");
+    if (role_==CompositeTransportRole::LanClient) {
+        if (!server_) throw std::logic_error("서버 권한 없는 LAN client의 listener 요청");if (ConnectionCallbackActive()) throw std::logic_error("수신 callback 중 LAN 서버 역할 전환 거부");
+        ListenLan(port); // State15의 실제 TCP listener 효과를 내부 끝 생성보다 먼저 보존한다. 뒤 할당 실패가 이 성공을 되돌리지 않는다.
+        internal_=std::make_shared<zacket::LocalMissionTransport>(players_,server_,dispatchHooks_,registry_,registrations_);role_=CompositeTransportRole::LanHost; // 같은 Client/World/Player/Registry/등록 대여를 유지하며 server/boss/Ready는 쓰지 않는다.
+    }
     if (editor_) { editor_->Open(port);return; }
     if (!server_) throw std::logic_error("서버 권한 없는 내부/LAN host listener 요청");
     if (tcp_) ListenLan(port); // 원문 TCP listener를 먼저 만들고 실제 수락은 다음 Poll에 남긴다.

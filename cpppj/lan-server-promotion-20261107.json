@@ -1,0 +1,40 @@
+{
+  "unit": 1008,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "서버 이전의 기존 LAN client Serve를 같은 Player/Registry/등록표의 host backend로 전환 가능하게 연결",
+  "sourceFunctions1078": [
+    "004b6dd0 case15",
+    "004e2430"
+  ],
+  "build": {
+    "firstExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1008\\build.log",
+    "exeSize": 11849216,
+    "exeSha256": "b8106ce08930c84b2428c48bab037c566df4b727856a8c27beb60674053279e5"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1008\\protected-before.json"
+  },
+  "remaining": [
+    "State15 실제 부모/63h 송수신·StateReconnect/ForceServerDeath/004b8cb0·복구State7 인계",
+    "일반 프레임486bc0/스펠·전체 파생 writer/decoder·메타·Outpost/checking7",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}
