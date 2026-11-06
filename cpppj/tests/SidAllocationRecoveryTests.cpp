@@ -127,3 +127,56 @@ TEST_CASE(SidAllocationRecovery_ReclaimPinsBindingUntilSynchronousReturn) { // �
     pool.BindAllocation({&disallow,&authority->boss,&bridge,[](auto,auto,auto) {},[&](Sid sid) { storage.ReclaimForAllocation(sid); }});RecoveryPut(RecoveryRaw(pool,0),4,pool.Tail(true).value,2);const auto replacement=pool.Allocate(2);
     CHECK(replacement.value==14999 && calls==1 && rejected && runtime->activeCalls==0);auto returned=use->ReturnForState(std::move(pass));CHECK(runtime->activeCalls==0); // 같은 증빙은 거부 때 소비하지 않고 호출이 끝난 뒤 소비한다.
 }
+
+namespace { //CD 고유 입력은 PATCH와 같은 체크섬만 공유하며 진단/회수 의미를 분리한다.
+constexpr std::uint32_t kCdRecoveryCapacity=14005; //원문 CD predictable 시작 뒤 네 슬롯을 가진 합법 입력 크기다.
+struct CdRecoveryScene {
+    std::uint32_t mode,flags; //명시 원문 입력과 Allocate의 두 비트다.
+    bool server,boss; //진단 뒤 현재값을 다시 읽는 서로 다른 권한 주소다.
+    std::uint32_t bridge{82},disallow{},kills{}; //현재 Bridge 전체 DWORD와 금지값/가상 호출 수다.
+    SidPool pool; //장치가 참조하는 전역보다 먼저 소멸하는 CD 물리 풀이다.
+    std::string events; //덤프/상세/단언/고정 후보 삭제/Tell의 동기 순서다.
+    CdRecoveryScene(std::uint32_t selected,std::uint32_t allocation,bool isServer,bool isBoss):mode(selected),flags(allocation),server(isServer),boss(isBoss),pool(OriginalEdition::Cd1072,kCdRecoveryCapacity,server,&server) { //독립 원문과 같은 초기 입력만 준비한다.
+        if (mode==15) { pool.Allocate(1);pool.Allocate(1); }
+        const bool client=(flags&2U)!=0;if (mode==1) disallow=1;
+        if (mode==3) RecoveryRaw(pool,pool.FirstFree(client).value)[11]=0;
+        if ((mode>=4 && mode<=9) || (mode>=17 && mode<=20)) RecoveryPut(RecoveryRaw(pool,0),client ? 4:18,pool.Tail(client).value,2);
+        if (mode==6 || mode==7 || mode==8 || mode==9 || mode==17) Candidate(10,mode==7 ? 70:82);
+        if (mode==17) bridge=0x10052;
+        if (mode==11) RecoveryRaw(pool,14000)[11]=0;
+        if (mode==12) RecoveryRaw(pool,14001)[11]=0;
+        if (mode==13 || mode==14) RecoveryPut(RecoveryRaw(pool,14001),4,mode==13 ? 14004:14000,2);
+        pool.BindAllocation({&disallow,&boss,&bridge,[this](auto expression,auto file,auto line) { //단언은 기록 뒤 정상 복귀하거나 명시 현재 권한만 바꾼다.
+            Add("A:"+std::to_string(line)+":"+RecoveryHex(expression)+":"+RecoveryHex(file));if (mode==1 && line==0xe8) disallow=0;if (mode==11 && line==0xf0) RecoveryRaw(pool,14000)[11]=1;if (mode==20 && line==0x118) boss=false;
+        },[this](Sid sid) { //실제 제품 Release 뒤 명시 외부 효과만 적용하며 자연 가상 삭제라고 주장하지 않는다.
+            ++kills;Add("K:"+std::to_string(sid.value)+":0");if (mode!=6 || kills==1) pool.Release(sid);if (mode==6 && kills==1) Candidate(sid.value);if (kills==1) { if (mode==8) bridge=70;else if (mode==9) throw std::runtime_error("명시 CD 삭제 장치 실패"); }
+        },[this] { Add("D");if (mode==18) throw std::runtime_error("명시 CD dump 실패"); },[this](auto text) { Add("V:"+RecoveryHex(text));if (mode==19) throw std::runtime_error("명시 CD detail 실패"); },[this](auto text) { Add("T:"+RecoveryHex(text)); }});
+    }
+    void Add(std::string text) { if (!events.empty()) events+=';';events+=text; } //원문 fixture의 사건 구분자를 보존한다.
+    void Candidate(std::uint32_t sid,std::uint8_t type=82) { auto raw=RecoveryRaw(pool,sid);RecoveryPut(raw,0,kFakeTable);raw[10]=type;raw[11]=4; } //반납과 구별되는 명시 VT/void 입력이다.
+};
+}
+
+TEST_CASE(SidCdAllocationRecovery_NativeCurrentDiagnosticsFixedCandidateAndRelease) { //CD 원문 전체 물리/기록과 정상 반환·중단의 부분 상태를 대조한다.
+    std::ifstream input(NETSTORM_SID_CD_ALLOCATION_RECOVERY_FIXTURE);CHECK(bool(input));std::string line;std::size_t rows{};
+    while (std::getline(input,line)) { //동결한 모든 CD 입력17열을 순서대로 비교한다.
+        if (!line.empty() && line.back()=='\r') line.pop_back();if (line.empty() || line[0]=='#') continue;std::stringstream stream(line);std::vector<std::string> fields;std::string field;
+        while (std::getline(stream,field,'\t')) fields.push_back(field); //한 행의 입력/관측을 누락 없이 분리한다.
+        CHECK(fields.size()==17);if (fields.size()!=17) continue;const auto number=[&](std::size_t i) { return static_cast<std::uint32_t>(std::stoul(fields[i])); };CdRecoveryScene scene(number(0),number(1),number(2)!=0,number(3)!=0);std::uint32_t stopped{},result{};
+        try { result=scene.pool.Allocate(scene.flags).value; }catch (const std::exception& error) { stopped=std::string_view(error.what()).find("무효과 무한 반복")!=std::string_view::npos ? 2U:1U; }
+        CHECK(stopped==number(4));const std::array<std::uint32_t,9> actual{result,scene.pool.FreeCount(),scene.pool.PredictableCursor(),scene.pool.FirstFree(true).value,scene.pool.Tail(true).value,scene.pool.FirstFree(false).value,scene.pool.Tail(false).value,RecoveryAdler(scene.pool.Bytes()),RecoveryLogAdler(scene.pool)};
+        for (std::size_t i=0;i<actual.size();++i) CHECK(actual[i]==number(5+i)); //전체 Pool/삭제 기록도 독립 원문 관측과 대조한다.
+        CHECK(scene.bridge==number(14) && scene.disallow==number(15));CHECK((scene.events.empty() ? "-":scene.events)==fields[16]);++rows;
+    }CHECK(rows==52);
+}
+
+TEST_CASE(SidCdAllocationRecovery_SelectedDumpFailureKeepsPrefixAndMissingDevice) { //선택한 덤프의 예외/미연결은 상세나 목록 소비 이전에 중단한다.
+    CdRecoveryScene scene(18,2,true,true);const auto before=std::vector<std::uint8_t>(scene.pool.Bytes().begin(),scene.pool.Bytes().end());bool failed=false;try { scene.pool.Allocate(2); }catch (const std::runtime_error&) { failed=true; }CHECK(failed && scene.events=="D" && std::equal(before.begin(),before.end(),scene.pool.Bytes().begin()));
+    scene.events.clear();scene.pool.BindAllocation({&scene.disallow,&scene.boss,&scene.bridge,[](auto,auto,auto) {},{},{},{},{}});failed=false;try { scene.pool.Allocate(2); }catch (const std::logic_error&) { failed=true; }CHECK(failed && scene.events.empty() && std::equal(before.begin(),before.end(),scene.pool.Bytes().begin()));
+}
+
+TEST_CASE(SidCdAllocationRecovery_LongStorageSharesCurrentDetailDumpAndTell) { //실제 장기 Storage도 CD의 덤프/상세/단언/Tell 순서를 같은 Client 장치에 전달한다.
+    auto types=netstorm::test::MakeFormTypeInputs(188);std::vector<RiftTypeFrames> frames(types.size(),RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(types.size());RawSurfaceStorage storage(OriginalEdition::Cd1072,types,frames,shapes);std::optional<std::string> detail;std::vector<std::string> events;
+    storage.BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(file==(line==0x10c ? "\\ns\\o\\squid.h":"\\ns\\o\\Squid.cpp"));events.push_back(std::string(expression)+":"+std::to_string(line)); });storage.BindAllocationDiagnostics([&] { events.emplace_back("dump"); },[&](auto name) { events.emplace_back(name); });RecoveryPut(RecoveryRaw(storage.pool,0),4,storage.pool.Tail(true).value,2);
+    CHECK(storage.pool.Allocate(2).value==5999);CHECK(detail=="alCLIENT: Send in \\NetStorm\\squids.txt with this bug!!");CHECK((events==std::vector<std::string>{"dump","0:280","BridgesKilled","p != *freeTail:321","n != getSid():268"}));
+}

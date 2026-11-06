@@ -64,13 +64,15 @@ void Client::TraceObject(std::uint32_t sid) { // 현재 물리 소유자를 고�
     const o::ObjectTraceGlobals globals{trace_->depth,surface->pool.CapacityValue(),gameplay->finder.checkingDead,surface->ownerMode.challenge,gameplay->Boss()};
     TraceRawObjectToLog(surface->pool,surface->types,trace_->suppress,globals,trace_->log,DiagnosticLogHooks(),sid,[] { throw std::logic_error("원문 객체 trace dead 부모 진단"); });
 }
-void Client::DumpDiagnostics() { //004437f0은 실제 단일RET이며 이어서004d6020→00471890을 호출한다.
+void Client::DumpObjectDiagnostics() { //004d6020/CD0041f3e0의 객체 덤프 본문만 공유한다.
     const auto surface=SurfaceStorage();const auto gameplay=GameplayGlobals();
     const ObjectDumpGlobals globals{trace_->suppress,surface->pool.CapacityValue(),gameplay->GameAux()->TerrainType(),gameplay->TerrainBitmaps().fringeType,gameplay->GameAux()->EdgeFarmType()};
     const auto diagnosticsDirectory=UserData() ? UserData()->Diagnostics() : GameDirectory(); // 5차: squids.txt/procSumm.txt는 설치 폴더·CWD가 아닌 사용자 Diagnostics에 쓴다.
     if (UserData()) platform::UserDataRoot::EnsureDirectory(diagnosticsDirectory);
     const auto hooks=MakeObjectDumpDiskHooks(diagnosticsDirectory,[this](auto sid) { TraceObject(sid); },[] { throw std::logic_error("원문 객체 덤프 trace FILE 열기 진단"); },&Files()); // 원문의 빈 prefix/재읽기/재쓰기는 실제 Client의 같은10칸을 사용하고 OS 상대 열기만 가상 게임 CWD로 대체한다.
     std::array<std::uint8_t,24> file{};DumpRawObjects(surface->pool,surface->types,trace_->log,globals,DiagnosticLogHooks(),hooks,file);
-    WriteClientProcessSummary(*surface,GetKernel(),diagnosticsDirectory,UserData().has_value());
+}
+void Client::DumpDiagnostics() { //004437f0은 실제 단일RET이며 이어서004d6020→00471890을 호출한다.
+    DumpObjectDiagnostics();const auto surface=SurfaceStorage();const auto directory=UserData() ? UserData()->Diagnostics() : GameDirectory();WriteClientProcessSummary(*surface,GetKernel(),directory,UserData().has_value());
 }
 }

@@ -1,0 +1,90 @@
+{
+  "unit": 977,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 977,
+  "version": "11.01",
+  "scope": "CD SID 할당 부모의 진단 정상 복귀·고정 후보 회수·현재 장치 전달",
+  "exeSha256": "3280b6cf9e8bcd872a0a692d4bbabb2af1d780acd915c50d13d79ea7b72aba55",
+  "exeBytes": 11388416,
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-11-03",
+    "inputs": 52,
+    "binarySha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "fixtureSha256": "59ab2612161c6c97be2fbd66afd5f1a26dbddd6c6afda305521650a3666aaff5",
+    "fakeTable": 268439552,
+    "stopKinds": {
+      "0": "원문 정상 반환",
+      "1": "명시 외부 장치 예외",
+      "2": "현재 고정 후보의 동일 무효과 루프 두 번 관측"
+    },
+    "boundary": "CD Reset/Allocate/Release/기록 CRT 실제 원문. dump/detail/Tell/단언은 호출 기록 및 명시 외부 효과. 같은 후보50회는첫Native Release후VT/void복원과나머지49회멱등입력. 게임/MP/자연삭제 아님."
+  },
+  "build": {
+    "releaseCommands": 1,
+    "exitCodes": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "uniqueCases": 28,
+    "newCases": 3,
+    "filters": [
+      {
+        "filter": "SidCdAllocationRecovery_",
+        "cases": 3,
+        "failedChecks": 0
+      },
+      {
+        "filter": "SidAllocationRecovery_",
+        "cases": 4,
+        "failedChecks": 0
+      },
+      {
+        "filter": "SidPool_",
+        "cases": 6,
+        "failedChecks": 0
+      },
+      {
+        "filter": "ProcessHostStorage_",
+        "cases": 11,
+        "failedChecks": 0
+      },
+      {
+        "filter": "ProcessCreationCurrent_",
+        "cases": 4,
+        "failedChecks": 0
+      }
+    ]
+  },
+  "protected": {
+    "before": 2799,
+    "unchanged": 2799,
+    "after": 2800,
+    "fixtures": 980,
+    "new": [
+      "cpppj/tests/fixtures/sid-cd-allocation-recovery-x86.tsv"
+    ],
+    "pythonSyntax": "pass"
+  },
+  "checkingRemaining": 8,
+  "solutionProjects": 83,
+  "lastGuiUnit": 968,
+  "boundaries": [
+    "CD 고정 후보 무효과 무한 반복은 호스트 명시 오류",
+    "CD 전체 dump/파생 trace는10.72 후순위; 현재 Client dump본문은PATCH만허용",
+    "새GUI/MP/공중3종/포획·희생·특정적공격·승리/전체CTest·34미션·ZIP 반복 제외"
+  ],
+  "remaining": [
+    "978 raw 외부 Kernel 현재 회수 대여·최종 소유 필터",
+    "외부heap/할당실패·파일/비멀티 수명 감사",
+    "4→7→8 순서 계속"
+  ]
+}

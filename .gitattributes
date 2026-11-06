@@ -2485,3 +2485,6 @@ tools/native_palette_frame_probe.cpp text eol=lf
 tools/observe_palette_frame_hardware.py text eol=lf
 cpppj/palette-frame-hardware-native-20261104.json text eol=lf
 cpppj/palette-frame-checking-20261104.json text eol=lf
+
+# CD SID 원문 관측의 최초 바이트와 SHA-256을 줄바꿈 변환 없이 보존한다.
+cpppj/tests/fixtures/sid-cd-allocation-recovery-x86.tsv -text

@@ -1922,4 +1922,6 @@ std::string UberGump::Report(bool cameraOnly) const {
 }
 //부모가현재battle/showTime을확인한뒤같은board를호출한다.
 void UberGump::ShowGameTimeMessage() { warnings_->GameTimeStatus(); }
+// CD의 SID 회수 완료 알림도 현재 미션/일반 Tell 검색과 같은 모달 수명을 사용한다.
+void UberGump::ShowSidRecoveryNotice() { Tell("BridgesKilled"); }
 }

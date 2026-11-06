@@ -31,6 +31,9 @@ struct SidAllocationBindings {
     const std::uint32_t* bridgeType{}; //005411a0의현재전체DWORD로BYTE TYPE와비교한다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //원문단언정상복귀뒤같은위치에서계속하며실행중장치교체를허용한다.
     std::function<void(Sid)> reclaim; //현재가상+10을flags0으로호출하는실제World삭제경계다.
+    std::function<void()> dump; //CD 소진의0041f3e0 객체 덤프만 실행하며 프로세스 요약을 덧붙이지 않는다.
+    std::function<void(std::string_view)> detail; //CD004875b0의 상세를 현재 Client owner에 복사한다.
+    std::function<void(std::string_view)> tell; //CD 회수 뒤004c3dc0의 현재 Tell 부모에 이름을 전달한다.
 };
 
 // 원본 SID 영역별 자유 슬롯과 예측 슬롯을 할당·반납하는 저장소이다.
@@ -95,8 +98,8 @@ private:
     void WriteNext(std::size_t offset,std::uint16_t next);
     // 슬롯 주소 산술을 수행하기 전에 번호 범위를 검사한다.
     std::size_t Offset(Sid sid) const;
-    Sid AllocateLegacy(std::uint32_t flags); //CD의기존정상할당계약을보존한다.다른소진dump/진단분기는별도이관대상이다.
-    void AssertAllocation(std::string_view expression,std::uint32_t line,std::string_view file={}) const; //PATCH할당의선택된단언만현재장치로보낸다.
+    Sid AllocateCd(std::uint32_t flags); //CD004aae40의 진단·고정 후보 회수·현재 목록 선택을 복원한다.
+    void AssertAllocation(std::string_view expression,std::uint32_t line,std::string_view file={}) const; //판본별 할당의 선택된 단언만 현재 장치로 보낸다.
     // 반납 기록의 20항목 이동을 복원하며 마지막 항목은 버린다.
     void Record(Sid sid,std::uint8_t type);
     // layout_: 좌표 배치 계산 또는 판본별 필드 위치 정보.

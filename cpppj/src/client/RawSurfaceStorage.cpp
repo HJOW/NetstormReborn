@@ -25,6 +25,8 @@ void RawSurfaceStorage::RecordDisplayFrameError(std::uint32_t type,std::int32_t 
 }
 // 진단을 선택한 지점만 장치를 요구하며 복귀 뒤 다음 TYPE 조회를 막지 않는다.
 void RawSurfaceStorage::AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const { if (!displayAssertion_) throw std::logic_error("표시 원문 진단 장치 미연결");displayAssertion_(expression,file,line); }
+// 장기 물리는 현재 Client 장치만 보관하며 실제 소진 전에는 덤프/대화상자를 실행하지 않는다.
+void RawSurfaceStorage::BindAllocationDiagnostics(std::function<void()> dump,std::function<void(std::string_view)> tell) { allocationDump_=std::move(dump);allocationTell_=std::move(tell); }
 // Client의 현재 로그 서비스를 장기 owner에 보관한다. World 대여마다 다른 Session 포인터로 교체하지 않는다.
 void RawSurfaceStorage::BindGraphTrace(std::function<void(std::int32_t,std::string_view)> trace) { graphTrace_=std::move(trace); }
 // 매 프레임 동일 게임 난수를 직접 소비하며 Session 또는 별도 난수 사본을 만들지 않는다.
@@ -47,7 +49,10 @@ RawSurfaceStorage::RawSurfaceStorage(o::OriginalEdition edition,std::span<const 
     for (std::size_t type=0;type<frames.size();++type) codes[type].assign(frames[type].Codes().begin(),frames[type].Codes().end()); // 같은 타입의 실제 프레임 코드만 최초 보관한다.
     pool.BindAllocation({&disallowSquidAllocation,&authority_->boss,&links.bridgeType,
         [this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); },
-        [this](o::Sid sid) { Processes().ReclaimForAllocation(sid); }}); //긴Pool은같은전역을읽고실제삭제만현재World의짧은대여에서선택한다.
+        [this](o::Sid sid) { Processes().ReclaimForAllocation(sid); },
+        [this] { const auto dump=allocationDump_;if (!dump) throw std::logic_error("CD SID 할당의 현재 Client 객체 덤프 미연결");dump(); },
+        [this](auto text) { RecordAssertionDetail(text); },
+        [this](auto text) { const auto tell=allocationTell_;if (!tell) throw std::logic_error("CD SID 할당의 현재 Client Tell 미연결");tell(text); }}); //긴Pool은같은전역을읽고실제삭제만현재World의짧은대여에서선택한다.
 }
 // 장기 process owner는 실제 Pool/TYPE가 살아 있는 동안 최종 소유권을 반납한다.
 RawSurfaceStorage::~RawSurfaceStorage()=default;

@@ -57,11 +57,11 @@ void SidPool::ClearDeletionHistory() {
 void SidPool::BindAllocation(SidAllocationBindings bindings) { allocation_=std::move(bindings); }
 // 진단의정상복귀/예외를그대로전달하며자가재연결중에도선택한callable을유지한다.
 void SidPool::AssertAllocation(std::string_view expression,std::uint32_t line,std::string_view file) const {
-    const auto assertion=allocation_.assertion;if (!assertion) throw std::logic_error("SID 할당의 선택된 원문 단언 미연결");assertion(expression,file.empty() ? "\\Ns\\O\\Squid.cpp":file,line);
+    const auto assertion=allocation_.assertion;if (!assertion) throw std::logic_error("SID 할당의 선택된 원문 단언 미연결");assertion(expression,file.empty() ? (Edition()==OriginalEdition::Cd1072 ? "\\ns\\o\\Squid.cpp":"\\Ns\\O\\Squid.cpp"):file,line);
 }
 // PATCH004af1d0의진단/현재값/소진회수/머리갱신/슬롯초기화순서를실제Pool에연결한다.
 Sid SidPool::Allocate(std::uint32_t flags) {
-    if (Edition()==OriginalEdition::Cd1072) return AllocateLegacy(flags); //CD의다른dump/상세/회수루프를PATCH로대체하지않는다.
+    if (Edition()==OriginalEdition::Cd1072) return AllocateCd(flags); //CD의 다른 dump/상세/고정 후보 루프를 PATCH로 대체하지 않는다.
     if (allocation_.disallow && *allocation_.disallow) AssertAllocation("disallowSquidAllocation == 0",0xe8);
     const auto raw=[this](std::uint32_t sid) { //DWORD를WORD로좁히기전에실제물리범위만검사한다.
         if (sid>=capacity_) throw std::out_of_range("SID 할당의 실제 물리 범위");return std::span(bytes_).subspan(static_cast<std::size_t>(sid)*layout_.stride,layout_.stride);
@@ -112,40 +112,62 @@ Sid SidPool::Allocate(std::uint32_t flags) {
     if (flags&1U) ++predictableCursor_;
     --freeCount_;return Sid{static_cast<std::uint16_t>(sid)};
 }
-// CD004aae40의기존성공경로다.소진의별도dump/상세/루프는독립근거로추후이관한다.
-Sid SidPool::AllocateLegacy(std::uint32_t flags) {
+// CD004aae40의 정상 복귀 진단과 고정 후보50회 호출을 보존하고 무효과 무한 반복은 명시 실패한다.
+Sid SidPool::AllocateCd(std::uint32_t flags) {
+    if (allocation_.disallow && *allocation_.disallow) AssertAllocation("disallowSquidAllocation == 0",0xe8);
+    const auto raw=[this](std::uint32_t sid) { //DWORD 번호의 원문 진단 뒤 실제 호스트 저장소 밖 접근만 거부한다.
+        if (sid>=capacity_) throw std::out_of_range("CD SID 할당의 실제 물리 범위");return std::span(bytes_).subspan(static_cast<std::size_t>(sid)*layout_.stride,layout_.stride);
+    };
     std::uint32_t sid{};
-    if (flags&1) {
+    if (flags&1U) {
         const auto head=layout_.predictableFirst*layout_.stride;
+        if (!(bytes_[head+kState]&kFree)) AssertAllocation("predictableHead->isFree()",0xf0);
         sid=layout_.predictableFirst+predictableCursor_;
-        if (sid>=capacity_ || !(bytes_[head+kState]&kFree)) throw std::out_of_range("예측 SID 소진");
-        const auto offset=sid*layout_.stride;
-        if (!(bytes_[offset+kState]&kFree)) throw std::logic_error("예측 SID가 사용 중입니다");
+        if (std::bit_cast<std::int32_t>(sid)>=static_cast<std::int32_t>(capacity_)) AssertAllocation("sid < numSquids",0xf2);
+        if (!(raw(sid)[kState]&kFree)) AssertAllocation("me->isFree()",0xf4);
         if (IsServer()) {
-            const auto next=ReadNext(offset);
-            if (next!=sid+1 || next>=capacity_ || !(bytes_[next*layout_.stride+kState]&kFree))
-                throw std::out_of_range("예측 SID 서버 꼬리 소진");
-            WriteNext(head,next);
+            if (ReadNext(static_cast<std::size_t>(sid)*layout_.stride)!=sid+1U) AssertAllocation("me->getNext() == sid+1",0xf7);
+            const auto next=ReadNext(static_cast<std::size_t>(sid)*layout_.stride);
+            if (!(raw(next)[kState]&kFree)) AssertAllocation("checkMe->isFree()",0xfa);
+            const auto selected=ReadNext(static_cast<std::size_t>(sid)*layout_.stride);
+            if (selected==layout_.predictableFirst) AssertAllocation("n != getSid()",0x10c,"\\ns\\o\\squid.h");
+            WriteNext(head,selected);
         }
-        ++predictableCursor_;
     } else {
-        const bool client=(flags&2)!=0;
-        if (!client && !IsServer()) throw std::logic_error("서버 SID 할당 권한이 없습니다");
+        const bool client=(flags&2U)!=0;
+        if (!client && !IsServer()) AssertAllocation("server",0x10a);
         const auto list=client ? 0U : 1U;
+        if (ReadNext(kHeads[list])==tails_[list]) {
+            const auto diagnose=[this](std::string_view text,std::uint32_t line) { //원문의 dump→상세→단언을 각 선택 위치에서 조회한다.
+                const auto dump=allocation_.dump;if (!dump) throw std::logic_error("CD SID 소진 객체 덤프 미연결");dump();
+                const auto detail=allocation_.detail;if (!detail) throw std::logic_error("CD SID 소진 상세 미연결");detail(text);AssertAllocation("0",line);
+            };
+            if (client) diagnose("alCLIENT: Send in \\NetStorm\\squids.txt with this bug!!",0x118);
+            const auto boss=allocation_.boss;if (!boss) throw std::logic_error("CD SID 소진 복구의 현재 boss 미연결");
+            if (!*boss) diagnose("!Server: Send in \\NetStorm\\squids.txt with this bug!",0x12c);
+            else {
+                std::uint32_t candidate=2; //CD는 첫 live 후보를 찾은 뒤 번호를 증가시키지 않는다.
+                while (candidate<capacity_ && (raw(candidate)[kState]&kFree)) ++candidate; //최초 free 탐색만 현재 물리 배열을 전진한다.
+                std::uint32_t remaining=50; //원문 ESI의 같은 후보 가상 삭제 호출 상한이다.
+                while (candidate>=1 && candidate<capacity_ && remaining) { //현재 TYPE/Bridge를 다시 읽되 후보는 고정한다.
+                    const auto bridge=allocation_.bridgeType;if (!bridge) throw std::logic_error("CD SID 소진 복구의 현재 Bridge TYPE 미연결");
+                    if (raw(candidate)[kType]!=*bridge) throw std::logic_error("CD SID 회수 원문의 고정 후보 무효과 무한 반복"); //004aaf45..82의 동일 상태 반복에는 호스트를 멈추는 대신 명시 오류를 낸다.
+                    --remaining;const auto reclaim=allocation_.reclaim;if (!reclaim) throw std::logic_error("CD SID 소진 복구의 현재 가상 삭제 미연결");reclaim(Sid{static_cast<std::uint16_t>(candidate)});
+                }
+                const auto tell=allocation_.tell;if (!tell) throw std::logic_error("CD SID 회수 뒤 Tell 미연결");tell("BridgesKilled");
+            }
+            if (!client && !IsServer()) AssertAllocation("server",0x130);
+        }
         sid=ReadNext(kHeads[list]);
-        // 원본의 소진 시 UI/다리 파괴 분기는 후속이다. 이 보호 경로에서는 풀을 바꾸지 않는다.
-        if (!sid || sid==tails_[list]) throw std::out_of_range("일반 SID 소진: 예약 꼬리를 유지합니다");
-        const auto offset=Offset(Sid{static_cast<std::uint16_t>(sid)});
-        if (!(bytes_[offset+kState]&kFree)) throw std::logic_error("free list SID가 사용 중입니다");
-        const auto next=ReadNext(offset);
-        if (!next || next>=capacity_) throw std::logic_error("free list next 오류");
+        if (!(raw(sid)[kState]&kFree)) AssertAllocation("p->isFree()",0x140);
+        if (sid==tails_[list]) AssertAllocation("p != *freeTail",0x141);
+        const auto next=ReadNext(static_cast<std::size_t>(sid)*layout_.stride);
+        if (!next) AssertAllocation("n != getSid()",0x10c,"\\ns\\o\\squid.h");
         WriteNext(kHeads[list],next);
     }
-    const auto offset=sid*layout_.stride;
-    std::fill_n(bytes_.begin()+offset,layout_.stride,std::uint8_t{0});
-    bytes_[offset+kState]=kVoid;
-    --freeCount_;
-    return Sid{static_cast<std::uint16_t>(sid)};
+    auto selected=raw(sid);std::fill(selected.begin(),selected.end(),std::uint8_t{});selected[kState]=kVoid;
+    if (flags&1U) ++predictableCursor_;
+    --freeCount_;return Sid{static_cast<std::uint16_t>(sid)};
 }
 // 삭제 기록→슬롯 초기화/타입 보존→필요한 FIFO 꼬리 연결→상태를 원본 순서로 적용한다.
 void SidPool::Release(Sid sid) {
