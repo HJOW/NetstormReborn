@@ -1,0 +1,56 @@
+{
+  "unit": 1020,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "기존ChargeShortfall의 실제70h·6ch·2fh 장치/송금·운반caller와2fh 전체예측정리 수신을 연결",
+  "sourceFunctions1078": [
+    "00442b50",
+    "00442a40",
+    "00442af0",
+    "004332c0",
+    "0040a620",
+    "004d56f0"
+  ],
+  "referenceFunctions1072": [
+    "004d1bc0",
+    "00488350"
+  ],
+  "build": {
+    "firstExitCode": 0,
+    "firstWarnings": 1,
+    "firstErrors": 0,
+    "correction": "Impl의player 멤버를가린지역명을recipient로교정",
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted\\cpp-resume-1020\\build-first.log",
+      "extracted\\cpp-resume-1020\\build.log"
+    ],
+    "exeSize": 11934720,
+    "exeSha256": "0a4e50f9b534d4f00e14b05c24f88cf16d86c21ace78c76ab24ffb2618d71fd8"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "livePenaltyRuns": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1020\\protected-before.json"
+  },
+  "remaining": [
+    "00433c30 전체객체/검증·PlayerNoMake·파생 writer/decoder",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

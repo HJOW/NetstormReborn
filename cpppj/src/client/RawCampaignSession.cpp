@@ -138,6 +138,8 @@
 #include "o/RawBattleResourceFrame.h" // 일반 게임 프레임의 스펠/SP/간헐천을 같은 실제 장치에 연결한다.
 #include "o/RawRemoteTellPacket.h" // 비용 부족/메타 안내의 실제70h를 같은 공유 등록표와 현재 Tell에 연결한다.
 #include "o/OriginalText.h" // 실제 원격 Tell의 표시 바이트를 같은 UI UTF-8 경계에서 변환한다.
+#include "o/RawConstructionFailurePackets.h" // 비용실패의실제6ch/2fh와현재예측객체정리를공유한다.
+#include "client/MessageGump.h" // 비용안내의한문자열/256BYTE 원문서식을실제기존처리기로작성한다.
 #include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
 #include "o/RawBombActivation.h"
@@ -318,7 +320,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,18> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70}; // 실제70h도같은Session의등록/해제수명을따른다.
+constexpr std::array<std::uint32_t,19> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f}; // 취소2fh도같은Session등록/해제수명을따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -406,6 +408,7 @@ struct RawCampaignSession::Impl {
     std::shared_ptr<ClientChatWindowGlobals> chatGlobals{services.chatGlobals ? services.chatGlobals : std::make_shared<ClientChatWindowGlobals>()}; // 실제 Client 또는 독립 Session의 같은 중계 마스크 수명이다.
     ChatRelayHooks ChatDevices(); // 같은 현재 Player/연결 표와 UI를 중계 부모에 공급한다.
     void SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet); // 준비된 현재 로컬 전송의 observer와 큐에 원시 패킷을 넘긴다.
+    void SendRemoteTell(std::uint32_t owner,std::string_view section,bool others); // 같은실제mutable송신을004c9150/4c9200부모에제공한다.
     const std::string missionFortName; //현재 Session 설치 요청의 논리 요새 이름이다. manager의 실제 파일 경로와 혼용하지 않는다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals{services.localStateGlobals ? services.localStateGlobals : std::make_shared<ClientLocalStateGlobals>()}; // 실제 Client는 같은 owner를 빌리고 독립 Session만 기존 BSS0 입력을 한 번 소유한다.
     std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals{services.connectionActivityGlobals ? services.connectionActivityGlobals : std::make_shared<ClientConnectionActivityGlobals>()}; // 실제 Client의 표를 빌리며 독립 Session만 최초0 owner를 한 번 구성한다.
@@ -2428,6 +2431,11 @@ struct RawCampaignSession::Impl {
         if (construction) throw std::logic_error("실제 Session 받침/간헐천 중복 연결");
         recentGeysers.entries.resize(5);PrepareConstruction();
         auto effects=services.construction; // 미선택 외부 경계는 실제 호출 때 오류로 드러내며 성공 관찰로 채우지 않는다.
+        if (!effects.presentation.sendMoney) effects.presentation.sendMoney=[this](auto owner,const auto& value) { auto packet=WriteConstructionMoneyPacket(value);SendChatMutable(std::bit_cast<std::int32_t>(owner),packet); }; // 실제환불수신과같은6ch를보낸다.
+        if (!effects.presentation.sendReject) effects.presentation.sendReject=[this](auto owner,const auto& value) { auto packet=WriteConstructionRejectPacket(value);SendChatMutable(std::bit_cast<std::int32_t>(owner),packet); }; // 좌표/타입/인자/방향을2fh로보낸다.
+        if (!effects.presentation.format) effects.presentation.format=[](auto format,auto name) { return FormatWarningMessage(format,name); }; // 원문ClientCheated/ServerCheated의이름%s를256BYTE안에서작성한다.
+        if (!effects.presentation.tellOthers) effects.presentation.tellOthers=[this](auto owner,auto text) { SendRemoteTell(owner,text,true); };if (!effects.presentation.tellPlayer) effects.presentation.tellPlayer=[this](auto owner,auto text) { SendRemoteTell(owner,text,false); };
+        if (!effects.presentation.tell) effects.presentation.tell=[this](auto text) { if (!services.factoryTell) throw std::logic_error("비용부족의실제현재Tell미연결");services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); }; // 실제로컬cf730경계에서만UTF-8로변환한다.
         FillMissing(effects.configInt);FillMissing(effects.wallSeconds);FillMissing(effects.refresh);
         FillMissing(effects.negativeQuantity);FillMissing(effects.boundsAssertion);
         effects.islandExists=[this](std::int32_t region) { return islands->Exists(region); }; //같은 현재 섬 목록을 읽으며 청크의 존재 여부로 추정하지 않는다.
@@ -3726,6 +3734,11 @@ ChatRelayHooks RawCampaignSession::Impl::ChatDevices() {
 void RawCampaignSession::Impl::SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet) {
     if (!loaded) throw std::logic_error("실제 설치 전 mutable Chat 패킷 송신");if (login) login->SendMutable(target,packet);else if (services.editorTransport) static_cast<void>(services.editorTransport->SendMutable(target,packet));else throw std::logic_error("실제 로컬 전송 없는 mutable Chat 송신");
 }
+// 각대상의실제observer가같은원문지역packet을갱신하고송신한다.
+void RawCampaignSession::Impl::SendRemoteTell(std::uint32_t owner,std::string_view section,bool others) {
+    auto packet=WriteRemoteTellPacket(section,[storage=world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); },others ? 0x4fbU:0x4efU);
+    if (others) { for (std::uint32_t recipient=1;recipient<9;++recipient) if (recipient!=owner) SendChatMutable(static_cast<std::int32_t>(recipient),packet); }else SendChatMutable(std::bit_cast<std::int32_t>(owner),packet); // 실제NULL/flags/주소판정은기존전송에맡긴다.
+}
 #include "client/RawCampaignCarrierInput.inc"
 
 //같은원본처리기가참여성공/Ready/월드설치를수행한다.강제owner/flags쓰기를추가하지않는다.
@@ -3828,8 +3841,7 @@ void RawCampaignSession::SendLocalPacket(std::int32_t target,std::span<const std
 }
 // 원문 단일 대상/대상 제외8행의 실제 원격 Tell 송신 부모다.
 void RawCampaignSession::SendPlayerTell(std::uint32_t owner,std::string_view section,bool others) {
-    auto& s=*impl_;const auto packet=WriteRemoteTellPacket(section,[storage=s.world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); },others ? 0x4fbU:0x4efU);
-    if (others) { for (std::uint32_t player=1;player<9;++player) if (player!=owner) SendLocalPacket(static_cast<std::int32_t>(player),packet); }else SendLocalPacket(std::bit_cast<std::int32_t>(owner),packet); // Native대상번호/flags/NULL과observer는같은기존전송이판정한다.
+    impl_->SendRemoteTell(owner,section,others); // 비용안내도같은실제mutable관찰기/큐를사용한다.
 }
 // 실제 원시 패킷의 길이 확정과 기존 로컬 큐 경계를 외부 UI에 제공한다.
 void RawCampaignSession::SendMutableLocalPacket(std::int32_t target,std::span<std::uint8_t> packet) { impl_->SendChatMutable(target,packet); }
@@ -4450,12 +4462,13 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
     // 원본 등록 표의54h 버전1/정책0/8바이트/빈 observer와 같은 수신이다.
     dispatch.Observe(0x54,{});dispatch.Version(0x54,1,0);dispatch.RequireLength(0x54,8);
     dispatch.Register(0x54,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->salvageCommand->Receive(sender,packet); });
+    dispatch.Observe(0x2f,{});dispatch.Version(0x2f,1,0);dispatch.RequireLength(0x2f,15);dispatch.Register(0x2f,[this](auto,auto&,auto packet) { auto& s=*impl_;s.PrepareConstruction();ReceiveConstructionReject(packet,{s.core.pool,s.core.hash,s.core.types,s.metadata.frames,s.constructionState.clear.patternTypes,s.core.bridgeState.noIslandType,&s.metadata.geometry.decoderDiagnostics},[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); }); }); //4332c0의모든칸/모든후보정리다.
     dispatch.Observe(0x6c,{});dispatch.Version(0x6c,1,0);dispatch.RequireLength(0x6c,11); //40af90/4d56f0의 원래 송금/보상 메시지다.
     dispatch.Register(0x6c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) {
         if (packet.size()<11) throw std::out_of_range("SP 통지11BYTE 부족");auto& s=*impl_;auto h=MoneyInputHooks();const auto amount=[packet] { return std::bit_cast<std::int32_t>(Read(packet,7)); }; // 각 원문 위치에서 현재 비정렬 signed 금액을 읽는다.
         const auto notice=[&s](std::uint32_t message,std::uint32_t player,std::int32_t value) { if (!s.services.localLogin || !s.services.localLogin->status) throw std::logic_error("SP 통지의 실제 MessageBoard 장치 미연결");s.services.localLogin->status(message,player,std::bit_cast<std::uint32_t>(value)); }; // 원문4d3090의 표시1/빈문자열/현재 종류4·18이다.
         if (!packet[6]) {
-            if (s.core.processState.Server() && packet[5]!=s.playerState.battleOwner) { const auto source=packet[5];const auto available=source>0 && source<9 ? Sp(source):0.0F;if (static_cast<double>(available)<static_cast<double>(amount())) throw std::logic_error("원본 송금 부정 자금 진단/제재 경로는 후속 구현"); } //0040ef30의 번호 관문/x87 정수 비교를 유지한다. 별도00442b50 부모는 후속이다.
+            if (s.core.processState.Server() && packet[5]!=s.playerState.battleOwner) { const auto source=packet[5];const auto available=source>0 && source<9 ? Sp(source):0.0F;if (static_cast<double>(available)<static_cast<double>(amount())) { s.PrepareConstruction();s.construction->ChargeShortfall(0,packet[5],-10000.0F,-10000.0F,0,0);return; } } // 원문Type0/무효좌표의442b50을호출하고가산/중계없이복귀한다.
             if (packet[5]!=s.playerState.battleOwner) { const auto source=packet[5];h.addOwner(source,static_cast<float>(std::bit_cast<std::int32_t>(0U-std::bit_cast<std::uint32_t>(amount())))); } // PE는 DWORD neg 뒤 signed fild/fstp float을 수행한다.
         }
         if (packet[6]==2) { if (!BattleIncomePeriod(s.battleOptions)) return;const auto current=amount();if (current!=BattleIncomeAmount(s.battleOptions)) return;notice(18,packet[5],current); } // 현재 지급 간격/금액이 다르면 가산·중계 없이 복귀한다.
