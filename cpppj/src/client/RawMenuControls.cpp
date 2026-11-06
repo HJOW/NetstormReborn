@@ -595,6 +595,8 @@ std::uint32_t RawMenuControls::ShowMissionLoading(RawHtmlWindowContext context,s
 // 새 화면에서 이전 안내를 현재 serial로 반납하며 다른 메뉴/생산 자식은 건드리지 않는다.
 void RawMenuControls::CloseMissionLoading() { auto& s=*impl_;if (const auto token=s.LoadingRoot()) s.common.lifetime.Kill(token);if (s.htmlContext) s.htmlContext->globals->window.transientSerial=0;s.common.changed(); } // 원문4c8dc0의Kill 뒤 현재 안내serial0을 유지한다.
 bool RawMenuControls::MissionLoadingOpen() const { return impl_->LoadingRoot()!=0; } // 실제 같은 serial 조회만 수행하며 다음 안내를 만들거나 정리하지 않는다.
+// 타이머 소유 serial과 공통 transient를 구별하고 실제 공통 수명에 Kill만 예약한다.
+void RawMenuControls::CloseHtmlSerial(std::uint32_t& serial) { auto& s=*impl_;if (const auto token=s.Reference(serial)) s.common.lifetime.Kill(token);serial=0;s.common.changed(); }
 // 자동 검사도 그림과 같은 실제 공통 경계를 읽는다.
 std::optional<ScreenRect> RawMenuControls::MissionLoadingBounds() const { const auto& s=*impl_;if (const auto token=s.LoadingRoot()) return s.common.collection.Bounds(token);return {}; }
 bool RawMenuControls::HelpOpen() const { const auto token=impl_->Reference(impl_->helpState.id);return token && (impl_->common.node(token)->flags&1) && impl_->common.node(token)->parent; } // 현재 등록/표시를 직접 읽는다.

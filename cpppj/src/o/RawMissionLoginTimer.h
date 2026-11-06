@@ -3,6 +3,7 @@
 #include "o/RiftType.h"
 #include <functional>
 #include <span>
+#include <string>
 #include <string_view>
 
 namespace netstorm::o {
@@ -16,6 +17,9 @@ public:
     std::uint32_t Disconnected() const; // 00490bc0: subscriber!=0 && flags2 && flags100이다.
     std::uint32_t Ready() const; // 00490b20: subscriber!=0 && flags2 && flags1 && flags40이다.
     std::uint32_t LoggedIn() const; // 00490970: subscriber!=0 && flags2 && flags1이다.
+    std::uint32_t Pending() const; // 00490c50: subscriber/flags2가 있고 flags1/100이 모두 없는 기록 수다.
+    std::uint32_t Connecting() const; // 00490cf0: subscriber가 있고 flags2가 없는 기록 수다.
+    std::span<const std::uint8_t> Record(std::uint32_t owner) const; // 진행 문구가 같은 현재 이름/flags를 읽도록 실제 한 기록을 빌린다.
 private:
     // 정렬되지 않은 실제 Player의 little endian DWORD를 현재 기록에서 읽는다.
     std::uint32_t Read(std::uint32_t owner,std::size_t offset) const;
@@ -53,12 +57,12 @@ struct MissionLoginTimerHooks {
     std::function<void()> closeProgress; // 004c8d90(&005c85b0)의 실제 진행 창 해제다.
     std::function<void()> resetCamera; // !missionPost 때만004340d0을 실행한다.
     std::function<void()> abortBattle; // 004b6350의 실제 상태 요청/정리다. Abort의 필수 하위다.
-    std::function<void()> progress; // 아직 미복원인 일반 진행 UI 꼬리004b68d6..004b6ba1의 명시 경계다.
+    std::function<void()> progress; // 일반 진행 UI 꼬리를 현재 Player/번역/프레임 시각과 실제 HTML에 연결한다.
     std::function<void()> serverAssertion; // Begin의 checkingAssertions&&!server 진단 후 계속 실행한다.
     std::function<void(MissionLoginTimerLog,std::string_view)> log; // 원본 시작/상태 로그를 해당 위치에서 전달한다.
     std::function<void()> initializeGeneral,createInitialGeysers; // !savedGame의 현재 !mission 초기화와 뒤의 현재 boss&&!mission 간헐천 생성이다.
 };
-// 실제 타이머와 Begin/Abort는 직접 계산한다. 큰 일반 전투 초기화는 도달 시 명시 거부한다.
+// 실제 타이머/Begin/Abort와 일반 진행 문구를 계산하고 선택된 효과만 실제 장치에 위임한다.
 class RawMissionLoginTimer {
 public:
     // 모든 참조/현재 조회 대상은 타이머보다 오래 살아야 한다. 필수 모드는 생성 시 확인한다.
@@ -72,6 +76,7 @@ public:
     void Begin() const;
     // 004b6780: begin0/timer0/scriptBreak1/phase4→실제004b6350→진행 창 해제다.
     void Abort() const;
+    std::string ProgressText(double frameWall,const std::function<std::string(std::string_view)>& translate) const; // 004b68d6..004b6b95: 원문 cached wall/현재 Player 집계와 번역된 네 인자 서식을 사용한다.
 private:
     MissionLoginTimerState state_; // 실제 기존 저장소에 대한 참조 묶음이며 DWORD/bool 복제를 만들지 않는다.
     const MissionLoginPlayerCounts& players_; // 같은 현재 Player9를 읽는 집계다.

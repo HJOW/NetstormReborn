@@ -32,5 +32,9 @@ struct CampaignLoginServices {
     std::function<void(std::uint32_t)> queueAlliance; // 팀 구성의 packed owner/target을 원문02000122의 실제 일반 입력 고리에 두 번 같은 인자로 예약한다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> status; // 종류/Player/parameter의 실제 표시1/빈문자열 MessageBoard 안내다.
     std::function<void()> abortBattle; // 로그인 타이머 Abort가 같은004b6350/사용자 저장 파일 삭제를 실행한다.
+    std::function<std::string(std::string_view)> translate; // 일반 대기 화면의 원문 조각을 현재 표시 부호화로 번역한다.
+    std::function<double()> frameWallSeconds; //0055b4d8의 현재 프레임 벽시각이며 새 wall getter 호출로 바꾸지 않는다.
+    std::function<std::uint32_t(std::string_view)> showTimerProgress; //cf570의 실제 반환 serial을005c85b0에 저장하도록 돌려준다.
+    std::function<void()> closeTimerProgress; //005c85b0만4c8d90으로 닫으며 공통 transient serial과 합치지 않는다.
 };
 }

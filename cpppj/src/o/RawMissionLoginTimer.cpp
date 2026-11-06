@@ -1,6 +1,10 @@
 // 원본 로그인 종료는 missionPost이면 ready 장벽을 추가하지 않고 사제/타이머 정리를 실행한다.
 #include "o/RawMissionLoginTimer.h"
+#include <algorithm>
 #include <array>
+#include <bit>
+#include <cmath>
+#include <cstdio>
 #include <stdexcept>
 #include <utility>
 
@@ -62,6 +66,61 @@ std::uint32_t MissionLoginPlayerCounts::LoggedIn() const {
     for (std::uint32_t owner=1;owner<kPlayerCount;++owner)
         if (Read(owner,0x2c)!=0 && (Read(owner,0x50)&2U)!=0 && (Read(owner,0x50)&1U)!=0) ++count;
     return count;
+}
+// 원본 미로그인/미단절 참여자를 Ready/연결 전 기록과 별도로 센다.
+std::uint32_t MissionLoginPlayerCounts::Pending() const {
+    std::uint32_t count{};
+    // 원문의 펼친 여덟 기록과 같은 owner1..8을 현재 값으로 방문한다.
+    for (std::uint32_t owner=1;owner<kPlayerCount;++owner) if (Read(owner,0x2c)!=0 && (Read(owner,0x50)&0x103U)==2U) ++count;
+    return count;
+}
+// 참여 전 연결 중 상태는 flags2 부재만으로 결정한다.
+std::uint32_t MissionLoginPlayerCounts::Connecting() const {
+    std::uint32_t count{};
+    // stale flags와 Player0을 제외하고 실제 subscriber가 있는 기록만 센다.
+    for (std::uint32_t owner=1;owner<kPlayerCount;++owner) if (Read(owner,0x2c)!=0 && (Read(owner,0x50)&2U)==0) ++count;
+    return count;
+}
+// 이름/flags의 별도 사본 목록을 만들지 않고 같은 물리9기록을 조회한다.
+std::span<const std::uint8_t> MissionLoginPlayerCounts::Record(std::uint32_t owner) const {
+    if (owner>=kPlayerCount) throw std::out_of_range("로그인 진행 Player 범위");return players_.subspan(owner*kPlayerStride,kPlayerStride);
+}
+// 번역 서식은 실제 공급한 문자열/문자열/정수/문자열 네 인자와 폭/정밀도만 허용한다.
+std::string RawMissionLoginTimer::ProgressText(double frameWall,const std::function<std::string(std::string_view)>& translate) const {
+    std::string list; // 원본1024BYTE 지역 명단의 첫NUL 앞을 보존한다.
+    // subscriber가 있는 owner1..8의 이름 뒤 현재 flags의 상태 문구와 LF를 붙인다.
+    for (std::uint32_t owner=1;owner<kPlayerCount;++owner) {
+        const auto record=players_.Record(owner);std::uint32_t subscriber{};
+        // 정렬되지 않은 같은 subscriber DWORD를 먼저 읽고 없는 기록의 이름을 생략한다.
+        for (std::size_t byte=0;byte<4;++byte) subscriber|=std::uint32_t(record[0x2c+byte])<<(8*byte);
+        if (!subscriber) continue;
+        const auto name=record.subspan(12,32);const auto end=std::find(name.begin(),name.end(),0);if (end==name.end()) throw std::length_error("로그인 진행 이름의 NUL 누락");list.append(reinterpret_cast<const char*>(name.data()),static_cast<std::size_t>(end-name.begin()));
+        std::uint32_t flags{};
+        // 주소 formatter의 버려지는 지역 결과는 표시하지 않으며 DNS 조회도 추가하지 않는다.
+        for (std::size_t byte=0;byte<4;++byte) flags|=std::uint32_t(record[0x50+byte])<<(8*byte);
+        const auto key=!(flags&2U) ? ": ~iConnecting~." : !(flags&1U) ? (flags&0x100U ? ": ~iDisconnected~." : ": ~iPending~.") : !(flags&0x40U) ? ": ~iTransferring~." : ": ~iReady~.";
+        list+=Need(translate,"로그인 진행 번역 미연결")(key);list+='\n';if (list.size()>=1024) throw std::length_error("로그인 진행 명단1024BYTE 초과");
+    }
+    const auto difference=state_.end-frameWall; // PE4b6a8b/93은 현재 end와0055b4d8의 차이를 x87에 남긴다.
+    const auto bits=(!std::isfinite(difference) || difference>=9223372036854775808.0 || difference< -9223372036854775808.0) ? 0U : static_cast<std::uint32_t>(static_cast<std::int64_t>(difference));
+    auto remaining=std::bit_cast<std::int32_t>(bits);if (remaining<0) remaining=0;std::string extra;
+    if (remaining<1) extra=Need(translate,"로그인 지연 번역 미연결")("\n\nThere may be Internet traffic, or the Server\nmay have a slow Internet connection which is\ntaking longer than expected. You can abort\nthis game, or continue waiting to get in. Most\ngames reconnect correctly even after long delays.\n$ButtonInstant=Abort,LeaveBattle,3\n");
+    std::string_view titleKey="Starting Game"; // 최초 비서버 선택은 제목을 다시 서버 조회로 바꾸지 않는다.
+    if (reads_.server()) {
+        const auto disconnected=players_.Disconnected(),subscribers=players_.Subscribers(),pending=players_.Pending(),connecting=players_.Connecting(),ready=players_.Ready(); // 원문 bc0/ab0/c50/cf0/b20 순서를 유지한다.
+        if (subscribers-disconnected-pending-connecting==ready && std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(state_.timeout)-static_cast<std::uint32_t>(remaining))>10)
+            extra=Need(translate,"로그인 강제 시작 번역 미연결")("\n\nSome players are not connected and may\nnot make it back. Press Start to begin now.$ButtonInstant=Start,ServerForceBattleStart,0 ");
+        if (reads_.server()) titleKey="Becoming Server"; // 강제 시작 안내의 번역 효과 뒤에만 현재 서버를 다시 읽는다.
+    }
+    const auto title=Need(translate,"로그인 제목 번역 미연결")(titleKey);const auto pattern=Need(translate,"로그인 진행 서식 번역 미연결")("~.~3%s~*~.\n\n%s\nTime Remaining: ~i%d~.%s");std::size_t argument{};
+    // CRT에 미공급 인자를 읽게 하는 번역은 명시 거부하고 %%와 상수 폭/정밀도는 유지한다.
+    for (std::size_t at=0;at<pattern.size();++at) if (pattern[at]=='%') {
+        if (++at<pattern.size() && pattern[at]=='%') continue;
+        while (at<pattern.size() && (pattern[at]=='-' || pattern[at]=='+' || pattern[at]==' ' || pattern[at]=='#' || pattern[at]=='0' || pattern[at]=='.' || (pattern[at]>='0' && pattern[at]<='9'))) ++at;
+        if (argument>=4 || at==pattern.size() || pattern[at]!=(argument==2 ? 'd':'s')) throw std::invalid_argument("로그인 진행 번역의 네 인자 서식 오류");++argument;
+    }
+    if (argument!=4) throw std::invalid_argument("로그인 진행 번역의 인자 개수 오류");std::array<char,1024> output{};
+    const auto count=std::snprintf(output.data(),output.size(),pattern.c_str(),title.c_str(),list.c_str(),remaining,extra.c_str());if (count<0 || static_cast<std::size_t>(count)>=output.size()) throw std::length_error("로그인 진행 HTML1024BYTE 초과");return std::string(output.data(),static_cast<std::size_t>(count));
 }
 // 값형 사본 대신 실제 기존 상태 참조와 현재 모드를 빌린다.
 RawMissionLoginTimer::RawMissionLoginTimer(OriginalEdition edition,MissionLoginTimerState state,const MissionLoginPlayerCounts& players,

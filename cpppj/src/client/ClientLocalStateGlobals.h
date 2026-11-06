@@ -45,6 +45,8 @@ public:
     const bool& SavedGame() const { return savedGame_; } // 임의 DWORD 상위 비트 보존을 bool 참조로 가장하지 않는다.
     std::uint32_t& Begin() { return begin_; } // 005c7a74의 Login/Ready/타이머가 같은 시작 DWORD를 쓴다.
     const std::uint32_t& Begin() const { return begin_; } // 세션 반납은 시작값을 암묵 초기화하지 않는다.
+    std::uint32_t& LoginProgressSerial() { return loginProgressSerial_; } //005c85b0의 실제 cf570 반환 serial이며005cab34와 별개다.
+    const std::uint32_t& LoginProgressSerial() const { return loginProgressSerial_; } // Session 교체에도 같은 현재 진행 창 표식을 읽는다.
     std::uint32_t& CentralCreated() { return centralCreated_; } // 005c85a0의 실제 metadata writer와 cleanup이 공유할 DWORD다.
     const std::uint32_t& CentralCreated() const { return centralCreated_; } // 현재 중앙섬 상태를 복제하지 않는다.
     double& CaptureEnd() { return captureEnd_; } // 005c8618의 Reply/Zone/LoginBegin 벽시각 기한이다.
@@ -109,6 +111,7 @@ private:
     std::int32_t ambientKind_{},ambientForced_{}; //00544d50/54의 최초 BSS0이며 Session 반납/설정으로 임의 변경하지 않는다.
     double activityEnd_{}; //00544d58의 최초 BSS0이며 게임 정지 가능한 시계로 바꾸지 않는다.
     std::uint32_t zonePending_{},sourceType_{},begin_{},centralCreated_{}; // 순서가 다른 Native 주소들의 명시 소유자이며 주소 산술 배열로 쓰지 않는다.
+    std::uint32_t loginProgressSerial_{}; //005c85b0의 BSS0이며 타이머 완료/중단만 현재 serial0을 작성한다.
     bool savedGame_{}; // 기존 실제 소비자의 정상0/1 표현을 유지하며 임의 Native DWORD 모델은 후속이다.
     double captureEnd_{},connectEnd_{},loginEnd_{}; // 각 Native 주소의 최초 BSS0과 서로 다른 수명을 유지한다.
     std::uint32_t scriptBreak_{1}; // 보호 PE00542544의 최초 DWORD는1이며 Session 생성으로0을 덮어쓰지 않는다.

@@ -102,6 +102,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto effect=ScenarioEffectScriptCode(name);if (effect!=0xffffffffU) return effect; // 일반 표시 명령도 같은 HTML/메타/대본 이름표로 조회한다.
     const auto object=ScenarioObjectScriptCode(name);if (object!=0xffffffffU) return object; // 시나리오/메뉴 버튼도 원문 객체 이름표를 공유한다.
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
+    if (key=="serverforcebattlestart") return 0x020000f5U; //PE00543330 이름표/00542ac8의 실제 일반 명령이다.
     if (key=="setlanguage") return kSetLanguageCommand;
     if (key=="languagechanged") return kLanguageChangedCommand;
     if (key=="playintro") return kPlayIntroCommand;
