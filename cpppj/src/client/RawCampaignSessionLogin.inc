@@ -232,6 +232,7 @@ struct RawCampaignSession::Impl::Login {
             SetPlayerSpAmount(std::bit_cast<std::int32_t>(player),amount,s.sp,
                 {[this] { return s.playerState.playerKnown; },[this] { return s.playerState.battleOwner; },[this] { return s.globals.editor ? 1U:0U; }},[this] { Need(effects.refresh)(); });
         };
+        serverHooks.cleanupReconnectClients=[this] { CleanupReconnectClients(); };serverHooks.checkingAssertions=[this] { return s.gunState.checking; };serverHooks.log=effects.log; //63h도 현재 같은Pool/TYPE/지갑/가상표와checking/진행 로그를 사용한다.
         server=std::make_unique<RawMissionLogin>(s.players,*s.participation,MissionLoginGlobals{s.core.processState.Server(),s.assetState.Boss(),simul,s.objectState.mission,s.globals.missionPost,s.core.ownerMode.challenge,s.playerState,s.globals.mySubscriber,fortCount,lastPlayer,predictable,begin,beginSeed,battleSeed,burst,clockStamp,baseClock,captureEnd,currentCore,cachedCore,Zone(),s.battleOptions,&s.gameplayGlobals->GameAux()->ResourcePool(),&saved,&s.assetState.inBattle},std::move(serverHooks)); // 실제 저장게임/전투 bool 주소를 빌리며 일반 모드를 강제로 켜지 않는다.
         MissionClientPacketHooks receive;receive.clock=effects.clock;receive.wallSeconds=effects.wallSeconds;receive.runState=[this] { state->Run(); };receive.resetCamera=s.services.install.resetCamera;receive.refreshSp=effects.refresh;
         receive.localFort=[this](auto owner) { LocalFort(owner); }; // savedGame 여부와 무관한 !missionPost의 실제 자기 Fort 사슬이다.
@@ -320,6 +321,18 @@ struct RawCampaignSession::Impl::Login {
         if (parentRunning) starting(); // 부모의 최초 복사/로그를 유지하며 후반만 반환한다. 외부 공통부가7 확정과8을 이어서 실행한다.
         else if (startingTail) state->RunStarting(starting); // 독립 편의 접합의 같은 원문 공통부가7 전체를 확정한 뒤 즉시8을 실행한다.
         else { starting();blocks[3][0]=8;state->Run(); } // 독립 상태8 검사의 이전 부분 범위이며 전체 State7 실행으로 세지 않는다.
+    }
+    //004a7510은 현재 client의 유료 객체를 비용 환불한 뒤 현재 TYPE/count/삭제 가상으로 다시 분배한다.
+    void CleanupReconnectClients() {
+        if (s.core.pool.Capacity()<15000) throw std::logic_error("PATCH 재접속 client SID 물리 누락");
+        // 원문5..14999의 고정 순서를 지키고 각 효과 뒤 같은 실제 슬롯의 현재 필드를 다시 읽는다.
+        for (std::uint32_t number=5;number<15000;++number) {
+            const Sid sid{static_cast<std::uint16_t>(number)};const auto raw=s.core.pool.Slot(sid);if ((raw[11]&7U) || raw[10]<70 || !(raw[40]&1U)) continue;
+            s.hp.AddSp(s.playerState.battleOwner,static_cast<float>(s.hp.TypeCostUnits(raw[10]))); // 원문0059ab50의 정수 비용 복호화와 실제 로컬 SP/지갑/표시 부모다.
+            if (raw[10]>=s.core.types.size()) throw std::out_of_range("재접속 정리 현재 TYPE 물리 범위");
+            if ((s.core.types[raw[10]].flags2&0x4000U) && (raw[40]&8U) && s.RewardCount(sid)>0) continue;
+            static_cast<void>(s.world.Destroy(sid,0)); // 현재 가상+10/인자0을 사용하며 별도 SID 반납/부분 효과 복구를 추가하지 않는다.
+        }
     }
     //004b54e0의 SP 진단/현재 Player와 같은 Client 소유 복구 슬롯을 실제 File writer에 연결한다.
     void SaveReconnect() {

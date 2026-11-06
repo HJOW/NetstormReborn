@@ -1,0 +1,69 @@
+{
+  "unit": 1009,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "원문63h 재접속 수신/참가 순서 복구·현재 client 객체 환불/정리·실제 Ready 및 checking 꼬리 연결",
+  "sourceFunctions1078": [
+    "004a7510",
+    "0040b380",
+    "004a6dc0",
+    "004a6920",
+    "004a6ab0",
+    "004a6f70",
+    "0040eec0",
+    "004ac200"
+  ],
+  "referenceFunctions1072": [
+    "004c18e0",
+    "0040b7a0",
+    "004c17f0",
+    "004c0f30",
+    "004c10e0",
+    "004c1e30",
+    "004abae0"
+  ],
+  "build": {
+    "firstExitCode": 1,
+    "firstErrors": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\o\\RawMissionLogin.cpp(168,17): error C2039: 'log': 'netstorm::o::MissionLoginHooks'의 멤버가 아닙니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]",
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\o\\RawMissionLogin.cpp(168,5): error C2672: 'netstorm::o::`anonymous-namespace'::Need': 일치하는 오버로드된 함수가 없습니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
+    ],
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "firstLog": "extracted\\cpp-resume-1009\\build.log",
+    "finalLog": "extracted\\cpp-resume-1009\\build-final.log",
+    "exeSize": 11855360,
+    "exeSha256": "49a7fecc29fb731509751e6a96f5b72d100048a5c3f3f11c2ea2c239525769bd"
+  },
+  "checking": {
+    "remaining": 6,
+    "parents": 2,
+    "partial": 1,
+    "multiplayer": 3,
+    "completedParents": 40,
+    "completedPartial": 5
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1009\\protected-before.json"
+  },
+  "remaining": [
+    "State15 부모/63h 송신·StateReconnect/ForceServerDeath/004b8cb0·복구State7 인계",
+    "일반 프레임486bc0/스펠·전체 파생 writer/decoder·메타·Outpost/checking6",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

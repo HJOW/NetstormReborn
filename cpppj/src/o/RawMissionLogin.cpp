@@ -162,9 +162,28 @@ void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,
     const auto current=globals_.player.battleOwner;Put(current,kFlags,Read(current,kFlags)|0x40U);SendReady(owner);Need(hooks_.flush)();
     if (counts_.Subscribers()!=1) { const auto disconnected=counts_.Disconnected();if (counts_.Subscribers()-disconnected!=1) return; }globals_.begin=1;
 }
+//63h 재접속은 CheckLogin 거부 뒤에도 원문 후반을 계속하며 새 Fort/월드 생성 분기를 실행하지 않는다.
+void RawMissionLogin::ReceiveReconnect(std::int32_t pending,std::span<const std::uint8_t> packet) const {
+    if (packet.size()!=8 || packet[1]!=0x63 || ReadBytes(packet,2,2)!=8) throw std::invalid_argument("재접속63h의 실제8BYTE 입력 오류");
+    Need(hooks_.log)("Reconnecting "+std::to_string(pending)+"\n");std::uint32_t owner=1;
+    // 원문은 subscriber0도 비교하며 별도 flags/서버 권한 관문을 추가하지 않는다.
+    for (;owner<9;++owner) if (ReadBytes(packet,4)==Read(owner,0x2c)) break;
+    if (owner==9) { if (Need(hooks_.checkingAssertions)()) Need(hooks_.assertion)("0");return; } //Serverboard.cpp1b2의 실제 진단 복귀 뒤 반환이다.
+    if (participation_.CheckLogin(pending,static_cast<std::int32_t>(owner))) SendReply(static_cast<std::int32_t>(owner),1);
+    if (ReadBytes(packet,4)==globals_.mySubscriber) Put(owner,kFlags,Read(owner,kFlags)|0x18U);
+    Joined(owner,ReadBytes(packet,4));globals_.fortCount=0;globals_.lastLoginPlayer=0;std::int32_t marker{};
+    // PE는 counter의 최대값 대신 앞서 고른 owner번호와 다음+5c를 비교한다. 이 원문 선택을 정규화하지 않는다.
+    for (std::uint32_t player=1;player<9;++player) if (Read(player,kFlags,1)&2U) {
+        ++globals_.fortCount;if (std::bit_cast<std::int32_t>(Read(player,0x5c))>marker) { marker=static_cast<std::int32_t>(player);globals_.lastLoginPlayer=player; }
+    }
+    Need(hooks_.cleanupReconnectClients)();const auto local=globals_.player.battleOwner;Put(local,kFlags,Read(local,kFlags)|0x40U);SendReady(owner);
+    if (counts_.Subscribers()!=1) { const auto disconnected=counts_.Disconnected();if (counts_.Subscribers()-disconnected!=1) return; }globals_.begin=1; // 뒤4437f0은 빈 함수라 새 효과를 추가하지 않는다.
+}
 // 분배기의 현재 callback 수명 안에서 같은 원본 버퍼를 전달한다.
 void RegisterMissionLogin(RawPacketDispatch& dispatch,RawMissionLogin& login) {
     dispatch.Observe(0x27,{});dispatch.Version(0x27,1,0);
     dispatch.Register(0x27,[&login](std::uint32_t pending,PacketConnection& connection,std::span<const std::uint8_t> packet) { login.Receive(std::bit_cast<std::int32_t>(pending),connection,packet); });
+    dispatch.Observe(0x63,{});dispatch.Version(0x63,1,0);dispatch.RequireLength(0x63,8); // 원문99의 observer40b380은 빈 함수이며 실제63h/1/8 수신을 등록한다.
+    dispatch.Register(0x63,[&login](std::uint32_t pending,PacketConnection&,std::span<const std::uint8_t> packet) { login.ReceiveReconnect(std::bit_cast<std::int32_t>(pending),packet); });
 }
 }

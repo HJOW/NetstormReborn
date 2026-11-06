@@ -63,6 +63,9 @@ struct MissionLoginHooks {
     std::function<void(std::uint32_t)> restoreCoreData; //004a796c의 previous0에서만 호출하는 같은0048fb30 부모다. 독립 미션Post1의 누락 장치는 하위 첫 자연 반환과 같다.
     std::function<void(std::uint32_t,std::int32_t)> setSp; //00447810의 현재 owner/정수 SP 지정 전체이며 로컬 HUD/편집 모드도 실제 구현이 처리해야 한다.
     std::function<void(std::uint32_t)> makeBattleIsland; //0046d9b0→0046da60(owner)→0046e2c0의 실제 생성/배치/소멸 전체다. watcher 자연 생략을 대신 성공시키지 않는다.
+    std::function<void()> cleanupReconnectClients; //004a7510의 실제 client SID5..14999 비용 환불/현재 가상count·삭제 순회다.
+    std::function<bool()> checkingAssertions; //004a7510의 subscriber 미발견 꼬리가 현재005e4794를 읽는다.
+    std::function<void(std::string_view)> log; //004a68e0의 재접속 원문 진행 로그를 현재 장치에 전달한다.
 };
 // 같은 현재 일반/미션 분기와 실제 CheckLogin을 조립하고 선택된 큰 하위는 필수 장치로 요구한다.
 class RawMissionLogin {
@@ -75,6 +78,7 @@ public:
     void SendReply(std::int32_t owner,std::uint8_t accepted) const;
     // 004a6f70의 현재 owner1..8 Ready mask를 실제0x6e 패킷으로 보낸다.0은 원본 전체분배다.
     void SendReady(std::uint32_t target) const;
+    void ReceiveReconnect(std::int32_t pending,std::span<const std::uint8_t> packet) const; //004a7510: 실제63h의subscriber를 찾아 기존CheckLogin/응답/Joined 뒤 현재 장부/클라이언트 정리/Ready를 수행한다.
 private:
     // 현재9기록의 비정렬 필드를 원본 폭대로 읽고 쓴다.
     std::uint32_t Read(std::uint32_t owner,std::size_t offset,std::size_t width=4) const;
