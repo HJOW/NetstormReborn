@@ -1,0 +1,229 @@
+{
+  "unit": 970,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 970,
+  "version": "11.01",
+  "scope": "Form 범위의 현재 VT에 따른 Gump/Content 삭제 분배",
+  "exeSha256": "0017ecb1ab2d9ebbfde146e1252bde29f2434e6cb75e6e05f7442f42194bf169",
+  "exeBytes": 11358720,
+  "static": [
+    {
+      "edition": "originals",
+      "kind": "Gump",
+      "vtable": "00512188",
+      "slots": {
+        "10": "004af780",
+        "14": "004ac1c0",
+        "18": "004ac1b0",
+        "1c": "004ae9d0",
+        "48": "004ae140"
+      },
+      "releaseBody": [
+        {
+          "address": "004ae9d0",
+          "instruction": "mov eax, dword ptr [ecx + 0x12]"
+        },
+        {
+          "address": "004ae9d3",
+          "instruction": "test eax, eax"
+        },
+        {
+          "address": "004ae9d5",
+          "instruction": "je 0x4ae9e5"
+        },
+        {
+          "address": "004ae9d7",
+          "instruction": "movzx ecx, word ptr [ecx + 0x10]"
+        },
+        {
+          "address": "004ae9db",
+          "instruction": "push ecx"
+        },
+        {
+          "address": "004ae9dc",
+          "instruction": "push eax"
+        },
+        {
+          "address": "004ae9dd",
+          "instruction": "call 0x464190"
+        },
+        {
+          "address": "004ae9e2",
+          "instruction": "add esp, 8"
+        },
+        {
+          "address": "004ae9e5",
+          "instruction": "ret 4"
+        }
+      ]
+    },
+    {
+      "edition": "originals",
+      "kind": "Content",
+      "vtable": "00512208",
+      "slots": {
+        "10": "004af780",
+        "14": "004aeeb0",
+        "18": "004ac1b0",
+        "1c": "0040b380",
+        "48": "004ae140"
+      },
+      "releaseBody": [
+        {
+          "address": "0040b380",
+          "instruction": "ret 4"
+        }
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "kind": "Gump",
+      "vtable": "00505a80",
+      "slots": {
+        "10": "004ab7e0",
+        "14": "004abaa0",
+        "18": "004aba90",
+        "1c": "004afd40",
+        "48": "004af270"
+      },
+      "releaseBody": [
+        {
+          "address": "004afd40",
+          "instruction": "mov eax, dword ptr [ecx + 0x12]"
+        },
+        {
+          "address": "004afd43",
+          "instruction": "test eax, eax"
+        },
+        {
+          "address": "004afd45",
+          "instruction": "je 0x4afd57"
+        },
+        {
+          "address": "004afd47",
+          "instruction": "xor edx, edx"
+        },
+        {
+          "address": "004afd49",
+          "instruction": "mov dx, word ptr [ecx + 0x10]"
+        },
+        {
+          "address": "004afd4d",
+          "instruction": "push edx"
+        },
+        {
+          "address": "004afd4e",
+          "instruction": "push eax"
+        },
+        {
+          "address": "004afd4f",
+          "instruction": "call 0x492be0"
+        },
+        {
+          "address": "004afd54",
+          "instruction": "add esp, 8"
+        },
+        {
+          "address": "004afd57",
+          "instruction": "ret 4"
+        }
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "kind": "Content",
+      "vtable": "00505b00",
+      "slots": {
+        "10": "004ab7e0",
+        "14": "004b0300",
+        "18": "004aba90",
+        "1c": "004afe60",
+        "48": "004af270"
+      },
+      "releaseBody": [
+        {
+          "address": "004afe60",
+          "instruction": "ret 4"
+        }
+      ]
+    }
+  ],
+  "build": {
+    "commands": 3,
+    "exitCodes": [
+      0,
+      1,
+      0
+    ],
+    "firstCorrection": "C3538 BYTE/DWORD auto 선언을 분리",
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_pop_context_tests"
+    ]
+  },
+  "focused": {
+    "uniqueCases": 6,
+    "newCases": 1,
+    "existingCases": 5,
+    "newInputs": 12,
+    "editions": [
+      "PATCH10.78",
+      "CD10.72"
+    ],
+    "formConstructors": [
+      3,
+      6
+    ],
+    "sourceTypeNumbers": [
+      3,
+      6,
+      7
+    ],
+    "beforeFailedChecks": 18,
+    "finalFailedChecks": 0,
+    "freeTypeRecordContractPreserved": true,
+    "tests": [
+      "FormClassLifetime_CurrentVtableKeepsGumpAndContentEffects",
+      "FormTake_GumpAttachmentAndDestroyIntegration",
+      "DependCreateCurrent_UnregisteredClassDoesNotUseDifferentRawTypeRoute",
+      "ContentLifetime_SharedMixedFormDispatch",
+      "FormPopCurrent_ActualWorldReadsRepairedVtableAndSharedDepth",
+      "FormPopCurrent_SortedContentBorrowsSameFactoryDepth"
+    ]
+  },
+  "protection": {
+    "files": 2796,
+    "fixtures": 976,
+    "changed": 0,
+    "newFixtures": 0,
+    "baseline": "extracted/cpp-resume-970/protected-final.json"
+  },
+  "gui": {
+    "newExecutions": 0,
+    "lastUnit": 968
+  },
+  "newNativeExecutions": 0,
+  "newMultiplayerTests": 0,
+  "solutionProjects": 83,
+  "checkingRemaining": 8,
+  "remaining": [
+    "ContentFormHost의 나머지 필드 API/현재 TYPE·VT 소비",
+    "Process 기본 PID0와 별칭/현재 클래스의 남은 경계",
+    "자산 TYPE 범위와 전체 삭제/외부 heap·할당 실패",
+    "파일/비멀티 파생 수명"
+  ],
+  "excluded": [
+    "실제 GUI/게임",
+    "MP/패킷/프로토콜/통신",
+    "공중3종 전용",
+    "실제 사제 포획/희생/특정 적 공격/승리",
+    "전체 CTest/34미션/ZIP"
+  ]
+}

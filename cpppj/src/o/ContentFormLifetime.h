@@ -39,7 +39,7 @@ public:
     void Destroy(Sid form,std::uint32_t flags=0) const;
     // Content만 분배하고 다른 타입의 기존 효과를 유지한다. 전체 월드 분배기와 내부 삭제도 같은 훅을 사용해야 한다.
     SquidDestroyHooks Hooks() const;
-    // 반납된 타입 기록도 판정하되 필드 접근은 별도로 free를 검사한다.
+    // 사용중/dead는현재ContentVT로판정하고반납된슬롯의기존타입기록조회도보존한다.
     bool IsContentForm(Sid form) const;
     const SidPool& Pool() const;
 private:

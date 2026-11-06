@@ -28,10 +28,13 @@ Sid GumpFormHost::Create(std::uint32_t flags) const { return factory_.CreateGump
 Sid GumpFormHost::Take(Sid form) const { return factory_.Take(kGumpFormType,form); }
 // 메뉴/수명 연결기가 실제 판본과 풀을 확인할 수 있게 제공한다.
 const SidPool& GumpFormHost::Pool() const { return pool_; }
-// 타입 바이트는 반납 뒤에도 보존된다. dead 검사/중첩 삭제를 위해 free 여부는 여기서 제외한다.
+// 사용중클래스는현재VT로구별하고반납된슬롯의타입기록조회도보존한다.
 bool GumpFormHost::IsGumpForm(Sid form) const {
-    return form.value>=5 && form.value!=pool_.Layout().predictableFirst && form.value<pool_.Capacity()
-        && pool_.Slot(form)[kType]==kGumpFormType;
+    if (form.value<5 || form.value>=pool_.Capacity() || form.value==pool_.Layout().predictableFirst) return false;
+    const auto raw=pool_.Slot(form);
+    if (raw[kState]&kFree) return raw[kType]==3U; // 반납후VT는지워지므로기존공개타입기록조회계약만유지한다.
+    const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
+    return table==(pool_.Edition()==OriginalEdition::Patch1078 ? 0x512188U:0x505a80U); // 사용중/dead슬롯은실제현재GumpForm생성자VT를사용한다.
 }
 // 삭제 중 dead Form도 알림/Unpop이 필요하지만 반납된 슬롯의 필드 접근은 거부한다.
 std::span<const std::uint8_t> GumpFormHost::Form(Sid form) const {

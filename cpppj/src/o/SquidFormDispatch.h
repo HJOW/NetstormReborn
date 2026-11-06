@@ -8,7 +8,7 @@
 namespace netstorm::o {
 // 자산의 가상 +0x10 재정의(예: 다리 삭제 거부)를 보존하는 루트 삭제 경계다.
 using SquidAssetDestroy=std::function<bool(Sid,std::uint32_t,const SquidDestroyHooks&)>;
-// 타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다.
+// 현재가상클래스별fallback사슬을같은분배기로모아혼합종속체인의중첩삭제를지원한다.
 class SquidFormDispatch {
 public:
     // 자산 기본 효과와 선택 경계를 유지한다. 풀·공통 삭제기·등록한 호스트들은 이 객체보다 오래 살아야 한다.
@@ -22,7 +22,7 @@ public:
     void SetAssets(SquidDestroyHooks assets,SquidAssetDestroy assetDestroy);
     // 현재 타입별 가상 루트 삭제다. 자산의 별도 재정의는 assetDestroy를 사용하고 Form은 공통 몸체에 들어간다.
     bool Destroy(Sid sid,std::uint32_t flags=0) const;
-    // 모든 Form 효과/Unpop은 현재 타입에 따라 분배하며 전송·선택 해제는 공통 자산 경계로 곧바로 전달한다.
+    // Form범위의효과/Unpop은현재VT로분배하며전송·선택해제는공통자산경계로전달한다.
     SquidDestroyHooks Hooks() const;
     // 초기화/진단 시 같은 SID 풀이 연결되어 있는지 확인한다.
     const SidPool& Pool() const;

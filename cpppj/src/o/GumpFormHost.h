@@ -22,7 +22,7 @@ public:
     Sid Take(Sid form) const;
     // 기존 처리기와 같은 풀/판본인지 연결 단계에서 확인할 수 있다.
     const SidPool& Pool() const;
-    // 반납된 타입 기록도 포함해 번호가 GumpForm인지 판별한다. 이미 dead인 중첩 삭제를 원본처럼 건너뛰기 위해서다.
+    // 사용중/dead는현재GumpVT로판정하고반납된슬롯은기존타입기록조회계약을유지한다.
     bool IsGumpForm(Sid form) const;
     // 현재 raw DWORD 소유 ID와 WORD 부모를 읽는다. free 슬롯은 읽기 계약 밖이다.
     std::uint32_t Owner(Sid form) const;

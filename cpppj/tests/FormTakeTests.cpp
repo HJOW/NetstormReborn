@@ -3,6 +3,7 @@
 #include "TestSupport.h"
 #include "o/SquidForms.h"
 #include "o/GumpFormHost.h"
+#include "o/SquidFormDispatch.h" // 부모삭제가현재Form클래스의알림/취소를사용하는지같은실제호스트로대조한다.
 #include <algorithm>
 #include <fstream>
 #include <stdexcept>
@@ -159,4 +160,26 @@ TEST_CASE(FormTake_ContentNoticeTimingAndPayloadMutation) {
     CHECK(bound.Take(6,form)==form);CHECK(notices==1);CHECK(Read(pool,form,18,4)==0xfedc5678);
     CHECK(Throws([&] { bound.Take(6,form); }));CHECK(Throws([&] { bound.Take(3,form); }));
     const auto free=pool.FreeCount();CHECK(Throws([&] { bound.Create(4,2); }));CHECK(pool.FreeCount()==free);
+}
+
+// TYPE별칭에도현재Gump/Content VT의부모삭제알림·커서취소·공통깊이반납을보존한다.
+TEST_CASE(FormClassLifetime_CurrentVtableKeepsGumpAndContentEffects) {
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 두판본의실제생성자/가상표를각각사용한다.
+        for (const auto formType:{3U,6U}) { // Gump의owner알림과Content의빈알림/커서취소를구별한다.
+            for (const auto sourceType:{3U,6U,7U}) { // 변경가능한TYPE가현재클래스를대신할수없다.
+                SidPool pool(edition,kCapacity,false);auto types=netstorm::test::MakeFormTypeInputs(edition==OriginalEdition::Patch1078 ? 188:171);SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
+                SquidDestroyHooks assets;assets.selected=[] { return Sid{}; };assets.emit=[](const SquidDestroyEvent&) { throw std::logic_error("Form삭제검사에서자산효과선택"); }; // 이검사는자산/전송/통신경계를선택하지않는다.
+                SquidFormDispatch dispatch(pool,destroy,assets);Sid parent{},form{};std::size_t notices{},cancels{};
+                GumpFormHost gumps(pool,factory,types,destroy,[&](auto owner,Sid notifiedParent) { CHECK(owner==0x12345678 && notifiedParent==parent);++notices; },dispatch.Hooks()); // 원본Gump의비정렬ownerDWORD와부모WORD를확인한다.
+                ContentFormHost content(pool,types,[](Sid,Sid,std::uint32_t) { throw std::logic_error("삭제중Content부모통지선택"); });ContentLifetimeState state;ContentLifetimeHooks hooks;
+                hooks.cancelCursor=[&] { CHECK(pool.Slot(form)[10]==sourceType && (pool.Slot(form)[11]&2U));++cancels; }; // 원본Content preDestroy는dead설정뒤실제커서와비교한다.
+                ContentFormLifetime lifetime(pool,types,content,destroy,state,std::move(hooks),dispatch.Hooks());dispatch.Bind(gumps);dispatch.Bind(lifetime);
+                parent=factory.CreateGumpForm(2);form=factory.Create(formType,2);state.cursor=form.value;
+                if (formType==3) gumps.SetOwner(form,0x12345678);else Put(pool,form,18,75,2); // 너겟/경제/전투효과를선택하지않는일반kind다.
+                Put(pool,parent,6,form.value,2);Put(pool,form,16,parent.value,2);pool.AllocatedBytes(form)[11]=8;pool.AllocatedBytes(form)[10]=static_cast<std::uint8_t>(sourceType);const auto free=pool.FreeCount();
+                bool failed=false;try { CHECK(dispatch.Destroy(parent,0)); } catch (const std::exception& error) { failed=true;std::printf("FormClassLifetime edition=%u form=%u type=%u: %s\n",static_cast<unsigned>(edition),formType,sourceType,error.what()); }
+                CHECK(!failed && notices==(formType==3 ? 1U:0U) && cancels==(formType==6 ? 1U:0U));CHECK((pool.Slot(parent)[11]&1U) && (pool.Slot(form)[11]&1U));CHECK(pool.FreeCount()==free+2 && destroy.PreDepth()==0 && destroy.PostDepth()==0);CHECK(gumps.IsGumpForm(form)==(sourceType==3) && lifetime.IsContentForm(form)==(sourceType==6)); // 반납뒤타입기록조회는현재클래스판정과별도계약이다.
+            }
+        }
+    }
 }

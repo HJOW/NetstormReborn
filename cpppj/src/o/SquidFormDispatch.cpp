@@ -42,14 +42,16 @@ void SquidFormDispatch::SetAssets(SquidDestroyHooks assets,SquidAssetDestroy ass
     if (!assets.emit || !assets.selected || !assetDestroy) throw std::invalid_argument("Form 분배 현재 자산 경계 필요");
     assets_=std::move(assets);assetDestroy_=std::move(assetDestroy);
 }
-// 콜백 뒤 다음 효과는 현재 raw 타입으로 다시 선택한다.
+// 콜백 뒤 현재 VT의 실제 Form 클래스로 다시 선택하며 TYPE 별칭을 다른 파생 효과로 보내지 않는다.
 const SquidDestroyHooks& SquidFormDispatch::Route(Sid sid) const {
-    const auto raw=pool_.Slot(sid);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
-    if (table==(pool_.Edition()==OriginalEdition::Patch1078 ? 0x512110U : 0x505a08U)) {
-        if (!bound_[kDepend]) throw std::logic_error("선택된 실제 감시 클래스 처리기 미등록");return routes_[kDepend]; // 이전/현재 TYPE가 달라도 실제 클래스를 사용하며 다른 raw TYPE 처리기로 대체하지 않는다.
+    const auto raw=pool_.Slot(sid);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const std::array<std::pair<std::uint32_t,std::uint32_t>,3> classes{{{patch ? 0x512110U:0x505a08U,kDepend},{patch ? 0x512188U:0x505a80U,kGump},{patch ? 0x512208U:0x505b00U,kContent}}}; // 기존세호스트를실제생성자가남긴VT에연결한다.
+    for (const auto& [vtable,number]:classes) { // 선택한현재클래스에필요한호스트만요구한다.
+        if (table==vtable) { if (!bound_[number]) throw std::logic_error("선택된 현재 Form 클래스 처리기 미등록");return routes_[number]; }
     }
-    const auto type=pool_.Slot(sid)[10];
-    if (type>=routes_.size() || !bound_[type]) throw std::logic_error("Form 분배 미등록 타입");return routes_[type];
+    const auto type=raw[10];const auto end=patch ? kPatchProcessEnd:kCdProcessEnd;
+    if (table!=(patch ? 0x512098U:0x505990U) || type<kProcessFirst || type>=end || !bound_[type]) throw std::logic_error("선택된 현재 ProcessForm 처리기 미등록"); // 기존실제PID프로세스범위만유지하며미지원VT를다른호스트로재귀대체하지않는다.
+    return routes_[type];
 }
 // 루트 자산 재정의와 Form 공통 몸체를 현재 타입에서 구분한다.
 bool SquidFormDispatch::Destroy(Sid sid,std::uint32_t flags) const {

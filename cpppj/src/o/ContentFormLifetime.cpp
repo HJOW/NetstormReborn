@@ -32,9 +32,13 @@ ContentFormLifetime::ContentFormLifetime(SidPool& pool,std::span<const RiftTypeR
     if (&forms.Pool()!=&pool || &destroy.Pool()!=&pool || (reward && &reward->Pool()!=&pool)) throw std::invalid_argument("Content 수명 SID 풀 불일치");
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U)) throw std::invalid_argument("Content 수명 타입 판본/크기 오류");
 }
-// dead 타입6 재진입은 허용하며 실제 필드 접근 시 free를 따로 확인한다.
+// 사용중/dead클래스는현재VT로구별하고반납된슬롯의기존타입기록도조회한다.
 bool ContentFormLifetime::IsContentForm(Sid form) const {
-    return form.value>=5 && form.value<pool_.Capacity() && form.value!=pool_.Layout().predictableFirst && pool_.Slot(form)[kType]==kContent;
+    if (form.value<5 || form.value>=pool_.Capacity() || form.value==pool_.Layout().predictableFirst) return false;
+    const auto raw=pool_.Slot(form);
+    if (raw[kState]&kFree) return raw[kType]==6U; // 반납후VT는지워지므로기존공개타입기록조회계약만유지한다.
+    const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
+    return table==(pool_.Edition()==OriginalEdition::Patch1078 ? 0x512208U:0x505b00U); // 사용중/dead슬롯은실제현재ContentForm생성자VT를사용한다.
 }
 // 원본 kind/parent의 WORD 전체를 읽는다.
 std::uint16_t ContentFormLifetime::Word(Sid sid,std::size_t offset) const {
