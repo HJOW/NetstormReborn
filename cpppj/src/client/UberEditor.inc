@@ -67,19 +67,25 @@ void UberGump::PrepareNativeFortState(bool editing) {
 //현재 State가1일 때만 실제 Editor 외곽을 준비하며 State 확정은 호출한 RawLocalMissionState에 남긴다.
 o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t selected) {
     if (selected!=1 || !editor_) throw std::logic_error("실제 Edit State1 외곽 계약");
-    PrepareNativeFortState(true);auto& e=*editor_;
+    PrepareNativeFortState(true);return InstallPreparedFortState(true);
+}
+// 이미 실행한 Native prefix를 반복하지 않고 State1/2의 실제 파일·월드·UI 꼬리만 잇는다.
+o::LocalMissionParentResult UberGump::InstallPreparedFortState(bool prefixHud) {
+    const auto current=client_.LocalStateGlobals()->State().current[0];
+    if (!editor_ || world_ || (current!=1 && current!=2)) throw std::logic_error("준비된 비멀티 Fort 설치의 실제 State1/2·빈 호스트 월드 계약");
+    auto& e=*editor_;
     //호스트 Session은 준비된 물리만 빌리고 파일 설치/Template 변경은 아래 실제 checkpoint의 위치까지 지연한다.
     const std::string pending(client_.FortGlobals()->Pending()); // 실제 이름 선택/기본 이름은 checkpoint가 수행하므로 여기서는 파일을 조회하거나 파싱하지 않는다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }});
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; // 편집 세션도 원문 Guide의 현재 +68을 조회하며 미션이 없으면 0을 반환한다.
-    services.installMode=CampaignInstallMode::ExistingEditor;services.deferExistingEditorFile=true;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.localLogin.reset();
+    services.installMode=CampaignInstallMode::ExistingEditor;services.deferExistingEditorFile=true;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.adoptMainMenuFort=!prefixHud;services.localLogin.reset();
     services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.editorTransport=e.transport;services.fortMission=FortMissionSaveEffects();
     services.fortBadges=client_.FortBadges();services.fortTypeConversion=client_.FortTypeConversion(); //기존 파일의 실제 장부/변환표를 캠페인과 같은 Client owner에서 빌린다.
     world_=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),o::FortTemplate{},o::MissionPlayers{},pending,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
     world_->elapsed=[this] { return client_.Time().delta; };world_->paused=[this] { return client_.Paused(); };world_->frameTime=[this] { return client_.Time(); };
     world_->BindHideBuildings([this] { return hideBuildings_; });world_->soundViewChanged=[this](auto view) { client_.WorldAudio().SetView(view); };
     world_->surfaceDisplay={[this] { return client_.GetRenderer().FullRedrawPending(); },[this](auto rect,auto flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
-    auto& session=world_->Session();session.WithExistingEditorPrefixUi(*client_.LocalStateGlobals(),[this] { ApplyHudModeForState(1); });
+    auto& session=world_->Session();if (prefixHud) session.WithExistingEditorPrefixUi(*client_.LocalStateGlobals(),[this] { ApplyHudModeForState(1); }); // State3 제목 뒤의 continuation은 앞서 실제 HUD를 실행했으므로 다시 분배하지 않는다.
     static_cast<void>(EnsureEditorFortFiles()); // 첫 ReadFort에서 이미 만든 장치도 재생성하지 않아 같은 현재 경로/장부/reader 수명을 유지한다.
     CampaignExistingEditorCheckpointServices checkpoint;
     checkpoint.fort.currentName=[this] { return client_.FortGlobals()->Current(); };checkpoint.fort.pendingName=[this] { return client_.FortGlobals()->Pending(); };
@@ -141,7 +147,7 @@ o::LocalMissionParentResult UberGump::InstallMainMenuNativeState(std::uint32_t s
     hooks.title=[this] { RefreshWindowTitle(); };hooks.closeGuide=[this] { ReleaseCurrentGuideMission(); };
     hooks.tell=[this](auto section) { Tell(std::string(section)); };hooks.startup=[this] { return o::CheckStartupState(EditorStartupStateHooks()); };
     hooks.editorPlayers=[this] { client_.Configuration().Set("lastEditFort",client_.FortGlobals()->Current());if (!world_) throw std::logic_error("State3 Tell 뒤 선택된 EditorPlayers의 실제 Session 없음");world_->Session().InstallExistingEditorPlayers(MakeEditorPlayerClientHooks(client_)); };
-    hooks.changedState=[]()->o::LocalMissionParentResult { throw std::logic_error("State3 제목 갱신 뒤 선택된 다른 기존 맵 설치 분기 미연결"); };
+    hooks.changedState=[this] { return InstallPreparedFortState(false); }; // 원문 LAB_004b72eb에서 같은 파일/미션 조기 반환/월드/tail을 이어가며 앞단과 메인 전용 안내를 반복하지 않는다.
     hooks.tail=[this,&local] {
         ExistingEditorAfterCheckpointEffects tail;tail.hud=[this](auto command) { rawButtons_->NotifyHudMode(command,1); };tail.wallSeconds=[this] { return client_.WallSeconds(); };
         tail.requestMusic=[this](auto name) { client_.WorldAudio().RequestMusic(name); };tail.fortPalette=[this] { const auto name=client_.Configuration().PathSpec("fortPal");client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); };
@@ -196,14 +202,15 @@ void UberGump::PollEditorState() {
         editor_->state=std::make_unique<o::RawLocalMissionState>(client_.Assets().Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),surface.ownerMode.battle,game.world.missionPost,local.SavedGame(),surface.links.mission,local.Simulconnect(),surface.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.CdPresent(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(htmlGlobals_.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client_.Time().game,client_.Time().wall},std::move(hooks));
     }
     if (next==1 || next==3) editor_->committed=false;editor_->state->Poll();
-    if (next==3 || (next>=39 && next<=42)) {
+    if (next>=39 && next<=42) {
         if (local.State().phase[0]==3 && local.State().next[0]==4) PublishNativeMainMenuState();
         return; // 영상이 살아 있는 State40은 다음 Poll까지 유지하며 메인 메뉴를 먼저 공개하지 않는다.
     }
-    if (next==1 && local.State().next[0]==7) return; // 현재 Guide가 쓴7은 편집 입력/loaded 공개 없이 같은 Tick의 지연 미션 부모가 소비한다.
-    if (next==1 && !editor_->committed) {
+    if (next==3 && local.State().phase[0]==3 && local.State().next[0]==4) { PublishNativeMainMenuState();return; }
+    if ((next==1 || next==3) && local.State().next[0]==7) return; // 두 진입의 실제 Guide 요청은 입력/loaded 공개 없이 같은 Tick의 지연 미션 부모가 소비한다.
+    if ((next==1 || next==3) && !editor_->committed) {
         world_->Session().CommitExistingEditorInstall(local); //공통 확정 뒤 실제 loaded 공개가 끝나야 호스트 사용자 입력 몸체를 만들 수 있다.
         BindCampaignUserInputServices(client_,*world_,editor_->selectCursor);userInput_=std::make_unique<UserInput>(client_,*world_);
-        editor_->committed=true;state_.phase=ClientPhase::Mission;pageName_="editor";page_={};popup_.clear();RebuildControls();
+        editor_->committed=true;state_.phase=ClientPhase::Mission;pageName_=client_.GameplayGlobals()->world.editor ? "editor" : "mission";page_={};popup_.clear();RebuildControls();
     }
 }

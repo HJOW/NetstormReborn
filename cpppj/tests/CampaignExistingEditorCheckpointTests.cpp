@@ -806,3 +806,5 @@ TEST_CASE(CampaignExistingEditorCheckpoint_DeferredCleanupSelectsSharedCursor) {
         CHECK(called==1 && client.GameplayGlobals()->Borrowed() && !session.HasCursorRuntimeForState() && cursor==&client.GameplayGlobals()->cursor);CHECK(CheckpointRejects<std::logic_error>([&] { static_cast<void>(session.Cursor()); }));
     },true);
 }
+
+#include "CampaignNativeFortContinuationTests.inc" // State3 특이 분기도 실제 파일/월드/공통 확정과 같은 장치를 사용한다.

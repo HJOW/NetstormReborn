@@ -656,9 +656,14 @@ void UberGump::PublishNativeMainMenuState() {
 }
 // 현재 미션의 원본 제목 설정을 적용한다. 데모 모드는 같은 미션 객체의 직접 기록을 읽는다.
 void UberGump::RefreshWindowTitle() {
-    WindowTitleState state; // 현재 메뉴는 요새 없음이며 데모 여부는 같은 실제 미션 필드다.
-    if (mission_) { state.fortName=missionRuntime_ && missionRuntime_->guided ? std::string(client_.FortGlobals()->Current()) : mission_->FortName();state.mission=true; } // 원문 Init이 연결된 미션은 같은 실제 현재 Fort를 읽는다. 다른 기존 로더의 이름 계약은 유지한다.
-    if (world_ && client_.GameplayGlobals()->world.editor) { state.fortName=std::string(client_.FortGlobals()->Current());state.editor=true; } //실제 Editor 파일 설치 중의 제목도 같은 현재 이름과 EditorWindowName을 사용한다.
+    WindowTitleState state;state.fortName=std::string(client_.FortGlobals()->Current());state.editor=client_.GameplayGlobals()->world.editor!=0;state.mission=client_.GameplayGlobals()->world.missionPost; // 현재 Fort는 World 생성 전에도 존재하며 State3의 첫 BYTE 삭제 뒤에는 빈 제목을 선택한다.
+    if (mission_ && state.mission) { state.fortName=missionRuntime_ && missionRuntime_->guided ? std::string(client_.FortGlobals()->Current()) : mission_->FortName(); } // 원문 Init이 연결된 미션은 같은 실제 현재 Fort를 읽는다. 다른 기존 로더의 이름 계약은 유지한다.
+    if (!state.editor && !state.mission && !state.fortName->empty()) {
+        const auto owner=client_.GameplayGlobals()->player.templateOwner;const auto headers=templateStorage_->Headers(); // 원문 현재 owner의 같은 20BYTE 헤더를 조회한다.
+        if (owner>=9 || headers.size()<static_cast<std::size_t>(owner+1U)*20U) throw std::out_of_range("일반 Fort 제목의 현재 Template 헤더 범위");
+        const auto header=headers.subspan(static_cast<std::size_t>(owner)*20U,20);
+        state.templatePresent=header[0] || header[1] || header[2] || header[3];state.templateReadOnly=header[8] || header[9] || header[10] || header[11]; // 실제 +0/+8 DWORD가 모두 비영일 때 readonly 접두를 붙인다.
+    }
     if (missionRuntime_) { state.demo=missionRuntime_->gate.demo!=0;state.testBattle=missionRuntime_->mode64!=0; } // 현재 미션의 +68/+64를 함께 읽어 데모 우선과 Test Battle 제목 선택을 보존한다.
     netstorm::client::RefreshWindowTitle(state,{
         [this](std::string_view key,std::optional<std::string_view> argument) { return client_.Configuration().PathSpec(key,argument); },

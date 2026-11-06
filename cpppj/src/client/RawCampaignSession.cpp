@@ -951,9 +951,10 @@ struct RawCampaignSession::Impl {
         placement.anchor.graphAssertion=anchorState.graphAssertion; // 지형 생성용 고정 파이프라인도 같은 현재 진단을 빌리며 gameplay 쪽은 매 요청 anchorState 전체를 복사한다.
         assetState.sharedAuthority=gameplayGlobals->Authority().get();gunState.sharedAuthority=gameplayGlobals->Authority().get();regularState.sharedAuthority=gameplayGlobals->Authority().get(); // 첫 파생 모듈 전에 같은 owner를 연결하며 준비된false를 true로 덮지 않는다.
         assetState.inBattle=true;assetState.localOwner=1;
+        if (services.adoptMainMenuFort && (!services.adoptPreparedWorld || services.installMode!=CampaignInstallMode::ExistingEditor || (services.localStateGlobals->State().current[0]!=1 && services.localStateGlobals->State().current[0]!=2))) throw std::logic_error("State3 continuation의 같은 준비된 비멀티 Fort/State1·2 계약");
         if (services.installMode==CampaignInstallMode::ExistingEditor) {
             if (services.adoptPreparedWorld) {
-                if (!core.ownerMode.fort || core.ownerMode.battle || core.ownerMode.challenge || core.bridgeState.battle || globals.editor!=1 || !globals.missionPost || !playerState.fortMode || playerState.playerKnown!=1 || playerState.battleOwner!=1 || playerState.templateOwner!=1) throw std::logic_error("준비된 Editor의 실제 prefix 모드/Player 불일치"); //파일 지연 중의 기존 mission은 이름 비교 뒤 closeGuide까지 보존한다. World 시작의 별도 관문이 잔류 mission을 거부한다.
+                if (!core.ownerMode.fort || core.ownerMode.battle || core.ownerMode.challenge || core.bridgeState.battle || (services.adoptMainMenuFort ? (globals.editor!=0 || globals.missionPost) : (globals.editor!=1 || !globals.missionPost)) || !playerState.fortMode || playerState.playerKnown!=1 || playerState.battleOwner!=1 || playerState.templateOwner!=1) throw std::logic_error("준비된 Editor의 실제 prefix 모드/Player 불일치"); //파일 지연 중의 기존 mission은 이름 비교 뒤 closeGuide까지 보존한다. World 시작의 별도 관문이 잔류 mission을 거부한다.
             } else {
                 world.ConfigureInstallModes(true,false,false,true); // 독립 단계 검사는 최초 객체 전에 기존 Editor 모드를 구성한다.
                 core.bridgeState.mission=false;globals.editor=1;globals.missionPost=true;playerState.fortMode=true;fullDeck=1; // 기존 비준비 Editor 생성의 호환 입력이며 준비 prefix의 현재 DWORD는 덮지 않는다.
@@ -2906,6 +2907,49 @@ struct RawCampaignSession::Impl {
         const FortTypeNamesLoadGlobals typeNameGlobals{objectState.loadingDepth,fortTypeConversion->Current()}; // 기존 Objects/Technology/Deck과 같은 실제전역이다.
         try { LoadFortTypeNames(static_cast<std::int32_t>(slot),typeNameGlobals,hooks); }catch (...) { UnwindFortTypeNamesLoad(typeNameGlobals,hooks);throw; }
     }
+    // 원문004beca0의 일반 Fort 인자0 경로를 실행한다. 재접속의 인자1 최소값 병합은 별도 후속 경로다.
+    void ReadExistingFortCoreData(std::uint32_t slot) {
+        if (globals.missionPost || globals.editor) return;
+        ++objectState.loadingDepth;world.SetLoadingDepth(objectState.loadingDepth);
+        try {
+            if (slot>=9) throw std::out_of_range("Fort CoreData의 실제9슬롯 범위");
+            if (!Read(templateStorage->Headers(),slot*20)) throw std::logic_error("Fort CoreData Template.cpp1151 진단");
+            const auto stream=templateStorage->SelectSection(slot,"CoreData",1); // 같은 노드의 writable 선택과 pos0을 원문 시점에 수행한다.
+            templateStorage->AccessSection(stream,[this,slot](auto fields,const auto& memory) {
+                if (!Read(fields,0) || !Read(fields,8)) return;
+                if ((slot>=1 && slot<=8 ? slot : 0U)!=playerState.battleOwner) throw std::logic_error("Fort CoreData Template.cpp1156 진단");
+                coreDataGlobals->Active()=1;
+                const auto currentCore=[this] { const std::uint32_t metamap=core.ownerMode.challenge ? 1U : 0U;return coreDataGlobals->Read(playerState,metamap,{SessionMissing<void,std::uint32_t>()}); }; // 읽기·무결성 실패 위치마다 같은 현재 포인터를 다시 조회한다.
+                auto target=currentCore();const auto source=memory.buffer(Read(fields,0));const auto position=Read(fields,4);
+                if (target.size()<10 || position>source.size() || 10>source.size()-position) throw std::out_of_range("Fort CoreData10BYTE의 실제 물리 범위");
+                std::copy_n(source.begin()+position,10,target.begin());Put(fields,4,Read(fields,4)+10U);
+                if (std::bit_cast<std::int32_t>(Read(fields,4))>std::bit_cast<std::int32_t>(Read(fields,8))) throw std::logic_error("Fort CoreData MemStream46 진단");
+                if (!services.fortTechnologyUi) throw std::logic_error("Fort CoreData의 실제 Chat 랭크 갱신 미연결");services.fortTechnologyUi();
+                // 원문 인라인 BYTE/WORD/DWORD 읽기는 저장 후 WORD/DWORD만 논리 end를 진단한다.
+                const auto readWord=[&](std::uint32_t width) {
+                    const auto bytes=memory.buffer(Read(fields,0));const auto at=Read(fields,4);
+                    if (at>bytes.size() || width>bytes.size()-at) throw std::out_of_range("Fort CoreData 인라인 읽기 물리 범위");
+                    std::uint32_t value{};for (std::uint32_t byte=0;byte<width;++byte) value|=std::uint32_t(bytes[at+byte])<<(byte*8); // 선택한 실제 폭만 합성한다.
+                    Put(fields,4,Read(fields,4)+width);
+                    if (width>1 && std::bit_cast<std::int32_t>(Read(fields,4))>std::bit_cast<std::int32_t>(Read(fields,8))) throw std::logic_error("Fort CoreData MemStream46 진단");return value;
+                };
+                if (std::bit_cast<std::int32_t>(Read(fields,4))<std::bit_cast<std::int32_t>(Read(fields,8))) {
+                    const auto word=readWord(2);if (!services.randomGlobals) throw std::logic_error("Fort CoreData의 현재 seed DWORD 미연결");
+                    auto& seedValue=services.randomGlobals->FortCoreSeed();seedValue=(seedValue&0xffff0000U)|word; // 원문의 lowWORD 대입은 상위WORD를 보존한다.
+                }
+                for (std::uint32_t group=0;group<3;++group) { // 남아 있는 세 무결성 블록을 랭크 BYTE·승리 WORD·패배 WORD 순서로 확인한다.
+                    if (std::bit_cast<std::int32_t>(Read(fields,4))>=std::bit_cast<std::int32_t>(Read(fields,8))) break;
+                    const auto data=currentCore();if (data.size()<5) throw std::out_of_range("Fort CoreData 무결성 현재 포인터 폭");
+                    const auto expected=group==0 ? std::uint32_t(data[4]) : std::uint32_t(data[(group-1)*2])|(std::uint32_t(data[(group-1)*2+1])<<8);
+                    for (std::uint32_t bit=0;bit<32;++bit) { // 원문004bea70은 앞8 BYTE·다음8 WORD·나머지16 DWORD의 해당 비트만 대조한다.
+                        const auto encoded=readWord(bit<8 ? 1U : bit<16 ? 2U : 4U);const auto mask=1U<<bit;
+                        if ((encoded&mask)!=(expected&mask)) { auto current=currentCore();if (current.size()<5) throw std::out_of_range("Fort CoreData 불일치 현재 포인터 폭");current[4]=1;gameplayGlobals->PatchDiagnostic()=priestState.regen.patch.sample; } // 로컬 저장 자료의 원문 효과이며 외부 서버 검증을 실행하지 않는다.
+                    }
+                }
+            });
+        }catch (...) { --objectState.loadingDepth;world.SetLoadingDepth(objectState.loadingDepth);throw; }
+        --objectState.loadingDepth;world.SetLoadingDepth(objectState.loadingDepth);
+    }
     // 일반World Graph 뒤 정확한 외곽에서만 호출할 Deck 단계다. 전체 Editor 설치 완료를 표시하지 않는다.
     void ReadExistingFortDeck(std::uint32_t slot) {
         if (slot>=9 || !services.fortTypeConversion) throw std::logic_error("기존Editor 실제Deck 슬롯/변환표 미연결");
@@ -3607,7 +3651,7 @@ void RawCampaignSession::LoadExistingEditorWorld() {
     s.editorWorldStarted=true;s.ConnectBuilding();s.ConnectMotion();
     s.runtime->LoadExistingFort([&s] {
         s.player->Create(std::bit_cast<std::int32_t>(s.playerState.battleOwner));
-        if (!s.globals.editor && !s.globals.missionPost) throw std::logic_error("004beca0의기존Editor자연생략관문변경");
+        s.ReadExistingFortCoreData(s.playerState.templateOwner); // 원문004beca0(0)은 Editor/post의 자연 관문 또는 실제 현재 CoreData 읽기를 수행한다.
         s.RecoverEditorTerritory();
     },std::bit_cast<std::int32_t>(s.editorAlternate));
     s.editorWorldReady=true; //Deck/생산/전체Snapshot/State/EditorPlayers는아직안끝났으므로loaded는false다.

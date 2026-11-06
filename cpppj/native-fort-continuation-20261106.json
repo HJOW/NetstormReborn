@@ -1,0 +1,83 @@
+{
+  "unit": 952,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 952,
+  "version": "11.01",
+  "exeSha256": "c685e4241531793383acdec2edd8d6aa47c8cec100795ea8a1e30316b6188026",
+  "exeBytes": 11254272,
+  "cppTests": {
+    "new": 4,
+    "existing": 19,
+    "total": 23,
+    "failedChecks": 0,
+    "existingNativeFixtureRows": 82
+  },
+  "build": {
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "initialCompileFailed": true,
+    "initialContinuationFailed": 1,
+    "intermediateTestWarnings": 1
+  },
+  "gameExecuted": true,
+  "guiExecuted": true,
+  "multiplayerTestsExecuted": false,
+  "actualHostContinuationConnected": true,
+  "normalFortInstallCompleted": false,
+  "remainingNativeFortBody": "004923e0 non-mission Technology/Priest; natural State3 late redirect unobserved",
+  "gui": {
+    "passed": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "dataFiles": 1395,
+    "actions": 13,
+    "observations": 8,
+    "fullReports": 8,
+    "pngs": 4,
+    "titles": [
+      "MAIN",
+      "MAIN",
+      "EDITOR:TEST01",
+      "TEST:TEST01",
+      "TEST:TEST01",
+      "EDITOR:TEST01",
+      "EDITOR:TEST01",
+      "MAIN"
+    ]
+  },
+  "protectedFiles": 2787,
+  "fixtures": 967,
+  "newFixtures": 0,
+  "files": {
+    "cpppj/src/client/RawCampaignSession.cpp": "53575e96236e0e028d549eb1c49c4e39b3f2bad4a8dacf516f86a4b27559e422",
+    "cpppj/src/client/RawCampaignSession.h": "46f45158046cd3000909ac70f840a5fbe305b54b8088b3e341eec187de7c84c5",
+    "cpppj/src/client/UberEditor.inc": "b5637c46477bd202e6195ccab04d2e112abd91b833b9c5288d66b6b265b27c54",
+    "cpppj/src/client/UberGump.cpp": "b9e41efc21367fadfce518cdb8c4dc1735021ae1c347b0b1b22e6b0edabbf025",
+    "cpppj/src/client/UberGump.h": "a2bf4fe93d987f3431ea5524280f33e72dd17fc59d11833420c91d7093ca4056",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp": "d9692ef5c363ea96d36f5be667684796be13b681bbd7281842822824ed4a33ea",
+    "cpppj/tests/CampaignNativeFortContinuationTests.inc": "2ccb2c3f5ed6a3f337e74c64a6c69212a913b03ecfe6233b2ca50efa3ea3f4c9",
+    "cpppj/README.md": "9bc383d27d8af3ce4d549ca652728e7362c687c4d27996fde017ab2e90c57f7e",
+    "docs/exe/cpp-native-fort-continuation-20261106.md": "35dfee4e56ab7fcc892dce60403356a5ae39c8599b005deb73a897b8e55f9a78"
+  },
+  "raw": {
+    "build-final-tests.log": "abb501f7bf7ef121df6b76a6af761a47ef8d7074c74928ed797b213cea6fc9ad",
+    "build-fixed.log": "71b5d874aaf1b06e4896566e987147ee6929566ea4f48f3e00604a385d093db4",
+    "build-tests.log": "bee612cb5952d7a1966ea4e27d4f4630c745df130e7bd6547580bd677e49beb1",
+    "build.log": "41495ef12b82dcf7bf504f54a80cfc3ec8da347f6eee973932b4ddfc3f9d40c4",
+    "editor-prefix.log": "2f7c699bc515d66db63cbf927a2fcfc1b5eeec11bb463ac3848c8d04760d4d4f",
+    "editor-ui-commit.log": "6e630237d9bacdadc0cf195ed07ae70ce0bc1e578c2506fadc71fe4be735c259",
+    "gui-regression.log": "a77dd10c7dc61797487d2d5a1573798ebb881e52eb7f25dd06b25d512be18ca2",
+    "guide-handoff.log": "40c5be2afe6feb6bd0821583d3de29eb47821f5394d95c3f25685d0a79123d58",
+    "native-fort-final.log": "4f64269860370dad77e5e57b5702f3029ddc5f62f089c419a8b4b164829aa4cd",
+    "native-fort-first.log": "2249b6c73353c8ef4ab7edcc6da8fc823ec8a8bf74d915e45f57943499dd9263",
+    "native-fort-second.log": "8cd9b3484a9ad9a2039634354e51d80acfe038857cf842cb6e709a5b82222294",
+    "native-menu-tests.log": "18951803eb4dfad9ae08519a5daf9481331ae053f952151f047efee7ccdefb99",
+    "window-title-tests.log": "006a2c4ce2398b7ecad50b590108b02518ebfaa42a2dee735d3995220b7c5594"
+  },
+  "next": "953: 3절3번 004923e0 실제 기술/사제 후처리와 나머지 Native/State/LeaveBattle"
+}
