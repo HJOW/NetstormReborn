@@ -3784,6 +3784,10 @@ void RawCampaignSession::PollReconnectSave() {
 bool RawCampaignSession::BattleFinished() const {
     auto& s=*impl_;RawBattleCompletion gate({s.players,s.battleOptions,s.playerRecords->Alliances(),s.core.ownerMode.battle,s.globals.missionPost,s.assetState.Boss(),s.localStateGlobals->ScriptBreak(),s.loginEnd},{[&s] { if (!s.login || !s.login->transport.exists) throw std::logic_error("종료 관문의 실제 서버 연결 조회 미연결");return s.login->transport.exists(9); },[&s](auto owner) { return s.outcome->PriestDead(owner); }});return gate.Finished();
 }
+// 재접속 부모의 동기 State15 진입을 기존 같은 전체144BYTE 확정 경로에 연결한다.
+void RawCampaignSession::TakeServerForState() {
+    auto& s=*impl_;if (!s.loaded || !s.login || (s.login->transport.callbacksActive && s.login->transport.callbacksActive())) throw std::logic_error("실제 Login/외부 Poll 없는 서버 인수 요청");s.login->blocks[3][0]=15;s.login->state->Run();
+}
 // 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.
 void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 연구 수신 등록");o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
 // 현재 메뉴 부모와 signedWORD 종류를 원문 입력 몸체에 전달한다.

@@ -1,0 +1,47 @@
+{
+  "unit": 1010,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "실제 State15 서버 인수/63h 송신·현재 Player flags/서버 SID/타이머/시계와15→16 공통확정 연결",
+  "sourceFunctions1078": [
+    "004b6dd0 case15/16",
+    "004e29c0",
+    "004e2430",
+    "004e2870",
+    "0040adc0",
+    "004af1a0",
+    "004abe00",
+    "004c1f20"
+  ],
+  "nativeBodyAddress": "004b7ad1",
+  "build": {
+    "firstExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1010\\build.log",
+    "exeSize": 11859968,
+    "exeSha256": "347a5ac1c46eb023dc8f2869b9f8f8e579a97b1b7a1dad5fada886d8508d6c09"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1010\\protected-before.json"
+  },
+  "remaining": [
+    "StateReconnect/ForceServerDeath/004b8cb0 실제 caller·복구State7/전역 handle 수명 인계",
+    "일반 프레임486bc0/스펠·전체 파생 writer/decoder·메타·Outpost/checking6",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

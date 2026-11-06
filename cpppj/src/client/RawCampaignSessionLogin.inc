@@ -155,6 +155,7 @@ struct RawCampaignSession::Impl::Login {
         hooks.listenServer=[this] { Need(transport.listen)(std::bit_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799))); }; // 서버 권한과 별개인 simulconnect의 실제 listener만 연다.
         hooks.initializeDensity=[this] { auto& aux=*s.gameplayGlobals->GameAux();options->InitializeDensity(s.random,aux.ArchipelagoMinimum(),aux.ArchipelagoMaximum(),aux.ArchipelagoPercent()); }; // metadata/지형 root와 같은 현재 세 DWORD·게임 난수다.
         hooks.clearChat=s.services.ai.participation.clearChat;hooks.progress=effects.progress;
+        hooks.takeServer=[this] { TakeServer(); }; //State15도 현재 같은 Login/World를 보유하고 원문 공통부에 즉시16을 요청한다.
         hooks.closeConnection=[this](auto id) { Need(transport.close)(id); };hooks.renameConnection=[this](auto pending,auto owner) { Need(transport.assign)(pending,owner); };
         hooks.logConnection=[this](auto line,auto value) { Need(effects.log)("연결 진단 "+std::to_string(line)+":"+std::to_string(value)+"\n"); };
         hooks.serverConnection=[this] { return transport.registry->Cleanup().transceivers[9]; };hooks.attachCommander=effects.attachCommander ? effects.attachCommander : std::function<void(std::uint32_t)>{[this](auto connection) { clockSynchronization->Attach(*transport.dispatch,connection); }}; // 실제 Client는 같은 Commander 표본/기한/연결을 설치하며 기존 명시 외부 장치 대여만 존중한다.
@@ -321,6 +322,23 @@ struct RawCampaignSession::Impl::Login {
         if (parentRunning) starting(); // 부모의 최초 복사/로그를 유지하며 후반만 반환한다. 외부 공통부가7 확정과8을 이어서 실행한다.
         else if (startingTail) state->RunStarting(starting); // 독립 편의 접합의 같은 원문 공통부가7 전체를 확정한 뒤 즉시8을 실행한다.
         else { starting();blocks[3][0]=8;state->Run(); } // 독립 상태8 검사의 이전 부분 범위이며 전체 State7 실행으로 세지 않는다.
+    }
+    // 원문 case15의 같은 월드/Player/등록표 인수이며 정리/새 미션 설치로 대체하지 않는다.
+    void TakeServer() {
+        if (Need(transport.callbacksActive)()) throw std::logic_error("수신 callback 복귀 전 State15 실행 거부"); // 실제 World/전송 역할 교체는 외부 일반 입력/Poll 위치에서만 실행한다.
+        Need(s.services.player.log)(0x1d,"Server takeover\n");saved=true;transport.registry->CloseAll();s.core.processState.Server()=true;s.assetState.Boss()=true;Need(effects.clearStatus)(1,0,0);
+        Need(transport.serve)(std::bit_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799)));
+        std::array<std::uint8_t,20> address{};constexpr std::array<std::uint8_t,9> local{'z','l','o','c','a','l',',','*',0}; // 실제 내부 전송 선택이며 주소 해석은 같은 backend가 수행한다.
+        std::copy(local.begin(),local.end(),address.begin());Need(transport.connect)(address,std::bit_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799))); //Native의Serve 뒤 현재 포트를 다시 읽고 실제 client9를 등록한다.
+        std::array<std::uint8_t,8> packet{1,0x63,8,0};const auto subscriber=s.globals.mySubscriber; //40adc0의 실제63h/1/8 헤더 뒤 현재subscriber DWORD다.
+        for (std::size_t byte=0;byte<4;++byte) packet[4+byte]=static_cast<std::uint8_t>(subscriber>>(8*byte)); // 현재 지역8BYTE를 동기 송신 큐에 복사한다.
+        Send(9,packet);
+        // 각 실제1..8 기록에서 미로그인 참여자는 단절100을 켜고 모든 flags는 원문702만 보존한다.
+        for (std::uint32_t owner=1;owner<9;++owner) {
+            const auto at=static_cast<std::size_t>(owner)*0xb4;if (Get(s.players,at+0x2c)) { const auto flags=Get(s.players,at+0x50);if ((flags&2U) && !(flags&1U)) Put(s.players,at+0x50,flags|0x102U); }Put(s.players,at+0x50,Get(s.players,at+0x50)&0x702U);
+        }
+        if (!s.core.processState.Server()) Need(s.services.ai.assertion)("server");s.core.pool.RebuildServer();timer->Run(true);
+        const auto savedTicks=ticks;ResetClockSynchronization(s.localStateGlobals->ClockSynchronization());++s.revision;state->Request(16);ticks=savedTicks; // 원문의 시계3DWORD reset/미니맵 증가/즉시16/같은GameTicks 복구 순서다.
     }
     //004a7510은 현재 client의 유료 객체를 비용 환불한 뒤 현재 TYPE/count/삭제 가상으로 다시 분배한다.
     void CleanupReconnectClients() {
