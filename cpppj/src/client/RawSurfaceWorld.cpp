@@ -101,6 +101,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::unique_ptr<o::RawSurfaceLifecycle> lifecycle;/* events: 발생한 이벤트 또는 이벤트 처리기. */ std::unique_ptr<o::RawBridgeEvents> events;
     // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트.
     std::unique_ptr<o::SquidProcessHost> legacyHost; // raw Kernel*만 빌린 기존 독립 fixture의 좁은 수명이다.
+    std::shared_ptr<const std::function<void(o::Sid)>> legacyAllocationReclaim; // 같은 현재 World의 회수 경계를 소유하며 Storage에는 weak 참조만 남긴다.
     o::SquidProcessHost* host{}; // 실제 경로는 Storage 장기 Host를 직접 가리킨다.
     std::unique_ptr<RawProcessHostStorage::Use> processUse; // 현재 World의 실제 가상 처리기 대여다.
     std::optional<RawProcessHostStorage::Returned> returnedProcesses; // 단일 Native Clear 뒤 실제 소비한 대여의 반납 증빙이다.
@@ -225,7 +226,10 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             binding->factory=factory.get(); // 같은 World의 공장만 현재 대여에 보관하며 장기 Storage Host에 직접 남기지 않는다.
             binding->postPopDepth=[this] { return bookkeeping.depth; };binding->assertion=[this](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 공통 깊이는 짧은 World 대여, 진단은 같은 장기 Client 장치를 사용한다.
             processUse=storage->Processes().Bind(std::move(binding));host=&storage->Processes().Host();
-        } else { legacyHost=std::make_unique<o::SquidProcessHost>(pool,types,kernel,*baseDestroy,processState,o::MakeBridgeRegularHandler(pool,*events),formDispatch->Hooks());legacyHost->BindFormFactory(*factory);host=legacyHost.get(); } // 직접 Host와 공장은 같은 World 수명이며 대여 밖으로 참조를 남기지 않는다.
+        } else {
+            legacyHost=std::make_unique<o::SquidProcessHost>(pool,types,kernel,*baseDestroy,processState,o::MakeBridgeRegularHandler(pool,*events),formDispatch->Hooks());legacyHost->BindFormFactory(*factory);host=legacyHost.get();
+            legacyAllocationReclaim=storage->Processes().BindLegacyAllocationReclaim([this](o::Sid sid) { static_cast<void>(Destroy(sid,0)); }); // 실제 현재 Form/자산 분배로만 회수하며 raw Kernel을 Storage의 다른 Kernel로 대체하지 않는다.
+        } // 직접 Host와 공장은 같은 World 수명이며 대여 밖으로 참조를 남기지 않는다.
         formDispatch->Bind(*host);
         dependencies=std::make_unique<o::DependFormHost>(pool,*baseDestroy,
             [this](o::Sid watcher,o::Sid watched,o::Sid form) {
@@ -279,13 +283,18 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     }
     // 가상 삭제가 거부되면 changed를 새로 켜지 않는다.
     bool Destroy(o::Sid sid,std::uint32_t flags) { const bool result=formDispatch->Destroy(sid,flags);if (result) changed=true;return result; }
+    // Native Clear와 구별되는 최종 소유권 반납이며 외부 Kernel의 다른 Host/Client 객체는 보존한다.
+    void DrainCurrentProcessesForShutdown() {
+        if (processUse) processUse->DrainOwnedForShutdown();
+        else if (legacyHost) kernel.DrainOwnedForShutdown([this](const o::BaseProcess& process) { return legacyHost->Owns(process); }); // 슬롯0/retired와 소멸 중 재등록도 같은 실제 Host의 소유권만 반납한다.
+    }
 };
 // 공개 객체는 내부 참조/콜백이 이동하지 않게 단일 구현 객체를 소유한다.
 RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
     std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> storage,bool adoptPrepared,bool* sharedSavedGame,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
     :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel,std::move(storage),adoptPrepared,sharedSavedGame,std::move(authority),std::move(gameAux))) {}
 // 프로세스가 빌린 raw 데이터보다 먼저 반납되며 외부 Client Kernel 자체는 파괴하지 않는다.
-RawSurfaceWorld::~RawSurfaceWorld() { if (impl_->processUse) impl_->processUse->DrainOwnedForShutdown(); } // 현재 대여의 생성 실패/일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 Storage다.
+RawSurfaceWorld::~RawSurfaceWorld() { impl_->DrainCurrentProcessesForShutdown(); } // 현재 대여의 생성 실패/일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 Storage다.
 // 이 뷰는 내부 모듈의 현재 참조만 돌려주며 새 배열/풀을 만들지 않는다.
 RawWorldCore RawSurfaceWorld::Core() {
     auto& s=*impl_;return {s.pool,s.hash,s.spots,s.types,s.frames,s.shapes,s.bookkeeping,s.ownerMode,
@@ -372,8 +381,7 @@ void RawSurfaceWorld::ClearProcesses() { impl_->kernel.Clear(); }
 void RawSurfaceWorld::DrainProcesses() { do { impl_->kernel.Clear(); } while (impl_->kernel.Size()); }
 // 완성된 새 Session의 후반 실패도 이전 Native 잔류를 제거하지 않고 자기 현재 처리기만 반납한다.
 void RawSurfaceWorld::DrainCurrentProcessBindingsForShutdown() {
-    if (impl_->processUse) impl_->processUse->DrainOwnedForShutdown();
-    else if (!impl_->returnedProcesses) DrainProcesses(); // 장기 대여가 없는 종전 raw 외부 Kernel 경로의 최종 소멸 계약이다.
+    impl_->DrainCurrentProcessesForShutdown(); // 명시 종료와 직접 World 소멸이 같은 현재 소유권 필터를 사용한다.
 }
 // 명시 World 대여에서 실제 Native 단일 Clear가 끝난 경우만 증빙을 전달한다.
 RawProcessHostStorage::ClearPass RawSurfaceWorld::ClearProcessesForState() {

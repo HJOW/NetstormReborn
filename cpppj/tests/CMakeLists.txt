@@ -3744,3 +3744,7 @@ set_source_files_properties(SidAllocationRecoveryTests.cpp PROPERTIES COMPILE_DE
 # SID 공통 부모 변경은 기존 양판본 정상 입력과 FIFO/예측 경계도 같은 집중 대상에서 확인한다.
 target_sources(netstorm_pop_context_tests PRIVATE SidTests.cpp)
 set_source_files_properties(SidTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SID_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sid-x86.tsv\"")
+
+# raw 외부 Kernel의 현재 회수 대여와 자기 소유 프로세스 반납만 창 없이 대조한다(978).
+target_sources(netstorm_tests PRIVATE LegacyWorldLifetimeTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE LegacyWorldLifetimeTests.cpp)

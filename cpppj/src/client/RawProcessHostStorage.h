@@ -51,12 +51,14 @@ public:
     o::SquidProcessHost& Host(); // 첫 사용에 안정된 Host를 만들고 같은 주소를 유지한다.
     o::SquidProcessState& State(); // 전체 World/Regular가 같은 실제 스칼라 저장소를 빌린다.
     void ReclaimForAllocation(o::Sid sid); //현재가상삭제대여를호출끝까지pin하고SID소진의flags0삭제를실행한다.
+    std::shared_ptr<const std::function<void(o::Sid)>> BindLegacyAllocationReclaim(std::function<void(o::Sid)> reclaim); // raw 외부 Kernel의 현재 World만 회수 callable을 소유하며 마지막 대여 반납 뒤에는 조회를 거부한다.
     std::unique_ptr<Use> Bind(std::shared_ptr<o::ProcessHostRuntimeBindings> runtime); // 중복/다른 Pool은 현재 바인딩을 바꾸기 전에 거부한다.
 private:
     o::SidPool& pool_;std::span<const o::RiftTypeRecord> types_; // 실제 물리 배열은 외부 Storage가 소유한다.
     std::shared_ptr<o::RawAuthorityState> authority_; // 현재 두 권한 bool과 같은 긴 수명이다.
     o::SquidProcessState state_; // now fallback/typeRotation/pollType와 실제 외부 참조를 한 번 소유한다.
     std::weak_ptr<o::ProcessHostRuntimeBindings> current_; // 현재 짧은 대여만 조회하며 World를 숨겨서 붙잡지 않는다.
+    std::weak_ptr<const std::function<void(o::Sid)>> legacyAllocationReclaim_; // 외부 raw Kernel의 World를 장기 소유하지 않고 현재 가상 회수 경계만 조회한다.
     std::unique_ptr<o::SquidProcessHost> host_; // Kernel의 최종 소멸보다 오래 살아 있어야 한다.
     std::shared_ptr<o::FrameTime> clock_;std::shared_ptr<std::uint32_t> pollType_; // 스칼라 포인터의 실제 소유자를 pin한다.
     std::shared_ptr<o::RawGameAuxState> gameAux_; // 일반/공유/상한 참조가 Host의 최종 반납까지 유효하도록 소유자를 유지한다.

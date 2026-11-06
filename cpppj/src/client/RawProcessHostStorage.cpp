@@ -31,7 +31,7 @@ RawProcessHostStorage::~RawProcessHostStorage() {
 void RawProcessHostStorage::BindDevices(std::shared_ptr<o::Kernel> kernel,std::shared_ptr<o::FrameTime> clock,std::shared_ptr<std::uint32_t> pollType) {
     if (!pollType) pollType=pollType_; // 명시 미지정은 기존 같은 장기 TYPE owner를 보존한다.
     if (external_ && kernel_==kernel && clock_==clock && pollType_==pollType) return; // 실제 같은 주소의 재확인은 대여/값을 변경하지 않는다.
-    if (!kernel || !clock || !current_.expired() || (kernel_ && (kernel_!=kernel || clock_!=clock || pollType_!=pollType))) throw std::invalid_argument("ProcessHost의 같은 장기 Kernel/시각 장치 계약");
+    if (!kernel || !clock || !current_.expired() || !legacyAllocationReclaim_.expired() || (kernel_ && (kernel_!=kernel || clock_!=clock || pollType_!=pollType))) throw std::invalid_argument("ProcessHost의 같은 장기 Kernel/시각 장치 계약");
     kernel_=std::move(kernel);clock_=std::move(clock);pollType_=std::move(pollType);external_=true;state_.sharedNow=&clock_->game;state_.sharedPollType=pollType_ ? pollType_.get() : nullptr;
 }
 bool RawProcessHostStorage::UsesKernel(const o::Kernel* kernel) const { return kernel_ && kernel_.get()==kernel; } // 현재 실제 Kernel 주소만 비교한다.
@@ -43,11 +43,17 @@ o::SquidProcessHost& RawProcessHostStorage::Host() {
 o::SquidProcessState& RawProcessHostStorage::State() { return state_; } // 같은 scalar와 현재 외부 참조다.
 // Pool이긴수명을유지해도종료된World주소는사용하지않고현재모듈반납을호출중금지한다.
 void RawProcessHostStorage::ReclaimForAllocation(o::Sid sid) {
+    if (const auto legacy=legacyAllocationReclaim_.lock()) { (*legacy)(sid);return; } // 현재 legacy World의 callable을 정상/예외 복귀까지 pin하고 다음 대여에는 보관하지 않는다.
     const auto runtime=current_.lock();if (!runtime || !runtime->asset.emit) throw std::logic_error("SID 소진 복구의 현재 World 가상 삭제 미연결");
     ClearCall call(runtime);const auto emit=runtime->asset.emit;emit({o::SquidDestroyEffect::DestroyDependent,sid,{},0});
 }
+// raw Kernel의 소유권은 바꾸지 않고 같은 현재 World의 회수 callable에만 단일 대여를 발급한다.
+std::shared_ptr<const std::function<void(o::Sid)>> RawProcessHostStorage::BindLegacyAllocationReclaim(std::function<void(o::Sid)> reclaim) {
+    if (!reclaim || !current_.expired() || !legacyAllocationReclaim_.expired()) throw std::invalid_argument("SID legacy 회수의 단일 현재 World 대여 계약");
+    auto use=std::make_shared<const std::function<void(o::Sid)>>(std::move(reclaim));legacyAllocationReclaim_=use;return use;
+}
 std::unique_ptr<RawProcessHostStorage::Use> RawProcessHostStorage::Bind(std::shared_ptr<o::ProcessHostRuntimeBindings> runtime) {
-    if (!runtime || !runtime->destroy || &runtime->destroy->Pool()!=&pool_ || !current_.expired()) throw std::invalid_argument("ProcessHost의 실제 현재 World 단일 대여 계약");
+    if (!runtime || !runtime->destroy || &runtime->destroy->Pool()!=&pool_ || !current_.expired() || !legacyAllocationReclaim_.expired()) throw std::invalid_argument("ProcessHost의 실제 현재 World 단일 대여 계약");
     if (runtime->factory && &runtime->factory->Pool()!=&pool_) throw std::invalid_argument("ProcessHost 현재 공장의 다른 Pool 대여"); // 미선택 공장 부재는 생성/수신 위치에서만 보고한다.
     static_cast<void>(Host());return std::unique_ptr<Use>(new Use(*this,std::move(runtime)));
 } // 모든 거부는 기존 current를 변경하기 전에 수행한다.

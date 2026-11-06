@@ -1,0 +1,77 @@
+{
+  "unit": 978,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 978,
+  "version": "11.01",
+  "scope": "raw 외부 Kernel의 현재 가상 회수 대여와 Host 소유 필터 최종 반납",
+  "exeSha256": "7323cd376f04143fdcbade4128045392fd41778ac6ee79c5879445bdb40d5fa8",
+  "exeBytes": 11392000,
+  "build": {
+    "releaseCommands": 2,
+    "exitCodes": [
+      1,
+      0
+    ],
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "firstFailure": "새 검사에서 보호된 SquidProcess.Pid 직접 접근 C2248. 검사 파생 클래스의 자기 PID getter로 교정; 제품 변경 없음."
+  },
+  "tests": {
+    "uniqueCases": 26,
+    "newCases": 4,
+    "filters": [
+      {
+        "filter": "LegacyWorldLifetime_",
+        "cases": 4,
+        "failedChecks": 0
+      },
+      {
+        "filter": "ProcessHostStorage_",
+        "cases": 11,
+        "failedChecks": 0
+      },
+      {
+        "filter": "SidAllocationRecovery_",
+        "cases": 4,
+        "failedChecks": 0
+      },
+      {
+        "filter": "SidCdAllocationRecovery_",
+        "cases": 3,
+        "failedChecks": 0
+      },
+      {
+        "filter": "ProcessCreationCurrent_",
+        "cases": 4,
+        "failedChecks": 0
+      }
+    ]
+  },
+  "protected": {
+    "before": 2800,
+    "unchanged": 2800,
+    "after": 2800,
+    "fixtures": 980,
+    "new": []
+  },
+  "solutionProjects": 83,
+  "checkingRemaining": 8,
+  "lastGuiUnit": 968,
+  "skipped": [
+    "새GUI/진단UI",
+    "MP/패킷/통신",
+    "포획/희생/특정적공격/승리",
+    "공중3종전용",
+    "전체CTest/34미션/ZIP반복"
+  ],
+  "remaining": [
+    "979 원문 new_handler 등록·종료 부모",
+    "4번 유한 범위 마감·7번 환경/사용자 확인 분류",
+    "8번 MP/한국어/시나리오UI"
+  ]
+}
