@@ -1,0 +1,51 @@
+{
+  "unit": 1007,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "startup 재접속 질문 No/DelStateFile의 실제 일반 입력→사용자 저장 파일 삭제 연결",
+  "sourceFunctions1078": [
+    "004d62b0",
+    "004b5880",
+    "004b5470"
+  ],
+  "referenceFunctions1072": [
+    "00432a00"
+  ],
+  "command": {
+    "name": "DelStateFile",
+    "table": "005430e8",
+    "global": "005429a4",
+    "value": "020000ac"
+  },
+  "build": {
+    "firstExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1007\\build.log",
+    "exeSize": 11848704,
+    "exeSha256": "4fcc9d1cfed9a89669b60686af1e5cc25d3eaec7fa96f3279e273f3069bb5914"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "liveFileDeletes": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1007\\protected-before.json"
+  },
+  "remaining": [
+    "StateReconnect/ForceServerDeath 입력·004b8cb0 서버 이전/State15/복구State7 인계",
+    "일반 프레임486bc0/스펠·전체 파생 writer/decoder·메타·Outpost/checking7",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

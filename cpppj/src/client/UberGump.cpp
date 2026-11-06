@@ -200,7 +200,7 @@ std::uint32_t DialogScriptCode(std::string_view name) {
 }
 // 실제 HTML 메뉴가 선택하는 현재 복원 명령도 같은 원본 메뉴 큐를 사용할 수 있다.
 bool IsTellMenuCommand(std::uint32_t command) {
-    if (command==kAskEditFortCommand || command==kReadFortCommand || command==kScrollMapListCommand || command==0x020000c4U || command==0x020000f5U) return true; // HTML 맵 행/스크롤/로컬 Connect/강제 시작도 같은 일반 입력 큐를 사용한다.
+    if (command==kAskEditFortCommand || command==kReadFortCommand || command==kScrollMapListCommand || command==0x020000c4U || command==0x020000f5U || command==0x020000acU) return true; // HTML 맵 행/스크롤/로컬 Connect/강제 시작/저장상태 삭제도 같은 일반 입력 큐를 사용한다.
     static constexpr std::array<std::string_view,12> names{"Tell","DoNothing","StartDemo","Config","Warning","MissionBegin","MissionRestart","MissionAbort","LeaveBattle","MissionFork","MissionEnd","SetOwner"}; // 같은 실제 이름 조회와 숫자 코드를 공유한다.
     for (const auto name:names) if (command==DialogScriptCode(name)) return true; // 별도 호스트 Action 번호로 바꾸지 않는다.
     return false;
@@ -1362,6 +1362,7 @@ void UberGump::Event(InputEvent event) {
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
     if (MultiplayerOptionsEvent(event)) return; // 일반 옵션의 이름/연결 예약도 같은 Guide/Gump 뒤 일반 입력 큐에서 소비한다.
     if (transitionCode==0x020000f5U) { if (!(event.code&InputCode::kRelease)) client_.LocalStateGlobals()->Begin()=1;return; } // ServerForceBattleStart는 원문처럼 Begin만1을 쓰며 다음 타이머가 실제6e를 송신한다.
+    if (transitionCode==0x020000acU) { if (!(event.code&InputCode::kRelease)) static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile()));return; } // DelStateFile은4b5880처럼 현재 경로를 작성해 unlink하고 반환을 무시한다. 새 상태 요청/월드 반납을 추가하지 않는다.
     if (transitionCode==0x02000122U) { if (!(event.code&InputCode::kRelease)) { if (!world_) throw std::logic_error("강제 동맹 일반 입력의 현재 World 없음");world_->Session().RequestForcedAlliance(std::bit_cast<std::uint32_t>(event.y)); }return; } // 원문 팀 시작/동맹 요청도 같은 일반 입력 위치에서78h만 송신한다.
     if (DispatchTellTip(event,client_.LocalStateGlobals()->TipNumber(),{
         [](std::int32_t value) { char text[32]{};std::snprintf(text,sizeof(text),"%d",value);return std::string(text); }, //원문 호출자의 지역 버퍼와 signed 정수 서식만 사용한다.
