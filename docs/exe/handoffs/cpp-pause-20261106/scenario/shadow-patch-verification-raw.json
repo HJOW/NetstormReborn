@@ -1,0 +1,74 @@
+{
+  "shadow": "C:\\Users\\BUZZ\\AppData\\Local\\Temp\\netstorm-scenario-raw-shadow-cgjz_kcj",
+  "git_configuration": "outside repository; core.autocrlf=false; core.eol=lf; core.attributesfile=NUL",
+  "apply_exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "pending_files": 24,
+  "shadow_files": 24,
+  "differences": [
+    {
+      "path": "cpppj/src/client/EditorMapCatalogFiles.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "e99c28b5102253144ad75f194ab5912231c385cc27c868c02500a6b6b4625db9",
+      "pending_sha256": "142785b8c2cdea3912576b1d1337078e9395df9eac6057351e16baac3d423abb",
+      "equal_after_lf": true,
+      "shadow_crlf": 142,
+      "pending_crlf": 144
+    },
+    {
+      "path": "cpppj/src/client/EditorMapCatalogFiles.h",
+      "issue": "bytes",
+      "shadow_sha256": "f7b98d97d5986853b9b7ccbcf75f2a00654671bbe3489c02c5351df0ccc75583",
+      "pending_sha256": "e10fd49f5d65f99b6b073929e99e9cafe2754cca738537c58c7b7e5583dde8a0",
+      "equal_after_lf": true,
+      "shadow_crlf": 33,
+      "pending_crlf": 34
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignMissionStartBindings.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "517dab26328ffe07266796899ab9030edf38f6473f7016fe07c3c9d036da4bf6",
+      "pending_sha256": "2a59f594a1833aa8519b0be0a36ab1829cce89ee6c7a9ca84046b2d79d81ce7b",
+      "equal_after_lf": true,
+      "shadow_crlf": 62,
+      "pending_crlf": 64
+    },
+    {
+      "path": "cpppj/src/client/RawMenuSaveFort.inc",
+      "issue": "bytes",
+      "shadow_sha256": "23bb5d033ce3fd7c4168aa192144f7e71e1aaf80666291b78ce7ab02e8fe60e1",
+      "pending_sha256": "bbf7e5356bd84634cfb26cc3108fc8056e015cedddf3433d30ccd6a6bbfb821a",
+      "equal_after_lf": true,
+      "shadow_crlf": 47,
+      "pending_crlf": 52
+    },
+    {
+      "path": "cpppj/src/client/SaveFortNameDialog.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "cae8d1ef23ebd57ec791236f51f88c0997e15acbbb1984d085b5b5a6d9772b19",
+      "pending_sha256": "3990bd15626c9b8ce5f2116f0f19b7a8c87d8c9091f2b3ca965ead3848328d55",
+      "equal_after_lf": true,
+      "shadow_crlf": 114,
+      "pending_crlf": 125
+    },
+    {
+      "path": "cpppj/src/client/SaveFortNameDialog.h",
+      "issue": "bytes",
+      "shadow_sha256": "9123cf9c9e38dea09fc9c684630439b3908acd4b0dbde944f98631456a87ec3d",
+      "pending_sha256": "edf67bfe70046b88286614bb0b3a4a3d460d20b532eb2f8e13f59aad870edf72",
+      "equal_after_lf": true,
+      "shadow_crlf": 74,
+      "pending_crlf": 79
+    },
+    {
+      "path": "cpppj/src/client/UberEditor.inc",
+      "issue": "bytes",
+      "shadow_sha256": "48d3e6b4b64409c9b62f7bbc61a3346551f107746baa66bbab9d7832adc172d7",
+      "pending_sha256": "20757a517cddc60600a342147dbf0ba209d955e5a23e6b71457bb043821c5ebf",
+      "equal_after_lf": true,
+      "shadow_crlf": 182,
+      "pending_crlf": 185
+    }
+  ]
+}

@@ -1,0 +1,789 @@
+--- a/cpppj/src/client/EditorMapCatalogFiles.cpp
++++ b/cpppj/src/client/EditorMapCatalogFiles.cpp
+@@ -142,4 +142,6 @@
+     const auto key=impl_->Key(configuredPath);if (key.find_first_of("*?")==std::string::npos) { impl_->Import(key);if (impl_->entries.contains(o::AsciiLower(key))) return impl_->files->TryRead(key); }if (auto bytes=impl_->files->TryRead(key)) return bytes;
+     return impl_->source.archiveOnly ? impl_->source.archiveOnly(key) : std::nullopt; //이관되지 않은 archive-only 내용은 loose 목록/장부에 추가하지 않는다.
+ }
++// 없는 원본과 사용자가 지운 완료 항목을 구별한다. source/TAFF를 다시 가져오거나 장부를 바꾸지 않는다.
++bool EditorCatalogWorkspace::Deleted(std::string_view configuredPath) { const auto key=impl_->Key(configuredPath);impl_->Load();const auto found=impl_->entries.find(o::AsciiLower(key));return found!=impl_->entries.end() && found->second==kCompleted && !std::filesystem::exists(impl_->files->ResolvePath(key)); }
+ }
+--- a/cpppj/src/client/EditorMapCatalogFiles.h
++++ b/cpppj/src/client/EditorMapCatalogFiles.h
+@@ -26,6 +26,7 @@
+     std::filesystem::path Prepare(std::string_view configuredPath); //직접 Editor 진입도 같은 장부를 지키며 archive 실제 설치는 별도 명시 이관한다.
+     std::vector<std::string> Enumerate(std::string_view configuredPattern); //이관 뒤 실제 work Win32 결과만 전달하며 논리 중복/디렉터리/명시 부재를 제거하지 않는다.
+     std::optional<std::vector<std::uint8_t>> Read(std::string_view configuredPath); //분류/메타마다 현재 작업 파일을 읽고 완료 missing에서는 모든 source fallback을 막는다.
++    bool Deleted(std::string_view configuredPath); // 시나리오 자동 기본 생성도 완료 이관 후 삭제 표식을 우회하지 않게 한다.
+ private:
+     struct Impl; //source identity/검증된 metadata/잠금/버전 장부의 고정 owner다.
+     std::unique_ptr<Impl> impl_; //World나 listener보다 오래 유지하는 실제 I/O 정책 수명이다.
+--- /dev/null
++++ b/cpppj/src/client/EditorScenarioController.cpp
+@@ -0,0 +1,66 @@
++// 원문 영어 키를 실제 저장 키로 쓰며 번역된 UI 문구를 설정 키로 사용하지 않는다.
++#include "client/EditorScenarioController.h"
++#include "o/OriginalText.h"
++#include <algorithm>
++#include <stdexcept>
++#include <utility>
++
++namespace netstorm::client { // 파일을 직접 여는 UI 코드와 순수 검증 모델을 분리한다.
++namespace { // 페이지/필드 ID와 표시용 값만 정의한다.
++constexpr std::array<std::string_view,12> kGeneral{{"title","missionType","missionNumber","tutorialNumber","myStartMoney","myTech","techAllowed","moreGeysers","denySalvage","denyAscend","allowAnyCapture","randGeysers"}}; // 원문 일반 키의 고정 ID0..11이다.
++constexpr std::array<std::string_view,15> kAi{{"Name","StartMoney","Tech","Off","Color","AllyList","Enemy","NoTemple","Ability","BridgeDrawRate","StuffRefreshRate","TimeBetweenMoves","GeyserAttachments","MaxInHand","Collectors"}}; // AI owner*32+index의 순서를 고정한다.
++constexpr std::uint32_t kBriefing=0x1000U; // 첫 A. 본문의 필드 ID다.
++// 현재 필드 ID를 원문 저장 키로 해석한다.
++std::string Key(std::uint32_t field) { if (field<kGeneral.size()) return std::string(kGeneral[field]);if (field>=0x200U && field<0x200U+kAi.size()) return "ai"+std::string(kAi[field-0x200U]);const auto owner=field/32,index=field%32;if (owner>=1 && owner<=8 && index<kAi.size()) return "ai"+std::to_string(owner)+std::string(kAi[index]);if (field==kBriefing) return "[A.]";throw std::out_of_range("시나리오 UI 필드 ID 범위"); }
++// 원문/실효 값을 구별하며 긴/표시 불가 문자열 때문에 패널 전체를 잃지 않는다.
++std::string Preview(std::string_view text) {
++    try { const auto bytes=o::EncodeDisplayText(text);std::size_t end{},count{};while (end<bytes.size() && count<24) { end+=o::DecodeExtendedSequence(bytes,end) ? 4U : 1U;++count; }return o::DecodeDisplayText(std::span<const std::uint8_t>(bytes).first(end))+(end<bytes.size() ? "..." : ""); } // 표시 인코딩 문자 경계에서만 자른다.
++    catch (const std::invalid_argument&) { return "(표시 미지원 원문 보존)"; }
++}
++// 서식 제어가 있는 사용자 제목은 메뉴 마크업으로 재해석하지 않고 평문 값으로 안내한다.
++std::string Safe(std::string value) { std::replace(value.begin(),value.end(),'~',' ');std::replace(value.begin(),value.end(),'\r',' ');std::replace(value.begin(),value.end(),'\n',' ');return value; }
++}
++EditorScenarioController::EditorScenarioController(std::shared_ptr<EditorScenarioFiles> files,std::string map,EditorScenarioContext context):files_(std::move(files)),opened_(files_ ? files_->Open(map) : throw std::invalid_argument("시나리오 UI 파일 owner 누락")),context_(std::move(context)),model_(opened_.document,context_) {} // 열기만으로 저장/AI생성을 하지 않는다.
++// 각 페이지는40항목 메뉴 상한 안의 유한 목록이다.
++std::vector<EditorScenarioRow> EditorScenarioController::Page(std::uint32_t page,const std::function<bool(std::uint32_t)>& hasPriest) const {
++    std::vector<EditorScenarioRow> rows;
++    if (!page) {
++        rows.push_back({"Player start / 시작 SP·기술",kEditorScenarioPage,1});rows.push_back({"General / 제목·규칙",kEditorScenarioPage,2});rows.push_back({"Briefing / 브리핑",kEditorScenarioPage,3});
++        rows.push_back({"File / 저장 대상: "+Safe(Preview(opened_.path)),0,0,false}); // 실제 현재 언어 override/English 선택을 읽기 전용으로 안내한다.
++        rows.push_back({"AI common / 공통 상속값",kEditorScenarioPage,10});
++        for (std::uint32_t owner=1;owner<=8;++owner) { const bool local=owner==context_.localOwner;rows.push_back({local ? "Player "+std::to_string(owner)+" / 로컬 시작값은 Player에서 편집" : "AI "+std::to_string(owner)+(hasPriest && hasPriest(owner) ? " / 사제 배치 있음" : " / 사제 배치 필요"),kEditorScenarioPage,10+owner,!local}); } // 일반 TestBattle은 로컬 owner의 AI를 만들지 않는다.
++        rows.push_back({Dirty() ? "Save changes / 변경 저장" : "Save / 저장",kEditorScenarioSave});rows.push_back({"Discard / 취소",kEditorScenarioDiscard});return rows;
++    }
++    if (page==3) { rows.push_back({"Edit first [A.] briefing / 첫 브리핑 편집",kEditorScenarioEdit,kBriefing});rows.push_back({"다른 이벤트/승리 대본은 보존합니다",0,0,false}); }
++    else if (page==1 || page==2) {
++        for (std::uint32_t field=0;field<kGeneral.size();++field) { if ((page==1)!=(field==4 || field==5 || field==6)) continue;const auto view=model_.Field(kGeneral[field]);rows.push_back({Key(field)+" = "+Safe(Preview(view.effective))+(view.dynamic ? " [식]" : ""),kEditorScenarioEdit,field}); } // 실효값은 보기이고 수정 초기값은 raw를 쓴다.
++    } else if (page==10) {
++        for (std::uint32_t index=0;index<kAi.size();++index) { const auto id=0x200U+index;const auto field=model_.Field(Key(id));rows.push_back({Key(id)+" = "+Safe(Preview(field.effective)),kEditorScenarioEdit,id}); } // 공통 AllyList/Ability를 명시 편집해야 가산된 공통 관계를 제거할 수 있다.
++        rows.push_back({"공통값은 모든 AI에 먼저 적용됩니다",0,0,false});
++    } else if (page>=11 && page<=18) {
++        const auto owner=page-10;const auto view=model_.Ai(owner);
++        for (std::uint32_t index=0;index<kAi.size();++index) { const auto& field=view.fields.at(std::string(kAi[index]));const auto id=owner*32+index;rows.push_back({std::string(kAi[index])+" = "+Safe(Preview(field.effective))+(!field.raw || field.raw->empty() ? " [상속]" : ""),kEditorScenarioEdit,id}); } // 원문 목록/가산 결과를 자동 대칭화하지 않는다.
++        rows.push_back({"AllyList: AI가 볼 동맹 owner; 1은 로컬",0,0,false});rows.push_back({"능력/적/테크는 기존 영문 키 목록입니다",0,0,false});
++    } else throw std::out_of_range("시나리오 페이지 범위");
++    rows.push_back({"Back / 이전",kEditorScenarioPage,0});return rows;
++}
++// 원시 값이 없으면 빈 입력으로 시작한다. 동적 식을 편집하면 명시 literal로 바뀜을 제목에 알린다.
++EditorScenarioEditRequest EditorScenarioController::Edit(std::uint32_t field) const {
++    EditorScenarioEditRequest result;result.key=Key(field);result.title=result.key+" / 빈 AI 값은 상속";
++    if (field==kBriefing) { result.initial=model_.Document().Section("A.").value_or("");result.multiline=true;result.maximum=1000;result.title="Briefing [A.] / HTML·$Button 대본"; } // 첫 UI는999표시BYTE까지 편집하여 원문1024BYTE Draw 한 줄을 넘지 않는다.
++    else { result.initial=model_.Document().Raw(result.key).value_or("");if (result.key.ends_with("Name")) result.maximum=30;else if (result.key=="title") result.maximum=240; }
++    if (o::EncodeDisplayText(result.initial).size()>=static_cast<std::size_t>(result.maximum)) throw std::length_error("기존 시나리오 값이 이 입력창의 BYTE 상한을 넘습니다. 원문은 보존됩니다"); // 기존 긴 대본을 자동 절단하지 않는다.
++    return result;
++}
++// 입력은 UTF-8로 해독된 사용자 문자다. 표시토큰/Config escape는 저장 경계가 각각 처리한다.
++void EditorScenarioController::Apply(std::uint32_t field,std::string_view value) {
++    const auto request=Edit(field);if (value==request.initial) return;const auto bytes=o::EncodeDisplayText(value);if (bytes.size()>=static_cast<std::size_t>(request.maximum)) throw std::length_error("시나리오 입력 BYTE 상한 초과"); // 기존 동적 식/escape를 그대로 OK한 경우 새 literal로 바꾸지 않는다.
++    std::size_t column{};for (const auto byte:bytes) { if (byte=='\n') column=0;else if (++column>1000) throw std::length_error("브리핑 한 줄은1000BYTE 이하여야 합니다"); } // 실제 TextEntry Draw의1024BYTE 한 줄 저장소를 넘기지 않는다.
++    if (field==kBriefing) model_.SetBriefing(value);else model_.Set(request.key,value);
++}
++void EditorScenarioController::Inherit(std::uint32_t field) { const auto key=Key(field);if (!key.starts_with("ai")) throw std::invalid_argument("AI override만 상속할 수 있습니다");model_.Set(key,""); } // 가산 공통값을 지우는 의미가 아니다.
++void EditorScenarioController::Save(bool explicitSave) { files_->Save(opened_,model_.Document(),explicitSave);model_=EditorScenarioModel(opened_.document,context_); } // 파일 정상 완료 뒤에만 보류 문서 기준을 재설정한다.
++bool EditorScenarioController::Dirty() const { return !opened_.baseline || model_.Document().Changed(); } // 신규 문서도 저장할 변경으로 표시한다.
++const std::string& EditorScenarioController::Map() const { return opened_.map; } // 실제 Fort identity 비교용이다.
++const std::string& EditorScenarioController::Path() const { return opened_.path; } // 쓰기 대상 안내용이다.
++}
+--- /dev/null
++++ b/cpppj/src/client/EditorScenarioController.h
+@@ -0,0 +1,33 @@
++// 실제 Editor 전용 패널의 페이지/편집/저장/취소를 파일 소유자에 연결한다.
++#pragma once
++#include "client/EditorScenarioFiles.h"
++
++namespace netstorm::client { // 원문 명령과 겹치지 않는 명시 클론 확장 UI다.
++inline constexpr std::uint32_t kEditorScenarioOpen=0x0300e100U; // Edit 메뉴의 Scenario 진입 명령이다.
++inline constexpr std::uint32_t kEditorScenarioPage=0x0300e101U; // 인자 페이지로 별도 시나리오 패널을 연다.
++inline constexpr std::uint32_t kEditorScenarioEdit=0x0300e102U; // 인자 필드의 실제 TextEntry 모달을 연다.
++inline constexpr std::uint32_t kEditorScenarioSave=0x0300e103U; // 사용자 work에 명시 저장하고 패널을 닫는다.
++inline constexpr std::uint32_t kEditorScenarioDiscard=0x0300e104U; // 저장하지 않은 변경을 버리고 닫는다.
++inline constexpr std::uint32_t kEditorScenarioInherit=0x0300e105U; // AI override를 명시 빈 값으로 바꾼다.
++// 메뉴 한 행의 표시 UTF-8와 원시 일반 명령이다.
++struct EditorScenarioRow { std::string label;std::uint32_t command{},parameter{};bool enabled{true}; }; // label/code/인자는 순서대로 같은 Gump에 전달한다.
++// 고정 필드 ID는 페이지가 바뀌어도 다른 키를 가리키지 않는다.
++struct EditorScenarioEditRequest { std::string key,title,initial;std::int32_t maximum{512};bool multiline{}; }; // initial은 UTF-8이며 maximum은 NUL 포함 BYTE 상한이다.
++class EditorScenarioController {
++public:
++    EditorScenarioController(std::shared_ptr<EditorScenarioFiles> files,std::string map,EditorScenarioContext context); // 현재 맵 문서만 열고 보류 변경을 소유한다.
++    std::vector<EditorScenarioRow> Page(std::uint32_t page,const std::function<bool(std::uint32_t)>& hasPriest={}) const; // 0전체/1로컬/2일반/3브리핑/11~18AI이며 실제 사제 배치를 읽기만 한다.
++    EditorScenarioEditRequest Edit(std::uint32_t field) const; // 고정 ID의 원문 raw값을 편집용으로 반환한다. 실효값으로 원문을 덮지 않는다.
++    void Apply(std::uint32_t field,std::string_view value); // 수정한 필드만 모델 검증 후 반영한다.
++    void Inherit(std::uint32_t field); // AI 공통값과 가산 관계를 그대로 유지한다.
++    void Save(bool explicitSave); // atomic 정상 반환 뒤에만 dirty 기준을 새로 잡는다.
++    bool Dirty() const; // 신규/수정/삭제 재작성 상태를 읽는다.
++    const std::string& Map() const; // 맵 전환 뒤의 지연 callback을 거부하는 identity다.
++    const std::string& Path() const; // 실제 선택 언어/English 저장 대상을 화면에 표시한다.
++private:
++    std::shared_ptr<EditorScenarioFiles> files_; // 현재 workspace와 동일한 파일 장치 수명이다.
++    EditorScenarioOpened opened_; // 기준 바이트/대상 경로/삭제 재작성 상태다.
++    EditorScenarioContext context_; // staged 문서를 실제 Config 스냅샷으로 해석한다.
++    EditorScenarioModel model_; // 저장 전의 보류 문서/미리보기다.
++};
++}
+--- /dev/null
++++ b/cpppj/src/client/EditorScenarioFiles.cpp
+@@ -0,0 +1,81 @@
++// 파일/설정의 실제 owner를 공유하고 원문 부재/사용자 삭제/손상을 서로 바꾸지 않는다.
++#include "client/EditorScenarioFiles.h"
++#include "client/EditorMapCatalogFiles.h"
++#include "platform/Utf8Path.h"
++#include "o/OriginalText.h"
++#include <algorithm>
++#include <filesystem>
++#include <stdexcept>
++#include <utility>
++
++namespace netstorm::client { // 시나리오 편집 파일은 게임 전역 상태와 분리한다.
++namespace { // 실제 Config 스냅샷과 경로 identity만 처리한다.
++// 현재 Config의 등록 순서/이름/본문을 독립 Registry에 복제하는 짧은 계산 수명이다.
++struct Snapshot {
++    o::ConfigRegistry registry; // 실제 Registry를 변경하지 않는 독립 등록표다.
++    std::vector<std::unique_ptr<o::Config>> objects; // 각 설정 본문/Prefix를 현재 순서대로 소유한다.
++    o::Config* configuration{}; // 원래 ConfigInterface::Configuration에 대응하는 사본이다.
++    // 외부 mission 파일을 새로 읽지 않으며 현재 메모리의 이름/본문/로컬 환경 정책만 복제한다.
++    explicit Snapshot(o::ConfigInterface& source) {
++        registry.environment=source.Registry().environment;registry.registryValue=source.Registry().registryValue;
++        for (const auto* original:source.Registry().Objects()) { // 같은 순서여야 bare/이름 붙은 조회의 우선순위가 보존된다.
++            auto name=original->Prefix();if (!name.empty()) name.pop_back();auto copy=std::make_unique<o::Config>(registry,name);
++            if (original->IsValid()) copy->Assign(original->Text());copy->environmentEnabled=original->environmentEnabled;
++            if (original==&source.Configuration()) configuration=copy.get();objects.push_back(std::move(copy));
++        }
++        if (!configuration) throw std::logic_error("시나리오 경로의 실제 Configuration 사본 누락");
++    }
++};
++// 같은 namespace의 case만 다른 경로는 한 파일로 판정한다.
++bool Same(std::string_view first,std::string_view second) { auto a=o::AsciiLower(first),b=o::AsciiLower(second);std::replace(a.begin(),a.end(),'\\','/');std::replace(b.begin(),b.end(),'\\','/');return a==b; }
++// 새 기본 문서/파일 이름은 원문의 ASCII 정책을 유지한다.
++void CheckMap(std::string_view name) {
++    if (name.empty()) throw std::invalid_argument("시나리오의 현재 맵 이름이 비었습니다");
++    for (const auto byte:name) if (!((byte>='A' && byte<='Z') || (byte>='a' && byte<='z') || (byte>='0' && byte<='9') || byte=='_' || byte==' ')) throw std::invalid_argument("시나리오 파일명은 기존 ASCII 영숫자/밑줄/공백 정책을 사용합니다"); // 표시 제목은 별도 UTF-8 필드다.
++}
++}
++// local.1과 언어만 독립 사본에 넣어 간접 missionSpec/사용자 override도 현재 문법으로 계산한다.
++EditorScenarioPaths ResolveEditorScenarioPaths(o::ConfigInterface& config,std::string_view map) {
++    CheckMap(map);Snapshot snapshot(config);o::Config local(snapshot.registry,"local");auto literal=ScenarioDocument::FromUtf8("");literal.SetLiteral("1",map);local.Assign(literal.Text());
++    EditorScenarioPaths result;result.requested=snapshot.configuration->Get("missionSpec").value_or("");snapshot.configuration->Set("currentLanguage","english");result.english=snapshot.configuration->Get("missionSpec").value_or("");
++    if (result.requested.empty() || result.english.empty()) throw std::invalid_argument("시나리오 missionSpec 경로가 비었습니다");return result;
++}
++// 마지막 mission 사본이 staged 문서여야 변경한 값의 실제 상속/치환을 미리 볼 수 있다.
++std::string ResolveEditorScenarioField(o::ConfigInterface& config,const ScenarioDocument& document,std::string_view key) { Snapshot snapshot(config);o::Config mission(snapshot.registry,"mission");mission.Assign(document.Text());return mission.Get("mission."+std::string(key)).value_or(""); }
++EditorScenarioFiles::EditorScenarioFiles(EditorScenarioFileHooks hooks):hooks_(std::move(hooks)) { if (!hooks_.read || !hooks_.deleted || !hooks_.write || !hooks_.paths) throw std::invalid_argument("시나리오 파일 장치 누락"); } // 선택 전에는 I/O를 수행하지 않는다.
++// 기존 장부와 원본 보호 검사를 우회하는 별도 reader/writer를 만들지 않는다.
++EditorScenarioFiles::EditorScenarioFiles(std::shared_ptr<EditorCatalogWorkspace> workspace,o::ConfigInterface& config):EditorScenarioFiles(EditorScenarioFileHooks{
++    [workspace](auto path) { if (!workspace) throw std::logic_error("시나리오 workspace 누락");auto bytes=workspace->Read(path);if (!bytes && std::filesystem::exists(workspace->Resolve(path))) throw std::runtime_error("기존 시나리오 파일 읽기 실패");return bytes; },
++    [workspace](auto path) { return workspace->Deleted(path); },
++    [workspace](auto path,auto bytes) { workspace->Files().WriteAtomic(platform::PathToUtf8(workspace->Resolve(path)),bytes); },
++    [&config](auto map) { return ResolveEditorScenarioPaths(config,map); }}) {}
++// 기본 생성은 이름/경로 계산 뒤 기존 요청 언어를 덮지 않고 English 한 개만 작성한다.
++bool EditorScenarioFiles::EnsureEnglish(std::string_view map) const {
++    CheckMap(map);const auto paths=hooks_.paths(map);if (hooks_.read(paths.english)) return true;if (hooks_.deleted(paths.english)) return false;
++    const auto bytes=CreateDefaultEditorScenario(map).Serialize();hooks_.write(paths.english,bytes);return true;
++}
++// 원문 손상은 FromBytes가 거부하며 빈/손상 파일을 신규 부재로 바꾸지 않는다.
++EditorScenarioOpened EditorScenarioFiles::Open(std::string_view map) const {
++    CheckMap(map);const auto paths=hooks_.paths(map);if (auto bytes=hooks_.read(paths.requested)) return {std::string(map),paths.requested,ScenarioDocument::FromBytes(*bytes),std::move(bytes),false};
++    if (!Same(paths.requested,paths.english)) if (auto bytes=hooks_.read(paths.english)) return {std::string(map),paths.english,ScenarioDocument::FromBytes(*bytes),std::move(bytes),false};
++    const bool deleted=hooks_.deleted(paths.english);return {std::string(map),paths.english,CreateDefaultEditorScenario(map),std::nullopt,deleted};
++}
++// atomic 실패/동시 수정은 opened의 baseline/dirty를 바꾸지 않는다.
++void EditorScenarioFiles::Save(EditorScenarioOpened& opened,const ScenarioDocument& document,bool explicitSave) const {
++    if (opened.deleted && !explicitSave) throw std::runtime_error("삭제한 시나리오는 Scenario의 Save로 명시 재작성해야 합니다");
++    const auto current=hooks_.read(opened.path);if (current!=opened.baseline) throw std::runtime_error("시나리오 파일이 편집 중 다른 곳에서 변경되거나 삭제되었습니다");
++    const auto bytes=document.Serialize();if (current && *current==bytes) return;hooks_.write(opened.path,bytes);opened.baseline=bytes;opened.document=ScenarioDocument::FromBytes(bytes);opened.deleted=false;
++}
++// 서로 다른 파일 저장을 한 트랜잭션이라고 가장하지 않는다. 대상 충돌은 쓰기 전에 모두 확인한다.
++void EditorScenarioFiles::CopyAs(std::string_view previous,std::string_view next) const {
++    CheckMap(previous);CheckMap(next);if (Same(previous,next)) return;const auto old=hooks_.paths(previous),target=hooks_.paths(next);
++    std::vector<std::pair<std::string,std::vector<std::uint8_t>>> copies;
++    for (const auto& paths:std::array<std::pair<std::string,std::string>,2>{{{old.english,target.english},{old.requested,target.requested}}}) { // English와 현재 언어만 복사하며 임의 대본 전체 치환은 하지 않는다.
++        if (std::any_of(copies.begin(),copies.end(),[&](const auto& item) { return Same(item.first,paths.second); })) continue;
++        if (const auto bytes=hooks_.read(paths.first)) { const auto existing=hooks_.read(paths.second);if (existing && *existing!=*bytes) throw std::runtime_error("Save as 대상 시나리오가 이미 있습니다");if (!existing) copies.emplace_back(paths.second,*bytes); }
++    }
++    for (const auto& [path,bytes]:copies) hooks_.write(path,bytes); // 첫 성공/뒤 실패의 부분 효과는 재시도할 때 같은 바이트인지 확인한다.
++}
++// 실제 미션은 현재 언어 override를 먼저 읽고 해당 요청이 부재일 때만 같은 workspace의 English를 사용한다.
++std::optional<std::vector<std::uint8_t>> EditorScenarioFiles::ReadForMission(std::string_view map,std::string_view requested) const { const auto paths=hooks_.paths(map);if (auto bytes=hooks_.read(requested)) return bytes;if (Same(requested,paths.requested) && !Same(paths.requested,paths.english)) return hooks_.read(paths.english);return std::nullopt; }
++}
+--- /dev/null
++++ b/cpppj/src/client/EditorScenarioFiles.h
+@@ -0,0 +1,45 @@
++// 현재 Editor 작업 namespace에서 시나리오 선택/기본 생성/충돌 검사/저장을 소유한다.
++#pragma once
++#include "client/EditorScenarioModel.h"
++#include "o/ConfigInterface.h"
++#include <functional>
++#include <memory>
++
++namespace netstorm::client { // 실제 파일 보호와 순수 문서 편집을 연결하는 클론 확장이다.
++class EditorCatalogWorkspace; // 기존 이관 장부/TAFF/삭제 표식 owner를 공유한다.
++// 동일 미션 이름의 현재 언어/English 경로다. 사용자 missionSpec를 그대로 해석한다.
++struct EditorScenarioPaths {
++    std::string requested; // 현재 선택 언어의 실제 missionSpec 결과다.
++    std::string english; // 독립 Config에서 currentLanguage만 english로 해석한 결과다.
++};
++// 독립 장치 검사와 실제 workspace가 같은 생성/저장 정책을 사용한다.
++struct EditorScenarioFileHooks {
++    std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)> read; // 부재와 읽기 실패를 구별해야 한다.
++    std::function<bool(std::string_view)> deleted; // 완료 이관 후 삭제된 경로는 자동 부활시키지 않는다.
++    std::function<void(std::string_view,std::span<const std::uint8_t>)> write; // 사용자 work의 atomic 쓰기만 허용한다.
++    std::function<EditorScenarioPaths(std::string_view)> paths; // 현재 Config/이름을 매번 해석한다.
++};
++// 편집 중인 파일 identity와 최초 읽기를 소유한다. 실제 현재 mission Config를 수정하지 않는다.
++struct EditorScenarioOpened {
++    std::string map; // Fort의 기존 ASCII 이름이며 UTF-8 파일명 확장을 하지 않는다.
++    std::string path; // 현재 언어 override가 있으면 그 파일, 없으면 English다.
++    ScenarioDocument document; // 보존형 원문과 사용자 수정의 소유자다.
++    std::optional<std::vector<std::uint8_t>> baseline; // 동시 수정/삭제를 감지할 최초 바이트다.
++    bool deleted{}; // 명시 삭제된 English를 사용자가 다시 작성하려는 임시 문서다.
++};
++class EditorScenarioFiles {
++public:
++    explicit EditorScenarioFiles(EditorScenarioFileHooks hooks); // 생성만으로 파일을 읽거나 쓰지 않는다.
++    explicit EditorScenarioFiles(std::shared_ptr<EditorCatalogWorkspace> workspace,o::ConfigInterface& config); // 같은 실제 workspace/장기 Config를 빌린다.
++    bool EnsureEnglish(std::string_view map) const; // 실제 부재만 기본 생성한다. tombstone이면 false로 자동 생성을 생략한다.
++    EditorScenarioOpened Open(std::string_view map) const; // 요청 언어→English 선택이며 손상/접근 실패를 기본값으로 덮지 않는다.
++    void Save(EditorScenarioOpened& opened,const ScenarioDocument& document,bool explicitSave) const; // 충돌 검사 뒤 atomic 저장한다. 삭제 재작성은 명시 Save에서만 허용한다.
++    void CopyAs(std::string_view previous,std::string_view next) const; // Save as가 현재/English sidecar를 사용자 work에 복사한다. 기존 대상은 덮지 않는다.
++    std::optional<std::vector<std::uint8_t>> ReadForMission(std::string_view map,std::string_view requested) const; // Fort/추가파일은 원래 read, 해당 script 요청만 English fallback이다.
++private:
++    EditorScenarioFileHooks hooks_; // 모든 실제 I/O와 경로 계산 장치는 이 owner보다 오래 살아야 한다.
++};
++// 현재 Config를 별도 Registry에 복제하여 전역 변경 없이 경로와 staged mission 실효값을 계산한다.
++EditorScenarioPaths ResolveEditorScenarioPaths(o::ConfigInterface& config,std::string_view map);
++std::string ResolveEditorScenarioField(o::ConfigInterface& config,const ScenarioDocument& document,std::string_view key);
++}
+--- a/cpppj/src/client/EditorScenarioModel.cpp
++++ b/cpppj/src/client/EditorScenarioModel.cpp
+@@ -85,7 +85,7 @@
+ std::string ReadText(const std::array<std::uint8_t,600>& bytes,std::size_t offset) {
+     const auto begin=bytes.begin()+static_cast<std::ptrdiff_t>(offset),end=std::find(begin,bytes.end(),std::uint8_t{});
+     if (end==bytes.end()) throw std::invalid_argument("시나리오 AI 설정 문자열의 NUL이 없습니다");
+-    return o::DecodeOriginalText({&*begin,static_cast<std::size_t>(end-begin)});
++    return o::DecodeDisplayText({&*begin,static_cast<std::size_t>(end-begin)});
+ }
+ // 색 none/미등록은 이전 값 유지이므로 실제로 덮어쓰는 유효색만 판별한다.
+ bool AssignsColor(std::string_view value) {
+@@ -114,7 +114,7 @@
+     CheckOwner(owner);EditorScenarioAiView view;view.owner=owner;
+     o::MissionAiSettingsState state;state.startingSp=context_.startingSp;state.stuffRefreshRate=context_.stuffRefreshRate;
+     o::MissionAiSettingsHooks hooks;
+-    hooks.get=[this](auto key) { const auto bytes=o::EncodeOriginalText(Resolve(key));return std::string(bytes.begin(),bytes.end()); }; // 실제 시작 연결과 같은 CP1252 경계다.
++    hooks.get=[this](auto key) { const auto name=o::AsciiLower(key);const bool display=name.size()>=4 && name.ends_with("name");const auto text=Resolve(key);const auto bytes=display ? o::EncodeDisplayText(text) : o::EncodeOriginalText(text);return std::string(bytes.begin(),bytes.end()); }; // Name만 기존 표시 토큰을 허용하며 실제 런타임과 같은29BYTE 경계를 사용한다.
+     hooks.parseFloat=[](auto value) { const std::string text(value);return std::strtod(text.c_str(),nullptr); }; // 현재 제품의 atof 경계와 같다.
+     hooks.unknownAbilityLog=[&view](auto value) { view.diagnostics.push_back("기존 원문의 미등록 AI 능력: "+std::string(value)); }; // 기존 문서는 지우거나 성공으로 숨기지 않는다.
+     o::RawMissionAiSettings settings(o::OriginalEdition::Patch1078,state,std::move(hooks));settings.Prepare(view.settings,static_cast<std::int32_t>(owner));
+@@ -148,7 +148,7 @@
+                 else { if (item.front()=='!') item.erase(item.begin());if (std::none_of(kAbilities.begin(),kAbilities.end(),[&](auto ability) { return Equal(item,ability); })) throw std::invalid_argument("등록되지 않은 새 AI 능력입니다"); }
+             }
+         }
+-        else if (name=="Name") { if (o::EncodeOriginalText(value).size()>29) throw std::length_error("새 AI 이름은 원문 Tech 영역 앞의 29BYTE 이하여야 합니다"); }
++        else if (name=="Name") { if (o::EncodeDisplayText(value).size()>29) throw std::length_error("새 AI 이름은 한글4BYTE를 포함해 원문 Tech 영역 앞의29BYTE 이하여야 합니다"); }
+         else if (name=="BridgeDrawRate" || name=="StuffRefreshRate" || name=="TimeBetweenMoves") CheckRate(value);
+         else if (name=="missionType") { if (!Equal(value,"Tutorial") && !Equal(value,"Battle")) throw std::invalid_argument("새 미션 유형은 실제 Tutorial/Battle이어야 합니다"); }
+         else if (name!="title") CheckInteger(value);
+@@ -157,6 +157,8 @@
+ }
+ // 빈 owner override도 명시 상태로 남기므로 중복 키 삭제나 공통값 펼치기를 하지 않는다.
+ bool EditorScenarioModel::InheritAi(std::uint32_t owner,std::string_view suffix) { CheckOwner(owner);return Set("ai"+std::to_string(owner)+std::string(suffix),""); }
++// 브리핑은 key/value가 아닌 실제 첫 A. 섹션으로 저장한다.
++bool EditorScenarioModel::SetBriefing(std::string_view value) { return document_.SetSection("A.",value); }
+ // UI 선택 목록도 실제 이름 순서를 유지한다.
+ std::span<const std::string_view> EditorScenarioModel::AiColors() { return kColors; }
+ // 미등록 능력을 만들어 원문 index13 오류 경로를 새 입력으로 사용하지 않는다.
+--- a/cpppj/src/client/EditorScenarioModel.h
++++ b/cpppj/src/client/EditorScenarioModel.h
+@@ -55,6 +55,7 @@
+     EditorScenarioAiView Ai(std::uint32_t owner) const;
+     // 지원키·입력 범위·실제 이름을 검증한 뒤 해당 키만 바꾼다. 기존 미지원 입력은 보존된다.
+     bool Set(std::string_view key,std::string_view value);
++    bool SetBriefing(std::string_view value); // 선택한 첫 A. 섹션만 실제 브리핑 대본으로 저장한다.
+     // owner의 명시값을 빈 문자열로 만든다. 원문 소비자처럼 공통값/기본값이 계속 적용된다.
+     // AllyList/Ability는 가산이므로 이 함수로 공통 관계나 능력을 제거하지 않는다.
+     bool InheritAi(std::uint32_t owner,std::string_view suffix);
+--- a/cpppj/src/client/RawCampaignMissionStartBindings.cpp
++++ b/cpppj/src/client/RawCampaignMissionStartBindings.cpp
+@@ -1,5 +1,6 @@
+ // 관찰 callback으로 게임 계산을 대신하지 않고 기존 원본 몸체의 실제 Session 소비자를 공급한다.
+ #include "client/RawCampaignMissionStartBindings.h"
++#include "client/DisplayTextInput.h" // 기존 한국어 표시 토큰의 유효성을 공유한다.
+ #include "o/OriginalText.h"
+ #include <array>
+ #include <cstdlib>
+@@ -22,7 +23,7 @@
+ // 원본 atof의 좁은 문자열 변환과 현재 미션 문자열의 Windows-1252 경계를 사용한다.
+ o::MissionAiSettingsHooks RawCampaignMissionStartBindings::AiHooks() {
+     o::MissionAiSettingsHooks hooks;
+-    hooks.get=[this](std::string_view key) { const auto bytes=o::EncodeOriginalText(script_.Get(key).value_or(std::string{}));return std::string(bytes.begin(),bytes.end()); };
++    hooks.get=[this](std::string_view key) { const auto name=o::AsciiLower(key);const bool display=name.size()>=4 && name.ends_with("name");const auto text=script_.Get(key).value_or(std::string{});const auto bytes=display ? o::EncodeDisplayText(text) : o::EncodeOriginalText(text);const std::string value(bytes.begin(),bytes.end());if (display && HasExtendedDisplayText(value) && bytes.size()>29) throw std::length_error("확장 AI 이름은 한글 표시토큰을 포함해29BYTE 이하여야 합니다");return value; }; // 새 확장 Name만 제한하고 기존 CP1252 대본의 원문 복사 규칙은 보존한다.
+     hooks.parseFloat=[](std::string_view value) { const std::string text(value);return std::strtod(text.c_str(),nullptr); };
+     hooks.unknownAbilityAssertion=[this](std::string_view name) { if (!effects_.unknownAbilityAssertion) throw std::logic_error("미션 AI의 실제 능력 이름 진단 미연결");effects_.unknownAbilityAssertion(name); };
+     hooks.unknownAbilityLog=[this](std::string_view name) { if (!effects_.unknownAbilityLog) throw std::logic_error("미션 AI의 실제 능력 이름 기록 미연결");effects_.unknownAbilityLog(name); };
+--- a/cpppj/src/client/RawGameMenus.cpp
++++ b/cpppj/src/client/RawGameMenus.cpp
+@@ -81,6 +81,7 @@
+ // Editor행은SaveAs/NewFort 명령의인자1을보존하고다리수준0/1/2를별도하위메뉴로작성한다.
+ std::uint32_t RawGameMenus::Edit() const {
+     Need(hooks_.vertical)();Item("Save as...",0x5428dc,1U);Item("Add Island",0x542780);
++    if (hooks_.scenarioCommand) Need(hooks_.item)(Text("Scenario..."),*hooks_.scenarioCommand,0U,1,1); // 원문 Edit 메뉴 뒤에 명시 호환 기능만 더한다.
+     Need(hooks_.vertical)();Item("Cracked",0x542a4c,0U);Item("Normal",0x542a4c,1U);Item("Hard",0x542a4c,2U);
+     const auto bridge=Need(hooks_.take)();Need(hooks_.submenu)("Set All Bridge",bridge,1,0);return Need(hooks_.take)();
+ }
+--- a/cpppj/src/client/RawGameMenus.h
++++ b/cpppj/src/client/RawGameMenus.h
+@@ -4,6 +4,7 @@
+ #include <array>
+ #include <span>
+ #include <variant>
++#include <optional>
+ 
+ namespace netstorm::client {
+ // 숫자DWORD와 NUL 종료 원문 문자열 인자를 구별한다. 실제 고리는 GUI 바인더가 공급한다.
+@@ -12,6 +13,7 @@
+ struct GameMenuLanguage { std::string label; std::uint32_t number; bool checked; };
+ // 상위 메뉴가 실제 원문 시점에 조회하는 게임·설정·GUI 의존이다.
+ struct GameMenusHooks {
++    std::optional<std::uint32_t> scenarioCommand; // 실제 클론 Editor에만 주어지는 Scenario 행이다. 기본 없음이면 원문 메뉴/fixture를 보존한다.
+     std::function<std::uint32_t(std::uint32_t)> global; // 주소로 지정한 원본 전역의 현재DWORD/BYTE다. 별도 캐시 모드로 대체하지 않는다.
+     std::function<std::int32_t(std::string_view)> config; //00441090의 현재 GetInt다.
+     std::function<void(std::string_view,std::int32_t&)> readInt; //00441270의 누락시기존값을보존하는ReadInt다.
+--- a/cpppj/src/client/RawMenuControls.cpp
++++ b/cpppj/src/client/RawMenuControls.cpp
+@@ -399,7 +399,7 @@
+         lastInput={token,event,first,second};
+         if (islandRoots.contains(token)) return const_cast<Impl*>(this)->HandleIsland(token,{event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)});
+         if (imageLists.contains(token)) return imageList->Handle(token,event,first,second);
+-        if (saveFortRoots.contains(token)) return saveFortDialog->Handle(token,event,first,second);
++        if (saveFortRoots.contains(token)) { const auto& context=saveFortContexts.at(token);if (context.editorAccept && context.editorMultiline && (event&0x03ffffffU)==0x02000038U) return 1;return saveFortDialog->Handle(token,event,first,second); } // Scenario 다중 줄 Enter는 줄바꿈만 하며 실제 OK 버튼에서 확정한다.
+         if (htmlRoots.contains(token)) return htmlWindow->Handle(token,event,first,second);
+         if (movies && movies->Node(token)) return movies->Handle(token,event);
+         if (gifWindows && gifWindows->Node(token)) return gifWindows->Handle(token,event,first,second);
+@@ -688,6 +688,12 @@
+     struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } }; //정상/예외반환에서생성중문맥만반납한다.
+     Reset reset{s};return s.saveFortDialog->ShowInput(mode,title,continuation);
+ }
++// 별도 Scenario 모달도 기존 공통 파생 저장소/시계/클립보드/수명에 연결한다.
++std::uint32_t RawMenuControls::ShowScenarioInputDialog(SaveFortNameDialogContext context,std::string_view title,std::string_view initial,std::int32_t maximum,bool multiline) {
++    auto& s=*impl_;if (!context.editorAccept || !context.editorCancel || !context.editor.now || !context.translate) throw std::invalid_argument("Scenario 입력창 실제 장치 누락");context.editorMultiline=multiline;EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("Scenario 입력창 재귀 생성");s.saveFortBuilding=&context;
++    struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } };const Reset reset{s}; // 부분 실패에서도 지역 문맥 별칭을 지운다.
++    const auto token=s.saveFortDialog->ShowScenarioInput(title,maximum,multiline);const auto entry=s.saveFortRoots.at(token)->entry;std::string text(initial);text.push_back(0);s.textEntries->Backend().SetText(entry,text);return token;
++}
+ // 송금 숫자 창은 파일 장치를 요구하지 않고 같은 문자/Gump 수명에 전용 확정을 설치한다.
+ std::uint32_t RawMenuControls::ShowSendMoneyDialog(SaveFortNameDialogContext context,std::uint32_t target) {
+     auto& s=*impl_;if (!context.sendMoney || !context.editor.now || !context.translate) throw std::invalid_argument("송금 숫자 창의 실제 장치 누락");
+--- a/cpppj/src/client/RawMenuControls.h
++++ b/cpppj/src/client/RawMenuControls.h
+@@ -122,6 +122,7 @@
+     RawTextEntryControls* TextEntryControls() const; // 설치된 실제 처리기만 조회한다.
+     std::uint32_t ShowSaveFortNameDialog(SaveFortNameDialogContext context,std::uint32_t fortMode=1,std::uint32_t canCancel=1,std::optional<std::string_view> initial={}); // 실제 공통 모달/문자 입력/두 버튼을 생성한다.
+     std::uint32_t ShowHtmlInputDialog(SaveFortNameDialogContext context,std::uint32_t mode,std::string_view title,std::string_view continuation); //HTML $Input의원문mode/제목/후속Tell섹션을같은실제모달로작성한다.
++    std::uint32_t ShowScenarioInputDialog(SaveFortNameDialogContext context,std::string_view title,std::string_view initial,std::int32_t maximum,bool multiline); // 일반 TextEntry 입력으로만 Scenario 필드를 편집한다. initial은 표시 BYTE다.
+     std::uint32_t ShowSendMoneyDialog(SaveFortNameDialogContext context,std::uint32_t target); // 현재 숫자 창의 확정 장치와 대상은 모달 수명 동안 유지한다.
+     const SaveFortNameDialogNode* SaveFortNameNode(std::uint32_t token) const; // 검사도 실제 파생/자식 필드를 그대로 읽는다.
+     void CloseSaveFortNameDialogs(); // Session 장치 반납 전에 현재 부모와 부분 생성 자식을 공통 수명으로 정리한다.
+--- a/cpppj/src/client/RawMenuSaveFort.inc
++++ b/cpppj/src/client/RawMenuSaveFort.inc
+@@ -15,6 +15,9 @@
+ // 현재 창의 실제 편집 버퍼와 동일 작업본 경로/헤더/전체 이름 부모를 묶는다.
+ std::uint32_t AcceptSaveFort(std::uint32_t token) {
+     const auto& context=saveFortContexts.at(token);auto& root=*saveFortRoots.at(token);SaveFortNameConfirmHooks effects;
++    if (context.editorAccept) {
++        const auto* node=textEntries->Node(root.entry);if (!node) throw std::logic_error("Scenario 확정의 실제 편집 노드 없음");const auto* buffer=textEntries->Storage().Find(node->buffer);if (!buffer) throw std::logic_error("Scenario 확정의 실제 문자 저장소 없음");return context.editorAccept(buffer->Text()) ? 1U : 0U;
++    } // Native256BYTE scratch 대신 같은 실제 버퍼의 명시 길이를 읽으며 임의 상태를 주입하지 않는다.
+     if (context.htmlInput) { HtmlInputConfirmHooks inputEffects;inputEffects.copyText=[this,&root](auto output) { static_cast<void>(textEntries->Backend().CopyText(root.entry,output)); };inputEffects.space=[](auto code) { return std::isspace(code); };inputEffects.parseLong=[](auto text) { return o::ConfigParseLong(text); };
+         inputEffects.format=[](auto section,auto input) { std::array<char,256> text{};const std::string key(section),value(input);const auto count=std::snprintf(text.data(),text.size(),"%s(%s)",key.c_str(),value.c_str());if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("HTML 입력 확인의256BYTE 서식 범위");return std::string(text.data(),static_cast<std::size_t>(count)); };inputEffects.tell=context.tell;return ConfirmHtmlInput(root.fortMode,root.inputSection,inputEffects); } //004cfae0의같은실제CopyText/CRT/Tell이다.설정에직접쓰지않는다.
+     if (context.sendMoney) { std::array<char,256> text{};static_cast<void>(textEntries->Backend().CopyText(root.entry,text));text.back()=0;return context.sendMoney(root.fortMode,std::string_view(text.data())); } //004c9350은 현재 편집 문자열을 읽은 뒤 송금하고1을 반환한다.
+@@ -22,7 +25,7 @@
+     effects.alnum=[](auto value) { return std::isalnum(value); };effects.path=context.fortPath;
+     effects.exists=[&context](auto path) { const auto relative=std::filesystem::path(path).is_absolute() ? std::string(path) : o::NormalizeGamePath(path);std::error_code error;return std::filesystem::exists(context.work->ResolvePath(relative),error) ? 1 : 0; }; // 원문 GetFileAttributesA처럼 디렉터리도 비영이며 작업본 경계는 동일하게 검사한다.
+     effects.header=context.header;effects.setName=context.setName;effects.tell=context.tell;effects.readFort=context.readFort;
+-    return ConfirmSaveFortName(root.fortMode,effects);
++    try { return ConfirmSaveFortName(root.fortMode,effects); }catch (const std::exception& error) { if (!context.reportError) throw;context.reportError(error.what());return 0; } // 명시 파일 실패는 원본/이전 파일을 보존하고 편집창에서 재시도하게 한다.
+ }
+ // 이미 복원된 공통 처리기에 하위 계산을 맡기고 새 파생 부모의 조회/수명만 추가한다.
+ void BindSaveFortDialog() {
+@@ -42,7 +45,7 @@
+     h.stone=[this](auto token,auto text) { const std::string terminated(text);common.stones.Construct(token,70,18,terminated.c_str(),palette.named.at(8).index,nullptr); };
+     h.fitTitle=[this](auto token) { costText->Fit(token); };h.fitStone=[this](auto token) { common.stones.FitToText(token); };h.push=[this](auto token) { common.tree.Push(token); };h.attach=common.attach;
+     h.depth=[this](auto token,auto depth) { common.tree.AddDepth(token,std::bit_cast<std::uint32_t>(depth)); };h.modal=[this](auto token) { SetModal(token,true); };h.kill=[this](auto token) { common.lifetime.Kill(token); };
+-    h.accept=[this](auto token) { return AcceptSaveFort(token); };h.cancel=[this](auto token) { const auto& root=*saveFortRoots.at(token);return CancelSaveFortName(root.canCancel,saveFortContexts.at(token).tell); };
++    h.accept=[this](auto token) { return AcceptSaveFort(token); };h.cancel=[this](auto token) { const auto& context=saveFortContexts.at(token);if (context.editorCancel) { context.editorCancel();return 1U; }const auto& root=*saveFortRoots.at(token);return CancelSaveFortName(root.canCancel,context.tell); };
+     h.baseHandle=[this](auto token,auto event,auto first,auto second) { return BaseHelp(token,event,first,second); };
+     h.translate=[this](auto text) { if (!saveFortBuilding || !saveFortBuilding->translate) throw std::logic_error("Save as 현재 번역 장치 미연결");return saveFortBuilding->translate(text); };
+     saveFortDialog=std::make_unique<SaveFortNameDialog>(common.create,std::move(h));
+--- a/cpppj/src/client/SaveFortNameDialog.cpp
++++ b/cpppj/src/client/SaveFortNameDialog.cpp
+@@ -100,6 +100,17 @@
+     Buttons(token,Base(root.entry).y+Base(root.entry).baseHeight+15.0F);root.baseHeight+=4.0F;root.height=root.baseHeight*root.scale;root.baseWidth=std::max(root.baseWidth,Base(root.title).baseWidth+32.0F);root.width=root.baseWidth*root.scale;
+     hooks_.attach(token,(static_cast<float>(state_.screenWidth)-root.baseWidth)*0.5F,(static_cast<float>(state_.screenHeight)-root.baseHeight)*0.5F,state_.entries[0],0);Need(hooks_.depth)(token,std::bit_cast<std::int32_t>(root.depth)-76);Need(hooks_.modal)(token);return token;
+ }
++// 기존 ShowInput/Show/ShowMoney의 원문 기하·상한을 바꾸지 않는 Scenario 전용 생성이다.
++std::uint32_t SaveFortNameDialog::ShowScenarioInput(std::string_view title,std::int32_t maximum,bool multiline) const {
++    if (maximum<2 || maximum>16384) throw std::out_of_range("Scenario 입력 BYTE 상한 범위");
++    const auto width=static_cast<float>(std::clamp(state_.screenWidth-40,240,620)),height=static_cast<float>(multiline ? std::clamp(state_.screenHeight-100,160,360) : 120);
++    const auto token=Need(hooks_.allocate)(0x128);Need(hooks_.decoration)(token,width,height);auto& root=Node(token);root.vtable=0x00517d00U;root.command=68;root.fortMode=1;root.canCancel=1;
++    root.entry=hooks_.allocate(0x110);Need(hooks_.textEntry)(root.entry,static_cast<std::int32_t>(width)-36,multiline ? static_cast<std::int32_t>(height)-98 : 18,"");
++    auto* entry=Need(hooks_.entry)(root.entry);if (!entry) throw std::logic_error("Scenario 실제 편집 자식 없음");entry->maxLength=maximum;entry->multiline=multiline ? 1U : 0U;entry->showVertical=multiline ? 1U : 0U;entry->showHorizontal=1;
++    Need(hooks_.attach)(root.entry,18,42,token,0);const auto border=hooks_.allocate(0xb8);Need(hooks_.background)(border,Base(root.entry).baseWidth+8,Base(root.entry).baseHeight+4);hooks_.attach(border,14,40,token,0);
++    root.title=hooks_.allocate(0xa4);Need(hooks_.inputTitle)(root.title,width-28,Need(hooks_.translate)(title));hooks_.attach(root.title,14,10,token,0);Buttons(token,height-34);
++    hooks_.attach(token,(state_.screenWidth-width)*0.5F,(state_.screenHeight-height)*0.5F,state_.entries[0],0);Need(hooks_.depth)(token,std::bit_cast<std::int32_t>(root.depth)-76);Need(hooks_.modal)(token);return token;
++}
+ // 실제 버튼 serial(+2c)과 Enter를 판정하고 callback 비영 복귀에서만 지연 Kill한다.
+ std::uint32_t SaveFortNameDialog::Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
+     const auto code=event&0x03ffffffU;auto& root=Node(token);
+--- a/cpppj/src/client/SaveFortNameDialog.h
++++ b/cpppj/src/client/SaveFortNameDialog.h
+@@ -27,6 +27,10 @@
+ std::uint32_t CancelSaveFortName(const std::uint32_t& canCancel,const std::function<void(std::string_view)>& tell);
+ // 실제 Client가 제공하는 현재 장치이며 매 창의 callback은 해당 모달보다 오래 살아야 한다.
+ struct SaveFortNameDialogContext {
++    std::function<bool(std::string_view)> editorAccept; // 클론 Scenario 전용 확정이며 false면 같은 편집창을 유지한다.
++    std::function<void()> editorCancel; // Scenario 취소 후 실제 패널로 돌아가는 일반 명령을 예약한다.
++    bool editorMultiline{}; // Scenario 본문 Enter는 줄바꿈이고 OK 버튼으로만 확정한다.
++    std::function<void(std::string_view)> reportError; // 클론 파일 작업 실패를 같은 창에 안내한다. 기본 없음이면 원문 예외 계약이다.
+     bool htmlInput{}; //파일/송금과 구별되는 HTML Input 형제 창이며 같은 Tell 확인을 선택한다.
+     std::function<std::uint32_t(const std::uint32_t&,std::string_view)> sendMoney; // 원본+d4를 참조로 빌려 자금 조회 뒤 현재 대상을 저장하는 같은 숫자 확정을 사용한다.
+     const EditorFiles* work{}; // 보호 원본과 구별된 실제 namespace를 반드시 지정한다.
+@@ -59,6 +63,7 @@
+ // 원본004d3250/004d3490과00487460을 같은 저장소에 실행한다.
+ class SaveFortNameDialog {
+ public:
++    std::uint32_t ShowScenarioInput(std::string_view title,std::int32_t maximum,bool multiline) const; // 원문 공통 장식/편집/두 버튼을 재사용하는 별도 클론 대형 입력 모달이다.
+     SaveFortNameDialog(GumpCreateState& state,SaveFortNameDialogHooks hooks); // 공통 등록표와 실제 장치를 빌린다.
+     std::uint32_t Show(std::uint32_t fortMode,std::uint32_t canCancel,std::string_view current,std::optional<std::string_view> initial={}) const; // 실제 모달 root 토큰이다.
+     std::uint32_t ShowMoney(std::uint32_t target) const; //004d3860/004d3b60의 숫자 전용 형제 창이며 공통 장식/두 버튼을 재사용한다.
+--- a/cpppj/src/client/ScenarioDocument.cpp
++++ b/cpppj/src/client/ScenarioDocument.cpp
+@@ -113,6 +113,21 @@
+ }
+ // 문서 참조만 빌려 주며 현재 게임의 설정에는 등록하지 않는다.
+ const std::string& ScenarioDocument::Text() const { return text_; }
++// 원문 ConfigFindSection의 첫 일치 본문 범위를 사용한다.
++std::optional<std::string> ScenarioDocument::Section(std::string_view name) const {
++    o::ConfigRegistry registry;o::Config config(registry,"scenario");config.Assign(text_);if (const auto section=config.Section(name)) return std::string(*section);return std::nullopt;
++}
++// 첫 A. 본문 편집은 명시 동작이다. 다른 섹션을 넣는 줄은 이 API에서 거부한다.
++bool ScenarioDocument::SetSection(std::string_view name,std::string_view body) {
++    ValidateUtf8(body);if (name.empty() || name.find_first_of("[]\r\n")!=name.npos) throw std::invalid_argument("시나리오 섹션 이름 범위");
++    for (std::size_t at=0;at<body.size();++at) if (body[at]=='[' && (!at || body[at-1]=='\n' || body[at-1]=='\r')) throw std::invalid_argument("브리핑 본문에 새 섹션 행을 넣을 수 없습니다"); // 사용자에게 전체 대본 편집이라고 가장하지 않는다.
++    const auto header="["+std::string(name)+"]";const auto start=o::ConfigFindSection(text_,0,header);const auto newline=Newline(text_);std::string replacement(body);
++    if (!replacement.empty() && replacement.back()!='\n') replacement+=newline;
++    if (start) { auto end=*start;while (end<text_.size() && !(text_[end]=='[' && end && (text_[end-1]=='\n' || text_[end-1]=='\r'))) ++end;const auto old=text_.substr(*start,end-*start);if (old==replacement) return false;text_.replace(*start,end-*start,replacement);return true; } // 기존 첫 섹션의 바깥 문자는 이동하지 않는다.
++    const auto lower=o::AsciiLower(text_);auto insertion=text_.size(),at=lower.find("[end]");
++    while (at!=text_.npos) { if (!at || text_[at-1]=='\n' || text_[at-1]=='\r') { insertion=at;break; }at=lower.find("[end]",at+1); } // 빈 마지막 END도 본문 존재 검사 없이 찾아 그 앞에 새 섹션을 둔다.
++    const auto prefix=insertion && text_[insertion-1]!='\n' ? std::string(newline) : std::string{};text_.insert(insertion,prefix+header+std::string(newline)+replacement);return true;
++}
+ // 변경된 본문만 UTF-8 BOM 평문으로 만들고 미변경 암호/줄바꿈/바이트는 그대로 반환한다.
+ std::vector<std::uint8_t> ScenarioDocument::Serialize() const {
+     if (!Changed()) return originalBytes_;std::vector<std::uint8_t> bytes(kBom.begin(),kBom.end());bytes.insert(bytes.end(),text_.begin(),text_.end());return bytes;
+--- a/cpppj/src/client/ScenarioDocument.h
++++ b/cpppj/src/client/ScenarioDocument.h
+@@ -23,6 +23,8 @@
+     // 사용자 문자값을 Config의 백틱/따옴표/매크로 문법에서 보호해 첫 값 구간만 바꾼다.
+     // 없는 키만 Header 끝에 삽입한다. 기존 중복·주석·브리핑·미지 키는 이동하지 않는다.
+     bool SetLiteral(std::string_view key, std::string_view value);
++    std::optional<std::string> Section(std::string_view name) const; // 원문 Config와 같은 첫 브리핑 섹션을 읽고 본문을 복사한다.
++    bool SetSection(std::string_view name,std::string_view body); // 사용자가 선택한 섹션 본문만 바꾸며 나머지 대본/중복/주석을 유지한다.
+     // 읽기 전용 디코딩 본문이다. 암호 Config의 mQdsT 접두도 실제 소비자처럼 유지한다.
+     const std::string& Text() const;
+     // 변경이 없으면 입력 바이트 그대로, 변경되었으면 현재 본문에 UTF-8 BOM을 붙인다.
+--- a/cpppj/src/client/UberEditor.inc
++++ b/cpppj/src/client/UberEditor.inc
+@@ -40,11 +40,12 @@
+     if (fortMode && (!world_ || !client_.GameplayGlobals()->world.editor)) throw std::logic_error("실제 Editor 밖의 Save as 파일 장치 미연결");
+     if (!editor_) editor_=std::make_unique<EditorRuntime>(client_); // mode0 새 이름 창은 World/State1 이전에도 같은 작업 파일 장치를 빌린다.
+     SaveFortNameDialogContext context;context.work=&editor_->files;context.currentName=client_.FortGlobals()->Current();context.editor.now=[this] { return client_.WallSeconds(); };
++    context.reportError=[this](auto error) { warnings_->Add(FontBytes(error)); }; // sidecar 충돌/권한 실패도 일반 이름 입력창을 닫지 않고 표시한다.
+     BindTextClipboard(context.editor,textClipboard_); //최초 Chat이 이미 만든 공통 문자 UI와 같은 장치를 계속 빌린다.
+     context.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
+     context.fortPath=[this](auto name) { mapFileSpec_.SelectFort();client_.FortGlobals()->SelectFileSpec();const auto configured=client_.Configuration().PathSpec(mapFileSpec_.Current(),name);return platform::PathToUtf8(editorCatalog_->Resolve(configured)); }; //같은 현재 FileSpec의 source/work 절대 경로도 명시 전체 매핑을 사용한다. Windows10/11 한글 경로는 원본 ANSI 대신 UTF-8다.
+     context.header=[this] { const auto owner=client_.GameplayGlobals()->player.templateOwner;auto headers=templateStorage_->Headers();if (owner>=9 || headers.size()<static_cast<std::size_t>(owner+1U)*20U) throw std::out_of_range("Save as의 현재 Template 헤더 범위");return headers.subspan(static_cast<std::size_t>(owner)*20U,20); };
+-    context.setName=[this](auto name) { SelectCurrentFortName(name); };context.tell=[this](auto section) { Tell(std::string(section)); };
++    context.setName=[this,fortMode](auto name) { if (fortMode && scenarioFiles_) { const auto current=std::string(client_.FortGlobals()->Current());if (scenario_ && scenario_->Map()==current && scenario_->Dirty()) scenario_->Save(true);scenarioFiles_->CopyAs(current,name); }SelectCurrentFortName(name);CloseScenarioUi(true); };context.tell=[this](auto section) { Tell(std::string(section)); }; // 명시 Save as만 sidecar를 복사하며 일반 ReadFort/이름 선택에는 섞지 않는다.
+     context.readFort=[this](auto name) { const auto token=std::bit_cast<std::int32_t>(scriptStrings_.Store(name));client_.Input().PushCommand(kReadFortCommand,token,token); }; //원문 mode0은 같은 현재 이름 token을 두 인자에 복제하여 일반 입력 큐에 예약한다.
+     rawButtons_->Menus()->ShowSaveFortNameDialog(std::move(context),fortMode,1); //원문 일반 입력은 event.y,1,NULL의 세 인자를 같은 공장에 전달한다.
+ }
+@@ -104,6 +105,7 @@
+     checkpoint.invalid.erase=[&e](auto path) { e.files.Delete(path); }; // 원본 자산이 아닌 같은 작업본만 삭제한다.
+     checkpoint.startup=EditorStartupStateHooks(); //State3과 같은 실제 기본 옵션/파일 부재 관문/벽시각 장치를 빌린다.
+     if (!session.InstallExistingEditorCheckpoint(checkpoint,client_.ReadOnlyForts(),e.files)) return o::LocalMissionParentResult::ReturnWithoutCommit; // 원문 미션 분기는 공통 State1 확정도 생략한다.
++    if (client_.GameplayGlobals()->world.editor) { try { static_cast<void>(scenarioFiles_->EnsureEnglish(client_.FortGlobals()->Current())); }catch (const std::exception& error) { warnings_->Add(FontBytes(error.what())); } } // 정상 신규/기존 Editor 설치 뒤 사용자 work English만 생성한다. 삭제 표식/손상은 덮지 않는다.
+     ExistingEditorAfterCheckpointEffects tail;tail.hud=[this](auto command) { rawButtons_->NotifyHudMode(command,1); };tail.wallSeconds=[this] { return client_.WallSeconds(); };
+     tail.requestMusic=[this](auto name) { client_.WorldAudio().RequestMusic(name); };tail.fortPalette=[this] { const auto name=client_.Configuration().PathSpec("fortPal");client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); };tail.islandCount=[&session] { return session.IslandCount(); };
+     session.WithExistingEditorInstallUi(*client_.LocalStateGlobals(),client_.Input(),tail,[this,&session,&e] {
+--- a/cpppj/src/client/UberGump.cpp
++++ b/cpppj/src/client/UberGump.cpp
+@@ -141,6 +141,7 @@
+ #include "client/NativeIntroState.h" // 첫 설치의 영상 부재도 원문 39→40→41→3 순서를 사용한다.
+ #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
+ #include "client/EditorTestBattle.h" //c2의 snapshot/Guide 교체와 편집 복귀 순서를 실제 일반 입력에 연결한다.
++#include "client/EditorScenarioController.h" // Editor의 별도 문서 UI와 같은 workspace/English 보장을 연결한다.
+ #include "client/SaveFortNameDialog.h" //실제 TextEntry/두 버튼/전체 Fort 이름 부모를 사용하는 모달이다.
+ #include "client/TellTip.h" //같은 현재 팁 번호와 실제 Config/Tell을 일반 입력에서 갱신한다.
+ #include "client/TextClipboard.h" //최초 TextEntry 생성 전에 같은 CF_TEXT 장치를 준비한다.
+@@ -261,6 +262,7 @@
+ 
+ #include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
+ #include "client/UberEditor.inc" //실제 Edit 선택의 Native State1/파일/후반 UI와 다음 Poll4를 연결한다.
++#include "client/UberScenario.inc" // 시나리오 편집은 원문 메뉴/Guide 몸체 밖의 명시 클론 확장이다.
+ //446b50의 현재 커서 갱신 뒤 Alt/가운데 폴링을 같은497e00 목표 쓰기로 전달한다.
+ bool UberGump::PollCameraPan(const InputEvent& pointer) {
+     client_.Configuration().ReadInt("scrollWhileMouseOut",scrollWhileMouseOut_);CameraPanHooks hooks;
+@@ -289,6 +291,7 @@
+     const auto catalogFiles=std::make_shared<EditorFiles>(editorRoots.work,editorRoots.protectedRoots,client_.Files().FileNameOwner()); // 생성은보호경로/같은Client경로소유자만연결한다. 목록의Template읽기와실제Editor가같은장치를공유한다.
+     EditorCatalogSourceDevices catalogSource;catalogSource.root=client_.GameDirectory();catalogSource.metadataRoot=editorRoots.metadata;catalogSource.archiveOnly=[this](auto path) { return client_.Files().TryReadArchiveOnly(path); }; //실제 기존 등록순서의 TAFF만 읽어 완료키 삭제의 disk 우회를 막는다.
+     editorCatalog_=std::make_shared<EditorCatalogWorkspace>(catalogFiles,std::move(catalogSource)); //한 장기 이관 owner를 목록과 실제 Editor 경로 모두에 공유한다.
++    scenarioFiles_=std::make_shared<EditorScenarioFiles>(editorCatalog_,client_.Configuration()); // 생성만으로 sidecar/현재 미션을 읽거나 쓰지 않는다.
+     SoloMapCatalogEffects mapEffects; // 현재 실제 장치만 제공하며 목록 분류/행 처리는 기존 몸체를 사용한다.
+     mapEffects.sectionNames=templateStorage_->SectionNamesOwner(); // 주Template/분류/메타가같은Client이름표와변환상태를빌린다.
+     mapEffects.serializationGlobals=serializationGlobals_; // 목록의두임시MapProbe도실제manager생성자의같은전역0쓰기를공유한다.
+@@ -439,6 +442,7 @@
+ }
+ // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
+ void UberGump::ClearWorld() {
++    CloseScenarioUi(true); // Session을 빌리는 Scenario 모달/보류 문서를 기존 실제 World보다 먼저 반납한다.
+     if (world_ && world_->Session().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 전체 World 정리 재진입"); // UI/공유 저장소를 일부 반납하기 전에 전체 정리를 거부한다.
+     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // 숫자 창도 현재 Session의 확정 장치를 반납한 뒤 월드를 해제한다.
+     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
+@@ -1001,6 +1005,7 @@
+         BindGameMenusControls(hooks,widgets,controls,menu,[this](auto text) { return scriptStrings_.Store(text); });
+         hooks.node=[this](auto token) { return rawButtons_->Menus()->Node(token); };
+         hooks=session.BindGameMenus(std::move(hooks));const auto globals=hooks.global;const auto translate=hooks.translate; // 바인더가교체한같은현재소유자의getter를빌린다.
++        if (client_.GameplayGlobals()->world.editor) hooks.scenarioCommand=kEditorScenarioOpen; // 일반 전투/캠페인 메뉴에는 노출하지 않는다.
+         hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른Windows10/11 DIB 호환 화면비만 명시 추가하며 기본 원문 검사는 빈 목록을 유지한다.
+         hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 게임 중 옵션 메뉴에도 같은 Language 하위 메뉴를 둔다.
+         ConnectPostProcessMenu(hooks); // 7차: 게임 중 옵션 메뉴에도 같은 후처리 항목을 둔다.
+@@ -1182,6 +1187,7 @@
+ }
+ // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
+ void UberGump::Event(InputEvent event) {
++    if (ScenarioEvent(event)) return; // 새 Editor 명령만 별도 실제 모달에 전달하고 나머지 원문 순서는 보존한다.
+     if (DispatchScreenMouseKey(event,[this] { return client_.GetScreen().Flags(); },[this](auto mode) { client_.ChangeScreenMode(mode); })) rebuild_=true; // 원본 DirectDraw 호출은 Windows10/11에서 borderless/DIB 호환 장치로 실행한다. 같은 사건은 Guide/모달에 계속 전달한다.
+     if (const auto* movie=rawButtons_->Menus()->Movies();movie && movie->Active()) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) { rebuild_=true;return; } } // 실제 MovieGump 모달을 일반 ESC/키 처리보다 먼저 같은 Gump Route에 전달한다.
+     const auto transitionCode=event.code&0x03ffffffU; // 원본 Guide 제어 사건은 일반 입력/프레임보다 먼저 소비한다.
+@@ -1305,14 +1311,14 @@
+     }
+     if (transitionCode==kDialogDoNothing) return; // 원본 명령 자체는 효과가 없으며 HTML 부모는 발화 시 이미 Kill되었다.
+     if (transitionCode==kEditorTestBattleCommand) {
+-        EditorTestBattleHooks hooks;hooks.snapshot=[this] { if (!world_) throw std::logic_error("Test Battle의 실제 Editor Session 없음");world_->Session().SaveCurrentMap(); };
++        EditorTestBattleHooks hooks;hooks.snapshot=[this] { if (!world_) throw std::logic_error("Test Battle의 실제 Editor Session 없음");world_->Session().SaveCurrentMap();PrepareScenarioTest(); };
+         hooks.currentFortName=[this] { const auto bytes=client_.FortGlobals()->CurrentBytes();return std::string_view(reinterpret_cast<const char*>(bytes.data()),bytes.size()); }; //늦은 이름 복사는 같은 실제256BYTE의 NUL까지 읽는다.
+-        hooks.guide=MissionTransitionEffects();hooks.guide.create=[this,workspace=editorCatalog_](auto name) { CreateMission(std::string(name),0,0,[workspace](auto path) { return workspace->Read(path); }); }; //실제 편집 작업본의 동일 namespace를 Script/별칭 Fort/재로드까지 소유한다.
++        hooks.guide=MissionTransitionEffects();hooks.guide.create=[this,files=scenarioFiles_](auto name) { CreateMission(std::string(name),0,0,[files,map=std::string(name)](auto path) { return files->ReadForMission(map,path); }); }; // Script만 같은 workspace English fallback을 사용하며 Fort/추가파일은 원래 reader를 보존한다.
+         hooks.pending=FortEditEffects().pending;hooks.requestEdit=[this] {
+             auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U;
+             RequestFortEdit({fortSelectionMode_,native.next[0],battle,native.phase[0],player.templateOwner,player.battleOwner},FortEditEffects()); //next1을 먼저 쓰고 실제 Battle14의 파일/State/섬/Notify를 원문 순서대로 수행한다.
+         };
+-        static_cast<void>(DispatchEditorTestBattle(event,fortSelectionMode_,hooks));rebuild_=true;return;
++        try { static_cast<void>(DispatchEditorTestBattle(event,fortSelectionMode_,hooks)); }catch (const EditorScenarioPrepareError& error) { warnings_->Add(FontBytes(error.what())); }rebuild_=true;return; // sidecar 실패는 Guide 해제 이전 snapshot에서만 별도로 처리한다.
+     }
+     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
+     if (DispatchTellTip(event,client_.LocalStateGlobals()->TipNumber(),{
+@@ -1326,6 +1332,7 @@
+         context.random=[this](auto limit) { return client_.RandomGlobals()->Game().Next(limit); };context.camera=[this](float x,float y) { world_->CenterCamera(x,y); };context.revision=[this] { ++client_.GameplayGlobals()->MapRevision(); };context.pulseRegistered=[this](auto id) { static_cast<void>(rawButtons_->PulseRegisteredIfIdle(id)); };
+         rawButtons_->Menus()->ShowEditorIslandWindow(std::move(context));rebuild_=true;
+     })) return; // release는 소비만 하고 press는 실제 공장/부착/모달 등록을 수행한다.
++    if (transitionCode==kSaveGoMainCommand && !(event.code&InputCode::kRelease) && event.y && scenario_ && scenario_->Dirty()) { try { scenario_->Save(false); }catch (const std::exception& error) { warnings_->Add(FontBytes(error.what()));return; } } // sidecar 실패 전에 원문 nextState를 바꾸지 않아 보류 문서/현재 Editor를 유지한다.
+     if (DispatchEditorSaveGoMain(event,client_.LocalStateGlobals()->State().next[0],[this] { if (!world_) throw std::logic_error("SaveGoMain의 현재 Session 없음");world_->Session().SaveCurrentMap(); })) return;
+     if (transitionCode==0x02000079U) {
+         if (!(event.code&InputCode::kRelease)) OpenSaveFortNameDialog(std::bit_cast<std::uint32_t>(event.y));
+--- a/cpppj/src/client/UberGump.h
++++ b/cpppj/src/client/UberGump.h
+@@ -41,6 +41,7 @@
+ class TextClipboard; //같은 Client UI의 모든 문자 입력이 공유하는 실제 CF_TEXT 부모다.
+ class EditorFortFileDevices; // 최초 캠페인 편집 요청에서도 같은 지연 작업 파일 장치를 사용한다.
+ class EditorCatalogWorkspace; //목록/직접 Edit/이름 변경이 공유하는 장기 단일 namespace와 이관 장부다.
++class EditorScenarioFiles;class EditorScenarioController; // 실제 Editor 문서/사용자 파일과 별도 시나리오 UI owner다.
+ // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
+ class UberGump {
+     friend class ClientRendererFrame; //같은 실제 Gump의 override/지도 clip만 현재 Frame에 빌린다.
+@@ -135,6 +136,11 @@
+     void PollEditorState(); //메인/Edit/인트로39~41과 후속4를 같은 Native State 분배기로 소비한다.
+     o::LocalMissionParentResult InstallIntroNativeState(std::uint32_t selected); // 실제 Client 준비/영상 경계와 Native39~41 부모를 연결한다.
+     void OpenSaveFortNameDialog(std::uint32_t fortMode); //현재 Editor의 실제 파일/헤더/이름 부모를 원문 fortMode 인자의 TextEntry 모달에 연결한다.
++    bool ScenarioEvent(const InputEvent& event); // Editor 전용 새 명령/ESC만 소비하고 원문 입력은 그대로 넘긴다.
++    void OpenScenarioPage(std::uint32_t page); // 현재 문서의 실효값/원문 필드 페이지를 실제 Gump에 작성한다.
++    void OpenScenarioField(std::uint32_t field); // 같은 TextEntry/IME/MCP 일반 입력 모달로 한 필드를 편집한다.
++    void CloseScenarioUi(bool discard); // 패널/편집 모달의 실제 토큰만 Kill하고 취소 시 보류 문서를 반납한다.
++    void PrepareScenarioTest(); // Fort snapshot 정상 복귀 뒤 같은 사용자 sidecar를 저장/보장한다.
+     void OpenSendMoneyDialog(std::uint32_t target); // 원본 숫자 창의 대상·현재 입력·확정이 같은 월드를 빌린다.
+     o::LocalMissionParentResult InstallExistingEditorState(std::uint32_t selected); //State1의 정리/prefix/현재 파일/UI tail을 실행하며 공통 확정은 분배기에 맡긴다.
+     o::LocalMissionParentResult InstallPreparedFortState(bool prefixHud); // 같은 Native 앞단 뒤 파일/월드/꼬리를 연결한다. false는 State3에서 이미 실행한 HUD를 반복하지 않는다.
+@@ -213,6 +219,9 @@
+     SoloMapFileSpec& mapFileSpec_; // 같은 Client의9BYTE FileSpec 키를 페이지/Session 교체 뒤에도 직접 빌린다.
+     std::unique_ptr<SoloMapCatalog> mapCatalog_; // 현재 파일 캐시/dirty/이름을 Client 수명에 소유한다.
+     std::shared_ptr<EditorCatalogWorkspace> editorCatalog_; //World/listener 반납 뒤에도 같은 작업 폴더와 durable 삭제 상태를 유지한다.
++    std::shared_ptr<EditorScenarioFiles> scenarioFiles_; // Script/World 반납 뒤 TestBattle reader도 같은 작업 namespace를 유지한다.
++    std::unique_ptr<EditorScenarioController> scenario_; // 현재 맵의 보류 시나리오만 소유하며 월드 전환 때 반납한다.
++    std::uint32_t scenarioPage_{},scenarioToken_{}; // 실제 현재 페이지/모달 토큰이며 명령 ID나 성공 상태를 합성하지 않는다.
+     std::shared_ptr<TellFileMenus> fileMenus_; // 기존 Tell과 실제 전체 HTML 메타가 같은 @/# Config를 공유한다.
+     std::string mapUserName_; // 원본 초기 빈 사용자 이름이며 두 Fort 이름 버퍼와 다르다.
+     std::uint32_t& fortSelectionMode_; // 같은 Client005cae84이며 Ask의2와 진행State1을 구별한다.
+--- /dev/null
++++ b/cpppj/src/client/UberScenario.inc
+@@ -0,0 +1,60 @@
++// UberGump.cpp의 같은 namespace에서 포함하며 별도 가짜 UI/전송 상태를 만들지 않는다.
++namespace { // snapshot 이후 새 sidecar 준비 실패만 구별한다.
++struct EditorScenarioPrepareError:std::runtime_error { using std::runtime_error::runtime_error; }; // Guide를 닫기 전의 실패만 기존 Editor 안내로 처리한다.
++}
++// 패널/자식 모달의 실제 토큰만 Kill한다. 저장하지 않은 변경은 사용자의 취소/World 반납에서 버린다.
++void UberGump::CloseScenarioUi(bool discard) {
++    if (scenarioToken_ && rawButtons_) { rawButtons_->KillGump(scenarioToken_);scenarioToken_=0; }
++    if (discard) { scenario_.reset();scenarioPage_=0; }
++}
++// 최초 열기에서만 현재 맵의 실제 문서를 소유하며 페이지 이동은 보류 편집을 유지한다.
++void UberGump::OpenScenarioPage(std::uint32_t page) {
++    if (!world_ || !client_.GameplayGlobals()->world.editor || state_.phase!=ClientPhase::Mission) throw std::logic_error("Scenario는 설치 완료 Editor에서만 열 수 있습니다");
++    const auto current=std::string(client_.FortGlobals()->Current());
++    if (!scenario_ || scenario_->Map()!=current) {
++        EditorScenarioContext context;context.localOwner=client_.GameplayGlobals()->player.battleOwner;context.startingSp=world_->Session().MissionAiSettings().startingSp;context.stuffRefreshRate=world_->Session().MissionAiSettings().stuffRefreshRate; // 존재를 추정한 Config 키 대신 실제 원문 기본 전역을 읽는다.
++        context.knownTechnology=[this](auto name) { return client_.Assets().TypeTable().Find(name)>=0; };context.resolve=[this](const auto& document,auto key) { return ResolveEditorScenarioField(client_.Configuration(),document,key); };
++        scenario_=std::make_unique<EditorScenarioController>(scenarioFiles_,current,std::move(context));
++    }
++    CloseScenarioUi(false);scenarioPage_=page;const auto rows=scenario_->Page(page,[this](auto owner) { return world_->Session().FindPriestParticipation(owner)!=0; });auto& menus=*rawButtons_->Menus();
++    menus.OpenAttached([&](const auto& widgets,const auto& controls,const auto& menu) {
++        widgets.BeginFancy();controls.AddTitle(FontBytes("Scenario / 시나리오: "+current));
++        for (const auto& row:rows) controls.AddText(FontBytes(row.label),row.command,row.parameter,true,row.enabled,false); // 원래 메뉴40행 제한 안의 유한 페이지를 작성한다.
++        const auto token=menu.TakeCurrent();const auto* node=menus.Node(token);if (!node) throw std::logic_error("Scenario 실제 메뉴 노드 없음");widgets.Attach(token,(client_.GetScreen().Width()-node->baseWidth)*0.5F,(client_.GetScreen().Height()-node->baseHeight)*0.5F,rawButtons_->RootToken(),0);scenarioToken_=token;return token;
++    },true);menus.SetGumpModal(scenarioToken_,true);rebuild_=true;
++}
++// 화면 입력은 기존 실제 TextEntry/clipboard/IME/MCP의 일반 사건 경로를 그대로 사용한다.
++void UberGump::OpenScenarioField(std::uint32_t field) {
++    if (!scenario_ || !world_ || !client_.GameplayGlobals()->world.editor) throw std::logic_error("Scenario 편집 문서/현재 Editor 없음");
++    const auto request=scenario_->Edit(field);const auto map=scenario_->Map();CloseScenarioUi(false);SaveFortNameDialogContext context;context.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(context.editor,textClipboard_);
++    context.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
++    context.editorAccept=[this,field,map](auto bytes) {
++        try { if (!scenario_ || scenario_->Map()!=map || client_.FortGlobals()->Current()!=map || !client_.GameplayGlobals()->world.editor) throw std::logic_error("맵 전환 뒤의 Scenario 입력은 적용할 수 없습니다");const auto value=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()});scenario_->Apply(field,value);client_.Input().PushCommand(kEditorScenarioPage,0,static_cast<std::int32_t>(scenarioPage_));return true; }
++        catch (const std::exception& error) { warnings_->Add(FontBytes(error.what()));return false; } // 잘못된 새 값은 문서/기존 입력창을 보존한다.
++    };
++    context.editorCancel=[this] { client_.Input().PushCommand(kEditorScenarioPage,0,static_cast<std::int32_t>(scenarioPage_)); }; // 실제 Cancel은 보류 문서 전체를 버리지 않고 현재 필드만 취소한다.
++    scenarioToken_=rawButtons_->Menus()->ShowScenarioInputDialog(std::move(context),FontBytes(request.title),FontBytes(request.initial),request.maximum,request.multiline);rebuild_=true;
++}
++// 원문 새 Guide 공장이 기존 Editor를 반납하기 전에 sidecar 오류를 확정한다.
++void UberGump::PrepareScenarioTest() {
++    try {
++        const auto name=std::string(client_.FortGlobals()->Current());if (scenario_ && scenario_->Map()==name && scenario_->Dirty()) scenario_->Save(false);
++        if (!scenarioFiles_->EnsureEnglish(name)) throw std::runtime_error("삭제한 English 시나리오를 Scenario의 Save로 다시 작성하세요");
++    } catch (const std::exception& error) { throw EditorScenarioPrepareError(error.what()); }
++}
++// 원문 입력과 겹치지 않는 명시 Editor 확장 명령만 분배한다.
++bool UberGump::ScenarioEvent(const InputEvent& event) {
++    const auto code=event.code&0x03ffffffU;
++    if (scenario_ && code==0x1bU) { if (!(event.code&InputCode::kRelease)) CloseScenarioUi(true);rebuild_=true;return true; }
++    if (code<kEditorScenarioOpen || code>kEditorScenarioInherit) return false;
++    if (event.code&InputCode::kRelease) return true;
++    if (!world_ || !client_.GameplayGlobals()->world.editor || state_.phase!=ClientPhase::Mission) return true;
++    try {
++        if (code==kEditorScenarioOpen) OpenScenarioPage(0);
++        else if (code==kEditorScenarioPage) OpenScenarioPage(static_cast<std::uint32_t>(event.y));
++        else if (code==kEditorScenarioEdit) OpenScenarioField(static_cast<std::uint32_t>(event.y));
++        else if (code==kEditorScenarioSave) { if (!scenario_) throw std::logic_error("저장할 Scenario 문서 없음");scenario_->Save(true);CloseScenarioUi(true); }
++        else if (code==kEditorScenarioDiscard) CloseScenarioUi(true);
++        else if (code==kEditorScenarioInherit) { if (!scenario_) throw std::logic_error("상속할 Scenario 문서 없음");scenario_->Inherit(static_cast<std::uint32_t>(event.y));OpenScenarioPage(scenarioPage_); }
++    } catch (const std::exception& error) { warnings_->Add(FontBytes(error.what())); }rebuild_=true;return true;
++}
+--- /dev/null
++++ b/cpppj/tests/EditorScenarioIntegrationTests.cpp
+@@ -0,0 +1,101 @@
++// 창/게임/통신 없이 실제 보존형 문서/모델/파일 정책/패널 동작을 대조한다.
++#include "TestSupport.h"
++#include "client/EditorScenarioController.h"
++#include "client/DisplayTextInput.h"
++#include "client/RawGameMenus.h" // 원문 기본 메뉴와 명시 Scenario 확장 유무를 확인한다.
++#include <map>
++#include <memory>
++#include <set>
++#include <stdexcept>
++
++using namespace netstorm::client;
++namespace { // 디스크 대신 명시 입력/실제 저장 바이트를 소유한다.
++// 실제 파일 장치의 성공/부재/삭제/쓰기 실패를 독립적으로 제공한다.
++struct ScenarioMemory {
++    std::map<std::string,std::vector<std::uint8_t>> work,archive; // 사용자/원본 TAFF 내용을 구별하며 archive에는 쓰지 않는다.
++    std::set<std::string> deleted; // 완료 이관 뒤 삭제된 경로다.
++    std::size_t writes{}; // 실제 성공한 사용자 쓰기 횟수다.
++    bool failWrite{},korean{}; // 명시 실패와 현재 요청 언어다.
++    // 실제 정책과 같은 장치를 제공한다. 반환값으로 기대 결과를 만들지 않는다.
++    EditorScenarioFileHooks Hooks() {
++        EditorScenarioFileHooks hooks;
++        hooks.read=[this](auto path)->std::optional<std::vector<std::uint8_t>> { const std::string key(path);if (const auto at=work.find(key);at!=work.end()) return at->second;if (deleted.contains(key)) return std::nullopt;if (const auto at=archive.find(key);at!=archive.end()) return at->second;return std::nullopt; };
++        hooks.deleted=[this](auto path) { return deleted.contains(std::string(path)); };
++        hooks.write=[this](auto path,auto bytes) { if (failWrite) throw std::runtime_error("명시 atomic 실패");work[std::string(path)]={bytes.begin(),bytes.end()};++writes; };
++        hooks.paths=[this](auto map) { return EditorScenarioPaths{"D/"+std::string(map)+(korean ? ".korean" : ".english"),"D/"+std::string(map)+".english"}; };return hooks;
++    }
++    // 명시 원문 대본을 BOM UTF-8 파일로 제공한다.
++    void Put(std::string name,std::string text,bool source=false) { (source ? archive : work)[std::move(name)]=ScenarioDocument::FromUtf8(std::move(text)).Serialize(); }
++};
++// 새 UI가 실제 기술 표에 이름을 물어보는 경계를 제공한다.
++EditorScenarioContext Context() { EditorScenarioContext context;context.knownTechnology=[](auto name) { return name=="Priest" || name=="Temple"; };return context; }
++}
++
++// 신규 부재만 기본 생성하고 기존 원문/TAFF/사용자 파일을 자동 변환하지 않는다.
++TEST_CASE(EditorScenarioIntegration_DefaultEnglishAndTombstone) {
++    ScenarioMemory memory;EditorScenarioFiles files(memory.Hooks());CHECK(files.EnsureEnglish("NEW01"));CHECK(memory.writes==1);const auto saved=memory.work.at("D/NEW01.english");CHECK(saved[0]==0xef);
++    auto opened=files.Open("NEW01");CHECK(opened.document.Raw("myStartMoney")=="5000");CHECK(opened.document.Raw("myTech")=="all");CHECK(opened.document.Section("A.").has_value());CHECK(files.EnsureEnglish("NEW01"));CHECK(memory.writes==1 && memory.work.at("D/NEW01.english")==saved);
++    memory.Put("D/OLD.english","[Header]\nmyStartMoney=123\n[A.]\nold\n",true);const auto source=memory.archive;CHECK(files.EnsureEnglish("OLD"));CHECK(memory.writes==1 && memory.archive==source);
++    memory.deleted.insert("D/OLD.english");CHECK(!files.EnsureEnglish("OLD"));CHECK(memory.writes==1 && memory.archive==source);auto deleted=files.Open("OLD");CHECK(deleted.deleted && !deleted.baseline);
++    bool refused{};try { files.Save(deleted,deleted.document,false); }catch (const std::runtime_error&) { refused=true; }CHECK(refused);files.Save(deleted,deleted.document,true);CHECK(memory.writes==2 && !deleted.deleted);
++}
++
++// 현재 언어 override가 실효 편집 파일이며 없는 언어만 같은 English로 돌아간다.
++TEST_CASE(EditorScenarioIntegration_LanguageOverrideAndMissionReload) {
++    ScenarioMemory memory;memory.korean=true;memory.Put("D/MAP.english","[Header]\nmyStartMoney=10\n[A.]\nEnglish\n");auto files=std::make_shared<EditorScenarioFiles>(memory.Hooks());
++    CHECK(files->ReadForMission("MAP","D/MAP.korean")==memory.work.at("D/MAP.english"));CHECK(files->Open("MAP").path=="D/MAP.english");CHECK(!files->ReadForMission("MAP","D/MAP.fort"));
++    memory.Put("D/MAP.korean","[Header]\nmyStartMoney=20\n[A.]\n한국어\n");auto opened=files->Open("MAP");CHECK(opened.path=="D/MAP.korean");auto changed=opened.document;changed.SetLiteral("myStartMoney","300");files->Save(opened,changed,true);
++    const auto reloaded=files->ReadForMission("MAP","D/MAP.korean");CHECK(reloaded.has_value());CHECK(ScenarioDocument::FromBytes(*reloaded).Raw("myStartMoney")=="300");CHECK(ScenarioDocument::FromBytes(memory.work.at("D/MAP.english")).Raw("myStartMoney")=="10");
++}
++
++// atomic 실패와 외부 변경은 baseline/보류 문서/이전 파일을 그대로 보존한다.
++TEST_CASE(EditorScenarioIntegration_WriteFailureAndConcurrentChange) {
++    ScenarioMemory memory;memory.Put("D/MAP.english","[Header]\nmyStartMoney=7\n[A.]\nkeep\n");EditorScenarioFiles files(memory.Hooks());auto opened=files.Open("MAP");auto changed=opened.document;changed.SetLiteral("myStartMoney","9");const auto baseline=opened.baseline;
++    memory.failWrite=true;bool failed{};try { files.Save(opened,changed,true); }catch (const std::runtime_error&) { failed=true; }CHECK(failed && opened.baseline==baseline && changed.Changed());memory.failWrite=false;
++    memory.Put("D/MAP.english","[Header]\nmyStartMoney=99\n");failed=false;try { files.Save(opened,changed,true); }catch (const std::runtime_error&) { failed=true; }CHECK(failed && opened.baseline==baseline && memory.writes==0);
++}
++
++// Save as는 현재/English 두 파일을 보존 복사하고 충돌은 첫 쓰기 전에 거부한다.
++TEST_CASE(EditorScenarioIntegration_SaveAsCopiesWithoutChangingScripts) {
++    ScenarioMemory memory;memory.korean=true;memory.Put("D/OLD.english","[Header]\nloadFort=OTHER\nunknown=keep\n[A.]\nold\n");memory.Put("D/OLD.korean","[Header]\ntitle=기존\n[A.]\n이전\n");EditorScenarioFiles files(memory.Hooks());
++    files.CopyAs("OLD","NEW");CHECK(memory.work.at("D/NEW.english")==memory.work.at("D/OLD.english"));CHECK(memory.work.at("D/NEW.korean")==memory.work.at("D/OLD.korean"));CHECK(memory.writes==2);
++    files.CopyAs("OLD","NEW");CHECK(memory.writes==2);memory.Put("D/OTHER.korean","conflict");bool conflict{};try { files.CopyAs("OLD","OTHER"); }catch (const std::runtime_error&) { conflict=true; }CHECK(conflict && memory.writes==2 && !memory.work.contains("D/OTHER.english"));
++}
++
++// 실제 Config 사본은 간접 missionSpec/local 인자를 해석하면서 현재 Registry/언어를 바꾸지 않는다.
++TEST_CASE(EditorScenarioIntegration_ActualConfigSnapshotAndStagedValues) {
++    netstorm::o::ConfigInterface config(netstorm::o::ConfigInterface::FileReader{});config.Configuration().Assign("DataDir=D\ncurrentLanguage=korean\nwhere={DataDir}/{local.1}.{currentLanguage}\nmissionSpec={where}\nbase=42\n");const auto text=config.Configuration().Text();const auto count=config.Registry().Objects().size();
++    const auto paths=ResolveEditorScenarioPaths(config,"MAP");CHECK(paths.requested=="D/MAP.korean" && paths.english=="D/MAP.english");CHECK(config.Configuration().Text()==text && config.Registry().Objects().size()==count);
++    auto document=ScenarioDocument::FromUtf8("[Header]\nmyStartMoney={base}\n");CHECK(ResolveEditorScenarioField(config,document,"myStartMoney")=="42");document.SetLiteral("myStartMoney","500");CHECK(ResolveEditorScenarioField(config,document,"myStartMoney")=="500");CHECK(config.Configuration().Text()==text && config.Registry().Objects().size()==count);
++}
++
++// 새 AI 이름은 한글4BYTE/29BYTE 상한이며 실제 기존 settings 소비자의 실효값을 읽는다.
++TEST_CASE(EditorScenarioIntegration_KoreanAiNameAndActualSettings) {
++    EditorScenarioModel model(CreateDefaultEditorScenario("MAP"),Context());model.Set("ai2Name","가나다라마바사");model.Set("ai2StartMoney","6500");model.Set("ai2Tech","Priest;Temple");model.Set("ai2AllyList","1;3");model.Set("ai2Off","0");const auto ai=model.Ai(2);
++    CHECK(ai.fields.at("Name").effective=="가나다라마바사");CHECK(ai.fields.at("StartMoney").effective=="6500");CHECK(ai.fields.at("Tech").effective=="Priest;Temple");CHECK(ai.allyMask==10);
++    bool rejected{};try { model.Set("ai2Name","가나다라마바사아"); }catch (const std::length_error&) { rejected=true; }CHECK(rejected);CHECK(model.Ai(2).fields.at("Name").effective=="가나다라마바사");
++}
++
++// 패널 필드 ID가 실효 문서에 반영되고 저장/새 열기에서 동일하게 읽힌다.
++TEST_CASE(EditorScenarioIntegration_ControllerFieldsBriefingAndReload) {
++    ScenarioMemory memory;auto files=std::make_shared<EditorScenarioFiles>(memory.Hooks());EditorScenarioController controller(files,"MAP",Context());CHECK(controller.Dirty());const auto page=controller.Page(0,[](auto owner) { return owner==2; });CHECK(page.size()<40);CHECK(controller.Edit(4).key=="myStartMoney");
++    controller.Apply(4,"9876");controller.Apply(5,"Priest;Temple");controller.Apply(2*32,"한글 AI");controller.Apply(2*32+5,"1;3");controller.Apply(0x1000,"<h2>한글 안내</h2>\n$Button=Go!,DoNothing,0\n");controller.Save(true);CHECK(!controller.Dirty());
++    const auto opened=files->Open("MAP");EditorScenarioModel model(opened.document,Context());CHECK(model.Player().startingMoney==9876.0F);CHECK(model.Ai(2).fields.at("Name").effective=="한글 AI");CHECK(model.Ai(2).allyMask==10);CHECK(model.Document().Section("A.")->find("한글 안내")!=std::string::npos);
++    CHECK(controller.Edit(0x1000).multiline && controller.Edit(0x1000).maximum==1000);
++}
++
++// 브리핑 편집은 다른 섹션/미지 대본을 보존하고 섹션 삽입·길이 초과는 거부한다.
++TEST_CASE(EditorScenarioIntegration_BriefingPreservesUnselectedScript) {
++    auto document=ScenarioDocument::FromUtf8("[Header]\nunknown={script}\n[A.]\nold\n[Won.]\nDoNotChange\n[END]\n");document.SetSection("A.","새 안내\n$Button=Go!,DoNothing,0\n");CHECK(document.Text().find("[Won.]\nDoNotChange\n[END]")!=std::string::npos);CHECK(document.Raw("unknown")=="{script}");
++    const auto saved=document.Serialize();bool rejected{};try { document.SetSection("A.","[Won.]\nnew"); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected && document.Serialize()==saved);
++    auto missing=ScenarioDocument::FromUtf8("[Header]\nunknown=keep\n[END]\n");missing.SetSection("A.","brief\n");CHECK(missing.Section("A.")=="brief\n");CHECK(missing.Text().ends_with("[END]\n"));
++    ScenarioMemory memory;EditorScenarioController controller(std::make_shared<EditorScenarioFiles>(memory.Hooks()),"MAP",Context());rejected=false;try { controller.Apply(0x1000,std::string(1000,'x')); }catch (const std::length_error&) { rejected=true; }CHECK(rejected);
++}
++
++// 기본 훅은 원문 Edit행 그대로이고 실제 클론에서만 Scenario 일반 명령이 추가된다.
++TEST_CASE(EditorScenarioIntegration_EditMenuExtensionIsExplicit) {
++    GameMenusHooks hooks;std::vector<std::pair<std::string,std::uint32_t>> rows;std::uint32_t next{};
++    hooks.vertical=[] {};hooks.global=[](auto address) { return address; };hooks.translate=[](auto value) { return std::string(value); };hooks.take=[&] { return ++next; };hooks.submenu=[](auto,auto,auto,auto) {};
++    hooks.item=[&](auto label,auto command,const auto&,auto,auto) { rows.emplace_back(label,command); };
++    RawGameMenus(hooks).Edit();CHECK(rows.size()==5);CHECK(rows[0].first=="Save as...");rows.clear();hooks.scenarioCommand=kEditorScenarioOpen;RawGameMenus(hooks).Edit();CHECK(rows.size()==6 && rows[2].first=="Scenario..." && rows[2].second==kEditorScenarioOpen);
++}

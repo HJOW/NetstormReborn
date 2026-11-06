@@ -1,0 +1,74 @@
+--- a/cpppj/src/client/CampaignTemplateStorage.h
++++ b/cpppj/src/client/CampaignTemplateStorage.h
+@@ -33,6 +33,12 @@
+     std::function<void()> refreshTitle; // 현재 슬롯의 성공에서만00460730의 중간 제목 효과를 수행한다.
+     std::function<std::optional<DataManagerFileAllocation>(std::string_view)> readWhole; // 명시 Native41baa0의 최소4 물리/논리길이다. nullopt와 존재하는 빈 파일을 구별한다.
+ };
++//004bfc60이 선택한 실제 서명/진단/Notify만 제공한다. 파일 읽기/현재 Fort 재로드를 대신 실행하지 않는다.
++struct TemplateImageLoadHooks {
++    TemplateFileLoadHooks file; // signature의 현재 TYPE 수/진단/잘못된 서명 삭제 장치만 빌린다. read/readWhole은 호출하지 않는다.
++    std::function<void(std::uint32_t)> assertion; // Template.cpp의 manager0(0x56b)/inBattle0(0x56c)/valid0(0x573) 진단이다.
++    std::function<void(std::uint32_t)> notify; // 같은 고정 slot의004bd360 전체이며 +8/+12/+16과 mission 재조회는 실제 부모가 수행한다.
++};
+ // 현재 섹션이 바뀌어도 같은 manager의 같은 생성 수명에 쓰기 위한 불투명 참조다.
+ struct TemplateWriteStream {
+     std::uint32_t manager{},section{}; // 실제 호스트 manager와 같은 생성 수명의 동적 섹션 토큰이다. 포인터를 DWORD로 자르지 않는다.
+@@ -58,6 +64,7 @@
+     void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.
+     void LoadFile(std::uint32_t slot,o::FortTemplate fort,std::string_view name,const TemplateFileLoadHooks& file); //004bf550의기존파일유지/읽기전공개/정상false부분정리를실제owner에서실행한다. fort는이미해석된보조metadata이며실제section은reader의할당을쓴다.
+     o::FortImageData ReadLoginImage(std::string_view name,const TemplateFileLoadHooks& file,std::uint32_t territory); //004b63d0의지역Template읽기와004bf3e0의5섹션복제/직렬화/반납을실행한다.현재Client의version/이름표만공유하고전역9헤더는보존한다.
++    void ReadImage(std::uint32_t slot,std::span<const std::uint8_t> image,const bool& inBattle,const TemplateImageLoadHooks& hooks); //004bfc60의 지역 MarkStream20/복사/서명/실제 섹션 병합/Notify/예외반납이다. 현재 manager/부분효과를 재설치하거나 rollback하지 않는다.
+     void Borrow(std::uint32_t slot,std::uint32_t source); // 같은 manager를 빌리며 State/지형 cursor도 같은 객체를 사용한다.
+     void ClearAll(); // 원본 전역 정리의 실제 소멸/할당 반납을 수행한다.
+     void Clear(std::uint32_t slot); // 원본 단일 반납이다. 빈 포인터의 부가 필드도 비운다.
+--- a/cpppj/src/client/CampaignTemplateStorage.cpp
++++ b/cpppj/src/client/CampaignTemplateStorage.cpp
+@@ -394,6 +394,20 @@
+         try { const auto success=o::ReadDataManagerFile(manager,file);BindFileStreams();if (success && created!=o::FortTemplate::kSectionCount) throw std::logic_error("Template 실제 파일의 전체 이름 표 불일치");return success; }
+         catch (...) { BindFileStreams();throw; } // host 예외 전에 원문이 이미 붙인 노드/부분 pos를 숨기거나 rollback하지 않는다.
+     }
++    // 수신 이미지의 같은 지역 MarkStream에서 현재 manager로 직접 읽는다. 기존 파일 reader와 같은 실제 노드/버퍼 장치를 사용한다.
++    void ReadImageSource(std::span<std::uint8_t> cursor,std::span<std::uint8_t> input) {
++        RequireNoAccess();SyncStreams();std::uint32_t allocating{},created{}; // 부분 생성 노드는 아래 실제 목록/할당에 그대로 남는다.
++        o::DataManagerImageHooks hooks;hooks.names=[this] { return sectionNames.Names(); };hooks.assertion=[](auto) { throw std::logic_error("Template 수신 이미지의 원문 섹션 진단"); };
++        hooks.streams.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.streams.list=ListEffects();
++        hooks.streams.allocateStream=[this,&allocating,&created](auto size) { if (size!=60 || created>=o::FortTemplate::kSectionCount) throw std::logic_error("Template 수신 이미지의 새 노드 계약 위반");++created;allocating=AllocateStream();return allocating; }; // 빈 새 섹션도 기존 raw reader가 생성/반납한다.
++        hooks.streams.memory.buffer=[this,input](auto pointer)->std::span<std::uint8_t> {
++            if (pointer==0x30000U) return input;if (pointer<=0x10000000U || !streams.contains(pointer-0x10000000U)) throw std::out_of_range("Template 수신 이미지의 실제 버퍼 토큰 범위");return Buffer(pointer-0x10000000U);
++        }; // 수신 원본과 생성된 같은 manager의 버퍼만 조회한다.
++        hooks.streams.memory.allocate=[this,&allocating](auto size) { auto& buffer=Buffer(allocating);if (!buffer.empty()) throw std::logic_error("Template 수신 이미지의 새 버퍼 중복 할당");buffer.resize(size);return BufferToken(allocating); };
++        hooks.streams.memory.assertion=[](auto) { throw std::logic_error("Template 수신 이미지의 실제 MemStream 진단"); };
++        try { o::ReadDataManagerImage(manager,cursor,hooks);BindFileStreams(); }
++        catch (...) { BindFileStreams();throw; } // 원문이 이미 교체한 노드/부분 cursor를 숨기거나 예전 파일로 rollback하지 않는다.
++    }
+     // 기존 Campaign/목록 교체 API는 이전과 같이 빈 manager에 읽고 정상 false를 예외로 바꾼다.
+     void ReadFile(std::span<const std::uint8_t> input,std::int32_t typeCount) {
+         if (!streams.empty() || Read(std::span(manager).subspan(4)) || input.size()>0xffffffffU) throw std::invalid_argument("Template 실제 파일 이미지/빈 manager 계약 위반");
+@@ -496,6 +510,27 @@
+         o::FortImageHooks image;image.typeCount=[&file] { return static_cast<std::uint32_t>(NeedFile(file.typeCount)()); };image.assertion=[](auto) { throw std::logic_error("로그인이미지의직렬화진단"); };
+         auto result=target.SaveImage(std::move(image));temporary.Clear(1);temporary.Clear(0);return result;
+     } catch (...) { temporary.Clear(1);temporary.Clear(0);throw; } //부분읽기/복제예외에서도지역노드/할당을유지한채전역owner로넘기지않는다.
++}
++//004bfc60은 기존 같은 manager를 사용한다. 지역 수신 할당만 정상/예외에서 한 번 반납한다.
++void CampaignTemplateStorage::ReadImage(std::uint32_t slot,std::span<const std::uint8_t> input,const bool& inBattle,const TemplateImageLoadHooks& hooks) {
++    const auto header=Header(slot);if (!Read(header)) NeedFile(hooks.assertion)(0x56b);if (!inBattle) NeedFile(hooks.assertion)(0x56c);
++    if (input.size()>0xffffffffU) throw std::out_of_range("Template 수신 이미지의 DWORD 길이 범위");
++    std::array<std::uint8_t,20> source{};Put(source,16,0xffffffffU);std::vector<std::uint8_t> allocation;bool releaseAttempted{}; // 원문 MarkStream의 첫 네DWORD0/mark-1과 독립 지역 할당이다.
++    o::MemStreamHooks memory;
++    memory.allocate=[&allocation](auto size) { allocation.resize(size);return 0x30000U; }; // 실제 요청 길이의 지역 물리를 소유하며 헤더 manager를 새로 만들지 않는다.
++    memory.buffer=[&allocation](auto token)->std::span<std::uint8_t> { if (token!=0x30000U) throw std::out_of_range("Template 수신 지역 할당 토큰");return allocation; };
++    memory.release=[&allocation](auto token) { if (token!=0x30000U) throw std::logic_error("Template 수신 지역 할당 반납 토큰");std::vector<std::uint8_t>{}.swap(allocation); };
++    memory.assertion=[](auto) { throw std::logic_error("Template 수신 지역 MemStream 원문 진단"); };
++    const auto release=[&] { if (releaseAttempted) return;releaseAttempted=true;o::DestroyMemStream(source,memory.release); }; // 반납 예외에서 같은 할당을 다시 free하지 않는다.
++    try {
++        o::AllocateMemStream(source,static_cast<std::uint32_t>(input.size()),memory);o::WriteMemStream(source,input,static_cast<std::uint32_t>(input.size()),memory);Put(source,4,0);
++        const auto signatureManager=Read(header); // 가상 서명 진입 때 선택한 manager는 서명 본문 끝까지 고정한다.
++        o::TemplateFileSignatureHooks signature;signature.buffer=memory.buffer;signature.typeCount=hooks.file.typeCount;signature.tooManyTypes=hooks.file.tooManyTypes;signature.rejectFile=hooks.file.rejectFile;
++        signature.fileName=[this,signatureManager] { return o::TemplateDataManagerFileName(ManagerBytes(signatureManager)); }; // 진단 후 삭제도 같은 가상 this의 실제 이름이다.
++        if (!o::ReadTemplateFileSignature(ManagerBytes(signatureManager),source,signature)) NeedFile(hooks.assertion)(0x573); // 원문 진단이 복귀하면 실제 섹션 읽기를 계속한다.
++        Current(slot).ReadImageSource(source,allocation); // 서명/진단 효과 뒤 header의 현재 manager를 새로 선택한다.
++        NeedFile(hooks.notify)(slot);release(); // 실제 Notify의 flags/mission/preventSave 관문이 끝난 뒤 지역 원문을 반납한다.
++    }catch (...) { release();throw; }
+ }
+ // 빌린 헤더를 반납해도 원래 소유자의 실제 버퍼/커서는 유지된다.
+ void CampaignTemplateStorage::Borrow(std::uint32_t slot,std::uint32_t source) { if (slot==source) throw std::invalid_argument("Template 자기 manager 빌림 계약");static_cast<void>(Current(source));const auto handle=Read(Header(source));const auto target=Header(slot);if (Read(target)==handle && !Read(target.subspan(4))) throw std::invalid_argument("Template 원래 소유자를 반납하는 같은 manager 빌림");Clear(slot);Put(Header(slot),0,handle);Put(Header(slot),4,1); }

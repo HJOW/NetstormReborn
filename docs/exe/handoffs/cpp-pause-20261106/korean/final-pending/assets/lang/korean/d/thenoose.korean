@@ -1,0 +1,69 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 10000
+myTech = "sunWalker;thunderBattery;sunFence;sunArcher;sunCannon;sunBlocker;thunderBlocker;bulf"
+
+aiName = "Chamberlain of Rain"
+aiTech = "sunCannon;rainBattery;thunderBattery;rainCannon;rainBlocker;rainBalloon;rainWalker;thunderCannon"
+aiStartMoney = 0
+aiGeyserAttachments = 2
+aiCollectors = 4
+aiTimeBetweenMoves = 2
+
+title = "올가미"
+
+[Options]
+
+[A.]
+<h2>올가미</h2>
+<i>"무자비하고 교활하지 않다면
+열 배는 용감하고 열 배는 대담해야 한다.
+하지만 그래도 부족할 때가 많다." --님버스의 전략가 트롬 인스키넬드</i>
+<p>
+어젯밤에도 평소처럼 보초를 세웠습니다.
+교대 병력이 도착해 보니 그들은 잠든 사이 살해되었고,
+우현에는 적의 섬이 있으며 우리 섬은 적의 다리에 둘러싸여 있었습니다!
+<p>
+해가 뜨면 스톰 간헐천이 나타나고 적의 공격이 시작됩니다.
+그들의 전선을 <i>반드시</i> 돌파해야 합니다!
+
+$Button=다음,Tell,A1.
+
+[A1.]
+<h2>올가미</h2>
+<p>
+함정을 깨뜨린 뒤에는 적 사제를 포획하여
+우리 제단 위에 그의 피를 쏟아야 합니다.
+그래야 어둠의 왕자들도 은밀한 수작조차 우리에게는 통하지 않음을 알 것입니다!
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+쓰러진 보초들의 원수를 갚았습니다!
+다리를 뚫고 오만한 적을 압도했습니다.
+그의 기습 전술도 당신의 뛰어난 파괴 능력에는 상대가 되지 못했습니다!
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,RainVsRain
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+잠든 사이 죽은 보초들은 오히려 편히 간 셈입니다.
+남은 병력은 사방에서 밀려드는 적에게 잔혹하게 학살되었습니다.
+섬이 마지막 굴욕을 당하는 동안
+그들의 비명이 머릿속에서 울려 퍼집니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]
+																		 
+																		 

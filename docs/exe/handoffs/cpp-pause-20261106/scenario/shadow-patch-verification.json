@@ -1,0 +1,200 @@
+{
+  "shadow": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-editor-scenario-integration-preparation\\scenario-patch-shadow-dd56e806",
+  "apply_exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "base_files": 18,
+  "pending_files": 24,
+  "shadow_files": 24,
+  "differences": [
+    {
+      "path": "cpppj/src/client/EditorMapCatalogFiles.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "37a9ced70ec1e700b0d6284303a79e34130ef110000ef2869f0498280804a6f0",
+      "pending_sha256": "142785b8c2cdea3912576b1d1337078e9395df9eac6057351e16baac3d423abb",
+      "shadow_size": 17303,
+      "pending_size": 17300,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioController.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "f902b556fe49f77f8df072aa81f8cb36e0644e8d32c36e5b3eb80450d906a86d",
+      "pending_sha256": "396fc6f4e5afcba400b7aa2958c334e41108c115b07ac5100af5f50c613b9aec",
+      "shadow_size": 8980,
+      "pending_size": 8914,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioController.h",
+      "issue": "bytes",
+      "shadow_sha256": "5fb1d7c733c6153ef4f5ef6ff1a87b632147027b2087a30ed58fe8b01578bfd8",
+      "pending_sha256": "dd1b8fcd0d57b6f2b55017b583ea13a138c2cbf2f60e6e5eb515492ac7607c3e",
+      "shadow_size": 3120,
+      "pending_size": 3087,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioFiles.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "29aedb9a9a2afaea6766ee2e674fe12a9f47a5e6a7c1b762d2fb765537b84b93",
+      "pending_sha256": "1a73fc6d449cd421103aff31b2c45c90d77ed927f9a26dfd95a4450c21c984ae",
+      "shadow_size": 8803,
+      "pending_size": 8722,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioFiles.h",
+      "issue": "bytes",
+      "shadow_sha256": "ef567d117c2beac8d3b165bf63cb62872394ff1d18ae51d05ae857d7fa6077d2",
+      "pending_sha256": "973115e28696c7d6844d07dbcd7fb8958a4730ec415e9e5e312be1a09f83aadc",
+      "shadow_size": 3800,
+      "pending_size": 3755,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioModel.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "1ecfdad6d5725ec58a0785a12822feb78de6973755d4ee5c1138b5edd3aacda4",
+      "pending_sha256": "d2e98171454d2ecd7aebd1fd378bddf50bb7b595fe3be297e5daca29aeab1610",
+      "shadow_size": 16225,
+      "pending_size": 16057,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioModel.h",
+      "issue": "bytes",
+      "shadow_sha256": "28842003428138be715dea2b9a0f1f4ee02b3ba33e1aff27bfb7991d87b5cc9f",
+      "pending_sha256": "3de3d5cfd27b70efc9eed459c7ea444ac4640aae92f16a35ffc0fa1e5e0f08c7",
+      "shadow_size": 5471,
+      "pending_size": 5398,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/RawGameMenus.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "3b8793d2e9c058977e657bb8cc2d0d1b6c271fd366ac4223e4b470f92deb5f0f",
+      "pending_sha256": "fd6d64ce4e594915a5ae674f3ef9c8abf3a8da3615993ff3d1709bb61c312fed",
+      "shadow_size": 18567,
+      "pending_size": 18374,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/RawGameMenus.h",
+      "issue": "bytes",
+      "shadow_sha256": "5ee7205ef3b9bbe1e5e343a3cae55109b101d37399a1137d905a37d8db4cd629",
+      "pending_sha256": "bdad400905072f4c9c8044487e4d87441f640fe789d6283526d4ecb77928f3a4",
+      "shadow_size": 6845,
+      "pending_size": 6777,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "6bee828bac147c3fd66a219e34597f5e00fca34777d5dc4b841faca65eca56e9",
+      "pending_sha256": "c32805ebf986fe0cffe1594a0fd4d225a0553aa0565225580838dad30bdfb1ef",
+      "shadow_size": 145385,
+      "pending_size": 144267,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.h",
+      "issue": "bytes",
+      "shadow_sha256": "bb932d542ee646deb9fcc8ed7f5d7a3fdb5ead32225ab507fb94cf4f38d731b4",
+      "pending_sha256": "90fd5b0fb8f3093d82248abaa5b508274b5d76a122e8f1544851bd561fafe434",
+      "shadow_size": 26871,
+      "pending_size": 26641,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/ScenarioDocument.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "b677a952f6e09e308794806e07b21a1d44746a0251bd4809d36c3a3872e9c863",
+      "pending_sha256": "7ef18e395fbc7ebc84780b54a58393dec6a142fef35e15f5afaffa3e6574a87d",
+      "shadow_size": 13431,
+      "pending_size": 13272,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/ScenarioDocument.h",
+      "issue": "bytes",
+      "shadow_sha256": "9dd598aec498a18eda50ac1f77f568fcef9fc9659301ef7e3e086ad35eb8c78e",
+      "pending_sha256": "c9a8577b82cee3e23e12412b18a8e4803725df9390ce1669342633a72ec93c24",
+      "shadow_size": 3577,
+      "pending_size": 3527,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/UberEditor.inc",
+      "issue": "bytes",
+      "shadow_sha256": "795173d91b4816fa78a55b9c161a8e1e1053f091c51124ded26769eb5c1d1e73",
+      "pending_sha256": "20757a517cddc60600a342147dbf0ba209d955e5a23e6b71457bb043821c5ebf",
+      "shadow_size": 31995,
+      "pending_size": 31962,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "754347f7ee1acb5e2f0ff1b79234eb77008ddf909dbc4ae25a3afd5c52c46db5",
+      "pending_sha256": "32ce3d4818a8e37fbd1b282577a397e7f33f86dcee8a488b056c4dae0c5652ce",
+      "shadow_size": 230452,
+      "pending_size": 228509,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/UberGump.h",
+      "issue": "bytes",
+      "shadow_sha256": "ef9d3eebb694069c4fe97798a22d7b1f6cc97431b58512c9dd827fb9d6ed1bb6",
+      "pending_sha256": "001d1bfd0da6de5bc2dad9879497f0a90334443ac9a5bb53019e7c4b7d7f05a7",
+      "shadow_size": 29024,
+      "pending_size": 28744,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/src/client/UberScenario.inc",
+      "issue": "bytes",
+      "shadow_sha256": "afdf3b617b45c8c7b22f7c984bc94ec9c17b2ee55bad0afe3055be35aa7b36f6",
+      "pending_sha256": "4639752f5586d3b9f4613e9f1b2ea9b48e61e34937db22f36e3d1c8d12a475fb",
+      "shadow_size": 6706,
+      "pending_size": 6646,
+      "equal_after_lf": true
+    },
+    {
+      "path": "cpppj/tests/EditorScenarioIntegrationTests.cpp",
+      "issue": "bytes",
+      "shadow_sha256": "2dd52579301411e4960e316391b9a870d6365326d574ee2ea71da43992d60d06",
+      "pending_sha256": "23759a45016b27c1740b387b3784c46dbc591c60d10aee99c8ed114375a98419",
+      "shadow_size": 11854,
+      "pending_size": 11753,
+      "equal_after_lf": true
+    }
+  ],
+  "required_unregistered_five": {
+    "cpppj/src/client/ScenarioDocument.h": {
+      "base": true,
+      "pending": true,
+      "shadow": true
+    },
+    "cpppj/src/client/ScenarioDocument.cpp": {
+      "base": true,
+      "pending": true,
+      "shadow": true
+    },
+    "cpppj/src/client/EditorScenarioModel.h": {
+      "base": true,
+      "pending": true,
+      "shadow": true
+    },
+    "cpppj/src/client/EditorScenarioModel.cpp": {
+      "base": true,
+      "pending": true,
+      "shadow": true
+    },
+    "cpppj/tests/ScenarioDocumentTests.cpp": {
+      "base": true,
+      "pending": true,
+      "shadow": true
+    }
+  }
+}

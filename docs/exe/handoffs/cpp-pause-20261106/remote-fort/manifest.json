@@ -1,0 +1,47 @@
+{
+  "status": "DESIGN HANDOFF ONLY; product 985 unchanged; unvalidated draft must not be applied",
+  "product_commit": "1f00a25a",
+  "host": "HJOW-Athlon",
+  "last_full_decompilation": "2026-11-03 / HJOW-Athlon",
+  "documents": [
+    {
+      "path": "PLAN.md",
+      "sha256": "1c1dedf241f97c068147f5b9155b35f860ce3c06b783a9a03b705c69a8941934"
+    },
+    {
+      "path": "FUNCTION_MAP.md",
+      "sha256": "2255bf3217e2663dfc9035e98753c94e00e7521a16fcacf6e04657af6f610fda"
+    }
+  ],
+  "reference_sources": [
+    {
+      "path": "cpppj/src/client/CampaignTemplateStorage.h",
+      "sha256": "8a4871fff041a3db56963d2cfcca0281a8054fe640cd44bfdf4a9db2e30e183a"
+    },
+    {
+      "path": "cpppj/src/client/CampaignTemplateStorage.cpp",
+      "sha256": "97689846ae00b8212eb9a866ff003ebdca65faf54c1191d732113e5ac1fc263a"
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+      "sha256": "938a564ea327c754c3aeaeaa556ea47f0c186e75bc7e49e847713cd282086dc8"
+    },
+    {
+      "path": "cpppj/src/o/RawMissionLogin.cpp",
+      "sha256": "5c464ec6014c798d5604c28247bf2985118cc2d68c0b4fc86a7b72bbed2f899d"
+    },
+    {
+      "path": "cpppj/src/client/NewFortManagerDevices.cpp",
+      "sha256": "f5cbbc51d61f870a47fd6f378380cb2a01ebdd1a1570a2a401ce8440aad8bf61"
+    },
+    {
+      "path": "cpppj/src/o/RawNewFort.cpp",
+      "sha256": "61c7157042b28779444323144dc8cecb816be847e5f476fbc986a74d5f81a624"
+    }
+  ],
+  "unvalidated_draft": "unvalidated-draft/DO_NOT_APPLY.md",
+  "agent_product_changes": 0,
+  "agent_builds": 0,
+  "agent_runs": 0,
+  "new_mp_tests_written": 0
+}

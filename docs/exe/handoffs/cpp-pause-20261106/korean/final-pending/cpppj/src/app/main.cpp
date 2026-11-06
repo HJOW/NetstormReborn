@@ -1,0 +1,973 @@
+// 새로 쓰는 실행 진입점: 복원된 데이터 계층을 실제 원본/CD 파일로 검증한다.
+// 메뉴·브리핑·저장 미션의 지형/선택/이동과 독립 검사 장면을 표시한다. 건설/전투 규칙은 후속이다.
+#include <cstdio>
+#include <cstdlib>
+#include <bit>
+#include <exception>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+#include <map>
+#include <regex>
+#include <stdexcept>
+#include <optional>
+#include <string>
+#include <string_view>
+#include <vector>
+#include "app/InspectView.h"
+#include "app/McpServer.h"
+#include "app/FrameBindingInspect.h"
+#include "client/ClientMain.h"
+#include "client/ClientAudio.h"
+#include "client/ClientCdGlobals.h"
+#include "client/GameAssets.h"
+#include "client/GameMenuCommands.h"
+#include "client/SquidRenderer.h"
+#include "client/GameWorld.h"
+#include "client/Mission.h"
+#include "client/UberGump.h"
+#include "client/GifImage.h"
+#include "o/BaseFile.h"
+#include "o/RawFileName.h"
+#include "o/CanonDecoder.h"
+#include "o/Config.h"
+#include "o/ConfigInterface.h"
+#include "o/Islandbuilder.h"
+#include "o/OriginalText.h"
+#include "o/Template.h"
+#include "o/Xlat.h"
+#include "platform/Console.h"
+#include "client/ProductPresentation.h"
+#include "platform/Bitmap.h"
+#include "platform/FileOutput.h"
+#include "platform/PortableStartup.h"
+#include "platform/UserDataRoot.h"
+
+namespace {
+// 복원의 기준이 되는 원본 판본.
+constexpr const char* kTargetOriginalVersion = "10.78";
+
+// 실행 가능한 공용 계층의 명령과 아직 구현하지 않은 범위를 출력한다.
+void PrintBuildInfo() {
+    std::puts("  --run: --test-bridge-patterns 3,0,25 (test-only repeating sequence; off restores normal supply)");
+    std::printf("NetStorm %s\n",netstorm::client::kProductVersion.data());
+    std::printf("  reconstructed from: NetStorm %s (decompiled)\n", kTargetOriginalVersion);
+    std::printf("  default maxFPS: %d (frame interval %.6f s, 1ms clock: %u ms)\n",
+        netstorm::client::kDefaultMaxFps, netstorm::client::FrameIntervalSeconds(netstorm::client::kDefaultMaxFps),
+        netstorm::client::QuantizedFrameMilliseconds(netstorm::client::kDefaultMaxFps));
+    std::printf("  --inspect-data <game-dir>\n  --read-archive <tarc> <entry>\n  --dump-archive <tarc>\n  --read-game <game-dir> <entry>\n");
+    std::printf("  --config <file> <key>\n  --translate-game <game-dir> <language-number> <original-text>\n");
+    std::printf("  --inspect-assets <game-dir> [--cd]\n  --dump-assets <game-dir> [--cd]\n");
+    std::printf("  --inspect-frame-binding <game-dir> [--cd]\n");
+    std::printf("  --inspect-priest-assets <game-dir> [--cd]\n");
+    std::printf("  --inspect-canon-patterns <game-dir> [--cd]\n");
+    std::printf("  --inspect-canon-shapes <game-dir> [--cd]\n");
+    std::printf("  --inspect-canon-geometry <game-dir> [--cd]\n");
+    std::printf("  --inspect-canon-placement <game-dir> [--cd]\n");
+    std::printf("  --inspect-canon-mayplace <game-dir> [--cd]\n");
+    std::printf("  --export-frame <game-dir> <type> <cluster> <layer> <output.bmp> [--cd]\n");
+    std::printf("  --config-dump <game-dir> [--cd]\n  --config-get <game-dir> <key> [--cd]\n");
+    std::printf("  --config-spec <game-dir> <key> [arg1 [arg2 [arg3]]] [--cd]\n");
+    std::printf("  --config-save <game-dir> <output-file> [key=value ...] [--cd]\n");
+    std::printf("  --dump-types <game-dir> [--cd]\n  --inspect-fort <game-dir> <mission-or-path> [--cd]\n  --dump-forts <game-dir> [--cd]\n");
+    std::printf("  --inspect-mission <game-dir> <mission> [--cd]\n  --dump-territories <game-dir> [--cd]\n");
+    std::printf("  --run <game-dir> [--view types|fonts|<mission> | --mission <mission>] [--window] [--frames N] [--screenshot out.bmp] [--render-stats] [--no-audio | --mute-audio] [--audio-report out.txt] [--set \"k=v;k=v\"] [--cd]\n");
+    std::printf("  --dump-font <game-dir> <font-path>\n");
+    std::printf("  --dump-gif <game-dir> <gif-path>\n  --run also accepts --ui-script steps.tsv --ui-report report.tsv\n");
+    std::printf("  --dump-world <game-dir> <mission> [--cd]\n");
+    std::printf("  --inspect-bridges <game-dir> [--cd]\n");
+}
+
+// 실제 자산을 읽는 VFS를 만든다. 아카이브 등록 순서는 명시적으로 지정한다.
+netstorm::o::BaseFileSystem Files(const std::filesystem::path& root) {
+    netstorm::o::BaseFileSystem files(root);
+    files.RegisterArchives(); //실제 Client와 같은 기본*.tarc 등록 순서로 명시 CLI 자료도 읽는다.
+    return files;
+}
+
+// 원본 바이트를 손실 없이 출력하여 Python 도구와 바이트 단위 대조를 가능하게 한다.
+void WriteBytes(const std::vector<std::uint8_t>& bytes) {
+    netstorm::platform::UseBinaryStdout();
+    if (!bytes.empty() && std::fwrite(bytes.data(), 1, bytes.size(), stdout) != bytes.size())
+        throw std::runtime_error("Unable to write stdout");
+}
+
+// UTF-8 텍스트도 줄바꿈 변환 없이 출력한다.
+void WriteText(const std::string& text) { WriteBytes(std::vector<std::uint8_t>(text.begin(), text.end())); }
+
+// 일괄 검사 출력의 길이는 원본과 같이 리틀 엔디언 32비트로 쓴다.
+void WriteLength(std::uint32_t value) {
+    std::vector<std::uint8_t> bytes(4);
+    // 낮은 바이트부터 순서대로 기록한다.
+    for (std::size_t i = 0; i < bytes.size(); ++i) bytes[i] = static_cast<std::uint8_t>(value >> (i*8));
+    WriteBytes(bytes);
+}
+
+// 검사 전용 프레임 형식: 개수, 각 이름 길이·이름·내용 길이·내용. 원본 TAFF 형식을 바꾸지 않는다.
+void DumpArchive(const std::filesystem::path& path) {
+    const auto archive = netstorm::o::TaffArchive::Open(path);
+    WriteLength(static_cast<std::uint32_t>(archive.Entries().size()));
+    // 모든 엔트리를 한 프로세스에서 읽어 검사기의 반복 실행 비용을 없앤다.
+    for (const auto& entry : archive.Entries()) {
+        WriteLength(static_cast<std::uint32_t>(entry.name.size())); WriteText(entry.name);
+        const auto data = archive.Read(entry.name);
+        WriteLength(static_cast<std::uint32_t>(data.size())); WriteBytes(data);
+    }
+}
+
+// 복호화된 설정·번역 자산을 읽어 실행 가능한 공용 계층의 상태를 보고한다.
+void InspectData(const std::filesystem::path& root) {
+    const auto archive = netstorm::o::TaffArchive::Open(root / "netstorm.tarc");
+    auto files = Files(root);
+    const auto config = netstorm::o::ConfigText::FromBytes(files.Read("d/setup.cfg"));
+    const auto translations = netstorm::o::XlatTable(netstorm::o::DecodeOriginalText(files.Read("d/xlat.german")));
+    std::printf("TAFF entries: %zu\n", archive.Entries().size());
+    const auto major = config.GetRaw("gamemaster"); const auto minor = config.GetRaw("gameminor");
+    if (major && minor) std::printf("Version declared in setup.cfg: %s.%s\n", major->c_str(), minor->c_str());
+    else std::printf("Version not declared in setup.cfg\n");
+    std::printf("German translation keys: %zu\n", translations.Size());
+}
+
+// 선택적인 --cd를 해석한다. 판본은 블록 개수만으로 자동 추정하지 않는다.
+netstorm::o::OriginalEdition Edition(int argc, char** argv, int expectedCount) {
+    if (argc == expectedCount) return netstorm::o::OriginalEdition::Patch1078;
+    if (argc == expectedCount+1 && std::string(argv[expectedCount]) == "--cd") return netstorm::o::OriginalEdition::Cd1072;
+    throw std::invalid_argument("Expected optional --cd as the last argument");
+}
+
+// 타입·클러스터·그림을 한 번씩 해석하여 실제 로더의 처리 결과를 보고한다.
+void InspectAssets(const netstorm::client::GameAssets& assets,netstorm::o::OriginalEdition edition) {
+    std::size_t frames = 0, images = 0, special = 0;
+    // 모든 블록을 검사하여 메타데이터와 이미지 레코드 수를 구분한다.
+    for (const auto& type : assets.Types()) {
+        const auto& block = assets.Shapes().Blocks()[type.block];
+        frames += block.frames.size();
+        // 실제 압축 해제까지 수행하므로 잘린 픽셀 스트림도 실패로 보고한다.
+        for (std::size_t frame = 0; frame < block.frames.size(); ++frame) {
+            if (block.frames[frame].IsSpecial()) ++special;
+            else { assets.Shapes().Decode(type.block, frame); ++images; }
+        }
+    }
+    std::printf("Loaded asset types: %zu\nShape frames: %zu\nDecoded images: %zu\nSpecial records: %zu\n", assets.Types().size(), frames, images, special);
+    // 실제 두 판본의 SHP 추가 헤더와 타입 번호 연결을 읽기 전용 검사에 포함한다.
+    const auto displayShapes=netstorm::client::SquidRenderer::Shapes(assets,edition);
+    std::size_t displayFrames=0;
+    // 내장 타입의 빈 shape를 제외하고 모든 물리 헤더를 확인한다.
+    for (const auto& shape:displayShapes) displayFrames+=shape.frames.size();
+    std::printf("Squid display headers: %zu\n",displayFrames);
+}
+
+// 길이가 붙은 UTF-8 문자열을 검사 전용 스트림으로 기록한다.
+void WriteString(const std::string& value) { WriteLength(static_cast<std::uint32_t>(value.size())); WriteText(value); }
+// 숫자형 속성은 리틀 엔디언 IEEE 754 double로 기록하여 텍스트 반올림을 피한다.
+void WriteDouble(double value) {
+    const auto bits = std::bit_cast<std::uint64_t>(value);
+    WriteLength(static_cast<std::uint32_t>(bits)); WriteLength(static_cast<std::uint32_t>(bits >> 32));
+}
+// 복원된 타입과 모든 픽셀을 한 프로세스에서 독립 Python 판독기와 대조하게 한다.
+void DumpAssets(const netstorm::client::GameAssets& assets) {
+    WriteLength(1); // 검사 스트림의 스키마 버전이며 원본 파일 형식과는 별개다.
+    WriteLength(static_cast<std::uint32_t>(assets.Types().size()));
+    // 타입별 속성·클러스터·특수 인덱스·모든 그래픽 프레임을 기록한다.
+    for (const auto& asset : assets.Types()) {
+        const auto& type = asset.definition;
+        WriteString(asset.assetName); WriteString(type.name); WriteString(type.constructor);
+        WriteLength(static_cast<std::uint32_t>(type.flags.size()));
+        // 미사용 게임 플래그도 원문 이름을 보존한다.
+        for (const auto& flag : type.flags) WriteString(flag);
+        WriteLength(static_cast<std::uint32_t>(type.properties.size()));
+        // 문자열과 숫자형 속성은 서로 다른 태그로 기록한다.
+        for (const auto& property : type.properties) {
+            WriteString(property.name);
+            if (const auto* number = std::get_if<double>(&property.value)) { WriteLength(0); WriteDouble(*number); }
+            else { WriteLength(1); WriteString(std::get<std::string>(property.value)); }
+        }
+        WriteLength(static_cast<std::uint32_t>(type.clusters.size()));
+        // 프레임 코드는 side·variant·number·flags의 원래 4바이트다.
+        for (const auto& cluster : type.clusters) {
+            WriteString(cluster.name);
+            WriteBytes({cluster.code.side, cluster.code.variant, cluster.code.number, cluster.code.flags});
+            WriteLength(static_cast<std::uint32_t>(cluster.images.size()));
+            // GIF 참조를 검증하되 런타임 그래픽 선택에는 쓰지 않는다.
+            for (const auto& reference : cluster.images) { WriteString(reference.file); WriteDouble(reference.number); }
+        }
+        WriteLength(std::bit_cast<std::uint32_t>(type.specialFrames.defaultFrame));
+        WriteLength(std::bit_cast<std::uint32_t>(type.specialFrames.gumpFrame));
+        WriteLength(std::bit_cast<std::uint32_t>(type.specialFrames.helpFrame));
+        WriteLength(std::bit_cast<std::uint32_t>(type.specialFrames.baseFrame));
+        const auto foot = type.Footprint();
+        WriteLength(std::bit_cast<std::uint32_t>(foot[0])); WriteLength(std::bit_cast<std::uint32_t>(foot[1]));
+        const auto& block = assets.Shapes().Blocks()[asset.block];
+        WriteLength(static_cast<std::uint32_t>(block.frames.size()));
+        // 특수 레코드는 헤더만 기록하고 정상 레코드는 팔레트 번호와 투명 마스크를 기록한다.
+        for (std::size_t i = 0; i < block.frames.size(); ++i) {
+            const auto& frame = block.frames[i];
+            WriteLength(frame.bounds[0]); WriteLength(frame.bounds[1]); WriteLength(frame.origin[0]); WriteLength(frame.origin[1]);
+            WriteLength(std::bit_cast<std::uint32_t>(frame.rect.left)); WriteLength(std::bit_cast<std::uint32_t>(frame.rect.top));
+            WriteLength(std::bit_cast<std::uint32_t>(frame.rect.right)); WriteLength(std::bit_cast<std::uint32_t>(frame.rect.bottom));
+            WriteLength(frame.IsSpecial() ? 1 : 0);
+            if (!frame.IsSpecial()) {
+                const auto image = assets.Shapes().Decode(asset.block, i);
+                WriteLength(static_cast<std::uint32_t>(image.width)); WriteLength(static_cast<std::uint32_t>(image.height));
+                WriteBytes(image.indices); WriteBytes(image.opacity);
+            }
+        }
+    }
+}
+
+// 자산 로더로 선택한 프레임을 원본 팔레트와 투명도로 BMP에 내보낸다.
+void ExportFrame(const netstorm::client::GameAssets& assets, const std::string& typeName,
+    const std::string& cluster, const std::string& layerText, const std::filesystem::path& output) {
+    if (layerText.empty() || layerText.front() == '-') throw std::invalid_argument("Invalid shape layer");
+    std::size_t parsed = 0;
+    const auto layer = std::stoull(layerText, &parsed);
+    if (parsed != layerText.size()) throw std::invalid_argument("Invalid shape layer");
+    const auto& type = assets.Find(typeName);
+    const auto frame = assets.FrameIndex(type, cluster, static_cast<std::size_t>(layer));
+    const auto image = assets.Shapes().Decode(type.block, frame);
+    std::vector<std::uint8_t> rgba(image.indices.size()*4);
+    // 투명 여부를 팔레트 번호 0으로 대신하지 않는다.
+    for (std::size_t i = 0; i < image.indices.size(); ++i) {
+        const auto color = assets.Palette().Color(image.indices[i]);
+        rgba[i*4] = color.red; rgba[i*4+1] = color.green; rgba[i*4+2] = color.blue; rgba[i*4+3] = image.opacity[i];
+    }
+    netstorm::platform::WriteBitmap(output, static_cast<std::uint32_t>(image.width), static_cast<std::uint32_t>(image.height), rgba);
+    std::printf("Exported %s/%s layer %zu: %zux%zu -> %s\n", type.assetName.c_str(), cluster.c_str(), static_cast<std::size_t>(layer), image.width, image.height, output.string().c_str());
+}
+
+// 환경 변수를 읽는다. 없으면 빈 값이다(설정의 `{_이름}` 조회와 시작 순서의 IDENTITY·USER에 쓴다).
+std::optional<std::string> Environment(std::string_view name) {
+    const char* value = std::getenv(std::string(name).c_str());
+    if (!value) return std::nullopt;
+    return std::string(value);
+}
+
+// 인자 끝의 선택적인 --cd를 떼어 내고 판본을 정한다.
+netstorm::o::OriginalEdition TakeEdition(std::vector<std::string>& arguments) {
+    if (!arguments.empty() && arguments.back() == "--cd") { arguments.pop_back(); return netstorm::o::OriginalEdition::Cd1072; }
+    return netstorm::o::OriginalEdition::Patch1078;
+}
+
+// 원본 시작 순서(FUN_00441790)대로 실제 설정 파일을 읽는다. 버전 값은 실행 파일의 상수(10.78, CD 10.72)다.
+void StartConfiguration(netstorm::o::ConfigInterface& config, const std::filesystem::path& root, netstorm::o::OriginalEdition edition) {
+    config.Registry().environment = Environment;
+    netstorm::o::ConfigInterface::StartupOptions options;
+    options.majorVersion = 10;
+    options.minorVersion = edition == netstorm::o::OriginalEdition::Cd1072 ? 72 : 78;
+    auto identity = Environment("IDENTITY");
+    if (!identity || identity->empty()) identity = Environment("USER");
+    options.identity = identity.value_or(std::string());
+    options.installDir = std::filesystem::absolute(root).lexically_normal().string();
+    config.Startup(options);
+    netstorm::client::ApplyProductVersion(config); // 분석 명령의 원본 판본 표기와 실제 제품 버전11.01은 구별한다.
+    // 원본은 시작할 때 `currentLanguage`의 용어표를 읽는다(FUN_00441db0).
+    config.LoadLanguage(config.Configuration().Get("currentLanguage").value_or(std::string()));
+}
+
+// 설정에서 계산한 전투 팔레트 경로(`GamePalSpec`에 `battlePal`을 넣은 값)로 자산을 읽는다.
+netstorm::client::GameAssets LoadAssets(const std::filesystem::path& root, netstorm::o::OriginalEdition edition) {
+    const auto files = Files(root);
+    netstorm::o::ConfigInterface config([&files](std::string_view path) { return files.TryRead(path); },files.FileNameOwner());
+    StartConfiguration(config, root, edition);
+    const auto palette = config.PathSpec("GamePalSpec", config.Configuration().Get("battlePal").value_or(std::string()));
+    return netstorm::client::GameAssets(files, edition, palette);
+}
+
+// 새 검사 진입점: 원본 다리 모양·판본별 가중치와 실제 bridge.type 프레임의 네 회전을 출력한다.
+void InspectBridges(const netstorm::client::GameAssets& assets, netstorm::o::OriginalEdition edition) {
+    const auto patterns = netstorm::o::BridgePatterns(edition);
+    const auto frames = assets.Find("bridge").definition.FrameTable();
+    int total = 0;
+    // 실제 판본 가중치의 합을 보고한다.
+    for (const auto& pattern : patterns) total += pattern.first;
+    std::ostringstream output;
+    output << "BridgePatterns\t" << patterns.size() << '\t' << total << '\n';
+    // 모양 번호마다 원본 헤더와 회전한 모든 셀을 순서대로 적는다.
+    for (std::size_t i = 0; i < patterns.size(); ++i) {
+        const auto& pattern = patterns[i];
+        output << "Pattern\t" << i << '\t' << pattern.first << '\t' << pattern.width << '\t' << pattern.height << '\n';
+        // 원본 direction은 0,2,4,6이며 회전 번호는 그 절반이다.
+        for (int rotation = 0; rotation < 4; ++rotation) {
+            // 실제 타입의 프레임과 같은 반복자로 줄 우선 출력한다.
+            for (netstorm::o::CanonDecoder decoder(frames, pattern, rotation*2, 0, 0); decoder.Valid(); decoder.Advance()) {
+                const auto& code = frames.Codes()[static_cast<std::size_t>(decoder.Frame())];
+                output << "Cell\t" << i << '\t' << rotation << '\t' << decoder.Frame() << '\t'
+                    << decoder.X() << '\t' << decoder.Y() << '\t' << decoder.Side() << '\t'
+                    << static_cast<int>(code.number) << '\t' << decoder.Label() << '\n';
+            }
+        }
+    }
+    WriteText(output.str());
+}
+
+// 타입 번호를 이름으로 적는다. 이름 없는 타입은 번호로 구분한다.
+std::string TypeLabel(const netstorm::o::RiftTypeTable& types, int type) {
+    if (type >= 0 && static_cast<std::size_t>(type) < types.Types().size()) {
+        const auto& record = types.Types()[static_cast<std::size_t>(type)];
+        // .type 타입은 파일 이름으로 적는다. 원본 구조체의 이름은 20글자를 넘으면 설명과 이어져 읽힌다.
+        if (!record.assetName.empty()) return record.assetName;
+        if (!record.name.empty()) return record.name;
+    }
+    return "#" + std::to_string(type);
+}
+
+// 전체 타입 표를 한 줄에 하나씩 적는다: 번호, 이름, 이름 해시, 플래그 1·2, 그룹, 종류, 목록 플래그, 발자국.
+void DumpTypes(const netstorm::o::RiftTypeTable& types) {
+    std::string text;
+    char line[256];
+    // 번호순으로 모든 타입을 적는다.
+    for (std::size_t i = 0; i < types.Types().size(); ++i) {
+        const auto& type = types.Types()[i];
+        std::snprintf(line, sizeof line, "%zu\t%s\t%08x\t%08x\t%08x\t%d\t%s\t%x\t%x\t%d\t%d\n", i,
+            type.name.empty() ? "-" : type.name.c_str(), netstorm::o::RiftTypeTable::NameHash(type.name), type.flags1, type.flags2,
+            type.group, type.kind.empty() ? "-" : type.kind.c_str(), type.containerListFlags, type.contentListFlags, type.footX, type.footY);
+        text += line;
+    }
+    WriteText(text);
+}
+
+// 내용물 목록을 한 줄로 적는다: (타입 수량 [lf=파일에서 읽은 목록 플래그] [중첩 목록]) ...
+void AppendContents(std::string& text, const netstorm::o::RiftTypeTable& types, const std::vector<netstorm::o::FortContent>& items, bool complete) {
+    text += complete ? "[" : "[!";
+    // 항목을 저장 순서대로 적는다.
+    for (const auto& item : items) {
+        text += "(" + TypeLabel(types, item.type) + " " + std::to_string(item.quantity);
+        if (item.listFlagsStored) text += " lf=" + std::to_string(item.listFlags);
+        // container 타입은 비어 있어도 중첩 목록을 적는다.
+        if ((types.Types()[static_cast<std::size_t>(item.type)].flags1 & netstorm::o::TypeFlag1::kContainer) != 0) {
+            text += " ";
+            AppendContents(text, types, item.contents, item.contentsComplete);
+        }
+        text += ")";
+    }
+    text += "]";
+}
+
+// 선택 필드를 `이름=값` 꼴로 붙인다.
+template <typename Value>
+void AppendField(std::string& text, const char* name, const std::optional<Value>& value) {
+    if (value) text += std::string(" ") + name + "=" + std::to_string(static_cast<int>(*value));
+}
+
+// 청크 섹션 하나를 적는다. 청크 번호는 섹션 안의 저장 순서다.
+void AppendChunkSection(std::string& text, std::string_view name, const netstorm::o::FortChunkSection& section, const netstorm::o::RiftTypeTable& types) {
+    if (!section.present) return;
+    text += "SEC " + std::string(name) + " v=" + std::to_string(section.version) + " chunks=" + std::to_string(section.chunks.size()) + "\n";
+    // 청크마다 오브젝트를 저장 순서대로 적는다.
+    for (std::size_t chunk = 0; chunk < section.chunks.size(); ++chunk) {
+        // 빈 청크는 줄을 만들지 않는다.
+        for (const auto& object : section.chunks[chunk].objects) {
+            text += "O " + std::to_string(chunk) + " " + std::to_string(object.CellX()) + "," + std::to_string(object.CellY())
+                + " " + std::to_string(object.storedType) + " " + TypeLabel(types, object.type);
+            AppendField(text, "sh", object.shorthandOwner);
+            AppendField(text, "frame", object.frame);
+            AppendField(text, "qa", object.quantityByte);
+            AppendField(text, "qb", object.quantityWord);
+            AppendField(text, "bridge", object.bridgeFrame);
+            AppendField(text, "legacy", object.legacyState);
+            AppendField(text, "factory", object.factoryState);
+            AppendField(text, "owner", object.owner);
+            AppendField(text, "skip", object.islandByte);
+            if (object.contents) { text += " contents="; AppendContents(text, types, object.contents->items, object.contents->complete); }
+            text += "\n";
+        }
+    }
+}
+
+// 파일 하나의 구조 전체를 글로 적는다. 독립 Python 판독기의 결과와 줄 단위로 비교하는 데 쓴다.
+std::string DescribeFort(std::string_view name, const netstorm::o::FortTemplate& fort, const netstorm::o::RiftTypeTable& types) {
+    std::string text = "FORT " + std::string(name) + " flag=" + std::to_string(fort.flag) + " sections=" + std::to_string(fort.sections.size())
+        + " trailing=" + std::to_string(fort.trailingBytes) + "\n";
+    char line[128];
+    if (fort.subscriber) {
+        std::string hex;
+        // 이름은 원본 바이트를 16진수로 적어 인코딩 차이를 피한다.
+        for (const unsigned char c : fort.subscriber->name) { std::snprintf(line, sizeof line, "%02x", c); hex += line; }
+        text += "SUB " + std::to_string(fort.subscriber->id) + " " + (hex.empty() ? "-" : hex) + "\n";
+    }
+    if (fort.money) { std::snprintf(line, sizeof line, "MONEY %08x\n", std::bit_cast<std::uint32_t>(*fort.money)); text += line; }
+    text += "TYPES " + std::to_string(fort.typeHashes.size()) + "\n";
+    if (!fort.Section("Technology").empty()) {
+        text += "TECH " + std::to_string(fort.technology.items.size()) + " trailing=" + std::to_string(fort.technologyTrailingBytes) + " ";
+        AppendContents(text, types, fort.technology.items, fort.technology.complete);
+        text += "\n";
+    }
+    if (!fort.Section("Deck").empty()) {
+        text += "DECK " + std::to_string(fort.deck.size());
+        // 덱 항목: 타입 chance power 남은횟수.
+        for (const auto& entry : fort.deck)
+            text += " (" + TypeLabel(types, entry.type) + " " + std::to_string(entry.chance) + " " + std::to_string(entry.power) + " " + std::to_string(entry.remaining) + ")";
+        text += "\n";
+    }
+    AppendChunkSection(text, "Chaff", fort.chaff, types);
+    // 영역 섹션은 번호순이다.
+    for (std::size_t i = 0; i < fort.territories.size(); ++i) {
+        std::snprintf(line, sizeof line, "Terr%02zu", i);
+        AppendChunkSection(text, line, fort.territories[i], types);
+    }
+    return text;
+}
+
+// 요새 하나의 요약: 섹션, 자원, 덱, 기술, 타입별 오브젝트 수.
+void InspectFort(std::string_view name, const netstorm::o::FortTemplate& fort, const netstorm::o::RiftTypeTable& types) {
+    std::printf("Fort: %s\n  sections: %zu, trailing bytes: %zu, flag: 0x%02x\n", std::string(name).c_str(), fort.sections.size(), fort.trailingBytes, fort.flag);
+    if (fort.subscriber) std::printf("  subscriber: %u \"%s\"\n", fort.subscriber->id, fort.subscriber->name.c_str());
+    if (fort.money) std::printf("  storm power: %g\n", static_cast<double>(*fort.money));
+    std::printf("  type names: %zu, technology: %zu, deck: %zu\n", fort.typeHashes.size(), fort.technology.items.size(), fort.deck.size());
+    // 섹션마다 타입별 개수를 센다.
+    const auto report = [&types](std::string_view section, const netstorm::o::FortChunkSection& data) {
+        if (!data.present) return;
+        std::map<std::string, std::size_t> counts;
+        std::size_t total = 0;
+        // 청크와 오브젝트를 모두 훑는다.
+        for (const auto& chunk : data.chunks) for (const auto& object : chunk.objects) { ++counts[TypeLabel(types, object.type)]; ++total; }
+        std::printf("  %s: version %u, %zu chunks, %zu objects\n", std::string(section).c_str(), data.version, data.chunks.size(), total);
+        // 이름순으로 출력한다.
+        for (const auto& [type, count] : counts) std::printf("    %-24s %zu\n", type.c_str(), count);
+    };
+    report("Chaff", fort.chaff);
+    char label[16];
+    // 내용이 있는 영역만 출력한다.
+    for (std::size_t i = 0; i < fort.territories.size(); ++i) { std::snprintf(label, sizeof label, "Terr%02zu", i); report(label, fort.territories[i]); }
+}
+
+// 요새 하나의 영역 배치를 적는다: 영역마다 레코드 값, 놓인 청크(y·x 순서), `TerrNN`의 청크 레코드 수.
+std::string DescribeTerritories(std::string_view name, const netstorm::o::FortTemplate& fort, const netstorm::o::RiftTypeFrames& pieceFrames) {
+    std::string text = "FORT " + std::string(name) + "\n";
+    if (fort.territory.empty()) return text;
+    netstorm::o::ChunkMap map;
+    netstorm::o::IslandList islands;
+    netstorm::o::IslandBuilder builder(map, islands, pieceFrames, 1);
+    builder.PlaceAll(fort.territory);
+    // 영역 번호순으로 적는다.
+    for (int territory = 0; territory < netstorm::o::kTerritoryCount; ++territory) {
+        const auto* record = &fort.territory[static_cast<std::size_t>(territory) * netstorm::o::kTerritoryRecordBytes];
+        const auto chunks = netstorm::o::TerritoryChunks(map, islands, 1, territory);
+        const auto& section = fort.territories[static_cast<std::size_t>(territory)];
+        if (chunks.empty() && !section.present) continue;
+        text += "T " + std::to_string(territory) + " shape=" + std::to_string(record[0] & 0x3f) + " dir=" + std::to_string(record[0] >> 6)
+            + " flags=" + std::to_string(record[1]) + " pos=" + std::to_string(record[2] & 0xf) + "," + std::to_string(record[2] >> 4)
+            + " stored=" + std::to_string(section.chunks.size()) + " chunks=";
+        // 청크 좌표를 순회 순서대로 적는다.
+        for (const auto& chunk : chunks) text += std::to_string(chunk.x) + "," + std::to_string(chunk.y) + map.At(chunk.x, chunk.y).side + ";";
+        text += "\n";
+    }
+    return text;
+}
+
+// `.fort` 검사 명령.
+int RunFortCommand(const std::string& command, std::vector<std::string> arguments) {
+    const auto edition = TakeEdition(arguments);
+    if (arguments.empty()) throw std::invalid_argument("Missing game directory");
+    const std::filesystem::path root = arguments[0];
+    const auto files = Files(root);
+    const auto assets = LoadAssets(root, edition);
+    const auto& types = assets.TypeTable();
+    if (command == "--dump-types" && arguments.size() == 1) { DumpTypes(types); return 0; }
+    if (command == "--inspect-fort" && arguments.size() == 2) {
+        std::string path = arguments[1];
+        // 경로 구분자나 확장자가 없으면 미션 이름으로 보고 설정의 fortSpec으로 경로를 만든다.
+        if (path.find_first_of("\\/.") == std::string::npos) {
+            netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); },files.FileNameOwner());
+            StartConfiguration(config, root, edition);
+            path = config.PathSpec("fortSpec", path);
+        }
+        InspectFort(path, netstorm::o::FortTemplate::Parse(files.Read(path), types), types);
+        return 0;
+    }
+    if (command == "--dump-world" && arguments.size()==2) {
+        netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); },files.FileNameOwner());
+        StartConfiguration(config,root,edition); netstorm::client::MissionScript mission(config,arguments[1]);
+        if (!mission.Loaded() || netstorm::o::AsciiLower(mission.MissionType())!="tutorial") throw std::invalid_argument("World restoration currently supports stored Tutorial missions");
+        const auto fort=netstorm::o::FortTemplate::Parse(files.Read(mission.FortPath()),types);
+        auto players=netstorm::o::MissionPlayers::Load([&mission](std::string_view key) { return mission.Get(key); },fort,types,6500);
+        netstorm::client::GameWorld world(assets,fort,std::move(players)); world.Resize(1024,768); WriteText(world.Report(true)); return 0;
+    }
+    if (command == "--inspect-mission" && arguments.size() == 2) {
+        netstorm::o::ConfigInterface config([&files](std::string_view file) { return files.TryRead(file); },files.FileNameOwner());
+        StartConfiguration(config, root, edition);
+        netstorm::client::MissionScript mission(config, arguments[1]);
+        std::printf("Mission: %s\n  script: %s (%s)\n", mission.Name().c_str(), mission.ScriptPath().c_str(), mission.Loaded() ? "loaded" : "missing");
+        std::printf("  mission type: %s\n  fort: %s -> %s\n", mission.MissionType().c_str(), mission.FortName().c_str(), mission.FortPath().c_str());
+        // 머리 값: 플레이어 설정과 AI 2~8의 설정. 스크립트에 있는 것만 적는다.
+        std::vector<std::string> keys{"title", "missionNumber", "moreGeysers", "myStartMoney", "myTech", "myAllyList"};
+        // AI 번호마다 같은 이름 꼴의 키가 있다.
+        for (int ai = 2; ai <= 8; ++ai)
+            // 키 이름은 "ai" + 번호 + 접미어다.
+            for (const char* suffix : {"Name", "Tech", "StartMoney", "AllyList", "color", "Ability"})
+                keys.push_back("ai" + std::to_string(ai) + suffix);
+        // 찾은 키만 `키 = 값`으로 적는다.
+        for (const auto& key : keys) if (const auto value = mission.Get(key)) std::printf("  %s = %s\n", key.c_str(), value->c_str());
+        const auto fortPath = mission.FortPath();
+        if (const auto bytes = files.TryRead(fortPath)) InspectFort(fortPath, netstorm::o::FortTemplate::Parse(*bytes, types), types);
+        else std::printf("Fort: %s (missing)\n", fortPath.c_str());
+        return 0;
+    }
+    if ((command == "--dump-forts" || command == "--dump-territories") && arguments.size() == 1) {
+        const bool territories = command == "--dump-territories";
+        const auto pieceFrames = assets.Find("puzzlePiece").definition.FrameTable();
+        // 파일 하나를 고른 형식으로 적는다.
+        const auto describe = [&](std::string_view name, const netstorm::o::FortTemplate& fort) {
+            return territories ? DescribeTerritories(name, fort, pieceFrames) : DescribeFort(name, fort, types);
+        };
+        std::string text;
+        std::size_t count = 0;
+        // 데이터 폴더의 낱개 파일을 이름순으로 읽는다(폴더 이름의 대소문자는 판본마다 다르다).
+        for (const auto* folder : {"d", "D"}) {
+            const auto directory = root / folder;
+            if (!std::filesystem::is_directory(directory)) continue;
+            std::map<std::string, std::filesystem::path> found;
+            // 확장자는 대소문자를 구분하지 않는다.
+            for (const auto& entry : std::filesystem::directory_iterator(directory))
+                if (entry.is_regular_file() && netstorm::o::AsciiLower(entry.path().extension().string()) == ".fort")
+                    found[entry.path().filename().string()] = entry.path();
+            // 파일마다 구조를 적는다. 형식 오류는 그 파일의 줄에 남기고 계속한다.
+            for (const auto& [name, path] : found) {
+                try { text += describe(name, netstorm::o::FortTemplate::Parse(netstorm::o::ReadFileBytes(path), types)); }
+                catch (const std::exception& error) { text += "FORT " + name + " ERROR " + error.what() + "\n"; }
+                ++count;
+            }
+            break; // Windows에서는 d와 D가 같은 폴더다.
+        }
+        // 아카이브 안의 .fort.
+        for (const auto* archiveName : {"netstorm.tarc"}) {
+            const auto archive = netstorm::o::TaffArchive::Open(root / archiveName);
+            // 디렉터리의 원본 순서대로 읽는다.
+            for (const auto& entry : archive.Entries()) {
+                if (!netstorm::o::AsciiLower(entry.name).ends_with(".fort")) continue;
+                const auto name = "tarc:" + entry.name;
+                try { text += describe(name, netstorm::o::FortTemplate::Parse(archive.Read(entry.name), types)); }
+                catch (const std::exception& error) { text += "FORT " + name + " ERROR " + error.what() + "\n"; }
+                ++count;
+            }
+        }
+        WriteText(text);
+        std::fprintf(stderr, "Dumped %zu fort files\n", count);
+        return 0;
+    }
+    throw std::invalid_argument("Invalid fort command arguments");
+}
+
+// 새 검사 도구의 한 단계. 탭 뒤의 라벨은 공백을 보존한다.
+struct UiStep { /* frame: 타입에서 사용할 그림 프레임 번호. */ std::uint64_t frame{}; /* operation: 자동 UI 프레임에서 실행할 작업 이름. */ /* argument: 타입·패턴·명령에 별도로 전달하는 첫 인자. */ std::string operation, argument; };
+// 검사에서 예약한 Tell을 실제 Kernel 순회 중 실행하여 입력 이후 페이지 교체를 재현한다.
+class UiKernelTell final : public netstorm::o::BaseProcess {
+public:
+    // menu는 검사 Client가 먼저 만들며 이 프로세스보다 오래 유지한다.
+    explicit UiKernelTell(netstorm::client::UberGump& menu):menu_(menu) {}
+    // 같은 프레임에 예약된 섹션도 스크립트 순서대로 처리한다.
+    void Queue(std::string target) { pending_.push_back(std::move(target)); }
+    // 실제 커널 단계에서만 일반 Tell을 호출하고 다음 프레임의 중복 실행을 막는다.
+    void RunFrame() override {
+        auto pending=std::move(pending_);pending_.clear();
+        // 여러 Tell이 한 프레임에 오면 마지막 페이지와 그 전에 추가된 Warning을 함께 보존한다.
+        for (auto& target:pending) menu_.InspectTell(std::move(target));
+    }
+private:
+    netstorm::client::UberGump& menu_; // 실제 페이지/입력 트리를 소유하는 검사 Client의 UI다.
+    std::vector<std::string> pending_; // 다음 Kernel 순회에서 한 번만 실행할 섹션 이름들이다.
+};
+// 검사용 TSV를 읽는다. 프레임 번호/동작/라벨 또는 캡처 경로 순이다.
+std::vector<UiStep> ReadUiSteps(const std::filesystem::path& path) {
+    std::ifstream file(path, std::ios::binary); if (!file) throw std::runtime_error("Unable to read UI script");
+    std::vector<UiStep> steps; std::string line;
+    // 순서가 뒤바뀐 입력은 조용히 누락하지 않고 거부한다.
+    while (std::getline(file, line)) {
+        if (!line.empty() && line.back() == '\r') line.pop_back();
+        if (line.empty() || line[0] == '#') continue;
+        const auto first = line.find('\t'), second = line.find('\t', first == std::string::npos ? line.size() : first + 1);
+        if (first == std::string::npos) throw std::invalid_argument("UI script needs tab-separated fields");
+        UiStep step{std::stoull(line.substr(0, first)), line.substr(first + 1, second == std::string::npos ? line.size() : second - first - 1),
+            second == std::string::npos ? std::string() : line.substr(second + 1)};
+        if (step.frame == 0 || (!steps.empty() && step.frame < steps.back().frame)) throw std::invalid_argument("UI frames must be positive and sorted");
+        steps.push_back(std::move(step));
+    }
+    return steps;
+}
+// 원본 방식의 창과 Renderer를 띄운다. 기본은 메뉴, --view는 독립 검사 장면이다.
+int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::RawFileName> startupFileNames={},std::optional<std::filesystem::path> portableRoot={}) { // 무인자 탐색의 경로/고리를 Client까지 소유 복사로 인계한다.
+    netstorm::client::ClientOptions options;
+    options.edition = TakeEdition(arguments);
+    if (arguments.empty() && !portableRoot) throw std::invalid_argument("Missing game directory");
+    options.gameDirectory = portableRoot ? *portableRoot:std::filesystem::path(arguments[0]);
+    options.startupFileNames=std::move(startupFileNames);
+    options.userData=netstorm::platform::UserDataRoot::Resolve(); // 5차: 설정/진행/체크포인트를 설치 폴더가 아닌 사용자 홈(Saved Games 아래 Netstorm)에 둔다. 읽기 전용/관리자 권한 설치에서도 동작하기 위한 호환 처리다.
+    std::string view;
+    bool renderStats = false;
+    std::filesystem::path uiScript, uiReport;
+    bool mcpMode = false; // 4차 새 옵션: stdio MCP 서버로 게임을 조작/관찰한다(원본에 없는 분석용 기능).
+    // 나머지 인자: 원본 명령줄의 "window"에 해당하는 것과 검사용 옵션.
+    for (std::size_t i = 1; i < arguments.size(); ++i) {
+        const auto& argument = arguments[i];
+        const auto value = [&]() -> const std::string& {
+            if (i + 1 >= arguments.size()) throw std::invalid_argument("Missing value for " + argument);
+            return arguments[++i];
+        };
+        if (argument == "--window") options.forceWindow = true;
+        else if (argument == "--frames") options.frameLimit = std::stoull(value());
+        else if (argument == "--screenshot") options.screenshot = value();
+        else if (argument == "--set") options.settings = value();
+        else if (argument == "--view") view = value();
+        else if (argument == "--mission") options.mission=value();
+        else if (argument == "--render-stats") renderStats = true;
+        else if (argument == "--no-audio") options.noAudio = true;
+        else if (argument == "--mute-audio") options.audioMute = true;
+        else if (argument == "--audio-report") options.audioReport = value();
+        else if (argument == "--mcp") mcpMode = true;
+        else if (argument == "--ui-script") uiScript = value();
+        else if (argument == "--ui-report") uiReport = value();
+        else if (argument == "--test-bridge-patterns") options.testBridgePatterns=value(); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다.
+        else throw std::invalid_argument("Unknown --run option: " + argument);
+    }
+    if (!view.empty() && !options.mission.empty()) throw std::invalid_argument("--view and --mission cannot be combined");
+    // 자동 검사 스크립트가 소리를 내지 않도록 환경 변수로도 끈다(새 검사 기능). 비어 있거나 "0"이면 켜 둔다.
+    if (const char* silent = std::getenv("NETSTORM_CPP_NO_AUDIO"); silent && *silent && std::string(silent) != "0") options.noAudio = true;
+    if (mcpMode && (!uiScript.empty() || !view.empty())) throw std::invalid_argument("--mcp cannot be combined with --ui-script or --view");
+    std::unique_ptr<netstorm::app::McpServer> mcp; // 4차: Client가 stdout에 쓰기 전에 stdout을 MCP 전용으로 분리한다.
+    if (mcpMode) { mcp = std::make_unique<netstorm::app::McpServer>(); mcp->Start(); }
+    netstorm::client::Client client(std::move(options));
+    std::optional<netstorm::app::InspectView> inspect;
+    if (!view.empty()) inspect.emplace(client, view);
+    auto steps = uiScript.empty() ? std::vector<UiStep>() : ReadUiSteps(uiScript); // MCP 모드에서는 입력 도구가 프레임마다 단계를 덧붙인다.
+    std::size_t next = 0; std::string report;
+    // 성공/실패 모두 같은 현재 관측을 보존한다. 이 쓰기는 검사 출력 경로만 사용한다.
+    const auto saveUiReport=[&] { if (!uiReport.empty()) netstorm::platform::WriteFileBytes(uiReport,std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(report.data()),report.size())); };
+    // UI 스크립트의 마지막 마우스 좌표/왼쪽 버튼 상태다. 실제 커서를 움직이지 않고 폴링과 사건을 일치시킨다.
+    std::optional<netstorm::client::InputEvent> scriptPointer;
+    UiKernelTell* kernelTell{}; // 커널이 소유한 검사 전용 프로세스다. Client::Run 동안만 사용한다.
+    if (!uiScript.empty() || mcp) {
+        if (!view.empty()) throw std::invalid_argument("UI script cannot be combined with --view");
+        if (mcp) client.inputHookError = [&](const std::string& message) { mcp->ReportInputError(client, message); }; // 잘못된 입력 도구 호출은 응답 오류로 돌리고 게임은 계속한다.
+        // UI 검사 마우스는 같은 좌표를 쓴다. 가운데 폴링이 실제 바탕 화면 위치로 커서를 덮지 않게 한다.
+        client.inspectPoll=[&](std::uint32_t code) -> std::optional<netstorm::client::InputEvent> {
+            using namespace netstorm::client;
+            if (!scriptPointer || (code!=InputCode::kLeftButton && code!=InputCode::kRightButton && code!=InputCode::kMiddleButton && code!=0xffff && code!=(0x12U<<InputCode::kVirtualKeyShift) && code!=(0x11U<<InputCode::kVirtualKeyShift))) return std::nullopt; // 원본 미니맵의ffff 좌표 폴링도 동일한 실제 자동 입력점을 읽는다.
+            auto event=*scriptPointer;event.code=(event.code&(InputCode::kOutside|InputCode::kRelease))|code;
+            if (code!=(scriptPointer->code&0x00ffffffU)) event.code|=InputCode::kRelease;return event;
+        };
+        client.beforeInput = [&](netstorm::client::Client& c) {
+            if (mcp) for (auto& action : mcp->BeforeInput(c)) steps.push_back(UiStep{c.Time().number, action.first, action.second}); // 4차: MCP 입력 도구의 이번 프레임 동작을 같은 UI 스크립트 엔진에 넘긴다.
+            // 이번 프레임의 입력만 실제 InputQueue에 넣는다.
+            for (std::size_t i = next; i < steps.size() && steps[i].frame == c.Time().number; ++i) {
+                auto step = steps[i]; using namespace netstorm::client; // 조건부 검사 입력도 같은 실제 분배기를 사용하며 원래 계획은 변경하지 않는다.
+                if (step.operation=="when") {
+                    const auto first=step.argument.find(";;"),second=first==std::string::npos ? first : step.argument.find(";;",first+2); // 조건/동작/인자를 나누는 검사 전용 구분자다.
+                    if (first==std::string::npos || second==std::string::npos) throw std::invalid_argument("UI when needs regex;;operation;;argument");
+                    const auto condition=step.argument.substr(0,first); // 현재 실제 보고서에 대한 읽기 전용 조건이다.
+                    const auto observed=c.Menu()->Report();bool allowed=true;std::size_t begin=0; // 조건은 같은 시점의 실제 보고서 하나를 읽는다.
+                    // &&로 나눈 각 정규식을 검사한다. 앞의 !는 관측 조건의 부정이며 게임 상태를 쓰지 않는다.
+                    while (begin<=condition.size()) {
+                        const auto end=condition.find("&&",begin);const auto part=condition.substr(begin,end==std::string::npos ? end : end-begin); // 현재 한 조건이다.
+                        if (part.empty() || part=="!") throw std::invalid_argument("UI when empty condition");
+                        const bool negate=part.front()=='!'; // 각 단일 조건의 긍정/부정만 허용한다.
+                        if (std::regex_search(observed,std::regex(negate ? part.substr(1) : part))==negate) { allowed=false;break; }
+                        if (end==std::string::npos) break;begin=end+2;
+                    }
+                    if (!allowed) continue;
+                    const auto operation=step.argument.substr(first+2,second-first-2),argument=step.argument.substr(second+2); // 원래 입력 큐가 소비할 같은 동작/인자다.
+                    if (operation!="click" && operation!="click-if" && operation!="up-if" && operation!="down" && operation!="up" && operation!="right" && operation!="outside" && operation!="pointer" && operation!="esc" && operation!="key" && operation!="keyup") throw std::invalid_argument("UI when supports input operations only");
+                    step.operation=operation;step.argument=argument;
+                }
+                if (step.operation == "snapshot" || step.operation=="snapshot-presented" || step.operation=="snapshot-output" || step.operation == "report" || step.operation=="report-presented" || step.operation=="refresh") continue;
+                // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 이미 생성된 조각은 바꾸지 않는다.
+                if (step.operation=="test-state-hud") { if (step.argument=="clear") { c.Menu()->KillGumpsForState();c.Menu()->CleanupGumpsForState(); }else if (step.argument=="replace") c.Menu()->ReplaceHudForState();else if (step.argument=="sp") c.Menu()->RefreshStormPower();else if (step.argument=="normal") c.Menu()->ApplyHudModeForState(3);else if (step.argument=="editor") c.Menu()->ApplyHudModeForState(4);else throw std::invalid_argument("State HUD 검사 동작은 clear/replace/sp/normal/editor만 허용");continue; } //검사 전용 실제 Native 자식 호출이며 State 전환/loaded 성공을 만들지 않는다.
+                if (step.operation=="test-state-world") { if (step.argument!="0") throw std::invalid_argument("전체 State 검사 reason0만 허용");c.Menu()->CleanupNativeStateWorld(0);continue; } //검사 전용 명시 호출이다. 자연 Edit 예약/State 확정을 대신하지 않는다.
+                if (step.operation=="test-bridge-patterns") { c.Menu()->InspectBridgePatterns(step.argument);continue; }
+                // 직전 완성 프레임의 실제 상태가 조건을 만족할 때만 다음 검사 입력으로 진행한다.
+                if (step.operation=="require") {
+                    if (step.argument.empty()) throw std::invalid_argument("UI require 조건이 비어 있음");
+                    const auto observed=c.Menu()->Report();report+="frame\t"+std::to_string(step.frame)+"\trequire"+std::to_string(step.frame)+"\n"+observed;
+                    if (!std::regex_search(observed,std::regex(step.argument))) {
+                        if (!uiReport.empty()) c.Capture(uiReport.string()+".failed.bmp");
+                        throw std::runtime_error("UI require 실패: "+step.argument);
+                    }
+                    continue;
+                }
+                // 입력 처리 뒤의 실제 Kernel 단계까지 Tell을 지연한다. 일반 클릭 명령 경로와 구별한다.
+                if (step.operation=="kernel-tell") {
+                    if (!kernelTell) {
+                        auto process=std::make_unique<UiKernelTell>(*c.Menu());kernelTell=process.get();c.GetKernel().Add(std::move(process));
+                    }
+                    kernelTell->Queue(step.argument);continue;
+                }
+                // 날씨 순환의 실제 다음 곡 경로를 검사용으로만 호출한다. 몇 분짜리 곡 끝을 기다리지 않고 네 팔레트를 검사한다.
+                if (step.operation=="music-next") {
+                    if (!c.Audio()) throw std::runtime_error("music-next requires client audio");
+                    c.Audio()->NextSceneMusic();continue;
+                }
+                // 검사 명령은 실제 raw 삭제를 사용한다. 건설/전투 UI 구현으로 취급하지 않는다.
+                if (step.operation=="surface-delete") {
+                    std::istringstream fields(step.argument);std::string type;float x{},y{};char comma{};
+                    if (!std::getline(fields,type,':') || !(fields>>x>>comma>>y) || comma!=',' || !(fields>>std::ws).eof())
+                        throw std::invalid_argument("surface-delete needs type:x,y");
+                    c.Menu()->InspectDestroySurface(type,x,y);continue;
+                }
+                // 검사 전용: 원문 이름표의 일반 명령을 실제 입력 큐에 한 번 넣는다. 인자는 "이름[,첫째[,둘째]]"이며 이후 소비는 일반 프레임 입력과 같다. 단위696에서 추가했다.
+                // 검사 전용 입력이다. HTML과 같은 원문 문자열/명령 큐를 사용하며 상태나 파일 설치 성공을 합성하지 않는다.
+                if (step.operation=="script-command") { c.Menu()->QueueHtmlScriptCommand(step.argument);continue; }
+                if (step.operation=="command") {
+                    std::istringstream fields(step.argument);std::string name;std::int32_t first{},second{};char comma{}; // 이름과 선택 인자 두 개다.
+                    std::getline(fields,name,',');if (fields.good()) { fields>>first;if (fields.good()) { fields>>comma>>second; } }
+                    const auto code=GameMenuScriptCode(name); // 게임 안의 이름→명령 표를 그대로 사용한다.
+                    if (code==0xffffffffU) throw std::invalid_argument("UI command 이름 미등록: "+name);
+                    c.Input().PushCommand(code,first,second);continue;
+                }
+                // 테스트 전용 임시 조작이며 원본 동작이 아니다. 원문에는 005c85ec의 다른 쓰기 지점이 없으므로, 열려 있는 모달의 실제 serial을 이 값에 넣어 RecheckCD의 Kill 경로만 확인한다. 단위696에서 추가했다.
+                if (step.operation=="test-recheck-serial") {
+                    if (step.argument!="current-dialog") throw std::invalid_argument("test-recheck-serial은 current-dialog만 허용");
+                    const auto serial=c.Menu()->CurrentDialogSerial();if (!serial) throw std::runtime_error("열린 모달이 없어 RecheckCD 검사 serial을 만들 수 없음");
+                    c.CdGlobals()->RecheckSerial()=serial;continue;
+                }
+                if (step.operation == "esc") { c.Input().Push(0x1b, 0, 0); continue; }
+                if (step.operation=="text") { if (!c.QueueCommittedText(step.argument)) throw std::length_error("text 입력 큐 공간 부족: 한 번에 최대39문자");continue; } // IME와 같은 검증/일반 큐를 사용한다. TextEntry 상태나 파일을 직접 바꾸지 않는다.
+                if (step.operation=="key" || step.operation=="keyup") {
+                    if (step.argument.size()==1 && static_cast<unsigned char>(step.argument[0])>=0x20 && static_cast<unsigned char>(step.argument[0])<0x7f) {
+                        c.Input().Push(static_cast<unsigned char>(step.argument[0])|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; // WM_CHAR와 같은 하위 문자 코드를 넣는다. 가상 키 번호로 바꾸지 않는다.
+                    }
+                    const std::map<std::string,unsigned> keys{{"left",0x25},{"up",0x26},{"right",0x27},{"down",0x28},{"home",0x73},{"priest",0x74},{"f1",0x70},{"f2",0x71},{"f3",0x72},{"f4",0x73},{"f5",0x74},{"f6",0x75},{"f7",0x76},{"f8",0x77},{"f9",0x78},{"f12",0x7b}}; // 검사도 실제 Win32 가상 키 번호를 같은 큐에 넣는다. F12는 검사 입력 이름만 추가하며 물리 키 생성은 기존 KeyEvent가 담당한다.
+                    std::string_view name=step.argument;std::uint32_t modifiers{}; // 검사 입력도 같은 Win32 Ctrl/Shift/Alt 사건 비트만 만든다.
+                    while (name.find('+')!=name.npos) { // 복수 수정키는 입력 순서와 관계없이 원본 상위 비트를 합친다.
+                        const auto split=name.find('+');const auto prefix=name.substr(0,split); // 현재 수정키 접두와 다음 실제 키의 경계다.
+                        if (prefix=="shift") modifiers|=InputCode::kShift;else if (prefix=="ctrl") modifiers|=InputCode::kControl;else if (prefix=="alt") modifiers|=InputCode::kAlt;
+                        else throw std::invalid_argument("Unknown UI key modifier: "+std::string(prefix));name.remove_prefix(split+1);
+                    }
+                    if (name.size()==1 && static_cast<unsigned char>(name[0])>=0x20 && static_cast<unsigned char>(name[0])<0x7f) {
+                        c.Input().Push(static_cast<unsigned char>(name[0])|modifiers|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; //검사 전용 CLI의 수정키+문자도 같은 WM_CHAR 하위 코드와 실제 상위 비트로 보낸다(717). 제품의 물리 키 생성 규칙은 바꾸지 않는다.
+                    }
+                    const std::map<std::string,unsigned> characters{{"enter",13},{"tab",9},{"backspace",8}}; //제어문자도 실제 WM_CHAR 경로의 하위 코드이며 가상키<<16과 구별한다.
+                    if (const auto character=characters.find(std::string(name));character!=characters.end()) { c.Input().Push(character->second|modifiers|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; }
+                    const auto found=keys.find(std::string(name)); if (found==keys.end()) throw std::invalid_argument("Unknown UI key: "+step.argument);
+                    c.Input().Push((found->second<<InputCode::kVirtualKeyShift)|modifiers|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0); continue;
+                }
+                if (step.operation=="pointer") {
+                    // 검사 폴링의 원본 code,x,y만 바꾼다. 큐에 사건을 넣지 않아 재진입 합성 release의 실제 소비를 따로 관측할 수 있다.
+                    std::istringstream fields(step.argument);std::uint32_t pointerCode{};std::int32_t pointerX{},pointerY{};char firstComma{},secondComma{};
+                    if (!(fields>>std::setbase(0)>>pointerCode>>firstComma>>pointerX>>secondComma>>pointerY) || firstComma!=',' || secondComma!=',' || (fields>>std::ws && !fields.eof()))
+                        throw std::invalid_argument("UI pointer requires code,x,y");
+                    scriptPointer=InputEvent{pointerCode,pointerX,pointerY};continue;
+                }
+                const bool optional=step.operation=="click-if" || step.operation=="up-if"; // 검사 전용: 현재 화면에 조작부가 없으면 사용자 클릭을 보내지 않는다.
+                const std::string_view operation=step.operation=="click-if" ? "click" : step.operation=="up-if" ? "up" : std::string_view(step.operation); // 기존 입력 주입 순서는 그대로 보존한다.
+                ScreenPoint point{};
+                if (operation == "click" || operation == "down" || operation == "up" || operation == "right") {
+                    // 검사 스크립트의 화면 좌표도 일반 InputQueue에만 보낸다. 전용 창 상태나 월드 배치를 직접 바꾸지 않는다.
+                    if (step.argument.starts_with("screen:")) {
+                        std::istringstream fields(step.argument.substr(7));char comma{};
+                        if (!(fields>>point.x>>comma>>point.y) || comma!=',' || !(fields>>std::ws).eof() || point.x<0 || point.y<0 || point.x>=c.GetScreen().Width() || point.y>=c.GetScreen().Height()) throw std::invalid_argument("UI 화면 좌표는 현재 화면 안의 screen:x,y여야 함");
+                    } else {
+                    const auto found = c.Menu()->ControlPoint(step.argument);
+                    if (!found && optional) continue; // 결과나 게임 상태를 바꾸지 않고 없는 조작만 생략한다.
+                    if (!found) throw std::runtime_error("UI control not found: " + step.argument);
+                    point = *found;
+                    }
+                } else if (operation == "outside") point = {0, 0};
+                else throw std::invalid_argument("Unknown UI operation: " + step.operation);
+                // down 이후 프레임에서도 같은 위치를 폴링해 누름 캡처가 실제 바탕 화면 커서 때문에 취소되지 않게 한다.
+                scriptPointer=InputEvent{InputCode::kLeftButton | (operation=="down" || operation=="outside" ? 0U : InputCode::kRelease),point.x,point.y};
+                if (operation == "click" || operation == "down" || operation == "outside") c.Input().Push(InputCode::kLeftButton, point.x, point.y);
+                if (operation == "click" || operation == "up") c.Input().Push(InputCode::kLeftButton | InputCode::kRelease, point.x, point.y);
+                if (operation == "right") { c.Input().Push(InputCode::kRightButton, point.x, point.y); c.Input().Push(InputCode::kRightButton | InputCode::kRelease, point.x, point.y); }
+            }
+        };
+        client.afterPresentation = [&](netstorm::client::Client& c) { // 검사 전용으로 실제 표시한 논리 버퍼를 읽고 afterFrame의 다음 카메라용 버퍼와 구별한다.
+            for (std::size_t index=next;index<steps.size() && steps[index].frame==c.Time().number;++index) { // 원래 입력/보고 순서와 소비 위치는 바꾸지 않는다.
+                if (steps[index].operation=="snapshot-presented") c.Capture(steps[index].argument);
+                if (steps[index].operation=="report-presented") { // 원본에 없는 읽기 전용 관찰이다. 즉시Home과Present뒤목표적용의 현재view/카운터를 같은 실제 표시 시점에서 구별한다.
+                    report+="frame\t"+std::to_string(steps[index].frame)+"\t"+steps[index].argument+"\n"+c.Menu()->Report(steps[index].argument.starts_with("camera:"));saveUiReport();
+                }
+            }
+        };
+        client.afterFrame = [&](netstorm::client::Client& c) {
+            // 그리기 완료 뒤 같은 프레임의 캡처/상태를 기록한다.
+            while (next < steps.size() && steps[next].frame == c.Time().number) {
+                const auto& step = steps[next++];
+                if (step.operation == "snapshot") c.Capture(step.argument);
+                if (step.operation=="snapshot-output") c.CapturePresentation(step.argument); // 검사 전용 실제 Win32 출력이며 논리 캡처와 구별한다.
+                if (step.operation == "report") {
+                    report += "frame\t" + std::to_string(step.frame) + "\t" + step.argument + "\n" + c.Menu()->Report(step.argument.starts_with("camera:")); //검사 전용 접두는 같은 현재 카메라/프레임의 간결 관측만 선택한다.
+                    saveUiReport(); // 구동 테스트가 중단돼도 직전 실제 관측을 남긴다. 게임 상태를 바꾸는 동작은 아니다.
+                }
+                // 다음 Tick에서 표시만 갱신하여 버튼 캡처/serial을 보존하는지 검사한다.
+                if (step.operation=="refresh") c.Menu()->Refresh();
+            }
+            if (mcp) mcp->AfterFrame(c); // 4차: 대기 중인 MCP 호출(화면 캡처/프레임 대기)을 완료한다.
+        };
+    }
+    int result{}; // 검사 도중 예외도 기존 관측을 보존한 뒤 호출자에게 전달한다.
+    try { result=client.Run(); } catch (...) { saveUiReport();throw; }
+    saveUiReport();
+    // 실제 사용자 QuitApp의 정상 종료만 허용하며 프레임 제한/창 닫기/오류로 남은 단계는 계속 진단한다.
+    if (!uiScript.empty() && next < steps.size() && !(client.Menu() && client.Menu()->QuitRequested())) throw std::runtime_error("UI script ended before all steps ran");
+    if (renderStats) {
+        const auto counts = client.RenderCounts();
+        std::printf("Renderer draws=%llu presents=%llu\n", static_cast<unsigned long long>(counts.first), static_cast<unsigned long long>(counts.second));
+    }
+    return result;
+}
+
+// 실제 글꼴 캐시의 표·사각형·해독 픽셀을 읽기 전용 검사 스트림으로 내보낸다.
+void DumpFont(const std::filesystem::path& root, std::string_view path) {
+    const netstorm::client::BitmapFont font(Files(root).Read(path));
+    std::vector<std::uint8_t> output;
+    // 부호 있는 값도 원본 비트 패턴을 리틀 엔디언으로 쓴다.
+    const auto put = [&output](std::uint32_t value) {
+        // 한 정수의 네 바이트.
+        for (int shift = 0; shift < 32; shift += 8) output.push_back(static_cast<std::uint8_t>(value >> shift));
+    };
+    put(static_cast<std::uint32_t>(font.Height())); put(static_cast<std::uint32_t>(font.Ascent())); put(static_cast<std::uint32_t>(font.Descent()));
+    // 256개 글자에 대해 표와 실제 불투명 픽셀을 내보낸다.
+    for (int c = 0; c < 256; ++c) {
+        const auto& glyph = font.Glyph(static_cast<std::uint8_t>(c));
+        put(static_cast<std::uint32_t>(glyph.advance)); put(static_cast<std::uint32_t>(glyph.bearing)); put(static_cast<std::uint32_t>(glyph.drawAdvance));
+        const auto* frame = glyph.shape ? &glyph.shape->Blocks()[0].frames[0] : nullptr;
+        put(frame ? 1u : 0u);
+        if (frame) {
+            put(static_cast<std::uint32_t>(frame->rect.left)); put(static_cast<std::uint32_t>(frame->rect.top));
+            put(static_cast<std::uint32_t>(frame->rect.right)); put(static_cast<std::uint32_t>(frame->rect.bottom));
+            if (!frame->IsSpecial()) {
+                const auto image = glyph.shape->Decode(0, 0);
+                put(static_cast<std::uint32_t>(image.width)); put(static_cast<std::uint32_t>(image.height));
+                output.insert(output.end(), image.indices.begin(), image.indices.end()); output.insert(output.end(), image.opacity.begin(), image.opacity.end());
+            } else { put(0); put(0); }
+        }
+    }
+    WriteBytes(output);
+}
+
+// 설정 검사 명령: 버퍼 전체, 키 조회, 경로 지정값, 값 쓰기 뒤 저장 내용.
+int RunConfigCommand(const std::string& command, std::vector<std::string> arguments) {
+    const auto edition = TakeEdition(arguments);
+    if (arguments.empty()) throw std::invalid_argument("Missing game directory");
+    const std::filesystem::path root = arguments[0];
+    const auto files = Files(root);
+    netstorm::o::ConfigInterface config([&files](std::string_view path) { return files.TryRead(path); },files.FileNameOwner());
+    StartConfiguration(config, root, edition);
+    if (command == "--config-dump" && arguments.size() == 1) { WriteText(config.Configuration().Text()); return 0; }
+    if (command == "--config-get" && arguments.size() == 2) {
+        const auto value = config.Configuration().Get(arguments[1]);
+        if (!value) return 2;
+        WriteText(*value); return 0;
+    }
+    if (command == "--config-spec" && arguments.size() >= 2 && arguments.size() <= 5) {
+        std::optional<std::string_view> values[3];
+        // 준 인자만 local.1~local.3에 넣는다.
+        for (std::size_t i = 2; i < arguments.size(); ++i) values[i-2] = arguments[i];
+        WriteText(config.PathSpec(arguments[1], values[0], values[1], values[2])); return 0;
+    }
+    if (command == "--config-save" && arguments.size() >= 2) {
+        const auto output = std::filesystem::weakly_canonical(std::filesystem::absolute(arguments[1]));
+        const auto protectedRoot = std::filesystem::weakly_canonical(std::filesystem::absolute(root));
+        const auto outputName = netstorm::o::AsciiLower(output.generic_string());
+        const auto rootName = netstorm::o::AsciiLower(protectedRoot.generic_string());
+        const auto optionsName = netstorm::o::AsciiLower((protectedRoot / "d" / "options.cfg").generic_string());
+        // AGENTS.md의 예외와 사용자 결정: 게임 폴더에서는 d/options.cfg만 설정 출력으로 덮어쓸 수 있다.
+        // 실제 경로와 Windows의 대소문자 비교로 검사해 '..'·심볼릭 링크 우회를 막는다.
+        if ((outputName == rootName || outputName.starts_with(rootName + "/")) && outputName != optionsName)
+            throw std::invalid_argument("Refusing to write inside the game directory except d/options.cfg");
+        // `키=값` 인자를 차례로 쓴다.
+        for (std::size_t i = 2; i < arguments.size(); ++i) {
+            const auto equals = arguments[i].find('=');
+            if (equals == std::string::npos) throw std::invalid_argument("Expected key=value");
+            config.Set(arguments[i].substr(0, equals), arguments[i].substr(equals + 1));
+        }
+        // 쓰기 실패 때 변경 표시를 잃지 않도록 게임 시작과 같은 저장 진입점을 쓴다.
+        config.SaveFile("options.cfg", [&output](std::string_view, std::span<const std::uint8_t> bytes) {
+            netstorm::platform::WriteFileBytes(output, bytes);
+            std::printf("Saved %zu bytes -> %s\n", bytes.size(), output.string().c_str());
+        });
+        return 0;
+    }
+    throw std::invalid_argument("Invalid config command arguments");
+}
+}
+
+// 무인자는 원본처럼 게임 GUI를 시작하고 명시적인 옵션은 기존 분석/검사 CLI로 분배한다.
+int main(int argc, char** argv) {
+    try {
+        if (argc == 1) {
+            auto names=std::make_shared<netstorm::o::RawFileName>();const auto directory=netstorm::platform::PortableGameDirectory(netstorm::platform::CurrentExecutableFile(),names.get()); // 새 휴대 배포 배치이며 원본과 다른 Windows 10/11 경로 어댑터다.
+            netstorm::platform::DetachOwnGuiConsole();
+            return RunClient({},std::move(names),directory); // 원본과 다른 Windows10/11 호환: 이미 얻은 Unicode 경로를 좁은 명령줄 문자열로 재변환하지 않는다. manifest의UTF-8설정도 유지한다.
+        }
+        if (std::string(argv[1]) == "--mcp") { // 4차: 휴대 배포 배치의 게임을 stdio MCP 서버로 실행한다. 나머지 인자는 --run과 같은 옵션이다.
+            auto names=std::make_shared<netstorm::o::RawFileName>();const auto directory=netstorm::platform::PortableGameDirectory(netstorm::platform::CurrentExecutableFile(),names.get());
+            std::vector<std::string> options{"<portable>","--mcp"};for (int index=2;index<argc;++index) options.push_back(argv[index]); // 첫 항목은 휴대 배치 자리표시자이며 옵션 해석은 둘째부터다.
+            return RunClient(std::move(options),std::move(names),directory);
+        }
+        if (argc == 2 && std::string(argv[1]) == "--help") { PrintBuildInfo(); return 0; }
+        const std::string command = argv[1];
+        if (argc==2 && command=="--version") { std::printf("NetStorm %s\n",netstorm::client::kProductVersion.data());return 0; } // 창/자산/원격 접속 없이 제품 표시 버전만 출력한다.
+        if (command == "--dump-font" && argc == 4) { DumpFont(argv[2], argv[3]); return 0; }
+        if (command.starts_with("--config-")) return RunConfigCommand(command, std::vector<std::string>(argv + 2, argv + argc));
+        if (command == "--run") return RunClient(std::vector<std::string>(argv + 2, argv + argc));
+        if (command == "--dump-gif") {
+            if (argc != 4) throw std::invalid_argument("Expected game directory and GIF path");
+            const auto image = netstorm::client::DecodeGif(Files(argv[2]).Read(argv[3]));
+            WriteLength(static_cast<std::uint32_t>(image.width)); WriteLength(static_cast<std::uint32_t>(image.height));
+            WriteBytes(image.indices); WriteBytes(image.opacity); return 0;
+        }
+        if (command == "--dump-types" || command == "--inspect-fort" || command == "--dump-forts" || command == "--inspect-mission" || command=="--dump-world"
+            || command == "--dump-territories")
+            return RunFortCommand(command, std::vector<std::string>(argv + 2, argv + argc));
+        if (argc == 3 && command == "--inspect-data") { InspectData(argv[2]); return 0; }
+        if (argc == 3 && command == "--dump-archive") { DumpArchive(argv[2]); return 0; }
+        if ((argc == 3 || argc == 4) && (command == "--inspect-assets" || command == "--dump-assets")) {
+            const auto assets = LoadAssets(argv[2], Edition(argc, argv, 3));
+            if (command == "--inspect-assets") InspectAssets(assets,Edition(argc,argv,3)); else DumpAssets(assets);
+            return 0;
+        }
+        if ((argc == 3 || argc == 4) && command == "--inspect-bridges") {
+            const auto edition = Edition(argc, argv, 3);
+            InspectBridges(LoadAssets(argv[2], edition), edition); return 0;
+        }
+        if ((argc == 3 || argc == 4) && command == "--inspect-frame-binding") {
+            netstorm::app::InspectFrameBinding(argv[2],Edition(argc,argv,3));return 0;
+        }
+        if ((argc == 3 || argc == 4) && command == "--inspect-priest-assets") {
+            netstorm::app::InspectPriestAssets(argv[2],Edition(argc,argv,3));return 0;
+        }
+        // 일반 자산과 특수 패턴의 픽셀 모양을 창 없이 읽기 전용으로 검사한다.
+        if ((argc == 3 || argc == 4) && command == "--inspect-canon-shapes") {
+            netstorm::app::InspectCanonPixelShapes(argv[2],Edition(argc,argv,3));return 0;
+        }
+        // 일반 타입 배치 접두를 실제 전체 픽셀 getter와 연결해 창 없이 관찰한다.
+        if ((argc == 3 || argc == 4) && command == "--inspect-canon-placement") {
+            netstorm::app::InspectCanonPixelShapes(argv[2],Edition(argc,argv,3),true);return 0;
+        }
+        // 원본 자산을 읽고 전체 배치를 콘솔에서만 검사한다.
+        if ((argc == 3 || argc == 4) && command == "--inspect-canon-mayplace") {
+            netstorm::app::InspectCanonMayPlace(argv[2],Edition(argc,argv,3));return 0;
+        }
+        // 실제 타입/패턴의 배치 모양과 finder 인자를 읽기 전용 콘솔로 조회한다.
+        if ((argc == 3 || argc == 4) && command == "--inspect-canon-geometry") {
+            netstorm::app::InspectCanonPlacementGeometry(argv[2],Edition(argc,argv,3));return 0;
+        }
+        if ((argc == 3 || argc == 4) && command == "--inspect-canon-patterns") {
+            netstorm::app::InspectCanonPatterns(argv[2],Edition(argc,argv,3));return 0;
+        }
+        if ((argc == 7 || argc == 8) && command == "--export-frame") {
+            const auto assets = LoadAssets(argv[2], Edition(argc, argv, 7));
+            ExportFrame(assets, argv[3], argv[4], argv[5], argv[6]); return 0;
+        }
+        if (argc == 4 && command == "--read-archive") { WriteBytes(netstorm::o::TaffArchive::Open(argv[2]).Read(argv[3])); return 0; }
+        if (argc == 4 && command == "--read-game") { WriteBytes(Files(argv[2]).Read(argv[3])); return 0; }
+        if (argc == 4 && command == "--config") {
+            const auto value = netstorm::o::ConfigText::FromBytes(netstorm::o::ReadFileBytes(argv[2])).GetRaw(argv[3]);
+            if (!value) return 2;
+            WriteText(*value); return 0;
+        }
+        if (argc == 5 && command == "--translate-game") {
+            const int language = std::stoi(argv[3]);
+            // 원본 언어 번호만 읽는다. 한국어 UTF-8 언어 파일 연결은 후속 작업이다.
+            const std::vector<std::string> languages{"english","english","french","german","spanish","japanese","portuguese"};
+            if (language < 0 || language >= static_cast<int>(languages.size())) throw std::runtime_error("Unsupported language number");
+            const auto text = Files(argv[2]).Read("d/xlat." + languages[static_cast<std::size_t>(language)]);
+            WriteText(netstorm::o::XlatTable(netstorm::o::DecodeOriginalText(text)).Translate(argv[4], language)); return 0;
+        }
+        PrintBuildInfo(); return 2;
+    } catch (const std::exception& error) {
+        if (argc==1) netstorm::platform::ShowGuiStartupError(error.what()); // 탐색기 직접 실행 실패도 사용자가 읽을 수 있게 남긴다.
+        std::fprintf(stderr, "%s\n", error.what()); return 1;
+    }
+}

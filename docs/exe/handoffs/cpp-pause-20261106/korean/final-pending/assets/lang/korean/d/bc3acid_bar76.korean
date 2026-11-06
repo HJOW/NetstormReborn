@@ -1,0 +1,70 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=3
+moregeysers=0
+
+mystartmoney=3000
+mytech="RainBattery;RainFence"
+myallylist=""
+
+title="애시드 바"
+
+ai2name="Jailer"
+ai2tech="thunderBattery;thunderCannon"
+ai2startmoney=3000
+ai2geyserattachments=2
+ai2collectors=3
+ai2timebetweenmoves= 4
+ai2allylist=""
+ai2color=Red
+ai2bridgedrawrate= 7
+
+[Options]
+
+[A.]
+<h2>애시드 바</h2>
+<i>~y"애시드 바에는 돈이 들지 않습니다. 돈을 벌어 주지요."<br>
+-님버스의 판매원</i>
+<p>~w당신은 포로로 잡혔습니다. 탈출을 막는 것은 맨 오 워의 요새뿐입니다. 모든 지식을 빼앗겼지만, 깊숙이 숨겨 두고 쓸 일도 없을 것이라 생각했던 애시드 바만은 남았습니다. 하지만 이런 것으로 탈출할 수 있을까요... 정말로?
+<p>밖에서 목소리가 들립니다.
+$Button=다음,Tell,A1.
+
+[A1.]
+<h2>애시드 바</h2>
+<p>~o~E"새 명령이다. 포로를 처형한다!"
+<p>~.~B~w움직이려면 지금이 기회입니다!
+<p>~B~E~r목표:~.~b~w  애시드 바 사이에 적 유닛이 들어가도록 연결하여 파괴하십시오. 기회가 생기면 적 사제도 그 사이에 들어가도록 배치하여 움직이지 못하게 만들고, 포획하여 희생시키십시오. 사제는 벌프들 사이에 숨어 있을 수 있습니다.
+<p>~B~E~o도움말:~.~b~w  신전을 공격하는 썬더 캐논 오른쪽에 이미 애시드 바 하나가 있습니다. 준비된 다리의 캐논 왼쪽에 연결할 애시드 바를 놓으십시오.
+<p><!"rainfence.*">
+<p>"애시드 바"
+$Button=사용 가능한 지식,ShowTechnology,55
+$Button=시작하겠습니다!,DoNothing,0
+</?>
+
+[succeeded][badteamdead]
+<h2>탈출!</h2>
+<p>해냈습니다! 간수는 예상조차 못 했습니다. 당신의 섬이 떠나가고 무력화된 "요새"는 저 멀리 남습니다.
+
+<$Config,Done{mission.fileName}=1>
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+$Button=다음,MissionBegin,bc4bow_rush76
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[Failed]
+<h2>실패...</h2>
+<p>최선을 다했다고는 할 수 있겠지만, 간수는 방어를 뚫고 계획대로 당신을 처형했습니다. 죽어 가는 비명 사이로 간수의 웃음이 들립니다.
+<p>~o"애시드 바? 그게 무슨 피해나 주겠어... 하하하하하."
+<p>~w어쩌면 그의 말이 맞았을까요?
+
+
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[END]

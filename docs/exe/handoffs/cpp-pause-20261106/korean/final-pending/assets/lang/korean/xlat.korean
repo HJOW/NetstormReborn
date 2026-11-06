@@ -1,0 +1,3153 @@
+﻿// NetStorm 11.01 한국어 번역표(UTF-8).
+// 형식은 원본 xlat 파일과 같다: "***" 줄 다음이 영어 원문, "---" 줄 다음이 번역, "===" 줄이 끝이다.
+// 서식 코드(%s, %d, ~색상, ~[아이콘], <c>, $ButtonInstant)는 영어 원문과 같은 순서로 유지한다.
+// 건물·유닛 이름은 docs/korean-unit-names.md의 명칭 규칙을 따른다.
+// 없는 키는 영어 원문을 그대로 표시한다(설치 프로그램 문구와 내부 타입 이름은 번역하지 않았다).
+
+***
+EVERYONE
+---
+모두
+===
+
+***
+ALLIES
+---
+동맹
+===
+
+***
+BATTLE
+---
+전투
+===
+
+***
+Save Fortress As?
+---
+요새를 다른 이름으로 저장?
+===
+
+***
+New Save-Game Name?
+---
+새 저장 게임 이름?
+===
+
+***
+%s (~rCORRUPT~.)
+---
+%s (~r손상됨~.)
+===
+
+***
+Loading
+---
+불러오는 중
+===
+
+***
+Please Wait
+---
+잠시 기다려 주세요
+===
+
+***
+Warning, you are low on virtual memory.  You may have problems running NetStorm.
+Free disk space on your hard drive to increase virtual memory.
+---
+경고: 가상 메모리가 부족합니다.  NetStorm 실행에 문제가 생길 수 있습니다.
+가상 메모리를 늘리려면 하드 디스크의 여유 공간을 확보하세요.
+===
+
+***
+Low Memory
+---
+메모리 부족
+===
+
+***
+You may not run more than one copy of NetStorm simultaneously.
+---
+NetStorm을 동시에 두 개 이상 실행할 수 없습니다.
+===
+
+***
+Sorry...
+---
+죄송합니다...
+===
+
+***
+Activision and Titanic Entertainment Present: NetStorm
+---
+Activision 과 Titanic Entertainment 제공: NetStorm
+===
+
+***
+The game is not properly installed.
+Please re-run setup.
+
+---
+게임이 올바르게 설치되지 않았습니다.
+설치 프로그램을 다시 실행하세요.
+
+===
+
+***
+Fatal Error
+---
+치명적 오류
+===
+
+***
+Unrecoverable Exception!
+---
+복구할 수 없는 예외!
+===
+
+***
+NetStorm will now shutdown.
+---
+NetStorm을 종료합니다.
+===
+
+***
+Everyone
+---
+모두
+===
+
+***
+Allies
+---
+동맹
+===
+
+***
+Friends
+---
+친구
+===
+
+***
+Battle
+---
+전투
+===
+
+***
+~y~ESend To:
+---
+~y~E보낼 대상:
+===
+
+***
+Cost: ~i%d~[IfortGump.3]~.
+
+---
+비용: ~i%d~[IfortGump.3]~.
+
+===
+
+***
+~r~ENeed more Storm Power to Build!
+
+---
+~r~E건설하려면 스톰 파워가 더 필요합니다!
+
+===
+
+***
+Salvage for %d~[IfortGump.3]
+---
+%d~[IfortGump.3]에 회수
+===
+
+***
+Storm Power Available
+---
+사용 가능한 스톰 파워
+===
+
+***
+Production Window
+---
+생산 창
+===
+
+***
+Priest can't get here.
+---
+사제가 이곳에 올 수 없습니다.
+===
+
+***
+Must be placed over constructing artifact
+---
+건설 중인 아티팩트 위에 배치해야 합니다
+===
+
+***
+Cannot place here
+---
+여기에는 배치할 수 없습니다
+===
+
+***
+Energy not satisfied
+---
+에너지 조건을 만족하지 않습니다
+===
+
+***
+Only on Controlled Island
+---
+통제 중인 섬에서만 가능합니다
+===
+
+***
+ Level %s
+---
+ 레벨 %s
+===
+
+***
+None
+---
+없음
+===
+
+***
+Put Knowledge into Production
+---
+지식을 생산에 투입
+===
+
+***
+Knowledge Available
+
+---
+사용 가능한 지식
+
+===
+
+***
+Production Slots Available: %s
+
+---
+사용 가능한 생산 슬롯: %s
+
+===
+
+***
+ Again
+---
+ 다시
+===
+
+***
+All Knowledge is in Production
+---
+모든 지식이 생산 중입니다
+===
+
+***
+Upgrade costs %s%d~[IfortGump.3]
+---
+업그레이드 비용 %s%d~[IfortGump.3]
+===
+
+***
+Cancel
+---
+취소
+===
+
+***
+Your Description Here
+---
+여기에 설명 입력
+===
+
+***
+New battle description:
+---
+새 전투 설명:
+===
+
+***
+Please type in your player name.
+---
+플레이어 이름을 입력하세요.
+===
+
+***
+New Player SubId?
+---
+새 플레이어 SubId?
+===
+
+***
+Player %s
+
+---
+플레이어 %s
+
+===
+
+***
+Status: ~iOnline~.
+
+---
+상태: ~i온라인~.
+
+===
+
+***
+Status: ~r~EDISCONNECTED~.
+
+---
+상태: ~r~E연결 끊김~.
+
+===
+
+***
+Priest: ~i%s~.
+
+---
+사제: ~i%s~.
+
+===
+
+***
+Dead
+---
+사망
+===
+
+***
+Captured
+---
+포획됨
+===
+
+***
+Alive
+---
+생존
+===
+
+***
+Allied with ~i%s~.
+---
+~i%s~.와(과) 동맹.
+===
+
+***
+(One-Way)
+---
+(일방)
+===
+
+***
+Allied with nobody.
+
+---
+동맹이 없습니다.
+
+===
+
+***
+Reliability: ~i%d%%~.
+
+---
+신뢰도: ~i%d%%~.
+
+===
+
+***
+Games Played: ~i%d~.
+
+---
+플레이한 게임: ~i%d~.
+
+===
+
+***
+View Player Info
+---
+플레이어 정보 보기
+===
+
+***
+Ignore chat
+---
+채팅 무시
+===
+
+***
+Find Priest!
+---
+사제 찾기!
+===
+
+***
+Send %s1000~[IfortGump.3]
+---
+%s1000~[IfortGump.3] 보내기
+===
+
+***
+Un-mark as Friend
+---
+친구 표시 해제
+===
+
+***
+Mark as Friend
+---
+친구로 표시
+===
+
+***
+Break Alliance
+---
+동맹 파기
+===
+
+***
+Request Alliance
+---
+동맹 요청
+===
+
+***
+Hide/Show chat - ~iF3~.
+---
+채팅 숨기기/보이기 - ~iF3~.
+===
+
+***
+Refresh Zones
+---
+구역 새로 고침
+===
+
+***
+Hide buildings - ~iF2~.
+---
+건물 숨기기 - ~iF2~.
+===
+
+***
+View Home Temple - ~iF4~.
+---
+본거지 신전 보기 - ~iF4~.
+===
+
+***
+View Your Priest - ~iF5~.
+---
+내 사제 보기 - ~iF5~.
+===
+
+***
+View Knowledge - ~iF6~.
+---
+지식 보기 - ~iF6~.
+===
+
+***
+Hide Island Ownership - ~iF7~.
+---
+섬 소유 표시 숨기기 - ~iF7~.
+===
+
+***
+Review Mission Objectives - ~iF8~.
+---
+미션 목표 보기 - ~iF8~.
+===
+
+***
+View Player List - ~iF9~.
+---
+플레이어 목록 보기 - ~iF9~.
+===
+
+***
+Find Local Server
+---
+로컬 서버 찾기
+===
+
+***
+~E~Select Server
+
+---
+~E서버 선택
+
+===
+
+***
+Kickoff "%s"?
+
+---
+"%s"을(를) 내보낼까요?
+
+===
+
+***
+Failed
+---
+실패
+===
+
+***
+Add New Server...
+---
+새 서버 추가...
+===
+
+***
+Adjust Direct Draw
+---
+Direct Draw 조정
+===
+
+***
+Window Mode
+---
+창 모드
+===
+
+***
+Direct Draw / Full Screen
+---
+Direct Draw / 전체 화면
+===
+
+***
+Sound On
+---
+소리 켜기
+===
+
+***
+Play Music
+---
+음악 재생
+===
+
+***
+Wind Noise
+---
+바람 소리
+===
+
+***
+Speaker Swap L/R
+---
+스피커 좌/우 교체
+===
+
+***
+Default
+---
+기본
+===
+
+***
+Low
+---
+낮음
+===
+
+***
+Medium
+---
+보통
+===
+
+***
+High
+---
+높음
+===
+
+***
+Sound Quality
+---
+음질
+===
+
+***
+Volume 1
+---
+음량 1
+===
+
+***
+Volume 2
+---
+음량 2
+===
+
+***
+Volume 3
+---
+음량 3
+===
+
+***
+Volume 4
+---
+음량 4
+===
+
+***
+Volume 5
+---
+음량 5
+===
+
+***
+Sound Effect Volume
+---
+효과음 음량
+===
+
+***
+Music Volume
+---
+음악 음량
+===
+
+***
+Edge Scroll in Fullscreen
+---
+전체 화면에서 가장자리 스크롤
+===
+
+***
+Cursor Snap To Grid
+---
+커서를 격자에 맞춤
+===
+
+***
+Auto-Demo
+---
+자동 데모
+===
+
+***
+Tell Tips at Startup
+---
+시작 시 팁 표시
+===
+
+***
+Pause - ~iShift-F9~.
+---
+일시 정지 - ~iShift-F9~.
+===
+
+***
+Select Language
+---
+언어 선택
+===
+
+***
+Zacket Record During Battle
+---
+전투 중 Zacket 기록
+===
+
+***
+Force server death
+---
+서버 강제 종료
+===
+
+***
+Allow Reconnect
+---
+재접속 허용
+===
+
+***
+Stall for 12 seconds
+---
+12초 지연
+===
+
+***
+Stall for 15 seconds
+---
+15초 지연
+===
+
+***
+%s (Level %d)
+---
+%s (레벨 %d)
+===
+
+***
+~y%s - not available in demo
+---
+~y%s - 데모에서는 사용할 수 없음
+===
+
+***
+Altar at Max Level
+---
+최대 레벨의 제단
+===
+
+***
+Upgrade Altar to Level %d
+---
+제단을 레벨 %d(으)로 업그레이드
+===
+
+***
+ADVANCE TO RANK %s!!
+---
+%s 계급으로 승급!!
+===
+
+***
+Get 5,000 ~[IfortGump.3]
+---
+5,000 ~[IfortGump.3] 얻기
+===
+
+***
+Save as...
+---
+다른 이름으로 저장...
+===
+
+***
+Add Island
+---
+섬 추가
+===
+
+***
+Cracked
+---
+약함
+===
+
+***
+Normal
+---
+보통
+===
+
+***
+Hard
+---
+어려움
+===
+
+***
+Test Battle
+---
+테스트 전투
+===
+
+***
+Main Menu
+---
+메인 메뉴
+===
+
+***
+Return to Editing
+---
+편집으로 돌아가기
+===
+
+***
+Restart Demo
+---
+데모 다시 시작
+===
+
+***
+Exit Demo
+---
+데모 종료
+===
+
+***
+Restart Mission
+---
+미션 다시 시작
+===
+
+***
+Leave Mission
+---
+미션 나가기
+===
+
+***
+Leave Battle In Shame
+---
+불명예스럽게 전투 이탈
+===
+
+***
+Leave Battle Honorably
+---
+명예롭게 전투 이탈
+===
+
+***
+Declare a Draw
+---
+무승부 선언
+===
+
+***
+Quit Game
+---
+게임 종료
+===
+
+***
+Player List
+
+---
+플레이어 목록
+
+===
+
+***
+, Level %d
+---
+, 레벨 %d
+===
+
+***
+ - SERVER
+---
+ - 서버
+===
+
+***
+Game
+---
+게임
+===
+
+***
+Edit
+---
+편집
+===
+
+***
+View
+---
+보기
+===
+
+***
+Options
+---
+옵션
+===
+
+***
+Players
+---
+플레이어
+===
+
+***
+General Help - ~iF1~.
+---
+일반 도움말 - ~iF1~.
+===
+
+***
+Technical Help
+---
+기술 도움말
+===
+
+***
+Version
+---
+버전
+===
+
+***
+Debug
+---
+디버그
+===
+
+***
+Cheat
+---
+치트
+===
+
+***
+Ignore Energy
+---
+에너지 무시
+===
+
+***
+Get 10,000
+---
+10,000 얻기
+===
+
+***
+Font
+---
+글꼴
+===
+
+***
+Cheats ON
+---
+치트 켜짐
+===
+
+***
+Get 10,000~[IfortGump.3]
+---
+10,000~[IfortGump.3] 얻기
+===
+
+***
+Make me an AI
+---
+나를 AI로 변경
+===
+
+***
+Set 0~[IfortGump.3]
+---
+0~[IfortGump.3]으로 설정
+===
+
+***
+Get Full Deck
+---
+전체 덱 얻기
+===
+
+***
+Get a free island
+---
+무료 섬 얻기
+===
+
+***
+Edit Local Config...
+---
+로컬 설정 편집...
+===
+
+***
+Telnet to Master...
+---
+마스터에 텔넷...
+===
+
+***
+Flag as Multiplayer
+---
+멀티플레이어로 표시
+===
+
+***
+Flag as Mission
+---
+미션으로 표시
+===
+
+***
+Flag as PlayerMade
+---
+플레이어 제작으로 표시
+===
+
+***
+~w~3~EMultiplayer Options
+---
+~w~3~E멀티플레이어 옵션
+===
+
+***
+Connect!
+---
+접속!
+===
+
+***
+~ySave Game: ~w%s
+---
+~y저장 게임: ~w%s
+===
+
+***
+~yPlayer Name: ~w%s
+---
+~y플레이어 이름: ~w%s
+===
+
+***
+~yServer: ~w%s
+---
+~y서버: ~w%s
+===
+
+***
+~yProtocol: ~w%s
+---
+~y프로토콜: ~w%s
+===
+
+***
+Unnamed
+---
+이름 없음
+===
+
+***
+Select LAN Protocol
+
+---
+LAN 프로토콜 선택
+
+===
+
+***
+New Server Address?
+---
+새 서버 주소?
+===
+
+***
+New Server Port Number?
+---
+새 서버 포트 번호?
+===
+
+***
+New Server Nickname?
+---
+새 서버 별명?
+===
+
+***
+Campaign
+---
+캠페인
+===
+
+***
+Multiplayer
+---
+멀티플레이어
+===
+
+***
+Demo
+---
+데모
+===
+
+***
+Help
+---
+도움말
+===
+
+***
+Intro
+---
+인트로
+===
+
+***
+Credits
+---
+크레딧
+===
+
+***
+Quit
+---
+종료
+===
+
+***
+~wServer not responding
+---
+~w서버가 응답하지 않습니다
+===
+
+***
+~w%s not responding
+---
+~w%s 응답 없음
+===
+
+***
+~w%s has disconnected
+---
+~w%s 연결이 끊어졌습니다
+===
+
+***
+~w%s is present
+---
+~w%s 접속 중
+===
+
+***
+~w%s sent you Storm Power
+---
+~w%s이(가) 스톰 파워를 보냈습니다
+===
+
+***
+~w%s wishes to declare a Draw
+---
+~w%s이(가) 무승부를 선언하려 합니다
+===
+
+***
+~w%s and %s are now Allies
+---
+~w%s와(과) %s이(가) 동맹이 되었습니다
+===
+
+***
+~w%s and %s have broken their Alliance.
+---
+~w%s와(과) %s의 동맹이 깨졌습니다.
+===
+
+***
+~wGame started!
+---
+~w게임 시작!
+===
+
+***
+~wGame completed!
+---
+~w게임 완료!
+===
+
+***
+~wGame Paused!
+---
+~w게임 일시 정지!
+===
+
+***
+your game name here
+---
+여기에 게임 이름 입력
+===
+
+***
+Battle Island
+
+---
+전투 섬
+
+===
+
+***
+Sail to here
+---
+이곳으로 항해
+===
+
+***
+Game Server disconnected.  Reconnecting to new Game Server.
+---
+게임 서버 연결이 끊어졌습니다.  새 게임 서버에 다시 접속합니다.
+===
+
+***
+Initializing.
+---
+초기화 중.
+===
+
+***
+Connecting to Game Server. %s
+---
+게임 서버에 접속 중. %s
+===
+
+***
+Game Server disconnected; reconnecting.
+---
+게임 서버 연결이 끊어졌습니다. 다시 접속합니다.
+===
+
+***
+Reconnecting to Game Server %s
+---
+게임 서버 %s에 다시 접속 중
+===
+
+***
+Contacting Game Server.
+---
+게임 서버에 연결 중.
+===
+
+***
+Connecting to Game Server %s
+---
+게임 서버 %s에 접속 중
+===
+
+***
+Server login failure.
+---
+서버 로그인 실패.
+===
+
+***
+Game Server disconnected; reconnecting. Countdown %d.
+---
+게임 서버 연결이 끊어졌습니다. 다시 접속합니다. 카운트다운 %d.
+===
+
+***
+Reconnecting to Game Server %s - Countdown %d.
+---
+게임 서버 %s에 다시 접속 중 - 카운트다운 %d.
+===
+
+***
+Contacting Game Server. Countdown %d.
+---
+게임 서버에 연결 중. 카운트다운 %d.
+===
+
+***
+Connecting to Game Server %s - Countdown %d.
+---
+게임 서버 %s에 접속 중 - 카운트다운 %d.
+===
+
+***
+Connection to Game Server lost.
+---
+게임 서버와의 연결이 끊어졌습니다.
+===
+
+***
+Login to server denied.
+---
+서버 로그인이 거부되었습니다.
+===
+
+***
+Searching for local %s server.
+---
+로컬 %s 서버를 찾는 중.
+===
+
+***
+Local %s server found.
+---
+로컬 %s 서버를 찾았습니다.
+===
+
+***
+Becoming local %s server.
+---
+로컬 %s 서버가 되는 중.
+===
+
+***
+Root Server login failure.
+---
+루트 서버 로그인 실패.
+===
+
+***
+Failed to connect.
+---
+접속 실패.
+===
+
+***
+Contacting Root Server.
+---
+루트 서버에 연결 중.
+===
+
+***
+Root Server connected. Awaiting login reply.
+---
+루트 서버에 접속했습니다. 로그인 응답을 기다리는 중.
+===
+
+***
+Contacting Challenge Server.
+---
+챌린지 서버에 연결 중.
+===
+
+***
+Challenge Server login failure.
+---
+챌린지 서버 로그인 실패.
+===
+
+***
+Challenge Server connected. Awaiting login reply.
+---
+챌린지 서버에 접속했습니다. 로그인 응답을 기다리는 중.
+===
+
+***
+Challenge server login denied:%s
+---
+챌린지 서버 로그인 거부:%s
+===
+
+***
+Challenge Server connection lost.
+---
+챌린지 서버 연결이 끊어졌습니다.
+===
+
+***
+Communicating with Challenge Server.
+---
+챌린지 서버와 통신 중.
+===
+
+***
+Creating Islands.
+---
+섬을 만드는 중.
+===
+
+***
+You
+---
+당신
+===
+
+***
+Battle can not be restarted because there is no one to reconnect to.
+---
+다시 접속할 상대가 없어 전투를 다시 시작할 수 없습니다.
+===
+
+***
+Yes
+---
+예
+===
+
+***
+No
+---
+아니오
+===
+
+***
+A battle was started %2.1f minutes ago, but was not cleanly exited.  Attempt to reconnect?%s
+---
+%2.1f분 전에 시작된 전투가 정상적으로 종료되지 않았습니다.  다시 접속하시겠습니까?%s
+===
+
+***
+Starting Mission...
+---
+미션을 시작하는 중...
+===
+
+***
+Reconnecting to new Game Server. Transferring.
+---
+새 게임 서버에 다시 접속 중. 전송 중.
+===
+
+***
+Connected to server %s - Transferring.
+---
+서버 %s에 접속했습니다 - 전송 중.
+===
+
+***
+: ~iReady~.
+---
+: ~i준비됨~.
+===
+
+***
+: ~iTransferring~.
+---
+: ~i전송 중~.
+===
+
+***
+: ~iDisconnected~.
+---
+: ~i연결 끊김~.
+===
+
+***
+: ~iPending~.
+---
+: ~i대기 중~.
+===
+
+***
+: ~iConnecting~.
+---
+: ~i접속 중~.
+===
+
+***
+
+
+There may be Internet traffic, or the Server
+may have a slow Internet connection which is
+taking longer than expected. You can abort
+this game, or continue waiting to get in. Most
+games reconnect correctly even after long delays.
+$ButtonInstant=Abort,LeaveBattle,3
+
+---
+
+
+인터넷 트래픽이 많거나 서버의 인터넷 연결이
+느려서 예상보다 오래 걸리고 있을 수 있습니다.
+이 게임을 중단하거나 계속 기다릴 수 있습니다.
+대부분의 게임은 오래 지연되어도 올바르게
+다시 접속됩니다.
+$ButtonInstant=중단,LeaveBattle,3
+
+===
+
+***
+
+
+Some players are not connected and may
+not make it back. Press Start to begin now.$ButtonInstant=Start,ServerForceBattleStart,0 
+---
+
+
+일부 플레이어가 접속하지 않았고 돌아오지 못할
+수도 있습니다. 지금 시작하려면 시작을 누르세요.$ButtonInstant=시작,ServerForceBattleStart,0 
+===
+
+***
+~.~3%s~*~.
+
+%s
+Time Remaining: ~i%d~.%s
+---
+~.~3%s~*~.
+
+%s
+남은 시간: ~i%d~.%s
+===
+
+***
+Becoming Server
+---
+서버가 되는 중
+===
+
+***
+Starting Game
+---
+게임 시작 중
+===
+
+***
+(unknown)
+---
+(알 수 없음)
+===
+
+***
+(demo)
+---
+(데모)
+===
+
+***
+(beta)
+---
+(베타)
+===
+
+***
+Leave this Battle
+---
+이 전투 나가기
+===
+
+***
+View your Player Info
+---
+내 플레이어 정보 보기
+===
+
+***
+Change Description...
+---
+설명 변경...
+===
+
+***
+Incompatible
+---
+호환되지 않음
+===
+
+***
+Challenge Area (id %d)
+
+---
+챌린지 지역 (id %d)
+
+===
+
+***
+~yNum Players:~.%d
+
+---
+~y플레이어 수:~.%d
+
+===
+
+***
+~yNum Friends:~.%d
+
+---
+~y친구 수:~.%d
+
+===
+
+***
+Decend to this Level
+---
+이 레벨로 내려가기
+===
+
+***
+About
+---
+정보
+===
+
+***
+Refresh Information
+---
+정보 새로 고침
+===
+
+***
+BATTLEMASTER
+
+---
+배틀마스터
+
+===
+
+***
+Players:%d  Avg Level:%d
+---
+플레이어:%d  평균 레벨:%d
+===
+
+***
+Empty
+---
+비어 있음
+===
+
+***
+Friends:%d
+---
+친구:%d
+===
+
+***
+~r~EBATTLEMASTER
+---
+~r~E배틀마스터
+===
+
+***
+Start Battle
+---
+전투 시작
+===
+
+***
+~w~E~3Exclude which unit:
+---
+~w~E~3제외할 유닛:
+===
+
+***
+~y~EExcluded Units:
+---
+~y~E제외된 유닛:
+===
+
+***
+Remove exclusion of %s?
+
+---
+%s 제외를 해제할까요?
+
+===
+
+***
+~w~E%s
+Players in Zone %d
+
+---
+~w~E%s
+구역 %d의 플레이어
+
+===
+
+***
+LAN Server
+---
+LAN 서버
+===
+
+***
+BATTLEMASTER
+
+
+---
+배틀마스터
+
+
+===
+
+***
+~w~E%s
+Players in Battle (Zone %d)
+
+---
+~w~E%s
+전투 중인 플레이어 (구역 %d)
+
+===
+
+***
+Battle Status Window
+---
+전투 상태 창
+===
+
+***
+Player List Window
+---
+플레이어 목록 창
+===
+
+***
+Dismiss
+---
+닫기
+===
+
+***
+Place New Islands
+
+---
+새 섬 배치
+
+===
+
+***
+To the Beyond
+---
+저편으로
+===
+
+***
+Alignment: <c>%s</c>
+---
+속성: <c>%s</c>
+===
+
+***
+Alignment: <c>None</c>
+---
+속성: <c>없음</c>
+===
+
+***
+Class: <c>%s</c>
+---
+분류: <c>%s</c>
+===
+
+***
+Hits: <c>%d</c>
+---
+체력: <c>%d</c>
+===
+
+***
+Hits: <c>Invulnerable</c>
+---
+체력: <c>무적</c>
+===
+
+***
+Range: <c>%d</c>
+---
+사거리: <c>%d</c>
+===
+
+***
+Range: <c>n/a</c>
+---
+사거리: <c>해당 없음</c>
+===
+
+***
+Damage: <c>%d</c>
+---
+피해: <c>%d</c>
+===
+
+***
+Damage: <c>special</c>
+---
+피해: <c>특수</c>
+===
+
+***
+Damage: <c>n/a</c>
+---
+피해: <c>해당 없음</c>
+===
+
+***
+Cost in Storm Power: <c>%d</c>~[IfortGump.3]
+---
+스톰 파워 비용: <c>%d</c>~[IfortGump.3]
+===
+
+***
+Cost in Storm Power: <c>n/a</c>
+---
+스톰 파워 비용: <c>해당 없음</c>
+===
+
+***
+%s to Build: <c>%s</c>
+---
+건설에 필요한 %s: <c>%s</c>
+===
+
+***
+%s to Build: <c>n/a</c>
+---
+건설에 필요한 %s: <c>해당 없음</c>
+===
+
+***
+%s to Build: <c>None</c>
+---
+건설에 필요한 %s: <c>없음</c>
+===
+
+***
+Sacrifice
+---
+희생
+===
+
+***
+OK
+---
+확인
+===
+
+***
+Back
+---
+뒤로
+===
+
+***
+No help information available
+---
+사용할 수 있는 도움말 정보가 없습니다
+===
+
+***
+Type
+---
+종류
+===
+
+***
+Chat Window
+---
+채팅 창
+===
+
+***
+Select chat view
+---
+채팅 보기 선택
+===
+
+***
+Select help view
+---
+도움말 보기 선택
+===
+
+***
+Select research view
+---
+연구 보기 선택
+===
+
+***
+Select friend status view
+---
+친구 상태 보기 선택
+===
+
+***
+Current Production
+
+---
+현재 생산
+
+===
+
+***
+No Production Yet.
+
+---
+아직 생산 중인 것이 없습니다.
+
+===
+
+***
+View Current Production
+---
+현재 생산 보기
+===
+
+***
+Construct Building
+
+---
+건물 건설
+
+===
+
+***
+%sTemple
+---
+%s신전
+===
+
+***
+Workshop
+---
+워크샾
+===
+
+***
+%sConstruct~.
+---
+%s건설~.
+===
+
+***
+Prayer
+
+---
+기도
+
+===
+
+***
+Pray for Devastation Spell
+---
+데버스테이션 주문 기도
+===
+
+***
+%sPray~.
+---
+%s기도~.
+===
+
+***
+View Learned Knowledge
+---
+습득한 지식 보기
+===
+
+***
+%d Priest%s
+---
+사제 %d명%s
+===
+
+***
+~y~EExcluded
+---
+~y~E제외됨
+===
+
+***
+WIND
+---
+윈드
+===
+
+***
+RAIN
+---
+레인
+===
+
+***
+THUN.
+---
+썬더
+===
+
+***
+SUN
+---
+썬
+===
+
+***
+~0~w~ENot enough Storm Power to build this
+---
+~0~w~E이것을 건설할 스톰 파워가 부족합니다
+===
+
+***
+~0~w~ENone in inventory
+---
+~0~w~E보유한 것이 없습니다
+===
+
+***
+Sky Overview
+---
+하늘 전체 보기
+===
+
+***
+Unspecified reason
+---
+알 수 없는 이유
+===
+
+***
+Login successful
+---
+로그인 성공
+===
+
+***
+Initial info sent
+---
+초기 정보 전송됨
+===
+
+***
+Player already logged in
+---
+이미 로그인한 플레이어입니다
+===
+
+***
+Name length is bad
+---
+이름 길이가 올바르지 않습니다
+===
+
+***
+The server is full
+---
+서버가 가득 찼습니다
+===
+
+***
+Unknown error
+---
+알 수 없는 오류
+===
+
+***
+~g~3~E%s just arrived!
+
+---
+~g~3~E%s 님이 방금 도착했습니다!
+
+===
+
+***
+%s
+%s%s%sLevel %d
+
+---
+%s
+%s%s%s레벨 %d
+
+===
+
+***
+You have been kicked off!
+---
+추방되었습니다!
+===
+
+***
+ERROR: Invalid battle id
+---
+오류: 잘못된 전투 id
+===
+
+***
+ERROR: Invalid battle slot id
+---
+오류: 잘못된 전투 슬롯 id
+===
+
+***
+That battle began before you got there
+---
+당신이 도착하기 전에 그 전투가 시작되었습니다
+===
+
+***
+A NetStorm CD is required to play in that battle.
+---
+그 전투에 참여하려면 NetStorm CD가 필요합니다.
+===
+
+***
+Salvage
+---
+회수
+===
+
+***
+Salvage gains %d~[IfortGump.3]
+---
+회수 이득 %d~[IfortGump.3]
+===
+
+***
+Salvage costs %d~[IfortGump.3]
+---
+회수 비용 %d~[IfortGump.3]
+===
+
+***
+Human Player
+---
+사람 플레이어
+===
+
+***
+Player
+---
+플레이어
+===
+
+***
+Computer #%d
+---
+컴퓨터 #%d
+===
+
+***
+english
+---
+영어
+===
+
+***
+french
+---
+프랑스어
+===
+
+***
+german
+---
+독일어
+===
+
+***
+spanish
+---
+스페인어
+===
+
+***
+japanese
+---
+일본어
+===
+
+***
+portuguese
+---
+포르투갈어
+===
+
+***
+Wind
+---
+윈드
+===
+
+***
+Rain
+---
+레인
+===
+
+***
+Thunder
+---
+썬더
+===
+
+***
+Sun
+---
+썬
+===
+
+***
+archer
+---
+아처
+===
+
+***
+cannon
+---
+캐논
+===
+
+***
+blocker
+---
+블로커
+===
+
+***
+aviary
+---
+에비어리
+===
+
+***
+flyer
+---
+플라이어
+===
+
+***
+battery
+---
+배터리
+===
+
+***
+fence
+---
+펜스
+===
+
+***
+walker
+---
+워커
+===
+
+***
+balloon
+---
+벌룬
+===
+
+***
+misc
+---
+기타
+===
+
+***
+CHEAT Set Owner
+---
+치트: 소유자 설정
+===
+
+***
+Nobody
+---
+아무도 없음
+===
+
+***
+Owner
+---
+소유자
+===
+
+***
+Enemy
+---
+적
+===
+
+***
+Ally
+---
+동맹
+===
+
+***
+
+Alignment: ~i%s~.
+---
+
+속성: ~i%s~.
+===
+
+***
+
+Class: ~i%s~.
+---
+
+분류: ~i%s~.
+===
+
+***
+~y~[I%d.*]Invisible!~.
+
+---
+~y~[I%d.*]투명!~.
+
+===
+
+***
+~y~[I%d.*]Paralyzed!~.
+
+---
+~y~[I%d.*]마비!~.
+
+===
+
+***
+Meltdown!
+---
+붕괴!
+===
+
+***
+NetStorm has failed an assertion and can't continue. Please submit this info to http://www.titanic.com/netstorm/bugreport.cgi
+(To copy, select with mouse, then hit Ctrl-ins. Then hit Shift-Ins in your web browser.)
+---
+NetStorm이 어설션에 실패하여 계속할 수 없습니다. 이 정보를 http://www.titanic.com/netstorm/bugreport.cgi 에 제출해 주세요.
+(복사하려면 마우스로 선택한 뒤 Ctrl-Ins를 누르고, 웹 브라우저에서 Shift-Ins를 누르세요.)
+===
+
+***
+NetStorm Assertion Failed
+---
+NetStorm 어설션 실패
+===
+
+***
+N
+---
+북
+===
+
+***
+NE
+---
+북동
+===
+
+***
+E
+---
+동
+===
+
+***
+SE
+---
+남동
+===
+
+***
+S
+---
+남
+===
+
+***
+SW
+---
+남서
+===
+
+***
+W
+---
+서
+===
+
+***
+NW
+---
+북서
+===
+
+***
+ for %s%d~[IfortGump.3]
+---
+ %s%d~[IfortGump.3]에
+===
+
+***
+Build Level %d %s%s
+---
+레벨 %d %s%s 건설
+===
+
+***
+Build %s%s
+---
+%s%s 건설
+===
+
+***
+Create %s for %s%d~[IfortGump.3]
+---
+%s 생성: %s%d~[IfortGump.3]
+===
+
+***
+Clear away
+---
+치우기
+===
+
+***
+~wNothing
+---
+~w없음
+===
+
+***
+~wUnknown
+---
+~w알 수 없음
+===
+
+***
+~r~E(Not while paralyzed)
+---
+~r~E(마비 중에는 불가)
+===
+
+***
+~r~E(Not while flying)
+---
+~r~E(비행 중에는 불가)
+===
+
+***
+~r~E(Not here)
+---
+~r~E(여기서는 불가)
+===
+
+***
+for %s%d~[IfortGump.3]
+---
+비용 %s%d~[IfortGump.3]
+===
+
+***
+%sCast~. ~i%s~.~[I%d.*] %s
+---
+%s시전~. ~i%s~.~[I%d.*] %s
+===
+
+***
+About %s
+---
+%s 정보
+===
+
+***
+Carrying: ~i%s~.
+
+---
+운반 중: ~i%s~.
+
+===
+
+***
+%sDrop~. ~i%s~. %s
+---
+%s내려놓기~. ~i%s~. %s
+===
+
+***
+~yCapturable!~.
+
+---
+~y포획 가능!~.
+
+===
+
+***
+~yNot Connected!~.
+
+---
+~y연결되지 않음!~.
+
+===
+
+***
+Storm Power: ~i%d~.
+
+---
+스톰 파워: ~i%d~.
+
+===
+
+***
+Slow
+---
+느림
+===
+
+***
+Fast
+---
+빠름
+===
+
+***
+Individual
+---
+개별
+===
+
+***
+Shared
+---
+공유
+===
+
+***
+Short
+---
+짧음
+===
+
+***
+Long
+---
+김
+===
+
+***
+Bridge Slots
+---
+다리 슬롯
+===
+
+***
+Unit Rate
+---
+유닛 생산 속도
+===
+
+***
+Knowledge
+---
+지식
+===
+
+***
+Generator Range
+---
+제네레이터 범위
+===
+
+***
+Kill Reward
+---
+처치 보상
+===
+
+***
+Breakable Alliances
+---
+파기 가능한 동맹
+===
+
+***
+~[IfortGump.3] per Geyser
+---
+간헐천당 ~[IfortGump.3]
+===
+
+***
+%s Available
+
+---
+사용 가능한 %s
+
+===
+
+***
+All %s is in Production
+---
+모든 %s이(가) 생산 중입니다
+===
+
+***
+Put %s into Production
+---
+%s을(를) 생산에 투입
+===
+
+***
+Aerial Attack
+---
+공중 공격
+===
+
+***
+Aerial Transport
+---
+공중 수송
+===
+
+***
+Air Attack Base
+---
+공중 공격 기지
+===
+
+***
+Altar
+---
+제단
+===
+
+***
+Bridge
+---
+다리
+===
+
+***
+Defense
+---
+방어
+===
+
+***
+Defensive Spell
+---
+방어 주문
+===
+
+***
+Energy
+---
+에너지
+===
+
+***
+Ground Transport
+---
+지상 수송
+===
+
+***
+High Priest
+---
+사제
+===
+
+***
+Offensive Spell
+---
+공격 주문
+===
+
+***
+Production
+---
+생산
+===
+
+***
+Residence
+---
+거주 구역
+===
+
+***
+Shooter
+---
+슈터
+===
+
+***
+Source of Energy
+---
+에너지원
+===
+
+***
+Spell
+---
+주문
+===
+
+***
+Source of Storm Power
+---
+스톰 파워 원천
+===
+
+***
+Bridge Harden
+---
+다리 강화
+===
+
+***
+Challenge Ring
+---
+챌린지 링
+===
+
+***
+Heal
+---
+치유
+===
+
+***
+Large Farm
+---
+대형 팜
+===
+
+***
+Outpost
+---
+아웃포스트
+===
+
+***
+Paralysis
+---
+마비
+===
+
+***
+Small Farm
+---
+소형 팜
+===
+
+***
+Treason
+---
+반역
+===
+
+***
+Tree
+---
+나무
+===
+
+***
+Water Wheel
+---
+워터 휠
+===
+
+***
+Acid Barricade
+---
+애시드 바리케이드
+===
+
+***
+Air Ship
+---
+에어 쉽
+===
+
+***
+Arc Spire
+---
+아크 스파이어
+===
+
+***
+Artifact
+---
+아티팩트
+===
+
+***
+Balloon
+---
+벌룬
+===
+
+***
+Banner
+---
+배너
+===
+
+***
+Bulf
+---
+벌프
+===
+
+***
+Bulwark
+---
+불워크
+===
+
+***
+City Gate
+---
+시티 게이트
+===
+
+***
+Cloud Floater
+---
+클라우드 플로터
+===
+
+***
+Crossbow
+---
+크로스보우
+===
+
+***
+Crystal Crab
+---
+크리스탈 크랩
+===
+
+***
+Decimation
+---
+데시메이션
+===
+
+***
+Devastation
+---
+데버스테이션
+===
+
+***
+Devil Maker
+---
+데빌 메이커
+===
+
+***
+Dust Devil
+---
+더스트 데빌
+===
+
+***
+Edge Farm
+---
+에지 팜
+===
+
+***
+Embassy
+---
+엠버시
+===
+
+***
+Empty Storm Geyser
+---
+고갈된 스톰 간헐천
+===
+
+***
+Force Field
+---
+포스 필드
+===
+
+***
+Fountain
+---
+파운틴
+===
+
+***
+Golem
+---
+골렘
+===
+
+***
+Grove
+---
+그로브
+===
+
+***
+Growing Ice Tower
+---
+성장하는 아이스 타워
+===
+
+***
+Homestead
+---
+홈스테드
+===
+
+***
+Ice Cannon
+---
+아이스 캐논
+===
+
+***
+Ice Tower
+---
+아이스 타워
+===
+
+***
+Invisibility
+---
+투명화
+===
+
+***
+Island
+---
+섬
+===
+
+***
+Man o'War Pool
+---
+맨 오 워 풀
+===
+
+***
+Man o'War
+---
+맨 오 워
+===
+
+***
+Mansion
+---
+맨션
+===
+
+***
+Nimbian
+---
+님비안
+===
+
+***
+Obelisk
+---
+오벨리스크
+===
+
+***
+Player Stub
+---
+플레이어 스텁
+===
+
+***
+Point Blast
+---
+포인트 블라스트
+===
+
+***
+Rain Generator
+---
+레인 제네레이터
+===
+
+***
+Rain Temple
+---
+레인 신전
+===
+
+***
+Rain Workshop
+---
+레인 워크샾
+===
+
+***
+Rain {Focus}
+---
+레인 {Focus}
+===
+
+***
+River
+---
+리버
+===
+
+***
+Sail Skater
+---
+세일 스케이터
+===
+
+***
+Stone Tower
+---
+스톤 타워
+===
+
+***
+Storm Crystal
+---
+스톰 크리스탈
+===
+
+***
+Storm Geyser
+---
+스톰 간헐천
+===
+
+***
+Sun Barricade
+---
+썬 바리케이드
+===
+
+***
+Sun Cannon
+---
+썬 캐논
+===
+
+***
+Sun Disc Thrower
+---
+썬 디스크 발사기
+===
+
+***
+Sun Generator
+---
+썬 제네레이터
+===
+
+***
+Sun Workshop
+---
+썬 워크샾
+===
+
+***
+Sun {Focus}
+---
+썬 {Focus}
+===
+
+***
+Thunder Cannon
+---
+썬더 캐논
+===
+
+***
+Thunder Generator
+---
+썬더 제네레이터
+===
+
+***
+Thunder Temple
+---
+썬더 신전
+===
+
+***
+Thunder Workshop
+---
+썬더 워크샾
+===
+
+***
+Thunder {Focus}
+---
+썬더 {Focus}
+===
+
+***
+Trees
+---
+나무들
+===
+
+***
+Vander Tower
+---
+반더 타워
+===
+
+***
+Wall
+---
+벽
+===
+
+***
+Whirlibase
+---
+훨리베이스
+===
+
+***
+Whirligig
+---
+훨리기그
+===
+
+***
+Wind Generator
+---
+윈드 제네레이터
+===
+
+***
+Wind Temple
+---
+윈드 신전
+===
+
+***
+Wind Tower
+---
+윈드 타워
+===
+
+***
+Wind Workshop
+---
+윈드 워크샾
+===
+
+***
+Wind {Focus}
+---
+윈드 {Focus}
+===
+
+***
+Platform
+---
+플랫폼
+===
+
+***
+Language
+---
+언어
+===
+
+***
+Resolution
+---
+해상도
+===
+
+***
+Anti-Aliasing
+---
+안티앨리어싱
+===
+
+***
+FSR 1.0 Upscaling
+---
+FSR 1.0 업스케일링
+===

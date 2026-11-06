@@ -1,0 +1,837 @@
+{
+  "status": "적용 가능한 준비 후보/미적용/컴파일 및 실행 미검증",
+  "host": "HJOW-Athlon",
+  "lastDecompilation": "HJOW-Athlon/2026-11-03",
+  "productBaseHead": "1f00a25add9619291f7978a18b2c07f2de0ee242",
+  "initialProductHead": "4be0c4639ed6859d9ac438975b3839d70d44cb85",
+  "initialRawBase": "final-base-983",
+  "currentRawBase": "final-base",
+  "patch": "final.patch",
+  "patchSha256": "34c37f01abaf7a660c5358b4b8944a7c256844136beb79fbd7b0daf688113ac8",
+  "patchIncludesAssets": false,
+  "codeFiles": 41,
+  "assetCount": 44,
+  "totalFinalFiles": 85,
+  "draftTestCount": 24,
+  "builds": 0,
+  "cppTestsRun": 0,
+  "gameGuiImeMpRuns": 0,
+  "productFilesEdited": 0,
+  "fixturesEdited": 0,
+  "originalsEdited": 0,
+  "wbInputsEdited": 0,
+  "priorPendingIntegrityProblems": [],
+  "code": [
+    {
+      "path": "cpppj/package-cpppj.ps1",
+      "baseSha256": "ab2a1522cc8f7b815700e6fbbdcc3a9d1e92168e5ab194a9801708f24cda90b5",
+      "currentProductSha256": "ab2a1522cc8f7b815700e6fbbdcc3a9d1e92168e5ab194a9801708f24cda90b5",
+      "finalSha256": "35fba4d1f72339c349ec4f0a615f2d509e8211e968824c0a4046bf15c53e0b54",
+      "bytes": 55190,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/app/main.cpp",
+      "baseSha256": "352ea04ef99eb4a2a438fd2875d646cec3bb2c4ee458e81f4a66eae88ba618b3",
+      "currentProductSha256": "352ea04ef99eb4a2a438fd2875d646cec3bb2c4ee458e81f4a66eae88ba618b3",
+      "finalSha256": "afdf03f8a0683a5cb8e9d367647c389b082b7676f95efa8abd5c63623b5164b2",
+      "bytes": 73497,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/app/McpServer.cpp",
+      "baseSha256": "f306c7b5ecd3cfd510338f4f40c5fd8a2e1e62f559d8a1627ed072badc6df22f",
+      "currentProductSha256": "f306c7b5ecd3cfd510338f4f40c5fd8a2e1e62f559d8a1627ed072badc6df22f",
+      "finalSha256": "d65bcc351e551ded873362e3e5a03cc121decf466e748f5fe254514d5bf85ca4",
+      "bytes": 28137,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/ClientMain.cpp",
+      "baseSha256": "b867f892338cff27037378cbb86492e346b01a634a8eec9dc9c09da761f2c829",
+      "currentProductSha256": "b867f892338cff27037378cbb86492e346b01a634a8eec9dc9c09da761f2c829",
+      "finalSha256": "b2f7994ab218e492a4b73e5f7969b857224211abfa088a621e4139821694276b",
+      "bytes": 122347,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/ClientMain.h",
+      "baseSha256": "a5c43e7b8fbf341e6938f2e282dbcbe96e410aa139ea13b85702bf9528199e22",
+      "currentProductSha256": "a5c43e7b8fbf341e6938f2e282dbcbe96e410aa139ea13b85702bf9528199e22",
+      "finalSha256": "ab74ee8c8cd2971922bd0ba122c029327ecb16b63bf55c4073b4bbd614868ac9",
+      "bytes": 43621,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/ConfigFileRead.cpp",
+      "baseSha256": "fd2c397b342ee625ad4f338f67b3625ad64de13d6109f4c45e6ba44033443390",
+      "currentProductSha256": "fd2c397b342ee625ad4f338f67b3625ad64de13d6109f4c45e6ba44033443390",
+      "finalSha256": "a2ac81d84b0be60aa4a5d332a5e0337ab16319b1aeacd101d7e06b485cc120b6",
+      "bytes": 6833,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/ConfigFileRead.h",
+      "baseSha256": "db5afe3fa39e4fb1d321efc163381482dac415f11eef38d008580784678b6f38",
+      "currentProductSha256": "db5afe3fa39e4fb1d321efc163381482dac415f11eef38d008580784678b6f38",
+      "finalSha256": "aff0ac160a9a048abd3a33fa057bfb10c415d6323c6588f9e9ea65c666c14402",
+      "bytes": 990,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/DisplayTextInput.cpp",
+      "baseSha256": null,
+      "currentProductSha256": null,
+      "finalSha256": "5e53083937cd57422f7f9a4da8968d76b2bf9f8eaacebef5f7a598af21276d03",
+      "bytes": 6368,
+      "newFile": true
+    },
+    {
+      "path": "cpppj/src/client/DisplayTextInput.h",
+      "baseSha256": null,
+      "currentProductSha256": null,
+      "finalSha256": "daaad3b32a1922a6fd0b5a7fb94dbc3dd07dae53809bee0c83c8190b2e7a3f2d",
+      "bytes": 2529,
+      "newFile": true
+    },
+    {
+      "path": "cpppj/src/client/HtmlTextParser.cpp",
+      "baseSha256": "d354f2536e4636d531b65acd0b43270b8fd1f689e882df2fbb47617d5d4e8883",
+      "currentProductSha256": "d354f2536e4636d531b65acd0b43270b8fd1f689e882df2fbb47617d5d4e8883",
+      "finalSha256": "1e83dfbc4d49dd9bb223cc8dfe48b74a95912490e7b694540a2955aa4e368ab8",
+      "bytes": 9863,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/HtmlTextParser.h",
+      "baseSha256": "dec88daebc5cbfc0fe207170c171469eaa4464b97ee642a7cfd0528a67a94b34",
+      "currentProductSha256": "dec88daebc5cbfc0fe207170c171469eaa4464b97ee642a7cfd0528a67a94b34",
+      "finalSha256": "a48192ad7701fa7be2543287759355a2dbce35acfdc77ece0ddabf688a972ad3",
+      "bytes": 5847,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/HtmlWindowFactory.cpp",
+      "baseSha256": "c64296db21143c534b5c693067d22cf04d5974ad2c3a3701178bfc8d6c1fe94a",
+      "currentProductSha256": "c64296db21143c534b5c693067d22cf04d5974ad2c3a3701178bfc8d6c1fe94a",
+      "finalSha256": "51122600f2b5a2554fec61d2473eab059a93869351fcb02c1a2437c6ffdd91e5",
+      "bytes": 4242,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/HtmlWindowFactory.h",
+      "baseSha256": "60a1b04965a344c3e6686dfe6eedeffb6d35a60c1121c24944902d3acf8511e8",
+      "currentProductSha256": "60a1b04965a344c3e6686dfe6eedeffb6d35a60c1121c24944902d3acf8511e8",
+      "finalSha256": "7d39e731628f9ddf60d4d4e15817d32908d7c8ee2636a17b12a17ba63c072384",
+      "bytes": 2555,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/InputEvent.cpp",
+      "baseSha256": "f2ce8df60e1aeb90848936a04b6174fb0577c7a7cc6ebc965899b0c1d7808553",
+      "currentProductSha256": "f2ce8df60e1aeb90848936a04b6174fb0577c7a7cc6ebc965899b0c1d7808553",
+      "finalSha256": "cc8a2280f4a9c7d520050d4a7ef5f858037254dc44a3eaa1177914715acc2356",
+      "bytes": 2340,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/InputEvent.h",
+      "baseSha256": "f2c036c82f621386d3d0e48b04cc4ece79316550a16877cb85cf1ddf5719c4f9",
+      "currentProductSha256": "f2c036c82f621386d3d0e48b04cc4ece79316550a16877cb85cf1ddf5719c4f9",
+      "finalSha256": "1a36938c94526d7224cd6423dc044d45c18bfbe342c357656852233ac80f51fb",
+      "bytes": 3320,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/KoreanResources.cpp",
+      "baseSha256": "5b472837b32f93b4b18b539ce46519c0a206ff009ed66fe638d66315c928a2e0",
+      "currentProductSha256": "5b472837b32f93b4b18b539ce46519c0a206ff009ed66fe638d66315c928a2e0",
+      "finalSha256": "0f926b49d4ee807ff4506aa19e83d85704fe9cf3ae2e39db6ad3d663a9472eb9",
+      "bytes": 9313,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/KoreanResources.h",
+      "baseSha256": "f0f930be7256fc032e886fb13320b6665abcf184369077f31e9c511c734870d5",
+      "currentProductSha256": "f0f930be7256fc032e886fb13320b6665abcf184369077f31e9c511c734870d5",
+      "finalSha256": "9ed264dbac46da7ad164094a88b85d103b784418825c7c9e28f2ed32a78a4e50",
+      "bytes": 2897,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/Mission.cpp",
+      "baseSha256": "08bbbda0598b29e9b7bc68e17defe5c003eb7217e746b603e3995ff204197a84",
+      "currentProductSha256": "08bbbda0598b29e9b7bc68e17defe5c003eb7217e746b603e3995ff204197a84",
+      "finalSha256": "6e1bd9db41d145822fa539c1f070a0139164a82b1947f94f7348cd80f637fe2a",
+      "bytes": 8474,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/Mission.h",
+      "baseSha256": "252b6000141c016865f3ee630a638ef6d64f296c8637dca396fec7839eb5968d",
+      "currentProductSha256": "252b6000141c016865f3ee630a638ef6d64f296c8637dca396fec7839eb5968d",
+      "finalSha256": "edba1bdc89c26ed0f64954d0f1def0f33af4e75620598800904d62fef2899fc6",
+      "bytes": 5303,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/QuickHelpFileRead.cpp",
+      "baseSha256": "6434673060f34e7214b8d8f7e2df8c6724e11458e69a2210200437d47df87adf",
+      "currentProductSha256": "6434673060f34e7214b8d8f7e2df8c6724e11458e69a2210200437d47df87adf",
+      "finalSha256": "5186be529639faa796cb43efe04af13bb428ea706aaef23c0974f6b13dea077a",
+      "bytes": 6034,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/QuickHelpWindow.cpp",
+      "baseSha256": "675f3086dc495c2b717a41459739c63d6261e33947f46381c885e7bb921f4e15",
+      "currentProductSha256": "675f3086dc495c2b717a41459739c63d6261e33947f46381c885e7bb921f4e15",
+      "finalSha256": "648a69c062ee46d86ca020c891a68b9b2a8adf1cdaedfb26fc1466471f05fc24",
+      "bytes": 12750,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/QuickHelpWindow.h",
+      "baseSha256": "7cc6398b40293a118640dae69beec0919571c9e38ef6ef454a7a5025a641f4c9",
+      "currentProductSha256": "7cc6398b40293a118640dae69beec0919571c9e38ef6ef454a7a5025a641f4c9",
+      "finalSha256": "a8a30edf6c64c7c606c7d22d9552b81b7a90dd723d19b279adebeb9f1e843345",
+      "bytes": 6963,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/RawButtonControls.cpp",
+      "baseSha256": "b3993245f76b21e68229a48199cca3d3e781d4281e0bbfd7532cbddf487c8c6f",
+      "currentProductSha256": "b3993245f76b21e68229a48199cca3d3e781d4281e0bbfd7532cbddf487c8c6f",
+      "finalSha256": "07ddfb393ec831c04f28bff2e391152c0a5b0ae6b85384e2a91f5b8a8921927d",
+      "bytes": 70101,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.cpp",
+      "baseSha256": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476",
+      "currentProductSha256": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476",
+      "finalSha256": "b6be874d69084c6e6eb34003c6d5db21c641af477f74aef4ba8c62c1894d0b9f",
+      "bytes": 143333,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.h",
+      "baseSha256": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e",
+      "currentProductSha256": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e",
+      "finalSha256": "88f5f3c6428a0fb0e8c878a311a4ddbad0df246d3c6e5cacd68ecf229dc85922",
+      "bytes": 26562,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/RawMenuHtml.inc",
+      "baseSha256": "c349cdc954dab4c64813a34bc259530c7bfd808f785a218b19902fbca98d6f39",
+      "currentProductSha256": "c349cdc954dab4c64813a34bc259530c7bfd808f785a218b19902fbca98d6f39",
+      "finalSha256": "f3f4b036ef0001031632c7720c3804b3d2e2bcc132271beb0584fce6f678d2a8",
+      "bytes": 15802,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/TellFileMenus.cpp",
+      "baseSha256": "0adad5d4d17df8c92939684c0943758aa394dab3121fb8bc076528fb1c97d544",
+      "currentProductSha256": "0adad5d4d17df8c92939684c0943758aa394dab3121fb8bc076528fb1c97d544",
+      "finalSha256": "335a26c96650e6134d3e75e90e7d0f3ed58d2e8654bb62796cac19885e71541d",
+      "bytes": 8820,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/TellFileMenus.h",
+      "baseSha256": "55935bcae0bcaaf1cc4b2c9e37c14e6430af9c562609b894144fcd9cb381c4e2",
+      "currentProductSha256": "55935bcae0bcaaf1cc4b2c9e37c14e6430af9c562609b894144fcd9cb381c4e2",
+      "finalSha256": "fabd85f09acd10bed7a99488ae3e3a7948d2c4c32fbd15641b5741eb05e4beb8",
+      "bytes": 2425,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/TextClipboard.cpp",
+      "baseSha256": "f50663473df05af4bb693da7818ef10d94d08c5446563ae1fc7f2a90490fd030",
+      "currentProductSha256": "f50663473df05af4bb693da7818ef10d94d08c5446563ae1fc7f2a90490fd030",
+      "finalSha256": "c4c0866548f67b3ca422e3199f864d8e0c3d9897499ae4e4954eae0efcfcccc9",
+      "bytes": 9790,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/TextClipboard.h",
+      "baseSha256": "26a87a1771367cac741685d4d1373d4e8598da26c721ecf78ec151d425bcf04c",
+      "currentProductSha256": "26a87a1771367cac741685d4d1373d4e8598da26c721ecf78ec151d425bcf04c",
+      "finalSha256": "5a6fe4ecf5965670feeec419886f7a57ce9c8bb45ae661c73d5234f6368b3b98",
+      "bytes": 3158,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/TextEntryBuffer.cpp",
+      "baseSha256": "5ee16d78d8396a2e112660d70a1ad26c2903d5cb830421248bf51855a9655725",
+      "currentProductSha256": "5ee16d78d8396a2e112660d70a1ad26c2903d5cb830421248bf51855a9655725",
+      "finalSha256": "213c2a75f0a76070defd35e1f06622052adabba01192d9f2c5e24662d063ebba",
+      "bytes": 14799,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/TextEntryBuffer.h",
+      "baseSha256": "6ef878ca104eae2a67bf0723f7dbfe7478ee16e549c5a40b70a9a0687a32530d",
+      "currentProductSha256": "6ef878ca104eae2a67bf0723f7dbfe7478ee16e549c5a40b70a9a0687a32530d",
+      "finalSha256": "ebf7b8f64eb4b841cc19e04fb3a6a97dd9cd4c531362b02a9bba36fcd7f3b078",
+      "bytes": 5336,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/TextEntryGump.cpp",
+      "baseSha256": "7c11109dcb73e569b60ae579100f45ea0dcb98c566576411681ec0e4590d29bc",
+      "currentProductSha256": "7c11109dcb73e569b60ae579100f45ea0dcb98c566576411681ec0e4590d29bc",
+      "finalSha256": "f267c3bb8be5072ee042368e9b6d353a98fdeeaed0a92580a4e3c479b3a9c05d",
+      "bytes": 35060,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "baseSha256": "b73e44d448e8ae99a97ba32cf2edc80fcc96730ca2e4cdbe0ef068e4640bb997",
+      "currentProductSha256": "b73e44d448e8ae99a97ba32cf2edc80fcc96730ca2e4cdbe0ef068e4640bb997",
+      "finalSha256": "e256d40546aa2cf5867d204e21d3980048d2b889366c7a0b660b064755ee9c4a",
+      "bytes": 228341,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/CMakeLists.txt",
+      "baseSha256": "3eeacc5e567dc5b4b8f0be57517655ca5da7629ac44b7c2237d77ff71982e675",
+      "currentProductSha256": "3eeacc5e567dc5b4b8f0be57517655ca5da7629ac44b7c2237d77ff71982e675",
+      "finalSha256": "faabf29fc26508898eaf8f2ddd7fc342025676286aa70697181ca2b0162ab1dc",
+      "bytes": 37418,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/o/BaseFile.cpp",
+      "baseSha256": "d0a49fa556033b9427d9e4a4621a5cb7b6739124fccab390e2059715962f6c70",
+      "currentProductSha256": "d0a49fa556033b9427d9e4a4621a5cb7b6739124fccab390e2059715962f6c70",
+      "finalSha256": "f3cdc645dc51d319231ac03ace2196edf6bdfa314a2ad3a3a07b2356f7159c1d",
+      "bytes": 43466,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/src/o/BaseFile.h",
+      "baseSha256": "8c7a055b7b6c29a3b050f553977c620a41d5b5fe3b91cf8b043e76993df8f095",
+      "currentProductSha256": "8c7a055b7b6c29a3b050f553977c620a41d5b5fe3b91cf8b043e76993df8f095",
+      "finalSha256": "ac9db161b1550e536371b22521d2f7a10c00b7c7caba387246e47741bea201c4",
+      "bytes": 10539,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/tests/CMakeLists.txt",
+      "baseSha256": "c9f97734fd7ec34ff6376b26681863e51b832ddf025dd0e202554d8b84196874",
+      "currentProductSha256": "c9f97734fd7ec34ff6376b26681863e51b832ddf025dd0e202554d8b84196874",
+      "finalSha256": "ecdb2b97390644a3d9aeb525d7e4c1e435e47e4886b96c48d0a952c762ca269c",
+      "bytes": 305065,
+      "newFile": false
+    },
+    {
+      "path": "cpppj/tests/DisplayTextInputTests.cpp",
+      "baseSha256": null,
+      "currentProductSha256": null,
+      "finalSha256": "b09948a18bba7244c5ad73d31aabbaa56d1e3f1a10afb482cc9396e5e4f198ac",
+      "bytes": 16222,
+      "newFile": true
+    },
+    {
+      "path": "cpppj/tests/KoreanResourcesIntegrationTests.cpp",
+      "baseSha256": null,
+      "currentProductSha256": null,
+      "finalSha256": "f0bf402d4be992a7f51cb62250aad56798422fdabd3e9450d8f9f56535b15e3b",
+      "bytes": 18000,
+      "newFile": true
+    },
+    {
+      "path": "cpppj/tests/QuickHelpWindowTests.cpp",
+      "baseSha256": "883cf92880ca1dccdca9368395f183e69ad160ca7cefed99e3ad3203cbbe6630",
+      "currentProductSha256": "883cf92880ca1dccdca9368395f183e69ad160ca7cefed99e3ad3203cbbe6630",
+      "finalSha256": "4c0645fc5024e962bcabb126de07a36a2e3bb4e23764d0e5ad9bfc8c93ace800",
+      "bytes": 30890,
+      "newFile": false
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/lang/korean/d/tell.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/tell.korean",
+      "frozenSha256": "0024324bafc9edf14570f4697ec3bcdcd96ed81b47e913bc830ff79228f05223",
+      "finalSha256": "0024324bafc9edf14570f4697ec3bcdcd96ed81b47e913bc830ff79228f05223",
+      "bytes": 71109,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/help.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/help.korean",
+      "frozenSha256": "d757023f04c7a44d787b337d22cd87c023ce4b53061f11167b14ac5ab4f34c06",
+      "finalSha256": "d757023f04c7a44d787b337d22cd87c023ce4b53061f11167b14ac5ab4f34c06",
+      "bytes": 133223,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/config.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/config.korean",
+      "frozenSha256": "44a21f0ed5270881bbf89417b9cdb2c4edc98305e99d4a08868ed6521a8712b6",
+      "finalSha256": "02694d17d6ce5c2d8017a0d820747781e376d38c2bbb867a9934a24d85714254",
+      "bytes": 3121,
+      "differsFromFrozen": true
+    },
+    {
+      "path": "assets/lang/korean/d/offical1.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/offical1.korean",
+      "frozenSha256": "4a05d551a807b14eb42980919431b99836c0c4ba9cc9d63e9cf874db919b44a8",
+      "finalSha256": "4a05d551a807b14eb42980919431b99836c0c4ba9cc9d63e9cf874db919b44a8",
+      "bytes": 857,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/offical2.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/offical2.korean",
+      "frozenSha256": "a8e8d03f3c369b514634445c808d78a376972171666f8e6b82405aa2d25c210f",
+      "finalSha256": "a8e8d03f3c369b514634445c808d78a376972171666f8e6b82405aa2d25c210f",
+      "bytes": 1250,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/offical2sep.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/offical2sep.korean",
+      "frozenSha256": "57aff422a777bcd810e52bfbd852c112098daffad4fc23bdec986c0ae9d4eb34",
+      "finalSha256": "57aff422a777bcd810e52bfbd852c112098daffad4fc23bdec986c0ae9d4eb34",
+      "bytes": 15,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/offical3.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/offical3.korean",
+      "frozenSha256": "df88f6c3c21023fa8175dffbc794bcfc0c2833a0f216674e10fe47c9fae0ad4e",
+      "finalSha256": "df88f6c3c21023fa8175dffbc794bcfc0c2833a0f216674e10fe47c9fae0ad4e",
+      "bytes": 1269,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/offical4.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/offical4.korean",
+      "frozenSha256": "d2cab43b1215b0e1d6b48138ff2099fd0b8abd03ee75020e30b74a751d054a68",
+      "finalSha256": "d2cab43b1215b0e1d6b48138ff2099fd0b8abd03ee75020e30b74a751d054a68",
+      "bytes": 678,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/offical5.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/offical5.korean",
+      "frozenSha256": "a4e68772e128e4e3983d838d42bb1b089dab4b90f84cef14bde4ad7a33c41203",
+      "finalSha256": "a4e68772e128e4e3983d838d42bb1b089dab4b90f84cef14bde4ad7a33c41203",
+      "bytes": 650,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/offical5sep.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/offical5sep.korean",
+      "frozenSha256": "57aff422a777bcd810e52bfbd852c112098daffad4fc23bdec986c0ae9d4eb34",
+      "finalSha256": "57aff422a777bcd810e52bfbd852c112098daffad4fc23bdec986c0ae9d4eb34",
+      "bytes": 15,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/offical6.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/offical6.korean",
+      "frozenSha256": "84ab636b0bdc7fd3a8c7b832ce1440d01dfefe550991750b2a175959d10ab7c9",
+      "finalSha256": "84ab636b0bdc7fd3a8c7b832ce1440d01dfefe550991750b2a175959d10ab7c9",
+      "bytes": 259,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/xlat.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/lang/xlat.korean",
+      "frozenSha256": "8fa749b8b3b72ef228148e8f48c0c0e678235e37ed50561b0aa55339a5820cd9",
+      "finalSha256": "8fa749b8b3b72ef228148e8f48c0c0e678235e37ed50561b0aa55339a5820cd9",
+      "bytes": 27551,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/tutorial1.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/tutorial1.korean",
+      "frozenSha256": "9a4c0567eef45e7fa2ede596528e01b763790b66308b770eb4d7a9e7557c705b",
+      "finalSha256": "9a4c0567eef45e7fa2ede596528e01b763790b66308b770eb4d7a9e7557c705b",
+      "bytes": 6670,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/tutorial2.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/tutorial2.korean",
+      "frozenSha256": "28693a4081809be9a0d12f9eda57efe616bf8c0cd46a97b8d285dd318fc19d0c",
+      "finalSha256": "28693a4081809be9a0d12f9eda57efe616bf8c0cd46a97b8d285dd318fc19d0c",
+      "bytes": 9326,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/tutorial3.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/tutorial3.korean",
+      "frozenSha256": "fb0b33c47e2b3c763bbcc7c7a8c5ffb1741a385e763d3b62720ca1c639937919",
+      "finalSha256": "fb0b33c47e2b3c763bbcc7c7a8c5ffb1741a385e763d3b62720ca1c639937919",
+      "bytes": 7950,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/tutorial4.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/tutorial4.korean",
+      "frozenSha256": "b7471624a01ee813594e8903cdd888f0b8a734b5279c5388a862a29af0085d61",
+      "finalSha256": "b7471624a01ee813594e8903cdd888f0b8a734b5279c5388a862a29af0085d61",
+      "bytes": 8591,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/tutorial5.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/tutorial5.korean",
+      "frozenSha256": "330befe8a58f4a87af2c0596b9959cb1abc7c65b1f4af8250b0530f18265f260",
+      "finalSha256": "330befe8a58f4a87af2c0596b9959cb1abc7c65b1f4af8250b0530f18265f260",
+      "bytes": 9071,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/tutorial6.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/tutorial6.korean",
+      "frozenSha256": "6b029f7292f8c24e6c9b2358d943dfa0b7d7a546b72bcba91de919f81baa74ad",
+      "finalSha256": "6b029f7292f8c24e6c9b2358d943dfa0b7d7a546b72bcba91de919f81baa74ad",
+      "bytes": 7519,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/bc1menu76.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/bc1menu76.korean",
+      "frozenSha256": "79d090e1ef2ed0aa72aa7eb90d8229fb61c6b5aef39d97544f8c8f1a16890e83",
+      "finalSha256": "79d090e1ef2ed0aa72aa7eb90d8229fb61c6b5aef39d97544f8c8f1a16890e83",
+      "bytes": 1058,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/bc2bridging76.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/bc2bridging76.korean",
+      "frozenSha256": "44e977cf4fa754295f44fb04dd383a5847f31f18acf86d852ac9c17d8eca920a",
+      "finalSha256": "44e977cf4fa754295f44fb04dd383a5847f31f18acf86d852ac9c17d8eca920a",
+      "bytes": 2163,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/bc3acid_bar76.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/bc3acid_bar76.korean",
+      "frozenSha256": "38dec43a41af6f408bce794f4dc17d1c42233c1a47375a2dc969cb5aa45330b0",
+      "finalSha256": "38dec43a41af6f408bce794f4dc17d1c42233c1a47375a2dc969cb5aa45330b0",
+      "bytes": 2519,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/bc4bow_rush76.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/bc4bow_rush76.korean",
+      "frozenSha256": "458a1da66dfe1cfd802a8641356a1bfba34acab27bfac118eb6c80902ec12957",
+      "finalSha256": "458a1da66dfe1cfd802a8641356a1bfba34acab27bfac118eb6c80902ec12957",
+      "bytes": 2246,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/bc5walkers76.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/bc5walkers76.korean",
+      "frozenSha256": "aa0792c06cb03913eefad8f355144639fa4bb592fff0ba8837bb617b9cd3edc8",
+      "finalSha256": "aa0792c06cb03913eefad8f355144639fa4bb592fff0ba8837bb617b9cd3edc8",
+      "bytes": 2062,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/bc6mows76.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/bc6mows76.korean",
+      "frozenSha256": "4873c9661d021b0367e6e7a675c80a780b211684ea28c84d75579819d6a1d0d6",
+      "finalSha256": "4873c9661d021b0367e6e7a675c80a780b211684ea28c84d75579819d6a1d0d6",
+      "bytes": 3090,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/bc7sun_bars76.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/bc7sun_bars76.korean",
+      "frozenSha256": "6c18ae772f2aa6a7b5ca8fba8a53896232fd1d535aacbfec94869891d552d43f",
+      "finalSha256": "6c18ae772f2aa6a7b5ca8fba8a53896232fd1d535aacbfec94869891d552d43f",
+      "bytes": 2507,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/bc8fury76.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/bc8fury76.korean",
+      "frozenSha256": "9f495a16d372c686988cb1053f1b84b3b03ca7c45107c9228a86f80103302bb9",
+      "finalSha256": "9f495a16d372c686988cb1053f1b84b3b03ca7c45107c9228a86f80103302bb9",
+      "bytes": 3446,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/bc9ssun_bars76.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/bc9ssun_bars76.korean",
+      "frozenSha256": "0871f5d5001727f2b9bbb0002ae6bdf7e819fba56901b651aa46de67cbd1c748",
+      "finalSha256": "0871f5d5001727f2b9bbb0002ae6bdf7e819fba56901b651aa46de67cbd1c748",
+      "bytes": 2073,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/thewarbegins.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/thewarbegins.korean",
+      "frozenSha256": "ca844bf5b738a92388d735297db8e28ea0a2928d72439c94bf844ab77b99e9c9",
+      "finalSha256": "ca844bf5b738a92388d735297db8e28ea0a2928d72439c94bf844ab77b99e9c9",
+      "bytes": 1902,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/masterofwhirligigs.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/masterofwhirligigs.korean",
+      "frozenSha256": "7ff1d8c83bf9ae202b90cbd9c8370053efd9359cbb1caeddc898b357f6533dff",
+      "finalSha256": "7ff1d8c83bf9ae202b90cbd9c8370053efd9359cbb1caeddc898b357f6533dff",
+      "bytes": 1903,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/savetheisland.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/savetheisland.korean",
+      "frozenSha256": "1806d782979302137df0647d13cb02ef8173d854ea4142c5fc78285fff7163b4",
+      "finalSha256": "1806d782979302137df0647d13cb02ef8173d854ea4142c5fc78285fff7163b4",
+      "bytes": 1823,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/fragilefortune.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/fragilefortune.korean",
+      "frozenSha256": "0cd00400fd056753194106ae3a7cc2864816b69131442e6870d402e36bf297f0",
+      "finalSha256": "0cd00400fd056753194106ae3a7cc2864816b69131442e6870d402e36bf297f0",
+      "bytes": 1894,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/thunderingpower.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/thunderingpower.korean",
+      "frozenSha256": "ec5ec665eb3696f561eff487e5a3dbdde57665a3465e3a3790b1e392d2e1a24e",
+      "finalSha256": "ec5ec665eb3696f561eff487e5a3dbdde57665a3465e3a3790b1e392d2e1a24e",
+      "bytes": 5259,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/dissolvedalliance.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/dissolvedalliance.korean",
+      "frozenSha256": "c88be8e1d26324d6a84001391f086244eb213221e3c62c292604346bef47dc70",
+      "finalSha256": "c88be8e1d26324d6a84001391f086244eb213221e3c62c292604346bef47dc70",
+      "bytes": 2125,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/thenoose.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/thenoose.korean",
+      "frozenSha256": "18ab34b3eba0495e556f9fee16fdc948b4f73680969f0216c67e03986c0af2f8",
+      "finalSha256": "18ab34b3eba0495e556f9fee16fdc948b4f73680969f0216c67e03986c0af2f8",
+      "bytes": 2120,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/rainvsrain.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/rainvsrain.korean",
+      "frozenSha256": "6b1b30283aa0685e1fbe553cc7cf0ec35482f33929e3345c07fb2ddc82bb54e0",
+      "finalSha256": "6b1b30283aa0685e1fbe553cc7cf0ec35482f33929e3345c07fb2ddc82bb54e0",
+      "bytes": 1711,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/runforit.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/runforit.korean",
+      "frozenSha256": "95fcc0ae8a11d7b3e630d59419dc666c295a94f9b16b3237079932a5a56a728d",
+      "finalSha256": "95fcc0ae8a11d7b3e630d59419dc666c295a94f9b16b3237079932a5a56a728d",
+      "bytes": 2153,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/guardmyback.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/guardmyback.korean",
+      "frozenSha256": "8ad3f105d287624c5754337f6f54cf075a99a353657be3711a8596aa06f519cf",
+      "finalSha256": "8ad3f105d287624c5754337f6f54cf075a99a353657be3711a8596aa06f519cf",
+      "bytes": 3630,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/surrounded.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/surrounded.korean",
+      "frozenSha256": "7cb7c2085faed610cd6a75104ef3d729cf0d6785ec87fa65d200aaf9eb41adb4",
+      "finalSha256": "7cb7c2085faed610cd6a75104ef3d729cf0d6785ec87fa65d200aaf9eb41adb4",
+      "bytes": 2361,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/breakingthrough.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/breakingthrough.korean",
+      "frozenSha256": "c1de2baa6da625b7a8a5d66215d4b9a61dbfa0ccb8d8147c6eb821e7627745c5",
+      "finalSha256": "c1de2baa6da625b7a8a5d66215d4b9a61dbfa0ccb8d8147c6eb821e7627745c5",
+      "bytes": 2057,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/totherescue.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/totherescue.korean",
+      "frozenSha256": "4914419b5c18037a5f68777eb67b61b8d81e42d4e3193dbac99a86cdcd2e6eef",
+      "finalSha256": "4914419b5c18037a5f68777eb67b61b8d81e42d4e3193dbac99a86cdcd2e6eef",
+      "bytes": 2728,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/vicious.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/vicious.korean",
+      "frozenSha256": "3cc5c3fb1c8f065468ab278092a59379895b41cca50a8189373f4902072edbfb",
+      "finalSha256": "3cc5c3fb1c8f065468ab278092a59379895b41cca50a8189373f4902072edbfb",
+      "bytes": 1893,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/enemyterritory.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/enemyterritory.korean",
+      "frozenSha256": "812cf7ff53929c7682bba8759de0f000ec23440ecbdabe01aadbbb2f59a40fa8",
+      "finalSha256": "812cf7ff53929c7682bba8759de0f000ec23440ecbdabe01aadbbb2f59a40fa8",
+      "bytes": 2707,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/finalconfrontation.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/finalconfrontation.korean",
+      "frozenSha256": "232a0cd9074facd93b395e2fe674ce36f185502a0624801b5626f2faeba61d52",
+      "finalSha256": "232a0cd9074facd93b395e2fe674ce36f185502a0624801b5626f2faeba61d52",
+      "bytes": 2440,
+      "differsFromFrozen": false
+    },
+    {
+      "path": "assets/lang/korean/d/demostormrages.korean",
+      "frozenSource": "extracted/cpp-korean-preparation/merged/d/demostormrages.korean",
+      "frozenSha256": "169508eb3523cdde164a66fe5eae2fabfe07fde856b4fef6edaf4fd0d024f43d",
+      "finalSha256": "169508eb3523cdde164a66fe5eae2fabfe07fde856b4fef6edaf4fd0d024f43d",
+      "bytes": 797,
+      "differsFromFrozen": false
+    }
+  ],
+  "preservedInputs": [
+    {
+      "path": "webpj/translations/tell.korean",
+      "expectedSha256": "3d962957b3d8bb07f9b084c795ebc2969f8f34c1c78f3d84276e3a56fe74ebc8",
+      "currentSha256": "3d962957b3d8bb07f9b084c795ebc2969f8f34c1c78f3d84276e3a56fe74ebc8"
+    },
+    {
+      "path": "webpj/translations/help.korean",
+      "expectedSha256": "db062d7efed68a7d1f2e2e51e7b5c9d190523f93269b70822df20d241d53a737",
+      "currentSha256": "db062d7efed68a7d1f2e2e51e7b5c9d190523f93269b70822df20d241d53a737"
+    },
+    {
+      "path": "webpj/translations/config.korean",
+      "expectedSha256": "506ee1f003b8f8b3abaa319f197279a80e9e2bff1d0904f8564926a0f0767316",
+      "currentSha256": "506ee1f003b8f8b3abaa319f197279a80e9e2bff1d0904f8564926a0f0767316"
+    },
+    {
+      "path": "webpj/translations/offical1.korean",
+      "expectedSha256": "dc8295342a65355c6f21a1790a75d7667ea28e93a55f3bbcc4697476e66f9324",
+      "currentSha256": "dc8295342a65355c6f21a1790a75d7667ea28e93a55f3bbcc4697476e66f9324"
+    },
+    {
+      "path": "webpj/translations/offical2.korean",
+      "expectedSha256": "0d6be89bd09b2a63b798888e1346f8216e4dba990e327f744d5e5af457a440dd",
+      "currentSha256": "0d6be89bd09b2a63b798888e1346f8216e4dba990e327f744d5e5af457a440dd"
+    },
+    {
+      "path": "webpj/translations/offical2sep.korean",
+      "expectedSha256": "c7ef0322af580989cf2b1c96d033f1f5d44b64e876a639cd5b4e86a5f412b371",
+      "currentSha256": "c7ef0322af580989cf2b1c96d033f1f5d44b64e876a639cd5b4e86a5f412b371"
+    },
+    {
+      "path": "webpj/translations/offical3.korean",
+      "expectedSha256": "b385275eb013fff92a19baa6381e671d0a125840a6690fe500e93681ee2ce0c6",
+      "currentSha256": "b385275eb013fff92a19baa6381e671d0a125840a6690fe500e93681ee2ce0c6"
+    },
+    {
+      "path": "webpj/translations/offical4.korean",
+      "expectedSha256": "c93dd63a4997587cdd401e9244b618aa2c88fc01ab5b147f2ebdedf12d0cdfd4",
+      "currentSha256": "c93dd63a4997587cdd401e9244b618aa2c88fc01ab5b147f2ebdedf12d0cdfd4"
+    },
+    {
+      "path": "webpj/translations/offical5.korean",
+      "expectedSha256": "5e397d78225c2b95ce5b70e3fce0aa0e5e4d15da53789e7001e783be63a4644d",
+      "currentSha256": "5e397d78225c2b95ce5b70e3fce0aa0e5e4d15da53789e7001e783be63a4644d"
+    },
+    {
+      "path": "webpj/translations/offical5sep.korean",
+      "expectedSha256": "c7ef0322af580989cf2b1c96d033f1f5d44b64e876a639cd5b4e86a5f412b371",
+      "currentSha256": "c7ef0322af580989cf2b1c96d033f1f5d44b64e876a639cd5b4e86a5f412b371"
+    },
+    {
+      "path": "webpj/translations/offical6.korean",
+      "expectedSha256": "400f45484bb56f9c5343f78cbdad452709adfc3ad10a1f7f312eed40c141f330",
+      "currentSha256": "400f45484bb56f9c5343f78cbdad452709adfc3ad10a1f7f312eed40c141f330"
+    },
+    {
+      "path": "assets/lang/korean/xlat.korean",
+      "expectedSha256": "5d3e6f890aec15fc08786a5f0d7f4f937fdeb205e6b3ad3f53dd522c323b40c8",
+      "currentSha256": "5d3e6f890aec15fc08786a5f0d7f4f937fdeb205e6b3ad3f53dd522c323b40c8"
+    }
+  ],
+  "diagnosticChanges": [
+    {
+      "key": "crash HTML ",
+      "before": "crash HTML = \"<p>Please copy this information and <a href=`\"mailto:bugs@titanic.com`\">Email Us</a> with it.`n<p>`n<a href=`\"{troubleshooting URL}`\">Go to troubleshooting pages.</a><hr>(to stop this browser launch, set troubleshootOnCrash = 0 in your options.cfg file.)`n\"",
+      "after": "crash HTML = \"<p>이 정보를 복사하여 <a href=`\"mailto:bugs@titanic.com`\">이메일로 보내 주십시오</a>.`n<p>`n<a href=`\"{troubleshooting URL}`\">문제 해결 안내로 이동합니다.</a><hr>(이 브라우저 실행을 중지하려면 options.cfg 파일의 troubleshootOnCrash 값을 0으로 설정하십시오.)`n\""
+    },
+    {
+      "key": "crash TXT  ",
+      "before": "crash TXT  = \"An assertion has failed:`n'%s' in '%s', line %d version %d.`nPlease copy this information and mail it to bugs@titanic.com`n\"",
+      "after": "crash TXT  = \"단언에 실패했습니다:`n'%s', 파일 '%s', 줄 %d, 버전 %d.`n이 정보를 복사하여 bugs@titanic.com으로 보내 주십시오.`n\""
+    }
+  ],
+  "tests": [
+    {
+      "path": "cpppj/tests/DisplayTextInputTests.cpp",
+      "names": [
+        "KoreanInput_Utf8Utf16AndAtomicQueue",
+        "KoreanInput_DisplayBoundariesAndFiltering",
+        "KoreanInput_EditCursorSelectionAndDeletion",
+        "KoreanInput_ByteLimitAndNumericExclusion",
+        "KoreanInput_PasteWholeCharacters",
+        "KoreanInput_DrawScrollAndCaretBoundaries",
+        "KoreanInput_ConsoleCompletionWordBoundary",
+        "KoreanInput_UnicodeClipboardBoundary",
+        "KoreanInput_AsciiPasteIntoExtendedBodyHonorsFinalByteLimit",
+        "KoreanInput_StaleShiftAnchorsAlwaysEndOnWholeCharacters",
+        "KoreanInput_UnicodeMissingUsesOriginalAsciiClipboardPath"
+      ],
+      "count": 11,
+      "compiled": false,
+      "run": false
+    },
+    {
+      "path": "cpppj/tests/KoreanResourcesIntegrationTests.cpp",
+      "names": [
+        "KoreanIntegration_All43BuiltinBodiesResolveWithOriginalBomBytes",
+        "KoreanIntegration_PortableNamespaceAndExactNativeFileTakePriority",
+        "KoreanIntegration_UnknownAbsoluteAndOtherLanguagesNeverSelectBuiltin",
+        "KoreanIntegration_GuideFinderUsesKoreanLogicalNamesAndKeepsEnglishOrder",
+        "KoreanIntegration_NativeConfigAndMissionDisplayKeepAiState",
+        "KoreanIntegration_ExplicitCustomMissionSourceKeepsItsNamespace",
+        "KoreanIntegration_HelpBomIsTheOnlyDisplayDecodeTrigger",
+        "KoreanIntegration_HtmlExtendedFlagPreservesWholeTokensAndLegacyBytes",
+        "KoreanIntegration_HtmlFactoryRecognizesPureKoreanOnlyThroughCloneHook",
+        "KoreanIntegration_RealHelpAll128TopicsAndLargestBodyKeepKoreanTail",
+        "KoreanIntegration_TellFileMenuInvalidationReloadsLocalizedTitles",
+        "KoreanIntegration_EnglishHelpBytesAndOutputStayIdentical"
+      ],
+      "count": 12,
+      "compiled": false,
+      "run": false
+    },
+    {
+      "path": "cpppj/tests/QuickHelpWindowTests.cpp",
+      "names": [
+        "KoreanIntegration_ActualHelpCacheReloadsAcrossLanguageInvalidation"
+      ],
+      "count": 1,
+      "compiled": false,
+      "run": false
+    }
+  ],
+  "frozenTranslationManifestSha256": "52096b06216b7cfa81587db00f7b047f0076b1179903f02cb4fef1da61c58c23",
+  "frozenTranslationShaListSha256": "ff5b132d56f5c9c3aa9e13df9aaf9aaa55bd55f66969b1ed61ba5f1d323a60c8",
+  "frozenIntegrationManifestSha256": "39d5dd053fc37024bffe0a0ec6a7cd3279bc61215c0e8b449828b9cc12b84b79",
+  "frozenUiManifestSha256": "8882742d80b3a385ba276328b00616e475e5109ed8d90ce36eb523f2eaf0fd05",
+  "staticPatchCheck": "별도 git apply --check --ignore-space-change 명령의 final-static-verification.json 결과 참조"
+}

@@ -1,0 +1,99 @@
+{
+  "unit": 986,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 985,
+  "version": "11.01",
+  "productCommit": "1f00a25add9619291f7978a18b2c07f2de0ee242",
+  "exeSha256": "244127dcb7682d403820aefea400862662c61ae28b6a81a8016f0076e76a6d0f",
+  "exeBytes": 11517440,
+  "scope": "진행 중인 한국어/시나리오 준비 및 원격 Fort 분석을 마감·추적 인계·로컬 커밋 후 사용자 요청 일시중지",
+  "archive": "docs/exe/handoffs/cpp-pause-20261106",
+  "archivedFiles": 237,
+  "archivedBytes": 6654129,
+  "manifestSha256": "fdc6cd7eda72516da51bf98aa5f5ebf3ff8c9d308df739963fab7951383f08a1",
+  "byteVerificationPassed": true,
+  "korean": {
+    "codeFiles": 41,
+    "assets": 44,
+    "draftTests": 24,
+    "applied": false,
+    "compiled": false,
+    "run": false
+  },
+  "scenario": {
+    "changedFiles": 23,
+    "candidateFiles": 24,
+    "baseFiles": 18,
+    "draftIntegrationTests": 9,
+    "draftModelTests": 10,
+    "applied": false,
+    "compiled": false,
+    "run": false,
+    "patchAppliedInShadow": true,
+    "sameAfterLineEndingNormalization": 24,
+    "exactPatchedBytesClaimed": false
+  },
+  "remoteFort": {
+    "designHandoff": true,
+    "productImplemented": false,
+    "unvalidatedDraftFiles": 2,
+    "draftMustNotBeApplied": true
+  },
+  "relocatedUnregisteredModels": [
+    {
+      "originalPath": "cpppj/src/client/ScenarioDocument.h",
+      "archivedBase": "scenario/base/cpppj/src/client/ScenarioDocument.h",
+      "sha256": "c2f3323f4307050cae2ef465c0e1f9170c3765362cb632ec94f67f9603dfef74"
+    },
+    {
+      "originalPath": "cpppj/src/client/ScenarioDocument.cpp",
+      "archivedBase": "scenario/base/cpppj/src/client/ScenarioDocument.cpp",
+      "sha256": "96ee0c3703e34090c54837451d49fb49e04390a5a2681564648cf4549e80ff02"
+    },
+    {
+      "originalPath": "cpppj/src/client/EditorScenarioModel.h",
+      "archivedBase": "scenario/base/cpppj/src/client/EditorScenarioModel.h",
+      "sha256": "478c5b24e03e395db2705ff6f58dccd9ed608e72ca3e12105ccca9257a3e0d91"
+    },
+    {
+      "originalPath": "cpppj/src/client/EditorScenarioModel.cpp",
+      "archivedBase": "scenario/base/cpppj/src/client/EditorScenarioModel.cpp",
+      "sha256": "fcb3e9e7022b688e9b0c8c8ee0239d9fe6dd22a47d57686cbb2c2ee9f1069bb9"
+    },
+    {
+      "originalPath": "cpppj/tests/ScenarioDocumentTests.cpp",
+      "archivedBase": "scenario/base/cpppj/tests/ScenarioDocumentTests.cpp",
+      "sha256": "b00da9b3ceab065e3256a1faa188b82603fb5d8a56d88c49e86389d83f7b4a24"
+    }
+  ],
+  "builds": 0,
+  "cppTests": 0,
+  "gameRuns": 0,
+  "multiplayerTests": 0,
+  "lastGuiUnit": 984,
+  "protected": {
+    "files": 2800,
+    "fixtures": 980,
+    "unchangedFiles": 2799,
+    "ownChanges": 0,
+    "externalObservedChanges": [
+      {
+        "path": "AGENTS.md",
+        "before": "3134d0a2b9482da6655c48d2816a371374fc39be0136c79dda452a68cfbb2716",
+        "observed": "63620f16ec1f016b061143d585735da579b4094b147aea8e4baba9a03a355529",
+        "classification": "외부 동시 변경 관측; 본 작업 수정/stage/커밋0"
+      }
+    ],
+    "new": []
+  },
+  "checkingRemaining": 8,
+  "pauseRequested": true,
+  "pauseAfterLocalCommit": true,
+  "nextUnit": 987,
+  "next": "새 사용자 재개 지시 뒤 원격 Fort 실제 접합; 이후 기존 8번 순서 유지"
+}

@@ -1,0 +1,99 @@
+{
+  "verifiedAssets": 44,
+  "variantCandidates": [],
+  "preservedGeneralNouns": [
+    {
+      "path": "d/help.korean",
+      "line": 1089,
+      "text": "굉음을 토해 내고, 하늘에서 쏟아지는 번개가 길 위에 서 있는 모든 것에 파멸을 퍼붓는다…\" -님버스의 함대 제독</q>",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/help.korean",
+      "line": 1099,
+      "text": "번개를 불러 과녁에 닿게 하는 힘이 찾아온다.<br>",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/help.korean",
+      "line": 1119,
+      "text": "<q>\"번개와 우레 같은 포효의 땅에서<br>",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/help.korean",
+      "line": 1120,
+      "text": "죽음의 바람이 솟구치기 시작했고,<br>",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/help.korean",
+      "line": 1131,
+      "text": "<q>\"아픈 건 바람이 아니라고요... 날아다니는 다리에 맞아 본 적 있나요? -페이퍼스, 님버스의 안전 검사관\"</q>",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/help.korean",
+      "line": 1467,
+      "text": "<q>\"인생에서 무시할 수 없는 것이 둘 있으니, 하나는 대포이고 다른 하나는 포탄이다.\" -페트릭",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/help.korean",
+      "line": 1522,
+      "text": "님버스의 바람이 그것을 가온 다 위의 올림 바 음으로 울릴 때 알게 될 것이다.\" 《제6 궁수 교본》에서</q>",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/help.korean",
+      "line": 1607,
+      "text": "<q>최고의 조종사들은 산들바람을 서로 부르는 이름으로 알아본다.</q>",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/thewarbegins.korean",
+      "line": 62,
+      "text": "자유를 얻을 유일한 기회가 손에 잡히지 않는 바람처럼 지나갔습니다.",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/thunderingpower.korean",
+      "line": 27,
+      "text": "<i>\"천둥을 벗으로 삼으려면 스스로 번개가 되어라.\"",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/thunderingpower.korean",
+      "line": 156,
+      "text": "천둥 같은 함성으로 환호합니다.",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "d/tutorial2.korean",
+      "line": 95,
+      "text": "이 기계는 작은 태양을 적에게 던집니다. 전투에서 사제를 포획해",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    },
+    {
+      "path": "lang/xlat.korean",
+      "line": 546,
+      "text": "바람 소리",
+      "disposition": "일반소리/인용문/비유/공격묘사이며특정고유유닛명으로치환하지않음"
+    }
+  ],
+  "requiredNames": [
+    "제네레이터",
+    "워크샾",
+    "훨리베이스",
+    "훨리기그",
+    "반더 타워"
+  ],
+  "nameTable": "assets/unit-names.korean.json",
+  "sourceAndWbModified": false,
+  "changesDuringPreparation": [
+    "신규번역캐넌을공유표의캐논으로일치",
+    "신규번역맨오워/에어십/크리스털을공유표의맨 오 워/에어 쉽/크리스탈로일치",
+    "훈련메뉴Man o' War표시라벨도맨 오 워로일치"
+  ],
+  "retainedException": "help.korean bombLight*인용문의대포/포탄은일반명사이다. 바람/태양/천둥/번개도세계관/비유/소리/공격묘사문맥은원래번역대로보존한다."
+}

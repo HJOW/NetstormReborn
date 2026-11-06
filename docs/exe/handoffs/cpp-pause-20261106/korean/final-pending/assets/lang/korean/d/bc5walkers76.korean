@@ -1,0 +1,57 @@
+﻿[Header]
+missiontype="tutorial"
+
+denysalvage=1
+missionnumber=5
+moregeysers=0
+
+mystartmoney=0
+mytech=""
+myallylist=""
+
+title="죽음의 다리"
+
+ai2name="Lord NoChance"
+ai2tech=""
+ai2startmoney=0
+
+[Options]
+
+[A.]
+<h2>죽음의 다리</h2>
+<i>~y"늘 마지막에 고르는 녀석들이 뜻밖의 활약을 할 수도 있다."<br>
+-벌프의 지지자</i>
+<p>~w사악한 영주와 싸운 끝에 둘 다 위태로운 상황에 빠졌습니다. 하지만 적 사제가 움직이지 못하게 되어 당신이 유리합니다... 노란 구체 안에서 영주의 웃음소리가 들립니다.
+<p>
+~o~B~E"하하하! 네 워커는 하나도 내 다리 방어를 넘지 못할 것이다!"
+<p>
+~.~B~w정말 그럴까요?
+<p>~B~E~r목표:~.~B~w  채취 유닛을 다리 건너로 보내 사제를 데려오십시오. 각 워커의 능력을 익히는 훈련입니다.
+<p>~B~E~o도움말:~.~B~w  ~jShift를 누른 채 선택~w하면 한꺼번에 보낼 수 있지만, 여러 유닛에게 동시에 사제를 집어 들라고 명령할 수는 없습니다. 하나씩 보내면 각 채취 유닛의 장단점을 더 잘 알 수 있습니다.
+<p>     <!"sunwalker.*">          <!"bulf.*">        <!"windwalker.*">                     <!"rainwalker.*">
+<p>"골렘"<!"mana.11">     "벌프"<!"mana.10">      "세일 스케이터"<!"mana.8">      "크리스탈 크랩"<!"mana.9">
+$Button=사용 가능한 지식,ShowTechnology,55
+$Button=시작하겠습니다!,DoNothing,0
+</?>
+
+[succeeded][ai2priestcaptured]
+<h2>~o안 돼애애애애애!!!!</h2>
+<p>~w당신이 바로 앞까지 걸어와 사제를 포획하자 사악한 영주가 비명을 지릅니다. 불가능은 없습니다!"
+<$Config,Done{mission.fileName}=1>
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+$Button=다음,MissionBegin,BC6Mows76
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[Failed]
+<h2>어...</h2>
+<p>어떻게 이런 일이?!
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[END]

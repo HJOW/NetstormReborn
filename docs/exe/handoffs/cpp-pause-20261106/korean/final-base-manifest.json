@@ -1,0 +1,199 @@
+{
+  "headAtStart": "4be0c4639ed6859d9ac438975b3839d70d44cb85",
+  "host": "HJOW-Athlon",
+  "files": [
+    {
+      "path": "assets/lang/korean/xlat.korean",
+      "baseSha256": "5d3e6f890aec15fc08786a5f0d7f4f937fdeb205e6b3ad3f53dd522c323b40c8",
+      "bytes": 27548
+    },
+    {
+      "path": "cpppj/package-cpppj.ps1",
+      "baseSha256": "ab2a1522cc8f7b815700e6fbbdcc3a9d1e92168e5ab194a9801708f24cda90b5",
+      "bytes": 55330
+    },
+    {
+      "path": "cpppj/src/app/main.cpp",
+      "baseSha256": "352ea04ef99eb4a2a438fd2875d646cec3bb2c4ee458e81f4a66eae88ba618b3",
+      "bytes": 74168
+    },
+    {
+      "path": "cpppj/src/app/McpServer.cpp",
+      "baseSha256": "f306c7b5ecd3cfd510338f4f40c5fd8a2e1e62f559d8a1627ed072badc6df22f",
+      "bytes": 27560
+    },
+    {
+      "path": "cpppj/src/client/ClientMain.cpp",
+      "baseSha256": "b867f892338cff27037378cbb86492e346b01a634a8eec9dc9c09da761f2c829",
+      "bytes": 117471
+    },
+    {
+      "path": "cpppj/src/client/ClientMain.h",
+      "baseSha256": "a5c43e7b8fbf341e6938f2e282dbcbe96e410aa139ea13b85702bf9528199e22",
+      "bytes": 42127
+    },
+    {
+      "path": "cpppj/src/client/ConfigFileRead.cpp",
+      "baseSha256": "fd2c397b342ee625ad4f338f67b3625ad64de13d6109f4c45e6ba44033443390",
+      "bytes": 6403
+    },
+    {
+      "path": "cpppj/src/client/ConfigFileRead.h",
+      "baseSha256": "db5afe3fa39e4fb1d321efc163381482dac415f11eef38d008580784678b6f38",
+      "bytes": 767
+    },
+    {
+      "path": "cpppj/src/client/HtmlTextParser.cpp",
+      "baseSha256": "d354f2536e4636d531b65acd0b43270b8fd1f689e882df2fbb47617d5d4e8883",
+      "bytes": 9537
+    },
+    {
+      "path": "cpppj/src/client/HtmlTextParser.h",
+      "baseSha256": "dec88daebc5cbfc0fe207170c171469eaa4464b97ee642a7cfd0528a67a94b34",
+      "bytes": 5749
+    },
+    {
+      "path": "cpppj/src/client/HtmlWindowFactory.cpp",
+      "baseSha256": "c64296db21143c534b5c693067d22cf04d5974ad2c3a3701178bfc8d6c1fe94a",
+      "bytes": 4198
+    },
+    {
+      "path": "cpppj/src/client/HtmlWindowFactory.h",
+      "baseSha256": "60a1b04965a344c3e6686dfe6eedeffb6d35a60c1121c24944902d3acf8511e8",
+      "bytes": 2390
+    },
+    {
+      "path": "cpppj/src/client/InputEvent.cpp",
+      "baseSha256": "f2ce8df60e1aeb90848936a04b6174fb0577c7a7cc6ebc965899b0c1d7808553",
+      "bytes": 1799
+    },
+    {
+      "path": "cpppj/src/client/InputEvent.h",
+      "baseSha256": "f2c036c82f621386d3d0e48b04cc4ece79316550a16877cb85cf1ddf5719c4f9",
+      "bytes": 3010
+    },
+    {
+      "path": "cpppj/src/client/KoreanResources.cpp",
+      "baseSha256": "5b472837b32f93b4b18b539ce46519c0a206ff009ed66fe638d66315c928a2e0",
+      "bytes": 3194
+    },
+    {
+      "path": "cpppj/src/client/KoreanResources.h",
+      "baseSha256": "f0f930be7256fc032e886fb13320b6665abcf184369077f31e9c511c734870d5",
+      "bytes": 1500
+    },
+    {
+      "path": "cpppj/src/client/Mission.cpp",
+      "baseSha256": "08bbbda0598b29e9b7bc68e17defe5c003eb7217e746b603e3995ff204197a84",
+      "bytes": 7330
+    },
+    {
+      "path": "cpppj/src/client/Mission.h",
+      "baseSha256": "252b6000141c016865f3ee630a638ef6d64f296c8637dca396fec7839eb5968d",
+      "bytes": 5157
+    },
+    {
+      "path": "cpppj/src/client/QuickHelpFileRead.cpp",
+      "baseSha256": "6434673060f34e7214b8d8f7e2df8c6724e11458e69a2210200437d47df87adf",
+      "bytes": 5820
+    },
+    {
+      "path": "cpppj/src/client/QuickHelpWindow.cpp",
+      "baseSha256": "675f3086dc495c2b717a41459739c63d6261e33947f46381c885e7bb921f4e15",
+      "bytes": 12583
+    },
+    {
+      "path": "cpppj/src/client/QuickHelpWindow.h",
+      "baseSha256": "7cc6398b40293a118640dae69beec0919571c9e38ef6ef454a7a5025a641f4c9",
+      "bytes": 6820
+    },
+    {
+      "path": "cpppj/src/client/RawButtonControls.cpp",
+      "baseSha256": "b3993245f76b21e68229a48199cca3d3e781d4281e0bbfd7532cbddf487c8c6f",
+      "bytes": 69478
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.cpp",
+      "baseSha256": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476",
+      "bytes": 142963
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.h",
+      "baseSha256": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e",
+      "bytes": 26383
+    },
+    {
+      "path": "cpppj/src/client/RawMenuHtml.inc",
+      "baseSha256": "c349cdc954dab4c64813a34bc259530c7bfd808f785a218b19902fbca98d6f39",
+      "bytes": 15619
+    },
+    {
+      "path": "cpppj/src/client/TellFileMenus.cpp",
+      "baseSha256": "0adad5d4d17df8c92939684c0943758aa394dab3121fb8bc076528fb1c97d544",
+      "bytes": 7222
+    },
+    {
+      "path": "cpppj/src/client/TellFileMenus.h",
+      "baseSha256": "55935bcae0bcaaf1cc4b2c9e37c14e6430af9c562609b894144fcd9cb381c4e2",
+      "bytes": 2272
+    },
+    {
+      "path": "cpppj/src/client/TextClipboard.cpp",
+      "baseSha256": "f50663473df05af4bb693da7818ef10d94d08c5446563ae1fc7f2a90490fd030",
+      "bytes": 6003
+    },
+    {
+      "path": "cpppj/src/client/TextClipboard.h",
+      "baseSha256": "26a87a1771367cac741685d4d1373d4e8598da26c721ecf78ec151d425bcf04c",
+      "bytes": 2613
+    },
+    {
+      "path": "cpppj/src/client/TextEntryBuffer.cpp",
+      "baseSha256": "5ee16d78d8396a2e112660d70a1ad26c2903d5cb830421248bf51855a9655725",
+      "bytes": 13626
+    },
+    {
+      "path": "cpppj/src/client/TextEntryBuffer.h",
+      "baseSha256": "6ef878ca104eae2a67bf0723f7dbfe7478ee16e549c5a40b70a9a0687a32530d",
+      "bytes": 5215
+    },
+    {
+      "path": "cpppj/src/client/TextEntryGump.cpp",
+      "baseSha256": "7c11109dcb73e569b60ae579100f45ea0dcb98c566576411681ec0e4590d29bc",
+      "bytes": 30773
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "baseSha256": "b73e44d448e8ae99a97ba32cf2edc80fcc96730ca2e4cdbe0ef068e4640bb997",
+      "bytes": 227055
+    },
+    {
+      "path": "cpppj/src/CMakeLists.txt",
+      "baseSha256": "3eeacc5e567dc5b4b8f0be57517655ca5da7629ac44b7c2237d77ff71982e675",
+      "bytes": 37211
+    },
+    {
+      "path": "cpppj/src/o/BaseFile.cpp",
+      "baseSha256": "d0a49fa556033b9427d9e4a4621a5cb7b6739124fccab390e2059715962f6c70",
+      "bytes": 42948
+    },
+    {
+      "path": "cpppj/src/o/BaseFile.h",
+      "baseSha256": "8c7a055b7b6c29a3b050f553977c620a41d5b5fe3b91cf8b043e76993df8f095",
+      "bytes": 10348
+    },
+    {
+      "path": "cpppj/tests/CMakeLists.txt",
+      "baseSha256": "c9f97734fd7ec34ff6376b26681863e51b832ddf025dd0e202554d8b84196874",
+      "bytes": 304963
+    },
+    {
+      "path": "cpppj/tests/QuickHelpWindowTests.cpp",
+      "baseSha256": "883cf92880ca1dccdca9368395f183e69ad160ca7cefed99e3ad3203cbbe6630",
+      "bytes": 28845
+    }
+  ],
+  "headAfterRebase": "1f00a25add9619291f7978a18b2c07f2de0ee242",
+  "initialManifest": "final-initial-base-manifest.json",
+  "initialRawBase": "final-base-983"
+}

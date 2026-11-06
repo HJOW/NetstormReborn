@@ -1,0 +1,177 @@
+{
+  "verifiedAssets": 44,
+  "integrityProblems": [],
+  "originalSourceStructureProblems": [],
+  "originalWbAndSharedSourceIntegrityProblems": [],
+  "unsupportedCodepoints": [],
+  "largestHelpIntervals": [
+    {
+      "name": "battleoptionshelp",
+      "displayBytesIncludingMarkup": 8086
+    },
+    {
+      "name": "statshelp",
+      "displayBytesIncludingMarkup": 6153
+    },
+    {
+      "name": "chathelperhelp",
+      "displayBytesIncludingMarkup": 5812
+    },
+    {
+      "name": "interfacehelp",
+      "displayBytesIncludingMarkup": 4177
+    },
+    {
+      "name": "themehelp",
+      "displayBytesIncludingMarkup": 4011
+    },
+    {
+      "name": "themehelp",
+      "displayBytesIncludingMarkup": 3930
+    },
+    {
+      "name": "battleislandtype",
+      "displayBytesIncludingMarkup": 3615
+    },
+    {
+      "name": "playerlistviewhelp",
+      "displayBytesIncludingMarkup": 3448
+    },
+    {
+      "name": "bombhelp",
+      "displayBytesIncludingMarkup": 3252
+    },
+    {
+      "name": "transporthelp",
+      "displayBytesIncludingMarkup": 3173
+    }
+  ],
+  "helpIntervalsAtOrAbove8192": [],
+  "largestMissionIntervals": [
+    {
+      "path": "d/tutorial6.korean",
+      "name": "[a2.]",
+      "displayBytesIncludingMarkup": 1561
+    },
+    {
+      "path": "d/bc5walkers76.korean",
+      "name": "[a.]",
+      "displayBytesIncludingMarkup": 1523
+    },
+    {
+      "path": "d/bc6mows76.korean",
+      "name": "[header]",
+      "displayBytesIncludingMarkup": 1450
+    },
+    {
+      "path": "d/tutorial5.korean",
+      "name": "[c1.]",
+      "displayBytesIncludingMarkup": 1415
+    },
+    {
+      "path": "d/bc2bridging76.korean",
+      "name": "[a.]",
+      "displayBytesIncludingMarkup": 1400
+    },
+    {
+      "path": "d/bc6mows76.korean",
+      "name": "[a.]",
+      "displayBytesIncludingMarkup": 1271
+    },
+    {
+      "path": "d/bc8fury76.korean",
+      "name": "[header]",
+      "displayBytesIncludingMarkup": 1234
+    },
+    {
+      "path": "d/tutorial6.korean",
+      "name": "[f.]",
+      "displayBytesIncludingMarkup": 1228
+    },
+    {
+      "path": "d/guardmyback.korean",
+      "name": "[header]",
+      "displayBytesIncludingMarkup": 1197
+    },
+    {
+      "path": "d/surrounded.korean",
+      "name": "[header]",
+      "displayBytesIncludingMarkup": 1195
+    }
+  ],
+  "missionIntervalsAtOrAbove8192": [],
+  "metadataLabelsAtOrAbove80": [],
+  "largestMetadataLabels": [
+    {
+      "path": "d/tell.korean",
+      "line": 13,
+      "kind": "Input",
+      "label": "사용자 패스를 추가할 구역 입력",
+      "displayBytes": 56
+    },
+    {
+      "path": "d/tell.korean",
+      "line": 291,
+      "kind": "Input",
+      "label": "공개 멀티캐스트 메시지 입력",
+      "displayBytes": 51
+    },
+    {
+      "path": "d/tell.korean",
+      "line": 2068,
+      "kind": "Checked",
+      "label": "안전하지만 끊기는 마우스",
+      "displayBytes": 46
+    },
+    {
+      "path": "d/tell.korean",
+      "line": 2185,
+      "kind": "Button",
+      "label": "도전 구역으로 돌아가기",
+      "displayBytes": 42
+    },
+    {
+      "path": "d/thunderingpower.korean",
+      "line": 169,
+      "kind": "Button",
+      "label": "후작에게 편지를 보낸다",
+      "displayBytes": 42
+    },
+    {
+      "path": "d/tell.korean",
+      "line": 282,
+      "kind": "Input",
+      "label": "공개 방송 메시지 입력",
+      "displayBytes": 39
+    },
+    {
+      "path": "d/tell.korean",
+      "line": 748,
+      "kind": "Menu",
+      "label": "NetStorm 오리지널 크레딧",
+      "displayBytes": 38
+    },
+    {
+      "path": "d/tell.korean",
+      "line": 2067,
+      "kind": "Checked",
+      "label": "안전하지만 느린 모드",
+      "displayBytes": 38
+    },
+    {
+      "path": "d/tell.korean",
+      "line": 456,
+      "kind": "Menu",
+      "label": "데모 \"내 등을 지켜라\"",
+      "displayBytes": 37
+    },
+    {
+      "path": "d/thunderingpower.korean",
+      "line": 141,
+      "kind": "Button",
+      "label": "불명예스럽게 떠난다",
+      "displayBytes": 37
+    }
+  ],
+  "note": "크기는치환/HTML전의보수적구간길이다.실제8192BYTE body/표면검증은제품적용단위에서별도다.80BYTE메타label은NUL포함상한이므로80이상은적용전에줄여야한다."
+}

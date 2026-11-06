@@ -1,0 +1,1223 @@
+{
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": "HJOW-Athlon/2026-11-03",
+  "status": "진행분 보존 인계 완료; 제품 미적용 후보와 설계; 컴파일/실행 미검증",
+  "productBase": 985,
+  "productCommit": "1f00a25add9619291f7978a18b2c07f2de0ee242",
+  "authoritativeBytes": "전체 후보/기준 사본; 패치는 hunk 병합용이고 개행에 따른 SHA 차이가 있을 수 있음",
+  "relocatedUnregisteredModels": [
+    {
+      "originalPath": "cpppj/src/client/ScenarioDocument.h",
+      "archivedBase": "scenario/base/cpppj/src/client/ScenarioDocument.h",
+      "sha256": "c2f3323f4307050cae2ef465c0e1f9170c3765362cb632ec94f67f9603dfef74"
+    },
+    {
+      "originalPath": "cpppj/src/client/ScenarioDocument.cpp",
+      "archivedBase": "scenario/base/cpppj/src/client/ScenarioDocument.cpp",
+      "sha256": "96ee0c3703e34090c54837451d49fb49e04390a5a2681564648cf4549e80ff02"
+    },
+    {
+      "originalPath": "cpppj/src/client/EditorScenarioModel.h",
+      "archivedBase": "scenario/base/cpppj/src/client/EditorScenarioModel.h",
+      "sha256": "478c5b24e03e395db2705ff6f58dccd9ed608e72ca3e12105ccca9257a3e0d91"
+    },
+    {
+      "originalPath": "cpppj/src/client/EditorScenarioModel.cpp",
+      "archivedBase": "scenario/base/cpppj/src/client/EditorScenarioModel.cpp",
+      "sha256": "fcb3e9e7022b688e9b0c8c8ee0239d9fe6dd22a47d57686cbb2c2ee9f1069bb9"
+    },
+    {
+      "originalPath": "cpppj/tests/ScenarioDocumentTests.cpp",
+      "archivedBase": "scenario/base/cpppj/tests/ScenarioDocumentTests.cpp",
+      "sha256": "b00da9b3ceab065e3256a1faa188b82603fb5d8a56d88c49e86389d83f7b4a24"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 116,
+      "sha256": "fc458dba08b55606a1118359b55aced2adc6438e1fbecf10167c20bbc4f75c4a"
+    },
+    {
+      "path": "korean/audit-ui-final.md",
+      "bytes": 5097,
+      "sha256": "d26884b416c381c523c846df8f738dee6ba043e40af3f524cc39375c8f12cfc8"
+    },
+    {
+      "path": "korean/final-base/assets/lang/korean/xlat.korean",
+      "bytes": 27548,
+      "sha256": "5d3e6f890aec15fc08786a5f0d7f4f937fdeb205e6b3ad3f53dd522c323b40c8"
+    },
+    {
+      "path": "korean/final-base/cpppj/package-cpppj.ps1",
+      "bytes": 55330,
+      "sha256": "ab2a1522cc8f7b815700e6fbbdcc3a9d1e92168e5ab194a9801708f24cda90b5"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/app/main.cpp",
+      "bytes": 74168,
+      "sha256": "352ea04ef99eb4a2a438fd2875d646cec3bb2c4ee458e81f4a66eae88ba618b3"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/app/McpServer.cpp",
+      "bytes": 27560,
+      "sha256": "f306c7b5ecd3cfd510338f4f40c5fd8a2e1e62f559d8a1627ed072badc6df22f"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/ClientMain.cpp",
+      "bytes": 117471,
+      "sha256": "b867f892338cff27037378cbb86492e346b01a634a8eec9dc9c09da761f2c829"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/ClientMain.h",
+      "bytes": 42127,
+      "sha256": "a5c43e7b8fbf341e6938f2e282dbcbe96e410aa139ea13b85702bf9528199e22"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/ConfigFileRead.cpp",
+      "bytes": 6403,
+      "sha256": "fd2c397b342ee625ad4f338f67b3625ad64de13d6109f4c45e6ba44033443390"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/ConfigFileRead.h",
+      "bytes": 767,
+      "sha256": "db5afe3fa39e4fb1d321efc163381482dac415f11eef38d008580784678b6f38"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/HtmlTextParser.cpp",
+      "bytes": 9537,
+      "sha256": "d354f2536e4636d531b65acd0b43270b8fd1f689e882df2fbb47617d5d4e8883"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/HtmlTextParser.h",
+      "bytes": 5749,
+      "sha256": "dec88daebc5cbfc0fe207170c171469eaa4464b97ee642a7cfd0528a67a94b34"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/HtmlWindowFactory.cpp",
+      "bytes": 4198,
+      "sha256": "c64296db21143c534b5c693067d22cf04d5974ad2c3a3701178bfc8d6c1fe94a"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/HtmlWindowFactory.h",
+      "bytes": 2390,
+      "sha256": "60a1b04965a344c3e6686dfe6eedeffb6d35a60c1121c24944902d3acf8511e8"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/InputEvent.cpp",
+      "bytes": 1799,
+      "sha256": "f2ce8df60e1aeb90848936a04b6174fb0577c7a7cc6ebc965899b0c1d7808553"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/InputEvent.h",
+      "bytes": 3010,
+      "sha256": "f2c036c82f621386d3d0e48b04cc4ece79316550a16877cb85cf1ddf5719c4f9"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/KoreanResources.cpp",
+      "bytes": 3194,
+      "sha256": "5b472837b32f93b4b18b539ce46519c0a206ff009ed66fe638d66315c928a2e0"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/KoreanResources.h",
+      "bytes": 1500,
+      "sha256": "f0f930be7256fc032e886fb13320b6665abcf184369077f31e9c511c734870d5"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/Mission.cpp",
+      "bytes": 7330,
+      "sha256": "08bbbda0598b29e9b7bc68e17defe5c003eb7217e746b603e3995ff204197a84"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/Mission.h",
+      "bytes": 5157,
+      "sha256": "252b6000141c016865f3ee630a638ef6d64f296c8637dca396fec7839eb5968d"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/QuickHelpFileRead.cpp",
+      "bytes": 5820,
+      "sha256": "6434673060f34e7214b8d8f7e2df8c6724e11458e69a2210200437d47df87adf"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/QuickHelpWindow.cpp",
+      "bytes": 12583,
+      "sha256": "675f3086dc495c2b717a41459739c63d6261e33947f46381c885e7bb921f4e15"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/QuickHelpWindow.h",
+      "bytes": 6820,
+      "sha256": "7cc6398b40293a118640dae69beec0919571c9e38ef6ef454a7a5025a641f4c9"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/RawButtonControls.cpp",
+      "bytes": 69478,
+      "sha256": "b3993245f76b21e68229a48199cca3d3e781d4281e0bbfd7532cbddf487c8c6f"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/RawMenuControls.cpp",
+      "bytes": 142963,
+      "sha256": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/RawMenuControls.h",
+      "bytes": 26383,
+      "sha256": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/RawMenuHtml.inc",
+      "bytes": 15619,
+      "sha256": "c349cdc954dab4c64813a34bc259530c7bfd808f785a218b19902fbca98d6f39"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/TellFileMenus.cpp",
+      "bytes": 7222,
+      "sha256": "0adad5d4d17df8c92939684c0943758aa394dab3121fb8bc076528fb1c97d544"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/TellFileMenus.h",
+      "bytes": 2272,
+      "sha256": "55935bcae0bcaaf1cc4b2c9e37c14e6430af9c562609b894144fcd9cb381c4e2"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/TextClipboard.cpp",
+      "bytes": 6003,
+      "sha256": "f50663473df05af4bb693da7818ef10d94d08c5446563ae1fc7f2a90490fd030"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/TextClipboard.h",
+      "bytes": 2613,
+      "sha256": "26a87a1771367cac741685d4d1373d4e8598da26c721ecf78ec151d425bcf04c"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/TextEntryBuffer.cpp",
+      "bytes": 13626,
+      "sha256": "5ee16d78d8396a2e112660d70a1ad26c2903d5cb830421248bf51855a9655725"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/TextEntryBuffer.h",
+      "bytes": 5215,
+      "sha256": "6ef878ca104eae2a67bf0723f7dbfe7478ee16e549c5a40b70a9a0687a32530d"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/TextEntryGump.cpp",
+      "bytes": 30773,
+      "sha256": "7c11109dcb73e569b60ae579100f45ea0dcb98c566576411681ec0e4590d29bc"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/client/UberGump.cpp",
+      "bytes": 227055,
+      "sha256": "b73e44d448e8ae99a97ba32cf2edc80fcc96730ca2e4cdbe0ef068e4640bb997"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/CMakeLists.txt",
+      "bytes": 37211,
+      "sha256": "3eeacc5e567dc5b4b8f0be57517655ca5da7629ac44b7c2237d77ff71982e675"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/o/BaseFile.cpp",
+      "bytes": 42948,
+      "sha256": "d0a49fa556033b9427d9e4a4621a5cb7b6739124fccab390e2059715962f6c70"
+    },
+    {
+      "path": "korean/final-base/cpppj/src/o/BaseFile.h",
+      "bytes": 10348,
+      "sha256": "8c7a055b7b6c29a3b050f553977c620a41d5b5fe3b91cf8b043e76993df8f095"
+    },
+    {
+      "path": "korean/final-base/cpppj/tests/CMakeLists.txt",
+      "bytes": 304963,
+      "sha256": "c9f97734fd7ec34ff6376b26681863e51b832ddf025dd0e202554d8b84196874"
+    },
+    {
+      "path": "korean/final-base/cpppj/tests/QuickHelpWindowTests.cpp",
+      "bytes": 28845,
+      "sha256": "883cf92880ca1dccdca9368395f183e69ad160ca7cefed99e3ad3203cbbe6630"
+    },
+    {
+      "path": "korean/final-base-983/assets/lang/korean/xlat.korean",
+      "bytes": 27548,
+      "sha256": "5d3e6f890aec15fc08786a5f0d7f4f937fdeb205e6b3ad3f53dd522c323b40c8"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/package-cpppj.ps1",
+      "bytes": 55330,
+      "sha256": "ab2a1522cc8f7b815700e6fbbdcc3a9d1e92168e5ab194a9801708f24cda90b5"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/app/main.cpp",
+      "bytes": 74168,
+      "sha256": "352ea04ef99eb4a2a438fd2875d646cec3bb2c4ee458e81f4a66eae88ba618b3"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/app/McpServer.cpp",
+      "bytes": 27560,
+      "sha256": "f306c7b5ecd3cfd510338f4f40c5fd8a2e1e62f559d8a1627ed072badc6df22f"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/ClientMain.cpp",
+      "bytes": 116085,
+      "sha256": "a6fc24938088db2d0cddd222bff8b419dbc8d44c61973af66296ab0ee2cb41a9"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/ClientMain.h",
+      "bytes": 42127,
+      "sha256": "a5c43e7b8fbf341e6938f2e282dbcbe96e410aa139ea13b85702bf9528199e22"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/ConfigFileRead.cpp",
+      "bytes": 6403,
+      "sha256": "fd2c397b342ee625ad4f338f67b3625ad64de13d6109f4c45e6ba44033443390"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/ConfigFileRead.h",
+      "bytes": 767,
+      "sha256": "db5afe3fa39e4fb1d321efc163381482dac415f11eef38d008580784678b6f38"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/HtmlTextParser.cpp",
+      "bytes": 9537,
+      "sha256": "d354f2536e4636d531b65acd0b43270b8fd1f689e882df2fbb47617d5d4e8883"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/HtmlTextParser.h",
+      "bytes": 5749,
+      "sha256": "dec88daebc5cbfc0fe207170c171469eaa4464b97ee642a7cfd0528a67a94b34"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/HtmlWindowFactory.cpp",
+      "bytes": 4198,
+      "sha256": "c64296db21143c534b5c693067d22cf04d5974ad2c3a3701178bfc8d6c1fe94a"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/HtmlWindowFactory.h",
+      "bytes": 2390,
+      "sha256": "60a1b04965a344c3e6686dfe6eedeffb6d35a60c1121c24944902d3acf8511e8"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/InputEvent.cpp",
+      "bytes": 1799,
+      "sha256": "f2ce8df60e1aeb90848936a04b6174fb0577c7a7cc6ebc965899b0c1d7808553"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/InputEvent.h",
+      "bytes": 3010,
+      "sha256": "f2c036c82f621386d3d0e48b04cc4ece79316550a16877cb85cf1ddf5719c4f9"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/KoreanResources.cpp",
+      "bytes": 3194,
+      "sha256": "5b472837b32f93b4b18b539ce46519c0a206ff009ed66fe638d66315c928a2e0"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/KoreanResources.h",
+      "bytes": 1500,
+      "sha256": "f0f930be7256fc032e886fb13320b6665abcf184369077f31e9c511c734870d5"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/Mission.cpp",
+      "bytes": 7330,
+      "sha256": "08bbbda0598b29e9b7bc68e17defe5c003eb7217e746b603e3995ff204197a84"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/Mission.h",
+      "bytes": 5157,
+      "sha256": "252b6000141c016865f3ee630a638ef6d64f296c8637dca396fec7839eb5968d"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/QuickHelpFileRead.cpp",
+      "bytes": 5820,
+      "sha256": "6434673060f34e7214b8d8f7e2df8c6724e11458e69a2210200437d47df87adf"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/QuickHelpWindow.cpp",
+      "bytes": 12583,
+      "sha256": "675f3086dc495c2b717a41459739c63d6261e33947f46381c885e7bb921f4e15"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/QuickHelpWindow.h",
+      "bytes": 6820,
+      "sha256": "7cc6398b40293a118640dae69beec0919571c9e38ef6ef454a7a5025a641f4c9"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/RawButtonControls.cpp",
+      "bytes": 69478,
+      "sha256": "b3993245f76b21e68229a48199cca3d3e781d4281e0bbfd7532cbddf487c8c6f"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/RawMenuControls.cpp",
+      "bytes": 142963,
+      "sha256": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/RawMenuControls.h",
+      "bytes": 26383,
+      "sha256": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/RawMenuHtml.inc",
+      "bytes": 15619,
+      "sha256": "c349cdc954dab4c64813a34bc259530c7bfd808f785a218b19902fbca98d6f39"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/TellFileMenus.cpp",
+      "bytes": 7222,
+      "sha256": "0adad5d4d17df8c92939684c0943758aa394dab3121fb8bc076528fb1c97d544"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/TellFileMenus.h",
+      "bytes": 2272,
+      "sha256": "55935bcae0bcaaf1cc4b2c9e37c14e6430af9c562609b894144fcd9cb381c4e2"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/TextClipboard.cpp",
+      "bytes": 6003,
+      "sha256": "f50663473df05af4bb693da7818ef10d94d08c5446563ae1fc7f2a90490fd030"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/TextClipboard.h",
+      "bytes": 2613,
+      "sha256": "26a87a1771367cac741685d4d1373d4e8598da26c721ecf78ec151d425bcf04c"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/TextEntryBuffer.cpp",
+      "bytes": 13626,
+      "sha256": "5ee16d78d8396a2e112660d70a1ad26c2903d5cb830421248bf51855a9655725"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/TextEntryBuffer.h",
+      "bytes": 5215,
+      "sha256": "6ef878ca104eae2a67bf0723f7dbfe7478ee16e549c5a40b70a9a0687a32530d"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/TextEntryGump.cpp",
+      "bytes": 30773,
+      "sha256": "7c11109dcb73e569b60ae579100f45ea0dcb98c566576411681ec0e4590d29bc"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/client/UberGump.cpp",
+      "bytes": 225389,
+      "sha256": "75b12d073df3525db39a6ec4c91e14a41dc5b22779518d335b2a47f1eacb8097"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/CMakeLists.txt",
+      "bytes": 36736,
+      "sha256": "a61ef6330c0742727002d294847235aa56005582164a4b46a54b7bedd1783554"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/o/BaseFile.cpp",
+      "bytes": 42948,
+      "sha256": "d0a49fa556033b9427d9e4a4621a5cb7b6739124fccab390e2059715962f6c70"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/src/o/BaseFile.h",
+      "bytes": 10348,
+      "sha256": "8c7a055b7b6c29a3b050f553977c620a41d5b5fe3b91cf8b043e76993df8f095"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/tests/CMakeLists.txt",
+      "bytes": 304963,
+      "sha256": "c9f97734fd7ec34ff6376b26681863e51b832ddf025dd0e202554d8b84196874"
+    },
+    {
+      "path": "korean/final-base-983/cpppj/tests/QuickHelpWindowTests.cpp",
+      "bytes": 28845,
+      "sha256": "883cf92880ca1dccdca9368395f183e69ad160ca7cefed99e3ad3203cbbe6630"
+    },
+    {
+      "path": "korean/final-base-manifest.json",
+      "bytes": 6970,
+      "sha256": "2b1589d3b336e229580be908e2b3e7d0be5f4a4a0a774d77e5f3f8724c2f4f3b"
+    },
+    {
+      "path": "korean/final-code-paths.json",
+      "bytes": 1619,
+      "sha256": "0d5529ab06da2ad4187a4d27e7bbaa4162f3716fc865d850f8d765ddd6ec0c57"
+    },
+    {
+      "path": "korean/final-initial-base-manifest.json",
+      "bytes": 6807,
+      "sha256": "79ea0203c9135e06c6ec27ac2620db91f69167595775996e0dbad701f3b5b976"
+    },
+    {
+      "path": "korean/final-manifest.json",
+      "bytes": 40640,
+      "sha256": "ff5111e0aa907f872a23ca79ccc87fd9e5402cab94b1a8bb0650c1c0f5816f0d"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/bc1menu76.korean",
+      "bytes": 1058,
+      "sha256": "79d090e1ef2ed0aa72aa7eb90d8229fb61c6b5aef39d97544f8c8f1a16890e83"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/bc2bridging76.korean",
+      "bytes": 2163,
+      "sha256": "44e977cf4fa754295f44fb04dd383a5847f31f18acf86d852ac9c17d8eca920a"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/bc3acid_bar76.korean",
+      "bytes": 2519,
+      "sha256": "38dec43a41af6f408bce794f4dc17d1c42233c1a47375a2dc969cb5aa45330b0"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/bc4bow_rush76.korean",
+      "bytes": 2246,
+      "sha256": "458a1da66dfe1cfd802a8641356a1bfba34acab27bfac118eb6c80902ec12957"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/bc5walkers76.korean",
+      "bytes": 2062,
+      "sha256": "aa0792c06cb03913eefad8f355144639fa4bb592fff0ba8837bb617b9cd3edc8"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/bc6mows76.korean",
+      "bytes": 3090,
+      "sha256": "4873c9661d021b0367e6e7a675c80a780b211684ea28c84d75579819d6a1d0d6"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/bc7sun_bars76.korean",
+      "bytes": 2507,
+      "sha256": "6c18ae772f2aa6a7b5ca8fba8a53896232fd1d535aacbfec94869891d552d43f"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/bc8fury76.korean",
+      "bytes": 3446,
+      "sha256": "9f495a16d372c686988cb1053f1b84b3b03ca7c45107c9228a86f80103302bb9"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/bc9ssun_bars76.korean",
+      "bytes": 2073,
+      "sha256": "0871f5d5001727f2b9bbb0002ae6bdf7e819fba56901b651aa46de67cbd1c748"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/breakingthrough.korean",
+      "bytes": 2057,
+      "sha256": "c1de2baa6da625b7a8a5d66215d4b9a61dbfa0ccb8d8147c6eb821e7627745c5"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/config.korean",
+      "bytes": 3121,
+      "sha256": "02694d17d6ce5c2d8017a0d820747781e376d38c2bbb867a9934a24d85714254"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/demostormrages.korean",
+      "bytes": 797,
+      "sha256": "169508eb3523cdde164a66fe5eae2fabfe07fde856b4fef6edaf4fd0d024f43d"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/dissolvedalliance.korean",
+      "bytes": 2125,
+      "sha256": "c88be8e1d26324d6a84001391f086244eb213221e3c62c292604346bef47dc70"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/enemyterritory.korean",
+      "bytes": 2707,
+      "sha256": "812cf7ff53929c7682bba8759de0f000ec23440ecbdabe01aadbbb2f59a40fa8"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/finalconfrontation.korean",
+      "bytes": 2440,
+      "sha256": "232a0cd9074facd93b395e2fe674ce36f185502a0624801b5626f2faeba61d52"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/fragilefortune.korean",
+      "bytes": 1894,
+      "sha256": "0cd00400fd056753194106ae3a7cc2864816b69131442e6870d402e36bf297f0"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/guardmyback.korean",
+      "bytes": 3630,
+      "sha256": "8ad3f105d287624c5754337f6f54cf075a99a353657be3711a8596aa06f519cf"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/help.korean",
+      "bytes": 133223,
+      "sha256": "d757023f04c7a44d787b337d22cd87c023ce4b53061f11167b14ac5ab4f34c06"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/masterofwhirligigs.korean",
+      "bytes": 1903,
+      "sha256": "7ff1d8c83bf9ae202b90cbd9c8370053efd9359cbb1caeddc898b357f6533dff"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/offical1.korean",
+      "bytes": 857,
+      "sha256": "4a05d551a807b14eb42980919431b99836c0c4ba9cc9d63e9cf874db919b44a8"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/offical2.korean",
+      "bytes": 1250,
+      "sha256": "a8e8d03f3c369b514634445c808d78a376972171666f8e6b82405aa2d25c210f"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/offical2sep.korean",
+      "bytes": 15,
+      "sha256": "57aff422a777bcd810e52bfbd852c112098daffad4fc23bdec986c0ae9d4eb34"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/offical3.korean",
+      "bytes": 1269,
+      "sha256": "df88f6c3c21023fa8175dffbc794bcfc0c2833a0f216674e10fe47c9fae0ad4e"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/offical4.korean",
+      "bytes": 678,
+      "sha256": "d2cab43b1215b0e1d6b48138ff2099fd0b8abd03ee75020e30b74a751d054a68"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/offical5.korean",
+      "bytes": 650,
+      "sha256": "a4e68772e128e4e3983d838d42bb1b089dab4b90f84cef14bde4ad7a33c41203"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/offical5sep.korean",
+      "bytes": 15,
+      "sha256": "57aff422a777bcd810e52bfbd852c112098daffad4fc23bdec986c0ae9d4eb34"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/offical6.korean",
+      "bytes": 259,
+      "sha256": "84ab636b0bdc7fd3a8c7b832ce1440d01dfefe550991750b2a175959d10ab7c9"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/rainvsrain.korean",
+      "bytes": 1711,
+      "sha256": "6b1b30283aa0685e1fbe553cc7cf0ec35482f33929e3345c07fb2ddc82bb54e0"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/runforit.korean",
+      "bytes": 2153,
+      "sha256": "95fcc0ae8a11d7b3e630d59419dc666c295a94f9b16b3237079932a5a56a728d"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/savetheisland.korean",
+      "bytes": 1823,
+      "sha256": "1806d782979302137df0647d13cb02ef8173d854ea4142c5fc78285fff7163b4"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/surrounded.korean",
+      "bytes": 2361,
+      "sha256": "7cb7c2085faed610cd6a75104ef3d729cf0d6785ec87fa65d200aaf9eb41adb4"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/tell.korean",
+      "bytes": 71109,
+      "sha256": "0024324bafc9edf14570f4697ec3bcdcd96ed81b47e913bc830ff79228f05223"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/thenoose.korean",
+      "bytes": 2120,
+      "sha256": "18ab34b3eba0495e556f9fee16fdc948b4f73680969f0216c67e03986c0af2f8"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/thewarbegins.korean",
+      "bytes": 1902,
+      "sha256": "ca844bf5b738a92388d735297db8e28ea0a2928d72439c94bf844ab77b99e9c9"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/thunderingpower.korean",
+      "bytes": 5259,
+      "sha256": "ec5ec665eb3696f561eff487e5a3dbdde57665a3465e3a3790b1e392d2e1a24e"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/totherescue.korean",
+      "bytes": 2728,
+      "sha256": "4914419b5c18037a5f68777eb67b61b8d81e42d4e3193dbac99a86cdcd2e6eef"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/tutorial1.korean",
+      "bytes": 6670,
+      "sha256": "9a4c0567eef45e7fa2ede596528e01b763790b66308b770eb4d7a9e7557c705b"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/tutorial2.korean",
+      "bytes": 9326,
+      "sha256": "28693a4081809be9a0d12f9eda57efe616bf8c0cd46a97b8d285dd318fc19d0c"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/tutorial3.korean",
+      "bytes": 7950,
+      "sha256": "fb0b33c47e2b3c763bbcc7c7a8c5ffb1741a385e763d3b62720ca1c639937919"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/tutorial4.korean",
+      "bytes": 8591,
+      "sha256": "b7471624a01ee813594e8903cdd888f0b8a734b5279c5388a862a29af0085d61"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/tutorial5.korean",
+      "bytes": 9071,
+      "sha256": "330befe8a58f4a87af2c0596b9959cb1abc7c65b1f4af8250b0530f18265f260"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/tutorial6.korean",
+      "bytes": 7519,
+      "sha256": "6b029f7292f8c24e6c9b2358d943dfa0b7d7a546b72bcba91de919f81baa74ad"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/d/vicious.korean",
+      "bytes": 1893,
+      "sha256": "3cc5c3fb1c8f065468ab278092a59379895b41cca50a8189373f4902072edbfb"
+    },
+    {
+      "path": "korean/final-pending/assets/lang/korean/xlat.korean",
+      "bytes": 27551,
+      "sha256": "8fa749b8b3b72ef228148e8f48c0c0e678235e37ed50561b0aa55339a5820cd9"
+    },
+    {
+      "path": "korean/final-pending/cpppj/package-cpppj.ps1",
+      "bytes": 55190,
+      "sha256": "35fba4d1f72339c349ec4f0a615f2d509e8211e968824c0a4046bf15c53e0b54"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/app/main.cpp",
+      "bytes": 73497,
+      "sha256": "afdf03f8a0683a5cb8e9d367647c389b082b7676f95efa8abd5c63623b5164b2"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/app/McpServer.cpp",
+      "bytes": 28137,
+      "sha256": "d65bcc351e551ded873362e3e5a03cc121decf466e748f5fe254514d5bf85ca4"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/ClientMain.cpp",
+      "bytes": 122347,
+      "sha256": "b2f7994ab218e492a4b73e5f7969b857224211abfa088a621e4139821694276b"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/ClientMain.h",
+      "bytes": 43621,
+      "sha256": "ab74ee8c8cd2971922bd0ba122c029327ecb16b63bf55c4073b4bbd614868ac9"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/ConfigFileRead.cpp",
+      "bytes": 6833,
+      "sha256": "a2ac81d84b0be60aa4a5d332a5e0337ab16319b1aeacd101d7e06b485cc120b6"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/ConfigFileRead.h",
+      "bytes": 990,
+      "sha256": "aff0ac160a9a048abd3a33fa057bfb10c415d6323c6588f9e9ea65c666c14402"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/DisplayTextInput.cpp",
+      "bytes": 6368,
+      "sha256": "5e53083937cd57422f7f9a4da8968d76b2bf9f8eaacebef5f7a598af21276d03"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/DisplayTextInput.h",
+      "bytes": 2529,
+      "sha256": "daaad3b32a1922a6fd0b5a7fb94dbc3dd07dae53809bee0c83c8190b2e7a3f2d"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/HtmlTextParser.cpp",
+      "bytes": 9863,
+      "sha256": "1e83dfbc4d49dd9bb223cc8dfe48b74a95912490e7b694540a2955aa4e368ab8"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/HtmlTextParser.h",
+      "bytes": 5847,
+      "sha256": "a48192ad7701fa7be2543287759355a2dbce35acfdc77ece0ddabf688a972ad3"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/HtmlWindowFactory.cpp",
+      "bytes": 4242,
+      "sha256": "51122600f2b5a2554fec61d2473eab059a93869351fcb02c1a2437c6ffdd91e5"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/HtmlWindowFactory.h",
+      "bytes": 2555,
+      "sha256": "7d39e731628f9ddf60d4d4e15817d32908d7c8ee2636a17b12a17ba63c072384"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/InputEvent.cpp",
+      "bytes": 2340,
+      "sha256": "cc8a2280f4a9c7d520050d4a7ef5f858037254dc44a3eaa1177914715acc2356"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/InputEvent.h",
+      "bytes": 3320,
+      "sha256": "1a36938c94526d7224cd6423dc044d45c18bfbe342c357656852233ac80f51fb"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/KoreanResources.cpp",
+      "bytes": 9313,
+      "sha256": "0f926b49d4ee807ff4506aa19e83d85704fe9cf3ae2e39db6ad3d663a9472eb9"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/KoreanResources.h",
+      "bytes": 2897,
+      "sha256": "9ed264dbac46da7ad164094a88b85d103b784418825c7c9e28f2ed32a78a4e50"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/Mission.cpp",
+      "bytes": 8474,
+      "sha256": "6e1bd9db41d145822fa539c1f070a0139164a82b1947f94f7348cd80f637fe2a"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/Mission.h",
+      "bytes": 5303,
+      "sha256": "edba1bdc89c26ed0f64954d0f1def0f33af4e75620598800904d62fef2899fc6"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/QuickHelpFileRead.cpp",
+      "bytes": 6034,
+      "sha256": "5186be529639faa796cb43efe04af13bb428ea706aaef23c0974f6b13dea077a"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/QuickHelpWindow.cpp",
+      "bytes": 12750,
+      "sha256": "648a69c062ee46d86ca020c891a68b9b2a8adf1cdaedfb26fc1466471f05fc24"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/QuickHelpWindow.h",
+      "bytes": 6963,
+      "sha256": "a8a30edf6c64c7c606c7d22d9552b81b7a90dd723d19b279adebeb9f1e843345"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/RawButtonControls.cpp",
+      "bytes": 70101,
+      "sha256": "07ddfb393ec831c04f28bff2e391152c0a5b0ae6b85384e2a91f5b8a8921927d"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/RawMenuControls.cpp",
+      "bytes": 143333,
+      "sha256": "b6be874d69084c6e6eb34003c6d5db21c641af477f74aef4ba8c62c1894d0b9f"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/RawMenuControls.h",
+      "bytes": 26562,
+      "sha256": "88f5f3c6428a0fb0e8c878a311a4ddbad0df246d3c6e5cacd68ecf229dc85922"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/RawMenuHtml.inc",
+      "bytes": 15802,
+      "sha256": "f3f4b036ef0001031632c7720c3804b3d2e2bcc132271beb0584fce6f678d2a8"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/TellFileMenus.cpp",
+      "bytes": 8820,
+      "sha256": "335a26c96650e6134d3e75e90e7d0f3ed58d2e8654bb62796cac19885e71541d"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/TellFileMenus.h",
+      "bytes": 2425,
+      "sha256": "fabd85f09acd10bed7a99488ae3e3a7948d2c4c32fbd15641b5741eb05e4beb8"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/TextClipboard.cpp",
+      "bytes": 9790,
+      "sha256": "c4c0866548f67b3ca422e3199f864d8e0c3d9897499ae4e4954eae0efcfcccc9"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/TextClipboard.h",
+      "bytes": 3158,
+      "sha256": "5a6fe4ecf5965670feeec419886f7a57ce9c8bb45ae661c73d5234f6368b3b98"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/TextEntryBuffer.cpp",
+      "bytes": 14799,
+      "sha256": "213c2a75f0a76070defd35e1f06622052adabba01192d9f2c5e24662d063ebba"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/TextEntryBuffer.h",
+      "bytes": 5336,
+      "sha256": "ebf7b8f64eb4b841cc19e04fb3a6a97dd9cd4c531362b02a9bba36fcd7f3b078"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/TextEntryGump.cpp",
+      "bytes": 35060,
+      "sha256": "f267c3bb8be5072ee042368e9b6d353a98fdeeaed0a92580a4e3c479b3a9c05d"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/client/UberGump.cpp",
+      "bytes": 228341,
+      "sha256": "e256d40546aa2cf5867d204e21d3980048d2b889366c7a0b660b064755ee9c4a"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/CMakeLists.txt",
+      "bytes": 37418,
+      "sha256": "faabf29fc26508898eaf8f2ddd7fc342025676286aa70697181ca2b0162ab1dc"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/o/BaseFile.cpp",
+      "bytes": 43466,
+      "sha256": "f3cdc645dc51d319231ac03ace2196edf6bdfa314a2ad3a3a07b2356f7159c1d"
+    },
+    {
+      "path": "korean/final-pending/cpppj/src/o/BaseFile.h",
+      "bytes": 10539,
+      "sha256": "ac9db161b1550e536371b22521d2f7a10c00b7c7caba387246e47741bea201c4"
+    },
+    {
+      "path": "korean/final-pending/cpppj/tests/CMakeLists.txt",
+      "bytes": 305065,
+      "sha256": "ecdb2b97390644a3d9aeb525d7e4c1e435e47e4886b96c48d0a952c762ca269c"
+    },
+    {
+      "path": "korean/final-pending/cpppj/tests/DisplayTextInputTests.cpp",
+      "bytes": 16222,
+      "sha256": "b09948a18bba7244c5ad73d31aabbaa56d1e3f1a10afb482cc9396e5e4f198ac"
+    },
+    {
+      "path": "korean/final-pending/cpppj/tests/KoreanResourcesIntegrationTests.cpp",
+      "bytes": 18000,
+      "sha256": "f0bf402d4be992a7f51cb62250aad56798422fdabd3e9450d8f9f56535b15e3b"
+    },
+    {
+      "path": "korean/final-pending/cpppj/tests/QuickHelpWindowTests.cpp",
+      "bytes": 30890,
+      "sha256": "4c0645fc5024e962bcabb126de07a36a2e3bb4e23764d0e5ad9bfc8c93ace800"
+    },
+    {
+      "path": "korean/final-static-verification.json",
+      "bytes": 2079,
+      "sha256": "6c66b7c49268a317bc00cd32e2493135802cbfd1fd823347c140696f5267afde"
+    },
+    {
+      "path": "korean/final-tweaks.py",
+      "bytes": 20148,
+      "sha256": "1ec51b689d942d2ac873c05d0f180889e3ba93a5a626abcc2fabafb663cc6cdc"
+    },
+    {
+      "path": "korean/final.patch",
+      "bytes": 158665,
+      "sha256": "34c37f01abaf7a660c5358b4b8944a7c256844136beb79fbd7b0daf688113ac8"
+    },
+    {
+      "path": "korean/FINAL_HANDOFF_SHA256SUMS.txt",
+      "bytes": 710,
+      "sha256": "7199d0f07d79dbff60a932e49506582d3c1b6c604f2974bd980a4c78d0f6cc3e"
+    },
+    {
+      "path": "korean/FINAL_PLAN.md",
+      "bytes": 13611,
+      "sha256": "bcf826956c57d6b365e632cbf4699233653e21ce4571fa4fb8d737d49d94d74f"
+    },
+    {
+      "path": "korean/FINAL_SHA256SUMS.txt",
+      "bytes": 8799,
+      "sha256": "923e6acffad2cd926aeb63e8155bce6e2037b8c01ffea55225f71bac1f86c1fb"
+    },
+    {
+      "path": "korean/finalize-final.py",
+      "bytes": 9034,
+      "sha256": "50d8edca4d2378ba61a0283a3b9ce42dc537ebf63bb9bc381a1d12debb3fe52a"
+    },
+    {
+      "path": "korean/translation-audit/coverage.json",
+      "bytes": 322586,
+      "sha256": "420ea31a9fff9c0bf55dca788c6835d987e7f019d6a22032817891349b975149"
+    },
+    {
+      "path": "korean/translation-audit/final-summary.json",
+      "bytes": 666,
+      "sha256": "72a0497c0baca630c7a379ee1bf148ebf106f5d401ca1fe0dec2b30aeb8a0d39"
+    },
+    {
+      "path": "korean/translation-audit/name-audit.json",
+      "bytes": 4622,
+      "sha256": "d995ada8ba1ed5f42619078e41ad3318c10a5e1d6fe9fb634b7c77991538b747"
+    },
+    {
+      "path": "korean/translation-audit/SHA256SUMS.txt",
+      "bytes": 3853,
+      "sha256": "ff5b132d56f5c9c3aa9e13df9aaf9aaa55bd55f66969b1ed61ba5f1d323a60c8"
+    },
+    {
+      "path": "korean/translation-audit/verification.json",
+      "bytes": 4455,
+      "sha256": "82925d12d24f1b27a704ec0164dacf7b6fa061962992fc0390f0e8a058fbe05e"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5127,
+      "sha256": "bfc77194c4f8739c04e949c16a251285076399abfbfe50e83f77ed86fa22f746"
+    },
+    {
+      "path": "remote-fort/FUNCTION_MAP.md",
+      "bytes": 5204,
+      "sha256": "2255bf3217e2663dfc9035e98753c94e00e7521a16fcacf6e04657af6f610fda"
+    },
+    {
+      "path": "remote-fort/manifest.json",
+      "bytes": 1633,
+      "sha256": "a6885772c0a47bb35e4503cd8c6c1f3ff505cf46877eabd8cc9201908201775d"
+    },
+    {
+      "path": "remote-fort/PLAN.md",
+      "bytes": 10101,
+      "sha256": "1c1dedf241f97c068147f5b9155b35f860ce3c06b783a9a03b705c69a8941934"
+    },
+    {
+      "path": "remote-fort/unvalidated-draft/DO_NOT_APPLY.md",
+      "bytes": 1046,
+      "sha256": "053a5e6fc81a0a769a3ff80aa083daea7d61f3f1de78a3498075da01a7e7348a"
+    },
+    {
+      "path": "remote-fort/unvalidated-draft/manifest.json",
+      "bytes": 903,
+      "sha256": "8eb9035c7262af4bfc68307a9c226c841b595360cbc784711eb7528519c8ea34"
+    },
+    {
+      "path": "remote-fort/unvalidated-draft/pending/cpppj/src/client/CampaignTemplateStorage.cpp",
+      "bytes": 73212,
+      "sha256": "965f832327f67bc1b79b767016b7971c9c8d7978bb05aec1ddf05ba652e61a93"
+    },
+    {
+      "path": "remote-fort/unvalidated-draft/pending/cpppj/src/client/CampaignTemplateStorage.h",
+      "bytes": 14637,
+      "sha256": "0786720d8d178876572a8359708443b1a7721317a2fb381ba5a32c66b478e2be"
+    },
+    {
+      "path": "remote-fort/unvalidated-draft/storage-read-image.patch",
+      "bytes": 10087,
+      "sha256": "e7b3be6ef0ffc9487b891564c45f864e8c6d3f0046f72c1ffaac641f8e527235"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/EditorMapCatalogFiles.cpp",
+      "bytes": 16846,
+      "sha256": "f6ca231dad36e9846b3bab33b9013937152be6ecff58e86a94455e57b8cca4f2"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/EditorMapCatalogFiles.h",
+      "bytes": 2822,
+      "sha256": "b38b0250730c29ae01e9a34324d3369fae2517a8979249e6d1f8611f860d6b2c"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/EditorScenarioModel.cpp",
+      "bytes": 15643,
+      "sha256": "fcb3e9e7022b688e9b0c8c8ee0239d9fe6dd22a47d57686cbb2c2ee9f1069bb9"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/EditorScenarioModel.h",
+      "bytes": 5278,
+      "sha256": "478c5b24e03e395db2705ff6f58dccd9ed608e72ca3e12105ccca9257a3e0d91"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/RawCampaignMissionStartBindings.cpp",
+      "bytes": 5133,
+      "sha256": "6d5e5c31ae34ffaa125d812446b48fd7cf6242d13a4a41303bc8fd538b289fbc"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/RawGameMenus.cpp",
+      "bytes": 18207,
+      "sha256": "6bdb27b0ed5e2a074b0d856f9dce3c511670604f747cb761ae483751cd0912af"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/RawGameMenus.h",
+      "bytes": 6585,
+      "sha256": "eb939e35925bbe6239eab949d23cd8a478014441cbef0d1418f3b136e1b42b14"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/RawMenuControls.cpp",
+      "bytes": 142963,
+      "sha256": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/RawMenuControls.h",
+      "bytes": 26383,
+      "sha256": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/RawMenuSaveFort.inc",
+      "bytes": 6604,
+      "sha256": "a92eb798f12dc960a3bc88e7e7888bf61083af3822c4805d07fc52cfcf3d7457"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/SaveFortNameDialog.cpp",
+      "bytes": 12317,
+      "sha256": "edc4d007991332a5883dab81b0188f5aa479ae9cf52183bb19906c8961039184"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/SaveFortNameDialog.h",
+      "bytes": 7103,
+      "sha256": "d7bc5cb1ca41ba31303f6f8cde2d19e05e40b3fa20ebb70f1387eb20eee1665b"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/ScenarioDocument.cpp",
+      "bytes": 11210,
+      "sha256": "96ee0c3703e34090c54837451d49fb49e04390a5a2681564648cf4549e80ff02"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/ScenarioDocument.h",
+      "bytes": 3209,
+      "sha256": "c2f3323f4307050cae2ef465c0e1f9170c3765362cb632ec94f67f9603dfef74"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/UberEditor.inc",
+      "bytes": 31083,
+      "sha256": "7a8ad975d5617a33087852103e77f27a6197acf0bbce2eb14276ef14232623df"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/UberGump.cpp",
+      "bytes": 227055,
+      "sha256": "b73e44d448e8ae99a97ba32cf2edc80fcc96730ca2e4cdbe0ef068e4640bb997"
+    },
+    {
+      "path": "scenario/base/cpppj/src/client/UberGump.h",
+      "bytes": 27518,
+      "sha256": "ec8872b1fdda67f7a13afe9cbcb0fff507f4f979acb824c2c20f19de1ad0cd07"
+    },
+    {
+      "path": "scenario/base/cpppj/tests/ScenarioDocumentTests.cpp",
+      "bytes": 13649,
+      "sha256": "b00da9b3ceab065e3256a1faa188b82603fb5d8a56d88c49e86389d83f7b4a24"
+    },
+    {
+      "path": "scenario/CMake-additions.txt",
+      "bytes": 1047,
+      "sha256": "216de2c496b5a7ff1cc092e6fb15e77090b8e8ac5e22193db51af4fb442b0c82"
+    },
+    {
+      "path": "scenario/manifest.json",
+      "bytes": 11617,
+      "sha256": "84ae8c5aef25caa4a9ec683b47023ea099783cff0c587e64c6392a7f6c078d6e"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/EditorMapCatalogFiles.cpp",
+      "bytes": 17300,
+      "sha256": "142785b8c2cdea3912576b1d1337078e9395df9eac6057351e16baac3d423abb"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/EditorMapCatalogFiles.h",
+      "bytes": 2977,
+      "sha256": "e10fd49f5d65f99b6b073929e99e9cafe2754cca738537c58c7b7e5583dde8a0"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/EditorScenarioController.cpp",
+      "bytes": 8914,
+      "sha256": "396fc6f4e5afcba400b7aa2958c334e41108c115b07ac5100af5f50c613b9aec"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/EditorScenarioController.h",
+      "bytes": 3087,
+      "sha256": "dd1b8fcd0d57b6f2b55017b583ea13a138c2cbf2f60e6e5eb515492ac7607c3e"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/EditorScenarioFiles.cpp",
+      "bytes": 8722,
+      "sha256": "1a73fc6d449cd421103aff31b2c45c90d77ed927f9a26dfd95a4450c21c984ae"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/EditorScenarioFiles.h",
+      "bytes": 3755,
+      "sha256": "973115e28696c7d6844d07dbcd7fb8958a4730ec415e9e5e312be1a09f83aadc"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/EditorScenarioModel.cpp",
+      "bytes": 16057,
+      "sha256": "d2e98171454d2ecd7aebd1fd378bddf50bb7b595fe3be297e5daca29aeab1610"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/EditorScenarioModel.h",
+      "bytes": 5398,
+      "sha256": "3de3d5cfd27b70efc9eed459c7ea444ac4640aae92f16a35ffc0fa1e5e0f08c7"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/RawCampaignMissionStartBindings.cpp",
+      "bytes": 5679,
+      "sha256": "2a59f594a1833aa8519b0be0a36ab1829cce89ee6c7a9ca84046b2d79d81ce7b"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/RawGameMenus.cpp",
+      "bytes": 18374,
+      "sha256": "fd6d64ce4e594915a5ae674f3ef9c8abf3a8da3615993ff3d1709bb61c312fed"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/RawGameMenus.h",
+      "bytes": 6777,
+      "sha256": "bdad400905072f4c9c8044487e4d87441f640fe789d6283526d4ecb77928f3a4"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/RawMenuControls.cpp",
+      "bytes": 144267,
+      "sha256": "c32805ebf986fe0cffe1594a0fd4d225a0553aa0565225580838dad30bdfb1ef"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/RawMenuControls.h",
+      "bytes": 26641,
+      "sha256": "90fd5b0fb8f3093d82248abaa5b508274b5d76a122e8f1544851bd561fafe434"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/RawMenuSaveFort.inc",
+      "bytes": 7431,
+      "sha256": "bbf7e5356bd84634cfb26cc3108fc8056e015cedddf3433d30ccd6a6bbfb821a"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/SaveFortNameDialog.cpp",
+      "bytes": 14055,
+      "sha256": "3990bd15626c9b8ce5f2116f0f19b7a8c87d8c9091f2b3ca965ead3848328d55"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/SaveFortNameDialog.h",
+      "bytes": 7846,
+      "sha256": "edf67bfe70046b88286614bb0b3a4a3d460d20b532eb2f8e13f59aad870edf72"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/ScenarioDocument.cpp",
+      "bytes": 13272,
+      "sha256": "7ef18e395fbc7ebc84780b54a58393dec6a142fef35e15f5afaffa3e6574a87d"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/ScenarioDocument.h",
+      "bytes": 3527,
+      "sha256": "c9a8577b82cee3e23e12412b18a8e4803725df9390ce1669342633a72ec93c24"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/UberEditor.inc",
+      "bytes": 31962,
+      "sha256": "20757a517cddc60600a342147dbf0ba209d955e5a23e6b71457bb043821c5ebf"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/UberGump.cpp",
+      "bytes": 228509,
+      "sha256": "32ce3d4818a8e37fbd1b282577a397e7f33f86dcee8a488b056c4dae0c5652ce"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/UberGump.h",
+      "bytes": 28744,
+      "sha256": "001d1bfd0da6de5bc2dad9879497f0a90334443ac9a5bb53019e7c4b7d7f05a7"
+    },
+    {
+      "path": "scenario/pending/cpppj/src/client/UberScenario.inc",
+      "bytes": 6646,
+      "sha256": "4639752f5586d3b9f4613e9f1b2ea9b48e61e34937db22f36e3d1c8d12a475fb"
+    },
+    {
+      "path": "scenario/pending/cpppj/tests/EditorScenarioIntegrationTests.cpp",
+      "bytes": 11753,
+      "sha256": "23759a45016b27c1740b387b3784c46dbc591c60d10aee99c8ed114375a98419"
+    },
+    {
+      "path": "scenario/pending/cpppj/tests/ScenarioDocumentTests.cpp",
+      "bytes": 13649,
+      "sha256": "b00da9b3ceab065e3256a1faa188b82603fb5d8a56d88c49e86389d83f7b4a24"
+    },
+    {
+      "path": "scenario/PLAN.md",
+      "bytes": 13813,
+      "sha256": "806ae02d2e2110bf7fe8fe4c66dac0ad188599facf332bc3dfb1fff4575c6439"
+    },
+    {
+      "path": "scenario/scenario-integration.patch",
+      "bytes": 90054,
+      "sha256": "d8cd5e633ef73e0190ea97ab2f7e2ce47da017479623ea2e61653db36d9deee8"
+    },
+    {
+      "path": "scenario/shadow-patch-verification-raw.json",
+      "bytes": 2832,
+      "sha256": "e9b1016d74eeb60a469758073975c1a32c26a67727ca7b0ed853a19dc0d4831b"
+    },
+    {
+      "path": "scenario/shadow-patch-verification.json",
+      "bytes": 7393,
+      "sha256": "a26e395157ac42e4f7486a72e957083aca50aa5f1d221dda6b5553d176160789"
+    },
+    {
+      "path": "verify.py",
+      "bytes": 1196,
+      "sha256": "0baf7c435520104102ba4ab5604834d02c8b89042b9b51e6892b9c1c24822a10"
+    }
+  ]
+}

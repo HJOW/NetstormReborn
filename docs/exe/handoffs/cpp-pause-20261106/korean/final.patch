@@ -1,0 +1,1603 @@
+diff --git a/cpppj/package-cpppj.ps1 b/cpppj/package-cpppj.ps1
+--- a/cpppj/package-cpppj.ps1
++++ b/cpppj/package-cpppj.ps1
+@@ -432,7 +432,7 @@
+         '  Netstorm-SavedMode.bat  저장된 화면 모드로 실행',
+         '  third-party\fsr1\   AMD FidelityFX FSR 1.0 헤더/라이선스(MIT)와 출처 설명',
+         '  fonts\              한국어 글꼴(D2Coding)과 라이선스',
+-        '  lang\               한국어 번역표(xlat.korean). 옵션 > 언어(Language)에서 한국어를 고릅니다.',
++        '  lang\               한국어 번역표와 본문44개(lang\korean). 옵션 > 언어(Language)에서 한국어를 고릅니다.',
+         '  game\               게임 데이터 (원본 Netstorm 10.78)',
+         '    netstorm.tarc, d\, sound\, music\, MOVIE\ (영상 원천이 있을 때)',
+         '    Netstorm.exe      원본 실행 파일. 클론이 아이콘, 커서, 로딩 그림을 읽는 자료로만 쓰며',
+@@ -459,7 +459,7 @@
+         '3. Requires Windows 10/11 x64. The Visual C++ runtime DLLs are bundled in this folder.',
+         '4. game\Netstorm.exe is the original executable. The clone only reads its icon/cursor resources; do not run it directly.',
+         '5. Delete %USERPROFILE%\Saved Games\Netstorm\Saves\options.cfg and fullscreenStateFile.dat to reset settings.',
+-        '6. Korean: fonts\ (D2Coding) and lang\xlat.korean are bundled; pick Options > Language > Korean.',
++        '6. Korean: fonts\ (D2Coding) and lang\korean\xlat.korean and all 43 Korean bodies are bundled; pick Options > Language > Korean.',
+         '7. Optional Anti-Aliasing and AMD FidelityFX Super Resolution 1.0 (MIT, see third-party\fsr1\) are in Options (off by default); 2560x1440/3840x2160 appear when a Direct3D 11 device exists.',
+         '8. This is a work-in-progress clone; multiplayer is not included.')
+     return (($lines -join "`r`n") + "`r`n")
+@@ -823,7 +823,14 @@
+     if (Test-Path -LiteralPath $fontLicense -PathType Leaf) { Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/License.txt') -Source $fontLicense }
+     $koreanTable = Join-Path $RepoRoot 'assets\lang\korean\xlat.korean'
+     if (-not (Test-Path -LiteralPath $koreanTable -PathType Leaf)) { throw "한국어 번역표를 찾을 수 없습니다: ${koreanTable}" }
+-    Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/xlat.korean') -Source $koreanTable
++    Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/korean/xlat.korean') -Source $koreanTable
++    # 공통11/공식32본문은원문game자료와분리하며원본파일을덮어쓰지않는다.
++    $koreanBodyDirectory = Join-Path $RepoRoot 'assets\lang\korean\d'
++    $koreanBodies = @(Get-ChildItem -LiteralPath $koreanBodyDirectory -Filter '*.korean' -File -ErrorAction Stop | Sort-Object Name)
++    if ($koreanBodies.Count -ne 43) { throw "공식 한국어 본문 43개가 필요합니다: $($koreanBodies.Count)" }
++    foreach ($koreanBody in $koreanBodies) { # 실행파일옆언어namespace로본문만동봉하며AI/SP설정이나BOM을다시쓰지않는다.
++        Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/korean/d/' + $koreanBody.Name) -Source $koreanBody.FullName
++    }
+ 
+     # BUILD_INFO.txt 는 게임 항목을 포함한 전체 수를 알아야 해서 게임 항목을 더한 뒤 마지막에 만든다.
+     $gameBytes = [long]0
+diff --git a/cpppj/src/app/main.cpp b/cpppj/src/app/main.cpp
+--- a/cpppj/src/app/main.cpp
++++ b/cpppj/src/app/main.cpp
+@@ -720,6 +720,7 @@
+                     c.CdGlobals()->RecheckSerial()=serial;continue;
+                 }
+                 if (step.operation == "esc") { c.Input().Push(0x1b, 0, 0); continue; }
++                if (step.operation=="text") { if (!c.QueueCommittedText(step.argument)) throw std::length_error("text 입력 큐 공간 부족: 한 번에 최대39문자");continue; } // IME와 같은 검증/일반 큐를 사용한다. TextEntry 상태나 파일을 직접 바꾸지 않는다.
+                 if (step.operation=="key" || step.operation=="keyup") {
+                     if (step.argument.size()==1 && static_cast<unsigned char>(step.argument[0])>=0x20 && static_cast<unsigned char>(step.argument[0])<0x7f) {
+                         c.Input().Push(static_cast<unsigned char>(step.argument[0])|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; // WM_CHAR와 같은 하위 문자 코드를 넣는다. 가상 키 번호로 바꾸지 않는다.
+diff --git a/cpppj/src/app/McpServer.cpp b/cpppj/src/app/McpServer.cpp
+--- a/cpppj/src/app/McpServer.cpp
++++ b/cpppj/src/app/McpServer.cpp
+@@ -1,6 +1,7 @@
+ // 4차 로컬 MCP 서버 구현이다. 프로토콜 처리(McpProtocol)와 stdio/게임 스레드 연결(McpServer)을 나눠 앞쪽만 게임 없이 검사한다.
+ #include "app/McpServer.h"
+ #include "client/ClientMain.h"
++#include "client/DisplayTextInput.h" // UTF-8 text 동작을 실행 전에 전체 검증한다.
+ #include "client/Screen.h"
+ #include "client/UberGump.h"
+ #include "platform/Png.h"
+@@ -25,7 +26,7 @@
+ constexpr std::uint64_t kMaxWaitFrames = 36000;                                     // 한 번의 대기 호출이 허용하는 최대 프레임 수다.
+ constexpr std::size_t kMaxActions = 200;                                            // 한 번의 입력 호출이 허용하는 최대 동작 수다.
+ // 입력 도구가 허용하는 UI 스크립트 동작이다. 검사 전용(test-*)/상태 합성 동작은 노출하지 않는다.
+-const std::set<std::string> kAllowedOperations{"click", "click-if", "down", "up", "up-if", "right", "outside", "pointer", "esc", "key", "keyup", "script-command", "command"};
++const std::set<std::string> kAllowedOperations{"click", "click-if", "down", "up", "up-if", "right", "outside", "pointer", "esc", "key", "keyup", "text", "script-command", "command"};
+ // 도구 이름 목록이다(tools/list와 tools/call 검증이 같은 표를 쓴다).
+ const std::set<std::string> kToolNames{"netstorm_status", "netstorm_report", "netstorm_screenshot", "netstorm_input", "netstorm_wait_frames", "netstorm_record_start", "netstorm_record_stop", "netstorm_quit"};
+ 
+@@ -61,7 +62,7 @@
+     tools.Push(Tool("netstorm_report", "게임 내부 관측 보고서(메뉴/월드/카탈로그/카메라 등 탭 구분 텍스트)를 돌려준다.", std::move(reportProperties)));
+     Json screenshotProperties; screenshotProperties.Set("presented", Property("boolean", "true이면 논리 화면 대신 GPU 후처리(안티앨리어싱/FSR 1.0)가 실제로 표시한 클라이언트 영역 전체를 RGBA PNG로 돌려준다. 후처리가 꺼져 있으면 논리 화면이다."));
+     tools.Push(Tool("netstorm_screenshot", "현재 게임 화면을 PNG 이미지로 돌려준다(기본은 논리 화면 버퍼, 원본 팔레트 색 그대로).", std::move(screenshotProperties)));
+-    Json action; action.Set("type", "object").Set("properties", Json::MakeObject().Set("op", Property("string", "동작: click, click-if, down, up, up-if, right, outside, pointer, esc, key, keyup, script-command, command")).Set("arg", Property("string", "동작 인자. click은 컨트롤 라벨 또는 screen:x,y, key는 문자/키 이름(예: enter, f5, shift+a), script-command는 'Tell,Blank' 같은 원문 명령.")));
++    Json action; action.Set("type", "object").Set("properties", Json::MakeObject().Set("op", Property("string", "동작: click, click-if, down, up, up-if, right, outside, pointer, esc, key, keyup, text, script-command, command")).Set("arg", Property("string", "동작 인자. click은 컨트롤 라벨 또는 screen:x,y, key는 문자/키 이름(예: enter, f5, shift+a), text는 UTF-8 확정 본문(제어문자 제외·최대39문자), script-command는 'Tell,Blank' 같은 원문 명령.")));
+     Json actions; actions.Set("type", "array").Set("items", std::move(action)).Set("description", "프레임마다 하나씩 순서대로 실행할 입력 동작 목록이다.");
+     Json inputProperties;
+     inputProperties.Set("actions", std::move(actions)).Set("wait_frames", Property("integer", "마지막 동작 뒤 더 기다릴 프레임 수(기본 3).")).Set("screenshot", Property("boolean", "true이면 완료 뒤 화면 PNG를 함께 돌려준다(기본 true)."));
+@@ -330,6 +331,7 @@
+                 for (const auto& item : list) { // 허용된 동작만 받는다.
+                     const auto op = item["op"].AsString();
+                     if (!kAllowedOperations.contains(op)) { Send(McpProtocol::TextResult(call.id, "허용되지 않는 동작: " + op, true)); valid = false; break; }
++                    if (op=="text") { const auto events=netstorm::client::MakeCommittedTextEvents(item["arg"].AsString());if (events.size()>=netstorm::client::InputQueue::kCapacity) throw std::length_error("text는 한 동작에 최대39문자이며 더 긴 본문은 여러 동작으로 전달해야 함"); } // 잘못된 UTF-8/미지원 문자는 첫 동작 이전에 호출 전체를 거부한다.
+                     pending.actions.emplace_back(op, item["arg"].AsString());
+                 }
+                 if (!valid) continue;
+diff --git a/cpppj/src/client/ClientMain.cpp b/cpppj/src/client/ClientMain.cpp
+--- a/cpppj/src/client/ClientMain.cpp
++++ b/cpppj/src/client/ClientMain.cpp
+@@ -20,6 +20,7 @@
+ #include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
+ #include "client/LanguageRequest.h" //SetLanguage는같은현재언어/설정/입력큐와공유카운터를사용한다.
+ #include "client/KoreanResources.h" //6차: 한국어 번역표와 D2Coding 글꼴 파일 탐색이다.
++#include "client/DisplayTextInput.h" // IME/MCP 확정 문자와 기존 BYTE 큐를 안전하게 연결한다.
+ #include "client/GpuPresenter.h" //7차: 후처리 장치 가용성 확인이다.
+ #include "platform/PortableStartup.h" //6차: 실행 파일 폴더로 클론 데이터(lang, fonts) 위치를 찾는다.
+ #include "o/RawXlat.h" //시작 때 함께 읽은 세 언어의 번역을 선택 변경 뒤에도 보존한다.
+@@ -87,6 +88,7 @@
+ #define WIN32_LEAN_AND_MEAN
+ #define NOMINMAX
+ #include <windows.h>
++#include <imm.h> // 실제 ANSI 창에서 UTF-16 조합 결과를 가져오는 Windows10/11 호환 장치다.
+ #include <dwmapi.h>
+ #include <mmsystem.h>
+ 
+@@ -189,7 +191,7 @@
+ // 파일 시스템·설정·전역 Chat 저장소만 만든다. 창과 화면은 Run에서 원본 순서대로 만든다.
+ Client::Client(ClientOptions options)
+     : options_(std::move(options)), files_(options_.gameDirectory,{},options_.startupFileNames),
+-      configuration_([this](std::string_view path) { return files_.TryRead(path); },files_.FileNameOwner(),options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileSearchHooks([this] { return options_.gameDirectory; }):o::FileSpecQueryHooks{},options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileReadHooks(files_):o::ConfigFileLoadHooks{}), // Config파일만명시Native장치를쓰고공유Fort/Editor Reader와CD는기존계약을유지한다.
++      configuration_([this](std::string_view path) { return ReadLocalizedGameFile(path); },files_.FileNameOwner(),options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileSearchHooks([this] { return options_.gameDirectory; }):o::FileSpecQueryHooks{},options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileReadHooks(files_,[this](auto name) { return ResolveKoreanBuiltinFile(name); }):o::ConfigFileLoadHooks{}), // Config파일만명시Native장치를쓰고공유Fort/Editor Reader와CD는기존계약을유지한다.
+       fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
+       fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),
+       subscriberGlobals_(std::make_shared<ClientSubscriberGlobals>()),
+@@ -213,6 +215,7 @@
+       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
+       chat_(std::make_unique<ChatState>(*this,options_.edition)),kernel_(std::make_shared<o::Kernel>(options_.edition==o::OriginalEdition::Patch1078 ? o::kProcessCapacity:o::kCdProcessCapacity)),trace_(std::make_unique<ClientTraceGlobals>()) { // 실제장기Kernel도원문의PATCH39999/CD3999상한을사용한다.
+     if (options_.edition==o::OriginalEdition::Patch1078) files_.DeferPrimaryArchiveRegistration();else files_.RegisterArchives(); // 원본10.78은441790의setup탐색뒤에등록한다. 독립조회는첫TAFF접근까지예약하고10.72기존초기화는유지한다.
++    htmlWindowGlobals_->text.extendedText=true; // 클론의UTF8/BOM/IME표시토큰을모든UI언어에서보존한다. 번역선택과원문독립파서의기본false는별개다.
+     rendererFrame_=std::make_unique<ClientRendererFrame>(*this); //생성은 BSS0 owner/참조만 준비하며 아직 화면/파일/난수를 사용하지 않는다.
+     captureSequence_=std::make_unique<ClientCaptureSequence>(*this); //원문BSS0처럼파일/화면 없이 장기 상태만 준비한다.
+     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
+@@ -648,6 +651,7 @@
+     hooks.read=[this] { std::string name;configuration_.ReadString("currentLanguage",name);return name; };
+     hooks.load=[this](auto name) { configuration_.LoadLanguage(name); };
+     const bool languageChanged=ApplyOriginalLanguageOption(detectedLanguage_,currentLanguage_,languageNumber_,hooks);
++    htmlWindowGlobals_->text.extendedText=true; // 같은재사용클론전역은언어변경뒤에도유효한표시4BYTE를보존한다. 영어원문파일선택/바이트와독립fixture의기본false는그대로다.
+     LoadKoreanTranslations(); // 6차: 현재 언어가 korean이면 번역표를 읽고 다른 언어가 되면 비운다(원문 세 언어 장부는 건드리지 않는다).
+     if (languageChanged && options_.edition!=o::OriginalEdition::Patch1078) {
+         translations_.reset(); //CD 어댑터만 기존 단일 표를 사용한다.10.78은 최초 다중 장부를 언어 변경 때 비우지 않는다.
+@@ -1067,6 +1071,10 @@
+ // 원본 00436020: 글자가 되는 키는 WM_CHAR에서 넣으므로 여기서는 건너뛴다.
+ void Client::KeyEvent(NativeHandle windowHandle, unsigned message, std::uintptr_t wParam, std::intptr_t lParam) {
+     const HWND window = static_cast<HWND>(windowHandle);
++    if (imeComposing_ || wParam==VK_PROCESSKEY) {
++        if (message==WM_KEYDOWN || message==WM_SYSKEYDOWN) { imeKeyConsumed_=true;imeKeyToken_=(std::uint64_t(static_cast<std::uint32_t>(GetMessageTime()))<<32)|(static_cast<std::uint32_t>(lParam)&0x01ffffffU); } // 같은 조합 키에서 TranslateMessage가 만든 지연 WM_CHAR도 삼킨다.
++        return; // IME 자체의 처리와 기본 조합 UI는 창 프로시저가 계속 호출한다.
++    }
+     const std::uint32_t release = message == WM_KEYUP || message == WM_MBUTTONUP || message == WM_SYSKEYUP ? InputCode::kRelease : 0;
+     const std::uint32_t modifiers = ModifierBits();
+     POINT cursor{};
+@@ -1083,11 +1091,29 @@
+     input_.Push((static_cast<std::uint32_t>(wParam) << InputCode::kVirtualKeyShift) | modifiers | release, x, y);
+ }
+ // 원본 00436190: 글자 코드를 아래 비트에 넣는다.
+-void Client::CharacterEvent(NativeHandle windowHandle, std::uintptr_t wParam) {
++void Client::CharacterEvent(NativeHandle windowHandle, std::uintptr_t wParam,std::intptr_t lParam) {
++    const auto keyToken=(std::uint64_t(static_cast<std::uint32_t>(GetMessageTime()))<<32)|(static_cast<std::uint32_t>(lParam)&0x01ffffffU); // 조합 종료 뒤 도착한 동일 키 문자도 버퍼 제출/삭제로 중복 실행하지 않는다.
++    if (imeComposing_ || (imeKeyConsumed_ && imeKeyToken_==keyToken)) return;
+     POINT cursor{};
+     GetCursorPos(&cursor);
+     ScreenToClient(static_cast<HWND>(windowHandle),&cursor);const auto point=screen_ ? screen_->ToLogicalPoint({cursor.x,cursor.y}) : ScreenPoint{cursor.x,cursor.y};
+     input_.Push(ModifierBits() | static_cast<std::uint32_t>(wParam),point.x,point.y);
++}
++// 일반 창 메시지와 MCP가 같은 검증/원자 큐 API를 사용한다. 큐 거부는 기존 내용과 새 본문을 모두 보존한다.
++bool Client::QueueCommittedText(std::string_view utf8,std::int32_t x,std::int32_t y) { const auto events=MakeCommittedTextEvents(utf8,x,y);return input_.TryPushBatch(events); }
++// 크기는 UTF-16 문자 수가 아닌 BYTE이며, 결과 플래그는 호출자가 기본 창 프로시저에 넘기지 않는다.
++void Client::ImeResultEvent(NativeHandle windowHandle) {
++    const HWND window=static_cast<HWND>(windowHandle);const HIMC context=ImmGetContext(window);if (!context) return;
++    struct Release { HWND window;HIMC context;~Release() { ImmReleaseContext(window,context); } }; // 모든 실패/예외에서 같은 IMM 문맥을 반납한다.
++    const Release release{window,context};
++    try {
++        const LONG length=ImmGetCompositionStringW(context,GCS_RESULTSTR,nullptr,0);
++        if (length<0 || (length%static_cast<LONG>(sizeof(char16_t)))!=0 || length>65536) throw std::length_error("IME 확정 결과의 UTF-16 BYTE 범위");
++        std::u16string text(static_cast<std::size_t>(length)/sizeof(char16_t),0);
++        if (length && ImmGetCompositionStringW(context,GCS_RESULTSTR,text.data(),static_cast<DWORD>(length))!=length) throw std::runtime_error("IME 확정 결과 읽기 실패");
++        POINT cursor{};GetCursorPos(&cursor);ScreenToClient(window,&cursor);const auto point=screen_ ? screen_->ToLogicalPoint({cursor.x,cursor.y}) : ScreenPoint{cursor.x,cursor.y};
++        if (!QueueCommittedText(CommittedUtf16ToUtf8(text),point.x,point.y)) throw std::length_error("IME 입력 큐 공간 부족: 한 번에 최대39문자");
++    } catch (const std::exception& error) { WriteDiagnosticLog(29,error.what());MessageBeep(MB_ICONWARNING); } // 창 프로시저 밖으로 예외를 내보내지 않고 실패한 본문 전체를 거부한다.
+ }
+ 
+ // 원본 00452e00.
+@@ -1116,6 +1142,26 @@
+     const HWND window = static_cast<HWND>(windowHandle);
+     // [원본] 등록 메시지 "NETSTORMOOGABOOGA"(설정 도구와의 통신) — 옮기지 않았다.
+     switch (message) {
++    case WM_IME_STARTCOMPOSITION:
++        imeComposing_=true;break; // 미완성 조합과 후보는 기본 IME 창에서 표시한다.
++    case WM_IME_ENDCOMPOSITION:
++        imeComposing_=false;break; // 취소/확정 모두 미완성 본문을 편집 버퍼에 남기지 않는다.
++    case WM_KILLFOCUS: {
++        if (imeComposing_) { const HIMC context=ImmGetContext(window);if (context) { ImmNotifyIME(context,NI_COMPOSITIONSTR,CPS_CANCEL,0);ImmReleaseContext(window,context); }imeComposing_=false; }break; // 다른 창으로 이동할 때 미완성 조합만 취소한다.
++    }
++    case WM_IME_COMPOSITION:
++        if (lParam&GCS_RESULTSTR) {
++            ImeResultEvent(window);
++            const auto remainder=lParam&~static_cast<std::intptr_t>(GCS_RESULTSTR|GCS_RESULTREADSTR|GCS_RESULTCLAUSE|GCS_RESULTREADCLAUSE); // 직접 받은 결과에서 ANSI WM_IME_CHAR/WM_CHAR가 재생성되지 않게 한다.
++            return remainder ? DefWindowProcA(window,message,wParam,remainder) : 0;
++        }
++        break; // GCS_COMPSTR 등 미완성 조합은 OS 기본 UI가 맡는다.
++    case WM_IME_CHAR:
++        return 0; // GCS_RESULTSTR에서 직접 받은 문자와 ANSI DBCS 분해가 중복되지 않게 한다.
++    case WM_UNICHAR:
++        if (wParam==UNICODE_NOCHAR) return TRUE;
++        try { if (wParam>0xffffU) throw std::invalid_argument("표시 인코딩 미지원 Unicode 문자");const char16_t scalar=static_cast<char16_t>(wParam);if (!QueueCommittedText(CommittedUtf16ToUtf8({&scalar,1}))) MessageBeep(MB_ICONWARNING); }
++        catch (const std::exception& error) { WriteDiagnosticLog(29,error.what());MessageBeep(MB_ICONWARNING); }return 0;
+     case WM_KEYDOWN:
+     case WM_KEYUP:
+         KeyEvent(window, message, wParam, lParam);
+@@ -1193,7 +1239,7 @@
+         if (wParam == SC_KEYMENU) return 0; // Alt가 메뉴를 열지 않게 한다.
+         break;
+     case WM_CHAR:
+-        CharacterEvent(window, wParam);
++        CharacterEvent(window, wParam,lParam);
+         break;
+     case WM_SYSKEYDOWN:
+     case WM_SYSKEYUP:
+@@ -1356,3 +1402,15 @@
+     StepMonitorTime(localStateGlobals_->MonitorTime(),hooks);
+ }
+ }
++
++namespace netstorm::client { // 실제Client수명과현재게임root에서만클론언어번들을선택한다.
++std::optional<std::filesystem::path> Client::ResolveKoreanBuiltinFile(std::string_view name) const {
++    return FindBuiltinKoreanFile(files_,CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path()),name); // 후보검사가영어/명시사용자경로를먼저거부한다.
++}
++std::optional<std::vector<std::uint8_t>> Client::ReadLocalizedGameFile(std::string_view name) const {
++    return netstorm::client::ReadLocalizedGameFile(files_,CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path()),name); // Config/Script용이며Fort/그래픽원문요청은같은VFS로통과한다.
++}
++std::vector<std::string> Client::MatchLocalizedGameFiles(std::string_view pattern) const {
++    return netstorm::client::MatchLocalizedGameFiles(files_,CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path()),pattern); // 영어열거결과와명시작업namespace는바꾸지않는다.
++}
++}
+diff --git a/cpppj/src/client/ClientMain.h b/cpppj/src/client/ClientMain.h
+--- a/cpppj/src/client/ClientMain.h
++++ b/cpppj/src/client/ClientMain.h
+@@ -186,6 +186,10 @@
+     void RebuildColorSortMaps(); //43c010의고정초기RGB/현재빨강9표만생성하며소비자갱신과구별한다.
+     void RefreshPaletteConsumers(); //기존AudioTints/커서/월드/UI소비자를이후maps경계에서갱신한다.
+     InputQueue& Input();
++    // IME와 MCP text가 공유하는 일반 입력 경계다. 미지원 UTF-8은 예외, 큐 공간 부족은 무효과 false다.
++    bool QueueCommittedText(std::string_view utf8,std::int32_t x=0,std::int32_t y=0);
++    // Unicode 클립보드가 실제 게임 창을 소유자로 사용하도록 핸들만 빌린다.
++    NativeHandle InputWindowHandle() const { return window_; }
+     o::ConfigInterface& Configuration();
+     // 원본0054db30의 Client 수명 DWORD를 빌린다. 저장할 때 설정을 다시 조회하지 않는다.
+     const std::uint32_t& ReadOnlyForts() const;
+@@ -217,6 +221,9 @@
+     const std::shared_ptr<ClientStaticStrings>& StaticStrings() const; // 같은 고리의 실제 수명을 빌리며 조회 자체는 예약/할당하지 않는다.
+     const std::shared_ptr<ClientDotCommandGlobals>& DotCommandGlobals() const; //최초 say를 보존하는 같은 장기 등록 표를 빌린다.
+     const o::BaseFileSystem& Files() const;
++    std::optional<std::filesystem::path> ResolveKoreanBuiltinFile(std::string_view name) const; // 현재VFS의정확파일뒤에공식한국어번들을찾으며사용자/영어경로는빈값이다.
++    std::optional<std::vector<std::uint8_t>> ReadLocalizedGameFile(std::string_view name) const; // Config값형reader도같은본문선택을쓰되BOM/AI설정은기존해독부모에넘긴다.
++    std::vector<std::string> MatchLocalizedGameFiles(std::string_view pattern) const; // guide목록의공식한국어논리이름만같은FileFinder순서에합친다.
+     void InitializeNativeSecondaryFiles(std::string_view directory); //00441790의 CD 탐색 뒤 보조 root/TAFF 등록을 같은 장기 VFS에 연결한다. 빈 결과는 기본 root이며 별도 목록은 만들지 않는다.
+     StartupFileLocations InitializeNativeStartupFiles(const std::function<std::string()>& findCd); //10.78실제시작과창없는집중검사가같은설정탐색/CD/등록순서를호출한다. 반환검색객체는설정Load뒤반납한다.
+     const std::optional<platform::UserDataRoot>& UserData() const { return options_.userData; } // 5차: 사용자 홈 저장 정책이 켜졌는지와 그 루트를 읽는다(없으면 설치 폴더 동작).
+@@ -301,7 +308,9 @@
+     void PresentScene(bool captureFrame); //Draw/Finish 뒤 일반 Frame만 수집한다. 로딩 즉시 출력은 수집하지 않는다.
+     // 원본 FUN_00436020 / FUN_00436190: 키·글자 사건을 큐에 넣는다.
+     void KeyEvent(NativeHandle window, unsigned message, std::uintptr_t wParam, std::intptr_t lParam);
+-    void CharacterEvent(NativeHandle window, std::uintptr_t wParam);
++    void CharacterEvent(NativeHandle window, std::uintptr_t wParam,std::intptr_t lParam);
++    // ANSI 창에서도 IMM의 UTF-16 확정 결과를 직접 가져온다. 미완성 조합은 OS 기본 UI에 남긴다.
++    void ImeResultEvent(NativeHandle window);
+     // 원본 FUN_00435b30: 초기화 도중 쌓인 창 메시지를 처리한다. WM_QUIT이면 거짓.
+     bool PumpMessages();
+     // 화면을 BMP로 저장한다(새 검사 기능).
+@@ -387,6 +396,9 @@
+     bool sceneVisible_{};
+     // input_: 처리할 입력 또는 입력 분배기.
+     InputQueue input_;
++    bool imeComposing_{}; // 미완성 IME 조합이 BYTE 편집 버퍼/게임 단축키를 변경하지 않게 한다.
++    bool imeKeyConsumed_{}; // 아래 식별자가 실제 조합 키에서 작성되었는지 구별한다.
++    std::uint64_t imeKeyToken_{}; // 조합을 끝낸 Enter/Backspace의 동일 WM_CHAR를 시간/scan/repeat로 구별한다.
+     // clock_: 같은 원점·정지 상태를 프레임과 장기 전송이 공유하는 실제 시계 소유자다.
+     std::shared_ptr<o::GameClock> clock_{std::make_shared<o::GameClock>()};
+     bool uiPaused_{}; // 메뉴/브리핑의 단일 정지 소유 표식이다. 원본 미션 scriptPaused와 별도로 유지한다.
+diff --git a/cpppj/src/client/ConfigFileRead.cpp b/cpppj/src/client/ConfigFileRead.cpp
+--- a/cpppj/src/client/ConfigFileRead.cpp
++++ b/cpppj/src/client/ConfigFileRead.cpp
+@@ -40,9 +40,10 @@
+ };
+ }
+ // 실제Client는Config파일에만이장치를설치한다.공유Reader의값/snapshot은유지한다.
+-o::ConfigFileLoadHooks MakeConfigFileReadHooks(const o::BaseFileSystem& files) {
+-    o::ConfigFileLoadHooks hooks;hooks.probe=[&files](auto name) { return files.Probe(name); };
+-    hooks.load=[&files](o::Config& config,std::string_view name) {
++o::ConfigFileLoadHooks MakeConfigFileReadHooks(const o::BaseFileSystem& files,ConfigFilePathResolver resolve) {
++    o::ConfigFileLoadHooks hooks;hooks.probe=[&files,resolve](auto name) { const auto selected=resolve ? resolve(name):std::nullopt;return files.Probe(selected ? platform::PathToUtf8(*selected):std::string(name)); }; // 한국어번들만직접물리경로로바꾸고영어는원래query를그대로쓴다.
++    hooks.load=[&files,resolve](o::Config& config,std::string_view name) {
++        const auto selected=resolve ? resolve(name):std::nullopt;const auto physicalName=selected ? platform::PathToUtf8(*selected):std::string(name); // 실제FILE/키/해독/정리의원문부모는그대로사용한다.
+         ConfigFileReader reader;std::vector<std::uint8_t> allocation;o::BaseFileWholeReadHooks whole;o::ConfigFileLoadBodyHooks body; // Append복귀까지같은물리할당을소유한다.
+         whole.probe=[&](auto physical) { return files.Probe({reinterpret_cast<const char*>(physical.data()),physical.size()}); };
+         whole.open=[&](auto& file,auto physical,auto mode,auto create) { files.Open(file,{reinterpret_cast<const char*>(physical.data()),physical.size()},mode,create,reader.io); };
+@@ -50,7 +51,7 @@
+         body.buffer=[&](auto token) { if (token!=1) throw std::logic_error("Config 실제 할당 토큰");if (!reader.complete) throw std::runtime_error("Config 전체읽기의 실제 부분 I/O");return std::span(allocation); };
+         body.append=[&](auto,std::span<const std::uint8_t> bytes) { config.AppendDecodedBytes(bytes); }; // 원문XOR는40380에서끝났으므로기존LoadBytes로두번해독하지않는다.
+         body.release=[&](auto token) { if (token!=1) throw std::logic_error("Config 실제 반납 토큰");std::vector<std::uint8_t>{}.swap(allocation); }; // Append가정상복귀한뒤에만원문free를연결한다.
+-        std::string input(name.substr(0,name.find('\0')));input+='\0';std::array<std::uint8_t,4096> scratch{};o::LoadConfigFile(reader.state,{reinterpret_cast<const std::uint8_t*>(input.data()),input.size()},reader.io,whole,body,scratch); // 호스트예외의남은할당은지역RAII로추가반납하며원문예외ABI와구별한다.
++        std::string input(physicalName.substr(0,physicalName.find('\0')));input+='\0';std::array<std::uint8_t,4096> scratch{};o::LoadConfigFile(reader.state,{reinterpret_cast<const std::uint8_t*>(input.data()),input.size()},reader.io,whole,body,scratch); // 호스트예외의남은할당은지역RAII로추가반납하며원문예외ABI와구별한다.
+     };return hooks;
+ }
+ // 원문chdir대신검색시점의현재게임CWD를사용하며FindClose/Next는같은Windows핸들을소비한다.
+diff --git a/cpppj/src/client/ConfigFileRead.h b/cpppj/src/client/ConfigFileRead.h
+--- a/cpppj/src/client/ConfigFileRead.h
++++ b/cpppj/src/client/ConfigFileRead.h
+@@ -6,5 +6,6 @@
+ namespace netstorm::o { class BaseFileSystem; } // 같은 현재 root/TAFF/이름 고리를 빌린다.
+ namespace netstorm::client { // 공유 Fort/Editor 값 reader와 독립인 Config 접합이다.
+ o::FileSpecQueryHooks MakeConfigFileSearchHooks(std::function<std::filesystem::path()> directory); //실제검색직전현재root를읽는다.일반비패턴입력은root/검색장치를호출하지않는다.
+-o::ConfigFileLoadHooks MakeConfigFileReadHooks(const o::BaseFileSystem& files); // 생성만으로 I/O/이름고리를 쓰지 않으며 실제 선택한 파일·인자에서만 Probe/Load한다.
++using ConfigFilePathResolver=std::function<std::optional<std::filesystem::path>(std::string_view)>; // 클론 추가 본문의 물리 파일만 선택하며 기본 원문 호출자는 빈 장치다.
++o::ConfigFileLoadHooks MakeConfigFileReadHooks(const o::BaseFileSystem& files,ConfigFilePathResolver resolve={}); // 생성만으로 I/O/이름고리를 쓰지 않으며 실제 선택한 파일·인자에서만 Probe/Load한다.
+ }
+diff --git a/cpppj/src/client/DisplayTextInput.cpp b/cpppj/src/client/DisplayTextInput.cpp
+new file mode 100644
+--- /dev/null
++++ b/cpppj/src/client/DisplayTextInput.cpp
+@@ -0,0 +1,84 @@
++// 기존 표시 인코딩을 재사용하며 문자를 네 개의 WM_CHAR로 분해하지 않는다.
++#include "client/DisplayTextInput.h"
++#include "o/OriginalText.h"
++#include <algorithm>
++#include <stdexcept>
++
++namespace netstorm::client { // 플랫폼/IME/MCP와 TextEntry가 같은 변환 규칙을 공유한다.
++namespace { // 외부에 노출하지 않는 표시 BYTE 조회와 UTF-8 부호화다.
++// 문자 하나의 물리 BYTE 폭이다. 정확한 네 BYTE만 원자 문자로 취급한다.
++std::size_t Width(std::string_view text,std::size_t at) {
++    const std::span<const std::uint8_t> bytes{reinterpret_cast<const std::uint8_t*>(text.data()),text.size()};
++    return o::DecodeExtendedSequence(bytes,at) ? o::kExtendedTextLength : 1U;
++}
++// 검증된 scalar를 UTF-8 뒤에 기록한다. surrogate/Unicode 범위 밖을 거부한다.
++void AppendUtf8(std::string& out,std::uint32_t cp) {
++    if (cp>0x10ffffU || (cp>=0xd800U && cp<=0xdfffU)) throw std::invalid_argument("확정 입력 Unicode 범위");
++    if (cp<0x80U) out.push_back(static_cast<char>(cp));
++    else if (cp<0x800U) { out.push_back(static_cast<char>(0xc0U|(cp>>6)));out.push_back(static_cast<char>(0x80U|(cp&63U))); }
++    else if (cp<0x10000U) { out.push_back(static_cast<char>(0xe0U|(cp>>12)));out.push_back(static_cast<char>(0x80U|((cp>>6)&63U)));out.push_back(static_cast<char>(0x80U|(cp&63U))); }
++    else { out.push_back(static_cast<char>(0xf0U|(cp>>18)));out.push_back(static_cast<char>(0x80U|((cp>>12)&63U)));out.push_back(static_cast<char>(0x80U|((cp>>6)&63U)));out.push_back(static_cast<char>(0x80U|(cp&63U))); }
++}
++}
++bool IsCommittedTextInput(std::uint32_t event) { return (event&0x03e00000U)==kCommittedTextInput && (event&0x001fffffU)<=0x10ffffU; }
++std::string CommittedTextBytes(std::uint32_t event) {
++    if (!IsCommittedTextInput(event)) throw std::invalid_argument("확정 입력 태그 범위");
++    const auto encoded=o::EncodeExtendedCodePoint(event&0x001fffffU);if (!encoded) throw std::invalid_argument("표시 인코딩 미지원 확정 문자");
++    return {encoded->begin(),encoded->end()};
++}
++std::vector<InputEvent> MakeCommittedTextEvents(std::string_view utf8,std::int32_t x,std::int32_t y) {
++    const auto bytes=o::EncodeDisplayText(utf8);std::vector<InputEvent> result;result.reserve(bytes.size());
++    for (std::size_t at=0;at<bytes.size();) { // 전체 검증 뒤에만 사건 목록을 만들므로 실패가 일부 입력을 남기지 않는다.
++        if (const auto cp=o::DecodeExtendedSequence(bytes,at)) { result.push_back({kCommittedTextInput|*cp,x,y});at+=o::kExtendedTextLength; }
++        else { const auto byte=bytes[at++];if (byte<0x20U || byte==0x7fU) throw std::invalid_argument("text 입력의 제어문자는 key 동작으로 전달해야 함");result.push_back({byte,x,y}); }
++    }
++    return result;
++}
++std::string CommittedUtf16ToUtf8(std::u16string_view text) {
++    std::string result;
++    for (std::size_t at=0;at<text.size();++at) { // UTF-16 surrogate 쌍을 하나의 scalar로 검증한다.
++        std::uint32_t cp=text[at];
++        if (cp>=0xd800U && cp<=0xdbffU) { if (++at==text.size() || text[at]<0xdc00U || text[at]>0xdfffU) throw std::invalid_argument("잘린 UTF-16 확정 입력");cp=0x10000U+((cp-0xd800U)<<10)+(text[at]-0xdc00U); }
++        AppendUtf8(result,cp);
++    }
++    return result;
++}
++std::u16string DisplayTextToUtf16(std::span<const char> text) {
++    std::u16string result;const std::span<const std::uint8_t> bytes{reinterpret_cast<const std::uint8_t*>(text.data()),text.size()};
++    for (std::size_t at=0;at<bytes.size();) { // 기존 1252/확장 부호화는 BMP만 표현하므로 UTF-16 한 칸이다.
++        if (const auto cp=o::DecodeExtendedSequence(bytes,at)) { result.push_back(static_cast<char16_t>(*cp));at+=o::kExtendedTextLength; }
++        else { const auto utf8=o::DecodeOriginalText(bytes.subspan(at++,1));const auto lead=static_cast<std::uint8_t>(utf8[0]);std::uint32_t cp=lead;
++            if (utf8.size()==2) cp=((lead&31U)<<6)|(static_cast<std::uint8_t>(utf8[1])&63U);
++            else if (utf8.size()==3) cp=((lead&15U)<<12)|((static_cast<std::uint8_t>(utf8[1])&63U)<<6)|(static_cast<std::uint8_t>(utf8[2])&63U);
++            result.push_back(static_cast<char16_t>(cp)); }
++    }
++    return result;
++}
++bool HasExtendedDisplayText(std::string_view text) {
++    for (std::size_t at=0;at<text.size();++at) if (Width(text,at)>1) return true; // 원문 일반 BYTE만 있으면 편집 동작을 그대로 보존한다.
++    return false;
++}
++std::size_t DisplayTextFloor(std::string_view text,std::size_t position) {
++    position=std::min(position,text.size());std::size_t at{};
++    while (at<position) { const auto next=at+Width(text,at);if (next>position) return at;at=next; } // 문자의 일부를 선택 시작으로 만들지 않는다.
++    return at;
++}
++std::size_t DisplayTextCeil(std::string_view text,std::size_t position) {
++    position=std::min(position,text.size());const auto floor=DisplayTextFloor(text,position);return floor==position ? floor : floor+Width(text,floor);
++}
++std::size_t PreviousDisplayText(std::string_view text,std::size_t position) { const auto at=DisplayTextFloor(text,position);return at ? DisplayTextFloor(text,at-1) : 0U; }
++std::size_t NextDisplayText(std::string_view text,std::size_t position) { const auto at=DisplayTextFloor(text,position);return at<text.size() ? at+Width(text,at) : text.size(); }
++std::string_view DisplayTextLine(std::string_view text,std::int32_t line) {
++    if (line<0) return {};
++    for (std::int32_t at=0;at<line;++at) { const auto end=text.find('\n');if (end==text.npos) return {};text.remove_prefix(end+1); } // LF 줄번호는 원문과 같은 BYTE 본문에서 읽는다.
++    return text.substr(0,text.find('\n'));
++}
++std::string FilterDisplayText(std::string_view text,std::string_view excluded,std::size_t maximum) {
++    std::string result;const auto nul=text.find('\0');text=text.substr(0,nul);
++    for (std::size_t at=0;at<text.size();) { // 확장 숫자의 0x08/공백 판정을 금지하고 완전한 문자만 복사한다.
++        const auto count=Width(text,at);if (excluded.find(text[at])!=excluded.npos) { at+=count;continue; } // 숫자 전용처럼 lead가 제외되면 확장 문자 전체를 거부한다.
++        if (count>maximum-result.size()) break;result.append(text.substr(at,count));at+=count;
++    }
++    return result;
++}
++}
+diff --git a/cpppj/src/client/DisplayTextInput.h b/cpppj/src/client/DisplayTextInput.h
+new file mode 100644
+--- /dev/null
++++ b/cpppj/src/client/DisplayTextInput.h
+@@ -0,0 +1,37 @@
++// UTF-8/UTF-16 확정 입력과 기존 표시 BYTE 문자열의 문자 경계를 연결한다.
++#pragma once
++#include "client/InputEvent.h"
++#include <cstddef>
++#include <cstdint>
++#include <span>
++#include <string>
++#include <string_view>
++#include <vector>
++
++namespace netstorm::client { // 원문 큐의 크기/배치를 유지하는 한국어 입력 경계다.
++// 비명령 사건의 미사용 상위 비트로 확정 Unicode 한 문자를 식별한다. 실제 VK는 0xff 이하라 겹치지 않는다.
++inline constexpr std::uint32_t kCommittedTextInput = 0x01000000U;
++// 문자 태그/명령 비트와 Unicode 범위를 구별한다.
++bool IsCommittedTextInput(std::uint32_t event);
++// 확정 입력 한 사건을 기존 표시 바이트로 바꾼다. 잘못된 태그/미지원 문자는 거부한다.
++std::string CommittedTextBytes(std::uint32_t event);
++// 전체 UTF-8을 먼저 검증한다. ASCII/1252는 기존 한 BYTE 사건, 한글은 태그 한 사건이다.
++// 제어문자/NUL은 받지 않는다. Enter/Tab/Backspace는 기존 키 동작으로 전달한다.
++std::vector<InputEvent> MakeCommittedTextEvents(std::string_view utf8,std::int32_t x=0,std::int32_t y=0);
++// IMM의 UTF-16 확정 본문을 UTF-8로 바꾼다. 비정상 surrogate는 전체 거부한다.
++std::string CommittedUtf16ToUtf8(std::u16string_view text);
++// 표시 바이트를 UTF-16으로 되돌린다. 클립보드 경계에서만 사용한다.
++std::u16string DisplayTextToUtf16(std::span<const char> text);
++// 정확히 인식되는 네 BYTE 확장 토큰이 하나라도 있는지 읽는다.
++bool HasExtendedDisplayText(std::string_view text);
++// BYTE 오프셋을 이전/다음 문자 경계로 보정한다. 잘못된 선두는 원래 한 BYTE로 취급한다.
++std::size_t DisplayTextFloor(std::string_view text,std::size_t position);
++std::size_t DisplayTextCeil(std::string_view text,std::size_t position);
++// 현재 위치의 이전/다음 문자 경계다. 한글 네 BYTE를 한 번에 건너뛴다.
++std::size_t PreviousDisplayText(std::string_view text,std::size_t position);
++std::size_t NextDisplayText(std::string_view text,std::size_t position);
++// LF 기준 실제 줄의 읽기 전용 뷰다. 원문 BYTE 줄번호를 바꾸지 않는다.
++std::string_view DisplayTextLine(std::string_view text,std::int32_t line);
++// BYTE 상한까지 완전한 토큰만 복사한다. 제외문자는 확장 토큰 내부에 적용하지 않는다.
++std::string FilterDisplayText(std::string_view text,std::string_view excluded,std::size_t maximum);
++}
+diff --git a/cpppj/src/client/HtmlTextParser.cpp b/cpppj/src/client/HtmlTextParser.cpp
+--- a/cpppj/src/client/HtmlTextParser.cpp
++++ b/cpppj/src/client/HtmlTextParser.cpp
+@@ -1,5 +1,6 @@
+ // 태그의 원문 규칙·조건별 현재 상태 재조회·원본 출력 바이트 순서를 유지한다.
+ #include "client/HtmlTextParser.h"
++#include "o/OriginalText.h"
+ #include <algorithm>
+ #include <bit>
+ #include <stdexcept>
+@@ -126,7 +127,9 @@
+             if (state_.shown) {
+                 if (std::bit_cast<std::int32_t>(state_.textAllowed)<1 ||
+                     static_cast<std::int64_t>(state_.output.size())>static_cast<std::int64_t>(capacity)-kOutputReserve) break;
+-                if (byte>0x1f) {
++                if (globals_.extendedText && o::DecodeExtendedSequence({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()},state_.inputOffset)) {
++                    Append(source.substr(state_.inputOffset,o::kExtendedTextLength),capacity);state_.inputOffset+=o::kExtendedTextLength-1;state_.afterHeading=0; // 제어BYTE네개를통째로보존하고하위숫자를일반공백/태그로재해석하지않는다.
++                } else if (byte>0x1f) {
+                     Append(source.substr(state_.inputOffset,1),capacity);
+                     if (state_.afterHeading) state_.afterHeading=Byte(source,state_.inputOffset)==' ';
+                 }
+diff --git a/cpppj/src/client/HtmlTextParser.h b/cpppj/src/client/HtmlTextParser.h
+--- a/cpppj/src/client/HtmlTextParser.h
++++ b/cpppj/src/client/HtmlTextParser.h
+@@ -21,6 +21,7 @@
+ struct HtmlTextParserGlobals {
+     std::uint32_t suppressParagraph{}; // PATCH00565ec0/CD00536368: 다음 P에서 출력 대신0으로 돌아간다.
+     std::array<char,80> background{}; // PATCH00565e70..565ebf의 실제 이름 저장소다. 페이지 교체와 짧은 덮어쓰기에서 나머지 바이트를 보존한다.
++    bool extendedText{}; // 실제클론의모든UI언어에서유효한표시4BYTE를원자문자로보존한다. 원문집계초기화/fixture는기본false다.
+ };
+ // 조건/명령/그림/링크/배경 및 TextHtml 파생 동작은 실제 공급자가 필요하다.
+ struct HtmlTextParserHooks {
+diff --git a/cpppj/src/client/HtmlWindowFactory.cpp b/cpppj/src/client/HtmlWindowFactory.cpp
+--- a/cpppj/src/client/HtmlWindowFactory.cpp
++++ b/cpppj/src/client/HtmlWindowFactory.cpp
+@@ -17,7 +17,7 @@
+     const auto root=suppress ? 0U : Need(hooks_.create)(width,height);state_.createdSerial=root ? Node(root).serial : 0U;
+     const auto substituted=Need(hooks_.substitute)(CString(source),static_cast<std::uint32_t>(kHtmlFactoryCapacity));if (CString(substituted).size()>=kHtmlFactoryCapacity) throw std::length_error("HTML 치환 지역8192BYTE 범위 초과");
+     HtmlTextParserState parser;std::array<char,kHtmlFactoryCapacity> first{};Copy(first,Need(hooks_.parse)(parser,root,CString(substituted),static_cast<std::uint32_t>(kHtmlFactoryCapacity)));if (!root) return 0;
+-    if (!HasContent(first.data())) { state_.createdSerial=0;Need(hooks_.body)(root,"xxx");Need(hooks_.attach)(root,0,0,Need(hooks_.read)(0x563e38),0);Need(hooks_.kill)(root);return 0; }
++    if (!HasContent(first.data()) && !(hooks_.localizedContent && hooks_.localizedContent(first.data()))) { state_.createdSerial=0;Need(hooks_.body)(root,"xxx");Need(hooks_.attach)(root,0,0,Need(hooks_.read)(0x563e38),0);Need(hooks_.kill)(root);return 0; }
+     state_.lastCloseTime=Need(hooks_.wallSeconds)();if (!Need(hooks_.metadata)(root,first)) { std::array<char,kHtmlFactoryCapacity> fallback{};Copy(fallback,Need(hooks_.fallback)());Need(hooks_.metadata)(root,fallback); }
+     std::string secondSource;for (const char byte:CString(first.data())) { if (byte=='\n') secondSource+="<br>";else secondSource+=byte; } // 실제String.Replace의모든LF를BR로바꾼다. 첫 메타가 바꾼 현재 버퍼를 읽는다.
+     auto second=Need(hooks_.parse)(parser,root,secondSource,static_cast<std::uint32_t>(kHtmlFactoryCapacity));second.resize(CString(second).size());if (second.size()+1>=kHtmlFactoryCapacity) throw std::length_error("HTML 마지막 LF/NUL 지역 범위 초과");second+='\n';Need(hooks_.body)(root,second);
+diff --git a/cpppj/src/client/HtmlWindowFactory.h b/cpppj/src/client/HtmlWindowFactory.h
+--- a/cpppj/src/client/HtmlWindowFactory.h
++++ b/cpppj/src/client/HtmlWindowFactory.h
+@@ -10,6 +10,7 @@
+     std::function<std::uint32_t(std::uint32_t,std::span<char>)> metadata;std::function<double()> wallSeconds; //4c83b0과 현재 벽 시각이다.
+     std::function<void(std::uint32_t,std::string_view)> body;std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach; // 실제 본문 생성과 전체 Fit 가상 부착이다.
+     std::function<void(std::uint32_t,bool)> modal;std::function<void(std::uint32_t)> kill;std::function<std::uint32_t(std::uint32_t)> read; // 같은 공통 모달/수명·현재 화면/루트 전역이다.
++    std::function<bool(std::string_view)> localizedContent; // 실제클론언어에서만확장문자를내용으로인정한다. 원문fixture는빈장치로ASCII관문을유지한다.
+ };
+ class HtmlWindowFactory { // 부분 미션 안내를 대체할 원문 전체 공장 본체다.
+ public:
+diff --git a/cpppj/src/client/InputEvent.cpp b/cpppj/src/client/InputEvent.cpp
+--- a/cpppj/src/client/InputEvent.cpp
++++ b/cpppj/src/client/InputEvent.cpp
+@@ -17,6 +17,14 @@
+     write_ = (write_ + 1) % kCapacity;
+     if (write_ == read_) write_ = (write_ + kCapacity - 1) % kCapacity;
+ }
++// 단일 확정 본문의 일부만 들어가거나 네 BYTE 토큰이 잘리는 상태를 만들지 않는다.
++bool InputQueue::TryPushBatch(std::span<const InputEvent> events) {
++    if (events.size()>FreeSlots()) return false;
++    for (const auto& event:events) Push(event.code,event.x,event.y); // 검증한 남은 칸 안에서 원래 쓰기 위치를 순서대로 사용한다.
++    return true;
++}
++// 읽기/쓰기 위치가 감기는 경우에도 한 칸을 항상 비워 둔다.
++std::size_t InputQueue::FreeSlots() const { return (read_+kCapacity-write_-1)%kCapacity; }
+ // 코드만 다듬고 같은 방식으로 넣는다.
+ void InputQueue::PushCommand(std::uint32_t code, std::int32_t x, std::int32_t y) {
+     Push((code & kCommandCodeMask) | InputCode::kCommand, x, y);
+diff --git a/cpppj/src/client/InputEvent.h b/cpppj/src/client/InputEvent.h
+--- a/cpppj/src/client/InputEvent.h
++++ b/cpppj/src/client/InputEvent.h
+@@ -3,6 +3,7 @@
+ #pragma once
+ #include <array>
+ #include <cstdint>
++#include <span>
+ 
+ namespace netstorm::client {
+ // 사건 코드의 비트(창 프로시저 FUN_00436550·FUN_00436020이 만든다).
+@@ -37,6 +38,10 @@
+     static constexpr std::size_t kCapacity = 40;
+     // 원본 FUN_00452f90: 끝에 넣는다. 가득 차면 방금 넣은 사건을 버린다.
+     void Push(std::uint32_t code, std::int32_t x, std::int32_t y);
++    // 한국어 확정 본문을 원자적으로 넣는다. 공간이 부족하면 기존 큐와 새 본문을 모두 보존하고 false다.
++    bool TryPushBatch(std::span<const InputEvent> events);
++    // 원문 39사건 중 현재 비어 있는 칸 수다. 일반 Push의 버림 정책은 바꾸지 않는다.
++    std::size_t FreeSlots() const;
+     // 원본 FUN_00452fe0: 명령 사건을 넣는다(코드는 0x0100ffff만 남기고 명령 표시를 붙인다).
+     void PushCommand(std::uint32_t code, std::int32_t x, std::int32_t y);
+     // 원본 FUN_00452f00: 하나 꺼낸다. 비었으면 0으로 채운 사건이다.
+diff --git a/cpppj/src/client/KoreanResources.cpp b/cpppj/src/client/KoreanResources.cpp
+--- a/cpppj/src/client/KoreanResources.cpp
++++ b/cpppj/src/client/KoreanResources.cpp
+@@ -1,5 +1,8 @@
+ // 6차 한국어 지원: 한국어 번역표와 D2Coding 글꼴 파일 탐색 구현이다.
+ #include "client/KoreanResources.h"
++#include "o/BaseFile.h"
++#include "o/OriginalText.h"
++#include <array>
+ #include <algorithm>
+ #include <fstream>
+ #include <iterator>
+@@ -36,7 +39,7 @@
+ }
+ // 번역표는 UTF-8 텍스트이며 BOM이 있으면 제거해 첫 줄의 구분 문자가 줄 첫 글자가 되게 한다.
+ std::optional<std::string> ReadKoreanTranslationFile(const std::vector<std::filesystem::path>& roots) {
+-    const std::filesystem::path relatives[] = {std::filesystem::path("lang") / "xlat.korean", std::filesystem::path("assets") / "lang" / "korean" / "xlat.korean"};
++    const std::filesystem::path relatives[] = {std::filesystem::path("lang") / "korean" / "xlat.korean", std::filesystem::path("lang") / "xlat.korean", std::filesystem::path("assets") / "lang" / "korean" / "xlat.korean"};
+     for (const auto& root : roots) for (const auto& relative : relatives) { // 가까운 폴더, 같은 폴더 안에서는 배포 위치 우선이다.
+         std::error_code error;
+         const auto path = root / relative;
+@@ -50,3 +53,97 @@
+     return std::nullopt;
+ }
+ }
++
++namespace netstorm::client { // 언어번들은원문자료/사용자맵과다른읽기전용namespace다.
++namespace { // 고정공식본문목록과논리이름검사만공유한다.
++constexpr std::array<std::string_view,43> kBuiltinKoreanNames{{
++    "tell.korean",
++    "help.korean",
++    "config.korean",
++    "offical1.korean",
++    "offical2.korean",
++    "offical2sep.korean",
++    "offical3.korean",
++    "offical4.korean",
++    "offical5.korean",
++    "offical5sep.korean",
++    "offical6.korean",
++    "tutorial1.korean",
++    "tutorial2.korean",
++    "tutorial3.korean",
++    "tutorial4.korean",
++    "tutorial5.korean",
++    "tutorial6.korean",
++    "bc1menu76.korean",
++    "bc2bridging76.korean",
++    "bc3acid_bar76.korean",
++    "bc4bow_rush76.korean",
++    "bc5walkers76.korean",
++    "bc6mows76.korean",
++    "bc7sun_bars76.korean",
++    "bc8fury76.korean",
++    "bc9ssun_bars76.korean",
++    "thewarbegins.korean",
++    "masterofwhirligigs.korean",
++    "savetheisland.korean",
++    "fragilefortune.korean",
++    "thunderingpower.korean",
++    "dissolvedalliance.korean",
++    "thenoose.korean",
++    "rainvsrain.korean",
++    "runforit.korean",
++    "guardmyback.korean",
++    "surrounded.korean",
++    "breakingthrough.korean",
++    "totherescue.korean",
++    "vicious.korean",
++    "enemyterritory.korean",
++    "finalconfrontation.korean",
++    "demostormrages.korean",
++}}; // 원문대본의공통11/공식32고유파일만허용한다. xlat은기존별도표로읽는다.
++// 드라이브/UNC/상위이동/다른디렉터리를거부하고DataDir의선행구분자하나만논리접두로해석한다.
++std::optional<std::string> KoreanLeaf(std::string_view input,bool wildcard) {
++    auto text=std::string(input.substr(0,input.find('\0')));std::replace(text.begin(),text.end(),'\\','/');text=o::AsciiLower(text);
++    if (text.empty() || text.starts_with("//") || text.find(':')!=text.npos) return {};
++    if (text.front()=='/') text.erase(0,1);if (!text.starts_with("d/")) return {};text.erase(0,2);
++    if (text.empty() || text.find('/')!=text.npos || text=="." || text==".." || !text.ends_with(".korean")) return {};
++    if (!wildcard && text.find_first_of("*?")!=text.npos) return {};
++    if (!wildcard && std::find(kBuiltinKoreanNames.begin(),kBuiltinKoreanNames.end(),text)==kBuiltinKoreanNames.end()) return {};
++    return text;
++}
++// 아카이브FileFinder와같은ASCII와일드카드만비교하며경로는이미고정된한디렉터리다.
++bool KoreanMatches(std::string_view name,std::string_view mask) {
++    std::size_t n{},m{},star=std::string_view::npos,retry{}; // 마지막별표에서늘릴소비위치만기억한다.
++    while (n<name.size()) { if (m<mask.size() && (mask[m]=='?' || mask[m]==name[n])) { ++m;++n; }else if (m<mask.size() && mask[m]=='*') { star=m++;retry=n; }else if (star!=std::string_view::npos) { m=star+1;n=++retry; }else return false; } // 원문목록순서를정렬하지않는다.
++    while (m<mask.size() && mask[m]=='*') ++m;return m==mask.size();
++}
++// 열거된논리이름의확장자만제외한마지막요소로중복을판정한다.
++std::string KoreanStem(std::string_view path) {
++    const auto separator=path.find_last_of("\\/");auto name=o::AsciiLower(path.substr(separator==path.npos ? 0:separator+1));const auto dot=name.find_last_of('.');if (dot!=name.npos) name.resize(dot);return name;
++}
++}
++std::optional<std::filesystem::path> FindBuiltinKoreanFile(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view name) {
++    const auto leaf=KoreanLeaf(name,false);if (!leaf || files.ProbeExact(name)) return {}; // 사용자/설치/등록TAFF의정확한한국어파일이항상우선한다.
++    for (const auto& root:roots) for (const auto& prefix:{std::filesystem::path("lang")/"korean"/"d",std::filesystem::path("assets")/"lang"/"korean"/"d"}) { // 가까운배포번들다음개발저장소를읽기만한다.
++        const auto candidate=root/prefix/(*leaf);std::error_code error;if (std::filesystem::is_regular_file(candidate,error)) return std::filesystem::absolute(candidate).lexically_normal();
++    }
++    return {};
++}
++std::optional<std::vector<std::uint8_t>> ReadLocalizedGameFile(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view name) {
++    if (const auto path=FindBuiltinKoreanFile(files,roots,name)) return o::ReadFileBytes(*path);return files.TryRead(name); // BOM/AI/SP설정은바꾸지않으며부재영어대체도기존VFS가소유한다.
++}
++std::vector<std::string> MatchLocalizedGameFiles(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view pattern) {
++    auto result=files.MatchFinder(pattern);const auto mask=KoreanLeaf(pattern,true);if (!mask) return result; // 영어/절대사용자패턴은기존벡터를그대로반환한다.
++    const auto separator=pattern.find_last_of("\\/");const auto prefix=std::string(pattern.substr(0,separator==pattern.npos ? 0:separator+1));
++    for (const auto name:kBuiltinKoreanNames) { // 같은영어fallback행의위치만한국어논리이름으로바꾸고새번들만뒤에추가한다.
++        if (!KoreanMatches(name,*mask)) continue;const auto logical=prefix+std::string(name);if (!FindBuiltinKoreanFile(files,roots,logical)) continue;
++        const auto stem=KoreanStem(name);const auto found=std::find_if(result.begin(),result.end(),[&](const auto& old) { return KoreanStem(old)==stem; });
++        if (found==result.end()) result.push_back(logical);else if (o::AsciiLower(*found).ends_with(".english")) *found=logical;
++    }
++    return result;
++}
++std::string DecodeQuickHelpDisplaySource(std::string_view bytes) {
++    if (!bytes.starts_with("\xEF\xBB\xBF")) return std::string(bytes); // 원문영어의NUL/1252/제어BYTE는새로해석하지않는다.
++    const auto decoded=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()});const auto display=o::EncodeDisplayText(decoded);return {display.begin(),display.end()};
++}
++}
+diff --git a/cpppj/src/client/KoreanResources.h b/cpppj/src/client/KoreanResources.h
+--- a/cpppj/src/client/KoreanResources.h
++++ b/cpppj/src/client/KoreanResources.h
+@@ -5,8 +5,10 @@
+ #include <filesystem>
+ #include <optional>
+ #include <string>
++#include <string_view>
+ #include <vector>
+ 
++namespace netstorm::o { class BaseFileSystem; } // 실제 VFS의 우선권과 같은 이름 존재를 읽기만 한다.
+ namespace netstorm::client { // 클론 데이터 파일 탐색은 Client와 독립 검사가 같은 규칙을 공유한다.
+ // 실행 파일 폴더와 게임 폴더에서 위로 최대 maxLevels단계까지 올라가며 만든 탐색 시작 폴더 목록이다(중복 제거, 가까운 순서).
+ // 휴대 배포(exe 옆 fonts, lang)와 개발 환경(저장소 루트의 fonts, assets/lang)을 같은 함수로 찾기 위해 추가했다.
+@@ -16,3 +18,14 @@
+ // 탐색 폴더 아래 lang/xlat.korean, assets/lang/korean/xlat.korean 순서로 첫 파일을 UTF-8 텍스트(BOM 제거)로 읽는다. 없으면 빈 값이다.
+ std::optional<std::string> ReadKoreanTranslationFile(const std::vector<std::filesystem::path>& roots);
+ }
++
++namespace netstorm::client { // 클론이 추가한 한국어 본문만 별도 배포 namespace로 연결한다.
++// 논리 d/<이름>.korean의43공식본문 중 현재VFS의정확파일이없을때만언어번들파일을찾는다. 절대/사용자/다른언어경로는대상밖이다.
++std::optional<std::filesystem::path> FindBuiltinKoreanFile(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view name);
++// 원문영어/사용자경로는같은VFS를읽고명시한국어본문만BOM그대로반환한다. Config가이후기존해독을소유한다.
++std::optional<std::vector<std::uint8_t>> ReadLocalizedGameFile(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view name);
++// 기존FileFinder순서를유지하면서일치하는공식한국어번들의논리이름을추가하고같은stem의영어대체중복을제거한다.
++std::vector<std::string> MatchLocalizedGameFiles(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view pattern);
++// UTF8 BOM이있는클론본문만표시4BYTE로바꾸며BOM없는원문1252/제어BYTE는그대로반환한다.
++std::string DecodeQuickHelpDisplaySource(std::string_view bytes);
++}
+diff --git a/cpppj/src/client/Mission.cpp b/cpppj/src/client/Mission.cpp
+--- a/cpppj/src/client/Mission.cpp
++++ b/cpppj/src/client/Mission.cpp
+@@ -30,6 +30,7 @@
+ }
+ // 원본은 미션 설정 객체를 this로 FUN_004409d0을 부른다. 스크립트를 읽지 못했으면 찾지 못한다.
+ std::optional<std::string> MissionScript::Get(std::string_view key) {
++    if (key=="title") if (auto display=LocalizedDisplayScript()) if (auto title=display->Get("title")) return title; // 표시제목만현재언어를읽고AI/SP등의실행키는기존객체를유지한다.
+     return script_.Get(std::string(kMissionPrefix) + std::string(key));
+ }
+ // 미션 이름을 돌려준다.
+@@ -73,6 +74,7 @@
+ std::string MissionScript::MissionType() { return Get("missionType").value_or(std::string()); }
+ // Section은 등록 객체의 접두어를 붙이지 않는 원본 본문 조회다.
+ std::optional<std::string> MissionScript::Section(std::string_view name) const {
++    if (auto display=LocalizedDisplayScript()) if (const auto body=display->Section(name)) return std::string(*body); // 명시CustomMaps reader도그대로사용하고부재는기존본문으로돌아간다.
+     const auto section = script_.Section(name);
+     return section ? std::optional<std::string>(std::string(*section)) : std::nullopt;
+ }
+@@ -89,3 +91,12 @@
+     if (!mission) return;mission.reset();missionMode=false;configuration.Set("global.inMission","0"); //전체 State cleanup이나 Editor prefix에서 원문에 없는 모드 초기화를 추가하지 않는다.
+ }
+ }
++
++namespace netstorm::client { // 표시언어가바뀌어도현재월드의실행대본을교체하지않는다.
++std::unique_ptr<o::Config> MissionScript::LocalizedDisplayScript() const {
++    const auto path=configuration_.PathSpec("missionSpec",name_);if (path.empty() || path==scriptPath_) return {}; // 같은파일은기존캐시/원문조회만사용한다.
++    auto display=std::make_unique<o::Config>(configuration_.Registry()); // 익명객체라현재mission의등록이름/우선권을덮지않는다.
++    if (explicitSource_) { if (source_) if (const auto bytes=source_(path)) display->LoadBytes(*bytes); }else configuration_.LoadFile(*display,path); // 명시작업source의부재를공식번들로우회하지않는다.
++    return display->IsValid() ? std::move(display):std::unique_ptr<o::Config>{};
++}
++}
+diff --git a/cpppj/src/client/Mission.h b/cpppj/src/client/Mission.h
+--- a/cpppj/src/client/Mission.h
++++ b/cpppj/src/client/Mission.h
+@@ -41,6 +41,7 @@
+     // 실제 미션 Config의004404e0(key,value)다. 전역 설정이 아닌 현재 mission 객체에 값을 기록한다.
+     bool Set(std::string_view key,std::string_view value);
+ private:
++    std::unique_ptr<o::Config> LocalizedDisplayScript() const; // 언어파일경로가바뀐경우만동일source로익명임시Config를읽는다. 실행AI/SP/상태와원문키는수정하지않는다.
+     // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
+     o::ConfigInterface& configuration_;
+     // name_: 이름으로 조회·표시할 때 사용하는 문자열.
+diff --git a/cpppj/src/client/QuickHelpFileRead.cpp b/cpppj/src/client/QuickHelpFileRead.cpp
+--- a/cpppj/src/client/QuickHelpFileRead.cpp
++++ b/cpppj/src/client/QuickHelpFileRead.cpp
+@@ -1,6 +1,7 @@
+ // 원문 Help의41baa0 호출을 같은 실제 VFS·Unicode FILE·키 반납에 연결한다.
+ #include "client/QuickHelpFileRead.h"
+ #include "client/ClientMain.h"
++#include "client/KoreanResources.h"
+ #include "platform/Utf8Path.h"
+ #include <array>
+ #include <cstdio>
+@@ -47,9 +48,10 @@
+     HelpFileReader reader;std::vector<std::uint8_t> allocation;std::int32_t length{};o::BaseFileWholeReadHooks whole; // 추가2/최소4 물리는 본문과 구별해 소유한다.
+     whole.open=[&](auto& file,auto physical,auto mode,auto create) { client.Files().Open(file,{reinterpret_cast<const char*>(physical.data()),physical.size()},mode,create,reader.io); };
+     whole.allocate=[&](auto size) { allocation.resize(size);return o::BaseFileWholeAllocation{1,allocation}; }; // vector의 초기0 padding은 반환하지 않으며 원문 미정 할당의 값으로 주장하지 않는다.
+-    std::string input(name.substr(0,name.find('\0')));input+='\0';std::array<std::uint8_t,4096> scratch{}; // 짧은 암호 읽기의 원문 미정 scratch는 호스트에서 초기화하되 결과 문자열은 거부한다.
++    const auto selected=client.ResolveKoreanBuiltinFile(name);const auto physical=selected ? platform::PathToUtf8(*selected):std::string(name); // 기존Help원문파일이있으면resolver는빈값이다.
++    std::string input(physical.substr(0,physical.find('\0')));input+='\0';std::array<std::uint8_t,4096> scratch{}; // 짧은 암호 읽기의 원문 미정 scratch는 호스트에서 초기화하되 결과 문자열은 거부한다.
+     const auto result=ReadQuickHelpFileBytes(reader.state,{reinterpret_cast<const std::uint8_t*>(input.data()),input.size()},length,reader.io,whole,scratch);
+     if (!reader.complete) throw std::runtime_error("Help 전체읽기의 실제 부분 I/O");if (!result) return {};
+-    return std::string(reinterpret_cast<const char*>(allocation.data()),static_cast<std::size_t>(length)); // 기존 창이 LF를 한 번 더하고 std::string의 NUL로 원문 추가2BYTE의 논리 끝을 보존한다.
++    return DecodeQuickHelpDisplaySource({reinterpret_cast<const char*>(allocation.data()),static_cast<std::size_t>(length)}); // 기존 창이 LF를 한 번 더하고 std::string의 NUL로 원문 추가2BYTE의 논리 끝을 보존한다.
+ }
+ }
+diff --git a/cpppj/src/client/QuickHelpWindow.cpp b/cpppj/src/client/QuickHelpWindow.cpp
+--- a/cpppj/src/client/QuickHelpWindow.cpp
++++ b/cpppj/src/client/QuickHelpWindow.cpp
+@@ -49,6 +49,7 @@
+     state_.id=Node(token).serial;Width(token,450);Height(token,350);Node(token).flags|=0x800;Node(token).picture=0;return token;
+ }
+ // 현재 그림/표시 자식을 먼저 반납하고 새 정보 pane을 실제 다중 줄로 생성한다.
++void QuickHelpWindow::InvalidateCache() const { state_.helpData.reset(); } // 캐시이외원문전역/이력/스크립트/현재실행대본은변경하지않는다.
+ void QuickHelpWindow::Reset(std::uint32_t token) const {
+     if (Node(token).picture) { Need(hooks_.kill)(Node(token).picture);Node(token).picture=0; }Need(hooks_.clearBody)(Node(token).body);if (Node(token).information) Need(hooks_.kill)(Node(token).information);
+     const auto pane=Allocate(0xd8);Need(hooks_.constructInformation)(pane,0,0,5,state_.color);Node(token).information=pane;Need(hooks_.attach)(Node(token).information,0,0,token,0);
+diff --git a/cpppj/src/client/QuickHelpWindow.h b/cpppj/src/client/QuickHelpWindow.h
+--- a/cpppj/src/client/QuickHelpWindow.h
++++ b/cpppj/src/client/QuickHelpWindow.h
+@@ -52,6 +52,7 @@
+     QuickHelpWindow(QuickHelpWindowState& state,QuickHelpPopupState& popup,QuickHelpWindowHooks hooks); // 같은 캐시/현재 표식과 실제 트리를 빌린다.
+     std::uint32_t Construct(std::uint32_t token,std::uint32_t learnType) const; // 전용 자식/라벨/파일 캐시·450×350·등록 serial을 설치한다.
+     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const; // 그림/선택 버튼/본문/정보의 현재 크기를 원본 순서로 배치한다.
++    void InvalidateCache() const; // 언어전환뒤성공본문을반납하고다음생성에서같은FILE/해독경계를다시사용한다.
+     void Reset(std::uint32_t token) const; // 그림/본문 자식/이전 정보 pane을 정리하고 새 정보 pane을 만든다.
+     void Show(std::uint32_t token,std::uint32_t type,std::string_view topic) const; // 기본 주제/파생 HTML·치환·그림·실제 본문을 갱신한다.
+ private:
+diff --git a/cpppj/src/client/RawButtonControls.cpp b/cpppj/src/client/RawButtonControls.cpp
+--- a/cpppj/src/client/RawButtonControls.cpp
++++ b/cpppj/src/client/RawButtonControls.cpp
+@@ -271,7 +271,15 @@
+     state.stoneState.palette=assets.palette;state.stoneState.backgroundType=assets.type;state.stoneState.backgroundFrame=assets.frame;
+     state.create.screenWidth=width;state.create.screenHeight=height;auto& root=*state.Node(state.root);
+     root.baseWidth=root.width=static_cast<float>(width);root.baseHeight=root.height=static_cast<float>(height);
+-    if (existingMain) { auto& node=*state.Node(existingMain);node.baseWidth=node.width=static_cast<float>(width);node.baseHeight=node.height=static_cast<float>(height);state.Changed();return; } //재합성/안내창 복귀는 같은 부모와 버튼을 재사용해45초 기한을 새로 시작하지 않는다.
++    if (existingMain) {
++        auto& node=*state.Node(existingMain);node.baseWidth=node.width=static_cast<float>(width);node.baseHeight=node.height=static_cast<float>(height);
++        for (const auto& control:controls) if (!control.menu) { // 언어가 바뀐 라벨만 같은 실제 돌 버튼에서 다시 측정하며 부모/45초 기한을 재생성하지 않는다.
++            const auto found=state.controls.find(control.id);if (found==state.controls.end()) throw std::logic_error("메인 재사용의 실제 버튼 누락");
++            auto& button=*state.stones.at(found->second);const auto& label=labels[static_cast<std::size_t>(control.id)];
++            if (std::string_view(button.label.data())!=label) state.stone->SetLabel(found->second,label.c_str());
++        }
++        state.Changed();return;
++    } //재합성/안내창 복귀는 같은 부모와 버튼을 재사용해45초 기한을 새로 시작하지 않는다.
+     const auto previousToken=state.nextToken; // 메인 생성 전의 다른 UI와 이번 부분 가족을 구별한다.
+     try {
+     if (mainMenuParent) {
+diff --git a/cpppj/src/client/RawMenuControls.cpp b/cpppj/src/client/RawMenuControls.cpp
+--- a/cpppj/src/client/RawMenuControls.cpp
++++ b/cpppj/src/client/RawMenuControls.cpp
+@@ -1,5 +1,6 @@
+ // 원본 메뉴 계층의 실제 처리기를 단일 Client 등록표·트리·입력·표면에 조립한다.
+ #include "client/RawMenuControls.h"
++#include "client/DisplayTextInput.h" // 입력agent의유효4BYTE판별을HTML공장도공유한다.
+ #include "client/HelpLinkPolicy.h" //원래 토큰/접두 비교를 Help와 전체 HTML 링크가 함께 사용한다.
+ #include "client/TraceChat.h" // 원문 진단 전달도 같은 실제 Chat 공장을 빌린다.
+ #include "client/TellFileMenus.h"
+@@ -590,6 +591,7 @@
+ // 자동 검사도 그림과 같은 실제 공통 경계를 읽는다.
+ std::optional<ScreenRect> RawMenuControls::MissionLoadingBounds() const { const auto& s=*impl_;if (const auto token=s.LoadingRoot()) return s.common.collection.Bounds(token);return {}; }
+ bool RawMenuControls::HelpOpen() const { const auto token=impl_->Reference(impl_->helpState.id);return token && (impl_->common.node(token)->flags&1) && impl_->common.node(token)->parent; } // 현재 등록/표시를 직접 읽는다.
++void RawMenuControls::InvalidateHelpLanguage() { if (!impl_->helpWindow || !impl_->helpState.helpData) return;CloseHelp();impl_->helpWindow->InvalidateCache(); } // 캐시반납은queued언어알림에서만수행해현재메뉴클릭을재진입삭제하지않는다.
+ void RawMenuControls::CloseHelp() { if (const auto token=impl_->Reference(impl_->helpState.id)) impl_->common.lifetime.Kill(token);impl_->common.lifetime.Cleanup();impl_->common.changed(); } // Session보다 먼저 삭제한다.
+ // 공통 생성과 분배는 별도 기본 노드 복사본을 만들지 않는다.
+ GumpCreateNode* RawMenuControls::Node(std::uint32_t token) const { return impl_->Node(token); }
+diff --git a/cpppj/src/client/RawMenuControls.h b/cpppj/src/client/RawMenuControls.h
+--- a/cpppj/src/client/RawMenuControls.h
++++ b/cpppj/src/client/RawMenuControls.h
+@@ -167,6 +167,7 @@
+     bool MissionLoadingOpen() const; // 같은 현재 transient serial의 실제 안내 노드가 있는지만 조회한다. Kill/등록/소멸을 성공 플래그로 대신하지 않는다.
+     std::optional<ScreenRect> MissionLoadingBounds() const; // 살아 있는 원본 부모의 현재 화면 경계다.
+     bool HelpOpen() const; // 현재 serial/등록/visible/dead를 조회한다.
++    void InvalidateHelpLanguage(); // 실제언어알림에서기존도움말창을닫고성공본문캐시를반납한다. 다음열기는같은FILE/생성부모를다시쓴다.
+     void CloseHelp(); // Session 해제 전에 같은 창과 지연 삭제 큐를 정리한다.
+     // 공통 기본 생성/가상 분배에서 현재 파생 노드를 직접 조회한다. 없는 토큰은 nullptr다.
+     GumpCreateNode* Node(std::uint32_t token) const;
+diff --git a/cpppj/src/client/RawMenuHtml.inc b/cpppj/src/client/RawMenuHtml.inc
+--- a/cpppj/src/client/RawMenuHtml.inc
++++ b/cpppj/src/client/RawMenuHtml.inc
+@@ -25,7 +25,8 @@
+     meta.namedList=[this](auto key,auto command,auto argument) { const auto& hook=htmlContext->metadata.namedList;if (hook) hook(key,command,argument);else AppendHtmlFiles(key,command,argument,true); };meta.fileList=[this](auto key,auto command,auto argument) { const auto& hook=htmlContext->metadata.fileList;if (hook) hook(key,command,argument);else AppendHtmlFiles(key,command,argument,false); };meta.inlineList=[this](auto key,auto command,auto argument) { const auto& hook=htmlContext->metadata.inlineList;if (hook) return hook(key,command,argument);if (!htmlContext->metadata.fileMenus) throw std::logic_error("HTML 실제 삽입 목록 미연결");return htmlContext->metadata.fileMenus->Inline(key,command,argument); };
+     meta.wallSeconds=htmlContext->wallSeconds;meta.idle=[this](auto token,auto enabled) { common.lifetime.SetIdle(token,enabled); };meta.read=[this](auto address) { if (!htmlContext->read) throw std::logic_error("HTML 실제 메타 전역 미연결");return htmlContext->read(address); };meta.queue=[this](auto command,auto first,auto second) { if (!htmlContext->queue) throw std::logic_error("HTML 실제 메타 원시 큐 미연결");htmlContext->queue(command,first,second); };
+     meta.input=[this](auto mode,auto label,auto argument) { const auto& hook=htmlContext->metadata.input;if (!hook) throw std::logic_error("HTML 실제 입력 창 미연결");hook(mode,label,argument); };meta.send=[this](auto label,auto command,auto argument) { const auto& hook=htmlContext->metadata.send;if (!hook) throw std::logic_error("HTML 실제 Zsend 장치 미연결");hook(label,command,argument); };htmlMetadata=std::make_unique<HtmlWindowMetadata>(std::move(meta));
+-    HtmlWindowFactoryHooks factory;factory.create=[this](auto width,auto height) { return AllocateHtml(width,height); };factory.node=[this](auto token) { return Find(htmlRoots,token); };
++    HtmlWindowFactoryHooks factory;factory.localizedContent=[this](auto text) { return htmlContext->factory.globals->extendedText && HasExtendedDisplayText(text); }; // 입력부품과같은유효토큰판별을공유하며독립원문파서의기본false관문은유지한다.
++    factory.create=[this](auto width,auto height) { return AllocateHtml(width,height); };factory.node=[this](auto token) { return Find(htmlRoots,token); };
+     factory.substitute=[this](auto text,auto capacity) { const auto& hook=htmlContext->factory.substitute;if (!hook) throw std::logic_error("HTML 전체 실제 Config 치환 미연결");return hook(text,capacity); };factory.fallback=[this] { const auto& hook=htmlContext->factory.fallback;if (!hook) throw std::logic_error("HTML 전체 실제 OkButton 조회 미연결");return hook(); };factory.parse=[this](auto& parser,auto root,auto text,auto capacity) { return ParseHtml(parser,root,text,capacity); };factory.metadata=[this](auto token,auto buffer) { return htmlMetadata->Process(token,buffer); };factory.wallSeconds=htmlContext->wallSeconds;
+     factory.body=[this](auto token,auto text) { htmlWindow->SetBody(token,text); };factory.attach=[this](auto token,auto x,auto y,auto parent,auto mode) { Attach(token,x,y,parent,mode); };factory.modal=[this](auto token,auto enabled) { SetModal(token,enabled); };factory.kill=[this](auto token) { common.lifetime.Kill(token); };factory.read=[this](auto address) { if (!htmlContext->read) throw std::logic_error("HTML 전체 실제 화면/루트 미연결");return htmlContext->read(address); };htmlFactory=std::make_unique<HtmlWindowFactory>(htmlContext->globals->window,std::move(factory));
+ }
+diff --git a/cpppj/src/client/TellFileMenus.cpp b/cpppj/src/client/TellFileMenus.cpp
+--- a/cpppj/src/client/TellFileMenus.cpp
++++ b/cpppj/src/client/TellFileMenus.cpp
+@@ -2,6 +2,7 @@
+ #include "client/TellFileMenus.h"
+ #include "o/OriginalText.h"
+ #include <algorithm>
++#include <array>
+ #include <stdexcept>
+ 
+ namespace netstorm::client { //4ce1b0과4ce580의 공통 수명과 제목 폴백 차이를 유지한다.
+@@ -21,6 +22,19 @@
+ std::string Title(o::ConfigInterface& config,std::string_view name,bool fallback) { auto label=config.SubstituteLocal("{{local.1}.title}",name);Limit(label,80);if (fallback && label.empty()) { label=name;Limit(label,80); }return label; } // 실제 지역80BYTE 복사 뒤 @/%만 빈 제목을 이름으로 바꾼다.
+ }
+ TellFileMenus::TellFileMenus(o::ConfigInterface& config,std::function<std::vector<std::string>(std::string_view)> enumerate):config_(config),enumerate_(std::move(enumerate)) {} // 생성 시 파일이나 메뉴를 만들지 않는다.
++void TellFileMenus::InvalidateLanguageFiles() { // 현재안내의officalN.Overview참조가살아있도록같은등록객체를유지한다.
++    const auto language=config_.Configuration().Get("currentLanguage").value_or(""); // 실제Client가확정한현재설정이며빈독립입력은다음수집에서재생성한다.
++    if (language.empty()) { owned_.clear();return; }
++    constexpr std::array<std::string_view,7> languages{"english","french","german","spanish","japanese","portuguese","korean"}; // 언어확장자만교체하며일반cfg/프로필파일명은바꾸지않는다.
++    if (std::find(languages.begin(),languages.end(),language)==languages.end()) return;
++    for (auto& object:owned_) { // 소유한목록Config만교체하고mission/사용자다른객체에는접근하지않는다.
++        const auto path=object->GetRaw("path");if (!path) continue;const auto dot=path->find_last_of('.');if (dot==path->npos) continue;
++        const auto previous=o::AsciiLower(std::string_view(*path).substr(dot+1));if (std::find(languages.begin(),languages.end(),previous)==languages.end()) continue;
++        const auto selected=path->substr(0,dot+1)+language;if (selected==*path) continue;
++        const auto name=object->GetRaw("fileName").value_or(ObjectName(*object)),index=object->GetRaw("index").value_or("0"); // prefix주소와원래index/파일이름은보존한다.
++        object->Clear();object->Append("path="+selected);object->Append("fileName="+name);object->Append("index="+index);config_.LoadFile(*object,selected); // 실제Config FILE/본문해독만사용하며AI/SP실행을다시시작하지않는다.
++    }
++}
+ TellFileMenus::~TellFileMenus()=default; // 실제 Config 소멸자가 등록을 반납한다.
+ std::vector<o::Config*> TellFileMenus::Collect(std::string_view pattern,std::size_t capacity) {
+     if (!enumerate_) throw std::logic_error("Tell 파일 목록의 실제 열거 미연결");const auto spec=Decode(CString(pattern));Limit(spec,256);std::vector<o::Config*> objects;std::uint32_t index=1;
+diff --git a/cpppj/src/client/TellFileMenus.h b/cpppj/src/client/TellFileMenus.h
+--- a/cpppj/src/client/TellFileMenus.h
++++ b/cpppj/src/client/TellFileMenus.h
+@@ -9,6 +9,7 @@
+ };
+ class TellFileMenus { // 한 Client에서 적재한 이름별 Config를 페이지보다 오래 보유한다.
+ public:
++    void InvalidateLanguageFiles(); // 같은언어전환알림에서소유한목록Config의언어내용만재적재하고등록주소/index/열린안내링크는유지한다.
+     TellFileMenus(o::ConfigInterface& config,std::function<std::vector<std::string>(std::string_view)> enumerate); // 실제 파일 열거는 UTF-8 경로를 원문 OS 순서로 공급한다.
+     ~TellFileMenus(); // 소유 Config를 같은 실제 Registry에서 반납한다.
+     TellFileMenus(const TellFileMenus&)=delete;TellFileMenus& operator=(const TellFileMenus&)=delete; // 등록된 고정 Config 주소를 복제하지 않는다.
+diff --git a/cpppj/src/client/TextClipboard.cpp b/cpppj/src/client/TextClipboard.cpp
+--- a/cpppj/src/client/TextClipboard.cpp
++++ b/cpppj/src/client/TextClipboard.cpp
+@@ -1,8 +1,12 @@
+ // 실제 OS의 실패 반환을 성공으로 바꾸지 않고 원문의 검사/무시/Close 위치를 유지한다.
+ #include "client/TextClipboard.h"
++#include "client/DisplayTextInput.h" // 확장 BYTE를 외부 클립보드에 제어문자로 내보내지 않는다.
++#include "o/OriginalText.h"
+ #include "client/RawTextEntryContext.h"
++#include <algorithm>
+ #include <cstring>
+ #include <limits>
++#include <new>
+ #include <stdexcept>
+ #include <utility>
+ #ifdef _WIN32
+@@ -24,6 +28,13 @@
+ TextClipboard::TextClipboard(TextClipboardDevices devices):devices_(std::move(devices)) {} // 소유만 넘기며 아직 OS 효과를 만들지 않는다.
+ void TextClipboard::Read(std::span<char> output) const { // 원문 최대256BYTE 호출 외에도 같은 명시 capacity를 받는다.
+     if (output.empty() || output.size()>std::numeric_limits<std::uint32_t>::max()) throw std::out_of_range("TextClipboard 읽기의 실제 출력 물리 범위");
++    if (devices_.readUnicode) if (const auto text=devices_.readUnicode()) {
++        try {
++            for (const auto scalar:*text) if ((scalar<0x20 && scalar!=9 && scalar!=10 && scalar!=13) || scalar==0x7f) throw std::invalid_argument("Unicode 클립보드 제어문자 거부"); // 외부 U+001F를 내부 토큰 선두로 해석하지 않는다.
++            const auto bytes=o::EncodeDisplayText(CommittedUtf16ToUtf8(*text));const std::string_view input(reinterpret_cast<const char*>(bytes.data()),bytes.size());
++            const auto filtered=FilterDisplayText(input,{},output.size()-1);std::fill(output.begin(),output.end(),0);std::copy(filtered.begin(),filtered.end(),output.begin()); }
++        catch (const std::invalid_argument&) { std::fill(output.begin(),output.end(),0); }return; // 지원하지 않는 외부 Unicode는 일부 붙이지 않고 빈 입력으로 거부한다.
++    }
+     output[0]=0;if (!Need(devices_.formatAvailable)(kTextFormat)) return;if (!Need(devices_.open)(0)) return;
+     const auto handle=Need(devices_.get)(kTextFormat);
+     if (handle) {
+@@ -38,6 +49,7 @@
+     static_cast<void>(Need(devices_.close)());
+ }
+ void TextClipboard::Write(std::span<const char> input) const { // 선택한 본문 길이에 첫NUL 절단을 추가하지 않는다.
++    if (devices_.writeUnicode && HasExtendedDisplayText({input.data(),input.size()})) { devices_.writeUnicode(DisplayTextToUtf16(input));return; } // ASCII/원문 BYTE 복사는 기존 장치 순서를 유지한다.
+     if (input.size()>=std::numeric_limits<std::uint32_t>::max()) throw std::out_of_range("TextClipboard 쓰기의 호스트 할당 물리 범위");
+     if (!Need(devices_.open)(0)) return;static_cast<void>(Need(devices_.empty)());
+     const auto handle=Need(devices_.allocate)(kAllocateFlags,static_cast<std::uint32_t>(input.size()+1));
+@@ -45,6 +57,33 @@
+     auto* target=Need(devices_.lock)(handle);if (!target) throw std::out_of_range("원문 TextClipboard 쓰기의 NULL GlobalLock 물리 접근"); // 원문은 이곳에서 접근 실패한다. 성공/Close/Free로 위장하지 않는다.
+     if (!input.empty()) std::memcpy(target,input.data(),input.size());target[input.size()]=0;
+     static_cast<void>(Need(devices_.unlock)(handle));static_cast<void>(Need(devices_.set)(kTextFormat,handle));static_cast<void>(Need(devices_.close)());
++}
++// Unicode 확장만 GMEM_MOVEABLE/실제 창을 사용한다. 원문 장치 플래그/NULL HWND는 별도 경로에 보존한다.
++TextClipboardDevices Win32DisplayTextClipboardDevices(std::uintptr_t window) {
++    auto devices=Win32TextClipboardDevices();
++#ifdef _WIN32
++    devices.readUnicode=[window]()->std::optional<std::u16string> {
++        if (!IsClipboardFormatAvailable(CF_UNICODETEXT)) return std::nullopt;
++        if (!OpenClipboard(reinterpret_cast<HWND>(window))) throw std::runtime_error("Unicode 클립보드 열기 실패");
++        struct Close { ~Close() { CloseClipboard(); } };const Close close; // 성공한 Open은 모든 반환에서 반납한다.
++        const HANDLE data=GetClipboardData(CF_UNICODETEXT);if (!data) throw std::runtime_error("Unicode 클립보드 본문 없음");
++        const auto capacity=GlobalSize(data)/sizeof(char16_t);const auto* text=static_cast<const char16_t*>(GlobalLock(data));if (!text) throw std::runtime_error("Unicode 클립보드 잠금 실패");
++        struct Unlock { HANDLE data;~Unlock() { GlobalUnlock(data); } };const Unlock unlock{data}; // 시스템 소유 본문을 수정하거나 반납하지 않는다.
++        const auto end=std::find(text,text+capacity,char16_t{});if (end==text+capacity) throw std::length_error("Unicode 클립보드 NUL 범위");return std::u16string(text,end);
++    };
++    devices.writeUnicode=[window](std::u16string_view text) {
++        if (!window || !OpenClipboard(reinterpret_cast<HWND>(window))) throw std::runtime_error("Unicode 클립보드 실제 창/열기 실패");
++        struct Close { ~Close() { CloseClipboard(); } };const Close close; // 결과와 무관하게 현재 창의 클립보드 잠금을 반납한다.
++        if (text.size()>(std::numeric_limits<SIZE_T>::max()/sizeof(char16_t))-1) throw std::length_error("Unicode 클립보드 할당 범위");
++        const auto bytes=(text.size()+1)*sizeof(char16_t);const HGLOBAL memory=GlobalAlloc(GMEM_MOVEABLE,bytes);if (!memory) throw std::bad_alloc();
++        auto* target=static_cast<char16_t*>(GlobalLock(memory));if (!target) { GlobalFree(memory);throw std::runtime_error("Unicode 클립보드 쓰기 잠금 실패"); }
++        std::copy(text.begin(),text.end(),target);target[text.size()]=0;GlobalUnlock(memory);
++        if (!EmptyClipboard() || !SetClipboardData(CF_UNICODETEXT,memory)) { GlobalFree(memory);throw std::runtime_error("Unicode 클립보드 게시 실패"); } // 성공한 Set만 OS로 소유권을 넘긴다.
++    };
++#else
++    static_cast<void>(window);
++#endif
++    return devices;
+ }
+ TextClipboardDevices Win32TextClipboardDevices() { // HWND NULL과 CF_TEXT를 원문 그대로 User32/Kernel32에 전달한다.
+ #ifdef _WIN32
+diff --git a/cpppj/src/client/TextClipboard.h b/cpppj/src/client/TextClipboard.h
+--- a/cpppj/src/client/TextClipboard.h
++++ b/cpppj/src/client/TextClipboard.h
+@@ -4,10 +4,15 @@
+ #include <functional>
+ #include <memory>
+ #include <span>
++#include <optional>
++#include <string>
++#include <string_view>
+ 
+ namespace netstorm::client { // 공통 TextEntry가 빌리는 클립보드의 원문 부모다.
+ struct RawTextEntryContext; // 기존 공통 문자 UI 문맥을 정의의 복제 없이 빌린다.
+ struct TextClipboardDevices { // OS 반환은 원문이 검사하는 위치에서만 해석한다.
++    std::function<std::optional<std::u16string>()> readUnicode; // 클론 실제 장치만 제공한다. 형식이 없으면 nullopt로 CF_TEXT 경로를 계속한다.
++    std::function<void(std::u16string_view)> writeUnicode; // 한글 토큰이 있는 선택만 실제 CF_UNICODETEXT로 보낸다.
+     std::function<std::uint32_t(std::uint32_t)> formatAvailable; // IsClipboardFormatAvailable(1)의 비영 여부다.
+     std::function<std::uint32_t(std::uintptr_t)> open; // 원문 HWND는 고정 NULL이며 현재 게임 창 핸들을 대신 전달하지 않는다.
+     std::function<std::uintptr_t(std::uint32_t)> get; // GetClipboardData(CF_TEXT)의 실제 HANDLE이다.
+@@ -27,5 +32,7 @@
+     TextClipboardDevices devices_; // 창이나 Config보다 독립적인 실제 OS/검사 장치의 수명이다.
+ };
+ TextClipboardDevices Win32TextClipboardDevices(); // 실제 Win32 API를 연결한다. 호출 자체는 클립보드를 열거나 수정하지 않는다.
++// 한국어 확정 입력용 실제 창 소유자와 Unicode 형식을 더한다. 기본/fixture 장치는 원문 CF_TEXT 그대로다.
++TextClipboardDevices Win32DisplayTextClipboardDevices(std::uintptr_t window);
+ void BindTextClipboard(RawTextEntryContext& context,std::shared_ptr<const TextClipboard> clipboard); // 실제 같은 장치 수명을 두 callback이 공유하며 다른 now/Console callback은 보존한다.
+ }
+diff --git a/cpppj/src/client/TextEntryBuffer.cpp b/cpppj/src/client/TextEntryBuffer.cpp
+--- a/cpppj/src/client/TextEntryBuffer.cpp
++++ b/cpppj/src/client/TextEntryBuffer.cpp
+@@ -1,5 +1,6 @@
+ // 원본 편집 버퍼의 부분실패/현재 재조회/선택과 LF 줄offset을 유지한다.
+ #include "client/TextEntryBuffer.h"
++#include "client/DisplayTextInput.h" // 확장 토큰의 숫자를 제외문자와 혼동하거나 중간에서 자르지 않는다.
+ #include <algorithm>
+ #include <bit>
+ #include <cstring>
+@@ -130,8 +131,15 @@
+     if (state_.selectionBegin==state_.selectionEnd) { state_.selectionBegin=0;state_.selectionEnd=state_.length; }Copy();Insert();state_.dirty=1;
+ }
+ // clipboard읽기뒤현재state에같은Insert를적용하고빈clipboard도dirty1을남긴다.
+-void TextEntryBuffer::Paste(std::span<const char> excluded) const {
++void TextEntryBuffer::Paste(std::span<const char> excluded,std::int32_t maxLength) const {
+     if (!hooks_.clipboardRead) throw std::runtime_error("편집버퍼 실제clipboard읽기 없음");std::array<char,256> text{};hooks_.clipboardRead(text);const auto length=CStringLength(text);
++    const std::string_view incoming(text.data(),length); // 실제 읽은 본문만 확장 경계에 넘긴다.
++    if (HasExtendedDisplayText(incoming) || HasExtendedDisplayText(Text())) { // 기존한글본문에긴ASCII를붙이는경우도최종BYTE상한을우회하지않는다.
++        const auto current=Text();const auto begin=DisplayTextFloor(current,static_cast<std::size_t>(state_.selectionBegin));const auto end=state_.selectionBegin==state_.selectionEnd ? begin : DisplayTextCeil(current,static_cast<std::size_t>(state_.selectionEnd));
++        const auto kept=std::int64_t(state_.length)-static_cast<std::int64_t>(end-begin);const auto available=maxLength>0 ? std::max<std::int64_t>(0,std::int64_t(maxLength)-1-kept) : 255; // 원문 고정 출력과 BYTE 제한 중 작은 범위다.
++        const auto excludedLength=excluded.empty() ? 0U : CStringLength(excluded);auto filtered=FilterDisplayText(incoming,{excluded.data(),excludedLength},static_cast<std::size_t>(available));
++        if (!filtered.empty()) { Select(static_cast<std::int32_t>(begin),static_cast<std::int32_t>(end));filtered.push_back(0);Insert(filtered); }state_.dirty=1;return;
++    }
+     if (!excluded.empty()) {
+         const auto excludedLength=CStringLength(excluded);std::size_t index{};
+         while (index<text.size() && text[index]) { // 원문은제외문자삭제시현재칸을다시검사한다.
+diff --git a/cpppj/src/client/TextEntryBuffer.h b/cpppj/src/client/TextEntryBuffer.h
+--- a/cpppj/src/client/TextEntryBuffer.h
++++ b/cpppj/src/client/TextEntryBuffer.h
+@@ -54,7 +54,8 @@
+     //00451b10: 빈선택은전체선택으로바꾼뒤복사→null삽입→dirty1이다.
+     void Cut() const;
+     //00451800: 실제clipboard256BYTE에서제외문자들을지운뒤비어있지않으면삽입한다.
+-    void Paste(std::span<const char> excluded={}) const;
++    // 한글 표시토큰이 있을 때만 maxLength의 물리 BYTE 상한과 완전한 문자 경계를 함께 적용한다. 기본0/순수 BYTE는 원문 동작이다.
++    void Paste(std::span<const char> excluded={},std::int32_t maxLength=0) const;
+     // 같은실제상태의현재필드를TextEntry/Console이직접재조회한다.
+     TextEntryBufferState& State() const;
+     // 현재주소의실제남은저장범위다.원문문자열/선택/Draw가같은바이트를사용한다.
+diff --git a/cpppj/src/client/TextEntryGump.cpp b/cpppj/src/client/TextEntryGump.cpp
+--- a/cpppj/src/client/TextEntryGump.cpp
++++ b/cpppj/src/client/TextEntryGump.cpp
+@@ -1,5 +1,6 @@
+ // 실제0x28 편집 버퍼와 두 Slider를 공유하며 원본의 현재 필드 재조회/사건 순서를 유지한다.
+ #include "client/TextEntryGump.h"
++#include "client/DisplayTextInput.h" // 확정 한글과 BYTE 선택/삭제가 같은 문자 경계를 사용한다.
+ #include <algorithm>
+ #include <bit>
+ #include <cmath>
+@@ -132,7 +133,10 @@
+     hooks_.sliderRange(node.horizontalSlider,0,Sub(count,1));hooks_.sliderPage(node.horizontalSlider,columns);hooks_.sliderPosition(node.horizontalSlider,column);
+     node.scrollColumn=Slider(node.horizontalSlider).position;
+     const auto lines=Buffer(token).LineCount();hooks_.sliderRange(node.verticalSlider,0,Sub(lines,1));hooks_.sliderPage(node.verticalSlider,rows);hooks_.sliderPosition(node.verticalSlider,line);
+-    node.scrollLine=Slider(node.verticalSlider).position;Redraw(token);
++    node.scrollLine=Slider(node.verticalSlider).position;
++    const auto currentLine=DisplayTextLine(Buffer(token).Text(),node.scrollLine); // 두 실제 Slider가 확정한 줄에서만 BYTE 열을 문자 경계로 보정한다.
++    if (HasExtendedDisplayText(currentLine)) { node.scrollColumn=static_cast<std::int32_t>(DisplayTextFloor(currentLine,static_cast<std::size_t>(std::max(0,node.scrollColumn))));hooks_.sliderPosition(node.horizontalSlider,node.scrollColumn); }
++    Redraw(token);
+ }
+ // 원본 delta는 각각 현재 signed DWORD와 감김 덧셈한다.
+ void TextEntryGump::RelativeScroll(std::uint32_t token,std::int32_t line,std::int32_t column) const {
+@@ -180,22 +184,27 @@
+ std::uint32_t TextEntryGump::Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
+     auto& node=Node(token);auto value=event;std::uint32_t result{};const auto code=event&kCodeMask; // Enter만 전달 value를 LF10으로 바꿀 수 있다.
+     if (!(event&kCommand) && code!=0x10000 && code!=0x20000 && !node.readOnly && !(event&kRelease)) {
++        const bool extended=HasExtendedDisplayText(Buffer(token).Text()); // 기존 순수 BYTE fixture는 원문 계산/통지 경로를 그대로 사용한다.
++        if (extended) { auto& buffer=Buffer(token);const auto text=buffer.Text();const auto begin=DisplayTextFloor(text,static_cast<std::size_t>(buffer.State().selectionBegin));const auto end=buffer.State().selectionBegin==buffer.State().selectionEnd ? begin : DisplayTextCeil(text,static_cast<std::size_t>(buffer.State().selectionEnd));buffer.Select(static_cast<std::int32_t>(begin),static_cast<std::int32_t>(end));node.shiftAnchor=static_cast<std::int32_t>(DisplayTextFloor(text,static_cast<std::size_t>(std::max(0,node.shiftAnchor))));node.shiftEnd=static_cast<std::int32_t>(DisplayTextFloor(text,static_cast<std::size_t>(std::max(0,node.shiftEnd)))); } // 외부선택뒤stale Shift기준도토큰내부를가리키지않는다.
++        // 현재 버퍼를 매번 다시 읽으므로 Insert 재할당 뒤의 오래된 뷰를 보유하지 않는다.
++        const auto previous=[&](std::int32_t at) { return extended ? static_cast<std::int32_t>(PreviousDisplayText(Buffer(token).Text(),static_cast<std::size_t>(std::max(0,at)))) : Sub(at,1); };
++        const auto next=[&](std::int32_t at) { return extended ? static_cast<std::int32_t>(NextDisplayText(Buffer(token).Text(),static_cast<std::size_t>(std::max(0,at)))) : Add(at,1); };
+         result=1;bool notify=true; // 인식하지 않는 문자/키는 공통 Redraw 뒤 반환0이다.
+         switch (code) {
+         case 0x250000: { // 왼쪽: 선택이 있어도 shift가 없으면 현재 begin−1 한 칸으로 옮긴다.
+             const auto begin=Buffer(token).State().selectionBegin,end=Buffer(token).State().selectionEnd;
+-            if (!(event&kShift)) Buffer(token).Select(Sub(begin,1),Sub(begin,1));
+-            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=Sub(node.shiftEnd,1);Buffer(token).Select(node.shiftAnchor,node.shiftEnd); }break;
++            if (!(event&kShift)) Buffer(token).Select(previous(begin),previous(begin));
++            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=previous(node.shiftEnd);Buffer(token).Select(node.shiftAnchor,node.shiftEnd); }break;
+         }
+         case 0x270000: { // 오른쪽은 현재 end+1을 기준으로 삼는다.
+             const auto begin=Buffer(token).State().selectionBegin,end=Buffer(token).State().selectionEnd;
+-            if (!(event&kShift)) Buffer(token).Select(Add(end,1),Add(end,1));
+-            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=Add(node.shiftEnd,1);Buffer(token).Select(node.shiftAnchor,node.shiftEnd); }break;
++            if (!(event&kShift)) Buffer(token).Select(next(end),next(end));
++            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=next(node.shiftEnd);Buffer(token).Select(node.shiftAnchor,node.shiftEnd); }break;
+         }
+         case 0x230000: { // End는 length+1로 Select한 뒤 원문처럼 +dc 기준의 열 delta를 전달한다.
+             const auto begin=Buffer(token).State().selectionBegin,end=Buffer(token).State().selectionEnd;
+-            if (!(event&kShift)) { const auto at=Add(Buffer(token).State().length,1);Buffer(token).Select(at,at);RelativeScroll(token,0,node.shiftEnd); }
+-            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=Add(Buffer(token).State().length,1);Buffer(token).Select(node.shiftAnchor,node.shiftEnd);RelativeScroll(token,0,node.shiftEnd); }break;
++            if (!(event&kShift)) { const auto at=extended ? Buffer(token).State().length:Add(Buffer(token).State().length,1);Buffer(token).Select(at,at);RelativeScroll(token,0,node.shiftEnd); }
++            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=extended ? Buffer(token).State().length:Add(Buffer(token).State().length,1);Buffer(token).Select(node.shiftAnchor,node.shiftEnd);RelativeScroll(token,0,node.shiftEnd); }break;
+         }
+         case 0x240000: { // Home의 shift 선택과 열0 요청은 서로 다른 상태를 사용한다.
+             const auto begin=Buffer(token).State().selectionBegin,end=Buffer(token).State().selectionEnd;
+@@ -205,7 +214,7 @@
+         }
+         case 8: { // Ctrl+Backspace는 단어 삭제가 아니라 전체 Reset이다.
+             if (event&kControl) Buffer(token).Reset();
+-            else { auto begin=Buffer(token).State().selectionBegin;const auto end=Buffer(token).State().selectionEnd;if (begin==end) begin=Sub(begin,1);Buffer(token).Select(begin,end);Buffer(token).Insert(); }break;
++            else { auto begin=Buffer(token).State().selectionBegin;const auto end=Buffer(token).State().selectionEnd;if (begin==end) begin=previous(begin);Buffer(token).Select(begin,end);Buffer(token).Insert(); }break;
+         }
+         case 13: { // multiline일 때만 LF를 삽입하나 Enter 부모 통지는 항상 보낸다.
+             if (node.multiline) { value=10;const std::array<char,2> newline{10,0};Buffer(token).Insert(newline); }
+@@ -213,14 +222,22 @@
+         }
+         case 9:case 27:case 0x260000:case 0x280000:result=0;notify=false;break; // Tab/ESC/위/아래는 이 기본 입력기에서 처리하지 않는다.
+         case 0x2d0000: // Insert는 Ctrl 복사 우선이며 shift가 있으면 붙여넣는다.
+-            if (event&kControl) Buffer(token).Copy();else if (event&kShift) Buffer(token).Paste(Excluded(token));break;
++            if (event&kControl) Buffer(token).Copy();else if (event&kShift) Buffer(token).Paste(Excluded(token),node.maxLength);break;
+         case 0x2e0000: { // Shift+Delete는 Cut, 일반 Delete는 현재 선택 또는 오른쪽 한 문자다.
+             if (event&kShift) Buffer(token).Cut();
+-            else { const auto begin=Buffer(token).State().selectionBegin;auto end=Buffer(token).State().selectionEnd;if (begin==end) end=Add(end,1);Buffer(token).Select(begin,end);Buffer(token).Insert(); }break;
++            else { const auto begin=Buffer(token).State().selectionBegin;auto end=Buffer(token).State().selectionEnd;if (begin==end) end=next(end);Buffer(token).Select(begin,end);Buffer(token).Insert(); }break;
+         }
+         default: {
++            if (IsCommittedTextInput(event)) {
++                const auto bytes=CommittedTextBytes(event);auto& buffer=Buffer(token);const auto& state=buffer.State();
++                const auto excluded=Excluded(token);if (std::find(excluded.begin(),excluded.end(),static_cast<char>(0x1f))!=excluded.end()) { result=0;notify=false;break; } // 숫자 전용창의 기존 제외목록은 확장 토큰 전체에도 적용한다.
++                const auto size=std::int64_t(state.length)-(state.selectionEnd-state.selectionBegin)+static_cast<std::int64_t>(bytes.size()); // 길이 제한은 기존 물리 BYTE 상한이고 새 문자만 완전한 토큰으로 판정한다.
++                if (node.maxLength<1 || size<node.maxLength) buffer.Insert(Terminated(bytes));else { result=0;notify=false; }
++                break;
++            }
+             if (code<0x20 || code>=0x100) { result=0;notify=false;break; }
+-            if (node.maxLength<1 || Add(Buffer(token).State().length,1)<node.maxLength) {
++            const auto& current=Buffer(token).State();const auto length=extended ? std::int64_t(current.length)-(current.selectionEnd-current.selectionBegin)+1 : std::int64_t(Add(current.length,1)); // 원문 순수 BYTE의 선택 미차감 규칙은 유지한다.
++            if (node.maxLength<1 || length<node.maxLength) {
+                 const auto excluded=Excluded(token); // 문자 제한은 현재 선택 길이를 빼지 않고 전체length+1로 판정한다.
+                 if (!excluded.empty() && std::find(excluded.begin(),excluded.end(),static_cast<char>(value))!=excluded.end()) { result=0;notify=false;break; }
+                 const std::array<char,2> character{static_cast<char>(value),0};Buffer(token).Insert(character);
+@@ -253,9 +270,10 @@
+                 std::optional<std::string_view> word; // null은 이전 단어의 다음/이전 후보를 뜻한다.
+                 if (node.resetWord) {
+                     node.wordStart=static_cast<std::uint32_t>(begin);const auto data=Buffer(token).Data(); // 실제 현재 선택과 같은 바이트다.
+-                    while (node.wordStart>0) { // 공백/콜론 바로 뒤까지 단어 시작을 역방향으로 찾는다.
+-                        const auto at=node.wordStart-1;if (at>=data.size()) throw std::runtime_error("Console 단어 선택 범위");
+-                        const auto value=data[at];if (Space(value) || value==':') break;--node.wordStart;
++                    const auto text=Buffer(token).Text();const bool extended=HasExtendedDisplayText(text); // 토큰 숫자 BYTE를 공백으로 오해하지 않는다.
++                    while (node.wordStart>0) { // 공백/콜론 바로 뒤까지 문자 경계로 단어 시작을 역방향으로 찾는다.
++                        const auto at=extended ? PreviousDisplayText(text,node.wordStart) : node.wordStart-1;if (at>=data.size()) throw std::runtime_error("Console 단어 선택 범위");
++                        const auto value=data[at];if (node.wordStart-at==1 && (Space(value) || value==':')) break;node.wordStart=static_cast<std::uint32_t>(at);
+                     }
+                     node.wordLength=std::uint32_t(begin)-node.wordStart;
+                     if (node.wordStart>=data.size()) throw std::runtime_error("Console 단어 시작 범위");
+@@ -287,11 +305,18 @@
+     };
+     for (auto index=node.scrollLine;index<Buffer(token).LineCount();index=Add(index,1)) { // 줄 수는 각 반복 끝의 현재 문자 버퍼에서 다시 읽는다.
+         if (limit<=Sub(index,node.scrollLine)) return;
+-        const auto length=Buffer(token).CopyLine(index,line,selection); // 수평 잘라내기 뒤에도 원문의 선택/길이 쌍을 임의 보정하지 않는다.
++        auto length=Buffer(token).CopyLine(index,line,selection); // 순수 BYTE는 원문을 유지하고 한글 줄만 선택/스크롤 경계를 보정한다.
+         if (length==0xffffffffU) { if (hooks_.assertion) hooks_.assertion(0x2ae);throw std::runtime_error("TextEntry 원본 줄 복사 범위 거부"); }
++        const std::string_view original(line.data(),length);const bool extended=HasExtendedDisplayText(original); // 복사된 현재 줄의 토큰만 검사한다.
++        const auto removedColumn=extended ? DisplayTextFloor(original,static_cast<std::size_t>(std::max(0,node.scrollColumn))) : static_cast<std::size_t>(std::max(0,node.scrollColumn)); // 표시 원점이 한글 중간에 놓이지 않게 한다.
++        if (extended && selection[0]>=0 && selection[1]>=0) { const auto begin=DisplayTextFloor(original,static_cast<std::size_t>(selection[0]));const auto end=selection[0]==selection[1] ? begin : DisplayTextCeil(original,static_cast<std::size_t>(selection[1]));selection={static_cast<std::int32_t>(begin),static_cast<std::int32_t>(end)}; }
+         if (node.scrollColumn>0 && node.scrollColumn<1024) {
+-            const auto visible=CString(line).size()-1,removed=static_cast<std::size_t>(node.scrollColumn); // 원본 String::erase는 요청 수가 길이를 넘으면 아무것도 바꾸지 않는다.
++            const auto visible=CString(line).size()-1,removed=removedColumn; // 원본 String::erase는 요청 수가 길이를 넘으면 아무것도 바꾸지 않는다.
+             if (removed<=visible) std::memmove(line.data(),line.data()+removed,visible-removed+1);
++            if (extended && removed<=visible) {
++                length-=static_cast<std::uint32_t>(removed);
++                if (selection[0]>=0) { const auto offset=static_cast<std::int32_t>(removed);if (selection[1]<offset || (selection[1]==offset && selection[0]!=selection[1])) selection={-1,-1};else { selection[0]=std::max(0,selection[0]-offset);selection[1]=std::max(0,selection[1]-offset); } } // 화면 왼쪽에서 끝난 선택을 가짜 caret로 바꾸지 않는다.
++            }
+         }
+         if (length) { if (length>line.size()) throw std::runtime_error("TextEntry 줄 끝 범위");if (line[length-1]=='\n') line[length-1]=' '; }
+         else { line[0]=' ';line[1]=0; }
+diff --git a/cpppj/src/client/UberGump.cpp b/cpppj/src/client/UberGump.cpp
+--- a/cpppj/src/client/UberGump.cpp
++++ b/cpppj/src/client/UberGump.cpp
+@@ -51,6 +51,7 @@
+ #include "client/RendererDiagnostics.h" //명시특수전역뒤원문7/10/13키의현재DWORD만토글한다.
+ #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
+ #include "client/LanguageOptions.h" //6차: 옵션 메뉴 Language 하위 메뉴가 한국어 번호(kKoreanLanguageNumber)를 쓴다.
++#include "client/DisplayTextInput.h" // 확정 Unicode 사건은 같은 Gump 입력에만 전달한다.
+ #include "client/GameMenuActions.h"
+ #include "client/ViewKeyInput.h"
+ #include "client/PauseKeyInput.h" //Pause 가상키도 같은 일반 Pause 명령 FIFO를 정지 관문 전에 사용한다.
+@@ -280,7 +281,7 @@
+ // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
+ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),mapFileSpec_(client.FortGlobals()->FileSpec()),fortSelectionMode_(client.FortGlobals()->SelectionMode()),htmlGlobals_(client.HtmlWindowGlobals()->text),hideBuildings_(client.GameplayGlobals()->HideBuildings()),worldRedraw_(client.KencloudGlobals()->WorldRedraw()),menuConfigRevision_(client.FortGlobals()->Catalog().dirty),commandGump_(client.ChatWindowGlobals()->window.current) {
+     scripts_.emplace(std::string(kProductCreditsObject),MakeProductCreditsConfig(client_.Configuration().Registry())); // 원본 파일 대신 UI 수명의 등록 Config로 추가 Credits를 제공한다.
+-    textClipboard_=std::make_shared<TextClipboard>(Win32TextClipboardDevices()); //API를 연결만 하며 이 생성은 OS 클립보드를 열거나 변경하지 않는다.
++    textClipboard_=std::make_shared<TextClipboard>(Win32DisplayTextClipboardDevices(reinterpret_cast<std::uintptr_t>(client_.InputWindowHandle()))); //한글 선택만 Unicode로 복사하고 기본 BYTE 경로는 보존한다. 생성 중에는 OS를 열지 않는다.
+     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
+     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
+     templateStorage_->BindDiagnosticLog([client=&client_](auto level,auto text) { client->WriteDiagnosticLog(level,text); }); // 지역 Template 덤프도 원본 level29 formatter/FILE/flush/trace→Chat을 같은 Client 수명에서 사용한다.
+@@ -393,7 +394,7 @@
+     warnings_=&rawButtons_->EnableWarnings([this] { return client_.WallSeconds(); },[this] {
+         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
+     },std::move(pauseContext),[this] { return client_.GameplayGlobals()->world.missionPost; }); //원문의현재00594fa4를같은장기owner에서매Show진입에읽는다.
+-    fileMenus_=std::make_shared<TellFileMenus>(client_.Configuration(),[this](auto pattern) { return client_.Files().MatchFinder(pattern); }); // 실제 FileFinder의 디스크/TAFF/보조 순서와 장기 Config 수명을 공유한다.
++    fileMenus_=std::make_shared<TellFileMenus>(client_.Configuration(),[this](auto pattern) { return client_.MatchLocalizedGameFiles(pattern); }); // 실제 FileFinder의 디스크/TAFF/보조 순서와 장기 Config 수명을 공유한다.
+     o::MissionGuideHooks guideHooks; // 같은 실제 현재 미션/전환 큐/창과 복원한 Guide 반복 몸체다.
+     guideHooks.current=[this]() -> o::MissionStartState* { return missionRuntime_ && missionRuntime_->guided ? &missionRuntime_->state : nullptr; };
+     guideHooks.pending=[this] { return state_.Pending() || client_.LocalStateGlobals()->State().next[0] || (world_ && world_->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken) ? 1U : 0U; }; // 현재 Native 다음 상태와 같은 미션의 설치 대여도 Guide보다 먼저 소비한다.
+@@ -512,7 +513,7 @@
+     if (const auto found = scripts_.find(key); found != scripts_.end()) return *found->second;
+     auto script = std::make_unique<o::Config>(client_.Configuration().Registry(), key);
+     const auto path = client_.Configuration().PathSpec("missionSpec", key);
+-    script->LoadBytes(client_.Files().Read(path)); script->Set("fileName", key);
++    const auto bytes=client_.ReadLocalizedGameFile(path);if (!bytes) throw std::runtime_error("Game file not found: "+path);script->LoadBytes(*bytes); script->Set("fileName", key);
+     const auto [it, inserted] = scripts_.emplace(key, std::move(script)); (void)inserted;
+     return *it->second;
+ }
+@@ -1182,6 +1183,7 @@
+ }
+ // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
+ void UberGump::Event(InputEvent event) {
++    if (IsCommittedTextInput(event.code)) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) rebuild_=true;return; } // 새 확정 문자도 일반 focus/dialog/root를 사용하며 입력창이 없으면 게임 단축키로 바꾸지 않는다.
+     if (DispatchScreenMouseKey(event,[this] { return client_.GetScreen().Flags(); },[this](auto mode) { client_.ChangeScreenMode(mode); })) rebuild_=true; // 원본 DirectDraw 호출은 Windows10/11에서 borderless/DIB 호환 장치로 실행한다. 같은 사건은 Guide/모달에 계속 전달한다.
+     if (const auto* movie=rawButtons_->Menus()->Movies();movie && movie->Active()) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) { rebuild_=true;return; } } // 실제 MovieGump 모달을 일반 ESC/키 처리보다 먼저 같은 Gump Route에 전달한다.
+     const auto transitionCode=event.code&0x03ffffffU; // 원본 Guide 제어 사건은 일반 입력/프레임보다 먼저 소비한다.
+@@ -1444,7 +1446,7 @@
+     if (transitionCode==kProductionBridgeCommand) {
+         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // Guide/현재 모달 뒤 같은 Gump 트리로 전달한다. 정지/활성 커서 관문을 추가하지 않는다.
+     }
+-    if (DispatchLanguageChanged(event,worldUiRouted,[this](const auto& notification) { static_cast<void>(rawButtons_->RouteInput(notification)); })) { rebuild_=true;return; } //Chat의기존Push/Attach를같은실제트리에서한번만실행한다.
++    if (DispatchLanguageChanged(event,worldUiRouted,[this](const auto& notification) { static_cast<void>(rawButtons_->RouteInput(notification)); })) { rawButtons_->Menus()->InvalidateHelpLanguage();if (fileMenus_) fileMenus_->InvalidateLanguageFiles();std::erase_if(scripts_,[](const auto& item) { return item.first!=kProductCreditsObject; });if (state_.phase==ClientPhase::MainMenu) RebuildControls();rebuild_=true;return; } //클론본문캐시반납뒤Chat의기존Push/Attach를같은실제트리에서한번만실행한다.
+     if (transitionCode==0x02000088U) {
+         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // 원본 하단 전환은 HUD 효과 뒤 기본 반환0이다. 이미 실행한 Route를 반복하거나 미구현 메뉴 오류로 바꾸지 않는다.
+     }
+@@ -1755,7 +1757,7 @@
+         if (state_.phase!=ClientPhase::LoadingMission) rawButtons_->Menus()->CloseMissionLoading();
+         std::vector<std::string> originalLabels;originalLabels.reserve(labels_.size());
+         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
+-        for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
++        for (const auto& label:labels_) originalLabels.push_back(FontBytes(state_.phase==ClientPhase::MainMenu && client_.LanguageNumber()==static_cast<int>(kKoreanLanguageNumber) ? client_.Translate(label) : label)); //한국어 메인 버튼만 기존 돌 UI/D2Coding으로 표시하며 영어 라벨/원본 자산은 유지한다.
+         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
+             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || (rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current()) || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0,
+             state_.phase==ClientPhase::MainMenu && client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? std::optional<std::int32_t>{-83} : std::nullopt,
+@@ -1820,7 +1822,7 @@
+     if (world_ && !world_->Connecting() && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);
+     if (rawButtons_->Menus()->HasMenus() || rawButtons_->Menus()->HtmlWindowsOpen() || rawButtons_->CurrentDialog() || state_.phase==ClientPhase::LoadingMission) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
+     // 동일 라벨의 첫 영역을 선택한다.
+-    for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label)
++    for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label || (state_.phase==ClientPhase::MainMenu && client_.LanguageNumber()==static_cast<int>(kKoreanLanguageNumber) && client_.Translate(labels_.at(static_cast<std::size_t>(control.id)))==label))
+         return ScreenPoint{(control.rect.left + control.rect.right) / 2, (control.rect.top + control.rect.bottom) / 2};
+     return {};
+ }
+diff --git a/cpppj/src/CMakeLists.txt b/cpppj/src/CMakeLists.txt
+--- a/cpppj/src/CMakeLists.txt
++++ b/cpppj/src/CMakeLists.txt
+@@ -442,3 +442,7 @@
+ 
+ # 공통 Owner의 현재 값/진단과 늦은 목록 선택을 복원한다(961).
+ target_sources(netstorm PRIVATE o/RawCommonOwner.cpp o/RawCommonOwner.h)
++
++# 한국어 확정입력/문자경계 공통부품과 실제 Windows IME 결과조회다.
++target_sources(netstorm PRIVATE client/DisplayTextInput.cpp client/DisplayTextInput.h)
++target_link_libraries(netstorm PUBLIC imm32)
+diff --git a/cpppj/src/o/BaseFile.cpp b/cpppj/src/o/BaseFile.cpp
+--- a/cpppj/src/o/BaseFile.cpp
++++ b/cpppj/src/o/BaseFile.cpp
+@@ -308,6 +308,13 @@
+     return false;
+ }
+ // 원문 rb 열기/닫기와 TAFF 이름 조회만 사용한다. Windows10/11의 한글 경로는 기존 UTF-8/W 경계로 처리한다.
++// 클론 언어 어댑터의 정확 조회만 대체를 억제하고 예외/중첩 뒤에도 종전 상태로 복원한다.
++std::uint32_t BaseFileSystem::ProbeExact(std::string_view name) const {
++    const bool previous=suppressEnglishFallback; // 같은 스레드의 바깥 정확 조회를 덮어쓰지 않는다.
++    suppressEnglishFallback=true;
++    try { const auto result=ProbeWithDiskName(name,{});suppressEnglishFallback=previous;return result; }
++    catch (...) { suppressEnglishFallback=previous;throw; }
++}
+ std::uint32_t BaseFileSystem::Probe(std::string_view name) const {
+     return ProbeWithDiskName(name,{}); // 기존 존재조회 소비자는 새 인코딩 장치를 요구하지 않는다.
+ }
+diff --git a/cpppj/src/o/BaseFile.h b/cpppj/src/o/BaseFile.h
+--- a/cpppj/src/o/BaseFile.h
++++ b/cpppj/src/o/BaseFile.h
+@@ -81,6 +81,7 @@
+     std::optional<std::vector<std::uint8_t>> TryReadWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const; //명시 ACP 글꼴 소비자만 디스크 이름을UTF-8로 변환한다. raw TAFF/방문순서/고리소비는 그대로다.
+     std::optional<std::vector<std::uint8_t>> TryReadArchiveOnly(std::string_view name,bool secondary=false) const; //선택한 목록만 등록 순서로 읽고 다른 목록/디스크로 fallback하지 않는다.
+     bool ContainsArchiveOnly(std::string_view name,bool secondary=false) const; //선택한41a340 목록의 이름 메타데이터만 조회하며 내용/복호화/디스크를 읽지 않는다.
++    std::uint32_t ProbeExact(std::string_view name) const; // 클론 추가 한국어를 찾기 전에 현재 disk/TAFF의 같은 이름만 조회하며 영어 대체를 잠시 억제한다.
+     std::uint32_t Probe(std::string_view name) const; //0041ab10의 출처0..5를 내용 읽기 없이 조회한다. 직접 경로 실패는 상대/TAFF로 fallback하지 않는다.
+     std::uint32_t ProbeWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const; // 같은 raw출처 순서에서 disk query만 변환하며 변환 실패도 다음 raw TAFF를 막지 않는다.
+     // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.
+diff --git a/cpppj/tests/CMakeLists.txt b/cpppj/tests/CMakeLists.txt
+--- a/cpppj/tests/CMakeLists.txt
++++ b/cpppj/tests/CMakeLists.txt
+@@ -3756,3 +3756,7 @@
+ # 와이드 패널 본문 반복과 기존 원문 배경/실제 픽셀을 같은 집중 대상에서 대조한다(981).
+ target_sources(netstorm_tests PRIVATE GumpWidePanelTests.cpp)
+ target_sources(netstorm_translated_pixels_tests PRIVATE GumpWidePanelTests.cpp GumpBackgroundDrawTests.cpp GumpBackgroundTests.cpp)
++
++# 한국어 입력/본문의 창 없는 검사이며 기존 원문 fixture 파일은 그대로다.
++target_sources(netstorm_tests PRIVATE DisplayTextInputTests.cpp KoreanResourcesIntegrationTests.cpp)
++target_sources(netstorm_korean_text_tests PRIVATE DisplayTextInputTests.cpp KoreanResourcesIntegrationTests.cpp)
+diff --git a/cpppj/tests/DisplayTextInputTests.cpp b/cpppj/tests/DisplayTextInputTests.cpp
+new file mode 100644
+--- /dev/null
++++ b/cpppj/tests/DisplayTextInputTests.cpp
+@@ -0,0 +1,156 @@
++// 실제 TextEntryBuffer/Gump와 일반 입력 큐를 사용하는 창 없는 한국어 입력 검사다.
++#include "TestSupport.h"
++#include "client/DisplayTextInput.h"
++#include "client/TextClipboard.h"
++#include "client/TextEntryGump.h"
++#include "client/TextEntryStorage.h"
++#include "o/OriginalText.h"
++#include <algorithm>
++#include <array>
++#include <memory>
++#include <stdexcept>
++#include <string>
++#include <vector>
++
++using namespace netstorm::client;
++namespace { // 실제 버퍼/노드만 만들며 창/OS 입력/전송을 사용하지 않는 장치다.
++// UTF-8 기대 본문을 기존 표시 경계로만 준비한다. 입력 API의 결과를 기대값으로 재사용하지 않는다.
++std::string Display(std::string_view value) { const auto bytes=netstorm::o::EncodeDisplayText(value);return {bytes.begin(),bytes.end()}; }
++// 일반 Insert가 요구하는 마지막 NUL을 별도 소유 문자열에 붙인다.
++std::string Terminated(std::string value) { value.push_back(0);return value; }
++// 실제 공통 노드/메모리/선택 상태와 별도 장치 관측을 소유한다.
++struct KoreanEntryScene {
++    ConsoleGumpNode node{}; // 같은 파생/기본 주소를 갖는 실제 편집 노드다.
++    ScrollGumpNode vertical{},horizontal{}; // 현재 가로/세로 position을 보유하는 실제 두 Slider다.
++    TextEntryGumpState state{}; // 현재 색/통지 전역이다.
++    std::string clipboard; // 명시 장치가 반환하는 표시 BYTE 본문이다.
++    std::vector<std::string> drawn; // 실제 DrawText에 전달한 토큰 경계를 관측한다.
++    std::vector<ScreenRect> fills; // 실제 선택/커서 사각형을 관측한다.
++    std::vector<std::uint32_t> notices; // 일반 통지/원시 사건 순서를 관측한다.
++    std::string completed; // Console이 전달한 실제 자동완성 단어다.
++    TextEntryStorage storage; // 실제 TextEntryBuffer 할당/선택/Insert 처리를 소유한다.
++    std::unique_ptr<TextEntryGump> entry; // 같은 노드/버퍼를 사용하는 실제 입력 처리기다.
++    // 생성자는 원문 편집 버퍼를 만들고 필요한 조회/Draw/Slider 장치만 연결한다.
++    KoreanEntryScene():storage([this](auto bytes) { std::fill(bytes.begin(),bytes.end(),0);std::copy_n(clipboard.begin(),std::min(clipboard.size(),bytes.size()-1),bytes.begin()); },[this](auto bytes) { clipboard.assign(bytes.begin(),bytes.end()); }) {
++        auto& buffer=storage.Create(4);buffer.Construct();buffer.Reset();node.buffer=4;node.verticalSlider=2;node.horizontalSlider=3;node.baseWidth=100;node.baseHeight=16;node.serial=17;
++        TextEntryGumpHooks hooks;
++        hooks.node=[this](auto token) { return token==1 ? static_cast<TextEntryGumpNode*>(&node) : nullptr; }; // 실제 기본/파생 주소다.
++        hooks.console=[this](auto token) { return token==1 ? &node : nullptr; }; // 같은 Console 주소다.
++        hooks.base=[this](auto token)->GumpCreateNode* { if (token==1) return &node;if (token==2) return &vertical;if (token==3) return &horizontal;return nullptr; }; // 같은 세 실제 노드다.
++        hooks.buffer=[this](auto token) { return storage.Find(token); }; // 같은 메모리 소유자를 조회한다.
++        hooks.slider=[this](auto token) { return token==2 ? &vertical : &horizontal; }; // 두 실제 Slider를 조회한다.
++        hooks.redraw=[](auto,bool) {};hooks.bubble=[this](auto,auto event,auto,auto) { notices.push_back(event); }; // 픽셀/통지만 관측한다.
++        hooks.sliderRange=[](auto,auto,auto) {};hooks.sliderPage=[](auto,auto) {};hooks.sliderPosition=[this](auto token,auto at) { (token==2 ? vertical : horizontal).position=std::max(0,at); }; // SetScroll의 실제 읽기/쓰기다.
++        hooks.bytes=[this](auto address) { return storage.Bytes(address); }; // 제외목록도 같은 실제 저장소다.
++        hooks.drawBackground=[](auto) {};hooks.position=[](auto) { return ScreenPoint{10,20}; }; // 배경 외부 효과를 만들지 않는다.
++        hooks.drawText=[this](auto,auto bytes,auto,const auto*) { const auto end=std::find(bytes.begin(),bytes.end(),0);drawn.emplace_back(bytes.begin(),end); }; // 실제 전달한 각 조각을 기록한다.
++        hooks.fill=[this](auto rect,auto) { fills.push_back(rect); }; // 커서와 선택 폭을 관측한다.
++        hooks.measure=[](auto,std::span<const char> bytes,std::int32_t count) { // 글자당8픽셀의 독립 장치이며 유효한 토큰만 한 글자로 센다.
++            const auto nul=std::find(bytes.begin(),bytes.end(),0);auto length=static_cast<std::size_t>(nul-bytes.begin());if (count>=0) length=std::min(length,static_cast<std::size_t>(count));
++            const std::span<const std::uint8_t> raw{reinterpret_cast<const std::uint8_t*>(bytes.data()),length};std::int32_t width{};
++            for (std::size_t at=0;at<length;) { at+=netstorm::o::DecodeExtendedSequence(raw,at) ? 4U : 1U;width+=8; } // 기대 의미는 글자 수이며 입력 경계 헬퍼를 재사용하지 않는다.
++            return std::array<std::int32_t,2>{width,16};
++        };
++        hooks.complete=[this](auto,auto word,auto,bool)->std::optional<std::string> { if (word) completed=*word;return std::nullopt; }; // Console이 자른 단어를 그대로 기록한다.
++        entry=std::make_unique<TextEntryGump>(state,std::move(hooks));
++    }
++    // 일반 입력 경로가 사용하는 같은 실제 버퍼를 조회한다.
++    TextEntryBuffer& Buffer() { return *storage.Find(4); }
++    // 입력 본문을 일반 Reset에 전달한다. 테스트 상태에 기대 결과를 쓰지 않는다.
++    void Set(std::string_view value) { const auto text=Terminated(Display(value));Buffer().Reset(text); }
++    // UTF-8 입력을 실제 일반 사건 생성→같은 Gump.Handle로 전달한다.
++    void Type(std::string_view value) { for (const auto& event:MakeCommittedTextEvents(value)) entry->Handle(1,event.code,0,0); } // 네 BYTE 토큰을 단일 사건으로 처리한다.
++    // 현재 편집 본문을 실제 표시 경계에서 UTF-8로 관측한다.
++    std::string Text() { const auto text=Buffer().Text();return netstorm::o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}); }
++};
++}
++
++// 미지원/비정상 입력이 사건을 일부 생성하지 않고 한글마다 단일 태그를 만드는지 확인한다.
++TEST_CASE(KoreanInput_Utf8Utf16AndAtomicQueue) {
++    const auto events=MakeCommittedTextEvents("A한글");CHECK(events.size()==3);CHECK(events[0].code=='A');CHECK(IsCommittedTextInput(events[1].code));CHECK(CommittedTextBytes(events[1].code)==Display("한"));
++    CHECK(CommittedUtf16ToUtf8(u"한글")=="한글");CHECK(DisplayTextToUtf16(std::span<const char>(Display("한글")))==u"한글");
++    for (const auto& invalid:std::vector<std::string>{std::string("A\0B",3),"A\nB",std::string("\xe0\x80\x80",3),"A😀"}) { bool rejected{};try { static_cast<void>(MakeCommittedTextEvents(invalid)); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected); } // 각 입력은 전체 검증에서 거부한다.
++    bool rejected{};try { static_cast<void>(CommittedUtf16ToUtf8(std::u16string(1,static_cast<char16_t>(0xd800)))); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
++    InputQueue queue;for (unsigned i=0;i<38;++i) queue.Push('x',0,0); // 실제 링에 한 칸만 남긴다.
++    CHECK(!queue.TryPushBatch(MakeCommittedTextEvents("한글")));CHECK(queue.FreeSlots()==1);
++    for (unsigned i=0;i<38;++i) CHECK(queue.Pop(false).code=='x'); // 실패한 본문의 일부가 들어가지 않았는지 확인한다.
++    CHECK(queue.Empty());CHECK(queue.TryPushBatch(events));CHECK(queue.Pop(false).code=='A');CHECK(IsCommittedTextInput(queue.Pop(false).code));CHECK(IsCommittedTextInput(queue.Pop(false).code));CHECK(queue.Empty());
++}
++
++// 한글 중간의 모든 BYTE 위치와 제외목록/길이 상한을 확인한다.
++TEST_CASE(KoreanInput_DisplayBoundariesAndFiltering) {
++    const auto text=Display("A한글B");CHECK(text.size()==10);
++    for (std::size_t at=2;at<5;++at) { CHECK(DisplayTextFloor(text,at)==1);CHECK(DisplayTextCeil(text,at)==5); } // 첫 한글 내부를 양쪽 경계로 보정한다.
++    CHECK(PreviousDisplayText(text,5)==1);CHECK(NextDisplayText(text,1)==5);CHECK(FilterDisplayText(text,"A",7)==Display("한"));
++    CHECK(FilterDisplayText(text,std::string(1,static_cast<char>(0x1f)),100)=="AB");CHECK(FilterDisplayText(Display("갈"),std::string(1,static_cast<char>(11)),100)==Display("갈"));
++    CHECK(DisplayTextLine(Display("a\n한글\nb"),1)==Display("한글"));
++}
++
++// 실제 Gump에서 왼쪽/오른쪽/선택/삭제가 네 BYTE 중간에 멈추지 않는지 확인한다.
++TEST_CASE(KoreanInput_EditCursorSelectionAndDeletion) {
++    KoreanEntryScene scene;scene.Type("A한글B");CHECK(scene.Text()=="A한글B");CHECK(scene.Buffer().State().selectionBegin==10);
++    scene.entry->Handle(1,0x250000,0,0);CHECK(scene.Buffer().State().selectionBegin==9);scene.entry->Handle(1,0x250000,0,0);CHECK(scene.Buffer().State().selectionBegin==5);
++    scene.entry->Handle(1,8,0,0);CHECK(scene.Text()=="A글B");CHECK(scene.Buffer().State().selectionBegin==1);
++    scene.entry->Handle(1,0x2e0000,0,0);CHECK(scene.Text()=="AB");scene.Buffer().Select(1,1);scene.Type("한글");
++    scene.entry->Handle(1,InputCode::kShift|0x250000,0,0);CHECK(scene.Buffer().State().selectionBegin==5);CHECK(scene.Buffer().State().selectionEnd==9);scene.Type("가");CHECK(scene.Text()=="A한가B");
++    scene.Buffer().Select(2,3);scene.entry->Handle(1,8,0,0);CHECK(scene.Text()=="A가B"); // 손상된 외부 선택도 한 문자 전체로 확장한다.
++}
++
++// 기존 물리 BYTE 상한을 유지하면서 선택 교체/숫자 전용 제외목록을 확인한다.
++TEST_CASE(KoreanInput_ByteLimitAndNumericExclusion) {
++    KoreanEntryScene scene;scene.node.maxLength=9;scene.Type("한글");CHECK(scene.Text()=="한글");scene.Type("가");CHECK(scene.Text()=="한글");
++    scene.Buffer().Select(0,4);scene.Type("나");CHECK(scene.Text()=="나글");scene.Buffer().Select(0,4);scene.Type("A");CHECK(scene.Text()=="A글");
++    const auto excluded=scene.storage.Allocate(2);auto bytes=scene.storage.Bytes(excluded);bytes[0]=0x1f;bytes[1]=0;scene.node.excludedChars=excluded;scene.Type("한");CHECK(scene.Text()=="A글");
++}
++
++// 붙여넣기의 제외문자/상한이 한글 내부 제어 숫자를 지우지 않는지 확인한다.
++TEST_CASE(KoreanInput_PasteWholeCharacters) {
++    KoreanEntryScene scene;scene.node.maxLength=10;scene.clipboard=Display("갈한글");scene.entry->Handle(1,InputCode::kShift|0x2d0000,0,0);CHECK(scene.Text()=="갈한");
++    scene.Buffer().Select(0,4);scene.clipboard=Display("가나");scene.entry->Handle(1,InputCode::kShift|0x2d0000,0,0);CHECK(scene.Text()=="가한");
++}
++
++// 가로 스크롤/선택/커서가 같은 BYTE 경계와 실제 글자 폭을 사용하는지 확인한다.
++TEST_CASE(KoreanInput_DrawScrollAndCaretBoundaries) {
++    KoreanEntryScene scene;scene.Set("한글B");scene.Buffer().Select(8,8);scene.node.scrollColumn=2;scene.node.blinkPhase=1;scene.entry->Draw(1);
++    CHECK(!scene.drawn.empty());CHECK(scene.drawn.front()==Display("한글B"));CHECK(!scene.fills.empty());CHECK(scene.fills.back().left==26);
++    scene.drawn.clear();scene.fills.clear();scene.node.scrollColumn=5;scene.entry->Draw(1);CHECK(scene.drawn.front()==Display("글B"));CHECK(scene.fills.back().left==18);
++    scene.entry->SetScroll(1,0,6);CHECK(scene.node.scrollColumn==4);CHECK(scene.horizontal.position==4);
++}
++
++// Console 자동완성이 한글 토큰 내부의 공백과 같은 숫자 BYTE를 단어 경계로 오해하지 않는지 확인한다.
++TEST_CASE(KoreanInput_ConsoleCompletionWordBoundary) {
++    KoreanEntryScene scene;scene.Set("prefix 갈");scene.Buffer().Select(scene.Buffer().State().length,scene.Buffer().State().length);scene.node.autocomplete=1;scene.node.resetWord=1;
++    scene.entry->HandleConsole(1,9,0,0);CHECK(scene.completed==Display("갈"));CHECK(scene.node.wordStart==7);CHECK(scene.node.wordLength==4);
++}
++
++// 실제 OS 대신 명시 Unicode 장치로 완전한 토큰 복사/붙여넣기와 미지원 거부를 확인한다.
++TEST_CASE(KoreanInput_UnicodeClipboardBoundary) {
++    TextClipboardDevices devices;std::u16string written;devices.readUnicode=[] { return std::optional<std::u16string>(u"한글"); };devices.writeUnicode=[&](auto text) { written=text; };TextClipboard clipboard(std::move(devices));
++    std::array<char,8> shortOutput{};clipboard.Read(shortOutput);CHECK(std::string(shortOutput.data())==Display("한"));const auto text=Display("한글");clipboard.Write(text);CHECK(written==u"한글");
++    TextClipboardDevices unsupported;unsupported.readUnicode=[] { return std::optional<std::u16string>(u"A😀"); };TextClipboard reject(std::move(unsupported));std::array<char,20> output{};output[0]='x';reject.Read(output);CHECK(output[0]==0);
++}
++
++TEST_CASE(KoreanInput_AsciiPasteIntoExtendedBodyHonorsFinalByteLimit) { // 기존본문이한글일때긴ASCII도물리상한을넘기지않는다.
++    KoreanEntryScene scene;scene.node.maxLength=10;scene.Set("한");scene.Buffer().Select(4,4);scene.clipboard=std::string(255,'A');scene.entry->Handle(1,InputCode::kShift|0x2d0000,0,0);
++    CHECK(scene.Text()=="한AAAAA" && scene.Buffer().State().length==9);scene.entry->Handle(1,InputCode::kShift|0x2d0000,0,0);CHECK(scene.Text()=="한AAAAA"); // 남은상한0이면본문/선택을자르지않는다.
++    scene.Set("한글");scene.Buffer().Select(0,4);scene.entry->Handle(1,InputCode::kShift|0x2d0000,0,0);CHECK(scene.Text()=="AAAAA글" && scene.Buffer().State().length==9); // 지워질선택을차감한최종길이다.
++    scene.node.maxLength=5;scene.Set("한");scene.Buffer().Select(0,0);scene.entry->Handle(1,InputCode::kShift|0x2d0000,0,0);CHECK(scene.Text()=="한");
++}
++
++TEST_CASE(KoreanInput_StaleShiftAnchorsAlwaysEndOnWholeCharacters) { // 외부선택뒤Shift가부분한글을다시선택하지않는다.
++    for (const std::uint32_t key:{0x250000U,0x270000U,0x230000U,0x240000U}) { // Left/Right/End/Home은같은원자문자경계를사용한다.
++        KoreanEntryScene scene;scene.Set("한A");scene.Buffer().Select(0,4);scene.node.shiftAnchor=2;scene.node.shiftEnd=2;scene.entry->Handle(1,InputCode::kShift|key,0,0);
++        const auto boundary=[](std::int32_t at) { return at==0 || at==4 || at==5; }; // 한글1자와ASCII1자의독립적인의미경계다.
++        CHECK(boundary(scene.Buffer().State().selectionBegin) && boundary(scene.Buffer().State().selectionEnd));CHECK(boundary(scene.node.shiftAnchor) && boundary(scene.node.shiftEnd));
++    }
++}
++
++TEST_CASE(KoreanInput_UnicodeMissingUsesOriginalAsciiClipboardPath) { // Unicode부재/ASCII복사에서는CF_TEXT와원문할당순서를유지한다.
++    TextClipboardDevices devices;std::string calls;std::array<char,16> memory{};const std::string source="ASCII";std::copy(source.begin(),source.end(),memory.begin());std::uint32_t flags{},allocated{},unicodeWrites{}; // 시스템대신명시된기존장치를관측한다.
++    devices.readUnicode=[&]()->std::optional<std::u16string> { calls+='U';return {}; };devices.writeUnicode=[&](auto) { ++unicodeWrites; };
++    devices.formatAvailable=[&](auto format) { CHECK(format==1);calls+='F';return 1U; };devices.open=[&](auto window) { CHECK(window==0);calls+='O';return 1U; };devices.get=[&](auto format) { CHECK(format==1);calls+='G';return std::uintptr_t{1}; };
++    devices.lock=[&](auto handle) { CHECK(handle==1);calls+='L';return memory.data(); };devices.unlock=[&](auto) { calls+='N';return 1U; };devices.close=[&] { calls+='C';return 1U; };
++    devices.empty=[&] { calls+='E';return 1U; };devices.allocate=[&](auto value,auto size) { flags=value;allocated=size;calls+='A';return std::uintptr_t{1}; };devices.set=[&](auto format,auto handle) { CHECK(format==1 && handle==1);calls+='S';return handle; };
++    TextClipboard clipboard(std::move(devices));std::array<char,16> output{};clipboard.Read(output);CHECK(std::string(output.data())==source && calls=="UFOGLNC");
++    calls.clear();const std::string copied="COPY";clipboard.Write(copied);CHECK(calls=="OEALNSC" && unicodeWrites==0 && flags==0x2000 && allocated==5);CHECK(std::string(memory.data())==copied);
++}
+diff --git a/cpppj/tests/KoreanResourcesIntegrationTests.cpp b/cpppj/tests/KoreanResourcesIntegrationTests.cpp
+new file mode 100644
+--- /dev/null
++++ b/cpppj/tests/KoreanResourcesIntegrationTests.cpp
+@@ -0,0 +1,137 @@
++// 클론한국어43본문/표1개와실제Config/미션/HTML경계를창·게임·MP없이대조한다.
++#include "TestSupport.h"
++#include "client/KoreanResources.h"
++#include "client/ConfigFileRead.h"
++#include "client/DisplayTextInput.h"
++#include "client/Mission.h"
++#include "client/HtmlTextParser.h"
++#include "client/HtmlWindowFactory.h"
++#include "client/QuickHelpHtml.h"
++#include "client/TellFileMenus.h"
++#include "o/BaseFile.h"
++#include "o/OriginalText.h"
++#include "platform/Utf8Path.h"
++#include <algorithm>
++#include <filesystem>
++#include <fstream>
++#include <regex>
++#include <set>
++#include <stdexcept>
++
++namespace { // 제품경계에넣을실제파일과명시표시효과만준비하며원문기대값은수정하지않는다.
++// 제품에적용된검사소스기준으로저장소를찾는다. pending자체에서는빌드하지않는다.
++std::filesystem::path KoreanRepo() { return std::filesystem::path(__FILE__).parent_path().parent_path().parent_path(); }
++// 각검사는고정된별도작업폴더만쓰며원본/번역자산에는쓰지않는다.
++std::filesystem::path KoreanWork(std::string_view label) {
++    const auto directory=KoreanRepo()/"cpppj/build/test-data"/("korean-integration-"+std::string(label)); // 검사전용작업경로다.
++    std::filesystem::create_directories(directory/"d");return directory;
++}
++// 검사입력파일만바이트그대로기록한다. BOM/1252제어BYTE도자동변환하지않는다.
++void KoreanWrite(const std::filesystem::path& path,std::string_view text) {
++    std::filesystem::create_directories(path.parent_path());std::ofstream stream(path,std::ios::binary|std::ios::trunc);stream.write(text.data(),static_cast<std::streamsize>(text.size()));if (!stream) throw std::runtime_error("한국어독립입력파일쓰기실패");
++}
++// 기존문자모델의표시BYTE를검사에서만편하게다룬다.
++std::string KoreanDisplay(std::string_view text) { const auto bytes=netstorm::o::EncodeDisplayText(text);return {bytes.begin(),bytes.end()}; }
++// 원문BYTE와UTF8표시문장의경계를명시적으로반환한다.
++std::string KoreanDecode(std::string_view text) { return netstorm::o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}); }
++// 누락과빈파일을구별하여실제읽기결과를문자열로확인한다.
++std::string KoreanBytes(const std::optional<std::vector<std::uint8_t>>& bytes) { return bytes ? std::string(bytes->begin(),bytes->end()):"<missing>"; }
++// 실제ClientConfig와같은NativeFILE본문입구를명시적인root/resolver로설치한다.
++netstorm::o::ConfigFileLoadHooks KoreanConfigHooks(const netstorm::o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots) {
++    return netstorm::client::MakeConfigFileReadHooks(files,[&files,roots](auto name) { return netstorm::client::FindBuiltinKoreanFile(files,roots,name); });
++}
++// 현재본문을실제전용Help/링크/그림파서로읽는다. TYPE0이므로동적정보pane은요구하지않는다.
++std::string KoreanHelpBody(std::string_view source,std::string_view topic,bool extended=true) {
++    using namespace netstorm::client;
++    HtmlTextParserState state;HtmlTextParserGlobals globals;globals.extendedText=extended;std::uint32_t info{};HtmlLinkTextState links;links.base=0x13000000;links.enabled=true; // 같은8192BYTE링크모델과클론표시관문이다.
++    HtmlTextParserHooks base;BindHtmlPictureText(base);BindHtmlLinkText(base,links);QuickHelpHtml parser(state,globals,info,0,topic,false,{}, {},std::move(base),&links);
++    return parser.Parse(source);
++}
++}
++
++TEST_CASE(KoreanIntegration_All43BuiltinBodiesResolveWithOriginalBomBytes) { // 실제번들목록과허용목록의누락/변조를공통입구에서찾는다.
++    using namespace netstorm::client;const auto repo=KoreanRepo(),work=KoreanWork("all-bodies");netstorm::o::BaseFileSystem files(work);std::size_t count{}; // 원본game/쓰기경로와분리된빈VFS다.
++    for (const auto& entry:std::filesystem::directory_iterator(repo/"assets/lang/korean/d")) { // 실제적용43파일을각각같은resolver로찾는다.
++        if (!entry.is_regular_file() || entry.path().extension()!=".korean") continue;const auto name="d/"+entry.path().filename().string();const auto selected=FindBuiltinKoreanFile(files,{repo},name);CHECK(selected.has_value());if (!selected) continue;
++        const auto actual=ReadLocalizedGameFile(files,{repo},name);CHECK(actual && *actual==netstorm::o::ReadFileBytes(entry.path()));if (actual) CHECK(actual->size()>=3 && (*actual)[0]==0xef && (*actual)[1]==0xbb && (*actual)[2]==0xbf);++count;
++    }
++    CHECK(count==43);
++}
++
++TEST_CASE(KoreanIntegration_PortableNamespaceAndExactNativeFileTakePriority) { // EXE옆언어번들은읽기전용게임폴더에본문을복사하지않아도동작한다.
++    using namespace netstorm::client;const auto work=KoreanWork("portable"),portable=work/"portable";netstorm::o::BaseFileSystem files(work); // 경로우선권만확인하는독립입력이다.
++    KoreanWrite(work/"d/help.english","ENGLISH\xe9");KoreanWrite(portable/"lang/korean/d/help.korean","\xef\xbb\xbf한국어 도움말");std::filesystem::remove(work/"d/help.korean");
++    CHECK(files.ProbeExact("d/help.korean")==0 && files.Probe("d/help.korean")!=0);const auto found=FindBuiltinKoreanFile(files,{portable},"\\D\\HELP.KOREAN");CHECK(found && *found==std::filesystem::absolute(portable/"lang/korean/d/help.korean").lexically_normal());
++    CHECK(KoreanBytes(ReadLocalizedGameFile(files,{portable},"d/help.korean"))=="\xef\xbb\xbf한국어 도움말");CHECK(KoreanBytes(ReadLocalizedGameFile(files,{portable},"d/help.english"))=="ENGLISH\xe9"); // 영어원시BYTE는그대로다.
++    KoreanWrite(work/"d/help.korean","\xef\xbb\xbf사용자 도움말");CHECK(!FindBuiltinKoreanFile(files,{portable},"d/help.korean"));CHECK(KoreanBytes(ReadLocalizedGameFile(files,{portable},"d/help.korean"))=="\xef\xbb\xbf사용자 도움말");
++}
++
++TEST_CASE(KoreanIntegration_UnknownAbsoluteAndOtherLanguagesNeverSelectBuiltin) { // 사용자CustomMaps/절대/다른언어이름을공식번들로오인하지않는다.
++    using namespace netstorm::client;const auto repo=KoreanRepo(),work=KoreanWork("filters");netstorm::o::BaseFileSystem files(work); // 검사고유경로다.
++    for (const std::string name:{"d/custom.korean","d/help.english","d/help.german","help.korean","d/../help.korean","d/sub/help.korean","//server/d/help.korean","C:/CustomMaps/d/help.korean"}) CHECK(!FindBuiltinKoreanFile(files,{repo},name)); // 공식43본문과정확한논리디렉터리만허용한다.
++    KoreanWrite(work/"d/custom.english","CUSTOM-EN");CHECK(KoreanBytes(ReadLocalizedGameFile(files,{repo},"d/custom.korean"))=="CUSTOM-EN"); // 미등록커스텀본문의영어대체는기존VFS가소유한다.
++    KoreanWrite(work/"CustomMaps/d/help.korean","USER-ABS");const auto absolute=netstorm::platform::PathToUtf8(std::filesystem::absolute(work/"CustomMaps/d/help.korean"));CHECK(!FindBuiltinKoreanFile(files,{repo},absolute));CHECK(KoreanBytes(ReadLocalizedGameFile(files,{repo},absolute))=="USER-ABS");
++}
++
++TEST_CASE(KoreanIntegration_GuideFinderUsesKoreanLogicalNamesAndKeepsEnglishOrder) { // 영어fallback행위치와같은공식한국어행을연결해실제제목로드가한국어로간다.
++    using namespace netstorm::client;const auto repo=KoreanRepo(),work=KoreanWork("finder");netstorm::o::BaseFileSystem files(work);KoreanWrite(work/"d/offical1.english","title=EN"); // 기존첫열거행이다.
++    const auto english=files.MatchFinder("d\\offical*.english");CHECK(MatchLocalizedGameFiles(files,{repo},"d\\offical*.english")==english); // 영어목록순서/이름은동일하다.
++    const auto korean=MatchLocalizedGameFiles(files,{repo},"d\\offical*.korean");CHECK(korean.size()==8 && netstorm::o::AsciiLower(korean.front()).ends_with("offical1.korean"));std::set<std::string> unique; // 중복stem은하나만남아야한다.
++    for (const auto& name:korean) { CHECK(netstorm::o::AsciiLower(name).ends_with(".korean"));CHECK(unique.insert(netstorm::o::AsciiLower(name)).second);CHECK(FindBuiltinKoreanFile(files,{repo},name)); }
++}
++
++TEST_CASE(KoreanIntegration_NativeConfigAndMissionDisplayKeepAiState) { // 같은실제FILE부모의BOM해독과언어전환표시만갱신되는지확인한다.
++    using namespace netstorm::client;const auto repo=KoreanRepo(),game=repo/"assets/game-data";netstorm::o::BaseFileSystem files(game);files.RegisterArchives();const std::vector<std::filesystem::path> roots{repo}; // 보호자료는읽기만한다.
++    netstorm::o::ConfigInterface config([&](auto name) { return ReadLocalizedGameFile(files,roots,name); },files.FileNameOwner(),MakeConfigFileSearchHooks([&] { return game; }),KoreanConfigHooks(files,roots));
++    config.Configuration().Append("missionSpec=\"d/{local.1}.{currentLanguage}\"\nlanguageSpec=\"d/config.{local.1}\"\ncurrentLanguage=english\n");config.LoadLanguage("korean");CHECK(config.Language().Get("factory")=="워크샾");
++    MissionScript mission(config,"tutorial2");CHECK(mission.Get("myStartMoney")=="10000");mission.Set("myStartMoney","31415");const auto englishTitle=mission.Get("title");config.Set("currentLanguage","korean");
++    CHECK(mission.Get("title")=="비밀 워크샾" && mission.Get("title")!=englishTitle);CHECK(mission.Get("myStartMoney")=="31415");const auto body=mission.Section("A.");CHECK(body && body->find("건물, 1부")!=body->npos);config.Set("currentLanguage","english");CHECK(mission.Get("title")==englishTitle && mission.Get("myStartMoney")=="31415");
++}
++
++TEST_CASE(KoreanIntegration_ExplicitCustomMissionSourceKeepsItsNamespace) { // 공식미션과이름이같아도명시CustomMaps reader를번들로우회하지않는다.
++    using namespace netstorm::client;netstorm::o::ConfigInterface config;config.Configuration().Append("missionSpec=\"d/{local.1}.{currentLanguage}\"\ncurrentLanguage=english\n");std::vector<std::string> reads; // 명시source만있고공식자산reader는없다.
++    MissionScript mission(config,"tutorial2",{},[&](std::string_view name)->std::optional<std::vector<std::uint8_t>> { reads.emplace_back(name);const std::string text=name.ends_with(".korean") ? "\xef\xbb\xbf[Header]\ntitle=사용자 제목\nmyStartMoney=7\n[A.]\n사용자 안내\n":"[Header]\ntitle=CUSTOM TITLE\nmyStartMoney=7\n[A.]\nCUSTOM BODY\n";return std::vector<std::uint8_t>(text.begin(),text.end()); });
++    mission.Set("myStartMoney","19");config.Set("currentLanguage","korean");CHECK(mission.Get("title")=="사용자 제목" && mission.Get("myStartMoney")=="19");const auto body=mission.Section("A.");CHECK(body && body->find("사용자 안내")!=std::string::npos);CHECK(!reads.empty() && reads.back()=="d/tutorial2.korean");
++}
++
++TEST_CASE(KoreanIntegration_HelpBomIsTheOnlyDisplayDecodeTrigger) { // 원문1252/NUL/제어BYTE를잘못UTF8로재해석하지않는다.
++    using namespace netstorm::client;const std::string english("<h2>caf\xe9</h2>\0tail",19);const auto before=english; // 원문BYTE는한글표시토큰으로확장하지않는다.
++    CHECK(DecodeQuickHelpDisplaySource(english)==before);const std::string utf8="\xef\xbb\xbf<h2>한국어 도움말</h2>";const auto display=DecodeQuickHelpDisplaySource(utf8);CHECK(!display.starts_with("\xef\xbb\xbf") && HasExtendedDisplayText(display));CHECK(KoreanDecode(display)=="<h2>한국어 도움말</h2>");
++    CHECK(DecodeQuickHelpDisplaySource("한국어") == "한국어"); // BOM없는임의UTF8는새로추측해독하지않는다.
++}
++
++TEST_CASE(KoreanIntegration_HtmlExtendedFlagPreservesWholeTokensAndLegacyBytes) { // 기존938의제어BYTE삭제를실제평문파서에서검출한다.
++    using namespace netstorm::client;const auto text=KoreanDisplay("한국어 본문");HtmlTextParserState state;HtmlTextParserGlobals globals; // 기본false는원문제어BYTE관문이다.
++    CHECK(!HasExtendedDisplayText(HtmlTextParser(state,globals).Parse(text)));globals.extendedText=true;const auto result=HtmlTextParser(state,globals).Parse(text);CHECK(KoreanDecode(result).find("한국어 본문")!=std::string::npos);
++    const std::string malformed("\x1f\x01",2);CHECK(HtmlTextParser(state,globals).Parse(malformed)=="\n");globals.extendedText=false;CHECK(HtmlTextParser(state,globals).Parse("ASCII unchanged")=="ASCII unchanged\n");
++}
++
++TEST_CASE(KoreanIntegration_HtmlFactoryRecognizesPureKoreanOnlyThroughCloneHook) { // 한글만있는본문도빈창xxx/삭제로처리하지않는다.
++    using namespace netstorm::client;HtmlWindowGumpState shared;HtmlWindowGumpNode node{};node.serial=61;node.baseWidth=200;node.baseHeight=100;HtmlTextParserGlobals globals;globals.extendedText=true;std::string shown;bool killed{}; // 게임/Gump창대신명시부모만제공한다.
++    HtmlWindowFactoryHooks hooks;hooks.create=[](auto,auto) { return 1U; };hooks.node=[&](auto) { return &node; };hooks.substitute=[](auto value,auto) { return std::string(value); };hooks.parse=[&](auto& state,auto,auto value,auto capacity) { return HtmlTextParser(state,globals).Parse(value,static_cast<std::int32_t>(capacity)); };hooks.metadata=[](auto,auto) { return 1U; };hooks.wallSeconds=[] { return 1.0; };hooks.fallback=[] { return std::string("OK"); };hooks.body=[&](auto,auto value) { shown=value; };hooks.attach=[](auto,auto,auto,auto,auto) {};hooks.modal=[](auto,auto) {};hooks.kill=[&](auto) { killed=true; };hooks.read=[](auto address) { return address==0x5c78f4U ? 600U:800U; };
++    CHECK(HtmlWindowFactory(shared,hooks).Show(KoreanDisplay("본문"),0,0,0)==0 && killed);killed=false;hooks.localizedContent=[&](auto value) { return globals.extendedText && HasExtendedDisplayText(value); };
++    CHECK(HtmlWindowFactory(shared,hooks).Show(KoreanDisplay("본문"),0,0,0)==61 && !killed);CHECK(KoreanDecode(shown).find("본문")!=std::string::npos);
++}
++
++TEST_CASE(KoreanIntegration_RealHelpAll128TopicsAndLargestBodyKeepKoreanTail) { // 준비파일추산이아닌실제전체Help/링크/HTML출력을8192BYTE경계에서검사한다.
++    using namespace netstorm::client;const auto bytes=netstorm::o::ReadFileBytes(KoreanRepo()/"assets/lang/korean/d/help.korean");const std::string raw(bytes.begin(),bytes.end()),display=DecodeQuickHelpDisplaySource(raw);const std::regex anchor("<a name=\"([^\"]*)\">");std::set<std::string> topics; // 실제본문의중복을보존하고주제별전체순회한다.
++    for (std::sregex_iterator entry(raw.begin(),raw.end(),anchor),end;entry!=end;++entry) topics.insert(netstorm::o::AsciiLower((*entry)[1].str()));
++    CHECK(topics.size()==128);
++    for (const auto& topic:topics) { const auto body=KoreanHelpBody(display,topic);CHECK(body.size()<8192);for (std::size_t at=0;at<body.size();++at) { if (static_cast<std::uint8_t>(body[at])!=netstorm::o::kExtendedTextLead) continue;CHECK(netstorm::o::DecodeExtendedSequence({reinterpret_cast<const std::uint8_t*>(body.data()),body.size()},at));at+=netstorm::o::kExtendedTextLength-1; } } // 마지막한글도중간BYTE에서잘리지않아야한다.
++    const auto large=KoreanHelpBody(display,"battleOptionsHelp");CHECK(HasExtendedDisplayText(large));CHECK(KoreanDecode(large).find("멀티플레이어 빠른 시작으로 돌아가기")!=std::string::npos); // 8086BYTE원자료의끝안내까지남아야한다.
++}
++
++TEST_CASE(KoreanIntegration_TellFileMenuInvalidationReloadsLocalizedTitles) { // 기존등록Config가언어전환후영어제목을계속노출하지않는다.
++    using namespace netstorm::client;const auto repo=KoreanRepo(),game=repo/"assets/game-data";netstorm::o::BaseFileSystem files(game);files.RegisterArchives(); // 파일목록의namespace는현재선택언어만바뀐다.
++    netstorm::o::ConfigInterface config([&](auto name) { return ReadLocalizedGameFile(files,{repo},name); },files.FileNameOwner(),MakeConfigFileSearchHooks([&] { return game; }),KoreanConfigHooks(files,{repo}));TellFileMenus menus(config,[&](auto pattern) { return MatchLocalizedGameFiles(files,{repo},pattern); });ScriptStringRing strings;std::vector<std::string> labels;
++    menus.Append(KoreanDisplay("d/offical*.english"),1,"0",true,strings,[&](const auto& item) { if (!item.separator) labels.push_back(KoreanDecode(item.label)); });CHECK(!labels.empty());const auto english=labels;auto* registered=config.Registry().FindByName("offical1");CHECK(registered);config.Set("currentLanguage","korean");menus.InvalidateLanguageFiles();CHECK(config.Registry().FindByName("offical1")==registered);if (registered) CHECK(registered->Section("Overview"));labels.clear();
++    menus.Append(KoreanDisplay("d/offical*.korean"),1,"0",true,strings,[&](const auto& item) { if (!item.separator) labels.push_back(KoreanDecode(item.label)); });CHECK(!labels.empty() && labels!=english);CHECK(std::any_of(labels.begin(),labels.end(),[](const auto& value) { return value.find("초기 미션")!=value.npos || value.find("사제")!=value.npos; }));
++}
++
++TEST_CASE(KoreanIntegration_EnglishHelpBytesAndOutputStayIdentical) { // 실제클론표시허용이기존영문파일선택/출력을바꾸지않는다.
++    using namespace netstorm::client;const auto repo=KoreanRepo();netstorm::o::BaseFileSystem files(repo/"assets/game-data");files.RegisterArchives();const auto raw=files.Read("d/help.english");const std::string english(raw.begin(),raw.end()); // 원본자료는읽기만한다.
++    const auto localized=ReadLocalizedGameFile(files,{repo},"d/help.english");CHECK(localized && *localized==raw);CHECK(DecodeQuickHelpDisplaySource(english)==english);const std::regex anchor("<a name=\"([^\"]*)\">");std::set<std::string> topics;
++    for (std::sregex_iterator entry(english.begin(),english.end(),anchor),end;entry!=end;++entry) topics.insert(netstorm::o::AsciiLower((*entry)[1].str())); // 실제원문주제의중복/별칭은전체파서입력에남긴다.
++    CHECK(topics.size()==128);
++    for (const auto& topic:topics) CHECK(KoreanHelpBody(english,topic,false)==KoreanHelpBody(english,topic,true)); // defaultfalse오라클과클론true를동일한영문입력으로대조한다.
++}
+diff --git a/cpppj/tests/QuickHelpWindowTests.cpp b/cpppj/tests/QuickHelpWindowTests.cpp
+--- a/cpppj/tests/QuickHelpWindowTests.cpp
++++ b/cpppj/tests/QuickHelpWindowTests.cpp
+@@ -1,4 +1,5 @@
+ #include "client/QuickHelpFileRead.h"
++#include "o/OriginalText.h"
+ #include "QuickHelpFileReadTestSupport.h"
+ #include "o/RawColorMapCache.h"
+ #include "o/RawFileName.h"
+@@ -34,6 +35,8 @@
+     float scale{1};bool script{},empty{},failure{};std::int32_t lineCount{1},frame{3};std::string trace,helpText="<a name=\"unitType\"><info><p>BODY</a>\nEND"; // 독립 GUI/파일/Config 입력이다.
+     std::function<void(std::uint32_t)> backgroundCreated; //질감 자식 생성 뒤 원본 전역이 바뀐 경우의 현재 값 재조회를 검사한다.
+     std::function<std::optional<std::string>(std::string_view)> fileRead; // 선택한 실제/명시 FILE reader를 기존 창 몸체에 공급한다.
++    std::function<std::string()> fileSpec; // 언어cache추가검사만현재파일키를공급하며기존fixture의기본영문키는그대로다.
++    std::function<std::string()> fileSpec; // 언어cache추가검사만현재파일키를공급하며기존fixture의기본영문키는그대로다.
+     std::function<void(std::string_view)> fileError; // NULL 반환의 원문 로그와 실제 Open 예외를 구별한다.
+     // 첫 관측과 같은 현재 노드/기본 전역을 공급하고 제품 처리기만 조립한다.
+     WindowFixtureScene() {
+@@ -52,7 +55,7 @@
+         h.constructButton=[this](auto token,auto width,auto height,std::string_view label,auto unused,auto context) { Event("Stone,"+std::to_string(token)+','+std::to_string(width)+','+std::to_string(height)+','+TextHex(label)+','+std::to_string(unused)+','+std::to_string(context));Fill(token,60,20,0); };h.fitButton=[this](auto token) { Event("Fit,"+std::to_string(token)); };
+         h.constructInformation=[this](auto token,auto width,auto height,auto font,auto color) { ConstructText(token,width,height,font,color); };
+         h.constructPicture=[this](auto token,auto type,auto image,auto mode) { Event("Picture,"+std::to_string(token)+','+std::to_string(type)+','+std::to_string(image)+','+std::to_string(mode));Fill(token,99,88,1); };
+-        h.translate=[](std::string_view value) { return std::string(value); };h.config=[this](std::string_view key) { Event("Config,"+TextHex(key));return std::string("d/help.english"); };
++        h.translate=[](std::string_view value) { return std::string(value); };h.config=[this](std::string_view key) { Event("Config,"+TextHex(key));return fileSpec ? fileSpec():std::string("d/help.english"); };
+         h.load=[this](std::string_view name) -> std::optional<std::string> { Event("Load,"+TextHex(name)+",0,2");if (fileRead) return fileRead(name);return failure ? std::nullopt : std::optional<std::string>(helpText); };h.loadError=[this](std::string_view name) { Event("LoadError,9,"+TextHex(name));if (fileError) fileError(name); };
+         h.substitute=[this](std::string_view text) { Event("Substitute,"+TextHex(text)+",8192");return empty ? std::string{} : std::string(text); };h.nearestColor=[this](auto red,auto green,auto blue) { Event("Color,"+std::to_string(red)+','+std::to_string(green)+','+std::to_string(blue));return 35U; };h.scripted=[this] { Event("Script");return script; };
+         h.kill=[this](auto token) { Kill(token); };h.push=[this](auto token) { Push(token); };h.clearBody=[this](auto token) { html->Clear(token); };h.attach=[this](auto token,float x,float y,auto parent,auto mode) { Attach(token,x,y,parent,mode); };h.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { BaseAttach(token,x,y,parent,mode); };h.lines=[this](auto token) { CHECK(token==kInfo);return lineCount; };
+@@ -183,3 +186,12 @@
+     try { scene.help->Construct(kWindow,0); }catch (const netstorm::o::ColorCacheUnableToOpen&) { rejected=true; }
+     CHECK(rejected && !scene.state.helpData && scene.state.id==0 && errors==0 && scene.window.body==kBody && scene.window.backButton==kBack);Text(root/"d/help.english","");scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(scene.state.helpData==std::string("\n") && scene.state.helpData->c_str()[1]==0 && scene.state.id==scene.window.serial && errors==0);
+ }
++
++TEST_CASE(KoreanIntegration_ActualHelpCacheReloadsAcrossLanguageInvalidation) { // 같은실제창/cache와FILE해독을영어/한국어/영어순서로대조한다.
++    using namespace netstorm::test::helpread;const auto root=Work();const std::string english="<h2>English Help</h2>";Text(root/"d/help.english",english);Text(root/"d/help.korean","\xef\xbb\xbf<h2>한국어 도움말</h2>");netstorm::client::Client instance(Options(root));WindowFixtureScene scene;scene.state.helpData.reset();std::string selected="d/help.english";std::size_t reads{}; // fixture기대값을바꾸지않는새독립입력이다.
++    scene.fileSpec=[&] { return selected; };scene.fileRead=[&](auto name) { ++reads;return ReadClientQuickHelpFile(instance,name); };scene.help->Construct(kWindow,0);CHECK(scene.state.helpData==english+"\n" && reads==1);
++    selected="d/help.korean";scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(scene.state.helpData==english+"\n" && reads==1); // 기존성공cache는명시무효화전까지유지된다.
++    scene.help->InvalidateCache();CHECK(!scene.state.helpData);scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(scene.state.helpData && reads==2);
++    if (scene.state.helpData) CHECK(netstorm::o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(scene.state.helpData->data()),scene.state.helpData->size()})=="<h2>한국어 도움말</h2>\n");
++    selected="d/help.english";scene.help->InvalidateCache();scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(scene.state.helpData==english+"\n" && reads==3);CHECK(netstorm::o::ReadFileBytes(root/"d/help.english")==std::vector<std::uint8_t>(english.begin(),english.end()));
++}

@@ -1,0 +1,75 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 350
+myTech = "sunCannon;windWalker;windBattery;windAviary;windBlocker;sunBlocker"
+
+aiName = "Lord of Rain"
+aiTech = "sunWalker;rainBattery;rainAviary;rainBlocker;rainBalloon"
+aiStartMoney = 0
+aiGeyserAttachments = 2
+aiCollectors = 3
+aiTimeBetweenMoves = 2
+
+title="도망쳐라!"
+
+[Init]
+<$ViewSpot,(139x88)>
+
+
+[A.]
+<h2>도망쳐라!</h2>
+<i>"병사들이 용감하리라 믿으면, 그들은 용감해진다.<br>
+그들이 영원히 살리라 믿으면, 그들은 결코 죽지 않는다."<br>
+--홀섬 브렉스 대령</i>
+<p>
+식량과 스톰 파워가 바닥난 윈드의 섬이 며칠째 표류했습니다.
+승무원의 충성심과 기술만이 그들을 살게 했습니다.
+<p>
+조용히 표류하던 섬은 들키지 않은 채 적의 요새 근처에 이르렀습니다.
+측면으로 다리를 놓고 용감한 지원자들이
+위험한 임무에 나섭니다.
+$Button=다음,Tell,A1.
+
+[A1.]
+<h2>도망쳐라!</h2>
+<p>
+임무는 생산을 재개할 만큼 스톰 파워를 훔치는 것입니다.
+어쩌면 적을 물리칠 수도 있습니다!
+<p>
+스톰 크리스탈을 집는 순간 들키고 말았습니다!
+서둘러 섬으로 돌아오게 하고 전투를 준비해야 합니다.
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+영리한 사제가 살아 돌아왔고
+당신의 섬은 용감하고 놀라운 승리를 거두었습니다!
+이제 며칠 동안 축제를 벌일 만큼
+자원과 스톰 파워가 충분합니다.
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,GuardMyBack
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+모든 것을 잃었습니다! 승무원과 사제에게는
+승리할 용기와 힘이 있었지만, 당신의 서투름이 그들을 파멸시켰습니다.
+<p>
+이 용감하고 충성스러운 이들에게 남은 것은 죽음뿐입니다.
+창백한 입술에 당신을 향한 저주를 머금은 죽음입니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]
+																		 
+																		 

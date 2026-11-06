@@ -1,0 +1,54 @@
+{
+  "status": "정적 준비검사만 수행/제품 미적용/컴파일 및 C++검사 실행 미검증",
+  "productBaseHead": "1f00a25add9619291f7978a18b2c07f2de0ee242",
+  "patchCheck": {
+    "command": "git apply --check --ignore-space-change extracted/cpp-korean-integration-preparation/final.patch",
+    "exitCode": 0,
+    "stderr": "",
+    "mutatedProduct": false
+  },
+  "patchPaths": 41,
+  "duplicatePatchPaths": 0,
+  "fixturePathsInPatch": 0,
+  "assetCount": 44,
+  "frozenAssetsChanged": 0,
+  "priorPendingChanged": 0,
+  "configTagMacroEscapeFormatSequencePreserved": true,
+  "trackedProtectedPathsWithUncommittedChanges": [],
+  "currentCloneLegacyDiagnosticExactConsumers": [],
+  "diagnosticSearchScope": [
+    "cpppj/src/**/*.{cpp,h,inc}",
+    "cpppj/tests/**/*.{cpp,h,inc}"
+  ],
+  "diagnosticSearchLimit": "현재 키의 리터럴 검색이며 원본 동적 키 구성/미복원 코드의 불가능을 증명하지 않는다. 새 외부 접속/메일/브라우저 실행은 추가하지 않았다.",
+  "fontInputs": [
+    {
+      "path": "fonts/D2Coding-Ver1.4.0-20261003-all.ttc",
+      "bytes": 8500540,
+      "sha256": "1d3ce697149412ae6f1c7b80970ebc8b5abd80e34ae539e5ccefd7f78e5b8419"
+    },
+    {
+      "path": "fonts/License.txt",
+      "bytes": 4006,
+      "sha256": "5755b8a0eefddc5e728b1d1090a08fbfef9656baed3104644cca7f86d112530e"
+    }
+  ],
+  "newCppTestsDrafted": 24,
+  "builds": 0,
+  "cppTestsRun": 0,
+  "gameGuiImeMpRuns": 0,
+  "packagePowerShellAstParseErrors": 0,
+  "packageScriptExecuted": false,
+  "builtinWhitelistMatchesActual43Assets": true,
+  "actualHelpAnchorIntervals": 138,
+  "actualHelpUniqueTopics": 128,
+  "finalTreeFiles": 85,
+  "finalAssetBytes": 349791,
+  "priorUiPatchSha256": "d6f23429107391f433c772b33949d33e2a0e0d353e5622cc02af2302d916d912",
+  "priorIntegrationPatchSha256": "5b20a8b156fae713c20d4cb32d289e7624608ea0bd9f2b79dae038111aac0982",
+  "sourceRebasePaths": [
+    "cpppj/src/client/ClientMain.cpp",
+    "cpppj/src/client/UberGump.cpp",
+    "cpppj/src/CMakeLists.txt"
+  ]
+}

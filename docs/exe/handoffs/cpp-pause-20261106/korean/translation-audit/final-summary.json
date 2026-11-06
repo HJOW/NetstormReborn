@@ -1,0 +1,17 @@
+{
+  "preparedAssets": 44,
+  "preparedBytes": 349713,
+  "completedMissions": 32,
+  "additionalCommonTranslatedIntervals": 130,
+  "sha256SumsSha256": "ce02fefc957b3e4de36cbd5a384d50b0a1cbc71c83f9bc7bf53b2bf908de7cc9",
+  "tellSha256": "0024324bafc9edf14570f4697ec3bcdcd96ed81b47e913bc830ff79228f05223",
+  "helpSha256": "d757023f04c7a44d787b337d22cd87c023ce4b53061f11167b14ac5ab4f34c06",
+  "tellUntranslatedDirectEnglishWords": 0,
+  "helpPreservedPlaceholderEnglishWords": 38,
+  "productApplied": false,
+  "gameRun": false,
+  "buildRun": false,
+  "sourceWbSharedIntegrityVerified": true,
+  "nameVariantCandidates": 0,
+  "preservedGeneralNounRows": 13
+}

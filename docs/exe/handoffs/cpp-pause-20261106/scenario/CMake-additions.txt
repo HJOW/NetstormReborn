@@ -1,0 +1,17 @@
+# 이 파일은 인수인계용 조각이며 실제 CMakeLists.txt에 적용하지 않았다.
+# 한국어 final-pending의 DisplayTextInput.cpp/IME/클립보드/HTML 보존을 먼저 통합한다.
+target_sources(netstorm PRIVATE
+    client/ScenarioDocument.cpp client/ScenarioDocument.h
+    client/EditorScenarioModel.cpp client/EditorScenarioModel.h
+    client/EditorScenarioFiles.cpp client/EditorScenarioFiles.h
+    client/EditorScenarioController.cpp client/EditorScenarioController.h
+    client/UberScenario.inc)
+
+# 기존 미등록 모델 검사10개와 새 통합 검사9개를 기존 일반 검사 대상에 추가한다.
+target_sources(netstorm_tests PRIVATE
+    ScenarioDocumentTests.cpp
+    EditorScenarioIntegrationTests.cpp)
+
+# 집중 필터: ScenarioDocument_, EditorScenarioModel_, EditorScenarioIntegration_
+# 원문 회귀 필터: GameMenus_, SaveFortNameDialog_, EditorTestBattle_, EditorSaveGoMain_, EditorCatalog_
+# 모든 검사는 아직 빌드/실행하지 않았다. root가 실제 등록/컴파일/검사를 수행한다.

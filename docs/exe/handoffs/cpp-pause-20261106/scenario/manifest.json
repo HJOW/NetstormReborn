@@ -1,0 +1,251 @@
+{
+  "head_at_handoff": "1f00a25add9619291f7978a18b2c07f2de0ee242",
+  "host": "HJOW-Athlon",
+  "decompilation_host": "HJOW-Athlon",
+  "decompilation_date": "2026-11-03",
+  "builds": 0,
+  "tests_run": 0,
+  "game_gui_mp_runs": 0,
+  "patch_sha256": "d8cd5e633ef73e0190ea97ab2f7e2ce47da017479623ea2e61653db36d9deee8",
+  "patch_lines": 789,
+  "files": [
+    {
+      "path": "cpppj/src/client/EditorMapCatalogFiles.cpp",
+      "pending_sha256": "142785b8c2cdea3912576b1d1337078e9395df9eac6057351e16baac3d423abb",
+      "base_sha256": "f6ca231dad36e9846b3bab33b9013937152be6ecff58e86a94455e57b8cca4f2",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "f6ca231dad36e9846b3bab33b9013937152be6ecff58e86a94455e57b8cca4f2"
+    },
+    {
+      "path": "cpppj/src/client/EditorMapCatalogFiles.h",
+      "pending_sha256": "e10fd49f5d65f99b6b073929e99e9cafe2754cca738537c58c7b7e5583dde8a0",
+      "base_sha256": "b38b0250730c29ae01e9a34324d3369fae2517a8979249e6d1f8611f860d6b2c",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "b38b0250730c29ae01e9a34324d3369fae2517a8979249e6d1f8611f860d6b2c"
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioController.cpp",
+      "pending_sha256": "396fc6f4e5afcba400b7aa2958c334e41108c115b07ac5100af5f50c613b9aec"
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioController.h",
+      "pending_sha256": "dd1b8fcd0d57b6f2b55017b583ea13a138c2cbf2f60e6e5eb515492ac7607c3e"
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioFiles.cpp",
+      "pending_sha256": "1a73fc6d449cd421103aff31b2c45c90d77ed927f9a26dfd95a4450c21c984ae"
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioFiles.h",
+      "pending_sha256": "973115e28696c7d6844d07dbcd7fb8958a4730ec415e9e5e312be1a09f83aadc"
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioModel.cpp",
+      "pending_sha256": "d2e98171454d2ecd7aebd1fd378bddf50bb7b595fe3be297e5daca29aeab1610",
+      "base_sha256": "fcb3e9e7022b688e9b0c8c8ee0239d9fe6dd22a47d57686cbb2c2ee9f1069bb9",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "fcb3e9e7022b688e9b0c8c8ee0239d9fe6dd22a47d57686cbb2c2ee9f1069bb9"
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioModel.h",
+      "pending_sha256": "3de3d5cfd27b70efc9eed459c7ea444ac4640aae92f16a35ffc0fa1e5e0f08c7",
+      "base_sha256": "478c5b24e03e395db2705ff6f58dccd9ed608e72ca3e12105ccca9257a3e0d91",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "478c5b24e03e395db2705ff6f58dccd9ed608e72ca3e12105ccca9257a3e0d91"
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignMissionStartBindings.cpp",
+      "pending_sha256": "2a59f594a1833aa8519b0be0a36ab1829cce89ee6c7a9ca84046b2d79d81ce7b",
+      "base_sha256": "6d5e5c31ae34ffaa125d812446b48fd7cf6242d13a4a41303bc8fd538b289fbc",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "6d5e5c31ae34ffaa125d812446b48fd7cf6242d13a4a41303bc8fd538b289fbc"
+    },
+    {
+      "path": "cpppj/src/client/RawGameMenus.cpp",
+      "pending_sha256": "fd6d64ce4e594915a5ae674f3ef9c8abf3a8da3615993ff3d1709bb61c312fed",
+      "base_sha256": "6bdb27b0ed5e2a074b0d856f9dce3c511670604f747cb761ae483751cd0912af",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "6bdb27b0ed5e2a074b0d856f9dce3c511670604f747cb761ae483751cd0912af"
+    },
+    {
+      "path": "cpppj/src/client/RawGameMenus.h",
+      "pending_sha256": "bdad400905072f4c9c8044487e4d87441f640fe789d6283526d4ecb77928f3a4",
+      "base_sha256": "eb939e35925bbe6239eab949d23cd8a478014441cbef0d1418f3b136e1b42b14",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "eb939e35925bbe6239eab949d23cd8a478014441cbef0d1418f3b136e1b42b14"
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.cpp",
+      "pending_sha256": "c32805ebf986fe0cffe1594a0fd4d225a0553aa0565225580838dad30bdfb1ef",
+      "base_sha256": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476"
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.h",
+      "pending_sha256": "90fd5b0fb8f3093d82248abaa5b508274b5d76a122e8f1544851bd561fafe434",
+      "base_sha256": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e"
+    },
+    {
+      "path": "cpppj/src/client/RawMenuSaveFort.inc",
+      "pending_sha256": "bbf7e5356bd84634cfb26cc3108fc8056e015cedddf3433d30ccd6a6bbfb821a",
+      "base_sha256": "a92eb798f12dc960a3bc88e7e7888bf61083af3822c4805d07fc52cfcf3d7457",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "a92eb798f12dc960a3bc88e7e7888bf61083af3822c4805d07fc52cfcf3d7457"
+    },
+    {
+      "path": "cpppj/src/client/SaveFortNameDialog.cpp",
+      "pending_sha256": "3990bd15626c9b8ce5f2116f0f19b7a8c87d8c9091f2b3ca965ead3848328d55",
+      "base_sha256": "edc4d007991332a5883dab81b0188f5aa479ae9cf52183bb19906c8961039184",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "edc4d007991332a5883dab81b0188f5aa479ae9cf52183bb19906c8961039184"
+    },
+    {
+      "path": "cpppj/src/client/SaveFortNameDialog.h",
+      "pending_sha256": "edf67bfe70046b88286614bb0b3a4a3d460d20b532eb2f8e13f59aad870edf72",
+      "base_sha256": "d7bc5cb1ca41ba31303f6f8cde2d19e05e40b3fa20ebb70f1387eb20eee1665b",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "d7bc5cb1ca41ba31303f6f8cde2d19e05e40b3fa20ebb70f1387eb20eee1665b"
+    },
+    {
+      "path": "cpppj/src/client/ScenarioDocument.cpp",
+      "pending_sha256": "7ef18e395fbc7ebc84780b54a58393dec6a142fef35e15f5afaffa3e6574a87d",
+      "base_sha256": "96ee0c3703e34090c54837451d49fb49e04390a5a2681564648cf4549e80ff02",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "96ee0c3703e34090c54837451d49fb49e04390a5a2681564648cf4549e80ff02"
+    },
+    {
+      "path": "cpppj/src/client/ScenarioDocument.h",
+      "pending_sha256": "c9a8577b82cee3e23e12412b18a8e4803725df9390ce1669342633a72ec93c24",
+      "base_sha256": "c2f3323f4307050cae2ef465c0e1f9170c3765362cb632ec94f67f9603dfef74",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "c2f3323f4307050cae2ef465c0e1f9170c3765362cb632ec94f67f9603dfef74"
+    },
+    {
+      "path": "cpppj/src/client/UberEditor.inc",
+      "pending_sha256": "20757a517cddc60600a342147dbf0ba209d955e5a23e6b71457bb043821c5ebf",
+      "base_sha256": "7a8ad975d5617a33087852103e77f27a6197acf0bbce2eb14276ef14232623df",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "7a8ad975d5617a33087852103e77f27a6197acf0bbce2eb14276ef14232623df"
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "pending_sha256": "32ce3d4818a8e37fbd1b282577a397e7f33f86dcee8a488b056c4dae0c5652ce",
+      "base_sha256": "b73e44d448e8ae99a97ba32cf2edc80fcc96730ca2e4cdbe0ef068e4640bb997",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "b73e44d448e8ae99a97ba32cf2edc80fcc96730ca2e4cdbe0ef068e4640bb997"
+    },
+    {
+      "path": "cpppj/src/client/UberGump.h",
+      "pending_sha256": "001d1bfd0da6de5bc2dad9879497f0a90334443ac9a5bb53019e7c4b7d7f05a7",
+      "base_sha256": "ec8872b1fdda67f7a13afe9cbcb0fff507f4f979acb824c2c20f19de1ad0cd07",
+      "product_equals_base_at_handoff": true,
+      "product_sha256_at_handoff": "ec8872b1fdda67f7a13afe9cbcb0fff507f4f979acb824c2c20f19de1ad0cd07"
+    },
+    {
+      "path": "cpppj/src/client/UberScenario.inc",
+      "pending_sha256": "4639752f5586d3b9f4613e9f1b2ea9b48e61e34937db22f36e3d1c8d12a475fb"
+    },
+    {
+      "path": "cpppj/tests/EditorScenarioIntegrationTests.cpp",
+      "pending_sha256": "23759a45016b27c1740b387b3784c46dbc591c60d10aee99c8ed114375a98419"
+    }
+  ],
+  "baseline_files": [
+    {
+      "path": "cpppj/src/client/EditorMapCatalogFiles.cpp",
+      "sha256": "f6ca231dad36e9846b3bab33b9013937152be6ecff58e86a94455e57b8cca4f2",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/EditorMapCatalogFiles.h",
+      "sha256": "b38b0250730c29ae01e9a34324d3369fae2517a8979249e6d1f8611f860d6b2c",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioModel.cpp",
+      "sha256": "fcb3e9e7022b688e9b0c8c8ee0239d9fe6dd22a47d57686cbb2c2ee9f1069bb9",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/EditorScenarioModel.h",
+      "sha256": "478c5b24e03e395db2705ff6f58dccd9ed608e72ca3e12105ccca9257a3e0d91",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignMissionStartBindings.cpp",
+      "sha256": "6d5e5c31ae34ffaa125d812446b48fd7cf6242d13a4a41303bc8fd538b289fbc",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/RawGameMenus.cpp",
+      "sha256": "6bdb27b0ed5e2a074b0d856f9dce3c511670604f747cb761ae483751cd0912af",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/RawGameMenus.h",
+      "sha256": "eb939e35925bbe6239eab949d23cd8a478014441cbef0d1418f3b136e1b42b14",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.cpp",
+      "sha256": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/RawMenuControls.h",
+      "sha256": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/RawMenuSaveFort.inc",
+      "sha256": "a92eb798f12dc960a3bc88e7e7888bf61083af3822c4805d07fc52cfcf3d7457",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/SaveFortNameDialog.cpp",
+      "sha256": "edc4d007991332a5883dab81b0188f5aa479ae9cf52183bb19906c8961039184",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/SaveFortNameDialog.h",
+      "sha256": "d7bc5cb1ca41ba31303f6f8cde2d19e05e40b3fa20ebb70f1387eb20eee1665b",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/ScenarioDocument.cpp",
+      "sha256": "96ee0c3703e34090c54837451d49fb49e04390a5a2681564648cf4549e80ff02",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/ScenarioDocument.h",
+      "sha256": "c2f3323f4307050cae2ef465c0e1f9170c3765362cb632ec94f67f9603dfef74",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/UberEditor.inc",
+      "sha256": "7a8ad975d5617a33087852103e77f27a6197acf0bbce2eb14276ef14232623df",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "sha256": "b73e44d448e8ae99a97ba32cf2edc80fcc96730ca2e4cdbe0ef068e4640bb997",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/src/client/UberGump.h",
+      "sha256": "ec8872b1fdda67f7a13afe9cbcb0fff507f4f979acb824c2c20f19de1ad0cd07",
+      "product_equals_base": true
+    },
+    {
+      "path": "cpppj/tests/ScenarioDocumentTests.cpp",
+      "sha256": "b00da9b3ceab065e3256a1faa188b82603fb5d8a56d88c49e86389d83f7b4a24",
+      "product_equals_base": true
+    }
+  ],
+  "new_test_cases": 9,
+  "existing_unregistered_test_copy": "cpppj/tests/ScenarioDocumentTests.cpp",
+  "patch_check": "git apply --check --whitespace=error --ignore-space-change: exit 0"
+}

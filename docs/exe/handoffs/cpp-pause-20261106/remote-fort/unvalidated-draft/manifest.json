@@ -1,0 +1,19 @@
+{
+  "status": "UNVALIDATED DRAFT: never applied or compiled; do not apply; requires new review after explicit work resume",
+  "files": [
+    {
+      "path": "cpppj/src/client/CampaignTemplateStorage.h",
+      "base_sha256": "8a4871fff041a3db56963d2cfcca0281a8054fe640cd44bfdf4a9db2e30e183a",
+      "pending_sha256": "0786720d8d178876572a8359708443b1a7721317a2fb381ba5a32c66b478e2be"
+    },
+    {
+      "path": "cpppj/src/client/CampaignTemplateStorage.cpp",
+      "base_sha256": "97689846ae00b8212eb9a866ff003ebdca65faf54c1191d732113e5ac1fc263a",
+      "pending_sha256": "965f832327f67bc1b79b767016b7971c9c8d7978bb05aec1ddf05ba652e61a93"
+    }
+  ],
+  "agent_builds": 0,
+  "agent_runs": 0,
+  "new_mp_tests": 0,
+  "reason": "생성 직후 사용자 중지 지시에 따라 구현을 중단하고 출처 보존용으로 분리했다. 정식986 산출물은 설계/함수표뿐이다."
+}

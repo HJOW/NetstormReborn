@@ -1,0 +1,2 @@
+# 기준/후보/패치의 CRLF·LF와 UTF-8 BOM을 바이트 그대로 보존한다.
+* -text whitespace=cr-at-eol
