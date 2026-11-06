@@ -27,14 +27,14 @@ std::size_t FieldSize(std::uint8_t mask) { return ((mask&kStart) ? 8U : 0U)+((ma
 // 원본의 범위 밖 읽기 대신 실제 버퍼 길이를 미리 요구한다. 선언 길이 WORD는 별도 전송 계층의 책임이다.
 void Require(std::size_t actual,std::size_t needed) { if (actual<needed) throw std::invalid_argument("건설 상태 패킷 길이 부족"); }
 }
-RawConstructionData::RawConstructionData(SidPool& pool,ConstructionProcessState& state,ConstructionDataHooks hooks,SquidProcessHost* host)
-    :pool_(pool),state_(state),hooks_(std::move(hooks)),host_(host) {
+RawConstructionData::RawConstructionData(SidPool& pool,ConstructionProcessState& state,ConstructionDataHooks hooks,SquidProcessHost* host,ConstructionDataAssertion assertion)
+    :pool_(pool),state_(state),hooks_(std::move(hooks)),host_(host),assertion_(std::move(assertion)) {
     if (!hooks_.allocate || !hooks_.attach || (!host && !hooks_.lookup) || (host && &host->Pool()!=&pool))
         throw std::invalid_argument("건설 상태 수신의 저장소/효과 연결 오류");
 }
 // 실제 새 객체 수신도 같은 월드의 건설/삭제/Kernel을 사용한다.
-RawConstructionData::RawConstructionData(SidPool& pool,ConstructionProcessState& state,RawConstructionProcess& logic,SquidProcessHost& host)
-    :pool_(pool),state_(state),host_(&host),logic_(&logic) {
+RawConstructionData::RawConstructionData(SidPool& pool,ConstructionProcessState& state,RawConstructionProcess& logic,SquidProcessHost& host,ConstructionDataAssertion assertion)
+    :pool_(pool),state_(state),host_(&host),logic_(&logic),assertion_(std::move(assertion)) {
     if (&logic.Pool()!=&pool || &host.Pool()!=&pool) throw std::invalid_argument("건설 상태 수신의 실제 풀이 다릅니다");
 }
 std::uint16_t RawConstructionData::Write(ConstructionProcessFields& fields,std::span<std::uint8_t> packet,
@@ -55,40 +55,41 @@ std::uint16_t RawConstructionData::WriteProcess(ConstructionProcess& process,std
     return Write(process.Fields(),packet,process.Form().value,parent,force,header);
 }
 std::uint32_t RawConstructionData::Read(ConstructionProcessFields* fields,std::span<const std::uint8_t> packet) {
-    Require(packet.size(),kHeaderSize);const auto mask=packet[8];Require(packet.size(),kHeaderSize+((mask&kParent) ? 4U : 0U)+FieldSize(mask));
-    if (!fields && (mask&(kStart|kEnd|kAdditional))) throw std::invalid_argument("건설 상태의 실제 필드가 없습니다");
+    Require(packet.size(),kHeaderSize);const auto mask=packet[8];
     std::uint32_t parent=0;std::size_t cursor=kHeaderSize;
-    if (mask&kParent) { parent=static_cast<std::uint32_t>(ReadBits(packet,cursor,4));cursor+=4; }
-    if (mask&kStart) { fields->start=std::bit_cast<double>(ReadBits(packet,cursor,8));cursor+=8; }
-    if (mask&kEnd) { fields->end=std::bit_cast<double>(ReadBits(packet,cursor,8));cursor+=8; }
-    if (mask&kAdditional) fields->additional=packet[cursor];
+    const auto requireFields=[&](std::size_t width) { Require(packet.size(),cursor+width);if (!fields) throw std::invalid_argument("건설 상태의 실제 필드가 없습니다"); }; // 선택된 실제 저장 직전만 검사해 앞선 부분 쓰기를 보존한다.
+    if (mask&kParent) { Require(packet.size(),cursor+4);parent=static_cast<std::uint32_t>(ReadBits(packet,cursor,4));cursor+=4; }
+    if (mask&kStart) { requireFields(8);fields->start=std::bit_cast<double>(ReadBits(packet,cursor,8));cursor+=8; }
+    if (mask&kEnd) { requireFields(8);fields->end=std::bit_cast<double>(ReadBits(packet,cursor,8));cursor+=8; }
+    if (mask&kAdditional) { requireFields(1);fields->additional=packet[cursor]; }
     return parent;
 }
 void RawConstructionData::Receive(std::span<const std::uint8_t> packet) const {
     Require(packet.size(),kHeaderSize);const auto number=static_cast<std::uint32_t>(ReadBits(packet,4,4));const auto mask=packet[8];
-    Require(packet.size(),kHeaderSize+((mask&kParent) ? 4U : 0U)+FieldSize(mask));
     if (!number || number>=pool_.Capacity()) throw std::out_of_range("건설 상태 form 번호 오류");
     const Sid form{static_cast<std::uint16_t>(number)};const auto raw=pool_.Slot(form);
     if (raw[11]&1) {
-        if (mask!=0xff) throw std::invalid_argument("새 건설 상태의 전체 비트가 필요합니다");
+        if (mask!=0xff) Assert("*(( char *)((char *)zacket+8) ) == (char)0xFFFFFFFF",0x42);
         auto owned=logic_ ? std::make_unique<ConstructionProcess>(*logic_,ConstructionProcessFields{}) : nullptr;
         auto* fields=owned ? &owned->Fields() : hooks_.allocate();if (!fields) throw std::bad_alloc();
         // 원본 수신 생성자가 쓰는 필드만 초기화한다. 추가/소리의 미초기화 영역은 저장소 공급자가 정한다.
         fields->dirty=0xff;fields->start=0;fields->end=0;
         const auto parent=Read(fields,packet);
         if (owned) {
-            if (!parent || parent>=pool_.Capacity()) throw std::out_of_range("수신한 건설 부모 DWORD 범위 오류");
-            host_->Attach(std::move(owned),state_.processType,Sid{static_cast<std::uint16_t>(parent)},0x10,form);
-        } else hooks_.attach(*fields,state_.processType,parent,number,0x10);
+            if (parent>65535U || parent>=pool_.Capacity()) throw std::out_of_range("수신한 건설 부모 DWORD 범위 오류");
+            host_->Attach(std::move(owned),state_.ProcessType(),Sid{static_cast<std::uint16_t>(parent)},0x10,form);
+        } else hooks_.attach(*fields,state_.ProcessType(),parent,number,0x10);
         return;
     }
-    if (mask&kParent) throw std::invalid_argument("기존 건설 상태의 부모 변경 비트 오류");
+    if (mask&kParent) Assert("(*(char *)(( (char *)zacket+8) ) & 1) == 0",0x4a);
     ConstructionProcessFields* fields=nullptr;
     if (host_) {
         auto* base=host_->FromForm(form);auto* process=dynamic_cast<ConstructionProcess*>(base);
-        if (base && (!process || process->Form()!=form)) throw std::invalid_argument("건설 상태의 실제 form 연결 오류");
         if (process) fields=&process->Fields();
     } else fields=hooks_.lookup(static_cast<ProcessId>(ReadBits(raw,18,4)));
     static_cast<void>(Read(fields,packet));
+}
+void RawConstructionData::Assert(std::string_view expression,std::uint32_t line) const { // 진단이 정상 복귀하면 원문 다음 명령으로 진행한다.
+    if (!assertion_) throw std::invalid_argument("건설 상태의 실제 진단 장치 미연결");assertion_(expression,pool_.Edition()==OriginalEdition::Patch1078 ? "c:\\ns\\o\\_p_constructionprocessdata.cpp" : "\\Ns\\o\\_p_constructionprocessdata.cpp",line);
 }
 }

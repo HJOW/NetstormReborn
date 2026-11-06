@@ -165,6 +165,7 @@
 #include "o/RawSquidFinder.h"
 #include "o/RawConstructionArrival.h"
 #include "o/RawConstructionProcess.h"
+#include "o/RawConstructionData.h" // 실제37h 수신과 일반/전체 writer도 같은 건설 본체/Host를 공유한다.
 #include "o/RawFormLinked.h"
 #include "o/RawManaBoltArrival.h"
 #include "o/RawManaBoltRegular.h"
@@ -326,7 +327,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,34> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c}; // 발사/회전 수신도 같은 Session 등록/해제 수명을 따른다.
+constexpr std::array<std::uint32_t,35> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37}; // 건설37h 수신도 같은 Session 등록/해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -843,6 +844,8 @@ struct RawCampaignSession::Impl {
     ConstructionEffectsState buildingEffectsState; // 완료 밀어내기가 현재 방향별 동맹을 읽는 저장소다.
     std::unique_ptr<RawConstructionEffects> buildingEffects; // 같은 해시/spot/가상 공간을 쓰는 원본 밀어내기 몸체다.
     std::unique_ptr<RawConstructionProcess> building; // 같은 Host의 실제30 시작/진행/완료를 소유한다.
+    std::unique_ptr<RawConstructionData> buildingData; // 같은 실제 건설 본체의 신규 Form/현재 PID37h decoder다.
+    bool writingConstruction{}; // 직전 writer가 공통 버퍼에 작성한 건설 패킷인지 구별한다.
     std::array<std::uint32_t,188> buildingMapTokens{}; // 원본 색표 초기화의 일반1/전용2/없는0 분류다.
     OwnerColorMaps buildingOwnerColors; // 일반 소유자 색 띠이며 다리는 별도 기존 분기로 취급한다.
     std::map<std::uint32_t,OwnerColorMaps> buildingSpecialOwnerColors; //벌룬/에어쉽/세일 스케이터의 실제 명도 색표를 최초 사용 때 보관한다.
@@ -935,6 +938,7 @@ struct RawCampaignSession::Impl {
         priestDamageState.sharedBoss=damageablePostState.sharedBoss=contentLifetimeState.sharedBoss=&gameplayGlobals->Authority()->boss; // 피격·삭제·중첩 커서 취소가 같은 현재 권한을 읽는다.
         constructionState.place.sharedAuthority=constructionState.clear.sharedAuthority=constructionState.notice.sharedAuthority=constructionState.geyser.sharedBoss=&gameplayGlobals->Authority()->boss; // 건설 하위 네 몸체는 Prepare 사본을 기다리지 않는다.
         buildingState.sharedBoss=geyserMinedState.sharedBoss=&gameplayGlobals->Authority()->boss; // 진행·표시·음향 효과 뒤에도 같은 현재 boss를 조회한다.
+        buildingState.currentProcessType=&gameplayGlobals->GameAux()->ConstructionProcessType(); // 생성/수신/볼텍스의 같은 현재005410e8을 Session보다 긴 owner에서 빌린다.
         constructionState.place.sharedServer=buildingEffectsState.sharedServer=&gameplayGlobals->Authority()->server; // Take와 섬 전파는 boss와 독립인 실제 server를 읽는다.
         constructionState.notice.sharedHistory=&gameplayGlobals->Camera().ConstructionHistory(); //같은 실제3f 통지가 Tab과 공유한 Client 장부를 쓰며 Session 교체로 소멸하지 않는다(718).
         farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();farm.sharedArchipelagoSpan=&gameplayGlobals->GameAux()->WorldGeyserMargin();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088/542654를 직접 빌린다.
@@ -1235,7 +1239,7 @@ struct RawCampaignSession::Impl {
         if (!hitEffects.burning.create) hitEffects.burning.create=[this](Sid victim) { const auto* process=particles->AddBurning(victim,1);return process ? process->Form() : Sid{}; };
         if (!hitEffects.burning.bulfSound) hitEffects.burning.bulfSound=[this](Sid,float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("불프 피격 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("bulfHurt.wav"),0,0); };
         // 건설 중 신전 피격은 기존 같은30 Form의 끝 시각과 실제 가상88 표시를 갱신한다.
-        if (!hitEffects.vortex.constructionType) hitEffects.vortex.constructionType=[this] { return buildingState.processType; };
+        if (!hitEffects.vortex.constructionType) hitEffects.vortex.constructionType=[this] { return buildingState.ProcessType(); };
         if (!hitEffects.vortex.resetEnd) hitEffects.vortex.resetEnd=[this](Sid form,std::uint32_t amount) { PrepareConstruction();building->ResetEndFromForm(form,amount); };
         if (!hitEffects.vortex.refresh) hitEffects.vortex.refresh=[this](Sid victim) { core.display.Update(core.pool.Slot(victim),0); };
         if (!hitEffects.dudes.createBurning) hitEffects.dudes.createBurning=[this](Sid victim) { static_cast<void>(particles->AddBurning(victim,0)); };
@@ -1401,7 +1405,7 @@ struct RawCampaignSession::Impl {
             if (HasRegularTable(kBaseDamageableHitTables,table)) return hits->GeneralDamage().BaseHit(victim,damage,static_cast<std::uint32_t>(owner),source);
             if (PriestLifetime(victim)) return hits->PriestDamage().Hit(victim,damage,static_cast<std::uint32_t>(owner),source);
             if (Vortex(victim)) {
-                VortexDamageHooks hooks;hooks.constructionType=[this] { return buildingState.processType; };
+                VortexDamageHooks hooks;hooks.constructionType=[this] { return buildingState.ProcessType(); };
                 hooks.find=[this](Sid parent,std::uint32_t type,std::uint32_t index,bool remove) { RawContainedLookup lookup(core.pool,[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });return lookup.Find(parent,type,index,remove); };
                 hooks.resetEnd=[this](Sid form,std::uint32_t amount) { if (!building) throw std::logic_error("예약 신전 피해의 건설 연결 누락");PrepareConstruction();building->ResetEndFromForm(form,amount); };hooks.refresh=[this](Sid sid) { core.display.Update(core.pool.Slot(sid),0); };
                 hooks.general=[this](Sid sid,std::int32_t amount,std::uint32_t owner,Sid source) { return hits->GeneralDamage().Hit(sid,amount,owner,source); };return RawVortexDamage(core.pool,victim,damage,static_cast<std::uint32_t>(owner),source,hooks);
@@ -1590,7 +1594,7 @@ struct RawCampaignSession::Impl {
             }
             catch (...) { std::fprintf(stderr,"실제 Regular 실패 SID%u TYPE%u event%u count%u payload%08x\n",sid.value,sid.value<core.pool.Capacity() ? core.pool.Slot(sid)[10] : 0xffffU,event,count,std::bit_cast<std::uint32_t>(payload));throw; }
         };
-        worldHooks.transmit=AviaryTransmission(combat->Transmission(services.formPacket,assetBindings->Transmission()));worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
+        worldHooks.transmit=AviaryTransmission(ConstructionTransmission(combat->Transmission(services.formPacket,assetBindings->Transmission())));worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
         worldHooks.bridgeEffect=[this](const BridgeLifecycleEvent& event) {
             if (event.effect==BridgeLifecycleEffect::NotifyRemoval) { static_cast<void>(particles->AddShrapnel(event.sid,ShrapnelKind::Variant2));return; } // 실제460600은 source와 종류2를4604a0에 전달한다.
             if (event.effect==BridgeLifecycleEffect::FallSound) { if (!services.sound.playOnceAt) throw std::logic_error("실제 다리 낙하 위치 소리 미연결");services.sound.playOnceAt(event.x,event.y,soundNames.Lookup("bridgeFall.wav"),0,0);return; }
@@ -2121,6 +2125,16 @@ struct RawCampaignSession::Impl {
     void BroadcastFlyerCommand(Sid parent,std::uint32_t command) const {
         std::array<std::uint8_t,20> packet{}; // 원본 caller의 미정+8/+16은 호스트에서0으로 초기화하며 정의된 필드와 구별한다.
         WriteFlyerCommandPacket(packet,parent,command);broadcast->Send(packet);
+    }
+    // 현재 건설 객체의 같은30BYTE writer/공통 버퍼를 일반/전체 상태 송신에 연결한다.
+    ProcessFormTransmission ConstructionTransmission(ProcessFormTransmission fallback) {
+        const auto write=[this](ConstructionProcess& process,bool parentChanged,bool force) { auto& aux=*gameplayGlobals->GameAux();const auto header=aux.ConstructionHeader();return static_cast<std::int32_t>(RawConstructionData::WriteProcess(process,aux.SquidTransmission().buffer,parentChanged,force,ConstructionDataHeader{header[1],header[0]})); }; // 헤더와 현재 Form/부모/필드는 실제 직렬화 위치에서 읽는다.
+        ProcessFormTransmission hooks;
+        hooks.writeData=[this,write,fallback](SquidProcess& process,bool parentChanged) { auto* current=dynamic_cast<ConstructionProcess*>(&process);writingConstruction=current!=nullptr;if (current) return write(*current,parentChanged,false);if (!fallback.writeData) throw std::logic_error("다른 프로세스의 실제 일반 writer 미연결");return fallback.writeData(process,parentChanged); };
+        hooks.writeFullData=[this,write,fallback](SquidProcess& process,std::uint32_t force) { auto* current=dynamic_cast<ConstructionProcess*>(&process);writingConstruction=current!=nullptr;if (current) return write(*current,false,force!=0);if (!fallback.writeFullData) throw std::logic_error("다른 프로세스의 실제 전체 writer 미연결");return fallback.writeFullData(process,force); };
+        hooks.packet=[this,fallback](std::int32_t length)->std::span<const std::uint8_t> { if (!writingConstruction) { if (!fallback.packet) throw std::logic_error("다른 프로세스의 실제 작성 버퍼 미연결");return fallback.packet(length); }const auto& buffer=gameplayGlobals->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("건설의 실제 작성 버퍼 범위");return std::span(buffer).first(static_cast<std::size_t>(length)); };
+        hooks.transmit=[this,fallback](std::int32_t length) { if (!writingConstruction) { if (!fallback.transmit) throw std::logic_error("다른 프로세스의 실제 송신 미연결");fallback.transmit(length);return; }const auto& buffer=gameplayGlobals->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("건설의 실제 송신 길이 범위");services.formPacket(std::span(buffer).first(static_cast<std::size_t>(length))); };
+        return hooks;
     }
     // 타입31/32/60의 서로 다른 writer와 같은 실제 송신기를 연결한다.
     ProcessFormTransmission AviaryTransmission(ProcessFormTransmission fallback) {
@@ -2727,7 +2741,7 @@ struct RawCampaignSession::Impl {
         auto& patch=priestState.regen.patch;
         playerContent=std::make_unique<RawPlayerContentNotice>(core.pool,PlayerContentNoticeState{
             reads.cursorA,reads.cursorB,gameplayGlobals->PatchDiagnostic(),patch.sample,patch.remaining,
-            PlayerContentNoticeRead<std::uint32_t>::Bind([this] { return assetState.inBattle ? 1U : 0U; }),
+            PlayerContentNoticeRead<std::uint32_t>::Bind([this] { return playerState.playerKnown; }), // 원문4d55e0의00595344이며 전투 모드00594fbc와 구별한다.
             playerState.battleOwner,reads.firstSpPool,reads.firstPermutation,contentGumpType,contentEvent},std::move(playerHooks));
         contentNotice=std::make_unique<RawContentParentNotice>(core.pool,[this](Sid parent,Sid form,std::uint32_t reason) {
             lifetime->ParentNotice(parent,form,reason);
@@ -3448,6 +3462,7 @@ struct RawCampaignSession::Impl {
         hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
         hooks.push=[this](float x,float y,std::uint32_t type,std::uint32_t owner) { static_cast<void>(buildingEffects->Displace(x,y,type,owner)); };
         building=std::make_unique<RawConstructionProcess>(core.pool,core.types,buildingState,std::move(hooks),&core.processes);
+        buildingData=std::make_unique<RawConstructionData>(core.pool,buildingState,*building,core.processes,[storage=world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); // 기본 생성자/decoder 뒤 같은 명시 Form 부착과 실제 진단 복귀를 사용한다.
     }
     // 송신 효과 뒤 또는 외부 수신 직전에 실제 현재 전역을 같은 기존 handler에 공급한다.
     void ReceiveGeyserMined(std::span<const std::uint8_t> packet) {
@@ -3642,7 +3657,7 @@ struct RawCampaignSession::Impl {
             if (length<=0 || static_cast<std::size_t>(length)>pathBuffer.size()) throw std::logic_error("세션 Path 송신 길이 오류");
             services.pathPacket(std::span<const std::uint8_t>(pathBuffer).first(static_cast<std::size_t>(length)));
         });
-        core.processes.SetFormTransmit(AviaryTransmission(combat->Transmission(services.formPacket,assetBindings->Transmission(std::move(pathTx)))));
+        core.processes.SetFormTransmit(AviaryTransmission(ConstructionTransmission(combat->Transmission(services.formPacket,assetBindings->Transmission(std::move(pathTx))))));
         BridgeCarrierHooks bridgeHooks;
         bridgeHooks.graphFor=[this](Sid sid) { return anchor->GraphFor(sid.value); };
         bridgeHooks.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
@@ -4472,6 +4487,7 @@ bool RawCampaignSession::RequestConstruction(const ConstructionConfirmRequest& r
 // 기존 실제 패킷 분배기/로컬 전송이 같은 서버 수신 몸체를 호출한다.
 void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 건설 수신 등록");impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); });
+    if (!impl_->buildingData) throw std::logic_error("실제 건설 상태 수신 본체 미설치");dispatch.RequireLength(0x37,0xffff);RegisterConstructionData(dispatch,*impl_->buildingData); // 실제37h의 NULL observer/버전1/정책0·가변 길이 등록과 같은 수명이다.
     // 원본 등록 표의54h 버전1/정책0/8바이트/빈 observer와 같은 수신이다.
     dispatch.Observe(0x54,{});dispatch.Version(0x54,1,0);dispatch.RequireLength(0x54,8);
     dispatch.Register(0x54,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->salvageCommand->Receive(sender,packet); });

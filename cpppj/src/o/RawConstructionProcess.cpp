@@ -109,9 +109,9 @@ void RawConstructionProcess::Construct(Sid parent,float duration) const {
     ConstructionProcessFields* attached=nullptr;
     if (host_) {
         // 패치판에서 부모가 free/dead이면 붙지 않는다. 원본은 그 객체를 해제하지 않고 남은 쓰기를 계속한다.
-        auto* process=static_cast<ConstructionProcess*>(host_->Attach(std::make_unique<ConstructionProcess>(*this,fields),state_.processType,parent,kAttachFlags));
+        auto* process=static_cast<ConstructionProcess*>(host_->Attach(std::make_unique<ConstructionProcess>(*this,fields),state_.ProcessType(),parent,kAttachFlags));
         if (process) attached=&process->Fields();
-    } else attached=hooks_.attach(fields,state_.processType,parent,kAttachFlags);
+    } else attached=hooks_.attach(fields,state_.ProcessType(),parent,kAttachFlags);
     auto& live=attached ? *attached : fields;
     // 패치판은 fcomp(비교 불가는 소리 없음), CD판은 지속 시간 비트의 signed 비교다.
     const bool audible=patch ? duration>kSoundSeconds : std::bit_cast<std::int32_t>(duration)>std::bit_cast<std::int32_t>(kSoundSeconds);

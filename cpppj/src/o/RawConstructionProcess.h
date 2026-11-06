@@ -38,6 +38,8 @@ struct ConstructionProcessState {
     const bool* sharedBoss{}; // 실제 Client boss를 건설 진행/완료 실행기보다 오래 빌린다.
     RawCheckingFlag checking; //Run 입구에서만 읽는 같은 Client 진단 DWORD이며 독립 기본값은0이다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // HP·표시·소리 효과 뒤 각각의 완료 관문에서 현재값을 읽는다.
+    const std::uint32_t* currentProcessType{}; // 실제 Client의005410e8을 신규 생성/전체 수신/볼텍스 조회가 같이 빌린다.
+    std::uint32_t ProcessType() const { return currentProcessType ? *currentProcessType : processType; } // 기존 독립 입력의30은 장기 대여가 없을 때만 사용한다.
 };
 // 건설 프로세스 밖의 효과다. attach를 뺀 모든 경계가 필요하며 attach는 실제 host를 주면 비워 둘 수 있다.
 // 사용: 검사에서는 호출 사실을 기록하는 함수를, 실제 연결에서는 MakeConstructionProcessHooks가 채운 값을 넘긴다.

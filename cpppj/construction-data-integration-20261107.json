@@ -1,0 +1,57 @@
+{
+  "unit": 1031,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "건설37h의 실제 Session 수신/송신·진단 복귀/부분 쓰기·같은 TYPE와 내용물 통지 PlayerKnown 교정",
+  "sourceFunctions1078": [
+    "004426d0",
+    "00442760",
+    "004427b0",
+    "00443bd0",
+    "00443c40",
+    "004d55e0",
+    "00490750"
+  ],
+  "referenceFunctions1072": [
+    "004d0430",
+    "004d04d0",
+    "004d0540",
+    "004d2b20"
+  ],
+  "staticPe": {
+    "constructionType": 30,
+    "headerBytes": "3701",
+    "defaultTime": 0.0
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1031\\build.log",
+    "exeSize": 12045312,
+    "exeSha256": "f908bc8d76031d5e1f5e655c54aa0cca38bd68a0888cc162119ffa9f04721e5e"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1031\\protected-before.json"
+  },
+  "remaining": [
+    "Path30h 등 나머지 프로세스 decoder/전송 감사",
+    "재동기화 허용/owner cache·Activate 수신자 부모",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}
