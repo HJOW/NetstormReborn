@@ -8,7 +8,8 @@
     "independent": "원본 자산을 웹과 다른 독립 구현(Python 도구)으로 계산한 기대값",
     "screenshot": "원본 게임 화면 캡처(창 테두리 포함, screenShots/)",
     "source": "cpppj/dotnetpj 의 상수·자료를 교차 확인하는 소스(계속 바뀌므로 해시 미기록)",
-    "original-binary": "보호 원본 실행 파일의 정적 자료(.data 초기값 등)를 파일 읽기로만 대조한다. 실행하지 않는다"
+    "original-binary": "보호 원본 실행 파일의 정적 자료(.data 초기값 등)를 파일 읽기로만 대조한다. 실행하지 않는다",
+    "cpppj-oracle": "cpppj 기준선 실행 파일(LEFT_JOBS.webpj.md 3.6절 기준선)을 같은 단계표로 실행해 수집한 논리 화면·관측 보고서와 그 시나리오(tools/cpp-oracle.mjs, 창 실행). npm test 는 저장된 결과만 읽는다"
   },
   "entries": [
     {
@@ -807,7 +808,7 @@
       "bytes": 944860,
       "lines": null,
       "fixtureCommit": "ddfce6c4",
-      "webCommit": "b25f8763",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -833,7 +834,7 @@
       "bytes": 901847,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "48339f60",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -859,7 +860,7 @@
       "bytes": 850127,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "48339f60",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -885,7 +886,7 @@
       "bytes": 920155,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "48339f60",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -1036,7 +1037,7 @@
       "bytes": 873500,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "b25f8763",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -1062,7 +1063,7 @@
       "bytes": 909221,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "b25f8763",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -1088,7 +1089,7 @@
       "bytes": 929779,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "b25f8763",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -1113,7 +1114,7 @@
       "bytes": 814877,
       "lines": null,
       "fixtureCommit": "ddfce6c4",
-      "webCommit": "0b81247b",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -1858,6 +1859,70 @@
         "cpppj/src/o/DependFormHost.cpp": "d678fcad",
         "cpppj/src/o/ContentFormHost.cpp": "34891d67"
       }
+    },
+    {
+      "id": "cpppj-oracle-m1-meta",
+      "path": "webpj/tests/fixtures/cpppj/m1/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "consumers": [
+        "webpj/tests/cpp-oracle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/main-menu.js",
+        "webpj/www/ui/popup-menu.js",
+        "webpj/www/ui/option-menus.js",
+        "webpj/www/ui/tell-window.js",
+        "webpj/www/ui/help-window.js",
+        "webpj/www/ui/menu-list.js",
+        "webpj/www/ui/stone-button.js"
+      ],
+      "unit": "WB02-H",
+      "doc": "docs/webpj-cpp-oracle-20261107.md",
+      "cpppjSources": [],
+      "producer": "node webpj/tools/cpp-oracle.mjs --exe extracted/webpj-oracle/1f00a25a/Netstorm.exe (cpppj 1f00a25a Release, HJOW-Athlon). 시나리오 8개의 논리 화면 PNG·보고서 SHA-256 과 EXE SHA-256·명령줄·자료 해시를 담고, 각 PNG/보고서 해시는 검사가 이 메타로 대조한다",
+      "scope": "M1 메인 메뉴 장면(영어 4:3 1024x768): Welcome·메인 메뉴·Campaign·Demo·Credits Tell·Help/Options 펼침 메뉴·General Help 창. 미션/월드 장면은 아직 없음",
+      "text": true,
+      "sha256": "24ea26b4fab1acea08eedf30bb48b8e5ff947f81b98261235c9728a283e4e3ac",
+      "bytes": 7575,
+      "lines": 259,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "cpppj-oracle-m1-scenarios",
+      "path": "webpj/tests/fixtures/cpppj/m1-scenarios.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "consumers": [
+        "webpj/tests/cpp-oracle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/main-menu.js",
+        "webpj/www/ui/popup-menu.js",
+        "webpj/www/ui/option-menus.js",
+        "webpj/www/ui/tell-window.js",
+        "webpj/www/ui/help-window.js",
+        "webpj/www/ui/menu-list.js",
+        "webpj/www/ui/stone-button.js"
+      ],
+      "unit": "WB02-H",
+      "doc": "docs/webpj-cpp-oracle-20261107.md",
+      "cpppjSources": [],
+      "producer": "사람이 작성한 단계표와 원인 기록(expected). 수집 입력(언어·화면·설정·단계표)의 해시는 oracle.json 의 collectionInputsSha256 과 같아야 한다",
+      "scope": "시나리오 8개의 단계표, 구름 배경 분류 기준(main-menu), 원인을 기록한 차이(구름 Kencloud·Options 항목 구성·스크롤 화살표 색·Demo Tell 이름)",
+      "text": true,
+      "sha256": "4f5fe359e092afe07f46b3c5c8e9bdb30814700bcf51b796096affb04c616b39",
+      "bytes": 5596,
+      "lines": 71,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {}
     }
   ]
 }

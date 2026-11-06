@@ -1,0 +1,145 @@
+frame	20	options-popup
+screen_mode	138	1024	768	1024	1
+screen_transition	0
+screen_window	0	0	1040	807	1024	768	349110272
+screen_output	0	0	1024	768
+screen_cursor_clip	0	0	1920	1080
+raw_renderer_frame	20	3	3	3	0	20	0	0	138	0	2	905969664	1	0	0	0
+raw_renderer_cloud_area	0	0	1024	768	0	0
+raw_renderer_scene	19	0	0	41	0	0	0	0	41	0	0
+raw_renderer_dirty_area	2	1574364
+screen_capture	0	0	0	0
+recheck_cd	0
+intro_available	0
+main_menu_parent	383	355	54.729	551	344
+auto_demo	1
+bridge_scan_global	15000	23001	22779	10.352	10	0	1	1	0	0
+raw_camera_frame	0	0	0	0	6	0	7	0
+phase	0
+page	main
+popup	
+size	1024	768
+raw_view_keys	0	0	1
+raw_owner_tables	0	1	0	0	0	1272064	1265152	1304320	1373440	1364224
+sound_first_free	352321664
+paused	0
+sound	1
+mouse_cursor	1	1
+map_menu	0	0	1	fortSpec
+html_window_state	0	2	0
+main_menu_globals	0	0	0	0	0
+rotation_mode	0	0
+construction_history	0	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160
+saved_camera	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160
+fort_selection	0	4	0	0	
+fort_names			1	fortSpec
+editor_runtime	0	1	0	1078460418	0
+chat_manager	1	0		10
+static_strings	10240	536870912	536870913	0
+player_core	805388288	1	1620	10	288	0
+sp_globals	1	1	288	63	63	0	3399947107	0
+kencloud	905969664	906231808	2	174	2	10	400	1	989855744	0
+fort_catalog	0	1	0	fortSpec
+current_dialog	400
+thunder_processes	0
+raw_trace	0	0	0	0	0
+game_menu_bar	0	0	0
+movie_update_depth	0
+state_hud	0	1	0	205	0
+connection_table	1	0	0	1828716544	0
+RawButtons	8	190	376	0	9	55
+raw_hud_owners	1	1	192	205	191
+raw_production_gump	206	6	-5	688	0
+raw_production_maintenance	0	0	9.391	0	0	2	9.7289999999999992
+raw_production_budget_flash	0	0
+
+minimap	5	0	693	-5	75	18	0	0	20	0	0	946445765
+raw_ui_dirty	7239	1631	101
+raw_ui_direct_dirty	1
+raw_uber	201	1	3	0	0	1024	768
+raw_uber_children	201	202	203	204	205	206	214	356
+raw_hud_divider	202	188	-5	0	5	768	4	60	130	0	0	918017
+raw_hud_divider	203	189	0	688	-5	5	8	0	0	645	768	918017
+raw_hud_divider	204	190	0	768	1024	5	26	0	0	25	743	918017
+
+movie_runtime	0	0	1	0	0
+movie_timing	0	0
+raw_menus	5	0	5	13	50
+raw_chat_globals	356	0
+raw_chat_log	0	0	0
+raw_chat_completion	0	0	0
+raw_chat_window	356	396801	201	360	4195456	0
+raw_chat_input	356	
+raw_external_gumps	1	3
+raw_nsinfo	214	1	8	1	8	9	13
+raw_nsinfo_owned	50
+raw_nsinfo_root	214	14	200	201	395264	215	216	224	234
+raw_nsinfo_caption	214	2	Players in Zone 0
+raw_gump_help_strings	14
+raw_menu_input	383	33554493	1	0
+raw_menu	400	185	201	17313	69730304	2	0	551	294	717	597
+raw_menu	401	186	400	928	2621440	-1	0	551	294	650	464
+raw_menu	402	187	400	928	2621440	-1	0	551	294	622	328
+raw_menu	403	188	400	928	2621440	-1	0	551	294	634	379
+raw_menu	404	189	400	928	2621440	-1	0	551	294	634	379
+raw_menu_object	400	0	0	372
+raw_menu_object	401	0	0	373
+raw_menu_object	402	0	0	374
+raw_menu_object	403	0	0	375
+raw_menu_object	404	0	0	376
+raw_menu_item	400	0	66689	33554581	101	1	Direct Draw / Full Screen
+raw_menu_item	400	1	66592	0	0	1	Resolution
+raw_menu_item	400	2	66600	0	0	1	Language
+raw_menu_item	400	3	65552	0	0	1	
+raw_menu_item	400	4	66693	33554541	112	1	Sound On
+raw_menu_item	400	5	66693	33554541	113	1	Play Music
+raw_menu_item	400	6	66693	33554541	114	1	Wind Noise
+raw_menu_item	400	7	66689	33554541	115	1	Speaker Swap L/R
+raw_menu_item	400	8	66592	0	0	1	Sound Effect Volume
+raw_menu_item	400	9	66592	0	0	1	Music Volume
+raw_menu_item	400	10	65552	0	0	1	
+raw_menu_item	400	11	66693	33554541	116	1	Edge Scroll in Fullscreen
+raw_menu_item	400	12	66693	33554541	117	1	Auto-Demo
+raw_menu_item	400	13	66689	33554541	118	1	Tell Tips at Startup
+raw_menu_item	400	14	66689	33554541	119	1	Anti-Aliasing
+raw_menu_item	400	15	66689	33554541	120	1	FSR 1.0 Upscaling
+raw_menu_item	400	16	65552	0	0	1	
+raw_menu_item	400	17	66689	33554581	121	1	Pass Server Diagnostic 
+raw_menu_item	401	0	66689	33554581	102	0	640 by 480
+raw_menu_item	401	1	66689	33554581	103	0	800 by 600
+raw_menu_item	401	2	66693	33554581	104	0	1024 by 768
+raw_menu_item	401	3	66689	33554581	105	0	1280 by 720
+raw_menu_item	401	4	66689	33554581	106	0	1280 by 800
+raw_menu_item	401	5	66689	33554581	107	0	1366 by 768
+raw_menu_item	401	6	66689	33554581	108	0	1600 by 900
+raw_menu_item	401	7	66689	33554581	109	0	1920 by 1080
+raw_menu_item	401	8	66689	33554581	110	0	2560 by 1440
+raw_menu_item	401	9	66689	33554581	111	0	3840 by 2160
+raw_menu_item	402	0	66693	33554597	0	0	English
+raw_menu_item	402	1	66689	33554597	7	0	
+raw_menu_item	403	0	66689	33554662	1	0	Volume 1
+raw_menu_item	403	1	66689	33554662	2	0	Volume 2
+raw_menu_item	403	2	66689	33554662	3	0	Volume 3
+raw_menu_item	403	3	66689	33554662	4	0	Volume 4
+raw_menu_item	403	4	66689	33554662	5	0	Volume 5
+raw_menu_item	404	0	66689	33554663	1	0	Volume 1
+raw_menu_item	404	1	66689	33554663	2	0	Volume 2
+raw_menu_item	404	2	66689	33554663	3	0	Volume 3
+raw_menu_item	404	3	66689	33554663	4	0	Volume 4
+raw_menu_item	404	4	66689	33554663	5	0	Volume 5
+warning_count	0
+warning_registry	201	190	0
+time	9.729	9.729
+fullscreenMarker	0
+musicVolume	0
+soundVolume	0
+audio_view	0	0	0	0	1024	768
+weather	3	170	0	218	77	254	170
+control	Campaign	1	0	356	311	431	331	0
+control	Multiplayer	1	0	435	311	510	331	0
+control	Demo	1	0	514	311	589	331	0
+control	Help	1	0	593	311	668	331	0
+control	Edit	1	0	356	334	431	354	0
+control	Credits	1	0	435	334	510	354	0
+control	Options	1	0	514	334	589	354	0
+control	Quit	1	0	593	334	668	354	0

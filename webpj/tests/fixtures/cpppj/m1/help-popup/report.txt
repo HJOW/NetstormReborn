@@ -1,0 +1,100 @@
+frame	20	help-popup
+screen_mode	138	1024	768	1024	1
+screen_transition	0
+screen_window	0	0	1040	807	1024	768	349110272
+screen_output	0	0	1024	768
+screen_cursor_clip	0	0	1920	1080
+raw_renderer_frame	20	3	3	3	0	20	0	0	138	0	2	905969664	1	0	0	0
+raw_renderer_cloud_area	0	0	1024	768	0	0
+raw_renderer_scene	19	0	0	41	0	0	0	0	41	0	0
+raw_renderer_dirty_area	2	1574364
+screen_capture	0	0	0	0
+recheck_cd	0
+intro_available	0
+main_menu_parent	383	355	54.75	630	321
+auto_demo	1
+bridge_scan_global	15000	23001	22795	10.377	10	0	1	1	0	0
+raw_camera_frame	0	0	0	0	6	0	7	0
+phase	0
+page	main
+popup	
+size	1024	768
+raw_view_keys	0	0	1
+raw_owner_tables	0	1	0	0	0	1272064	1265152	1304320	1373440	1364224
+sound_first_free	352321664
+paused	0
+sound	1
+mouse_cursor	1	1
+map_menu	0	0	1	fortSpec
+html_window_state	0	2	0
+main_menu_globals	0	0	0	0	0
+rotation_mode	0	0
+construction_history	0	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160
+saved_camera	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160	3323740160
+fort_selection	0	4	0	0	
+fort_names			1	fortSpec
+editor_runtime	0	1	0	1078460418	0
+chat_manager	1	0		10
+static_strings	10240	536870912	536870913	0
+player_core	805388288	1	1620	10	288	0
+sp_globals	1	1	288	41	41	0	3968603396	0
+kencloud	905969664	906231808	2	249	2	10	400	1	989855744	0
+fort_catalog	0	1	0	fortSpec
+current_dialog	400
+thunder_processes	0
+raw_trace	0	0	0	0	0
+game_menu_bar	0	0	0
+movie_update_depth	0
+state_hud	0	1	0	205	0
+connection_table	1	0	0	1828716544	0
+RawButtons	8	186	372	0	5	55
+raw_hud_owners	1	1	192	205	191
+raw_production_gump	206	6	-5	688	0
+raw_production_maintenance	0	0	9.4179999999999993	0	0	2	9.75
+raw_production_budget_flash	0	0
+
+minimap	5	0	693	-5	75	18	0	0	20	0	0	946445765
+raw_ui_dirty	7235	1631	101
+raw_ui_direct_dirty	1
+raw_uber	201	1	3	0	0	1024	768
+raw_uber_children	201	202	203	204	205	206	214	356
+raw_hud_divider	202	188	-5	0	5	768	4	60	130	0	0	918017
+raw_hud_divider	203	189	0	688	-5	5	8	0	0	645	768	918017
+raw_hud_divider	204	190	0	768	1024	5	26	0	0	25	743	918017
+
+movie_runtime	0	0	1	0	0
+movie_timing	0	0
+raw_menus	1	0	1	13	18
+raw_chat_globals	356	0
+raw_chat_log	0	0	0
+raw_chat_completion	0	0	0
+raw_chat_window	356	396801	201	360	4195456	0
+raw_chat_input	356	
+raw_external_gumps	1	3
+raw_nsinfo	214	1	8	1	8	9	13
+raw_nsinfo_owned	50
+raw_nsinfo_root	214	14	200	201	395264	215	216	224	234
+raw_nsinfo_caption	214	2	Players in Zone 0
+raw_gump_help_strings	14
+raw_menu_input	383	33554493	1	0
+raw_menu	400	185	201	17313	69746688	0	0	630	311	755	361
+raw_menu_object	400	0	0	372
+raw_menu_item	400	0	66697	33554455	1879048293	1	General Help - F1
+raw_menu_item	400	1	67201	33554505	0	1	Technical Help
+raw_menu_item	400	2	66689	33554581	102	1	Version
+warning_count	0
+warning_registry	201	186	0
+time	9.75	9.75
+fullscreenMarker	0
+musicVolume	0
+soundVolume	0
+audio_view	0	0	0	0	1024	768
+weather	3	170	0	218	77	254	170
+control	Campaign	1	0	356	311	431	331	0
+control	Multiplayer	1	0	435	311	510	331	0
+control	Demo	1	0	514	311	589	331	0
+control	Help	1	0	593	311	668	331	0
+control	Edit	1	0	356	334	431	354	0
+control	Credits	1	0	435	334	510	354	0
+control	Options	1	0	514	334	589	354	0
+control	Quit	1	0	593	334	668	354	0

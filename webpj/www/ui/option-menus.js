@@ -71,9 +71,11 @@ export function buildOptionsItems(settings, { includeAll = false } = {}) {
 
 // Help 펼침 메뉴의 항목 정의를 만든다. includeAll 이 참이면 외부 도움말 실행 항목(Technical Help)도 만든다. (2026-10-29 WB03-F)
 // 메인 메뉴의 Help 목록은 구분선 없이 세 행이 붙어 있다(스크린샷 높이 51 = 3×17). 게임 안 맨 위 메뉴 막대의 About 하위에는 Technical Help 와 Version 사이에 구분선이 있다.
-export function buildHelpItems({ includeAll = false } = {}) {
+// technicalHelpAvailable 은 Technical Help 행의 활성 여부이다. 원본은 기술 도움말 프로그램이 설치돼 있을 때만 활성으로 만든다(cpppj ClientTechnicalHelpAvailable).
+// 기본값 true 는 원본 스크린샷(설치본, 활성)과 비교할 때이고, cpppj 오라클과 비교하는 원본 비교 모드는 웹에 그 프로그램이 없으므로 false 를 넘긴다. (2026-11-07 WB02-H)
+export function buildHelpItems({ includeAll = false, technicalHelpAvailable = true } = {}) {
     return joinGroups([
-        [text('General Help - ~iF1~.', 'F1Help', '0'), ...(includeAll ? [text('Technical Help', 'TechnicalHelp', '0')] : []), text('Version', 'Tell', 'About')],
+        [text('General Help - ~iF1~.', 'F1Help', '0'), ...(includeAll ? [text('Technical Help', 'TechnicalHelp', '0', technicalHelpAvailable)] : []), text('Version', 'Tell', 'About')],
     ]);
 }
 

@@ -40,6 +40,19 @@ export function measureGumpText(font, bytes, context) {
     return { width, height };
 }
 
+// 버튼 목록에서 라벨(원문 label 또는 표시 문구 text)이 같은 첫 버튼의 가운데 화면 좌표({ x, y })를 돌려준다. 없으면 null 이다.
+// 가운데는 cpppj UberGump::ControlPoint 와 같이 정수 사각형의 (왼쪽+오른쪽)/2, (위+아래)/2 를 절삭한다.
+// 자동 검사(tools/headless.mjs)의 라벨 클릭 전용이며 게임 동작에는 쓰지 않는다. null 칸은 건너뛴다. (2026-11-07 WB02-H)
+export function stoneButtonPoint(buttons, label) {
+    // 칸 순서대로 같은 라벨을 찾는다.
+    for (const button of buttons) {
+        if (!button || (button.label !== label && button.text !== label)) continue;
+        const rect = button.bounds();
+        return { x: Math.trunc((rect.left + rect.right) / 2), y: Math.trunc((rect.top + rect.bottom) / 2) };
+    }
+    return null;
+}
+
 // 돌 버튼 하나이다. 라벨·명령과 원본 노드 필드(크기·배율·위치·누름 상태)를 가진다.
 // 사용: new StoneButton({ label: 'Campaign', command }) → fitToText(font) → setBaseWidth(w) → attach(x, y) → draw(surface, resources).
 // 입력은 pointerDown/broadcast/pointerUp/cancel 순서로 넘기며, pointerUp 이 true 를 돌려주면 실행(click 통지)이다. (2026-10-23 WB03-M1)

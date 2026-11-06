@@ -10,6 +10,14 @@ import { createTextContext } from '../render/glyph-text.js';
 import { GumpBackgroundFlags, drawGumpBackground, planGumpBackground } from '../render/gump-visual.js';
 import { clipRect } from '../render/indexed-surface.js';
 import { drawChain, measureChain, parseStyleText } from './style-text.js';
+import { decodeWindows1252 } from '../assets/text-encoding.js';
+
+// 항목 스타일 조각에서 일반 글자만 이어 붙인 문자열이다(스타일 명령·태그·그림 조각은 빠진다). 원본 글꼴 조각(Uint8Array)은 Windows-1252,
+// 유니코드 글꼴 조각(Uint16Array)은 UTF-16 코드 단위로 푼다. cpppj RawMenuControls::Point 가 스타일 항목의 일반 문자열 조각을 이어 라벨과 비교하는 규칙과 같다.
+// 자동 검사(tools/headless.mjs)의 라벨 클릭 전용이다. (2026-11-07 WB02-H)
+function plainText(fragments) {
+    return fragments.map((fragment) => (fragment.bytes instanceof Uint16Array ? String.fromCharCode(...fragment.bytes) : decodeWindows1252(fragment.bytes))).join('');
+}
 
 // 세로 메뉴의 항목 가로 여백(왼쪽·오른쪽)이다(원본 margins[0..1] = 15). (2026-10-28 WB03-D)
 const VERTICAL_MARGIN_X = 15;
@@ -194,6 +202,21 @@ export class MenuList {
             selected += 1;
         }
         return this.items[selected].disabled ? -1 : selected;
+    }
+
+    // 라벨이 같은 첫 활성 행의 가운데 화면 좌표({ x, y }, 정수)를 돌려준다. 없으면 null 이다.
+    // 자동 검사(tools/headless.mjs)가 cpppj `--ui-script` 의 라벨 클릭(UberGump::ControlPoint)과 같은 단계표로 입력을 넣을 때 쓴다. 게임 동작에는 쓰지 않는다.
+    // 라벨은 cpppj 와 같이 스타일 명령을 뺀 일반 글자(예: 'General Help - F1')로 비교한다. 행 높이 안의 가운데(위쪽 + 높이/2, 절삭)를 고른다. (2026-11-07 WB02-H)
+    controlPoint(label) {
+        const bounds = this.bounds();
+        // 위에서부터 같은 라벨의 선택 가능한 행을 찾는다.
+        for (let index = 0; index < this.items.length; index += 1) {
+            const item = this.items[index];
+            if (item.kind === 'separator' || item.disabled || plainText(item.fragments) !== label) continue;
+            const top = Math.fround(this.y + this.offsets[index] * this.scale);
+            return { x: Math.trunc((bounds.left + bounds.right) / 2), y: Math.trunc(top + (this.heights[index] * this.scale) / 2) };
+        }
+        return null;
     }
 
     // 포인터 이동에 맞춰 선택(강조) 행을 바꾼다(원본 Broadcast). 구분선은 선택될 수 있어도 강조하지 않는다. 바뀌면 true.

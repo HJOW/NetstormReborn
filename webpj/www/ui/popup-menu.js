@@ -19,7 +19,9 @@ import { MenuList } from './menu-list.js';
 // (2026-10-29 WB03-F)
 export class PopupMenu {
     // resources 는 메인 메뉴 자원 묶음(fonts·colors·texture·marker 등), screen 은 논리 화면 크기 { width, height } 이다.
-    constructor({ resources, screen, onCommand = null, onSound = null }) {
+    constructor({ resources, screen, onCommand = null, onSound = null, name = '' }) {
+        // 이 펼침 메뉴를 연 메인 메뉴 대상 이름('help'·'options', 원본 popup 이름의 소문자)이다. 관측 보고(tools/headless.mjs)에만 쓴다. (2026-11-07 WB02-H)
+        this.name = String(name);
         // 그리기·측정 자원 묶음이다.
         this.resources = resources;
         // 논리 화면 크기이다. 펼침 목록이 화면 밖으로 나가지 않게 당기는 기준이다.
@@ -104,6 +106,17 @@ export class PopupMenu {
     }
 
     // 포인터가 Canvas 밖으로 나가거나 포커스를 잃었을 때 모든 강조를 지운다. 그림이 바뀌면 true. (2026-10-29 WB03-F)
+    // 열린 단계 중 위쪽(나중에 연) 단계부터 라벨이 같은 행의 가운데 화면 좌표를 찾는다. 없으면 null 이다.
+    // 자동 검사(tools/headless.mjs)의 라벨 클릭 전용이며 게임 동작에는 쓰지 않는다. (2026-11-07 WB02-H)
+    controlPoint(label) {
+        // 겹친 단계는 위쪽이 먼저 입력을 받으므로 뒤에서부터 찾는다.
+        for (let index = this.levels.length - 1; index >= 0; index -= 1) {
+            const point = this.levels[index].list.controlPoint(label);
+            if (point) return point;
+        }
+        return null;
+    }
+
     pointerLeave() {
         let changed = false;
         for (const level of this.levels) if (level.list.pointerLeave()) changed = true;

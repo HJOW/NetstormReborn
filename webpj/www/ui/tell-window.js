@@ -9,7 +9,7 @@
 // (2026-10-28 WB03-D: 메인 메뉴 다음 화면(Credits 먼저)을 원본과 같은 배치로 그리기 위해 추가, 2026-10-31 WB03-K: 링크 훅과 본문 스크롤바 추가, 2026-10-31 WB03-O: 한국어 글자 부호화)
 import { createTextContext } from '../render/glyph-text.js';
 import { GumpBackgroundFlags, drawGumpBackground, planGumpBackground } from '../render/gump-visual.js';
-import { StoneButton } from './stone-button.js';
+import { StoneButton, stoneButtonPoint } from './stone-button.js';
 import { MenuList } from './menu-list.js';
 import { ScrollingText } from './scroll-text.js';
 import { CURSOR_NORMAL } from './cursor.js';
@@ -313,6 +313,13 @@ export class TellWindow {
         for (const button of this.buttons) button.draw(surface, this.resources);
     }
 
+    // 라벨이 같은 목록 행 또는 돌 버튼의 가운데 화면 좌표를 돌려준다(목록 행 먼저). 닫힌 창이거나 없으면 null 이다.
+    // 자동 검사(tools/headless.mjs)의 라벨 클릭 전용이며 게임 동작에는 쓰지 않는다. (2026-11-07 WB02-H)
+    controlPoint(label) {
+        if (this.closed) return null;
+        return this.menu?.controlPoint(label) ?? stoneButtonPoint(this.buttons, label);
+    }
+
     // 지정한 명령을 실행한다. 창이 닫혔으면 무시한다.
     _run(command) {
         if (this.closed || !command) return;
@@ -457,7 +464,9 @@ export class TellWindow {
 // 반환: { window, empty, missing, blank, inlineCommands[{ name, argument, number }] }.
 // 사용: const result = createTellWindow({ gameData, resources, name: 'Credits', screen, nowSeconds, onCommand, onLink }); result.window?.fit();
 // (2026-10-28 WB03-D, 2026-10-30 WB03-J: BLANK·지역 인자·이름 기록·조건 태그·인라인 명령 추가, 2026-10-31 WB03-K: 링크 표·onLink·now 추가)
-export function createTellWindow({ gameData, resources, name, screen, nowSeconds = 0, now = () => 0, onCommand = null, onLink = null, onSound = null, onUnsupported = null, onTrace = null, hooks = {} }) {
+// excludedLists 는 파일 목록 메뉴에서 뺄 목록 객체 이름 배열이다. 생략하면 웹 판본 제외 목록(tell-lists.js WEB_EXCLUDED_LIST_OBJECTS)이며,
+// cpppj 오라클과 비교하는 원본 비교 모드는 빈 배열을 넘겨 원본처럼 모든 행(User Made Campaigns 포함)을 만든다. (2026-11-07 WB02-H)
+export function createTellWindow({ gameData, resources, name, screen, nowSeconds = 0, now = () => 0, onCommand = null, onLink = null, onSound = null, onUnsupported = null, onTrace = null, hooks = {}, excludedLists = undefined }) {
     const inlineCommands = [];
     if (asciiLower(name) === 'blank') return { window: null, empty: false, missing: false, blank: true, inlineCommands };
     // 지역 인자 객체이다. 같은 이름의 바깥 객체는 일시적으로 가려지고 본문 처리 뒤 내려간다.
@@ -478,7 +487,7 @@ export function createTellWindow({ gameData, resources, name, screen, nowSeconds
         // 스크립트 명령은 모아 두고, 링크는 링크 표에 모으며, 지원하지 않는 기능은 onUnsupported 로 알린다.
         const links = new LinkTable();
         const mergedHooks = {
-            expandMenu: (label, command, argument) => expandFileList(gameData, label, command, argument),
+            expandMenu: (label, command, argument) => expandFileList(gameData, label, command, argument, excludedLists === undefined ? undefined : { excluded: excludedLists }),
             condition: (parserState, raw, closing) => applyHtmlCondition(parserState, raw, closing, (text) => gameData.substitute(text)),
             command: (parserState, raw) => inlineCommands.push(parseScriptCommand(raw)),
             link: (parserState, raw, closing) => links.text(raw, closing),

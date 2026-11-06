@@ -79,14 +79,16 @@ test('이식 대응표: 단독 경로와 웹 제외 경계의 대표 분류', ()
 // 기존 웹 모듈 대응: 이식을 마친 WB04 모듈과 3.6절 판정 행의 기록을 고정한다.
 test('이식 대응표: 기존 웹 모듈 대응과 3.6절 판정 기록', () => {
     const row = (key) => map.rows.find((item) => unitKey(item.cpp) === key);
-    assert.deepEqual([row('o/SidPool').web, row('o/SidPool').status, row('o/SidPool').base], ['www/core/sid-pool.js', 'port', BASELINE]);
+    // base 는 기준선이거나 그 뒤 변경을 판정한 커밋이다(2026-11-07 WB02-H 에서 9cb0547f 판정). (2026-11-06 WB02-G, 2026-11-07 WB02-H 수정)
+    assert.deepEqual([row('o/SidPool').web, row('o/SidPool').status], ['www/core/sid-pool.js', 'port']);
+    assert.match(row('o/SidPool').base, /^[0-9a-f]{8}$/);
     assert.equal(row('o/SquidFactory').status, 'port');
     assert.equal(row('o/RawDependCreate').status, 'partial');
     // 3.6절 9곳은 판정(①/②/③)을 메모에 남겼다.
     const judged = ['o/Config', 'o/ConfigInterface', 'client/TellSection', 'o/RiftTypeTable', 'o/CanonDecoder', 'o/RawTerrainContext', 'o/RawIslandPostPop', 'o/SidPool', 'o/RawSquidContainedUnpop'];
     assert.deepEqual(judged.filter((key) => !/3\.6[①②③]/.test(splitNote(row(key).note).text)), []);
     // 대응표 base 가 fixture-manifest 의 재검토 기준으로 쓰인다.
-    assert.equal(reviewedBase('cpppj/src/o/SidPool.h', map), BASELINE);
+    assert.equal(reviewedBase('cpppj/src/o/SidPool.h', map), row('o/SidPool').base);
     assert.equal(reviewedBase('cpppj/src/platform/Utf8Path.cpp', map), null);
 });
 

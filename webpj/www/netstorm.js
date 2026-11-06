@@ -353,6 +353,8 @@ function readQueryParams() {
 //  - onStateChange: (새 상태, 이전 상태) => void. 상태가 바뀔 때 호출된다.
 //  - onMenuCommand: (명령, 라벨) => void. 메인 메뉴 버튼이 실행됐을 때 호출된다(다음 화면은 아직 없음).
 //  - previewMap: 개발용 정적 지형을 클릭하여 시작 뒤 연다. 기본은 ?map=파일이름, 없으면 null이다. 미션은 실행하지 않는다. (2026-11-02 WB03-AA)
+//  - originalComparison: true 면 웹이 빼는 원본 화면 요소(8버튼·펼침 메뉴 전체 항목·User Made Campaigns 행)를 보이는 원본 비교 모드이다(기본 false).
+//    cpppj 오라클과 비교하는 무브라우저 실행(tools/headless.mjs)이 쓴다. 그 요소의 기능은 구현하지 않는다. (2026-11-07 WB02-H)
 // (2026-10-23 WB01, 2026-10-23 WB03-M1: 자산·소리·메뉴 옵션 추가)
 export class Netstorm {
     // 앱을 만든다. DOM 은 init 에서 만든다.
@@ -372,6 +374,10 @@ export class Netstorm {
             fetch: options.fetch ?? null,
             scaling: normalizeScaling(options.scaling ?? params.get('scaling')),
             audio: options.audio ?? !params.has('mute'),
+            // 원본 비교 모드이다. 참이면 웹 판본이 빼는 원본 화면 요소(메인 메뉴 Multiplayer·Edit·Quit 버튼, 펼침 메뉴의 Direct Draw·Resolution·Technical Help 등,
+            // Campaign 목록의 User Made Campaigns 행)를 원본처럼 보여 cpppj 오라클·원본 스크린샷과 같은 배치로 비교한다. 그 요소들의 동작(Edit·멀티플레이 등)은 여전히 구현하지 않는다.
+            // 무브라우저 실행(tools/headless.mjs)의 오라클 비교 전용이며 기본값 false 이다. (2026-11-07 WB02-H)
+            originalComparison: options.originalComparison ?? false,
             // 호스트가 정한 음량 단계(1~5)이다. 없으면(null) 저장된 설정을 쓴다. 정하면 저장하지 않고 이번 실행에서만 우선한다. (2026-10-29 WB03-F)
             soundVolume: options.soundVolume ?? null,
             musicVolume: options.musicVolume ?? null,
@@ -778,6 +784,8 @@ export class Netstorm {
                 resources: this._resources,
                 onCommand: (command, label, point) => this._onMenuCommand(command, label, point),
                 onButtonSound: () => this._audio?.playSound(BUTTON_SOUND_NAME),
+                // 원본 비교 모드는 원본 8버튼 배치를 쓴다. (2026-11-07 WB02-H)
+                includeAllButtons: this.options.originalComparison,
             });
         }
         this._ensureSurface();
@@ -830,7 +838,8 @@ export class Netstorm {
     // 메인 메뉴의 펼침 메뉴(Help·Options)를 point(왼쪽 위 기준점)에 연다. 모르는 대상이면 열지 않는다. 기준점은 원본 스크린샷 측정값과 같은 규칙으로 정해진다(ui/main-menu.js popupAnchor). 열었으면 true. (2026-10-29 WB03-F)
     _openPopup(target, point) {
         if (!this._mainMenu || !this._resources || !this._settings) return false;
-        const items = buildPopupItems(target, this._settings, { translate: this._resources.translate });
+        // 원본 비교 모드는 웹이 빼는 원본 항목도 만든다. Technical Help 는 원본 가용성 판정대로 비활성이다(웹에는 기술 도움말 프로그램이 없음). (2026-11-07 WB02-H)
+        const items = buildPopupItems(target, this._settings, { translate: this._resources.translate, includeAll: this.options.originalComparison, technicalHelpAvailable: false });
         if (!items) {
             console.warn(`Netstorm: 알 수 없는 펼침 메뉴 '${target}' 입니다.`);
             return false;
@@ -840,6 +849,8 @@ export class Netstorm {
             screen: { width: this._mainMenu.width, height: this._mainMenu.height },
             onCommand: (command) => this._onPopupCommand(command),
             onSound: () => this._audio?.playSound(MENU_SOUND_NAME),
+            // 관측 보고용 대상 이름이다. (2026-11-07 WB02-H)
+            name: target,
         });
         // 포인터 위치가 없으면(호스트가 직접 호출) 현재 포인터 위치를 쓴다.
         popup.open(items, point ?? { x: Math.max(0, this._input.pointer.x), y: Math.max(0, this._input.pointer.y) });
@@ -925,6 +936,8 @@ export class Netstorm {
             onLink: (destination) => this._onDialogLink(destination),
             onSound: (kind) => this._audio?.playSound(kind === 'menu' ? MENU_SOUND_NAME : BUTTON_SOUND_NAME),
             onUnsupported: (what, text) => console.warn(`Netstorm: Tell '${name}' 의 ${what} 은(는) 아직 지원하지 않습니다.`, text),
+            // 원본 비교 모드는 웹이 빼는 목록 행(User Made Campaigns)도 만든다. (2026-11-07 WB02-H)
+            excludedLists: this.options.originalComparison ? [] : undefined,
         });
         if (result.missing) console.warn(`Netstorm: TELL cannot find "${name}".`);
         if (result.window) {
@@ -1526,6 +1539,10 @@ export class Netstorm {
         this._clock.tick(now);
         this._frameSeconds = now / 1000;
         if (this._state === AppState.MAIN_MENU) {
+            // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다
+            // (cpppj 오라클 help-popup/options-popup 관측). 브라우저는 포인터가 움직일 때만 사건을 주므로 마지막 포인터 위치를 매 프레임 다시 알린다. (2026-11-07 WB02-H)
+            const pointer = this._input.pointer;
+            if (this._mainMenu && pointer.inside) this._mainMenu.pointerMove(pointer.x, pointer.y);
             this._mainMenu?.update(this._frameSeconds);
             // 스크롤·창 열림/닫힘·키 입력으로 포인터 아래 내용이 바뀌었을 수 있으므로 커서를 다시 고른다(원본은 매 포인터 갱신마다 선택). (2026-10-31 WB03-L)
             this._applyCursor();

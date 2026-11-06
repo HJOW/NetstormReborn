@@ -10,7 +10,7 @@
 import { createTextContext } from '../render/glyph-text.js';
 import { GumpBackgroundFlags, drawGumpBackground, planGumpBackground } from '../render/gump-visual.js';
 import { findPaletteColor } from '../assets/palette.js';
-import { StoneButton } from './stone-button.js';
+import { StoneButton, stoneButtonPoint } from './stone-button.js';
 import { ScrollingText } from './scroll-text.js';
 import { CURSOR_NORMAL } from './cursor.js';
 import { VerticalSlider } from './slider.js';
@@ -238,6 +238,12 @@ export class HelpWindow {
             this.body.placeSlider();
         }
         [this.backButton, this.okButton].forEach((button, index) => button.attach(f32(this.x + this.buttonLocals[index].x), f32(this.y + this.buttonLocals[index].y)));
+    }
+
+    // 라벨이 같은 돌 버튼(Back·OK)의 가운데 화면 좌표를 돌려준다. 닫힌 창이거나 없으면 null 이다.
+    // 자동 검사(tools/headless.mjs)의 라벨 클릭 전용이며 게임 동작에는 쓰지 않는다. (2026-11-07 WB02-H)
+    controlPoint(label) {
+        return this.closed ? null : stoneButtonPoint([this.backButton, this.okButton], label);
     }
 
     // 창 전체의 화면 정수 경계이다. (2026-10-30 WB03-G)

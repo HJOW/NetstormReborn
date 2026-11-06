@@ -15,19 +15,19 @@ webpj의 **현재 구현·개발 계획(남은 작업 순서)·유효한 결정*
 
 ## 0. 현재 기준과 재개 절차
 
-### 0.1 현재 값 (2026-11-07, WB02-G 완료)
+### 0.1 현재 값 (2026-11-07, WB02-H 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 마지막 구현 커밋 | **WB02-G** `20261107-01 WB` 이식 대응표 `webpj/PORT_MAP.tsv`·`tools/port-map.mjs`와 3.6절 9곳·기준선 뒤 `a328ac1f` 판정([문서](docs/webpj-port-map-20261106.md)). 그 앞 구현은 **WB04-D5a** `4d5b486a / 20261106-56 WB`(Form 호스트), `7dd335e0`(D4 SquidFactory·생성자 표)·`410beda4`(D3 공통 Form 층)·`3ef1d18b`(D2 Unpop 처리기·삭제기)·`41cb8da9`(D1 공통 공간 해제)·`c68e673b`(C3 입력 큐·메인 루프)·`e993112b`(C2 게임 보조 전역)·`176ef6e7`(C1 난수·시계·Kernel)·`0563c07f`(B 공간 해시·탐색기)·`0fd343a1`(A SID 풀). `71bae405 / 20261106-61 WB`는 문서만 바꾼 재계획 커밋이다 |
+| 마지막 구현 커밋 | **WB02-H** `20261107-05 WB` 무브라우저 실행 `tools/headless.mjs`·cpppj 오라클 수집 `tools/cpp-oracle.mjs`·비교 `tools/screen-compare.mjs`와 M1 8장면 대조, 웹 결함 2건 수정([문서](docs/webpj-cpp-oracle-20261107.md)). 그 앞은 **WB02-G** `e2386b09 / 20261107-01 WB` 이식 대응표([문서](docs/webpj-port-map-20261106.md)), **WB04-D5a** `4d5b486a / 20261106-56 WB`(Form 호스트), `7dd335e0`(D4 SquidFactory·생성자 표)·`410beda4`(D3 공통 Form 층)·`3ef1d18b`(D2 Unpop 처리기·삭제기)·`41cb8da9`(D1 공통 공간 해제)·`c68e673b`(C3 입력 큐·메인 루프)·`e993112b`(C2 게임 보조 전역)·`176ef6e7`(C1 난수·시계·Kernel)·`0563c07f`(B 공간 해시·탐색기)·`0fd343a1`(A SID 풀). `71bae405 / 20261106-61 WB`는 문서만 바꾼 재계획 커밋이다 |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기까지다. **실제 미션 플레이는 아직 불가**다. `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
-| 원본과의 동일성 | 메뉴·대화상자 일부는 원본 스크린샷과 대조했다. Fort/지형·그림·SID와 WB04 부품은 원본 fixture 또는 독립 계산과 대조했다. **cpppj 오라클 비교는 0건**이며, 같은 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
-| 마일스톤 | M1(시작→메인 메뉴) 완료. M2(Tutorial1의 실제 시작 상태와 정적 표시)는 지형/공통 출력/값형 로더와 월드 핵심 부품(WB04-A~D5a)까지 부분 완료이며, 이 부품들은 아직 앱 수명에 연결하지 않았다. 순서1(WB02-G) 완료, 다음은 3.2절 순서2(WB02-H) |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27, 미분류 0**. 상태: **port 41·partial 85·todo 770·제외(-) 88**, session/oracle 0. 웹 모듈 86개 중 83개 대응·3개 웹 전용. 웹 소스는 `www/` JS 약 1만 6천 5백 줄(자료 제외), 검사 파일 44개다 |
-| 마지막 전체 검사 | WB02-G의 Node v24.21.0, **434/434 통과·실패/건너뜀0**(신규 port-map 5; WB04-D5a 429), 약51.5초 |
-| 마지막 e2e | WB03-AC의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도로 임시 Playwright 스크립트로 Credits→세 번째 행→Back/Cancel을 영어/한국어 실제 클릭 확인(Chromium 156.0.8078.4, 오류0). 미션/월드 검사가 아니다 |
-| cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 그 뒤 `cpppj/src` 변경은 `a328ac1f`(987 원격 Fort, 8파일) 하나이며 2026-11-07 WB02-G에서 모두 ①(원격 owner 전용·리팩터, 단독 경로 영향 없음)로 판정해 해당 6행 base를 `a328ac1f`로 기록했다. WB02-G 작업 중 `1cd2b05a / 20261106-63 CP`(참가자별 월드 동기화, 15파일 +174/−8)가 더해졌다. 변경 8단위(RawCampaignSession·Login.inc·RawSurfaceWorld·RawCampaignAssetBindings·SquidProcess·RawSquidTransmission·RawPathData·RawWindAviaryProcess)는 모두 `todo`라 **이식 때 판정**하고(공유 writer의 단독 영향 확인 필요), 새 파일 `o/RawPeerWorldSync`는 재기준선 때 분류한다. 같은 작업 트리에는 다른 세션의 미커밋 cpppj 변경(RawBattleIsland 등)이 있으며 WB 커밋에서 제외했다. 공통 인계(LEFT_JOBS.md)는 다른 세션이 갱신하므로 cpppj 상태는 커밋과 소스로 판단한다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 62항목(original-x86 38·independent 7·screenshot 13·source 3·original-binary 1). original-x86 38개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. WB04-D5a 4항목 webCommit을 `4d5b486a`로 기록했다. `fixture-manifest.mjs`는 이제 대응표 base(판정 커밋) 뒤 변경만 보고하며, 2026-11-07 보고는 cpppj 변경 0·갱신 필요 0이다. `port-map.mjs`는 WB02-G 작업 중 다른 세션이 커밋한 `1cd2b05a`(아래 기준선 행)의 8단위와 새 파일 2개를 보고한다 |
+| 원본과의 동일성 | 메뉴·대화상자 일부는 원본 스크린샷과 대조했다. Fort/지형·그림·SID와 WB04 부품은 원본 fixture 또는 독립 계산과 대조했다. **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드): 기록한 원인 밖 픽셀 차이 0. 구름 배경(웹 GIF 타일 vs 원본 Kencloud, 웹 쪽)과 cpppj 쪽 차이 3종을 기록했다(2절 WB02-H). 같은 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
+| 마일스톤 | M1(시작→메인 메뉴) 완료, M1 화면 cpppj 대조 완료. M2(Tutorial1의 실제 시작 상태와 정적 표시)는 지형/공통 출력/값형 로더와 월드 핵심 부품(WB04-A~D5a)까지 부분 완료이며, 이 부품들은 아직 앱 수명에 연결하지 않았다. 순서1(WB02-G)·순서2(WB02-H) 완료, 다음은 3.2절 순서3(WB04-D5b) |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27, 미분류 0**. 상태: **port 41·partial 85·todo 770·제외(-) 88**, session/oracle 0. 웹 모듈 86개 중 83개 대응·3개 웹 전용. 웹 소스는 `www/` JS 약 1만 6천 5백 줄(자료 제외), 검사 파일 45개, 도구(`webpj/tools`) 오라클 관련 4개 추가다 |
+| 마지막 전체 검사 | WB02-H의 Node v24.21.0, **437/437 통과·실패/건너뜀0**(신규 cpp-oracle 3; WB02-G 434), 약46초 |
+| 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도로 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(마우스 정지 상태에서 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류0). 미션/월드 검사가 아니다 |
+| cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 그 뒤 `cpppj/src` 변경은 `a328ac1f`(987 원격 Fort, 8파일) 하나이며 2026-11-07 WB02-G에서 모두 ①(원격 owner 전용·리팩터, 단독 경로 영향 없음)로 판정해 해당 6행 base를 `a328ac1f`로 기록했다. WB02-G 작업 중 `1cd2b05a / 20261106-63 CP`(참가자별 월드 동기화, 15파일 +174/−8)가 더해졌다. 변경 8단위(RawCampaignSession·Login.inc·RawSurfaceWorld·RawCampaignAssetBindings·SquidProcess·RawSquidTransmission·RawPathData·RawWindAviaryProcess)는 모두 `todo`라 **이식 때 판정**하고(공유 writer의 단독 영향 확인 필요), 새 파일 `o/RawPeerWorldSync`는 재기준선 때 분류한다. 같은 작업 트리에는 다른 세션의 미커밋 cpppj 변경(RawBattleIsland 등)이 있으며 WB 커밋에서 제외했다. 2026-11-07 WB02-H 착수 중 `dc6d1933`(일반 전투섬)·`9cb0547f`(중앙섬/군도)가 더해졌다. 웹 이식분이 있는 3행(RawGameAuxState ①·SidPool ①·UberGump ③)을 판정해 base를 `9cb0547f`로 올렸고, 나머지 `todo` 13단위는 이식 때 판정, 새 파일 8개(RawBattleIsland·RawCentralIsland·RawIslandPartition·RawPeerWorldSync)는 재기준선 때 분류한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다. 공통 인계(LEFT_JOBS.md)는 다른 세션이 갱신하므로 cpppj 상태는 커밋과 소스로 판단한다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 64항목(original-x86 38·independent 7·screenshot 13·source 3·original-binary 1·**cpppj-oracle 2**). original-x86 38개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하며, 2026-11-07 보고는 cpppj 변경 0이다. `port-map.mjs`는 기준선 뒤 `todo` 단위 변경(이식 때 판정)과 새 파일을 보고한다 |
 | 마지막 전체 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**. 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 | 즉시 요구 | 11.01 표기/세 번째 Patch Credits(WB03-AC)·외부 접속 목록(WB02-E)·이식 추적 목록(WB02-F) 완료. **바깥 링크 새 탭/창 열기**는 결정됐고 미구현이다(3.1절) |
 
@@ -73,6 +73,7 @@ webpj의 **현재 구현·개발 계획(남은 작업 순서)·유효한 결정*
 | [x] WB03-Z·AA | CRT 정렬·64바이트 카메라·공통 월드 그림/그림자 출력과 개발용 중립 지형 화면. 실제 Draw/소유자·배경/카메라 정책은 미연결 | [출력](docs/webpj-world-render-20261102.md)·[지형 장면](docs/webpj-terrain-scene-20261102.md) |
 | [x] WB03-AB | 값형 Fort 객체/내용물·Terr→Chaff 순회 로더. 필수 생성/Pop/finder/소유자 장치가 없어 실제 월드에는 미연결 | [객체 로더](docs/webpj-fort-object-load-20261102.md) |
 | [x] WB04-A | 실제50바이트 SID 풀·할당/반납/재초기화·20개 삭제 기록. 원본10.78의1584전이 대조. `slot/bytes/deletions`는 시점 사본, `allocated`만 쓰기 대여이며 양수reset 뒤 재조회 | [SID 풀](docs/webpj-sid-pool-20261104.md) |
+| [x] WB02-H | 무브라우저 실행 `tools/headless.mjs`(실제 `Netstorm`의 적재·시작·프레임·입력 처리기를 쓰고 DOM 경계만 대체), cpppj 오라클 수집 `tools/cpp-oracle.mjs`(기준선 별도 빌드 EXE·빈 사용자 루트·`--mute-audio`·무손실 팔레트 PNG·메타), 비교 `tools/screen-compare.mjs`(픽셀 무허용 오차·구름 정밀 분류·원인 기록 판정), 그림 도구, 검사 3개. 원본 비교 모드(`originalComparison`)·라벨 조회 `controlPoint`. M1 8장면 대조: 기록 밖 차이 0. 원인 기록: 구름 배경(웹 GIF 타일 vs 원본 Kencloud, 원본 스크린샷도 cpppj 쪽 → WB03-M2), cpppj 쪽 3종(Options 6/7차 추가·Pause 누락, 스크롤 화살표 붉은 갈색, Demo Tell `DEMOVILLE`). 웹 결함 수정 2건(매 프레임 포인터 폴링으로 정지 포인터 아래 행 강조, 원본 비교 모드 Technical Help 비활성) | [오라클 비교](docs/webpj-cpp-oracle-20261107.md) |
 | [x] WB02-G | 이식 대응표 `webpj/PORT_MAP.tsv`(기준선 984단위, 미분류0)·도구 `tools/port-map.mjs`(생성/검사/기준선 뒤 변경 보고/`--why`)·검사 `port-map.test.mjs` 5개. 분류 규칙 31개(단독 경로 판정: 복합 전송·로그인/패킷·State 정리·HUD Chat은 port). 기존 웹 모듈 83개를 126행에 대응(port 41·partial 85), 웹 전용 3개. 3.6절 9곳 판정(①3·③5·②반영1)과 `a328ac1f` ①판정. `fixture-manifest.mjs`가 대응표 base 뒤 변경만 보고, D5a 4항목 webCommit 기록 | [이식 대응표](docs/webpj-port-map-20261106.md) |
 | [x] WB04-D5a | `depend-form-host.js`(감시 쌍 생성 004b1510·DependFormHost: 현재 Depend TYPE 두 번 읽기, TYPE 번호 후보·VT 클래스 판정, preDestroy 상대 삭제·release 통지), `gump-form-host.js`(소유 ID DWORD·부모 삭제 UI 통지·VT/반납 TYPE 판정), `content-form-host.js`(정렬 부착 004aec10·통지 뒤 현재 TYPE 사제 포획 꼬리·Robust/Linked/Damage 재부착·BindCreate), `raw-form-linked.js`(004ae080), `content-parent-notice.js`(+0x24 분배), `contained-create.js`(004afa70), contained 종단 `…AtTable` 재반영. 원본 감시 쌍 생성810·정렬 부착41·Form 연결120·Form 수명456행 대조, 계약19, 음성 대조18종 | [Form 호스트](docs/webpj-form-hosts-20261106.md) |
 | [x] WB04-D4 | `squid-constructors.js`(10.78 생성자 주소 188칸·자산 파생 recipe 82개, cpppj `.inc`에서 생성)와 `squid-factory.js`: `createRawSquid`(004af530)·`takeRawSquid`(004af610)·TYPE HP(0049fce0)·`SquidFactory`(create/take/construct/constructCurrent/constructByAddress/retype/postCreate/postTake/firstPopFlags와 Form 진입 createContained/createGumpForm/attachForm/popForm/unpopForm). 사제 1/4 HP·사제/다이스/fakeSurface TYPE은 `bindGameAux`로 같은 GameAuxState를 빌림. 원본 생성자188·자산생성자567·Create부모294·Take부모360·초기화288·firstPop256·생성482·파생3300·Unpop/Take/반납1809 대조, 음성 대조16종. D2/D3 합성 준비를 실제 Factory로 교체. 웹 타입 로더의 zorder/생성자 주소 연결은 WB05 | [SquidFactory](docs/webpj-squid-factory-20261106.md) |
@@ -109,7 +110,7 @@ webpj의 **현재 구현·개발 계획(남은 작업 순서)·유효한 결정*
 | 순서·상태 | 단위 | 할 일 / 선행 관계 | 완료 기준 |
 | --- | --- | --- | --- |
 | 1 · [x] | **WB02-G 이식 대응표·기준선 재반영 (2026-11-07 완료)** | 기준선 `1f00a25a`의 git 트리에서 단위 984개를 만들고(CMake 목록 대신 실제 트리 사용, `platform/`·`app/` 제외) 규칙 31개로 분류했다. 기존 웹 모듈 대응·상태, 3.6절 9곳 판정(②는 없음), D5a 4항목 webCommit 기록, 기준선 뒤 변경 보고와 `a328ac1f` 판정을 마쳤다([문서](docs/webpj-port-map-20261106.md)) | 미분류 0·웹 모듈 미대응 0·9곳 판정 완료·분류별 개수 0.1절 기록. `port-map.test.mjs` 5/5, 전체 434/434 |
-| 2 · [ ] | **WB02-H 무브라우저 실행·cpppj 오라클 기반 (다음)** | ① `tools/headless.mjs`: 같은 자료로 core+render를 Node에서 실행해 8비트 논리 화면(cpppj `snapshot`과 같은 팔레트 BMP)과 관측 보고서를 낸다. DOM에 의존하는 모듈(render 1·ui 3·assets 1·audio·platform)은 표시 경계만 대체한다. ② `tools/cpp-oracle.mjs`: cpppj `--ui-script`로 같은 단계표를 실행해 BMP·보고서·명령줄·cpppj 커밋·EXE SHA-256·자료 해시를 `webpj/tests/fixtures/cpppj/`에 저장하고 manifest에 `kind: cpppj-oracle`로 등록한다. ③ 화면/보고서 비교 도구. 첫 대상은 이미 구현한 M1 화면(메인 메뉴·Campaign·Help·Options·Credits, 영어 4:3) | M1 화면의 cpppj 대조 결과(차이 0 또는 원인 기록). 웹 검사는 저장된 오라클만 읽고 cpppj를 실행하지 않는다 |
+| 2 · [x] | **WB02-H 무브라우저 실행·cpppj 오라클 기반 (2026-11-07 완료)** | ① `tools/headless.mjs`는 실제 `Netstorm` 앱 객체를 Node에서 돌리고 DOM 경계(문서·Canvas·표시기·fetch)만 대체해 논리 화면(cpppj 캡처와 같은 32비트 BMP)과 보고서를 낸다. ② `tools/cpp-oracle.mjs`는 기준선 별도 빌드 EXE로 같은 단계표를 실행해 PNG·보고서·메타(`oracle.json`)를 `webpj/tests/fixtures/cpppj/m1/`에 두고 manifest `cpppj-oracle`로 등록했다. ③ `tools/screen-compare.mjs`. M1 8장면(Welcome 포함)을 대조했다([문서](docs/webpj-cpp-oracle-20261107.md)) | 기록 밖 차이 0·원인 기록 5종·웹 결함 2건 수정. `cpp-oracle.test.mjs` 3/3, 전체 437/437. 웹 검사는 저장된 오라클만 읽는다 |
 | 3 · [ ] | **WB04-D5b·D5c·E 월드 핵심 부품 마감** | D5b `SquidFormDispatch`(현재 VT 클래스 분배)·`ContentFormLifetime`(Content pre/post 삭제·경제·커서 취소)과 의존 `SquidReward`, `contentlifetime-x86.tsv`(10.78 198행). D5c `SquidProcessHost`·Process/BaseProcess 부착·Regular 공통(`AddRegular/AddSharedRegular/FindEvent`, `regular-current-*-x86.tsv`)과 Depend 생성의 Process 직렬화 부착 접두(`process-x86.tsv`·`processform-x86.tsv`·`process/baseprocess-attach-current-local-x86.tsv`). E 공간 spots/해시 등록·Graph/점유·Pop/PostPop·소유자/지역/장부·HP/프레임·내용물 생성과 소유자 마감. (D5a 4항목 webCommit은 WB02-G에서 기록 완료) | 해당 cpppj 검사와 원본 fixture 통과, PORT_MAP `port`. 효과 뒤 현재 TYPE/VT/슬롯·진단 복귀·부분 쓰기 순서 보존 |
 | 4 · [ ] | **WB05-A/B 월드 조립과 미션 시작** | `RawSurfaceWorld`/`RawWorldCore`·`RawCampaignSession`과 1절의 내부 미션 전송·패킷·미션 로그인 경로, `RawFortWorldLoad`·지형/섬 Builder 계열, Player/동맹/기술/SP/Deck/AI 초기화, Start/Guide·State 전환을 cpppj 부모의 호출 순서로 조립한다. 기존 판독/영역/지형(WB03-U~AB)과 WB04 부품을 같은 월드에 연결하고, 웹 타입 로더의 `zorder`/생성자 주소를 Factory에 넘긴다. 첫 대상은 Tutorial1 | Tutorial1에서 cpppj와 같은 Load/Start 관측(보고서·첫 프레임 논리 화면). Session 덤프가 없으면 3.5절 1번이 정해질 때까지 보고서 범위로 기록한다. 임시 Player/AI/색 번호로 시작 성공을 만들지 않는다 |
 | 5 · [ ] | **WB03-M2/WB05-C 월드 표시·카메라·HUD** | `Renderer`·`DrawSort`·타입별 Draw·시각 시스템·`KenCloud`·팔레트 전환, 실제 카메라·가장자리 스크롤, `UberHud`·덱·미니맵·`FloatingSpGump`·커서, `MissionBegin`·`StartDemo`·환영 창 명령 | **M2:** Tutorial1 진입 직후와 N프레임 뒤 논리 화면이 cpppj와 차이 0(L4a). 영어 4:3 다음 16:9/16:10·한국어. `?map=` 개발 화면과 구분 |
@@ -126,7 +127,7 @@ webpj의 **현재 구현·개발 계획(남은 작업 순서)·유효한 결정*
 
 | 수단 (cpppj 기준선 실행 파일) | 얻는 것 | 창 |
 | --- | --- | --- |
-| `--run <자료> --window --no-audio --set "k=v;…" --ui-script steps.tsv --ui-report report.tsv` | 프레임별 입력(click/right/key/esc/pointer 등)과 `snapshot`(논리 8비트 화면 BMP)·`report`(메뉴/세션 관측 TSV) | 뜸 |
+| `--run <자료> --window --mute-audio --frames N --set "k=v;…" --ui-script steps.tsv --ui-report report.tsv` (+ 환경 `NETSTORM_USER_DATA=<빈 폴더>`) | 프레임별 입력(click/right/key/esc/pointer 등)과 `snapshot`(팔레트를 적용한 논리 화면의 32비트 BMP)·`report`(메뉴/세션 관측 TSV). `tools/cpp-oracle.mjs`가 이 형태로 실행한다. `--no-audio`·`NETSTORM_CPP_NO_AUDIO`는 소리 장치가 없는 상태라 Options 소리 항목이 비활성으로 그려지므로 쓰지 않는다(WB02-H) | 뜸 |
 | `--run <자료> --frames N --screenshot out.bmp` | N프레임 뒤 논리 화면 | 뜸 |
 | `--mcp`: `netstorm_input`·`status`·`report`·`screenshot`·`wait_frames`·`record_start`/`record_stop` | 대화형 조작·관측·소리 포함 녹화(L4b 소리 시점·곡 선택) | 뜸 |
 | `--dump-types`·`--inspect-fort`·`--inspect-mission`·`--dump-territories`·`--config-*`·`--inspect-*`·`--dump-font`·`--dump-gif` | 자료 해석 결과 | 없음 |
@@ -135,6 +136,8 @@ webpj의 **현재 구현·개발 계획(남은 작업 순서)·유효한 결정*
 - **제한:** `--dump-world`는 저장된 Tutorial 미션만 받는 옛 `GameWorld` 보고서라 실제 Session 비교에 쓰지 않는다. 실제 Session 상태 전체를 내보내는 명령이 없으므로(3.5절 1번) `report`로 관측할 수 없는 범위는 단위 문서에 한계로 적는다.
 - **같은 조건:** 같은 자료(`assets/game-data` 기준으로 cpppj 실행 폴더와 `webpj/www/data`의 해시를 대조), 같은 언어·화면 크기·설정(`--set`), 같은 시드와 프레임 단위 단계표, 같은 입력을 쓴다. 맞출 수 없는 조건(소리 장치 시각, 브라우저 시계 등)은 비교에서 빼고 기록한다.
 - **실행 규칙:** 창이 뜨는 수집은 AGENTS.md의 실행 확인 대상이다(예외: HJOW-Athlon·VM-W11-Codex·vm-debian-codex). 수집은 해당 단위의 별도 단계에서만 하고, 결과 파일과 cpppj 커밋·EXE SHA-256·명령줄을 manifest에 남긴다. `npm test`는 저장된 결과만 읽는다.
+- **도구와 절차 (WB02-H):** 시나리오 묶음 `webpj/tests/fixtures/<묶음>-scenarios.json`에 단계표를 적고 `node webpj/tools/cpp-oracle.mjs --exe <기준선 EXE>`로 모은 뒤, `node webpj/tools/screen-compare.mjs --diff <폴더>`로 웹(무브라우저, 원본 비교 모드)과 비교한다. 차이는 고치거나 시나리오의 `expected`에 영역·픽셀 수·원인으로 적는다(영역 밖 0이어야 통과). 라벨 클릭은 cpppj `ControlPoint`처럼 스타일 명령을 뺀 일반 글자로 쓴다(`General Help - F1`). 기준선 EXE는 `cpppj/build`(다른 세션이 계속 다시 빌드)를 쓰지 않고 기준선 worktree에서 따로 빌드한다. 이 PC에는 `extracted/webpj-oracle/1f00a25a/`에 보존했다.
+- **알려진 비교 차이:** 메인 메뉴 구름 배경은 원본(=cpppj) Kencloud 출력과 웹 GIF 단순 타일이 행별 1픽셀 어긋난다. 비교 도구는 이를 `background` 기준 장면으로 정밀 분류한다. Kencloud 이식(순서5) 때 0으로 바꾼다.
 - **의미:** 오라클과 같다는 것은 "cpppj와 같다"는 뜻이다. 원본과의 동일성은 cpppj가 원본과 대조한 범위만큼만 보증되므로 L1 원본 fixture 대조를 대체하지 않고 함께 쓴다. cpppj가 미검증·사용자 확인으로 둔 동작(자연 완주·포획/희생·특정 적 공격·승리)은 웹도 같은 경계로 둔다.
 
 ### 3.4 cpppj 잔여와 webpj의 관계 (2026-11-06, 제품985·인계986 기준)
@@ -174,6 +177,9 @@ webpj의 **현재 구현·개발 계획(남은 작업 순서)·유효한 결정*
 | [x] | `o/RawSquidContainedUnpop.cpp/.h` `d678fcad` → `f83db66c` | `core/squid-contained-unpop.js` | ②→반영(2026-11-06 WB04-D5a): 정렬 Content 부착용 `commonContainedPreviousAtTable`/`SetPreviousAtTable` |
 | [x] | 기준선 뒤 `a328ac1f`(987 원격 Fort): `RawCampaignSessionLogin.inc`·`RawCampaignSession.h`·`CampaignTemplateStorage`·`UberGump.cpp`·`FortCurrentNameDevices`·`NewFortManagerDevices` | (UberGump만 `ui/main-menu.js` 등 partial) | ①: 원격 owner 전용 훅·서비스 칸, 파일 읽기 장치 공용화(같은 결과)와 원격 `ReadImage` 추가. 단독(로컬+AI)은 미션 Template을 쓰므로 도달하지 않는다. 6행 base를 `a328ac1f`로 기록 |
 
+| [x] | 기준선 뒤 `dc6d1933`·`9cb0547f`(일반 전투섬·중앙섬/군도): `o/RawGameAuxState.h`·`o/SidPool.cpp` | `core/game-aux-state.js`·`core/sid-pool.js` | ①(2026-11-07 WB02-H): 중앙섬 X/Y 칸(MP 몫), 예측 커서 쓰기 접근자만 추가. 2행 base `9cb0547f` |
+| [ ] ③ | 같은 커밋 `client/UberGump.cpp` | `ui/main-menu.js` 등 partial | ③: 로그인 중 "Creating Islands." 안내(일반 전투섬 생성 경로) → **WB05 로그인 이식 때 단독 도달 여부 확인**. base `9cb0547f` |
+
 `[ ] ③` 행은 판정을 마쳤고 반영 시점만 남은 항목이다. 해당 단위에서 반영하면 `[x]`로 바꾸고 대응표 메모를 고친다.
 
 ## 4. 이관해도 남겨야 할 미해결 한계
@@ -187,9 +193,10 @@ webpj의 **현재 구현·개발 계획(남은 작업 순서)·유효한 결정*
 | edgeFarm | spots·finder·MayPlace·지면 Retype 뒤 실제 월드에 구현. `RawFarmCluster`의3×77 별도 시드/30000실패 한도 등 원본 순서를 유지. 타입121에 isle 색표가 있다고 추정하지 않음([근거6절](docs/webpj-terrain-extras-20261102.md)) |
 | 타입 표 생성 메타 | 2026-11-06 WB04-D4: Factory는 `{constructorAddress, zOrder, maxHitPoints, flags1, flags2, footX/Y, name}` 레코드 배열을 받는다. 웹 타입 로더(`buildTypeRecords`)는 아직 `zorder`(cpppj `RiftTypeTable.cpp`의 23개 이름 상수+오프셋)와 `constructorAddress`(`typeConstructorAddress`)를 채우지 않는다. 실제 미션 TYPE 표를 Factory에 넘기는 WB05-A(3.2절 순서 4, Fort Load)에서 cpppj `SquidFactory_TypeLoader_ConnectsHpDepthAndConstructorMetadata`와 같이 연결·검사한다 |
 | 영역 회전 | 기존 실제 파일은 방향0. 회전2/3의 실제 저장 사례가 생기면 원본 결과와 추가 대조. 독립 기하 계산 통과를 실제 파일 관측으로 세지 않음 |
-| 입력/커서 | 커서2~14·17·18은 쓰는 미션 입력과 함께 추가. 본문 끌기/캡처 중 Overlay의 원문 입력(`004d62b0` 계열) 계약은 미확정 |
+| 입력/커서 | 커서2~14·17·18은 쓰는 미션 입력과 함께 추가. 본문 끌기/캡처 중 Overlay의 원문 입력(`004d62b0` 계열) 계약은 미확정. 2026-11-07 WB02-H: 원본처럼 매 프레임 마지막 포인터 위치를 메인 메뉴에 다시 알리게 했다(정지 포인터 아래 펼침 메뉴 행 강조, cpppj 오라클 일치). 미션 입력(UserInput)도 같은 폴링 계약으로 이식한다 |
+| 메인 메뉴 구름 배경 | 2026-11-07 WB02-H 오라클 대조: 원본/cpppj는 Kencloud 출력(`ClientKencloudGlobals::Draw`·`o/RawKencloud*`), 웹은 GIF 단순 타일이라 일부 행이 가로 1픽셀 어긋난다(4:3에서 37,054픽셀, 원본 스크린샷도 cpppj 쪽). Kencloud 이식(3.2절 순서5 WB03-M2) 때 해소하고 `m1-scenarios.json`의 구름 차이 기록을 0으로 바꾼다 |
 | Options/저장된 값 | Help0/Options−40은 측정값이며 일반 위치 규칙/와이드 메뉴 배치는 미확정. Wind Noise·Speaker Swap·Edge Scroll·Auto-Demo는 해당 시스템과 실제 연결 확인 필요. 시작 팁·설정→GameData 동기화/Done* 저장은 이미 구현 |
-| 도움말 고급 표시 | `<info>` 머리글/능력치, `#`/`&` 상자 맞춤·색 치환, 원본 삼각형 색 해석 확인. 웹은 원본 스크린샷 기준 검정 화살표를 사용. 레이어0/그림자 없는 도움말 그림 경계 유지 |
+| 도움말 고급 표시 | `<info>` 머리글/능력치, `#`/`&` 상자 맞춤·색 치환, 원본 삼각형 색 해석 확인. 웹은 원본 스크린샷 기준 검정 화살표를 사용. 2026-11-07 WB02-H: cpppj 기준선은 붉은 갈색(99,38,22)이고 원본 스크린샷 확대는 검정이라 웹을 유지하고 cpppj 쪽 차이로 기록했다. 레이어0/그림자 없는 도움말 그림 경계 유지 |
 | 에너지 기호 | `mana.8~11`은 현재10.78 클러스터8개 밖이라0크기. 실제 원본 F1 모습 관측은 미확인. 원본 실행이 필요하면 AGENTS.md의 확인/예외 규칙 적용 |
 | Tell/언어 | `<background>`는 이름만 보관(`nsisles` 자료/사용 근거 미확정). 현재 미션·`{@미션.키}`·브리핑/안내 `.korean`·스크립트 도움말 Back은 WB05·WB11/WB13(3.2절 순서 4·8)에서 연결. 한국어 영어대체/긴 줄/고DPI도 해당 화면과 확인 |
 | 메뉴 확장 | 두 열 메뉴는 범위 내 실제 소비자가 필요할 때 원본 계약으로 이식. `%{userSpec}`·User Made Campaigns는 제외이며 새 과제로 돌리지 않음 |
@@ -225,6 +232,10 @@ node webpj/tools/fixture-manifest.mjs
 # 이식 대응표 검사·분류/상태 개수·기준선(행 base) 뒤 cpppj 변경 보고. --write 는 행/분류를 다시 만들고 사람 칸을 보존한다. --why 이름 은 분류 사유.
 node webpj/tools/port-map.mjs
 node webpj/tools/port-map.mjs --why CompositeMissionTransport
+# 웹 무브라우저 실행(논리 화면 BMP·보고서), 저장된 cpppj 오라클과 비교, 오라클 재수집(창이 뜸: AGENTS.md 실행 확인 규칙)
+node webpj/tools/headless.mjs --scenarios webpj/tests/fixtures/cpppj/m1-scenarios.json --out <폴더>
+node webpj/tools/screen-compare.mjs --diff <폴더>
+node webpj/tools/cpp-oracle.mjs --exe extracted/webpj-oracle/1f00a25a/Netstorm.exe [--id 시나리오]
 # 준비 자료를 검사한다. 자료 변경이 필요한 단위에서만 prepare-assets로 재생성한다.
 npm --prefix webpj run check-assets
 npm --prefix webpj run prepare-assets
@@ -241,10 +252,11 @@ npm --prefix webpj run test:e2e
 - [스크린샷](docs/screens/README.md)·[녹화](docs/videos/README.md)·[애니메이션 시간](docs/videos/animation-timing.md)
 - [cpppj 빌드·실행 옵션](docs/cpp-build.md)·[cpppj 로컬 MCP](docs/exe/cpp-mcp-server-20261106.md)·[dotnetpj 포트 맵 형식](dotnetpj/PORT_MAP.md): 오라클 실행과 대응표 형식
 - [이식 대응표 문서](docs/webpj-port-map-20261106.md): 분류 규칙·단독 경로 판정·3.6절 판정 근거(WB02-G)
-- 추가할 도구(WB02-H): `tools/headless.mjs`(무브라우저 실행·논리 화면/보고서), `tools/cpp-oracle.mjs`(cpppj 오라클 수집). 만들면 위 명령 목록에 추가한다.
+- [오라클 비교 문서](docs/webpj-cpp-oracle-20261107.md): 무브라우저 실행·오라클 수집/비교 규칙·M1 대조 결과(WB02-H)
 
 ## 7. 이번 정리와 과거 이관
 
+- **2026-11-07, HJOW-Athlon, WB02-H(사용자 "다음 작업 진행" 요청):** 0.1·2절(WB02-H 행)·3.2절 순서2 완료·3.3절(실행 형태·도구 절차·알려진 차이)·3.6절(`9cb0547f` 판정)·4절(입력 폴링·구름·삼각형 색)·6절 명령을 갱신했다. 예외 PC라 cpppj 기준선 창 실행(시나리오 단위 수집 2회·전체 수집 3회(첫 회는 General Help 라벨 오류로 중단, 마지막 회는 재현성 확인)·프레임 탐색 1회)과 Chromium e2e·임시 클릭 확인을 확인 없이 진행했다. 기준선 빌드용 worktree는 실행 파일을 `extracted/webpj-oracle/1f00a25a/`에 보존한 뒤 지웠다. 디컴파일은 하지 않았고, 공통 인계 LEFT_JOBS.md와 cpppj 파일은 수정하지 않았다. 찾은 cpppj 쪽 차이 3종은 사용자에게 보고했다.
 - **2026-11-07, HJOW-Athlon, WB02-G(사용자 "다음 작업 진행" 요청):** 0.1·0.2·2절(WB02-G 행)·3.0절(`partial` 상태·분류/ base 규칙)·3.2절 순서1 완료·순서3 문구·3.6절 판정표·6절 명령을 갱신했다. 게임·브라우저·cpppj 실행과 디컴파일은 하지 않았다. 공통 인계 LEFT_JOBS.md와 cpppj 파일은 수정하지 않았다.
 - **2026-11-06, HJOW-Athlon, 사용자 요청(재계획, 문서만):** cpppj가 싱글플레이 범위를 마감하고 멀티플레이로 넘어간 것을 반영해 기준선 고정·파일 단위 이식·cpppj 오라클·싱글/멀티 경계를 정했다(머리말·1절·3.0~3.6절). 실행 순서를 WB02-G/H 선행으로 다시 세우고 0.1·0.2·5·6절을 갱신했다. 2절 완료 색인과 4절 미해결 한계는 유지했으며, 4절의 옛 순서 번호만 WB 영역 이름으로 바꿨다. 이전 원문은 보관본에 바이트 그대로 옮겼다. 코드·검사·자산 변경, npm/브라우저/게임 실행, 디컴파일은 하지 않았다. 같은 작업 트리에서 다른 세션이 cpppj 인계를 갱신하고 있어 LEFT_JOBS.md 등 공통·cpppj 파일은 수정하지 않았다.
 - 그 전 정리(2026-11-04 원문 이관·계획 재작성, 2026-11-05 사용자 결정 반영)의 기록은 보관본에 있다.

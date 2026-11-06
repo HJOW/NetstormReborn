@@ -1,0 +1,71 @@
+{
+  "format": "netstorm-webpj-oracle-scenarios",
+  "version": 1,
+  "description": "M1 메인 메뉴 화면(영어 4:3 1024x768)의 cpppj 오라클 비교 시나리오. tools/cpp-oracle.mjs 가 cpppj --ui-script 로, tools/headless.mjs 가 웹(원본 비교 모드)으로 같은 단계표를 실행한다. 단계는 [프레임, 동작, 인자] 이다. expected 는 원인을 기록한 차이이며 tools/screen-compare.mjs 가 판정한다(docs/webpj-cpp-oracle-20261107.md).",
+  "language": "english",
+  "screen": { "width": 1024, "height": 768 },
+  "settings": { "SCREENW": 1024, "SCREENH": 768 },
+  "background": { "scenario": "main-menu", "snapshot": "main-menu" },
+  "scenarios": [
+    {
+      "id": "welcome", "title": "첫 실행 환영 창(Welcome)", "settings": {}, "frames": 30,
+      "steps": [[20, "snapshot", "welcome"], [20, "report", "welcome"]],
+      "expected": { "welcome": { "background": { "pixels": 37054, "reason": "구름 배경: 원본/cpppj 는 Kencloud 출력, 웹은 GIF 단순 타일이라 일부 행이 가로 1픽셀 어긋난다. 원본 스크린샷도 cpppj 쪽에 가깝다(차이 픽셀 평균 오차 cpppj 5.78·웹 12.47). WB03-M2 KenCloud 이식 때 해소" } } }
+    },
+    {
+      "id": "main-menu", "title": "메인 메뉴(8버튼 원본 배치)", "settings": { "WelcomeGiven": 1, "tellTips": 0 }, "frames": 30,
+      "steps": [[20, "snapshot", "main-menu"], [20, "report", "main-menu"]],
+      "expected": { "main-menu": { "background": { "pixels": 37054, "reason": "구름 배경(welcome 과 같은 원인). 제목 그림과 8버튼은 픽셀까지 같다" } } }
+    },
+    {
+      "id": "campaign", "title": "Campaign Tell(User Made Campaigns 행 포함)", "settings": { "WelcomeGiven": 1, "tellTips": 0 }, "frames": 30,
+      "steps": [[10, "click", "Campaign"], [20, "snapshot", "campaign"], [20, "report", "campaign"]],
+      "expected": { "campaign": { "background": { "pixels": 37054, "reason": "구름 배경(welcome 과 같은 원인). Tell 창은 픽셀까지 같다" } } }
+    },
+    {
+      "id": "demo", "title": "Demo Tell", "settings": { "WelcomeGiven": 1, "tellTips": 0 }, "frames": 30,
+      "steps": [[10, "click", "Demo"], [20, "snapshot", "demo"], [20, "report", "demo"]],
+      "expected": {
+        "demo": {
+          "background": { "pixels": 37054, "reason": "구름 배경(welcome 과 같은 원인). Tell 창은 픽셀까지 같다" },
+          "report": { "page": { "cpp": "DEMOVILLE", "web": "Demoville", "reason": "현재 Tell 이름: 원본 10.78 실행 파일의 Demo 버튼 인자 문자열은 'Demoville' 하나뿐이고(DEMOVILLE 없음) 웹은 원본과 같다. cpppj 기준선은 대문자 'DEMOVILLE' 을 넘겨 기록 이름이 다르다(섹션 조회는 대소문자를 가리지 않아 화면은 같음). cpppj 쪽 차이" } }
+        }
+      }
+    },
+    {
+      "id": "credits", "title": "Credits Tell(세 행, 11.01 Patch Credits 포함)", "settings": { "WelcomeGiven": 1, "tellTips": 0 }, "frames": 30,
+      "steps": [[10, "click", "Credits"], [20, "snapshot", "credits"], [20, "report", "credits"]],
+      "expected": { "credits": { "background": { "pixels": 37054, "reason": "구름 배경(welcome 과 같은 원인). Tell 창은 픽셀까지 같다" } } }
+    },
+    {
+      "id": "help-popup", "title": "Help 펼침 메뉴", "settings": { "WelcomeGiven": 1, "tellTips": 0 }, "frames": 30,
+      "steps": [[10, "click", "Help"], [20, "snapshot", "help-popup"], [20, "report", "help-popup"]],
+      "expected": { "help-popup": { "background": { "pixels": 37054, "reason": "구름 배경(welcome 과 같은 원인). 펼침 메뉴는 정지 포인터 아래 행 강조·Technical Help 비활성까지 픽셀이 같다" } } }
+    },
+    {
+      "id": "options-popup", "title": "Options 펼침 메뉴", "settings": { "WelcomeGiven": 1, "tellTips": 0 }, "frames": 30,
+      "steps": [[10, "click", "Options"], [20, "snapshot", "options-popup"], [20, "report", "options-popup"]],
+      "expected": {
+        "options-popup": {
+          "background": { "pixels": 37054, "reason": "구름 배경(welcome 과 같은 원인)" },
+          "regions": [
+            { "rect": [551, 294, 718, 600], "pixels": 17259, "reason": "펼침 메뉴 항목 구성: cpppj 기준선은 원본에 없는 Language >(6차)·Anti-Aliasing·FSR 1.0 Upscaling(7차)을 더하고 원본 스크린샷(screenShots/mainMenu - Options.png)에 있는 'Pause - Shift-F9' 행이 없다. 웹 원본 비교 모드는 원본 스크린샷 구성과 같다. 행 수가 달라 정지 포인터 아래 강조 행도 다르다(cpppj Language, 웹 Sound On). cpppj 쪽 차이" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "general-help", "title": "General Help 창(F1Help)", "settings": { "WelcomeGiven": 1, "tellTips": 0 }, "frames": 40,
+      "steps": [[10, "click", "Help"], [20, "click", "General Help - F1"], [30, "snapshot", "general-help"], [30, "report", "general-help"]],
+      "expected": {
+        "general-help": {
+          "background": { "pixels": 33164, "reason": "구름 배경(welcome 과 같은 원인)" },
+          "regions": [
+            { "rect": [715, 61, 721, 67], "pixels": 15, "reason": "스크롤바 위 화살표 삼각형 색: cpppj 기준선은 붉은 갈색(99,38,22), 원본 스크린샷(screenShots/help - NetStorm Instructions.png)과 웹은 검정. cpppj 쪽 차이(인계 4절 '원본 삼각형 색' 항목)" },
+            { "rect": [715, 341, 721, 347], "pixels": 15, "reason": "스크롤바 아래 화살표 삼각형 색(위 화살표와 같은 원인)" }
+          ]
+        }
+      }
+    }
+  ]
+}
