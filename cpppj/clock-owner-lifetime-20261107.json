@@ -1,0 +1,23 @@
+{
+  "unit": 995,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "공유 GameClock이 실제 GameTicks 주소의 LocalState owner를 유지하도록 보완",
+  "build": {
+    "exitCode": 0, "warnings": 0, "errors": 0,
+    "log": "extracted/cpp-resume-995/build.log",
+    "exeSize": 11648000,
+    "exeSha256": "7fa28b8bc7e38f15377d32f443eba3d603bd3c7d3fc45c3439b098de2a84e078"
+  },
+  "existingNonMultiplayerRegression": {
+    "filter": "GameClockReset_", "tests": 4, "failedChecks": 0,
+    "publicFixtureRows": 114, "rawEvidenceRows": 24,
+    "buildExitCode": 0, "testExitCode": 0,
+    "buildLog": "extracted/cpp-resume-995/nonmp-build.log",
+    "testLog": "extracted/cpp-resume-995/nonmp-tests.log"
+  },
+  "excluded": { "newTests": 0, "newMultiplayerTests": 0, "clockPacketRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-995/protected-before.json" },
+  "remaining": ["실제 Uber State6 선택/일반 Fort 설치·공개 계약", "Multiplayer Options/roster/LAN UI", "일반 State7 호스트 진입/World 교체 부모", "전체 파생 writer/decoder", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}

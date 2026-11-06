@@ -3,6 +3,7 @@
 #include "o/GameClock.h"
 #include <limits>
 #include <stdexcept>
+#include <utility> // 실제 장기 소유권을 복제 상태 없이 시계 대여에 이동한다.
 
 namespace netstorm::o {
 // 원본 DAT_0050a668: 밀리초 나머지를 초로 환산하는 배율.
@@ -19,7 +20,7 @@ double GameClock::GameSeconds(std::uint32_t milliseconds) const {
     if (pauseDepth_!=0) return pausedGame_;const auto elapsed=(milliseconds-origin_)-(synchronizationTicks_ ? *synchronizationTicks_ : 0U); // 원문은 signed 보정 비트도 unsigned 밀리초 감김으로 감산한다.
     return (static_cast<double>(elapsed/1000)+static_cast<double>(elapsed%1000)*kMillisecondSeconds)-pausedTotal_;
 }
-void GameClock::BindSynchronizationTicks(const std::uint32_t& ticks) { synchronizationTicks_=&ticks; } // 같은 Native writer/cleanup 결과를 매 게임시각 조회에 직접 반영한다.
+void GameClock::BindSynchronizationTicks(const std::uint32_t& ticks,std::shared_ptr<void> owner) { synchronizationOwner_=std::move(owner);synchronizationTicks_=&ticks; } // 같은 Native writer/cleanup 결과를 매 게임시각 조회에 직접 반영하고 실제 소유자를 유지한다.
 // 첫 정지에서 저장하고 추가 정지는 카운터만 증가시킨다.
 void GameClock::Pause(std::uint32_t milliseconds) {
     if (pauseDepth_ == std::numeric_limits<std::uint32_t>::max()) throw std::overflow_error("Pause depth overflow");

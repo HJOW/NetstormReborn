@@ -343,7 +343,7 @@ int Client::Run() {
     else screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition); // CD호스트의기존값형입구는별도판본으로유지한다.
     // [원본] 설치 검사(GameInstalledTest)·zacket·프로토콜 검사는 아직 연결하지 않았다.
     *clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
-    if (options_.edition==o::OriginalEdition::Patch1078) clock_->BindSynchronizationTicks(localStateGlobals_->GameTicks()); // 실제0055b4ac를 조회 때마다 빌리며 초기화/재접속에서 별도 시계 사본을 만들지 않는다.
+    if (options_.edition==o::OriginalEdition::Patch1078) clock_->BindSynchronizationTicks(localStateGlobals_->GameTicks(),localStateGlobals_); // 같은 실제0055b4ac와 owner를 보유하여 외부 공유 시계가 Client보다 오래 남아도 주소 대여를 유지한다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientPlayerRecords(*this); //0043952c의 실제 초기화이며 그 다음00439537 ColorSort 입력보다 앞선다.
     //00439537의초기ColorSort입력위치다.이캡처만으로미연결43b430검색/색띠전체를성공시킨것은아니다.
     colorSortInput_->CaptureWithPrimary(screen_->LogicalPalette());
