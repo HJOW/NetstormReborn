@@ -1,0 +1,563 @@
+{
+  "unit": 981,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 981,
+  "version": "11.01",
+  "scope": "PATCH fortGump A02 첫774행 보존·확장부 본문749행 반복",
+  "exeSha256": "31afb2ee316b76c0acf77b2f55f266b3e1bae1373682b7c37532a751197ce771",
+  "exeBytes": 11396608,
+  "build": {
+    "releaseCommands": 2,
+    "exitCodes": [
+      1,
+      0
+    ],
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "firstFailure": "새 픽셀 검사에서 GumpBackgroundDraw.h 직접 include 누락 C3646/C4430 연쇄. 검사 include만 추가; 제품 변경 없음."
+  },
+  "tests": {
+    "uniqueCases": 15,
+    "newCases": 3,
+    "filters": [
+      {
+        "filter": "GumpWidePanel_",
+        "cases": 3,
+        "failedChecks": 0
+      },
+      {
+        "filter": "GumpBackgroundDraw_",
+        "cases": 7,
+        "failedChecks": 0
+      },
+      {
+        "filter": "GumpBackground_",
+        "cases": 5,
+        "failedChecks": 0
+      }
+    ],
+    "firstRunFailures": 0
+  },
+  "live": {
+    "baseline": {
+      "passed": true,
+      "unit": 981,
+      "exitCode": 0,
+      "exeSha256": "148a9950b58cae2a903b7ecf3b0cdcb701b0c8e1ebce34168775d170bd71e5c1",
+      "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-981\\baseline\\game",
+      "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-981\\baseline\\live-close\\user-data",
+      "dataUnchanged": true,
+      "protectedUnchanged": true,
+      "actions": [
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "script-command",
+          "arg": "MissionBegin,tutorial1"
+        },
+        {
+          "op": "click",
+          "arg": "MORE"
+        },
+        {
+          "op": "click",
+          "arg": "OK"
+        }
+      ],
+      "observations": [
+        {
+          "label": "main-0",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Welcome"
+            ]
+          ],
+          "mission": null,
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "9.625",
+              "9.625"
+            ]
+          ]
+        },
+        {
+          "label": "main-1",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Welcome2"
+            ]
+          ],
+          "mission": null,
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "9.734",
+              "9.734"
+            ]
+          ]
+        },
+        {
+          "label": "main-2",
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "mission": null,
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "9.859",
+              "9.859"
+            ]
+          ]
+        },
+        {
+          "label": "entry-0",
+          "phase": [
+            [
+              "3"
+            ]
+          ],
+          "page": [
+            [
+              "A."
+            ]
+          ],
+          "mission": [
+            [
+              "tutorial1",
+              "Tutorial",
+              "826"
+            ]
+          ],
+          "paused": [
+            [
+              "1"
+            ]
+          ],
+          "time": [
+            [
+              "10.015",
+              "10.187"
+            ]
+          ]
+        },
+        {
+          "label": "entry-1",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "A1."
+            ]
+          ],
+          "mission": [
+            [
+              "tutorial1",
+              "Tutorial",
+              "826"
+            ]
+          ],
+          "paused": [
+            [
+              "1"
+            ]
+          ],
+          "time": [
+            [
+              "10.015",
+              "10.281"
+            ]
+          ]
+        },
+        {
+          "label": "entry-2",
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "mission"
+            ]
+          ],
+          "mission": [
+            [
+              "tutorial1",
+              "Tutorial",
+              "826"
+            ]
+          ],
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "10.269",
+              "10.566"
+            ]
+          ]
+        },
+        {
+          "label": "before-close",
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "mission"
+            ]
+          ],
+          "mission": [
+            [
+              "tutorial1",
+              "Tutorial",
+              "826"
+            ]
+          ],
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "11.999",
+              "12.296"
+            ]
+          ]
+        }
+      ],
+      "scope": "일반 tutorial1 진입/비정지 대기/활성 미션 WM_CLOSE 종료. 실제 OOM·포획·희생·공격·승리·MP·공중3종·물리 입력 검증 아님.",
+      "pixels": {
+        "size": [
+          1920,
+          1080
+        ],
+        "rect": [
+          0,
+          774,
+          80,
+          799
+        ],
+        "black": 2000,
+        "pixels": 2000
+      }
+    },
+    "after": {
+      "passed": true,
+      "unit": 981,
+      "exitCode": 0,
+      "exeSha256": "31afb2ee316b76c0acf77b2f55f266b3e1bae1373682b7c37532a751197ce771",
+      "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-981\\after\\game",
+      "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-981\\after\\live-close\\user-data",
+      "dataUnchanged": true,
+      "protectedUnchanged": true,
+      "actions": [
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "script-command",
+          "arg": "MissionBegin,tutorial1"
+        },
+        {
+          "op": "click",
+          "arg": "MORE"
+        },
+        {
+          "op": "click",
+          "arg": "OK"
+        }
+      ],
+      "observations": [
+        {
+          "label": "main-0",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Welcome"
+            ]
+          ],
+          "mission": null,
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "9.646",
+              "9.646"
+            ]
+          ]
+        },
+        {
+          "label": "main-1",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Welcome2"
+            ]
+          ],
+          "mission": null,
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "9.771",
+              "9.771"
+            ]
+          ]
+        },
+        {
+          "label": "main-2",
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "mission": null,
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "9.896",
+              "9.896"
+            ]
+          ]
+        },
+        {
+          "label": "entry-0",
+          "phase": [
+            [
+              "3"
+            ]
+          ],
+          "page": [
+            [
+              "A."
+            ]
+          ],
+          "mission": [
+            [
+              "tutorial1",
+              "Tutorial",
+              "826"
+            ]
+          ],
+          "paused": [
+            [
+              "1"
+            ]
+          ],
+          "time": [
+            [
+              "10.052",
+              "10.225"
+            ]
+          ]
+        },
+        {
+          "label": "entry-1",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "A1."
+            ]
+          ],
+          "mission": [
+            [
+              "tutorial1",
+              "Tutorial",
+              "826"
+            ]
+          ],
+          "paused": [
+            [
+              "1"
+            ]
+          ],
+          "time": [
+            [
+              "10.052",
+              "10.303"
+            ]
+          ]
+        },
+        {
+          "label": "entry-2",
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "mission"
+            ]
+          ],
+          "mission": [
+            [
+              "tutorial1",
+              "Tutorial",
+              "826"
+            ]
+          ],
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "10.286",
+              "10.584"
+            ]
+          ]
+        },
+        {
+          "label": "before-close",
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "mission"
+            ]
+          ],
+          "mission": [
+            [
+              "tutorial1",
+              "Tutorial",
+              "826"
+            ]
+          ],
+          "paused": [
+            [
+              "0"
+            ]
+          ],
+          "time": [
+            [
+              "12.02",
+              "12.318"
+            ]
+          ]
+        }
+      ],
+      "scope": "일반 tutorial1 진입/비정지 대기/활성 미션 WM_CLOSE 종료. 실제 OOM·포획·희생·공격·승리·MP·공중3종·물리 입력 검증 아님.",
+      "pixels": {
+        "size": [
+          1920,
+          1080
+        ],
+        "rect": [
+          0,
+          774,
+          80,
+          799
+        ],
+        "black": 0,
+        "pixels": 2000,
+        "colors": 17
+      }
+    }
+  },
+  "protected": {
+    "before": 2800,
+    "unchanged": 2800,
+    "after": 2800,
+    "fixtures": 980,
+    "new": []
+  },
+  "solutionProjects": 83,
+  "checkingRemaining": 8,
+  "lastGuiUnit": 981,
+  "skipped": [
+    "MP/패킷/통신",
+    "포획/희생/특정적공격/승리",
+    "공중3종전용",
+    "물리입력/활성전체화면/PCM/CD 재시도",
+    "전체CTest/34미션/ZIP반복"
+  ],
+  "next": "7번 표시 결함 해소·환경/사용자 확인 제외에 따라8번 LAN TCP부터 구현 계속"
+}

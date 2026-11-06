@@ -32,6 +32,8 @@ struct GumpBackgroundDrawHooks {
     std::function<void(ScreenRect,std::uint32_t,bool)> fill;
     // line: 지정한 두 점 사이의 선을 출력하는 콜백.
     std::function<void(GumpLine)> line;
+    // repeatBody: 와이드 전용 패널의 반복 시 제외할 선두 행 수다.0/미연결은 원문 타일을 그대로 쓴다.
+    std::function<std::int32_t(std::uint32_t,std::uint32_t)> repeatBody;
 };
 // 00465c60/CD 00494e40 및 00465880/CD 00494a20의 전체 정상 출력 분배다.
 class GumpBackgroundDraw {
@@ -57,7 +59,7 @@ private:
 // 배경 토큰만 실제 가상 Draw로 분배하며 기존 돌 버튼/다른 파생 타입의 처리기를 보존한다.
 void BindGumpBackgroundDraw(GumpDrawHooks& hooks,const GumpBackgroundDraw& draw,std::function<bool(std::uint32_t)> isBackground);
 // 실제 SHP 블록과 원본 타입의 논리 프레임 수/flags1이다. 물리 레이어 수와 논리 수를 구분한다.
-struct GumpBackgroundAssetBinding { /* type: 타입 표에서 객체 종류를 찾는 번호. */ std::uint32_t type{};/* block: 셰이프 DB에서 그림을 찾는 블록 번호. */ std::size_t block{};/* frameCount: 사용 가능한 프레임 개수. */ std::int32_t frameCount{};/* flags: 동작을 선택하는 플래그 비트. */ std::uint32_t flags{}; };
+struct GumpBackgroundAssetBinding { /* type: 타입 표에서 객체 종류를 찾는 번호. */ std::uint32_t type{};/* block: 셰이프 DB에서 그림을 찾는 블록 번호. */ std::size_t block{};/* frameCount: 사용 가능한 프레임 개수. */ std::int32_t frameCount{};/* flags: 동작을 선택하는 플래그 비트. */ std::uint32_t flags{};/* repeatFrame: 와이드에서 선두 검정 행을 재반복하지 않을 단일 패널 프레임이며 -1은 원문 경로다. */ std::int32_t repeatFrame{-1}; };
 // 실제 GameAssets 또는 독립 검사 SHP를 기존 생성/출력의 자산 경계에 공급한다. 주소 토큰은 호스트 타입 번호다.
 class GumpBackgroundAssets {
 public:
@@ -71,9 +73,10 @@ public:
     const GumpBackgroundFrame& Frame(std::uint32_t type,std::uint32_t abstract,std::uint32_t frame) const;
     // 정상 프레임의 실제 VFX 데이터베이스/블록을 제공한다. 생성 노드의 이전 shape 필드는 읽지 않는다.
     std::pair<const ShapeDatabase*,std::size_t> Shape(std::uint32_t type,std::uint32_t frame) const;
+    std::int32_t RepeatBodyStart(std::uint32_t type,std::uint32_t frame) const; // 선택한 패널의 실제 불투명 검정 선두 행 수이며 다른 프레임/원문 판본은0이다.
 private:
     // 안정된 원본 메타데이터를 타입별로 소유한다. 여기의 shape 토큰을 물리 포인터로 재해석하지 않는다.
-    struct View { /* type: 객체 종류를 구별하는 타입 자료. */ GumpBackgroundType type;/* block: 셰이프 DB에서 그림을 찾는 블록 번호. */ std::size_t block{};/* count: 현재 항목 또는 실행 횟수. */ std::int32_t count{};/* flags: 동작을 선택하는 플래그 비트. */ std::uint32_t flags{};/* frames: 타입별 프레임 자료. */ std::vector<GumpBackgroundFrame> frames; };
+    struct View { /* type: 객체 종류를 구별하는 타입 자료. */ GumpBackgroundType type;/* block: 셰이프 DB에서 그림을 찾는 블록 번호. */ std::size_t block{};/* count: 현재 항목 또는 실행 횟수. */ std::int32_t count{};/* flags: 동작을 선택하는 플래그 비트. */ std::uint32_t flags{};/* frames: 타입별 프레임 자료. */ std::vector<GumpBackgroundFrame> frames;/* repeatFrame: 첫 원문 타일 뒤 본문만 반복할 프레임이며 -1은 기존 경로다. */ std::int32_t repeatFrame{-1};/* repeatBodyStart: 같은 실제 SHP에서 읽은 불투명 검정 선두 행 수다. */ std::int32_t repeatBodyStart{}; };
     // 중복 타입·잘못된 블록/논리 수·추가 헤더 누락을 거부하며 모든 물리 프레임 메타데이터를 보존한다.
     void Add(GumpBackgroundAssetBinding binding);
     // shapes_: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료.

@@ -1,0 +1,68 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-11-03",
+  "source": "originals\\d\\_shapes.shp",
+  "sourceSha256": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+  "block": 22,
+  "physicalFrame": 2,
+  "vfxOffset": 3528948,
+  "metrics": [
+    81,
+    775,
+    0,
+    0
+  ],
+  "rect": [
+    0,
+    0,
+    79,
+    773
+  ],
+  "width": 80,
+  "height": 774,
+  "opaqueBlackLeadingRows": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ],
+  "baseline": "extracted\\cpp-resume-981\\baseline\\live-close\\mission.png",
+  "baselineSha256": "c8216af25666629ea598ba66ca4a05fe0092abf24a2d1fa756d2f2f4a678c6cd",
+  "baselineSize": [
+    1920,
+    1080
+  ],
+  "blackBand": {
+    "rect": [
+      0,
+      774,
+      80,
+      799
+    ],
+    "blackPixels": 2000,
+    "totalPixels": 2000
+  },
+  "diagnosis": "775-1=774행 타일에서 불투명 검정 선두25행이 y774부터재출력. 별도Gump/팔레트투명성문제아님.",
+  "execution": "보호SHP/기존PNG 정적읽기만. 게임/빌드/검사/기계어실행없음."
+}

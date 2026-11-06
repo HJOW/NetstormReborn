@@ -3752,3 +3752,7 @@ target_sources(netstorm_pop_context_tests PRIVATE LegacyWorldLifetimeTests.cpp)
 # 실제 OS 메모리 고갈/오류창을 만들지 않고 원문 종료 순서와 handler 등록 복원을 대조한다(979).
 target_sources(netstorm_tests PRIVATE AllocationFailureTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE AllocationFailureTests.cpp)
+
+# 와이드 패널 본문 반복과 기존 원문 배경/실제 픽셀을 같은 집중 대상에서 대조한다(981).
+target_sources(netstorm_tests PRIVATE GumpWidePanelTests.cpp)
+target_sources(netstorm_translated_pixels_tests PRIVATE GumpWidePanelTests.cpp GumpBackgroundDrawTests.cpp GumpBackgroundTests.cpp)

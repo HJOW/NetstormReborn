@@ -1,5 +1,6 @@
 // 실제 배경 출력 분기와 현재 자산/클립/색을 보존하고 원본 호출 수명을 같은 저장소로 연결한다.
 #include "client/GumpBackgroundDraw.h"
+#include <algorithm>
 #include <bit>
 #include <limits>
 #include <stdexcept>
@@ -69,6 +70,30 @@ void GumpBackgroundDraw::Texture(ScreenRect rect,std::uint32_t flags,std::uint32
     const auto metrics=Require(hooks_.frame)(type,frame);const auto saved=clip_.clip;
     const auto plan=PlanGumpTexture(rect,saved,metrics.width,metrics.height,flags);
     if (!plan.validTile) return;
+    const auto bodyStart=hooks_.repeatBody ? hooks_.repeatBody(type,frame):0;
+    const std::int32_t firstPeriod=metrics.height-1,bodyRows=firstPeriod-bodyStart;
+    const auto extra=ClipScreenRect(plan.clip,{plan.clip.left,firstPeriod,plan.clip.right,plan.clip.bottom});
+    if (bodyStart>0 && bodyRows>0 && extra.left<extra.right && extra.top<extra.bottom) {
+        // 첫 타일은 원본774행을 그대로 보존한다. 새 높이에 드러나는 반복에서만 예산 아래 숨었던25행을 제외한다.
+        const auto legacy=ScreenRect{plan.clip.left,plan.clip.top,plan.clip.right,std::min(plan.clip.bottom,firstPeriod)};
+        if (legacy.top<legacy.bottom) {
+            const TextureClipGuard guard(Require(hooks_.clip),saved,legacy);if (plan.shade) Require(hooks_.shade)(plan.shade);
+            for (const auto origin:plan.origins) Require(hooks_.shape)({type,frame,origin,plan.shade!=0}); // 기존 타일/위상은 최초 원문 영역 안에서만 출력한다.
+        }
+        if (plan.origins.empty()) return;const auto firstY=plan.origins.front().y;
+        const auto first=std::int64_t(firstPeriod)+(std::int64_t(extra.top)-firstPeriod)/bodyRows*bodyRows;
+        const auto columns=std::count_if(plan.origins.begin(),plan.origins.end(),[firstY](auto origin) { return origin.y==firstY; }); // 기존 가로 타일 개수를 그대로 사용한다.
+        const auto rows=(std::int64_t(extra.bottom)-first+bodyRows-1)/bodyRows;
+        if (std::uint64_t(columns)*static_cast<std::uint64_t>(rows)>1000000) throw std::length_error("와이드 패널 본문 반복 범위 초과");
+        for (auto top=first;top<extra.bottom;top+=bodyRows) { // 원래의 첫 전체 타일 뒤에는 실제 본문25..773만749행 간격으로 반복한다.
+            const ScreenRect cut{extra.left,static_cast<std::int32_t>(std::max<std::int64_t>(extra.top,top)),extra.right,static_cast<std::int32_t>(std::min<std::int64_t>(extra.bottom,top+bodyRows))};
+            const TextureClipGuard guard(Require(hooks_.clip),saved,cut);if (plan.shade) Require(hooks_.shade)(plan.shade);
+            for (const auto origin:plan.origins) { // 원문의 가로 타일 간격과 현재 프레임/색 표는 그대로 사용한다.
+                if (origin.y==firstY) Require(hooks_.shape)({type,frame,{origin.x,static_cast<std::int32_t>(top-bodyStart)},plan.shade!=0});
+            }
+        }
+        return;
+    }
     const TextureClipGuard guard(Require(hooks_.clip),saved,plan.clip);
     if (plan.shade) Require(hooks_.shade)(plan.shade);
     // 빈 클립에서도 원본의 모든 여분 타일 호출을 전달한다. 원색은 현재 설치된 색 표를 무시한다.
@@ -84,11 +109,13 @@ void BindGumpBackgroundDraw(GumpDrawHooks& hooks,const GumpBackgroundDraw& draw,
 // 원본 전체 타입 번호와 물리 SHP 로딩 순서를 유지한다. 논리 프레임 수는 클러스터 수다.
 GumpBackgroundAssets::GumpBackgroundAssets(const GameAssets& assets):shapes_(assets.Shapes()) {
     const auto types=assets.TypeTable().Types();
+    const auto panelBlock=assets.Edition()==o::OriginalEdition::Patch1078 ? assets.Find("fortGump").block : std::numeric_limits<std::size_t>::max(); // 원문 CD/다른 자산에는 호환 정책을 설치하지 않는다.
     // 내장 타입은 SHP 자산이 없으므로 생성 경계에서 실제 자산 타입만 제공한다.
     for (std::size_t i=0;i<assets.Types().size();++i) {
         const auto& asset=assets.Types()[i];const auto type=static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+i);
         if (asset.definition.clusters.size()>static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max())) throw std::out_of_range("배경 논리 프레임 수 범위 오류");
-        Add({type,asset.block,static_cast<std::int32_t>(asset.definition.clusters.size()),types[type].flags1});
+        const bool widePanel=asset.block==panelBlock; // 다른 자산/판본의 검정 픽셀이나 투명을 바꾸지 않는다.
+        Add({type,asset.block,static_cast<std::int32_t>(asset.definition.clusters.size()),types[type].flags1,widePanel ? 2:-1});
     }
 }
 // 독립 데이터베이스도 실제 GameAssets와 같은 헤더/프레임 검증 경로를 사용한다.
@@ -104,6 +131,20 @@ void GumpBackgroundAssets::Add(GumpBackgroundAssetBinding binding) {
     // 추가 레이어/공유 프레임을 포함한 실제 물리 헤더를 읽어 signed WORD 폭/높이를 보존한다.
     for (std::size_t frame=0;frame<shapes_.Blocks()[binding.block].frames.size();++frame) {
         const auto metrics=shapes_.SquidMetrics(binding.block,frame);view.frames.push_back({metrics.width,metrics.height});
+    }
+    if (binding.repeatFrame>=0) {
+        if (binding.repeatFrame>=binding.frameCount) throw std::invalid_argument("와이드 패널의 실제 논리 프레임 범위 오류");const auto index=static_cast<std::size_t>(binding.repeatFrame);const auto& source=shapes_.Blocks()[binding.block].frames[index];const auto image=shapes_.Decode(binding.block,index);const auto metrics=view.frames[index];
+        if (!source.IsSpecial() && source.rect.left==0 && source.rect.top==0 && image.width==static_cast<std::size_t>(metrics.width-1) && image.height==static_cast<std::size_t>(metrics.height-1)) {
+            std::size_t row{};
+            for (;row<image.height;++row) { // 명시한A02 패널에서만 첫 연속 불투명 검정 행을 실제 RLE 결과로 센다.
+                const auto first=row*image.width;bool black=true;
+                for (std::size_t x=0;x<image.width;++x) { // 팔레트0을 투명으로 취급하지 않고 실제 opacity도 함께 확인한다.
+                    if (image.indices[first+x]!=0 || image.opacity[first+x]!=255) { black=false;break; }
+                }
+                if (!black) break;
+            }
+            if (row>0 && row<image.height) { view.repeatFrame=binding.repeatFrame;view.repeatBodyStart=static_cast<std::int32_t>(row); }
+        }
     }
     views_.emplace(binding.type,std::move(view));
 }
@@ -122,11 +163,14 @@ const GumpBackgroundFrame& GumpBackgroundAssets::Frame(std::uint32_t type,std::u
 std::pair<const ShapeDatabase*,std::size_t> GumpBackgroundAssets::Shape(std::uint32_t type,std::uint32_t frame) const {
     Frame(type,0,frame);return {&shapes_,views_.at(type).block};
 }
+// 실제 파일에서 명시 선택한 패널만 확장하고 다른 프레임의 검정/투명 픽셀 의미는 보존한다.
+std::int32_t GumpBackgroundAssets::RepeatBodyStart(std::uint32_t type,std::uint32_t frame) const { Frame(type,0,frame);const auto& view=views_.at(type);return view.repeatFrame>=0 && frame==static_cast<std::uint32_t>(view.repeatFrame) ? view.repeatBodyStart:0; }
 // 생성과 출력 모두 같은 타입/헤더를 읽되 raw 생성자는 판본별 필드 쓰기 순서를 그대로 맡는다.
 void BindGumpBackgroundAssets(GumpBackgroundCreateHooks& create,GumpBackgroundDrawHooks& draw,const GumpBackgroundAssets& assets) {
     create.type=[&assets](auto type) { return &assets.Type(type); };
     create.frame=[&assets](auto type,auto abstract,auto frame) { return &assets.Frame(type,abstract,frame); };
     draw.frame=[&assets](auto type,auto frame) { return assets.Frame(type,0,frame); };
+    draw.repeatBody=[&assets](auto type,auto frame) { return assets.RepeatBodyStart(type,frame); }; // 10.78 A02의 새 높이에서만 원문 선두 행 재반복을 제외한다.
 }
 // 질감/글자는 같은 현재 VFX 색 표를 공유한다. 명암 표는 Screen의 마지막 파일 팔레트 표를 참조할 수 있다.
 GumpBackgroundPixelTarget::GumpBackgroundPixelTarget(const GumpPixelTarget& target,const GumpBackgroundAssets& assets,const GumpShadeMaps& maps,ColorMap& colors)
