@@ -43,6 +43,7 @@ struct MissionFortLoadRequest {
 // 일반 LAN State7은 미션용86BYTE 생성기를 사용하지 않고 실제 호스트 명단 또는 client의 Zone 부재를 인계한다.
 struct GeneralBattleStartRequest {
     std::vector<std::uint8_t> zone; // 호스트가 작성한 가변 길이 Zone이며 참가자 기록은 원문71BYTE stride다. client는 비운다.
+    std::string handle; // 정리 전 실제 Fort의 표시 부호화 이름이며 새 Session의 원문64BYTE 이름에 인계한다.
     std::optional<o::LocalMissionStartingSnapshot> starting; // 이전 World 정리 전에 캡처한 실제 State7 지역값이다.
     bool consumed{}; // 같은 요청의 정상 후반 소비만 표시하며 Player/Ready/연결 성공을 대신하지 않는다.
 };

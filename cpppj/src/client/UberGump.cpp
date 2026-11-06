@@ -139,6 +139,8 @@
 #include "client/ExistingEditorAfterCheckpoint.h"
 #include "client/NativeBattleReturnState.h" // 일반 전투 복귀의 실제 결과 지역값/앞뒤 부모를 같은 Fort 설치에 연결한다.
 #include "client/MultiplayerOptionsWindow.h" // 원문 일반 옵션 창을 같은 현재 Fort/이름과 입력 큐에 연결한다.
+#include "client/LanBattleLobby.h" // 로컬 명단 합의와 실제 일반 State7의 요청 수명을 연결한다.
+#include "client/ClientSpGlobals.h" // 대기실 Zone ID에 실제 time32 장치를 사용하며 게임 난수를 소비하지 않는다.
 #include "client/NativeMainMenuState.h" //State3의 원문 부모와 호스트 표시 확정은 다른 시점이다.
 #include "client/NativeIntroState.h" // 첫 설치의 영상 부재도 원문 39→40→41→3 순서를 사용한다.
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
@@ -187,6 +189,7 @@ std::uint32_t DialogScriptCode(std::string_view name) {
     if (lower=="viewspot") return kViewSpotCommand; // RunForIt [Init] 등이 입장 카메라를 옮기는 대본 명령이다(단위676).
     if (lower=="movedialog") return kMoveDialogCommand; // 커스텀 시나리오/안내창의 원문 위치 명령이다.
     if (lower=="setowner") return kSetObjectOwnerCommand; // 원본 Tell.SetOwner의 일반 입력 명령이다.
+    if (lower=="connect") return 0x020000c4U; // 원문 Connect이며 로컬 대기실의 명시 역할 인자는 같은 일반 입력 큐로 보낸다.
     if (lower=="salvage") return 0x0200005dU; // 원본542e70의이름→54286c명령을HTML확인버튼에서도같은회수입력으로연결한다.
     const auto money=SendMoneyScriptCode(name);if (money!=0xffffffffU) return money; // asksend의 Yes가 원본 SendAllBucks를 같은 입력 큐로 보낸다.
     const auto fort=FortSelectionScriptCode(name);if (fort!=0xffffffffU) return fort; // 실제 맵 행도 같은 원문 번호와 문자열 고리를 사용한다.
@@ -196,7 +199,7 @@ std::uint32_t DialogScriptCode(std::string_view name) {
 }
 // 실제 HTML 메뉴가 선택하는 현재 복원 명령도 같은 원본 메뉴 큐를 사용할 수 있다.
 bool IsTellMenuCommand(std::uint32_t command) {
-    if (command==kAskEditFortCommand || command==kReadFortCommand || command==kScrollMapListCommand) return true; // HTML 맵 행과 5차 스크롤 행을 임시 DialogAction 번호로 바꾸지 않는다.
+    if (command==kAskEditFortCommand || command==kReadFortCommand || command==kScrollMapListCommand || command==0x020000c4U) return true; // HTML 맵 행/스크롤/로컬 Connect도 같은 일반 입력 큐를 사용한다.
     static constexpr std::array<std::string_view,12> names{"Tell","DoNothing","StartDemo","Config","Warning","MissionBegin","MissionRestart","MissionAbort","LeaveBattle","MissionFork","MissionEnd","SetOwner"}; // 같은 실제 이름 조회와 숫자 코드를 공유한다.
     for (const auto name:names) if (command==DialogScriptCode(name)) return true; // 별도 호스트 Action 번호로 바꾸지 않는다.
     return false;
@@ -263,6 +266,7 @@ std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t
 
 #include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
 #include "client/UberEditor.inc" //실제 Edit 선택의 Native State1/파일/후반 UI와 다음 Poll4를 연결한다.
+#include "client/UberLan.inc" // 같은 실제 Fort/대기실과 일반 State7/World 교체를 연결한다.
 //446b50의 현재 커서 갱신 뒤 Alt/가운데 폴링을 같은497e00 목표 쓰기로 전달한다.
 bool UberGump::PollCameraPan(const InputEvent& pointer) {
     client_.Configuration().ReadInt("scrollWhileMouseOut",scrollWhileMouseOut_);CameraPanHooks hooks;
@@ -441,6 +445,7 @@ void UberGump::ReleaseCurrentGuideMission() {
 }
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
+    CloseLanLobby();lan_.reset();state_.Cancel("LoadLanBattleWorld"); // Player 주소를 다시 만들기 전에 제어 연결과 이전 일반 시작 요청을 반납한다.
     if (world_ && world_->Session().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 전체 World 정리 재진입"); // UI/공유 저장소를 일부 반납하기 전에 전체 정리를 거부한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // 숫자 창도 현재 Session의 확정 장치를 반납한 뒤 월드를 해제한다.
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
@@ -477,6 +482,7 @@ ScreenRect UberGump::CurrentMapView() const { return rawButtons_->MapViewRect();
 void UberGump::RetireWorldForState() {
     if (!world_) throw std::logic_error("State Runtime 반납의 현재 GameWorld 소유자 누락");
     if (world_->Session().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 State Runtime 반납 재진입"); // 공유 Pool/Player를 사용하는 실행자가 남아 있으면 전체 부모가 시작되면 안 된다.
+    CloseLanLobby(); // Native 자식/Player 반납 전에 제어 소켓을 닫되 같은 State7 요청의 장기 owner는 유지한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // State 전환도 같은 숫자/이름 모달의 장치를 먼저 닫는다.
     mapUserName_=world_->Session().CurrentHandle(); //State7은 새 Guide의 Init이 작성한 요청/Zone을 사용한다. 이전 Session 반납으로 그 owner를 지우지 않는다.
     gameMenuState_.reset();if (objectMenus_) objectMenus_->Clear(); //현재 Runtime에 대한 메뉴/Form 비소유 참조만 반납한다.
@@ -487,6 +493,7 @@ void UberGump::RetireWorldForState() {
 }
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
 void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
+    if (world_ && world_->Session().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 Native/LAN 정리 금지");CloseLanLobby(); // 제어 연결이 빌린 Player 주소를 실제 재할당하기 전에 반납한다.
     ClientStateWorldDevices devices;devices.cancelInitialCursor=[this] { CancelClientCursorForState(client_,*client_.SurfaceStorage()); };
     devices.killGumps=[this] { KillGumpsForState(); };devices.cleanupGumps=[this] { CleanupGumpsForState(); };devices.replaceUber=[this] { ReplaceHudForState(); };devices.refreshSp=[this] { RefreshStormPower(); };
     devices.retireRuntime=[this] { RetireWorldForState(); };devices.assertion=[](auto line) { throw std::logic_error("원문 State 중복 모드 진단:"+std::to_string(line)); };
@@ -1596,10 +1603,12 @@ void UberGump::Tick() {
 }
 // 실제 로컬 큐는 일반 원문 슬롯4에서 진행하며 완료가 Guide/입력보다 먼저 현재 UI를 설치한다.
 void UberGump::PollMissionPackets() {
+    PollLanLobby(); // 대기실 callback이 반환한 뒤에만 다음 Tick의 World 교체를 예약한다.
     const auto world=world_; // 이 폴링과 완료 후처리가 끝날 때까지 실제 표시/Session 소비자를 함께 보유한다.
     if (!world || world->PreparingFort()) return;world->Session().PumpLocalConnection();
     if (world_!=world) return; // callback이 현재 호스트를 바꿨으면 이전 결과를 새 월드에 공개하지 않는다.
-    if (world->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken && world->CompleteLocalConnection()) FinishMissionWorldLoad(); // 이전 미션이면 호스트 World의 공개도 건너뛰고 원래 cleanup까지 닫아 둔다.
+    if (world->Connecting() && !missionRuntime_ && lan_ && lan_->start && lan_->start->consumed && world->CompleteLocalConnection()) FinishLanBattleWorld();
+    else if (world->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken && world->CompleteLocalConnection()) FinishMissionWorldLoad(); // 이전 미션이면 호스트 World의 공개도 건너뛰고 원래 cleanup까지 닫아 둔다.
 }
 // 원본 루프8번에서 현재 Guide의 상태/창 관문과0..6 단계를 한 번 실행한다.
 void UberGump::MissionFrame() {
@@ -1636,6 +1645,8 @@ void UberGump::PaletteChanged() {
 }
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
 void UberGump::Execute(const DialogAction& action) {
+    if (o::AsciiLower(action.command)=="loadlanbattleworld") { LoadLanBattleWorld();return; } // 실제 명단/State7 예약 뒤 다음 호스트 Tick에서만 World를 교체한다.
+    if (o::AsciiLower(action.command)=="multiplayer") { if (client_.Edition()!=o::OriginalEdition::Patch1078) { Tell("NotImplemented");return; }client_.Input().PushCommand(0x020000c4U,0,0);return; } //10.78 메인 버튼은 원문 일반 Connect의 마지막 Fort 선택 경로를 사용하며 CD의 기존 보류 경계를 유지한다.
     if (o::AsciiLower(action.command)=="loadmissionworld") { LoadMissionWorld();return; } // 비 Tutorial의 Start도 실제 접속 완료에 맡긴다.
     if (o::AsciiLower(action.command)=="loadmissionfort") { if (!missionRuntime_ || !missionRuntime_->guided) throw std::logic_error("현재 Tutorial 없는 지연 요새 로드");LoadMissionWorld(action.argument);return; } // 같은 전환 큐의 다음 루프에서만 설치한다.
     if (QueueMissionControlAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
@@ -1731,7 +1742,7 @@ void UberGump::Compose() {
         const std::string campaign = client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? "UCampaign" : Script("tell").Section("UCampaign") ? "UCampaign" : "Campaign"; // 원문10.78 MainMenu의 고정 target이며 영구 tell Config를 새로 등록하지 않는다.
         // 원본 10.78의 기본8개·감지 성공 시 Intro를 포함한9개 버튼이다. 원문 순서대로 두 행에 배치한다.
         std::vector<DialogItem> buttons{
-            {"Campaign", {"Tell", campaign}}, {"Multiplayer", {"Tell", "NotImplemented"}}, {"Demo", {"Tell", "DEMOVILLE"}}, {"Help", {"Menu", "help"}},
+            {"Campaign", {"Tell", campaign}}, {"Multiplayer", {"Multiplayer", ""}}, {"Demo", {"Tell", "DEMOVILLE"}}, {"Help", {"Menu", "help"}},
             {"Edit", {"AskEditFort", "0"}}};
         if (client_.Edition()==o::OriginalEdition::Patch1078 && client_.LocalStateGlobals()->IntroAvailable()) buttons.push_back({"Intro",{"PlayIntro","0"}}); // 원문0054db98의 최초 감지값이며 매 Compose마다 파일을 재검사하지 않는다.
         buttons.insert(buttons.end(),{{"Credits", {"Tell", "Credits"}}, {"Options", {"Menu", "options"}}, {"Quit", {"RequestQuitApp", "0"}}});

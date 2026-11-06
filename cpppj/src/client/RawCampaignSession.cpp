@@ -969,6 +969,7 @@ struct RawCampaignSession::Impl {
             if (localStateGlobals->State().current[0]!=7 || !core.ownerMode.battle || core.ownerMode.fort || core.ownerMode.challenge || core.bridgeState.mission || globals.missionPost || globals.editor || !services.missionFortFileSelect) throw std::logic_error("일반 LAN의 실제 State7/비미션 전투/파일 선택 계약");
             world.ConfigureInstallModes(core.ownerMode.fort,core.ownerMode.battle,core.ownerMode.challenge,false); // 준비된 기존 Fort 전용이던 C++ BridgeDecay의 private editor 별칭을 실제 비편집 모드에 맞춘다. 공유 모드 값은 같은 값으로 유지한다.
             objectState.mission=false;objectState.fort=false;objectState.special=false;
+            const auto& name=services.generalBattleStart->handle;if (name.empty() || name.size()>=handle.size() || name.find('\0')!=name.npos) throw std::logic_error("일반 LAN의 정리 전 실제 사용자 이름 누락/범위");std::copy(name.begin(),name.end(),handle.begin());handle[name.size()]=0; // Native 전역 이름이 Session 반납으로 비워지지 않도록 실제 이전 이름만 인계한다.
         }
         if (services.adoptMainMenuFort && (!services.adoptPreparedWorld || services.installMode!=CampaignInstallMode::ExistingEditor || !IsExistingFortEntry(services.localStateGlobals->State().current[0],true))) throw std::logic_error("State3/일반 복귀의 같은 준비된 Fort/State1·2·6 계약");
         if (services.installMode==CampaignInstallMode::ExistingEditor) {

@@ -1,0 +1,53 @@
+{
+  "unit": 1000,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "실제 Multiplayer/Fort 진입·로컬 대기실 화면과 일반 State7 World 교체/완료 공개 연결",
+  "sourceFunctions1078": [
+    "004d62b0",
+    "004b3550",
+    "004b6dd0",
+    "004b4be0"
+  ],
+  "referenceFunctions1072": [
+    "0042d630"
+  ],
+  "build": {
+    "firstExitCode": 1,
+    "firstErrors": 8,
+    "firstErrorRoots": "ConfigInterface ReadString 출력 인자 호출 형식2곳과 파생 진단6건",
+    "correctedExitCode": 0,
+    "reviewExitCode": 0,
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "firstLog": "extracted\\cpp-resume-1000\\build.log",
+    "correctedLog": "extracted\\cpp-resume-1000\\build-final.log",
+    "reviewLog": "extracted\\cpp-resume-1000\\build-review.log",
+    "finalLog": "extracted\\cpp-resume-1000\\build-review-final.log",
+    "exeSize": 11762688,
+    "exeSha256": "ac82a2f3991de7cf2df767cca0853fdad69c498091caf8e92221c04978f9b5c0"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1000\\protected-before.json"
+  },
+  "remaining": [
+    "일반 로그인 타이머 초기화/진행 안내/저장 부모",
+    "전체 파생 writer/decoder·메타·저장/재접속·Outpost/checking8",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

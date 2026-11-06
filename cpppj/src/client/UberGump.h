@@ -41,6 +41,7 @@ class TellFileMenus; // 실제 파일 목록의 등록 Config를 부모/미션�
 class TextClipboard; //같은 Client UI의 모든 문자 입력이 공유하는 실제 CF_TEXT 부모다.
 class EditorFortFileDevices; // 최초 캠페인 편집 요청에서도 같은 지연 작업 파일 장치를 사용한다.
 class EditorCatalogWorkspace; //목록/직접 Edit/이름 변경이 공유하는 장기 단일 namespace와 이관 장부다.
+struct LanLobbyBattle; // 대기실의 실제 명단/ACK 뒤 외부 State7으로 인계하는 요청이다.
 // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
     friend class ClientRendererFrame; //같은 실제 Gump의 override/지도 clip만 현재 Frame에 빌린다.
@@ -211,6 +212,17 @@ private:
     bool PollCameraPan(const InputEvent& pointer); //현재 커서 갱신 뒤 원문 Alt/가운데 이동과 전용 큐 경로를 선택한다.
     struct HudRuntime;std::unique_ptr<HudRuntime> hud_; // 실제 화면/지도 전역의 주소를 Client UI 수명에 고정한다.
     struct EditorRuntime;std::unique_ptr<EditorRuntime> editor_; //실제 파일/전송/State 장치는 World보다 먼저 만들고 Session 반납 뒤 해제한다.
+    struct LanRuntime;std::unique_ptr<LanRuntime> lan_; // 대기실 제어 수명과 정리 전 일반 시작 요청을 소유한다.
+    void OpenLanChoice(); // 원문 HTML 부품으로 로컬 host/join/주소 선택을 제공한다.
+    void ResumeLanChoiceAfterInput(); // 주소 입력이 대기실 선택에서 열렸을 때만 같은 선택 창으로 복귀한다.
+    void StartLanLobby(bool host,bool startOnly=false); // 현재 실제 Fort ID/이름으로 열거나 이미 열린 host에만 명시 Start를 요청한다.
+    void ShowLanLobby(); // 실제 가입자/시작 대기/실패를 같은 원문 HTML 창에 표시한다.
+    void PollLanLobby(); // TCP callback 밖에서 완료 요청을 다음 호스트 Tick에 예약한다.
+    void CloseLanLobby(); // 자기 대기실/창만 닫고 이미 인계한 State7 요청은 보존한다.
+    void RequestLanBattle(LanLobbyBattle battle); // 실제 명단을 Native next7과 같은 요청 owner에 인계한다.
+    void LoadLanBattleWorld(); // Client 수명의 State7 공통 부모가 이전/새 World를 끝까지 소유한다.
+    void LoadLanBattleWorldBody(); // 실제 cleanup/전투 prefix와 일반 Session 후반을 연결한다.
+    void FinishLanBattleWorld(); // 실제 phase14/Player 참여 뒤에만 사용자 입력·커서·표시를 연다.
     std::uint32_t multiplayerOptionsToken_{}; // 현재 일반 옵션의 실제 Gump token이며 닫힌 창의 serial을 새 창으로 대신하지 않는다.
     std::shared_ptr<const TextClipboard> textClipboard_; //최초 Chat과 뒤 Save as의 두 callback이 같은 OS 장치 수명을 공유한다.
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
