@@ -22,6 +22,7 @@ class RawSquidName {
 public:
     RawSquidName(const SidPool& pool,std::span<const RiftTypeRecord> types,SquidNameHooks hooks); //같은PATCH/188TYPE와장치경계를빌린다.
     std::string Name(Sid parent) const; //004ace20 또는00454d30의 실제 이름을 만든다.
+    std::string BaseName(Sid parent) const; //004ac550→0049af80의 현재 TYPE 설명만 읽는다. Factory 레벨 접미사는 추가하지 않는다.
     const SidPool& Pool() const; //같은 실제 월드 연결을 확인한다.
 private:
     std::string Base(Sid parent) const; //현재 TYPE의 설명→언어 관문→80바이트 복사→설정 치환이다.

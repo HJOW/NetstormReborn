@@ -1,0 +1,65 @@
+{
+  "unit": 1021,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "공통2ch 전체 객체 수신·검증과 같은 Session의 PlayerNoMake/기술 장부·종속 부착 연결",
+  "sourceFunctions1078": [
+    "00433c30",
+    "004af610",
+    "004ac220",
+    "004acec0",
+    "004adca0",
+    "004ad470",
+    "0048f110",
+    "0042b300",
+    "004ad330",
+    "004ac800",
+    "004ac560"
+  ],
+  "reference1072": {
+    "function": "00487d40",
+    "scope": "CD 별도 객체 폭의 비교 근거이며 PATCH 수신과 혼합하지 않음"
+  },
+  "staticVtables": {
+    "count": 83,
+    "entries": {
+      "48": [
+        "0x4ad470"
+      ],
+      "80": [
+        "0x4ad330"
+      ]
+    }
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1021\\build.log",
+    "exeSize": 11968000,
+    "exeSha256": "4252a0234d57628ad1fbe8cfb133515ec0938e7532a9814ec2fd6e527bb89d5e"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1021\\protected-before.json"
+  },
+  "remaining": [
+    "7ah 압축 decoder/수신 owner cache·검증 진입 부모",
+    "파생 writer/decoder·재동기화 허용/owner cache",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

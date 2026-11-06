@@ -18,6 +18,8 @@
 #include "o/RawObjectConversion.h" // 비석/주문의정확한가상표만읽기전용예약진단대상으로구별한다.
 #include "o/RawBuildingSpace.h"
 #include "o/RawContentParentNotice.h" // 기본 빈 통지와 미연결 파생 통지를 실제 VT로 구분한다.
+#include "o/RawFormAttach.h" // 자산+50도 같은 현재 종속 링크/공통 Pop을 사용한다.
+#include "o/RawFormPop.h" // 같은 실제 PostPop 깊이를 공유한다.
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -377,6 +379,23 @@ void RawSurfaceWorld::FinishLoadAfterGraph() {
 o::Sid RawSurfaceWorld::Create(std::uint32_t type,std::uint32_t flags) { impl_->changed=true;return impl_->factory->Create(type,flags); }
 // 현재 raw 프레임의 실제 SHP 크기가 공간 등록에 쓰인다.
 void RawSurfaceWorld::Pop(o::Sid sid,float x,float y,std::uint32_t flags) { impl_->Pop(sid,x,y,flags); }
+void RawSurfaceWorld::AttachBaseAsset(o::Sid sid,o::Sid parent,std::uint32_t flags) { // 원문83개 자산 VT의+50은 모두004ad330이다.
+    auto& s=*impl_;if (s.edition!=o::OriginalEdition::Patch1078) throw std::logic_error("자산 종속 수신의 PATCH 가상 몸체 계약");
+    s.storage->AssertDisplay("0","\\Ns\\O\\Squid.cpp",0x72a);
+    auto slot=s.pool.Slot(sid);auto raw=std::span(const_cast<std::uint8_t*>(slot.data()),slot.size());
+    Write(raw,18,0,4);Write(raw,14,std::bit_cast<std::uint32_t>(static_cast<float>(parent.value)),4);
+    if (const auto current=s.sessionContainedUnpop.lock()) current->NotifyUi(sid);else s.containedUnpop->NotifyUi(sid);
+    o::FormAttachHooks attach;attach.assertion=[&s](auto expression,auto file,auto line) { s.storage->AssertDisplay(expression,file,line); };
+    attach.genus=[&s](auto type) { return s.types.at(type).flags2; };attach.contentType=[&s] { if (const auto current=s.sessionContainedUnpop.lock()) return current->ContentFormType();return s.containedType; };
+    attach.setParent=[&s](auto form,auto,auto into) { o::CommonContainedSetParent(s.pool,form,into); };attach.setPrevious=[&s](auto form,auto table,auto previous) { o::CommonContainedSetPreviousAtTable(s.pool,form,table,previous); };
+    attach.pop=[&s](auto form,auto popFlags) { // 공통 Pop의 실제 깊이와 현재 파생 PostPop을 재사용한다.
+        o::FormPopHooks pop;pop.assertion=[&s](auto expression,auto file,auto line) { s.storage->AssertDisplay(expression,file,line); };pop.server=[&s] { return s.pool.IsServer(); };
+        pop.depth=[&s] { return s.postPop->ActivationDepth(); };pop.setDepth=[&s](auto value) { s.postPop->ActivationDepth()=value; };pop.postPop=[&s](auto object,auto,auto value) { s.postPop->PostPopVirtual(object,value); };
+        pop.transmit=[&s](auto object,auto,auto,auto,auto value) { if (!s.squidTransmission) throw std::logic_error("종속 자산의 실제 Squid 전송 미연결");s.squidTransmission->Pop(object,value); };
+        o::PopCommonForm(s.pool,form,popFlags,pop);
+    };
+    o::AttachCommonForm(s.pool,sid,parent,flags,attach);s.changed=true;
+}
 // 현재 raw 타입의 실제 공간/표시 해제 몸체를 호출한다.
 void RawSurfaceWorld::Unpop(o::Sid sid,std::uint32_t flags) {
     auto& s=*impl_;s.unpop->Unpop(sid,s.types.at(s.pool.Slot(sid)[10]),flags);s.changed=true;

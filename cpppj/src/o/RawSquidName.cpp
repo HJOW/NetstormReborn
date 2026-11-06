@@ -36,4 +36,5 @@ std::string RawSquidName::Name(Sid parent) const {
 }
 // 같은 현재 월드 연결을 확인한다.
 const SidPool& RawSquidName::Pool() const { return pool_; }
+std::string RawSquidName::BaseName(Sid parent) const { return Base(parent); } // 같은 현재 언어/설정 치환과80BYTE 경계를 공유한다.
 }

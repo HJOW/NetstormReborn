@@ -246,6 +246,7 @@ public:
     void Pop(o::Sid sid,float x,float y,std::uint32_t flags);
     void Unpop(o::Sid sid,std::uint32_t flags);
     void Repop(o::Sid sid,std::uint32_t flags);
+    void AttachBaseAsset(o::Sid sid,o::Sid parent,std::uint32_t flags); //004ad330의 진단 복귀/좌표/내용물 UI→공통 부착을 같은 World에서 실행한다.
     // 외부 연결 모듈을 해제하기 전에 예약 객체를 먼저 정리한다. 월드 자료는 유지한다.
     void ClearProcesses();
     RawProcessHostStorage::ClearPass ClearProcessesForState(); // 실제 단일 Clear 정상 복귀의 증빙을 발급한다.

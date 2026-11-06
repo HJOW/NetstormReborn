@@ -139,6 +139,8 @@
 #include "o/RawRemoteTellPacket.h" // 비용 부족/메타 안내의 실제70h를 같은 공유 등록표와 현재 Tell에 연결한다.
 #include "o/OriginalText.h" // 실제 원격 Tell의 표시 바이트를 같은 UI UTF-8 경계에서 변환한다.
 #include "o/RawConstructionFailurePackets.h" // 비용실패의실제6ch/2fh와현재예측객체정리를공유한다.
+#include "o/RawSquidReceive.h" // 전체 객체 수신/검증도 같은 Factory·소유자·현재 공간을 사용한다.
+#include "o/RawSquidWord.h" // 수신 QA WORD는 기존 다리 표면 통지를 유지한다.
 #include "client/MessageGump.h" // 비용안내의한문자열/256BYTE 원문서식을실제기존처리기로작성한다.
 #include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
@@ -320,7 +322,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,19> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f}; // 취소2fh도같은Session등록/해제수명을따른다.
+constexpr std::array<std::uint32_t,20> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c}; // 전체 객체2ch도 같은 Session 등록/해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -4479,6 +4481,30 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
 }
 // 실제 초기 등록과 같은 버전/정책/빈 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
+    dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);
+    dispatch.Register(0x2c,[this](auto,auto&,auto packet) { //433c30은 별도 세계나 새 Player 기록을 만들지 않는다.
+        auto& s=*impl_;SquidReceiveHooks hooks;const auto diagnose=[&s](auto expression,auto file,auto line) { s.world.Storage()->AssertDisplay(expression,file,line); };
+        const auto typeRecord=[&s](std::uint32_t type)->const RiftTypeRecord& { if (type>=s.core.types.size()) throw std::out_of_range("객체 수신의 현재 TYPE 물리 범위");return s.core.types[type]; }; // 각 원문 조회 시점의 같은 표를 읽는다.
+        hooks.assertion=diagnose;hooks.take=[&s](auto type,auto sid) { return s.core.factory.Take(type,sid); };
+        hooks.word=[&s](auto sid,auto word) { SetRawSquidWord(s.core.pool,sid,word,s.core.bridgeState.bridgeType,[&s](auto value) { s.core.building.NotifySurface(value); }); };
+        hooks.owner=[&s](auto sid,auto owner) { s.ownership->SetOwner(sid,owner); };hooks.flags1=[typeRecord](auto type) { return typeRecord(type).flags1; };
+        hooks.firstPop=[&s](auto sid) { if (!SquidFactory::SupportsConstructedVtable(OriginalEdition::Patch1078,Read(s.core.pool.Slot(sid),0))) throw std::logic_error("객체 수신의 현재 가상30 미연결");return s.core.factory.FirstPopFlags(sid); }; // PE83개 자산 VT가 모두004ad470인 것을 정적 대조했다.
+        hooks.hasTechnology=[&s,diagnose,typeRecord](std::uint32_t owner,std::uint32_t type) { //48f110→42b300의 현재 Core 장부를 읽는다.
+            if (!owner || typeRecord(type).techBitIndex==-1) return true;
+            if (owner>8) diagnose("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS","\\Ns\\O\\Player.cpp",0x68);
+            const auto index=typeRecord(type).techBitIndex;if (index<0 || index>=32) diagnose("techBitIndex >= 0 && techBitIndex < 32","\\Ns\\O\\Ch.cpp",0x164);
+            const auto records=s.coreDataGlobals->Records();const auto offset=std::size_t(owner)*16+10;if (offset+4>records.size()) throw std::out_of_range("객체 수신의 실제 Core 장부 물리 범위");return (Read(records,offset)&(1U<<(std::bit_cast<std::uint32_t>(index)&31U)))!=0;
+        };
+        hooks.noMake=[&s](auto sid) { // 이름 포인터를 먼저 선택하고 TYPE 설명 번역/치환 뒤 실제 Tell을 실행한다.
+            const auto owner=s.core.pool.Slot(sid)[34];if (owner>8) throw std::out_of_range("PlayerNoMake의 실제 Player 물리 범위");const auto name=s.players.subspan(std::size_t(owner)*180+12,32);if (std::find(name.begin(),name.end(),0)==name.end()) throw std::length_error("PlayerNoMake의 현재 이름 NUL 누락");
+            const auto description=s.objectNames->BaseName(sid);std::array<char,256> message{};const auto count=std::snprintf(message.data(),message.size(),"PlayerNoMake(%s,%s)",reinterpret_cast<const char*>(name.data()),description.c_str());if (count<0 || static_cast<std::size_t>(count)>=message.size()) throw std::length_error("PlayerNoMake의 원문256BYTE 범위");
+            if (!s.services.factoryTell) throw std::logic_error("PlayerNoMake의 실제 Tell 미연결");s.services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(message.data()),static_cast<std::size_t>(count)}));
+        };
+        hooks.markNoMake=[&s](auto sid) { const auto owner=s.core.pool.Slot(sid)[34];if (owner>8) throw std::out_of_range("PlayerNoMake의 현재 Player 표식 범위");const auto offset=std::size_t(owner)*180+0x54;Put(s.players,offset,Read(s.players,offset)|0x400U); }; // 안내 콜백 뒤 현재 owner를 재조회한다.
+        hooks.pop=[&s](auto sid,auto x,auto y,auto flags) { s.world.Pop(sid,x,y,flags); };hooks.containedPop=[&s](auto sid,auto parent,auto flags) { s.world.AttachBaseAsset(sid,parent,flags); };
+        hooks.typeName=[&s,typeRecord](auto sid) { const auto& name=typeRecord(s.core.pool.Slot(sid)[10]).name;return name.substr(0,name.find('\0')); };hooks.log=s.services.player.log;
+        auto& aux=*s.gameplayGlobals->GameAux();ReceiveRawSquid(s.core.pool,packet,{aux.VerifySid(),aux.SupportTypeWas(),s.localStateGlobals->PlayerNoMakeWarnings()},hooks);
+    });
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");RegisterGeyserMined(dispatch,*impl_->geyserMined);
     RegisterRemoteTellPacket(dispatch,[this](auto text) { if (!impl_->services.factoryTell) throw std::logic_error("원격 Tell의 실제 현재 cf730 미연결");impl_->services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); // 표시부호화는현재실제UI의UTF-8경계에서만변환한다.
     dispatch.Register(0x5b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveGeyserMined(packet); });
