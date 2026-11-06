@@ -8,6 +8,7 @@ struct UberGump::EditorRuntime {
     std::string savedPath; //004b5470의 게임 폴더/d/!state.dat 절대 경로를 reader 동기 호출 동안 보존한다.
     std::function<void(std::uint32_t)> selectCursor; //실제 커서 장치를 공통 State 확정 뒤의 호스트 입력 구성에도 같은 callback으로 전달한다.
     bool committed{}; //실제 Session.Commit 복귀의 호스트 관측이며 Native State나 loaded 대신 쓰지 않는다.
+    std::function<void()> multiplayerOptions; // 일반 State6의 실제 옵션 공장을 빌리며 미연결을 빈 창/성공으로 대체하지 않는다.
     explicit EditorRuntime(Client& value):client(value),files(ResolveEditorRoots(value.GameDirectory(),value.UserData()).work,ResolveEditorRoots(value.GameDirectory(),value.UserData()).protectedRoots) {} //기존에는 자산 디렉터리의 형제 작업본, 5차 사용자 홈 정책에서는 CustomMaps를 작업 루트로, 같은 보호 루트를 선택한다. 생성만으로 파일/게임 상태를 쓰지 않는다.
     //호스트 메인 메뉴/종료에서 Session 수신기를 반납한 뒤 남은 실제 양끝/리스너를 닫는다.
     void Close() { if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); } }
@@ -70,15 +71,15 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     PrepareNativeFortState(true);return InstallPreparedFortState(true);
 }
 // 이미 실행한 Native prefix를 반복하지 않고 State1/2의 실제 파일·월드·UI 꼬리만 잇는다.
-o::LocalMissionParentResult UberGump::InstallPreparedFortState(bool prefixHud) {
+o::LocalMissionParentResult UberGump::InstallPreparedFortState(bool prefixHud,std::function<void()> battleOver) {
     const auto current=client_.LocalStateGlobals()->State().current[0];
-    if (!editor_ || world_ || (current!=1 && current!=2)) throw std::logic_error("준비된 비멀티 Fort 설치의 실제 State1/2·빈 호스트 월드 계약");
+    if (!editor_ || world_ || (current!=1 && current!=2 && current!=6)) throw std::logic_error("준비된 Fort 설치의 실제 State1/2/6·빈 호스트 월드 계약");
     auto& e=*editor_;
     //호스트 Session은 준비된 물리만 빌리고 파일 설치/Template 변경은 아래 실제 checkpoint의 위치까지 지연한다.
     const std::string pending(client_.FortGlobals()->Pending()); // 실제 이름 선택/기본 이름은 checkpoint가 수행하므로 여기서는 파일을 조회하거나 파싱하지 않는다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }});
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; // 편집 세션도 원문 Guide의 현재 +68을 조회하며 미션이 없으면 0을 반환한다.
-    services.installMode=CampaignInstallMode::ExistingEditor;services.deferExistingEditorFile=true;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.adoptMainMenuFort=!prefixHud;services.localLogin.reset();
+    services.installMode=CampaignInstallMode::ExistingEditor;services.deferExistingEditorFile=true;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.adoptMainMenuFort=!prefixHud || current==6;services.localLogin.reset(); // 현재6은 State3 continuation과 같은 비편집 Fort 모드를 빌리되 첫 HUD1은 실제로 실행한다.
     services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.editorTransport=e.transport;services.fortMission=FortMissionSaveEffects();
     services.fortBadges=client_.FortBadges();services.fortTypeConversion=client_.FortTypeConversion(); //기존 파일의 실제 장부/변환표를 캠페인과 같은 Client owner에서 빌린다.
     world_=std::make_shared<GameWorld>(client_.Assets(),client_.Files(),o::FortTemplate{},o::MissionPlayers{},pending,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
@@ -106,6 +107,7 @@ o::LocalMissionParentResult UberGump::InstallPreparedFortState(bool prefixHud) {
     if (!session.InstallExistingEditorCheckpoint(checkpoint,client_.ReadOnlyForts(),e.files)) return o::LocalMissionParentResult::ReturnWithoutCommit; // 원문 미션 분기는 공통 State1 확정도 생략한다.
     ExistingEditorAfterCheckpointEffects tail;tail.hud=[this](auto command) { rawButtons_->NotifyHudMode(command,1); };tail.wallSeconds=[this] { return client_.WallSeconds(); };
     tail.requestMusic=[this](auto name) { client_.WorldAudio().RequestMusic(name); };tail.fortPalette=[this] { const auto name=client_.Configuration().PathSpec("fortPal");client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); };tail.islandCount=[&session] { return session.IslandCount(); };
+    tail.battleOver=std::move(battleOver); // State6 앞단이 보관한 실제 결과/출처와 옵션 공장의 수명을 그대로 전달한다.
     session.WithExistingEditorInstallUi(*client_.LocalStateGlobals(),client_.Input(),tail,[this,&session,&e] {
         auto effects=MakeCampaignCursorClientEffects(client_,*rawButtons_);e.selectCursor=effects.lifecycle.selectCursor;
         effects.send=[&session](auto target,auto packet) { session.SendLocalPacket(std::bit_cast<std::int32_t>(target),packet); };
@@ -114,6 +116,16 @@ o::LocalMissionParentResult UberGump::InstallPreparedFortState(bool prefixHud) {
         InstallHud();world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());world_->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());
     });
     return o::LocalMissionParentResult::Commit;
+}
+// State6은 정리 전 결과를 지역값으로 보유하고 같은 일반 Fort의 파일/월드/후반 UI를 이어서 설치한다.
+o::LocalMissionParentResult UberGump::InstallBattleReturnNativeState(std::uint32_t selected) {
+    if (selected!=6 || !editor_) throw std::logic_error("일반 복귀 State6의 실제 장기 부모 계약");auto& local=*client_.LocalStateGlobals();auto& surface=*client_.SurfaceStorage();
+    NativeBattleReturnHooks hooks;hooks.deleteSavedState=[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); };
+    hooks.requestMusic=[this](auto name) { client_.WorldAudio().RequestMusic(name); };
+    hooks.sourceBackground=[this](auto type)->std::optional<std::string> { const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("일반 복귀 source TYPE 이름 범위");const auto name=types[type].name;if (!client_.Files().TryRead("d/"+name+".gif")) return std::nullopt;return name; };
+    hooks.leaveBattle=[this] { if (!world_) throw std::logic_error("State6의 이전 Battle14 실제 Session 없음");SendBattleLeaveForState(world_->Session()); };hooks.prefix=[this] { PrepareNativeFortState(false); };
+    hooks.installFort=[this](const auto& saved) { return InstallPreparedFortState(true,[this,saved] { CompleteNativeBattleReturn(saved,client_.WorldAudio().ResultState(),{editor_->multiplayerOptions,[this](auto section) { Tell(std::string(section)); }}); }); }; // 콜백은 보관 지역값을 값으로 소유해 실제 Fort 적재 중 전역 변경과 구별한다.
+    return netstorm::client::InstallNativeBattleReturnState({local.State(),local.SourceType(),client_.WorldAudio().ResultState(),surface.ownerMode.battle,htmlGlobals_.background},hooks);
 }
 //원문 startupStateCheck의 실제 선택 장치를 두 Native 부모가 같은 장기 파일 경로로 공유한다.
 o::StartupStateCheckHooks UberGump::EditorStartupStateHooks() {
@@ -192,12 +204,12 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
 }
 // 미션 Login은 기존 분배기에 남기고 Edit1/2·메인3·인트로39~42과 다음4를 같은 분배기로 처리한다.
 void UberGump::PollEditorState() {
-    auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2; //원문 두 Editor 선택은 같은 prefix/파일/확정을 사용한다.
+    auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2 || next==6; // 일반 복귀6도 같은 Fort 설치/공통 확정을 사용하며 첫 배경/결과만 전용 부모가 처리한다.
     if (!fort && next!=3 && !(next>=39 && next<=42) && !(editor_ && next==4)) return; // PlayIntro는 Editor 장치가 아직 없어도 같은 Native 부모를 처음 구성한다.
     if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
     if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
         auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
-        o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { if (selected>=39 && selected<=42) return InstallIntroNativeState(selected);return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
+        o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { if (selected>=39 && selected<=42) return InstallIntroNativeState(selected);if (selected==6) return InstallBattleReturnNativeState(selected);return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
         hooks.invalidState=[](auto state) { throw std::logic_error("Editor/메인 분배기의 선택된 Native State 미연결:"+std::to_string(state)); };
         editor_->state=std::make_unique<o::RawLocalMissionState>(client_.Assets().Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),surface.ownerMode.battle,game.world.missionPost,local.SavedGame(),surface.links.mission,local.Simulconnect(),surface.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.CdPresent(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(htmlGlobals_.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client_.Time().game,client_.Time().wall},std::move(hooks));
     }
@@ -211,6 +223,6 @@ void UberGump::PollEditorState() {
     if ((fort || next==3) && !editor_->committed) {
         world_->CompleteFortInstall(local); //공통 확정 뒤 실제 loaded 공개가 끝나야 호스트 사용자 입력 몸체를 만들 수 있다.
         BindCampaignUserInputServices(client_,*world_,editor_->selectCursor);userInput_=std::make_unique<UserInput>(client_,*world_);
-        editor_->committed=true;state_.phase=ClientPhase::Mission;pageName_=client_.GameplayGlobals()->world.editor ? "editor" : "mission";page_={};popup_.clear();RebuildControls();
+        editor_->committed=true;if (next!=6 || state_.phase!=ClientPhase::Dialog) { state_.phase=ClientPhase::Mission;pageName_=client_.GameplayGlobals()->world.editor ? "editor" : "mission";page_={};popup_.clear(); }RebuildControls(); // 일반 복귀의 실제 BattleOver Tell이 만든 호스트 모달 상태도 보존한다.
     }
 }

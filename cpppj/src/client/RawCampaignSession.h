@@ -188,7 +188,7 @@ struct RawCampaignSessionServices {
     std::function<void(std::span<std::uint8_t>)> chatReceive; // 실제 현재 UI 수신이다. 중계 후 선택된 호출에서만 요구한다.
     CampaignInstallMode installMode{CampaignInstallMode::Campaign}; //기존모든호출은캠페인입력을보존한다.
     bool deferExistingEditorFile{}; //명시ExistingEditor만ctor파일설치를checkpoint의실제File.load까지지연한다.기존Campaign/LocalLogin/단계검사는false를유지한다.
-    bool adoptMainMenuFort{}; // State3 제목 뒤의 비멀티 Fort는 Editor/missionPost 0인 실제 앞단을 빌린다. 같은 준비/State1·2 계약을 별도로 검증하며 모드를 쓰지 않는다.
+    bool adoptMainMenuFort{}; // State3 continuation/일반 복귀6은 Editor/missionPost0인 실제 앞단을 빌린다. 같은 준비/State1·2·6 계약을 검증하며 모드를 새로 쓰지 않는다.
     bool adoptPreparedWorld{}; // 실제 State cleanup/prefix가 준비한 같은 Client 전역·표면·Player를 초기화 없이 빌린다. 지연 ExistingEditor 설치에서만 사용한다.
     std::function<void(std::span<std::uint8_t>)> templateStateBytes; // 빈 State 초기화의 미정 바이트를 현재 실제 할당 입력으로 공급한다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage; // Init의 명시 정리까지 실제 manager/State/이미지를 같은 저장소에 유지한다.

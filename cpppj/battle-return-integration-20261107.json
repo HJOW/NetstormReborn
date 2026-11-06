@@ -1,0 +1,19 @@
+{
+  "unit": 996,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "실제 Uber State6 선택과 같은 일반 Fort 파일/월드/UI·공통 확정/완료 공개 연결",
+  "sourceFunctions1078": ["004b6dd0"],
+  "referenceFunctions1072": ["0042d630"],
+  "build": {
+    "firstExitCode": 0, "firstWarnings": 1, "firstWarning": "C4189 미사용 game 지역 참조 제거",
+    "finalExitCode": 0, "finalWarnings": 0, "finalErrors": 0,
+    "firstLog": "extracted/cpp-resume-996/build.log", "finalLog": "extracted/cpp-resume-996/build-final.log",
+    "exeSize": 11662336,
+    "exeSha256": "fb106ae054092a687b478b1a5804fc81e8a5ecd4043dc68b0465f0118caac927"
+  },
+  "excluded": { "newMultiplayerTests": 0, "unitTestRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-996/protected-before.json" },
+  "remaining": ["Multiplayer Options 공장 callback/LAN 화면", "일반 State7 호스트 진입/World 교체 부모", "roster/전체 파생 writer/decoder", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}

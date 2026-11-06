@@ -336,6 +336,7 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset) {
     return static_cast<std::uint32_t>(raw[offset])|(static_cast<std::uint32_t>(raw[offset+1])<<8)|
         (static_cast<std::uint32_t>(raw[offset+2])<<16)|(static_cast<std::uint32_t>(raw[offset+3])<<24);
 }
+bool IsExistingFortEntry(std::uint32_t state,bool ordinary) { return state==1 || state==2 || (ordinary && state==6); } // 실제1/2 편집 또는 명시 비편집6만 같은 Fort 준비/완료 계약에 허용한다.
 // 원본 전체 캡처를 대조한 제네레이터·스톤/아이스 타워의 TYPE 기본/빈 추가 그림을 선택한다.
 bool IsPlainBuildingCapture(std::span<const std::uint8_t> raw) { return IsPlainWorkshopCapture(raw) || (raw[10]>=75 && raw[10]<=77 && Read(raw,0)==0x501ea0U) || ((raw[10]==78 || raw[10]==147) && Read(raw,0)==0x50e940U) || (raw[10]==79 && Read(raw,0)==0x50ea08U) || (raw[10]==139 && Read(raw,0)==0x509aa0U) || (raw[10]==142 && Read(raw,0)==0x50ead0U) || (raw[10]==149 && Read(raw,0)==0x50e668U) || (raw[10]==164 && Read(raw,0)==kPatchAltarVtable) || (raw[10]==95 && Read(raw,0)==kPatchStalagVtable) || (raw[10]==157 && Read(raw,0)==kPatchNoIslandVtable); } // 현재타입별색표유무와빈+a4를보존하며다섯워크샾자산도같은실제캡처에포함한다.
 }
@@ -960,7 +961,7 @@ struct RawCampaignSession::Impl {
         placement.anchor.graphAssertion=anchorState.graphAssertion; // 지형 생성용 고정 파이프라인도 같은 현재 진단을 빌리며 gameplay 쪽은 매 요청 anchorState 전체를 복사한다.
         assetState.sharedAuthority=gameplayGlobals->Authority().get();gunState.sharedAuthority=gameplayGlobals->Authority().get();regularState.sharedAuthority=gameplayGlobals->Authority().get(); // 첫 파생 모듈 전에 같은 owner를 연결하며 준비된false를 true로 덮지 않는다.
         assetState.inBattle=true;assetState.localOwner=1;
-        if (services.adoptMainMenuFort && (!services.adoptPreparedWorld || services.installMode!=CampaignInstallMode::ExistingEditor || (services.localStateGlobals->State().current[0]!=1 && services.localStateGlobals->State().current[0]!=2))) throw std::logic_error("State3 continuation의 같은 준비된 비멀티 Fort/State1·2 계약");
+        if (services.adoptMainMenuFort && (!services.adoptPreparedWorld || services.installMode!=CampaignInstallMode::ExistingEditor || !IsExistingFortEntry(services.localStateGlobals->State().current[0],true))) throw std::logic_error("State3/일반 복귀의 같은 준비된 Fort/State1·2·6 계약");
         if (services.installMode==CampaignInstallMode::ExistingEditor) {
             if (services.adoptPreparedWorld) {
                 if (!core.ownerMode.fort || core.ownerMode.battle || core.ownerMode.challenge || core.bridgeState.battle || (services.adoptMainMenuFort ? (globals.editor!=0 || globals.missionPost) : (globals.editor!=1 || !globals.missionPost)) || !playerState.fortMode || playerState.playerKnown!=1 || playerState.battleOwner!=1 || playerState.templateOwner!=1) throw std::logic_error("준비된 Editor의 실제 prefix 모드/Player 불일치"); //파일 지연 중의 기존 mission은 이름 비교 뒤 closeGuide까지 보존한다. World 시작의 별도 관문이 잔류 mission을 거부한다.
@@ -3868,17 +3869,17 @@ bool RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingE
         s.editorCheckpointReady=true;s.editorCheckpointRunning=false;return true; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
     }catch (...) { s.editorCheckpointRunning=false;throw; } //동기진입guard만반납한다.manager/State/Config/파일/객체/난수는rollback하지않는다.
 }
-// 실제 State1/2의 준비 대여가 파일 전 HUD를 한 번 분배할 때 생산 동기화만 같은 실제 Deck에 허용한다.
+// 실제 State1/2/6의 준비 대여가 파일 전 HUD를 한 번 분배할 때 생산 동기화만 같은 실제 Deck에 허용한다.
 void RawCampaignSession::WithExistingEditorPrefixUi(ClientLocalStateGlobals& owner,std::function<void()> prepareUi) {
     auto& s=*impl_;
-    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.adoptPreparedWorld || s.services.localStateGlobals.get()!=&owner || (owner.State().current[0]!=1 && owner.State().current[0]!=2) || s.loaded || s.editorCheckpointStarted || s.editorPrefixUiStarted || !prepareUi) throw std::logic_error("기존 Editor prefix의 같은 State1·2/준비 대여/한번 HUD 계약");
+    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.adoptPreparedWorld || s.services.localStateGlobals.get()!=&owner || !IsExistingFortEntry(owner.State().current[0],s.services.adoptMainMenuFort) || s.loaded || s.editorCheckpointStarted || s.editorPrefixUiStarted || !prepareUi) throw std::logic_error("기존 Fort prefix의 같은 State1·2·6/준비 대여/한번 HUD 계약");
     s.editorPrefixUiStarted=true;s.editorPrefixUiInstalling=true;
     try { prepareUi();s.editorPrefixUiInstalling=false; }catch (...) { s.editorPrefixUiInstalling=false;throw; } //이미 만들어진 실제 Deck/표시 효과는 남기고 동기 scope만 닫는다.
 }
 // 실제 State 부모의 checkpoint 정상 복귀 뒤 UI 생성과 원문 tail에 필요한 현재 조회만 한정 허용한다.
 void RawCampaignSession::WithExistingEditorInstallUi(ClientLocalStateGlobals& owner,InputQueue& input,const ExistingEditorAfterCheckpointEffects& effects,std::function<void()> prepareUi) {
     auto& s=*impl_;const auto state=owner.State();
-    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.localStateGlobals || s.services.localStateGlobals.get()!=&owner || s.loaded || !s.editorCheckpointReady || !s.editorWorldReady || s.editorCheckpointRunning || s.editorUiStarted || !prepareUi || (state.current[0]!=1 && state.current[0]!=2) || state.immediate[0]) throw std::logic_error("기존 Editor UI의 같은 현재 State/한번 tail 계약");
+    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.localStateGlobals || s.services.localStateGlobals.get()!=&owner || s.loaded || !s.editorCheckpointReady || !s.editorWorldReady || s.editorCheckpointRunning || s.editorUiStarted || !prepareUi || !IsExistingFortEntry(state.current[0],s.services.adoptMainMenuFort) || state.immediate[0]) throw std::logic_error("기존 Editor UI의 같은 현재 State/한번 tail 계약");
     s.editorUiStarted=true;s.editorUiStateOwner=&owner;s.editorUiRequest=state.current;s.editorUiPreviousPhase=state.phase;
     s.PrepareExistingEditorWorldUi();s.editorUiInstalling=true;
     try { prepareUi();ApplyExistingEditorAfterCheckpoint(owner,input,effects);s.editorUiInstalling=false;s.editorUiTailReady=true; } // 실제 helper의 정상 복귀만 tail 완료이며 빈 UI callback으로 대신하지 않는다.
@@ -3888,7 +3889,7 @@ void RawCampaignSession::WithExistingEditorInstallUi(ClientLocalStateGlobals& ow
 void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& owner) {
     auto& s=*impl_;const auto state=owner.State();
     if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.localStateGlobals || s.services.localStateGlobals.get()!=&owner || s.editorUiStateOwner!=&owner || s.loaded || !s.editorCheckpointReady || !s.editorWorldReady || !s.editorUiPrepared || s.editorCheckpointRunning || s.editorUiInstalling || !s.editorUiTailReady || !s.cursor || !s.gameplayPipeline || !s.buildingMover) throw std::logic_error("기존 Editor 최종 공개의 같은 checkpoint/UI/tail 수명 계약");
-    if ((s.editorUiRequest[0]!=1 && s.editorUiRequest[0]!=2) || state.current[0] || state.immediate[0] || state.next[0]!=4 || state.phase!=s.editorUiRequest || state.old!=s.editorUiPreviousPhase || !std::equal(state.current.begin()+1,state.current.end(),s.editorUiRequest.begin()+1)) throw std::logic_error("기존 Editor 실제 State 공통 확정/다음 Poll4 미완료");
+    if (!IsExistingFortEntry(s.editorUiRequest[0],s.services.adoptMainMenuFort) || state.current[0] || state.immediate[0] || state.next[0]!=(s.editorUiRequest[0]==6 ? 0U : 4U) || state.phase!=s.editorUiRequest || state.old!=s.editorUiPreviousPhase || !std::equal(state.current.begin()+1,state.current.end(),s.editorUiRequest.begin()+1)) throw std::logic_error("기존 Fort 실제 State 공통 확정/편집 다음4·일반 복귀 다음0 미완료");
     if (s.services.editorTransport) {
         auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch || s.editorActivityRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
         for (const auto type:kEditorGameplayMessages) if (dispatch.Registration(type).receive) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); // 전체 등록종을 먼저 확인하여 기존 처리기를 부분 덮어쓰지 않는다.

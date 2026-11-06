@@ -137,6 +137,7 @@
 #include "client/EditorLocalTransport.h"
 #include "client/EditorIslandDialog.h" // 실제 Add Island 명령의 release와 전용 창 생성 경계를 분리한다.
 #include "client/ExistingEditorAfterCheckpoint.h"
+#include "client/NativeBattleReturnState.h" // 일반 전투 복귀의 실제 결과 지역값/앞뒤 부모를 같은 Fort 설치에 연결한다.
 #include "client/NativeMainMenuState.h" //State3의 원문 부모와 호스트 표시 확정은 다른 시점이다.
 #include "client/NativeIntroState.h" // 첫 설치의 영상 부재도 원문 39→40→41→3 순서를 사용한다.
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
