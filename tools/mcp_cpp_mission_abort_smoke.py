@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--exe', type=Path, required=True)
     parser.add_argument('--game', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--user-data', type=Path, help='같은 격리 프로필을 재사용해 캐시/설정 재시작을 확인할 때만 지정한다')
     parser.add_argument('--check-saved-state-delete', action='store_true', help='중단 뒤 사용자 저장 상태 삭제와 설치 파일 보존을 검사한다')
     args = parser.parse_args()
     output = args.output.resolve()
@@ -42,7 +43,7 @@ def main():
         legacy.write_bytes(b'949-install-saved-state-must-survive')  # 검사 사본에 없는 파일만 새로 만들고 기존 파일은 읽기만 한다.
     legacy_sha = hashlib.sha256(legacy.read_bytes()).hexdigest() if legacy is not None else None
     before = file_manifest(game)
-    user_data = output / 'user-data'  # 기존 Saved Games와 분리한 검사 전용 저장 루트다.
+    user_data = (args.user_data or output / 'user-data').resolve()  # 기본은 새 격리 루트이며 명시 재시작 검사만 같은 기존 검사 루트를 빌린다.
     env = dict(os.environ, NETSTORM_USER_DATA=str(user_data))
     command = [str(args.exe.resolve()), '--run', str(game), '--mcp', '--window', '--no-audio', '--set', 'currentLanguage=english']  # 파일 확장자 설정은 UI 언어 번호가 아닌 원문 언어 이름이다.
     client = McpClient(command, env)

@@ -299,11 +299,11 @@ void RawProductionControls::Release(std::uint32_t token) {
     s.dividers.erase(token);s.grids.erase(token);s.items.erase(token);s.images.erase(token);s.texts.erase(token);s.backgrounds.erase(token);s.hints.erase(token);
 } // 공통 Release에서만 토큰과 동적 저장소를 반납하며 Kill 단계에는 주소를 유지한다.
 // 파일 팔레트 변경만 색표를 다시 만들며 일시 번개에는 재계산하지 않는다.
-void RawProductionControls::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) {
+void RawProductionControls::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical,const std::array<ColorMap,9>* colorMaps) {
     if (palette.size()!=256) throw std::invalid_argument("생산 팔레트256색 필요");std::array<std::uint32_t,256> logical{};
     // 원본 PALETTEENTRY의 성분 순서를 보존한다.
     for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16)|(std::uint32_t(palette[i].reserved)<<24);
-    auto& s=*impl_;s.colors=BuildProductionColorMaps(ColorSortLogicalInput(colorSortLogical,logical));s.shades=BuildGumpShadeMaps(ColorSortLogicalInput(colorSortLogical,logical));const auto paletteColors=BuildPaletteColorTable(logical);s.hintState.white=paletteColors.basic[7];s.hintState.black=paletteColors.basic[0];
+    auto& s=*impl_;s.colors=colorMaps ? ProductionColorMaps{(*colorMaps)[2],(*colorMaps)[5]}:BuildProductionColorMaps(ColorSortLogicalInput(colorSortLogical,logical));s.shades=colorMaps ? GumpShadeMaps{(*colorMaps)[4],(*colorMaps)[6]}:BuildGumpShadeMaps(ColorSortLogicalInput(colorSortLogical,logical));const auto paletteColors=BuildPaletteColorTable(logical);s.hintState.white=paletteColors.basic[7];s.hintState.black=paletteColors.basic[0];
     // 전용 HSL 표도 원본에 등록된 다섯 TYPE만 생성한다.
     if (!s.context.ownerColorTables) for (const auto type:kSpecial) s.ownerColors[type]=BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type); // 기존 독립 UI 입력만 지역 표를 만든다.
 }

@@ -16,7 +16,7 @@ public:
     RawCampaignCursorDisplay(const RawCampaignCursorDisplay&)=delete; // 참조 주소를 보존한다.
     RawCampaignCursorDisplay& operator=(const RawCampaignCursorDisplay&)=delete; // 다른 세션과 복사하지 않는다.
     // 파일 팔레트를 교체할 때만 세 색표/기본 색을 다시 만든다. 일시 번개 팔레트와 구별한다.
-    void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다.
+    void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={},const std::array<ColorMap,9>* colorMaps=nullptr); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다.
     void SetView(SoundView view); // 현재 월드 viewport를 마지막 dirty와 별도로 보존한다.
     void BindOwnerColors(std::shared_ptr<OwnerColorTableState> owner); // 배너 옵션의 현재 표를 빌리며 테마 설정과 구별한다.
     // 원본 문자열 번역/실제 FontStore를 장기 출력기에 연결한다. 문자열은 원본 좁은 바이트다.

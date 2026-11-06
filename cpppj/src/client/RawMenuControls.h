@@ -196,6 +196,7 @@ public:
     void RequestClosePopups();
     // 실제 메뉴 생성 전에 현재 파일 팔레트의 색 전역을 공급한다.
     void SetPalette(const PaletteColorTable& palette);
+    void BindColorMaps(std::function<const std::array<ColorMap,9>&()> current); // 같은 Client의 현재9표를 그림/도움말 Draw 시점에 빌린다. 독립 메뉴만 기존 계산을 유지한다.
     // 현재 Client 픽셀에 원본 수집/정렬/Draw를 실행한다. 배경/그림/글자 모두 실제8비트 클립을 공유한다.
     void Draw(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,std::optional<ScreenRect> clip={});
     std::int32_t CollectDrawing(ScreenRect clip,std::span<o::RenderCollectionEntry> output,std::int32_t limit) const; //원문 현재 dirty 안의 같은 Gump 트리를 수집하며 별도 정렬/출력을 하지 않는다.

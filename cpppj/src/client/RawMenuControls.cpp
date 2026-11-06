@@ -96,6 +96,7 @@ struct RawMenuControls::Impl {
     GumpDrawState clip; // 전체 메뉴 출력이 공유하는 실제 클립이다.
     GumpGlyphColorState colors; // 글리프/그림/질감이 공유하는 현재 VFX 색표다.
     ColorMap pictureColors{}; // 원본 그림 전용 치환표다.
+    std::function<const std::array<ColorMap,9>&()> currentColorMaps; // Client보다 먼저 반납되는 메뉴가 빌리는 현재 파일/재생성9표다.
     StyleTextState fragments; // 항목과 제목의 같은 실제 조각 소유 표다.
     MarkupState pictureState; // 같은 조각 토큰의 실제 그림 파생 자료다.
     StyleTextMarkupState markupState; // 현재 bracket 옵션/맞춤 전역이다.
@@ -869,6 +870,7 @@ void RawMenuControls::AppendTechnology(RawCampaignSession& session,std::uint32_t
 // 커서 Take 등의 실행 중 스택이 현재 메뉴를 참조할 수 있으므로 원본의 지연 삭제 시점을 보존한다.
 void RawMenuControls::RequestClosePopups() { auto& s=*impl_;s.input->ClosePopups();s.common.changed(); }
 // 파일 팔레트의 실제 기본색을 생성 전역과 Draw 전역에 함께 공급한다.
+void RawMenuControls::BindColorMaps(std::function<const std::array<ColorMap,9>&()> current) { if (!current) throw std::invalid_argument("메뉴 현재9색표 조회기 누락");impl_->currentColorMaps=std::move(current); } // 소비 순간의 같은 표를 읽는다.
 void RawMenuControls::SetPalette(const PaletteColorTable& palette) {
     const auto dim=std::find_if(palette.named.begin(),palette.named.end(),[](const NamedPaletteColor& color) { return color.red==47 && color.green==24 && color.blue==17; }); // 원본005c78d0/CD0055bad4의 실제 목표 RGB다.
     if (dim==palette.named.end()) throw std::invalid_argument("메뉴 원본 비활성/그림자 색 전역 없음");
@@ -888,6 +890,7 @@ std::int32_t RawMenuControls::CollectDrawing(ScreenRect clip,std::span<o::Render
 // 모든 종류의 통합 정렬/출력 동안 같은 UI 장치를 한 번만 유지한다. 토큰 함수는 본문 밖에 보관하면 안 된다.
 void RawMenuControls::WithDrawing(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,ScreenRect region,const std::function<void(const DrawingToken&)>& body) {
     auto& s=*impl_;if (s.activeText || !body) throw std::logic_error("실제 메뉴 Draw 재진입/본문 누락");SetPalette(palette);
+    if (s.currentColorMaps) { const auto& currentMaps=s.currentColorMaps();s.pictureColors=currentMaps[7];s.metaDisabled=currentMaps[2]; } // 초기cache와후속43c010갱신을같은그림소비자에반영한다.
     SetGumpDrawClip(s.clip,region);GumpPixelTarget target(pixels,pitch,height,s.clip);GumpTextDraw text(s.fonts,MakeGumpGlyphPixelHooks(target,s.colors),s.assets.Edition());GumpBackgroundPixelTarget bgPixels(target,s.backgroundAssets,maps,s.colors.vfxColors);MarkupPixelTarget picturePixels(target,s.markupAssets,s.colors.vfxColors,s.pictureColors);
     std::unique_ptr<ImageGumpPixelTarget> helpPictures; // 10.78 전용 Help를 설치한 판본에서만 해당 픽셀 처리기를 생성한다.
     if (s.helpImage) { helpPictures=std::make_unique<ImageGumpPixelTarget>(target,s.assets,s.pictureColors,[](auto) -> ColorMap { throw std::logic_error("Help 모드8 이외 소유자 색표 미연결"); });s.activeImage=helpPictures->Hooks({}); }

@@ -32,6 +32,7 @@ void ClientColorSortInput::CaptureWithPrimary(std::span<const std::uint32_t,256>
 const std::shared_ptr<o::RawColorSortPrimary>& ClientColorSortInput::Primary() const {
     if (!primary_ || !primary_->Constructed()) throw std::logic_error("ColorSort 실제primary 미연결");return primary_;
 }
+bool ClientColorSortInput::MapsReady() const { return built_; } // 파일 hit 또는 실제9표 생성의 같은 준비 표식이다.
 bool ClientColorSortInput::Captured() const { return captured_; }
 std::span<const std::uint32_t,256> ClientColorSortInput::Logical() const { if (!captured_) throw std::logic_error("ColorSort 최초 논리RGB 미캡처");return logical_; }
 const std::array<ColorMap,9>& ClientColorSortInput::Maps() const { if (!built_) throw std::logic_error("ColorSort 실제9표 미생성");return maps_; }

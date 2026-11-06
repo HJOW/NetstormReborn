@@ -1,0 +1,187 @@
+{
+  "unit": 967,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 967,
+  "version": "11.01",
+  "exeSha256": "7a8dd2ceec393a0e632b50b80836daf8e6fd623ef2f0fcbdbbb600e41b633263",
+  "exeBytes": 11355648,
+  "scope": "기존RawColorMapCache→현재CRT/VFS·장기9표/8행접두·owner등록과실제시작/건물/커서/생산/메뉴/Screen 연결. 사용자Cache 저장.",
+  "static": {
+    "parent": "0043c4e0",
+    "owners": [
+      84,
+      249,
+      184,
+      140,
+      150,
+      112,
+      156,
+      222
+    ],
+    "readDestinationOrder": [
+      "00556038",
+      "00557738",
+      "00556438",
+      "00556238",
+      "00556138",
+      "00556338",
+      "00555f38",
+      "00555e38",
+      "00557838"
+    ],
+    "memoryIndices": [
+      2,
+      7,
+      6,
+      4,
+      3,
+      5,
+      1,
+      0,
+      8
+    ],
+    "existingNativeFixture": "cpppj/tests/fixtures/colorsort-cache-parent-x86.tsv",
+    "existingNineMapFixture": "cpppj/tests/fixtures/colorsort-fixed-input-x86.tsv",
+    "nativeExecutions": 0,
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "cpppj/tests/fixtures/colorsort-cache-parent-x86.tsv": "6c798d40024bd57c7b0c07712238938b193c6aea5efc885d9c89ae99415bc3e6",
+      "cpppj/tests/fixtures/colorsort-fixed-input-x86.tsv": "70684bfd514b29e981d67faa4d2abc6cababcc5ed275b22f495f58e41d65813f"
+    }
+  },
+  "build": {
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_colormap_file_tests"
+    ],
+    "logs": [
+      "extracted\\cpp-resume-967\\build.log",
+      "extracted\\cpp-resume-967\\build-final.log"
+    ]
+  },
+  "focused": {
+    "firstTests": 12,
+    "finalUniqueTests": 13,
+    "newTests": 5,
+    "existingTests": 8,
+    "failedChecks": 0,
+    "existingNativeParentRows": 130,
+    "existingNativeNineMapRows": 6,
+    "newNativeExecutions": 0,
+    "actualShortReadBytes": 3,
+    "encryptedTaffCurrentVsSnapshot": true,
+    "screenCurrentCacheAndRebuild": true,
+    "actualDiskFullOrAllocationFailure": false,
+    "log": "extracted\\cpp-resume-967\\focused-final.log"
+  },
+  "live": [
+    {
+      "name": "live-miss",
+      "exitCode": 0,
+      "entries": 4,
+      "actions": 37,
+      "observations": 26,
+      "dataUnchanged": true,
+      "missionNames": [
+        [
+          "tutorial1",
+          "Tutorial"
+        ]
+      ],
+      "summary": "extracted\\cpp-resume-967\\live-miss\\summary.json"
+    },
+    {
+      "name": "live-hit",
+      "exitCode": 0,
+      "entries": 4,
+      "actions": 35,
+      "observations": 24,
+      "dataUnchanged": true,
+      "missionNames": [
+        [
+          "tutorial1",
+          "Tutorial"
+        ]
+      ],
+      "summary": "extracted\\cpp-resume-967\\live-hit\\summary.json"
+    }
+  ],
+  "cache": {
+    "path": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-967\\live-miss\\user-data\\Cache\\!color.dat",
+    "bytes": 2304,
+    "sha256": "ac1205f05c99c526235676c93f06ad6c6a60c49e161e3fef3cd5a695fa1eaad1",
+    "mtimeNs": 1793944040038048400,
+    "restartBytesUnchanged": true,
+    "restartMtimeUnchanged": true,
+    "locationPolicy": "사용자홈 Cache/!color.dat; 실제검사는격리NETSTORM_USER_DATA"
+  },
+  "viewedScreenshots": [
+    "live-miss/mission-0.png",
+    "live-miss/final-main.png",
+    "live-hit/mission-1.png",
+    "live-hit/final-main.png"
+  ],
+  "solution": {
+    "projects": 83,
+    "application": 78,
+    "testNamed": 73,
+    "game": 1,
+    "probeDump": 4,
+    "libraries": 2,
+    "utility": 3
+  },
+  "protection": {
+    "files": 2796,
+    "fixtures": 976,
+    "unchanged": true,
+    "newFixtures": 0,
+    "next": "extracted\\cpp-resume-967\\protected-final.json"
+  },
+  "preparationError": "extracted\\cpp-resume-967\\finish-first-error.txt",
+  "limits": [
+    "FILE24BYTE/전체SEH ABI·미정heap/물리디스크·할당실패는현대호스트경계",
+    "CD10.72 파일부모는후속범위",
+    "두8행의모든별도표시소비자·전체색표소비/Factory/파일/비멀티수명은미완료",
+    "새MP/프로토콜/포획·공격·승리/전체CTest·34·ZIP검사없음"
+  ],
+  "sha256": {
+    "cpppj/src/client/CMakeLists.txt": "2745889a94c06aadd294bcfe8430112e115d48fae11869252e5f924b91f3d897",
+    "cpppj/src/client/ClientColorSortInput.cpp": "4151520f8a080565d8010f0936d7166308d4b5c5767edb7b859f3fa9e3906f20",
+    "cpppj/src/client/ClientColorSortInput.h": "7902e056f96cce60e62641ce6e112c77311bc1b692ceba3ad867dc5e396dcf67",
+    "cpppj/src/client/ClientMain.cpp": "75d269d845589b4507b00b03d58b0c64f5cf60e3678e7566fa4e470cb11b8849",
+    "cpppj/src/client/GameWorld.cpp": "b7b5b59d36460a13442524df9edfa8b307cfad4a6218dd3d315c0b0aaee21953",
+    "cpppj/src/client/GameWorld.h": "97863ad768d8995d965420b49b020ca873c1bfc41fd85c863cebd8b3cdc54eac",
+    "cpppj/src/client/RawCampaignCursor.cpp": "4488fc4e6a27c68acb11cac55867e435f5f72d961791f639954c5edf0b8c39d9",
+    "cpppj/src/client/RawCampaignCursor.h": "cc9155789108c73e8d9d645fc527b801e498f62bd4c721ea9368cdc8863aa69b",
+    "cpppj/src/client/RawCampaignCursorDisplay.cpp": "b59c4dd1ead658110f68a26f95ab6051aeba824baacbf02de7d9a4a6055cda2f",
+    "cpppj/src/client/RawCampaignCursorDisplay.h": "03a4e679b70df8e9d93180dc5270482ddda84b6f30de36b58990d04efab0538f",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "9a2255362e3237060ccf804a0c71b05dbd74f10220b4e12cd8c79d1c9aeb1d67",
+    "cpppj/src/client/RawCampaignFactoryDisplay.h": "be030dcaf8f9932fa1ef2b61e5e8643aaaf046954f424e13ed16b409ed40979b",
+    "cpppj/src/client/RawCampaignSession.cpp": "ed8ad8473b650477a8ddbae9dafa80d895f0e5600c9ff77f5f9544a4fb42c19b",
+    "cpppj/src/client/RawMenuControls.cpp": "1fe42532008097e4c1563cece98b888906d3bdc4f8a02f2197d2b74fee0b3476",
+    "cpppj/src/client/RawMenuControls.h": "307d36877528c1d896b830b022d6a04e634ca9a960fd77e9b45796bfe0fd3c6e",
+    "cpppj/src/client/RawProductionControls.cpp": "e5c6b1c888b39f8f8dd2276b7d8ba1cc787a4b1d4243198cd47170740079adb5",
+    "cpppj/src/client/RawProductionControls.h": "97d5c476d3e407832a32e6cee5f990d76e5aa621b19bf5f2eecd2e98a4afd64b",
+    "cpppj/src/client/Screen.cpp": "f6c06cc253f2f7a083c47f007edb493e09a6903b21b59872df43ff03b65e3bc5",
+    "cpppj/src/client/Screen.h": "cca6e797f7a729e84649fe9905f778d8aa79e6010200b1636558d974f77dd303",
+    "cpppj/src/client/UberGump.cpp": "ccf8efa66b906ecbc13e6c04355499c813c4cb4a3ee666db917080ff151ecb79",
+    "cpppj/tests/CMakeLists.txt": "5a65dee5042e6bec5744769726e7dce9cae515eec38d3cc73f7025924e36d6d6",
+    "tools/mcp_cpp_mission_abort_smoke.py": "dba77fb99b2bfc66d48e0457ce59c3a1abe61a2f1bc2707389c44bf9ed9a7f3b",
+    "cpppj/src/client/ClientColorMapFile.cpp": "b482b51c092a024476356e2f3611958f12300504dd64eccb5445ca584dcf11bc",
+    "cpppj/tests/ClientColorMapFileTests.cpp": "96a8ef8baa2c7f20c2f643659594946e23a78d95f3f57bcc5225e49ebcc9147f",
+    "extracted\\cpp-resume-967\\build.log": "c9b26752c0bb71ad982851e5afa5d2f33e3a2d57fb6ea252870e3940264a7e18",
+    "extracted\\cpp-resume-967\\build-final.log": "099dfc0971a34acf89879e25a0b60f4fe365e795e47deb5c72d418c8d5167228",
+    "extracted\\cpp-resume-967\\focused-first.log": "03a33fc4a755ef9e1d0c330772c17456ecacb74f11170f97a853ce07ba9a1dbf",
+    "extracted\\cpp-resume-967\\focused-final.log": "19dc47e74b7e0e07ab5dc28ea90e4d946bed844f06a4ca6c41d7337ac7a5796f"
+  }
+}

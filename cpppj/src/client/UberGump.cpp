@@ -351,6 +351,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     menuHooks.objectForms=[this]() -> o::GumpFormHost& { if (!world_) throw std::logic_error("현재Client 메뉴Form의월드미설치");return world_->Session().GumpForms(); };
     menuHooks.gameSeconds=[this] { return client_.Time().game; }; // 비용 표시도 같은 프레임의 게임 시각을 읽는다.
     rawButtons_->EnableMenus(client_.Assets(),client_.Fonts(),std::move(menuHooks)).SetPalette(client_.GetScreen().Colors());
+    rawButtons_->Menus()->BindColorMaps([owner=client_.ColorSortInput()]() -> const std::array<ColorMap,9>& { return owner->Maps(); }); // 메뉴 그림/도움말도 현재9표를 사용하며 파일 hit 뒤 재계산하지 않는다.
     RawHelpHooks help;help.globals=&htmlGlobals_; // Tell과 같은 HTML 전역/Config/입력 고리를 빌린다.
     help.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };help.config=[this](auto key) { return FontBytes(client_.Configuration().PathSpec(key)); };
     help.substitute=[this](auto text) { const auto decoded=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()});return FontBytes(client_.Configuration().SubstituteLocal(decoded)); };
@@ -861,7 +862,7 @@ void UberGump::FinishMissionWorldLoad() {
     // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.
     world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());
     // 직전 미션의 날씨 팔레트가 유지된 재진입도 현재 화면 색을 사용한다.
-    world_->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());
+    world_->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
     // 같은 단일 커서에 현재 장치/트리·비용 표시·선택 해제·실제 로그인 전송을 공급한다.
     auto cursorEffects=MakeCampaignCursorClientEffects(client_,*rawButtons_);
     cursorEffects.send=[session=&world_->Session()](std::uint32_t target,std::span<const std::uint8_t> packet) { session->SendLocalPacket(std::bit_cast<std::int32_t>(target),packet); };
@@ -1589,9 +1590,9 @@ void UberGump::Frame() {
 void UberGump::Refresh() { rebuild_=true;client_.GetRenderer().InvalidateAll(); }
 // 새 RGB를 월드에 공급한 뒤 UI의 장식·글자·선택 색도 다시 합성한다.
 void UberGump::PaletteChanged() {
-    if (world_) world_->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());
+    if (world_) world_->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
     rawButtons_->SetPalette(ButtonColors(client_.GetScreen().Colors()));
-    if (rawButtons_->Production()) rawButtons_->Production()->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());
+    if (rawButtons_->Production()) rawButtons_->Production()->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
     if (rawButtons_->Minimap()) rawButtons_->Minimap()->SetPalette(client_.GetScreen().Colors());
     Refresh();
 }
@@ -1766,7 +1767,7 @@ void UberGump::Compose() {
                 [this](std::string_view key) { return FontBytes(client_.Translate(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(key.data()),key.size()}))); },
                 [this](const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) { if (!world_ || !objectMenus_) throw std::logic_error("생산 정보의 현재 월드 없음");return objectMenus_->OpenProduction(*world_,item,point,affordable); }});
             auto& production=*rawButtons_->Production(); // 같은 미션의 안내/복귀는 예산/등록ID를 재생성하지 않는다.
-            production.Resize(height);production.SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());
+            production.Resize(height);production.SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
             if (!rawButtons_->Minimap()) rawButtons_->EnableMinimap(world_->Session(),RawMinimapHooks{
                 [this] { return world_->MinimapView(); },[this](auto x,auto y) { world_->CenterCamera(x,y); },
                 [this](auto x,auto y) { world_->MoveFromMinimap(x,y); },[this] { return world_->InputMode(); },[this] { return client_.Poll(0xffff); }});

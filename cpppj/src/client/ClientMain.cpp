@@ -382,7 +382,14 @@ int Client::Run() {
     GameAssets::ShapeDatabaseRead readShapes; // 실제 자산 수명까지 같은 view/핸들 owner를 인계한다.
     if (options_.edition==o::OriginalEdition::Patch1078) { readType=[this](auto name) { return ReadNativeTypeDefinition(files_,name); };readShapes=[this] { return LoadNativeShapeDatabase(files_,options_.gameDirectory); }; }
     assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath,std::move(readType),std::move(readShapes));
-    if (options_.edition==o::OriginalEdition::Patch1078) colorSortInput_->OwnerTables()->Initialize(colorSortInput_->Primary(),assets_->TypeTable().Types().size(),static_cast<std::uint32_t>(assets_->Find("bridge").block+o::kFirstAssetTypeNumber),kencloudGlobals_->WorldRedraw()); // 원문43c4e0→43be30의 최초 등록이다. 호스트는 TYPE 크기가 확정된 직후, 첫 UI/World보다 먼저 수행한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) {
+        const auto cache=options_.userData ? options_.userData->Cache():platform::UserDataRoot::Resolve().Cache(); // 새 자동생성cache도 설치 경로에 쓰지 않는다.
+        platform::UserDataRoot::EnsureDirectory(cache);
+        colorSortInput_->InitializeCache(files_,cache/L"!color.dat",screen_->Colors().basic[1],[this] { // 원문43c4e0의소유자두표→43be30→FILE9표순서다.
+            colorSortInput_->OwnerTables()->Initialize(colorSortInput_->Primary(),assets_->TypeTable().Types().size(),static_cast<std::uint32_t>(assets_->Find("bridge").block+o::kFirstAssetTypeNumber),kencloudGlobals_->WorldRedraw());
+        }); // 호스트는TYPE크기확정직후·첫UI/World앞에서같은부모를설치한다.
+    } else static_cast<void>(colorSortInput_->Rebuild(screen_->Colors().basic[1])); // CD호스트는기존값형계산을유지하며10.78파일부모를판본확인없이호출하지않는다.
+    screen_->BindColorMaps([owner=colorSortInput_] { const auto& maps=owner->Maps();return GumpShadeMaps{maps[4],maps[6]}; }); // 실제cache의두행을화면명암에도사용한다.
     surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority(),gameplayGlobals_->GameAux()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     surfaceStorage_->BindChecking(o::RawCheckingFlag{gameplayGlobals_->AiDebug().Checking()}); // 같은ClientDWORD를Editor/Session대여전부터빌리며새World에서0으로복제하지않는다.
     surfaceStorage_->BindDisplayDiagnostics(gameplayGlobals_->AiDebug().AssertionDetail(),[](std::string_view expression,std::string_view file,std::uint32_t line) { std::clog<<"원본 표시 진단: "<<file<<':'<<line<<' '<<expression<<'\n'; }); // 첫 Editor/Session 이전부터 현재 상세 저장소와 복귀하는 기존 로그 진단을 연결한다.
@@ -954,6 +961,7 @@ void Client::ChangeResolution(int width, int height) {
     screen_->SetPresentSize(presentWidth_, presentHeight_); // 7차: 표시 크기를 SetMode보다 먼저 알린다.
     screen_->Init(); screen_->InitDibSection();
     screen_->BindColorSortInput([owner=colorSortInput_] { return owner->Logical(); }); //해상도재생성은초기입력을다시캡처하지않는다.
+    screen_->BindColorMaps([owner=colorSortInput_] { const auto& maps=owner->Maps();return GumpShadeMaps{maps[4],maps[6]}; }); // 이전Screen의현재색표소유자도그대로인계한다.
     screen_->LoadPalette(GamePalette(palette),options_.edition);
     RECT rect{0, 0, presentWidth_, presentHeight_}; // 7차: 창 클라이언트 영역은 표시 크기다.
     AdjustWindowRectEx(&rect, static_cast<DWORD>(GetWindowLongPtrA(static_cast<HWND>(window_), GWL_STYLE)), FALSE, 0);

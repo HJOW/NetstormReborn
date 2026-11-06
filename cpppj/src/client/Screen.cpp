@@ -353,7 +353,7 @@ void Screen::ApplySavedPalette(o::OriginalEdition edition,std::uint32_t clear) {
     ApplyScreenPaletteClear(clear,flags_,paletteLoaded_,devices);
     SetPalette(0, kPaletteSize, nullptr, true);
     colors_=BuildPaletteColorTable(logical_,edition);
-    shadeMaps_=BuildGumpShadeMaps(colorSortInput_ ? colorSortInput_() : std::span<const std::uint32_t,256>(logical_));
+    shadeMaps_=currentColorMaps_ ? currentColorMaps_():BuildGumpShadeMaps(colorSortInput_ ? colorSortInput_() : std::span<const std::uint32_t,256>(logical_));
 }
 // 원본과 다른 Windows10/11 DIB 전체화면은 독점 DirectDraw vblank 대신 현재 GDI/데스크톱 합성을 동기화한다.
 void Screen::WaitPaletteVerticalBlank() {
@@ -383,7 +383,8 @@ const std::uint32_t& Screen::PaletteLoaded() const { return paletteLoaded_; }
 // 원본처럼 파일 읽기가 끝난 뒤 계산된 표를 보존한다. 번개의 부분 적용/복구는 표를 다시 만들지 않는다.
 const PaletteColorTable& Screen::Colors() const { return colors_; }
 // GUI 어댑터는 마지막 파일에서 만든 표를 참조한다. 원본 paletteDirty 소비 수명은 후속 복원 대상이다.
-const GumpShadeMaps& Screen::ShadeMaps() const { return shadeMaps_; }
+const GumpShadeMaps& Screen::ShadeMaps() const { if (currentColorMaps_) shadeMaps_=currentColorMaps_();return shadeMaps_; } // 팔레트적용뒤43c010이바꾼현재표도같은Draw에반영한다.
+void Screen::BindColorMaps(std::function<GumpShadeMaps()> current) { if (!current) throw std::invalid_argument("Screen 현재9색표 조회기 누락");currentColorMaps_=std::move(current);shadeMaps_=currentColorMaps_(); } // 실제캐시준비뒤와해상도재생성뒤에같은소유자를연결한다.
 std::span<const std::uint32_t,256> Screen::LogicalPalette() const { return logical_; } //논리팔레트를현재화면RGB사본으로바꾸지않는다.
 void Screen::BindColorSortInput(std::function<std::span<const std::uint32_t,256>()> current) { if (!current) throw std::invalid_argument("Screen 고정ColorSort 입력조회기누락");colorSortInput_=std::move(current); }
 // apply와 무관하게 논리 팔레트가 색 검색의 원본이다.

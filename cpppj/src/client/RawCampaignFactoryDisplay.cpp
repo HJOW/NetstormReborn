@@ -268,11 +268,11 @@ void RawCampaignFactoryDisplay::BindOwnerColors(std::shared_ptr<OwnerColorTableS
     impl_->sharedOwnerColors=std::move(owner);impl_->ownerColors.clear();impl_->state.sharedOwnerMaps=impl_->sharedOwnerColors->Tokens();impl_->state.sharedUseBanners=&impl_->sharedOwnerColors->Enabled();
 }
 // 장치 BGRX와 별개로 원본 R/G/B/예약 DWORD를 만들어 실제 파일 색 표를 계산한다.
-void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) {
+void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical,const std::array<ColorMap,9>* colorMaps) {
     if (palette.size()!=256) throw std::invalid_argument("Factory 파일 팔레트256색 계약");std::array<std::uint32_t,256> logical{};
     // 실제 현재 파일 팔레트의 모든 번호를 보존한다.
     for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16)|(std::uint32_t(palette[i].reserved)<<24);
-    const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->colors=BuildSpriteColorMaps(ColorSortLogicalInput(colorSortLogical,logical));impl_->state.barBackground=named.basic[0];
+    const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->colors=colorMaps ? SpriteColorMaps{(*colorMaps)[4],(*colorMaps)[6],(*colorMaps)[7]}:BuildSpriteColorMaps(ColorSortLogicalInput(colorSortLogical,logical));impl_->state.barBackground=named.basic[0];
     if (!impl_->sharedOwnerColors) for (const auto type:kSpecialOwnerTypes) impl_->ownerColors.insert_or_assign(type,BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type)); // 명시 독립 표시 입력만 지역 표를 갱신한다. 실제 Client 표는 최초 primary와 현재 옵션을 유지한다.
     impl_->state.hitPointColors={named.named.at(10).index,named.basic[5],named.basic[1]};impl_->ready=true;
 }

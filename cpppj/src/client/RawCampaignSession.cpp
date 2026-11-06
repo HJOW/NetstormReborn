@@ -3193,7 +3193,7 @@ struct RawCampaignSession::Impl {
             if (!services.colorSortInput || !services.screenPalette) throw std::logic_error("캠페인 커서의 같은 ColorSort/현재 화면 색 서비스 미연결");
             // 현재 화면의 명명색 입력과 최초 고정 lookup 입력은 서로 다른 저장소다.
             const auto palette=services.screenPalette();
-            cursor->SetPalette(palette,services.colorSortInput->Logical());
+            cursor->SetPalette(palette,services.colorSortInput->Logical(),services.colorSortInput->MapsReady() ? &services.colorSortInput->Maps():nullptr);
         } else {
             // 두 서비스를 모두 생략한 기존 독립 headless 검사만 명시 COL adapter를 유지한다.
             std::array<ScreenColor,256> palette;

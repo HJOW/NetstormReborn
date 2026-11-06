@@ -1,5 +1,7 @@
 # !color.dat 부모·catch·cleanup의 독립 복원
 
+**2026-11-06 후속967:** 이 문서의 당시 미접합 부모를 실제 CRT/VFS·사용자Cache·장기9표와 시작/표시에 연결했다. 고유13검사와 같은 프로필 miss/hit2실행을 확인했다. 두8행/다른 색표의 모든 별도 소비자 및 FILE/SEH ABI 한계는 유지한다. [967기록](cpp-colormap-current-file-20261106.md).
+
 단위386 후속 **미등록 모듈**이다. 현재/마지막 전체 정밀 디컴파일 PC는 HJOW-Athlon /2026-10-23이다. 기존 공유 제품/CMake/LEFT/git/공용 build/lib·원본/CD·GUI·게임은 변경하거나 실행하지 않았다. [이전 정적 설계](cpp-colorsort-cache-parent-next-20261024.md)와 [현재385 ColorSort 사본](cpp-colorsort-input-current385-20261024.md)을 바꾸지 않고 다음 자료를 추가했다.
 
 ## 제품 전에 고정한 원문 범위

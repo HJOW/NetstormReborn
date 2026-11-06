@@ -3717,3 +3717,9 @@ netstorm_apply_compiler_options(netstorm_vortex_owner_diagnostic_tests)
 target_compile_definitions(netstorm_vortex_owner_diagnostic_tests PRIVATE NETSTORM_VORTEXOWNER_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortex-owner-x86.tsv")
 set_source_files_properties(VortexOwnerDiagnosticTests.cpp PROPERTIES COMPILE_DEFINITIONS
     NETSTORM_VORTEX_OWNER_DIAGNOSTIC_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/vortex-owner-diagnostic-local-x86.tsv")
+
+# 현재 색표 FILE/Native 부모/실제 화면 조회를 게임 실행 없이 집중 대조한다.
+target_sources(netstorm_tests PRIVATE ClientColorMapFileTests.cpp)
+add_executable(netstorm_colormap_file_tests FocusedTestMain.cpp ClientColorMapFileTests.cpp ColorMapCacheTests.cpp ColorSortFixedInputTests.cpp ClientColorSortPrimaryTests.cpp)
+target_link_libraries(netstorm_colormap_file_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_colormap_file_tests)
