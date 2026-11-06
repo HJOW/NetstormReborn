@@ -2,8 +2,10 @@
 #pragma once
 #include "o/RawConstructionData.h"
 #include <array>
+#include <memory>
 
 namespace netstorm::o {
+class PacketRegistrationTable;class PacketRegistrationLease; // backend별 hooks와 별개로 공유할 실제 등록표/Session 대여다.
 // 원본 연결 객체에서 단일 분배가 읽고 쓰는 값이다. 호스트 소켓 포인터 대신 명시적인 참조를 전달한다.
 struct PacketConnection {
     std::uint32_t flags{}; // +0x34: bit 0x40이 켜진 연결에는 진입하지 않는다.
@@ -16,6 +18,9 @@ struct PacketConnection {
 };
 // 원본 세 등록 표를 호스트 함수/값으로 옮긴 한 항목이다.
 struct PacketRegistration {
+    std::weak_ptr<PacketRegistrationLease> registrationLease; // 실행 중 실제 Session 전체 owner를 pin할 약한 대여다.
+    bool leased{}; // 전역 기본 등록과 Session 대여 등록을 구별한다.
+    std::shared_ptr<void> Pin() const; // receiver/observer 호출이 끝날 때까지 실제 참조 모듈을 유지한다.
     std::function<void(std::uint32_t,PacketConnection&,std::span<const std::uint8_t>)> receive; // 처리기(sender,연결,원본 버퍼)다.
     std::function<void(std::uint32_t)> observer; // 집합 패킷에서만 쓰이는 관찰기이며 단일 분배에서는 호출하지 않는다.
     std::function<void(std::span<std::uint8_t>,std::uint32_t)> packetObserver; // 같은 원문 observer 슬롯의 mutable this를 쓰는 장치다. 기존 인자 전용 장치와 동시에 등록하지 않는다.
@@ -37,7 +42,8 @@ struct PacketDispatchHooks {
 class RawPacketDispatch {
 public:
     // 판본별 최대 타입과 원본 고정 길이 표를 준비한다. 필수 시계/기록/수명 경계는 비울 수 없다.
-    RawPacketDispatch(OriginalEdition edition,PacketDispatchHooks hooks);
+    RawPacketDispatch(OriginalEdition edition,PacketDispatchHooks hooks,std::shared_ptr<PacketRegistrationTable> registrations={});
+    const std::shared_ptr<PacketRegistrationTable>& Registrations() const; // Local/TCP/Editor가 같은 등록표 owner를 생성 때 공유한다.
     // 각 원본 등록 함수처럼 한 표만 바꾼다. 타입 0/최대 밖 번호는 등록 전에 거부한다.
     void Register(std::uint32_t type,decltype(PacketRegistration::receive) receive);
     // 해당 타입의 관찰기 표만 바꾼다. 단일 분배는 등록된 관찰기를 호출하지 않는다.
@@ -57,7 +63,7 @@ public:
 private:
     // 잘못된 등록 번호가 다른 항목을 덮어쓰지 않게 한다.
     void CheckType(std::uint32_t type) const;
-    std::array<PacketRegistration,256> entries_; // 원본 BYTE 메시지 번호 전체의 호스트 저장소다.
+    std::shared_ptr<PacketRegistrationTable> registrations_; // 원문 전역 등록표 하나이며 backend별 hooks는 아래에 별도로 남긴다.
     std::uint32_t lastType_; // 원본 초기 최대 타입: 패치 137/CD 126이다.
     PacketDispatchHooks hooks_; // 전송 계층의 시계·로그·연결 수명 효과다.
 };

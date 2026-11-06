@@ -14,6 +14,12 @@ add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE o/RawAllocationFailure.cpp o/RawAllocationFailure.h client/ClientAllocationFailure.cpp platform/ScopedNewHandler.h)
 # 원문 TCP 프레이밍/현재 연결표를 사용하는 LAN 전송 부품을 컴파일한다. 실제 Login/UI 접합은 후속 단위다(982).
 target_sources(netstorm PRIVATE client/LocalTcpTransport.cpp client/LocalTcpTransport.h)
+# 원문 공유 등록표/per-ID 복합 순서와 실제 Client/World 수명 대여를 같은 라이브러리에 연결한다(984).
+target_sources(netstorm PRIVATE
+    o/PacketRegistrationTable.cpp o/PacketRegistrationTable.h o/RawTransportPolling.h
+    client/CompositeMissionTransport.cpp client/CompositeMissionTransport.h
+    client/CampaignTransportServices.cpp client/CampaignTransportServices.h
+    client/ClientCampaignTransport.cpp client/ClientCampaignTransport.h)
 target_link_libraries(netstorm PUBLIC ws2_32)
 target_sources(netstorm PRIVATE client/ScreenModeTransition.cpp client/ScreenModeTransition.h) #원문 화면 변경 부모의 실패 복구/설정/공유 갱신 순서다(746).
 target_sources(netstorm PRIVATE client/SavedCameraKey.cpp client/SavedCameraKey.h) #숫자/Shift 기호와 현재 Renderer 중심의 저장 카메라다(719).

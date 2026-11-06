@@ -5,6 +5,7 @@
 #include "client/RawEdgeScroll.h"
 #include "client/RawMinimapControls.h"
 #include "client/CampaignUserInputServices.h"
+#include "client/ClientCampaignTransport.h" // 같은 실제 World/장기 전역과 공유 전송 수명을 로그인 전에 연결한다.
 #include "client/RitualChoiceInput.h" //의식선택은실제일반명령에서6b요청만작성한다.
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
@@ -438,6 +439,7 @@ void UberGump::ReleaseCurrentGuideMission() {
 }
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
+    if (world_ && world_->Session().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 전체 World 정리 재진입"); // UI/공유 저장소를 일부 반납하기 전에 전체 정리를 거부한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // 숫자 창도 현재 Session의 확정 장치를 반납한 뒤 월드를 해제한다.
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseEditorIslandWindows(); // 창/루트 드래그의 실제 Session 대여를 월드보다 먼저 반납한다.
@@ -457,6 +459,7 @@ void UberGump::ClearWorld() {
     client_.GetRenderer().SetOverlayProcedure({}); // 실제 메뉴 픽셀 소비자가 반납한 월드를 다시 읽지 않도록 먼저 제거한다.
     if (objectMenus_) objectMenus_->Clear();
     DetachMissionWorldBindings(); //같은 Session을 빌리는 실행기만 닫는다. 실제 Guide 데이터/자기정지/소멸 전역은 선택된 ReleaseCurrentGuideMission까지 보존한다.
+    if (world_) world_->Session().DetachConnectionTransport(); // 실제 하위 수신기를 소멸하기 전에 자기 등록 대여만 반납한다.
     auto retiringWorld=std::move(world_); // 실제 소멸 callback의 현재 subscriber 조회는 이미 NULL인 같은 슬롯을 본다.
     if (retiringWorld) {
         retiringWorld.reset(); // Session이 같은 전역 Kernel을 먼저 비운 뒤 나머지 월드 소유권을 반납한다.
@@ -471,11 +474,13 @@ ScreenRect UberGump::CurrentMapView() const { return rawButtons_->MapViewRect();
 // Native 부모가 실제 AI/링크/Kernel을 정리하고 Core0을 선택한 뒤 호출하는 호스트 소비자 반납이다.
 void UberGump::RetireWorldForState() {
     if (!world_) throw std::logic_error("State Runtime 반납의 현재 GameWorld 소유자 누락");
+    if (world_->Session().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 State Runtime 반납 재진입"); // 공유 Pool/Player를 사용하는 실행자가 남아 있으면 전체 부모가 시작되면 안 된다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // State 전환도 같은 숫자/이름 모달의 장치를 먼저 닫는다.
     mapUserName_=world_->Session().CurrentHandle(); //State7은 새 Guide의 Init이 작성한 요청/Zone을 사용한다. 이전 Session 반납으로 그 owner를 지우지 않는다.
     gameMenuState_.reset();if (objectMenus_) objectMenus_->Clear(); //현재 Runtime에 대한 메뉴/Form 비소유 참조만 반납한다.
     client_.GetRenderer().SetExtraCollection({});client_.GetRenderer().SetOverlayProcedure({}); //새 HUD를 지우지 않고 이전 월드 Draw callback만 닫는다.
     DetachMissionWorldBindings();briefingSections_.clear();briefingIndex_=0;fortObjects_=0; //Runtime의 Session 참조만 반납한다. gate/state/Script와 Native mission은 State1 이름 비교 뒤 실제 closeGuide 또는 메인 메뉴 해제까지 유지한다.
+    world_->Session().DetachConnectionTransport(); // 같은 실제 Session의 등록을 하위 처리기 소멸보다 먼저 닫는다.
     auto retiring=std::move(world_);retiring.reset(); //같은 Session의 실제 자식 증빙이 C++ 소멸자의 중복 전역 쓰기를 막는다.
 }
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
@@ -827,7 +832,7 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
         missionRuntime_->tutorial->Gate().PauseForDialog();
     };
     tutorialSeen_=0; // 원본 State7의 세계 재설정4b2df0도 Init의5ca8f0을0으로 되돌린다. 사제 체력을 앞선1쓰기만으로 바꾸지 않는다.
-    auto world=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),std::move(fort),std::move(players),
+    auto world=std::make_shared<GameWorld>(client_.Assets(),client_.Files(),std::move(fort),std::move(players),
         selectedFort,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
     world->elapsed=[this]() { return client_.Time().delta; }; world->paused=[this]() { return client_.Paused(); };
     world->frameTime=[this]() { return client_.Time(); };
@@ -839,6 +844,7 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     world_=std::move(world); // 호스트 어댑터는 원문 프로세스 슬롯을 차지하지 않는다.
+    if (nativePlayers) world_->Session().BindConnectionTransport(MakeClientCampaignTransport(client_,CompositeTransportRole::InternalMission,world_),world_); // 실제 World 전체를 콜백 동안 유지하며 생성/바인딩으로 접속을 앞당기지 않는다.
     worldMissionToken_=missionRuntime_->saveToken; // 준비한 World를 현재 미션 수명에만 귀속한다.
     if (missionRuntime_->mode64) { if (!editor_) throw std::logic_error("편집 Test Battle의 실제 작업 파일 owner 없음");world_->Session().BindFortFileSave(client_.ReadOnlyForts(),editor_->files); } //테스트 복귀의 선택된 Notify도 실제 작업본 경로에만 저장한다.
     missionRuntime_->start=std::make_unique<RawCampaignMissionStartBindings>(world_->Session(),*mission_,missionRuntime_->gate,missionRuntime_->state,
@@ -1551,6 +1557,7 @@ bool UberGump::Input() {
 }
 // 예약 명령은 메시지/입력보다 앞서 실행한다(원본 004b88c0 자리).
 void UberGump::Tick() {
+    if (world_ && world_->Session().ConnectionCallbackActive()) return; // 재진입 Tick의 State/후속 명령 전체를 다음 정상 Tick까지 유지한다. 정리만 건너뛰고 부모 후반을 실행하지 않는다.
     const auto action=state_.TakeAfterPoll([this] { if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); }); // 원문 Poll은 한 번만 소비한다. 여기서 새로 예약한 Guide/미션 설치와 timeout의next3는 다음 Tick까지 유지한다.
     const bool loading = state_.phase == ClientPhase::LoadingMission;
     if (action) Execute(*action);
@@ -1560,8 +1567,10 @@ void UberGump::Tick() {
 }
 // 실제 로컬 큐는 일반 원문 슬롯4에서 진행하며 완료가 Guide/입력보다 먼저 현재 UI를 설치한다.
 void UberGump::PollMissionPackets() {
-    if (!world_ || world_->PreparingFort()) return;world_->Session().PumpLocalConnection();
-    if (world_->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken && world_->CompleteLocalConnection()) FinishMissionWorldLoad(); // 이전 미션이면 호스트 World의 공개도 건너뛰고 원래 cleanup까지 닫아 둔다.
+    const auto world=world_; // 이 폴링과 완료 후처리가 끝날 때까지 실제 표시/Session 소비자를 함께 보유한다.
+    if (!world || world->PreparingFort()) return;world->Session().PumpLocalConnection();
+    if (world_!=world) return; // callback이 현재 호스트를 바꿨으면 이전 결과를 새 월드에 공개하지 않는다.
+    if (world->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken && world->CompleteLocalConnection()) FinishMissionWorldLoad(); // 이전 미션이면 호스트 World의 공개도 건너뛰고 원래 cleanup까지 닫아 둔다.
 }
 // 원본 루프8번에서 현재 Guide의 상태/창 관문과0..6 단계를 한 번 실행한다.
 void UberGump::MissionFrame() {

@@ -33,6 +33,7 @@ void CancelClientStateCursor(ClientGameplayGlobals& game,const std::function<voi
 }
 void CleanupClientStateWorld(std::uint32_t reason,ClientStateWorldContext c,std::shared_ptr<RawSurfaceStorage> storage,const ClientStateWorldDevices& devices) {
     if (!storage || storage.get()!=&c.surface) throw std::invalid_argument("전체 State 정리의 같은 실제 표면 owner 필요");
+    if (c.client.GameplayGlobals()->Borrowed() && c.client.GameplayGlobals()->RequireSession().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 전체 Native State 정리 재진입"); // 원문 첫 효과 전에 전체 부모를 거부하여 공유 Player/Pool을 먼저 비우지 않는다.
     const auto globals=BindClientStateWorldGlobals(c);ClientStateRuntimeRetirement runtime(c.client,storage);auto& game=*c.client.GameplayGlobals();auto& local=*c.client.LocalStateGlobals();auto& sp=c.client.SpGlobals()->Store();
     o::StateWorldCleanupHooks hooks;
     hooks.disconnect=[&](auto owner) { c.client.ConnectionGlobals()->Disconnect(static_cast<std::int32_t>(owner)); };

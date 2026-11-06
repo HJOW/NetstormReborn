@@ -5,7 +5,8 @@ struct RawCampaignSession::Impl::Login {
     Impl& s; //유일한 Player/Template/SP/월드/현재 모드 소유자다.
     CampaignLoginServices effects; //현재 실제 Client 설정/시계/표시/로그 장치다.
     std::function<void()> install; //428570 등록을 포함한 같은 Session.Load의 실제 소비자다.
-    std::unique_ptr<netstorm::zacket::LocalMissionTransport> transport; //이 로그인과 현재 명령이 공유하는 실제 두끝/송수신 큐다.
+    std::shared_ptr<netstorm::zacket::LocalMissionTransport> internalTransport; // 기존 단독 미션만 현재 내부 양끝을 소유한다.
+    CampaignTransportServices transport; // 명시 LAN/내부 backend의 같은 현재 ID/Registry/분배기만 빌린다.
     std::unique_ptr<RawMissionLogin> server; //실제0x27의서버 처리기다.
     std::unique_ptr<RawMissionClientPackets> client; //같은Player/SP/상태에8종응답을 적용한다.
     std::unique_ptr<RawMissionServerPackets> metadata; //실제Player/metadata 패킷 writer다.
@@ -44,6 +45,14 @@ struct RawCampaignSession::Impl::Login {
     std::vector<std::uint8_t> wireTypes; //실제수신한패킷종류의 진단기록이며 분기를 대신하지 않는다.
     //선택한 실제 장치가 빠지면 그 지점에서 명시 오류를 보인다.
     template<class F> static const F& Need(const F& hook) { if (!hook) throw std::logic_error("실제 미션 로그인 장치 미연결");return hook; }
+    // 생성 도중 실패해 Login 소멸자가 실행되지 않는 때에도 외부 등록 대여를 반납한다.
+    struct RegistrationRollback {
+        CampaignTransportServices& current; // 실제 외부 등록 반납 장치를 빌린다.
+        bool armed; // 정상 생성 완료 전의 외부 대여만 선택한다.
+        ~RegistrationRollback() { if (armed) current.detachSession(); } // 반납 장치는 noexcept 계약이며 실패를 성공으로 숨기지 않는다.
+    };
+    // 장기 TCP/공유 분배기의 수신기가 짧은 Login this를 보관하지 않게 하위 모듈 소멸 전에 반납한다.
+    ~Login() { if (effects.transport) transport.detachSession(); } // 외부 등록 owner가 제공하는 noexcept 토큰 반납만 허용한다.
     void SetUiMode(std::uint32_t mode) { // 현재 실제 미션에는466280을 요구하며 상태8 전용 독립 장치는 이전 관측 범위를 유지한다.
         uiMode=mode;if (s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette || effects.startingProgress) Need(effects.uiMode)(mode);else Need(effects.refresh)();
     }
@@ -81,18 +90,24 @@ struct RawCampaignSession::Impl::Login {
         if (owner>=9) throw std::out_of_range("현재 미션 Template의 실제9슬롯 범위");const auto selected=SelectFile();if (selected.fileName.empty()) throw std::runtime_error("미션 파일 선택기의 실제 파일 이름 누락");
         s.templateStorage->LoadFile(owner,{},selected.fileName,FileHooks(selected));
     }
-    //현재20BYTE zlocal주소에서 실제클라이언트의포트와주소를 제공한다.
-    std::array<std::uint8_t,20> Address() const {
-        std::array<std::uint8_t,20> address{};Put(address,0,20,2);const auto port=Need(effects.configInt)("gameServerPort",6799);Put(address,2,((std::uint32_t(port)&255U)<<8)|(std::uint32_t(port)>>8),2);Put(address,16,0x10d);return address;
-    }
+    // 현재 실제 Client9 주소를 읽고 TCP를 내부 wildcard 주소로 바꾸지 않는다.
+    std::array<std::uint8_t,20> Address() const { return Need(transport.address)(9); }
+    // 실제 현재 노드가 필요한 선택 효과에만 같은 저장소를 빌린다.
+    PacketConnection& RequiredConnection(std::int32_t id) const { auto* connection=Need(transport.connection)(id);if (!connection) throw std::logic_error("실제 현재 연결 없는 Login 소비자");return *connection; }
+    // mutable observer/선언 길이도 현재 선택 전송에 맡기며 수신을 동기 호출하지 않는다.
+    void SendMutable(std::int32_t target,std::span<std::uint8_t> bytes) { static_cast<void>(Need(transport.sendMutable)(target,bytes)); }
     //현재같은실제연결gate로만송신하며수신기를동기호출하지않는다.
-    void Send(std::int32_t target,std::span<const std::uint8_t> bytes) { if (effects.observePacket && bytes[1]==0x6e) Need(effects.log)("Ready 송신 target"+std::to_string(target)+" mask"+std::to_string(Get(bytes,4))+"\n");static_cast<void>(transport->Send(target,bytes)); }
+    void Send(std::int32_t target,std::span<const std::uint8_t> bytes) { if (effects.observePacket && bytes[1]==0x6e) Need(effects.log)("Ready 송신 target"+std::to_string(target)+" mask"+std::to_string(Get(bytes,4))+"\n");static_cast<void>(Need(transport.send)(target,bytes)); }
     //현재 시각/수신 기록과 실제고정연결 수명을 분배기에 공급한다.
     PacketDispatchHooks Device() {
         PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(Need(effects.wallSeconds)()); };
-        hooks.record=[this](PacketConnection& connection,std::span<const std::uint8_t> packet,std::uint16_t) { wireTypes.push_back(packet[1]);if (effects.observePacket) effects.observePacket(connection.sender,s.assetState.Boss(),s.assetState.localOwner,packet); };
+        hooks.record=[this](PacketConnection& connection,std::span<const std::uint8_t> packet,std::uint16_t) { Record(connection,packet); };
         hooks.terminate=[this](PacketConnection& connection) { connection.flags|=0x40;Need(effects.log)("로컬 미션 연결 종료\n"); };
         hooks.close=[this](PacketConnection&) { Need(effects.log)("로컬 연결 큐/소켓 종료\n"); };hooks.release=[this](PacketConnection&) { Need(effects.log)("로컬 연결 반납\n"); };return hooks; //실제 큐/endpoint 반납은 LocalMissionTransport의 같은 수명 장치가 수행한다.
+    }
+    // 현재 Login의 실제 진단과 observer를 같은 순서로 기록한다. 장기 복합 backend는 외곽 Session API로 재조회한다.
+    void Record(PacketConnection& connection,std::span<const std::uint8_t> packet) {
+        if (packet.size()<4) throw std::out_of_range("현재 수신 기록의 실제 헤더 부족");wireTypes.push_back(packet[1]);if (effects.observePacket) effects.observePacket(connection.sender,s.assetState.Boss(),s.assetState.localOwner,packet);
     }
     //같은상태9/응답13이사용하는실제시계/연결/Template/UI/타이머 경계다.
     LocalMissionStateHooks StateHooks() {
@@ -100,8 +115,11 @@ struct RawCampaignSession::Impl::Login {
         hooks.wallSeconds=effects.wallSeconds;
         hooks.initializeRenderer=effects.initializeRenderer; // 전체 State7 연결에서도 같은 실제 장치를 사용한다. 상태8 전용 독립 장치에 가짜 성공을 추가하지 않는다.
         hooks.connectServer=[this](auto address,auto port) { Connect(address,port); };
-        hooks.connectionStatus=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) ? 1 : 0; };
-        hooks.connectionOpen=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) && !(transport->Client().flags&0x40); };
+        hooks.connectionStatus=[this](std::int32_t owner) { return Need(transport.status)(owner); }; // buffered bit2와 실제 연결 완료를 구별한다.
+        hooks.connectionOpen=[this](std::int32_t owner) { return Need(transport.isOpen)(owner); };
+        hooks.closeConnection=[this](auto id) { Need(transport.close)(id); };hooks.renameConnection=[this](auto pending,auto owner) { Need(transport.assign)(pending,owner); };
+        hooks.logConnection=[this](auto line,auto value) { Need(effects.log)("연결 진단 "+std::to_string(line)+":"+std::to_string(value)+"\n"); };
+        hooks.serverConnection=[this] { return transport.registry->Cleanup().transceivers[9]; };hooks.attachCommander=effects.attachCommander; // 실제 비서버 Commander 몸체가 없으면 State13의 기존 Need가 거부한다.
         hooks.sendLogin=[this] {
             const auto image=[this] { // 실제 State9은 지역 readonly Template를 읽고 선택된 다섯 섹션의 이미지를 만든 뒤 모두 반납한다.
                 if (s.services.missionFortFileSelect) { const auto selected=SelectFile();return s.templateStorage->ReadLoginImage(selected.fileName,FileHooks(selected),s.localStateGlobals->BattleTerritory()); }
@@ -130,16 +148,23 @@ struct RawCampaignSession::Impl::Login {
     Login(Impl& owner,CampaignLoginServices device,std::function<void()> load):s(owner),effects(std::move(device)),install(std::move(load)) {
         // 첫 실제 접속/설치 전에 Init의22개 기본 옵션/색과 예약 영역 보존을 같은87BYTE에 적용한다.
         if (!s.services.missionOptions) ResetMissionBattleOptions(OriginalEdition::Patch1078,s.battleOptions); // 실제 Client Init이 쓴 전역을 다시 지우지 않는다.
-        transport=std::make_unique<netstorm::zacket::LocalMissionTransport>(s.players,s.core.processState.Server(),Device(),s.services.connectionRegistry);
+        if (effects.transport) {
+            transport=*effects.transport;if (!transport.lifetime || !transport.registry || !transport.dispatch || !transport.detachSession || !transport.callbacksActive) throw std::logic_error("외부 Login 전송의 실제 owner/Registry/분배기/Session 등록 반납/콜백 관문 누락");
+            if (s.services.connectionRegistry && s.services.connectionRegistry!=transport.registry) throw std::logic_error("Login과 Client State의 서로 다른 현재 연결표");s.services.connectionRegistry=transport.registry;
+        } else { internalTransport=std::make_shared<netstorm::zacket::LocalMissionTransport>(s.players,s.core.processState.Server(),Device(),s.services.connectionRegistry);transport=BindInternalCampaignTransport(internalTransport); }
+        RegistrationRollback rollback{transport,effects.transport.has_value()}; // 첫 실제 등록보다 먼저 생성 실패 복구를 설치한다.
         auto send=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); }; //모든 부모가 공유하는 같은 실제 연결이다.
         options=std::make_unique<RawMissionBattleOptions>(OriginalEdition::Patch1078,MissionBattleOptionState{s.battleOptions,s.world.MutableTypes(),typeUse,ranges,s.geyserType,range,s.energyState.radiusSquared,optionValue});
-        MissionServerPacketHooks packets;packets.send=send;packets.peerAddress=[this](std::uint32_t) { return "*:"+std::to_string(Need(effects.configInt)("gameServerPort",6799)); };packets.log=effects.log;
+        MissionServerPacketHooks packets;packets.send=send;packets.peerAddress=[this](std::uint32_t owner) { return Need(transport.peerAddress)(std::bit_cast<std::int32_t>(owner)); };packets.log=effects.log;
         metadata=std::make_unique<RawMissionServerPackets>(s.players,MissionServerPacketState{s.core.processState.Server(),s.core.ownerMode.challenge,s.playerState.battleOwner,central,archipelago,Zone()},std::move(packets));
         forts=std::make_unique<RawMissionLoginPackets>(OriginalEdition::Patch1078,s.players,MissionFortPacketReads{[this](std::uint32_t player)->const FortTemplate* { return player<9 && Get(s.headers,player*20) ? &s.templateStorage->Template(player) : nullptr; },[] { return std::uint16_t{4}; }},FortImageHooks{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}},MissionFortPacketHooks{[this](std::uint32_t,std::int32_t) { Need(effects.log)("로컬 Fort 전송\n"); },send,{}});
         MissionSettingsPacketHooks setting;setting.current=[this](MissionSettingsField field) { return settingValues.at(static_cast<std::size_t>(field)); };setting.setCurrent=[this](MissionSettingsField field,std::uint32_t value) { settingValues.at(static_cast<std::size_t>(field))=value;if (field==MissionSettingsField::ShootMyFriends) s.gunTargetState.friendlyFire=value!=0; };setting.send=send;settings=std::make_unique<RawMissionSettingsPacket>(OriginalEdition::Patch1078,std::move(setting));
         state=std::make_unique<RawLocalMissionState>(OriginalEdition::Patch1078,LocalMissionStateStorage{blocks[0],blocks[1],blocks[2],blocks[3],blocks[4]},LocalMissionStateGlobals{s.core.processState.Server(),s.assetState.Boss(),s.assetState.inBattle,s.globals.missionPost,saved,s.objectState.mission,simul,s.core.ownerMode.challenge,s.playerState,zonePending,ticks,source,cdPresent,blocks[2][33],metaRefresh,metaRebuild,title,battleByte,connectEnd,activityEnd,s.core.processState.Now(),wall},StateHooks());
-        MissionLoginHooks serverHooks;serverHooks.send=send;serverHooks.broadcast=[this](std::span<const std::uint8_t> bytes) { s.broadcast->Send(bytes); };serverHooks.flush=[this] { transport->Flush(); };serverHooks.wallSeconds=effects.wallSeconds;serverHooks.clock=effects.clock;serverHooks.spBits=[this](std::uint32_t player) { return s.sp.Get(player); };
-        serverHooks.applyOptions=[this](std::span<const std::uint8_t> bytes) { client->Receive(0,transport->Server(),bytes); };serverHooks.clearTypes=[this] { options->ClearTypes(); };
+        MissionLoginHooks serverHooks;serverHooks.disconnect=[this](auto id) { Need(transport.close)(id); };
+        serverHooks.pendingReply=[this](PacketConnection& connection,auto packet) { const auto id=std::bit_cast<std::int32_t>(connection.sender);if (&RequiredConnection(id)!=&connection) throw std::logic_error("거부 응답의 현재 연결 정체성 불일치");Send(id,packet); };
+        serverHooks.peerAddress=[this](auto owner) { return Need(transport.peerAddress)(std::bit_cast<std::int32_t>(owner)); };
+        serverHooks.send=send;serverHooks.broadcast=[this](std::span<const std::uint8_t> bytes) { s.broadcast->Send(bytes); };serverHooks.flush=[this] { Need(transport.flush)(); };serverHooks.wallSeconds=effects.wallSeconds;serverHooks.clock=effects.clock;serverHooks.spBits=[this](std::uint32_t player) { return s.sp.Get(player); };
+        serverHooks.applyOptions=[this](std::span<const std::uint8_t> bytes) { client->Options(0,bytes); };serverHooks.clearTypes=[this] { options->ClearTypes(); };
         serverHooks.sendPlayer=[this](std::uint32_t player,std::uint32_t target) { metadata->SendPlayer(player,static_cast<std::int32_t>(target)); };serverHooks.sendFortMetadata=[this](std::uint32_t target) { metadata->SendMetadata(static_cast<std::int32_t>(target)); };
         serverHooks.loadCurrentFort=[this](std::uint32_t player) { Reload(player); };serverHooks.sendFort=[this](std::uint32_t player,std::uint32_t target,std::uint32_t count) { static_cast<void>(forts->SendFort(player,static_cast<std::int32_t>(target),count)); };serverHooks.loadWorld=install;serverHooks.sendSettings=[this](std::uint32_t target) { settings->Send(static_cast<std::int32_t>(target)); };serverHooks.restoreCoreData=[this](std::uint32_t player) { RestoreCoreData(player); }; // 두 원문 caller가 같은 장기 Core 복원 몸체를 사용한다.
         server=std::make_unique<RawMissionLogin>(s.players,*s.participation,MissionLoginGlobals{s.core.processState.Server(),s.assetState.Boss(),simul,s.objectState.mission,s.globals.missionPost,s.core.ownerMode.challenge,s.playerState,s.globals.mySubscriber,fortCount,lastPlayer,predictable,begin,beginSeed,battleSeed,burst,clockStamp,baseClock,captureEnd,currentCore,cachedCore,Zone(),s.battleOptions,&s.gameplayGlobals->GameAux()->ResourcePool()},std::move(serverHooks));
@@ -148,31 +173,33 @@ struct RawCampaignSession::Impl::Login {
         receive.addChat=s.services.ai.participation.addChat;receive.playerUiBusy=effects.playerUiBusy;receive.playerNotice=effects.playerNotice;receive.send=send;receive.sendReady=[this](std::uint32_t target) { server->SendReady(target); };receive.restoreCoreData=[this](std::uint32_t player) { RestoreCoreData(player); }; // 004912d0의 실제 후처리도 같은 복원 부모와 Player/캐시를 빌린다.
         client=std::make_unique<RawMissionClientPackets>(s.players,*s.participation,s.sp,MissionClientPacketState{s.core.processState.Server(),s.assetState.Boss(),s.globals.missionPost,saved,s.core.ownerMode.challenge,s.assetState.inBattle,s.globals.editor,outpost,s.playerState,beginSeed,battleSeed,s.revision,optionValue,begin,clockStamp,baseClock,blocks[1][0],blocks[3][0],blocks[3][14],blocks[4][0],source,coreActive,captureEnd,s.loginEnd,currentCore,cachedCore,Zone(),s.battleOptions,s.handle,s.hiddenPlayers,&s.gameplayGlobals->GameAux()->ResourcePool()},std::move(receive));
         MissionLoginTimerHooks timing;timing.configInt=[this](std::string_view key) { return Need(effects.configInt)(key,30); };timing.wallSeconds=effects.wallSeconds;timing.clock=effects.clock;timing.broadcast=[this](std::span<const std::uint8_t> bytes) { if (effects.observePacket) Need(effects.log)("Timer broadcast local"+std::to_string(s.assetState.localOwner)+"\n");s.broadcast->Send(bytes); };timing.priestRefresh=[this](std::uint32_t player) { s.priestParticipation->Refresh(player); };
-        timing.connection=[this](std::int32_t peer) { return peer==9 && transport->HasClientConnection(); }; //004e2b10은 flags2/IsOpen이 아닌 현재 Client9 객체 존재를 조회한다.
+        timing.connection=[this](std::int32_t peer) { return peer==9 && Need(transport.exists)(9); }; //004e2b10은 flags2/IsOpen이 아닌 현재 Client9 객체 존재를 조회한다.
         timing.remoteStatus=[this](std::int32_t peer,std::uint32_t,std::uint32_t) { s.connectionActivity->Receive(peer); }; //004b6180의 wire 수신과 같은 몸체이며 미사용 두 Native 인자를 합성하지 않는다.
         timing.saveReconnect=[this] { if (!s.globals.missionPost) throw std::logic_error("일반전투 재접속 저장 미연결"); };timing.closeProgress=[this] { CloseProgress(); };timing.log=[this](MissionLoginTimerLog,std::string_view text) { Need(effects.log)(text); };
         timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{s.loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.Server(); },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.Boss(); },[this] { return s.gunState.checking; }},std::move(timing));
-        RegisterMissionLogin(transport->Dispatch(),*server);RegisterMissionClientPackets(transport->Dispatch(),*client);RegisterMissionMetadata(transport->Dispatch(),*metadata);RegisterMissionSettingsPacket(transport->Dispatch(),*settings);
-        RegisterConnectionActivity(transport->Dispatch(),*s.connectionActivity); // 실제64h/version1/정책0/빈 observer를 같은 일반 수신 분배기에 등록한다.
-        RegisterChatPacket(transport->Dispatch(),s.chatGlobals->receivedMask,s.ChatDevices()); // 같은 단독 양끝의41h mutable observer와 중계를 실제 UI 수신에 등록한다.
-        RegisterBattleLeavePacket(transport->Dispatch(),s.players); // 실제 State3의 종료52h도 같은 큐에서 수신하며 직접 Player flag를 합성하지 않는다.
+        RegisterMissionLogin((*transport.dispatch),*server);RegisterMissionClientPackets((*transport.dispatch),*client);RegisterMissionMetadata((*transport.dispatch),*metadata);RegisterMissionSettingsPacket((*transport.dispatch),*settings);
+        RegisterConnectionActivity((*transport.dispatch),*s.connectionActivity); // 실제64h/version1/정책0/빈 observer를 같은 일반 수신 분배기에 등록한다.
+        RegisterChatPacket((*transport.dispatch),s.chatGlobals->receivedMask,s.ChatDevices()); // 같은 단독 양끝의41h mutable observer와 중계를 실제 UI 수신에 등록한다.
+        RegisterBattleLeavePacket((*transport.dispatch),s.players); // 실제 State3의 종료52h도 같은 큐에서 수신하며 직접 Player flag를 합성하지 않는다.
         // 원본3d 등록의 observer는0040b380의 빈 반환이고 version1/mismatch0이다.
-        transport->Dispatch().Observe(0x3d,[](std::uint32_t) {});transport->Dispatch().Version(0x3d,1,0);
-        transport->Dispatch().Register(0x3d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> bytes) {
-            // 이 분배기는 LocalMissionTransport의 mutable vector만 수신한다. 같은 실제 버퍼에 원본 self bit를 쓴다.
+        (*transport.dispatch).Observe(0x3d,[](std::uint32_t) {});(*transport.dispatch).Version(0x3d,1,0);
+        (*transport.dispatch).Register(0x3d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> bytes) {
+            // 모든 backend는 callback 동안 소유한 mutable 수신 frame을 제공한다. 같은 실제 버퍼에 원본 self bit를 쓴다.
             s.participation->ReceiveAlliance({const_cast<std::uint8_t*>(bytes.data()),bytes.size()},[this](std::span<const std::uint8_t> packet) { s.broadcast->Send(packet); });
         });
+        rollback.armed=false; // 정상 생성 뒤에는 Login 소멸자가 하위 처리기보다 먼저 같은 대여를 반납한다.
     }
     MissionLoginPlayerCounts counts{OriginalEdition::Patch1078,s.players}; //같은 Player9의 현재 집계를 타이머에 공급한다.
     //원본 미션 부모의 로컬 Zone을 설치하고 실제 상태8에서 접속한다.
     void Begin(bool parentRunning=false) {
         if (!s.services.subscriberGlobals) { s.globals.loginSubscriber=s.services.missionSubscriber.value_or(1);s.globals.mySubscriber=s.globals.loginSubscriber; } //독립fallback만기존복사를수행한다.실제Client는Init현재쓰기뒤Login에서ID를재복사하지않는다.
-        s.connectionAssign=[this](std::int32_t pending,std::int32_t player) { transport->AssignConnection(pending,player);s.services.battlePeers.at(static_cast<std::size_t>(player))=transport->Peer(static_cast<std::uint32_t>(player)); };
+        s.connectionAssign=[this](std::int32_t pending,std::int32_t player) { Need(transport.assign)(pending,player);s.services.battlePeers.at(static_cast<std::size_t>(player))=Need(transport.peer)(static_cast<std::uint32_t>(player)); };
         s.connectionAlliance=[this](std::uint32_t target,std::uint32_t owner,std::uint32_t mask) {
             std::array<std::uint8_t,9> packet{1,0x3d,9,0}; // 원본0040a780/0052ede2의 version1/type3d/length9다.
             packet[4]=static_cast<std::uint8_t>(owner);Put(packet,5,mask);Send(static_cast<std::int32_t>(target),packet);
         };
-        s.services.ai.localTransport=[this] { return transport->IsOpen(); };s.services.carrierRequest=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); };
+        s.services.ai.localTransport=[this] { return simul; }; // RawPlayerParticipation의 실제0054db50이며 전송 존재와 구별한다.
+        s.services.carrierRequest=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); };
         auto request=s.services.missionFortRequest;std::optional<netstorm::zacket::LocalMissionPacket> fallback; // Init에서 작성한 같은86BYTE를 사용하며 독립 Session만 기존 작성기를 호출한다.
         if (s.services.adoptInitializedPlayers && !request) throw std::logic_error("실제 Client 미션의 State7 요청 누락");
         if (request) { if (request->consumed || request->next[0]!=7 || request->next[0x80/4]!=1 || request->zone.size()!=86) throw std::logic_error("현재 Init Fort 요청/이미지 계약 위반");if (request->starting) { if (blocks[3][0]!=7 || blocks[3][32]!=1) throw std::logic_error("정리 뒤 실제 현재 State7/Zone 계약 위반"); }else blocks[3]=request->next; } // 실제 앞단은 현재 블록을 이미 소비했다. 독립 편의 접합만 이전 Init 캡처를 사용한다.
@@ -184,7 +211,7 @@ struct RawCampaignSession::Impl::Login {
         if (!request || !request->starting) title=0; // 실제 앞단은 정리 전에 첫BYTE를 이미 지웠다. 뒤에서 현재 제목을 다시 쓰지 않으며 독립 편의 접합만 이전 경계를 유지한다.
         const auto zone=request ? std::span<const std::uint8_t>(request->zone) : fallback->Bytes();netstorm::zacket::LocalMissionZoneHooks hooks;hooks.loginTimeout=[this] { return Need(effects.configInt)("loginTimeout",30); };hooks.seconds=effects.wallSeconds;
         hooks.storeName=[](std::uint32_t subscriber,std::string_view name) { SanitizeMissionPlayerName(subscriber,{reinterpret_cast<std::uint8_t*>(const_cast<char*>(name.data())),name.size()+1}); };
-        hooks.serve=[this](std::uint32_t port) { transport->Open(port,false); };
+        hooks.serve=[this](std::uint32_t port) { Need(transport.serve)(port); };
         netstorm::zacket::InstallLocalMissionZone(zone,s.players,s.playerState,{s.core.processState.Server(),s.assetState.Boss(),s.globals.mySubscriber,pendingStamp,activeStamp,zoneWord,zoneWords[0],captureEnd,adjust,s.objectState.mission,overrideFlags,s.core.ownerMode.challenge,currentCore,cachedCore},std::move(hooks),static_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799)));
         if (request) { std::vector<std::uint8_t>{}.swap(request->zone);request->consumed=true;blocks[3][0x80/4]=0;blocks[4][0x80/4]=0; } // 실제 할당 반납 뒤 current/next+80만 지운다. 이미 복사한 immediate+80은 보존한다.
         if (s.services.adoptInitializedPlayers || effects.initializeRenderer) Need(effects.initializeRenderer)(); // 실제 State7의4993c0 위치다. 앞선 실제 Player 정리를 채택한 미션은 장치 누락을 거부한다.
@@ -196,7 +223,7 @@ struct RawCampaignSession::Impl::Login {
         else { starting();blocks[3][0]=8;state->Run(); } // 독립 상태8 검사의 이전 부분 범위이며 전체 State7 실행으로 세지 않는다.
     }
     // 부모/독립 상태8이 같은 로컬 접속 몸체를 사용하며 원문 현재 블록을 검증한다.
-    void Connect(std::span<const std::uint8_t> address,std::uint32_t) { if (address.size()!=20 || blocks[3][0]!=8) throw std::logic_error("실제 현재8/주소20BYTE 접속 계약 오류");transport->Connect(); } // 현재 어댑터는 이미 연 같은 로컬 서버를 사용한다. 외부 주소/포트의 TCP/IP 해석은 별도 복원 범위다.
+    void Connect(std::span<const std::uint8_t> address,std::uint32_t port) { if (address.size()!=20 || blocks[3][0]!=8) throw std::logic_error("실제 현재8/주소20BYTE 접속 계약 오류");Need(transport.connect)(address,port); } // 명시 선택한 실제 backend가 현재 주소/포트를 처리한다.
     // 현재 송신을flush한 뒤 실제 큐를 분배한다. 프레임 계산은 기존Kernel이 수행한다.
-    void Pump() { wall=Need(effects.wallSeconds)();transport->Flush();static_cast<void>(transport->Poll());if (s.loginEnd!=0.0) timer->Run(false); }
+    void Pump() { wall=Need(effects.wallSeconds)();Need(transport.flush)();static_cast<void>(Need(transport.poll)());if (s.loginEnd!=0.0) timer->Run(false); }
 };

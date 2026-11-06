@@ -14,7 +14,7 @@ namespace netstorm::client { // 원문 Ztrans/Zocket의 OS 경계만 Windows TCP
 // 생성은 소켓을 열지 않는다. Listen/Connect를 명시 호출해야 하며 단독 미션/Edit의 내부 전송을 대체하지 않는다.
 class LocalTcpTransport final {
 public:
-    LocalTcpTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={}); // Player9와 현재 서버 권한/실제 진단 장치는 이 owner보다 오래 살아야 한다.
+    LocalTcpTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={},std::shared_ptr<o::PacketRegistrationTable> registrations={}); // Player9와 현재 서버 권한/실제 진단 장치는 이 owner보다 오래 살아야 한다.
     ~LocalTcpTransport(); // 최종 owner 종료에서 자기 노드의 별칭과 OS 핸들을 반드시 반납한다. 정상 State cleanup은 CloseAll로 요청한다.
     LocalTcpTransport(const LocalTcpTransport&)=delete; // 실제 socket/노드와 현재 등록표의 반납 권한을 복제하지 않는다.
     LocalTcpTransport& operator=(const LocalTcpTransport&)=delete; // 생존 연결의 고정 주소를 다른 전송으로 대입하지 않는다.
@@ -33,6 +33,12 @@ public:
     bool SendMutable(std::int32_t destination,std::span<std::uint8_t> packet); // 현재 Player/연결 관문 뒤 원문 observer(1)를 같은 버퍼에 실행한다.
     void Flush(); //004e2920의 정상22칸 번호순으로 type4를 확정하고 partial send의 나머지를 보관한다.
     std::size_t Poll(); // listener 수락→pending 한 번→정상0..21 순서로 비동기 접속/부분 프레임을 진행한다. GUI 스레드를 기다리지 않는다.
+
+    void BeginPoll(); // 실제 수신 전 closed/depth0 정리와 중첩 guard를 수행한다.
+    void AcceptPending(); // 실제 TCP listener의 accept만 수행한다. 생성 전 pending을 만들지 않는다.
+    o::TransportPollResult ReceiveOne(std::int32_t id); // 현재 자기 ID의 한 완성 frame/partial 진행만 처리한다.
+    void FlushOne(std::int32_t id); // 현재 정상 ID의 실제 partial send/집합만 확정한다.
+    void EndPoll(); // 최외곽 callback 대여 뒤에만 retired 노드를 물리 수거한다.
 
     o::RawPacketDispatch& Dispatch(); // LocalMissionTransport의 집합 분배를 Open 없이 재사용하는 같은 등록표다.
     const std::shared_ptr<o::RawConnectionRegistry>& Registry() const; // 같은 현재 토큰/주소/close 장치를 상위 Session에 빌린다.
@@ -59,7 +65,7 @@ private:
     Node& Adopt(std::uintptr_t socket,std::int32_t id,bool connecting,bool buffered,const std::array<std::uint8_t,20>& address); // 실제 socket을 가진 안정된 노드를 Track/Register하며 실패 시 핸들도 반납한다.
     void Accept(); // 원문 pending31칸 상한 아래에서만 실제 accepted 소켓을 등록한다.
     bool CompleteConnection(Node& node); // write/exception readiness와 SO_ERROR로 접속 완료를 확인하고 type1을 한 번 알린다.
-    bool ReceiveOne(Node& node); // 한 선언 프레임만 부분 수신하며 무효/sentinel이면 같은 Poll의 추가 분배를 멈춘다.
+    bool ReceiveOne(Node& node,bool* consumed=nullptr); // 한 선언 프레임만 부분 수신하며 무효/sentinel이면 같은 Poll의 추가 분배를 멈춘다.
     bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable); // 원문 현재 gate/선택 observer/버퍼 효과를 하나로 모은다.
     void SendNode(Node& node,std::span<const std::uint8_t> packet); // buffered는 미확정 집합에 추가하고 직접 송신은 wire에 넣는다.
     void Finalize(Node& node); // 아직 확정하지 않은 payload를 원문 type4/WORD 헤더로 한 번 감싼다.

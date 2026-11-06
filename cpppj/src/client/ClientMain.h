@@ -232,6 +232,7 @@ public:
     void DumpObjectDiagnostics(); //CD SID 소진은 객체 덤프만 호출하고 프로세스 요약을 추가하지 않는다.
     const std::shared_ptr<o::Kernel>& ProcessKernelOwner() const; // 같은 실제 전역 Kernel 소유권만 전달한다.
     const std::shared_ptr<o::FrameTime>& FrameClockOwner() const; // 같은 Time().game 주소가 외부 Storage보다 먼저 사라지지 않게 한다.
+    const std::shared_ptr<o::GameClock>& GameClockOwner() const; // 장기 전송도 같은 원점·정지 상태의 실제 시계를 보유하며 현재 벽시각을 읽는다.
     const std::shared_ptr<RawSurfaceStorage>& SurfaceStorage() const; // 자산 초기화 뒤 모든 Session과 초기 HUD가 같은 물리를 빌린다.
     const std::shared_ptr<RawSurfaceStorage>& SurfaceStorageIfInitialized() const { return surfaceStorage_; } // 초기 정리 연결은 미초기화 NULL도 순수 조회한다. 기존 SurfaceStorage의 필수 초기화 검사는 유지한다.
     // 복원한 그리기·글꼴·커서 기반. 초기화 뒤에만 쓴다.
@@ -386,8 +387,8 @@ private:
     bool sceneVisible_{};
     // input_: 처리할 입력 또는 입력 분배기.
     InputQueue input_;
-    // clock_: 프레임 판정에 현재 게임 시각을 공급하는 시계.
-    o::GameClock clock_;
+    // clock_: 같은 원점·정지 상태를 프레임과 장기 전송이 공유하는 실제 시계 소유자다.
+    std::shared_ptr<o::GameClock> clock_{std::make_shared<o::GameClock>()};
     bool uiPaused_{}; // 메뉴/브리핑의 단일 정지 소유 표식이다. 원본 미션 scriptPaused와 별도로 유지한다.
     std::int32_t movieUpdatePauseDepth_{}; // 원본0054dc58이며 실제 Moviegump483680/4837f0이435dc0으로 보유/반납한다. GameClock 깊이와 별개다.
     // time_: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime).

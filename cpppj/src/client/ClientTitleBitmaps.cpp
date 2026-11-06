@@ -39,7 +39,7 @@ void ClientTitleBitmaps::Copy(const TitleBitmapCopy& copy,bool front) { auto& sc
 }
 TitleBitmapHooks ClientTitleBitmaps::Devices() { TitleBitmapHooks h;auto& screen=*client_.screen_;
     h.pump=[this] { if (!client_.PumpMessages()) throw TitleBitmapQuit(); };h.input=[this] { return client_.input_.Pop(true).code; }; //실제WM_QUIT은게임오류대화창대신Run정상반환이며입력큐의release처리는별도다.
-    h.game=[this] { return client_.clock_.GameSeconds(timeGetTime()); };h.wall=[this] { return client_.WallSeconds(); }; //원문pause가능시각과벽시각을구별한다.
+    h.game=[this] { return client_.clock_->GameSeconds(timeGetTime()); };h.wall=[this] { return client_.WallSeconds(); }; //원문pause가능시각과벽시각을구별한다.
     h.clip=[&screen](auto rect) { screen.SetClip(rect.left,rect.top,rect.right,rect.bottom); };h.lock=[&screen] { screen.Lock(); };h.unlock=[&screen] { screen.Unlock(); };
     h.present=[&screen] { screen.PresentPaletteClear(); };h.flip=[&screen] { screen.Flip(); }; //현재같은전체viewport/bit4관문을사용한다.
     h.load=[this](auto literal,auto& width,auto& height) { return Load(literal,width,height); };h.palette=[this](auto literal) { client_.LoadPaletteFile(Path(literal),1); }; //fortPal복구는State42바깥이담당한다.

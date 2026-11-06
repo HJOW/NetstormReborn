@@ -8,7 +8,7 @@ namespace netstorm::client { // 게임 계산은 등록된 기존 패킷 처리�
 class EditorLocalTransport {
 public:
     const std::shared_ptr<o::RawConnectionRegistry>& Registry() const; //같은 실제 Client 연결표의 정체성을 Session 설치 전에 확인한다.
-    EditorLocalTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={}); //같은 실제 Client 표를 빌리며 독립 검사만 별도 표를 소유한다.
+    EditorLocalTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={},std::shared_ptr<o::PacketRegistrationTable> registrations={}); //같은 실제 Client 표를 빌리며 독립 검사만 별도 표를 소유한다.
     ~EditorLocalTransport(); //호스트 owner 최종 반납 전에 자기 노드의 남은 별칭/장치를 떼며 Native 정리 성공을 합성하지 않는다.
     EditorLocalTransport(const EditorLocalTransport&)=delete; // 콜백이 빌리는 연결 주소와 큐를 복제하지 않는다.
     EditorLocalTransport& operator=(const EditorLocalTransport&)=delete; // 생존 연결의 장치 참조를 교체하지 않는다.
@@ -16,6 +16,11 @@ public:
     bool Send(std::int32_t destination,std::span<const std::uint8_t> packet); // 현재9/accepted -1 끝의 단일 바이트를 반대 큐에 쓰며 동기 수신하지 않는다.
     bool SendMutable(std::int32_t destination,std::span<std::uint8_t> packet); // 길이를 쓰는 실제 observer에 같은 원시 packet this를 공급한다.
     std::size_t Poll(); // listener 수락→pending 한 패킷→client9 전체 패킷을 같은 등록표로 분배한다.
+    void BeginPoll(); // 전역 coordinator가 Editor backend 재진입을 같은 guard로 막는다.
+    void AcceptPending(); // 실제 listener/client의 현재 수락 한 번만 수행한다.
+    o::TransportPollResult ReceiveOne(std::int32_t id); // 현재 자기 pending 또는9의 한 프레임만 처리한다.
+    void EndPoll() noexcept; // 예외에서도 per-ID 폴링 대여를 끝낸다.
+    o::PacketConnection* Connection(std::int32_t id) const; // 현재 자기 두 끝만 반환한다.
     void Disconnect(std::int32_t destination); // 현재 끝에 종료를 기록하고 가상 처리 중이면 실제 최외곽 복귀까지 반납을 미룬다.
     void CloseListener(); // 새 accepted를 만들던 listener만 실제close/release로반납한다. 양끝을 대신 종료하지 않는다.
     o::RawPacketDispatch& Dispatch(); // 건설/이동/파괴의 실제 기존 처리기를 같은 표에 등록한다.

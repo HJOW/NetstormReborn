@@ -63,6 +63,7 @@ namespace netstorm::o { class RawConnectionRegistry; } //실제 Client와 로컬
 namespace netstorm::o { class BombEffectTimerProcess; } // 기본 생성 결과의 실제 클래스이며 호출자는 사용 전에 본문 헤더를 포함한다.
 
 namespace netstorm::client {
+class CompositeMissionTransport; // 실제 Session 전체 owner를 빌리는 현재 ID 복합 전송이다.
 struct RitualChoiceInputHooks; //실제 Carrier.cpp의 같은선택제단과전송을일반입력에빌린다.
 struct TechnologyListMenuHooks; //HTML 원소별 기술 목록의 GUI는 실제 현재 controlled 메뉴가 공급한다.
 struct SendMoneyHooks; // 같은 실제 세션의 경제 상태를 일반 입력과 숫자 창에 빌린다.
@@ -295,6 +296,10 @@ public:
     void InstallExistingEditorPlayers(o::EditorPlayersHooks ui);
     //현재실제설정/시계/Player/Template로 원본로컬로그인 후 같은Load를 정확한 위치에서 실행한다.
     void LoadLocalConnection();
+    void BindConnectionTransport(std::shared_ptr<CompositeMissionTransport> transport,const std::shared_ptr<void>& runtimeOwner); // Load/Prepare 전 실제 World 전체 owner로 한 번만 등록을 대여한다.
+    void DetachConnectionTransport() noexcept; // 현재 Session 등록만 반납하며 실행 중 callback의 owner pin은 복귀까지 유지한다. 반납한 Session은 다시 사용하지 않는다.
+    bool ConnectionCallbackActive() const noexcept; // 전체 State/Kernel 정리 전에 활성/반납 콜백을 함께 확인한다.
+    void RecordConnectionPacket(o::PacketConnection& connection,std::span<const std::uint8_t> packet); // 장기 backend는 약한 World를 재조회한 뒤 현재 Login의 실제 기록만 호출한다.
     void StartLocalConnection(); // 독립 편의 접합은 같은 준비/상태8까지 실행한다. 실제 Client의 실행 중 부모는 PrepareLocalConnectionForState를 사용한다.
     void PrepareLocalConnectionForState(); // 실행 중인 외부 State7 부모에서 Zone/후반만 설치한다. 공통 확정이나 상태8 접속을 중첩 실행하지 않는다.
     void ConnectLocalConnectionForState(std::span<const std::uint8_t> address,std::uint32_t port); // 부모의 현재8이 같은 로컬 접속 몸체를 사용한다. 외부 TCP/IP 접속을 대신하지 않는다.

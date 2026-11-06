@@ -98,8 +98,8 @@ struct LocalTcpTransport::Node {
 };
 
 // 생성 자체는 네트워크를 시작하지 않으며 기존 집합 분배기를 Open 없이 사용한다.
-LocalTcpTransport::LocalTcpTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry)
-    :players_(players),server_(server),hooks_(std::move(hooks)),registry_(registry ? std::move(registry):std::make_shared<o::RawConnectionRegistry>()),dispatcher_(players,server,DispatchHooks(),registry_) {
+LocalTcpTransport::LocalTcpTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<o::PacketRegistrationTable> registrations)
+    :players_(players),server_(server),hooks_(std::move(hooks)),registry_(registry ? std::move(registry):std::make_shared<o::RawConnectionRegistry>()),dispatcher_(players,server,DispatchHooks(),registry_,std::move(registrations)) {
     if (players.size()!=kPlayerStride*kPlayerCount || !hooks_.now || !hooks_.record || !hooks_.terminate || !hooks_.close || !hooks_.release) throw std::invalid_argument("LAN TCP의 실제 Player9/현재 분배 장치 누락");
 }
 // 최종 owner 소멸은 사용자 callback 예외에 의존하지 않고 자기 별칭/핸들을 반납한다.
@@ -111,8 +111,16 @@ LocalTcpTransport::~LocalTcpTransport() {
 o::PacketDispatchHooks LocalTcpTransport::DispatchHooks() {
     o::PacketDispatchHooks result;result.now=[this] { return hooks_.now(); };result.record=[this](auto& node,auto bytes,auto length) { hooks_.record(node,bytes,length); };
     result.terminate=[this](auto& connection) { auto* node=Find(connection);if (!node) throw std::logic_error("TCP 종료의 다른 연결 owner");Fail(*node,0); };
-    result.close=[this](auto& connection) { auto* node=Find(connection);if (!node) throw std::logic_error("TCP close의 다른 연결 owner");registry_->Destroy(node->token); };
-    result.release=[this](auto& connection) { auto* node=Find(connection);if (!node) throw std::logic_error("TCP free의 다른 연결 owner");registry_->Release(node->token); };return result;
+    result.close=[this](auto& connection) {
+        auto* node=Find(connection);if (!node) throw std::logic_error("TCP close의 다른 연결 owner"); // 물리 보관 중인 retired 노드도 같은 주소로 식별한다.
+        if (node->retired) { if (registry_->Owns(node->token)) throw std::logic_error("반납한 TCP close 토큰의 잘못된 재등록");return; } // 이미 실제 반납한 동일 할당만 중복 생략한다.
+        if (!registry_->Owns(node->token) || &registry_->Node(node->token)!=&connection) throw std::logic_error("TCP close의 다른 세대/주소");registry_->Destroy(node->token);
+    };
+    result.release=[this](auto& connection) {
+        auto* node=Find(connection);if (!node) throw std::logic_error("TCP free의 다른 연결 owner"); // 실제 노드 수거 전까지 retired 주소는 유지한다.
+        if (node->retired) { if (registry_->Owns(node->token)) throw std::logic_error("반납한 TCP free 토큰의 잘못된 재등록");return; } // 이전 실제 Release의 완료를 확인한 경우만 생략한다.
+        if (!registry_->Owns(node->token) || &registry_->Node(node->token)!=&connection) throw std::logic_error("TCP free의 다른 세대/주소");registry_->Release(node->token);
+    };return result;
 }
 // 같은 owner의 첫 명시 LAN 동작만 Winsock 참조를 얻는다.
 void LocalTcpTransport::StartSockets() {
@@ -125,7 +133,7 @@ LocalTcpTransport::Node* LocalTcpTransport::Find(std::uint32_t token) const {
 }
 // 분배 callback은 자기 노드의 동일 PacketConnection 주소만 받을 수 있다.
 LocalTcpTransport::Node* LocalTcpTransport::Find(const o::PacketConnection& connection) const {
-    for (const auto& node:nodes_) if (&node->connection==&connection && !node->retired) return node.get(); // 해제 완료 노드는 반환하지 않는다.
+    for (const auto& node:nodes_) if (&node->connection==&connection) return node.get(); // 같은 물리 할당은 외곽 수거 전까지 retired도 식별한다. 현재 ID 조회는 토큰용 Find가 계속 제외한다.
     return nullptr;
 }
 // 원문의 정상22칸/음수 pending1..31의 현재 토큰을 읽는다.
@@ -226,8 +234,8 @@ void LocalTcpTransport::CollectRetired() {
     }
 }
 // 원문4BYTE header와 선언 길이를 TCP stream에서 정확히 한 프레임만 모은다.
-bool LocalTcpTransport::ReceiveOne(Node& node) {
-    if (!CompleteConnection(node)) return false;
+bool LocalTcpTransport::ReceiveOne(Node& node,bool* consumed) {
+    if (consumed) *consumed=false;if (!CompleteConnection(node)) return false;
     for (;;) { // header/body가 나뉘어 오면 현재 부분 버퍼를 다음 Poll에 그대로 남긴다.
         std::size_t required=kHeader;if (node.input.size()>=kHeader) { required=Read(node.input,2,2);if (required<kHeader || required>kWireLimit) { Fail(node,WSAEMSGSIZE);return false; } }
         if (node.input.size()<required) {
@@ -235,8 +243,9 @@ bool LocalTcpTransport::ReceiveOne(Node& node) {
             if (count==SOCKET_ERROR) { const auto error=WSAGetLastError();node.input.resize(before);if (error==WSAEWOULDBLOCK) return false;Fail(node,error);return false; }
             if (!count) { node.input.resize(before);Fail(node,0);return false; }node.input.resize(before+static_cast<std::size_t>(count));if (node.input.size()<required) return false;if (required==kHeader) continue;
         }
-        auto frame=std::move(node.input);node.input.clear();node.version=frame[0];if (Retired(frame[1])) return true;if (!dispatcher_.Dispatch().Validate(frame)) return false;
-        if (frame[1]!=4) { const auto observer=dispatcher_.Dispatch().Registration(frame[1]);observer.NotifyObserver(frame,0); } //004dfc00의 단일 observer0이며 집합 내부 observer는 기존 분배기가 한 번 실행한다.
+        auto frame=std::move(node.input);node.input.clear();if (consumed) *consumed=true;node.version=frame[0];if (Retired(frame[1])) return true;if (!dispatcher_.Dispatch().Validate(frame)) return false;
+        const auto observer=dispatcher_.Dispatch().Registration(frame[1]);const auto sessionPin=observer.Pin(); // observer부터 뒤 분배까지 실제 Runtime 대여를 유지한다.
+        if (frame[1]!=4) observer.NotifyObserver(frame,0); //004dfc00의 단일 observer0이며 집합 내부 observer는 기존 분배기가 한 번 실행한다.
         if (node.retired || (node.connection.flags&kClosed)) { CloseReady(node);return false; }return dispatcher_.DispatchFrame(node.connection,frame) && !node.retired;
     }
 }
@@ -249,7 +258,8 @@ bool LocalTcpTransport::SendPacket(std::int32_t destination,std::span<const std:
     const CallGuard call(activeCalls_);if (packet.size()>=kHeader && Retired(packet[1])) return false;
     if (destination>=1 && destination<static_cast<std::int32_t>(kPlayerCount) && !(players_[static_cast<std::size_t>(destination)*kPlayerStride+0x50]&1U)) return false;auto* node=Current(destination);if (!node || (node->connection.flags&kClosed) || node->socket==kInvalidSocket) return false;
     if (packet.size()<kHeader) throw std::out_of_range("LAN TCP 송신 헤더 부족");if (RetiredFrame(packet)) return false;
-    if (!writable.empty()) { const auto observer=dispatcher_.Dispatch().Registration(packet[1]);observer.NotifyObserver(writable,1); }if (node->retired || (node->connection.flags&kClosed)) return false;const auto length=Read(packet,2,2);if (length<kHeader || length>packet.size()) throw std::out_of_range("LAN TCP 송신 선언 길이 범위");if (RetiredFrame(packet)) return false;if (packet[1]==4 && (node->connection.flags&kBuffered)) throw std::logic_error("LAN TCP buffered 안의 직접 집합 송신 미복원");SendNode(*node,packet.first(length));return !node->retired && !(node->connection.flags&kClosed);
+    const auto observer=dispatcher_.Dispatch().Registration(packet[1]);const auto sessionPin=observer.Pin(); // callback이 caller의 패킷 owner를 반납해도 실제 송신 복귀까지 유지한다.
+    if (!writable.empty()) observer.NotifyObserver(writable,1);if (Current(destination)!=node || node->retired || (node->connection.flags&kClosed)) return false;const auto length=Read(packet,2,2);if (length<kHeader || length>packet.size()) throw std::out_of_range("LAN TCP 송신 선언 길이 범위");if (RetiredFrame(packet)) return false;if (packet[1]==4 && (node->connection.flags&kBuffered)) throw std::logic_error("LAN TCP buffered 안의 직접 집합 송신 미복원");SendNode(*node,packet.first(length));return !node->retired && !(node->connection.flags&kClosed);
 }
 // buffered payload는 집합 확정까지 보관하며 unbuffered도 부분 send의 나머지를 잃지 않는다.
 void LocalTcpTransport::SendNode(Node& node,std::span<const std::uint8_t> packet) {
@@ -274,26 +284,35 @@ void LocalTcpTransport::Drain(Node& node) {
     node.wire.clear();node.sent=0;
 }
 // 원문 정상22칸의 현재 순서이며 아직 음수인 pending은 buffered flush 대상이 아니다.
+void LocalTcpTransport::FlushOne(std::int32_t id) {
+    if (id<0 || id>=static_cast<std::int32_t>(o::kTransceiverSlots)) throw std::out_of_range("TCP flush 정상 ID 범위");const CallGuard call(activeCalls_);if (auto* node=Current(id)) { Finalize(*node);Drain(*node); }
+}
+// 단독 TCP 사용도 같은 현재0..21 순회이며 callback 뒤 현재 ID를 다시 읽는다.
 void LocalTcpTransport::Flush() {
     const CallGuard call(activeCalls_);
-    for (std::int32_t id=0;id<static_cast<std::int32_t>(o::kTransceiverSlots);++id) { // callback 뒤 다음 칸은 현재 Registry에서 다시 찾는다.
-        if (auto* node=Current(id)) { Finalize(*node);Drain(*node); }
-    }
+    for (std::int32_t id=0;id<static_cast<std::int32_t>(o::kTransceiverSlots);++id) FlushOne(id); // 다른 backend 노드를 선택하지 않는다.
 }
-// listener→각 pending 한 번→현재 정상 연결 반복의 원문 순서를 GUI 루프에서 진행한다.
+// 전역 coordinator와 단독 Poll이 같은 실제 진입/수거 guard를 쓴다.
+void LocalTcpTransport::BeginPoll() {
+    if (polling_ || activeCalls_) throw std::logic_error("LAN TCP Poll 중첩 호출");polling_=true;
+    try { for (auto& node:nodes_) CloseReady(*node); }catch (...) { polling_=false;throw; } // 이전 callback이 남긴 자기 closed/depth0 노드만 반납한다.
+}
+// socket accept 성공만 현재 전역 Registry에 pending으로 등록한다.
+void LocalTcpTransport::AcceptPending() { if (!polling_) throw std::logic_error("TCP accept의 Poll 대여 누락");Accept(); }
+// 한 현재 자기 ID의 partial/완성 수신과 미전달 송신만 진행한다.
+o::TransportPollResult LocalTcpTransport::ReceiveOne(std::int32_t id) {
+    if (!polling_) throw std::logic_error("TCP per-ID 수신의 Poll 대여 누락");const CallGuard call(activeCalls_);auto* node=Current(id);if (!node) return {};bool consumed=false;const bool again=ReceiveOne(*node,&consumed);Drain(*node);return {consumed,again};
+}
+// callback/Send 대여가 모두 끝난 최외곽에서만 실제 Node를 물리 erase한다.
+void LocalTcpTransport::EndPoll() { if (activeCalls_) throw std::logic_error("TCP callback 복귀 전 Poll 대여 반납 금지");polling_=false;CollectRetired(); }
+// 기존 단독 호출도 per-ID 경계만 조립하여 원문 listener/pending/normal 순서를 유지한다.
 std::size_t LocalTcpTransport::Poll() {
-    if (polling_ || activeCalls_) throw std::logic_error("LAN TCP Poll 중첩 호출");polling_=true;std::size_t count{};
+    BeginPoll();std::size_t count{};
     try {
-        for (auto& node:nodes_) CloseReady(*node); // 이전 callback이 남긴 closed 노드만 먼저 반납한다.
-        Accept();
-        for (std::int32_t id=-1;id>-static_cast<std::int32_t>(o::kPendingConnectionSlots);--id) { // 각 현재 pending은 원문처럼 한 번만 읽는다.
-            if (auto* node=Current(id)) { if (ReceiveOne(*node)) ++count;Drain(*node); }
-        }
-        for (std::int32_t id=0;id<static_cast<std::int32_t>(o::kTransceiverSlots);++id) { // 재배치된 노드도 같은 정상 번호 순회에서 다음 프레임을 읽을 수 있다.
-            auto* node=Current(id);while (node && ReceiveOne(*node)) { ++count;node=Current(id); }if (node) Drain(*node);
-        }
-        polling_=false;CollectRetired();return count;
-    } catch (...) { polling_=false;throw; }
+        AcceptPending();
+        for (std::int32_t id=-1;id>-static_cast<std::int32_t>(o::kPendingConnectionSlots);--id) { const auto result=ReceiveOne(id);if (result.consumed) ++count; } // 각 현재 pending은 한 번만 받는다.
+        for (std::int32_t id=0;id<static_cast<std::int32_t>(o::kTransceiverSlots);++id) { for (;;) { const auto result=ReceiveOne(id);if (result.consumed) ++count;if (!result.again) break; } } // 재배치/반납 뒤 현재 노드를 다시 선택한다.
+    }catch (...) { polling_=false;throw; }EndPoll();return count;
 }
 // 모든 상위 packet 등록/현재 observer가 이 한 표를 공유한다.
 o::RawPacketDispatch& LocalTcpTransport::Dispatch() { return dispatcher_.Dispatch(); }

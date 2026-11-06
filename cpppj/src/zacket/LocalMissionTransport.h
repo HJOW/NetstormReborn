@@ -4,6 +4,7 @@
 #include "o/RawPlayerWorld.h"
 #include "o/RawBattleBroadcast.h"
 #include "o/RawConnectionRegistry.h"
+#include "o/RawTransportPolling.h"
 #include "o/RawCheckingFlag.h" // 같은 생성/Zone DWORD를 bool 사본 없이 현재 비영 관문으로 읽는다.
 #include <deque>
 
@@ -56,21 +57,21 @@ struct LocalMissionZoneHooks {
 // PATCH004b4be0과 양수 owner의0048f3b0을 실제 Player9에 적용한다. flags2 로그인 성공을 쓰지 않는다.
 void InstallLocalMissionZone(std::span<const std::uint8_t> zone,std::span<std::uint8_t> players,
     o::PlayerWorldState& player,LocalMissionZoneGlobals globals,LocalMissionZoneHooks hooks,std::uint32_t port);
-// 실제 zlocal의 클라이언트9/서버 pending-1 두 끝과 byte 큐를 단독 소유한다.
+// 실제 zlocal의 클라이언트9/accepted 서버 두 끝과 byte 큐를 단독 소유한다. pending 번호는 공유 표가 고른다.
 // TCP/SPX/OS 소켓 전체를 복원하는 클래스가 아니며 simulconnect 전역을 변경하지 않는다.
 class LocalMissionTransport {
 public:
     // 같은 Player9와 서버 전역/실제 분배 효과를 빌린다. hooks의 모든 경계는 실제 소비자여야 한다.
-    LocalMissionTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={});
+    LocalMissionTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={},std::shared_ptr<o::PacketRegistrationTable> registrations={});
     ~LocalMissionTransport(); //현재 호스트 수명에서 없어지는 자기 양끝의 남은 별칭/장치를 반납한다.
     LocalMissionTransport(const LocalMissionTransport&)=delete; //실제 양끝과 등록된 주소를 복제하지 않는다.
     LocalMissionTransport& operator=(const LocalMissionTransport&)=delete; //살아 있는 연결/큐의 현재 owner를 대입으로 바꾸지 않는다.
     //0x27/version1/정책0 등록이다. 실제004a7800 상위 몸체가 없으면 열기 전에 거부한다.
     void RegisterLogin(decltype(o::PacketRegistration::receive) receive);
-    // 원본 zlocal 서버/접속 두 끝을 열고 서버 측을 pending-1로 등록한다. 포트는 실제 게임 설정값이다.
-    void Open(std::uint32_t port,bool connectImmediately=true); // 기존 호출은 양끝을 열며 실제 미션 부모는 서버만 먼저 연다.
+    // 원본 zlocal listener를 열고 요청한 경우 client9만 만든다. 서버 끝은 실제 Poll accept에서 등록한다.
+    void Open(std::uint32_t port,bool connectImmediately=true); // 실제 미션 부모는 listener만 먼저 열고 State8에서 client9를 만든다.
     void Connect(); // 이미 열린 로컬 서버에 실제 클라이언트9 끝을 접속한다. Player 성공 flag는 쓰지 않는다.
-    //004e27b0의 실제 pending-1을 같은 연결 객체 owner1..8로 이동하고 buffered 전송을 켠다.
+    //004e27b0의 실제 현재 pending을 같은 연결 객체 owner1..8로 이동하고 buffered 전송을 켠다.
     void AssignConnection(std::int32_t pending,std::int32_t owner);
     //004e2dc0의 현재 flags1/NULL 연결 선택 후 선언 길이 바이트를 실제 다른 끝의 송신 큐에 쓴다.
     bool Send(std::int32_t destination,std::span<const std::uint8_t> packet);
@@ -80,6 +81,16 @@ public:
     void Flush();
     //004e28b0처럼 pending을 먼저 한 번, 등록된 연결을 번호순으로 읽고 같은 등록표에 분배한다.
     std::size_t Poll();
+    void BeginPoll(); // 실제 per-ID 수신의 중첩을 막고 이전 closed 끝을 반납한다.
+    void AcceptPending(); // 연결된 내부 client가 있을 때만 현재 첫 pending 칸에 실제 server 끝을 수락한다.
+    o::TransportPollResult ReceiveOne(std::int32_t id); // 이 owner의 현재 ID 한 프레임만 소비하고 sentinel을 반환한다.
+    void EndPoll() noexcept; // 정상/예외 복귀 모두 현재 per-ID 폴링 대여를 끝낸다.
+    void FlushOne(std::int32_t id); // 현재 선택 ID만 집합으로 확정한다. pending은 이 함수 대상이 아니다.
+    o::PacketConnection* Connection(std::int32_t id) const; // 다른 backend의 노드를 반환하지 않는 현재 자기 끝 조회다.
+    bool ConnectionOpen(std::int32_t id) const; // 내부 socket 존재/상대 수명/closed를 조회하며 buffered bit2는 사용하지 않는다.
+    std::int32_t ConnectionStatus(std::int32_t id) const; // 실제 Connect/Accept 완료 상태만 반환한다.
+    void CloseAll(); // 자기 두 끝만 실제 Registry 장치로 반납하고 내부 listener를 닫는다.
+
     // 지연 없는 실제 수신 프레임의 단일/집합 분기다. 같은 실제 연결/등록표를 직접 사용한다.
     bool DispatchFrame(o::PacketConnection& connection,std::span<const std::uint8_t> frame);
     // 같은 실제 분배기에 건설/준비/서버 응답 처리기도 추가할 수 있다.
@@ -100,10 +111,10 @@ private:
     std::uint32_t Track(o::PacketConnection& connection); //현재 실제 양끝의 수명과 큐 장치에 한 토큰을 발급한다.
     std::uint32_t Token(const o::PacketConnection& connection) const; //같은 실제 두 주소의 현재 토큰만 읽는다.
     void RetireClosed(); //이전 폴링이 닫힘 sentinel로 남긴 실제 끝만 다음 폴링에서 반납한다.
-    // 지정 끝의 실제 한 프레임을 꺼내 분배한다. callback 이후에도 고정 주소 연결은 살아 있다.
-    bool ReceiveOne(bool serverSide);
+    // 지정 끝의 실제 한 프레임을 꺼내 원문 단일 observer/분배를 수행한다.
+    o::TransportPollResult ReceiveEndpoint(bool serverSide);
     // buffered 데이터의 실제 집합 헤더를 만들고 다른 끝의 수신 큐로 옮긴다.
-    void FlushOne(bool serverSide);
+    void FlushEndpoint(bool serverSide);
     std::span<const std::uint8_t> players_; //같은 현재 Player9 원문이며 active 사본을 만들지 않는다.
     const bool& serverMode_; //004e27b0이 현재 읽는 실제 서버 모드다.
     o::PacketDispatchHooks hooks_; //같은 실제 시계/기록/종료/반납 경계다.
@@ -111,6 +122,8 @@ private:
     o::RawPacketDispatch dispatch_; //로그인/건설/응답이 공유하는 실제 등록표다.
     o::PacketConnection client_,server_; //포인터 없는 표식이 아닌 실제 서로 다른 연결 저장소다.
     bool open_{},pending_{},serverBuffered_{}; //실제 두 끝의 열림/서버 pending/서버 buffered 모드다.
+    bool polling_{},accepted_{}; // per-ID 폴링 재진입과 내부 listener의 한 수락 세대를 구별한다.
+    std::array<std::uint8_t,2> receiveVersion_{{0xff,0xff}}; // client/server의 실제 마지막 수신 version BYTE이며 type1/2 통지가 보존한다.
     bool clientPresent_{}; // 서버만 열면 부재이며 실제 Client9 접속 생성 완료 뒤 존재한다. flags 변경으로 객체 수명을 지우지 않는다.
     bool serverPresent_{},clientPeerLost_{},serverPeerLost_{}; //실제 accepted 끝의 존재와 반대 끝 소멸을 구별한다.
     std::uint32_t clientToken_{},serverToken_{};std::int32_t pendingId_{}; //현재 실제 양끝/첫 빈 pending의 식별자이며 소유자 성공값과 다르다.

@@ -246,7 +246,7 @@ private:
     std::uint32_t& worldRedraw_; // 원본0059a8b0의 같은 Client 장기 DWORD이며 전체 팔레트/메뉴/resize가 직접 공유한다.
     std::uint32_t& menuConfigRevision_; // 이름 변경/설정/목록이 같은00542678 dirty를 직접 사용한다.
     std::uint32_t& commandGump_; // 실제00548740의 같은 Client Chat 현재 포인터이며 전체 공장이 이 슬롯을 갱신한다.
-    std::unique_ptr<GameWorld> world_; // 호스트 월드를 Kernel 밖에서 소유하여 전역 Clear 중 중복 소멸/중첩 프레임을 막는다.
+    std::shared_ptr<GameWorld> world_; // Kernel 밖의 실제 월드 전체를 소유하며 실행 중 패킷 콜백도 같은 표시/Session 수명을 유지한다.
     // userInput_: 플레이 입력을 선택·카메라·명령 동작으로 전달하는 처리기 (std::unique_ptr<UserInput>).
     std::unique_ptr<UserInput> userInput_;
     // 실제 미션 설치 완료 시점의 월드 객체 수다. 선행 Fort 파싱을 만들지 않고 진단 mission 행에 사용한다.

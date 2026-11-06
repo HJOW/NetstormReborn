@@ -58,3 +58,8 @@ NativeMainMenuState의 기본 정책 `referenceValidationNotice=false`와 실제
 ## 2026-11-06 추가 — LAN TCP 부품(982)
 
 `LocalTcpTransport`의 명시 Listen/Connect/accept만 WinSock2를 사용하도록 컴파일했다. 목적지/수락 상대는127/8·RFC1918·169.254/16의 IPv4 숫자 주소이며 bind0.0.0.0은 리슨 주소다. DNS/공식·master/root·인터넷 진단·검증7f/80은 연결하지 않는다. 생성 자체는 무소켓이며 아직 실제 Login/UI caller가 없어 현재982 EXE에는 WS2_32 import도 없다. 부품 컴파일과 활성 연결/기능 검증을 구별한다. 새 MP/소켓/통신/게임 검사는 실행하지 않았다. [982 범위와 다음 접합](cpp-lan-tcp-transport-20261106.md)을 따른다.
+
+
+## 2026-11-06 단위984 — 공유 전송 실제 단독 경로 접합
+
+공유 등록표/per-ID 복합 전송이 실제 단독 미션의 Client/World에 연결돼 EXE에 `WS2_32.dll`이 링크된다. `InternalMission` 역할은 TCP backend를 만들지 않는다. 실제 tutorial1 진입/대기/종료만 확인했고 LAN/소켓/통신 검사는 하지 않았다. TCP 역할의 주소 제한·DNS/공식 서버/폐기 유효성 비활성 정책은982와 같다. Multiplayer UI와 일반 전투 접합은 미완료다. [984 범위와 검증](cpp-shared-transport-lifetime-20261106.md)을 따른다.

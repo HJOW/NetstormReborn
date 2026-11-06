@@ -1,6 +1,7 @@
 #include "o/RawVortexOwnerDiagnostic.h" // 신전 상세/진단의 실제 Client 경계다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/CompositeMissionTransport.h" // 현재 ID 복합 전송과 실제 전체 Runtime 등록 대여를 연결한다.
 #include "o/RawSidRobust.h" // 상세 SID 진단의 실제 부모다.
 #include "o/RawCheckingDiagnostics.h" // 원문4ad730의 실제 순수 Form 검사다.
 #include "client/AiDebugCommandInput.h" //일반진단입력도현재AI본문을직접사용한다.
@@ -3612,7 +3613,7 @@ struct RawCampaignSession::Impl {
 // 로컬 주소/등록/Player를 같은 현재 전송에서 조회하며 이미 반납한 Session 포인터를 외부에 남기지 않는다.
 ChatRelayHooks RawCampaignSession::Impl::ChatDevices() {
     ChatRelayHooks hooks;hooks.read=[this](auto at)->std::uint32_t { if (at==0x594fbc) return core.ownerMode.battle;if (at==0x540bc0) return core.processState.Server();if (at==0x540c74) return globals.mySubscriber;throw std::out_of_range("Chat 중계의 실제 Session 전역 없음"); };
-    const auto registry=[this] { if (login) return login->transport->Registry();if (services.editorTransport) return services.editorTransport->Registry();throw std::logic_error("Chat 중계의 실제 연결 표 없음"); }; // 매조회에서 현재 실제 로컬 표만 빌린다.
+    const auto registry=[this] { if (login) return login->transport.registry;if (services.editorTransport) return services.editorTransport->Registry();throw std::logic_error("Chat 중계의 실제 연결 표 없음"); }; // 매조회에서 현재 실제 로컬 표만 빌린다.
     hooks.address=[registry](auto sender) { return registry()->Address(std::bit_cast<std::int32_t>(sender)); };
     hooks.player=[this](auto subscriber)->std::uint32_t {
         if (!subscriber) std::fprintf(stderr,"Chat 중계 Player 원본 진단: subId != INVALID_SUBSCRIBER_ID\n"); // 원문 진단이 복귀하면 같은 Player 검색을 계속한다.
@@ -3626,7 +3627,7 @@ ChatRelayHooks RawCampaignSession::Impl::ChatDevices() {
 }
 // 같은 전송의 실제 연결 관문과 mutable observer만 실행하며 수신기를 동기로 우회하지 않는다.
 void RawCampaignSession::Impl::SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet) {
-    if (!loaded) throw std::logic_error("실제 설치 전 mutable Chat 패킷 송신");if (login) static_cast<void>(login->transport->SendMutable(target,packet));else if (services.editorTransport) static_cast<void>(services.editorTransport->SendMutable(target,packet));else throw std::logic_error("실제 로컬 전송 없는 mutable Chat 송신");
+    if (!loaded) throw std::logic_error("실제 설치 전 mutable Chat 패킷 송신");if (login) login->SendMutable(target,packet);else if (services.editorTransport) static_cast<void>(services.editorTransport->SendMutable(target,packet));else throw std::logic_error("실제 로컬 전송 없는 mutable Chat 송신");
 }
 #include "client/RawCampaignCarrierInput.inc"
 
@@ -3634,6 +3635,24 @@ void RawCampaignSession::Impl::SendChatMutable(std::int32_t target,std::span<std
 void RawCampaignSession::LoadLocalConnection() {
     StartLocalConnection();impl_->login->state->Poll();impl_->login->Pump(); // 기존 독립 접합 호출의 한 번 Poll/Pump 계약만 유지하며 실제 Client는 이 동기 편의 함수를 사용하지 않는다.
     if (!LocalConnectionReady()) throw std::logic_error("실제 로컬 미션 로그인 미완료");
+}
+// 실제 World가 shared 생성된 뒤 Load/Prepare 이전에만 연결한다. 표식 토큰으로 전체 owner를 대신하지 않는다.
+void RawCampaignSession::BindConnectionTransport(std::shared_ptr<CompositeMissionTransport> transport,const std::shared_ptr<void>& runtimeOwner) {
+    if (impl_->loaded || impl_->login || impl_->editorWorldStarted || !impl_->services.localLogin || impl_->services.localLogin->transport) throw std::logic_error("현재 Session의 초기 전송 대여 시점/중복 오류");
+    if (!transport || (impl_->services.connectionRegistry && impl_->services.connectionRegistry!=transport->Registry())) throw std::logic_error("현재 Session과 복합 전송의 서로 다른 Registry");
+    auto services=BindCompositeCampaignTransport(std::move(transport),runtimeOwner);impl_->services.connectionRegistry=services.registry;impl_->services.localLogin->transport=std::move(services);
+}
+// 아직 Login을 만들지 않은 부분 생성 실패도 같은 services에 저장한 대여를 반납한다.
+void RawCampaignSession::DetachConnectionTransport() noexcept {
+    if (impl_->services.localLogin && impl_->services.localLogin->transport) impl_->services.localLogin->transport->detachSession();
+}
+// 단순 shared 생존만으로 보장하지 못하는 같은 Kernel/Player 물리 정리를 외곽에서 거부한다.
+bool RawCampaignSession::ConnectionCallbackActive() const noexcept {
+    if (!impl_->services.localLogin || !impl_->services.localLogin->transport) return false;const auto& active=impl_->services.localLogin->transport->callbacksActive;return active && active();
+}
+// backend는 Login this를 보관하지 않는다. 약한 전체 World의 현재 Session에서만 실제 기록을 조회한다.
+void RawCampaignSession::RecordConnectionPacket(o::PacketConnection& connection,std::span<const std::uint8_t> packet) {
+    const auto current=impl_->login;if (current) current->Record(connection,packet);
 }
 // 앞선 준비와 실제 상태8 실행 뒤 정상 프레임에 제어를 돌려준다.
 void RawCampaignSession::StartLocalConnection() { BeginLocalConnection(false); }
@@ -3644,7 +3663,7 @@ void RawCampaignSession::ConnectLocalConnectionForState(std::span<const std::uin
 // 기존 생성/명령 등록 순서는 유지하고 부모가 실행 중이면 후반 몸체까지만 반환한다.
 void RawCampaignSession::BeginLocalConnection(bool parentRunning) {
     if (impl_->loaded || impl_->login || !impl_->services.localLogin) throw std::logic_error("실제로컬로그인 새수명/장치 계약 오류");
-    impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands(impl_->login->transport->Dispatch());RegisterConstructionCommands(impl_->login->transport->Dispatch());RegisterFactoryResearchCommands(impl_->login->transport->Dispatch()); });impl_->login->Begin(parentRunning);
+    impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands((*impl_->login->transport.dispatch));RegisterConstructionCommands((*impl_->login->transport.dispatch));RegisterFactoryResearchCommands((*impl_->login->transport.dispatch)); });impl_->login->Begin(parentRunning);
 }
 // 큰 상태 부모는 Uber의 동일 State Tick이 처리하도록 남겨 두며 수신/게임 Kernel은 여기서 실행하지 않는다.
 bool RawCampaignSession::PollLocalConnectionState() {
@@ -3697,6 +3716,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 }
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession() {
+    DetachConnectionTransport(); // 전역 분배기의 짧은 수신기를 실제 하위 모듈 해제보다 먼저 반납한다.
     impl_->ReleaseEditorCommandReceivers();bool stateReturned{}; //같은 실제 수신기를 먼저 닫은 뒤 자식 증빙을 검사한다.
     try { stateReturned=impl_->StateChildrenReturned(); }
     catch (const std::exception& error) { std::fprintf(stderr,"실제 Session State 반납 증빙 오류: %s\n",error.what()); } //손상된 외부 필드는 진단하고 기존 일반 최종 반납을 계속한다.

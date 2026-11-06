@@ -81,7 +81,7 @@ o::LocalMissionParentResult UberGump::InstallPreparedFortState(bool prefixHud) {
     services.installMode=CampaignInstallMode::ExistingEditor;services.deferExistingEditorFile=true;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.adoptMainMenuFort=!prefixHud;services.localLogin.reset();
     services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.editorTransport=e.transport;services.fortMission=FortMissionSaveEffects();
     services.fortBadges=client_.FortBadges();services.fortTypeConversion=client_.FortTypeConversion(); //기존 파일의 실제 장부/변환표를 캠페인과 같은 Client owner에서 빌린다.
-    world_=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),o::FortTemplate{},o::MissionPlayers{},pending,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
+    world_=std::make_shared<GameWorld>(client_.Assets(),client_.Files(),o::FortTemplate{},o::MissionPlayers{},pending,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
     world_->elapsed=[this] { return client_.Time().delta; };world_->paused=[this] { return client_.Paused(); };world_->frameTime=[this] { return client_.Time(); };
     world_->BindHideBuildings([this] { return hideBuildings_; });world_->soundViewChanged=[this](auto view) { client_.WorldAudio().SetView(view); };
     world_->surfaceDisplay={[this] { return client_.GetRenderer().FullRedrawPending(); },[this](auto rect,auto flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};

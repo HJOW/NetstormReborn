@@ -1,0 +1,123 @@
+{
+  "unit": 984,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 984,
+  "version": "11.01",
+  "exeSha256": "82f65d6e393dfb3829439de7ff6d7bac4b27397b63100df7f8b8d15cc22d3393",
+  "exeBytes": 11512320,
+  "scope": "동일 등록표/per-ID 복합 전송과 실제 InternalMission World 전체 수명 접합; LAN UI/일반 전투 미완료",
+  "sources": [
+    "cpppj/src/client/CampaignLoginServices.h",
+    "cpppj/src/client/CampaignTransportServices.cpp",
+    "cpppj/src/client/CampaignTransportServices.h",
+    "cpppj/src/client/CompositeMissionTransport.cpp",
+    "cpppj/src/client/CompositeMissionTransport.h",
+    "cpppj/src/client/EditorLocalTransport.cpp",
+    "cpppj/src/client/EditorLocalTransport.h",
+    "cpppj/src/client/LocalTcpTransport.cpp",
+    "cpppj/src/client/LocalTcpTransport.h",
+    "cpppj/src/client/RawCampaignSession.cpp",
+    "cpppj/src/client/RawCampaignSession.h",
+    "cpppj/src/client/RawCampaignSessionLogin.inc",
+    "cpppj/src/o/PacketRegistrationTable.cpp",
+    "cpppj/src/o/PacketRegistrationTable.h",
+    "cpppj/src/o/RawMissionClientPackets.h",
+    "cpppj/src/o/RawPacketDispatch.cpp",
+    "cpppj/src/o/RawPacketDispatch.h",
+    "cpppj/src/o/RawTransportPolling.h",
+    "cpppj/src/zacket/LocalMissionTransport.cpp",
+    "cpppj/src/zacket/LocalMissionTransport.h",
+    "cpppj/src/CMakeLists.txt",
+    "cpppj/src/client/ClientCampaignTransport.cpp",
+    "cpppj/src/client/ClientCampaignTransport.h",
+    "cpppj/src/client/ClientMain.cpp",
+    "cpppj/src/client/ClientMain.h",
+    "cpppj/src/client/ClientStateRuntimeRetirement.cpp",
+    "cpppj/src/client/ClientStateWorldCleanup.cpp",
+    "cpppj/src/client/ClientTitleBitmaps.cpp",
+    "cpppj/src/client/UberEditor.inc",
+    "cpppj/src/client/UberGump.cpp",
+    "cpppj/src/client/UberGump.h"
+  ],
+  "sourceCount": 31,
+  "newSourceCount": 9,
+  "build": {
+    "releaseCommands": 2,
+    "exitCodes": [
+      0,
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "socketImports": [
+      "WS2_32.dll"
+    ]
+  },
+  "tests": {
+    "newCases": 0,
+    "executedUnitCases": 0,
+    "multiplayerCases": 0,
+    "reason": "사용자 지시대로 신규 MP/소켓/통신 검사는 작성·실행하지 않음"
+  },
+  "gui": {
+    "runs": 1,
+    "mission": "tutorial1",
+    "waitedFrames": 100,
+    "exitCode": 0,
+    "actions": 5,
+    "observations": 7,
+    "gameFiles": 1351,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "missionImageViewed": true,
+    "scope": "실제 단독 진입/비정지 대기/WM_CLOSE 종료만 확인; LAN/공격/포획/희생/승리/물리 입력 아님"
+  },
+  "protected": {
+    "files": 2800,
+    "fixtures": 980,
+    "unchanged": true,
+    "new": []
+  },
+  "checkingRemaining": 8,
+  "localPolicy": {
+    "dns": false,
+    "officialServer": false,
+    "retiredValidationTypes": [
+      "0x7f",
+      "0x80"
+    ],
+    "multiplayerUiConnected": false
+  },
+  "originalFunctions": [
+    "004ded50",
+    "004ded70",
+    "004ded90",
+    "004df240",
+    "004e28b0",
+    "004df560",
+    "004e2920",
+    "004e2430",
+    "004e02d0",
+    "004e18d0",
+    "004e27b0",
+    "004df440",
+    "004e2940"
+  ],
+  "hostBoundaries": [
+    "실제 shared World/Player/권한/시계와 weak 등록 대여",
+    "콜백 중 전체 Native 정리 재진입 거부",
+    "현재 토큰/주소를 검증한 중복 반납 방지",
+    "동시 스레드/32비트 heap·SEH 동일성 미검증"
+  ],
+  "next": [
+    "985 RawMissionLogin004a7800 일반 부모 분기 복원",
+    "원격 Fort/월드 동기화/실제 전투섬/중앙섬",
+    "roster/일반 State/Commander/LAN UI/재접속/Outpost/checking8",
+    "한국어 및 Scenario UI 준비본 실제 반영"
+  ]
+}

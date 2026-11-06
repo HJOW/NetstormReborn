@@ -31,6 +31,7 @@ RawCampaignSession* ClientStateRuntimeRetirement::Current() const {
     if (storage_->Generation()!=generation_) throw std::logic_error("State 정리 도중 표면 대여 세대 변경");
     if (game.Borrowed()) {
         auto& current=game.RequireSession();
+        if (current.ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 공유 Runtime 저장소 정리 재진입"); // 다른 직접 caller도 실제 자식 정리 전에 같은 수명 관문을 지킨다.
         if (&current!=session_ || current.World().Storage()!=storage_ || !storage_->Borrowed() || current.PlayerRecords().data()!=client_.PlayerRecords()->Records().data())
             throw std::logic_error("State 정리 도중 현재 Session/표면/Player 정체성 변경");
         return &current;

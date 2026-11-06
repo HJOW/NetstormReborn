@@ -82,6 +82,8 @@ public:
         MissionClientPacketState state,MissionClientPacketHooks hooks);
     // 실제 등록된 타입을 처리한다. 모르는 타입이나 물리 범위 밖의 원본 메모리 손상은 거부한다.
     void Receive(std::uint32_t sender,PacketConnection& connection,std::span<const std::uint8_t> packet) const;
+    //004a7800의 직접004b4900 호출도 같은 본문을 사용하며 관계없는 연결 객체를 요구하지 않는다.
+    void Options(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
 private:
     // 실제 Player 필드와 문자열의 원본 폭/종료를 보존한다.
     std::uint32_t Read(std::uint32_t owner,std::size_t offset,std::size_t width=4) const;
@@ -90,7 +92,6 @@ private:
     std::string_view Name(std::uint32_t owner) const;
     // 같은 현재 state를 직접 갱신하는 각 실제 수신 몸체다.
     void LoginBegin(std::span<const std::uint8_t> packet) const;
-    void Options(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
     void Fort(std::span<const std::uint8_t> packet) const;
     void Player(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
     void Reply(std::span<const std::uint8_t> packet) const;
