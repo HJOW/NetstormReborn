@@ -111,6 +111,8 @@ public:
     const bool& PriestQuarterHp() const { return priestQuarterHp_; } // Session을 교체하거나 Frame을 기다리지 않고 현재값을 읽는다.
     RawSquidTransmissionState& SquidTransmission() { return squidTransmission_; } //005c7c50/00531850/0054d8e4등의현재전송물리다.
     const RawSquidTransmissionState& SquidTransmission() const { return squidTransmission_; } //상태조회는같은물리를읽으며세션교체로지우지않는다.
+    std::array<float,2>& CentralPosition() { return centralPosition_; } //00568afc/00568b00의 실제 중앙 X/Y를 일반 중앙섬/후속 메타 부모가 공유한다.
+    const std::array<float,2>& CentralPosition() const { return centralPosition_; } // Session 교체 때 값 사본으로 초기화하지 않는다.
     void ResetForGeneralWorld() { // 기존 지역 Runtime의 fresh 입력만 호환하며 Native cleanup 전체가 아니다.
         ordinaryGeysers_=0;totalCost_=0;resourcePool_=0;refundPercent_=25;allowAnyCapture_=0;archipelago_=0;lostX_=0.0F;lostY_=0.0F;geyserType_=122;priestQuarterHp_=false;
     }
@@ -118,6 +120,7 @@ public:
         lostY_=std::bit_cast<float>(0xc61c4000U);lostX_=std::bit_cast<float>(0xc61c4000U);
     }
 private:
+    std::array<float,2> centralPosition_{}; // 원문 최초 BSS0이며 중앙섬 배치가 X→Y 순서로 쓴다.
     RawSquidTransmissionState squidTransmission_; //최초한번의PE/BSS초기값이며일반월드fresh와별개로유지한다.
     bool priestQuarterHp_{}; // 원문 최초 BSS0이며 일반 fresh의 기존0만 호환한다. prepared와 반납은 현재값을 보존한다.
     std::uint32_t ordinaryGeysers_{},geyserFrameFlag_{},savedGeyserCount_{}; // 실제 세 BSS DWORD다.

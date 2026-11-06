@@ -18,6 +18,12 @@ struct MissionServerPacketHooks {
     std::function<std::string(std::uint32_t)> peerAddress; //004e2a50→004e0a30(1,0,0)의 현재 주소 문자열이다.
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> send; // observer가 확정한 실제 wire바이트의 현재 송신이다.
     std::function<void(std::string_view)> log; // 중앙섬 없음의 실제004a68e0 로그다.
+    std::function<void()> creatingIslands; // 번역한 Creating Islands.를 실제004cf570 안내 창에 전달한다.
+    std::function<void(std::uint32_t)> setArchipelago,setCentralCreated; //005c8bb4/005c85a0의 같은 실제 DWORD에 쓴다.
+    std::function<std::uint8_t()> layout; // 생성 안내/밀도 쓰기 뒤 현재0052f7e5를 읽는다.
+    std::function<void(std::span<const std::uint8_t,6>)> randomCentral; // owner0/값형 Zone6BYTE의 실제0046e140 부모다.
+    std::function<void()> surroundedCentral; // layout2의 지역 Template SURROUNDED 배치 부모다. 미연결이면 선택 위치에서 거부한다.
+    std::function<std::uint32_t()> predictableCount; // 생성 뒤 실제 SID Pool의 현재005424b0이다.
 };
 // PATCH0048f9f0/004a6b40와 미션 Zone의004b3bc0 자연 경로를 같은 Player에 연결한다.
 class RawMissionServerPackets {
@@ -28,8 +34,9 @@ public:
     void SendPlayer(std::uint32_t owner,std::int32_t target) const;
     // 실제$Random metadata를 만들고 필요하면 같은 로컬 수신 몸체를 먼저 실행한다.
     void SendMetadata(std::int32_t target) const;
-    // 같은 Zone의 bit100이 없으면 원본 로그 뒤 자연 반환한다. 큰 중앙섬 생성은 명시 미복원이다.
+    // 같은 Zone의 bit100이 없으면 로그 뒤 반환하고 $ 이름이면 현재 배치별 실제 중앙섬을 생성한다.
     void ReceiveMetadata(std::span<const std::uint8_t> packet) const;
+    void ObserveMetadata(std::span<std::uint8_t> packet,std::uint32_t sending) const; //0040b110의 송신 len!=-1 진단과 낮은WORD+10 길이 쓰기다.
 private:
     // 현재 Player 번호와 비정렬 필드를 각각 원본 위치에서 읽는다.
     std::uint32_t Owner(std::uint32_t owner) const;

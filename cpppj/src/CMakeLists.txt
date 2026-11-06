@@ -16,6 +16,7 @@ target_sources(netstorm PRIVATE o/RawAllocationFailure.cpp o/RawAllocationFailur
 target_sources(netstorm PRIVATE client/LocalTcpTransport.cpp client/LocalTcpTransport.h)
 target_sources(netstorm PRIVATE o/RawPeerWorldSync.cpp o/RawPeerWorldSync.h) # 원문 참가자별 지형/종속 송신과 walker 재등록 순서를 연결하며 MP 검사는 실행하지 않는다.
 target_sources(netstorm PRIVATE o/RawBattleIsland.cpp o/RawBattleIsland.h) # 일반 전투의 현재 Fort 영역/지형/권한별 객체 적재 부모다. 신규 MP 검사는 하지 않는다.
+target_sources(netstorm PRIVATE o/RawCentralIsland.cpp o/RawCentralIsland.h o/RawIslandPartition.cpp o/RawIslandPartition.h) # 일반 중앙섬/군도 지역 분리를 실제 같은 월드 부모에 연결한다. MP 검사는 실행하지 않는다.
 # 원문 공유 등록표/per-ID 복합 순서와 실제 Client/World 수명 대여를 같은 라이브러리에 연결한다(984).
 target_sources(netstorm PRIVATE
     o/PacketRegistrationTable.cpp o/PacketRegistrationTable.h o/RawTransportPolling.h

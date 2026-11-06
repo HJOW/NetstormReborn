@@ -26,6 +26,8 @@ std::uint32_t ReadStateWord(const ClientStateWorldContext& c,std::uint32_t addre
     auto& game=*c.client.GameplayGlobals();auto& local=*c.client.LocalStateGlobals();auto& aux=*game.GameAux();
     if (ActivityWord(address)) return c.client.ConnectionActivityGlobals()->Frames()[(address-0x5c84e8U)/4U];
     switch (address) {
+    case 0x5424b0:return c.surface.pool.PredictableCursor(); // Login/지형/State가 같은 실제005424b0을 읽는다.
+    case 0x568afc:return std::bit_cast<std::uint32_t>(aux.CentralPosition()[0]);case 0x568b00:return std::bit_cast<std::uint32_t>(aux.CentralPosition()[1]); // 실제 중앙 X/Y의 float 비트다.
     case 0x540bc0:return game.Server();case 0x540bc4:return game.Boss();
     case 0x540bdc:return std::bit_cast<std::uint32_t>(aux.DefaultSp());case 0x540c70:return game.player.battleOwner;case 0x540cac:return game.player.templateOwner;case 0x541240:return aux.GeyserType();
     case 0x5424bc:return aux.RefundPercent();case 0x542534:return local.CachedPeerIndex();case 0x542538:return local.CachedPeerValue();case 0x54253c:return local.CachedPeerFieldA4();case 0x542540:return local.CachedPeerFieldA8();case 0x542544:return local.ScriptBreak();
@@ -46,6 +48,8 @@ void WriteStateWord(const ClientStateWorldContext& c,std::uint32_t address,std::
     auto& game=*c.client.GameplayGlobals();auto& local=*c.client.LocalStateGlobals();auto& aux=*game.GameAux();
     if (ActivityWord(address)) { c.client.ConnectionActivityGlobals()->Frames()[(address-0x5c84e8U)/4U]=value;return; }
     switch (address) {
+    case 0x5424b0:c.surface.pool.PredictableCursorValue()=value;return; // 같은 할당 카운터만 직접 쓰고 Pool 목록을 다시 만들지 않는다.
+    case 0x568afc:aux.CentralPosition()[0]=std::bit_cast<float>(value);return;case 0x568b00:aux.CentralPosition()[1]=std::bit_cast<float>(value);return; // Native 두 DWORD의 실제 float 물리만 쓴다.
     case 0x540bc0:game.Server()=StateBoolean(value);return;case 0x540bc4:game.Boss()=StateBoolean(value);return;
     case 0x5424bc:aux.RefundPercent()=value;return;case 0x542534:local.CachedPeerIndex()=value;return;case 0x542538:local.CachedPeerValue()=value;return;case 0x54253c:local.CachedPeerFieldA4()=value;return;case 0x542540:local.CachedPeerFieldA8()=value;return;case 0x542544:local.ScriptBreak()=value;return;
     case 0x5453e4:aux.AllowAnyCapture()=std::bit_cast<std::int32_t>(value);return;case 0x5467b8:c.client.NsInfoGlobals()->zone=value;return;case 0x5467bc:aux.SubscriberMarker()=value;return;

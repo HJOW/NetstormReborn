@@ -1,0 +1,20 @@
+{
+  "unit": 990,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "metadata 송수신 observer와 일반/특수 중앙섬·군도 분리 및 실제 예측 커서 연결",
+  "sourceFunctions1078": ["004b3bc0", "0040b110", "0046e140", "0046f7d0", "0046ed50", "0046ec00", "004acda0", "004abb10"],
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-resume-990/build.log",
+    "exeSize": 11621888,
+    "exeSha256": "aba1b54593aa66e48ba704079b131a165478e5c19258013e87a8347d727572f5"
+  },
+  "staticPeInstructions": 533,
+  "excluded": { "newMultiplayerTests": 0, "unitTestRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-990/protected-before.json" },
+  "remaining": ["ordinary 자기 Fort 부모", "일반 State/Commander/roster/LAN UI", "전체 파생 writer/decoder", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}

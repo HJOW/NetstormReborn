@@ -70,6 +70,7 @@ public:
     const std::uint32_t& CapacityValue() const; //005c847c의 같은 현재 DWORD를 빌린다. Reset 뒤에도 값 사본을 유지하지 않는 진단용이다.
     std::uint32_t FreeCount() const;
     std::uint32_t PredictableCursor() const;
+    std::uint32_t& PredictableCursorValue(); //005424b0의 같은 현재 카운터를 Login/metadata에 빌린다. 별도 동기화 사본을 만들지 않는다.
     Sid FirstFree(bool client) const;
     Sid Tail(bool client) const;
 private:

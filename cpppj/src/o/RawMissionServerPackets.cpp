@@ -2,6 +2,8 @@
 #include "o/RawMissionServerPackets.h"
 #include "o/RawMissionClientPackets.h"
 #include <algorithm>
+#include <array> // 원문 값형 Zone6BYTE를 지역 버퍼에 고정한다.
+#include <bit> // 원문 predictableCount의 signed 로그 비트를 보존한다.
 #include <stdexcept>
 #include <utility>
 namespace netstorm::o {
@@ -54,10 +56,18 @@ void RawMissionServerPackets::SendPlayer(std::uint32_t owner,std::int32_t target
     packet[0x37]=static_cast<std::uint8_t>(Read(owner,0xa0,1));packet[0x38]=static_cast<std::uint8_t>(Read(owner,0xa4,1));packet[0x39]=static_cast<std::uint8_t>(Read(owner,0xa5,1));packet[0x3a]=static_cast<std::uint8_t>(Read(owner,0x71,1));
     Put(packet,2,0x3bU+packet[0x33],2);Need(hooks_.send)(target,std::span<const std::uint8_t>(packet).first(Get(packet,2,2)));
 }
-// 본문 계산을 생략한 성공을 만들지 않고 미션 Zone의 실제 자연 반환만 제공한다.
+// Zone 관문 뒤 실제 안내/배치/밀도/현재 생성 전역과 원문 두 중앙섬 경로를 실행한다.
 void RawMissionServerPackets::ReceiveMetadata(std::span<const std::uint8_t> packet) const {
     if (!(Get(state_.zoneAddress,0)&0x100U)) { Need(hooks_.log)("No Central Island.\n");return; }
-    if (packet.size()<=10) throw std::out_of_range("중앙섬 metadata 원문 부족");if (packet[10]=='$') throw std::logic_error("실제 중앙섬 Archipelago 생성 미복원");
+    if (packet.size()<=10) throw std::out_of_range("중앙섬 metadata 원문 부족");if (packet[10]!='$') return;
+    Need(hooks_.creatingIslands)();Need(hooks_.log)("createArchipelago... ");Need(hooks_.setArchipelago)(Get(packet,5,1));
+    if (Need(hooks_.layout)()==2) { Need(hooks_.surroundedCentral)();return; } // 원문 특수 배치는 centralCreated/예측수 로그 없이 반환한다.
+    std::array<std::uint8_t,6> record{};std::copy_n(state_.zoneAddress.begin(),6,record.begin());Need(hooks_.randomCentral)(record);Need(hooks_.setCentralCreated)(1);
+    Need(hooks_.log)("predictableCount = "+std::to_string(std::bit_cast<std::int32_t>(Need(hooks_.predictableCount)()))+"\n");
+}
+// 실제 패킷을 가진 observer만 가변 길이를 기록하며 수신 방향0은 원문처럼 무동작이다.
+void RawMissionServerPackets::ObserveMetadata(std::span<std::uint8_t> packet,std::uint32_t sending) const {
+    if (!sending) return;if (Get(packet,6)==0xffffffffU) Need(hooks_.assertion)("len != (int)-1");Put(packet,2,Get(packet,6,2)+10U,2);
 }
 // 실제$Random 작성→현재 자기 처리→현재 로컬 번호 비교→다른 대상 송신을 유지한다.
 void RawMissionServerPackets::SendMetadata(std::int32_t target) const {
@@ -68,9 +78,7 @@ void RawMissionServerPackets::SendMetadata(std::int32_t target) const {
 }
 // 원본이 실제 등록한0x72 observer는0040b110이며 길이는현재+6 WORD+10이다.
 void RegisterMissionMetadata(RawPacketDispatch& dispatch,RawMissionServerPackets& packets) {
-    dispatch.Version(0x72,1,0);dispatch.Observe(0x72,[](std::uint32_t sending) {
-        if (sending) throw std::logic_error("metadata 송신 observer는 실제 패킷을 가진 writer에서 실행해야 합니다"); // 현재 등록표에는 packet 인자가 없어 길이 쓰기를 생략한 성공을 반환하지 않는다.
-    });
+    dispatch.Version(0x72,1,0);dispatch.ObservePacket(0x72,[&packets](std::span<std::uint8_t> packet,std::uint32_t sending) { packets.ObserveMetadata(packet,sending); });
     dispatch.Register(0x72,[&packets](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> bytes) { packets.ReceiveMetadata(bytes); });
 }
 }

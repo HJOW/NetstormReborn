@@ -8,6 +8,12 @@ namespace {
 constexpr std::size_t kType=10,kRegion=8;
 constexpr std::uint32_t kSurfaceGenus=0x01000006,kBridge=4;
 }
+// 원문 getter는 미지원 genus 진단 뒤에도 현재 noRegion을 반환하며 다리에는 raw WORD를 읽지 않는다.
+std::uint32_t GetSquidRegion(const SidPool& pool,std::span<const RiftTypeRecord> types,Sid sid,std::uint32_t noRegion,const std::function<void(SquidRegionAssert)>& diagnostic) {
+    const auto raw=pool.Slot(sid);if (raw[kType]>=types.size()) throw std::out_of_range("섬 번호 getter의 현재 TYPE 범위");const auto genus=types[raw[kType]].flags2;
+    if (!(genus&kSurfaceGenus)) { if (!diagnostic) throw std::logic_error("섬 번호 getter의 원문 genus 진단 미연결");diagnostic(SquidRegionAssert::UnsupportedGenus);return noRegion; }
+    return genus&kBridge ? noRegion : std::uint32_t(raw[kRegion])|(std::uint32_t(raw[kRegion+1])<<8);
+}
 // 같은 현재 raw 슬롯과 타입의 판본 차이를 보존한다.
 void SetSquidRegion(SidPool& pool,std::span<const RiftTypeRecord> types,Sid sid,std::uint32_t region,
     std::uint32_t noRegion,const std::function<void(SquidRegionAssert)>& diagnostic) {

@@ -24,7 +24,8 @@ struct RawCampaignSession::Impl::Login {
     bool& simul{s.localStateGlobals->Simulconnect()};std::uint32_t& adjust{s.gameplayGlobals->GameAux()->TerrainEnabled()};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},localTitle{};std::uint8_t& battleByte{s.localStateGlobals->BattleByte()}; //State의 현재 입력과 생성/Zone 보정은 같은 Client 수명이며 독립 검사만 별도 배경 첫BYTE를 사용한다.
     std::uint8_t& title{s.services.htmlWindowGlobals ? reinterpret_cast<std::uint8_t&>(s.services.htmlWindowGlobals->text.background[0]) : localTitle}; //현재 HTML 배경80BYTE의 첫BYTE만 같은 주소로 빌린다.
     std::uint32_t& activeStamp{s.connectionActivityGlobals->ActiveStamp()};std::uint32_t& zoneWord{s.connectionActivityGlobals->ActiveZoneWord()}; // 두 활동 표 사이005c8540/544의 실제 현재 Zone 출력을 직접 빌린다.
-    std::uint32_t pendingStamp{},predictable{},beginSeed{},battleSeed{},burst{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
+    std::uint32_t pendingStamp{},beginSeed{},battleSeed{},burst{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
+    std::uint32_t& predictable{s.core.pool.PredictableCursorValue()}; // 실제 할당/Reset과 같은005424b0을 빌리며 이전 지역 사본0을 사용하지 않는다.
     std::uint32_t& archipelago{s.gameplayGlobals->GameAux()->ArchipelagoPercent()}; // 같은bb4의 metadata와 군도 강제 밀도를 Session 교체 뒤에도 공유한다.
     std::uint32_t& clockStamp{s.gameplayGlobals->BattleClockStamp()};std::uint32_t& baseClock{s.gameplayGlobals->BattleClockOrigin()}; //메시지와같은00594fb0/4의Clientowner를로그인/타이머/수신도직접쓴다.
     std::uint32_t& optionValue{s.gameplayGlobals->GameAux()->RefundPercent()}; // 실제25비율을 Reward/Options와 공유한다.
@@ -107,6 +108,13 @@ struct RawCampaignSession::Impl::Login {
         hooks.rejectFile=[this](auto path) { if (!s.services.remoteFortFiles) throw std::logic_error("원격 Fort 서명 거부의 사용자 파일 장치 미연결");s.services.remoteFortFiles->Delete(path); };
         hooks.changed=[this,owner] { s.templateState->Changed(owner); };s.templateStorage->ReadImage(owner,image,s.assetState.inBattle,hooks);
     }
+    // 원문 특수 중앙섬은 현재 Fort 선택을 바꾸지 않고 지역 Template에 고정 SURROUNDED 자산을 읽는다.
+    void SurroundedCentral() {
+        auto temporary=s.templateStorage->CreateSibling();constexpr std::string_view name="\\D\\SURROUNDED.FORT"; //004b3bc0의 실제 고정 원본 파일명이다.
+        auto hooks=FileHooks({std::string(name),[this] { return s.assets.files.Read("d/surrounded.fort"); }});hooks.currentSlot=[] { return 9U; };hooks.refreshTitle={}; // 지역 Template는 전역 현재 슬롯과 다르므로 제목을 갱신하지 않는다.
+        try { temporary->LoadFile(0,{},name,hooks);s.BuildSurroundedCentral(*temporary);temporary->Clear(0); }
+        catch (...) { temporary->Clear(0);throw; } // 호스트 지역 owner만 반납하며 이미 생성한 월드/공유 version을 되돌리지 않는다.
+    }
     // 현재 실제 Client9 주소를 읽고 TCP를 내부 wildcard 주소로 바꾸지 않는다.
     std::array<std::uint8_t,20> Address() const { return Need(transport.address)(9); }
     // 실제 현재 노드가 필요한 선택 효과에만 같은 저장소를 빌린다.
@@ -173,6 +181,10 @@ struct RawCampaignSession::Impl::Login {
         auto send=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); }; //모든 부모가 공유하는 같은 실제 연결이다.
         options=std::make_unique<RawMissionBattleOptions>(OriginalEdition::Patch1078,MissionBattleOptionState{s.battleOptions,s.world.MutableTypes(),typeUse,ranges,s.geyserType,range,s.energyState.radiusSquared,optionValue});
         MissionServerPacketHooks packets;packets.send=send;packets.peerAddress=[this](std::uint32_t owner) { return Need(transport.peerAddress)(std::bit_cast<std::int32_t>(owner)); };packets.log=effects.log;
+        packets.assertion=[this](auto expression) { Need(s.services.ai.assertion)(expression); };packets.creatingIslands=effects.creatingIslands;
+        packets.setArchipelago=[this](auto value) { archipelago=value; };packets.setCentralCreated=[this](auto value) { central=value; };packets.layout=[this] { return s.battleOptions.at(5); };
+        packets.randomCentral=[this](auto record) { s.BuildCentralIsland(record); };packets.predictableCount=[this] { return predictable; }; // 실제 Pool 카운터와 같은 현재 중앙섬 부모를 사용한다.
+        packets.surroundedCentral=[this] { SurroundedCentral(); }; // layout2도 실제 원문 고정 자산/지역 Template/전체 배치 부모에 연결한다.
         metadata=std::make_unique<RawMissionServerPackets>(s.players,MissionServerPacketState{s.core.processState.Server(),s.core.ownerMode.challenge,s.playerState.battleOwner,central,archipelago,Zone()},std::move(packets));
         forts=std::make_unique<RawMissionLoginPackets>(OriginalEdition::Patch1078,s.players,MissionFortPacketReads{[this](std::uint32_t player)->const FortTemplate* { return player<9 && Get(s.headers,player*20) ? &s.templateStorage->Template(player) : nullptr; },[] { return std::uint16_t{4}; }},FortImageHooks{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}},MissionFortPacketHooks{[this](std::uint32_t,std::int32_t) { Need(effects.log)("로컬 Fort 전송\n"); },send,{}});
         MissionSettingsPacketHooks setting;setting.current=[this](MissionSettingsField field) { return settingValues.at(static_cast<std::size_t>(field)); };setting.setCurrent=[this](MissionSettingsField field,std::uint32_t value) { settingValues.at(static_cast<std::size_t>(field))=value;if (field==MissionSettingsField::ShootMyFriends) s.gunTargetState.friendlyFire=value!=0; };setting.send=send;settings=std::make_unique<RawMissionSettingsPacket>(OriginalEdition::Patch1078,std::move(setting));

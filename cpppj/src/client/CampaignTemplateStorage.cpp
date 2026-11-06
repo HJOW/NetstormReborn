@@ -458,6 +458,8 @@ void CampaignTemplateStorage::InitializeEmptyManager(std::uint32_t token,const s
 o::TemplateLifetimeHooks CampaignTemplateStorage::ManagerLifetime() { return Effects(); }
 // 다른Storage도동일Client이름표를명시공유할수있다.
 std::shared_ptr<ClientTemplateSectionNames> CampaignTemplateStorage::SectionNamesOwner() const { return sectionNames_; }
+// 원문 지역 Template도 전역 저장소와 같은 serializationVersion/이름표를 사용하도록 실제 owner만 새로 만든다.
+std::unique_ptr<CampaignTemplateStorage> CampaignTemplateStorage::CreateSibling() const { return std::make_unique<CampaignTemplateStorage>(serializationGlobals_,sectionNames_); }
 // 같은DWORD의현재값과주소를호출자에게빌린다. 조회/Storage생성자에서공유값을재초기화하지않는다.
 std::uint32_t& CampaignTemplateStorage::SerializationVersion() { return serializationGlobals_->version; }
 // 같은 Client의 현재 필터/FILE/공유 버퍼를 실제 덤프 시점에 호출하도록 장치만 보관한다.

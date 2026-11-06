@@ -230,6 +230,8 @@ const std::uint32_t& SidPool::CapacityValue() const { return capacity_; } // Poo
 std::uint32_t SidPool::FreeCount() const { return freeCount_; }
 // 다음 예측 번호에 더하는 원본 커서를 반환한다.
 std::uint32_t SidPool::PredictableCursor() const { return predictableCursor_; }
+// 할당/Reset이 직접 쓰는 같은 실제 DWORD를 로그인과 저장 부모에 제공한다.
+std::uint32_t& SidPool::PredictableCursorValue() { return predictableCursor_; }
 // 지정 영역의 머리 객체가 가리키는 첫 빈 슬롯을 반환한다.
 Sid SidPool::FirstFree(bool client) const { return Sid{ReadNext(kHeads[client ? 0 : 1])}; }
 // 할당 때 예약하는 지정 영역의 마지막 빈 슬롯을 반환한다.

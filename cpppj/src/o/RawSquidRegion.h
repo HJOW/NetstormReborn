@@ -15,4 +15,5 @@ enum class SquidRegionAssert {
 // 패치 진단 분기는 필수 callback을 호출하며 CD는 조용히 반환한다. callback이 없으면 해당 분기를 거부한다.
 void SetSquidRegion(SidPool& pool,std::span<const RiftTypeRecord> types,Sid sid,std::uint32_t region,
     std::uint32_t noRegion,const std::function<void(SquidRegionAssert)>& diagnostic={});
+std::uint32_t GetSquidRegion(const SidPool& pool,std::span<const RiftTypeRecord> types,Sid sid,std::uint32_t noRegion,const std::function<void(SquidRegionAssert)>& diagnostic={}); //004acda0: 현재 genus 진단/다리의 noRegion 반환 뒤 실제 raw+8 WORD를 읽는다.
 }

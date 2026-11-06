@@ -1,6 +1,9 @@
 #include "o/RawVortexOwnerDiagnostic.h" // 신전 상세/진단의 실제 Client 경계다.
 #include "o/RawFortMoneyLoad.h" // 일반 Login의 초기 SP도 기존00447810 전체 지정 몸체를 공유한다.
 #include "o/RawBattleIsland.h" // 원격 수신/일반 Login이 같은 실제 전투섬 부모를 사용한다.
+#include "o/RawCentralIsland.h" // metadata가 선택한 일반 중앙섬의 실제 생성 부모다.
+#include "o/RawIslandPartition.h" // 중앙 군도 지면의 현재 연결을 실제 섬/지역 목록으로 나눈다.
+#include "o/RawSquidRegion.h" // 같은 TYPE 진단과 raw 지역 WORD의 getter/setter를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "client/CompositeMissionTransport.h" // 현재 ID 복합 전송과 실제 전체 Runtime 등록 대여를 연결한다.
@@ -2855,13 +2858,14 @@ struct RawCampaignSession::Impl {
         return reader;
     }
     // 고정 Template의 실제 반환 stream 수명을 유지하며 지정 Terr 범위를 같은 원문 부모에서 읽고 즉시 생성한다. 기본 범위는 기존 전체20영역이다.
-    void ReadFortObjectStreams(const RawFortObjectLoad& objects,std::uint32_t slot,std::int32_t firstTerritory=0,std::int32_t territoryEnd=20) {
+    void ReadFortObjectStreams(const RawFortObjectLoad& objects,std::uint32_t slot,std::int32_t firstTerritory=0,std::int32_t territoryEnd=20,CampaignTemplateStorage* sourceStorage=nullptr) {
         if (slot>=9 || !fortTypeConversion) throw std::logic_error("Objects 실제 Template/변환표 소유자 미연결");
+        auto& selectedStorage=sourceStorage ? *sourceStorage : *templateStorage; // 지역 Template도 같은 raw reader를 사용하며 전역 현재 manager를 교체하지 않는다.
         std::vector<TemplateWriteStream> streams;FortObjectStreamHooks hooks; // 읽기 callback은 현재 노드의 같은 생성 수명만 빌린다.
-        hooks.manager=[this](auto owner) { if (owner<0 || owner>=9) throw std::out_of_range("Objects 실제 Template 슬롯");return Read(templateStorage->Headers(),static_cast<std::size_t>(owner)*20); };
-        hooks.select=[&](auto manager,auto name,auto writable) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("Objects 현재 manager 불일치");streams.push_back(templateStorage->SelectSection(slot,name,writable));return static_cast<std::uint32_t>(streams.size()); };
-        hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("Objects 반환 stream 수명 범위");templateStorage->AccessSection(streams[token-1],operation); };
-        hooks.prepareTypes=[this](auto owner) { PrepareFortTypeNames(static_cast<std::uint32_t>(owner)); };
+        hooks.manager=[&selectedStorage](auto owner) { if (owner<0 || owner>=9) throw std::out_of_range("Objects 실제 Template 슬롯");return Read(selectedStorage.Headers(),static_cast<std::size_t>(owner)*20); };
+        hooks.select=[&](auto manager,auto name,auto writable) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("Objects 현재 manager 불일치");streams.push_back(selectedStorage.SelectSection(slot,name,writable));return static_cast<std::uint32_t>(streams.size()); };
+        hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("Objects 반환 stream 수명 범위");selectedStorage.AccessSection(streams[token-1],operation); };
+        hooks.prepareTypes=[this,&selectedStorage](auto owner) { PrepareFortTypeNames(static_cast<std::uint32_t>(owner),&selectedStorage); };
         hooks.conversion=[this] { return fortTypeConversion->Current(); };hooks.checking=[this] { return gunState.checking.Read(); };
         hooks.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return fortTypeConversion->Bytes(token); };
         hooks.releaseConversion=[this] { auto& current=fortTypeConversion->Current();if (current) fortTypeConversion->Release(current);current=0; };
@@ -2878,6 +2882,40 @@ struct RawCampaignSession::Impl {
         hooks.boss=[this] { return assetState.Boss(); };hooks.objects=[this](auto slot,auto start,auto end) { if (!runtime) throw std::logic_error("전투섬의 실제 Objects 부모 미설치");ReadFortObjectStreams(runtime->Objects(),slot,start,end); };
         hooks.graph=[this](bool reset) { core.graph.Rebuild(reset); };hooks.builderAssertion=[this](auto) { if (!services.ai.assertion) throw std::logic_error("전투섬의 builder 진단 미연결");services.ai.assertion("전투섬 IslandBuilder 진단"); };hooks.decoderDiagnostics=&metadata.geometry.decoderDiagnostics;
         RawBattleIsland(core.pool,chunks,*islands,core.frames,piece,std::move(hooks)).Build(owner);
+    }
+    // 중앙섬의0046df80은 기존 실제 거주 구역 배치/seed/같은 게임 객체 생성 부모를 사용한다.
+    void PopulateCentralResidences(std::int32_t region) {
+        IslandPopulationHooks hooks;hooks.assertion=[this](auto) { if (!services.ai.assertion) throw std::logic_error("중앙 거주 구역의 실제 진단 미연결");services.ai.assertion("중앙섬 IslandPopulation 진단"); };
+        hooks.wallSeconds=services.sound.wallSeconds;hooks.position=[this](auto sid) { return core.neighbors.Center(sid); };hooks.destroy=[this](auto sid,auto flags) { world.Destroy(sid,flags); };hooks.create=[this](auto type,auto flags) { return world.Create(type,flags); };
+        hooks.defaultFrame=[this](auto type) { if (type<70 || type-70>=assets.game.Types().size()) throw std::out_of_range("중앙 거주 구역의 실제 TYPE 기본 프레임 범위");return assets.game.Types()[type-70].definition.specialFrames.defaultFrame; };
+        hooks.typeHitPoints=[this](auto type) { return hp.TypeHitPoints(type); };hooks.hasHitPoints=[this](auto sid) { return hp.HasHitPoints(sid); };hooks.setOwner=[this](auto sid,auto owner) { ownership->SetOwner(sid,owner); };hooks.pop=[this](auto sid,auto x,auto y,auto flags) { world.Pop(sid,x,y,flags); };hooks.refreshProduction=services.ownership.refreshProduction;
+        if (!finish) throw std::logic_error("중앙 거주 구역의 실제 랜덤 배치 부모 미설치");RawIslandPopulation(core.pool,chunks,chunks,*islands,*finish,{assetState.Boss(),core.ownerMode.fort,finishState.residenceType,tutorialArcherType,templeProduct,rewardState.types.priest},std::move(hooks)).Residence(region);
+    }
+    // metadata의 일반 $Random 요청을 같은 지형/현재 중심/군도 분리/Graph에 연결한다.
+    void BuildCentralIsland(std::span<const std::uint8_t,6> record) {
+        CentralIslandHooks hooks;hooks.assertion=[this](auto expression,auto) { if (!services.ai.assertion) throw std::logic_error("중앙섬의 실제 진단 미연결");services.ai.assertion(expression); };
+        hooks.placement=[this](auto territory) { if (!construction) throw std::logic_error("중앙섬의 실제 원점 배치 부모 미설치");return construction->PlayerBounds().OriginPlacement(territory); };
+        hooks.generate=[this](const auto& builder,auto region) { if (!normal) throw std::logic_error("중앙섬의 실제 지형 부모 미설치");normal->GenerateOriginal(builder.owner,builder.bounds,region); };
+        hooks.residence=[this](auto region) { PopulateCentralResidences(region); };
+        hooks.partition=[this] {
+            const auto diagnostic=[this](auto reason) { if (!services.ai.assertion) throw std::logic_error("군도 지역의 실제 진단 미연결");services.ai.assertion(reason==SquidRegionAssert::UnsupportedGenus ? "genus & (gISLAND|gBRIDGE|gISLAND3x3)" : "regionNum == noRegion"); }; // getter와 setter의 선택된 원문 진단을 구별한다.
+            RawIslandPartition(core.pool,core.hash.Entries(0),core.frames,terrainType,*islands,worldRedraw,
+                [this,diagnostic](auto sid) { return GetSquidRegion(core.pool,core.types,sid,static_cast<std::uint32_t>(noRegion),diagnostic); },
+                [this,diagnostic](auto sid,auto region) { SetSquidRegion(core.pool,core.types,sid,region,static_cast<std::uint32_t>(noRegion),diagnostic); }).Split();
+        };
+        hooks.graph=[this](bool reset) { core.graph.Rebuild(reset); };hooks.builderAssertion=[this](auto) { if (!services.ai.assertion) throw std::logic_error("중앙섬의 builder 진단 미연결");services.ai.assertion("중앙섬 IslandBuilder 진단"); };hooks.decoderDiagnostics=&metadata.geometry.decoderDiagnostics;
+        auto& auxiliary=*gameplayGlobals->GameAux();RawCentralIsland(core.pool,chunks,*islands,core.frames,piece,{assetState.inBattle,assetState.Boss(),auxiliary.TerrainEnabled(),auxiliary.Archipelago(),auxiliary.CentralPosition(),finishState.invalidRegion},std::move(hooks)).Build(record);
+    }
+    // layout2의 지역 SURROUNDED Template를 원문 SetMap(owner1)/전체 배치/지형/Objects 순서로 적용한다.
+    void BuildSurroundedCentral(CampaignTemplateStorage& sourceStorage) {
+        FortWorldLoadHooks territory;territory.templatePresent=[&sourceStorage](auto slot) { return Read(sourceStorage.Headers(),static_cast<std::size_t>(slot)*20)!=0; };
+        territory.territory=[&sourceStorage](auto slot)->FortTerritoryStream& { return sourceStorage.SelectTerritory(slot); };
+        territory.assertion=[this](auto reason) { if (!services.ai.assertion) throw std::logic_error("특수 중앙섬 Territory의 실제 진단 미연결");services.ai.assertion(reason==FortWorldLoadAssertion::MissingTerritoryTemplate ? "tm" : "position <= end"); };
+        std::uint32_t localOwner{};std::array<std::uint8_t,120> records{};
+        RawFortWorldLoad(core.pool,chunks,*islands,core.frames,piece,localOwner,noRegion,objectState.loadingDepth,std::move(territory)).ReadTerritory(0,records);
+        RawIslandBuilderState state;state.decoderDiagnostics=&metadata.geometry.decoderDiagnostics;const auto diagnostic=[this](auto) { if (!services.ai.assertion) throw std::logic_error("특수 중앙섬 builder 진단 미연결");services.ai.assertion("특수 중앙섬 IslandBuilder 진단"); };
+        RawIslandBuilder builder(chunks,chunks,*islands,core.frames,piece,state,diagnostic);builder.PlaceAll(records,0,20);
+        if (!normal || !runtime) throw std::logic_error("특수 중앙섬의 실제 지형/객체 부모 미설치");normal->GenerateOriginal(state.owner,state.bounds,noRegion);ReadFortObjectStreams(runtime->Objects(),0,0,20,&sourceStorage);
     }
     // 같은 실제 Session/Storage/Client 전역과원시Contents reader를일반Fort child에연결한다.
     RawExistingFortChildren MakeExistingFortChildren(const RawFortObjectLoad& objects) {
@@ -2938,12 +2976,13 @@ struct RawCampaignSession::Impl {
         LoadFortSubscriber(std::bit_cast<std::int32_t>(slot),handle,{globals.mySubscriber},hooks); //원시ID/문자열/등록마감만실행하고Config이름/제목/World는외곽이순서대로호출한다.
     }
     // 실제 반환 노드와 같은 fields/버퍼를 빌려 현재255BYTE 변환표를 준비하고 실패한 본문만 cleanup한다.
-    void PrepareFortTypeNames(std::uint32_t slot) {
+    void PrepareFortTypeNames(std::uint32_t slot,CampaignTemplateStorage* sourceStorage=nullptr) {
         if (slot>=9 || !fortTypeConversion) throw std::logic_error("실제TypeNames 슬롯/소유자 미연결");
+        auto& selectedStorage=sourceStorage ? *sourceStorage : *templateStorage; // 지역/전역 Template의 실제 고정 this를 선택하며 변환표 owner는 같은 Client다.
         std::vector<TemplateWriteStream> streams;FortTypeNamesLoadHooks hooks; // 같은 원문 Select 반환수명만 지역 registry에 보관한다.
-        hooks.manager=[this](auto owner) { if (owner<0 || owner>=9) throw std::out_of_range("TypeNames 실제Template 범위");return Read(templateStorage->Headers(),static_cast<std::size_t>(owner)*20); };
-        hooks.select=[&](auto manager,auto name,auto writable) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("TypeNames 현재manager 불일치");streams.push_back(templateStorage->SelectSection(slot,name,writable));return static_cast<std::uint32_t>(streams.size()); };
-        hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("TypeNames 반환stream 범위");templateStorage->AccessSection(streams[token-1],operation); };
+        hooks.manager=[&selectedStorage](auto owner) { if (owner<0 || owner>=9) throw std::out_of_range("TypeNames 실제Template 범위");return Read(selectedStorage.Headers(),static_cast<std::size_t>(owner)*20); };
+        hooks.select=[&](auto manager,auto name,auto writable) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("TypeNames 현재manager 불일치");streams.push_back(selectedStorage.SelectSection(slot,name,writable));return static_cast<std::uint32_t>(streams.size()); };
+        hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("TypeNames 반환stream 범위");selectedStorage.AccessSection(streams[token-1],operation); };
         hooks.allocate=[this](auto bytes) { return fortTypeConversion->Allocate(bytes); };
         hooks.conversionBuffer=[this](auto token) { return fortTypeConversion->Bytes(token); };
         hooks.typeCount=[this] { return static_cast<std::int32_t>(core.types.size()); };
