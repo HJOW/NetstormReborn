@@ -22,6 +22,7 @@
 #include "client/WarningMessages.h" // 일반 로그인/동맹의 실제 종류9/7 안내도 같은 MessageBoard를 사용한다.
 #include "client/RawBattleLeave.h" // 로그인 Abort도 같은 Native 상태 예약/부분 효과를 공유한다.
 #include "client/SavedStateFiles.h" // 실제 사용자 저장 namespace의!state.dat 삭제 장치다.
+#include "client/SavedStateFileWrite.h" // 일반 로그인 완료의!state.dat도 같은 사용자 경로/VFS 쓰기를 사용한다.
 #include "client/RawChatChannels.h"
 #include "client/ScriptCommand.h"
 #include "o/OriginalText.h"
@@ -135,6 +136,7 @@ void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& cont
     login.frameWallSeconds=[&client] { return client.Time().wall; }; // 원본0055b4d8과 같은 프레임 시각이며 새 wall 효과를 수행하지 않는다.
     login.showTimerProgress=[&client](auto text) { if (!client.Menu()) throw std::logic_error("일반 대기 안내의 실제 UberGump 미연결");return client.Menu()->ShowLoginWaiting(text); };
     login.closeTimerProgress=[&client,&controls] { if (!controls.Menus()) throw std::logic_error("일반 대기 안내의 실제 메뉴 미설치");controls.Menus()->CloseHtmlSerial(client.LocalStateGlobals()->LoginProgressSerial()); };
+    login.reconnectFile=MakeSavedStateFileWriteHooks(client); // 실제 open은 writer의 현재 관문/진단 뒤에만 수행한다.
 }
 // 현재 Native 요청을 Init 캡처로 되돌리지 않으며 실제 분모/시각/출처와 제목 물리만 선택 위치에서 바꾼다.
 void PrepareCampaignMissionStarting(Client& client,MissionFortLoadRequest& request) {

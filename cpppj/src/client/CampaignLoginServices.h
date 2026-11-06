@@ -1,6 +1,7 @@
 // 실제 미션 로그인에 필요한 현재 설정/시계/표시 장치만 빌린다.
 #pragma once
 #include "o/RawMissionSettingsPacket.h"
+#include "o/RawSavedStateWrite.h" // 일반 재접속 저장은 실제 사용자 FILE 장치만 빌린다.
 #include "client/CampaignTransportServices.h"
 #include <optional>
 #include <functional>
@@ -36,5 +37,6 @@ struct CampaignLoginServices {
     std::function<double()> frameWallSeconds; //0055b4d8의 현재 프레임 벽시각이며 새 wall getter 호출로 바꾸지 않는다.
     std::function<std::uint32_t(std::string_view)> showTimerProgress; //cf570의 실제 반환 serial을005c85b0에 저장하도록 돌려준다.
     std::function<void()> closeTimerProgress; //005c85b0만4c8d90으로 닫으며 공통 transient serial과 합치지 않는다.
+    std::optional<o::SavedStateWriteHooks> reconnectFile; // 실제 Client만 같은 사용자 홈 경로/VFS/FILE을 제공하며 미션의 자연 반환에는 요구하지 않는다.
 };
 }

@@ -243,7 +243,7 @@ struct RawCampaignSession::Impl::Login {
         MissionLoginTimerHooks timing;timing.configInt=[this](std::string_view key) { return Need(effects.configInt)(key,30); };timing.wallSeconds=effects.wallSeconds;timing.clock=effects.clock;timing.broadcast=[this](std::span<const std::uint8_t> bytes) { if (effects.observePacket) Need(effects.log)("Timer broadcast local"+std::to_string(s.assetState.localOwner)+"\n");s.broadcast->Send(bytes); };timing.priestRefresh=[this](std::uint32_t player) { s.priestParticipation->Refresh(player); };
         timing.connection=[this](std::int32_t peer) { return peer==9 && Need(transport.exists)(9); }; //004e2b10은 flags2/IsOpen이 아닌 현재 Client9 객체 존재를 조회한다.
         timing.remoteStatus=[this](std::int32_t peer,std::uint32_t,std::uint32_t) { s.connectionActivity->Receive(peer); }; //004b6180의 wire 수신과 같은 몸체이며 미사용 두 Native 인자를 합성하지 않는다.
-        timing.saveReconnect=[this] { if (!s.globals.missionPost) throw std::logic_error("일반전투 재접속 저장 미연결"); };timing.closeProgress=[this] { if (effects.closeTimerProgress) effects.closeTimerProgress();else CloseProgress(); };timing.log=[this](MissionLoginTimerLog,std::string_view text) { Need(effects.log)(text); };
+        timing.saveReconnect=[this] { SaveReconnect(); };timing.closeProgress=[this] { if (effects.closeTimerProgress) effects.closeTimerProgress();else CloseProgress(); };timing.log=[this](MissionLoginTimerLog,std::string_view text) { Need(effects.log)(text); };
         timing.progress=[this] { const auto body=timer->ProgressText(Need(effects.frameWallSeconds)(),Need(effects.translate));s.localStateGlobals->LoginProgressSerial()=Need(effects.showTimerProgress)(body); }; // 같은 현재9 Player/프레임 시각과cf570의 실제 반환 값을 사용한다.
         timing.initializeGeneral=[this] { InitializeGeneral(); };timing.createInitialGeysers=s.createWorldGeysers;timing.abortBattle=effects.abortBattle;timing.resetCamera=s.services.install.resetCamera;timing.serverAssertion=[this] { Need(s.services.ai.assertion)("server"); }; // 미션의 자연 관문은 유지하고 선택된 일반 초기화/중단/카메라만 실제 부모를 요구한다.
         timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{s.loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.Server(); },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.Boss(); },[this] { return s.gunState.checking; }},std::move(timing));
@@ -320,6 +320,21 @@ struct RawCampaignSession::Impl::Login {
         if (parentRunning) starting(); // 부모의 최초 복사/로그를 유지하며 후반만 반환한다. 외부 공통부가7 확정과8을 이어서 실행한다.
         else if (startingTail) state->RunStarting(starting); // 독립 편의 접합의 같은 원문 공통부가7 전체를 확정한 뒤 즉시8을 실행한다.
         else { starting();blocks[3][0]=8;state->Run(); } // 독립 상태8 검사의 이전 부분 범위이며 전체 State7 실행으로 세지 않는다.
+    }
+    //004b54e0의 SP 진단/현재 Player와 같은 Client 소유 복구 슬롯을 실제 File writer에 연결한다.
+    void SaveReconnect() {
+        auto hooks=effects.reconnectFile.value_or(SavedStateWriteHooks{}); // 미션/미known 자연 반환은 File 장치 부재도 허용한다.
+        hooks.diagnose=[this] {
+            auto& patch=s.priestState.regen.patch;const auto mismatch=s.sp.OffsetCurrent()!=static_cast<std::uint32_t>(s.sp.TrackingOffsetCurrent());auto fallback=patch.sample;
+            if (mismatch) s.gameplayGlobals->PatchDiagnostic()=fallback;
+            if (patch.remaining) {
+                const auto amount=s.playerState.playerKnown ? std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner)):0.0F;fallback=patch.sample; //40ee90의 현재 known/owner/Get 뒤 현재 진단값을 다시 읽는다.
+                if (amount>7000.0F) s.gameplayGlobals->PatchDiagnostic()=fallback;--patch.remaining;
+            }
+            if (!s.sp.FirstPoolCurrent()) s.gameplayGlobals->PatchDiagnostic()=fallback;if (s.sp.Permutation()[0]==-1) s.gameplayGlobals->PatchDiagnostic()=fallback;
+        };
+        hooks.localSp=[this] { return s.playerState.playerKnown ? std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner)):0.0F; }; // 저장DWORD는 게임시각이 아니라 현재 SP float의 정수부다.
+        WriteSavedState(SavedStateWriteGlobals{[this] { return s.globals.missionPost; },[this] { return s.playerState.playerKnown; },[this] { return s.gunState.checking; },[this] { return s.playerState.battleOwner; },[this] { return s.globals.mySubscriber; },[this] { return std::span<const std::uint8_t>(s.handle); },[this] { return std::span<const std::uint8_t>(s.players); },s.localStateGlobals->RestoreOwner(),s.localStateGlobals->RestoreSubscriber(),s.localStateGlobals->PreviousHandle(),{[this] { return s.gameplayGlobals->GameAux()->SpellCount(); },[this] { return source; },[this] { return ticks; }},s.loginEnd},hooks);
     }
     // 부모/독립 상태8이 같은 로컬 접속 몸체를 사용하며 원문 현재 블록을 검증한다.
     void Connect(std::span<const std::uint8_t> address,std::uint32_t port) { if (address.size()!=20 || blocks[3][0]!=8) throw std::logic_error("실제 현재8/주소20BYTE 접속 계약 오류");Need(transport.connect)(address,port); } // 명시 선택한 실제 backend가 현재 주소/포트를 처리한다.

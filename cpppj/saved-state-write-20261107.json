@@ -1,0 +1,62 @@
+{
+  "unit": 1003,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "일반 로그인 완료의 실제!state.dat writer/SP 진단·개별 FILE 쓰기·현재 복구 슬롯과 checking 두 소비자 연결",
+  "sourceFunctions1078": [
+    "004b54e0",
+    "0040ee90",
+    "0040ec50",
+    "0041b4c0",
+    "0041a910",
+    "0041b410"
+  ],
+  "referenceFunctions1072": [
+    "00432770"
+  ],
+  "build": {
+    "firstExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1003\\build.log",
+    "exeSize": 11820544,
+    "exeSha256": "ca5d6eaba54663b097d1e951ddf8df4e6b4b21a2966c29072edc58dc5aafda2b"
+  },
+  "format": {
+    "signature": "0x000a004e",
+    "bytes": 976,
+    "players": 8,
+    "perPlayerBytes": 86,
+    "lastDword": "current LoginEnd != 0"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1003\\protected-before.json"
+  },
+  "checking": {
+    "remaining": 7,
+    "parents": 3,
+    "partial": 1,
+    "multiplayer": 3,
+    "completedParents": 39,
+    "completedPartial": 5
+  },
+  "remaining": [
+    "재접속 파일 실제 reader/주기 writer/일반 프레임·스펠 소비·saveBattle/서버 이전",
+    "전체 파생 writer/decoder·메타·Outpost/checking7",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

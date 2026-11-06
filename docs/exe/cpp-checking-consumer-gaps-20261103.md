@@ -1610,6 +1610,8 @@ LAB_004ad54f:
 
 ## FUN_004b54e0 @ 004b54e0
 
+**1003 원문/정적 연결 완료:** SP 정합성 접두·실제 사용자 홈 File976BYTE 개별 쓰기/현재 복구 슬롯·두 checking f79/fa3 뒤 계속과 로그인 완료 타이머 caller를 연결했다. 신규 MP/단위/게임/통신 검사0이며 실제 reader/주기 저장/재접속·랭크0044fa00은 후속이다. checking잔여7=부모3/부분1/MP3, 완료부모39/부분5=44+7/기준51이다.[1003 기록](cpp-saved-state-write-20261107.md). 아래는779 당시 분류다.
+
 별도 부모 후속: Begin getter는779공유하지만Update의파일명/count checking진단2개는별도누락
 
 현재 주소 언급: cpppj\src\o\RawMissionClientPackets.h, cpppj\src\o\RawMissionLoginTimer.h
