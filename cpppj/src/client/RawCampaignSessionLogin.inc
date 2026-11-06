@@ -368,7 +368,13 @@ struct RawCampaignSession::Impl::Login {
         WriteSavedState(SavedStateWriteGlobals{[this] { return s.globals.missionPost; },[this] { return s.playerState.playerKnown; },[this] { return s.gunState.checking; },[this] { return s.playerState.battleOwner; },[this] { return s.globals.mySubscriber; },[this] { return std::span<const std::uint8_t>(s.handle); },[this] { return std::span<const std::uint8_t>(s.players); },s.localStateGlobals->RestoreOwner(),s.localStateGlobals->RestoreSubscriber(),s.localStateGlobals->PreviousHandle(),{[this] { return s.gameplayGlobals->GameAux()->SpellCount(); },[this] { return source; },[this] { return ticks; }},s.loginEnd},hooks);
     }
     // 부모/독립 상태8이 같은 로컬 접속 몸체를 사용하며 원문 현재 블록을 검증한다.
-    void Connect(std::span<const std::uint8_t> address,std::uint32_t port) { if (address.size()!=20 || blocks[3][0]!=8) throw std::logic_error("실제 현재8/주소20BYTE 접속 계약 오류");Need(transport.connect)(address,port); } // 명시 선택한 실제 backend가 현재 주소/포트를 처리한다.
+    void Connect(std::span<const std::uint8_t> address,std::uint32_t port) {
+        if (address.size()!=20 || blocks[3][0]!=8) throw std::logic_error("실제 현재8/typed주소20BYTE 접속 계약 오류");
+        if (blocks[3][33]) {
+            const auto field=std::span(reinterpret_cast<const std::uint8_t*>(blocks[3].data()),sizeof(blocks[3])).subspan(0x54,40);const auto end=std::find(field.begin(),field.end(),0);if (end==field.end()) throw std::length_error("저장 재접속 주소40BYTE의NUL 누락");
+            Need(transport.connectPeerText)({reinterpret_cast<const char*>(field.data()),static_cast<std::size_t>(end-field.begin())},port); // Native4e2620의 실제 문자열과 별도 현재 포트를 전달한다.
+        } else Need(transport.connect)(address,port); // 기존 private LAN/단독 시작의 typed 연결은 유지한다.
+    }
     // 현재 송신을flush한 뒤 실제 큐를 분배한다. 프레임 계산은 기존Kernel이 수행한다.
     void Pump() { wall=Need(effects.wallSeconds)();Need(transport.flush)();clockSynchronization->Poll();static_cast<void>(Need(transport.poll)());if (s.loginEnd!=0.0) timer->Run(false); } // 원문 flush→시간 보정/새 표본→receive 순서를 같은 전송 수명 안에 둔다.
 };

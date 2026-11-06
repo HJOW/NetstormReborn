@@ -34,6 +34,7 @@ template<class Transport> CampaignTransportServices Basic(const std::shared_ptr<
 CampaignTransportServices BindInternalCampaignTransport(std::shared_ptr<zacket::LocalMissionTransport> transport) {
     auto services=Basic(transport);services.serve=[transport](auto port) { transport->Open(port,false); };
     services.connect=[transport](auto address,auto) { if (address.size()!=20) throw std::out_of_range("현재 내부 State8 주소는20BYTE여야 합니다");transport->Connect(); }; // 내부 선택 모드만 주소 해석 없이 기존 zlocal 서버에 붙는다.
+    services.connectPeerText=[transport](auto,auto) { transport->Connect(); }; // 같은 명시 내부 역할은 문자 주소에서도 실제 내부client9만 연다.
     services.assign=[transport](auto pending,auto owner) { transport->AssignConnection(pending,owner); };services.flush=[transport] { transport->Flush(); };services.peer=[transport](auto owner) { return transport->Peer(owner); };
     services.connection=[transport](auto id) { return transport->Connection(id); };
     services.exists=[connection=services.connection](auto id) { return connection(id)!=nullptr; };
@@ -42,7 +43,7 @@ CampaignTransportServices BindInternalCampaignTransport(std::shared_ptr<zacket::
 }
 // 실제 TCP 상태/주소와 accepted 노드를 그대로 사용하며 내부 자기끝을 선생성하지 않는다.
 CampaignTransportServices BindTcpCampaignTransport(std::shared_ptr<LocalTcpTransport> transport) {
-    auto services=Basic(transport);services.serve=[transport](auto port) { transport->Listen(port); };services.listen=services.serve;services.connect=[transport](auto address,auto port) { transport->Connect(address,port,9); };
+    auto services=Basic(transport);services.serve=[transport](auto port) { transport->Listen(port); };services.listen=services.serve;services.connect=[transport](auto address,auto port) { transport->Connect(address,port,9); };services.connectPeerText=[transport](auto address,auto port) { transport->ConnectPeerText(address,port,9); };
     services.assign=[transport](auto pending,auto owner) { transport->AssignConnection(pending,owner); };services.flush=[transport] { transport->Flush(); };services.peer=[transport](auto owner) { return transport->Peer(owner); };
     services.connection=[transport](auto id) { return transport->Connection(id); };services.exists=[transport](auto id) { return transport->HasConnection(id); };services.isOpen=[transport](auto id) { return transport->IsOpen(id); };services.status=[transport](auto id) { return transport->Status(id); };return services;
 }
@@ -61,6 +62,7 @@ CampaignTransportServices BindCompositeCampaignTransport(std::shared_ptr<Composi
     services.callbacksActive=[transport] { return transport->ConnectionCallbackActive(); }; // table의 현재/반납 대여를 함께 조회한다.
     services.address=[transport](auto id) { return transport->Address(id); };services.peerAddress=[address=services.address](auto id) { return PeerText(address(id)); }; // 다른 backend owner의 주소도 canonical 현재 ID 검증을 거친다.
     services.serve=[transport](auto port) { transport->Serve(port); };services.listen=[transport](auto port) { transport->ListenLan(port); };services.connect=[transport](auto address,auto port) { transport->Connect(address,port); };services.assign=[transport](auto pending,auto owner) { transport->Assign(pending,owner); };services.flush=[transport] { transport->Flush(); };services.peer=[transport](auto owner) { return transport->Peer(owner); };
+    services.connectPeerText=[transport](auto address,auto port) { transport->ConnectPeerText(address,port); }; // 저장 문자열도 같은 Registry/등록 대여/역할을 사용한다.
     services.connection=[transport](auto id) { return transport->Connection(id); };services.exists=[transport](auto id) { return transport->Exists(id); };services.isOpen=[transport](auto id) { return transport->IsOpen(id); };services.status=[transport](auto id) { return transport->Status(id); };return services;
 }
 }

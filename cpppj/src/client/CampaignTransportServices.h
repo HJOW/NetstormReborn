@@ -21,7 +21,8 @@ struct CampaignTransportServices {
     o::RawPacketDispatch* dispatch{}; // 현재 실제 등록/observer/version/길이 표다. 이 포인터의 owner는 lifetime에 포함한다.
     std::function<void(std::uint32_t)> serve; // 선택한 실제 서버 열기이며 Editor에는 Login Serve 의미가 없다.
     std::function<void(std::uint32_t)> listen; // simulconnect 등에서 서버 권한과 별개로 명시 여는 실제 LAN TCP listener다.
-    std::function<void(std::span<const std::uint8_t>,std::uint32_t)> connect; // 원문 현재 State8의20BYTE 주소와 포트다.
+    std::function<void(std::span<const std::uint8_t>,std::uint32_t)> connect; // 현재 typed LAN의20BYTE 주소/포트다. 원문 State8 저장 주소의 문자열40BYTE는connectPeerText로 전달한다.
+    std::function<void(std::string_view,std::uint32_t)> connectPeerText; // 원문State8의+54..7b 문자열 영역/현재포트다. 기존20BYTE typed LAN 시작과 구별한다.
     std::function<void(std::int32_t,std::int32_t)> assign; // 같은 실제 pending 노드의 재배치/buffered 설정이다.
     std::function<bool(std::int32_t,std::span<const std::uint8_t>)> send; // 이미 길이를 확정한 현재 writer의 송신이다.
     std::function<bool(std::int32_t,std::span<std::uint8_t>)> sendMutable; // 현재 observer1을 실제 한 번 호출하는 송신이다.

@@ -1,0 +1,46 @@
+{
+  "unit": 1012,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "원문 저장 주소 문자열40BYTE를 현재 typed LAN 주소20BYTE와 구별해 같은 실제 TCP/내부 연결에 전달",
+  "sourceFunctions1078": [
+    "004e2620",
+    "004e0cd0",
+    "004e0a00",
+    "004b8cb0"
+  ],
+  "referenceFunctions1072": [
+    "004bfc60",
+    "004a7030"
+  ],
+  "build": {
+    "firstExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1012\\build.log",
+    "exeSize": 11863040,
+    "exeSha256": "85452c49ac008aa56cea05b637aa6eb9430e0407f65addc2b78968b005b77c1d"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1012\\protected-before.json"
+  },
+  "remaining": [
+    "StateReconnect/ForceServerDeath/004b8cb0 실제 caller·복구State7 선택/현재 Fort 이름 인계",
+    "일반 프레임486bc0/스펠·전체 파생 writer/decoder·메타·Outpost/checking6",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

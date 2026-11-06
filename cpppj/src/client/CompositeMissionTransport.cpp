@@ -45,6 +45,11 @@ void CompositeMissionTransport::Connect(std::span<const std::uint8_t> address,st
     if (role_==CompositeTransportRole::LanClient) { tcp_->Connect(address,port,9);return; }
     if (!internal_) throw std::logic_error("Editor 내부 끝은 Open에서 생성되며 Login Connect가 없습니다");internal_->Connect();
 }
+// 저장 상태의 문자열을 binary sockaddr로 가장하지 않고 같은 현재 역할의 실제 연결을 연다.
+void CompositeMissionTransport::ConnectPeerText(std::string_view address,std::uint32_t port) {
+    const auto pin=shared_from_this();if (role_==CompositeTransportRole::LanClient) { tcp_->ConnectPeerText(address,port,9);return; }
+    if (!internal_) throw std::logic_error("Editor 전송에 재접속 Login 경로 없음");internal_->Connect(); // 명시 내부 역할은 기존 zlocal 끝을 사용하며TCP/DNS를 만들지 않는다.
+}
 // 실제 현재 token이 있는 backend 한 곳만 선택하며 슬롯을 초기화하지 않는다.
 CompositeMissionTransport::Backend CompositeMissionTransport::Select(std::int32_t id) const {
     if (!o::CurrentTransportToken(*registry_,id)) return Backend::Missing;

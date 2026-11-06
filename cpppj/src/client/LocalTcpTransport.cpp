@@ -164,6 +164,10 @@ void LocalTcpTransport::Listen(std::uint32_t port,std::string_view bindAddress) 
 void LocalTcpTransport::StopListening() {
     if (listener_==kInvalidSocket) return;if (closesocket(Socket(listener_))==SOCKET_ERROR) { lastError_=WSAGetLastError();throw SocketError("listener close",lastError_); }listener_=kInvalidSocket;port_=0;
 }
+// Native4e2620은 문자열 parser 뒤4e0a00으로 포트를 덮어쓴다. 실제 연결/사설주소 검사는 기존Connect에 맡긴다.
+void LocalTcpTransport::ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id) {
+    address=address.substr(0,address.find('\0'));if (address.starts_with("tcp,")) address.remove_prefix(4);address=address.substr(0,address.find(','));address=address.substr(0,address.find(':'));Connect(address,port,id);
+}
 // 명시 LAN IPv4만 사용하며 원문처럼 현재 ID9의 실제 socket을 등록한다.
 void LocalTcpTransport::Connect(std::string_view address,std::uint32_t port,std::int32_t id) {
     const auto parsed=ParseAddress(address);if (!LocalAddress(parsed)) throw std::invalid_argument("LAN TCP는 loopback/사설/link-local IPv4만 접속합니다");if (id<0 || id>=static_cast<std::int32_t>(o::kTransceiverSlots) || Token(id)) throw std::logic_error("LAN TCP 접속 ID의 빈 현재 칸 필요");const auto endpoint=SocketAddress(parsed,port);StartSockets();SocketOwner socket{::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)};

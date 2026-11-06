@@ -18,6 +18,7 @@ public:
     void Serve(std::uint32_t port); // 실제 서버 권한이 새로 주어진 LAN client도 같은 TCP/등록표를 유지해 host로 전환하고 두 listener를 연다. accept/client9는 뒤 단계다.
     void ListenLan(std::uint32_t port,std::string_view bindAddress="0.0.0.0"); // simulconnect의 LAN client도 실제 TCP listener만 명시 열 수 있다. 게임 서버 권한을 쓰지 않는다.
     void Connect(std::span<const std::uint8_t> address,std::uint32_t port); // host 자기끝/단독은 내부 client9, LAN client는 실제20BYTE TCP다.
+    void ConnectPeerText(std::string_view address,std::uint32_t port); // 원문 저장 상태의 문자 주소는 선택한 같은 backend에 전달하고 현재 포트를 적용한다.
     void Assign(std::int32_t pending,std::int32_t owner); // 현재 accepted 노드를 실제 소유 backend에서 재배치한다.
     bool Send(std::int32_t target,std::span<const std::uint8_t> packet); // 현재 ID의 실제 owner만 선택한다.
     bool SendMutable(std::int32_t target,std::span<std::uint8_t> packet); // 선택 backend에서 observer1을 한 번만 실행한다.
