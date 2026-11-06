@@ -1,0 +1,20 @@
+{
+  "unit": 959,
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "rows": 48,
+  "server": 0,
+  "scope": "004b1440/CD004af380의 비서버 진단→공통부착 호출/ret8. 공통자식은 명시 장치. 서버/MP/직렬화/송신 미실행.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originalCD/Netstorm.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_process_attach_current.py": "59beffe02bfe16929cb6a239b1f2349bbdc7ad5ec4f60cec63c789195a679684",
+    "cpppj/tests/fixtures/process-attach-current-local-x86.tsv": "e47be5fa783bb9f953fde1c3af4882a4bb62fc916666a6c0dd52d5fab6cebe96"
+  }
+}

@@ -1,5 +1,6 @@
 // 객체 부착 프로세스의 form 생성/부착/해제와 Regular 이벤트 실행을 원본 쓰기 순서대로 복원한다.
 #include "o/SquidProcess.h"
+#include "o/RawProcessAttach.h"
 #include "o/SquidForms.h"
 #include "o/SquidFactory.h" // ProcessForm도 현재 공통 생성자/가상 수신 부모를 사용한다.
 #include <bit>
@@ -124,25 +125,21 @@ void SquidProcessHost::SetPrevious(Sid sid,std::uint16_t previous) {
 }
 void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.
-    // 004b1440: 부모가 바뀌는 부착은 프로세스 디버그 flag가 있어야 한다. 새 form의 부모 필드는 0이다.
-    if (Word(form,kFormParent)!=parent.value && !(flags&kProcessDebug)) throw std::logic_error("프로세스 form 부모 변경 flag 누락");
-    // 서버는 부모/체인을 쓰기 전에 파생 WriteData를 호출한다. 양수 버퍼만 송신하고 공통 Form Pop 전송은 억제한다.
-    if (pool_.IsServer()) {
-        if (!(flags&kLocalMask)) {
-            if (!Transmission().writeData || !Transmission().transmit) throw std::logic_error("프로세스 Form 직렬화/송신 경계 필요");
-            auto* process=FromForm(form);if (!process) throw std::logic_error("프로세스 Form 직렬화 PID 오류");
-            const auto size=Transmission().writeData(*process,Word(form,kFormParent)!=parent.value);
-            if (!size || size>0x7ff) throw std::logic_error("프로세스 Form 직렬화 크기 오류");
-            if (size>0) Transmission().transmit(size);
-        }
-        flags|=0x40;
-    }
+    ProcessAttachHooks hooks;SquidProcess* selected{}; // 서버 lookup이 저장한 실제 포인터만 writer에서 사용한다.
+    hooks.server=[this] { return pool_.IsServer(); };
+    hooks.lookup=[&](Sid sid) { selected=FromForm(sid); }; // flags가 로컬이어도 서버 lookup은 먼저 실행한다. NULL은 writer 선택 때만 오류다.
+    hooks.writeData=[&](bool changed) { if (!selected) throw std::logic_error("Process 부착의 선택된 실제 PID 미연결");const auto device=Transmission().writeData;if (!device) throw std::logic_error("Process 부착의 선택된 실제 writer 미연결");return device(*selected,changed); };
+    hooks.transmit=[this](std::int32_t size) { const auto device=Transmission().transmit;if (!device) throw std::logic_error("Process 부착의 선택된 실제 송신 장치 미연결");device(size); };
+    hooks.assertion=[this](auto expression,auto file,auto line) { const auto device=currentRuntime_ ? Runtime()->assertion : state_.assertion;if (!device) throw std::logic_error("Process 부착의 선택된 원문 진단 장치 미연결");device(expression,file,line); }; // 진단 선택 위치에서 현재 대여만 요구한다.
+    hooks.attach=[this](Sid form,Sid parent,std::uint32_t flags) {
     const auto apply=[&](SquidFactory& factory) { factory.AttachForm(form,parent,flags); }; // 파생 직렬화 접두 뒤에만 공통 현재 genus/링크/Pop 진단을 실행한다.
     if (currentRuntime_) { const auto runtime=Runtime();if (!runtime->factory) throw std::logic_error("현재 World의 공통 Form 부착 공장 미연결");apply(*runtime->factory); }
     else if (directFormFactory_) apply(*directFormFactory_);
     else { SquidFactory independent(pool_,types_);independent.BindDiagnostics({types_,state_.assertion,{}});apply(independent); } // 독립 입력도 같은 현재 표/진단 부모를 쓴다.
-
+    }; // 원문 파생 접두를 마친 위치에서만 현재 공통 공장을 요구한다.
+    AttachProcessForm(pool_,form,parent,flags,hooks);
 }
+
 SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.
     if (!process) throw std::invalid_argument("부착할 프로세스가 없습니다");

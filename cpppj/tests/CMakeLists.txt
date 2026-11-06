@@ -3673,4 +3673,10 @@ set_source_files_properties(BattleLeaveReasonTests.cpp PROPERTIES COMPILE_DEFINI
 # 정렬 Content 부모의 실제 링크/Pop 부분 효과만 선택 실행하며 전투/포획/통신은 실행하지 않는다.
 target_sources(netstorm_tests PRIVATE ContentAttachCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE ContentAttachCurrentTests.cpp)
+
+# 서버0 Process 진단 복귀만 대조하며 신규 직렬화/MP/패킷 검사는 실행하지 않는다(959).
+target_sources(netstorm_tests PRIVATE ProcessAttachCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE ProcessAttachCurrentTests.cpp)
+set_source_files_properties(ProcessAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    NETSTORM_PROCESS_ATTACH_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/process-attach-current-local-x86.tsv")
 set_source_files_properties(ContentAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CONTENT_ATTACH_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/content-attach-current-x86.tsv\"") # 최초 원문41행만 기대값으로 사용한다.

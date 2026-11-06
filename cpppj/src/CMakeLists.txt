@@ -422,3 +422,6 @@ target_sources(netstorm PRIVATE o/RawFormPop.cpp o/RawFormPop.h)
 
 # 정렬 Content의 원문 링크/늦은 Pop·통지는 공통 Form +74와 구별한다.
 target_sources(netstorm PRIVATE o/RawContentAttach.cpp o/RawContentAttach.h)
+
+# Process 파생 접두의 진단/현재 서버와 공통 부착 호출 순서다(959).
+target_sources(netstorm PRIVATE o/RawProcessAttach.cpp o/RawProcessAttach.h)
