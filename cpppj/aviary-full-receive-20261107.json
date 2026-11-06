@@ -1,0 +1,65 @@
+{
+  "unit": 1027,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "Sun38h/Rain73h/Wind74h 전체 수신·현재 세 TYPE와 같은 생성자/decoder·PID/명시 Form 부착 연결",
+  "sourceFunctions1078": [
+    "0045e410",
+    "0045e5d0",
+    "0045e4f0",
+    "0045b0f0",
+    "0045b210",
+    "0045d690",
+    "0045d810",
+    "0045d730",
+    "0041bd20"
+  ],
+  "globals": {
+    "005410f0": 32,
+    "0054115c": 59,
+    "00541160": 60
+  },
+  "reference1072": {
+    "scope": "PATCH 수신 부모/decoder이며 CD 별도 ABI와 혼합하지 않음"
+  },
+  "build": {
+    "firstExitCode": 0,
+    "firstWarnings": 0,
+    "firstErrors": 0,
+    "followup": "NULL PID의 미선택 객체 필드 무동작과 두 공통48BYTE 클래스의 배치 공유를 원문에 맞게 보완",
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted\\cpp-resume-1027\\build-first.log",
+      "extracted\\cpp-resume-1027\\build.log"
+    ],
+    "exeSize": 12014592,
+    "exeSha256": "0cd3fcfb7f1acc438ee7eeef17ef2d0e157efef8f4537a2f3c62342a93f78e9b"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "dedicatedAirUnitTests": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1027\\protected-before.json"
+  },
+  "remaining": [
+    "비행39h/애니메이션3bh·3ch 등 나머지 프로세스 전체 decoder",
+    "재동기화 허용/owner cache·Activate 수신자 부모",
+    "내용물 통지 PlayerKnown 실제 binding 대조",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

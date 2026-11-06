@@ -465,3 +465,4 @@ target_sources(netstorm PRIVATE o/RawSquidReceive.cpp o/RawSquidReceive.h) # 실
 target_sources(netstorm PRIVATE o/RawSquidCompressedReceive.cpp o/RawSquidCompressedReceive.h) #7ah의16필드 decoder/실제 길이 관찰기와 같은 수신 캐시다.
 target_sources(netstorm PRIVATE o/RawSquidVerification.cpp o/RawSquidVerification.h) #4ah/4bh의 검증 시작과 자유 슬롯/이전 SID 간격 부모다.
 target_sources(netstorm PRIVATE o/RawSquidMutationReceive.cpp o/RawSquidMutationReceive.h) # 내용물2dh/삭제2eh의 같은 실제 부착·환불·삭제 수신이다.
+target_sources(netstorm PRIVATE o/RawAviaryProcessData.cpp o/RawAviaryProcessData.h) # Sun/Rain 공통 decoder와 세 아비어리의 같은 PID/명시 Form 수신이다.

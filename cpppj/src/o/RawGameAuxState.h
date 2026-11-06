@@ -64,6 +64,9 @@ public:
     const std::uint32_t& StreakProcessType() const { return streakProcessType_; } // Runtime 교체/일반 월드 준비로12의 새 사본을 만들지 않는다.
     std::uint32_t& RegularProcessType() { return regularProcessType_; } //00541128: 일반 예약 생성과 종속 조회가 공유하는 현재 DWORD다.
     std::uint32_t& GunProcessType() { return gunProcessType_; } //005410f8의 현재 총 프로세스 TYPE를 신규 생성/전체 수신이 함께 읽는다.
+    std::uint32_t& SunAviaryProcessType() { return sunAviaryProcessType_; } //005410f0의 현재 훨리베이스 프로세스 TYPE다.
+    std::uint32_t& WindAviaryProcessType() { return windAviaryProcessType_; } //0054115c의 현재 데빌메이커 프로세스 TYPE다.
+    std::uint32_t& RainAviaryProcessType() { return rainAviaryProcessType_; } //00541160의 현재 맨 오 워 메이커 프로세스 TYPE다.
     std::uint32_t& ProcessFormType() { return processFormType_; } //00541078/CD0051c968: 공통 Process 부모의 Create/Take가 읽는 현재 DWORD다.
     std::uint32_t& DependFormType() { return dependFormType_; } //00541074/CD0051c964: 감시 쌍의 두 Create와 검색이 각각 읽는 현재 전체 DWORD다.
     const std::uint32_t& DependFormType() const { return dependFormType_; } // World 교체/일반 준비에서도 같은 장기 주소를 유지한다.
@@ -151,6 +154,7 @@ private:
     std::uint32_t evilRayProcessType_{10},particleSource_{}; // 보호 PE00541098의10과00595128의BSS0이며 일반 fresh에서 덮어쓰지 않는다.
     std::uint32_t flyerProcessType_{31}; // 보호 PE005410ec의 초기 DWORD이며 홈/생성·후속 writer가 공유할 장기 물리다.
     std::uint32_t gunProcessType_{34}; // 보호 PE005410f8의 초기 DWORD다. World/Session 교체에서 새34를 쓰지 않는다.
+    std::uint32_t sunAviaryProcessType_{32},windAviaryProcessType_{59},rainAviaryProcessType_{60}; // 보호 PE의 서로 다른 세 DWORD다. 생성·검색·수신이 같은 장기 주소를 쓴다.
     std::uint32_t altarType_{164},daisType_{165}; // 보호 PE005412e8/005412ec의 두 초기 DWORD이며 일반 월드 준비에서 초기화하지 않는다.
     std::uint32_t priestType_{158}; // 두 보호 PE의 최초158이며 실제 HP/이동 소비자가 같은 장기 주소를 빌린다.
     std::uint32_t fakeSurfaceType_{162}; // PATCH005412e0의 최초162이며 실제 생성 부모가 장기 주소를 빌린다.

@@ -51,13 +51,17 @@ std::uint16_t RawWindAviaryState::WriteProcess(WindAviaryProcessFields& fields,s
 }
 // 잘린 host 버퍼는 첫 쓰기 전에 거부한다. 정상 원문의 부분 갱신과 부모 출력0은 그대로 따른다.
 std::uint32_t RawWindAviaryState::ReadProcess(WindAviaryProcessFields& fields,std::span<const std::uint8_t> packet) {
+    return ReadProcess(std::span<std::uint8_t>(fields.bytes),packet); // 같은80BYTE를 빌려 기존 typed 진입과 실제 수신을 공유한다.
+}
+std::uint32_t RawWindAviaryState::ReadProcess(std::span<std::uint8_t> fields,std::span<const std::uint8_t> packet) { // PID NULL의 미선택 필드에는 새 객체를 요구하지 않는다.
     if (packet.size()<9) throw std::out_of_range("데빌메이커 상태 수신 머리 부족");
     const auto dirty=packet[8];const auto size=9U+((dirty&1U) ? 4U : 0U)+PayloadSize(dirty);
     if (packet.size()<size) throw std::out_of_range("데빌메이커 상태 수신 필드 부족");
     std::size_t at=9;std::uint32_t parent{};if (dirty&1U) { parent=Read(packet,at);at+=4; }
     // 선택되지 않은 상태·예약 시각·목표·padding은 caller 원문 그대로 보존한다.
     for (std::size_t index=0;index<kSizes.size();++index) if (dirty&(2U<<index)) {
-        std::copy_n(packet.begin()+static_cast<std::ptrdiff_t>(at),kSizes[index],fields.bytes.begin()+static_cast<std::ptrdiff_t>(kOffsets[index]));at+=kSizes[index];
+        if (kOffsets[index]>fields.size() || kSizes[index]>fields.size()-kOffsets[index]) throw std::out_of_range("데빌메이커 수신의 실제 객체 필드 미연결");
+        std::copy_n(packet.begin()+static_cast<std::ptrdiff_t>(at),kSizes[index],fields.begin()+static_cast<std::ptrdiff_t>(kOffsets[index]));at+=kSizes[index];
     }
     return parent;
 }

@@ -19,5 +19,6 @@ public:
         bool includeParent,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x74);
     // 현재 packet의 선택 필드만 덮고 부모 출력 DWORD를 돌려준다. dirty와 inner 소유권은 바꾸지 않는다.
     static std::uint32_t ReadProcess(WindAviaryProcessFields& fields,std::span<const std::uint8_t> packet);
+    static std::uint32_t ReadProcess(std::span<std::uint8_t> fields,std::span<const std::uint8_t> packet); //0045b210의 NULL this도 표현한다. 선택된 객체 저장이 없는 입력은 빈 뷰에서도 반환한다.
 };
 }

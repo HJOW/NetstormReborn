@@ -143,6 +143,7 @@
 #include "o/RawSquidCompressedReceive.h" //7ah도 현재 owner 캐시로 복원한 뒤 같은 전체 수신 본문을 호출한다.
 #include "o/RawSquidVerification.h" //4ah/4bh는 같은 객체 수신의 검증 SID와 별도 간격 커서를 공유한다.
 #include "o/RawSquidMutationReceive.h" // 내용물2dh/삭제2eh도 같은 부착·환불·삭제·SP 추적을 사용한다.
+#include "o/RawAviaryProcessData.h" // Sun/Rain은 원문처럼 같은0045b0f0 decoder를 공유한다.
 #include "o/RawSquidWord.h" // 수신 QA WORD는 기존 다리 표면 통지를 유지한다.
 #include "client/MessageGump.h" // 비용안내의한문자열/256BYTE 원문서식을실제기존처리기로작성한다.
 #include "o/RawBalloonBody.h"
@@ -325,7 +326,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,28> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a}; // 총 전체 수신도 같은 Session 등록/해제 수명을 따른다.
+constexpr std::array<std::uint32_t,31> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74}; // 세 아비어리도 같은 Session 등록/해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -416,6 +417,7 @@ struct RawCampaignSession::Impl {
     void SendRemoteTell(std::uint32_t owner,std::string_view section,bool others); // 같은실제mutable송신을004c9150/4c9200부모에제공한다.
     void ReceiveSquid(std::span<const std::uint8_t> packet); //2ch/7ah의 같은00433c30 본문과 현재 실제 장치를 공유한다.
     void ReceiveGunPacket(std::span<const std::uint8_t> packet); //0046a0c0의 신규 Form/기존 PID 수신을 같은 Kernel과 현재 총 본체에 연결한다.
+    void ReceiveAviaryPacket(std::uint32_t message,std::span<const std::uint8_t> packet); //38h/73h/74h의 같은 생성자/decoder·현재 PID/명시 Form 부착이다.
     const std::string missionFortName; //현재 Session 설치 요청의 논리 요새 이름이다. manager의 실제 파일 경로와 혼용하지 않는다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals{services.localStateGlobals ? services.localStateGlobals : std::make_shared<ClientLocalStateGlobals>()}; // 실제 Client는 같은 owner를 빌리고 독립 Session만 기존 BSS0 입력을 한 번 소유한다.
     std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals{services.connectionActivityGlobals ? services.connectionActivityGlobals : std::make_shared<ClientConnectionActivityGlobals>()}; // 실제 Client의 표를 빌리며 독립 Session만 최초0 owner를 한 번 구성한다.
@@ -801,7 +803,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawArcSpire> arcSpire; //149의 전용 +X/+Y 동맹 이웃·연쇄 빔·Regular다.
     std::unique_ptr<RawWindFlyer> windFlyer; // 더스트 데빌의전용104BYTE/애니메이션/범위공격이다.
     std::vector<std::uint32_t> windActiveSounds; // 같은188TYPE의실제activeSound 토큰이다.
-    std::uint32_t windAviaryType{59},windAviaryAsset{139}; // 실제프로세스와건물의서로다른TYPE다.
+    std::uint32_t& windAviaryType{gameplayGlobals->GameAux()->WindAviaryProcessType()}; // 생성/검색/수신이 같은0054115c를 직접 빌린다.
+    std::uint32_t windAviaryAsset{139}; // 실제 건물 TYPE이며 프로세스 전역과 구별한다.
     std::array<std::uint8_t,64> windAviaryPacket{};bool writingWindAviary{}; // 실제0x74 writer와동일송신버퍼다.
     std::unique_ptr<RegularProcess> pendingWindRegular; // 더스트 데빌첫Pop의new28 예약소유권이다.
     std::unique_ptr<RawFlyerProcess> flyer; // 같은 실제 Host의 공통 비행 생성/전송/홈 연결이다.
@@ -817,9 +820,11 @@ struct RawCampaignSession::Impl {
     std::uint32_t& flyerProcessType{gameplayGlobals->GameAux()->FlyerProcessType()}; // PATCH005410ec를 같은 Client의 장기 owner에서 직접 빌린다.
     std::array<std::uint8_t,64> flyerPacket{};bool writingFlyer{}; // 실제0x39 상태 writer와 송신의 단일 버퍼/선택 표식이다.
     std::unique_ptr<FlyerProcess> pendingFlyer; // 기본 생성자의 부착 경계까지 단일 프로세스 소유권을 보관한다.
-    std::uint32_t rainAviaryType{60},rainFlyerType{144}; // PATCH00541160/00541298의 현재 원본 타입 전역이다.
+    std::uint32_t& rainAviaryType{gameplayGlobals->GameAux()->RainAviaryProcessType()}; // 생성/검색/수신이 같은00541160을 직접 빌린다.
+    std::uint32_t rainFlyerType{144}; // PATCH00541298의 플라이어 TYPE다.
     std::array<std::uint8_t,64> rainAviaryPacket{};bool writingRainAviary{}; // 실제0x73 writer와 송신이 공유하는 버퍼/분배 표식이다.
-    std::uint32_t sunAviaryType{32},sunFlyerType{73}; // PATCH005410f0/0054117c의 현재 원본 타입 전역이다.
+    std::uint32_t& sunAviaryType{gameplayGlobals->GameAux()->SunAviaryProcessType()}; // 생성/검색/수신이 같은005410f0을 직접 빌린다.
+    std::uint32_t sunFlyerType{73}; // PATCH0054117c의 플라이어 TYPE다.
     std::array<std::uint8_t,64> sunAviaryPacket{};bool writingSunAviary{}; // 현재 writer/송신이 공유하는 패킷과 분배 표식이다.
     std::array<std::uint8_t,64> localHandle{};std::array<std::uint8_t,64>& handle{services.subscriberGlobals ? services.subscriberGlobals->Handle():localHandle}; // 실제 Client는 같은 장기PTR00540ca8을 빌리고 독립 Session만 기존 지역64BYTE를 소유한다.
     std::unique_ptr<RawCampaignWorldRuntime> runtime; // 위 실제 하위를 단일 캠페인 부모에 연결한다.
@@ -4522,11 +4527,40 @@ void RawCampaignSession::Impl::ReceiveGunPacket(std::span<const std::uint8_t> pa
     auto* currentGun=dynamic_cast<GunProcess*>(core.processes.FromForm(form));if (!currentGun) throw std::logic_error("총 수신의 현재 PID/outer 객체 미발견"); // 원문 decoder(NULL)의 미정의 역참조를 새 객체로 대신하지 않는다.
     assetBindings->PrepareFrame(core.processState.Now());assetBindings->Gun().ReadData(currentGun->Fields(),packet,parent);
 }
+// 원문 세 아비어리 수신은 기존 PID에 재부착하지 않으며 새 Form만 현재 전역 TYPE로 부착한다.
+void RawCampaignSession::Impl::ReceiveAviaryPacket(std::uint32_t message,std::span<const std::uint8_t> packet) {
+    if (message!=0x38U && message!=0x73U && message!=0x74U) throw std::invalid_argument("미지원 아비어리 수신 종류");if (packet.size()<9) throw std::out_of_range("아비어리 수신의 실제9BYTE 머리 부족");
+    const auto number=Read(packet,4);if (!number || number>65535U || number>=core.pool.Capacity()) throw std::out_of_range("아비어리 수신의 명시 Form SID 물리 범위");const Sid form{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(form);
+    const auto file=message==0x38U ? "c:\\ns\\o\\_p_sunaviaryprocessdata.cpp" : message==0x73U ? "c:\\ns\\o\\_p_rainaviaryprocessdata.cpp" : "c:\\ns\\o\\_p_windaviaryprocessdata.cpp"; // 각 원문 receiver의 실제 진단 파일이다.
+    const auto assertion=[this,file](auto expression,auto line) { world.Storage()->AssertDisplay(expression,file,line); }; // 진단 정상 복귀 뒤 현재 입력을 계속 처리한다.
+    const auto parentSid=[this](std::uint32_t value) { if (value>65535U || value>=core.pool.Capacity()) throw std::out_of_range("아비어리 수신의 DWORD 부모 SID 물리 범위");return Sid{static_cast<std::uint16_t>(value)}; }; // DWORD 검증 전에 WORD로 줄이지 않는다.
+    if (raw[11]&1U) {
+        if (packet[8]!=0xffU) assertion("*(( char *)((char *)zacket+8) ) == (char)0xFFFFFFFF",message==0x74U ? 0x4eU : 0x3cU);
+        if (message==0x38U) {
+            if (!sunAviary) throw std::logic_error("Sun 아비어리의 실제 생성 본체 미연결");auto pending=std::make_unique<SunAviaryProcess>(*sunAviary,SunAviaryProcessFields{});sunAviary->Initialize(pending->Fields());const auto parent=ReadAviaryProcessData(pending->Fields().bytes,packet);
+            static_cast<void>(core.processes.Attach(std::move(pending),sunAviaryType,parentSid(parent),0x10,form));return;
+        }
+        if (message==0x73U) {
+            if (!rainAviary) throw std::logic_error("Rain 아비어리의 실제 생성 본체 미연결");auto pending=std::make_unique<RainAviaryProcess>(*rainAviary,RainAviaryProcessFields{});rainAviary->Initialize(pending->Fields());const auto parent=ReadAviaryProcessData(pending->Fields().bytes,packet);
+            static_cast<void>(core.processes.Attach(std::move(pending),rainAviaryType,parentSid(parent),0x10,form));return;
+        }
+        if (!windAviary) throw std::logic_error("Wind 아비어리의 실제 생성 본체 미연결");auto pending=std::make_unique<WindAviaryProcess>(*windAviary,WindAviaryProcessFields{});RawWindAviaryState::Initialize(pending->Fields(),core.processState.Server(),core.processState.Now());const auto parent=RawWindAviaryState::ReadProcess(pending->Fields(),packet);
+        static_cast<void>(core.processes.Attach(std::move(pending),windAviaryType,parentSid(parent),0x10,form));return;
+    }
+    if (packet[8]&1U) assertion("(*(char *)(( (char *)zacket+8) ) & 1) == 0",message==0x74U ? 0x56U : 0x44U);
+    auto* current=core.processes.FromForm(form); // 원문의 현재 PID 조회 뒤 해당 outer 필드만 갱신한다.
+    if (message!=0x74U) {
+        std::span<std::uint8_t> fields;if (auto* selected=dynamic_cast<SunAviaryProcess*>(current)) fields=selected->Fields().bytes;else if (auto* selectedRain=dynamic_cast<RainAviaryProcess*>(current)) fields=selectedRain->Fields().bytes; // 두 원문 outer+20/48BYTE 클래스는 같은 decoder/배치를 쓴다.
+        static_cast<void>(ReadAviaryProcessData(fields,packet));return; // PID NULL도 필드 저장이 없으면 원문처럼 반환한다.
+    }
+    auto* selected=dynamic_cast<WindAviaryProcess*>(current);static_cast<void>(RawWindAviaryState::ReadProcess(selected ? std::span<std::uint8_t>(selected->Fields().bytes) : std::span<std::uint8_t>{},packet)); // 가짜 객체 없이 실제 선택된 NULL 저장만 오류로 드러낸다.
+}
 // 실제 초기 등록과 같은 버전/정책과 각 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");
     dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);dispatch.Register(0x2c,[this](auto,auto&,auto packet) { impl_->ReceiveSquid(packet); });
     dispatch.Observe(0x3a,{});dispatch.Version(0x3a,1,0);dispatch.RequireLength(0x3a,0xffff);dispatch.Register(0x3a,[this](auto,auto&,auto packet) { impl_->ReceiveGunPacket(packet); }); // 원문3ah는 observer NULL/버전1/정책0이다.
+    for (const auto type:{0x38U,0x73U,0x74U}) { dispatch.Observe(type,{});dispatch.Version(type,1,0);dispatch.RequireLength(type,0xffff);dispatch.Register(type,[this,type](auto,auto&,auto packet) { impl_->ReceiveAviaryPacket(type,packet); }); } // 세 원문 receiver 모두 observer NULL/버전1/정책0/가변 길이다.
     const auto assertion=[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 같은 현재 Client 진단을 송신 관찰기에도 공급한다.
     const auto verify=[this,assertion](auto packet,bool freePacket) { // 실제 현재 Pool/TYPE와 두 장기 DWORD를 직접 빌린다.
         auto& s=*impl_;SquidVerificationHooks hooks;hooks.assertion=assertion;hooks.log=s.services.player.log;
