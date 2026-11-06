@@ -1,0 +1,514 @@
+{
+  "unit": 968,
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "kind": "static PE bytes/instruction operands only; no emulation/game/flyer tests",
+  "candidates": [
+    {
+      "region": "ownerSolid",
+      "address": "0040622d",
+      "value": "00557400",
+      "section": ".text",
+      "decoded": []
+    },
+    {
+      "region": "map0",
+      "address": "0043c455",
+      "value": "00555e38",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c453",
+          "parent": "43c010",
+          "origin": "precise-metadata",
+          "instruction": "mov byte ptr [edx + 0x555e38], cl"
+        }
+      ]
+    },
+    {
+      "region": "map8",
+      "address": "0043c469",
+      "value": "00557838",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c467",
+          "parent": "43c010",
+          "origin": "precise-metadata",
+          "instruction": "mov byte ptr [edx + 0x557838], cl"
+        }
+      ]
+    },
+    {
+      "region": "map0",
+      "address": "0043c4a0",
+      "value": "00555f1c",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c49e",
+          "parent": "43c010",
+          "origin": "precise-metadata",
+          "instruction": "mov byte ptr [eax + 0x555f1c], cl"
+        }
+      ]
+    },
+    {
+      "region": "map0",
+      "address": "0043c4c5",
+      "value": "00555f36",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c4c3",
+          "parent": "43c010",
+          "origin": "precise-metadata",
+          "instruction": "mov byte ptr [0x555f36], cl"
+        }
+      ]
+    },
+    {
+      "region": "map0",
+      "address": "0043c4ca",
+      "value": "00555f37",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c4c9",
+          "parent": "43c010",
+          "origin": "precise-metadata",
+          "instruction": "mov byte ptr [0x555f37], al"
+        }
+      ]
+    },
+    {
+      "region": "map8",
+      "address": "0043c4d0",
+      "value": "00557936",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c4ce",
+          "parent": "43c010",
+          "origin": "precise-metadata",
+          "instruction": "mov byte ptr [0x557936], cl"
+        }
+      ]
+    },
+    {
+      "region": "map8",
+      "address": "0043c4d5",
+      "value": "00557937",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c4d4",
+          "parent": "43c010",
+          "origin": "precise-metadata",
+          "instruction": "mov byte ptr [0x557937], al"
+        }
+      ]
+    },
+    {
+      "region": "ownerHighlight",
+      "address": "0043c54d",
+      "value": "00556538",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c54b",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea edx, [ebx + 0x556538]"
+        }
+      ]
+    },
+    {
+      "region": "ownerSolid",
+      "address": "0043c55a",
+      "value": "00556e38",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c558",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x556e38]"
+        }
+      ]
+    },
+    {
+      "region": "ownerSolid",
+      "address": "0043c567",
+      "value": "00556e39",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c565",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x556e39]"
+        }
+      ]
+    },
+    {
+      "region": "ownerHighlight",
+      "address": "0043c574",
+      "value": "00556539",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c572",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x556539]"
+        }
+      ]
+    },
+    {
+      "region": "ownerSolid",
+      "address": "0043c581",
+      "value": "00556e3a",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c57f",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x556e3a]"
+        }
+      ]
+    },
+    {
+      "region": "ownerHighlight",
+      "address": "0043c58e",
+      "value": "0055653a",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c58c",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x55653a]"
+        }
+      ]
+    },
+    {
+      "region": "ownerSolid",
+      "address": "0043c59b",
+      "value": "00556e3b",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c599",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x556e3b]"
+        }
+      ]
+    },
+    {
+      "region": "ownerHighlight",
+      "address": "0043c5a8",
+      "value": "0055653b",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c5a6",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x55653b]"
+        }
+      ]
+    },
+    {
+      "region": "ownerSolid",
+      "address": "0043c5b5",
+      "value": "00556e3c",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c5b3",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x556e3c]"
+        }
+      ]
+    },
+    {
+      "region": "ownerHighlight",
+      "address": "0043c5c2",
+      "value": "0055653c",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c5c0",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x55653c]"
+        }
+      ]
+    },
+    {
+      "region": "ownerSolid",
+      "address": "0043c5cf",
+      "value": "00556e3d",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c5cd",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x556e3d]"
+        }
+      ]
+    },
+    {
+      "region": "ownerHighlight",
+      "address": "0043c5dc",
+      "value": "0055653d",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c5da",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x55653d]"
+        }
+      ]
+    },
+    {
+      "region": "ownerSolid",
+      "address": "0043c5e9",
+      "value": "00556e3e",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c5e7",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x556e3e]"
+        }
+      ]
+    },
+    {
+      "region": "ownerHighlight",
+      "address": "0043c5f6",
+      "value": "0055653e",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c5f4",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x55653e]"
+        }
+      ]
+    },
+    {
+      "region": "ownerSolid",
+      "address": "0043c603",
+      "value": "00556e3f",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c601",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x556e3f]"
+        }
+      ]
+    },
+    {
+      "region": "ownerHighlight",
+      "address": "0043c610",
+      "value": "0055653f",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c60e",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "lea eax, [ecx + 0x55653f]"
+        }
+      ]
+    },
+    {
+      "region": "map0",
+      "address": "0043c92e",
+      "value": "00555e38",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c92d",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "push 0x555e38"
+        }
+      ]
+    },
+    {
+      "region": "map8",
+      "address": "0043c942",
+      "value": "00557838",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043c941",
+          "parent": "43c4e0",
+          "origin": "precise-metadata",
+          "instruction": "push 0x557838"
+        }
+      ]
+    },
+    {
+      "region": "map0",
+      "address": "0043ca30",
+      "value": "00555e38",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043ca2f",
+          "parent": "43c96b",
+          "origin": "precise-metadata",
+          "instruction": "push 0x555e38"
+        }
+      ]
+    },
+    {
+      "region": "map8",
+      "address": "0043ca47",
+      "value": "00557838",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0043ca46",
+          "parent": "43c96b",
+          "origin": "precise-metadata",
+          "instruction": "push 0x557838"
+        }
+      ]
+    },
+    {
+      "region": "map0",
+      "address": "0045bcde",
+      "value": "00555e38",
+      "section": ".text",
+      "decoded": [
+        {
+          "address": "0045bcdd",
+          "parent": "45bcd0",
+          "origin": "manual-PE-VT-ret8",
+          "instruction": "push 0x555e38"
+        }
+      ]
+    }
+  ],
+  "excludedNumericCandidates": [
+    {
+      "region": "ownerSolid",
+      "address": "0040622d",
+      "value": "00557400",
+      "section": ".text",
+      "decoded": []
+    }
+  ],
+  "selected": {
+    "entry": "0045bcd0",
+    "table": "00509b98",
+    "slot": "a4",
+    "reference": "00509c3c",
+    "bytes": "f6410b0275278b5424088b412468385e5500528b54240c5250e8620805008b80dc00000050e896ee070083c414c20800",
+    "instructions": [
+      {
+        "address": "0045bcd0",
+        "text": "test byte ptr [ecx + 0xb], 2"
+      },
+      {
+        "address": "0045bcd4",
+        "text": "jne 0x45bcfd"
+      },
+      {
+        "address": "0045bcd6",
+        "text": "mov edx, dword ptr [esp + 8]"
+      },
+      {
+        "address": "0045bcda",
+        "text": "mov eax, dword ptr [ecx + 0x24]"
+      },
+      {
+        "address": "0045bcdd",
+        "text": "push 0x555e38"
+      },
+      {
+        "address": "0045bce2",
+        "text": "push edx"
+      },
+      {
+        "address": "0045bce3",
+        "text": "mov edx, dword ptr [esp + 0xc]"
+      },
+      {
+        "address": "0045bce7",
+        "text": "push edx"
+      },
+      {
+        "address": "0045bce8",
+        "text": "push eax"
+      },
+      {
+        "address": "0045bce9",
+        "text": "call 0x4ac550"
+      },
+      {
+        "address": "0045bcee",
+        "text": "mov eax, dword ptr [eax + 0xdc]"
+      },
+      {
+        "address": "0045bcf4",
+        "text": "push eax"
+      },
+      {
+        "address": "0045bcf5",
+        "text": "call 0x4dab90"
+      },
+      {
+        "address": "0045bcfa",
+        "text": "add esp, 0x14"
+      },
+      {
+        "address": "0045bcfd",
+        "text": "ret 8"
+      }
+    ]
+  },
+  "scope": "두8행의직접operand는초기화부모만확인. 간접별칭/임의계산주소/런타임 전체도달부재의증명은아니다. map8도계산/FILE부모밖직접operand미발견. map0의Whirligig폭탄추가Draw는원문코드복원대상이며전용검사는제외한다.",
+  "product": {
+    "actualAdditionalDispatch": "0045bcd0",
+    "deadByte": 11,
+    "frameDword": 36,
+    "colorMapIndex": 0,
+    "mode": "Bright160",
+    "flyerBodyExecutionTests": 0
+  },
+  "startup": {
+    "parent": "00438dc0",
+    "nativePalette": "004a4850",
+    "clear": 1,
+    "beforeInitialColorSortCapture": true
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/src/client/ObjectHitVtables.inc": "2d3ab42facad0b873b492b514c604dd557955674e9697b6633984a26c57dbdff",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c4835d66292daa58d10a1ba1dde7ab8739fe46ad984faec844338061e77d1b67",
+    "cpppj/src/client/SpriteDraw.h": "803038efa13fd24b6607cd39ff82845167858ec636b54ef9a57e42e07524f292",
+    "cpppj/src/client/ClientMain.cpp": "199553970bd3359ded50a48dcec5aa7ee96fe156845552110c638eaf5cda205f",
+    "cpppj/tests/TranslatedPixelsTests.cpp": "77a3f778f1c3440fd7c503e605dc3d7b1fd5e67a69973d40f2c18d4ad18f1ae0",
+    "tools/cpp_colormap_reference_audit.py": "8bda764e624f1691b04631e3d089842eb89164d71594659c79764053efb1bb8a"
+  }
+}

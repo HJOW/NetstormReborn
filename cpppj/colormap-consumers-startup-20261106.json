@@ -1,0 +1,111 @@
+{
+  "unit": 968,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 968,
+  "version": "11.01",
+  "exeSha256": "125d2572bb7d02fbbe6e458a1ab6b9d64a8396be50e4078fd05cdee55981cd02",
+  "exeBytes": 11358208,
+  "scope": "색표 직접 참조 분류·훨리기그폭탄45bcd0/첫표0번코드 연결(전용검사제외)·최초PATCH팔레트현재FILE/clear1연결",
+  "static": {
+    "report": "cpppj/colormap-reference-static-20261106.json",
+    "candidates": 29,
+    "decodedOperands": 28,
+    "unclassifiedNumericCandidates": 1,
+    "newNativeExecutions": 0,
+    "originalMetadataMissingFunction": "0045bcd0",
+    "manualFunctionBytes": 48,
+    "virtualTable": "00509b98",
+    "slot": "a4",
+    "indirectNonreachabilityProven": false
+  },
+  "build": {
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_translated_pixels_tests",
+      "netstorm_file_tests"
+    ],
+    "logs": [
+      "extracted\\cpp-resume-968\\build.log",
+      "extracted\\cpp-resume-968\\build-final.log"
+    ]
+  },
+  "focused": {
+    "uniqueTests": 7,
+    "newTestCases": 0,
+    "extendedExistingTestCases": 1,
+    "unchangedExistingTestCases": 6,
+    "failedChecks": 0,
+    "translatedTests": 2,
+    "paletteFileTests": 3,
+    "paletteApplyTests": 2,
+    "genericDestinationSurfaces": 296,
+    "spriteFourModeSurfaces": 1184,
+    "totalSurfaces": 1480,
+    "existingPaletteNativeRows": 92,
+    "existingApplyNativeRows": 166,
+    "flyerOrBombBodyExecuted": false,
+    "newMultiplayerTests": 0
+  },
+  "live": {
+    "processes": 1,
+    "exitCode": 0,
+    "entries": 4,
+    "actions": 37,
+    "observations": 26,
+    "missionNames": [
+      [
+        "tutorial1",
+        "Tutorial"
+      ]
+    ],
+    "dataUnchanged": true,
+    "summary": "extracted\\cpp-resume-968\\live\\summary.json",
+    "viewedScreenshots": [
+      "live/mission-0.png",
+      "live/final-main.png"
+    ],
+    "cacheBytes": 2304,
+    "cacheSha256": "ac1205f05c99c526235676c93f06ad6c6a60c49e161e3fef3cd5a695fa1eaad1",
+    "sameCacheAs967": true,
+    "flyerBehaviorTest": false
+  },
+  "protection": {
+    "files": 2796,
+    "fixtures": 976,
+    "unchanged": true,
+    "newFixtures": 0,
+    "next": "extracted\\cpp-resume-968\\protected-final.json"
+  },
+  "preparationErrors": "extracted\\cpp-resume-968\\audit-preparation-errors.txt",
+  "solutionProjects": 83,
+  "checkingRemaining": 8,
+  "limits": [
+    "두8행/마지막표의절대주소직접참조조사이며전체간접도달부재증명이아님",
+    "폭탄45bcd0은코드/정적대조·컴파일만; 사용자제외전용실행/검사0",
+    "CD실제캐시/최초FILE부모전체는후속범위",
+    "전체FILE/FileSpec/SEH·Factory/비멀티수명미완료"
+  ],
+  "sha256": {
+    "cpppj/src/client/ClientMain.cpp": "199553970bd3359ded50a48dcec5aa7ee96fe156845552110c638eaf5cda205f",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "c4835d66292daa58d10a1ba1dde7ab8739fe46ad984faec844338061e77d1b67",
+    "cpppj/src/client/SpriteDraw.h": "803038efa13fd24b6607cd39ff82845167858ec636b54ef9a57e42e07524f292",
+    "cpppj/tests/TranslatedPixelsTests.cpp": "77a3f778f1c3440fd7c503e605dc3d7b1fd5e67a69973d40f2c18d4ad18f1ae0",
+    "tools/cpp_colormap_reference_audit.py": "8bda764e624f1691b04631e3d089842eb89164d71594659c79764053efb1bb8a",
+    "cpppj/colormap-reference-static-20261106.json": "110a50ba428e56cc86e572ead0baa42f401a657e7c91549f88e2de0b4db4513a",
+    "extracted\\cpp-resume-968\\build.log": "92d53a99641476c033bbba702c1a57b77c783a8bce147e7391bbec50f8f81062",
+    "extracted\\cpp-resume-968\\build-final.log": "3cea8a3fe8dc618d4d242fc51b30807d089e3fdd00acbc581969565a44db4475",
+    "extracted\\cpp-resume-968\\translated-first.log": "b85e04d30a66feb5960db06bef64fb619ab8264f6b9aad3b8f4a34b0f9fb6632",
+    "extracted\\cpp-resume-968\\translated-final.log": "b85e04d30a66feb5960db06bef64fb619ab8264f6b9aad3b8f4a34b0f9fb6632",
+    "extracted\\cpp-resume-968\\palette-file.log": "19fba62f3bcd3242fe3a11c902de590dcb7fb96f6f48d9d9a03e2da2b47f119a",
+    "extracted\\cpp-resume-968\\palette-apply.log": "9351991e4af364c74faaaa431f935f56244f619012079d8454c46088455d1f31"
+  }
+}

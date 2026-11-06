@@ -30,7 +30,7 @@ void ReplayTranslated(bool sprite) {
             auto actual=background;DrawTranslatedVfxImage(actual,static_cast<int>(dimensions[0]),static_cast<int>(dimensions[1]),image,frame,point,TranslatedSigned(scale[0]),TranslatedSigned(scale[1]),clip,colors);
             if (!compare(actual)) return;
         } else {
-            for (const auto mode:{SpriteShapeMode::Shadow,SpriteShapeMode::Dead,SpriteShapeMode::Abstract}) { // 동일004dab90을부르는세고정표모드를각각확인한다.
+            for (const auto mode:{SpriteShapeMode::Shadow,SpriteShapeMode::Dead,SpriteShapeMode::Abstract,SpriteShapeMode::Bright160}) { // 동일004dab90의네일반색표모드만합성RLE/기존표면으로확인한다.비행체나폭탄을생성/호출하지않는다.
                 auto actual=background;SpritePixelTarget target(actual,static_cast<int>(dimensions[0]),static_cast<int>(dimensions[1]),clip,
                     [&](auto type) { CHECK(type==70);return PreviewShapeBinding{&database,0}; },[&](auto requested,auto,auto) { CHECK(requested==mode);return colors; });
                 auto hooks=target.Hooks();SpriteShapeRequest request{70,0,point,mode};request.scaled=true;request.scaleX=TranslatedSigned(scale[0]);request.scaleY=TranslatedSigned(scale[1]);hooks.shape(request);
@@ -43,4 +43,4 @@ void ReplayTranslated(bool sprite) {
 } // 실제커널표면과소유자외세고정표의배포경로를별도로확인한다.
 }
 TEST_CASE(TranslatedPixels_Original296CompleteSurfaces) { ReplayTranslated(false); } // 두정밀도/재관측888회로동결한기대값이다.
-TEST_CASE(TranslatedPixels_SpriteThreeModesUseOriginalDestinationKernel) { ReplayTranslated(true); } //888개실제Sprite출력도같은독립기대값을사용한다.
+TEST_CASE(TranslatedPixels_SpriteFourModesUseOriginalDestinationKernel) { ReplayTranslated(true); } //1184개일반Sprite표면을기존Native기대값에대조하며공중전용검사로확대하지않는다.

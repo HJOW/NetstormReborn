@@ -329,7 +329,8 @@ int Client::Run() {
     screen_->SetPresentSize(presentWidth_, presentHeight_); // 7차: 창 클라이언트 영역의 목표 크기(FSR 해상도에서만 논리 크기와 다르다)를 먼저 알린다.
     screen_->Init();
     const auto palettePath = configuration_.PathSpec("GamePalSpec", configuration_.PathSpec("fortPal"));
-    screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition);
+    if (options_.edition==o::OriginalEdition::Patch1078) screen_->LoadNativePaletteFile(files_,palettePath,1); // 원문38dc0의첫4a4850도현재FILE/키/반납과clear1을사용하며9표캡처보다앞선다.
+    else screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition); // CD호스트의기존값형입구는별도판본으로유지한다.
     // [원본] 설치 검사(GameInstalledTest)·zacket·프로토콜 검사는 아직 연결하지 않았다.
     clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientPlayerRecords(*this); //0043952c의 실제 초기화이며 그 다음00439537 ColorSort 입력보다 앞선다.

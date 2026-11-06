@@ -7,7 +7,7 @@
 
 namespace netstorm::client {
 // VFX 호출의 원색·현재 소유자 표·명시 변환 표를 서로 구분한다.
-enum class SpriteShapeMode { Plain, Owner, Abstract, Dead, Shadow };
+enum class SpriteShapeMode { Plain, Owner, Abstract, Dead, Shadow, Bright160 }; // Bright160은555e38의1.6배명도표로소스마스크아래대상화면을치환한다.1.5배Abstract와구분한다.
 // 실제 타입의 SHP와 선택 헤더/기본 프레임 및 상태 막대용 타입 필드다.
 struct SpriteTypeView {
     // shape: 프레임 그림을 찾는 셰이프 식별자 또는 셰이프 자료.

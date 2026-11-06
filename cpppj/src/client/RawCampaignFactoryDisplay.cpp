@@ -54,6 +54,7 @@ struct RawCampaignFactoryDisplay::Impl {
     SpriteDrawState state; // 원본 표시 전역과 현재 카메라/로컬 소유자다.
     std::vector<SpriteStatusProcess> statusSlots; // 첫0번과 현재Kernel 순서를 유지하는 선택용 읽기 전용 뷰다.
     SpriteColorMaps colors; // 실제 파일 팔레트의 세 소스 치환 표다.
+    ColorMap intenseColors{}; // 원문555e38의1.6배RGB표이며실제Client는같은캐시9표의0번행을공급한다.
     std::map<std::uint32_t,OwnerColorMaps> ownerColors; // 원본 일반12종/전용5종의 실제9색표이며 현재 팔레트로 갱신한다.
     std::shared_ptr<OwnerColorTableState> sharedOwnerColors; // 실제 Client의 현재 표와 배너 DWORD이며 Session 반납으로 초기화하지 않는다.
     TempleDraw templeDraw; // 같은 Session의 현재 전용Draw/상승음이며 그리기 시점에만 호출한다.
@@ -82,7 +83,8 @@ struct RawCampaignFactoryDisplay::Impl {
         return o::IsGeyserCapture(core.pool.Slot(sid));
     }
     bool ManaBolt(o::Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==105 && DisplayDword(raw,0)==0x509810U; } // 원본105의+a0는 빈 몸체이며+a4가 그림자와 실제 원소색 그림을 그린다.
-    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Bomb(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || ManaBolt(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || o::IsPlainAssetDraw(core.pool.Slot(sid)) || FlyerShadow(sid); } // 일반 자산도 같은 원본 본체/상태색/기준점/그림자 경로에 포함한다.
+    bool IntenseBomb(o::Sid sid) const { return DisplayDword(core.pool.Slot(sid),0)==0x509b98U; } // 훨리기그폭탄의실제VT+a4=45bcd0만선택하며TYPE163숫자로다른VT를대체하지않는다.
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Bomb(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || ManaBolt(sid) || IntenseBomb(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || o::IsPlainAssetDraw(core.pool.Slot(sid)) || FlyerShadow(sid); } // 일반 자산도 같은 원본 본체/상태색/기준점/그림자 경로에 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
     Impl(RawWorldCore world,const GameAssets& data,TempleDraw supplied):core(world),assets(data),factory(core.pool,core.frames),
         collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
@@ -99,6 +101,7 @@ struct RawCampaignFactoryDisplay::Impl {
     }
     // 건설/추상/그림자는 명시 표, 아웃포스트는 같은 현재 소유자 색 번호로 변환한다.
     ColorMap Color(SpriteShapeMode mode,std::uint32_t type,std::uint32_t owner) const {
+        if (mode==SpriteShapeMode::Bright160) return intenseColors; // 45bcd0→4dab90은1.5배표가아닌같은현재0번표를사용한다.
         if (mode==SpriteShapeMode::Abstract) return colors.bright;if (mode==SpriteShapeMode::Dead) return colors.dead;if (mode==SpriteShapeMode::Shadow) return colors.shadow;
         if (mode!=SpriteShapeMode::Owner || owner>=core.bridgeState.ownerColors.size()) throw std::logic_error("실제 자산 소유자 색표 분기 오류");
         const auto index=core.bridgeState.ownerColors[owner];if (index<0 || index>8) throw std::out_of_range("실제 자산 현재 소유자 색 번호");
@@ -110,6 +113,10 @@ struct RawCampaignFactoryDisplay::Impl {
             const auto composite=core.pool.Slot(object); // 같은 프레임의 현재 본체/추가 그림 분배에 사용한다.
             const auto& dispatch=HitVtable(composite); // 같은 실제+a4 분배를 일반화면과선택캡처가공유한다.
             if (dispatch.additional==0x41c100U) return; // 실제빈ret8만정상반환한다.
+            if (dispatch.additional==0x45bcd0U) { // PE509b98+a4의48BYTE몸체다.사용자제외에따라공중전용실행/검사는하지않는다.
+                if (composite[11]&2U) return;const auto frame=DisplayDword(composite,36); // 원문dead관문뒤현재DWORD프레임을먼저보관한다.
+                shape({composite[10],frame,point,SpriteShapeMode::Bright160});return; // 현재TYPE/SHP의마스크아래대상픽셀만치환한다.
+            }
             if (dispatch.additional==0x479340U || dispatch.additional==0x485f90U) { // 같은 TYPE/SHP 토큰과 현재 표면의 배율/추상색 출력으로 연결한다.
                 const o::AuxiliaryDrawHooks hooks{[](auto type) { return type; },[&shape](const auto& value) {
                     SpriteShapeRequest request{value.shape,value.frame,{value.x,value.y},value.abstract ? SpriteShapeMode::Abstract : SpriteShapeMode::Plain};
@@ -216,7 +223,7 @@ struct RawCampaignFactoryDisplay::Impl {
             if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
             if (o::IsSunAviaryCapture(core.pool.Slot(object))) return o::SunAviaryCaptureMainFrame(core.pool.Slot(object));
             if (o::IsBurningArcherCapture(core.pool.Slot(object)) || o::IsPlainAssetDraw(core.pool.Slot(object))) return assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame;
-            return Flare(object) || Generator(object) || Geyser(object) || o::IsPatchDais(core.pool.Slot(object)) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object);
+            return Flare(object) || Generator(object) || Geyser(object) || IntenseBomb(object) || o::IsPatchDais(core.pool.Slot(object)) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object);
         };rules.surface=MakeSpriteSurfaceLookup(core.hash);
         rules.constructionActive=[this](o::Sid object) { return core.processes.FindEvent(object,0x25d)!=nullptr; }; // 491af0은 현재 사제의 기도 Regular를 조회한다.
         rules.timers=[this](o::Sid object,std::uint32_t type)->std::optional<std::array<double,3>> {
@@ -273,6 +280,8 @@ void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette,
     // 실제 현재 파일 팔레트의 모든 번호를 보존한다.
     for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16)|(std::uint32_t(palette[i].reserved)<<24);
     const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->colors=colorMaps ? SpriteColorMaps{(*colorMaps)[4],(*colorMaps)[6],(*colorMaps)[7]}:BuildSpriteColorMaps(ColorSortLogicalInput(colorSortLogical,logical));impl_->state.barBackground=named.basic[0];
+    if (colorMaps) impl_->intenseColors=(*colorMaps)[0];
+    else { ClientColorSortInput independent;independent.Capture(ColorSortLogicalInput(colorSortLogical,logical));impl_->intenseColors=independent.Rebuild(named.basic[1])[0]; } // 기존독립표시입력만같은검증된9표계산을사용하며실제Client에별도저장소를만들지않는다.
     if (!impl_->sharedOwnerColors) for (const auto type:kSpecialOwnerTypes) impl_->ownerColors.insert_or_assign(type,BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type)); // 명시 독립 표시 입력만 지역 표를 갱신한다. 실제 Client 표는 최초 primary와 현재 옵션을 유지한다.
     impl_->state.hitPointColors={named.named.at(10).index,named.basic[5],named.basic[1]};impl_->ready=true;
 }
