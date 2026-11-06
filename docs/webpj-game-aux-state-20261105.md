@@ -45,3 +45,5 @@ aux.resetForGeneralWorld();  // 원본 일반 월드 준비의 fresh 입력만 �
 - WB04-C3: 입력/예약 큐(cpppj `client/InputEvent.h`의 `InputQueue`, 명령 예약·취소 순서)와 게임 시계·Kernel의 프레임 순서.
 - WB04-D: 이번에 옮긴 `processFormType`·`dependFormType`·`regularProcessType` 등을 빌리는 Form/Process 생성자와 Regular(`AddRegular`/`FindEvent`, `regular-current-*-x86.tsv`).
 - 앱 연결: `GameAuxState`도 `ClientRandomGlobals`처럼 첫 실제 소비자와 함께 클라이언트(앱) 수명에 만든다.
+
+**2026-11-06 WB04-D3 추가:** 공통 Form 층이 호출마다 읽는 Form 종속 전역 3칸(`gumpFormType` 0054107c=3, `contentFormType` 00541088=6, `contentUnpopEvent` 005427dc=`0x02000039`)을 같은 표에 넣어 **50필드**가 됐다. 세 칸도 같은 PE `.data` 대조를 통과했으며 TYPE 칸 대조는 28칸(내장 Form 이름 3·6 추가)이다. 소비 계약은 [공통 Form 층 문서](webpj-squid-forms-20261106.md)를 따른다.

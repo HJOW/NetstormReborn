@@ -62,6 +62,10 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['regularProcessType', 0x00541128, 'u32', 46, 'regularProcessType', '일반 예약(Regular) 생성과 종속 조회 TYPE'],
     ['processFormType', 0x00541078, 'u32', 2, 'ProcessForm', '공통 Process 부모 Create/Take TYPE'],
     ['dependFormType', 0x00541074, 'u32', 1, 'DependForm', '감시 쌍 Create 와 검색 TYPE'],
+    // 아래 세 칸은 공통 Form 층·contained 해제가 호출마다 읽는 종속 전역이다(squid-forms.js squidFormGlobals). (2026-11-06 WB04-D3 추가)
+    ['gumpFormType', 0x0054107c, 'u32', 3, 'GumpForm', 'contained 해제 UI 검색이 종속 raw TYPE BYTE 와 비교하는 현재 Form TYPE'],
+    ['contentFormType', 0x00541088, 'u32', 6, 'ContentForm', '공통 부착 꼬리 진단·contained 부모 통지의 현재 내용물 Form TYPE'],
+    ['contentUnpopEvent', 0x005427dc, 'u32', 0x02000039, null, 'contained 해제가 큐에 넣는 내용물 변경(UpdateContents) 사건(Player 통지 005427bc 와 별개)'],
     ['sharedRegularProcessType', 0x00541164, 'u32', 61, 'sharedRegularProcessType', '공유 예약 TYPE(일반 예약과 별개)'],
     ['processTypeEnd', 0x0054116c, 'u32', 63, null, '프로세스 TYPE 상한(원문 signed 비교, 10+53)'],
     ['evilRayProcessType', 0x00541098, 'u32', 10, 'evilRaySystemProcessType', '악마 광선 생성자 부착 TYPE'],

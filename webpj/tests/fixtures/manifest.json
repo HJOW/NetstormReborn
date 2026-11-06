@@ -736,17 +736,19 @@
       "unit": "WB04-C2",
       "doc": "docs/webpj-game-aux-state-20261105.md",
       "cpppjSources": [
-        "cpppj/src/o/RawGameAuxState.h"
+        "cpppj/src/o/RawGameAuxState.h",
+        "cpppj/src/o/RawSquidContainedUnpop.h"
       ],
-      "scope": "게임 보조 전역 47필드+장식 4칸의 초기값. 실행 중 writer(타입 적재·Start·정리)의 값 변화는 각 소비자 단위에서 대조",
+      "scope": "게임 보조 전역 50필드(WB04-D3 의 Form 종속 전역 0054107c·00541088·005427dc 포함)+장식 4칸의 초기값. 실행 중 writer(타입 적재·Start·정리)의 값 변화는 각 소비자 단위에서 대조",
       "text": false,
       "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
       "bytes": 1552384,
       "lines": null,
       "fixtureCommit": "2f80430a",
-      "webCommit": "e993112b",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawGameAuxState.h": "886f2d23"
+        "cpppj/src/o/RawGameAuxState.h": "886f2d23",
+        "cpppj/src/o/RawSquidContainedUnpop.h": "f83db66c"
       }
     },
     {
@@ -776,7 +778,7 @@
       "bytes": 419588,
       "lines": 1300,
       "fixtureCommit": "6ff267a1",
-      "webCommit": "worktree",
+      "webCommit": "3ef1d18b",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459",
         "cpppj/src/o/RawSquidUnpopParent.h": "6ff267a1",
@@ -1224,7 +1226,7 @@
       "bytes": 6817,
       "lines": 152,
       "fixtureCommit": "a86150db",
-      "webCommit": "worktree",
+      "webCommit": "3ef1d18b",
       "cpppjBasis": {
         "cpppj/src/o/UnpopVtables.inc": "fbc27346",
         "cpppj/src/o/SquidUnpop.cpp": "ea848459",
@@ -1256,7 +1258,7 @@
       "bytes": 115773,
       "lines": 1041,
       "fixtureCommit": "028bd402",
-      "webCommit": "worktree",
+      "webCommit": "3ef1d18b",
       "cpppjBasis": {
         "cpppj/src/o/RawMetadisplayDirty.cpp": "bae8b702",
         "cpppj/src/o/RawMetadisplayDirty.h": "bae8b702"
@@ -1291,12 +1293,168 @@
       "bytes": 1573181,
       "lines": 1993,
       "fixtureCommit": "5edb2b6d",
-      "webCommit": "worktree",
+      "webCommit": "3ef1d18b",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidDestroy.cpp": "f2215dc5",
         "cpppj/src/o/RawSquidDestroy.h": "886f2d23",
         "cpppj/src/o/RawBridgeLifecycle.cpp": "5879152b",
         "cpppj/src/o/SquidUnpop.cpp": "ea848459"
+      }
+    },
+    {
+      "id": "form-constructor",
+      "path": "cpppj/tests/fixtures/form-constructor-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 내장 Form 생성자(cdecl 1/2/3/6) x86 관측(지정 물리 슬롯의 VT DWORD 단일 저장·반환 상대 주소)",
+      "consumers": [
+        "webpj/tests/squid-forms.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-forms.js"
+      ],
+      "unit": "WB04-D3",
+      "doc": "docs/webpj-squid-forms-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidForms.cpp",
+        "cpppj/src/o/SquidForms.h"
+      ],
+      "scope": "10.78 28행 전체(0·예약·free·dead·끝 슬롯). CD 28행 제외",
+      "text": true,
+      "sha256": "8cb3b884d2e1b9147446498d5c161f6da75cb5697474f7ea99f71ca1d3281176",
+      "bytes": 11062,
+      "lines": 57,
+      "fixtureCommit": "7a4ef74b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidForms.cpp": "09ad72b0",
+        "cpppj/src/o/SquidForms.h": "09ad72b0"
+      }
+    },
+    {
+      "id": "form-attach-current",
+      "path": "cpppj/tests/fixtures/form-attach-current-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 공통 Form 부착 부모(004ac800) x86 관측(genus/setter/Pop/진단 순서·진단 복귀 뒤 현재 VT/TYPE·네 슬롯 전체)",
+      "consumers": [
+        "webpj/tests/squid-forms.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-forms.js"
+      ],
+      "unit": "WB04-D3",
+      "doc": "docs/webpj-squid-forms-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFormAttach.cpp",
+        "cpppj/src/o/RawFormAttach.h"
+      ],
+      "scope": "10.78 432행 전체. genus/setter/Pop/진단은 명시 장치이며 실제 현재 TYPE 표·Factory 진입 연결은 D4/D5",
+      "text": true,
+      "sha256": "da5dcfb44bff278d696f7ab92144bcd5eeac3540233e939c37f93964b73f32b7",
+      "bytes": 420097,
+      "lines": 865,
+      "fixtureCommit": "d678fcad",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFormAttach.cpp": "d678fcad",
+        "cpppj/src/o/RawFormAttach.h": "d678fcad"
+      }
+    },
+    {
+      "id": "form-pop-current",
+      "path": "cpppj/tests/fixtures/form-pop-current-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 공통 Form Pop 부모(004ac560) x86 관측(진단 복귀·flags 정규화·void/xmit 부분 상태·권한·공유 깊이·this 슬롯)",
+      "consumers": [
+        "webpj/tests/squid-forms.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-forms.js"
+      ],
+      "unit": "WB04-D3",
+      "doc": "docs/webpj-squid-forms-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFormPop.cpp",
+        "cpppj/src/o/RawFormPop.h"
+      ],
+      "scope": "10.78 1280행 전체. 전송/PostPop 은 명시 장치이며 실제 패킷 작성·송신은 웹 제외(멀티플레이)",
+      "text": true,
+      "sha256": "c4cade1a06620b70b0d6bcbcd3384e2c3815329f3839a0f8e59bed3a73ffdc90",
+      "bytes": 542706,
+      "lines": 2561,
+      "fixtureCommit": "09ad72b0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFormPop.cpp": "09ad72b0",
+        "cpppj/src/o/RawFormPop.h": "09ad72b0"
+      }
+    },
+    {
+      "id": "form-unpop-current",
+      "path": "cpppj/tests/fixtures/form-unpop-current-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Form 공통 Unpop(004ae140) x86 관측(세 진단·void·현재 VT 부모 getter·부모 free 관문·분리 호출·두 슬롯)",
+      "consumers": [
+        "webpj/tests/squid-forms.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-forms.js"
+      ],
+      "unit": "WB04-D3",
+      "doc": "docs/webpj-squid-forms-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidForms.cpp",
+        "cpppj/src/o/RawSquidContainedUnpop.cpp"
+      ],
+      "scope": "10.78 864행 전체. 종속 분리 몸체는 WB04-D2 RawSquidContainedUnpop(contained 계약 검사)",
+      "text": true,
+      "sha256": "acfa309114c45b9c415b1fd7ef1a5d3aa1e0f1b61fe9e63be0ad107cf9334060",
+      "bytes": 410922,
+      "lines": 1729,
+      "fixtureCommit": "36777e48",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidForms.cpp": "09ad72b0",
+        "cpppj/src/o/RawSquidContainedUnpop.cpp": "f83db66c"
+      }
+    },
+    {
+      "id": "form-take",
+      "path": "cpppj/tests/fixtures/formtake-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 내장 Form Create/Take/Unpop/Reset x86 관측(반환값·통지 당시 Form/부모 바이트·관측 슬롯·풀 카운터/머리/꼬리·전체 풀 Adler)",
+      "consumers": [
+        "webpj/tests/squid-forms.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-forms.js",
+        "webpj/www/core/sid-pool.js"
+      ],
+      "unit": "WB04-D3",
+      "doc": "docs/webpj-squid-forms-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidForms.cpp",
+        "cpppj/src/o/SidPool.cpp"
+      ],
+      "scope": "10.78 300행 전체. Factory 의 현재 생성자 표를 거치는 Create/Take(자산·TYPE 별칭)는 D4",
+      "text": true,
+      "sha256": "79c03977292f3c33b0ca2f7394150a1e98c00c7ba4913565633c5ccb159d0764",
+      "bytes": 366794,
+      "lines": 601,
+      "fixtureCommit": "a466b2a6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidForms.cpp": "09ad72b0",
+        "cpppj/src/o/SidPool.cpp": "435cfa1d"
       }
     }
   ]
