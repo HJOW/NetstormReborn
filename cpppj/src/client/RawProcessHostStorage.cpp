@@ -41,6 +41,11 @@ o::SquidProcessHost& RawProcessHostStorage::Host() {
     if (!host_) host_=std::make_unique<o::SquidProcessHost>(pool_,types_,Kernel(),state_,[this] { return current_.lock(); });return *host_;
 } // 현재 World가 없어도 안정된 Host 자체를 소유할 수 있다.
 o::SquidProcessState& RawProcessHostStorage::State() { return state_; } // 같은 scalar와 현재 외부 참조다.
+// Pool이긴수명을유지해도종료된World주소는사용하지않고현재모듈반납을호출중금지한다.
+void RawProcessHostStorage::ReclaimForAllocation(o::Sid sid) {
+    const auto runtime=current_.lock();if (!runtime || !runtime->asset.emit) throw std::logic_error("SID 소진 복구의 현재 World 가상 삭제 미연결");
+    ClearCall call(runtime);const auto emit=runtime->asset.emit;emit({o::SquidDestroyEffect::DestroyDependent,sid,{},0});
+}
 std::unique_ptr<RawProcessHostStorage::Use> RawProcessHostStorage::Bind(std::shared_ptr<o::ProcessHostRuntimeBindings> runtime) {
     if (!runtime || !runtime->destroy || &runtime->destroy->Pool()!=&pool_ || !current_.expired()) throw std::invalid_argument("ProcessHost의 실제 현재 World 단일 대여 계약");
     if (runtime->factory && &runtime->factory->Pool()!=&pool_) throw std::invalid_argument("ProcessHost 현재 공장의 다른 Pool 대여"); // 미선택 공장 부재는 생성/수신 위치에서만 보고한다.

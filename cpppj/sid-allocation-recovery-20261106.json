@@ -1,0 +1,108 @@
+{
+  "unit": 976,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 976,
+  "version": "11.01",
+  "scope": "PATCH SID 할당 단언 정상복귀/현재 free-list·최대50 회수와 현재 World 가상 삭제 대여",
+  "exeSha256": "01b9366f6efb12a0cd4b89073ad31adb3ccef49b842eb8c888f1350c4e5d01a7",
+  "exeBytes": 11379712,
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-11-03",
+    "inputs": 47,
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "1527716c4194bc879f0bab5cb6352a378951f7beb049b730cf503485426fd5d8",
+    "fakeTable": 268439552,
+    "boundary": "PATCH Allocate/Reset/iterator/Release/기록CRT 실제원문. 단언정상복귀/가상삭제→Native Release/명시외부변형만경계. 실제게임/MP/공격없음."
+  },
+  "build": {
+    "releaseCommands": 3,
+    "exitCodes": [
+      0,
+      0,
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_pop_context_tests"
+    ]
+  },
+  "tests": {
+    "uniqueCases": 25,
+    "newCases": 4,
+    "existingCases": 21,
+    "failedChecks": 0,
+    "newFilter": "SidAllocationRecovery_",
+    "existing": [
+      {
+        "filter": "SidPool_",
+        "exit": 0,
+        "cases": 6,
+        "failedChecks": 0
+      },
+      {
+        "filter": "ProcessHostStorage_",
+        "exit": 0,
+        "cases": 11,
+        "failedChecks": 0
+      },
+      {
+        "filter": "ProcessCreationCurrent_",
+        "exit": 0,
+        "cases": 4,
+        "failedChecks": 0
+      }
+    ],
+    "nativeFixtureRows": {
+      "newAllocation": 47,
+      "existingSid": 3168,
+      "total": 3215
+    },
+    "firstRun": {
+      "cases": 3,
+      "failedChecks": 1,
+      "cause": "검사 준비에서 실제 Session이 후설치하는 Content 호스트 누락. 같은 현재 World 분배기에 실제 호스트 후설치로 교정. Native47/선택된 미연결 경계는 첫 실행부터 통과."
+    },
+    "actualWorld": [
+      "현재 Form 클래스의 실제 삭제",
+      "전체 DWORD Bridge 번호와 BYTE TYPE 비교",
+      "종료 대여 거부/다음 prepared World 재대여",
+      "동기 회수 중 이전 Clear 증빙의 반납 거부/복귀 뒤 소비"
+    ]
+  },
+  "protected": {
+    "before": 2798,
+    "unchanged": 2798,
+    "after": 2799,
+    "fixtures": 979,
+    "new": [
+      "cpppj/tests/fixtures/sid-allocation-recovery-x86.tsv"
+    ],
+    "pythonSyntax": "pass"
+  },
+  "solutionProjects": 83,
+  "checkingRemaining": 8,
+  "lastGuiUnit": 968,
+  "skipped": [
+    "GUI/진단UI",
+    "MP/패킷/통신",
+    "공중3종 전용",
+    "실제 포획/희생/특정 적 공격/승리",
+    "전체CTest/34미션/ZIP 반복"
+  ],
+  "remaining": [
+    "CD004aae40의 dump/상세/별도 회수/BridgesKilled 실패 경로",
+    "외부 heap 반환/실제 malloc 실패의 소유권",
+    "legacy 외부 raw Kernel World 독립 회수 연결",
+    "다른 생성자/가상 callee/파일/비멀티 수명",
+    "우선순위4 전체"
+  ],
+  "userDecision": "이번976 검증·문서·로컬 커밋 완료 후 목표 일시 중지. 새 재개 지시 전977 시작 금지."
+}

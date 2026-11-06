@@ -3,7 +3,9 @@
 #include "o/RiftType.h"
 #include <array>
 #include <cstdint>
+#include <functional>
 #include <span>
+#include <string_view>
 #include <vector>
 
 namespace netstorm::o {
@@ -22,6 +24,15 @@ struct SidLayout { /* stride: 원본 객체 슬롯 하나의 바이트 크기. *
 // 원본이 반납 직전에 보존하는 최근 삭제 기록 한 항목이다.
 struct SidDeletion { /* sid: 원본 풀에서 객체를 찾는 SID 번호. */ /* type: 타입 표에서 객체 종류를 찾는 번호. */ std::uint32_t sid{},type{}; };
 
+// 긴 Pool이 현재 권한/종류/진단만 빌리고 실제 삭제는 짧은 World 대여에서 선택하게 한다.
+struct SidAllocationBindings {
+    const std::uint32_t* disallow{}; //005c8458의현재금지DWORD이며독립미연결은원문BSS0이다.
+    const bool* boss{}; //00540bc4의현재권한이며소진복구를선택할때만필요하다.
+    const std::uint32_t* bridgeType{}; //005411a0의현재전체DWORD로BYTE TYPE와비교한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //원문단언정상복귀뒤같은위치에서계속하며실행중장치교체를허용한다.
+    std::function<void(Sid)> reclaim; //현재가상+10을flags0으로호출하는실제World삭제경계다.
+};
+
 // 원본 SID 영역별 자유 슬롯과 예측 슬롯을 할당·반납하는 저장소이다.
 class SidPool {
 public:
@@ -35,6 +46,7 @@ public:
     void ClearDeletionHistory();
     // 004af1d0 ↔ CD 004aae40. bit 1=예측, bit 2=클라이언트이며 예측이 우선한다.
     Sid Allocate(std::uint32_t flags=0);
+    void BindAllocation(SidAllocationBindings bindings); //실제장기전역/현재World삭제장치를연결한다.할당이나값초기화는수행하지않는다.
     // 004abf60 ↔ CD 004ab250. void 객체만 반납하며 raw 슬롯을 지운 뒤 이전 타입 번호를 남긴다.
     void Release(Sid sid);
     // 004abe00 ↔ CD 004aad30. free 서버 슬롯을 번호순으로 다시 잇고 기존 freeCount에 더한다.
@@ -83,10 +95,13 @@ private:
     void WriteNext(std::size_t offset,std::uint16_t next);
     // 슬롯 주소 산술을 수행하기 전에 번호 범위를 검사한다.
     std::size_t Offset(Sid sid) const;
+    Sid AllocateLegacy(std::uint32_t flags); //CD의기존정상할당계약을보존한다.다른소진dump/진단분기는별도이관대상이다.
+    void AssertAllocation(std::string_view expression,std::uint32_t line,std::string_view file={}) const; //PATCH할당의선택된단언만현재장치로보낸다.
     // 반납 기록의 20항목 이동을 복원하며 마지막 항목은 버린다.
     void Record(Sid sid,std::uint8_t type);
     // layout_: 좌표 배치 계산 또는 판본별 필드 위치 정보.
     SidLayout layout_;
+    SidAllocationBindings allocation_; //Pool보다긴전역주소와같은Storage의현재대여조회만보관한다.
     // capacity_: 확보한 저장소의 최대 항목 수.
     // freeCount_: 반납 상태인 슬롯의 개수.
     // predictableCursor_: 다음 예측 슬롯 할당을 시작할 번호.

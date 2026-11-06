@@ -3736,3 +3736,11 @@ target_sources(netstorm_pop_context_tests PRIVATE KernelDiagnosticCurrentTests.c
 target_sources(netstorm_tests PRIVATE FactoryFirstPopCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE FactoryFirstPopCurrentTests.cpp)
 set_source_files_properties(FactoryFirstPopCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FIRST_POP_FLAGS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/first-pop-flags-x86.tsv\"")
+
+# 실제SID소진회수/단언복귀와World현재대여를원문전체메모리에집중대조한다(976).
+target_sources(netstorm_tests PRIVATE SidAllocationRecoveryTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE SidAllocationRecoveryTests.cpp)
+set_source_files_properties(SidAllocationRecoveryTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SID_ALLOCATION_RECOVERY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sid-allocation-recovery-x86.tsv\"")
+# SID 공통 부모 변경은 기존 양판본 정상 입력과 FIFO/예측 경계도 같은 집중 대상에서 확인한다.
+target_sources(netstorm_pop_context_tests PRIVATE SidTests.cpp)
+set_source_files_properties(SidTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SID_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sid-x86.tsv\"")

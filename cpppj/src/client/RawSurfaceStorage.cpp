@@ -45,6 +45,9 @@ RawSurfaceStorage::RawSurfaceStorage(o::OriginalEdition edition,std::span<const 
     o::FinishSquidPoolReset(pool,boardTargetState.invalid); //Pool 생성자가 이미 실행한 하위 Reset 뒤 원문 시작의 기록80DWORD·Y/X 꼬리를 한 번 잇는다.
     links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157; // 기존10.78 표면/초기 생산 경계의 실제 종류다. 월드 설치는 자기 판본의 실제 값을 직접 쓴다.
     for (std::size_t type=0;type<frames.size();++type) codes[type].assign(frames[type].Codes().begin(),frames[type].Codes().end()); // 같은 타입의 실제 프레임 코드만 최초 보관한다.
+    pool.BindAllocation({&disallowSquidAllocation,&authority_->boss,&links.bridgeType,
+        [this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); },
+        [this](o::Sid sid) { Processes().ReclaimForAllocation(sid); }}); //긴Pool은같은전역을읽고실제삭제만현재World의짧은대여에서선택한다.
 }
 // 장기 process owner는 실제 Pool/TYPE가 살아 있는 동안 최종 소유권을 반납한다.
 RawSurfaceStorage::~RawSurfaceStorage()=default;

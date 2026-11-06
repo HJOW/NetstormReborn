@@ -41,8 +41,8 @@ MAX_INSTRUCTIONS=10000000
 
 class SidOracle:
     """SID의 새 Ghidra 범위에서 원본 명령과 정상 스택 복구만 허용한다."""
-    def __init__(self,edition):
-        """두 PE를 읽어 별도 에뮬레이터에 복사하고 SID 몸체·쓰기 범위를 구성한다."""
+    def __init__(self,edition,facts_path=None):
+        """명시 facts_path는 현재 정밀 선별 범위를 사용하고 생략하면 기존 SID 산출물 계약을 유지한다."""
         self.edition=edition
         self.spec=SPECS[edition]
         binary=ROOT/('originals/Netstorm.exe' if edition=='originals' else 'originalCD/NETSTORM.EXE')
@@ -58,7 +58,7 @@ class SidOracle:
         self.entries=self.spec['entries']
         self.facts=[]
         self.allowed=[]
-        with (ROOT/f'extracted/sid/{edition}/functions.tsv').open(encoding='utf-8') as fp:
+        with (facts_path or ROOT/f'extracted/sid/{edition}/functions.tsv').open(encoding='utf-8') as fp:
             # 새 헤드리스 디컴파일의 실제 불연속 몸체 범위만 사용한다.
             for row in csv.DictReader(fp,delimiter='\t'):
                 self.facts.append(row)
