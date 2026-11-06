@@ -300,7 +300,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     login.gameSeconds=[&client] { return client.GameSeconds(); }; // 서버 시간 응답은 요청 처리 순간의 같은 실제 보정/정지 시계를 읽는다.
     login.refresh=[&client] { client.GetRenderer().InvalidateAll(); };
     login.initializeChat=[&client] { InitializeClientChatManager(client); }; // 현재 Core/manager·명령표·Config를 실제 원문 수명으로 재구성한다.
-    login.playerUiBusy=[&controls] { return controls.Menus() && controls.Menus()->HasMenus(); };
+    login.playerUiBusy=[&client,&controls] { if (client.Edition()!=o::OriginalEdition::Patch1078) return controls.Menus() && controls.Menus()->HasMenus();if (!client.SurfaceStorage()->ownerMode.battle || client.GameplayGlobals()->world.missionPost || client.LocalStateGlobals()->ScriptBreak()) return false;return client.GameplayGlobals()->RequireSession().BattleFinished(); }; // 패치는 원문449200 종료 관문을 사용하고 CD는 기존 어댑터를 유지한다. 역사적 필드명으로 동작을 추측하지 않는다.
     login.playerNotice=[&client](std::uint32_t kind,std::uint32_t owner,std::uint32_t value) { std::clog<<"Player UI "<<kind<<' '<<owner<<' '<<value<<'\n';client.GetRenderer().InvalidateAll(); };
     login.log=[](std::string_view text) { std::clog<<text; };services.localLogin=std::move(login);
     services.localLogin->queueAlliance=[&client](auto packed) { const auto value=std::bit_cast<std::int32_t>(packed);client.Input().PushCommand(0x02000122U,value,value); };

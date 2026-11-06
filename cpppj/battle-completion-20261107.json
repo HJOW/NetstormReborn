@@ -1,0 +1,51 @@
+{
+  "unit": 1006,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "재접속/Player 변경의00449200 종료 관문을 메뉴 존재에서 실제 참가자/동맹/사제 판정으로 교체",
+  "sourceFunctions1078": [
+    "00448f50",
+    "00448fd0",
+    "004490d0",
+    "00449200"
+  ],
+  "referenceFunctions1072": [
+    "00483e70",
+    "00483fe0",
+    "00484120"
+  ],
+  "build": {
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted\\cpp-resume-1006\\build.log",
+      "extracted\\cpp-resume-1006\\build-final.log"
+    ],
+    "exeSize": 11848192,
+    "exeSha256": "bdf2269ee29f63ebd70fe3492963fdc86cecf90112f443fd6ca2a5ff614c0a93"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1006\\protected-before.json"
+  },
+  "remaining": [
+    "StateReconnect/DelStateFile 입력·004b8cb0 서버 이전/복구State7 인계",
+    "일반 프레임486bc0/스펠·전체 파생 writer/decoder·메타·Outpost/checking7",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

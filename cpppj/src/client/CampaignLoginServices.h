@@ -14,7 +14,7 @@ struct CampaignLoginServices {
     std::function<double()> gameSeconds; // 시간 동기화 응답의 실제 현재 게임시각이며 고정된 Frame.game 사본을 쓰지 않는다.
     std::function<std::uint32_t()> clock; //원본 CRT clock의 현재32비트다.
     std::function<void()> refresh; //같은 실제 UI/SP 표시의 현재 원문 재수집을 요청한다.
-    std::function<bool()> playerUiBusy; //현재 Player UI 작업 중인지 조회하는 실제 장치 경계다.
+    std::function<bool()> playerUiBusy; // 역사적 필드명이며 원문00449200의 실제 전투 종료 관문을 조회한다. 메뉴 존재 여부로 대신하지 않는다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> playerNotice; //현재 Player 표시 사건을 실제 UI에 전달한다.
     std::function<void(std::uint32_t,bool,std::uint32_t,std::span<const std::uint8_t>)> observePacket; //선택검사전용현재sender/boss/local과수신바이트의읽기전용관측이다.
     std::function<void(std::string_view)> log; //로그인/전송의 원본 진단과 상태를 실제 로그에 남긴다.

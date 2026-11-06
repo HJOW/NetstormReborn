@@ -12,6 +12,7 @@
 #include "client/AiDebugCommandInput.h" //일반진단입력도현재AI본문을직접사용한다.
 #include "client/ObjectOwnerCommands.h" //편집 객체 추적이 같은 Session의 실제 월드 다시 그리기 DWORD를 사용한다.
 #include "o/RawFortSubscriberChange.h" // 현재 Fort의 Champion 변경도 같은 실제 Template writer를 사용한다.
+#include "o/RawBattleCompletion.h" // 재접속/Player 변경의 실제 전투 종료 관문도 같은 현재 물리를 쓴다.
 #include "client/RitualChoiceInput.h" //6b요청은같은현재선택제단과실제전송을사용한다.
 #include "o/RawRitualChoice.h" //선택Form교체를실제종속수신기에연결한다.
 #include "client/TechnologyListMenu.h" //HTML 원소별 기술 목록의 현재 TYPE/기술 종류WORD/가상 레벨을 연결한다.
@@ -3778,6 +3779,10 @@ void RawCampaignSession::RequestForcedAlliance(std::uint32_t packed) { if (!impl
 void RawCampaignSession::PollReconnectSave() {
     auto& s=*impl_;if (!s.core.ownerMode.battle) return;if (!s.login) throw std::logic_error("전투 주기 저장의 실제 Login 미설치");
     PollSavedStateWrite(s.core.ownerMode.battle,s.localStateGlobals->ReconnectSaveEnd(),s.login->effects.wallSeconds,[&s] { s.login->SaveReconnect(); });
+}
+// 현재 물리/연결/사제 부모를 빌려 종료 여부만 계산하며 승리나 상태 쓰기를 합성하지 않는다.
+bool RawCampaignSession::BattleFinished() const {
+    auto& s=*impl_;RawBattleCompletion gate({s.players,s.battleOptions,s.playerRecords->Alliances(),s.core.ownerMode.battle,s.globals.missionPost,s.assetState.Boss(),s.localStateGlobals->ScriptBreak(),s.loginEnd},{[&s] { if (!s.login || !s.login->transport.exists) throw std::logic_error("종료 관문의 실제 서버 연결 조회 미연결");return s.login->transport.exists(9); },[&s](auto owner) { return s.outcome->PriestDead(owner); }});return gate.Finished();
 }
 // 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.
 void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 연구 수신 등록");o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }

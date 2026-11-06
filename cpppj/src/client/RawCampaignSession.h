@@ -310,6 +310,7 @@ public:
     bool LocalConnectionReady() const; // 실제 loaded/phase14/PlayerKnown/현재 Player 참여 비트만 조회한다. 별도 성공 플래그를 만들지 않는다.
     void RequestForcedAlliance(std::uint32_t packed); // 원문02000122의 highWORD owner/lowBYTE target을 실제78h로 서버9에 요청한다.
     void PollReconnectSave(); //004b6730의 현재 전투/벽시각 만료를 같은 실제 로그인 writer/Client 기한에 연결한다.
+    bool BattleFinished() const; //00449200의 실제 현재 참가자/동맹/사제 종료 관문이며 UI 메뉴 존재 여부가 아니다.
     //프레임마다현재실제송신/수신큐와로그인타이머를진행한다.
     void PumpLocalConnection();
     //현재연결상태/실제수신패킷은진단전용읽기다. 별도성공flag를만들지않는다.

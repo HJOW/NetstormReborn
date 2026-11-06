@@ -66,7 +66,7 @@ struct MissionClientPacketHooks {
     std::function<void(std::uint32_t,std::string_view,std::uint32_t)> addChat; // 실제00444ee0의20채널 추가다.
     std::function<void(std::uint32_t,std::uint32_t)> removeChat; // 실제00444ff0의 해당 subscriber채널 제거다.
     std::function<void(std::uint32_t)> restoreCoreData; // !missionPost의0048fb30 전체다.
-    std::function<bool()> playerUiBusy; // 00449200의 실제 현재 창 관문이다.
+    std::function<bool()> playerUiBusy; // 역사적 필드명이며00449200의 현재 전투 종료 관문이다. 실제 UI 창 개수와 구별한다.
     std::function<void()> saveReconnect; // !missionPost의004b54e0 전체다. 미션은 원문처럼 자연 반환한다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> playerNotice; //004d3090(kind,owner,arg,0,"")의 실제 소비자다.
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> send; // 현재 실제 연결/접속gate를 지나는 송신이다.
