@@ -164,7 +164,7 @@ struct CampaignSubscriberServices {
     std::function<void(o::FortSubscriberLoadAssertion)> assertion; //고정Template/직접읽기의원문진단이다.
 };
 // 생성전선택이며캠페인생성후Editor bool을켜는전환으로대체하지않는다.
-enum class CampaignInstallMode { Campaign,ExistingEditor }; // Fort 편집 설치는 기존/신규 파일을 공통 부모에서 구분하고 원문 alternate0/1을 유지한다.
+enum class CampaignInstallMode { Campaign,ExistingEditor,GeneralBattle }; // Fort 편집과 일반 LAN의 준비된 전역 대여를 미션 파일/World 적재와 구별한다.
 // 기존raw부모가소유한외곽순서에현재Client장치만공급한다.게임저장소는Session이덮어연결한다.
 struct CampaignExistingEditorCheckpointServices {
     o::ExistingEditorFortHooks fort; //현재/pending이름·비교·Guide·setName·Config·outside만외부에서공급한다.CoreWrite를포함한게임child는Session이연결한다.
@@ -200,6 +200,7 @@ struct RawCampaignSessionServices {
     std::shared_ptr<EditorFiles> remoteFortFiles; // 원격 manager의 존재/삭제에 사용하는 검사된 사용자 작업 장치이며 Session보다 오래 소유한다.
     std::string missionFortFileName; //최초 missionFortImage와 같은 읽기에서 선택한 실제 파일 경로다. 생략한 독립 호출만 기존 논리 이름을 유지한다.
     std::shared_ptr<MissionFortLoadRequest> missionFortRequest; // Init에서 만든 같은 요청/Zone을 소비하며 설치 때 새 Zone을 만들지 않는다.
+    std::shared_ptr<GeneralBattleStartRequest> generalBattleStart; // 일반 State7의 정리 전 지역값과 실제 Zone 수명이며 단독 미션 요청과 혼용하지 않는다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions; // Client Init와 실제 로그인/세계/메뉴가 같은 전역87BYTE를 소유한다. 독립 검사는 자체 배열을 쓴다.
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions; // 설치 전 Header와 설치 후 TotalMade가 같은 현재 표를 빌린다.
     std::optional<std::uint32_t> missionSubscriber; // Init이 현재54265c에서 복사한540c74다. 독립 로그인은 기존1을 사용한다.

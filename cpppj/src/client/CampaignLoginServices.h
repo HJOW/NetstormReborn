@@ -26,6 +26,7 @@ struct CampaignLoginServices {
     std::function<void()> creatingIslands; // 중앙섬 metadata의 번역 안내를 같은 현재 transient HTML 창에 재설정한다.
     std::function<void(o::LocalMissionProgress,std::int32_t)> progress; // State7/8/9·송신 뒤 안내를 실제 번역/공유 HTML 창으로 전달한다.
     std::function<void()> initializeChat; //0048fb30의 저장게임 복원 뒤 같은 Client의 실제0042e050을 재실행한다.
+    std::function<void()> selectReconnectFort; // 일반 State7의 재접속 표식 뒤00460980 현재 이름 선택이다. 파일 Reload로 대신하지 않는다.
     std::optional<CampaignTransportServices> transport; // 명시 LAN/공통 전송만 주입하며 없으면 기존 내부 미션 양끝을 사용한다.
     std::function<void(std::uint32_t)> attachCommander; // 비서버 State13의 실제 Commander 연결이며 누락은 해당 선택 위치에서 명시 거부한다.
 };

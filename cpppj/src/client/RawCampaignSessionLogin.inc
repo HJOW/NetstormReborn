@@ -251,6 +251,32 @@ struct RawCampaignSession::Impl::Login {
         rollback.armed=false; // 정상 생성 뒤에는 Login 소멸자가 하위 처리기보다 먼저 같은 대여를 반납한다.
     }
     MissionLoginPlayerCounts counts{OriginalEdition::Patch1078,s.players}; //같은 Player9의 현재 집계를 타이머에 공급한다.
+    //004b4be0의 실제 가변 Zone을 같은 Player/Core/권한에 설치한다. 단독/일반 모두 이 몸체를 사용한다.
+    void InstallZone(std::span<const std::uint8_t> zone) {
+        netstorm::zacket::LocalMissionZoneHooks hooks;hooks.loginTimeout=[this] { return Need(effects.configInt)("loginTimeout",30); };hooks.seconds=effects.wallSeconds;
+        hooks.storeName=[](std::uint32_t subscriber,std::string_view name) { SanitizeMissionPlayerName(subscriber,{reinterpret_cast<std::uint8_t*>(const_cast<char*>(name.data())),name.size()+1}); };
+        hooks.serve=[this](std::uint32_t port) { Need(transport.serve)(port); };
+        hooks.assertion=[this](auto expression) { Need(s.services.ai.assertion)(expression); };
+        netstorm::zacket::InstallLocalMissionZone(zone,s.players,s.playerState,{s.core.processState.Server(),s.assetState.Boss(),s.globals.mySubscriber,pendingStamp,activeStamp,zoneWord,zoneWords[0],captureEnd,adjust,s.objectState.mission,overrideFlags,s.core.ownerMode.challenge,currentCore,cachedCore},std::move(hooks),static_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799)));
+    }
+    // 일반 State7의 실제 후반이다. 호스트 Zone의 유무를 캡처값으로 선택하며 client에 합성 미션 명단을 공급하지 않는다.
+    void BeginGeneral(bool parentRunning) {
+        const auto request=s.services.generalBattleStart;
+        if (!parentRunning || !request || request->consumed || !request->starting || blocks[3][0]!=7 || !effects.transport || s.globals.missionPost || s.objectState.mission) throw std::logic_error("일반 LAN의 외부 State7/같은 요청/실제 전송 계약");
+        if ((request->starting->zonePending!=0)==request->zone.empty()) throw std::logic_error("일반 LAN의 정리 전 Zone 표식/가변 이미지 불일치");
+        if (simul) Need(transport.listen)(std::bit_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799))); // 원문은 서버 권한과 별개로 Zone 설치 전에 simulconnect listener를 연다.
+        if (request->starting->zonePending) {
+            InstallZone(request->zone);std::vector<std::uint8_t>{}.swap(request->zone);blocks[3][32]=0;blocks[4][32]=0;
+            clockSynchronization->InitializeServer(*transport.dispatch); // 원문은 Zone 설치/해제 때만 서버 시간 응답기를 등록한다.
+        }
+        request->consumed=true;Need(effects.initializeRenderer)();s.playerState.playerKnown=0;SetUiMode(2);ResetAmbientSoundDeadline(activityEnd,effects.wallSeconds);blocks[2][1]=20;state->Request(8);
+        if (blocks[3][33]) { saved=true;Need(effects.selectReconnectFort)();Need(effects.progress)(LocalMissionProgress::ReconnectStarting,0); }
+        else {
+            if (s.core.processState.Server()) { auto& aux=*s.gameplayGlobals->GameAux();options->InitializeDensity(s.random,aux.ArchipelagoMinimum(),aux.ArchipelagoMaximum(),aux.ArchipelagoPercent()); }
+            Need(s.services.ai.participation.clearChat)(0x40);Need(s.services.ai.participation.clearChat)(0x80);Need(effects.progress)(LocalMissionProgress::ConnectingStarting,0);
+        }
+        Need(effects.battlePalette)(); // State7/즉시8의 공통 확정과 접속은 살아 있는 외부 Client 부모가 수행한다.
+    }
     //원본 미션 부모의 로컬 Zone을 설치하고 실제 상태8에서 접속한다.
     void Begin(bool parentRunning=false) {
         if (!s.services.subscriberGlobals) { s.globals.loginSubscriber=s.services.missionSubscriber.value_or(1);s.globals.mySubscriber=s.globals.loginSubscriber; } //독립fallback만기존복사를수행한다.실제Client는Init현재쓰기뒤Login에서ID를재복사하지않는다.
@@ -261,6 +287,7 @@ struct RawCampaignSession::Impl::Login {
         };
         s.services.ai.localTransport=[this] { return simul; }; // RawPlayerParticipation의 실제0054db50이며 전송 존재와 구별한다.
         s.services.carrierRequest=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); };
+        if (s.services.installMode==CampaignInstallMode::GeneralBattle) { BeginGeneral(parentRunning);return; } // 일반 host/client는 단독 미션86BYTE fallback과 요청 검증을 통과시키지 않는다.
         auto request=s.services.missionFortRequest;std::optional<netstorm::zacket::LocalMissionPacket> fallback; // Init에서 작성한 같은86BYTE를 사용하며 독립 Session만 기존 작성기를 호출한다.
         if (s.services.adoptInitializedPlayers && !request) throw std::logic_error("실제 Client 미션의 State7 요청 누락");
         if (request) { if (request->consumed || request->next[0]!=7 || request->next[0x80/4]!=1 || request->zone.size()!=86) throw std::logic_error("현재 Init Fort 요청/이미지 계약 위반");if (request->starting) { if (blocks[3][0]!=7 || blocks[3][32]!=1) throw std::logic_error("정리 뒤 실제 현재 State7/Zone 계약 위반"); }else blocks[3]=request->next; } // 실제 앞단은 현재 블록을 이미 소비했다. 독립 편의 접합만 이전 Init 캡처를 사용한다.
@@ -270,10 +297,7 @@ struct RawCampaignSession::Impl::Login {
         if (startingTail && !request) blocks[3][0]=7; // 독립 편의 요청도 현재7을 명시한다. 실제 Client는 Init/요청의 같은144BYTE를 사용한다.
         const auto starting=[this,&request,&fallback,startingTail] { // 앞선 호스트 정리 뒤의 실제 Zone/Renderer/안내를 원문 공통부 안에서 수행한다.
         if (!request || !request->starting) title=0; // 실제 앞단은 정리 전에 첫BYTE를 이미 지웠다. 뒤에서 현재 제목을 다시 쓰지 않으며 독립 편의 접합만 이전 경계를 유지한다.
-        const auto zone=request ? std::span<const std::uint8_t>(request->zone) : fallback->Bytes();netstorm::zacket::LocalMissionZoneHooks hooks;hooks.loginTimeout=[this] { return Need(effects.configInt)("loginTimeout",30); };hooks.seconds=effects.wallSeconds;
-        hooks.storeName=[](std::uint32_t subscriber,std::string_view name) { SanitizeMissionPlayerName(subscriber,{reinterpret_cast<std::uint8_t*>(const_cast<char*>(name.data())),name.size()+1}); };
-        hooks.serve=[this](std::uint32_t port) { Need(transport.serve)(port); };
-        netstorm::zacket::InstallLocalMissionZone(zone,s.players,s.playerState,{s.core.processState.Server(),s.assetState.Boss(),s.globals.mySubscriber,pendingStamp,activeStamp,zoneWord,zoneWords[0],captureEnd,adjust,s.objectState.mission,overrideFlags,s.core.ownerMode.challenge,currentCore,cachedCore},std::move(hooks),static_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799)));
+        const auto zone=request ? std::span<const std::uint8_t>(request->zone) : fallback->Bytes();InstallZone(zone);
         if (request) { std::vector<std::uint8_t>{}.swap(request->zone);request->consumed=true;blocks[3][0x80/4]=0;blocks[4][0x80/4]=0; } // 실제 할당 반납 뒤 current/next+80만 지운다. 이미 복사한 immediate+80은 보존한다.
         clockSynchronization->InitializeServer(*transport.dispatch); // 원문 Zone 반납 뒤004c1e70의5번 등록/두 카운터0/서버 응답모드1이다.
         if (s.services.adoptInitializedPlayers || effects.initializeRenderer) Need(effects.initializeRenderer)(); // 실제 State7의4993c0 위치다. 앞선 실제 Player 정리를 채택한 미션은 장치 누락을 거부한다.

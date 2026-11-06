@@ -302,7 +302,10 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
         if (!services.adoptPreparedWorld || services.installMode!=CampaignInstallMode::ExistingEditor || !services.deferExistingEditorFile || !services.adoptInitializedPlayers || !services.playerRecords || services.localLogin) throw std::invalid_argument("Editor 전송의 준비된 실제 World/Player/로그인 배제 계약");
         const auto players=services.playerRecords->Records();const auto wirePlayers=services.editorTransport->Players();if (players.size()!=9*180 || players.data()!=wirePlayers.data() || players.size()!=wirePlayers.size()) throw std::invalid_argument("Editor 전송의 같은 실제 Player9 물리 불일치"); // 대여나 모드 재설정 전에 다른 Client/이전 할당의 송수신 큐를 거부한다.
     }
-    if (services.adoptPreparedWorld && (services.installMode!=CampaignInstallMode::ExistingEditor || !services.deferExistingEditorFile || !services.adoptInitializedPlayers || !services.gameplayGlobals || !services.surfaceStorage || !services.localStateGlobals || !services.playerRecords || !services.coreDataGlobals || !services.randomGlobals || !services.spGlobals || !services.processKernel || services.localLogin)) throw std::invalid_argument("준비된 Editor의 같은 전역/표면/State/Player/Core/SP/Kernel 대여 계약"); // 대여 이전에 필수 실제 소유자를 확인하고 캠페인 로그인으로 Editor 전송을 대신하지 않는다.
+    const bool editorPrepared=services.installMode==CampaignInstallMode::ExistingEditor && services.deferExistingEditorFile && !services.localLogin; // Editor의 실제 파일 지연/비로그인 계약이다.
+    const bool generalPrepared=services.installMode==CampaignInstallMode::GeneralBattle && services.localLogin && services.generalBattleStart && !services.missionFortRequest && !services.deferExistingEditorFile && !services.editorTransport; // 일반 LAN은 실제 State7 요청과 Login 전송을 별도로 요구한다.
+    if (services.installMode==CampaignInstallMode::GeneralBattle && !services.adoptPreparedWorld) throw std::invalid_argument("일반 LAN은 실제 State7 정리 뒤 준비된 전역 대여가 필요함");
+    if (services.adoptPreparedWorld && ((!editorPrepared && !generalPrepared) || !services.adoptInitializedPlayers || !services.gameplayGlobals || !services.surfaceStorage || !services.localStateGlobals || !services.playerRecords || !services.coreDataGlobals || !services.randomGlobals || !services.spGlobals || !services.processKernel)) throw std::invalid_argument("준비된 Editor/LAN의 같은 전역/표면/State/Player/Core/SP/Kernel 대여 계약"); // 대여 전에 실제 소유자를 확인하며 World/로그인 성공을 합성하지 않는다.
     if (services.gameplayGlobals && services.gameplayGlobals->Subscribers()!=services.subscriberGlobals) throw std::invalid_argument("Session의 실제 현재 전역/Subscriber 소유자 불일치");
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->Authority()!=services.surfaceStorage->Authority()) throw std::invalid_argument("Session의 실제 현재 전역/표면 권한 소유자 불일치"); // 대여/fresh 쓰기 이전에 정체성을 검증한다.
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
@@ -960,7 +963,13 @@ struct RawCampaignSession::Impl {
         anchorState.graphAssertion=[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph SID 조회 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 현재 상태의 복사본도 같은 장기 Session 서비스를 매 호출 읽는다.
         placement.anchor.graphAssertion=anchorState.graphAssertion; // 지형 생성용 고정 파이프라인도 같은 현재 진단을 빌리며 gameplay 쪽은 매 요청 anchorState 전체를 복사한다.
         assetState.sharedAuthority=gameplayGlobals->Authority().get();gunState.sharedAuthority=gameplayGlobals->Authority().get();regularState.sharedAuthority=gameplayGlobals->Authority().get(); // 첫 파생 모듈 전에 같은 owner를 연결하며 준비된false를 true로 덮지 않는다.
-        assetState.inBattle=true;assetState.localOwner=1;
+        assetState.inBattle=true;assetState.localOwner=services.installMode==CampaignInstallMode::GeneralBattle ? static_cast<std::uint8_t>(playerState.battleOwner) : 1;
+        if (services.installMode==CampaignInstallMode::GeneralBattle) {
+            // Native State7 정리/전투 모드 쓰기를 대여하며 ctor에서 미션/서버/현재 Player를 다시 만들지 않는다.
+            if (localStateGlobals->State().current[0]!=7 || !core.ownerMode.battle || core.ownerMode.fort || core.ownerMode.challenge || core.bridgeState.mission || globals.missionPost || globals.editor || !services.missionFortFileSelect) throw std::logic_error("일반 LAN의 실제 State7/비미션 전투/파일 선택 계약");
+            world.ConfigureInstallModes(core.ownerMode.fort,core.ownerMode.battle,core.ownerMode.challenge,false); // 준비된 기존 Fort 전용이던 C++ BridgeDecay의 private editor 별칭을 실제 비편집 모드에 맞춘다. 공유 모드 값은 같은 값으로 유지한다.
+            objectState.mission=false;objectState.fort=false;objectState.special=false;
+        }
         if (services.adoptMainMenuFort && (!services.adoptPreparedWorld || services.installMode!=CampaignInstallMode::ExistingEditor || !IsExistingFortEntry(services.localStateGlobals->State().current[0],true))) throw std::logic_error("State3/일반 복귀의 같은 준비된 Fort/State1·2·6 계약");
         if (services.installMode==CampaignInstallMode::ExistingEditor) {
             if (services.adoptPreparedWorld) {
@@ -976,7 +985,7 @@ struct RawCampaignSession::Impl {
             priestState.regen.modeBlocked=true;
         }
         if (services.adoptPreparedWorld) {
-            const auto current=coreDataGlobals->Current();if (current.size()!=10 || current.data()!=players.data()+180+0x6c || coreDataGlobals->Players().data()!=players.data()) throw std::logic_error("준비된 Editor의 실제 prefix Core1 선택 불일치"); // 원문 prefix가 선택한 같은 Player뷰를 검증하며 active/cache/owner를 다시 쓰지 않는다.
+            const auto current=coreDataGlobals->Current();if (current.size()!=10 || current.data()!=players.data()+180+0x6c || coreDataGlobals->Players().data()!=players.data()) throw std::logic_error("준비된 Editor/LAN의 실제 cleanup/prefix Core1 선택 불일치"); // 원문 prefix/정리가 선택한 같은 Player뷰를 검증하며 active/cache/owner를 다시 쓰지 않는다.
         } else if (services.coreDataGlobals) { const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,1,1); } // 기존 독립/캠페인 어댑터는 종전 선택 순서를 보존한다.
         constructionState.command.chargeBlockedRead=constructionState.place.chargeBlockedRead=[this] { return globals.missionPost; }; // 원본00594fa4는 캠페인/편집/일반 전투 모두의 현재 미션 전역이다. 각 소비 위치에서 읽어 캠페인 배치 확정의 중복 비용 검사와 잘못된 부족 안내를 막는다. 생산 가격·AI 자금 판정은 별도 몸체가 유지한다.
         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
@@ -3740,7 +3749,14 @@ void RawCampaignSession::ConnectLocalConnectionForState(std::span<const std::uin
 // 기존 생성/명령 등록 순서는 유지하고 부모가 실행 중이면 후반 몸체까지만 반환한다.
 void RawCampaignSession::BeginLocalConnection(bool parentRunning) {
     if (impl_->loaded || impl_->login || !impl_->services.localLogin) throw std::logic_error("실제로컬로그인 새수명/장치 계약 오류");
-    impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands((*impl_->login->transport.dispatch));RegisterConstructionCommands((*impl_->login->transport.dispatch));RegisterFactoryResearchCommands((*impl_->login->transport.dispatch)); });impl_->login->Begin(parentRunning);
+    const bool general=impl_->services.installMode==CampaignInstallMode::GeneralBattle; // 일반 Fort/전투섬은 Login 수신 부모가 직접 적재하며 캠페인 전체 Load를 호출하지 않는다.
+    if (general) {
+        // 빈 일반 월드의 실제 게임 모듈만 준비한다. GameWorld의 connecting 관문과 phase14/Player 참여 검사는 계속 닫혀 있다.
+        impl_->ConnectBuilding();impl_->ConnectMotion();impl_->ConnectDevastation();impl_->ConnectCarrierDrop();impl_->ConnectPriestPrayer();impl_->buildingMover=impl_->MakeBuilder(impl_->buildingMoverState,{});impl_->ConnectGameplayPlacement();impl_->ConnectCursor();impl_->loaded=true;
+    }
+    impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands((*impl_->login->transport.dispatch));RegisterConstructionCommands((*impl_->login->transport.dispatch));RegisterFactoryResearchCommands((*impl_->login->transport.dispatch)); });
+    if (general) { auto& dispatch=*impl_->login->transport.dispatch;RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch); } // 실제 일반 수신이 도달하기 전에 같은 Session/전송 등록표를 준비한다.
+    impl_->login->Begin(parentRunning);
 }
 // 큰 상태 부모는 Uber의 동일 State Tick이 처리하도록 남겨 두며 수신/게임 Kernel은 여기서 실행하지 않는다.
 bool RawCampaignSession::PollLocalConnectionState() {

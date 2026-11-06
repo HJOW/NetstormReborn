@@ -40,6 +40,12 @@ struct MissionFortLoadRequest {
     bool consumed{}; // 실제 Zone 설치 후 반납 여부다. 재설치는 명시 거부한다.
     std::optional<o::LocalMissionStartingSnapshot> starting; // 실제 State7 앞단이 캡처한 정리 전 지역 값이다. 있으면 Login은 현재 Native 요청을 Init 캡처로 덮어쓰지 않는다.
 };
+// 일반 LAN State7은 미션용86BYTE 생성기를 사용하지 않고 실제 호스트 명단 또는 client의 Zone 부재를 인계한다.
+struct GeneralBattleStartRequest {
+    std::vector<std::uint8_t> zone; // 호스트가 작성한 가변 길이 Zone이며 참가자 기록은 원문71BYTE stride다. client는 비운다.
+    std::optional<o::LocalMissionStartingSnapshot> starting; // 이전 World 정리 전에 캡처한 실제 State7 지역값이다.
+    bool consumed{}; // 같은 요청의 정상 후반 소비만 표시하며 Player/Ready/연결 성공을 대신하지 않는다.
+};
 // 원본0040a1e0(1)의 길이 확정과004dece0의 실제 소유 복제를 같은 버퍼에 수행한다.
 std::uint32_t CaptureMissionFortZone(MissionFortLoadRequest& request,zacket::LocalMissionPacket& packet);
 // Guide 교체/전체 종료에서 이전 미션의 지연 로드만 취소한다. State의 이전 World 반납에서는 호출하지 않는다.
