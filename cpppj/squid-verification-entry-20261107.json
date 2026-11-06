@@ -1,0 +1,46 @@
+{
+  "unit": 1023,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "4ah/4bh 검증 시작·자유 슬롯과 이전 SID 간격 확인을 같은 두 전역/등록표 수명에 연결",
+  "sourceFunctions1078": [
+    "00432600",
+    "004326e0",
+    "00432710"
+  ],
+  "referenceFunctions1072": [
+    "00487ae0",
+    "00487be0"
+  ],
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1023\\build.log",
+    "exeSize": 11981824,
+    "exeSha256": "8cc591f219df984de00feaff0715c6a93df8cb7943ec9fbdc23434740fbb3b33"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1023\\protected-before.json"
+  },
+  "remaining": [
+    "2dh 내용물/2eh 삭제와 파생 writer/decoder",
+    "재동기화 허용/owner cache·Activate 수신자 부모",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

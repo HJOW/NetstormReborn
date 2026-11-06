@@ -95,6 +95,7 @@ public:
     std::uint32_t& NuggetType() { return nuggetType_; } //005412c0의 현재 너겟 TYPE이며 보상 환불의 전액 단가 관문이다.
     const std::uint32_t& NuggetType() const { return nuggetType_; } // 같은 장기 owner를 후속 운반/채집 소비자도 빌릴 수 있다.
     std::uint32_t& VerifySid() { return verifySid_; } //0054d4d8의 BSS0이며 전체 객체 수신/검증 부모가 같은 DWORD를 쓴다.
+    std::uint32_t& PreviousVerifySid() { return previousVerifySid_; } //0054d4dc의 별도 BSS0이며4ah/4bh 간격 순회의 현재 위치다.
     std::uint32_t& SupportTypeWas() { return supportTypeWas_; } //0054d4e4: 실제 전체 객체 수신이 쓰고 받침 진단이 읽는 같은 DWORD다.
     const std::uint32_t& SupportTypeWas() const { return supportTypeWas_; } // 일반 월드 준비/Session 교체로 현재 진단 문맥을 초기화하지 않는다.
     std::uint32_t& FirstTimerFactoryType() { return firstTimerFactoryType_; } //005411ac의 현재 DWORD를 Factory 최초 event2가 읽는다.
@@ -155,6 +156,7 @@ private:
     std::uint32_t runeType_{166}; // 보호 PE005412f0의 초기 DWORD이며 ResetForGeneralWorld는 현재 번호를 유지한다.
     std::uint32_t nuggetType_{154}; //005412c0의 최초154를 한 번만 소유하고 Session 재대여로 덮어쓰지 않는다.
     std::uint32_t verifySid_{}; //0054d4d8의 최초 BSS0을 Session/World 교체에서 초기화하지 않는다.
+    std::uint32_t previousVerifySid_{}; //0054d4dc의 최초 BSS0이며 현재 검증 SID의0 저장과 별도로 유지한다.
     std::uint32_t supportTypeWas_{}; //0054d4e4의 최초 BSS0이며 진단 소비자와 실제 수신 writer가 공유할 장기 물리다.
     std::uint32_t firstTimerFactoryType_{85},secondTimerFactoryType_{87},outpostType_{126}; // 보호10.78 PE의 세 TYPE DWORD 초기값이며 일반 Runtime 초기화와 구별한다.
     std::uint32_t terrainType_{97},edgeFarmType_{121}; // 보호 PE 두 TYPE 전역이며 현재 Runtime 대여/반납은 초기화하지 않는다.

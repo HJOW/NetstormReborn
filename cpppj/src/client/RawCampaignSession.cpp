@@ -141,6 +141,7 @@
 #include "o/RawConstructionFailurePackets.h" // 비용실패의실제6ch/2fh와현재예측객체정리를공유한다.
 #include "o/RawSquidReceive.h" // 전체 객체 수신/검증도 같은 Factory·소유자·현재 공간을 사용한다.
 #include "o/RawSquidCompressedReceive.h" //7ah도 현재 owner 캐시로 복원한 뒤 같은 전체 수신 본문을 호출한다.
+#include "o/RawSquidVerification.h" //4ah/4bh는 같은 객체 수신의 검증 SID와 별도 간격 커서를 공유한다.
 #include "o/RawSquidWord.h" // 수신 QA WORD는 기존 다리 표면 통지를 유지한다.
 #include "client/MessageGump.h" // 비용안내의한문자열/256BYTE 원문서식을실제기존처리기로작성한다.
 #include "o/RawBalloonBody.h"
@@ -323,7 +324,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,21> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a}; // 압축7ah도 같은 Session 등록/해제 수명을 따른다.
+constexpr std::array<std::uint32_t,23> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b}; // 두 검증 패킷도 같은 Session 등록/해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -4510,6 +4511,13 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");
     dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);dispatch.Register(0x2c,[this](auto,auto&,auto packet) { impl_->ReceiveSquid(packet); });
     const auto assertion=[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 같은 현재 Client 진단을 송신 관찰기에도 공급한다.
+    const auto verify=[this,assertion](auto packet,bool freePacket) { // 실제 현재 Pool/TYPE와 두 장기 DWORD를 직접 빌린다.
+        auto& s=*impl_;SquidVerificationHooks hooks;hooks.assertion=assertion;hooks.log=s.services.player.log;
+        hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range("검증 간격의 현재 TYPE 물리 범위");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\0')); };
+        auto& aux=*s.gameplayGlobals->GameAux();SquidVerificationState state{aux.VerifySid(),aux.PreviousVerifySid()};if (freePacket) ReceiveFreeSquidVerification(s.core.pool,packet,state,hooks);else BeginSquidVerification(s.core.pool,packet,state,hooks);
+    };
+    dispatch.Observe(0x4a,{});dispatch.Version(0x4a,1,0);dispatch.RequireLength(0x4a,7);dispatch.Register(0x4a,[verify](auto,auto&,auto packet) { verify(packet,true); });
+    dispatch.Observe(0x4b,{});dispatch.Version(0x4b,1,0);dispatch.RequireLength(0x4b,6);dispatch.Register(0x4b,[verify](auto,auto&,auto packet) { verify(packet,false); });
     dispatch.ObservePacket(0x7a,[assertion](auto packet,auto sending) { ObserveCompressedSquid(packet,sending,assertion); });dispatch.Version(0x7a,1,0);dispatch.RequireLength(0x7a,0xffff);
     dispatch.Register(0x7a,[this,assertion](auto,auto&,auto packet) { auto& s=*impl_;SquidCompressedReceiveHooks hooks;hooks.assertion=assertion;hooks.defaultType=[&s] { return s.core.bridgeState.bridgeType; };
         hooks.type=[&s](std::uint32_t type)->const RiftTypeRecord& { if (type>=s.core.types.size()) throw std::out_of_range("압축 객체의 현재 TYPE 물리 범위");return s.core.types[type]; };hooks.maximumHp=[&s](const RiftTypeRecord& selected) { return s.core.factory.ReadSelectedHitPoints(selected,s.core.types); };
