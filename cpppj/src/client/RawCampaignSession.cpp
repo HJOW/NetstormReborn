@@ -3788,6 +3788,13 @@ bool RawCampaignSession::BattleFinished() const {
 void RawCampaignSession::TakeServerForState() {
     auto& s=*impl_;if (!s.loaded || !s.login || (s.login->transport.callbacksActive && s.login->transport.callbacksActive())) throw std::logic_error("실제 Login/외부 Poll 없는 서버 인수 요청");s.login->blocks[3][0]=15;s.login->state->Run();
 }
+// 실제 서버/참가자 전송 객체에 원문의 활동 패킷만 송신한다.
+void RawCampaignSession::SendConnectionHeartbeat(bool broadcast) { auto& s=*impl_;if (!s.login) throw std::logic_error("활동 송신의 실제 Login 없음");std::array<std::uint8_t,5> packet{1,0x64,5,0,0};if (broadcast) s.broadcast->Send(packet);else s.login->Send(9,packet); } //0040ae00/0052ee4e의 길이5와 payload0을 그대로 사용한다.
+// 서버 표식은 남기고 flags1/40만 지우며 실패한 저장의 부분 효과도 되돌리지 않는다.
+void RawCampaignSession::SaveServerFailure() {
+    auto& s=*impl_;if (!s.login) throw std::logic_error("서버 장애 저장의 실제 Login 없음");for (std::uint32_t owner=1;owner<9;++owner) { const auto flags=Impl::Login::Get(s.players,owner*180+0x50);if (flags&8U) Impl::Login::Put(s.players,owner*180+0x50,(flags&0xffffffbeU)|0x100U); }s.login->SaveReconnect(); // 원문 고정8행 뒤 같은 writer를 호출한다.
+}
+void RawCampaignSession::RunConnectionLoginTimer() { if (impl_->login) impl_->login->timer->Run(false); } // timer 자체의 현재 LoginEnd 관문을 사용한다.
 // 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.
 void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 연구 수신 등록");o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
 // 현재 메뉴 부모와 signedWORD 종류를 원문 입력 몸체에 전달한다.

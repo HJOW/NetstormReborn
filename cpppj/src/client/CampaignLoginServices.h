@@ -9,6 +9,7 @@
 namespace netstorm::o { enum class LocalMissionProgress; } // 진행 종류만 빌리며 상태 분배기를 서비스에 소유하지 않는다.
 namespace netstorm::client {
 struct CampaignLoginServices {
+    bool frameLoginTimer{}; // 실제 Client만 원문439ae3 위치에서 타이머를 호출하며 독립 Session은 기존 Pump 호출을 유지한다.
     std::function<std::int32_t(std::string_view,std::int32_t)> configInt; //현재 원본 설정값과 누락 기본값이다.
     std::function<double()> wallSeconds; //정지와 무관한 원본 현재 벽시각이다.
     std::function<double()> gameSeconds; // 시간 동기화 응답의 실제 현재 게임시각이며 고정된 Frame.game 사본을 쓰지 않는다.

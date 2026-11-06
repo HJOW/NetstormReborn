@@ -13,6 +13,8 @@ public:
     ClientConnectionActivityGlobals(ClientConnectionActivityGlobals&&)=delete; // 소비자가 빌린 현재 표 주소를 이동하지 않는다.
     ClientConnectionActivityGlobals& operator=(ClientConnectionActivityGlobals&&)=delete; // 연결된 모듈의 주소 수명을 유지한다.
     o::ConnectionActivityTables Tables() { return {frames_,wallSeconds_}; } // 간극을 포함하지 않는 두 고정 span을 실제 수신 몸체에 빌린다.
+    double& HeartbeatEnd() { return heartbeatEnd_; } //005c8620의 독립 BSS0 기한이며 Session 교체/수신 표 정리로 초기화하지 않는다.
+    std::uint32_t& AutoRestart() { return autoRestart_; } //00531908의 현재 DWORD이며 실제 옵션 해석이1을 쓴다.
     std::array<std::uint32_t,o::kConnectionActivityEntries>& Frames() { return frames_; } //005c84e8..005c853c이며 cleanup은 이22DWORD만 지운다.
     const std::array<std::uint32_t,o::kConnectionActivityEntries>& Frames() const { return frames_; } // 실제 마지막 수신 프레임의 현재값을 관측한다.
     std::array<std::uint32_t,o::kConnectionActivityEntries>& WallSeconds() { return wallSeconds_; } //005c8548..005c859c이며 이후 reader는 각 DWORD를 signed32로 해석한다.
@@ -22,6 +24,7 @@ public:
     std::uint32_t& ActiveZoneWord() { return activeZoneWord_; } //005c8544의 Zone+10 복사 출력이며 wall표의음수항목이 아니다.
     const std::uint32_t& ActiveZoneWord() const { return activeZoneWord_; } // 같은 실제 Zone 소비자가 빌릴 현재 DWORD다.
 private:
+    double heartbeatEnd_{};std::uint32_t autoRestart_{6}; // 보호PE의 실제 최초 BSS0/초기DWORD6이며 옵션 해석 뒤1이 된다.
     std::array<std::uint32_t,o::kConnectionActivityEntries> frames_{}; //005c84e8부터88BYTE이며 최초 BSS0이다.
     std::uint32_t activeStamp_{},activeZoneWord_{}; //005c8540/544의 별도 두 DWORD이며 표 clear에 포함하지 않는다.
     std::array<std::uint32_t,o::kConnectionActivityEntries> wallSeconds_{}; //005c8548부터88BYTE이며 바로 뒤005c85a0 CentralCreated를 포함하지 않는다.

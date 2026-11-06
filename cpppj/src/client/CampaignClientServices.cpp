@@ -134,6 +134,7 @@ void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& cont
     login.progress=[&client](auto kind,auto remaining) { if (!client.Menu()) throw std::logic_error("현재 로그인 안내의 실제 UberGump 미연결");client.Menu()->ShowLoginProgress(kind,remaining); }; // 생성 시 메뉴/창을 요구하지 않고 원문 진행 안내 시점에 현재 부모를 조회한다.
     login.translate=[&client](auto key) { const auto bytes=o::EncodeDisplayText(client.Translate(key));return std::string(bytes.begin(),bytes.end()); }; // 번역 출력은 파일명용 원본 부호화와 섞지 않는다.
     login.frameWallSeconds=[&client] { return client.Time().wall; }; // 원본0055b4d8과 같은 프레임 시각이며 새 wall 효과를 수행하지 않는다.
+    login.frameLoginTimer=true; // 실제 Client의 타이머는 수신 폴링이 아닌 입력/연결 감시 뒤439ae3에서 한 번 실행한다.
     login.showTimerProgress=[&client](auto text) { if (!client.Menu()) throw std::logic_error("일반 대기 안내의 실제 UberGump 미연결");return client.Menu()->ShowLoginWaiting(text); };
     login.closeTimerProgress=[&client,&controls] { if (!controls.Menus()) throw std::logic_error("일반 대기 안내의 실제 메뉴 미설치");controls.Menus()->CloseHtmlSerial(client.LocalStateGlobals()->LoginProgressSerial()); };
     login.reconnectFile=MakeSavedStateFileWriteHooks(client); // 실제 open은 writer의 현재 관문/진단 뒤에만 수행한다.

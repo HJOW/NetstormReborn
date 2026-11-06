@@ -377,5 +377,5 @@ struct RawCampaignSession::Impl::Login {
         } else Need(transport.connect)(address,port); // 기존 private LAN/단독 시작의 typed 연결은 유지한다.
     }
     // 현재 송신을flush한 뒤 실제 큐를 분배한다. 프레임 계산은 기존Kernel이 수행한다.
-    void Pump() { wall=Need(effects.wallSeconds)();Need(transport.flush)();clockSynchronization->Poll();static_cast<void>(Need(transport.poll)());if (s.loginEnd!=0.0) timer->Run(false); } // 원문 flush→시간 보정/새 표본→receive 순서를 같은 전송 수명 안에 둔다.
+    void Pump() { wall=Need(effects.wallSeconds)();Need(transport.flush)();clockSynchronization->Poll();static_cast<void>(Need(transport.poll)());if (!effects.frameLoginTimer && s.loginEnd!=0.0) timer->Run(false); } // 실제 Client의 타이머는439ae3에 두고 독립 Session만 기존 편의 호출을 유지한다.
 };

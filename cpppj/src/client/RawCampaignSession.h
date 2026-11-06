@@ -312,6 +312,9 @@ public:
     void PollReconnectSave(); //004b6730의 현재 전투/벽시각 만료를 같은 실제 로그인 writer/Client 기한에 연결한다.
     bool BattleFinished() const; //00449200의 실제 현재 참가자/동맹/사제 종료 관문이며 UI 메뉴 존재 여부가 아니다.
     void TakeServerForState(); //004b8cb0이 요청하는 현재15를 같은 실제 Login/State 공통부로 실행한다. callback 안에서는 실행하지 않는다.
+    void SendConnectionHeartbeat(bool broadcast); // 실제64h/1/5의 끝BYTE0을 서버9 또는 같은 실제 참가자 broadcast로 송신한다.
+    void SaveServerFailure(); //004b6560의 서버 flags 변경→같은 실제976BYTE 저장 writer를 실행한다.
+    void RunConnectionLoginTimer(); // 실제 Client439ae3의 동일 타이머이며 Editor에는 Login을 만들지 않는다.
     //프레임마다현재실제송신/수신큐와로그인타이머를진행한다.
     void PumpLocalConnection();
     //현재연결상태/실제수신패킷은진단전용읽기다. 별도성공flag를만들지않는다.

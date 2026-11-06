@@ -152,6 +152,8 @@
 #include "o/RawDataManagerSelection.h"
 #include "o/RawSavedStateRead.h" //startupStateCheck의 실제 저장 파일 부재 관문도 원문 reader에서 판정한다.
 #include "o/RawBattleReconnect.h" // 저장 질문/서버 실패의 실제 같은 후보 선택 부모를 사용한다.
+#include "o/RawConnectionHealth.h" // 실제 프레임의 연결 활동/지연/자동 서버 이전을 같은 상태에 연결한다.
+#include "client/ClientConnectionActivityGlobals.h" // 수신과 프레임 감시가 같은22칸/기한/자동 이전 DWORD를 빌린다.
 #include "client/SavedStateFileRead.h" // 같은 startup reader를 실제 사용자 FILE/Player/Core에 연결한다.
 #include "client/SavedStateFiles.h" //State1/3의 같은 저장파일 이름/State3 정리를 실제 설치 경로에 연결한다.
 #include <algorithm>

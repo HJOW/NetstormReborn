@@ -1,0 +1,71 @@
+{
+  "unit": 1015,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "실제439ad8의 연결 활동 송신/지연 안내/서버 장애 저장→자동 재접속과439ae3 로그인 타이머를 연결",
+  "sourceFunctions1078": [
+    "004b9010",
+    "004b6560",
+    "0040ae00",
+    "004d0600",
+    "00439ad8",
+    "00439ae3"
+  ],
+  "referenceFunctions1072": [
+    "004c8b40"
+  ],
+  "nativeConstants": {
+    "heartbeatHeaderHex": "0164050000",
+    "clientPeriod": 10,
+    "serverPeriod": 3,
+    "outsidePhase14Period": 1,
+    "serverWarning": 8,
+    "playerWarning": 15,
+    "reconnectSeconds": 20,
+    "reconnectFrames": 20,
+    "autoRestartPe": 6,
+    "autoRestartInterpretOptions": 1
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1015\\build.log",
+    "exeSize": 11893248,
+    "exeSha256": "22cbc1b8dcd2254f3e42db60103daf4f7695918e822658934739f3429a8b17dc",
+    "firstExitCode": 1,
+    "firstErrors": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\client\\UberReconnect.inc(31,127): error C2039: 'processState': 'netstorm::client::RawSurfaceStorage'의 멤버가 아닙니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]",
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\client\\UberReconnect.inc(31,12): error C2664: 'bool netstorm::o::PollConnectionHealth(netstorm::o::ConnectionHealthGlobals,const netstorm::o::ConnectionHealthHooks &)': 인수 1을(를) 'initializer list'에서 'netstorm::o::ConnectionHealthGlobals'(으)로 변환할 수 없습니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
+    ],
+    "correction": "RawSurfaceStorage에 없는processState 대신 같은 실제 Gameplay.Authority.server를 빌리도록 교정",
+    "secondExitCode": 1,
+    "secondErrors": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\o\\RawConnectionHealth.cpp(11,78): error C2561: 'netstorm::o::PollConnectionHealth': 함수는 값을 반환해야 합니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
+    ],
+    "secondCorrection": "메타 연결 부재의 bool 자연 반환을 false로 명시"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "liveFailureSaves": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1015\\protected-before.json"
+  },
+  "remaining": [
+    "일반486bc0/스펠/비미션 너겟 배치",
+    "전체 파생 writer/decoder·메타·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

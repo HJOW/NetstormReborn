@@ -469,6 +469,7 @@ int Client::Run() {
         if (movieUpdatePauseDepth_<=0) {
             // 원본439ad3의 설정 저장은439b13의 가상 소멸/OnExit 예약보다 먼저다.
             if (configuration_.Configuration().changed) SaveOptions();
+            if (menu_) menu_->PollConnectionHealth(); //439ad8의 실제 연결 감시/서버 이전과439ae3 타이머는 입력 뒤·Ambient/Wind 앞이다.
             UpdateAmbientSound(); //00439aeb는 같은 난수를 소비하는 Wind 바로 앞이며 noAudio/게임 정지로 생략하지 않는다.
             surfaceStorage_->UpdateAmbientWind(randomGlobals_->Game()); //00439af0의 Movie 잠금 없는 가지이며 게임 시계 정지/메뉴 여부와 무관하게 같은 난수를 소비한다.
             UpdateMonitorTime(); //00439af5는 Wind 뒤이며 게임 시계 정지/장치 없는 음향과 무관하다.
@@ -1350,7 +1351,7 @@ void Client::UpdateAmbientSound() {
 }
 
 namespace netstorm::client { // 시간 알림은 같은 현재 Config/UI를 그 호출 지점에서만 읽는다.
-void Client::InterpretMonitorOptions() { auto& state=localStateGlobals_->MonitorTime();configuration_.ReadInt("monitor",state.monitor);configuration_.ReadInt("alert",state.alert); } // 누락 키/상위 비트와 기존 기한은 보존한다.
+void Client::InterpretMonitorOptions() { connectionActivityGlobals_->AutoRestart()=1;auto& state=localStateGlobals_->MonitorTime();configuration_.ReadInt("monitor",state.monitor);configuration_.ReadInt("alert",state.alert); } // 원문 옵션 해석의00531908=1 뒤 monitor/alert를 읽으며 누락 키/기한은 보존한다.
 void Client::UpdateMonitorTime() {
     MonitorTimeHooks hooks;hooks.wallSeconds=[this] { return WallSeconds(); };hooks.calendar=MonitorCalendarText;
     hooks.handle=[this]() -> std::string_view { if (!menu_) throw std::logic_error("시간 알림의 현재 이름 UI 소유자 없음");return menu_->CurrentHandle(); };

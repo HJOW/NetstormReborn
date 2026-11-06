@@ -12,6 +12,8 @@ constexpr std::int32_t kWarning=17; //원문Script Warning의실제메시지종�
 constexpr std::int32_t kGameTime=16; //원문게임시간메시지의실제종류다.
 constexpr std::int32_t kPause=11; // 원문 분배기와 생성자가 사용하는 실제 Pause 종류다.
 constexpr std::int32_t kAllied=7,kStarted=9; //0048f880의 동맹 안내와004b4a20의 실제 게임 시작 안내다.
+constexpr std::int32_t kServerInactive=1,kPlayerInactive=2; //004b9010의 실제 응답 지연 종류이며 새 활동 수신에서 같은 키로 지운다.
+constexpr std::array<char,8> kInactiveColors{'b','r','w','u','m','y','l','o'}; // PE004d08d6..4d09f2의 지연 서식은4번 색이u다.
 constexpr std::array<char,8> kAlliedColors{'b','r','w','g','m','y','l','o'}; // PE004d0f94..1db7의64서식에서 확인한 행/열 색이다.
 constexpr std::string_view kGameTimeText="~E~yGame Time~r:~w %d:%02d:%02d"; //PE00516024의원문번역서식이다.
 constexpr std::string_view kPauseText="~E~wGame Paused!"; // PE00516010의 현재 원문 번역 키다.
@@ -64,7 +66,7 @@ MessageGumpNode& MessageGump::Node(std::uint32_t token) const {
 }
 // Pause는 시계/음향/idle을 호출하지 않고 기한0의 영구 메시지를 측정한다.
 std::uint32_t MessageGump::Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter,std::optional<std::string_view> source) const {
-    if (kind!=kPause && kind!=kGameTime && kind!=kWarning && kind!=kAllied && kind!=kStarted) throw std::logic_error("다른 원본 메시지 종류의 생성 분기 미복원");
+    if (kind!=kPause && kind!=kGameTime && kind!=kWarning && kind!=kAllied && kind!=kStarted && kind!=kServerInactive && kind!=kPlayerInactive) throw std::logic_error("다른 원본 메시지 종류의 생성 분기 미복원");
     hooks_.constructText(token);
     Node(token).vtable=kMessageVtable;
     Node(token).deadline=0.0;
@@ -72,13 +74,17 @@ std::uint32_t MessageGump::Construct(std::uint32_t token,std::int32_t kind,std::
     Node(token).player=player;
     Node(token).parameter=parameter;
     std::span<const char> firstName; // 동맹 종류만 원문 첫 이름 주소를 후속 서식까지 보유한다.
-    if (kind==kAllied) {
+    if (kind==kAllied || kind==kPlayerInactive) {
         const auto& name=hooks_.challenge() ? hooks_.challengePlayerText : hooks_.playerText;if (!name) throw std::logic_error("동맹 안내의 실제 이름 주소 미연결");firstName=name(player);
     } else if (hooks_.challenge()) {
         if (!hooks_.challengePlayerName) throw std::logic_error("Challenge 메시지의 실제42bbb0 이름 조회 미연결");
         hooks_.challengePlayerName(player);
     } else hooks_.playerName(player);
-    if (Node(token).kind==kAllied || Node(token).kind==kStarted) {
+    if (Node(token).kind==kServerInactive || Node(token).kind==kPlayerInactive) {
+        if (!hooks_.warningSound) throw std::logic_error("응답 지연 안내의 실제 경고 음향 미연결");hooks_.warningSound();
+        if (Node(token).kind==kServerInactive) hooks_.style(token,hooks_.translate("~wServer not responding"));
+        else { const auto player=Node(token).player;if (player>=1 && player<=8) { const auto pattern=std::string("~E~")+kInactiveColors[static_cast<std::size_t>(player-1)]+"%s~w not responding";const auto translated=hooks_.translate(pattern);hooks_.style(token,FormatWarningMessage(translated,CurrentMessageName(firstName))); } } // 번역 뒤 보관했던 실제 이름 포인터의 현재 NUL까지 읽는다.
+    } else if (Node(token).kind==kAllied || Node(token).kind==kStarted) {
         if (Node(token).kind==kStarted) { const auto text=hooks_.translate("~E~wGame started!");hooks_.style(token,text); }
         else {
             if (!hooks_.warningSound) throw std::logic_error("동맹 안내의 실제 경고 음향 미연결");hooks_.warningSound();const auto row=Node(token).player,column=Node(token).parameter;
