@@ -6,7 +6,7 @@
 namespace netstorm::o {
 namespace {
 // 판본 공통 타입/단어 위치와 low 7비트·로컬 표식 마스크다.
-constexpr std::size_t kType=10,kWord=12;
+constexpr std::size_t kWord=12;
 constexpr std::uint8_t kOriginalPlayer=0x7f,kLocalFlag=0x80;
 // raw 가상 표는 little endian DWORD이며 정렬되지 않은 주소도 읽을 수 있다.
 std::uint32_t Vtable(std::span<const std::uint8_t> raw) {
@@ -27,16 +27,18 @@ bool RawPriestOwner::Handles(Sid sid) const {
 }
 // 사제 몸체의 공통 소유자 호출 여부와 이후 비트 변경 순서를 그대로 적용한다.
 void RawPriestOwner::Set(Sid sid,std::uint32_t player) const {
-    auto raw=pool_.AllocatedBytes(sid);
-    if (raw[kType]!=kPriestType || !Handles(sid)) throw std::invalid_argument("사제 소유자 가상 표/타입 불일치");
+    if (!Handles(sid)) throw std::invalid_argument("사제 소유자 가상 표 불일치");
+    const auto slot=pool_.Slot(sid);std::span<std::uint8_t> raw{const_cast<std::uint8_t*>(slot.data()),slot.size()}; // 실제 가상 진입 뒤에는 TYPE/free/dead를 선행 거부하지 않는다.
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    const bool changesOriginal=!mode_.battle || state_.loadingDepth!=0;
+    const bool initialBattle=mode_.battle; // 요청0 진단의 행 번호는 최초에 선택한 전투/비전투 분기를 따른다.
+    const bool changesOriginal=!initialBattle || state_.loadingDepth!=0;
     const auto effective=changesOriginal ? player : static_cast<std::uint32_t>(raw[kWord]&kOriginalPlayer);
     const bool callsBase=(!changesOriginal || effective!=0) && (!patch || effective<=kPlayerCount);
-    // 원본 assert 뒤의 부분 변경은 호스트에서 효과 전 예외로 옮긴다. 무시되는 전투 인자는 검사하지 않는다.
-    if (patch && changesOriginal && player==0) throw std::invalid_argument("사제 원래 소유자 0(원본 assert)");
-    if (callsBase && (effective>kPlayerCount || (mode_.challenge && effective==0)))
-        throw std::out_of_range("사제 공통 소유자 범위 오류(원본 assert)");
+    if (patch && changesOriginal && player==0) {
+        const auto assertion=hooks_.assertion; // 진단 장치가 정상 복귀하면 요청0의 원문 후단으로 진행한다.
+        if (!assertion) throw std::logic_error("사제 원래 소유자0의 실제 진단 장치 미연결");
+        assertion("newPlayerId != INVALID_PLAYER_ID",".\\Priest.cpp",initialBattle ? 0x5bU : 0x68U);
+    }
     if (changesOriginal && player!=0) {
         raw[kWord]=static_cast<std::uint8_t>((raw[kWord]&kLocalFlag)|(player&kOriginalPlayer));
         hooks_.notify(sid);
@@ -44,7 +46,6 @@ void RawPriestOwner::Set(Sid sid,std::uint32_t player) const {
     if (callsBase) hooks_.base(sid,effective);
     if (state_.loadingDepth==0 || mode_.battle) {
         // 공통 소유자 호출 뒤의 현재 raw 단어를 고친다. high byte(+13)는 두 판본 모두 보존한다.
-        raw=pool_.AllocatedBytes(sid);
         const bool local=(mode_.fort && effective==state_.fortPlayer) || (mode_.battle && effective==state_.battlePlayer);
         raw[kWord]=static_cast<std::uint8_t>((raw[kWord]&kOriginalPlayer)|(local ? kLocalFlag : 0));
         hooks_.notify(sid);

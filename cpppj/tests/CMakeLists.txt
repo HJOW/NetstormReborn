@@ -3699,3 +3699,12 @@ target_sources(netstorm_tests PRIVATE AssetOwnerCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE AssetOwnerCurrentTests.cpp)
 set_source_files_properties(AssetOwnerCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     NETSTORM_ASSET_OWNER_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/asset-owner-current-local-x86.tsv")
+
+# 사제 Owner 현재 진단/부분 효과와 기존 로컬 원문을 별도 집중 대상으로 대조한다(963).
+target_sources(netstorm_tests PRIVATE PriestOwnerCurrentTests.cpp)
+add_executable(netstorm_priest_owner_current_tests FocusedTestMain.cpp PriestOwnerCurrentTests.cpp PriestOwnerTests.cpp AssetOwnerCurrentTests.cpp)
+target_link_libraries(netstorm_priest_owner_current_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_priest_owner_current_tests)
+target_compile_definitions(netstorm_priest_owner_current_tests PRIVATE NETSTORM_PRIESTOWNER_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priestowner-x86.tsv")
+set_source_files_properties(PriestOwnerCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    NETSTORM_PRIEST_OWNER_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/priest-owner-current-local-x86.tsv")

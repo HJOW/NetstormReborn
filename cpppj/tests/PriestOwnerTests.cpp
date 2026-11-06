@@ -99,8 +99,8 @@ TEST_CASE(priest_owner_cd_x86_full_body) { Replay("originalCD"); }
 // 추가 10.37은 별도 PE SHA를 가진 실행 결과다.
 TEST_CASE(priest_owner_1037_x86_full_body) { Replay("original1037"); }
 
-// missing 효과와 원본 assert에 해당하는 요청/상태는 효과 전에 거부한다.
-TEST_CASE(priest_owner_rejects_missing_hooks_and_assert_inputs_before_mutation) {
+// 필수 장치/외국 VT는 거부하며 실제 진단의 위치에 따라 앞선 WORD/알림/부모 진입을 보존한다.
+TEST_CASE(priest_owner_rejects_missing_hooks_and_keeps_original_partial_effects) {
     // 두 판본의 서로 다른 원본 assert 경로를 나누어 확인한다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         PriestScene scene(edition);
@@ -114,12 +114,19 @@ TEST_CASE(priest_owner_rejects_missing_hooks_and_assert_inputs_before_mutation) 
             const auto before=Hex(scene.pool.Slot(kSource));
             CHECK(Throws([&] { priest.Set(sid,player); }));CHECK(scene.events.empty() && Hex(scene.pool.Slot(kSource))==before);
         };
-        reject(kSource,scene.patch ? 0 : 9);reject(Sid{0},3);reject(Sid{51},3);
-        scene.pool.AllocatedBytes(kSource)[10]=82;reject(kSource,3);scene.pool.AllocatedBytes(kSource)[10]=kPriestType;
+        if (scene.patch) reject(kSource,0);
+        else {
+            const auto before=Get(scene.pool.Slot(kSource),12,2);CHECK(Throws([&] { priest.Set(kSource,9); }));
+            CHECK(Get(scene.pool.Slot(kSource),12,2)==((before&0xff80U)|9U) && scene.pool.Slot(kSource)[scene.OwnerOffset()]==2 && scene.events.size()==2);
+            scene.Prepare(row); // CD 공통 진단 전의 WORD/알림은 남기고 다음 독립 입력만 다시 준비한다.
+        }
+        reject(Sid{0},3);reject(Sid{51},3);
+        scene.pool.AllocatedBytes(kSource)[10]=82;priest.Set(kSource,3);CHECK(scene.pool.Slot(kSource)[10]==82 && scene.pool.Slot(kSource)[scene.OwnerOffset()]==3);scene.Prepare(row); // 가상 몸체는 현재 TYPE를 사제 번호로 선행 강제하지 않는다.
         Put(scene.pool.AllocatedBytes(kSource),0,kVtable);reject(kSource,3);
         Put(scene.pool.AllocatedBytes(kSource),0,scene.patch ? kPatchPriestVtable : kCdPriestVtable);
-        // challenge의 공통 지정은 0을 거부한다. 전투 요청은 무시되어도 유효 소유자 검사는 적용한다.
-        scene.mode.battle=true;scene.mode.challenge=true;scene.state.loadingDepth=0;Put(scene.pool.AllocatedBytes(kSource),12,0,2);reject(kSource,3);
+        // 기존 challenge 혼합 사례는 공통 진단 이전의 실제 부모 진입을 남긴다. 단위963에서는 이 혼합 검사를 실행하지 않는다.
+        scene.mode.battle=true;scene.mode.challenge=true;scene.state.loadingDepth=0;Put(scene.pool.AllocatedBytes(kSource),12,0,2);const auto before=Hex(scene.pool.Slot(kSource));
+        CHECK(Throws([&] { priest.Set(kSource,3); }));CHECK(Hex(scene.pool.Slot(kSource))==before && scene.events.size()==1 && scene.events.front().starts_with("B:"));
         CHECK(Throws([&] { auto invalid=MakePriestOwnerDispatch(priest,{}); }));
     }
 }

@@ -123,6 +123,7 @@ struct RawPriestWorldEffects {
     // 보호막의 현재 사제 TYPE 검색을 월드의 실제004b1fa0에 연결한다. 독립 구성의 기존 finder는 선택 입력으로 유지한다.
     std::function<o::Sid(float,float,std::uint32_t)> findTypeAt;
     std::function<void(o::Sid,std::uint32_t)> nonPriestOwner; // 실제 Session은 World의 표면/생산/중립 재정의를 연결한다. 빈 독립 입력은 기존 공통 부모다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> ownerAssertion; // 현재 Client의 사제Owner 진단과 정상 복귀를 연결한다.
 };
 // 사용 순서: 생성→ProcessHost(RegularHandler/DestroyHooks) 생성→BindProcesses→후속 모듈 Bind다.
 // 로딩 Pop 전에 BindProcesses가 필요하며, 삭제/해방 전에는 Damageable/Placement도 연결해야 한다.
@@ -152,7 +153,7 @@ public:
     void BindPlayerRecords(std::span<const std::uint8_t> players);
     // 로컬 소유자에 대한 원본 owner 표식과 보호막 안내 조건을 함께 갱신한다.
     void SetLocalPlayer(std::uint32_t player);
-    // 사제는 원래 소유자 규칙, 다른 자산은 공통 실제 소유자 지정으로 분배한다.
+    // 사제는 원래 소유자 규칙, 다른 자산은 연결한 현재 분배기 또는 독립 공통 부모로 보낸다.
     void SetOwner(o::Sid sid,std::uint32_t player) const;
     // 실제 HP/spot/extra에 따른 경계 전환을 같은 월드의 Unpop/Repop에 연결한다.
     void SetHitPoints(o::Sid sid,std::int32_t value) const;

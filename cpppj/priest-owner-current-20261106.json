@@ -1,0 +1,145 @@
+{
+  "unit": 963,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 963,
+  "version": "11.01",
+  "exeSha256": "641282aa6ada723abeda93299b9879e88f02c90512ca229fa611d1903a828cd0",
+  "exeBytes": 11323392,
+  "scope": "사제Owner 요청0/공통 진단 정상 복귀와 WORD/알림의 부분 효과·현재 로딩/모드·실제 Client 진단 연결. 게임/포획/MP 실행 없음.",
+  "native": {
+    "unit": 963,
+    "rows": 144,
+    "scope": "실제 사제 부모/ret4, 진단/알림/공통 부모는 명시 변경·중단 장치. 게임/MP 실행 없음.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_priest_owner_current.py": "886f2ab115dd21c64f884cf1e43ecec991a48e3ee6da653df08f7556bf0a0748",
+      "cpppj/tests/fixtures/priest-owner-current-local-x86.tsv": "1cd15e36397e43768f55ba4baa7fcaffebc69ecdb947b5211986186f6df20dd2"
+    }
+  },
+  "nativeReobserve": {
+    "rows": 144,
+    "differentRows": 0
+  },
+  "initialBuildIssue": {
+    "exitCode": 1,
+    "log": "extracted/cpp-resume-963/build-first.log",
+    "reason": "새 Session 검사가 읽기 전용 Priests() 조회에 SetLoadingDepth를 호출해 C2662와 lambda 변환 오류 발생. 기존 공개 World.SetLoadingDepth로 교정. 제품/새 집중 대상은 이 명령에서도 빌드 성공."
+  },
+  "finalBuild": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_priest_owner_current_tests",
+      "netstorm_world_generation_tests"
+    ],
+    "configuration": "Release",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-resume-963/build-fixed.log"
+  },
+  "tests": [
+    {
+      "log": "extracted/cpp-resume-963/tests-new.log",
+      "cases": 2,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-963/tests-session.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-963/tests-old-0.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-963/tests-old-1.log",
+      "cases": 1,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-963/tests-old-2.log",
+      "cases": 3,
+      "failedChecks": 0
+    },
+    {
+      "log": "extracted/cpp-resume-963/tests-old-session.log",
+      "cases": 1,
+      "failedChecks": 0
+    }
+  ],
+  "uniqueTests": 9,
+  "newTests": 3,
+  "existingTests": 6,
+  "legacyReplay": {
+    "path": "cpppj/tests/fixtures/priestowner-x86.tsv",
+    "sha256": "fe892a4fe7f1687079d12a2ebc99709a905d6ae5cde18a00e1897ad601ab5d01",
+    "patchRows": 3528,
+    "cdRows": 1944,
+    "fixtureUnchanged": true,
+    "mixedChallengeGuardTestExecuted": false
+  },
+  "sourceSha256": {
+    "cpppj/src/o/RawPriestOwner.cpp": "d6e189380b33c46f43f9a19f426a3415916432760c178ebaa1e186c2cb39c154",
+    "cpppj/src/o/RawPriestOwner.h": "0ab598f4e8d958d9d263bb40eab5c77a63a2a0631fc504385d661640147652ed",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "821c1bccde391267607301ae56e212f4285054759b3403c900c7dcac76a90eec",
+    "cpppj/src/client/RawPriestWorldBindings.h": "2826c35fa563e1369bf8713bc9e5b2d09bd9557d466f40a88badee44a431144d",
+    "cpppj/src/client/RawCampaignSession.cpp": "6870bdb6b1b2be774ce0409c8056975557ce8fe85ae0fa03286eb38e702894bf",
+    "cpppj/tests/PriestOwnerCurrentTests.cpp": "2250c3dd75e3825c5aa06fec6bac95322f23b3fb11a8d9f66cccac1fa5b8018a",
+    "cpppj/tests/PriestOwnerTests.cpp": "5f0b7ebad35b1cd7f93990e33f34d75328068af1e3b3de9644643749097128b1",
+    "cpppj/tests/CampaignSessionTests.cpp": "22023be23bfdbd1e0241a6affcf5d56eb0a2a2ef6b49f543701cc0b2b2bbb104"
+  },
+  "protection": {
+    "existingUnchanged": 2794,
+    "newFixtures": 1,
+    "nextFiles": 2795,
+    "nextFixtures": 975,
+    "baseline": "extracted/cpp-resume-963/protected-final.json"
+  },
+  "checking": {
+    "remaining": 8,
+    "parents": 3,
+    "partial": 2,
+    "mp": 3,
+    "completedParents": 39,
+    "completedPartial": 4,
+    "unchanged": true
+  },
+  "lastGui": {
+    "product": 962,
+    "entries": 4,
+    "newProductGuiVerified": false
+  },
+  "excluded": [
+    "새 게임/GUI",
+    "실제 포획/희생/특정 적 공격/승리",
+    "신규 MP/패킷/통신",
+    "공중3종 전용",
+    "물리 입력/PCM/CD",
+    "전체 CTest/34미션/ZIP 반복"
+  ],
+  "remaining": [
+    "같은 3절4번의 신전 missingIsland 실제 Client 진단/현재 부모와 파생 범위",
+    "Factory 외부 heap/파일/부분 I/O 등 남은 수명",
+    "7번 환경/사용자 확인 경계 뒤 8번 후속 구현"
+  ],
+  "nextUnit": 964,
+  "goalComplete": false,
+  "solutionInventory": {
+    "projects": 81,
+    "applications": 76,
+    "testNamed": 71,
+    "game": 1,
+    "probesAndDump": 4,
+    "libraries": 2,
+    "utilities": 3,
+    "source": "cpppj/build/NetstormCpp.slnx and referenced vcxproj; static inventory, not all-built/tested"
+  }
+}

@@ -16,6 +16,7 @@ struct PriestOwnerState {
 struct PriestOwnerHooks {
     std::function<void(Sid,std::uint32_t)> base; // 공통 SquidOwner::Set에 연결한다.
     std::function<void(Sid)> notify; // 004214a0 / CD 00448c10: 원본은 사제 상태를 바꾸지 않는 호출이다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 원문 식/파일/행을 전달한다. 선택 시 장치가 없으면 중단하고 정상 복귀하면 현재 값으로 계속한다.
 };
 // Priest의 소유자 재정의(00491790 / CD 0040bda0)를 raw SID에 복원한다.
 class RawPriestOwner {
@@ -25,7 +26,7 @@ public:
     // 실제 가상 표 기록값으로 사제 소유자 재정의 여부를 판정한다.
     bool Handles(Sid sid) const;
     // 로딩/비전투는 word의 low 7비트를 갱신하고, 전투 중에는 그 원래 소유자를 다시 사용한다.
-    // 패치판의 범위 밖 인자는 공통 지정만 생략한다. CD의 공통 assert와 패치의 로딩 중 0은 변경 전 예외다.
+    // 패치의 범위 밖 인자는 공통 지정만 생략한다. 요청0 진단과 CD 공통 진단의 정상 복귀/부분 변경을 보존한다.
     void Set(Sid sid,std::uint32_t player) const;
 private:
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.

@@ -1,0 +1,11 @@
+{
+  "unit": 963,
+  "rows": 144,
+  "scope": "실제 사제 부모/ret4, 진단/알림/공통 부모는 명시 변경·중단 장치. 게임/MP 실행 없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_priest_owner_current.py": "886f2ab115dd21c64f884cf1e43ecec991a48e3ee6da653df08f7556bf0a0748",
+    "cpppj/tests/fixtures/priest-owner-current-local-x86.tsv": "1cd15e36397e43768f55ba4baa7fcaffebc69ecdb947b5211986186f6df20dd2"
+  }
+}

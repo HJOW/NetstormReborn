@@ -5415,3 +5415,16 @@ TEST_CASE(AssetOwnerCurrent_ActualSessionUsesWorldDispatch) {
     }
     CHECK(external.packets.size()==initialPackets && external.allianceRequests.size()==initialAlliances);
 }
+
+// 실제 Session의 사제 요청0 진단이 같은 Client로 전달되고 정상 복귀 뒤 현재 로딩 값을 읽는지 확인한다.
+TEST_CASE(PriestOwnerCurrent_ActualSessionUsesClientDiagnosticAndCurrentLoading) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;std::optional<std::string> detail;std::uint32_t diagnostics{};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+    const auto sid=session.World().Create(158,2);auto raw=core.pool.AllocatedBytes(sid);Put(raw,12,0xab81,2);raw[34]=3;const auto oldMode=core.ownerMode;core.ownerMode={false,false,false};session.World().SetLoadingDepth(1);
+    session.World().Storage()->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) {
+        CHECK(expression=="newPlayerId != INVALID_PLAYER_ID" && file==".\\Priest.cpp" && line==0x68 && Get(raw,12,2)==0xab81);++diagnostics;session.World().SetLoadingDepth(0);
+    }); // 실제 Client 장치가 진단에서 바꾼 현재 로딩 값을 사제 후단이 바로 읽어야 한다.
+    const auto notices=external.notices,packets=external.packets.size();session.SetObjectOwner(sid,0);
+    CHECK(diagnostics==1 && raw[34]==3 && Get(raw,12,2)==0xab01 && external.notices==notices+1 && external.packets.size()==packets);
+    session.World().Storage()->BindDisplayDiagnostics(detail,{});core.ownerMode=oldMode; // 검사 장치의 참조가 지역 관측 값보다 오래 남지 않게 한다.
+}

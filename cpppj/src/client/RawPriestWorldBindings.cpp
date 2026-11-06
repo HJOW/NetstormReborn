@@ -101,7 +101,7 @@ struct RawPriestWorldBindings::Impl {
         priest=std::make_unique<o::RawPriestState>(core.pool,core.reward,core.types,core.spots);
         if (core.pool.Edition()==o::OriginalEdition::Patch1078) priest->BindCurrentTypes(core.types); // 지면 genus와 HP getter가 같은 실제 현재 TYPE 표를 읽는다(단위863).
         owner=std::make_unique<o::RawPriestOwner>(core.pool,core.ownerMode,state.owner,o::PriestOwnerHooks{
-            [this](o::Sid sid,std::uint32_t player) { core.owner.Set(sid,player); },effects.ownerNotice});
+            [this](o::Sid sid,std::uint32_t player) { core.owner.Set(sid,player); },effects.ownerNotice,effects.ownerAssertion});
         auto shieldEffects=o::MakePriestShieldCreationHooks(core.pool,core.factory,core.owner,effects.shield);
         shieldEffects.pop=effects.pop;
         shield=std::make_unique<o::RawPriestShield>(core.pool,*lookup,state.shield,std::move(shieldEffects));

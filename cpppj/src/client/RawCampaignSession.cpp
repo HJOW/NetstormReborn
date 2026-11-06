@@ -1014,6 +1014,7 @@ struct RawCampaignSession::Impl {
         priestEffects.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         priestEffects.claimGround=[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); };
         priestEffects.nonPriestOwner=[this](Sid sid,std::uint32_t owner) { world.SetAssetOwner(sid,owner); }; // 신전은 상위 Ownership에서 선택하고 다른 자산은 현재 +74 재정의를 보존한다.
+        priestEffects.ownerAssertion=[storage=world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 같은 Client 진단이 정상 복귀하면 사제 후단도 현재 모드/로딩 값을 읽는다.
         // 사제 Owner의 004214a0도 동일한 실제 무상태 다리 진단 몸체다. 별도 AI 통지로 대체하지 않는다.
         if (!priestEffects.ownerNotice) priestEffects.ownerNotice=[this](Sid sid) { core.building.NotifySurface(sid); };
         priestEffects.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
