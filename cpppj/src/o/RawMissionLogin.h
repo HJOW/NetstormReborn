@@ -1,4 +1,4 @@
-// PATCH 새 미션 로그인004a7800의 실제 Player/Template/패킷/Ready 순서를 복원한다.
+// PATCH 로그인004a7800의 현재 Player/일반 전투·미션/패킷/Ready 부모 순서를 복원한다.
 #pragma once
 #include <bit>
 #include "o/RawPlayerParticipation.h"
@@ -34,6 +34,8 @@ struct MissionLoginGlobals {
     std::span<const std::uint8_t> zoneAddress; // 005c86c0의 실제6바이트다.
     std::span<const std::uint8_t> battleOptions; // 0052f7e0의 현재87바이트다.
     const std::int32_t* sharedBattleSeed{}; // signed 자원과 같은 DWORD를 빌리며 송신은 unsigned bits로 읽는다.
+    const bool* savedGame{}; // 일반 자원 초기화가 선택될 때 같은005c85d4를 직접 빌려야 한다. 미션Post1의 기존 호출자는 생략할 수 있다.
+    const bool* inBattle{}; // 일반 자원 초기화의 같은00594fbc이며 임의로 true를 공급하지 않는다.
     std::uint32_t BattleSeed() const { return sharedBattleSeed ? std::bit_cast<std::uint32_t>(*sharedBattleSeed) : battleSeed; } // 다른 타입의 ref를 만들지 않는다.
 };
 // 큰 외부 몸체는 선택된 실제 위치에서 필수다. 패킷을 버리는 성공 처리기를 공급하지 않는다.
@@ -58,9 +60,11 @@ struct MissionLoginHooks {
     std::function<void()> loadWorld; // 새 로그인의004b5300이며 같은 Session.Load를 이 위치에 연결한다.
     std::function<void(std::uint32_t)> sendSettings; // 0044dbc0의 현재7DWORD 설정 패킷이다.
     std::function<void(std::string_view)> assertion; // 원본 진단 후 계속하는 assertion 경계다.
-    std::function<void(std::uint32_t)> restoreCoreData; //004a796c의 같은0048fb30 부모다. missionPost1은 하위의 자연 반환과 같이 생략한다.
+    std::function<void(std::uint32_t)> restoreCoreData; //004a796c의 previous0에서만 호출하는 같은0048fb30 부모다. 독립 미션Post1의 누락 장치는 하위 첫 자연 반환과 같다.
+    std::function<void(std::uint32_t,std::int32_t)> setSp; //00447810의 현재 owner/정수 SP 지정 전체이며 로컬 HUD/편집 모드도 실제 구현이 처리해야 한다.
+    std::function<void(std::uint32_t)> makeBattleIsland; //0046d9b0→0046da60(owner)→0046e2c0의 실제 생성/배치/소멸 전체다. watcher 자연 생략을 대신 성공시키지 않는다.
 };
-// 정상 missionWorld/missionPost 경로와 실제 CheckLogin을 조립하며 전투 섬 분기는 명시적으로 거부한다.
+// 같은 현재 일반/미션 분기와 실제 CheckLogin을 조립하고 선택된 큰 하위는 필수 장치로 요구한다.
 class RawMissionLogin {
 public:
     // caller는 현재 Player9와 참여 처리기에 동일 저장소를 공급해야 하며 모든 참조 대상이 더 오래 살아야 한다.

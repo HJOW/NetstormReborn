@@ -1,6 +1,7 @@
 // 원본의 현재 조회·중복 Fort 전송·Ready 전역 쓰기를 같은 실제 저장소에서 보존한다.
 #include "o/RawMissionLogin.h"
 #include <algorithm>
+#include <array>
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -86,10 +87,9 @@ void RawMissionLogin::SendReady(std::uint32_t target) const {
     for (std::uint32_t owner=1;owner<9;++owner) if (Read(owner,kFlags,1)&0x40U) mask|=1U<<owner;
     Write(bytes,4,mask);if (!target) Need(hooks_.broadcast)(bytes);else Need(hooks_.send)(static_cast<std::int32_t>(target),bytes);
 }
-// 전체 부모의 selected mission 분기를 현재 전역/같은 Player에 실행한다.
+//004a7800의 일반/미션 부모를 같은 현재 Player와 실제 선택 효과로 실행한다.
 void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,std::span<const std::uint8_t> packet) const {
     if (!globals_.server) { Need(hooks_.disconnect)(pending);return; }
-    if (!globals_.missionWorld || !globals_.missionPost) throw std::logic_error("미션 로그인 이외 Battle/후처리 분기 미복원");
     const auto subscriber=ReadBytes(packet,8);std::uint32_t owner=1;
     // subscriber가 같은 현재 첫 실제 Player만 선택한다.
     for (;owner<9;++owner) if (Read(owner,0x2c)==subscriber) break;if (owner==9) owner=0;
@@ -101,9 +101,12 @@ void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,
         }
     }
     if (!owner) { const auto bytes=Reply(0,0);Need(hooks_.pendingReply)(connection,bytes);return; }
-    if (globals_.simulconnect) throw std::logic_error("미션 로그인 simulconnect 분기 미복원");
+    if (globals_.simulconnect) {
+        if (pending<0) Need(hooks_.disconnect)(static_cast<std::int32_t>(owner)); // 실제 새 pending을 이전 owner 연결과 구별하여 먼저 이전 끝만 닫는다.
+        else if (pending<1 || pending>8) Need(hooks_.assertion)("FIRST_REAL_PLAYER <= pendingId && pendingId < END_REAL_PLAYERS"); // 원문 진단이 복귀하면 CheckLogin 순서를 계속한다.
+    }
     const auto previous=(Read(owner,kFlags)>>1)&1U; //CheckLogin 이전의 사람 참여 bit2를 끝까지 보존한다.
-    if (!globals_.missionPost) Need(hooks_.restoreCoreData)(owner); // 원문0048fb30의 현재 missionPost1 자연 반환은 미사용 장치를 요구하지 않는다.
+    if (!previous && (hooks_.restoreCoreData || !globals_.missionPost)) Need(hooks_.restoreCoreData)(owner); // 실제 Client는 원문처럼 previous0에서 부모를 호출한다. 독립 미션Post1의 장치 누락만 하위 첫 자연 반환과 같다.
     participation_.CheckLogin(pending,static_cast<std::int32_t>(owner));Need(hooks_.flush)();SendBegin(owner);Need(hooks_.flush)();
     auto options=Packet(0x67,94,0xff);options[4]=0;Write(options,5,87,2);std::copy(globals_.battleOptions.begin(),globals_.battleOptions.end(),options.begin()+7);
     Need(hooks_.send)(static_cast<std::int32_t>(owner),options);if (counts_.Participating()<2) Need(hooks_.applyOptions)(options);Need(hooks_.flush)();
@@ -119,7 +122,20 @@ void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,
         else Need(hooks_.loadFortImage)(owner,packet.subspan(start,size));
     }
     Joined(owner,ReadBytes(packet,8));SendReply(static_cast<std::int32_t>(owner),1);
-    if (!globals_.missionPost) throw std::logic_error("로그인 도중 일반 전투 자원 분기로 변경됨");Need(hooks_.flush)();
+    if (!globals_.missionPost && !*Need(globals_.savedGame) && *Need(globals_.inBattle)) {
+        Put(owner,0x58,globals_.battleOptions[0x3e+owner]==1 ? 1U:0U); // 원문 조건의 쉼표식처럼 watcher 쓰기는 +64 검사보다 먼저 실행한다.
+        if (!Read(owner,0x64)) {
+            for (std::uint32_t player=1;player<9;++player) { // 각 지정 효과 뒤 watcher/현재 시작 SP 옵션을 다시 읽는다.
+                std::int32_t amount{}; // watcher는 실제 SP0이며 다른 Player만 시작 SP+4000을 받는다.
+                if (globals_.battleOptions[0x3e+player]!=1) {
+                    constexpr std::array<std::int32_t,3> startingSp{1000,2500,3000}; //0041c7d0의 실제3항목이며 옵션+0e가 현재 색인을 고른다.
+                    const auto index=globals_.battleOptions[0x0e];if (index>=startingSp.size()) throw std::out_of_range("일반 로그인 시작 SP 옵션 색인");amount=startingSp[index]+4000;
+                }
+                Need(hooks_.setSp)(player,amount); // 실제00447810의 분산 SP/HUD 효과를 호출하며 별도 성공값을 만들지 않는다.
+            }
+        }
+    }
+    Need(hooks_.flush)();
     if (globals_.metamap) Need(hooks_.assertion)("!metamap");SendSp(owner);Need(hooks_.flush)();
     globals_.clockStamp=Need(hooks_.clock)();const auto difference=std::bit_cast<std::int32_t>(globals_.clockStamp-globals_.baseClock)/1000;
     // 시간 packet은 실제1..8 전체를 요청한다. 실제 접속gate/연결부재 처리는send가 담당한다.
@@ -139,7 +155,8 @@ void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,
             if (Read(globals_.lastLoginPlayer,0x60)!=globals_.predictableCount) Need(hooks_.assertion)("predictableCount");
             Need(hooks_.sendFort)(owner,target,globals_.predictableCount);
         }
-        if (!globals_.missionWorld) throw std::logic_error("로그인 도중 Battle 섬 분기로 변경됨");Need(hooks_.loadWorld)();
+        if (globals_.missionWorld) Need(hooks_.loadWorld)(); // 원문 미션 저장 월드만 현재 Load를 실행한다.
+        else if (globals_.missionPost || !Read(owner,0x58)) Need(hooks_.makeBattleIsland)(owner); // 일반 watcher는 실제 세 단계의 전투섬 생성 없이 settings/Ready로 간다.
     }
     Need(hooks_.sendSettings)(owner);Need(hooks_.flush)();Need(hooks_.flush)();
     const auto current=globals_.player.battleOwner;Put(current,kFlags,Read(current,kFlags)|0x40U);SendReady(owner);Need(hooks_.flush)();

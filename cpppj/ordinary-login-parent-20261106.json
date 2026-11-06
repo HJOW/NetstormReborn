@@ -1,0 +1,68 @@
+{
+  "unit": 985,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 985,
+  "version": "11.01",
+  "exeSha256": "244127dcb7682d403820aefea400862662c61ae28b6a81a8016f0076e76a6d0f",
+  "exeBytes": 11517440,
+  "sources": [
+    "cpppj/src/o/RawMissionLogin.h",
+    "cpppj/src/o/RawMissionLogin.cpp",
+    "cpppj/src/client/RawCampaignSession.cpp",
+    "cpppj/src/client/RawCampaignSessionLogin.inc"
+  ],
+  "scope": "원문004a7800 일반 Login 부모와 실제 저장/전투 bool·00447810 SP setter 연결; 전체 일반 전투/LAN 미완료",
+  "originalFunctions": [
+    "004a7800",
+    "0048fb30",
+    "0041c7d0",
+    "00447810",
+    "0046d9b0",
+    "0046da60",
+    "0046e2c0"
+  ],
+  "build": {
+    "releaseCommands": 1,
+    "exitCodes": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "newCases": 0,
+    "executedCases": 0,
+    "multiplayerCases": 0,
+    "reason": "사용자 지시로 신규 MP/단위/소켓/통신/게임 검사를 작성·실행하지 않음"
+  },
+  "guiRuns": 0,
+  "lastGuiUnit": 984,
+  "protected": {
+    "files": 2800,
+    "fixtures": 980,
+    "unchanged": true,
+    "new": []
+  },
+  "checkingRemaining": 8,
+  "implemented": [
+    "simulconnect 기존 owner Disconnect/번호 진단 뒤 previous 재조회",
+    "previous0 CoreData 복원; 실제 미션Post1도 동일 하위 첫 자연 반환",
+    "일반 watcher 쓰기→+64 검사→현재 옵션/SP setter",
+    "현재 startingSp1000/2500/3000+4000·watcher0",
+    "미션 World와 일반 watcher/전투섬 필수 효과 분기"
+  ],
+  "remaining": [
+    "원격 Fort 이미지 실제 loadFortImage",
+    "004a7350 전체 월드 동기화",
+    "makeBattleIsland 전체 세 단계",
+    "metadata 중앙섬",
+    "방 roster/Zone·일반 State·Commander·LAN UI",
+    "재접속/메타맵/Outpost/checking8"
+  ],
+  "next": "986: 원격 Fort 이미지/Template manager 수명 부모를 실제 Session에 연결"
+}

@@ -2,25 +2,25 @@
 
 cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효한 사용자 결정**을 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-04 문서 정리:** 단위861까지 원문은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261104-through-861)에 보존했다. **2026-11-06 단위984: 공유 등록표/번호순 복합 전송과 실제 단독 미션 World 수명을 접합했다. 제품984/11.01, Release 두 번 경고/오류0·실제 tutorial1 진입/100프레임 대기/창 종료0이다. LAN UI와 일반 전투는 미완료이며 다음985는004a7800 일반 부모 분기를 복원한다. 전체 목표는 진행 중이다.**
+**2026-11-04 문서 정리:** 단위861까지 원문은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261104-through-861)에 보존했다. **2026-11-06 단위985: 원문004a7800 일반 로그인 부모와 실제 저장/전투 상태·초기 SP 지정을 복원했다. 제품985/11.01·Release 첫 명령 경고/오류0, 신규 MP 검사/게임 실행0이다. 다음986은 원격 Fort 이미지/manager 수명 연결이며 LAN UI/일반 전투 전체는 미완료다. 전체 목표는 진행 중이다.**
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-06, 단위984 공유 전송/World 수명 접합·제품984·8번 진행)
+### 0.1 현재 값 (2026-11-06, 단위985 일반 Login 부모·제품985·8번 진행)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **984 공유 등록표/복합 전송/실제 World 수명 접합·제품984·8번 진행.** 현재 단독 미션은 실제 coordinator를 사용한다. LAN 역할은 컴파일만 했으며 UI/일반 State/roster는 미접합이다. 다음985는004a7800 일반 부모 분기다. 신규 MP 검사는 제외한다. |
-| 현재 제품 | **984 / 표시·파일·제품11.01.** 실제 InternalMission 전송/수명 접합과 TCP 참조의 게임 재링크다. WS2_32 import가 있으나 단독 실행은 TCP 소켓을 만들지 않고 Multiplayer 메뉴는 아직 NotImplemented다. |
+| 진행 상태 | **985 일반 Login 부모 복원·제품985·8번 진행.** simulconnect/previous 복원/watcher·초기 SP/전투섬 선택을 실제 분기로 반영했다. 원격 Fort/전체 월드 동기화/전투섬 큰 하위와 roster/일반 State/LAN UI는 미연결이다. 다음986은 원격 Fort 이미지·manager 수명이다. MP 검사는 제외한다. |
+| 현재 제품 | **985 / 표시·파일·제품11.01.** 984의 실제 공유 전송에 일반 Login 부모와 현재 저장/전투 bool·기존 SP setter를 연결해 재링크했다. Multiplayer 메뉴와 일반 전투 전체는 아직 미완료다. |
 | 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반31+데모3의 마지막 전체 진입 검증은 **645의644 제품**이며 현재 제품의 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | `82f65d6e393dfb3829439de7ff6d7bac4b27397b63100df7f8b8d15cc22d3393` (984 / 11.01, 11,512,320바이트) |
-| 최신 빌드·집중 검사 | **984 Release 첫 명령과 close 재진입 보강 뒤 증분 명령 모두 종료0·경고/오류0.** 새 단위/MP/소켓/통신 검사0, 실제 단독 tutorial1 진입/비정지100프레임 대기/창 종료0이다. 983의 집중10검사를984 전체 통과로 세지 않는다. [984 기록](docs/exe/cpp-shared-transport-lifetime-20261106.md). |
+| EXE SHA-256 | `244127dcb7682d403820aefea400862662c61ae28b6a81a8016f0076e76a6d0f` (985 / 11.01, 11,517,440바이트) |
+| 최신 빌드·집중 검사 | **985 Release 첫 명령 종료0·경고/오류0.** 부모/실제 SP setter 접합의 컴파일·링크이며 새 MP/단위/소켓/통신/게임 검사0이다. 최신 실제 단독 GUI는984이고985 회귀로 세지 않는다. [985 기록](docs/exe/cpp-ordinary-login-parent-20261106.md). |
 | checking 잔여 | **8함수=부모3+부분2+MP분류3.** 완료부모39/부분4이며현재비멀티수명/FILE범위는980에서마감했다. 메타맵2표/재접속/Descend 등은3절8번 잔여다. |
 | 마지막 GUI | **984 실제 단독MCP 1실행:** 격리1920×1080 tutorial1 진입·비정지100프레임 대기·WM_CLOSE 종료0, 입력5/관측7·PNG 확인·설치1351개/보호 불변. LAN/공격/포획/희생/승리/물리 입력 검증이 아니다. |
 | 전체 검사 기준 | 현재활성솔루션83프로젝트=Application78(검사이름73/게임1/probe·dump4)+라이브러리2+Utility3.967에서색표FILE집중대상1개추가/생성slnx/vcxproj직접확인.과거963의82분류·779전체71/549전체3389중7실패/510제품508의3337통과는당시이력이며현재집중을전체통과로쓰지않는다. |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
-| 보호 기준 | **기존2800개/fixture980개 불변·새 fixture 없음.** 다음 기준은 `extracted/cpp-resume-984/protected-final.json`이다. |
+| 보호 기준 | **기존2800개/fixture980개 불변·새 fixture 없음.** 다음 기준은 `extracted/cpp-resume-985/protected-final.json`이다. |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
@@ -42,7 +42,9 @@ cpppj와 공통 사항의 **현재 기준, 완료 범위, 남은 작업, 유효�
 - **환경 한계:** 물리 입력/캡처는762의 새 부팅·RDP세션1에서도 두 번 timeout이었다. 실제 환경 변화 전 재시도하지 않는다. 다른 모니터/DPI·실제 앱 전환·청취·사용자 활성 전체화면의 물리 출력·실제 CD 삽입은 미검증이다. 실제 PCM 캡처는936에서후속성공했다(3절7번).
 - **원문/호스트 경계:** 32비트 FILE/FileSpec/SEH·스택 배치/미정값 자체 일치, 부분 I/O/실제 할당 실패와 전체 진단 UI는 별도 한계다. 612의 반사 입력, VFX signed WORD/정상 표본·양수/회전0/원색의 근거를 전체 입력·픽셀로 확대하지 않는다.
 
-### 0.4 최신 인계 — 단위984 실제 공유 전송/World 수명 접합·제품984
+### 0.4 최신 인계 — 단위985 일반 Login 부모 복원·제품985
+
+- **985 부모 반영:** 원문004a7800의 simulconnect/이전 참여 bit 재조회/previous0 Restore/watcher 쓰기·+64/초기 SP·전투섬 선택을 실제 본문으로 바꿨다. 실제 저장/전투 bool 주소와 기존00447810 분산 SP/로컬 HUD/Editor 전체 setter·진단을 같은 Session에 연결했다. 원문0041c7d0의1000/2500/3000+4000과 watcher0을 각 반복의 현재 옵션으로 계산한다. Release 첫 명령 경고/오류0·새 MP/단위/소켓/통신/게임 실행0·보호2800/fixture980 불변·제품985/11.01·마지막 정밀 HJOW-Athlon/2026-11-03이다. [985 기록](docs/exe/cpp-ordinary-login-parent-20261106.md). **큰 하위가 없는데 부모 guard만 없앤 성공 경로가 아니다. 원격 loadFortImage/004a7350/전투섬3단계/중앙섬은 선택 위치의 필수 장치로 남으며 LAN UI/roster/일반 State도 미완료다. 다음986은extracted/cpp-resume-986/remote-fort 준비안을 이어 실제 manager/이미지 수명에 연결한다. 한국어/Scenario는 별도 통합 준비 중이다.**
 
 - **984 완료 범위:** 원문 공유 등록표/per-ID listener→pending각1회→normal0..21 반복/flush와 실제 단독 World/Session 대여를 접합했다. 실제 shared World 및 장기 Player/권한/동일 GameClock을 보유하고, 등록 반납/콜백 중 Native 정리 재진입/현재 토큰·주소의 중복 close/free를 보호한다. 첫 Release와 보강 뒤 증분 모두 경고/오류0, 실제 tutorial1 진입/비정지100프레임/WM_CLOSE 종료0·입력5/관측7/PNG 확인·설치1351/보호2800/fixture980 불변이다. [984 기록](docs/exe/cpp-shared-transport-lifetime-20261106.md). **제품984/11.01·현재EXE WS2_32 import는 실제 LAN 동작 검증이 아니다. Multiplayer UI/roster/일반 State/원격 Fort·월드 동기화/중앙섬/Commander/재접속/Outpost/checking8은 미완료다. 다음985는extracted/cpp-mp-login-preparation의004a7800 일반 부모 준비안을 이어 실제 반영한다. 한국어 final-pending과 Scenario 통합은 계속 독립 준비 중이다. 신규 MP/소켓/통신 검사는 실행하지 않는다. 마지막 정밀 HJOW-Athlon/2026-11-03이다.**
 
@@ -210,6 +212,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 ## 2. 현재까지 완료한 범위와 검증 한계
 
 ### 2.1 완료 목록 — 부분 완료 범위를 명시
+
+- [x] **985 일반 Login 부모 복원:** 실제 simulconnect/previous0/watcher·SP/섬 선택과 현재 상태/SP setter 연결·Release 통과. 원격 큰 하위/LAN 전체와 MP 동작 검증은 미완료다. [985 기록](docs/exe/cpp-ordinary-login-parent-20261106.md).
 
 - [x] **984 공유 전송/현재 World 수명 접합:** 실제 단독 경로 연결·Release 두 번 통과·tutorial1 진입/대기/창 종료0. LAN UI/일반 전투는8번 잔여이며 MP 검사0이다. [984 기록](docs/exe/cpp-shared-transport-lifetime-20261106.md).
 
@@ -552,7 +556,7 @@ AI 미완료 체크 항목이 아니며 단계 전환을 막지 않는다. 부�
 
 ### 8. 멀티플레이·배포·후속 단계
 
-- [ ] **3차 TCP/IP 로컬 멀티플레이·Outpust:** 982 TCP부품/984 공유 등록표·per-ID 복합 전송·실제 단독 Client/World 수명을 접합했다. LAN UI/roster/일반 전투는 아직 미접합이다. 다음985의004a7800 일반 부모→원격 Fort/월드 동기화/전투섬/중앙섬→일반 State6·7/Commander/roster→LAN UI→메타·저장/재접속/Outpost/checking8을 원문 근거로 구현한다. 신규 단위/게임/통신 검사는 하지 않는다. 공식 서버 복구·구 클라이언트 유효성 검사는 연결하지 않는다. **폐기CD확인7f/80(42cd10)은965의검증비활성화정책에따라복원하지않는다.**
+- [ ] **3차 TCP/IP 로컬 멀티플레이·Outpust:** 982 TCP부품/984 공유 등록표·per-ID 복합 전송·실제 단독 Client/World 수명을 접합했다. LAN UI/roster/일반 전투는 아직 미접합이다. 985에서004a7800 일반 부모와 실제 SP 지정을 복원했다. 다음986의 원격 Fort/manager 수명→월드 동기화/전투섬/중앙섬→일반 State6·7/Commander/roster→LAN UI→메타·저장/재접속/Outpost/checking8을 원문 근거로 구현한다. 신규 단위/게임/통신 검사는 하지 않는다. 공식 서버 복구·구 클라이언트 유효성 검사는 연결하지 않는다. **폐기CD확인7f/80(42cd10)은965의검증비활성화정책에따라복원하지않는다.**
 - checking전체잔여8(957재대조,완료부모39/부분4불변): 부모004a7510·004b02d0의메타맵표시0050c9f0/0050cc08·004dc220(event4/Descend),부분004b54e0/004b8cb0,MP분류0042bc10/004b4df0/004b8b20. 기존분류이며직접inSingle관문부재를모든단독도달불가증명으로확대하지않는다. 신규MP검사없이원문구현을이어간다.
 - MP 이월 목록: 공통+20 미연결VT0050c9f0(TYPE108/109)/0050cc08(TYPE161), 시스템뉴스0042e470/0042e4d0/0042e4f0·endpoint/UI·설정저장, RequestMenu 전송 `004d712e..004d717c`, 메타맵 열기 `004789b0/00479390`·번개 `00479650`·Challenge 이미지/텍스트 `00478d10`/참가자 삭제 `0042bc10`, c6/db·ChalSailPos 모드6·선행클릭/항해 메뉴·desc, 비미션 의식/랭크·조기 희생 안내, PlayerNoMake writer `00433c30`, frame22/주기64·timeout/UI·endpoint/server/boss·리슨/수락/22칸 송신, Activate의 별도 수신자/삭제 선택·프로세스 writer 전체/decoder·재동기화의 허용/owner 캐시 부모(843), 섬·표면 TypeWas의 MP 수신 writer(861).
 - 신전 `004dc220` event4의fort territory0046f650/0046f5a0·curServer0054db4c·Descend0x02000013→004b3760/004b3620/State19와 생성입구004dbac0/0x030000a7을 포함한다(866). 기존 removeAnimation/regionGeneration 임시명은 실제 의미가 아니며 원문 부모 전체를 사전 구현할 잔여다. 직접inSingle 관문이 없으므로 단독 전체 미도달을 증명한 것은 아니다.

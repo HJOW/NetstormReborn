@@ -1,4 +1,5 @@
 #include "o/RawVortexOwnerDiagnostic.h" // 신전 상세/진단의 실제 Client 경계다.
+#include "o/RawFortMoneyLoad.h" // 일반 Login의 초기 SP도 기존00447810 전체 지정 몸체를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "client/CompositeMissionTransport.h" // 현재 ID 복합 전송과 실제 전체 Runtime 등록 대여를 연결한다.
