@@ -180,15 +180,31 @@ bool UberGump::MultiplayerOptionsEvent(const InputEvent& event) {
 }
 //원문 startupStateCheck의 실제 선택 장치를 두 Native 부모가 같은 장기 파일 경로로 공유한다.
 o::StartupStateCheckHooks UberGump::EditorStartupStateHooks() {
-    if (!editor_) throw std::logic_error("State1/3 startup 장기 장치 누락");auto& e=*editor_;o::StartupStateCheckHooks startup;
+    if (!editor_) throw std::logic_error("State1/3 startup 장기 장치 누락");o::StartupStateCheckHooks startup;
     startup.configInt=[this](auto name) { return client_.Configuration().GetInt(name); }; //선택된 saved-state reader의 누락을 옵션 강제0으로 숨기지 않는다.
-    startup.readSavedState=[this,&e] {
-        const auto bytes=SavedStateFilePath(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile()).u8string();e.savedPath.assign(bytes.begin(),bytes.end());o::SavedStateReadHooks reader; // 원본ANSI와 달리 Windows10/11의 한글 설치 이름을 UTF-8로 보존한다.
-        reader.path=[&e] { return std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(e.savedPath.c_str()),e.savedPath.size()+1); };
-        reader.exists=[](auto path) { const std::filesystem::path actual(std::u8string(path.begin(),path.end()));return GetFileAttributesW(actual.c_str())!=INVALID_FILE_ATTRIBUTES ? 1 : 0; }; // 원본004dd560의 디렉터리 비영 판정은 같다. Windows10/11 한글 경로 때문에 ANSI 대신 W API를 쓴다.
-        std::array<std::uint8_t,o::kSavedStateReadScratchBytes> scratch; //부재 경로는 실제 reader가 stack/복원 전역에 접근하지 않는다. 존재하면 아직 미연결인 open 경계에서 명시 중단한다.
-        return o::ReadSavedState(scratch,{},reader);
+    startup.readSavedState=[this] { return ReadClientSavedState(client_); }; // 존재하는 실제 사용자 파일도 같은 Player/Core/복구 슬롯으로 읽는다.
+    struct StartupText { // 동기 Check 호출 동안 첫Yes/No/질문과 두 서식 결과의 별도 주소를 유지한다.
+        std::array<std::string,3> translated;std::size_t next{}; // 원문의 번역 세 결과를 뒤 소비까지 보관한다.
+        std::string buttons,warning; // 원문의 지역256BYTE 버튼과cf550에 넘기는 실제 질문 결과다.
     };
+    const auto text=std::make_shared<StartupText>();
+    startup.translate=[this,text](auto key)->std::string_view { auto& slot=text->translated[text->next++%3];slot=FontBytes(client_.Translate(key));return slot; };
+    startup.formatButtons=[text](auto pattern,auto yes,auto no)->std::string_view {
+        const std::string format(pattern),first(yes),second(no);std::array<char,256> output{};const auto count=std::snprintf(output.data(),output.size(),format.c_str(),first.c_str(),second.c_str());
+        if (count<0 || static_cast<std::size_t>(count)>=output.size()) throw std::length_error("재접속 질문 버튼256BYTE 초과");text->buttons.assign(output.data(),static_cast<std::size_t>(count));return text->buttons;
+    };
+    startup.formatWarning=[text](auto pattern,double minutes,auto buttons)->std::string_view {
+        std::size_t argument{};
+        // 실제 공급한 double/문자열만 CRT가 읽게 하고 %%와 상수 폭/정밀도를 보존한다.
+        for (std::size_t at=0;at<pattern.size();++at) if (pattern[at]=='%') {
+            if (++at<pattern.size() && pattern[at]=='%') continue;
+            while (at<pattern.size() && (pattern[at]=='-' || pattern[at]=='+' || pattern[at]==' ' || pattern[at]=='#' || pattern[at]=='.' || (pattern[at]>='0' && pattern[at]<='9'))) ++at;
+            if (argument>=2 || at==pattern.size() || pattern[at]!=(argument==0 ? 'f':'s')) throw std::invalid_argument("재접속 질문 번역의 실제 두 인자 서식 오류");++argument;
+        }
+        if (argument!=2) throw std::invalid_argument("재접속 질문 번역 인자 개수 오류");const std::string format(pattern),suffix(buttons);const auto count=std::snprintf(nullptr,0,format.c_str(),minutes,suffix.c_str());if (count<0 || count>=8192) throw std::length_error("재접속 질문 실제 HTML8192BYTE 초과");
+        std::vector<char> output(static_cast<std::size_t>(count)+1);static_cast<void>(std::snprintf(output.data(),output.size(),format.c_str(),minutes,suffix.c_str()));text->warning.assign(output.data(),static_cast<std::size_t>(count));return text->warning;
+    };
+    startup.tell=[this](auto body,auto width,auto height) { static_cast<void>(rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext(CurrentMapView()),body,0,width,height));rebuild_=true; }; //cf550은cf270(text,0,width,height)이며 별도 MessageBox/정지를 추가하지 않는다.
     startup.wallSeconds=[this] { return client_.WallSeconds(); };return startup; //reader0 복귀에서도 원문처럼 현재 벽시각을 읽는다.
 }
 //실제 State3는 World를 다시 만들지 않고 같은 Client의 Native 부모와 공통 tail을 실행한다.

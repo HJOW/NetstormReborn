@@ -452,3 +452,4 @@ target_sources(netstorm PRIVATE o/RawBaseProcessAttach.cpp o/RawBaseProcessAttac
 target_sources(netstorm PRIVATE o/RawCommonOwner.cpp o/RawCommonOwner.h)
 target_sources(netstorm PRIVATE o/RawOrdinaryBattleStart.cpp o/RawOrdinaryBattleStart.h) # 일반 Login 완료의 현재 Core/Player/스펠/팀 입력을 조립한다.
 target_sources(netstorm PRIVATE o/RawSavedStateWrite.cpp o/RawSavedStateWrite.h client/SavedStateFileWrite.cpp client/SavedStateFileWrite.h) # 일반 재접속 저장의 개별 원문 쓰기를 실제 사용자 FILE에 연결한다.
+target_sources(netstorm PRIVATE client/SavedStateFileRead.cpp client/SavedStateFileRead.h) # startup 저장상태 reader가 같은 실제 Client Player/Core와 사용자 FILE을 읽는다.

@@ -1,0 +1,48 @@
+{
+  "unit": 1005,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "실제 startup 저장 파일 reader/현재 Player·Core·복구 슬롯과 재접속 질문 번역/서식/HTML 연결",
+  "sourceFunctions1078": [
+    "004b5890",
+    "004b5ba0",
+    "004cf550",
+    "0042ce70",
+    "0048f350"
+  ],
+  "referenceFunctions1072": [
+    "00432a10",
+    "00432d40",
+    "004c3670"
+  ],
+  "build": {
+    "firstExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1005\\build.log",
+    "exeSize": 11844096,
+    "exeSha256": "63306a19b19c1251dc161d71182cb3564d72a06f3be50c5321e91aa72346680a"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1005\\protected-before.json"
+  },
+  "remaining": [
+    "StateReconnect/DelStateFile 일반 입력·실제 재접속/서버 이전004b8cb0·복구 State7 이름/Player 인계",
+    "일반 프레임486bc0/스펠·전체 파생 writer/decoder·메타·Outpost/checking7",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}
