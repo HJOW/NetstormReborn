@@ -1,0 +1,24 @@
+{
+  "unit": 997,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {"host": "HJOW-Athlon", "date": "2026-11-03"},
+  "description": "원문 Multiplayer Options 창과 State6 공장·같은 Fort/Subscriber/로컬 주소 입력 연결",
+  "sourceFunctions1078": ["004cc4d0", "004cc970", "004ccf30", "004cfc80"],
+  "referenceFunctions1072": ["004c9350", "004c98b0", "004c73e0"],
+  "build": {
+    "firstExitCode": 1,
+    "firstErrors": 1,
+    "firstError": "C2664: optional<string_view> 인자의 명시 string_view 구성으로 교정",
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "firstLog": "extracted/cpp-resume-997/build.log",
+    "finalLog": "extracted/cpp-resume-997/build-final.log",
+    "exeSize": 11688960,
+    "exeSha256": "41d0f1cd9bd8c659b677c41876fc91d4c4523c80fd8120ab5e4fae332b58158c"
+  },
+  "excluded": {"newMultiplayerTests": 0, "unitTestRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0},
+  "protected": {"files": 2800, "changed": [], "baseline": "extracted/cpp-resume-997/protected-before.json"},
+  "remaining": ["Connect 일반 State7/LAN 시작 소비자", "메인 메뉴 Multiplayer 진입", "일반 호스트/roster/전체 파생 writer/decoder", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}

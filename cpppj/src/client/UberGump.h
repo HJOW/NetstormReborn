@@ -140,6 +140,9 @@ private:
     o::LocalMissionParentResult InstallExistingEditorState(std::uint32_t selected); //State1의 정리/prefix/현재 파일/UI tail을 실행하며 공통 확정은 분배기에 맡긴다.
     o::LocalMissionParentResult InstallPreparedFortState(bool prefixHud,std::function<void()> battleOver={}); // 같은 Native 앞단 뒤 파일/월드/꼬리를 연결한다. false는 State3의 HUD 중복을 피하고 현재6은 실제 후반 옵션/결과 장치를 요구한다.
     o::LocalMissionParentResult InstallBattleReturnNativeState(std::uint32_t selected); // 실제 State6의 보관 결과/출처와 일반 Fort 재설치를 기존 큰 부모에 연결한다.
+    void OpenMultiplayerOptions(); // 실제 현재 Fort/이름/로컬 서버 설정과 원문 일반 옵션 창을 조립한다.
+    void OpenMultiplayerInput(bool server); // 이름/로컬 서버 주소를 기존 HTML Input 공장으로 편집하고 실제 저장소에 반영한다.
+    bool MultiplayerOptionsEvent(const InputEvent& event); // 원문 SetName b9/Connect c4 예약을 실제 일반 입력 위치에서 처리한다.
     void PrepareNativeFortState(bool editor); //State1/3의 같은 실제 cleanup/Chat/listener/Fort/Core/Renderer/Chunk/options 준비를 실행한다. HUD는 각 원문 위치의 별도 호출이다.
     o::LocalMissionParentResult InstallMainMenuNativeState(std::uint32_t selected); //State3의 실제 전체 부모를 실행하며 호스트 메뉴 표시는 Native 공통 확정 뒤에만 공개한다.
     o::StartupStateCheckHooks EditorStartupStateHooks(); //State1/3이 같은 실제 saved-state reader/벽시각을 사용한다. 기본 옵션을 강제로 바꾸지 않는다.
@@ -208,6 +211,7 @@ private:
     bool PollCameraPan(const InputEvent& pointer); //현재 커서 갱신 뒤 원문 Alt/가운데 이동과 전용 큐 경로를 선택한다.
     struct HudRuntime;std::unique_ptr<HudRuntime> hud_; // 실제 화면/지도 전역의 주소를 Client UI 수명에 고정한다.
     struct EditorRuntime;std::unique_ptr<EditorRuntime> editor_; //실제 파일/전송/State 장치는 World보다 먼저 만들고 Session 반납 뒤 해제한다.
+    std::uint32_t multiplayerOptionsToken_{}; // 현재 일반 옵션의 실제 Gump token이며 닫힌 창의 serial을 새 창으로 대신하지 않는다.
     std::shared_ptr<const TextClipboard> textClipboard_; //최초 Chat과 뒤 Save as의 두 callback이 같은 OS 장치 수명을 공유한다.
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
     WarningMessages* warnings_{}; // rawButtons가 소유하는 같은 실제 Gump/StyleText의10초 안내를 빌린다.

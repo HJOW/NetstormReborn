@@ -316,6 +316,7 @@ target_sources(netstorm PRIVATE client/ClientStateWorldGlobals.h client/ClientSt
 # Native ClockSync·MetaZone·Zone6BYTE 정리의 실제 장기 owner 연결이다.
 target_sources(netstorm PRIVATE o/RawClockSynchronization.cpp o/RawClockSynchronization.h) # 서버/Commander의 실제5번 시간 응답·70표본·게임보정을 같은 Client에 연결한다.
 target_sources(netstorm PRIVATE client/NativeBattleReturnState.cpp client/NativeBattleReturnState.h) # 일반 State6의 배경/음악·정리 전 결과 지역값과 Fort 뒤 결과 안내 부모다.
+target_sources(netstorm PRIVATE client/MultiplayerOptionsWindow.h client/RawMenuMultiplayer.inc) # 같은 공통 트리의 원문 일반 옵션 창과 현재 문자열/선택 장치다.
 target_sources(netstorm PRIVATE client/ClientStateStorageCleanup.h client/ClientStateStorageCleanup.cpp o/RawStateZoneReset.h o/RawStateZoneReset.cpp)
 # 하위 SID Reset을 재사용하는 실제 월드 Pool 부모와 기록·실패점 꼬리다.
 target_sources(netstorm PRIVATE o/RawSquidPoolReset.h o/RawSquidPoolReset.cpp)

@@ -9,6 +9,7 @@ struct UberGump::EditorRuntime {
     std::function<void(std::uint32_t)> selectCursor; //실제 커서 장치를 공통 State 확정 뒤의 호스트 입력 구성에도 같은 callback으로 전달한다.
     bool committed{}; //실제 Session.Commit 복귀의 호스트 관측이며 Native State나 loaded 대신 쓰지 않는다.
     std::function<void()> multiplayerOptions; // 일반 State6의 실제 옵션 공장을 빌리며 미연결을 빈 창/성공으로 대체하지 않는다.
+    std::function<void()> connectLan; // 다음 일반 State7/LAN 시작 부모의 실제 입력 소비자이며 아직 미연결이면 해당 명령에서 명시 거부한다.
     explicit EditorRuntime(Client& value):client(value),files(ResolveEditorRoots(value.GameDirectory(),value.UserData()).work,ResolveEditorRoots(value.GameDirectory(),value.UserData()).protectedRoots) {} //기존에는 자산 디렉터리의 형제 작업본, 5차 사용자 홈 정책에서는 CustomMaps를 작업 루트로, 같은 보호 루트를 선택한다. 생성만으로 파일/게임 상태를 쓰지 않는다.
     //호스트 메인 메뉴/종료에서 Session 수신기를 반납한 뒤 남은 실제 양끝/리스너를 닫는다.
     void Close() { if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); } }
@@ -120,12 +121,51 @@ o::LocalMissionParentResult UberGump::InstallPreparedFortState(bool prefixHud,st
 // State6은 정리 전 결과를 지역값으로 보유하고 같은 일반 Fort의 파일/월드/후반 UI를 이어서 설치한다.
 o::LocalMissionParentResult UberGump::InstallBattleReturnNativeState(std::uint32_t selected) {
     if (selected!=6 || !editor_) throw std::logic_error("일반 복귀 State6의 실제 장기 부모 계약");auto& local=*client_.LocalStateGlobals();auto& surface=*client_.SurfaceStorage();
+    editor_->multiplayerOptions=[this] { OpenMultiplayerOptions(); }; // 실제 옵션 공장을 현재 Uber/Client 수명에 연결하며 창 생성은 후반 원문 관문까지 지연한다.
     NativeBattleReturnHooks hooks;hooks.deleteSavedState=[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); };
     hooks.requestMusic=[this](auto name) { client_.WorldAudio().RequestMusic(name); };
     hooks.sourceBackground=[this](auto type)->std::optional<std::string> { const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("일반 복귀 source TYPE 이름 범위");const auto name=types[type].name;if (!client_.Files().TryRead("d/"+name+".gif")) return std::nullopt;return name; };
     hooks.leaveBattle=[this] { if (!world_) throw std::logic_error("State6의 이전 Battle14 실제 Session 없음");SendBattleLeaveForState(world_->Session()); };hooks.prefix=[this] { PrepareNativeFortState(false); };
     hooks.installFort=[this](const auto& saved) { return InstallPreparedFortState(true,[this,saved] { CompleteNativeBattleReturn(saved,client_.WorldAudio().ResultState(),{editor_->multiplayerOptions,[this](auto section) { Tell(std::string(section)); }}); }); }; // 콜백은 보관 지역값을 값으로 소유해 실제 Fort 적재 중 전역 변경과 구별한다.
     return netstorm::client::InstallNativeBattleReturnState({local.State(),local.SourceType(),client_.WorldAudio().ResultState(),surface.ownerMode.battle,htmlGlobals_.background},hooks);
+}
+// 일반 옵션의 원문 표시/선택 장치는 같은 현재 Fort/사용자 이름을 매 호출마다 조회한다.
+void UberGump::OpenMultiplayerOptions() {
+    if (!world_ || !editor_) throw std::logic_error("일반 옵션 공장의 실제 Fort/장기 장치 없음");MultiplayerOptionsWindowContext context;context.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(context.editor,textClipboard_);
+    context.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };context.fortName=[this] { return std::string(client_.FortGlobals()->Current()); };
+    context.playerName=[this] { if (!world_) throw std::logic_error("일반 옵션 현재 이름의 실제 Session 없음");return std::string(world_->Session().CurrentHandle()); };
+    context.serverName=[this] { std::string address;client_.Configuration().ReadString("lanServerAddress",address);return address.empty() ? FontBytes(client_.Translate("Find Local Server")) : address; }; // 공식 서버 목록 대신 명시한 로컬 TCP 주소만 표시한다.
+    context.rememberFort=[this](auto name) { client_.Configuration().Set("lastMultiplayerFort",name); };context.special=[this] { return client_.GameplayGlobals()->player.special!=0; };
+    context.action=[this](auto action) {
+        switch (action) {
+        case MultiplayerOptionsAction::ChooseFort:fortSelectionMode_=0;mapFileSpec_.SelectFort();client_.FortGlobals()->SelectFileSpec();Tell("LoadMultiplayer");break;
+        case MultiplayerOptionsAction::ChooseName:client_.Input().PushCommand(0x020000b9U,0,0);break; // 원문 SetName은 같은 일반40칸 고리에 예약한다.
+        case MultiplayerOptionsAction::ChooseServer:OpenMultiplayerInput(true);break;
+        case MultiplayerOptionsAction::ChooseProtocol:break; // 제품은 원문 TCP/IP 행을 고정하며 SPX/IPX/폐기 인터넷 선택은 비활성이다.
+        case MultiplayerOptionsAction::Connect:client_.Input().PushCommand(0x020000c4U,0,1);break; // Native Connect 인자1은 실제 다음 입력 소비자가 처리한다.
+        case MultiplayerOptionsAction::Cancel:client_.Input().PushCommand(0x02000095U,0,std::bit_cast<std::int32_t>(scriptStrings_.Store("BLANK")));break;
+        }
+    };
+    multiplayerOptionsToken_=rawButtons_->Menus()->ShowMultiplayerOptions(std::move(context));rebuild_=true;
+}
+// 기존 Input 공장의 확정 문자열을 같은 실제 Subscriber/로컬 주소 설정에 전달한다.
+void UberGump::OpenMultiplayerInput(bool server) {
+    if (!world_) throw std::logic_error("일반 옵션 입력의 실제 Fort 없음");SaveFortNameDialogContext context;context.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(context.editor,textClipboard_);context.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };
+    const std::string key=server ? "LanServerAddress" : "LanPlayerName";
+    context.tell=[this,server,key](auto section) {
+        const std::string prefix=key+"(";if (!section.starts_with(prefix) || section.empty() || section.back()!=')') { Tell(std::string(section));return; }
+        const auto value=section.substr(prefix.size(),section.size()-prefix.size()-1);
+        if (server) client_.Configuration().Set("lanServerAddress",std::string(value));
+        else { if (!world_) throw std::logic_error("이름 확정의 실제 Fort 없음");std::vector<std::uint8_t> name(value.begin(),value.end());name.push_back(0);world_->Session().ChangeFortSubscriber(world_->Session().CurrentSubscriber(),std::span<const std::uint8_t>(name)); }
+        rawButtons_->Menus()->RefreshMultiplayerOptions(multiplayerOptionsToken_);rebuild_=true;
+    };
+    rawButtons_->Menus()->ShowHtmlInputDialog(std::move(context),1,server ? "Local TCP/IP Server Address?" : "Player Name?",key);rebuild_=true;
+}
+// 일반 입력 큐에서만 이름/연결 명령을 소비하여 Gump callback 안에서 World를 교체하지 않는다.
+bool UberGump::MultiplayerOptionsEvent(const InputEvent& event) {
+    const auto code=event.code&0x03ffffffU;if ((code!=0x020000b9U && code!=0x020000c4U) || !editor_ || !world_ || !client_.SurfaceStorage()->ownerMode.fort) return false;
+    if (event.code&InputCode::kRelease) return true;if (code==0x020000b9U) OpenMultiplayerInput(false);
+    else { if (!editor_->connectLan) throw std::logic_error("일반 State7/LAN 시작 부모 미연결");editor_->connectLan(); }return true;
 }
 //원문 startupStateCheck의 실제 선택 장치를 두 Native 부모가 같은 장기 파일 경로로 공유한다.
 o::StartupStateCheckHooks UberGump::EditorStartupStateHooks() {

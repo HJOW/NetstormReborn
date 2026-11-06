@@ -40,9 +40,11 @@
 #include "client/ClientDotCommandGlobals.h"
 #include "client/TextEntryStorage.h"
 #include "client/SaveFortNameDialog.h"
+#include "client/MultiplayerOptionsWindow.h" // State6의 일반 옵션도 기존 공통 자식과 입력/수명을 재사용한다.
 #include "client/HtmlInputDialog.h" //실제HTML입력확인은후속Tell을사용한다.
 #include "client/EditorFiles.h"
 #include <cctype>
+#include <cstring> // 원문 Unnamed의 대소문자 무시 비교를 같은 CRT 문자열로 실행한다.
 #include <cstdio>
 #include <set>
 #include "o/OriginalText.h"
@@ -71,6 +73,8 @@ struct RawMenuControls::Impl {
     std::set<std::uint32_t> nsOwned; // 원문 생성 경계가 직접 할당한50노드의 실제 토큰이다. 포인터 대입/부착 전 실패도 소유한다.
     std::unique_ptr<RawTextEntryControls> textEntries; // 같은 공통 수명/클립과 실제 문자 물리를 사용하는 편집 노드다.
     std::map<std::uint32_t,std::unique_ptr<SaveFortNameDialogNode>> saveFortRoots; // 같은 장식/가상 분배가 사용하는 실제0xdc 부모다.
+    std::map<std::uint32_t,std::unique_ptr<MultiplayerOptionsWindowNode>> multiplayerRoots; // 원문0xe0 기본 파생의 실제 고정 저장소다.
+    std::map<std::uint32_t,MultiplayerOptionsWindowContext> multiplayerContexts;std::set<std::uint32_t> multiplayerOwned; // 현재 창 장치와 부분 생성/미부착 자식의 장기 소유권이다.
     std::map<std::uint32_t,SaveFortNameDialogContext> saveFortContexts; // 각 부모보다 오래 유지하는 현재 작업본/이름 callback이다.
     std::set<std::uint32_t> saveFortOwned; // 원문 포인터 대입 전 실패도 같은 실제 정리 대상으로 보관한다.
     const SaveFortNameDialogContext* saveFortBuilding{};std::unique_ptr<SaveFortNameDialog> saveFortDialog; // 동기 생성 장치와 장기 원문 부모 처리기다.
@@ -348,6 +352,7 @@ struct RawMenuControls::Impl {
     #include "client/RawMenuHtml.inc" // 같은 실제 장식/본문/돌 버튼과 부모 수명을 연결한다.
     #include "client/RawMenuChat.inc" // 같은 Impl 저장소에 실제 Chat 공장만 연결한다.
     #include "client/RawMenuSaveFort.inc" // 같은 장식/문자/두 버튼과 실제 작업본으로 Save as를 조립한다.
+    #include "client/RawMenuMultiplayer.inc" // 같은 실제 기본/장식/문자/돌 버튼으로 Multiplayer Options를 조립한다.
     #include "client/RawMenuEditorIsland.inc" // 실제 단일 창/후보 갱신/입력과 공통 기하·수명을 연결한다.
     // 동적 Image 생성은 공개 공장과 목록 자식에서 같은 실제 처리기를 사용한다.
     std::uint32_t CreateMeta(RawImage& image) {
@@ -355,6 +360,7 @@ struct RawMenuControls::Impl {
     }
     // 모든 공통 처리는 같은 실제 파생 기본 주소를 받는다.
     GumpCreateNode* Node(std::uint32_t token) const {
+        if (auto* node=Find(multiplayerRoots,token)) return node;
         if (auto* node=Find(islandRoots,token)) return node;
         if (auto* node=Find(imageLists,token)) return node;
         if (auto* node=Find(metaImages,token)) return node;
@@ -385,6 +391,7 @@ struct RawMenuControls::Impl {
     }
     // 각 실제 가상 Attach를 현재 분류로 호출한다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
+        if (multiplayerRoots.contains(token)) { const_cast<Impl*>(this)->AttachMultiplayer(token,x,y,parent,mode);return; }
         if (islandRoots.contains(token)) { IslandLayout(token).Attach(token,x,y,parent,mode);return; }
         if (imageLists.contains(token)) { imageList->Attach(token,x,y,parent,mode);return; }
         if (metaImages.contains(token)) { metaImage->Attach(token,x,y,parent,mode);return; }
@@ -396,6 +403,7 @@ struct RawMenuControls::Impl {
     void Redraw(std::uint32_t token,bool erase) const { if (menus.contains(token)) menu->Redraw(token,erase);else if (decorations.contains(token) || saveFortRoots.contains(token) || islandRoots.contains(token)) decoration->Redraw(token,erase);else common.RedrawBase(token,erase); }
     // 부모가 전달한 원본 사건을 대상 자신에게 분배한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
+        if (multiplayerRoots.contains(token)) return const_cast<Impl*>(this)->HandleMultiplayer(token,event,first,second);
         lastInput={token,event,first,second};
         if (islandRoots.contains(token)) return const_cast<Impl*>(this)->HandleIsland(token,{event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)});
         if (imageLists.contains(token)) return imageList->Handle(token,event,first,second);
@@ -619,7 +627,7 @@ void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) cons
     else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.plainTexts.contains(token)) s.costText->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.islandOwned.erase(token);s.islandContexts.erase(token);s.islandRoots.erase(token);s.embeddedTells.erase(token);s.imageLists.erase(token);s.metaImages.erase(token);s.saveFortOwned.erase(token);s.saveFortContexts.erase(token);s.saveFortRoots.erase(token);s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.multiplayerOwned.erase(token);s.multiplayerContexts.erase(token);s.multiplayerRoots.erase(token);s.islandOwned.erase(token);s.islandContexts.erase(token);s.islandRoots.erase(token);s.embeddedTells.erase(token);s.imageLists.erase(token);s.metaImages.erase(token);s.saveFortOwned.erase(token);s.saveFortContexts.erase(token);s.saveFortRoots.erase(token);s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
 // 생성자는 같은 등록표를 사용하고 Image의 소유권은 호출자에게 남긴다.
 std::uint32_t RawMenuControls::CreateMetaImage(RawImage& image) {
     return impl_->CreateMeta(image);
@@ -676,6 +684,10 @@ RawTextEntryControls& RawMenuControls::EnableTextEntry(RawTextEntryContext conte
 }
 RawTextEntryControls* RawMenuControls::TextEntryControls() const { return impl_->textEntries.get(); } // 실제 설치 여부만 관측한다.
 // 원문 공장을 호출하는 동안만 생성 번역 문맥을 빌리고 각 root에는 실제 장치 수명을 보관한다.
+// 현재 문자 장치와 같은 실제 Gump 등록표/수명을 사용하여 일반 옵션 창을 생성한다.
+std::uint32_t RawMenuControls::ShowMultiplayerOptions(MultiplayerOptionsWindowContext context) { EnableTextEntry(context.editor);return impl_->CreateMultiplayer(std::move(context)); }
+// 원문 갱신 통지는 살아 있는 같은 창에만 전달되며 닫힌 serial을 새 창으로 대신하지 않는다.
+void RawMenuControls::RefreshMultiplayerOptions(std::uint32_t token) { auto& s=*impl_;const auto found=s.multiplayerRoots.find(token);if (found==s.multiplayerRoots.end() || (found->second->flags&0x10004U)) return;const auto& root=*found->second;s.common.RedrawBase(token,true);s.AttachMultiplayer(token,root.x,root.y,0,0); }
 std::uint32_t RawMenuControls::ShowSaveFortNameDialog(SaveFortNameDialogContext context,std::uint32_t fortMode,std::uint32_t canCancel,std::optional<std::string_view> initial) {
     auto& s=*impl_;if (!context.work || !context.editor.now || !context.translate || !context.fortPath || !context.tell || (fortMode && (!context.header || !context.setName)) || (!fortMode && !context.readFort)) throw std::invalid_argument("Save as 실제 작업본/Client/이름 장치 누락");
     EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("Save as 생성 안의 재귀 생성 미지원");s.saveFortBuilding=&context;

@@ -27,6 +27,7 @@ struct SaveFortNameDialogContext;struct SaveFortNameDialogNode; // 원본 이름
 struct RawMovieContext;class RawMovieControls; // 실제 영상의 singleton/공통 수명 조립이다.
 struct RawBackgroundGifContext;class RawBackgroundGifControls; // 새 Uber의 실제 BackgroundGif 자식이다.
 struct EditorIslandWindowContext;struct EditorIslandWindowNode; // 실제 섬 추가 창의 현재 필드와 Session 대여다.
+struct MultiplayerOptionsWindowContext;struct MultiplayerOptionsWindowNode; // 일반 State6의 실제 옵션 창과 현재 이름/입력 큐 장치다.
 // 같은 수집/정렬/클립 안에서 생산 패널의 원본 파생 Draw를 호출한다.
 struct RawMenuExternalGumps {
     std::function<TextGumpNode*(std::uint32_t)> text; // 같은 TextGump/StyleText가 읽는 외부 텍스트 노드다.
@@ -123,6 +124,8 @@ public:
     std::uint32_t ShowSaveFortNameDialog(SaveFortNameDialogContext context,std::uint32_t fortMode=1,std::uint32_t canCancel=1,std::optional<std::string_view> initial={}); // 실제 공통 모달/문자 입력/두 버튼을 생성한다.
     std::uint32_t ShowHtmlInputDialog(SaveFortNameDialogContext context,std::uint32_t mode,std::string_view title,std::string_view continuation); //HTML $Input의원문mode/제목/후속Tell섹션을같은실제모달로작성한다.
     std::uint32_t ShowSendMoneyDialog(SaveFortNameDialogContext context,std::uint32_t target); // 현재 숫자 창의 확정 장치와 대상은 모달 수명 동안 유지한다.
+    std::uint32_t ShowMultiplayerOptions(MultiplayerOptionsWindowContext context); //004cc4d0/004cc970/004ccf30의 실제 장식/네 행/돌 버튼을 같은 공통 모달에 생성한다.
+    void RefreshMultiplayerOptions(std::uint32_t token); // 현재 같은 창의 이름/설정/자식 크기를 다시 읽고 재부착한다.
     const SaveFortNameDialogNode* SaveFortNameNode(std::uint32_t token) const; // 검사도 실제 파생/자식 필드를 그대로 읽는다.
     void CloseSaveFortNameDialogs(); // Session 장치 반납 전에 현재 부모와 부분 생성 자식을 공통 수명으로 정리한다.
     void CloseTextEntries(); // 화면 교체에서 미부착/부분 생성도 같은 공통 수명으로 반납한다.

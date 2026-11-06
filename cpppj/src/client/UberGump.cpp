@@ -138,6 +138,7 @@
 #include "client/EditorIslandDialog.h" // 실제 Add Island 명령의 release와 전용 창 생성 경계를 분리한다.
 #include "client/ExistingEditorAfterCheckpoint.h"
 #include "client/NativeBattleReturnState.h" // 일반 전투 복귀의 실제 결과 지역값/앞뒤 부모를 같은 Fort 설치에 연결한다.
+#include "client/MultiplayerOptionsWindow.h" // 원문 일반 옵션 창을 같은 현재 Fort/이름과 입력 큐에 연결한다.
 #include "client/NativeMainMenuState.h" //State3의 원문 부모와 호스트 표시 확정은 다른 시점이다.
 #include "client/NativeIntroState.h" // 첫 설치의 영상 부재도 원문 39→40→41→3 순서를 사용한다.
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
@@ -1342,6 +1343,7 @@ void UberGump::Event(InputEvent event) {
         static_cast<void>(DispatchEditorTestBattle(event,fortSelectionMode_,hooks));rebuild_=true;return;
     }
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
+    if (MultiplayerOptionsEvent(event)) return; // 일반 옵션의 이름/연결 예약도 같은 Guide/Gump 뒤 일반 입력 큐에서 소비한다.
     if (DispatchTellTip(event,client_.LocalStateGlobals()->TipNumber(),{
         [](std::int32_t value) { char text[32]{};std::snprintf(text,sizeof(text),"%d",value);return std::string(text); }, //원문 호출자의 지역 버퍼와 signed 정수 서식만 사용한다.
         [this](auto key,auto value) { client_.Configuration().Set(std::string(key),std::string(value)); }, //동기 옵션 재해석도 같은 현재 TipNumber를 갱신한다.
