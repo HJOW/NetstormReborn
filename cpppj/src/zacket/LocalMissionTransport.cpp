@@ -10,6 +10,8 @@ namespace netstorm::zacket {
 namespace {
 constexpr std::size_t kPlayerBytes=180,kPlayers=9,kHeader=4,kZoneReserve=512,kZoneClient=71,kZoneHead=15; //원본 Player/패킷/Zone 레코드의 실제 폭이다.
 constexpr std::uint8_t kZoneType=0x1a,kLoginType=0x27,kVersion=1; //PATCH의 실제 초기 패킷 종류와 버전이다.
+// 종료된 CD 파일 확인 요청7f/응답80을 제품에서 송수신하지 않는다. 원문과 다른 이유는 AGENTS의 클라이언트 유효성 검사 비활성화 요구다.
+constexpr bool IsRetiredCdValidationPacket(std::uint8_t type) { return type==0x7fU || type==0x80U; }
 constexpr std::array<std::string_view,4> kZoneNames{"zsimpson","jgreer","kdemarest","tbratton"}; //004b51e0의 실제 네 정적 이름이다.
 // 실제 비정렬 little endian BYTE/WORD/DWORD를 지정 폭으로 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t offset,std::size_t width=4) {
@@ -164,6 +166,7 @@ const std::shared_ptr<o::RawConnectionRegistry>& LocalMissionTransport::Registry
 // 기존 완성 패킷 writer는 이미 길이를 확정했다. 원시 작성기만 같은 등록 observer에 실제 this를 전달한다.
 bool LocalMissionTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable) {
     if (!open_) throw std::logic_error("로컬 전송 연결을 열기 전 송신");
+    if (packet.size()>=kHeader && IsRetiredCdValidationPacket(packet[1])) return false; // 폐기된 파일 검증은 observer/송신 큐까지 전달하지 않는다.
     if (destination==9 && (!clientPresent_ || !(client_.flags&2U) || (client_.flags&0x40U) || clientPeerLost_)) return false; //현재 실제 Client9/반대 끝 수명을 사용한다.
     if (destination>=1 && destination<static_cast<std::int32_t>(kPlayers) && !(players_[std::size_t(destination)*kPlayerBytes+0x50]&1U)) return false;
     const bool client=destination==9,server=serverPresent_ && !serverPeerLost_ && !(server_.flags&0x40U) && ((destination==pendingId_ && pending_) || (destination>=1 && static_cast<std::uint32_t>(destination)==owner_));
@@ -186,6 +189,7 @@ void LocalMissionTransport::Flush() {
 }
 // 같은 등록표를 사용하며 집합 경로만 원본의 now→정책→기록→observer→receive 순서로 추가한다.
 bool LocalMissionTransport::DispatchFrame(o::PacketConnection& connection,std::span<const std::uint8_t> frame) {
+    if (frame.size()>=kHeader && IsRetiredCdValidationPacket(frame[1])) return !(connection.flags&0x40U); // 단일 검증 요청은 등록 여부와 무관하게 파일/응답 처리 전에 무시한다.
     if (frame.size()<4 || frame[1]!=4) return dispatch_.Dispatch(connection,frame);if (connection.flags&0x40U) return false;
     if (connection.delayed) throw std::logic_error("로컬 집합의 지연 분배 미복원");const auto total=Read(frame,2,2);std::size_t cursor=4;
     if (total>frame.size()) { hooks_.terminate(connection);return false; }
@@ -193,7 +197,8 @@ bool LocalMissionTransport::DispatchFrame(o::PacketConnection& connection,std::s
     while (cursor<total) {
         if (total-cursor<4) { hooks_.terminate(connection);return false; }const auto length=Read(frame,cursor+2,2);
         if (!length || length>total-cursor) { hooks_.terminate(connection);return false; }const auto packet=frame.subspan(cursor,length);cursor+=length;
-        if (!dispatch_.Validate(packet)) continue;if (packet[1]==4) throw std::logic_error("로컬 중첩 집합 패킷 미복원");const auto type=packet[1];
+        if (!dispatch_.Validate(packet)) continue;if (IsRetiredCdValidationPacket(packet[1])) continue; // 집합 내부에서도 폐기된 검증의 기록/observer/수신기를 호출하지 않는다.
+        if (packet[1]==4) throw std::logic_error("로컬 중첩 집합 패킷 미복원");const auto type=packet[1];
         const auto now=hooks_.now();if (type==6) connection.heartbeat=now;else connection.received=now;
         const auto& registration=dispatch_.Registration(type);const auto incoming=packet[0]&0x7f;
         if (incoming!=registration.version) {

@@ -1,0 +1,147 @@
+{
+  "unit": 965,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 965,
+  "version": "11.01",
+  "exeSha256": "9643418655dc2f016dc6be6319d2af084a5d058443b277d34a28a2559b7846e2",
+  "exeBytes": 11326464,
+  "scope": "785의 미분류seek42cd10을CD파일4BYTE확인/논리수신자11·reply80으로분류. 실제로컬/Editor공유전송에서7f/80단일·집합수신/송신을비활성화. 일반RawPacketDispatch원문계약보존.",
+  "static": {
+    "unit": 965,
+    "host": "HJOW-Athlon",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "kind": "read-only PE/source inventory; no emulation/game/network/protocol tests",
+    "original": {
+      "requestType": 127,
+      "registrationParent": "0040b4b0",
+      "registrationReference": "0040c26d",
+      "registrationBytes": "6810cd42006a7fe8d72a0d00",
+      "receive": "0042cd10",
+      "decoder": "0042cc10",
+      "cdRoot": "00440d40",
+      "seek": "0041a700",
+      "read": "0041a7a0",
+      "readBytes": 4,
+      "send": "004e2dc0",
+      "destination": 11,
+      "replyConstructor": "0040b420",
+      "replyType": 128,
+      "replyVersion": 1,
+      "replyLength": 8,
+      "purpose": "원격 지정 CD 파일/offset의4BYTE 확인 응답. 클라이언트 검증 용도 판정은 이 동작과 이전 검증 비활성화 정책을 함께 근거로 한 분류다. 고정 원격 도메인 또는 다른 검증 전체와의 동일성을 새로 증명하지 않는다."
+    },
+    "product": {
+      "guards": [
+        {
+          "line": 14,
+          "text": "constexpr bool IsRetiredCdValidationPacket(std::uint8_t type) { return type==0x7fU || type==0x80U; }"
+        },
+        {
+          "line": 169,
+          "text": "if (packet.size()>=kHeader && IsRetiredCdValidationPacket(packet[1])) return false; // 폐기된 파일 검증은 observer/송신 큐까지 전달하지 않는다."
+        },
+        {
+          "line": 192,
+          "text": "if (frame.size()>=kHeader && IsRetiredCdValidationPacket(frame[1])) return !(connection.flags&0x40U); // 단일 검증 요청은 등록 여부와 무관하게 파일/응답 처리 전에 무시한다."
+        },
+        {
+          "line": 200,
+          "text": "if (!dispatch_.Validate(packet)) continue;if (IsRetiredCdValidationPacket(packet[1])) continue; // 집합 내부에서도 폐기된 검증의 기록/observer/수신기를 호출하지 않는다."
+        }
+      ],
+      "sharedBy": "LocalMissionTransport and EditorLocalTransport.DispatchFrame",
+      "genericRawPacketDispatchUnchanged": true,
+      "newReceiveOrReplyImplemented": false,
+      "validationSuccessSynthesized": false
+    },
+    "scopeCorrection": "785의 미분류42cd10 seek 부모는 일반 비멀티 FILE 복원 대상에서 폐기된 CD 확인 경로로 재분류한다. 원본 callback/파일 조회/응답은 제품에 연결하지 않는다.",
+    "sha256": {
+      "AGENTS.md": "3134d0a2b9482da6655c48d2816a371374fc39be0136c79dda452a68cfbb2716",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/src/zacket/LocalMissionTransport.cpp": "bc93f7eef9fc2048a50e06ea6f5cdaa51f8c8e28fcb4c1ccde8e151f2af6a583",
+      "cpppj/src/client/EditorLocalTransport.cpp": "26cf5ce2e2c350cfb51e9dd9ce1438a2fc4345fed9764197c4e9f18514a7feec",
+      "cpppj/src/o/RawPacketDispatch.cpp": "92b3f9a83c3c6e99f99933b284f33bfe21e1aba769762c5eb1cf951ff6ac5833",
+      "tools/cpp_retired_cd_validation_audit.py": "73f861d2494cae35fdd17c724b3cc3c9749d2c819a8b52731c4f7700bfbf2369"
+    },
+    "emulations": 0,
+    "gameExecutions": 0,
+    "networkExecutions": 0,
+    "newProtocolTests": 0
+  },
+  "initialBuild": {
+    "exitCode": 1,
+    "log": "extracted/cpp-resume-965/build.log",
+    "reason": "다른 namespace의 kClosed 참조 C2065/후속 C4390. 기존 실제 종료비트0x40으로 교정; 최초 소스/정적 보고 보존."
+  },
+  "finalBuild": {
+    "targets": [
+      "NetstormCpp"
+    ],
+    "configuration": "Release",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-resume-965/build-fixed.log"
+  },
+  "newCppTests": 0,
+  "newProtocolTests": 0,
+  "nativeExecutions": 0,
+  "networkExecutions": 0,
+  "live": {
+    "product": 965,
+    "summary": "extracted/cpp-resume-965/live/summary.json",
+    "toolTagUnit": 945,
+    "entries": 4,
+    "cycles": 2,
+    "actions": 37,
+    "observations": 26,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "capturePixels": [
+      800,
+      600
+    ],
+    "visuallyChecked": [
+      "mission-0.png",
+      "final-main.png"
+    ],
+    "scope": "일반 싱글 진입/Replay/메인 복귀. 폐기 프로토콜/MP 검증 아님."
+  },
+  "sourceSha256": {
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "bc93f7eef9fc2048a50e06ea6f5cdaa51f8c8e28fcb4c1ccde8e151f2af6a583"
+  },
+  "protection": {
+    "existingUnchanged": 2796,
+    "newFixtures": 0,
+    "nextFiles": 2796,
+    "nextFixtures": 976,
+    "baseline": "extracted/cpp-resume-965/protected-final.json"
+  },
+  "checking": {
+    "remaining": 8,
+    "parents": 3,
+    "partial": 2,
+    "mp": 3,
+    "completedParents": 39,
+    "completedPartial": 4,
+    "unchanged": true
+  },
+  "remaining": [
+    "4번 Factory/파생/파일 잔여",
+    "다음966 options 부분쓰기/1176·1177 교체 실패",
+    "이후7→8 순서"
+  ],
+  "nextUnit": 966,
+  "goalComplete": false
+}
