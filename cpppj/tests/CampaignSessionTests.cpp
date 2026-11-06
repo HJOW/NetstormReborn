@@ -2235,7 +2235,7 @@ TEST_CASE(CampaignSession_CursorReturnsFactoryPieceWithActualTimer) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyCursorFactoryInput(fort);
     GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;session.SetSp(1,5000);const auto source=CursorEnergyInput(session);CHECK(core.pool.Slot(source)[10]==76);const auto form=ReadyCursorFactoryForm(session);const auto parent=SquidForms(core.pool).Parent(form);
     cursor.ReturnSettings().lifetimeIndex=1;cursor.Take(form,0x41);const auto point=CursorPlacementPoint(session,ui);CHECK(session.CursorDropSettings().x==point.x);cursor.Drop();CHECK(ui.sent.size()==1 && ui.shown==1 && session.Sp(1)==5000-core.types[75].cost);const auto returned=session.Priests().Carrier().FindContained(parent,8,75,0);CHECK(returned.value);if (!returned.value) return;
-    CHECK(core.pool.Slot(returned)[10]==6 && (Get(core.pool.Slot(returned),20,2)&0x108)==0x108);const auto timer=FindAttachedProcess(core.pool,returned,46);CHECK(timer.value);if (!timer.value) return;const auto* process=dynamic_cast<RegularProcess*>(core.processes.FromForm(timer));CHECK(process && process->Event()==0 && process->Payload()==5.0f && process->Time()==core.processState.now && core.pool.Slot(returned)[30]==2);CHECK(!session.CursorDropSettings().preview && cursor.Lifecycle().previewCount==0);
+    CHECK(core.pool.Slot(returned)[10]==6 && (Get(core.pool.Slot(returned),20,2)&0x108)==0x108);const auto timer=FindAttachedProcess(core.pool,returned,46);CHECK(timer.value);if (!timer.value) return;const auto* process=dynamic_cast<RegularProcess*>(core.processes.FromForm(timer));CHECK(session.BattleOption(2)==0 && process && process->Event()==0 && process->Payload()==10.0f && process->Time()==core.processState.now && core.pool.Slot(returned)[30]==2); // 실제현재Slow옵션0의10초를사용하며독립lifetimeIndex1사본의5초로대체하지않는다.CHECK(!session.CursorDropSettings().preview && cursor.Lifecycle().previewCount==0);
 }
 
 // 실제 커서 수집의 깊이/tail과 현재8비트 SHP/윤곽/파일 색표·카메라를 같은 표시기에서 검사한다.
@@ -5439,4 +5439,33 @@ TEST_CASE(VortexOwnerDiagnostic_ActualSessionReportsSameClientDetail) {
     }); // 원문 진단 진입에서만 멈추며 부모의 선행 상세를 관측한다.
     bool stopped=false;try { session.SetObjectOwner(sid,2); }catch (const std::string&) { stopped=true; }CHECK(stopped && diagnostics==1 && raw[34]==3);
     session.World().Storage()->BindDisplayDiagnostics(detail,{});std::copy(original.begin(),original.end(),raw.begin()); // 명시 입력과 지역 장치 참조를 원복하고 실제 객체 수명은 Session에 맡긴다.
+}
+
+
+// 실제Session의Cancel→Form가상복귀가같은World의진단/깊이를사용하는지창없이검사한다.
+TEST_CASE(CursorFormPop_ActualSessionCancelUsesSharedFactoryAndCurrentVtable) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;std::function<void(std::string_view)> currentAssertion;auto services=external.Services();
+    services.ai.assertion=[&](auto expression) { if (!currentAssertion) throw std::logic_error("커서Form검사의예상밖진단");currentAssertion(expression); }; // 실제Session이Factory에대여하는현재진단서비스다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());
+    const bool server=session.World().Storage()->Authority()->server;session.World().Storage()->Authority()->server=false; // 실제전송을선택하지않는비서버권한만명시한다.
+    for (const auto formType:{1U,2U,3U,6U}) { // 실제네Form생성자를같은공장에서사용한다.공중/사제/전투입력이아니다.
+        for (const auto sourceType:{6U,7U,63U}) { // 현재TYPE를바꿔도실제VT의공통Form몸체를선택한다.
+            for (const bool wasVoid:{true,false}) { // +48생략과현재가상분리뒤+4c를각각확인한다.
+                const auto source=core.factory.Create(formType,2),preview=core.factory.CreateContained(2);auto raw=core.pool.AllocatedBytes(source),form=core.pool.AllocatedBytes(preview);
+                const std::vector<std::uint8_t> original(raw.begin(),raw.end());const auto oldDepth=core.bookkeeping.depth;const auto packets=external.packets.size();
+                const Sid freeParent{static_cast<std::uint16_t>(core.pool.Capacity()-1)};CHECK(core.pool.Slot(freeParent)[11]&1U);Put(raw,16,freeParent.value,2); // 공통Unpop이확인하는부모를실제free슬롯으로준비한다.
+                raw[10]=static_cast<std::uint8_t>(sourceType);raw[11]=wasVoid ? 0x14:0x10;Put(form,16,source.value,2);auto& drop=session.CursorDropSettings();drop.preview=preview.value;drop.lockDepth=0;drop.inputFlags=0x80;drop.costFlags=0x100;drop.cursorGump=0;cursor.Lifecycle().previews.fill(0);cursor.Lifecycle().previewCount=0;core.bookkeeping.depth=11;
+                std::size_t diagnostics{};currentAssertion=[&](auto expression) { // 실제공통Pop의진단정상복귀가현재VT/공유깊이를바꾼다.
+                    CHECK(expression=="!xmitJustCreatedFlag");CHECK(raw[11]==0x10 && core.bookkeeping.depth==11);++diagnostics;
+                    raw[11]=8;Put(raw,0,SquidForms(core.pool).Vtable(3));core.bookkeeping.depth=0xffffffffU;
+                };
+                bool failed=false;try { cursor.CancelForState(); }catch (const std::exception& error) { failed=true;std::printf("CursorFormPop form=%u type=%u void=%d: %s\n",formType,sourceType,wasVoid?1:0,error.what()); }
+                CHECK(!failed && diagnostics==1 && raw[10]==sourceType && raw[11]==8 && core.bookkeeping.depth==0xffffffffU);CHECK(drop.preview==0 && drop.lockDepth==1 && cursor.Lifecycle().previewCount==0 && external.packets.size()==packets);
+                currentAssertion={};std::copy(original.begin(),original.end(),raw.begin());core.bookkeeping.depth=oldDepth;drop.preview=0;drop.lockDepth=1;cursor.Lifecycle().previews.fill(0);cursor.Lifecycle().previewCount=0; // 지역진단과명시입력을원복해bareForm반납을준비한다.
+                if (!(core.pool.Slot(preview)[11]&1U)) { Put(core.pool.AllocatedBytes(preview),16,0,2);CHECK(session.World().Destroy(preview,0)); }
+                core.pool.Release(source); // bare생성Form에는PID/외부자원이없으므로원래void슬롯을반납한다.미등록ProcessForm2삭제경로를만들지않는다.
+            }
+        }
+    }
+    session.World().Storage()->Authority()->server=server;
 }

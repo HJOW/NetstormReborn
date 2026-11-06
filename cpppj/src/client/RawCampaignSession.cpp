@@ -3158,13 +3158,18 @@ struct RawCampaignSession::Impl {
         game.prepare=[this] { PrepareConstruction();gameplayPlacement.geometry.patternTypes=constructionState.confirm.patternTypes;cursorDrop.localPlayer=playerState.battleOwner;cursorDrop.battle=core.ownerMode.battle ? 1U : 0U;cursorDrop.blocked=globals.missionPost; };
         game.lifecycle.source=[this](Sid form) { return SquidForms(core.pool).Parent(form); };
         game.lifecycle.sourceNotice=[this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); };
-        game.lifecycle.detach=[this](Sid sid,std::uint32_t flags) {
-            if (core.pool.Slot(sid)[10]==6) { if (flags) throw std::logic_error("커서 ContentForm 분리 flags0 계약");contentForms->Unpop(sid); }
+        const auto commonForm=[this](Sid sid) { // 변경 가능한 TYPE 대신 현재 VT의 공통 Form +48/+4c 몸체를 선택한다.
+            const auto table=Read(core.pool.Slot(sid),0);const SquidForms forms(core.pool);
+            for (const auto type:{1U,2U,3U,6U}) if (table==forms.Vtable(type)) return true; // 네 실제 Form 생성자 표만 같은 몸체를 공유한다.
+            return false;
+        };
+        game.lifecycle.detach=[this,commonForm](Sid sid,std::uint32_t flags) { // 같은 World의 진단/종속 분리를 대여한다.
+            if (commonForm(sid)) core.factory.UnpopForm(sid);
             else world.Unpop(sid,flags);
         };
-        game.lifecycle.unpop=[this](Sid sid,std::uint32_t flags) {
+        game.lifecycle.unpop=[this,commonForm](Sid sid,std::uint32_t flags) { // 같은 World의 현재 진단/권한/공유 깊이로 복귀한다.
             const auto raw=core.pool.Slot(sid);
-            if (raw[10]==6) { SquidForms(core.pool).Pop(sid,flags);return; }
+            if (commonForm(sid)) { core.factory.PopForm(sid,flags);return; }
             world.Pop(sid,std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),flags);
         }; // 원본 가상+4c는 void 해제/복귀 Pop이며 +48 분리와 구별한다.
         game.lifecycle.destroy=[this](Sid sid,std::uint32_t flags) { if (!world.Destroy(sid,flags)) throw std::logic_error("커서 실제 가상 삭제 거부"); };

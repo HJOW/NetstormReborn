@@ -1,0 +1,161 @@
+{
+  "unit": 969,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 969,
+  "version": "11.01",
+  "scope": "실제 커서 취소의 현재 Form VT 분리/복귀를 World 공유 Factory에 연결",
+  "exeSha256": "e8fd503549044a06d7841c30dc9dca7bf305cec6594f0a5348ceac5684568bdb",
+  "exeBytes": 11357696,
+  "originalCursorCancel": "00446e70",
+  "formVirtualSlots": [
+    {
+      "edition": "originals",
+      "form": 1,
+      "vtable": "00512110",
+      "unpop": "004ae140",
+      "pop": "004ac560",
+      "postPop": "004ac1d0"
+    },
+    {
+      "edition": "originals",
+      "form": 2,
+      "vtable": "00512098",
+      "unpop": "004ae140",
+      "pop": "004ac560",
+      "postPop": "004ac1d0"
+    },
+    {
+      "edition": "originals",
+      "form": 3,
+      "vtable": "00512188",
+      "unpop": "004ae140",
+      "pop": "004ac560",
+      "postPop": "004ac1d0"
+    },
+    {
+      "edition": "originals",
+      "form": 6,
+      "vtable": "00512208",
+      "unpop": "004ae140",
+      "pop": "004ac560",
+      "postPop": "004ac1d0"
+    },
+    {
+      "edition": "originalCD",
+      "form": 1,
+      "vtable": "00505a08",
+      "unpop": "004af270",
+      "pop": "004abfb0",
+      "postPop": "004abab0"
+    },
+    {
+      "edition": "originalCD",
+      "form": 2,
+      "vtable": "00505990",
+      "unpop": "004af270",
+      "pop": "004abfb0",
+      "postPop": "004abab0"
+    },
+    {
+      "edition": "originalCD",
+      "form": 3,
+      "vtable": "00505a80",
+      "unpop": "004af270",
+      "pop": "004abfb0",
+      "postPop": "004abab0"
+    },
+    {
+      "edition": "originalCD",
+      "form": 6,
+      "vtable": "00505b00",
+      "unpop": "004af270",
+      "pop": "004abfb0",
+      "postPop": "004abab0"
+    }
+  ],
+  "build": {
+    "commands": 4,
+    "exitCodes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_world_generation_tests"
+    ]
+  },
+  "focused": {
+    "uniqueCases": 5,
+    "newCases": 1,
+    "existingCases": 4,
+    "newInputs": 24,
+    "formConstructors": [
+      1,
+      2,
+      3,
+      6
+    ],
+    "sourceTypeNumbers": [
+      6,
+      7,
+      63
+    ],
+    "sourceVoid": [
+      true,
+      false
+    ],
+    "beforePrepared": {
+      "inputs": 8,
+      "failedChecks": 16
+    },
+    "afterFirstFixedPreparation": {
+      "inputs": 24,
+      "failedChecks": 48,
+      "reason": "실제 Session Services 진단 대신 Storage 진단만 바꾼 검사 준비"
+    },
+    "finalFailedChecks": 0,
+    "oldTimerExpectationCorrected": true
+  },
+  "tests": [
+    "CursorFormPop_ActualSessionCancelUsesSharedFactoryAndCurrentVtable",
+    "CampaignSession_CursorMenuUsesActualStateAndCancel",
+    "CampaignSession_CursorContentDestroyReadsCurrentPreview",
+    "CampaignSession_CursorRequiresActualEffectsAndSupportsRebinding",
+    "CampaignSession_CursorReturnsFactoryPieceWithActualTimer"
+  ],
+  "preparationNotes": [
+    "최초 bare ProcessForm2 미등록 삭제와 부모0/free 준비 교정",
+    "Session이 Factory에 대여하는 services.ai.assertion 검사 준비 교정",
+    "20261101-71의 현재 unitRate 연결에 맞춰 기존 사본1/5초 기대를 현재 Slow0/10초로 교정"
+  ],
+  "protection": {
+    "files": 2796,
+    "fixtures": 976,
+    "changed": 0,
+    "newFixtures": 0,
+    "baseline": "extracted/cpp-resume-969/protected-final.json"
+  },
+  "gui": {
+    "newExecutions": 0,
+    "lastUnit": 968
+  },
+  "excluded": [
+    "신규 Native/CPU/fixture",
+    "MP/패킷/프로토콜/통신 검사",
+    "공중3종 전용",
+    "실제 포획/희생/특정 적 공격/승리",
+    "전체 CTest/34미션/ZIP"
+  ],
+  "checkingRemaining": 8,
+  "solutionProjects": 83,
+  "remaining": "Form 삭제의 현재 클래스 분배·외부 heap/할당 실패·파일과 비멀티 수명; 우선순위4 전체 미완료"
+}
