@@ -194,6 +194,14 @@ o::RegularHandler RawCampaignAssetBindings::Handler(o::RegularHandler fallback) 
 o::ProcessFormTransmission RawCampaignAssetBindings::Transmission(o::ProcessFormTransmission fallback) {
     o::ProcessFormTransmission hooks;
     hooks.writeData=[this,fallback](o::SquidProcess& process,bool parentChanged) { auto* gun=dynamic_cast<o::GunProcess*>(&process);impl_->writingGun=gun!=nullptr;if (gun) return static_cast<std::int32_t>(gun->WritePacket(impl_->packet,parentChanged));if (!fallback.writeData) throw std::logic_error("캠페인 다른실제Process packet writer 미연결");return fallback.writeData(process,parentChanged); };
+    hooks.writeFullData=[this,fallback](o::SquidProcess& process,std::uint32_t force) {
+        auto* gun=dynamic_cast<o::GunProcess*>(&process);impl_->writingGun=gun!=nullptr;if (gun) return static_cast<std::int32_t>(gun->WritePacket(impl_->packet,false,force!=0));
+        if (!fallback.writeFullData) throw std::logic_error("다른 Process의 실제 전체 writer 미연결");return fallback.writeFullData(process,force);
+    };
+    hooks.packet=[this,fallback](std::int32_t length)->std::span<const std::uint8_t> {
+        if (!impl_->writingGun) { if (!fallback.packet) throw std::logic_error("다른 Process의 실제 작성 버퍼 미연결");return fallback.packet(length); }
+        if (length<0 || static_cast<std::size_t>(length)>impl_->packet.size()) throw std::out_of_range("Gun 실제 작성 버퍼 범위");return std::span(impl_->packet).first(static_cast<std::size_t>(length));
+    };
     hooks.transmit=[this,fallback](std::int32_t length) { if (impl_->writingGun) { if (!impl_->effects.sendGunPacket) throw std::logic_error("캠페인 Gun flags0 실제 packet 송신 미연결");if (length<0 || static_cast<std::size_t>(length)>impl_->packet.size()) throw std::out_of_range("캠페인 Gun 실제 packet 길이 오류");impl_->effects.sendGunPacket(std::span<const std::uint8_t>(impl_->packet).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("캠페인 다른실제Process packet 송신 미연결");fallback.transmit(length); };return hooks;
 }
 // 상위설치/검사가같은원본PostPop몸체를조회한다.

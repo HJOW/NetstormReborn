@@ -88,7 +88,9 @@ ProcessFormTransmission MakePathFormTransmission(SidPool& pool,std::span<const R
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || buffer.size()<kPayload || !transport)
         throw std::invalid_argument("Path 서버 직렬화 연결 누락");
     ProcessFormTransmission result;
-    result.writeData=[&pool,types,&header,buffer,other](SquidProcess& process,bool parentChanged) {
+    const auto pathSelected=std::make_shared<bool>(); // 반환된 writer와 버퍼 조회가 마지막 실제 파생 선택을 공유한다.
+    result.writeData=[&pool,types,&header,buffer,other,pathSelected](SquidProcess& process,bool parentChanged) {
+        *pathSelected=dynamic_cast<RawPathProcess*>(&process)!=nullptr;
         if (auto* path=dynamic_cast<RawPathProcess*>(&process)) {
             if (&path->Pool()!=&pool || !process.Form().value || !process.Parent().value) throw std::invalid_argument("Path 서버 직렬화 풀/부착 불일치");
             const auto type=pool.Slot(process.Parent())[10];
@@ -96,6 +98,15 @@ ProcessFormTransmission MakePathFormTransmission(SidPool& pool,std::span<const R
         }
         if (!other.writeData) throw std::logic_error("다른 프로세스의 실제 WriteData 미복원 경계");
         return other.writeData(process,parentChanged);
+    };
+    result.packet=[buffer,other,pathSelected](std::int32_t size)->std::span<const std::uint8_t> {
+        if (!*pathSelected) { if (!other.packet) throw std::logic_error("다른 Process의 실제 작성 버퍼 미연결");return other.packet(size); }
+        if (size<0 || static_cast<std::size_t>(size)>buffer.size()) throw std::out_of_range("Path 실제 작성 버퍼 범위");return buffer.first(static_cast<std::size_t>(size));
+    };
+    result.writeFullData=[writer=result.writeData,other,pathSelected](SquidProcess& process,std::uint32_t force) {
+        if (dynamic_cast<RawPathProcess*>(&process)) return writer(process,false); // 원문 Path writer는 세 번째 force 인자로 필드를 선별하지 않고 현재 전체 경로를 작성한다.
+        *pathSelected=false; // 파생 fallback 뒤 버퍼 조회가 앞선 Path 버퍼를 잘못 선택하지 않게 같은 writer 선택을 갱신한다.
+        if (!other.writeFullData) throw std::logic_error("다른 Process의 실제 전체 writer 미연결");return other.writeFullData(process,force);
     };
     result.transmit=std::move(transport);return result;
 }

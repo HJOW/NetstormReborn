@@ -1,5 +1,6 @@
 // 호스트 통합이다. 개별 몸체의 원본 근거는 surface-graph-integration 및 각 raw 모듈 문서를 따른다.
 #include "client/RawSurfaceWorld.h"
+#include "o/RawPeerWorldSync.h" // 실제 같은 Pool/송신 전역과 walker Unpop/재등록을 접합한다.
 #include "client/GameAssets.h" // 최초 로딩 비용표는 수정 가능한 World TYPE와 별개인 불변 자산 표에서 읽는다(단위865).
 #include "o/RawBridgeFallParent.h" // 실제낙하예약이원문현재checking/TYPE진단부모를거친다.
 #include "o/RawBridgeEvents.h"
@@ -170,6 +171,9 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             transmission.broadcast=[this](auto packet) { if (!runtimeBound) return;if (!runtime.squidPacket) throw std::logic_error("현재월드의Squid방송장치미연결");const auto send=runtime.squidPacket;send(packet); }; //독립World는연결표가없고실제Session은동일broadcast를설치한다.
             transmission.trace=[owner=storage.get()](auto level,auto text) { owner->TraceGraph(level,text); };
             transmission.assertion=[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); };
+            transmission.connected=[this](auto target) { if (!runtimeBound || !runtime.squidConnected) throw std::logic_error("현재 대상별 Player 연결 관문 미연결");return runtime.squidConnected(target); };
+            transmission.send=[this](auto target,auto packet) { if (!runtimeBound || !runtime.squidSend) throw std::logic_error("현재 대상별 Squid 송신 장치 미연결");runtime.squidSend(target,packet); };
+            transmission.processPacket=[this](auto form,auto packet,auto argument) { if (!host) throw std::logic_error("ProcessForm의 실제 Host 미설치");return host->WriteFormPacket(form,argument,packet,storage->GameAux()->SquidTransmission()); };
             squidTransmission=std::make_unique<o::RawSquidTransmission>(pool,storage->GameAux()->SquidTransmission(),std::move(transmission));
             pop->BindTransmission([this](o::Sid sid,std::uint32_t flags) { squidTransmission->Pop(sid,flags); });
         }
@@ -303,6 +307,12 @@ RawWorldCore RawSurfaceWorld::Core() {
 }
 // 월드 모듈과 별개로 유지되는 실제 물리 소유자다.
 const std::shared_ptr<RawSurfaceStorage>& RawSurfaceWorld::Storage() const { return impl_->storage; }
+// 지역 부모는 소유 이미지를 만들지 않고 현재 장기 전역과 같은 공간 부모만 빌린다.
+void RawSurfaceWorld::SynchronizePeer(std::uint32_t owner) {
+    auto& s=*impl_;if (!s.squidTransmission) throw std::logic_error("현재 판본의 실제 Squid 전송기 미설치");o::PeerWorldSyncHooks hooks;
+    hooks.sharedRegularType=[&s] { return s.storage->GameAux()->SharedRegularProcessType(); };hooks.unpop=[this](auto sid,auto flags) { Unpop(sid,flags); };hooks.repop=[this](auto sid,auto flags) { Repop(sid,flags); };
+    o::RawPeerWorldSync(s.pool,s.types,s.storage->GameAux()->SquidTransmission(),*s.squidTransmission,std::move(hooks)).Synchronize(owner);
+}
 // Session의globals만바꾸고private BridgeDecayMode.editor를남기지않는다.
 void RawSurfaceWorld::ConfigureInstallModes(bool fort,bool battle,bool challenge,bool editor) {
     auto& s=*impl_;if (s.runtimeBound || s.loading || s.loaded || s.pool.FreeCount()!=s.pool.Capacity()-5) throw std::logic_error("실제설치모드는첫객체/Runtime등록전에필요");

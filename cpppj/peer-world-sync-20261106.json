@@ -1,0 +1,23 @@
+{
+  "unit": 988,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "참가자별 월드 동기화·대상 지정 송신·실제 ProcessForm/공유 Regular writer·walker 재등록",
+  "sourceFunctions1078": ["004a7350", "004a6d00", "00433100", "004ac260", "0048f4b0", "004ae360", "00496e00", "004afe50", "0041c0d0"],
+  "staticDisassembly": "extracted/cpp-resume-988/x86.txt",
+  "build": {
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "firstLog": "extracted/cpp-resume-988/build.log",
+    "finalLog": "extracted/cpp-resume-988/build-final.log",
+    "exeSize": 11567616,
+    "exeSha256": "3fd6728ca763774f55ba6c8f166438ba15331ce6baa43620e95fbe797c443367"
+  },
+  "excluded": { "newMultiplayerTests": 0, "unitTestRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-988/protected-before.json" },
+  "corrections": ["004ac260의 대상/selector/세 번째 writer 인자는 PE로 재대조", "ProcessForm의 부모 변경0과 force 인자를 분리", "마지막0x10000 순회는 process 송신이 아닌 walker Unpop/재등록", "Path의 파생 fallback 뒤 실제 버퍼 선택 표식 갱신"],
+  "remaining": ["일반 전투섬/중앙섬 생성", "원격 실제 배치와 ordinary 자기 Fort 부모", "전체 파생 writer/decoder", "일반 State/Commander/roster/LAN UI", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}

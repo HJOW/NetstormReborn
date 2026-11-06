@@ -54,7 +54,7 @@ public:
     void Notify(std::uint32_t,std::uint32_t,std::uint32_t) override; // 원본 ret12의 빈 통지다.
     WindAviaryProcessFields& Fields(); // 수신/현재 상태를 사본 없이 제공한다.
     const WindAviaryProcessFields& Fields() const; // 읽기 전용 수명 관찰도 같은 원문을 조회한다.
-    std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged); // 같은 Host의 실제0x74 writer다.
+    std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force=false); // 같은 Host의 실제0x74 writer다. 동기화 force는 현재 전체 필드/부모를 기록한다.
 private:
     const RawWindAviaryProcess& logic_; WindAviaryProcessFields fields_; // 처리기 참조와 유일한80BYTE 소유권이다.
 };

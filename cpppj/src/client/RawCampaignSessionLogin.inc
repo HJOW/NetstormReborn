@@ -185,6 +185,7 @@ struct RawCampaignSession::Impl::Login {
         serverHooks.sendPlayer=[this](std::uint32_t player,std::uint32_t target) { metadata->SendPlayer(player,static_cast<std::int32_t>(target)); };serverHooks.sendFortMetadata=[this](std::uint32_t target) { metadata->SendMetadata(static_cast<std::int32_t>(target)); };
         serverHooks.loadCurrentFort=[this](std::uint32_t player) { Reload(player); };serverHooks.sendFort=[this](std::uint32_t player,std::uint32_t target,std::uint32_t count) { static_cast<void>(forts->SendFort(player,static_cast<std::int32_t>(target),count)); };serverHooks.loadWorld=install;serverHooks.sendSettings=[this](std::uint32_t target) { settings->Send(static_cast<std::int32_t>(target)); };serverHooks.restoreCoreData=[this](std::uint32_t player) { RestoreCoreData(player); }; // 두 원문 caller가 같은 장기 Core 복원 몸체를 사용한다.
         serverHooks.loadFortImage=[this](auto owner,auto image) { OpenRemoteFort(owner);ReadRemoteFort(owner,image); }; // 원문 신규 원격 로그인은 준비/읽기를 같은 슬롯에 순서대로 수행한다.
+        serverHooks.synchronizePeer=[this](auto owner) { s.world.SynchronizePeer(owner); }; // 실제004a7350의 현재 전체 월드/종속/공간 재등록 부모다.
         serverHooks.assertion=[this](auto expression) { Need(s.services.ai.assertion)(expression); }; // 원문 simulconnect/메타맵/예측수 진단도 같은 실제 Client 진단으로 복귀한다.
         serverHooks.setSp=[this](std::uint32_t player,std::int32_t amount) { // 초기 지정도 같은 분산 SP와 현재 로컬/Editor 판정·HUD 갱신 전체를 사용한다.
             SetPlayerSpAmount(std::bit_cast<std::int32_t>(player),amount,s.sp,

@@ -16,8 +16,9 @@ template<class Header> void WireHeader(std::span<std::uint8_t> packet,Header hea
 bool WireByteCoordinate(float value) { return std::isfinite(value) && value>=0 && value<=255 && value==std::trunc(value); } //4328c0의정수변환/8비트/float동일 비교다. 범위 밖 ftol 미정 비트는 통과하지 않는다.
 }
 RawSquidTransmission::RawSquidTransmission(const SidPool& pool,RawSquidTransmissionState& state,RawSquidTransmissionHooks hooks):pool_(pool),state_(state),hooks_(std::move(hooks)) { if (pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("현재 Squid 전송은10.78 전용"); } // CD writer를 패치 레이아웃으로 해석하지 않는다.
-std::int32_t RawSquidTransmission::Write(Sid sid) const { // 현재+54의82개 공통/1개 빈 writer와기존두Form만분배한다.
+std::int32_t RawSquidTransmission::Write(Sid sid,std::uint32_t writerArgument) const { // 현재+54의 공통/빈 writer·두 Form·실제 ProcessForm을 분배한다.
     const auto raw=pool_.Slot(sid);const auto table=WireRead(raw,0,4);
+    if (table==0x512098U) return WireNeed(hooks_.processPacket)(sid,state_.buffer,writerArgument); //004ae360은 부모 진단 뒤 같은 PID 객체의 실제 writer를 부른다.
     if (table==0x5092d0U) return 0; // 보호83VT중이표의+54만00455ae0의실제0반환이다.
     if (!SquidFactory::SupportsConstructedVtable(pool_.Edition(),table)) {
         RawFormPacket forms(pool_,state_.forms,state_.deletion);return forms.WriteData(sid,state_.buffer); // 다른현재VT는기존writer의명시실패를유지한다.
@@ -54,10 +55,19 @@ std::int32_t RawSquidTransmission::Compress(std::span<const std::uint8_t> input)
     }
     return static_cast<std::int32_t>(length);
 }
-void RawSquidTransmission::Pop(Sid sid,std::uint32_t) const { //004ac260의일반Pop호출은broadcast=-1/selector=-1/writer인자0이다.
+void RawSquidTransmission::Transmit(Sid sid,std::int32_t target,std::uint32_t writerArgument) const { //004ac260의 selector!=-2 경로이며 네 번째 flags는 이 분기에서 사용하지 않는다.
     if (!state_.clientSidAllowed && sid.value>=5 && sid.value<15000) WireNeed(hooks_.assertion)("!isClientSid()","\\Ns\\O\\Squid.cpp",0x2d8);
-    const auto size=Write(sid);
+    const auto size=Write(sid,writerArgument);
     if (size>=2048) WireNeed(hooks_.assertion)("transmitSize < TRANSMIT_BUFFER_SIZE","\\Ns\\O\\Squid.cpp",0x2e3);
-    if (size>0) { if (static_cast<std::size_t>(size)>state_.buffer.size()) throw std::out_of_range("Squid송신공통버퍼범위");WireNeed(hooks_.broadcast)(std::span<const std::uint8_t>(state_.buffer).first(static_cast<std::size_t>(size))); }
+    if (size>0) {
+        if (static_cast<std::size_t>(size)>state_.buffer.size()) throw std::out_of_range("Squid송신공통버퍼범위");const auto packet=std::span<const std::uint8_t>(state_.buffer).first(static_cast<std::size_t>(size));
+        if (target==-1) WireNeed(hooks_.broadcast)(packet);else if (WireNeed(hooks_.connected)(target)) WireNeed(hooks_.send)(target,packet);
+    }
 }
+// 기존 Pop의 일반 방송/인자0 계약은 같은 공통 몸체를 사용한다.
+void RawSquidTransmission::Pop(Sid sid,std::uint32_t) const { Transmit(sid,-1,0); }
+// 동기화의 대상 번호/인자1을 보존하며 호출 이후 현재 연결을 다시 조회한다.
+void RawSquidTransmission::SendTo(Sid sid,std::int32_t target,std::uint32_t writerArgument) const { Transmit(sid,target,writerArgument); }
+// 압축 모드가 같아도 원문처럼 owner 캐시를 항상 초기화한다.
+void RawSquidTransmission::SameOwnerMode(std::uint32_t mode) const { state_.sameOwnerEnabled=mode;state_.lastOwner=0xffffff9dU; }
 }

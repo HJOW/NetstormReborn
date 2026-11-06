@@ -198,6 +198,8 @@ struct RawWorldRuntimeHooks {
     // formTransmit: 실제 DependForm 서버 Pop의 현재 raw Form/flags 전송 요청 경계다.
     o::FormPopTransmit formTransmit;
     o::BattlePacketSend squidPacket; //일반Squid writer가완성한현재패킷을같은실제방송분배기로보낸다.
+    std::function<bool(std::int32_t)> squidConnected; // 원문 Player+50 bit1의 대상별 접속 관문이다.
+    std::function<void(std::int32_t,std::span<const std::uint8_t>)> squidSend; // 같은 현재 대상의 연결 객체로만 패킷을 보낸다.
     o::DependFormNotice dependencyNotice; // watcher의 실제 가상+34다. 누락 시 기존 ProcessForm 통지를 사용한다.
     std::function<void(const o::BridgeLifecycleEvent&)> bridgeEffect; // 실제 세션의 다리 파편/위치 소리 소비자이며 runtime 설치 전에 필수로 공급한다.
 };
@@ -218,6 +220,7 @@ public:
     // 같은 풀에 실제 미션 모듈을 구성할 때 사용한다. 반환 참조의 수명은 이 월드와 같다.
     RawWorldCore Core();
     const std::shared_ptr<RawSurfaceStorage>& Storage() const; // 미니맵도 Session이 아닌 동일 물리 소유자를 직접 빌린다.
+    void SynchronizePeer(std::uint32_t owner); //004a7350의 실제 같은 월드/전송/공간 재등록을 참가자별로 실행한다.
     //원본옵션의TYPE+c4 쓰기가같은월드의188TYPE를직접사용하게한다. 새사본을만들지않는다.
     std::span<o::RiftTypeRecord> MutableTypes();
     // 최초객체/Runtime등록전에원본모드의실제소유권·연결색·다리붕괴소비자를함께설정한다.

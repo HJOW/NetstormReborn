@@ -1,11 +1,13 @@
 // 객체 부착 프로세스의 form 생성/부착/해제와 Regular 이벤트 실행을 원본 쓰기 순서대로 복원한다.
 #include "o/SquidProcess.h"
+#include "o/RawSquidTransmission.h" // ProcessForm/공유 Regular의 같은 송신 헤더와 임시 허용 전역을 빌린다.
 #include "o/RawProcessAttach.h"
 #include "o/RawBaseProcessAttach.h"
 #include "o/RawSquidContainedUnpop.h"
 #include "o/SquidForms.h"
 #include "o/SquidFactory.h" // ProcessForm도 현재 공통 생성자/가상 수신 부모를 사용한다.
 #include <bit>
+#include <algorithm> // 실제 작성 버퍼 복사와 헤더 최소 길이에 사용한다.
 #include <cmath>
 #include <stdexcept>
 #include <utility>
@@ -172,6 +174,7 @@ RegularProcess* SquidProcessHost::AddSharedRegular(Sid parent,std::uint32_t even
 }
 // 이미 확보한 예약은 같은 현재 생성자 번호로 부착하며 SharedRegular의 원문 진단 후에도 현재 값을 다시 읽는다.
 RegularProcess* SquidProcessHost::AttachRegular(std::unique_ptr<RegularProcess> process,Sid parent,bool shared,std::uint32_t flags) {
+    if (process) process->shared_=shared; // 원문 두 생성자의 실제 writer 가상 표 선택을 부착 전에 보존한다.
     if (shared && pool_.Edition()==OriginalEdition::Patch1078) {
         const auto runtime=currentRuntime_ ? Runtime() : nullptr;RuntimeCall call(runtime); // 진단이 대여 반납을 시도해도 호출 중 World를 보존한다.
         const auto depth=runtime ? runtime->postPopDepth : std::function<std::uint32_t()>{};
@@ -193,6 +196,30 @@ const SidPool& SquidProcessHost::Pool() const { return pool_; }
 void SquidProcessHost::SetRegularHandler(RegularHandler handler) { if (currentRuntime_) Runtime()->regular=std::move(handler);else handler_=std::move(handler); }
 // 전송 정책을 우회하는 flags 변경 없이 현재 미션 직렬화 경계만 갱신한다.
 void SquidProcessHost::SetFormTransmit(ProcessFormTransmission transmit) { if (currentRuntime_) Runtime()->transmit=std::move(transmit);else transmit_=std::move(transmit); }
+// 원문004ae360/00496e00의 같은 Kernel 객체를 사용한다. 호출 중 현재 World 대여를 반납하지 않는다.
+std::int32_t SquidProcessHost::WriteFormPacket(Sid form,std::uint32_t argument,std::span<std::uint8_t> packet,const RawSquidTransmissionState& transmission) const {
+    RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr);const auto parent=CommonContainedParent(pool_,form);
+    if (parent.value>=5 && parent.value<15000) {
+        const auto assertion=currentRuntime_ ? Runtime()->assertion : state_.assertion;if (!assertion) throw std::logic_error("ProcessForm writer의 부모 SID 진단 미연결");assertion("!getParent().isClientSid()","\\Ns\\O\\Squid.cpp",0xac2);
+    }
+    auto* process=FromForm(form);if (!process) throw std::logic_error("ProcessForm writer의 실제 PID 객체 누락");
+    if (const auto* regular=dynamic_cast<RegularProcess*>(process)) {
+        if (!regular->Shared() || !transmission.clientSidAllowed) return 0; // 일반 Regular는 실제 빈 writer이며 공유 writer는 동기화 허용 때만 작성한다.
+        if (packet.size()<28) throw std::out_of_range("SharedRegular의 실제28BYTE 버퍼 범위");
+        const auto put=[packet](std::size_t offset,std::uint64_t value,std::size_t width) { // 원문 WORD/DWORD/double 필드만 쓰며 미작성+4/+5를 보존한다.
+            for (std::size_t index=0;index<width;++index) packet[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); // 각 필드의 낮은 바이트부터 지정 폭만 쓴다.
+        };
+        const auto header=transmission.sharedRegular;packet[0]=header.protocol&0x7fU;packet[1]=header.message;put(2,std::max<std::uint32_t>(4,header.length),2);
+        put(6,regular->Parent().value,2);put(8,std::bit_cast<std::uint64_t>(regular->Time()),8);put(16,regular->Event(),4);put(20,std::bit_cast<std::uint32_t>(regular->Payload()),4);put(24,regular->Count(),4);return 28;
+    }
+    const auto device=Transmission();if (!device.writeFullData) throw std::logic_error("ProcessForm의 실제 전체 파생 writer 미연결");const auto size=device.writeFullData(*process,argument);
+    if (size>0) {
+        if (!device.packet) throw std::logic_error("ProcessForm의 실제 작성 버퍼 미연결");const auto bytes=device.packet(size);
+        if (static_cast<std::size_t>(size)>bytes.size() || static_cast<std::size_t>(size)>packet.size()) throw std::out_of_range("ProcessForm의 실제 패킷 복사 범위");std::copy_n(bytes.begin(),size,packet.begin());
+    }return size;
+}
+// 원문 일반/공유 Regular의 가상 writer 선택만 공개한다.
+bool RegularProcess::Shared() const { return shared_; }
 // 현재 raw 부모를 다시 읽어 프로세스의 오래된 parent 복사값으로 재부착하지 않는다.
 void SquidProcessHost::RefreshForm(SquidProcess& process) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 현재 World의 호출 대여를 끝까지 유지한다.

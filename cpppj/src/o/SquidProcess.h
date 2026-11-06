@@ -10,6 +10,7 @@
 #include <string_view>
 
 namespace netstorm::o {
+struct RawSquidTransmissionState; // ProcessForm이 현재 Client의 수신 허용/공유 Regular 헤더를 빌린다.
 class SquidProcessHost;
 class SquidFactory; // 현재 World가 빌려주는 공통 생성/수신 부모의 타입이다.
 struct ProcessHostRuntimeBindings; // 짧은 World 대여의 C++ 반납만 식별하며 원문 process 필드로 직렬화하지 않는다.
@@ -61,6 +62,7 @@ public:
     void SetNextTime(double time); // 생성자/부착 콜백 뒤 event/payload/count를 보존하며 실제 기한만 덮어쓴다.
     // Damageable 삭제 후 새 Regular에 원본 +0x20 초기 count를 쓴다. event/payload/time/Form은 보존한다.
     void SetInitialCount(std::uint32_t count);
+    bool Shared() const; // 원문 SharedRegular의 실제 writer 가상 표와 일반 Regular를 구별한다. raw TYPE 변경으로 이 값을 추측하지 않는다.
 private:
     friend class SquidProcessHost;
     // time_: 시각.
@@ -71,6 +73,7 @@ private:
     float payload_{};
     // count_: 현재 항목 또는 실행 횟수.
     std::uint32_t count_{};
+    bool shared_{}; // 실제 공유 생성자로 준비한 객체의 가상 writer 구별이다. 실행/예약 수치와 별개다.
 };
 // 프로세스 계층이 읽거나 바꾸는 원본 전역이다. 패치 주소/CD 주소는 괄호에 둔다.
 struct SquidProcessState {
@@ -109,6 +112,8 @@ struct ProcessFormTransmission {
     std::function<std::int32_t(SquidProcess&,bool parentChanged)> writeData;
     // transmit: 작성한 패킷이나 Form 데이터를 송신하는 콜백.
     std::function<void(std::int32_t length)> transmit;
+    std::function<std::span<const std::uint8_t>(std::int32_t)> packet; // 마지막 writer가 작성한 같은 버퍼를 빌린다. 대상 지정 전송은 방송 콜백을 실행하지 않고 이 바이트만 복사한다.
+    std::function<std::int32_t(SquidProcess&,std::uint32_t)> writeFullData; // ProcessForm+54의 실제 (buffer,부모변경0,force인자)를 전달한다. 평상시 부착 writer와 구별한다.
 };
 
 // 한 World가 빌리는 현재 삭제/사건/전송 처리기이며 Host 자체의 장기 수명과 구별한다.
@@ -159,6 +164,7 @@ public:
     void SetRegularHandler(RegularHandler handler);
     // 미션 runtime의 실제 직렬화기를 연결한다. 기존 프로세스도 다음 Pop에서 이 경계를 읽는다.
     void SetFormTransmit(ProcessFormTransmission transmit);
+    std::int32_t WriteFormPacket(Sid form,std::uint32_t argument,std::span<std::uint8_t> packet,const RawSquidTransmissionState& transmission) const; //004ae360의 부모 SID 진단과 실제 PID의 가상 writer를 현재 공통 버퍼에 연결한다.
     // 0041c010/CD 0048f8d0: 현재 부모를 읽고 live Form Unpop(0)→같은 부모 Attach(flags0)을 수행한다.
     // 파생 OnAttached를 다시 부르지 않으며 서버 전송이 필요한 경우 현재 전송 경계를 사용한다.
     void RefreshForm(SquidProcess& process);
