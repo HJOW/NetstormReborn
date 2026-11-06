@@ -1,0 +1,28 @@
+{
+  "unit": 987,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "원격 Fort 현재 경로·사용자 작업 namespace·manager·실제 이미지 읽기·Session 연결",
+  "sourceFunctions1078": ["004606d0", "004bfba0", "004bfc60", "004bce10", "0044d380", "004bd360"],
+  "sourceFunctions1072": ["004ca440", "00429bb0"],
+  "build": {
+    "productExitCode": 0,
+    "existingTestTargetExitCode": 0,
+    "productLog": "extracted/cpp-resume-987/build.log",
+    "testBuildLog": "extracted/cpp-resume-987/test-build.log",
+    "exeSize": 11538944,
+    "exeSha256": "004886fd483073b017d8ebd9616ca9a838b3d542ae0bc59af661861eac1656fb"
+  },
+  "regression": {
+    "kind": "기존 비멀티 Template 파일 읽기 검사",
+    "filter": "CampaignTemplateLoadFile_",
+    "executed": 9,
+    "failedChecks": 0,
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-987/template-tests.log"
+  },
+  "excluded": { "newMultiplayerTests": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-987/protected-before.json" },
+  "remaining": ["월드 동기화", "원격 Fort 실제 배치", "ordinary 자기 Fort 부모", "중앙섬/일반 전투", "Commander/roster/LAN UI", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}

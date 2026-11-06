@@ -4,6 +4,7 @@
 #include "client/EditorFiles.h"
 #include "o/RawNewFort.h"
 #include "o/RawTemplateLoad.h"
+#include "platform/Utf8Path.h" // 사용자 홈의 한글 경로를 파일 장치의 UTF-8 계약으로 전달한다.
 #include <stdexcept>
 
 namespace netstorm::client { // 독립 manager 사본이나 임시 Fort 파일을 만들지 않는다.
@@ -17,7 +18,7 @@ void CreateNewEditorFortManager(CampaignTemplateStorage& storage,const EditorFil
     hooks.allocate=[&storage](auto bytes) { return storage.AllocateEmptyManager(bytes); };
     hooks.construct=[&storage](auto token,auto name) { return storage.ConstructEmptyManager(token,name); };
     hooks.fileName=[&storage](auto token) { return o::TemplateDataManagerFileName(storage.ManagerBytes(token)); };
-    hooks.erase=[&files](auto name) { files.Delete(files.ResolvePath(name).string()); }; // 상대 이름도 존재 검사와 같은 작업 경로로 해석하며 manager에 저장한 원문 이름은 보존한다.
+    hooks.erase=[&files](auto name) { files.Delete(platform::PathToUtf8(files.ResolvePath(name))); }; // 상대 이름도 존재 검사와 같은 작업 경로로 해석하며 manager에 저장한 원문 이름은 보존한다.
     const auto lifetime=storage.ManagerLifetime();hooks.destroy=lifetime.destroy;hooks.release=lifetime.release;
     hooks.initialize=[&storage,&diagnostics](auto token) { storage.InitializeEmptyManager(token,diagnostics.initializeAssertion); };
     o::CreateNewFortManager(storage.Headers().subspan(static_cast<std::size_t>(slot)*20,20),fileName,argument,hooks);

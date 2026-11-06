@@ -7,11 +7,18 @@
 #include <cstring>
 #include <stdexcept>
 #include <utility>
+#include <bit> // 원문 %d의 owner 비트 표현을 signed 정수로 읽는다.
 
 namespace netstorm::client { // 파일 쓰기/삭제는 명시 작업 namespace의 동일 장치만 사용한다.
 // 원문4410f0의 인자 없는 현재 조회가 끝난 뒤 기존460980을 호출한다. 이름이 다시 비어도 여기서 반복하지 않는다.
 void SelectConfiguredNewFort(o::ConfigInterface& config,const std::function<void(std::string_view)>& select) {
     const auto name=config.PathSpec("newFort");if (!select) throw std::logic_error("기본 Fort의 실제 전체 이름 선택 장치 미연결");select(name);
+}
+// 원문004606d0/CD004ca440의 경로만 반환한다. 사용자 작업 namespace 매핑은 이 원문 조회가 끝난 뒤 호출자가 수행한다.
+std::string SelectRemoteFortPath(ClientFortGlobals& names,o::ConfigInterface& config,std::uint32_t owner,std::uint32_t localOwner,const std::function<void(std::string_view)>& assertion) {
+    if (owner==localOwner) { if (!assertion) throw std::logic_error("원격 Fort의 자기 owner 진단 미연결");assertion("playerId != myPlayerId()"); }
+    const auto ownerText=std::to_string(std::bit_cast<std::int32_t>(owner));const auto current=names.Current();
+    return config.PathSpec("BattleFortSpec",o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()}),ownerText);
 }
 namespace { // 외부 C문자열 장치의 물리 조회를 공유한다.
 // 반환값을 쓰는 장치만 현재 NUL까지 읽으며 임의 미종료 입력은 거부한다.

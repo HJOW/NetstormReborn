@@ -360,20 +360,25 @@ struct CampaignTemplateStorage::Image {
             auto& buffer=Buffer(current);const auto end=Read(std::span(node).subspan(8));if (end>buffer.size()) throw std::out_of_range("Template 파일 읽기 뒤 실제 end 범위");buffer.resize(end);PublishCursor(current);current=Read(std::span(node).subspan(56));
         }
     }
+    // 파일과 수신 이미지가 같은 노드 생성/버퍼/기존 섹션 병합 장치를 사용한다. 카운터와 입력 장치는 읽기가 끝날 때까지 유효해야 한다.
+    o::DataManagerImageHooks ImageReadDevices(std::function<std::span<std::uint8_t>()> sourceBuffer,std::uint32_t& allocating,std::uint32_t& created) {
+        o::DataManagerImageHooks hooks;hooks.names=[this] { return sectionNames.Names(); };hooks.assertion=[](auto) { throw std::logic_error("Template 실제 파일 이미지의 원본 진단"); };
+        hooks.streams.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.streams.list=ListEffects();
+        hooks.streams.allocateStream=[this,&allocating,&created](auto size) { if (size!=60 || created>=o::FortTemplate::kSectionCount) throw std::logic_error("Template 파일 이미지의 새 노드 계약 위반");++created;allocating=AllocateStream();return allocating; }; // 기존 canonical 버퍼는 원문 제거 전까지 덮어쓰지 않는다.
+        hooks.streams.memory.buffer=[this,sourceBuffer=std::move(sourceBuffer)](auto pointer)->std::span<std::uint8_t> {
+            if (pointer==0x30000) return sourceBuffer();if (pointer<=0x10000000U || !streams.contains(pointer-0x10000000U)) throw std::out_of_range("Template 파일 이미지의 실제 버퍼 토큰 범위");return Buffer(pointer-0x10000000U);
+        }; // 입력과 새 임시 할당 및 기존 노드 모두 현재 실제 버퍼를 빌린다.
+        hooks.streams.memory.allocate=[this,&allocating](auto size) { auto& buffer=Buffer(allocating);if (!buffer.empty()) throw std::logic_error("Template 파일 이미지의 새 버퍼 중복 할당");buffer.resize(size);return BufferToken(allocating); };
+        hooks.streams.memory.assertion=[](auto) { throw std::logic_error("Template 파일 이미지의 실제 MemStream 진단"); };
+        return hooks;
+    }
     // 같은 raw reader의 bool을 유지한다. 새 임시 버퍼는 기존 같은 이름을 제거하기 전까지 별개로 소유한다.
     bool ReadFile(const TemplateFileLoadHooks& fileEffects) {
         RequireNoAccess();
         if (streams.empty() && !Read(std::span(manager).subspan(4))) { fort.sections.clear();fort.sections.resize(o::FortTemplate::kSectionCount);seeded.fill(true);state={{},0,0,false};territory={}; }
         else SyncStreams();
         std::vector<std::uint8_t> source;std::optional<DataManagerFileAllocation> wholeSource;std::uint32_t allocating{},created{}; // 파일할당은지역소유지만이름표는같은Client에서빌린다.
-        o::DataManagerImageHooks hooks;hooks.names=[this] { return sectionNames.Names(); };hooks.assertion=[](auto) { throw std::logic_error("Template 실제 파일 이미지의 원본 진단"); };
-        hooks.streams.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.streams.list=ListEffects();
-        hooks.streams.allocateStream=[this,&allocating,&created](auto size) { if (size!=60 || created>=o::FortTemplate::kSectionCount) throw std::logic_error("Template 파일 이미지의 새 노드 계약 위반");++created;allocating=AllocateStream();return allocating; }; // 기존 canonical 버퍼는 원문 제거 전까지 덮어쓰지 않는다.
-        hooks.streams.memory.buffer=[this,&source,&wholeSource](auto pointer)->std::span<std::uint8_t> {
-            if (pointer==0x30000) return wholeSource ? std::span(wholeSource->storage):std::span(source);if (pointer<=0x10000000U || !streams.contains(pointer-0x10000000U)) throw std::out_of_range("Template 파일 이미지의 실제 버퍼 토큰 범위");return Buffer(pointer-0x10000000U);
-        }; // 입력과 새 임시 할당 및 기존 노드 모두 현재 실제 버퍼를 빌린다.
-        hooks.streams.memory.allocate=[this,&allocating](auto size) { auto& buffer=Buffer(allocating);if (!buffer.empty()) throw std::logic_error("Template 파일 이미지의 새 버퍼 중복 할당");buffer.resize(size);return BufferToken(allocating); };
-        hooks.streams.memory.assertion=[](auto) { throw std::logic_error("Template 파일 이미지의 실제 MemStream 진단"); };
+        auto hooks=ImageReadDevices([&source,&wholeSource] { return wholeSource ? std::span(wholeSource->storage):std::span(source); },allocating,created);
         o::DataManagerFileHooks file;file.image=hooks;file.fileName=[this] { return o::TemplateDataManagerFileName(manager); };
         file.readFile=[&source,&wholeSource,&fileEffects](std::string_view fileName,std::int32_t mode,std::span<std::uint8_t> length,std::int32_t flags) {
             if (mode!=1 || flags || length.size()!=4) throw std::logic_error("Template 파일 읽기의 실제 요청 인수 불일치");
@@ -393,6 +398,12 @@ struct CampaignTemplateStorage::Image {
         file.releaseFile=[&source,&wholeSource](auto pointer) { if (pointer!=0x30000U) throw std::logic_error("Template 파일 읽기 부모의 실제 할당 반납 불일치");wholeSource.reset();std::vector<std::uint8_t>{}.swap(source); }; // 기존 원문 reader가 성공/거부/예외에서 한 번만 반납한다.
         try { const auto success=o::ReadDataManagerFile(manager,file);BindFileStreams();if (success && created!=o::FortTemplate::kSectionCount) throw std::logic_error("Template 실제 파일의 전체 이름 표 불일치");return success; }
         catch (...) { BindFileStreams();throw; } // host 예외 전에 원문이 이미 붙인 노드/부분 pos를 숨기거나 rollback하지 않는다.
+    }
+    // 서명 뒤 재조회된 같은 manager에 수신 MarkStream을 병합한다. 부분 목록/커서는 예외 뒤에도 공개한다.
+    void ReadImageSource(std::span<std::uint8_t> cursor,std::span<std::uint8_t> input) {
+        RequireNoAccess();SyncStreams();std::uint32_t allocating{},created{};auto hooks=ImageReadDevices([input] { return input; },allocating,created);
+        try { o::ReadDataManagerImage(manager,cursor,hooks);BindFileStreams(); }
+        catch (...) { BindFileStreams();throw; }
     }
     // 기존 Campaign/목록 교체 API는 이전과 같이 빈 manager에 읽고 정상 false를 예외로 바꾼다.
     void ReadFile(std::span<const std::uint8_t> input,std::int32_t typeCount) {
@@ -479,6 +490,24 @@ void CampaignTemplateStorage::LoadFile(std::uint32_t slot,o::FortTemplate fort,s
     hooks.readFile=[this,&file](auto manager) { return images_.at(manager)->ReadFile(file); }; // readonly callback 뒤 header에서 재조회한 manager를 그대로 읽는다.
     hooks.isCurrent=[slot,&file] { return slot==NeedFile(file.currentSlot)(); };hooks.refreshTitle=[&file] { NeedFile(file.refreshTitle)(); };hooks.lifetime=Effects();
     o::LoadTemplateFile(Header(slot),name,hooks);
+}
+// 원문004bfc60의 같은 헤더를 유지하며 서명의 this와 본문의 현재 manager를 구별한다. 근거: docs/exe/cpp-remote-fort-image-20261106.md.
+void CampaignTemplateStorage::ReadImage(std::uint32_t slot,std::span<const std::uint8_t> input,const bool& inBattle,const TemplateImageLoadHooks& hooks) {
+    const auto header=Header(slot);if (!Read(header)) NeedFile(hooks.assertion)(TemplateImageAssertion::MissingManager);
+    if (!inBattle) NeedFile(hooks.assertion)(TemplateImageAssertion::NotInBattle);
+    if (input.size()>0xffffffffU) throw std::out_of_range("Template 수신 이미지의 DWORD 길이 초과");
+    std::array<std::uint8_t,20> source{};Put(source,16,0xffffffffU);std::vector<std::uint8_t> allocation; // 지역 MarkStream의 실제 할당은 본문/알림 예외에서도 C++ 수명이 반납한다.
+    constexpr std::uint32_t sourceToken=0x30000U; // 호스트 포인터를 자르지 않고 같은 지역 수신 버퍼를 식별한다.
+    o::MemStreamHooks memory;memory.buffer=[&allocation](auto token)->std::span<std::uint8_t> { if (token!=sourceToken) throw std::out_of_range("Template 수신 버퍼 토큰 불일치");return allocation; };
+    memory.allocate=[&allocation](auto size) { allocation.resize(size);return sourceToken; };
+    memory.release=[&allocation](auto token) { if (token!=sourceToken) throw std::logic_error("Template 수신 버퍼 중복/잘못된 반납");std::vector<std::uint8_t>{}.swap(allocation); };
+    memory.assertion=[](auto) { throw std::logic_error("Template 수신 MarkStream의 원문 진단"); };
+    o::AllocateMemStream(source,static_cast<std::uint32_t>(input.size()),memory);o::WriteMemStream(source,input,static_cast<std::uint32_t>(input.size()),memory);Put(source,4,0);
+    const auto signatureManager=Read(header);auto& signatureImage=*images_.at(signatureManager); // 가상+c에 진입하는 this는 고정하고 진단 뒤 섹션 본문은 header에서 다시 선택한다.
+    o::TemplateFileSignatureHooks signature;signature.buffer=memory.buffer;signature.typeCount=hooks.typeCount;signature.tooManyTypes=hooks.tooManyTypes;signature.rejectFile=hooks.rejectFile;
+    signature.fileName=[&signatureImage] { return o::TemplateDataManagerFileName(signatureImage.manager); };
+    if (!o::ReadTemplateFileSignature(signatureImage.manager,source,signature)) NeedFile(hooks.assertion)(TemplateImageAssertion::InvalidImage);
+    Current(slot).ReadImageSource(source,allocation);NeedFile(hooks.changed)();o::DestroyMemStream(source,memory.release);
 }
 // 송신용지역Template와strip용NONAME는같은Client전역을빌리며완료/예외모두target부터source순서로반납한다.
 // 원본004b63d0/004bf3e0의 이미지 내용/할당은667,0044cf20 진단은668에서 연결했다. 근거: docs/exe/cpp-login-template-lifetime-20261101.md와cpp-datamanager-dump-20261101.md.

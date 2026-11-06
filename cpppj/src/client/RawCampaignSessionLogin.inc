@@ -90,6 +90,23 @@ struct RawCampaignSession::Impl::Login {
         if (owner>=9) throw std::out_of_range("현재 미션 Template의 실제9슬롯 범위");const auto selected=SelectFile();if (selected.fileName.empty()) throw std::runtime_error("미션 파일 선택기의 실제 파일 이름 누락");
         s.templateStorage->LoadFile(owner,{},selected.fileName,FileHooks(selected));
     }
+    // 원문004606d0→004bfba0의 원격 준비만 실행한다. 자기 Fort의 Load/선택과 수신 이미지 병합을 앞당기지 않는다.
+    void OpenRemoteFort(std::uint32_t owner) {
+        if (!s.services.remoteFortFiles) throw std::logic_error("원격 Fort의 사용자 작업 namespace 미연결");
+        const auto path=Need(s.services.remoteFortPath)(owner,s.playerState.battleOwner);NewFortManagerDiagnostics diagnostics;
+        diagnostics.templateAssertion=[this](auto) { Need(s.services.ai.assertion)("!tm"); };
+        diagnostics.initializeAssertion=[this](auto) { Need(s.services.ai.assertion)("원격 Fort manager 초기화 진단"); };
+        CreateNewEditorFortManager(*s.templateStorage,*s.services.remoteFortFiles,owner,path,1,diagnostics);
+    }
+    // 같은 고정 헤더의 실제 Changed 전체 부모에 수신 이미지 읽기를 연결한다. 원문 preventSave=1의 자연 관문을 보존한다.
+    void ReadRemoteFort(std::uint32_t owner,std::span<const std::uint8_t> image) {
+        TemplateImageLoadHooks hooks;hooks.assertion=[this](auto kind) {
+            const auto expression=kind==TemplateImageAssertion::MissingManager ? "tm" : kind==TemplateImageAssertion::NotInBattle ? "inBattleMode" : "valid";Need(s.services.ai.assertion)(expression);
+        };
+        hooks.typeCount=[this] { return static_cast<std::int32_t>(s.core.types.size()); };hooks.tooManyTypes=[this] { Need(s.services.ai.assertion)("numTypes < 256"); };
+        hooks.rejectFile=[this](auto path) { if (!s.services.remoteFortFiles) throw std::logic_error("원격 Fort 서명 거부의 사용자 파일 장치 미연결");s.services.remoteFortFiles->Delete(path); };
+        hooks.changed=[this,owner] { s.templateState->Changed(owner); };s.templateStorage->ReadImage(owner,image,s.assetState.inBattle,hooks);
+    }
     // 현재 실제 Client9 주소를 읽고 TCP를 내부 wildcard 주소로 바꾸지 않는다.
     std::array<std::uint8_t,20> Address() const { return Need(transport.address)(9); }
     // 실제 현재 노드가 필요한 선택 효과에만 같은 저장소를 빌린다.
@@ -167,6 +184,7 @@ struct RawCampaignSession::Impl::Login {
         serverHooks.applyOptions=[this](std::span<const std::uint8_t> bytes) { client->Options(0,bytes); };serverHooks.clearTypes=[this] { options->ClearTypes(); };
         serverHooks.sendPlayer=[this](std::uint32_t player,std::uint32_t target) { metadata->SendPlayer(player,static_cast<std::int32_t>(target)); };serverHooks.sendFortMetadata=[this](std::uint32_t target) { metadata->SendMetadata(static_cast<std::int32_t>(target)); };
         serverHooks.loadCurrentFort=[this](std::uint32_t player) { Reload(player); };serverHooks.sendFort=[this](std::uint32_t player,std::uint32_t target,std::uint32_t count) { static_cast<void>(forts->SendFort(player,static_cast<std::int32_t>(target),count)); };serverHooks.loadWorld=install;serverHooks.sendSettings=[this](std::uint32_t target) { settings->Send(static_cast<std::int32_t>(target)); };serverHooks.restoreCoreData=[this](std::uint32_t player) { RestoreCoreData(player); }; // 두 원문 caller가 같은 장기 Core 복원 몸체를 사용한다.
+        serverHooks.loadFortImage=[this](auto owner,auto image) { OpenRemoteFort(owner);ReadRemoteFort(owner,image); }; // 원문 신규 원격 로그인은 준비/읽기를 같은 슬롯에 순서대로 수행한다.
         serverHooks.assertion=[this](auto expression) { Need(s.services.ai.assertion)(expression); }; // 원문 simulconnect/메타맵/예측수 진단도 같은 실제 Client 진단으로 복귀한다.
         serverHooks.setSp=[this](std::uint32_t player,std::int32_t amount) { // 초기 지정도 같은 분산 SP와 현재 로컬/Editor 판정·HUD 갱신 전체를 사용한다.
             SetPlayerSpAmount(std::bit_cast<std::int32_t>(player),amount,s.sp,
@@ -174,6 +192,7 @@ struct RawCampaignSession::Impl::Login {
         };
         server=std::make_unique<RawMissionLogin>(s.players,*s.participation,MissionLoginGlobals{s.core.processState.Server(),s.assetState.Boss(),simul,s.objectState.mission,s.globals.missionPost,s.core.ownerMode.challenge,s.playerState,s.globals.mySubscriber,fortCount,lastPlayer,predictable,begin,beginSeed,battleSeed,burst,clockStamp,baseClock,captureEnd,currentCore,cachedCore,Zone(),s.battleOptions,&s.gameplayGlobals->GameAux()->ResourcePool(),&saved,&s.assetState.inBattle},std::move(serverHooks)); // 실제 저장게임/전투 bool 주소를 빌리며 일반 모드를 강제로 켜지 않는다.
         MissionClientPacketHooks receive;receive.clock=effects.clock;receive.wallSeconds=effects.wallSeconds;receive.runState=[this] { state->Run(); };receive.resetCamera=s.services.install.resetCamera;receive.refreshSp=effects.refresh;
+        receive.openFortImage=[this](auto owner) { OpenRemoteFort(owner); };receive.readFortImage=[this](auto owner,auto image) { ReadRemoteFort(owner,image); }; // packet2a는 두 선택을 분리해 manager를 중복 생성하지 않는다.
         receive.updateRange=[this] { options->UpdateRange(); };receive.requiredEnergy=[this] { return options->TypeCost(); };receive.setEnergyType=[this](float value) { options->SetSelectedTypeCost(value); };receive.readOptionValue=[this] { return options->CurrentValue(); };
         receive.addChat=s.services.ai.participation.addChat;receive.playerUiBusy=effects.playerUiBusy;receive.playerNotice=effects.playerNotice;receive.send=send;receive.sendReady=[this](std::uint32_t target) { server->SendReady(target); };receive.restoreCoreData=[this](std::uint32_t player) { RestoreCoreData(player); }; // 004912d0의 실제 후처리도 같은 복원 부모와 Player/캐시를 빌린다.
         client=std::make_unique<RawMissionClientPackets>(s.players,*s.participation,s.sp,MissionClientPacketState{s.core.processState.Server(),s.assetState.Boss(),s.globals.missionPost,saved,s.core.ownerMode.challenge,s.assetState.inBattle,s.globals.editor,outpost,s.playerState,beginSeed,battleSeed,s.revision,optionValue,begin,clockStamp,baseClock,blocks[1][0],blocks[3][0],blocks[3][14],blocks[4][0],source,coreActive,captureEnd,s.loginEnd,currentCore,cachedCore,Zone(),s.battleOptions,s.handle,s.hiddenPlayers,&s.gameplayGlobals->GameAux()->ResourcePool()},std::move(receive));

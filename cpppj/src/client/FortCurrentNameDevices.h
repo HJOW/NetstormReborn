@@ -7,6 +7,7 @@
 
 namespace netstorm::client { // 게임 알고리즘은 기존 RawFortCurrentName 본체만 실행한다.
 void SelectConfiguredNewFort(o::ConfigInterface& config,const std::function<void(std::string_view)>& select); // PATCH00460c20/CD004ca8e0: 현재 newFort의 PathSpec 결과를 기존 전체 이름 부모에 전달한다. 재검사/임의 이름은 추가하지 않는다.
+std::string SelectRemoteFortPath(ClientFortGlobals& names,o::ConfigInterface& config,std::uint32_t owner,std::uint32_t localOwner,const std::function<void(std::string_view)>& assertion); //004606d0: 자기 owner 진단 뒤 현재 curFort와 signed owner 문자열로 BattleFortSpec을 조회하며 선택 이름을 변경하지 않는다.
 // 이름/경로 scratch와 동기 장치 대여를 소유한다. 네 외부 소유자는 이 객체보다 오래 살아야 한다.
 class FortCurrentNameDevices {
 public:

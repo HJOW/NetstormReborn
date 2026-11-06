@@ -38,6 +38,20 @@ struct TemplateWriteStream {
     std::uint32_t manager{},section{}; // 실제 호스트 manager와 같은 생성 수명의 동적 섹션 토큰이다. 포인터를 DWORD로 자르지 않는다.
     std::uint64_t generation{}; // 같은 이름의 섹션을 재생성한 뒤 이전 참조로 쓰는 것을 거부한다.
 };
+// 수신 이미지 부모의 세 원문 진단을 실제 호출자가 구별하여 처리한다.
+enum class TemplateImageAssertion {
+    MissingManager, // 현재 헤더의 manager가0인 tm 진단이다.
+    NotInBattle, // 현재 inBattleMode가0인 진단이다.
+    InvalidImage // 가상 서명 판정이0인 valid 진단이다.
+};
+// 파일 읽기와 달리 수신 버퍼를 현재 manager에 병합하고 같은 헤더의 Changed를 호출한다.
+struct TemplateImageLoadHooks {
+    std::function<void(TemplateImageAssertion)> assertion; // Template.cpp의 tm/inBattleMode/valid 진단이며 복귀하면 계속한다.
+    std::function<std::int32_t()> typeCount; // 서명 검사 순간의 현재 signed TYPE 개수다.
+    std::function<void()> tooManyTypes; // numTypes<256 진단에서만 사용한다.
+    std::function<void(std::string_view)> rejectFile; // 현재 manager 이름의 삭제 요청이며 검사된 사용자 namespace만 허용한다.
+    std::function<void()> changed; // 같은 고정 헤더의 RawPlayerTemplateState::Changed 전체 부모다.
+};
 // 실제 파싱 자료를 단독 소유하고 빌린 헤더는 같은 manager/State cursor를 조회한다.
 class CampaignTemplateStorage {
 public:
@@ -57,6 +71,7 @@ public:
     void Install(std::uint32_t slot,o::FortTemplate fort,std::string name); // 이전 한 헤더를 실제 반납한 뒤 새 소유 manager를 설치한다.
     void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.
     void LoadFile(std::uint32_t slot,o::FortTemplate fort,std::string_view name,const TemplateFileLoadHooks& file); //004bf550의기존파일유지/읽기전공개/정상false부분정리를실제owner에서실행한다. fort는이미해석된보조metadata이며실제section은reader의할당을쓴다.
+    void ReadImage(std::uint32_t slot,std::span<const std::uint8_t> input,const bool& inBattle,const TemplateImageLoadHooks& hooks); //004bfc60의 지역 MarkStream 복사/서명/현재 manager 병합/Changed를 수행하며 예외에도 지역 할당만 반납한다.
     o::FortImageData ReadLoginImage(std::string_view name,const TemplateFileLoadHooks& file,std::uint32_t territory); //004b63d0의지역Template읽기와004bf3e0의5섹션복제/직렬화/반납을실행한다.현재Client의version/이름표만공유하고전역9헤더는보존한다.
     void Borrow(std::uint32_t slot,std::uint32_t source); // 같은 manager를 빌리며 State/지형 cursor도 같은 객체를 사용한다.
     void ClearAll(); // 원본 전역 정리의 실제 소멸/할당 반납을 수행한다.

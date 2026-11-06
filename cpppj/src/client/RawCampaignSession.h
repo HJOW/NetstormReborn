@@ -196,6 +196,8 @@ struct RawCampaignSessionServices {
     std::function<std::vector<std::uint8_t>(std::string_view)> missionFortRead; // 독립 합성/명시 이미지 어댑터의 reader다. 실제10.78 Client는 아래 지연 선택기로 원문 파일 시점을 사용한다.
     MissionFortFileSelector missionFortFileSelect; // 실제10.78은 경로를 먼저 선택하고 Template 부모가 요구할 때만 읽는다. 같은 이름 manager는 I/O 없이 보존한다.
     TemplateFileLoadHooks missionFortLoad; // 실제 파일의 권한/거부/진단 경계다. read·현재타입·현재owner·제목은 같은 Session이 연결한다.
+    std::function<std::string(std::uint32_t,std::uint32_t)> remoteFortPath; // 원문 owner/현재 local owner의 경로 조회 뒤 사용자 작업 namespace로 매핑한다. 파일 복사/이름 선택을 하지 않는다.
+    std::shared_ptr<EditorFiles> remoteFortFiles; // 원격 manager의 존재/삭제에 사용하는 검사된 사용자 작업 장치이며 Session보다 오래 소유한다.
     std::string missionFortFileName; //최초 missionFortImage와 같은 읽기에서 선택한 실제 파일 경로다. 생략한 독립 호출만 기존 논리 이름을 유지한다.
     std::shared_ptr<MissionFortLoadRequest> missionFortRequest; // Init에서 만든 같은 요청/Zone을 소비하며 설치 때 새 Zone을 만들지 않는다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions; // Client Init와 실제 로그인/세계/메뉴가 같은 전역87BYTE를 소유한다. 독립 검사는 자체 배열을 쓴다.

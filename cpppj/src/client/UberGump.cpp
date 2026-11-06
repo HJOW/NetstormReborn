@@ -821,6 +821,11 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
         if (!mission_->FileSource()) services.missionFortLoad=BindDataManagerFileRead(std::move(services.missionFortLoad),client_.Files()); //일반10.78만 연결하며 명시Editor 작업본/삭제 장부 namespace는 유지한다.
         services.missionFortLoad.tooManyTypes=[] { throw std::logic_error("미션 Template 파일의 numTypes<256 진단"); };
         services.missionFortLoad.rejectFile=[](auto path) { throw std::runtime_error("미션 Template 잘못된 서명의 원본 삭제 요청: 보호 파일은 삭제하지 않습니다: "+std::string(path)); }; // 원본 삭제 요청을 보호 자산에 자동 적용하지 않는다.
+        services.remoteFortFiles=std::shared_ptr<EditorFiles>(editorCatalog_,&editorCatalog_->Files()); // 같은 장기 작업 namespace를 빌리며 수신 자료를 설치 자산에서 복사하지 않는다.
+        services.remoteFortPath=[this](auto owner,auto localOwner) {
+            const auto configured=SelectRemoteFortPath(*client_.FortGlobals(),client_.Configuration(),owner,localOwner,[](auto expression) { std::clog<<"Fortspec 원본 진단: "<<expression<<'\n'; });
+            return platform::PathToUtf8(editorCatalog_->Resolve(configured)); // 원문 경로 조회 뒤에만 보호 검사와 사용자 홈 매핑을 수행한다.
+        };
     } else { services.missionFortImage=fortImage;services.missionFortFileName=std::move(fortFile.fileName);services.missionFortRead=mission_->FortReader(); } //10.72의 기존 부분 어댑터만 동기 입력을 유지한다.
     services.fortBadges=client_.FortBadges();services.fortMission=FortMissionSaveEffects(); // 실제 Client 단일 장부와 현재 Runtime getter를 같은 Session에 빌린다.
     services.fortTypeConversion=client_.FortTypeConversion(); // 같은 Client의 현재 타입 변환표 소유자를 전달한다.
