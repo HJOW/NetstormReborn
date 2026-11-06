@@ -1294,7 +1294,7 @@
       "bytes": 1573181,
       "lines": 1993,
       "fixtureCommit": "5edb2b6d",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidDestroy.cpp": "f2215dc5",
         "cpppj/src/o/RawSquidDestroy.h": "886f2d23",
@@ -1482,7 +1482,7 @@
       "bytes": 7166,
       "lines": 360,
       "fixtureCommit": "078ea3e8",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/TypeConstructors.inc": "078ea3e8"
       }
@@ -1513,7 +1513,7 @@
       "bytes": 220690,
       "lines": 1037,
       "fixtureCommit": "0d163f6e",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/DerivedConstructors.inc": "f7675661",
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
@@ -1543,7 +1543,7 @@
       "bytes": 148872,
       "lines": 589,
       "fixtureCommit": "e6259e97",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidCreation.cpp": "e6259e97"
       }
@@ -1572,7 +1572,7 @@
       "bytes": 325827,
       "lines": 721,
       "fixtureCommit": "e1a617ac",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidTake.cpp": "e1a617ac"
       }
@@ -1603,7 +1603,7 @@
       "bytes": 146005,
       "lines": 577,
       "fixtureCommit": "21da8875",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
         "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a5"
@@ -1633,7 +1633,7 @@
       "bytes": 8250,
       "lines": 513,
       "fixtureCommit": "cf4bdec8",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
       }
@@ -1664,7 +1664,7 @@
       "bytes": 164662,
       "lines": 1649,
       "fixtureCommit": "078ea3e8",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
       }
@@ -1696,7 +1696,7 @@
       "bytes": 975424,
       "lines": 7469,
       "fixtureCommit": "f7675661",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
         "cpppj/src/o/DerivedConstructors.inc": "f7675661"
@@ -1730,11 +1730,133 @@
       "bytes": 862447,
       "lines": 8423,
       "fixtureCommit": "a86150db",
-      "webCommit": "worktree",
+      "webCommit": "7dd335e0",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
         "cpppj/src/o/SquidUnpop.cpp": "ea848459",
         "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459"
+      }
+    },
+    {
+      "id": "depend-create-parent",
+      "path": "cpppj/tests/fixtures/depend-create-parent-current-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 감시 쌍 생성 부모(004b1510) x86 관측(server 진단·두 Create 의 현재 TYPE·WORD 쓰기·저장/현재 VT·부착 순서·두 슬롯)",
+      "consumers": [
+        "webpj/tests/form-hosts.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/depend-form-host.js"
+      ],
+      "unit": "WB04-D5a",
+      "doc": "docs/webpj-form-hosts-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDependCreate.cpp"
+      ],
+      "scope": "10.78 810행 전체. Create/진단/부착은 명시 장치",
+      "text": true,
+      "sha256": "3cc59aea363466d0a6734d567a5f4d8d0577e4e3f9f2267e210e5a5ba6facd68",
+      "bytes": 485411,
+      "lines": 1621,
+      "fixtureCommit": "886f2d23",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDependCreate.cpp": "886f2d23"
+      }
+    },
+    {
+      "id": "content-attach-current",
+      "path": "cpppj/tests/fixtures/content-attach-current-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 정렬 Content 부착(004aec10) x86 관측(dead/free 진단·그룹 순서 삽입·저장 VT/현재 getter·늦은 Pop/통지 실패·다섯 슬롯)",
+      "consumers": [
+        "webpj/tests/form-hosts.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/content-form-host.js",
+        "webpj/www/core/squid-contained-unpop.js"
+      ],
+      "unit": "WB04-D5a",
+      "doc": "docs/webpj-form-hosts-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawContentAttach.cpp",
+        "cpppj/src/o/RawSquidContainedUnpop.cpp"
+      ],
+      "scope": "10.78 41행 전체(판본 열 없는 10.78 전용 표). 전투·사제 포획 꼬리는 원본 관측 범위 밖이며 계약 검사로 확인",
+      "text": true,
+      "sha256": "fe24b00b07c7841f2e4419dbf1d6b38b9bf054ee0ea4f80c6fa23aca82785479",
+      "bytes": 23954,
+      "lines": 42,
+      "fixtureCommit": "f83db66c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawContentAttach.cpp": "f83db66c",
+        "cpppj/src/o/RawSquidContainedUnpop.cpp": "f83db66c"
+      }
+    },
+    {
+      "id": "form-linked-parent",
+      "path": "cpppj/tests/fixtures/form-linked-parent-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Form::isRobust(004ae080) 부모 체인 전체 검사 x86 관측(체인 입력 12종·논리 범위 64)",
+      "consumers": [
+        "webpj/tests/form-hosts.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-form-linked.js"
+      ],
+      "unit": "WB04-D5a",
+      "doc": "docs/webpj-form-hosts-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFormLinked.cpp"
+      ],
+      "scope": "120행 전체(판본 열 없는 물리 입력 표, 두 판본 같은 몸체). 원문 비종료 순환은 웹 명시 오류",
+      "text": true,
+      "sha256": "a25d7aa27570bd79adb49b627a45a8e9a330bd968526ffeb2fdca0b9adc0bc15",
+      "bytes": 2114,
+      "lines": 121,
+      "fixtureCommit": "72012e83",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFormLinked.cpp": "72012e83"
+      }
+    },
+    {
+      "id": "form-lifecycle",
+      "path": "cpppj/tests/fixtures/formlifecycle-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 감시 쌍·ContentForm 수명 x86 관측(Pair/Destroy/Notify/Has/Remove/Attach/Robust/Damage 결과·통지 당시 바이트·관측 슬롯·풀/삭제 깊이)",
+      "consumers": [
+        "webpj/tests/form-hosts.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/depend-form-host.js",
+        "webpj/www/core/content-form-host.js"
+      ],
+      "unit": "WB04-D5a",
+      "doc": "docs/webpj-form-hosts-20261106.md",
+      "cpppjSources": [
+        "cpppj/src/o/DependFormHost.cpp",
+        "cpppj/src/o/ContentFormHost.cpp"
+      ],
+      "scope": "10.78 456행 전체. 전송·통지는 명시 장치(네트워크 없음). CD 행 제외",
+      "text": true,
+      "sha256": "d75399be71e956c18abd06a56c0f681a85b4386e337060af7e496f7c899f2405",
+      "bytes": 544151,
+      "lines": 913,
+      "fixtureCommit": "aa3c0995",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/DependFormHost.cpp": "d678fcad",
+        "cpppj/src/o/ContentFormHost.cpp": "34891d67"
       }
     }
   ]

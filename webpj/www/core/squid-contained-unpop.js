@@ -33,13 +33,18 @@ function need(device, name) {
     return device;
 }
 
-// 현재 VT 가 Form 링크 배치이면 true, 지원 자산이면 false, 모르면 오류이다(타입/상태로 추정하지 않는다). (2026-11-05 WB04-D2)
-function formLinkLayout(pool, sid) {
-    const raw = pool.slot(sid);
-    const table = (word(raw, 0) | (word(raw, 2) << 16)) >>> 0;
+// 선택한 VT 가 Form 링크 배치이면 true, 지원 자산이면 false, 모르면 오류이다(타입/상태로 추정하지 않는다).
+// (2026-11-05 WB04-D2, 2026-11-06 WB04-D5a: 저장한 VT 로도 고를 수 있게 분리 — cpppj f83db66c FormLinkLayoutAtTable 재반영)
+function formLinkLayoutAtTable(table) {
     if (isSquidFormVtable(table)) return true;
     if (squidAssetVtable(table) !== null) return false;
     throw new Error('공통 contained 링크의 미복원 현재 가상 표');
+}
+
+// 슬롯의 현재 VT 로 링크 배치를 고른다(일반 경로는 호출 직전 현재 VT). (2026-11-05 WB04-D2)
+function formLinkLayout(pool, sid) {
+    const raw = pool.slot(sid);
+    return formLinkLayoutAtTable((word(raw, 0) | (word(raw, 2) << 16)) >>> 0);
 }
 
 // 현재 VT+0 부모 getter 이다(Form +16, 자산 +14 WORD). (2026-11-05 WB04-D2)
@@ -60,6 +65,16 @@ export function commonContainedSetParent(pool, sid, parent) {
 // 현재 VT+0xc 이전 setter 이다. 해당 WORD 만 바꾼다. (2026-11-05 WB04-D2)
 export function commonContainedSetPrevious(pool, sid, previous) {
     putWord(pool, sid, formLinkLayout(pool, sid) ? 14 : 16, previous);
+}
+
+// 정렬 Content 부착이 앞서 저장한 VT 의 +4 이전 getter 이다(현재 VT 를 다시 읽지 않음). (2026-11-06 WB04-D5a: cpppj f83db66c CommonContainedPreviousAtTable 재반영)
+export function commonContainedPreviousAtTable(pool, sid, table) {
+    return word(pool.slot(sid), formLinkLayoutAtTable(table >>> 0) ? 14 : 16);
+}
+
+// 정렬 Content 부착이 고른 VT 의 +0xc 이전 setter 이다(해당 WORD 만 씀). (2026-11-06 WB04-D5a: cpppj f83db66c CommonContainedSetPreviousAtTable 재반영)
+export function commonContainedSetPreviousAtTable(pool, sid, table, previous) {
+    putWord(pool, sid, formLinkLayoutAtTable(table >>> 0) ? 14 : 16, previous);
 }
 
 // 공통 contained 해제 종단이다. pool 은 SidPool, state 는 현재 전역 getter 묶음(호출 시점마다 다시 읽음):

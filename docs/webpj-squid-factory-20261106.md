@@ -83,3 +83,5 @@
 
 - squid-factory 10개(약 22초, 파생 3300단계·Unpop 1809단계가 대부분), squid-factory-contract 31개.
 - 다음은 D5다. Form 호스트(Depend/Gump/Content·ContentLifetime), `SquidProcessHost`·Regular, `SquidFormDispatch`, `ValidatePop`·`RawFormLinked`를 다룬다. 계획은 [공통 Form 층 문서 5절](webpj-squid-forms-20261106.md)의 D5 행을 따른다. D5를 시작할 때 `node webpj/tools/fixture-manifest.mjs --write`로 이번 9개 항목과 `squid-destroy`의 `webCommit`(`worktree`)을 실제 커밋으로 갱신한다.
+
+**2026-11-06 WB04-D5a 완료:** Form 호스트(Depend/Gump/Content)와 부모들을 [Form 호스트 문서](webpj-form-hosts-20261106.md)로 마쳤다. D5는 D5a(완료)·D5b(분배기·Content 수명)·D5c(ProcessHost·Regular)로 나눴다.
