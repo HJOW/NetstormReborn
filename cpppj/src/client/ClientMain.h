@@ -271,6 +271,7 @@ public:
     void UpdateMonitorTime(); //Wind 뒤 현재 벽시각/달력/이름/Config/Chat 부모를 연결한다.
     void UpdateAmbientSound(); //004180f0의 실제 같은 State기한/난수/음향/현재 모달/화면 요청을 연결한다.
     double WallSeconds() const;
+    double GameSeconds() const; // 현재 보정·정지 상태를 적용한00460cd0을 새 OS 밀리초로 조회하며 프레임 캐시와 구별한다.
     // 창이 활성인가(원본 DAT_0054dc50).
     bool Active() const;
     // 번역표로 글을 바꾼다(원본 FUN_004de9a0).

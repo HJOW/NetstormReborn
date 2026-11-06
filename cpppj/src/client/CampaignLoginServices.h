@@ -10,6 +10,7 @@ namespace netstorm::client {
 struct CampaignLoginServices {
     std::function<std::int32_t(std::string_view,std::int32_t)> configInt; //현재 원본 설정값과 누락 기본값이다.
     std::function<double()> wallSeconds; //정지와 무관한 원본 현재 벽시각이다.
+    std::function<double()> gameSeconds; // 시간 동기화 응답의 실제 현재 게임시각이며 고정된 Frame.game 사본을 쓰지 않는다.
     std::function<std::uint32_t()> clock; //원본 CRT clock의 현재32비트다.
     std::function<void()> refresh; //같은 실제 UI/SP 표시의 현재 원문 재수집을 요청한다.
     std::function<bool()> playerUiBusy; //현재 Player UI 작업 중인지 조회하는 실제 장치 경계다.

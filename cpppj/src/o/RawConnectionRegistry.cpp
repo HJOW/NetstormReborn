@@ -24,6 +24,8 @@ bool RawConnectionRegistry::SendMutable(std::int32_t id,std::span<std::uint8_t> 
     if (!token) return false;const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.send) throw std::logic_error("현재 살아 있는 송신기의 실제 가상+4 장치 미연결");const auto send=found->second.send;send(packet);return true;
 }
 bool RawConnectionRegistry::Owns(std::uint32_t token) const { return bindings_.contains(token); }
+std::uint32_t RawConnectionRegistry::TokenFor(const PacketConnection& connection) const { for (const auto& entry:bindings_) if (entry.second.node==&connection) return entry.first;throw std::out_of_range("직접 송신의 현재 노드 token 누락"); } // 실제 살아 있는 동일 주소만 선택하며 sender 번호로 다른 노드를 대신하지 않는다.
+void RawConnectionRegistry::SendDirect(std::uint32_t token,std::span<std::uint8_t> packet) const { const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.send) throw std::logic_error("직접 연결의 실제 가상 송신 장치 미연결");const auto send=found->second.send;send(packet); } // callback 중 해제에도 선택한 callable의 수명을 보유한다.
 PacketConnection& RawConnectionRegistry::Node(std::uint32_t token) const { const auto it=bindings_.find(token);if (it==bindings_.end()) throw std::out_of_range("해제되거나 다른 owner의 연결 토큰");return *it->second.node; }
 ConnectionRegistrationHooks RawConnectionRegistry::RegistrationHooks(std::function<void(std::uint32_t)> buffered) {
     return {[this](auto token)->PacketConnection& { return Node(token); },std::move(buffered),[](auto line) { throw std::logic_error("원문 연결 등록 진단:"+std::to_string(line)); }};

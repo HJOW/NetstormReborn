@@ -16,8 +16,10 @@ double GameClock::WallSeconds(std::uint32_t milliseconds) const {
 }
 // 정지 시간은 프레임 시간차와 별도로 누적한다.
 double GameClock::GameSeconds(std::uint32_t milliseconds) const {
-    return pauseDepth_ != 0 ? pausedGame_ : WallSeconds(milliseconds) - pausedTotal_;
+    if (pauseDepth_!=0) return pausedGame_;const auto elapsed=(milliseconds-origin_)-(synchronizationTicks_ ? *synchronizationTicks_ : 0U); // 원문은 signed 보정 비트도 unsigned 밀리초 감김으로 감산한다.
+    return (static_cast<double>(elapsed/1000)+static_cast<double>(elapsed%1000)*kMillisecondSeconds)-pausedTotal_;
 }
+void GameClock::BindSynchronizationTicks(const std::uint32_t& ticks) { synchronizationTicks_=&ticks; } // 같은 Native writer/cleanup 결과를 매 게임시각 조회에 직접 반영한다.
 // 첫 정지에서 저장하고 추가 정지는 카운터만 증가시킨다.
 void GameClock::Pause(std::uint32_t milliseconds) {
     if (pauseDepth_ == std::numeric_limits<std::uint32_t>::max()) throw std::overflow_error("Pause depth overflow");

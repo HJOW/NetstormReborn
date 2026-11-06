@@ -288,6 +288,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     BindCampaignLoginStateClientServices(client,controls,login); // 같은 실제 장치를 State7 앞단과 State13 모두에 공급하며10.72의 기존 어댑터를 구별한다.
     login.configInt=[&client](std::string_view key,std::int32_t fallback) { client.Configuration().ReadInt(key,fallback);return fallback; };
     login.wallSeconds=[&client] { return client.WallSeconds(); };login.clock=[] { return static_cast<std::uint32_t>(std::clock()); };
+    login.gameSeconds=[&client] { return client.GameSeconds(); }; // 서버 시간 응답은 요청 처리 순간의 같은 실제 보정/정지 시계를 읽는다.
     login.refresh=[&client] { client.GetRenderer().InvalidateAll(); };
     login.initializeChat=[&client] { InitializeClientChatManager(client); }; // 현재 Core/manager·명령표·Config를 실제 원문 수명으로 재구성한다.
     login.playerUiBusy=[&controls] { return controls.Menus() && controls.Menus()->HasMenus(); };

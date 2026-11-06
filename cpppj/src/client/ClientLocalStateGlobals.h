@@ -4,6 +4,7 @@
 #include "o/RawAmbientSound.h"
 #include "client/RawMonitorTime.h"
 #include "o/RawClockSyncReset.h"
+#include "o/RawClockSynchronization.h" // 서버/Commander와 Session 교체가 같은70개 시간 표본을 공유한다.
 #include "o/RawMetaZoneCleanup.h"
 #include <array>
 
@@ -75,6 +76,8 @@ public:
     std::uint32_t& HudModeCommand() { return hudModeCommand_; } // 005427ec의 현재 명령을 호출 직전에 읽고 변경도 보존한다.
     std::uint32_t& AddIslandCommand() { return addIslandCommand_; } // 00542780의 현재 명령을 빈섬 예약 직전에 읽는다.
     o::ClockSyncResetGlobals ClockSynchronization() { return {syncConnection_,syncReplyMode_,gameTicks_}; } //004c1f20이 정확히 지우는 실제 세 DWORD를 값 복사 없이 빌린다.
+    o::ClockSynchronizationData& ClockSamples() { return clockSamples_; } //005c8bf0/8bf8/8bfc/8c08/70표본을 같은 Client 수명으로 빌린다.
+    const o::ClockSynchronizationData& ClockSamples() const { return clockSamples_; } // 진단도 같은 현재 표본을 읽고 별도 캐시를 만들지 않는다.
     const std::uint32_t& SynchronizationConnection() const { return syncConnection_; } //005c8bf4의 현재 동기화 token이며 전체22연결표와 구별한다.
     const std::uint32_t& SynchronizationReplyMode() const { return syncReplyMode_; } //005c8c00은 인접 동기화 송수신 카운터와 별도다.
     std::uint32_t& GameTicks() { return gameTicks_; } //0055b4ac의 현재 DWORD를 로그인 State와 정리가 직접 공유한다.
@@ -121,6 +124,7 @@ private:
     std::uint32_t hudModeCommand_{0x0200003dU}; //보호PE005427ec의 실제 명령 초기값이다.
     std::uint32_t addIslandCommand_{0x02000022U}; //보호PE00542780의 실제 Add Island 명령 초기값이다.
     std::uint32_t syncConnection_{},syncReplyMode_{},gameTicks_{}; //세 개의 실제 최초 BSS DWORD며 정리 세 store 이외의 재초기화를 추가하지 않는다.
+    o::ClockSynchronizationData clockSamples_; // 최초 BSS0이며 서버 초기화는 표본을 유지하고 Commander 연결만 원문 전체0을 쓴다.
     std::uint32_t cdPresent_{},metaRefresh_{},metaRebuild_{}; //CD 결과와 두 메타 예약의 최초 BSS0을 Client 수명에 한 번 구성한다.
     bool simulconnect_{}; //최초 BSS0이며 Session 교체가 초기화하지 않는 연결모드다.
     std::uint32_t battleTerritory_{}; //005c85d0의 실제4BYTE이며 State의BYTE와 strip의DWORD 소비자가 함께 빌린다.

@@ -2,25 +2,25 @@
 
 cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용자 확인, 재개 절차**를 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-07 진행:** 사용자 /goal 지시로 기존 일시중지를 해제했다. 실행 제품은 **992 / 11.01**이며987~991의 원격/자기 Fort·동기화·섬 생성에 이어992 일반 시작 밀도/연결 안내를 연결·컴파일했다. 남은 AI 구현은 **LAN 멀티플레이 → 한국어 후속 → Edit 시나리오 UI**다. 지정된 공격/포획/희생/승리·사용자 확인·멀티플레이 테스트는 제외하고 단위별 문서/로컬 커밋을 계속한다. 986까지의 상세 이력은 [보관본](LEFT_JOBS.old.md#archive-20261106-through-986)에 있다.
+**2026-11-07 진행:** 사용자 /goal 지시로 기존 일시중지를 해제했다. 실행 제품은 **993 / 11.01**이며987~992의 Fort/섬/일반 시작 세부 경로에 이어993 시간 패킷·Commander·직접 송신과 실제 게임 시계 보정을 연결·컴파일했다. 남은 AI 구현은 **LAN 멀티플레이 → 한국어 후속 → Edit 시나리오 UI**다. 지정된 공격/포획/희생/승리·사용자 확인·멀티플레이 테스트는 제외하고 단위별 문서/로컬 커밋을 계속한다. 986까지의 상세 이력은 [보관본](LEFT_JOBS.old.md#archive-20261106-through-986)에 있다.
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-07, 제품992)
+### 0.1 현재 값 (2026-11-07, 제품993)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **사용자 /goal로 구현 재개.** 992를 마쳤고 다음은 시간 동기화/Commander와 일반 State 호스트·LAN UI다. 전체 목표는 미완료이며 지정된 테스트 제외를 유지한다. |
-| 현재 제품 | **992 / 표시·파일·제품11.01.** 일반 State7 밀도·Chat/listener·State8/9 연결 안내를 실제 장치에 연결했다. Multiplayer 메뉴와 일반 전투 전체는 아직 미완료다. |
+| 진행 상태 | **사용자 /goal로 구현 재개.** 993을 마쳤고 다음은 일반 State6·7 호스트와 roster·LAN UI다. 전체 목표는 미완료이며 지정된 테스트 제외를 유지한다. |
+| 현재 제품 | **993 / 표시·파일·제품11.01.** 시간 패킷·70표본·Commander·직접 노드 송신과 같은 GameTicks 게임 시계를 연결했다. Multiplayer 메뉴와 일반 전투 전체는 아직 미완료다. |
 | 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반31+데모3의 마지막 전체 진입 검증은 **645의644 제품**이며 현재 제품의 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | `2abd3ae3119d059ba961bc177ef230b26239f9749c12bc39ee157cffae899a7c` (992 / 11.01, 11,632,640바이트) |
-| 최신 빌드·집중 검사 | **992 Release 제품 빌드 종료0·경고/오류0.** 신규 MP/단위/게임/통신 검사0이다. 기존 비멀티 파일 읽기9검사는987 결과다. [992 기록](docs/exe/cpp-battle-start-details-20261107.md)·`cpppj/battle-start-details-20261107.json`. |
+| EXE SHA-256 | `71540224f4926cd5fda2ff9ee12de7e47fab7d16786aced609216ac09c207261` (993 / 11.01, 11,647,488바이트) |
+| 최신 빌드·집중 검사 | **993 Release 제품 빌드 종료0·경고/오류0.** 신규 MP/단위/게임/통신 검사0이다. 기존 비멀티 파일 읽기9검사는987 결과다. [993 기록](docs/exe/cpp-clock-synchronization-20261107.md)·`cpppj/clock-synchronization-20261107.json`. |
 | checking 잔여 | **8함수=부모3+부분2+MP분류3.** 완료부모39/부분4이며현재비멀티수명/FILE범위는980에서마감했다. 메타맵2표/재접속/Descend 등은3절8번 잔여다. |
 | 마지막 GUI | **984 실제 단독MCP 1실행:** 격리1920×1080 tutorial1 진입·비정지100프레임 대기·WM_CLOSE 종료0, 입력5/관측7·PNG 확인·설치1351개/보호 불변. LAN/공격/포획/희생/승리/물리 입력 검증이 아니다. |
 | 전체 검사 기준 | 활성 솔루션83프로젝트: Application78(검사 이름73/게임1/probe·dump4), 라이브러리2, Utility3. 현재 제품의 전체 검사 통과 기록은 없다. 과거 전체 결과는 보관본, 알려진 실패/기준선 판정은2.5절을 따른다. |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
-| 보호 기준 | **987에서 새로 고정한 AGENTS.md·원본/CD/fixture2800파일을992 종료 때도 모두 불변으로 확인했다.** 새 fixture 없음. 다른 세션의 WB 파일은 보존하고 CP 커밋에서 제외한다. 원시 기준은 `extracted/cpp-resume-992/protected-before.json`이다. |
+| 보호 기준 | **987에서 새로 고정한 AGENTS.md·원본/CD/fixture2800파일을993 종료 때도 모두 불변으로 확인했다.** 새 fixture 없음. 다른 세션의 WB 파일은 보존하고 CP 커밋에서 제외한다. 원시 기준은 `extracted/cpp-resume-993/protected-before.json`이다. |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
@@ -28,7 +28,7 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 1. 사용자 재개 요청 뒤 AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 해당 인계도 읽는다. `git status`와 `git fetch`로 다른 PC/세션 변경을 확인하며 push는 하지 않는다.
 2. 현재 호스트가 마지막 디컴파일 호스트와 다르면 cpppj 작업/디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 문서에 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 불완전하므로 쓰지 않는다.
 3. 실제 게임·별도 창 실행은 AGENTS.md의 확인 규칙을 따른다. 예외는 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94) 및 사용자가 직접 요청한 원본 수동 컨트롤/녹화 분석의 해당 단계다. 다른 PC는 실행 목적·필요성 설명 후 명시적 확인이 필요하다.
-4. 최신 제품992의 보고서는 `cpppj/battle-start-details-20261107.json`이다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-992/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
+4. 최신 제품993의 보고서는 `cpppj/clock-synchronization-20261107.json`이다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-993/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj/webpj·staged 파일·실행 출력은 포함하지 않는다. 한 단위를 마치면 0.1절·0.4절·2.1절 완료 항목·3절 잔여·단위 문서를 갱신하고 해당 파일만 로컬 커밋한다.
 6. 완료 범위는2.1절, 잔여 우선순위는3절을 따른다. 단위986까지의 상세 인계·옛 검사 수·대체된 지시는 [정리 전 전체 원문](LEFT_JOBS.old.md#archive-20261106-through-986)과 각 단위 기록에서 확인한다. 과거의 다음 작업 예고를 현재 미완료 목록으로 되살리지 않는다.
 
@@ -72,6 +72,10 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 
 991은 `a4f57cda / 20261107-04 CP`로 커밋됐다. 992는 일반 State7의 현재 밀도 옵션/두 게임 난수·채널40/80 정리·simulconnect listener, State8 연결 안내, State9 송신 뒤 안내를 기존 상태 몸체/실제 Session·Client HTML에 연결했다. Release 제품 빌드 종료0·경고/오류0, 보호2800파일 불변이며 신규 MP/단위/게임/통신 검사0이다. [992 기록](docs/exe/cpp-battle-start-details-20261107.md). 일반 전투의 호스트 State7 진입/World 교체 부모와 State6/Commander/roster/LAN UI는 남는다.
 
+### 0.9 최근 단위 — 993 시간 동기화와 Commander
+
+992는 `7f1ae00e / 20261107-06 CP`로 커밋됐다. 993은 원문5번 시간 패킷·70표본·빠른 절반의 보정 평균·서버/Commander 설치, 같은 실제 GameTicks를 쓰는 게임 시계와 flush→동기화→receive 순서를 연결했다. 가상 this의 직접 송신에서 기존 Player/ID 재검사를 제거하고 현재 노드 수명을 유지했다. Release 빌드 종료0·경고/오류0, 보호2800파일 불변이며 신규 MP/단위/게임/통신 검사0이다. [993 기록](docs/exe/cpp-clock-synchronization-20261107.md). 일반 State6·7 호스트/roster/LAN UI 등은 남는다.
+
 ## 1. 현행 목표
 
 ### 1.1 cpppj 단계 (AGENTS.md 기준)
@@ -80,7 +84,7 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 | --- | --- | --- |
 | 1차 | 원본을 디컴파일해 C++로 최대한 똑같이 복원한다. 기준은 10.78이며 멀티플레이·Outpust는 제외한다. 문서화할 때 10.72 관련 내용도 기록한다. | **활성 비멀티 구현·대조 범위 마감.** UI929·Edit943·미션 수명956·내부 수명/FILE980. 34경로의 마지막 전체 진입 확인은645/제품644다. 자연 완주·전체 동일성은 사용자 확인이며, 새로운 제보는 AI 수정 항목으로 연다. 8차 신규 시나리오 UI와 구별한다. |
 | 2차 | Windows 10/11에서 오류 없이 실행한다. 전체화면 DirectDraw 오류와 전체화면 종료 후 재실행 오류를 수정한다. | **구현·현재 확인 범위를 정리하고 후속 단계로 전환.** 호환 전체화면·화면비·가장자리 스크롤·저장 재시작을 확인했고 와이드 덱 결함은981에서 수정했다. 물리 입력/출력·다른 장치/DPI·Windows 11/ARM 실기는 미검증이며 사용자/환경 확인이다. 무오류 보증은 아니다. 10.72 호환성은 후순위다. |
-| 3차 | 멀티플레이·Outpust. 공식 서버는 없어졌으므로 TCP/IP 로컬 네트워크만 구현한다. | **사전 구현 진행 중.** 982 TCP·984 공유 전송/수명·985 일반 Login/SP·987 원격 Fort 수신·988 참가자별 동기화·989 전투섬·990 중앙섬·991 자기 Fort·992 시작 세부 경로를 연결·컴파일했다. 일반 전투·전체 decoder·roster/LAN UI·Outpust는 미완료다. 신규 MP/통신 검사0이며 플레이 가능 상태가 아니다. |
+| 3차 | 멀티플레이·Outpust. 공식 서버는 없어졌으므로 TCP/IP 로컬 네트워크만 구현한다. | **사전 구현 진행 중.** 982 TCP·984 공유 전송/수명·985 일반 Login/SP·987 원격 Fort 수신·988 참가자별 동기화·989 전투섬·990 중앙섬·991 자기 Fort·992 시작 세부 경로·993 시간 동기화/Commander를 연결·컴파일했다. 일반 전투·전체 decoder·roster/LAN UI·Outpust는 미완료다. 신규 MP/통신 검사0이며 플레이 가능 상태가 아니다. |
 | 4차 | **로컬MCP**로 dotnetpj 분석을 위한 모든 게임 조작·화면 캡처·소리 포함 녹화. **16:9 최대 1920×1080 지원**이며 이 단계에서 그래픽 크기 스케일 조정은 불필요하다. | **구현 완료(935~937).** 로컬 MCP 서버(`Netstorm.exe --mcp`: 조작/상태/보고서/화면 PNG/프레임 대기/소리 포함 녹화/종료)와 16:9 최대 1920×1080을 구현하고 실제 실행으로 확인했다([MCP](docs/exe/cpp-mcp-server-20261106.md), [해상도](docs/exe/cpp-wide-resolution-20261106.md)). 와이드 덱의80×25 검은 띠는981에서 원인 확정·수정/검증 완료. 실제 활성 전체화면/큰 창 물리 확인은 사용자 대상이다. |
 | 5차 | **일반 권한·읽기 전용 설치 정상 동작.** 설정/진행은`%USERPROFILE%\Saved Games\Netstorm\Saves\`, 신규 맵은`CustomMaps\`다. 모든 자동 생성 파일/디렉터리(임시/백업/잠금/장부/캡처/진단 포함)와 대응 reader도 같은Netstorm하위로 옮긴다. 원래/사용자 맵 병행 읽기와 Edit 스크롤/무제한도 포함한다. | **구현·해당 검증 완료(932~934).** 설정/체크포인트/표식/캡처/진단·Editor 작업본/장부·글꼴 캐시·PieceList 이관, Edit 목록 무제한/50행 스크롤, 읽기 전용 설치·유니코드 경로 실행 검증 완료([기록](docs/exe/cpp-user-data-root-20261105.md)). 4차 MCP 녹화 산출물도 사용자 `Captures`에 저장한다(936). 남음: `CustomMaps` 배치/복사 방식 사용자 확인. |
 | 6차 | 한국어 지원 | **진행 중.** 938 1차 완료(글꼴·502항목 번역표·Language 메뉴·배포). 본문/버튼 그림·번역 검수·한글 입력은 잔여다. 986 후속 후보는 보존만 완료했다(0.4절) |
@@ -147,13 +151,13 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 | 데모 반복 | 제품939에서 세 데모 모두360초 두 만료→세 번째 월드 진행→Exit Demo/메인/종료. [946](docs/exe/cpp-demo-second-storm-20261106.md)·[947](docs/exe/cpp-demo-second-guard-20261106.md)·[948](docs/exe/cpp-demo-second-alliance-20261106.md) | 모든 자연 전투/승패·최신 제품 회귀와 구별 |
 | 월드·규칙·Renderer | 공통 AI·워크샾25종·의식/SP·간헐천·투사체/다리/지형·단일 표시 목록·카메라/미니맵·Graph/색표. [25종](docs/exe/cpp-unit-restoration-20261022.md)·[Renderer](docs/exe/cpp-renderer-frame-20261030.md)·[Graph](docs/exe/cpp-editor-graph-world-20261102.md) | 자연 플레이/전체TYPE 프레임·공중3종 신규 전용 검사는 제외. Graph 장부 차이8은 원본에도 있어 정규화하지 않음 |
 | 현재TYPE·HP·생성/반납 | 834~912의 Unpop/Take/Pop·현재VT/TYPE·Form/Process/Factory·의식/너겟/Rune·HP/Regular·실제 Session 연결과957~979 후속. [Pop 범위](docs/exe/cpp-pop-current-scope-20261106.md)·[Factory](docs/exe/cpp-factory-parent-scope-20261106.md)·[980 정리](docs/exe/cpp-internal-lifetime-closure-20261106.md) | checking8·MP writer·CD전체/ABI 자체/미관측 실패는 분리. 효과 정적 연결을 실제 포획/희생 검사로 세지 않음 |
-| checking 소비자·군도 | 779~833의 현재 진단 복귀/장기owner·Graph/연소/마나/도착·892~895 군도 root/CoreData. [함수 색인](docs/exe/cpp-checking-consumer-gaps-20261103.md)·[군도 root](docs/exe/cpp-terrain-generation-root-20261105.md) | 892/893의 당시 상위 미연결은894에서 연결. 일반 State7의 밀도 writer/중앙섬 등 MP 잔여는3절8번 |
+| checking 소비자·군도 | 779~833의 현재 진단 복귀/장기owner·Graph/연소/마나/도착·892~895 군도 root/CoreData. [함수 색인](docs/exe/cpp-checking-consumer-gaps-20261103.md)·[군도 root](docs/exe/cpp-terrain-generation-root-20261105.md) | 892/893의 당시 상위 미연결은894에서 연결. 일반 State7 밀도 writer는992·중앙섬은990 연결. 남은 MP 부모는3절8번 |
 | FILE·자산/색표·저장 실패 | 파일명/경로·Native FILE/키/TAFF·Config/TYPE/GIF/SHP/글꼴·옵션 교체/복구·실제 색표Cache·Kernel/SID/new_handler/종료. [966](docs/exe/cpp-options-save-failures-20261106.md)·[968](docs/exe/cpp-colormap-consumers-startup-20261106.md)·[980](docs/exe/cpp-internal-lifetime-closure-20261106.md) | FILE 직접74호출의 현재54/MP·폐기인터넷18/폐기CD1/휴면Chat1 분류. 32비트ABI/실제OS 고갈/전체PE 간접호출 부재 증명과 구별 |
 | 4차 MCP·와이드 | 935~937의 조작/상태/PNG/대기/소리 포함 녹화·1600×900/1920×1080. [MCP](docs/exe/cpp-mcp-server-20261106.md)·[해상도](docs/exe/cpp-wide-resolution-20261106.md). 덱 검은띠는[981](docs/exe/cpp-wide-deck-background-20261106.md) 수정 | 물리 입력/활성 전체화면 출력은 사용자/환경 |
 | 5차 사용자 데이터 | 932~934의 Saves/CustomMaps/Editor/Captures/Diagnostics·reader·무제한/50행 스크롤·읽기 전용 설치/Unicode 실행. [5차 기록](docs/exe/cpp-user-data-root-20261105.md) | CustomMaps 배치/복사 방식은 사용자 확인(3절8번) |
 | 6차 한국어1차/7차 후처리 | 938 D2Coding/표시 부호화·502항목·언어 메뉴/영어fallback, 939 D3D11 AA/공식FSR1·1440p/4K 선택/캡처. [한국어](docs/exe/cpp-korean-language-20261106.md)·[AA/FSR](docs/exe/cpp-aa-fsr-20261106.md) | 한국어 본문/그림/입력은 미적용 후보. 미션/활성 전체화면/실제4K/입력 역변환은 사용자 확인 |
 | 호환·배포·제품 정책 | 전체화면/3화면비/가장자리·저장 재시작(746), `Netstorm.exe`/배포 스크립트/빌드 선택(562/637/739), 11.01/Credits685·외부접속 분류/검증 비활성684/965 | 최신제품 ZIP 검증 미실시. 구 CD검증7f/80 복원 금지. 1.3절·3절7·8번 |
-| 최신 사전 구현·인계 | 982 TCP·984 공유 전송/수명·985 일반Login/SP·[987 원격Fort](docs/exe/cpp-remote-fort-image-20261106.md)·[988 동기화](docs/exe/cpp-peer-world-sync-20261106.md)·[989 전투섬/원격 배치](docs/exe/cpp-battle-island-20261107.md). 986 한국어/시나리오 후보 보존 | 중앙섬/LAN UI/일반전투/전체 파생 writer·decoder 미완료·신규MP검사0. 986 후보는 기능 완료가 아님 |
+| 최신 사전 구현·인계 | 982 TCP·984 공유 전송/수명·985 일반Login/SP·[987 원격Fort](docs/exe/cpp-remote-fort-image-20261106.md)·[988 동기화](docs/exe/cpp-peer-world-sync-20261106.md)·[989 전투섬](docs/exe/cpp-battle-island-20261107.md)·[990 중앙섬](docs/exe/cpp-central-island-20261107.md)·[991 자기Fort](docs/exe/cpp-local-fort-20261107.md)·[992 시작 세부](docs/exe/cpp-battle-start-details-20261107.md)·[993 시간/Commander](docs/exe/cpp-clock-synchronization-20261107.md). 986 후보 보존 | 일반State 호스트/LAN UI/전체 파생 writer·decoder 미완료·신규MP검사0. 986 후보는 기능 완료가 아님 |
 
 ### 2.2 미션별 확보한 증거
 
@@ -198,7 +202,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 ## 3. 앞으로 할 작업 (재개 후 권장 순서)
 
-**진행 지점은8번이다.** 1번929·2번943·3번956·4번980·7번표시결함981을 마감했다. 사용자 /goal로 재개하여987 원격Fort·988 동기화·989 전투섬·990 중앙섬·991 자기 Fort·992 시작 세부 경로를 반영했으며 **일반 State 등 LAN 잔여 → 한국어 후속 → 시나리오UI** 순서로 진행한다. 아래1~4번은 완료 범위/재조사 조건이며,5~7번의 사용자·환경 확인은 단계 전환을 막지 않는다. `[ ]`만 AI 구현 잔여다.
+**진행 지점은8번이다.** 1번929·2번943·3번956·4번980·7번표시결함981을 마감했다. 사용자 /goal로 재개하여987 원격Fort·988 동기화·989 전투섬·990 중앙섬·991 자기 Fort·992 시작 세부 경로·993 시간 동기화를 반영했으며 **일반 State 등 LAN 잔여 → 한국어 후속 → 시나리오UI** 순서로 진행한다. 아래1~4번은 완료 범위/재조사 조건이며,5~7번의 사용자·환경 확인은 단계 전환을 막지 않는다. `[ ]`만 AI 구현 잔여다.
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI — 비멀티 범위 완료(929)
 
@@ -253,18 +257,18 @@ AI 미완료 체크 항목이 아니며 단계 전환을 막지 않는다. 부�
 
 ### 8. 멀티플레이·배포·후속 단계
 
-- [ ] **3차 TCP/IP 로컬 멀티플레이·Outpust:** 982 TCP부품/984 공유 등록표·per-ID 복합 전송·실제 단독 Client/World 수명·985 일반 Login/SP·987 원격 Fort/manager/수신 이미지 수명·988 참가자별 동기화·989 전투섬·990 중앙섬·991 자기 Fort·992 시작 세부 경로를 접합·컴파일했다. LAN UI/roster/일반 전투는 아직 미접합이다. 다음은 **일반 State6·7/Commander/roster→LAN UI→메타·저장/재접속/Outpost/checking8**이다. 원격 client buildFort는989에서 연결했다. 자기 ordinary localFort는991에서 연결했다. 신규 MP 단위/게임/통신 검사는 하지 않는다. 공식 서버 복구·구 클라이언트 유효성 검사는 연결하지 않는다. **폐기CD확인7f/80(42cd10)은965의검증비활성화정책에따라복원하지않는다.**
+- [ ] **3차 TCP/IP 로컬 멀티플레이·Outpust:** 982 TCP부품/984 공유 등록표·per-ID 복합 전송·실제 단독 Client/World 수명·985 일반 Login/SP·987 원격 Fort/manager/수신 이미지 수명·988 참가자별 동기화·989 전투섬·990 중앙섬·991 자기 Fort·992 시작 세부 경로·993 시간 동기화를 접합·컴파일했다. LAN UI/roster/일반 전투는 아직 미접합이다. 다음은 **일반 State6·7 호스트/roster→LAN UI→메타·저장/재접속/Outpost/checking8**이다. 원격 client buildFort는989에서 연결했다. 자기 ordinary localFort는991에서 연결했다. 신규 MP 단위/게임/통신 검사는 하지 않는다. 공식 서버 복구·구 클라이언트 유효성 검사는 연결하지 않는다. **폐기CD확인7f/80(42cd10)은965의검증비활성화정책에따라복원하지않는다.**
 - checking전체잔여8(957재대조,완료부모39/부분4불변): 부모004a7510·004b02d0의메타맵표시0050c9f0/0050cc08·004dc220(event4/Descend),부분004b54e0/004b8cb0,MP분류0042bc10/004b4df0/004b8b20. 기존분류이며직접inSingle관문부재를모든단독도달불가증명으로확대하지않는다. 신규MP검사없이원문구현을이어간다.
 - MP 이월 목록: 공통+20 미연결VT0050c9f0(TYPE108/109)/0050cc08(TYPE161), 시스템뉴스0042e470/0042e4d0/0042e4f0·endpoint/UI·설정저장, RequestMenu 전송 `004d712e..004d717c`, 메타맵 열기 `004789b0/00479390`·번개 `00479650`·Challenge 이미지/텍스트 `00478d10`/참가자 삭제 `0042bc10`, c6/db·ChalSailPos 모드6·선행클릭/항해 메뉴·desc, 비미션 의식/랭크·조기 희생 안내, PlayerNoMake writer `00433c30`, frame22/주기64·timeout/UI·endpoint/server/boss·리슨/수락/22칸 송신, Activate의 별도 수신자/삭제 선택·프로세스 writer 전체/decoder·재동기화의 허용/owner 캐시 부모(843), 섬·표면 TypeWas의 MP 수신 writer(861).
 - 신전 `004dc220` event4의fort territory0046f650/0046f5a0·curServer0054db4c·Descend0x02000013→004b3760/004b3620/State19와 생성입구004dbac0/0x030000a7을 포함한다(866). 기존 removeAnimation/regionGeneration 임시명은 실제 의미가 아니며 원문 부모 전체를 사전 구현할 잔여다. 직접inSingle 관문이 없으므로 단독 전체 미도달을 증명한 것은 아니다.
-- 일반 전투 `!state.dat` 저장/복구·saveBattle/metamap/비mission phase14·StateReconnect/서버 이전`004b8cb0`(ForceServerDeath/StateReconnect·자동 장애 caller,831)·Zone0/메타 Poll/`004c1e70` 시계 패킷·`004b54e0` 파일명/count 진단과 `0044fa00` 소비자·`004a7510` 참가자 재접속/팀 재편·실패 진단·LeaveBattle 원격 페널티(004cbab0/004b4ac0/004b4b40/004bfb50)와State6의일반Fort/결과복귀를 포함한다(661/955의 분류). 기존 질문/삭제 UI는 유지한다. 정적 사전 구현과 검증 완료를 구별한다.
+- 일반 전투 `!state.dat` 저장/복구·saveBattle/metamap/비mission phase14·StateReconnect/서버 이전`004b8cb0`(ForceServerDeath/StateReconnect·자동 장애 caller,831)·Zone0/메타 Poll·`004b54e0` 파일명/count 진단과 `0044fa00` 소비자·`004a7510` 참가자 재접속/팀 재편·실패 진단·LeaveBattle 원격 페널티(004cbab0/004b4ac0/004b4b40/004bfb50)와State6의일반Fort/결과복귀를 포함한다(661/955의 분류). 기존 질문/삭제 UI는 유지한다. 시계 패킷/Commander는993에서 연결했다. 정적 사전 구현과 검증 완료를 구별한다.
 - 일반전투 State7의 최소/최대밀도 옵션getter·게임난수/강제밀도bb4 writer는992, 중앙섬metadata 수신/송신 observer는990에서 연결했다. 일반 호스트 State7 진입/World 교체·전체MP부모는잔여다.894는실제생성root/장기owner의코드연결이며이writer나MP동작검증완료를뜻하지않는다.
 - [x] **4차 로컬 MCP·와이드 완료(935~937), 덱 검은띠981 해결.** 제공 기능/검증과 물리 확인 경계는1.1절·3절7번을 따른다.
 - [x] **5차 사용자 저장 경로·무제한 목록 완료(932~934).** 실제 이관/reader와 읽기 전용 설치·Unicode 실행을 확인했다. 사용자 확인: 작업 루트가 `CustomMaps`라 실제 맵은 `CustomMaps\d\NAME.fort`이고 첫 Edit 목록 때 원본fort433개를 복사한다. 스크롤은 이동 행 클릭 방식이며 마우스 휠은 미구현, 이동 행 문구는 영어 고정이다. 배치/복사 방식은 사용자 결정 후 조정하고 한국어 문구는6차에서 처리한다.
 - [ ] **6차 한국어(938 1차 완료: 글꼴·번역표 502항목·Language 메뉴·`.korean`→`.english` 대체·배포 동봉. 남은 것: 미션 브리핑/팁/도움말 `.korean` 본문(AI/SP 구성은 english에서 복사), 한글 메인 버튼 그림, 번역 검수, 한글 입력):** 메뉴/문자열/시나리오·글꼴을 지원한다. 글꼴은 D2Coding이며 명칭은 AGENTS.md를 따른다. **986후보는 미적용이다.** `korean/FINAL_PLAN.md`의 최종 코드41파일과 별도44자산을 검토·병합하고 허용된 빌드/집중 검사로 확인한다. 표시 부호화/IME·클립보드 경계를 시나리오 통합 전에 완료한다.
 - [x] **7차 AA/FSR1.0 구현 완료(939).** 기본off·1440p/4K 자동FSR/논리1080p는1.1절 기준이다. 미션/활성 전체화면/실제4K/입력 역변환은 사용자 확인이며 성능 최적화는 후속이다.
 - [ ] **8차 Edit 시나리오 UI:** 초기 자본/테크·적·동맹 등을 별도 편집 UI로 수정하고 새 맵의 기본 english 자동 생성·english 부재 Test Battle 종료를 개선한다. 기존 수동 대본·저장/재적재를 보존한다. **986 통합 후보는 미적용이다.** 한국어 통합 뒤 `scenario/PLAN.md`·`CMake-additions.txt`를 따라 모델5파일/코드를 병합·등록하고 실제 사용자 홈 저장/Editor/Test Battle 진입을 확인한다. 0.4절의 준비 검사를 실제 통과로 세지 않는다.
-- 배포 스크립트 자체는 완료다. 배포할 제품이 정해지면 README/BUILD_INFO를 갱신하고 그 제품의 ZIP·압축 해제 실행을 확인한다. 마지막 전체34경로와 묶인 검증 ZIP은644 제품이며 이후 제품의 전체 배포 회귀로 쓰지 않는다. 938에서는 별도1379항목 ZIP의 한국어 실행만 추가 확인했다. 현재992의 ZIP 검증은 없다.
+- 배포 스크립트 자체는 완료다. 배포할 제품이 정해지면 README/BUILD_INFO를 갱신하고 그 제품의 ZIP·압축 해제 실행을 확인한다. 마지막 전체34경로와 묶인 검증 ZIP은644 제품이며 이후 제품의 전체 배포 회귀로 쓰지 않는다. 938에서는 별도1379항목 ZIP의 한국어 실행만 추가 확인했다. 현재993의 ZIP 검증은 없다.
 - 60/120프레임·CD10.72 전체 복원/Windows 10 구동 불가 해결책은 별도 후순위다. Linux는dotnetpj 후순위이며cpppj는Windows 대상이다.
 
 ## 4. 운영 규칙과 유효한 사용자 결정

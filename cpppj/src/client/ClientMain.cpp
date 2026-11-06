@@ -343,6 +343,7 @@ int Client::Run() {
     else screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition); // CD호스트의기존값형입구는별도판본으로유지한다.
     // [원본] 설치 검사(GameInstalledTest)·zacket·프로토콜 검사는 아직 연결하지 않았다.
     *clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
+    if (options_.edition==o::OriginalEdition::Patch1078) clock_->BindSynchronizationTicks(localStateGlobals_->GameTicks()); // 실제0055b4ac를 조회 때마다 빌리며 초기화/재접속에서 별도 시계 사본을 만들지 않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientPlayerRecords(*this); //0043952c의 실제 초기화이며 그 다음00439537 ColorSort 입력보다 앞선다.
     //00439537의초기ColorSort입력위치다.이캡처만으로미연결43b430검색/색띠전체를성공시킨것은아니다.
     colorSortInput_->CaptureWithPrimary(screen_->LogicalPalette());
@@ -1319,6 +1320,7 @@ const o::FrameTime& Client::Time() const { return *time_; }
 // 장기 전송의 현재 시계 조회가 Client의 실제 시계 저장소를 함께 보유하게 한다.
 const std::shared_ptr<o::GameClock>& Client::GameClockOwner() const { return clock_; }
 double Client::WallSeconds() const { return clock_->WallSeconds(timeGetTime()); }
+double Client::GameSeconds() const { return clock_->GameSeconds(timeGetTime()); } // 시간 패킷의 서버 응답은 현재 프레임 시각보다 실제 새 시계를 사용한다.
 // 창이 활성인가.
 bool Client::Active() const { return active_; }
 // 번역표가 없거나 영어면 원문 그대로다.

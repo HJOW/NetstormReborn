@@ -1,0 +1,19 @@
+{
+  "unit": 993,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "서버/Commander 시간 패킷·70표본·직접 연결 송신과 실제 GameTicks 시계 보정 연결",
+  "sourceFunctions1078": ["004c1de0", "004c1e30", "004c1e70", "004c1eb0", "004c1f60", "004c2070", "00460cd0"],
+  "referenceFunctions1072": ["004ec3e0", "004ec420", "004ec490", "00401130"],
+  "staticPeInstructions": 470,
+  "build": {
+    "exitCode": 0, "warnings": 0, "errors": 0,
+    "log": "extracted/cpp-resume-993/build.log",
+    "exeSize": 11647488,
+    "exeSha256": "71540224f4926cd5fda2ff9ee12de7e47fab7d16786aced609216ac09c207261"
+  },
+  "excluded": { "newMultiplayerTests": 0, "unitTestRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-993/protected-before.json" },
+  "remaining": ["일반 State7 호스트 진입/World 교체 부모", "일반 State6/roster/LAN UI", "전체 파생 writer/decoder", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}

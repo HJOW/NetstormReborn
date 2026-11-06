@@ -34,7 +34,7 @@ public:
     std::uint32_t Port() const; // 이 로컬 수명이 사용한 실제 설정 포트다.
     std::size_t QueuedFrames() const; // 아직 폴링되지 않은 두 방향의 단일 프레임 수다.
 private:
-    bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable); // 같은 연결/observer/큐 몸체를 기존 방향 전용·실제 this 작성기가 함께 사용한다.
+    bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct=nullptr); // 일반 번호 선택과 가상 this의 직접 고정 끝 선택이 같은 observer/큐를 사용한다.
     o::PacketDispatchHooks WrappedHooks(); // 기존 분배의 close/release를 같은 연결 소유권 반납과 이어 준다.
     std::uint32_t Track(o::PacketConnection& connection); //같은 실제 노드의 close/free와 현재 Client 표를 연결한다.
     std::uint32_t Token(const o::PacketConnection& connection) const; //현재 양끝의 숫자 식별자를 순수 조회한다.

@@ -148,7 +148,7 @@ LocalTcpTransport::Node& LocalTcpTransport::Adopt(std::uintptr_t socket,std::int
     const CallGuard call(activeCalls_);
     SocketOwner guard{Socket(socket)};auto node=std::make_unique<Node>();node->socket=static_cast<std::uintptr_t>(guard.Release());node->connection.sender=std::bit_cast<std::uint32_t>(id);node->connection.address=address;node->connection.flags=4U|kConnecting|(buffered ? kBuffered:0U);node->connection.received=hooks_.now();node->connection.heartbeat=hooks_.now();node->connecting=connecting;node->connected=!connecting;auto* pointer=node.get();nodes_.push_back(std::move(node));
     try {
-        pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendMutable(std::bit_cast<std::int32_t>(pointer->connection.sender),packet)); });
+        pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(pointer->connection.sender),packet,packet,&pointer->connection)); }); // 실제 가상 this의 송신은 현재 Player/번호 gate를 반복하지 않는다.
         if (id<0) pointer->connection.sender=std::bit_cast<std::uint32_t>(registry_->Accept(pointer->token));else registry_->Register(id,pointer->token);
     } catch (...) { registry_->Forget(pointer->token);nodes_.pop_back();throw; }
     return *pointer;
@@ -254,12 +254,12 @@ bool LocalTcpTransport::Send(std::int32_t destination,std::span<const std::uint8
 // 원문 thiscall observer가 같은 mutable 버퍼의 길이를 확정하게 한다.
 bool LocalTcpTransport::SendMutable(std::int32_t destination,std::span<std::uint8_t> packet) { return SendPacket(destination,packet,packet); }
 //004e2dc0의 Player/연결 gate를 실행한 뒤에만 observer와 실제 송신을 선택한다.
-bool LocalTcpTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable) {
+bool LocalTcpTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct) {
     const CallGuard call(activeCalls_);if (packet.size()>=kHeader && Retired(packet[1])) return false;
-    if (destination>=1 && destination<static_cast<std::int32_t>(kPlayerCount) && !(players_[static_cast<std::size_t>(destination)*kPlayerStride+0x50]&1U)) return false;auto* node=Current(destination);if (!node || (node->connection.flags&kClosed) || node->socket==kInvalidSocket) return false;
+    if (!direct && destination>=1 && destination<static_cast<std::int32_t>(kPlayerCount) && !(players_[static_cast<std::size_t>(destination)*kPlayerStride+0x50]&1U)) return false;auto* node=direct ? Find(*direct) : Current(destination);if (!node || node->retired || (node->connection.flags&kClosed) || node->socket==kInvalidSocket) return false;
     if (packet.size()<kHeader) throw std::out_of_range("LAN TCP 송신 헤더 부족");if (RetiredFrame(packet)) return false;
     const auto observer=dispatcher_.Dispatch().Registration(packet[1]);const auto sessionPin=observer.Pin(); // callback이 caller의 패킷 owner를 반납해도 실제 송신 복귀까지 유지한다.
-    if (!writable.empty()) observer.NotifyObserver(writable,1);if (Current(destination)!=node || node->retired || (node->connection.flags&kClosed)) return false;const auto length=Read(packet,2,2);if (length<kHeader || length>packet.size()) throw std::out_of_range("LAN TCP 송신 선언 길이 범위");if (RetiredFrame(packet)) return false;if (packet[1]==4 && (node->connection.flags&kBuffered)) throw std::logic_error("LAN TCP buffered 안의 직접 집합 송신 미복원");SendNode(*node,packet.first(length));return !node->retired && !(node->connection.flags&kClosed);
+    if (!writable.empty()) observer.NotifyObserver(writable,1);if ((!direct && Current(destination)!=node) || node->retired || (node->connection.flags&kClosed)) return false;const auto length=Read(packet,2,2);if (length<kHeader || length>packet.size()) throw std::out_of_range("LAN TCP 송신 선언 길이 범위");if (RetiredFrame(packet)) return false;if (packet[1]==4 && (node->connection.flags&kBuffered)) throw std::logic_error("LAN TCP buffered 안의 직접 집합 송신 미복원");SendNode(*node,packet.first(length));return !node->retired && !(node->connection.flags&kClosed);
 }
 // buffered payload는 집합 확정까지 보관하며 unbuffered도 부분 send의 나머지를 잃지 않는다.
 void LocalTcpTransport::SendNode(Node& node,std::span<const std::uint8_t> packet) {

@@ -116,7 +116,7 @@ std::uint32_t LocalMissionTransport::Token(const o::PacketConnection& connection
 std::uint32_t LocalMissionTransport::Track(o::PacketConnection& connection) {
     auto* node=&connection;return registry_->Track(connection,[this,node] {
         hooks_.close(*node);if (node==&client_) { serverPeerLost_=true;clientOutput_.clear(); }else { clientPeerLost_=true;serverOutput_.clear(); }toServer_.clear();toClient_.clear();
-    },[this,node] { const bool client=node==&client_;hooks_.release(*node);if (client) clientPresent_=false;else { serverPresent_=false;pending_=false;owner_=0; } },[this,node](auto packet) { static_cast<void>(SendMutable(std::bit_cast<std::int32_t>(node->sender),packet)); }); //같은노드의현재sender와기존observer/송신큐를가상+4장치로등록한다.
+    },[this,node] { const bool client=node==&client_;hooks_.release(*node);if (client) clientPresent_=false;else { serverPresent_=false;pending_=false;owner_=0; } },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); }); // 같은 실제 가상 this를 ID 재선택/Player 재검사 없이 송신한다.
 }
 // 실제 RawPacketDispatch와 집합 분배가 같은 노드/수명 장치를 사용한다.
 o::PacketDispatchHooks LocalMissionTransport::WrappedHooks() {
@@ -176,15 +176,15 @@ bool LocalMissionTransport::SendMutable(std::int32_t destination,std::span<std::
 // 주소 조회와 송수신이 같은 실제 연결 표를 사용한다.
 const std::shared_ptr<o::RawConnectionRegistry>& LocalMissionTransport::Registry() const { return registry_; }
 // 기존 완성 패킷 writer는 이미 길이를 확정했다. 원시 작성기만 같은 등록 observer에 실제 this를 전달한다.
-bool LocalMissionTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable) {
+bool LocalMissionTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct) {
     if (!open_) throw std::logic_error("로컬 전송 연결을 열기 전 송신");
     if (packet.size()>=kHeader && IsRetiredCdValidationPacket(packet[1])) return false; // 폐기된 파일 검증은 observer/송신 큐까지 전달하지 않는다.
-    if (destination==9 && (!clientPresent_ || !(client_.flags&2U) || (client_.flags&0x40U) || clientPeerLost_)) return false; //현재 실제 Client9/반대 끝 수명을 사용한다.
-    if (destination>=1 && destination<static_cast<std::int32_t>(kPlayers) && !(players_[std::size_t(destination)*kPlayerBytes+0x50]&1U)) return false;
-    const bool client=destination==9,server=serverPresent_ && !serverPeerLost_ && !(server_.flags&0x40U) && ((destination==pendingId_ && pending_) || (destination>=1 && static_cast<std::uint32_t>(destination)==owner_));
+    if ((direct ? direct==&client_ : destination==9) && (!clientPresent_ || !(client_.flags&2U) || (client_.flags&0x40U) || clientPeerLost_)) return false; //현재 실제 Client9/반대 끝 수명을 사용한다.
+    if (!direct && destination>=1 && destination<static_cast<std::int32_t>(kPlayers) && !(players_[std::size_t(destination)*kPlayerBytes+0x50]&1U)) return false;
+    const bool client=direct ? direct==&client_ : destination==9,server=serverPresent_ && !serverPeerLost_ && !(server_.flags&0x40U) && (direct ? direct==&server_ : (destination==pendingId_ && pending_) || (destination>=1 && static_cast<std::uint32_t>(destination)==owner_));
     if (!client && !server) return false;if (packet.size()<4) throw std::out_of_range("로컬 송신 헤더 부족");const auto registration=dispatch_.Registration(packet[1]);const auto sessionPin=registration.Pin(); // observer 뒤 caller의 실제 패킷 저장소까지 송신 복귀 동안 유지한다.
     if (!writable.empty()) registration.NotifyObserver(writable,1);
-    if (!Connection(destination) || (client ? !clientPresent_ || (client_.flags&0x40U) || clientPeerLost_ : !serverPresent_ || (server_.flags&0x40U) || serverPeerLost_)) return false; // observer가 반납/재배치한 현재 노드는 이전 선택으로 송신하지 않는다.
+    if ((!direct && !Connection(destination)) || (client ? !clientPresent_ || (client_.flags&0x40U) || clientPeerLost_ : !serverPresent_ || (server_.flags&0x40U) || serverPeerLost_)) return false; // 직접 this는 ID 재배치와 구별하며 실제 노드 반납/peer 상실은 같은 수명으로 확인한다.
     const auto length=Read(packet,2,2);if (length<4 || length>packet.size()) throw std::out_of_range("로컬 전송 패킷 실제 선언 바이트 부족");
     auto& output=client ? clientOutput_ : serverOutput_;const auto bytes=packet.first(length);
     if (!client && !serverBuffered_) toClient_.emplace_back(bytes.begin(),bytes.end());

@@ -20,6 +20,7 @@ public:
     double WallSeconds(std::uint32_t milliseconds) const;
     // 00460cd0(A) ↔ CD 00401130: 정지 중이면 저장값, 아니면 누적 정지 시간을 뺀 값.
     double GameSeconds(std::uint32_t milliseconds) const;
+    void BindSynchronizationTicks(const std::uint32_t& ticks); //0055b4ac의 같은 장기 DWORD를 원문 게임시각의 밀리초 감산에 연결한다. 값 자체는 변경하지 않는다.
     // 00460df0(A) ↔ CD 00401230: 첫 정지에서만 게임 시각을 저장한다.
     void Pause(std::uint32_t milliseconds);
     // 00460e30(A) ↔ CD 00401270: 마지막 정지가 풀릴 때만 정지 시간을 누적한다.
@@ -33,6 +34,7 @@ public:
 private:
     // origin_: 좌표 또는 시각 계산의 기준 원점.
     std::uint32_t origin_{};
+    const std::uint32_t* synchronizationTicks_{}; // 실제 Client 수명보다 짧게 빌리는 보정 주소이며 독립 시계는 기존0 보정을 유지한다.
     // pauseDepth_: 중첩된 시계 정지 요청의 수.
     std::uint32_t pauseDepth_{};
     // pausedGame_: 정지 시점에 저장한 게임 시각(초).

@@ -19,6 +19,8 @@ public:
     std::uint32_t Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,
         std::function<void(std::span<std::uint8_t>)> send={}); //현재실제노드/수명과선택가상+4송신장치를같은토큰에연결한다.기존수명전용호출은송신을요구하지않는다.
     bool SendMutable(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players) const; //004e2dc0의현재슬롯/Playerflag1/NULL관문뒤같은가상송신장치를호출한다.반환은장치호출여부이며전달성공값이아니다.
+    std::uint32_t TokenFor(const PacketConnection& connection) const; // 실제 고정 노드 주소의 현재 token을 찾아 ID 재배치와 구별한다.
+    void SendDirect(std::uint32_t token,std::span<std::uint8_t> packet) const; // 이미 선택된 this의 가상+4를 직접 호출하며 Player/번호 관문을 반복하지 않는다.
     bool Owns(std::uint32_t token) const; //해제 후 노드를 다시 읽지 않는 순수 존재 조회다.
     PacketConnection& Node(std::uint32_t token) const; //같은 현재 생존 노드만 읽는다.
     std::array<std::uint8_t,20> Address(std::int32_t id) const; //004e2a50의 현재 슬롯 주소 또는0.0.0.0:0을 읽는다.

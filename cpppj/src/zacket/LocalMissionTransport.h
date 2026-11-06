@@ -106,7 +106,7 @@ public:
     std::uint32_t Owner() const;
     std::size_t QueuedFrames() const;
 private:
-    bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable); // 기존 완성 writer 계약과 새 mutable observer 경계를 같은 연결 관문/큐에 적용한다.
+    bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct=nullptr); // 번호 writer는 Player gate를 적용하며 가상 this는 같은 고정 끝을 직접 선택한다.
     o::PacketDispatchHooks WrappedHooks(); //실제 분배와 같은 Client 표의 소멸/free를 연결한다.
     std::uint32_t Track(o::PacketConnection& connection); //현재 실제 양끝의 수명과 큐 장치에 한 토큰을 발급한다.
     std::uint32_t Token(const o::PacketConnection& connection) const; //같은 실제 두 주소의 현재 토큰만 읽는다.

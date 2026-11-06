@@ -25,7 +25,7 @@ std::uint32_t EditorLocalTransport::Token(const o::PacketConnection& connection)
 std::uint32_t EditorLocalTransport::Track(o::PacketConnection& connection) {
     auto* node=&connection;return registry_->Track(connection,[this,node] { Need(hooks_.close)(*node);SocketClosed(*node); },[this,node] {
         const bool client=node==&client_;Need(hooks_.release)(*node);if (client) { clientAlive_=false;toClient_.clear(); }else { pendingAlive_=false;toPending_.clear(); }
-    },[this,node](auto packet) { static_cast<void>(SendMutable(std::bit_cast<std::int32_t>(node->sender),packet)); }); //현재동일노드의가상+4는기존mutable observer/실제반대쪽큐를사용한다.
+    },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); }); // 실제 가상 this는 ID 재선택 없이 같은 observer/반대쪽 큐를 사용한다.
 }
 o::PacketDispatchHooks EditorLocalTransport::WrappedHooks() {
     o::PacketDispatchHooks result; //기존 분배기가 요구하는 실제 경계만 감싸며 observer/버전/길이 판단은 복제하지 않는다.
@@ -81,15 +81,15 @@ bool EditorLocalTransport::Send(std::int32_t destination,std::span<const std::ui
 // 원시 작성기의 observer는 복사 전 같은 mutable 패킷을 직접 변경한다.
 bool EditorLocalTransport::SendMutable(std::int32_t destination,std::span<std::uint8_t> packet) { return SendPacket(destination,packet,packet); }
 // 전송 가능 여부를 먼저 판정하며 observer와 peer 소멸/실제 복사의 원문 순서를 유지한다.
-bool EditorLocalTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable) {
-    if (destination< -32 || destination>21) throw std::out_of_range("Editor 현재 transceiver 번호 범위");
-    const bool client=destination==9,pending=destination<0 && pendingAlive_ && destination==std::bit_cast<std::int32_t>(pending_.sender); //현재 실제 pending 번호를 사용하며 항상-1로 가정하지 않는다.
+bool EditorLocalTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct) {
+    if (!direct && (destination< -32 || destination>21)) throw std::out_of_range("Editor 현재 transceiver 번호 범위");
+    const bool client=direct ? direct==&client_ : destination==9,pending=pendingAlive_ && (direct ? direct==&pending_ : destination<0 && destination==std::bit_cast<std::int32_t>(pending_.sender)); // 가상 this와 일반 현재 pending 번호를 구별하고 항상-1로 가정하지 않는다.
     if ((!client && !pending) || !(client ? clientAlive_ : pendingAlive_)) return false;
     auto& connection=client ? client_ : pending_;if (connection.flags&kClosed) return false;
     if (packet.size()<4) throw std::invalid_argument("Editor 송신 실제 헤더4BYTE 부족");
     const auto registration=dispatcher_.Dispatch().Registration(packet[1]);const auto sessionPin=registration.Pin(); // 가상송신+4의 observer와 뒤 caller 버퍼 복사를 실제 Runtime 수명으로 감싼다.
     if (registration.packetObserver && writable.empty()) throw std::logic_error("Editor 송신의 실제 mutable observer this 없음");registration.NotifyObserver(writable,1);
-    if (Connection(destination)!=&connection || (connection.flags&kClosed)) return false; // observer가 같은 현재 칸을 반납/교체했으면 이전 끝으로 복사하지 않는다.
+    if ((!direct && Connection(destination)!=&connection) || !Alive(connection) || (connection.flags&kClosed)) return false; // 직접 this는 ID 재배치와 별개지만 실제 노드 반납 뒤에는 복사하지 않는다.
     if (PeerLost(connection)) { Terminated(connection);return false; } //004e1c00의실패뒤가상송신은004df9f0을통해상위종료를분배한다.
     const auto length=std::size_t(packet[2])|(std::size_t(packet[3])<<8); //observer가 변경한 현재 원문 선언 길이를 읽는다.
     if (length<4 || length>packet.size()) throw std::out_of_range("Editor 송신 선언 길이의 실제 버퍼 부족");

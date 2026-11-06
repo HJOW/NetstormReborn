@@ -66,7 +66,7 @@ private:
     void Accept(); // 원문 pending31칸 상한 아래에서만 실제 accepted 소켓을 등록한다.
     bool CompleteConnection(Node& node); // write/exception readiness와 SO_ERROR로 접속 완료를 확인하고 type1을 한 번 알린다.
     bool ReceiveOne(Node& node,bool* consumed=nullptr); // 한 선언 프레임만 부분 수신하며 무효/sentinel이면 같은 Poll의 추가 분배를 멈춘다.
-    bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable); // 원문 현재 gate/선택 observer/버퍼 효과를 하나로 모은다.
+    bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct=nullptr); // 일반 번호 송신은 gate를 적용하고 이미 선택된 실제 가상 this만 직접 노드/큐를 사용한다.
     void SendNode(Node& node,std::span<const std::uint8_t> packet); // buffered는 미확정 집합에 추가하고 직접 송신은 wire에 넣는다.
     void Finalize(Node& node); // 아직 확정하지 않은 payload를 원문 type4/WORD 헤더로 한 번 감싼다.
     void Compact(Node& node); // 이미 전달한 wire 접두만 지워 원문 partial-send memmove와 같은 미전달 바이트를 남긴다.
