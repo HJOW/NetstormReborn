@@ -28,4 +28,5 @@ struct SavedStateWriteHooks { // 파일 장치와 실제 SP 진단/시간/현재
 };
 //004b54e0: post 또는 미known이면 장치 없이 반환하며 부분 쓰기를 전체 트랜잭션으로 되돌리지 않는다.
 void WriteSavedState(const SavedStateWriteGlobals& globals,const SavedStateWriteHooks& hooks);
+void PollSavedStateWrite(const bool& battle,double& deadline,const std::function<double()>& wallSeconds,const std::function<void()>& save); //004b6730: 현재 전투에서만 새 wall을 읽고 만료하면 저장 뒤 또 읽어10초를 예약한다.
 }

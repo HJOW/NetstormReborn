@@ -10,7 +10,7 @@ RawSavedStateWrite는 missionPost 또는 미PlayerKnown이면 파일 장치를 �
 
 현재 owner를 기록하기 전에00542528을 쓰고 해당 write 뒤0054252c/이전handle005c84c0을 갱신한다. 같은 Client 수명에 실제 초기ffffffff인 두DWORD와 NUL 포함64BYTE 호스트 이전이름 물리를 마련했다. 각 Player base는 해당 반복 시작에 조회해 실제 일곱 쓰기 뒤 같은 flags8을 센다. checking의 점 이름(f79)·서버수<=1(fa3) 진단은 원문처럼 복귀 후 계속한다. 이름 NUL/물리 범위를 넘는 원본 미정 접근은 명시 거부한다.
 
-기존 로그인 완료 타이머의 saveReconnect를 이 실제 writer에 연결했다. 이 시점에는 LoginEnd가 비영이므로 마지막DWORD1인 미완료 표식이 기록된다. **주기004b6730의 후속 writer와 실제 파일 reader/재접속 시작·일반 프레임/스펠·saveBattle/서버 이전은 아직 남는다.**0044fa00의 랭크 소비자도 별도 후속이며 파일 writer의 구현을 전체 재접속 완료로 세지 않는다.
+기존 로그인 완료 타이머의 saveReconnect를 이 실제 writer에 연결했다. **1004 정정:** 서버 Begin은 먼저LoginEnd0을 쓰므로 뒤 writer의 마지막DWORD는0이다. 클라이언트의 현재LoginEnd가 비영인 선택은1이며 타이머가 뒤에0을 쓴다. writer 코드는 현재값을 사용했고 앞 설명만 과도하게 일반화했다. 주기004b6730은1004에서 연결했으며 실제 파일 reader/재접속 시작·일반 프레임/스펠·saveBattle/서버 이전은 아직 남는다.0044fa00의 랭크 소비자도 별도 후속이며 파일 writer의 구현을 전체 재접속 완료로 세지 않는다.
 
 checking 부분 잔여004b54e0의 전체 쓰기/두 진단 몸체와 실제 타이머 caller를 연결했으므로 잔여는7(부모3/부분1/MP3), 완료부모39/부분5=44+잔여7/기준51로 갱신했다. 신규 MP 동작 검증 완료라는 뜻이 아니다. 최초 patch의 CMake 문맥 불일치는 파일 변경 없이 교정했다.
 

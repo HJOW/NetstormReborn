@@ -20,6 +20,10 @@ std::uint32_t Truncate(double value) { // 원본_ftol의 signed64 정수부/하�
     return !std::isfinite(value) || value>=9223372036854775808.0 || value< -9223372036854775808.0 ? 0U : static_cast<std::uint32_t>(static_cast<std::int64_t>(value));
 }
 }
+// 게임 정지와 별개인 실제 wall을 두 번 읽으며 저장 예외가 나면 새 예약을 작성하지 않는다.
+void PollSavedStateWrite(const bool& battle,double& deadline,const std::function<double()>& wallSeconds,const std::function<void()>& save) {
+    if (!battle) return;const auto now=Need(wallSeconds)();if (deadline<=now) { Need(save)();deadline=Need(wallSeconds)()+10.0; } // 보호 PE00501450의 double10.0이며 missed 주기를 여러 번 재생하지 않는다.
+}
 // 파일 생성 이전 관문을 유지하며 실제 열기가 정상 복귀한 뒤에만 해제 책임을 가진다.
 void WriteSavedState(const SavedStateWriteGlobals& globals,const SavedStateWriteHooks& hooks) {
     if (Need(globals.missionPost)() || !Need(globals.playerKnown)()) return;

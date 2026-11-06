@@ -3774,6 +3774,11 @@ bool RawCampaignSession::LocalConnectionReady() const {
 }
 //02000122의 실제 highWORD/lowBYTE를 같은 고정 헤더에 넣고 일반 서버9에 예약한다.
 void RawCampaignSession::RequestForcedAlliance(std::uint32_t packed) { if (!impl_->loaded || !impl_->login) throw std::logic_error("실제 Login 없는 강제 동맹 요청");const std::array<std::uint8_t,6> packet{1,0x78,6,0,static_cast<std::uint8_t>(packed>>16),static_cast<std::uint8_t>(packed)};impl_->login->Send(9,packet); }
+// 실제 주기 caller도 로그인 완료와 같은 저장 몸체/현재 Client 기한을 사용한다.
+void RawCampaignSession::PollReconnectSave() {
+    auto& s=*impl_;if (!s.core.ownerMode.battle) return;if (!s.login) throw std::logic_error("전투 주기 저장의 실제 Login 미설치");
+    PollSavedStateWrite(s.core.ownerMode.battle,s.localStateGlobals->ReconnectSaveEnd(),s.login->effects.wallSeconds,[&s] { s.login->SaveReconnect(); });
+}
 // 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.
 void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 연구 수신 등록");o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
 // 현재 메뉴 부모와 signedWORD 종류를 원문 입력 몸체에 전달한다.

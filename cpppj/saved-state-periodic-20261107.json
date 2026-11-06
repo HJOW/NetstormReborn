@@ -1,0 +1,44 @@
+{
+  "unit": 1004,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "실제 주기 저장 caller004b6730/Client 프레임439b39 연결과 현재 LoginEnd 표식 설명 정정",
+  "sourceFunctions1078": [
+    "004b6730",
+    "004b54e0",
+    "004b61f0"
+  ],
+  "referenceFunctions1072": [],
+  "frameCall": "00439b39",
+  "periodSeconds": 10.0,
+  "build": {
+    "firstExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1004\\build.log",
+    "exeSize": 11822080,
+    "exeSha256": "8c48c6ddc9900f68186b34a879a7afbeafa509ac705143d129096d76252a9662"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1004\\protected-before.json"
+  },
+  "remaining": [
+    "실제 파일 reader/재접속 시작·일반 프레임486bc0/스펠 소비·saveBattle/서버 이전",
+    "전체 파생 writer/decoder·메타·Outpost/checking7",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}
