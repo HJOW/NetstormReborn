@@ -30,6 +30,7 @@
 #include "client/ClientOptionsDisk.h"
 #include "client/StartupFiles.h"
 #include "platform/Utf8Path.h"
+#include "platform/ScopedNewHandler.h" // 실제 Run 범위에서만 원문 new_handler를 등록하고 정상/예외 복귀에 이전 값을 복원한다.
 #include "client/CdDirectory.h"
 #include "client/ClientBridgeDecay.h"
 #include "client/GifScreenshot.h"
@@ -120,6 +121,13 @@ constexpr const char* kFullScreenStateFile = "fullscreenStateFile.dat";
 
 // 창 프로시저가 찾는 단 하나의 클라이언트(원본은 전역 변수를 쓴다).
 Client* g_client = nullptr;
+
+// 원문435f50은 회복 불가능한 메모리 실패를 안내한 뒤 종료0으로 끝낸다.
+void ClientAllocationFailureHandler() {
+    std::set_new_handler(nullptr); // 실패 정리의 추가 할당에서 같은 오류창/정리를 재귀 실행하지 않는 현대 호스트 경계다.
+    try { if (g_client) g_client->HandleAllocationFailure(); }catch (...) {} // 정리 중 추가 실패도 원문의 치명적 종료 목적을 유지한다.
+    std::_Exit(0);
+}
 
 // 정적 창 프로시저: 클라이언트가 있으면 넘기고, 없으면 기본 처리한다.
 LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -226,6 +234,7 @@ Client::Client(ClientOptions options)
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
 Client::~Client() {
+    nativeStartupComplete_=0; // 호스트 최종 소멸의 부분 반납 뒤 합성 WM_DESTROY가 종료된 메뉴를 다시 정리하지 않게 한다.
     configuration_.onChanged = {}; // 부분 반납 중인 Client를 콜백으로 다시 읽지 않게 먼저 해제한다.
     menu_.reset();
     titleBitmaps_.reset(); //실패로남은host픽셀도Screen/창반납전에회수하며원문정상free8/깊이감소를합성하지않는다.
@@ -246,6 +255,7 @@ Client::~Client() {
 
 // 원본 WinMain. 옮기지 않은 단계는 원본 순서의 자리에 주석으로 남긴다.
 int Client::Run() {
+    const platform::ScopedNewHandler allocationHandler(options_.edition==o::OriginalEdition::Patch1078 ? ClientAllocationFailureHandler:std::get_new_handler()); // 등록 이전 Client 생성자와 CLI/malloc 전체의 실패를 포괄한다고 주장하지 않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) staticStrings_->Initialize(10240); // 보호PE00438fe0의 실제0x2800→004b92b0이며 첫 경로/설정 해석보다 앞선다.
     // [원본] CreateMutexA("TitanicNetStormMutex"): 먼저 뜬 실행인지 기록한다(네트워크용). 원본 게임과 같이 띄울 때
     //        서로 영향을 주지 않도록 아직 만들지 않는다.
@@ -414,6 +424,7 @@ int Client::Run() {
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientChatManager(*this); //00439840의 실제 map mode 시작이며 메뉴/Session 생성보다 먼저 같은 현재 manager/명령표를 구성한다.
     fortBadges_->ResetCounts(); // 원본0043984a는 Chat 시작 다음의 같은 장부 count reset이며 매 Session 생성 때 반복하지 않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) RequestInitialTitleBitmap(localStateGlobals_->State().next); //439859의원문startup42/next+8c0.호스트/CD메뉴캐시로대체하지않는다.
+    nativeStartupComplete_=1; // 원문00439919의 초기화 완료는 첫10칸 카메라 위치 복사보다 먼저 기록한다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeSavedCameraPositions(gameplayGlobals_->Camera().SavedPositions()); //00439928의 최초10칸 쓰기이며 일반 미션/Renderer 재시작에서는 반복하지 않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeConstructionHistory(gameplayGlobals_->Camera().ConstructionHistory()); //원문0043994c의 최초5칸 쓰기다. 새 미션/Session/Renderer마다 반복하지 않는다.
     // 현재 UberGump는 단일 플레이 메뉴/브리핑과 저장 미션의 지형·선택·이동 월드를 연결한다.
@@ -1110,7 +1121,7 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
         KeyEvent(window, message, wParam, lParam);
         break;
     case WM_DESTROY:
-        // [원본] FUN_004b3490: 진행 중인 게임을 정리한다 — 옮기지 않았다.
+        if (options_.edition==o::OriginalEdition::Patch1078) static_cast<void>(CleanupNativeGameForExit()); // 원문의 현재 관문 뒤 기존 전체 State 정리를 공유한다.
         PostQuitMessage(0);
         break;
     case WM_SIZE:

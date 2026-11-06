@@ -3748,3 +3748,7 @@ set_source_files_properties(SidTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTOR
 # raw 외부 Kernel의 현재 회수 대여와 자기 소유 프로세스 반납만 창 없이 대조한다(978).
 target_sources(netstorm_tests PRIVATE LegacyWorldLifetimeTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE LegacyWorldLifetimeTests.cpp)
+
+# 실제 OS 메모리 고갈/오류창을 만들지 않고 원문 종료 순서와 handler 등록 복원을 대조한다(979).
+target_sources(netstorm_tests PRIVATE AllocationFailureTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE AllocationFailureTests.cpp)

@@ -10,6 +10,8 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+# 메모리 실패의 원문 부모와 실제 Run 등록 수명·Client 종료 연결을 함께 빌드한다(979).
+target_sources(netstorm PRIVATE o/RawAllocationFailure.cpp o/RawAllocationFailure.h client/ClientAllocationFailure.cpp platform/ScopedNewHandler.h)
 target_sources(netstorm PRIVATE client/ScreenModeTransition.cpp client/ScreenModeTransition.h) #원문 화면 변경 부모의 실패 복구/설정/공유 갱신 순서다(746).
 target_sources(netstorm PRIVATE client/SavedCameraKey.cpp client/SavedCameraKey.h) #숫자/Shift 기호와 현재 Renderer 중심의 저장 카메라다(719).
 target_sources(netstorm PRIVATE client/LostPositionKey.cpp client/LostPositionKey.h) #U/u는 공통 삭제가 기록한 현재 손실 위치로 즉시 이동한다(751).

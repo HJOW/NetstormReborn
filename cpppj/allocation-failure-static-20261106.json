@@ -1,0 +1,208 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-11-03",
+  "mode": "read-only static PE instructions; no game, OOM, or operating-system callback executed",
+  "items": [
+    {
+      "path": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "start": "0x435f50",
+      "size": 60,
+      "bytes": "6a10689c5b5000688c5b50006a00ff1520035000e827d50700a1ccdb540085c0740950e8c871030083c404e8e0f0ffffe8eb4d07006a00e834e00a00",
+      "strings": {
+        "0x505b8c": "Out of memory!",
+        "0x505b9c": "Unrecoverable Error!"
+      },
+      "instructions": [
+        {
+          "address": "0x435f50",
+          "mnemonic": "push",
+          "operands": "0x10"
+        },
+        {
+          "address": "0x435f52",
+          "mnemonic": "push",
+          "operands": "0x505b9c"
+        },
+        {
+          "address": "0x435f57",
+          "mnemonic": "push",
+          "operands": "0x505b8c"
+        },
+        {
+          "address": "0x435f5c",
+          "mnemonic": "push",
+          "operands": "0"
+        },
+        {
+          "address": "0x435f5e",
+          "mnemonic": "call",
+          "operands": "dword ptr [0x500320]"
+        },
+        {
+          "address": "0x435f64",
+          "mnemonic": "call",
+          "operands": "0x4b3490"
+        },
+        {
+          "address": "0x435f69",
+          "mnemonic": "mov",
+          "operands": "eax, dword ptr [0x54dbcc]"
+        },
+        {
+          "address": "0x435f6e",
+          "mnemonic": "test",
+          "operands": "eax, eax"
+        },
+        {
+          "address": "0x435f70",
+          "mnemonic": "je",
+          "operands": "0x435f7b"
+        },
+        {
+          "address": "0x435f72",
+          "mnemonic": "push",
+          "operands": "eax"
+        },
+        {
+          "address": "0x435f73",
+          "mnemonic": "call",
+          "operands": "0x46d140"
+        },
+        {
+          "address": "0x435f78",
+          "mnemonic": "add",
+          "operands": "esp, 4"
+        },
+        {
+          "address": "0x435f7b",
+          "mnemonic": "call",
+          "operands": "0x435060"
+        },
+        {
+          "address": "0x435f80",
+          "mnemonic": "call",
+          "operands": "0x4aad70"
+        },
+        {
+          "address": "0x435f85",
+          "mnemonic": "push",
+          "operands": "0"
+        },
+        {
+          "address": "0x435f87",
+          "mnemonic": "call",
+          "operands": "0x4e3fc0"
+        }
+      ]
+    },
+    {
+      "path": "originalCD/NETSTORM.EXE",
+      "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "start": "0x485ab0",
+      "size": 66,
+      "bytes": "6a1068c4f3520068dcf352006a00ff1558d85b00e887a1faffa19ce9520085c0740950e8f837030083c404e8a083fdffe82b3efbff6a00e864d6060083c40433c0c3",
+      "strings": {
+        "0x52f3dc": "Out of memory!",
+        "0x52f3c4": "Unrecoverable Error!"
+      },
+      "instructions": [
+        {
+          "address": "0x485ab0",
+          "mnemonic": "push",
+          "operands": "0x10"
+        },
+        {
+          "address": "0x485ab2",
+          "mnemonic": "push",
+          "operands": "0x52f3c4"
+        },
+        {
+          "address": "0x485ab7",
+          "mnemonic": "push",
+          "operands": "0x52f3dc"
+        },
+        {
+          "address": "0x485abc",
+          "mnemonic": "push",
+          "operands": "0"
+        },
+        {
+          "address": "0x485abe",
+          "mnemonic": "call",
+          "operands": "dword ptr [0x5bd858]"
+        },
+        {
+          "address": "0x485ac4",
+          "mnemonic": "call",
+          "operands": "0x42fc50"
+        },
+        {
+          "address": "0x485ac9",
+          "mnemonic": "mov",
+          "operands": "eax, dword ptr [0x52e99c]"
+        },
+        {
+          "address": "0x485ace",
+          "mnemonic": "test",
+          "operands": "eax, eax"
+        },
+        {
+          "address": "0x485ad0",
+          "mnemonic": "je",
+          "operands": "0x485adb"
+        },
+        {
+          "address": "0x485ad2",
+          "mnemonic": "push",
+          "operands": "eax"
+        },
+        {
+          "address": "0x485ad3",
+          "mnemonic": "call",
+          "operands": "0x4b92d0"
+        },
+        {
+          "address": "0x485ad8",
+          "mnemonic": "add",
+          "operands": "esp, 4"
+        },
+        {
+          "address": "0x485adb",
+          "mnemonic": "call",
+          "operands": "0x45de80"
+        },
+        {
+          "address": "0x485ae0",
+          "mnemonic": "call",
+          "operands": "0x439910"
+        },
+        {
+          "address": "0x485ae5",
+          "mnemonic": "push",
+          "operands": "0"
+        },
+        {
+          "address": "0x485ae7",
+          "mnemonic": "call",
+          "operands": "0x4f3150"
+        },
+        {
+          "address": "0x485aec",
+          "mnemonic": "add",
+          "operands": "esp, 4"
+        },
+        {
+          "address": "0x485aef",
+          "mnemonic": "xor",
+          "operands": "eax, eax"
+        },
+        {
+          "address": "0x485af1",
+          "mnemonic": "ret",
+          "operands": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,296 @@
+{
+  "unit": 979,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 979,
+  "version": "11.01",
+  "scope": "PATCH new_handler435f50 등록·종료4b3490/기존4b2df0·현재event/음악Stop·WM_DESTROY",
+  "exeSha256": "148a9950b58cae2a903b7ecf3b0cdcb701b0c8e1ebce34168775d170bd71e5c1",
+  "exeBytes": 11393536,
+  "static": "cpppj/allocation-failure-static-20261106.json",
+  "build": {
+    "releaseCommands": 1,
+    "exitCodes": [
+      0
+    ],
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "uniqueCases": 20,
+    "newCases": 5,
+    "localGateCombinations": 36,
+    "filters": [
+      {
+        "filter": "AllocationFailure_",
+        "cases": 5,
+        "failedChecks": 0
+      },
+      {
+        "filter": "LegacyWorldLifetime_",
+        "cases": 4,
+        "failedChecks": 0
+      },
+      {
+        "filter": "ProcessHostStorage_",
+        "cases": 11,
+        "failedChecks": 0
+      }
+    ],
+    "firstRunFailures": 0
+  },
+  "live": {
+    "passed": true,
+    "unit": 979,
+    "exitCode": 0,
+    "exeSha256": "148a9950b58cae2a903b7ecf3b0cdcb701b0c8e1ebce34168775d170bd71e5c1",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-979\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-979\\live-close\\user-data",
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "actions": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "script-command",
+        "arg": "MissionBegin,tutorial1"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      }
+    ],
+    "observations": [
+      {
+        "label": "main-0",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "Welcome"
+          ]
+        ],
+        "mission": null,
+        "paused": [
+          [
+            "0"
+          ]
+        ],
+        "time": [
+          [
+            "9.798",
+            "9.798"
+          ]
+        ]
+      },
+      {
+        "label": "main-1",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "Welcome2"
+          ]
+        ],
+        "mission": null,
+        "paused": [
+          [
+            "0"
+          ]
+        ],
+        "time": [
+          [
+            "9.92",
+            "9.92"
+          ]
+        ]
+      },
+      {
+        "label": "main-2",
+        "phase": [
+          [
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "main"
+          ]
+        ],
+        "mission": null,
+        "paused": [
+          [
+            "0"
+          ]
+        ],
+        "time": [
+          [
+            "10.064",
+            "10.064"
+          ]
+        ]
+      },
+      {
+        "label": "entry-0",
+        "phase": [
+          [
+            "3"
+          ]
+        ],
+        "page": [
+          [
+            "A."
+          ]
+        ],
+        "mission": [
+          [
+            "tutorial1",
+            "Tutorial",
+            "826"
+          ]
+        ],
+        "paused": [
+          [
+            "1"
+          ]
+        ],
+        "time": [
+          [
+            "10.205",
+            "10.345"
+          ]
+        ]
+      },
+      {
+        "label": "entry-1",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "A1."
+          ]
+        ],
+        "mission": [
+          [
+            "tutorial1",
+            "Tutorial",
+            "826"
+          ]
+        ],
+        "paused": [
+          [
+            "1"
+          ]
+        ],
+        "time": [
+          [
+            "10.205",
+            "10.423"
+          ]
+        ]
+      },
+      {
+        "label": "entry-2",
+        "phase": [
+          [
+            "4"
+          ]
+        ],
+        "page": [
+          [
+            "mission"
+          ]
+        ],
+        "mission": [
+          [
+            "tutorial1",
+            "Tutorial",
+            "826"
+          ]
+        ],
+        "paused": [
+          [
+            "0"
+          ]
+        ],
+        "time": [
+          [
+            "10.446",
+            "10.711"
+          ]
+        ]
+      },
+      {
+        "label": "before-close",
+        "phase": [
+          [
+            "4"
+          ]
+        ],
+        "page": [
+          [
+            "mission"
+          ]
+        ],
+        "mission": [
+          [
+            "tutorial1",
+            "Tutorial",
+            "826"
+          ]
+        ],
+        "paused": [
+          [
+            "0"
+          ]
+        ],
+        "time": [
+          [
+            "12.127",
+            "12.392"
+          ]
+        ]
+      }
+    ],
+    "scope": "일반 tutorial1 진입/비정지 대기/활성 미션 WM_CLOSE 종료. 실제 OOM·포획·희생·공격·승리·MP·공중3종·물리 입력 검증 아님."
+  },
+  "protected": {
+    "before": 2800,
+    "unchanged": 2800,
+    "after": 2800,
+    "fixtures": 980,
+    "new": []
+  },
+  "solutionProjects": 83,
+  "checkingRemaining": 8,
+  "lastGuiUnit": 979,
+  "limits": [
+    "실제OOM/오류창/치명적종료/HTTP이벤트 실행하지않음",
+    "Run 이전생성자/CLI/모든malloc 실패등록으로확대하지않음",
+    "메타맵양성/MP/포획·희생·특정적공격·승리/공중3종/물리입력/전체CTest·34·ZIP 제외"
+  ],
+  "next": "980 내부수명/FILE 유한범위마감·7번환경한계분류뒤8번구현계속"
+}

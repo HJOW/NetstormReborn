@@ -254,6 +254,8 @@ public:
     SoundView CurrentSoundView() const; // 497220의 현재 snapshot 픽셀과4c6b30의 같은 Gump 지도LTRB를 조회한다. World/음향 사본을 읽지 않는다.
     // 원본 init sound 위치에서 실제 음향을 한 번 만든다. noAudio 검사는 창·장치 없이 같은 비활성 owner를 준비한다.
     void InitializeNativeAudio();
+    bool CleanupNativeGameForExit(); //004b3490의 현재 초기화/모드/재진입 guard와 기존 전체 State 정리를 연결한다.
+    [[noreturn]] void HandleAllocationFailure(); //435f50의 실제 고정 오류창/현재 정리/음악 Stop/종료0을 실행한다.
     // 원본 Interpret Options(00435220)의 소리 부분: 설정을 다시 읽어 장치·음량·현재 곡을 맞춘다. 옵션 메뉴에서 소리 설정을 바꾼 뒤 부른다.
     void ApplyAudioOptions();
     // 화면/월드 해제 전에 실제 번개 Form을 공통 삭제 경로로 반납한다. 부모 종속 삭제도 같은 수명을 사용한다.
@@ -361,6 +363,7 @@ private:
     NativeHandle loadingFont_{};       // DAT_0054de74
     // screen_: 원본 Screen.cpp의 전역 변수 묶음을 객체 하나로 둔다. 창과 창의 장치 문맥은 ClientMain이 만든다 (std::unique_ptr<Screen>).
     std::uint32_t paletteLoaded_{}; //00555e08실제DWORD를Screen보다오래소유하여해상도재생성으로0복제하지않는다.
+    std::uint32_t nativeStartupComplete_{},nativeExitGuard_{}; //0054dbb8/005c890c이며 최초 시작 성공과 종료 부모의 중복 방지 상태다.
     std::uint32_t screenModeInitialized_{}; //0054dbb4의 최초 BSS0이며 모드 장치의 첫 성공 뒤1을 유지한다. HWND 유무와 다르다.
     std::unique_ptr<Screen> screen_;
     // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.

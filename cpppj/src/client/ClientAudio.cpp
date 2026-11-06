@@ -121,6 +121,9 @@ void ClientAudio::Shutdown() {
 // 현재 장치 수명과 별개인 원본 소리 옵션을 영상 종료의 재초기화 관문에 제공한다.
 bool ClientAudio::SoundEnabled() const { return state_.enabled; }
 
+// 같은 실제 음악 준비/채널/잠금 부모로 기본 채널만 정지한다.
+void ClientAudio::StopMusic() { music_.Stop(); }
+
 // 원본 메인 루프 3단계. 초기화·옵션과 무관하게 실제 버퍼 상태로 센다.
 void ClientAudio::CountPlaying() {
     player_.Recount();

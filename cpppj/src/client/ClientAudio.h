@@ -87,6 +87,7 @@ public:
     void Interpret(std::uintptr_t window,const ClientAudioOptions& options);
     // 음악 스레드를 합류하고 장치를 닫는다. 반복해서 불러도 된다. 이름 표와 현재 곡 이름은 보존한다.
     void Shutdown();
+    void StopMusic(); //004aad70의 준비된 기본 음악 채널 정지만 호출한다. 장치/작업 스레드 전체 Shutdown과 구별한다.
     // 메인 루프 3단계(원본 004a8e60): 재생 중인 효과음 수를 다시 센다.
     void CountPlaying();
     // 메인 루프 10단계(원본 00469f60): 곡이 끝났는지 확인하고 다음 곡을 요청한다. 게임 시계 정지와 무관하게 호출한다.
