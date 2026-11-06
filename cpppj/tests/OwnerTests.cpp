@@ -88,7 +88,7 @@ struct Scene {
     }
 };
 // 판본 이름으로 고른 행을 모두 재생한다.
-void ReplayEdition(const std::string& name, std::size_t minimum,bool bound=false) {
+void ReplayEdition(const std::string& name, std::size_t minimum,bool bound=false,bool nonchallengeOnly=false) {
     Scene scene(name == "originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);
     netstorm::client::ClientPlayerRecords records([](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x79}); }); // 선택한 새 경로만 실제 할당 소유자를 쓴다.
     std::unique_ptr<netstorm::client::ClientPlayerRecords::Use> use; // Scene 목록 소비가 끝날 때까지 고정 Player뷰를 대여한다.
@@ -110,6 +110,7 @@ void ReplayEdition(const std::string& name, std::size_t minimum,bool bound=false
     for (const auto& row : Fixture()) {
         if (row[0] != "Owner" || row[1] != name) continue;
         CHECK(row.size() == 14);
+        if (nonchallengeOnly && row[4]!="0") continue; // 새 집중 재생에서는 기존 MP/challenge 입력을 실행하지 않는다.
         scene.mode.fort = Number(row[2]) != 0;
         scene.mode.battle = Number(row[3]) != 0;
         scene.mode.challenge = Number(row[4]) != 0;
@@ -163,7 +164,7 @@ void ReplayEdition(const std::string& name, std::size_t minimum,bool bound=false
         }
         ++rows;
     }
-    CHECK(rows >= minimum);
+    if (nonchallengeOnly) CHECK(rows==minimum);else CHECK(rows>=minimum); // 새 부분집합은 최초 고정744행 전체가 필요하다.
 }
 }
 
@@ -175,7 +176,7 @@ TEST_CASE(owner_patch_x86_bound_player_records_fixture) { ReplayEdition("origina
 TEST_CASE(owner_cd_x86_fixture) { ReplayEdition("originalCD", 1000); }
 // 추가 10.37 실행 파일은 CD와 같은 코드 배치지만 별도 PE의 출력을 재생한다.
 TEST_CASE(owner_1037_x86_fixture) { ReplayEdition("original1037", 1000); }
-// 원본이 assert를 보고하는 범위 밖 소유자와 목록이 없는 번호는 쓰기 전에 거부한다.
+// 실제 진단 장치 부재의 중단과 유효 번호가 선택한 목록 물리 부재의 늦은 중단을 구별한다.
 TEST_CASE(owner_rejects_out_of_range_players_before_writing) {
     Scene scene(OriginalEdition::Patch1078);
     auto raw = scene.pool.AllocatedBytes(kTarget);
@@ -191,7 +192,12 @@ TEST_CASE(owner_rejects_out_of_range_players_before_writing) {
     CHECK(Throws([&] { owner.Set(kTarget, 0); }));
     CHECK(Throws([&] { owner.Set(kTarget, 20); }));
     CHECK(Throws([&] { owner.Set(kTarget, 40); }));
-    // 거부된 호출은 소유자 바이트와 목록을 바꾸지 않는다.
-    CHECK(scene.pool.Slot(kTarget)[scene.OwnerOffset()] == 3);
-    CHECK(scene.bookkeeping.ownerFactories[3].count == 1);
+    // challenge의 유효20은 제거/BYTE 뒤 목록 물리에서 중단되고, 무효40의 미연결 진단은 그 상태를 보존한다.
+    CHECK(scene.pool.Slot(kTarget)[scene.OwnerOffset()] == 20);
+    CHECK(scene.bookkeeping.ownerFactories[3].count == 0);
 }
+
+// 원문 첫 관측의 비challenge744행을 실제 Player factory 물리로만 다시 읽는다.
+TEST_CASE(owner_current_patch_nonchallenge_bound_fixture) { ReplayEdition("originals",744,true,true); }
+// CD의 별도 목록/슬롯 배치를 같은 비challenge744행으로 확인한다.
+TEST_CASE(owner_current_cd_nonchallenge_fixture) { ReplayEdition("originalCD",744,false,true); }

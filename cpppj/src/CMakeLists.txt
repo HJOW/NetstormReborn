@@ -428,3 +428,6 @@ target_sources(netstorm PRIVATE o/RawProcessAttach.cpp o/RawProcessAttach.h)
 
 # BaseProcess 상위 부착의 현재 필드/등록/부분 실패 부모다(960).
 target_sources(netstorm PRIVATE o/RawBaseProcessAttach.cpp o/RawBaseProcessAttach.h)
+
+# 공통 Owner의 현재 값/진단과 늦은 목록 선택을 복원한다(961).
+target_sources(netstorm PRIVATE o/RawCommonOwner.cpp o/RawCommonOwner.h)

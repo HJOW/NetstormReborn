@@ -175,6 +175,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         factory->BindFakeSurfaceType(storage->GameAux()->FakeSurfaceType()); // 생성 입구 진단도 같은Client 수명의 현재TYPE를 읽는다.
         frame=std::make_unique<o::SquidFrame>(pool,types,o::MakeSquidFrameHooks(pool,types,*display,*unpop,*pop));
         owner=std::make_unique<o::SquidOwner>(pool,types,bookkeeping,ownerMode);
+        owner->BindDiagnostics({types,[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }}); // 실제 같은 World TYPE와 장기 Client 진단을 대여한다.
         neighbors=std::make_unique<o::RawSquidNeighbors>(pool,hash,spots,types,frames);
         if (edition==o::OriginalEdition::Patch1078) neighbors->BindCurrentTypes(types); //실제이웃과Graph가같은현재발자국/플래그를쓴다.
         o::BridgeConnectHooks objects;

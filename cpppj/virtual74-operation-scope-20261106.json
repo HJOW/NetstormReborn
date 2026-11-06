@@ -1,0 +1,1936 @@
+{
+  "unit": 961,
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "kind": "static PE/direct-control-flow ret inventory; not runtime or full derived verification",
+  "rows": [
+    {
+      "edition": "originals",
+      "vtable": "00501dd0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00501ea0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502370",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502448",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502510",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005025d8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005026a0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502778",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502840",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502908",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005029d0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502aa8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502b70",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502c38",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502cf0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502db0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502e68",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502f30",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00502ff8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005030c0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00503188",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00503360",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005034c8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00503d80",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00503e50",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00503f20",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00503ff0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005040c0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00504198",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00506d98",
+      "entry74": "00442310",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 23,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00506e50",
+      "entry74": "00442310",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 23,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00506f08",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005070c0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005075d8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005076b8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00507770",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00507950",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00508cc8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00509148",
+      "entry74": "00454cb0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 92,
+      "listedEntryInRefinedMetadata": false,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00509210",
+      "entry74": "00454cb0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 92,
+      "listedEntryInRefinedMetadata": false,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005092d0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00509388",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00509470",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005096a0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00509758",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00509810",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00509930",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005099e8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00509aa0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00509b98",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050a050",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050a1e8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050a388",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050a748",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050a820",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050a8e8",
+      "entry74": "00462580",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 2,
+      "listedEntryInRefinedMetadata": false,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050b570",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050b6e8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050b7c0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050b888",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050b9b8",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050bad0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050c3b0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050c9f0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050cc08",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050da88",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050db78",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050dc30",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050e568",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050e668",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050e738",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050e888",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050e940",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050ea08",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050ead0",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050eb98",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050ee08",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050f210",
+      "entry74": "00491790",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 119,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "0050f540",
+      "entry74": "004adf00",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 88,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005196f0",
+      "entry74": "004dc4e0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 157,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "005197a8",
+      "entry74": "004dc4e0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 157,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00519860",
+      "entry74": "004dc4e0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 157,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00519918",
+      "entry74": "004dc4e0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 157,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originals",
+      "vtable": "00512110",
+      "entry74": "004af160",
+      "returnStackBytes": [
+        8
+      ],
+      "staticInstructionsVisited": 102,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "form-attach",
+      "arguments": 2
+    },
+    {
+      "edition": "originals",
+      "vtable": "00512098",
+      "entry74": "004b1440",
+      "returnStackBytes": [
+        8
+      ],
+      "staticInstructionsVisited": 72,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "form-attach",
+      "arguments": 2
+    },
+    {
+      "edition": "originals",
+      "vtable": "00512188",
+      "entry74": "004af160",
+      "returnStackBytes": [
+        8
+      ],
+      "staticInstructionsVisited": 102,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "form-attach",
+      "arguments": 2
+    },
+    {
+      "edition": "originals",
+      "vtable": "00512208",
+      "entry74": "004af160",
+      "returnStackBytes": [
+        8
+      ],
+      "staticInstructionsVisited": 102,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "form-attach",
+      "arguments": 2
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00500030",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005002a8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005003e0",
+      "entry74": "0040bda0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 120,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005006a8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00500760",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00500818",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005009a0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00500a58",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00500b10",
+      "entry74": "00416f20",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 2,
+      "listedEntryInRefinedMetadata": false,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00501120",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005011e8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005012b0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00501378",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00501440",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005014f8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005019f8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00501ab0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00501b90",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00501d28",
+      "entry74": "0044f2a0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 132,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00501de0",
+      "entry74": "0044f2a0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 132,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00501e98",
+      "entry74": "0044f2a0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 132,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005022f8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005026b8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00502780",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00502848",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00502910",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005029d8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00502aa0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00502c98",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00502d50",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00503008",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005030c0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005031b0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00503298",
+      "entry74": "0047b580",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 8,
+      "listedEntryInRefinedMetadata": false,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00503358",
+      "entry74": "0047b580",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 8,
+      "listedEntryInRefinedMetadata": false,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00503a78",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00503b30",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00503be8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00503ee8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00504090",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00504148",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00504200",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005042b8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005044f8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005046f8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005047c8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00504c00",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00504cd8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00504db0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00504e68",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00504f20",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00504fd8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005050f0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005058d8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005060b0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00506168",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00506230",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005062f8",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00506960",
+      "entry74": "004d01a0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 17,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00506a18",
+      "entry74": "004d0350",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 17,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00506ad0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00506bb0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00506ea0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00506f70",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00507040",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00507110",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005071e0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "005072f0",
+      "entry74": "004aefa0",
+      "returnStackBytes": [
+        4
+      ],
+      "staticInstructionsVisited": 82,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "asset-owner",
+      "arguments": 1
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00505a08",
+      "entry74": "004b04e0",
+      "returnStackBytes": [
+        8
+      ],
+      "staticInstructionsVisited": 6,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "form-attach",
+      "arguments": 2
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00505990",
+      "entry74": "004af380",
+      "returnStackBytes": [
+        8
+      ],
+      "staticInstructionsVisited": 64,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "form-attach",
+      "arguments": 2
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00505a80",
+      "entry74": "004b04e0",
+      "returnStackBytes": [
+        8
+      ],
+      "staticInstructionsVisited": 6,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "form-attach",
+      "arguments": 2
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00505b00",
+      "entry74": "004b04e0",
+      "returnStackBytes": [
+        8
+      ],
+      "staticInstructionsVisited": 6,
+      "listedEntryInRefinedMetadata": true,
+      "operation": "form-attach",
+      "arguments": 2
+    }
+  ],
+  "counts": {
+    "asset-owner": 151,
+    "form-attach": 8
+  },
+  "missingEntryMetadata": [
+    "originalCD:00416f20",
+    "originalCD:0047b580",
+    "originals:00454cb0",
+    "originals:00462580"
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "cpppj/src/o/ContentNoticeVtables.inc": "41a4508c4ed3ca25250beeb7f3f94aac0feb77de933eac1a38dd64bd8ef4fcdc",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def"
+  }
+}

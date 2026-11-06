@@ -1,0 +1,19 @@
+{
+  "unit": 961,
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "rows": 72,
+  "scope": "공통Owner004adf00/CD004aefa0 본문/ret4와현재TYPE·모드/진단복귀·부분중단. genus/목록은명시장치. battle0/challenge0, 게임/MP미실행.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originalCD/Netstorm.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_owner_current.py": "482c1f655a8f7bd008597d6d82cdd73119100c7b60da4588e3bab7a82dc80cb4",
+    "cpppj/tests/fixtures/owner-current-local-x86.tsv": "69081dd6ae28495d6e7144ae32d696d8723c57280e31c93edced5b94c8b30600"
+  }
+}

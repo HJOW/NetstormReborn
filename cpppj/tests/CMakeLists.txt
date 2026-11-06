@@ -3681,6 +3681,13 @@ target_sources(netstorm_pop_context_tests PRIVATE ProcessAttachCurrentTests.cpp)
 # 신규 로컬 BaseProcess 부모의 진단/생성 부분 상태만 대조하며 새 수신/MP 검사는 실행하지 않는다(960).
 target_sources(netstorm_tests PRIVATE BaseProcessAttachCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE BaseProcessAttachCurrentTests.cpp)
+
+# 공통 Owner의 현재 값/진단과 기존 비challenge 입력만 선택 실행한다(961).
+target_sources(netstorm_tests PRIVATE OwnerCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE OwnerCurrentTests.cpp OwnerTests.cpp)
+target_compile_definitions(netstorm_pop_context_tests PRIVATE NETSTORM_OWNER_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/owner-x86.tsv")
+set_source_files_properties(OwnerCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    NETSTORM_OWNER_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/owner-current-local-x86.tsv")
 set_source_files_properties(BaseProcessAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     NETSTORM_BASEPROCESS_ATTACH_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/baseprocess-attach-current-local-x86.tsv")
 set_source_files_properties(ProcessAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS

@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **960 / 표시 버전11.01**이다. LEFT_JOBS 3절4번에서 상위 BaseProcess0041bd20/CD0048f590의 현재 필드·등록·생성 부분 실패/늦은 진단과 갱신0041c010/CD0048f8d0를 복원했다. 내장4VT의 실제 +74를 선택한다. 새 로컬 Native48행/고유21검사(새5/기존16)·최종 Release 경고/오류0이며 실제 Bridge the Gap 새2/Replay2·Continue/Abort 메인 복귀/종료0·사본1395파일 불변을 확인했다. 지정 수신/MP는 코드만 반영했고 전체 SEH/외부 heap·파생 VT/Factory는 잔여다. 보호2791/fixture971 불변·새fixture1→2792/972·checking8 불변이다. 다음961도 같은4번 현재 VT+74/파생·Factory 외부 heap/파일 수명이다. [960 기록](../docs/exe/cpp-baseprocess-attach-current-20261106.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
+현재 실행 제품은 **961 / 표시 버전11.01**이다. LEFT_JOBS 3절4번에서 공통 Owner의 현재 TYPE/모드·진단 정상 복귀·늦은 목록 경계와 실제 World 대여를 복원했다. 자산151표의 +74는 Owner ret4, Form8표는 부착 ret8로 정적 구분했다. 새 Native72행/기존 비challenge744+744행·고유12검사(새7/기존5)·최종 Release 경고/오류0이다. 새 게임/GUI/MP 검사는 없으며 파생 Owner/Factory 외부 heap/파일 수명·checking8은 잔여다. 보호2792/fixture972 불변·새fixture1→2793/973이다. **사용자 요청으로 이 단위 문서/로컬 커밋 뒤 목표를 일시 정지한다.** 재개하면 같은4번의 파생 Owner/현재 분배·Factory/파일부터962를 진행한다. [961 기록](../docs/exe/cpp-owner-current-20261106.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 
