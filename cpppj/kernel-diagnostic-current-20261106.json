@@ -1,0 +1,177 @@
+{
+  "unit": 973,
+  "date": "2026-11-06",
+  "host": "HJOW-ATHLON",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 973,
+  "version": "11.01",
+  "scope": "Kernel 현재 빈 슬롯 단언/소진 진단과 슬롯0 소유권·실제 Client 접합",
+  "exeSha256": "7a36a6133bd10effe8c2203992c068e6d3bdad97ed1ad5598b0edff18c09f6f2",
+  "exeBytes": 11372544,
+  "sourceFunctions": {
+    "originals": [
+      "00471950",
+      "004719e0",
+      "00471aa0",
+      "00471890",
+      "00436d20"
+    ],
+    "originalCD": [
+      "004ed500",
+      "004ed590",
+      "004ed640",
+      "004ed400",
+      "004875b0"
+    ]
+  },
+  "staticGet": [
+    {
+      "edition": "originals",
+      "function": "00471aa0",
+      "instructions": [
+        {
+          "address": "00471aa0",
+          "instruction": "mov eax, dword ptr [esp + 4]"
+        },
+        {
+          "address": "00471aa4",
+          "instruction": "mov eax, dword ptr [eax*4 + 0x56b808]"
+        },
+        {
+          "address": "00471aab",
+          "instruction": "ret "
+        }
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "function": "004ed640",
+      "instructions": [
+        {
+          "address": "004ed640",
+          "instruction": "mov eax, dword ptr [esp + 4]"
+        },
+        {
+          "address": "004ed644",
+          "instruction": "mov eax, dword ptr [eax*4 + 0x5b7bb0]"
+        },
+        {
+          "address": "004ed64b",
+          "instruction": "ret "
+        }
+      ]
+    }
+  ],
+  "cdLiterals": [
+    {
+      "edition": "originalCD",
+      "address": "0x546370",
+      "bytesHex": "4f7574206f662070726f6365737365732e20412070726f6365737320636f756e7420747261636520686173206265656e2064756d7065640a746f2070726f6353756d6d2e7478742e2020506c656173652064656c6976657220746869732066696c6520776974682074686520627567207265706f72742e0a",
+      "text": "Out of processes. A process count trace has been dumped\nto procSumm.txt.  Please deliver this file with the bug report.\n"
+    },
+    {
+      "edition": "originalCD",
+      "address": "0x5463ec",
+      "bytesHex": "5c6e735c6f5c4b65726e656c2e637070",
+      "text": "\\ns\\o\\Kernel.cpp"
+    },
+    {
+      "edition": "originalCD",
+      "address": "0x546410",
+      "bytesHex": "5c6e735c6f5c4b65726e656c2e637070",
+      "text": "\\ns\\o\\Kernel.cpp"
+    }
+  ],
+  "builds": [
+    {
+      "log": "build-final-tests-corrected.log",
+      "errors": 0,
+      "warnings": 0,
+      "exitCode": 0
+    },
+    {
+      "log": "build-final-tests.log",
+      "errors": 1,
+      "warnings": 0,
+      "exitCode": 1
+    },
+    {
+      "log": "build-final.log",
+      "errors": 0,
+      "warnings": 0,
+      "exitCode": 0
+    }
+  ],
+  "finalTests": [
+    {
+      "filter": "BaseProcessAttachCurrent_",
+      "count": 5,
+      "failures": 0
+    },
+    {
+      "filter": "KernelDiagnosticCurrent_",
+      "count": 7,
+      "failures": 0
+    },
+    {
+      "filter": "ProcessClassCurrent_",
+      "count": 3,
+      "failures": 0
+    },
+    {
+      "filter": "ProcessCreationCurrent_",
+      "count": 4,
+      "failures": 0
+    },
+    {
+      "filter": "ProcessHostStorage_",
+      "count": 11,
+      "failures": 0
+    },
+    {
+      "filter": "ProcessRetake_DestructorKeepsSlotLifetimeThroughReentry",
+      "count": 1,
+      "failures": 0
+    },
+    {
+      "filter": "ProcessSummary_",
+      "count": 2,
+      "failures": 0
+    }
+  ],
+  "uniqueTests": 33,
+  "newTests": 7,
+  "existingTests": 26,
+  "existingNativeRows": {
+    "processSummary": 20,
+    "baseAttach": 48
+  },
+  "preparationCorrections": [
+    "첫6검사 중 정식 요약 이름을 Regular로 잘못 적은 기대값1개를 regularProcessType으로 교정",
+    "추가 연결 검사 빌드 C2248은 보호된 PID getter 대신 실제 Kernel.Find로 교정"
+  ],
+  "protectedFiles": 2796,
+  "fixtures": 976,
+  "newFixtures": 0,
+  "newNativeRuns": 0,
+  "guiRuns": 0,
+  "lastGuiUnit": 968,
+  "multiplayerTests": 0,
+  "checkingRemaining": 8,
+  "solutionProjects": 83,
+  "remaining": [
+    "CD 실제 요약의 다른 이름표/부모 캐시/3999슬롯은 기존 PATCH 전용 본문과 구별해 잔여로 보존",
+    "자산 TYPE 전체 삭제/Factory/외부 heap·파일/비멀티 수명과 우선순위4는 미완료",
+    "초기 NULL PID0의 pre 실패와 소진 후 실제 포인터가 기록된 슬롯0을 구별",
+    "원문의 해제 포인터/범위 밖 접근/이미 소유한 포인터의 이중 unique_ptr 소유권은 호스트에서 실행하지 않음"
+  ],
+  "rawDirectory": "extracted/cpp-resume-973",
+  "firstTestPreparation": {
+    "tests": 6,
+    "failedChecks": 1,
+    "log": "extracted/cpp-resume-973/focused-first.log"
+  }
+}

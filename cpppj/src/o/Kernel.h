@@ -1,8 +1,11 @@
 // 원본 Kernel.cpp의 등록·삭제·슬롯 순서 실행. 패치판의 확장된 39,999 슬롯을 기준으로 한다.
 #pragma once
 #include "o/BaseProcess.h"
+#include "o/RiftType.h"
 #include <cstdint>
+#include <functional>
 #include <memory>
+#include <string_view>
 #include <vector>
 
 namespace netstorm::o {
@@ -10,8 +13,16 @@ namespace netstorm::o {
 inline constexpr std::uint32_t kProcessCapacity = 39999;
 // CD 10.72의 실제 Kernel 끝 번호다. 판본 비교 장면에서 생성자 인자로 사용한다.
 inline constexpr std::uint32_t kCdProcessCapacity = 3999;
-// 원본 슬롯 0은 미등록을 뜻하며 실행하지 않는다.
+// 정상 등록은1부터 시작한다. 소진 단언 복귀로 기록된0도 조회/삭제할 수 있지만 실행 순회에서는 제외한다.
 using ProcessId = std::uint32_t;
+
+// 선택된 원문 진단만 실행하며 미연결 장치는 해당 실패 분기에서 명시적으로 거부한다.
+struct KernelDiagnostics {
+    OriginalEdition edition{OriginalEdition::Patch1078}; // 경로의 대소문자와 원문 단언 행 번호를 선택한다.
+    std::function<void()> summary; // 소진 시 객체 덤프 없이 현재 프로세스 요약만 쓴다.
+    std::function<void(std::string_view)> detail; // 원문 오류 문구를 같은 장기 상세 저장소에 복사한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 정상 복귀 또는 예외의 부분 효과를 호출자가 그대로 관찰한다.
+};
 
 // 원본 슬롯 포인터와 단일 C++ 소유권을 함께 유지하는 프로세스 실행기다.
 class Kernel {
@@ -41,9 +52,15 @@ public:
     std::size_t Size() const;
     // 판본별 마지막 등록 번호를 반환한다. 슬롯 0은 이 범위에 포함하지 않는다.
     std::uint32_t Capacity() const;
+    // 실제 Client의 현재 진단 장치 또는 독립 원문 대조 장치를 연결한다. 값 조회/등록은 수행하지 않는다.
+    void BindDiagnostics(KernelDiagnostics diagnostics);
+    // Native Clear와 구별되는 C++ 최종 반납이다. 선택 소유자의 슬롯0/덮어쓴 소유권도 참조 대상이 살아 있을 때 정리한다.
+    void DrainOwnedForShutdown(const std::function<bool(const BaseProcess&)>& select={});
 private:
     std::vector<BaseProcess*> processes_; // 원본처럼 소멸자 실행이 끝날 때까지 슬롯 포인터가 남는다.
     std::vector<std::unique_ptr<BaseProcess>> owned_; // 같은 포인터를 재등록해도 소유권은 한 슬롯에만 둔다.
+    std::vector<std::unique_ptr<BaseProcess>> retired_; // Native 포인터 덮어쓰기에서 가상 소멸 효과를 추가하지 않고 최종 반납까지 소유권을 지킨다.
+    KernelDiagnostics diagnostics_; // 요약/상세/단언은 선택 시점의 현재 장치만 각각 복사해 호출한다.
     std::uint32_t capacity_{}; // 기본은 10.78의 39999, CD 비교는 3999다.
     // count_: 현재 항목 또는 실행 횟수.
     std::size_t count_{};

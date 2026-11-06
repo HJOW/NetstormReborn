@@ -96,10 +96,9 @@ bool SquidProcessHost::Owns(const BaseProcess& process) const { const auto* squi
 // 이것은 World 최종 C++ 반납이며 Native Kernel.Clear의 단일 순회를 대신하지 않는다.
 void SquidProcessHost::DrainRuntimeBindings(const std::shared_ptr<ProcessHostRuntimeBindings>& runtime) {
     const auto pinned=runtime;RuntimeCall call(pinned); // 소멸 callback의 반납 재진입에도 같은 호출 대여를 안정적으로 유지한다.
-    bool removed;
-    do { removed=false;for (ProcessId id=1;id<=kernel_.Capacity();++id) { // 현재 대여에서 실제 부착한 객체만 같은 모듈이 살아 있을 때 반납한다.
-        auto* process=dynamic_cast<SquidProcess*>(kernel_.Get(id));if (process && process->host_==this && process->runtimeBinding_.lock()==pinned) { kernel_.Remove(id);removed=true; }
-    } } while (removed); // 같은 World 소멸 callback이 지난 슬롯에 만든 자기 객체도 최종 반납한다.
+    kernel_.DrainOwnedForShutdown([this,&pinned](const BaseProcess& candidate) { // 슬롯0/덮어쓴 소유권도 같은 모듈이 살아 있는 대여 반납에서 정리한다.
+        const auto* process=dynamic_cast<const SquidProcess*>(&candidate);return process && process->host_==this && process->runtimeBinding_.lock()==pinned;
+    });
 }
 bool SquidProcessHost::HasOnlyRegularProcesses() const {
     for (ProcessId id=1;id<=kernel_.Capacity();++id) { // 단일 현재 표를 읽으며 다른 Host/Client 프로세스를 자기 소유로 판정하지 않는다.

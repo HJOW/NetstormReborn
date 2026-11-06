@@ -22,8 +22,8 @@ RawProcessHostStorage::RawProcessHostStorage(o::SidPool& pool,std::span<const o:
 // 게임 중 Native 효과는 이 경로를 사용하지 않는다. 마지막 물리 소유권만 실제 프로세스를 반납한다.
 RawProcessHostStorage::~RawProcessHostStorage() {
     if (kernel_ && host_) {
-        if (!external_) { do { kernel_->Clear(); } while (kernel_->Size()); } // 독립 Kernel의 최종 종료는 Host/Pool이 살아 있는 이 위치에서 수행한다.
-        else { bool removed;do { removed=false;for (o::ProcessId id=1;id<=kernel_->Capacity();++id) { const auto* process=kernel_->Get(id);if (process && host_->Owns(*process)) { kernel_->Remove(id);removed=true; } } } while (removed); } // 다른 Storage/Client 소유 프로세스를 자기 최종 소멸로 지우지 않는다.
+        if (!external_) kernel_->DrainOwnedForShutdown(); // 독립 Kernel의 슬롯0/덮어쓴 소유권도 Host/Pool보다 먼저 반납한다.
+        else kernel_->DrainOwnedForShutdown([this](const o::BaseProcess& process) { return host_->Owns(process); }); // 다른 Storage/Client 소유자는 남긴다.
     }
     kernel_.reset();host_.reset(); // 실제 반납 뒤에만 Host를 소멸시킨다.
 }

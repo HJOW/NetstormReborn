@@ -2,8 +2,16 @@
 #pragma once
 #include "client/RawTraceLog.h"
 #include "client/InputEvent.h"
+#include <filesystem>
+#include <memory>
+
+namespace netstorm::o { class Kernel; } // 실제 Client Kernel을 빌리며 새 실행기를 만들지 않는다.
 
 namespace netstorm::client { // 장기 로그 상태와 실제 입력 관문만 선언하며 월드를 별도 소유하지 않는다.
+class RawSurfaceStorage; // 현재 Pool/TYPE/진단 장치의 실제 소유자다.
+class ClientGameplayGlobals; // 상세 문자열의 장기 소유권을 Kernel 장치 수명까지 유지한다.
+// 시작/창 없는 집중 검사 모두 같은 요약 본문·사용자 경로·현재 단언을 연결한다. Kernel/Surface는 약한 참조로 순환 소유를 피한다.
+void BindClientKernelDiagnostics(const std::shared_ptr<o::Kernel>& kernel,const std::shared_ptr<RawSurfaceStorage>& surface,const std::shared_ptr<ClientGameplayGlobals>& gameplay,const std::filesystem::path& directory,bool userPolicy);
 struct ClientTraceGlobals {
     TraceLogState log; //00542658/005ca8d0 이후의 같은 FILE/버퍼/들여쓰기/필터다.
     std::uint32_t depth{},suppress{},traceToChat{}; //0055a4a0/005c8454/00531854의 최초BSS0이며 미션 전환 때 보존한다.

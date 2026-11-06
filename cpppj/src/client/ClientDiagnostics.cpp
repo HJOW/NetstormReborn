@@ -20,6 +20,28 @@ FILE* DiagnosticFile(o::ProcessSummaryHandle handle) { if (!handle) throw std::l
 const o::SquidProcess& DiagnosticProcess(o::ProcessSummaryHandle handle) { // 실제 제품의 모든 프로세스가 같은 원문 Form/부모를 가진다.
     const auto* process=dynamic_cast<const o::SquidProcess*>(reinterpret_cast<const o::BaseProcess*>(handle));if (!process) throw std::logic_error("현재 Kernel 프로세스의 실제 Form/부모 없음");return *process;
 }
+// 소진과 개발자 F7은 같은 프로세스 요약 본문을 사용한다. 이 함수는 객체 덤프/trace를 호출하지 않는다.
+void WriteClientProcessSummary(const RawSurfaceStorage& surface,const o::Kernel& kernel,const std::filesystem::path& diagnosticsDirectory,bool userPolicy) {
+    if (userPolicy) platform::UserDataRoot::EnsureDirectory(diagnosticsDirectory);
+    o::ProcessSummaryHooks summary;summary.slot=[&kernel](auto slot) { return reinterpret_cast<o::ProcessSummaryHandle>(kernel.Get(slot)); };
+    summary.form=[](auto handle) { return std::uint32_t(DiagnosticProcess(handle).Form().value); };summary.parent=[](auto handle) { return std::int32_t(DiagnosticProcess(handle).Parent().value); };
+    summary.open=[&diagnosticsDirectory,userPolicy](auto name,auto mode) { // 원문 상대 FILE과5차 사용자 Diagnostics 정책을 기존 본문 그대로 공유한다.
+        const auto path=userPolicy ? diagnosticsDirectory/std::filesystem::path(std::string(name)) : std::filesystem::path(std::string(name));const std::string text(mode);const std::wstring wide(text.begin(),text.end());
+        return reinterpret_cast<o::ProcessSummaryHandle>(userPolicy ? ::_wfopen(path.c_str(),wide.c_str()) : std::fopen(std::string(name).c_str(),text.c_str())); };
+    summary.write=[](auto handle,std::string_view row) { static_cast<void>(std::fwrite(row.data(),1,row.size(),DiagnosticFile(handle))); };summary.close=[](auto handle) { std::fclose(DiagnosticFile(handle)); };
+    o::WriteRawProcessSummary(surface.pool,surface.types,summary);
+}
+}
+// 같은 장기 상세 소유자만 pin하고 실제 물리/Kernel은 선택 위치에서 잠가 Client 종료 뒤의 해제 주소를 읽지 않는다.
+void BindClientKernelDiagnostics(const std::shared_ptr<o::Kernel>& kernel,const std::shared_ptr<RawSurfaceStorage>& surface,const std::shared_ptr<ClientGameplayGlobals>& gameplay,const std::filesystem::path& directory,bool userPolicy) {
+    if (!kernel || !surface || !gameplay) throw std::invalid_argument("Client Kernel 진단의 실제 소유자 필요");
+    o::KernelDiagnostics diagnostics;diagnostics.edition=surface->pool.Edition();
+    diagnostics.summary=[weakKernel=std::weak_ptr<o::Kernel>(kernel),weakSurface=std::weak_ptr<RawSurfaceStorage>(surface),directory,userPolicy] { // 복귀/예외까지 두 실제 소유자를 유지한다.
+        const auto actualKernel=weakKernel.lock();const auto actualSurface=weakSurface.lock();if (!actualKernel || !actualSurface) throw std::logic_error("Client Kernel 요약의 실제 물리 수명 종료");WriteClientProcessSummary(*actualSurface,*actualKernel,directory,userPolicy);
+    };
+    diagnostics.detail=[gameplay](std::string_view text) { gameplay->AiDebug().AssertionDetail()=std::string(text); }; //00436d20의 문자열 복사이며 경고창을 새로 만들지 않는다.
+    diagnostics.assertion=[weakSurface=std::weak_ptr<RawSurfaceStorage>(surface)](auto expression,auto file,auto line) { const auto actual=weakSurface.lock();if (!actual) throw std::logic_error("Client Kernel 단언의 실제 물리 수명 종료");actual->AssertDisplay(expression,file,line); }; // 소비 위치의 현재 진단을 읽는다.
+    kernel->BindDiagnostics(std::move(diagnostics));
 }
 bool DispatchDiagnosticKey(InputEvent event,const std::function<void()>& dump) { // 원문 누름 관문과 두 수정키를 함께 요구하며 Alt는 별도 금지하지 않는다.
     if ((event.code&0x03ffffffU)!=0x760000U || (event.code&InputCode::kRelease) || (event.code&(InputCode::kShift|InputCode::kControl))!=(InputCode::kShift|InputCode::kControl)) return false;
@@ -49,12 +71,6 @@ void Client::DumpDiagnostics() { //004437f0은 실제 단일RET이며 이어서0
     if (UserData()) platform::UserDataRoot::EnsureDirectory(diagnosticsDirectory);
     const auto hooks=MakeObjectDumpDiskHooks(diagnosticsDirectory,[this](auto sid) { TraceObject(sid); },[] { throw std::logic_error("원문 객체 덤프 trace FILE 열기 진단"); },&Files()); // 원문의 빈 prefix/재읽기/재쓰기는 실제 Client의 같은10칸을 사용하고 OS 상대 열기만 가상 게임 CWD로 대체한다.
     std::array<std::uint8_t,24> file{};DumpRawObjects(surface->pool,surface->types,trace_->log,globals,DiagnosticLogHooks(),hooks,file);
-    o::ProcessSummaryHooks summary;summary.slot=[this](auto slot) { return reinterpret_cast<o::ProcessSummaryHandle>(GetKernel().Get(slot)); };
-    summary.form=[](auto handle) { return std::uint32_t(DiagnosticProcess(handle).Form().value); };summary.parent=[](auto handle) { return std::int32_t(DiagnosticProcess(handle).Parent().value); };
-    summary.open=[diagnosticsDirectory,userPolicy=UserData().has_value()](auto name,auto mode) { // 원문은 고정ASCII procSumm.txt/wb를 현재 작업 폴더에서 연다. 5차: 사용자 홈 정책에서는 Diagnostics 폴더에서 연다(CWD가 읽기 전용 설치여도 동작).
-        const auto path=userPolicy ? diagnosticsDirectory/std::filesystem::path(std::string(name)) : std::filesystem::path(std::string(name));const std::string text(mode);const std::wstring wide(text.begin(),text.end());
-        return reinterpret_cast<o::ProcessSummaryHandle>(userPolicy ? ::_wfopen(path.c_str(),wide.c_str()) : std::fopen(std::string(name).c_str(),text.c_str())); };
-    summary.write=[](auto handle,std::string_view row) { static_cast<void>(std::fwrite(row.data(),1,row.size(),DiagnosticFile(handle))); };summary.close=[](auto handle) { std::fclose(DiagnosticFile(handle)); };
-    o::WriteRawProcessSummary(surface->pool,surface->types,summary);
+    WriteClientProcessSummary(*surface,GetKernel(),diagnosticsDirectory,UserData().has_value());
 }
 }

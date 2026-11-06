@@ -397,6 +397,7 @@ int Client::Run() {
     surfaceStorage_->BindGraphTrace([this](auto level,auto text) { WriteDiagnosticLog(level,text); }); // Graph의 원문 로그도 현재 Client 필터/들여쓰기/FILE 수명을 직접 사용한다.
     surfaceStorage_->BindGraphClock([this] { return clock_.GameSeconds(timeGetTime()); }); // 삭제 Graph의 두 시각 읽기도 같은 현재 Client 시계를 쓴다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.
+    BindClientKernelDiagnostics(kernel_,surfaceStorage_,gameplayGlobals_,options_.userData ? options_.userData->Diagnostics() : options_.gameDirectory,options_.userData.has_value()); // 소진은 요약만 쓰고 빈 슬롯 단언은 같은 현재 Client 장치에 정상 복귀한다.
     // 원문469fc0/469f60은 소비 시점의00594fbc를 읽는다. 실제 물리 설치 뒤·최초 음악 Start 앞에서 같은 owner를 고정 수명으로 빌린다.
     // 근거: docs/exe/cpp-scene-current-battle-20261101.md. cleanup의 음악 Start 뒤 battle0 쓰기 순서는 그대로 유지한다.
     if (options_.edition==o::OriginalEdition::Patch1078) WorldAudio().BindCurrentBattle([storage=surfaceStorage_] { return storage->ownerMode.battle ? 1U : 0U; });

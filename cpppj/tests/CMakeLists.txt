@@ -3726,3 +3726,7 @@ netstorm_apply_compiler_options(netstorm_colormap_file_tests)
 
 # Content 현재 필드 조회가 재사용하는 공통 Form 체인의 기존 Native120/현재 물리 검사를 같은 집중 대상에 포함한다(971).
 target_sources(netstorm_pop_context_tests PRIVATE RawFormLinkedTests.cpp)
+
+# Kernel의 현재 단언/소진 접합과 기존 프로세스 요약 원문20행을 같은 집중 대상에서 선택한다(973).
+target_sources(netstorm_tests PRIVATE KernelDiagnosticCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE KernelDiagnosticCurrentTests.cpp ProcessSummaryTests.cpp)
