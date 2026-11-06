@@ -638,6 +638,7 @@ public:
     const RawPriestWorldBindings& Priests() const;
 private:
     void SnapshotFortBasicSection(std::uint32_t slot,bool names); // 실제 manager/State/덱과 같은 생성 수명의 쓰기 참조를 묶는다.
+    void PlaceBattleNuggets(o::FortRandomRectangle rectangle,std::uint32_t quantity); //0040e050의 지역 난수와 현재 TYPE를 같은 Factory/MayPlace/Pop으로 연결한다.
     void SnapshotFortBody(std::uint32_t slot); // 실제 월드 설치 뒤의 Editor 외곽만 loaded 이전에 호출할 수 있는 전체 저장 본문이다.
     void SnapshotTemplateBody(std::uint32_t slot,bool battle); //같은 실제 writer를 빌리되 원본 Battle/Fort 부모의 서로 다른 순서/진단을 유지한다.
     void WriteFortCoreDataBody(std::uint32_t slot); //설치 외곽과 실제 Battle이 같은004beb30의 자연 missionPost/editor 관문을 사용한다.

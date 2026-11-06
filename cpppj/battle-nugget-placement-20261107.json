@@ -1,0 +1,48 @@
+{
+  "unit": 1016,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "00485e40 비미션 보충의 실제0040e050 지역 seed/오벨리스크 TYPE112 배치를 같은 Factory/MayPlace/Pop으로 연결",
+  "sourceFunctions1078": [
+    "0040e050",
+    "00485e40",
+    "0040ded0",
+    "004bcab0"
+  ],
+  "referenceFunctions1072": [
+    "0042c930",
+    "004151d0",
+    "0042c7a0"
+  ],
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1016\\build.log",
+    "exeSize": 11900416,
+    "exeSha256": "7317192a45ca6a4c09277db71d75ab25422a55a0d1194b7629ba38c3f445ccc1"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "livePlacementRuns": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1016\\protected-before.json"
+  },
+  "remaining": [
+    "일반486bc0 스펠 예약 소비/SP 주기/간헐천 프레임",
+    "전체 파생 writer/decoder·메타·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

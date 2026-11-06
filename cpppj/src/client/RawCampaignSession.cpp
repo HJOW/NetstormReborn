@@ -133,6 +133,7 @@
 #include "o/RawGemReward.h"
 #include "o/RawObjectConversion.h"
 #include "o/RawNuggetReplenish.h"
+#include "o/RawBattleNuggetPlacement.h" // 비미션 보충도 원문 지역 난수와 실제 Factory/배치/Pop을 사용한다.
 #include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
 #include "o/RawBombActivation.h"
@@ -544,6 +545,7 @@ struct RawCampaignSession::Impl {
     std::function<void()> refreshLocalRitual; //고정 Session의 실제 Core/CoreData/snapshot을 Impl 생성 뒤 묶는 완료 분기다.
     std::function<void(std::uint32_t)> writeCurrentFortCore; // 일반 시작의004beb30을 고정 외곽 Session에 연결한다.
     std::function<void()> createWorldGeysers; // 일반 타이머의00486440을 같은 실제 Session/세계 생성 부모에 연결한다.
+    std::function<void(FortRandomRectangle,std::uint32_t)> placeBattleNuggets; // 같은 외곽 Session이 실제0040e050/큰 배치를 제공한다.
     std::unique_ptr<void,void(*)(void*)> pendingRitualSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // Dais 지연 소리의 new40 확보 한 번을 같은 Sound47 생성까지 보관한다.
     std::unique_ptr<RegularProcess> pendingRitualRegular; // 실제 확보 한 번을 예약/생성/부착까지 유지한다.
     PlayerWorldState& playerState{gameplayGlobals->player}; // 현재 두 owner/known을 초기 HUD와 같은 주소에서 읽고 쓴다.
@@ -2410,11 +2412,11 @@ struct RawCampaignSession::Impl {
         constructionState.confirm.patternTypes[2]=core.bridgeState.islandType;constructionState.confirm.patternTypes[3]=core.bridgeState.noIslandType;
         constructionState.clear.patternTypes=constructionState.place.patternTypes=constructionState.request.patternTypes=constructionState.confirm.patternTypes;
     }
-    // 같은 현재 모드와 지도/Canon의 원본 보충 부모다. 비미션의 큰 배치는 아직 명시 미연결이다.
+    // 같은 현재 모드/지도/Canon과 실제 지역 난수 배치를 사용하는 원본 보충 부모다.
     void ReplenishNuggets() const {
         if (!construction) throw std::logic_error("보충 부모의 실제 지도 범위 미설치");
         RawNuggetReplenish body(construction->PlayerBounds(),{assetState.Boss(),globals.missionPost,core.ownerMode.fort,globals.editor,farm.ArchipelagoSpan()},
-            {[](std::uint32_t line) { throw std::logic_error("원본 Nugget.cpp 보충 권한 진단 "+std::to_string(line)); },SessionMissing<void,FortRandomRectangle,std::uint32_t>()});
+            {[storage=world.Storage()](std::uint32_t line) { storage->AssertDisplay("boss","\\Ns\\O\\Nugget.cpp",line); },[this](auto rectangle,auto quantity) { if (!placeBattleNuggets) throw std::logic_error("너겟 보충의 같은 Session 배치 미연결");placeBattleNuggets(rectangle,quantity); }});
         body.Run();
     }
     // 수명/자산의 실제 파생 동작을 설치한 뒤 첫 객체 생성 전에 받침/로컬 간헐천 연결을 한 번 구성한다.
@@ -3827,6 +3829,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) {
     impl_->learnNewTechnology=[this](auto type) { LearnNewTechnology(type); }; //복사/이동되지 않는 Session 주소를 실제 로컬 획득과 Help가 공유한다.
     impl_->writeCurrentFortCore=[this](auto owner) { WriteFortCoreDataBody(owner); };impl_->createWorldGeysers=[this] { GenerateWorldGeysers(); }; // 같은 외곽 주소가 완성된 뒤에만 실제 일반 시작 장치를 공개한다.
+    impl_->placeBattleNuggets=[this](auto rectangle,auto quantity) { PlaceBattleNuggets(rectangle,quantity); }; // 실제 같은 Session의 배치 장치는 최초 게임 객체 생성 전에 설치한다.
     impl_->refreshLocalRitual=[this] { //실제 호출 시점의 owner/모드를 빌리며 완료 전에 필드를 복사하지 않는다.
         o::RitualRefreshHooks hooks;hooks.core=[this] { RefreshCurrentPlayerCore(); };hooks.templateOwner=[this] { return impl_->playerState.templateOwner; };
         hooks.coreData=[this](auto owner) { WriteFortCoreDataBody(owner); };
@@ -4556,6 +4559,17 @@ void RawCampaignSession::GenerateWorldGeysers() {
     hooks.decorate=[&placement](o::GameRandom& random,auto rectangle,auto region,auto quantity,auto type,auto force) { static_cast<void>(placement.PlaceRandom(random,rectangle,region,quantity,type,force)); };
     hooks.populate=[&s](std::int32_t quantity,o::GameRandom& random,auto rectangle,auto options) { s.PrepareConstruction();s.construction->PopulateGeysers(quantity,random,rectangle,options); };
     o::RawWorldGeyser(s.core.pool.Edition(),{s.core.ownerMode.battle,s.battleOptions,s.gameplayGlobals->GameAux()->WorldDecorationTypes()},std::move(hooks)).Generate();
+}
+//0040e050의 지역 난수/모드·현재 오벨리스크 TYPE를 같은 공간·Factory·MayPlace에 연결한다.
+void RawCampaignSession::PlaceBattleNuggets(o::FortRandomRectangle rectangle,std::uint32_t quantity) {
+    auto& s=*impl_;if (!s.loaded || !s.construction) throw std::logic_error("설치 전 실제 비미션 보충 배치");auto singleHooks=MakeNormalTerrainFarmWorldHooks(s.world,s.chunks,*s.islands,*s.pipeline,s.hp);singleHooks.mayPlace=[&s](const o::CanonPlacementQuery& query) { return s.MayPlaceGameplay(query); };
+    o::RawFortRandomPlacement single(s.core.pool,s.core.hash,s.core.spots,s.core.types,s.core.frames,s.random,s.randomPlacement,std::move(singleHooks));o::FortFinishOwnerHooks finish;
+    finish.regionBounds=[&s](auto region) { const auto result=s.islands->Bounds(region);return o::FortRandomRectangle{result.left,result.top,result.right,result.bottom}; };finish.wallSeconds=s.services.construction.wallSeconds;
+    finish.invalidType=[&s] { if (!s.services.player.log) throw std::logic_error("보충 배치의 실제 TYPE 진단 로그 미연결");s.services.player.log(0x1d,"AddRandom: Invalid Type\n"); };finish=o::MakeFortSinglePlacementHook(s.core.pool,single,std::move(finish));
+    o::RawFortFinishOwner placement(s.core.pool,s.core.types,s.assetState.Residences(),s.finishState,std::move(finish));o::BattleNuggetPlacementHooks hooks;
+    hooks.singleAssertion=[storage=s.world.Storage()] { storage->AssertDisplay("!inSingle","\\Ns\\O\\Addrandom.cpp",0xb4); };hooks.wallSeconds=s.services.construction.wallSeconds;hooks.regionZero=[&s] { return s.construction->PlayerBounds().RegionRecord(0); };
+    hooks.place=[&placement](auto& random,auto bounds,auto region,auto count,auto type,auto force) { static_cast<void>(placement.PlaceRandom(random,bounds,region,count,type,force)); };
+    o::PlaceBattleNuggets(rectangle,quantity,{s.globals.missionPost,s.assetState.Boss(),s.gemRewardState.buriedType},hooks);
 }
 //0040dfd0의 지역 난수/고정 범위 배치를 같은 현재 공간·섬·Factory·완전한 MayPlace에 연결한다.
 void RawCampaignSession::AddRandomObjects(std::uint32_t type,std::uint32_t quantity) {
