@@ -16,7 +16,7 @@ void ApplyExistingEditorAfterCheckpoint(ClientLocalStateGlobals& globals,InputQu
     o::ResetAmbientSoundDeadline(globals.ActivityEnd(),effects.wallSeconds); // 현재 State/주변음이 같은 기한을 쓴다.
     Need(effects.requestMusic)("ser22.mus");
     if (state.current[0]==6) { //음악 복귀 뒤의 현재 요청이며 진입 시 요청을 캐시하지 않는다.
-        Need(effects.battleOver)();throw std::logic_error("기존 Editor 한정 tail의 BattleOver 분기");
+        Need(effects.battleOver)();return; // 일반 복귀는 실제 옵션/결과 안내 부모에 맡기고 다음4/fortPal/빈섬 예약을 실행하지 않는다.
     }
     Need(effects.fortPalette)();
     const auto current=state.current[0]; //palette 전체 부모 복귀 뒤의 현재 요청을 다시 읽는다.

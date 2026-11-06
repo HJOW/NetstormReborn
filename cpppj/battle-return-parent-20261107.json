@@ -1,0 +1,18 @@
+{
+  "unit": 994,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "일반 State6의 결과/출처·배경/음악·Fort 전후 부모와 분배/공통 꼬리 연결",
+  "sourceFunctions1078": ["004b6dd0"],
+  "referenceFunctions1072": ["0042d630"],
+  "build": {
+    "exitCode": 0, "warnings": 0, "errors": 0,
+    "log": "extracted/cpp-resume-994/build.log",
+    "exeSize": 11646976,
+    "exeSha256": "cd9ca5f1714874493222834a12d7c526451fec7b4718f990cca3de20fb681031"
+  },
+  "excluded": { "newMultiplayerTests": 0, "unitTestRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-994/protected-before.json" },
+  "remaining": ["실제 Uber State6 선택/일반 Fort 설치·공개 계약", "Multiplayer Options/roster/LAN UI", "일반 State7 호스트 진입/World 교체 부모", "전체 파생 writer/decoder", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}
