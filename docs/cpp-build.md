@@ -1,12 +1,16 @@
 # C++ 빌드 (`cpppj/`)
 
-2026-10-13 최신(`HJOW-Athlon`): [GumpForm SID 부착·소유 UI 알림·반납](exe/cpp-gump-form.md)을 구현했다. 기존 SID 풀/factory·공통 destroy와 같은 메뉴/등록/Gump 수명에 타입3 생성·DWORD 소유 ID/WORD 부모·종속 체인·부모 삭제 알림/가상 +4 Kill·중첩 Form 삭제/지연 UI 큐·실제 Unpop/반납을 연결한다. 패치 부모0 무동작/CD assert 경로 거부를 구분한다. 두 PE 함수 **20/20개** 정적 내보내기, 라이브러리/실행 파일 **Release 최종 경고/오류 0**. **새 테스트 추가/실행·독립 PE/C++ 풀/필드/알림/중첩 삭제 대조·게임/GUI 실행 미수행**이다. 전체 Form 재구성/다른 Form 수명·서버 전송·다른 파생 Gump +4/내부 재분배·실제 Client/월드 연결·동적 메뉴/전역/명령 큐/OS 입력/자동 raw GUI·건설/미션 완주는 후속이다. 관찰 **523,634개**/대조 **523,374개**/CTest **854개 통과**는 앞 단계 기록이며 이번 추가 관찰/대조는 0이다. 마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-13**다.
+> **현재 상태(2026-11-06):** cpppj는 34경로(Early Missions 6·Priest Training 9·캠페인 16·데모 3)를 플레이할 수 있다. 4차(로컬 MCP·16:9 최대 1920×1080)·5차(사용자 홈 저장 경로)·7차(안티앨리어싱·FSR 1.0)를 구현했고 6차(한국어)는 1차 구현까지 마쳤으며, 3차(LAN 멀티플레이)를 사전 구현하는 중이다. 진행 상황과 단위별 근거는 [README](../README.md#현재-개발-진행상황)와 [인수인계](../LEFT_JOBS.md)를 따른다. 이 문서는 빌드·실행·배포 방법(1~3·7절)과 소스 복원 규칙(4~6절)을 다룬다.
+>
+> 아래의 날짜별 문단과 3절 앞부분의 날짜별 문단은 2026-10-05~10-13의 작업 기록이다. 그 안의 "최신/다음/후속/남았다"와 실행 허용·금지 조건은 당시 기준이며 현재 상태가 아니다.
+
+2026-10-13 기록(`HJOW-Athlon`): [GumpForm SID 부착·소유 UI 알림·반납](exe/cpp-gump-form.md)을 구현했다. 기존 SID 풀/factory·공통 destroy와 같은 메뉴/등록/Gump 수명에 타입3 생성·DWORD 소유 ID/WORD 부모·종속 체인·부모 삭제 알림/가상 +4 Kill·중첩 Form 삭제/지연 UI 큐·실제 Unpop/반납을 연결한다. 패치 부모0 무동작/CD assert 경로 거부를 구분한다. 두 PE 함수 **20/20개** 정적 내보내기, 라이브러리/실행 파일 **Release 최종 경고/오류 0**. **새 테스트 추가/실행·독립 PE/C++ 풀/필드/알림/중첩 삭제 대조·게임/GUI 실행 미수행**이다. 전체 Form 재구성/다른 Form 수명·서버 전송·다른 파생 Gump +4/내부 재분배·실제 Client/월드 연결·동적 메뉴/전역/명령 큐/OS 입력/자동 raw GUI·건설/미션 완주는 후속이다. 관찰 **523,634개**/대조 **523,374개**/CTest **854개 통과**는 앞 단계 기록이며 이번 추가 관찰/대조는 0이다. 마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-13**다.
 
 2026-10-13 앞 단계(`HJOW-Athlon`): [controlled 메뉴 항목·제목/머리·CD 문맥](exe/cpp-menu-gump-controls.md)을 구현했다. 같은 controlled/등록/항목/제목 저장소에 일반/체크/자식/구분선·조건/비활성/명령/인자·판본별 색/서식/현재 칸 재조회·fancy 실제 파서·메뉴 없음·CD 자식 8DWORD 전달/선택 부분 정리를 연결한다. 두 PE 함수 **10/12개** 정적 내보내기, 라이브러리/실행 파일 **Release 최종 경고/오류 0**. **새 테스트 추가/실행·독립 PE/C++ 항목/픽셀/문맥 대조·게임/GUI 실행 미수행**이다. 전체 Form/동적 자식·현재 전역/명령 큐/변경 영역/allocator·공용 서식기/포인터 alias·OS 입력/자동 raw GUI/건설·미션 완주는 후속이다. 관찰 **523,634개**/대조 **523,374개**/CTest **854개 통과**는 앞 단계 기록이며 이번 추가 관찰/대조는 0이다. 마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-13**다.
 
 2026-10-13 앞 단계(`HJOW-Athlon`): [메뉴 출력·선택/하위 입력·객체 부착](exe/cpp-menu-gump-interaction.md)을 구현했다. 실제 배경/글리프/StyleText/장식 SHP 캐시에 선택 배경·구분선·체크/하위 표시를 연결하고, 같은 트리/등록/수명에서 선택 변경·명령/음향·재귀 숨김/동적 Kill·가상 자식 요청/열기/확장·부모 통지/팝업 삭제를 처리한다. Form 경계 뒤 객체 부착 필드/가상 Attach를 추가하고 앞 단계 메뉴/장식 식별값 쓰기를 실제 **+20 command**로 수정했다. 두 PE 함수 **12/13개** 정적 내보내기, 라이브러리/실행 파일 **Release 최종 경고/오류 0**. **새 테스트 추가/실행·독립 원본 입력/픽셀 대조·게임/GUI 실행은 미수행**이다. 제목/머리 포맷·controlled 항목 래퍼·전체 Form·실제 전역/명령 큐/변경 영역 공급·OS 입력/자동 raw GUI·건설/미션 완주는 후속이다. 관찰 **523,634개**/C++ 대조 **523,374개**/CTest **854개 통과**는 앞 단계 기록이다. 마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-13**다.
 
-> 2026-10-13: [건물·유닛 한국어 명칭 규칙](korean-unit-names.md)을 적용한다. 사제·신전·다리·발사기 이외 이름은 영어 발음의 한글 표기를 사용하며 Workshop은 워크샾, Generator는 제네레이터다.
+> [건물·유닛 한국어 명칭 규칙](korean-unit-names.md)을 적용한다(2026-10-13 도입). 사제·신전·다리·발사기·간헐천·제단·거주 구역(Residence)·고갈된(Empty)은 번역할 수 있고, 그 밖의 이름은 영어 발음의 한글 표기를 쓴다(Workshop은 워크샾, Generator는 제네레이터, Whirlibase는 훨리베이스, Whirligig는 훨리기그, Vander Tower는 반더 타워).
 
 2026-10-13 앞 단계(`HJOW-Athlon`): [메뉴 정상 생성·장식/제목·controlled 시작·수명/Attach](exe/cpp-menu-gump-widgets.md)을 구현했다. 원본 부분 초기화/조건부 생성 입력·실제 장식/다중 줄 제목/현재 Reflow·controlled 칸/할당/idle·선택 통지/40개 스타일 역순 소멸·판본별 화면 밖 Attach 보정·실제 SHP 모서리 원색 픽셀/변경 영역을 같은 Gump 계층에 연결한다. 두 PE 함수 **13/18개** 정적 내보내기, 라이브러리/실행 파일 Release 경고/오류 **0**. **새 테스트 추가/실행·독립 원본 동작/픽셀 대조·게임/GUI 실행은 미수행**이다. 메뉴 실제 Draw/입력/AttachObject·제목 포맷·전체 Form·그림 색 표/회전 VFX·OS 입력·자동 raw GUI/건설·미션 완주는 후속이다. 관찰 **523,634개**/C++ 대조 **523,374개**/CTest **854개 통과**는 앞 단계 기록이다. 마지막 디컴파일 PC는 **HJOW-Athlon, 2026-10-13**다.
 
@@ -38,9 +42,9 @@
 
 > 2026-10-05 추가·갱신. **메뉴→캠페인→브리핑→지형/객체·선택/이동→복귀를 연결했다.** 건설·경제·전투·AI·승패·소리·MCP는 후속이다. **cpppj는 Windows 전용이다.** [공용 계층](exe/cpp-reconstruction.md), [자산](exe/cpp-assets-reconstruction.md), [설정](exe/cpp-config-reconstruction.md), [요새](exe/cpp-fort-reconstruction.md), [창](exe/cpp-screen-reconstruction.md), [표시 기반](exe/cpp-renderer-reconstruction.md), [메뉴](exe/cpp-menu-reconstruction.md), [월드/조작의 범위와 제한](exe/cpp-world-reconstruction.md).
 
-**기존 게임 전체가 실제 플레이 가능한 수준으로 복원되는 것이 우선이다.** 화면비 확장·한국어·Linux·추가 기능은 이후다. 현재 작업 순서·완료 기준은 [실제 플레이 복원 계획](cpp-playable-plan.md), 기반 복원 세부 항목은 [기존 로드맵](cpp-roadmap.md)에 있다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
+**작업 순서는 AGENTS.md의 단계(① 10.78 복원 → ② Windows 10/11 → ③ LAN 멀티플레이·Outpust → ④~⑧ 추가 요구)를 따르며, 현재 순서와 잔여는 [인수인계](../LEFT_JOBS.md) 3절에 있다.** [실제 플레이 복원 계획](cpp-playable-plan.md)과 [기존 로드맵](cpp-roadmap.md)은 1차 복원 당시의 계획과 기반 복원 세부 항목이다. 이 문서는 빌드와 소스 복원 규칙을 다룬다.
 
-2026-10-08 최신(`HJOW-Athlon`): **[Damageable 삭제 준비의 효과·소리 접두와 실제 종속 순회](exe/cpp-damageable-predestroy-reconstruction.md)**를 복원했다. ordinary 진입→붕괴/폭발 효과·현재 좌표의 소리→좌표+0.9999/x87 절삭의 spot→contained 사제마다 해방 소리→현재 권한/flags의 해방 요청→같은 flags의 공통 pre 순서다. 공용 contained 커서는 다음 SID를 먼저 저장하며 현재 타입/kind 전역을 다시 읽는다. 실제 사제 보호막/Carrier·회복 form/Kernel·공통 장부/깊이·SID 반납 합성에도 접두를 연결했다. 새 독립 x86 **4,896개**, 누적 **207,577개**, Release 경고/오류 0·CTest 내부 **311개·실패 0**(91.03초), 감사 **41종 모두 통과**. **파편/소리 출력·종속 해방의 생성/배치·Carrier 전역 후처리의 내부는 외부 경계**다. 기계어 대조도 해방 중간 코드 구간을 명시 대체하며 바깥 조건/좌표/순회/반환만 실제 실행한다. 다음은 해방 좌표/타입 조건·생성/배치 요청·보호막 생성/해제·사제 낙하·전체 공간 수명이다. 일반 사제 Pop/비표면 raw GUI·실제 플레이는 후속이다. 원본 게임/복사본·클론 창 실행·보호 파일 변경·커밋/푸시 없음.
+2026-10-08 기록(`HJOW-Athlon`): **[Damageable 삭제 준비의 효과·소리 접두와 실제 종속 순회](exe/cpp-damageable-predestroy-reconstruction.md)**를 복원했다. ordinary 진입→붕괴/폭발 효과·현재 좌표의 소리→좌표+0.9999/x87 절삭의 spot→contained 사제마다 해방 소리→현재 권한/flags의 해방 요청→같은 flags의 공통 pre 순서다. 공용 contained 커서는 다음 SID를 먼저 저장하며 현재 타입/kind 전역을 다시 읽는다. 실제 사제 보호막/Carrier·회복 form/Kernel·공통 장부/깊이·SID 반납 합성에도 접두를 연결했다. 새 독립 x86 **4,896개**, 누적 **207,577개**, Release 경고/오류 0·CTest 내부 **311개·실패 0**(91.03초), 감사 **41종 모두 통과**. **파편/소리 출력·종속 해방의 생성/배치·Carrier 전역 후처리의 내부는 외부 경계**다. 기계어 대조도 해방 중간 코드 구간을 명시 대체하며 바깥 조건/좌표/순회/반환만 실제 실행한다. 다음은 해방 좌표/타입 조건·생성/배치 요청·보호막 생성/해제·사제 낙하·전체 공간 수명이다. 일반 사제 Pop/비표면 raw GUI·실제 플레이는 후속이다. 원본 게임/복사본·클론 창 실행·보호 파일 변경·커밋/푸시 없음.
 
 2026-10-08 앞 단계(`HJOW-Athlon`): **[Carrier 삭제 준비와 실제 contained 조회](exe/cpp-carrier-predestroy-reconstruction.md)**를 복원했다. Damageable 호출 뒤 현재 권한→타입 DWORD/두 WORD 조건의 종속 조회 `(1,0,0)`→0이 아닌 SID일 때 인자 없는 전역 후처리 순서를 보존한다. 직접 조회는 대체 없이 실행하고 Carrier에서는 Damageable/전역 후처리만 외부 경계다. 사제 보호막 조회·회복 form/Kernel·공통 장부/깊이·SID 정리의 기존 두 판본 server/client 합성 검사에도 실제 Carrier를 연결했다. 새 독립 x86 **2,880개**, 누적 **202,681개**, Release 경고/오류 0·CTest 내부 **307개·실패 0**(101.70초), 감사 **40종 모두 통과**. **다음은 Damageable pre/post의 파편·소리·공간 효과와 전역 후처리·보호막 생성/해제·사제 낙하·전체 postPop/공간 효과**다. 일반 사제 Pop/비표면 raw GUI·실제 플레이는 후속이다. 원본 게임/복사본·클론 창 실행·보호 파일 변경·커밋/푸시 없음.
 
@@ -74,7 +78,7 @@
 
 2026-10-08 후속: [flag 0 첫 연결 이웃·다리 postPop 접두·끝 칸 raw 통합](exe/cpp-neighbor-reconstruction.md)을 완료했다. 새 제한 x86 **1,968개**(이웃/이벤트 1,728 + 접두 240)·Release 경고/오류 0·CTest 내부 **218개·실패 0**(CTest 전체 86.80초), 누적 **111,754개**·감사 **27개 모두 통과**다. 실제 생성/소유자/삭제/Pop과 실행 중 Regular 정리를 콘솔에서 연결했다. **다리 연결 객체/소유자 전파 함수는 콜백 경계이며 GUI raw GameWorld·Kernel↔게임 루프·Graph 활성 통합·실제 낙하/파편/소리·건설/경제/전투/승패는 남았다.** 게임/복사본·클론 창 실행 없음.
 
-**1차 판본은 10.78(2026-10-07 사용자 결정)**이다. 최신: [소유자 지정(vtable +0x74)](exe/cpp-owner-reconstruction.md)을 새 x86 **3,000개**(대체 함수 없음)로 대조하고 다리 이벤트 처리기를 Regular 프로세스에 가상 표 기준으로 연결했다. Release 경고/오류 0·CTest 내부 **211개·실패 0**(103.26초), 누적 제한 입력 **109,786개**다. 기계어 대조 입력을 어느 PC에서나 다시 만들 수 있도록 [Ghidra 내보내기 절차](exe/ghidra-exports.md)를 정리했고 감사 25개가 모두 통과한다. 그 앞서 [다리 이벤트 처리기와 끝 칸 변환](exe/cpp-bridgeevent-reconstruction.md)을 새 x86 **4,653개**로 대조했다. 다리 이벤트 `0x2691`/`0x2692`, 끝 칸 L·M·N·O 변환, 글자별 프레임 구간 표를 복원했고 외부 효과(이웃 탐색·표면 알림·생성·destroy·소유자·Pop)는 훅으로 남겼다. 그 앞서 [객체 부착 프로세스(ProcessForm)·Kernel·Regular 지연/주기 이벤트](exe/cpp-process-reconstruction.md)를 새 x86 **시나리오 360개·연산 5,893개(보강 재생성)**로 대조했다. 프로세스의 Kernel 슬롯과 부모 안의 form SID·종속 체인·form destroy·부모 삭제 때의 정리·Regular 이벤트의 실행/재예약/종료·이벤트 조회를 복원하고 다리 지연 낙하 예약/조회를 올렸다. 보강한 대조 입력 재생성과 [변이 확인](../tools/cpp_mutation_check.py)은 다른 PC로 넘겼다. 다리 이벤트 처리기 몸체·다른 파생 프로세스·AI 부착 통지·raw GameWorld는 남았다. **이번 호스트 `DESKTOP-HJOW`에서는 원본/복사본 게임·업데이터/설치 도구·클론 창을 실행하지 않았다.**
+**1차 판본은 10.78(2026-10-07 사용자 결정)**이다. 당시 최신: [소유자 지정(vtable +0x74)](exe/cpp-owner-reconstruction.md)을 새 x86 **3,000개**(대체 함수 없음)로 대조하고 다리 이벤트 처리기를 Regular 프로세스에 가상 표 기준으로 연결했다. Release 경고/오류 0·CTest 내부 **211개·실패 0**(103.26초), 누적 제한 입력 **109,786개**다. 기계어 대조 입력을 어느 PC에서나 다시 만들 수 있도록 [Ghidra 내보내기 절차](exe/ghidra-exports.md)를 정리했고 감사 25개가 모두 통과한다. 그 앞서 [다리 이벤트 처리기와 끝 칸 변환](exe/cpp-bridgeevent-reconstruction.md)을 새 x86 **4,653개**로 대조했다. 다리 이벤트 `0x2691`/`0x2692`, 끝 칸 L·M·N·O 변환, 글자별 프레임 구간 표를 복원했고 외부 효과(이웃 탐색·표면 알림·생성·destroy·소유자·Pop)는 훅으로 남겼다. 그 앞서 [객체 부착 프로세스(ProcessForm)·Kernel·Regular 지연/주기 이벤트](exe/cpp-process-reconstruction.md)를 새 x86 **시나리오 360개·연산 5,893개(보강 재생성)**로 대조했다. 프로세스의 Kernel 슬롯과 부모 안의 form SID·종속 체인·form destroy·부모 삭제 때의 정리·Regular 이벤트의 실행/재예약/종료·이벤트 조회를 복원하고 다리 지연 낙하 예약/조회를 올렸다. 보강한 대조 입력 재생성과 [변이 확인](../tools/cpp_mutation_check.py)은 다른 PC로 넘겼다. 다리 이벤트 처리기 몸체·다른 파생 프로세스·AI 부착 통지·raw GameWorld는 남았다. **이번 호스트 `DESKTOP-HJOW`에서는 원본/복사본 게임·업데이터/설치 도구·클론 창을 실행하지 않았다.**
 
 그 앞 기록: [삭제 보상(SP)·SP 저장소·샘 풀](exe/cpp-reward-reconstruction.md)을 새 x86 **7,200개**로 대조했고 Release 경고/오류 0·CTest 내부 **191개·실패 0**(61.41초), 누적 제한 입력 **96,240개**다. 삭제 flags의 수신자에게 비용×비율을 지급하고 해체는 남은 HP 비례로 환불하며 지급하지 않은 가치를 샘 풀에 쌓는 계산과 패치판의 흩뿌린 SP 저장소(SP가 바뀔 때마다 전역 난수 160회 소비)를 복원해 삭제 장부에 연결했다. 그 앞서 [공통 삭제 Graph 분할/Free·주변 표면 Add](exe/cpp-destroygraph-reconstruction.md)(x86 1,728개·CTest 182개)도 연결했다. AI 부착 통지·종속 파생 메서드·파편/소리/낙하·이벤트·raw GameWorld는 남았다. **이번 호스트 `DESKTOP-HJOW`에서는 원본/복사본 게임·업데이터/설치 도구·클론 창을 실행하지 않았다.**
 
@@ -82,16 +86,16 @@
 
 ## 1. 두 빌드의 관계
 
-저장소에는 게임 빌드가 둘 있다. 서로의 코드를 참조하지 않는다.
+저장소에는 데스크톱 게임 빌드가 둘 있다. 서로의 코드를 참조하지 않지만, dotnetpj는 cpppj 소스를 이식 근거로 삼고 cpppj 실행 파일을 같은 입력의 비교 기준(오라클)으로 쓴다. 웹 클론 `webpj/`(HTML + JavaScript)도 같은 방식으로 cpppj를 기준으로 삼는다([webpj 인계](../LEFT_JOBS.webpj.md)).
 
 | | C# + MonoGame 빌드 | C++ 빌드 |
 |---|---|---|
 | 폴더 | [`dotnetpj/`](../dotnetpj/) | [`cpppj/`](../cpppj/) |
-| 만드는 방법 | 원본을 분석해 규칙·화면을 새로 구현한다 (클론 코딩) | **기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만든다** |
+| 만드는 방법 | 원본을 분석해 만든 기존 클론(동결)을 cpppj 구조를 직역한 새 `Netstorm.Client` 경로로 교체하는 중이다(2026-10-28 계획) | **기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만든다** |
 | 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러(MSVC), **Windows 전용** |
-| 플랫폼 | MonoGame (Windows·Linux) | **Win32 API 를 원본처럼 직접 호출** (외부 라이브러리 없음) |
-| 실행 파일 | `Netstorm` | `Netstorm.exe` (CMake 대상 `NetstormCpp`) |
-| 상태 | 캠페인 1-1·1-2 플레이 가능 | 메뉴→브리핑→실제 지형/객체·선택/이동·정지/복귀. 건설·전투·미션 완주는 후속 |
+| 플랫폼 | MonoGame (Windows·Linux) | **Win32 API 를 원본처럼 직접 호출**. Windows 구성요소 밖의 외부 라이브러리는 없으며, FSR 1.0 헤더와 SMK 디코더 소스는 `cpppj/third_party/`에 동봉한다 |
+| 실행 파일 | `Netstorm.exe`(Windows)·`Netstorm`(Linux) | `Netstorm.exe` (CMake 대상 `NetstormCpp`) |
+| 상태(2026-11-06) | 기존 경로에서 캠페인 1-1·1-2 근사 플레이. 새 경로는 메뉴 일부와 Fort 적재 부품까지 | 34경로(Early 6·Training 9·캠페인 16·데모 3) 플레이 가능. 4·5·7차 구현, 6차 1차 구현, 3차 LAN 사전 구현 중 |
 
 두 빌드가 함께 쓰는 것은 저장소 루트에 그대로 있다.
 
@@ -103,7 +107,7 @@
 
 공통 목표(AGENTS.md)는 영어·한국어, 풀스크린과 16:9·16:10·4:3, 원본 수준의 프레임을 먼저 맞추고 이후 60·120프레임이다.
 
-**cpppj의 방향(2026-10-05 사용자 결정, AGENTS.md에 반영됨).** 목표의 순서는 AGENTS.md(2026-10-09·10·16 변경)에 따라 **1차 10.78 디컴파일 코드를 C++로 최대한 똑같이 복원(멀티플레이·Outpost 제외) → 2차 Windows10/11에서 오류 없이 실행(DirectDraw 오류 수정 포함) → 3차 한국어 지원 → 4차 TCP/IP 기반 로컬 네트워크 멀티플레이(Outpost 포함, 공식 서버 제외) → 5차 요구사항 반영·MCP 추가**다. dotnetpj는 cpppj 완성 후 이를 분석해 개발하며 먼저 기존 게임과 완전히 동일하게 동작하게 만든 뒤 요구사항을 반영한다. (2026-10-05 문구는 ① 복원 → ② 실행 가능 수준 → ③ 요구사항 반영과 MCP의 세 단계였다.) cpppj는 기존 게임 원본을 되살리는 것이 목적이다. 기능 변경을 최소로 하고 **원본과 같은 방식**으로 만들며, 이후 MCP를 붙여 원본 게임 분석에 쓴다. 그래서 창·화면·입력은 원본처럼 Win32 API를 직접 부른다. **cpppj는 Windows 전용**이고(다른 OS에서는 CMake 구성이 멈춘다) Linux 지원은 C# 빌드의 후순위 목표다. 한국어 지원은 cpppj에서는 3차 목표에서 추가한다(2026-10-10 19:24 변경 전에는 4차 목표였다).
+**cpppj의 방향(AGENTS.md).** 목표 순서는 **1차 10.78 디컴파일 코드를 C++로 최대한 똑같이 복원(멀티플레이·Outpust 제외) → 2차 Windows 10/11에서 오류 없이 실행(전체화면 DirectDraw 오류와 전체화면 종료 후 재실행 오류 수정 포함) → 3차 TCP/IP 로컬 네트워크 멀티플레이(Outpust 포함, 공식 서버 제외) → 4차 로컬 MCP·16:9 최대 1920×1080 → 5차 설정·진행·자동 생성 파일의 `%USERPROFILE%\Saved Games\Netstorm\` 이관과 Edit 맵 목록 무제한·스크롤 → 6차 한국어 → 7차 안티앨리어싱·FSR 1.0 → 8차 Edit 시나리오 편집 UI**다. dotnetpj와 webpj는 cpppj를 분석해 개발하며, 먼저 기존 게임과 완전히 같게 동작하도록 만든 뒤 요구사항을 반영한다. cpppj는 기존 게임 원본을 되살리는 것이 목적이다. 기능 변경을 최소로 하고 **원본과 같은 방식**으로 만든다. 그래서 창·화면·입력은 원본처럼 Win32 API를 직접 부르고, 원본과 다른 호환 처리는 그 이유를 한국어 주석에 적는다. 4차 MCP는 dotnetpj 개발을 위한 게임 분석에 쓴다. **cpppj는 Windows 전용**이고(다른 OS에서는 CMake 구성이 멈춘다) x86-64를 대상으로 하되 Windows 11 ARM도 고려한다. Linux 지원은 C# 빌드의 후순위 목표다. (2026-10-05~10-16에는 3차가 한국어, 4차가 멀티플레이, 5차가 요구사항·MCP였다. 지금 순서는 그 뒤의 AGENTS.md 변경을 따른다.)
 
 ## 2. 폴더 구조
 
@@ -120,9 +124,12 @@ cpppj/
     o/                    원본 \Ns\O\      공용 모듈 (게임 규칙·데이터·프로세스 커널)
     client/               원본 .\          클라이언트 모듈 (화면·입력·소리·메인 루프)
     zacket/               원본 \Ns\Zacket\ 네트워크 패킷
-    platform/             새로 쓰는 코드   원본에 없는 보조 기능 (콘솔 출력·BMP 저장·파일 쓰기)
-    app/                  새로 쓰는 코드   실행 파일 진입점 (main.cpp), 임시 검사용 화면 (InspectView)
-  tests/                  단위 테스트 (ctest)
+    platform/             새로 쓰는 코드   원본에 없는 보조 기능 (콘솔 출력·BMP/PNG 저장·파일 쓰기·사용자 홈 저장 경로·휴대 배포 시작·녹화)
+    app/                  새로 쓰는 코드   실행 파일 진입점 (main.cpp), 로컬 MCP 서버 (McpServer), 임시 검사용 화면 (InspectView)
+  third_party/
+    fsr1/                 AMD FidelityFX FSR 1 공식 헤더 (MIT, 수정 없음, 7차)
+    libsmacker/           인트로 SMK 디코더 libsmacker (LGPL 2.1). NetstormSmacker.dll 을 만든다
+  tests/                  단위 테스트 (ctest). tests/fixtures 에 원본 x86 대조 자료
 ```
 
 | 원본 폴더 (assert 문자열) | 파일 수 | cpppj | 내용 |
@@ -137,7 +144,7 @@ cpppj/
 * **한 판본에만 있는 파일**: CD판에만 `Cloud.cpp`·`CloudSystem.cpp`·`Fountain.cpp`·`Look.cpp`·`Markup.cpp`·`Piecegump.cpp`·`Splash.cpp`·`TextGump.cpp`·`Connection.cpp`·`Terr.cpp`, 패치판에만 `Dissolve.cpp`·`Factory.cpp`·`Fierytail.cpp`·`Priest.cpp`·`Fence.cpp`·`Periodicharmer.cpp`·`Totalmade.cpp`·`rifttype.h` 가 나온다. assert 문자열이 있고 없고의 차이일 수 있어서, 그 판본에 그 소스가 없었다는 뜻은 아니다.
 * **`_p_*.cpp`**: `_p_gunprocessdata.cpp`·`_p_packets.cpp` 등 10개. 이름으로 보아 자동 생성된 직렬화 코드로 추정한다(확인하지 않았다).
 * **포함 경로**의 기준은 `cpppj/src/` 다. 예: `#include "client/ClientMain.h"`, `#include "o/Squid.h"`.
-* 지금은 정적 라이브러리 하나(`netstorm`)로 묶는다. `o/` 는 `client/`·`platform/` 을 포함하지 않는 것이 규칙이지만 빌드가 강제하지는 않는다. 라이브러리는 `user32`·`gdi32`·`winmm` 에 연결된다(`client/` 가 원본처럼 Win32 를 직접 부른다).
+* 지금은 정적 라이브러리 하나(`netstorm`)로 묶는다. `o/` 는 `client/`·`platform/` 을 포함하지 않는 것이 규칙이지만 빌드가 강제하지는 않는다. 라이브러리는 `user32`·`gdi32`·`winmm`·`dwmapi`(창·화면·소리), `shell32`·`ole32`·`mmdevapi`(셸 실행·소리 장치와 녹화), `ws2_32`(3차 LAN TCP), `d3d11`·`dxgi`·`d3dcompiler`(7차 후처리 출력)에 연결된다. 모두 Windows 구성요소이며 `client/` 가 원본처럼 Win32 를 직접 부른다.
 
 ## 3. 빌드와 테스트
 
@@ -157,7 +164,7 @@ AI가 게임 또는 클론/도구의 별도 창을 실행할 때는 [실행 전 
 
 **2026-10-06 당시 실행 기록:** 당시 PC에서는 창이 뜨는 검사를 허용했다. Release 빌드·CTest와 클론 window/renderer/menu/world GUI 스모크를 실행했다. 원본/복사본 게임 프로세스는 실행하지 않았다. 이 허용은 현재 PC의 2026-10-07 창 금지 지시로 대체한다. [raw Pop 후속·실행 검증의 범위](exe/cpp-pop-reconstruction.md).
 
-후속 [기본 생성/Take·가상 초기화](exe/cpp-creation-reconstruction.md)는 SID raw 풀과 타입 표에 연결했다. 자산 파생 생성자는 후속 연결했으며 form/process·실제 월드 연결은 남았다. 생성자 표 359행은 964회 새 기계어 호출과 별도로 센다. [자산 파생 생성자 후속](exe/cpp-derived-reconstruction.md)에서 153개 생성자·179개 타입 연결을 추가했다(6,028회). 이어 [raw 일반 공간 해제·non-void Take·firstPop 플래그](exe/cpp-unpop-reconstruction.md)를 표시 비활성 경로에서 연결했다(3,618회, vtable 메타데이터 151행 별도). 섬·다리·건물 부착/파생 효과·표시 활성·실제 Pop/삭제·월드 연결은 남았다. raw +8 word는 섬 번호로 정정했다.
+**2026-10 당시 기록:** 후속 [기본 생성/Take·가상 초기화](exe/cpp-creation-reconstruction.md)는 SID raw 풀과 타입 표에 연결했다. 자산 파생 생성자는 후속 연결했으며 form/process·실제 월드 연결은 남았다. 생성자 표 359행은 964회 새 기계어 호출과 별도로 센다. [자산 파생 생성자 후속](exe/cpp-derived-reconstruction.md)에서 153개 생성자·179개 타입 연결을 추가했다(6,028회). 이어 [raw 일반 공간 해제·non-void Take·firstPop 플래그](exe/cpp-unpop-reconstruction.md)를 표시 비활성 경로에서 연결했다(3,618회, vtable 메타데이터 151행 별도). 섬·다리·건물 부착/파생 효과·표시 활성·실제 Pop/삭제·월드 연결은 남았다. raw +8 word는 섬 번호로 정정했다.
 
 저장소 루트에서 실행한다. Windows 10/11 과 Visual Studio 2022(또는 Build Tools)의 C++ 도구가 필요하다. 외부 라이브러리가 없어 인터넷 연결이 필요 없다.
 
@@ -182,12 +189,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\cpppj\build-cpppj.ps1 -Mod
 * 필요한 도구는 `PREPARE.ps1` 의 "VS Build Tools 2022 (C++)"와 "CMake" 항목으로 설치한다.
 * CI(`.github/workflows/ci.yml`)의 `cpp-build-test`는 테스트 ON을 명시하고 기존 전체 빌드/CTest를 유지한다.
 
-인자 없이 실행하면 빌드 정보·검사 명령을 표시한다. 원본 게임을 실행하지 않고 복원한 모듈을 사용한다.
+인자 없이 실행하면 실행 파일 옆의 `game\` 또는 실행 파일 폴더에서 `netstorm.tarc`를 찾아 GUI 메인 메뉴를 연다(배포판 배치). 자료가 없으면 안내 창을 띄우고 끝나므로 빌드 폴더에서는 `--run <게임 폴더>`를 쓴다. `--help`는 빌드 정보와 검사 명령 목록을, `--version`은 제품 표시 버전(`NetStorm 11.01`)을 출력한다. 어느 경우에도 원본 게임을 실행하지 않고 복원한 모듈을 사용한다.
 
 ```text
-Netstorm (menu and mission entry; playable world pending)
+  --run: --test-bridge-patterns 3,0,25 (test-only repeating sequence; off restores normal supply)
+NetStorm 11.01
   reconstructed from: NetStorm 10.78 (decompiled)
   default maxFPS: 75 (frame interval 0.013333 s, 1ms clock: 14 ms)
+  ... (검사 명령 목록)
 ```
 
 단위 테스트는 외부 프레임워크 없이 `cpppj/tests/TestSupport.h` 의 `TEST_CASE`·`CHECK`·`CHECK_NEAR` 만 쓴다. 테스트 파일을 만들어 `cpppj/tests/CMakeLists.txt` 의 목록에 더하면 된다.
@@ -212,11 +221,11 @@ python tools/cpp_menu_smoke.py
 python tools/cpp_audio_smoke.py
 ```
 
-`--run <게임 폴더>`는 클론 창을 띄운다(원본 게임을 실행하지 않는다). `--view`가 없으면 **원본 메인 메뉴**를 표시한다. `--view types|fonts|<미션>`은 기존 독립 검사 장면이다. [메뉴·브리핑의 현재 범위/검사](exe/cpp-menu-reconstruction.md).
+`--run <게임 폴더>`는 클론 창을 띄운다(원본 게임을 실행하지 않는다). `--view`가 없으면 **원본 메인 메뉴**를 표시한다. `--view types|fonts|<미션>`은 기존 독립 검사 장면이다. [메뉴·브리핑의 범위/검사](exe/cpp-menu-reconstruction.md). `--mission <미션 키>`는 메뉴를 거치지 않고 해당 미션 브리핑으로 들어가고, `--set "k=v;k=v"`는 설정을 덮어쓴다(예: `currentLanguage=korean`). `--ui-script steps.tsv --ui-report report.tsv`는 정해진 프레임에 입력을 넣고 `snapshot`(논리 8비트 화면 BMP)·`report`(관측 보고서)를 남기는 검사 스크립트이며 dotnetpj·webpj의 비교 기준으로도 쓴다. `--mcp`는 게임을 stdio 로컬 MCP 서버로 실행한다(4차, [MCP 기록](exe/cpp-mcp-server-20261106.md)). 창을 띄우는 이 명령들도 [실행 확인 조건](execution-confirmation.md)을 따른다.
 
-기존 기반에 `Gump`·`State`·`UberGump`·`GifImage`·`DialogScript`, `TerrainBuilder`·`Player`·`Squid` 일부와 새 `GameWorld`/부분 `UserInput`을 연결했다. 이어 CanonDecoder 다리 모양/추첨과 Bridge 열린 방향·수명 접두 구간을 복원했다. `SurfaceFinder`와 Bridge 확장은 정수 발자국의 flag 8 이웃·양쪽 타입/프레임 연결·붕괴 방문 목록을 계산한다. [표면/재귀의 근거·한계](exe/cpp-surface-reconstruction.md). 당시 CTest는 x86 기대값 **46,156개 입력 사례**(기존 5,365＋다리 18,053＋표면/재귀 3,450＋해시/점유 4,632＋공간 등록 878＋SID 3,168＋base 생성/Take 964＋자산 파생 생성/Take 6,028＋raw 일반 공간 해제/수명 3,618)를 포함한 **112개 내부 검사**다. 공간 등록은 가상/영역 효과의 계약 대체 조건, 새 raw 해제는 표시 비활성·합성 기존 배치 상태이며 대체 함수가 없다. 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 열린 끝은 패치판만 검증했다. 실제 표면/SID·spot, 배치 UI·전체 붕괴는 아직 월드에 연결하지 않았다. 메뉴/월드는 독립 자료 대조와 클론 창 조작 기록이며 원본 기계어 전체 대조는 아니다. `--mission TEST01`로 같은 브리핑/월드를 검사한다. 원본 모듈 파일이 생긴 것을 모듈 전체 복원 완료로 세지 않는다.
+**2026-10 당시 기록:** 기존 기반에 `Gump`·`State`·`UberGump`·`GifImage`·`DialogScript`, `TerrainBuilder`·`Player`·`Squid` 일부와 새 `GameWorld`/부분 `UserInput`을 연결했다. 이어 CanonDecoder 다리 모양/추첨과 Bridge 열린 방향·수명 접두 구간을 복원했다. `SurfaceFinder`와 Bridge 확장은 정수 발자국의 flag 8 이웃·양쪽 타입/프레임 연결·붕괴 방문 목록을 계산한다. [표면/재귀의 근거·한계](exe/cpp-surface-reconstruction.md). 당시 CTest는 x86 기대값 **46,156개 입력 사례**(기존 5,365＋다리 18,053＋표면/재귀 3,450＋해시/점유 4,632＋공간 등록 878＋SID 3,168＋base 생성/Take 964＋자산 파생 생성/Take 6,028＋raw 일반 공간 해제/수명 3,618)를 포함한 **112개 내부 검사**다. 공간 등록은 가상/영역 효과의 계약 대체 조건, 새 raw 해제는 표시 비활성·합성 기존 배치 상태이며 대체 함수가 없다. 수명 480개는 접두 구간, 해시 초기화 4개는 할당 없는 경로이며 전체 열린 끝은 패치판만 검증했다. 실제 표면/SID·spot, 배치 UI·전체 붕괴는 아직 월드에 연결하지 않았다. 메뉴/월드는 독립 자료 대조와 클론 창 조작 기록이며 원본 기계어 전체 대조는 아니다. `--mission TEST01`로 같은 브리핑/월드를 검사한다. 원본 모듈 파일이 생긴 것을 모듈 전체 복원 완료로 세지 않는다.
 
-`SquidHash`의 네 단계 배열/버킷 주소·객체 단계와 `Squid::EffectiveGenus`의 발자국/지붕 보정을 추가했다. [x87 실행 상태·검사·표면 배열의 관계](exe/cpp-hash-reconstruction.md)를 확인한다. 이어 `SquidSpatial`의 next 체인·등록/해제·spot OR/AND·비전투 상태와 등록 지도→정수 SurfaceFinder 전달을 복원했다. [CD 충돌 차이·조건부 기계어 검증·재현](exe/cpp-spatial-reconstruction.md). SID 풀은 후속 복원했다. [판본 경계·FIFO/예측 할당·반납·검증 제한](exe/cpp-sid-reconstruction.md). form/process 생성자·다른 가상/영역 효과·GameWorld 연결은 남았다.
+**2026-10 당시 기록:** `SquidHash`의 네 단계 배열/버킷 주소·객체 단계와 `Squid::EffectiveGenus`의 발자국/지붕 보정을 추가했다. [x87 실행 상태·검사·표면 배열의 관계](exe/cpp-hash-reconstruction.md)를 확인한다. 이어 `SquidSpatial`의 next 체인·등록/해제·spot OR/AND·비전투 상태와 등록 지도→정수 SurfaceFinder 전달을 복원했다. [CD 충돌 차이·조건부 기계어 검증·재현](exe/cpp-spatial-reconstruction.md). SID 풀은 후속 복원했다. [판본 경계·FIFO/예측 할당·반납·검증 제한](exe/cpp-sid-reconstruction.md). form/process 생성자·다른 가상/영역 효과·GameWorld 연결은 남았다.
 
 ## 4. 디컴파일한 소스에서 C++ 소스를 만드는 절차
 
@@ -280,18 +289,18 @@ double FrameIntervalSeconds(int maxFps);
 
 ## 6. 정하지 않은 것
 
-* ~~플랫폼 계층의 라이브러리~~ → **정함(2026-10-05): Win32 직접 호출, 외부 라이브러리 없음.** 소리·글꼴·영상·전체화면(DirectDraw)의 방식은 해당 모듈을 옮길 때 원본 방식을 기본으로 정한다 — [창·화면 장치 복원](exe/cpp-screen-reconstruction.md) 1·8절.
-* ~~설정 저장 위치~~ → **구현 완료(2026-10-05): `options.cfg`는 원본 게임과 동일하게 처리한다.** `<게임 폴더>/d/options.cfg`를 시작·변경 저장 시점에 Windows-1252·XOR로 쓴다. 시작 표시의 조회·생성·메인 버튼 사건의 삭제도 연결했다. [옵션 저장 복원](exe/cpp-options-reconstruction.md). 스모크는 허용한 두 파일을 보관하고 복구한다.
-* **한국어 글꼴.** D2Coding(TTC)을 그리는 방법이 필요하다(C# 빌드는 FontStashSharp 를 쓴다). cpppj 에서는 후순위다.
-* **원본에 없는 기능과 호환성 수정의 단계.** DirectDraw 오류와 전체화면 종료 뒤 재실행 오류는 **2차 목표에서 반드시 수정**한다(AGENTS.md 2026-10-16). Windows10/11 각각에서 전체화면 설정을 저장한 뒤 종료·재실행을 반복해 정상 진입을 확인한다. 현재 지정 미션의1차 복원 작업에서는 해당 오류 수정 제외를 유지한다. 와이드 화면과60·120프레임은5차 목표이며 다시 만든 코드를 어디서 어떻게 바꿀지는 해당 모듈에서 정한다. C# 빌드의 결정(와이드 화면 = 시야 확장, [LEFT_JOBS.md](../LEFT_JOBS.md) 1.7절)을 따르는 것이 기본이다.
-* **옮기는 순서.** [후속 복원 계획](cpp-roadmap.md)의 단계별 완료 기준을 따른다.
+* ~~플랫폼 계층의 라이브러리~~ → **정함(2026-10-05): Win32 직접 호출, 외부 라이브러리 없음.** 소리·글꼴·영상·전체화면(DirectDraw)의 방식은 해당 모듈을 옮길 때 원본 방식을 기본으로 정한다 — [창·화면 장치 복원](exe/cpp-screen-reconstruction.md) 1·8절. 그 뒤 인트로 SMK는 원본 32비트 `Smackw32.dll` 대신 동봉한 libsmacker로 만든 `NetstormSmacker.dll`로 재생하고, 7차 후처리는 Windows 구성요소인 Direct3D 11과 동봉한 FSR 1 헤더로 구현했다([AA/FSR 기록](exe/cpp-aa-fsr-20261106.md)).
+* ~~설정 저장 위치~~ → **구현 완료(2026-10-05): `options.cfg`는 원본 게임과 같은 시점(시작·변경 저장)과 형식(Windows-1252·XOR)으로 쓴다.** 시작 표시의 조회·생성·메인 버튼 사건의 삭제도 연결했다. [옵션 저장 복원](exe/cpp-options-reconstruction.md). 스모크는 허용한 두 파일을 보관하고 복구한다. **2026-11-05 5차 변경:** 저장 위치를 `<게임 폴더>/d/options.cfg`에서 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 옮겼다. `!state.dat`·전체화면 표식, 캡처·진단, Editor 작업본·장부, 글꼴 캐시 등 자동 생성 파일도 같은 루트 아래(`Saves`·`CustomMaps`·`Editor`·`Captures`·`Diagnostics`)에 쓴다. 사용자 파일을 설치 폴더 파일보다 먼저 읽고 설치 폴더의 파일은 바꾸지 않으며, 검사·휴대 실행은 환경 변수 `NETSTORM_USER_DATA`로 루트를 바꿀 수 있다([5차 기록](exe/cpp-user-data-root-20261105.md)).
+* ~~한국어 글꼴~~ → **구현(2026-11-06, 6차 1차):** D2Coding을 GDI로 한 글자씩 그려 원본 글꼴과 같은 256색 글리프로 캐시한다. 한글은 표시 전용 4바이트 확장 시퀀스로 8비트 글꼴 경로에 싣고, 원문용 부호화(Windows-1252 밖 문자 거부)는 바꾸지 않았다. 번역표 `xlat.korean`(502항목), Options의 Language 메뉴, `.korean` 파일이 없을 때 `.english`로 대체하는 파일 조회를 더했다([한국어 기록](exe/cpp-korean-language-20261106.md)). 미션·팁·도움말의 `.korean` 본문과 한글 메인 버튼 그림은 남았다.
+* **원본에 없는 기능과 호환성 수정의 단계.** DirectDraw 오류와 전체화면 종료 뒤 재실행 오류는 2차 목표로 고쳤고, 저장된 전체화면 상태에서 다시 실행해 메인 메뉴까지 정상 진입함을 확인했다(단위563·588). Windows 10에서 확인되면 Windows 11 실기 검증 없이 다음 단계로 넘어간다(2026-10-31 사용자 결정). 와이드 화면은 4차에서 16:9 1600×900·1920×1080 해상도 지원으로 구현했으며 그래픽 크기 스케일은 바꾸지 않는다([해상도 기록](exe/cpp-wide-resolution-20261106.md)). 60·120프레임은 별도 후순위다. 원본과 다른 호환 처리는 그 이유를 한국어 코드 주석에 적는다.
+* **옮기는 순서.** 현재 순서와 잔여는 [인수인계](../LEFT_JOBS.md) 3절을 따른다. 아래는 1차 복원 초기에 [후속 복원 계획](cpp-roadmap.md)의 단계별 완료 기준을 따르던 당시 기록이다.
   - 2026-10-05: 파일 읽기·원시 설정·번역, 타입 자산·SHP·프레임 코드/검색, 커널 실행 인터페이스·시계, 팔레트·기본 8비트 합성 일부를 복원했다. 다음은 **Config 치환→`.fort`·타입 연결→TEST01 정적 창→실제 프로세스·입력→캠페인 1-1 플레이**다. 전체 모듈 이식 완료로 보지 않는다.
   - 2026-10-05(이어서): 설정·타입·요새 파일·영역 배치·Win32 창·창 모드 화면·입력 큐·메인 루프 뼈대와 **Renderer·원본 글꼴·커서 표시 기반**을 옮겼다. 다음은 [현재 계획](cpp-playable-plan.md)의 **메인 메뉴/브리핑→실제 월드/조작→1-1 완주**다.
-* **두 빌드의 결과를 비교하는 방법.** 같은 미션에서 C# 빌드와 C++ 빌드의 동작을 대조하는 도구는 없다.
+* **다른 클론과 결과를 비교하는 방법.** dotnetpj와 webpj는 cpppj를 같은 입력의 비교 기준(오라클)으로 쓴다. `--run … --ui-script`의 `snapshot` 논리 캡처는 `dotnetpj/tools/cpp_frame_compare.py`로 같은 형식의 캡처와 비교한다([dotnetpj 인계](../LEFT_JOBS.dotnetpj.md) 0.3절 결정 4, [webpj 인계](../LEFT_JOBS.webpj.md)). 실제 Session 상태 전체(SID·TYPE·HP·소유자·Graph·Player·SP·난수)를 내보내는 명령은 아직 없다. `--dump-world`는 저장된 Tutorial 미션의 옛 `GameWorld` 보고서라 이 용도에 쓰지 않는다.
 
 ## 7. 배포판 압축파일 만들기
 
-2026-10-23: [`cpppj/package-cpppj.ps1`](../cpppj/package-cpppj.ps1) 이 클론 실행 파일, Visual C++ 런타임 DLL, 원본 10.78 게임 데이터를 하나의 zip 으로 묶는다(AGENTS.md 의 배포판 압축 스크립트 요구사항). 받는 사람은 압축을 풀고 `Netstorm.bat` 를 실행하면 된다.
+[`cpppj/package-cpppj.ps1`](../cpppj/package-cpppj.ps1)(2026-10-23 신규)이 클론 실행 파일, Visual C++ 런타임 DLL, 원본 10.78 게임 데이터, 한국어 글꼴·번역표, 서드파티 헤더·라이선스를 하나의 zip으로 묶는다(AGENTS.md의 배포판 압축 스크립트 요구사항). 받는 사람은 압축을 풀고 `Netstorm.exe`를 실행하면 된다.
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\dist\NetstormReborn-cpppj.zip
@@ -299,9 +308,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\d
 
 * **저장 위치.** 첫 매개변수다. 생략하면 실행 중에 입력받고, 빈 값을 입력하면 취소한다(종료 코드 0). 폴더만 주면 `NetstormReborn-cpppj-YYYYMMDD.zip` 으로 만들고, 확장자를 생략하면 `.zip` 을 붙인다.
 * **빌드.** 기본 실행은 `NetstormCpp` 대상을 Release 증분 빌드해 모든 CMake 입력을 확인하며 `cpppj/build/bin/Release/Netstorm.exe`를 만든다. `-NoBuild` 로 끄고, `-ExePath` 로 미리 만든 실행 파일을 지정하며, `-DryRun` 은 압축 없이 계획만 보여 준다.
-* **구성.** 최상위에 `Netstorm.exe`, 실행 파일이 가져오는 `msvcp140.dll` 등 런타임 DLL, `Netstorm.bat`(창 모드)·`Netstorm-SavedMode.bat`(저장된 화면 모드), `README.txt`, `BUILD_INFO.txt`, `LICENSE.txt` 가 들어가고 `game\` 에 `netstorm.tarc`·`Netstorm.exe`·`d\`·`sound\`·`music\` 이 들어간다. 데이터는 `originals/` 에서 읽기만 한다(`-GameSource` 로 바꿀 수 있다).
+* **구성.** 최상위에 `Netstorm.exe`, 실행 파일이 가져오는 `msvcp140.dll` 등 런타임 DLL과 인트로 디코더 DLL, `Netstorm.bat`(창 모드로 강제)·`Netstorm-SavedMode.bat`(저장된 화면 모드), `README.txt`(한국어·영어 안내), `BUILD_INFO.txt`, `LICENSE.txt`가 들어간다. `fonts\`에는 최신 D2Coding `.ttc`와 라이선스, `lang\`에는 한국어 번역표 `xlat.korean`(6차), `third-party\fsr1\`에는 AMD FidelityFX FSR 1 헤더·MIT 라이선스·출처 설명(7차), `third-party\libsmacker\`에는 SMK 디코더의 라이선스와 대응 소스가 들어간다. `game\`에는 `netstorm.tarc`·`Netstorm.exe`·`d\`·`sound\`·`music\`과, 영상 원천이 있으면 원본 CD 인트로 SMK를 담은 `MOVIE\`가 들어간다. 데이터는 `originals/`에서 읽기만 한다(`-GameSource`로 바꿀 수 있고, 영상 원천은 `-MovieSource`로 지정한다).
 * **원본 `Netstorm.exe` 를 넣는 이유.** 클라이언트가 아이콘·커서·로딩 그림 리소스를 이 파일에서 읽는다(`ClientMain.cpp`, `LOAD_LIBRARY_AS_DATAFILE`). 실행하지 않으며 없으면 기본 아이콘과 화살표 커서로 대체된다. `assets/game-data` 에는 이 파일이 없어 데이터 원천은 `originals/` 이다.
-* **제외.** 실행 중 만들어지는 `d\options.cfg`, 남아 있으면 창 모드로 강제되는 `fullscreenStateFile.dat`, 내려받은 지도 묶음의 잔재인 `d\request*.php`. 클론이 읽지 않는 `help\`·`movie\`·`w\`와 원본 DLL·도구도 넣지 않는다.
-* **쓰기 권한.** 클라이언트가 시작할 때 `game\d\options.cfg` 를 쓰므로 압축을 푸는 폴더는 쓰기 가능해야 한다.
+* **제외.** 사용자별 상태 파일인 `d\options.cfg`와 `fullscreenStateFile.dat`(남아 있으면 창 모드로 강제된다), 내려받은 지도 묶음의 잔재인 `d\request*.php`는 넣지 않는다. 클론이 읽지 않는 `help\`·`movie\`·`w\`와 원본 DLL·도구도 넣지 않는다.
+* **설정·저장 위치(쓰기 권한).** 5차(2026-11-05)부터 설정·진행·캡처·진단·편집 작업본은 설치 폴더가 아니라 `%USERPROFILE%\Saved Games\Netstorm\`에 저장된다. 따라서 압축을 푼 폴더가 읽기 전용이거나 관리자 권한이 있어야 쓸 수 있는 위치여도 실행된다. 설정을 초기화하려면 `%USERPROFILE%\Saved Games\Netstorm\Saves\`의 `options.cfg`와 `fullscreenStateFile.dat`를 지운다. (2026-10-23~11-04 제품은 `game\d\options.cfg`를 썼으므로 압축을 푸는 폴더가 쓰기 가능해야 했다.)
 * **런타임 DLL.** UCRT 는 Windows 10/11 에 기본 포함되어 넣지 않는다. 실행 파일에서 발견한 `MSVCP140`·`VCRUNTIME140` 계열만 `VCToolsRedistDir` → Visual Studio 재배포 폴더 → System32 순으로 찾아 동봉한다. 필요한 DLL 을 못 찾으면 오류로 멈춘다(`-NoRuntime` 으로 생략 가능).
-* **확인.** [단위580](exe/cpp-executable-name-20261030.md)에서 기본 증분 빌드·새 이름의 ZIP/두 런처·압축 해제본의 새 설치 안내→메인 메뉴 진입을 확인했다. 런타임이 없는 깨끗한 Windows 및 Windows11 실기 검증은 남아 있다.
+* **확인.** [단위580](exe/cpp-executable-name-20261030.md)에서 기본 증분 빌드·새 이름의 ZIP/두 런처·압축 해제본의 새 설치 안내→메인 메뉴 진입을 확인했다. 단위645에서는 제품644 배포본(1,376항목)을 한글·이모지가 들어간 경로에 풀어 실행했고, 단위932~934에서 읽기 전용 설치 실행([5차 기록](exe/cpp-user-data-root-20261105.md)), 단위938에서 한국어 글꼴·번역표를 넣은 배포본(1,379항목)의 압축 해제와 한국어 옵션 메뉴([한국어 기록](exe/cpp-korean-language-20261106.md))를 확인했다. 단위939의 `third-party\fsr1\` 동봉은 DryRun으로만 확인했다. 그 뒤 제품의 배포본, 런타임이 없는 깨끗한 Windows, Windows 11 실기 검증은 남아 있다.
