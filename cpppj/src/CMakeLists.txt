@@ -464,3 +464,4 @@ target_sources(netstorm PRIVATE o/RawConstructionFailurePackets.cpp o/RawConstru
 target_sources(netstorm PRIVATE o/RawSquidReceive.cpp o/RawSquidReceive.h) # 실제35BYTE 객체 수신/검증·PlayerNoMake를 같은 Session에 연결한다.
 target_sources(netstorm PRIVATE o/RawSquidCompressedReceive.cpp o/RawSquidCompressedReceive.h) #7ah의16필드 decoder/실제 길이 관찰기와 같은 수신 캐시다.
 target_sources(netstorm PRIVATE o/RawSquidVerification.cpp o/RawSquidVerification.h) #4ah/4bh의 검증 시작과 자유 슬롯/이전 SID 간격 부모다.
+target_sources(netstorm PRIVATE o/RawSquidMutationReceive.cpp o/RawSquidMutationReceive.h) # 내용물2dh/삭제2eh의 같은 실제 부착·환불·삭제 수신이다.
