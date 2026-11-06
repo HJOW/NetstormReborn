@@ -134,6 +134,7 @@
 #include "o/RawObjectConversion.h"
 #include "o/RawNuggetReplenish.h"
 #include "o/RawBattleNuggetPlacement.h" // 비미션 보충도 원문 지역 난수와 실제 Factory/배치/Pop을 사용한다.
+#include "o/RawBattleResourceOptions.h" // 주기 SP 통지 검증도 같은 현재87BYTE와 원문 표를 조회한다.
 #include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
 #include "o/RawBombActivation.h"
@@ -4443,14 +4444,15 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
     dispatch.Register(0x54,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->salvageCommand->Receive(sender,packet); });
     dispatch.Observe(0x6c,{});dispatch.Version(0x6c,1,0);dispatch.RequireLength(0x6c,11); //40af90/4d56f0의 원래 송금/보상 메시지다.
     dispatch.Register(0x6c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) {
-        if (packet.size()<11) throw std::out_of_range("SP 통지11BYTE 부족");auto& s=*impl_;const auto recipient=packet[4],source=packet[5],kind=packet[6];const auto amount=std::bit_cast<std::int32_t>(Read(packet,7));const auto local=s.playerState.battleOwner;auto h=MoneyInputHooks();
-        if (!kind) {
-            if (s.core.processState.Server() && source!=local && Sp(source)<static_cast<float>(amount)) throw std::logic_error("원본 송금 부정 자금 진단/제재 경로는 후속 구현"); // 정상 UI의 지불 검사와 별개의 원본 서버 검증이며 성공으로 숨기지 않는다.
-            if (source!=local) h.addOwner(source,static_cast<float>(std::bit_cast<std::int32_t>(0U-std::bit_cast<std::uint32_t>(amount))));
+        if (packet.size()<11) throw std::out_of_range("SP 통지11BYTE 부족");auto& s=*impl_;auto h=MoneyInputHooks();const auto amount=[packet] { return std::bit_cast<std::int32_t>(Read(packet,7)); }; // 각 원문 위치에서 현재 비정렬 signed 금액을 읽는다.
+        const auto notice=[&s](std::uint32_t message,std::uint32_t player,std::int32_t value) { if (!s.services.localLogin || !s.services.localLogin->status) throw std::logic_error("SP 통지의 실제 MessageBoard 장치 미연결");s.services.localLogin->status(message,player,std::bit_cast<std::uint32_t>(value)); }; // 원문4d3090의 표시1/빈문자열/현재 종류4·18이다.
+        if (!packet[6]) {
+            if (s.core.processState.Server() && packet[5]!=s.playerState.battleOwner) { const auto source=packet[5];const auto available=source>0 && source<9 ? Sp(source):0.0F;if (static_cast<double>(available)<static_cast<double>(amount())) throw std::logic_error("원본 송금 부정 자금 진단/제재 경로는 후속 구현"); } //0040ef30의 번호 관문/x87 정수 비교를 유지한다. 별도00442b50 부모는 후속이다.
+            if (packet[5]!=s.playerState.battleOwner) { const auto source=packet[5];h.addOwner(source,static_cast<float>(std::bit_cast<std::int32_t>(0U-std::bit_cast<std::uint32_t>(amount())))); } // PE는 DWORD neg 뒤 signed fild/fstp float을 수행한다.
         }
-        if (kind==2) throw std::logic_error("원본 도박 SP 통지의 현재 내기 상태 연결은 후속 구현"); // 송금 메뉴의kind0·건설 환불kind1과 구별한다.
-        h.addOwner(recipient,static_cast<float>(amount));
-        if (recipient==local && !kind && s.services.player.log) s.services.player.log(4,"Storm Power received\n"); // 일반 단일 미션의 현재 수신 표시 경계다. 원본 Message4 전체 표시는 후속이다.
+        if (packet[6]==2) { if (!BattleIncomePeriod(s.battleOptions)) return;const auto current=amount();if (current!=BattleIncomeAmount(s.battleOptions)) return;notice(18,packet[5],current); } // 현재 지급 간격/금액이 다르면 가산·중계 없이 복귀한다.
+        const auto recipient=packet[4];const auto current=static_cast<float>(amount());if (recipient==s.playerState.battleOwner) h.addLocal(current);else h.addOwner(recipient,current);
+        if (packet[4]==s.playerState.battleOwner && !packet[6]) notice(4,packet[5],amount()); // 실제 이름/현재 금액의 원문 송금 안내이며 로그로 대체하지 않는다.
         if (s.core.processState.Server()) s.broadcast->Send(packet);
     });
 }

@@ -47,7 +47,9 @@
     "secondErrors": [
       "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\o\\RawConnectionHealth.cpp(11,78): error C2561: 'netstorm::o::PollConnectionHealth': 함수는 값을 반환해야 합니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
     ],
-    "secondCorrection": "메타 연결 부재의 bool 자연 반환을 false로 명시"
+    "secondCorrection": "메타 연결 부재의 bool 자연 반환을 false로 명시",
+    "firstWarnings": 1,
+    "warningCorrectionUnit": 1017
   },
   "excluded": {
     "newMultiplayerTests": 0,

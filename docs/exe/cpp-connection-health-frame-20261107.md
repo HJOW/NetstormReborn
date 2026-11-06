@@ -11,3 +11,5 @@
 Client의 영상 갱신 잠금 없는 가지에서 SaveOptions 뒤/Ambient·Wind 앞439ad8에 실제감시를 연결했다. 실제Client의 로그인 타이머는 수신 Pump에서 떼어 같은439ae3 위치로 옮겼다. 독립 Session만 기존 Pump 편의 호출을 유지하고 실제Client는 같은 타이머를 한 번 호출한다. Editor에는 Login을 만들지 않는다. 이 변경을 일반 프레임486bc0/전체 MP 송신·디코더 완료로 쓰지 않는다.
 
 첫 빌드의 없는 RawSurfaceStorage.processState 한 원인/C2039·C2664 오류2를 같은 실제 Gameplay.Authority.server 참조로 교정했다. 두 번째 빌드에서 메타 연결 부재의 bool 자연 반환 누락/C2561 오류1을 false 명시로 교정했다. 최종 Release 제품 빌드 종료0·경고/오류0이다. 제품11.01은11,893,248바이트, SHA-256 `22cbc1b8dcd2254f3e42db60103daf4f7695918e822658934739f3429a8b17dc`다. 보고서는 `cpppj/connection-health-frame-20261107.json`이다. 신규 MP/단위/게임/통신 검사·fixture 생성/실제 장애 저장0이며 보호2800파일 불변이다. 실제 자동 장애 재현·LAN 안정성 검증은 수행하지 않았다.
+
+1017 후속 정정:1015 첫 빌드에는 응답 지연 지역명player의 C4457 경고1도 있었다. 당시 최종 incremental로그의 경고0과 구별하며1017에서 해당 지역명을owner로 교정한 최종 빌드 경고0을 확인했다.

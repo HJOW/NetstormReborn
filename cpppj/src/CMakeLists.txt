@@ -457,3 +457,4 @@ target_sources(netstorm PRIVATE o/RawBattleCompletion.cpp o/RawBattleCompletion.
 target_sources(netstorm PRIVATE o/RawBattleReconnect.cpp o/RawBattleReconnect.h) #4b8cb0의 실제 서버 선택과 현재15/다음7·3 요청을 복원한다.
 target_sources(netstorm PRIVATE o/RawConnectionHealth.cpp o/RawConnectionHealth.h) #4b9010의 프레임 활동 송신/지연/자동 서버 장애 관문이다.
 target_sources(netstorm PRIVATE o/RawBattleNuggetPlacement.cpp o/RawBattleNuggetPlacement.h) #40e050의 비미션 보충 배치를 같은 실제 월드에 연결한다.
+target_sources(netstorm PRIVATE o/RawBattleResourceOptions.cpp o/RawBattleResourceOptions.h) # 현재 SP 지급/간헐천 주기 표를 실제 수신·프레임이 공유한다.
