@@ -462,3 +462,4 @@ target_sources(netstorm PRIVATE o/RawBattleResourceFrame.cpp o/RawBattleResource
 target_sources(netstorm PRIVATE o/RawRemoteTellPacket.cpp o/RawRemoteTellPacket.h) #70h의 실제 문자열 writer/관찰기/현재 Tell 수신이다.
 target_sources(netstorm PRIVATE o/RawConstructionFailurePackets.cpp o/RawConstructionFailurePackets.h) # 비용실패의6ch/2fh와같은실제예측정리수신이다.
 target_sources(netstorm PRIVATE o/RawSquidReceive.cpp o/RawSquidReceive.h) # 실제35BYTE 객체 수신/검증·PlayerNoMake를 같은 Session에 연결한다.
+target_sources(netstorm PRIVATE o/RawSquidCompressedReceive.cpp o/RawSquidCompressedReceive.h) #7ah의16필드 decoder/실제 길이 관찰기와 같은 수신 캐시다.

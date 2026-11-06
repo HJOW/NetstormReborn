@@ -140,6 +140,7 @@
 #include "o/OriginalText.h" // 실제 원격 Tell의 표시 바이트를 같은 UI UTF-8 경계에서 변환한다.
 #include "o/RawConstructionFailurePackets.h" // 비용실패의실제6ch/2fh와현재예측객체정리를공유한다.
 #include "o/RawSquidReceive.h" // 전체 객체 수신/검증도 같은 Factory·소유자·현재 공간을 사용한다.
+#include "o/RawSquidCompressedReceive.h" //7ah도 현재 owner 캐시로 복원한 뒤 같은 전체 수신 본문을 호출한다.
 #include "o/RawSquidWord.h" // 수신 QA WORD는 기존 다리 표면 통지를 유지한다.
 #include "client/MessageGump.h" // 비용안내의한문자열/256BYTE 원문서식을실제기존처리기로작성한다.
 #include "o/RawBalloonBody.h"
@@ -322,7 +323,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,20> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c}; // 전체 객체2ch도 같은 Session 등록/해제 수명을 따른다.
+constexpr std::array<std::uint32_t,21> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a}; // 압축7ah도 같은 Session 등록/해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -411,6 +412,7 @@ struct RawCampaignSession::Impl {
     ChatRelayHooks ChatDevices(); // 같은 현재 Player/연결 표와 UI를 중계 부모에 공급한다.
     void SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet); // 준비된 현재 로컬 전송의 observer와 큐에 원시 패킷을 넘긴다.
     void SendRemoteTell(std::uint32_t owner,std::string_view section,bool others); // 같은실제mutable송신을004c9150/4c9200부모에제공한다.
+    void ReceiveSquid(std::span<const std::uint8_t> packet); //2ch/7ah의 같은00433c30 본문과 현재 실제 장치를 공유한다.
     const std::string missionFortName; //현재 Session 설치 요청의 논리 요새 이름이다. manager의 실제 파일 경로와 혼용하지 않는다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals{services.localStateGlobals ? services.localStateGlobals : std::make_shared<ClientLocalStateGlobals>()}; // 실제 Client는 같은 owner를 빌리고 독립 Session만 기존 BSS0 입력을 한 번 소유한다.
     std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals{services.connectionActivityGlobals ? services.connectionActivityGlobals : std::make_shared<ClientConnectionActivityGlobals>()}; // 실제 Client의 표를 빌리며 독립 Session만 최초0 owner를 한 번 구성한다.
@@ -4479,11 +4481,9 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
         if (s.core.processState.Server()) s.broadcast->Send(packet);
     });
 }
-// 실제 초기 등록과 같은 버전/정책/빈 observer이며 수신 시점의 현재 권한/타입을 읽는다.
-void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
-    dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);
-    dispatch.Register(0x2c,[this](auto,auto&,auto packet) { //433c30은 별도 세계나 새 Player 기록을 만들지 않는다.
-        auto& s=*impl_;SquidReceiveHooks hooks;const auto diagnose=[&s](auto expression,auto file,auto line) { s.world.Storage()->AssertDisplay(expression,file,line); };
+//433c30은 별도 세계나 새 Player 기록을 만들지 않으며 압축 decoder도 직접 같은 본문을 사용한다.
+void RawCampaignSession::Impl::ReceiveSquid(std::span<const std::uint8_t> packet) {
+        auto& s=*this;SquidReceiveHooks hooks;const auto diagnose=[&s](auto expression,auto file,auto line) { s.world.Storage()->AssertDisplay(expression,file,line); };
         const auto typeRecord=[&s](std::uint32_t type)->const RiftTypeRecord& { if (type>=s.core.types.size()) throw std::out_of_range("객체 수신의 현재 TYPE 물리 범위");return s.core.types[type]; }; // 각 원문 조회 시점의 같은 표를 읽는다.
         hooks.assertion=diagnose;hooks.take=[&s](auto type,auto sid) { return s.core.factory.Take(type,sid); };
         hooks.word=[&s](auto sid,auto word) { SetRawSquidWord(s.core.pool,sid,word,s.core.bridgeState.bridgeType,[&s](auto value) { s.core.building.NotifySurface(value); }); };
@@ -4504,8 +4504,18 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
         hooks.pop=[&s](auto sid,auto x,auto y,auto flags) { s.world.Pop(sid,x,y,flags); };hooks.containedPop=[&s](auto sid,auto parent,auto flags) { s.world.AttachBaseAsset(sid,parent,flags); };
         hooks.typeName=[&s,typeRecord](auto sid) { const auto& name=typeRecord(s.core.pool.Slot(sid)[10]).name;return name.substr(0,name.find('\0')); };hooks.log=s.services.player.log;
         auto& aux=*s.gameplayGlobals->GameAux();ReceiveRawSquid(s.core.pool,packet,{aux.VerifySid(),aux.SupportTypeWas(),s.localStateGlobals->PlayerNoMakeWarnings()},hooks);
+}
+// 실제 초기 등록과 같은 버전/정책과 각 observer이며 수신 시점의 현재 권한/타입을 읽는다.
+void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
+    if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");
+    dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);dispatch.Register(0x2c,[this](auto,auto&,auto packet) { impl_->ReceiveSquid(packet); });
+    const auto assertion=[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 같은 현재 Client 진단을 송신 관찰기에도 공급한다.
+    dispatch.ObservePacket(0x7a,[assertion](auto packet,auto sending) { ObserveCompressedSquid(packet,sending,assertion); });dispatch.Version(0x7a,1,0);dispatch.RequireLength(0x7a,0xffff);
+    dispatch.Register(0x7a,[this,assertion](auto,auto&,auto packet) { auto& s=*impl_;SquidCompressedReceiveHooks hooks;hooks.assertion=assertion;hooks.defaultType=[&s] { return s.core.bridgeState.bridgeType; };
+        hooks.type=[&s](std::uint32_t type)->const RiftTypeRecord& { if (type>=s.core.types.size()) throw std::out_of_range("압축 객체의 현재 TYPE 물리 범위");return s.core.types[type]; };hooks.maximumHp=[&s](const RiftTypeRecord& selected) { return s.core.factory.ReadSelectedHitPoints(selected,s.core.types); };
+        const auto image=DecodeCompressedSquid(packet,s.gameplayGlobals->GameAux()->SquidTransmission(),hooks);s.ReceiveSquid(image); // 가짜 packet 재분배나 새 캐시 없이 원문 직접 호출한다.
     });
-    if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");RegisterGeyserMined(dispatch,*impl_->geyserMined);
+    RegisterGeyserMined(dispatch,*impl_->geyserMined);
     RegisterRemoteTellPacket(dispatch,[this](auto text) { if (!impl_->services.factoryTell) throw std::logic_error("원격 Tell의 실제 현재 cf730 미연결");impl_->services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); // 표시부호화는현재실제UI의UTF-8경계에서만변환한다.
     dispatch.Register(0x5b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveGeyserMined(packet); });
     dispatch.Observe(0x40,{});dispatch.Version(0x40,1,0);dispatch.RequireLength(0x40,18);
