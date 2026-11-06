@@ -1,0 +1,19 @@
+{
+  "unit": 960,
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "rows": 48,
+  "scope": "신규로컬Form0/flags50의0041bd20/CD0048f590와실제타입쓰기. Kernel/Create/가상부착/통지는명시장치. 생성중단은자식진입부분상태이며전체SEH/힙실패아님. MP/수신미실행.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originalCD/Netstorm.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_baseprocess_attach_current.py": "d1ed8ee729d56af1dec5d6ba45092a554362142cd2b99a51abcfd35c4514fd61",
+    "cpppj/tests/fixtures/baseprocess-attach-current-local-x86.tsv": "6d8c548585021e94997957ac42d59d76443891da387c2022f6d41c83c331b6d6"
+  }
+}

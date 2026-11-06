@@ -138,13 +138,13 @@ public:
     void DrainRuntimeBindings(const std::shared_ptr<ProcessHostRuntimeBindings>& runtime); // 독립 World의 최종 fallback만 자기 현재 대여를 정리하며 이전 Native 잔류는 보존한다.
     bool HasOnlyRegularProcesses() const; // 현재 Host의 잔류 중 C++ Regular 이외 수명은 별도 복원을 요구한다. 표시 TYPE와 C++ 실행 클래스는 구별한다.
     // 0041bd20 ↔ CD 0048f590: Kernel 등록 → ProcessForm 생성/지정 슬롯 Take → 타입/pid 기록 → 부모 부착 → OnAttached.
-    // 패치판은 부모가 free/dead이면 등록하지 않고 null을 반환한다. CD판의 그 경로(assert 뒤 계속)는 지원하지 않는다.
-    // form=0은 기존 번호 할당이다. 신규 포인터의 지정 form은 free 서버 번호를 받고 raw payload·풀 목록/카운터를 보존한다.
-    // 이미 소유한 포인터는 Reattach로 넘긴다. 기존 live Form에 신규 포인터를 넣는 원본 assert 경로는 거부한다.
+    // 패치판은 부모가 free/dead이면 등록하지 않고 null을 반환한다. CD판은 현재 진단 복귀 뒤 계속 진행한다.
+    // form=0은 기존 번호 할당이다. 지정 form은 실제 공통 Take/현재 getter와 늦은 부모/PID 진단을 사용한다.
+    // 이미 소유한 포인터는 Reattach로 넘긴다. live Form의 불일치는 원문 진단 뒤 정상 복귀할 수 있다.
     SquidProcess* Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form={});
     // 같은 Kernel이 이미 소유한 포인터의 지정 Form을 재수신한다(0041bd20/CD 0048f590).
-    // live Form은 기존 부모/PID를 검증한 뒤 OnAttached만 부르고 타입·링크·상태를 그대로 둔다.
-    // free 서버 Form은 기존 PID로 Take/타입 쓰기/부착을 수행한다. 다른 객체의 live Form 교체는 원본 assert 경로로 거부한다.
+    // live Form은 기존 부모/PID를 원문 위치에서 진단한 뒤 OnAttached만 부르고 타입·링크·상태를 그대로 둔다.
+    // free 서버 Form은 기존 PID로 Take/타입 쓰기/부착을 수행한다. 선행 genus/체인 검사나 생성 실패 rollback은 추가하지 않는다.
     SquidProcess* Reattach(SquidProcess& process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form);
     // 00496e80 ↔ CD 0048efd0: RegularProcess를 붙이고 시각을 현재 시각으로 둔다. 원본 생성자의 flags는 항상 로컬 전용 0x50이며
     // 다른 값은 BaseProcess 생성자의 할당/권한 분기를 검사할 때만 쓴다.
@@ -182,6 +182,7 @@ public:
     std::uint32_t ProcessTypeEnd() const;
     std::uint32_t FormVtable() const;
 private:
+    bool AttachBase(SquidProcess& process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form,std::unique_ptr<SquidProcess>* owned); // 같은 상위 원문 부모에서 실제 신규/기존 Kernel 등록을 선택한다.
     friend class RegularProcess;
     // raw 필드를 호스트 정렬과 무관하게 읽고 쓴다. 쓰기는 할당된 슬롯만 받는다.
     std::uint16_t Word(Sid sid,std::size_t offset) const;

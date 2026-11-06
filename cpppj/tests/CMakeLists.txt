@@ -3677,6 +3677,12 @@ target_sources(netstorm_pop_context_tests PRIVATE ContentAttachCurrentTests.cpp)
 # 서버0 Process 진단 복귀만 대조하며 신규 직렬화/MP/패킷 검사는 실행하지 않는다(959).
 target_sources(netstorm_tests PRIVATE ProcessAttachCurrentTests.cpp)
 target_sources(netstorm_pop_context_tests PRIVATE ProcessAttachCurrentTests.cpp)
+
+# 신규 로컬 BaseProcess 부모의 진단/생성 부분 상태만 대조하며 새 수신/MP 검사는 실행하지 않는다(960).
+target_sources(netstorm_tests PRIVATE BaseProcessAttachCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE BaseProcessAttachCurrentTests.cpp)
+set_source_files_properties(BaseProcessAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    NETSTORM_BASEPROCESS_ATTACH_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/baseprocess-attach-current-local-x86.tsv")
 set_source_files_properties(ProcessAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS
     NETSTORM_PROCESS_ATTACH_CURRENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/process-attach-current-local-x86.tsv")
 set_source_files_properties(ContentAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CONTENT_ATTACH_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/content-attach-current-x86.tsv\"") # 최초 원문41행만 기대값으로 사용한다.

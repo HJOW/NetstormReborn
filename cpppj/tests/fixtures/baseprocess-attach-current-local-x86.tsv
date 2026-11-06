@@ -1,0 +1,49 @@
+# 신규 로컬Form0/flags50 BaseProcess; Kernel/Create/가상부착은 명시 경계; MP/수신 미실행
+originals	0,46,0	returned	K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c2e4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	0,46,1	create	K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	0,9,0	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28;K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c094663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	0,9,1	create	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	0,4294967295,0	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28;K;C2,2;D0 <= pType && pType < MAX_TYPES|\Ns\O\Squid.cpp|2743;A7,208;N	5,7	002000107b98b5d2ef0cff4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	0,4294967295,1	create	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	1,46,0	returned	-	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	1,46,1	returned	-	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	1,9,0	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	1,9,1	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	1,4294967295,0	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	1,4294967295,1	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	2,46,0	returned	-	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	2,46,1	returned	-	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	2,9,0	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	2,9,1	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	2,4294967295,0	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	2,4294967295,1	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	3,46,0	returned	-	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	3,46,1	returned	-	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	3,9,0	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	3,9,1	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	3,4294967295,0	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originals	3,4294967295,1	returned	DisProcessType(_processType)|\Ns\O\Baseprocess.cpp|28	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe1b3855728facc9e603203d5a7794
+originalCD	0,46,0	returned	K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c2e4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	0,46,1	create	K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	0,9,0	returned	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c094663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	0,9,1	create	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	0,4294967295,0	returned	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;K;C2,2;D0 <= pType && pType < MAX_TYPES|\ns\o\Squid.cpp|2670;A7,208;N	5,7	002000107b98b5d2ef0cff4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	0,4294967295,1	create	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	1,46,0	returned	D!base.isFree()|\ns\o\BaseProcess.cpp|56;K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c2e4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	1,46,1	create	D!base.isFree()|\ns\o\BaseProcess.cpp|56;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	1,9,0	returned	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isFree()|\ns\o\BaseProcess.cpp|56;K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c094663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	1,9,1	create	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isFree()|\ns\o\BaseProcess.cpp|56;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	1,4294967295,0	returned	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isFree()|\ns\o\BaseProcess.cpp|56;K;C2,2;D0 <= pType && pType < MAX_TYPES|\ns\o\Squid.cpp|2670;A7,208;N	5,7	002000107b98b5d2ef0cff4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	1,4294967295,1	create	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isFree()|\ns\o\BaseProcess.cpp|56;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	2,46,0	returned	D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c2e4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	2,46,1	create	D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	2,9,0	returned	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c094663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	2,9,1	create	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	2,4294967295,0	returned	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2;D0 <= pType && pType < MAX_TYPES|\ns\o\Squid.cpp|2670;A7,208;N	5,7	002000107b98b5d2ef0cff4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	2,4294967295,1	create	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	3,46,0	returned	D!base.isFree()|\ns\o\BaseProcess.cpp|56;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c2e4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	3,46,1	create	D!base.isFree()|\ns\o\BaseProcess.cpp|56;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	3,9,0	returned	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isFree()|\ns\o\BaseProcess.cpp|56;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2;A7,208;N	5,7	002000107b98b5d2ef0c094663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	3,9,1	create	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isFree()|\ns\o\BaseProcess.cpp|56;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe
+originalCD	3,4294967295,0	returned	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isFree()|\ns\o\BaseProcess.cpp|56;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2;D0 <= pType && pType < MAX_TYPES|\ns\o\Squid.cpp|2670;A7,208;N	5,7	002000107b98b5d2ef0cff4663809dbad7f40700000085a2bfdcf91633506d8aa7c4e1fe
+originalCD	3,4294967295,1	create	DisProcessType(_processType)|\ns\o\BaseProcess.cpp|28;D!base.isFree()|\ns\o\BaseProcess.cpp|56;D!base.isDead()|\ns\o\BaseProcess.cpp|57;K;C2,2	0,7	002000107b98b5d2ef0c024663809dbad7f4112e4b6885a2bfdcf91633506d8aa7c4e1fe

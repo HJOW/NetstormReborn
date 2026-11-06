@@ -1,6 +1,8 @@
 // 객체 부착 프로세스의 form 생성/부착/해제와 Regular 이벤트 실행을 원본 쓰기 순서대로 복원한다.
 #include "o/SquidProcess.h"
 #include "o/RawProcessAttach.h"
+#include "o/RawBaseProcessAttach.h"
+#include "o/RawSquidContainedUnpop.h"
 #include "o/SquidForms.h"
 #include "o/SquidFactory.h" // ProcessForm도 현재 공통 생성자/가상 수신 부모를 사용한다.
 #include <bit>
@@ -137,96 +139,37 @@ void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
     else if (directFormFactory_) apply(*directFormFactory_);
     else { SquidFactory independent(pool_,types_);independent.BindDiagnostics({types_,state_.assertion,{}});apply(independent); } // 독립 입력도 같은 현재 표/진단 부모를 쓴다.
     }; // 원문 파생 접두를 마친 위치에서만 현재 공통 공장을 요구한다.
-    AttachProcessForm(pool_,form,parent,flags,hooks);
+    const auto table=std::uint32_t(Word(form,0))|(std::uint32_t(Word(form,2))<<16); // TYPE를 바꾸어도 실제 생성 VT의 +74를 선택한다.
+    if (table==FormVtable()) AttachProcessForm(pool_,form,parent,flags,hooks);
+    else {
+        bool common=false;for (const auto kind:{1U,3U,6U}) if (table==SquidForms(pool_).Vtable(kind)) common=true; // 확인된 내장 Form 세 클래스의 +74는 공통 부모다.
+        if (!common) throw std::logic_error("BaseProcess 부착의 미복원 현재 VT+74");hooks.attach(form,parent,flags);
+    }
 }
 
+// C++ 소유권을 가진 신규 입력도 같은 원문 부모에 전달한다.
 SquidProcess* SquidProcessHost::Attach(std::unique_ptr<SquidProcess> process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form) {
-    RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.
     if (!process) throw std::invalid_argument("부착할 프로세스가 없습니다");
-    // 이미 소유한 포인터를 받은 경우 중복 unique_ptr 소멸을 막고 동일 포인터 재수신으로 넘긴다.
-    if (kernel_.Find(*process)) { auto* existing=process.release();return Reattach(*existing,processType,parent,flags,form); }
-    if (processType<kFirstProcessType || std::bit_cast<std::int32_t>(ProcessTypeEnd())<=0 || processType>=ProcessTypeEnd()) throw std::invalid_argument("프로세스 타입 번호 오류");
-    if (parent.value==0 || parent.value>=pool_.Capacity()) throw std::out_of_range("프로세스 부착 SID 범위 오류");
-    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (pool_.Slot(parent)[kState]&(kFree|kDead)) {
-        // 패치판은 조용히 건너뛴다. CD판은 assert를 보고한 뒤 계속하므로 지원하지 않는다.
-        if (patch) return nullptr;
-        throw std::logic_error("CD판의 free/dead 부모 부착은 지원하지 않습니다");
-    }
-    // Gun/Path의 flags0은 서버 Form을 만든다. 연결하지 않은 전송기를 로컬 flags로 우회하지 않는다.
-    if (pool_.IsServer() && !(flags&kLocalMask) && (!Transmission().writeData || !Transmission().transmit)) throw std::logic_error("프로세스 Form 서버 전송 경계가 필요합니다");
-    if (form.value) {
-        if (form.value<pool_.Layout().serverFirst || form.value>=pool_.Capacity() || form.value==pool_.Layout().predictableFirst)
-            throw std::out_of_range("지정 프로세스 form은 예약 머리를 제외한 서버 번호여야 합니다");
-        if (!(pool_.Slot(form)[kState]&kFree)) throw std::logic_error("live 지정 form의 기존 PID와 신규 프로세스 포인터가 다릅니다");
-        // 새 Take 뒤에는 복구할 수 없으므로 잘못된 genus/체인 머리를 Kernel 등록 전에 거부한다.
-        if (Type(processType).flags2&kNoContainerGenus) throw std::logic_error("지정 form genus 오류");
-        const auto head=Word(parent,kHead);
-        if (head==form.value || head>=pool_.Capacity() || (head && (head<5 || head==pool_.Layout().predictableFirst || (pool_.Slot(Sid{head})[kState]&kFree))))
-            throw std::logic_error("지정 form의 부모 종속 체인 오류");
-    }
-    auto* attached=process.get();
-    const auto pid=kernel_.Add(std::move(process));
-    const auto rotation=state_.typeRotation;
-    // 패치판 Kernel 등록은 타입 순환 값을 하나 전진시킨다(0049c2c0).
-    if (patch) state_.typeRotation=(state_.typeRotation+1)%static_cast<std::uint32_t>(TypeCount());
-    try {
-        // 지정 번호에서는 Allocate를 부르지 않는다. Take의 postTake도 ProcessForm에서는 빈 함수다.
-        form=CreateOrTakeForm(flags,form);
-    } catch (...) {
-        // 번호 소진이면 등록을 되돌려 form 없는 프로세스가 남지 않게 한다.
-        kernel_.Remove(pid);state_.typeRotation=rotation;
-        throw;
-    }
-    auto raw=pool_.AllocatedBytes(form);
-    // 004ae2e0: 타입 번호를 프로세스 타입으로 바꾸고 Kernel 번호를 기록한다.
-    raw[kType]=static_cast<std::uint8_t>(processType);
-    for (std::size_t i=0;i<4;++i) raw[kFormPid+i]=static_cast<std::uint8_t>(pid>>(8*i));
-    attached->form_=form;attached->parent_=parent;attached->pid_=pid;attached->host_=this;attached->runtimeBinding_=currentRuntime_ ? currentRuntime_() : std::shared_ptr<ProcessHostRuntimeBindings>{};
-    AttachForm(form,parent,flags|kProcessDebug);
-    attached->OnAttached();
-    return attached;
+    if (kernel_.Find(*process)) { auto* existing=process.release();return Reattach(*existing,processType,parent,flags,form); } // 동일 포인터의 C++ 중복 소유권만 해제한다.
+    auto* attached=process.get();return AttachBase(*attached,processType,parent,flags,form,&process) ? attached : nullptr;
 }
-// 원본의 지정 live 분기는 Take/Unpop/Kernel 삭제 없이 같은 포인터를 재등록한다.
+// 실제 Kernel이 소유한 기존 포인터는 새 unique_ptr 없이 같은 상위 부모에 등록한다.
 SquidProcess* SquidProcessHost::Reattach(SquidProcess& process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form) {
-    RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.
-    const auto existing=kernel_.Find(process);
-    if (!existing || (process.host_ && process.host_!=this)) throw std::invalid_argument("재수신 프로세스의 Kernel/host 불일치");
-    if (processType<kFirstProcessType || std::bit_cast<std::int32_t>(ProcessTypeEnd())<=0 || processType>=ProcessTypeEnd()) throw std::invalid_argument("재수신 프로세스 타입 번호 오류");
-    if (!parent.value || parent.value>=pool_.Capacity() || !form.value || form.value>=pool_.Capacity())
-        throw std::out_of_range("재수신 프로세스 SID 범위 오류");
-    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    // BaseProcess는 부모 상태를 보기 전에 전달된 두 SID를 자기 필드에 기록한다.
-    process.form_=form;process.parent_=parent;process.pid_=existing;process.host_=this;process.runtimeBinding_=currentRuntime_ ? currentRuntime_() : std::shared_ptr<ProcessHostRuntimeBindings>{};
-    if (pool_.Slot(parent)[kState]&(kFree|kDead)) {
-        if (patch) return nullptr;
-        throw std::logic_error("CD판의 free/dead 부모 재수신은 지원하지 않습니다");
-    }
-    const bool free=(pool_.Slot(form)[kState]&kFree)!=0;
-    if (free) {
-        if (form.value<pool_.Layout().serverFirst || form.value==pool_.Layout().predictableFirst)
-            throw std::out_of_range("free 재수신 form은 예약 머리를 제외한 서버 번호여야 합니다");
-        if (pool_.IsServer() && !(flags&kLocalMask) && (!Transmission().writeData || !Transmission().transmit)) throw std::logic_error("프로세스 Form 서버 전송 경계가 필요합니다");
-        if (Type(processType).flags2&kNoContainerGenus) throw std::logic_error("재수신 form genus 오류");
-        const auto head=Word(parent,kHead);
-        if (head==form.value || head>=pool_.Capacity() || (head && (head<5 || head==pool_.Layout().predictableFirst || (pool_.Slot(Sid{head})[kState]&kFree))))
-            throw std::logic_error("재수신 form 부모 종속 체인 오류");
-    } else {
-        // live 슬롯에서는 processType 인자를 덮어쓰지 않는다. 실제 표/기존 부모/PID만 확인한다.
-        if (!IsProcessForm(form) || SquidForms(pool_).Parent(form)!=parent || FromForm(form)!=&process)
-            throw std::logic_error("live 재수신 form의 기존 부모/PID 불일치");
-    }
-    const auto pid=kernel_.Add(process);
-    // 패치 Kernel의 타입 순환 helper는 중복 포인터 검색보다 먼저 실행된다.
-    if (patch) state_.typeRotation=(state_.typeRotation+1)%static_cast<std::uint32_t>(TypeCount());
-    if (free) {
-        form=CreateOrTakeForm(flags,form);
-        auto raw=pool_.AllocatedBytes(form);raw[kType]=static_cast<std::uint8_t>(processType);
-        // 원본의 정렬되지 않은 PID DWORD만 기록해 그 뒤 payload를 보존한다.
-        for (std::size_t i=0;i<4;++i) raw[kFormPid+i]=static_cast<std::uint8_t>(pid>>(8*i));
-        AttachForm(form,parent,flags|kProcessDebug);
-    }
-    process.OnAttached();return &process;
+    if (!kernel_.Find(process) || (process.host_ && process.host_!=this)) throw std::invalid_argument("재수신 프로세스의 C++ Kernel/host 소유권 불일치");
+    return AttachBase(process,processType,parent,flags,form,nullptr) ? &process : nullptr;
+}
+// 장기 Host의 현재 장치와 실제 두 필드를 원문 부모에 제공하며 부분 실패를 숨기지 않는다.
+bool SquidProcessHost::AttachBase(SquidProcess& process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form,std::unique_ptr<SquidProcess>* owned) {
+    RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr);process.host_=this;process.runtimeBinding_=currentRuntime_ ? currentRuntime_() : std::shared_ptr<ProcessHostRuntimeBindings>{};
+    BaseProcessAttachHooks hooks;hooks.typeEnd=[this] { return ProcessTypeEnd(); };hooks.processFormType=[this] { return state_.ProcessFormType(); };
+    hooks.assertion=[this](auto expression,auto file,auto line) { const auto device=currentRuntime_ ? Runtime()->assertion : state_.assertion;if (!device) throw std::logic_error("BaseProcess 부착의 선택된 원문 진단 장치 미연결");device(expression,file,line); };
+    hooks.registerProcess=[&] { if (pool_.Edition()==OriginalEdition::Patch1078) state_.typeRotation=(state_.typeRotation+1U)%static_cast<std::uint32_t>(TypeCount());const auto pid=owned ? kernel_.Add(std::move(*owned)) : kernel_.Add(process);process.pid_=pid;return pid; }; // 원문 Kernel helper는 슬롯 검색 전에 회전을 전진시킨다.
+    hooks.create=[this](std::uint32_t allocationFlags) { return CreateOrTakeForm(allocationFlags==2 ? kClientForm : 0U,Sid{}); };
+    hooks.take=[this](Sid selected) { static_cast<void>(CreateOrTakeForm(0,selected)); };
+    hooks.parent=[this](Sid selected) { return CommonContainedParent(pool_,selected); };
+    hooks.attach=[this](Sid selected,Sid into,std::uint32_t popFlags) { AttachForm(selected,into,popFlags); };
+    hooks.onAttached=[&] { process.OnAttached(); };
+    return AttachBaseProcess(pool_,{process.form_,process.parent_},processType,parent,form,flags,hooks);
 }
 RegularProcess* SquidProcessHost::AddRegular(Sid parent,std::uint32_t event,float payload,std::uint32_t flags) {
     return AttachRegular(std::make_unique<RegularProcess>(event,payload),parent,false,flags); // 첫 실행은 현재 시각 이후의 Kernel 프레임이다.
@@ -261,14 +204,13 @@ void SquidProcessHost::SetRegularHandler(RegularHandler handler) { if (currentRu
 void SquidProcessHost::SetFormTransmit(ProcessFormTransmission transmit) { if (currentRuntime_) Runtime()->transmit=std::move(transmit);else transmit_=std::move(transmit); }
 // 현재 raw 부모를 다시 읽어 프로세스의 오래된 parent 복사값으로 재부착하지 않는다.
 void SquidProcessHost::RefreshForm(SquidProcess& process) {
-    RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.
-    if (process.host_!=this || !IsRegistered(process.pid_,&process)) throw std::logic_error("Form 갱신 프로세스 소유권 오류");
-    const auto form=process.Form();const auto parent=SquidForms(pool_).Parent(form);
-    if (!parent.value || parent.value>=pool_.Capacity() || (pool_.Slot(parent)[kState]&(kFree|kDead)))
-        throw std::logic_error("Form 갱신 부모 상태 오류");
-    if (pool_.IsServer() && (!Transmission().writeData || !Transmission().transmit))
-        throw std::logic_error("Form 갱신 서버 전송 경계가 필요합니다");
-    UnpopForm(form);AttachForm(form,parent,0);
+    RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 현재 World의 호출 대여를 끝까지 유지한다.
+    if (process.host_!=this || !IsRegistered(process.pid_,&process)) throw std::logic_error("Form 갱신 프로세스의 C++ 소유권 불일치");
+    const auto parent=CommonContainedParent(pool_,process.Form());const auto raw=pool_.Slot(parent);const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 부모는 첫 getter에서 저장하고 Form 필드는 각 가상 진입 전에 다시 읽는다.
+    const auto assertion=[this,patch](std::string_view expression,std::uint32_t patchLine,std::uint32_t cdLine) { const auto device=currentRuntime_ ? Runtime()->assertion : state_.assertion;if (!device) throw std::logic_error("Form 갱신의 선택된 원문 진단 장치 미연결");device(expression,patch ? "\\Ns\\O\\Baseprocess.cpp" : "\\ns\\o\\BaseProcess.cpp",patch ? patchLine : cdLine); };
+    if (raw[11]&kDead) assertion("!parent.isDead()",0xb0,0xab);
+    if (raw[11]&kFree) assertion("!parent.isFree()",0xb1,0xac);
+    UnpopForm(process.Form());AttachForm(process.Form(),parent,0);
 }
 void SquidProcessHost::UnpopForm(Sid form) {
     const auto runtime=currentRuntime_ ? Runtime() : nullptr;RuntimeCall call(runtime); // 실제 분리/진단이 돌아올 때까지 현재 World를 보존한다.

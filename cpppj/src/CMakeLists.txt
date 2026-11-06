@@ -425,3 +425,6 @@ target_sources(netstorm PRIVATE o/RawContentAttach.cpp o/RawContentAttach.h)
 
 # Process 파생 접두의 진단/현재 서버와 공통 부착 호출 순서다(959).
 target_sources(netstorm PRIVATE o/RawProcessAttach.cpp o/RawProcessAttach.h)
+
+# BaseProcess 상위 부착의 현재 필드/등록/부분 실패 부모다(960).
+target_sources(netstorm PRIVATE o/RawBaseProcessAttach.cpp o/RawBaseProcessAttach.h)
