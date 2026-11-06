@@ -141,3 +141,13 @@ TEST_CASE(KernelDiagnosticCurrent_ClientWorldPreUsesChangedEmptyPidAndFinishesFo
         CHECK(destroyed==1 && client.GetKernel().Size()==0); // World의 실제 대여 최종 반납은 남은 자기 C++ 소유권을 모듈보다 먼저 회수한다.
     }
 }
+
+TEST_CASE(KernelDiagnosticCurrent_CdClientUsesOriginalCapacityAndNullNameSummary) { // 실제 CD Client의Kernel 상한과 같은 요약/상세/현재 단언 접합을 대조한다.
+    KernelDiagnosticDirectory output;const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Cd1072);ClientOptions options;options.edition=OriginalEdition::Cd1072;options.gameDirectory=assets.root;options.noAudio=true;options.userData=netstorm::platform::UserDataRoot(output.root);Client client(std::move(options));CHECK(client.GetKernel().Capacity()==3999);
+    const auto gameplay=client.GameplayGlobals();auto storage=MakeRawSurfaceStorage(assets.game,gameplay->Authority(),gameplay->GameAux());auto kernel=std::make_shared<Kernel>(1);std::size_t assertions{};
+    storage->BindDisplayDiagnostics(gameplay->AiDebug().AssertionDetail(),[&](auto expression,auto file,auto line) { CHECK(expression=="firstSlot != 0" && file=="\\ns\\o\\Kernel.cpp" && line==0x77);CHECK(gameplay->AiDebug().AssertionDetail().has_value());++assertions; });BindClientKernelDiagnostics(kernel,storage,gameplay,output.root/"Diagnostics",true);
+    const auto bytes=storage->pool.Bytes();const_cast<std::uint8_t*>(bytes.data())[10]=9; // CD 원문 포인터 이름표의 NULL9를 실제 CRT에서 관측한 출력과 비교한다.
+    kernel->Add(std::make_unique<KernelSummaryProcess>());const auto failed=KernelDiagnosticRejects([&] { CHECK(kernel->Add(std::make_unique<KernelSummaryProcess>())==0); });CHECK(!failed && assertions==1 && kernel->Get(0));
+    if (failed) return; // 준비 전 실패에서도 임시 파일/소유권만 정상 정리하며 가짜 파일 기대값은 만들지 않는다.
+    std::ifstream file(output.root/"Diagnostics"/"procSumm.txt",std::ios::binary);const std::string text((std::istreambuf_iterator<char>(file)),{});file.close();CHECK(text=="pType=(null) sid=0, attachToType=NULL\n" && !std::filesystem::exists(output.root/"Diagnostics"/"squids.txt"));kernel->DrainOwnedForShutdown();CHECK(kernel->Size()==0);
+}

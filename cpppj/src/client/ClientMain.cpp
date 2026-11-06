@@ -203,7 +203,7 @@ Client::Client(ClientOptions options)
       chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
       staticStrings_(std::make_shared<ClientStaticStrings>(files_.FileNameOwner())),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
-      chat_(std::make_unique<ChatState>(*this,options_.edition)),trace_(std::make_unique<ClientTraceGlobals>()) {
+      chat_(std::make_unique<ChatState>(*this,options_.edition)),kernel_(std::make_shared<o::Kernel>(options_.edition==o::OriginalEdition::Patch1078 ? o::kProcessCapacity:o::kCdProcessCapacity)),trace_(std::make_unique<ClientTraceGlobals>()) { // 실제장기Kernel도원문의PATCH39999/CD3999상한을사용한다.
     if (options_.edition==o::OriginalEdition::Patch1078) files_.DeferPrimaryArchiveRegistration();else files_.RegisterArchives(); // 원본10.78은441790의setup탐색뒤에등록한다. 독립조회는첫TAFF접근까지예약하고10.72기존초기화는유지한다.
     rendererFrame_=std::make_unique<ClientRendererFrame>(*this); //생성은 BSS0 owner/참조만 준비하며 아직 화면/파일/난수를 사용하지 않는다.
     captureSequence_=std::make_unique<ClientCaptureSequence>(*this); //원문BSS0처럼파일/화면 없이 장기 상태만 준비한다.

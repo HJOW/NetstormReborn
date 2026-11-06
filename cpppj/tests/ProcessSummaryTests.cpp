@@ -21,40 +21,41 @@ std::string Hex(std::string_view bytes) {
 struct Record { std::uint32_t form{};std::int32_t parent{}; }; //form은현재Form SID, parent는signed 부착 부모다.
 //풀/슬롯/장치의 입력과 원문에서 정한 시점의 외부 변형만 보유한다.
 struct SummaryScene {
-    SidPool pool{OriginalEdition::Patch1078,24000,true}; //원문 관측기의 같은 실제50바이트 물리 풀이다.
-    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); //현재 부모의 이름이 들어 있는 원본 TYPE 표다.
+    SidPool pool; // 판본별 원문36/50바이트 물리 풀이다.
+    std::vector<RiftTypeRecord> types; // 현재 부모 이름을 읽는171/188개의 실제 TYPE 표다.
     std::array<ProcessSummaryHandle,40001> slots{}; //0/40000은 읽으면 안 되는 sentinel도 포함한다.
     std::array<Record,80> records{}; //불투명 핸들 번호별 현재 두 필드다.
     std::string trace; //실제파일 경계에 전달된 원문 순서의 인자 기록이다.
+    std::uint32_t end{}; // 순회 마지막 번호는CD3999/PATCH39999이며 다음 번호는 sentinel이다.
     std::int32_t mutation{};std::uint32_t file{},lines{},forms{},parents{}; //입력 변형/파일 토큰과 현재 경계 호출 횟수다.
     //검사 입력은 non-const 풀이 소유한 물리 슬롯을 초기화하며 할당 상태도 원문처럼 따로 둔다.
-    std::span<std::uint8_t> Raw(std::uint32_t sid) { const auto bytes=pool.Bytes();return std::span(const_cast<std::uint8_t*>(bytes.data()),bytes.size()).subspan(sid*50,50); }
+    std::span<std::uint8_t> Raw(std::uint32_t sid) { const auto bytes=pool.Slot(Sid{static_cast<std::uint16_t>(sid)});return {const_cast<std::uint8_t*>(bytes.data()),bytes.size()}; }
     //원문의 fprintf가 돌아온 순간에만 다음 필드/슬롯을 바꾼다.
     void Mutate() {
         switch (mutation) {
         case 1:slots[2]=0;break;case 2:slots[100]=4;break;case 3:records[2].parent=0;break;
         case 4:Raw(51)[10]=54;break;case 5:Raw(61)[10]=157;break;case 6:slots[2]=3;break;
-        case 7:slots[1]=4;break;case 8:Raw(50)[10]=62;break;case 13:slots[39999]=0;break;case 14:slots[3]=4;break;default:break;
+        case 7:slots[1]=4;break;case 8:Raw(50)[10]=pool.Edition()==OriginalEdition::Patch1078 ? 62:61;break;case 13:slots[end]=0;break;case 14:slots[3]=4;break;default:break;
         }
     }
     //입력 구성은 원문 도구와 같고 출력 trace는 실행 전 비워 둔다.
-    SummaryScene(std::uint32_t scenario,std::int32_t change,std::uint32_t token):mutation(change),file(token) {
+    SummaryScene(std::uint32_t scenario,std::int32_t change,std::uint32_t token,OriginalEdition edition=OriginalEdition::Patch1078):pool(edition,24000,true),types(edition==OriginalEdition::Patch1078 ? 188:171),end(edition==OriginalEdition::Patch1078 ? 39999:3999),mutation(change),file(token) {
         types[82].name="bridge";types[94].name="island";types[157].name="aLongParentNameWith%and\tText";types[0].name=std::string("none\0ignored",12);
         Raw(60)[10]=82;Raw(61)[10]=94;Raw(62)[10]=157;Raw(63)[10]=0;
         constexpr std::array<std::uint8_t,5> kinds{46,10,55,54,0};constexpr std::array<std::int32_t,5> parent{60,61,0,62,63}; //다섯 합성 프로세스의 입력 TYPE/부모다.
         for (std::size_t i=0;i<kinds.size();++i) { records[i+1]={static_cast<std::uint32_t>(50+i),parent[i]};Raw(static_cast<std::uint32_t>(50+i))[10]=kinds[i]; } //원본+4 Form은각각50..54다.
-        slots[0]=slots[40000]=5;
+        slots[0]=slots[end+1]=5;
         if (scenario==1) { slots[1]=1;records[1].parent=0;Raw(50)[11]=1; }
-        else if (scenario==2) { slots[1]=1;slots[2]=2;slots[3]=3;slots[39999]=5; }
-        else if (scenario==3) for (std::uint32_t kind=0;kind<63;++kind) { //축약 TYPE 이름으로 대체하면 실패하는 전체63개 원래 이름이다.
+        else if (scenario==2) { slots[1]=1;slots[2]=2;slots[3]=3;slots[end]=5; }
+        else if (scenario==3) for (std::uint32_t kind=0;kind<(edition==OriginalEdition::Patch1078 ? 63U:62U);++kind) { // 축약 이름으로 대체하지 않고 판본별 전체 포인터 표를 읽는다.
             const auto handle=10+kind,sid=100+kind;slots[kind+1]=handle;records[handle]={sid,std::array<std::int32_t,5>{0,60,61,62,63}[kind%5]};Raw(sid)[10]=static_cast<std::uint8_t>(kind);Raw(sid)[11]=static_cast<std::uint8_t>(kind%16);
         }
-        else if (scenario==4) { slots[1]=3;slots[39998]=1;slots[39999]=2; }
+        else if (scenario==4) { slots[1]=3;slots[end-1]=1;slots[end]=2; }
     }
     //사본 목록이 아니라 원문이 재조회하는 같은 현재 핸들/필드를 공급한다.
     ProcessSummaryHooks Hooks() {
         return {
-            [this](std::uint32_t slot) { CHECK(slot>=1 && slot<=39999);return slots.at(slot); },
+            [this](std::uint32_t slot) { CHECK(slot>=1 && slot<=end);return slots.at(slot); },
             [this](ProcessSummaryHandle handle) { const auto form=records.at(handle).form;if (++forms==1 && mutation==9) slots[1]=2;return form; },
             [this](ProcessSummaryHandle handle) { const auto parent=records.at(handle).parent;if (++parents==1) { if (mutation==10) records.at(handle).parent=61;else if (mutation==11) slots[1]=2; }return parent; },
             [this](std::string_view path,std::string_view mode) { trace="O:"+Hex(path)+":"+Hex(mode)+":"+std::to_string(file);return file; },
@@ -85,4 +86,20 @@ TEST_CASE(ProcessSummary_HostBoundariesPreservePriorEffects) {
     SummaryScene missing(0,0,0);auto absent=missing.Hooks();absent.close={};threw=false;
     try { WriteRawProcessSummary(missing.pool,missing.types,absent); }catch (const std::logic_error&) { threw=true; }
     CHECK(threw && missing.trace=="O:70726f6353756d6d2e747874:7762:0");
+}
+
+TEST_CASE(ProcessSummary_CdIndependentNative20CachedParentAndFullNames) { // CD의 전체62이름/NULL9·3999범위와 부모 캐시는 독립 원문 파일 바이트로 대조한다.
+    std::ifstream input(NETSTORM_CD_PROCESS_SUMMARY_FIXTURE);CHECK(bool(input));std::string line;std::size_t count{};
+    while (std::getline(input,line)) { // 같은20원문 입력의 파일 토큰0/순회 중 변형도 빠짐없이 적용한다.
+        if (!line.empty() && line.back()=='\r') line.pop_back();if (line.empty() || line[0]=='#') continue;
+        std::stringstream fields(line);std::string scenario,change,file,expected;std::getline(fields,scenario,'\t');std::getline(fields,change,'\t');std::getline(fields,file,'\t');std::getline(fields,expected);
+        SummaryScene scene(static_cast<std::uint32_t>(std::stoul(scenario)),std::stoi(change),static_cast<std::uint32_t>(std::stoul(file)),OriginalEdition::Cd1072);bool failed=false;
+        try { WriteRawProcessSummary(scene.pool,scene.types,scene.Hooks()); }catch (const std::exception&) { failed=true; }CHECK(!failed && scene.trace==expected);++count;
+    }
+    CHECK(count==20);
+}
+
+TEST_CASE(ProcessSummary_CdUnsafeNameAndWrongTablePreserveBoundary) { // CD62는 이름표 밖이며 PATCH의 마지막 이름으로 대신하지 않는다.
+    SummaryScene scene(1,0,700,OriginalEdition::Cd1072);scene.Raw(50)[10]=62;bool failed=false;try { WriteRawProcessSummary(scene.pool,scene.types,scene.Hooks()); }catch (const std::out_of_range&) { failed=true; }catch (const std::exception&) {}
+    CHECK(failed && scene.trace=="O:70726f6353756d6d2e747874:7762:700");SummaryScene wrong(0,0,700,OriginalEdition::Cd1072);wrong.types.resize(188);failed=false;try { WriteRawProcessSummary(wrong.pool,wrong.types,wrong.Hooks()); }catch (const std::invalid_argument&) { failed=true; }CHECK(failed && wrong.trace.empty());
 }

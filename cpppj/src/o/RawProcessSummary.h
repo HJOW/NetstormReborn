@@ -1,4 +1,4 @@
-// 원본00471890의 현재 Kernel 슬롯 순서와 procSumm.txt 바이트 출력을 복원한다.
+// 원본00471890/CD004ed400의 현재 Kernel 슬롯 순서와 procSumm.txt 바이트 출력을 복원한다.
 #pragma once
 #include "o/SidPool.h"
 #include <functional>
@@ -19,6 +19,6 @@ struct ProcessSummaryHooks {
 };
 //0049a830의 전체 이름은 TYPE의20바이트 축약 이름과 구별한다.
 std::string_view ProcessSummaryTypeName(std::uint32_t type);
-//PATCH의39999슬롯을 실제 진단 순서로 읽는다. 호출 자체는 자체 파일 경로나 상태를 보유하지 않는다.
+// PATCH39999/CD3999슬롯과각판본의이름표/부모캐시를원문순서로읽는다.자체파일경로나상태를보유하지않는다.
 void WriteRawProcessSummary(const SidPool& pool,std::span<const RiftTypeRecord> types,const ProcessSummaryHooks& hooks);
 }
