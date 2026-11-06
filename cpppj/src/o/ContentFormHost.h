@@ -34,8 +34,9 @@ public:
     void Unpop(Sid form) const;
     void BindPop(std::function<void(Sid,std::uint32_t)> pop); // 정렬 링크 뒤 실제 World 공통 Pop 깊이/현재 진단을 대여한다.
     void BindUnpop(std::function<void(Sid)> unpop); // 실제 World의 공통 Factory가 현재 번호/부모 알림을 선택하도록 대여한다.
+    void BindReattach(std::function<void(Sid,Sid,std::uint32_t)> reattach); // Regular 분리 뒤 현재 VT+50을 같은 Factory/정렬 호스트로 선택한다.
     void BindCurrentTypes(std::span<const RiftTypeRecord> types); // 같은 현재 표를 빌리고 독립 입력의 기존 사본은 유지한다.
-    // 가상 +0x60: WORLD(0x80) 목록은 assert 경로이며 0x34 중 하나라도 있으면 true다.
+    // 가상 +0x60의 직접 flags 조회다. WORLD 진단 복귀 뒤 현재 0x34를 읽으며 TYPE/상태를 선행 검사하지 않는다.
     bool Robust(Sid form) const;
     // 004ae080/CD 004af1c0: 부모 head에서 모든 next를 따라가 자기 SID 포함 여부를 검사한다.
     // 목록 flags 검사인 가상 +0x60(Robust)와 다르며 부착 알림 뒤 실제 연결 상태를 다시 확인한다.
@@ -49,8 +50,6 @@ public:
     const SidPool& Pool() const;
 private:
     void Assert(std::string_view expression,std::uint32_t line) const; // 선택한10.78 진단만 요구하고 돌아오면 원문 본문을 계속한다.
-    // 타입6 가상 표·free 상태·원본 WORD 필드를 확인한다.
-    void Form(Sid form) const;
     std::uint16_t Word(Sid sid,std::size_t offset) const;
     void Put(Sid sid,std::size_t offset,std::uint16_t value) const;
     // Form/contained 자산이 섞인 체인의 가상 previous getter/setter 위치를 구분한다.
@@ -71,6 +70,7 @@ private:
     // captured_: 포획된 사제 또는 현재 포획 상태 자료.
     ContentPriestNotice captured_;
     std::function<void(Sid,std::uint32_t)> pop_; // 실제 Session은 같은 World 공장에 후처리를 보내고 독립 입력은 기존 Form 몸체를 사용한다.
+    std::function<void(Sid,Sid,std::uint32_t)> reattach_; // Regular의 분리/flags 쓰기 뒤 현재 가상 +50을 선택하는 실제 Session 장치다.
     std::function<void(Sid)> unpop_; // 미연결 독립 Host는 같은 공통 Form 분리와 입력 notice를 사용한다.
 };
 }

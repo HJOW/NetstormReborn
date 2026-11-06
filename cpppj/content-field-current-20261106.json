@@ -1,0 +1,576 @@
+{
+  "unit": 971,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 971,
+  "version": "11.01",
+  "scope": "Content 직접 flags/공통 Linked·Regular 조기 반환과 현재 가상 재부착·양판본 내장 Form 빈 부모 통지",
+  "exeSha256": "07f7f27d4d8d973da1ac57b255a20355914645082e306291ec4faaee2e8a840d",
+  "exeBytes": 11360768,
+  "static": [
+    {
+      "edition": "originals",
+      "form": 1,
+      "vtable": "00512110",
+      "slots": {
+        "24": "0041c100",
+        "48": "004ae140",
+        "50": "004ac800",
+        "5c": "00496e70",
+        "60": "004bcb30"
+      },
+      "noticeFirst": "ret 8"
+    },
+    {
+      "edition": "originals",
+      "form": 2,
+      "vtable": "00512098",
+      "slots": {
+        "24": "0041c100",
+        "48": "004ae140",
+        "50": "004ac800",
+        "5c": "00496e70",
+        "60": "004bcb30"
+      },
+      "noticeFirst": "ret 8"
+    },
+    {
+      "edition": "originals",
+      "form": 3,
+      "vtable": "00512188",
+      "slots": {
+        "24": "0041c100",
+        "48": "004ae140",
+        "50": "004ac800",
+        "5c": "00496e70",
+        "60": "004bcb30"
+      },
+      "noticeFirst": "ret 8"
+    },
+    {
+      "edition": "originals",
+      "form": 6,
+      "vtable": "00512208",
+      "slots": {
+        "24": "0041c100",
+        "48": "004ae140",
+        "50": "004aec10",
+        "5c": "004af070",
+        "60": "004aea60"
+      },
+      "noticeFirst": "ret 8",
+      "regularBody": [
+        {
+          "address": "004af070",
+          "instruction": "mov eax, dword ptr [esp + 8]"
+        },
+        {
+          "address": "004af074",
+          "instruction": "test eax, eax"
+        },
+        {
+          "address": "004af076",
+          "instruction": "push esi"
+        },
+        {
+          "address": "004af077",
+          "instruction": "mov esi, ecx"
+        },
+        {
+          "address": "004af079",
+          "instruction": "jle 0x4af0a4"
+        },
+        {
+          "address": "004af07b",
+          "instruction": "mov eax, dword ptr [esi]"
+        },
+        {
+          "address": "004af07d",
+          "instruction": "push edi"
+        },
+        {
+          "address": "004af07e",
+          "instruction": "call dword ptr [eax]"
+        },
+        {
+          "address": "004af080",
+          "instruction": "mov edx, dword ptr [esi]"
+        },
+        {
+          "address": "004af082",
+          "instruction": "push 0"
+        },
+        {
+          "address": "004af084",
+          "instruction": "mov ecx, esi"
+        },
+        {
+          "address": "004af086",
+          "instruction": "mov edi, eax"
+        },
+        {
+          "address": "004af088",
+          "instruction": "call dword ptr [edx + 0x48]"
+        },
+        {
+          "address": "004af08b",
+          "instruction": "mov eax, dword ptr [esi]"
+        },
+        {
+          "address": "004af08d",
+          "instruction": "and byte ptr [esi + 0x15], 0xfe"
+        },
+        {
+          "address": "004af091",
+          "instruction": "push 0x10"
+        },
+        {
+          "address": "004af093",
+          "instruction": "push edi"
+        },
+        {
+          "address": "004af094",
+          "instruction": "mov ecx, esi"
+        },
+        {
+          "address": "004af096",
+          "instruction": "call dword ptr [eax + 0x50]"
+        },
+        {
+          "address": "004af099",
+          "instruction": "fld dword ptr [0x500fc4]"
+        },
+        {
+          "address": "004af09f",
+          "instruction": "pop edi"
+        },
+        {
+          "address": "004af0a0",
+          "instruction": "pop esi"
+        },
+        {
+          "address": "004af0a1",
+          "instruction": "ret 0xc"
+        },
+        {
+          "address": "004af0a4",
+          "instruction": "fld dword ptr [esp + 0x10]"
+        },
+        {
+          "address": "004af0a8",
+          "instruction": "pop esi"
+        },
+        {
+          "address": "004af0a9",
+          "instruction": "ret 0xc"
+        }
+      ],
+      "robustBody": [
+        {
+          "address": "004aea60",
+          "instruction": "push esi"
+        },
+        {
+          "address": "004aea61",
+          "instruction": "mov esi, ecx"
+        },
+        {
+          "address": "004aea63",
+          "instruction": "mov al, byte ptr [esi + 0x14]"
+        },
+        {
+          "address": "004aea66",
+          "instruction": "test al, al"
+        },
+        {
+          "address": "004aea68",
+          "instruction": "jns 0x4aea81"
+        },
+        {
+          "address": "004aea6a",
+          "instruction": "push 0xbb1"
+        },
+        {
+          "address": "004aea6f",
+          "instruction": "push 0x5122a0"
+        },
+        {
+          "address": "004aea74",
+          "instruction": "push 0x5129e4"
+        },
+        {
+          "address": "004aea79",
+          "instruction": "call 0x4e0620"
+        },
+        {
+          "address": "004aea7e",
+          "instruction": "add esp, 0xc"
+        },
+        {
+          "address": "004aea81",
+          "instruction": "mov al, byte ptr [esi + 0x14]"
+        },
+        {
+          "address": "004aea84",
+          "instruction": "and al, 0x34"
+        },
+        {
+          "address": "004aea86",
+          "instruction": "neg al"
+        },
+        {
+          "address": "004aea88",
+          "instruction": "pop esi"
+        },
+        {
+          "address": "004aea89",
+          "instruction": "sbb eax, eax"
+        },
+        {
+          "address": "004aea8b",
+          "instruction": "neg eax"
+        },
+        {
+          "address": "004aea8d",
+          "instruction": "ret "
+        }
+      ],
+      "positiveRegularResultBits": "00000000"
+    },
+    {
+      "edition": "originalCD",
+      "form": 1,
+      "vtable": "00505a08",
+      "slots": {
+        "24": "00401c20",
+        "48": "004af270",
+        "50": "004ac2e0",
+        "5c": "0048f430",
+        "60": "00426850"
+      },
+      "noticeFirst": "ret 8"
+    },
+    {
+      "edition": "originalCD",
+      "form": 2,
+      "vtable": "00505990",
+      "slots": {
+        "24": "00401c20",
+        "48": "004af270",
+        "50": "004ac2e0",
+        "5c": "0048f430",
+        "60": "00426850"
+      },
+      "noticeFirst": "ret 8"
+    },
+    {
+      "edition": "originalCD",
+      "form": 3,
+      "vtable": "00505a80",
+      "slots": {
+        "24": "00401c20",
+        "48": "004af270",
+        "50": "004ac2e0",
+        "5c": "0048f430",
+        "60": "00426850"
+      },
+      "noticeFirst": "ret 8"
+    },
+    {
+      "edition": "originalCD",
+      "form": 6,
+      "vtable": "00505b00",
+      "slots": {
+        "24": "00401c20",
+        "48": "004af270",
+        "50": "004afff0",
+        "5c": "004b0350",
+        "60": "004afe20"
+      },
+      "noticeFirst": "ret 8",
+      "regularBody": [
+        {
+          "address": "004b0350",
+          "instruction": "cmp dword ptr [esp + 8], 0"
+        },
+        {
+          "address": "004b0355",
+          "instruction": "push esi"
+        },
+        {
+          "address": "004b0356",
+          "instruction": "push edi"
+        },
+        {
+          "address": "004b0357",
+          "instruction": "mov esi, ecx"
+        },
+        {
+          "address": "004b0359",
+          "instruction": "jle 0x4b0385"
+        },
+        {
+          "address": "004b035b",
+          "instruction": "mov eax, dword ptr [esi]"
+        },
+        {
+          "address": "004b035d",
+          "instruction": "call dword ptr [eax]"
+        },
+        {
+          "address": "004b035f",
+          "instruction": "mov edi, eax"
+        },
+        {
+          "address": "004b0361",
+          "instruction": "push 0"
+        },
+        {
+          "address": "004b0363",
+          "instruction": "mov eax, dword ptr [esi]"
+        },
+        {
+          "address": "004b0365",
+          "instruction": "mov ecx, esi"
+        },
+        {
+          "address": "004b0367",
+          "instruction": "call dword ptr [eax + 0x48]"
+        },
+        {
+          "address": "004b036a",
+          "instruction": "and word ptr [esi + 0x14], 0xfeff"
+        },
+        {
+          "address": "004b0370",
+          "instruction": "push 0x10"
+        },
+        {
+          "address": "004b0372",
+          "instruction": "mov eax, dword ptr [esi]"
+        },
+        {
+          "address": "004b0374",
+          "instruction": "push edi"
+        },
+        {
+          "address": "004b0375",
+          "instruction": "mov ecx, esi"
+        },
+        {
+          "address": "004b0377",
+          "instruction": "call dword ptr [eax + 0x50]"
+        },
+        {
+          "address": "004b037a",
+          "instruction": "fld dword ptr [0x5058b0]"
+        },
+        {
+          "address": "004b0380",
+          "instruction": "pop edi"
+        },
+        {
+          "address": "004b0381",
+          "instruction": "pop esi"
+        },
+        {
+          "address": "004b0382",
+          "instruction": "ret 0xc"
+        },
+        {
+          "address": "004b0385",
+          "instruction": "fld dword ptr [esp + 0x14]"
+        },
+        {
+          "address": "004b0389",
+          "instruction": "pop edi"
+        },
+        {
+          "address": "004b038a",
+          "instruction": "pop esi"
+        },
+        {
+          "address": "004b038b",
+          "instruction": "ret 0xc"
+        }
+      ],
+      "robustBody": [
+        {
+          "address": "004afe20",
+          "instruction": "push esi"
+        },
+        {
+          "address": "004afe21",
+          "instruction": "mov esi, ecx"
+        },
+        {
+          "address": "004afe23",
+          "instruction": "test byte ptr [ecx + 0x14], 0x80"
+        },
+        {
+          "address": "004afe27",
+          "instruction": "je 0x4afe40"
+        },
+        {
+          "address": "004afe29",
+          "instruction": "push 0xb68"
+        },
+        {
+          "address": "004afe2e",
+          "instruction": "push 0x53a91c"
+        },
+        {
+          "address": "004afe33",
+          "instruction": "push 0x53a92c"
+        },
+        {
+          "address": "004afe38",
+          "instruction": "call 0x490040"
+        },
+        {
+          "address": "004afe3d",
+          "instruction": "add esp, 0xc"
+        },
+        {
+          "address": "004afe40",
+          "instruction": "mov ax, word ptr [esi + 0x14]"
+        },
+        {
+          "address": "004afe44",
+          "instruction": "pop esi"
+        },
+        {
+          "address": "004afe45",
+          "instruction": "and ax, 0x34"
+        },
+        {
+          "address": "004afe49",
+          "instruction": "cmp ax, 1"
+        },
+        {
+          "address": "004afe4d",
+          "instruction": "sbb eax, eax"
+        },
+        {
+          "address": "004afe4f",
+          "instruction": "inc eax"
+        },
+        {
+          "address": "004afe50",
+          "instruction": "ret "
+        }
+      ],
+      "positiveRegularResultBits": "00000000"
+    }
+  ],
+  "build": {
+    "commands": 5,
+    "exitCodes": [
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    "preparationFailures": [
+      "Put width 누락/Reserve 대신 실제 Reset API",
+      "공통 Previous의 반환 Sid를 기존 WORD로 변환할 .value 누락(C2440)"
+    ],
+    "finalDiagnostics": {
+      "build-final-corrected.log": {
+        "warnings": 0,
+        "errors": 0
+      },
+      "build-final-linked.log": {
+        "warnings": 0,
+        "errors": 0
+      }
+    },
+    "targets": [
+      "NetstormCpp",
+      "netstorm_pop_context_tests",
+      "netstorm_world_generation_tests"
+    ]
+  },
+  "focused": {
+    "uniqueCases": 14,
+    "newCases": 6,
+    "existingCases": 8,
+    "beforeUniqueCases": 4,
+    "beforeComponentFailedChecks": 120,
+    "beforeSessionFailedChecks": 4,
+    "finalFailedChecks": 0,
+    "aliasStateInputs": 96,
+    "worldDiagnosticInputs": 4,
+    "earlyReturnInputs": 24,
+    "reattachProfiles": 8,
+    "emptyParentInputs": 64,
+    "reservedParentInputs": 2,
+    "actualSessionParentTypes": [
+      6,
+      7,
+      63
+    ],
+    "existingNativeChainRows": 120,
+    "tests": [
+      "ContentFieldCurrent_AliasesStatesAndWholeChain",
+      "ContentFieldCurrent_RobustDiagnosticReadsCurrentFlagsAfterRepair",
+      "ContentFieldCurrent_ZeroNegativeRegularSkipsObjectFields",
+      "ContentFieldCurrent_ReattachUsesCurrentClassCachedParentAndWritePrefix",
+      "ContentFieldCurrent_AllEightFormParentNoticesAreEmpty",
+      "ContentFieldCurrent_ActualSessionRegularUsesVtableAndSharedReattach",
+      "RawFormLinked_Native120WholeChainAndReadOnlyBytes",
+      "RawFormLinked_CurrentPoolAfterParentAndExplicitCycle",
+      "RawFormLinked_ProcessGetterKeepsWordAndIgnoresStateType",
+      "ContentLifetime_SharedMixedFormDispatch",
+      "FormPopCurrent_SortedContentBorrowsSameFactoryDepth",
+      "FormLifecycle_ContractsAndSameParentPair",
+      "ContentFormAttach_DeadDiagnosticsResumeAtCurrentSlots",
+      "CampaignSession_CursorContentDestroyReadsCurrentPreview"
+    ],
+    "initialMissingFilter": {
+      "name": "RawFormLinked_",
+      "cases": 0,
+      "failedChecks": 1,
+      "correction": "기존 작은 검사 파일을 공통 체인 소비자와 같은 pop 집중 대상에 추가"
+    }
+  },
+  "protection": {
+    "files": 2796,
+    "fixtures": 976,
+    "changed": 0,
+    "newFixtures": 0,
+    "baseline": "extracted/cpp-resume-971/protected-final.json"
+  },
+  "gui": {
+    "newExecutions": 0,
+    "lastUnit": 968
+  },
+  "newNativeExecutions": 0,
+  "newMultiplayerTests": 0,
+  "solutions": [
+    {
+      "file": "NetstormCpp.slnx",
+      "projects": 83
+    }
+  ],
+  "solutionProjects": 83,
+  "checkingRemaining": 8,
+  "remaining": [
+    "Process 기본 PID0/별칭과 현재 클래스·Factory 수명",
+    "자산 TYPE 범위와 전체 삭제/외부 heap·할당 실패",
+    "CD 전체 정렬/진단/파일 이관",
+    "파일/비멀티 파생 수명"
+  ],
+  "excluded": [
+    "실제 GUI/게임",
+    "MP/패킷/프로토콜/통신",
+    "공중3종 전용",
+    "실제 포획/희생/특정 적 공격/승리",
+    "전체 CTest/34미션/ZIP"
+  ]
+}

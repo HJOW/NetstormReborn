@@ -1522,7 +1522,7 @@ struct RawCampaignSession::Impl {
                 [this](Sid parent,std::uint32_t code,std::uint32_t number,float value) { return carrierRegular->Handle(parent,code,number,value); }); // 가상5c의42af60만 전용 event3을 처리한다.
             // 실제 ContentForm+5c(4af070)는 count0에서 payload를 반환하고 양수count에서 선택을 풀어 재부착한다.
             // 기존 ContentFormHost::Damage는 이 원본 몸체의 보존 API명이며 피해를 전달하는 경로가 아니다.
-            if (raw[10]==6 && Read(raw,0)==0x512208U) return contentForms->Damage(sid,std::bit_cast<std::int32_t>(count),payload);
+            if (Read(raw,0)==0x512208U) return contentForms->Damage(sid,std::bit_cast<std::int32_t>(count),payload);
             const bool priest=raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable;
             if (priest && event==604) { if (!priestRitualFrame) throw std::logic_error("사제604 몸체 설치 전 호출");return priestRitualFrame->Tick(sid); }
             if (priest && event==605) { if (!priestPrayer) throw std::logic_error("사제605 몸체 설치 전 호출");return priestPrayer->Tick(sid,count,payload); }
@@ -2754,6 +2754,12 @@ struct RawCampaignSession::Impl {
         world.BindContainedUnpop(containedUnpop); // 첫 객체 생성 전 같은 World의 일반 Unpop에 현재 Session 종단을 대여한다.
         contentForms->BindPop([this](Sid sid,std::uint32_t flags) { core.factory.PopForm(sid,flags); }); // 실제 Content 정렬 후 같은 현재 진단/공유 basePostPop을 사용한다.
         contentForms->BindUnpop([this](Sid sid) { core.factory.UnpopForm(sid); }); // Form6도 현재 번호/부모 알림을 같은 World 공장에서 조회한다.
+        contentForms->BindReattach([this](Sid sid,Sid parent,std::uint32_t flags) { // Regular의 Unpop 이후 현재 가상+50을 같은 World에 연결한다.
+            const auto table=Read(core.pool.Slot(sid),0);const SquidForms forms(core.pool);
+            if (table==forms.Vtable(6)) { contentForms->Attach(sid,parent,flags);return; }
+            for (const auto type:{1U,2U,3U}) if (table==forms.Vtable(type)) { core.factory.AttachForm(sid,parent,flags);return; } // 현재 내장 클래스의 공통 부착/Pop 깊이를 대여한다.
+            throw std::logic_error("Content Regular의 현재 가상+50 미연결");
+        });
         ContainedCreateHooks createHooks;createHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         contentState.sharedContainedType=&contentFinder.containedType;contentState.sharedBridgeType=&world.Storage()->links.bridgeType; // 생성/검색과 실제 다리 소비자가 같은 현재 번호 주소를 사용한다.
         contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(createHooks)));

@@ -23,8 +23,9 @@ std::uint32_t RawContentParentNotice::NativeEntry(Sid parent) const {
     std::uint32_t table=0; // 비정렬 DWORD의 little endian 조립 결과다.
     // 원본 32비트 VT 주소 네 바이트만 읽는다.
     for (std::size_t i=0;i<4;++i) table|=std::uint32_t(raw[i])<<(i*8);
-    // 포획대상의내용물은새ContentForm에재부착된다.실제512208+24도공통빈ret8이다.
-    if (pool_.Edition()==OriginalEdition::Patch1078 && table==0x512208U) return 0x41c100U;
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    const std::array<std::uint32_t,4> forms=patch ? std::array<std::uint32_t,4>{0x512110,0x512098,0x512188,0x512208}:std::array<std::uint32_t,4>{0x505a08,0x505990,0x505a80,0x505b00}; // 두 PE의 네 Form +24는 모두 같은 빈 ret8이다.
+    for (const auto form:forms) if (table==form) return patch ? 0x41c100U:0x401c20U; // 실제 클래스가 고른 빈 몸체에서 TYPE/상태/인자를 추가로 읽지 않는다.
     const auto entries=pool_.Edition()==OriginalEdition::Patch1078 ? std::span<const ContentNoticeEntry>(kPatchContentNotices) :
         std::span<const ContentNoticeEntry>(kCdContentNotices); // 판본별 실제 생성자 표다.
     // 생성자에서 실제 사용할 수 있는 VT만 허용한다.

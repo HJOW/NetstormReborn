@@ -1,6 +1,7 @@
 // ContentForm은 부모 머리 앞의 일반 Form과 달리 같은 목록 그룹의 순서 번호로 삽입한다.
 #include "o/ContentFormHost.h"
 #include "o/RawContentAttach.h"
+#include "o/RawFormLinked.h" // 같은 공통 부모의 전체 체인 검사를 재사용한다.
 #include "o/RawSquidContainedUnpop.h"
 #include <stdexcept>
 #include <unordered_set>
@@ -28,11 +29,6 @@ void ContentFormHost::Assert(std::string_view expression,std::uint32_t line) con
     if (!state_ || !state_->assertion) throw std::logic_error("ContentForm 실제 원문 진단 장치 미연결");
     state_->assertion(expression,"\\Ns\\O\\Squid.cpp",line);
 }
-// 공통 가상 표 검사를 사용하여 오염된 타입6 슬롯의 필드 변경을 거부한다.
-void ContentFormHost::Form(Sid form) const {
-    if (pool_.Slot(form)[kType]!=kContent) throw std::logic_error("ContentForm 타입 오류");
-    forms_.Parent(form);
-}
 // 정렬되지 않은 WORD를 little endian으로 읽는다.
 std::uint16_t ContentFormHost::Word(Sid sid,std::size_t offset) const {
     const auto raw=pool_.Slot(sid);return static_cast<std::uint16_t>(raw[offset]|(std::uint16_t(raw[offset+1])<<8));
@@ -43,11 +39,11 @@ void ContentFormHost::Put(Sid sid,std::size_t offset,std::uint16_t value) const 
 }
 // Form과 자산은 부모/previous WORD 위치가 서로 반대다.
 std::uint16_t ContentFormHost::Previous(Sid sid) const {
-    return Word(sid,pool_.Slot(sid)[kType]<kFirstAssetTypeNumber ? kPrevious : kParent);
+    return CommonContainedPrevious(pool_,sid).value;
 }
 // 가상 setPrev의 실제 폭만 기록한다.
 void ContentFormHost::SetPrevious(Sid sid,std::uint16_t previous) const {
-    Put(sid,pool_.Slot(sid)[kType]<kFirstAssetTypeNumber ? kPrevious : kParent,previous);
+    CommonContainedSetPrevious(pool_,sid,Sid{previous});
 }
 // 기존 체인을 한 번 훑고 첫 순서 공백에 삽입한다. 다른 그룹과 일반 Form/자산은 건너뛴다.
 void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
@@ -63,7 +59,7 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
     else { // CD의 기존 정렬 한정 계약은 유지한다.
     if (form.value<5 || parent.value<5 || parent.value>=pool_.Capacity() || parent==form) throw std::logic_error("ContentForm 부착 번호 오류");
     if ((pool_.Slot(parent)[kState]|pool_.Slot(form)[kState])&(kFree|kDead)) return;
-    Form(form);forms_.ValidatePop(form,flags);
+    forms_.Parent(form);forms_.ValidatePop(form,flags);
     const auto stored=Word(form,kContentType);if (stored>=types_.size()) throw std::logic_error("ContentForm 생산 타입 오류");
     const auto listFlags=Word(form,kFlags);const auto orderOffset=pool_.Edition()==OriginalEdition::Patch1078 ? 23U : 22U;
     std::uint32_t order=0;Sid previous{},current{Word(parent,kHead)};bool inserted=false;std::unordered_set<std::uint16_t> visited;
@@ -107,33 +103,35 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
 void ContentFormHost::Unpop(Sid form) const { if (unpop_) unpop_(form);else forms_.Unpop(form); } // 실제 가상 진입 앞에 고정 TYPE/free 검사를 추가하지 않는다.
 void ContentFormHost::BindPop(std::function<void(Sid,std::uint32_t)> pop) { pop_=std::move(pop); } // 같은 Session이 살아 있는 동안 현재 실제 Pop만 사용한다.
 void ContentFormHost::BindUnpop(std::function<void(Sid)> unpop) { unpop_=std::move(unpop); } // 현재 World와 같은 수명의 공통 해제를 연결한다.
+void ContentFormHost::BindReattach(std::function<void(Sid,Sid,std::uint32_t)> reattach) { reattach_=std::move(reattach); } // Regular의 Unpop 뒤 현재 VT+50을 선택할 실제 장치를 연결한다.
 // 실제 현재 TYPE 대여는 통지 뒤에도 같은 표를 다시 읽는다.
 void ContentFormHost::BindCurrentTypes(std::span<const RiftTypeRecord> types) { if (!types.empty() && types.size()!=types_.size()) throw std::invalid_argument("Content 현재 TYPE 표의 판본/길이 계약");currentTypes_=types; }
 std::uint32_t ContentFormHost::TypeGenus(std::uint32_t type) const { const auto current=currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_;if (type>=current.size()) throw std::out_of_range("Content 통지 뒤 현재 TYPE 물리 범위");return current[type].flags2; } // 실제 소비 위치의 오류만 보고한다.
-// WORLD 플래그의 원본 assert 경로를 명시적으로 거부한다.
+// WORLD 진단이 정상 복귀하면 현재 flags를 다시 읽으며 TYPE/상태 필터를 합성하지 않는다.
 bool ContentFormHost::Robust(Sid form) const {
-    Form(form);const auto flags=Word(form,kFlags);if (flags&kWorld) throw std::logic_error("WORLD ContentForm Robust 금지");
-    return (flags&kRobust)!=0;
-}
-// 전체 체인을 검사해야 자기 번호 뒤의 무효 next가 있어도 false로 끝나는 원본 동작을 보존한다.
-bool ContentFormHost::Linked(Sid form) const {
-    Form(form);const Sid parent{Word(form,kParent)};
-    if (!parent.value || parent.value>=pool_.Capacity()) throw std::logic_error("ContentForm 연결 검사 부모 번호 오류");
-    Sid current{Word(parent,kHead)};bool found=false;std::unordered_set<std::uint16_t> visited;
-    // 상태/타입 필터를 추가하지 않고 부모 체인의 실제 next만 따라간다.
-    while (current.value) {
-        if (current.value>=pool_.Capacity()) return false;
-        if (!visited.insert(current.value).second) throw std::logic_error("ContentForm 연결 검사 체인 순환");
-        if (current==form) found=true;
-        current=Sid{Word(current,kNext)};
+    if (Word(form,kFlags)&kWorld) {
+        const auto assertion=state_ ? state_->assertion : std::function<void(std::string_view,std::string_view,std::uint32_t)>{}; // 장치가 자기 연결을 반납해도 선택한 callable은 복귀까지 유지한다.
+        if (!assertion) throw std::logic_error("ContentForm Robust의 선택된 원문 진단 장치 미연결");const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+        assertion("!(getListFlags() & CFF_WORLD)",patch ? "\\Ns\\O\\Squid.cpp":"\\ns\\o\\Squid.cpp",patch ? 0xbb1U:0xb68U);
     }
-    return found;
+    return (Word(form,kFlags)&kRobust)!=0;
 }
-// 재부착은 현재 부모를 Unpop 전에 저장하며 제거 알림 뒤의 현재 플래그를 읽어 0x100만 끈다.
+// 현재 실제 부모 getter를 한 번 읽고 자기 뒤의 범위 실패까지 기존 공통 부모에서 검사한다.
+bool ContentFormHost::Linked(Sid form) const {
+    return CheckRawFormLinked(pool_,form,[this](Sid current) { return CommonContainedParent(pool_,current); }); // 예약 부모0도 실제 물리 head만 읽으며 TYPE/free/dead를 별도로 거르지 않는다.
+}
+// 원본 Regular+5c는 양수 count에서만 현재 getter→Unpop→flags 쓰기→현재 가상 재부착을 실행한다.
 float ContentFormHost::Damage(Sid form,std::int32_t damage,float amount) const {
-    Form(form);if (damage<=0) return amount;
-    const auto parent=forms_.Parent(form);Unpop(form);Put(form,kFlags,static_cast<std::uint16_t>(Word(form,kFlags)&~kChanged));
-    Attach(form,parent,0x10);return 0;
+    if (damage<=0) return amount;
+    const auto parent=CommonContainedParent(pool_,form);Unpop(form);const auto current=pool_.Slot(form);auto* bytes=const_cast<std::uint8_t*>(current.data());
+    if (pool_.Edition()==OriginalEdition::Patch1078) bytes[kFlags+1]&=0xfeU; // PATCH는 Unpop 뒤 현재 high BYTE의 bit0만 끈다.
+    else { const auto flags=Word(form,kFlags)&~kChanged;bytes[kFlags]=static_cast<std::uint8_t>(flags);bytes[kFlags+1]=static_cast<std::uint8_t>(flags>>8); } // CD는 같은 효과를 WORD store로 남긴다.
+    const auto reattach=reattach_; // Unpop이 장치를 바꿀 수 있으므로 실제 소비 위치에서 선택하고 수명을 유지한다.
+    if (reattach) reattach(form,parent,0x10);
+    else { const auto raw=pool_.Slot(form);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
+        if (table!=forms_.Vtable(6)) throw std::logic_error("ContentForm 현재 가상 재부착 장치 미연결");Attach(form,parent,0x10); // 독립 기존 Content 호출만 보존하고 다른 클래스의 +50을 임의 정렬 부착으로 대체하지 않는다.
+    }
+    return 0;
 }
 // RawContainedCreate의 원래 생성·필드 쓰기 순서를 유지하면서 마지막 부착만 실제 처리기로 바꾼다.
 ContainedCreateHooks ContentFormHost::BindCreate(SquidFactory& factory,ContainedCreateHooks hooks) const {

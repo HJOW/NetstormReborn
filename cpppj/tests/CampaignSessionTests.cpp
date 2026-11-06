@@ -5469,3 +5469,14 @@ TEST_CASE(CursorFormPop_ActualSessionCancelUsesSharedFactoryAndCurrentVtable) {
     }
     session.World().Storage()->Authority()->server=server;
 }
+
+// 실제 Regular 장치가 TYPE 별칭에도 Content VT의 조기 반환/현재 공유 Factory 재부착을 사용한다.
+TEST_CASE(ContentFieldCurrent_ActualSessionRegularUsesVtableAndSharedReattach) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+    for (const auto type:{6U,7U,63U}) { // 전투/유닛 없이 일반 Form과 실제 Regular 프로세스만 생성한다.
+        const auto parent=core.factory.CreateContained(2),form=core.factory.CreateContained(2);auto raw=core.pool.AllocatedBytes(form);Put(raw,18,75,2);Put(raw,20,0x120,2);Put(raw,16,parent.value,2);Put(core.pool.AllocatedBytes(parent),6,form.value,2);raw[10]=static_cast<std::uint8_t>(type);raw[11]=8;const auto depth=core.bookkeeping.depth;const auto packets=external.packets.size();auto* process=core.processes.AddRegular(form,0,2.5f);CHECK(process);if (!process) return;const auto pid=core.kernel.Find(*process);const auto processForm=process->Form();
+        bool failed=false;try { process->RunFrame();CHECK(process->Count()==1 && process->Payload()==2.5f && process->Time()==core.processState.now+2.5 && Get(core.pool.Slot(form),20,2)==0x120);process->SetNextTime(core.processState.now);process->RunFrame(); } catch (const std::exception& error) { failed=true;std::printf("ContentFieldCurrent type=%u: %s\n",type,error.what()); }
+        CHECK(!failed && !core.kernel.Get(pid) && (core.pool.Slot(processForm)[11]&1U));CHECK(core.bookkeeping.depth==depth && Get(core.pool.Slot(form),20,2)==0x20 && Get(core.pool.Slot(parent),6,2)==form.value && external.packets.size()==packets);
+        CHECK(session.World().Destroy(parent,0)); // 같은 실제 혼합 삭제 경로로 남아 있는 Form/Regular까지 반납한다.
+    }
+}
