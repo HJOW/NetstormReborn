@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 실행 제품은 **956 / 표시 버전11.01**이며957은 소스/제품 불변의 현재 연결 대조다. LEFT_JOBS 3절4번 앞선 checking/공통 Pop의 현재 World·Session 장치와83개 가상 표를 다시 대조했다. 기존31검사와 집중 Release 경고/오류0이며 표시81표 지원/메타맵2표 잔여를 구분했다. 전체 checking8/공통Pop·Factory 잔여는 계속 미완료이며 공중3종/Outpost4표는 코드 대조만 유지한다. 새 게임/GUI/CPU/fixture 없음·보호2789/fixture969 불변이다. 다음958은 같은4번 Process/Content·Form의 부착/Pop과 상위 Factory 공유 수명부터 진행한다. [957 기록](../docs/exe/cpp-pop-current-scope-20261106.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
+현재 실행 제품은 **958 / 표시 버전11.01**이다. LEFT_JOBS 3절4번에서 정렬 Content004aec10의 저장VT/현재getter와 링크·부모·contained 뒤 Pop/통지 순서를 복원하고 같은 Client/World의 현재 content 번호·TYPE 표를 대여했다. 새 Native41행 재관측 차이0·고유16검사(새3/기존13)·최종 Release 경고/오류0이다. 사제 꼬리·전체파생/Factory 완료가 아니며 checking8은 불변이다. 새 게임/GUI/MP 검사 없음·기존 보호2789/fixture969 불변·새fixture1→2790/970이다. 다음959도 같은4번 Process004b1440/CD004af380와 상위 Factory 수명이다. [958 기록](../docs/exe/cpp-content-attach-current-20261106.md)·[현재 인계](../LEFT_JOBS.md)를 따른다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 

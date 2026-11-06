@@ -13,6 +13,7 @@ struct ContentFormState {
     RawCheckingFlag inBattle{}; // 부모 알림 뒤 원문00594fbc의 현재 전투 값을 읽는다.
     RawCheckingFlag checkingLinks{}; // 두 진단 위치에서 같은005e4794를 다시 읽는다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 원문 식/파일/행을 전달하고 복귀 뒤 현재 상태를 다시 판정한다.
+    std::function<std::uint32_t()> contentType; // 정렬 순회마다 현재00541088을 읽는다. 독립 입력만6을 쓴다.
 };
 // 사제를 워커/벌룬에 담은 전투 부착 뒤 포획 알림(004927f0/CD 0040df80)을 요청한다.
 // 두 번째 인자는 내용물 +12의 하위7비트에 저장된 이전 사제 소유자다.
@@ -33,6 +34,7 @@ public:
     void Unpop(Sid form) const;
     void BindPop(std::function<void(Sid,std::uint32_t)> pop); // 정렬 링크 뒤 실제 World 공통 Pop 깊이/현재 진단을 대여한다.
     void BindUnpop(std::function<void(Sid)> unpop); // 실제 World의 공통 Factory가 현재 번호/부모 알림을 선택하도록 대여한다.
+    void BindCurrentTypes(std::span<const RiftTypeRecord> types); // 같은 현재 표를 빌리고 독립 입력의 기존 사본은 유지한다.
     // 가상 +0x60: WORLD(0x80) 목록은 assert 경로이며 0x34 중 하나라도 있으면 true다.
     bool Robust(Sid form) const;
     // 004ae080/CD 004af1c0: 부모 head에서 모든 next를 따라가 자기 SID 포함 여부를 검사한다.
@@ -54,10 +56,12 @@ private:
     // Form/contained 자산이 섞인 체인의 가상 previous getter/setter 위치를 구분한다.
     std::uint16_t Previous(Sid sid) const;
     void SetPrevious(Sid sid,std::uint16_t previous) const;
+    std::uint32_t TypeGenus(std::uint32_t type) const; // 통지 뒤 현재 TYPE를 실제 소비 위치에서 읽는다.
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    std::span<const RiftTypeRecord> currentTypes_; // 같은 World의 고정 길이 표이며 호스트보다 오래 살아야 한다.
     // notice_: 통지.
     ContentFormNotice notice_;
     // forms_: 객체에 부착된 Form의 생성·통지·수명 처리기.

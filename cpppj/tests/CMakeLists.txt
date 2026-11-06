@@ -3669,3 +3669,8 @@ target_sources(netstorm_mission_entry_tests PRIVATE StatePollActionTests.cpp)
 target_sources(netstorm_tests PRIVATE BattleLeaveReasonTests.cpp)
 target_sources(netstorm_mission_entry_tests PRIVATE BattleLeaveReasonTests.cpp RetreatConfirmationTests.cpp)
 set_source_files_properties(BattleLeaveReasonTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BATTLE_LEAVE_REASON_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/battle-leave-reason-x86.tsv\"")
+
+# 정렬 Content 부모의 실제 링크/Pop 부분 효과만 선택 실행하며 전투/포획/통신은 실행하지 않는다.
+target_sources(netstorm_tests PRIVATE ContentAttachCurrentTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE ContentAttachCurrentTests.cpp)
+set_source_files_properties(ContentAttachCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CONTENT_ATTACH_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/content-attach-current-x86.tsv\"") # 최초 원문41행만 기대값으로 사용한다.

@@ -22,20 +22,22 @@ template<class Function> const Function& NeedContained(const Function& function)
 std::uint16_t LinkWord(std::span<const std::uint8_t> raw,std::size_t offset) { return static_cast<std::uint16_t>(raw[offset]|(std::uint16_t(raw[offset+1])<<8)); } // 원문 WORD 전체만 읽는다.
 std::span<std::uint8_t> LinkRaw(SidPool& pool,Sid sid) { const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // 진단 정상 복귀 뒤 free 슬롯에도 물리 범위 안 쓰기를 유지한다.
 void PutLink(SidPool& pool,Sid sid,std::size_t offset,std::uint16_t value) { auto raw=LinkRaw(pool,sid);raw[offset]=static_cast<std::uint8_t>(value);raw[offset+1]=static_cast<std::uint8_t>(value>>8); } // 인접 payload를 바꾸지 않는 원문 WORD 쓰기다.
-bool FormLinkLayout(const SidPool& pool,Sid sid) { // 타입으로 추정하지 않고 실제 생성 VT의 세 가상 진입점을 확인한 목록으로 분배한다.
-    const auto raw=pool.Slot(sid);const auto table=std::uint32_t(LinkWord(raw,0))|(std::uint32_t(LinkWord(raw,2))<<16);
-    const auto& forms=pool.Edition()==OriginalEdition::Patch1078 ? kPatchForms : kCdForms;
+bool FormLinkLayoutAtTable(OriginalEdition edition,std::uint32_t table) { // 선택한 실제 가상 표의 getter/setter 배치다.
+    const auto& forms=edition==OriginalEdition::Patch1078 ? kPatchForms : kCdForms;
     for (const auto form:forms) if (form==table) return true; // PATCH4ad010/4abac0/4abae0,CD4b04a0/4b04b0/4b04d0의+0/+4/+c다.
-    const auto entries=pool.Edition()==OriginalEdition::Patch1078 ? std::span<const ContentNoticeEntry>(kPatchContentNotices) : std::span<const ContentNoticeEntry>(kCdContentNotices);
+    const auto entries=edition==OriginalEdition::Patch1078 ? std::span<const ContentNoticeEntry>(kPatchContentNotices) : std::span<const ContentNoticeEntry>(kCdContentNotices);
     for (const auto& entry:entries) if (entry.table==table) return false; // PE전수검사:PATCH83개4ad000/4ad010/4ad040,CD68개4acc80/4acc90/4accc0다.
     throw std::logic_error("공통 contained 링크의 미복원 현재 가상 표");
 }
+bool FormLinkLayout(const SidPool& pool,Sid sid) { const auto raw=pool.Slot(sid);return FormLinkLayoutAtTable(pool.Edition(),std::uint32_t(LinkWord(raw,0))|(std::uint32_t(LinkWord(raw,2))<<16)); } // 일반 경로는 호출 직전 현재 VT를 선택한다.
 }
 Sid CommonContainedParent(const SidPool& pool,Sid sid) { const bool form=FormLinkLayout(pool,sid);return Sid{LinkWord(pool.Slot(sid),form ? 16U : 14U)}; } // 같은 현재 VT의 부모 WORD getter다.
 Sid CommonContainedPrevious(const SidPool& pool,Sid sid) { const bool form=FormLinkLayout(pool,sid);return Sid{LinkWord(pool.Slot(sid),form ? 14U : 16U)}; } // 같은 현재 VT의 이전 WORD getter다.
+Sid CommonContainedPreviousAtTable(const SidPool& pool,Sid sid,std::uint32_t table) { const bool form=FormLinkLayoutAtTable(pool.Edition(),table);return Sid{LinkWord(pool.Slot(sid),form ? 14U : 16U)}; } // 저장한 VT의 getter WORD다.
 void CommonContainedSetParent(SidPool& pool,Sid sid,Sid parent) { const bool form=FormLinkLayout(pool,sid);PutLink(pool,sid,form ? 16U : 14U,parent.value); } // 확인한 실제 VT+8의 하위 WORD만 바꾼다.
 std::uint32_t RawSquidContainedUnpop::ContentFormType() const { return state_.contentFormType; } // 약한 Session 대여가 살아 있는 동안 현재 DWORD를 읽는다.
 void CommonContainedSetPrevious(SidPool& pool,Sid sid,Sid previous) { const bool form=FormLinkLayout(pool,sid);PutLink(pool,sid,form ? 14U : 16U,previous.value); } // 공통 자산의+0xe DWORD 상위WORD 쓰기와 동일한 비트 결과다.
+void CommonContainedSetPreviousAtTable(SidPool& pool,Sid sid,std::uint32_t table,Sid previous) { const bool form=FormLinkLayoutAtTable(pool.Edition(),table);PutLink(pool,sid,form ? 14U : 16U,previous.value); } // 선택한 VT+c를 실행한다.
 RawSquidContainedUnpop::RawSquidContainedUnpop(SidPool& pool,SquidContainedUnpopState state,SquidContainedUnpopHooks hooks)
     :pool_(pool),state_(std::move(state)),hooks_(std::move(hooks)) {} // 생성 중에는 선택하지 않은 장치를 요구하거나 풀을 수정하지 않는다.
 void RawSquidContainedUnpop::Assert(std::string_view expression,std::uint32_t patchLine,std::uint32_t cdLine) const {

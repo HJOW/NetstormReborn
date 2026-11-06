@@ -1,0 +1,20 @@
+{
+  "unit": 958,
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "rows": 41,
+  "scope": "004aec10의 부모 통지 진입까지와 실제004aba70. 가상 getter/setter/Pop/통지는 명시 장치. 사제/전투 꼬리·게임/MP/통신 미실행.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_content_attach_current.py": "ea7f3b7514484bf6e4110acb9c846c484661f7dda78102349de4ab673b33380c",
+    "cpppj/tests/fixtures/content-attach-current-x86.tsv": "fe24b00b07c7841f2e4419dbf1d6b38b9bf054ee0ea4f80c6fa23aca82785479"
+  },
+  "firstToolSha256": "b62cded8646f8bebafd3053a3205a977f39fde02b23a185e814a15f7cd8f363c",
+  "toolCommentOnlyCorrection": "한글 주석 교정; 최초 도구/보고서는 raw에 보존, fixture 바이트 불변"
+}

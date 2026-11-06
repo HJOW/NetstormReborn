@@ -25,8 +25,10 @@ struct SquidContainedUnpopHooks { // 원문 가상 호출과 큐/진단의 선�
 // 두 PE의 생성자 VT에서 확인한 공통 부모/이전 getter를 실행한다. 모르는 VT는 거부한다.
 Sid CommonContainedParent(const SidPool& pool,Sid sid);
 Sid CommonContainedPrevious(const SidPool& pool,Sid sid); // Form의+0xe와 자산의+0x10 WORD를 실제 VT로 구별한다.
+Sid CommonContainedPreviousAtTable(const SidPool& pool,Sid sid,std::uint32_t table); // 정렬 부모가 이미 선택한 VT+4를 실행한다.
 void CommonContainedSetParent(SidPool& pool,Sid sid,Sid parent); // 현재 VT+8의 Form+10/자산+e WORD를 쓴다.
 void CommonContainedSetPrevious(SidPool& pool,Sid sid,Sid previous); // 같은 실제 VT의 setPrev 쓰기 폭을 보존한다.
+void CommonContainedSetPreviousAtTable(SidPool& pool,Sid sid,std::uint32_t table,Sid previous); // 이웃 getter 앞에서 저장한 VT+c 배치를 사용한다.
 class RawSquidContainedUnpop { // PATCH004ac6b0→004ad230/CD004ac160→004acf40의 실제 종단이다.
 public:
     RawSquidContainedUnpop(SidPool& pool,SquidContainedUnpopState state,SquidContainedUnpopHooks hooks); // 상태 참조/풀은 처리기보다 오래 살아야 한다.

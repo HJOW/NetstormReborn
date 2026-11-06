@@ -1,5 +1,7 @@
 // ContentForm은 부모 머리 앞의 일반 Form과 달리 같은 목록 그룹의 순서 번호로 삽입한다.
 #include "o/ContentFormHost.h"
+#include "o/RawContentAttach.h"
+#include "o/RawSquidContainedUnpop.h"
 #include <stdexcept>
 #include <unordered_set>
 #include <utility>
@@ -49,11 +51,17 @@ void ContentFormHost::SetPrevious(Sid sid,std::uint16_t previous) const {
 }
 // 기존 체인을 한 번 훑고 첫 순서 공백에 삽입한다. 다른 그룹과 일반 Form/자산은 건너뛴다.
 void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
-    if (form.value<5 || parent.value<5 || parent.value>=pool_.Capacity() || parent==form) throw std::logic_error("ContentForm 부착 번호 오류");
     if (pool_.Edition()==OriginalEdition::Patch1078) {
-        if (pool_.Slot(parent)[kState]&(kFree|kDead)) Assert("!into.isDead() && !into.isFree()",0xbe6);
-        if (pool_.Slot(form)[kState]&(kFree|kDead)) Assert("!isDead() && !isFree()",0xbe7);
+        ContentAttachHooks hooks;hooks.contentType=[this] { const auto getter=state_ ? state_->contentType : std::function<std::uint32_t()>{};return getter ? getter() : 6U; };
+        hooks.previous=[this](Sid sid,std::uint32_t table) { return CommonContainedPreviousAtTable(pool_,sid,table); };
+        hooks.setPrevious=[this](Sid sid,std::uint32_t table,Sid value) { CommonContainedSetPreviousAtTable(pool_,sid,table,value); };
+        hooks.setParent=[this](Sid sid,std::uint32_t,Sid value) { CommonContainedSetParent(pool_,sid,value); };
+        hooks.pop=[this](Sid sid,std::uint32_t value) { if (pop_) { const auto selected=pop_;selected(sid,value); }else forms_.Pop(sid,value); };
+        hooks.notice=notice_;hooks.assertion=state_ ? state_->assertion : std::function<void(std::string_view,std::string_view,std::uint32_t)>{};
+        if (!AttachSortedContent(pool_,form,parent,flags,hooks)) return;
     }
+    else { // CD의 기존 정렬 한정 계약은 유지한다.
+    if (form.value<5 || parent.value<5 || parent.value>=pool_.Capacity() || parent==form) throw std::logic_error("ContentForm 부착 번호 오류");
     if ((pool_.Slot(parent)[kState]|pool_.Slot(form)[kState])&(kFree|kDead)) return;
     Form(form);forms_.ValidatePop(form,flags);
     const auto stored=Word(form,kContentType);if (stored>=types_.size()) throw std::logic_error("ContentForm 생산 타입 오류");
@@ -81,9 +89,10 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
     }
     pool_.AllocatedBytes(form)[orderOffset]=static_cast<std::uint8_t>(order);Put(form,kParent,parent.value);
     pool_.AllocatedBytes(form)[kState]|=kContained;if (pop_) pop_(form,flags|0x100);else forms_.Pop(form,flags|0x100);notice_(parent,form,1);
+    }
     // 부모 알림/전송이 바꾼 현재 내용물 타입·부모 genus·전투 상태를 다시 읽어 사제 포획 알림 조건을 평가한다.
-    if ((types_.at(Word(form,kContentType)).flags2&0x200000) &&
-        (types_.at(pool_.Slot(parent)[kType]).flags2&0x30000) && state_ && state_->inBattle) {
+    if ((TypeGenus(Word(form,kContentType))&0x200000) &&
+        (TypeGenus(pool_.Slot(parent)[kType])&0x30000) && state_ && state_->inBattle) {
         if (state_->checkingLinks) {
             if (form.value<1 || form.value>=pool_.Capacity()) Assert("isValid()",0xc2b);
             if (state_->checkingLinks && !Linked(form)) Assert("isRobust()",0xc2c);
@@ -98,6 +107,9 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
 void ContentFormHost::Unpop(Sid form) const { if (unpop_) unpop_(form);else forms_.Unpop(form); } // 실제 가상 진입 앞에 고정 TYPE/free 검사를 추가하지 않는다.
 void ContentFormHost::BindPop(std::function<void(Sid,std::uint32_t)> pop) { pop_=std::move(pop); } // 같은 Session이 살아 있는 동안 현재 실제 Pop만 사용한다.
 void ContentFormHost::BindUnpop(std::function<void(Sid)> unpop) { unpop_=std::move(unpop); } // 현재 World와 같은 수명의 공통 해제를 연결한다.
+// 실제 현재 TYPE 대여는 통지 뒤에도 같은 표를 다시 읽는다.
+void ContentFormHost::BindCurrentTypes(std::span<const RiftTypeRecord> types) { if (!types.empty() && types.size()!=types_.size()) throw std::invalid_argument("Content 현재 TYPE 표의 판본/길이 계약");currentTypes_=types; }
+std::uint32_t ContentFormHost::TypeGenus(std::uint32_t type) const { const auto current=currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_;if (type>=current.size()) throw std::out_of_range("Content 통지 뒤 현재 TYPE 물리 범위");return current[type].flags2; } // 실제 소비 위치의 오류만 보고한다.
 // WORLD 플래그의 원본 assert 경로를 명시적으로 거부한다.
 bool ContentFormHost::Robust(Sid form) const {
     Form(form);const auto flags=Word(form,kFlags);if (flags&kWorld) throw std::logic_error("WORLD ContentForm Robust 금지");

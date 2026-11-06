@@ -2663,6 +2663,7 @@ struct RawCampaignSession::Impl {
         contentNotice=std::make_unique<RawContentParentNotice>(core.pool,[this](Sid parent,Sid form,std::uint32_t reason) {
             lifetime->ParentNotice(parent,form,reason);
         });
+        contentFormState.contentType=[owner=gameplayGlobals] { return owner->finder.containedType; }; // 생성/검색과 같은 Client의 현재 content DWORD다.
         contentFormState.inBattle.Bind(core.ownerMode.battle);contentFormState.checkingLinks.Bind(gameplayGlobals->AiDebug().Checking());
         contentFormState.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("ContentForm 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); };
         PriestTakenNoticeHooks taken; // 원문004927f0의 선택 장치를 실제 세션의 현재 서비스에 연결한다.
@@ -2675,6 +2676,7 @@ struct RawCampaignSession::Impl {
         contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,
             [this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); },services.dependencyTransmit,&contentFormState,
             [this](Sid parent,std::uint32_t previousOwner) { priestTakenNotice->Notify(parent,previousOwner); }); // 부착/일반 부모 알림 뒤 원문의 현재 상태로 포획 안내를 판정한다.
+        contentForms->BindCurrentTypes(core.types); // 통지 뒤에도 같은 World TYPE 표의 현재 genus를 사용한다.
         auto contentEffects=services.contentLifetime;
         contentEffects.cancelCursor=[this] {
             if (!cursor) throw std::logic_error("현재 ContentForm 커서 수명 미설치");cursor->Cancel();

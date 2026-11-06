@@ -419,3 +419,6 @@ target_sources(netstorm PRIVATE o/RawFormAttach.cpp o/RawFormAttach.h)
 
 # 현재 권한/진단 후 상태와 공유 깊이의 공통 Form Pop 부모다(912).
 target_sources(netstorm PRIVATE o/RawFormPop.cpp o/RawFormPop.h)
+
+# 정렬 Content의 원문 링크/늦은 Pop·통지는 공통 Form +74와 구별한다.
+target_sources(netstorm PRIVATE o/RawContentAttach.cpp o/RawContentAttach.h)
