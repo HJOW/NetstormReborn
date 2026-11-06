@@ -1,5 +1,6 @@
 #include "o/RawVortexOwnerDiagnostic.h" // 신전 상세/진단의 실제 Client 경계다.
 #include "o/RawFortMoneyLoad.h" // 일반 Login의 초기 SP도 기존00447810 전체 지정 몸체를 공유한다.
+#include "o/RawBattleIsland.h" // 원격 수신/일반 Login이 같은 실제 전투섬 부모를 사용한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "client/CompositeMissionTransport.h" // 현재 ID 복합 전송과 실제 전체 Runtime 등록 대여를 연결한다.
@@ -2853,8 +2854,8 @@ struct RawCampaignSession::Impl {
         reader.assertion=SessionMissing<void,FortContentsLoadAssertion>();
         return reader;
     }
-    // 고정 Template의 실제 반환 stream 수명을 유지하며 읽기/생성을 동일 원문 부모에서 진행한다.
-    void ReadFortObjectStreams(const RawFortObjectLoad& objects,std::uint32_t slot) {
+    // 고정 Template의 실제 반환 stream 수명을 유지하며 지정 Terr 범위를 같은 원문 부모에서 읽고 즉시 생성한다. 기본 범위는 기존 전체20영역이다.
+    void ReadFortObjectStreams(const RawFortObjectLoad& objects,std::uint32_t slot,std::int32_t firstTerritory=0,std::int32_t territoryEnd=20) {
         if (slot>=9 || !fortTypeConversion) throw std::logic_error("Objects 실제 Template/변환표 소유자 미연결");
         std::vector<TemplateWriteStream> streams;FortObjectStreamHooks hooks; // 읽기 callback은 현재 노드의 같은 생성 수명만 빌린다.
         hooks.manager=[this](auto owner) { if (owner<0 || owner>=9) throw std::out_of_range("Objects 실제 Template 슬롯");return Read(templateStorage->Headers(),static_cast<std::size_t>(owner)*20); };
@@ -2865,7 +2866,18 @@ struct RawCampaignSession::Impl {
         hooks.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return fortTypeConversion->Bytes(token); };
         hooks.releaseConversion=[this] { auto& current=fortTypeConversion->Current();if (current) fortTypeConversion->Release(current);current=0; };
         hooks.contents=[&](Sid parent,auto stream) { auto reader=MakeFortContentsReader(hooks.access);const FortContentsLoadGlobals globals{fortTypeConversion->Current(),hooks.checking};static_cast<void>(LoadFortContents(parent.value,stream,9,0,globals,reader)); };
-        hooks.assertion=[](auto line) { throw std::logic_error("원본 Objects Template.cpp 진단 "+std::to_string(line)); };objects.LoadStream(static_cast<std::int32_t>(slot),hooks);
+        hooks.assertion=[](auto line) { throw std::logic_error("원본 Objects Template.cpp 진단 "+std::to_string(line)); };objects.LoadStream(static_cast<std::int32_t>(slot),hooks,firstTerritory,territoryEnd);
+    }
+    // 원문0046e2c0의 지형/객체를 현재 Session의 동일 Runtime·생성자·Player/Graph에 연결한다.
+    void BuildBattleIsland(std::uint32_t owner) {
+        BattleIslandHooks hooks;hooks.assertion=[this](auto) { if (!services.ai.assertion) throw std::logic_error("전투섬 owner 진단 미연결");services.ai.assertion("playerId != INVALID_PLAYER_ID"); };
+        hooks.territory=[this](auto slot,auto output) { if (!runtime) throw std::logic_error("전투섬의 현재 Territory 부모 미설치");runtime->ReadTerritory(slot,output); };
+        hooks.placement=[this](auto player,auto record) { if (!construction) throw std::logic_error("전투섬의 현재 Player 배치 부모 미설치");return construction->PlayerBounds().Placement(static_cast<std::int32_t>(player),record); };
+        hooks.region=[this](auto player,auto island) { if (player>=9) throw std::out_of_range("전투섬의 실제 Player9 범위");Put(players,static_cast<std::size_t>(player)*180+0x78,island); };
+        hooks.generate=[this](const auto& builder,auto island) { if (!normal) throw std::logic_error("전투섬의 실제 지형 부모 미설치");normal->GenerateOriginal(builder.owner,builder.bounds,island); };
+        hooks.boss=[this] { return assetState.Boss(); };hooks.objects=[this](auto slot,auto start,auto end) { if (!runtime) throw std::logic_error("전투섬의 실제 Objects 부모 미설치");ReadFortObjectStreams(runtime->Objects(),slot,start,end); };
+        hooks.graph=[this](bool reset) { core.graph.Rebuild(reset); };hooks.builderAssertion=[this](auto) { if (!services.ai.assertion) throw std::logic_error("전투섬의 builder 진단 미연결");services.ai.assertion("전투섬 IslandBuilder 진단"); };hooks.decoderDiagnostics=&metadata.geometry.decoderDiagnostics;
+        RawBattleIsland(core.pool,chunks,*islands,core.frames,piece,std::move(hooks)).Build(owner);
     }
     // 같은 실제 Session/Storage/Client 전역과원시Contents reader를일반Fort child에연결한다.
     RawExistingFortChildren MakeExistingFortChildren(const RawFortObjectLoad& objects) {

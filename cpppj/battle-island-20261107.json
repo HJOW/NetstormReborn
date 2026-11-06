@@ -1,0 +1,24 @@
+{
+  "unit": 989,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": { "host": "HJOW-Athlon", "date": "2026-11-03" },
+  "description": "일반 전투섬의 현재 Territory 선택·실제 배치/지형·권한별 객체 적재와 서버/원격 client 연결",
+  "sourceFunctions1078": ["0046d9b0", "0046da60", "0046e2c0", "004bd660", "00432050", "0046dba0", "0046da70", "004be610", "00463110"],
+  "referenceFunctions1072": ["00490430", "00490510", "00490fa0"],
+  "build": {
+    "firstExitCode": 0,
+    "firstWarnings": 1,
+    "firstWarning": "C4458: start 매개변수가 Impl.start 멤버를 가려 firstTerritory로 변경",
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "firstLog": "extracted/cpp-resume-989/build.log",
+    "finalLog": "extracted/cpp-resume-989/build-final.log",
+    "exeSize": 11579392,
+    "exeSha256": "44f7759ca405d94b4640fb3f1287f82e0f8f2b2ae71a0d5fea31a43df2fe2403"
+  },
+  "excluded": { "newMultiplayerTests": 0, "unitTestRuns": 0, "gameRuns": 0, "networkRuns": 0, "newFixtures": 0 },
+  "protected": { "files": 2800, "changed": [], "baseline": "extracted/cpp-resume-989/protected-before.json" },
+  "remaining": ["중앙섬 metadata/생성", "ordinary 자기 Fort 부모", "일반 State/Commander/roster/LAN UI", "전체 파생 writer/decoder", "메타/저장/재접속/Outpost/checking8", "한국어 후속", "Edit 시나리오 UI"]
+}
