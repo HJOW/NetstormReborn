@@ -184,10 +184,9 @@ public:
 private:
     bool AttachBase(SquidProcess& process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form,std::unique_ptr<SquidProcess>* owned); // 같은 상위 원문 부모에서 실제 신규/기존 Kernel 등록을 선택한다.
     friend class RegularProcess;
-    // raw 필드를 호스트 정렬과 무관하게 읽고 쓴다. 쓰기는 할당된 슬롯만 받는다.
+    // raw WORD를 호스트 정렬과 무관하게 읽는다.
     std::uint16_t Word(Sid sid,std::size_t offset) const;
-    void PutWord(Sid sid,std::size_t offset,std::uint16_t value);
-    // 타입 번호가 프로세스 타입인 form인지 판단한다.
+    // 가상 삭제 효과를 처리할 현재 Process VT인지 판단한다. finder의 원문 TYPE/상한 관문과 구별한다.
     bool IsProcessForm(Sid sid) const;
     // 004b1440→004ac800→004ac560 ↔ CD 004af380→004ac2e0→004abfb0: 부모의 종속 체인 머리에 넣고 contained를 켠 뒤 Pop한다.
     void AttachForm(Sid form,Sid parent,std::uint32_t flags);
@@ -197,8 +196,6 @@ private:
     void FormPreDestroy(Sid form,std::uint32_t flags);
     // 004ae2b0 ↔ CD 004af4c0: 부모가 지워질 때 프로세스에 통지한다.
     void FormParentDying(Sid form,Sid parent);
-    // form 종속 체인에서 이전 항목 번호를 쓰는 가상 함수(vtable +0xc)다. form과 contained 자산의 필드 위치가 다르다.
-    void SetPrevious(Sid sid,std::uint16_t previous);
     // Regular 실행 몸체. 판본별 abstract 처리와 처리기 반환값 분기를 구별한다.
     void RunRegular(RegularProcess& process);
     template<class Predicate> RegularProcess* Find(Sid parent,Predicate match) const;

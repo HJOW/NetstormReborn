@@ -1,0 +1,438 @@
+{
+  "unit": 972,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 972,
+  "version": "11.01",
+  "scope": "Process 현재 VT/유효 PID 수명·NULL 부모 통지와 필수 pre PID/다른 Kernel 클래스의 선택 경계",
+  "exeSha256": "a7f730c020f562d77b239cb38c36494b5ee25a323b29d1d08fcc64cf8e8ba2ab",
+  "exeBytes": 11360256,
+  "static": [
+    {
+      "edition": "originals",
+      "vtable": "00512098",
+      "slots": {
+        "14": "004ae240",
+        "18": "004ac1b0",
+        "1c": "004ae2b0"
+      },
+      "bodies": {
+        "14": [
+          {
+            "address": "004ae240",
+            "instruction": "push esi"
+          },
+          {
+            "address": "004ae241",
+            "instruction": "mov esi, ecx"
+          },
+          {
+            "address": "004ae243",
+            "instruction": "mov eax, dword ptr [esi + 0x12]"
+          },
+          {
+            "address": "004ae246",
+            "instruction": "push eax"
+          },
+          {
+            "address": "004ae247",
+            "instruction": "call 0x471aa0"
+          },
+          {
+            "address": "004ae24c",
+            "instruction": "mov ecx, dword ptr [esp + 0xc]"
+          },
+          {
+            "address": "004ae250",
+            "instruction": "mov edx, dword ptr [eax]"
+          },
+          {
+            "address": "004ae252",
+            "instruction": "add esp, 4"
+          },
+          {
+            "address": "004ae255",
+            "instruction": "push ecx"
+          },
+          {
+            "address": "004ae256",
+            "instruction": "mov ecx, eax"
+          },
+          {
+            "address": "004ae258",
+            "instruction": "call dword ptr [edx + 0xc]"
+          },
+          {
+            "address": "004ae25b",
+            "instruction": "mov edx, dword ptr [esi + 0x12]"
+          },
+          {
+            "address": "004ae25e",
+            "instruction": "push edx"
+          },
+          {
+            "address": "004ae25f",
+            "instruction": "call 0x4719e0"
+          },
+          {
+            "address": "004ae264",
+            "instruction": "mov eax, dword ptr [0x5c8480]"
+          },
+          {
+            "address": "004ae269",
+            "instruction": "add esp, 4"
+          },
+          {
+            "address": "004ae26c",
+            "instruction": "dec eax"
+          },
+          {
+            "address": "004ae26d",
+            "instruction": "mov dword ptr [0x5c8480], eax"
+          },
+          {
+            "address": "004ae272",
+            "instruction": "pop esi"
+          },
+          {
+            "address": "004ae273",
+            "instruction": "ret 4"
+          }
+        ],
+        "18": [
+          {
+            "address": "004ac1b0",
+            "instruction": "dec dword ptr [0x5c8484]"
+          },
+          {
+            "address": "004ac1b6",
+            "instruction": "ret 4"
+          }
+        ],
+        "1c": [
+          {
+            "address": "004ae2b0",
+            "instruction": "mov ecx, dword ptr [ecx + 0x12]"
+          },
+          {
+            "address": "004ae2b3",
+            "instruction": "push ecx"
+          },
+          {
+            "address": "004ae2b4",
+            "instruction": "call 0x471aa0"
+          },
+          {
+            "address": "004ae2b9",
+            "instruction": "add esp, 4"
+          },
+          {
+            "address": "004ae2bc",
+            "instruction": "test eax, eax"
+          },
+          {
+            "address": "004ae2be",
+            "instruction": "je 0x4ae2c7"
+          },
+          {
+            "address": "004ae2c0",
+            "instruction": "mov edx, dword ptr [eax]"
+          },
+          {
+            "address": "004ae2c2",
+            "instruction": "mov ecx, eax"
+          },
+          {
+            "address": "004ae2c4",
+            "instruction": "jmp dword ptr [edx + 0x10]"
+          },
+          {
+            "address": "004ae2c7",
+            "instruction": "ret 4"
+          }
+        ]
+      },
+      "kernelLookup": "00471aa0",
+      "kernelRemove": "004719e0",
+      "kernelAdd": "00471950",
+      "kernelLookupBody": [
+        {
+          "address": "00471aa0",
+          "instruction": "mov eax, dword ptr [esp + 4]"
+        },
+        {
+          "address": "00471aa4",
+          "instruction": "mov eax, dword ptr [eax*4 + 0x56b808]"
+        },
+        {
+          "address": "00471aab",
+          "instruction": "ret "
+        }
+      ]
+    },
+    {
+      "edition": "originalCD",
+      "vtable": "00505990",
+      "slots": {
+        "14": "004af450",
+        "18": "004aba90",
+        "1c": "004af4c0"
+      },
+      "bodies": {
+        "14": [
+          {
+            "address": "004af450",
+            "instruction": "push esi"
+          },
+          {
+            "address": "004af451",
+            "instruction": "push edi"
+          },
+          {
+            "address": "004af452",
+            "instruction": "mov eax, dword ptr [ecx + 0x12]"
+          },
+          {
+            "address": "004af455",
+            "instruction": "mov esi, ecx"
+          },
+          {
+            "address": "004af457",
+            "instruction": "push eax"
+          },
+          {
+            "address": "004af458",
+            "instruction": "call 0x4ed640"
+          },
+          {
+            "address": "004af45d",
+            "instruction": "mov edi, dword ptr [esp + 0x10]"
+          },
+          {
+            "address": "004af461",
+            "instruction": "add esp, 4"
+          },
+          {
+            "address": "004af464",
+            "instruction": "mov edx, dword ptr [eax]"
+          },
+          {
+            "address": "004af466",
+            "instruction": "mov ecx, eax"
+          },
+          {
+            "address": "004af468",
+            "instruction": "push edi"
+          },
+          {
+            "address": "004af469",
+            "instruction": "call dword ptr [edx + 0xc]"
+          },
+          {
+            "address": "004af46c",
+            "instruction": "mov eax, dword ptr [esi + 0x12]"
+          },
+          {
+            "address": "004af46f",
+            "instruction": "push eax"
+          },
+          {
+            "address": "004af470",
+            "instruction": "call 0x4ed590"
+          },
+          {
+            "address": "004af475",
+            "instruction": "add esp, 4"
+          },
+          {
+            "address": "004af478",
+            "instruction": "mov ecx, esi"
+          },
+          {
+            "address": "004af47a",
+            "instruction": "push edi"
+          },
+          {
+            "address": "004af47b",
+            "instruction": "call 0x4abaa0"
+          },
+          {
+            "address": "004af480",
+            "instruction": "pop edi"
+          },
+          {
+            "address": "004af481",
+            "instruction": "pop esi"
+          },
+          {
+            "address": "004af482",
+            "instruction": "ret 4"
+          }
+        ],
+        "18": [
+          {
+            "address": "004aba90",
+            "instruction": "dec dword ptr [0x5395fc]"
+          },
+          {
+            "address": "004aba96",
+            "instruction": "ret 4"
+          }
+        ],
+        "1c": [
+          {
+            "address": "004af4c0",
+            "instruction": "mov eax, dword ptr [ecx + 0x12]"
+          },
+          {
+            "address": "004af4c3",
+            "instruction": "push eax"
+          },
+          {
+            "address": "004af4c4",
+            "instruction": "call 0x4ed640"
+          },
+          {
+            "address": "004af4c9",
+            "instruction": "add esp, 4"
+          },
+          {
+            "address": "004af4cc",
+            "instruction": "test eax, eax"
+          },
+          {
+            "address": "004af4ce",
+            "instruction": "je 0x4af4dc"
+          },
+          {
+            "address": "004af4d0",
+            "instruction": "mov ecx, dword ptr [esp + 4]"
+          },
+          {
+            "address": "004af4d4",
+            "instruction": "mov edx, dword ptr [eax]"
+          },
+          {
+            "address": "004af4d6",
+            "instruction": "push ecx"
+          },
+          {
+            "address": "004af4d7",
+            "instruction": "mov ecx, eax"
+          },
+          {
+            "address": "004af4d9",
+            "instruction": "call dword ptr [edx + 0x10]"
+          },
+          {
+            "address": "004af4dc",
+            "instruction": "ret 4"
+          }
+        ]
+      },
+      "kernelLookup": "004ed640",
+      "kernelRemove": "004ed590",
+      "kernelAdd": "004ed500",
+      "kernelLookupBody": [
+        {
+          "address": "004ed640",
+          "instruction": "mov eax, dword ptr [esp + 4]"
+        },
+        {
+          "address": "004ed644",
+          "instruction": "mov eax, dword ptr [eax*4 + 0x5b7bb0]"
+        },
+        {
+          "address": "004ed64b",
+          "instruction": "ret "
+        }
+      ]
+    }
+  ],
+  "build": {
+    "commands": 3,
+    "exitCodes": [
+      0,
+      0,
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "targets": [
+      "NetstormCpp",
+      "netstorm_pop_context_tests"
+    ]
+  },
+  "focused": {
+    "uniqueCases": 16,
+    "newCases": 3,
+    "existingCases": 13,
+    "beforeFailedChecks": 80,
+    "finalFailedChecks": 0,
+    "beforeAliasInputs": 32,
+    "finalAliasInputs": 48,
+    "patchCurrentEndZeroAdditionalInputs": 16,
+    "cdFixedEndGetterUnchanged": true,
+    "kernelBoundaryInputs": 4,
+    "actualWorldInputs": 8,
+    "existingBaseAttachNativeRows": 48,
+    "eventFinderTypeFilterPreserved": true,
+    "tests": [
+      "ProcessClassCurrent_ActualHostAndDispatchIgnoreTypeAliases",
+      "ProcessClassCurrent_NullParentNoticeAndForeignKernelClassStayDistinct",
+      "ProcessClassCurrent_ActualWorldReturnsAliasedProcessAndKeepsFinderFilter",
+      "ProcessCreationCurrent_WorldFactoryCurrentNumberAndSuccessiveLoans",
+      "ProcessCreationCurrent_IndependentHostUsesCommonCreateAndCurrentDword",
+      "ProcessCreationCurrent_GumpTakeUsesCurrentConstructorAndKeepsPayload",
+      "ProcessCreationCurrent_RuntimeMissingAndForeignFactoryAreExplicit",
+      "BaseProcessAttachCurrent_RefreshDiagnosesDeadAndFreeSeparately",
+      "BaseProcessAttachCurrent_IndependentNative48NewLocalInputs",
+      "BaseProcessAttachCurrent_CurrentVtableSelectsNewLocalAttach",
+      "BaseProcessAttachCurrent_CreateFailureKeepsRegistrationAndWrittenFields",
+      "BaseProcessAttachCurrent_TypeDiagnosticResumesBeforeFieldWritesAndRegister",
+      "ContentLifetime_SharedMixedFormDispatch",
+      "ProcessHostStorage_OtherResidualRequiresFurtherLifetimeWorkWithoutForcedDrain",
+      "FormClassLifetime_CurrentVtableKeepsGumpAndContentEffects",
+      "ProcessRetake_DestructorKeepsSlotLifetimeThroughReentry"
+    ]
+  },
+  "protection": {
+    "files": 2796,
+    "fixtures": 976,
+    "changed": 0,
+    "newFixtures": 0,
+    "baseline": "extracted/cpp-resume-972/protected-final.json"
+  },
+  "gui": {
+    "newExecutions": 0,
+    "lastUnit": 968
+  },
+  "newNativeExecutions": 0,
+  "newMultiplayerTests": 0,
+  "solutions": [
+    {
+      "file": "NetstormCpp.slnx",
+      "projects": 83
+    }
+  ],
+  "solutionProjects": 83,
+  "checkingRemaining": 8,
+  "remaining": [
+    "Kernel.Remove 빈 슬롯 진단의 정상 복귀/현재 슬롯과 실제 Client 장치 연결",
+    "이미 있는 RawProcessSummary/Client Diagnostics를 Kernel.Add 소진 호출/실패 UI에 접합",
+    "자산 TYPE 범위와 전체 공통 삭제/외부 heap·할당 실패",
+    "남은 파일/비멀티 파생 수명"
+  ],
+  "excluded": [
+    "초기 PID0의 잘못된 원본 포인터 실행",
+    "실제 GUI/게임",
+    "MP/지정 수신/패킷/프로토콜/통신 검사",
+    "공중3종 전용",
+    "실제 포획/희생/특정 적 공격/승리",
+    "전체 CTest/34미션/ZIP"
+  ]
+}

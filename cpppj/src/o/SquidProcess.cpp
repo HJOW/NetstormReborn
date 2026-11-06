@@ -14,8 +14,8 @@ namespace netstorm::o {
 namespace {
 // 공통 raw 필드: 종속 체인의 다음(+4)·머리(+6), 타입(+10), 상태(+11).
 constexpr std::size_t kNext=4,kHead=6,kType=10,kState=11;
-// form은 이전 항목을 +0xe, 부모를 +0x10, Kernel 번호를 +0x12에 둔다. contained 자산은 부모가 +0xe, 이전 항목이 +0x10이다.
-constexpr std::size_t kFormPrevious=14,kFormParent=16,kFormPid=18,kAssetPrevious=16;
+// Form의 비정렬 Kernel 번호 DWORD는 +0x12이며 가상 링크는 공통 현재 getter/setter가 처리한다.
+constexpr std::size_t kFormPid=18;
 // 상태 비트: free·dead·void·contained.
 constexpr std::uint8_t kFree=1,kDead=2,kVoid=4,kContained=8;
 // 타입 번호: ProcessForm, 프로세스 타입의 첫 번호, Regular/SharedRegular, form으로 취급하는 마지막 번호.
@@ -24,8 +24,8 @@ constexpr std::uint32_t kFirstProcessType=10,kRegularType=46,kSharedRegularType=
 constexpr std::uint32_t kCdProcessEnd=62,kPatchFormVtable=0x512098,kCdFormVtable=0x505990;
 // 부착 flags: 0x10 client 번호로 form 할당, 0x10|0x40 전송 억제, 0x80 부모 변경 허용(pfPROCESS_DEBUG).
 constexpr std::uint32_t kClientForm=0x10,kLocalMask=0x50,kProcessDebug=0x80;
-// form을 넣을 수 없는 부모 genus(emplacement·vortex·factory)와 abstract여도 실행하는 genus.
-constexpr std::uint32_t kNoContainerGenus=0x44200,kAbstractRunGenus=0x404200;
+// abstract 상태여도 실제 Regular를 실행하는 부모 genus 비트다.
+constexpr std::uint32_t kAbstractRunGenus=0x404200;
 // geyser에 붙은 Regular가 허용하는 가장 먼 예약(초)이다.
 constexpr double kPollLimit=0.5;
 // 실제 선택 효과가 반환하기 전에 그 World 대여를 소비하지 못하게 하는 C++ 호출 수명이다.
@@ -112,18 +112,10 @@ std::uint16_t SquidProcessHost::Word(Sid sid,std::size_t offset) const {
     const auto raw=pool_.Slot(sid);
     return static_cast<std::uint16_t>(raw[offset]|(static_cast<std::uint16_t>(raw[offset+1])<<8));
 }
-void SquidProcessHost::PutWord(Sid sid,std::size_t offset,std::uint16_t value) {
-    auto raw=pool_.AllocatedBytes(sid);
-    raw[offset]=static_cast<std::uint8_t>(value);raw[offset+1]=static_cast<std::uint8_t>(value>>8);
-}
 bool SquidProcessHost::IsProcessForm(Sid sid) const {
     if (sid.value==0 || sid.value>=pool_.Capacity()) return false;
-    const auto type=pool_.Slot(sid)[kType];
-    return type>=kFirstProcessType && static_cast<std::int32_t>(type)<std::bit_cast<std::int32_t>(ProcessTypeEnd());
-}
-// form의 가상 setPrev는 +0xe, contained 자산의 것은 +0x10에 쓴다.
-void SquidProcessHost::SetPrevious(Sid sid,std::uint16_t previous) {
-    PutWord(sid,pool_.Slot(sid)[kType]<=kLastFormType ? kFormPrevious : kAssetPrevious,previous);
+    const auto raw=pool_.Slot(sid);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
+    return table==FormVtable(); // 가상 삭제 효과는 현재 클래스가 선택하며 변경 가능한 TYPE/프로세스 상한을 선행 검사하지 않는다.
 }
 void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.
@@ -238,7 +230,10 @@ void SquidProcessHost::FormParentDying(Sid form,Sid parent) {
     const auto raw=pool_.Slot(form);ProcessId pid=0;
     // 정렬되지 않은 DWORD를 낮은 바이트부터 읽는다.
     for (std::size_t i=0;i<4;++i) pid|=static_cast<ProcessId>(raw[kFormPid+i])<<(8*i);
-    if (auto* process=dynamic_cast<SquidProcess*>(kernel_.Get(pid))) process->OnParentDying(parent);
+    auto* current=kernel_.Get(pid);if (!current) return; // 원문 +1c의 NULL 조회만 빈 통지로 생략한다.
+    auto* process=dynamic_cast<SquidProcess*>(current);
+    if (!process) throw std::logic_error("현재 Process 부모 통지의 실제 가상+10 미연결"); // 비어 있지 않은 다른 Kernel 클래스를 빈 성공으로 숨기지 않는다.
+    process->OnParentDying(parent);
 }
 void SquidProcessHost::Kill(SquidProcess& process,std::uint32_t flags) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 실제 효과가 끝나기 전 현재 대여를 반납하지 않는다.
