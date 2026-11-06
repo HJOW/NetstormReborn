@@ -1,0 +1,74 @@
+{
+  "unit": 1018,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "실제486bc0 전체 스펠 예약 소비/SP 주기/구역별·전체 간헐천을 같은 Client Kernel 뒤 프레임에 연결",
+  "sourceFunctions1078": [
+    "00486bc0",
+    "0048f4e0",
+    "0041c800",
+    "0041c840",
+    "0041c870",
+    "00485e40",
+    "00486130",
+    "00439b34"
+  ],
+  "referenceFunctions1072": [
+    "004151d0"
+  ],
+  "nativeConstants": {
+    "spellPeriod": 20,
+    "singleSecondaryPeriod": 30,
+    "predictableSeed": "0000beef",
+    "incomePrimedAddress": "00595124",
+    "partitionCellOrder": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "cornerDivisors": [
+      2,
+      4
+    ],
+    "center": "corner+1",
+    "edge": "(corner+1)/2",
+    "firstSpExpiry": "prime only"
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1018\\build.log",
+    "exeSize": 11919872,
+    "exeSha256": "deec76174873877ae0f8aa9af9efa83c4c42a54bc952ca6c7fa3552b79637c4f"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "nativeCpuRuns": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1018\\protected-before.json"
+  },
+  "remaining": [
+    "6ch 부족 자금·건설Reject의 실제00442b50 제재/Tell 부모",
+    "전체 파생 writer/decoder·메타·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

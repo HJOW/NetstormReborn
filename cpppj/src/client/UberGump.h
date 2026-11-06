@@ -99,6 +99,7 @@ public:
     void CleanupGumps(); // 원본4662b0 위치에서 실제 전체 HTML/Warning을 포함한 같은 공통 큐를 정리한다.
     void ShowGameTimeMessage(); //00439b5f의kind16/player1/표시1을기존메시지20칸에전달한다.
     void PollConnectionHealth(); //00439ad8의 실제 활동/지연/자동 서버 이전과 뒤439ae3 로그인 타이머를 실행한다.
+    void PollBattleResources(); //00439b34의 실제 자원 프레임이며 월드 없는 메뉴도 같은 전역의 자연 관문을 실행한다.
     void ShowSidRecoveryNotice(); //CD SID 회수 뒤 BridgesKilled를 실제 공통 Tell 부모로 연다.
     void IdleGumps(); // 원본464170 위치에서 Warning을 포함한 현재 공통 idle 표를 한 번 실행한다.
     // --ui-script 전용 검사 경계다. 실제 월드의 가상 삭제를 호출하며 일반 게임 입력에는 노출하지 않는다.

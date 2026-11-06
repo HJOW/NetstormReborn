@@ -135,6 +135,7 @@
 #include "o/RawNuggetReplenish.h"
 #include "o/RawBattleNuggetPlacement.h" // 비미션 보충도 원문 지역 난수와 실제 Factory/배치/Pop을 사용한다.
 #include "o/RawBattleResourceOptions.h" // 주기 SP 통지 검증도 같은 현재87BYTE와 원문 표를 조회한다.
+#include "o/RawBattleResourceFrame.h" // 일반 게임 프레임의 스펠/SP/간헐천을 같은 실제 장치에 연결한다.
 #include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
 #include "o/RawBombActivation.h"
@@ -4561,6 +4562,20 @@ void RawCampaignSession::GenerateWorldGeysers() {
     hooks.decorate=[&placement](o::GameRandom& random,auto rectangle,auto region,auto quantity,auto type,auto force) { static_cast<void>(placement.PlaceRandom(random,rectangle,region,quantity,type,force)); };
     hooks.populate=[&s](std::int32_t quantity,o::GameRandom& random,auto rectangle,auto options) { s.PrepareConstruction();s.construction->PopulateGeysers(quantity,random,rectangle,options); };
     o::RawWorldGeyser(s.core.pool.Edition(),{s.core.ownerMode.battle,s.battleOptions,s.gameplayGlobals->GameAux()->WorldDecorationTypes()},std::move(hooks)).Generate();
+}
+//00486bc0의 현재 자원 전역과 실제 송신/공간/생성 장치를 같은 월드에 연결한다.
+void RawCampaignSession::RunBattleResources() {
+    auto& s=*impl_;if (!s.loaded) throw std::logic_error("설치 전 실제 자원 프레임");auto& aux=*s.gameplayGlobals->GameAux();o::WorldGeyserBoundsHooks geometry;
+    geometry.chunkBounds=[&s](auto region) { if (!s.islands->Exists(region)) throw std::logic_error("자원 프레임의 현재 ChunkMap.bounds 섬 존재 진단");return s.chunks.Bounds(region); };geometry.spacing=[&s] { return o::WorldGeyserSpacing(s.battleOptions[6]); };
+    o::RawWorldGeyserBounds bounds(s.core.pool.Edition(),{s.globals.missionPost,s.gameplayGlobals->WorldCells(),aux.WorldGeyserMargin()},std::move(geometry));o::BattleResourceFrameHooks hooks;
+    hooks.replenish=[&s] { s.ReplenishNuggets(); };hooks.income=[this](auto owner,auto source,auto value) { std::array<std::uint8_t,11> packet{1,0x6c,11,0,static_cast<std::uint8_t>(owner),static_cast<std::uint8_t>(source),2};for (std::size_t byte=0;byte<4;++byte) packet[7+byte]=static_cast<std::uint8_t>(std::bit_cast<std::uint32_t>(value)>>(byte*8));SendLocalPacket(9,packet); }; // 원문 비정렬 signed 금액의 네BYTE를 쓰고 같은 실제9 송신을 사용한다.
+    hooks.predictable=[&s] { if (!s.services.construction.configInt) throw std::logic_error("자원 프레임의 현재 Config 장치 미연결");return s.services.construction.configInt("predictableGeysers",0)==1; };hooks.wallSeconds=s.services.construction.wallSeconds;
+    hooks.budget=[&s] { return o::WorldGeyserBudget(s.core.pool.Edition(),s.core.ownerMode.battle,s.players,s.battleOptions); };hooks.density=[&s] { return o::WorldGeyserDensity(s.battleOptions[17]); };hooks.spacing=[&s] { return o::WorldGeyserSpacing(s.battleOptions[6]); };
+    hooks.whole=[&bounds] { return bounds.Whole(); };hooks.partition=[&bounds](auto cell) { return bounds.Partition(cell,3); };
+    hooks.count=[&s,&aux](auto area) { const auto lower=RawCursorPosition::TruncatePoint({area.left,area.top}),upper=RawCarrierDropPoint::Snap({area.right,area.bottom});RawSquidFinder finder(s.core.pool,s.core.hash,s.core.types);std::uint32_t count{};for (auto sid=finder.Begin({FortSaveCoordinate(lower[0]),FortSaveCoordinate(lower[1]),FortSaveCoordinate(upper[0]),FortSaveCoordinate(upper[1])},1);sid.value;sid=finder.Next()) if (s.core.pool.Slot(sid)[10]==aux.GeyserType()) ++count;return count; }; // 원문 flags1 finder의 순서/중복과 현재TYPE를 그대로 센다.
+    hooks.geyserCount=[&s] { return s.assetState.Geysers().Count(); };hooks.typeCost=[&s,&aux] { if (aux.GeyserType()>=s.core.types.size()) throw std::out_of_range("자원 프레임의 현재 TYPE 범위");return s.core.types[aux.GeyserType()].cost; };hooks.choose=[&s](auto count) { return s.random.Next(count); };
+    hooks.populate=[&s](auto quantity,auto& random,auto rectangle,auto options) { s.PrepareConstruction();s.construction->PopulateGeysers(quantity,random,rectangle,options); };
+    o::RunBattleResourceFrame({aux,s.loginEnd,s.core.processState.Now(),s.assetState.Boss(),s.core.ownerMode.battle,s.globals.missionPost,s.globals.editor,s.playerState.battleOwner,s.battleOptions,[&s] { return std::span<const std::uint8_t>(s.players); }},hooks);
 }
 //0040e050의 지역 난수/모드·현재 오벨리스크 TYPE를 같은 공간·Factory·MayPlace에 연결한다.
 void RawCampaignSession::PlaceBattleNuggets(o::FortRandomRectangle rectangle,std::uint32_t quantity) {

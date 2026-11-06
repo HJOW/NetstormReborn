@@ -153,6 +153,7 @@
 #include "o/RawSavedStateRead.h" //startupStateCheck의 실제 저장 파일 부재 관문도 원문 reader에서 판정한다.
 #include "o/RawBattleReconnect.h" // 저장 질문/서버 실패의 실제 같은 후보 선택 부모를 사용한다.
 #include "o/RawConnectionHealth.h" // 실제 프레임의 연결 활동/지연/자동 서버 이전을 같은 상태에 연결한다.
+#include "o/RawBattleResourceFrame.h" // Kernel 뒤 같은 장기 자원 전역의 프레임을 실행한다.
 #include "client/ClientConnectionActivityGlobals.h" // 수신과 프레임 감시가 같은22칸/기한/자동 이전 DWORD를 빌린다.
 #include "client/SavedStateFileRead.h" // 같은 startup reader를 실제 사용자 FILE/Player/Core에 연결한다.
 #include "client/SavedStateFiles.h" //State1/3의 같은 저장파일 이름/State3 정리를 실제 설치 경로에 연결한다.
@@ -1640,6 +1641,11 @@ void UberGump::MissionFrame() {
 void UberGump::PrepareKernelFrame() { if (world_) world_->PrepareKernelFrame(); }
 // 현재 단일 Kernel의 이동/생성/삭제가 끝난 같은 프레임에서만 표시 사본을 갱신한다.
 void UberGump::FinishKernelFrame() { if (world_) world_->FinishKernelFrame(); }
+// 실제 World가 없는 메뉴에서는 원문 비boss 자연 반환까지 같은 전역을 갱신한다.
+void UberGump::PollBattleResources() {
+    if (world_) { if (!world_->PreparingFort()) world_->Session().RunBattleResources();return; }auto& game=*client_.GameplayGlobals();auto& local=*client_.LocalStateGlobals();
+    o::RunBattleResourceFrame({*game.GameAux(),local.LoginEnd(),client_.Time().game,game.Authority()->boss,client_.SurfaceStorage()->ownerMode.battle,game.world.missionPost,game.world.editor,game.player.battleOwner,*missionOptions_,[this] { return std::span<const std::uint8_t>(client_.PlayerRecords()->Records()); }},{}); // 월드 없는 현재 비boss에서는 배치/시계/송신 장치를 합성하지 않는다.
+}
 // 원본의미니맵프레임은게임정지와별개로커널보다먼저실행한다.
 void UberGump::RefreshMinimap() { if (rawButtons_->Minimap() && rawButtons_->Minimap()->Refresh()) rebuild_=true; }
 // 실제 공통 삭제 큐의 후반 반납 뒤 표시 상태를 현재 부모에서 다시 조회한다.

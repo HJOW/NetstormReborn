@@ -481,6 +481,7 @@ int Client::Run() {
             if (menu_) menu_->PrepareKernelFrame(); // 같은 실제 시각/연결/AI 입력을 준비하며 Kernel은 호출하지 않는다.
             kernel_->RunFrame();
             if (menu_) menu_->FinishKernelFrame(); // 모든 원문 프로세스가 같은 슬롯 순회를 끝낸 뒤 표시를 수집한다.
+            if (menu_) menu_->PollBattleResources(); //439b34의486bc0은 Kernel 뒤/실제 주기 저장 앞이며 게임 정지 중에도 현재 게임시각 관문을 사용한다.
             if (surfaceStorage_->ownerMode.battle) gameplayGlobals_->RequireSession().PollReconnectSave(); //00439b39의 주기 저장은 Kernel 뒤/시간 안내 앞이며 게임 정지 중에도 실제 wall을 사용한다.
             if (menu_ && surfaceStorage_->ownerMode.battle && gameplayGlobals_->ShowGameTime()) menu_->ShowGameTimeMessage(); //00439b43..64는영상갱신잠금없는가지에서만현재전투/표시값을읽는다.
         } else if (menu_) menu_->IdleGumps(); //439b69: 영상 갱신 잠금 중에도 Idle만 계속 실행한다.
