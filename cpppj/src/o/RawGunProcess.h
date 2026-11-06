@@ -79,6 +79,8 @@ public:
     void Construct(GunProcessFields& fields,Sid parent) const;
     // 실제 Kernel factory가 flags0 Attach 전에 같은 생성자 필드를 준비한다. 단독 생성 완료가 아니다.
     void Initialize(GunProcessFields& fields,Sid parent) const;
+    void InitializeReceived(GunProcessFields& fields) const; //0046a030의 수신용 기본 생성자다. group/부모 검증이나 부착을 추가하지 않는다.
+    void ReadData(GunProcessFields& fields,std::span<const std::uint8_t> packet,std::uint32_t& parent) const; //00468f80의 before/after observer와 dirty별 부분 쓰기다. 부모는 별도 DWORD 출력이다.
     // 0046b830/CD004342f0: 상태0~10의 시간·권한·현재 표적·애니메이션 흐름을 실행한다.
     void Frame(GunProcessFields& fields) const;
     // 0046a290/CD00434720: 표적 감시 제거·WORD0·선택적 상태1·현재 Form 재전송을 처리한다.
@@ -91,8 +93,8 @@ public:
     void Notify(GunProcessFields& fields,std::uint32_t event,std::uint32_t info,std::uint32_t value) const;
     // outer 가상 발사 0046bd20/CD00434790: 유효 표적의 실제 shot 경계와 재시작·현재 시각 cooldown이다.
     void Fire(GunProcessFields& fields) const;
-    // outer observer 0046a4b0/CD00434a70: 부모 변경·dirty8·상태3/6의 현재 AnimationProcess를 중지한다.
-    void ReceiveUpdate(GunProcessFields& fields,std::uint8_t dirty,std::uint32_t parentChanged) const;
+    // outer observer 0046a4b0/CD00434a70: 수신 전 phase/dirty8·옛 상태3/6의 현재 AnimationProcess를 중지한다.
+    void ReceiveUpdate(GunProcessFields& fields,std::uint8_t dirty,std::uint32_t beforeRead) const;
     // 00468ed0/CD00433db0: 헤더·선택 dirty 필드·부모·길이·dirty0을 원본 순서로 기록한다.
     static std::uint16_t WriteData(GunProcessFields& fields,std::span<std::uint8_t> packet,
         std::uint32_t form,std::uint32_t parent,bool force,std::uint8_t protocol,std::uint8_t message);

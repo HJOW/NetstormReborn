@@ -11,7 +11,7 @@
 namespace netstorm::client {
 namespace {
 // 초기 총과 원본 fire/rotate ProcessForm 번호이며 Flags는 실제 factory에 둔다.
-constexpr std::uint32_t kGunProcess=34,kFireProcess=35,kRotateProcess=36,kNoIsland=127;
+constexpr std::uint32_t kFireProcess=35,kRotateProcess=36,kNoIsland=127;
 // 비정렬 원본 BYTE/WORD/DWORD를 현재 raw 원문에서 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
     std::uint32_t value=0;
@@ -147,7 +147,7 @@ struct RawCampaignAssetBindings::Impl {
     o::AssetPostPopHooks PostHooks() {
         auto hooks=effects.postPop;
         hooks.addRegular=[this](o::Sid sid,std::uint32_t event,float payload) { if (!core.processes.AddRegular(sid,event,payload)) throw std::logic_error("캠페인 자산 실제 Regular 부모 부착 실패"); };
-        hooks.createGunProcess=[this](o::Sid sid) { Prepare(core.processState.Now());if (!o::CreateGunProcess(core.processes,*gun,sid,kGunProcess)) throw std::logic_error("캠페인 자산 실제 Gun 부모 부착 실패"); };
+        hooks.createGunProcess=[this](o::Sid sid) { Prepare(core.processState.Now());if (!o::CreateGunProcess(core.processes,*gun,sid,world.Storage()->GameAux()->GunProcessType())) throw std::logic_error("캠페인 자산 실제 Gun 부모 부착 실패"); }; // 신규 생성과 수신이 같은005410f8을 읽는다.
         hooks.removeAnimation=[this](o::Sid sid) { if (!effects.queueCommand) throw std::logic_error("캠페인 발사기 실제 입력명령 큐 미연결");effects.queueCommand(globals.archerNoticeCommand,sid.value,0); };
         hooks.surface=[this](float x,float y) { return o::RawPathSurfaceAt(core.hash,{x,y}); };
         hooks.setOwner=[this](o::Sid sid,std::uint32_t owner) { Prepare(core.processState.Now());SetOwner(sid,owner); };

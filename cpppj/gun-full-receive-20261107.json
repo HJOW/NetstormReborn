@@ -1,0 +1,58 @@
+{
+  "unit": 1026,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "총3ah의 수신용 생성자·dirty decoder/observer와 같은 PID/명시 Form 부착·현재 TYPE 전역 연결",
+  "sourceFunctions1078": [
+    "0046a0c0",
+    "0046a030",
+    "00468f80",
+    "0046a4b0",
+    "0041bd20"
+  ],
+  "reference1072": {
+    "observer": "00434a70",
+    "scope": "PATCH3ah 전체 수신/기본 생성자와 CD ABI를 혼합하지 않음"
+  },
+  "build": {
+    "firstExitCode": 0,
+    "firstWarnings": 2,
+    "firstDiagnostics": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\client\\RawCampaignSession.cpp(4518,163): warning C4458: 'process' 선언은 클래스 멤버를 숨깁니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]",
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\src\\client\\RawCampaignSession.cpp(4522,11): warning C4458: 'process' 선언은 클래스 멤버를 숨깁니다. [H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
+    ],
+    "correction": "Impl 멤버를 가린 지역 process 이름과 수신용 배정/초기화 순서를 정리",
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted\\cpp-resume-1026\\build-first.log",
+      "extracted\\cpp-resume-1026\\build.log"
+    ],
+    "exeSize": 12008960,
+    "exeSha256": "60e29d2608e68e710d23ffdfed2757f7bfe6c1fa487790090d690c3f05ef6c41"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1026\\protected-before.json"
+  },
+  "remaining": [
+    "아비어리/비행/애니메이션 등 나머지 프로세스 전체 decoder",
+    "재동기화 허용/owner cache·Activate 수신자 부모",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

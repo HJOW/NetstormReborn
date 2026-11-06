@@ -155,7 +155,7 @@ public:
     // 다른 값은 BaseProcess 생성자의 할당/권한 분기를 검사할 때만 쓴다.
     RegularProcess* AddRegular(Sid parent,std::uint32_t event,float payload,std::uint32_t flags=0x50);
     // 일반 Regular와 같은 실행 몸체를 타입 61로 부착한다. 시각은 부착 후 현재 시각이다.
-    // 원본: SharedRegular 생성자 00496f00 / CD 0048f1d0. 네트워크 저장 가상 함수는 별도 미복원이다.
+    // 원본: SharedRegular 생성자00496f00/CD0048f1d0이며 같은 실제 객체의7eh writer/전체 수신도 연결되어 있다.
     RegularProcess* AddSharedRegular(Sid parent,std::uint32_t event,float payload);
     RegularProcess* ReceiveSharedRegular(std::span<const std::uint8_t> packet); //00497030/00496fa0의7eh28BYTE 수신이다. 실행 시각/횟수를 부착 전에 복원하고 현재 시각으로 덮지 않는다.
     RegularProcess* AttachRegular(std::unique_ptr<RegularProcess> process,Sid parent,bool shared=false,std::uint32_t flags=0x50); // 같은 확보 메모리에 현재 번호/공유 진단/부착 뒤 현재 시각을 적용한다. caller의 추가 계수/기한 쓰기는 유지한다.

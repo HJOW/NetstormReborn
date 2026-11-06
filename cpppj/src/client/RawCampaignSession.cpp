@@ -325,7 +325,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,27> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e}; // 감시/공유 Regular도 같은 Session 등록/해제 수명을 따른다.
+constexpr std::array<std::uint32_t,28> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a}; // 총 전체 수신도 같은 Session 등록/해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -415,6 +415,7 @@ struct RawCampaignSession::Impl {
     void SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet); // 준비된 현재 로컬 전송의 observer와 큐에 원시 패킷을 넘긴다.
     void SendRemoteTell(std::uint32_t owner,std::string_view section,bool others); // 같은실제mutable송신을004c9150/4c9200부모에제공한다.
     void ReceiveSquid(std::span<const std::uint8_t> packet); //2ch/7ah의 같은00433c30 본문과 현재 실제 장치를 공유한다.
+    void ReceiveGunPacket(std::span<const std::uint8_t> packet); //0046a0c0의 신규 Form/기존 PID 수신을 같은 Kernel과 현재 총 본체에 연결한다.
     const std::string missionFortName; //현재 Session 설치 요청의 논리 요새 이름이다. manager의 실제 파일 경로와 혼용하지 않는다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals{services.localStateGlobals ? services.localStateGlobals : std::make_shared<ClientLocalStateGlobals>()}; // 실제 Client는 같은 owner를 빌리고 독립 Session만 기존 BSS0 입력을 한 번 소유한다.
     std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals{services.connectionActivityGlobals ? services.connectionActivityGlobals : std::make_shared<ClientConnectionActivityGlobals>()}; // 실제 Client의 표를 빌리며 독립 Session만 최초0 owner를 한 번 구성한다.
@@ -4507,10 +4508,25 @@ void RawCampaignSession::Impl::ReceiveSquid(std::span<const std::uint8_t> packet
         hooks.typeName=[&s,typeRecord](auto sid) { const auto& name=typeRecord(s.core.pool.Slot(sid)[10]).name;return name.substr(0,name.find('\0')); };hooks.log=s.services.player.log;
         auto& aux=*s.gameplayGlobals->GameAux();ReceiveRawSquid(s.core.pool,packet,{aux.VerifySid(),aux.SupportTypeWas(),s.localStateGlobals->PlayerNoMakeWarnings()},hooks);
 }
+// 총 전체 수신은 새 객체만 명시 Form SID에 부착하고 기존 PID의 예약/부모는 보존한다.
+void RawCampaignSession::Impl::ReceiveGunPacket(std::span<const std::uint8_t> packet) {
+    if (packet.size()<9) throw std::out_of_range("총 수신의 실제9BYTE 머리 부족");const auto number=Read(packet,4);
+    if (!number || number>65535U || number>=core.pool.Capacity()) throw std::out_of_range("총 수신의 명시 Form SID 물리 범위");const Sid form{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(form);std::uint32_t parent{};
+    const auto assertion=[this](auto expression,auto line) { world.Storage()->AssertDisplay(expression,"c:\\ns\\o\\_p_gunprocessdata.cpp",line); }; // 원문 수신 진단 정상 복귀 뒤 현재 패킷을 다시 읽는다.
+    if (raw[11]&1U) {
+        if (packet[8]!=0xffU) assertion("*(( char *)((char *)zacket+8) ) == (char)0xFFFFFFFF",0x4e);
+        assetBindings->PrepareFrame(core.processState.Now());const auto& logic=assetBindings->Gun();auto pending=std::make_unique<GunProcess>(logic,GunProcessFields{});logic.InitializeReceived(pending->Fields());logic.ReadData(pending->Fields(),packet,parent);
+        if (parent>65535U || parent>=core.pool.Capacity()) throw std::out_of_range("총 수신의 DWORD 부모 SID 물리 범위");static_cast<void>(core.processes.Attach(std::move(pending),gameplayGlobals->GameAux()->GunProcessType(),Sid{static_cast<std::uint16_t>(parent)},0x10,form));return;
+    }
+    if (packet[8]&1U) assertion("(*(char *)(( (char *)zacket+8) ) & 1) == 0",0x56);
+    auto* currentGun=dynamic_cast<GunProcess*>(core.processes.FromForm(form));if (!currentGun) throw std::logic_error("총 수신의 현재 PID/outer 객체 미발견"); // 원문 decoder(NULL)의 미정의 역참조를 새 객체로 대신하지 않는다.
+    assetBindings->PrepareFrame(core.processState.Now());assetBindings->Gun().ReadData(currentGun->Fields(),packet,parent);
+}
 // 실제 초기 등록과 같은 버전/정책과 각 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");
     dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);dispatch.Register(0x2c,[this](auto,auto&,auto packet) { impl_->ReceiveSquid(packet); });
+    dispatch.Observe(0x3a,{});dispatch.Version(0x3a,1,0);dispatch.RequireLength(0x3a,0xffff);dispatch.Register(0x3a,[this](auto,auto&,auto packet) { impl_->ReceiveGunPacket(packet); }); // 원문3ah는 observer NULL/버전1/정책0이다.
     const auto assertion=[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 같은 현재 Client 진단을 송신 관찰기에도 공급한다.
     const auto verify=[this,assertion](auto packet,bool freePacket) { // 실제 현재 Pool/TYPE와 두 장기 DWORD를 직접 빌린다.
         auto& s=*impl_;SquidVerificationHooks hooks;hooks.assertion=assertion;hooks.log=s.services.player.log;

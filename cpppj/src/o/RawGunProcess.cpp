@@ -222,10 +222,23 @@ void RawGunProcess::Fire(GunProcessFields& fields) const {
     static_cast<void>(parent);
 }
 // 수신 뒤 동작은 현재 raw 단계를 검사하며 stop helper의 현재 animation 두 번 조회를 보존한다.
-void RawGunProcess::ReceiveUpdate(GunProcessFields& fields,std::uint8_t dirty,std::uint32_t parentChanged) const {
-    if (!parentChanged || !(dirty&8) || (fields.Stage()!=3 && fields.Stage()!=6)) return;
+void RawGunProcess::ReceiveUpdate(GunProcessFields& fields,std::uint8_t dirty,std::uint32_t beforeRead) const {
+    if (!beforeRead || !(dirty&8) || (fields.Stage()!=3 && fields.Stage()!=6)) return;
     if (!hooks_.animationForm || !hooks_.killAnimation) throw std::logic_error("GunProcess 수신 animation 중지 경계 누락");
     if (hooks_.animationForm(fields.Parent()).value) hooks_.killAnimation(hooks_.animationForm(fields.Parent()),0x40);
+}
+void RawGunProcess::InitializeReceived(GunProcessFields& fields) const { // 수신 전 observer가 읽을 target/시각/단계와 실제 두 VT만 초기화한다.
+    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;if (!patch) throw std::invalid_argument("총 수신용 기본 생성자의 PATCH 계약");
+    Put(fields.bytes,0,kPatchOuter);Put(fields.bytes,kInner,kPatchInner);fields.bytes[kDirty]=0xff;Put(fields.bytes,kForm,0);Put(fields.bytes,kParent,0);
+    Put(fields.bytes,kTarget,0,2);PutTime(fields,state_.now);Put(fields.bytes,kStage,0); // group과 주변 padding은 기존 확보 바이트를 보존한다.
+}
+void RawGunProcess::ReadData(GunProcessFields& fields,std::span<const std::uint8_t> packet,std::uint32_t& parent) const { // 원문은 dirty를 fields에 복사하거나 소비하지 않는다.
+    parent=0;if (packet.size()<9) throw std::out_of_range("총 수신의9BYTE 머리 부족");const auto dirty=packet[8];std::size_t offset=9;ReceiveUpdate(fields,dirty,1);
+    const auto require=[&](std::size_t width) { if (offset>packet.size() || width>packet.size()-offset) throw std::out_of_range("총 수신의 선택된 dirty 필드 부족"); }; // 앞선 observer/필드 효과는 되돌리지 않는다.
+    const auto copy=[&](std::size_t destination,std::size_t width) { require(width);std::copy_n(packet.begin()+offset,width,fields.bytes.begin()+destination);offset+=width; }; // 선택 필드만 원래 비트로 저장한다.
+    if (dirty&1U) { require(4);parent=Read(packet,offset);offset+=4; }
+    if (dirty&2U) copy(kTime,8);if (dirty&4U) copy(kTarget,2);if (dirty&8U) copy(kStage,4);if (dirty&0x10U) copy(kGroup,4);
+    ReceiveUpdate(fields,dirty,0);
 }
 // 원본 쓰기 폭/dirty 소비를 유지하며 부족한 버퍼는 변경 전에 거부한다.
 std::uint16_t RawGunProcess::WriteData(GunProcessFields& fields,std::span<std::uint8_t> packet,
