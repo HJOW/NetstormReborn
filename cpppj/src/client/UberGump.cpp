@@ -1556,16 +1556,16 @@ bool UberGump::Input() {
 }
 // 예약 명령은 메시지/입력보다 앞서 실행한다(원본 004b88c0 자리).
 void UberGump::Tick() {
-    if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); // 같은 Tick은 다음 로컬 상태 또는 큰 부모 한 쪽만 소비한다. timeout이 쓴 next3는 다음 Tick까지 유지한다.
+    const auto action=state_.TakeAfterPoll([this] { if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); }); // 원문 Poll은 한 번만 소비한다. 여기서 새로 예약한 Guide/미션 설치와 timeout의next3는 다음 Tick까지 유지한다.
     const bool loading = state_.phase == ClientPhase::LoadingMission;
-    if (const auto action = state_.Take()) Execute(*action);
-    else if (loading && world_ && !world_->Connecting() && !(missionRuntime_ && missionRuntime_->guided)) AdvanceBriefing();
+    if (action) Execute(*action);
+    else if (!state_.Pending() && loading && world_ && !world_->Connecting() && !(missionRuntime_ && missionRuntime_->guided)) AdvanceBriefing();
     SyncTellPresentation();
     if (rebuild_) Compose();
 }
 // 실제 로컬 큐는 일반 원문 슬롯4에서 진행하며 완료가 Guide/입력보다 먼저 현재 UI를 설치한다.
 void UberGump::PollMissionPackets() {
-    if (!world_) return;world_->Session().PumpLocalConnection();
+    if (!world_ || world_->PreparingFort()) return;world_->Session().PumpLocalConnection();
     if (world_->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken && world_->CompleteLocalConnection()) FinishMissionWorldLoad(); // 이전 미션이면 호스트 World의 공개도 건너뛰고 원래 cleanup까지 닫아 둔다.
 }
 // 원본 루프8번에서 현재 Guide의 상태/창 관문과0..6 단계를 한 번 실행한다.

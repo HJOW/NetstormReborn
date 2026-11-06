@@ -1,0 +1,183 @@
+{
+  "unit": 954,
+  "date": "2026-11-06",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "product": 954,
+  "version": "11.01",
+  "exeSha256": "6942d8f7f4f57235b9598200715ed459c5c85b33772ae42cea439f723c4eb601",
+  "exeBytes": 11280896,
+  "cppTests": {
+    "new": 5,
+    "existing": 21,
+    "total": 26,
+    "failedChecks": 0,
+    "existingFixtureRows": {
+      "nativeMenu": 82,
+      "missionLifecycle": 831
+    }
+  },
+  "control": {
+    "behaviour": "poll then unconditional Take",
+    "cases": 4,
+    "failedCases": 2,
+    "failedChecks": 5,
+    "restored": true
+  },
+  "build": {
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "intermediateTestCompileErrors": 1
+  },
+  "initialTestAliasFailed": 1,
+  "initialCameraDeviceFailed": 1,
+  "gameExecuted": true,
+  "guiExecuted": true,
+  "multiplayerTestsExecuted": false,
+  "guiRuns": {
+    "gui-regression": {
+      "passed": true,
+      "exitCode": 0,
+      "exeSha256": "081221acbbef8bb6324bfb2612ece8428056cc094103c0dfa5b4a374b6105b41",
+      "currentProduct": false,
+      "dataUnchanged": true,
+      "actions": 35,
+      "observations": 24,
+      "pngs": {
+        "final-main.png": [
+          1024,
+          768
+        ],
+        "mission-0.png": [
+          1024,
+          768
+        ],
+        "mission-1.png": [
+          1024,
+          768
+        ]
+      }
+    },
+    "gui-handoff": {
+      "passed": false,
+      "exitCode": 1,
+      "exeSha256": "6942d8f7f4f57235b9598200715ed459c5c85b33772ae42cea439f723c4eb601",
+      "currentProduct": true,
+      "dataUnchanged": true,
+      "actions": 5,
+      "observations": 5,
+      "pngs": {}
+    },
+    "gui-handoff-v2": {
+      "passed": true,
+      "exitCode": 0,
+      "exeSha256": "6942d8f7f4f57235b9598200715ed459c5c85b33772ae42cea439f723c4eb601",
+      "currentProduct": true,
+      "dataUnchanged": true,
+      "actions": 5,
+      "observations": 13,
+      "pngs": {}
+    },
+    "gui-title": {
+      "passed": true,
+      "exitCode": 0,
+      "exeSha256": "6942d8f7f4f57235b9598200715ed459c5c85b33772ae42cea439f723c4eb601",
+      "currentProduct": true,
+      "dataUnchanged": true,
+      "actions": 13,
+      "observations": 8,
+      "pngs": {
+        "editor.png": [
+          1024,
+          768
+        ],
+        "main.png": [
+          1024,
+          768
+        ],
+        "returned-editor.png": [
+          1024,
+          768
+        ],
+        "test-battle.png": [
+          1024,
+          768
+        ]
+      }
+    }
+  },
+  "handoffAudit": {
+    "stateSequence": [
+      42,
+      41,
+      3,
+      4,
+      7,
+      8,
+      9,
+      10,
+      13,
+      14,
+      1,
+      7,
+      8,
+      9,
+      10,
+      13,
+      14
+    ],
+    "transientPendingObserved": false
+  },
+  "frozenHandoffToolSha256": "1b85db9e8de7d7dad60a0e7794f40bbcc9294b0ba12f2affde8ccd22c646d539",
+  "committedHandoffToolSha256": "5664b64181ba091cd710c38ac8b176f19411b42160fbde79bc7fd810898a99b5",
+  "protectedFiles": 2788,
+  "fixtures": 968,
+  "newFixtures": 0,
+  "files": {
+    "cpppj/src/client/State.cpp": "ae04c531cfacd1a7f84870efa0f70b2c97572402e6d90a85898b88134e91c013",
+    "cpppj/src/client/State.h": "d2c7b055da6e73260c487963c0b442afede942348d32b68700c2634d0a222dbf",
+    "cpppj/src/client/GameWorld.cpp": "b358fb1fdfbaa51511949ced78da17231a844f42dd9539981d9a02983364caea",
+    "cpppj/src/client/GameWorld.h": "e3f8e58c11a66f5dbbfa70239678380a015d55d982eefca618a8d9c0193099b4",
+    "cpppj/src/client/UberEditor.inc": "cf8659fe690b49fc1e915df8f8443a5d4c7063ec91d7763ac4afb75e3a433031",
+    "cpppj/src/client/UberGump.cpp": "f9bc882e8e44a72633b54300b9c1f0ac6a57bde5f65fe76126e1d75b50ab9c98",
+    "cpppj/tests/CMakeLists.txt": "a4815f4c69265528e5ea1ba9c98c741b8764fc089a0afd4090e8a0ebc2e3caa5",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp": "e11877abee4aa4505bd67d7d30995d585e3bd9d57cd01626d460b76e8eb16130",
+    "cpppj/tests/CampaignFortFrameLeaseTests.inc": "c6adf2152110681ded2b6b776c9c0b9e31095c94d133e037544f5731e630008b",
+    "cpppj/tests/StatePollActionTests.cpp": "67a5483f246b774aa73e67fad9fecfbc0b9aef95b97296a1078b644691024b2a",
+    "tools/mcp_cpp_guide_fort_handoff_smoke.py": "5664b64181ba091cd710c38ac8b176f19411b42160fbde79bc7fd810898a99b5",
+    "cpppj/README.md": "8d1ba4d9c336f8e524ee4141fe02a0edc1999a010d479a2005e5b3f394517643",
+    "docs/exe/cpp-tick-fort-handoff-20261106.md": "1865bf9b341ec283da880253eb28e91f20455d0e5e5c3b4071938efed08abdda"
+  },
+  "raw": {
+    "build-complete-final.log": "c993c0a30f243c435c17dd8e37a7130c58e7b59435fa049449acf7df80e3437f",
+    "build-control.log": "c0d15d80380d85e7d66a9a6373a20f6b8149956efaeb59a72c3c75f6460139d0",
+    "build-final.log": "3b4504162409e1542d3112d426219fc043f1002073279a1cb36ec6c18141d4c2",
+    "build-fort-frame.log": "f5f3cbd47bbdb638d3420a77d4a9e7866a7b2b08be818d2fad82d29a1ee82017",
+    "build-fort-test-device.log": "abb501f7bf7ef121df6b76a6af761a47ef8d7074c74928ed797b213cea6fc9ad",
+    "build-fort-test-fixed.log": "abb501f7bf7ef121df6b76a6af761a47ef8d7074c74928ed797b213cea6fc9ad",
+    "build-test-fix.log": "a21b75d37fbe917139781eefc92460a373b2ad727eb7c81f7ba7aed5923df296",
+    "build.log": "8801fc98d09dc527c28763c3893ec62ea3ca36adbb5c70237e35b081e72e05e9",
+    "continuation-final.log": "7a4b401ca237a0cc81ddfa640af89e9555a42a2a41dd84cf4eae73d044714cc8",
+    "editor-prefix-final.log": "2f7c699bc515d66db63cbf927a2fcfc1b5eeec11bb463ac3848c8d04760d4d4f",
+    "editor-ui-final.log": "6e630237d9bacdadc0cf195ed07ae70ce0bc1e578c2506fadc71fe4be735c259",
+    "fort-frame-final.log": "a6c8e611471dbd20bcde4d2cfe64f921fa6282196fc7afc8f6ed48debdb24dde",
+    "fort-frame-first.log": "3626f7d7eb9db9970ad6b78e8797f078383268c2b48bb5f536a0c63300b4dd46",
+    "gui-handoff-v2.log": "e280f96031dde67787d6ae670cf0c7b299e6a817835817e25264903bdf52b50a",
+    "gui-handoff.log": "498f47f348f99a9a18228ef2aabe0528fde392564f5f5cbe9f7275a11af8b70f",
+    "gui-regression.log": "cc7fab183d4ee17cf28f2cd8c1f9237cb6d6e9d2165f37f218f4f43b136fafb7",
+    "gui-title.log": "a77dd10c7dc61797487d2d5a1573798ebb881e52eb7f25dd06b25d512be18ca2",
+    "mission-lifecycle-final.log": "191acc9c99d83ddafd1064a330b71a0aecb602bd95cc95fcad444bef7594f69a",
+    "mission-lifecycle.log": "191acc9c99d83ddafd1064a330b71a0aecb602bd95cc95fcad444bef7594f69a",
+    "native-menu-final.log": "18951803eb4dfad9ae08519a5daf9481331ae053f952151f047efee7ccdefb99",
+    "native-menu.log": "18951803eb4dfad9ae08519a5daf9481331ae053f952151f047efee7ccdefb99",
+    "state-poll-control.log": "9207dc819877d88648a3bf71dc279853d5d255c49370f6e1b39cba975e7f6ef5",
+    "state-poll-final-all.log": "d611e2b8bd13096075d8c7a30cc15b5ce8fa5da2a3a8534cfb5bd222f3c11a21",
+    "state-poll-final.log": "d611e2b8bd13096075d8c7a30cc15b5ce8fa5da2a3a8534cfb5bd222f3c11a21",
+    "state-poll-first.log": "28d4b1548990e0d76912567f9b1014e22a2bf7b9dc90e09d7380723142699975",
+    "state-poll-fixed.log": "d611e2b8bd13096075d8c7a30cc15b5ce8fa5da2a3a8534cfb5bd222f3c11a21"
+  },
+  "next": "955: 같은3절3번 Native/State/cleanup Tick/LeaveBattle 잔여"
+}

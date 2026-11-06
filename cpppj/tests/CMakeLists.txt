@@ -3661,3 +3661,6 @@ set_source_files_properties(FortPriestPreparationTests.cpp PROPERTIES COMPILE_DE
 
 # missionPost1의 기존 양판본65행도 같은 집중 대상에서 회귀 대조한다.
 target_sources(netstorm_guide_fort_request_tests PRIVATE CampaignWorldLoadTests.cpp)
+
+# 실제 Native 조기 ret와 호스트 Tick의 새 예약/취소/실패 수명을 함께 대조한다.
+target_sources(netstorm_mission_entry_tests PRIVATE StatePollActionTests.cpp)

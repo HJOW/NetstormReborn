@@ -109,8 +109,13 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
         for (std::size_t i=0;i<palette.size();++i) { const auto color=assets_.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0}; }
         factoryDisplay_->SetPalette(palette);
     }
-    if (deferConnection) { if (!existingEditor && !connect) throw std::logic_error("실제Client 지연로그인 장치 누락");return; } //기존 Campaign의 장치 조건은 유지하며 Editor는 외곽이 설치한다.
+    if (deferConnection) { if (!existingEditor && !connect) throw std::logic_error("실제Client 지연로그인 장치 누락");if (existingEditor) connecting_=preparingFort_=true;return; } //기존 Campaign의 장치 조건은 유지하며 Editor는 외곽이 설치한다.
     if (connect) campaign_->LoadLocalConnection();else campaign_->Load();RefreshCampaignObjects();
+}
+// 기존 Fort도 원문 State 공통 확정/Session 공개가 끝날 때까지 커서·게임 프레임을 열지 않는다.
+void GameWorld::CompleteFortInstall(ClientLocalStateGlobals& owner) {
+    if (!preparingFort_ || !connecting_ || !campaign_) throw std::logic_error("실제 Fort 설치 대여/Session 누락 또는 중복 공개");
+    campaign_->CommitExistingEditorInstall(owner);RefreshCampaignObjects();preparingFort_=false;connecting_=false;
 }
 //Client.CurrentSubscriber가현재Session을반환하는등록이끝난뒤에만실제로그인을시작한다.
 void GameWorld::BeginLocalConnection() { if (!campaign_) throw std::logic_error("실제Session 없는 로그인 요청");campaign_->LoadLocalConnection();if (pendingCursorPalette_) { campaign_->Cursor().SetPalette(*pendingCursorPalette_,colorSortLogical_);pendingCursorPalette_.reset(); }RefreshCampaignObjects(); } // 원문 팔레트 선택 뒤 생성된 실제 커서만 현재256색을 받으며 설치 실패에서는 대기 색을 보존한다.
@@ -843,6 +848,7 @@ void GameWorld::CheckMissionOutcome() {
 std::string GameWorld::Report(bool mask) const {
     std::ostringstream out; out.precision(12);
     out<<"world\t"<<objects_.size()<<'\t'<<tiles_.size()<<"\nselected\t"<<selected_<<"\ncamera\t"<<CameraX()<<'\t'<<CameraY()<<"\n";
+    if (preparingFort_) { out<<"raw_fort_pending\t"<<campaign_->ExistingEditorCheckpointReady()<<'\t'<<campaign_->HasCursorRuntimeForState()<<'\n';return out.str(); } // 실제 미확정 Fort는 접속 완료나 정상 입력 가능한 월드로 보고하지 않는다.
     if (connecting_) { out<<"raw_connection_pending\t"<<campaign_->LocalConnectionPhase()<<'\t'<<campaign_->LocalConnectionReady()<<'\t'<<campaign_->HasCursorRuntimeForState()<<'\n';return out.str(); } // 준비 중 보고는 실제 접속만 읽고 미생성 커서/설치 후 객체를 관측하지 않는다.
     if (campaign_) {
         out<<"raw_input\t"<<selected_<<'\t'<<highlightMode_<<'\t'<<campaign_->LocalConnectionPhase()<<'\t'<<campaign_->LocalConnectionPackets().size()<<"\nraw_packets";

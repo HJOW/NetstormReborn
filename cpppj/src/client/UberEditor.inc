@@ -207,9 +207,9 @@ void UberGump::PollEditorState() {
         return; // 영상이 살아 있는 State40은 다음 Poll까지 유지하며 메인 메뉴를 먼저 공개하지 않는다.
     }
     if (next==3 && local.State().phase[0]==3 && local.State().next[0]==4) { PublishNativeMainMenuState();return; }
-    if ((next==1 || next==3) && local.State().next[0]==7) return; // 두 진입의 실제 Guide 요청은 입력/loaded 공개 없이 같은 Tick의 지연 미션 부모가 소비한다.
+    if ((next==1 || next==3) && local.State().next[0]==7) return; // 두 진입의 실제 Guide 요청은 입력/loaded 공개 없이 다음 Tick의 지연 미션 부모가 소비한다.
     if ((next==1 || next==3) && !editor_->committed) {
-        world_->Session().CommitExistingEditorInstall(local); //공통 확정 뒤 실제 loaded 공개가 끝나야 호스트 사용자 입력 몸체를 만들 수 있다.
+        world_->CompleteFortInstall(local); //공통 확정 뒤 실제 loaded 공개가 끝나야 호스트 사용자 입력 몸체를 만들 수 있다.
         BindCampaignUserInputServices(client_,*world_,editor_->selectCursor);userInput_=std::make_unique<UserInput>(client_,*world_);
         editor_->committed=true;state_.phase=ClientPhase::Mission;pageName_=client_.GameplayGlobals()->world.editor ? "editor" : "mission";page_={};popup_.clear();RebuildControls();
     }

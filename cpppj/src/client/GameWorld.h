@@ -32,6 +32,8 @@ public:
     void BeginLocalConnection();
     void StartLocalConnection(); // 독립 편의 접합의 비동기 진입이다. 상태8 뒤 입력/Kernel 준비를 닫고 정상 프레임으로 반환한다.
     void PrepareLocalConnectionForState(); // 외부 State7의 실행 중에 실제 후반을 준비한다. 게임 프레임은 닫고7/8 확정은 같은 부모에 남긴다.
+    bool PreparingFort() const { return preparingFort_; } // 기존 Fort의 실제 파일/State 설치 대여만 읽는다. 이 동안 Session 패킷/입력은 공개되지 않았다.
+    void CompleteFortInstall(ClientLocalStateGlobals& owner); // 같은 Session의 정상 State 확정을 검증한 뒤 실제 표시 사본을 만들고 호스트 프레임을 연다.
     bool Connecting() const { return connecting_; } // 호스트 설치 대여가 끝나지 않았는지만 읽는다. Native loaded/phase14와 구별한다.
     bool CompleteLocalConnection(); // 실제 접속이 완료됐을 때만 보관 색/표시를 설치하고 true를 반환한다. 이전 상태에서는 아무 효과 없이 false다.
     // 콜백이 읽는 선택/그림 저장소의 수명이 끝나기 전에 실제 캠페인 프로세스를 정리한다.
@@ -196,6 +198,7 @@ private:
     std::array<PaletteColor,256> palette_{};
     std::span<const std::uint32_t> colorSortLogical_; //World보다오래사는Client의고정초기입력이며별도값동기화는없다.
     std::optional<std::array<ScreenColor,256>> pendingCursorPalette_; // State7 팔레트가 실제 커서 생성보다 앞설 때 원래256색을 보유한다. 설치 후 커서에 한 번 전달하며 입력 관문은 열지 않는다.
+    bool preparingFort_{}; // ExistingEditor 공통 Fort 설치의 호스트 대여다. Native loaded를 대신하지 않고 실제 Commit 복귀 뒤에만 닫는다.
     bool connecting_{}; // 실제 Client의 비동기 설치 구간만 닫는 호스트 수명 표식이다. Native 성공/실패 상태를 대신하지 않는다.
     // remaps_: 소유자·타입별 출력 색 변환표 캐시.
     mutable std::map<std::pair<std::size_t,int>,ColorMap> remaps_;

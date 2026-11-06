@@ -808,3 +808,5 @@ TEST_CASE(CampaignExistingEditorCheckpoint_DeferredCleanupSelectsSharedCursor) {
 }
 
 #include "CampaignNativeFortContinuationTests.inc" // State3 특이 분기도 실제 파일/월드/공통 확정과 같은 장치를 사용한다.
+
+#include "CampaignFortFrameLeaseTests.inc" // 실제 GameWorld의 미설치/정상 확정 프레임 수명을 확인한다.

@@ -2,6 +2,8 @@
 #pragma once
 #include "client/DialogScript.h"
 #include <deque>
+#include <functional>
+#include <cstdint>
 #include <optional>
 #include <string_view>
 
@@ -14,6 +16,7 @@ public:
     void Post(DialogAction action);
     // 루프 시작 시 하나 꺼낸다. 빈 큐는 아무 전환도 만들지 않는다.
     std::optional<DialogAction> Take();
+    std::optional<DialogAction> TakeAfterPoll(const std::function<void()>& poll); // Poll 진입 전의 같은 대기 요청만 꺼낸다. 새 요청/취소 뒤 교체 요청은 다음 Tick까지 보존한다.
     // 원본 Guide의 pending 관문에 현재 다음 루프 전환 유무를 공급한다. 별도 완료 표식을 만들지 않는다.
     bool Pending() const;
     bool Cancel(std::string_view command); // 해당 소유자의 정확한 내부 명령만 취소한다. 다른 대기 요청은 보존한다.
@@ -22,5 +25,6 @@ public:
 private:
     // pending_: 후속 처리 전까지 보류하는 요청이나 상태.
     std::deque<DialogAction> pending_;
+    std::uint64_t pendingSequence_{}; // 호스트 큐 항목의 수명만 구별한다. Native State 번호·phase·완료 표식과 별개이며 새 항목을 받을 때만 증가한다.
 };
 }
