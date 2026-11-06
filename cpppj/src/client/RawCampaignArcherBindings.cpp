@@ -129,4 +129,32 @@ o::RegularHandler RawCampaignArcherBindings::Handler(o::RegularHandler fallback)
 const o::RawArcherAnimation& RawCampaignArcherBindings::Animation() const { return *impl_->animation; }
 const o::RawMissile& RawCampaignArcherBindings::Missile() const { return *impl_->missile; }
 const o::SidPool& RawCampaignArcherBindings::Pool() const { return impl_->core.pool; }
+// 원문의 두 수신 공장은 패킷+9의 부모 TYPE로만 파생을 선택하고 공통 필드를 해석한다.
+void RawCampaignArcherBindings::ReceiveAnimationPacket(std::uint32_t message,std::span<const std::uint8_t> packet) {
+    if (message!=0x3bU && message!=0x3cU) throw std::invalid_argument("애니메이션 수신의 실제 메시지 범위");
+    const auto read=[&](std::size_t at) { if (at>packet.size() || 4U>packet.size()-at) throw std::out_of_range("애니메이션 수신의 DWORD 부족");std::uint32_t value{};for (std::size_t index=0;index<4;++index) value|=std::uint32_t(packet[at+index])<<(8*index);return value; }; // 물리 패킷 밖을 읽지 않고 낮은 바이트부터 결합한다.
+    if (packet.size()<9) throw std::out_of_range("애니메이션 수신의 실제9BYTE 머리 부족");const auto number=read(4);
+    const auto sid=[this](std::uint32_t value) { if (value>65535U || value>=impl_->core.pool.Capacity()) throw std::out_of_range("애니메이션 수신의 DWORD SID 물리 범위");return o::Sid{static_cast<std::uint16_t>(value)}; }; // 부모0은 원문 공장/부착 위치에서 조회한다.
+    if (!number) throw std::out_of_range("애니메이션 수신의 명시 Form0");const auto form=sid(number);const bool fire=message==0x3bU;const auto file=fire ? "c:\\ns\\o\\_p_fireanimprocessdata.cpp" : "c:\\ns\\o\\_p_rotateanimprocessdata.cpp";
+    const auto storage=impl_->world.Storage();auto& aux=*storage->GameAux();const auto raw=impl_->core.pool.Slot(form);
+    const auto fields=[](o::SquidProcess* process)->std::span<std::uint8_t> { // 실제 공통 outer+20 접두를 가진 현재 객체만 빌리며 새 객체로 대체하지 않는다.
+        if (auto* value=dynamic_cast<o::GunAnimation*>(process)) return value->Fields().bytes;
+        if (auto* value=dynamic_cast<o::CannonFire*>(process)) return value->Fields().bytes;
+        if (auto* value=dynamic_cast<o::ArcherAnimation*>(process)) return value->Fields().bytes;
+        if (auto* value=dynamic_cast<o::CrossbowAnimation*>(process)) return value->Fields().bytes;
+        if (auto* value=dynamic_cast<o::IceCannonFire*>(process)) return value->Fields().common.bytes;
+        return {};
+    };
+    if (raw[11]&1U) {
+        if (packet[8]!=0xffU) storage->AssertDisplay("*(( char *)((char *)zacket+8) ) == (char)0xFFFFFFFF",file,0x42);
+        const auto type=impl_->core.pool.Slot(sid(read(9)))[10];std::unique_ptr<o::SquidProcess> pending;
+        if (fire && type==aux.SunArcherType()) { o::ArcherAnimationFields value;o::InitializeReceivedGunAnimation(value.bytes,o::GunAnimationReceiveKind::ArcherFire);pending=std::make_unique<o::ArcherAnimation>(*impl_->animation,std::move(value),true); }
+        else if (type==aux.SunCannonType()) { o::GunAnimationFields value;o::InitializeReceivedGunAnimation(value.bytes,fire ? o::GunAnimationReceiveKind::SunFire : o::GunAnimationReceiveKind::SunRotate);if (fire) pending=std::make_unique<o::CannonFire>(*impl_->sunFire,std::move(value));else pending=std::make_unique<o::GunAnimation>(*impl_->cannon,std::move(value),o::GunAnimationKind::SunRotate); }
+        else if (!fire && type==aux.WindArcherType()) { o::ArcherAnimationFields value;o::InitializeReceivedGunAnimation(value.bytes,o::GunAnimationReceiveKind::ArcherRotate);pending=std::make_unique<o::ArcherAnimation>(*impl_->crossbowRotate,std::move(value),false); }
+        else storage->AssertDisplay("false","\\Ns\\O\\Gunanim.cpp",fire ? 0x23bU : 0x248U); // 알 수 없는 TYPE는 원문의 NULL 반환 뒤 선택 필드 저장/부착 실패로 드러낸다.
+        const auto parent=o::ReadGunAnimationProcessData(fields(pending.get()),packet);static_cast<void>(impl_->core.processes.Attach(std::move(pending),fire ? aux.FireAnimationProcessType() : aux.RotateAnimationProcessType(),sid(parent),0x10,form));return;
+    }
+    if (packet[8]&1U) storage->AssertDisplay("(*(char *)(( (char *)zacket+8) ) & 1) == 0",file,0x4d);
+    static_cast<void>(o::ReadGunAnimationProcessData(fields(impl_->core.processes.FromForm(form)),packet)); // live 수신은 공장을 재실행하거나 부착/현재 시각을 덮어쓰지 않는다.
+}
 }

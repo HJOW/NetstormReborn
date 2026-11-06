@@ -34,6 +34,8 @@ public:
     o::GunProcessHooks GunHooks(o::GunProcessHooks hooks) const;
     // 실제 썬 디스크의 예약 프레임 처리를 같은 지정기에 연결한다.
     o::RegularHandler Handler(o::RegularHandler fallback={}) const;
+    // 3bh/3ch의 실제 기본 생성 공장/같은 PID decoder/명시 Form 부착을 같은 World에 연결한다.
+    void ReceiveAnimationPacket(std::uint32_t message,std::span<const std::uint8_t> packet);
     // 후속 실제 전투/검사가 같은 생성/프레임 처리기를 재사용한다.
     const o::RawArcherAnimation& Animation() const;
     const o::RawMissile& Missile() const;

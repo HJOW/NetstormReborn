@@ -1,0 +1,55 @@
+{
+  "unit": 1029,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "3bh/3ch 발사·회전 전체 수신과 네 기본 생성자·같은 PID 공통 decoder/명시 Form 부착",
+  "sourceFunctions1078": [
+    "00466d30",
+    "00466b60",
+    "00466cc0",
+    "00468830",
+    "00468900"
+  ],
+  "globals": {
+    "005410fc": 35,
+    "00541100": 36,
+    "00541174": 71,
+    "00541258": 128,
+    "00541288": 140
+  },
+  "reference1072": {
+    "scope": "이번 수신 공장은 PATCH 전용이며 CD의 별도 ABI와 혼합하지 않음"
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1029\\build.log",
+    "exeSize": 12024832,
+    "exeSha256": "c8f7a56db7623be5cbcf6b088aae7bca4281520fc9df43157fd3f8e8e4b3fccd"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1029\\protected-before.json"
+  },
+  "remaining": [
+    "애니메이션 writer 분배/일반 생성·조회 TYPE 별칭 통합 및 나머지 프로세스 decoder 감사",
+    "재동기화 허용/owner cache·Activate 수신자 부모",
+    "내용물 통지 PlayerKnown 실제 binding 대조",
+    "메타·의식/랭크·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

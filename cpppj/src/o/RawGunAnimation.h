@@ -6,6 +6,12 @@
 namespace netstorm::o {
 // 캠페인 1-1의 썬 캐논이 사용하는 원본 파생 애니메이션 종류다.
 enum class GunAnimationKind { SunRotate,SunFire,SunRest };
+// 00468830/00468900의 수신 전용 네 기본 생성자다. 일반 생성/첫 발사 초기화와 구별한다.
+enum class GunAnimationReceiveKind { SunFire,SunRotate,ArcherFire,ArcherRotate };
+// 수신 공장의 실제 지정 필드만 초기화한다. 미작성 좌표/표적/방향과 padding은 보존한다.
+void InitializeReceivedGunAnimation(std::span<std::uint8_t> outer,GunAnimationReceiveKind kind);
+// 00466cc0의 공통 outer+20 decoder다. 부모DWORD는 별도 반환하고 선택된 WORD/8BYTE만 복사한다.
+std::uint32_t ReadGunAnimationProcessData(std::span<std::uint8_t> outer,std::span<const std::uint8_t> packet);
 // 원본 0x38/0x40 객체의 필드와 미초기화 padding을 보존한다.
 struct GunAnimationFields {
     // bytes: 직접 필드 이미지이며 조회/직렬화는 원본 쓰기 폭을 사용한다.

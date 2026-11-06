@@ -47,6 +47,25 @@ std::int32_t Direction(std::array<float,2> from,std::array<float,2> to) {
     return dx<=0 ? 6 : 2;
 }
 }
+// 원문 네 공장은 현재 시각이나 gun/target setter를 호출하지 않는다.
+void InitializeReceivedGunAnimation(std::span<std::uint8_t> outer,GunAnimationReceiveKind kind) {
+    const bool archerFire=kind==GunAnimationReceiveKind::ArcherFire;
+    if (outer.size()<(archerFire ? 88U : 56U)) throw std::out_of_range("애니메이션 수신 생성자의 실제 객체 크기 부족");
+    Put(outer,kParent,0);Put(outer,kForm,0);Put(outer,kInner,kind==GunAnimationReceiveKind::SunRotate || kind==GunAnimationReceiveKind::ArcherRotate ? 0x50b0c0U : 0x50b0c4U);Put(outer,kTime,0);Put(outer,kTime+4,0);outer[kDirty]=0xff;
+    if (archerFire) { Put(outer,64,0);Put(outer,76,0);Put(outer,80,0);Put(outer,0,0x50b1c0);Put(outer,kInner,0x50b1bc);Put(outer,68,0x43340000);Put(outer,72,0x43340000);return; }
+    if (kind==GunAnimationReceiveKind::SunFire) { Put(outer,0,0x50b318);Put(outer,kInner,0x50b310);return; }
+    Put(outer,0,kind==GunAnimationReceiveKind::SunRotate ? 0x50b260U : 0x50b450U);Put(outer,kInner,kind==GunAnimationReceiveKind::SunRotate ? 0x50b258U : 0x50b448U);
+}
+// 미선택 객체 필드가 없으면 NULL this도 저장을 하지 않는 원문 경로를 빈 span으로 나타낸다.
+std::uint32_t ReadGunAnimationProcessData(std::span<std::uint8_t> outer,std::span<const std::uint8_t> packet) {
+    std::uint32_t parent{};if (packet.size()<9) throw std::out_of_range("애니메이션 수신의 실제9BYTE 머리 부족");const auto dirty=packet[8];std::size_t offset=9;
+    const auto require=[&](std::size_t width) { if (offset>packet.size() || width>packet.size()-offset) throw std::out_of_range("애니메이션 수신의 선택 필드 부족"); }; // 앞선 부분 쓰기는 뒤 실패에도 유지한다.
+    if (dirty&1U) { require(4);parent=Read(packet,offset);offset+=4; }
+    for (const auto [bit,target,width]:{std::array<std::size_t,3>{2,kGun,2},{4,kTarget,2},{8,kTime,8}}) if (dirty&bit) { // decoder에는 observer/dirty 소비/추가 상태 초기화가 없다.
+        require(width);if (target>outer.size() || width>outer.size()-target) throw std::logic_error("애니메이션 수신의 현재 PID/선택 필드 미연결");std::copy_n(packet.begin()+offset,width,outer.begin()+target);offset+=width;
+    }
+    return parent;
+}
 // 원본 필드 이미지의 직접 조회다.
 Sid GunAnimationFields::Form() const { return Sid{static_cast<std::uint16_t>(Read(bytes,kForm))}; }
 Sid GunAnimationFields::Parent() const { return Sid{static_cast<std::uint16_t>(Read(bytes,kParent))}; }
