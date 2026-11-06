@@ -114,15 +114,13 @@ bool RawConstructionEffects::Displace(float x,float y,std::uint32_t type,std::ui
     return true;
 }
 void RawConstructionEffects::DropIsland(float x,float y,std::uint32_t flags,std::uint32_t player) const {
-    if (state_.blocked) return;
-    if (state_.islandType>=types_.size()) throw std::out_of_range("섬 정리 타입 오류");
-    Validate(x,y,types_[state_.islandType]);
+    if (state_.Blocked()) return; // 원문 진입 억제 뒤 원격 전파를 먼저 실행한다.
     if (state_.Server() && !(flags&kNoBroadcast))
         hooks_.broadcast(std::bit_cast<std::uint32_t>(Ftol(static_cast<double>(x)*kWireScale)),
             std::bit_cast<std::uint32_t>(Ftol(static_cast<double>(y)*kWireScale)),flags,player);
-    if (state_.islandType>=types_.size()) throw std::out_of_range("전파 뒤 섬 정리 타입 오류");
-    Validate(x,y,types_[state_.islandType]);
-    const auto& island=types_[state_.islandType];
+    if (state_.IslandType()>=types_.size()) throw std::out_of_range("전파 뒤 섬 정리 타입 오류");
+    Validate(x,y,types_[state_.IslandType()]);
+    const auto& island=types_[state_.IslandType()];
     const auto area=Area({static_cast<float>(static_cast<double>(x)-(island.footX-1)),
         static_cast<float>(static_cast<double>(y)-(island.footY-1)),x,y});
     if (hooks_.scan) hooks_.scan(area);RawSquidFinder finder(pool_,hash_,types_);
@@ -131,15 +129,15 @@ void RawConstructionEffects::DropIsland(float x,float y,std::uint32_t flags,std:
     for (Sid current=finder.Begin(area);current.value;current=finder.Next()) {
         const auto raw=pool_.Slot(current);if (raw[pool_.Edition()==OriginalEdition::Patch1078 ? kPatchOwner : kCdOwner]!=player) continue;
         const std::uint32_t type=raw[kType];
-        if (type==state_.noIslandType || type==state_.stalagType) {
+        if (type==state_.NoIslandType() || type==state_.StalagType()) {
             if (!(flags&kQuietFall)) {
                 hooks_.fall(current);const auto after=pool_.Slot(current);hooks_.sound(Coordinate(after,kX),Coordinate(after,kY));
             }
             hooks_.destroy(current,flags|kPieceFlags);
-            if (type==state_.noIslandType) ++noIslands;else ++stalags;
+            if (type==state_.NoIslandType()) ++noIslands;else ++stalags;
         }
-        if (type==state_.stumpType) hooks_.destroy(current,flags|kPieceFlags);
-        if (type==state_.islandType) { hooks_.destroy(current,flags);++islands; }
+        if (type==state_.StumpType()) hooks_.destroy(current,flags|kPieceFlags);
+        if (type==state_.IslandType()) { hooks_.destroy(current,flags);++islands; }
         if (Genus(current)&kNotifyGenus) hooks_.notify(current);
     }
     if (noIslands || islands || stalags) {

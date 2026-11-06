@@ -183,6 +183,7 @@ struct CampaignCameraCommitContext {
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
     std::function<void(const CampaignCameraCommitContext&)> cameraCommit; // 실제497960의 커서/화면/dirty/Gump 장치다. 생략된 실제 호출은 두setter/noop로 대체하지 않는다.
+    std::function<ScreenPoint()> cameraScreenSize; // 34h 수신이 현재005c78f0/f4 논리 화면 크기를 읽는다. 지도 Gump 크기나 호스트 표시 크기와 구별한다.
     std::function<ScreenRect()> mapView; // 초기 Reset 전부터 같은 현재 Gump 지도 영역을 읽는다. 독립 비GUI 장치만 기존 전체 viewport 계약을 사용한다.
     std::shared_ptr<ClientChatWindowGlobals> chatGlobals; // 실제 Client는 같은 Chat 상태를 제공하며 독립 Session만 별도 BSS를 소유한다.
     std::function<void(std::span<std::uint8_t>)> chatReceive; // 실제 현재 UI 수신이다. 중계 후 선택된 호출에서만 요구한다.

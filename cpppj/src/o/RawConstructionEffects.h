@@ -10,6 +10,13 @@ struct ConstructionEffectsState {
     std::uint32_t islandType{94},noIslandType{157},stalagType{95},stumpType{96}; // 두 판본의 섬/받침/종유석/그루터기 번호다.
     bool blocked{}; // 0054db84 / CD 0052e92c: 섬 정리 전체를 생략한다.
     bool server{}; // 00540bc0 / CD 00540a28: 섬 정리 메시지를 다른 플레이어에 전파한다.
+    const std::uint32_t* sharedBlocked{}; // 실제0054db84 DWORD이며 객체 로딩 깊이005c89b8와 별개다.
+    const std::uint32_t *sharedIslandType{},*sharedNoIslandType{},*sharedStalagType{},*sharedStumpType{}; // 현재 섬/표면/종유석/그루터기 TYPE 주소다. 독립 호출은 기존 필드를 사용한다.
+    bool Blocked() const { return sharedBlocked ? *sharedBlocked!=0 : blocked; } // 진입 시 현재 억제 DWORD를 한 번 읽는다.
+    std::uint32_t IslandType() const { return sharedIslandType ? *sharedIslandType : islandType; } // 각 원문 TYPE 비교/발자국 조회에서 같은 현재 섬 번호를 읽는다.
+    std::uint32_t NoIslandType() const { return sharedNoIslandType ? *sharedNoIslandType : noIslandType; } // 시각/삭제 콜백 뒤의 표면 수량 판정도 현재 번호를 다시 읽는다.
+    std::uint32_t StalagType() const { return sharedStalagType ? *sharedStalagType : stalagType; } // 후보 비교 위치의 현재 종유석 번호를 반환한다.
+    std::uint32_t StumpType() const { return sharedStumpType ? *sharedStumpType : stumpType; } // 앞선 삭제 콜백 뒤 현재 그루터기 번호를 읽는다.
     const bool* sharedServer{}; // 실제 Client server이며 boss와 독립인 전파 권한이다.
     const bool& Server() const { return sharedServer ? *sharedServer : server; } // 섬 정리 방송 직전에 현재 서버 역할을 읽는다.
 };

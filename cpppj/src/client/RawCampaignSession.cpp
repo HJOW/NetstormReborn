@@ -289,6 +289,7 @@
 #include <new>
 #include <source_location>
 #include <unordered_set>
+#include <utility> // 공간 수신 등록표의 메시지/고정 길이 쌍을 명시한다.
 using namespace netstorm::o;
 namespace netstorm::client {
 namespace {
@@ -327,7 +328,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,36> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30}; // Path30h 수신도 같은 Session 등록/해제 수명을 따른다.
+constexpr std::array<std::uint32_t,39> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30,0x33,0x34,0x35}; // Path와 공간33h/카메라34h/섬35h 수신도 같은 Session 등록/해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -940,6 +941,8 @@ struct RawCampaignSession::Impl {
         buildingState.sharedBoss=geyserMinedState.sharedBoss=&gameplayGlobals->Authority()->boss; // 진행·표시·음향 효과 뒤에도 같은 현재 boss를 조회한다.
         buildingState.currentProcessType=&gameplayGlobals->GameAux()->ConstructionProcessType(); // 생성/수신/볼텍스의 같은 현재005410e8을 Session보다 긴 owner에서 빌린다.
         constructionState.place.sharedServer=buildingEffectsState.sharedServer=&gameplayGlobals->Authority()->server; // Take와 섬 전파는 boss와 독립인 실제 server를 읽는다.
+        buildingEffectsState.sharedBlocked=&gameplayGlobals->GameAux()->IslandDropBlocked();buildingEffectsState.sharedStumpType=&gameplayGlobals->GameAux()->IslandStumpType(); // 객체 로딩 깊이가 아닌 실제 섬 정리 억제/그루터기 전역이다.
+        buildingEffectsState.sharedIslandType=&core.bridgeState.islandType;buildingEffectsState.sharedNoIslandType=&core.bridgeState.noIslandType;buildingEffectsState.sharedStalagType=&core.bridgeState.stalagType; // 현재 지면/연결 몸체가 소유한 동일 TYPE 주소를 빌린다.
         constructionState.notice.sharedHistory=&gameplayGlobals->Camera().ConstructionHistory(); //같은 실제3f 통지가 Tab과 공유한 Client 장부를 쓰며 Session 교체로 소멸하지 않는다(718).
         farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();farm.sharedArchipelagoSpan=&gameplayGlobals->GameAux()->WorldGeyserMargin();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088/542654를 직접 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
@@ -3445,6 +3448,7 @@ struct RawCampaignSession::Impl {
         effects.broadcast=[this](std::uint32_t x,std::uint32_t y,std::uint32_t flags,std::uint32_t owner) {
             std::array<std::uint8_t,20> packet{};WriteDropIslandPacket(packet,x,y,flags,owner);broadcast->Send(packet); // 원본4e2e30처럼 원격에만 송신하며 현재 로컬 정리는 호출자가 계속한다.
         };
+        effects.assertion=[this](auto expression,auto line) { world.Storage()->AssertDisplay(expression,"\\Ns\\O\\Islanddropper.cpp",line); }; // 원문9/1/1 진단이 복귀하면 다음 검사를 계속한다.
         buildingEffects=std::make_unique<RawConstructionEffects>(core.pool,core.hash,core.types,core.spots,buildingEffectsState,std::move(effects));
         ConstructionProcessHooks hooks; // 실제 Host/vector가 확보를 수행하며 실패를 예외로 보고한다.
         buildingState.checking=gunState.checking;hooks.formRobust=[this](Sid form) { return CheckRawFormLinked(core.pool,form,[this](Sid current) { return ReadRawProcessFormParent(core.pool,current); }); }; //같은 Client checking과 현재 ProcessForm/부모 체인의 실제 슬롯을 읽으며 free/TYPE 필터를 더하지 않는다.
@@ -4591,6 +4595,25 @@ void RawCampaignSession::Impl::ReceiveFlyerPacket(std::span<const std::uint8_t> 
 // 실제 초기 등록과 같은 버전/정책과 각 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");
+    // 세 원문 observer0040b380은 송수신 모두 자연 반환하며 버전1/정책0이다. 고정 길이는 보호 PE 표와 같다.
+    for (const auto entry:std::array<std::pair<std::uint32_t,std::uint16_t>,3>{{{0x33U,std::uint16_t{18}},{0x34U,std::uint16_t{12}},{0x35U,std::uint16_t{20}}}}) { dispatch.Observe(entry.first,{});dispatch.Version(entry.first,1,0);dispatch.RequireLength(entry.first,entry.second); }
+    dispatch.Register(0x33,[this](auto,auto&,auto packet) { //4a71c0: 예약 SID를 제외하고 현재 살아 있는 자산만 실제 Unpop/직접frame/Pop한다.
+        if (packet.size()<6) throw std::out_of_range("위치 수신의 WORD SID 부족");const auto number=std::uint16_t(packet[4])|(std::uint16_t(packet[5])<<8);if (number>=5 && number<15000) return;
+        auto& s=*impl_;const Sid sid{static_cast<std::uint16_t>(number)};if (s.core.pool.Slot(sid)[11]&7U) return;s.world.Unpop(sid,0);
+        Put(s.core.pool.AllocatedBytes(sid),36,Read(packet,14)); // 가상 Unpop 뒤 현재 패킷 frame을 raw+24에 직접 저장하며 SetFrame을 호출하지 않는다.
+        const auto x=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,6)))*0x1p-16); // PE의 FILD32×정확한2^-16→FSTP32이며 먼저float로 축소하지 않는다.
+        const auto y=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,10)))*0x1p-16); // X 저장 뒤 Y를 해석하며 두 signed DWORD의16.16 소수부를 보존한다.
+        s.world.Pop(sid,x,y,0);
+    });
+    dispatch.Register(0x34,[this](auto,auto&,auto packet) { //4333f0: float 비트를 그대로497f20에 넘기고 목표/재구성 카운터만 변경한다.
+        const auto y=std::bit_cast<float>(Read(packet,8));const auto x=std::bit_cast<float>(Read(packet,4));auto& s=*impl_;
+        if (!s.services.cameraScreenSize) throw std::logic_error("카메라 수신의 현재 논리 화면 크기 장치 미연결");const auto size=s.services.cameraScreenSize();RequestCameraCenter(x,y,size.x,size.y);
+    });
+    dispatch.Register(0x35,[this](auto,auto&,auto packet) { //46e940: 현재 섬 정리 본체가 권한/전파/표시/파생 삭제/진단을 순서대로 수행한다.
+        const auto rawX=std::bit_cast<std::int32_t>(Read(packet,4));const auto owner=Read(packet,16);const auto flags=Read(packet,12);
+        const auto x=static_cast<float>(static_cast<double>(rawX)*0x1p-16);const auto y=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,8)))*0x1p-16); // 두 FILD32×2^-16→FSTP32 좌표를 기존 DropIsland에 전달한다.
+        auto& s=*impl_;if (!s.buildingEffects) throw std::logic_error("섬 정리 수신의 실제 건설 효과 미설치");s.PrepareBuilding(s.core.processState.Now());s.buildingEffects->DropIsland(x,y,flags,owner);
+    });
     dispatch.ObservePacket(0x30,[storage=impl_->world.Storage()](auto packet,auto sending) { ObservePathData(packet,sending,[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); });dispatch.Version(0x30,1,0);dispatch.RequireLength(0x30,0xffff);dispatch.Register(0x30,[this](auto,auto&,auto packet) { if (!impl_->motion) throw std::logic_error("Path 수신의 실제 이동 본체 미연결");impl_->motion->Paths().ReceivePacket(packet); }); //40a660 observer와489ee0 receiver를 같은 실제 등록표에 연결한다.
     dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);dispatch.Register(0x2c,[this](auto,auto&,auto packet) { impl_->ReceiveSquid(packet); });
     dispatch.Observe(0x3a,{});dispatch.Version(0x3a,1,0);dispatch.RequireLength(0x3a,0xffff);dispatch.Register(0x3a,[this](auto,auto&,auto packet) { impl_->ReceiveGunPacket(packet); }); // 원문3ah는 observer NULL/버전1/정책0이다.
