@@ -1,10 +1,10 @@
 // 제공된 R.exe의 Root16h 요청과0Fh 존/친구 목록 응답을 실제 R 전송에 연결한다.
 #pragma once
+#include "root/ChallengeState.h"
 #include "root/TransceiverTransport.h"
 #include <utility>
 
 namespace netstorm::root { // 클라이언트의 다른 크기 Challenge 저장소를 재사용하지 않는 R 전용 부모다.
-inline constexpr std::size_t kRootChallengeBytes=0x2b80; // R0044ca80의 실제 CCh 할당 크기다.
 class ChallengeDirectoryView final { // 실제 관리자가 소유한 현재 CCh 바이트를 읽기만 빌린다.
 public:
     explicit ChallengeDirectoryView(std::span<const std::uint8_t> bytes); // 원문 전체 물리가 있는 경우만 조회를 허용한다.

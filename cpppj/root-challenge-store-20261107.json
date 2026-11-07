@@ -1,0 +1,76 @@
+{
+  "unit": 1067,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12365824,
+    "exeSha256": "4181cd296a8e5b266767a3b0d95a91323f5b632b8332286813a65ab59211eab2"
+  },
+  "scope": [
+    "실제 R CCh2b80BYTE/전투344×10·참가자188×40·연결40/카운터·미작성 끝DWORD 보존",
+    "프로세스 수명 최초 좌표/크기와 R float32 저장 위치·0번 좌표 보존",
+    "실제 CRT 물리/비재사용 토큰·Root 단일 프로세스 생성/index/flags·현재40노드 수신/flush·명시 소멸/표0"
+  ],
+  "nativeAudit": {
+    "reset": "0044cfb0의헤더8→참가자1d60→전투d70→연결a0→카운터4. +2b7c4BYTE미작성",
+    "children": "0044ce90/0044cee0의header·상수·10BYTE초기화는모두Reset으로덮임/외부효과없음",
+    "geometry": "sqrt20 float32→floor→FTOL4; 반경/중심/고리반경/누적각도각float32, grid1..39/ring1..9만기록",
+    "rootInitialize": "00477e10:현재PP로그→count상한진단→PP=count→count/count=1→processOwners0→상한진단→1..count-1공개/index/flags/Chal모드OR",
+    "rootCleanup": "00478af0의CCh1..50/0044cf30의연결0..39 close→같은칸0→물리반납→Root슬롯0",
+    "pump": "004578f0 수신/004579d0 flush를현재CCh토큰과실제TransceiverTransport에연결"
+  },
+  "runtime": {
+    "challengeStorageManagerImplemented": true,
+    "sameRootDirectoryStorageAvailable": true,
+    "networkHooksBindCurrentChallengeConnections": true,
+    "explicitRootInitializeAndShutdownImplemented": true,
+    "rootExeTargetExists": false,
+    "rootRuntimeCallsInitialize": false,
+    "rootRuntimeCallsPump": false,
+    "rootCsLoginAndParticipantEndStillRequired": true
+  },
+  "nativeReferences": [
+    "R0044ca80",
+    "R0044ce90",
+    "R0044cee0",
+    "R0044cfb0",
+    "R0044cf30",
+    "R00444860",
+    "R0044b930",
+    "R00445270",
+    "R0044ce50",
+    "R004578f0",
+    "R004579d0",
+    "R00477e10",
+    "R00478af0"
+  ],
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "새R.exe/실제 프로세스 초기화·Root/CS나머지 수신·참가자 로그인/종료·보조 객체·시계/기록/주소 formatter·현재부품호출",
+    "실제 moderation/filter/채팅 표·사용자 홈 설정/기록 장치·전체 Root 초기화/정리",
+    "0Fh 존 항목47/3BYTE 차이·클라이언트0F/1d 수신·메타/OS launch·LAN/Outpost/checking5·한국어 후속/Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

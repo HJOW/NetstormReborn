@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE root/ChallengeState.cpp root/ChallengeState.h root/ChallengeStore.cpp root/ChallengeStore.h) #1067:R 실제 CCh 물리/최초 좌표·단일 프로세스 생성/통신·정리를 연결한다.
 target_sources(netstorm PRIVATE root/Configuration.cpp root/Configuration.h) #1066:R 시작/재해석 옵션과 실제 Config/현재 통신 전역을 접합한다.
 target_sources(netstorm PRIVATE root/RootDirectory.cpp root/RootDirectory.h) #1065:R16h 요청의 실제0Fh 추천 존/친구 응답을 전송 계층에 연결한다.
 target_sources(netstorm PRIVATE o/RawLocalServerDiscovery.cpp o/RawLocalServerDiscovery.h) #1057검색몸체와1058실제UDP/상태접합이다.새R서버실행은후속이다.
