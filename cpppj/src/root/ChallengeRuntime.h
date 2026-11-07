@@ -20,6 +20,7 @@ struct ChallengeRuntimeHooks { // 실제 상위 표/파일/주소·Root 라우�
     std::function<void(std::span<const std::uint8_t>,bool)> broadcastRoot; //00474d30/474e80의 명시 길이/일반·확장41h를 같은 Root 라우터로 보낸다.
     std::function<void(std::uint32_t,double)> schedule; //00479090의 현재 reset/shutdown 선택과 초 단위 delay를 같은 메인 예약 상태에 적용한다.
     std::function<std::optional<std::string>(std::uint32_t)> guildName; //0045d7e0/004d0870의 현재 subscriber 소속 길드 이름 조회다.
+    std::function<std::string()> commandTemplates;std::function<void(std::string&)> expandCommandPage; //00451f30/452570의 실제 현재 서버 템플릿/OS시각·존 치환 장치다. 같은 CommandPages owner가 연결한다.
     std::function<void(std::int32_t,std::string_view)> log; // 원문 level/이미 완성한 전체 로그다.
 };
 class ChallengeRuntime final { // 같은 CCh/전송·Root callback보다 오래 사는 실제 실행 부모다.
@@ -31,6 +32,7 @@ public:
     void EndParticipant(std::uint32_t challenge,std::uint32_t participant); //0044e0d0의 Root 통지/전투 재선택·삭제/현재 socket close·명단 제거다.
     std::int32_t Tick(std::uint32_t challenge); //004581e0의 현재 전투 재생성/가상 참가자·명단 송신을 수행하고 원문처럼1을 반환한다.
     std::span<std::uint8_t> SharedPacket() { return scratch_; } //004cf220부터 다음 전역까지 확인한5000BYTE 공유 구간이며 재초기화 때 지우지 않는다.
+    void SendCommandPage(std::uint32_t challenge,std::uint32_t participant,std::string_view page); //00452300의 객체8BYTE/확장41h 응답을 같은 현재 참가자에게 보낸다. 객체BYTE1..3 미작성은 호스트 입력으로 보존한다.
 private:
     ConnectionState& state_;TransceiverTransport& transport_;ChallengeStore& challenges_;Options& options_;ChallengeMessages& messages_;ClockState& clock_;Random& random_; // 같은 현재 R 표/장치/옵션·뉴스/시계·프로세스 난수를 빌린다.
     ChallengeRuntimeHooks hooks_;std::array<std::uint8_t,5000> scratch_{}; // 실제 상위 장치와 PE 로더 초기0인 공유 작성 물리다.

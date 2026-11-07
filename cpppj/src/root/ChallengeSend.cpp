@@ -17,6 +17,7 @@ void ChallengeRuntime::AddressPacket(std::uint32_t challenge,std::uint32_t parti
 void ChallengeRuntime::Message(std::uint32_t challenge,std::uint32_t participant,std::string_view text,std::span<const std::uint8_t> object,bool extended) {
     text=text.substr(0,text.find('\0'));auto packet=Packet(0x41,19+object.size()+text.size()+1);Put(packet,0,3,1);Put(packet,5,extended ? 0x81:1,1);Put(packet,6,0);Put(packet,10,static_cast<std::uint32_t>(object.size()),2);Put(packet,12,static_cast<std::uint32_t>(text.size()+1),2);Put(packet,14,1,1);Copy(packet,15,object);PutText(packet,15+object.size(),text);Put(packet,16+object.size()+text.size(),Read(Player(challenge,participant),4));Send(challenge,participant,packet);
 }
+void ChallengeRuntime::SendCommandPage(std::uint32_t challenge,std::uint32_t participant,std::string_view page) { std::array<std::uint8_t,8> object;AllocationInput(object);Put(object,0,0,1);Put(object,4,0);Message(challenge,participant,page,object,true); } //52300은 첫BYTE/뒤DWORD만0으로 쓰며 나머지3BYTE와 같은 현재 subscriber/전송을 유지한다.
 void ChallengeRuntime::SendGuildName(std::uint32_t challenge,std::uint32_t subscriber,std::uint32_t destination) {
     const auto text=Need(hooks_.guildName)(subscriber);if (!text) return;auto packet=Packet(0x88,98,98);AllocationInput(packet);Header(packet,0x88,98);Put(packet,4,subscriber);PutText(packet,8,*text);if (destination==0xffffffffU) Broadcast(challenge,packet);else Send(challenge,destination,packet);
 }

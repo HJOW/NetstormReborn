@@ -1,0 +1,182 @@
+{
+  "unit": 1084,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "e9700d3482ec0c8f082e9d05eb457397874b47d1100d182ed89a24ef922b65ca"
+  },
+  "nativeAudit": {
+    "scope": "동일 호스트 R 원문/보호 PE·명령 페이지/문자열·송신 주요 몸체의 전체 주소범위 기계어와 현재 CCh/파일 장치를 정적으로 대조했다. 페이지/패킷/MP 실행 검사가 아니다.",
+    "commandInventory": [
+      "GET",
+      "GUILD",
+      "GUILDREQAPROVE",
+      "GUILDVIEWREQUEST",
+      "GUILDSETPENDING",
+      "GUILDSUBMIT",
+      "GUILDJOIN",
+      "GUILDTOGGLEREC",
+      "GUILDSETPASS",
+      "GUILDCHANGEIT",
+      "GUILDDISBAND",
+      "GUILDLOGIN",
+      "GUILDQUIT",
+      "GUILDNEW",
+      "ADMIN"
+    ],
+    "adminSubcommands": [
+      "GETPLAYER",
+      "SHUTUP",
+      "ADMIN",
+      "KICK",
+      "FORTBAN",
+      "IPBAN"
+    ],
+    "nativeCommandRanges": "00452f50-004550a7;00455e19-00455e2b의 합8555BYTE이며 비연속 tail을 별도 기계어 범위로 읽었다. wrapper00476550은87h/CHAL 진단1365와 signed zone/현재 CCh 관문이다. 이번 단위는 이 수신을 등록하지 않는다.",
+    "load": "00451f30의 Admin.server→Update.server→Guild.server를 매회 같은 실제 Working/Saves 파일 장치에서 연다. 텍스트모드·최대29BYTE/get30·NUL delimiter 미소비/EOF·fail 다음반복 관문과 구분자 없이 이어붙이기를 유지한다. 캐시/임의 LF를 추가하지 않는다.",
+    "section": "00452170의 [name] 첫 일치 위치+marker길이→그 위치부터 [END] 첫 검색→끝 부재면 현재 끝까지 부분 문자열이다. 시작 marker 부재를 검사해 정상 빈페이지로 바꾸지 않으며 원문 -1+marker길이 계산을 유지한다. 물리 밖 검색/음수 부분 길이 등은 명시 거부한다.",
+    "replace": "0044a5d0/44b3d0은 원문 사본의 BYTE마다 겹치는 일치도 세고 원래 위치-oldLength*ordinal+newLength*ordinal로 DWORD 보정한다. 실제 inclusive 삭제/삽입 관문을 유지하며 삽입한 tag를 재검색하지 않는다. limit-1만 무제한/limit0은 첫 교체 뒤 반환한다. 정수는 signed %d 문자열이다. 호출 계약은 비어 있지 않은 tag이며 빈tag/문자열 signed 물리초과는 명시 오류다.",
+    "commonExpansion": "00452570은 TIME→ZONELIST 순서다. TIME은00452350의 실제 _time32/현지시각/asctime 앞19BYTE+colon/space이며 게임 FullTime으로 대체하지 않는다. ZONELIST는00452460의 현재51칸 비NULL 존을0부터 읽고 원문 herf 철자·X1 링크/공백을 그대로 잇는다. 활성 참가자 조건이나 정정된 href를 합성하지 않는다.",
+    "reply": "00452300의 실제 CCh SendCommandPage는 지역8BYTE 객체에 첫BYTE0/뒤DWORD0만 쓰고 BYTE1..3은 현재 CRT allocation 입력을 보존한다. 기존 Message의 version3/확장81·text strlen+1·현재 참가자 subscriber/실제 Send를 공유한다. 빈page의 송신 여부는 원문처럼 호출자가 판단한다.",
+    "bindings": "CommandPages.Bind가 같은 장기owner의 현재 Load/Expand를 CCh hooks.commandTemplates/expandCommandPage에 연결한다. 최종 owner/실제 Bind·87h 소비자는 아직 없다.",
+    "templateAssets": "현재 originals/originalCD에 세 .server 파일이 없음을 파일 목록에서 확인했다. 원본 콘텐츠를 만들거나 설치 경로에 기록하지 않았다. 실제 선택파일이 없으면 Load는 빈문자열이고 이후 Section의 원문 marker 계산이 물리 범위를 벗어나면 명시 오류다. 최종 배포/명령 페이지 콘텐츠 확보는 후속이다.",
+    "hostBoundaries": [
+      "구형 ifstream/CharString 힙·allocator/미작성 스택 물리 자체 일치는 주장하지 않음",
+      "실제 locale·시간대/2038 범위·파일손상·페이지 송신/수명은 실행 미검증",
+      "87h 전체 guild/admin 분기·변경/저장/목록 renderer와 실제 수신 등록은 남음"
+    ],
+    "receiverInventory": [
+      {
+        "type": "0xb",
+        "receiver": "00475070",
+        "status": "implemented"
+      },
+      {
+        "type": "0xc",
+        "receiver": "00475040",
+        "status": "implemented"
+      },
+      {
+        "type": "0x10",
+        "receiver": "004763d0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x83",
+        "receiver": "00476490",
+        "status": "implemented"
+      },
+      {
+        "type": "0x11",
+        "receiver": "00475260",
+        "status": "implemented"
+      },
+      {
+        "type": "0x12",
+        "receiver": "00475580",
+        "status": "implemented"
+      },
+      {
+        "type": "0x16",
+        "receiver": "00475660",
+        "status": "implemented"
+      },
+      {
+        "type": "0x17",
+        "receiver": "00476070",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1c",
+        "receiver": "00476180",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1e",
+        "receiver": "00476700",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1f",
+        "receiver": "004767c0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x87",
+        "receiver": "00476550",
+        "status": "pending"
+      },
+      {
+        "type": "0x41",
+        "receiver": "00476880",
+        "status": "implemented"
+      },
+      {
+        "type": "0x66",
+        "receiver": "00475f90",
+        "status": "implemented"
+      },
+      {
+        "type": "0x67",
+        "receiver": "00476940",
+        "status": "implemented"
+      },
+      {
+        "type": "0x68",
+        "receiver": "00476a00",
+        "status": "implemented"
+      },
+      {
+        "type": "0x71",
+        "receiver": "00476ac0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x80",
+        "receiver": "00476640",
+        "status": "retired-validation-disabled"
+      }
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "commandPageBodiesImplemented": true,
+    "sameCurrentFileAndZonesAndOsTimeImplemented": true,
+    "sameActualExtendedCChReplyImplemented": true,
+    "full87ReceiverRegistered": false,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsBindOrRun": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newCommandPages": 0,
+    "newPacketOrReply": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "87h 전체 길드/관리자 명령·현재 길드/요청 변경·저장/목록 renderer·템플릿 콘텐츠/실제 등록",
+    "보조객체·전체 패킷/초기화/정리·새R.exe 최종owner/entry·실제 Bind/Install/Run·LAN hostname",
+    "클라이언트0F존47/서버3BYTE·0F/1d·메타/OSlaunch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
