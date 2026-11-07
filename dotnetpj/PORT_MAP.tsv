@@ -611,3 +611,4 @@ cpppj/src/client/RawFortWorldLoadBinding.h	Netstorm.Core/Original/RawFortWorldLo
 cpppj/src/client/RawFortWorldLoadBinding.cpp	Netstorm.Core/Original/RawFortWorldLoadBinding.cs	2d50804c8e2796f498c79cb79956848b54c5e5f0	port
 cpppj/src/o/RawFormPop.h	Netstorm.Core/Original/RawFormPop.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	port
 cpppj/src/o/RawFormPop.cpp	Netstorm.Core/Original/RawFormPop.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	port
+cpppj/src/o/RawSquidTransmission.h	Netstorm.Core/Original/RawSquidTransmissionState.cs	b8cadde14fbf9cd9e2d89a3102c5db2d5645c494	port

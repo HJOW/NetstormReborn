@@ -215,6 +215,91 @@ public sealed class SquidProcessHost
         }
     }
 
+    /// <summary>
+    /// 같은 커널 객체로 폼 패킷을 작성한다. 일반 Regular는 빈 writer(0)이며 공유 writer는 동기화 허용 때만 28바이트를 쓴다.
+    /// 전체 파생 writer·버퍼 미연결 경로는 명시 오류다(멀티플레이 사전 구현이며 3차 로컬 구현 때 연결한다).
+    /// 근거: cpppj/src/o/SquidProcess.cpp WriteFormPacket (F2d Host 전송 사전 구현, 2026-11-07).
+    /// </summary>
+    /// <param name="form">쓸 Form SID다.</param>
+    /// <param name="argument">파생 writer 인자다.</param>
+    /// <param name="packet">쓸 패킷 버퍼다.</param>
+    /// <param name="transmission">같은 전송 상태다.</param>
+    /// <returns>쓴 바이트 수다.</returns>
+    public int WriteFormPacket(int form, uint argument, Span<byte> packet, RawSquidTransmissionState transmission)
+    {
+        ArgumentNullException.ThrowIfNull(transmission);
+        using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
+        {
+            int parent = RawContainedLink.CommonContainedParent(_pool, form);
+            if (parent >= RawSidPool.FirstOrdinary && parent < RawSidPool.ServerFirst)
+            {
+                Action<string, string, uint>? assertion = _currentRuntime is not null ? Runtime().Assertion : _state.Assertion;
+                if (assertion is null)
+                {
+                    throw new InvalidOperationException("ProcessForm writer의 부모 SID 진단 미연결");
+                }
+
+                assertion("!getParent().isClientSid()", @"\Ns\O\Squid.cpp", 0xac2u);
+            }
+
+            SquidProcess? process = FromForm(form);
+            if (process is null)
+            {
+                throw new InvalidOperationException("ProcessForm writer의 실제 PID 객체 누락");
+            }
+
+            if (process is RegularProcess regular)
+            {
+                // 일반 Regular는 실제 빈 writer이며 공유 writer는 동기화 허용 때만 작성한다
+                if (!regular.Shared() || transmission.ClientSidAllowed == 0u)
+                {
+                    return 0;
+                }
+
+                if (packet.Length < 28)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(packet), "SharedRegular의 실제28BYTE 버퍼 범위");
+                }
+
+                FormPacketHeader header = transmission.SharedRegular;
+                packet[0] = (byte)(header.Protocol & 0x7fu);
+                packet[1] = header.Message;
+                PutPacketField(packet, 2, Math.Max(4u, (uint)header.Length), 2);
+                PutPacketField(packet, 6, unchecked((uint)regular.Parent()), 2);
+                PutPacketField(packet, 8, unchecked((ulong)BitConverter.DoubleToInt64Bits(regular.Time())), 8);
+                PutPacketField(packet, 16, regular.Event(), 4);
+                PutPacketField(packet, 20, unchecked((uint)BitConverter.SingleToInt32Bits(regular.Payload())), 4);
+                PutPacketField(packet, 24, regular.Count(), 4);
+                return 28;
+            }
+
+            ProcessFormTransmission? device = Transmission();
+            if (device is null || device.WriteFullData is null)
+            {
+                throw new InvalidOperationException("ProcessForm의 실제 전체 파생 writer 미연결");
+            }
+
+            int size = device.WriteFullData(process, argument);
+            if (size > 0)
+            {
+                if (device.Packet is null)
+                {
+                    throw new InvalidOperationException("ProcessForm의 실제 작성 버퍼 미연결");
+                }
+
+                byte[] bytes = device.Packet(size);
+                if (size > bytes.Length || size > packet.Length)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(packet), "ProcessForm의 실제 패킷 복사 범위");
+                }
+
+                bytes.AsSpan(0, size).CopyTo(packet);
+            }
+
+            return size;
+        }
+    }
+
     /// <summary>판본의 프로세스 타입 번호 범위 끝(패치 63, CD 62)이다. PATCH는 같은 현재 상한 비트를 반환한다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
     /// <returns>절차 상한 비트다.</returns>
     public uint ProcessTypeEnd() => _pool.Edition == OriginalEdition.Patch1078 ? _state.ProcessTypeEnd() : CdProcessEnd;
@@ -915,6 +1000,20 @@ public sealed class SquidProcessHost
         }
 
         return value;
+    }
+
+    /// <summary>원문 WORD/DWORD/double 필드만 쓰며 미작성 바이트를 보존한다. 2026-11-07 F2d Host 전송 사전 구현에서 추가됐다.</summary>
+    /// <param name="packet">쓸 패킷 버퍼다.</param>
+    /// <param name="offset">쓸 위치다.</param>
+    /// <param name="value">쓸 값이다.</param>
+    /// <param name="width">쓸 바이트 수다.</param>
+    private static void PutPacketField(Span<byte> packet, int offset, ulong value, int width)
+    {
+        // 각 필드의 낮은 바이트부터 지정 폭만 쓴다
+        for (int i = 0; i < width; i++)
+        {
+            packet[offset + i] = (byte)(value >> (i * 8));
+        }
     }
 
     /// <summary>
