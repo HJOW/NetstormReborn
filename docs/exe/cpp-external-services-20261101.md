@@ -1,5 +1,7 @@
 # 외부 접속 기능 목록과 구 클라이언트 검증 비활성화 — 단위684
 
+**2026-11-07 / 1090 갱신:** R485e42의 ZAssertion 표시에는 bugs@titanic.com으로 정보를 보내 달라는 문구가 있다. 표시문구이며 함수 자체에 접속/메일발송은 없다. 새 ProcessTrace는 사용자 Diagnostics/assert.html 위치 안내로 바꾸고 외부메일/HTTP/DNS를 추가하지 않았다. 새진단표시는11.01이며 폐기7f/80·온라인검증은 비활성 유지한다. 실제로그/진단/대화상자/서버실행은0이고 최종owner 연결은 후속이다([1090 기록](cpp-root-process-trace-20261107.md)).
+
 **2026-11-07 / 1087 갱신:** R의004d23f8은 원격명령 TCP/4세션 장치다. 기본생성7ee90은 listener/handler NULL이며 현재R시작/전역참조에는 Open/handler등록이 없다. rootTelnetPort 읽기만으로 포트를 열지 않는다. 명시Open API는 실제LAN IPv4 listener/기존Accept허용범위를 사용하고 외부DNS/폐기공식서버 접속을 추가하지 않았다. 최종owner/실제Bind·Run/통신실행은 아직없다([1087 기록](cpp-root-remote-command-20261107.md)).
 
 **2026-11-07 / 1083 갱신:** R11h 진단의 역방향 TCP 연결을 같은 실제 IPv4/client 장치에 연결했다. 실제 connect 앞에서 loopback/RFC1918/link-local만 허용하며 요청자의 주소/요청port를 사용한다. 공인 IP/폐기 공식 DNS 접속은 연결하지 않았다. IPX/SPX/Zlocal/UDP는 이 새 송신 TCP 장치의 범위 밖이다. 최종R owner/실제 호출과 MP/통신 실행은 아직 없다([1083 기록](cpp-root-diagnostic-20261107.md)).

@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE root/ProcessTrace.h root/ProcessTrace.cpp) #1090:R 최종owner가 사용할 실제 로그/OS시각·사용자 홈 진단/스택·복귀 장치를 연결한다.
+
 target_sources(netstorm PRIVATE root/Lifecycle.h root/Lifecycle.cpp) #1089:R 실제 시작/정리·노드 생성/등록과 같은 메인 hook을 연결한다.
 target_sources(netstorm PRIVATE root/PacketRegistration.h root/PacketRegistration.cpp root/PacketObservers.cpp) #1088:R 전체 전역 관찰/버전·실제 수신 초기화와 공통 길이 계산을 연결한다.
 

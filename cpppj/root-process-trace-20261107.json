@@ -1,0 +1,103 @@
+{
+  "unit": 1090,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "3112bf2e1edcf511ace683a55a156bd86c40f732b988134733ae699757a3e84c"
+  },
+  "nativeAudit": {
+    "scope": "제품의 로그/파일/시각/스택·대화상자/서버를 실행하지 않은 동일호스트 원문·보호PE·전체 함수범위 기계어/소스 대조다.",
+    "nativeFunctions": [
+      "004800e0",
+      "004800b0",
+      "00485cf0",
+      "00485e42"
+    ],
+    "levelGate": "signed0<=level<=현재traceLevel, 관문 실패는 시각/FILE/버퍼를 쓰지 않음",
+    "logBufferBytes": 1024,
+    "modePrefix": {
+      "diagMask": 17,
+      "rootMask": 2,
+      "challengeMask": 4,
+      "literalOrder": [
+        "diag",
+        "root",
+        "chal"
+      ]
+    },
+    "normalization": "첫NUL·연속선두 ~두BYTE/현재signed들여쓰기·모든후미CRLF를LF1개로 정리",
+    "time": "실제_time32/localtime/asctime 앞19BYTE, 게임Clock사용0",
+    "output": "첫허용로그에서stdout설치, 모드·시각접두,선택stderr본문복제→현재stdout본문→현재flush옵션",
+    "flush": "이미현재FILE일때만fflush, 새출력대상생성없음",
+    "assertionSequence": [
+      "현재guard비영이면추가정보만반납/복귀",
+      "guard1",
+      "stderr진단",
+      "사용자Diagnostics/assert.html w+b/무버퍼·원문HTML/진단·닫기",
+      "현재로그flush",
+      "실제호스트반환주소최대20개/포인터전체폭·4개마다CRLF",
+      "현재추가정보·제품11.01/MessageBoxW 경고48",
+      "정상대화상자복귀뒤guard0/추가정보반납"
+    ],
+    "throwOnAssert": "제공R의직접.text참조2개는모두옵션읽기에주소push뿐이며485cf0/85e42에서읽지않는다. 정상진단에인위적C++예외를추가하지않음",
+    "optionReferences": [
+      {
+        "address": "0x477623",
+        "previousOpcode": "0x68",
+        "reference": "push &rootServerThrowExceptionOnAssert"
+      },
+      {
+        "address": "0x4779aa",
+        "previousOpcode": "0x68",
+        "reference": "push &rootServerThrowExceptionOnAssert"
+      }
+    ],
+    "removedExternalText": "원문485e42 안내의 bugs@titanic.com 은표시문구뿐이며접속기능없음.현재진단파일위치안내로교체/메일발송없음",
+    "hostBoundaries": [
+      "구형 vsprintf/스택 물리 넘침·미완성선두코드와잘못된UTF8/NULL FILE은명시오류",
+      "1024BYTE 현재버퍼/첫NUL·tail보존은유지하지만원문 가변인자스택/인자포인터==현재버퍼 주소별칭 ABI전체는복제하지않음",
+      "32비트EBP사슬/SEH읽기는현재Windows CaptureStackBackTrace의실제포인터폭으로교체하며원본반환주소를합성하지않음",
+      "원문10.71은wire에유지하고새진단버전표시는요구된11.01/Unicode대화상자·사용자홈자동쓰기정책을사용",
+      "원문의NULL FILE크래시/SEH·예외진입·재진입/guard잔류와OS실패·전체수명은실행미검증",
+      "최종새R.exeowner/entry·실제LogDevice/AssertionDevice·Lifecycle.Bind/MainLoop.Run은아직없음"
+    ],
+    "testsExecuted": 0
+  },
+  "runtime": {
+    "sameCurrentProcessLogAndReturningAssertionDevicesImplemented": true,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsLogAssertionDevicesOrRun": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "traceOrAssertion": 0,
+    "reportWriteOrDialog": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "새R.exe최종owner/entry·실제LogDevice/AssertionDevice/Lifecycle.Bind/MainLoop.Run·클라이언트OSlaunch/배포",
+    "세.server콘텐츠/배포·LAN hostname·클라이언트0F존47/서버3BYTE·0F/1d·메타",
+    "LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

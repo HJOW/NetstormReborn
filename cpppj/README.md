@@ -1,12 +1,12 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-07 현재 제품 기준은1089 / 표시 버전11.01이다.** R시작/정리·실제노드생성/현재번호공개·같은메인hook을 연결했다. Release종료0·경고/오류0·새단위/MP/게임/통신/소켓실행검사0이다. 새R.exe최종owner/실제Lifecycle.Bind/MainLoop.Run·OSlaunch/배포·템플릿콘텐츠·LAN이름/0F·1d/메타·LAN/Outpost/checking5→한국어후속→시나리오UI가 남아 전체목표는미완료다. 실제IPv4 TCP/UDP범위이며 IPX/SPX는명시미지원이다. [1089 기록](../docs/exe/cpp-root-lifecycle-20261107.md).986후보는미적용이다.
+**2026-11-07 현재 제품 기준은1090 / 표시 버전11.01이다.** 최종R owner가사용할 실제ProcessTrace 로그/OS시각·사용자홈HTML/스택·복귀형ZAssertion을작성했다. Release종료0·경고/오류0·새단위/MP/게임/통신/로그·진단/대화상자실행검사0이다. 새R.exe최종owner/실제LogDevice·AssertionDevice/Lifecycle.Bind/MainLoop.Run·OSlaunch/배포·템플릿콘텐츠·LAN이름/0F·1d/메타·LAN/Outpost/checking5→한국어후속→시나리오UI가남아전체목표는미완료다. [1090 기록](../docs/exe/cpp-root-process-trace-20261107.md).986후보는미적용이다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 
 비멀티 UI929·Edit943·미션 수명956·내부 수명/FILE980의 구현·대조 범위를 마감했다. 4차 로컬MCP/와이드·5차 사용자 홈 저장·7차AA/FSR1을 구현했고, 6차 한국어는1차까지만 제품에 반영했다. LAN 전송/공유 수명/일반Login/원격Fort 수신/참가자별 동기화/전투섬·중앙섬 배치는982~993에서 시간 동기화/일반 시작 세부 경로와 함께 사전 구현했다. 1000에서는 LAN UI/일반 State7 앞단을 연결했다. 일반 전투 전체·파생 writer/decoder·Outpust는 미완료이며 신규MP/통신 검사는 하지 않았다.
 
-미션 플레이 경로가 있으며 마지막 전체34경로 진입 검증은645의제품644, 마지막 실제 단독GUI는984, 마지막 제품빌드는1089이다. 원본 전체 동일성과 모든 자연 완주는 사용자 확인 대상이다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**이다. 현재 값·남은 작업은 [LEFT_JOBS.md](../LEFT_JOBS.md), 한국어/시나리오 미적용 후보는 [986 인계](../docs/exe/handoffs/cpp-pause-20261106/README.md)가 기준이다.
+미션 플레이 경로가 있으며 마지막 전체34경로 진입 검증은645의제품644, 마지막 실제 단독GUI는984, 마지막 제품빌드는1090이다. 원본 전체 동일성과 모든 자연 완주는 사용자 확인 대상이다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**이다. 현재 값·남은 작업은 [LEFT_JOBS.md](../LEFT_JOBS.md), 한국어/시나리오 미적용 후보는 [986 인계](../docs/exe/handoffs/cpp-pause-20261106/README.md)가 기준이다.
 
 ## 과거 작업 기록 — 당시 제품 기준
 
