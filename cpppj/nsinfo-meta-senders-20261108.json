@@ -1,0 +1,61 @@
+{
+  "unit": 1108,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12546560,
+      "sha256": "f1c46baf4bcc18f8be2c568b7cc543312ab29877064942773bf18b116d27e6ab"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "d4f41e91d8b13aa32f53954130150ae43b229f23d63d509c249ba3cc8619ccd5"
+    }
+  },
+  "staticAudit": {
+    "status": "0040a300의12BYTE 헤더→실제 caller payload/부분효과→같은 TCP11.기존NotifyMetaMaster가공유하며순서보존",
+    "data": "0042bfb0 전체정상 count0..159/FF초기화/67h·BYTE키/WORD길이/DWORD뒤BYTE복사·같은11",
+    "observer": "0040ae80 송신만FFFF진단0xa07→현재WORD재조회/길이+7. 실제version1/가변길이등록",
+    "descriptor": "보호PE의67h/version1/기본길이WORD0와1fh의WORD12대조",
+    "limits": "음수 원문 크기/실제source 부족은호스트예외. Native메모리오염을재현하지않음"
+  },
+  "integration": {
+    "existingNotifyUsesStatusWriter": true,
+    "dataSenderAndObserverBoundToTransport": true,
+    "nsInfoInputCallersBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "NSInfo 세 Handle/메타 참가자 메뉴·카메라/신규송신 UI 호출",
+    "CS 수신/참가자·전투섬 생성·카메라 Rig/HTML",
+    "1dh/28~33 등록 및1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

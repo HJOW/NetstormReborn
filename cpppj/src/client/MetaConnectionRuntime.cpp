@@ -106,6 +106,11 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     }); //서버발견은현재36직접쓰기뒤실제Run을동기실행한다.검색토큰비교만인경우Run하지않는다.
     dispatch.Observe(0x1f,{});dispatch.Version(0x1f,1,0);dispatch.RequireLength(0x1f,12); //0040a300의 고정12BYTE/master 준비 통지이며 별도 수신기를 합성하지 않는다.
     dispatch.Observe(0x7c,{});dispatch.Version(0x7c,1,0);dispatch.RequireLength(0x7c,28); //0040b340/0040b380의 고정28BYTE/빈 관찰기다. 게임 로그인 수신은 별도 부모다.
+    dispatch.ObservePacket(0x67,[this](auto packet,auto sending) {
+        if (!sending) return;if (packet.size()<7) throw std::out_of_range("메타67h 관찰기의 실제7BYTE 부족");const auto first=std::uint32_t(packet[5])|(std::uint32_t(packet[6])<<8);
+        if (first==0xffffU) client_.SurfaceStorage()->AssertDisplay("dataLen != (unsigned short)-1","\\Ns\\O\\_p_packets.cpp",0xa07);
+        const auto length=std::uint32_t(packet[5])|(std::uint32_t(packet[6])<<8);Put(packet,2,length+7U,2); //0040ae80은진단이복귀한뒤같은현재WORD를다시읽는다.
+    });dispatch.Version(0x67,1,0);dispatch.RequireLength(0x67,0xffff); //실제관찰/버전만등록하며미복원수신기를합성하지않는다.
 }
 MetaConnectionRuntime::~MetaConnectionRuntime()=default; //자기OS/노드수명은실제TCP/UDP소유자의소멸자가반납한다.
 // minor 차이는 로그만 남기고 major 차이만 현재 설정값/실제 Tell 결과로 거부한다.
@@ -127,10 +132,19 @@ bool MetaConnectionRuntime::CallbackActive() const { return pumping_; } //현재
 // 현재 자기 CS 기록을 먼저 캡처하고 원문처럼 로컬 flags를 실제 송신 관문보다 앞서 쓴다.
 void MetaConnectionRuntime::NotifyMetaMaster() {
     const auto own=client_.ChallengeGlobals()->Participant(client_.GameplayGlobals()->player.battleOwner);
-    std::array<std::uint8_t,12> packet;Header(packet,0x1f);Put(packet,2,12,2);
-    Put(packet,4,client_.CurrentSubscriber(),4);
-    const auto flags=PeerWord(own,0x64)|0x2000U;Put(own,0x64,flags,4);Put(packet,8,flags,4);
-    static_cast<void>(tcp_->SendMutable(11,packet)); //실제 전송 실패여도 앞선 원문 flags 쓰기를 되돌리지 않는다.
+    SendMetaStatus([this,own](auto packet) { Put(packet,4,client_.CurrentSubscriber(),4);const auto flags=PeerWord(own,0x64)|0x2000U;Put(own,0x64,flags,4);Put(packet,8,flags,4); }); //실제헤더→현재subscriber→원문flags쓰기→같은송신관문의순서를보존한다.
+}
+// 헤더뒤에만caller의현재필드/부분효과를실행하므로준비/시작/추방부모도원문순서를유지한다.
+void MetaConnectionRuntime::SendMetaStatus(const std::function<void(std::span<std::uint8_t>)>& writePayload) {
+    std::array<std::uint8_t,12> packet;Header(packet,0x1f);Put(packet,2,12,2);if (!writePayload) throw std::logic_error("메타1fh의 실제 payload writer 미연결");writePayload(packet);static_cast<void>(tcp_->SendMutable(11,packet)); //송신실패여도앞서쓴CS/버튼/음향등을되돌리지않는다.
+}
+// 87BYTE 전투옵션을포함한원문160미만자료를같은실제67h 관찰기/전송장치에전달한다.
+void MetaConnectionRuntime::SendMetaData(std::uint32_t key,std::span<const std::uint8_t> data,std::uint32_t count) {
+    if (std::bit_cast<std::int32_t>(count)>=160) return;if (count>159U) throw std::out_of_range("메타자료의 음수 원문 할당/복사 물리 범위");std::array<std::uint8_t,166> scratch;const auto size=count+7U;auto packet=std::span(scratch).first(size);std::fill(packet.begin(),packet.end(),std::uint8_t{0xff});Header(packet,0x67);Put(packet,2,4,2);Put(packet,4,key,1);Put(packet,5,count,2);
+    // rep movsd는각실제DWORD를읽고쓴뒤마지막BYTE들을진행한다.미정다른scratch는초기화하지않는다.
+    std::uint32_t offset{};for (;offset+4U<=count;offset+=4U) { if (offset>data.size() || 4U>data.size()-offset) throw std::out_of_range("메타자료의 실제 source DWORD 부족");const std::array<std::uint8_t,4> word{data[offset],data[offset+1],data[offset+2],data[offset+3]};std::copy(word.begin(),word.end(),packet.begin()+7+offset); }
+    for (;offset<count;++offset) { if (offset>=data.size()) throw std::out_of_range("메타자료의 실제 source BYTE 부족");packet[7+offset]=data[offset]; } //원문나머지0..3BYTE만추가로쓴다.
+    static_cast<void>(tcp_->SendMutable(11,packet)); //같은실제sender관문을통과할때만0040ae80이WORD길이를확정한다.
 }
 // master 진단이 복귀하면 현재 CS를 다시 읽고 같은 스냅샷의 master/자기 필드를 순서대로 전송한다.
 void MetaConnectionRuntime::SendMetaGameLogin() {

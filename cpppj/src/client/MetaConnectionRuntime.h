@@ -18,6 +18,8 @@ public:
     void Pump(); //같은 원문 slot4의 flush→수신을 World 없이 진행한다.
     bool CallbackActive() const; //동기 수신/송신 중 전체 Native 정리의 재진입을 막는다.
     void NotifyMetaMaster(); //004b2c00의 현재 자기 flags에2000h를 저장하고 같은 TCP11로1fh/12BYTE를 전송한다.
+    void SendMetaStatus(const std::function<void(std::span<std::uint8_t>)>& writePayload); //0040a300의실제12BYTE 헤더뒤caller가+4/+8과부분효과를쓰고같은11로송신한다.
+    void SendMetaData(std::uint32_t key,std::span<const std::uint8_t> data,std::uint32_t count); //0042bfb0: signed160관문·FF초기화/67h생성·BYTE키/WORD길이·현재원문복사→같은11송신이다.
     void SendMetaGameLogin(); //004b62b0의 실제 master/자기 CS 기록으로7ch/28BYTE를 작성해 같은 TCP9로 전송한다.
 private:
     bool Connect(std::string_view endpoint,std::uint32_t port,std::uint32_t challenge); //004b3ed0의현재 해석 뒤 TCP10/11을 실제 선택한다. 공개/DNS 주소는 기존 LAN 장치가 거부한다.
