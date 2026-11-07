@@ -212,6 +212,7 @@
     <None Include="../../../cpppj/tests/fixtures/terrainstamp-x86.tsv" Link="X86/terrainstamp-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/island-population-x86.tsv" Link="X86/island-population-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fort-priest-preparation-x86.tsv" Link="X86/fort-priest-preparation-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/player-core-data-x86.tsv" Link="X86/player-core-data-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/bridgeconnect-x86.tsv" Link="X86/bridgeconnect-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/canonterrain-x86.tsv" Link="X86/canonterrain-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/priestterrain-x86.tsv" Link="X86/priestterrain-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

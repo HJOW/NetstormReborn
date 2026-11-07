@@ -441,6 +441,10 @@ cpppj/src/o/RawNewFort.cpp	Netstorm.Core/Original/RawNewFort.cs	51e2d8f48ac7949c
 cpppj/src/o/RawNewFort.h	Netstorm.Core/Original/RawNewFort.cs	51e2d8f48ac7949ce094a88748cb9c0689ae3505	L1
 cpppj/src/o/RawObjectConversion.cpp	Netstorm.Core/Original/RawObjectConversion.cs	b126e9007a61bb7bc133a29fe3ac585043194a56	L1
 cpppj/src/o/RawPathAnimation.cpp	Netstorm.Core/Original/RawPathAnimation.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawPlayerCoreData.cpp	Netstorm.Core/Original/RawPlayerCoreData.cs	79c3a5815fdc8244c4509c8d1e6bac34f6068af5	L1
+cpppj/src/o/RawPlayerCoreData.h	Netstorm.Core/Original/RawPlayerCoreData.cs	79c3a5815fdc8244c4509c8d1e6bac34f6068af5	L1
+cpppj/src/o/RawPlayerCoreRecords.cpp	Netstorm.Core/Original/RawPlayerCoreRecords.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	L1
+cpppj/src/o/RawPlayerCoreRecords.h	Netstorm.Core/Original/RawPlayerCoreRecords.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	L1
 cpppj/src/o/RawPlayerTemplateState.cpp	Netstorm.Core/Original/RawPlayerTemplateState.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawPlayerTemplateState.h	Netstorm.Core/Original/RawPlayerTemplateState.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawPriestDamage.cpp	Netstorm.Core/Original/RawPriestDamage.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
