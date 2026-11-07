@@ -39,6 +39,11 @@ struct SocketDevice::System { // 같은 accept 계열이 공유하는 실제 WSA
 SocketDevice::~SocketDevice() { Close(); } // 자기 핸들을 반납한 뒤 공유 WSA owner가 소멸한다.
 bool SocketDevice::IsOpen() const { return socket_!=kInvalidSocket; } // 실제 소켓0도 현대 OS의 유효한 반환이면 보존한다.
 void SocketDevice::Close() { if (IsOpen()) { closesocket(Socket(socket_));socket_=kInvalidSocket; }flags_&=~0x40U; } // 원문 close의 반환 무시와 기존 오류 보존을 유지한다.
+std::unique_ptr<SocketDevice> SocketDevice::Detach() {
+    auto result=std::make_unique<SocketDevice>();result->system_=system_;result->socket_=socket_;result->flags_=flags_;result->error_=error_;result->peer_=peer_;socket_=kInvalidSocket;return result; // 할당 성공 뒤에만 옛 핸들을 무효화한다. 새 소유자가 최종 close 권한과 WSA 수명을 유지한다.
+}
+void SocketDevice::PrepareTransferredStream() { flags_=0x444U;error_=0;peer_.fill(0); } // 새 CCh inline socket 초기값이며 실제 socket/WSA를 새로 열지 않는다.
+void SocketDevice::FinishTransferredStream() { const auto address=QueryPeerAddress();if ((std::uint32_t(address[0])|(std::uint32_t(address[1])<<8U))==AF_INET) flags_=0x54U; } // listener 비트를 상속한 이전 장치를 그대로 CCh stream으로 사용하지 않는다.
 std::int32_t SocketDevice::Error(std::int32_t code) { error_=code;flags_|=0x2000U;return -1; } // 현재 실패만 실제 코드로 기록한다.
 bool SocketDevice::OpenDatagram(std::uint32_t port) { return Open(port,false); } // 서버 UDP만 열며 패킷/512BYTE 버퍼는 바깥 노드가 소유한다.
 bool SocketDevice::Listen(std::uint32_t port) { return Open(port,true); } // 실제 새 TCP listener만 연다.

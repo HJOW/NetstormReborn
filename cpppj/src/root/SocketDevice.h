@@ -26,6 +26,9 @@ public:
     std::int32_t LastError() const { return error_; } // 성공/준비없음으로 이전 오류를 임의 지우지 않는다.
     bool IsOpen() const; // 실제 핸들의 존재만 읽는다.
     void Close(); // 자기 핸들을 한 번 닫고 open bit를 내린다. 다른 연결표는 변경하지 않는다.
+    std::unique_ptr<SocketDevice> Detach(); //00476368..79의 실제 핸들 읽기/옛 핸들 무효화를 소유권 이전으로 표현한다. WSA 참조/핸들 폭을 보존하고 OS close는 하지 않는다.
+    void PrepareTransferredStream(); //004841f0의 새 CCh socket flags444/오류0/초기 주소를 같은 이전 핸들에 구성한다.
+    void FinishTransferredStream(); //0044ea1c..3a의 별도 peer 조회 뒤 IPv4일 때만 flags54를 쓴다.
     static std::int32_t Select(std::uintptr_t highestPlusOne,NetworkSocketSets& sets,std::int32_t waitSeconds); // 원문64칸 세 집합을 실제 WinSock에 전달하고 수정된 집합을 되돌린다. nfds는 WinSock에서 무시한다.
 private:
     struct System;std::shared_ptr<System> system_; // accept 자식과 같은 WSA2.2 시작/마지막 반납 수명을 공유한다.

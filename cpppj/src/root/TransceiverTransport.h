@@ -29,6 +29,8 @@ public:
     std::uint32_t OpenDatagram(std::uint32_t port,std::uint32_t capacity=512); // R LAN UDP의 실제 새 일반 번호/512BYTE 버퍼다. 실패는0이며 성공 상태를 합성하지 않는다.
     std::uint32_t Listen(std::uint32_t port,std::uint32_t capacity=4096); // listener 자체 버퍼8과 수락 노드4096을 구별하고 최초 pending 초기화를 수행한다.
     void InstallTerminationReceiver(); //477e10이 실제 초기화 위치에서 등록하는2번→75170을 연결한다.
+    std::unique_ptr<SocketDevice> DetachSocket(std::uint32_t token); // 현재 대기 노드의 실제 socket만 이전한다. 뒤의 ClosePending은 그 OS 핸들을 닫지 않는다.
+    std::uint32_t AdoptTransferredStream(std::unique_ptr<SocketDevice> socket); //004841f0의 sender0/4096/flags444→별도 peer 조회/IPv4 flags54를 구성한다. 표 공개/참가자 번호는 실제 CCh 로그인 부모가 수행한다.
     ReceivedFrame ReceiveOne(std::uint32_t token,bool dispatch=true); //848c0/85aa0의 한 수신/수락 순회다. false는 observer 뒤 실제 패킷 분배만 생략한다.
     void Send(std::uint32_t token,std::span<std::uint8_t> packet); //84e90의 매번 observer1/현재 길이/직접 또는 집합 쓰기/기록이다.
     void SendTo(std::uint32_t token,std::span<std::uint8_t> packet,std::span<const std::uint8_t,20> destination); //85250의 UDP 가상 송신이며 짧은 쓰기는2번 통지다.

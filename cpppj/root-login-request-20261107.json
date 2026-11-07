@@ -1,0 +1,83 @@
+{
+  "unit": 1068,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12365824,
+    "exeSha256": "5722fc6e0c69dc1cfdfcaa760f74c7cfeb821bc3a3de2dbe40a4d1b05bd67a47"
+  },
+  "scope": [
+    "Root00476180/1Ch 종료·모드/주소·signed존/현재CCh 선택·원문로그/수신등록",
+    "실제 pending socket 소유권 이전→옛노드close·카운터→현재owned CCh 인계/내부토큰",
+    "실제64비트핸들/WSA수명·004841f0 sender0/4096/flags444·별도peer조회/IPv4flags54"
+  ],
+  "nativeAudit": {
+    "observer": "004444f0: nameLen255 진단1223/46+unsignedBYTE 길이",
+    "rootRoute": "exit0→Chal모드진단1206→IPv4 localhost127.0.0.1 예외/lowWORD 비교→signed존/현재개수/토큰→positive직행또는pending이전",
+    "traceLines": [
+      1245,
+      1252,
+      1257,
+      1263
+    ],
+    "pending": "00476368..79의 실제 핸들 추출/옛핸들-1→ClosePending 뒤 현재 CCh flags1 관문/요청+29h쓰기",
+    "newNode": "0044e9d3..e9e9: flags444/capacity4096/handle/sender0→별도getpeername/AF_INETflags54",
+    "hostOwnership": "uintptr_t 실제 핸들/공유WSA를 유지하고 요청+29h는private비재사용DWORD토큰; CCh만Claim한번",
+    "localHostLookup": "R004870d0 gethostname/gethostbyname은 원문 인벤토리에 추가; 새 부모는localAddress장치를요구하고직접DNS0"
+  },
+  "runtime": {
+    "root1cRequestParentImplemented": true,
+    "realSocketTransferImplemented": true,
+    "transferredStreamNodeConstructionImplemented": true,
+    "csLoginBody0044e940StillRequired": true,
+    "participantEnd0044e0d0StillRequired": true,
+    "actualLocalAddressDeviceStillRequired": true,
+    "rootExeTargetExists": false,
+    "rootRuntimeInstallsReceiver": false,
+    "client1dReceiverConnected": false
+  },
+  "nativeReferences": [
+    "R00476180",
+    "R004444f0",
+    "R00477dc0",
+    "R00478ac0",
+    "R004858d0",
+    "R004841f0",
+    "R004842a0",
+    "R00489620",
+    "R0044e940",
+    "R00459580",
+    "R00459560",
+    "R004870d0"
+  ],
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "dns": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "실제 CCh0044e940 로그인/참가자 데이터·응답/0044e0d0 종료·다른Root/CS수신",
+    "새R.exe/실제 전체 초기화·localAddress/시계·기록/주소 formatter·moderation/보조 객체·호출",
+    "0Fh 존 항목47/3BYTE 차이·클라이언트0F/1d 수신·메타/OS launch·LAN/Outpost/checking5·한국어 후속/Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
