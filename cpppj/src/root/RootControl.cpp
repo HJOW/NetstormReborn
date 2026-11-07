@@ -6,8 +6,8 @@
 
 namespace netstorm::root { // 서로 다른 게임 Client의 연결표/검색 상태를 만들지 않는다.
 using namespace challenge_detail; // 실제 원문 폭과 allocator/현재 packet 바이트를 사용한다.
-RootControl::RootControl(ConnectionState& state,TransceiverTransport& transport,Options& options,AddressCodec& addresses)
-    :state_(state),transport_(transport),options_(options),addresses_(addresses) {}
+RootControl::RootControl(ConnectionState& state,TransceiverTransport& transport,Options& options,AddressCodec& addresses,Clock& clock,std::function<void(std::int32_t,std::string_view)> log)
+    :state_(state),transport_(transport),options_(options),addresses_(addresses),clock_(clock),log_(std::move(log)) {}
 void RootControl::CheckExit() { if (state_.exitRequested) { Need(transport_.Lifecycle().exit)(0);throw std::logic_error("R 인사/LAN _exit 장치가 복귀했습니다"); } }
 void RootControl::Assert(std::string_view expression,std::string_view file,std::uint32_t line) { Need(transport_.Lifecycle().assertion)(expression,file,line); }
 void RootControl::ObserveGreeting(std::span<std::uint8_t> packet,std::uint32_t sending,bool reply) {
@@ -20,6 +20,8 @@ void RootControl::Install() {
     }
     dispatch.RegisterDirect(0x0b,[this](auto sender,auto* connection,auto) { ReceiveGreeting(std::bit_cast<std::int32_t>(sender),connection); });dispatch.RegisterDirect(0x0c,[this](auto,auto*,auto) { CheckExit(); }); //0ch의 실제 몸체는 종료 관문 뒤 즉시 반환한다.
     dispatch.ObservePacket(0x66,[](auto,auto) {});dispatch.Version(0x66,1,0);dispatch.RequireLength(0x66,12);dispatch.RegisterDirect(0x66,[this](auto sender,auto*,auto packet) { ReceiveDiscovery(std::bit_cast<std::int32_t>(sender),packet); }); //66h의 원문 observer는 빈 몸체이며 실제 연결 인자는 읽지 않는다.
+    for (const auto type:std::array<std::uint8_t,2>{0x11,0x12}) { dispatch.ObservePacket(type,[](auto,auto) {});dispatch.Version(type,1,0);dispatch.RequireLength(type,12); } //444060/4440f0의 빈 observer와 원문 고정 길이/버전만 등록한다.
+    dispatch.RegisterDirect(0x11,[this](auto sender,auto*,auto packet) { ReceiveDiagnostic(std::bit_cast<std::int32_t>(sender),packet); });dispatch.RegisterDirect(0x12,[this](auto sender,auto* connection,auto) { ReceiveDiagnosticRequest(std::bit_cast<std::int32_t>(sender),connection); });
 }
 void RootControl::ReceiveGreeting(std::int32_t sender,o::PacketConnection* connection) {
     CheckExit();const auto current=ReadTransceiver(state_,sender,transport_.Lifecycle());if (current ? &transport_.Connection(current)!=connection:connection!=nullptr) Assert("t == _t","c:\\ns\\r\\r.cpp",462);if (!current) return;auto reply=Packet(0x0c,12);Put(reply,4,10,2);Put(reply,6,71,2);Put(reply,8,0);transport_.Send(current,reply);transport_.Flush(current); // 제품표시11.01과 구별한 원문10.71 프로토콜이며 진단 복귀 후 같은 조회 노드만 사용한다.

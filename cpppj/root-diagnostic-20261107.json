@@ -1,0 +1,158 @@
+{
+  "unit": 1083,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "abcb20ac7ad3d202bfe1ebfc00be124cf4a0fe5639a88d7b36560b14b1955873"
+  },
+  "nativeAudit": {
+    "scope": "동일 호스트 R 원문/보호 PE와 진단·TCP 생성/번호 선택·guard 주요 몸체의 기계어를 현재 장치에 정적으로 대조했다. 실제 송수신/소켓 열기 검사가 아니다.",
+    "registration": "11h/12h는 원문444060/4440f0의 빈 observer·버전1/정책0·고정12와 nullable 실제 수신을 같은 RootControl.Install에 등록한다.",
+    "diagnostic11": "00475260은 exitRequested의 실제 exit0→diag flags11h 관문→초기 code==2 저장→11h 헤더/요청 code DWORD만 복사→기본0.0.0.0 주소. code2는 pending/응답/닫힘 없이 로그. 그외4754e0의 실제 하위 pending 토큰/주소→요청port!=0 및 diagRecv일 때 역방향 연결→같은 노드 Send/Flush→475520처럼 현재sender의 ClosePending→현재 요청 필드 로그 순서다.",
+    "callback": "59560은 주소+4 getter이며 포트는 그 전 push한 signed DWORD가 sprintf tcp,%s:%d,cb의 %d로 남는다. 실제 현재 주소 BYTE4..7/요청port를 문자열로 만들어 현재 parser에 전달한다. cb는 client4/nonblocking1이며 TCP10과 합쳐15h다. 버퍼는512이며 실패 callback 로그는 Connect 반환번호==0일 때만 발생한다.",
+    "diagnostic12": "00475580은 diagRecv 관문→현재 상위 ReadTransceiver→실제 connection 동일성 진단830→비영일때11h code1/Flush→같은 노드 현재주소 로그다. 원문에 없는 exitRequested 관문·pending 대체 조회·응답port 쓰기를 추가하지 않는다.",
+    "replyAndLog": "두 응답은443ff0/PE의11h/버전1/길이12 헤더와 code만 쓰며+8 DWORD는 현 CRT allocation 입력을 유지한다.11h 로그의 tcp/udp는 초기 code==2에 따른 원문 라벨이고 Format(1,0,0) 뒤 별도 :port를 다시 붙이는 원문 서식을 유지한다. 원본 스택 물리 자체 일치는 주장하지 않는다.",
+    "connectParent": "00474920은 mode&13h 진단213→같은 Clock.CaptureGame 시작→현재1..255 첫빈번호→주소Parse/실제 소켓 생성→현재시각·주소/버퍼 ctor→표공개→open/노드kill 관문→실패로그/Close/표0→선택번호 반환→별도 CaptureGame 종료/39레벨 시간로그다. 원문처럼 실패 뒤에도 선택한 번호를 반환하며 실제 연결 성공으로 해석하지 않는다. 공간이 없으면9로그/0 반환 뒤에도 종료시각 로그를 쓴다.",
+    "socket": "004875c0의 IPv4/client TCP 범위에서 실제 WSA2.2/socket→선택TCP_NODELAY→선택FIONBIO1→connect를 실행한다. nonblocking의 실제 WSAEWOULDBLOCK만 열린 시작으로 유지한다. 생성 실패는 오류/무효핸들을 유지하고 수신·송신 bit2000을 합성하지 않는다. 기존 Status/Receive/Send/QueryPeerAddress·번호/깊이/닫힘과 같은 실제 장치를 사용한다.",
+    "policy": "실제 connect 앞에서 loopback/RFC1918/link-local만 허용하며 공인 IP/폐기 공식 DNS에 연결하지 않는다. 역방향 연결 대상도 같은 실제 요청자의 LAN 주소다. IPX/SPX/Zlocal/UDP를 새 TCP 경로로 가장하지 않으며 장치 범위 밖은 명시 오류다.",
+    "hostBoundaries": [
+      "실제 물리 필드/32·256칸/반납 노드 범위는 기존 명시 오류",
+      "callback 뒤 노드 재접근·비동기 실제 실패/수명 전체는 실행 미검증",
+      "WSA1.1/x86 SEH·구형 힙/스택/미작성 지역 물리 자체 동일성은 주장하지 않음",
+      "최종 새R.exe owner/실제 Install/Connect/Run 호출은 아직 없음"
+    ],
+    "receiverInventory": [
+      {
+        "type": "0xb",
+        "receiver": "00475070",
+        "status": "implemented"
+      },
+      {
+        "type": "0xc",
+        "receiver": "00475040",
+        "status": "implemented"
+      },
+      {
+        "type": "0x10",
+        "receiver": "004763d0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x83",
+        "receiver": "00476490",
+        "status": "implemented"
+      },
+      {
+        "type": "0x11",
+        "receiver": "00475260",
+        "status": "implemented"
+      },
+      {
+        "type": "0x12",
+        "receiver": "00475580",
+        "status": "implemented"
+      },
+      {
+        "type": "0x16",
+        "receiver": "00475660",
+        "status": "implemented"
+      },
+      {
+        "type": "0x17",
+        "receiver": "00476070",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1c",
+        "receiver": "00476180",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1e",
+        "receiver": "00476700",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1f",
+        "receiver": "004767c0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x87",
+        "receiver": "00476550",
+        "status": "pending"
+      },
+      {
+        "type": "0x41",
+        "receiver": "00476880",
+        "status": "implemented"
+      },
+      {
+        "type": "0x66",
+        "receiver": "00475f90",
+        "status": "implemented"
+      },
+      {
+        "type": "0x67",
+        "receiver": "00476940",
+        "status": "implemented"
+      },
+      {
+        "type": "0x68",
+        "receiver": "00476a00",
+        "status": "implemented"
+      },
+      {
+        "type": "0x71",
+        "receiver": "00476ac0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x80",
+        "receiver": "00476640",
+        "status": "retired-validation-disabled"
+      }
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "bothDiagnosticBodiesImplemented": true,
+    "sameCurrentPendingOrUpperLookupImplemented": true,
+    "actualOutgoingLanTcpDeviceImplemented": true,
+    "sameNumberAndClockParentImplemented": true,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsInstallConnectOrRun": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "newDiagnostic": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "Root/CS87h 수신·보조객체·전체 패킷/초기화·정리",
+    "새R.exe 최종owner/entry·실제UDP번호발행/Announce/Bind/Install/Run·LAN hostname",
+    "클라이언트0F존47/서버3BYTE·0F/1d·메타/OSlaunch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

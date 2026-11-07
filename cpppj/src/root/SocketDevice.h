@@ -12,6 +12,7 @@ public:
     SocketDevice(const SocketDevice&)=delete;SocketDevice& operator=(const SocketDevice&)=delete; // OS 핸들의 닫기 권한을 복제하지 않는다.
     bool OpenDatagram(std::uint32_t port); // IPv4 UDP wildcard bind/broadcast를 열고 실제 실패는false/LastError로 보존한다.
     bool Listen(std::uint32_t port); // R의 TCP wildcard listener를 backlog4로 연다.
+    bool ConnectStream(std::span<const std::uint8_t,20> destination); //004875c0의 IPv4/client TCP 옵션·선택 nonblocking/connect를 실행한다. 주소 tail의 실제 모드와 LAN 경계를 사용한다.
     std::int32_t Accept(std::unique_ptr<SocketDevice>& accepted); //88760의 select0→accept이며0은준비없음/-1은오류/1은새 실제 소켓이다.
     std::int32_t Receive(std::span<std::uint8_t> bytes); //88a90의 select0→한번 recv이며 TCP EOF도 오류로 반환한다.
     std::int32_t ReceiveDatagram(std::span<std::uint8_t> bytes,std::array<std::uint8_t,20>& source); //89170의 select0→recvfrom과 같은 network endian20BYTE다.

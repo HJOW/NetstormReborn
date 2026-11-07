@@ -11,6 +11,7 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE root/RootControl.cpp root/RootControl.h) #1082:실제0b/0c 인사와66h LAN 수신/현재공지·하위pending guard를 같은 R 장치에 연결한다.
+target_sources(netstorm PRIVATE root/RootDiagnostic.cpp) #1083:실제11/12h 수신·대기/상위 연결 관문과 역방향 TCP를 같은 Root 장치에 연결한다.
 target_sources(netstorm PRIVATE root/ChallengeAdmin.cpp root/MainSchedule.cpp) #1081:실제83h 관리 명령/현재 하위소켓닫기·예약리셋/차단·확장Root안내를 같은 부모에 연결한다.
 target_sources(netstorm PRIVATE root/ChallengeBattleLaunch.cpp root/ChallengeReady.cpp) #1080:실제1fh 준비·전투 시작/접속안내/현재연결 종료와 전투 재배치 부모를 연결한다.
 target_sources(netstorm PRIVATE root/ChallengeMove.cpp) #1079:실제1eh 이동·입장 검증/기존 소속 탈퇴·master 선택과 명단/옵션 전송을 연결한다.

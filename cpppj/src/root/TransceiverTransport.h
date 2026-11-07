@@ -7,6 +7,7 @@
 
 namespace netstorm::root { // 게임 Player/22칸 Registry를 만들지 않는 R 전용 전송 소유자다.
 class SocketDevice; // 실제 OS 핸들과 공유 WSA 수명을 소유한다.
+class AddressCodec; // 새 일반 번호를 선택한 뒤 같은 원문 주소 parser를 호출한다.
 struct TransceiverHooks { // 프로세스의 실제 시계/기록/진단/종료 장치는 호출자가 보유한다.
     std::function<std::uint32_t()> now,captureNow; // 현재473b80 전역 시각과 새 지역4739b0 캡처를 구별한다.
     std::function<void(bool,o::PacketConnection&,std::span<const std::uint8_t>,std::uint16_t)> record; // 실제 방향/현재 주소·sender/논리 길이를 원문 기록 장치에 전달한다.
@@ -28,6 +29,7 @@ public:
     TransceiverTransport(const TransceiverTransport&)=delete;TransceiverTransport& operator=(const TransceiverTransport&)=delete; // 고정 노드/콜백 this와 OS 소유권을 복제하지 않는다.
     std::uint32_t OpenDatagram(std::uint32_t port,std::uint32_t capacity=512); // R LAN UDP의 실제 새 일반 번호/512BYTE 버퍼다. 실패는0이며 성공 상태를 합성하지 않는다.
     std::uint32_t Listen(std::uint32_t port,std::uint32_t capacity=4096); // listener 자체 버퍼8과 수락 노드4096을 구별하고 최초 pending 초기화를 수행한다.
+    std::uint32_t ConnectStream(const std::string& text,AddressCodec& addresses,std::uint32_t capacity=512); //00474920의 번호선택→실제 TCP 생성/현재표 공개·실패 닫힘이다. 원문처럼 생성 실패 뒤에도 선택 번호를 반환하며 시간/모드 관문은 Root 부모가 수행한다.
     void InstallTerminationReceiver(); //477e10이 실제 초기화 위치에서 등록하는2번→75170을 연결한다.
     std::unique_ptr<SocketDevice> DetachSocket(std::uint32_t token); // 현재 대기 노드의 실제 socket만 이전한다. 뒤의 ClosePending은 그 OS 핸들을 닫지 않는다.
     std::uint32_t AdoptTransferredStream(std::unique_ptr<SocketDevice> socket); //004841f0의 sender0/4096/flags444→별도 peer 조회/IPv4 flags54를 구성한다. 표 공개/참가자 번호는 실제 CCh 로그인 부모가 수행한다.

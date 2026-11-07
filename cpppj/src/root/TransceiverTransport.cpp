@@ -1,5 +1,6 @@
 // 같은 R 번호표/실제 OS 노드/공통 패킷 표의 소유권과 메인 통신 부모를 접합한다.
 #include "root/TransceiverInternals.h"
+#include "root/AddressCodec.h"
 #include <algorithm>
 
 namespace netstorm::root { // 원문 R 전역 표와 고정 노드의 수명을 분리한다.
@@ -39,6 +40,12 @@ std::uint32_t TransceiverTransport::Open(std::uint32_t port,std::uint32_t capaci
 }
 std::uint32_t TransceiverTransport::OpenDatagram(std::uint32_t port,std::uint32_t capacity) { return Open(port,capacity,false); } // R LAN의 원문 기본512 물리를 사용한다.
 std::uint32_t TransceiverTransport::Listen(std::uint32_t port,std::uint32_t capacity) { return Open(port,capacity,true); } // 수락용 물리는 기본4096이며 listener8과 구별한다.
+std::uint32_t TransceiverTransport::ConnectStream(const std::string& text,AddressCodec& addresses,std::uint32_t capacity) {
+    const CallGuard guard(*this);const auto id=FindFreeTransceiver(connections_);if (!id) { Need(hooks_.log)(9,"Out of transceivers.\n");return 0; }
+    auto socket=std::make_unique<SocketDevice>();static_cast<void>(socket->ConnectStream(addresses.Parse(text)));const auto token=Adopt(std::move(socket),id,capacity);connections_.transceivers[id]=token; // 실패한 하위 socket도 같은 시각/주소·버퍼 생성과 표 공개를 거친다.
+    if (!(Get(token).socket->Flags()&0x40U) || (Get(token).connection.flags&0x40U)) { Need(hooks_.log)(9,"Failed to connect:\""+text+"\" error code = "+std::to_string(Get(token).socket->LastError())+"\n");Close(token);connections_.transceivers[id]=0; }
+    return id; // 원문은 실패 분기에서도 local_18에 선택한 번호를 쓴다. 실제 연결 토큰/성공 상태와 혼동하지 않는다.
+}
 std::unique_ptr<SocketDevice> TransceiverTransport::DetachSocket(std::uint32_t token) { const CallGuard guard(*this);return Get(token).socket->Detach(); } // 옛 노드의 버퍼/표/깊이는 이후 원문 닫힘까지 보존한다.
 std::uint32_t TransceiverTransport::AdoptTransferredStream(std::unique_ptr<SocketDevice> socket) {
     const CallGuard guard(*this);if (!socket) throw std::invalid_argument("R CCh의 실제 이전 socket 소유권 누락");socket->PrepareTransferredStream();const auto token=Adopt(std::move(socket),0,4096);Get(token).socket->FinishTransferredStream();return token; // 첫 실제 주소/시각/버퍼 구성 뒤 두 번째 peer 조회를 실행한다.

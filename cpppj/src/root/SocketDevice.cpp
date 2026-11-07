@@ -50,6 +50,18 @@ void SocketDevice::FinishTransferredStream() { const auto address=QueryPeerAddre
 std::int32_t SocketDevice::Error(std::int32_t code) { error_=code;flags_|=0x2000U;return -1; } // 현재 실패만 실제 코드로 기록한다.
 bool SocketDevice::OpenDatagram(std::uint32_t port) { return Open(port,false); } // 서버 UDP만 열며 패킷/512BYTE 버퍼는 바깥 노드가 소유한다.
 bool SocketDevice::Listen(std::uint32_t port) { return Open(port,true); } // 실제 새 TCP listener만 연다.
+bool SocketDevice::ConnectStream(std::span<const std::uint8_t,20> destination) {
+    if (IsOpen()) throw std::logic_error("R 생존 socket 중복 연결");sockaddr_in address{};std::memcpy(&address,destination.data(),sizeof(address));std::memcpy(&flags_,destination.data()+16,sizeof(flags_));error_=0;
+    if (address.sin_family!=AF_INET || (flags_&0x30U)!=0x10U || !(flags_&4U) || (flags_&2U)) throw std::invalid_argument("R 송신 연결의 IPv4/client TCP 장치 범위");
+    const auto fail=[this](int code) { error_=code;Close();return false; }; // 원문 생성 실패는 마지막 오류/무효 핸들만 남긴다. 수신·송신 오류의 bit2000을 추가하지 않는다.
+    if (!Local(address)) return fail(WSAEACCES); // 외부 IP/DNS에 연결하지 않는 사용자 LAN 정책을 실제 connect 앞에 적용한다.
+    if (!system_) system_=std::make_shared<System>();if (system_->result) { const auto code=system_->result;system_.reset();return fail(code); }
+    socket_=::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);if (!IsOpen()) return fail(WSAGetLastError());
+    const int enabled=1;if ((flags_&0x100U) && setsockopt(Socket(socket_),IPPROTO_TCP,TCP_NODELAY,reinterpret_cast<const char*>(&enabled),sizeof(enabled))==SOCKET_ERROR) return fail(WSAGetLastError()); // 원문 n 옵션을 실제 TCP_NODELAY에 전달한다.
+    u_long nonblocking=1;if ((flags_&1U) && ioctlsocket(Socket(socket_),FIONBIO,&nonblocking)) return fail(WSAGetLastError());
+    if (::connect(Socket(socket_),reinterpret_cast<const sockaddr*>(&address),sizeof(address))<0) { const auto code=WSAGetLastError();if (!(flags_&1U) || code!=WSAEWOULDBLOCK) return fail(code); } // nonblocking의 실제 would-block만 열린 연결 시작으로 유지한다.
+    flags_|=0x40U;return true; //00478a70의 open 관문이며 연결 완료/실제 응답을 합성하지 않는다.
+}
 bool SocketDevice::Open(std::uint32_t port,bool stream) {
     if (IsOpen()) throw std::logic_error("R 생존 socket 중복 열기");if (port>65535) throw std::out_of_range("R socket 포트 WORD 범위");
     flags_=stream ? 0x92U:0x22U; // 구현 범위의 TCP/listener/server 또는 UDP/server다. 성공 뒤40을 더한다.
