@@ -222,7 +222,7 @@ cpppj/src/client/PaletteFlash.cpp	port			todo	[client-default]
 cpppj/src/client/PaletteShade.cpp	port	www/assets/palette.js	1f00a25a	partial	[client-default] UI 명암 변환표
 cpppj/src/client/ParticlePaletteMemory.cpp	adapt			todo	[adapt-screen]
 cpppj/src/client/PauseKeyInput.cpp	port	www/core/pause-key-input.js	1f00a25a	port	[client-default] WB04-E20: 004d8dd3 Pause 가상 키의 일반 Pause 명령 예약. fixture pause-key-input 10.78 246행 전부. GameMenuActions 소비 시점 대조는 해당 단위에서
-cpppj/src/client/PresentationCommandInput.cpp	port			todo	[client-default]
+cpppj/src/client/PresentationCommandInput.cpp	port	www/core/presentation-command-input.js	1f00a25a	port	[client-default] WB04-E25: 글꼴/음질 변경 명령. fixture sound-quality-command 32행·font-face-rebuild 부모 15행·이름표 21행(번호만). 실제 FontStore/ClientAudio는 해당 단위에서
 cpppj/src/client/PreviewCollection.cpp	port			todo	[client-default]
 cpppj/src/client/PreviewColorMaps.cpp	port			todo	[client-default]
 cpppj/src/client/PreviewDraw.cpp	port			todo	[client-default]
@@ -357,7 +357,7 @@ cpppj/src/client/RotationKeyInput.cpp	port	www/core/rotation-key-input.js	1f00a2
 cpppj/src/client/SavedCameraKey.cpp	port			todo	[client-default]
 cpppj/src/client/SavedStateFiles.cpp	exclude-mp			-	[mp-saved-battle]
 cpppj/src/client/SaveFortNameDialog.cpp	exclude-edit			-	[edit-fort-save]
-cpppj/src/client/ScenarioEffectInput.cpp	port			todo	[client-default]
+cpppj/src/client/ScenarioEffectInput.cpp	port	www/core/scenario-effect-input.js	1f00a25a	port	[client-default] WB04-E25: 4d77f3/4d7f45 연기·번개·무동작. fixture scenario-effect-input 576행·dump-squids-input 48행 전부
 cpppj/src/client/ScenarioObjectInput.cpp	port			todo	[client-default]
 cpppj/src/client/Screen.cpp	adapt	www/assets/palette.js;www/render/indexed-surface.js;www/render/presenter.js	1f00a25a	partial	[adapt-screen] 팔레트 파일·8비트 표면·표시. DirectDraw 장치는 웹 대체
 cpppj/src/client/ScreenModeTransition.cpp	exclude-host			-	[host-display-mode]
@@ -421,13 +421,13 @@ cpppj/src/client/UberHud.inc	port			todo	[client-default]
 cpppj/src/client/UberRootGump.cpp	port			todo	[client-default]
 cpppj/src/client/UrlInput.cpp	port	www/core/url-input.js	1f00a25a	port	[client-default] WB04-E20: 4d7b09 URL 일반 입력(두 번째 DWORD 문자열 토큰). fixture url-input 10.78 96행 전부. 메타 resolver 연결은 해당 단위에서
 cpppj/src/client/UserInput.cpp	port			todo	[client-default]
-cpppj/src/client/UtilityCommandInput.cpp	port			todo	[client-default]
+cpppj/src/client/UtilityCommandInput.cpp	port	www/core/utility-command-input.js	1f00a25a	port	[client-default] WB04-E25: 일반 유틸리티 명령 다섯 개. fixture utility-commands 10.78 355행 중 비멀티 283행(MP 72행 제외)과 이름표 48행(번호만). 대본 큐·실제 저장/카메라는 해당 단위에서
 cpppj/src/client/VFXDraw.cpp	port	www/assets/shapes.js	1f00a25a	partial	[client-default] VFX 셰이프 RLE 해독
 cpppj/src/client/VFXEllipse.cpp	port			todo	[client-default]
 cpppj/src/client/VFXLine.cpp	port	www/render/vfx-line.js	1f00a25a	partial	[client-default] 단색 선(스크롤바 화살표)
 cpppj/src/client/VFXMappedDraw.cpp	port			todo	[client-default]
 cpppj/src/client/VFXTransform.cpp	port			todo	[client-default]
-cpppj/src/client/ViewKeyInput.cpp	port			todo	[client-default]
+cpppj/src/client/ViewKeyInput.cpp	port	www/core/view-key-input.js	1f00a25a	port	[client-default] WB04-E25: 4d9670~4d998c F2/F3/F7/F8 표시 키. fixture view-key-input 10.78 310행 전부
 cpppj/src/client/WarningMessages.cpp	port			todo	[client-default]
 cpppj/src/client/WindowTitle.cpp	adapt			todo	[adapt-screen]
 cpppj/src/client/XlatFileRead.cpp	adapt			todo	[adapt-file]

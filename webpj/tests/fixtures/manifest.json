@@ -4062,6 +4062,238 @@
       "cpppjBasis": {
         "cpppj/src/client/CursorObjectPickup.cpp": "100d8808"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E25",
+      "id": "view-key-input",
+      "path": "cpppj/tests/fixtures/view-key-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: F2/F3/F7/F8의 수정키·뗌·정지·테마 조회·Fort/메타맵/편집기 분기와 큐 인자",
+      "consumers": [
+        "webpj/tests/view-utility-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/view-key-input.js"
+      ],
+      "doc": "docs/webpj-view-utility-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/ViewKeyInput.cpp"
+      ],
+      "scope": "310행 전부 사용",
+      "text": true,
+      "sha256": "280bec80c5f2f5717da8bb8922a27b5eaa6acb555bedfc38e9fff9847cc6a900",
+      "bytes": 366870,
+      "lines": 311,
+      "fixtureCommit": "485ec285",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ViewKeyInput.cpp": "559cf9ac"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E25",
+      "id": "utility-commands",
+      "path": "cpppj/tests/fixtures/utility-commands-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 화면 저장/URL 별칭/Run/강조/보기 명령의 호출 순서와 인자",
+      "consumers": [
+        "webpj/tests/view-utility-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/utility-command-input.js"
+      ],
+      "doc": "docs/webpj-view-utility-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/UtilityCommandInput.cpp"
+      ],
+      "scope": "355행 중 비멀티 283행 사용(MoveIsland MP 72행은 cpppj와 같이 제외)",
+      "text": true,
+      "sha256": "b4c86f894beff7d756650f1f16d86bbe82a416bd6ef8c934aca314706ffb3e1c",
+      "bytes": 41671,
+      "lines": 356,
+      "fixtureCommit": "616ce4d0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UtilityCommandInput.cpp": "616ce4d0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E25",
+      "id": "utility-command-names",
+      "path": "cpppj/tests/fixtures/utility-command-names-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 유틸리티 이름표·토큰·큐 예약",
+      "consumers": [
+        "webpj/tests/view-utility-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/utility-command-input.js"
+      ],
+      "doc": "docs/webpj-view-utility-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/UtilityCommandInput.cpp"
+      ],
+      "scope": "48행의 이름→명령 번호만 사용(인자·문자열 고리·큐 예약은 대본 큐 단위)",
+      "text": true,
+      "sha256": "72333f29c8c811fd6aab2386bbcc18018a24cd050ca100304e70508f7d51bd61",
+      "bytes": 3468,
+      "lines": 49,
+      "fixtureCommit": "616ce4d0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UtilityCommandInput.cpp": "616ce4d0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E25",
+      "id": "presentation-command-names",
+      "path": "cpppj/tests/fixtures/presentation-command-names-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 글꼴/음질 이름표·토큰·큐 예약",
+      "consumers": [
+        "webpj/tests/view-utility-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/presentation-command-input.js"
+      ],
+      "doc": "docs/webpj-view-utility-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/PresentationCommandInput.cpp"
+      ],
+      "scope": "21행의 이름→명령 번호만 사용(인자·문자열 고리·큐 예약은 대본 큐 단위)",
+      "text": true,
+      "sha256": "f636ef54c44256f0c9acf9b0a5949fd118d2b6ff243a62472ea4100c2e48062d",
+      "bytes": 1968,
+      "lines": 22,
+      "fixtureCommit": "731c9dee",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PresentationCommandInput.cpp": "731c9dee"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E25",
+      "id": "sound-quality-command",
+      "path": "cpppj/tests/fixtures/sound-quality-command-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 음질 변경의 선행 종료·signed Config·priestmove.wav·뗌",
+      "consumers": [
+        "webpj/tests/view-utility-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/presentation-command-input.js"
+      ],
+      "doc": "docs/webpj-view-utility-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/PresentationCommandInput.cpp"
+      ],
+      "scope": "32행 전부 사용",
+      "text": true,
+      "sha256": "3be2b8854c03476b4fd2a7c517f886890f5f81e9f7919693cdaf9e39d08edda9",
+      "bytes": 2765,
+      "lines": 33,
+      "fixtureCommit": "731c9dee",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PresentationCommandInput.cpp": "731c9dee"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E25",
+      "id": "font-face-rebuild",
+      "path": "cpppj/tests/fixtures/font-face-rebuild-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 글꼴 재생성 부모의 현재 높이/폭·dirty·이름 재조회와 각 효과 중단 꼬리",
+      "consumers": [
+        "webpj/tests/view-utility-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/presentation-command-input.js"
+      ],
+      "doc": "docs/webpj-view-utility-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/PresentationCommandInput.cpp"
+      ],
+      "scope": "23행 중 일반 입력 부모 15행 사용(child Clear/Create/Cache 내부 8행은 FontStore 단위)",
+      "text": true,
+      "sha256": "93d27926e222fc876a615e9dee329738e7a75d756ed53f4d2432efbeea26d2bf",
+      "bytes": 25856,
+      "lines": 24,
+      "fixtureCommit": "731c9dee",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PresentationCommandInput.cpp": "731c9dee"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E25",
+      "id": "scenario-effect-input",
+      "path": "cpppj/tests/fixtures/scenario-effect-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 연기/번개 생성 인자·무동작·폭 보관·기술 조회 순서",
+      "consumers": [
+        "webpj/tests/view-utility-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/scenario-effect-input.js"
+      ],
+      "doc": "docs/webpj-view-utility-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScenarioEffectInput.cpp"
+      ],
+      "scope": "576행 전부 사용",
+      "text": true,
+      "sha256": "4de65004071867ef9ebb7c3cf2754fa0682c28ce8843924c9d0f71432270d46c",
+      "bytes": 31699,
+      "lines": 577,
+      "fixtureCommit": "fc2ef723",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScenarioEffectInput.cpp": "c148400b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E25",
+      "id": "dump-squids-input",
+      "path": "cpppj/tests/fixtures/dump-squids-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 입력의 DumpSquids 48개 정상 무동작",
+      "consumers": [
+        "webpj/tests/view-utility-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/scenario-effect-input.js"
+      ],
+      "doc": "docs/webpj-view-utility-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScenarioEffectInput.cpp"
+      ],
+      "scope": "48행 전부 사용",
+      "text": true,
+      "sha256": "c92a0531a8d1dd6ef4ab8540aa7b11543bfc9d21b08849e19506043d38758f7a",
+      "bytes": 1211,
+      "lines": 49,
+      "fixtureCommit": "c148400b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScenarioEffectInput.cpp": "c148400b"
+      }
     }
   ]
 }
