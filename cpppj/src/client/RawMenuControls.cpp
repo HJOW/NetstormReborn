@@ -32,6 +32,7 @@
 #include "client/HudPlayerButtonDraw.h" //같은특수버튼의배경/단색/원색그림전체Draw다.
 #include "client/NativeMetaPlayerMenu.h" //같은controlled메뉴의자기/다른참가자부착을실행한다.
 #include "client/NativeNsInfoInput.h" //루트 입력도 실제 정렬표/CS·공통 메뉴/카메라·송신을 사용한다.
+#include "client/NativePlayerInfoInput.h" //두 자기 버튼/슬롯 변경/추방 확인도 전체 원문 입력을 사용한다.
 #include "client/RawPlayerMenu.h" //World없는메타도기존전체Player메뉴본문을사용한다.
 #include "client/ClientSubscriberGlobals.h" //메뉴선택때현재subscriber를실제장기슬롯에서읽는다.
 #include "o/RawPlayerNotification.h" //원문참가자기술합계는현재TYPE기반공통몸체를재사용한다.
@@ -404,14 +405,22 @@ struct RawMenuControls::Impl {
         geometry.metamapLayout=[this](auto token) { LayoutMetaNsInfo(token,NsMetaGlobals(),NsMetaHooks()); }; //일반앞단/관문뒤원문루트본문을같은실제배치장치로실행한다.
         nsGeometry=std::make_unique<HudNsInfo>(HudNsInfoModeView{[this] { return NsRead(0x594fc8); },[this] { return NsRead(0x595344); }},std::move(geometry));
     }
-    // 루트 전체 입력을 먼저 분배하고 아직 남은 두 자식 입력은 명시적으로 구별한다.
+    // 같은 현재 자식 serial/버튼 DWORD·CS/옵션과 실제 controlled 메뉴/두 송신 장치를 연결한다.
+    std::uint32_t NsPlayerHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) {
+        NativePlayerInfoInputHooks h;h.command=[this](auto address) { return NsRead(address); };h.serial=[this](auto child) { auto* node=common.node(child);if (!node) throw std::out_of_range("PlayerInfo 입력의 실제 자식 없음");return node->serial; };h.buttonValue=[this](auto child) { return nsButtons.at(child)->value; };
+        h.owner=[this] { return nsContext->gameplay->player.battleOwner; };h.subscriber=[this] { return nsContext->gameplay->Subscribers()->MySubscriber(); };h.participant=[this](auto index) { if (!nsContext->challenge) throw std::logic_error("PlayerInfo 입력의 실제 CS 미연결");return nsContext->challenge->Participant(index); };h.battle=[this](auto index) { if (!nsContext->challenge) throw std::logic_error("PlayerInfo 입력의 실제 전투 CS 미연결");return nsContext->challenge->Battle(index); };
+        h.auxiliary=[this](auto value) { nsContext->gameplay->StateAuxFC4()=value; };h.status=nsContext->status;h.data=nsContext->sendData;h.translate=nsContext->translate;h.beginMenu=[this] { widgets->BeginFancy(); };h.title=[this](auto text) { controls->AddTitle(text); };h.item=[this](auto text,auto command,auto parameter) { controls->AddText(text,command,parameter,true,true,false); };
+        h.attachMenu=[this] { const auto current=menu->Current(),root=common.create.entries[0];const auto point=nsContext->gameplay->selection.mouse;menu->AttachCurrent(point.x,point.y,root);popup=current;common.changed(); };return HandleNativePlayerInfo(*nsPlayers.at(token),event,first,second,h);
+    }
+    // 루트와 PlayerInfo 전체 입력을 분배하며 남은 BattleInfo만 명시적으로 구별한다.
     std::uint32_t NsHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) {
         if (nsRoots.contains(token)) {
             NativeNsInfoInputHooks h;h.command=[this](auto address) { return NsRead(address); };h.roster=[this](auto row) { return nsContext->globals->rosterOrder.at(row); };
             h.participant=[this](auto index)->std::span<const std::uint8_t> { if (!nsContext->challenge) throw std::logic_error("NSInfo 루트 입력의 실제 CS 미연결");return nsContext->challenge->Participant(index); };h.mouse=[this] { return nsContext->gameplay->selection.mouse; };h.menu=[this](auto index,auto point) { OpenMetaParticipant(index,point); };
             h.center=nsContext->center;h.status=nsContext->status;h.kickoffSound=nsContext->kickoffSound;h.base=[this,token](auto original,auto a,auto b) { return BaseHelp(token,original,a,b); };return HandleNativeNsInfo(event,first,second,h);
         }
-        if (NsRead(0x594fc8) && NsRead(0x595344)) throw std::logic_error("NSInfo PlayerInfo/BattleInfo 메타 입력 미연결");
+        if (nsPlayers.contains(token)) return NsPlayerHandle(token,event,first,second);
+        if (NsRead(0x594fc8) && NsRead(0x595344)) throw std::logic_error("NSInfo BattleInfo 메타 입력 미연결");
         return BaseHelp(token,event,first,second);
     }
     #include "client/RawMenuHtml.inc" // 같은 실제 장식/본문/돌 버튼과 부모 수명을 연결한다.

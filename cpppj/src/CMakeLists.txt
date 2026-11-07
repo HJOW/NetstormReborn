@@ -550,3 +550,6 @@ target_sources(netstorm PRIVATE client/ClientMetaPlayerMenu.h client/ClientMetaP
 
 # NSInfo 루트의 전체 입력도 같은 현재 CS/정렬표와 실제 메뉴·카메라·송신 장치를 사용한다.
 target_sources(netstorm PRIVATE client/NativeNsInfoInput.h client/NativeNsInfoInput.cpp)
+
+# PlayerInfo의 전체 입력과 현재 슬롯 writer·실제 옵션/상태 송신을 연결한다.
+target_sources(netstorm PRIVATE client/NativePlayerInfoInput.h client/NativePlayerInfoInput.cpp)

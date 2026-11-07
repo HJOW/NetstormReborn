@@ -24,5 +24,6 @@ struct RawNsInfoContext {
     std::function<void(std::uint32_t)> center; // 현재 SID를 같은 Session의 433ba0와 실제 즉시 카메라 적용에 전달한다.
     std::function<void(const std::function<void(std::span<std::uint8_t>)>&)> status; // 현재 메타 전송 owner를 소비 시점에 조회하며 실제 헤더/11번 송신을 사용한다.
     std::function<void()> kickoffSound; // 현재 실제 음향의 chalKickedoff.wav 우선순위1 재생이다.
+    std::function<void(std::uint32_t,std::span<const std::uint8_t>,std::uint32_t)> sendData; // 현재 실제 메타 전송 owner의67h 자료 송신이며 옵션87BYTE도 같은 장치에 전달한다.
 };
 }

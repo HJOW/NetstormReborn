@@ -1,0 +1,60 @@
+{
+  "unit": 1113,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12620800,
+      "sha256": "606b361b0301fa9c9837ed8d8a629db21f78b3396fedf35364214b150b254c33"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "21a4c6f62eb34afc31863cafff97484842f1ffadaa89c6785db7f9e6d61a9e8f"
+    }
+  },
+  "staticAudit": {
+    "native": "0047a900 전체148줄·다음47afa0까지기계어",
+    "buttons": "같은현재clickEvent/자식serial·자기Ready는CS2비트저장/송신·Start는12h송신뒤reserved1",
+    "slots": "좌/우 다섯1107writer·색/랭크는헤더전/Special은헤더·초기payload뒤·자기594fc4만쓰기",
+    "send": "현재CS subscriber/flags4000h(로컬재저장없음)1fh→현재BattleOptions87BYTE67h",
+    "confirmation": "같은Fancy/번역/256BYTE제목·현재직접참가자번호/0 Yes/No→원시좌표/현재루트부착",
+    "fallback": "별도meta/known관문·원문에없는추가권한/Ready전체검사없음.태그분기는1/미처리0"
+  },
+  "integration": {
+    "rootHandleBound": true,
+    "playerHandleBound": true,
+    "battleHandleBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "BattleInfo 전체 입력/옵션·제외 목록 writer",
+    "CS 수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신 상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

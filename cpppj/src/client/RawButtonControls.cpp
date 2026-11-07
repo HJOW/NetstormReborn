@@ -446,7 +446,7 @@ std::uint32_t RawButtonControls::BubbleGump(std::uint32_t token,std::uint32_t ev
 // 같은 현재 배경 전역과 실제 기본 버튼을 전체 NSInfo 생성자에 연결한다.
 std::uint32_t RawButtonControls::ConstructNsInfo(RawNsInfoContext context) {
     auto& s=*impl_;if (!s.menus) throw std::logic_error("NSInfo 공통 메뉴/문자 계층 미연결");const auto supplied=context.read;
-    context.read=[&s,supplied](auto address) { if (address==0x5ca920U) return s.productionGlobals.backgroundType;if (address==0x5ca924U) return s.productionGlobals.backgroundFrame;if (address==0x5ca928U) return s.productionGlobals.panelFrame;if (!supplied) throw std::logic_error("NSInfo 실제 TYPE/색 전역 미연결");return supplied(address); };
+    context.read=[&s,supplied](auto address) { if (address==0x5427a8U) return s.buttonState.clickEvent;if (address==0x5ca920U) return s.productionGlobals.backgroundType;if (address==0x5ca924U) return s.productionGlobals.backgroundFrame;if (address==0x5ca928U) return s.productionGlobals.panelFrame;if (!supplied) throw std::logic_error("NSInfo 실제 TYPE/색 전역 미연결");return supplied(address); }; //NSInfo도 실제 Button 처리기의 같은 현재 clickEvent를 읽는다.
     context.constructButton=[&s](auto token,auto width,auto height,auto flags) { s.buttons->ConstructBase(token,width,height,flags); };context.enabled=[&s](auto token,bool enabled) { s.buttons->SetEnabled(token,enabled); };context.value=[&s](auto token,auto value) { s.buttons->SetValue(token,value); };return s.menus->CreateNsInfo(std::move(context)); //같은현재Button처리기를파생메타배치에도빌린다.
 }
 // 같은 공통 참조를 빌려 실제 Warning/Pause를 가상 분배와 원본 정렬 Draw에 연결한다.

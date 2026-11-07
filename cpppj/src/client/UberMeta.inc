@@ -7,6 +7,7 @@ void UberGump::BindMetaNsInfoInput(RawNsInfoContext& context) {
     };
     context.status=[this](const auto& writer) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("NSInfo 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->SendMetaStatus(writer); }; //1fh 실제 헤더가 먼저 작성된 뒤 caller가 CS/음향 부분효과를 수행한다.
     context.kickoffSound=[this] { client_.WorldAudio().Sounds().PlayByName("chalKickedoff.wav",0,0,0,1,0); }; //원문 priority1을 일반 메뉴 소리의0으로 바꾸지 않는다.
+    context.sendData=[this](auto key,auto data,auto count) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("NSInfo 자료 송신의 현재 메타 전송 owner 미연결");editor_->metaTransport->SendMetaData(key,data,count); }; //실제 옵션 변경 뒤에만 현재67h/TCP11을 선택한다.
 }
 // 실제 State19의 World 정리 뒤 같은 Client Fort/Core/CS/Chat 장치를 선택한다.
 o::LocalMissionParentResult UberGump::InstallMetaNativeState(std::uint32_t selected) {
