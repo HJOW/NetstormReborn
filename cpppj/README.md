@@ -1,12 +1,12 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 현재 제품 기준은1114 / 표시 버전11.01이며 /goal 진행 중이다.** 제품 기준은 **1114 / 11.01**이다.BattleOptions 첫BYTE/포함최댓값·순환/직접선택·제외추가/제거/조회 일곱전체몸체와음향전후순서를 복원·제품에 컴파일했다. **BattleInfo 전체 입력/실제 옵션·제외 메뉴의1114호출은 후속**이다.두 Release 종료0·경고/오류0·보호2800불변·새C++/MP/게임/통신실행0이다.다음은 BattleInfo전체입력→CS수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신 상태호출이다.세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI도 남아 전체 목표는 미완료다. [1114 기록](../docs/exe/cpp-battle-option-mutation-20261108.md)·[현재인계](../LEFT_JOBS.md).986후보는 미적용이다.
+**2026-11-08 현재 제품 기준은1115 / 표시 버전11.01이며 /goal 진행 중이다.** 제품 기준은 **1115 / 11.01**이다.BattleInfo 입력분기/기본설정 적용 부모를 원문대로 복원·제품에 컴파일했다. **다섯 메뉴 자식/실제UI와1115부모 입력 분배는 후속**이다.두 Release 종료0·경고/오류0·보호2800불변·새C++/MP/게임/통신실행0이다.다음은 메뉴자식/실제분배→CS수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신 상태호출이다.세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI도 남아 전체 목표는 미완료다. [1115 기록](../docs/exe/cpp-nsinfo-battle-input-parent-20261108.md)·[현재인계](../LEFT_JOBS.md).986후보는 미적용이다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 
 비멀티 UI929·Edit943·미션 수명956·내부 수명/FILE980의 구현·대조 범위를 마감했다. 4차 로컬MCP/와이드·5차 사용자 홈 저장·7차AA/FSR1을 구현했고, 6차 한국어는1차까지만 제품에 반영했다. LAN 전송/공유 수명/일반Login/원격Fort 수신/참가자별 동기화/전투섬·중앙섬 배치는982~993에서 시간 동기화/일반 시작 세부 경로와 함께 사전 구현했다. 1000에서는 LAN UI/일반 State7 앞단을 연결했다. 일반 전투 전체·파생 writer/decoder·Outpust는 미완료이며 신규MP/통신 검사는 하지 않았다.
 
-미션 플레이 경로가 있으며 마지막 전체34경로 진입 검증은645의제품644, 마지막 실제 단독GUI는984, 마지막 제품빌드는1114이다. 원본 전체 동일성과 모든 자연 완주는 사용자 확인 대상이다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**이다. 현재 값·남은 작업은 [LEFT_JOBS.md](../LEFT_JOBS.md), 한국어/시나리오 미적용 후보는 [986 인계](../docs/exe/handoffs/cpp-pause-20261106/README.md)가 기준이다.
+미션 플레이 경로가 있으며 마지막 전체34경로 진입 검증은645의제품644, 마지막 실제 단독GUI는984, 마지막 제품빌드는1115이다. 원본 전체 동일성과 모든 자연 완주는 사용자 확인 대상이다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**이다. 현재 값·남은 작업은 [LEFT_JOBS.md](../LEFT_JOBS.md), 한국어/시나리오 미적용 후보는 [986 인계](../docs/exe/handoffs/cpp-pause-20261106/README.md)가 기준이다.
 
 ## 과거 작업 기록 — 당시 제품 기준
 

@@ -556,3 +556,6 @@ target_sources(netstorm PRIVATE client/NativePlayerInfoInput.h client/NativePlay
 
 # BattleInfo의 현재 옵션 변경/제외 목록 getter·writer와 음향 전후 순서를 복원한다.
 target_sources(netstorm PRIVATE o/RawBattleOptionMutation.h o/RawBattleOptionMutation.cpp)
+
+# BattleInfo 입력 분기/기본값 적용 부모다. 실제 메뉴 자식을 결합한 뒤 UI 분배기에 연결한다.
+target_sources(netstorm PRIVATE client/NativeBattleInfoInput.h client/NativeBattleInfoInput.cpp)

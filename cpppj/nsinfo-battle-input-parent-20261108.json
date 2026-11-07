@@ -1,0 +1,60 @@
+{
+  "unit": 1115,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12620800,
+      "sha256": "2dbf76757a74aa117f078a42f83a17a5cec87800abdb234b181d87fa768e6411"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "99625f0820da979e6b1b03da99afcb643a98abf7dbbd8e56c5631d333f7f3d69"
+    }
+  },
+  "staticAudit": {
+    "native": "0047b180 전체·0047b8f0 전체388줄/다음47c430까지 기계어의 입력분기부모",
+    "defaults": "현재설정1..21→각1114선택writer·종류BYTE는보존",
+    "gates": "현재metamap/비0battle/활성BYTE1·known추가없음",
+    "right": "현재제목serial·signed태그/권한·순환/기본설정·다섯메뉴선택·반환1",
+    "commands": "별도if의mode/직접선택/제외추가/제거·signed상위16/하위XOR",
+    "tail": "변경/현재권한둘다비0일때만현재키87BYTE67h→Push뒤현재x/y부모0재부착·원문반환값"
+  },
+  "integration": {
+    "compiledInProduct": true,
+    "battleInfoHandleBound": false,
+    "menuChildrenBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "BattleInfo 다섯 메뉴 자식 전체몸체/같은실제UI·1115부모분배",
+    "CS 수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신 상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
