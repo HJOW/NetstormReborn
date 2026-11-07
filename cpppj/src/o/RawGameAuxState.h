@@ -71,6 +71,10 @@ public:
     std::uint32_t& IslandStumpType() { return islandStumpType_; } //005411d8의 현재 그루터기 TYPE이며 섬 정리의 가상 삭제 비교가 읽는다.
     std::array<std::uint32_t,7>& MissionSettings() { return missionSettings_; } //32h의 현재7DWORD이며 각 원문 전역을 같은 Client 수명에서 순서대로 읽고 쓴다.
     const std::array<std::uint32_t,7>& MissionSettings() const { return missionSettings_; } // 진단/송신도 Login이나 Session 사본을 만들지 않는다.
+    std::uint32_t& QuickBuild() { return quickBuild_; } //0055a49c의 현재 건설 즉시 완료 DWORD다.
+    std::uint32_t& QuickVortex() { return quickVortex_; } //0055a498의 현재 신전 건설 즉시 완료 DWORD다.
+    std::int32_t& DeveloperScatterRow() { return developerScatterRow_; } //005326d8의 현재 signed 행 번호이며 실제 scatter의 CRT 사용과 함께 유지한다.
+    std::uint32_t& DeveloperCombatResizeCommand() { return developerCombatResizeCommand_; } //0054288c의 현재 입력 명령 DWORD를 cr 분기가 큐에 넣는다.
     std::uint32_t& FireAnimationProcessType() { return fireAnimationProcessType_; } //005410fc의 현재35를 전체 발사 수신 부모가 조회한다.
     std::uint32_t& RotateAnimationProcessType() { return rotateAnimationProcessType_; } //00541100의 현재36이며 발사와 별개인 장기 DWORD다.
     std::uint32_t& SunArcherType() { return sunArcherType_; } //00541174의 현재71이며 수신 공장의 첫 발사 TYPE 비교다.
@@ -173,6 +177,9 @@ private:
     std::int32_t pathTraceLevel_{99}; // 보호 PE00540c68의 초기99이며 실제 공통 로그의 현재 임계값과 별개다.
     std::uint32_t islandDropBlocked_{},islandStumpType_{96}; // 보호 PE0054db84의 BSS0과005411d8의 최초96이며 Session 대여로 초기화하지 않는다.
     std::array<std::uint32_t,7> missionSettings_{1,0,0,0,0,1,8}; //5326cc/55a488/55a48c/55a490/55a494/5326d0/5326d4의 실제 최초값이며 월드 교체에서 재설정하지 않는다.
+    std::uint32_t quickBuild_{},quickVortex_{}; // 두 보호 PE BSS0을 새 Client에서만 만들고 Session 교체로 지우지 않는다.
+    std::int32_t developerScatterRow_{3}; // 보호 PE005326d8의 최초3이며 scatter 뒤 signed (행+2)%10으로 갱신한다.
+    std::uint32_t developerCombatResizeCommand_{0x02000065}; // 보호 PE0054288c의 최초 입력 코드이며 현재 원문 명령 주소와 대응한다.
     std::uint32_t fireAnimationProcessType_{35},rotateAnimationProcessType_{36}; // 보호 PE의 서로 다른 두 TYPE이며 World 교체에서 초기화하지 않는다.
     std::uint32_t sunArcherType_{71},sunCannonType_{128},windArcherType_{140}; // 수신 공장의 실제 세 비교 전역 초기값이며 기본 생성자 선택과 구별한다.
     std::array<std::uint8_t,2> rotateAnimationHeader_{0x3c,1},fireAnimationHeader_{0x3b,1}; // 보호 PE의 두 현재 헤더이며 World/Session 교체에서 초기화하지 않는다.

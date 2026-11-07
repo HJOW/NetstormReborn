@@ -51,4 +51,11 @@ void RegisterMissionSettingsPacket(RawPacketDispatch& dispatch,RawMissionSetting
     dispatch.Observe(0x32,[](std::uint32_t) {});dispatch.Version(0x32,1,0);
     dispatch.Register(0x32,[&packet](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> bytes) { packet.Receive(bytes); });
 }
+// 비Login에서도 원문32h의 현재 입력→직접 store를0..6순서로 실행하며 UI/값 정규화를 추가하지 않는다.
+void RegisterMissionSettingsPacket(RawPacketDispatch& dispatch,std::array<std::uint32_t,7>& current) {
+    dispatch.Observe(0x32,{});dispatch.Version(0x32,1,0);dispatch.RequireLength(0x32,32);
+    dispatch.Register(0x32,[&current](auto,auto&,auto packet) {
+        for (std::size_t index=0;index<current.size();++index) current[index]=SettingsRead(packet,4+index*4); // 앞선 store를 되돌리지 않고 다음 현재 DWORD를 읽는다.
+    });
+}
 }

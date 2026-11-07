@@ -1,6 +1,7 @@
 // 실제 로그인 마지막의7DWORD 현재 설정 송신을 복원한다.
 #pragma once
 #include "o/RawPacketDispatch.h"
+#include <array> // 비Login 수신도 같은7DWORD owner에 직접 저장한다.
 #include <functional>
 
 namespace netstorm::o {
@@ -34,4 +35,5 @@ private:
 };
 //0040b91a가 선택한 실제0x32/version1/정책0/자연ret4 observer와 수신기를 등록한다.
 void RegisterMissionSettingsPacket(RawPacketDispatch& dispatch,RawMissionSettingsPacket& packet);
+void RegisterMissionSettingsPacket(RawPacketDispatch& dispatch,std::array<std::uint32_t,7>& current); // Editor/현재 Session은 송신 객체 없이 같은 원문7DWORD 수신을 등록한다.
 }

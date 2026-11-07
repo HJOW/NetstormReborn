@@ -136,7 +136,8 @@
 #include "o/RawBattleNuggetPlacement.h" // 비미션 보충도 원문 지역 난수와 실제 Factory/배치/Pop을 사용한다.
 #include "o/RawBattleResourceOptions.h" // 주기 SP 통지 검증도 같은 현재87BYTE와 원문 표를 조회한다.
 #include "o/RawBattleResourceFrame.h" // 일반 게임 프레임의 스펠/SP/간헐천을 같은 실제 장치에 연결한다.
-#include "o/RawRemoteTellPacket.h" // 비용 부족/메타 안내의 실제70h를 같은 공유 등록표와 현재 Tell에 연결한다.
+#include "o/RawRemoteTellPacket.h"
+#include "o/RawDeveloperCommandPacket.h" //31h 현재 문자열/길이 관찰과 실제 해석기를 연결한다. // 비용 부족/메타 안내의 실제70h를 같은 공유 등록표와 현재 Tell에 연결한다.
 #include "o/OriginalText.h" // 실제 원격 Tell의 표시 바이트를 같은 UI UTF-8 경계에서 변환한다.
 #include "o/RawConstructionFailurePackets.h" // 비용실패의실제6ch/2fh와현재예측객체정리를공유한다.
 #include "o/RawSquidReceive.h" // 전체 객체 수신/검증도 같은 Factory·소유자·현재 공간을 사용한다.
@@ -278,6 +279,7 @@
 #include "client/OwnerColorMaps.h"
 #include "client/OwnerColorTableState.h"
 #include "client/RawCampaignCursorDisplay.h"
+#include <algorithm> // 개발자 패널의 원문 행/열 제한을 같은 signed 정수로 적용한다.
 #include <bit>
 #include <cstdio>
 #include <iostream>
@@ -328,7 +330,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,39> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30,0x33,0x34,0x35}; // Path와 공간33h/카메라34h/섬35h 수신도 같은 Session 등록/해제 수명을 따른다.
+constexpr std::array<std::uint32_t,41> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30,0x33,0x34,0x35,0x31,0x32}; // 개발자31h/현재 설정32h도 같은 실제 Session 등록/반납 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -417,6 +419,7 @@ struct RawCampaignSession::Impl {
     ChatRelayHooks ChatDevices(); // 같은 현재 Player/연결 표와 UI를 중계 부모에 공급한다.
     void SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet); // 준비된 현재 로컬 전송의 observer와 큐에 원시 패킷을 넘긴다.
     void SendRemoteTell(std::uint32_t owner,std::string_view section,bool others); // 같은실제mutable송신을004c9150/4c9200부모에제공한다.
+    void ExecuteDeveloperCommand(std::string_view text); //44dc70의 현재 설정/생성·삭제·피해/배치 명령과 미접합 분기 진단이다.
     void ReceiveSquid(std::span<const std::uint8_t> packet); //2ch/7ah의 같은00433c30 본문과 현재 실제 장치를 공유한다.
     void ReceiveGunPacket(std::span<const std::uint8_t> packet); //0046a0c0의 신규 Form/기존 PID 수신을 같은 Kernel과 현재 총 본체에 연결한다.
     void ReceiveAviaryPacket(std::uint32_t message,std::span<const std::uint8_t> packet); //38h/73h/74h의 같은 생성자/decoder·현재 PID/명시 Form 부착이다.
@@ -615,6 +618,7 @@ struct RawCampaignSession::Impl {
     std::vector<DudeNoticeTypeData> dudeSpeeds; // 실제 TYPE 이동속도의 현재 mutable 보충 표다.
     std::unique_ptr<RawPlayerDamageNotice> playerDamage; // 같은 Player9/모드의 실제 AI 조회와 피해 통지 래퍼다.
     std::unique_ptr<RawAiDamage> aiDamage; // 같은 AI 본체·목록에 실제 피해 대상/공격자 반응을 기록한다.
+    std::function<std::int32_t(Sid,std::uint32_t,std::int32_t,std::uint32_t)> developerDamage; // 실제 가상98 분배를 기존 정기 피해와 공유하며 새 피해 공식을 만들지 않는다.
     std::unique_ptr<RawCampaignHitBindings> hits; // 같은 피해/감시/충돌/주변Dude/자산수명 처리기다.
     SquidPostPopList& dudePopulation{world.Storage()->sidLists.dudes}; //같은 장기30칸 population/count를 생성/행동/삭제가 직접 빌린다.
     std::int32_t dudeProviderIndex{}; //0055a4fc의현재공급자 보행 순환 전역이며 초기값은0이다.
@@ -943,6 +947,7 @@ struct RawCampaignSession::Impl {
         constructionState.place.sharedAuthority=constructionState.clear.sharedAuthority=constructionState.notice.sharedAuthority=constructionState.geyser.sharedBoss=&gameplayGlobals->Authority()->boss; // 건설 하위 네 몸체는 Prepare 사본을 기다리지 않는다.
         buildingState.sharedBoss=geyserMinedState.sharedBoss=&gameplayGlobals->Authority()->boss; // 진행·표시·음향 효과 뒤에도 같은 현재 boss를 조회한다.
         buildingState.currentProcessType=&gameplayGlobals->GameAux()->ConstructionProcessType(); // 생성/수신/볼텍스의 같은 현재005410e8을 Session보다 긴 owner에서 빌린다.
+        buildingState.quickBuild.Bind(gameplayGlobals->GameAux()->QuickBuild());buildingState.quickVortex.Bind(gameplayGlobals->GameAux()->QuickVortex()); // 두 현재 개발자 DWORD를 건설 Run의 원문 관문마다 읽는다.
         constructionState.place.sharedServer=buildingEffectsState.sharedServer=&gameplayGlobals->Authority()->server; // Take와 섬 전파는 boss와 독립인 실제 server를 읽는다.
         buildingEffectsState.sharedBlocked=&gameplayGlobals->GameAux()->IslandDropBlocked();buildingEffectsState.sharedStumpType=&gameplayGlobals->GameAux()->IslandStumpType(); // 객체 로딩 깊이가 아닌 실제 섬 정리 억제/그루터기 전역이다.
         buildingEffectsState.sharedIslandType=&core.bridgeState.islandType;buildingEffectsState.sharedNoIslandType=&core.bridgeState.noIslandType;buildingEffectsState.sharedStalagType=&core.bridgeState.stalagType; // 현재 지면/연결 몸체가 소유한 동일 TYPE 주소를 빌린다.
@@ -1418,6 +1423,7 @@ struct RawCampaignSession::Impl {
             }
             throw std::logic_error("예약 피해의 다른 실제 가상98 미복원 TYPE"+std::to_string(core.pool.Slot(victim)[10]));
         };
+        developerDamage=assetEffects.regular.hitPoints; // 동일 실제 가상98 callback을31h applydamage와 공유한다.
         // Damageable의 실제6700 재시도는 같은30/17/47·시계·HP·수명을 사용하는 기존 건설 시작으로 전달한다.
         assetEffects.regular.startConstruction=[this](Sid parent,float duration) {
             if (!building) throw std::logic_error("실제 건설 시작의 세션 처리기 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,duration);
@@ -4514,6 +4520,50 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
         if (s.core.processState.Server()) s.broadcast->Send(packet);
     });
 }
+// 현재 Client 전역과 같은 세계를 사용한다. 알려진 미접합 진단 분기는 성공으로 삼키지 않는다.
+void RawCampaignSession::Impl::ExecuteDeveloperCommand(std::string_view text) {
+    const std::string input(text.substr(0,text.find('\0')));std::array<char,256> token{};if (std::sscanf(input.c_str(),"%255s",token.data())!=1) throw std::invalid_argument("개발자 명령의 미정 첫 토큰");
+    std::string key(token.data()); // 19문자인 setbridgekillperiod도 보존하며 원문 겹친 스택 버퍼 자체는 복제하지 않는다.
+    for (auto& letter:key) if (letter>='A' && letter<='Z') letter=static_cast<char>(letter+('a'-'A')); // 원문 고정 ASCII 명령 이름만 대소문자를 합친다.
+    std::array<int,2> arguments{}; // 선택된 sscanf가 쓸 두 signed DWORD이며 미기입 원문 지역값을0으로 사용하지 않는다.
+    const auto one=[&] { return std::sscanf(input.c_str(),"%*s %d",&arguments[0]); }; // 원문 한 정수 분기의 추가 토큰 무시를 보존한다.
+    const auto two=[&] { return std::sscanf(input.c_str(),"%*s %d %d",&arguments[0],&arguments[1]); }; // 원문 두 정수 분기의 성공 개수만 반환한다.
+    const auto required=[&] { if (one()!=1) throw std::invalid_argument("개발자 명령의 원문 미정 정수 입력");return arguments[0]; }; // uninitialized stack 자체는 합성하지 않는다.
+    const auto log=[this](std::string_view message) { world.Storage()->TraceGraph(29,message); }; // 실제4c2630 수준29의 같은 출력/필터 장치를 사용한다.
+    const auto sid=[this](int value) { if (value<0 || value>65535 || static_cast<std::uint32_t>(value)>=core.pool.Capacity()) throw std::out_of_range("개발자 명령의 현재 SID 물리 범위");return Sid{static_cast<std::uint16_t>(value)}; }; // 유효한 원문 low SID를 물리 풀로 연결한다.
+    auto& aux=*gameplayGlobals->GameAux();auto& settings=aux.MissionSettings(); // 모든 명령/수신이 공유하는 현재 주소이며 새 명령이 초기화하지 않는다.
+    if (key=="sethackmove" || key=="shm") { settings[1]=required()!=0;log("hackmover now "+std::to_string(settings[1])+"\n");return; }
+    if (key=="setnodamage" || key=="snd") { settings[2]=required()!=0;log("nodamagedebug now "+std::to_string(settings[2])+"\n");log("requested server to do same.\n***Not echoed to other clients.  This will FUCK EVERYTHING!***\n");return; }
+    if (key=="shootmyfriends" || key=="smf") { const auto value=one()==1 ? arguments[0] : 1;settings[3]=value!=0;return; }
+    if (key=="fillmytank" || key=="fmt" || key=="generatortimer" || key=="gt") { if (one()!=1 || arguments[0]<0) { log("bad command\n");return; }settings[key=="fillmytank" || key=="fmt" ? 4U : 0U]=key=="fillmytank" || key=="fmt" ? static_cast<std::uint32_t>(arguments[0]) : static_cast<std::uint32_t>(arguments[0]!=0);return; }
+    if (key=="quickvortex" || key=="qv") { aux.QuickVortex()=required()!=0;return; }
+    if (key=="quickbuild" || key=="qb") { const auto value=one()==1 ? arguments[0] : 1;aux.QuickBuild()=value!=0;return; }
+    if (key=="roundtotile" || key=="rtt") return; // 실제10.78의 두 분기는 인자를 읽지 않고 반환한다.
+    if (key=="combatgumpcolsrows" || key=="cr") {
+        if (two()!=2) { arguments[0]=3;arguments[1]=10; }settings[5]=static_cast<std::uint32_t>(std::clamp(arguments[0],1,3));settings[6]=static_cast<std::uint32_t>(std::clamp(arguments[1],1,16));
+        if (settings[5]*settings[6]>8) settings[0]=0;if (!services.developerQueue) throw std::logic_error("개발자 cr의 실제 입력 큐 미연결");services.developerQueue(aux.DeveloperCombatResizeCommand(),settings[5],settings[6]);return;
+    }
+    if (key=="setally" || key=="sally" || key=="clrally" || key=="cally") { if (two()==2) participation->AddAlly(static_cast<std::uint32_t>(arguments[0]),static_cast<std::uint32_t>(arguments[1]));return; } // PATCH PE의 두 명령은 실제 같은48f6a0을 호출한다.
+    if (key=="destroy" || key=="de") { if (!core.processState.Server() || one()!=1) return;const auto target=sid(arguments[0]);if (!(core.pool.Slot(target)[11]&1U)) world.Destroy(target,0);return; }
+    if (key=="create" || key=="c") {
+        if (two()!=2) { log("bad command.\n");return; }if (!core.processState.Server()) return;const auto target=world.Create(static_cast<std::uint32_t>(arguments[0]),0);if (!target.value) throw std::logic_error("개발자 create의 원문 NULL 슬롯");Put(core.pool.AllocatedBytes(target),36,std::bit_cast<std::uint32_t>(arguments[1]));world.Pop(target,20.0F,20.0F,0);return; // PE는 입력 두 정수 뒤 직접frame/고정20·20을 쓴다.
+    }
+    if (key=="scatter" || key=="sct") {
+        if (one()!=1) { log("bad command.\n");return; }if (!core.processState.Server()) return;
+        for (int x=3;x<33;x+=3) { // 원문3..30 열마다 같은 factory와15비트 CRT를 한 번씩 사용한다.
+            const auto target=world.Create(static_cast<std::uint32_t>(arguments[0]),0);if (!target.value) throw std::logic_error("개발자 scatter의 원문 NULL 슬롯");const auto type=core.pool.Slot(target)[10];if (type>=core.frames.size()) throw std::out_of_range("개발자 scatter의 현재 TYPE 물리 범위");const auto count=core.frames[type].Codes().size();const auto roll=particleCrt.Next();if (!count || count>0x7fffffffU) throw std::out_of_range("개발자 scatter의 원문 나눗셈 프레임 개수");
+            const auto frame=roll%static_cast<std::uint32_t>(count);const auto y=static_cast<float>(aux.DeveloperScatterRow());Put(core.pool.AllocatedBytes(target),36,frame);world.Pop(target,static_cast<float>(x),y,0);
+        }
+        aux.DeveloperScatterRow()=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(aux.DeveloperScatterRow())+2U)%10;return;
+    }
+    if (key=="setabstract" || key=="sa") {
+        if (two()!=2) { log("bad command.\n");return; }const auto target=sid(arguments[0]);world.Unpop(target,0);auto raw=core.pool.AllocatedBytes(target);if (!(raw[11]&4U)) world.Storage()->AssertDisplay("isVoid()","c:\\ns\\o\\squid.h",0x282);raw=core.pool.AllocatedBytes(target);raw[40]^=static_cast<std::uint8_t>((raw[40]^static_cast<std::uint8_t>(arguments[1]))&1U);world.Repop(target,0);return;
+    }
+    if (key=="applydamage" || key=="ad") { if (two()!=2 || arguments[0]<0) { log("bad command\n");return; }if (!developerDamage) throw std::logic_error("개발자 피해의 실제 가상98 미연결");developerDamage(sid(arguments[0]),std::bit_cast<std::uint32_t>(arguments[1]),0,0);return; }
+    for (const auto pending:{"help","?","setsubid","ssi","setbridgekillperiod","sbkp","dump","d","setowner","so","dumptypes","dts","dumptype","setlocalhitpoints","slhp","settracelevel","stl","heaptrace","ht","dumpartdata","dad","dumpplayers","dp","dumpgraph","dg","dumpally","dally","querydirectdraw","qdd","addlabel","al","getpriest","gp"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
+        if (key==pending) throw std::logic_error("개발자 명령의 실제 후속 본체 미접합: "+key);
+    }
+}
 //433c30은 별도 세계나 새 Player 기록을 만들지 않으며 압축 decoder도 직접 같은 본문을 사용한다.
 void RawCampaignSession::Impl::ReceiveSquid(std::span<const std::uint8_t> packet) {
         auto& s=*this;SquidReceiveHooks hooks;const auto diagnose=[&s](auto expression,auto file,auto line) { s.world.Storage()->AssertDisplay(expression,file,line); };
@@ -4598,6 +4648,8 @@ void RawCampaignSession::Impl::ReceiveFlyerPacket(std::span<const std::uint8_t> 
 // 실제 초기 등록과 같은 버전/정책과 각 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");
+    RegisterDeveloperCommandPacket(dispatch,[this](auto text) { impl_->ExecuteDeveloperCommand(text); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); //31h의 현재 수신은 일반/단독/Editor가 같은 본체를 사용한다.
+    RegisterMissionSettingsPacket(dispatch,impl_->gameplayGlobals->GameAux()->MissionSettings()); // Login 밖에서도 현재7DWORD에 직접 저장한다.
     // 세 원문 observer0040b380은 송수신 모두 자연 반환하며 버전1/정책0이다. 고정 길이는 보호 PE 표와 같다.
     for (const auto entry:std::array<std::pair<std::uint32_t,std::uint16_t>,3>{{{0x33U,std::uint16_t{18}},{0x34U,std::uint16_t{12}},{0x35U,std::uint16_t{20}}}}) { dispatch.Observe(entry.first,{});dispatch.Version(entry.first,1,0);dispatch.RequireLength(entry.first,entry.second); }
     dispatch.Register(0x33,[this](auto,auto&,auto packet) { //4a71c0: 예약 SID를 제외하고 현재 살아 있는 자산만 실제 Unpop/직접frame/Pop한다.

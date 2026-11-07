@@ -33,8 +33,8 @@ struct ConstructionProcessState {
     bool boss{true};                     // 00540bc4 / 00540a2c: 권한 쪽에서만 건설을 끝내고 abstract를 푼다.
     std::uint32_t pushGenus{0x10444200}; // 005325b4 / 0053fc28: 완성 뒤 발자국의 유닛을 밀어내는 genus 마스크다.
     std::uint32_t daisType{165};         // 005412ec / 0051cbd8: form 삭제 통지가 HP를 채우지 않는 타입이다.
-    bool quickBuild{};                   // 0055a49c / 00537eb4: 콘솔 명령 quickbuild(qb). 켜져 있으면 모든 건설이 한 프레임에 끝난다.
-    bool quickVortex{};                  // 0055a498 / 00537eb0: 콘솔 명령 quickvortex(qv). genus 0x200(vortex)의 건설만 바로 끝낸다.
+    RawCheckingFlag quickBuild{};        // 0055a49c / 00537eb4의 현재 비영 뷰이며 모든 건설을 한 프레임에 끝낸다.
+    RawCheckingFlag quickVortex{};       // 0055a498 / 00537eb0의 현재 비영 뷰이며 genus0x200 신전 건설만 바로 끝낸다.
     const bool* sharedBoss{}; // 실제 Client boss를 건설 진행/완료 실행기보다 오래 빌린다.
     RawCheckingFlag checking; //Run 입구에서만 읽는 같은 Client 진단 DWORD이며 독립 기본값은0이다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // HP·표시·소리 효과 뒤 각각의 완료 관문에서 현재값을 읽는다.
