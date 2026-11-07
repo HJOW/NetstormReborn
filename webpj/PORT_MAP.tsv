@@ -508,7 +508,7 @@ cpppj/src/o/RawAllocationFailure.cpp	exclude-host			-	[host-memory]
 cpppj/src/o/RawAltarReleaseParent.cpp	port	www/core/raw-altar-release-parent.js	1f00a25a	port	[o-default] WB04-E15: 00448bd0 제단 해방 부모(진단·해방·Unpop·P 프레임·Repop). fixture altar-release-parent-hardware 10.78 1596행 전부
 cpppj/src/o/RawAltarSacrifice.cpp	port			todo	[o-default]
 cpppj/src/o/RawAmbientSound.cpp	port			todo	[o-default]
-cpppj/src/o/RawAmbientWind.cpp	port			todo	[o-default]
+cpppj/src/o/RawAmbientWind.cpp	port	www/core/raw-ambient-wind.js	1f00a25a	port	[o-default] WB04-E17: 004dd2b0 공유 바람 갱신(감쇠·잡음 난수·atan2 각도·Boardcoord 정규화, 10.78 경로). fixture ambient-wind-hardware originals 960행 전부. Client Storage 수명 대조는 해당 단위에서
 cpppj/src/o/RawArcherAnimation.cpp	port			todo	[o-default]
 cpppj/src/o/RawArcherTypeData.cpp	port			todo	[o-default]
 cpppj/src/o/RawArcSpire.cpp	port			todo	[o-default]
@@ -528,7 +528,7 @@ cpppj/src/o/RawBattleBroadcast.cpp	port			todo	[o-default]
 cpppj/src/o/RawBoardAngle.cpp	port	www/core/raw-board-angle.js	1f00a25a	port	[o-default] WB04-E15: 0041cdb0 Boardcoord 각도 정규화(10.78 경로). fixture board-angle-hardware originals 544행 전부
 cpppj/src/o/RawBoardApproach.cpp	port			todo	[o-default]
 cpppj/src/o/RawBoardTarget.cpp	port			todo	[o-default]
-cpppj/src/o/RawBombActivation.cpp	port			todo	[o-default]
+cpppj/src/o/RawBombActivation.cpp	port	www/core/raw-bomb-activation.js	1f00a25a	port	[o-default] WB04-E17: 0x5c/41e860 주문 활성화 수신(원격 비용·genus 진단·할당·예약). fixture bomb-activation 10.78 434행 전부
 cpppj/src/o/RawBombBlast.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombEffect.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombEffectTimer.cpp	port			todo	[o-default]

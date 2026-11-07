@@ -3467,7 +3467,7 @@
       "bytes": 18762,
       "lines": 289,
       "fixtureCommit": "f724baa7",
-      "webCommit": "worktree",
+      "webCommit": "058a0688",
       "cpppjBasis": {
         "cpppj/src/o/RawNuggetPostPop.cpp": "f724baa7"
       }
@@ -3496,7 +3496,7 @@
       "bytes": 3013,
       "lines": 519,
       "fixtureCommit": "29b16c52",
-      "webCommit": "worktree",
+      "webCommit": "058a0688",
       "cpppjBasis": {
         "cpppj/src/o/RawGunAngle.h": "e98bb51f"
       }
@@ -3525,9 +3525,68 @@
       "bytes": 24240,
       "lines": 385,
       "fixtureCommit": "e98bb51f",
-      "webCommit": "worktree",
+      "webCommit": "058a0688",
       "cpppjBasis": {
         "cpppj/src/o/RawGunAngle.h": "e98bb51f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E17",
+      "id": "bomb-activation",
+      "path": "cpppj/tests/fixtures/bomb-activation-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 주문 활성화 수신의 원격 비용/진단/할당/예약 호출 인자와 부모 50 BYTE(두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/bomb-wind.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-activation.js"
+      ],
+      "doc": "docs/webpj-bomb-wind-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombActivation.cpp"
+      ],
+      "scope": "434행 전부 사용",
+      "text": true,
+      "sha256": "0b38f77761eaf3c33d98e46903192d45724502b482066698ca3a4f0a419af67f",
+      "bytes": 115006,
+      "lines": 435,
+      "fixtureCommit": "d43f1d29",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombActivation.cpp": "d43f1d29"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E17",
+      "id": "ambient-wind-hardware",
+      "path": "cpppj/tests/fixtures/ambient-wind-hardware-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 공유 바람의 장기 감쇠·난수 소비·각도 정규화 시퀀스(세 float 비트·게임 난수 상태·checking·진단)",
+      "consumers": [
+        "webpj/tests/bomb-wind.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ambient-wind.js",
+        "webpj/www/core/raw-board-angle.js"
+      ],
+      "doc": "docs/webpj-bomb-wind-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAmbientWind.cpp"
+      ],
+      "scope": "1920행 중 originals(10.78) 960행 사용. originalCD 960행 제외",
+      "text": true,
+      "sha256": "8d653588b6e676c85f7cd292677699df4a3702bb6ab268b5697caea19b04c999",
+      "bytes": 199920,
+      "lines": 1920,
+      "fixtureCommit": "e5a198df",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAmbientWind.cpp": "e5a198df"
       }
     }
   ]
