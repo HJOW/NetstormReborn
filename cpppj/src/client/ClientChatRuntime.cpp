@@ -108,7 +108,8 @@ bool ResolveClientChatIdentity(Client& client,const RawSurfaceStorage& surface,s
     o::PlayerIdentityReads reads;reads.localOwner=[&client] { return client.GameplayGlobals()->player.battleOwner; };reads.subscriber=[&client] { return client.CurrentSubscriber(); };
     reads.address=[&client] { return client.GameplayGlobals()->LocalAddress(); };reads.name=[currentName] { return currentName; }; //원문이읽는현재로컬정보를같은동기호출동안빌린다.
     reads.battle=[&surface] { return surface.ownerMode.battle; };reads.editor=[&client] { return client.GameplayGlobals()->world.editor!=0; };reads.metamap=[&surface] { return surface.ownerMode.challenge; }; //모드에따른실제검색순서는기존원문본문에남긴다.
-    o::RawPlayerIdentity identity(client.Edition(),client.CoreDataGlobals()->Players(),{},client.ChatRecords(),std::move(reads));return identity.Resolve(record); //메타맵기록은선택시기존명시경계로남으며일반Player/Chat행으로대체하지않는다.
+    reads.metaRecords=[&client]()->std::span<const std::uint8_t> { return client.ChallengeGlobals()->Bytes().subspan(o::kChallengeParticipantOffset,o::kChallengeParticipantCount*o::kChallengeParticipantBytes); }; //같은현재CS를메타분기에서만조회하므로일반모드/로컬일치에서없는CS를선행요구하지않는다.
+    o::RawPlayerIdentity identity(client.Edition(),client.CoreDataGlobals()->Players(),{},client.ChatRecords(),std::move(reads));return identity.Resolve(record); //현재표의40활성기록과원문부분완료/채팅후속검색을같은기존몸체가수행한다.
 }
 //현재이름getter는매Identity진입에서다시읽고두UI소비자가같은검사부모를사용한다.
 void BindClientChatRecipients(RawChatWindowContext& context,Client& client,std::shared_ptr<RawSurfaceStorage> surface,std::function<std::string_view()> currentName) {

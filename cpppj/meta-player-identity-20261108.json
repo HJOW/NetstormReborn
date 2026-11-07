@@ -1,0 +1,60 @@
+{
+  "unit": 1109,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12548608,
+      "sha256": "378d1733bdb27457685c07d1a659bddd131d5756434a2ed660e1c8ddff95d5f8"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "30cc12aea3d65535a0e9ca3b722b18394ab7264dd3629d954fb5829b7ae5a98f"
+    }
+  },
+  "staticAudit": {
+    "native": "004841c0의로컬/Player뒤현재메타40기록과Chat100후속순서를유지",
+    "provider": "실제메타분기/메타메뉴의MetaRecords 도달때만현재CS+b70/40×1cc를대여",
+    "legacy": "provider 미공급의기존고정span·CD296검증은유지.신규실제Client CS 장치는PATCH전용",
+    "lookup": "기존활성/이름/subscriber/부분완료/Chat후속몸체를유지하며일반모드/로컬일치에서CS를선행요구하지않음"
+  },
+  "integration": {
+    "clientChatCurrentMetaRecordsBound": true,
+    "nsInfoMetaMenusBound": false,
+    "nsInfoThreeHandleBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "NSInfo 세 Handle/메타 참가자 메뉴·카메라/1107슬롯·1108송신 UI 호출",
+    "CS 수신/참가자·전투섬 생성·카메라 Rig/HTML",
+    "1dh/28~33 등록 및1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

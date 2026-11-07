@@ -71,10 +71,10 @@ bool RawPlayerIdentity::Resolve(PlayerIdentityRecord& record) const {
         if (Read(record,0) && Read(record,4) && record[kName]) return true;
     }
     if (Required(reads_.metamap)()) {
-        if (meta_.empty()) throw std::logic_error("실제 metamap 식별자 기록 미연결");
+        const auto meta=MetaRecords();if (meta.empty()) throw std::logic_error("실제 metamap 식별자 기록 미연결");
         // 실제40개의 활성 기록만 subscriber 또는 이름으로 비교한다. owner는 match 조건이 아니다.
         for (std::size_t index=0;index<kMetaCount;++index) {
-            const auto entry=meta_.subspan(index*metaStride,metaStride);const bool active=patch ? (entry[0x64]&1)!=0 : (Read(entry,0x48)&1)!=0;const auto nameOffset=patch ? 0x26U : 8U;
+            const auto entry=meta.subspan(index*metaStride,metaStride);const bool active=patch ? (entry[0x64]&1)!=0 : (Read(entry,0x48)&1)!=0;const auto nameOffset=patch ? 0x26U : 8U;
             if (active && ((Read(record,4) && Read(record,4)==Read(entry,4)) || (record[kName] && Equal(Text(record,kName,kTerminatedNameBytes),Text(entry,nameOffset,40))))) {
                 Put(record,0,Read(entry,0));Put(record,4,Read(entry,4));SetName(record,Text(entry,nameOffset,40));Put(record,kAddress,0);break;
             }
@@ -104,8 +104,8 @@ std::string RawPlayerIdentity::NameForOwner(std::uint32_t owner) const { PlayerI
 OriginalEdition RawPlayerIdentity::Edition() const { return edition_; }
 // 호출자가 같은 현재9 Player를 사용하게 한다.
 std::span<const std::uint8_t> RawPlayerIdentity::PlayerRecords() const { return players_; }
-// 메뉴 metadata는 같은40개 기록을 빌린다.
-std::span<const std::uint8_t> RawPlayerIdentity::MetaRecords() const { return meta_; }
+// 현재CS getter는실제로메타검색/메타메뉴가도달한때만읽는다.고정span의기존독립계약도유지한다.
+std::span<const std::uint8_t> RawPlayerIdentity::MetaRecords() const { const auto bytes=reads_.metaRecords ? reads_.metaRecords():meta_;const auto stride=edition_==OriginalEdition::Patch1078 ? 460U:296U;if (!bytes.empty() && bytes.size()!=kMetaCount*stride) throw std::invalid_argument("현재 Player 식별자 메타40기록 물리 크기 오류");return bytes; }
 // 현재 모드/로컬 식별자 getter를 다른 실제 소비자와 공유한다.
 const PlayerIdentityReads& RawPlayerIdentity::CurrentInputs() const { return reads_; }
 }

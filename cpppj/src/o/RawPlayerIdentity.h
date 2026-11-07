@@ -14,6 +14,7 @@ struct PlayerIdentityReads {
     std::function<std::string_view()> name; // PATCH540ca8/CD50f6d0이 가리키는 현재 원본 바이트 문자열이다.
     std::function<bool()> battle,editor,metamap; // 각 원본 모드를 호출 위치에서 현재 값으로 조회한다.
     std::function<std::string_view()> unknownName; // 이름 getter 실패의 SOMEONE 포인터이며 실제 내용은 호출자가 공급한다.
+    std::function<std::span<const std::uint8_t>()> metaRecords; //실제메타분기에서만현재CS+b70의40기록을빌린다.미공급독립호출자는기존고정span을유지한다.
 };
 // PATCH004841c0/CD00401610과 실제 초기화/네 getter다. 채팅·Player·metamap 기록을 직접 빌린다.
 class RawPlayerIdentity {
