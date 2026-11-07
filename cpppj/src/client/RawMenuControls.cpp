@@ -28,6 +28,8 @@
 #include "client/RawNsInfoContext.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/HudNsInfoCreate.h"
+#include "client/HudNsInfoMeta.h" //메타루트/참가자순서도같은CS·공통문자/트리를사용한다.
+#include "o/RawPlayerNotification.h" //원문참가자기술합계는현재TYPE기반공통몸체를재사용한다.
 #include "client/NativeMetaDisplay.h"
 #include "client/NativeMetaScene.h"
 #include "client/RawTextEntryControls.h"
@@ -322,7 +324,32 @@ struct RawMenuControls::Impl {
         default:return std::string(nsContext->text(token));
         }
     }
-    // 전체 원문 생성자는 기존 실제 하위 처리기에만 연결한다. 메타맵 전체 후속은 선택 시 거부한다.
+    // 소유문자열의기존반납/새토큰/현재노드저장순서를도움말과메타창이공유한다.
+    void SetNodeHelp(std::uint32_t token,std::string_view text,bool word) {
+        auto* node=common.node(token);if (!node) throw std::out_of_range("도움말 실제 노드 없음");auto& pointer=word ? node->alternateTextPointer:node->textPointer;helpStrings.erase(pointer);pointer=0;
+        if (nextHelpString==0x61ffffffU) throw std::overflow_error("도움말 문자열 주소 영역 소진");const auto value=++nextHelpString;helpStrings.emplace(value,text);pointer=value;
+    }
+    // 선택된메타분기만실제CS owner를요구하고현재모드/known/owner주소를빌린다.
+    HudNsInfoMetaGlobals NsMetaGlobals() const {
+        if (!nsContext || !nsContext->challenge) throw std::logic_error("NSInfo 메타의 실제 CS owner 미연결");return {*nsContext->challenge,*nsContext->globals,nsContext->storage->ownerMode.challenge,nsContext->gameplay->player.playerKnown,nsContext->gameplay->player.battleOwner};
+    }
+    // 별도UI복사본없이같은파생노드/버퍼·StyleText/서버문자열·실제Pool/TYPE를연결한다.
+    HudNsInfoMetaHooks NsMetaHooks() {
+        HudNsInfoMetaHooks h;h.root=[this](auto token)->HudNsInfoNode& { const auto found=Find(nsRoots,token);if (!found) throw std::out_of_range("NSInfo 메타 루트 저장소 없음");return *found; };
+        h.player=[this](auto token)->HudPlayerInfoNode& { const auto found=Find(nsPlayers,token);if (!found) throw std::out_of_range("NSInfo 메타 PlayerInfo 저장소 없음");return *found; };
+        h.battle=[this](auto token)->HudBattleInfoNode& { const auto found=Find(nsBattles,token);if (!found) throw std::out_of_range("NSInfo 메타 BattleInfo 저장소 없음");return *found; };
+        h.node=[this](auto token)->GumpCreateNode& { auto* node=common.node(token);if (!node) throw std::out_of_range("NSInfo 메타 실제 공통 노드 없음");return *node; };
+        h.push=[this](auto token) { common.tree.Push(token); };h.attach=common.attach;h.fitHeight=[this](auto token) { title->FitHeight(token); };
+        h.replace=[this](auto token,std::string_view text) { const std::string bytes(text);title->ReplaceText(token,{bytes.data(),bytes.size()+1},0); };h.parse=[this](auto token,auto text) { titleMarkup->Parse(token,text); };h.wrap=[this](auto token,auto wrap) { titleWidgets->SetWrap(token,wrap); };
+        h.append=[this](auto token,std::string_view text,const auto& context,auto metadata) { const std::string bytes(text);title->AppendText(token,{bytes.data(),bytes.size()+1},context,-1,metadata); };h.read=[this](auto address) { return NsRead(address); };
+        h.objectOwner=[this](auto sid) { if (sid>65535U || sid>=nsContext->storage->pool.Capacity()) throw std::out_of_range("NSInfo 참가자 SID의 실제 Pool 범위");return std::uint32_t(nsContext->storage->pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)})[0x22]); };
+        h.weight=[this](auto core) { o::CoreTechnologyWeightHooks weight;weight.count=[this] { return static_cast<std::int32_t>(nsContext->storage->types.size()); };weight.type=[this](auto index) { const auto& type=nsContext->storage->types.at(static_cast<std::size_t>(index));return o::CoreTechnologyWeightType{type.techBitIndex,type.level}; };return o::CoreTechnologyWeight(core,weight); };
+        h.header=[this](bool battle) {
+            const auto format=nsContext->translate(battle ? "~w~E%s\nPlayers in Battle (Zone %d)\n":NsText(nsContext->globals->zoneFormat,true));const auto zone=std::bit_cast<std::int32_t>(nsContext->globals->zone);const std::string server(nsContext->globals->ResolveServerName(nsContext->translate));
+            std::array<char,256> text;const auto length=std::snprintf(text.data(),text.size(),format.c_str(),server.c_str(),zone);if (length<0 || static_cast<std::size_t>(length)>=text.size()) throw std::out_of_range("NSInfo 메타 제목의 실제256BYTE 범위");return std::string(text.data(),static_cast<std::size_t>(length));
+        };h.translate=[this](auto text) { return nsContext->translate(text); };h.helpText=[this](auto token,auto text) { SetNodeHelp(token,text,false); };h.helpWord=[this](auto token,auto text) { SetNodeHelp(token,text,true); };return h;
+    }
+    // 전체 원문 생성자는 기존 실제 하위 처리기에만 연결한다. 메타자식후속은각선택위치에서요구한다.
     void BindNs(RawNsInfoContext context) {
         if (!context.globals || !context.gameplay || !context.storage || !context.read || !context.translate || !context.storeText || !context.text || !context.constructButton || assets.Edition()!=o::OriginalEdition::Patch1078 || context.storage->Source()!=&assets) throw std::invalid_argument("NSInfo의 실제 Client/자산/문자열 연결 불일치");
         if (nsContext) { if (context.globals!=nsContext->globals || context.gameplay!=nsContext->gameplay || context.storage!=nsContext->storage) throw std::logic_error("NSInfo 실제 소유자 교체 전 정리 필요");return; }
@@ -344,6 +371,7 @@ struct RawMenuControls::Impl {
         h.assertion=[](auto line) { throw std::logic_error("NSInfo 원본 진단: "+std::to_string(line)); };h.metamapLayout=[](auto,auto) { throw std::logic_error("NSInfo 자식의 전체 메타맵 배치 미연결"); };
         nsCreate=std::make_unique<HudNsInfoCreate>(nsContext->globals->current,std::move(h));HudNsInfoHooks geometry;
         geometry.node=[this](auto token) { return Find(nsRoots,token); };geometry.base=common.node;geometry.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };geometry.push=[this](auto token) { common.tree.Push(token); };geometry.attach=common.attach;
+        geometry.metamapLayout=[this](auto token) { LayoutMetaNsInfo(token,NsMetaGlobals(),NsMetaHooks()); }; //일반앞단/관문뒤원문루트본문을같은실제배치장치로실행한다.
         nsGeometry=std::make_unique<HudNsInfo>(HudNsInfoModeView{[this] { return NsRead(0x594fc8); },[this] { return NsRead(0x595344); }},std::move(geometry));
     }
     // 전용 메타맵 입력은 미복원을 숨기지 않는다. 초기 일반 노드의 기본 Help는 같은 실제 경로다.
@@ -626,13 +654,11 @@ void RawMenuControls::RefreshMetaNsInfo(ClientNsInfoGlobals& globals) const {
 const StyleText& RawMenuControls::StyleBackend() const { return *impl_->style; } // 같은 조각 소유자다.
 // 초기 도움말 문자열도 다른 메뉴/생산 노드와 같은 공통 수명에서 반납한다.
 void RawMenuControls::SetHelpText(std::uint32_t token,std::string_view text) {
-    auto& s=*impl_;auto* node=s.common.node(token);if (!node) throw std::out_of_range("도움말 실제 노드 없음");s.helpStrings.erase(node->textPointer);node->textPointer=0;
-    if (s.nextHelpString==0x61ffffffU) throw std::overflow_error("도움말 문자열 주소 영역 소진");const auto value=++s.nextHelpString;s.helpStrings.emplace(value,text);node->textPointer=value;
+    impl_->SetNodeHelp(token,text,false);
 }
 // 현재 alternate 포인터만 교체하며 다른 기본 필드나 도움말 제목은 보존한다.
 void RawMenuControls::SetHelpWord(std::uint32_t token,std::string_view text) {
-    auto& s=*impl_;auto* node=s.common.node(token);if (!node) throw std::out_of_range("도움말 키 실제 노드 없음");s.helpStrings.erase(node->alternateTextPointer);node->alternateTextPointer=0;
-    if (s.nextHelpString==0x61ffffffU) throw std::overflow_error("도움말 키 주소 영역 소진");const auto value=++s.nextHelpString;s.helpStrings.emplace(value,text);node->alternateTextPointer=value;
+    impl_->SetNodeHelp(token,text,true);
 }
 void RawMenuControls::MeasureText(std::span<const char> bytes,const std::array<std::uint32_t,8>& context,std::int32_t& width,std::int32_t& height,std::uint32_t limit) const { impl_->metrics.Measure(bytes,DecodeGumpTextContext(context),width,height,std::bit_cast<std::int32_t>(limit)); } // 같은 원본 문맥과 signed 길이다.
 const GumpBackgroundCreate& RawMenuControls::BackgroundBackend() const { return *impl_->backgroundCreate; } // 같은 실제 자산이다.

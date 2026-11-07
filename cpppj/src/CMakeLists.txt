@@ -12,6 +12,7 @@
 add_library(netstorm STATIC)
 
 target_sources(netstorm PRIVATE client/NativeMetaScene.h client/NativeMetaScene.cpp) #1100:전체메타원격존배치·세이름표·현재TYPE/SHP진단과실제UI장치를복원한다.
+target_sources(netstorm PRIVATE client/HudNsInfoMeta.h client/HudNsInfoMeta.cpp) #1103:실제NSInfo메타루트배치·참가자순서표/행문맥을복원한다.
 
 target_sources(netstorm PRIVATE client/NativeMetaDisplay.h client/NativeMetaDisplay.cpp) #1097:메타 참가자/전투섬 갱신·이름표/8자리 배치와51존 정리 본체를 복원한다.
 

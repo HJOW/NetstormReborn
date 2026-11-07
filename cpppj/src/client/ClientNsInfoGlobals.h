@@ -10,6 +10,7 @@
 namespace netstorm::client {
 struct ClientNsInfoGlobals {
     std::uint32_t current{},zone{}; //593150/5467b8의 현재 NSInfo 포인터 토큰과 zone DWORD다.
+    std::array<std::uint32_t,40> rosterOrder{}; //005930b0..314f의실제정렬40DWORD이며목록갱신은1..39만쓴다.같은행입력도이표를빌린다.
     std::int32_t serverSelection{}; //54db4c의 BSS0이며 Interpret Options의 curServer가 갱신한다.
     std::int32_t passedDiags{}; //0054db70의 BSS0/현재 passedDiags 옵션이며 메타 요청의 진단 정보 비트를 쓴다.
     std::int32_t rootServerBroadcastPort{}; //0054db54의BSS0/InterpretOptions현재DWORD이며검색은Config문자열을다시파싱하지않고이값을읽는다.

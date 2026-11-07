@@ -1,0 +1,61 @@
+{
+  "unit": 1103,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "firstBuildExitCode": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12499456,
+      "sha256": "aa8d600750c887037b4d7505e2eb88de2684359e86062fae538858c1378e5f66"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "7c7126698e1fcc4eecb74a70666b24acb973870e61e372803033d88a1e8030c4"
+    }
+  },
+  "staticAudit": {
+    "roster": "0047e630 전체: 1..39 초기 순서·39×39 원문 교환·동률 기술 합계의 상대→현재 조회·행 번호 metadata·현재 팔레트 문맥",
+    "root": "0047e9d0 일반 앞단/모드 관문은 기존 HudNsInfo, 그 뒤 전체 메타 본체·두 도움말·8패널·실제 자식 Attach",
+    "devices": "같은 CS/정렬 표·현재 owner/known/metadataMode·공통 트리/문자/Markup/Wrap/Pool/기술 합계",
+    "numeric": "전체 함수 범위 기계어로 3/2/.5·행120BYTE·FST32 뒤 잔류 계산값·master/nonmaster의 ftol 위치 대조"
+  },
+  "integration": {
+    "rootAndRosterBound": true,
+    "playerInfoFullLayoutBound": false,
+    "battleInfoFullLayoutBound": false,
+    "metaInputAndButtonDrawBound": false,
+    "wholeMetaScreenComplete": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "PlayerInfo/BattleInfo 전체 배치·NSInfo 입력과 버튼 Draw",
+    "CS 수신/참가자·전투섬 생성·카메라 Rig와 HTML",
+    "1dh/28~33 등록 및1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

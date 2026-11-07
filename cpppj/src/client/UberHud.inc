@@ -38,8 +38,8 @@ void UberGump::EnsureHudFactories() {
             [this](const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) { if (!world_ || !objectMenus_) throw std::logic_error("생산 정보 입력의 현재 월드 미연결");return objectMenus_->OpenProduction(*world_,item,point,affordable); },
             [this](auto code) { return client_.Poll(code); },[this](auto cursor) { client_.GetCursor().Set(static_cast<int>(cursor)); },[this] { return client_.Time().game; }});return panel.RootToken(); };
         context.root.createKnowledge=[this] {
-            RawNsInfoContext data;data.globals=client_.NsInfoGlobals();data.gameplay=client_.GameplayGlobals();data.storage=client_.SurfaceStorage();
-            data.read=[this](auto address) { if (address==0x5411c8U) return static_cast<std::uint32_t>(client_.Assets().Find("fortGump").block+o::kFirstAssetTypeNumber);if (address==0x5bec3cU) return static_cast<std::uint32_t>(client_.GetScreen().Colors().basic[7]);throw std::out_of_range("전체 Uber NSInfo 현재 전역"); };
+            RawNsInfoContext data;data.globals=client_.NsInfoGlobals();data.challenge=client_.ChallengeGlobals();data.gameplay=client_.GameplayGlobals();data.storage=client_.SurfaceStorage();
+            data.read=[this](auto address) { if (address==0x5411c8U) return static_cast<std::uint32_t>(client_.Assets().Find("fortGump").block+o::kFirstAssetTypeNumber);if (address==0x5bec3cU) return client_.GetScreen().Colors().basic[8];if (address==0x59afd8U) return client_.GetScreen().Colors().basic[5];if (address==0x5c78d0U) return client_.GetScreen().Colors().named.at(36).index;if (address==0x5c85c8U) return client_.LocalStateGlobals()->MetadataMode();throw std::out_of_range("전체 Uber NSInfo 현재 전역"); };
             data.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };data.storeText=[this](auto text) { return client_.ChatWindowGlobals()->Store(text); };
             data.text=[this](auto token) -> std::string_view { return client_.ChatWindowGlobals()->strings.at(token); };return rawButtons_->ConstructNsInfo(std::move(data));
         };
