@@ -15,6 +15,23 @@ public class SquidProcess : BaseProcess
     /// <summary>커널의 프로세스 등록 번호다. 부착 전에는 0이다. Host가 Kill 뒤 등록 여부를 물을 때 쓴다. Host 본체 단위에서 붙인다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     private uint _pid = 0u;
 
+    /// <summary>부착한 host다. 부착 전에는 null이다. Host 본체 단위에서 붙인다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+    internal SquidProcessHost? HostLink { get; set; }
+
+    /// <summary>독립 월드 최종 fallback은 자기 대여가 만든 프로세스만 반납한다. Host 본체 단위에서 붙인다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+    internal ProcessHostRuntimeBindings? RuntimeLink { get; set; }
+
+    /// <summary>부착·재수신 때 식별자를 한 번에 둔다. 원문 friend 쓰기와 같다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+    /// <param name="form">쓸 Form SID다.</param>
+    /// <param name="parent">쓸 부모 SID다.</param>
+    /// <param name="pid">쓸 커널 등록 번호다.</param>
+    internal void SetIdentity(int form, int parent, uint pid)
+    {
+        _form = form;
+        _parent = parent;
+        _pid = pid;
+    }
+
     /// <summary>부모의 종속 체인에 들어 있는 form이다. 부착 전에는 0이다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <returns>Form SID다.</returns>
     public int Form() => _form;
@@ -48,6 +65,10 @@ public class SquidProcess : BaseProcess
     {
         throw new InvalidOperationException("복원하지 않은 파생 프로세스 통지");
     }
+
+    /// <summary>부착한 host다. 부착 전에는 null이다. Host 본체 단위에서 잇는다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
+    /// <returns>부착한 호스트다. 부착 전에는 null이다.</returns>
+    protected SquidProcessHost? Host() => HostLink;
 
     /// <summary>부착한 host다. 부착 전에는 null이다. Host 본체 단위에서 잇는다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <returns>커널의 프로세스 등록 번호다. 부착 전에는 0이다.</returns>
@@ -130,4 +151,32 @@ public sealed class RegularProcess : SquidProcess
     /// <summary>원문 SharedRegular의 실제 writer 가상 표와 일반 Regular를 구별한다. raw TYPE 변경으로 이 값을 추측하지 않는다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <returns>공유 생성분이면 참이다.</returns>
     public bool Shared() => _shared;
+}
+
+// 실제 선택 효과가 반환하기 전에 그 월드 대여를 소비하지 못하게 하는 호출 수명이다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.
+public sealed class RuntimeCallGuard : IDisposable
+{
+    /// <summary>호출 중 실제 처리기 묶음을 유지한다. null이면 아무것도 세지 않는다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+    private ProcessHostRuntimeBindings? _runtime;
+
+    /// <summary>같은 현재 대여만 증가시킨다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+    /// <param name="runtime">유지할 런타임 묶음이다. null이면 빈 guard다.</param>
+    public RuntimeCallGuard(ProcessHostRuntimeBindings? runtime)
+    {
+        _runtime = runtime;
+        if (_runtime is not null)
+        {
+            ++_runtime.ActiveCalls;
+        }
+    }
+
+    /// <summary>정상·예외 모두 실제 호출이 끝난 뒤 반납한다. 중첩 반납이 진행 중 호출을 소비하지 못하게 한다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+    public void Dispose()
+    {
+        if (_runtime is not null)
+        {
+            --_runtime.ActiveCalls;
+            _runtime = null;
+        }
+    }
 }

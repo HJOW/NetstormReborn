@@ -12,6 +12,10 @@ public sealed class RawSquidProcessTests
         /// <summary>부착 전 등록 번호를 공개한다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
         /// <returns>등록 번호다.</returns>
         public uint ExposedPid() => Pid();
+
+        /// <summary>부착 전 호스트를 공개한다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+        /// <returns>부착한 호스트다.</returns>
+        public SquidProcessHost? ExposedHost() => Host();
     }
 
     /// <summary>부착 전 식별자는 모두 0이다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
@@ -80,5 +84,73 @@ public sealed class RawSquidProcessTests
     public void RegularRunFrameThrowsUntilHost()
     {
         Assert.Throws<InvalidOperationException>(() => new RegularProcess(1u, 0f).RunFrame());
+    }
+
+    /// <summary>빈 guard는 아무것도 세지 않는다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RuntimeCallGuardNullIsNoop()
+    {
+        using (var guard = new RuntimeCallGuard(null))
+        {
+        }
+    }
+
+    /// <summary>호출 수명은 묶음의 대여 수를 올리고 정상·예외 복귀 때 내린다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RuntimeCallGuardCountsActiveCalls()
+    {
+        var bindings = new ProcessHostRuntimeBindings();
+        Assert.Equal(0ul, bindings.ActiveCalls);
+        var guard = new RuntimeCallGuard(bindings);
+        Assert.Equal(1ul, bindings.ActiveCalls);
+        guard.Dispose();
+        Assert.Equal(0ul, bindings.ActiveCalls);
+        guard.Dispose();
+        Assert.Equal(0ul, bindings.ActiveCalls);
+        try
+        {
+            using (var scoped = new RuntimeCallGuard(bindings))
+            {
+                Assert.Equal(1ul, bindings.ActiveCalls);
+                throw new InvalidOperationException("호출 실패");
+            }
+        }
+        catch (InvalidOperationException)
+        {
+        }
+
+        Assert.Equal(0ul, bindings.ActiveCalls);
+        using (var outer = new RuntimeCallGuard(bindings))
+        {
+            using (var inner = new RuntimeCallGuard(bindings))
+            {
+                Assert.Equal(2ul, bindings.ActiveCalls);
+            }
+
+            Assert.Equal(1ul, bindings.ActiveCalls);
+        }
+
+        Assert.Equal(0ul, bindings.ActiveCalls);
+    }
+
+    /// <summary>부착 식별자·호스트·런타임 배선은 Host 본체 단위에서 쓴다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
+    [Fact]
+    public void AttachmentWiringPinsHostAndIdentity()
+    {
+        var process = new PidProcess();
+        Assert.Null(process.ExposedHost());
+        Assert.Null(process.RuntimeLink);
+        process.SetIdentity(5, 7, 3u);
+        Assert.Equal(5, process.Form());
+        Assert.Equal(7, process.Parent());
+        Assert.Equal(3u, process.ExposedPid());
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var host = new SquidProcessHost(pool, types, new Kernel(8u), new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types), new SquidProcessState());
+        var runtime = new ProcessHostRuntimeBindings();
+        process.HostLink = host;
+        process.RuntimeLink = runtime;
+        Assert.Same(host, process.ExposedHost());
+        Assert.Same(runtime, process.RuntimeLink);
     }
 }
