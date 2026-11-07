@@ -533,4 +533,186 @@ public sealed class RawSquidProcessHostTests
         host.DrainRuntimeBindings(null);
         Assert.Equal(2, kernel.Size());
     }
+
+    /// <summary>부모·폼 체인 슬롯을 만든다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    /// <param name="pool">같은 풀이다.</param>
+    /// <param name="parent">부모 번호다.</param>
+    /// <param name="form">폼 번호다.</param>
+    private static void FormChain(RawSidPool pool, int parent, int form)
+    {
+        Span<byte> head = pool.RawSlot(parent);
+        head.Fill(0);
+        head[10] = 1;
+        head[6] = unchecked((byte)form);
+        head[7] = unchecked((byte)(form >> 8));
+        Span<byte> raw = pool.RawSlot(form);
+        raw.Fill(0);
+        raw[10] = 2;
+        raw[11] = 8;
+        raw[16] = unchecked((byte)parent);
+        raw[17] = unchecked((byte)(parent >> 8));
+        // 타입 2의 생성자 가상 표다
+        raw[0] = 0x98;
+        raw[1] = 0x20;
+        raw[2] = 0x51;
+        raw[3] = 0x00;
+    }
+
+    /// <summary>독립 Host는 공통 순서로 폼을 풀고 체인을 끊는다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UnpopFormFallbackReleasesChain()
+    {
+        (RawSidPool pool, Kernel _, RawSquidDestroy _, SquidProcessHost host) = DestroyScene();
+        FormChain(pool, 100, 101);
+        host.UnpopForm(101);
+        Assert.Equal(4, pool.Slot(101)[11]);
+        Assert.Equal(0, pool.Slot(100)[6] | (pool.Slot(100)[7] << 8));
+        Assert.Throws<InvalidOperationException>(() => host.UnpopForm(101));
+    }
+
+    /// <summary>현재 공장이 비어 있는 런타임 분리는 거부한다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UnpopFormRuntimeWithoutFactoryThrows()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState state, SquidProcessHost _) = LookupScene();
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var destroy = new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types);
+        var runtime = new ProcessHostRuntimeBindings { Destroy = destroy };
+        var host = new SquidProcessHost(pool, types, kernel, state, () => runtime);
+        Assert.Throws<InvalidOperationException>(() => host.UnpopForm(101));
+    }
+
+    /// <summary>직접 공장은 Form 분리를 아직 잇지 않아 명시 오류다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UnpopFormDirectFactoryThrowsExplicit()
+    {
+        (RawSidPool pool, Kernel _, RawSquidDestroy _, SquidProcessHost host) = DestroyScene();
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        host.BindFormFactory(new RawSquidFactory(pool, types));
+        Assert.Throws<InvalidOperationException>(() => host.UnpopForm(101));
+    }
+
+    /// <summary>권한이 없으면 서버 번호·플래그 없는 삭제는 조용히 둔다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void KillSkipsWithoutAuthority()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var kernel = new Kernel(8u);
+        var state = new SquidProcessState { Boss = false };
+        var host = new SquidProcessHost(pool, types, kernel, new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types), state);
+        var process = new SquidProcess();
+        process.SetIdentity(16000, 0, 0u);
+        host.Kill(process, 0u);
+        Assert.Throws<ArgumentNullException>(() => host.Kill(null!, 0u));
+    }
+
+    /// <summary>0번·죽음·범위 밖 폼 삭제는 거부한다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void KillRejectsBadForm()
+    {
+        (RawSidPool pool, Kernel _, RawSquidDestroy _, SquidProcessHost host) = DestroyScene();
+        var empty = new SquidProcess();
+        empty.SetIdentity(0, 0, 0u);
+        Assert.Throws<InvalidOperationException>(() => host.Kill(empty, 0u));
+        pool.RawSlot(200)[11] = 2;
+        var dead = new SquidProcess();
+        dead.SetIdentity(200, 0, 0u);
+        Assert.Throws<InvalidOperationException>(() => host.Kill(dead, 0u));
+        var outside = new SquidProcess();
+        outside.SetIdentity(pool.Capacity, 0, 0u);
+        Assert.Throws<InvalidOperationException>(() => host.Kill(outside, 0u));
+    }
+
+    /// <summary>폼 뿌리 삭제는 효과 순서대로 풀고 반납한다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void KillDestroysRoot()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var kernel = new Kernel(8u);
+        var state = new SquidProcessState();
+        var destroy = new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types);
+        var seen = new List<SquidDestroyEvent>();
+        var asset = new SquidDestroyHooks
+        {
+            Emit = e =>
+            {
+                seen.Add(e);
+                if (e.Effect == SquidDestroyEffect.PreDestroy)
+                {
+                    destroy.CompletePreDestroy();
+                }
+                else if (e.Effect == SquidDestroyEffect.PostDestroy)
+                {
+                    destroy.CompletePostDestroy();
+                }
+            },
+            Selected = () => 0,
+        };
+        var host = new SquidProcessHost(pool, types, kernel, destroy, state, null, asset);
+        FormChain(pool, 100, 101);
+        var process = new SquidProcess();
+        kernel.Add(process);
+        PutPid(pool, 101, 1u);
+        process.SetIdentity(101, 100, 1u);
+        host.Kill(process, 0u);
+        Assert.Null(kernel.Get(1u));
+        Assert.Equal(0u, destroy.PreDepth);
+        Assert.Equal(0u, destroy.PostDepth);
+        Assert.NotEqual(0, pool.Slot(101)[11] & 1);
+    }
+
+    /// <summary>선택 조회는 현재 자산·없음 기본값을 따른다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void HooksSelectedDefaults()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState state, SquidProcessHost bare) = LookupScene();
+        Assert.Equal(0, bare.Hooks().Selected!());
+        var asset = new SquidDestroyHooks { Selected = () => 7 };
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var direct = new SquidProcessHost(pool, types, kernel, new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types), state, null, asset);
+        Assert.Equal(7, direct.Hooks().Selected!());
+        var runtimeAsset = new SquidDestroyHooks { Selected = () => 9 };
+        var runtime = new ProcessHostRuntimeBindings
+        {
+            Destroy = new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types),
+            Asset = runtimeAsset,
+        };
+        var host = new SquidProcessHost(pool, types, kernel, state, () => runtime);
+        Assert.Equal(9, host.Hooks().Selected!());
+    }
+
+    /// <summary>폼이 아니면 자산에 그대로 넘기고 없으면 거부한다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void HooksEmitForwardsOrRejects()
+    {
+        (RawSidPool pool, Kernel _, RawSquidDestroy _, SquidProcessHost bare) = DestroyScene();
+        pool.RawSlot(300).Fill(0);
+        var plain = new SquidDestroyEvent(SquidDestroyEffect.PreDestroy, 300, 0, 0u);
+        Assert.Throws<InvalidOperationException>(() => bare.Hooks().Emit!(plain));
+        SquidDestroyEvent? forwarded = null;
+        var asset = new SquidDestroyHooks { Emit = e => forwarded = e, Selected = () => 0 };
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var kernel = new Kernel(8u);
+        var host = new SquidProcessHost(pool, types, kernel, new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types), new SquidProcessState(), null, asset);
+        host.Hooks().Emit!(plain);
+        Assert.Equal(plain, forwarded);
+    }
+
+    /// <summary>묶음의 분리 콜백은 호스트 분리로 이어진다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void HooksUnpopFormWired()
+    {
+        (RawSidPool pool, Kernel _, RawSquidDestroy _, SquidProcessHost host) = DestroyScene();
+        Assert.NotNull(host.Hooks().UnpopForm);
+        Span<byte> raw = pool.RawSlot(9999);
+        raw.Fill(0);
+        raw[10] = 2;
+        raw[0] = 0x98;
+        raw[1] = 0x20;
+        raw[2] = 0x51;
+        raw[3] = 0x00;
+        Assert.Throws<InvalidOperationException>(() => host.Hooks().UnpopForm!(9999));
+    }
 }

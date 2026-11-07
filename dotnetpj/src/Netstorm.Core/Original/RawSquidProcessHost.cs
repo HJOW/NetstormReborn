@@ -1,11 +1,11 @@
-// 객체 Form과 커널 프로세스의 부착 기반(생성·조회·번호)을 공유한다.
+// 객체 Form과 커널 프로세스의 부착·삭제 기반(생성·조회·번호·해제·삭제)을 공유한다.
 using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Original;
 
 // 프로세스 호스트 모듈을 담는 네임스페이스다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.
 
-// 객체 Form과 커널 프로세스의 부착·통지·수명을 연결하는 호스트 껍데기다. 부착·검색·삭제·전송 본체는 후속 단위에서 잇는다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.
+// 객체 Form과 커널 프로세스의 부착·통지·수명·삭제를 연결하는 호스트 본체다. 부착·검색·전송 본체와 정기 실행은 후속 단위에서 잇는다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐고 0.204에서 삭제 본체를 이었다.
 public sealed class SquidProcessHost
 {
     /// <summary>CD판의 절차 상한 비트다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
@@ -359,6 +359,120 @@ public sealed class SquidProcessHost
         process.OnParentDying(parent);
     }
 
+    /// <summary>원본 004ae170의 Form 분리를 현재 월드·직접 공장·공통 순서로 실행한다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    /// <param name="form">해제할 Form 번호다.</param>
+    public void UnpopForm(int form)
+    {
+        ProcessHostRuntimeBindings? runtime = _currentRuntime is not null ? Runtime() : null;
+        using (var call = new RuntimeCallGuard(runtime))
+        {
+            if (runtime is not null)
+            {
+                if (runtime.Factory is null)
+                {
+                    throw new InvalidOperationException("Process Unpop의 현재 공장 미연결");
+                }
+
+                throw new InvalidOperationException("Process Unpop의 Form 공장 미연결");
+            }
+
+            if (_directFormFactory is not null)
+            {
+                throw new InvalidOperationException("Process Unpop의 직접 Form 공장 미연결");
+            }
+
+            // 독립 Host도 같은 공통 해제 순서를 사용한다
+            new RawSquidForms(_pool).Unpop(form);
+        }
+    }
+
+    /// <summary>원본 004ae140의 권한·번호 관문을 지나 공통 삭제로 프로세스를 지운다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    /// <param name="process">지울 프로세스다.</param>
+    /// <param name="flags">삭제 플래그다.</param>
+    public void Kill(SquidProcess process, uint flags)
+    {
+        ArgumentNullException.ThrowIfNull(process);
+        using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
+        {
+            int form = process.Form();
+            // 권한이 없고 form이 서버 번호이며 client flag도 없으면 아무것도 하지 않는다
+            if (!_state.Boss && !(form > 4 && form < RawSidPool.ServerFirst) && (flags & ClientForm) == 0u)
+            {
+                return;
+            }
+
+            if (form == 0 || form >= _pool.Capacity || (_pool.Slot(form)[StateOffset] & DeadBit) != 0)
+            {
+                throw new InvalidOperationException("프로세스 form 상태 오류");
+            }
+
+            Destroy().Destroy(form, flags, Hooks());
+        }
+    }
+
+    /// <summary>원본의 선택·분리·효과 분배를 같은 현재 대여·자산에 연결한다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    /// <returns>현재 삭제 효과 묶음이다.</returns>
+    public SquidDestroyHooks Hooks()
+    {
+        var hooks = new SquidDestroyHooks();
+        if (_currentRuntime is not null)
+        {
+            // form은 선택 대상이 아니므로 현재 자산 효과를 읽어 답한다
+            hooks.Selected = () =>
+            {
+                using (var call = new RuntimeCallGuard(_currentRuntime()))
+                {
+                    SquidDestroyHooks? asset = Asset();
+                    return asset?.Selected is not null ? asset.Selected() : 0;
+                }
+            };
+        }
+        else if (_asset?.Selected is not null)
+        {
+            hooks.Selected = _asset.Selected;
+        }
+        else
+        {
+            hooks.Selected = () => 0;
+        }
+
+        hooks.UnpopForm = UnpopForm;
+        hooks.Emit = e =>
+        {
+            using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
+            {
+                // pre/post는 루트가, release/destroy는 종속이 ProcessForm일 때만 여기서 처리한다
+                if (IsProcessForm(e.Sid))
+                {
+                    switch (e.Effect)
+                    {
+                        case SquidDestroyEffect.PreDestroy:
+                            FormPreDestroy(e.Sid, e.Flags);
+                            return;
+                        case SquidDestroyEffect.PostDestroy:
+                            Destroy().CompletePostDestroy();
+                            return;
+                        case SquidDestroyEffect.ReleaseDependent:
+                            FormParentDying(e.Sid, e.Parent);
+                            return;
+                        case SquidDestroyEffect.DestroyDependent:
+                            Destroy().Destroy(e.Sid, e.Flags, Hooks());
+                            return;
+                    }
+                }
+
+                SquidDestroyHooks? asset = Asset();
+                if (asset?.Emit is null)
+                {
+                    throw new InvalidOperationException("프로세스 host의 자산 삭제 훅 미연결");
+                }
+
+                asset.Emit(e);
+            }
+        };
+        return hooks;
+    }
+
     /// <summary>가장 최근에 붙은 종속부터 다음 링크를 따라간다. 자산 타입은 건너뛴다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
     /// <param name="parent">부를 부모 SID다.</param>
     /// <param name="match">고른 프로세스 판정이다.</param>
@@ -417,6 +531,12 @@ public sealed class SquidProcessHost
 
     /// <summary>타입 번호(1바이트)의 위치다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
     private const int TypeOffset = 10;
+
+    /// <summary>상태 바이트의 위치다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    private const int StateOffset = 11;
+
+    /// <summary>상태 바이트의 죽음 비트다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    private const byte DeadBit = 2;
 
     /// <summary>Form의 비정렬 커널 번호 DWORD 위치다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
     private const int FormPidOffset = 18;
