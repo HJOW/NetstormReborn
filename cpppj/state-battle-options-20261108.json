@@ -1,0 +1,57 @@
+{
+  "unit": 1127,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      "-first",
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12725248,
+      "sha256": "20382d95226d68dbd646a29ed630413e6023da1dd0c65d2fcb90599b51c7c7fb"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "b3de455a2780dae152ca79a1731310dc2bae1303ccfd87e7f86981b866c0a49d"
+    }
+  },
+  "staticAudit": {
+    "native": "004b4900 전체와 다음 함수까지 기계어·0042c920/4b4860/41c8b0/41ca70/4c7880 전체 하위 근거",
+    "parent": "진단 후 현재 WORD 재조회→DWORD/나머지BYTE 부분복사→현재 CS 비영 자식→범위→현재 비용/FILD32→TYPE 비용 쓰기→현재 비율 저장→battle&&!mission&&saved의 실제 HUD 재생성 장치",
+    "integration": "기존 RawMissionClientPackets.Options가 같은 전체 부모를 호출한다. 실제 CampaignLoginServices와 Session.receive.outpostOptions를 CS/음향/NSInfo에 연결했다. 역사적 outpostOptions 이름은 CS 자식이며 건물 Outpost 구현과 별개다.",
+    "copyAndFailure": "전체 source/길이 선검사·std::copy_n을 제거하고 각 실제 DWORD/BYTE 접근 위치에서 물리 범위를 확인한다. 미복사 꼬리와 실패 전 쓰기를 보존하며 원래87BYTE 밖 접근은 호스트 오류로 구별한다.",
+    "callbackLifetime": "공통 부모는 기존7개 std::function을 동기 const 참조로 빌린다. 복사/미사용 장치 선검사·추가 성공 callback을 넣지 않는다.",
+    "remainingIntegration": "MetaConnectionRuntime67은 아직1120의 CS 자식 직접 등록 상태다. 전체 공통 부모 등록과 공유 반경/파생값·004c7880의 실제 HUD 재생성 장치는 다음 단위다. 일반 수신의 해당 UI 선택 장치도 후속이다.",
+    "validation": "첫/최종 Release 빌드만 실행한다. 기존 MP fixture/단위·게임·실제 통신 검사는 사용자 지시대로 실행하지 않는다."
+  },
+  "remaining": [
+    "메타67h 전체 부모 등록/공유 반경·파생 전역/004c7880 HUD 재생성·메타 객체 그림/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

@@ -1,5 +1,6 @@
 // 실제 클라이언트 수신의 작은 계산/쓰기는 직접 실행하고 큰 외부 하위는 필수 위치에 남긴다.
 #include "o/RawMissionClientPackets.h"
+#include "o/RawStateBattleOptions.h" //일반/메타가 같은67h 전체 부모와 부분 복사 순서를 사용한다.
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -78,10 +79,7 @@ void RawMissionClientPackets::LoginBegin(std::span<const std::uint8_t> packet) c
 }
 //004b4900의 현재 옵션 복사와 모든 파생 효과를 순서대로 실행한다.
 void RawMissionClientPackets::Options(std::uint32_t sender,std::span<const std::uint8_t> packet) const {
-    const auto length=Get(packet,5,2);if (length>87) Need(hooks_.assertion)("z->dataLen <= sizeof(globalBattleOptions)");
-    if (length>87 || packet.size()<7+length) throw std::out_of_range("미션 옵션 실제 복사 범위");std::copy_n(packet.begin()+7,length,state_.battleOptions.begin());
-    if (state_.outpost) Need(hooks_.outpostOptions)(sender,packet);Need(hooks_.updateRange)();const auto energy=Need(hooks_.requiredEnergy)();Need(hooks_.setEnergyType)(static_cast<float>(energy));state_.optionValue=Need(hooks_.readOptionValue)();
-    if (state_.inBattle && !state_.missionPost && state_.savedGame) Need(hooks_.reconnectUi)();
+    ReceiveStateBattleOptions(sender,packet,{state_.battleOptions,state_.outpost,state_.optionValue,state_.inBattle,state_.missionPost,state_.savedGame},{hooks_.assertion,hooks_.outpostOptions,hooks_.updateRange,hooks_.requiredEnergy,hooks_.setEnergyType,hooks_.readOptionValue,hooks_.reconnectUi}); //각 원문 위치에서 필요한 현재 장치만 같은 공통 몸체가 선택한다.
 }
 //004b3d30은 로컬 미션 서버에서는 재설치를 생략하고 revision만 실제로 증가한다.
 void RawMissionClientPackets::Fort(std::span<const std::uint8_t> packet) const {
