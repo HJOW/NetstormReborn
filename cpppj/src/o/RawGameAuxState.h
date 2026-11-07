@@ -9,6 +9,8 @@
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
+    std::uint32_t& StateNotifyType() { return stateNotifyType_; } //005411a0:004ac220이 상태WORD 변경 뒤 표면 통지를 선택하는 현재 TYPE다.
+    const std::uint32_t& StateNotifyType() const { return stateNotifyType_; } // World/Session 교체에서82로 다시 쓰지 않는다.
     RawGameAuxState()=default; // PE의 BSS+0과 명시25/2000/122·세계여백2/장식타입4개를 한 번 구성한다.
     RawGameAuxState(const RawGameAuxState&)=delete;RawGameAuxState& operator=(const RawGameAuxState&)=delete; // 살아 있는 실제 참조 주소를 복제하지 않는다.
     std::uint32_t& OrdinaryGeysers() { return ordinaryGeysers_; } //005950ac: Start가 moreGeysers 부정을 쓴다.
@@ -152,6 +154,7 @@ public:
         lostY_=std::bit_cast<float>(0xc61c4000U);lostX_=std::bit_cast<float>(0xc61c4000U);
     }
 private:
+    std::uint32_t stateNotifyType_{82}; // 보호10.78 PE005411a0의 초기 DWORD이며 실제 상태 변경 부모가 현재 번호를 읽는다.
     std::array<float,2> centralPosition_{}; // 원문 최초 BSS0이며 중앙섬 배치가 X→Y 순서로 쓴다.
     RawSquidTransmissionState squidTransmission_; //최초한번의PE/BSS초기값이며일반월드fresh와별개로유지한다.
     bool priestQuarterHp_{}; // 원문 최초 BSS0이며 일반 fresh의 기존0만 호환한다. prepared와 반납은 현재값을 보존한다.

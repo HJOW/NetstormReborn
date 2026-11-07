@@ -607,6 +607,11 @@ void UberGump::SelectCurrentFortName(std::string_view name) {
     FortCurrentNameDevices devices(names,*templateStorage_,client_.Configuration(),std::move(globals),std::move(hooks),work,[this](auto configured) { return editorCatalog_->Resolve(configured); }); //절대 source FileSpec도 old/new snapshot/삭제의 같은 작업 namespace로 매핑한다.
     const std::string source(name.substr(0,name.find('\0')));devices.Set({reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1}); // 현재 요청의 안정된 NUL 입력을 동기 부모가 끝날 때까지 유지한다.
 }
+// 다음 상태를 먼저 쓰고 실제 Battle14의 파일/State/섬/Notify 하위를 같은 부모로 실행한다.
+void UberGump::RequestFortEditState() {
+    auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U;
+    RequestFortEdit({fortSelectionMode_,native.next[0],battle,native.phase[0],player.templateOwner,player.battleOwner},FortEditEffects());
+}
 // 일반 복구State7도 실제 pending/current 버퍼와 기존 전체 이름 부모를 사용한다.
 void UberGump::SelectReconnectFortForState() {
     const auto native=client_.LocalStateGlobals()->State();if (native.current[0]!=7 || !native.current[33]) throw std::logic_error("복구 Fort 이름 선택의 실제 State7/재접속 표식 누락");SelectCurrentFortName(client_.FortGlobals()->Pending());
@@ -1363,10 +1368,7 @@ void UberGump::Event(InputEvent event) {
         EditorTestBattleHooks hooks;hooks.snapshot=[this] { if (!world_) throw std::logic_error("Test Battle의 실제 Editor Session 없음");world_->Session().SaveCurrentMap(); };
         hooks.currentFortName=[this] { const auto bytes=client_.FortGlobals()->CurrentBytes();return std::string_view(reinterpret_cast<const char*>(bytes.data()),bytes.size()); }; //늦은 이름 복사는 같은 실제256BYTE의 NUL까지 읽는다.
         hooks.guide=MissionTransitionEffects();hooks.guide.create=[this,workspace=editorCatalog_](auto name) { CreateMission(std::string(name),0,0,[workspace](auto path) { return workspace->Read(path); }); }; //실제 편집 작업본의 동일 namespace를 Script/별칭 Fort/재로드까지 소유한다.
-        hooks.pending=FortEditEffects().pending;hooks.requestEdit=[this] {
-            auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U;
-            RequestFortEdit({fortSelectionMode_,native.next[0],battle,native.phase[0],player.templateOwner,player.battleOwner},FortEditEffects()); //next1을 먼저 쓰고 실제 Battle14의 파일/State/섬/Notify를 원문 순서대로 수행한다.
-        };
+        hooks.pending=FortEditEffects().pending;hooks.requestEdit=[this] { RequestFortEditState(); };
         static_cast<void>(DispatchEditorTestBattle(event,fortSelectionMode_,hooks));rebuild_=true;return;
     }
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.

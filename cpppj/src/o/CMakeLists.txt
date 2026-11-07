@@ -590,3 +590,6 @@ target_sources(netstorm PRIVATE RawAssetOwner.h RawAssetOwner.cpp)
 
 # 신전 소유자의 missingIsland 상세와 실제 Client 진단 순서를 공유한다.
 target_sources(netstorm PRIVATE RawVortexOwnerDiagnostic.h RawVortexOwnerDiagnostic.cpp)
+
+# 신전51h 수신과 실제 Territory/표면/객체/마지막 섬 정리 부모를 함께 컴파일한다.
+target_sources(netstorm PRIVATE RawVortexDeparture.h RawVortexDeparture.cpp)

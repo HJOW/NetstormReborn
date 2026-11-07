@@ -47,6 +47,8 @@ struct AssetRegularHooks {
     std::function<void(Sid,float)> beginFactoryUpgrade; //PATCH event3/count0의 실제 client 그림·건설·종속쌍이다.
     std::function<float(Sid)> finishFactoryUpgrade; //PATCH event3/count양수의 실제 완료·현재AI 통지다.
     std::function<void(Sid,std::int32_t,std::uint32_t)> factoryFlare; //PATCH event5의 상위 레벨 실제 플레어다.
+    std::function<void(Sid,std::uint16_t)> state; // 신전의 상태WORD와004ac220 특정TYPE 통지를 같은 실제 부모로 실행한다.
+    std::function<bool()> suppressLeaveRequest; // event3의 소비 위치에서 현재00594fa0을 조회한다. 독립 입력은 기존 state를 쓴다.
 };
 // +5c 가상 표의 실제 주소로 몸체를 선택하고 공통 Damageable의 event 분배까지 복원한다.
 class RawAssetRegular {

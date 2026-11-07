@@ -81,6 +81,7 @@
 #include "o/RawFortObjectsSave.h"
 #include "o/RawFortRegionSave.h"
 #include "o/RawFortTerritorySave.h"
+#include "o/RawVortexDeparture.h" //51h 수신과 실제 섬/현재 Territory 정리를 같은 Session에 연결한다.
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
 #include "client/RawGameMenus.h"
@@ -332,7 +333,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,41> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30,0x33,0x34,0x35,0x31,0x32}; // 개발자31h/현재 설정32h도 같은 실제 Session 등록/반납 수명을 따른다.
+constexpr std::array<std::uint32_t,42> kEditorGameplayMessages{0x51,0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30,0x33,0x34,0x35,0x31,0x32}; // 개발자31h/현재 설정32h도 같은 실제 Session 등록/반납 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -601,6 +602,11 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawBalloonBody> balloonBody; //같은 풀/실제 그림자/전용 후처리와 그림자 우선 삭제다.
     std::unique_ptr<void,void(*)(void*)> pendingCloudRegular{nullptr,[](void* storage) { ::operator delete(storage); }}; // 클라우드 플로터의 실제 Regular 확보와 생성 사이 메모리다.
     AssetRegularState regularState; // 실제 예약 사건의 현재 전역이다.
+    VortexAscendState vortexAscendState; // 같은 현재 noIsland TYPE를 기존 Tick/삭제 후보와 공유한다.
+    std::vector<std::unique_ptr<std::uint8_t[]>> vortexCandidateBuffers; // 중첩 상승 Tick의 실제80BYTE 후보 버퍼 수명이다.
+    std::unique_ptr<RawVortexAscend> vortexAscend; // 실제 동일 섬/난수/공간 후보 판정이다.
+    std::unique_ptr<RawVortexDeparture> vortexDeparture; //51h/완료 정리와 현재 Territory/실제 삭제의 부모다.
+    std::function<void()> vortexSnapshot; // 외곽 Session 주소가 완성된 뒤 연결하는004bfac0이다.
     GunProcessState gunState; // 실제 Gun 초기 Form/시각/서버 전역이다.
     GunTargetState gunTargetState; // 실제 자기 동맹/검색의 현재 상태다.
     CursorRangeGlobals cursorRangeGlobals{cursorManaGlobals,gunTargetState}; // 마나와 총의 같은 좌표/픽셀/Wind 전역을 빌린다.
@@ -1408,7 +1414,14 @@ struct RawCampaignSession::Impl {
         iceRicochet=std::make_unique<RawIceRicochet>(core.pool,core.types,missileTypes,random,MakeIceRicochetWorldHooks(core.pool,core.hash,core.types,hp,std::move(ricochetHooks)));
         combatEffects.missile.ricochet=[this](const MissileFields& fields) { iceRicochet->Generate(fields); };
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
+        InstallVortexDeparture();
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
+        assetEffects.regular.state=[this](Sid sid,std::uint16_t state) { SetVortexState(sid,state); };
+        assetEffects.regular.suppressLeaveRequest=[this] { return core.bridgeState.mission; }; // event3의 현재00594fa0이며 missionPost와 구별한다.
+        assetEffects.regular.ascendTick=[this](Sid sid,std::uint32_t count) { return vortexAscend->Tick(sid,count); };
+        assetEffects.regular.countForeignOwnedIslands=[this](auto owner) { return vortexAscend->CountForeignOwnedIslands(owner); };
+        assetEffects.regular.playerLeavingNotice=[this](auto owner) { if (!services.player.log) throw std::logic_error("신전 상승의 실제 이탈 로그 미연결");services.player.log(29,"Player "+VortexPlayerName(owner)+" is leaving!\n"); };
+        assetEffects.regular.requestLeave=[this](Sid sid,std::uint32_t island) { RequestVortexDeparture(sid,island); };
         assetEffects.postPop.startBlocker=[this](Sid sid) { gunBlocker->Notify(sid); }; // 기존 이름을 유지하며 실제0046ae80의 장애물 통지를 연결한다.
         assetEffects.postPop.nuggetPostPop=[this](Sid sid,std::uint32_t flags) { if (!nuggetPostPop) throw std::logic_error("현재 너겟 PostPop 미설치");nuggetPostPop->PostPop(sid,flags); };
         assetEffects.postPop.growingIcePostPop=[this](Sid sid,std::uint32_t flags) { if (!iceTower) throw std::logic_error("성장형 아이스 전체 후처리 설치 전 호출");iceTower->PostPop(sid,flags); };
@@ -3709,6 +3722,7 @@ struct RawCampaignSession::Impl {
         },std::move(hooks));
     }
     #include "client/RawCampaignRitual.inc"
+    #include "client/RawCampaignVortex.inc"
     // State 부모가 지정하는 같은 현재 Player와 같은 실제 Deck owner를 기존 원문 자식에 빌린다.
     void ReleasePlayerLinks() {
         if (productionDeck && productionDeck->PlayerLinksReturnedForState()) throw std::logic_error("Native 반납된 Session Player 링크의 반복 정리 금지");
@@ -3906,6 +3920,7 @@ void RawCampaignSession::SendMutableLocalPacket(std::int32_t target,std::span<st
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) {
     impl_->learnNewTechnology=[this](auto type) { LearnNewTechnology(type); }; //복사/이동되지 않는 Session 주소를 실제 로컬 획득과 Help가 공유한다.
+    impl_->vortexSnapshot=[this] { if (impl_->core.ownerMode.battle) SnapshotBattle(impl_->playerState.templateOwner);if (impl_->core.ownerMode.fort) SnapshotFort(impl_->playerState.templateOwner); }; // 원문 두 독립 if에서 각각 현재 owner를 다시 읽는다.
     impl_->writeCurrentFortCore=[this](auto owner) { WriteFortCoreDataBody(owner); };impl_->createWorldGeysers=[this] { GenerateWorldGeysers(); }; // 같은 외곽 주소가 완성된 뒤에만 실제 일반 시작 장치를 공개한다.
     impl_->placeBattleNuggets=[this](auto rectangle,auto quantity) { PlaceBattleNuggets(rectangle,quantity); }; // 실제 같은 Session의 배치 장치는 최초 게임 객체 생성 전에 설치한다.
     impl_->refreshLocalRitual=[this] { //실제 호출 시점의 owner/모드를 빌리며 완료 전에 필드를 복사하지 않는다.
@@ -4526,6 +4541,8 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
     // 원본 등록 표의54h 버전1/정책0/8바이트/빈 observer와 같은 수신이다.
     dispatch.Observe(0x54,{});dispatch.Version(0x54,1,0);dispatch.RequireLength(0x54,8);
     dispatch.Register(0x54,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->salvageCommand->Receive(sender,packet); });
+    dispatch.Observe(0x51,{});dispatch.Version(0x51,1,0);dispatch.RequireLength(0x51,8); //40b380 빈 observer/실제51h 버전1·정책0·8BYTE다.
+    dispatch.Register(0x51,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->vortexDeparture->Receive(std::bit_cast<std::int32_t>(sender),packet); }); // 같은 Session 대여로 시작 중계/완료 부모를 소비한다.
     dispatch.Observe(0x2f,{});dispatch.Version(0x2f,1,0);dispatch.RequireLength(0x2f,15);dispatch.Register(0x2f,[this](auto,auto&,auto packet) { auto& s=*impl_;s.PrepareConstruction();ReceiveConstructionReject(packet,{s.core.pool,s.core.hash,s.core.types,s.metadata.frames,s.constructionState.clear.patternTypes,s.core.bridgeState.noIslandType,&s.metadata.geometry.decoderDiagnostics},[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); }); }); //4332c0의모든칸/모든후보정리다.
     dispatch.Observe(0x6c,{});dispatch.Version(0x6c,1,0);dispatch.RequireLength(0x6c,11); //40af90/4d56f0의 원래 송금/보상 메시지다.
     dispatch.Register(0x6c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) {

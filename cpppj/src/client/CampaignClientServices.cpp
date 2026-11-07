@@ -177,6 +177,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.developerQueryDirectDraw=[&client] { QueryDeveloperDirectDraw([&client](auto text) { client.WriteDiagnosticLog(29,text); }); }; // 드라이버 열거의 실제 NULL 반환과 현재 시스템 버전만 읽는다.
     services.developerHeapTrace=[&client](auto enabled) { client.DiagnosticGlobals().heapTrace=enabled; }; // 현재 Client의 원문 플래그만 바꾸며 Frame 이후 소비 위치를 유지한다.
     services.developerTraceObject=[&client](auto sid) { client.TraceObject(sid); }; // F7/선택 trace와 같은44dab0 전체 몸체를 사용한다.
+    services.requestFortEdit=[&client] { if (!client.Menu()) throw std::logic_error("신전 이탈의 실제 Uber/Fort 상태 부모 미연결");client.Menu()->RequestFortEditState(); }; // 일반 입력 c2와 동일한 즉시004b3560 부모를 사용한다.
     services.mapView=[&controls] { return controls.MapViewRect(); }; //초기 Reset 전에도 현재 도킹의 같은005ca9cc 영역을 사용한다.
     services.chatGlobals=client.ChatWindowGlobals();services.chatReceive=std::move(ui.receiveChat); // 수신 마스크/무시 상태와 실제 UI는 같은 Client/현재 게임을 빌린다.
     services.subscriberGlobals=client.SubscriberGlobals(); // Init/Chat/모든 Session이 같은 두 DWORD를 수명째 빌린다.

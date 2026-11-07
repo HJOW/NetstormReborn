@@ -71,6 +71,7 @@ public:
     void ShowCaptureNotice(std::string_view body,std::uint32_t width,std::uint32_t height); //4cf550 직접 본문을 기존 공통 HTML 공장/모달 수명에 전달한다.
     void ShowLoginProgress(o::LocalMissionProgress kind,std::int32_t remaining); // 원문 State/로그인의 각 번역 안내를 같은 현재 loading serial로 표시하며 상태는 쓰지 않는다.
     std::uint32_t ShowLoginWaiting(std::string_view body); // 이미 번역/서식화한 일반 대기를 cf570/현재 HTML에 표시하고 실제 반환 serial을 전달한다.
+    void RequestFortEditState(); //004b3560의 실제 현재 World/Fort/State 보존과 next1 요청을 실행한다.
     void SelectReconnectFortForState(); // 실제 복구State7의 pending 이름을00460980/기존 Template snapshot·Notify·제목·dirty 부모로 선택한다.
     void SelectBuildReplayObject(std::uint32_t sid); // 현재 World의 실제Select(SID,0,1)이며 저장소에SID만 쓰지 않는다.
     void ToggleChatInput(); //그리기 뒤 프레임말의0042f210을 같은 현재 실제 Console에 전달한다.

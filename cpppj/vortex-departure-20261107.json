@@ -1,0 +1,62 @@
+{
+  "unit": 1050,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "신전51h 실제 수신·서버 제외 중계와 섬 상승 완료/현재 Territory·공간 정리 연결",
+  "sourceFunctions1078": [
+    "004dc050",
+    "004dbce0",
+    "004db3e0",
+    "004db490",
+    "004db620",
+    "004db750",
+    "004dc220(event0/3)",
+    "004ac220",
+    "004324e0",
+    "00432210",
+    "004b34e0",
+    "004b3560"
+  ],
+  "implemented": [
+    "같은 Session 대여의51h/버전1/정책0/빈observer/8BYTE 등록·반납",
+    "현재 server 시작 중계→Regular event3→현재 owner별 번역 경고/3음향",
+    "완료51h의 현재 Territory120BYTE/빈슬롯·home비트/Chunk6BYTE 갱신·snapshot",
+    "실제 신전 owner0→동적 표면 이웃→다음SID 선취 객체 후보→받침→IslandList 삭제·revision 증가",
+    "자기 마지막 섬이면 기존004b3560 전체 Fort 편집 상태 요청",
+    "기존 RawVortexAscend의 실제 Tick/같은 난수/80BYTE 중첩 버퍼·외국 섬 수를 신전 Handle에 연결",
+    "event3 현재00594fa0 억제 관문/51h 방송 뒤 같은 직접 수신",
+    "004ac220 현재 TYPE005411a0/상태WORD/표면 통지의 같은 장기 전역"
+  ],
+  "remaining": [
+    "신전004dbac0의 실제 상승/Descend 명령·메뉴와004dc220 event4의territory/curServer·State19",
+    "메타맵 부모/2VT·나머지 송신·endpoint/server·writer/decoder·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ],
+  "decompilerOutputsChanged": false,
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1050\\build.log",
+    "exeSize": 12208640,
+    "exeSha256": "158d0317b200a23e15b2352e98b846f3fbc5ca73cf3306a1ab410b29dfe8af57"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1050\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  }
+}

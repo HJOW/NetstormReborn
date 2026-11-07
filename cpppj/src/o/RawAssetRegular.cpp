@@ -212,10 +212,10 @@ float RawAssetRegular::Vortex(Sid sid,std::uint32_t event,std::uint32_t count,fl
         const auto signedCount=std::bit_cast<std::int32_t>(count);
         if (!count && Read(pool_.Slot(sid),12,2)==2) return 0.0f;
         Require(hooks_.countForeignOwnedIslands,"신전 이탈 다른 소유자 섬 조회 누락");
-        if (!count) { Require(hooks_.playerLeavingNotice,"신전 이탈 알림 누락");Write(pool_.AllocatedBytes(sid),12,2,2);hooks_.playerLeavingNotice(pool_.Slot(sid)[ownerOffset]); }
+        if (!count) { Require(hooks_.playerLeavingNotice,"신전 이탈 알림 누락");if (hooks_.state) hooks_.state(sid,2);else Write(pool_.AllocatedBytes(sid),12,2,2);hooks_.playerLeavingNotice(pool_.Slot(sid)[ownerOffset]); }
         static_cast<void>(hooks_.countForeignOwnedIslands(pool_.Slot(sid)[ownerOffset]));
         if (signedCount<(state_.Boss() ? 3 : 23)) return 1.0f;
-        if (!state_.suppressLeaveRequest) {
+        if (!(hooks_.suppressLeaveRequest ? hooks_.suppressLeaveRequest() : state_.suppressLeaveRequest)) {
             Require(hooks_.islandNumber,"신전 이탈 섬 조회 누락");Require(hooks_.requestLeave,"신전 이탈 요청 누락");
             const auto raw=pool_.Slot(sid);const auto island=hooks_.islandNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
             hooks_.requestLeave(sid,island&255U);if (pool_.Slot(sid)[11]&1U) return -1.0f;
@@ -224,12 +224,12 @@ float RawAssetRegular::Vortex(Sid sid,std::uint32_t event,std::uint32_t count,fl
     }
     if (event==4) {
         const auto signedCount=std::bit_cast<std::int32_t>(count);
-        if (!count) Write(pool_.AllocatedBytes(sid),12,4,2);
+        if (!count) { if (hooks_.state) hooks_.state(sid,4);else Write(pool_.AllocatedBytes(sid),12,4,2); }
         if (!state_.checkingForms && static_cast<float>(signedCount)<=4.0f) return 1.0f;
         Require(hooks_.regionNumber,"신전 event4 지역 조회 누락");Require(hooks_.removeAnimation,"신전 event4 애니메이션 통지 누락");
         const auto raw=pool_.Slot(sid);const auto region=hooks_.regionNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
         const auto token=(state_.regionGeneration<<16)|region;hooks_.removeAnimation(state_.animationType,token);
-        Write(pool_.AllocatedBytes(sid),12,0,2);return 0.0f;
+        if (hooks_.state) hooks_.state(sid,0);else Write(pool_.AllocatedBytes(sid),12,0,2);return 0.0f;
     }
     return DamageableHandle(sid,event,count,payload);
 }

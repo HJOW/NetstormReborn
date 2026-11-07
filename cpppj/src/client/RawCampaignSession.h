@@ -189,6 +189,7 @@ struct RawCampaignSessionServices {
     std::function<void(float,float)> developerHighlight; //4345e0의 현재 좌표 강조를 실제 Screen/카메라/즉시 출력에 연결한다.
     std::shared_ptr<ClientBuildReplayGlobals> buildReplay; // 건설 Confirm의 현재495710/495730이 읽는 실제 Client 전역이다.
     std::function<void(std::uint32_t)> developerSelectObject; //4958d0의 마지막4d5c90(SID,0,1)을 같은 실제 World 선택기로 전달한다.
+    std::function<void()> requestFortEdit; //004b3560의 실제 next1/Battle14 Fort 보존 부모다. 신전 마지막 섬 이탈에서 즉시 호출한다.
     std::function<void(std::string_view)> developerRecordLabel; //4954f0의 현재 파일/RL 라벨 기록이며 원문 활성 관문 뒤에만 호출한다.
     std::function<void()> developerQueryDirectDraw; // qdd는 같은 Client 로그와 Windows 시스템 DLL 버전 장치를 사용한다.
     std::function<void(std::uint32_t)> developerHeapTrace; //31h ht는 같은 Client 프레임의0054dab0만 설정하고 즉시 로그/힙 순회를 실행하지 않는다.

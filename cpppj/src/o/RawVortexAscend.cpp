@@ -71,7 +71,7 @@ bool RawVortexAscend::Candidate(Sid sid,std::int32_t island,std::uint32_t owner)
     const auto index=static_cast<std::size_t>(cellY)*256+static_cast<std::size_t>(cellX);
     if (spots_[index]&2U) {
         const auto support=Sid{hash_.Entries(0)[index]};
-        if (!support.value || pool_.Slot(support)[10]==state_.noIslandType) return false;
+        if (!support.value || pool_.Slot(support)[10]==state_.NoIslandType()) return false;
     } else {
         const auto currentType=pool_.Slot(sid)[10];
         if (currentType>=types_.size()) throw std::out_of_range("Ascend 후속 후보 타입 오류");

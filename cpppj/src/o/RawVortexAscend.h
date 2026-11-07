@@ -14,6 +14,8 @@ struct VortexAscendIsland {
 // 현재 후보판정 전역이다. 플레이 중 바뀌면 다음 후보부터 현재 값을 읽는다.
 struct VortexAscendState {
     std::uint32_t noIslandType{157}; // 현재 기본 표면 noIsland 타입 전역이다.
+    const std::uint32_t* sharedNoIslandType{}; // 실제 Client의 현재 TYPE 주소다. 독립 입력만 앞의 값을 사용한다.
+    std::uint32_t NoIslandType() const { return sharedNoIslandType ? *sharedNoIslandType : noIslandType; } // 후보마다 당시 현재 번호를 읽는다.
 };
 // 섬 조회·버퍼 확보·가상 삭제의 실제 외부 효과다. 어떤 것도 무효 콜백으로 채우지 않는다.
 struct VortexAscendHooks {
