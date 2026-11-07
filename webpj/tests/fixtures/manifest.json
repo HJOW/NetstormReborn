@@ -5541,7 +5541,7 @@
       "bytes": 49027,
       "lines": 17,
       "fixtureCommit": "29b16c52",
-      "webCommit": "worktree",
+      "webCommit": "5c75f228",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85"
       }
@@ -5555,7 +5555,8 @@
       "path": "cpppj/tests/fixtures/graph-live-checking-x86.tsv",
       "producer": "cpppj 독립 PE 관측: Graph 실제 부모(Add/Flood/Rebuild)의 진단·로그 재진입 전체 표/스택/슬롯",
       "consumers": [
-        "webpj/tests/raw-graph.test.mjs"
+        "webpj/tests/raw-graph.test.mjs",
+        "webpj/tests/squid-postpop.test.mjs"
       ],
       "modules": [
         "webpj/www/core/raw-graph.js"
@@ -5564,13 +5565,13 @@
       "cpppjSources": [
         "cpppj/src/o/RawGraphLive.cpp"
       ],
-      "scope": "144행 중 10.78(originals) 72행 사용(originalCD 72행은 범위 밖)",
+      "scope": "144행 중 10.78(originals) 72행 사용(originalCD 72행은 범위 밖) · squid-postpop.test.mjs는 전체 이벤트 열에서 원문 assertion 목록(허용 진단 카탈로그)만 읽음",
       "text": true,
       "sha256": "473ee74344c15d6117716428d6f76f07da2262970e19884f0d15c20c18d91852",
       "bytes": 5241371,
       "lines": 144,
       "fixtureCommit": "b7065914",
-      "webCommit": "worktree",
+      "webCommit": "5c75f228",
       "cpppjBasis": {
         "cpppj/src/o/RawGraphLive.cpp": "99ff1a5f"
       }
@@ -5599,7 +5600,7 @@
       "bytes": 873511,
       "lines": 24,
       "fixtureCommit": "b7065914",
-      "webCommit": "worktree",
+      "webCommit": "5c75f228",
       "cpppjBasis": {
         "cpppj/src/o/RawGraphLive.cpp": "99ff1a5f"
       }
@@ -5628,7 +5629,7 @@
       "bytes": 15725020,
       "lines": 432,
       "fixtureCommit": "8df974e5",
-      "webCommit": "worktree",
+      "webCommit": "5c75f228",
       "cpppjBasis": {
         "cpppj/src/o/RawGraphLive.cpp": "99ff1a5f"
       }
@@ -5657,7 +5658,7 @@
       "bytes": 291356,
       "lines": 8,
       "fixtureCommit": "8df974e5",
-      "webCommit": "worktree",
+      "webCommit": "5c75f228",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85"
       }
@@ -5687,7 +5688,7 @@
       "bytes": 47816,
       "lines": 760,
       "fixtureCommit": "2d166e07",
-      "webCommit": "worktree",
+      "webCommit": "5c75f228",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85"
       }
@@ -5717,7 +5718,7 @@
       "bytes": 93084,
       "lines": 1080,
       "fixtureCommit": "588c0e9c",
-      "webCommit": "worktree",
+      "webCommit": "5c75f228",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85"
       }
@@ -5746,7 +5747,7 @@
       "bytes": 2569455,
       "lines": 65,
       "fixtureCommit": "860030e7",
-      "webCommit": "worktree",
+      "webCommit": "5c75f228",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85"
       }
@@ -5775,7 +5776,7 @@
       "bytes": 1528567,
       "lines": 775,
       "fixtureCommit": "81d2e089",
-      "webCommit": "worktree",
+      "webCommit": "5c75f228",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85"
       }
@@ -5804,6 +5805,190 @@
       "bytes": 2031927,
       "lines": 583,
       "fixtureCommit": "c9a02cb8",
+      "webCommit": "5c75f228",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E41",
+      "id": "postpop",
+      "path": "cpppj/tests/fixtures/postpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 공통 후처리의 비용·목록·통계 장부와 Pop/Unpop·재등록",
+      "consumers": [
+        "webpj/tests/squid-postpop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-postpop.js"
+      ],
+      "doc": "docs/webpj-squid-postpop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidPostPop.cpp",
+        "cpppj/src/o/SquidPostPopPatch.cpp"
+      ],
+      "scope": "10.78(originals) 구간의 PostPop 384·Pop 72·Unpop 36행 사용(표시 dirty 열 제외, original1037·originalCD 구간은 범위 밖)",
+      "text": true,
+      "sha256": "9ddeab230d993a9fbe77b0e46f2786900d9b28a3639a8a2cc02a4ed200dcac62",
+      "bytes": 218979,
+      "lines": 2141,
+      "fixtureCommit": "4ed429ca",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidPostPop.cpp": "b04fd743",
+        "cpppj/src/o/SquidPostPopPatch.cpp": "99ff1a5f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E41",
+      "id": "bridgepostpop",
+      "path": "cpppj/tests/fixtures/bridgepostpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리 postPop 접두의 flags/extra/연결 요청 순서",
+      "consumers": [
+        "webpj/tests/squid-postpop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-postpop.js"
+      ],
+      "doc": "docs/webpj-squid-postpop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidPostPop.cpp"
+      ],
+      "scope": "240행 중 10.78 80행 사용",
+      "text": true,
+      "sha256": "89893c5dd8c165cc619935924e671c1fdbb49dc4c19dbe77537dd75a5e2beb0c",
+      "bytes": 8204,
+      "lines": 241,
+      "fixtureCommit": "8bb3d9ca",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidPostPop.cpp": "b04fd743"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E41",
+      "id": "rawgraph",
+      "path": "cpppj/tests/fixtures/rawgraph-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 표면 Pop·PostPop·Flood·Add의 전체 슬롯/기록/스택/해시/spot/풀/장부",
+      "consumers": [
+        "webpj/tests/squid-postpop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-postpop.js",
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-squid-postpop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp",
+        "cpppj/src/o/SquidPostPop.cpp"
+      ],
+      "scope": "10.78 구간의 768행 사용(표시 dirty 열 제외)",
+      "text": true,
+      "sha256": "f3804bf8ed3c08ceabbe91ffd381b13dfb1059ad45e770c411d53225cde10319",
+      "bytes": 10343491,
+      "lines": 1797,
+      "fixtureCommit": "398e67b0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85",
+        "cpppj/src/o/SquidPostPop.cpp": "b04fd743"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E41",
+      "id": "regiongraph",
+      "path": "cpppj/tests/fixtures/regiongraph-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반/다리/섬 Pop의 영역 통지와 Add",
+      "consumers": [
+        "webpj/tests/squid-postpop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-postpop.js",
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-squid-postpop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp",
+        "cpppj/src/o/SquidPostPop.cpp"
+      ],
+      "scope": "10.78 구간의 512행을 일반/checking 두 경로로 사용(표시 dirty 열 제외)",
+      "text": true,
+      "sha256": "5f0d9623a354a6f2139ec37118927592a93556768d09e8a171e62567c9e0239a",
+      "bytes": 2349133,
+      "lines": 1927,
+      "fixtureCommit": "44815f5a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85",
+        "cpppj/src/o/SquidPostPop.cpp": "b04fd743"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E41",
+      "id": "graphremove",
+      "path": "cpppj/tests/fixtures/graphremove-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 삭제 일반 finder/분할 정책과 다리·섬 Unpop·Release",
+      "consumers": [
+        "webpj/tests/squid-postpop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-postpop.js",
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-squid-postpop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp"
+      ],
+      "scope": "10.78 구간의 386행 사용(표시 dirty 열 제외)",
+      "text": true,
+      "sha256": "82a2f1291b867d958ccdae64231185b27877a069abec53b7dd3c747b26a782b7",
+      "bytes": 2065280,
+      "lines": 1549,
+      "fixtureCommit": "09d24c09",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E41",
+      "id": "graphrecovery",
+      "path": "cpppj/tests/fixtures/graphrecovery-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Add/Detach/Pop/PostPop 상위 호출 안의 전체 재구성(FullPool)",
+      "consumers": [
+        "webpj/tests/squid-postpop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-postpop.js",
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-squid-postpop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp"
+      ],
+      "scope": "10.78 구간의 64행 사용(표시 dirty 열 제외)",
+      "text": true,
+      "sha256": "201655d8f2a0693de127a892c8fe0b6e45f8e425c11b6edfb65e888e2d22b8a6",
+      "bytes": 1355851,
+      "lines": 391,
+      "fixtureCommit": "561e2803",
       "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85"
