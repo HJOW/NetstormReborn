@@ -6083,7 +6083,7 @@
       "bytes": 2413945,
       "lines": 14540,
       "fixtureCommit": "4118523c",
-      "webCommit": "worktree",
+      "webCommit": "69ceaae1",
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeDecay.cpp": "cc328596",
         "cpppj/src/o/Bridge.cpp": "11b04c8e"
@@ -6113,7 +6113,7 @@
       "bytes": 54079,
       "lines": 273,
       "fixtureCommit": "cc328596",
-      "webCommit": "worktree",
+      "webCommit": "69ceaae1",
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeDecay.cpp": "cc328596"
       }
@@ -6142,9 +6142,38 @@
       "bytes": 10089,
       "lines": 74,
       "fixtureCommit": "53a639f0",
-      "webCommit": "worktree",
+      "webCommit": "69ceaae1",
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeDecayScan.cpp": "53a639f0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E46",
+      "id": "bridge-carrier-retreat",
+      "path": "cpppj/tests/fixtures/bridge-carrier-retreat-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 위험한 다리 위 사제/rainWalker의 이동 조회와 같은 Graph 표면 대피 선택",
+      "consumers": [
+        "webpj/tests/bridge-carriers.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bridge-carriers.js"
+      ],
+      "doc": "docs/webpj-bridge-carriers-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeCarriers.cpp"
+      ],
+      "scope": "258행 전부 사용",
+      "text": true,
+      "sha256": "4fdc07e6a08778c87fdf235bc307a281d63f5a7c2d4e64a459784fa05076c83c",
+      "bytes": 128144,
+      "lines": 259,
+      "fixtureCommit": "29dbc48c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeCarriers.cpp": "8b467ca0"
       }
     }
   ]
