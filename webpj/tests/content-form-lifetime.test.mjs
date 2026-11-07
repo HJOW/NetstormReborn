@@ -2,7 +2,7 @@
 //  - 원본 관측(cpppj/tests/fixtures, 10.78 행만): contentlifetime-x86 198행(cpppj ContentLifetime_IndependentPeFixture)·content-cursor-width-x86(CursorPreviewDword_ContentComparisonNative56KeepsAllBits).
 //    입력·명시 장치는 cpppj 검사와 같고 기대값(효과 당시 전체 슬롯·통지·관측 슬롯·풀/깊이)은 fixture 에서 읽는다.
 //  - 계약: cpppj ContentLifetimeTests(실제 SP/지갑 통합·boss 재조회·너겟 번호 재조회·혼합 Form 분배), FormTakeTests 의 FormClassLifetime_CurrentVtableKeepsGumpAndContentEffects,
-//    DependCreateCurrentTests 의 DependCreateCurrent_UnregisteredClassDoesNotUseDifferentRawTypeRoute. 혼합 분배의 Process 부분은 SquidProcessHost 이식(WB04-D5c) 때 더한다.
+//    DependCreateCurrentTests 의 DependCreateCurrent_UnregisteredClassDoesNotUseDifferentRawTypeRoute. 혼합 분배는 Process(자기 삭제 프로세스·Kernel)까지 포함한다(WB04-D5c).
 // 실제 게임·브라우저 실행이 아니다. (2026-11-07 WB04-D5b: Content 수명·Form 분배기 이식과 함께 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -25,6 +25,8 @@ import { ScrambledSpStore } from '../www/core/sp-store.js';
 import { SquidReward, SquidRewardState } from '../www/core/squid-reward.js';
 import { ContentFormLifetime, ContentLifetimeState } from '../www/core/content-form-lifetime.js';
 import { SquidFormDispatch } from '../www/core/squid-form-dispatch.js';
+import { Kernel } from '../www/core/kernel.js';
+import { SquidProcess, SquidProcessHost, SquidProcessState } from '../www/core/squid-process.js';
 
 // 원본 관측 파일 폴더와 10.78 행 읽기이다. 파일이 없으면 해당 검사를 건너뛴다. (2026-11-07 WB04-D5b)
 const FIXTURES = path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures');
@@ -325,7 +327,29 @@ test('ContentFormLifetime: 현재 너겟 번호를 kind·단가마다 다시 읽
     assert.deepEqual([events, current, state.nuggetType, pool.slot(form)[11] & 1, get(pool.slot(parent), 6, 2), destroy.preDepth, destroy.postDepth], ['CNWSA', 72, 154, 1, 0, 0, 0]);
 });
 
-// 한 부모의 감시·Gump·Content Form 이 자기 알림에서 삭제돼도 같은 저장소/깊이/선저장 next 를 공유한다(cpppj ContentLifetime_SharedMixedFormDispatch 중 Process 를 뺀 부분).
+// 부모 삭제 중 자신의 Form 을 같은 분배기로 지우는 프로세스이다. 객체를 삭제한 뒤 멤버를 다시 읽지 않는다. counts: [부모 사망 통지, form 삭제 통지, 소멸] 세 카운터. (2026-11-08 WB04-D5c)
+class SelfDeletingProcess extends SquidProcess {
+    constructor(dispatch, counts) {
+        super();
+        this.dispatch = dispatch;
+        this.counts = counts;
+    }
+
+    // Kernel 의 실제 객체 소멸도 확인한다.
+    destroy() { this.counts[2] += 1; }
+
+    // 같은 Form 의 가상 preDestroy 로 들어온 통지를 센다.
+    onFormDestroy() { this.counts[1] += 1; }
+
+    // 상대 부모 release 중 현재 프로세스만 중첩 삭제한다. 부모가 선저장한 다음 종속은 지우지 않는다.
+    onParentDying() {
+        const form = this.form;
+        this.counts[0] += 1;
+        this.dispatch.destroy(form, 0x10);
+    }
+}
+
+// 한 부모의 감시·Gump·프로세스·Content Form 이 자기 알림에서 삭제돼도 같은 저장소/깊이/선저장 next 를 공유한다(cpppj ContentLifetime_SharedMixedFormDispatch).
 test('SquidFormDispatch: 혼합 Form 종속 체인의 중첩 삭제', () => {
     const pool = new SidPool(32768);
     const types = formTypeInputs();
@@ -355,6 +379,10 @@ test('SquidFormDispatch: 혼합 Form 종속 체인의 중첩 삭제', () => {
     const content = new ContentFormHost(pool, types, (_parent, _form, reason) => { if (reason === 2) contentRemovals += 1; });
     const lifetime = new ContentFormLifetime(pool, types, content, destroy, new ContentLifetimeState(), {}, dispatch.hooks());
     dispatch.bind(lifetime);
+    const counts = [0, 0, 0];
+    const kernel = new Kernel();
+    const processes = new SquidProcessHost(pool, types, kernel, destroy, new SquidProcessState(), { asset: dispatch.hooks() });
+    dispatch.bind(processes);
     let gumpForm = 0;
     const gumps = new GumpFormHost(pool, factory, types, destroy, {
         notice: (owner, object) => {
@@ -377,14 +405,16 @@ test('SquidFormDispatch: 혼합 Form 종속 체인의 중첩 삭제', () => {
     const value = factory.createContained(2);
     put(pool.allocated(value), 18, 80, 2);
     content.attach(value, root, 0x10);
+    const process = processes.attach(new SelfDeletingProcess(dispatch, counts), 46, root, 0x10);
+    const processForm = process.form;
     gumpForm = gumps.create(2);
     gumps.setOwner(gumpForm, 0xabcdef12);
     gumps.attach(gumpForm, root);
     const pair = depends.create(root, watcher);
     assert.equal(dispatch.destroy(root, 0x10), true);
-    assert.deepEqual([assetRoots, selected, dependNotices, gumpNotices, contentRemovals, get(pool.slot(watcher), 6, 2)], [1, 0, 1, 1, 0, 0]);
+    assert.deepEqual([assetRoots, selected, kernel.size, counts, dependNotices, gumpNotices, contentRemovals, get(pool.slot(watcher), 6, 2)], [1, 0, 0, [1, 1, 1], 1, 1, 0, 0]);
     // 모든 Form 과 루트가 같은 SID 반납/삭제 기록에 들어간다.
-    for (const sid of [root, value, gumpForm, pair.watchedForm, pair.watcherForm]) assert.equal(pool.slot(sid)[11] & 3, 3, `sid ${sid}`);
+    for (const sid of [root, value, processForm, gumpForm, pair.watchedForm, pair.watcherForm]) assert.equal(pool.slot(sid)[11] & 3, 3, `sid ${sid}`);
     assert.deepEqual([destroy.preDepth, destroy.postDepth], [0, 0]);
     assert.ok(throws(() => dispatch.bind(gumps)));
     assert.ok(throws(() => dispatch.bind({ pool, hooks: () => ({}) })));

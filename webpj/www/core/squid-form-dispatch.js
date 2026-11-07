@@ -3,15 +3,16 @@
 //  - 공유 훅: 전송/선택 해제는 자산 경계, 종속 삭제는 루트 재진입, Form 의 pre/post/release 와 Unpop 은 효과 뒤 **현재 VT** 가 고른 클래스 호스트,
 //    자산은 자산 경계로 보낸다. 변경 가능한 TYPE BYTE 를 클래스 대신 쓰지 않으며, 선택된 클래스 호스트가 없으면 다른 경로로 숨기지 않고 오류다.
 //  - 각 호스트는 생성 때 fallback 에 이 분배기의 hooks() 를 넘긴 뒤 bind 로 등록한다. 등록 전에는 실제 삭제하지 않는다.
-// Process 호스트(SquidProcessHost)는 WB04-D5c 에서 이식하며, 그 전에는 Process VT 가 선택되면 "미등록" 오류다.
+// Process 호스트(SquidProcessHost)도 bind 로 등록한다(WB04-D5c). 등록 전에 Process VT 가 선택되면 "미등록" 오류다.
 // 근거: cpppj `o/SquidFormDispatch.cpp/.h`(기준선 1f00a25a). 검사(cpppj ContentLifetime_SharedMixedFormDispatch·FormClassLifetime_CurrentVtableKeepsGumpAndContentEffects·
 //       DependCreateCurrent_UnregisteredClassDoesNotUseDifferentRawTypeRoute)는 tests/content-form-lifetime.test.mjs 에 있다. CD 10.72 VT 는 범위 밖이다.
-// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-07 WB04-D5b: 혼합 종속 체인의 중첩 삭제 분배로 추가)
+// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-07 WB04-D5b: 혼합 종속 체인의 중첩 삭제 분배로 추가, 2026-11-08 WB04-D5c: Process 호스트 등록 추가)
 import { RawSquidDestroy, SQUID_DESTROY_EFFECT } from './squid-destroy.js';
 import { SQUID_FORM_VTABLES } from './squid-vtables.js';
 import { DependFormHost } from './depend-form-host.js';
 import { GumpFormHost } from './gump-form-host.js';
 import { ContentFormLifetime } from './content-form-lifetime.js';
+import { SquidProcessHost } from './squid-process.js';
 
 // 네 내장 Form 클래스의 등록 번호와 첫 자산 TYPE 번호이다. (2026-11-07 WB04-D5b)
 const DEPEND = 1, PROCESS = 2, GUMP = 3, CONTENT = 6, FIRST_ASSET_TYPE = 70;
@@ -60,13 +61,15 @@ export class SquidFormDispatch {
     // 같은 실제 풀이다(월드/클라이언트 공유 확인용).
     get pool() { return this.#pool; }
 
-    // 감시·Gump·Content 호스트를 현재 클래스 번호로 등록한다. 다른 풀·같은 클래스 재등록·불완전 훅·미지원 호스트는 거부한다.
+    // 감시·Process·Gump·Content 호스트를 현재 클래스 번호로 등록한다. 다른 풀·같은 클래스 재등록·불완전 훅·미지원 호스트는 거부한다.
+    // 사용: dispatch.bind(new SquidProcessHost(pool, types, kernel, destroy, state, { asset: dispatch.hooks() })). (2026-11-08 WB04-D5c: Process 호스트 등록 추가)
     bind(host) {
         let number;
         if (host instanceof DependFormHost) number = DEPEND;
+        else if (host instanceof SquidProcessHost) number = PROCESS;
         else if (host instanceof GumpFormHost) number = GUMP;
         else if (host instanceof ContentFormLifetime) number = CONTENT;
-        else throw new TypeError('Form 분배 등록 대상 클래스 오류(Process 호스트는 WB04-D5c 이식 대상)');
+        else throw new TypeError('Form 분배 등록 대상 클래스 오류');
         this.#register(host.pool, number, host.hooks());
     }
 

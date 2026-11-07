@@ -93,7 +93,7 @@
       "bytes": 19992,
       "lines": 92,
       "fixtureCommit": "8f85465d",
-      "webCommit": "worktree",
+      "webCommit": "97b687ea",
       "cpppjBasis": {
         "cpppj/src/client/HelpLinkPolicy.cpp": "8f85465d"
       }
@@ -1114,7 +1114,7 @@
       "bytes": 814877,
       "lines": null,
       "fixtureCommit": "ddfce6c4",
-      "webCommit": "worktree",
+      "webCommit": "97b687ea",
       "cpppjBasis": {}
     },
     {
@@ -1889,7 +1889,7 @@
       "bytes": 7575,
       "lines": 259,
       "fixtureCommit": "5bf64ed5",
-      "webCommit": "worktree",
+      "webCommit": "97b687ea",
       "cpppjBasis": {}
     },
     {
@@ -1921,7 +1921,7 @@
       "bytes": 5596,
       "lines": 71,
       "fixtureCommit": "5bf64ed5",
-      "webCommit": "worktree",
+      "webCommit": "97b687ea",
       "cpppjBasis": {}
     },
     {
@@ -2077,6 +2077,275 @@
       "webCommit": "2a2e08e4",
       "cpppjBasis": {
         "cpppj/src/o/ContentFormLifetime.cpp": "b08059ac"
+      }
+    },
+    {
+      "id": "process-scenarios",
+      "path": "cpppj/tests/fixtures/process-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Process 부착·Regular 실행·Kill·조회·삭제 x86 관측(부모 가상 pre/post/처리기·new/free·로그·전파만 대체한 시나리오 재생)",
+      "consumers": [
+        "webpj/tests/squid-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-process.js",
+        "webpj/www/core/raw-process-attach.js"
+      ],
+      "unit": "WB04-D5c",
+      "doc": "docs/webpj-process-host-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidProcess.cpp",
+        "cpppj/src/o/RawBaseProcessAttach.cpp",
+        "cpppj/src/o/RawProcessAttach.cpp"
+      ],
+      "scope": "10.78(originals) 시나리오 전체(연산마다 13개 풀 수치·슬롯·프로세스 필드·사건·해제 목록). CD 10.72·10.37 행 제외",
+      "text": true,
+      "sha256": "34be38ab8e39ff846142cf51aa453c60c9ab0620b40e92646d5dafe9f8ebc553",
+      "bytes": 819581,
+      "lines": 361,
+      "fixtureCommit": "a3fa0596",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidProcess.cpp": "6fefcff5",
+        "cpppj/src/o/RawBaseProcessAttach.cpp": "877cc129",
+        "cpppj/src/o/RawProcessAttach.cpp": "4c449132"
+      }
+    },
+    {
+      "id": "process-attach-local",
+      "path": "cpppj/tests/fixtures/process-attach-current-local-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 ProcessForm 파생 +74 접두(서버 0, 004b1440) x86 관측(진단·공통 자식 인자·전체 raw 슬롯)",
+      "consumers": [
+        "webpj/tests/squid-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-process-attach.js"
+      ],
+      "unit": "WB04-D5c",
+      "doc": "docs/webpj-process-host-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawProcessAttach.cpp"
+      ],
+      "scope": "10.78 24행. CD 행 제외",
+      "text": true,
+      "sha256": "e47be5fa783bb9f953fde1c3af4882a4bb62fc916666a6c0dd52d5fab6cebe96",
+      "bytes": 6383,
+      "lines": 49,
+      "fixtureCommit": "4c449132",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawProcessAttach.cpp": "4c449132"
+      }
+    },
+    {
+      "id": "baseprocess-attach-local",
+      "path": "cpppj/tests/fixtures/baseprocess-attach-current-local-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 BaseProcess 신규 로컬 부착 x86 관측(타입 진단·Kernel/Create/가상 부착 호출 순서·필드·슬롯)",
+      "consumers": [
+        "webpj/tests/squid-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-process-attach.js"
+      ],
+      "unit": "WB04-D5c",
+      "doc": "docs/webpj-process-host-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBaseProcessAttach.cpp"
+      ],
+      "scope": "10.78 24행(신규 로컬 Form0/flags 0x50). 지정 Form/수신/MP 분기는 이 표에 없음. CD 행 제외",
+      "text": true,
+      "sha256": "6d8c548585021e94997957ac42d59d76443891da387c2022f6d41c83c331b6d6",
+      "bytes": 9168,
+      "lines": 49,
+      "fixtureCommit": "877cc129",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBaseProcessAttach.cpp": "877cc129"
+      }
+    },
+    {
+      "id": "process-form-attach",
+      "path": "cpppj/tests/fixtures/processform-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 지정 free ProcessForm 수신(Attach)과 단일 즉시 패킷 분배 x86 관측(가상 통지·세 슬롯 전체·풀 메타)",
+      "consumers": [
+        "webpj/tests/process-form.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-process.js"
+      ],
+      "unit": "WB04-D5c",
+      "doc": "docs/webpj-process-host-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidProcess.cpp"
+      ],
+      "scope": "10.78 Attach 288행만 사용(Dispatch 행은 패킷 분배 단위에서). CD 10.72·10.37 행 제외",
+      "text": true,
+      "sha256": "32b67fe92fe59e484ea2b8c32599a7bac63c13145a56f3b3481398a21ac8b5ef",
+      "bytes": 518003,
+      "lines": 1837,
+      "fixtureCommit": "e2dd58a8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidProcess.cpp": "6fefcff5"
+      }
+    },
+    {
+      "id": "process-retake",
+      "path": "cpppj/tests/fixtures/processretake-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 지정 ProcessForm 재수신·Kernel 중복 포인터·삭제 PID 재조회/소멸자·Clear 중 재등록 x86 관측",
+      "consumers": [
+        "webpj/tests/process-form.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-process.js",
+        "webpj/www/core/kernel.js"
+      ],
+      "unit": "WB04-D5c",
+      "doc": "docs/webpj-process-host-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidProcess.cpp",
+        "cpppj/src/o/Kernel.cpp"
+      ],
+      "scope": "10.78 194행. CD 행 제외",
+      "text": true,
+      "sha256": "705276d822488e0177fc743d09d394d5f7dcbb3e796a7a77238044b7b88a09c8",
+      "bytes": 141552,
+      "lines": 389,
+      "fixtureCommit": "a5afdafb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidProcess.cpp": "6fefcff5",
+        "cpppj/src/o/Kernel.cpp": "c6536398"
+      }
+    },
+    {
+      "id": "process-transmit",
+      "path": "cpppj/tests/fixtures/processtransmit-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 ProcessForm 서버 부착/갱신의 WriteData·송신·체인/Pop 순서 x86 관측(전송 직렬화는 입력 장치)",
+      "consumers": [
+        "webpj/tests/process-transmit.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-process.js"
+      ],
+      "unit": "WB04-D5c",
+      "doc": "docs/webpj-process-host-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidProcess.cpp"
+      ],
+      "scope": "10.78 행(Attach·Refresh). CD 행 제외",
+      "text": true,
+      "sha256": "5ae6f79b52b4eeb888a858e16cecea9e332b4538a34cafe52a8ce74d7abbcfe1",
+      "bytes": 159901,
+      "lines": 377,
+      "fixtureCommit": "ada85427",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidProcess.cpp": "6fefcff5"
+      }
+    },
+    {
+      "id": "process-removal-filter",
+      "path": "cpppj/tests/fixtures/process-removal-filter-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 ProcessFinder 일괄 제거(004b27a0) x86 관측(혼합 Form 목록·요청 타입별 삭제 순서와 flags)",
+      "consumers": [
+        "webpj/tests/raw-process-removal.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-process-removal.js"
+      ],
+      "unit": "WB04-D5c",
+      "doc": "docs/webpj-process-host-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawProcessRemoval.cpp"
+      ],
+      "scope": "10.78 64행(판본 열 없는 10.78 전용 표). 웹 입력은 raw 노드에 실제 VT 를 넣음",
+      "text": true,
+      "sha256": "240d9b62a101c6f160bbf0b8f1f77fc0a9262dd9f867d824935fc00d74454c85",
+      "bytes": 2102,
+      "lines": 65,
+      "fixtureCommit": "98c3aea8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawProcessRemoval.cpp": "98c3aea8"
+      }
+    },
+    {
+      "id": "regular-current-find",
+      "path": "cpppj/tests/fixtures/regular-current-find-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 두 Regular finder(FindEvent·FindEventMasked) x86 관측(현재 일반/공유 번호 전체 DWORD·signed 프로세스 상한·자산 선행 필터)",
+      "consumers": [
+        "webpj/tests/regular-current.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-process.js"
+      ],
+      "unit": "WB04-D5c",
+      "doc": "docs/webpj-process-host-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidProcess.cpp"
+      ],
+      "scope": "10.78 1232행(판본 열 없는 10.78 전용 표)",
+      "text": true,
+      "sha256": "073724a72d2b0f619ea85ec07ff9f476d38def76f9f63ae288f7f331067efa49",
+      "bytes": 32988,
+      "lines": 1233,
+      "fixtureCommit": "9dd15ef2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidProcess.cpp": "6fefcff5"
+      }
+    },
+    {
+      "id": "regular-current-constructor",
+      "path": "cpppj/tests/fixtures/regular-current-constructor-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Regular/SharedRegular 생성자 부착 x86 관측(부착 호출·후단 필드·공유 생성 진단 복귀)",
+      "consumers": [
+        "webpj/tests/regular-current.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-process.js"
+      ],
+      "unit": "WB04-D5c",
+      "doc": "docs/webpj-process-host-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidProcess.cpp"
+      ],
+      "scope": "10.78 64행 중 부착 장치가 시각을 바꾸지 않는 32행만 사용(나머지 32행은 외부 장치 시각 변경, 별도 관찰 유지)",
+      "text": true,
+      "sha256": "f2922ac64a94c4115d4cbe7d980d05db5d06d3e4025b82516beec5736ec9324e",
+      "bytes": 3735,
+      "lines": 65,
+      "fixtureCommit": "9dd15ef2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidProcess.cpp": "6fefcff5"
       }
     }
   ]

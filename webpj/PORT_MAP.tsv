@@ -432,7 +432,7 @@ cpppj/src/client/WarningMessages.cpp	port			todo	[client-default]
 cpppj/src/client/WindowTitle.cpp	adapt			todo	[adapt-screen]
 cpppj/src/client/XlatFileRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/BaseFile.cpp	adapt	www/assets/game-files.js;www/assets/taff.js;www/assets/asset-loader.js	1f00a25a	partial	[adapt-file] 느슨한 파일→TAFF 조회(웹 대체, docs/formats/vfs.md)
-cpppj/src/o/BaseProcess.cpp	port	www/core/kernel.js	1f00a25a	partial	[o-default] Kernel 이 쓰는 프로세스 슬롯 일부. Process/BaseProcess 부착은 WB04-D5c
+cpppj/src/o/BaseProcess.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(BaseProcess 기반)·WB04-D5c(Process/BaseProcess 부착은 squid-process.js 호스트)
 cpppj/src/o/Bridge.cpp	port			todo	[o-default]
 cpppj/src/o/BurningVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/CampaignDamageVtables.inc	port			todo	[o-default]
@@ -460,7 +460,7 @@ cpppj/src/o/GameClock.cpp	port	www/core/game-clock.js	3e9dc2c7	port	[o-default] 
 cpppj/src/o/Graph.cpp	port			todo	[o-default]
 cpppj/src/o/GumpFormHost.cpp	port	www/core/gump-form-host.js	1f00a25a	port	[o-default] WB04-D5a
 cpppj/src/o/Islandbuilder.cpp	port	www/assets/territory.js	1f00a25a	partial	[o-default] WB03-V 영역 패턴 배치
-cpppj/src/o/Kernel.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(1..39999 현재 슬롯 순서)
+cpppj/src/o/Kernel.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(1..39999 현재 슬롯 순서) / WB04-D5c: 기준선 정렬 — 진단 장치(소진 요약→상세→단언 0x7a, 빈 슬롯 삭제 단언 0x82), 슬롯 0 조회·삭제(순회 제외), 밀려난 객체 보관, drainOwnedForShutdown. KernelDiagnosticCurrentTests 의 Client 접합 2장면은 WB05
 cpppj/src/o/LightningVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/OriginalText.cpp	port	www/assets/text-encoding.js	1f00a25a	partial	[o-default] Windows-1252 변환
 cpppj/src/o/PacketRegistrationTable.cpp	port			todo	[o-default]
@@ -515,7 +515,7 @@ cpppj/src/o/RawArcSpire.cpp	port			todo	[o-default]
 cpppj/src/o/RawAssetOwner.cpp	port			todo	[o-default]
 cpppj/src/o/RawAssetPostPop.cpp	port			todo	[o-default]
 cpppj/src/o/RawAssetRegular.cpp	port			todo	[o-default]
-cpppj/src/o/RawAuthorityState.h	port			todo	[o-default]
+cpppj/src/o/RawAuthorityState.h	port	www/core/raw-authority-state.js	1f00a25a	port	[o-default] WB04-D5c(server/boss 두 논리 전역, 호스트 상태가 빌림)
 cpppj/src/o/RawAuxiliaryDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawBalloonBody.cpp	port			todo	[o-default]
 cpppj/src/o/RawBalloonFrame.cpp	port			todo	[o-default]
@@ -523,7 +523,7 @@ cpppj/src/o/RawBaseFileIO.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawBaseFileOpenPolicy.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawBaseFileReadPolicy.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawBaseFileWholeRead.cpp	adapt			todo	[adapt-file]
-cpppj/src/o/RawBaseProcessAttach.cpp	port			todo	[o-default]
+cpppj/src/o/RawBaseProcessAttach.cpp	port	www/core/raw-process-attach.js	1f00a25a	port	[o-default] WB04-D5c: 신규 로컬/지정 Form 부착 부모. fixture baseprocess-attach-current-local 24행(10.78)
 cpppj/src/o/RawBattleBroadcast.cpp	port			todo	[o-default]
 cpppj/src/o/RawBoardAngle.cpp	port			todo	[o-default]
 cpppj/src/o/RawBoardApproach.cpp	port			todo	[o-default]
@@ -648,7 +648,7 @@ cpppj/src/o/RawDataManagerResize.cpp	port			todo	[o-default]
 cpppj/src/o/RawDataManagerSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawDeckDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawDeckRestore.cpp	exclude-edit			-	[edit-existing-fort]
-cpppj/src/o/RawDependCreate.cpp	port	www/core/depend-form-host.js	1f00a25a	partial	[o-default] WB04-D5a 감시 쌍 생성(004b1510). Process 직렬화 부착 접두는 WB04-D5c
+cpppj/src/o/RawDependCreate.cpp	port	www/core/depend-form-host.js	1f00a25a	port	[o-default] WB04-D5a 감시 쌍 생성(004b1510). Process VT 부착은 기준선도 DependFormHost 에서 미연결(명시 오류)이며 실제 Process 부착 접두는 squid-process.js(WB04-D5c)
 cpppj/src/o/RawDestroyAt.cpp	port			todo	[o-default]
 cpppj/src/o/RawDiscRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawDissolveFrame.cpp	port			todo	[o-default]
@@ -859,8 +859,8 @@ cpppj/src/o/RawPriestShield.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestSpawn.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestState.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestTakenNotice.cpp	port			todo	[o-default]
-cpppj/src/o/RawProcessAttach.cpp	port			todo	[o-default]
-cpppj/src/o/RawProcessRemoval.cpp	port			todo	[o-default]
+cpppj/src/o/RawProcessAttach.cpp	port	www/core/raw-process-attach.js	1f00a25a	port	[o-default] WB04-D5c: ProcessForm 파생 +74 접두. fixture process-attach-current-local 24행(10.78) + 서버 접두 계약
+cpppj/src/o/RawProcessRemoval.cpp	port	www/core/raw-process-removal.js	1f00a25a	port	[o-default] WB04-D5c: 004b27a0 일괄 제거. fixture process-removal-filter 64행(웹 입력은 raw 노드에 실제 VT 를 넣음)
 cpppj/src/o/RawProcessSummary.cpp	exclude-host			-	[host-dev-files]
 cpppj/src/o/RawProductionDeck.cpp	port			todo	[o-default]
 cpppj/src/o/RawProductionSync.cpp	port			todo	[o-default]
@@ -963,7 +963,7 @@ cpppj/src/o/SquidDestroyLifecycle.cpp	port			todo	[o-default]
 cpppj/src/o/SquidDisplay.cpp	port			todo	[o-default]
 cpppj/src/o/SquidFactory.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4. 웹 타입 로더의 zorder/생성자 주소를 Factory 에 넘기는 연결은 WB05-A(4절 타입 표 생성 메타)
 cpppj/src/o/SquidFinder.cpp	port			todo	[o-default]
-cpppj/src/o/SquidFormDispatch.cpp	port	www/core/squid-form-dispatch.js	1f00a25a	partial	[o-default] WB04-D5b(Depend/Gump/Content 현재 VT 분배·루트 자산 재정의). Process 호스트 등록(Bind(SquidProcessHost))은 WB04-D5c
+cpppj/src/o/SquidFormDispatch.cpp	port	www/core/squid-form-dispatch.js	1f00a25a	port	[o-default] WB04-D5b + WB04-D5c: Process 호스트 bind 와 혼합 체인 분배(자기 삭제 프로세스·Kernel)
 cpppj/src/o/SquidForms.cpp	port	www/core/squid-forms.js	1f00a25a	port	[o-default] WB04-D3
 cpppj/src/o/SquidFrame.cpp	port			todo	[o-default]
 cpppj/src/o/SquidFrameBinding.cpp	port			todo	[o-default]
@@ -973,7 +973,7 @@ cpppj/src/o/SquidOwner.cpp	port			todo	[o-default]
 cpppj/src/o/SquidPop.cpp	port			todo	[o-default]
 cpppj/src/o/SquidPostPop.cpp	port			todo	[o-default]
 cpppj/src/o/SquidPostPopPatch.cpp	port			todo	[o-default]
-cpppj/src/o/SquidProcess.cpp	port			todo	[o-default]
+cpppj/src/o/SquidProcess.cpp	port	www/core/squid-process.js	02b00b12	port	[o-default] WB04-D5c: SquidProcess/RegularProcess/SquidProcessState/SquidProcessHost·ScheduleBridgeFall. fixture process 시나리오·processform Attach 288·processretake 194·processtransmit·regular-current finder 1232/ctor 32 행. 3.6절 판정(02b00b12): ① 기준선 뒤 ReceiveSharedRegular/WriteFormPacket/shared_/writeFullData 는 LAN 전체 수신·참가자 월드 동기화(웹 제외, 단독 경로 결과 동일), ③ 발사/회전 애니메이션 프로세스 TYPE 두 칸(fireAnimationType·rotateAnimationType)은 애니메이션 소비자(RawCampaignArcherBindings) 이식 때 추가
 cpppj/src/o/SquidReward.cpp	port	www/core/squid-reward.js	1f00a25a	port	[o-default] WB04-D5b(0044c2f0 보상·SP 가산 비트·AI 지갑·최대 HP, reward 2400행·sp-add-bits 504행·HP 579행). 장부는 SquidPostPopState(WB04-E)의 localOwner/aiAttached 를 읽음
 cpppj/src/o/SquidSpatial.cpp	port			todo	[o-default]
 cpppj/src/o/SquidUnpop.cpp	port	www/core/squid-unpop.js;www/core/squid-vtables.js	1f00a25a	port	[o-default] WB04-D2(현재 TYPE 표·진단 연결)

@@ -245,8 +245,10 @@ test('Kernel: 실행 중 변경은 현재 슬롯 순서를 따른다', () => {
     assert.deepEqual(calls, [4, 2]);
     assert.equal(kernel.size, 2);
     assert.equal(PROCESS_CAPACITY, 39999);
-    assert.throws(() => kernel.remove(0), RangeError);
-    assert.throws(() => kernel.remove(39999), RangeError);
+    // 기준선 Kernel(WB04-D5c): 빈 슬롯 삭제는 현재 단언 장치를 부르며 미연결이면 그 위치에서 오류이고, 물리 범위 밖만 범위 오류이다.
+    assert.throws(() => kernel.remove(0), /단언 미연결/);
+    assert.throws(() => kernel.remove(39999), /단언 미연결/);
+    assert.throws(() => kernel.remove(40000), RangeError);
 });
 
 // Kernel 계약: 같은 객체 재등록은 기존 번호(뒤 슬롯이라도), 소멸 중에는 원래 슬롯이 보임, clear 는 한 번 순회(지난 앞 슬롯 신규는 남음), dispose 는 모두 정리, 슬롯 소진 오류.
@@ -294,7 +296,8 @@ test('Kernel: 재등록·소멸 순서·clear 한 번 순회·dispose·소진', 
     assert.equal(kernel.size, 0);
     // 슬롯 소진·잘못된 프로세스.
     for (let index = 0; index < 4; index += 1) kernel.add(new CallbackProcess(() => {}));
-    assert.throws(() => kernel.add(new CallbackProcess(() => {})), /Out of processes/);
+    // 기준선 Kernel(WB04-D5c): 소진은 현재 요약→상세→단언 장치를 차례로 부르며, 연결 전에는 첫 장치 위치에서 오류이다(진단 연결 뒤의 동작은 kernel-diagnostics 검사).
+    assert.throws(() => kernel.add(new CallbackProcess(() => {})), /프로세스 요약 미연결/);
     assert.throws(() => kernel.add({}), TypeError);
     assert.throws(() => new Kernel(0), RangeError);
     assert.throws(() => new Kernel(40000), RangeError);

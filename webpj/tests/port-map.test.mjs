@@ -83,7 +83,9 @@ test('이식 대응표: 기존 웹 모듈 대응과 3.6절 판정 기록', () =>
     assert.deepEqual([row('o/SidPool').web, row('o/SidPool').status], ['www/core/sid-pool.js', 'port']);
     assert.match(row('o/SidPool').base, /^[0-9a-f]{8}$/);
     assert.equal(row('o/SquidFactory').status, 'port');
-    assert.equal(row('o/RawDependCreate').status, 'partial');
+    // 감시 쌍 생성은 WB04-D5a 에서 옮겼고 Process VT 부착은 기준선도 DependFormHost 에서 명시 오류라 WB04-D5c 에서 port 로 올렸다.
+    assert.equal(row('o/RawDependCreate').status, 'port');
+    assert.equal(row('o/SquidProcess').status, 'port');
     // 3.6절 9곳은 판정(①/②/③)을 메모에 남겼다.
     const judged = ['o/Config', 'o/ConfigInterface', 'client/TellSection', 'o/RiftTypeTable', 'o/CanonDecoder', 'o/RawTerrainContext', 'o/RawIslandPostPop', 'o/SidPool', 'o/RawSquidContainedUnpop'];
     assert.deepEqual(judged.filter((key) => !/3\.6[①②③]/.test(splitNote(row(key).note).text)), []);
