@@ -200,6 +200,70 @@ public sealed class RawSurfaceWorldTests
         Assert.Equal(7.0, world.CurrentTime().Game);
     }
 
+    /// <summary>제어 장부 초기값이 원본과 같은지 검증한다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BookkeepingStartsWithLocalOwnerOne()
+    {
+        // 원본 Impl 생성자의 bookkeeping.localOwner=1을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Equal(1, world.Bookkeeping().LocalOwner);
+        Assert.False(world.Loading());
+        Assert.False(world.Loaded());
+    }
+
+    /// <summary>적재 시작이 장부·깊이·진행 상태를 함께 여는지 검증한다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BeginLoadStartsLoading()
+    {
+        // 원본 BeginLoad의 장부·진행·깊이 순서를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.BeginLoad();
+        Assert.True(world.Loading());
+        Assert.False(world.Loaded());
+        Assert.Equal(1u, world.LoadingDepth());
+        Assert.True(world.Bookkeeping().GraphsEnabled);
+    }
+
+    /// <summary>중복 적재 시작을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BeginLoadRejectsDuplicate()
+    {
+        // 적재 중·완료 뒤의 시작은 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.BeginLoad();
+        Assert.Throws<InvalidOperationException>(() => world.BeginLoad());
+        world.FinishLoadAfterGraph();
+        Assert.Throws<InvalidOperationException>(() => world.BeginLoad());
+    }
+
+    /// <summary>그래프 뒤 적재 종료가 상태를 닫는지 검증한다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FinishLoadAfterGraphCompletes()
+    {
+        // 원본 FinishLoadAfterGraph의 장부·깊이·완료·변경 순서를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.BeginLoad();
+        Assert.True(world.TakeChanged());
+        world.FinishLoadAfterGraph();
+        Assert.False(world.Loading());
+        Assert.True(world.Loaded());
+        Assert.Equal(0u, world.LoadingDepth());
+        Assert.True(world.Bookkeeping().GraphsEnabled);
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>순서 없는 적재 종료를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FinishLoadAfterGraphRejectsOutOfOrder()
+    {
+        // 시작 전과 완료 뒤의 종료는 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.FinishLoadAfterGraph());
+        world.BeginLoad();
+        world.FinishLoadAfterGraph();
+        Assert.Throws<InvalidOperationException>(() => world.FinishLoadAfterGraph());
+    }
+
     /// <summary>살아 있는 자산이 없으면 빈 목록을 돌려주는지 검증한다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
     [Fact]
     public void ObjectsEmptyWhenNoLiveAssets()

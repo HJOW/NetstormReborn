@@ -44,6 +44,9 @@ public sealed class RawSurfaceWorld
     /// <summary>프로세스 실행·부착·이벤트 분배에 쓰는 같은 저장소 상태다. 원본 Impl.processState에 대응하며 호출자 저장소보다 오래 살 수 없다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
     private readonly SquidProcessState _processState;
 
+    /// <summary>객체 종류·소유자별 등록 목록과 개수를 관리하는 제어 장부다. 원본 Impl.bookkeeping에 대응한다. 공유 집계 연결은 세션 조립에서 잇는다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    private readonly RawPostPopState _bookkeeping = new();
+
     /// <summary>같은 판본·타입·지형으로 월드를 만들고 물리 저장소를 빌리거나 새로 만든다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -62,6 +65,7 @@ public sealed class RawSurfaceWorld
         _terrainType = terrainType;
         _storage = storage ?? new RawSurfaceStorage(edition);
         _processState = _storage.Processes().State();
+        _bookkeeping.LocalOwner = 1;
     }
 
     /// <summary>월드가 따르는 원본 판본이다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
@@ -224,6 +228,47 @@ public sealed class RawSurfaceWorld
     /// <summary>현재 공급된 프레임 시각을 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
     /// <returns>현재 프레임 시각이다.</returns>
     public FrameTime CurrentTime() => _time;
+
+    /// <summary>원본 Fort 순서대로 Create·필드 저장·Pop하는 로더의 시작이다. 적재 중 Graph·장부를 켠다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    public void BeginLoad()
+    {
+        // 적재 중에도 noGraph 표면의 254 지정과 건물 점유 영역 무효화가 필요해 미리 켠다.
+        if (_loaded || _loading)
+        {
+            throw new InvalidOperationException("원본 월드 중복 적재 시작입니다.");
+        }
+
+        _bookkeeping.GraphsEnabled = true;
+        _loading = true;
+        SetLoadingDepth(1u);
+    }
+
+    /// <summary>실제 캠페인 부모가 Graph(false)를 이미 실행한 뒤 로딩 상태만 종료한다. Graph·풀·해시를 재구성하지 않는다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    public void FinishLoadAfterGraph()
+    {
+        if (!_loading || _loaded)
+        {
+            throw new InvalidOperationException("원본 월드 적재 종료 순서가 잘못됐습니다.");
+        }
+
+        _bookkeeping.GraphsEnabled = true;
+        SetLoadingDepth(0u);
+        _loading = false;
+        _loaded = true;
+        _changed = true;
+    }
+
+    /// <summary>적재 작업 중인지 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    /// <returns>적재 중이면 참이다.</returns>
+    public bool Loading() => _loading;
+
+    /// <summary>현재 자료의 적재가 끝났는지 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    /// <returns>적재가 끝났으면 참이다.</returns>
+    public bool Loaded() => _loaded;
+
+    /// <summary>같은 월드가 소유한 제어 장부를 빌린다. 새 사본을 만들지 않는다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    /// <returns>제어 장부다.</returns>
+    public RawPostPopState Bookkeeping() => _bookkeeping;
 
     /// <summary>같은 월드·전송·공간 재등록을 참가자별로 실행한다. 멀티플레이 3차 사전 구현이며 전송기가 없어 명시 오류로 멈춘다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
     /// <param name="owner">동기화할 참가자 번호다.</param>
