@@ -60,6 +60,7 @@
 #include "client/ClientPlayerRuntime.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientNsInfoGlobals.h"
+#include "client/RootServerListDisk.h" //Root0Fh가 갱신한 같은 사용자 서버 목록을 다음 시작 때 우선 읽는다.
 #include "client/ClientChallengeGlobals.h" // 메타 CS는 같은 Client가 현재 포인터/실제 기록/좌표를 소유한다.
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ClientHtmlWindowGlobals.h"
@@ -401,8 +402,7 @@ int Client::Run() {
     // 원문469fc0/469f60은 소비 시점의00594fbc를 읽는다. 실제 물리 설치 뒤·최초 음악 Start 앞에서 같은 owner를 고정 수명으로 빌린다.
     // 근거: docs/exe/cpp-scene-current-battle-20261101.md. cleanup의 음악 Start 뒤 battle0 쓰기 순서는 그대로 유지한다.
     if (options_.edition==o::OriginalEdition::Patch1078) WorldAudio().BindCurrentBattle([storage=surfaceStorage_] { return storage->ownerMode.battle ? 1U : 0U; });
-    const auto serverPath=configuration_.SubstituteLocal("{DataDir}/!rootservers.dat");const auto serverFile=files_.TryRead(serverPath); // 현재 보호 시작 목록을 읽으며 네트워크 갱신/저장 부모와 구별한다.
-    if (serverFile) nsInfoGlobals_->LoadServerNames(*serverFile);else if (const auto original=files_.TryRead(configuration_.SubstituteLocal("{DataDir}/rootservers.dat"))) nsInfoGlobals_->LoadServerNames(*original);
+    LoadClientRootServerList(*this); // 원문 설치 자료 순서를 유지하되 자동 저장된 사용자 홈 파일을 먼저 읽는다.
     if (!PumpMessages()) return 0;
     // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
     //        전체 명령 표, 연락처, HTTP 서버는 남으며 인트로 감지와 지도 모드의 실제 부모는 아래에 연결한다.

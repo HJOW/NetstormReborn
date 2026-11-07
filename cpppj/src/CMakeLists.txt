@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE o/RawRootLoginReply.h o/RawRootLoginReply.cpp client/RootServerListDisk.h client/RootServerListDisk.cpp) #1093:Root0Fh 실제 수신/제공10.71 형식과 같은 서버 목록/사용자 홈 저장을 연결한다.
+
 target_sources(netstorm PRIVATE client/LocalServerProcess.h client/LocalServerProcess.cpp) #1092:메타37의새R 파일식별/Unicode 실제lan 실행·작업폴더와 자식핸들을 연결한다.
 
 target_sources(netstorm PRIVATE root/Server.h root/Server.cpp) #1091:같은 실제 서버 전역/모든 장기 모듈과 수신·파일·메인 hook을 최종owner로 묶는다.

@@ -1,0 +1,71 @@
+{
+  "unit": 1093,
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "build": {
+    "target": "NetstormCpp/NetstormRoot",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "initialBuild": "종료0/C4458 두 건은 변수 이름 교정 뒤 최종 재빌드에서0"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12397056,
+      "sha256": "5476b3d56be9acc0c0a10510a9f53996cb27963983d4088b475ec979c616447e"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "c359d752fb1b93920cc0c96b4f38fcf7af840fdeb2abe9ec2bbd5c79526ef970"
+    }
+  },
+  "staticAudit": {
+    "nativeClientFunctions": 28,
+    "nativeRootFunctions": 3,
+    "nativeClientZoneStride": 47,
+    "nativeClientFriendZoneStride": 3,
+    "providedRootZoneStride": 3,
+    "nativeProtocol": "클라이언트10.78/제공R10.71",
+    "compatibility": "major10/minor71·양수 존/비음수 친구·선언길이20+rootLen+3*numChals+5*numFriends와 실제 물리가 모두 맞을 때만 compact,없는 이름/+84는 정리 결과 유지",
+    "sourcePreserved": "47BYTE 분기의 원문 친구3BYTE 오프셋과 signed char·기록1부터 순차·16친구·phase23 next24/추천,그외 refresh 증가",
+    "bindings": [
+      "같은 Client MetaZones/MetaRefresh/다섯State",
+      "기존 실제 ClearClientMetaZoneRecords",
+      "현재 phase+44 서버 값/목록 upsert·stale checksum",
+      "사용자 Saves !rootservers.dat 저장과 다음 시작 우선읽기",
+      "현재 Config/로그/실제 HTML MetaVerDiff"
+    ],
+    "sourceOnly": true
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "1dh 수신과State28..33/CS·실제메타표시",
+    "세.server콘텐츠·LAN hostname/Config registryValue 경계",
+    "LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "boundaries": [
+    "10.71 compact는 원문10.78에 없는 명시 호환 분기이며 원본R을 실행하거나 응답 내용을 만들지 않음",
+    "유효하지 않은 실제 패킷/표 밖 읽기·쓰기와 버퍼 초과는 호스트 예외",
+    "목록 시작 긴 행/원문 EOF 중복 바이트·논리capacity/NULL 행과 32비트 FILE ABI 자체 일치는 이 단위 범위 밖",
+    "자동 파일은 사용자 홈으로만 쓰며 경로 Unicode와 FILE 소유권은 현대 OS 경계",
+    "47BYTE 친구 오프셋 원문 이상은 고쳤다고 주장하지 않음",
+    "신규 수신/파일 갱신·메타/통신은 사용자 지시로 실행 미검증"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03/HJOW-Athlon",
+    "lastRoot": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

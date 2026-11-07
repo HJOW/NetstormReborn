@@ -2,26 +2,26 @@
 
 cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용자 확인, 재개 절차**를 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-07 재개 진행:** 제품 기준은 **1092 / 11.01**이다. 클라이언트37의실제새R Windows lan/wait0실행/동일자료CWD·부모와분리된콘솔/핸들반납과배포동봉을연결했다. 원문여섯검색/다음34·38부모는유지하되분리배치의클론모듈폴더/새11.01 R파일식별을사용한다. 두Release빌드종료0·경고/오류0,PowerShell5.1 계획/ZIP검증종료0·1384항목/두EXE정확바이트다. 실제게임/서버/MP·통신실행0이다. 다음은제공R3BYTE존/클라이언트0F47BYTE차이·0F/1d수신/메타실제연결이다. 세.server콘텐츠/배포·LAN hostname/Config registryValue경계·LAN/Outpost/checking5→한국어후속→Edit시나리오UI도남아전체목표는미완료다. 원본R실행/폐기검증·PIRATE quota/원문에없는원격포트Open·handler등록은비활성유지하며지정공격/포획/희생/승리·사용자확인·공중3종검사는제외한다.
+**2026-11-07 재개 진행:** 제품 기준은 **1093 / 11.01**이다. Root0Fh 실제 수신/관찰기와 같은 메타 기록·State/목록 갱신·사용자 Saves 저장/다음 시작 우선읽기를 연결했다. 원문47BYTE/친구3BYTE 접근을 보존하고 제공R10.71·정확한3BYTE 길이/물리가 맞을 때만 별도compact 호환을 적용하며 없는 이름/플래그를 만들지 않는다. 두Release 최종빌드 종료0·경고/오류0·보호2800불변·새C++/MP/게임/통신 실행0이다. 다음은1dh 수신·State28..33/CS·실제메타표시다. 세.server콘텐츠/배포·LAN hostname/Config registryValue경계·LAN/Outpost/checking5→한국어후속→Edit시나리오UI도남아전체목표는미완료다. 원본R실행/폐기검증·PIRATE quota/원문에없는원격포트Open·handler등록은비활성유지하며지정공격/포획/희생/승리·사용자확인·공중3종검사는제외한다.
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-07, 제품1092)
+### 0.1 현재 값 (2026-11-07, 제품1093)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 진행 상태 | **이번 /goal로 재개해 작업 진행 중.** 전체 목표 미완료다. |
-| 현재 제품 | **1092 / 표시·파일·제품11.01.** 클라이언트실제새R실행/CWD·콘솔/핸들장치·배포동봉/한ZIP바이트검증을연결했다. 0F존47/3BYTE차이·0F/1d/메타·템플릿콘텐츠·LAN이름/Config레지스트리경계·MP나머지/한국어후속/시나리오UI는남는다. |
+| 현재 제품 | **1093 / 표시·파일·제품11.01.** Root0Fh 실제 수신/관찰·동일 메타/State·목록 갱신·사용자 홈 저장을 연결했다. 1dh·State28..33/CS·실제메타표시·템플릿콘텐츠·LAN이름/Config레지스트리경계·MP나머지/한국어후속/시나리오UI는남는다. |
 | 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반31+데모3의 마지막 전체 진입 검증은 **645의644 제품**이며 현재 제품의 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | Netstorm.exe `228b158634e984f179abfb349fffb07900ece5f15fc08c4081df66d3804d4aec` (12,370,944바이트), 새R.exe `25d7bfba53a5dc935864eb3f4fae4fe9c17026a811b6efac903750118c70a061` (669,696바이트),1092/11.01 |
-| 최신 빌드·집중 검사 | **1092 NetstormCpp/NetstormRoot Release/x64 빌드종료0·경고/오류0.** 실제PowerShell5.1 계획/한ZIP검증종료0·두EXE정확바이트/전체CRC·새R유일동봉이다. 새C++단위/MP/게임/통신/실제CreateProcess/새R·원본R실행0,마지막C++실행검사는1052 기존7개다. [1092 기록](docs/exe/cpp-local-server-process-package-20261107.md). |
+| EXE SHA-256 | Netstorm.exe `5476b3d56be9acc0c0a10510a9f53996cb27963983d4088b475ec979c616447e` (12,397,056바이트), 새R.exe `c359d752fb1b93920cc0c96b4f38fcf7af840fdeb2abe9ec2bbd5c79526ef970` (669,696바이트),1093/11.01 |
+| 최신 빌드·집중 검사 | **1093 NetstormCpp/NetstormRoot Release/x64 최종빌드 종료0·경고/오류0.** 원문/PE·현재배선 정적대조·보호2800불변이다. 새C++/MP/게임/통신/새R·원본R실행0이며마지막C++실행검사는1052 기존7개다. [1093 기록](docs/exe/cpp-root-login-reply-20261107.md). |
 | checking 잔여 | **5함수=부모2+부분0+MP분류3.** 1014에서004b8cb0 전체 몸체/현재 진단·수동 입력을 연결했다. 완료부모40/부분6다. 메타맵2표/004b02d0·Descend/004b4df0/004b8b20 등은3절8번 잔여다. |
-| 최신 정적 감사 | **1092:원문37의여섯후보/lan0·Windows Unicode실행/새R식별·CWD/콘솔·상태·한ZIP의두EXE/3DLL·1384항목CRC를대조했다.** 서버/통신 실행 검증이 아니다. |
+| 최신 정적 감사 | **1093:클라이언트28/제공R3함수 원문·전체PE범위/0F47·친구3와제공10.71 compact분기·현재Client표/State/서버목록·사용자홈저장을대조했다.** 수신·서버/통신실행 검증이 아니다. |
 | 마지막 GUI | **984 실제 단독MCP 1실행:** 격리1920×1080 tutorial1 진입·비정지100프레임 대기·WM_CLOSE 종료0, 입력5/관측7·PNG 확인·설치1351개/보호 불변. LAN/공격/포획/희생/승리/물리 입력 검증이 아니다. |
 | 전체 검사 기준 | 활성 솔루션84프로젝트: Application79(검사 이름73/게임1/서버1/probe·dump4),라이브러리2,Utility3. 디스크의잔류10프로젝트는제외한다. 현재 제품의 전체 검사 통과 기록은 없다. 과거 전체 결과는 보관본, 알려진 실패/기준선 판정은2.5절을 따른다. |
 | 전체 34·ZIP | 마지막전체34진입은645의644제품이다. 최신ZIP만1092/1384항목·게임자료1358개·202,440,265바이트·SHA-256 `33b2459cca9dcbde8b10c7e2cca2e12cc071715244868e3a60908fb085089ae7`/전체CRC·두EXE동일바이트다. 1092 ZIP추출후게임/서버실행은0이며645의전체GUI검증과구분한다. |
-| 보호 기준 | **987의AGENTS.md·원본/CD/fixture2800파일을1092 종료 때도 모두 불변으로 확인했다.** 새fixture0,DN/WB는 제외한다. 기준은 `extracted/cpp-resume-1092/protected-before.json`이다. |
+| 보호 기준 | **987의AGENTS.md·원본/CD/fixture2800파일을1093 종료 때도 모두 불변으로 확인했다.** 새fixture0,DN/WB는 제외한다. 기준은 `extracted/cpp-resume-1093/protected-before.json`이다. |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 | R.exe 전용 정밀 디컴파일 | **HJOW-Athlon / 2026-11-07**.5308함수/실패0·미정규약184. 클라이언트양판본전체날짜와구분하며 [1057 기록](docs/exe/cpp-local-server-discovery-20261107.md)의전용스크립트로재생성한다. |
 
@@ -30,7 +30,7 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 1. 사용자 재개 요청 뒤 AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 해당 인계도 읽는다. `git status`와 `git fetch`로 다른 PC/세션 변경을 확인하며 push는 하지 않는다.
 2. 현재 호스트가 마지막 디컴파일 호스트와 다르면 cpppj 작업/디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 문서에 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 불완전하므로 쓰지 않는다.
 3. 실제 게임·별도 창 실행은 AGENTS.md의 확인 규칙을 따른다. 예외는 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94) 및 사용자가 직접 요청한 원본 수동 컨트롤/녹화 분석의 해당 단계다. 다른 PC는 실행 목적·필요성 설명 후 명시적 확인이 필요하다.
-4. 최신 제품1092의 보고서는 `cpppj/local-server-process-package-20261107.json`이다. R원문이필요한새PC에서는기존클라이언트전체정밀절차와별도로`tools/ghidra/refine_root_server.ps1`을실행하고호스트를갱신한다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-996/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
+4. 최신 제품1093의 보고서는 `cpppj/root-login-reply-20261107.json`이다. R원문이필요한새PC에서는기존클라이언트전체정밀절차와별도로`tools/ghidra/refine_root_server.ps1`을실행하고호스트를갱신한다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-996/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj/webpj·staged 파일·실행 출력은 포함하지 않는다. 한 단위를 마치면 0.1절·0.4절·2.1절 완료 항목·3절 잔여·단위 문서를 갱신하고 해당 파일만 로컬 커밋한다.
 6. 완료 범위는2.1절, 잔여 우선순위는3절을 따른다. 단위986까지의 상세 인계·옛 검사 수·대체된 지시는 [정리 전 전체 원문](LEFT_JOBS.old.md#archive-20261106-through-986)과 각 단위 기록에서 확인한다. 과거의 다음 작업 예고를 현재 미완료 목록으로 되살리지 않는다.
 
@@ -474,6 +474,10 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 
 1091은 `dc59e44d / 20261107-164 CP`로커밋됐다.1092는클라이언트37의실제새R CreateProcessW lan/wait0/CWD·콘솔/핸들장치와배포동봉을연결했다. Native부모여섯순서/34·38을보존하고클론모듈기준/새11.01 R파일식별을사용한다. 두Release종료0·경고/오류0·PowerShell5.1 계획/한ZIP검증종료0·1384항목/두EXE정확바이트·보호2800불변·새C++/MP/게임/통신/새R·원본R실행0이다. **다음은제공R3BYTE존/클라이언트0F47BYTE차이·0F/1d수신/메타실제연결이다.** [1092 기록](docs/exe/cpp-local-server-process-package-20261107.md).
 
+### 0.109 최근 단위 — 1093 Root0Fh 수신과 목록 저장
+
+1092는 `d677b74e / 20261107-172 CP`로커밋됐다.1093은0Fh 실제수신/관찰기·같은Client 메타기록/State·목록 갱신·사용자Saves 저장/다음시작 우선읽기를연결했다. 원문47BYTE/친구3BYTE는보존하고제공R10.71/정확한3BYTE길이에만명시compact호환을적용하며없는이름/플래그는만들지않는다. 최종두Release종료0·경고/오류0·보호2800불변·새C++/MP/게임/통신실행0이다. **다음은1dh수신·State28..33/CS·실제메타표시다.** [1093 기록](docs/exe/cpp-root-login-reply-20261107.md).
+
 ## 1. 현행 목표
 
 ### 1.1 cpppj 단계 (AGENTS.md 기준)
@@ -538,6 +542,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 ## 2. 현재까지 완료한 범위와 검증 한계
 
 ### 2.1 완료 범위 색인
+
+1093에서Root0Fh 실제수신/관찰·동일Client기록/State·서버목록갱신·사용자홈저장/시작읽기를연결했다. 원문47/친구3과제공10.71 compact호환을구분했으며1dh/State28..33/CS·실제메타표시는후속이다([1093 기록](docs/exe/cpp-root-login-reply-20261107.md)).
 
 1092에서클라이언트실제새R실행/동일자료CWD·콘솔/핸들장치와배포동봉·한ZIP바이트검증을연결했다. 게임/서버·통신실행0이며0F/1d·메타와나머지LAN은후속이다([1092 기록](docs/exe/cpp-local-server-process-package-20261107.md)).
 
@@ -745,6 +751,7 @@ AI 미완료 체크 항목이 아니며 단계 전환을 막지 않는다. 부�
 - checking 전체 잔여5(1014에서004b8cb0 부모/진단 연결, 완료부모40/부분6): 부모004b02d0의 메타맵 표시0050c9f0/0050cc08·004dc220(event4/Descend), MP분류0042bc10/004b4df0/004b8b20. 기존분류이며직접inSingle관문부재를모든단독도달불가증명으로확대하지않는다. 신규MP검사없이원문구현을이어간다.
 - [x] 내용물 통지의 PlayerKnown00595344 binding은1031에서 원문4d55e0/490750을 대조해 현재 `playerState.playerKnown`으로 교정했다. 삭제2eh도 같은 현재 값을 읽으며 별도 alias 잔여는 해소됐다.
 - MP 이월 목록: 공통+20 미연결VT0050c9f0(TYPE108/109)/0050cc08(TYPE161), 시스템뉴스의 키/읽기/쓰기·실제 수신UI/설정은1054 연결(검사 제외), endpoint(1055에서State19 뉴스 읽기 호출자 연결), RequestMenu 전송 `004d712e..004d717c`, 메타맵 열기 `004789b0/00479390`·번개 `00479650`·Challenge 이미지/텍스트 `00478d10`/참가자 삭제 `0042bc10`, c6/db·ChalSailPos 모드6·선행클릭/항해 메뉴·desc, 비미션 의식/랭크·조기 희생 안내, PlayerNoMake/TypeWas의433c30은1021 연결, 압축7ah는1022/검증 시작은1023/내용물·삭제는1024 연결, 감시/공유 Regular는1025/총3ah는1026/아비어리3종은1027/비행39h는1028/애니메이션3bh·3ch는1029 연결, 애니메이션 writer/일반 TYPE 별칭은1030 연결, 건설37h의 실제 수신/송신·진단 복귀/현재 TYPE와 PlayerKnown은1031 연결·교정, Path30h는1032/공간33h·34h·35h는1033 연결, 현재32h 설정/소비자는1034 연결, 31h 수신/관찰·핵심16명령/비Login32h는1035 연결, 화면 강조·6진단명령은1036 연결(총22개), 1037에서설정3명령추가(총25개), 1038에서진단5명령추가(총30개), 1039에서qdd/gp추가(총32개), 1040에서addLabel/기록writer추가(33개분기접합), 1041에서직접입력/송신·cr UI 가정해소, 1042의 판독/라벨·Run에 이어1043에서 실제Client/Kernel/홈reader·입력/Confirm부모 연결, 나머지 수신/전송 감사, 1045에서 활동frame22 전체/선택 정리와 기존1015의64h·timeout/UI 재대조, 1046에서1번004e2f00/별도22송신버퍼 연결, 1047에서 기존 연결 재사용/실제 준비·직접 공개/실패 보존과 listener 관문 연결, 1048에서 실제 수락 순서/signed31/준비·진단 반환 교정, 1050 실제 신전51h/004dbce0·Tick/event3 연결, 1051 command/event4·ViewMeta저장/State19요청 연결, 1058 UDP/검색34·35·36·38 접합 뒤 남은37/새R서버·응답0Fh/1dh·State28~33/메타·전체 송신·endpoint/server/boss 감사, 1044에서 Activate의 별도 수신자/삭제 선택과 재동기화 허용/owner 캐시 부모 잔여 해소(988 연결 재대조), 나머지 프로세스 writer/decoder 감사, 섬·표면 TypeWas의 MP 수신 writer는1021에서 연결(861 잔여 해소).
+- **1093에서Root0Fh 실제수신/관찰기·같은Client 메타기록/State·현재서버목록 갱신·사용자Saves 저장/다음시작 우선읽기를연결했다. 최신잔여는이항목이우선한다.** 원문47BYTE 존/친구3BYTE 위치를보존하고제공R10.71·정확한3BYTE길이/물리에만별도compact호환을적용하며없는이름/+84값은정리결과를유지한다. 원문47BYTE 친구위치이상은고쳤다고주장하지않는다. 다음은1dh수신·State28..33/CS·실제메타표시와나머지수신이다. 세.server콘텐츠/배포·다른LAN hostname/기존Config registryValue경계의R필요경로대조/접합·LAN/Outpost/checking5→한국어후속→Edit시나리오UI를이어간다. 새C++/MP/게임/통신실행0이며전체34/ZIP을반복하지않는다. 현재IPv4 TCP/UDP/IPX·SPX명시미지원·폐기7f/80/PIRATE quota비활성과원문에없는원격포트Open/handler등록금지를유지한다.
 - **1092에서클라이언트37의실제새R Windows실행/동일자료CWD·부모와분리된콘솔/핸들장치와배포동봉·한ZIP의바이트검증을연결했다. 최신잔여는이항목이우선한다.** 여섯검색/34·38/lan0부모는유지하고현대분리배치의클론모듈폴더/11.01 R식별을사용한다. 새R의500사전통지를준비ACK로만들지않으며실제OS실행/게임·서버/MP·통신검사는0이다. 다음은제공R3BYTE존과클라이언트0F47BYTE차이·0F/1d수신/메타실제연결을우선대조한다. 세.server콘텐츠/배포·다른LAN hostname/기존Config registryValue경계의R필요경로대조/접합·LAN/Outpost/checking5→한국어후속→Edit시나리오UI를이어간다. 기존동일Server owner/진단·파일·주소·라우팅/CCh/전송·메인수명과현재IPv4 TCP/UDP/IPX·SPX명시미지원·폐기7f/80/PIRATE quota비활성을유지한다. 배포ZIP은실제새R/런타임합집합을동봉했지만원본R실행/원문에없는원격포트Open·handler등록은추가하지않는다. 패키지변경없는단위마다ZIP/전체34검사를반복하지않는다.
 - **1091에서같은최종Server owner/모든실제모듈·수명/메인과 새R.exe entry의Run호출·CMake빌드를연결했다. 최신잔여는 이 항목이 우선한다.** NetstormCpp가새NetstormRoot/R.exe도빌드하며19핵심링크심볼·Release인라인256정리·AMD64/CUI/11.01·UTF-8/asInvoker를정적대조했다. 실제새R/서버·MP/통신실행은0이다. 다음은클라이언트 NativeLocalServerLaunch의 새R.exe 실제OSlaunch/배포이며 원본R을대신실행/복사하면안된다. 실제500사전통지를준비성공ACK로해석하지않는다. 원문에없는원격포트Open/handler등록은추가하지않는다. 세.server콘텐츠/배포·LAN hostname/클라이언트0F존47/서버3BYTE·0F/1d/메타와기존Config registryValue미연결계약의R필요경로대조/접합·LAN/Outpost/checking5→한국어후속→Edit시나리오UI를이어간다. 현재실제IPv4 TCP/UDP/IPX·SPX명시미지원과폐기검증/PIRATE quota비활성·신규MP검사제외를유지한다.
 - **1090에서최종R owner가사용할 실제ProcessTrace 로그/OS시각·사용자홈HTML/호스트스택·복귀형ZAssertion을 작성했다. 최신잔여는 이 항목이 우선한다.** 원문485cf0/85e42에서throwOnAssert옵션을소비하지않으므로정상진단을일률적throw로대체하지않는다. 다음은새R.exe최종owner/entry·CMake R.exe대상과 실제LogDevice/AssertionDevice·Lifecycle.Bind/MainLoop.Run·클라이언트OSlaunch/배포다. ProcessTrace에는같은Configuration.Values() 참조를넘긴다. Configuration생성은IO가없으므로필요한forward capture는실행전같은장치구성을보장하고별도Options사본/빈fallback장치를만들지않는다. 같은Configuration/Clock/Random/기록·파일/목록·주소/RootControl·Routing/BindSchedule/CommandPages.Bind·SharedFiles.Bind·LoginRequest/CCh/전송과LifecycleModules/State를장기owner에묶는다. 원문에없는원격포트Open/handler등록은추가하지않는다. IPv4 TCP/UDP범위/IPX·SPX명시미지원·세.server콘텐츠/배포·LAN hostname/0F존47·3BYTE/0F·1d/메타·LAN/Outpost/checking5→한국어후속→Edit시나리오UI를이어간다. 폐기검증/PIRATE quota비활성과신규MP검사제외를유지한다.

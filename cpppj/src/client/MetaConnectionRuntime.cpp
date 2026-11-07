@@ -25,12 +25,15 @@
 #include "client/LocalUdpTransport.h"
 #include "client/NativeLocalServerLaunch.h"
 #include "client/LocalServerProcess.h"
+#include "client/RootServerListDisk.h"
+#include "client/ClientStateStorageCleanup.h"
 #include "client/ClientRandomGlobals.h"
 #include "client/CampaignTransportServices.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/RawConnectionEnded.h"
 #include "o/RawPlayerNotification.h"
 #include "o/RawFileName.h"
+#include "o/RawRootLoginReply.h"
 #include "platform/Utf8Path.h"
 #include "platform/PortableStartup.h"
 #include <algorithm>
@@ -56,9 +59,9 @@ BOOL CALLBACK FindRootWindow(HWND window,LPARAM value) {
 }
 }
 // 현재 저장소를 검증하고 observer/기본 연결 종료를 설치하며 실제 소켓 열기는 Connect까지 지연한다.
-MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState)
-    :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)) {
-    if (!progress_ || !request_ || !processState_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run 장치 필요");
+MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell)
+    :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)),tell_(std::move(tell)) {
+    if (!progress_ || !request_ || !processState_ || !tell_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run 장치 필요");
     o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client_.WallSeconds()); };
     hooks.record=[](auto&,auto,auto) {}; //World 없는 현재 메타의 선택적 기록은 미연결이다. 수신/로그인 성공을 합성하지 않는다.
     hooks.terminate=[](auto& connection) { connection.flags|=0x40U; }; //실제소켓/노드반납은각TCP/UDP소유자가수행한다.
@@ -70,6 +73,8 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         ended.saveServerFailure=[] { throw std::logic_error("메타10/11 밖의 Game Server9 종료 부모 미연결"); };ended.broadcastPlayer=[](auto) { throw std::logic_error("메타 전송의 게임 Player 종료 통지 미연결"); };
         o::ReceiveConnectionEnded(std::bit_cast<std::int32_t>(sender),client_.ConnectionGlobals()->TokenFor(connection),{client_.GameplayGlobals()->Server(),local.ClockSynchronization().connection,local.State().phase[0],local.State().next[0],client_.ConnectionActivityGlobals()->Frames(),[this] { return client_.PlayerRecords()->Records(); }},ended);
     }); //sender10/phase23의 실제 종료는 다음20을 예약한다.
+    dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { o::ObserveRootLoginReply(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
+    dispatch.Register(0x0f,[this](auto,auto&,auto packet) { ReceiveRootReply(packet); }); //원문과같이sender/연결번호·현재phase 관문을 수신 앞에 추가하지 않는다.
     dispatch.ObservePacket(0x16,[](auto packet,auto sending) {
         if (!sending) return;if (packet.size()<6) throw std::out_of_range("16h observer 필드 부족");if (packet[5]==0xffU) std::clog<<"_p_packets.cpp1112 numFriends 진단\n";
         const auto count=std::bit_cast<std::int8_t>(packet[5]);Put(packet,2,static_cast<std::uint16_t>(std::int32_t(count)*4+14),2);
@@ -84,6 +89,21 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     }); //서버발견은현재36직접쓰기뒤실제Run을동기실행한다.검색토큰비교만인경우Run하지않는다.
 }
 MetaConnectionRuntime::~MetaConnectionRuntime()=default; //자기OS/노드수명은실제TCP/UDP소유자의소멸자가반납한다.
+// minor 차이는 로그만 남기고 major 차이만 현재 설정값/실제 Tell 결과로 거부한다.
+bool MetaConnectionRuntime::CheckMetaVersion(std::uint32_t major,std::uint32_t minor) {
+    if (major!=10 || minor!=78) {
+        client_.WriteDiagnosticLog(0x1d,"VERSION DIFFERENCE: You are 10.78. Meta Server is "+std::to_string(major)+'.'+std::to_string(minor)+".\n");
+        if (major!=10 && !client_.Configuration().GetInt("suppressVersionMessage")) { tell_("MetaVerDiff("+std::to_string(major)+'.'+std::to_string(minor)+')');return false; }
+    }return true;
+}
+// 현재 Client의 같은 기록/phase/목록을 빌리며 별도 메타 표나 접속성공을 만들지 않는다.
+void MetaConnectionRuntime::ReceiveRootReply(std::span<const std::uint8_t> packet) {
+    auto& local=*client_.LocalStateGlobals();o::RootLoginReplyHooks hooks;hooks.version=[this](auto major,auto minor) { return CheckMetaVersion(major,minor); };
+    hooks.clearZones=[this] { ClearClientMetaZoneRecords(client_,*client_.SurfaceStorage()); };
+    hooks.checksum=[this](auto value) { client_.NsInfoGlobals()->SetServerValue(std::bit_cast<std::int32_t>(client_.LocalStateGlobals()->State().phase[0x44/4]),value); };
+    hooks.server=[this](auto row) { client_.NsInfoGlobals()->UpsertServer(row,true); };hooks.saveServers=[this] { SaveClientRootServerList(client_); };
+    o::ReceiveRootLoginReply(packet,{local.State(),local.MetaZones().records,local.MetaRefresh()},hooks);
+}
 bool MetaConnectionRuntime::CallbackActive() const { return pumping_; } //현재 대여 중인 이 owner를 Native cleanup이 반납하지 않게 한다.
 // 기존slot4의TCP뒤UDP를진행한다.66h발견은원문처럼수신뒤같은Run을동기실행한다.
 void MetaConnectionRuntime::Pump() { if (pumping_) throw std::logic_error("메타 TCP/UDP 중첩 Poll 금지");pumping_=true;try { tcp_->Flush();static_cast<void>(tcp_->Poll());static_cast<void>(udp_->Poll()); }catch (...) { pumping_=false;throw; }pumping_=false; }
