@@ -88,6 +88,9 @@ public sealed class RawSquidForms
     /// <summary>서버 Pop 을 데이터 쓰기·송신에 넘기는 경계. 없으면 서버 전송이 필요한 Pop 은 예외다.</summary>
     private readonly Action<int, uint>? _transmit;
 
+    /// <summary>바인딩된 현재 부착 장치다. 없으면 기존 직접 순서로 부착한다. 2026-11-07 F2d Forms 부착 바인딩 이식에서 추가됐다.</summary>
+    private FormAttachHooks? _boundAttach;
+
     /// <summary>
     /// Form 수신 몸체를 만든다. 풀은 이 객체보다 오래 살아야 한다.
     /// </summary>
@@ -304,14 +307,32 @@ public sealed class RawSquidForms
     }
 
     /// <summary>
+    /// 실제 현재 TYPE·번호·진단을 빌린다. 다음 부착부터 현재 getter·진단을 사용한다.
+    /// 바인딩 전에는 기존 직접 순서를 그대로 둔다(기존 검사와 L1 대조 유지).
+    /// </summary>
+    /// <param name="hooks">빌릴 부착 장치 묶음이다.</param>
+    public void BindAttach(FormAttachHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        _boundAttach = hooks.Clone();
+    }
+
+    /// <summary>
     /// 기본 Form 을 부모의 첫 종속 항목으로 부착하고 공통 Pop 을 호출한다. ContentForm 은 정렬 부착기를 써야 한다.
     /// 부모 0 은 원본 10.78 처럼 아무것도 바꾸지 않고 돌아온다.
+    /// 바인딩된 장치가 있으면 공통 부착 몸체에 현재 장치를 채워 위임한다.
     /// </summary>
     /// <param name="form">부착할 Form 번호.</param>
     /// <param name="parent">부모 번호.</param>
     /// <param name="flags">Pop 플래그.</param>
     public void Attach(int form, int parent, uint flags = 0)
     {
+        if (_boundAttach is not null)
+        {
+            AttachBound(form, parent, flags);
+            return;
+        }
+
         if (parent == 0)
         {
             // 10.78 은 부모 0 부착을 조용히 넘긴다
@@ -344,6 +365,26 @@ public sealed class RawSquidForms
         _pool.RawSlot(form)[StateOffset] |= ContainedBit;
         // 0x100 플래그는 원본처럼 부착 뒤의 서버 전송을 건너뛴다
         Pop(form, flags | 0x100);
+    }
+
+    /// <summary>바인딩된 현재 장치에 풀 기본값을 채워 공통 부착 몸체에 위임한다. 2026-11-07 F2d Forms 부착 바인딩 이식에서 추가됐다.</summary>
+    /// <param name="form">부착할 Form 번호.</param>
+    /// <param name="parent">부모 번호.</param>
+    /// <param name="flags">Pop 플래그.</param>
+    private void AttachBound(int form, int parent, uint flags)
+    {
+        FormAttachHooks effective = _boundAttach!.Clone();
+        // 독립 편의 입력에는 TYPE 표가 없으며 실제 공장은 현재 getter를 제공한다
+        effective.Genus ??= _ => 0u;
+        // 독립 입력의 명시 초기 번호다
+        effective.ContentType ??= () => 6u;
+        // 실제 현재 VT+8을 선택한다
+        effective.SetParent ??= (sid, table, value) => RawContainedLink.CommonContainedSetParent(_pool, sid, value);
+        // raw TYPE 비교로 필드 배치를 추정하지 않는다
+        effective.SetPrevious ??= (sid, table, value) => RawContainedLink.CommonContainedSetPrevious(_pool, sid, value);
+        // 기존 공통 Pop의 guard는 이 자식 위치에서만 적용한다
+        effective.Pop ??= (sid, value) => Pop(sid, value);
+        RawFormAttach.Attach(_pool, form, parent, flags, effective);
     }
 
     /// <summary>
