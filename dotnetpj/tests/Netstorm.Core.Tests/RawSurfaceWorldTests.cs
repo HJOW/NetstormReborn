@@ -95,6 +95,27 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.MutableTypes());
     }
 
+    /// <summary>로딩 깊이 초기값이 원본과 같은지 검증한다. 2026-11-07 F2d 월드 본체 SetLoadingDepth 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadingDepthStartsAtOne()
+    {
+        // 원본 Impl.loadState{1,false}의 초기 깊이를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Equal(1u, world.LoadingDepth());
+    }
+
+    /// <summary>로딩 깊이 쓰기가 그대로 읽히는지 검증한다. 2026-11-07 F2d 월드 본체 SetLoadingDepth 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetLoadingDepthStoresValue()
+    {
+        // 원본 loadState.loadingDepth 대입 순서를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.SetLoadingDepth(5u);
+        Assert.Equal(5u, world.LoadingDepth());
+        world.SetLoadingDepth(0u);
+        Assert.Equal(0u, world.LoadingDepth());
+    }
+
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {

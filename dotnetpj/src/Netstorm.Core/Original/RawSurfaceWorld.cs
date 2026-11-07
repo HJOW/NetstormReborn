@@ -21,6 +21,9 @@ public sealed class RawSurfaceWorld
     /// <summary>후속 갱신이 필요한 상태 변경이 남았는지다. 원본 Impl.changed에 대응하며 초기값은 true다. 표시 억제와 무관하게 TakeChanged로 한 번만 소비한다. 2026-11-07 F2d 월드 본체 TakeChanged 이식에서 추가됐다.</summary>
     private bool _changed = true;
 
+    /// <summary>중첩 로딩의 표면/사제/자산 후처리가 같은 값을 읽는 로딩 상태다. 원본 Impl.loadState에 대응하며 초기 깊이는 1이다. 런타임 전달과 저장 게임 공유 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 SetLoadingDepth 이식에서 추가됐다.</summary>
+    private readonly IslandPostPopState _loadState = new() { LoadingDepth = 1u };
+
     /// <summary>같은 판본·타입·지형으로 월드를 만들고 물리 저장소를 빌리거나 새로 만든다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -78,4 +81,16 @@ public sealed class RawSurfaceWorld
 
         throw new InvalidOperationException("서피스 월드의 실제 TYPE 표가 수정 가능한 목록이 아닙니다.");
     }
+
+    /// <summary>파생 로더의 중첩 깊이를 표면과 비표면 몸체에 동일하게 전달한다. 런타임 연결 뒤의 전달과 저장 게임 공유 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 SetLoadingDepth 이식에서 추가됐다.</summary>
+    /// <param name="depth">쓸 로딩 중첩 깊이다.</param>
+    public void SetLoadingDepth(uint depth)
+    {
+        // 원본 impl_->loadState.loadingDepth 대입을 직역한다. runtimeBound 때의 runtime.loadingDepth 전달은 BindRuntime 단위에서 잇는다.
+        _loadState.LoadingDepth = depth;
+    }
+
+    /// <summary>현재 로딩 중첩 깊이를 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 SetLoadingDepth 이식에서 추가됐다.</summary>
+    /// <returns>현재 로딩 중첩 깊이다.</returns>
+    public uint LoadingDepth() => _loadState.LoadingDepth;
 }
