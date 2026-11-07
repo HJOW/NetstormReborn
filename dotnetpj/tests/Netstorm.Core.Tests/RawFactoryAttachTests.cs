@@ -276,4 +276,67 @@ public sealed class RawFactoryAttachTests
         Assert.Throws<InvalidOperationException>(() => factory.Create(71u));
         factory.Create(70u);
     }
+
+    /// <summary>Take 타입 불일치는 진단 미연결 때 거부하고 풀을 바꾸지 않는다. 2026-11-07 F2d 공장 진단 소비 이식에서 추가됐다.</summary>
+    [Fact]
+    public void TakeMismatchRequiresDiagnostics()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Types188();
+        types[74].Name = "Alpha";
+        types[80].Name = "Beta";
+        var factory = new RawSquidFactory(pool, types);
+        int sid = factory.Create(74u);
+        pool.RawSlot(sid)[RawSidPool.StateOffset] = RawSidPool.VoidBit;
+        byte beforeType = pool.RawSlot(sid)[RawSidPool.TypeOffset];
+        Assert.Throws<InvalidOperationException>(() => factory.Take(80u, sid));
+        Assert.Equal(beforeType, pool.RawSlot(sid)[RawSidPool.TypeOffset]);
+    }
+
+    /// <summary>Take 타입 불일치는 상세를 복사하고 진단 복귀 뒤 새 타입으로 덮어쓴다. 2026-11-07 F2d 공장 진단 소비 이식에서 추가됐다.</summary>
+    [Fact]
+    public void TakeMismatchWritesDetailAndRecovers()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Types188();
+        types[74].Name = "Alpha";
+        types[80].Name = "Beta";
+        var factory = new RawSquidFactory(pool, types);
+        int sid = factory.Create(74u);
+        pool.RawSlot(sid)[RawSidPool.StateOffset] = RawSidPool.VoidBit;
+        var details = new List<string>();
+        var assertions = new List<(string Expression, string File, uint Line)>();
+        factory.BindDiagnostics(new SquidFactoryDiagnostics
+        {
+            Detail = details.Add,
+            Assertion = (expression, file, line) => assertions.Add((expression, file, line)),
+        });
+        Assert.Equal(sid, factory.Take(80u, sid));
+        Assert.Single(details);
+        Assert.Equal("Invalid take. Server type Beta, client type Alpha", details[0]);
+        Assert.Single(assertions);
+        Assert.Equal("0", assertions[0].Expression);
+        Assert.Equal(0x1bau, assertions[0].Line);
+        Assert.Equal(80, pool.RawSlot(sid)[RawSidPool.TypeOffset]);
+    }
+
+    /// <summary>Take 상세가 256바이트를 넘기면 장치 연결과 무관하게 거부한다. 2026-11-07 F2d 공장 진단 소비 이식에서 추가됐다.</summary>
+    [Fact]
+    public void TakeDetailOverflowRejects()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Types188();
+        types[74].Name = new string('A', 200);
+        types[80].Name = new string('B', 200);
+        var factory = new RawSquidFactory(pool, types);
+        int sid = factory.Create(74u);
+        pool.RawSlot(sid)[RawSidPool.StateOffset] = RawSidPool.VoidBit;
+        factory.BindDiagnostics(new SquidFactoryDiagnostics
+        {
+            Detail = _ => { },
+            Assertion = (_, _, _) => { },
+        });
+        Assert.Throws<InvalidOperationException>(() => factory.Take(80u, sid));
+        Assert.Equal(74, pool.RawSlot(sid)[RawSidPool.TypeOffset]);
+    }
 }

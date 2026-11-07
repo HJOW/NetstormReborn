@@ -428,6 +428,52 @@ public sealed class RawSquidFactory
         assertion(line);
     }
 
+    /// <summary>공장 Take·생성의 원문 식·줄을 빌린 진단 장치에 전달한다. 미연결이면 명시 경계 오류로 멈추고, 연결되면 정상 복귀 뒤 계속한다. 2026-11-07 F2d 공장 진단 소비 이식에서 추가됐다.</summary>
+    /// <param name="expression">원문 식이다.</param>
+    /// <param name="line">원문 줄 번호다.</param>
+    private void Assert(string expression, uint line)
+    {
+        Action<string, string, uint>? assertion = _diagnostics?.Assertion;
+        if (assertion is null)
+        {
+            throw new InvalidOperationException("Factory의 선택된 원문 진단 장치 미연결");
+        }
+
+        // 원문은 판본별 파일 경로를 넘긴다
+        assertion(expression, _pool.Edition == OriginalEdition.Patch1078 ? "\\Ns\\O\\Squid.cpp" : "\\ns\\o\\Squid.cpp", line);
+    }
+
+    /// <summary>Take 타입 불일치 상세를 현재 두 이름으로 복사한다. 256바이트를 넘기면 거부하고 장치 미연결이면 거부한다. 2026-11-07 F2d 공장 진단 소비 이식에서 추가됐다.</summary>
+    /// <param name="serverType">서버가 정한 타입 번호다.</param>
+    /// <param name="clientType">슬롯에 있던 기존 타입 번호다.</param>
+    private void WriteTakeDetail(uint serverType, uint clientType)
+    {
+        // TYPE+4의 첫 NUL까지의 이름이다
+        static string BaseName(OriginalTypeRecord record)
+        {
+            string name = record.Name ?? "";
+            int cut = name.IndexOf('\0');
+            return cut < 0 ? name : name.Substring(0, cut);
+        }
+
+        IReadOnlyList<OriginalTypeRecord> current = CurrentTypes();
+        string serverName = serverType < (uint)current.Count ? BaseName(current[(int)serverType]) : "";
+        string clientName = clientType < (uint)current.Count ? BaseName(current[(int)clientType]) : "";
+        string detail = "Invalid take. Server type " + serverName + ", client type " + clientName;
+        if (System.Text.Encoding.Latin1.GetByteCount(detail) >= 256)
+        {
+            throw new InvalidOperationException("Take 원문 상세256BYTE 범위");
+        }
+
+        Action<string>? writer = _diagnostics?.Detail;
+        if (writer is null)
+        {
+            throw new InvalidOperationException("Take의 실제 오류 상세 장치 미연결");
+        }
+
+        writer(detail);
+    }
+
     /// <summary>
     /// 서버가 정한 번호의 슬롯을 받는다(원본 Take). 풀 목록·빈 번호 카운터는 바꾸지 않는다.
     /// 이미 쓰는 슬롯이면 같은 타입·같은 클래스(가상 표)여야 하고, void 가 아니면 공간 해제(Form은 <see cref="UnpopForm"/>, 자산은 <see cref="IRawUnpop"/>)를 먼저 한다.
@@ -454,7 +500,10 @@ public sealed class RawSquidFactory
         {
             if (bytes[RawSidPool.TypeOffset] != type)
             {
-                throw new InvalidOperationException("Take 타입이 기존 오브젝트와 다릅니다");
+                // 원문 Take 부모는 상세 복사 뒤 진단을 거쳐 정상 복귀하면 새 타입으로 덮어쓴다. 2026-11-07 F2d 공장 진단 소비 이식에서 연결했다.
+                uint previous = bytes[RawSidPool.TypeOffset];
+                WriteTakeDetail(type, previous);
+                Assert("0", _pool.Edition == OriginalEdition.Patch1078 ? 0x1bau : 0x1b1u);
             }
             uint beforeTable = ReadVtable(bytes);
             if (beforeTable != ConstructorVtable(record))
