@@ -3351,7 +3351,7 @@
       "bytes": 385090,
       "lines": 1596,
       "fixtureCommit": "1e7bf89e",
-      "webCommit": "worktree",
+      "webCommit": "7495a4ae",
       "cpppjBasis": {
         "cpppj/src/o/RawAltarReleaseParent.cpp": "1e7bf89e"
       }
@@ -3380,7 +3380,7 @@
       "bytes": 19962,
       "lines": 201,
       "fixtureCommit": "43bdf664",
-      "webCommit": "worktree",
+      "webCommit": "7495a4ae",
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeFallParent.cpp": "43bdf664"
       }
@@ -3409,7 +3409,7 @@
       "bytes": 91564,
       "lines": 865,
       "fixtureCommit": "5393a14f",
-      "webCommit": "worktree",
+      "webCommit": "7495a4ae",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestRegenHitPoints.cpp": "5393a14f"
       }
@@ -3438,9 +3438,96 @@
       "bytes": 65114,
       "lines": 1088,
       "fixtureCommit": "56a28270",
-      "webCommit": "worktree",
+      "webCommit": "7495a4ae",
       "cpppjBasis": {
         "cpppj/src/o/RawBoardAngle.cpp": "56a28270"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E16",
+      "id": "nugget-postpop",
+      "path": "cpppj/tests/fixtures/nugget-postpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 너겟 PostPop 의 조회/할당/난수 소비/두 예약/기본 호출 순서(두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/nugget-gun.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-nugget-post-pop.js"
+      ],
+      "doc": "docs/webpj-nugget-gun-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawNuggetPostPop.cpp"
+      ],
+      "scope": "288행 전부 사용",
+      "text": true,
+      "sha256": "46998ea686990586fb51f7a50f6cade479ec339bfa8187e99b9e6cff4367fa7a",
+      "bytes": 18762,
+      "lines": 289,
+      "fixtureCommit": "f724baa7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawNuggetPostPop.cpp": "f724baa7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E16",
+      "id": "gun-angle",
+      "path": "cpppj/tests/fixtures/gun-angle-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Gunanim 프레임→Graph 방향(음수 -4..-1, 0..512, INT_MAX)",
+      "consumers": [
+        "webpj/tests/nugget-gun.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-angle.js"
+      ],
+      "doc": "docs/webpj-nugget-gun-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunAngle.h"
+      ],
+      "scope": "518행(머리글 제외) 전부 사용",
+      "text": true,
+      "sha256": "86c0c4b0346bcf6fd230b940548b9dfbee369ca26c92ddae5a0def7c5fb43be2",
+      "bytes": 3013,
+      "lines": 519,
+      "fixtureCommit": "29b16c52",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunAngle.h": "e98bb51f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E16",
+      "id": "gun-frame-checking",
+      "path": "cpppj/tests/fixtures/gun-frame-checking-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Gunanim 인덱스 진단 앞단의 복귀/중단/원래 인자 변경",
+      "consumers": [
+        "webpj/tests/nugget-gun.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-angle.js"
+      ],
+      "doc": "docs/webpj-nugget-gun-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunAngle.h"
+      ],
+      "scope": "384행 전부 사용",
+      "text": true,
+      "sha256": "1012ccceeea2fea3b9b66a15197bd4676ad4681d3cfec5bef27de90e70fbceeb",
+      "bytes": 24240,
+      "lines": 385,
+      "fixtureCommit": "e98bb51f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunAngle.h": "e98bb51f"
       }
     }
   ]

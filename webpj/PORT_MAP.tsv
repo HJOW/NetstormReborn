@@ -738,7 +738,7 @@ cpppj/src/o/RawGeyserLifetime.cpp	port			todo	[o-default]
 cpppj/src/o/RawGeyserMined.cpp	port			todo	[o-default]
 cpppj/src/o/RawGraph.cpp	port			todo	[o-default]
 cpppj/src/o/RawGraphLive.cpp	port			todo	[o-default]
-cpppj/src/o/RawGunAngle.h	port			todo	[o-default]
+cpppj/src/o/RawGunAngle.h	port	www/core/raw-gun-angle.js	1f00a25a	port	[o-default] WB04-E16: 00467610 Gunanim 프레임→Graph 방향(인덱스·진단·20개 각도). fixture gun-angle 518행·gun-frame-checking 384행 전부(10.78)
 cpppj/src/o/RawGunAnimation.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunBlocker.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunGroundTarget.cpp	port			todo	[o-default]
@@ -790,7 +790,7 @@ cpppj/src/o/RawMissionSettingsPacket.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionStart.cpp	port			todo	[o-default]
 cpppj/src/o/RawNewFort.cpp	exclude-edit			-	[edit-new-fort]
 cpppj/src/o/RawNewTechnology.cpp	port	www/core/raw-new-technology.js	1f00a25a	port	[o-default] WB04-E13: 00492a30 기술 획득 부모(조회/추가/snapshot/이름·그림 Config/안내 순서). fixture new-technology 10.78 45행 전부
-cpppj/src/o/RawNuggetPostPop.cpp	port			todo	[o-default]
+cpppj/src/o/RawNuggetPostPop.cpp	port	www/core/raw-nugget-post-pop.js	1f00a25a	port	[o-default] WB04-E16: 00484f90 너겟 PostPop(두 Regular 예약·난수 소비·Damageable 위임). fixture nugget-postpop 10.78 288행 전부
 cpppj/src/o/RawNuggetRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawNuggetReplenish.cpp	port			todo	[o-default]
 cpppj/src/o/RawObjectCommand.cpp	port			todo	[o-default]
