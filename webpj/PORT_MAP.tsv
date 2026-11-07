@@ -119,7 +119,7 @@ cpppj/src/client/FsrConstants.cpp	exclude-host			-	[host-gpu]
 cpppj/src/client/GameAssets.cpp	port			todo	[client-default]
 cpppj/src/client/GameMenuActions.cpp	port			todo	[client-default]
 cpppj/src/client/GameMenuCommands.cpp	port			todo	[client-default]
-cpppj/src/client/GameTimeDisplay.cpp	port			todo	[client-default]
+cpppj/src/client/GameTimeDisplay.cpp	port	www/core/game-time-display.js	1f00a25a	port	[client-default] WB04-E34: T/t 토글(004d9862)과 CRT 시계 초 계산(004a68b0). fixture game-time-key 168행 전부. 시간 메시지 90행은 MessageGump 단위에서
 cpppj/src/client/GameWorld.cpp	port			todo	[client-default] 옛 GameWorld 어댑터(--dump-world). 실제 세션 조립은 RawSurfaceWorld/RawCampaignSession
 cpppj/src/client/GameWorldInput.inc	port			todo	[client-default]
 cpppj/src/client/GifFileRead.cpp	adapt			todo	[adapt-file]
@@ -174,7 +174,7 @@ cpppj/src/client/InventoryItemGump.cpp	port			todo	[client-default]
 cpppj/src/client/KnowledgeSort.cpp	port			todo	[client-default]
 cpppj/src/client/KoreanResources.cpp	adapt	www/assets/korean-assets.js;www/assets/unicode-font.js;www/platform/glyph-rasterizer.js	1f00a25a	partial	[adapt-file] 웹은 D2Coding woff2·xlat 번역표를 직접 적재
 cpppj/src/client/LanguageOptions.cpp	port			todo	[client-default]
-cpppj/src/client/LanguageRequest.cpp	port			todo	[client-default]
+cpppj/src/client/LanguageRequest.cpp	port	www/core/language-request.js	1f00a25a	port	[client-default] WB04-E34: 004dea70 언어 변경 요청과 SetLanguage/LanguageChanged 분배·언어 이름표. fixture language-request 337행 전부. LanguageOptions 감지/적용은 해당 단위에서
 cpppj/src/client/LocalTcpTransport.cpp	exclude-mp			-	[mp-lan-tcp]
 cpppj/src/client/LostPositionKey.cpp	port	www/core/construction-history-key.js	1f00a25a	port	[client-default] WB04-E22: U/u 최근 손실 위치 이동(004d98e2..004d990d). fixture lost-position-key 10.78 1022행 전부
 cpppj/src/client/MainMenuActivity.cpp	port	www/core/main-menu-activity.js	1f00a25a	port	[client-default] WB04-E33: 004cee80/004cebf0 메인 메뉴 무활동 감시. fixture main-menu-activity 1944행 전부
@@ -429,7 +429,7 @@ cpppj/src/client/VFXMappedDraw.cpp	port			todo	[client-default]
 cpppj/src/client/VFXTransform.cpp	port			todo	[client-default]
 cpppj/src/client/ViewKeyInput.cpp	port	www/core/view-key-input.js	1f00a25a	port	[client-default] WB04-E25: 4d9670~4d998c F2/F3/F7/F8 표시 키. fixture view-key-input 10.78 310행 전부
 cpppj/src/client/WarningMessages.cpp	port			todo	[client-default]
-cpppj/src/client/WindowTitle.cpp	adapt			todo	[adapt-screen]
+cpppj/src/client/WindowTitle.cpp	adapt	www/core/window-title.js	1f00a25a	port	[adapt-screen] WB04-E34: 00460730 창 제목 선택(설정 조회 순서·미션 title 시점). fixture window-title 10.78 576행(originalCD 제외). 실제 창 적용은 웹 소비자(document.title)로 대체
 cpppj/src/client/XlatFileRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/BaseFile.cpp	adapt	www/assets/game-files.js;www/assets/taff.js;www/assets/asset-loader.js	1f00a25a	partial	[adapt-file] 느슨한 파일→TAFF 조회(웹 대체, docs/formats/vfs.md)
 cpppj/src/o/BaseProcess.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(BaseProcess 기반)·WB04-D5c(Process/BaseProcess 부착은 squid-process.js 호스트)

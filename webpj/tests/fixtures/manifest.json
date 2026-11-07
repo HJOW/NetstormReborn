@@ -5018,7 +5018,7 @@
       "bytes": 61802,
       "lines": 409,
       "fixtureCommit": "befbc1cb",
-      "webCommit": "worktree",
+      "webCommit": "c62e6204",
       "cpppjBasis": {
         "cpppj/src/client/CreateAtInput.cpp": "befbc1cb"
       }
@@ -5047,7 +5047,7 @@
       "bytes": 1493,
       "lines": 16,
       "fixtureCommit": "befbc1cb",
-      "webCommit": "worktree",
+      "webCommit": "c62e6204",
       "cpppjBasis": {
         "cpppj/src/client/CreateAtInput.cpp": "befbc1cb"
       }
@@ -5076,7 +5076,7 @@
       "bytes": 30915,
       "lines": 74,
       "fixtureCommit": "cb71d060",
-      "webCommit": "worktree",
+      "webCommit": "c62e6204",
       "cpppjBasis": {
         "cpppj/src/client/MoveDialog.cpp": "cb71d060"
       }
@@ -5105,7 +5105,7 @@
       "bytes": 558,
       "lines": 15,
       "fixtureCommit": "f5b45f3d",
-      "webCommit": "worktree",
+      "webCommit": "c62e6204",
       "cpppjBasis": {
         "cpppj/src/client/MovieTimer.cpp": "f5b45f3d"
       }
@@ -5134,7 +5134,7 @@
       "bytes": 9763,
       "lines": 85,
       "fixtureCommit": "388ef596",
-      "webCommit": "worktree",
+      "webCommit": "c62e6204",
       "cpppjBasis": {
         "cpppj/src/client/IntroMenu.cpp": "388ef596"
       }
@@ -5163,9 +5163,96 @@
       "bytes": 205404,
       "lines": 1945,
       "fixtureCommit": "96b5a1c3",
-      "webCommit": "worktree",
+      "webCommit": "c62e6204",
       "cpppjBasis": {
         "cpppj/src/client/MainMenuActivity.cpp": "96b5a1c3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E34",
+      "id": "language-request",
+      "path": "cpppj/tests/fixtures/language-request-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 언어 변경 요청의 설정 콜백 뒤 현재 명령/카운터와 큐 writer",
+      "consumers": [
+        "webpj/tests/language-title-time.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/language-request.js"
+      ],
+      "doc": "docs/webpj-language-title-time-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/LanguageRequest.cpp"
+      ],
+      "scope": "337행 전부 사용",
+      "text": true,
+      "sha256": "fe51de8de8718752ac24d391cf9c700739a71d2e77da9f593413822124dc0c41",
+      "bytes": 27731,
+      "lines": 338,
+      "fixtureCommit": "05c2233b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/LanguageRequest.cpp": "05c2233b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E34",
+      "id": "window-title",
+      "path": "cpppj/tests/fixtures/window-title-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 두 PE의 창 제목 분기와 설정/미션 title 조회 순서·최종 문자열",
+      "consumers": [
+        "webpj/tests/language-title-time.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/window-title.js"
+      ],
+      "doc": "docs/webpj-language-title-time-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/WindowTitle.cpp"
+      ],
+      "scope": "1152행 중 10.78(originals) 576행 사용(originalCD 576행은 범위 밖)",
+      "text": true,
+      "sha256": "60bbb56a8094273045859212dc60ac06d4e00e320b12f0be0ebccfabb0b898ef",
+      "bytes": 187471,
+      "lines": 1153,
+      "fixtureCommit": "b4113da2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/WindowTitle.cpp": "b4113da2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E34",
+      "id": "game-time-key",
+      "path": "cpppj/tests/fixtures/game-time-key-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: T/t 키의 뗌/모달/정지/수정키와 DWORD 토글",
+      "consumers": [
+        "webpj/tests/language-title-time.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/game-time-display.js"
+      ],
+      "doc": "docs/webpj-language-title-time-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/GameTimeDisplay.cpp"
+      ],
+      "scope": "168행 전부 사용",
+      "text": true,
+      "sha256": "fa3d7914b3ad32a2c4320b13bb56292c47c85dd8ad0246761641ad3d4f1b9e67",
+      "bytes": 5184,
+      "lines": 168,
+      "fixtureCommit": "8d51d63d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GameTimeDisplay.cpp": "8d51d63d"
       }
     }
   ]
