@@ -3,6 +3,7 @@ using System.Globalization;
 using Netstorm.Assets;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
+using Netstorm.Tests;
 
 namespace Netstorm.Core.Tests;
 
@@ -461,6 +462,239 @@ public sealed class BridgeConnectTests
         Assert.Equal(72, walk.Next());
         Assert.Equal(0, walk.Next());
         Assert.Equal(0, walk.Next());
+    }
+
+    /// <summary>만든 객체 슬롯의 16진수 목록이다. 2026-11-07 F2c 나머지 이식에서 추가됐다.</summary>
+    /// <param name="scene">읽을 장면이다.</param>
+    /// <returns>쉼표로 이은 목록이다. 없으면 "-"다.</returns>
+    private static string BornText(BridgeScene scene)
+    {
+        List<string> parts = [];
+        // 만든 순서대로 쉼표로 잇는 반복문이다. 2026-11-07 F2c 나머지 이식에서 추가됐다.
+        for (int i = 0; i < scene.Born; ++i)
+        {
+            ReadOnlySpan<byte> slot = scene.Pool.Slot(FirstBorn + i);
+            parts.Add(Convert.ToHexString(scene.Patch ? slot : slot.Slice(0, 36)).ToLowerInvariant());
+        }
+
+        return parts.Count == 0 ? "-" : string.Join(',', parts);
+    }
+
+    /// <summary>실행기 풀 번호 0~127의 Adler-32다. 2026-11-07 F2c 나머지 이식에서 추가됐다.</summary>
+    /// <param name="scene">읽을 장면이다.</param>
+    /// <returns>십진수 문자열이다.</returns>
+    private static string PoolAdler(BridgeScene scene)
+    {
+        int stride = scene.Patch ? 50 : 36;
+        byte[] image = new byte[(LastSid + 1) * stride];
+        // 확보한 슬롯만 실제 바이트를 복사하는 반복문이다. 2026-11-07 F2c 나머지 이식에서 추가됐다.
+        for (int sid = 5; sid <= LastSid; ++sid)
+        {
+            scene.Pool.Slot(sid).Slice(0, stride).CopyTo(image.AsSpan(sid * stride, stride));
+        }
+
+        return Netstorm.Tests.X86Fixture.Adler32(image).ToString(CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>프레임 필드를 판본의 폭으로 읽는다. 2026-11-07 F2c 나머지 이식에서 추가됐다.</summary>
+    /// <param name="scene">읽을 장면이다.</param>
+    /// <param name="sid">조회할 번호다.</param>
+    /// <returns>십진수 문자열이다.</returns>
+    private static string FrameText(BridgeScene scene, int sid)
+    {
+        ReadOnlySpan<byte> raw = scene.Pool.Slot(sid);
+        uint frame = scene.Patch ? System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(raw.Slice(36, 4)) : raw[34];
+        return frame.ToString(CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>미리보기 목록을 실행기의 표기로 만든다. 2026-11-07 F2c 나머지 이식에서 추가됐다.</summary>
+    /// <param name="preview">쓴 목록이다.</param>
+    /// <param name="used">목록을 썼으면 참이다.</param>
+    /// <returns>표기 문자열이다.</returns>
+    private static string ListedText(List<int> preview, bool used)
+    {
+        if (!used)
+        {
+            return "-";
+        }
+
+        return preview.Count == 0 ? "empty" : string.Join(',', preview);
+    }
+
+    /// <summary>한 판본의 장면 관찰 행을 모두 재생한다. 2026-11-07 F2c 나머지 이식에서 추가됐다.</summary>
+    /// <param name="edition">판본 이름이다.</param>
+    private static void Replay(string edition)
+    {
+        OriginalEdition version = edition == "originals" ? OriginalEdition.Patch1078 : OriginalEdition.Cd1072;
+        string path = Path.Combine(AppContext.BaseDirectory, "X86", "bridgeconnect-x86.tsv");
+        string[] lines = File.ReadAllLines(path);
+        Dictionary<string, string[]> scenes = new();
+        List<string[]> rows = [];
+        // 장면 행은 번호로 따로 두고 관찰 행을 모으는 반복문이다. 2026-11-07 F2c 나머지 이식에서 추가됐다.
+        foreach (string line in lines)
+        {
+            if (string.IsNullOrEmpty(line) || line[0] == '#')
+            {
+                continue;
+            }
+
+            string[] row = line.Split('\t');
+            if (row[0] == "Scene")
+            {
+                scenes[row[1]] = [row[2], row[3], row[4], row[5], row[6]];
+            }
+            else
+            {
+                rows.Add(row);
+            }
+        }
+
+        Dictionary<string, int> counts = new();
+        List<string> failures = [];
+        // 각 행을 앞 행과 독립된 입력부터 다시 준비해 실행하는 반복문이다. 2026-11-07 F2c 나머지 이식에서 추가됐다.
+        foreach (string[] row in rows)
+        {
+            if (row[1] != edition || row[0] == "Color")
+            {
+                continue;
+            }
+
+            string kind = row[0];
+            string actual;
+            string expected;
+            try
+            {
+                if (kind == "Walk")
+                {
+                    BridgeScene scene = new(version);
+                    scene.Prepare(scenes[row[2]]);
+                    RawSquidNeighborWalk walk = new(scene.Neighbors!, Source, uint.Parse(row[3], CultureInfo.InvariantCulture));
+                    List<string> found = [];
+                    // 0이 나올 때까지 이웃 번호를 모으는 반복문이다. 2026-11-07 F2c 나머지 이식에서 추가됐다.
+                    for (int current = walk.Current; current != 0; current = walk.Next())
+                    {
+                        found.Add(current.ToString(CultureInfo.InvariantCulture));
+                    }
+
+                    actual = found.Count == 0 ? "-" : string.Join(',', found);
+                    expected = row[4];
+                }
+                else if (kind == "FindAt")
+                {
+                    BridgeScene scene = new(version);
+                    scene.Prepare(scenes[row[2]]);
+                    RawBridgeConnect connect = new(scene.Pool, scene.Neighbors!, scene.State, scene.Hooks());
+                    actual = connect.FindTypeAt(
+                        BitConverter.UInt32BitsToSingle(uint.Parse(row[3], CultureInfo.InvariantCulture)),
+                        BitConverter.UInt32BitsToSingle(uint.Parse(row[4], CultureInfo.InvariantCulture)),
+                        uint.Parse(row[5], CultureInfo.InvariantCulture)).ToString(CultureInfo.InvariantCulture);
+                    expected = row[6];
+                }
+                else if (kind == "IslandOwner" || kind == "StalagOwner")
+                {
+                    BridgeScene scene = new(version);
+                    scene.Prepare(scenes[row[2]]);
+                    RawBridgeConnect.SetIslandOwner(scene.Pool, scene.State, Source, uint.Parse(row[3], CultureInfo.InvariantCulture), (sid, owner) =>
+                    {
+                        scene.Pool.AllocatedBytes(sid)[scene.OwnerOffset] = (byte)owner;
+                        scene.Events.Add("B:" + sid + ":" + owner);
+                    });
+                    actual = scene.EventsText() + "|" + FrameText(scene, Source);
+                    expected = row[4] + "|" + row[5];
+                }
+                else
+                {
+                    BridgeScene scene = new(version);
+                    scene.Prepare(scenes[row[2]]);
+                    RawBridgeConnect connect = new(scene.Pool, scene.Neighbors!, scene.State, scene.Hooks());
+                    List<int> preview = [];
+                    if (kind == "Connect")
+                    {
+                        bool listed = row[3] == "1";
+                        if (listed)
+                        {
+                            connect.ConnectPreview(Source, preview.Add);
+                        }
+                        else
+                        {
+                            connect.Connect(Source);
+                        }
+
+                        actual = scene.EventsText() + "|" + BornText(scene) + "|" + PoolAdler(scene) + "|" + ListedText(preview, listed);
+                        expected = row[4] + "|" + row[5] + "|" + row[6] + "|" + row[7];
+                    }
+                    else if (kind == "Link")
+                    {
+                        bool listed = row[5] == "1";
+                        connect.Link(int.Parse(row[3], CultureInfo.InvariantCulture), int.Parse(row[4], CultureInfo.InvariantCulture), uint.Parse(row[6], CultureInfo.InvariantCulture), listed ? preview : null);
+                        actual = scene.EventsText() + "|" + BornText(scene) + "|" + PoolAdler(scene) + "|" + ListedText(preview, listed);
+                        expected = row[7] + "|" + row[8] + "|" + row[9] + "|" + row[10];
+                    }
+                    else if (kind == "Owner")
+                    {
+                        connect.PropagateOwner(int.Parse(row[3], CultureInfo.InvariantCulture), int.Parse(row[4], CultureInfo.InvariantCulture));
+                        actual = scene.EventsText() + "|" + PoolAdler(scene);
+                        expected = row[5] + "|" + row[6];
+                    }
+                    else if (kind == "IslandPost")
+                    {
+                        connect.IslandPostPop(Source, uint.Parse(row[3], CultureInfo.InvariantCulture), (sid, flags) => scene.Events.Add("T:" + sid + ":" + flags));
+                        actual = scene.EventsText() + "|" + BornText(scene) + "|" + PoolAdler(scene);
+                        expected = row[4] + "|" + row[5] + "|" + row[6];
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("알 수 없는 행 종류");
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                actual = "예외: " + error.Message;
+                expected = "(일치 기대)";
+            }
+
+            if (actual != expected)
+            {
+                if (failures.Count < 6)
+                {
+                    failures.Add($"{edition} {kind} 장면 {row[2]}: 실제 {actual} / 기대 {expected}");
+                }
+            }
+
+            counts[kind] = counts.TryGetValue(kind, out int had) ? had + 1 : 1;
+        }
+
+        Assert.True(failures.Count == 0, string.Join('\n', failures));
+        Assert.Equal(1856, counts.GetValueOrDefault("Walk", 0));
+        Assert.Equal(464, counts.GetValueOrDefault("Connect", 0));
+        Assert.Equal(392, counts.GetValueOrDefault("Link", 0));
+        Assert.Equal(330, counts.GetValueOrDefault("Owner", 0));
+        Assert.Equal(270, counts.GetValueOrDefault("FindAt", 0));
+        Assert.Equal(96, counts.GetValueOrDefault("IslandOwner", 0));
+        Assert.Equal(96, counts.GetValueOrDefault("StalagOwner", 0));
+        Assert.Equal(54, counts.GetValueOrDefault("IslandPost", 0));
+    }
+
+    /// <summary>세 판본의 장면 관찰을 각각 대조한다. 2026-11-07 F2c 나머지 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FullPatchX86()
+    {
+        Replay("originals");
+    }
+
+    /// <summary>CD판의 장면 관찰을 대조한다. 2026-11-07 F2c 나머지 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FullCdX86()
+    {
+        Replay("originalCD");
+    }
+
+    /// <summary>추가 판본의 장면 관찰을 대조한다. 2026-11-07 F2c 나머지 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FullThirdX86()
+    {
+        Replay("original1037");
     }
 
     /// <summary>표면 칸을 직접 등록한다. 2026-11-07 F2c 나머지 이식에서 추가됐다.</summary>

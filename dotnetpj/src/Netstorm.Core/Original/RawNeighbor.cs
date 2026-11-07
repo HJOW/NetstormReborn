@@ -33,8 +33,8 @@ public readonly record struct SquidFootprint(float Left, float Top, float Right,
 /// <summary>
 /// 탐색기로 찾은 이웃을 원본 raw 값·발자국·표면에서 고르는 처리기(원본 RawSquidNeighbors, 10.78).
 /// 해시 0단계·일반 탐색의 머리·다음 순서대로 원본 생성 순서의 후보를 받는다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 추가 바이트·프레임 위치가 달라서 옮기지 않았다).
-/// 근거: cpppj/src/o/RawSquidNeighbors.cpp (W02 이웃 조각, 2026-10-20).
+/// 기준 판본은 10.78이다. CD 10.72의 추가 비트·프레임 위치(35·34)도 판본 분기로 읽는다.
+/// 근거: cpppj/src/o/RawSquidNeighbors.cpp (W02 이웃 조각, 2026-10-20; CD 분기 0.162, 2026-11-07).
 /// </summary>
 public sealed class RawSquidNeighbors
 {
@@ -53,8 +53,14 @@ public sealed class RawSquidNeighbors
     /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
     private const int ExtraOffset = 40;
 
+    /// <summary>슬롯 안 추가 비트 바이트의 위치(CD 10.72).</summary>
+    private const int CdExtraOffset = 35;
+
     /// <summary>슬롯 안 프레임 DWORD의 위치(10.78).</summary>
     private const int FrameOffset = 36;
+
+    /// <summary>슬롯 안 프레임 바이트의 위치(CD 10.72).</summary>
+    private const int CdFrameOffset = 34;
 
     /// <summary>상태 바이트의 죽음(dead) 비트.</summary>
     private const byte DeadBit = 2;
@@ -234,7 +240,7 @@ public sealed class RawSquidNeighbors
         };
         if (readFrame)
         {
-            uint frame = Read(raw, FrameOffset);
+            uint frame = Read(raw, _pool.Edition == OriginalEdition.Patch1078 ? FrameOffset : CdFrameOffset, _pool.Edition == OriginalEdition.Patch1078 ? 4 : 1);
             IReadOnlyList<FrameCode> codes = _frames[(int)number];
             if (frame >= (uint)codes.Count)
             {
@@ -309,8 +315,8 @@ public sealed class RawSquidNeighbors
         {
             return false;
         }
-        // abstract 후보는 제외한다
-        if ((flags & NeighborFlags.SkipAbstract) != 0 && (raw[ExtraOffset] & AbstractBit) != 0)
+        // abstract 후보는 제외한다. 판본별 추가 비트 위치가 다르다
+        if ((flags & NeighborFlags.SkipAbstract) != 0 && (raw[_pool.Edition == OriginalEdition.Patch1078 ? ExtraOffset : CdExtraOffset] & AbstractBit) != 0)
         {
             return false;
         }
