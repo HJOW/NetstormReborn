@@ -5,7 +5,7 @@
 cpp	class	web	base	status	note
 cpppj/src/client/AddRandomInput.cpp	port	www/core/script-command-inputs.js	1f00a25a	port	[client-default] WB04-E21: 4d7c33 AddRandom 일반 입력 분배(signed 255 타입 조회). fixture add-random-input 10.78 288행 전부
 cpppj/src/client/AiDebugCommandInput.cpp	port			todo	[client-default]
-cpppj/src/client/AiTypeRequiredEnergy.cpp	port			todo	[client-default]
+cpppj/src/client/AiTypeRequiredEnergy.cpp	port	www/core/raw-type-required-energy.js	1f00a25a	partial	[client-default] WB04-E26: AI getter(188 TYPE/116 정의 계약·자산 70..185·현재 TYPE 재조회)만 옮김. 보호 자산 116개 정의로 188 TYPE 전체를 읽는 연결은 자산 적재 단위에서
 cpppj/src/client/AiUtilityCommandInput.cpp	port	www/core/client-input-commands.js	1f00a25a	port	[client-default] WB04-E23: AI/간헐천 일반 명령 세 개 분배. fixture ai-utility-commands 10.78 72행 전부. ai-utility-names 30행(스크립트 큐)은 해당 단위에서
 cpppj/src/client/BackgroundGifGump.cpp	port			todo	[client-default]
 cpppj/src/client/BitmapFont.cpp	port	www/assets/bitmap-font.js;www/assets/font-set.js;www/render/glyph-text.js	1f00a25a	partial	[client-default] .chfnt 글꼴 표·글자 출력
@@ -867,7 +867,7 @@ cpppj/src/o/RawProductionSync.cpp	port			todo	[o-default]
 cpppj/src/o/RawProjectileGeometry.cpp	port			todo	[o-default]
 cpppj/src/o/RawRainAviaryProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawRainVortexDraw.cpp	port			todo	[o-default]
-cpppj/src/o/RawRegionOwner.cpp	port			todo	[o-default]
+cpppj/src/o/RawRegionOwner.cpp	port	www/core/raw-region-owner.js	1f00a25a	port	[o-default] WB04-E26: 0046f710/0046f770 표면 소유자. fixture region-owner 10.78 816행(originalCD 816행 제외). 실제 Session/미션 adapter 연결은 해당 단위에서
 cpppj/src/o/RawRegionOwnership.cpp	port			todo	[o-default] outpost 분기는 RawOutpostLifecycle(exclude-mp)로 명시 웹 제외
 cpppj/src/o/RawRegionPaint.cpp	port	www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] 지역 도장 일부
 cpppj/src/o/RawRenderCollection.cpp	port			todo	[o-default]
@@ -880,7 +880,7 @@ cpppj/src/o/RawSalvageCommand.cpp	port			todo	[o-default]
 cpppj/src/o/RawSavedStateRead.cpp	exclude-mp			-	[mp-saved-battle]
 cpppj/src/o/RawShrapnelFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawShrapnelLifetime.cpp	port			todo	[o-default]
-cpppj/src/o/RawSidRobust.cpp	port			todo	[o-default]
+cpppj/src/o/RawSidRobust.cpp	port	www/core/raw-sid-robust.js	1f00a25a	port	[o-default] WB04-E26: 004ac040/004ac140 SID 건전성 두 부모. fixture sid-robust-parent 1012행 전부 + 호스트 풀 재사용 계약
 cpppj/src/o/RawSmokeEffect.cpp	port			todo	[o-default]
 cpppj/src/o/RawSnart.cpp	port	www/core/raw-snart.js	1f00a25a	port	[o-default] WB04-E19: 004a8800/004a8850 SNART 이름표 선택(제자리 변환). data-manager-initialize 64행·template-section-names 12행을 통해 대조. 파일 이미지 reader 경로는 DataManager 단위에서
 cpppj/src/o/RawSoloMapList.cpp	exclude-edit			-	[edit-map-list]
@@ -909,7 +909,7 @@ cpppj/src/o/RawSquidUnpopParent.cpp	port	www/core/squid-unpop.js	1f00a25a	port	[
 cpppj/src/o/RawSquidWord.h	port	www/core/raw-squid-word.js	1f00a25a	port	[o-default] WB04-E2: 004ac220 표면 WORD setter(현재 다리 TYPE 통지)
 cpppj/src/o/RawStartupStateCheck.cpp	exclude-mp			-	[mp-saved-battle]
 cpppj/src/o/RawStateBridgeReset.cpp	port	www/core/raw-state-bridge-reset.js	1f00a25a	port	[o-default] WB04-E11: 0043b540 소유자 색 앞 9칸·00422490 다리 붕괴 스캔 초기화. fixture state-bridge-reset 10.78 64행 전부. 실제 Client/World 통합 대조는 해당 단위에서
-cpppj/src/o/RawStateSidLists.cpp	port			todo	[o-default]
+cpppj/src/o/RawStateSidLists.cpp	port	www/core/raw-state-sid-lists.js	1f00a25a	port	[o-default] WB04-E26: 00472830/00472880/004728a0 등록 표와 정적 목록 여덟 개. fixture state-sid-lists 66행 전부. 실제 Client 정리/표면 저장소/사제 접두 연결은 해당 단위에서
 cpppj/src/o/RawStateWorldCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawStateZoneReset.cpp	port	www/core/raw-state-zone-reset.js	1f00a25a	port	[o-default] WB04-E11: 004bfd60 State Zone 정확히 6 BYTE 쓰기. fixture state-zone-reset 10.78 10행 + 길이 0..8 경계
 cpppj/src/o/RawStaticStrings.cpp	port	www/core/raw-static-strings.js	1f00a25a	port	[o-default] WB04-E18: Staticstring.cpp 외곽(004b92b0 초기화·004b9320 예약·004b9390 서식). fixture static-string-runtime 10.78 204행 전부. ClientStaticStrings 통합은 Client 단위에서
@@ -936,7 +936,7 @@ cpppj/src/o/RawTutorialLater.cpp	port			todo	[o-default]
 cpppj/src/o/RawTutorialMissionRelease.cpp	port	www/core/raw-tutorial-mission-release.js	1f00a25a	port	[o-default] WB04-E15: 004c3210 Tutorial 소멸(여섯 전역 0·AI 반납·기본 Mission 한 번). 원본 관측 없음, PE 정적 계약 독립 검사 4건
 cpppj/src/o/RawTutorialOne.cpp	port			todo	[o-default]
 cpppj/src/o/RawTutorialTwo.cpp	port			todo	[o-default]
-cpppj/src/o/RawTypeRequiredEnergy.cpp	port			todo	[o-default]
+cpppj/src/o/RawTypeRequiredEnergy.cpp	port	www/core/raw-type-required-energy.js	1f00a25a	port	[o-default] WB04-E26: 0049c3b0/0049b0d0 TYPE 요구 에너지. fixture type-required-energy 2352행 전부 + 경계 거부
 cpppj/src/o/RawVortexAscend.cpp	port			todo	[o-default]
 cpppj/src/o/RawVortexOwner.cpp	port			todo	[o-default]
 cpppj/src/o/RawVortexOwnerDiagnostic.cpp	port			todo	[o-default]

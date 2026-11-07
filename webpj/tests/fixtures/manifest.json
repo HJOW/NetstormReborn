@@ -4087,7 +4087,7 @@
       "bytes": 366870,
       "lines": 311,
       "fixtureCommit": "485ec285",
-      "webCommit": "worktree",
+      "webCommit": "25a0b663",
       "cpppjBasis": {
         "cpppj/src/client/ViewKeyInput.cpp": "559cf9ac"
       }
@@ -4116,7 +4116,7 @@
       "bytes": 41671,
       "lines": 356,
       "fixtureCommit": "616ce4d0",
-      "webCommit": "worktree",
+      "webCommit": "25a0b663",
       "cpppjBasis": {
         "cpppj/src/client/UtilityCommandInput.cpp": "616ce4d0"
       }
@@ -4145,7 +4145,7 @@
       "bytes": 3468,
       "lines": 49,
       "fixtureCommit": "616ce4d0",
-      "webCommit": "worktree",
+      "webCommit": "25a0b663",
       "cpppjBasis": {
         "cpppj/src/client/UtilityCommandInput.cpp": "616ce4d0"
       }
@@ -4174,7 +4174,7 @@
       "bytes": 1968,
       "lines": 22,
       "fixtureCommit": "731c9dee",
-      "webCommit": "worktree",
+      "webCommit": "25a0b663",
       "cpppjBasis": {
         "cpppj/src/client/PresentationCommandInput.cpp": "731c9dee"
       }
@@ -4203,7 +4203,7 @@
       "bytes": 2765,
       "lines": 33,
       "fixtureCommit": "731c9dee",
-      "webCommit": "worktree",
+      "webCommit": "25a0b663",
       "cpppjBasis": {
         "cpppj/src/client/PresentationCommandInput.cpp": "731c9dee"
       }
@@ -4232,7 +4232,7 @@
       "bytes": 25856,
       "lines": 24,
       "fixtureCommit": "731c9dee",
-      "webCommit": "worktree",
+      "webCommit": "25a0b663",
       "cpppjBasis": {
         "cpppj/src/client/PresentationCommandInput.cpp": "731c9dee"
       }
@@ -4261,7 +4261,7 @@
       "bytes": 31699,
       "lines": 577,
       "fixtureCommit": "fc2ef723",
-      "webCommit": "worktree",
+      "webCommit": "25a0b663",
       "cpppjBasis": {
         "cpppj/src/client/ScenarioEffectInput.cpp": "c148400b"
       }
@@ -4290,9 +4290,125 @@
       "bytes": 1211,
       "lines": 49,
       "fixtureCommit": "c148400b",
-      "webCommit": "worktree",
+      "webCommit": "25a0b663",
       "cpppjBasis": {
         "cpppj/src/client/ScenarioEffectInput.cpp": "c148400b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E26",
+      "id": "region-owner",
+      "path": "cpppj/tests/fixtures/region-owner-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 표면 소유자의 정수 칸/float snap/CRT 절삭과 TYPE·상태·소유자 조합",
+      "consumers": [
+        "webpj/tests/region-sid-lists.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-region-owner.js"
+      ],
+      "doc": "docs/webpj-region-sid-lists-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawRegionOwner.cpp"
+      ],
+      "scope": "1632행 중 10.78(originals) 816행 사용(originalCD 816행은 범위 밖)",
+      "text": true,
+      "sha256": "138de15121defd70e2e2c02f528bfd8f1be70e7b6cc15e4cffa738f3ad704b00",
+      "bytes": 76997,
+      "lines": 1633,
+      "fixtureCommit": "cbafd5fe",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawRegionOwner.cpp": "cbafd5fe"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E26",
+      "id": "sid-robust-parent",
+      "path": "cpppj/tests/fixtures/sid-robust-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: SID 건전성 두 부모의 실패 비트·번호 경계·선택 장치 순서·진단 재진입",
+      "consumers": [
+        "webpj/tests/region-sid-lists.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-sid-robust.js"
+      ],
+      "doc": "docs/webpj-region-sid-lists-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSidRobust.cpp"
+      ],
+      "scope": "1012행 전부 사용",
+      "text": true,
+      "sha256": "31bc1602ebca5d3716783e37e251270957061a12680ca6d446df8279cfa1e7f7",
+      "bytes": 153706,
+      "lines": 1013,
+      "fixtureCommit": "8b467ca0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSidRobust.cpp": "8b467ca0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E26",
+      "id": "state-sid-lists",
+      "path": "cpppj/tests/fixtures/state-sid-lists-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 정적 SID 목록 등록/해제/개수 정리의 표·헤더 전체 출력과 쓰기 순서",
+      "consumers": [
+        "webpj/tests/region-sid-lists.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-state-sid-lists.js"
+      ],
+      "doc": "docs/webpj-region-sid-lists-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawStateSidLists.cpp"
+      ],
+      "scope": "66행 전부 사용",
+      "text": true,
+      "sha256": "bf6e68d182afe25e18e47ee39b004c93a720f720445b9e9ec3f211bf31736e13",
+      "bytes": 215391,
+      "lines": 67,
+      "fixtureCommit": "1e8e43d9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawStateSidLists.cpp": "1e8e43d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E26",
+      "id": "type-required-energy",
+      "path": "cpppj/tests/fixtures/type-required-energy-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: TYPE mana 후처리의 level·문자표 NUL·제외/group10·명시 문자열 결과",
+      "consumers": [
+        "webpj/tests/type-required-energy.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-type-required-energy.js"
+      ],
+      "doc": "docs/webpj-region-sid-lists-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTypeRequiredEnergy.cpp"
+      ],
+      "scope": "2352행 전부 사용",
+      "text": true,
+      "sha256": "8bcb3e215c958f5df0a395365059f5481801b1660569f2f04c0720f394f14f4c",
+      "bytes": 53527,
+      "lines": 2353,
+      "fixtureCommit": "10735a35",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTypeRequiredEnergy.cpp": "10735a35"
       }
     }
   ]
