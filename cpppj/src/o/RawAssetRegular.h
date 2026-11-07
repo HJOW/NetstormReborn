@@ -19,8 +19,8 @@ struct AssetRegularState {
     std::uint32_t maxDecorationScan{}; // 원본 전역에 저장하는 한 번의 finder 최대 조사 개수다.
     std::uint32_t damageEvent{6699},constructionEvent{6700}; // Damageable의 폭발 연쇄/abstract 건설 재시도 이벤트 번호다.
     std::uint32_t constructionProcessType{30}; // abstract 건설 재시도가 찾는 부착 프로세스 번호다.
-    std::uint32_t animationType{0x2000013}; // 신전 event4의 삭제 통지 대상 토큰이다. 두 PE 초기DWORD는0x2000013이다.
-    std::uint32_t regionGeneration{}; // event4 통지 토큰의 상위 WORD를 만드는 전역이다.
+    std::uint32_t animationType{0x2000013}; // 독립 기존 입력의 ViewMeta 명령이다. 실제 Client는hooks.descend에서 같은 현재 명령을 읽는다.
+    std::uint32_t regionGeneration{}; // 독립 기존 입력의 상위WORD 서버 선택이다. 실제 Client는hooks.descend에서 현재curServer를 읽는다.
     RawAuthorityState* sharedAuthority{}; // Session/물리 저장소와 같은 권한만 공유하며 예약/목록은 실행기에 남긴다.
     bool& Boss() { return sharedAuthority ? sharedAuthority->boss : boss; } // 신전 이탈 대기의 실제 비교 위치에서 읽는다.
     const bool& Boss() const { return sharedAuthority ? sharedAuthority->boss : boss; } // 독립 raw 입력의 bool fallback을 보존한다.
@@ -49,6 +49,7 @@ struct AssetRegularHooks {
     std::function<void(Sid,std::int32_t,std::uint32_t)> factoryFlare; //PATCH event5의 상위 레벨 실제 플레어다.
     std::function<void(Sid,std::uint16_t)> state; // 신전의 상태WORD와004ac220 특정TYPE 통지를 같은 실제 부모로 실행한다.
     std::function<bool()> suppressLeaveRequest; // event3의 소비 위치에서 현재00594fa0을 조회한다. 독립 입력은 기존 state를 쓴다.
+    std::function<void(float,float)> descend; // event4의 실제 Fort 지역 조회→현재 서버/Descend 명령 큐다. 독립 기존 입력만 아래의 지역/애니메이션 훅을 사용한다.
 };
 // +5c 가상 표의 실제 주소로 몸체를 선택하고 공통 Damageable의 event 분배까지 복원한다.
 class RawAssetRegular {

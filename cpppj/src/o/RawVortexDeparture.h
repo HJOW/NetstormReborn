@@ -31,6 +31,8 @@ public:
         const std::uint32_t& localOwner,const bool& server,std::uint32_t& revision,VortexDepartureHooks hooks); // 모든 현재 입력은 같은 World 수명이다.
     void Receive(std::int32_t sender,std::span<const std::uint8_t> packet) const; //51h/8BYTE를 해석하고 시작·완료를 구별한다.
     void Remove(Sid temple,std::int32_t island) const; // 자신의 Territory와 무관한 원격 섬도 실제 공간/자산을 정리한다.
+    std::int32_t FortTerritoryAt(float x,float y,const bool& fort,const std::int32_t& noIsland) const; //0046f650/0046f5a0의 float 절삭→Fort/표면/존재 진단→signed 지역BYTE다.
+    void UpdateIslandRecord(std::int32_t island,std::span<const std::uint8_t,6> record) const; //004324e0의 값 인자/현재 지도6BYTE/생산 갱신을 상승·Descend가 공유한다.
 private:
     std::uint32_t Genus(Sid sid) const; // 매 소비 위치의 현재 TYPE.flags2를 읽는다.
     std::array<float,2> Position(Sid sid) const; // 같은 부모의 비정렬 float 두 개를 값으로 읽는다.

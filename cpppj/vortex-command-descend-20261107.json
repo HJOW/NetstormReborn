@@ -1,0 +1,64 @@
+{
+  "unit": 1051,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "신전 실제 명령/event4·ViewMeta 입력/현재 Fort 저장과 State19 요청 연결",
+  "sourceFunctions1078": [
+    "004dbac0",
+    "00492770",
+    "004dc220(event4)",
+    "0046f650",
+    "0046f5a0",
+    "004acda0",
+    "004b3620",
+    "004b3760",
+    "004d7627..004d7670"
+  ],
+  "originalCommandNames": {
+    "WipeOut": "0300006f",
+    "Ascend": "0300007c",
+    "Descend": "030000a7",
+    "ViewMeta": "02000013"
+  },
+  "implemented": [
+    "네 신전VT의 실제 가상6c·상태WORD·확인WORD·같은 목록 사제/섬 검사",
+    "확인 실패의 global.param1/원문 숫자·PriestOffIsland 및 실제51h 송신/시작 음향",
+    "Descend Regular4/count0·실제 Fort 지역 getter/진단→현재 서버와 ViewMeta 큐→상태0",
+    "같은 HTML/일반 이름표의 네 원문 이름 및 상위WORD 보존 입력",
+    "ViewMeta signed서버WORD/-1/목록 상한·무효로그/curServer0·유효지역 실제 저장",
+    "읽기전용 경고 후 계속/현재 Fort·invalidTerritory 진단→선택 지역home비트/지도 갱신·Territory 쓰기/전체Fort snapshot",
+    "저장 뒤 next19/기록DWORD·WORD/현재서버 순서와 인접WORD 보존"
+  ],
+  "remaining": [
+    "State19의 실제 CS 생성/목록/World·HUD·메타 부모는 미연결이며 요청만 구현",
+    "메타맵2VT·나머지 송신·endpoint/server·writer/decoder·Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ],
+  "decompilerOutputsChanged": false,
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1051\\build.log",
+    "exeSize": 12219904,
+    "exeSha256": "ac9dd246e2bf5c574fedbf90871cf08ae50d9cecb3e6d5e13bfbe480d89e6fd8"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1051\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  }
+}

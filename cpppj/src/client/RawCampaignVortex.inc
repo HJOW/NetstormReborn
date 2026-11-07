@@ -38,3 +38,34 @@
         std::array<std::uint8_t,8> packet{1,0x51,8,0,static_cast<std::uint8_t>(island),static_cast<std::uint8_t>(temple.value),static_cast<std::uint8_t>(temple.value>>8),1}; // 보호 PE0052ee12의1/51h/8과 실제 완료BYTE다.
         broadcast->Send(packet);vortexDeparture->Receive(9,packet);
     }
+    void QueueVortexDescend(float x,float y) { //004dc220 event4의 실제 지역 조회가 끝난 뒤 당시 서버/명령을 읽는다.
+        const auto region=vortexDeparture->FortTerritoryAt(x,y,core.ownerMode.fort,noRegion);
+        if (!services.nsInfoGlobals || !services.developerQueue) throw std::logic_error("신전 Descend의 실제 서버/일반 입력 큐 미연결");
+        const auto token=(std::bit_cast<std::uint32_t>(services.nsInfoGlobals->serverSelection)<<16)|std::bit_cast<std::uint32_t>(region);
+        services.developerQueue(localStateGlobals->ViewMetaCommand(),token,token); //452fe0은 두 인자에 같은DWORD를 넣으며 State를 여기서 바꾸지 않는다.
+    }
+    bool PriestOnVortexIsland(Sid temple,std::uint32_t owner) const { //00492770의 첫 살아 있는 목록 사제/현재 free/같은 표면 섬 조건이다.
+        const auto number=RawPriestLookup(core.pool,priestState.priests).Find(owner);if (!number) return false;
+        const Sid priest{static_cast<std::uint16_t>(number)};const auto raw=core.pool.Slot(priest);
+        const auto island=ownership->IslandNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
+        if ((core.pool.Slot(priest)[11]&1U) || island==noRegion) return false;
+        const auto current=core.pool.Slot(temple);return island==ownership->IslandNumber(std::bit_cast<float>(Read(current,14)),std::bit_cast<float>(Read(current,18)));
+    }
+    std::uint32_t CommandVortex(Sid temple,std::uint32_t code,std::uint16_t parameter) { //004dbac0의 상태WORD/확인인자와 실제51h 요청을 복원한다.
+        const auto command=code&0x03ffffffU;
+        if (command==0x0300006fU) { world.Storage()->AssertDisplay("0","\\Ns\\O\\Vortex.cpp",0x2ea);return 1; }
+        if (command==0x0300007cU && !(Read(core.pool.Slot(temple),12)&0xffffU)) {
+            if (!core.ownerMode.battle) world.Storage()->AssertDisplay("inBattleMode","\\Ns\\O\\Vortex.cpp",0x2ef);
+            if (!parameter) {
+                if (!PriestOnVortexIsland(temple,core.pool.Slot(temple)[34])) {
+                    const auto picture=std::to_string(std::uint32_t(temple.value)|0x10000U);if (!services.install.setConfig || !services.factoryTell) throw std::logic_error("신전 Ascend의 실제 설정/Tell 장치 미연결");
+                    services.install.setConfig("global.param1",{reinterpret_cast<const std::uint8_t*>(picture.c_str()),picture.size()+1});services.factoryTell("PriestOffIsland");return 1; // 원문의%d/256BYTE 지역서식이며 그림 markup을 추가하지 않는다.
+                }
+            } else if (parameter!=1) return 1;
+            SetVortexState(temple,1);const auto raw=core.pool.Slot(temple);const auto island=ownership->IslandNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
+            std::array<std::uint8_t,8> packet{1,0x51,8,0,static_cast<std::uint8_t>(island),static_cast<std::uint8_t>(temple.value),static_cast<std::uint8_t>(temple.value>>8),0}; //0040aa20의 실제 시작 패킷이다.
+            if (!services.sound.play) throw std::logic_error("신전 Ascend의 실제 시작 음향 미연결");services.sound.play(soundNames.Lookup("preparingAscend.wav"),0,0,0,0,0);SendChatMutable(9,packet);return 1;
+        }
+        if (command==0x030000a7U && !(Read(core.pool.Slot(temple),12)&0xffffU)) { static_cast<void>(core.processes.AddRegular(temple,4,0));return 1; }
+        return objectCommand->Command(temple,code); // 상태가0이 아닌 일치 명령도 원문처럼 공통 부모로 위임한다.
+    }

@@ -363,3 +363,6 @@ target_sources(netstorm PRIVATE RendererDiagnostics.cpp RendererDiagnostics.h)
 
 # 현재의 벽시각/Chat 임시서식을 같은 Client 시간 알림에 연결한다.
 target_sources(netstorm PRIVATE RawMonitorTime.h RawMonitorTime.cpp)
+
+# 신전 가상 명령의 확인WORD와 일반 Descend의 서버/지역 검증을 실제 입력에 연결한다.
+target_sources(netstorm PRIVATE VortexCommandInput.h VortexCommandInput.cpp)

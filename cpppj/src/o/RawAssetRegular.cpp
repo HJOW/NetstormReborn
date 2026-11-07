@@ -226,9 +226,13 @@ float RawAssetRegular::Vortex(Sid sid,std::uint32_t event,std::uint32_t count,fl
         const auto signedCount=std::bit_cast<std::int32_t>(count);
         if (!count) { if (hooks_.state) hooks_.state(sid,4);else Write(pool_.AllocatedBytes(sid),12,4,2); }
         if (!state_.checkingForms && static_cast<float>(signedCount)<=4.0f) return 1.0f;
-        Require(hooks_.regionNumber,"신전 event4 지역 조회 누락");Require(hooks_.removeAnimation,"신전 event4 애니메이션 통지 누락");
-        const auto raw=pool_.Slot(sid);const auto region=hooks_.regionNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
-        const auto token=(state_.regionGeneration<<16)|region;hooks_.removeAnimation(state_.animationType,token);
+        const auto raw=pool_.Slot(sid);
+        if (hooks_.descend) hooks_.descend(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
+        else { // 기존 독립 fixture의 명시 입력 경계만 보존한다. 실제 Client는 위의 Descend 본체를 사용한다.
+            Require(hooks_.regionNumber,"신전 event4 지역 조회 누락");Require(hooks_.removeAnimation,"신전 event4 통지 누락");
+            const auto region=hooks_.regionNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
+            const auto token=(state_.regionGeneration<<16)|region;hooks_.removeAnimation(state_.animationType,token);
+        }
         if (hooks_.state) hooks_.state(sid,0);else Write(pool_.AllocatedBytes(sid),12,0,2);return 0.0f;
     }
     return DamageableHandle(sid,event,count,payload);

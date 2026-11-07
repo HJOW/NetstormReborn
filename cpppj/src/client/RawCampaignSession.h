@@ -182,10 +182,12 @@ struct CampaignCameraCommitContext {
 };
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct ClientBuildReplayGlobals; // 같은 Client의 현재 재생 playing과 객체를 장기 소유권으로 빌린다.
+struct ClientNsInfoGlobals; // 같은 Client의 현재 서버 선택/시작 목록이며 새 접속이나 서버 조회를 만들지 않는다.
 struct RawCampaignSessionServices {
+    std::shared_ptr<ClientNsInfoGlobals> nsInfoGlobals; // Descend의 현재0054db4c를 신전 큐/State19 요청이 같은 주소에서 읽는다.
     std::function<void(const CampaignCameraCommitContext&)> cameraCommit; // 실제497960의 커서/화면/dirty/Gump 장치다. 생략된 실제 호출은 두setter/noop로 대체하지 않는다.
     std::function<ScreenPoint()> cameraScreenSize; // 34h 수신이 현재005c78f0/f4 논리 화면 크기를 읽는다. 지도 Gump 크기나 호스트 표시 크기와 구별한다.
-    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> developerQueue; // 개발자 cr의452fe0을 같은 실제 입력 큐에 넣고 직접 UI 변경으로 대체하지 않는다.
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> developerQueue; // cr/신전 ViewMeta의452fe0을 같은 실제 입력 큐에 넣고 직접 UI/State 변경으로 대체하지 않는다.
     std::function<void(float,float)> developerHighlight; //4345e0의 현재 좌표 강조를 실제 Screen/카메라/즉시 출력에 연결한다.
     std::shared_ptr<ClientBuildReplayGlobals> buildReplay; // 건설 Confirm의 현재495710/495730이 읽는 실제 Client 전역이다.
     std::function<void(std::uint32_t)> developerSelectObject; //4958d0의 마지막4d5c90(SID,0,1)을 같은 실제 World 선택기로 전달한다.
@@ -507,7 +509,8 @@ public:
     void RequestCarrierMove(o::Sid parent,o::RawPathPoint destination,std::uint32_t sacrifice=0);
     void RequestCarrierDrop(o::Sid parent,o::Sid content={}); // 실제427070의비용/선택/9바이트송신만 실행하며 서버 수신을 직접 부르지 않는다.
     std::uint32_t CommandCarrierDrop(o::Sid parent,std::uint32_t command,o::Sid listParent); // 실제42aa50 Cast/Drop 메뉴와 최초 내용물 선택 순서를 실행한다.
-    std::uint32_t CommandObject(o::Sid parent,std::uint32_t command); // 실제 비석/주문6c 전환과4ae010/4ac9b0 공통 부모 명령·미처리0 반환이다.
+    std::uint32_t CommandObject(o::Sid parent,std::uint32_t command,std::uint16_t parameter=0); // 실제 가상6c에 명령과상위WORD 인자를 보존한다. 기존 두인자 호출은 원문 인자0이다.
+    void RequestFortDescend(std::int32_t territory); //004b3620의 실제 현재 지형/저장 뒤004b3760의 next19/6BYTE/현재서버만 쓴다.
     void SetObjectOwner(o::Sid parent,std::uint32_t owner); // 실제 가상74의 신전·사제 재정의와 공통 소유자 변경을 같은 월드에서 분배한다.
     void FollowObjectOwner(std::uint32_t sid); //004d5290의 같은 Pool/Player Core 선택과0059a8b0 증가를 실행한다. 미니맵 갱신과 구별한다.
     std::uint32_t CommandPriest(o::Sid parent,std::uint32_t command,std::uint32_t parameter); // 실제4940b0의packed y 기도 요청과 Carrier 부모 위임이다.

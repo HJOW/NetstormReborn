@@ -180,6 +180,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.requestFortEdit=[&client] { if (!client.Menu()) throw std::logic_error("신전 이탈의 실제 Uber/Fort 상태 부모 미연결");client.Menu()->RequestFortEditState(); }; // 일반 입력 c2와 동일한 즉시004b3560 부모를 사용한다.
     services.mapView=[&controls] { return controls.MapViewRect(); }; //초기 Reset 전에도 현재 도킹의 같은005ca9cc 영역을 사용한다.
     services.chatGlobals=client.ChatWindowGlobals();services.chatReceive=std::move(ui.receiveChat); // 수신 마스크/무시 상태와 실제 UI는 같은 Client/현재 게임을 빌린다.
+    services.nsInfoGlobals=client.NsInfoGlobals(); // 신전/Descend/State 요청이 옵션과 같은 현재 서버 선택을 빌린다.
     services.subscriberGlobals=client.SubscriberGlobals(); // Init/Chat/모든 Session이 같은 두 DWORD를 수명째 빌린다.
     services.playerRecords=client.PlayerRecords(); // 실제 Player/factory를 Client 수명에 소유하고 Session 대여 중 재할당하지 않는다.
     services.connectionRegistry=client.ConnectionGlobals(); //실제 로컬 연결도 State 정리와 같은 장기22/32칸을 사용한다.

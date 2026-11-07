@@ -27,6 +27,29 @@ RawVortexDeparture::RawVortexDeparture(SidPool& pool,const SquidHash& hash,std::
 std::uint32_t RawVortexDeparture::Genus(Sid sid) const { const auto type=pool_.Slot(sid)[10];if (type>=types_.size()) throw std::out_of_range("신전 상승의 현재 TYPE 범위");return types_[type].flags2; } // 첫 TYPE 사본을 후속 효과에 재사용하지 않는다.
 std::array<float,2> RawVortexDeparture::Position(Sid sid) const { const auto raw=pool_.Slot(sid);return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))}; } // 원문 float32 입력이다.
 std::int32_t RawVortexDeparture::IslandAt(float x,float y) const { return std::bit_cast<std::int8_t>(chunks_.At(Cell(x)/16,Cell(y)/16).island); } // C++ signed 나눗셈도 원문처럼0방향으로 자른다.
+std::int32_t RawVortexDeparture::FortTerritoryAt(float x,float y,const bool& fort,const std::int32_t& noIsland) const { // float wrapper의 변환을 Fort 진단보다 먼저 수행한다.
+    const auto cx=Cell(x),cy=Cell(y);
+    if (!fort) Need(hooks_.assertion)("inFortMode","\\Ns\\O\\Islandlist.cpp",0x344);
+    Sid surface{};if (cx>=0 && cx<=255 && cy>=0 && cy<=255) surface=Sid{hash_.Entries(0)[static_cast<std::size_t>(cy)*256+cx]};
+    std::int32_t island;
+    if (!surface.value) island=noIsland;
+    else {
+        const auto genus=Genus(surface);
+        if (!(genus&0x1000006U)) { Need(hooks_.assertion)("genus & (gISLAND|gBRIDGE|gISLAND3x3)","\\Ns\\O\\Squid.cpp",0x4cf);island=noIsland; }
+        else island=genus&4U ? noIsland : static_cast<std::int32_t>(Read(pool_.Slot(surface),8,2));
+    }
+    if (island<0 || island>=std::bit_cast<std::int32_t>(islands_.Count()) || !islands_.Exists(island)) Need(hooks_.assertion)("exists(islandId)","\\Ns\\O\\Islandlist.cpp",0x348);
+    if (island<0 || island>=100) throw std::out_of_range("Descend 지역BYTE의 실제 섬100개 물리 범위");
+    return std::bit_cast<std::int8_t>(islands_.Bytes()[4+static_cast<std::size_t>(island)*32+12]);
+}
+void RawVortexDeparture::UpdateIslandRecord(std::int32_t island,std::span<const std::uint8_t,6> record) const { // 원문의 DWORD/WORD 값 전달을 첫 진단 전 고정한다.
+    const std::array<std::uint8_t,6> value{record[0],record[1],record[2],record[3],record[4],record[5]};
+    if (!islands_.Exists(island)) Need(hooks_.assertion)("islandList.exists(islandId)","\\Ns\\O\\Chunkmap.cpp",0x139);
+    for (int cy=0;cy<chunks_.YLength();++cy) { // 현재 y 행을 먼저 순회한다.
+        for (int cx=0;cx<chunks_.XLength();++cx) { auto& entry=chunks_.At(cx,cy);if (std::bit_cast<std::int8_t>(entry.island)==island) entry.record=value; } // 같은 섬의6BYTE만 바꾼다.
+    }
+    Need(hooks_.refreshProduction)();
+}
 bool RawVortexDeparture::AdditionalCandidate(Sid sid,std::int32_t island) const { // 첫 genus는 추가 좌표 조회 후에도 보관한다.
     const auto genus=Genus(sid);
     if (genus&0x1000U) { const auto point=Position(sid);return IslandAt(point[0],static_cast<float>(static_cast<double>(point[1])-4.0))==island; }
@@ -71,11 +94,7 @@ void RawVortexDeparture::Remove(Sid temple,std::int32_t island) const { //004dbc
             for (std::size_t index=0;index<20;++index) if (records[index*6+1]&4U) records[index*6+1]&=0xfbU; // 기존20개 home 비트만 지운다.
         }
         Need(hooks_.writeTerritory)(owner,records);
-        if (!islands_.Exists(island)) Need(hooks_.assertion)("islandList.exists(islandId)","\\Ns\\O\\Chunkmap.cpp",0x139);
-        for (int cy=0;cy<chunks_.YLength();++cy) { // 현재 y 행을 먼저 순회한다.
-            for (int cx=0;cx<chunks_.XLength();++cx) { auto& entry=chunks_.At(cx,cy);if (std::bit_cast<std::int8_t>(entry.island)==island) entry.record=record; } // 같은 섬의6BYTE만 바꾼다.
-        }
-        Need(hooks_.refreshProduction)();Need(hooks_.snapshot)();
+        UpdateIslandRecord(island,record);Need(hooks_.snapshot)();
     }
     Need(hooks_.owner)(temple,0);Surfaces(island,true);
     if (!islands_.Exists(island)) Need(hooks_.assertion)("islandList.exists(islandId)","\\Ns\\O\\Chunkmap.cpp",0xc2);

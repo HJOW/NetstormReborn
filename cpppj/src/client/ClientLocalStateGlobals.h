@@ -13,6 +13,8 @@ namespace netstorm::client {
 class ClientLocalStateGlobals {
 public:
     ClientLocalStateGlobals()=default; // 새 Client에서만 원문 BSS0과 명령표의 실제 초기값을 만든다.
+    std::uint32_t& ViewMetaCommand() { return viewMetaCommand_; } //00542744의 현재02000013 ViewMeta이며 신전 Descend event4가 큐 직전에 읽는다.
+    std::int32_t& InvalidTerritory() { return invalidTerritory_; } //00540a30의 현재127이며004b3620의 진단에서 별도 지역없음 전역과 구별한다.
     ClientLocalStateGlobals(const ClientLocalStateGlobals&)=delete; // 같은 블록을 빌리는 State/패킷 소비자에게 사본을 만들지 않는다.
     ClientLocalStateGlobals& operator=(const ClientLocalStateGlobals&)=delete; // 현재 사용 중인 블록 주소를 대입으로 바꾸지 않는다.
     ClientLocalStateGlobals(ClientLocalStateGlobals&&)=delete; // 장기 참조가 이전 객체에 남는 이동을 금지한다.
@@ -106,6 +108,8 @@ public:
     std::array<std::uint32_t,255>& PlayerNoMakeWarnings() { return playerNoMakeWarnings_; } //0054d4e8의 타입별 경고 비트 표이며 SP 추적/TotalMade와 별개다.
     const std::array<std::uint32_t,255>& PlayerNoMakeWarnings() const { return playerNoMakeWarnings_; } //Session 대여 전후에도 같은 전체255DWORD를 조회한다.
 private:
+    std::uint32_t viewMetaCommand_{0x02000013}; // 보호 PE의 최초 ViewMeta 명령이며 Runtime 대여/반납에서 다시 쓰지 않는다.
+    std::int32_t invalidTerritory_{127}; // 보호 PE00540a30의 실제 초기 DWORD다. BattleTerritory와 구별한다.
     std::array<o::LocalMissionStateBlock,5> blocks_{}; //005c8630/8758/86c8/87e8/8878의 독립144BYTE 다섯 개다.
     std::uint32_t firstMenuPending_{1},userUpdated_{},tellTips_{1}; //각 PE 초기값1/BSS0/1을 새 Client에서만 한 번 구성하며 State 교체로 되돌리지 않는다.
     std::uint32_t tipNumber_{1}; //00531910의 PE 초기1이며 TellTips 옵션과 별개인 실제32비트 안내 순번이다.

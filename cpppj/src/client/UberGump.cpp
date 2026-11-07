@@ -174,6 +174,8 @@
 #include "client/ObjectOwnerCommands.h"
 #include "client/DetonateInput.h"
 #include "client/ScenarioObjectInput.h"
+#include "client/VortexCommandInput.h" // 실제 신전 가상6c 인자와 일반 Descend 입력을 보존한다.
+#include "client/ClientNsInfoGlobals.h" // ViewMeta가 현재 시작 서버 행의 개수를 검증한다.
 #include "client/ScenarioEffectInput.h"
 #include "client/AddRandomInput.h"
 #include "client/DestroyAtInput.h"
@@ -1433,6 +1435,13 @@ void UberGump::Event(InputEvent event) {
         hooks.lightning=[this](auto parent,auto from,auto to,auto life) { if (!world_) throw std::logic_error("Lightning의 현재 Session 없음");static_cast<void>(world_->Session().Particles().AddScreenBolt(o::Sid{static_cast<std::uint16_t>(parent)},from,to,life)); };
         static_cast<void>(DispatchScenarioEffectInput(event,hooks));rebuild_=true;return;
     }
+    if (DispatchVortexCommandInput(event,[this](o::Sid target,std::uint32_t code,std::uint16_t parameter) {
+        if (!world_) throw std::logic_error("신전 명령의 실제 현재 Session 없음");static_cast<void>(world_->Session().CommandObject(target,code,parameter));
+    })) { rebuild_=true;return; } // 일반 객체 입력과 같은 뗌/대상0 처리이며 확인WORD를 버리지 않는다.
+    if (DispatchViewMetaInput(event,client_.LocalStateGlobals()->ViewMetaCommand(),{
+        [this] { return static_cast<std::int32_t>(client_.NsInfoGlobals()->servers.size()); },
+        [this] { client_.WriteDiagnosticLog(19,"An invalid server is selected. Forcing number 0.\n");client_.Configuration().Set("curServer","0"); },
+        [this](auto territory) { if (!world_) throw std::logic_error("Descend 저장의 실제 현재 Session 없음");world_->Session().RequestFortDescend(territory); }})) return;
     if (DispatchScenarioObjectInput(event,[this](o::Sid target,std::uint32_t code) {
         if (!world_) throw std::logic_error("시나리오 객체 명령의 현재 Session 없음");return world_->Session().CommandObject(target,code);
     })) { rebuild_=true;return; } // 원문처럼 메뉴를 열지 않은 대상과 객체의0반환도 같은 현재 사건에서 처리한다.

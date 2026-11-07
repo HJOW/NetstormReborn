@@ -2,6 +2,7 @@
 #include "client/AiUtilityCommandInput.h" //772의세이름/명령도같은현재허용표를공유한다.
 #include "client/MakeAiCommandInput.h" //일반 MakeAi 이름과 같은 HTML/큐 명령이다.
 #include "client/GameMenuCommands.h"
+#include "client/VortexCommandInput.h" // 신전 세 가상명령과 ViewMeta의 실제 이름표도 같은 일반 큐로 보낸다.
 #include "client/CreateAtInput.h" //같은 일반 명령의 원문 이름과 숫자다.
 #include "client/DrawWater.h" //같은 일반 명령 이름/현재 DWORD만 허용한다.
 
@@ -102,6 +103,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto configured=ConfigurationCommandScriptCode(name);if (configured!=0xffffffffU) return configured; //원문 등록 이름만 연결하고 기본 메뉴는 추가하지 않는다.
     const auto effect=ScenarioEffectScriptCode(name);if (effect!=0xffffffffU) return effect; // 일반 표시 명령도 같은 HTML/메타/대본 이름표로 조회한다.
     const auto object=ScenarioObjectScriptCode(name);if (object!=0xffffffffU) return object; // 시나리오/메뉴 버튼도 원문 객체 이름표를 공유한다.
+    const auto vortex=VortexCommandScriptCode(name);if (vortex!=0xffffffffU) return vortex; // 보호 이름표의 네 항목만 허용하며 신규 메뉴는 추가하지 않는다.
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
     if (key=="serverforcebattlestart") return 0x020000f5U; //PE00543330 이름표/00542ac8의 실제 일반 명령이다.
     if (key=="delstatefile") return 0x020000acU; //PE005430e8→005429a4의 실제 저장상태 삭제 명령이다.

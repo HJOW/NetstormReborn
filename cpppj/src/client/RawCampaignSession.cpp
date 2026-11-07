@@ -82,6 +82,7 @@
 #include "o/RawFortRegionSave.h"
 #include "o/RawFortTerritorySave.h"
 #include "o/RawVortexDeparture.h" //51h 수신과 실제 섬/현재 Territory 정리를 같은 Session에 연결한다.
+#include "client/ClientNsInfoGlobals.h" // Descend가 현재 서버 선택을 값 사본 없이 읽는다.
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
 #include "client/RawGameMenus.h"
@@ -1422,6 +1423,7 @@ struct RawCampaignSession::Impl {
         assetEffects.regular.countForeignOwnedIslands=[this](auto owner) { return vortexAscend->CountForeignOwnedIslands(owner); };
         assetEffects.regular.playerLeavingNotice=[this](auto owner) { if (!services.player.log) throw std::logic_error("신전 상승의 실제 이탈 로그 미연결");services.player.log(29,"Player "+VortexPlayerName(owner)+" is leaving!\n"); };
         assetEffects.regular.requestLeave=[this](Sid sid,std::uint32_t island) { RequestVortexDeparture(sid,island); };
+        assetEffects.regular.descend=[this](float x,float y) { QueueVortexDescend(x,y); }; // event4의 실제 Fort 지역→현재서버/명령 큐다.
         assetEffects.postPop.startBlocker=[this](Sid sid) { gunBlocker->Notify(sid); }; // 기존 이름을 유지하며 실제0046ae80의 장애물 통지를 연결한다.
         assetEffects.postPop.nuggetPostPop=[this](Sid sid,std::uint32_t flags) { if (!nuggetPostPop) throw std::logic_error("현재 너겟 PostPop 미설치");nuggetPostPop->PostPop(sid,flags); };
         assetEffects.postPop.growingIcePostPop=[this](Sid sid,std::uint32_t flags) { if (!iceTower) throw std::logic_error("성장형 아이스 전체 후처리 설치 전 호출");iceTower->PostPop(sid,flags); };
@@ -4853,8 +4855,9 @@ void RawCampaignSession::RequestCarrierDrop(Sid parent,Sid content) { if (!impl_
 // 메뉴의검색부모와실제요청부모를원본처럼별개인자로유지한다.
 std::uint32_t RawCampaignSession::CommandCarrierDrop(Sid parent,std::uint32_t command,Sid listParent) { if (!impl_->loaded) throw std::logic_error("설치 전 Cast/Drop 메뉴");impl_->PrepareCarrierDrop();return impl_->carrierDrop->Command(parent,command,listParent); }
 // 실제 가상6c가 비석/주문 전환이면 같은 SID를 재사용하고 나머지는 공통 객체 부모에 위임한다.
-std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command) {
+std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command,std::uint16_t parameter) {
     if (!impl_->loaded || !impl_->objectCommand) throw std::logic_error("설치 전 공통 객체 명령");auto& current=*impl_;
+    if (current.Vortex(parent)) return current.CommandVortex(parent,command,parameter); // 실제 네 신전VT의4dbac0을 공통 객체 부모보다 먼저 실행한다.
     if (Read(current.core.pool.Slot(parent),0)==0x501ea0U && (command&0x03ffffffU)==0x030000f8U) {
         if (!current.meltdown) throw std::logic_error("실제 제네레이터 Meltdown 미설치");current.meltdown->Command(parent,command,[&current](Sid sid,auto code) { static_cast<void>(current.objectCommand->Command(sid,code)); });return 1; // 원문41c290은void이며 전송 뒤 부모0을 UI 미처리로 잘못 해석하지 않는다.
     }
@@ -4868,6 +4871,24 @@ std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command
         current.services.ai.assertion(expression); // 원문 진단 서비스가 복귀하면 타입/생성자·frame/QA·Repop을 계속한다.
     });
     return RawObjectConversion(current.core.pool,current.gemRewardState.buriedType,std::move(hooks)).Command(parent,command,body);
+}
+//004b3620/004b3760: 현재 Territory/원문 전체 Fort 저장이 끝난 뒤에만 next19의 명시 필드를 쓴다.
+void RawCampaignSession::RequestFortDescend(std::int32_t territory) {
+    auto& s=*impl_;if (!s.loaded || !s.runtime || !s.services.nsInfoGlobals) throw std::logic_error("Descend의 실제 설치/서버/현재 Territory 미연결");
+    if (s.playerState.templateOwner>=9) throw std::out_of_range("Descend 현재 Template9의 물리 범위");
+    if (Read(s.templateStorage->Headers(),s.playerState.templateOwner*20+8)) { if (!s.services.player.log) throw std::logic_error("Descend 읽기전용 경고의 실제 로그 미연결");s.services.player.log(29,"WARNING: You cannot descend with a read-only fort.\n"); }
+    if (!s.core.ownerMode.fort) s.world.Storage()->AssertDisplay("inFortMode",".\\State.cpp",0x91b);
+    if (territory==s.localStateGlobals->InvalidTerritory()) s.world.Storage()->AssertDisplay("terrId != invalidTerrId",".\\State.cpp",0x91c);
+    s.localStateGlobals->BattleTerritory()=std::bit_cast<std::uint32_t>(territory);
+    std::array<std::uint8_t,120> records{};s.runtime->ReadTerritory(s.playerState.templateOwner,records);
+    if (territory<0 || territory>=20) throw std::out_of_range("Descend 지역 기록20개의 실제 물리 범위");const auto at=static_cast<std::size_t>(territory)*6;records[at+1]|=4U;
+    const std::array<std::uint8_t,6> record{records[at],records[at+1],records[at+2],records[at+3],records[at+4],records[at+5]}; // 원문은 현재 지도 검색 전에 DWORD/WORD 인자를 보관한다.
+    const auto island=RawIslandQueries(*s.islands,s.finishState).FindOwnerTerritory(std::bit_cast<std::int32_t>(s.playerState.battleOwner),territory);
+    s.vortexDeparture->UpdateIslandRecord(static_cast<std::int32_t>(island),record);
+    s.WriteEditorTerritory(s.playerState.templateOwner,records);SnapshotFort(s.playerState.templateOwner);
+    auto& next=s.localStateGlobals->State().next;next[0]=19;next[0x48/4]=Read(records,at);
+    const auto tail=std::uint32_t(records[at+4])|(std::uint32_t(records[at+5])<<8);next[0x4c/4]=(next[0x4c/4]&0xffff0000U)|tail;
+    next[0x44/4]=std::bit_cast<std::uint32_t>(s.services.nsInfoGlobals->serverSelection); // 마지막 현재서버 store이며 다른 next BYTE는 보존한다.
 }
 // 일반 입력의 전체 owner 인자를 실제 신전/사제/공통 소유자 몸체에 전달한다.
 void RawCampaignSession::SetObjectOwner(Sid parent,std::uint32_t owner) { if (!impl_->loaded) throw std::logic_error("설치 전 실제 가상 소유자 변경");impl_->ownership->SetOwner(parent,owner); }
