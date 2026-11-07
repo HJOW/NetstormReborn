@@ -1,5 +1,6 @@
 // 원본 단독 미션의 바이너리 패킷·현재 Player 설치·zlocal 두 끝의 실제 분배를 연결한다.
 #include "zacket/LocalMissionTransport.h"
+#include "o/RawPacketFrame.h"
 #include "o/PacketRegistrationTable.h" // 실제 callback 중 고정 노드의 새 세대 재생성을 거부한다.
 #include <algorithm>
 #include <bit>
@@ -210,31 +211,9 @@ void LocalMissionTransport::Flush() {
 }
 // 같은 등록표를 사용하며 집합 경로만 원본의 now→정책→기록→observer→receive 순서로 추가한다.
 bool LocalMissionTransport::DispatchFrame(o::PacketConnection& connection,std::span<const std::uint8_t> frame) {
-    if (frame.size()>=kHeader && IsRetiredCdValidationPacket(frame[1])) return !(connection.flags&0x40U); // 단일 검증 요청은 등록 여부와 무관하게 파일/응답 처리 전에 무시한다.
-    if (frame.size()<4 || frame[1]!=4) return dispatch_.Dispatch(connection,frame);if (connection.flags&0x40U) return false;
-    if (connection.delayed) throw std::logic_error("로컬 집합의 지연 분배 미복원");const auto total=Read(frame,2,2);std::size_t cursor=4;
-    if (total>frame.size()) { hooks_.terminate(connection);return false; }
-    // 현재 집합의 원문 순서를 보존하고 callback 뒤 다음 등록/연결 필드를 다시 읽는다.
-    while (cursor<total) {
-        if (total-cursor<4) { hooks_.terminate(connection);return false; }const auto length=Read(frame,cursor+2,2);
-        if (!length || length>total-cursor) { hooks_.terminate(connection);return false; }const auto packet=frame.subspan(cursor,length);cursor+=length;
-        if (!dispatch_.Validate(packet)) continue;if (IsRetiredCdValidationPacket(packet[1])) continue; // 집합 내부에서도 폐기된 검증의 기록/observer/수신기를 호출하지 않는다.
-        if (packet[1]==4) throw std::logic_error("로컬 중첩 집합 패킷 미복원");const auto type=packet[1];
-        const auto now=hooks_.now();if (type==6) connection.heartbeat=now;else connection.received=now;
-        const auto& registration=dispatch_.Registration(type);const auto incoming=packet[0]&0x7f;
-        if (incoming!=registration.version) {
-            const bool lower=incoming<registration.version;if (registration.mismatch&(lower ? 8U : 4U)) { hooks_.terminate(connection);return false; }
-            if (registration.mismatch&(lower ? 2U : 1U)) continue;
-        }
-        const auto recordPin=registration.Pin(); // 집합의 record도 실제 전체 Runtime 정리보다 먼저 대여를 올린다.
-        hooks_.record(connection,packet,static_cast<std::uint16_t>(length));const auto observerEntry=dispatch_.Registration(type);observerEntry.NotifyObserver({const_cast<std::uint8_t*>(packet.data()),packet.size()},0); // 실제 수신 frame은 전송이 소유한 mutable vector이며 같은 this를 전달한다.
-        const auto receiverEntry=dispatch_.Registration(type);const auto pin=receiverEntry.Pin();const auto receive=receiverEntry.receive;if (receive) { // 집합도 같은 실제 Session 전체를 pin하며 재분배하지 않는다.
-            ++connection.depth;try { receive(connection.sender,connection,packet); } catch (...) { --connection.depth;throw; }--connection.depth;
-        }
-    }
-    if (cursor!=total) { hooks_.terminate(connection);return false; }
-    if (!connection.depth && (connection.flags&0x40U)) { auto hooks=WrappedHooks();hooks.close(connection);hooks.release(connection);return false; }return true;
+    return o::DispatchPacketFrame(dispatch_,connection,frame,WrappedHooks()); // 같은 실제 표와 기존 endpoint/외부 노드의 수명 장치를 공유한다.
 }
+
 // 수신 프레임은 callback 동안 고정된 로컬 소유 벡터에 두고 같은 실제 연결을 넘긴다.
 o::TransportPollResult LocalMissionTransport::ReceiveEndpoint(bool serverSide) {
     auto& queue=serverSide ? toServer_ : toClient_;if (queue.empty()) return {};auto bytes=std::move(queue.front());queue.pop_front();if (!bytes.empty()) receiveVersion_[serverSide ? 1U:0U]=bytes[0];

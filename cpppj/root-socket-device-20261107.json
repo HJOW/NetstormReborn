@@ -1,0 +1,80 @@
+{
+  "unit": 1063,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12365824,
+    "exeSha256": "882b10c1a79ef492d8fb9e75e462d22c146214e2f504c16c54c6d160d502c0d5"
+  },
+  "scope": [
+    "R SocketDevice의 실제 IPv4 UDP bind/TCP listen4·accept/select/recv·recvfrom/send·sendto·핸들/공유WSA 수명",
+    "Player/22칸 Registry 없는 공통 RawPacketFrame으로 기존 단일/집합 분배 이동·실제 Client 호출 연결",
+    "R/10.78 PE의 최대137/길이138 항목 전체 동일 확인·R accepted socket 플래그/오류 상속·20BYTE sendto·non-datagram 반환 대조"
+  ],
+  "runtime": {
+    "rootExeTargetExists": false,
+    "rootTransceiverOwnerConnected": false,
+    "networkPumpSocketBindingConnected": false,
+    "rootManagerConnected": false,
+    "challengeManagerConnected": false,
+    "deviceCompiled": true,
+    "clientUsesSharedFrameBody": true
+  },
+  "protocolAudit": {
+    "rootLastHandler": 137,
+    "clientLastHandler": 137,
+    "lengthEntries": 138,
+    "lengthDifferences": 0,
+    "serverReplyVersionNotChanged": "R 응답10.71과 클라이언트10.78/제품11.01을 구별함"
+  },
+  "nativeReferences": [
+    "R00482b60",
+    "R00483750",
+    "R00483870",
+    "R004848c0",
+    "R00485aa0",
+    "R004842a0",
+    "R004875c0",
+    "R004873a0",
+    "R00488590",
+    "R00488760",
+    "R00488a90",
+    "R00489170",
+    "R00488e90",
+    "R004893e0",
+    "R00489620",
+    "R004896d0",
+    "R004cd160=137",
+    "R004cd168/Netstorm0052ec40"
+  ],
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "R transceiver의512/4096 버퍼/부분 수신·집합 송신·숫자 토큰/지연 닫힘과 SocketDevice/NetworkPump 접합",
+    "새 R.exe/Root·CS 관리자/실제 OS launch·17h/1dh 응답",
+    "수동 검색/28~33·메타/LAN/Outpost/checking5/선택적 packet-record·한국어 후속·Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
