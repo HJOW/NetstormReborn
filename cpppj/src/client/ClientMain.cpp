@@ -488,6 +488,7 @@ int Client::Run() {
         if (menu_) menu_->Frame(); // 합성/그리기 경계는 양쪽 가지 모두 유지하며 State Tick과 합치지 않는다.
         // 11. 프레임 제한 + 그리기.
         Frame();
+        if (trace_->heapTrace) WriteDiagnosticLog(29,"allocated = "+std::to_string(std::bit_cast<std::int32_t>(trace_->heapAllocated))+"\n"); //438dc0/4395df 공통 Frame 뒤다.437f0은 실제 단일RET이므로 새 힙 순회/집계를 합성하지 않는다.
         ConsumeChatInputToggle(chatWindowGlobals_->inputLineOff,[this] { if (menu_) menu_->ToggleChatInput(); }); //원문439b96: 양쪽 갱신 가지의 그리기 뒤/커서·Sleep 앞에서 한 번 전환하고0을 쓴다.
         if (afterFrame) afterFrame(*this);
         // 12. 커서 위치를 읽어 같은 자리에 다시 놓고(원본 그대로, 목적 미확인), 설정한 만큼 쉰다.

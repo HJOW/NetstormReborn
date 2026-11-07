@@ -1,0 +1,69 @@
+{
+  "unit": 1038,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "타입/그림 프레임/그래프 덤프와 실제 프레임의 heaptrace 연결",
+  "sourceFunctions1078": [
+    "0044dc70",
+    "0049fc90",
+    "0049fd70",
+    "00419850",
+    "00462a20",
+    "004437f0",
+    "00438dc0",
+    "004395df"
+  ],
+  "referenceFunctions1072": [
+    "004a4290",
+    "00444270",
+    "0045b500",
+    "0048ef00"
+  ],
+  "developerCommands": {
+    "added": [
+      "dumptypes",
+      "dumptype",
+      "dumpArtData",
+      "dumpgraph",
+      "heaptrace"
+    ],
+    "implementedTotal": 30,
+    "remaining": [
+      "queryDirectDraw",
+      "addLabel",
+      "getPriest"
+    ],
+    "totalComplete": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1038\\build.log",
+    "exeSize": 12103680,
+    "exeSha256": "6390e4c380c1b18caba3bbf68f6ee62a49574542975638454fb910fa413fd4c3"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1038\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remaining": [
+    "31h 잔여3명령/실제 입력·cr65h",
+    "나머지 LAN/재동기화·Activate·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

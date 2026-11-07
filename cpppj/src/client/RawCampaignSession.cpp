@@ -4602,7 +4602,31 @@ void RawCampaignSession::Impl::ExecuteDeveloperCommand(std::string_view text) {
         if (two()!=2) { log("bad command.\n");return; }const auto target=sid(arguments[0]);world.Unpop(target,0);auto raw=core.pool.AllocatedBytes(target);if (!(raw[11]&4U)) world.Storage()->AssertDisplay("isVoid()","c:\\ns\\o\\squid.h",0x282);raw=core.pool.AllocatedBytes(target);raw[40]^=static_cast<std::uint8_t>((raw[40]^static_cast<std::uint8_t>(arguments[1]))&1U);world.Repop(target,0);return;
     }
     if (key=="applydamage" || key=="ad") { if (two()!=2 || arguments[0]<0) { log("bad command\n");return; }if (!developerDamage) throw std::logic_error("개발자 피해의 실제 가상98 미연결");developerDamage(sid(arguments[0]),std::bit_cast<std::uint32_t>(arguments[1]),0,0);return; }
-    for (const auto pending:{"dumptypes","dts","dumptype","heaptrace","ht","dumpartdata","dad","dumpgraph","dg","querydirectdraw","qdd","addlabel","al","getpriest","gp"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
+    // 현재 TYPE의 원문 이름/flags/depth/프레임 개수를 동일한 수준29 서식으로 출력한다.
+    const auto dumpType=[this,&log](std::uint32_t type) {
+        if (type>=core.types.size() || type>=core.shapes.size()) throw std::out_of_range("개발자 TYPE 덤프의 현재 물리 범위");const auto& record=core.types[type];std::array<char,512> message{};
+        const auto count=std::snprintf(message.data(),message.size(),"%02d:%s, flags=%d, depth=%d numFrames=%d\n",std::bit_cast<std::int32_t>(type),record.name.c_str(),std::bit_cast<std::int32_t>(record.flags1),record.zOrder,core.shapes[type].frameCount);if (count<0 || static_cast<std::size_t>(count)>=message.size()) throw std::length_error("개발자 TYPE 덤프 로그 물리 범위");log({message.data(),static_cast<std::size_t>(count)});
+    };
+    if (key=="dumptypes" || key=="dts") {
+        static_cast<void>(one()); // 원문은 detailed를 읽지만49fd70 본체는 사용하지 않는다.
+        for (std::uint32_t type=1;type<core.types.size();++type) dumpType(type); // 타입0은 제외하고 다음 행 직전에 현재 표/프레임을 다시 읽는다.
+        return;
+    }
+    if (key=="dumptype") { dumpType(one()==1 ? std::bit_cast<std::uint32_t>(arguments[0]) : 0U);return; } // 실제 별칭dts는 앞 dumptypes에 먼저 잡힌다. 도움말dt를 새 별칭으로 추가하지 않는다.
+    if (key=="dumpartdata" || key=="dad") {
+        if (one()!=1) { log("bad command\n");return; }const auto type=std::bit_cast<std::uint32_t>(arguments[0]);if (type>=core.shapes.size() || type>=core.types.size()) throw std::out_of_range("개발자 그림 덤프의 현재 TYPE 범위");const auto frames=core.shapes[type].frameCount;
+        for (std::int32_t frame=0;frame<frames;++frame) { // 최초 numFrames를 상한으로 고정하되 각 헤더/진단은 현재 TYPE를 읽는다.
+            const auto& shape=core.shapes[type];const auto& record=core.types[type];const auto limit=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(shape.frameCount)*((record.flags1&0x440000U) ? 2U : 1U));const bool inRange=frame<limit;
+            if (!inRange) world.Storage()->RecordDisplayFrameError(type,frame,0);if (!inRange || !shape.loaded || record.maxHitPoints==-0x22222223 || record.maxHitPoints==-0x32323233) world.Storage()->AssertDisplay("frameCheck( abstract, frame, false )","..\\o\\rifttype.h",0xe1);
+            const auto& header=core.shapes[type].frames.at(static_cast<std::size_t>(frame));log(std::to_string(frame)+": hx="+std::to_string(header.hotspotX)+" hy="+std::to_string(header.hotspotY)+" w="+std::to_string(header.width)+" h="+std::to_string(header.height)+" wx="+std::to_string(header.muzzleX)+" wy="+std::to_string(header.muzzleY)+"\n");
+        }
+        return;
+    }
+    if (key=="dumpgraph" || key=="dg") {
+        if (one()!=1) { log("bad command\n");return; }const auto graph=std::bit_cast<std::uint32_t>(arguments[0]);const auto& records=world.Storage()->graph.records;if (graph>=records.size()) throw std::out_of_range("개발자 graph 덤프의 실제255행 물리 범위");const auto& record=records[graph];log("graph index: "+std::to_string(arguments[0])+" numSurface: "+std::to_string(record.surfaces)+" inUse: "+std::to_string(record.inUse)+"\n");return;
+    }
+    if (key=="heaptrace" || key=="ht") { if (one()!=1) { log("bad command\n");return; }if (!services.developerHeapTrace) throw std::logic_error("개발자 heaptrace의 실제 Client 프레임 미연결");services.developerHeapTrace(arguments[0]!=0);return; }
+    for (const auto pending:{"querydirectdraw","qdd","addlabel","al","getpriest","gp"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
         if (key==pending) throw std::logic_error("개발자 명령의 실제 후속 본체 미접합: "+key);
     }
 }
