@@ -485,4 +485,36 @@ public sealed class RawNormalTerrainBindingTests
         Assert.Equal([TerrainFarmPostpassAssertion.BoundsMissingIsland], first);
         Assert.Empty(second);
     }
+
+    /// <summary>공개 후처리 관문은 군도 상태를 거부하고 배치를 실행하지 않는다. 2026-11-07 F2d 정상 지형 후처리 관문 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PostprocessFarmsRejectsArchipelago()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        var farm = new FarmClusterState { Archipelago = true };
+        var spy = new PlaceSpy();
+        Assert.Throws<InvalidOperationException>(() => binding.PostprocessFarms(farm, 127, spy.Place));
+        Assert.Empty(spy.Calls);
+    }
+
+    /// <summary>공개 후처리 관문은 일반 상태에서 같은 후처리와 같다. 2026-11-07 F2d 정상 지형 후처리 관문 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PostprocessFarmsRunsPostprocess()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        var left = new PlaceSpy();
+        var right = new PlaceSpy();
+        binding.PostprocessFarms(new FarmClusterState(), 127, left.Place);
+        binding.PostprocessCurrentFarms(127, right.Place);
+        Assert.Equal(right.Calls.Count, left.Calls.Count);
+        // 같은 사각·지역·개수 순서다
+        for (int index = 0; index < right.Calls.Count; ++index)
+        {
+            Assert.Equal(right.Calls[index], left.Calls[index]);
+        }
+    }
 }

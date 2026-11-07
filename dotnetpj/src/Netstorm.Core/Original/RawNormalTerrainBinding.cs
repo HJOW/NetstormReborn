@@ -301,4 +301,18 @@ public sealed class RawNormalTerrainWorldBinding
     public void PostprocessCurrentFarms(int selectedRegion, Action<FortRandomRectangle, int, uint> place) =>
         RawNormalTerrainChecks.PostprocessCurrentFarms(_chunks, _islands, _globals, _placement, _stamp, _types, _pool,
             _puzzlePieceType.Value, _frames, _pool.Edition, _diagnostics.DecoderDiagnostics, _diagnostics.Postpass, selectedRegion, place);
+
+    /// <summary>
+    /// 이미 초기 지면을 등록한 실제 월드에서 상위의 섬별 후처리만 실행한다. 군도 상태는 거부한다.
+    /// 원문 0.211 껍데기의 위임 조각에 공개 관문을 둔다(생성·도장 본체는 월드 본체 조립 때 잇는다).
+    /// 근거: cpppj/src/client/RawNormalTerrainWorldBinding.cpp PostprocessFarms (F2d 정상 지형 후처리 관문, 2026-11-07).
+    /// </summary>
+    /// <param name="farm">군집 상태다. 군도이면 거부한다.</param>
+    /// <param name="selectedRegion">현재 noRegion이면 모든 섬을 실행한다.</param>
+    /// <param name="place">같은 군집 몸체의 배치 효과다.</param>
+    public void PostprocessFarms(FarmClusterState farm, int selectedRegion, Action<FortRandomRectangle, int, uint> place)
+    {
+        RequireNormal(farm);
+        PostprocessCurrentFarms(selectedRegion, place);
+    }
 }
