@@ -2531,7 +2531,7 @@
       "bytes": 139876,
       "lines": 193,
       "fixtureCommit": "adb9739e",
-      "webCommit": "worktree",
+      "webCommit": "075dd496",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerCoreRecords.cpp": "adb9739e"
       }
@@ -2560,7 +2560,7 @@
       "bytes": 2707406,
       "lines": 805,
       "fixtureCommit": "2ede4027",
-      "webCommit": "worktree",
+      "webCommit": "075dd496",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerCoreData.cpp": "79c3a581"
       }
@@ -2591,7 +2591,7 @@
       "bytes": 1160765,
       "lines": 643,
       "fixtureCommit": "d207940c",
-      "webCommit": "worktree",
+      "webCommit": "075dd496",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerCoreRefresh.cpp": "c1b8fbf4",
         "cpppj/src/o/RawPlayerCoreData.cpp": "79c3a581"
@@ -2621,9 +2621,38 @@
       "bytes": 1983,
       "lines": 21,
       "fixtureCommit": "d207940c",
-      "webCommit": "worktree",
+      "webCommit": "075dd496",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerCoreRefresh.cpp": "c1b8fbf4"
+      }
+    },
+    {
+      "id": "player-identity",
+      "path": "cpppj/tests/fixtures/player-identity-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 PE 관측: Player/Subscriber/이름/IP 조회(004841c0)의 전체 60 BYTE 레코드·네 getter·객체 메뉴 DWORD",
+      "consumers": [
+        "webpj/tests/player-identity.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-identity.js"
+      ],
+      "unit": "WB04-E4",
+      "doc": "docs/webpj-player-identity-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerIdentity.cpp"
+      ],
+      "scope": "10.78(originals) 851행 중 ctor 4·resolve 179·getter 644(subscriber/owner/address/name 각 161) 사용. menu 24행(client RawObjectMenu 필요)과 CD 10.72 851행 제외",
+      "text": true,
+      "sha256": "64d19e152e37ca7ed269bd1f4d466b213005608fbbfd387a33c76eed15a0ab7b",
+      "bytes": 221344,
+      "lines": 1703,
+      "fixtureCommit": "d4a92d06",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerIdentity.cpp": "16259484"
       }
     }
   ]

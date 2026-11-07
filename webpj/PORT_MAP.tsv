@@ -821,7 +821,7 @@ cpppj/src/o/RawPlayerCoreRecords.cpp	port	www/core/raw-player-core-records.js	1f
 cpppj/src/o/RawPlayerCoreRefresh.cpp	port	www/core/raw-player-core-refresh.js	1f00a25a	port	[o-default] WB04-E3: 0044fc00 Core 갱신. fixture player-core-refresh 지원 618행(+논리 span 쓰기 정지 24행 제외)·guard 지원 16행(Unicorn 부분 store 4행 제외)
 cpppj/src/o/RawPlayerDamageNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerGeyserBounds.cpp	port			todo	[o-default]
-cpppj/src/o/RawPlayerIdentity.cpp	port			todo	[o-default]
+cpppj/src/o/RawPlayerIdentity.cpp	port	www/core/raw-player-identity.js	1f00a25a	port	[o-default] WB04-E4: 004841c0 PlayerFinder(초기화·resolve 4단계 우선순위·네 getter). fixture player-identity 10.78 851행 중 menu 24행(client RawObjectMenu 단위 필요) 제외 827행
 cpppj/src/o/RawPlayerInitialization.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerLinksCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerNotification.cpp	port			todo	[o-default]
