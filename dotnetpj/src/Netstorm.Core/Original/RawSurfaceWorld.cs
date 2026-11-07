@@ -143,6 +143,53 @@ public sealed class RawSurfaceWorld
     /// <returns>현재 실행 상태 전역이다.</returns>
     public BridgeDecayMode DecayMode() => _mode;
 
+    /// <summary>빈·죽음·무효·포함 상태를 동시에 거르는 마스크다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
+    private const byte InactiveMask = 15;
+
+    /// <summary>정렬되지 않은 원본 필드를 리틀 엔디언으로 읽는다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
+    /// <param name="bytes">읽을 슬롯 바이트다.</param>
+    /// <param name="offset">읽을 위치다.</param>
+    /// <param name="width">읽을 폭이다. CD의 인접 extra 바이트를 섞지 않게 지정 폭만 읽는다.</param>
+    /// <returns>읽은 값이다.</returns>
+    private static uint ReadSlot(ReadOnlySpan<byte> bytes, int offset, int width)
+    {
+        // 지정 폭만 읽어 필드 밖의 바이트는 섞지 않는다.
+        uint value = 0u;
+        for (int i = 0; i < width; i++)
+        {
+            value |= (uint)bytes[offset + i] << (8 * i);
+        }
+
+        return value;
+    }
+
+    /// <summary>표시·검사에 현재 살아 있는 자산만 제공한다. ProcessForm은 제외한다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
+    /// <returns>살아 있는 자산의 스냅샷 목록이다.</returns>
+    public List<SurfaceSnapshot> Objects()
+    {
+        // 현재 살아 있는 자산 번호만 읽는다. ProcessForm·반납 슬롯은 표시 대상이 아니다.
+        var result = new List<SurfaceSnapshot>();
+        bool patch = _edition == OriginalEdition.Patch1078;
+        RawSidPool pool = _storage.Pool;
+        for (int sid = RawSidPool.FirstOrdinary; sid < pool.Capacity; sid++)
+        {
+            ReadOnlySpan<byte> raw = pool.Slot(sid);
+            if ((raw[RawSidPool.StateOffset] & InactiveMask) != 0 || raw[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType)
+            {
+                continue;
+            }
+
+            uint type = raw[RawSidPool.TypeOffset];
+            uint owner = raw[patch ? 34 : 32];
+            int frame = unchecked((int)ReadSlot(raw, patch ? 36 : 34, patch ? 4 : 1));
+            float x = BitConverter.UInt32BitsToSingle(ReadSlot(raw, 14, 4));
+            float y = BitConverter.UInt32BitsToSingle(ReadSlot(raw, 18, 4));
+            result.Add(new SurfaceSnapshot(sid, new SurfaceSeed(type, owner, frame, x, y)));
+        }
+
+        return result;
+    }
+
     /// <summary>같은 월드·전송·공간 재등록을 참가자별로 실행한다. 멀티플레이 3차 사전 구현이며 전송기가 없어 명시 오류로 멈춘다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
     /// <param name="owner">동기화할 참가자 번호다.</param>
     public void SynchronizePeer(uint owner)

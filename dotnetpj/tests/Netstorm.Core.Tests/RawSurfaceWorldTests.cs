@@ -153,6 +153,79 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.ConfigureInstallModes(true, true, false, false));
     }
 
+    /// <summary>살아 있는 자산이 없으면 빈 목록을 돌려주는지 검증한다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ObjectsEmptyWhenNoLiveAssets()
+    {
+        // 빈 풀·void 할당만으로는 표시 대상이 없음을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Empty(world.Objects());
+        world.Storage().Pool.Allocate();
+        Assert.Empty(world.Objects());
+    }
+
+    /// <summary>패치 슬롯 바이트가 스냅샷으로 그대로 읽히는지 검증한다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ObjectsDecodesLiveSlot()
+    {
+        // 원본 패치 오프셋(소유자 34·프레임 36/4바이트) 읽기 순서를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        raw[34] = 3;
+        WriteSlot(raw, 36, 0x01020304u, 4);
+        WriteSlot(raw, 14, BitConverter.SingleToUInt32Bits(1.5f), 4);
+        WriteSlot(raw, 18, BitConverter.SingleToUInt32Bits(-2.25f), 4);
+        List<SurfaceSnapshot> objects = world.Objects();
+        Assert.Single(objects);
+        Assert.Equal(sid, objects[0].Sid);
+        Assert.Equal((uint)OriginalConstructors.FirstAssetType, objects[0].Object.Type);
+        Assert.Equal(3u, objects[0].Object.Owner);
+        Assert.Equal(0x01020304, objects[0].Object.Frame);
+        Assert.Equal(1.5f, objects[0].Object.X);
+        Assert.Equal(-2.25f, objects[0].Object.Y);
+    }
+
+    /// <summary>CD 슬롯 바이트가 스냅샷으로 그대로 읽히는지 검증한다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ObjectsDecodesLiveSlotCd()
+    {
+        // 원본 CD 오프셋(소유자 32·프레임 34/1바이트) 읽기 순서를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, Types188(), 97u);
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        raw[32] = 5;
+        WriteSlot(raw, 34, 0x7Fu, 1);
+        WriteSlot(raw, 14, BitConverter.SingleToUInt32Bits(2.5f), 4);
+        WriteSlot(raw, 18, BitConverter.SingleToUInt32Bits(4.5f), 4);
+        List<SurfaceSnapshot> objects = world.Objects();
+        Assert.Single(objects);
+        Assert.Equal(sid, objects[0].Sid);
+        Assert.Equal((uint)OriginalConstructors.FirstAssetType, objects[0].Object.Type);
+        Assert.Equal(5u, objects[0].Object.Owner);
+        Assert.Equal(0x7F, objects[0].Object.Frame);
+        Assert.Equal(2.5f, objects[0].Object.X);
+        Assert.Equal(4.5f, objects[0].Object.Y);
+    }
+
+    /// <summary>슬롯 바이트를 리틀 엔디언으로 쓰는 검사 보조다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
+    /// <param name="raw">쓸 슬롯 바이트다.</param>
+    /// <param name="offset">쓸 위치다.</param>
+    /// <param name="value">쓸 값이다.</param>
+    /// <param name="width">쓸 폭이다.</param>
+    private static void WriteSlot(Span<byte> raw, int offset, uint value, int width)
+    {
+        // 원본 Write의 필드 밖 보존 의미를 검사 범위에서 재현한다.
+        for (int i = 0; i < width; i++)
+        {
+            raw[offset + i] = (byte)(value >> (8 * i));
+        }
+    }
+
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {
