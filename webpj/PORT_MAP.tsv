@@ -469,7 +469,7 @@ cpppj/src/o/Player.cpp	port			todo	[o-default]
 cpppj/src/o/PopVtables.inc	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 10.78 PE 가상 표 26칸(PATCH_POP_VTABLES). CD 표는 범위 밖
 cpppj/src/o/RawAcidFence.cpp	port			todo	[o-default]
 cpppj/src/o/RawAcidZap.cpp	port			todo	[o-default]
-cpppj/src/o/RawAddRandom.cpp	port			todo	[o-default]
+cpppj/src/o/RawAddRandom.cpp	port	www/core/raw-add-random.js	1f00a25a	port	[o-default] WB04-E30: 0040dfd0 AddRandom 고정 범위 부모와 시각 seed(RawFortFinishOwner TimeSeed 공유)·섬 검색 두 함수(RawFortTerritorySave의 검색 부분만, 저장 본체는 exclude-edit 유지). fixture add-random-parent 720행 전부
 cpppj/src/o/RawAiBrain.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBrainInitialUpdate.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBridgeCandidates.cpp	port			todo	[o-default]
@@ -649,7 +649,7 @@ cpppj/src/o/RawDataManagerSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawDeckDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawDeckRestore.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawDependCreate.cpp	port	www/core/depend-form-host.js	1f00a25a	port	[o-default] WB04-D5a 감시 쌍 생성(004b1510). Process VT 부착은 기준선도 DependFormHost 에서 미연결(명시 오류)이며 실제 Process 부착 접두는 squid-process.js(WB04-D5c)
-cpppj/src/o/RawDestroyAt.cpp	port			todo	[o-default]
+cpppj/src/o/RawDestroyAt.cpp	port	www/core/raw-destroy-at.js	1f00a25a	port	[o-default] WB04-E30: 0044c540 위치 해석·0044c790 점 검색/삭제 루프. fixture destroy-at-parse 16·destroy-at-parent 804행 전부. 실제 삭제 가상/월드 연결은 소비자 단위에서
 cpppj/src/o/RawDiscRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawDissolveFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawDissolveLifetime.cpp	port			todo	[o-default]

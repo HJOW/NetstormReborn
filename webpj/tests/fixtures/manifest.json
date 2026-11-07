@@ -4754,7 +4754,7 @@
       "bytes": 448744,
       "lines": 1059,
       "fixtureCommit": "5bd2e807",
-      "webCommit": "worktree",
+      "webCommit": "cffd501e",
       "cpppjBasis": {
         "cpppj/src/o/RawEnergySupply.cpp": "504a92a8"
       }
@@ -4783,7 +4783,7 @@
       "bytes": 690669,
       "lines": 568,
       "fixtureCommit": "504a92a8",
-      "webCommit": "worktree",
+      "webCommit": "cffd501e",
       "cpppjBasis": {
         "cpppj/src/o/RawEnergySupply.cpp": "504a92a8"
       }
@@ -4812,9 +4812,96 @@
       "bytes": 1356,
       "lines": 84,
       "fixtureCommit": "5bd2e807",
-      "webCommit": "worktree",
+      "webCommit": "cffd501e",
       "cpppjBasis": {
         "cpppj/src/o/RawEnergySupply.cpp": "504a92a8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E30",
+      "id": "add-random-parent",
+      "path": "cpppj/tests/fixtures/add-random-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AddRandom 부모의 시각 seed·기본 범위·현재 소유자 섬 검색과 place 인자",
+      "consumers": [
+        "webpj/tests/add-random-destroy-at.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-add-random.js"
+      ],
+      "doc": "docs/webpj-add-random-destroy-at-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAddRandom.cpp"
+      ],
+      "scope": "720행 전부 사용",
+      "text": true,
+      "sha256": "dffb9b89963349c900283e3503f574987f81c155815c0dff01ad3064371fca3d",
+      "bytes": 80840,
+      "lines": 721,
+      "fixtureCommit": "d48ea756",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAddRandom.cpp": "d48ea756"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E30",
+      "id": "destroy-at-parse",
+      "path": "cpppj/tests/fixtures/destroy-at-parse-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DestroyAt 위치 문자열의 토큰 구분자·따옴표·길이·NUL·atol과 다섯 출력",
+      "consumers": [
+        "webpj/tests/add-random-destroy-at.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-destroy-at.js"
+      ],
+      "doc": "docs/webpj-add-random-destroy-at-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDestroyAt.cpp"
+      ],
+      "scope": "16행 전부 사용",
+      "text": true,
+      "sha256": "43252bea7c58791d52103ede97055a64ba0b1deb81dc4266b2b7cb6a031635ca",
+      "bytes": 1300,
+      "lines": 17,
+      "fixtureCommit": "f5d46ada",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDestroyAt.cpp": "f5d46ada"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E30",
+      "id": "destroy-at-parent",
+      "path": "cpppj/tests/fixtures/destroy-at-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DestroyAt 부모의 권한/점 정수화/필터 루프와 장치 효과 뒤 늦은 읽기·전체 raw",
+      "consumers": [
+        "webpj/tests/add-random-destroy-at.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-destroy-at.js"
+      ],
+      "doc": "docs/webpj-add-random-destroy-at-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDestroyAt.cpp"
+      ],
+      "scope": "804행 전부 사용",
+      "text": true,
+      "sha256": "c099d313147ee5de1817eb62ed5037ed19c8cddb60e8ec01a8c35d71ea09f80b",
+      "bytes": 373416,
+      "lines": 805,
+      "fixtureCommit": "f5d46ada",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDestroyAt.cpp": "f5d46ada"
       }
     }
   ]
