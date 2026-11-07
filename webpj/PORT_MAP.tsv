@@ -221,7 +221,7 @@ cpppj/src/client/PaletteFileRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/client/PaletteFlash.cpp	port			todo	[client-default]
 cpppj/src/client/PaletteShade.cpp	port	www/assets/palette.js	1f00a25a	partial	[client-default] UI 명암 변환표
 cpppj/src/client/ParticlePaletteMemory.cpp	adapt			todo	[adapt-screen]
-cpppj/src/client/PauseKeyInput.cpp	port			todo	[client-default]
+cpppj/src/client/PauseKeyInput.cpp	port	www/core/pause-key-input.js	1f00a25a	port	[client-default] WB04-E20: 004d8dd3 Pause 가상 키의 일반 Pause 명령 예약. fixture pause-key-input 10.78 246행 전부. GameMenuActions 소비 시점 대조는 해당 단위에서
 cpppj/src/client/PresentationCommandInput.cpp	port			todo	[client-default]
 cpppj/src/client/PreviewCollection.cpp	port			todo	[client-default]
 cpppj/src/client/PreviewColorMaps.cpp	port			todo	[client-default]
@@ -353,7 +353,7 @@ cpppj/src/client/RecheckCdInput.cpp	exclude-host			-	[host-cd]
 cpppj/src/client/Renderer.cpp	port	www/render/world-sprites.js;www/render/indexed-surface.js	1f00a25a	partial	[client-default] WB03-Z 월드 그림/그림자 출력 일부. dirty·정렬 제출 전체는 WB03-M2
 cpppj/src/client/RendererDiagnostics.cpp	port			todo	[client-default]
 cpppj/src/client/RitualChoiceInput.cpp	port			todo	[client-default] RawRitualChoice 와 같음(WB10 확인)
-cpppj/src/client/RotationKeyInput.cpp	port			todo	[client-default]
+cpppj/src/client/RotationKeyInput.cpp	port	www/core/rotation-key-input.js	1f00a25a	port	[client-default] WB04-E20: 004d96b6 C/c 회전 방향 반전과 Config 기록. fixture rotation-key-input 10.78 264행 전부. 실제 Client Config 연결은 해당 단위에서
 cpppj/src/client/SavedCameraKey.cpp	port			todo	[client-default]
 cpppj/src/client/SavedStateFiles.cpp	exclude-mp			-	[mp-saved-battle]
 cpppj/src/client/SaveFortNameDialog.cpp	exclude-edit			-	[edit-fort-save]
@@ -419,7 +419,7 @@ cpppj/src/client/UberGump.cpp	port	www/ui/main-menu.js;www/netstorm.js	11fbb988	
 cpppj/src/client/UberGumpCamera.cpp	port			todo	[client-default]
 cpppj/src/client/UberHud.inc	port			todo	[client-default]
 cpppj/src/client/UberRootGump.cpp	port			todo	[client-default]
-cpppj/src/client/UrlInput.cpp	port			todo	[client-default]
+cpppj/src/client/UrlInput.cpp	port	www/core/url-input.js	1f00a25a	port	[client-default] WB04-E20: 4d7b09 URL 일반 입력(두 번째 DWORD 문자열 토큰). fixture url-input 10.78 96행 전부. 메타 resolver 연결은 해당 단위에서
 cpppj/src/client/UserInput.cpp	port			todo	[client-default]
 cpppj/src/client/UtilityCommandInput.cpp	port			todo	[client-default]
 cpppj/src/client/VFXDraw.cpp	port	www/assets/shapes.js	1f00a25a	partial	[client-default] VFX 셰이프 RLE 해독

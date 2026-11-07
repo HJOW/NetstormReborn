@@ -125,7 +125,7 @@
       "bytes": 29665,
       "lines": 263,
       "fixtureCommit": "7f1c4740",
-      "webCommit": "worktree",
+      "webCommit": "a638b780",
       "cpppjBasis": {
         "cpppj/src/client/ScriptCommand.cpp": "2054e074",
         "cpppj/src/o/RawTextToken.cpp": "7f1c4740"
@@ -3646,7 +3646,7 @@
       "bytes": 25961,
       "lines": 13,
       "fixtureCommit": "c4b75d7a",
-      "webCommit": "worktree",
+      "webCommit": "a638b780",
       "cpppjBasis": {
         "cpppj/src/o/RawTemplateSectionNames.cpp": "c4b75d7a"
       }
@@ -3678,10 +3678,97 @@
       "bytes": 182972,
       "lines": 65,
       "fixtureCommit": "c4b75d7a",
-      "webCommit": "worktree",
+      "webCommit": "a638b780",
       "cpppjBasis": {
         "cpppj/src/o/RawDataManagerInitialize.cpp": "c4b75d7a",
         "cpppj/src/o/RawSnart.cpp": "c4b75d7a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E20",
+      "id": "pause-key-input",
+      "path": "cpppj/tests/fixtures/pause-key-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Pause 키 입력의 상위 비트/뗌/선행 소비/현재 명령/FIFO 포화와 예약 결과",
+      "consumers": [
+        "webpj/tests/key-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/pause-key-input.js"
+      ],
+      "doc": "docs/webpj-key-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/PauseKeyInput.cpp"
+      ],
+      "scope": "246행 전부 사용",
+      "text": true,
+      "sha256": "95609b06c013b10db5849de1b9c66b3070437328142ca571d64f402c0aa108ad",
+      "bytes": 302694,
+      "lines": 247,
+      "fixtureCommit": "4a1362e5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PauseKeyInput.cpp": "4a1362e5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E20",
+      "id": "rotation-key-input",
+      "path": "cpppj/tests/fixtures/rotation-key-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: C/c 회전 방향 키의 수정키/뗌/정지/Config 재진입/중단",
+      "consumers": [
+        "webpj/tests/key-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/rotation-key-input.js"
+      ],
+      "doc": "docs/webpj-key-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/RotationKeyInput.cpp"
+      ],
+      "scope": "264행 전부 사용",
+      "text": true,
+      "sha256": "2f3c6d9020405b630feff0621cb838153d239550ed106e839c57cb887835714c",
+      "bytes": 11865,
+      "lines": 265,
+      "fixtureCommit": "75b4a466",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RotationKeyInput.cpp": "e46d8981"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E20",
+      "id": "url-input",
+      "path": "cpppj/tests/fixtures/url-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: URL 일반 입력의 두 번째 DWORD 전체 비트/뗌/수정키/모드 독립",
+      "consumers": [
+        "webpj/tests/key-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/url-input.js"
+      ],
+      "doc": "docs/webpj-key-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/UrlInput.cpp"
+      ],
+      "scope": "96행(머리글 제외) 전부 사용",
+      "text": true,
+      "sha256": "218646c0e41ada566d5d1afaad6df2ad64646ab63592bd4265b0de09be3ba6ef",
+      "bytes": 3339,
+      "lines": 97,
+      "fixtureCommit": "6ce32a27",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UrlInput.cpp": "6ce32a27"
       }
     }
   ]
