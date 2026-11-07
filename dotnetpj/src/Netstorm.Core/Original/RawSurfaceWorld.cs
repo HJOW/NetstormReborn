@@ -142,4 +142,21 @@ public sealed class RawSurfaceWorld
     /// <summary>현재 붕괴 처리 실행 상태 전역을 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
     /// <returns>현재 실행 상태 전역이다.</returns>
     public BridgeDecayMode DecayMode() => _mode;
+
+    /// <summary>같은 월드·전송·공간 재등록을 참가자별로 실행한다. 멀티플레이 3차 사전 구현이며 전송기가 없어 명시 오류로 멈춘다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
+    /// <param name="owner">동기화할 참가자 번호다.</param>
+    public void SynchronizePeer(uint owner)
+    {
+        // 원본 squidTransmission 미설치 logic_error를 직역한다. 실제 PeerWorldSync 연결은 3차 로컬 구현 때 잇는다.
+        throw new InvalidOperationException("현재 판본의 실제 Squid 전송기가 설치되지 않았습니다.");
+    }
+
+    /// <summary>공통 삭제의 패킷을 같은 현재 가상 기록기·버퍼·방송 부모로 전달한다. 멀티플레이 3차 사전 구현이며 전송기가 없어 명시 오류로 멈춘다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
+    /// <param name="sid">삭제 패킷을 보낼 객체 번호다.</param>
+    /// <param name="flags">삭제 전달 플래그다.</param>
+    public void TransmitDeletion(int sid, uint flags)
+    {
+        // 원본 squidTransmission 미설치 logic_error를 직역한다. 실제 Transmit 연결은 3차 로컬 구현 때 잇는다.
+        throw new InvalidOperationException("현재 판본의 실제 삭제 전송기가 설치되지 않았습니다.");
+    }
 }
