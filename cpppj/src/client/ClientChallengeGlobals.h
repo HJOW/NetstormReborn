@@ -1,6 +1,7 @@
 // Client가 실제 CS 포인터 슬롯·할당·공통 배치 좌표를 장기 소유한다.
 #pragma once
 #include "o/RawChallengeState.h"
+#include "client/NativeMetaProjection.h"
 #include <functional>
 #include <map>
 #include <memory>
@@ -13,6 +14,7 @@ public:
     ClientChallengeGlobals(ClientChallengeGlobals&&)=delete;ClientChallengeGlobals& operator=(ClientChallengeGlobals&&)=delete; // 이미 빌린 DWORD/좌표 주소를 이동하지 않는다.
     std::uint32_t& Current();const std::uint32_t& Current() const; //005467d8의 실제 같은 DWORD를 Session/메타 입력이 빌린다.
     o::ChallengeGeometry& Geometry();const o::ChallengeGeometry& Geometry() const; // 같은 최초 초기화 표와 현재 표시 크기를 반환한다.
+    MetaProjectionState& Projection();const MetaProjectionState& Projection() const; //00544d6c/5930a0/540adc·ae0의 같은 장기 투영/기준값을 빌린다.
     bool Prepare(const std::function<void()>& uninitialized); //State19의 새 생성 또는 listsInitialized 진단→기존Reset이다. State28의 직접Reset 부모는 이 생성/진단 경로와 구별한다.
     std::span<std::uint8_t> Bytes();std::span<const std::uint8_t> Bytes() const; // 현재 할당21328BYTE를 직접 빌린다.0/다른 포인터는 물리 경계에서 거부한다.
     std::span<std::uint8_t> Battle(std::uint32_t index); // 실제0..9의292BYTE 전투 기록이다.
@@ -20,6 +22,7 @@ public:
 private:
     std::uint32_t current_{},nextToken_{1}; // Native 현재0과 host 포인터를 자르지 않는 별도 비영 할당 토큰이다.
     o::ChallengeGeometry geometry_; // CS 객체 재사용/교체에서도 유지하는 같은 Client BSS다.
+    MetaProjectionState projection_; // 실제 메타 기울기/높이와 최초 보정값이며 기록 Reset·Session 교체로 재생성하지 않는다.
     std::map<std::uint32_t,std::unique_ptr<std::uint8_t[]>> allocations_; // 교체된 실제 할당도 최종 Client 수명까지 소유한다. 명시 파생 해제 부모는 별도다.
 };
 }

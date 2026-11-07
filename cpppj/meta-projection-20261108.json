@@ -1,0 +1,77 @@
+{
+  "unit": 1096,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp/NetstormRoot",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12397568,
+      "sha256": "7f48c789d2bad8dad52e1cc520737cc09df83abbe61bd3ef5e6b2af2f79ed64d"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "aeee6385673a5b1d9ab373b33cf22cf54d3560d98f99988732f89f120b0ac146"
+    }
+  },
+  "staticAudit": {
+    "nativeFunctions": [
+      "00419570",
+      "004189f0",
+      "00418a00",
+      "00418a30",
+      "00497e50",
+      "00497ec0",
+      "00479680",
+      "004adca0",
+      "00479760:first-calibration-branch"
+    ],
+    "peConstants": 9,
+    "depthClip": "ordered <= -1; NaN follows division",
+    "rawFields": [
+      "+8 WORD fraction",
+      "+1a DWORD upper scale/clipping"
+    ],
+    "uiClipAfterRawWrite": true,
+    "sameClientLifetimeOwner": true
+  },
+  "integration": {
+    "projectionAndOwnerCompiled": true,
+    "fullMetaDisplayApplied": false,
+    "newReplyRegistered": false,
+    "meta28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "boundaries": [
+    "원문 전체 메타 표시/Poll·CS 수신·실제 객체/가상표/HTML 연결은 후속",
+    "std sin/cos와double 중간 계산이며 x87 초월함수/전체 비트·픽셀 실행 대조는 없음",
+    "MP 실행검사 사용자 제외"
+  ],
+  "remaining": [
+    "0047dd60/479760 전체/47cab0·CS수신/실제 객체·카메라/HTML 장치",
+    "1dh/28..33 등록·1095 두 송신 장치와1096 투영 접합",
+    "세.server·LAN hostname/Config registryValue·나머지 LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03/HJOW-Athlon",
+    "lastRoot": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

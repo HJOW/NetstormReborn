@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE client/NativeMetaProjection.h client/NativeMetaProjection.cpp) #1096:원문 메타 원근 카메라·클리핑/객체 배율과 같은 Client 기준값을 복원한다.
+
 target_sources(netstorm PRIVATE o/RawChallengeLoginReply.h o/RawChallengeLoginReply.cpp client/NativeMetaConnectedState.h client/NativeMetaConnectedState.cpp) #1094:1dh/State28~33의 원문 본체·CS master/메타 캐시 경계를 복원하며 실제 표시 장치와 등록은 후속으로 남긴다.
 
 target_sources(netstorm PRIVATE o/RawRootLoginReply.h o/RawRootLoginReply.cpp client/RootServerListDisk.h client/RootServerListDisk.cpp) #1093:Root0Fh 실제 수신/제공10.71 형식과 같은 서버 목록/사용자 홈 저장을 연결한다.

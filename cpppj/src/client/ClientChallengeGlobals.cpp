@@ -8,6 +8,8 @@ std::uint32_t& ClientChallengeGlobals::Current() { return current_; } // 생성/
 const std::uint32_t& ClientChallengeGlobals::Current() const { return current_; } // 판정은 현재 같은 DWORD를 읽는다.
 o::ChallengeGeometry& ClientChallengeGlobals::Geometry() { return geometry_; } // 별도 캐시 사본을 만들지 않는다.
 const o::ChallengeGeometry& ClientChallengeGlobals::Geometry() const { return geometry_; } // 현재 같은 표를 읽는 const 소비자다.
+MetaProjectionState& ClientChallengeGlobals::Projection() { return projection_; } //메타 표시/카메라 부모가 같은 물리를 변경한다.
+const MetaProjectionState& ClientChallengeGlobals::Projection() const { return projection_; } //보고/표시는 보정이나 상태 변경 없이 현재값을 읽는다.
 bool ClientChallengeGlobals::Prepare(const std::function<void()>& uninitialized) { // 객체 포인터 존재와 좌표 초기화 플래그를 별개로 확인한다.
     if (current_) {
         if (!geometry_.initialized) { if (!uninitialized) throw std::logic_error("기존 CS listsInitialized의 실제 진단 장치 미연결");const auto assertion=uninitialized;assertion(); }
