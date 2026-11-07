@@ -12,21 +12,19 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-07, 단위 기록 0.165 기준 — `/goal` 지시로 재개 후 작업 중)
+### 0.1 현재 값 (2026-11-07, 단위 기록 0.166 기준 — `/goal` 지시로 재개 후 작업 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.165(F2d Player 참여·초기화 재생)이며, 다음 단위는 F2d·F3 나머지(월드·저장 나머지·`RawCampaignSession` 연결)이다. |
-| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여 6모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, `RawFortWorldLoadBinding`·F2d 나머지·F3 미착수). R5 이후는 미착수 |
+| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.166(F2d CoreData 완성·갱신)이며, 다음 단위는 F2d·F3 나머지(월드·저장 나머지·`RawCampaignSession` 연결)이다. |
+| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신 9모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, `RawFortWorldLoadBinding`·F2d 나머지·F3 미착수). R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.165(F2d Player 참여) 커밋 직전(이전: 0.164 `59b4344e / 20261107-80 DN`, 0.163 `bbeaeba6 / 20261107-79 DN`, 0.162 `26ba3526 / 20261107-77 DN`). |
-| 검사 | 0.165에서 Release **Core 집중 16개**(참여 8개·초기화 전수 포함 2개 + 무결성·매니페스트 6개) 통과, 실패·건너뜀 0. Core 전체는 시간 관계로 완주하지 못했으나(0.158 기준 비X86 1,049개 통과가 마지막 완주), 빌드 경고·오류 0이다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.165 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
-| 포트 맵 | `PORT_MAP.tsv` 533행 (L1 305, port 228). 0.165에서 2행(L1 2)을 더했다. 단위별 증가 내역은 0.155~0.165 기록과 이관 파일에 있다. |
-| fixture | 연결 220개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
-| fixture | 연결 219개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
-| fixture | 연결 218개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
-| cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.165는 참여 2종 기준 `3cea1b14`·`76e3c453`, 초기화 메모리 시그니처 정리 포함). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
+| 마지막 구현 커밋 | 0.166(F2d CoreData 완성) 커밋 직전(이전: 0.165 `16361582 / 20261107-81 DN`, 0.164 `59b4344e / 20261107-80 DN`, 0.163 `bbeaeba6 / 20261107-79 DN`). |
+| 검사 | 0.166에서 Release **Core 집중 16개**(장부 3개·갱신 4개·초기화 분리 포함 3개 + 무결성·매니페스트 6개) 통과, 실패·건너뜀 0. Core 전체는 시간 관계로 완주하지 못했으나(0.158 기준 비X86 1,049개 통과가 마지막 완주), 빌드 경고·오류 0이다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.166 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
+| 포트 맵 | `PORT_MAP.tsv` 총 543줄(자료 538행: L1 313, port 225)이다. 0.166에서 5행(L1 2, port 3)을 더했다. 단위별 증가 내역은 0.155~0.166 기록과 이관 파일에 있다. |
+| fixture | 연결 224개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
+| cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.166은 장부·갱신·월드상태·CoreDataGlobals 기준 `adb9739e`·`c1b8fbf4`·`fe3d121d`·`79c3a581`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한다. |
 
 ### 0.2 진단 — 기존 구현이 원본과 달라진 구조적 원인
@@ -199,8 +197,9 @@
     - [x] F2d Player Core 장부·CoreData(`RawPlayerCoreRecords`·`RawPlayerCoreData`, 0.163)
     - [x] F2d Player 초기화·Chat 채널(`RawPlayerInitialization`·`RawChatChannels`, 0.164)
     - [x] F2d Player 참여·초기화 재생(`RawPlayerParticipation`·202행 전수, 0.165)
+    - [x] F2d CoreData 완성·갱신(장부 검사·`ClientCoreDataGlobals`·월드 상태·`RawPlayerCoreRefresh`, 0.166)
     - [ ] F2c 나머지: `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요)
-    - [ ] F2d 나머지: `ClientCoreDataGlobals`·`RawPlayerWorld`·`RawCampaignWorldLoad`·`RawPlayerCoreData` 복원 검사·저장 나머지·`RawSurfaceWorld`
+    - [ ] F2d 나머지: `RawPlayerWorld`(본체)·`RawCampaignWorldLoad`·저장 나머지·`RawSurfaceWorld`
     - [ ] F3: `RawCampaignSession` 연결. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS·F 단계만으로는 화면 변화가 거의 없다.
   - 0.5 R4의 나머지 범위
 - [ ] **R3 잔여 → 이정표 D1:** 위젯 본체와 실제 호스트의 표시·입력 경로는 대부분 옮겼으나(1절 색인의 호스트·메뉴 행) R3 전체 완료로 세지 않는다. 남은 것:
@@ -271,6 +270,16 @@
 - **PORT_MAP:** 신규 2행(`RawFortPriestPreparation.cpp/.h` → `RawFortPriestPreparation.cs`, 모두 L1, 기준 `b8ce42c7`). 총 509행(L1 291, port 218).
 - **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 보호 원본은 새 검사가 읽기·쓰기 모두 풀 범위 안에서만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리에서 다른 세션의 cpppj 미커밋 변경(`cpppj/tests/SubscriberGlobalsTests.cpp` 1개)은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
 - **남은 것:** F2c 나머지·F2d·F3부터다. `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요), F2d World·저장 나머지(`RawSurfaceWorld` 63KB·`RawSurfaceStorage` 등 월드 스택), F3 `RawCampaignSession` 연결 순이다. `RawIslandPostPop`·`RawIslandLifecycle`의 x86 전수 재생(`islandpostpop-x86.tsv` 1988행·`islandlifecycle-x86.tsv` 2055행)은 월드 스택 하네스(생성·소유자·Pop 실제 모듈)가 필요해 F3 실제 조립 때 잇는다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 지시에 따라 건너뛴다. 멀티플레이는 3차 로컬 구현 때 `LocalNetworkPolicy` 루프백 전용으로 사전 구현만 잇는다.
+
+### 0.166 단위 기록 — F2d CoreData 완성·갱신 이식 (2026-11-07, HJOW-Athlon)
+
+- **범위:** 장부 검사 1종(`PlayerCoreRecordsTests` 3개)·CoreData 전역 1종(`ClientCoreDataGlobals`)·월드 상태 1종(`PlayerWorldState`)·갱신 1종(`RawPlayerCoreRefresh`와 618·16행 전수·직접 2개) 및 초기화 분리 검사 1종. `RawPlayerWorld` 본체·`RawCampaignWorldLoad`·세션 검사는 제외했다.
+- **구현(새 파일 5개):** 검사 `PlayerCoreRecordsTests.cs`(186행 전수·직접 2개), `Netstorm.Core/Original/RawPlayerCoreRefresh.cs`(기술·다이스 순회와 하한 갱신), 검사 `PlayerCoreRefreshTests.cs`(618·16행 전수·직접 2개), `Netstorm.Core/Original/RawPlayerWorldState.cs`(현재 전역 6필드), `Netstorm.Client/Player/ClientCoreDataGlobals.cs`(장기 저장소와 빌림·읽기·선택·복원). **기존 파일 수정 2개:** `Netstorm.Core.Tests.csproj`(fixture 링크 3행), `PlayerInitializationTests.cs`(분리 검사 1종).
+- **C#에서 달라진 모양:** (1) 원문 span 저장소는 배열 뷰로 옮겼다(`Span`은 클래스 필드가 안 된다). (2) 장부 뷰의 부분 배열은 독립 배열로 둔다(별칭 검사가 없으면 잘라 쓰지 않는다). (3) `TryGetArray`의 기본 `Memory` 성공 동작에 기대지 않고 빈 배열로 가린다(0.163 선례). (4) packet broadcast 동일 주소 단언은 내용·가드 대조로 대신한다.
+- **검증:** 집중 10건 통과(장부 186행 전수 1개·직접 2개·갱신 618·16행 전수 2개·직접 2개·분리 1개는 Core 16건으로 확인). **불일치 0.** fixture 3개를 링크·등록했다(총 224개, `cpp_sync.py` 0종료). 변이 검사 1종(슬롯 폭 50→48)을 전수가 즉시 실패로 검출함을 확인하고 원복했다. 개발 중 별칭·서명 오류 3건과 라이브 쓰기 누락 2건을 대조가 잡아 고쳤다. Release 빌드 경고·오류 0. Core 전체는 시간 관계로 완주하지 못했으나 변경이 신규 파일 4개 추가와 기존 1개 수정뿐이라 기존 검사에 영향을 주지 않으며(집중·무결성 16건 통과), 무결성·매니페스트 검사는 통과했다.
+- **PORT_MAP:** 신규 5행(`RawPlayerCoreRefresh` 2행 L1·`RawPlayerWorld.h` 1행 port·`ClientCoreDataGlobals` 2행 port). 총 543줄(자료 538행: L1 313, port 225).
+- **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 새 검사는 배열 범위 안의 읽기·쓰기만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리의 다른 세션 cpppj 변경·미커밋 파일은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
+- **남은 것:** F2d 나머지·F3부터다(0.9절 참조).
 
 ### 0.165 단위 기록 — F2d Player 참여·초기화 재생 이식 (2026-11-07, HJOW-Athlon)
 
@@ -398,6 +407,7 @@
 | F2d Player Core (11-07, 0.163) | `RawPlayerCoreRecords` 3종·`RawPlayerCoreData` 3종과 804행 전수 1개·직접 2개. 대표 변이 1종 검출 | 이 문서 0.163 | L1(PORT_MAP 참조). 세션 연결은 F3 |
 | F2d Player 초기화·Chat (11-07, 0.164) | `RawPlayerInitialization` 전체 부모와 `RawChatChannels` 4종, 2448행 전수 1개·직접 3개. 변이 2종 검출. 초기화 202행 재생·참여·CoreDataGlobals는 후속 | 이 문서 0.164 | L1·port(PORT_MAP 참조). 세션 연결은 F3 |
 | F2d Player 참여·초기화 재생 (11-07, 0.165) | `RawPlayerParticipation` 12종과 608·288·202행 전수 3개·직접 7개. 변이 2종 검출. AI 연계·CoreDataGlobals 검사는 후속 | 이 문서 0.165 | L1(PORT_MAP 참조). 세션 연결은 F3 |
+| F2d CoreData 완성·갱신 (11-07, 0.166) | 장부 186행·갱신 618·16행 전수 3개·직접 4개·분리 1개와 전역·상태 본체. 변이 1종 검출. 월드 본체·세션 검사는 후속 | 이 문서 0.166 | L1·port(PORT_MAP 참조). 세션 연결은 F3 |
 
 최신 전체 빌드·검사 결과는 0.1절을 따른다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 새 경로의 진행도는 Client 검사와 0.5절의 실제 단계 완료 기준을 함께 본다.
 

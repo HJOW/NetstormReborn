@@ -28,6 +28,8 @@ cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/TemplateFileNa
 cpppj/src/client/CampaignTemplateStorage.h	Netstorm.Client/Host/CampaignTemplateStorage.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
 cpppj/src/client/CampaignTemplateStorage.h	Netstorm.Client/Host/TemplateFileHooks.cs	473432cd5f2edca35ecb3cf78e79c151b105b0c2	port
 cpppj/src/client/CampaignTemplateStorage.h	Netstorm.Client/Host/TemplateWriteStream.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
+cpppj/src/client/ClientCoreDataGlobals.cpp	Netstorm.Client/Player/ClientCoreDataGlobals.cs	79c3a5815fdc8244c4509c8d1e6bac34f6068af5	port
+cpppj/src/client/ClientCoreDataGlobals.h	Netstorm.Client/Player/ClientCoreDataGlobals.cs	79c3a5815fdc8244c4509c8d1e6bac34f6068af5	port
 cpppj/src/client/ClientFortGlobals.cpp	Netstorm.Client/Host/ClientFortGlobals.cs	f4493776a781121067e3a5781d2c9831ed332111	port
 cpppj/src/client/ClientFortGlobals.h	Netstorm.Client/Host/ClientFortGlobals.cs	f4493776a781121067e3a5781d2c9831ed332111	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
@@ -451,6 +453,9 @@ cpppj/src/o/RawPlayerInitialization.cpp	Netstorm.Core/Original/RawPlayerInitiali
 cpppj/src/o/RawPlayerInitialization.h	Netstorm.Core/Original/RawPlayerInitialization.cs	7e53489e9d0c2f4bcba9f026c845ff0a3941cc3f	port
 cpppj/src/o/RawPlayerParticipation.cpp	Netstorm.Core/Original/RawPlayerParticipation.cs	3cea1b14a937109676b906df56dbac84187d91c8	L1
 cpppj/src/o/RawPlayerParticipation.h	Netstorm.Core/Original/RawPlayerParticipation.cs	76e3c4531cc94206f4342e8c16db948eb4917cef	L1
+cpppj/src/o/RawPlayerCoreRefresh.cpp	Netstorm.Core/Original/RawPlayerCoreRefresh.cs	c1b8fbf4155f92dd9319fe5fea3e1f69768b5348	L1
+cpppj/src/o/RawPlayerCoreRefresh.h	Netstorm.Core/Original/RawPlayerCoreRefresh.cs	c1b8fbf4155f92dd9319fe5fea3e1f69768b5348	L1
+cpppj/src/o/RawPlayerWorld.h	Netstorm.Core/Original/RawPlayerWorldState.cs	fe3d121d85e96104858cb19267b16200181af45d	port
 cpppj/src/o/RawPlayerTemplateState.cpp	Netstorm.Core/Original/RawPlayerTemplateState.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawPlayerTemplateState.h	Netstorm.Core/Original/RawPlayerTemplateState.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawPriestDamage.cpp	Netstorm.Core/Original/RawPriestDamage.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1

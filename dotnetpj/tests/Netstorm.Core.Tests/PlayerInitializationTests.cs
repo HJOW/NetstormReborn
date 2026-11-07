@@ -1,7 +1,9 @@
 // Player 전체 초기화의 선택 장치 요구와 앞선 부분 효과를 검증한다.
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Text;
 using Netstorm.Client.Chat;
+using Netstorm.Client.Player;
 using Netstorm.Core.Original;
 
 namespace Netstorm.Core.Tests;
@@ -102,19 +104,12 @@ public sealed class PlayerInitializationTests
         }
     }
 
-    /// <summary>두 현재 owner·모드를 함께 읽는 작은 뷰다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
-    private sealed class InitPlayerView
-    {
-        /// <summary>현재 known 값이다.</summary>
-        public uint PlayerKnown;
-
-        /// <summary>현재 전투 소유자다.</summary>
-        public uint BattleOwner = 1u;
-    }
-
     /// <summary>할당 주소·외부 입력·실제 동맹·Chat 하위만 제공하는 장면이다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private sealed class InitScene
     {
+        /// <summary>기존 동맹이 같은 known·owner를 빌린다.</summary>
+        public readonly PlayerWorldState Player = new();
+
         /// <summary>이전·새 주소의 stale 바이트를 각각 독립 보관한다.</summary>
         public readonly byte[][] Blocks = [new byte[PlayerBytes], new byte[PlayerBytes], new byte[PlayerBytes]];
 
@@ -126,9 +121,6 @@ public sealed class PlayerInitializationTests
 
         /// <summary>실제 Chat 채널이 직접 읽고 쓰는 저장소다.</summary>
         public readonly byte[] Chat = new byte[4800];
-
-        /// <summary>기존 동맹이 같은 known·owner를 빌린다.</summary>
-        public readonly InitPlayerView Player = new();
 
         /// <summary>원본 세 초기화 전역이다.</summary>
         public uint Base;
@@ -605,6 +597,58 @@ public sealed class PlayerInitializationTests
             Assert.Fail($"PlayerInit row{row} {field} at{at} actual={actual.Substring(at, Math.Min(128, actual.Length - at))} expected={expected.Substring(at, Math.Min(128, expected.Length - at))}");
         }
     }
+    /// <summary>메모리 뷰가 같은 주소를 가리키는지 본다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
+    /// <param name="first">첫 뷰다.</param>
+    /// <param name="second">둘째 뷰다.</param>
+    /// <returns>같은 주소면 참이다.</returns>
+    private static bool SameMemory(Memory<byte> first, Memory<byte> second)
+    {
+        if (!MemoryMarshal.TryGetArray(first, out ArraySegment<byte> a) || !MemoryMarshal.TryGetArray(second, out ArraySegment<byte> b))
+        {
+            return false;
+        }
+
+        return ReferenceEquals(a.Array, b.Array) && a.Offset == b.Offset && a.Count == b.Count;
+    }
+
+    /// <summary>실제 ClientCoreData의 캐시·NULL을 이전 해제보다 먼저 끝내고 새 base에서만 재선택한다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
+    [Fact]
+    public void CoreDetachCacheBeforeReleaseAndNewAliasAfterAllocation()
+    {
+        InitScene scene = new("165,0,2,0,511,0,none,none,0,4294967295");
+        ClientCoreDataGlobals core = new();
+        uint metamap = 0u;
+        core.Players = scene.Memory(scene.Base, 1620u);
+        core.Select(scene.Player, metamap, 1u, 1u);
+        core.Active = 0x12345678u;
+        byte[] previous = core.Current.ToArray();
+        scene.Player.PlayerKnown = 0u;
+        core.Select(scene.Player, metamap, 0u, 1u);
+        int released = 0;
+        scene.OnFreePlayers = token =>
+        {
+            ++released;
+            Assert.Equal(Bases[0], token);
+            Assert.Equal(0, core.Current.Length);
+            Assert.Equal(0u, core.Active);
+            Assert.Equal(previous, core.Cached());
+        };
+        scene.OnAssignedBase = address => core.Players = address != 0u ? scene.Memory(address, 1620u) : default;
+        Assert.Equal("normal", scene.Run());
+        Assert.Equal(1, released);
+        Assert.Equal(Bases[2], scene.Base);
+        Assert.Equal(0, core.Current.Length);
+        Assert.Equal(0u, core.Active);
+        Assert.Equal(0u, scene.Player.PlayerKnown);
+        Assert.Equal(0u, scene.Player.BattleOwner);
+        Assert.Equal(previous, core.Cached());
+        core.Select(scene.Player, metamap, 1u, 1u);
+        Assert.True(SameMemory(core.Current, scene.Blocks[2].AsMemory(180 + 0x6c, 10)));
+        Assert.Equal(1u, scene.Player.PlayerKnown);
+        Assert.True(core.Current.ToArray().All(b => b == 0));
+        Assert.Equal(previous, core.Cached());
+    }
+
     /// <summary>선택하지 않은 해제는 요구하지 않으며 선택 누락·짧은 DWORD는 앞선 실제 효과를 남긴다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     [Fact]
     public void RequiredDevicesKeepEarlierPartialEffects()
