@@ -229,8 +229,132 @@ public sealed class SquidProcessHost
     /// <returns>같은 주소면 참이다.</returns>
     public bool IsRegistered(uint pid, SquidProcess? process) => process is not null && ReferenceEquals(_kernel.Get(pid), process);
 
+    /// <summary>실제 가상 34는 server가 아니면 PID조차 읽지 않는다. 정상 현재 PID의 가상 통지만 호출한다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    /// <param name="watcher">보는 쪽 SID다.</param>
+    /// <param name="watched">보이는 쪽 SID다.</param>
+    /// <param name="dependForm">종속 Form SID다.</param>
+    public void NotifyDependency(int watcher, int watched, int dependForm)
+    {
+        if (!_state.Server)
+        {
+            return;
+        }
+
+        SquidProcess? process = FromForm(watcher);
+        if (process is null)
+        {
+            throw new InvalidOperationException("현재 Depend 통지의 실제 ProcessForm·PID 미연결");
+        }
+
+        using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
+        {
+            process.Notify(2u, unchecked((uint)dependForm), unchecked((uint)watched));
+        }
+    }
+
+    /// <summary>부모의 종속 체인에서 이벤트 번호가 같은 첫 Regular 프로세스를 찾는다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="ev">찾을 이벤트 번호다.</param>
+    /// <returns>찾은 프로세스다. 없으면 null이다.</returns>
+    public RegularProcess? FindEvent(int parent, uint ev) =>
+        Find(parent, process => process.Event() == ev);
+
+    /// <summary>(이벤트 &amp; 마스크) == 값인 첫 Regular 프로세스를 찾는다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="mask">마스크다.</param>
+    /// <param name="value">기대값이다.</param>
+    /// <returns>찾은 프로세스다. 없으면 null이다.</returns>
+    public RegularProcess? FindEventMasked(int parent, uint mask, uint value) =>
+        Find(parent, process => (process.Event() & mask) == value);
+
+    /// <summary>가상 삭제 효과를 처리할 현재 Process 가상 표인지 판단한다. finder의 원문 TYPE·상한 관문과 구별한다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    /// <param name="sid">확인할 번호다.</param>
+    /// <returns>프로세스 Form이면 참이다.</returns>
+    public bool IsProcessForm(int sid)
+    {
+        if (sid == 0 || sid >= _pool.Capacity)
+        {
+            return false;
+        }
+
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        uint table = (uint)raw[0] | ((uint)raw[1] << 8) | ((uint)raw[2] << 16) | ((uint)raw[3] << 24);
+        return table == FormVtable();
+    }
+
+    /// <summary>가장 최근에 붙은 종속부터 다음 링크를 따라간다. 자산 타입은 건너뛴다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="match">고른 프로세스 판정이다.</param>
+    private RegularProcess? Find(int parent, Func<RegularProcess, bool> match)
+    {
+        ArgumentNullException.ThrowIfNull(match);
+        if (parent == 0 || parent >= _pool.Capacity)
+        {
+            throw new ArgumentOutOfRangeException(nameof(parent), parent, "이벤트 조회 SID 범위 오류");
+        }
+
+        int current = Word(parent, HeadOffset);
+        uint guard = 0u;
+        // 다음 WORD·현재 content DWORD를 원문 위치에서 읽는 반복문이다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.
+        while (current != 0)
+        {
+            if (current >= _pool.Capacity || ++guard > (uint)_pool.Capacity)
+            {
+                throw new InvalidOperationException("종속 체인 손상");
+            }
+
+            ReadOnlySpan<byte> raw = _pool.Slot(current);
+            int next = Word(current, NextOffset);
+            byte type = raw[TypeOffset];
+            bool patch = _pool.Edition == OriginalEdition.Patch1078;
+            bool process = !patch || (type >= FirstProcessType && type <= LastFormType && (int)type < unchecked((int)ProcessTypeEnd()));
+            if (process && (type == (patch ? _state.RegularType() : RegularTypeNumber) || type == (patch ? _state.SharedRegularType() : SharedRegularTypeNumber)))
+            {
+                uint pid = (uint)raw[FormPidOffset] | ((uint)raw[FormPidOffset + 1] << 8) | ((uint)raw[FormPidOffset + 2] << 16) | ((uint)raw[FormPidOffset + 3] << 24);
+                var regular = _kernel.Get(pid) as RegularProcess;
+                if (regular is null)
+                {
+                    throw new InvalidOperationException("현재 Regular 종속의 커널 PID·실제 클래스 미연결");
+                }
+
+                if (match(regular))
+                {
+                    return regular;
+                }
+            }
+
+            current = next;
+        }
+
+        return null;
+    }
+
     /// <summary>부착 플래그의 client 번호 비트다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
     private const uint ClientForm = 0x10u;
+
+    /// <summary>다음 종속 번호(16비트)의 위치다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    private const int NextOffset = 4;
+
+    /// <summary>종속 머리(16비트)의 위치다. 부모가 첫 종속을 가리킨다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    private const int HeadOffset = 6;
+
+    /// <summary>타입 번호(1바이트)의 위치다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    private const int TypeOffset = 10;
+
+    /// <summary>Form의 비정렬 커널 번호 DWORD 위치다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    private const int FormPidOffset = 18;
+
+    /// <summary>프로세스 타입의 첫 번호다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    private const uint FirstProcessType = 10u;
+
+    /// <summary>일반 Regular 타입 번호다. CD판은 현재값 대신 이 상수를 쓴다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    private const uint RegularTypeNumber = 46u;
+
+    /// <summary>공유 Regular 타입 번호다. CD판은 현재값 대신 이 상수를 쓴다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    private const uint SharedRegularTypeNumber = 61u;
+
+    /// <summary>form으로 취급하는 마지막 번호다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    private const uint LastFormType = 0x45u;
 
     /// <summary>raw WORD를 호스트 정렬과 무관하게 읽는다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
     /// <param name="sid">읽을 번호다.</param>

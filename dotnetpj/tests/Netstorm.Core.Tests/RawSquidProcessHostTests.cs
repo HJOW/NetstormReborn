@@ -238,4 +238,120 @@ public sealed class RawSquidProcessHostTests
         runtime.Factory = new RawSquidFactory(foreignPool, foreignTypes);
         Assert.Throws<ArgumentException>(() => host.CreateOrTakeForm(0u, 0));
     }
+
+    /// <summary>통지를 기록하는 검사 전용 프로세스다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    private sealed class NotifyProcess : SquidProcess
+    {
+        /// <summary>마지막 통지 인자다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+        public (uint Event, uint Info, uint Value)? Seen { get; private set; }
+
+        /// <summary>가상 통지를 기록한다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+        /// <param name="ev">사건 번호다.</param>
+        /// <param name="info">부가 정보다.</param>
+        /// <param name="value">전달 값이다.</param>
+        public override void Notify(uint ev, uint info, uint value)
+        {
+            Seen = (ev, info, value);
+        }
+    }
+
+    /// <summary>종속 체인 슬롯을 만든다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    /// <param name="pool">같은 풀이다.</param>
+    /// <param name="sid">쓸 번호다.</param>
+    /// <param name="type">쓸 타입 바이트다.</param>
+    /// <param name="next">쓸 다음 번호다.</param>
+    /// <param name="pid">쓸 PID DWORD다.</param>
+    private static void ChainSlot(RawSidPool pool, int sid, byte type, int next, uint pid)
+    {
+        Span<byte> raw = pool.RawSlot(sid);
+        raw[10] = type;
+        raw[4] = unchecked((byte)next);
+        raw[5] = unchecked((byte)(next >> 8));
+        PutPid(pool, sid, pid);
+    }
+
+    /// <summary>부모 머리를 잇는 정적 보조 함수다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    /// <param name="pool">같은 풀이다.</param>
+    /// <param name="parent">부를 부모 번호다.</param>
+    /// <param name="head">쓸 머리 번호다.</param>
+    private static void LinkHead(RawSidPool pool, int parent, int head)
+    {
+        Span<byte> raw = pool.RawSlot(parent);
+        raw[6] = unchecked((byte)head);
+        raw[7] = unchecked((byte)(head >> 8));
+    }
+
+    /// <summary>실제 가상 34는 server가 아니면 통지하지 않고 PID가 비면 거부한다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    [Fact]
+    public void NotifyDependencyCallsCurrentPidNotify()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState state, SquidProcessHost host) = LookupScene();
+        state.Server = false;
+        host.NotifyDependency(100, 200, 300);
+        state.Server = true;
+        Assert.Throws<InvalidOperationException>(() => host.NotifyDependency(100, 200, 300));
+        var process = new NotifyProcess();
+        kernel.Add(process);
+        PutPid(pool, 100, 1u);
+        host.NotifyDependency(100, 200, 300);
+        Assert.Equal((2u, 300u, 200u), process.Seen);
+    }
+
+    /// <summary>부모 체인에서 사건·마스크가 맞는 첫 Regular를 찾는다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FindEventWalksChainSkippingAssets()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState _, SquidProcessHost host) = LookupScene();
+        var first = new RegularProcess(0x5101u, 1f);
+        var second = new RegularProcess(0x5102u, 2f);
+        kernel.Add(first);
+        kernel.Add(second);
+        ChainSlot(pool, 100, 46, 101, 1u);
+        ChainSlot(pool, 101, 1, 102, 2u);
+        ChainSlot(pool, 102, 46, 0, 2u);
+        LinkHead(pool, 50, 100);
+        Assert.Same(first, host.FindEvent(50, 0x5101u));
+        Assert.Same(second, host.FindEvent(50, 0x5102u));
+        Assert.Same(first, host.FindEventMasked(50, 0xfff0u, 0x5100u));
+        Assert.Null(host.FindEvent(50, 0x5203u));
+        Assert.Null(host.FindEventMasked(50, 0xfff0u, 0x5200u));
+        LinkHead(pool, 51, 0);
+        Assert.Null(host.FindEvent(51, 0x5101u));
+        Assert.Throws<ArgumentOutOfRangeException>(() => host.FindEvent(0, 0x5101u));
+        Assert.Throws<ArgumentOutOfRangeException>(() => host.FindEvent(RawSurfaceStorage.PoolCapacity, 0x5101u));
+    }
+
+    /// <summary>끊긴 체인·빈 PID·다른 클래스는 빈 검색으로 숨기지 않는다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FindRejectsBrokenChainAndForeignPid()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState _, SquidProcessHost host) = LookupScene();
+        var regular = new RegularProcess(0x5101u, 1f);
+        kernel.Add(regular);
+        ChainSlot(pool, 100, 46, 100, 1u);
+        LinkHead(pool, 50, 100);
+        Assert.Throws<InvalidOperationException>(() => host.FindEvent(50, 0x5203u));
+        ChainSlot(pool, 100, 46, 0, 9u);
+        Assert.Throws<InvalidOperationException>(() => host.FindEvent(50, 0x5101u));
+        kernel.Add(new NotifyProcess());
+        ChainSlot(pool, 100, 46, 0, 2u);
+        Assert.Throws<InvalidOperationException>(() => host.FindEvent(50, 0x5101u));
+    }
+
+    /// <summary>가상 삭제 효과를 처리할 현재 Process 가상 표인지 판단한다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
+    [Fact]
+    public void IsProcessFormMatchesVtable()
+    {
+        (RawSidPool pool, Kernel _, SquidProcessState _, SquidProcessHost host) = LookupScene();
+        Assert.False(host.IsProcessForm(0));
+        Assert.False(host.IsProcessForm(RawSurfaceStorage.PoolCapacity));
+        Span<byte> raw = pool.RawSlot(60);
+        raw[0] = 0x98;
+        raw[1] = 0x20;
+        raw[2] = 0x51;
+        raw[3] = 0x00;
+        Assert.True(host.IsProcessForm(60));
+        raw[0] = 0x10;
+        Assert.False(host.IsProcessForm(60));
+    }
 }
