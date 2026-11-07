@@ -12,6 +12,7 @@
 add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE o/RawLocalServerDiscovery.cpp o/RawLocalServerDiscovery.h) #1057검색몸체와1058실제UDP/상태접합이다.새R서버실행은후속이다.
 target_sources(netstorm PRIVATE client/LocalUdpTransport.cpp client/LocalUdpTransport.h) #1058:실제UDP12를같은연결/패킷표에연결한다.원본R서버복원은별도후속이다.
+target_sources(netstorm PRIVATE root/ConnectionState.cpp root/ConnectionState.h client/NativeLocalServerLaunch.cpp client/NativeLocalServerLaunch.h) #1059:R전용번호/모드와실제37검색부모이며새서버OS장치는후속이다.
 # 기록 재생의 원문 판독/180BYTE Run과 실제 Client/Kernel·입력 부모를 함께 컴파일한다.
 target_sources(netstorm PRIVATE client/RawBuildReplay.cpp client/RawBuildReplay.h client/ClientBuildReplay.cpp client/ClientBuildReplay.h)
 # 메모리 실패의 원문 부모와 실제 Run 등록 수명·Client 종료 연결을 함께 빌드한다(979).

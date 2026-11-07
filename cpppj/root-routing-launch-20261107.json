@@ -1,0 +1,85 @@
+{
+  "unit": 1059,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "date": "2026-11-07",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12328960,
+    "exeSha256": "9cfd0d1c30e23d75f675e61a89b5562c9365f6bc3108f4391c0b8b2f929eda09"
+  },
+  "scope": [
+    "실제 State37 안내/현재UDP닫기/ReadString/같은파일명고리·VFS/여섯후보 부모 연결",
+    "R전용256일반/32대기/51Challenge 토큰·개수초기1/일반·대기·복합ID종료 부품",
+    "R argv lan 선택/원문후반모드해석 부품"
+  ],
+  "serverTarget": {
+    "built": false,
+    "launched": false,
+    "state37LaunchDeviceConnected": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "originalServer": {
+    "bytes": 614400,
+    "sha256": "831e2ecbbba4654b97a270da8da91d7aa7302090f3198c4365f78c44d59dbf0b",
+    "startupText": "Fleet's Server Build version 1.0",
+    "rootReplyMajor": 10,
+    "rootReplyMinor": 71,
+    "clientMetaCheck": "004b4160: 같은major10의minor71은차이로그후1반환. 전체프로토콜호환증명은아님"
+  },
+  "nativeReferences": {
+    "client": [
+      "004b8026..004b80ee",
+      "00542624",
+      "0054d988",
+      "00441300",
+      "0041ab10",
+      "004dd6b0",
+      "00436550",
+      "004b4160",
+      "004b41e0",
+      "004b4250"
+    ],
+    "root": [
+      "00474830",
+      "004748c0",
+      "00475170",
+      "00478ac0",
+      "00485790",
+      "00485800",
+      "004858d0",
+      "00485970",
+      "00485a20",
+      "00477950",
+      "00479760",
+      "00475660"
+    ]
+  },
+  "remaining": [
+    "새 R 실행 대상/실제 OS launch 장치·Root/CS 관리자/256칸 실제 전송·분배",
+    "NETSTORMOOGABOOGA 등록 메시지: LAN 시작0x500의fullscreen복원/설정메시지들",
+    "004b9230 수동 선택·재시도 UI",
+    "17h/1dh 응답·28~33/메타·LAN/Outpost/checking5·선택적record",
+    "한국어 후속·Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

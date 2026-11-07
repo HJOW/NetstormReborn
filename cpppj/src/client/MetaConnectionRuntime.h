@@ -14,7 +14,7 @@ public:
     MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState); //생성은소켓을열지않으며현재Player/표와수신뒤실제큰Run부모를연결한다.
     MetaConnectionRuntime(const MetaConnectionRuntime&)=delete;MetaConnectionRuntime& operator=(const MetaConnectionRuntime&)=delete; //등록된 callback의 주소/실제 socket owner를 복제하지 않는다.
     ~MetaConnectionRuntime(); //Native CloseAll 뒤 남은 자기 노드만 실제 TCP owner가 반납한다.
-    o::LocalMissionParentResult Run(std::uint32_t selected); //20~27/34~36/38을실행하고공통144BYTE확정은바깥분배기에남긴다.새로컬서버실행37은후속이다.
+    o::LocalMissionParentResult Run(std::uint32_t selected); //20~27/34~38의부모를실행하고공통144BYTE확정은바깥분배기에남긴다.37의새R실행장치는후속이다.
     void Pump(); //같은 원문 slot4의 flush→수신을 World 없이 진행한다.
     bool CallbackActive() const; //동기 수신/송신 중 전체 Native 정리의 재진입을 막는다.
 private:

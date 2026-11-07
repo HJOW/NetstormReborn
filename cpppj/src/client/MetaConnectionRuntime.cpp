@@ -23,11 +23,14 @@
 #include "client/CdDirectory.h"
 #include "client/RootServerEndpoint.h"
 #include "client/LocalUdpTransport.h"
+#include "client/NativeLocalServerLaunch.h"
 #include "client/ClientRandomGlobals.h"
 #include "client/CampaignTransportServices.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/RawConnectionEnded.h"
 #include "o/RawPlayerNotification.h"
+#include "o/RawFileName.h"
+#include "platform/Utf8Path.h"
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -154,7 +157,13 @@ o::LocalMissionParentResult MetaConnectionRuntime::Run(std::uint32_t selected) {
         Progress("Local %s server found.",true);udp_->Close();client_.ConnectionGlobals()->Disconnect(13);const auto bytes=std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(state.current.data()),sizeof(state.current));const auto first=bytes.begin()+8;const auto end=std::find(first,bytes.end(),0);
         if (end==bytes.end()) throw std::out_of_range("메타36현재주소NUL물리없음");static_cast<void>(Connect({reinterpret_cast<const char*>(bytes.data()+8),static_cast<std::size_t>(end-first)},state.current[0x30/4],1));state.next[0]=26;state.next[0x34/4]=1;break;
     }
-    case 37:throw std::logic_error("Native State37의새로복원한로컬R서버실행부모미연결"); //원본R실행/가짜서버성공으로복원완료를대체하지않는다.
+    case 37: {
+        NativeLocalServerLaunchHooks hooks;hooks.progress=[this] { Progress("Becoming local %s server.",true); };hooks.closeDiscovery=[this] { udp_->Close();client_.ConnectionGlobals()->Disconnect(13); };
+        hooks.executable=[this] { std::string value;client_.Configuration().ReadString("rootServerExe",value);return value; }; //같은ReadString의변경여부와실제현재이름을구별한다.
+        hooks.format=[this](auto prefix,auto name) { const auto root=platform::PathToUtf8(client_.GameDirectory());const std::array<o::FileNamePart,3> parts{{{-2,root},{-2,prefix},{-3,name}}};return std::string(client_.Files().FileNameOwner()->Format(parts)); };
+        hooks.exists=[this](auto name) { return client_.Files().Probe(name); }; //새R실행장치는Root/CS런타임준비후결합한다.선택되면현재미연결장치에서명시오류다.
+        return InstallNativeLocalServerLaunch(state,hooks);
+    }
     case 38: {
         const auto address=udp_->LocalAddress();if (!address[0] && !address[1]) { Progress("Root Server login failure.");request_(20); }
         else { auto endpoint=CampaignPeerAddressText(address);endpoint.resize(endpoint.rfind(':'));static_cast<void>(Connect(endpoint,0,1));state.immediate[0]=26;state.immediate[0x34/4]=1; }break;
