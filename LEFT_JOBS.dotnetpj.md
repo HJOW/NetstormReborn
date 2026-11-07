@@ -12,17 +12,17 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-07, 단위 기록 0.177 기준 — `/goal` 지시로 재개 후 작업 중)
+### 0.1 현재 값 (2026-11-07, 단위 기록 0.178 기준 — `/goal` 지시로 재개 후 작업 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.177(F2d 서피스 저장소 껍데기)이며, 다음 단위는 F2d·F3 나머지(`RawSurfaceWorld` 본체·풀 생성·`RawFortWorldLoadBinding`·`RawCampaignSession` 연결)이다. |
-| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, 게임 난수·보드 각도·바람 진행·서피스 저장소 껍데기 완료, `RawFortWorldLoadBinding`·풀 생성·월드 본체·F3 미착수). R5 이후는 미착수 |
+| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.178(해시 선택·주소 전수 재생)이며, 다음 단위는 F2d·F3 나머지(저장소 풀 생성·`RawSurfaceWorld` 본체·`RawFortWorldLoadBinding`·`RawCampaignSession` 연결)이다. |
+| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, 게임 난수·보드 각도·바람 진행·저장소 껍데기·해시 선택/주소 완료, `RawFortWorldLoadBinding`·풀 생성·월드 본체·F3 미착수). R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.176 `77d26039 / 20261107-100 DN`(F2d 게임 난수·보드 각도·바람 진행, 이전: 0.175 `a1fe899c / 20261107-98 DN`, 0.174 `31d4dce3 / 20261107-97 DN`). |
-| 검사 | 0.177에서 Release **Core 집중 15개**(저장소 직접 11개 + 무결성·매니페스트 4개) 통과, 실패·건너뜀 0. Core 전체는 0.176 완주 1,416개가 마지막이며 변경이 신규 파일 3개 추가와 기존 1개 additive(`StringBox`)뿐이라 기존 검사에 영향을 주지 않으며(솔루션 빌드 경고·오류 0), 무결성·매니페스트 검사는 통과했다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.177 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
-| 포트 맵 | `PORT_MAP.tsv` 총 569줄(자료 564행: L1 318, port 246)이다. 0.177에서 4행(port 4)을 더했다. 단위별 증가 내역은 0.155~0.177 기록과 이관 파일에 있다. |
+| 마지막 구현 커밋 | 0.177 `46809276 / 20261107-101 DN`(F2d 서피스 저장소 껍데기, 이전: 0.176 `77d26039 / 20261107-100 DN`, 0.175 `a1fe899c / 20261107-98 DN`). |
+| 검사 | 0.178에서 Release **Core 집중 8개**(해시 주소 전수 1개+직접 3개 + 무결성·매니페스트 4개) 통과, 실패·건너뜀 0. Core 전체는 0.176 완주 1,416개가 마지막이며 변경이 기존 1개 확장+신규 검사 1개뿐이라 기존 검사에 영향을 주지 않으며(릴리스 빌드 경고·오류 0), 무결성·매니페스트 검사는 통과했다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.178 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
+| 포트 맵 | `PORT_MAP.tsv` 총 570줄(자료 565행: L1 319, port 246)이다. 0.178에서 1행(L1 1)을 더했다. 단위별 증가 내역은 0.155~0.178 기록과 이관 파일에 있다. |
 | fixture | 연결 227개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.167은 월드 본체 기준 `fe3d121d`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한다. |
@@ -209,6 +209,7 @@
     - [x] F2d 서피스 월드 바람(`AmbientWindState`·초기값/독립/읽기쓰기 직접 3종, 0.175)
     - [x] F2d 게임 난수·보드 각도·바람 진행(`GameRandom`·`CrtRandom`·`RawGameRandomSeed` 직접 11종, `BoardAngleDiagnostics`·`Normalize` 1088행 전수 1종+직접 3종, `RawAmbientWind.Step` 1920행 전수 1종+직접 2종, 0.176 — 0.175의 `StepAmbientWind` 잔여 해소)
     - [x] F2d 서피스 저장소 껍데기(`BoardTargetState`·`BridgeDecayScanState`·`RawSurfaceStorage` 진단·바람·대여 직접 11종, 0.177)
+    - [x] 해시 선택·주소 전수 재생(`RawSquidHash` `Select`·`At`·`MutableEntries`와 811행 전수 1종+직접 3종, 0.178 — W02 잔여 `At`·`Select` 해소)
     - [ ] F2c 나머지: `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요)
     - [ ] F2d 나머지: `RawSurfaceWorld`
     - [ ] F3: `RawCampaignSession` 연결. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS·F 단계만으로는 화면 변화가 거의 없다.
@@ -282,6 +283,16 @@
 - **PORT_MAP:** 신규 2행(`RawFortPriestPreparation.cpp/.h` → `RawFortPriestPreparation.cs`, 모두 L1, 기준 `b8ce42c7`). 총 509행(L1 291, port 218).
 - **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 보호 원본은 새 검사가 읽기·쓰기 모두 풀 범위 안에서만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리에서 다른 세션의 cpppj 미커밋 변경(`cpppj/tests/SubscriberGlobalsTests.cpp` 1개)은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
 - **남은 것:** F2c 나머지·F2d·F3부터다. `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요), F2d World·저장 나머지(`RawSurfaceWorld` 63KB·`RawSurfaceStorage` 등 월드 스택), F3 `RawCampaignSession` 연결 순이다. `RawIslandPostPop`·`RawIslandLifecycle`의 x86 전수 재생(`islandpostpop-x86.tsv` 1988행·`islandlifecycle-x86.tsv` 2055행)은 월드 스택 하네스(생성·소유자·Pop 실제 모듈)가 필요해 F3 실제 조립 때 잇는다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 지시에 따라 건너뛴다. 멀티플레이는 3차 로컬 구현 때 `LocalNetworkPolicy` 루프백 전용으로 사전 구현만 잇는다.
+
+### 0.178 단위 기록 — 해시 선택·주소 전수 재생 (2026-11-07, HJOW-Athlon)
+
+- **범위:** 해시 선택·조회 3종(`RawSquidHash`의 `Select`·`Selected`·`At`·`MutableEntries`) 및 cpp 검사 직역 1종+직접 3종(주소 811행 전수·독립/리셋·공유 저장소·거부 경계). `Level` 605행·`Genus` 3216행은 기이식(`X86SpotAndOrderTests`)이라 제외했다.
+- **구현(기존 파일 수정 1개·새 검사 1개):** `Netstorm.Core/Original/RawSquidHash.cs` 확장(선택 필드·선택 대입·선택 읽기·선택 단계 셀·가변 span, 생성자는 기본 0 유지로 기존 호출자 불변), 검사 `RawSquidHashAddressTests.cs`(전수 1개: Init 4·At 100·IntBucket 100·FloatBucket 607행 주소 별칭 대조, 직접 3개). fixture·링크·매니페스트 변경 없음(등록済 `hash-x86.tsv` 재사용, 총 227개 유지).
+- **C#에서 달라진 모양:** (1) 원문 `uint16_t&` 반환은 `ref ushort`로 옮겼다(주소 별칭을 `Unsafe.AreSame`으로 대조). (2) 생성자의 선택 인자는 두지 않고 기본 0으로 두었다(원문 기본 인자와 같은 값, 기존 호출자 30여 곳 불변). (3) `size_t` 인덱스는 65535 이하라 `int`로 옮겼다. (4) 판본 분기·`Squid` 쪽(`EffectiveGenus`)은 기존 모듈 그대로이며 이 단위에서 건드리지 않았다.
+- **검증:** 집중 8건 통과(주소 전수 811행 1개+직접 3개+무결성·매니페스트 4개). **불일치 0.** 변이 검사로 선택 무시(`Cell(_selected`→`Cell(0`) 변이 시 전수·직접 3개 실패로 검출함을 확인하고 `--no-incremental` 원복·재통과했다. Release 빌드 경고·오류 0. Core 전체는 0.176 완주 1,416개가 마지막이며 변경이 기존 1개 확장뿐이라 기존 검사에 영향을 주지 않는다.
+- **PORT_MAP:** 신규 1행(`SquidHash.h` → `RawSquidHash.cs`, L1 — 주소 전수 대조 근거). 총 570줄(자료 565행: L1 319, port 246). 기존 `.cpp` 행(base `f95a8db2`)은 영향 검토 전이라 올리지 않았다.
+- **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 새 검사는 배열 범위 안의 읽기·쓰기만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리의 다른 세션 cpppj 변경·미커밋 파일은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
+- **남은 것:** F2d 나머지(저장소 풀 생성·월드 본체)·`RawFortWorldLoadBinding`·F3부터다(0.9절 참조). W02 잔여였던 해시 `At`·`Select`는 해소됐다.
 
 ### 0.177 단위 기록 — F2d 서피스 저장소 껍데기 이식 (2026-11-07, HJOW-Athlon)
 

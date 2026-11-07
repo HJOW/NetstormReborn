@@ -8,7 +8,7 @@ namespace Netstorm.Core.Original;
 /// 버킷 값은 그 칸에 놓인 첫 오브젝트의 슬롯 번호(16비트)이며 0 이면 비어 있다. 체인의 다음 번호는 각 슬롯의 +4 에 있다.
 /// 이 클래스는 머리 배열과 주소 계산만 맡는다. 체인에 넣고 빼는 Pop·Unpop 은 <see cref="RawUnpop"/> 같은 호출자의 몫이다.
 /// 월드 좌표는 0 방향으로 절삭한 뒤 단계 크기로 나눈다(원본 004b2a90). 유한하지 않거나 0 미만 또는 256 이상인 좌표는 예외다.
-/// 선택 단계(Select)와 칸 좌표 조회(At)는 표면 탐색기를 옮길 때 더한다.
+/// 선택 단계(Select)·칸 좌표 조회(At)·편집기 직접 쓰기(MutableEntries)는 F2d 저장소 조립(2026-11-07)에서 더했다.
 /// 근거: docs/exe/cpp-hash-reconstruction.md, cpppj/src/o/SquidHash.cpp (W02 Unpop 조각, 2026-10-16).
 /// </summary>
 public sealed class RawSquidHash
@@ -25,6 +25,9 @@ public sealed class RawSquidHash
     /// <summary>단계별 머리 배열. 인덱스는 y 가 바깥, x 가 안쪽인 행 우선이다.</summary>
     private readonly ushort[][] _heads = new ushort[Levels][];
 
+    /// <summary>현재 선택한 단계다. 표면 조회 등은 0 단계를 읽는다. 2026-11-07 F2d 저장소 조립에서 추가됐다.</summary>
+    private int _selected;
+
     /// <summary>모든 머리가 0 인 해시를 만든다.</summary>
     public RawSquidHash()
     {
@@ -36,7 +39,7 @@ public sealed class RawSquidHash
         }
     }
 
-    /// <summary>모든 단계의 머리를 0 으로 지운다(원본 초기화).</summary>
+    /// <summary>모든 단계의 머리를 0 으로 지운다(원본 초기화). 현재 선택 단계는 보존한다.</summary>
     public void Reset()
     {
         // 큰 표면 배열부터 작은 일반 공간 배열까지 모두 지운다
@@ -45,6 +48,23 @@ public sealed class RawSquidHash
             Array.Clear(heads);
         }
     }
+
+    /// <summary>원본 초기화·탐색기의 단계 선택 대입을 이름 있는 함수로 옮긴다. 0~3 밖이면 예외이며 선택은 바뀌지 않는다. 2026-11-07 F2d 저장소 조립에서 추가됐다.</summary>
+    /// <param name="level">선택할 단계 0~3.</param>
+    public void Select(int level)
+    {
+        Side(level);
+        _selected = level;
+    }
+
+    /// <summary>현재 선택 단계를 복사 없이 읽는다. 2026-11-07 F2d 저장소 조립에서 추가됐다.</summary>
+    /// <returns>선택 단계다.</returns>
+    public int Selected() => _selected;
+
+    /// <summary>현재 선택한 단계의 쓰기 가능한 머리다. 값은 체인의 첫 객체 번호다. 참조로 돌려주므로 대입하면 머리가 바뀐다. 2026-11-07 F2d 저장소 조립에서 추가됐다.</summary>
+    /// <param name="x">버킷 x 번호.</param>
+    /// <param name="y">버킷 y 번호.</param>
+    public ref ushort At(int x, int y) => ref Cell(_selected, x, y);
 
     /// <summary>단계의 배열 한 변(칸이 아니라 버킷 수). 단계가 0~3 밖이면 예외다.</summary>
     /// <param name="level">단계 0~3.</param>
@@ -104,6 +124,16 @@ public sealed class RawSquidHash
     /// </summary>
     /// <param name="level">단계 0~3.</param>
     public ReadOnlySpan<ushort> Entries(int level)
+    {
+        Side(level);
+        return _heads[level];
+    }
+
+    /// <summary>
+    /// 단계의 모든 머리를 편집기의 직접 WORD 쓰기에 빌린다. 같은 실제 저장소이며 사본이 아니다. 2026-11-07 F2d 저장소 조립에서 추가됐다.
+    /// </summary>
+    /// <param name="level">단계 0~3.</param>
+    public Span<ushort> MutableEntries(int level)
     {
         Side(level);
         return _heads[level];

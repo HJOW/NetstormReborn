@@ -567,3 +567,4 @@ cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.cs	b
 cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.cs	435cfa1da96a960c9233f366b6e6818c4bbd658e	port
 cpppj/src/o/RawBoardTarget.h	Netstorm.Core/Original/RawBoardTargetState.cs	b7932e867cac5136577021d0ee5854c188ee75ce	port
 cpppj/src/o/Bridge.h	Netstorm.Core/Original/RawSurfaceStorage.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/o/SquidHash.h	Netstorm.Core/Original/RawSquidHash.cs	a9af29da799a51ce936892efba004b978b2c71ee	L1
