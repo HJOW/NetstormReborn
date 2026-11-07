@@ -587,3 +587,5 @@ cpppj/src/o/SquidProcess.cpp	Netstorm.Core/Original/RawSquidProcess.cs	6fefcff5c
 cpppj/src/o/SquidProcess.h	Netstorm.Core/Original/RawProcessHostBindings.cs	02b00b124e9a6d5de4314878926ede9135b5b4bb	port
 cpppj/src/o/SquidDisplay.h	Netstorm.Core/Original/RawSquidDisplaySink.cs	023a0a93cd4af9e75c56334dcf0d77c2507ec9f6	port
 cpppj/src/o/SquidDisplay.cpp	Netstorm.Core/Original/RawSquidDisplaySink.cs	fbc27346564e5245d36c00e0b151777204a22efe	port
+cpppj/src/o/SquidProcess.h	Netstorm.Core/Original/RawSquidProcessHost.cs	02b00b124e9a6d5de4314878926ede9135b5b4bb	port
+cpppj/src/o/SquidProcess.cpp	Netstorm.Core/Original/RawSquidProcessHost.cs	6fefcff5c429fc95d668c363f5356c41afc1868f	port
