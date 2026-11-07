@@ -12,16 +12,16 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-07, 단위 기록 0.179 기준 — `/goal` 지시로 재개 후 작업 중)
+### 0.1 현재 값 (2026-11-07, 단위 기록 0.180 기준 — `/goal` 지시로 재개 후 작업 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.179(저장소 물리 자료형)이며, 다음 단위는 F2d·F3 나머지(저장소 풀 생성·`RawSurfaceWorld` 본체·`RawFortWorldLoadBinding`·`RawCampaignSession` 연결)이다. |
-| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, 게임 난수·보드 각도·바람 진행·저장소 껍데기·해시 선택/주소·물리 자료형 완료, `RawFortWorldLoadBinding`·풀 생성·월드 본체·F3 미착수). R5 이후는 미착수 |
+| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.180(저장소 풀 생성·전체 대여)이며, 다음 단위는 F2d·F3 나머지(`RawSurfaceWorld` 본체·`RawFortWorldLoadBinding`·`RawCampaignSession` 연결)이다. |
+| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, 게임 난수·보드 각도·바람 진행·저장소 껍데기·해시 선택/주소·물리 자료형·풀 생성/전체 대여 완료, `RawFortWorldLoadBinding`·월드 본체·F3 미착수). R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.178 `7b8a355a / 20261107-102 DN`(해시 선택·주소 전수 재생, 이전: 0.177 `46809276 / 20261107-101 DN`, 0.176 `77d26039 / 20261107-100 DN`). |
-| 검사 | 0.179에서 Release **Core 집중 9개**(물리 자료형 직접 5개 + 무결성·매니페스트 4개) 통과, 실패·건너뜀 0. Core 전체는 0.176 완주 1,416개가 마지막이며 변경이 신규 파일 4개 추가뿐이라 기존 검사에 영향을 주지 않으며(릴리스 빌드 경고·오류 0), 무결성·매니페스트 검사는 통과했다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.179 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
+| 마지막 구현 커밋 | 0.179 `1f084ad5 / 20261107-103 DN`(저장소 물리 자료형, 이전: 0.178 `7b8a355a / 20261107-102 DN`, 0.177 `46809276 / 20261107-101 DN`). |
+| 검사 | 0.180에서 Release **Core 집중 19개**(저장소 직접 15개 + 무결성·매니페스트 4개) 통과, 실패·건너뜀 0. Core 전체는 0.176 완주 1,416개가 마지막이며 변경이 기존 2개 확장뿐이라 기존 검사에 영향을 주지 않으며(솔루션 빌드 경고·오류 0), 무결성·매니페스트 검사는 통과했다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.180 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
 | 포트 맵 | `PORT_MAP.tsv` 총 575줄(자료 570행: L1 319, port 251)이다. 0.179에서 5행(port 5)을 더했다. 단위별 증가 내역은 0.155~0.179 기록과 이관 파일에 있다. |
 | fixture | 연결 227개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.167은 월드 본체 기준 `fe3d121d`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
@@ -211,6 +211,7 @@
     - [x] F2d 서피스 저장소 껍데기(`BoardTargetState`·`BridgeDecayScanState`·`RawSurfaceStorage` 진단·바람·대여 직접 11종, 0.177)
     - [x] 해시 선택·주소 전수 재생(`RawSquidHash` `Select`·`At`·`MutableEntries`와 811행 전수 1종+직접 3종, 0.178 — W02 잔여 `At`·`Select` 해소)
     - [x] 저장소 물리 자료형(`RawTotalMadeStorage`·`RawGraphStorage`·`RawPathSearchWork/State/Storage` 직접 5종, 0.179)
+    - [x] 저장소 풀 생성·전체 대여(자산 벡터·풀·spot·그래프·집계·섬·청크 접합과 `Acquire` 직접 4종, 0.180)
     - [ ] F2c 나머지: `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요)
     - [ ] F2d 나머지: `RawSurfaceWorld`
     - [ ] F3: `RawCampaignSession` 연결. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS·F 단계만으로는 화면 변화가 거의 없다.
@@ -284,6 +285,16 @@
 - **PORT_MAP:** 신규 2행(`RawFortPriestPreparation.cpp/.h` → `RawFortPriestPreparation.cs`, 모두 L1, 기준 `b8ce42c7`). 총 509행(L1 291, port 218).
 - **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 보호 원본은 새 검사가 읽기·쓰기 모두 풀 범위 안에서만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리에서 다른 세션의 cpppj 미커밋 변경(`cpppj/tests/SubscriberGlobalsTests.cpp` 1개)은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
 - **남은 것:** F2c 나머지·F2d·F3부터다. `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요), F2d World·저장 나머지(`RawSurfaceWorld` 63KB·`RawSurfaceStorage` 등 월드 스택), F3 `RawCampaignSession` 연결 순이다. `RawIslandPostPop`·`RawIslandLifecycle`의 x86 전수 재생(`islandpostpop-x86.tsv` 1988행·`islandlifecycle-x86.tsv` 2055행)은 월드 스택 하네스(생성·소유자·Pop 실제 모듈)가 필요해 F3 실제 조립 때 잇는다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 지시에 따라 건너뛴다. 멀티플레이는 3차 로컬 구현 때 `LocalNetworkPolicy` 루프백 전용으로 사전 구현만 잇는다.
+
+### 0.180 단위 기록 — 저장소 풀 생성·전체 대여 이식 (2026-11-07, HJOW-Athlon)
+
+- **범위:** 저장소 전체 생성자(자산 벡터·풀·spot·그래프·집계·섬·청크 접합)와 일반 설치 전체(`Acquire`) 및 직접 검사 4종. 풀 할당 진단 배선(`BindAllocation` 풀 측·`Processes` 필요)·`Processes`·`Source`·`MakeRawSurfaceStorage`·`RecordDisplayFrameError`(타입·셰이프 필요)는 후속 단위에서 잇는다.
+- **구현(기존 파일 수정 2개):** `Netstorm.Core/Original/RawSurfaceStorage.cs` 확장(물리 12종 프로퍼티·전체 생성자·`Acquire` — 첫 대여는 풀·해시·spot을 건너뛰고 fresh Graph·집계·섬·청크·사제·검사를 둔다), `RawSurfaceStorageTests.cs` 확장(직접 4개: 전체 생성·자산 불일치·서버 공유·일반 설치 reset). PORT_MAP·fixture 변경 없음(이미 port인 파일의 본체 범위 확장).
+- **C#에서 달라진 모양:** (1) 풀 서버 공유 포인터는 클로저(`() => _authority.Server`)로 옮겼다. (2) 실패점 `ref` 전달은 지역 복사→`Finish`→대입으로 옮겼다(프로퍼티는 `ref`가 안 된다). (3) 타입 벡터는 같은 객체 참조를 모아 둔다(월드가 전역을 직접 고치는 의미 보존). (4) 코드는 타입별 `Codes`의 스냅샷 복사본으로 둔다.
+- **검증:** 집중 19건 통과(저장소 직접 15개 + 무결성·매니페스트 4개). **불일치 0.** 변이 검사로 첫 대여 건너뜀 삭제(`> 0`→`>= 0`) 변이 시 일반 설치 검사가 즉시 실패로 검출함을 확인하고 `--no-incremental` 원복·재통과했다. Release 솔루션 빌드 경고·오류 0. Core 전체는 0.176 완주 1,416개가 마지막이며 변경이 기존 2개 확장뿐이라 기존 검사에 영향을 주지 않는다.
+- **PORT_MAP:** 변경 없음(이미 port인 `RawSurfaceWorld.h`·`RawSurfaceStorage.cpp` 행의 본체 범위 확장). 총 575줄 유지(자료 570행: L1 319, port 251).
+- **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 새 검사는 풀·배열 범위 안의 읽기·쓰기·대여만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리의 다른 세션 cpppj 변경·미커밋 파일은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다.
+- **남은 것:** F2d 나머지(장기 ProcessHost·할당 배선·월드 본체)·`RawFortWorldLoadBinding`·F3부터다(0.9절 참조).
 
 ### 0.179 단위 기록 — 저장소 물리 자료형 이식 (2026-11-07, HJOW-Athlon)
 

@@ -19,7 +19,7 @@ public sealed class BridgeDecayScanState
     public double Next { get; set; }
 }
 
-// Session보다 오래 사는 실제 저장소의 진단·바람·대여 껍데기다. 풀·해시·spot·그래프·집계·섬·청크 물리와 장기 ProcessHost·실제 소진 진단은 전체 생성 단위에서 잇는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.
+// Session보다 오래 사는 실제 저장소의 진단·바람·대여 껍데기와 풀·물리 생성이다. 장기 ProcessHost·풀 할당 진단 배선·자산 소스는 후속 단위에서 잇는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.
 public sealed class RawSurfaceStorage
 {
     /// <summary>기존 실제 월드의 SID 풀 크기이며 다음 대여에서 재확보하지 않는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
@@ -50,13 +50,52 @@ public sealed class RawSurfaceStorage
     public uint[] PriestOwnerState { get; } = new uint[PriestOwnerCount];
 
     /// <summary>545370/545374 실패점을 Pool과 같은 장기 수명에 둔다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
-    public BoardTargetState BoardTargetState { get; } = new();
+    public BoardTargetState BoardTargetState { get; private set; } = new();
 
     /// <summary>0052f96c·970·005453a8·b8의 같은 현재 스캔 범위·커서·기한을 World 반납 뒤에도 유지한다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     public BridgeDecayScanState BridgeDecayScan { get; set; } = new();
 
     /// <summary>현재 스캔 주기(초)다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     public float BridgeDecayPeriod { get; set; } = BridgeDecayPeriodDefault;
+
+    /// <summary>같은 수정 가능한 전역 TYPE이며 Session마다 원본 파일로 덮어쓰지 않는다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public List<OriginalTypeRecord> Types { get; } = [];
+
+    /// <summary>자산보다 짧고 모든 Session보다 긴 프레임 배열이다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public List<RiftTypeFrames> Frames { get; } = [];
+
+    /// <summary>자산보다 짧고 모든 Session보다 긴 셰이프 배열이다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public List<SquidDisplayShape> Shapes { get; } = [];
+
+    /// <summary>Graph의 동일 프레임 코드 배열이다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public List<List<RiftFrameCode>> Codes { get; } = [];
+
+    /// <summary>객체 슬롯의 생성·조회·반납에 쓰는 SID 풀이다. Reset(0)은 기존 바이트·주소·용량을 유지한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public RawSidPool Pool { get; }
+
+    /// <summary>좌표별 객체 후보를 찾는 공간 해시다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public RawSquidHash Hash { get; } = new();
+
+    /// <summary>칸별 점유·통행 비트를 읽는 spot 지도다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public byte[] Spots { get; } = new byte[SpotCells];
+
+    /// <summary>59514c·595150의 실제 배열 소유자다. World 재대여 때 초기화하지 않는다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public RawPathSearchStorage PathSearch { get; } = new();
+
+    /// <summary>기록 255행과 flood 4096DWORD만 장기 보유한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public RawGraphStorage Graph { get; private set; } = new();
+
+    /// <summary>실제 정적 SID 목록·count와 등록 포인터를 World·Session 전후에 보존한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public RawStateSidLists SidLists { get; } = new();
+
+    /// <summary>현재 로컬·누적 로컬·전역 256DWORD만 장기 보유한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public RawTotalMadeStorage TotalMade { get; private set; } = new();
+
+    /// <summary>같은 3204바이트 섬과 모드·크기·청크를 Session 전후에도 유지한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public RawIslandStorage Islands { get; private set; } = new();
+
+    /// <summary>같은 지도와 256×12바이트 청크를 Session 전후에도 유지한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    public ChunkMap Chunks { get; private set; } = new();
 
     /// <summary>Pool의 현재 서버 포인터와 World 실행기보다 먼저 만드는 실제 권한 owner다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     private readonly RawAuthorityState _authority;
@@ -94,7 +133,7 @@ public sealed class RawSurfaceStorage
     /// <summary>성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     private ulong _generation;
 
-    /// <summary>배열은 전체 생성 단위에서 최초 한 번만 확보한다. 이 껍데기는 진단·바람·대여와 스칼라 전역만 둔다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
+    /// <summary>참조 배열을 원본 자산에서 최초 한 번만 복사해 이후 주소를 고정한다. 풀 할당 진단 배선·장기 ProcessHost·자산 소스는 후속 단위에서 잇는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     /// <param name="edition">바람 잡음 순서와 스캔 초기값이 읽는 판본이다.</param>
     /// <param name="authority">빌릴 실제 권한 owner다. null이면 자체 owner를 만든다.</param>
     /// <param name="gameAux">빌릴 실제 게임 보조 owner다. null이면 자체 owner를 만든다.</param>
@@ -103,6 +142,7 @@ public sealed class RawSurfaceStorage
         _edition = edition;
         _authority = authority ?? new RawAuthorityState();
         _gameAux = gameAux ?? new RawGameAuxState();
+        Pool = new RawSidPool(PoolCapacity, true, () => _authority.Server, edition);
         Links.BridgeType = 82u;
         Links.IslandType = 94u;
         Links.StalagType = 95u;
@@ -113,6 +153,37 @@ public sealed class RawSurfaceStorage
             First = edition == OriginalEdition.Patch1078 ? -1 : 0,
             Last = edition == OriginalEdition.Patch1078 ? -1 : 0,
         };
+    }
+
+    /// <summary>같은 실제 Pool·해시·spot·그래프·집계·섬·청크 물리에 타입·프레임·셰이프를 최초 한 번만 넣어 실제 저장소를 만든다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    /// <param name="edition">같은 판본의 풀·바람·스캔이 읽는 판본이다.</param>
+    /// <param name="inputTypes">같은 수정 가능한 전역 TYPE이다.</param>
+    /// <param name="inputFrames">타입별 프레임 자료다.</param>
+    /// <param name="inputShapes">프레임의 셰이프 자료다.</param>
+    /// <param name="authority">빌릴 실제 권한 owner다. null이면 자체 owner를 만든다.</param>
+    /// <param name="gameAux">빌릴 실제 게임 보조 owner다. null이면 자체 owner를 만든다.</param>
+    public RawSurfaceStorage(OriginalEdition edition, IReadOnlyList<OriginalTypeRecord> inputTypes, IReadOnlyList<RiftTypeFrames> inputFrames, IReadOnlyList<SquidDisplayShape> inputShapes, RawAuthorityState? authority = null, RawGameAuxState? gameAux = null)
+        : this(edition, authority, gameAux)
+    {
+        ArgumentNullException.ThrowIfNull(inputTypes);
+        ArgumentNullException.ThrowIfNull(inputFrames);
+        ArgumentNullException.ThrowIfNull(inputShapes);
+        if (inputFrames.Count != inputTypes.Count || inputShapes.Count != inputTypes.Count)
+        {
+            throw new ArgumentException("실제 월드 저장소의 자산 배열 크기 불일치");
+        }
+
+        Types.AddRange(inputTypes);
+        Frames.AddRange(inputFrames);
+        Shapes.AddRange(inputShapes);
+        RawPathPoint invalid = BoardTargetState.Invalid;
+        RawSquidPoolReset.Finish(Pool, ref invalid);
+        BoardTargetState.Invalid = invalid;
+        // 같은 타입의 실제 프레임 코드만 최초 보관한다
+        for (int type = 0; type < Frames.Count; ++type)
+        {
+            Codes.Add([.. Frames[type].Codes]);
+        }
     }
 
     /// <summary>Client 전역·Session과 같은 실제 서버·권한 주소의 정체성이다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
@@ -242,7 +313,41 @@ public sealed class RawSurfaceStorage
     /// <returns>대여 횟수다.</returns>
     public ulong Generation() => _generation;
 
-    /// <summary>앞선 명시 정리가 끝난 실제 배열을 초기화 없이 대여하며 동시 사용은 같은 관문에서 거부한다. 전체 Acquire의 풀·해시·spot·그래프·집계·섬·청크 재초기화는 전체 생성 단위에서 잇는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
+    /// <summary>동시 설치를 거부한 뒤에만 이전 물리를 초기화한다. TYPE·삭제 기록과 배열 주소는 유지한다. 일반 설치만 기존 새 목록 의미를 유지하며 prepared·반납은 현재 SID·count·용량을 보존한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
+    /// <returns>반납 경계다.</returns>
+    public Use Acquire()
+    {
+        if (_borrowed)
+        {
+            throw new InvalidOperationException("실제 월드 저장소 중복 대여");
+        }
+
+        var use = new Use(this);
+        GameAux().ResetForGeneralWorld();
+        BoardTargetState = new BoardTargetState();
+        _authority.Server = true;
+        _authority.Boss = true;
+        if (_generation > 0ul)
+        {
+            Pool.Reset(0);
+            Hash.Reset();
+            Array.Clear(Spots);
+        }
+
+        Array.Clear(PriestOwnerState);
+        Graph = new RawGraphStorage();
+        RawGraphStorage.ResetTable(Graph);
+        SidLists.PrepareGeneralWorld();
+        TotalMade = new RawTotalMadeStorage();
+        Islands = new RawIslandStorage();
+        RawIslandRuntime.ResetRawIslandRecords(Islands.Records);
+        Chunks = new ChunkMap();
+        _borrowed = true;
+        ++_generation;
+        return use;
+    }
+
+    /// <summary>앞선 명시 정리가 끝난 실제 배열을 초기화 없이 대여하며 동시 사용은 같은 관문에서 거부한다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     /// <returns>반납 경계다.</returns>
     public Use AcquirePrepared()
     {
