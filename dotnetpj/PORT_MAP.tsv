@@ -455,6 +455,8 @@ cpppj/src/o/RawPlayerParticipation.cpp	Netstorm.Core/Original/RawPlayerParticipa
 cpppj/src/o/RawPlayerParticipation.h	Netstorm.Core/Original/RawPlayerParticipation.cs	76e3c4531cc94206f4342e8c16db948eb4917cef	L1
 cpppj/src/o/RawPlayerCoreRefresh.cpp	Netstorm.Core/Original/RawPlayerCoreRefresh.cs	c1b8fbf4155f92dd9319fe5fea3e1f69768b5348	L1
 cpppj/src/o/RawPlayerCoreRefresh.h	Netstorm.Core/Original/RawPlayerCoreRefresh.cs	c1b8fbf4155f92dd9319fe5fea3e1f69768b5348	L1
+cpppj/src/o/RawPlayerWorld.cpp	Netstorm.Core/Original/RawPlayerWorld.cs	fe3d121d85e96104858cb19267b16200181af45d	port
+cpppj/src/o/RawPlayerWorld.h	Netstorm.Core/Original/RawPlayerWorld.cs	fe3d121d85e96104858cb19267b16200181af45d	port
 cpppj/src/o/RawPlayerWorld.h	Netstorm.Core/Original/RawPlayerWorldState.cs	fe3d121d85e96104858cb19267b16200181af45d	port
 cpppj/src/o/RawPlayerTemplateState.cpp	Netstorm.Core/Original/RawPlayerTemplateState.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawPlayerTemplateState.h	Netstorm.Core/Original/RawPlayerTemplateState.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
