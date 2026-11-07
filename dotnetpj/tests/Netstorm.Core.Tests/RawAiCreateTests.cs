@@ -1,6 +1,8 @@
 using System.Buffers.Binary;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
+using PlayerParticipationHooks = Netstorm.Core.Simulation.PlayerParticipationHooks;
+using PlayerParticipationState = Netstorm.Core.Simulation.PlayerParticipationState;
 
 // 원본 AI 생성과 Player 소유 수명을 검증한다.
 namespace Netstorm.Tests;

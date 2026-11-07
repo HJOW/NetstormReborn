@@ -39,7 +39,7 @@ public sealed class PlayerInitializationGlobals
 public sealed class PlayerInitializationHooks
 {
     /// <summary>현재 주소·요청 폭의 같은 물리뷰다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
-    public Func<uint, uint, byte[]>? Memory { get; set; }
+    public Func<uint, uint, Memory<byte>>? Memory { get; set; }
 
     /// <summary>현재 각 Player+0의 토큰을 아홉 번 전달한다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     public Action<uint>? FreeFactory { get; set; }
@@ -138,12 +138,13 @@ public static class RawPlayerInitialization
     /// <exception cref="ArgumentOutOfRangeException">Player 초기화의 실제 DWORD 적재 물리 부족이다.</exception>
     private static uint Read(PlayerInitializationHooks hooks, uint address)
     {
-        byte[] bytes = Need(hooks.Memory)(address, 4u);
-        if (bytes.Length != 4)
+        Memory<byte> view = Need(hooks.Memory)(address, 4u);
+        if (view.Length != 4)
         {
             throw new ArgumentOutOfRangeException(nameof(address), "Player 초기화의 실제 DWORD 적재 물리 부족");
         }
 
+        Span<byte> bytes = view.Span;
         uint value = 0u;
         // 원문 little endian 네 바이트만 읽는 반복문이다. 2026-11-07 F2d Player 이식에서 추가됐다.
         for (uint index = 0u; index < 4u; ++index)
@@ -161,12 +162,13 @@ public static class RawPlayerInitialization
     /// <exception cref="ArgumentOutOfRangeException">Player 초기화의 실제 DWORD 저장 물리 부족이다.</exception>
     private static void Write(PlayerInitializationHooks hooks, uint address, uint value)
     {
-        byte[] bytes = Need(hooks.Memory)(address, 4u);
-        if (bytes.Length != 4)
+        Memory<byte> view = Need(hooks.Memory)(address, 4u);
+        if (view.Length != 4)
         {
             throw new ArgumentOutOfRangeException(nameof(address), "Player 초기화의 실제 DWORD 저장 물리 부족");
         }
 
+        Span<byte> bytes = view.Span;
         // 현재 물리 네 바이트만 쓰는 반복문이다. 2026-11-07 F2d Player 이식에서 추가됐다.
         for (uint index = 0u; index < 4u; ++index)
         {
