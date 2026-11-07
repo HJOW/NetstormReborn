@@ -1,0 +1,186 @@
+{
+  "unit": 1086,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "d2ebb6a21d6785863cc666668ca468ed79cdfbe6c2da3692a835e9472019a725"
+  },
+  "nativeAudit": {
+    "scope": "동일호스트 R 전체87h/목록·제재 원문/보호PE·모든 함수범위 기계어와 현재파일/CCh/전송의 접합 정적감사다. 실제 명령·페이지·제재·파일왕복·통신검사가 아니다.",
+    "registration": "기존 CCh.InstallPacketObservers가87h 빈원문443e40 observer/버전1·정책0·고정274를 현재표에 등록한다. nullable 실제수신은 같은 ReceiveBattleControl의 exit0/CHAL진단1365/signed zone·현재 CCh/lowBYTE 참가자 관문→Command로 연결한다. 이 몸체는 입력을 수정하지 않고 네 C문자열을 복사한다.",
+    "inputAndHelpers": "452f50의 비연속8555BYTE 전체를 대조했다. 먼저 실제3파일 템플릿로드→operation+22h/first+72h/second+c2h/section+4 순서의 C문자열 사본이다.각 문자열은 실제패킷 NUL 경계를 검사하며 논리필드30/80 안에 NUL을 강제하지 않는다.대문자/명령철자를 유지한다.",
+    "commands": [
+      "GET",
+      "GUILD",
+      "GUILDREQAPROVE",
+      "GUILDVIEWREQUEST",
+      "GUILDSETPENDING",
+      "GUILDSUBMIT",
+      "GUILDJOIN",
+      "GUILDTOGGLEREC",
+      "GUILDSETPASS",
+      "GUILDCHANGEIT",
+      "GUILDDISBAND",
+      "GUILDLOGIN",
+      "GUILDQUIT",
+      "GUILDNEW",
+      "ADMIN"
+    ],
+    "adminCommands": [
+      "ADMIN",
+      "FORTBAN",
+      "GETPLAYER",
+      "IPBAN",
+      "KICK",
+      "SHUTUP"
+    ],
+    "pagesAndNoOps": "GET은section 필드/GUILD는first 필드 페이지를 사용한다.알 수 없는 상위명령은 응답없음,ADMIN미상세부명령은원래section 페이지.대부분빈페이지송신생략/ADMIN GETPLAYER는빈페이지도송신한다.GUILDSUBMIT/GUILDSETPASS는원문처럼공통TIME·존치환을호출하지않는다.그외기존실제CommandPages의순서/서식·CCh확장41h를사용한다.",
+    "guildCommands": "13길드명령은같은SharedFiles의모집/비밀번호/생성·탈퇴/해산/로그인/가입요청·승인과실제저장을사용한다.GUILDREQAPROVE는현재소속이름/second를atoi한subscriber의첫요청승인뒤응답없음.가입상태0/1/2/3/기타는Error3/Error1/Error4/Error2/Ok.GUILDNEW상태2/3/기타는ErrorCode2/ErrorCode3/Code1이며그외상태는현재subscriber의88h이름방송을실행한다.",
+    "guildNotifications": "해산은삭제전실제길드/회원사본→길드삭제/저장→사본회원별같은CCh에빈88h방송.탈퇴는현재회원제거→QuitComplete의조건부페이지송신→그뒤현재참가자subscriber를다시읽어빈이름방송.88h는고정98/첫이름BYTE0만쓰고미작성지역나머지는CRT입력으로보존한다.",
+    "guildLists": "452960은GuildSingleRequest 섹션/공통치환을한번하고현재같은길드요청만1부터순번/요청범위·ID/PLAYERNAME/SUBID를치환하며끝까지검사한다.승인여부필터없음.452ba0은GuildView/현재모집1만순번·GUILDNAME/MEMBERS/SUBID와범위뒤첫초과행에서종료한다.52e10/52ee0의현재카운트와6개페이지이동의signed DWORD·tag치환순서를유지한다.",
+    "adminLists": "권한은현재참가자+75 비영만검사한다.Pair는대문자X없는count0/반환,있으면빈항목0/첫두atoi이며뒤X는무시한다.GETPLAYER는PlayerList/Player/NEXTPLAYER를먼저추출→기본/next공통치환→현재시작부터6개실제행·13tag/색→현재페이지/next메뉴삽입순서다.원문MAXPLAYERS50을40으로정정하지않았다.",
+    "currentPhysicalAccess": "명령의대상존은현재51칸물리를조회한다.참가자는DWORD곱/덧셈뒤전체CCh실제물리만확인하고개별Read/Put/Text가각접근을검사한다.다른정상부모의논리40칸API로대체하거나임의clamp하지않는다.원문의잘못된실제물리밖읽기는명시거부한다.",
+    "adminActions": "SHUTUP은실제현재SID의chatlist삽입/첫삭제→대상+74쓰기→전체chatlist저장.ADMIN은대상+75비영toggle만한다.KICK은현재실제하위socket CloseSocket뿐이다.FORTBAN은현재SID삽입/전체blacklist저장→현재하위socket닫힘.IPBAN은현재IP문자열의기존정규화/축소strlen비교·중복삽입/전체저장→하위socket닫힘이다.별도Terminated/참가자즉시삭제없음.대상이NULL/무효여도고정Tell새로고침을응답한다.",
+    "writers": "chatlist/blacklist는같은실제SaveSubscribers의signed DWORD/endl.주소는현재정규화16BYTE첫NUL문자열/endl이며writer에서재정규화하지않는다.모든자동쓰기는기존WritableFile/사용자Saves/Unicode경로이고reader도기존Saves우선이다.원본/설치파일을쓰지않았다.",
+    "hostBoundaries": [
+      "문자열/태그·원래15/6분기·현재효과순서를대조했지만실제네트워크실패/callback수명·파일오류/왕복은실행미검증",
+      "구형StringList delimiterCount할당/힙넘침·SEH/스택·미작성물리자체동일성은주장하지않음",
+      "atoi의정상DWORD입력과모듈러페이지이동을사용하며현대CRT의범위밖숫자/locale전체동일성은미검증",
+      "세.server템플릿콘텐츠/최종배포·전체전역패킷등록·보조객체/초기화·정리·새R.exe최종owner호출은남음"
+    ],
+    "receiverInventory": [
+      {
+        "type": "0xb",
+        "receiver": "00475070",
+        "status": "implemented"
+      },
+      {
+        "type": "0xc",
+        "receiver": "00475040",
+        "status": "implemented"
+      },
+      {
+        "type": "0x10",
+        "receiver": "004763d0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x83",
+        "receiver": "00476490",
+        "status": "implemented"
+      },
+      {
+        "type": "0x11",
+        "receiver": "00475260",
+        "status": "implemented"
+      },
+      {
+        "type": "0x12",
+        "receiver": "00475580",
+        "status": "implemented"
+      },
+      {
+        "type": "0x16",
+        "receiver": "00475660",
+        "status": "implemented"
+      },
+      {
+        "type": "0x17",
+        "receiver": "00476070",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1c",
+        "receiver": "00476180",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1e",
+        "receiver": "00476700",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1f",
+        "receiver": "004767c0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x87",
+        "receiver": "00476550",
+        "status": "implemented"
+      },
+      {
+        "type": "0x41",
+        "receiver": "00476880",
+        "status": "implemented"
+      },
+      {
+        "type": "0x66",
+        "receiver": "00475f90",
+        "status": "implemented"
+      },
+      {
+        "type": "0x67",
+        "receiver": "00476940",
+        "status": "implemented"
+      },
+      {
+        "type": "0x68",
+        "receiver": "00476a00",
+        "status": "implemented"
+      },
+      {
+        "type": "0x71",
+        "receiver": "00476ac0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x80",
+        "receiver": "00476640",
+        "status": "retired-validation-disabled"
+      }
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "full87ReceiverBodyAndCurrentRegistrationImplemented": true,
+    "allRetained18InventoryReceiverBodiesImplemented": true,
+    "sameActualGuildAndAdminEffectsImplemented": true,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsBindInstallOrRun": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newCommandOrPages": 0,
+    "newModeration": 0,
+    "newFileRoundTrip": 0,
+    "newPacketOrReply": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "세.server콘텐츠/배포·Root보조객체·전체전역패킷/477e10초기화·478af0정리",
+    "새R.exe최종owner/entry·실제UDP번호발행/Announce/Bind/Install/Run·LAN hostname",
+    "클라이언트0F존47/서버3BYTE·0F/1d·메타/OSlaunch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

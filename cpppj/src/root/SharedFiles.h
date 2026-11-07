@@ -33,6 +33,8 @@ public:
     std::filesystem::path WorkingFile(const std::filesystem::path& relative) const; // 사용자 Saves의 같은 파일명 우선,그 외 현재 workingDirectory와 원문 상대 경로를 결합한다.
     std::filesystem::path WritableFile(std::string_view name) const; // 현재 사용자 Saves를 만들고 단일 생성 파일의 실제 wide 경로만 반환한다.
     void SaveBlacklist(std::span<const std::uint32_t> subscribers) const; //00458770의 현재 순서/정수·endl을 사용자 Saves/blacklist.txt에 쓴다.
+    void SaveSubscribers(std::string_view name,std::span<const std::uint32_t> subscribers) const; //58770/58860의 현재 signed DWORD/endl 목록을 같은 사용자 Saves 단일파일에 쓴다.
+    void SaveAddresses(std::span<const std::array<char,16>> addresses) const; //458060의 현재 IP 문자열/endl 목록을 사용자 Saves/ipbanlist.txt에 쓴다.
     void SaveGuilds(std::span<const Guild> guilds) const; //0045c220의 현재 행/회원·공백/endl을 사용자 Saves/guild.txt에 실제 저장한다.
     void SaveGuildRequests(std::span<const GuildRequest> requests) const; //0045dde0의 요청당 두줄/중간공백·signed DWORD를 사용자 Saves/guildreq.txt에 쓴다.
 private:
@@ -50,6 +52,9 @@ public:
     bool BlockedSubscriber(std::uint32_t subscriber) const;bool MarkedSubscriber(std::uint32_t subscriber) const; // 서로 다른 현재 숫자 표를 조회한다.
     bool BlockedAddress(std::string_view address) const; //004576c0: 입력을 새로 정규화하지 않고 현재 표/원문 축소 strlen 반복으로 비교한다.
     void BanAndSave(std::uint32_t subscriber); // 중복 없이 현재 표에 삽입한 뒤 삽입 여부와 무관하게 전체 현재 목록을 저장한다.
+    void MarkSubscriber(std::uint32_t subscriber,bool marked); //87h SHUTUP의 현재 chatlist 삽입/첫삭제만 수행하며 실제 참가자 flag/저장은 명령 부모가 순서대로 호출한다.
+    void SaveMarkedSubscribers(); //458860의 현재 전체 chatlist를 실제 사용자 홈에 저장한다.
+    void BanAddressAndSave(std::string_view address); //457630의 현재 주소정규화/중복비교·삽입 뒤458060 전체저장이다.
     std::optional<std::string> GuildName(std::uint32_t subscriber) const; //0045d7e0의 첫 회원 일치 길드 이름이다.
     const SharedFileTables& Tables() const { return tables_; } // 실제 길드/요청·관리 표를 읽기만 빌린다. 변경/재로드 뒤 레코드 참조를 재사용하지 않는다.
     std::optional<std::size_t> GuildFor(std::uint32_t subscriber) const; //0045d7e0의 현재 순서상 첫 소속 길드 번호다. 회원0/중복도 별도 필터 없이 읽는다.

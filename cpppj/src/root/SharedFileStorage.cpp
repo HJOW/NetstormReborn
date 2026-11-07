@@ -19,7 +19,14 @@ std::filesystem::path SharedFileStorage::WritableFile(std::string_view name) con
     const auto leaf=platform::PathFromUtf8(name);if (leaf.empty() || leaf.has_parent_path() || leaf!=leaf.filename() || leaf==L"." || leaf==L"..") throw std::invalid_argument("R 자동 생성 파일의 단일 파일 이름 필요");platform::UserDataRoot::EnsureDirectory(user_.Saves());return user_.Saves()/leaf;
 }
 void SharedFileStorage::SaveBlacklist(std::span<const std::uint32_t> subscribers) const {
-    platform::UserDataRoot::EnsureDirectory(user_.Saves());std::ofstream output(user_.Saves()/L"blacklist.txt",std::ios::out|std::ios::trunc);
+    SaveSubscribers("blacklist.txt",subscribers);
+}
+void SharedFileStorage::SaveSubscribers(std::string_view name,std::span<const std::uint32_t> subscribers) const {
+    std::ofstream output(WritableFile(name),std::ios::out|std::ios::trunc);
     for (const auto subscriber:subscribers) output<<std::bit_cast<std::int32_t>(subscriber)<<std::endl; // 현재 표 순서를 유지하며 각 signed DWORD 뒤 LF/flush를 수행한다. 원문처럼 stream 실패를 별도 성공으로 보고하지 않는다.
+}
+void SharedFileStorage::SaveAddresses(std::span<const std::array<char,16>> addresses) const {
+    std::ofstream output(WritableFile("ipbanlist.txt"),std::ios::out|std::ios::trunc);
+    for (const auto& address:addresses) { const auto text=std::string_view(address.data(),address.size());const auto end=text.find('\0');if (end==text.npos) throw std::out_of_range("R IP 저장의 실제16BYTE 문자열 범위");output<<text.substr(0,end)<<std::endl; } // 현재 정규화된 각 문자열/endl을 쓰며 이 writer에서 다시 정규화하지 않는다.
 }
 }

@@ -55,6 +55,9 @@ void SharedFiles::LoadFilter() {
 }
 void SharedFiles::Reload() { AppendSubscribers("blacklist.txt",tables_.blockedSubscribers);LoadAddresses();AppendSubscribers("chatlist.txt",tables_.markedSubscribers);LoadGuilds();LoadGuildRequests();LoadFilter(); }
 void SharedFiles::BanAndSave(std::uint32_t subscriber) { Insert(tables_.blockedSubscribers,subscriber);storage_.SaveBlacklist(tables_.blockedSubscribers); }
+void SharedFiles::MarkSubscriber(std::uint32_t subscriber,bool marked) { if (marked) Insert(tables_.markedSubscribers,subscriber);else { const auto found=std::find(tables_.markedSubscribers.begin(),tables_.markedSubscribers.end(),subscriber);if (found!=tables_.markedSubscribers.end()) tables_.markedSubscribers.erase(found); } } //4742b0은 현재 첫 일치만 제거하며 별도 CCh 상태를 일괄 변경하지 않는다.
+void SharedFiles::SaveMarkedSubscribers() { storage_.SaveSubscribers("chatlist.txt",tables_.markedSubscribers); }
+void SharedFiles::BanAddressAndSave(std::string_view address) { const auto normalized=NormalizeAddress(address);if (!BlockedAddress(normalized)) { std::array<char,16> bytes{};std::copy(normalized.begin(),normalized.end(),bytes.begin());tables_.blockedAddresses.push_back(bytes); }storage_.SaveAddresses(tables_.blockedAddresses); } // 원문 축소 strlen 비교/와일드카드와 현재 순서를 재사용하고 중복이어도 전체저장한다.
 void SharedFiles::CheckNews() {
     if (!log_) throw std::logic_error("R 뉴스의 실제 로그 장치 미연결");log_(29,"Checking for new news..\n");const auto path=storage_.DataFile("news.txt");const auto changed=ModificationTime(path);if (!changed || *changed==tables_.newsTime) return;log_(29,"New news!\n");tables_.newsTime=*changed;messages_.news.reset();messages_.news=ReadWhole(path);messages_.newsChecksum=std::bit_cast<std::uint32_t>(tables_.newsTime);if (!messages_.news) log_(9,"Failed to load the news file.\n");
 }
