@@ -6288,9 +6288,67 @@
       "bytes": 5738685,
       "lines": 1126,
       "fixtureCommit": "e142bfc3",
-      "webCommit": "worktree",
+      "webCommit": "c4179478",
       "cpppjBasis": {
         "cpppj/src/o/RawAcidFence.cpp": "a84509c9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E51",
+      "id": "bomb-predestroy",
+      "path": "cpppj/tests/fixtures/bomb-predestroy-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Bomb 가상 전처리 41e960의 폭발/소리 관문과 효과 뒤 현재 좌표·상태",
+      "consumers": [
+        "webpj/tests/bomb-pre-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-pre-destroy.js"
+      ],
+      "doc": "docs/webpj-bomb-pre-post-pop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombPreDestroy.cpp"
+      ],
+      "scope": "96행 전부 사용(53/64 비트 두 정밀도 열은 같은 값; 판본 열 없는 10.78 단일 관측)",
+      "text": true,
+      "sha256": "e095dac1311425f16bc3ae3c76a8f8f8f48fdb86690d7ca6aff1b1453e44ecd3",
+      "bytes": 24400,
+      "lines": 97,
+      "fixtureCommit": "65b21851",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombPreDestroy.cpp": "65b21851"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E51",
+      "id": "bomb-postpop",
+      "path": "cpppj/tests/fixtures/bomb-postpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 그라비테이션·힐·미티어 최초 Regular 예약 접두의 호출열과 난수 상태",
+      "consumers": [
+        "webpj/tests/bomb-pre-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-post-pop.js"
+      ],
+      "doc": "docs/webpj-bomb-pre-post-pop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombPostPop.cpp"
+      ],
+      "scope": "432행 전부 사용(판본 열 없는 10.78 단일 관측)",
+      "text": true,
+      "sha256": "392fd34c28870eec31ad5c1104ce2ea397ca6b0d5df57f788666095c46a25725",
+      "bytes": 20284,
+      "lines": 433,
+      "fixtureCommit": "b04fd743",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombPostPop.cpp": "b04fd743"
       }
     }
   ]
