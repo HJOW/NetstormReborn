@@ -4928,9 +4928,70 @@
       "bytes": 116387,
       "lines": 581,
       "fixtureCommit": "befbc1cb",
-      "webCommit": "worktree",
+      "webCommit": "651b4eb0",
       "cpppjBasis": {
         "cpppj/src/o/RawCreateAt.cpp": "befbc1cb"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E32",
+      "id": "make-ai-parent",
+      "path": "cpppj/tests/fixtures/make-ai-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 MakeAi의 기본 설정 600바이트·SP 절삭·owner 0 봉투와 호출 순서",
+      "consumers": [
+        "webpj/tests/make-ai.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-make-ai.js",
+        "webpj/www/core/raw-mission-ai-settings.js"
+      ],
+      "doc": "docs/webpj-make-ai-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMakeAi.cpp",
+        "cpppj/src/o/RawMissionAiSettings.cpp"
+      ],
+      "scope": "770행 전부 사용",
+      "text": true,
+      "sha256": "f35293b716d73552a66754cf9ebab34303022c668f0f6e7625870f122413f81e",
+      "bytes": 1366067,
+      "lines": 771,
+      "fixtureCommit": "b466c127",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMakeAi.cpp": "b466c127",
+        "cpppj/src/o/RawMissionAiSettings.cpp": "69c584bd"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E32",
+      "id": "make-ai-objects",
+      "path": "cpppj/tests/fixtures/make-ai-objects-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 객체 이전/삭제 순회의 현재 슬롯·Player 첫 region·깊이·두 카운터·삭제 mask",
+      "consumers": [
+        "webpj/tests/make-ai.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-make-ai.js"
+      ],
+      "doc": "docs/webpj-make-ai-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMakeAi.cpp"
+      ],
+      "scope": "2592행 전부 사용",
+      "text": true,
+      "sha256": "da9b17226e5ca08d3a104877fb623e560b8d32e63d59f8edb2c94ab0b0713cfa",
+      "bytes": 373133,
+      "lines": 2593,
+      "fixtureCommit": "b466c127",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMakeAi.cpp": "b466c127"
       }
     }
   ]

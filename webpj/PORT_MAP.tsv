@@ -765,7 +765,7 @@ cpppj/src/o/RawLightningLifetime.cpp	port			todo	[o-default]
 cpppj/src/o/RawLightningPath.cpp	port			todo	[o-default]
 cpppj/src/o/RawLocalGeyser.cpp	port			todo	[o-default]
 cpppj/src/o/RawLocalMissionState.cpp	port			todo	[o-default]
-cpppj/src/o/RawMakeAi.cpp	port			todo	[o-default]
+cpppj/src/o/RawMakeAi.cpp	port	www/core/raw-make-ai.js	1f00a25a	port	[o-default] WB04-E32: 일반 MakeAi 부모와 전체 객체 이전/삭제 순회. fixture make-ai-parent 770·make-ai-objects 2592행 전부. AI 생성(417e50)/Player 카운터/가상 삭제는 훅
 cpppj/src/o/RawManaBoltArrival.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaBoltRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaDraw.cpp	port			todo	[o-default]
@@ -776,7 +776,7 @@ cpppj/src/o/RawMetadisplayDirty.cpp	port	www/core/metadisplay-dirty.js	1f00a25a	
 cpppj/src/o/RawMetaZoneCleanup.cpp	port			todo	[o-default] State 정리(ClientLocalStateGlobals)에서 단독도 호출하므로 이식 대상
 cpppj/src/o/RawMinimapRaster.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissile.cpp	port			todo	[o-default]
-cpppj/src/o/RawMissionAiSettings.cpp	port			todo	[o-default]
+cpppj/src/o/RawMissionAiSettings.cpp	port	www/core/raw-mission-ai-settings.js	1f00a25a	partial	[o-default] WB04-E32: initialize(0040ef80)는 make-ai-parent 770행의 설정 600바이트로 대조. apply/setAbility/prepare는 소스 계약 검사만(미션 시작 override 관측은 MissionStart 단위에서)
 cpppj/src/o/RawMissionBattleOptions.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionClientPackets.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionFrameGate.cpp	port			todo	[o-default]
