@@ -736,8 +736,8 @@ cpppj/src/o/RawGeyserAiRegistration.cpp	port			todo	[o-default]
 cpppj/src/o/RawGeyserCapture.cpp	port			todo	[o-default]
 cpppj/src/o/RawGeyserLifetime.cpp	port			todo	[o-default]
 cpppj/src/o/RawGeyserMined.cpp	port			todo	[o-default]
-cpppj/src/o/RawGraph.cpp	port			todo	[o-default]
-cpppj/src/o/RawGraphLive.cpp	port			todo	[o-default]
+cpppj/src/o/RawGraph.cpp	port	www/core/raw-graph.js	1f00a25a	partial	[o-default] WB04-E40: 사전 계산(Add·Flood·Region·RegionAdd·Detach·Rebuild·Allocate·Inspect·Pop 예측)·영역 통지·삭제 연결·PostDestroy 사본·Free/Frame/Reset. fixture graph-reset 16·graphforms 32·graphlookup 128·graphrebuild 96·graph-reference-checking 360·graph-sentinel-checking 540. Pop/PostPop/Unpop·SquidDisplay를 함께 쓰는 rawgraph/regiongraph/graphremove/graphrecovery 대조는 SquidPostPop 처리기 단위에서(Commit은 실제 실행이 쓰지 않아 제외)
+cpppj/src/o/RawGraphLive.cpp	port	www/core/raw-graph.js	1f00a25a	port	[o-default] WB04-E40: 실제 Flood·Rebuild·Allocate·Add·PostDestroy·Detach(진단 0x739~0x25d·로그·시계 복귀 재진입). fixture graph-live-checking 72·graph-live-free-callback 12·graph-detach-live 216·graph-region-free 4
 cpppj/src/o/RawGunAngle.h	port	www/core/raw-gun-angle.js	1f00a25a	port	[o-default] WB04-E16: 00467610 Gunanim 프레임→Graph 방향(인덱스·진단·20개 각도). fixture gun-angle 518행·gun-frame-checking 384행 전부(10.78)
 cpppj/src/o/RawGunAnimation.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunBlocker.cpp	port			todo	[o-default]
@@ -809,7 +809,7 @@ cpppj/src/o/RawPathHaltParent.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathRetarget.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathRuntime.cpp	port			todo	[o-default]
-cpppj/src/o/RawPathSearch.cpp	port			todo	[o-default]
+cpppj/src/o/RawPathSearch.cpp	port	www/core/raw-path-surface.js	1f00a25a	partial	[o-default] WB04-E40: RawPathSurfaceAt(0.9999 보정 칸의 해시 0단계 머리)만. BFS 길 찾기 본체(RawPathSearch/RawPathProcess)는 후속 단위
 cpppj/src/o/RawPathStart.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlainAssetDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlainUnitCapture.cpp	port			todo	[o-default]

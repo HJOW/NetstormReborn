@@ -5454,7 +5454,7 @@
       "bytes": 160060,
       "lines": 3451,
       "fixtureCommit": "e8d879f7",
-      "webCommit": "worktree",
+      "webCommit": "c9e8a1a1",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidNeighbors.cpp": "99ff1a5f"
       }
@@ -5483,7 +5483,7 @@
       "bytes": 728,
       "lines": 32,
       "fixtureCommit": "586738be",
-      "webCommit": "worktree",
+      "webCommit": "c9e8a1a1",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidNeighbors.cpp": "99ff1a5f"
       }
@@ -5512,9 +5512,301 @@
       "bytes": 1056,
       "lines": 19,
       "fixtureCommit": "071d1c0e",
-      "webCommit": "worktree",
+      "webCommit": "c9e8a1a1",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidNeighbors.cpp": "99ff1a5f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graph-reset",
+      "path": "cpppj/tests/fixtures/graph-reset-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 월드 Graph 초기 표(앞251행·예약0·틈3행·sentinel·reserved 보존) 16개 입력",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp"
+      ],
+      "scope": "16행 전부 사용",
+      "text": true,
+      "sha256": "48fc211e1d99eab562ceabb1112f5e9031343c0e7e46ce5a0bdfa020a946fa79",
+      "bytes": 49027,
+      "lines": 17,
+      "fixtureCommit": "29b16c52",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graph-live-checking",
+      "path": "cpppj/tests/fixtures/graph-live-checking-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Graph 실제 부모(Add/Flood/Rebuild)의 진단·로그 재진입 전체 표/스택/슬롯",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraphLive.cpp"
+      ],
+      "scope": "144행 중 10.78(originals) 72행 사용(originalCD 72행은 범위 밖)",
+      "text": true,
+      "sha256": "473ee74344c15d6117716428d6f76f07da2262970e19884f0d15c20c18d91852",
+      "bytes": 5241371,
+      "lines": 144,
+      "fixtureCommit": "b7065914",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraphLive.cpp": "99ff1a5f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graph-live-free-callback",
+      "path": "cpppj/tests/fixtures/graph-live-free-callback-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 첫 로그에서 뒤 후보가 free가 되어도 내부 Flood가 계속 쓰는 경로",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraphLive.cpp"
+      ],
+      "scope": "24행 중 10.78 12행 사용",
+      "text": true,
+      "sha256": "ed7b0cc99f214a1ea2a5fd2482b70bc4206dc54ac5fb5983753a57736d19aac6",
+      "bytes": 873511,
+      "lines": 24,
+      "fixtureCommit": "b7065914",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraphLive.cpp": "99ff1a5f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graph-detach-live",
+      "path": "cpppj/tests/fixtures/graph-detach-live-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 삭제 Detach의 현재 정책/진단/로그/시계 복귀와 값 원천(12 장면×18)",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraphLive.cpp"
+      ],
+      "scope": "432행 중 10.78 216행 사용",
+      "text": true,
+      "sha256": "2d4b7573fe7567a914ba73b46fdc905cfe81bed89f7285db8e7344034d2028c2",
+      "bytes": 15725020,
+      "lines": 432,
+      "fixtureCommit": "8df974e5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraphLive.cpp": "99ff1a5f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graph-region-free",
+      "path": "cpppj/tests/fixtures/graph-region-free-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 영역 Remove 진단으로 free/재형이 되어도 같은 graph BYTE를 쓰는 경로",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp"
+      ],
+      "scope": "8행 중 10.78 4행 사용",
+      "text": true,
+      "sha256": "7ccfb02fb8426bbaaec9520c2a37c54a943530047df454c6cacf35954fdf35d8",
+      "bytes": 291356,
+      "lines": 8,
+      "fixtureCommit": "8df974e5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graph-reference-checking",
+      "path": "cpppj/tests/fixtures/graph-reference-checking-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 그래프 참조 감소(Remove)의 signed WORD·전체 checking·식/파일/행 순서",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js",
+        "webpj/www/core/graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp"
+      ],
+      "scope": "760행 중 10.78 Remove 360행 사용(Zero 20행은 Player 위치 단위, originalCD는 범위 밖)",
+      "text": true,
+      "sha256": "28c650c2c434cb16cb0f6e6540309216d78473b24dcea5dc0a6c5babb0c827d4",
+      "bytes": 47816,
+      "lines": 760,
+      "fixtureCommit": "2d166e07",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graph-sentinel-checking",
+      "path": "cpppj/tests/fixtures/graph-sentinel-checking-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: sentinel 진단 복귀와 Free의 현재 기록 쓰기",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js",
+        "webpj/www/core/graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp"
+      ],
+      "scope": "1080행 중 10.78 540행 사용",
+      "text": true,
+      "sha256": "60bbbac9a62c0536be5df69e882bfdf625742093958c9694a3fb53fd6c6b9684",
+      "bytes": 93084,
+      "lines": 1080,
+      "fixtureCommit": "588c0e9c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graphforms",
+      "path": "cpppj/tests/fixtures/graphforms-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 전체 풀 재구성이 내부 Form 6개를 생략하는 표면1/비표면 입력",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp"
+      ],
+      "scope": "64행 중 10.78 32행 사용",
+      "text": true,
+      "sha256": "58e1c638f532f84efd3a36b052eea5ea5bfff5e94cc2ea1c2f78b0eda056e24d",
+      "bytes": 2569455,
+      "lines": 65,
+      "fixtureCommit": "860030e7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graphlookup",
+      "path": "cpppj/tests/fixtures/graphlookup-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 같은 위치 다른 SID의 graph byte와 dead 원천 타입/프레임(Detach)",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp"
+      ],
+      "scope": "384행 중 10.78 128행 사용",
+      "text": true,
+      "sha256": "16c014101ac2870e2b0c36df61210c163f2b5567a7159ce08f9b6171317e996b",
+      "bytes": 1528567,
+      "lines": 775,
+      "fixtureCommit": "81d2e089",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E40",
+      "id": "graphrebuild",
+      "path": "cpppj/tests/fixtures/graphrebuild-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 전체 32768 raw 풀 재구성/소진 할당(Allocate/Rebuild)",
+      "consumers": [
+        "webpj/tests/raw-graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-raw-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGraph.cpp"
+      ],
+      "scope": "288행 중 10.78 96행 사용",
+      "text": true,
+      "sha256": "5912b9df3a895875b42a473c7961bef0bf730d03a0d61ed0dc62362af90653ba",
+      "bytes": 2031927,
+      "lines": 583,
+      "fixtureCommit": "c9a02cb8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGraph.cpp": "5626fa85"
       }
     }
   ]
