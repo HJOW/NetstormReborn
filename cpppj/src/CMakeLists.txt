@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE client/NativeMetaSpriteDraw.h client/NativeMetaSpriteDraw.cpp client/ClientMetaSpriteDraw.h client/ClientMetaSpriteDraw.cpp) #1130:실제 메타 섬+a4의 Image·TYPE·버전/설명·8자리 그림을 현재 통합 화면에 연결한다.
+
 target_sources(netstorm PRIVATE o/RawStateBattleOptions.h o/RawStateBattleOptions.cpp) #1127:67h 전체 공통 부모·부분 복사와 일반 Session의 실제 CS 자식을 연결한다.
 
 target_sources(netstorm PRIVATE client/NativeCameraRig.h client/NativeCameraRig.cpp) #1126:같은 카메라/메타 예약·실제 Kernel/Host/Renderer의 CameraRig를 복원한다.

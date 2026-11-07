@@ -1,0 +1,57 @@
+{
+  "unit": 1130,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12762112,
+      "sha256": "f374339104283be258f2dc369624cfeb63fb168279f2e8f59f71b25787827a25"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "72c0660b75f8ec4488bd9e075083128b05c75dec9020928c942d0f3d655926eb"
+    }
+  },
+  "staticAudit": {
+    "native": "00478d10 전체·00419850/004248a0/004a3df0/004a3f70/004daaf0와 다음 함수 경계까지 원문/기계어를 읽었다. 원문 생성물은 변경하지 않았다.",
+    "draw": "숨김4000h 선행 반환·kill8000h의 실제 QA Rig Image·일반 참가자 CS+bc Image·전투 TYPE/현재 프레임·버전/설명·8DWORD 비영 자리 순서를 유지한다. 도달한 실제 장치만 요구한다.",
+    "numeric": "상위14비트/하위WORD 배율0만1배로 대체한다. 참가자 Y 배율은 signed 하위DWORD×11/16이며 전투 포구는 float32 저장 배율과 원래 입력 X/Y의 FTOL이다. 첫0.9 비교와 이후 float32 1.1/0 비교를 구별한다.",
+    "text": "004248a0의32BYTE 문맥/6번 흰색 설명·0번 노랑 버전·검정 그림자와 같은 현재 FontStore/active GumpTextDraw/색 상태를 사용한다. 설명 NUL은 본체 그림 이후 선택된 문자 측정 위치에서만 소비한다.",
+    "binding": "실제+a4 분배→동일 잠긴 통합 Renderer→같은 CS 할당/ProcessForm Rig/SHP/GumpPixelTarget/메뉴 글꼴이다. 별도 화면/목록/가짜 객체·새 프레임을 만들지 않는다.",
+    "firstBuild": "첫 빌드 C2039/C2061: 새 연결 헤더가 Sid 정의 대신 구형 Squid 헤더를 포함했다. 완료 후 실제 SidPool 헤더로 수정하고 진단 뒤 QA 재조회·설명 지연 소비를 정적 보완했다. 첫 실패와 최종 성공 로그를 보존한다.",
+    "remaining": "4787c0 파생 표시 갱신과4789b0 메타 객체 입력·CS 수신/참가자 생성은 후속이다. 일반 RawObjectHit의 선택 캡처 장치 접합도 전체 완료로 주장하지 않는다.",
+    "validation": "최종 Release 빌드/정적 원문 대조/보호2800 확인만 수행한다. 신규 C++ 단위/MP/게임/통신 실행0이다."
+  },
+  "remaining": [
+    "메타 파생 표시 갱신/메타 객체 입력/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

@@ -10,6 +10,7 @@
 #include "client/ClientNsInfoGlobals.h"
 #include "client/NativeMetaScene.h" //같은현재CS/실제Pool·Gump를메타표시본체에연결한다.
 #include "client/NativeIslandRig.h" //같은 현재 Client/Kernel/ProcessForm과 실제 메타 섬 애니메이션을 연결한다.
+#include "client/ClientMetaSpriteDraw.h" //메타 객체+a4도 현재 통합 화면/메뉴 글꼴 장치를 빌린다.
 #include "client/CameraHome.h" //메타전체배치뒤의실제4340d0을현재Renderer한계에연결한다.
 #include "o/OriginalText.h" //현재번역문을기존영어/한국어표시바이트경계로변환한다.
 #include "client/ClientAudio.h"
@@ -195,7 +196,7 @@ void ClientRendererFrame::Submit(std::span<std::uint8_t> pixels,int pitch,int he
             auto* world=client_.menu_->world_.get();auto* display=world ? world->factoryDisplay_.get() : client_.menu_->MetaSpriteDisplay();if (!display) throw std::logic_error("Native SpriteDraw 실제 게임/메타 공통 출력기 부재");
             auto& session=client_.gameplayGlobals_->RequireSession();
             display->DrawEntry(entry,pixels,pitch,height,clip,client_.gameplayGlobals_->Camera().Snapshot().pixels,session.LocalOwner(),client_.menu_->hideBuildings_,
-                [&session](auto sid,auto x,auto y) { session.DrawBridgeAdditional(sid,x,y); });
+                [&session](auto sid,auto x,auto y) { session.DrawBridgeAdditional(sid,x,y); },[&](auto sid,auto x,auto y) { DrawClientMetaSprite(client_,menus,sid,{x,y},pixels,pitch,height,clip); });
         };
         hooks.group=[this](auto token) { return groups_->Group(token); };hooks.ui=ui;
         hooks.construction=[&](auto token) { client_.gameplayGlobals_->RequireSession().Particles().DrawEntry(token,pixels,pitch,height,clip); };

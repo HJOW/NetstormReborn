@@ -729,6 +729,7 @@ void RawMenuControls::SetHelpWord(std::uint32_t token,std::string_view text) {
     impl_->SetNodeHelp(token,text,true);
 }
 void RawMenuControls::MeasureText(std::span<const char> bytes,const std::array<std::uint32_t,8>& context,std::int32_t& width,std::int32_t& height,std::uint32_t limit) const { impl_->metrics.Measure(bytes,DecodeGumpTextContext(context),width,height,std::bit_cast<std::int32_t>(limit)); } // 같은 원본 문맥과 signed 길이다.
+void RawMenuControls::DrawCurrentText(std::span<const char> bytes,ScreenPoint position,const std::array<std::uint32_t,8>& context) const { if (!impl_->activeText) throw std::logic_error("현재 통합 Draw 문맥 밖의 글자 출력");impl_->activeText->Draw(bytes,position,DecodeGumpTextContext(context),-1); } //새 글꼴/표면/색 상태를 만들지 않고 현재4a3f70 장치를 빌린다.
 const GumpBackgroundCreate& RawMenuControls::BackgroundBackend() const { return *impl_->backgroundCreate; } // 같은 실제 자산이다.
 QuickHelpPopupState& RawMenuControls::PopupState() const { return impl_->popupState; } // 현재 팝업 표식 사본을 만들지 않는다.
 void RawMenuControls::EnableHelp(RawHelpHooks hooks) { impl_->EnableHelp(std::move(hooks)); } // 같은 실제 처리기를 설치한다.

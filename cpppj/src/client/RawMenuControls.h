@@ -113,6 +113,7 @@ public:
     void SetHelpText(std::uint32_t token,std::string_view text); //464ed0의 실제 소유 문자열을 같은 노드의 textPointer에 설치한다.
     void SetHelpWord(std::uint32_t token,std::string_view text); //464f80의 실제 소유 도움말 키를 alternateTextPointer에 설치한다.
     void MeasureText(std::span<const char> bytes,const std::array<std::uint32_t,8>& context,std::int32_t& width,std::int32_t& height,std::uint32_t limit) const; // 공통 돌 버튼 Fit도 같은 원본 글꼴 측정기를 사용한다.
+    void DrawCurrentText(std::span<const char> bytes,ScreenPoint position,const std::array<std::uint32_t,8>& context) const; //통합 WithDrawing 안에서 같은 실제 글꼴/색 상태로 원문 길이-1 글자를 출력한다.
     const GumpBackgroundCreate& BackgroundBackend() const; // 실제 TYPE/SHP를 읽는 같은 배경 생성기다.
     std::uint32_t CreateMetaImage(RawImage& image); //0047f2a0의 기본 등록/비소유 Image 연결만 수행하고 부착은 호출자가 결정한다.
     MetaImageGumpNode* MetaImageNode(std::uint32_t token) const; // 목록/창이 같은 파생 기하/색표 필드를 사용한다.
