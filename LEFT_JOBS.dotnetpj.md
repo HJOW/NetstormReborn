@@ -12,19 +12,19 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-07, 단위 기록 0.156 기준 — 사용자 요청으로 일시 중지)
+### 0.1 현재 값 (2026-11-07, 단위 기록 0.157 기준 — 사용자 요청으로 일시 중지 해제 후 재개)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **일시 중지(사용자 요청).** 전체 목표는 미완료다. 최근 완료 단위는 0.156(R4 지형·섬 생성 및 인구/배치 1차)이며, 다음 재개 단위는 0.157(R4 지형·섬 생성 및 사제/포탑 배치·섬 수명주기/PostPop·월드 바인딩 2차)이다. |
-| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12 완료, R4 지형·섬 생성 1차 12모듈 완료, R4 지형·섬 생성 2차 및 `RawFortWorldLoadBinding`·F2d·F3 미착수). R5 이후는 미착수 |
+| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.157(R4 Fort 사제 준비)이며, 다음 단위는 0.158(R4 지형·섬 생성 2차 나머지: 섬 수명주기·PostPop·배치 지형·월드 바인딩)이다. |
+| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12 완료, R4 지형·섬 생성 1차 12모듈 완료, R4 Fort 사제 준비 1모듈 완료, R4 지형·섬 생성 2차 나머지 및 `RawFortWorldLoadBinding`·F2d·F3 미착수). R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.156(R4 지형·섬 생성 컨텍스트·성장·도장 및 섬 인구·추가·전투·중앙·군도 분리 1차 이식) 커밋 직전(이전: 0.155 `e26587c0 / 20261107-57 DN`, 0.154 `3a9a741c / 20261104-24 DN`, 해시 기록 `ee69e4a4 / 20261104-25 DN`). |
-| 검사 | 0.156에서 Release 전체 **Core 1,278개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0. PORT_MAP 무결성 2개와 fixture 목록 검사도 통과했다. 서로 다른 프로젝트 값이며 한 번의 `sln` 전체 실행 합계가 아니다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 단위별 집중 검사·변이 검사 수는 0.154~0.156 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
-| 포트 맵 | `PORT_MAP.tsv` 507행 (L1 289, port 218). 0.156에서 24행(L1 16, port 8)을 더했다. 단위별 증가 내역은 0.155~0.156 기록과 이관 파일에 있다. |
-| fixture | 연결 213개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
-| cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.154는 HEAD `da27e191`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규·상향 행만 HEAD). cpppj 현재 값은 단위861/표시 11.01(`0c06fa66`)이며 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
+| 마지막 구현 커밋 | 0.157(R4 Fort 사제 준비) 커밋 직전(이전: 0.156 `5d02386f / 20261107-63 DN`, 0.155 `e26587c0 / 20261107-57 DN`, 0.154 `3a9a741c / 20261104-24 DN`, 해시 기록 `ee69e4a4 / 20261104-25 DN`). |
+| 검사 | 0.157에서 Release 전체 **Core 1,280개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0. PORT_MAP 무결성 2개와 fixture 목록 검사 포함 6개도 통과했다. 서로 다른 프로젝트 값이며 한 번의 `sln` 전체 실행 합계가 아니다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 단위별 집중 검사·변이 검사 수는 0.154~0.157 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
+| 포트 맵 | `PORT_MAP.tsv` 509행 (L1 291, port 218). 0.157에서 2행(L1 2)을 더했다. 단위별 증가 내역은 0.155~0.157 기록과 이관 파일에 있다. |
+| fixture | 연결 214개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
+| cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.157은 `RawFortPriestPreparation.cpp/.h` 기준 `b8ce42c7`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규·상향 행만 HEAD). cpppj 현재 값은 단위861 이후(HEAD `aebc8d24`)이며 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한다. |
 
 ### 0.2 진단 — 기존 구현이 원본과 달라진 구조적 원인
@@ -188,7 +188,8 @@
     - [x] F2c-1 Territory·팔레트(0.141), F2c-2 객체 적재 본체(0.142), F2c-3 객체 스트림·Meta ContentsHooks(0.143)
     - [x] F2c-4~F2c-8 저장 모듈 14종·`ChunkMap`·FinishOwner(0.144~0.148), F2c-9 변환 저장소(0.149), F2c-10 AddRandom 부모·입력(0.153), F2c-11 섬 목록·단일 배치·군집·게임 보조·Notify(0.154), F2c-12 Canon 디코더·섬 빌더/배치/검색·Fort 월드 적재 부모(`CanonDecoder`·`CanonTypeDecoder`·`RawCheckingFlag`·`RawIslandBuilder`·`RawIslandPlacement`·`RawIslandQueries`·`RawFortWorldLoad`·`MakeFortWorldChildrenHooks`, 0.155)
     - [x] R4 지형·섬 생성 1차(`TerrainBuilder`·`RawSquidRegion`·`RawFrameChoose`·`RawTerrainBitmap`·`RawTerrainStamp`·`RawTerrainContext`·`RawTerrainGrowth`·`RawIslandPopulation`·`RawIslandAdd`·`RawBattleIsland`·`RawCentralIsland`·`RawIslandPartition`, 0.156)
-    - [ ] R4 지형·섬 생성 2차(다음 단위 0.157 재개 지점): `RawIslandLifecycle`·`RawIslandPostPop`·`RawFortPriestPreparation`·`RawCanonPlacementTerrain`·`RawPriestPlacementTerrain`·`RawTerrainRun`·`RawTerrainPipeline`·`RawNormalTerrainWorldBinding`
+    - [x] R4 Fort 사제 준비(`RawFortPriestPreparation`, 0.157)
+    - [ ] R4 지형·섬 생성 2차 나머지(다음 단위 0.158): `RawIslandLifecycle`·`RawIslandPostPop`·`RawCanonPlacementTerrain`·`RawPriestPlacementTerrain`·`RawTerrainRun`·`RawTerrainPipeline`·`RawNormalTerrainWorldBinding`
     - [ ] F2c 나머지: `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요)
     - [ ] F2d: World·저장 나머지
     - [ ] F3: `RawCampaignSession` 연결. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS·F 단계만으로는 화면 변화가 거의 없다.
@@ -251,7 +252,16 @@
 - **구현(새 파일 12개, 모두 `Netstorm.Core/Original`):** `TerrainBuilder.cs`(원본 본섬 성장·통로·프린지 후보·간헐천/나무/다리 배치·8이웃 표·로컬 LCG 보조), `RawSquidRegion.cs`(`0043de40`/CD `0047ff90` 지역 슬롯 필드 기록·무효/범위 밖/비섬 진단), `RawFrameChoose.cs`(`0042ae70`/CD `004bb560` 초기 지형 및 다리 공유 최대 256 후보 추첨), `RawTerrainBitmap.cs`(256×256 1비트 비트맵·4바이트 정렬 스캔라인), `RawTerrainStamp.cs`(`004c19a0`·`004c1770` 초기 99칸 CRT 캐시·8이웃 variant 마스크·프린지 생성), `RawTerrainContext.cs`(`004c0ef0`·`004c15b0`·`004c16f0` 65536 문자/지역 지도·별칭/타입 매핑·테두리 표시·도장 후 정규화), `RawTerrainGrowth.cs`(`004c10a0` 일반 성장·통로·빈틈 보정·`FirstChunkSeed`·`Scatter`·`GrowRectangle`·`RemoveSparseCell`·`RemoveSparse`·`ClearPlacement`), `RawIslandPopulation.cs`(`0040e120`·`0040e340`·`0040e240` 거주 구역·비보스 간헐천·나무/식물 무작위 배치·초기 타입 치환), `RawIslandAdd.cs`(`0046f910` 편집기 섬 드롭·임시 충돌 검사·`PlaceIslandOnSurface`·지형 생성·그래프·영역 저장), `RawBattleIsland.cs`(`00470b10` 전투 섬 사각형 선택·나무 제거·영역 배정), `RawCentralIsland.cs`(`00470410`·`00470820` 중앙 섬 테두리 탐색·사각형 선택·성배/식물 배치), `RawIslandPartition.cs`(`00470100` 군도 잔여 조각 분리·BFS 라벨링·최소 크기/간격 검사). **기존 파일 수정 1개:** `RawCheckingFlag.cs`(함수 대리자 생성자 3종 추가).
 - **검증:** 집중 17건 통과(`TerrainContextTests` 2개: `terraincontext-x86.tsv` 224행 + 직접 1개, `TerrainGrowthTests` 2개: `terraingrowth-x86.tsv` 108행 + 직접 1개, `TerrainArchHelpersTests` 4개: `terrain-arch-helpers-x86.tsv` 1734행, `TerrainSeedTests` 4개: `terrain-seed-x86.tsv` 378행 + 직접 2개, `TerrainStampTests` 3개: `terrainstamp-x86.tsv` 1560행 패치/CD + 직접 1개, `IslandPopulationTests` 2개: `island-population-x86.tsv` 118행 + `IslandAdd` 직접 1개). fixture 6개를 링크·등록했다(총 213개, `cpp_sync.py` 0종료). 변이 검사로 `RawTerrainGrowth.RunNormal`의 `FixGaps(2)`→`FixGaps(1)` 변이 시 `TerrainGrowth_ReplaysBothNativeFullArrays`가 즉시 실패로 검출함을 확인하고 원복했다. Release 전체 **Core 1,278개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0.
 - **PORT_MAP:** 신규 24행(`RawBattleIsland` 2행 port, `RawCentralIsland` 2행 port, `RawFrameChoose` 2행 L1, `RawIslandAdd` 2행 L1, `RawIslandPartition` 2행 port, `RawIslandPopulation` 2행 L1, `RawSquidRegion` 2행 L1, `RawTerrainBitmap` 2행 port, `RawTerrainContext` 2행 L1, `RawTerrainGrowth` 2행 L1, `RawTerrainStamp` 2행 L1, `TerrainBuilder` 2행 L1). 총 507행(L1 289, port 218).
-- **남은 것(일시 중지 후 재개 지점 — 단위 0.157):** R4 지형·섬 생성 2차(`RawIslandLifecycle`·`RawIslandPostPop`·`RawFortPriestPreparation`·`RawCanonPlacementTerrain`·`RawPriestPlacementTerrain`·`RawTerrainRun`·`RawTerrainPipeline`·`RawNormalTerrainWorldBinding` 및 관련 x86 fixture 대조 검사), 이어서 `RawFortWorldLoadBinding`·F2d(World·저장 나머지)·F3 `RawCampaignSession` 연결.
+- **남은 것(재개 후 0.157에서 사제 준비만 완료 — 다음 단위 0.158):** R4 지형·섬 생성 2차 나머지(`RawIslandLifecycle`·`RawIslandPostPop`·`RawCanonPlacementTerrain`·`RawPriestPlacementTerrain`·`RawTerrainRun`·`RawTerrainPipeline`·`RawNormalTerrainWorldBinding` 및 관련 x86 fixture 대조 검사), 이어서 `RawFortWorldLoadBinding`·F2d(World·저장 나머지)·F3 `RawCampaignSession` 연결.
+
+### 0.157 단위 기록 — R4 Fort 사제 준비 이식 (2026-11-07, HJOW-Athlon)
+
+- **범위:** Fort 사제 준비 1종(`RawFortPriestPreparation`의 `Run`·`Collect`·`Marked`) 및 cpp 검사 직역 1종(`FortPriestPreparationTests` 2개). `RawIslandLifecycle`·`RawIslandPostPop`·`RawCanonPlacementTerrain`·`RawPriestPlacementTerrain`·`RawTerrainRun`·`RawTerrainPipeline`·`RawNormalTerrainWorldBinding`은 제외했다.
+- **구현(새 파일 1개, `Netstorm.Core/Original`):** `RawFortPriestPreparation.cs`(PATCH 004923e0 기본 기술 4종·현재 관문 재조회·지역 20개 원문 순서 처리, 00492120 현재 목록 재조회·유한 용량 계약, 004921a0 첫 실제 순서 비트 0x80 검사, 현재 DWORD 번호 물리 범위·리틀 엔디언 DWORD·미연결 장치 거부 보조). **기존 파일 수정 1개:** `Netstorm.Core.Tests.csproj`(fixture 링크 1행 추가).
+- **검증:** 집중 2건 통과(`FortPriestPreparationTests.Native13ActualParentAndListHelpers`: `fort-priest-preparation-x86.tsv` 13행 전수 + `SelectedFailureKeepsEarlierTechnologyEffects` 직접 1개). fixture 1개를 링크·등록했다(총 214개, `cpp_sync.py` 0종료). 변이 검사로 `Marked`의 `0x80u`→`0x40u` 변이 시 전수 검사가 즉시 실패로 검출함을 확인하고 원복했다. Release 전체 **Core 1,280개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0. PORT_MAP 무결성 2개와 fixture 목록 검사 포함 6개도 통과했다. `--ports`는 기존처럼 시간 초과라 단위가 읽는 cpppj 파일의 `git log`로 기준을 직접 확인했다.
+- **PORT_MAP:** 신규 2행(`RawFortPriestPreparation.cpp/.h` → `RawFortPriestPreparation.cs`, 모두 L1, 기준 `b8ce42c7`). 총 509행(L1 291, port 218).
+- **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 보호 원본은 새 검사가 읽기·쓰기 모두 풀 범위 안에서만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리에서 다른 세션의 cpppj 미커밋 변경(`cpppj/tests/SubscriberGlobalsTests.cpp` 1개)은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
+- **남은 것:** 0.158부터 R4 지형·섬 생성 2차 나머지 7모듈과 관련 x86 fixture 대조 검사를 잇는다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 지시에 따라 건너뛴다. 멀티플레이는 3차 로컬 구현 때 `LocalNetworkPolicy` 루프백 전용으로 사전 구현만 잇는다.
 
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
@@ -290,6 +300,7 @@
 | 11.01 표기·Credits (11-03, 0.150) | 새 경로 `ProductVersion`·`ProductPresentation`·Tell 본문 3항·`Patch1101` 등록, 기존 경로 `MainMenuView` 버전 창 11.01·Credits 3항 목록과 같은 상세 창. 원본 판본 표기와 옛 Credits는 유지 | [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154) 0.150, [cpppj 685 문서](docs/exe/cpp-product-1101-20261101.md) | 새 경로·기존 경로(`port`) |
 | 외부 접속 문서화·클라이언트 유효성 검사 비활성화 (11-03, 0.151) | C# 소켓·HTTP 코드 없음 확인, 외부 실행은 기존 경로 Help의 사용자 선택 링크 1곳, 구 검증은 연결·성공 합성 없음 | [dotnet 외부 접속 문서](docs/dotnet-external-endpoints-20261103.md) | 문서. 새 경로 이식 때마다 갱신(0.7) |
 | 멀티플레이 사전 구현 (11-03, 0.152) | `Netstorm.Net`의 `LocalNetworkPolicy`(루프백·리슨만 허용)·`LocalMissionTransport` 바이트 큐 골격. 사용자 지시로 검사 없음 | [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154) 0.152 | 사전 구현(`port`), 검증 완료 아님 |
+| R4 Fort 사제 준비 (11-07, 0.157) | `RawFortPriestPreparation`의 `Run`·`Collect`·`Marked`와 `FortPriestPreparationTests` 2개(원본 13행 전수·부분 실패 직접). 대표 변이 1종 검출 | 이 문서 0.157 | L1(PORT_MAP 참조). 세션 연결은 F3 |
 
 최신 전체 빌드·검사 결과는 0.1절을 따른다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 새 경로의 진행도는 Client 검사와 0.5절의 실제 단계 완료 기준을 함께 본다.
 

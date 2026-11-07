@@ -372,6 +372,8 @@ cpppj/src/o/RawFortObjectsSave.h	Netstorm.Core/Original/RawFortObjectsSave.cs	ae
 cpppj/src/o/RawFortPaletteTransition.cpp	Netstorm.Core/Original/RawFortPaletteTransition.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
 cpppj/src/o/RawFortPaletteTransition.h	Netstorm.Core/Original/RawFortPaletteTransition.cs	5cb5ba372b883b48f19a7df0dabda68cd5548795	L1
 cpppj/src/o/RawFortRandomPlacement.cpp	Netstorm.Core/Original/RawFortRandomPlacement.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
+cpppj/src/o/RawFortPriestPreparation.cpp	Netstorm.Core/Original/RawFortPriestPreparation.cs	b8ce42c7db0f762d0b836c50d557cc4556e04a52	L1
+cpppj/src/o/RawFortPriestPreparation.h	Netstorm.Core/Original/RawFortPriestPreparation.cs	b8ce42c7db0f762d0b836c50d557cc4556e04a52	L1
 cpppj/src/o/RawFortRandomPlacement.h	Netstorm.Core/Original/RawFortRandomPlacement.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawFortRegionSave.cpp	Netstorm.Core/Original/RawFortRegionSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
 cpppj/src/o/RawFortRegionSave.h	Netstorm.Core/Original/RawFortRegionSave.cs	aeb552a88c546fcaf76dca7be5b7469f831c4822	L1
