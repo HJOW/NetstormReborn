@@ -145,18 +145,18 @@ std::uint32_t LocalTcpTransport::Token(std::int32_t id) const {
 // 현재 칸이 다른 내부 전송의 토큰이면 이 OS owner로 간주하지 않는다.
 LocalTcpTransport::Node* LocalTcpTransport::Current(std::int32_t id) const { return Find(Token(id)); }
 // caller가 넘긴 socket의 소유권을 실패 시에도 책임지고 실제 노드/장치와 함께 등록한다.
-LocalTcpTransport::Node& LocalTcpTransport::Adopt(std::uintptr_t socket,std::int32_t id,bool connecting,bool buffered,const std::array<std::uint8_t,20>& address) {
+LocalTcpTransport::Node& LocalTcpTransport::Adopt(std::uintptr_t socket,std::int32_t id,bool connecting,bool buffered,const std::array<std::uint8_t,20>& address,bool publishConnect) {
     const CallGuard call(activeCalls_);
     SocketOwner guard{Socket(socket)};auto node=std::make_unique<Node>();node->socket=static_cast<std::uintptr_t>(guard.Release());node->connection.sender=std::bit_cast<std::uint32_t>(id);node->connection.address=address;node->connection.flags=4U|kConnecting|(buffered ? kBuffered:0U);node->connection.received=hooks_.now();node->connection.heartbeat=hooks_.now();node->connecting=connecting;node->connected=!connecting;auto* pointer=node.get();nodes_.push_back(std::move(node));
     try {
-        pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(pointer->connection.sender),packet,packet,&pointer->connection)); }); // 실제 가상 this의 송신은 현재 Player/번호 gate를 반복하지 않는다.
-        if (id<0) pointer->connection.sender=std::bit_cast<std::uint32_t>(registry_->Accept(pointer->token));else registry_->Register(id,pointer->token);
+        pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(pointer->connection.sender),packet,packet,&pointer->connection)); },[this,pointer] { return SocketReadiness(*pointer); }); // 같은 실제 socket/가상 this이며 현재 Player/번호 gate를 반복하지 않는다.
+        if (id<0) pointer->connection.sender=std::bit_cast<std::uint32_t>(registry_->Accept(pointer->token));else if (publishConnect) registry_->PublishConnect(id,pointer->token);else registry_->Register(id,pointer->token);
     } catch (...) { registry_->Forget(pointer->token);nodes_.pop_back();throw; }
     return *pointer;
 }
 // TCP host 선택 시에만 listener를 열며 기존 단독 내부 서버는 소켓 없이 유지된다.
 void LocalTcpTransport::Listen(std::uint32_t port,std::string_view bindAddress) {
-    if (listener_!=kInvalidSocket) throw std::logic_error("LAN TCP listener 중복 생성");const auto parsed=ParseAddress(bindAddress);if (parsed!=std::array<std::uint8_t,4>{} && !LocalAddress(parsed)) throw std::invalid_argument("LAN TCP 바인드 주소가 로컬 범위 밖입니다");const auto address=SocketAddress(parsed,port);StartSockets();SocketOwner socket{::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)};
+    if (listener_!=kInvalidSocket) return;const auto parsed=ParseAddress(bindAddress);if (parsed!=std::array<std::uint8_t,4>{} && !LocalAddress(parsed)) throw std::invalid_argument("LAN TCP 바인드 주소가 로컬 범위 밖입니다");const auto address=SocketAddress(parsed,port);StartSockets();SocketOwner socket{::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)};
     if (socket.socket==INVALID_SOCKET) { lastError_=WSAGetLastError();throw SocketError("socket",lastError_); }u_long nonblocking=1;
     if (ioctlsocket(socket.socket,FIONBIO,&nonblocking)==SOCKET_ERROR || bind(socket.socket,reinterpret_cast<const sockaddr*>(&address),sizeof(address))==SOCKET_ERROR || listen(socket.socket,31)==SOCKET_ERROR) { lastError_=WSAGetLastError();throw SocketError("LAN listen",lastError_); }
     listener_=static_cast<std::uintptr_t>(socket.Release());port_=port;
@@ -165,21 +165,25 @@ void LocalTcpTransport::Listen(std::uint32_t port,std::string_view bindAddress) 
 void LocalTcpTransport::StopListening() {
     if (listener_==kInvalidSocket) return;if (closesocket(Socket(listener_))==SOCKET_ERROR) { lastError_=WSAGetLastError();throw SocketError("listener close",lastError_); }listener_=kInvalidSocket;port_=0;
 }
-// Native4e2620은 문자열 parser 뒤4e0a00으로 포트를 덮어쓴다. 실제 연결/사설주소 검사는 기존Connect에 맡긴다.
-void LocalTcpTransport::ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) {
-    address=address.substr(0,address.find('\0'));if (address.starts_with("tcp,")) address.remove_prefix(4);address=address.substr(0,address.find(','));address=address.substr(0,address.find(':'));Connect(address,port,id,initialPacket);
+//004e2620은 기존 socket의 준비값이-1이어도 비영이면1을 반환한다. 새 연결 성공의 뜻으로 바꾸지 않는다.
+bool LocalTcpTransport::ReuseConnect(std::int32_t id) const { if (id<0 || id>=static_cast<std::int32_t>(o::kTransceiverSlots)) throw std::out_of_range("LAN TCP 접속 ID의 실제22칸 범위");const auto current=Token(id);return current && registry_->SocketReadiness(current)!=0; }
+// 문자열 원문은 기존 준비 조회를 주소 parser보다 먼저 한 번만 실행한다.
+bool LocalTcpTransport::Connect(std::string_view address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) { if (ReuseConnect(id)) return true;return ConnectNew(address,port,id,initialPacket); }
+// 현재 문자열/별도 포트도 재사용 관문 뒤에만 해석한다. DNS/외부 주소 제한은 기존 LAN 정책이다.
+bool LocalTcpTransport::ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) {
+    if (ReuseConnect(id)) return true;address=address.substr(0,address.find('\0'));if (address.starts_with("tcp,")) address.remove_prefix(4);address=address.substr(0,address.find(','));address=address.substr(0,address.find(':'));return ConnectNew(address,port,id,initialPacket);
 }
-// 명시 LAN IPv4만 사용하며 원문처럼 현재 ID9의 실제 socket을 등록한다.
-void LocalTcpTransport::Connect(std::string_view address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) {
-    const auto parsed=ParseAddress(address);if (!LocalAddress(parsed)) throw std::invalid_argument("LAN TCP는 loopback/사설/link-local IPv4만 접속합니다");if (id<0 || id>=static_cast<std::int32_t>(o::kTransceiverSlots) || Token(id)) throw std::logic_error("LAN TCP 접속 ID의 빈 현재 칸 필요");const auto endpoint=SocketAddress(parsed,port);StartSockets();SocketOwner socket{::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)};
-    if (socket.socket==INVALID_SOCKET) { lastError_=WSAGetLastError();throw SocketError("socket",lastError_); }u_long nonblocking=1;if (ioctlsocket(socket.socket,FIONBIO,&nonblocking)==SOCKET_ERROR) { lastError_=WSAGetLastError();throw SocketError("TCP nonblocking",lastError_); }
+// 새 socket 생성/비동기 connect 실패는 기존 노드/별도 버퍼를 보존하고 원문0을 반환한다.
+bool LocalTcpTransport::ConnectNew(std::string_view address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) {
+    const auto parsed=ParseAddress(address);if (!LocalAddress(parsed)) throw std::invalid_argument("LAN TCP는 loopback/사설/link-local IPv4만 접속합니다");const auto endpoint=SocketAddress(parsed,port);StartSockets();SocketOwner socket{::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)};
+    if (socket.socket==INVALID_SOCKET) { lastError_=WSAGetLastError();return false; }u_long nonblocking=1;if (ioctlsocket(socket.socket,FIONBIO,&nonblocking)==SOCKET_ERROR) { lastError_=WSAGetLastError();return false; }
     const auto result=connect(socket.socket,reinterpret_cast<const sockaddr*>(&endpoint),sizeof(endpoint));const auto error=result==SOCKET_ERROR ? WSAGetLastError():0;
-    if (error && error!=WSAEWOULDBLOCK && error!=WSAEINPROGRESS && error!=WSAEALREADY) { lastError_=error;throw SocketError("LAN connect",error); }static_cast<void>(Adopt(static_cast<std::uintptr_t>(socket.Release()),id,error!=0,true,AddressBytes(endpoint)));registry_->StoreConnectPacket(id,initialPacket,dispatcher_.Dispatch()); // 새 노드 공개 뒤 기존 버퍼 반납/observer/복제다. 뒤 실패가 앞선 접속을 되돌리지 않는다.
+    if (error && error!=WSAEWOULDBLOCK && error!=WSAEINPROGRESS && error!=WSAEALREADY) { lastError_=error;return false; }static_cast<void>(Adopt(static_cast<std::uintptr_t>(socket.Release()),id,error!=0,true,AddressBytes(endpoint),true));registry_->StoreConnectPacket(id,initialPacket,dispatcher_.Dispatch());return true; // 새 노드 성공 뒤 칸을 직접 대체하고 별도 버퍼를 처리한다. 이전 노드를 먼저 닫지 않으며 뒤 실패를 되돌리지 않는다.
 }
-// 원문 주소의 network endian 포트/IP를 host 문자열로 안전하게 변환하며 DNS를 조회하지 않는다.
-void LocalTcpTransport::Connect(std::span<const std::uint8_t> address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) {
-    if (address.size()!=20 || Read(address,0,2)!=AF_INET || !(Read(address,16)&kTcp) || (Read(address,16)&0x628U)) throw std::invalid_argument("LAN TCP의 AF_INET/TCP20BYTE 주소 필요");if (!port) port=(std::uint32_t(address[2])<<8)|address[3];
-    const auto text=std::to_string(address[4])+"."+std::to_string(address[5])+"."+std::to_string(address[6])+"."+std::to_string(address[7]);Connect(text,port,id,initialPacket);
+// 원문20BYTE 주소의network endian 포트/IP도 재사용 관문 뒤에만 읽는다.
+bool LocalTcpTransport::Connect(std::span<const std::uint8_t> address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) {
+    if (ReuseConnect(id)) return true;if (address.size()!=20 || Read(address,0,2)!=AF_INET || !(Read(address,16)&kTcp) || (Read(address,16)&0x628U)) throw std::invalid_argument("LAN TCP의 AF_INET/TCP20BYTE 주소 필요");if (!port) port=(std::uint32_t(address[2])<<8)|address[3];
+    const auto addressText=std::to_string(address[4])+"."+std::to_string(address[5])+"."+std::to_string(address[6])+"."+std::to_string(address[7]);return ConnectNew(addressText,port,id,initialPacket);
 }
 // 원문 같은 노드의 sender/등록 위치와 buffered 상태만 바꾼다.
 void LocalTcpTransport::AssignConnection(std::int32_t pending,std::int32_t owner) {
@@ -195,14 +199,16 @@ void LocalTcpTransport::Accept() {
         if (ioctlsocket(socket.socket,FIONBIO,&nonblocking)==SOCKET_ERROR) { lastError_=WSAGetLastError();throw SocketError("accepted nonblocking",lastError_); }static_cast<void>(Adopt(static_cast<std::uintptr_t>(socket.Release()),-1,false,false,AddressBytes(address)));
     }
 }
-// 실제 socket readiness와 SO_ERROR를 확인한 뒤 원문 connected 통지를 한 번 보낸다.
+//004e1800의 TCP 부분이다. select 오류/exception이면 원문4e1770처럼 socket만 닫고 WSA 오류를 저장한다.
+std::int32_t LocalTcpTransport::SocketReadiness(Node& node) const {
+    if (node.retired || node.socket==kInvalidSocket) return 0;fd_set writable,errors;FD_ZERO(&writable);FD_ZERO(&errors);FD_SET(Socket(node.socket),&writable);FD_SET(Socket(node.socket),&errors);timeval timeout{};const auto ready=select(0,nullptr,&writable,&errors,&timeout);
+    if (ready!=SOCKET_ERROR && !FD_ISSET(Socket(node.socket),&errors)) return FD_ISSET(Socket(node.socket),&writable) ? 1:0;
+    closesocket(Socket(node.socket));node.socket=kInvalidSocket;node.connecting=false;node.connected=false;node.error=lastError_=WSAGetLastError();return -1; // 조회 자체는1번/2번 통지나 PacketConnection 반납을 실행하지 않는다.
+}
+// 실제 Poll에서만 접속/종료 통지를 내며 앞선 상태 조회에서 닫힌 socket도 여기서 소비한다.
 bool LocalTcpTransport::CompleteConnection(Node& node) {
-    if (node.retired || (node.connection.flags&kClosed) || node.socket==kInvalidSocket) return false;
-    if (node.connecting) {
-        fd_set writable,errors;FD_ZERO(&writable);FD_ZERO(&errors);FD_SET(Socket(node.socket),&writable);FD_SET(Socket(node.socket),&errors);timeval timeout{};const auto ready=select(0,nullptr,&writable,&errors,&timeout);
-        if (ready==SOCKET_ERROR) { Fail(node,WSAGetLastError());return false; }if (!ready) return false;int error{},length=sizeof(error);
-        if (getsockopt(Socket(node.socket),SOL_SOCKET,SO_ERROR,reinterpret_cast<char*>(&error),&length)==SOCKET_ERROR) error=WSAGetLastError();if (error) { Fail(node,error);return false; }node.connecting=false;node.connected=true;
-    }
+    if (node.retired || (node.connection.flags&kClosed)) return false;if (node.socket==kInvalidSocket) { Fail(node,node.error);return false; }
+    if (node.connecting) { const auto ready=SocketReadiness(node);if (ready<0) { Fail(node,node.error);return false; }if (!ready) return false;node.connecting=false;node.connected=true; }
     if (!node.notified) { node.notified=true;node.connection.flags&=~kConnecting;Notify(node,1); }
     return !node.retired && !(node.connection.flags&kClosed);
 }
@@ -332,8 +338,8 @@ o::PacketConnection* LocalTcpTransport::Connection(std::int32_t id) { auto* node
 bool LocalTcpTransport::HasConnection(std::int32_t id) const { return Current(id)!=nullptr; }
 // 실제 핸들/상위closed를 확인하며 buffered bit2를 성공값으로 사용하지 않는다.
 bool LocalTcpTransport::IsOpen(std::int32_t id) const { const auto* node=Current(id);return node && node->socket!=kInvalidSocket && !(node->connection.flags&kClosed); }
-// 접속 진행은0이며 실제 OS 실패가 남아 있는 동안에만-1이다.
-std::int32_t LocalTcpTransport::Status(std::int32_t id) const { const auto* node=Current(id);return !node ? 0:node->error ? -1:node->connected && !(node->connection.flags&kClosed) ? 1:0; }
+//004e2b70은 현재 socket 조회의0/1/-1을 그대로 반환하며 이전 error/connected 값을 캐시하지 않는다.
+std::int32_t LocalTcpTransport::Status(std::int32_t id) const { auto* node=Current(id);return node ? SocketReadiness(*node):0; }
 // 원문20BYTE 또는0.0.0.0:0의 AF_INET/TCP 표기를 돌려준다.
 std::array<std::uint8_t,20> LocalTcpTransport::Address(std::int32_t id) const { const auto* node=Current(id);if (node) return node->connection.address;std::array<std::uint8_t,20> result{};Put(result,0,AF_INET,2);Put(result,16,kTcp);return result; }
 // listener는 접속 노드나 등록완료 flag와 별개다.

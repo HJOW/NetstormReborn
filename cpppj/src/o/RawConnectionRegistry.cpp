@@ -13,11 +13,13 @@ std::array<std::uint8_t,20> RawConnectionRegistry::Address(std::int32_t id) cons
 void RawConnectionRegistry::BindSynchronization(std::uint32_t& value,std::shared_ptr<void> lifetime) { synchronization_=&value;synchronizationOwner_=std::move(lifetime); }
 ConnectionCleanupGlobals RawConnectionRegistry::Cleanup() { return Cleanup(*synchronization_); }
 ConnectionCleanupGlobals RawConnectionRegistry::Cleanup(std::uint32_t& synchronization) { return {transceivers_,buffers_,pending_,synchronization,pendingCount_}; }
-std::uint32_t RawConnectionRegistry::Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,std::function<void(std::span<std::uint8_t>)> send) {
+std::uint32_t RawConnectionRegistry::Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,std::function<void(std::span<std::uint8_t>)> send,std::function<std::int32_t()> readiness) {
     if (!destroy || !release) throw std::invalid_argument("실제 연결 close/free 장치 누락");
     for (const auto& entry:bindings_) if (entry.second.node==&connection) throw std::logic_error("현재 연결의 중복 주소 등록"); //한 노드의 살아 있는 토큰을 중복 발급하지 않는다.
-    if (!nextToken_) throw std::overflow_error("연결 opaque 토큰 소진");const auto token=nextToken_++;bindings_.emplace(token,Binding{&connection,std::move(destroy),std::move(release),std::move(send)});return token;
+    if (!nextToken_) throw std::overflow_error("연결 opaque 토큰 소진");const auto token=nextToken_++;bindings_.emplace(token,Binding{&connection,std::move(destroy),std::move(release),std::move(send),std::move(readiness)});return token;
 }
+// 기존 연결 guard는 다른 backend의 같은 현재 노드도 실제 socket 조회로 판단한다.
+std::int32_t RawConnectionRegistry::SocketReadiness(std::uint32_t token) const { const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.readiness) throw std::logic_error("현재 연결의 실제 socket 준비 장치 미연결");const auto query=found->second.readiness;return query(); }
 //연결슬롯은Player관문보다먼저읽고가상송신이자기를반납해도callback이후같은노드를다시읽지않는다.
 bool RawConnectionRegistry::SendMutable(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players) const {
     if (id< -32 || id>21) throw std::out_of_range("원문 송신의 현재 transceiver 번호 범위");const auto token=id<0 ? pending_.at(static_cast<std::size_t>(-id)) : transceivers_.at(static_cast<std::size_t>(id));
@@ -48,6 +50,8 @@ ConnectionRegistrationHooks RawConnectionRegistry::RegistrationHooks(std::functi
     return {[this](auto token)->PacketConnection& { return Node(token); },std::move(buffered),[](auto line) { throw std::logic_error("원문 연결 등록 진단:"+std::to_string(line)); }};
 }
 void RawConnectionRegistry::Register(std::int32_t id,std::uint32_t token) { static_cast<void>(Node(token));RegisterTransceiver(id,token,Cleanup(),RegistrationHooks()); }
+// 원문 접속 생성자는 새 노드의 sender를 이미 쓴 뒤 기존 칸을 진단 없이 대체한다.
+void RawConnectionRegistry::PublishConnect(std::int32_t id,std::uint32_t token) { static_cast<void>(Node(token));if (id<0 || id>=static_cast<std::int32_t>(transceivers_.size())) throw std::out_of_range("접속 공개의 실제22칸 범위");transceivers_[static_cast<std::size_t>(id)]=token; }
 bool RawConnectionRegistry::CanAccept() const { return pendingCount_<31; }
 std::int32_t RawConnectionRegistry::Accept(std::uint32_t token) {
     auto& connection=Node(token);if (!CanAccept()) throw std::logic_error("현재 pending 개수31 관문");

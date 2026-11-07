@@ -1,0 +1,67 @@
+{
+  "unit": 1047,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "기존 연결 재사용/현재 socket 준비 조회와 새 노드 성공 뒤 직접 공개",
+  "sourceFunctions1078": [
+    "004e2620",
+    "004e1800",
+    "004e1770",
+    "004e2b70",
+    "004e2430"
+  ],
+  "implemented": [
+    "기존 현재 token의 실제 backend socket 준비값을 주소/포트/초기 패킷 해석보다 먼저 조회",
+    "원문 비영 관문에 -1 포함·새 socket/통지/초기 버퍼 변경 없는 true 반환",
+    "TCP select writable/exception·오류 시 socket close 후 WSAGetLastError·상태0/1/-1",
+    "공통 Registry의 token별 TCP/내부/Editor 실제 준비 조회",
+    "새 socket/ioctl/connect 실패는false·기존 칸/별도 초기 버퍼 보존",
+    "새 노드 성공 뒤 일반Register 진단 대신 현재 칸 직접 공개·그 뒤 기존1046 초기 패킷 처리",
+    "기존 노드를 미리 닫거나 해제하지 않는 원문 순서·C++최종owner 반납 경계",
+    "실제 Poll에서만 type1/2 통지·조회에서 닫힌 socket의 다음 Poll 소비",
+    "listener가 있으면 새 주소/포트를 읽지 않고 자연 반환"
+  ],
+  "static": {
+    "socketTimeoutInitial": "0000000000000000",
+    "socketTimeoutSourceLines": [
+      "(timeval *)&DAT_005e495c);",
+      "(timeval *)&DAT_005e495c);",
+      "(timeval *)&DAT_005e495c);",
+      "(timeval *)&DAT_005e495c);"
+    ],
+    "lastFullDecompilationHost": "HJOW-Athlon",
+    "lastFullDecompilationDate": "2026-11-03"
+  },
+  "decompilerOutputsChanged": false,
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1047\\build.log",
+    "exeSize": 12168192,
+    "exeSha256": "0f005d7ebecc7aa41f43c5bf5b785099bc8e6833aea4531c5881177838564382"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1047\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remaining": [
+    "endpoint/서버/boss·전체 수락/리스너·송신 감사",
+    "나머지 writer/decoder·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

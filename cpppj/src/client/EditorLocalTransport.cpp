@@ -26,7 +26,7 @@ std::uint32_t EditorLocalTransport::Token(const o::PacketConnection& connection)
 std::uint32_t EditorLocalTransport::Track(o::PacketConnection& connection) {
     auto* node=&connection;return registry_->Track(connection,[this,node] { Need(hooks_.close)(*node);SocketClosed(*node); },[this,node] {
         const bool client=node==&client_;Need(hooks_.release)(*node);if (client) { clientAlive_=false;toClient_.clear(); }else { pendingAlive_=false;toPending_.clear(); }
-    },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); }); // 실제 가상 this는 ID 재선택 없이 같은 observer/반대쪽 큐를 사용한다.
+    },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); },[this,node] { return Alive(*node) && !PeerLost(*node) ? 1:0; }); // 같은 내부 socket/가상 this를 ID 재선택 없이 조회한다.
 }
 o::PacketDispatchHooks EditorLocalTransport::WrappedHooks() {
     o::PacketDispatchHooks result; //기존 분배기가 요구하는 실제 경계만 감싸며 observer/버전/길이 판단은 복제하지 않는다.

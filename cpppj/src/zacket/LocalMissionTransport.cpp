@@ -117,7 +117,7 @@ std::uint32_t LocalMissionTransport::Token(const o::PacketConnection& connection
 std::uint32_t LocalMissionTransport::Track(o::PacketConnection& connection) {
     auto* node=&connection;return registry_->Track(connection,[this,node] {
         hooks_.close(*node);if (node==&client_) { serverPeerLost_=true;clientOutput_.clear(); }else { clientPeerLost_=true;serverOutput_.clear(); }toServer_.clear();toClient_.clear();
-    },[this,node] { const bool client=node==&client_;hooks_.release(*node);if (client) clientPresent_=false;else { serverPresent_=false;pending_=false;owner_=0; } },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); }); // 같은 실제 가상 this를 ID 재선택/Player 재검사 없이 송신한다.
+    },[this,node] { const bool client=node==&client_;hooks_.release(*node);if (client) clientPresent_=false;else { serverPresent_=false;pending_=false;owner_=0; } },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); },[this,node] { return (node==&client_ ? clientPresent_ && !clientPeerLost_ : serverPresent_ && !serverPeerLost_) ? 1:0; }); // 같은 실제 내부 socket/가상 this를 ID 재선택/Player 재검사 없이 사용한다.
 }
 // 실제 RawPacketDispatch와 집합 분배가 같은 노드/수명 장치를 사용한다.
 o::PacketDispatchHooks LocalMissionTransport::WrappedHooks() {

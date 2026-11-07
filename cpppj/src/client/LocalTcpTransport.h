@@ -23,9 +23,9 @@ public:
 
     void Listen(std::uint32_t port,std::string_view bindAddress="0.0.0.0"); //004e2430/004e02d0의 TCP listener만 연다. bind 주소는 wildcard 또는 로컬 IPv4 literal이다.
     void StopListening(); // 현재 accepted/등록 연결은 보존하고 신규 수락만 중단한다.
-    void Connect(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); //004e2620의 명시 LAN 접속 성공 뒤 별도 초기 패킷을 복제한다. 빈 span은 기존 호출의 NULL이며 DNS를 조회하지 않는다.
-    void Connect(std::span<const std::uint8_t> address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // 원문20BYTE 주소와 현재 포트/초기 패킷을 실제 TCP 접속 부모에 전달한다.
-    void ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // IP:port 또는tcp,IP:port,cn과 별도 포트를 읽고 같은 초기 패킷을 전달한다. DNS/공개주소는 기존 정책대로 허용하지 않는다.
+    bool Connect(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); //004e2620의 기존 socket 비영 재사용 또는 새 LAN 접속을 수행한다. socket 접속 실패는false이며 빈 span은NULL이다.
+    bool Connect(std::span<const std::uint8_t> address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // 재사용 관문 뒤20BYTE 주소/포트/초기 패킷을 같은 새 접속 부모에 전달한다.
+    bool ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // 재사용 관문 뒤IP:port 또는tcp,IP:port,cn을 해석한다. DNS/공개주소는 기존 정책대로 허용하지 않는다.
     void AssignConnection(std::int32_t pending,std::int32_t owner); //004e27b0의 같은 accepted 노드를 owner1..8 또는 비서버9로 이동하고 buffered 모드로 바꾼다.
     void Close(std::int32_t id); // 선택한 자기 연결만 closed로 표시하며 수신 depth가0일 때 실제 OS/등록표 반납을 수행한다.
     void CloseAll(); // 자기 listener와 모든 자기 노드를 닫는다. 다른 내부/외부 전송의 공유 등록표를 지우지 않는다.
@@ -47,7 +47,7 @@ public:
     o::PacketConnection* Connection(std::int32_t id); // 현재 자기 노드를 잠깐 빌리며 callback/다음 Poll 이후까지 주소를 보관하지 않는다.
     bool HasConnection(std::int32_t id) const; // buffered/연결완료와 별개인 현재 자기 노드의 존재다.
     bool IsOpen(std::int32_t id) const; //004e2b10의 실제 socket 존재/상위 closed 미설정이다. 접속 진행 상태와 구별한다.
-    std::int32_t Status(std::int32_t id) const; //004e2b70에 대응하는 접속 완료1/진행0/기록된 실패-1이며 buffered bit2를 읽지 않는다.
+    std::int32_t Status(std::int32_t id) const; //004e2b70의 같은 현재 socket 준비 조회이며0/1/-1을 캐시/Packet flags로 대체하지 않는다.
     std::array<std::uint8_t,20> Address(std::int32_t id) const; //004e2a50의 같은 peer20BYTE 또는 원문 zero IPv4 주소다.
     bool IsListening() const; // 실제 listener 핸들의 존재를 반환한다.
     std::uint32_t ListeningPort() const; // 성공한 Listen의 실제 포트이며 listener가 없으면0이다.
@@ -63,9 +63,12 @@ private:
     Node* Find(const o::PacketConnection& connection) const; // callback이 준 같은 고정 주소의 자기 노드를 찾는다.
     std::uint32_t Token(std::int32_t id) const; // 공유 표의 현재 pending/정상 칸만 읽는다.
     Node* Current(std::int32_t id) const; // 현재 표와 자기 owner를 함께 확인한다.
-    Node& Adopt(std::uintptr_t socket,std::int32_t id,bool connecting,bool buffered,const std::array<std::uint8_t,20>& address); // 실제 socket을 가진 안정된 노드를 Track/Register하며 실패 시 핸들도 반납한다.
+    Node& Adopt(std::uintptr_t socket,std::int32_t id,bool connecting,bool buffered,const std::array<std::uint8_t,20>& address,bool publishConnect=false); // 실제 노드/핸들을 소유하며 접속 생성의 직접 공개와 일반 Register/Accept를 구별한다.
+    bool ReuseConnect(std::int32_t id) const; // 현재 칸의 실제 준비값이 비영이면 주소/포트/새 패킷을 읽기 전에 자연 반환한다.
+    bool ConnectNew(std::string_view address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket); // 기존 준비0/빈 칸에서만 새 socket을 만들고 성공 뒤 칸/초기 패킷을 공개한다.
+    std::int32_t SocketReadiness(Node& node) const; //004e1800의 TCP select writable/exception과 오류 시 socket 닫기만 수행하며 type1/2는 알리지 않는다.
     void Accept(); // 원문 pending31칸 상한 아래에서만 실제 accepted 소켓을 등록한다.
-    bool CompleteConnection(Node& node); // write/exception readiness와 SO_ERROR로 접속 완료를 확인하고 type1을 한 번 알린다.
+    bool CompleteConnection(Node& node); // 같은 socket 준비 조회 뒤 실제 Poll에서만 type1/2를 알린다.
     bool ReceiveOne(Node& node,bool* consumed=nullptr); // 한 선언 프레임만 부분 수신하며 무효/sentinel이면 같은 Poll의 추가 분배를 멈춘다.
     bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct=nullptr); // 일반 번호 송신은 gate를 적용하고 이미 선택된 실제 가상 this만 직접 노드/큐를 사용한다.
     void SendNode(Node& node,std::span<const std::uint8_t> packet); // buffered는 미확정 집합에 추가하고 직접 송신은 wire에 넣는다.
@@ -86,7 +89,7 @@ private:
     std::list<std::unique_ptr<Node>> nodes_; // callback/Registry 대여 중 주소가 바뀌지 않는 자기 노드 owner다.
     std::uintptr_t listener_{kInvalidSocket}; // 실제 TCP listener 핸들이며 생성자에서는 열지 않는다.
     std::uint32_t port_{}; // 현재 listener가 성공한 실제 포트다.
-    std::int32_t lastError_{}; // 마지막 실제 Winsock 오류이며 정상값을 합성하지 않는다.
+    mutable std::int32_t lastError_{}; // 원문의 상태 조회도 갱신할 마지막 실제 Winsock 오류이며 정상값을 합성하지 않는다.
     bool socketsStarted_{},polling_{}; // Winsock 참조 수명과 같은 전송의 중첩 Poll 거부 상태다.
     std::size_t activeCalls_{}; // callback/송신 중 재진입 Poll이 현재 노드를 조기 수거하지 못하게 하는 동기 대여 수다.
 };

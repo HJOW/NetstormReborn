@@ -18,7 +18,8 @@ public:
     ConnectionCleanupGlobals Cleanup(); //같은 현재 동기화 토큰을 포함한 실제 표의 뷰다.
     ConnectionCleanupGlobals Cleanup(std::uint32_t& synchronization); //기존 직접 owner 검사는 동일 표에 명시 동기화를 빌릴 수 있다.
     std::uint32_t Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,
-        std::function<void(std::span<std::uint8_t>)> send={}); //현재실제노드/수명과선택가상+4송신장치를같은토큰에연결한다.기존수명전용호출은송신을요구하지않는다.
+        std::function<void(std::span<std::uint8_t>)> send={},std::function<std::int32_t()> readiness={}); // 실제 노드/수명/가상 송신과 같은 socket 준비 조회를 묶는다. 기존 수명 전용 호출은 미선택 장치를 요구하지 않는다.
+    std::int32_t SocketReadiness(std::uint32_t token) const; //004e1800의 실제 socket 장치를 token으로 조회하며 Player/Packet flags로 대체하지 않는다.
     bool SendMutable(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players) const; //004e2dc0의현재슬롯/Playerflag1/NULL관문뒤같은가상송신장치를호출한다.반환은장치호출여부이며전달성공값이아니다.
     std::uint32_t TokenFor(const PacketConnection& connection) const; // 실제 고정 노드 주소의 현재 token을 찾아 ID 재배치와 구별한다.
     void SendDirect(std::uint32_t token,std::span<std::uint8_t> packet) const; // 이미 선택된 this의 가상+4를 직접 호출하며 Player/번호 관문을 반복하지 않는다.
@@ -28,6 +29,7 @@ public:
     PacketConnection& Node(std::uint32_t token) const; //같은 현재 생존 노드만 읽는다.
     std::array<std::uint8_t,20> Address(std::int32_t id) const; //004e2a50의 현재 슬롯 주소 또는0.0.0.0:0을 읽는다.
     void Register(std::int32_t id,std::uint32_t token); //004e2870의 현재 슬롯/sender를 쓴다.
+    void PublishConnect(std::int32_t id,std::uint32_t token); //004e2620의 새 노드 성공 뒤 직접 칸 store다. 기존 노드나 초기 패킷을 먼저 닫거나 지우지 않는다.
     std::int32_t Accept(std::uint32_t token); //현재 첫 빈 pending1..31에 같은 노드를 등록하고 개수를 증가한다.
     bool CanAccept() const; //004e02d0의 현재 개수<31 관문이며 슬롯을 새로 지우지 않는다.
     void Assign(std::int32_t pending,std::int32_t target,std::uint32_t server,std::function<void(std::uint32_t)> buffered); //004e27b0 전체 현재 재배치를 실행한다.
@@ -43,6 +45,7 @@ private:
         PacketConnection* node{}; //실제 전송이 소유하는 동일 고정 주소다.
         std::function<void()> destroy,release; //현재 노드의 실제 close/free이며 callback 뒤 표를 다시 읽는다.
         std::function<void(std::span<std::uint8_t>)> send; //실제전송owner의같은mutable observer/큐이며그노드의반납과함께해제한다.
+        std::function<std::int32_t()> readiness; // 같은 실제 TCP/내부 socket의0/1/-1 준비 상태이며 현재 ID를 재선택하지 않는다.
     };
     void RemoveAliases(std::uint32_t token); //같은 token의 현재 별칭만 지우고 새 세대의 칸은 보존한다.
     ConnectionRegistrationHooks RegistrationHooks(std::function<void(std::uint32_t)> buffered={}); //같은 노드/실제 진단만 조립한다.
