@@ -10,6 +10,13 @@ public sealed class UIntBox
     public uint Value { get; set; }
 }
 
+// 외부 bool 전역을 빌리는 상자다. 원문 `const bool&amp;` 빌림을 옮긴다. 2026-11-07 F2d 공장 약화 공유 이식에서 추가됐다.
+public sealed class BoolBox
+{
+    /// <summary>빌린 bool 값이다. 같은 주소를 직접 읽고 쓴다. 2026-11-07 F2d 공장 약화 공유 이식에서 추가됐다.</summary>
+    public bool Value { get; set; }
+}
+
 // 외부 문자열 상세 owner를 빌리는 상자다. 원문 `std::optional&lt;string&gt;&amp;` 빌림을 옮긴다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.
 public sealed class StringBox
 {

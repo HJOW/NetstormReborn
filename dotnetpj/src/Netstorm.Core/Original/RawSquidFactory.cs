@@ -133,6 +133,9 @@ public sealed class RawSquidFactory
     /// <summary>Create가 읽는 같은 장기 fakeThreeByThreeSurface 타입 DWORD다. 미연결이면 162를 쓴다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
     private UIntBox? _sharedFakeSurfaceType;
 
+    /// <summary>생성 HP가 읽는 같은 장기 약화 전역이다. 미연결이면 생성자 값을 쓴다. 2026-11-07 F2d 공장 약화 공유 이식에서 추가됐다.</summary>
+    private BoolBox? _sharedWeakenedMana;
+
     /// <summary>팩토리를 만든다.</summary>
     /// <param name="pool">슬롯 풀.</param>
     /// <param name="types">타입 번호 순서의 타입 레코드. 개수는 <see cref="OriginalConstructors.TypeCount"/> 와 같아야 한다.</param>
@@ -245,6 +248,23 @@ public sealed class RawSquidFactory
     /// <summary>현재 fakeThreeByThreeSurface 타입 번호다. 미연결이면 162를 쓴다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
     /// <returns>fake 표면 타입 번호다.</returns>
     public uint CurrentFakeSurfaceType() => _sharedFakeSurfaceType?.Value ?? (uint)FakeSurfaceType;
+
+    /// <summary>생성 HP가 읽는 같은 장기 약화 전역을 빌린다. 다른 주소 재연결은 거부하며 대상은 이 공장보다 오래 살아야 한다. 2026-11-07 F2d 공장 약화 공유 이식에서 추가됐다.</summary>
+    /// <param name="current">빌릴 약화 상자다.</param>
+    public void BindWeakenedMana(BoolBox current)
+    {
+        ArgumentNullException.ThrowIfNull(current);
+        if (_sharedWeakenedMana is not null && !ReferenceEquals(_sharedWeakenedMana, current))
+        {
+            throw new ArgumentException("생성 HP의 약화 전역 중복 다른 주소 연결");
+        }
+
+        _sharedWeakenedMana = current;
+    }
+
+    /// <summary>현재 약화 여부다. 묶은 상자가 있으면 그 값을 읽고 없으면 생성자 값을 쓴다. 2026-11-07 F2d 공장 약화 공유 이식에서 추가됐다.</summary>
+    /// <returns>약화 여부다.</returns>
+    public bool CurrentWeakenedMana() => _sharedWeakenedMana?.Value ?? _weakenedMana;
 
     /// <summary>같은 공장의 현재 진단·공유 깊이를 부착·직접 Pop에 함께 연결한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
     /// <param name="forms">연결할 Form 몸체다. 같은 풀을 써야 한다.</param>
@@ -576,7 +596,7 @@ public sealed class RawSquidFactory
             : (type.Flags1 & OriginalTypeRecord.HasHitPoints) != 0;
         if (needsHp)
         {
-            int hp = _weakenedMana && bytes[RawSidPool.TypeOffset] == ManaType ? type.MaxHitPoints / 4 : type.MaxHitPoints;
+            int hp = CurrentWeakenedMana() && bytes[RawSidPool.TypeOffset] == ManaType ? type.MaxHitPoints / 4 : type.MaxHitPoints;
             Put(bytes, HpOffset, unchecked((uint)hp), 4);
         }
     }

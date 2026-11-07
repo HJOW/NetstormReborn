@@ -339,4 +339,51 @@ public sealed class RawFactoryAttachTests
         Assert.Throws<InvalidOperationException>(() => factory.Take(80u, sid));
         Assert.Equal(74, pool.RawSlot(sid)[RawSidPool.TypeOffset]);
     }
+
+    /// <summary>약화 전역 공유 관문을 확인한다. 묶은 상자가 생성자 값을 덮어쓴다. 2026-11-07 F2d 공장 약화 공유 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindWeakenedManaGuards()
+    {
+        (RawSidPool _, List<OriginalTypeRecord> _, RawSquidFactory factory) = Scene();
+        // 미연결이면 생성자 값(false)을 쓴다
+        Assert.False(factory.CurrentWeakenedMana());
+        Assert.Throws<ArgumentNullException>(() => factory.BindWeakenedMana(null!));
+        var box = new BoolBox { Value = true };
+        factory.BindWeakenedMana(box);
+        Assert.True(factory.CurrentWeakenedMana());
+        // 같은 상자 재연결은 허용한다
+        factory.BindWeakenedMana(box);
+        // 다른 주소 재연결은 거부한다
+        Assert.Throws<ArgumentException>(() => factory.BindWeakenedMana(new BoolBox { Value = true }));
+        // 상자 값을 바꾸면 현재값도 바뀐다
+        box.Value = false;
+        Assert.False(factory.CurrentWeakenedMana());
+    }
+
+    /// <summary>묶은 약화 상자가 사제 HP 1/4 규칙에 반영된다. 2026-11-07 F2d 공장 약화 공유 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindWeakenedManaRoutesPostCreate()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Types188();
+        types[158].Flags1 = OriginalTypeRecord.HasHitPoints;
+        types[158].MaxHitPoints = 1001;
+        var factory = new RawSquidFactory(pool, types);
+        // 미연결이면 생성자 값(false)이라 전체 HP다
+        Assert.Equal(1001, BitConverter.ToInt32(pool.Slot(factory.Create(158u)).Slice(26, 4)));
+        var box = new BoolBox { Value = true };
+        factory.BindWeakenedMana(box);
+        // 묶은 true는 1001 / 4 = 250 (0 쪽 절삭)이다
+        Assert.Equal(250, BitConverter.ToInt32(pool.Slot(factory.Create(158u)).Slice(26, 4)));
+        box.Value = false;
+        Assert.Equal(1001, BitConverter.ToInt32(pool.Slot(factory.Create(158u)).Slice(26, 4)));
+        // 생성자 true도 묶은 false가 덮어쓴다
+        var pool2 = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types2 = Types188();
+        types2[158].Flags1 = OriginalTypeRecord.HasHitPoints;
+        types2[158].MaxHitPoints = 1001;
+        var factory2 = new RawSquidFactory(pool2, types2, weakenedMana: true);
+        factory2.BindWeakenedMana(new BoolBox { Value = false });
+        Assert.Equal(1001, BitConverter.ToInt32(pool2.Slot(factory2.Create(158u)).Slice(26, 4)));
+    }
 }
