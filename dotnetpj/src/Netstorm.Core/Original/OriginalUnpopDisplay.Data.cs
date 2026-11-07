@@ -1,5 +1,5 @@
 // 이 파일은 dotnetpj/tools/gen_original_unpop_vtables.py 가 만든다. 직접 고치지 말고 도구를 다시 실행한다.
-// 입력(cpppj, 읽기 전용): UnpopVtables.inc sha256=118ba9490b81c09f9a3ee5154917a5fa83cdbd7b3f3098bb433669961d31ca0b
+// 입력(cpppj, 읽기 전용): UnpopVtables.inc sha256=70042228d64736a46ecad61f8d0c944e8f2cab6ed605bf0e2289bb72aec98384
 // 10.78 몫과 CD 10.72 몫(kCdDisplayVtables)을 함께 옮겼다. 결과는 원본 기계어 기대값 unpop-vtables.tsv 로 검사한다 (W02 Unpop 조각, 2026-10-16. CD 표는 F2c-11, 2026-11-04).
 namespace Netstorm.Core.Original;
 
@@ -74,7 +74,7 @@ public static partial class OriginalUnpopDisplay
         new(0x0050C3B0, 0),
         new(0x0050C9F0, 0),
         new(0x0050CC08, 0),
-        new(0x0050DA88, 1),
+        new(0x0050DA88, 3),
         new(0x0050DB78, 3),
         new(0x0050DC30, 3),
         new(0x0050E568, 3),

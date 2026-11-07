@@ -244,8 +244,9 @@ public sealed class X86RawUnpopTests
             uint mask = X86Fixture.UInt(row[5]);
             uint alternate = X86Fixture.UInt(row[3]);
             bool vortex = Array.IndexOf(VortexAlternates, alternate) >= 0;
+            bool geyser = vtable == 0x50DA88 && alternate == 0x4854B0;
             return OriginalUnpopDisplay.Supports(vtable, 0) == ((mask & 1) != 0)
-                && OriginalUnpopDisplay.Supports(vtable, OriginalUnpopDisplay.VortexFlag) == (((mask & 2) != 0) || vortex);
+                && OriginalUnpopDisplay.Supports(vtable, OriginalUnpopDisplay.VortexFlag) == (((mask & 2) != 0) || vortex || geyser);
         });
         Assert.False(OriginalUnpopDisplay.Supports(0, 0));
         Assert.False(OriginalUnpopDisplay.Supports(0x12345678, OriginalUnpopDisplay.VortexFlag));

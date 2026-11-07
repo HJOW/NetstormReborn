@@ -12,18 +12,18 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-04, 단위 기록 0.154 기준)
+### 0.1 현재 값 (2026-11-07, 단위 기록 0.155 기준)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **작업 진행 중.** 전체 목표는 미완료다. 최근 단위는 0.154(F2c-11)다. |
-| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-11 완료, F2c 나머지·F2d·F3 미착수). R5 이후는 미착수 |
+| 진행 상태 | **작업 진행 중.** 전체 목표는 미완료다. 최근 단위는 0.155(F2c-12)다. |
+| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12 완료, F2c 나머지 `RawFortWorldLoadBinding`·F2d·F3 미착수). R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.154(F2c-11 섬 목록·단일 배치·군집·게임 보조·Notify) `3a9a741c / 20261104-24 DN`, 해시 기록 `ee69e4a4 / 20261104-25 DN`. |
-| 검사 | 0.154에서 Release 전체 **Core 1,243개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0. PORT_MAP 무결성 2개와 fixture 목록 검사도 통과했다. 서로 다른 프로젝트 값이며 한 번의 `sln` 전체 실행 합계가 아니다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 단위별 집중 검사·변이 검사 수는 0.154 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
-| 포트 맵 | `PORT_MAP.tsv` 467행 (L1 263, port 204). 0.154에서 8행을 더하고 9행의 기준을 올렸다. 단위별 증가 내역은 이관 파일에 있다. |
-| fixture | 연결 203개. 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
+| 마지막 구현 커밋 | 0.155(F2c-12 Canon 디코더·섬 빌더/배치/검색·Fort 월드 적재 부모 및 UnpopVtables 동기화) 커밋 직전(이전: 0.154 `3a9a741c / 20261104-24 DN`, 해시 기록 `ee69e4a4 / 20261104-25 DN`). |
+| 검사 | 0.155에서 Release 전체 **Core 1,261개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0. PORT_MAP 무결성 2개와 fixture 목록 검사도 통과했다. 서로 다른 프로젝트 값이며 한 번의 `sln` 전체 실행 합계가 아니다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 단위별 집중 검사·변이 검사 수는 0.154~0.155 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
+| 포트 맵 | `PORT_MAP.tsv` 483행 (L1 273, port 210). 0.155에서 16행을 더하고 1행(`UnpopVtables.inc`)의 기준을 올렸다. 단위별 증가 내역은 이관 파일에 있다. |
+| fixture | 연결 207개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.154는 HEAD `da27e191`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규·상향 행만 HEAD). cpppj 현재 값은 단위861/표시 11.01(`0c06fa66`)이며 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한다. |
 
@@ -186,8 +186,8 @@
     - [x] F1 타입 표·`.type` 파서·`FortTemplate.Parse`(0.137에서 작성, 0.138에서 첫 실행·전체 재확인·변이·PORT_MAP L1로 확정)
     - [x] F2a Money·Meta 로더(0.139), F2b TypeNames·Deck·Contents·Subscriber 적재(0.140)
     - [x] F2c-1 Territory·팔레트(0.141), F2c-2 객체 적재 본체(0.142), F2c-3 객체 스트림·Meta ContentsHooks(0.143)
-    - [x] F2c-4~F2c-8 저장 모듈 14종·`ChunkMap`·FinishOwner(0.144~0.148), F2c-9 변환 저장소(0.149), F2c-10 AddRandom 부모·입력(0.153), F2c-11 섬 목록·단일 배치·군집·게임 보조·Notify(0.154)
-    - [ ] F2c 나머지: `RawFortWorldLoad`·`RawFortWorldLoadBinding`·`MakeFortWorldChildrenHooks`(R4 지형 `RawIslandBuilder` 계열 필요)
+    - [x] F2c-4~F2c-8 저장 모듈 14종·`ChunkMap`·FinishOwner(0.144~0.148), F2c-9 변환 저장소(0.149), F2c-10 AddRandom 부모·입력(0.153), F2c-11 섬 목록·단일 배치·군집·게임 보조·Notify(0.154), F2c-12 Canon 디코더·섬 빌더/배치/검색·Fort 월드 적재 부모(`CanonDecoder`·`CanonTypeDecoder`·`RawCheckingFlag`·`RawIslandBuilder`·`RawIslandPlacement`·`RawIslandQueries`·`RawFortWorldLoad`·`MakeFortWorldChildrenHooks`, 0.155)
+    - [ ] F2c 나머지: `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요)
     - [ ] F2d: World·저장 나머지
     - [ ] F3: `RawCampaignSession` 연결. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS·F 단계만으로는 화면 변화가 거의 없다.
   - 0.5 R4의 나머지 범위
@@ -234,6 +234,14 @@
 - **변이 검사:** 대표 6종 중 **5종을 검출**하고 **1종을 등가**로 판정했다(M1 섬 목록 모드 분기 제거 → 4개 실패로 검출, M2 지역 비교 반전 → 3개 실패로 검출, M3 탐색기 CD 매립 위치 patch 회귀 → CD만 실패로 검출, M4 생성자 CD 기본 가상 표 patch 회귀 → CD만 실패로 검출, M5 Pop 표시 CD 표 patch 회귀 → CD 1개 실패로 검출). M2 첫 시도(덩어리 좌표 `/16`→`/8`)는 균일 기록에서 관측이 같아 등가로 판정했다. 개발 중 검사 입력 오류 4건도 대조가 잡아 고쳤다. (1) 효과 기록 `text += ':' + value`의 문자 덧셈(콜론 누락, 효과 adler 불일치). (2) 같은 패턴의 바뀐 슬롯 번호 표기(`number + ':'`, 번호+58·콜론 누락). (3) 생성 슬롯 사전 확보 부족(10000번까지만 확보해 두 번째 생성부터 미할당 실패 → 고객 영역 끝까지 확보). (4) 신규 직접 검사의 번호 착각(새 풀의 첫 할당은 5번인데 50번으로 적음, 기존 검사 3건을 함께 바꾸었다가 되돌림). 별도 사본 운전은 쓰지 않고, 위 6종을 수동으로 제품·검사 빌드 뒤 `--no-build` 집중 실행으로 확인했다(각 변이는 실패로 검출 후 원복, 원복 뒤 집중 41개 통과를 재확인하고 전체 1,243개 통과를 최종 확인했다).
 - **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 보호 원본은 새 검사가 읽기만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리에서 다른 세션이 cpppj를 수정·커밋 중이었고(작업 중 `21cf8caf`→`da27e191`, ritual·Take 계열) 이 단위는 HEAD의 F2c-11 파일만 읽었으며 그 파일들에 변경은 없었다(`git log`로 확인). `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. `cpp_sync.py --update --add`로 fixture 3개를 등록했고, `--ports`는 시간 초과로 직접 기준을 확인했다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규·상향 행의 기준만 HEAD).
 - **남은 것:** F2c 나머지(`RawFortWorldLoad`·`RawFortWorldLoadBinding`, R4 지형 `RawIslandBuilder` 계열 필요)·F2d(World·저장 나머지)·F3 `RawCampaignSession` 연결부터다. **이월한 판본 분기 잔여(원문 근거는 있으나 이 단위 fixture·검사에서 관측되지 않아 두었다):** `RawSquidFactory.Take`·`PostCreate`의 나머지 CD 분기(당일 cpppj 98651032 Take 재작업과 함께 볼 것), `RawPop`의 무효 void CD throw·겹침 CD 항상 쓰기, `RawUnpop`의 추가 비트 CD 위치, `RawPostPop`·`RawUnpop`의 표시 지원 판본 overload 연결, `RawSquidFinder` 발자국 원문 조건(이 단위에서 기존 검사와 충돌 확인), `RawPathSearch` 전체·`RawCanonPlacementPipeline`·`MakeFortRandomPlacementHooks`(R6).
+
+### 0.155 단위 기록 — F2c-12 Canon 디코더·섬 빌더/배치/검색·Fort 월드 적재 부모 및 UnpopVtables 동기화 (2026-11-07)
+
+- **범위:** Canon 디코더 3종(`RawCheckingFlag`·`CanonDecoder`·`CanonDecoderTables`·`CanonTypeDecoder`), 섬 빌더/배치/검색 3종(`RawIslandBuilder`·`RawIslandPlacement`·`RawIslandQueries`), Fort 월드 적재 부모 1종(`RawFortWorldLoad`·`MakeFortWorldChildrenHooks`), `OriginalUnpopDisplay.Data.cs` 동기화(`0x0050da88U` 마스크 `1`→`3`), cpp 검사 직역 5종(`CanonTypeDecoderTests` 6개·`IslandBuilderTests` 4개·`IslandPlacementTests` 2개·`IslandQueriesTests` 3개·`FortWorldLoadTests` 3개) 및 기존 `X86RawUnpopTests.DisplaySupportTableMatchesOriginalVtables` 갱신. `RawFortWorldLoadBinding`은 `RawNormalTerrainWorldBinding`·`RawSurfaceWorld`가 필요해 제외했다.
+- **구현(새 파일 8개, 모두 `Netstorm.Core/Original`):** `RawCheckingFlag.cs`(`RawCheckingFlagState`), `CanonDecoder.cs`(8×8 섹션 마스크 디코더·`CreateCanonDecoder`·`DecodeCanonMask`), `CanonDecoderTables.Data.cs`(64×15 압축 표와 오프셋 표), `CanonTypeDecoder.cs`(타입별 마스크·범위·`DecodeTypeCanonFootprint`·`ApplyTypeCanonToEntry`·27개 생성자 패턴 표), `RawIslandBuilder.cs`(원본 112바이트 `Islandbuilder`·`Initialize`·`PlaceLoadedPiece`·`PlaceTerrainPiece`·`FillPieceHashes`·`MakeLoadedIslandBuilderHook`), `RawIslandPlacement.cs`(`PlaceIslandOnSurface`·`PlaceLoadedIslandAt`·`MakeIslandPlacementBuilderHooks`), `RawIslandQueries.cs`(`NotFound=127`·`FindIslandInBox`·`FindIslandAtPoint`·`FindNearestIsland`·`FindEmptyIslandSlot`·`SetIslandSpotFlags`·`ClearIslandSpotFlags`·`FindBattleSpotInIsland`), `RawFortWorldLoad.cs`(`LoadFortWorld`·`LoadFortWorldChildren`·`MakeFortWorldChildrenHooks`). **기존 파일 수정 2개:** `OriginalUnpopDisplay.Data.cs`(`gen_original_unpop_vtables.py` 재생성), `X86RawUnpopTests.cs`.
+- **검증:** 집중 19건 통과(`CanonTypeDecoderTests` 6개: `canontype-x86.tsv` 3927행·`canon-decoder-checking-x86.tsv` 156행 + 직접 4개, `IslandBuilderTests` 4개: `islandbuilder-x86.tsv` 1156행 패치/CD + 직접 2개, `IslandPlacementTests` 2개: `island-placement-x86.tsv` 4896행 패치/CD, `IslandQueriesTests` 3개: `islandqueries-x86.tsv` 8490행 + 직접 1개, `FortWorldLoadTests` 3개: `fortworldload-x86.tsv` 534행 + 직접 1개, `DisplaySupportTableMatchesOriginalVtables` 1개). fixture 6개를 링크·등록했다(총 207개, `cpp_sync.py` 0종료). 변이 검사로 `RawIslandQueries.NotFound`(`127u`→`126u`) 변이 시 `IslandQueriesTests` 3개 모두 실패로 검출됨을 확인하고 원복했다. Release 전체 **Core 1,261개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0.
+- **PORT_MAP:** 신규 16행(`CanonDecoder` 3행·`CanonTypeDecoder` 3행·`Islandbuilder` 2행·`RawCheckingFlag.h` 1행·`RawFortWorldLoad` 2행·`RawIslandBuilder` 2행·`RawIslandPlacement` 2행·`RawIslandQueries` 2행 중 L1 10행·port 6행), 기존 1행(`UnpopVtables.inc` → `fbc27346564e5245d36c00e0b151777204a22efe`) 기준 상향. 총 483행(L1 273, port 210).
+- **남은 것:** R4 섬·지형 본체(`TerrainBuilder`·`RawSquidRegion`·`RawFrameChoose`·`RawTerrain*`·`RawIslandLifecycle`·`RawIslandPostPop`·`RawIslandPopulation`·`RawIslandAdd`·`RawFortPriestPreparation`·`RawBattleIsland`·`RawCentralIsland`·`RawIslandPartition`·`RawCanonPlacementTerrain`·`RawPriestPlacementTerrain`)와 `RawNormalTerrainWorldBinding`·`RawFortWorldLoadBinding`·F2d(World·저장 나머지)·F3 `RawCampaignSession` 연결.
 
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 

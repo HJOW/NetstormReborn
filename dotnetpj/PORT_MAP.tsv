@@ -257,6 +257,12 @@ cpppj/src/client/VFXTransform.h	Netstorm.Client/Display/VfxTransform.cs	ca0c01eb
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeDecayRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeSurfaceRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/BridgeFrameSearch.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/CanonDecoder.cpp	Netstorm.Core/Original/CanonDecoder.cs	167866d9c40cc4b5d6260ceb11934b4a2a218177	L1
+cpppj/src/o/CanonDecoder.h	Netstorm.Core/Original/CanonDecoder.cs	167866d9c40cc4b5d6260ceb11934b4a2a218177	L1
+cpppj/src/o/CanonDecoderTables.inc	Netstorm.Core/Original/CanonDecoderTables.Data.cs	f7135706b78d40c3d46611b639247e80e1299cec	L1
+cpppj/src/o/CanonTypeDecoder.cpp	Netstorm.Core/Original/CanonTypeDecoder.cs	167866d9c40cc4b5d6260ceb11934b4a2a218177	L1
+cpppj/src/o/CanonTypeDecoder.h	Netstorm.Core/Original/CanonTypeDecoder.cs	167866d9c40cc4b5d6260ceb11934b4a2a218177	L1
+cpppj/src/o/CanonTypePatterns.inc	Netstorm.Core/Original/CanonTypeDecoder.cs	3c570b27018c9131aff5aa413486340c5c582c4a	L1
 cpppj/src/o/ChunkMap.cpp	Netstorm.Core/Original/RawChunkMap.cs	a8f87f6223e70e11d2f17b1cf0e6bb32258df766	port
 cpppj/src/o/ChunkMap.h	Netstorm.Core/Original/RawChunkMap.cs	a8f87f6223e70e11d2f17b1cf0e6bb32258df766	port
 cpppj/src/o/Config.cpp	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492ab5dc969361f25c51	L1
@@ -288,6 +294,7 @@ cpppj/src/o/RawBuildingSpace.cpp	Netstorm.Core/Original/RawBuildingSpace.cs	f95a
 cpppj/src/o/RawCanonPlacement.h	Netstorm.Core/Original/RawFortRandomPlacement.cs	da27e191b1459279170608224c4f60fdd84c3343	port
 cpppj/src/o/RawCarrierPostPop.cpp	Netstorm.Core/Original/RawCarrierPostPop.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawCarrierPreDestroy.cpp	Netstorm.Core/Original/RawCarrierPreDestroy.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawCheckingFlag.h	Netstorm.Core/Original/RawCheckingFlag.cs	8b467ca03249dbc963ceaf8efdd35fa6e26986b7	L1
 cpppj/src/o/RawColorSortPrimary.cpp	Netstorm.Core/Original/RawColorSortPrimary.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/o/RawColorSortPrimary.h	Netstorm.Core/Original/RawColorSortPrimary.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/o/RawColorSortStartup.cpp	Netstorm.Core/Original/RawColorSortStartup.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	L1
@@ -381,9 +388,17 @@ cpppj/src/o/RawFortTerritorySave.cpp	Netstorm.Core/Original/RawFortTerritorySave
 cpppj/src/o/RawFortTerritorySave.h	Netstorm.Core/Original/RawFortTerritorySave.cs	a8f87f6223e70e11d2f17b1cf0e6bb32258df766	L1
 cpppj/src/o/RawFortTypeNamesLoad.cpp	Netstorm.Core/Original/RawFortTypeNamesLoad.cs	be8f80f909787e5304bce1b926596031a452c71f	L1
 cpppj/src/o/RawFortTypeNamesLoad.h	Netstorm.Core/Original/RawFortTypeNamesLoad.cs	be8f80f909787e5304bce1b926596031a452c71f	L1
+cpppj/src/o/RawFortWorldLoad.cpp	Netstorm.Core/Original/RawFortWorldLoad.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
 cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	860030e73e9e11599c89334b2e6ab4b0c6e1702d	port
+cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/RawFortWorldLoad.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	da27e191b1459279170608224c4f60fdd84c3343	port
 cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	73506bcbedac557bfd132e68524f772123f245d2	L1
+cpppj/src/o/RawIslandBuilder.cpp	Netstorm.Core/Original/RawIslandBuilder.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
+cpppj/src/o/RawIslandBuilder.h	Netstorm.Core/Original/RawIslandBuilder.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
+cpppj/src/o/RawIslandPlacement.cpp	Netstorm.Core/Original/RawIslandPlacement.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
+cpppj/src/o/RawIslandPlacement.h	Netstorm.Core/Original/RawIslandPlacement.cs	7711020e09df060e58e6b619cc95929d7c0f4ae6	L1
+cpppj/src/o/RawIslandQueries.cpp	Netstorm.Core/Original/RawIslandQueries.cs	5b10ce8238c60d5fef8d4addbf2753f93276ba66	L1
+cpppj/src/o/RawIslandQueries.h	Netstorm.Core/Original/RawIslandQueries.cs	5b10ce8238c60d5fef8d4addbf2753f93276ba66	L1
 cpppj/src/o/RawIslandRuntime.cpp	Netstorm.Core/Original/RawIslandRuntime.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawIslandRuntime.h	Netstorm.Core/Original/RawIslandRuntime.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawMemStream.cpp	Netstorm.Core/Original/RawMemStream.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
@@ -467,6 +482,7 @@ cpppj/src/o/Template.h	Netstorm.Core/Original/FortTemplateRecords.cs	c2d292277d8
 cpppj/src/o/TypeConstructors.inc	Netstorm.Core/Original/OriginalConstructors.Data.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/TypeLoadOrder.cpp	Netstorm.Core/Original/RiftTypeLoadOrder.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/o/TypeParser.cpp	Netstorm.Core/Original/RiftTypeDefinition.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
+cpppj/src/o/UnpopVtables.inc	Netstorm.Core/Original/OriginalUnpopDisplay.Data.cs	fbc27346564e5245d36c00e0b151777204a22efe	L1
 cpppj/src/platform/Bitmap.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
 cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
