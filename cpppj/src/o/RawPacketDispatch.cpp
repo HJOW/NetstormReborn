@@ -17,7 +17,18 @@ RawPacketDispatch::RawPacketDispatch(OriginalEdition edition,PacketDispatchHooks
 // 등록표만 공유하며 실제 분배의 시계/record/close/free는 backend 고유 장치를 사용한다.
 const std::shared_ptr<PacketRegistrationTable>& RawPacketDispatch::Registrations() const { return registrations_; }
 void RawPacketDispatch::CheckType(std::uint32_t type) const { if (!type || type>lastType_) throw std::out_of_range("패킷 등록 타입 범위 오류"); }
-void RawPacketDispatch::Register(std::uint32_t type,decltype(PacketRegistration::receive) receive) { CheckType(type);registrations_->Touch(type);registrations_->entries_[type].receive=std::move(receive); }
+void RawPacketDispatch::Register(std::uint32_t type,decltype(PacketRegistration::receive) receive) { CheckType(type);registrations_->Touch(type);auto& entry=registrations_->entries_[type];entry.receive=std::move(receive);entry.directReceive={}; } // 일반 재등록도 같은 이전 nullable 수신기를 제거한다.
+void RawPacketDispatch::RegisterDirect(std::uint32_t type,decltype(PacketRegistration::directReceive) receive) {
+    CheckType(type);if (!receive) { registrations_->Touch(type);auto& entry=registrations_->entries_[type];entry.receive={};entry.directReceive={};return; }
+    const auto shared=std::make_shared<decltype(receive)>(std::move(receive)); // 두 입구가 mutable callable의 같은 실제 상태를 사용하며 dispatch 객체 this를 빌리지 않는다.
+    decltype(PacketRegistration::directReceive) direct=[shared](auto sender,auto* connection,auto packet) { (*shared)(sender,connection,packet); };
+    decltype(PacketRegistration::receive) framed=[shared](auto sender,auto& connection,auto packet) { (*shared)(sender,&connection,packet); };
+    registrations_->Touch(type);auto& entry=registrations_->entries_[type];entry.directReceive=std::move(direct);entry.receive=std::move(framed); // 모든 할당을 준비한 뒤 같은 lease/등록을 noexcept 이동으로 교체한다.
+}
+void RawPacketDispatch::InvokeDirect(std::uint32_t type,std::uint32_t sender,PacketConnection* connection,std::span<const std::uint8_t> packet) const {
+    CheckType(type);const auto& entry=registrations_->entries_[type];if (!entry.receive && !entry.directReceive) return;const auto pin=entry.Pin();const auto direct=entry.directReceive;
+    if (direct) { direct(sender,connection,packet);return; }const auto receive=entry.receive;if (!connection) throw std::invalid_argument("NULL 연결을 지원하지 않는 일반 수신기 직접 호출");if (receive) receive(sender,*connection,packet);
+}
 void RawPacketDispatch::Observe(std::uint32_t type,decltype(PacketRegistration::observer) observer) { CheckType(type);registrations_->Touch(type);registrations_->entries_[type].observer=std::move(observer);registrations_->entries_[type].packetObserver={}; }
 // 두 호스트 표현은 같은 원문 슬롯이므로 새 등록이 이전 장치를 완전히 교체한다.
 void RawPacketDispatch::ObservePacket(std::uint32_t type,decltype(PacketRegistration::packetObserver) observer) { CheckType(type);registrations_->Touch(type);registrations_->entries_[type].packetObserver=std::move(observer);registrations_->entries_[type].observer={}; }

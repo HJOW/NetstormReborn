@@ -1,0 +1,85 @@
+{
+  "unit": 1070,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "relayFinalExitCode": 0,
+    "registrationFinalExitCode": null,
+    "registrationFinalStatus": "로그에 최종 EXE 링크 완료, 산출물이 최종 소스보다 최신, 관련 빌드 프로세스 없음. 도구 응답 유실로 종료코드는 직접 관측하지 못함",
+    "warningsInLogs": 0,
+    "errorsInLogs": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "8a1274af6f685cf985019160b446f65740f9e0cac31f61a354040219e8dc36b6"
+  },
+  "nativeAudit": {
+    "scope": "정적 원문/기계어·제품 접합 검토이며 실행 검사가 아니다",
+    "sources": {
+      "relay": "00474b00 / relay.asm:00474b6d,6e,70,72 = push packet/0/0/call current receiver",
+      "rootPost": "00474ce0 = Root 모드 진단358 후 반환",
+      "change": "00476070 = exit/negative sender/zone/current flags1/remote update/Root post",
+      "mirror": "00456f80 = leave first subscriber0..39 or join first free1..39/NULL name/current defaults/flags0/level",
+      "constructor": "0044c7b0 = 공유188BYTE 생성자; 기존1069 원문",
+      "initialDefaults": "PE 로더0 + 004ba0c0/4b900/4b930 memset10,004ba570/443ee0 무변경,004ba7b0/44860 identity6 초기화"
+    },
+    "sameRegistration": {
+      "nullableAndFramedShareCallable": true,
+      "allocationsBeforeTouch": true,
+      "ordinaryRegisterClearsDirect": true,
+      "ownerPinned": true,
+      "separateReceiverTable": false,
+      "fakeConnection": false,
+      "directAddsFrameValidationOrObserverOrRecordOrClockOrDepth": false
+    },
+    "productIntegration": [
+      "CMake netstorm 실제 소스",
+      "Root2h/16h/17h/1Ch 같은 등록표 nullable receiver",
+      "로컬 로그인/원격 요약 같은 참가자 생성자",
+      "Root Relay가 현재 일반1번 또는 현재 실제 receiver 선택",
+      "폐기7f/80h 직접 경로 제외"
+    ],
+    "unbound": [
+      "새R.exe 프로세스 owner가 각 Install/Relay와 ChallengeRuntime hook을 최종 연결하는 호출",
+      "공유 파일/표·주소·시계/기록·보조 객체·나머지 Root/CS 수신/입력"
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "rootRelayAnd17ReceiverImplemented": true,
+    "sameParticipantConstructor": true,
+    "rootPostIsNativeAssertionAndReturn": true,
+    "mirrorDefaultsRemainMutable": true,
+    "rootExeTargetExists": false,
+    "rootRuntimeInstallsOrCallsNewRouting": false,
+    "fileLoadersImplemented": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "dns": 0,
+    "fileWriteByNewRuntime": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "공유 blacklist/marked/IP/filter·guild/guildreq/news 실제 로더와 사용자 홈 저장/주소 서식·해석",
+    "나머지 Root/CS 수신·전투 입력·시계/기록/보조 객체·새R.exe 전체 초기화/최종 owner와 실제 호출",
+    "클라이언트0F 존47/서버3BYTE·0F/1d 수신·메타/OS launch·LAN/Outpost/checking5·한국어 후속/Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

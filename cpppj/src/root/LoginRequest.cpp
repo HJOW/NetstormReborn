@@ -31,7 +31,7 @@ void LoginRequest::Observe(std::span<std::uint8_t> packet,std::uint32_t sending)
 }
 void LoginRequest::Install() {
     auto& dispatch=transport_.PacketHandlers();dispatch.ObservePacket(0x1c,[this](auto packet,auto sending) { Observe(packet,sending); });dispatch.Version(0x1c,1,0);dispatch.RequireLength(0x1c,0xffff);
-    dispatch.Register(0x1c,[this](auto sender,auto& connection,auto packet) { Receive(std::bit_cast<std::int32_t>(sender),connection,packet); }); // 현재 수신 노드의 깊이 대여 안에서만 소켓 이전/기존 노드 닫힘을 수행한다.
+    dispatch.RegisterDirect(0x1c,[this](auto sender,auto* connection,auto packet) { if (!connection) throw std::out_of_range("R1Ch 실제 연결 주소의 원문 NULL 읽기 거부");Receive(std::bit_cast<std::int32_t>(sender),*connection,packet); }); // 현재 수신 노드의 깊이 대여 안에서만 소켓 이전/기존 노드 닫힘을 수행한다.
 }
 void LoginRequest::Receive(std::int32_t sender,o::PacketConnection& connection,std::span<const std::uint8_t> request) {
     if (state_.exitRequested) { Need(transport_.Lifecycle().exit)(0);throw std::logic_error("R1Ch _exit 장치가 복귀했습니다"); }

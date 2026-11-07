@@ -57,7 +57,7 @@ ConnectionHooks TransceiverTransport::Lifecycle() {
     result.endParticipant=hooks_.endParticipant;result.exit=hooks_.exit;return result;
 }
 void TransceiverTransport::InstallTerminationReceiver() { // 실제 Root 초기화가 선택한 위치에서만75170을 등록한다.
-    dispatch_.Register(2,[this](auto sender,auto&,auto) { ReceiveConnectionEnded(connections_,std::bit_cast<std::int32_t>(sender),Lifecycle()); });
+    dispatch_.RegisterDirect(2,[this](auto sender,auto*,auto) { ReceiveConnectionEnded(connections_,std::bit_cast<std::int32_t>(sender),Lifecycle()); });
 }
 o::PacketDispatchHooks TransceiverTransport::DispatchHooks() {
     o::PacketDispatchHooks result;result.now=[this] { return Need(hooks_.now)(); };result.record=[this](auto& connection,auto packet,auto length) { Need(hooks_.record)(false,connection,packet,length); };

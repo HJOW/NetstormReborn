@@ -1,18 +1,12 @@
 // CCh 참가자/전투의 실제 필드 초기화와 종료 시 master 재선택을 복원한다.
 #include "root/ChallengeDetail.h"
-#include <ctime>
+#include "root/ParticipantState.h"
 
 namespace netstorm::root { // 같은 raw 참가자/전투와 실제 송신만 사용한다.
 using namespace challenge_detail; // 지정 폭의 실제 필드 쓰기를 공유한다.
 void ChallengeRuntime::InitializePlayer(std::uint32_t challenge,std::uint32_t participant,std::span<const std::uint8_t> request) {
-    auto player=Player(challenge,participant);Put(player,0,participant);Put(player,4,Read(request,11));const auto name=Text(request,46);if (name.size()+1>40) throw std::out_of_range("R 참가자 이름의 실제40BYTE 범위");PutText(player,0x26,name);
-    constexpr std::string_view remove=".?=()[]~\"`;: "; // PE004cd528의 원문 제거 문자 집합이다.
-    std::size_t at=0x26;
-    while (player[at]) { //0044c8e0처럼 원문 이름 영역에서 겹침 이동하며 끝 이후 기존 바이트를 보존한다.
-        if (remove.find(static_cast<char>(player[at]))==std::string_view::npos) { ++at;continue; }const auto tail=Text(player,at);std::memmove(player.data()+at,player.data()+at+1,tail.size());
-    }
-    player[at]=0;Put(player,0x6c,static_cast<std::uint32_t>(std::clock()));Put(player,0x70,0);Put(player,0x74,0,1);Copy(player,0x4e,request.subspan(20,6));Copy(player,0x54,request.subspan(26,10));Put(player,0x64,((Read(request,37)&0x1b00U)|1U)&~0x200U);
-    const auto point=challenges_.Geometry().grid.at(participant);Put(player,0x9c,std::bit_cast<std::uint32_t>(point[0]));Put(player,0xa0,std::bit_cast<std::uint32_t>(point[1]));Put(player,0xa4,0);Put(player,0xa8,0);
+    auto player=Player(challenge,participant);const auto name=Text(request,46);std::array<std::uint8_t,8> position;const auto point=challenges_.Geometry().grid.at(participant);Put(position,0,std::bit_cast<std::uint32_t>(point[0]));Put(position,4,std::bit_cast<std::uint32_t>(point[1]));
+    InitializeParticipant(player,participant,Read(request,11),std::optional<std::string_view>{std::string_view{name}},std::span<const std::uint8_t,6>(request.data()+20,6),std::span<const std::uint8_t,10>(request.data()+26,10),position,Read(request,37)); // Root 요약과 같은 실제 생성자를 사용한 뒤 로컬 로그인 후속 필드만 쓴다.
     if (Need(hooks_.markedSubscriber)(Read(request,11))) Put(player,0x74,1,1);const auto connection=ChallengeDirectoryView(challenges_.Bytes(challenge)).Transceiver(participant);const auto address=Need(hooks_.addressText)(transport_.Connection(connection).address,false);if (address.size()+1>30) throw std::out_of_range("R 참가자 주소의 실제30BYTE 범위");PutText(player,8,address);
     Put(player,0xb0,Read(request,4,2),2);Put(player,0xb2,Read(request,6,2),2);Put(player,0xac,Read(request,10,1));Put(player,0xb4,Read(request,8,2),2);Put(player,0x5e,Read(request,36,1),1);
 }

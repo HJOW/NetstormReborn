@@ -60,7 +60,7 @@ void RootDirectory::Observe(std::span<std::uint8_t> packet,std::uint32_t sending
 void RootDirectory::Install() {
     auto& dispatch=transport_.PacketHandlers();dispatch.ObservePacket(0x16,[this](auto packet,auto sending) { Observe(packet,sending,false); });dispatch.Version(0x16,1,0);dispatch.RequireLength(0x16,0xffff);
     dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { Observe(packet,sending,true); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
-    dispatch.Register(0x16,[this](auto sender,auto&,auto packet) { Receive(std::bit_cast<std::int32_t>(sender),packet); }); // 현재 수신 노드의 깊이 대여 안에서만 응답/guard를 수행한다.
+    dispatch.RegisterDirect(0x16,[this](auto sender,auto*,auto packet) { Receive(std::bit_cast<std::int32_t>(sender),packet); }); // 현재 수신 노드의 깊이 대여 안에서만 응답/guard를 수행한다.
 }
 void RootDirectory::Receive(std::int32_t sender,std::span<const std::uint8_t> request) {
     if (state_.exitRequested) { const auto hooks=transport_.Lifecycle();if (!hooks.exit) throw std::logic_error("R Root의 실제 종료 장치 누락");hooks.exit(0);throw std::logic_error("R Root의 _exit 장치가 복귀했습니다"); }

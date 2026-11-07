@@ -22,6 +22,7 @@ struct PacketRegistration {
     bool leased{}; // 전역 기본 등록과 Session 대여 등록을 구별한다.
     std::shared_ptr<void> Pin() const; // receiver/observer 호출이 끝날 때까지 실제 참조 모듈을 유지한다.
     std::function<void(std::uint32_t,PacketConnection&,std::span<const std::uint8_t>)> receive; // 처리기(sender,연결,원본 버퍼)다.
+    std::function<void(std::uint32_t,PacketConnection*,std::span<const std::uint8_t>)> directReceive; // R 내부 직접 호출의 실제NULL 연결을 지원한다. 일반 framed receive와 같은 callable 소유자를 공유한다.
     std::function<void(std::uint32_t)> observer; // 집합 패킷에서만 쓰이는 관찰기이며 단일 분배에서는 호출하지 않는다.
     std::function<void(std::span<std::uint8_t>,std::uint32_t)> packetObserver; // 같은 원문 observer 슬롯의 mutable this를 쓰는 장치다. 기존 인자 전용 장치와 동시에 등록하지 않는다.
     void NotifyObserver(std::span<std::uint8_t> packet,std::uint32_t sending) const; // 현재 등록된 한 종류의 observer만 실제 패킷/방향 인자로 호출한다.
@@ -46,6 +47,8 @@ public:
     const std::shared_ptr<PacketRegistrationTable>& Registrations() const; // Local/TCP/Editor가 같은 등록표 owner를 생성 때 공유한다.
     // 각 원본 등록 함수처럼 한 표만 바꾼다. 타입 0/최대 밖 번호는 등록 전에 거부한다.
     void Register(std::uint32_t type,decltype(PacketRegistration::receive) receive);
+    void RegisterDirect(std::uint32_t type,decltype(PacketRegistration::directReceive) receive); // 같은 등록표의 수신기이며 일반 프레임은 실제 연결 주소, 직접 호출은 선택한 nullable 포인터를 전달한다.
+    void InvokeDirect(std::uint32_t type,std::uint32_t sender,PacketConnection* connection,std::span<const std::uint8_t> packet) const; // 원문 함수 포인터 호출처럼 검증/observer·기록/시각/연결 깊이·닫힘을 추가하지 않는다. 등록 owner pin만 유지한다.
     // 해당 타입의 관찰기 표만 바꾼다. 단일 분배는 등록된 관찰기를 호출하지 않는다.
     void Observe(std::uint32_t type,decltype(PacketRegistration::observer) observer);
     void ObservePacket(std::uint32_t type,decltype(PacketRegistration::packetObserver) observer); // 원본 thiscall observer에 실제 mutable packet을 전달하는 동일 슬롯 등록이다.
