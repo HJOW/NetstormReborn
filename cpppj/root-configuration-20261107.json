@@ -1,0 +1,98 @@
+{
+  "unit": 1066,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12365824,
+    "exeSha256": "02e9c176b6906193a85430b7d48e412c54649aa328c38042d9448d3158d24b12"
+  },
+  "scope": [
+    "R004700b0/00470620 시작 설정 탐색/환경 이름·파일 순서와 기존 ConfigInterface::Load 접합",
+    "R00477570 재해석26옵션/R00477950 최초33옵션·PE data/BSS 초기값",
+    "같은 NetworkState 타임아웃/ConnectionState 모드·개수/RootDirectory 옵션 참조·문자열 소유 수명"
+  ],
+  "staticOptionOrderAudit": [
+    {
+      "parent": "Interpret",
+      "address": "00477570",
+      "optionKeys": 26,
+      "orderMatches": true
+    },
+    {
+      "parent": "Startup",
+      "address": "00477950",
+      "optionKeys": 33,
+      "orderMatches": true
+    }
+  ],
+  "initialValues": {
+    "traceLevel": 29,
+    "throwOnAssert": 1,
+    "telnetPort": 6801,
+    "spamTime": 2,
+    "spamCount": 3,
+    "badMajorVersion": 6,
+    "multiLineLimit": 6,
+    "diagnosticTimeout": 90,
+    "keepAliveFrequency": 15,
+    "autoBanCheaters": 1,
+    "legacyLimitPiratesRecordOnly": 1,
+    "otherOptionDwordsBssZero": true
+  },
+  "nativeAudit": {
+    "search": "004cd760의6후보·첫성공 Directory/Device/Format; 전부실패195진단복귀뒤 d\\",
+    "load": "IDENTITY→USER; options/user/dev/setup/demo/guild 경로작성; NULLcmd→10.71문자열→@→identity/user/options/dev/guild/setup 읽기",
+    "callback": "Load직전 저장·명시Interpret1회. Config Set은현재Interpret, InstallDir/CDDir추가Set없음",
+    "allocatedStrings": "빈값이면현재값/NULL보존, _stricmp상동값보존, 변경일때만소유값교체",
+    "mode": "기존InterpretMode의세임시0옵션·현재OR/LAN1/개수마지막+1",
+    "retiredValidation": "legacyLimitPirates는원문옵션기록전용이며외부등록/클라이언트검증소비자0"
+  },
+  "runtime": {
+    "rootConfigurationComponentImplemented": true,
+    "sameConfigInterfaceLoadUsed": true,
+    "sameNetworkStateTimeoutsUsed": true,
+    "rootDirectoryReferencesCurrentOptions": true,
+    "rootExeTargetExists": false,
+    "rootRuntimeCallsStartup": false,
+    "moderationLoaderAndRecordDeviceRequired": true,
+    "settingsPersistenceAndHomeWriteDevicesStillRequired": true
+  },
+  "nativeReferences": [
+    "R004700b0",
+    "R00470620",
+    "R00470da0",
+    "R00470e60",
+    "R00470f20",
+    "R00477570",
+    "R00477950"
+  ],
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "새R.exe/실제 프로세스·CCh 생성/관리·Root/CS나머지 수신·보조 객체/시계/기록/주소 formatter·초기화호출",
+    "실제 moderation/filter/채팅 표 로드·사용자 홈 설정/기록 쓰기 장치",
+    "0Fh 존 항목47/3BYTE 차이·클라이언트0F/1d 수신·메타/OS launch·LAN/Outpost/checking5·한국어 후속/Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
