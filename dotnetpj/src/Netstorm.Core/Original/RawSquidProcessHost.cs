@@ -229,6 +229,40 @@ public sealed class SquidProcessHost
     /// <returns>같은 주소면 참이다.</returns>
     public bool IsRegistered(uint pid, SquidProcess? process) => process is not null && ReferenceEquals(_kernel.Get(pid), process);
 
+    /// <summary>잔류 객체가 실제로 이 Host를 빌리는지 조회하며 PID나 SID를 정규화하지 않는다. 2026-11-07 F2d 프로세스 호스트 잔류 이식에서 추가됐다.</summary>
+    /// <param name="process">확인할 프로세스다.</param>
+    /// <returns>같은 Host면 참이다.</returns>
+    public bool Owns(BaseProcess process)
+    {
+        ArgumentNullException.ThrowIfNull(process);
+        return process is SquidProcess squid && ReferenceEquals(squid.HostLink, this);
+    }
+
+    /// <summary>이것은 월드 최종 반납이며 Native 커널 Clear의 단일 순회를 대신하지 않는다. 독립 월드의 최종 fallback만 자기 현재 대여를 정리하며 이전 Native 잔류는 보존한다. 2026-11-07 F2d 프로세스 호스트 잔류 이식에서 추가됐다.</summary>
+    /// <param name="runtime">정리할 현재 대여다.</param>
+    public void DrainRuntimeBindings(ProcessHostRuntimeBindings? runtime)
+    {
+        _kernel.DrainOwnedForShutdown(candidate =>
+            candidate is SquidProcess process && ReferenceEquals(process.HostLink, this) && ReferenceEquals(process.RuntimeLink, runtime));
+    }
+
+    /// <summary>현재 Host의 잔류 중 C++ Regular 이외 수명은 별도 복원을 요구한다. 표시 타입와 C++ 실행 클래스는 구별한다. 2026-11-07 F2d 프로세스 호스트 잔류 이식에서 추가됐다.</summary>
+    /// <returns>Regular만 남았으면 참이다.</returns>
+    public bool HasOnlyRegularProcesses()
+    {
+        // 단일 현재 표를 읽으며 다른 Host·Client 프로세스를 자기 소유로 판정하지 않는다
+        for (uint id = 1u; id <= _kernel.Capacity(); ++id)
+        {
+            BaseProcess? process = _kernel.Get(id);
+            if (process is not null && Owns(process) && process is not RegularProcess)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /// <summary>실제 가상 34는 server가 아니면 PID조차 읽지 않는다. 정상 현재 PID의 가상 통지만 호출한다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
     /// <param name="watcher">보는 쪽 SID다.</param>
     /// <param name="watched">보이는 쪽 SID다.</param>

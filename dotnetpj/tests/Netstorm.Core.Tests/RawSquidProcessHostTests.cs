@@ -454,4 +454,83 @@ public sealed class RawSquidProcessHostTests
         PutPid(pool, 201, 2u);
         Assert.Throws<InvalidOperationException>(() => host.FormParentDying(201, 77));
     }
+
+    /// <summary>같은 호스트·커널로 잔류 조회 장면을 만든다. 2026-11-07 F2d 프로세스 호스트 잔류 이식에서 추가됐다.</summary>
+    private static (Kernel Kernel, SquidProcessHost Host) ResidualScene()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var kernel = new Kernel(8u);
+        var state = new SquidProcessState();
+        var host = new SquidProcessHost(pool, types, kernel, new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types), state);
+        return (kernel, host);
+    }
+
+    /// <summary>잔류 객체가 실제로 이 Host를 빌리는지 조회한다. 2026-11-07 F2d 프로세스 호스트 잔류 이식에서 추가됐다.</summary>
+    [Fact]
+    public void OwnsPinsLinkedHost()
+    {
+        (Kernel _, SquidProcessHost host) = ResidualScene();
+        var process = new SquidProcess();
+        Assert.False(host.Owns(process));
+        Assert.False(host.Owns(new BaseProcess()));
+        process.HostLink = host;
+        Assert.True(host.Owns(process));
+        var other = new SquidProcessHost(
+            new RawSidPool(RawSurfaceStorage.PoolCapacity),
+            Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList(),
+            new Kernel(8u),
+            new SquidProcessState(),
+            () => null);
+        process.HostLink = other;
+        Assert.False(host.Owns(process));
+        Assert.Throws<ArgumentNullException>(() => host.Owns(null!));
+    }
+
+    /// <summary>현재 Host의 잔류 중 Regular 이외 수명은 거짓이다. 2026-11-07 F2d 프로세스 호스트 잔류 이식에서 추가됐다.</summary>
+    [Fact]
+    public void HasOnlyRegularProcessesGuardsNonRegular()
+    {
+        (Kernel kernel, SquidProcessHost host) = ResidualScene();
+        Assert.True(host.HasOnlyRegularProcesses());
+        var foreign = new RegularProcess(1u, 0f);
+        kernel.Add(foreign);
+        Assert.True(host.HasOnlyRegularProcesses());
+        var owned = new RegularProcess(2u, 0f);
+        owned.HostLink = host;
+        kernel.Add(owned);
+        Assert.True(host.HasOnlyRegularProcesses());
+        var plain = new SquidProcess();
+        plain.HostLink = host;
+        kernel.Add(plain);
+        Assert.False(host.HasOnlyRegularProcesses());
+        kernel.Remove(3u);
+        Assert.True(host.HasOnlyRegularProcesses());
+    }
+
+    /// <summary>독립 월드의 최종 fallback만 자기 현재 대여를 정리한다. 2026-11-07 F2d 프로세스 호스트 잔류 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DrainRuntimeBindingsKeepsForeignResidual()
+    {
+        (Kernel kernel, SquidProcessHost host) = ResidualScene();
+        var runtime = new ProcessHostRuntimeBindings();
+        var owned = new RegularProcess(1u, 0f);
+        owned.HostLink = host;
+        owned.RuntimeLink = runtime;
+        kernel.Add(owned);
+        var foreign = new RegularProcess(2u, 0f);
+        kernel.Add(foreign);
+        var other = new ProcessHostRuntimeBindings();
+        var stray = new RegularProcess(3u, 0f);
+        stray.HostLink = host;
+        stray.RuntimeLink = other;
+        kernel.Add(stray);
+        host.DrainRuntimeBindings(runtime);
+        Assert.Null(kernel.Get(1u));
+        Assert.NotNull(kernel.Get(2u));
+        Assert.NotNull(kernel.Get(3u));
+        Assert.Equal(2, kernel.Size());
+        host.DrainRuntimeBindings(null);
+        Assert.Equal(2, kernel.Size());
+    }
 }
