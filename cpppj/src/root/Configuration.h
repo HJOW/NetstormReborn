@@ -19,7 +19,7 @@ struct Options { // 제공된 R PE data 초기값과 BSS0을 구별한 현재 �
 struct ConfigurationHooks { // 선택된 실제 장치만 요구하며 미연결을 성공한 초기화로 처리하지 않는다.
     std::function<std::optional<std::string>(std::string_view)> environment; // IDENTITY 뒤 USER를 실제 프로세스 환경에서 읽는다.
     std::function<std::uint32_t(std::string_view)> probe; // 정규화한 여섯 setup.cfg 후보의 실제 존재 조회다.
-    std::function<void()> reloadModeration; //00477570 선두의 blacklist/ipban/chatlist/채팅 표·filter 로드를 실제 관리자가 수행한다.
+    std::function<void()> reloadModeration; //00477570 선두의 blacklist/ipban/chatlist/guild/guildreq/filter 로드를 실제 관리자가 수행한다.
     std::function<void(std::string_view)> openRecord; //00482720의 실제 기록 파일 열기다. 사용자 홈 쓰기 정책은 이 장치가 지켜야 한다.
     std::function<void(std::int32_t,std::string_view)> log; // 선택된 원문 level/완성된 출력 메시지다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 실제 선택된 configinterface/r 진단과 복귀 뒤 쓰기를 보존한다.

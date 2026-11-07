@@ -43,7 +43,7 @@ void Configuration::Load(std::string_view root) {
     config_.onChanged=[this] { Interpret(); };installed_=true;config_.Load(arguments);dataPrefix_=prefix; // R은 InstallDir/CDDir을 Set하지 않아 최초 해석 callback도 여기서 추가 호출하지 않는다.
 }
 void Configuration::Interpret() {
-    Need(hooks_.reloadModeration)(); // 실제 blacklist/ipban/chatlist/두 채팅 표/filter 부모가 끝난 뒤 옵션을 읽는다.
+    Need(hooks_.reloadModeration)(); // 실제 blacklist/ipban/chatlist/guild/guildreq/filter 부모가 끝난 뒤 옵션을 읽는다.
     ReadInt("multlinelimit",values_.multiLineLimit);ReadInt("rootServerTraceLevel",values_.traceLevel);ReadInt("rootServerThrowExceptionOnAssert",values_.throwOnAssert);ReadInt("rootServerFlushAfterTrace",values_.flushAfterTrace);ReadInt("rootServerTraceToStdErr",values_.traceToStdErr);
     ReadInt("rootServerRootTransceiverTimeout",network_.mainTimeout);ReadInt("rootServerPendingTransceiverTimeout",network_.pendingTimeout);ReadInt("rootServerChalTransceiverTimeout",network_.challengeTimeout);ReadInt("rootDiagTimeout",values_.diagnosticTimeout);
     ReadInt("useipreplace",values_.useIPReplace);ReadAllocated("chalipreplace",values_.ipReplace);ReadAllocated("chalipfind",values_.ipFind);

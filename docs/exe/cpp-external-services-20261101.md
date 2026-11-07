@@ -1,5 +1,7 @@
 # 외부 접속 기능 목록과 구 클라이언트 검증 비활성화 — 단위684
 
+**2026-11-07 / 1069 갱신:** CCh0044e940의 낮은 버전 기본 메시지004be0f0에는 폐기 HQ HTTP 링크가 있다. 새 CCh 기본 안내는 현재11.01 로컬 빌드 안내로 작성했으며 URL 열기/HTTP/DNS·외부 검증을 추가하지 않는다. LegacyPIRATE/BADDIAG 표시는 현재 wire 진단 문자열만 보존하고 온라인 검증 소비자로 연결하지 않는다. 실제 MP/통신/파일 쓰기 실행0이며 [1069 기록](cpp-root-challenge-runtime-20261107.md)을 따른다.
+
 **2026-11-07 / 1068 갱신:** 제공 R의1Ch 관문00476180은004870d0에서 `gethostname`→`gethostbyname`으로 로컬 hostname의 첫 IPv4를 얻고,127.0.0.1 예외/주소 lowWORD를 비교한다. 시스템 이름 해석기가 네트워크를 사용할 수 있는 원문 경계다. 새 `root::LoginRequest`는 실제 localAddress 장치를 요구하며 직접 DNS/공식 도메인 조회를 추가하지 않는다. 장치·새R.exe 호출은 아직 미연결이고 실제 DNS/소켓/MP 실행0이다. 폐기7f/80·외부 클라이언트 검증은 계속 비활성화한다([1068 기록](cpp-root-login-request-20261107.md)). 마지막 전체 정밀 디컴파일은2026-11-03/HJOW-Athlon, R 전용은2026-11-07/HJOW-Athlon이다.
 
 **2026-11-07 / 1061 갱신:** AccountSetup(005428e0/0200007a)은 원문 명령 표의 외부 계정 등록 경로다.004d7ac3은 `register`를004d5070에 넘기고 Tell `Setup`을 연다. 다른 비영 인자 분기는 도구 활성 확인/400h 송신이다. 기존 setup.exe 실행/외부 등록은 제품에 연결하지 않으며 새 R 실행 장치로 대신 실행하지 않는다. 등록 메시지100h의 현재 Fort ID 동기화는 같은 Client/Template의 로컬 파일 작업으로 따로 연결했다. 외부 접속·원본 실행은0이며 [1061 기록](cpp-registered-fort-subscriber-20261107.md)을 따른다.

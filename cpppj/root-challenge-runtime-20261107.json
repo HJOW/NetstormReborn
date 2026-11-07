@@ -1,0 +1,188 @@
+{
+  "unit": 1069,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "safetyFinalExitCode": 0,
+    "guildFinalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12365824,
+    "exeSha256": "9e6c176fdd69f9b227622aaebcbeef5db5fd0843fde0c53c980637c57c9496e7"
+  },
+  "scope": [
+    "실제 CCh0044e940 로그인과0044e0d0 종료 전체 부모/현재 참가자 데이터·전투 master 재선택",
+    "1d응답·20/21/22/23/26/41/71/7b/88h 실제 명단/주소·메시지·길드 이름/관찰기",
+    "같은 CCh/전송·공유scratch/현재 옵션·뉴스와 실제 상위 표/Root 라우팅 장치 접합"
+  ],
+  "nativeAudit": {
+    "parents": [
+      {
+        "address": "0044e940",
+        "file": "ChallengeLogin.cpp",
+        "scope": "Login 전체 부모"
+      },
+      {
+        "address": "0044e0d0",
+        "file": "ChallengeRuntime.cpp",
+        "scope": "EndParticipant"
+      },
+      {
+        "address": "0044c7b0",
+        "file": "ChallengeParticipants.cpp",
+        "scope": "InitializePlayer"
+      },
+      {
+        "address": "0044d550",
+        "file": "ChallengeParticipants.cpp",
+        "scope": "DeletePlayer"
+      },
+      {
+        "address": "0044c9a0",
+        "file": "ChallengeParticipants.cpp",
+        "scope": "188BYTE 초기화/로그"
+      },
+      {
+        "address": "0044d130",
+        "file": "ChallengeParticipants.cpp",
+        "scope": "RecalculateBattleVersions"
+      },
+      {
+        "address": "00458a40",
+        "file": "ChallengeParticipants.cpp",
+        "scope": "UpdateBattleMaster"
+      },
+      {
+        "address": "0044c540",
+        "file": "ChallengeSend.cpp",
+        "scope": "PlayerPacket20h"
+      },
+      {
+        "address": "0044c700",
+        "file": "ChallengeSend.cpp",
+        "scope": "PlayerChange22h"
+      },
+      {
+        "address": "0044bfa0",
+        "file": "ChallengeSend.cpp",
+        "scope": "BattlePacket23h"
+      },
+      {
+        "address": "0044c0c0",
+        "file": "ChallengeSend.cpp",
+        "scope": "BattleDescription71h"
+      },
+      {
+        "address": "0044e520",
+        "file": "ChallengeSend.cpp",
+        "scope": "LoginReply1dh"
+      },
+      {
+        "address": "0044e690",
+        "file": "ChallengeSend.cpp",
+        "scope": "Message41h"
+      },
+      {
+        "address": "0044e7e0",
+        "file": "ChallengeSend.cpp",
+        "scope": "Message41h/object"
+      },
+      {
+        "address": "00451d70",
+        "file": "ChallengeSend.cpp",
+        "scope": "SendGuildName88h"
+      },
+      {
+        "address": "00451df0",
+        "file": "ChallengeLogin.cpp",
+        "scope": "0번subscriber/source 전송 특이동작"
+      },
+      {
+        "address": "0044e2c0",
+        "file": "ChallengeRuntime.cpp",
+        "scope": "Broadcast"
+      },
+      {
+        "address": "0044e4c0",
+        "file": "ChallengeRuntime.cpp",
+        "scope": "Send"
+      },
+      {
+        "address": "0044e430",
+        "file": "ChallengeRuntime.cpp",
+        "scope": "SendBattle"
+      }
+    ],
+    "loginSuccess": {
+      "status": 1,
+      "replyDword": "요청subscriber",
+      "wireVersion": "10.71"
+    },
+    "failureStatuses": {
+      "blockedOrLowVersion": 0,
+      "duplicate": 3,
+      "name": 4,
+      "full": 5,
+      "counter": 6
+    },
+    "scratch": {
+      "address": "004cf220",
+      "nextKnownGlobal": "004d05a8",
+      "hostPhysicalLimit": 5000,
+      "loaderInitialBytesAllZero": true,
+      "debugArraySizeProven": false,
+      "battleByte5PreservedBeforeOr2": true
+    },
+    "sourceCorrections": {
+      "guildTable": "0045cda0 guild.txt/004d0870",
+      "guildRequests": "0045da40 guildreq.txt",
+      "chatBufferAssert": "004461a1 MOVZX WORD / CMP -1 항상false"
+    },
+    "executed": false
+  },
+  "sourceCorrections": {
+    "success": "1dh 성공상태1/DWORD요청subscriber; 참가자번호와구분",
+    "guild": "0045cda0 guild.txt/004d0870,0045da40 guildreq.txt. 옛두채팅표/별칭표표현정정",
+    "oldVersionText": "기본폐기HQ링크안내를현재11.01로컬빌드안내로교체"
+  },
+  "runtime": {
+    "csLoginBodyImplemented": true,
+    "participantEndBodyImplemented": true,
+    "playerAndBattleLifecycleImplemented": true,
+    "actualWireWritersAndObserversImplemented": true,
+    "sourceParentsBoundToSameStorageAndTransport": true,
+    "realUpperTablesAddressAndRootRoutingRequired": true,
+    "rootExeTargetExists": false,
+    "rootRuntimeCallsLoginOrEnd": false,
+    "client0FAnd1DReceiversConnected": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "dns": 0,
+    "fileWriteByNewRuntime": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "공유 blacklist/marked/IP/filter·길드/길드요청/뉴스 파일 실제 로더·사용자 홈 저장/Root 라우터·주소 서식/해석 장치",
+    "Root/CS 나머지 수신·일반 전투·참가자 입력·시계/기록/보조 객체와 새R.exe 전체 초기화/호출",
+    "0Fh 존47/3BYTE 차이·클라이언트0F/1d 수신·메타/OS launch·LAN/Outpost/checking5·한국어 후속/Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

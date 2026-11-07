@@ -41,6 +41,8 @@ public:
     NetworkPumpResult Pump(std::int32_t waitSeconds,NetworkHooks upper); // 실제 SocketDevice/select/현재 노드를1062 부모에 연결한다. Challenge/보조 객체의 실제 장치는 upper가 제공한다.
     o::RawPacketDispatch& PacketHandlers() { return dispatch_; } // 등록 API 전용이다. 수신 실행은 이 owner의 ReceiveOne을 통해 수명을 보장한다.
     std::uint32_t TokenFor(const o::PacketConnection& connection) const; // 실제 처리기가 받은 같은 연결의 생존 토큰을 조회한다. 외부/반납 세대는0이다.
+    std::uint32_t SocketFlags(std::uint32_t token); // CCh 종료가 실제 하위 socket 오류 bit2000을 읽는다. 연결 flags와 혼동하지 않는다.
+    std::array<std::uint8_t,20> SocketPeerAddress(std::uint32_t token); // CCh 생성의 별도 두 번째 조회가 보관한 실제 peer를 복사한다. OS 조회를 추가 실행하지 않는다.
     o::PacketConnection& Connection(std::uint32_t token); // 같은 현재 노드를 다음 변경 호출 전까지 빌린다.
     std::uint32_t& NoMainTimeout(std::uint32_t token); // 노드+90의 같은 DWORD다. UDP bind 성공 뒤 원문 부모가1을 쓴다.
     std::int32_t& WriteLimit(std::uint32_t token); // 노드+70의 초기100000/현재 signed 송신 한계다.

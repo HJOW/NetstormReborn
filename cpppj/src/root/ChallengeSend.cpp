@@ -1,0 +1,23 @@
+// CCh의 현재 참가자/전투·응답·주소/메시지를 실제 wire 형식으로 작성한다.
+#include "root/ChallengeDetail.h"
+
+namespace netstorm::root { // 현재 공유 scratch와 지역 allocator를 원문처럼 구분한다.
+using namespace challenge_detail; // 동일한 실제 필드/소유 문자열 경계를 사용한다.
+std::span<std::uint8_t> ChallengeRuntime::PlayerPacket(std::uint32_t challenge,std::uint32_t participant,bool existing) {
+    const auto player=Player(challenge,participant);auto packet=Shared(0x20);Put(packet,4,Read(player,0,1),1);Put(packet,5,Read(player,4));Copy(packet,19,player.subspan(0x4e,6));Copy(packet,25,player.subspan(0x54,10));Put(packet,35,Read(player,0x64)|(existing ? 0x40U:0U));Copy(packet,39,player.subspan(0x9c,8));Put(packet,47,Read(player,0xa4,1),1);Put(packet,48,Read(player,0xa8,1),1);Put(packet,49,Read(player,0x60));Put(packet,14,0);Put(packet,9,Read(player,0xb4,2),2);Put(packet,11,Read(player,0xb2,2),2);Put(packet,13,Read(player,0xac,1),1);const auto name=Text(player,0x26);if (name.size()+1>40) throw std::out_of_range("R 참가자 이름의 실제40BYTE 읽기 범위");Put(packet,18,static_cast<std::uint32_t>(name.size()+1),1);Copy(packet,53,player.subspan(0x26,packet[18]));return packet;
+}
+std::span<std::uint8_t> ChallengeRuntime::PlayerChange(std::uint32_t challenge,std::uint32_t participant) { const auto player=Player(challenge,participant);auto packet=Shared(0x22);Put(packet,4,Read(player,0,1),1);Put(packet,5,Read(player,0x64,2),2);Copy(packet,7,player.subspan(0x9c,8));Put(packet,15,Read(player,0xa4,1),1);Put(packet,16,Read(player,0xa8,1),1);return packet; }
+std::span<std::uint8_t> ChallengeRuntime::BattlePacket(std::uint32_t challenge,std::uint32_t battle,bool existing) { const auto record=Battle(challenge,battle);auto packet=Shared(0x23);Put(packet,4,Read(record,4,1),1);Copy(packet,6,record.subspan(8,6));Copy(packet,12,record.subspan(0x10,8));if (!existing) packet[5]=0;else packet[5]|=2U;return packet; } // 기존 표시 bit2만 OR하므로 공유 본문의 이전 bit도 보존한다.
+std::span<std::uint8_t> ChallengeRuntime::BattleDescription(std::uint32_t challenge,std::uint32_t battle) { const auto record=Battle(challenge,battle);auto packet=Shared(0x71);Put(packet,4,Read(record,4,1),1);const auto text=Text(record,0xe1);Put(packet,9,static_cast<std::uint32_t>(text.size()+1),1);Put(packet,5,0);Copy(packet,10,record.subspan(0xe1,packet[9]));return packet; }
+void ChallengeRuntime::LoginReply(std::uint32_t connection,std::uint8_t status,std::uint32_t subscriber) { auto packet=Packet(0x1d,13,13);Put(packet,4,10,2);Put(packet,6,71,2);Put(packet,8,subscriber);Put(packet,12,status,1);transport_.Send(connection,packet); }
+void ChallengeRuntime::NotifyRoot(std::uint32_t challenge,std::uint32_t participant,bool joined,std::uint8_t level) { auto packet=Packet(0x17,14,14);Put(packet,4,joined ? 1:0,1);Put(packet,5,Read(challenges_.Bytes(challenge),0));Put(packet,9,Read(Player(challenge,participant),4));Put(packet,13,level,1);Need(hooks_.relayRoot)(Read(challenges_.Bytes(challenge),0),packet); }
+void ChallengeRuntime::AddressPacket(std::uint32_t challenge,std::uint32_t participant,std::string_view address,std::uint32_t destination) {
+    address=address.substr(0,address.find('\0'));auto packet=Packet(0x7b,50);Put(packet,4,participant,1);Put(packet,5,Read(Player(challenge,participant),4));Put(packet,9,static_cast<std::uint32_t>(address.size()+1),1);if (std::bit_cast<std::int8_t>(packet[9])>=40) Assert("zcpa->addrLen < 40",destination==0xffffffffU ? 2865:2832);PutText(packet,10,address);if (destination==0xffffffffU) Broadcast(challenge,packet);else Send(challenge,destination,packet);
+}
+void ChallengeRuntime::Message(std::uint32_t challenge,std::uint32_t participant,std::string_view text,std::span<const std::uint8_t> object,bool extended) {
+    text=text.substr(0,text.find('\0'));auto packet=Packet(0x41,19+object.size()+text.size()+1);Put(packet,0,3,1);Put(packet,5,extended ? 0x81:1,1);Put(packet,6,0);Put(packet,10,static_cast<std::uint32_t>(object.size()),2);Put(packet,12,static_cast<std::uint32_t>(text.size()+1),2);Put(packet,14,1,1);Copy(packet,15,object);PutText(packet,15+object.size(),text);Put(packet,16+object.size()+text.size(),Read(Player(challenge,participant),4));Send(challenge,participant,packet);
+}
+void ChallengeRuntime::SendGuildName(std::uint32_t challenge,std::uint32_t subscriber,std::uint32_t destination) {
+    const auto text=Need(hooks_.guildName)(subscriber);if (!text) return;auto packet=Packet(0x88,98,98);AllocationInput(packet);Header(packet,0x88,98);Put(packet,4,subscriber);PutText(packet,8,*text);if (destination==0xffffffffU) Broadcast(challenge,packet);else Send(challenge,destination,packet);
+}
+}
