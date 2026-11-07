@@ -1,6 +1,7 @@
 // 원본 송신은 접속 플래그만으로 보내지 않고 연결 객체의 존재도 확인한다.
 #include "o/RawBattleBroadcast.h"
 #include <stdexcept>
+#include <utility>
 namespace netstorm::o {
 // 원본 packet86의 실제20BYTE 계약이며 미정 payload를 새 의미로 해석하지 않는다.
 void WriteFlyerCommandPacket(std::span<std::uint8_t> packet,Sid parent,std::uint32_t command) {
@@ -27,8 +28,9 @@ void WriteDropIslandPacket(std::span<std::uint8_t> packet,std::uint32_t x,std::u
 }
 // 두 원본 판본의 Player9 물리 폭을 확인한다.
 RawBattleBroadcast::RawBattleBroadcast(OriginalEdition edition,std::span<const std::uint8_t> players,
-    BattlePacketPeers& peers,const std::uint32_t& localOwner,const bool& server)
+    BattlePacketPeers& peers,const std::uint32_t& localOwner,const bool& server,BattleBroadcastAssertion assertion)
     :players_(players),peers_(peers),localOwner_(localOwner),server_(server),
+    assertion_(std::move(assertion)),
     stride_(edition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU),connectedOffset_(0x50U) {
     if (players.size()!=9*stride_) throw std::invalid_argument("송신 분배 Player9 크기 오류");
 }
@@ -42,7 +44,10 @@ void RawBattleBroadcast::Send(std::span<const std::uint8_t> packet) const {
 }
 // 원본 제외 송신은 localOwner를 시작 때 보관하며 이후 접속/연결 표만 다시 읽는다.
 void RawBattleBroadcast::SendExcept(std::int32_t excluded,std::span<const std::uint8_t> packet) const {
-    if (!server_) throw std::logic_error("원본 제외 송신의 server assertion");
+    if (!server_) {
+        if (!assertion_) throw std::logic_error("원본 제외 송신의 실제 server 진단 장치 미연결");
+        const auto assertion=assertion_;assertion(); // 현재 진단이 정상 복귀하면 서버 값을 재검사하지 않는다.
+    }
     const auto local=localOwner_;
     // 원본 후보 순서와 지정 제외/로컬 제외 조건을 유지한다.
     for (std::uint32_t owner=1;owner<9;++owner) {

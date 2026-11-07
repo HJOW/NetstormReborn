@@ -1034,7 +1034,8 @@ struct RawCampaignSession::Impl {
         } else if (services.coreDataGlobals) { const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,1,1); } // 기존 독립/캠페인 어댑터는 종전 선택 순서를 보존한다.
         constructionState.command.chargeBlockedRead=constructionState.place.chargeBlockedRead=[this] { return globals.missionPost; }; // 원본00594fa4는 캠페인/편집/일반 전투 모두의 현재 미션 전역이다. 각 소비 위치에서 읽어 캠페인 배치 확정의 중복 비용 검사와 잘못된 부족 안내를 막는다. 생산 가격·AI 자금 판정은 별도 몸체가 유지한다.
         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
-        broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,core.processState.Server());
+        broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,core.processState.Server(),
+            [storage=world.Storage()] { storage->AssertDisplay("server","\\Ns\\O\\Ztrans.cpp",0x1c3); }); // 실제 진단 뒤 당시 로컬 번호로 제외 송신을 계속한다.
         // 별도 관찰/장치 송신이 없으면 실제 분배기를 사용한다. NULL 연결은 원본 조건에서 자연스럽게 생략한다.
         if (!services.assets.sendGunPacket) services.assets.sendGunPacket=[this](std::span<const std::uint8_t> bytes) { broadcast->Send(bytes); };
         if (!services.pathPacket) services.pathPacket=[this](std::span<const std::uint8_t> bytes) { broadcast->Send(bytes); };

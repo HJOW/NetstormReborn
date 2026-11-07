@@ -1,0 +1,51 @@
+{
+  "unit": 1049,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "제외 방송의 실제 server 진단과 정상 복귀 후 순회 연결",
+  "sourceFunctions1078": [
+    "004e2e80",
+    "004dc050"
+  ],
+  "sourceComparison1072": [
+    "004c0480"
+  ],
+  "implemented": [
+    "server0에서 실제 Client 진단 장치 호출",
+    "정상 진단 복귀 뒤 현재 localOwner 스냅샷과 원문 순회 계속",
+    "현재 접속/제외번호/로컬번호/연결 조회 순서 유지",
+    "6인자 호출에도 DWORD 임시 참조 수명 거부 유지"
+  ],
+  "remaining": [
+    "제외 송신의 직접 caller004dc050 섬 상승 수신 및004dbce0 실제 섬 반납/메타 저장",
+    "나머지 송신/endpoint·서버/LAN writer·decoder·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ],
+  "decompilerOutputsChanged": false,
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1049\\build.log",
+    "exeSize": 12169728,
+    "exeSha256": "4cae3fa4fa38e0640a171dac375653a0ff5464ca8a3be586ce1368844b09fb10"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1049\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  }
+}
