@@ -531,14 +531,14 @@ cpppj/src/o/RawBoardTarget.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombActivation.cpp	port	www/core/raw-bomb-activation.js	1f00a25a	port	[o-default] WB04-E17: 0x5c/41e860 주문 활성화 수신(원격 비용·genus 진단·할당·예약). fixture bomb-activation 10.78 434행 전부
 cpppj/src/o/RawBombBlast.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombEffect.cpp	port			todo	[o-default]
-cpppj/src/o/RawBombEffectTimer.cpp	port			todo	[o-default]
+cpppj/src/o/RawBombEffectTimer.cpp	port	www/core/raw-bomb-effect-timer.js	1f00a25a	port	[o-default] WB04-E52: 상태 주문 타이머 필드/생성/Frame(41e100)과 SquidProcess 래퍼. fixture bomb-effect-timer 4416·bomb-timer-constructor 12행. 실제 가상 호출/썬 바리케이드/호스트 kill은 월드 조립에서
 cpppj/src/o/RawBombPostPop.cpp	port	www/core/raw-bomb-post-pop.js	1f00a25a	port	[o-default] WB04-E51: 그라비테이션·힐·미티어 최초 Regular 예약 접두(41f870/41f920/41fab0). fixture bomb-postpop 432행(SquidPostPop 분배 포함). RawCarrierSteal 두 VT 분배는 해당 단위에서
 cpppj/src/o/RawBombPreDestroy.cpp	port	www/core/raw-bomb-pre-destroy.js	1f00a25a	port	[o-default] WB04-E51: Point Blast 가상 전처리(41e960) 폭발 관문·효과 뒤 현재 좌표 소리·공통 전처리. fixture bomb-predestroy 96행. 실제 폭발/소리/공통 전처리는 월드 조립에서
 cpppj/src/o/RawBombRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombStatus.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombStrike.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombTargets.cpp	port			todo	[o-default]
-cpppj/src/o/RawBombTimerPacket.cpp	port			todo	[o-default]
+cpppj/src/o/RawBombTimerPacket.cpp	port	www/core/raw-bomb-timer-packet.js	1f00a25a	port	[o-default] WB04-E52: 상태 타이머 가변 패킷 writer(41e280)·읽기(41e230)·observer(40b390)·부모 선택(41e0a0)·수신(41e320). fixture bomb-timer-packet 602행
 cpppj/src/o/RawBridgeCarriers.cpp	port	www/core/raw-bridge-carriers.js	1f00a25a	port	[o-default] WB04-E46: 칸 위 이동체 확인(4202f0)·가까운 같은 Graph 표면 대피(427e00). fixture bridge-carrier-retreat 258행(사건 순서·4슬롯 50바이트). 실제 이동 프로세스/권한 전역 연결은 월드 조립에서
 cpppj/src/o/RawBridgeConnect.cpp	port	www/core/raw-bridge-connect.js	1f00a25a	port	[o-default] WB04-E42: 연결 순회·연결 객체 생성·소유자 전파·한 칸 조회·섬 받침 접두·색 프레임·소유자 분배. fixture bridgeconnect 10.78 3,600행(Walk 1856·Connect 464·Link 392·Owner 330·FindAt 270·Color 42·IslandOwner/StalagOwner 각 96·IslandPost 54). 실제 SquidFrame·bridge.type 프레임표 통합 검사는 SquidFrame 단위에서
 cpppj/src/o/RawBridgeDecay.cpp	port	www/core/raw-bridge-decay.js	1f00a25a	port	[o-default] WB04-E45: raw 슬롯 위 한 칸 붕괴/수명 감소(진단 0x268·현재 WORD 재조회·4비트 직접 쓰기). fixture bridgedecay Cell 4241·Life 3264, bridge-decay-checking 272

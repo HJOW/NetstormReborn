@@ -6317,7 +6317,7 @@
       "bytes": 24400,
       "lines": 97,
       "fixtureCommit": "65b21851",
-      "webCommit": "worktree",
+      "webCommit": "b5c7512b",
       "cpppjBasis": {
         "cpppj/src/o/RawBombPreDestroy.cpp": "65b21851"
       }
@@ -6346,9 +6346,96 @@
       "bytes": 20284,
       "lines": 433,
       "fixtureCommit": "b04fd743",
-      "webCommit": "worktree",
+      "webCommit": "b5c7512b",
       "cpppjBasis": {
         "cpppj/src/o/RawBombPostPop.cpp": "b04fd743"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E52",
+      "id": "bomb-effect-timer",
+      "path": "cpppj/tests/fixtures/bomb-effect-timer-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 상태 주문 타이머 41e100의 목록 갱신·만료 해제와 콜백 변형 뒤 기한/목록/세 슬롯",
+      "consumers": [
+        "webpj/tests/bomb-effect-timer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-effect-timer.js"
+      ],
+      "doc": "docs/webpj-bomb-effect-timer-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombEffectTimer.cpp"
+      ],
+      "scope": "4416행 전부 사용(판본 열 없는 10.78 단일 관측)",
+      "text": true,
+      "sha256": "c10c47747f592ce756894ce5b3cd74e358467ba7572f76ba8fd6c2415cee6d6f",
+      "bytes": 1672140,
+      "lines": 4417,
+      "fixtureCommit": "98d72ebe",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombEffectTimer.cpp": "9a4a01ea"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E52",
+      "id": "bomb-timer-constructor",
+      "path": "cpppj/tests/fixtures/bomb-timer-constructor-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 상태 타이머 기본 cdecl 생성의 필드(빈 목록·기한 0·미작성 flags)와 미사용 목록 바이트",
+      "consumers": [
+        "webpj/tests/bomb-effect-timer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-effect-timer.js"
+      ],
+      "doc": "docs/webpj-bomb-effect-timer-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombEffectTimer.cpp"
+      ],
+      "scope": "12행 전부 사용(판본 열 없는 10.78 단일 관측)",
+      "text": true,
+      "sha256": "127c1ce9b3817321138e8224b7099b7413318545c26d0bd8894b6a3cd6908f95",
+      "bytes": 10951,
+      "lines": 13,
+      "fixtureCommit": "9a4a01ea",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombEffectTimer.cpp": "9a4a01ea"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E52",
+      "id": "bomb-timer-packet",
+      "path": "cpppj/tests/fixtures/bomb-timer-packet-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 상태 타이머 생성/writer/누적 읽기/신규 수신/부모 선택의 결과·효과·필드·256바이트 패킷",
+      "consumers": [
+        "webpj/tests/bomb-effect-timer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-timer-packet.js"
+      ],
+      "doc": "docs/webpj-bomb-effect-timer-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombTimerPacket.cpp"
+      ],
+      "scope": "602행 전부 사용(판본 열 없는 10.78 단일 관측)",
+      "text": true,
+      "sha256": "0ac997425cf46b208ed48f153d3326458cecf2cb8cc135c72004e0a8b8b314b4",
+      "bytes": 435798,
+      "lines": 603,
+      "fixtureCommit": "914745c8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombTimerPacket.cpp": "f02ea8d1"
       }
     }
   ]
