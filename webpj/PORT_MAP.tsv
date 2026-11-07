@@ -6,7 +6,7 @@ cpp	class	web	base	status	note
 cpppj/src/client/AddRandomInput.cpp	port	www/core/script-command-inputs.js	1f00a25a	port	[client-default] WB04-E21: 4d7c33 AddRandom 일반 입력 분배(signed 255 타입 조회). fixture add-random-input 10.78 288행 전부
 cpppj/src/client/AiDebugCommandInput.cpp	port			todo	[client-default]
 cpppj/src/client/AiTypeRequiredEnergy.cpp	port			todo	[client-default]
-cpppj/src/client/AiUtilityCommandInput.cpp	port			todo	[client-default]
+cpppj/src/client/AiUtilityCommandInput.cpp	port	www/core/client-input-commands.js	1f00a25a	port	[client-default] WB04-E23: AI/간헐천 일반 명령 세 개 분배. fixture ai-utility-commands 10.78 72행 전부. ai-utility-names 30행(스크립트 큐)은 해당 단위에서
 cpppj/src/client/BackgroundGifGump.cpp	port			todo	[client-default]
 cpppj/src/client/BitmapFont.cpp	port	www/assets/bitmap-font.js;www/assets/font-set.js;www/render/glyph-text.js	1f00a25a	partial	[client-default] .chfnt 글꼴 표·글자 출력
 cpppj/src/client/BurningFrameCapture.cpp	port			todo	[client-default]
@@ -83,7 +83,7 @@ cpppj/src/client/CreateAtInput.cpp	port			todo	[client-default]
 cpppj/src/client/CurrentAllocationBytes.h	port			todo	[client-default]
 cpppj/src/client/CurrentTypeHitPoints.cpp	port			todo	[client-default]
 cpppj/src/client/Cursor.cpp	adapt	www/ui/cursor.js	1f00a25a	partial	[adapt-screen] RT_CURSOR 해독→CSS 커서(웹 대체). 커서2~14·17·18은 미션 입력과 함께
-cpppj/src/client/CursorObjectPickup.cpp	port			todo	[client-default]
+cpppj/src/client/CursorObjectPickup.cpp	port	www/core/client-input-commands.js	1f00a25a	port	[client-default] WB04-E23: 00447340 편집 객체 취득(Unpop→현재 TYPE/WORD→생성→Take). fixture cursor-object-pickup 10.78 96행 전부
 cpppj/src/client/CursorPreviewSource.h	port			todo	[client-default]
 cpppj/src/client/DataManagerFileRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/client/DestroyAtInput.cpp	port	www/core/script-command-inputs.js	1f00a25a	port	[client-default] WB04-E21: 004d8528 DestroyAt 일반 입력 분배. fixture destroy-at-input 10.78 48행 전부. 스크립트 큐/실제 부모 대조는 해당 단위에서
@@ -370,7 +370,7 @@ cpppj/src/client/ScrollGump.cpp	port	www/ui/slider.js	1f00a25a	partial	[client-d
 cpppj/src/client/ScrollGumpWidgets.cpp	port	www/ui/slider.js	1f00a25a	partial	[client-default] 돌 화살표·손잡이 / WB02-H M1 오라클: cpppj 기준선 스크롤 화살표 삼각형은 붉은 갈색(99,38,22), 원본 스크린샷과 웹은 검정
 cpppj/src/client/ScrollingTextGumpMarkup.cpp	port			todo	[client-default]
 cpppj/src/client/ScrollingTextGumpWidgets.cpp	port	www/ui/scroll-text.js	1f00a25a	partial	[client-default] 다중 줄 본문·Slider 부착
-cpppj/src/client/SelectionKeyInput.cpp	port			todo	[client-default]
+cpppj/src/client/SelectionKeyInput.cpp	port	www/core/client-input-commands.js	1f00a25a	port	[client-default] WB04-E23: 004d96b6 선택 키 부모(H/N/P/R/F4/F5/F6). fixture selection-key-input 10.78 480행 전부. 전체 GameMenuCommands 표 대조는 메뉴 단위에서
 cpppj/src/client/SendMoneyInput.cpp	port			todo	[client-default]
 cpppj/src/client/SmackerDecoder.cpp	adapt			todo	[adapt-sound]
 cpppj/src/client/SoloMapCatalog.cpp	exclude-edit			-	[edit-map-list]

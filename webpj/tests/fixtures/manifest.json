@@ -3883,7 +3883,7 @@
       "bytes": 108339,
       "lines": 512,
       "fixtureCommit": "059527a8",
-      "webCommit": "worktree",
+      "webCommit": "5b71aa2f",
       "cpppjBasis": {
         "cpppj/src/client/ConstructionHistoryKey.cpp": "e46d8981",
         "cpppj/src/o/RawConstructionHistory.h": "059527a8"
@@ -3913,7 +3913,7 @@
       "bytes": 107542,
       "lines": 1023,
       "fixtureCommit": "ee73f365",
-      "webCommit": "worktree",
+      "webCommit": "5b71aa2f",
       "cpppjBasis": {
         "cpppj/src/client/LostPositionKey.cpp": "ee73f365"
       }
@@ -3942,7 +3942,7 @@
       "bytes": 11300,
       "lines": 221,
       "fixtureCommit": "b006db45",
-      "webCommit": "worktree",
+      "webCommit": "5b71aa2f",
       "cpppjBasis": {
         "cpppj/src/client/PriestSelectionShortcut.cpp": "b006db45"
       }
@@ -3971,9 +3971,96 @@
       "bytes": 67716,
       "lines": 411,
       "fixtureCommit": "f95e8b10",
-      "webCommit": "worktree",
+      "webCommit": "5b71aa2f",
       "cpppjBasis": {
         "cpppj/src/client/NextUnitSelection.cpp": "f95e8b10"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E23",
+      "id": "selection-key-input",
+      "path": "cpppj/tests/fixtures/selection-key-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 선택 키 부모의 정지/수정키/대소문자/F4·F5·F6 분기와 큐 예약 인자",
+      "consumers": [
+        "webpj/tests/client-input-commands.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/client-input-commands.js"
+      ],
+      "doc": "docs/webpj-client-input-commands-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/SelectionKeyInput.cpp"
+      ],
+      "scope": "480행 전부 사용",
+      "text": true,
+      "sha256": "0ea81e68fdf078a0a697be95f510c5759b2cf185cd154b3078e577f06ae87fbe",
+      "bytes": 11493,
+      "lines": 481,
+      "fixtureCommit": "2afc4022",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SelectionKeyInput.cpp": "74c9383b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E23",
+      "id": "ai-utility-commands",
+      "path": "cpppj/tests/fixtures/ai-utility-commands-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI/간헐천 일반 명령 세 개의 선택된 호출과 param2 전체 DWORD",
+      "consumers": [
+        "webpj/tests/client-input-commands.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/client-input-commands.js"
+      ],
+      "doc": "docs/webpj-client-input-commands-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/AiUtilityCommandInput.cpp"
+      ],
+      "scope": "72행 전부 사용",
+      "text": true,
+      "sha256": "da15649094832c01bb3095c64b1d9a3e207dc43d3b8e0541cceadcdf4710bb56",
+      "bytes": 2320,
+      "lines": 73,
+      "fixtureCommit": "aeb552a8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/AiUtilityCommandInput.cpp": "aeb552a8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E23",
+      "id": "cursor-object-pickup",
+      "path": "cpppj/tests/fixtures/cursor-object-pickup-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 편집 객체 취득의 TYPE/WORD/flags/Unpop 변경/생성 0과 호출 순서",
+      "consumers": [
+        "webpj/tests/client-input-commands.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/client-input-commands.js"
+      ],
+      "doc": "docs/webpj-client-input-commands-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/CursorObjectPickup.cpp"
+      ],
+      "scope": "96행 전부 사용",
+      "text": true,
+      "sha256": "629909a2ea028ab370db21e24d7f20ac5aac47bff222994d4fe9d75e240b806f",
+      "bytes": 6375,
+      "lines": 97,
+      "fixtureCommit": "100d8808",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/CursorObjectPickup.cpp": "100d8808"
       }
     }
   ]
