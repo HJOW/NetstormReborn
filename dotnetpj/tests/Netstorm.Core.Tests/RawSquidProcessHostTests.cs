@@ -354,4 +354,104 @@ public sealed class RawSquidProcessHostTests
         raw[0] = 0x10;
         Assert.False(host.IsProcessForm(60));
     }
+
+    /// <summary>삭제 통지를 기록하는 검사 전용 프로세스다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+    private sealed class DestroyProcess : SquidProcess
+    {
+        /// <summary>쓸 PID DWORD를 고치는 콜백이다. 통지 중 재진입을 시험한다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+        public Action? OnDestroy { get; set; }
+
+        /// <summary>마지막 부모 통지다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+        public int? DyingParent { get; private set; }
+
+        /// <summary>마지막 삭제 플래그다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+        public uint? DestroyFlags { get; private set; }
+
+        /// <summary>form 삭제 직전 통지를 기록한다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+        /// <param name="flags">삭제 플래그다.</param>
+        public override void OnFormDestroy(uint flags)
+        {
+            DestroyFlags = flags;
+            OnDestroy?.Invoke();
+        }
+
+        /// <summary>부모 삭제 중 통지를 기록한다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+        /// <param name="parent">죽는 부모다.</param>
+        public override void OnParentDying(int parent)
+        {
+            DyingParent = parent;
+        }
+    }
+
+    /// <summary>같은 호스트·삭제 몸체로 삭제 통지 장면을 만든다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+    private static (RawSidPool Pool, Kernel Kernel, RawSquidDestroy Destroy, SquidProcessHost Host) DestroyScene()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var kernel = new Kernel(8u);
+        var state = new SquidProcessState();
+        var destroy = new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types);
+        return (pool, kernel, destroy, new SquidProcessHost(pool, types, kernel, destroy, state));
+    }
+
+    /// <summary>프로세스에 통지하고 커널에서 제거한 뒤 삭제 깊이를 줄인다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FormPreDestroyNotifiesRemovesAndCompletes()
+    {
+        (RawSidPool pool, Kernel kernel, RawSquidDestroy destroy, SquidProcessHost host) = DestroyScene();
+        var process = new DestroyProcess();
+        kernel.Add(process);
+        PutPid(pool, 200, 1u);
+        host.FormPreDestroy(200, 0x10u);
+        Assert.Equal(0x10u, process.DestroyFlags);
+        Assert.Null(kernel.Get(1u));
+        Assert.Equal(0, kernel.Size());
+        Assert.Equal(uint.MaxValue, destroy.PreDepth);
+    }
+
+    /// <summary>원본은 통지가 끝난 뒤 Form의 현재 PID를 다시 읽는다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FormPreDestroyRereadsPidAfterNotify()
+    {
+        (RawSidPool pool, Kernel kernel, RawSquidDestroy _, SquidProcessHost host) = DestroyScene();
+        var first = new DestroyProcess();
+        var second = new DestroyProcess();
+        kernel.Add(first);
+        kernel.Add(second);
+        PutPid(pool, 200, 1u);
+        first.OnDestroy = () => PutPid(pool, 200, 2u);
+        host.FormPreDestroy(200, 0u);
+        Assert.Same(first, kernel.Get(1u));
+        Assert.Null(kernel.Get(2u));
+        Assert.Equal(1, kernel.Size());
+    }
+
+    /// <summary>비어 있는 번호·다른 종류는 통지 전에 거부한다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FormPreDestroyRejectsMissing()
+    {
+        (RawSidPool pool, Kernel kernel, RawSquidDestroy _, SquidProcessHost host) = DestroyScene();
+        PutPid(pool, 200, 1u);
+        Assert.Throws<InvalidOperationException>(() => host.FormPreDestroy(200, 0u));
+        kernel.Add(new BaseProcess());
+        PutPid(pool, 201, 1u);
+        Assert.Throws<InvalidOperationException>(() => host.FormPreDestroy(201, 0u));
+    }
+
+    /// <summary>NULL 조회는 빈 통지로 생략하고 살아 있는 프로세스에만 알린다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FormParentDyingNotifiesOrSkips()
+    {
+        (RawSidPool pool, Kernel kernel, RawSquidDestroy _, SquidProcessHost host) = DestroyScene();
+        PutPid(pool, 200, 1u);
+        host.FormParentDying(200, 77);
+        var process = new DestroyProcess();
+        kernel.Add(process);
+        PutPid(pool, 200, 1u);
+        host.FormParentDying(200, 77);
+        Assert.Equal(77, process.DyingParent);
+        kernel.Add(new BaseProcess());
+        PutPid(pool, 201, 2u);
+        Assert.Throws<InvalidOperationException>(() => host.FormParentDying(201, 77));
+    }
 }

@@ -282,6 +282,49 @@ public sealed class SquidProcessHost
         return table == FormVtable();
     }
 
+    /// <summary>원본 004ae240의 프로세스에 통지하고 커널에서 제거한 뒤 삭제 깊이를 줄인다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+    /// <param name="form">지울 Form 번호다.</param>
+    /// <param name="flags">삭제 플래그다.</param>
+    public void FormPreDestroy(int form, uint flags)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(form);
+        uint pid = (uint)raw[FormPidOffset] | ((uint)raw[FormPidOffset + 1] << 8) | ((uint)raw[FormPidOffset + 2] << 16) | ((uint)raw[FormPidOffset + 3] << 24);
+        var process = _kernel.Get(pid) as SquidProcess;
+        if (process is null)
+        {
+            throw new InvalidOperationException("form의 프로세스가 커널에 없습니다.");
+        }
+
+        process.OnFormDestroy(flags);
+        // 원본은 통지가 끝난 뒤 Form의 현재 PID를 다시 읽는다. 콜백 중 다른 번호로 바뀐 경우 그 슬롯을 제거한다
+        ReadOnlySpan<byte> current = _pool.Slot(form);
+        uint reread = (uint)current[FormPidOffset] | ((uint)current[FormPidOffset + 1] << 8) | ((uint)current[FormPidOffset + 2] << 16) | ((uint)current[FormPidOffset + 3] << 24);
+        _kernel.Remove(reread);
+        Destroy().CompletePreDestroy();
+    }
+
+    /// <summary>원본 004ae2b0의 부모가 지워질 때 프로세스에 통지한다. 원문 +1c의 NULL 조회만 빈 통지로 생략한다. 2026-11-07 F2d 프로세스 삭제 통지 이식에서 추가됐다.</summary>
+    /// <param name="form">통지할 Form 번호다.</param>
+    /// <param name="parent">지워지는 부모 번호다.</param>
+    public void FormParentDying(int form, int parent)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(form);
+        uint pid = (uint)raw[FormPidOffset] | ((uint)raw[FormPidOffset + 1] << 8) | ((uint)raw[FormPidOffset + 2] << 16) | ((uint)raw[FormPidOffset + 3] << 24);
+        BaseProcess? current = _kernel.Get(pid);
+        if (current is null)
+        {
+            return;
+        }
+
+        var process = current as SquidProcess;
+        if (process is null)
+        {
+            throw new InvalidOperationException("현재 프로세스 부모 통지의 실제 가상+10 미연결");
+        }
+
+        process.OnParentDying(parent);
+    }
+
     /// <summary>가장 최근에 붙은 종속부터 다음 링크를 따라간다. 자산 타입은 건너뛴다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
     /// <param name="parent">부를 부모 SID다.</param>
     /// <param name="match">고른 프로세스 판정이다.</param>
