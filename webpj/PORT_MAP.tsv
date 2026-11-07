@@ -627,7 +627,7 @@ cpppj/src/o/RawContainedLookup.cpp	port			todo	[o-default]
 cpppj/src/o/RawContentAttach.cpp	port	www/core/content-form-host.js	1f00a25a	port	[o-default] WB04-D5a
 cpppj/src/o/RawContentParentNotice.cpp	port	www/core/content-parent-notice.js	1f00a25a	port	[o-default] WB04-D5a(+0x24 분배)
 cpppj/src/o/RawContentPreviewProcess.cpp	port			todo	[o-default]
-cpppj/src/o/RawCreateAt.cpp	port			todo	[o-default]
+cpppj/src/o/RawCreateAt.cpp	port	www/core/raw-create-at.js	1f00a25a	port	[o-default] WB04-E31: 0044c660 CreateAt 생성 부모와 TYPE+15c 프레임 필드. fixture create-at-parent 580행 전부. 실제 월드 생성/HP/Pop과 TYPE 프레임 표(count 추가 필요) 연결은 소비자 단위에서
 cpppj/src/o/RawCrossbowAnimation.cpp	port			todo	[o-default]
 cpppj/src/o/RawDaisContentNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawDaisDraw.cpp	port			todo	[o-default]

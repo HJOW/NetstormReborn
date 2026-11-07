@@ -4841,7 +4841,7 @@
       "bytes": 80840,
       "lines": 721,
       "fixtureCommit": "d48ea756",
-      "webCommit": "worktree",
+      "webCommit": "b2fcae8d",
       "cpppjBasis": {
         "cpppj/src/o/RawAddRandom.cpp": "d48ea756"
       }
@@ -4870,7 +4870,7 @@
       "bytes": 1300,
       "lines": 17,
       "fixtureCommit": "f5d46ada",
-      "webCommit": "worktree",
+      "webCommit": "b2fcae8d",
       "cpppjBasis": {
         "cpppj/src/o/RawDestroyAt.cpp": "f5d46ada"
       }
@@ -4899,9 +4899,38 @@
       "bytes": 373416,
       "lines": 805,
       "fixtureCommit": "f5d46ada",
-      "webCommit": "worktree",
+      "webCommit": "b2fcae8d",
       "cpppjBasis": {
         "cpppj/src/o/RawDestroyAt.cpp": "f5d46ada"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E31",
+      "id": "create-at-parent",
+      "path": "cpppj/tests/fixtures/create-at-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: CreateAt 부모의 권한·세 양수 관문·지면 소유자·HP·프레임·float32 Pop 결과와 현재 50바이트",
+      "consumers": [
+        "webpj/tests/create-at.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-create-at.js"
+      ],
+      "doc": "docs/webpj-create-at-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCreateAt.cpp"
+      ],
+      "scope": "580행 전부 사용",
+      "text": true,
+      "sha256": "cc8d013050f51349c68c1f2e6f2bf21d2d19f0c2afc0c1d1b0e3dc8f94702ea7",
+      "bytes": 116387,
+      "lines": 581,
+      "fixtureCommit": "befbc1cb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCreateAt.cpp": "befbc1cb"
       }
     }
   ]
