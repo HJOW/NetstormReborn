@@ -265,6 +265,7 @@ public:
     void ScanBridgeDecay(o::FrameTime time,bool paused); //독립 World도 같은 현재 스캔 저장소와 정지/Editor/권한 관문을 사용한다.
     // 카메라/viewport와 현재 Renderer의 표시 전달 경로를 갱신한다.
     void SetDisplay(o::SquidDisplayView view,SurfaceDisplayHooks hooks);
+    void BindMetaRefresh(std::function<void(std::span<const std::uint8_t>)> refresh); //현재 World의 실제 메타88/8c 장치를 설치하며 일반 view 교체로 반납하지 않는다.
     // 지정 위치의 실제 객체/받침을 조회한다. 없으면 SID 0이다.
     o::Sid Find(float x,float y,std::uint32_t type) const;
     // vtable +0x10의 삭제 재정의를 거쳐 연결 객체·장부·프로세스를 함께 정리한다.

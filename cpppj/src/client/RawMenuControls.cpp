@@ -685,6 +685,7 @@ void RawMenuControls::BindMetaDisplayGumps(NativeMetaDisplayHooks& hooks) const 
 }
 // 이미 선택한 등록ID를 현재 공통 트리 수명에 전달하며 가짜 창이나 별도 삭제 표를 만들지 않는다.
 void RawMenuControls::KillRegisteredGump(std::uint32_t id) { if (id>=impl_->common.create.entries.size()) throw std::out_of_range("Rig Gump 등록ID 물리 범위");const auto token=impl_->common.create.entries[id];if (!token) throw std::logic_error("Rig가 선택한 실제 Gump 등록이 반납됨");impl_->common.lifetime.Kill(token); }
+void RawMenuControls::RedrawRegisteredGump(std::uint32_t id) { if (id>=impl_->common.create.entries.size()) throw std::out_of_range("메타 dirty Gump 등록ID 물리 범위");const auto token=impl_->common.create.entries[id];if (!token) return;if (!impl_->common.node(token)) throw std::logic_error("메타 dirty 비영 Gump 토큰의 실제 노드 누락");impl_->Redraw(token,false); } //현재 등록 노드를 한 번 선택하고 실제 파생 분배를 유지한다.
 // 원격존의세이름표도기존실제TextGump/등록표/GumpForm으로작성한다.
 void RawMenuControls::BindMetaSceneGumps(NativeMetaSceneHooks& hooks) {
     BindMetaDisplayGumps(hooks.display);

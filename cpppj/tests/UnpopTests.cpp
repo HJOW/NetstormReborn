@@ -144,13 +144,14 @@ TEST_CASE(SquidUnpop_VtableMetadata_MatchesActualCommonDisplayPaths) {
         const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;
         const auto vtable=static_cast<std::uint32_t>(std::stoul(row[1])); const auto mask=std::stoul(row[5]);
         const bool mana=edition==OriginalEdition::Patch1078 && (vtable==0x50c3b0 || vtable==0x509810); // 별도 원문으로 복원한 마나103/볼트105 표시다. 기존 fixture의 공통 mask는 바꾸지 않는다.
-        CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0)==(((mask&1)!=0) || mana));
+        const bool meta=edition==OriginalEdition::Patch1078 && vtable==0x50c9f0U; //보호 PE의 메타88=4787c0/8c=4ad670 JMP88에 맞춰 기존 지원표 기대값만 갱신한다. 검사 실행은 제외한다.
+        CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0)==(((mask&1)!=0) || mana || meta));
         const auto alternate=static_cast<std::uint32_t>(std::stoul(row[3]));
         const bool vortex=edition==OriginalEdition::Patch1078 ?
             alternate==0x4dcda0U || alternate==0x4dcf80U || alternate==0x4dd150U || alternate==0x4dbcd0U :
             alternate==0x44feb0U || alternate==0x450140U || alternate==0x450320U;
         const bool geyser=edition==OriginalEdition::Patch1078 && vtable==0x50da88U && alternate==0x4854b0U; // 897의 독립432행으로 복원한 간헐천 부분표시다. 기존 metadata fixture는 보존한다.
-        CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0x2000)==(((mask&2)!=0) || vortex || mana || geyser)); ++rows;
+        CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0x2000)==(((mask&2)!=0) || vortex || mana || geyser || meta)); ++rows;
     }
     CHECK(rows==151); CHECK(!SquidUnpop::SupportsDisplay(OriginalEdition::Patch1078,0,0));
 }

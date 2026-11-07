@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE client/NativeMetaSpriteRefresh.h client/NativeMetaSpriteRefresh.cpp client/ClientMetaSpriteRefresh.h client/ClientMetaSpriteRefresh.cpp) #1131:메타88/8c 전체 영역 보정·실제 Form 이름표 갱신을 현재 World에 연결한다.
+
 target_sources(netstorm PRIVATE client/NativeMetaSpriteDraw.h client/NativeMetaSpriteDraw.cpp client/ClientMetaSpriteDraw.h client/ClientMetaSpriteDraw.cpp) #1130:실제 메타 섬+a4의 Image·TYPE·버전/설명·8자리 그림을 현재 통합 화면에 연결한다.
 
 target_sources(netstorm PRIVATE o/RawStateBattleOptions.h o/RawStateBattleOptions.cpp) #1127:67h 전체 공통 부모·부분 복사와 일반 Session의 실제 CS 자식을 연결한다.

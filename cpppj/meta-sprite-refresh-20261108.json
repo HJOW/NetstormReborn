@@ -1,0 +1,58 @@
+{
+  "unit": 1131,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      "-first",
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12776960,
+      "sha256": "644fdd9c190331dfbde57b0d05f5878a05bbd296c3a727632024e5c11b0e6c4f"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "1e267b93322f96ec2a179b3a446d9551229af4b862448029848688e935e1b8a7"
+    }
+  },
+  "staticAudit": {
+    "native": "004787c0/00498ff0/00499310/004b22d0/004b1b80/004b1bd0/004b1bf0 전체와 VT88/8c 및4ad670의 실제 JMP thunk를 읽었다. 원문 생성물 변경0이다.",
+    "bounds": "현재 TYPE/frame·두 FTOL/현재 카메라→SHP 존재/기존 frameCheck·현재 zoom/네 signedWORD의 실제 사각형을 사용한다. 메타 전투는 큰 배율에서 중심 유지, 참가자는 오른쪽/아래 고정이며 작은 배율은 별도 보정하지 않는다.",
+    "numeric": "좌표 합/차·IMUL은 lowDWORD이며 중심/확대 크기의 나눗셈은 signed0방향이다. 고정 배율 signed JLE와 현재 viewport 좌표별 clamp·signed 면적 판정을 유지한다.",
+    "forms": "dirty 뒤 checking/metamap/dead/boss 진단→현재 head/next 선저장·TYPE70미만/현재 excluded와 process범위 배제→FindGump가 있으면 실제 가상Redraw(false)다. 별도free/dead/active 조건은 없다. 순환/물리 범위 외만 호스트 예외다.",
+    "binding": "실제50c9f0의88/8c를 같은 SquidDisplaySink→현재 RawSurfaceWorld callback으로 분배한다. 일반 프레임/선택표식/그림자/억제 경로로 대체하지 않는다. 메타 Session 생성 직후 첫 객체 생성 전에 같은 Client/controls/Renderer/Gump를 설치한다. 일반 view 교체는 장치를 지우지 않으며 World 반납이 해제한다.",
+    "validation": "Release 빌드/정적 원문 대조/보호2800 확인만 수행한다. 신규 단위/MP/게임/통신 실행0이다.",
+    "sourceCompletion": "첫 Release 성공 뒤 실제 비영 Gump 토큰의 호스트 노드 누락을 빈 Find 결과로 숨기지 않고 선택된 위치에서 예외로 거부하도록 보완했다. 첫/최종 Release를 별도로 보존한다.",
+    "existingExpectation": "기존 Unpop 지원표 검사의 두 기대값만 새 실제 메타88/8c 분배에 맞게 갱신했다. 새 검사 사례/fixture는 없으며 이 검사 대상은 빌드·실행하지 않는다."
+  },
+  "remaining": [
+    "메타 객체 입력/일반 선택 캡처 접합/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

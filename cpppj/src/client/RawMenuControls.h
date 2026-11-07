@@ -103,6 +103,7 @@ public:
     const TextGump& TextBackend() const; // 수량/예산도 기존 원본 한 줄 글자 처리기를 공유한다.
     void BindMetaDisplayGumps(NativeMetaDisplayHooks& hooks) const; //실제노드/Push/문자·스크롤/가상Attach/등록ID조회만현재메타장치에연결한다.객체/Renderer/번역장치는호출자가연결한다.
     void KillRegisteredGump(std::uint32_t id); //선행 FindGump가 찾은 실제 등록ID의 현재 Gump를 공통00466480으로 Kill한다.
+    void RedrawRegisteredGump(std::uint32_t id); //현재 FindGump 결과가 있을 때만 같은 실제 가상Redraw(false)를 호출한다.
     void BindMetaSceneGumps(NativeMetaSceneHooks& hooks); //같은TextGump생성/Clear/Append/Fit/serial/객체부착과현재NSInfo의TYPE/SHP장치를연결한다.실제World/카메라장치는호출자가공급한다.
     std::uint32_t CreateMetaText(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은등록표에new(a4)/TextGump를생성한다.미부착실패노드도공통Cleanup이소유한다.
     std::uint32_t CreateMetaName(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은new(d8)/다중줄/버퍼·Slider를생성하여메타참가자이름표로사용한다.

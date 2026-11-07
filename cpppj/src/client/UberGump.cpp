@@ -20,6 +20,7 @@
 #include "client/ExternalHelpClient.h" //원래 외부 Help 정책을 현재 Client/Windows 장치에 연결한다.
 #include "client/UrlInput.h"
 #include "client/ClientMetaPlayerMenu.h" //World없는NSInfo도현재Client의전체Player메뉴장치를사용한다.
+#include "client/ClientMetaSpriteRefresh.h" //실제 메타 World 생성 직후 같은 현재 Renderer/Gump의88/8c를 결합한다.
 #include "client/NativeBattleInfoMenus.h" //실제옵션선택문자열/정체성과메뉴장치를같은Client에연결한다.
 #include "o/RawBattleOptionMutation.h" //메타제외목록도같은현재52f7e0전역옵션을조회한다.
 #include "o/RawBattleOptionText.h" //현재선택getter와보호PE원문포인터를같은Xlat정체성에연결한다.

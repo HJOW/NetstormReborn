@@ -79,6 +79,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     bool deletionBound{}; // 같은공통state의실제보상/효과후설치는첫객체생성전한번만허용한다.
     // displayHooks: 해상도 변경으로 Renderer가 교체되어도 현재 장치에 전달할 수 있는 표시 콜백이다 (SurfaceDisplayHooks).
     SurfaceDisplayHooks displayHooks;/* effectRequests: 효과 요청. */ /* walkerFalls: 이동유닛 추락. */ /* deletionRequests: 삭제 요청. */ std::size_t effectRequests{},walkerFalls{},deletionRequests{};
+    std::function<void(std::span<const std::uint8_t>)> metaRefresh; //실제 메타 월드에만 결합한 현재 Client/Renderer/Gump 장치이며 World가 수명을 반납한다.
     // graph: 서로 연결된 표면의 Graph 소속을 관리하는 처리기.
     std::unique_ptr<o::RawGraph> graph;/* display: 객체·프레임에서 실제 화면 출력 요청을 만드는 처리기. */ std::unique_ptr<o::SquidDisplay> display;
     // postPop: 객체 Pop 이후 목록·공간 후처리를 수행하는 처리기.
@@ -276,6 +277,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     o::RawCheckingFlag Checking() const override { return storage->Checking(); } // 표시 뷰 교체와 무관하게 같은 Client DWORD를 다시 빌린다.
     void FrameError(std::uint32_t type,std::int32_t frameNumber,std::uint32_t abstract) override { storage->RecordDisplayFrameError(type,frameNumber,abstract); } // 장치와 별도로 장기 상세 owner에 저장한다.
     void Assertion(std::string_view expression,std::string_view file,std::uint32_t line) override { storage->AssertDisplay(expression,file,line); } // 현재 진단 복귀를 실제 표시 부모에 돌려준다.
+    void MetaRefresh(std::span<const std::uint8_t> raw) override { if (!metaRefresh) throw std::logic_error("현재 World의 실제 메타 표시 갱신 미연결");metaRefresh(raw); } //일반 사각형/억제/성공 대용으로 처리하지 않는다.
     // 현재 raw 프레임의 SHP 크기로 실제 공간과 파생 postPop을 등록한다.
     void Pop(o::Sid sid,float x,float y,std::uint32_t flags) {
         if (edition==o::OriginalEdition::Patch1078) {
@@ -480,6 +482,7 @@ void RawSurfaceWorld::ScanBridgeDecay(o::FrameTime time,bool paused) {
 }
 // 현재 카메라의 원본 픽셀 기준값과 GUI 변경 표를 연결한다.
 void RawSurfaceWorld::SetDisplay(o::SquidDisplayView view,SurfaceDisplayHooks hooks) { impl_->display->SetView(view);impl_->displayHooks=std::move(hooks); }
+void RawSurfaceWorld::BindMetaRefresh(std::function<void(std::span<const std::uint8_t>)> refresh) { if (!refresh) throw std::invalid_argument("현재 메타 표시 갱신 장치 누락");impl_->metaRefresh=std::move(refresh); } //장치 설치는 프레임/화면/통신을 실행하지 않는다.
 // 일반 4단계 해시와 실제 타입 필터를 사용하는 조회다.
 o::Sid RawSurfaceWorld::Find(float x,float y,std::uint32_t type) const { return impl_->connect->FindTypeAt(x,y,type); }
 // 다리 거부 조건과 파생 pre/post를 동일한 호출로 실행한다.

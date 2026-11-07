@@ -48,6 +48,7 @@ public:
     virtual RawCheckingFlag Checking() const { return {}; } // 독립 기존 장치는 checking0이며 실제 World는 같은 Storage의 현재 뷰를 반환한다.
     virtual void FrameError(std::uint32_t,std::int32_t,std::uint32_t) { throw std::logic_error("표시 오류 상세 writer 미연결"); } // 선택된43d40만 실제 저장소를 요구한다.
     virtual void Assertion(std::string_view,std::string_view,std::uint32_t) { throw std::logic_error("표시 원문 진단 장치 미연결"); } // 진단 장치가 복귀하면 표시 부모가 현재 TYPE을 다시 조회한다.
+    virtual void MetaRefresh(std::span<const std::uint8_t>) { throw std::logic_error("현재 메타 섬 파생 표시 갱신 장치 미연결"); } //004787c0은 같은 실제 Client/Pool·Gump 장치가 필요한 독립88 몸체다.
 };
 // 타입·프레임 자료와 카메라에서 객체 출력 요청을 만드는 처리기이다.
 class SquidDisplay {
