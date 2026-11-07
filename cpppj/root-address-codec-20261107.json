@@ -1,0 +1,81 @@
+{
+  "unit": 1072,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "firstWarning": "C4996 inet_addr",
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "094944fa5d0e0b9fd2a533b09af017f35eb2614c0495d6a5379ab3f08bc379f5"
+  },
+  "nativeAudit": {
+    "scope": "정적 원문/PE·기계어·실제 장치 접합과 컴파일이며 실행 검사 아님",
+    "native": {
+      "format": "004864b0 5*30BYTE 고리/우선순위10,20,400,200,8/주소0=*/IPX rawDWORD uppercase/port/flags csnbr",
+      "parse": "00486870 strncpy79/80지역·첫comma protocol/host+1부터 두번째comma/소문자 flags·s=82/명시port 우선·network endian",
+      "ipx": "점1개면family6.486b45 strchr(dot)→486b4d 저장→486b54/57 같은dotpointer push→486b58 strtol이므로 network0 특이동작.6hex쌍/-1nibble BYTE 유지",
+      "ipv4": "inet_addr 숫자 문법 유지; 16BYTE sockaddr 초기화 뒤 현재+16 flags 보존",
+      "local": "004870d0 gethostname/gethostbyname 첫IPv4 성공→00486800 전체20초기화/port0/flags0, 실패family WORD만0"
+    },
+    "sameOwnerBindings": [
+      "LoginRequestHooks.localAddress",
+      "ChallengeRuntimeHooks.addressText/parseAddress",
+      "고리 결과는 callback 반환 전에 소유 문자열로 복사"
+    ],
+    "windowsCompatibility": {
+      "actualLocalDevice": "GetAdaptersAddresses AF_INET/Up/current OS order/first LAN unicast, 실패시 family만0",
+      "localNames": "localhost=127.0.0.1, 현재 컴퓨터 DNS short/FQDN/NetBIOS 이름은 OS 설정과 실제 어댑터 주소",
+      "noExternalDns": true,
+      "unsupportedNames": "다른 LAN/공개 hostname은 DNS 조회하지 않고 원문의 해석 실패 주소0 경로",
+      "networkPolicy": "실제 송신/접속은 기존 SocketDevice 로컬 IPv4 정책 유지; IPX/SPX/가상 주소 문법이 OS 소켓 구현 완료를 뜻하지 않음"
+    },
+    "hostBoundaries": [
+      "다중 어댑터 순서는 구형 hostname resolver의 첫 IPv4와 같음을 증명하지 않음",
+      "외부 hostname 조회 경계는 의도적으로 복구하지 않음; localhost 사용자 hosts 재정의는 조회하지 않음",
+      "NULL 입력/80BYTE 밖/서식30BYTE 넘침은 명시 물리 오류",
+      "CRT inet_addr/atoi/strtol 전체 구형 구현과 오류·로케일/미정 메모리 자체 동일성 미검증"
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "addressCodecAndRealLocalDeviceImplemented": true,
+    "sameLoginAndChallengeHooksBindingImplemented": true,
+    "rootExeTargetExists": false,
+    "rootRuntimeCallsCodecOrDevice": false,
+    "rootFinalOwnerRequired": true,
+    "otherLanHostnameResolutionImplemented": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "dns": 0,
+    "osAdapterQuery": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "다른 LAN hostname의 외부 DNS 없는 실제 해석",
+    "시계/기록/보조 객체·나머지 Root/CS 수신/입력",
+    "새R.exe 전체 초기화/최종 owner·실제 Config/CCh/Router/파일 watcher·주소 장치 연결/호출",
+    "클라이언트0F 존47/서버3BYTE·0F/1d 수신·메타/OS launch·LAN/Outpost/checking5·한국어 후속/Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
