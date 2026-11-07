@@ -5337,7 +5337,7 @@
       "bytes": 30721,
       "lines": 13,
       "fixtureCommit": "74bc5941",
-      "webCommit": "worktree",
+      "webCommit": "c72678b0",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidPoolReset.cpp": "74bc5941"
       }
@@ -5366,7 +5366,7 @@
       "bytes": 130243,
       "lines": 297,
       "fixtureCommit": "32ea6611",
-      "webCommit": "worktree",
+      "webCommit": "c72678b0",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionBattleOptions.cpp": "7f1ae00e"
       }
@@ -5395,9 +5395,39 @@
       "bytes": 1309542,
       "lines": 3306,
       "fixtureCommit": "05d7cb57",
-      "webCommit": "worktree",
+      "webCommit": "c72678b0",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionBattleOptions.cpp": "7f1ae00e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E38",
+      "id": "tutorial-init",
+      "path": "cpppj/tests/fixtures/tutorial-init-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미션 Init의 전체 필드·정규화 지역 80바이트·원래 이름·옵션 87바이트·큰 효과 호출 순서(효과가 현재 값을 바꾸는 변형 포함)",
+      "consumers": [
+        "webpj/tests/tutorial-init.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/tutorial-init.js",
+        "webpj/www/core/raw-mission-battle-options.js"
+      ],
+      "doc": "docs/webpj-tutorial-init-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/TutorialInit.cpp"
+      ],
+      "scope": "152행 전부 사용",
+      "text": true,
+      "sha256": "6a4d7045225c78c2636003b213cd45aa3a3bc5db0c3f3d644e9ae2507a0d5d71",
+      "bytes": 93038,
+      "lines": 153,
+      "fixtureCommit": "8ba4af11",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TutorialInit.cpp": "8ba4af11"
       }
     }
   ]
