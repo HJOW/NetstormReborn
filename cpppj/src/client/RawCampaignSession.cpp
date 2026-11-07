@@ -457,7 +457,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCampaignCursor> cursor; // 같은 실제 Form/마나/위치/로컬 예측 몸체를 설치 뒤 소유한다.
     SoundView cursorViewport{}; // 카메라 두값은 사용하지 않는 현재 화면clip 전달자료다.
     CursorDropState& cursorDrop{gameplayGlobals->cursor}; // 초기 HUD와 같은 실제 취득/배치/취소/마우스 전역이다.
-    CursorManaGlobals cursorManaGlobals{&gameplayGlobals->WorldCells()}; // 카메라와 같은00531928을 모든 마나/공급/AI 참조가 직접 빌린다.
+    CursorManaGlobals cursorManaGlobals{&gameplayGlobals->WorldCells(),&gameplayGlobals->ManaRadius()}; //카메라의 같은00531928과 옵션/커서/AI의 같은0052f488을 장기 owner에서 직접 빌린다.
     std::unique_ptr<RawCursorMana> cursorMana; // Kernel을 먼저 비운 뒤 해제하는 실제 마나 프레임/수명 몸체다.
     EnergySupplyState& energyState{gameplayGlobals->energy}; // 같은 Client의 공급 전역을 빌려 메뉴/설정과5cab30의 실제 주소를 공유한다.
     SquidPostPopList energySources{std::vector<std::uint32_t>(kEnergySourceCapacity),0}; // 4fcb80의 실제30칸 lastSource다.

@@ -29,6 +29,8 @@
 #include "client/LocalServerProcess.h"
 #include "client/RootServerListDisk.h"
 #include "client/NativeMetaBattleOptions.h" //현재CS의실제67h수신/음향·NSInfo갱신을공통등록표에결합한다.
+#include "o/RawStateBattleOptions.h" //메타도 일반 수신과 같은67h 전체 부모/복사 순서를 사용한다.
+#include "o/RawMissionBattleOptions.h" //현재 공급 반경·TYPE 비용·환불 비율의 같은 순수 getter다.
 #include "client/NativeMetaBattleCreate.h" //23h 생성 부모를 실제 공장·QA·Pop·Rig에 연결한다.
 #include "client/ClientMetaBattleObjects.h"
 #include "client/NativeIslandRig.h"
@@ -82,9 +84,9 @@ BOOL CALLBACK FindRootWindow(HWND window,LPARAM value) {
 }
 }
 // 현재 저장소를 검증하고 observer/기본 연결 종료를 설치하며 실제 소켓 열기는 Connect까지 지연한다.
-MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo)
-    :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)),tell_(std::move(tell)),refreshInfo_(std::move(refreshInfo)) {
-    if (!progress_ || !request_ || !processState_ || !tell_ || !refreshInfo_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run/NSInfo 장치 필요");
+MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo,std::shared_ptr<std::array<std::uint8_t,87>> options,std::function<void()> recreateHud)
+    :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)),tell_(std::move(tell)),refreshInfo_(std::move(refreshInfo)),options_(std::move(options)),recreateHud_(std::move(recreateHud)) {
+    if (!progress_ || !request_ || !processState_ || !tell_ || !refreshInfo_ || !options_ || !recreateHud_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run/NSInfo/전역옵션/HUD 장치 필요");
     o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client_.WallSeconds()); };
     hooks.record=[](auto&,auto,auto) {}; //World 없는 현재 메타의 선택적 기록은 미연결이다. 수신/로그인 성공을 합성하지 않는다.
     hooks.terminate=[](auto& connection) { connection.flags|=0x40U; }; //실제소켓/노드반납은각TCP/UDP소유자가수행한다.
@@ -117,7 +119,7 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         if (first==0xffffU) client_.SurfaceStorage()->AssertDisplay("dataLen != (unsigned short)-1","\\Ns\\O\\_p_packets.cpp",0xa07);
         const auto length=std::uint32_t(packet[5])|(std::uint32_t(packet[6])<<8);Put(packet,2,length+7U,2); //0040ae80은진단이복귀한뒤같은현재WORD를다시읽는다.
     });dispatch.Version(0x67,1,0);dispatch.RequireLength(0x67,0xffff); //송신관찰/버전은그대로유지하고수신부모를따로등록한다.
-    dispatch.Register(0x67,[this](auto,auto&,auto packet) { NativeMetaBattleOptionsHooks receive;receive.owner=[this] { return client_.GameplayGlobals()->player.battleOwner; };receive.log=[this](auto text) { client_.WriteDiagnosticLog(9,text); };receive.guySound=[this] { client_.WorldAudio().Sounds().PlayByName("guy.wav",0,0,0,0,0); };receive.refreshInfo=refreshInfo_;ReceiveNativeMetaBattleOptions(*client_.ChallengeGlobals(),packet,receive); }); //sender/phase/known추가필터없이같은현재CS·실제음향/UI를소비한다.
+    dispatch.Register(0x67,[this](auto sender,auto&,auto packet) { ReceiveBattleOptions(sender,packet); }); //원문과같이sender/phase/known 관문 없이 전체 State 부모를 호출한다.
     dispatch.Observe(0x23,{});dispatch.Version(0x23,1,0);dispatch.RequireLength(0x23,20); //0040b380의 빈 관찰기와 보호 PE의 고정20BYTE다.
     dispatch.Register(0x23,[this](auto,auto&,auto packet) {
         if (!client_.SurfaceStorage()->ownerMode.challenge) return;if (!client_.ChallengeGlobals()->Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xce6);NativeMetaBattleCreateHooks receive;BindClientMetaBattleObjects(receive,client_);
@@ -130,6 +132,17 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     }); //004b4600의 원래 메타 관문/CS 진단·삭제 부분 효과를 그대로 유지한다.
 }
 MetaConnectionRuntime::~MetaConnectionRuntime()=default; //자기OS/노드수명은실제TCP/UDP소유자의소멸자가반납한다.
+// 장치/전역은 실제 Client 주소를 빌리며 CS가0이어도 전역 옵션과 파생값 갱신을 수행한다.
+void MetaConnectionRuntime::ReceiveBattleOptions(std::uint32_t sender,std::span<const std::uint8_t> packet) {
+    auto& game=*client_.GameplayGlobals();auto& local=*client_.LocalStateGlobals();auto& storage=*client_.SurfaceStorage();
+    o::ReceiveStateBattleOptions(sender,packet,{*options_,client_.ChallengeGlobals()->Current(),game.GameAux()->RefundPercent(),storage.ownerMode.battle,game.world.missionPost,local.SavedGame()},{
+        [this](auto expression) { client_.SurfaceStorage()->AssertDisplay(expression,".\\State.cpp",0xd51); },
+        [this](auto,auto bytes) { NativeMetaBattleOptionsHooks receive;receive.owner=[this] { return client_.GameplayGlobals()->player.battleOwner; };receive.log=[this](auto text) { client_.WriteDiagnosticLog(9,text); };receive.guySound=[this] { client_.WorldAudio().Sounds().PlayByName("guy.wav",0,0,0,0,0); };receive.refreshInfo=refreshInfo_;ReceiveNativeMetaBattleOptions(*client_.ChallengeGlobals(),bytes,receive); },
+        [this] { auto& current=*client_.GameplayGlobals();o::UpdateMissionOptionSupplyRange(*options_,current.ManaRanges(),current.ManaRadius(),current.energy.radiusSquared); },
+        [this] { return o::MissionOptionTypeCost(*options_); },
+        [this](float cost) { auto& current=*client_.SurfaceStorage();const auto type=client_.GameplayGlobals()->GameAux()->GeyserType();if (type>=current.types.size()) throw std::out_of_range("메타67h 현재 비용 TYPE 물리 범위");current.types[type].cost=cost; },
+        [this] { return o::MissionOptionRefundPercent(*options_); },recreateHud_}); //임시 함수 장치의 수명은 이 전체 동기 호출 끝까지 유지된다.
+}
 // minor 차이는 로그만 남기고 major 차이만 현재 설정값/실제 Tell 결과로 거부한다.
 bool MetaConnectionRuntime::CheckMetaVersion(std::uint32_t major,std::uint32_t minor) {
     if (major!=10 || minor!=78) {

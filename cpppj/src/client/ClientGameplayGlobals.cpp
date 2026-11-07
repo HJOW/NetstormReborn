@@ -27,6 +27,7 @@ ClientGameplayGlobals::Use::Use(ClientGameplayGlobals& globals,bool prepared):gl
     globals_.Server()=true;globals_.Boss()=true; // 기존 일반 Session의 fresh 권한true/true만 유지한다. Native cleanup/prefix의 쓰기로 세지 않는다.
     globals_.fullDeck_=0; // 기존 일반 fresh 입력만 준비하며 authority/선택 reset도 함께 보존한다.
     globals_.energy={};globals_.energy.userCheat=userCheat; // 나머지 공급 상태는 기존 Session 초기화 의미를 유지한다. NativeState 전체 초기화 이행과 구별한다.
+    globals_.manaRadius_=22.0F; //기존 독립 fresh의22 입력만 유지하며 Native prepared와 반납은 현재 반경을 다시 쓰지 않는다.
     globals_.selection.ResetForGeneralWorld(); // 기존 일반 GameWorld의 fresh 입력 호환이다. prepared와 반납에서는 이 전역을 암묵 초기화하지 않는다.
 }
 // Player/커서의 기존 C++ 소멸 의미를 장기 전역의 명시 무효화로 바꾸며 두 Subscriber는 유지한다.

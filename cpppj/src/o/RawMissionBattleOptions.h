@@ -6,6 +6,9 @@ namespace netstorm::o {
 class GameRandom; // 일반 State7의 밀도도 SP/지형과 같은 게임 난수 상태를 직접 소비한다.
 // 0041cb90/0041cc10의 실제 PATCH 초기화다. BYTE23..62는 기존 값을 보존하고22개 기본 옵션/색0..7을 설치한다.
 void ResetMissionBattleOptions(OriginalEdition edition,std::span<std::uint8_t> options);
+void UpdateMissionOptionSupplyRange(std::span<const std::uint8_t> options,std::span<const float> choices,float& range,float& squared); //004b4860의 현재 선택/ordered 비교/F32·제곱 쓰기다. Session/가짜256BYTE 사용표를 요구하지 않는다.
+std::int32_t MissionOptionTypeCost(std::span<const std::uint8_t> options); //0041c8b0의 현재BYTE10h/1000·2000·3000·5000 조회다.
+std::uint32_t MissionOptionRefundPercent(std::span<const std::uint8_t> options); //0041ca70의 현재BYTE0fh/0·25·50·75·100·150 조회다.
 // 옵션 수신/로그인/TYPE 소비자가 빌리는 같은 현재 저장소다.
 struct MissionBattleOptionState {
     std::span<const std::uint8_t> options; // 0052f7e0의 실제87바이트이며 숨김9도 이 안에 있다.

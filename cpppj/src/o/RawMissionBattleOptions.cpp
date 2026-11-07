@@ -15,6 +15,8 @@ constexpr std::array<std::int32_t,4> kMinimumDensity{10,15,20,25},kMaximumDensit
 float StoreX87Float(float value) {
     auto bits=std::bit_cast<std::uint32_t>(value);if ((bits&0x7f800000U)==0x7f800000U && (bits&0x007fffffU)) bits|=0x00400000U;return std::bit_cast<float>(bits);
 }
+std::uint8_t OptionByte(std::span<const std::uint8_t> options,std::size_t index) { if (index>=options.size()) throw std::out_of_range("현재 전투 옵션 BYTE 물리 범위");return options[index]; } //선택한 현재BYTE만 읽고 전체87BYTE를 선복사하지 않는다.
+float RangeChoice(std::span<const float> choices,std::size_t index) { if (index>=choices.size()) throw std::out_of_range("현재 공급 반경 선택표 물리 범위");return choices[index]; } //원문 순서에서 실제 필요한float만 조회한다.
 }
 // 원본은 전체87바이트를 지우지 않는다. 미작성 예약40바이트와 양쪽 이웃은 건드리지 않는다.
 void ResetMissionBattleOptions(OriginalEdition edition,std::span<std::uint8_t> options) {
@@ -30,21 +32,22 @@ RawMissionBattleOptions::RawMissionBattleOptions(OriginalEdition edition,Mission
         throw std::invalid_argument("미션 옵션의 실제 PATCH 저장소 크기 오류");
 }
 // 원본은 초기 선택값을 먼저 저장한다. NaN에서 std::clamp/min/max로 바꾸지 않는다.
-void RawMissionBattleOptions::UpdateRange() const {
-    const auto index=state_.options[4];if (index>=state_.rangeTable.size()) throw std::out_of_range("미션 범위 옵션 인덱스");state_.range=StoreX87Float(state_.rangeTable[index]);
-    const auto candidate=state_.rangeTable[2]<state_.range ? state_.rangeTable[2] : state_.range;
-    if (state_.rangeTable[0]>candidate) state_.range=StoreX87Float(state_.rangeTable[0]);
-    else if (state_.rangeTable[2]<state_.range) state_.range=StoreX87Float(state_.rangeTable[2]);
-    state_.rangeSquared=state_.range*state_.range;
+void UpdateMissionOptionSupplyRange(std::span<const std::uint8_t> options,std::span<const float> choices,float& range,float& squared) {
+    const auto index=OptionByte(options,4);range=StoreX87Float(RangeChoice(choices,index));
+    const auto candidate=RangeChoice(choices,2)<range ? RangeChoice(choices,2):range;
+    if (RangeChoice(choices,0)>candidate) range=StoreX87Float(RangeChoice(choices,0));else if (RangeChoice(choices,2)<range) range=StoreX87Float(RangeChoice(choices,2));squared=range*range;
 }
+void RawMissionBattleOptions::UpdateRange() const { UpdateMissionOptionSupplyRange(state_.options,state_.rangeTable,state_.range,state_.rangeSquared); } //같은 실제 필드에 공통 본체를 적용한다.
 // 옵션 BYTE는 호출 때마다 같은 원문에서 읽는다.
-std::int32_t RawMissionBattleOptions::TypeCost() const {
-    const auto index=state_.options[0x10];if (index>=kTypeCosts.size()) throw std::out_of_range("미션 TYPE 비용 옵션 인덱스");return kTypeCosts[index];
+std::int32_t MissionOptionTypeCost(std::span<const std::uint8_t> options) {
+    const auto index=OptionByte(options,0x10);if (index>=kTypeCosts.size()) throw std::out_of_range("미션 TYPE 비용 옵션 인덱스");return kTypeCosts[index];
 }
+std::int32_t RawMissionBattleOptions::TypeCost() const { return MissionOptionTypeCost(state_.options); } //현재 동일 옵션의 순수 getter를 재사용한다.
 // 이후 설정 변경을 이전 파생값 캐시로 가리지 않는다.
-std::uint32_t RawMissionBattleOptions::CurrentValue() const {
-    const auto index=state_.options[0xf];if (index>=kValues.size()) throw std::out_of_range("미션 파생값 옵션 인덱스");return kValues[index];
+std::uint32_t MissionOptionRefundPercent(std::span<const std::uint8_t> options) {
+    const auto index=OptionByte(options,0xf);if (index>=kValues.size()) throw std::out_of_range("미션 파생값 옵션 인덱스");return kValues[index];
 }
+std::uint32_t RawMissionBattleOptions::CurrentValue() const { return MissionOptionRefundPercent(state_.options); } //실제 현재 비율 선택을 별도 사본 없이 읽는다.
 // 원문 옵션 BYTE를 매 getter마다 다시 읽으며 잘못된 인덱스의 스택 외부 읽기는 호스트 오류로 구별한다.
 std::int32_t RawMissionBattleOptions::MinimumDensity() const { const auto index=state_.options[7];if (index>=kMinimumDensity.size()) throw std::out_of_range("일반 전투 최소 밀도 옵션 범위");return kMinimumDensity[index]; }
 // 상한 조회를 하한 조회의 선택값으로 고정하지 않는다.

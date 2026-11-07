@@ -4,6 +4,8 @@
 #include "o/RawLocalMissionState.h"
 #include "o/RawLocalServerDiscovery.h"
 #include <functional>
+#include <array> //같은 실제 전역87BYTE 옵션의 공유 소유권을 형식으로 보관한다.
+#include <memory>
 #include <string_view>
 
 namespace netstorm::client { //같은 Client Player/CS/시계/현재 상태를 빌리는 메타 전송 부모다.
@@ -11,7 +13,7 @@ class Client; //실제 Client는 이 장기 EditorRuntime 자식보다 오래 �
 class LocalUdpTransport; //실제UDP12의물리소유자이며구현은같은Meta부모의cpp에서결합한다.
 class MetaConnectionRuntime {
 public:
-    MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo); //생성은소켓을열지않으며현재Player/표·실제Run/버전Tell과현재NSInfo갱신을연결한다.
+    MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo,std::shared_ptr<std::array<std::uint8_t,87>> options,std::function<void()> recreateHud); //생성은소켓을열지않고실제전역옵션·CS/NSInfo·전체HUD 장치를같은수명으로연결한다.
     MetaConnectionRuntime(const MetaConnectionRuntime&)=delete;MetaConnectionRuntime& operator=(const MetaConnectionRuntime&)=delete; //등록된 callback의 주소/실제 socket owner를 복제하지 않는다.
     ~MetaConnectionRuntime(); //Native CloseAll 뒤 남은 자기 노드만 실제 TCP owner가 반납한다.
     o::LocalMissionParentResult Run(std::uint32_t selected); //20~27/34~38의부모와37의실제새R lan실행을연결하고공통144BYTE확정은바깥분배기에남긴다.
@@ -29,6 +31,7 @@ private:
     void SendChallengeLogin(); //004b4480의1ch/현재Core/이름·언어·CD/진단 플래그 요청이다.
     bool CheckMetaVersion(std::uint32_t major,std::uint32_t minor); //004b4160의10.78 비교/로그·major 차이에서만 옵션/Tell 거부다.
     void ReceiveRootReply(std::span<const std::uint8_t> packet); //004b4250의 실제 현재 표/서버 목록/사용자 홈 저장과 next24·메타 갱신을 연결한다.
+    void ReceiveBattleOptions(std::uint32_t sender,std::span<const std::uint8_t> packet); //004b4900 전체 부모를 현재 전역87BYTE·선택CS·공유 파생값·실제 HUD에 연결한다.
     void Progress(std::string_view source,bool protocol=false); //원문문구를한번번역하고로컬검색의고정%s만TCP/IP로치환해실제HTML에전달한다.
     o::LocalServerDiscoveryGlobals Discovery(); //같은Client의005c85a8/005c8600/005c8608실제주소세개를빌린다.
     o::LocalServerDiscoveryHooks DiscoveryHooks(); //현재UDP12/공유CRT/실제벽시각/서버창/팔레트장치를원문검색몸체에결합한다.
@@ -38,6 +41,7 @@ private:
     std::function<void()> processState_; //66h서버발견의현재36직접쓰기뒤같은실제004b6dd0을동기실행한다.
     std::function<void(std::string_view)> tell_; //실제 현재 HTML Tell 장치이며 버전 차이 안내를 고정 문자열 창으로 대체하지 않는다.
     std::function<void()> refreshInfo_; //같은현재NSInfo의0047cab0이며수신전체보다오래사는실제UI를빌린다.
+    std::shared_ptr<std::array<std::uint8_t,87>> options_;std::function<void()> recreateHud_; //일반/메타가 같은 전역87BYTE를 공유하고 현재004c7880을 선택한다.
     std::unique_ptr<LocalTcpTransport> tcp_; //같은 Registry10/11의 실제 OS 노드/분배 owner다.
     std::unique_ptr<LocalUdpTransport> udp_; //TCP와같은Registry/등록표의실제검색12이며생성은소켓을열지않는다.
     bool pumping_{}; //호스트 재진입 보호이며 접속 성공/Native 상태를 나타내지 않는다.

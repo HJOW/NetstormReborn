@@ -20,8 +20,8 @@ struct RawCampaignSession::Impl::Login {
     std::array<std::uint32_t,2>& zoneWords{s.localStateGlobals->ZoneWords()}; //원본 Zone6BYTE와 같은 장기 Client 물리를 실제 로그인도 빌린다.
     std::span<std::uint8_t> cachedCore{s.coreDataGlobals->Cached()};std::span<std::uint8_t>& currentCore{s.coreDataGlobals->Current()}; // 실제 같은 장기10BYTE와 현재 포인터 슬롯을 직접 빌린다.
     std::array<std::uint8_t,256> typeUse{}; //원본256BYTE 타입사용표다.
-    std::array<float,4> ranges{14,22,30,38}; //원본5425f4의 실제4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
-    float range{22}; //원본52f488이며제곱은Session의같은EnergySupplyState에 쓴다.
+    std::span<const float,4> ranges{s.gameplayGlobals->ManaRanges()}; //원본5425f4의 현재4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
+    float& range{s.gameplayGlobals->ManaRadius()}; //원본52f488을 같은 커서/AI/메타 옵션과 공유하며 제곱도 실제EnergySupplyState에 쓴다.
     bool& simul{s.localStateGlobals->Simulconnect()};std::uint32_t& adjust{s.gameplayGlobals->GameAux()->TerrainEnabled()};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},localTitle{};std::uint8_t& battleByte{s.localStateGlobals->BattleByte()}; //State의 현재 입력과 생성/Zone 보정은 같은 Client 수명이며 독립 검사만 별도 배경 첫BYTE를 사용한다.
     std::uint8_t& title{s.services.htmlWindowGlobals ? reinterpret_cast<std::uint8_t&>(s.services.htmlWindowGlobals->text.background[0]) : localTitle}; //현재 HTML 배경80BYTE의 첫BYTE만 같은 주소로 빌린다.
     std::uint32_t& activeStamp{s.connectionActivityGlobals->ActiveStamp()};std::uint32_t& zoneWord{s.connectionActivityGlobals->ActiveZoneWord()}; // 두 활동 표 사이005c8540/544의 실제 현재 Zone 출력을 직접 빌린다.

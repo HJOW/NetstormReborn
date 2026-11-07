@@ -1,0 +1,55 @@
+{
+  "unit": 1129,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12736512,
+      "sha256": "6cf019254402bb273088d1633de58d3b11491d6c270e33a5efc688e1ddf47c89"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "7bf6d82fc1751f7aad90a46a26aa9ae5f0c9767c995a7e8514c6df2b053e805c"
+    }
+  },
+  "staticAudit": {
+    "native": "004b4900/004b4860/0041c8b0/0041ca70의 전체 다음 함수 경계까지 C/기계어와 보호 PE 초기값을 읽었다. 원문·기계어 생성물 변경0이다.",
+    "ownership": "ClientGameplayGlobals가 실제 공급 반경22와 4float 선택표14/22/30/38을 소유한다. prepared 대여는 보존하고 기존 fresh 경로만22로 재설정한다. 일반 옵션/커서/AI는 같은 주소를 빌린다.",
+    "parent": "메타67h 기존 observer/버전/가변 길이는 유지하고 수신 본체는 일반 수신과 같은 전체 State 부모를 호출한다. sender/phase/known 관문을 추가하지 않는다. 실제 같은87BYTE 옵션 저장소를 빌린다.",
+    "effects": "CS가 비영일 때만 실제42c920을 부르고 공급 범위/제곱·현재122 TYPE 비용·현재 환급을 순서대로 갱신한다. 실제battle&&!mission&&saved 조건에서만 전체 HUD 재생성을 부른다. World/Session 대용을 만들지 않는다.",
+    "numeric": "원문 float32 최초 저장과 순서 있는 비교·NaN 경로를 보존하며 std::clamp로 바꾸지 않는다. 범위 외 물리 접근은 해당 선택 시 호스트 예외다.",
+    "validation": "Release 빌드/정적 원문 대조/보호2800 확인만 수행한다. 신규 단위/MP/게임/통신 실행0이다."
+  },
+  "remaining": [
+    "메타 객체 그림/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

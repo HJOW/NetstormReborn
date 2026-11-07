@@ -44,6 +44,10 @@ public:
     RawCampaignSession& RequireSession() const; // 선택된 게임 효과가 실제 Runtime을 요구할 때만 호출한다.
     bool Borrowed() const; // 현재 대여 여부의 읽기 전용 관측이다.
     const std::shared_ptr<ClientSubscriberGlobals>& Subscribers() const; // 다른 Client의 참조를 잘못 합치지 않는다.
+    float& ManaRadius() { return manaRadius_; } //0052f488의 실제 공급 반경을 옵션/커서/AI가 같은 주소에서 읽고 쓴다.
+    const float& ManaRadius() const { return manaRadius_; } //Session 교체/반납에서22 사본을 새로 만들지 않는다.
+    std::span<float,4> ManaRanges() { return manaRanges_; } //005425f4의 현재4float 선택표이며 옵션 해석이 같은 표를 읽는다.
+    std::span<const float,4> ManaRanges() const { return manaRanges_; } //현재14/22/30/38 표의 비소유 조회다.
     o::TerrainBitmapState& TerrainBitmaps(); // 같은005c8ab0/005c8bb8 캐시와 fringe TYPE를 조회하며 Session 대여/반납에서 초기화하지 않는다.
     o::TerrainStampState& TerrainStamp(); // 최초 FrameAt에서 만드는005c8be4의99개 변형을 미션/편집 월드 교체 뒤에도 같은 주소에서 빌린다.
     std::uint32_t& FullDeck() { return fullDeck_; } // 0054db14의 실제 DWORD를 생산/건설/배치/객체/HUD가 같은 주소로 빌린다.
@@ -133,6 +137,7 @@ public:
     const std::uint32_t& FireMode() const { return diagnosticFireMode_; } //Session/Renderer교체뒤에도같은주소와전체값을보존한다.
     std::uint32_t specialAuxiliary{}; // 원문55a484이며 설정 해석에서55a480과 함께0으로 쓴다. 별도 기능 해석은 후속이다.
 private:
+    float manaRadius_{22.0F};std::array<float,4> manaRanges_{14.0F,22.0F,30.0F,38.0F}; //보호 PE의 최초 공급 반경/선택표이며 prepared 대여에서는 보존한다.
     std::uint32_t diagnosticHash_{},diagnosticFire_{},diagnosticSpot_{},diagnosticBoard_{},diagnosticFireMode_{}; //원문네플래그/Fire모드는최초BSS0이며설치/반납에서지우지않는다.
     std::uint32_t localAddress_{}; //보호PE005953fc의 최초BSS0이다. 이후 실제 네트워크 주소 writer는 후순위MP에서 연결한다.
     std::uint32_t fullDeck_{}; // 최초 PE BSS0이며 준비 대여/반납은 Native 부모가 쓴 현재 값을 보존한다.

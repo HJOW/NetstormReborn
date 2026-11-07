@@ -13,11 +13,12 @@ struct CursorManaFields {
 struct CursorManaGlobals {
 private:
     std::int32_t localMapLimit_{256}; // 독립 원문 검사의 기존 값형256이다. 실제 Client는 이 사본을 읽지 않는다.
+    float localRadiusLimit_{22.0F}; //실제 공급 반경을 빌리지 않는 독립 입력의 기존 초기22다.
 public:
     std::uint32_t manaType{103},processType{50}; // 005411f4/00541138의 마나 객체·마나 프로세스 번호다.
     std::int32_t& mapLimit; //00531928의 실제 장기 주소 또는 독립 입력을 직접 읽고 쓰는 참조다.
-    float invalidPoint{1},radiusLimit{22}; // 0052f838/0052f488의 범위 밖 위치와 마나 최대 반경이다.
-    explicit CursorManaGlobals(std::int32_t* sharedMapLimit=nullptr):mapLimit(sharedMapLimit ? *sharedMapLimit : localMapLimit_) {} // 처음 한 번 같은 현재 주소를 빌린다.
+    float invalidPoint{1};float& radiusLimit; //0052f838의 범위 밖 위치와0052f488의 같은 현재 공급 반경이다.
+    explicit CursorManaGlobals(std::int32_t* sharedMapLimit=nullptr,float* sharedRadius=nullptr):mapLimit(sharedMapLimit ? *sharedMapLimit : localMapLimit_),radiusLimit(sharedRadius ? *sharedRadius : localRadiusLimit_) {} //실제 Client는 두 장기 주소를 빌리며 독립 입력만 자체 기본값을 쓴다.
     CursorManaGlobals(const CursorManaGlobals&)=delete;CursorManaGlobals& operator=(const CursorManaGlobals&)=delete; // 지역 fallback에 매인 참조를 값 복사하지 않는다.
 };
 // 계산 밖의 실제 객체 생성·가상 표시/삭제와 중심 조회다. 선택한 경계의 누락은 예외다.
