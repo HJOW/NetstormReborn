@@ -84,12 +84,18 @@ function fakeDocument() {
     };
 }
 
-// 무브라우저 앱 하나를 만들어 메인 메뉴까지 연다. 반환: { app, frame(n), click(label), down/up(label), key(name), snapshot(), report() }.
+// 무브라우저 앱 하나를 만들어 메인 메뉴까지 연다. 반환: { app, openedLinks, frame(n), click(label), down/up(label), key(name), snapshot(), report() }.
 // options: { language('english'), screen({ width, height }), originalComparison(true), settings(설정 키 → 값), dataRoot }.
 // settings 의 키는 웹 설정(Settings: welcomeGiven·tellTips 등, 대소문자 무시)·진행 값(Done*)·cpppj 전용 키(CPP_ONLY_SETTING_KEYS) 중 하나여야 하며, 그 밖이면 Error 이다. (2026-11-07 WB02-H)
 export async function createHeadless({ language = 'english', screen = { width: 1024, height: 768 }, originalComparison = true, settings = {}, dataRoot = DEFAULT_DATA_ROOT } = {}) {
     if (language !== 'english') throw new Error('무브라우저 실행은 아직 영어만 지원한다(한국어 글리프 래스터라이저는 Canvas 2D 가 필요).');
-    const app = new Netstorm({ language, audio: false, originalComparison, fetch: diskFetch(dataRoot), autoFocus: false, previewMap: null, debug: false });
+    // 바깥 링크는 실제 탭을 열지 않고 열려던 주소만 이 목록에 기록한다(반환 값의 openedLinks). (2026-11-07 WB03-AD)
+    const openedLinks = [];
+    const openExternal = (document, link) => {
+        openedLinks.push(link.url);
+        return true;
+    };
+    const app = new Netstorm({ language, audio: false, originalComparison, fetch: diskFetch(dataRoot), autoFocus: false, previewMap: null, debug: false, openExternal });
     const doc = fakeDocument();
     // Netstorm.init 의 DOM 준비 대신 표시 경계 대체물을 넣는다(init 의 설정·진행 저장소 준비와 같은 순서).
     app._root = { ownerDocument: doc };
@@ -122,6 +128,8 @@ export async function createHeadless({ language = 'english', screen = { width: 1
     };
     return {
         app,
+        // 바깥 링크로 열려던 주소의 기록이다(실제 탭은 열지 않음). (2026-11-07 WB03-AD)
+        openedLinks,
         // n 번째 프레임을 처리한다(브라우저 requestAnimationFrame 콜백과 같은 _onFrame).
         frame(n) {
             app._onFrame(n * FRAME_MS);

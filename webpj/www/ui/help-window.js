@@ -4,7 +4,7 @@
 // 배치(원본 QuickHelpWindow::Construct/Attach): 창 450×350 을 화면 가운데(폭), y 40 에 놓는다. 본문 배경은 (17,17)에서 폭 420, 높이 350 - 17 - 10 - 10 - 버튼 높이이고 눌린 질감 테두리(질감 프레임 0)다.
 // 그 안쪽 (2,2)에 폭·높이 -4 의 단색(RGB 55,51,54) 칸이 있고, 본문은 그 칸을 채운다(오른쪽 9픽셀은 스크롤바). 버튼은 아래 위쪽 10픽셀을 비우고 가운데에 놓는다(Back, OK 순, 간격 10, 폭은 OK 의 1.2배로 통일).
 // 원본 주소: 생성·배치 QuickHelpWindow, 요청·이력·입력 QuickHelpControl(OpenQuickHelpWindow·DispatchQuickHelpWindow·QuickHelpHistory), 본문 변환 QuickHelpHtml. 복원 기준: cpppj(10.78 경로).
-// 웹 적응: 도움말 파일 안의 바깥 주소(`http://`)는 열지 않고 호스트 훅(onExternal)에 넘긴다(과거 도메인이며 접속하지 않는다). 마우스 휠로도 스크롤한다(원본에 없음).
+// 웹 적응: 도움말 파일 안의 바깥 주소(`http://`)는 이 창이 열지 않고 호스트 훅(onExternal)에 넘긴다(호스트가 새 탭/창으로 열지 판정한다, 2026-11-07 WB03-AD). 마우스 휠로도 스크롤한다(원본에 없음).
 // 한국어 모드에서는 Back·OK 단추 문구를 번역표로 바꾸고 단추·본문 글자를 유니코드 글꼴 코드(FontSet.encode)로 만든다. 한국어 도움말 파일은 아직 없어 본문은 영어 문장이 D2Coding 으로 그려진다.
 // (2026-10-30 WB03-G: 메인 메뉴 Help → General Help 창을 위해 추가, 2026-10-31 WB03-O: 한국어 단추·글자 부호화)
 import { createTextContext } from '../render/glyph-text.js';

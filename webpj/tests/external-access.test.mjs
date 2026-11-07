@@ -1,10 +1,12 @@
 // 웹 런타임의 외부 접속 경계를 검사한다(docs/webpj-external-access-20261105.md 의 목록과 같은 범위).
 //  1) www 소스에 같은 출처 자산 요청(AssetLoader 의 fetch) 밖의 네트워크·창 열기·주소 이동 API 와 절대 주소 문자열이 없다.
 //  2) 자산 목록(manifest)의 모든 경로와 앱 적재(_load)의 실제 요청이 데이터 폴더(문서 기준 상대 URL) 아래에 머문다.
-//  3) Tell/도움말 링크의 바깥 주소(http·mailto·file 등)는 열지 않고 콘솔 안내만 하며, cmd: 명령과 도움말 주제만 내부에서 처리한다.
+//  3) Tell/도움말 링크의 바깥 주소는 치환이 끝난 http/https/mailto 만 브라우저 새 탭/창으로 열고(열기 장치는 한 파일뿐),
+//     file:·미치환 자리표시·호스트 없는 주소·다른 접두는 열지 않고 콘솔 안내만 하며, cmd: 명령과 도움말 주제만 내부에서 처리한다.
 //  4) 구 검증 안내(UserNotUpdated)·Technical Help·서버 진단·$Zsend/$Input 등 외부 서비스 관련 기능은 웹에서 열리거나 실행되지 않는다.
 // 이 검사는 파일 읽기와 가짜 fetch 만 쓰며 실제 네트워크·DNS·브라우저를 쓰지 않는다.
 // (2026-11-05 WB02-E: AGENTS.md 의 외부 접속 기능 문서화 요구에 맞춘 웹 경계 검사로 추가)
+// (2026-11-07 WB03-AD: 바깥 링크를 새 탭/창으로 열도록 3)번과 소스 감사의 열기 장치 한정을 갱신)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -66,18 +68,22 @@ test('외부 접속 소스 감사: 네트워크 API 는 같은 출처 자산 요
     const violations = [];
     const fetchUsers = new Set();
     const windowOpen = [];
+    const anchorUsers = [];
     // 파일마다 코드 줄을 검사한다.
     for (const file of files) {
         codeLines(file).forEach((line, index) => {
             for (const pattern of FORBIDDEN) if (pattern.test(line)) violations.push(`${file}:${index + 1}: ${line.trim()}`);
             if (/\bfetch\b/i.test(line)) fetchUsers.add(file);
             if (/\bwindow\s*\.\s*open\s*\(/.test(line)) windowOpen.push(file);
+            if (/createElement\(\s*['"`]a['"`]\s*\)/.test(line)) anchorUsers.push(file);
         });
     }
     assert.deepEqual(violations, []);
     assert.deepEqual([...fetchUsers].sort(), ['assets/asset-loader.js', 'netstorm.js']);
     // 도움말 창 공장의 `window` 는 HelpWindow 지역 변수이며 window.open(topic) 은 첫 주제 열기이다(브라우저 창 열기 아님).
     assert.deepEqual(windowOpen, ['ui/help-window.js']);
+    // 바깥 주소를 여는 앵커 요소(createElement('a'))는 열기 장치 한 파일에서만 만든다(WB03-AD). 다른 곳의 링크 열기·이동은 금지 패턴이 막는다.
+    assert.deepEqual(anchorUsers, ['platform/external-opener.js']);
     assert.match(fs.readFileSync(path.join(WWW_ROOT, 'ui', 'help-window.js'), 'utf8'), /const window = new HelpWindow\(/);
     // 시작 문서는 바깥 스크립트·스타일·글꼴을 부르지 않는다.
     const html = fs.readFileSync(path.join(WWW_ROOT, 'index.html'), 'utf8');
@@ -139,18 +145,43 @@ test('앱 적재 요청: 언어별 묶음을 데이터 폴더 아래에서만 �
     }
 });
 
-// 링크 분배: 바깥 주소는 콘솔 안내만 하고 다른 처리(명령·도움말)를 하지 않는다. cmd: 는 대화상자 명령으로, 주제는 도움말 창으로 간다.
-test('링크의 바깥 주소: 열지 않고 콘솔 안내만 한다', (t) => {
+// 링크 분배: 열 수 있는 바깥 주소(http/https/mailto)는 열기 장치로 넘기고, 열 수 없는 주소(file:·미치환 자리표시·호스트 없는 주소)는 이유와 함께 콘솔로만 알린다.
+// cmd: 는 대화상자 명령으로, 주제는 도움말 창으로 가며 바깥 주소 처리를 건드리지 않는다. 실제 탭은 열지 않고 가짜 열기 장치로 받는다. (2026-11-07 WB03-AD)
+test('링크의 바깥 주소: 열 수 있는 주소만 열기 장치로 가고 나머지는 이유와 함께 알린다', (t) => {
     const info = t.mock.method(console, 'info', () => {});
     const calls = [];
-    const app = { _runDialogCommand: (command) => calls.push(['command', command]), _openHelp: (topic) => calls.push(['help', topic]) };
+    const opened = [];
+    const documentStub = { name: '가짜 문서' };
+    const app = Object.create(Netstorm.prototype);
+    app.options = { openExternal: (document, link) => { opened.push([document, link.kind, link.url]); return true; } };
+    app._root = { ownerDocument: documentStub };
+    app._runDialogCommand = (command) => calls.push(['command', command]);
+    app._openHelp = (topic) => calls.push(['help', topic]);
     const follow = (destination) => Netstorm.prototype._followLink.call(app, destination);
-    // 웹에서 닿는 자료의 바깥 링크 종류(http·mailto·file·치환 주소)를 모두 넣어 본다.
-    const externals = ['http://www.netstormhq.com', 'http://te.netstormhq.com', 'http://{UPDATEURL}', 'mailto:{EMAIL1}', 'mailto:bugs@titanic.com', 'file:NetStormPieceList.html'];
-    for (const destination of externals) follow(destination);
+    // 웹에서 닿는 자료의 바깥 링크 종류(http·mailto·file·치환되지 않은 주소)를 모두 넣어 본다. 치환되지 않은 자리표시와 file: 은 열지 않는다.
+    const external = [
+        ['http://www.netstormhq.com', 'web', 'http://www.netstormhq.com/'],
+        ['http://te.netstormhq.com', 'web', 'http://te.netstormhq.com/'],
+        ['http://{UPDATEURL}', null, null],
+        ['mailto:{EMAIL1}', null, null],
+        ['mailto:bugs@titanic.com', 'mail', 'mailto:bugs@titanic.com'],
+        ['file:NetStormPieceList.html', null, null],
+    ];
+    for (const [destination] of external) follow(destination);
     assert.deepEqual(calls, []);
-    assert.equal(info.mock.callCount(), externals.length);
-    assert.ok(info.mock.calls.every((call, index) => String(call.arguments[0]).includes(externals[index]) && String(call.arguments[0]).includes('열지 않습니다')));
+    assert.deepEqual(opened, external.filter(([, kind]) => kind).map(([, kind, url]) => [documentStub, kind, url]));
+    const refused = external.filter(([, kind]) => !kind).map(([destination]) => destination);
+    assert.equal(info.mock.callCount(), refused.length);
+    assert.ok(info.mock.calls.every((call, index) => String(call.arguments[0]).includes(refused[index]) && String(call.arguments[0]).includes('열지 않습니다')));
+    // 열기 장치가 실패(false)를 돌려주면 경고만 하고 게임 진행은 계속한다.
+    const warn = t.mock.method(console, 'warn', () => {});
+    app.options = { openExternal: () => false };
+    assert.equal(app._openExternalAddress('https://example.org/a', '링크'), false);
+    assert.equal(warn.mock.callCount(), 1);
+    // 도움말 창의 바깥 주소 훅도 같은 판정으로 간다(출처 이름만 다르다).
+    app.options = { openExternal: (document, link) => { opened.push(['도움말', link.url]); return true; } };
+    assert.equal(app._openExternalAddress('http://www.activision.com', '도움말'), true);
+    assert.deepEqual(opened.at(-1), ['도움말', 'http://www.activision.com/']);
     // 내부 처리: cmd: 명령과 도움말 주제.
     follow('cmd:Tell,TechSupport');
     follow('UnitsType');

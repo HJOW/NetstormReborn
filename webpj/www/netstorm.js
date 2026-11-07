@@ -37,6 +37,8 @@ import { createTellWindow } from './ui/tell-window.js';
 import { TELL_TIP_COMMAND, dispatchTellTip } from './ui/tell-tip.js';
 import { applyScriptConfig, parseScriptCommand } from './ui/script-command.js';
 import { dispatchHelpLink } from './ui/help-link.js';
+import { resolveExternalLink } from './ui/external-link.js';
+import { openExternalLink } from './platform/external-opener.js';
 import { configParseLong } from './assets/config.js';
 import { HelpWindow, createHelpWindow } from './ui/help-window.js';
 import { CURSOR_NORMAL, applyCursorStyle, buildCursorCss } from './ui/cursor.js';
@@ -381,6 +383,9 @@ export class Netstorm {
             // 호스트가 정한 음량 단계(1~5)이다. 없으면(null) 저장된 설정을 쓴다. 정하면 저장하지 않고 이번 실행에서만 우선한다. (2026-10-29 WB03-F)
             soundVolume: options.soundVolume ?? null,
             musicVolume: options.musicVolume ?? null,
+            // 바깥 링크를 여는 함수 (문서, 판정 결과) => 열었으면 true 이다. 기본(null)은 platform/external-opener.js 의 새 탭/창 열기이다.
+            // 무브라우저 실행(tools/headless.mjs)과 검사가 실제 탭을 열지 않도록 바꿔 끼운다. (2026-11-07 WB03-AD)
+            openExternal: options.openExternal ?? null,
             prepare: options.prepare ?? (async () => {}),
             onStateChange: options.onStateChange ?? null,
             onMenuCommand: options.onMenuCommand ?? null,
@@ -980,7 +985,7 @@ export class Netstorm {
     }
 
     // 일반 도움말 창을 열어 메인 메뉴 위에 올린다(원본 F1Help: 메인 메뉴 Help 목록의 General Help 행과 F1 키). 이미 열려 있으면 그 창에서 주제만 첫 주제로 되돌린다.
-    // 도움말 파일(`Quick Help Spec`)이 없으면 원본처럼 오류 로그만 남기고 열지 않는다. 바깥 주소 링크는 열지 않고 콘솔에 알린다(과거 도메인이라 접속하지 않음). 열었으면 true 를 돌려준다. (2026-10-30 WB03-G)
+    // 도움말 파일(`Quick Help Spec`)이 없으면 원본처럼 오류 로그만 남기고 열지 않는다. 바깥 주소 링크는 `_openExternalAddress` 로 새 탭/창에 연다(2026-11-07 WB03-AD, 그 전에는 콘솔 안내만). 열었으면 true 를 돌려준다. (2026-10-30 WB03-G)
     _openHelp(topic) {
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
         const open = this._mainMenu.dialog;
@@ -1000,7 +1005,7 @@ export class Netstorm {
                 this._displayDirty = true;
             },
             onCommand: (command) => this._onDialogCommand(command),
-            onExternal: (address) => console.info(`Netstorm: 도움말의 바깥 주소 '${address}' 는 열지 않습니다(원본의 과거 주소).`),
+            onExternal: (address) => this._openExternalAddress(address, '도움말'),
             onSound: () => this._audio?.playSound(BUTTON_SOUND_NAME),
             onUnsupported: (what, text) => console.warn(`Netstorm: 도움말의 ${what} 은(는) 아직 지원하지 않습니다.`, text),
         });
@@ -1035,7 +1040,7 @@ export class Netstorm {
     }
 
     // 링크 목적지를 원본 규칙(ui/help-link.js)으로 분배한다: `cmd:` 는 스크립트 명령으로 실행하고, 도움말 주제는 도움말 창을 열며(원본 mode 1, 학습 0),
-    // 바깥 주소(`http:`·`mailto:` 등)는 열지 않고 콘솔에 알린다(웹은 바깥 프로그램을 실행할 수 없고 원본 주소는 과거 도메인이다). 접두·본문 한도를 넘으면 알리고 아무것도 하지 않는다. (2026-10-31 WB03-K)
+    // 바깥 주소(`http:`·`mailto:` 등)는 `_openExternalAddress` 가 판정해 열 수 있는 것만 브라우저 새 탭/창으로 연다(2026-11-07 WB03-AD, 그 전에는 콘솔 안내만). 접두·본문 한도를 넘으면 알리고 아무것도 하지 않는다. (2026-10-31 WB03-K)
     _followLink(destination) {
         try {
             dispatchHelpLink(destination, {
@@ -1044,12 +1049,28 @@ export class Netstorm {
                     this._runDialogCommand({ name: command.name, argument: command.argument });
                 },
                 help: (topic) => this._openHelp(topic),
-                external: (original) => console.info(`Netstorm: 링크의 바깥 주소 '${original}' 는 열지 않습니다(원본의 과거 주소).`),
+                external: (original) => this._openExternalAddress(original, '링크'),
             });
         } catch (error) {
             if (!(error instanceof RangeError)) throw error;
             console.warn(`Netstorm: 링크 목적지가 원본 한도(접두 80, 본문 256)를 넘어 따라가지 않습니다: ${destination}`);
         }
+    }
+
+    // 링크·도움말의 바깥 주소 하나를 처리한다(2026-11-05 사용자 결정: 원본의 셸 실행 대신 브라우저 새 탭/창으로 연다).
+    // ui/external-link.js 가 열 수 있다고 판정한 주소(치환이 끝난 http/https 와 mailto)만 열고, 그 밖(file:·미치환 자리표시·호스트 없는 주소·다른 접두)은
+    // 이유와 함께 콘솔로 알리기만 한다. 팝업 차단을 피하도록 링크를 누른 포인터 입력 처리 안에서 동기로 부르며, 열기에 실패해도 게임 진행은 계속한다.
+    // 열기 방식은 options.openExternal(link, document) 로 바꿀 수 있고(무브라우저 실행·검사용), 기본은 platform/external-opener.js 이다.
+    // 열었으면 true, 열지 않았거나 실패했으면 false 를 돌려준다. where 는 콘솔 안내에 붙는 출처 이름이다. (2026-11-07 WB03-AD)
+    _openExternalAddress(original, where) {
+        const link = resolveExternalLink(original);
+        if (!link.open) {
+            console.info(`Netstorm: ${where}의 바깥 주소 '${original}' 는 열지 않습니다(${link.reason})`);
+            return false;
+        }
+        const opened = (this.options.openExternal ?? openExternalLink)(this._root?.ownerDocument ?? null, link);
+        if (!opened) console.warn(`Netstorm: ${where}의 바깥 주소 '${original}' 를 열지 못했습니다.`);
+        return opened === true;
     }
 
     // 닫힌 뒤 실행할 대화상자 명령 하나를 처리한다. (2026-10-28 WB03-D)

@@ -96,6 +96,8 @@ export const WEB_ONLY = Object.freeze({
     'www/assets/menu-assets.js': '메인 메뉴 자산 경로 묶음(웹 자산 준비). 원본 setup.cfg 값과 실행 파일 전역을 근거로 적은 웹 구성',
     'www/assets/terrain-scene.js': '개발용 지형 미리보기의 정적 출력 목록(게임 규칙 없음, WB03-AA)',
     'www/ui/terrain-preview.js': '개발용 지형 미리보기 화면(?map=, WB03-AA)',
+    'www/ui/external-link.js': '바깥 링크(http/https/mailto)의 새 탭/창 열기 가능 판정. 원본은 셸 실행(4a00c0 autoOpen)이라 웹 대체 정책(2026-11-05 사용자 결정, WB03-AD)',
+    'www/platform/external-opener.js': '판정을 마친 바깥 주소를 숨은 앵커 click 으로 새 탭/창에 여는 브라우저 경계(WB03-AD)',
 });
 
 // git 명령을 저장소 루트에서 실행해 출력을 돌려준다. 실패하면 null 이다. (2026-11-06 WB02-G)

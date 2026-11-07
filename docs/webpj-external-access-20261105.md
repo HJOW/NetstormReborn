@@ -5,7 +5,7 @@
 ## 1. 결론
 
 - 웹 런타임의 네트워크 요청은 **문서 기준 `./data/` 아래 같은 출처 정적 자산**뿐이다(`AssetLoader`). 외부 서버·DNS·업데이트·검증·진단·오류 보고 요청은 없다.
-- 원본 자료의 바깥 주소(`http:`·`mailto:`·`file:`·치환 주소)는 링크로 눌러도 **열지 않고 콘솔 안내만** 한다. 새 창·주소 이동·외부 프로그램 실행 경로가 없다. **2026-11-05 사용자 결정으로 새 탭/창으로 열도록 바꾸기로 했으며 아직 구현하지 않았다(7절).**
+- 원본 자료의 바깥 주소는 링크를 누르면 **치환이 끝난 `http:`/`https:`/`mailto:` 주소만 브라우저 새 탭/창(메일은 메일 처리기)으로 연다.** `file:`·치환되지 않은 자리표시(`{…}`)·호스트 없는 주소·그 밖의 접두는 열지 않고 이유와 함께 콘솔로만 알린다. 주소 이동(`location`)·외부 프로그램 실행 경로는 없다. 2026-11-05 사용자 결정을 **2026-11-07 WB03-AD에서 구현했다(7절).** (그 전에는 모든 바깥 주소가 콘솔 안내뿐이었다.)
 - 구 클라이언트 검증(`UserNotUpdated`, "Not Validated")은 **열지 않는다**(2026-09-30 프로젝트 결정, WB03-J 구현 유지). 검증 성공값을 합성하지도 않는다.
 - 위 경계는 신규 검사 `webpj/tests/external-access.test.mjs`(5개)가 소스·자산 목록·앱 적재·링크·미연결 기능 단위로 고정한다.
 
@@ -26,8 +26,8 @@
 
 | 경로 | 원본 동작 | 웹 처리 |
 | --- | --- | --- |
-| Tell 본문 `<a href>` → `Netstorm._onDialogLink` → `_followLink` → `dispatchHelpLink` | 원본 4a00c0: `cmd:` 명령, 주제, 그 밖은 `autoOpen` 접두면 셸 실행·아니면 접두 이름의 명령 설정 실행 | `cmd:`는 대화상자 명령, 주제는 도움말 창, **바깥 주소는 `console.info`만**. 한도(접두80/본문256) 초과는 경고 후 무시 |
-| 도움말 창 링크 → `HelpWindow` `onExternal` → `_openHelp`의 훅 | 위와 같은 분배 | **바깥 주소는 `console.info`만** |
+| Tell 본문 `<a href>` → `Netstorm._onDialogLink` → `_followLink` → `dispatchHelpLink` | 원본 4a00c0: `cmd:` 명령, 주제, 그 밖은 `autoOpen` 접두면 셸 실행·아니면 접두 이름의 명령 설정 실행 | `cmd:`는 대화상자 명령, 주제는 도움말 창, **바깥 주소는 `_openExternalAddress`가 판정해 열 수 있는 것만 새 탭/창으로 연다(7절)**. 한도(접두80/본문256) 초과는 경고 후 무시 |
+| 도움말 창 링크 → `HelpWindow` `onExternal` → `_openHelp`의 훅 | 위와 같은 분배 | **같은 `_openExternalAddress`** |
 | 시작 창 흐름 `_runMainMenuStartup` | Welcome / Blank → (`UserNotUpdated`) → Tips | `UserNotUpdated` 생략. Welcome 또는 Blank→Tips만 연다 |
 | 대화상자 명령 `_runDialogCommand` | Tell·Config·TellTip·TechnicalHelp·Zsend·MissionBegin 등 | Tell/Config/TellTip만 실행, 나머지는 "아직 구현되지 않음" 안내만(TechnicalHelp·Zsend·서버 명령 없음) |
 | HTML 지시문 `$Zsend`·`$Input` | 87h 요청 작성(구 서버 전송)·입력 창 | 컨트롤을 만들지 않고 `onUnsupported` 통지만 |
@@ -35,7 +35,7 @@
 
 ### 3.1 웹에서 닿는 자료의 바깥 주소
 
-조사 범위는 아카이브의 영어 `.english`/`.cfg`와 `www/data/d`의 한국어/느슨한 파일 63개다(독일어·프랑스어 등 웹 미사용 언어 제외). 주소처럼 보이는 문자열 **17개**, `<a href>` 목적지 분류는 **help179·script1·external11**이다. external 11종은 모두 위 3절의 콘솔 안내로 끝난다.
+조사 범위는 아카이브의 영어 `.english`/`.cfg`와 `www/data/d`의 한국어/느슨한 파일 63개다(독일어·프랑스어 등 웹 미사용 언어 제외). 주소처럼 보이는 문자열 **17개**, `<a href>` 목적지 분류는 **help179·script1·external11**이다. external 11종은 7절의 판정을 거친다: **치환 뒤 10종은 열리고 `file:NetStormPieceList.html` 1종만 열리지 않는다**(`http://{UPDATEURL}`은 게임 치환으로 `http://www.netstormhq.com`, `mailto:{EMAIL1}`은 `mailto:www.netstormhq.com`이 된다).
 
 | 바깥 링크 목적지 | 출처 |
 | --- | --- |
@@ -55,10 +55,10 @@
 | 인터넷 master/root 서버·디렉터리(`masterServer`, `!rootservers.dat`, nsLaunchC) | 없음. 멀티플레이 자체가 웹 제외 |
 | ping/네트워크 진단(`Ping*`/`PingName*`, `diagServer`), Pass Server Diagnostic | 없음. 메뉴 항목 제외 |
 | 로컬 LAN 서버(6799/6800/UDP8998)·Outpost | 웹 제외(AGENTS.md webpj 범위). 로컬 예외 규칙도 적용할 대상이 없음 |
-| 사용자 선택 웹/메일/telnet 링크·`autoOpen`·프로토콜 명령 | 열지 않음(콘솔 안내). 브라우저 새 창/`mailto:` 실행도 하지 않음 |
+| 사용자 선택 웹/메일/telnet 링크·`autoOpen`·프로토콜 명령 | `http:`/`https:`/`mailto:`만 7절 조건으로 새 탭/창·메일 처리기로 연다(2026-11-07 WB03-AD). `autoOpen`·프로토콜 명령 설정·`telnet:`·`file:`은 열지 않는다(콘솔 안내) |
 | Technical Help(`techHelpExe`/`techHelpFile`) | 메뉴 제외·명령 미실행 |
 | 구 업데이트 다운로드(`PatchUrl`, `update.english`) | 소비자 없음 |
-| 오류 보고 주소(`bugreport.cgi`, `bugs@titanic.com`) | 자동 전송 없음. mailto 링크는 콘솔 안내만 |
+| 오류 보고 주소(`bugreport.cgi`, `bugs@titanic.com`) | 자동 전송 없음. mailto 링크는 사용자가 누를 때만 메일 처리기로 넘긴다(7절) |
 
 ## 5. 개발·검사 도구 (런타임 아님)
 
@@ -73,17 +73,21 @@
 - `node --test tests/external-access.test.mjs` 5/5 통과(소스 감사의 음성 대조 포함). 전체 결과는 인계 문서 0.1절에 기록한다.
 - 주소 목록 집계는 임시 조사 스크립트로 했다. 원본 판독 규칙은 기존 `help-link.js` 분류를 그대로 썼다. 실제 DNS/HTTP 조회나 서버 상태 확인은 하지 않았다.
 - 원본/CD 실행, analyzeManager, 디컴파일은 하지 않았다.
-- 남겨 두었던 두 결정은 2026-11-05에 사용자가 정했다: 바깥 링크는 새 탭/창으로 연다(7절, 미구현), 개발 서버는 접속 제한 없이 유지한다.
+- 남겨 두었던 두 결정은 2026-11-05에 사용자가 정했다: 바깥 링크는 새 탭/창으로 연다(7절, 2026-11-07 구현), 개발 서버는 접속 제한 없이 유지한다.
 
-## 7. 바깥 링크 새 탭/창 열기 — 결정됨, 미구현 (2026-11-05)
+## 7. 바깥 링크 새 탭/창 열기 — 구현 완료 (결정 2026-11-05, 구현 2026-11-07 WB03-AD)
 
-사용자 결정: 원본 자료의 바깥 링크를 누르면 원본의 셸 실행(`autoOpen`/프로토콜 명령) 대신 **브라우저 새 탭이나 창으로 연다**. 이번에는 문서에만 반영했고 코드·검사는 바꾸지 않았다. 구현할 때의 조건은 다음과 같다.
+사용자 결정: 원본 자료의 바깥 링크를 누르면 원본의 셸 실행(`autoOpen`/프로토콜 명령) 대신 **브라우저 새 탭이나 창으로 연다.** 구현은 다음과 같고, 이 절의 조건은 검사(`tests/external-link.test.mjs`·`tests/external-access.test.mjs`)가 고정한다.
 
-| 항목 | 구현 조건 |
+| 항목 | 구현 |
 | --- | --- |
-| 바꿀 자리 | `www/netstorm.js`의 `_followLink` external 훅과 `_openHelp`의 `onExternal`(현재 `console.info`). 분류 규칙(`ui/help-link.js`)과 대화상자를 먼저 닫는 순서·`$OnExit` 실행 순서는 그대로 둔다 |
-| 여는 대상 | 치환이 끝난 `http:`/`https:` 주소는 새 탭/창, `mailto:`는 브라우저의 메일 처리기로 넘긴다 |
-| 열지 않는 대상 | `file:`(예: `file:NetStormPieceList.html`, 원본 PieceDump가 로컬에 만드는 파일이며 웹에 없음), 치환 뒤에도 `{…}`가 남거나 호스트가 빈 주소(예: `http://{UPDATEURL}`), 그 밖의 접두(`telnet:` 등)는 현행처럼 콘솔 안내만 한다. 원본 주소의 도메인이 지금 살아 있는지는 확인하지 않으며 사라진 사이트가 열릴 수 있다 |
-| 브라우저 조건 | 팝업 차단을 피하도록 링크를 누른 포인터 입력 처리 안에서 동기로 연다. 새 탭은 `noopener`(가능하면 `noreferrer`)로 열어 게임 창을 건드리지 못하게 한다. 열기 실패(차단·null 반환)는 콘솔 안내로 남기고 게임 진행은 계속한다 |
-| 검사 갱신 | `tests/external-access.test.mjs`의 소스 감사는 현재 전역 `open(`을 금지한다. 구현 시 허용 경로를 이 한 곳(링크 열기 함수)으로 한정해 갱신하고, 링크 검사의 "콘솔 안내만" 기대값을 여는 대상/열지 않는 대상별로 바꾼다. 실제 브라우저 확인은 AGENTS.md의 실행 확인 규칙을 따른다 |
-| 범위 밖 | 구 업데이트 다운로드·검증·서버 목록 등 4절의 미연결 기능은 링크 열기와 별개이며 계속 만들지 않는다 |
+| 바꾼 자리 | `www/netstorm.js`의 `_followLink` external 훅과 `_openHelp`의 `onExternal`이 같은 `_openExternalAddress(원문, 출처)`를 부른다. 분류 규칙(`ui/help-link.js`)과 대화상자를 먼저 닫는 순서·`$OnExit` 실행 순서는 그대로다 |
+| 판정 | `www/ui/external-link.js`의 `resolveExternalLink(원문)`(DOM 없음). 첫 NUL 앞까지만 읽고 앞뒤 공백을 지운다. 접두는 ASCII 대소문자를 구분하지 않는다 |
+| 여는 대상 | 치환이 끝난 `http:`/`https:`(`//호스트`가 있고 URL 해석이 같은 접두·비지 않은 호스트를 돌려주는 것)는 새 탭/창, `mailto:`(받는 사람이 비지 않은 것)는 메일 처리기. 주소는 URL 해석으로 정규화한다(`http://www.netstormhq.com` → `http://www.netstormhq.com/`). `mailto:`는 원문을 그대로 쓴다 |
+| 열지 않는 대상 | `file:`(원본 PieceDump가 로컬에 만드는 파일, 웹에 없음)·`telnet:`·`javascript:`·`data:` 등 그 밖의 접두, 접두가 없는 주소, 치환 뒤에도 `{…}`가 남거나 공백·제어 문자가 있는 주소(예: `http://{{param.1}.WebSite}`), 호스트가 없는 웹 주소(`http://`·`http:///x`), 받는 사람이 없는 메일, 2048자를 넘는 주소는 이유와 함께 콘솔 안내만 한다. 게임 치환(`gameData.substitute`) 뒤의 `http://{UPDATEURL}`은 `http://www.netstormhq.com`, `mailto:{EMAIL1}`은 `mailto:www.netstormhq.com`(`@` 없음)이 되어 둘 다 열린다. 원본도 이 주소를 그대로 셸/메일 처리기에 넘겼으므로 `@`는 요구하지 않는다 |
+| 브라우저 조건 | 열기는 `www/platform/external-opener.js`의 `openExternalLink(문서, 판정)` 한 곳이다: 숨은 `<a>`를 만들어 `href`를 주고 `click()`한다. 웹 주소는 `target="_blank"`·`rel="noopener noreferrer"`로 새 탭/창에 열어 게임 창(opener)을 건드리지 못하고 Referer도 보내지 않는다. 메일 주소는 target 없이 메일 처리기에 넘긴다. 링크를 누른 `pointerdown` 처리 안에서 동기로 불리므로 팝업 차단 대상이 아니다. 열기는 `click()` 예외만 실패로 알 수 있다 |
+| `window.open`을 쓰지 않은 이유 | `noopener`로 열면 성공해도 `null`을 돌려주어 차단과 구분되지 않는다(2026-11-05 구상의 "null 반환은 콘솔 안내"는 이 때문에 `click()` 예외로 바꿨다). 소스 감사의 창 열기 허용 경로(`window.open(` 도움말 창 지역 변수 한 곳)도 그대로 둘 수 있다 |
+| 호스트 훅 | `new Netstorm({ openExternal: (문서, 판정) => boolean })`로 열기 장치를 바꾼다(기본 `null` = 위 장치). 무브라우저 실행 `tools/headless.mjs`는 실제 탭을 열지 않고 `openedLinks`에 주소만 기록한다. 열기 장치가 `false`를 돌려주면 경고만 하고 게임은 계속한다 |
+| 검사 갱신 | 소스 감사: 앵커 요소 생성(`createElement('a')`)은 `platform/external-opener.js` 한 파일뿐, `window.open(`은 그대로 도움말 창 한 곳. 링크 검사: 열 수 있는 주소는 열기 장치로, `{UPDATEURL}`·`{EMAIL1}` 미치환 원문과 `file:`은 이유와 함께 알림만. 새 검사 3개: 판정 경계(열림 7종·거부 30여 종 + 불변 객체), 가짜 문서로 앵커 속성·click·실패, 실제 자료(문서 3.1절 11종의 치환 뒤 판정 + 도움말 전 주제의 바깥 링크) |
+| 실제 브라우저 확인 | 하지 않았다. 사용자 클릭 입력 안에서 새 탭이 열리는지(팝업 차단·포커스 이동 뒤 포인터 뗌 처리)는 실제 브라우저 확인 대상이며 이 단위의 정적/단위 검사에 포함되지 않는다. 새 탭이 열리면 게임 캔버스의 `blur`가 입력을 비운다(기존 동작) |
+| 범위 밖 | 구 업데이트 다운로드·검증·서버 목록 등 4절의 미연결 기능은 링크 열기와 별개이며 계속 만들지 않는다. 원본 주소 도메인의 생존 여부는 확인하지 않아 사라진 사이트가 열릴 수 있다 |
