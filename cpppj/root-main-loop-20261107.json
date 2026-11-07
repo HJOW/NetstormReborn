@@ -1,0 +1,87 @@
+{
+  "unit": 1075,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "0bafe9f5a074902d7515db64401a5bb9c55f9a2b99b8c9906874add0c3388f8e"
+  },
+  "nativeAudit": {
+    "scope": "원문/PE·전체 함수 기계어/같은 현재 부모 접합의 정적 확인이며 실행 검사 아님",
+    "native": {
+      "main": "00479760 LAN 사전500 통지/최초flag1→재초기화0/현재reset·stop 반복/정상Shutdown뒤reset만0",
+      "frame": "clockTick→현재51CCh token snapshot/최소wait60·조건부두번째Tick→같은transport/ChallengeStore NetworkPump→파일감시→예약",
+      "watcher": "00478fa0 process최초flag1/FullTime0·game-last>60에서시각먼저갱신→00478ca0 news→00471f20 rootservers.dat→00478dd0 blacklist",
+      "schedule": "004792f0 nonzero/00479630 deadline<=currentgame→deadline0/00478c40 reset++ 또는478c70stop++;그외remaining<=300이면60초,그외300초초과간격",
+      "minutes": "0047943e/0047951d remaining/PE004c04d0(60)→ftol64/lowDWORD+1,원문colors·resetting/going down/level29·마지막현재game",
+      "rootRoute": "00474bd0 Root진단321/currentzone·token·flags1/descriptor=-1진단325/currentreceiver(senderzone<<8,NULL,packet)",
+      "notice": "00474d30 allocator41/최소헤더4·version3/byte4ff보존/byte5=1/sourceDWORD0/객체1BYTE0·수신subscriber0/본문length+20/현재zone1..50"
+    },
+    "sourceCorrection": "파일 감시 중간471f20은 Config 설정 재로드가 아니라 rootservers.dat 목록 재로드다. 이전 다음 작업의 설정 갱신 표현을 정정한다.",
+    "sameCurrentState": [
+      "Clock.State의 현재 game/통계와 실제CCh Tick",
+      "같은 ChallengeStore/TransceiverTransport의 네트워크 장치/현재51·40표",
+      "같은 Routing 현재 receiver/SharedFiles 뉴스·blacklist 장치"
+    ],
+    "remainingDevices": [
+      "477e10 전체 최초/재초기화와478af0 전체정리",
+      "471ec0/471710 실제 rootservers.dat 검색·목록/체크섬 로더",
+      "실제 보조 객체/선택집합·Poll/나머지 Root·CS receiver와41h CCh 수신",
+      "새R.exe 최종 owner·entry가 Run을 실제 호출하는 접합"
+    ],
+    "compatibility": [
+      "표시 banner는사용자요구11.01,원문500통지는초기화이전이며준비성공아님",
+      "모듈진단경로는Windows wide/UTF-8·긴경로이며CWD변경없음",
+      "나머지현재플래그·대기단위/프레임내시각/동일packet·순회순서유지",
+      "빈상위장치는명시오류,원본불법본문길이/포인터·x87중간정밀도·실제OS/창·실패경계전체동일성미검증"
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "mainLoopAndFrameBodyImplemented": true,
+    "filePollAndScheduledResetBodyImplemented": true,
+    "root41NoticeAndLocalRouteImplemented": true,
+    "sameClockStoreAndTransportBound": true,
+    "remainingUpperDevicesRequired": true,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsRunOrStep": false,
+    "cch41ReceiverImplemented": false,
+    "rootServersFileLoaderImplemented": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "dns": 0,
+    "loopOrSchedule": 0,
+    "lanWindowNotification": 0,
+    "runtimeFileReadOrWrite": 0,
+    "newClockRngOrPriority": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "rootservers.dat 목록/체크섬·실제 보조 객체·나머지Root/CS 수신·41h 수신/전체 초기화·정리",
+    "새R.exe 최종owner/entry와현재Clock/Random·Config/표·파일/주소/기록/전송·실제Run호출",
+    "다른LAN hostname해석·클라이언트0F존47/서버3BYTE·0F/1d수신·메타/OS launch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

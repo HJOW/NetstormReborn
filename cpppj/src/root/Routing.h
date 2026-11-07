@@ -15,6 +15,9 @@ public:
     Routing(const Routing&)=delete;Routing& operator=(const Routing&)=delete; // 현재 등록/공유 전역 참조를 복제하지 않는다.
     void Install(); // Root17h의 같은 nullable 수신기/observer 없음·버전1/길이14를 등록한다.
     void Relay(std::uint32_t challenge,std::span<std::uint8_t> packet); //00474b00: 비Root는 현재 일반1번 송신, Root는 현재 수신기를sender0/NULL로 직접 호출한다. challenge 인자는 원문처럼 사용하지 않는다.
+    void SendChallenge(std::int32_t challenge,std::span<std::uint8_t> packet,std::int32_t descriptor=-1); //00474bd0의 Root/현재 CCh·localflag1/INVALID_SOCKET 관문 뒤 sender zone<<8/NULL로 직접 수신한다.
+    void BroadcastText(std::string_view text); //00474d30의 strlen+NUL 경로와 실제41h version3/객체1BYTE/수신subscriber0을 모든 현재 CCh에 전달한다.
+    void BroadcastBuffer(std::span<const std::uint8_t> text); //00474d30의 명시 길이 입력이다. 첫NUL 뒤도 지정 길이만큼 복사하며 빈 입력은 Text 경로에서 처리한다.
 private:
     ConnectionState& state_;TransceiverTransport& transport_;ChallengeStore& challenges_;MirrorPlayerDefaults& defaults_; // 같은 현재 모드/연결·CCh/원격 기본 바이트다.
     std::function<void(std::int32_t,std::string_view)> log_; // 원문 실제 level/완성된 로그를 받는 프로세스 장치다.

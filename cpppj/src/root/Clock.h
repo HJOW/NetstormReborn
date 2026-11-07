@@ -18,6 +18,7 @@ public:
     void Pause();void Resume();bool IsPaused() const;void ResetAccumulator(); //473a60/ac0/a30/b30의 중첩 깊이·누적 정지 시간만 변경한다.
     void Tick(); //00473b80의 게임→별도wall/첫게임·delta/history/FPS/현재 frame DWORD 증가다.
     std::uint32_t Now() const; // 현재 wall FullTime의 ftol64 하위DWORD이며 새 OS 시각을 읽지 않는다.
+    ClockState& State() { return state_; }const ClockState& State() const { return state_; } // 메인 루프/예약 처리도 같은 현재 게임 시각·통계를 직접 빌린다.
     void Bind(TransceiverHooks& hooks); // 현재 now와 별도 지역 captureNow를 실제 전송에 연결한다.
     static std::uint32_t Truncate(double seconds); // x87 ftol64의 truncation/invalid indefinite 하위DWORD를 호스트 정수로 옮긴다.
 private:
