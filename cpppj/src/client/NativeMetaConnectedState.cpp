@@ -20,9 +20,9 @@ std::span<const std::uint8_t> Participant(std::span<const std::uint8_t> bytes,st
 void Invalidate(NativeMetaConnectedGlobals g) { g.cache.index=0xffffffffU;g.cache.value=0xffffffffU;g.cache.battle=0xffffffffU;g.cache.slot=0xffffffffU;g.notified=0; } //원문 네 DWORD 순서와 뒤쪽 통지0쓰기를 보존한다.
 void CloseGamePeers(const NativeMetaConnectedHooks& h) { Need(h.closePending)();for (std::uint32_t id=1;id<=9;++id) Need(h.closeConnection)(id); } //현재 pending 정리 뒤1..9를 모두 닫으며10/11은 남긴다.
 void ConnectMaster(NativeMetaConnectedGlobals g,const NativeMetaConnectedHooks& h,std::int32_t master) { //닫힘 callback 이후의 현재 CS와 포트를 다시 읽는다.
-    const auto record=g.challenge.Participant(std::bit_cast<std::uint32_t>(master));const auto address=record.subspan(0x1a0);std::size_t length{};
+    const auto port=g.gamePort;const auto record=g.challenge.Participant(std::bit_cast<std::uint32_t>(master));const auto address=record.subspan(0x1a0);std::size_t length{};
     while (length<address.size() && address[length]) ++length; //원문 C문자열의 첫NUL까지만 실제44BYTE 주소 물리에서 찾는다.
-    if (length==address.size()) throw std::out_of_range("메타 master 주소의 실제 NUL 없음");const auto port=Need(h.gamePort)();Need(h.connect)(9,{reinterpret_cast<const char*>(address.data()),length},port);
+    if (length==address.size()) throw std::out_of_range("메타 master 주소의 실제 NUL 없음");Need(h.connect)(9,{reinterpret_cast<const char*>(address.data()),length},port);
 }
 }
 std::int32_t FindMetaBattleMaster(ClientChallengeGlobals& challenge,std::uint32_t owner) {
@@ -47,7 +47,7 @@ o::LocalMissionParentResult InstallNativeMetaConnectedState(std::uint32_t select
             auto section=std::string_view("CSLGenericFail");switch (g.state.current[0x38/4]) { case 3:section="CSLAlreadyHere";break;case 4:section="CSLBadNameLen";break;case 5:section="CSLServerFull";break;case 6:section="CSLShutdown";break;default:break; }
             g.state.immediate[0x3c/4]=Need(h.tell)(section);Need(h.request)(32);Need(h.resetCamera)();
         }break;
-    case 29:Need(h.closeProgress)();g.metadataMode=1;g.connected=1;Need(h.display)();Need(h.rootLogin)(11);Invalidate(g);Need(h.listen)(Need(h.gamePort)());g.state.next[0]=33;break;
+    case 29:Need(h.closeProgress)();g.metadataMode=1;g.connected=1;Need(h.display)();Need(h.rootLogin)(11);Invalidate(g);Need(h.listen)(g.gamePort);g.state.next[0]=33;break;
     case 30:Need(h.progress)(Need(h.translate)("Communicating with Challenge Server."));g.connected=0;break;
     case 31:g.connected=1;break;
     case 32: { const auto serial=Need(h.modalSerial)();if (!serial || *serial!=g.state.current[0x3c/4]) Need(h.request)(20);else g.state.next[0]=32;break; }

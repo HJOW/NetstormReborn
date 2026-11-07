@@ -19,6 +19,7 @@ struct NativeMetaConnectedGlobals { //상태 처리 중 같은 Client/CS owner�
     std::uint32_t& zone; //005467b8의 현재 메타 존이다.
     std::uint32_t& metadataMode;std::uint32_t& connected; //005c85c8/005c85c4는 별개의 현재 DWORD다.
     std::uint32_t& notified;MetaPeerCache cache; //005c85b4의 현재 통지 여부와 네 캐시를 직접 쓴다.
+    const std::uint32_t& gamePort; //005318e8의 같은 현재 DWORD이며 각 실제 원문 위치에서 읽는다.
 };
 struct NativeMetaConnectedHooks { //실제 장치 접합 전에는 선택된 필수 하위를 빈 함수로 대체하지 않는다.
     std::function<void(std::uint32_t)> request; //004b2bc0의 같은 즉시 상태 요청이다.
@@ -28,7 +29,6 @@ struct NativeMetaConnectedHooks { //실제 장치 접합 전에는 선택된 필
     std::function<std::optional<std::uint32_t>()> modalSerial; //00565dd4 NULL 또는 현재창+2c serial이다.
     std::function<void()> closeProgress,resetCamera,display; //004c8dc0/004340d0/0047dd60의 실제 전체 장치다.
     std::function<void(std::uint32_t)> rootLogin; //004b40c0(connection)의16h 요청이며29에서는11로 보낸다.
-    std::function<std::uint32_t()> gamePort; //005318e8의 현재 포트를 실제 읽기 위치에서 반환한다.
     std::function<void(std::uint32_t)> listen,closeConnection; //004e2430(port)/004e2940(id)이다.
     std::function<void()> closePending,notifyMaster,sendLogin; //004e2a00/004b2c00/004b62b0의 실제 본체다.
     std::function<bool(std::uint32_t)> open;std::function<std::int32_t(std::uint32_t)> status; //004e2b10/004e2b70의 현재 노드를 조회한다.

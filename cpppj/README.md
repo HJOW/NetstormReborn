@@ -1,5 +1,7 @@
 # cpppj — NetStorm C++ 빌드
 
+**사용자 요청으로1094 문서·최종CP커밋완료뒤목표를일시중지한다.** 재개는 [LEFT_JOBS.md의0.111](../LEFT_JOBS.md)에서실제메타표시/CS·장치→1dh/28~33등록부터이어간다. 전체목표는미완료다.
+
 **2026-11-07 현재 제품 기준은1094 / 표시 버전11.01이다.**1dh/28~33·CS master/캐시감시본체를라이브러리컴파일하고Root요청목적지인자/별도연결DWORD를복원했다. **새1dh등록/28~33분배는아직미적용이며실제메타표시/CS·카메라/HTML/전송장치완성뒤접합한다.** 두Release종료0·경고/오류0·새C++/MP/게임/통신실행0이다. 위실제메타장치→1dh/28~33등록·템플릿콘텐츠·LAN이름/Config레지스트리경계·LAN/Outpost/checking5→한국어후속→시나리오UI가남아전체목표는미완료다. [1094 기록](../docs/exe/cpp-meta-connected-bodies-20261107.md).986후보는미적용이다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
