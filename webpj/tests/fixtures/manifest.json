@@ -4959,7 +4959,7 @@
       "bytes": 1366067,
       "lines": 771,
       "fixtureCommit": "b466c127",
-      "webCommit": "worktree",
+      "webCommit": "f7b216be",
       "cpppjBasis": {
         "cpppj/src/o/RawMakeAi.cpp": "b466c127",
         "cpppj/src/o/RawMissionAiSettings.cpp": "69c584bd"
@@ -4989,9 +4989,183 @@
       "bytes": 373133,
       "lines": 2593,
       "fixtureCommit": "b466c127",
-      "webCommit": "worktree",
+      "webCommit": "f7b216be",
       "cpppjBasis": {
         "cpppj/src/o/RawMakeAi.cpp": "b466c127"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E33",
+      "id": "create-at-input",
+      "path": "cpppj/tests/fixtures/create-at-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: CreateAt 일반 입력의 두 인자·권한·정지/Console·상위 플래그",
+      "consumers": [
+        "webpj/tests/menu-small-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/create-at-input.js"
+      ],
+      "doc": "docs/webpj-menu-small-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/CreateAtInput.cpp"
+      ],
+      "scope": "408행 전부 사용",
+      "text": true,
+      "sha256": "17971b232228baecf08ceefbe68c1b775d355e646baa9aace336cac3ca03e75f",
+      "bytes": 61802,
+      "lines": 409,
+      "fixtureCommit": "befbc1cb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/CreateAtInput.cpp": "befbc1cb"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E33",
+      "id": "create-at-names",
+      "path": "cpppj/tests/fixtures/create-at-names-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: CreateAt 이름표·토큰·큐 예약",
+      "consumers": [
+        "webpj/tests/menu-small-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/create-at-input.js"
+      ],
+      "doc": "docs/webpj-menu-small-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/CreateAtInput.cpp"
+      ],
+      "scope": "15행의 이름→명령 번호만 사용(인자·문자열 고리·큐 예약은 대본 큐 단위)",
+      "text": true,
+      "sha256": "2e6610161a6ef271ee526a20b0125d05741989c6c5c8aece0db4050842d12679",
+      "bytes": 1493,
+      "lines": 16,
+      "fixtureCommit": "befbc1cb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/CreateAtInput.cpp": "befbc1cb"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E33",
+      "id": "move-dialog",
+      "path": "cpppj/tests/fixtures/move-dialog-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: MoveDialog의 문자열·화면·창 치수와 노드 float 비트·Push/Attach 순서",
+      "consumers": [
+        "webpj/tests/menu-small-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/move-dialog.js"
+      ],
+      "doc": "docs/webpj-menu-small-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/MoveDialog.cpp"
+      ],
+      "scope": "73행 전부 사용",
+      "text": true,
+      "sha256": "ea6d297da19b84e431ccd73e38d56a62024806b950978037b43486eb6c5bcbe4",
+      "bytes": 30915,
+      "lines": 74,
+      "fixtureCommit": "cb71d060",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MoveDialog.cpp": "cb71d060"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E33",
+      "id": "movie-timer",
+      "path": "cpppj/tests/fixtures/movie-timer-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: SDK SmackWait 가지의 최초 기한·대기·late 재설정·ready/fast·감김",
+      "consumers": [
+        "webpj/tests/menu-small-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/movie-timer.js"
+      ],
+      "doc": "docs/webpj-menu-small-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/MovieTimer.cpp"
+      ],
+      "scope": "14행 전부 사용",
+      "text": true,
+      "sha256": "220fadc980edec11a2517f7c7a0feffc037a2b4f1d6c2f069220c769c3b04473",
+      "bytes": 558,
+      "lines": 15,
+      "fixtureCommit": "f5b45f3d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MovieTimer.cpp": "f5b45f3d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E33",
+      "id": "intro-menu",
+      "path": "cpppj/tests/fixtures/intro-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 인트로 감지의 경로 첫 NUL·출처·초기값·조회 횟수",
+      "consumers": [
+        "webpj/tests/menu-small-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/intro-menu.js"
+      ],
+      "doc": "docs/webpj-menu-small-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/IntroMenu.cpp"
+      ],
+      "scope": "84행 전부 사용",
+      "text": true,
+      "sha256": "72be57d456722b59b5b0b7168454e6a547944f909f1f58ad2e21d0045cb795d9",
+      "bytes": 9763,
+      "lines": 85,
+      "fixtureCommit": "388ef596",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/IntroMenu.cpp": "388ef596"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E33",
+      "id": "main-menu-activity",
+      "path": "cpppj/tests/fixtures/main-menu-activity-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 메인 메뉴 무활동 감시의 기한 double 비트·포인터·helper 호출 순서",
+      "consumers": [
+        "webpj/tests/menu-small-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/main-menu-activity.js"
+      ],
+      "doc": "docs/webpj-menu-small-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/MainMenuActivity.cpp"
+      ],
+      "scope": "1944행 전부 사용",
+      "text": true,
+      "sha256": "e6b481d19acac9e627980e65f07aba3bfa86acb186db0b51b7ea500398541736",
+      "bytes": 205404,
+      "lines": 1945,
+      "fixtureCommit": "96b5a1c3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MainMenuActivity.cpp": "96b5a1c3"
       }
     }
   ]

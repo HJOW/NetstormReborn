@@ -79,7 +79,7 @@ cpppj/src/client/ConfigFileRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/client/ConfigurationCommandInput.cpp	port	www/core/configuration-command-input.js	1f00a25a	port	[client-default] WB04-E27: ChangePal/ChangePriority/SetFortType 일반 명령과 스레드 우선순위 계획. fixture configuration-commands 238행·이름표 30행(번호만). 실제 Client 설정/State 저장 manager는 해당 단위에서
 cpppj/src/client/ConstructionHistoryKey.cpp	port	www/core/construction-history-key.js	1f00a25a	port	[client-default] WB04-E22: Tab 최근 건설 위치 순환과 최초 5칸 초기화(0043994c·0040e800). fixture construction-history-key 10.78 511행 전부
 cpppj/src/client/ConstructionVisualRenderer.cpp	port			todo	[client-default]
-cpppj/src/client/CreateAtInput.cpp	port			todo	[client-default]
+cpppj/src/client/CreateAtInput.cpp	port	www/core/create-at-input.js	1f00a25a	port	[client-default] WB04-E33: 004d84f8..851b CreateAt 일반 입력과 이름표. fixture create-at-input 408행 전부·create-at-names 15행(이름→번호)
 cpppj/src/client/CurrentAllocationBytes.h	port			todo	[client-default]
 cpppj/src/client/CurrentTypeHitPoints.cpp	port			todo	[client-default]
 cpppj/src/client/Cursor.cpp	adapt	www/ui/cursor.js	1f00a25a	partial	[adapt-screen] RT_CURSOR 해독→CSS 커서(웹 대체). 커서2~14·17·18은 미션 입력과 함께
@@ -87,7 +87,7 @@ cpppj/src/client/CursorObjectPickup.cpp	port	www/core/client-input-commands.js	1
 cpppj/src/client/CursorPreviewSource.h	port			todo	[client-default]
 cpppj/src/client/DataManagerFileRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/client/DestroyAtInput.cpp	port	www/core/script-command-inputs.js	1f00a25a	port	[client-default] WB04-E21: 004d8528 DestroyAt 일반 입력 분배. fixture destroy-at-input 10.78 48행 전부. 스크립트 큐/실제 부모 대조는 해당 단위에서
-cpppj/src/client/DetonateInput.cpp	port			todo	[client-default]
+cpppj/src/client/DetonateInput.cpp	port	www/core/detonate-input.js	1f00a25a	partial	[client-default] WB04-E33: DetonateBomb 분배 계약만. 768행 fixture는 RawObjectConversion(Spell→Object→Form 반환) 단위에서 대조
 cpppj/src/client/DialogBodyLayout.cpp	port			todo	[client-default]
 cpppj/src/client/DialogCommandLifetime.cpp	port			todo	[client-default]
 cpppj/src/client/DialogExitCommand.cpp	port			todo	[client-default]
@@ -167,7 +167,7 @@ cpppj/src/client/HudNsInfoCreate.cpp	port			todo	[client-default]
 cpppj/src/client/ImageGump.cpp	port			todo	[client-default]
 cpppj/src/client/IndexedBitmapFile.cpp	exclude-host			-	[host-capture]
 cpppj/src/client/InputEvent.cpp	port	www/core/input-queue.js	1f00a25a	port	[client-default] WB04-C3(40칸 입력 큐)
-cpppj/src/client/IntroMenu.cpp	port			todo	[client-default]
+cpppj/src/client/IntroMenu.cpp	port	www/core/intro-menu.js	1f00a25a	port	[client-default] WB04-E33: 00435de0 인트로 감지·PlayIntro State39 예약. fixture intro-menu 84행 전부. BaseFile 조회 정책/Client 소유자는 해당 단위에서
 cpppj/src/client/InventoryAboutMenu.cpp	port			todo	[client-default]
 cpppj/src/client/InventoryGump.cpp	port			todo	[client-default]
 cpppj/src/client/InventoryItemGump.cpp	port			todo	[client-default]
@@ -177,7 +177,7 @@ cpppj/src/client/LanguageOptions.cpp	port			todo	[client-default]
 cpppj/src/client/LanguageRequest.cpp	port			todo	[client-default]
 cpppj/src/client/LocalTcpTransport.cpp	exclude-mp			-	[mp-lan-tcp]
 cpppj/src/client/LostPositionKey.cpp	port	www/core/construction-history-key.js	1f00a25a	port	[client-default] WB04-E22: U/u 최근 손실 위치 이동(004d98e2..004d990d). fixture lost-position-key 10.78 1022행 전부
-cpppj/src/client/MainMenuActivity.cpp	port			todo	[client-default]
+cpppj/src/client/MainMenuActivity.cpp	port	www/core/main-menu-activity.js	1f00a25a	port	[client-default] WB04-E33: 004cee80/004cebf0 메인 메뉴 무활동 감시. fixture main-menu-activity 1944행 전부
 cpppj/src/client/MakeAiCommandInput.cpp	port	www/core/script-command-inputs.js	1f00a25a	port	[client-default] WB04-E21: MakeAi 일반 입력 분배(Editor OR missionPost). fixture make-ai-input 10.78 64행 전부. make-ai-names 12행(스크립트 큐)은 해당 단위에서
 cpppj/src/client/Markup.cpp	port			todo	[client-default]
 cpppj/src/client/MenuGump.cpp	port	www/ui/menu-list.js;www/ui/popup-menu.js	1f00a25a	partial	[client-default] 세로 메뉴·controlled 메뉴 스택(메인 메뉴 펼침)
@@ -198,11 +198,11 @@ cpppj/src/client/MissionGuideInput.cpp	port			todo	[client-default]
 cpppj/src/client/MissionLifecycle.cpp	port			todo	[client-default]
 cpppj/src/client/MissionLoadingMessage.cpp	port			todo	[client-default]
 cpppj/src/client/MissionTechnology.cpp	port			todo	[client-default]
-cpppj/src/client/MoveDialog.cpp	port			todo	[client-default]
+cpppj/src/client/MoveDialog.cpp	port	www/core/move-dialog.js	1f00a25a	port	[client-default] WB04-E33: 004c8df0 MoveDialog. fixture move-dialog 73행 전부. 실제 Gump 트리 연결은 해당 단위에서
 cpppj/src/client/MovieLifecycle.cpp	adapt			todo	[adapt-sound]
 cpppj/src/client/MoviePcmOutput.cpp	adapt			todo	[adapt-sound]
 cpppj/src/client/MoviePlayback.cpp	port			todo	[client-default]
-cpppj/src/client/MovieTimer.cpp	adapt			todo	[adapt-sound]
+cpppj/src/client/MovieTimer.cpp	adapt	www/core/movie-timer.js	1f00a25a	port	[adapt-sound] WB04-E33: SDK SmackWait 타이머 가지. fixture movie-timer 14행 전부
 cpppj/src/client/NativeFontCacheFile.cpp	adapt			todo	[adapt-file]
 cpppj/src/client/NativeIntroState.cpp	port			todo	[client-default]
 cpppj/src/client/NativeMainMenuState.cpp	port			todo	[client-default]
