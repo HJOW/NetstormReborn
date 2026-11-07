@@ -95,6 +95,12 @@ public:
     std::uint32_t& MetaCdPresent() { return metaCdPresent_; } //State19의005c85bc이며 State7의005c85b8과 서로 다른 현재 CD 결과다.
     const std::uint32_t& MetaCdPresent() const { return metaCdPresent_; } //메타 진입이 바꾼 같은 현재 DWORD를 읽는다.
     std::uint32_t& MetaPending() { return metaPending_; } //005c85e8이며 State19의 renderer 초기화 직후0을 쓰는 실제 장기 DWORD다.
+    std::uint32_t& LocalServerToken() { return localServerToken_; } //005c85a8의현재검색토큰이며같은CRT와66h송수신이이주소를빌린다.
+    const std::uint32_t& LocalServerToken() const { return localServerToken_; } //부호비교에서도같은32비트현재값을읽는다.
+    double& LocalServerSearchEnd() { return localServerSearchEnd_; } //005c8600의검색기한이며State35/경쟁검색수신이같은double을갱신한다.
+    const double& LocalServerSearchEnd() const { return localServerSearchEnd_; } //메타전송반납으로재초기화하지않는장기값이다.
+    double& LocalServerRetryEnd() { return localServerRetryEnd_; } //005c8608의별도재송신기한이며새wall을원문위치에서읽는다.
+    const double& LocalServerRetryEnd() const { return localServerRetryEnd_; } //검색기한과합치지않는같은주소의현재값이다.
     const std::uint32_t& MetaPending() const { return metaPending_; } //인접 metaRefresh/Rebuild와 별도 물리를 보존한다.
     std::uint32_t& MetaRefresh() { return metaRefresh_; } //005c85d8의 현재 메타 갱신 예약 DWORD다.
     std::uint32_t& MetaRebuild() { return metaRebuild_; } //005c85dc의 별도 메타 재구성 예약 DWORD다.
@@ -145,6 +151,7 @@ private:
     o::ClockSynchronizationData clockSamples_; // 최초 BSS0이며 서버 초기화는 표본을 유지하고 Commander 연결만 원문 전체0을 쓴다.
     std::uint32_t cdPresent_{},metaRefresh_{},metaRebuild_{}; //CD 결과와 두 메타 예약의 최초 BSS0을 Client 수명에 한 번 구성한다.
     std::uint32_t metaCdPresent_{},metaPending_{}; //005c85bc/005c85e8의 별도 BSS0이며 State7/세션 반납으로 임의 갱신하지 않는다.
+    std::uint32_t localServerToken_{};double localServerSearchEnd_{},localServerRetryEnd_{}; //005c85a8/005c8600/005c8608의독립BSS0이며새Client에서만초기구성한다.
     bool simulconnect_{}; //최초 BSS0이며 Session 교체가 초기화하지 않는 연결모드다.
     std::uint32_t battleTerritory_{}; //005c85d0의 실제4BYTE이며 State의BYTE와 strip의DWORD 소비자가 함께 빌린다.
     std::array<std::uint32_t,2> zoneWords_{}; //기존 로그인의8BYTE 물리를 장기화한다. 원문 Zone 정리는 앞6BYTE만 쓴다.

@@ -1647,7 +1647,7 @@ void UberGump::Tick() {
 // 실제 로컬 큐는 일반 원문 슬롯4에서 진행하며 완료가 Guide/입력보다 먼저 현재 UI를 설치한다.
 void UberGump::PollMissionPackets() {
     PollLanLobby(); // 대기실 callback이 반환한 뒤에만 다음 Tick의 World 교체를 예약한다.
-    if (editor_ && editor_->metaTransport) editor_->metaTransport->Pump(); //World 없는 메타도 실제 slot4의 flush→수신을 진행하고 상태 확정은 다음 Tick에 남긴다.
+    if (editor_ && editor_->metaTransport) editor_->metaTransport->Pump(); //World없는메타도같은slot4에서TCP→UDP수신을진행하며66h발견은같은Run을동기실행한다.
     const auto world=world_; // 이 폴링과 완료 후처리가 끝날 때까지 실제 표시/Session 소비자를 함께 보유한다.
     if (!world || world->PreparingFort()) return;world->Session().PumpLocalConnection();
     if (world_!=world) return; // callback이 현재 호스트를 바꿨으면 이전 결과를 새 월드에 공개하지 않는다.

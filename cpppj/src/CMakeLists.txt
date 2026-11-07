@@ -10,7 +10,8 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
-target_sources(netstorm PRIVATE o/RawLocalServerDiscovery.cpp o/RawLocalServerDiscovery.h) #1057:실제66h검색/공유난수/두기한몸체이며UDP와큰State접합은후속이다.
+target_sources(netstorm PRIVATE o/RawLocalServerDiscovery.cpp o/RawLocalServerDiscovery.h) #1057검색몸체와1058실제UDP/상태접합이다.새R서버실행은후속이다.
+target_sources(netstorm PRIVATE client/LocalUdpTransport.cpp client/LocalUdpTransport.h) #1058:실제UDP12를같은연결/패킷표에연결한다.원본R서버복원은별도후속이다.
 # 기록 재생의 원문 판독/180BYTE Run과 실제 Client/Kernel·입력 부모를 함께 컴파일한다.
 target_sources(netstorm PRIVATE client/RawBuildReplay.cpp client/RawBuildReplay.h client/ClientBuildReplay.cpp client/ClientBuildReplay.h)
 # 메모리 실패의 원문 부모와 실제 Run 등록 수명·Client 종료 연결을 함께 빌드한다(979).

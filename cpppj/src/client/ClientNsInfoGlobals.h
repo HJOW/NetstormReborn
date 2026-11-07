@@ -12,6 +12,7 @@ struct ClientNsInfoGlobals {
     std::uint32_t current{},zone{}; //593150/5467b8의 현재 NSInfo 포인터 토큰과 zone DWORD다.
     std::int32_t serverSelection{}; //54db4c의 BSS0이며 Interpret Options의 curServer가 갱신한다.
     std::int32_t passedDiags{}; //0054db70의 BSS0/현재 passedDiags 옵션이며 메타 요청의 진단 정보 비트를 쓴다.
+    std::int32_t rootServerBroadcastPort{}; //0054db54의BSS0/InterpretOptions현재DWORD이며검색은Config문자열을다시파싱하지않고이값을읽는다.
     std::array<char,80> serverName{}; //594970의 실제 공유80BYTE이며 무효 서버 조회는 기존 바이트를 보존한다.
     std::vector<std::string> servers; //532714/71c의 실제 읽기 전용 시작 서버 행이다. 네트워크 편집/저장 부모는 별도다.
     std::uint8_t nsKind{6},playerKind{37},battleKind{60}; //540421/440/457의 보호10.78 초기 종류 BYTE다.

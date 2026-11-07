@@ -1,4 +1,11 @@
-// 실제 TCP 연결과 원문 연결 상태/요청을 같은 Client 전역에 직접 연결한다.
+// 실제 TCP/UDP와 원문 메타 연결/검색 상태를 같은 Client 전역에 직접 연결한다.
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN //창제목조회에구형Winsock선언을불러오지않는다.
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX //표준min/max와Windows매크로의충돌을막는다.
+#endif
+#include <windows.h>
 #include "client/MetaConnectionRuntime.h"
 #include "client/ClientMain.h"
 #include "client/ClientStaticStrings.h"
@@ -15,12 +22,16 @@
 #include "client/CurrentAllocationBytes.h"
 #include "client/CdDirectory.h"
 #include "client/RootServerEndpoint.h"
+#include "client/LocalUdpTransport.h"
+#include "client/ClientRandomGlobals.h"
+#include "client/CampaignTransportServices.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/RawConnectionEnded.h"
 #include "o/RawPlayerNotification.h"
 #include <algorithm>
 #include <array>
 #include <bit>
+#include <cstring>
 #include <iostream>
 #include <stdexcept>
 #include <utility>
@@ -34,16 +45,21 @@ void Put(std::span<std::uint8_t> packet,std::size_t at,std::uint32_t value,std::
 }
 // df590의 header0/종류/version/초기 길이0만 작성한다.
 void Header(std::span<std::uint8_t> packet,std::uint8_t type) { Put(packet,0,1,1);Put(packet,1,type,1);Put(packet,2,0,2); }
+// 00435a60의제목부분일치를검사하고모든창의열거를계속한다.실제LPARAM폭으로결과주소를전달한다.
+BOOL CALLBACK FindRootWindow(HWND window,LPARAM value) {
+    std::array<char,256> title{};GetWindowTextA(window,title.data(),static_cast<int>(title.size()));if (std::strstr(title.data(),"Netstorm Root Server")) *reinterpret_cast<bool*>(value)=true;return TRUE;
+}
 }
 // 현재 저장소를 검증하고 observer/기본 연결 종료를 설치하며 실제 소켓 열기는 Connect까지 지연한다.
-MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request)
-    :client_(client),progress_(std::move(progress)),request_(std::move(request)) {
-    if (!progress_ || !request_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/상태 장치 필요");
+MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState)
+    :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)) {
+    if (!progress_ || !request_ || !processState_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run 장치 필요");
     o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client_.WallSeconds()); };
     hooks.record=[](auto&,auto,auto) {}; //World 없는 현재 메타의 선택적 기록은 미연결이다. 수신/로그인 성공을 합성하지 않는다.
-    hooks.terminate=[](auto& connection) { connection.flags|=0x40U; }; //실제 소켓/노드 반납은 TCP owner가 수행한다.
+    hooks.terminate=[](auto& connection) { connection.flags|=0x40U; }; //실제소켓/노드반납은각TCP/UDP소유자가수행한다.
     hooks.close=[](auto&) {};hooks.release=[](auto&) {}; //이 위치의 추가 외부 장치가 없으며 TCP 노드가 실제 close/free를 소유한다.
-    tcp_=std::make_unique<LocalTcpTransport>(client_.PlayerRecords()->Records(),client_.GameplayGlobals()->Server(),std::move(hooks),client_.ConnectionGlobals());
+    const auto udpHooks=hooks;tcp_=std::make_unique<LocalTcpTransport>(client_.PlayerRecords()->Records(),client_.GameplayGlobals()->Server(),std::move(hooks),client_.ConnectionGlobals());
+    udp_=std::make_unique<LocalUdpTransport>(client_.PlayerRecords()->Records(),client_.GameplayGlobals()->Server(),udpHooks,client_.ConnectionGlobals(),tcp_->Dispatch().Registrations()); //실제등록표와연결표를복제하지않고공유한다.
     auto& dispatch=tcp_->Dispatch();dispatch.Register(2,[this](auto sender,auto& connection,auto) {
         auto& local=*client_.LocalStateGlobals();o::ConnectionEndedHooks ended;ended.disconnect=[this](auto id) { client_.ConnectionGlobals()->Disconnect(id); };
         ended.saveServerFailure=[] { throw std::logic_error("메타10/11 밖의 Game Server9 종료 부모 미연결"); };ended.broadcastPlayer=[](auto) { throw std::logic_error("메타 전송의 게임 Player 종료 통지 미연결"); };
@@ -56,11 +72,27 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     dispatch.ObservePacket(0x1c,[](auto packet,auto sending) {
         if (!sending) return;if (packet.size()<46) throw std::out_of_range("1ch observer 필드 부족");if (packet[45]==0xffU) std::clog<<"_p_packets.cpp1226 nameLen 진단\n";Put(packet,2,std::uint32_t(packet[45])+46U,2);
     });dispatch.Version(0x1c,1,0);dispatch.RequireLength(0x1c,0xffff);
+    dispatch.Observe(0x66,{});dispatch.Version(0x66,1,0);dispatch.RequireLength(0x66,12);
+    dispatch.Register(0x66,[this](auto sender,auto&,auto packet) {
+        o::LocalServerDiscoveryReceiveHooks receive;receive.wall=[this] { return client_.WallSeconds(); };receive.peerAddress=[this](auto id) { return CampaignPeerAddressText(client_.ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(id))); };receive.processState=processState_;
+        o::ReceiveLocalServerDiscovery(client_.LocalStateGlobals()->State(),Discovery(),sender,packet,receive);
+    }); //서버발견은현재36직접쓰기뒤실제Run을동기실행한다.검색토큰비교만인경우Run하지않는다.
 }
-MetaConnectionRuntime::~MetaConnectionRuntime()=default; //자기 OS/노드 수명은 LocalTcpTransport의 실제 소멸자가 반납한다.
+MetaConnectionRuntime::~MetaConnectionRuntime()=default; //자기OS/노드수명은실제TCP/UDP소유자의소멸자가반납한다.
 bool MetaConnectionRuntime::CallbackActive() const { return pumping_; } //현재 대여 중인 이 owner를 Native cleanup이 반납하지 않게 한다.
-// 기존 client4 위치에서만 pump하고 콜백이 상태를 예약해도 이 자리에서 State를 실행하지 않는다.
-void MetaConnectionRuntime::Pump() { if (pumping_) throw std::logic_error("메타 TCP 중첩 Poll 금지");pumping_=true;try { tcp_->Flush();static_cast<void>(tcp_->Poll()); }catch (...) { pumping_=false;throw; }pumping_=false; }
+// 기존slot4의TCP뒤UDP를진행한다.66h발견은원문처럼수신뒤같은Run을동기실행한다.
+void MetaConnectionRuntime::Pump() { if (pumping_) throw std::logic_error("메타 TCP/UDP 중첩 Poll 금지");pumping_=true;try { tcp_->Flush();static_cast<void>(tcp_->Poll());static_cast<void>(udp_->Poll()); }catch (...) { pumping_=false;throw; }pumping_=false; }
+// 완성한UTF-8문구를한번만번역한뒤호스트HTML장치가글꼴바이트로변환한다.
+void MetaConnectionRuntime::Progress(std::string_view source,bool protocol) { auto text=client_.Translate(source);if (protocol) { const auto at=text.find("%s");if (at!=std::string::npos) text.replace(at,2,"TCP/IP"); }progress_(text); }
+// 전송owner교체와무관한같은Client현재DWORD/double세개를빌린다.
+o::LocalServerDiscoveryGlobals MetaConnectionRuntime::Discovery() { auto& local=*client_.LocalStateGlobals();return {local.LocalServerToken(),local.LocalServerSearchEnd(),local.LocalServerRetryEnd()}; }
+// TCP/IP에해당하는원문분기만구현하며IPX의성공값/주소를대체하지않는다.
+o::LocalServerDiscoveryHooks MetaConnectionRuntime::DiscoveryHooks() {
+    o::LocalServerDiscoveryHooks hooks;hooks.wall=[this] { return client_.WallSeconds(); };hooks.open=[this] { static_cast<void>(udp_->Open(std::bit_cast<std::uint32_t>(client_.NsInfoGlobals()->rootServerBroadcastPort))); };
+    hooks.broadcast=[this](auto packet) { static_cast<void>(udp_->Broadcast(packet,std::bit_cast<std::uint32_t>(client_.NsInfoGlobals()->rootServerBroadcastPort))); };
+    hooks.progress=[this] { Progress("Searching for local %s server.",true); };hooks.palette=[this] { const auto path=client_.Configuration().PathSpec("chalPal");client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(path.data()),path.size()+1}); };
+    hooks.serverWindowExists=[] { bool found=false;EnumWindows(FindRootWindow,reinterpret_cast<LPARAM>(&found));return found; };return hooks;
+}
 // 지역80BYTE/기본 포트 조회 뒤 같은 기존 socket 재사용/로컬 IPv4 정책을 적용한다.
 bool MetaConnectionRuntime::Connect(std::string_view endpoint,std::uint32_t port,std::uint32_t challenge) {
     const auto selected=ResolveRootServerEndpoint(endpoint,port,[this] { return client_.Configuration().GetInt("rootServerBasePort"); });
@@ -95,28 +127,39 @@ void MetaConnectionRuntime::SendChallengeLogin() {
 o::LocalMissionParentResult MetaConnectionRuntime::Run(std::uint32_t selected) {
     auto state=client_.LocalStateGlobals()->State();if (state.current[0]!=selected) throw std::logic_error("메타 연결의 실제 current 계약");
     switch (selected) {
-    case 20:progress_("Failed to connect.");state.next[0]=3;break;
+    case 20:Progress("Failed to connect.");state.next[0]=3;break;
     case 21: {
-        progress_("Contacting Root Server.");std::array<char,80> endpoint;endpoint[0]=0;client_.NsInfoGlobals()->ReadServerFields(std::bit_cast<std::int32_t>(state.current[0x44/4]),std::span<char>(endpoint).first(79),{},nullptr);
+        Progress("Contacting Root Server.");std::array<char,80> endpoint;endpoint[0]=0;client_.NsInfoGlobals()->ReadServerFields(std::bit_cast<std::int32_t>(state.current[0x44/4]),std::span<char>(endpoint).first(79),{},nullptr);
         if (!endpoint[0]) client_.WriteDiagnosticLog(9,"nextState.serverNum is invalid.\n");static_cast<void>(Connect(endpoint.data(),0,0));state.next[0]=22;break;
     }
     case 22: {
-        const auto status=tcp_->Status(10);const auto open=tcp_->IsOpen(10);if (!open || status<0) { client_.ConnectionGlobals()->Disconnect(10);progress_("Root Server login failure.");request_(20); }
+        const auto status=tcp_->Status(10);const auto open=tcp_->IsOpen(10);if (!open || status<0) { client_.ConnectionGlobals()->Disconnect(10);Progress("Root Server login failure.");request_(20); }
         else if (!status) state.next[0]=22;else { SendRootLogin();request_(23); }break;
     }
-    case 23:progress_("Root Server connected. Awaiting login reply.");break;
+    case 23:Progress("Root Server connected. Awaiting login reply.");break;
     case 24:request_(25);break;
     case 25: {
-        progress_("Contacting Challenge Server.");const auto index=std::bit_cast<std::int32_t>(state.current[0x44/4]);const auto& servers=client_.NsInfoGlobals()->servers;
+        Progress("Contacting Challenge Server.");const auto index=std::bit_cast<std::int32_t>(state.current[0x44/4]);const auto& servers=client_.NsInfoGlobals()->servers;
         if (index<0 || static_cast<std::size_t>(index)>=servers.size()) { client_.WriteDiagnosticLog(9,"nextState.serverNum is invalid.\n");throw std::out_of_range("원문 NULL challenge endpoint의 물리 읽기 거부"); }
         static_cast<void>(Connect(servers[static_cast<std::size_t>(index)],0,1));state.next[0]=26;break;
     }
     case 26: {
         const auto status=tcp_->Status(11);const auto open=tcp_->IsOpen(11);if (!open || status<0) { client_.ConnectionGlobals()->Disconnect(11);state.next[0]=38; }
-        else if (!status) state.next[0]=26;else { SendChallengeLogin();progress_("Challenge Server connected. Awaiting login reply.");request_(27); }break;
+        else if (!status) state.next[0]=26;else { SendChallengeLogin();Progress("Challenge Server connected. Awaiting login reply.");request_(27); }break;
     }
     case 27:break; //원문4b874c 표의 실제4b86bd 공통 확정 직행 상태이며 로그인 응답은 별도 수신기가 예약한다.
-    default:throw std::logic_error("메타 연결20~27 밖의 상태 미연결");
+    case 34:o::StartLocalServerSearch(state,Discovery(),client_.RandomGlobals()->Crt(),DiscoveryHooks());break;
+    case 35:o::ContinueLocalServerSearch(state,Discovery(),client_.RandomGlobals()->Crt(),DiscoveryHooks());break;
+    case 36: {
+        Progress("Local %s server found.",true);udp_->Close();client_.ConnectionGlobals()->Disconnect(13);const auto bytes=std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(state.current.data()),sizeof(state.current));const auto first=bytes.begin()+8;const auto end=std::find(first,bytes.end(),0);
+        if (end==bytes.end()) throw std::out_of_range("메타36현재주소NUL물리없음");static_cast<void>(Connect({reinterpret_cast<const char*>(bytes.data()+8),static_cast<std::size_t>(end-first)},state.current[0x30/4],1));state.next[0]=26;state.next[0x34/4]=1;break;
+    }
+    case 37:throw std::logic_error("Native State37의새로복원한로컬R서버실행부모미연결"); //원본R실행/가짜서버성공으로복원완료를대체하지않는다.
+    case 38: {
+        const auto address=udp_->LocalAddress();if (!address[0] && !address[1]) { Progress("Root Server login failure.");request_(20); }
+        else { auto endpoint=CampaignPeerAddressText(address);endpoint.resize(endpoint.rfind(':'));static_cast<void>(Connect(endpoint,0,1));state.immediate[0]=26;state.immediate[0x34/4]=1; }break;
+    }
+    default:throw std::logic_error("메타 연결/검색 밖의 상태 미연결");
     }return o::LocalMissionParentResult::Commit;
 }
 }

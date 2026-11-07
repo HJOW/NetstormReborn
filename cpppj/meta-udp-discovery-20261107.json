@@ -1,0 +1,85 @@
+{
+  "unit": 1058,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "implementation": [
+    "실제 UDP12/공유 Registry·패킷 등록표/Native 데이터그램·현재 송신자 주소",
+    "같은 Client 검색 토큰·두 double 기한/현재 BroadcastPort·공유 CRT",
+    "실제 메타34·35·36·38과66h 동기 수신→같은 상태 Run/깊이 지연 반납"
+  ],
+  "build": {
+    "configuration": "Release/x64",
+    "attempts": 2,
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12322816,
+    "exeSha256": "9df977c31782c295b985faac3733a3947ae7c1d1979b5df07bb8cda874ba37b0"
+  },
+  "executions": {
+    "multiplayerTests": 0,
+    "newUnitTests": 0,
+    "game": 0,
+    "network": 0,
+    "originalServer": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "nativeReferences": [
+    "004dfb20",
+    "004df2c0",
+    "004dfc00",
+    "004dff00",
+    "004e00e0",
+    "004e0150",
+    "004e1210",
+    "004e1800",
+    "004e1c00",
+    "004e1d70",
+    "004e1e90",
+    "004df440",
+    "004df9f0",
+    "00435220",
+    "00435a60",
+    "00435ab0",
+    "004e2d20",
+    "004e2d60",
+    "004e1040",
+    "004b6dd0",
+    "004b8a10"
+  ],
+  "nativeGlobals": {
+    "005c85a8": "ClientLocalStateGlobals.LocalServerToken",
+    "005c8600": "ClientLocalStateGlobals.LocalServerSearchEnd",
+    "005c8608": "ClientLocalStateGlobals.LocalServerRetryEnd",
+    "0054db54": "ClientNsInfoGlobals.rootServerBroadcastPort"
+  },
+  "decompilation": {
+    "lastFullNetstorm": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "lastRootServer": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-07"
+    },
+    "rerun": false
+  },
+  "remaining": [
+    "State37: 원본 R 소스 기반 새 로컬 서버 실행 대상/실제 모드·Root·CS 관리자",
+    "004b9230의 수동 재시도/로컬 서버 선택 UI 부모",
+    "17h/1dh 응답·State28~33/메타 표시·나머지LAN/Outpost/checking5",
+    "선택적 packet-record 송수신 writer의 실제 연결",
+    "한국어 후속·Edit 시나리오 UI"
+  ],
+  "limits": [
+    "State35가 만료 후37을 선택하면 미복원 부모를 명시 오류로 보고한다. 로컬 검색 전체 완료가 아니다",
+    "같은 World 없는 메타의10/11/12 순서를 연결했으며 임의 backend 전체의 새 공통 coordinator가 아니다",
+    "TCP/IP만 구현하며 IPX/SPX를 로컬 주소나 성공값으로 대체하지 않는다",
+    "호스트 포트 물리0..65535/Windows2.2 WSA 참조와 OS 오류 전달은 현대 장치 경계다"
+  ]
+}

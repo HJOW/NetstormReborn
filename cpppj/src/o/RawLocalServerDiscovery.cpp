@@ -31,13 +31,13 @@ std::array<std::uint8_t,12> MakeLocalServerDiscoveryPacket(std::uint32_t command
     return packet;
 }
 // 원본R은한번작성한같은서버발견패킷을현재UDP노드의가상SendTo로세번전달한다.
-void AnnounceLocalServer(std::uint32_t basePort,const std::function<void(std::span<const std::uint8_t>)>& broadcast) {
-    const auto packet=MakeLocalServerDiscoveryPacket(1,basePort); //명령1의+8은클라이언트검색토큰이아니라서버TCPbasePort다.
+void AnnounceLocalServer(std::uint32_t basePort,const std::function<void(std::span<std::uint8_t>)>& broadcast) {
+    auto packet=MakeLocalServerDiscoveryPacket(1,basePort); //명령1의+8은클라이언트검색토큰이아니라서버TCPbasePort다.
     for (std::size_t attempt=0;attempt<3;++attempt) Need(broadcast)(packet); //Native00475eb7/00475eca/00475eda의연속세송신호출이다.
 }
 // 초기 검색과 이후 재시도가 같은 현재 토큰을 다시 읽는다.
 void BroadcastLocalServerDiscovery(LocalServerDiscoveryGlobals globals,const LocalServerDiscoveryHooks& hooks) {
-    const auto packet=MakeLocalServerDiscoveryPacket(0,globals.token);Need(hooks.broadcast)(packet); //실제 송신 동안만 원문12BYTE를 빌린다.
+    auto packet=MakeLocalServerDiscoveryPacket(0,globals.token);Need(hooks.broadcast)(packet); //실제 송신 동안만 원문12BYTE를 빌린다.
 }
 // 실제 열기 뒤 srand/네번rand를 소비하며 최종 토큰 저장 전까지 기존 전역을 유지한다.
 void BeginLocalServerDiscovery(LocalServerDiscoveryGlobals globals,CrtRandom& random,const LocalServerDiscoveryHooks& hooks) {

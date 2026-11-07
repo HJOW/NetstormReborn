@@ -611,6 +611,7 @@ void Client::InterpretFortFileOptions() {
     configuration_.ReadInt("readOnlyForts", value);
     readOnlyForts_ = std::bit_cast<std::uint32_t>(value);
     configuration_.ReadInt("curServer",nsInfoGlobals_->serverSelection); // 같은54db4c의 현재값에서 읽어 누락 시 보존한다.
+    configuration_.ReadInt("rootServerBroadcastPort",nsInfoGlobals_->rootServerBroadcastPort); //00435220의같은0054db54를현재값에서갱신하며누락이면보존한다.
     configuration_.ReadInt("passedDiags",nsInfoGlobals_->passedDiags); //같은0054db70의 현재DWORD를 보존하며 메타 요청의 정보 비트만 공급한다. 원격 클라이언트 검증은 실행하지 않는다.
 }
 
