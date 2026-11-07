@@ -1,5 +1,7 @@
 # 외부 접속 기능 목록과 구 클라이언트 검증 비활성화 — 단위684
 
+**2026-11-07 / 1079 갱신:** CCh 이동0044fad0의 기본 BADVER 가입 거부문구004be1c8에도 폐기 HQ HTTP 링크가 있다. 기본 문구만 현재11.01 로컬 빌드 안내로 바꾸고 현재badVersionNoBattle옵션/기존 플래그와 확장비트는 보존했다. countPirates는 현재명단의기존flag200 집계/진단이며 이동에서는 반환값을사용하지않는다. URL열기/HTTP/DNS·온라인검증·quota판단은연결하지않았다. 실제새수신/MP/통신실행0이며[1079 기록](cpp-root-challenge-move-20261107.md)을따른다.
+
 **2026-11-07 / 1076 갱신:** rootservers.dat의 현재 문자열 표/체크섬·행 읽기/갱신과 사용자 Saves 저장을 구현했다. 입력은 사용자 Saves 우선/원문 workingDirectory 기준..\d이며 파일에 도메인/주소 문자열이 있어도 이 로더·행 처리는 DNS/소켓을 호출하지 않는다. 같은 메인 재로드 hook/Root 체크섬 참조 계약을 제공하며 최종 R owner·실제 파일 실행은 아직 없다. 실제 접속은 기존 LAN 정책/폐기 검증 비활성화와 구분한다([1076 기록](cpp-root-server-list-20261107.md)).
 
 **2026-11-07 / 1072 갱신:** Root00486870의 inet_addr 실패 뒤 gethostbyname과004870d0의 로컬 hostname resolver 경계는 새 AddressCodec에서 외부 DNS로 연결하지 않는다. 숫자 IPv4/localhost/현재 컴퓨터 이름만 처리하며 실제 로컬 IPv4는 GetAdaptersAddresses의 Up/LAN unicast에서 얻는다. 다른 LAN/공개 hostname은 주소0 해석 실패로 남으므로 LAN 접속은 숫자 IPv4를 사용한다. 최종 R owner/실제 호출은 아직 없고 DNS/OS 조회/MP 실행0이다. 다중 어댑터의 구형 resolver 순서·hosts 재정의 동일성을 주장하지 않는다([1072 기록](cpp-root-address-codec-20261107.md)).
