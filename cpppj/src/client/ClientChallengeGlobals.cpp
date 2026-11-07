@@ -2,8 +2,15 @@
 #include "client/ClientChallengeGlobals.h"
 #include <new>
 #include <stdexcept>
+#include <bit>
 
 namespace netstorm::client { // 실제 같은 주소의 전역/할당만 제공하며 메타 상태 성공을 합성하지 않는다.
+namespace { //CS조회/버전집계의실제필드폭과선택된진단만처리한다.
+constexpr std::array<std::uint8_t,1> kEmptyParticipantName{0}; //00503c8b의빈C문자열에대응하는실제NUL수명이다.
+std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t at,std::size_t width=4) { if (at>bytes.size() || width>bytes.size()-at) throw std::out_of_range("CS 조회의 실제 필드 읽기 범위");std::uint32_t result{};for (std::size_t byte=0;byte<width;++byte) result|=std::uint32_t(bytes[at+byte])<<(8*byte);return result; } //원문1/2/4BYTE를낮은BYTE부터조립한다.
+void Put(std::span<std::uint8_t> bytes,std::size_t at,std::uint32_t value) { if (at>bytes.size() || 4>bytes.size()-at) throw std::out_of_range("CS 버전의 실제 DWORD 쓰기 범위");for (std::size_t byte=0;byte<4;++byte) bytes[at+byte]=static_cast<std::uint8_t>(value>>(8*byte)); } //선택한현재DWORD의네BYTE만순서대로쓴다.
+void Assert(const std::function<void(std::string_view,std::uint32_t)>& assertion,std::string_view expression,std::uint32_t line) { if (!assertion) throw std::logic_error("CS 원문 Ch.cpp 진단 장치 미연결");assertion(expression,line); } //진단이복귀하면원문처럼뒤의현재물리접근을계속한다.
+}
 std::uint32_t& ClientChallengeGlobals::Current() { return current_; } // 생성/옵션/Session 교체에서 다시0으로 쓰지 않는다.
 const std::uint32_t& ClientChallengeGlobals::Current() const { return current_; } // 판정은 현재 같은 DWORD를 읽는다.
 o::ChallengeGeometry& ClientChallengeGlobals::Geometry() { return geometry_; } // 별도 캐시 사본을 만들지 않는다.
@@ -40,6 +47,31 @@ std::span<std::uint8_t> ClientChallengeGlobals::Battle(std::uint32_t index) { //
 }
 std::span<std::uint8_t> ClientChallengeGlobals::Participant(std::uint32_t index) { // 물리40개와 각 기록의 실제 폭만 제한한다.
     if (index>=o::kChallengeParticipantCount) throw std::out_of_range("CS 참가자40기록 물리 범위");return Bytes().subspan(o::kChallengeParticipantOffset+index*o::kChallengeParticipantBytes,o::kChallengeParticipantBytes);
+}
+// 기존가변getter와동일한현재할당/범위만빌린다.
+std::span<const std::uint8_t> ClientChallengeGlobals::Battle(std::uint32_t index) const { return const_cast<ClientChallengeGlobals*>(this)->Battle(index); }
+// const조회도같은CS포인터를다시읽으며별도스냅샷을만들지않는다.
+std::span<const std::uint8_t> ClientChallengeGlobals::Participant(std::uint32_t index) const { return const_cast<ClientChallengeGlobals*>(this)->Participant(index); }
+// 유효성비트나subscriber0은검색조건이아니며처음일치한실제0번도반환한다.
+std::optional<std::uint32_t> ClientChallengeGlobals::FindParticipantBySubscriber(std::uint32_t subscriber) const {
+    for (std::uint32_t index=0;index<o::kChallengeParticipantCount;++index) if (Read(Participant(index),4)==subscriber) return index; //원문40개의현재subscriberDWORD를배열순서로비교한다.
+    return std::nullopt;
+}
+// 원문은이름내용을읽지않고포인터만돌려준다.호스트도현재고정이름물리뷰만제공한다.
+std::span<const std::uint8_t> ClientChallengeGlobals::ParticipantNameBytes(std::int32_t participant,const std::function<void(std::string_view,std::uint32_t)>& assertion) const {
+    if (participant<1 || participant>=40) Assert(assertion,"pId > 0 && pId < CL_NUM_CHAL_PLAYERS",0x48c);const auto record=Participant(std::bit_cast<std::uint32_t>(participant));return (Read(record,0x64,1)&1U) ? record.subspan(0x26,40):std::span<const std::uint8_t>(kEmptyParticipantName);
+}
+// 무효/비활성전투의추가관문없이같은현재여덟슬롯을센다.
+std::uint32_t ClientChallengeGlobals::FreeBattleSlots(std::uint32_t battle) const {
+    const auto record=Battle(battle);std::uint32_t count{};for (std::uint32_t slot=0;slot<8;++slot) if (!Read(record,0x38U+slot*4U)) ++count;return count; //각playerId DWORD가정확히0일때만증가한다.
+}
+// Native루프의slot0..7순서/참가자active필터없음·WORD상한후하한조회와최종두쓰기순서를유지한다.
+void ClientChallengeGlobals::UpdateBattleVersionBounds(std::int32_t battle,const std::function<void(std::string_view,std::uint32_t)>& assertion) {
+    if (battle<0 || battle>=10) Assert(assertion,"bId >= 0 && bId < CL_NUM_CHAL_BATTLES",0x45a);const auto record=Battle(std::bit_cast<std::uint32_t>(battle));if (!(Read(record,0,1)&1U)) Assert(assertion,"b->isValid()",0x45d);std::uint32_t maximum=0xffffffffU,minimum=0x100U;
+    for (std::uint32_t slot=0;slot<8;++slot) { //원문의두묶음네슬롯을동일한현재순서로순회한다.
+        const auto participant=Read(record,0x38U+slot*4U);if (!participant) continue;const auto peer=Participant(participant);const auto upper=Read(peer,0xb4,2);if (std::bit_cast<std::int32_t>(maximum)<=static_cast<std::int32_t>(upper)) maximum=upper;const auto lower=Read(peer,0xb2,2);if (lower<=minimum) minimum=lower;
+    }
+    Put(record,0x1c,minimum);Put(record,0x18,maximum);
 }
 // 실제 할당 성공 뒤만 토큰을 발행하고 아직 초기화하지 않은 원소는 caller의 native 쓰기에 맡긴다.
 std::uint32_t ClientChallengeGlobals::AllocateArray(std::size_t bytes) {

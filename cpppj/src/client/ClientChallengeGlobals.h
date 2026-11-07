@@ -5,6 +5,8 @@
 #include <functional>
 #include <map>
 #include <memory>
+#include <optional>
+#include <string_view>
 
 namespace netstorm::client { // 메타 서비스 객체와 지형 TYPE Outpost를 구별하는 원문 소유자다.
 class ClientChallengeGlobals {
@@ -23,6 +25,12 @@ public:
     std::span<std::uint8_t> Bytes();std::span<const std::uint8_t> Bytes() const; // 현재 할당21328BYTE를 직접 빌린다.0/다른 포인터는 물리 경계에서 거부한다.
     std::span<std::uint8_t> Battle(std::uint32_t index); // 실제0..9의292BYTE 전투 기록이다.
     std::span<std::uint8_t> Participant(std::uint32_t index); // 실제0..39의460BYTE 참가자 기록이다.
+    std::span<const std::uint8_t> Battle(std::uint32_t index) const; //같은현재전투물리의읽기전용뷰이며별도기록을복사하지않는다.
+    std::span<const std::uint8_t> Participant(std::uint32_t index) const; //같은현재참가자물리의읽기전용뷰다.
+    std::optional<std::uint32_t> FindParticipantBySubscriber(std::uint32_t subscriber) const; //0042bb70:0..39의첫subscriber일치이며active/비0관문을추가하지않는다.실제0번과미발견을구별한다.
+    std::span<const std::uint8_t> ParticipantNameBytes(std::int32_t participant,const std::function<void(std::string_view,std::uint32_t)>& assertion) const; //0042bbb0:1..39진단뒤현재active면같은40BYTE이름,아니면실제NUL1BYTE뷰다.읽기/문자열복사는caller가한다.
+    std::uint32_t FreeBattleSlots(std::uint32_t battle) const; //0042b350:현재8개playerIds DWORD중0인개수다.별도전투active조건은없다.
+    void UpdateBattleVersionBounds(std::int32_t battle,const std::function<void(std::string_view,std::uint32_t)>& assertion); //0042ba40:현재8슬롯의WORD버전필드집계→min256/max-1·최종min/max순서저장이다.
     std::uint32_t AllocateArray(std::size_t bytes); // CS 가변 배열의 실제 할당을 별도32비트 토큰으로 소유한다. 실패 시0이며 기록 공개/원소 작성은 caller가 한다.
     std::span<std::uint8_t> ArrayBytes(std::uint32_t token); // 등록된 실제 배열 전체를 빌리고 임의 원본 주소를 호스트 포인터로 변환하지 않는다.
     void ClearArray(std::span<std::uint8_t> header); //0046d8a0의 두 비영 포인터 free 뒤 +0/+4/+c/+8 순서로 같은16BYTE를 지운다.

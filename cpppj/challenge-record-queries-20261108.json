@@ -1,0 +1,67 @@
+{
+  "unit": 1119,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "refinement": "서버복원송신/집계와대조해WORD필드를버전으로명명한뒤최종재빌드"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12662272,
+      "sha256": "04960a01b69523dfc5499488b17dfd5309ea79958b70817d6769a97636de17ee"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "eb3667bcf6ee7d67130df2598a17d735cc144ebeae8e7fddd54943ecbce11fb6"
+    }
+  },
+  "staticAudit": {
+    "native": [
+      "0042b350",
+      "0042ba40",
+      "0042bb70",
+      "0042bbb0"
+    ],
+    "subscriber": "0..39첫전체DWORD일치·active/비0조건없음·실제index0과미발견구별",
+    "name": "원문범위진단복귀후activeBYTE1→같은40BYTE이름·아니면NUL1BYTE·본문문자복사없음",
+    "slots": "8개의playerIdDWORD가정확히0인개수·전투active추가관문없음",
+    "versions": "b2/b4 WORD는클라이언트버전필드·8슬롯/active필터없음·max-1/min256·min/max저장순서",
+    "storage": "같은현재CS할당/기록의const/mutable뷰·별도명단/집계사본없음"
+  },
+  "integration": {
+    "queryAndVersionApisCompiled": true,
+    "rootPlayerBattleUiBoundIn1118": true,
+    "csReceiversBound": false,
+    "metaObjectCreationBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "CS수신/참가자·전투섬생성·현재조회/버전집계호출·카메라Rig/HTML→1dh/28~33등록/1095송신상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
