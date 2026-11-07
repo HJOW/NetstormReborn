@@ -595,3 +595,5 @@ cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawWorldRuntimeHooks.c
 cpppj/src/o/SquidForms.h	Netstorm.Core/Original/RawWorldRuntimeHooks.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	port
 cpppj/src/o/RawBattleBroadcast.h	Netstorm.Core/Original/RawWorldRuntimeHooks.cs	167e7b79cda7a2af1d1fbbb7e9948889712e1938	port
 cpppj/src/o/SquidFormDispatch.h	Netstorm.Core/Original/RawWorldRuntimeHooks.cs	b08059acc1d9aa00e0dc86f1d8f912bd57c3153d	port
+cpppj/src/o/RawProcessAttach.h	Netstorm.Core/Original/RawProcessAttach.cs	4c449132bb3777b2494b3822781426dd6551f734	L1
+cpppj/src/o/RawProcessAttach.cpp	Netstorm.Core/Original/RawProcessAttach.cs	4c449132bb3777b2494b3822781426dd6551f734	L1
