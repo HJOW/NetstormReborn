@@ -3148,7 +3148,7 @@
       "bytes": 11396,
       "lines": 46,
       "fixtureCommit": "67cce492",
-      "webCommit": "worktree",
+      "webCommit": "febcbf8c",
       "cpppjBasis": {
         "cpppj/src/o/RawNewTechnology.cpp": "67cce492"
       }
@@ -3177,7 +3177,7 @@
       "bytes": 198483,
       "lines": 1201,
       "fixtureCommit": "229a2c10",
-      "webCommit": "worktree",
+      "webCommit": "febcbf8c",
       "cpppjBasis": {
         "cpppj/src/o/RawThemeTechnology.cpp": "229a2c10"
       }
@@ -3206,9 +3206,125 @@
       "bytes": 373944,
       "lines": 217,
       "fixtureCommit": "4738731f",
-      "webCommit": "worktree",
+      "webCommit": "febcbf8c",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerColor.h": "4738731f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E14",
+      "id": "flyer-predestroy",
+      "path": "cpppj/tests/fixtures/flyer-predestroy-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 플라이어 삭제 전처리의 +8 WORD 대상 삭제 요청·flags·callback 뒤 네 슬롯 200 BYTE",
+      "consumers": [
+        "webpj/tests/small-bodies.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-flyer-pre-destroy.js"
+      ],
+      "doc": "docs/webpj-small-bodies-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFlyerPreDestroy.cpp"
+      ],
+      "scope": "96행 전부 사용",
+      "text": true,
+      "sha256": "ead377fce65804b6537696768edb5f7ed0480a6aaa38d7d7ad36dd1eba06c202",
+      "bytes": 41399,
+      "lines": 97,
+      "fixtureCommit": "392ab168",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFlyerPreDestroy.cpp": "392ab168"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E14",
+      "id": "fence-type-parent",
+      "path": "cpppj/tests/fixtures/fence-type-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 바리케이드 두 타입 부모의 진단/복귀 뒤 raw·전역 재판정",
+      "consumers": [
+        "webpj/tests/small-bodies.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-type-parent.js"
+      ],
+      "doc": "docs/webpj-small-bodies-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFenceTypeParent.cpp"
+      ],
+      "scope": "432행 전부 사용",
+      "text": true,
+      "sha256": "698ec7bf869288cbfab9846afbeeec7737d0eb83f75d424800ed018bfc58bfd9",
+      "bytes": 86000,
+      "lines": 433,
+      "fixtureCommit": "d9689a19",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFenceTypeParent.cpp": "d9689a19"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E14",
+      "id": "priest-sacrifice-request",
+      "path": "cpppj/tests/fixtures/priest-sacrifice-request-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 희생 요청 wrapper 의 호출 순서·현재 owner 재독·반환",
+      "consumers": [
+        "webpj/tests/small-bodies.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-sacrifice-request.js"
+      ],
+      "doc": "docs/webpj-small-bodies-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestSacrificeRequest.cpp"
+      ],
+      "scope": "128행 전부 사용",
+      "text": true,
+      "sha256": "b0ee93daba823701bab57a5a74314251436be61ddfc7e080b02a6bc90146856f",
+      "bytes": 6061,
+      "lines": 129,
+      "fixtureCommit": "f591fc05",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestSacrificeRequest.cpp": "f591fc05"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E14",
+      "id": "carrier-mining",
+      "path": "cpppj/tests/fixtures/carrier-mining-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 채취 통지의 6 BYTE 패킷·송신 전후 효과·현재 지면 상태(두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/small-bodies.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-mining.js"
+      ],
+      "doc": "docs/webpj-small-bodies-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierMining.cpp"
+      ],
+      "scope": "864행 전부 사용",
+      "text": true,
+      "sha256": "b2a0bcaf272a6ae890313bc832e6a24a51847ddef5d1961ddb0ef42d6e1b9c77",
+      "bytes": 105618,
+      "lines": 865,
+      "fixtureCommit": "850ae867",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierMining.cpp": "850ae867"
       }
     }
   ]
