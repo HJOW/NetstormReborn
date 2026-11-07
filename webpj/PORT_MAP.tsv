@@ -769,7 +769,7 @@ cpppj/src/o/RawMakeAi.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaBoltArrival.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaBoltRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaDraw.cpp	port			todo	[o-default]
-cpppj/src/o/RawManaRegistration.cpp	port			todo	[o-default]
+cpppj/src/o/RawManaRegistration.cpp	port	www/core/raw-mana-registration.js	1f00a25a	port	[o-default] WB04-E10: 00472f70 마나 공급원 등록(최초 개수 저장·중복 검색·checking 진단 복귀·productionDirty 감김). fixture mana-registration-hardware 10.78 542행 전부(originalCD 542행은 10.72라 제외). 실제 Client/World 통합 대조는 공통 PostPop 본체 단위에서
 cpppj/src/o/RawMeltdown.cpp	port			todo	[o-default]
 cpppj/src/o/RawMemStream.cpp	port			todo	[o-default]
 cpppj/src/o/RawMetadisplayDirty.cpp	port	www/core/metadisplay-dirty.js	1f00a25a	port	[o-default] WB04-D2

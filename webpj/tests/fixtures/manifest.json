@@ -2913,9 +2913,38 @@
       "bytes": 45288,
       "lines": 89,
       "fixtureCommit": "7477610d",
-      "webCommit": "worktree",
+      "webCommit": "b085a738",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerContentNotice.cpp": "0cb53fac"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E10",
+      "id": "mana-registration-hardware",
+      "path": "cpppj/tests/fixtures/mana-registration-hardware-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 마나 공급원 등록의 포인터·개수·용량·카운터·checking·두 물리 배열·진단 이벤트(패치/CD 각 542행)",
+      "consumers": [
+        "webpj/tests/mana-registration.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mana-registration.js"
+      ],
+      "doc": "docs/webpj-mana-registration-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawManaRegistration.cpp"
+      ],
+      "scope": "1084행 중 originals(10.78) 542행 사용. originalCD 542행(10.72)은 제외",
+      "text": true,
+      "sha256": "4711f8b9998cd3e60f2cb5538dca4f84e95b8f24bf7e5477b5d00e0b3f7c532b",
+      "bytes": 351385,
+      "lines": 1084,
+      "fixtureCommit": "72fed9ba",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawManaRegistration.cpp": "72fed9ba"
       }
     }
   ]
