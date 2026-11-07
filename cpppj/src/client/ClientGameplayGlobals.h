@@ -68,6 +68,8 @@ public:
     const std::int32_t& DenyAscend() const { return denyAscend_; } // Session 대여나 반납 뒤에도 같은 주소와 현재 금지 값을 읽는다.
     std::uint32_t& PatchDiagnostic() { return patchDiagnostic_; } // 005318ec의 같은 DWORD를 SP 추적 쓰기와 경로·그림자·카메라 읽기가 빌린다.
     const std::uint32_t& PatchDiagnostic() const { return patchDiagnostic_; } // 진단값을 프레임별 사본이나 bool로 축소하지 않는다.
+    std::uint32_t& PatchSample() { return patchSample_; } //00540cb8의 현재 Next(9) 표본을 사제와 World 없는 Core 읽기가 공유한다.
+    const std::uint32_t& PatchSample() const { return patchSample_; } //Session 반납 뒤에도 마지막 실제 표본을 읽는다.
     std::int32_t& WorldCells() { return worldCells_; } //00531928의 같은 signed 세계 크기를 카메라와 마나/공급/AI가 빌린다.
     const std::int32_t& WorldCells() const { return worldCells_; } // Session 반납으로 주소나 현재값을 초기화하지 않는다.
     const std::shared_ptr<o::RawGameAuxState>& GameAux() const { return gameAux_; } // Storage와 같은17필드 owner 정체성을 빌린다.
@@ -140,6 +142,7 @@ private:
     std::uint32_t hideBuildings_{}; // 원문 최초 BSS0이며 명시 State store 외에 임의 초기화를 추가하지 않는다.
     std::int32_t denySalvage_{},denyAscend_{}; // 00595078/0059507c의 최초 BSS0이다. 대여·반납에서는 다시 쓰지 않고 Start와 Tutorial 소멸의 명시 쓰기만 공유한다.
     std::uint32_t patchDiagnostic_{6}; // 보호 10.78 PE의 초기 DWORD6이며 World/Session 대여·반납으로 다시 쓰지 않는다.
+    std::uint32_t patchSample_{6}; //보호10.78 PE00540cb8의 실제 초기 DWORD6이다. 표본 writer가 갱신하기 전0을 합성하지 않는다.
     std::int32_t worldCells_{256}; // 보호 PE 초기256이며 실제 startup의 명시 store와 Session 대여를 구별한다.
     ClientCameraGlobals camera_; // 전역snapshot과논리Renderer/목표를분리하고명시Native초기화외에는현재값을보존한다.
     ClientCursorGlobals cursorGlobals_; // callback/타이머없이Lifecycle/Placement/snap만장기소유한다.

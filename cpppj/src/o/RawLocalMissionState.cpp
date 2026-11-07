@@ -99,7 +99,7 @@ bool RawLocalMissionState::Step() {
     case 13: Connected();break;
     case 15: Need(hooks_.takeServer,"State15 실제 서버 인수 부모 미연결")();break;
     case 4: case 12: case 14: case 16: break; //004b874c의State4와 서버 인수 뒤16도004b86bd 공통확정으로 직행하며 다음Poll에서만 소비한다.
-    case 1: case 2: case 3: case 6: case 39: case 40: case 41: case 42: return Need(hooks_.parentState,"큰메뉴부모상태미연결")(state_.current[0])==LocalMissionParentResult::ReturnWithoutCommit; // 일반 복귀6도 같은 큰 Fort 부모의 실제 반환/공통 확정 계약을 따른다.
+    case 1: case 2: case 3: case 6: case 19: case 39: case 40: case 41: case 42: return Need(hooks_.parentState,"큰메뉴부모상태미연결")(state_.current[0])==LocalMissionParentResult::ReturnWithoutCommit; //메타19/일반복귀6도 같은 실제 큰 부모 뒤 공통144BYTE 확정 계약을 따른다.
     default: Need(hooks_.invalidState,"미복원상태진단미연결")(state_.current[0]);break;
     }
     return false;

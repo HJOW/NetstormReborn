@@ -183,6 +183,7 @@
 #include "o/RawSquidLevel.h"
 #include "o/RawPlayerCoreData.h"
 #include "client/ClientCoreDataGlobals.h"
+#include "client/FortCoreDataLoad.h"
 #include "client/ClientSpGlobals.h"
 #include "o/RawPlayerCoreRefresh.h"
 #include "o/RawSquidSelection.h"
@@ -925,7 +926,7 @@ struct RawCampaignSession::Impl {
         aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {
             if (!services.ai.allocationBytes) throw std::logic_error("실제 Session AI 할당 입력 바이트 미연결");services.ai.allocationBytes(bytes);
         }),
-        objectState(templateStorage->SerializationVersion()),seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()),
+        objectState(templateStorage->SerializationVersion(),templateStorage->LoadingDepth()),seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()),
         gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),dudeSpeeds(core.types.size()),
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
@@ -944,7 +945,7 @@ struct RawCampaignSession::Impl {
         motionState.carrier.sharedNuggetType=motionState.cleanup.sharedNuggetType=constructionState.place.sharedNuggetType=rewardState.sharedNuggetType; // 경로·건설·덱/의식 요청의 참조도 같은 장기 owner로 연결한다.
         hp.BindCurrentTypes(core.types); // 실제 PATCH의 최대HP/HP 플래그가 World의 같은 현재 TYPE 표를 읽는다. 별도 정수 비용 캐시는 유지한다(단위863).
         hp.BindLoadedCosts(assets.game.TypeTable().Types()); // Session 교체 뒤에도 최초 로딩 비용표를 읽고 현재 TYPE+c4 float 쓰기와 분리한다(단위865).
-        priestState.regen.patch.sharedChangedSample=&gameplayGlobals->PatchDiagnostic();motionState.search.sharedPolicySelector=&gameplayGlobals->PatchDiagnostic(); // 최초 객체 생성 전에 추적 writer와 BFS가 같은 장기005318ec을 직접 빌린다.
+        priestState.regen.patch.sharedChangedSample=&gameplayGlobals->PatchDiagnostic();priestState.regen.patch.sharedSample=&gameplayGlobals->PatchSample();motionState.search.sharedPolicySelector=&gameplayGlobals->PatchDiagnostic(); // 최초 객체 생성 전에 추적 writer와 BFS가 같은 장기005318ec을 직접 빌린다.
         priestState.regen.sharedPriestType=&gameplayGlobals->GameAux()->PriestType(); // 회복 증분도 이동/일반HP와 같은 장기 현재 사제 TYPE를 매 조회에서 읽는다.
         missionStart.sharedDenySalvage=&gameplayGlobals->DenySalvage();missionStart.sharedDenyAscend=&gameplayGlobals->DenyAscend(); // Start·회수·메뉴와 World 없는 Guide 해제가 같은 장기 전역을 빌린다. 근거: docs/exe/cpp-guide-release-20261101.md.
         missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
@@ -2775,7 +2776,7 @@ struct RawCampaignSession::Impl {
         const auto reads=BindSpStoreNotice(sp); // 모든 조회기는 초기값 대신 현재 같은 저장소를 빌린다.
         auto& patch=priestState.regen.patch;
         playerContent=std::make_unique<RawPlayerContentNotice>(core.pool,PlayerContentNoticeState{
-            reads.cursorA,reads.cursorB,gameplayGlobals->PatchDiagnostic(),patch.sample,patch.remaining,
+            reads.cursorA,reads.cursorB,gameplayGlobals->PatchDiagnostic(),patch.Sample(),patch.remaining,
             PlayerContentNoticeRead<std::uint32_t>::Bind([this] { return playerState.playerKnown; }), // 원문4d55e0의00595344이며 전투 모드00594fbc와 구별한다.
             playerState.battleOwner,reads.firstSpPool,reads.firstPermutation,contentGumpType,contentEvent},std::move(playerHooks));
         contentNotice=std::make_unique<RawContentParentNotice>(core.pool,[this](Sid parent,Sid form,std::uint32_t reason) {
@@ -3082,59 +3083,14 @@ struct RawCampaignSession::Impl {
         const FortTypeNamesLoadGlobals typeNameGlobals{objectState.loadingDepth,fortTypeConversion->Current()}; // 기존 Objects/Technology/Deck과 같은 실제전역이다.
         try { LoadFortTypeNames(static_cast<std::int32_t>(slot),typeNameGlobals,hooks); }catch (...) { UnwindFortTypeNamesLoad(typeNameGlobals,hooks);throw; }
     }
-    // 원문004beca0의 현재 CoreData 적재이며 인자1은 같은 lastKnown과 랭크/승패의 최소값을 병합한다.
+    // 기존 Session도 World 없는 메타 부모와 같은 실제 CoreData 읽기 몸체를 사용한다.
     void ReadExistingFortCoreData(std::uint32_t slot,bool minimum=false) {
-        if (globals.missionPost || globals.editor) return;
-        ++objectState.loadingDepth;world.SetLoadingDepth(objectState.loadingDepth);
-        try {
-            if (slot>=9) throw std::out_of_range("Fort CoreData의 실제9슬롯 범위");
-            if (!Read(templateStorage->Headers(),slot*20)) throw std::logic_error("Fort CoreData Template.cpp1151 진단");
-            const auto stream=templateStorage->SelectSection(slot,"CoreData",1); // 같은 노드의 writable 선택과 pos0을 원문 시점에 수행한다.
-            templateStorage->AccessSection(stream,[this,slot,minimum](auto fields,const auto& memory) {
-                if (!Read(fields,0) || !Read(fields,8)) return;
-                if ((slot>=1 && slot<=8 ? slot : 0U)!=playerState.battleOwner) throw std::logic_error("Fort CoreData Template.cpp1156 진단");
-                coreDataGlobals->Active()=1;
-                const auto currentCore=[this] { const std::uint32_t metamap=core.ownerMode.challenge ? 1U : 0U;return coreDataGlobals->Read(playerState,metamap,{SessionMissing<void,std::uint32_t>()}); }; // 읽기·무결성 실패 위치마다 같은 현재 포인터를 다시 조회한다.
-                auto target=currentCore();const auto source=memory.buffer(Read(fields,0));const auto position=Read(fields,4);
-                if (target.size()<10 || position>source.size() || 10>source.size()-position) throw std::out_of_range("Fort CoreData10BYTE의 실제 물리 범위");
-                std::copy_n(source.begin()+position,10,target.begin());Put(fields,4,Read(fields,4)+10U);
-                if (std::bit_cast<std::int32_t>(Read(fields,4))>std::bit_cast<std::int32_t>(Read(fields,8))) throw std::logic_error("Fort CoreData MemStream46 진단");
-                if (minimum) {
-                    const auto readValue=[](std::span<const std::uint8_t> bytes,std::size_t at,std::size_t width) { // 현재 Core의 unsigned BYTE/WORD만 읽으며 호스트 물리 범위 밖 입력은 거부한다.
-                        if (at>bytes.size() || width>bytes.size()-at) throw std::out_of_range("CoreData 최소 병합의 현재 필드 범위");return std::uint32_t(bytes[at])|(width==2 ? std::uint32_t(bytes[at+1])<<8 : 0U);
-                    };
-                    const auto mergeMinimum=[&](std::size_t at,std::size_t width) { // 원문 비교/선택/저장마다 현재 포인터를 재조회하고 unsigned BYTE/WORD만 대조한다.
-                        const auto cached=readValue(coreDataGlobals->Cached(),at,width);const auto current=readValue(currentCore(),at,width);
-                        const auto selected=current<cached ? readValue(currentCore(),at,width) : readValue(coreDataGlobals->Cached(),at,width);auto destination=currentCore();
-                        if (at>destination.size() || width>destination.size()-at) throw std::out_of_range("CoreData 최소 병합의 현재 쓰기 범위");destination[at]=static_cast<std::uint8_t>(selected);if (width==2) destination[at+1]=static_cast<std::uint8_t>(selected>>8);
-                    };
-                    mergeMinimum(4,1);mergeMinimum(0,2);mergeMinimum(2,2); // 원문 랭크 BYTE→승리 WORD→패배 WORD 순서를 보존한다.
-                }
-                if (!services.fortTechnologyUi) throw std::logic_error("Fort CoreData의 실제 Chat 랭크 갱신 미연결");services.fortTechnologyUi();
-                // 원문 인라인 BYTE/WORD/DWORD 읽기는 저장 후 WORD/DWORD만 논리 end를 진단한다.
-                const auto readWord=[&](std::uint32_t width) {
-                    const auto bytes=memory.buffer(Read(fields,0));const auto at=Read(fields,4);
-                    if (at>bytes.size() || width>bytes.size()-at) throw std::out_of_range("Fort CoreData 인라인 읽기 물리 범위");
-                    std::uint32_t value{};for (std::uint32_t byte=0;byte<width;++byte) value|=std::uint32_t(bytes[at+byte])<<(byte*8); // 선택한 실제 폭만 합성한다.
-                    Put(fields,4,Read(fields,4)+width);
-                    if (width>1 && std::bit_cast<std::int32_t>(Read(fields,4))>std::bit_cast<std::int32_t>(Read(fields,8))) throw std::logic_error("Fort CoreData MemStream46 진단");return value;
-                };
-                if (std::bit_cast<std::int32_t>(Read(fields,4))<std::bit_cast<std::int32_t>(Read(fields,8))) {
-                    const auto word=readWord(2);if (!services.randomGlobals) throw std::logic_error("Fort CoreData의 현재 seed DWORD 미연결");
-                    auto& seedValue=services.randomGlobals->FortCoreSeed();seedValue=(seedValue&0xffff0000U)|word; // 원문의 lowWORD 대입은 상위WORD를 보존한다.
-                }
-                for (std::uint32_t group=0;group<3;++group) { // 남아 있는 세 무결성 블록을 랭크 BYTE·승리 WORD·패배 WORD 순서로 확인한다.
-                    if (std::bit_cast<std::int32_t>(Read(fields,4))>=std::bit_cast<std::int32_t>(Read(fields,8))) break;
-                    const auto data=currentCore();if (data.size()<5) throw std::out_of_range("Fort CoreData 무결성 현재 포인터 폭");
-                    const auto expected=group==0 ? std::uint32_t(data[4]) : std::uint32_t(data[(group-1)*2])|(std::uint32_t(data[(group-1)*2+1])<<8);
-                    for (std::uint32_t bit=0;bit<32;++bit) { // 원문004bea70은 앞8 BYTE·다음8 WORD·나머지16 DWORD의 해당 비트만 대조한다.
-                        const auto encoded=readWord(bit<8 ? 1U : bit<16 ? 2U : 4U);const auto mask=1U<<bit;
-                        if ((encoded&mask)!=(expected&mask)) { auto current=currentCore();if (current.size()<5) throw std::out_of_range("Fort CoreData 불일치 현재 포인터 폭");current[4]=1;gameplayGlobals->PatchDiagnostic()=priestState.regen.patch.sample; } // 로컬 저장 자료의 원문 효과이며 외부 서버 검증을 실행하지 않는다.
-                    }
-                }
-            });
-        }catch (...) { --objectState.loadingDepth;world.SetLoadingDepth(objectState.loadingDepth);throw; }
-        --objectState.loadingDepth;world.SetLoadingDepth(objectState.loadingDepth);
+        FortCoreDataLoadContext context{globals.missionPost,globals.editor,core.ownerMode.challenge,playerState,*coreDataGlobals,objectState.loadingDepth};
+        context.seed=[this]()->std::uint32_t& { if (!services.randomGlobals) throw std::logic_error("Fort CoreData 현재 seed 미연결");return services.randomGlobals->FortCoreSeed(); };
+        context.depthChanged=[this](auto depth) { world.SetLoadingDepth(depth); };
+        context.assertion=[](auto,auto,auto line) { throw std::logic_error("Fort CoreData 원문 진단:"+std::to_string(line)); }; //기존 Session의 진단 중단 계약을 보존한다.
+        context.refreshRank=services.fortTechnologyUi;context.invalidData=[this] { gameplayGlobals->PatchDiagnostic()=priestState.regen.patch.Sample(); };
+        LoadFortCoreData(*templateStorage,slot,minimum,std::move(context));
     }
     // 일반World Graph 뒤 정확한 외곽에서만 호출할 Deck 단계다. 전체 Editor 설치 완료를 표시하지 않는다.
     void ReadExistingFortDeck(std::uint32_t slot) {
@@ -4806,8 +4762,8 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
         hooks.refund=[&s](auto sid,auto owner) { static_cast<void>(s.hp.Refund(sid,owner,true)); };hooks.destroy=[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); };
         hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range("삭제 수신의 현재 TYPE 물리 범위");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\0')); };
         hooks.auditSp=[&s] { //33170 꼬리는 첫 sample을 보관하고 조건부 SP 조회 뒤에만 새 sample을 읽는다.
-            auto& patch=s.priestState.regen.patch;auto& diagnostic=s.gameplayGlobals->PatchDiagnostic();const auto expected=std::bit_cast<std::uint32_t>(s.sp.TrackingOffsetCurrent());const auto actual=s.sp.OffsetCurrent();auto fallback=patch.sample;if (actual!=expected) diagnostic=fallback;
-            if (patch.remaining) { if (s.playerState.playerKnown) { const auto money=std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner));fallback=patch.sample;if (money>7000.0F) diagnostic=fallback; }--patch.remaining; }
+            auto& patch=s.priestState.regen.patch;auto& diagnostic=s.gameplayGlobals->PatchDiagnostic();const auto expected=std::bit_cast<std::uint32_t>(s.sp.TrackingOffsetCurrent());const auto actual=s.sp.OffsetCurrent();auto fallback=patch.Sample();if (actual!=expected) diagnostic=fallback;
+            if (patch.remaining) { if (s.playerState.playerKnown) { const auto money=std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner));fallback=patch.Sample();if (money>7000.0F) diagnostic=fallback; }--patch.remaining; }
             if (!s.sp.FirstPoolCurrent()) diagnostic=fallback;if (s.sp.Permutation()[0]==-1) diagnostic=fallback;
         };
         if (kind==1) ReceiveDeletedSquid(s.core.pool,packet,hooks);else if (kind==2) ReceiveDependencySquid(s.core.pool,packet,hooks);else ReceiveContentSquid(s.core.pool,packet,hooks);

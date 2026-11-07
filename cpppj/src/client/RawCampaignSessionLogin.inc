@@ -359,10 +359,10 @@ struct RawCampaignSession::Impl::Login {
     void SaveReconnect() {
         auto hooks=effects.reconnectFile.value_or(SavedStateWriteHooks{}); // 미션/미known 자연 반환은 File 장치 부재도 허용한다.
         hooks.diagnose=[this] {
-            auto& patch=s.priestState.regen.patch;const auto mismatch=s.sp.OffsetCurrent()!=static_cast<std::uint32_t>(s.sp.TrackingOffsetCurrent());auto fallback=patch.sample;
+            auto& patch=s.priestState.regen.patch;const auto mismatch=s.sp.OffsetCurrent()!=static_cast<std::uint32_t>(s.sp.TrackingOffsetCurrent());auto fallback=patch.Sample();
             if (mismatch) s.gameplayGlobals->PatchDiagnostic()=fallback;
             if (patch.remaining) {
-                const auto amount=s.playerState.playerKnown ? std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner)):0.0F;fallback=patch.sample; //40ee90의 현재 known/owner/Get 뒤 현재 진단값을 다시 읽는다.
+                const auto amount=s.playerState.playerKnown ? std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner)):0.0F;fallback=patch.Sample(); //40ee90의 현재 known/owner/Get 뒤 현재 진단값을 다시 읽는다.
                 if (amount>7000.0F) s.gameplayGlobals->PatchDiagnostic()=fallback;--patch.remaining;
             }
             if (!s.sp.FirstPoolCurrent()) s.gameplayGlobals->PatchDiagnostic()=fallback;if (s.sp.Permutation()[0]==-1) s.gameplayGlobals->PatchDiagnostic()=fallback;

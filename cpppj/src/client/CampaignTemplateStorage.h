@@ -68,6 +68,7 @@ public:
     std::shared_ptr<ClientTemplateSectionNames> SectionNamesOwner() const; // reader/신규초기화가공유하는Clientowner를읽는다.
     std::unique_ptr<CampaignTemplateStorage> CreateSibling() const; // 같은 Client version/이름표를 빌리는 지역 Template owner를 만든다. 파일/기존9헤더는 변경하지 않는다.
     std::uint32_t& SerializationVersion(); // 생성자/객체로더/저장부모가직접같이쓰는실제005c89c0 DWORD다. 복사값을반환하지않는다.
+    std::uint32_t& LoadingDepth(); //005c89b8의 같은 Client DWORD를 Session/메타 읽기와 중첩 객체 로더에 제공한다.
     void BindDiagnosticLog(std::function<void(std::int32_t,std::string_view)> log); // 실제 Client level29 로그 장치를 빌린다. 지역 송신 이미지의 덤프가 같은 공유 formatter/FILE/Chat을 사용한다.
     void Install(std::uint32_t slot,o::FortTemplate fort,std::string name); // 이전 한 헤더를 실제 반납한 뒤 새 소유 manager를 설치한다.
     void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.

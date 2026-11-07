@@ -1,0 +1,70 @@
+{
+  "unit": 1055,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "State19 실제 Uber/Fort/Core/CS/뉴스/채널 접합과 Client 중첩깊이/표본 수명",
+  "sourceFunctions1078": [
+    "004b6dd0:case19",
+    "004beca0",
+    "004bea70",
+    "0048f0d0",
+    "0042f3d0",
+    "0042f330",
+    "00494580"
+  ],
+  "sourceComparison1072": [
+    "00429200",
+    "004b2cd0",
+    "004b2c40"
+  ],
+  "implemented": [
+    "실제 Uber next19 선택과 같은 장기 RawLocalMissionState/부모19·공통144BYTE 확정",
+    "World 정리 후 실제 fortPal/CD/renderer/같은 CS/즉시 요청/Fort 파일/Core/HUD/주변음/뉴스/채널/입력 장치 접합",
+    "기존 Session과 메타가 같은 실제 CoreData stream10BYTE/최소병합/seed/세 무결성 블록을 읽는 공통 함수 사용",
+    "Client 같은005c89b8 중첩깊이를 TemplateStorage/객체로더/메타 Core에 참조 대여",
+    "Client00540cb8 실제 PE초기6/사제Next9 writer와 추적·Core 진단 소비자 같은 표본 수명",
+    "실제 BATTLE 접두/채널8·CS 참가자/전투8명 목록 갱신"
+  ],
+  "notCompleted": [
+    "즉시 다음21/25/34 부모는 미연결이므로 현재 State19 전체 진입은 해당 invalidState 경계에서 중단한다",
+    "State30/메타 표시/목록 패킷·endpoint·LAN 전체·Outpost/checking5는 후속",
+    "멀티플레이/신규 단위/게임/통신 검사는 수행하지 않음",
+    "기존 전체 솔루션/모든 미션/배포 ZIP은 이번 제품으로 검증하지 않음"
+  ],
+  "testCompile": {
+    "source": "cpppj/tests/TemplateSerializationGlobalsTests.cpp",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "executions": 0,
+    "log": "extracted\\cpp-resume-1055\\test-compile.log",
+    "change": "구형 host 전체4BYTE 단언을 두 Native 필드 DWORD 폭으로 교정"
+  },
+  "decompilerOutputsChanged": false,
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1055\\build.log",
+    "exeSize": 12264448,
+    "exeSha256": "5b3945d7ea2b1089bf3cb3425c91fa71a8101e3cd340f386ccf977d17b1b35b5"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1055\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remainingGoal": "즉시21/25/34 실제 로컬 부모→State30/메타·나머지LAN·Outpost/checking5→한국어 후속→시나리오 UI"
+}

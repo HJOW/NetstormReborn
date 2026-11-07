@@ -144,6 +144,9 @@
 #include "client/ClientSpGlobals.h" // 대기실 Zone ID에 실제 time32 장치를 사용하며 게임 난수를 소비하지 않는다.
 #include "client/NativeMainMenuState.h" //State3의 원문 부모와 호스트 표시 확정은 다른 시점이다.
 #include "client/NativeIntroState.h" // 첫 설치의 영상 부재도 원문 39→40→41→3 순서를 사용한다.
+#include "client/NativeMetaState.h"
+#include "client/FortCoreDataLoad.h"
+#include "client/ClientChallengeGlobals.h"
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
 #include "client/EditorTestBattle.h" //c2의 snapshot/Guide 교체와 편집 복귀 순서를 실제 일반 입력에 연결한다.
 #include "client/SaveFortNameDialog.h" //실제 TextEntry/두 버튼/전체 Fort 이름 부모를 사용하는 모달이다.
@@ -274,6 +277,7 @@ std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t
 
 #include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
 #include "client/UberEditor.inc" //실제 Edit 선택의 Native State1/파일/후반 UI와 다음 Poll4를 연결한다.
+#include "client/UberMeta.inc" //실제 메타19도 World 정리 뒤 같은 장기 Client 장치를 사용한다.
 #include "client/UberLan.inc" // 같은 실제 Fort/대기실과 일반 State7/World 교체를 연결한다.
 #include "client/UberReconnect.inc" // 같은 실제 저장 reader/현재 Player와 서버 선택을 State15/7에 연결한다.
 //446b50의 현재 커서 갱신 뒤 Alt/가운데 폴링을 같은497e00 목표 쓰기로 전달한다.

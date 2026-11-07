@@ -57,7 +57,7 @@ float RawPriestRegen::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
     if (raw[10]!=kPriestType || Vtable(raw)!=(patch ? kPatchPriestVtable : kCdPriestVtable))
         throw std::invalid_argument("사제 회복 타입/가상 표 오류");
     if (patch) {
-        state_.patch.sample=random_.Next(9);
+        state_.patch.Sample()=random_.Next(9);
         auto& sequence=hooks_.spReads && hooks_.spReads->trackingSequence ? hooks_.spReads->trackingSequence() : state_.patch.sequence; // 실제 사제/통지/SP가 공유하는 현재 추적 DWORD다.
         sequence=Add(sequence,3);
         if (sequence>kSequenceLimit) sequence=Add(sequence,-kSequenceLimit);
@@ -81,14 +81,14 @@ float RawPriestRegen::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
         auto& tracking=state_.patch;
         const auto observed=hooks_.spReads ? hooks_.spReads->observedSequence() : tracking.observedSequence;
         const auto sequence=hooks_.spReads && hooks_.spReads->trackingSequence ? hooks_.spReads->trackingSequence() : tracking.sequence; // 중립/외부 효과 뒤 같은 현재 추적 전역을 다시 읽는다.
-        if (observed!=sequence) tracking.ChangedSample()=tracking.sample;
+        if (observed!=sequence) tracking.ChangedSample()=tracking.Sample();
         if (tracking.remaining!=0) {
-            if (hooks_.measurement()>kMeasurementLimit) tracking.ChangedSample()=tracking.sample;
+            if (hooks_.measurement()>kMeasurementLimit) tracking.ChangedSample()=tracking.Sample();
             --tracking.remaining;
         }
         // 원본은 두 독립 if다. 첫 배열이 NULL이어도 뒤의 signed WORD를 반드시 현재 읽는다.
-        if (hooks_.spReads ? hooks_.spReads->firstPool()==nullptr : tracking.gate==0) tracking.ChangedSample()=tracking.sample;
-        if ((hooks_.spReads ? hooks_.spReads->firstPermutation() : tracking.sentinel)==-1) tracking.ChangedSample()=tracking.sample;
+        if (hooks_.spReads ? hooks_.spReads->firstPool()==nullptr : tracking.gate==0) tracking.ChangedSample()=tracking.Sample();
+        if ((hooks_.spReads ? hooks_.spReads->firstPermutation() : tracking.sentinel)==-1) tracking.ChangedSample()=tracking.Sample();
     }
     return payload;
 }

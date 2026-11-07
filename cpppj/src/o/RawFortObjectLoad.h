@@ -9,10 +9,17 @@ namespace netstorm::o {
 struct FortObjectStreamHooks; // 실제 현재 MemStream/변환표와 큰 하위 수명을 공급한다.
 // 객체/상위 로더가 매 분기에서 다시 읽는 원본 전역이다. 미션 기본 소유자는 Load의 Template 칸으로 전달한다.
 struct FortObjectLoadState {
+private:
+    std::uint32_t localLoadingDepth_{}; //독립 원문 대조의 깊이 fallback이며 실제 Client 대여는 사용하지 않는다.
+public:
     // 원본005c89c0은 manager 생성자와 같은 실제 DWORD를 빌린다. 호출자가 이 상태보다 오래 소유해야 한다.
-    explicit FortObjectLoadState(std::uint32_t& sharedVersion):version(sharedVersion) {}
+    explicit FortObjectLoadState(std::uint32_t& sharedVersion):version(sharedVersion),loadingDepth(localLoadingDepth_) {} //독립 입력은 자기 깊이를 직접 빌린다.
+    FortObjectLoadState(std::uint32_t& sharedVersion,std::uint32_t& sharedDepth):version(sharedVersion),loadingDepth(sharedDepth) {} //실제 Client는 판본/깊이 모두 같은 장기 주소를 빌린다.
+    FortObjectLoadState(const FortObjectLoadState&)=delete;FortObjectLoadState& operator=(const FortObjectLoadState&)=delete; //고정 깊이/판본 참조를 복사해 다른 생명주기에 남기지 않는다.
+    FortObjectLoadState(FortObjectLoadState&&)=delete;FortObjectLoadState& operator=(FortObjectLoadState&&)=delete; //독립 fallback을 가리키는 참조를 이동하지 않는다.
     std::uint32_t& version; // 005c89c0: 같은 Client의 저장/목록/객체 로더가 읽고 쓰는 실제 판본이다.
-    std::uint32_t loadingDepth{},scope{}; // 005c89b8/005c89b0: 중첩 로딩 깊이와Terr1/Chaff2의별도전역이다.
+    std::uint32_t& loadingDepth; //005c89b8의 실제 중첩 깊이며 같은 Client Core/객체 로더와 주소를 공유한다.
+    std::uint32_t scope{}; //005c89b0의Terr1/Chaff2 범위이며 중첩 깊이와 별개다.
     std::uint32_t bridgeType{82},islandType{94},largeIslandType{95},noIslandType{157}; // 실제 PE의 다리/island/islandStalag/noIsland 전역이다. 지면isle97/98과 구별한다.
     std::uint32_t ownerSavedMask{0x5d77cf00},ownerClearedMask{0x10002000},fortKeepMask{0x40480002}; // 두 PE의 초기 mask다.
     bool special{},mission{},fort{},chaffMode{},fortDestroyBlocked{}; // 편집/미션·Fort/Chaff 허용과 독립 raw용 Fort 삭제 억제 fallback이다.

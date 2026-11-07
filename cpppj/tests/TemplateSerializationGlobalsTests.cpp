@@ -39,7 +39,8 @@ template<class Function> bool SerializationRejects(Function function) { try { fu
 
 // Storage생성자/참조조회는초기화하지않고실제Image생성자의원문0쓰기가같은DWORD에도달한다.
 TEST_CASE(TemplateSerializationGlobals_SharedAddressAndManagerConstruction) {
-    static_assert(sizeof(FortSerializationGlobals)==sizeof(std::uint32_t)); // 실제소유상태는DWORD한개다.
+    static_assert(sizeof(decltype(FortSerializationGlobals::version))==sizeof(std::uint32_t)); //판본 슬롯 자체는 실제DWORD 한 개다. 다른 전역의 추가로 전체 host 크기를 제한하지 않는다.
+    static_assert(sizeof(decltype(FortSerializationGlobals::loadingDepth))==sizeof(std::uint32_t)); //별도 중첩깊이도 같은32비트 Native 폭을 보존한다.
     auto globals=std::make_shared<FortSerializationGlobals>();globals->version=0x89abcdefU;CampaignTemplateStorage first(globals),second(globals);
     auto& firstVersion=first.SerializationVersion();auto& secondVersion=second.SerializationVersion();
     CHECK(&firstVersion==&globals->version && &secondVersion==&globals->version && firstVersion==0x89abcdefU);

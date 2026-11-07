@@ -5,6 +5,8 @@
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ClientNsInfoGlobals.h"
+#include "client/ClientChallengeGlobals.h"
+#include "client/RawChatChannels.h"
 #include "client/SystemNewsTime.h"
 #include "client/ScriptCommand.h"
 #include "client/ChatRecipients.h"
@@ -49,6 +51,32 @@ SystemNewsTimeHooks NewsTimeHooks(Client& client) {
 void LoadClientSystemNewsTime(Client& client) { auto& news=*client.ChatWindowGlobals();ReadSystemNewsTime({news.newsTime,news.newsKey},NewsTimeHooks(client)); }
 // 이미 수신한 현재 시각을 원문 설정 해석기로 넘기고 일반 옵션 writer가 나중에 저장하도록 한다.
 void SaveClientSystemNewsTime(Client& client) { auto& news=*client.ChatWindowGlobals();WriteSystemNewsTime({news.newsTime,news.newsKey},NewsTimeHooks(client)); }
+// 실제 참가자/전투의 정렬 없는 DWORD를 물리 범위 안에서 읽는다.
+static std::uint32_t ChallengeWord(std::span<const std::uint8_t> bytes,std::size_t at) {
+    if (at>bytes.size() || 4>bytes.size()-at) throw std::out_of_range("Chat 메타 기록 DWORD 범위");std::uint32_t value{};
+    for (std::size_t byte=0;byte<4;++byte) value|=std::uint32_t(bytes[at+byte])<<(8*byte); //현재 네BYTE만 낮은 자리부터 합친다.
+    return value;
+}
+// prefix 변경과 Clear8 뒤 현재 known/CS를 조회하며 Add마다 현재 CS 참가자를 다시 읽는다.
+void RefreshClientBattleChatChannel(Client& client,RawMenuControls& menus,std::uint32_t mode) {
+    auto& player=client.GameplayGlobals()->player;auto& chat=*client.ChatWindowGlobals();
+    if (chat.window.current) {
+        if (!mode || !player.playerKnown || !(client.ChallengeGlobals()->Participant(player.battleOwner)[0x64]&4U)) {
+            const auto bytes=o::EncodeDisplayText(client.Translate("BATTLE"));const std::string name(bytes.begin(),bytes.end());const auto* backend=menus.ChatBackend();
+            if (!backend) throw std::logic_error("메타 BATTLE 접두의 실제 Chat 장치 없음");backend->ChangeRecipient(chat.window.current,name,mode ? 0U : 1U);
+        }
+    }
+    client.ChatChannels().Clear(8);
+    if (!player.playerKnown) return;
+    const auto battleIndex=ChallengeWord(client.ChallengeGlobals()->Participant(player.battleOwner),0xa4);if (!battleIndex) return;
+    const auto battle=client.ChallengeGlobals()->Battle(battleIndex); //원문은 이 현재 전투의 참가자 목록 포인터를 고정해 순회한다.
+    for (std::size_t index=0;index<8;++index) { //전투+38의 실제8DWORD를 순서대로 읽고0칸은 건너뛴다.
+        const auto owner=ChallengeWord(battle,0x38+index*4);if (!owner) continue;
+        const auto participant=client.ChallengeGlobals()->Participant(owner);const auto subscriber=ChallengeWord(participant,4);const auto text=participant.subspan(0x26);const auto end=std::find(text.begin(),text.end(),0);
+        if (end==text.end()) throw std::out_of_range("메타 Chat 참가자 이름의 실제 NUL 없음");
+        static_cast<void>(client.ChatChannels().AddToChannel(subscriber,{reinterpret_cast<const char*>(text.data()),static_cast<std::size_t>(end-text.begin())},8));
+    }
+}
 // 원문 init issueCommand 위치에서 호출하며 독립 Chat manager 재할당은 이 등록을 반복하지 않는다.
 void InitializeClientIssueCommands(Client& client) {
     RegisterIssueCommands([&client](auto name,auto callback,auto flag) {
