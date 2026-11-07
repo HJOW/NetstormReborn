@@ -3795,7 +3795,7 @@
       "bytes": 1552,
       "lines": 49,
       "fixtureCommit": "f5d46ada",
-      "webCommit": "worktree",
+      "webCommit": "191f157e",
       "cpppjBasis": {
         "cpppj/src/client/DestroyAtInput.cpp": "f5d46ada"
       }
@@ -3824,7 +3824,7 @@
       "bytes": 9847,
       "lines": 289,
       "fixtureCommit": "d48ea756",
-      "webCommit": "worktree",
+      "webCommit": "191f157e",
       "cpppjBasis": {
         "cpppj/src/client/AddRandomInput.cpp": "d48ea756"
       }
@@ -3853,9 +3853,127 @@
       "bytes": 2122,
       "lines": 65,
       "fixtureCommit": "b466c127",
-      "webCommit": "worktree",
+      "webCommit": "191f157e",
       "cpppjBasis": {
         "cpppj/src/client/MakeAiCommandInput.cpp": "b466c127"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E22",
+      "id": "construction-history-key",
+      "path": "cpppj/tests/fixtures/construction-history-key-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Tab 최근 건설 위치 순환과 초기화의 전체 40 BYTE 이력·순번·호출",
+      "consumers": [
+        "webpj/tests/selection-keys.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/construction-history-key.js"
+      ],
+      "doc": "docs/webpj-selection-keys-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/ConstructionHistoryKey.cpp",
+        "cpppj/src/o/RawConstructionHistory.h"
+      ],
+      "scope": "511행 전부 사용",
+      "text": true,
+      "sha256": "025c9734dbf3b33ce0b5be408cca6824e2d1377c0ef394bd64de735de7735b8f",
+      "bytes": 108339,
+      "lines": 512,
+      "fixtureCommit": "059527a8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ConstructionHistoryKey.cpp": "e46d8981",
+        "cpppj/src/o/RawConstructionHistory.h": "059527a8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E22",
+      "id": "lost-position-key",
+      "path": "cpppj/tests/fixtures/lost-position-key-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: U/u 최근 손실 위치 키의 모달/정지/두 축 경계/수정키/다른 사건/부분 중단",
+      "consumers": [
+        "webpj/tests/selection-keys.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/construction-history-key.js"
+      ],
+      "doc": "docs/webpj-selection-keys-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/LostPositionKey.cpp"
+      ],
+      "scope": "1022행 전부 사용",
+      "text": true,
+      "sha256": "b93aa2db6cd5ae38d9978f5ca6c5bd7c1ccffa270732073cf4616d6d3e645672",
+      "bytes": 107542,
+      "lines": 1023,
+      "fixtureCommit": "ee73f365",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/LostPositionKey.cpp": "ee73f365"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E22",
+      "id": "priest-selection-shortcut",
+      "path": "cpppj/tests/fixtures/priest-selection-shortcut-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: P/R 사제 선택 키의 조회 전 캡처/장기 카운터/일반 큐",
+      "consumers": [
+        "webpj/tests/selection-keys.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/selection-shortcuts.js"
+      ],
+      "doc": "docs/webpj-selection-keys-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/PriestSelectionShortcut.cpp"
+      ],
+      "scope": "220행 전부 사용",
+      "text": true,
+      "sha256": "eda2ab7c5d511402bc380cabf858dd197fd4a354d4bcdbd3afb77fb42e1b9711",
+      "bytes": 11300,
+      "lines": 221,
+      "fixtureCommit": "b006db45",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PriestSelectionShortcut.cpp": "b006db45"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E22",
+      "id": "next-unit-selection",
+      "path": "cpppj/tests/fixtures/next-unit-selection-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: N 다음 이동 유닛 선택의 순환/free/dead/owner/TYPE flags와 호출 순서",
+      "consumers": [
+        "webpj/tests/selection-keys.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/selection-shortcuts.js"
+      ],
+      "doc": "docs/webpj-selection-keys-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/NextUnitSelection.cpp"
+      ],
+      "scope": "410행 전부 사용",
+      "text": true,
+      "sha256": "3c6922ef0d094f81298d3aefdd0819bad97297959355f93e1e2a9a7c521c119e",
+      "bytes": 67716,
+      "lines": 411,
+      "fixtureCommit": "f95e8b10",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/NextUnitSelection.cpp": "f95e8b10"
       }
     }
   ]
