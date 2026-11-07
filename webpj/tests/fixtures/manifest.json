@@ -3235,7 +3235,7 @@
       "bytes": 41399,
       "lines": 97,
       "fixtureCommit": "392ab168",
-      "webCommit": "worktree",
+      "webCommit": "86219607",
       "cpppjBasis": {
         "cpppj/src/o/RawFlyerPreDestroy.cpp": "392ab168"
       }
@@ -3264,7 +3264,7 @@
       "bytes": 86000,
       "lines": 433,
       "fixtureCommit": "d9689a19",
-      "webCommit": "worktree",
+      "webCommit": "86219607",
       "cpppjBasis": {
         "cpppj/src/o/RawFenceTypeParent.cpp": "d9689a19"
       }
@@ -3293,7 +3293,7 @@
       "bytes": 6061,
       "lines": 129,
       "fixtureCommit": "f591fc05",
-      "webCommit": "worktree",
+      "webCommit": "86219607",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestSacrificeRequest.cpp": "f591fc05"
       }
@@ -3322,9 +3322,125 @@
       "bytes": 105618,
       "lines": 865,
       "fixtureCommit": "850ae867",
-      "webCommit": "worktree",
+      "webCommit": "86219607",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierMining.cpp": "850ae867"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E15",
+      "id": "altar-release-parent-hardware",
+      "path": "cpppj/tests/fixtures/altar-release-parent-hardware-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 제단 해방 부모의 방향·checking·범위·저장 SID·현재 P 프레임·가상 요청 순서",
+      "consumers": [
+        "webpj/tests/small-parents.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-altar-release-parent.js"
+      ],
+      "doc": "docs/webpj-small-parents-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAltarReleaseParent.cpp"
+      ],
+      "scope": "1596행 전부 사용",
+      "text": true,
+      "sha256": "6d55205225413bd3cce63d6bcd36997244c2e07b9cef33334666a0cc432368ee",
+      "bytes": 385090,
+      "lines": 1596,
+      "fixtureCommit": "1e7bf89e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAltarReleaseParent.cpp": "1e7bf89e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E15",
+      "id": "bridge-fall-parent",
+      "path": "cpppj/tests/fixtures/bridge-fall-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리 낙하 부모의 현재 checking/genus 진단·복귀 뒤 원래 좌표 비트",
+      "consumers": [
+        "webpj/tests/small-parents.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bridge-fall-parent.js"
+      ],
+      "doc": "docs/webpj-small-parents-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeFallParent.cpp"
+      ],
+      "scope": "200행 전부 사용",
+      "text": true,
+      "sha256": "22eda704911c2886da2efac28a5e28dbb1c2fbd1f0f06f5603d4e702f1addcbf",
+      "bytes": 19962,
+      "lines": 201,
+      "fixtureCommit": "43bdf664",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeFallParent.cpp": "43bdf664"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E15",
+      "id": "priest-regen-hit-points-current",
+      "path": "cpppj/tests/fixtures/priest-regen-hit-points-current-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 회복 HP 부모의 Actor/TYPE getter 반환·HP/번호 변경과 Setter 인자(패치/CD)",
+      "consumers": [
+        "webpj/tests/small-parents.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-regen-hit-points.js"
+      ],
+      "doc": "docs/webpj-small-parents-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestRegenHitPoints.cpp"
+      ],
+      "scope": "864행 중 originals(10.78) 432행 사용. originalCD 432행 제외",
+      "text": true,
+      "sha256": "1e10b6d2fd324225a3b8a7c3b25a7cadf5b5dae35f7c09c89f56f423649efca4",
+      "bytes": 91564,
+      "lines": 865,
+      "fixtureCommit": "5393a14f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestRegenHitPoints.cpp": "5393a14f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E15",
+      "id": "board-angle-hardware",
+      "path": "cpppj/tests/fixtures/board-angle-hardware-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Boardcoord 각도 정규화의 실제 CRT fmod 결과(이진 double)와 현재 checking 진단",
+      "consumers": [
+        "webpj/tests/small-parents.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-board-angle.js"
+      ],
+      "doc": "docs/webpj-small-parents-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBoardAngle.cpp"
+      ],
+      "scope": "1088행 중 originals(10.78) 544행 사용. originalCD 544행 제외",
+      "text": true,
+      "sha256": "3082bb54f64cf04fd178da9705e056235436df8a755bd5c661f7daba767ff7a8",
+      "bytes": 65114,
+      "lines": 1088,
+      "fixtureCommit": "56a28270",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBoardAngle.cpp": "56a28270"
       }
     }
   ]

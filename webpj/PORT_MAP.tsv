@@ -505,7 +505,7 @@ cpppj/src/o/RawAiStrategySetup.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiWallet.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiWorldRegistration.cpp	port			todo	[o-default]
 cpppj/src/o/RawAllocationFailure.cpp	exclude-host			-	[host-memory]
-cpppj/src/o/RawAltarReleaseParent.cpp	port			todo	[o-default]
+cpppj/src/o/RawAltarReleaseParent.cpp	port	www/core/raw-altar-release-parent.js	1f00a25a	port	[o-default] WB04-E15: 00448bd0 제단 해방 부모(진단·해방·Unpop·P 프레임·Repop). fixture altar-release-parent-hardware 10.78 1596행 전부
 cpppj/src/o/RawAltarSacrifice.cpp	port			todo	[o-default]
 cpppj/src/o/RawAmbientSound.cpp	port			todo	[o-default]
 cpppj/src/o/RawAmbientWind.cpp	port			todo	[o-default]
@@ -525,7 +525,7 @@ cpppj/src/o/RawBaseFileReadPolicy.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawBaseFileWholeRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawBaseProcessAttach.cpp	port	www/core/raw-process-attach.js	1f00a25a	port	[o-default] WB04-D5c: 신규 로컬/지정 Form 부착 부모. fixture baseprocess-attach-current-local 24행(10.78)
 cpppj/src/o/RawBattleBroadcast.cpp	port			todo	[o-default]
-cpppj/src/o/RawBoardAngle.cpp	port			todo	[o-default]
+cpppj/src/o/RawBoardAngle.cpp	port	www/core/raw-board-angle.js	1f00a25a	port	[o-default] WB04-E15: 0041cdb0 Boardcoord 각도 정규화(10.78 경로). fixture board-angle-hardware originals 544행 전부
 cpppj/src/o/RawBoardApproach.cpp	port			todo	[o-default]
 cpppj/src/o/RawBoardTarget.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombActivation.cpp	port			todo	[o-default]
@@ -546,7 +546,7 @@ cpppj/src/o/RawBridgeDecayScan.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeDraw.h	port			todo	[o-default]
 cpppj/src/o/RawBridgeEditor.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawBridgeEvents.cpp	port			todo	[o-default]
-cpppj/src/o/RawBridgeFallParent.cpp	port			todo	[o-default]
+cpppj/src/o/RawBridgeFallParent.cpp	port	www/core/raw-bridge-fall-parent.js	1f00a25a	partial	[o-default] WB04-E15: 00421f90 RunBridgeFallParent(현재 checking/genus 진단·복귀 뒤 예약) 이식. fixture bridge-fall-parent 10.78 200행 전부. ScheduleBridgeFallChecked(SquidProcessHost 연결)는 낙하 예약 단위에서
 cpppj/src/o/RawBridgeLifecycle.cpp	port	www/core/bridge-lifecycle.js	1f00a25a	partial	[o-default] WB04-D2 다리 삭제 훅. 다리 가상 삭제 분배는 WB07
 cpppj/src/o/RawBuildingSpace.cpp	port	www/core/squid-space.js	1f00a25a	port	[o-default] WB04-D1(Unpop 옆면·표면 통지) + WB04-E1(popSide·hasIsland)
 cpppj/src/o/RawBulfFrame.cpp	port			todo	[o-default]
@@ -851,7 +851,7 @@ cpppj/src/o/RawPriestPostPopTail.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPrayer.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPreDestroy.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestRegen.cpp	port			todo	[o-default]
-cpppj/src/o/RawPriestRegenHitPoints.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestRegenHitPoints.cpp	port	www/core/raw-priest-regen-hit-points.js	1f00a25a	port	[o-default] WB04-E15: 4945ee 사제 회복 HP(10.78 경로). fixture priest-regen-hit-points-current originals 432행 전부
 cpppj/src/o/RawPriestRitualActions.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestRitualFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestSacrificeRequest.cpp	port	www/core/raw-priest-sacrifice-request.js	1f00a25a	port	[o-default] WB04-E14: 4498e0/494eb0 사제 희생 요청(호출 순서·owner 재독). fixture priest-sacrifice-request 10.78 128행 전부
@@ -933,7 +933,7 @@ cpppj/src/o/RawThunderCannonCapture.cpp	port			todo	[o-default]
 cpppj/src/o/RawTotalMade.cpp	port			todo	[o-default]
 cpppj/src/o/RawTransportPolling.h	port			todo	[o-default] LocalMissionTransport 가 쓰는 현재 ID 순회
 cpppj/src/o/RawTutorialLater.cpp	port			todo	[o-default]
-cpppj/src/o/RawTutorialMissionRelease.cpp	port			todo	[o-default]
+cpppj/src/o/RawTutorialMissionRelease.cpp	port	www/core/raw-tutorial-mission-release.js	1f00a25a	port	[o-default] WB04-E15: 004c3210 Tutorial 소멸(여섯 전역 0·AI 반납·기본 Mission 한 번). 원본 관측 없음, PE 정적 계약 독립 검사 4건
 cpppj/src/o/RawTutorialOne.cpp	port			todo	[o-default]
 cpppj/src/o/RawTutorialTwo.cpp	port			todo	[o-default]
 cpppj/src/o/RawTypeRequiredEnergy.cpp	port			todo	[o-default]
