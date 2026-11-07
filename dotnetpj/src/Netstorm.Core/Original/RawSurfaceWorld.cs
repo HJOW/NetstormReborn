@@ -38,6 +38,12 @@ public sealed class RawSurfaceWorld
     /// <summary>현재 자료의 적재가 끝났는지다. 원본 Impl.loaded에 대응한다. FinishLoad 단위에서 갱신한다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
     private bool _loaded = false;
 
+    /// <summary>프레임의 게임 시각과 벽 시각 및 시간차다. 원본 Impl.time에 대응하며 초기값은 0이다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
+    private FrameTime _time;
+
+    /// <summary>프로세스 실행·부착·이벤트 분배에 쓰는 같은 저장소 상태다. 원본 Impl.processState에 대응하며 호출자 저장소보다 오래 살 수 없다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
+    private readonly SquidProcessState _processState;
+
     /// <summary>같은 판본·타입·지형으로 월드를 만들고 물리 저장소를 빌리거나 새로 만든다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -55,6 +61,7 @@ public sealed class RawSurfaceWorld
         _types = types;
         _terrainType = terrainType;
         _storage = storage ?? new RawSurfaceStorage(edition);
+        _processState = _storage.Processes().State();
     }
 
     /// <summary>월드가 따르는 원본 판본이다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
@@ -189,6 +196,34 @@ public sealed class RawSurfaceWorld
 
         return result;
     }
+
+    /// <summary>같은 시각만 공급한다. 실제 Client는 이후 전역 Kernel을 정확히 한 번 실행한다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
+    /// <param name="time">공급할 프레임 시각이다.</param>
+    public void PrepareFrame(FrameTime time)
+    {
+        // 실제 현재 시각으로 독립 스냅샷의 게임 값만 교정한다.
+        if (_processState.SharedNow is not null)
+        {
+            time.Game = _processState.Now;
+        }
+
+        if (!double.IsFinite(time.Game) || time.Game < _time.Game)
+        {
+            throw new ArgumentException("원본 월드의 역행·비유한 게임 시각입니다.", nameof(time));
+        }
+
+        // bound Client 시각은 스냅샷으로 역쓰기하지 않는다.
+        if (_processState.SharedNow is null)
+        {
+            _processState.Now = time.Game;
+        }
+
+        _time = time;
+    }
+
+    /// <summary>현재 공급된 프레임 시각을 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
+    /// <returns>현재 프레임 시각이다.</returns>
+    public FrameTime CurrentTime() => _time;
 
     /// <summary>같은 월드·전송·공간 재등록을 참가자별로 실행한다. 멀티플레이 3차 사전 구현이며 전송기가 없어 명시 오류로 멈춘다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
     /// <param name="owner">동기화할 참가자 번호다.</param>

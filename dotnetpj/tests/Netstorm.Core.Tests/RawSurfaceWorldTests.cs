@@ -153,6 +153,53 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.ConfigureInstallModes(true, true, false, false));
     }
 
+    /// <summary>프레임 시각 공급이 그대로 저장되는지 검증한다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PrepareFrameAdvancesTime()
+    {
+        // 같은 시각만 공급하는 원본 순서를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.PrepareFrame(new FrameTime { Game = 1.0, Wall = 2.0, Delta = 0.5, Number = 7u });
+        Assert.Equal(1.0, world.CurrentTime().Game);
+        Assert.Equal(2.0, world.CurrentTime().Wall);
+        Assert.Equal(0.5, world.CurrentTime().Delta);
+        Assert.Equal(7u, world.CurrentTime().Number);
+        Assert.Equal(1.0, world.Storage().Processes().State().Now);
+    }
+
+    /// <summary>역행 게임 시각을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PrepareFrameRejectsBackwardTime()
+    {
+        // 역행 시각은 저장 전에 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.PrepareFrame(new FrameTime { Game = 2.0 });
+        Assert.Throws<ArgumentException>(() => world.PrepareFrame(new FrameTime { Game = 1.0 }));
+        Assert.Equal(2.0, world.CurrentTime().Game);
+    }
+
+    /// <summary>비유한 게임 시각을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PrepareFrameRejectsNonFiniteTime()
+    {
+        // 비유한 시각은 역행 여부와 무관하게 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<ArgumentException>(() => world.PrepareFrame(new FrameTime { Game = double.NaN }));
+        Assert.Throws<ArgumentException>(() => world.PrepareFrame(new FrameTime { Game = double.PositiveInfinity }));
+        Assert.Equal(0.0, world.CurrentTime().Game);
+    }
+
+    /// <summary>공유 시각이 있으면 스냅샷 게임 값을 교정하는지 검증한다. 2026-11-07 F2d 월드 본체 PrepareFrame 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PrepareFrameUsesSharedNow()
+    {
+        // bound Client 시각은 스냅샷으로 역쓰기하지 않고 현재 값으로 교정한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.Storage().Processes().State().SharedNow = new DoubleBox { Value = 7.0 };
+        world.PrepareFrame(new FrameTime { Game = 1.0 });
+        Assert.Equal(7.0, world.CurrentTime().Game);
+    }
+
     /// <summary>살아 있는 자산이 없으면 빈 목록을 돌려주는지 검증한다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
     [Fact]
     public void ObjectsEmptyWhenNoLiveAssets()

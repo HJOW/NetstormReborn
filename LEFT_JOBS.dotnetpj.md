@@ -12,17 +12,17 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-07, 단위 기록 0.231 기준 — `/goal` 지시로 재개 후 작업 중)
+### 0.1 현재 값 (2026-11-07, 단위 기록 0.232 기준 — `/goal` 지시로 재개 후 작업 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.231(월드 객체 조회)이며, 다음 단위는 F2d·F3 나머지(월드 본체 조립·`RawCampaignSession` 연결)이다. |
-| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, 게임 난수·보드 각도·바람 진행·저장소 껍데기·해시 선택/주소·물리 자료형·풀 생성/전체 대여·게임 시계·커널·프로세스 상태·호스트 저장소 껍데기·프로세스 기본/정기·호스트 묶음·표시 진단·호스트 껍데기·부착 부모·호출 수명·런타임 훅·프로세스 부착·포함 링크·호스트 조회·Form 부착·Content 부착·호스트 통지/검색·Form 삭제 통지·호스트 잔류 조회·지형 바인딩 계약·호스트 대여·지형 패턴 개수·첫 기록·군집 후처리·Host 삭제 본체·Host 정기 실행·서피스 월드 껍데기·Fort 적재 바인딩·Forms 부착 바인딩·정상 바인딩 껍데기·Form Pop 바인딩·공장 부착 배선·Host 부착 본체·공장 폼 생성·Host 정기 예약·정상 지형 후처리 관문·공장 분리 종단·공장 진단 묶음·Host 전송 사전 구현·공장 HP·표면 바인딩·공장 Take 상세·Assert 소비·공장 약화 공유·공장 현재 생성·가상표·Dais 보조·지형 생성 입력·월드 변경 플래그·수정 가능 TYPE·로딩 깊이·설치 모드·전송 사전 구현·객체 조회 완료, 월드 본체 조립·F3 미착수). R5 이후는 미착수 |
+| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.232(월드 프레임 시각)이며, 다음 단위는 F2d·F3 나머지(월드 본체 조립·`RawCampaignSession` 연결)이다. |
+| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, 게임 난수·보드 각도·바람 진행·저장소 껍데기·해시 선택/주소·물리 자료형·풀 생성/전체 대여·게임 시계·커널·프로세스 상태·호스트 저장소 껍데기·프로세스 기본/정기·호스트 묶음·표시 진단·호스트 껍데기·부착 부모·호출 수명·런타임 훅·프로세스 부착·포함 링크·호스트 조회·Form 부착·Content 부착·호스트 통지/검색·Form 삭제 통지·호스트 잔류 조회·지형 바인딩 계약·호스트 대여·지형 패턴 개수·첫 기록·군집 후처리·Host 삭제 본체·Host 정기 실행·서피스 월드 껍데기·Fort 적재 바인딩·Forms 부착 바인딩·정상 바인딩 껍데기·Form Pop 바인딩·공장 부착 배선·Host 부착 본체·공장 폼 생성·Host 정기 예약·정상 지형 후처리 관문·공장 분리 종단·공장 진단 묶음·Host 전송 사전 구현·공장 HP·표면 바인딩·공장 Take 상세·Assert 소비·공장 약화 공유·공장 현재 생성·가상표·Dais 보조·지형 생성 입력·월드 변경 플래그·수정 가능 TYPE·로딩 깊이·설치 모드·전송 사전 구현·객체 조회·프레임 시각 완료, 월드 본체 조립·F3 미착수). R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.231 `20261107-170 DN`(월드 객체 조회, 이전: 0.230 `20261107-169 DN`, 0.229 `20261107-168 DN`, 0.228 `20261107-167 DN`). |
-| 검사 | 0.231 집중 16건 통과(서피스 월드 껍데기 직접 4개+TakeChanged 직접 1개+MutableTypes 직접 3개+로딩 깊이 직접 2개+설치 모드 직접 3개+객체 조회 직접 3개) 후 `--no-incremental` 원복·재통과했다. 변이(패치 소유자 위치 34→32) 시 신규 검사가 실패로 검출됨을 확인했다. Release 솔루션 빌드 경고·오류 0. Core 전체는 0.211 재기준선 1,576개가 마지막이며 변경이 기존 1개 확장+검사 1개 확장뿐이라 기존 검사에 영향을 주지 않는다. 단위별 집중 검사·변이 검사 수는 0.154~0.231 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
-| 포트 맵 | `PORT_MAP.tsv` 총 614줄(자료 609행: L1 329, port 280)이다. 0.231은 변경 없음(이미 port인 `RawSurfaceWorld.h/.cpp` → `RawSurfaceWorld.cs` 행들의 본체 범위 확장). 단위별 증가 내역은 0.155~0.231 기록과 이관 파일에 있다. |
+| 마지막 구현 커밋 | 0.232 `20261107-171 DN`(월드 프레임 시각, 이전: 0.231 `20261107-170 DN`, 0.230 `20261107-169 DN`, 0.229 `20261107-168 DN`). |
+| 검사 | 0.232 집중 20건 통과(서피스 월드 껍데기 직접 4개+TakeChanged 직접 1개+MutableTypes 직접 3개+로딩 깊이 직접 2개+설치 모드 직접 3개+객체 조회 직접 3개+프레임 시각 직접 4개) 후 `--no-incremental` 원복·재통과했다. 변이(역행 검사 제거) 시 신규 검사가 실패로 검출됨을 확인했다. Release 솔루션 빌드 경고·오류 0. Core 전체는 0.211 재기준선 1,576개가 마지막이며 변경이 기존 1개 확장+검사 1개 확장뿐이라 기존 검사에 영향을 주지 않는다. 단위별 집중 검사·변이 검사 수는 0.154~0.232 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
+| 포트 맵 | `PORT_MAP.tsv` 총 614줄(자료 609행: L1 329, port 280)이다. 0.232는 변경 없음(이미 port인 `RawSurfaceWorld.h/.cpp` → `RawSurfaceWorld.cs` 행들의 본체 범위 확장). 단위별 증가 내역은 0.155~0.232 기록과 이관 파일에 있다. |
 | fixture | 연결 232개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.167은 월드 본체 기준 `fe3d121d`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한다. |
@@ -262,6 +262,7 @@
     - [x] 월드 설치 모드(`ConfigureInstallModes` 소유권·연결·붕괴 관문 직접 3종, 0.229 — `Report`·월드 본체 조립은 잔여)
     - [x] 월드 전송 사전 구현(`SynchronizePeer`·`TransmitDeletion` 명시 오류, 검사 없음, 0.230 — 3차 연결·`Report`·월드 본체 조립은 잔여)
     - [x] 월드 객체 조회(`Objects` 슬롯 복원 직접 3종, 0.231 — `Report`·월드 본체 조립은 잔여)
+    - [x] 월드 프레임 시각(`PrepareFrame` 시각 보관·역행 거부·공유 교정 직접 4종, 0.232 — `Report`·월드 본체 조립은 잔여)
     - [ ] F2c 나머지: `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요)
     - [ ] F2d 나머지: `RawSurfaceWorld`
     - [ ] F3: `RawCampaignSession` 연결. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS·F 단계만으로는 화면 변화가 거의 없다.
@@ -335,6 +336,16 @@
 - **PORT_MAP:** 신규 2행(`RawFortPriestPreparation.cpp/.h` → `RawFortPriestPreparation.cs`, 모두 L1, 기준 `b8ce42c7`). 총 509행(L1 291, port 218).
 - **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 보호 원본은 새 검사가 읽기·쓰기 모두 풀 범위 안에서만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리에서 다른 세션의 cpppj 미커밋 변경(`cpppj/tests/SubscriberGlobalsTests.cpp` 1개)은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
 - **남은 것:** F2c 나머지·F2d·F3부터다. `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요), F2d World·저장 나머지(`RawSurfaceWorld` 63KB·`RawSurfaceStorage` 등 월드 스택), F3 `RawCampaignSession` 연결 순이다. `RawIslandPostPop`·`RawIslandLifecycle`의 x86 전수 재생(`islandpostpop-x86.tsv` 1988행·`islandlifecycle-x86.tsv` 2055행)은 월드 스택 하네스(생성·소유자·Pop 실제 모듈)가 필요해 F3 실제 조립 때 잇는다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 지시에 따라 건너뛴다. 멀티플레이는 3차 로컬 구현 때 `LocalNetworkPolicy` 루프백 전용으로 사전 구현만 잇는다.
+
+### 0.232 단위 기록 — 월드 프레임 시각 PrepareFrame 이식 (2026-11-07, HJOW-Athlon)
+
+- **범위:** 월드 본체 2종(`PrepareFrame` 시각 보관·`CurrentTime` 조회) 및 직접 검사 4종. `RunFrame`의 커널 실행·다리 붕괴 스캔과 월드 본체 조립은 후속 단위에서 잇는다.
+- **구현(기존 파일 수정 2개):** `Netstorm.Core/Original/RawSurfaceWorld.cs` 확장(원본 `Impl.time{}` 대응 `_time`·원본 `Impl.processState` 대응 `_processState` 저장소 대여·공유 시각 교정·역행·비유한 거부·독립 역쓰기·`CurrentTime()` 조회), `RawSurfaceWorldTests.cs` 확장(직접 4개: 전진 보관·역행 거부·비유한 거부·공유 교정). PORT_MAP·fixture 변경 없음(이미 port인 `RawSurfaceWorld.h/.cpp` → `RawSurfaceWorld.cs` 행들의 본체 범위 확장, 기준 `b8cadde1`).
+- **C#에서 달라진 모양:** (1) 원본 `invalid_argument` 관문은 `ArgumentException` 명시 오류로 옮겼다(0.222 선례). (2) 원본 `sharedNow` 포인터 유무는 `DoubleBox?` null 검사로 옮겼다(0.183 상태 선례). (3) 원본에 없는 `CurrentTime()` 조회는 C# 검사·소비자 연결용이다(기존 CurrentX 선례). (4) `RunFrame`의 스캔·커널 실행은 해당 단위에서 잇는다(현재 시각 공급만 둔다).
+- **검증:** 집중 20건 통과(서피스 월드 껍데기 직접 4개+TakeChanged 직접 1개+MutableTypes 직접 3개+로딩 깊이 직접 2개+설치 모드 직접 3개+객체 조회 직접 3개+프레임 시각 직접 4개). **불일치 0.** 변이 검사로 역행 검사 제거 변이 시 신규 검사가 실패(`Assert.Throws` 무예외)로 검출됨을 확인하고 `--no-incremental` 원복·재통과했다. Release 빌드 경고·오류 0. Core 전체는 0.211 재기준선 1,576개가 마지막이며 변경이 기존 1개 확장+검사 1개 확장뿐이라 기존 검사에 영향을 주지 않는다.
+- **PORT_MAP:** 변경 없음(이미 port인 `RawSurfaceWorld.h/.cpp` → `RawSurfaceWorld.cs` 행들의 본체 범위 확장). 총 614줄 유지(자료 609행: L1 329, port 280).
+- **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 새 검사는 월드 범위 안의 시각 보관만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리의 다른 세션 cpppj 변경·미커밋 파일은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다.
+- **남은 것:** F2d 나머지(`RunFrame`·`Report`·월드 본체 조립)·F3부터다(0.9절 참조).
 
 ### 0.231 단위 기록 — 월드 객체 조회 Objects 이식 (2026-11-07, HJOW-Athlon)
 
