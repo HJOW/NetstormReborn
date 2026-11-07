@@ -92,6 +92,10 @@ public:
     const std::uint32_t& GameTicks() const { return gameTicks_; } //시계의 double·프레임 번호로 바꾸지 않고 원시32비트를 보존한다.
     std::uint32_t& CdPresent() { return cdPresent_; } //005c85b8의 현재00440c60 결과다. 난수 시드가 아니며 State7의 실제 CD 확인 뒤에만 쓴다.
     const std::uint32_t& CdPresent() const { return cdPresent_; } // 화면/메뉴/Session도 같은 CD 결과를 읽으며 복제하지 않는다.
+    std::uint32_t& MetaCdPresent() { return metaCdPresent_; } //State19의005c85bc이며 State7의005c85b8과 서로 다른 현재 CD 결과다.
+    const std::uint32_t& MetaCdPresent() const { return metaCdPresent_; } //메타 진입이 바꾼 같은 현재 DWORD를 읽는다.
+    std::uint32_t& MetaPending() { return metaPending_; } //005c85e8이며 State19의 renderer 초기화 직후0을 쓰는 실제 장기 DWORD다.
+    const std::uint32_t& MetaPending() const { return metaPending_; } //인접 metaRefresh/Rebuild와 별도 물리를 보존한다.
     std::uint32_t& MetaRefresh() { return metaRefresh_; } //005c85d8의 현재 메타 갱신 예약 DWORD다.
     std::uint32_t& MetaRebuild() { return metaRebuild_; } //005c85dc의 별도 메타 재구성 예약 DWORD다.
     bool& Simulconnect() { return simulconnect_; } //0054db50의 정상0/1을 모든 State 소비자가 함께 읽는다.
@@ -140,6 +144,7 @@ private:
     std::uint32_t syncConnection_{},syncReplyMode_{},gameTicks_{}; //세 개의 실제 최초 BSS DWORD며 정리 세 store 이외의 재초기화를 추가하지 않는다.
     o::ClockSynchronizationData clockSamples_; // 최초 BSS0이며 서버 초기화는 표본을 유지하고 Commander 연결만 원문 전체0을 쓴다.
     std::uint32_t cdPresent_{},metaRefresh_{},metaRebuild_{}; //CD 결과와 두 메타 예약의 최초 BSS0을 Client 수명에 한 번 구성한다.
+    std::uint32_t metaCdPresent_{},metaPending_{}; //005c85bc/005c85e8의 별도 BSS0이며 State7/세션 반납으로 임의 갱신하지 않는다.
     bool simulconnect_{}; //최초 BSS0이며 Session 교체가 초기화하지 않는 연결모드다.
     std::uint32_t battleTerritory_{}; //005c85d0의 실제4BYTE이며 State의BYTE와 strip의DWORD 소비자가 함께 빌린다.
     std::array<std::uint32_t,2> zoneWords_{}; //기존 로그인의8BYTE 물리를 장기화한다. 원문 Zone 정리는 앞6BYTE만 쓴다.

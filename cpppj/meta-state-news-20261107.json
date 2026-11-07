@@ -1,0 +1,59 @@
+{
+  "unit": 1054,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "State19 전체 순서의 부모 부품과 실제 시스템 뉴스 시각/수신 HTML 연결",
+  "sourceFunctions1078": [
+    "004b6dd0:004b7d07..004b7e70",
+    "0042e470",
+    "0042e4d0",
+    "0042e4f0",
+    "0042ed30"
+  ],
+  "sourceComparison1072": [
+    "0042d630:case19",
+    "004b1990",
+    "004b1970",
+    "004b1a00"
+  ],
+  "implemented": [
+    "State19 첫BYTE/fortPal/cleanup0/별도 CD결과→metamap1/server0/boss0/renderer/pending0",
+    "같은 Client CS Prepare/52a 진단→현재 current+40/+44에 따른 즉시25/34/21→같은 immediate+40만0",
+    "Core 선택1/1→현재 경로/owner Fort 읽기→현재 owner Core 최소병합0→HUD(command,4,0,1)→PlayerKnown0→벽시각기한/뉴스 읽기/채널0/입력1",
+    "State7 CD005c85b8과 State19 CD005c85bc의 별도 Client 저장소 및005c85e8 BSS",
+    "실제 Chat00548748/키00548790→현재 NSInfo 서버 이름/번역→점만 밑줄 키→signed 읽기/쓰기와 기존 Config 해석/변경 알림",
+    "기존 실제 Chat 수신의 최신 시각 저장→서버별 설정 쓰기→HTML400×30 연결"
+  ],
+  "notCompleted": [
+    "NativeMetaState 부품은 제품 라이브러리에 컴파일했으나 실제 Uber 분배기와 Fort/Core/채널 장치 및 즉시25/34/21 부모는 미접합",
+    "State30/메타 표시/목록 수정/endpoint·LAN 전체·Outpost/checking5는 후속",
+    "멀티플레이/신규 단위/게임/통신 검사는 수행하지 않음"
+  ],
+  "decompilerOutputsChanged": false,
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1054\\build.log",
+    "exeSize": 12228096,
+    "exeSha256": "7426e8661fd381d76e560b794749e8b0867a6598c4fc3c02e99f9f023591ca82"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1054\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remainingGoal": "State19 실제 Uber/Fort/Core/채널·즉시25/34/21 부모→메타/나머지LAN·Outpost/checking5→한국어 후속→시나리오 UI"
+}

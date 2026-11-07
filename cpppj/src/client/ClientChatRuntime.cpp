@@ -4,6 +4,9 @@
 #include "client/ClientAudio.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientChatWindowGlobals.h"
+#include "client/ClientNsInfoGlobals.h"
+#include "client/SystemNewsTime.h"
+#include "client/ScriptCommand.h"
 #include "client/ChatRecipients.h"
 #include "client/RawChatSubmit.h"
 #include "client/RawChatFormat.h"
@@ -33,7 +36,19 @@ void ChatAssertion(std::uint32_t line) { std::clog<<"Chat 원문 진단:"<<line<
 std::int32_t IconCount(const GameAssets& assets,const RawSurfaceStorage& surface,std::uint8_t letter) {
     const auto kind=assets.Find("icon").block+o::kFirstAssetTypeNumber;if (kind>=surface.frames.size()) throw std::out_of_range("Chat icon 현재TYPE 물리 범위");return surface.frames[kind].Run(letter).count;
 }
+// 서버 이름의 원문 표시 바이트와 UTF-8 Config 경계를 같은 기존 변환기로 연결한다.
+SystemNewsTimeHooks NewsTimeHooks(Client& client) {
+    SystemNewsTimeHooks hooks;
+    hooks.serverName=[&client] { return client.NsInfoGlobals()->ResolveServerName([&client](auto source) { const auto bytes=o::EncodeDisplayText(client.Translate(source));return std::string(bytes.begin(),bytes.end()); }); };
+    hooks.read=[&client](auto key) { return client.Configuration().GetInt(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(key.data()),key.size()})); };
+    hooks.configure=[&client](auto expression) { static_cast<void>(ApplyScriptConfig(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(expression.data()),expression.size()}),client.Configuration())); };
+    return hooks;
 }
+}
+// 같은 Client의 원문 뉴스 키/시각 저장소를 읽으며 getter만으로 설정을 변경하지 않는다.
+void LoadClientSystemNewsTime(Client& client) { auto& news=*client.ChatWindowGlobals();ReadSystemNewsTime({news.newsTime,news.newsKey},NewsTimeHooks(client)); }
+// 이미 수신한 현재 시각을 원문 설정 해석기로 넘기고 일반 옵션 writer가 나중에 저장하도록 한다.
+void SaveClientSystemNewsTime(Client& client) { auto& news=*client.ChatWindowGlobals();WriteSystemNewsTime({news.newsTime,news.newsKey},NewsTimeHooks(client)); }
 // 원문 init issueCommand 위치에서 호출하며 독립 Chat manager 재할당은 이 등록을 반복하지 않는다.
 void InitializeClientIssueCommands(Client& client) {
     RegisterIssueCommands([&client](auto name,auto callback,auto flag) {

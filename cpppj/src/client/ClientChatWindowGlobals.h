@@ -2,6 +2,7 @@
 #pragma once
 #include "client/ChatWindow.h"
 #include "client/ChatNameCompletion.h"
+#include <array>
 #include <map>
 #include <vector>
 #include <stdexcept>
@@ -11,6 +12,7 @@ struct ClientChatWindowGlobals { // 표시 노드가 교체되어도 로그/초�
     StyleTextBufferState log; //548758의 실제 공유128줄 로그이며 공통 StyleText 저장소에 직접 연결한다.
     std::uint32_t logFile{}; //54874c의 최초0이며 append callback은 비0일 때만 파일 장치를 요구한다.
     std::uint32_t receivedMask{},newsTime{}; //548710/548748의 BSS0이며 중계/수신이 같은 Client 슬롯을 사용한다.
+    std::array<char,128> newsKey{}; //00548790의 BSS이며 다음00548810 완성 목록과 분리된 같은 서버별 키 버퍼다.
     std::vector<std::uint32_t> ignored; //548750/548754의 같은 장기 무시 목록이다. 객체 메뉴와 수신이 별도 사본을 만들지 않는다.
     std::int32_t inputLineOff{}; //0054db18의 BSS0이다. 옵션 재해석 때 읽고 그리기 뒤 프레임말에 한 번 전환/0을 쓴다.
     ChatNameCompletionState completion; //00548810..0054c89f의장기BSS이며Chat생성/미션교체로초기화하지않는다.

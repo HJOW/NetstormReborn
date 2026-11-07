@@ -104,7 +104,9 @@ void UberGump::ReceiveChatMessage(std::span<std::uint8_t> packet) {
     hooks.owner=[this](auto subscriber) { const auto name=world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_);return FindClientChatSenderOwner(client_,*client_.SurfaceStorage(),name,subscriber); };
     hooks.wake=[this](auto serial) { static_cast<void>(rawButtons_->PulseRegisteredIfIdle(serial)); };hooks.sound=[this](auto file) { client_.WorldAudio().Sounds().PlayByName(file,0,0,0,0,0); };
     hooks.append=[this](auto chat,auto text,auto context) { rawButtons_->Menus()->AppendChatLog(chat,text,context); };hooks.show=[this] { rawButtons_->Menus()->ShowChatWindow(); };
-    hooks.log=[this](auto level,auto text) { client_.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),text); };DispatchChatPacket(packet,hooks); // 시스템 뉴스의 실제 서비스/UI는 후순위 네트워크 장치로 남기며 일반 수신을 빈 성공으로 대체하지 않는다.
+    hooks.setNewsTime=[this](auto stamp) { client_.ChatWindowGlobals()->newsTime=stamp;SaveClientSystemNewsTime(client_); }; //원문00548748 store→현재 서버별 설정 해석/변경 알림이다.
+    hooks.news=[this](auto body,auto width,auto height) { static_cast<void>(rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext(CurrentMapView()),body,0,width,height));rebuild_=true; }; //004cf550(text,400,30)은 기존 HTML/serial 수명을 사용하며 새 Pause/별도 창을 합성하지 않는다.
+    hooks.log=[this](auto level,auto text) { client_.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),text); };DispatchChatPacket(packet,hooks);
 }
 // 현재 실제 World와 같은 초기 생성물을 연결하고 기존 미션 HUD mode3/팔레트·도킹을 유지한다.
 void UberGump::InstallHud() {
