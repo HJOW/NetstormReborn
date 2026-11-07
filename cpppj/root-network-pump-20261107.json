@@ -1,0 +1,65 @@
+{
+  "unit": 1062,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12365824,
+    "exeSha256": "1399adc9232cf1c87429b3fcd45c43bc5178fa8e62038b75ce26933ed5834fb5",
+    "librarySha256": "86515cd50a288d8bb905f1cac8064dac21d843ad7a9dd985faecb17ea18fe429"
+  },
+  "scope": [
+    "R00476b80 통신 부모의 일반256/대기32/Challenge51x40 소켓 집합/타임아웃 순회",
+    "원문64칸 집합/중복·가득 참 추가 생략/64번째 진단·부모 select·콜백 뒤 현재 슬롯 재조회",
+    "한 지역 FullTime의 DWORD/일반·대기·Challenge signed 타임아웃과 LAN 유휴 종료/직전 참가자수 초기1"
+  ],
+  "runtime": {
+    "rootExeTargetExists": false,
+    "osDeviceBindingConnected": false,
+    "pumpCalledByClient": false,
+    "rootManagerConnected": false,
+    "challengeManagerConnected": false,
+    "compiledInStaticLibrary": true
+  },
+  "nativeReferences": [
+    "R00476b80",
+    "R004739b0",
+    "R004586d0",
+    "R0048c0fc",
+    "R00478a30",
+    "R00477da0",
+    "R00477dc0",
+    "R00477de0",
+    "R00488590",
+    "R00485c10",
+    "R004cd804=1",
+    "R004cd860=1499"
+  ],
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "새 R.exe/WinSock 소켓 장치·패킷 분배/버퍼·Root/CS 관리자와 부모 연결",
+    "실제 OS launch·17h/1dh 응답·수동 검색/State28~33·메타/LAN/Outpost/checking5",
+    "한국어 후속·Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
