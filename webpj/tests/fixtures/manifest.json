@@ -4435,7 +4435,7 @@
       "bytes": 37543,
       "lines": 239,
       "fixtureCommit": "9e20b1c9",
-      "webCommit": "worktree",
+      "webCommit": "6c0302d5",
       "cpppjBasis": {
         "cpppj/src/client/ConfigurationCommandInput.cpp": "9e20b1c9"
       }
@@ -4464,7 +4464,7 @@
       "bytes": 2448,
       "lines": 31,
       "fixtureCommit": "9e20b1c9",
-      "webCommit": "worktree",
+      "webCommit": "6c0302d5",
       "cpppjBasis": {
         "cpppj/src/client/ConfigurationCommandInput.cpp": "9e20b1c9"
       }
@@ -4493,7 +4493,7 @@
       "bytes": 83458,
       "lines": 889,
       "fixtureCommit": "ca0c01eb",
-      "webCommit": "worktree",
+      "webCommit": "6c0302d5",
       "cpppjBasis": {
         "cpppj/src/client/SendMoneyInput.cpp": "ae3236e4"
       }
@@ -4522,7 +4522,7 @@
       "bytes": 5634,
       "lines": 201,
       "fixtureCommit": "8d6c325c",
-      "webCommit": "worktree",
+      "webCommit": "6c0302d5",
       "cpppjBasis": {
         "cpppj/src/client/AiDebugCommandInput.cpp": "8d6c325c"
       }
@@ -4551,7 +4551,7 @@
       "bytes": 27726,
       "lines": 481,
       "fixtureCommit": "e5e2f433",
-      "webCommit": "worktree",
+      "webCommit": "6c0302d5",
       "cpppjBasis": {
         "cpppj/src/client/ScenarioObjectInput.cpp": "e5e2f433"
       }
@@ -4580,9 +4580,154 @@
       "bytes": 939962,
       "lines": 1751,
       "fixtureCommit": "aae2f0ab",
-      "webCommit": "worktree",
+      "webCommit": "6c0302d5",
       "cpppjBasis": {
         "cpppj/src/client/SavedCameraKey.cpp": "e46d8981"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E28",
+      "id": "file-name-formatter",
+      "path": "cpppj/tests/fixtures/file-name-formatter-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 경로 작성기 부품 순서/구분자/접두·연결 문자/예외 뒤 부분 출력과 번호",
+      "consumers": [
+        "webpj/tests/file-name.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-file-name.js"
+      ],
+      "doc": "docs/webpj-file-name-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFileName.cpp"
+      ],
+      "scope": "352행 전부 사용",
+      "text": true,
+      "sha256": "9abf8632875f9fd1c362814ec3668e2c4f619a1eda081effb0cfc74f94e25834",
+      "bytes": 193217,
+      "lines": 353,
+      "fixtureCommit": "5b541654",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFileName.cpp": "c2d29227"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E28",
+      "id": "file-name-leaf",
+      "path": "cpppj/tests/fixtures/file-name-leaf-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 파일 이름 getter의 반환 위치와 칸 전체",
+      "consumers": [
+        "webpj/tests/file-name.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-file-name.js"
+      ],
+      "doc": "docs/webpj-file-name-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFileName.cpp"
+      ],
+      "scope": "64행 전부 사용",
+      "text": true,
+      "sha256": "d74a20647f2dfdddf0e03aa46164e8b525df45000f5ac6f3a9ba8ded037773af",
+      "bytes": 37895,
+      "lines": 65,
+      "fixtureCommit": "b2aa74b8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFileName.cpp": "c2d29227"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E28",
+      "id": "file-name-device",
+      "path": "cpppj/tests/fixtures/file-name-device-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 장치 접두 getter의 UNC/드라이브/빈/255바이트와 NUL 뒤 보존",
+      "consumers": [
+        "webpj/tests/file-name.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-file-name.js"
+      ],
+      "doc": "docs/webpj-file-name-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFileName.cpp"
+      ],
+      "scope": "32행 전부 사용",
+      "text": true,
+      "sha256": "861219c034b010426940b649c5c8e9b20da7d2c1051404da7da977b3a8e37089",
+      "bytes": 18069,
+      "lines": 33,
+      "fixtureCommit": "b5d1af5d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFileName.cpp": "c2d29227"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E28",
+      "id": "file-directory",
+      "path": "cpppj/tests/fixtures/file-directory-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 디렉터리 getter의 separator/level/255바이트 경계와 NULL 읽기 부분 버퍼",
+      "consumers": [
+        "webpj/tests/file-name.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-file-name.js"
+      ],
+      "doc": "docs/webpj-file-name-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFileName.cpp"
+      ],
+      "scope": "192행 전부 사용(원문 NULL 읽기 30행 포함)",
+      "text": true,
+      "sha256": "59b0c891f28e51a0fab7ebfcc26794233cb2f1bcc8c2c62c1bb710de0d53c1ec",
+      "bytes": 110096,
+      "lines": 193,
+      "fixtureCommit": "7abbabd6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFileName.cpp": "c2d29227"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E28",
+      "id": "file-full",
+      "path": "cpppj/tests/fixtures/file-full-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Full getter의 flag 0/1과 +2 물리 입력, 칸 전체",
+      "consumers": [
+        "webpj/tests/file-name.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-file-name.js"
+      ],
+      "doc": "docs/webpj-file-name-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFileName.cpp"
+      ],
+      "scope": "16행 전부 사용",
+      "text": true,
+      "sha256": "67e8a8960fc2a8a479318170104babdeebe3215d04210776e5a7b2751fdc032a",
+      "bytes": 9434,
+      "lines": 17,
+      "fixtureCommit": "c2d29227",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFileName.cpp": "c2d29227"
       }
     }
   ]
