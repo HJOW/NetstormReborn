@@ -285,6 +285,40 @@ public sealed class RawSurfaceWorldTests
         Assert.False(world.DeletionState().RebuildGraph);
     }
 
+    /// <summary>같은 저장소 커널을 빌리는지 검증한다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>
+    [Fact]
+    public void KernelSharesStorageKernel()
+    {
+        // 새 커널을 만들지 않고 같은 실제 커널을 빌림을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Same(world.Storage().Processes().Kernel(), world.Kernel());
+    }
+
+    /// <summary>예약 객체 정리가 같은 커널을 비우는지 검증한다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ClearProcessesEmptiesKernel()
+    {
+        // 외부 연결 모듈 해제 전의 예약 정리를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.Kernel().Add(new BaseProcess());
+        world.Kernel().Add(new BaseProcess());
+        Assert.Equal(2, world.Kernel().Size());
+        world.ClearProcesses();
+        Assert.Equal(0, world.Kernel().Size());
+    }
+
+    /// <summary>최종 소멸 정리가 같은 커널을 비우는지 검증한다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DrainProcessesEmptiesKernel()
+    {
+        // 명시 전체 커널의 최종 소멸을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.Kernel().Add(new BaseProcess());
+        Assert.Equal(1, world.Kernel().Size());
+        world.DrainProcesses();
+        Assert.Equal(0, world.Kernel().Size());
+    }
+
     /// <summary>살아 있는 자산이 없으면 빈 목록을 돌려주는지 검증한다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
     [Fact]
     public void ObjectsEmptyWhenNoLiveAssets()
