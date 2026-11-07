@@ -23,6 +23,7 @@ public:
     void SendMetaStatus(const std::function<void(std::span<std::uint8_t>)>& writePayload); //0040a300의실제12BYTE 헤더뒤caller가+4/+8과부분효과를쓰고같은11로송신한다.
     void SendMetaData(std::uint32_t key,std::span<const std::uint8_t> data,std::uint32_t count); //0042bfb0: signed160관문·FF초기화/67h생성·BYTE키/WORD길이·현재원문복사→같은11송신이다.
     void SendMetaGameLogin(); //004b62b0의 실제 master/자기 CS 기록으로7ch/28BYTE를 작성해 같은 TCP9로 전송한다.
+    void SendBattleDescription(std::string_view description); //0042c040(-1,text,0)의 현재 권한 관문과 실제71h/TCP11 전송이다.
 private:
     bool Connect(std::string_view endpoint,std::uint32_t port,std::uint32_t challenge); //004b3ed0의현재 해석 뒤 TCP10/11을 실제 선택한다. 공개/DNS 주소는 기존 LAN 장치가 거부한다.
     std::span<std::uint8_t> Core(); //0048f0d0의 같은 현재 Client Core와 실제 진단을 읽는다.

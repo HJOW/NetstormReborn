@@ -1404,6 +1404,7 @@ void UberGump::Event(InputEvent event) {
     }
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
     if (MultiplayerOptionsEvent(event)) return; // 일반 옵션의 이름/연결 예약도 같은 Guide/Gump 뒤 일반 입력 큐에서 소비한다.
+    if (transitionCode==0x020000f3U) { if (!(event.code&InputCode::kRelease)) OpenMetaBattleDescription(std::bit_cast<std::uint32_t>(event.y));return; } //004d8ab5는 Guide/Gump/뗌 뒤·Console/정지 앞에서 현재param2를 설명 모달에 전달한다.
     if (transitionCode==0x020000f5U) { if (!(event.code&InputCode::kRelease)) client_.LocalStateGlobals()->Begin()=1;return; } // ServerForceBattleStart는 원문처럼 Begin만1을 쓰며 다음 타이머가 실제6e를 송신한다.
     if (transitionCode==0x020000acU) { if (!(event.code&InputCode::kRelease)) static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile()));return; } // DelStateFile은4b5880처럼 현재 경로를 작성해 unlink하고 반환을 무시한다. 새 상태 요청/월드 반납을 추가하지 않는다.
     if (transitionCode==0x020000abU || transitionCode==0x020000a9U) { if (!(event.code&InputCode::kRelease)) RequestBattleReconnect(transitionCode==0x020000abU);return; } // StateReconnect는1, ForceServerDeath는0을 같은004b8cb0 부모에 전달한다.

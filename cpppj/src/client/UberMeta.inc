@@ -58,6 +58,18 @@ void UberGump::PrepareMetaWorldRuntime() {
     editor_->metaDisplay->BindOwnerColors(client_.ColorSortInput()->OwnerTables());editor_->metaDisplay->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
 }
 RawCampaignFactoryDisplay* UberGump::MetaSpriteDisplay() const { return editor_ ? editor_->metaDisplay.get() : nullptr; } //현재owner를조회만하며출력기나Session을새로만들지않는다.
+//원문 CS의 논리 주소를 같은 실제 할당에서 읽고 호스트 포인터를32비트로 자르지 않는다.
+void UberGump::OpenMetaBattleDescription(std::uint32_t text) {
+    std::optional<std::string_view> initial;
+    if (text) {
+        const auto& challenge=*client_.ChallengeGlobals();const auto bytes=challenge.Bytes();const auto offset=text-challenge.Current();
+        if (offset>=bytes.size()) throw std::out_of_range("설명 창의 현재 CS 논리 문자열 물리 범위");const auto tail=bytes.subspan(offset);const auto end=std::find(tail.begin(),tail.end(),0);
+        if (end==tail.end()) throw std::out_of_range("설명 창의 현재 CS 문자열 NUL 누락");initial=std::string_view(reinterpret_cast<const char*>(tail.data()),static_cast<std::size_t>(end-tail.begin()));
+    }
+    SaveFortNameDialogContext context;context.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(context.editor,textClipboard_);context.translate=[this](auto source) { return FontBytes(client_.Translate(source)); };
+    context.battleDescription=[this](auto description) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("설명 확정의 현재 메타 전송 owner 미연결");editor_->metaTransport->SendBattleDescription(description); };
+    rawButtons_->Menus()->ShowBattleDescriptionDialog(std::move(context),initial);
+}
 // 실제19의 World 정리 뒤 같은 Client 물리로만 메타 연결 owner를 처음 만든다.
 o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t selected) {
     if (!editor_ || world_ || !((selected>=20 && selected<=27) || (selected>=34 && selected<=38))) throw std::logic_error("World 없는 실제 메타 연결/검색 부모 계약");

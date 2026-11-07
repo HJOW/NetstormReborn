@@ -5,7 +5,7 @@ std::uint32_t AllocateSaveFort(std::size_t bytes) {
     else if (bytes==0x170) token=AllocateHelp(bytes);
     else {
         token=common.token();
-        if (bytes==0xdc || bytes==0xd8 || bytes==0x128) { saveFortRoots.emplace(token,std::make_unique<SaveFortNameDialogNode>());if (!saveFortBuilding) throw std::logic_error("입력 창의 실제 생성 문맥 없음");saveFortContexts.emplace(token,*saveFortBuilding); } // 숫자 창은 같은 공통 자식과+d4의 송금 대상을 사용한다.
+        if (bytes==0xdc || bytes==0xd8 || bytes==0x128 || bytes==0xd4) { saveFortRoots.emplace(token,std::make_unique<SaveFortNameDialogNode>());if (!saveFortBuilding) throw std::logic_error("입력 창의 실제 생성 문맥 없음");saveFortContexts.emplace(token,*saveFortBuilding); } //설명 창0xd4도 같은 공통 자식/문자 버퍼를 소유한다.
         else if (bytes==0xa4) plainTexts.emplace(token,std::make_unique<TextGumpNode>());
         else if (bytes==0xb8) backgrounds.emplace(token,std::make_unique<GumpBackgroundNode>());
         else throw std::logic_error("Save as 실제 파생 할당 크기 오류");
@@ -15,6 +15,7 @@ std::uint32_t AllocateSaveFort(std::size_t bytes) {
 // 현재 창의 실제 편집 버퍼와 동일 작업본 경로/헤더/전체 이름 부모를 묶는다.
 std::uint32_t AcceptSaveFort(std::uint32_t token) {
     const auto& context=saveFortContexts.at(token);auto& root=*saveFortRoots.at(token);SaveFortNameConfirmHooks effects;
+    if (context.battleDescription) { std::array<char,256> text;static_cast<void>(textEntries->Backend().CopyText(root.entry,text));context.battleDescription(ConfirmNativeMetaBattleDescription(text));return 1; } //004c92c0은 실제 CopyText→255번째NUL→LF→현재권한/전송 뒤 항상1을 반환한다.
     if (context.htmlInput) { HtmlInputConfirmHooks inputEffects;inputEffects.copyText=[this,&root](auto output) { static_cast<void>(textEntries->Backend().CopyText(root.entry,output)); };inputEffects.space=[](auto code) { return std::isspace(code); };inputEffects.parseLong=[](auto text) { return o::ConfigParseLong(text); };
         inputEffects.format=[](auto section,auto input) { std::array<char,256> text{};const std::string key(section),value(input);const auto count=std::snprintf(text.data(),text.size(),"%s(%s)",key.c_str(),value.c_str());if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("HTML 입력 확인의256BYTE 서식 범위");return std::string(text.data(),static_cast<std::size_t>(count)); };inputEffects.tell=context.tell;return ConfirmHtmlInput(root.fortMode,root.inputSection,inputEffects); } //004cfae0의같은실제CopyText/CRT/Tell이다.설정에직접쓰지않는다.
     if (context.sendMoney) { std::array<char,256> text{};static_cast<void>(textEntries->Backend().CopyText(root.entry,text));text.back()=0;return context.sendMoney(root.fortMode,std::string_view(text.data())); } //004c9350은 현재 편집 문자열을 읽은 뒤 송금하고1을 반환한다.

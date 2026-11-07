@@ -35,6 +35,7 @@ struct SaveFortNameDialogContext {
     std::function<std::span<std::uint8_t>()> header; // 현재 Template owner의 header를 빌린다.
     std::function<void(std::string_view)> setName,tell,readFort; // 전체 이름 부모에는 같은 work 장치를 전달해야 한다.
     std::string currentName; // 생성 시 원문 current 이름을 안정된 NUL 문자열로 보유한다.
+    std::function<void(std::string_view)> battleDescription; //전투 설명 모달은 파일/송금 대신 현재71h 권한/전송 부모를 호출한다.
 };
 // 생성/입력 부모는 실제 공통 장치 호출만 조립하며 기본 Gump를 별도 구현하지 않는다.
 struct SaveFortNameDialogHooks {
@@ -62,6 +63,7 @@ public:
     SaveFortNameDialog(GumpCreateState& state,SaveFortNameDialogHooks hooks); // 공통 등록표와 실제 장치를 빌린다.
     std::uint32_t Show(std::uint32_t fortMode,std::uint32_t canCancel,std::string_view current,std::optional<std::string_view> initial={}) const; // 실제 모달 root 토큰이다.
     std::uint32_t ShowMoney(std::uint32_t target) const; //004d3860/004d3b60의 숫자 전용 형제 창이며 공통 장식/두 버튼을 재사용한다.
+    std::uint32_t ShowDescription(std::optional<std::string_view> initial) const; //004d3550/004d37a0의41BYTE 단일행 설명과 같은 모달 수명을 생성한다. NULL일 때만 기본 문구를 번역한다.
     std::uint32_t ShowInput(std::uint32_t mode,std::string_view title,std::string_view continuation) const; //004d3c20/004d3ed0의문자/숫자후속Tell창이며기존공통두버튼을사용한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const; // Enter/두 버튼 외에는 기본 부모에 위임한다.
 private:

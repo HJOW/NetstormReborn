@@ -139,6 +139,7 @@ public:
     std::uint32_t ShowSaveFortNameDialog(SaveFortNameDialogContext context,std::uint32_t fortMode=1,std::uint32_t canCancel=1,std::optional<std::string_view> initial={}); // 실제 공통 모달/문자 입력/두 버튼을 생성한다.
     std::uint32_t ShowHtmlInputDialog(SaveFortNameDialogContext context,std::uint32_t mode,std::string_view title,std::string_view continuation); //HTML $Input의원문mode/제목/후속Tell섹션을같은실제모달로작성한다.
     std::uint32_t ShowSendMoneyDialog(SaveFortNameDialogContext context,std::uint32_t target); // 현재 숫자 창의 확정 장치와 대상은 모달 수명 동안 유지한다.
+    std::uint32_t ShowBattleDescriptionDialog(SaveFortNameDialogContext context,std::optional<std::string_view> initial); //실제 설명 편집/71h 확정 장치를 같은 공통 모달 수명으로 유지한다.
     std::uint32_t ShowMultiplayerOptions(MultiplayerOptionsWindowContext context); //004cc4d0/004cc970/004ccf30의 실제 장식/네 행/돌 버튼을 같은 공통 모달에 생성한다.
     void RefreshMultiplayerOptions(std::uint32_t token); // 현재 같은 창의 이름/설정/자식 크기를 다시 읽고 재부착한다.
     const SaveFortNameDialogNode* SaveFortNameNode(std::uint32_t token) const; // 검사도 실제 파생/자식 필드를 그대로 읽는다.

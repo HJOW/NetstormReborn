@@ -162,6 +162,12 @@ void MetaConnectionRuntime::ReceiveRootReply(std::span<const std::uint8_t> packe
     o::ReceiveRootLoginReply(packet,{local.State(),local.MetaZones().records,local.MetaRefresh()},hooks);
 }
 bool MetaConnectionRuntime::CallbackActive() const { return pumping_; } //현재 대여 중인 이 owner를 Native cleanup이 반납하지 않게 한다.
+//설명 모달이 닫히기 전 현재 자기 CS와 권한을 다시 읽고 같은 TCP11/가변 길이 관찰기를 사용한다.
+void MetaConnectionRuntime::SendBattleDescription(std::string_view description) {
+    NativeMetaDescriptionSendHooks hooks;hooks.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };
+    hooks.denied=[this] { tell_("MayNotBattleUpdate"); };hooks.send=[this](auto packet) { static_cast<void>(tcp_->SendMutable(11,packet)); };
+    SendNativeMetaBattleDescription(*client_.ChallengeGlobals(),client_.GameplayGlobals()->player.battleOwner,-1,description,0,hooks);
+}
 // 현재 자기 CS 기록을 먼저 캡처하고 원문처럼 로컬 flags를 실제 송신 관문보다 앞서 쓴다.
 void MetaConnectionRuntime::NotifyMetaMaster() {
     const auto own=client_.ChallengeGlobals()->Participant(client_.GameplayGlobals()->player.battleOwner);

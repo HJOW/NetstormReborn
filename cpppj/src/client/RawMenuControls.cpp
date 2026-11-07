@@ -55,6 +55,7 @@
 #include "client/ClientDotCommandGlobals.h"
 #include "client/TextEntryStorage.h"
 #include "client/SaveFortNameDialog.h"
+#include "client/NativeMetaBattleDescription.h" //설명 형제 창의 실제 CopyText/LF 확정을 공통 모달에 연결한다.
 #include "client/MultiplayerOptionsWindow.h" // State6의 일반 옵션도 기존 공통 자식과 입력/수명을 재사용한다.
 #include "client/HtmlInputDialog.h" //실제HTML입력확인은후속Tell을사용한다.
 #include "client/EditorFiles.h"
@@ -863,6 +864,13 @@ std::uint32_t RawMenuControls::ShowSendMoneyDialog(SaveFortNameDialogContext con
     EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("숫자 창 생성 안의 재귀 생성 미지원");s.saveFortBuilding=&context;
     struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } }; // 생성 성공/실패와 무관하게 지역 문맥 별칭만 반납한다.
     Reset reset{s};return s.saveFortDialog->ShowMoney(target);
+}
+//설명 창은 생성 중 문맥과 정상/예외 반납을 기존 공통 입력창 장치에 연결한다.
+std::uint32_t RawMenuControls::ShowBattleDescriptionDialog(SaveFortNameDialogContext context,std::optional<std::string_view> initial) {
+    auto& s=*impl_;if (!context.battleDescription || !context.editor.now || !context.translate) throw std::invalid_argument("전투 설명 창의 실제 문자/번역/확정 장치 누락");
+    EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("전투 설명 창 생성 안의 재귀 생성 미지원");s.saveFortBuilding=&context;
+    struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } }; //정상/예외 반환에서 지역 생성 문맥 별칭만 반납한다.
+    Reset reset{s};return s.saveFortDialog->ShowDescription(initial);
 }
 // 실제 반납 전까지 같은 root/자식 필드를 읽으며 등록 또는 별도 복사본으로 대체하지 않는다.
 const SaveFortNameDialogNode* RawMenuControls::SaveFortNameNode(std::uint32_t token) const { return Find(impl_->saveFortRoots,token); }

@@ -1,0 +1,63 @@
+{
+  "unit": 1135,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "be0ad21c / 20261108-103 CP",
+  "summary": "메타 설명 변경 f3를 실제 CS 문자열·기존 문자/클립보드·공통 모달과 71h/TCP11 확정에 연결했다. 권한 재조회·40BYTE/NUL·원문 후행 공백과 거부 안내를 보존했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1135\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12830720,
+      "sha256": "afffbcd7a383867040b432eacdd14692d9282a318e8c4988863a361901569ed2"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "b25cc264c9566b56f9496ebf0db63571c94ecc7a947aeff6e94dea8449417b65"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "004d3550/004d37a0/004c92c0/0042c040 전체 C/기계어·517c40 가상표·65번 command·f3 DWORD·실제 모달/CS/71h 관찰기 연결을 대조했다.",
+  "nativeEvidenceSha256": {
+    "004d62b0.c": "1895f01fd894f948e73b9b4486bed83af327308243efd67b82dbbb55694cbe22",
+    "004d62b0.asm": "054badcb9bd88942a9476cf5ee1b11b2e54699f6d09522a7b1f1d6fa795374bb",
+    "004d3550.c": "606e1b4c67f9d5d6ccdee61b5665597ee1a42d3bcfbd61f7750a1bf3559f1a39",
+    "004d3550.asm": "f4cbd68659b5b0e6e5719a3787e249ceaa60fdbb93acc3c95d834379963882d5",
+    "004d37a0.c": "99934e51e92a1c2531f5188d8ecc02ed824c5509b1ddb8e3c40339ff8f58d96a",
+    "004d37a0.asm": "e93982beee56ce85b58cadbd9e6dc0128b57c474f5a4eab450ad34583f7ee463",
+    "004c92c0.c": "2490ec2f34681267b3a2c300d9281c92d909a6487ca8d073add179d6e3ed307f",
+    "004c92c0.asm": "c87887dff6de2a64a8c05d1a4b495ab75538a7e2d97aa3fae4ae7aa7257be060",
+    "0042c040.c": "2d177b6e2cc0e3bf2473e6e2a1fefaf05943432815575a6c323c54d1a10f6211",
+    "0042c040.asm": "fcf970283ae0b56eb3f68def58ca2121431e97e7f792b1501dc2e824a64ffcf5"
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "remaining": [
+    "메타 월드 객체 입력/선택 caller·6b/6c 항해 소비자·나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ]
+}

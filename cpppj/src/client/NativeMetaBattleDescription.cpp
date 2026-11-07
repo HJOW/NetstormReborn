@@ -1,5 +1,9 @@
 // 원본 설명 수신은 복사한 길이의 마지막 바이트에 NUL을 쓰고 남은 꼬리를 지우지 않는다.
 #include "client/NativeMetaBattleDescription.h"
+#include "client/CurrentAllocationBytes.h" //가변 요청의 명시 필드 밖 바이트는 실제 할당 입력을 유지한다.
+#include <algorithm>
+#include <bit>
+#include <vector>
 #include <stdexcept>
 #include <string>
 
@@ -25,5 +29,22 @@ void ReceiveNativeMetaBattleDescription(ClientChallengeGlobals& challenge,std::s
         switch (value) { case 7:case 8:case 12:case 10:case 13:case 9:case 11:Put(battle,at,0x20,1);break;default:break; }++at;value=Read(battle,at,1);
     }
     Need(hooks.refreshObject)(Read(battle,0x20));Need(hooks.updateBattle)(Read(packet,4,1)); //실제 가상88 뒤에는 캐시한 첫 번호 대신 현재 packet 번호를 읽는다.
+}
+//원문 확정은 첫 LF를 자르고 NUL부터 isspace를 검사하므로 후행 공백은 남는다.
+std::string ConfirmNativeMetaBattleDescription(std::span<const char> copied) {
+    if (copied.size()<256) throw std::out_of_range("설명 확정의256BYTE 실제 복사 버퍼 부족");
+    std::array<char,256> text;std::copy_n(copied.begin(),256,text.begin());text.back()=0;
+    const auto end=std::find(text.begin(),text.end(),0);const auto line=std::find(text.begin(),end,'\n');
+    return {text.data(),static_cast<std::size_t>(line-text.begin())};
+}
+//권한 관문 뒤에만40BYTE 잘림/NUL을 작성하고 현재71h 관찰기/실제 전송을 호출한다.
+void SendNativeMetaBattleDescription(ClientChallengeGlobals& challenge,const std::uint32_t& localOwner,std::int32_t battle,std::optional<std::string_view> description,std::uint32_t parameter,const NativeMetaDescriptionSendHooks& hooks) {
+    if (battle<-1 || battle>=10) Need(hooks.assertion)("battleId >= -1 && battleId < CL_NUM_CHAL_BATTLES","\\Ns\\O\\Ch.cpp",0x580);
+    const auto own=challenge.Participant(localOwner);if (battle==-1) battle=std::bit_cast<std::int32_t>(Read(own,0xa4));
+    if (!Read(own,0xa4) || Read(own,0xa4)!=std::bit_cast<std::uint32_t>(battle) || !(Read(own,0x64,1)&4U)) { Need(hooks.denied)();return; }
+    if (!description) return;const auto text=description->substr(0,std::min(description->find('\0'),std::size_t{40}));
+    const auto length=text.size()+1;std::vector<std::uint8_t> packet(10+length);CurrentAllocationBytes(packet);
+    Put(packet,0,1,1);Put(packet,1,0x71,1);Put(packet,2,0,2);Put(packet,4,std::bit_cast<std::uint32_t>(battle),1);Put(packet,9,static_cast<std::uint32_t>(length),1);
+    std::copy(text.begin(),text.end(),packet.begin()+10);packet[10+text.size()]=0;Put(packet,5,parameter);Need(hooks.send)(packet);
 }
 }

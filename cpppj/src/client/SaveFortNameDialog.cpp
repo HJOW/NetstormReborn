@@ -87,6 +87,19 @@ std::uint32_t SaveFortNameDialog::ShowMoney(std::uint32_t target) const {
     root.baseWidth=std::max(root.baseWidth,Base(root.title).baseWidth+32.0F);root.width=root.baseWidth*root.scale;
     hooks_.attach(token,(static_cast<float>(state_.screenWidth)-root.baseWidth)*0.5F,(static_cast<float>(state_.screenHeight)-root.baseHeight)*0.5F,state_.entries[0],0);Need(hooks_.depth)(token,std::bit_cast<std::int32_t>(root.depth)-76);Need(hooks_.modal)(token);return token;
 }
+//설명 전용 형제는 원문65번 command·41BYTE 단일행·중앙 제목/두 버튼을 같은 공통 장치로 생성한다.
+std::uint32_t SaveFortNameDialog::ShowDescription(std::optional<std::string_view> initial) const {
+    const auto token=Need(hooks_.allocate)(0xd4);Need(hooks_.decoration)(token,200.0F,100.0F);auto& root=Node(token);root.vtable=0x00517c40U;root.command=65;root.canCancel=1;
+    const auto text=initial ? std::string(*initial):Need(hooks_.translate)("Your Description Here");
+    root.entry=hooks_.allocate(0x110);Need(hooks_.textEntry)(root.entry,static_cast<std::int32_t>(static_cast<double>(root.baseWidth)*static_cast<double>(0.8F)),18,text);
+    auto* entry=Need(hooks_.entry)(root.entry);if (!entry) throw std::logic_error("설명 창의 실제 편집 자식 없음");entry->maxLength=0x29;entry->multiline=0;
+    Need(hooks_.attach)(root.entry,(root.baseWidth-Base(root.entry).baseWidth)*0.5F,45.0F,token,0);
+    const auto border=hooks_.allocate(0xb8);Need(hooks_.background)(border,Base(root.entry).baseWidth+8.0F,Base(root.entry).baseHeight+4.0F);hooks_.attach(border,Base(root.entry).x-4.0F,Base(root.entry).y-2.0F,token,0);
+    const auto label=Need(hooks_.translate)("New battle description:");root.title=hooks_.allocate(0xa4);Need(hooks_.inputTitle)(root.title,Base(root.entry).x,label);Base(root.title).alignFlags|=4U;hooks_.attach(root.title,Base(root.entry).x,10.0F,token,0);
+    Need(hooks_.fitTitle)(root.title);Need(hooks_.push)(root.title);Base(root.title).alignFlags=4U;hooks_.attach(root.title,Base(root.title).x,Base(root.title).y,token,2);
+    Buttons(token,Base(root.entry).y+Base(root.entry).baseHeight+15.0F);root.baseHeight+=4.0F;root.height=root.baseHeight*root.scale;root.baseWidth=std::max(root.baseWidth,Base(root.title).baseWidth+32.0F);root.width=root.baseWidth*root.scale;
+    hooks_.attach(token,(static_cast<float>(state_.screenWidth)-root.baseWidth)*0.5F,(static_cast<float>(state_.screenHeight)-root.baseHeight)*0.5F,state_.entries[0],0);Need(hooks_.depth)(token,std::bit_cast<std::int32_t>(root.depth)-76);Need(hooks_.modal)(token);return token;
+}
 //HTML Input은모드1만문자안내이며다른모드는숫자안내를초기실제문자열로쓴다.숫자필터를추가하지않는다.
 std::uint32_t SaveFortNameDialog::ShowInput(std::uint32_t mode,std::string_view title,std::string_view continuation) const {
     continuation=continuation.substr(0,continuation.find('\0'));if (continuation.size()>=80) throw std::length_error("원문 HTML 입력 후속 섹션80BYTE 범위");
