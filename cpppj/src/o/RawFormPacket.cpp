@@ -62,8 +62,13 @@ std::uint16_t RawFormPacket::WriteData(Sid form,std::span<std::uint8_t> packet) 
     Put(packet,14,Read(raw,16,2),2);packet[16]=raw[patch ? 23U : 22U];packet[17]=raw[11];return 18;
 }
 // 원본 wrapper의 세 번째 인자는 쓰지 않고 네 번째 flags의 상위 WORD만 소비한다.
-std::uint16_t RawFormPacket::WriteDeletion(Sid sid,std::uint32_t flags,std::span<std::uint8_t> packet) const {
-    ServerSid(sid.value);Header(packet,headers_.deletion,8);Put(packet,4,sid.value,2);
+std::uint16_t RawFormPacket::WriteDeletion(Sid sid,std::uint32_t flags,std::span<std::uint8_t> packet,
+    const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion) const {
+    Header(packet,headers_.deletion,8); //004ac340은 진단보다 먼저 현재 헤더를 실제 버퍼에 쓴다.
+    if (sid.value>=5 && sid.value<pool_.Layout().serverFirst) {
+        if (assertion) assertion("!isClientSid()","\\Ns\\O\\Squid.cpp",0x2f6);else ServerSid(sid.value); // 독립 호출은 기존 명시 오류를 유지하고 실제 Client 진단은 정상 복귀를 허용한다.
+    }
+    Put(packet,4,sid.value,2);
     std::uint16_t token=0; // 현재 SID와 일치하지 않으면 원본의 최근 표식 소비는0이다.
     if (stamp_.sid==sid.value) { token=static_cast<std::uint16_t>(stamp_.token);stamp_.sid=0; }
     Put(packet,6,((flags>>16)&0xfff0U)|token,2);return 8;

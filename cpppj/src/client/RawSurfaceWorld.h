@@ -221,6 +221,7 @@ public:
     RawWorldCore Core();
     const std::shared_ptr<RawSurfaceStorage>& Storage() const; // 미니맵도 Session이 아닌 동일 물리 소유자를 직접 빌린다.
     void SynchronizePeer(std::uint32_t owner); //004a7350의 실제 같은 월드/전송/공간 재등록을 참가자별로 실행한다.
+    void TransmitDeletion(o::Sid sid,std::uint32_t flags); // 공통 삭제의 -1/-2/0/flags를 같은 현재 가상 writer·버퍼·방송 부모로 전달한다.
     //원본옵션의TYPE+c4 쓰기가같은월드의188TYPE를직접사용하게한다. 새사본을만들지않는다.
     std::span<o::RiftTypeRecord> MutableTypes();
     // 최초객체/Runtime등록전에원본모드의실제소유권·연결색·다리붕괴소비자를함께설정한다.

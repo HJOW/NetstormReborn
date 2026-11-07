@@ -1,0 +1,170 @@
+{
+  "unit": 1044,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "공통 전송의 삭제 선택자와 실제 현재 writer/버퍼/방송 부모 통합",
+  "sourceFunctions1078": [
+    "004ac260",
+    "004ac340",
+    "004ac560",
+    "004af780",
+    "00433100",
+    "004a7350",
+    "004a6d00"
+  ],
+  "implemented": [
+    "현재 client SID 진단 뒤 selector -2의 현재+58 선택",
+    "나머지 selector의+54 및 writer 인자 보존",
+    "원문 첫 인자 target으로 현재 연결/방송 분배",
+    "현재+58 writer에서 헤더→client SID 진단→SID→표식→상위 flags 순서",
+    "실제 Session 삭제 효과에서 World의 같은 공통 송신 부모 사용"
+  ],
+  "static": {
+    "deletionVtables": {
+      "0x501dd0": "0x4ac340",
+      "0x501ea0": "0x4ac340",
+      "0x502370": "0x4ac340",
+      "0x502448": "0x4ac340",
+      "0x502510": "0x4ac340",
+      "0x5025d8": "0x4ac340",
+      "0x5026a0": "0x4ac340",
+      "0x502778": "0x4ac340",
+      "0x502840": "0x4ac340",
+      "0x502908": "0x4ac340",
+      "0x5029d0": "0x4ac340",
+      "0x502aa8": "0x4ac340",
+      "0x502b70": "0x4ac340",
+      "0x502c38": "0x4ac340",
+      "0x502cf0": "0x4ac340",
+      "0x502db0": "0x4ac340",
+      "0x502e68": "0x4ac340",
+      "0x502f30": "0x4ac340",
+      "0x502ff8": "0x4ac340",
+      "0x5030c0": "0x4ac340",
+      "0x503188": "0x4ac340",
+      "0x503360": "0x4ac340",
+      "0x5034c8": "0x4ac340",
+      "0x503d80": "0x4ac340",
+      "0x503e50": "0x4ac340",
+      "0x503f20": "0x4ac340",
+      "0x503ff0": "0x4ac340",
+      "0x5040c0": "0x4ac340",
+      "0x504198": "0x4ac340",
+      "0x506d98": "0x4ac340",
+      "0x506e50": "0x4ac340",
+      "0x506f08": "0x4ac340",
+      "0x5070c0": "0x4ac340",
+      "0x5075d8": "0x4ac340",
+      "0x5076b8": "0x4ac340",
+      "0x507770": "0x4ac340",
+      "0x507950": "0x4ac340",
+      "0x508cc8": "0x4ac340",
+      "0x509148": "0x4ac340",
+      "0x509210": "0x4ac340",
+      "0x5092d0": "0x4ac340",
+      "0x509388": "0x4ac340",
+      "0x509470": "0x4ac340",
+      "0x5096a0": "0x4ac340",
+      "0x509758": "0x4ac340",
+      "0x509810": "0x4ac340",
+      "0x509930": "0x4ac340",
+      "0x5099e8": "0x4ac340",
+      "0x509aa0": "0x4ac340",
+      "0x509b98": "0x4ac340",
+      "0x50a050": "0x4ac340",
+      "0x50a1e8": "0x4ac340",
+      "0x50a388": "0x4ac340",
+      "0x50a748": "0x4ac340",
+      "0x50a820": "0x4ac340",
+      "0x50a8e8": "0x4ac340",
+      "0x50b570": "0x4ac340",
+      "0x50b6e8": "0x4ac340",
+      "0x50b7c0": "0x4ac340",
+      "0x50b888": "0x4ac340",
+      "0x50b9b8": "0x4ac340",
+      "0x50bad0": "0x4ac340",
+      "0x50c3b0": "0x4ac340",
+      "0x50c9f0": "0x4ac340",
+      "0x50cc08": "0x4ac340",
+      "0x50da88": "0x4ac340",
+      "0x50db78": "0x4ac340",
+      "0x50dc30": "0x4ac340",
+      "0x50e568": "0x4ac340",
+      "0x50e668": "0x4ac340",
+      "0x50e738": "0x4ac340",
+      "0x50e888": "0x4ac340",
+      "0x50e940": "0x4ac340",
+      "0x50ea08": "0x4ac340",
+      "0x50ead0": "0x4ac340",
+      "0x50eb98": "0x4ac340",
+      "0x50ee08": "0x4ac340",
+      "0x50f210": "0x4ac340",
+      "0x50f540": "0x4ac340",
+      "0x512098": "0x4ac340",
+      "0x512110": "0x4ac340",
+      "0x512188": "0x4ac340",
+      "0x512208": "0x4ac340",
+      "0x5196f0": "0x4ac340",
+      "0x5197a8": "0x4ac340",
+      "0x519860": "0x4ac340",
+      "0x519918": "0x4ac340"
+    },
+    "deletionWriterCount": 1,
+    "directCallers": [
+      {
+        "function": "FUN_004a6d00",
+        "callSites": 2
+      },
+      {
+        "function": "FUN_004a7350",
+        "callSites": 2
+      },
+      {
+        "function": "FUN_004ac560",
+        "callSites": 1
+      },
+      {
+        "function": "FUN_004af780",
+        "callSites": 1
+      }
+    ],
+    "syncParentsAlreadyIntegrated": 988,
+    "syncOwnerResetModes": [
+      1,
+      0
+    ],
+    "syncPermitClearedOnlyAtNormalEnd": true,
+    "decompilerOutputsChanged": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1044\\build.log",
+    "exeSize": 12146176,
+    "exeSha256": "b1e8330248bb282f957b9e5b2487d6116099d003acbaa43b7d85c298d586007c"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1044\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remaining": [
+    "나머지 프로세스 writer/decoder 감사",
+    "LAN 일반 프레임/메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

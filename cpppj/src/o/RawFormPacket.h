@@ -1,6 +1,8 @@
 // 원본 Form 가상+54와 공통 삭제 가상+58의 실제 패킷을 같은 raw 슬롯에서 작성한다.
 #pragma once
 #include "o/SidPool.h"
+#include <functional>
+#include <string_view>
 
 namespace netstorm::o {
 // 원본 등록 표에서 writer가 호출마다 읽는 헤더 필드다. length는 반환 크기와 별개다.
@@ -27,8 +29,9 @@ public:
     // 반환값은13/18이며 버퍼의 그 뒤 바이트는 보존한다. 미복원 다른 VT는 거부한다.
     std::uint16_t WriteData(Sid form,std::span<std::uint8_t> packet) const;
     // 실제 공통+58에 도달한 SID를 쓴다. flags>>16의fff0과 최근 표식 WORD를 합친다.
-    // 서버 번호/버퍼를 먼저 검사하며 정상 반환은8이다. 호출자가 파생+58 분배를 확인해야 한다.
-    std::uint16_t WriteDeletion(Sid sid,std::uint32_t flags,std::span<std::uint8_t> packet) const;
+    // 헤더 작성 뒤 client SID 진단을 호출하고 정상 복귀하면 계속한다. 호출자가 현재+58 분배를 확인한다.
+    std::uint16_t WriteDeletion(Sid sid,std::uint32_t flags,std::span<std::uint8_t> packet,
+        const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion={}) const;
 private:
     std::uint16_t Parent(Sid form) const; // 실제 Form VT의+0 getter와 같은+10 WORD다. 상태 필터는 추가하지 않는다.
     void ServerSid(std::uint16_t sid) const; // 원본의 client SID5..serverFirst-1 assert 경로를 거부한다.

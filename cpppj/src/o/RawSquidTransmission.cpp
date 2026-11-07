@@ -55,9 +55,14 @@ std::int32_t RawSquidTransmission::Compress(std::span<const std::uint8_t> input)
     }
     return static_cast<std::int32_t>(length);
 }
-void RawSquidTransmission::Transmit(Sid sid,std::int32_t target,std::uint32_t writerArgument) const { //004ac260의 selector!=-2 경로이며 네 번째 flags는 이 분기에서 사용하지 않는다.
+std::int32_t RawSquidTransmission::WriteDeletion(Sid sid,std::uint32_t flags) const { // 현재 가상+58은 자산83개/네 Form 모두004ac340임을 보호 PE에서 대조했다.
+    const auto table=WireRead(pool_.Slot(sid),0,4);
+    if (!SquidFactory::SupportsConstructedVtable(pool_.Edition(),table) && table!=0x512110U && table!=0x512098U && table!=0x512188U && table!=0x512208U) throw std::logic_error("현재 Squid 삭제 가상+58 미복원");
+    RawFormPacket forms(pool_,state_.forms,state_.deletion);return forms.WriteDeletion(sid,flags,state_.buffer,hooks_.assertion);
+}
+void RawSquidTransmission::Transmit(Sid sid,std::int32_t target,std::int32_t selector,std::uint32_t writerArgument,std::uint32_t flags) const { // 공통 진단 뒤 -2만+58(buffer,인자,flags), 나머지는+54(buffer,인자)를 실행한다.
     if (!state_.clientSidAllowed && sid.value>=5 && sid.value<15000) WireNeed(hooks_.assertion)("!isClientSid()","\\Ns\\O\\Squid.cpp",0x2d8);
-    const auto size=Write(sid,writerArgument);
+    const auto size=selector==-2 ? WriteDeletion(sid,flags) : Write(sid,writerArgument); // 공통+58은 writerArgument를 사용하지 않으며 target은 writer 반환 뒤에도 첫 인자다.
     if (size>=2048) WireNeed(hooks_.assertion)("transmitSize < TRANSMIT_BUFFER_SIZE","\\Ns\\O\\Squid.cpp",0x2e3);
     if (size>0) {
         if (static_cast<std::size_t>(size)>state_.buffer.size()) throw std::out_of_range("Squid송신공통버퍼범위");const auto packet=std::span<const std::uint8_t>(state_.buffer).first(static_cast<std::size_t>(size));
@@ -65,9 +70,9 @@ void RawSquidTransmission::Transmit(Sid sid,std::int32_t target,std::uint32_t wr
     }
 }
 // 기존 Pop의 일반 방송/인자0 계약은 같은 공통 몸체를 사용한다.
-void RawSquidTransmission::Pop(Sid sid,std::uint32_t) const { Transmit(sid,-1,0); }
+void RawSquidTransmission::Pop(Sid sid,std::uint32_t flags) const { Transmit(sid,-1,-1,0,flags); }
 // 동기화의 대상 번호/인자1을 보존하며 호출 이후 현재 연결을 다시 조회한다.
-void RawSquidTransmission::SendTo(Sid sid,std::int32_t target,std::uint32_t writerArgument) const { Transmit(sid,target,writerArgument); }
+void RawSquidTransmission::SendTo(Sid sid,std::int32_t target,std::uint32_t writerArgument) const { Transmit(sid,target,-3,writerArgument,1); }
 // 압축 모드가 같아도 원문처럼 owner 캐시를 항상 초기화한다.
 void RawSquidTransmission::SameOwnerMode(std::uint32_t mode) const { state_.sameOwnerEnabled=mode;state_.lastOwner=0xffffff9dU; }
 }

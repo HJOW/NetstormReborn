@@ -39,10 +39,11 @@ public:
     RawSquidTransmission(const SidPool& pool,RawSquidTransmissionState& state,RawSquidTransmissionHooks hooks); // 같은 물리와 장기 장치만 빌린다.
     void Pop(Sid sid,std::uint32_t flags) const; //004ac260의(-1,-1,0,flags) 호출이며 일반+54에는 원문 인자0을 전달한다.
     void SendTo(Sid sid,std::int32_t target,std::uint32_t writerArgument) const; //004ac260의 selector=-3/가상+54 경로다. 현재 writer 인자와 대상 연결을 사용하며 방송으로 대체하지 않는다.
+    void Transmit(Sid sid,std::int32_t target,std::int32_t selector,std::uint32_t writerArgument,std::uint32_t flags) const; //004ac260의 네 인자를 보존한다. -2만 현재+58에 flags까지 전달하고 나머지는+54다.
     void SameOwnerMode(std::uint32_t mode) const; //00433100: 모드를 쓰고 마지막 owner를 signed -99로 재설정한다.
 private:
     std::int32_t Write(Sid sid,std::uint32_t writerArgument) const; // 현재+54와 실제 ProcessForm writer 인자를 선택해 원문 크기를 반환한다.
-    void Transmit(Sid sid,std::int32_t target,std::uint32_t writerArgument) const; // 공통 client SID/버퍼 진단 뒤 양수 크기의 대상별 송신만 수행한다.
+    std::int32_t WriteDeletion(Sid sid,std::uint32_t flags) const; // 현재+58이 공통004ac340인87VT를 분배하고 같은 헤더/삭제 표식을 소비한다.
     std::int32_t Compress(std::span<const std::uint8_t> input) const; //00432fe0의16필드 인코딩과 현재 owner/누적을 실행한다.
     const SidPool& pool_; // 현재 슬롯과 현재 서버를 조회하는 같은 풀이다.
     RawSquidTransmissionState& state_; // 실제 공통 버퍼/헤더/압축 전역이다.

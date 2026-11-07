@@ -315,6 +315,10 @@ void RawSurfaceWorld::SynchronizePeer(std::uint32_t owner) {
     hooks.sharedRegularType=[&s] { return s.storage->GameAux()->SharedRegularProcessType(); };hooks.unpop=[this](auto sid,auto flags) { Unpop(sid,flags); };hooks.repop=[this](auto sid,auto flags) { Repop(sid,flags); };
     o::RawPeerWorldSync(s.pool,s.types,s.storage->GameAux()->SquidTransmission(),*s.squidTransmission,std::move(hooks)).Synchronize(owner);
 }
+// 실제 삭제도 Activate/재동기화와 같은004ac260의 진단/양수 크기/현재 대상 송신을 사용한다.
+void RawSurfaceWorld::TransmitDeletion(o::Sid sid,std::uint32_t flags) {
+    auto& s=*impl_;if (!s.squidTransmission) throw std::logic_error("현재 판본의 실제 삭제 전송기 미설치");s.squidTransmission->Transmit(sid,-1,-2,0,flags);
+}
 // Session의globals만바꾸고private BridgeDecayMode.editor를남기지않는다.
 void RawSurfaceWorld::ConfigureInstallModes(bool fort,bool battle,bool challenge,bool editor) {
     auto& s=*impl_;if (s.runtimeBound || s.loading || s.loaded || s.pool.FreeCount()!=s.pool.Capacity()-5) throw std::logic_error("실제설치모드는첫객체/Runtime등록전에필요");

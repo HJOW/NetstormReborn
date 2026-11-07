@@ -1477,6 +1477,7 @@ struct RawCampaignSession::Impl {
         // 공통 삭제의 -1/-2/0/flags 요청은 실제+58을 실행한다. 다른 파생/선택 효과는 실제 상위 소비자로 전달한다.
         worldHooks.assets.emit=[this,other=services.deletion.emit](const SquidDestroyEvent& event) {
             if (event.effect==SquidDestroyEffect::Transmit) {
+                if (core.pool.Edition()==OriginalEdition::Patch1078) { world.TransmitDeletion(event.sid,event.flags);return; } // 같은 현재 VT+58과 공통 송신 부모를 사용한다. CD는 기존 별도 호환 writer를 유지한다.
                 const auto size=formWriter->WriteDeletion(event.sid,event.flags,formBuffer); // 아직 반납 전인 같은 SID다.
                 services.formPacket(std::span<const std::uint8_t>(formBuffer).first(size));return;
             }
