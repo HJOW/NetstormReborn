@@ -23,7 +23,7 @@ class ChallengeRuntime final { // 같은 CCh/전송·Root callback보다 오래 
 public:
     ChallengeRuntime(ConnectionState& state,TransceiverTransport& transport,ChallengeStore& challenges,Options& options,ChallengeMessages& messages,ClockState& clock,Random& random,ChallengeRuntimeHooks hooks); // 생성은 서버/소켓/파일을 열지 않으며 같은 프로세스 시계/난수를 빌린다.
     ChallengeRuntime(const ChallengeRuntime&)=delete;ChallengeRuntime& operator=(const ChallengeRuntime&)=delete; // 현재 전역/전역 scratch/콜백 this를 복제하지 않는다.
-    void InstallPacketObservers(); // 실제 CCh 송신 관찰기·버전/고정 길이와41h nullable 수신을 명시 등록한다. 수신 버퍼는 원문처럼 쓰기 가능한 전송 물리여야 한다.
+    void InstallPacketObservers(); // 실제 CCh 송신 관찰기·버전/길이와10h/41h/67h/68h/71h nullable 수신을 등록한다. 입력은 원문처럼 쓰기 가능한 전송 물리여야 한다.
     void Login(std::uint32_t challenge,std::uint32_t source,std::span<std::uint8_t> request); //0044e940의 실제 참가자 준비/명단·응답·뉴스/길드 이름 전체 부모다.
     void EndParticipant(std::uint32_t challenge,std::uint32_t participant); //0044e0d0의 Root 통지/전투 재선택·삭제/현재 socket close·명단 제거다.
     std::int32_t Tick(std::uint32_t challenge); //004581e0의 현재 전투 재생성/가상 참가자·명단 송신을 수행하고 원문처럼1을 반환한다.
@@ -42,6 +42,10 @@ private:
     void ReceiveChat(std::uint32_t sender,std::span<std::uint8_t> packet); //00476880의 종료/CHAL 진단·signed 존/현재 토큰 관문을 거쳐 같은41h 물리를 전달한다.
     void Chat(std::uint32_t challenge,std::uint32_t participant,std::span<std::uint8_t> packet); //004512b0의 명령·줄/빈도 제한·직접 수신자/감시자 전달이며 입력 패킷을 제자리에서 수정한다.
     bool ChatCommand(std::uint32_t challenge,std::uint32_t participant,std::string_view text); //00451160의 대소문자 구분 부분 검색으로 .test/.test1을 찾으면 실제 특별41h 응답을 보낸다.
+    void ReceiveBattleControl(std::uint8_t type,std::uint32_t sender,std::span<std::uint8_t> packet); //10h/67h/68h/71h의 각각 원문 진단 줄과 현재 signed 존 관문 뒤 같은 CCh 몸체를 호출한다.
+    void BattleOptions(std::uint32_t challenge,std::uint32_t participant,std::span<std::uint8_t> packet); //0044d6d0의 소속/master 확인·실제 옵션 바이트/bit2 해제·공유22h와 입력67h 전송이다.
+    void QueryBattleOptions(std::uint32_t challenge,std::uint32_t participant,std::span<const std::uint8_t> packet); //0044e580은 요청 전투의 현재 valid 뒤 항상160BYTE를67h로 응답한다. 소속/권한 검사를 추가하지 않는다.
+    void UpdateBattleDescription(std::uint32_t challenge,std::uint32_t participant,std::span<std::uint8_t> packet); //0044dd90의 관리자 예외·현재 자기 전투 설명/길이0 쓰기와 입력71h 전체 통지를 보존한다.
     void InitializePlayer(std::uint32_t challenge,std::uint32_t participant,std::span<const std::uint8_t> request); //0044c7b0/후속 실제 버전·주소 필드를 현재 참가자에 쓴다.
     void DeletePlayer(std::uint32_t challenge,std::uint32_t participant); //0044d550/0044c9a0의 전투 소속 정리·로그/188BYTE 지우기다.
     void RecalculateBattleVersions(std::uint32_t challenge,std::uint32_t battle); //0044d130의 현재8참가자+b4/+b2 집계다.

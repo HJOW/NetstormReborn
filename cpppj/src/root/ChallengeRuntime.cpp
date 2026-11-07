@@ -16,9 +16,9 @@ void ChallengeRuntime::Broadcast(std::uint32_t challenge,std::span<std::uint8_t>
     }
 }
 void ChallengeRuntime::SendBattle(std::uint32_t challenge,std::uint32_t battle,std::span<std::uint8_t> packet) {
-    if (!(Read(Battle(challenge,battle),0)&1U)) return;
+    const auto at=8U+battle*0x158U;auto bytes=challenges_.Bytes(challenge);if (!(Read(bytes,at)&1U)) return; // 원문은 논리10칸 검사가 없으므로 DWORD 주소 계산 뒤 실제 CCh 물리만 확인한다.
     for (std::size_t slot=0;slot<8;++slot) { // 현재 전투8칸에서 매번 참가자 번호를 다시 읽는다.
-        const auto participant=Read(Battle(challenge,battle),0x20+slot*4);if (participant) Send(challenge,participant,packet);
+        const auto participant=Read(bytes,at+0x20U+slot*4);if (participant) Send(challenge,participant,packet);
     }
 }
 void ChallengeRuntime::Observe(std::uint8_t type,std::span<std::uint8_t> packet,std::uint32_t sending) {
@@ -29,6 +29,7 @@ void ChallengeRuntime::Observe(std::uint8_t type,std::span<std::uint8_t> packet,
     case 0x21:check(Read(packet,4,1)==255,"numPlayers != (unsigned char)-1",1411);Put(packet,2,Read(packet,4,1)+5,2);break;
     case 0x26:check(Read(packet,4,2)==65535,"modLen != (unsigned short)-1",1512);check(Read(packet,6,1)==255,"contactLen != (unsigned char)-1",1513);Put(packet,2,Read(packet,4,2)+9+Read(packet,6,1),2);break;
     case 0x41:check(Read(packet,10,2)==65535,"nameLen != (short)-1",2074);check(Read(packet,14,1)==255,"addrLen != (unsigned char)-1",2076);Put(packet,2,std::uint32_t(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(Read(packet,10,2))))+15U+std::uint32_t(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(Read(packet,12,2))))+Read(packet,14,1)*4,2);break; // 원문 bufferLen 관문은 WORD와ffffffff 비교여서 항상 거짓이다.
+    case 0x67:check(Read(packet,5,2)==65535,"dataLen != (unsigned short)-1",2564);Put(packet,2,Read(packet,5,2)+7U,2);break; // signed WORD 더하기도 최종 하위WORD는 같으며 원문은 다른 필드를 쓰지 않는다.
     case 0x71:check(Read(packet,9,1)==255,"descLen != (unsigned char)-1",2784);Put(packet,2,Read(packet,9,1)+10,2);break;
     case 0x7b:check(Read(packet,9,1)==255,"addrLen != (char)-1",2981);Put(packet,2,static_cast<std::uint16_t>(std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(Read(packet,9,1)))+10),2);break;
     default:break;
@@ -36,10 +37,13 @@ void ChallengeRuntime::Observe(std::uint8_t type,std::span<std::uint8_t> packet,
 }
 void ChallengeRuntime::InstallPacketObservers() {
     auto& dispatch=transport_.PacketHandlers();
-    for (const auto type:std::array<std::uint8_t,10>{0x17,0x1d,0x20,0x21,0x22,0x23,0x26,0x41,0x71,0x7b}) { // 원문 실제 송신 타입만 등록하며 기존 receiver를 바꾸지 않는다.
+    for (const auto type:std::array<std::uint8_t,13>{0x10,0x17,0x1d,0x20,0x21,0x22,0x23,0x26,0x41,0x67,0x68,0x71,0x7b}) { // 원문 실제 송신 타입만 등록하며 기존 receiver를 바꾸지 않는다.10h/68h 관찰기는 빈 원문 몸체다.
         dispatch.ObservePacket(type,[this,type](auto packet,auto sending) { Observe(type,packet,sending); });dispatch.Version(type,1,0); // 원문41h 등록은1이며 실제 작성기의version3과 별개다. 불일치 정책0도 보존한다.
     }
     dispatch.RequireLength(0x41,0xffff);dispatch.RegisterDirect(0x41,[this](auto sender,auto*,auto packet) { ReceiveChat(sender,{const_cast<std::uint8_t*>(packet.data()),packet.size()}); }); // 공통 프레임과 Root 직접 호출의 원래 mutable 버퍼를 같은 주소로 빌린다. NULL 연결은 읽지 않는다.
+    for (const auto type:std::array<std::uint8_t,4>{0x10,0x67,0x68,0x71}) { // 네 원문 제어 수신기를 현재 표에 등록하며 같은 mutable 전송 물리와 NULL 연결을 지원한다.
+        dispatch.RequireLength(type,type==0x10 ? 8:(type==0x68 ? 5:0xffff));dispatch.RegisterDirect(type,[this,type](auto sender,auto*,auto packet) { ReceiveBattleControl(type,sender,{const_cast<std::uint8_t*>(packet.data()),packet.size()}); });
+    }
     dispatch.Observe(0x88,{});dispatch.Version(0x88,1,0);dispatch.RequireLength(0x88,98); // 별칭의 실제 고정98BYTE다.
 }
 void ChallengeRuntime::EndParticipant(std::uint32_t challenge,std::uint32_t participant) {
