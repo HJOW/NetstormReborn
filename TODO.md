@@ -7,6 +7,10 @@
 
 (작업 전 AGENTS.md 및 LEFT_JOBS.dotnetpj.md 를 다시 읽고 진행) dotnetpj 프로젝트를 LEFT_JOBS.dotnetpj.md 에 기재된 내용 모두 완료될 때까지 진행한다. (LEFT_JOBS.dotnetpj.md 에 작업 순서 및 우선순위도 명시되어 있으니 참고한다.) 단 dotnetpj 실제 실행하여 테스트 시 사제 포획/희생, 특정 적 공격, 시나리오 승리를 재현해야 하는 테스트는 건너뛴다. (나중에 사용자가 직접 플레이해 확인하도록 한다.) 그리고 멀티플레이어 관련 기능도 사전 구현 (테스트 없이 cpppj 및 기존 프로그램 디컴파일만 참고하여 일단 작업만 수행하고 테스트는 건너 뜀) 한다. 단위마다 LEFT_JOBS.dotnetpj.md 를 갱신하여 중도에 작업 중단하는 것에 대비하도록 하며, 작업 단위마다 git 커밋을 수행한다. (커밋 메시지는 AGENTS.md 문서에 적힌 규칙대로 적는다. 커밋 실패하더라도 작업은 이어서 진행한다.)
 
+## webpj
+
+AGENTS.md, LEFT_JOBS.webpj.md 를 읽고 LEFT_JOBS.webpj.md 에 기재된 작업들을 모두 완료한다. LEFT_JOBS.webpj.md 에 기재된 작업단위가 하나씩 완료될 때마다 문서 내용을 갱신하고 git 에 커밋을 한다. (커밋 메시지는 AGENTS.md 에 기재된 관련 사항을 따른다.) 동시에 cpppj 도 진행 중이므로 cpppj 와 직접적으로 관련된 파일은 수정하지 않는다.
+
 # 참고사항
 
 작업 전 AGENTS.md 를 먼저 읽고, LEFT_JOBS.md (cpppj 작업 시), LEFT_JOBS.dotnetpj.md (dotnetpj 작업 시), LEFT_JOBS.webpj.md (webpj 작업 시) 내용을 반드시 읽고 진행할 것 !
