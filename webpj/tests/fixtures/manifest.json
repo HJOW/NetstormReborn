@@ -2471,7 +2471,7 @@
       "bytes": 1175828,
       "lines": 3002,
       "fixtureCommit": "218f2358",
-      "webCommit": "worktree",
+      "webCommit": "e3035fb9",
       "cpppjBasis": {
         "cpppj/src/o/SquidOwner.cpp": "5b98047b",
         "cpppj/src/o/RawCommonOwner.cpp": "5b98047b",
@@ -2502,9 +2502,128 @@
       "bytes": 11032,
       "lines": 96,
       "fixtureCommit": "6fabde2e",
-      "webCommit": "worktree",
+      "webCommit": "e3035fb9",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidLevel.cpp": "90ffe7e5"
+      }
+    },
+    {
+      "id": "player-core-records",
+      "path": "cpppj/tests/fixtures/player-core-records-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 PE 관측: Player 9×16 BYTE Core 장부와 별도 Core 10 BYTE 초기화·metadata 쓰기(장부 앞 64/뒤 48 인접 물리 포함 256 BYTE 창)",
+      "consumers": [
+        "webpj/tests/player-core-records.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-core-records.js"
+      ],
+      "unit": "WB04-E3",
+      "doc": "docs/webpj-player-core-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerCoreRecords.cpp"
+      ],
+      "scope": "192행(판본 열 없는 10.78 전용 표). 색 표 6관측은 귀속 감사로만 읽음",
+      "text": true,
+      "sha256": "60e881b56bf325378e83459de04d938aa6a12f5f3c4f5151934093991d6a00a2",
+      "bytes": 139876,
+      "lines": 193,
+      "fixtureCommit": "adb9739e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerCoreRecords.cpp": "adb9739e"
+      }
+    },
+    {
+      "id": "player-core-data",
+      "path": "cpppj/tests/fixtures/player-core-data-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 PE 관측: 현재 CoreData 조회·선택/정리의 포인터·캐시·부분 쓰기·가변 alias(양 x87 정밀도 제어값)",
+      "consumers": [
+        "webpj/tests/player-core-data.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-core-data.js"
+      ],
+      "unit": "WB04-E3",
+      "doc": "docs/webpj-player-core-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerCoreData.cpp"
+      ],
+      "scope": "804행(639/895 두 제어값 × 402). 복원(Restore)은 이 표에 없음",
+      "text": true,
+      "sha256": "212746b781f029872cac42da93bfd5cbda5f62ca6048dfc296f0c4e6c7d28f43",
+      "bytes": 2707406,
+      "lines": 805,
+      "fixtureCommit": "2ede4027",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerCoreData.cpp": "79c3a581"
+      }
+    },
+    {
+      "id": "player-core-refresh",
+      "path": "cpppj/tests/fixtures/player-core-refresh-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 PE 관측: Core 기술 bit 와 다이스 count 하한 갱신(Core 세 벌·Pool 두 벌 전체와 하위 호출 trace)",
+      "consumers": [
+        "webpj/tests/player-core-refresh.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-core-refresh.js",
+        "webpj/www/core/raw-player-core-data.js"
+      ],
+      "unit": "WB04-E3",
+      "doc": "docs/webpj-player-core-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerCoreRefresh.cpp",
+        "cpppj/src/o/RawPlayerCoreData.cpp"
+      ],
+      "scope": "642행 중 지원 618행. 논리 span 쓰기 정지 24행(fault)은 store 커밋의 별도 관측이라 제외",
+      "text": true,
+      "sha256": "db0ba92699032313ac1fc8b72d7b37c97c7dbc65f3bcc8bfb07d2dbfaabc734e",
+      "bytes": 1160765,
+      "lines": 643,
+      "fixtureCommit": "d207940c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerCoreRefresh.cpp": "c1b8fbf4",
+        "cpppj/src/o/RawPlayerCoreData.cpp": "79c3a581"
+      }
+    },
+    {
+      "id": "player-core-refresh-guard",
+      "path": "cpppj/tests/fixtures/player-core-refresh-guard-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 PE 관측: Core 갱신의 page 끝 16 BYTE guard 경계(getter 중복 호출 trace 포함)",
+      "consumers": [
+        "webpj/tests/player-core-refresh.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-core-refresh.js"
+      ],
+      "unit": "WB04-E3",
+      "doc": "docs/webpj-player-core-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerCoreRefresh.cpp"
+      ],
+      "scope": "20행 중 지원 16행. Unicorn 부분 store 4행(length 9)은 host 단일 store 거부와 같다고 하지 않아 제외",
+      "text": true,
+      "sha256": "5bfcc35714f2f3ea93256a97ef777032b8f9f0f73861f85bed1c29208e4b4aa2",
+      "bytes": 1983,
+      "lines": 21,
+      "fixtureCommit": "d207940c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerCoreRefresh.cpp": "c1b8fbf4"
       }
     }
   ]
