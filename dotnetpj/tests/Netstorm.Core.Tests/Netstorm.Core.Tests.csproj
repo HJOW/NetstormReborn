@@ -224,6 +224,7 @@
     <None Include="../../../cpppj/tests/fixtures/canonterrain-x86.tsv" Link="X86/canonterrain-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/priestterrain-x86.tsv" Link="X86/priestterrain-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/saved-state-read-x86.tsv" Link="X86/saved-state-read-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/form-attach-current-x86.tsv" Link="X86/form-attach-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/process-attach-current-local-x86.tsv" Link="X86/process-attach-current-local-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/baseprocess-attach-current-local-x86.tsv" Link="X86/baseprocess-attach-current-local-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/game-clock-reset-x86.tsv" Link="X86/game-clock-reset-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
