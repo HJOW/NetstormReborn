@@ -60,4 +60,68 @@ public sealed class RawSurfaceWorldTests
         Assert.False(world.TakeChanged());
         Assert.False(world.TakeChanged());
     }
+
+    /// <summary>수정 가능한 TYPE 보기가 같은 목록 참조인지 검증한다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MutableTypesReturnsSameReference()
+    {
+        // 원본 span이 새 사본이 아닌 같은 전역 TYPE임을 검증한다.
+        var types = Types188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u);
+        Assert.Same(types, world.MutableTypes());
+        Assert.Same(world.Types(), world.MutableTypes());
+    }
+
+    /// <summary>수정 가능 보기의 쓰기가 읽기 보기에도 보이는지 검증한다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MutableTypesMutationVisibleThroughTypes()
+    {
+        // 원본 옵션 소비자의 쓰기가 같은 TYPE에 반영되는 공유 의미를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.MutableTypes()[3].Flags1 = 0x1234u;
+        Assert.Equal(0x1234u, world.Types()[3].Flags1);
+        var replacement = new OriginalTypeRecord { Flags1 = 0x5678u };
+        world.MutableTypes()[0] = replacement;
+        Assert.Same(replacement, world.Types()[0]);
+    }
+
+    /// <summary>수정 불가능한 목록의 수정 가능 보기를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MutableTypesRejectsNonList()
+    {
+        // IList가 아닌 읽기 전용 목록은 명시 오류로 멈춘다(결정 6).
+        var readOnly = new NonListTypes(Types188());
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, readOnly, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.MutableTypes());
+    }
+
+    // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
+    private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
+    {
+        // 감싼 실제 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
+        private readonly IReadOnlyList<OriginalTypeRecord> _inner;
+
+        /// <summary>읽기 전용 목록을 감싼다.</summary>
+        /// <param name="inner">감쌀 실제 목록이다.</param>
+        public NonListTypes(IReadOnlyList<OriginalTypeRecord> inner)
+        {
+            _inner = inner;
+        }
+
+        /// <summary>기록 개수다.</summary>
+        public int Count => _inner.Count;
+
+        /// <summary>번호로 기록을 읽는다.</summary>
+        /// <param name="index">읽을 번호다.</param>
+        /// <returns>해당 번호의 기록이다.</returns>
+        public OriginalTypeRecord this[int index] => _inner[index];
+
+        /// <summary>기록을 순서대로 열거한다.</summary>
+        /// <returns>기록 열거자다.</returns>
+        public IEnumerator<OriginalTypeRecord> GetEnumerator() => _inner.GetEnumerator();
+
+        /// <summary>기록을 순서대로 열거한다.</summary>
+        /// <returns>기록 열거자다.</returns>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => _inner.GetEnumerator();
+    }
 }

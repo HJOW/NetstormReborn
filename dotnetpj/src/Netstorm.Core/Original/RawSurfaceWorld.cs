@@ -65,4 +65,17 @@ public sealed class RawSurfaceWorld
         _changed = false;
         return previous;
     }
+
+    /// <summary>같은 전역 TYPE의 수정 가능 범위를 원본 옵션 소비자에게만 빌린다. 새 사본을 만들지 않는다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.</summary>
+    /// <returns>생성 때 받은 같은 TYPE 목록의 수정 가능 보기다.</returns>
+    public IList<OriginalTypeRecord> MutableTypes()
+    {
+        // 원본 std::span<RiftTypeRecord>를 직역한다. 목록 자체가 바뀔 수 있으므로 같은 참조를 빌린다.
+        if (_types is IList<OriginalTypeRecord> mutable)
+        {
+            return mutable;
+        }
+
+        throw new InvalidOperationException("서피스 월드의 실제 TYPE 표가 수정 가능한 목록이 아닙니다.");
+    }
 }
