@@ -34,7 +34,11 @@ public:
     std::uint32_t AllocateArray(std::size_t bytes); // CS 가변 배열의 실제 할당을 별도32비트 토큰으로 소유한다. 실패 시0이며 기록 공개/원소 작성은 caller가 한다.
     std::span<std::uint8_t> ArrayBytes(std::uint32_t token); // 등록된 실제 배열 전체를 빌리고 임의 원본 주소를 호스트 포인터로 변환하지 않는다.
     void ClearArray(std::span<std::uint8_t> header); //0046d8a0의 두 비영 포인터 free 뒤 +0/+4/+c/+8 순서로 같은16BYTE를 지운다.
+    void CopyImage(std::span<std::uint8_t> target,std::span<const std::uint8_t> source,const std::function<void(std::string_view,std::uint32_t)>& assertion); //0046d900의 해제 선행·현재 크기·두 실제 할당의 깊은 복사다. 자기 복사도 해제 순서를 보존한다.
+    std::uint32_t& IslandAnimatorType();const std::uint32_t& IslandAnimatorType() const; //00541140의 현재 Rig TYPE52를 생성/검색이 공유한다.
+    std::uint32_t& CameraAnimatorType();const std::uint32_t& CameraAnimatorType() const; //00541144의 별도 카메라 TYPE53이며 Session 교체로 다시 쓰지 않는다.
 private:
+    std::uint32_t islandAnimatorType_{52},cameraAnimatorType_{53}; // 보호 PE의 실제 두 프로세스 번호이며 CS 기록 Reset과 독립이다.
     struct ArrayAllocation { // CS 가변 배열 한 할당의 실제 버퍼와 물리 길이다.
         std::unique_ptr<std::uint8_t[]> bytes; //원문 포인터 토큰이 지칭하는 실제 소유 버퍼다.
         std::size_t size; //같은 할당의 실제 BYTE 길이로 조회 범위를 제한한다.

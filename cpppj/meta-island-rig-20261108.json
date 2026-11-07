@@ -1,0 +1,59 @@
+{
+  "unit": 1124,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      "-first",
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12670976,
+      "sha256": "c7fa7a3101a9d8409d5d4e4ea83589c7b7835de883b99a194daaac3e99ff055e"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "361b2aa33da8a6b8781c35e517e85f0e8e6735649bbe0c5b0dd25e7e37117385"
+    }
+  },
+  "staticAudit": {
+    "native": "00418b10/418ca0/418de0/418eb0/4192a0/419390/4193f0/419460/4194c0/419520/4195b0·공통 Image/Kernel finder/빈 notify 전체 원문과 다음 함수까지 기계어",
+    "image": "해제→현재 source 폭/높이→비영 bits의 DWORD 곱·실제 할당/공개/복사→비영 shape의 크기 쓰기·signed 양수에서만 할당/복사. source shape0이면 기존 shapeSize를 보존한다. 자기 복사도 선행 해제를 유지한다.",
+    "process": "원문0x90 필드·실제 Kernel 슬롯0..39999/현재 Form TYPE52 검색·첫 부모 일치 또는 flags10h Host.Attach·현재 Form/Parent·Image 복사와 실제 Unpop/QA/Pop/Destroy",
+    "frame": "호출 시점 완료 관문→Spring→투영/현재 Gump 표시→FTOL 분수·배율/kill/clip→원래 z>0일 때 보조BYTE30→좌표 Pop. 도착 프레임 다음에 반납한다.",
+    "assemblyDetails": "이전 clip 비트는0/1로 정규화하지 않고0/ffffffff 부호 확장 결과로 비교한다.0041911d의 scale와1915c의 원래 높이는 PUSH EBP의4BYTE 이동을 반영하여 구분했다.",
+    "lifetime": "장기 Rig가 짧은 Uber/viewport 참조를 저장하지 않도록 현재 전역 getter를 도입했다. destructor는 UI getter 없이 같은 CS 할당 owner만 사용한다.",
+    "notify": "실제 VT+1c=00480260의 빈 몸체를 명시 override했다. 일반 미복원 notify 예외와 구별한다.",
+    "integration": "실제 Host/Kernel을 사용하는 클래스·공장은 컴파일했지만 Client 장치 바인더/생성 소비자·23h 등록·카메라 Rig/메타 객체 그림은 후속이다.",
+    "limits": "멀티플레이/새 단위/게임/통신 실행0. x87 확장정밀도·모든 비정상 메모리 입력·전체 메타 장면의 동일성 검증은 아니다."
+  },
+  "remaining": [
+    "실제 Client Rig 장치/생성 소비자·23h 등록·카메라 Rig·메타 객체 그림/나머지 CS 수신/참가자 생성/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
