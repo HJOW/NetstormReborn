@@ -1,0 +1,58 @@
+{
+  "unit": 1060,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 1,
+    "firstErrors": 2,
+    "firstCause": "ClientMain의 UI owner 멤버 uber_ 오기, 실제 menu_로 교정",
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "exeBytes": 12332032,
+    "exeSha256": "626ee478d2e680fe133ee53a42c712bdab7a3b9fbb742ebf46a8eb0943122aba"
+  },
+  "scope": [
+    "NETSTORMOOGABOOGA 실제 등록/현재 두 DWORD/일반 WndProc 접합",
+    "100h 빈 명령줄 재적재·명시 옵션 해석·등록 ID 두 번 조회",
+    "200h/300h 도구 표식·500h 실제 전체화면 창 복원",
+    "435ad0 현재 getter/435ae0 실제 동기 broadcast 장치"
+  ],
+  "nativeReferences": [
+    "00438dc0",
+    "00436550",
+    "00435ad0",
+    "00435ae0",
+    "00441790",
+    "004b3410",
+    "004b32f0",
+    "004d62b0",
+    "R:00479760"
+  ],
+  "boundaries": [
+    "현재 manager/fort 관문 통과 후 현재 Session이 없으면 기존 RequireSession 명시 오류. 비Session Template 저장/Changed 장기 장치 후속",
+    "도구 활성 표식의 실제 일반 명령 소비자/400h 송신 호출자 후속",
+    "전체 InterpretOptions 부모·새 R 실행 대상/OS launch·Root/CS·17h/1dh 응답 미완료"
+  ],
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "originalR": 0,
+    "registeredMessageBroadcast": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

@@ -313,24 +313,7 @@ int Client::Run() {
 
     // "init parse options"(FUN_004359f0): 설정을 시작 순서로 읽고 해석한다.
     if (!PumpMessages()) return 0;
-    o::ConfigInterface::StartupOptions startup;
-    startup.commandLine = options_.settings;
-    startup.majorVersion = kMajorVersion;
-    startup.minorVersion = options_.edition == o::OriginalEdition::Cd1072 ? kCdMinorVersion : kPatchMinorVersion;
-    auto identity = Environment("IDENTITY");
-    if (!identity || identity->empty()) identity = Environment("USER");
-    startup.identity = identity.value_or(std::string());
-    std::optional<StartupFileLocations> startupFiles; // 원문마지막FileSpec은설정Load/경로Set뒤까지살아있다.
-    if (options_.edition==o::OriginalEdition::Patch1078) {
-        startupFiles.emplace(InitializeNativeStartupFiles(FindWindowsCdDirectory));const auto& locations=*startupFiles;startup.dataPrefix=locations.dataPrefix;startup.installDir=platform::PathToUtf8(locations.installDirectory);startup.cdDir=locations.cdDirectory; // 설정/자산/저장/편집은선택한같은기본root를사용한다.
-    } else {
-        const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); //10.72기존경로를보존하며이번10.78탐색근거로확대하지않는다.
-        startup.cdDir=FindWindowsCdDirectory();InitializeNativeSecondaryFiles(startup.cdDir);
-    }
-    detectedLanguage_=DetectOriginalLanguage(GetUserDefaultLangID()); //원문00438dc0의 최초 OS 감지이며 매 Config 변경 때 감지하지 않는다.
-    configuration_.Startup(startup);
-    startupFiles.reset(); // 원문은Load/InstallDir/CDDir설정뒤마지막FileSpec의핸들을반납한다.
-    ApplyProductVersion(configuration_); // 원본 시작 계약 뒤 사용자 요청의 제품 표시11.01을 적용한다. 원본 데이터 판본은 바꾸지 않는다.
+    LoadNativeConfiguration(options_.settings,true);
     SaveOptions(); // 원본 FUN_004359f0 → FUN_00441d10(0): 설정 해석 전에 한 번 저장한다.
     InterpretOptions();
     if (!PumpMessages()) return 0;
@@ -345,6 +328,7 @@ int Client::Run() {
     const auto palettePath = configuration_.PathSpec("GamePalSpec", configuration_.PathSpec("fortPal"));
     if (options_.edition==o::OriginalEdition::Patch1078) screen_->LoadNativePaletteFile(files_,palettePath,1); // 원문38dc0의첫4a4850도현재FILE/키/반납과clear1을사용하며9표캡처보다앞선다.
     else screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition); // CD호스트의기존값형입구는별도판본으로유지한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) registeredMessages_.message=RegisterWindowMessageA("NETSTORMOOGABOOGA"); //00438dc0의 팔레트 뒤 원문 위치다. 서버 시작 통지도 같은 ID로 받는다.
     // [원본] 설치 검사(GameInstalledTest)·zacket·프로토콜 검사는 아직 연결하지 않았다.
     *clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
     if (options_.edition==o::OriginalEdition::Patch1078) clock_->BindSynchronizationTicks(localStateGlobals_->GameTicks(),localStateGlobals_); // 같은 실제0055b4ac와 owner를 보유하여 외부 공유 시계가 Client보다 오래 남아도 주소 대여를 유지한다.
@@ -675,6 +659,28 @@ void Client::LoadKoreanTranslations() {
     auto text=ReadKoreanTranslationFile(CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path())); // 휴대 배포의 lang 또는 개발 저장소의 assets/lang에서 찾는다.
     if (text) koreanTranslations_.emplace(std::move(*text));
 }
+// 원문441790의 시작/등록 메시지 재적재를 공유한다. 빈 명령줄은 처음 실행 인자를 재사용하지 않는다.
+void Client::LoadNativeConfiguration(std::string_view commandLine,bool detectLanguage) {
+    o::ConfigInterface::StartupOptions startup;
+    startup.commandLine = std::string(commandLine);
+    startup.majorVersion = kMajorVersion;
+    startup.minorVersion = options_.edition == o::OriginalEdition::Cd1072 ? kCdMinorVersion : kPatchMinorVersion;
+    auto identity = Environment("IDENTITY");
+    if (!identity || identity->empty()) identity = Environment("USER");
+    startup.identity = identity.value_or(std::string());
+    std::optional<StartupFileLocations> startupFiles; // 원문마지막FileSpec은설정Load/경로Set뒤까지살아있다.
+    if (options_.edition==o::OriginalEdition::Patch1078) {
+        startupFiles.emplace(InitializeNativeStartupFiles(FindWindowsCdDirectory));const auto& locations=*startupFiles;startup.dataPrefix=locations.dataPrefix;startup.installDir=platform::PathToUtf8(locations.installDirectory);startup.cdDir=locations.cdDirectory; // 설정/자산/저장/편집은선택한같은기본root를사용한다.
+    } else {
+        const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); //10.72기존경로를보존하며이번10.78탐색근거로확대하지않는다.
+        startup.cdDir=FindWindowsCdDirectory();InitializeNativeSecondaryFiles(startup.cdDir);
+    }
+    if (detectLanguage) detectedLanguage_=DetectOriginalLanguage(GetUserDefaultLangID()); // 최초 시작만 경로 탐색 뒤 원문 OS 언어를 감지하며 등록 메시지는 현재 감지값을 유지한다.
+    configuration_.Startup(startup);
+    startupFiles.reset(); // 원문은Load/InstallDir/CDDir설정뒤마지막FileSpec의핸들을반납한다.
+    ApplyProductVersion(configuration_); // 원본 시작 계약 뒤 사용자 요청의 제품 표시11.01을 적용한다. 원본 데이터 판본은 바꾸지 않는다.
+}
+
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(네트워크 등)의 전체 부모 순서는 후속이다.
 void Client::InterpretOptions() {
     configuration_.ReadInt("cs",gameplayGlobals_->GameAux()->SquidTransmission().compress); //00531850의현재값을같은writer와공유하며누락설정은보존한다.
@@ -1124,10 +1130,18 @@ InputEvent Client::Poll(std::uint32_t code) const {
     return {result, x, y};
 }
 
+//00435ae0은 현재 등록 ID로 외부 설정 도구를 깨우며 응답을 기다린다.
+void Client::NotifyRegisteredTool() { SendMessageA(HWND_BROADCAST,registeredMessages_.message,0,0x400); }
+
 // 원본 00436550. 원본의 중첩된 범위 비교를 switch로 풀어 썼다. 메시지별 처리 내용은 원본과 같다.
 std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message, std::uintptr_t wParam, std::intptr_t lParam) {
     const HWND window = static_cast<HWND>(windowHandle);
-    // [원본] 등록 메시지 "NETSTORMOOGABOOGA"(설정 도구와의 통신) — 옮기지 않았다.
+    if (options_.edition==o::OriginalEdition::Patch1078 && message==registeredMessages_.message) {
+        RegisteredMessageHooks hooks;hooks.reload=[this] { LoadNativeConfiguration({}); };hooks.interpret=[this] { InterpretOptions(); }; //100h는 원문처럼 재적재 후 명시 해석하며 SaveOptions를 추가하지 않는다.
+        hooks.subscriber=[this] { if (configuration_.GetInt("registeredSubId")!=-1) { const auto id=static_cast<std::uint32_t>(configuration_.GetInt("registeredSubId"));if (menu_) menu_->SynchronizeRegisteredSubscriber(id); } }; //4b3410은 같은 키를 두 번 읽는다. Uber 생성 전에는 현재 Template manager가 없다.
+        hooks.fullscreen=[this] { return screen_ && (screen_->Flags()&ScreenMode::kFullScreen)!=0; };hooks.restore=[window] { ShowWindow(window,SW_RESTORE); }; //500h는 시작 완료 판정이 아니라 전체화면 창 복원 알림이다.
+        DispatchRegisteredMessage(registeredMessages_,message,static_cast<std::uint32_t>(lParam),hooks); // 등록 메시지도 아래의 일반 WndProc/DefWindowProc 처리를 계속한다.
+    }
     switch (message) {
     case WM_KEYDOWN:
     case WM_KEYUP:

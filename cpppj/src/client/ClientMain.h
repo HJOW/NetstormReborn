@@ -4,6 +4,7 @@
 // 아직 옮기지 않은 초기화 단계와 루프 단계는 ClientMain.cpp에 원본 순서대로 적어 두었다.
 // 분석 문서: docs/exe/main-loop.md, docs/exe/cpp-screen-reconstruction.md
 #pragma once
+#include "client/RegisteredMessages.h" // 같은 Client의 등록 ID/도구 상태를 월드와 분리해 보유한다.
 #include "client/GameAssets.h"
 #include "client/InputEvent.h"
 #include "client/Screen.h"
@@ -227,6 +228,8 @@ public:
     const std::filesystem::path& GameDirectory() const { return options_.gameDirectory; } //편집 작업본을 읽기 전용 게임 자산의 형제 디렉터리에 배치할 실제 입력 경로다.
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
+    std::uint32_t RegisteredToolActive() const { return registeredMessages_.toolActive; } //435ad0의 현재 도구 표식이며 게임 루프를 멈추지 않는다.
+    void NotifyRegisteredTool(); //435ae0의 HWND_BROADCAST/400h 송신이며 실제 메뉴 호출자는 후속 연결한다.
     ClientTraceGlobals& DiagnosticGlobals(); // 선택/덤프/설정이 같은 현재 로그 모드와 재귀 상태를 빌린다.
     TraceLogHooks DiagnosticLogHooks(); // 원문 trace→Chat 관문과 실제 stdout/stderr/FILE 장치다.
     void WriteDiagnosticLog(std::int32_t level,std::string_view text,std::size_t prefixBytes=0); // 서식 후 바이트를 같은 현재1024BYTE 로그에 전달한다.
@@ -291,6 +294,7 @@ private:
     void SaveOptions();
     // 원본 FUN_00435220("Interpret Options")의 일부: 화면 크기·창 위치·프레임 제한 등 설정을 읽는다.
     void InterpretOptions();
+    void LoadNativeConfiguration(std::string_view commandLine,bool detectLanguage=false); //441790의 파일/CD/환경 재탐색과 설정 Load를 처음 시작/100h에서 공유한다.
     // 원본00435860의 현재 ReadInt만 재해석한다. 설정 변경 callback과 초기 해석이 공유한다.
     void InterpretFortFileOptions();
     void InterpretScriptMenuOptions(); // 원본4353ea의 개발 모드0/현재 userCheat ReadInt·허용값 검사를 같은 장기 전역에 적용한다.
@@ -321,6 +325,7 @@ private:
     o::BaseFileSystem files_;
     // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
     o::ConfigInterface configuration_;
+    RegisteredMessageState registeredMessages_; //0054da94/98의 최초0 두 DWORD를 Client 수명으로 보존한다.
     // 원본0054db30의 최초 BSS0이다. 미션 교체·누락 키로 초기화하지 않는 실제 한 DWORD다.
     std::uint32_t readOnlyForts_{};
     std::shared_ptr<o::RawFortBadgesGlobals> fortBadges_; // CRT 한 번과 시작 count reset을 구별하는 단일6160BYTE 소유자다.

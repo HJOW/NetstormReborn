@@ -722,6 +722,15 @@ void UberGump::PublishNativeMainMenuState() {
     if (!rawButtons_->Menus()->HtmlWindowsOpen()) { state_.phase=ClientPhase::MainMenu;pageName_="main";page_={}; } //Welcome/검증 안내/Tips가 열려 있으면 그 실제 Dialog를 유지한다.
     input_.Cancel();RefreshWindowTitle();RebuildControls();
 }
+// 등록 설정의 현재 ID만 Fort에 동기화한다. 외부 서버의 은퇴한 유효성 검사를 호출하지 않는다.
+void UberGump::SynchronizeRegisteredSubscriber(std::uint32_t id) {
+    const auto owner=client_.GameplayGlobals()->player.templateOwner;const auto headers=templateStorage_->Headers(); // 같은 현재 소유자/9개 헤더를 먼저 조회한다.
+    if (owner>=9 || headers.size()<static_cast<std::size_t>(owner+1U)*20U) throw std::out_of_range("등록 ID의 현재 Template 헤더 범위");
+    const auto header=headers.subspan(static_cast<std::size_t>(owner)*20U,4); //4b32f0은 manager가 없으면 fort 모드도 읽지 않는다.
+    if (!(header[0] || header[1] || header[2] || header[3]) || !client_.SurfaceStorage()->ownerMode.fort) return;
+    client_.GameplayGlobals()->RequireSession().ChangeFortSubscriber(id,std::nullopt); // 실제 Subscriber writer/등록/Changed를 재사용한다. manager가 살아 있는 비Session 메타 경계는 명시 누락 오류를 유지한다.
+}
+
 // 현재 미션의 원본 제목 설정을 적용한다. 데모 모드는 같은 미션 객체의 직접 기록을 읽는다.
 void UberGump::RefreshWindowTitle() {
     WindowTitleState state;state.fortName=std::string(client_.FortGlobals()->Current());state.editor=client_.GameplayGlobals()->world.editor!=0;state.mission=client_.GameplayGlobals()->world.missionPost; // 현재 Fort는 World 생성 전에도 존재하며 State3의 첫 BYTE 삭제 뒤에는 빈 제목을 선택한다.
