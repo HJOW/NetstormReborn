@@ -545,7 +545,7 @@ cpppj/src/o/RawBridgeDecay.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeDecayScan.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeDraw.h	port			todo	[o-default]
 cpppj/src/o/RawBridgeEditor.cpp	exclude-edit			-	[edit-editor]
-cpppj/src/o/RawBridgeEvents.cpp	port			todo	[o-default]
+cpppj/src/o/RawBridgeEvents.cpp	port	www/core/raw-bridge-events.js	1f00a25a	port	[o-default] WB04-E43: 이벤트 처리기(0x2691/0x2692)·끝 칸 변환·Regular 분배·이웃 훅. fixture bridgeevent 10.78 Handler 1,207·End 726·Table 306, 실제 다리 프레임 60개(bridgedecay Frames 0). 프로세스 호스트/실제 월드 수명 통합 검사는 월드 조립 단위에서
 cpppj/src/o/RawBridgeFallParent.cpp	port	www/core/raw-bridge-fall-parent.js	1f00a25a	partial	[o-default] WB04-E15: 00421f90 RunBridgeFallParent(현재 checking/genus 진단·복귀 뒤 예약) 이식. fixture bridge-fall-parent 10.78 200행 전부. ScheduleBridgeFallChecked(SquidProcessHost 연결)는 낙하 예약 단위에서
 cpppj/src/o/RawBridgeLifecycle.cpp	port	www/core/bridge-lifecycle.js	1f00a25a	partial	[o-default] WB04-D2 다리 삭제 훅. 다리 가상 삭제 분배는 WB07
 cpppj/src/o/RawBuildingSpace.cpp	port	www/core/squid-space.js	1f00a25a	port	[o-default] WB04-D1(Unpop 옆면·표면 통지) + WB04-E1(popSide·hasIsland)

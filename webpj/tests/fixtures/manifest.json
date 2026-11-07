@@ -6019,9 +6019,68 @@
       "bytes": 982108,
       "lines": 11861,
       "fixtureCommit": "6a0907de",
-      "webCommit": "worktree",
+      "webCommit": "5bbe0cdb",
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeConnect.cpp": "0c06fa66"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E43",
+      "id": "bridgeevent",
+      "path": "cpppj/tests/fixtures/bridgeevent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리 이벤트 처리기·끝 칸 변환·글자별 프레임 구간 표",
+      "consumers": [
+        "webpj/tests/bridge-events.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bridge-events.js",
+        "webpj/www/assets/terrain-tiles.js"
+      ],
+      "doc": "docs/webpj-bridge-events-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeEvents.cpp"
+      ],
+      "scope": "10.78(originals) Handler 1,207·End 726행과 Table 306행·Frames 3변형 사용(original1037·originalCD 구간은 범위 밖)",
+      "text": true,
+      "sha256": "d5c767563c7cfdc4d00728201150a5501394685d1acfaed18e6d6c6dd7d6ee94",
+      "bytes": 728154,
+      "lines": 4659,
+      "fixtureCommit": "9d1ed7e5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeEvents.cpp": "8bb3d9ca"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E43",
+      "id": "bridgedecay",
+      "path": "cpppj/tests/fixtures/bridgedecay-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리 붕괴(Frames 행에 실제 bridge.type 프레임 코드 60개)",
+      "consumers": [
+        "webpj/tests/bridge-events.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bridge-events.js"
+      ],
+      "doc": "docs/webpj-bridge-events-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeDecay.cpp"
+      ],
+      "scope": "`Frames 0` 행(실제 다리 프레임 60개)만 사용. 붕괴 연산 행은 RawBridgeDecay 단위에서",
+      "text": true,
+      "sha256": "1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638",
+      "bytes": 2413945,
+      "lines": 14540,
+      "fixtureCommit": "4118523c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeDecay.cpp": "cc328596"
       }
     }
   ]
