@@ -206,3 +206,99 @@ public static class RawNormalTerrainChecks
         }
     }
 }
+
+// 같은 실제 월드 소유에 묶어 분기·개수·기록·후처리를 위임하는 바인딩 껍데기다. 생성·도장·군집 조립은 후속 단위에서 잇는다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.
+public sealed class RawNormalTerrainWorldBinding
+{
+    /// <summary>같은 실제 월드의 청크 지도다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly ChunkMap _chunks;
+
+    /// <summary>같은 실제 월드의 섬 목록이다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly RawIslandRuntime _islands;
+
+    /// <summary>문자 mapping 전역이다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly TerrainContextGlobals _globals;
+
+    /// <summary>매 실제 배치가 읽는 타입 전역이다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly FortRandomPlacementState _placement;
+
+    /// <summary>수명이 긴 초기 캐시 상태다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly TerrainStampState _stamp;
+
+    /// <summary>같은 실제 TYPE 표다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly IReadOnlyList<OriginalTypeRecord> _types;
+
+    /// <summary>같은 실제 풀이다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly RawSidPool _pool;
+
+    /// <summary>매 요청 읽는 현재 조각 타입의 공유 상자다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly UIntBox _puzzlePieceType;
+
+    /// <summary>같은 실제 월드의 타입별 프레임 표다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly IReadOnlyList<RiftTypeFrames> _frames;
+
+    /// <summary>호출자가 준 진단 묶음의 복사본이다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private readonly NormalTerrainDiagnostics _diagnostics;
+
+    /// <summary>같은 실제 저장소를 묶고 타입·지역 연결을 확인한다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    /// <param name="chunks">같은 실제 월드의 청크 지도다.</param>
+    /// <param name="islands">같은 실제 월드의 섬 목록이다.</param>
+    /// <param name="globals">문자 mapping 전역이다.</param>
+    /// <param name="placement">매 실제 배치가 읽는 타입 전역이다.</param>
+    /// <param name="stamp">수명이 긴 초기 캐시 상태다.</param>
+    /// <param name="types">같은 실제 TYPE 표다.</param>
+    /// <param name="pool">같은 실제 풀이다.</param>
+    /// <param name="puzzlePieceType">매 요청 읽는 현재 조각 타입의 공유 상자다.</param>
+    /// <param name="frames">같은 실제 월드의 타입별 프레임 표다.</param>
+    /// <param name="diagnostics">원본 진단 묶음이다. 복사해서 가진다.</param>
+    public RawNormalTerrainWorldBinding(ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp, IReadOnlyList<OriginalTypeRecord> types, RawSidPool pool, UIntBox puzzlePieceType, IReadOnlyList<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics)
+    {
+        ArgumentNullException.ThrowIfNull(chunks);
+        ArgumentNullException.ThrowIfNull(islands);
+        ArgumentNullException.ThrowIfNull(globals);
+        ArgumentNullException.ThrowIfNull(placement);
+        ArgumentNullException.ThrowIfNull(stamp);
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(pool);
+        ArgumentNullException.ThrowIfNull(puzzlePieceType);
+        ArgumentNullException.ThrowIfNull(frames);
+        ArgumentNullException.ThrowIfNull(diagnostics);
+        _chunks = chunks;
+        _islands = islands;
+        _globals = globals;
+        _placement = placement;
+        _stamp = stamp;
+        _types = types;
+        _pool = pool;
+        _puzzlePieceType = puzzlePieceType;
+        _frames = frames;
+        _diagnostics = diagnostics.Clone();
+        RequireStorage();
+    }
+
+    /// <summary>군도와 서로 다른 원본 전역을 묵시적인 정상 지형·지역 기본값으로 바꾸지 않는다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    /// <param name="farm">군집 상태다.</param>
+    public void RequireNormal(FarmClusterState farm) => RawNormalTerrainChecks.RequireNormal(farm, _globals, _placement, _stamp, _types, _pool);
+
+    /// <summary>현재 원본 모드의 선택과 분리하여 같은 실제 TYPE·지역·생성자 연결을 확인한다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    public void RequireStorage() => RawNormalTerrainChecks.RequireStorage(_globals, _placement, _stamp, _types, _pool);
+
+    /// <summary>묶은 조각 타입·프레임·진단으로 영역 디코더를 돌려 유효 칸 수를 센다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    /// <param name="record">셀·회전을 담은 6바이트 기록이다.</param>
+    /// <returns>빈·누락 프레임을 건너뛰고 센 유효 칸 수다.</returns>
+    public uint PatternCount(ReadOnlySpan<byte> record) =>
+        RawNormalTerrainChecks.PatternCount(_frames, _puzzlePieceType.Value, record, _pool.Edition, _diagnostics.DecoderDiagnostics);
+
+    /// <summary>묶은 지도·목록·진단으로 해당 지역의 처음 일치한 청크 기록을 찾는다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    /// <param name="region">찾을 지역 번호다.</param>
+    /// <returns>처음 일치한 6바이트 복사본이며 없으면 6바이트 영 기록이다.</returns>
+    public byte[] FirstRecord(int region) =>
+        RawNormalTerrainChecks.FirstRecord(_chunks, _islands, region, _pool.Edition, _diagnostics.Postpass);
+
+    /// <summary>묶은 저장소로 도장 뒤 현재 섬별 후처리를 같은 군집 몸체에 순서대로 넣는다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    /// <param name="selectedRegion">현재 noRegion이면 모든 섬을 실행한다.</param>
+    /// <param name="place">같은 군집 몸체의 배치 효과다.</param>
+    public void PostprocessCurrentFarms(int selectedRegion, Action<FortRandomRectangle, int, uint> place) =>
+        RawNormalTerrainChecks.PostprocessCurrentFarms(_chunks, _islands, _globals, _placement, _stamp, _types, _pool,
+            _puzzlePieceType.Value, _frames, _pool.Edition, _diagnostics.DecoderDiagnostics, _diagnostics.Postpass, selectedRegion, place);
+}

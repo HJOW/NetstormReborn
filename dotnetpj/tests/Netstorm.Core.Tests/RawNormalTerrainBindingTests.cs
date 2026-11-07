@@ -399,4 +399,90 @@ public sealed class RawNormalTerrainBindingTests
         Assert.Empty(calls);
         Assert.Single(spy.Calls);
     }
+
+    /// <summary>묶은 바인딩 장면을 만든다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private static (ChunkMap Chunks, RawIslandRuntime Islands, TerrainContextGlobals Globals, FortRandomPlacementState Placement, TerrainStampState Stamp, List<OriginalTypeRecord> Types, RawSidPool Pool, UIntBox Piece, List<RiftTypeFrames> Frames, NormalTerrainDiagnostics Diagnostics) BindingScene()
+    {
+        (TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp, List<OriginalTypeRecord> types, RawSidPool pool) = Scene();
+        var chunks = new ChunkMap();
+        byte[] record = [3, 1, 0, 7, 0, 0];
+        PutChunk(chunks, 2, 2, 0, record);
+        RawIslandRuntime islands = IslandScene(pool.Edition, 1u, 0);
+        return (chunks, islands, globals, placement, stamp, types, pool, new UIntBox { Value = 0u }, CoveringFrames(), new NormalTerrainDiagnostics());
+    }
+
+    /// <summary>묶은 바인딩을 만든다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    private static RawNormalTerrainWorldBinding Bind(
+        ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+        List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) =>
+        new(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+
+    /// <summary>빈 묶음·어긋난 연결을 거부한다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindingCtorGuards()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        Assert.Throws<ArgumentNullException>(() => Bind(null!, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics));
+        Assert.Throws<ArgumentNullException>(() => Bind(chunks, islands, globals, placement, stamp, types, pool, null!, frames, diagnostics));
+        Assert.Throws<ArgumentNullException>(() => Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, null!));
+        placement.IslandType = 98u;
+        Assert.Throws<ArgumentException>(() => Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics));
+    }
+
+    /// <summary>묶은 호출이 같은 정적 몸체와 같다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindingDelegatesToStatics()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        binding.RequireStorage();
+        binding.RequireNormal(new FarmClusterState());
+        byte[] record = [3, 1, 0, 7, 0, 0];
+        Assert.Equal(RawNormalTerrainChecks.PatternCount(frames, 0u, record, pool.Edition, null), binding.PatternCount(record));
+        Assert.Equal(RawNormalTerrainChecks.FirstRecord(chunks, islands, 0, pool.Edition, null), binding.FirstRecord(0));
+        var left = new PlaceSpy();
+        var right = new PlaceSpy();
+        binding.PostprocessCurrentFarms(127, left.Place);
+        RawNormalTerrainChecks.PostprocessCurrentFarms(chunks, islands, globals, placement, stamp, types, pool,
+            0u, frames, pool.Edition, null, null, 127, right.Place);
+        Assert.Equal(right.Calls.Count, left.Calls.Count);
+        // 같은 사각·지역·개수 순서다
+        for (int index = 0; index < right.Calls.Count; ++index)
+        {
+            Assert.Equal(right.Calls[index], left.Calls[index]);
+        }
+    }
+
+    /// <summary>공유 조각 번호를 호출 때마다 다시 읽는다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindingReadsSharedPuzzlePieceLive()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        byte[] record = [3, 1, 0, 7, 0, 0];
+        Assert.Equal(RawNormalTerrainChecks.PatternCount(frames, 0u, record, pool.Edition, null), binding.PatternCount(record));
+        piece.Value = 1u;
+        Assert.Throws<ArgumentOutOfRangeException>(() => binding.PatternCount(record));
+    }
+
+    /// <summary>진단 묶음은 복사해서 가진다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindingClonesDiagnostics()
+    {
+        (ChunkMap chunks, RawIslandRuntime _, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var first = new List<TerrainFarmPostpassAssertion>();
+        diagnostics.Postpass = first.Add;
+        // 섬 없이 개수는 0이어서 Bounds 부재만 보고한다
+        RawIslandRuntime islands = IslandScene(pool.Edition, 1u);
+        var binding = Bind(new ChunkMap(), islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        var second = new List<TerrainFarmPostpassAssertion>();
+        diagnostics.Postpass = second.Add;
+        binding.PostprocessCurrentFarms(127, (_, _, _) => { });
+        Assert.Equal([TerrainFarmPostpassAssertion.BoundsMissingIsland], first);
+        Assert.Empty(second);
+    }
 }
