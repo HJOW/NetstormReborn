@@ -113,4 +113,49 @@ public static class RawNormalTerrainChecks
 
         return count;
     }
+
+    /// <summary>해당 지역의 처음 일치한 청크 6바이트 기록을 Y 바깥·X 안쪽 순서로 찾는다. 2026-11-07 F2d 첫 기록 이식에서 추가됐다.</summary>
+    /// <param name="chunks">같은 실제 월드의 청크 지도다.</param>
+    /// <param name="islands">같은 실제 월드의 섬 목록이다.</param>
+    /// <param name="region">찾을 지역 번호다.</param>
+    /// <param name="edition">CD 판본에서만 후처리 진단을 보고하는 판본이다.</param>
+    /// <param name="postpass">CD 전용 첫 기록·누락 진단이다. null이면 보고를 건너뛴다.</param>
+    /// <returns>처음 일치한 6바이트 복사본이며 없으면 6바이트 영 기록이다.</returns>
+    public static byte[] FirstRecord(ChunkMap chunks, RawIslandRuntime islands, int region, OriginalEdition edition, Action<TerrainFarmPostpassAssertion>? postpass)
+    {
+        ArgumentNullException.ThrowIfNull(chunks);
+        ArgumentNullException.ThrowIfNull(islands);
+        bool cd = edition == OriginalEdition.Cd1072;
+        if (cd && islands.Exists(region) == 0)
+        {
+            postpass?.Invoke(TerrainFarmPostpassAssertion.RecordMissingIsland);
+        }
+
+        // Y청크가 바깥이며 각 행의 X청크를 처음부터 찾는다
+        for (int y = 0; y < chunks.YLength(); y++)
+        {
+            // 원본은 처음 일치한 기록 6바이트만 반환한다
+            for (int x = 0; x < chunks.XLength(); x++)
+            {
+                ChunkEntry entry = chunks.At(x, y);
+                if (unchecked((int)unchecked((sbyte)entry.Island)) == region)
+                {
+                    byte[] found = new byte[6];
+                    if (entry.Record is not null)
+                    {
+                        Array.Copy(entry.Record, found, Math.Min(entry.Record.Length, found.Length));
+                    }
+
+                    return found;
+                }
+            }
+        }
+
+        if (cd)
+        {
+            postpass?.Invoke(TerrainFarmPostpassAssertion.RecordNotFound);
+        }
+
+        return new byte[6];
+    }
 }
