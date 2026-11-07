@@ -2650,9 +2650,67 @@
       "bytes": 221344,
       "lines": 1703,
       "fixtureCommit": "d4a92d06",
-      "webCommit": "worktree",
+      "webCommit": "dc1ddf21",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerIdentity.cpp": "16259484"
+      }
+    },
+    {
+      "id": "player-participation",
+      "path": "cpppj/tests/fixtures/player-participation-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 PE 관측: Player 9×180 BYTE 전체 기록·방향별 81 DWORD 표·로그인/동맹/AI 부착·해제 외부효과 순서",
+      "consumers": [
+        "webpj/tests/player-participation.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-participation.js"
+      ],
+      "unit": "WB04-E5",
+      "doc": "docs/webpj-player-participation-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerParticipation.cpp"
+      ],
+      "scope": "608행(판본 열 없는 10.78 전용 표: Login 210·Alliance 122·Add 72·Attach 192·Remove 6·RemoveAll 6) 전부 사용",
+      "text": true,
+      "sha256": "77d1e5af049d3f4e6faf591de6fc4814d4a6225d46581a7961844ca8979d8278",
+      "bytes": 2402254,
+      "lines": 609,
+      "fixtureCommit": "ddf0a837",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerParticipation.cpp": "3cea1b14"
+      }
+    },
+    {
+      "id": "player-alliance-packet",
+      "path": "cpppj/tests/fixtures/player-alliance-packet-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 PE 관측: 동맹 수신 packet(9 BYTE)의 전체 Player/방향표/효과/변경된 packet 과 broadcast 순서(양 x87 정밀도 열)",
+      "consumers": [
+        "webpj/tests/player-participation.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-participation.js"
+      ],
+      "unit": "WB04-E5",
+      "doc": "docs/webpj-player-participation-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerParticipation.cpp"
+      ],
+      "scope": "288행(두 정밀도 열 모두 대조) 전부 사용",
+      "text": true,
+      "sha256": "8765e66aa2fac76b2c8ad9870fdd5459bd56097a442baddc1d21a62c1fd8a6f6",
+      "bytes": 2311266,
+      "lines": 289,
+      "fixtureCommit": "4963da20",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerParticipation.cpp": "3cea1b14"
       }
     }
   ]

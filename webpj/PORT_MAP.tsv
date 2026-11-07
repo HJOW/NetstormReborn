@@ -825,7 +825,7 @@ cpppj/src/o/RawPlayerIdentity.cpp	port	www/core/raw-player-identity.js	1f00a25a	
 cpppj/src/o/RawPlayerInitialization.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerLinksCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerNotification.cpp	port			todo	[o-default]
-cpppj/src/o/RawPlayerParticipation.cpp	port			todo	[o-default]
+cpppj/src/o/RawPlayerParticipation.cpp	port	www/core/raw-player-participation.js	1f00a25a	port	[o-default] WB04-E5: 004a6dc0 로그인·00490ea0 방향별 동맹·0048f6a0 동맹 추가·00491220 수신·004911a0 AI 부착/해제·State 반납 증빙(BrainResetPass 의 JS 대응: 비공개 수명 토큰·1회 소비·진행 중 소비 거부). fixture player-participation 608행·player-alliance-packet 288행 전부(10.78). RawAiCreate 연동 거부 대조는 RawAiCreate 단위에서
 cpppj/src/o/RawPlayerPlacementAnchor.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerTechnology.cpp	port			todo	[o-default]
