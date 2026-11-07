@@ -12,6 +12,8 @@ class RawSurfaceStorage; // 현재 Pool/TYPE/진단 장치의 실제 소유자�
 class ClientGameplayGlobals; // 상세 문자열의 장기 소유권을 Kernel 장치 수명까지 유지한다.
 // 시작/창 없는 집중 검사 모두 같은 요약 본문·사용자 경로·현재 단언을 연결한다. Kernel/Surface는 약한 참조로 순환 소유를 피한다.
 void BindClientKernelDiagnostics(const std::shared_ptr<o::Kernel>& kernel,const std::shared_ptr<RawSurfaceStorage>& surface,const std::shared_ptr<ClientGameplayGlobals>& gameplay,const std::filesystem::path& directory,bool userPolicy);
+// queryDirectDraw의 원문 로그 순서와 시스템 ddraw.dll 버전 리소스만 조회한다. DLL/DirectDraw 장치를 초기화하지 않는다.
+void QueryDeveloperDirectDraw(const std::function<void(std::string_view)>& log);
 struct ClientTraceGlobals {
     std::uint32_t heapTrace{},heapAllocated{}; //0054dab0/00557dfc의 BSS0이며 Session 교체와 무관한 원문 프레임 진단이다. 빈437f0에 호스트 힙 집계를 추가하지 않는다.
     TraceLogState log; //00542658/005ca8d0 이후의 같은 FILE/버퍼/들여쓰기/필터다.

@@ -10,11 +10,35 @@
 #include "o/RawTerrainBitmap.h"
 #include "o/RawProcessSummary.h"
 #include "o/SquidProcess.h"
+#include <windows.h> // Windows10/11의 유니코드 시스템 경로와 버전 리소스 조회 경계다.
+#include <winver.h>
+#include <bit>
+#include <vector>
 #include <array>
 #include <cstdio>
+#include <cstring> // 버전 리소스의 고정 크기를 정렬과 무관하게 복사한다.
 #include <stdexcept>
 
 namespace netstorm::client { // 출력 모드/재귀 깊이는 같은 Client 객체에서만 변경한다.
+// 4429e0은 실제 xor eax,eax/ret이므로 원문 실패 두 줄 뒤에만 DLL의 버전 리소스를 읽는다.
+void QueryDeveloperDirectDraw(const std::function<void(std::string_view)>& log) {
+    if (!log) throw std::invalid_argument("개발자 DirectDraw 조회 로그 미연결");log("You don't have DirectDraw installed, or some error occured during\n");log("the query.\n");
+    VS_FIXEDFILEINFO version{}; // 원문 세 getter의 자료 부재는 각각 두DWORD0이며 실제 OS 파일 생성 시각과 구별한다.
+    std::array<wchar_t,32768> directory{};const auto length=GetSystemDirectoryW(directory.data(),static_cast<UINT>(directory.size())); // ANSI 대신 W 경로를 써 Windows10/11의 시스템 경로를 보존한다.
+    if (length && length<directory.size()) {
+        const auto path=std::filesystem::path(directory.data())/L"ddraw.dll";DWORD unused{};const auto size=GetFileVersionInfoSizeW(path.c_str(),&unused);
+        if (size) {
+            std::vector<std::uint8_t> bytes(size); // 생성자/소멸자의 임시 버전 리소스를 호출 수명 안에서만 소유한다.
+            if (GetFileVersionInfoW(path.c_str(),0,size,bytes.data())) { void* data{};UINT count{};if (VerQueryValueW(bytes.data(),L"\\",&data,&count) && data && count>=sizeof(version)) std::memcpy(&version,data,sizeof(version)); } // 손상 리소스의 범위 밖 포인터 접근 자체는 호스트에서 합성하지 않는다.
+        }
+    }
+    log("Information for DDRAW.DLL:\n");
+    const auto word=[](DWORD value) { return static_cast<int>(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(value))); }; // 원문 %d의 signed WORD 승격이다.
+    const auto printVersion=[&](std::string_view label,DWORD high,DWORD low) { std::array<char,128> text{};const auto count=std::snprintf(text.data(),text.size(),"%s Version: %d.%d.%d.%d\n",std::string(label).c_str(),word(high>>16),word(high),word(low>>16),word(low));if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("개발자 DLL 버전 로그 범위");log({text.data(),static_cast<std::size_t>(count)}); }; // 고정 원문 두 라벨의 버전을 동일 서식으로 전달한다.
+    printVersion("Product",version.dwProductVersionMS,version.dwProductVersionLS);printVersion("File",version.dwFileVersionMS,version.dwFileVersionLS);
+    const auto date=(std::uint64_t(version.dwFileDateMS)<<32)|version.dwFileDateLS;std::array<char,64> text{};const auto count=std::snprintf(text.data(),text.size(),"Creation Date: %llx\n",static_cast<unsigned long long>(date));if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("개발자 DLL 날짜 로그 범위");log({text.data(),static_cast<std::size_t>(count)}); //4ddfe0의 VS_FIXEDFILEINFO 날짜 두DWORD를64비트16진수로 출력한다.
+}
+
 namespace { // 실제 CRT와 Kernel 포인터만 플랫폼 경계로 변환한다.
 FILE* DiagnosticFile(o::ProcessSummaryHandle handle) { if (!handle) throw std::logic_error("프로세스 요약 NULL FILE");return reinterpret_cast<FILE*>(handle); } // 원문 NULL CRT 오류를 빈 성공으로 바꾸지 않는다.
 const o::SquidProcess& DiagnosticProcess(o::ProcessSummaryHandle handle) { // 실제 제품의 모든 프로세스가 같은 원문 Form/부모를 가진다.

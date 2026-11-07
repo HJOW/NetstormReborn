@@ -186,6 +186,7 @@ struct RawCampaignSessionServices {
     std::function<ScreenPoint()> cameraScreenSize; // 34h 수신이 현재005c78f0/f4 논리 화면 크기를 읽는다. 지도 Gump 크기나 호스트 표시 크기와 구별한다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> developerQueue; // 개발자 cr의452fe0을 같은 실제 입력 큐에 넣고 직접 UI 변경으로 대체하지 않는다.
     std::function<void(float,float)> developerHighlight; //4345e0의 현재 좌표 강조를 실제 Screen/카메라/즉시 출력에 연결한다.
+    std::function<void()> developerQueryDirectDraw; // qdd는 같은 Client 로그와 Windows 시스템 DLL 버전 장치를 사용한다.
     std::function<void(std::uint32_t)> developerHeapTrace; //31h ht는 같은 Client 프레임의0054dab0만 설정하고 즉시 로그/힙 순회를 실행하지 않는다.
     std::function<void(std::uint32_t)> developerTraceObject; //44dab0의 실제 객체/Form 재귀 trace이며 별도 요약으로 대체하지 않는다.
     std::function<ScreenRect()> mapView; // 초기 Reset 전부터 같은 현재 Gump 지도 영역을 읽는다. 독립 비GUI 장치만 기존 전체 viewport 계약을 사용한다.

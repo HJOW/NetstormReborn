@@ -4626,7 +4626,16 @@ void RawCampaignSession::Impl::ExecuteDeveloperCommand(std::string_view text) {
         if (one()!=1) { log("bad command\n");return; }const auto graph=std::bit_cast<std::uint32_t>(arguments[0]);const auto& records=world.Storage()->graph.records;if (graph>=records.size()) throw std::out_of_range("개발자 graph 덤프의 실제255행 물리 범위");const auto& record=records[graph];log("graph index: "+std::to_string(arguments[0])+" numSurface: "+std::to_string(record.surfaces)+" inUse: "+std::to_string(record.inUse)+"\n");return;
     }
     if (key=="heaptrace" || key=="ht") { if (one()!=1) { log("bad command\n");return; }if (!services.developerHeapTrace) throw std::logic_error("개발자 heaptrace의 실제 Client 프레임 미연결");services.developerHeapTrace(arguments[0]!=0);return; }
-    for (const auto pending:{"querydirectdraw","qdd","addlabel","al","getpriest","gp"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
+    if (key=="querydirectdraw" || key=="qdd") { if (!services.developerQueryDirectDraw) throw std::logic_error("개발자 qdd의 실제 시스템 버전 장치 미연결");services.developerQueryDirectDraw();return; }
+    if (key=="getpriest" || key=="gp") {
+        if (!globals.missionPost) return;RawSquidFinder finder(core.pool,core.hash,core.types);Sid priest{}; // 원문은 server가 아닌 missionPost 관문이며 전체1000칸 검색을 같은 해시 순서로 수행한다.
+        for (auto candidate=finder.Begin({-1000,-1000,1000,1000},0);candidate.value;candidate=finder.Next()) { const auto raw=core.pool.Slot(candidate);if (raw[10]==aux.PriestType() && raw[34]==playerState.battleOwner) { priest=candidate;break; } } // 현재 로컬 소유 사제의 첫 후보에서만 멈춘다.
+        if (!priest.value) return;const auto created=world.Create(aux.PriestType(),0);if (!created.value) throw std::logic_error("개발자 getPriest의 원문 NULL 생성");
+        for (std::uint32_t owner=1;owner<9;++owner) if (!(Read(players,std::size_t(owner)*180+0x50)&1U)) { SetRawSquidWord(core.pool,created,static_cast<std::uint16_t>(owner),core.bridgeState.bridgeType,[this](auto value) { core.building.NotifySurface(value); });ownership->SetOwner(created,owner);break; } // 비로그인 첫 Player1..8에 WORD→파생owner를 쓰며 없으면 생성자의 값을 유지한다.
+        RawBoardTarget board(world.Storage()->boardTargetState,[storage=world.Storage()](auto line) { storage->AssertDisplay("false","\\Ns\\O\\Boardcoord.cpp",line); });const auto point=board.Side(core.neighbors.Footprint(priest),2,4);world.Pop(created,point.x,point.y,0); // 로컬 사제의 현재 발자국을 동쪽/flags4로 확장한 변 중간점이다.
+        if (!developerDamage) throw std::logic_error("개발자 getPriest의 실제 가상98 미연결");developerDamage(created,10000,core.pool.Slot(priest)[34],priest.value);return; // PE는 원래 사제SID를 마지막 인자로 넘긴다. 새 검사에서 포획/피해 실행은 하지 않는다.
+    }
+    for (const auto pending:{"addlabel","al"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
         if (key==pending) throw std::logic_error("개발자 명령의 실제 후속 본체 미접합: "+key);
     }
 }

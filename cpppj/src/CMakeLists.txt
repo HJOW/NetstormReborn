@@ -24,7 +24,7 @@ target_sources(netstorm PRIVATE
     client/CompositeMissionTransport.cpp client/CompositeMissionTransport.h
     client/CampaignTransportServices.cpp client/CampaignTransportServices.h
     client/ClientCampaignTransport.cpp client/ClientCampaignTransport.h)
-target_link_libraries(netstorm PUBLIC ws2_32)
+target_link_libraries(netstorm PUBLIC ws2_32 version) # qdd의 시스템 DLL 버전 리소스를 Windows W API로 읽으며 드라이버/네트워크 접속은 하지 않는다.
 target_sources(netstorm PRIVATE client/ScreenModeTransition.cpp client/ScreenModeTransition.h) #원문 화면 변경 부모의 실패 복구/설정/공유 갱신 순서다(746).
 target_sources(netstorm PRIVATE client/SavedCameraKey.cpp client/SavedCameraKey.h) #숫자/Shift 기호와 현재 Renderer 중심의 저장 카메라다(719).
 target_sources(netstorm PRIVATE client/LostPositionKey.cpp client/LostPositionKey.h) #U/u는 공통 삭제가 기록한 현재 손실 위치로 즉시 이동한다(751).
