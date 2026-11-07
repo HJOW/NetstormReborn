@@ -50,6 +50,18 @@ public sealed class RawSurfaceWorld
     /// <summary>서로 연결된 표면의 Graph 소속을 관리하는 처리기다. 원본 Impl.graph에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 그래프 적재 이식에서 추가됐다.</summary>
     private readonly RawGraph? _graph;
 
+    /// <summary>자산 뿌리의 공간 해제기다. 원본 Impl.unpop에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    private readonly RawUnpop? _unpop;
+
+    /// <summary>자산 삭제의 기본 몸체다. 원본 Impl.baseDestroy에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    private readonly RawSquidDestroy? _baseDestroy;
+
+    /// <summary>교체한 현재 공통 삭제 몸체다. 원본 Impl.common에 대응하며 BindDeletion 전에는 비어 있다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    private RawSquidDestroyLifecycle? _common;
+
+    /// <summary>공통 삭제 실제 소비자를 설치했는지다. 원본 Impl.deletionBound에 대응한다. 첫 객체 생성 전 한 번만 연결한다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    private bool _deletionBound;
+
     /// <summary>후설치와 같은 현재 원본 삭제 전역이다. 원본 Impl.deletion에 대응한다. 별도 세션 사본을 만들지 않으며 공유 좌표 연결은 BindDeletion 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 상태 이식에서 추가됐다.</summary>
     private readonly SquidDeletionState _deletion = new();
 
@@ -78,6 +90,8 @@ public sealed class RawSurfaceWorld
         if (_types.Count == OriginalConstructors.TypeCount)
         {
             _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph.Records, _storage.Graph.Stack, null, GraphRecovery.FullPool);
+            _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots);
+            _baseDestroy = new RawSquidDestroy(_storage.Pool, _unpop, _types);
         }
 
         _bookkeeping.LocalOwner = 1;
@@ -309,6 +323,55 @@ public sealed class RawSurfaceWorld
     /// <summary>후설치와 같은 현재 원본 삭제 전역이다. 별도 세션 사본을 만들지 않는다. 2026-11-07 F2d 월드 본체 삭제 상태 이식에서 추가됐다.</summary>
     /// <returns>현재 원본 삭제 전역이다.</returns>
     public SquidDeletionState DeletionState() => _deletion;
+
+    /// <summary>첫 객체 생성 전에 공통 삭제의 관찰 경계를 실제 보상·현재 선택·선택해제·소리 소비자로 한 번 교체한다. 선택 함수 보관은 삭제 실행 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    /// <param name="selected">현재 UI 선택을 읽는 함수다. null이면 안 된다.</param>
+    /// <param name="hooks">선택 해제·보상·소리 효과와 파생 경계다. Emit·Forward가 없으면 안 된다.</param>
+    public void BindDeletion(Func<int>? selected, SquidDeletionHooks hooks)
+    {
+        // Take는 freeCount를 보존할 수 있으므로 동일 물리 슬롯도 검사한다.
+        RawSidPool pool = _storage.Pool;
+        if (_deletionBound || _loading || _loaded || pool.FreeCount != (uint)(pool.Capacity - RawSidPool.FirstOrdinary))
+        {
+            throw new InvalidOperationException("공통 삭제 실제 소비자는 첫 객체 생성 전에 한 번 연결해야 합니다.");
+        }
+
+        // 이미 만든 실제 슬롯이 하나라도 있으면 늦은 설치를 거부한다.
+        for (int sid = RawSidPool.FirstOrdinary; sid < pool.Capacity; sid++)
+        {
+            if ((pool.Slot(sid)[RawSidPool.StateOffset] & RawSidPool.FreeBit) == 0)
+            {
+                throw new InvalidOperationException("공통 삭제 실제 소비자 설치 전 객체가 존재합니다.");
+            }
+        }
+
+        if (_unpop is null || _baseDestroy is null || _graph is null)
+        {
+            throw new InvalidOperationException("공통 삭제 실제 소비자는 188개 TYPE 월드에서만 연결됩니다.");
+        }
+
+        ArgumentNullException.ThrowIfNull(selected);
+        ArgumentNullException.ThrowIfNull(hooks);
+        if (hooks.Emit is null || hooks.Forward is null)
+        {
+            throw new ArgumentException("공통 삭제의 실제 선택·효과·파생 경계가 없습니다.", nameof(hooks));
+        }
+
+        _common = new RawSquidDestroyLifecycle(pool, _types, _bookkeeping, _deletion, _baseDestroy, hooks, _graph);
+        _deletionBound = true;
+    }
+
+    /// <summary>현재 후설치된 실제 공통 삭제의 검사·Pre·Post를 파생 자산과 공유한다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    /// <returns>현재 공통 삭제 몸체다.</returns>
+    public RawSquidDestroyLifecycle CommonDeletion()
+    {
+        if (_common is null)
+        {
+            throw new InvalidOperationException("공통 삭제 실제 소비자가 설치되지 않았습니다.");
+        }
+
+        return _common;
+    }
 
     /// <summary>모든 Form·경로·Regular가 쓰는 같은 실제 커널을 빌린다. 새 커널을 만들지 않는다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>
     /// <returns>같은 실제 커널이다.</returns>

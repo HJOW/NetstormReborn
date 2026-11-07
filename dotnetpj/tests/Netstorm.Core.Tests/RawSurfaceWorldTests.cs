@@ -333,6 +333,71 @@ public sealed class RawSurfaceWorldTests
         Assert.False(world.DeletionState().RebuildGraph);
     }
 
+    /// <summary>삭제 효과 콜백 묶음을 만든다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    private static SquidDeletionHooks DeletionHooks() =>
+        new() { Emit = _ => { }, Forward = _ => { } };
+
+    /// <summary>공통 삭제 소비자 설치가 현재 몸체를 바꾸는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindDeletionBindsOnce()
+    {
+        // 첫 객체 생성 전의 한 번 연결을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.BindDeletion(() => 0, DeletionHooks());
+        Assert.NotNull(world.CommonDeletion());
+        Assert.Same(world.CommonDeletion(), world.CommonDeletion());
+    }
+
+    /// <summary>중복 설치를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindDeletionRejectsDuplicate()
+    {
+        // 한 번 연결 뒤의 설치는 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.BindDeletion(() => 0, DeletionHooks());
+        Assert.Throws<InvalidOperationException>(() => world.BindDeletion(() => 0, DeletionHooks()));
+    }
+
+    /// <summary>객체가 생긴 뒤의 늦은 설치를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindDeletionRejectsLateCall()
+    {
+        // 첫 객체 뒤의 늦은 설치는 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.Storage().Pool.Allocate();
+        Assert.Throws<InvalidOperationException>(() => world.BindDeletion(() => 0, DeletionHooks()));
+    }
+
+    /// <summary>빠진 선택·효과 경계를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindDeletionRejectsMissingHooks()
+    {
+        // 선택·효과·파생 경계 누락은 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<ArgumentNullException>(() => world.BindDeletion(null, DeletionHooks()));
+        Assert.Throws<ArgumentException>(() => world.BindDeletion(() => 0, new SquidDeletionHooks { Forward = _ => { } }));
+        Assert.Throws<ArgumentException>(() => world.BindDeletion(() => 0, new SquidDeletionHooks { Emit = _ => { } }));
+    }
+
+    /// <summary>설치 전의 현재 몸체 조회를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void CommonDeletionBeforeBindThrows()
+    {
+        // 미연결 몸체 읽기는 원본처럼 명시 오류로 멈춘다(결정 6).
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.CommonDeletion());
+    }
+
+    /// <summary>188개가 아닌 TYPE의 설치를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindDeletionRejectsNon188Types()
+    {
+        // CD 171개 TYPE의 삭제 연결은 후속 단위에서 잇는다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.BindDeletion(() => 0, DeletionHooks()));
+    }
+
     /// <summary>같은 저장소 커널을 빌리는지 검증한다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>
     [Fact]
     public void KernelSharesStorageKernel()
