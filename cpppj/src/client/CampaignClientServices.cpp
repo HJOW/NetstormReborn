@@ -169,6 +169,8 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.cameraCommit=[&client](const CampaignCameraCommitContext&) { if (!client.Menu()) throw std::logic_error("즉시 카메라의 실제 UberGump 미설치");client.Menu()->CommitCameraNow(); }; //같은 Session/Client owner의497960 전체를 호출하며 명시 독립 장치로 우회하지 않는다.
     services.cameraScreenSize=[&client] { return ScreenPoint{client.GetScreen().Width(),client.GetScreen().Height()}; }; // 수신 직전의 같은 논리 Screen을 읽으며 FSR 출력 픽셀이나 도킹 영역을 사용하지 않는다.
     services.developerQueue=[&client](auto code,auto first,auto second) { client.Input().PushCommand(code,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); }; // 같은 원문 명령 정규화/큐 용량/소비 순서를 유지한다.
+    services.developerHighlight=[&client](float x,float y) { client.HighlightDeveloperPoint(x,y); }; // 같은 현재 Screen/카메라/파일 팔레트를 지연 조회한다.
+    services.developerTraceObject=[&client](auto sid) { client.TraceObject(sid); }; // F7/선택 trace와 같은44dab0 전체 몸체를 사용한다.
     services.mapView=[&controls] { return controls.MapViewRect(); }; //초기 Reset 전에도 현재 도킹의 같은005ca9cc 영역을 사용한다.
     services.chatGlobals=client.ChatWindowGlobals();services.chatReceive=std::move(ui.receiveChat); // 수신 마스크/무시 상태와 실제 UI는 같은 Client/현재 게임을 빌린다.
     services.subscriberGlobals=client.SubscriberGlobals(); // Init/Chat/모든 Session이 같은 두 DWORD를 수명째 빌린다.

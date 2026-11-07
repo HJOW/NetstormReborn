@@ -136,8 +136,8 @@
 #include "o/RawBattleNuggetPlacement.h" // 비미션 보충도 원문 지역 난수와 실제 Factory/배치/Pop을 사용한다.
 #include "o/RawBattleResourceOptions.h" // 주기 SP 통지 검증도 같은 현재87BYTE와 원문 표를 조회한다.
 #include "o/RawBattleResourceFrame.h" // 일반 게임 프레임의 스펠/SP/간헐천을 같은 실제 장치에 연결한다.
-#include "o/RawRemoteTellPacket.h"
-#include "o/RawDeveloperCommandPacket.h" //31h 현재 문자열/길이 관찰과 실제 해석기를 연결한다. // 비용 부족/메타 안내의 실제70h를 같은 공유 등록표와 현재 Tell에 연결한다.
+#include "o/RawRemoteTellPacket.h" // 비용 부족/메타 안내의 실제70h를 같은 공유 등록표와 현재 Tell에 연결한다.
+#include "o/RawDeveloperCommandPacket.h" //31h 현재 문자열/길이 관찰과 실제 해석기를 연결한다.
 #include "o/OriginalText.h" // 실제 원격 Tell의 표시 바이트를 같은 UI UTF-8 경계에서 변환한다.
 #include "o/RawConstructionFailurePackets.h" // 비용실패의실제6ch/2fh와현재예측객체정리를공유한다.
 #include "o/RawSquidReceive.h" // 전체 객체 수신/검증도 같은 Factory·소유자·현재 공간을 사용한다.
@@ -4532,6 +4532,30 @@ void RawCampaignSession::Impl::ExecuteDeveloperCommand(std::string_view text) {
     const auto log=[this](std::string_view message) { world.Storage()->TraceGraph(29,message); }; // 실제4c2630 수준29의 같은 출력/필터 장치를 사용한다.
     const auto sid=[this](int value) { if (value<0 || value>65535 || static_cast<std::uint32_t>(value)>=core.pool.Capacity()) throw std::out_of_range("개발자 명령의 현재 SID 물리 범위");return Sid{static_cast<std::uint16_t>(value)}; }; // 유효한 원문 low SID를 물리 풀로 연결한다.
     auto& aux=*gameplayGlobals->GameAux();auto& settings=aux.MissionSettings(); // 모든 명령/수신이 공유하는 현재 주소이며 새 명령이 초기화하지 않는다.
+    const auto highlight=[this](Sid target) { if (!target.value) return;const auto raw=core.pool.Slot(target);const auto x=std::bit_cast<float>(Read(raw,14)),y=std::bit_cast<float>(Read(raw,18));if (!services.developerHighlight) throw std::logic_error("개발자 명령의 실제 화면 강조 미연결");services.developerHighlight(x,y); }; // 원문SID0은 화면/카메라 장치를 조회하지 않는다.
+    const auto playerName=[this](std::uint32_t owner) { if (owner>=9) throw std::out_of_range("개발자 Player 이름의 물리 범위");const auto bytes=players.subspan(std::size_t(owner)*180+12,32);const auto end=std::find(bytes.begin(),bytes.end(),0);if (end==bytes.end()) throw std::out_of_range("개발자 Player 이름의 NUL 부족");return std::string(reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin())); }; // 매 trace 직전 같은 현재 이름을 읽는다.
+    if (key=="help" || key=="?") {
+        for (const auto line:{"setOwner(so) sid newowner - sets the owner of sid via server.\n","setHackMove(shm) 1|0 - sets the hack move flag on client.\n","dump(d) sid - dumps lots of info about a given sid.\n","setNoDamage(snd) 1|0 - sets the \"nodamage\" flag on client and server.\n","scatter(sct) type - generates some random pieces of type near bc=<0,0>.\n","dumpTypes(dts) 1|0 - dumps the type info. 1=detailed, 0=abreviated.\n","dumpType(dt) type - dumps info about a specific type.\n","shootMyFriends(smf) 1|0 - attackers will target pieces of same owner.\n","create(c) type frame - create type of frame at bc=<20,20>.\n","setLocalHitPoints(slhp) sid - set the hitpoints field for sid only on this client.\n","setAbstract(sa) sid 1|0 - set the abstract flag on sid to 1 or 0 (Only on client).\n","fillMyTank(fmt) amount - set all graphs\' energy to amount (Only on this client and the server)\n","applyDamage(ad) sid amount - calls take damage on sid. (Client and server)\n","generatorTimer(gt) 1|0 - make stuff appear in combat gump fast\n","combatGumpColsRows(cr) cols rows - make more stuff appear in combat gump\n","heaptrace(ht) 1|0 - walk the heap and print stats each frame\n","destroy(de) sid - kill a sid\n","dumpArtData(dad) type - dumps art data (hot spot, etc)\n","dumpPlayers(dp) - dump the active players.\n","dumpgraph(dg) graphNumber - dump the graph\n","roundtotile(rtt) 1|0 - allow cursor to have fractional pos\n","setally(sally) player ally - set ally for player\n","clrally(cally) player ally - clr ally of player\n","dumpally(dally) player - dump ally status\n","createShipShit(css) - creates random crap in your ship\n","setbridgekillperiod(sbkp) - sets period for bridge kill scan\n","setsubid(ssi) - sets the subid and handle associated with this fort\n","quickVortex(qv) - makes vortices build instantly\n","quickBuild(qb) - makes everything build instantly\n","queryDirectDraw(qdd) - shows DirectDraw driver info\n","addLabel(al) - adds a label to the build record stream\n","getPriest(gp) - sticks a enemy priest next to your priest\n"}) log(line); // 원문 도움말32개 문자열을 같은 순서/수준으로 전달한다.
+        return;
+    }
+    if (key=="dump" || key=="d") { const auto value=one()==1 ? arguments[0] : 0;if (!value) return;const auto target=sid(value);highlight(target);if (!services.developerTraceObject) throw std::logic_error("개발자 dump의 실제44dab0 미연결");services.developerTraceObject(target.value);return; }
+    if (key=="setowner" || key=="so") {
+        if (two()!=2) throw std::invalid_argument("개발자 소유자 명령의 원문 미정 정수 입력");const auto target=sid(arguments[0]);const auto owner=static_cast<std::int32_t>(std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(arguments[1])));
+        if (core.processState.Server()) { world.Unpop(target,0);ownership->SetOwner(target,static_cast<std::uint32_t>(owner));world.Repop(target,8);return; }highlight(target);log("requested owner on "+std::to_string(arguments[0])+" set to "+std::to_string(owner)+"\n");return; // 원문client 분기는 안내/강조만 하며 별도 송신이 없다.
+    }
+    if (key=="setlocalhitpoints" || key=="slhp") {
+        if (two()!=2) { log("bad command.\n");return; }const auto target=sid(arguments[0]);world.Unpop(target,0);SetRawSquidHitPoints(core.pool,target,arguments[1]);world.Repop(target,0);highlight(target);const auto current=std::bit_cast<std::int32_t>(Read(core.pool.Slot(target),26));const auto maximum=hp.MaxHitPoints(target);log("sid "+std::to_string(arguments[0])+" changed to "+std::to_string(current)+" hp.  (max for type = "+std::to_string(maximum)+")\n");return;
+    }
+    if (key=="dumpplayers" || key=="dp") {
+        for (std::uint32_t owner=1;owner<9;++owner) { const auto flags=Read(players,std::size_t(owner)*180+0x50);if (flags&0x22U) log("id:"+std::to_string(owner)+" "+playerName(owner)+" "+((flags&1U) ? "" : "Not")+"Logged in\n"); } // 현재 Player1..8의 표시 관문/로그인 bit를 매 단계 다시 읽는다.
+        return;
+    }
+    if (key=="dumpally" || key=="dally") {
+        if (one()!=1) return;const auto owner=static_cast<std::uint32_t>(arguments[0]);log("Ally bits for "+std::to_string(arguments[0])+" "+playerName(owner)+"\n");
+        for (std::uint32_t target=1;target<9;++target) { if (Read(players,std::size_t(owner)*180+0x54)&(1U<<(target&31U))) log(" "+std::to_string(target)+" "+playerName(target)+"\n"); } //48f790은 현재+54의 해당bit만 검사한다.
+        return;
+    }
+
     if (key=="sethackmove" || key=="shm") { settings[1]=required()!=0;log("hackmover now "+std::to_string(settings[1])+"\n");return; }
     if (key=="setnodamage" || key=="snd") { settings[2]=required()!=0;log("nodamagedebug now "+std::to_string(settings[2])+"\n");log("requested server to do same.\n***Not echoed to other clients.  This will FUCK EVERYTHING!***\n");return; }
     if (key=="shootmyfriends" || key=="smf") { const auto value=one()==1 ? arguments[0] : 1;settings[3]=value!=0;return; }
@@ -4560,7 +4584,7 @@ void RawCampaignSession::Impl::ExecuteDeveloperCommand(std::string_view text) {
         if (two()!=2) { log("bad command.\n");return; }const auto target=sid(arguments[0]);world.Unpop(target,0);auto raw=core.pool.AllocatedBytes(target);if (!(raw[11]&4U)) world.Storage()->AssertDisplay("isVoid()","c:\\ns\\o\\squid.h",0x282);raw=core.pool.AllocatedBytes(target);raw[40]^=static_cast<std::uint8_t>((raw[40]^static_cast<std::uint8_t>(arguments[1]))&1U);world.Repop(target,0);return;
     }
     if (key=="applydamage" || key=="ad") { if (two()!=2 || arguments[0]<0) { log("bad command\n");return; }if (!developerDamage) throw std::logic_error("개발자 피해의 실제 가상98 미연결");developerDamage(sid(arguments[0]),std::bit_cast<std::uint32_t>(arguments[1]),0,0);return; }
-    for (const auto pending:{"help","?","setsubid","ssi","setbridgekillperiod","sbkp","dump","d","setowner","so","dumptypes","dts","dumptype","setlocalhitpoints","slhp","settracelevel","stl","heaptrace","ht","dumpartdata","dad","dumpplayers","dp","dumpgraph","dg","dumpally","dally","querydirectdraw","qdd","addlabel","al","getpriest","gp"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
+    for (const auto pending:{"setsubid","ssi","setbridgekillperiod","sbkp","dumptypes","dts","dumptype","settracelevel","stl","heaptrace","ht","dumpartdata","dad","dumpgraph","dg","querydirectdraw","qdd","addlabel","al","getpriest","gp"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
         if (key==pending) throw std::logic_error("개발자 명령의 실제 후속 본체 미접합: "+key);
     }
 }

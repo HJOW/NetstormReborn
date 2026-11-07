@@ -178,16 +178,31 @@ void ClientRendererFrame::DrawWater() {
     auto& enabled=client_.gameplayGlobals_->DrawWater();if (!enabled) return; //원문 flag0은 실제 물리/화면 장치를 요구하지 않는다.
     const auto storage=client_.SurfaceStorage();auto& screen=*client_.screen_;auto& camera=client_.gameplayGlobals_->Camera();
     DrawWaterHooks hooks;hooks.clip=[&screen](auto rect) { screen.SetClip(rect.left,rect.top,rect.right,rect.bottom); };
-    hooks.rectangle=[&screen](auto rect,auto color) {
-        const auto saved=screen.Clip();const ScreenRect full{0,0,screen.Width(),screen.Height()};screen.SetClip(full.left,full.top,full.right,full.bottom); //원문4a2270은 현재 객체 clip을 저장하고 전체 viewport로 임시 변경한다.
-        auto* pixels=screen.Lock();
-        try { DrawWaterRectangle({pixels,static_cast<std::size_t>(screen.Pitch())*static_cast<std::size_t>(screen.Height())},screen.Pitch(),screen.Height(),full,rect,color); }
-        catch (...) { screen.Unlock();screen.SetClip(saved.left,saved.top,saved.right,saved.bottom);throw; } //호스트 예외도 잠금/clip만 반납하며 앞서 그린 픽셀은 롤백하지 않는다.
-        screen.Unlock();screen.SetClip(saved.left,saved.top,saved.right,saved.bottom);
-    };
+    hooks.rectangle=[this](auto rect,auto color) { DrawOutlineRectangle(rect,color); }; // 같은 실제4a2270 장치를 개발자 강조와 공유한다.
     hooks.present=[&screen] { screen.PresentPaletteClear(); }; //이 기존 helper는 같은004a46d0의 전체 viewport 출력/clip 복구다. 새 팔레트 변경은 수행하지 않는다.
     RawDrawWater(storage->pool,storage->hash,storage->types).Draw(camera.RendererView(),camera.Snapshot(),screen.Width(),screen.Height(),enabled,screen.Colors().basic[3],hooks); //원문005ad128은 같은 파일 팔레트 기본 파랑이다.
 }
+
+// 사각형마다 현재 clip을 보존하고 전체 viewport의 기존 VFX 네 선을 그린다.
+void ClientRendererFrame::DrawOutlineRectangle(ScreenRect rectangle,std::uint32_t color) {
+    auto& screen=*client_.screen_;const auto saved=screen.Clip();const ScreenRect full{0,0,screen.Width(),screen.Height()};screen.SetClip(full.left,full.top,full.right,full.bottom);auto* pixels=screen.Lock();
+    try { DrawWaterRectangle({pixels,static_cast<std::size_t>(screen.Pitch())*static_cast<std::size_t>(screen.Height())},screen.Pitch(),screen.Height(),full,rectangle,color); }
+    catch (...) { screen.Unlock();screen.SetClip(saved.left,saved.top,saved.right,saved.bottom);throw; } // 부분 픽셀은 보존하고 호스트 잠금/clip만 반납한다.
+    screen.Unlock();screen.SetClip(saved.left,saved.top,saved.right,saved.bottom);
+}
+// 같은 현재 snapshot의 가로 칸 크기를 두 축에 쓰는 원문 비대칭 좌표를 보존한다.
+void ClientRendererFrame::HighlightDeveloperPoint(float x,float y) {
+    if (!client_.screen_) throw std::logic_error("개발자 강조의 현재 Screen 미설치");auto& screen=*client_.screen_;const auto& view=client_.gameplayGlobals_->Camera().Snapshot();const auto point=ProjectCameraView(view,x,y);
+    const auto wrap=[](std::uint32_t value) { return std::bit_cast<std::int32_t>(value); }; // 원문의 signed DWORD 덧셈/뺄셈 감김을 정의된 계산으로 유지한다.
+    ScreenRect rectangle{wrap(std::bit_cast<std::uint32_t>(point[0])-std::bit_cast<std::uint32_t>(view.cellPixels[0])+1U),wrap(std::bit_cast<std::uint32_t>(point[1])-std::bit_cast<std::uint32_t>(view.cellPixels[0])+1U),wrap(std::bit_cast<std::uint32_t>(point[0])-1U),wrap(std::bit_cast<std::uint32_t>(point[1])-1U)};
+    screen.SetClip(rectangle.left,rectangle.top,rectangle.right,rectangle.bottom); //4345e0은 이 작은 clip을 원래값으로 복구하지 않는다.
+    for (int stroke=0;stroke<3;++stroke) { // 각 선 뒤 현재 노랑0059afd8을 다시 읽고 사각형을 한 픽셀씩 줄인다.
+        DrawOutlineRectangle(rectangle,screen.Colors().basic[5]);rectangle.left=wrap(std::bit_cast<std::uint32_t>(rectangle.left)+1U);rectangle.top=wrap(std::bit_cast<std::uint32_t>(rectangle.top)+1U);rectangle.right=wrap(std::bit_cast<std::uint32_t>(rectangle.right)-1U);rectangle.bottom=wrap(std::bit_cast<std::uint32_t>(rectangle.bottom)-1U);
+    }
+    screen.PresentPaletteClear(); //4a46d0만 실행하며 장면 재그리기/Frame/flip을 추가하지 않는다.
+}
+// 실제 현재 Frame 장치가 동일 Screen의 private Native 출력 경계를 소유한다.
+void Client::HighlightDeveloperPoint(float x,float y) { if (!rendererFrame_) throw std::logic_error("개발자 강조의 실제 Renderer owner 미설치");rendererFrame_->HighlightDeveloperPoint(x,y); }
 
 // 정상 Draw의 잠금 반납 뒤·Present 앞에서 원문4994b0 말미의 dirty 정리를 실행한다.
 void ClientRendererFrame::Finish() { client_.kencloudGlobals_->CleanDirty();++finished_; }

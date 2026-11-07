@@ -1,0 +1,83 @@
+{
+  "unit": 1036,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "현재 화면 강조와 원문 trace/소유자·HP 변경 및 개발자6명령 접합",
+  "sourceFunctions1078": [
+    "004345e0",
+    "0044dab0",
+    "0044dc70",
+    "004a1580",
+    "004a2270",
+    "004a46d0",
+    "00497220",
+    "0048f790"
+  ],
+  "referenceFunctions1072": [
+    "004a9eb0",
+    "004a40c0"
+  ],
+  "developerCommands": {
+    "added": [
+      "help",
+      "dump",
+      "setowner",
+      "setlocalhitpoints",
+      "dumpplayers",
+      "dumpally"
+    ],
+    "implementedTotal": 22,
+    "remaining": [
+      "setsubid",
+      "setbridgekillperiod",
+      "dumptypes",
+      "dumptype",
+      "settracelevel",
+      "heaptrace",
+      "dumpArtData",
+      "dumpgraph",
+      "queryDirectDraw",
+      "addLabel",
+      "getPriest"
+    ],
+    "totalComplete": false,
+    "queuedCombatUiConsumer": "후속 확인 대상"
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1036\\build.log",
+    "exeSize": 12097536,
+    "exeSha256": "eed4e831db62f83d8801cf9ea3455e43e540eba8a8d23afb69c12e306c413091"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "diagnosticGuiRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0,
+    "dedicatedAirUnitTests": 0
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1036\\protected-before.json"
+  },
+  "pause": {
+    "requestedByUser": true,
+    "afterCurrentUnitDocumentationAndCommit": true,
+    "resumeRequiresUser": true
+  },
+  "remaining": [
+    "31h 나머지11명령/실제 입력 및cr65h UI 소비자",
+    "나머지 실제 수신·전송/재동기화·Activate 수신자·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

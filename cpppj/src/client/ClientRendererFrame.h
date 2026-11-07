@@ -24,9 +24,11 @@ public:
     void DrawDiagnosticsBeforeWater(); //436450의Hash→Fire→Spot은DrawWater앞에순서대로실행한다.
     void DrawDiagnosticsAfterWater(); //같은부모의Board는DrawWater뒤·Present앞이다.
     void DrawWater(); //00436450의 capture 뒤·499fe0 앞에서00434dd0의 같은 현재 물리/Screen을 표시한다.
+    void HighlightDeveloperPoint(float x,float y); // 현재 snapshot으로 투영한 좌표의 원문 세 겹 강조이며 Frame/난수는 진행하지 않는다.
     void Finish(); //정상 Draw의 화면 잠금 반납 뒤470ca0을 실행한다. 실패 경로에서는 부르지 않는다.
     std::string Diagnostics() const; //현재 실제 owner/cache·요청/반환을 읽을 뿐 게임 상태를 바꾸지 않는다.
 private:
+    void DrawOutlineRectangle(ScreenRect rectangle,std::uint32_t color); //4a2270의 임시 전체 clip/lock/네 선/clip 복구를 물 진단과 개발자 강조가 공유한다.
     void DrawDiagnostic(RendererDiagnosticKind kind,const std::uint32_t& flag); //선택한진단만현재물리/Screen을빌린다.
     RendererDiagnosticHooks DiagnosticDevices(); //같은clip/lock/palette/BFS거리표를지연조회한다.
     RendererCloudHooks CloudDevices(); //같은 Screen/색/파일/난수의 현재 표시 장치이며 별도 DirectDraw 표면 경계를 유지한다.
