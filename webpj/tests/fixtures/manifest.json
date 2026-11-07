@@ -4609,7 +4609,7 @@
       "bytes": 193217,
       "lines": 353,
       "fixtureCommit": "5b541654",
-      "webCommit": "worktree",
+      "webCommit": "cdf9959e",
       "cpppjBasis": {
         "cpppj/src/o/RawFileName.cpp": "c2d29227"
       }
@@ -4638,7 +4638,7 @@
       "bytes": 37895,
       "lines": 65,
       "fixtureCommit": "b2aa74b8",
-      "webCommit": "worktree",
+      "webCommit": "cdf9959e",
       "cpppjBasis": {
         "cpppj/src/o/RawFileName.cpp": "c2d29227"
       }
@@ -4667,7 +4667,7 @@
       "bytes": 18069,
       "lines": 33,
       "fixtureCommit": "b5d1af5d",
-      "webCommit": "worktree",
+      "webCommit": "cdf9959e",
       "cpppjBasis": {
         "cpppj/src/o/RawFileName.cpp": "c2d29227"
       }
@@ -4696,7 +4696,7 @@
       "bytes": 110096,
       "lines": 193,
       "fixtureCommit": "7abbabd6",
-      "webCommit": "worktree",
+      "webCommit": "cdf9959e",
       "cpppjBasis": {
         "cpppj/src/o/RawFileName.cpp": "c2d29227"
       }
@@ -4725,9 +4725,96 @@
       "bytes": 9434,
       "lines": 17,
       "fixtureCommit": "c2d29227",
-      "webCommit": "worktree",
+      "webCommit": "cdf9959e",
       "cpppjBasis": {
         "cpppj/src/o/RawFileName.cpp": "c2d29227"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E29",
+      "id": "energy-supply",
+      "path": "cpppj/tests/fixtures/energy-supply-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 에너지 대응/수집/평가/덮개/소비의 반환·문구·잔여·선택 목록(두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/energy-supply.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-energy-supply.js"
+      ],
+      "doc": "docs/webpj-energy-supply-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawEnergySupply.cpp"
+      ],
+      "scope": "1058행 전부 사용",
+      "text": true,
+      "sha256": "d020d2165be81e8db054c63804976ddd9a50876e3765243e7f7fcc38f2299802",
+      "bytes": 448744,
+      "lines": 1059,
+      "fixtureCommit": "5bd2e807",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawEnergySupply.cpp": "504a92a8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E29",
+      "id": "energy-sort",
+      "path": "cpppj/tests/fixtures/energy-sort-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 공급원 정렬 직후와 연속 소비 뒤의 전체 목록·진단·반환(두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/energy-supply.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-energy-supply.js"
+      ],
+      "doc": "docs/webpj-energy-supply-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawEnergySupply.cpp"
+      ],
+      "scope": "567행 전부 사용",
+      "text": true,
+      "sha256": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
+      "bytes": 690669,
+      "lines": 568,
+      "fixtureCommit": "504a92a8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawEnergySupply.cpp": "504a92a8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E29",
+      "id": "energy-provider-vtables",
+      "path": "cpppj/tests/fixtures/energy-provider-vtables.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 PATCH 가상 표 83개의 +a0 DWORD",
+      "consumers": [
+        "webpj/tests/energy-supply.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-energy-supply.js"
+      ],
+      "doc": "docs/webpj-energy-supply-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawEnergySupply.cpp"
+      ],
+      "scope": "83행 전부 사용",
+      "text": true,
+      "sha256": "21022817bb7106b346b7be01a30078a61ce9ac4ed11ed0341b5db888886a9d63",
+      "bytes": 1356,
+      "lines": 84,
+      "fixtureCommit": "5bd2e807",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawEnergySupply.cpp": "504a92a8"
       }
     }
   ]

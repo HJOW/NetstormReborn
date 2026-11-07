@@ -661,7 +661,7 @@ cpppj/src/o/RawDudeSpawn.cpp	port			todo	[o-default]
 cpppj/src/o/RawDudeTask.cpp	port			todo	[o-default]
 cpppj/src/o/RawEditorPlayers.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawEditorWorldFinish.cpp	exclude-edit			-	[edit-editor]
-cpppj/src/o/RawEnergySupply.cpp	port			todo	[o-default]
+cpppj/src/o/RawEnergySupply.cpp	port	www/core/raw-energy-supply.js	1f00a25a	port	[o-default] WB04-E29: Mana.cpp 4730c0/473330/4734d0/473570/474970과 41c0f0/41c170 공급 가상. fixture energy-supply 1058·energy-sort 567·energy-provider-vtables 83행 전부. 실제 AI 건조 지점/Builder/커서 연결은 소비자 단위에서
 cpppj/src/o/RawEvilRayFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawEvilRayLifetime.cpp	port			todo	[o-default]
 cpppj/src/o/RawExistingEditorInstallOuter.cpp	exclude-edit			-	[edit-editor]
