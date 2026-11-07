@@ -597,3 +597,5 @@ cpppj/src/o/RawBattleBroadcast.h	Netstorm.Core/Original/RawWorldRuntimeHooks.cs	
 cpppj/src/o/SquidFormDispatch.h	Netstorm.Core/Original/RawWorldRuntimeHooks.cs	b08059acc1d9aa00e0dc86f1d8f912bd57c3153d	port
 cpppj/src/o/RawProcessAttach.h	Netstorm.Core/Original/RawProcessAttach.cs	4c449132bb3777b2494b3822781426dd6551f734	L1
 cpppj/src/o/RawProcessAttach.cpp	Netstorm.Core/Original/RawProcessAttach.cs	4c449132bb3777b2494b3822781426dd6551f734	L1
+cpppj/src/o/RawSquidContainedUnpop.h	Netstorm.Core/Original/RawContainedLink.cs	f83db66ca229cc8fe9676d8ed52787277768869d	port
+cpppj/src/o/RawSquidContainedUnpop.cpp	Netstorm.Core/Original/RawContainedLink.cs	f83db66ca229cc8fe9676d8ed52787277768869d	port
