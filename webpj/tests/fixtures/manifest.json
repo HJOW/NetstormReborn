@@ -5425,9 +5425,96 @@
       "bytes": 93038,
       "lines": 153,
       "fixtureCommit": "8ba4af11",
-      "webCommit": "worktree",
+      "webCommit": "f6a15755",
       "cpppjBasis": {
         "cpppj/src/client/TutorialInit.cpp": "8ba4af11"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E39",
+      "id": "surface",
+      "path": "cpppj/tests/fixtures/surface-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 표면 지도 순회(Neighbor)의 발자국·필터·중복 캐시 125장면(두 PE 공통)",
+      "consumers": [
+        "webpj/tests/squid-neighbors.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-neighbors.js"
+      ],
+      "doc": "docs/webpj-squid-neighbors-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidNeighbors.cpp"
+      ],
+      "scope": "Neighbor 125장면만 사용(그 밖 연산 행이 있으면 SquidFinder/Graph 단위에서)",
+      "text": true,
+      "sha256": "73977006dfa97215ae4836dc1d01c2b33b4b358f945eb40b18603947dd8dd05b",
+      "bytes": 160060,
+      "lines": 3451,
+      "fixtureCommit": "e8d879f7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidNeighbors.cpp": "99ff1a5f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E39",
+      "id": "surface-neighbor-current",
+      "path": "cpppj/tests/fixtures/surface-neighbor-current-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 표면 지도 순회 중 현재 지도/후보 상태/원천 좌표 변경",
+      "consumers": [
+        "webpj/tests/squid-neighbors.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-neighbors.js"
+      ],
+      "doc": "docs/webpj-squid-neighbors-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidNeighbors.cpp"
+      ],
+      "scope": "32행 중 10.78(originals) 16행 사용(originalCD 16행은 범위 밖)",
+      "text": true,
+      "sha256": "4c7f9b9acf48f18129a2fcc7d3131443828cf0428b489d3a868727cf32e9ea1a",
+      "bytes": 728,
+      "lines": 32,
+      "fixtureCommit": "586738be",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidNeighbors.cpp": "99ff1a5f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E39",
+      "id": "neighbor-boundary",
+      "path": "cpppj/tests/fixtures/neighbor-boundary-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 첫 다리 취득 (0,0) 포함 유한 경계의 원본 발자국 사각형과 첫 이웃",
+      "consumers": [
+        "webpj/tests/squid-neighbors.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-neighbors.js"
+      ],
+      "doc": "docs/webpj-squid-neighbors-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidNeighbors.cpp"
+      ],
+      "scope": "18행 전부 사용",
+      "text": true,
+      "sha256": "a0ba755d3333de2e9d688543b284c14a2e5ca79774c384bd4ed79e54969b6296",
+      "bytes": 1056,
+      "lines": 19,
+      "fixtureCommit": "071d1c0e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidNeighbors.cpp": "99ff1a5f"
       }
     }
   ]
