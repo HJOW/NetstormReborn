@@ -6259,9 +6259,38 @@
       "bytes": 1036264,
       "lines": 666,
       "fixtureCommit": "eb739b80",
-      "webCommit": "worktree",
+      "webCommit": "1816cefb",
       "cpppjBasis": {
         "cpppj/src/o/RawArcSpire.cpp": "eb739b80"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E50",
+      "id": "acid-fence",
+      "path": "cpppj/tests/fixtures/acid-fence-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 애시드 울타리 네 진입점(후처리·Regular·Attack·Strike)의 효과 순서와 47개 슬롯·반환",
+      "consumers": [
+        "webpj/tests/acid-fence.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-acid-fence.js"
+      ],
+      "doc": "docs/webpj-acid-fence-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAcidFence.cpp"
+      ],
+      "scope": "1125행 전부 사용(판본 열 없는 10.78 단일 관측)",
+      "text": true,
+      "sha256": "c7380a4fd7c2b0daea334a0106934d6b5c03adf4eb1bc18e6ffc4352677b79c7",
+      "bytes": 5738685,
+      "lines": 1126,
+      "fixtureCommit": "e142bfc3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAcidFence.cpp": "a84509c9"
       }
     }
   ]
