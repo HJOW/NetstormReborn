@@ -1,0 +1,63 @@
+{
+  "unit": 1111,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "firstBuildExitCode": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12577792,
+      "sha256": "d3d6be7eded6a86ba0a39607dca9c84cea672e380c96a6f0086cbb14b6400521"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "1f3372f182b9a863ee4e7d154483bed1ff351c5becf030afcd260cebc1cbb52b"
+    }
+  },
+  "staticAudit": {
+    "factory": "4785f0의자기현재메뉴/다른전체RawPlayerMenu를같은controlled스택/객체Form에연결·강제Close/두번째Attach없음",
+    "identity": "실제현재handle/Player/CS/Chat·SOMEONE 보호PE·현재Session 동맹/숨김과실제사제상태",
+    "hooks": "현재번역/594fa0 fort/미션·신뢰도·ignored/실제Console whisper접두·실제SP/허용옵션",
+    "format": "기존서식몸체/순서/오류문자열을이름외정적동일확인후공유",
+    "address": "PATCH4e0cd0/4e0950 문법을기존공통20BYTEcodec와대조/재사용·폐기외부DNS복구없음.임의타LAN hostname확장은후속",
+    "lifetime": "전체ClearWorld에서도메타팝업Form을MetaSession보다먼저반납"
+  },
+  "integration": {
+    "worldlessMetaMenuDevicesBound": true,
+    "bothNsInfoFactoriesBound": true,
+    "existingCampaignAddressParserBound": true,
+    "nsInfoThreeHandleBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "NSInfo 세Handle/카메라/1107슬롯·1108송신 UI 호출",
+    "CS 수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

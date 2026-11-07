@@ -3,7 +3,9 @@
 #include "client/ClientNsInfoGlobals.h"
 #include <functional>
 #include <memory>
+namespace netstorm::o { class RawPlayerIdentity; } //메타공장이실제Client기록을빌리는조회몸체를반환한다.
 namespace netstorm::client {
+struct PlayerMenuHooks; //실제Client의주소/Chat/현재전역을기존전체Player메뉴에연결한다.
 class ClientGameplayGlobals;class RawSurfaceStorage; // 초기 HUD와 Session의 실제 장기 저장소다.
 class ClientChallengeGlobals; //메타목록/패널이같은실제CS할당을빌리며별도참가자사본을만들지않는다.
 struct RawNsInfoContext {
@@ -17,5 +19,7 @@ struct RawNsInfoContext {
     std::function<void(std::uint32_t,std::int32_t,std::int32_t,std::uint32_t)> constructButton; // 공통 ButtonGump::ConstructBase를 RawButtonControls가 연결한다.
     std::function<void(std::uint32_t,bool)> enabled; //같은Button가상+3c의현재활성화/Redraw다.
     std::function<void(std::uint32_t,std::uint32_t)> value; //같은Button가상+40의기본/돌버튼현재값쓰기다.
+    std::function<o::RawPlayerIdentity()> identity; //실제현재Player/CS/Chat과Client이름을빌리는같은식별자공장이다.
+    std::function<void(PlayerMenuHooks&)> playerMenuHooks; //같은현재번역/주소/신뢰도/Chat와미션허용조건을연결한다.UI작성은메뉴소유자가연결한다.
 };
 }

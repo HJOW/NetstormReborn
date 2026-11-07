@@ -107,6 +107,7 @@ public:
     std::uint32_t CreateMetaName(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은new(d8)/다중줄/버퍼·Slider를생성하여메타참가자이름표로사용한다.
     void CloseMetaDisplayGumps(); //같은메타공장에서생성한등록/미등록노드만공통자식우선수명으로정리한다.
     void RefreshMetaNsInfo(ClientNsInfoGlobals& globals) const; //같은기존NSInfo 슬롯으로0047cab0 Push/재조회/Attach를실행한다.
+    void OpenMetaParticipant(std::uint32_t participant,ScreenPoint point); //004785f0의두전체메뉴경로를같은실제Client/controlled트리/객체Form에연결한다.활성관문은caller가판정한다.
     const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.
     void SetHelpText(std::uint32_t token,std::string_view text); //464ed0의 실제 소유 문자열을 같은 노드의 textPointer에 설치한다.
     void SetHelpWord(std::uint32_t token,std::string_view text); //464f80의 실제 소유 도움말 키를 alternateTextPointer에 설치한다.

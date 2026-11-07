@@ -8,6 +8,22 @@ namespace {
 // 도달한 미연결 효과를 빈 목록/성공으로 바꾸지 않는다.
 template<class Function> const Function& Required(const Function& function) { if (!function) throw std::logic_error("실제 Player 메뉴 하위 미연결");return function; }
 }
+// 원본 메뉴의 실제 고정%s/%d/%%만 처리한다. 번역은 호출자의 원본 조회 위치에서 수행한다.
+std::string FormatPlayerMenuText(std::string_view pattern,std::span<const PriestMenuArgument> values) {
+    std::string result;std::size_t argument{};
+    // 각 원본 형식과 인자를 순서대로 소비하고 정의되지 않은 서식은 거부한다.
+    for (std::size_t index=0;index<pattern.size();++index) {
+        if (pattern[index]!='%') { result+=pattern[index];continue; }
+        if (++index>=pattern.size()) throw std::logic_error("실제 객체 메뉴 서식 끝 오류");
+        if (pattern[index]=='%') { result+='%';continue; }
+        if (argument>=values.size()) throw std::logic_error("실제 객체 메뉴 서식 인자 부족");
+        if (pattern[index]=='s') result+=std::get<std::string>(values[argument++]);
+        else if (pattern[index]=='d') result+=std::to_string(std::get<std::int32_t>(values[argument++]));
+        else throw std::logic_error("실제 객체 메뉴 미복원 서식");
+    }
+    if (argument!=values.size() || result.size()>=256) throw std::length_error("실제 객체 메뉴 원본256BYTE 서식 계약 오류");
+    return result;
+}
 // 이번 구현은 목표 판본PATCH만 받으며 세 실제 표 크기를 확인한다.
 RawPlayerMenu::RawPlayerMenu(const o::RawPlayerIdentity& identity,std::span<const std::uint32_t> alliances,std::span<const std::uint8_t> hidden,std::span<const std::uint32_t> priestStates,PlayerMenuState& state,PlayerMenuHooks hooks)
     :identity_(identity),alliances_(alliances),hidden_(hidden),priestStates_(priestStates),state_(state),hooks_(std::move(hooks)) {

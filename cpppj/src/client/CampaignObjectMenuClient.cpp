@@ -6,6 +6,7 @@
 #include "client/ClientAudio.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientChallengeGlobals.h" //메타신뢰도는같은현재CS의두WORD를사용한다.
+#include "client/ClientMetaPlayerMenu.h" //같은LAN주소문법의실제해석을공유한다.
 #include "client/NativeMetaPlayerMenu.h" //메뉴신뢰도의원문정수관문/비율을공유한다.
 #include "client/GameWorld.h"
 #include "client/RawButtonControls.h"
@@ -22,24 +23,6 @@
 #include <vector>
 
 namespace netstorm::client {
-namespace {
-// 원본 메뉴의 실제 고정%s/%d/%%만 처리한다. 번역은 호출자의 원본 조회 위치에서 수행한다.
-std::string PrintMenu(std::string_view pattern,std::span<const PriestMenuArgument> values) {
-    std::string result;std::size_t argument{};
-    // 각 원본 형식과 인자를 순서대로 소비하고 정의되지 않은 서식은 거부한다.
-    for (std::size_t index=0;index<pattern.size();++index) {
-        if (pattern[index]!='%') { result+=pattern[index];continue; }
-        if (++index>=pattern.size()) throw std::logic_error("실제 객체 메뉴 서식 끝 오류");
-        if (pattern[index]=='%') { result+='%';continue; }
-        if (argument>=values.size()) throw std::logic_error("실제 객체 메뉴 서식 인자 부족");
-        if (pattern[index]=='s') result+=std::get<std::string>(values[argument++]);
-        else if (pattern[index]=='d') result+=std::to_string(std::get<std::int32_t>(values[argument++]));
-        else throw std::logic_error("실제 객체 메뉴 미복원 서식");
-    }
-    if (argument!=values.size() || result.size()>=256) throw std::length_error("실제 객체 메뉴 원본256BYTE 서식 계약 오류");
-    return result;
-}
-}
 // 클라이언트 수명의 정적 문자열/Chat 보조 상태와 현재 메뉴의 실제 Session 참조다.
 struct CampaignObjectMenuClient::Impl {
     Client& client; // 현재 설정/실제 입력/원본 번역의 유일한 Client다.
@@ -81,28 +64,28 @@ struct CampaignObjectMenuClient::Impl {
         if (client.Configuration().ReadString("helpWord",help)) { const auto bytes=o::EncodeDisplayText(help);ui.objectState.helpWord=std::string(bytes.begin(),bytes.end()); }
         ui.objectState.denySalvageRead=[this] { return std::bit_cast<std::uint32_t>(world->Session().MissionStartSettings().DenySalvage()); };
         ui.identity.address=[this] { return client.GameplayGlobals()->LocalAddress(); };ui.identity.unknownName=[] { return std::string_view("SOMEONE"); };
-        ui.priest.format=ui.carrier.format=ui.object.format=[this](std::string_view key,std::span<const PriestMenuArgument> arguments) { return PrintMenu(Translate(key),arguments); };
+        ui.priest.format=ui.carrier.format=ui.object.format=[this](std::string_view key,std::span<const PriestMenuArgument> arguments) { return FormatPlayerMenuText(Translate(key),arguments); };
         ui.priest.description=ui.carrier.description=[this](std::uint32_t type) { const auto types=world->Session().Core().types;if (type>=types.size()) throw std::out_of_range("현재 객체 메뉴 설명 TYPE 범위");return Translate(types[type].description); };
         ui.priest.tell=[this](std::string_view key) { tell(key); };
         ui.factory.format=ui.priest.format;ui.factory.description=ui.priest.description;
         ui.factory.helpWord=[this] { std::string word;if (!client.Configuration().ReadString("helpWord",word)) throw std::logic_error("Factory 실제 도움말 원문 미설치");const auto bytes=o::EncodeDisplayText(word);return std::string(bytes.begin(),bytes.end()); };
-        ui.player.translate=[this](std::string_view key) { return Translate(key); };ui.player.print=PrintMenu;
+        ui.player.translate=[this](std::string_view key) { return Translate(key); };ui.player.print=FormatPlayerMenuText;
         ui.player.allowSend=[this] { return world->Session().BattleOption(13)!=0; };ui.player.allowOffer=[this] { return world->Session().BattleOption(11)!=0; };ui.player.allowBreak=[this] { return world->Session().BattleOption(12)!=0; };
         ui.player.ignored=[this](std::uint32_t subscriber) { const auto& ignored=client.ChatWindowGlobals()->ignored;return std::find(ignored.begin(),ignored.end(),subscriber)!=ignored.end(); }; // 수신과 같은 현재 Client 목록을 읽는다.
         ui.player.whispered=[this](std::uint32_t subscriber) { return Whispered(subscriber); };
-        ui.player.parseAddress=[](std::string_view,std::uint32_t) { throw std::logic_error("원격 Player 메뉴 주소 해석 미연결"); };
+        ui.player.parseAddress=ParsePlayerMenuAddress;
         ui.player.reliability=[this](std::uint32_t participant) { return MetaPlayerReliability(client.SurfaceStorage()->ownerMode.challenge,participant,[this](auto index)->std::span<const std::uint8_t> { return client.ChallengeGlobals()->Participant(index); }); }; //비메타일때는아직없는CS를선행조회하지않는다.
         ui.player.assertion=[](PlayerMenuAssertion assertion) { std::clog<<"객체 Player 메뉴 원본 진단 "<<static_cast<int>(assertion)<<'\n'; };
-        ui.info.translate=ui.player.translate;ui.info.description=ui.priest.description;ui.info.print=PrintMenu;
+        ui.info.translate=ui.player.translate;ui.info.description=ui.priest.description;ui.info.print=FormatPlayerMenuText;
         ui.info.substitute=[this](std::string_view source) { const auto text=client.Configuration().SubstituteLocal(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()}));const auto bytes=o::EncodeDisplayText(text);return std::string(bytes.begin(),bytes.end()); };
         BindPriestMenuControls(ui.priest,widgets,controls,raw);BindCarrierMenuControls(ui.carrier,controls);BindPlayerMenuControls(ui.player,widgets,controls,raw);BindObjectMenuInfoControls(ui.info,controls);
         BindFactoryMenuControls(ui.factory,widgets,controls,raw,[this](std::string_view text) { return Static(text); });
         BindObjectMenuControls(ui.object,controls,raw,client.Configuration(),[this](std::string_view text) { return Static(text); });
-        ui.aiDebug.format=[](auto requested,std::string_view pattern,std::span<const PriestMenuArgument> arguments) { if (requested!=80) throw std::logic_error("AI 메뉴 원문 서식 요청폭");return PrintMenu(pattern,arguments); };
+        ui.aiDebug.format=[](auto requested,std::string_view pattern,std::span<const PriestMenuArgument> arguments) { if (requested!=80) throw std::logic_error("AI 메뉴 원문 서식 요청폭");return FormatPlayerMenuText(pattern,arguments); };
         ui.aiDebug.header=[&controls](auto value) { controls.AddHeader(value); };ui.aiDebug.checked=[&controls](auto checked,auto label,auto command,auto parameter,auto include,auto enabled) { controls.AddChecked(checked!=0,label,command,parameter,include!=0,enabled!=0); };
         ui.aiDebug.begin=[&widgets](auto flags) { static_cast<void>(widgets.BeginVertical(flags)); };ui.aiDebug.take=[&raw] { return raw.TakeCurrent(); };ui.aiDebug.submenu=[&controls](auto label,auto child,auto enabled,auto checked) { controls.AddSubmenu(label,child,enabled!=0,checked!=0); }; //원래controlled자식스택/수명만사용한다.
         ui.variants.translate=ui.player.translate;ui.variants.helpWord=[this] { std::string text;if (!client.Configuration().ReadString("helpWord",text)) throw std::logic_error("풀숲 메뉴 실제 helpWord 없음");const auto bytes=o::EncodeDisplayText(text);return std::string(bytes.begin(),bytes.end()); };
-        ui.variants.format=[](std::string_view pattern,std::int32_t value) { const std::array<PriestMenuArgument,1> arguments{value};return PrintMenu(pattern,arguments); };
+        ui.variants.format=[](std::string_view pattern,std::int32_t value) { const std::array<PriestMenuArgument,1> arguments{value};return FormatPlayerMenuText(pattern,arguments); };
         ui.variants.item=[&controls](auto label,auto command,auto parameter,auto include,auto enabled) { controls.AddText(label,command,parameter,include!=0,enabled!=0,false); };
         ui.variants.header=[&controls](auto text) { controls.AddHeader(text); };ui.variants.separator=[&controls] { controls.AddSeparator(); }; // 기존 실제 controlled 수명과 조건부 구분선을 공유한다.
         return ui;
@@ -165,7 +148,7 @@ std::uint32_t CampaignObjectMenuClient::OpenProduction(GameWorld& world,const In
         h.helpWord=[&s]()->std::optional<std::string> { std::string word;if (!s.client.Configuration().ReadString("helpWord",word)) return std::nullopt;const auto bytes=o::EncodeDisplayText(word);return std::string(bytes.begin(),bytes.end()); };
         h.idle=[&](auto token,bool enabled) { widgets.SetIdle(token,enabled); };h.reference=[&](auto token,auto sid) { widgets.Reference(token,sid); };
         h.describe=[&s](auto kind,auto count,auto owner,auto sid) { s.chain->Describe(kind,count,owner,sid); };h.translate=[&s](auto key) { return s.Translate(key); };
-        h.print=[](auto pattern,std::int32_t value) { const std::array<PriestMenuArgument,1> arguments{value};return PrintMenu(pattern,arguments); };h.header=[&](auto text) { controls.AddHeader(text); };
+        h.print=[](auto pattern,std::int32_t value) { const std::array<PriestMenuArgument,1> arguments{value};return FormatPlayerMenuText(pattern,arguments); };h.header=[&](auto text) { controls.AddHeader(text); };
         h.entry=[&](std::optional<std::string_view> text,auto command,auto parameter,bool include,bool enabled,bool force) { if (!text) throw std::logic_error("생산 정보 메뉴 helpWord NULL의 실제 CRT 문자열 소비 미복원");controls.AddText(*text,command,parameter,include,enabled,force); };
         h.attach=[&](auto p,auto parent) { raw.AttachCurrent(p.x,p.y,parent); };h.sound=[&s](auto name) { s.client.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); };
         InventoryAboutMenu menu(world.Session().Core().pool,state,std::move(h));accepted=menu.Open(item,point);return s.root;

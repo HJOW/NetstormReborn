@@ -3,6 +3,7 @@
 #include "client/RawObjectMenu.h"
 
 namespace netstorm::client {
+std::string FormatPlayerMenuText(std::string_view pattern,std::span<const PriestMenuArgument> values); //원문고정%s/%d/%%와256BYTE서식을같은두메뉴공장이공유한다.번역은호출자가실행한다.
 // 원본이 진단 후 계속하는 사제 번호/메타맵 번호 조회다.
 enum class PlayerMenuAssertion { PriestOwner,MetamapNumber };
 // 두 정적 asksend 버퍼와 현재 명령 전역이다. 버퍼 주소 의미를 opaqueDWORD로 유지한다.

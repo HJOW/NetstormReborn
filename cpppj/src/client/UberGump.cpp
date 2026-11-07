@@ -19,6 +19,7 @@
 #include "client/ProductPresentation.h"
 #include "client/ExternalHelpClient.h" //원래 외부 Help 정책을 현재 Client/Windows 장치에 연결한다.
 #include "client/UrlInput.h"
+#include "client/ClientMetaPlayerMenu.h" //World없는NSInfo도현재Client의전체Player메뉴장치를사용한다.
 #include "client/CameraHome.h" //World없는LookAtSid도기존433ba0의현재Pool/TYPE와공통즉시카메라를사용한다.
 #include "client/AiUtilityCommandInput.h" //772의실제세부모를같은일반입력에연결한다.
 #include "o/RawAiCommandState.h" //World없는현재Player의NULL brain도같은raw부모가판정한다.
@@ -477,7 +478,7 @@ void UberGump::ClearWorld() {
     ReleaseMissionFortLoad(state_,missionFortRequest_); //전체 종료도 같은 요청 owner 반납을 사용한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseMissionLoading(); // 로딩 중 이탈한 부모를 다음 장면에 남기지 않는다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseHelp(); // 동적 정보/그림의 현재 Session보다 먼저 실제 창을 반납한다.
-    if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.
+    if ((world_ || (editor_ && editor_->metaWorld)) && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); //메타참가자팝업도같은Form을반납한뒤에만실제Session/월드포인터를해제한다.
     gameMenuState_.reset(); // 같은Session의검산참조를월드보다먼저반납한다.
     if (rawButtons_) rawButtons_->DisableMinimap(); // 같은Session/공통Gump보다먼저공간통지와미니맵을반납한다.
     if (rawButtons_) rawButtons_->DisableProduction(); // 실제 Session보다 먼저 UI Form을 반납한다.
@@ -1892,7 +1893,7 @@ void UberGump::Compose() {
                 RawNsInfoContext context;context.globals=client_.NsInfoGlobals();context.challenge=client_.ChallengeGlobals();context.gameplay=client_.GameplayGlobals();context.storage=client_.SurfaceStorage(); // 같은 실제 Client의 고정 소유자다.
                 context.read=[this](auto address) { if (address==0x5411c8U) return static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+client_.Assets().Find("fortGump").block);if (address==0x5bec3cU) return client_.GetScreen().Colors().basic[8];if (address==0x5bec2cU) return client_.GetScreen().Colors().basic[7];if (address==0x5b5e58U) return client_.GetScreen().Colors().basic[1];if (address>=0x5accfcU && address<=0x5acd18U && !(address&3U)) return client_.GetScreen().Colors().named.at(42U+(address-0x5accfcU)/4U).index;if (address>=0x5c78b0U && address<=0x5c78ccU && !(address&3U)) return client_.GetScreen().Colors().named.at(50U+(address-0x5c78b0U)/4U).index;if (address==0x59afd8U) return client_.GetScreen().Colors().basic[5];if (address==0x5c78d0U) return client_.GetScreen().Colors().named.at(36).index;if (address==0x5c85c8U) return client_.LocalStateGlobals()->MetadataMode();throw std::out_of_range("NSInfo 현재 원본 전역 미연결"); };
                 context.translate=[this](auto value) { return FontBytes(client_.Translate(value)); };context.substitute=[this](std::string_view text) { return FontBytes(client_.Configuration().SubstituteLocal(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };context.substitute=[this](std::string_view text) { return FontBytes(client_.Configuration().SubstituteLocal(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };context.storeText=[this](auto value) { const auto token=scriptStrings_.Store(value);if (token>0x0fffffffU) throw std::overflow_error("NSInfo 공유 문자열 고리 별칭 소진");return 0x70000000U|token; };context.text=[this](auto token) { return scriptStrings_.Resolve(token&0x0fffffffU); };
-                const auto token=rawButtons_->ConstructNsInfo(std::move(context));auto& node=*rawButtons_->Menus()->Node(token);node.baseWidth=static_cast<float>(width);node.width=static_cast<float>(static_cast<double>(width)*node.scale);node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(static_cast<double>(height)*node.scale);node.flags|=0x20000U; // 기존 월드 UI 설치 경계에서 원문 Uber의 크기/플래그/부착만 적용한다. 전체 Uber 교체는 후속이다.
+                BindClientMetaPlayerMenu(context,client_,*rawButtons_->Menus());const auto token=rawButtons_->ConstructNsInfo(std::move(context));auto& node=*rawButtons_->Menus()->Node(token);node.baseWidth=static_cast<float>(width);node.width=static_cast<float>(static_cast<double>(width)*node.scale);node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(static_cast<double>(height)*node.scale);node.flags|=0x20000U; // 기존 월드 UI 설치 경계에서 원문 Uber의 크기/플래그/부착만 적용한다. 전체 Uber 교체는 후속이다.
                 rawButtons_->Menus()->Attach(token,0,0,rawButtons_->RootToken(),0);
             }
             }

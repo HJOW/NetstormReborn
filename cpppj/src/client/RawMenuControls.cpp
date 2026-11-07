@@ -30,6 +30,9 @@
 #include "client/HudNsInfoCreate.h"
 #include "client/HudNsInfoMeta.h" //메타루트/참가자순서도같은CS·공통문자/트리를사용한다.
 #include "client/HudPlayerButtonDraw.h" //같은특수버튼의배경/단색/원색그림전체Draw다.
+#include "client/NativeMetaPlayerMenu.h" //같은controlled메뉴의자기/다른참가자부착을실행한다.
+#include "client/RawPlayerMenu.h" //World없는메타도기존전체Player메뉴본문을사용한다.
+#include "client/ClientSubscriberGlobals.h" //메뉴선택때현재subscriber를실제장기슬롯에서읽는다.
 #include "o/RawPlayerNotification.h" //원문참가자기술합계는현재TYPE기반공통몸체를재사용한다.
 #include "o/RawChatManagerPrefix.h" //메타참가자의랭크도같은현재icon B/C의기존몸체를사용한다.
 #include "client/NativeMetaDisplay.h"
@@ -72,6 +75,7 @@ template<class T> T* Find(const std::map<std::uint32_t,std::unique_ptr<T>>& node
 struct RawMenuControls::Impl {
     std::map<std::uint32_t,std::string> helpStrings;std::uint32_t nextHelpString{0x61100000U}; // 정적61000001..5/기본HTML61010000/전용HTML62000000..6fffffff와 겹치지 않는 공통 소유 문자열 영역이다.
     std::optional<RawNsInfoContext> nsContext; // 같은 Client 전역/물리/문자열 수명을 빌리는 현재 생성 문맥이다.
+    PlayerMenuState metaPlayerState; //실제메타Player메뉴의현재명령DWORD와정적버퍼수명이다.메타/Session교체로재초기화하지않는다.
     std::map<std::uint32_t,std::unique_ptr<HudNsInfoNode>> nsRoots;std::map<std::uint32_t,std::unique_ptr<HudPlayerInfoNode>> nsPlayers; // 실제 NSInfo/PlayerInfo 파생 저장소다.
     std::map<std::uint32_t,std::unique_ptr<HudBattleInfoNode>> nsBattles;std::map<std::uint32_t,std::unique_ptr<HudPlayerButtonNode>> nsButtons; // 실제 BattleInfo/특수 버튼이다.
     std::map<std::uint32_t,std::unique_ptr<TextGumpNode>> plainTexts;std::map<std::uint32_t,std::string> nsTranslated; // 같은 실제 한 줄 처리기와 번역 포인터의 현재 바이트다.
@@ -313,6 +317,7 @@ struct RawMenuControls::Impl {
         switch (address) {
         case 0x540421:return value.nsKind;case 0x540440:return value.playerKind;case 0x540457:return value.battleKind;
         case 0x5467b8:return value.zone;case 0x540bac:return value.zoneFormat;case 0x593150:return value.current;
+        case 0x542714:return value.leaveMenuCommand;case 0x542960:return metaPlayerState.viewInfo; //자기메뉴/다른Player메뉴가같은실제ViewInfo명령을읽는다.
         case 0x54db4c:return std::bit_cast<std::uint32_t>(value.serverSelection);case 0x594fc8:return nsContext->storage->ownerMode.challenge;case 0x595344:return nsContext->gameplay->player.playerKnown;
         default:return nsContext->read(address);
         }
@@ -330,6 +335,18 @@ struct RawMenuControls::Impl {
     void SetNodeHelp(std::uint32_t token,std::string_view text,bool word) {
         auto* node=common.node(token);if (!node) throw std::out_of_range("도움말 실제 노드 없음");auto& pointer=word ? node->alternateTextPointer:node->textPointer;helpStrings.erase(pointer);pointer=0;
         if (nextHelpString==0x61ffffffU) throw std::overflow_error("도움말 문자열 주소 영역 소진");const auto value=++nextHelpString;helpStrings.emplace(value,text);pointer=value;
+    }
+    // 같은현재Session의실제표/식별자와공통controlled스택으로전체Player메뉴를작성한다.
+    std::uint32_t BuildMetaPlayerMenu(std::uint32_t subscriber) {
+        if (!nsContext || !nsContext->identity || !nsContext->playerMenuHooks) throw std::logic_error("메타 Player 메뉴의 실제 Client 공장 미연결");auto identity=nsContext->identity();PlayerMenuHooks h;nsContext->playerMenuHooks(h);h.translate=nsContext->translate;BindPlayerMenuControls(h,*widgets,*controls,*menu);
+        auto& session=nsContext->gameplay->RequireSession();RawPlayerMenu player(identity,session.Alliances(),session.HiddenPlayers(),nsContext->storage->priestOwnerState,metaPlayerState,std::move(h));return player.Open(subscriber);
+    }
+    // 원문4785f0은기존팝업을강제닫거나객체메뉴를두번부착하지않는다.
+    void OpenMetaParticipant(std::uint32_t participant,ScreenPoint point) {
+        if (!nsContext || !nsContext->challenge) throw std::logic_error("메타 참가자 메뉴의 실제 CS 미연결");if (menuState.index) throw std::logic_error("메타 참가자 메뉴의 기존 controlled 스택 잔류");const auto record=nsContext->challenge->Participant(participant);std::uint32_t opened{};NativeMetaPlayerMenuHooks h;
+        h.subscriber=[this] { return nsContext->gameplay->Subscribers()->MySubscriber(); };h.root=[this] { return common.create.entries[0]; };h.command=[this](auto address) { return NsRead(address); };h.translate=nsContext->translate;h.beginFancy=[this] { widgets->BeginFancy(); };h.title=[this](auto text) { controls->AddTitle(text); };
+        h.item=[this](auto text,auto command,auto parameter) { controls->AddText(text,command,parameter,true,true,false); };h.attachCurrentObject=[this,&opened](auto object,auto x,auto y) { const auto token=menu->Current();menu->AttachObjectCurrent(object,x,y);opened=token; };h.playerMenu=[this](auto subscriber) { return BuildMetaPlayerMenu(subscriber); };
+        h.attachObject=[this,&opened](auto token,auto object,float x,float y,auto parent,auto mode) { widgets->AttachObject(token,object,x,y,parent,mode);opened=token; };netstorm::client::OpenMetaParticipantMenu(record,point.x,point.y,h);if (menuState.index) throw std::logic_error("메타 참가자 메뉴 부착 뒤 controlled 스택 잔류");popup=opened;common.changed();
     }
     // 선택된메타분기만실제CS owner를요구하고현재모드/known/owner주소를빌린다.
     HudNsInfoMetaGlobals NsMetaGlobals() const {
@@ -886,6 +903,7 @@ void RawMenuControls::CloseChatWindows() {
     s.common.lifetime.Cleanup();
     while (!s.chatOwned.empty()) { const auto token=*s.chatOwned.begin();if (std::find(s.common.create.entries.begin(),s.common.create.entries.end(),token)!=s.common.create.entries.end()) throw std::logic_error("Chat 정리 뒤 등록 객체 잔류");Release(token); } // 기본 생성 전 저장소만 직접 반납한다.
 }
+void RawMenuControls::OpenMetaParticipant(std::uint32_t participant,ScreenPoint point) { impl_->OpenMetaParticipant(participant,point); } //같은CS/공통메뉴/객체부착공장만선택한다.
 // 실제 현재 토큰의 생존 여부만 조회한다. 원문이 보존하는 죽은 current 전역을 임의0으로 쓰지 않는다.
 std::uint32_t RawMenuControls::NsInfoRoot() const { const auto& s=*impl_;if (!s.nsContext) return 0;const auto token=s.nsContext->globals->current;const auto* node=Find(s.nsRoots,token);return node && !(node->flags&0x10000U) ? token : 0U; }
 // 공통 기본 버튼 처리기는 실제 특수 파생의 동일 기본 주소를 빌린다.

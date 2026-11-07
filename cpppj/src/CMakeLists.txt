@@ -544,3 +544,6 @@ target_sources(netstorm PRIVATE o/RawBattleOptionSlots.h o/RawBattleOptionSlots.
 
 # 원문 메타 참가자 메뉴 본체와 현재 신뢰도 getter다.
 target_sources(netstorm PRIVATE client/NativeMetaPlayerMenu.h client/NativeMetaPlayerMenu.cpp)
+
+# 실제Client/CS/Chat/Session을World없는전체메타Player메뉴공장에연결한다.
+target_sources(netstorm PRIVATE client/ClientMetaPlayerMenu.h client/ClientMetaPlayerMenu.cpp)
