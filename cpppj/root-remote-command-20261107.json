@@ -1,0 +1,161 @@
+{
+  "unit": 1087,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "61684a804bb9d8efeef9810a2336043c10ce2c07bc2393038a3bb9e27dbda8ba"
+  },
+  "nativeAudit": {
+    "scope": "동일호스트 R 원문/보호PE·실제 생성/활성/4세션·집합/Poll/종료와 모든 함수범위 기계어·현재SocketDevice 접합의 정적감사다. 포트/세션/명령/통신 실행검사가 아니다.",
+    "identityCorrection": "00479bb0은 생성자가 아니라 listener!=NULL 및 하위flags40의 현재활성조회다. 실제 기본생성은0047ee90/전역CRT004ba540,소멸은0047ef90/004bbac0이다.004d23f8은원격명령 TCP서버/4세션이다.",
+    "defaultAndCalls": "기본 생성은 실제listener/서버handler NULL과4개 세션의 전역BSS0/최초maskChar2a를 구성하며 IO가 없다. 현재R의 전역리터럴참조14곳/477e10시작에서는 해당객체 Open/handler등록이 없다. rootTelnetPort를읽는것만으로 listener를열지않는다. 최종owner는기본객체/실제Bind만연결해야한다.",
+    "socketAndOpen": "7f020의 실제 SocketDevice.Listen(낮은WORD포트)/open flags판정·실패listener 객체보관이다. 기존LAN IPv4/backlog4/실제Accept·Recv/Send를 사용한다. 중복Open은 원문진단333이복귀하면옛listener를즉시닫지않고host종료까지보관한다. 외부DNS/공식서버접속을추가하지않았다.",
+    "sessionOwnership": "7f2b0은한번accept→첫빈4칸→세션Start/현재서버handler Started 통지→false면세션End→현재활성4칸Poll이다.모두바쁘면실제새소켓을반납한다. 세션Active는socket포인터존재이고서버Active의flags40과다르다. 현재callback은shared lease로보호하며0/1/행포인터는typed Event/같은160BYTE span으로옮긴다.",
+    "startAndEnd": "7e750은handler/socket채택과lineLength/outputLength/masking0뒤FF FB03→FF FB01 두3BYTE queue다. negotiation/subnegotiation/command/maskCharacter/userData/기존버퍼는초기화하지않는다.7e7e0은socket반납/NULL→현재Ended callback이며반환무시/항상1,이미NULL이어도통지한다.e720소멸은포인터존재때만End한다.",
+    "lineAndTelnet": "7ea80은실제20BYTE한수신/-1이면End. signed lineLength<159 동안현재각BYTE를처리한다.CR은CR/LF에코→현재행NUL→같은행callback/false종료→길이0.BS는길이감소/BS·공백·BS.LF/NUL은무시.일반BYTE는현재masking/문자로에코한다.IAC0/1/2/literalFF무에코·F0/FA차단상태를원문대로유지한다.159도달시남은수신을버리고다음수신도정상화/행초기화하지않는다.",
+    "output": "7e8b0은signed DWORD(outLength+len)<4801관문뒤실제4800BYTE붙이기다.Print는첫NUL전strlen/Printf는1024지역범위뒤동일queue다.Poll은20BYTE처리뒤실제한send/부분·0을현재앞이동나머지로보관한다.7e9b0 FlushComplete는현재길이보다짧은첫send면종료한다.두전송정책을합치지않는다.",
+    "setsAndBinding": "7f510은현재listener와포인터가있는4세션의같은실제핸들을nullable read/write/error 각집합에직접추가/중복보존·64상한과최고핸들반환이다.호스트는uintptr폭을보존한다.Bind는기존메인의auxiliaryActive/Sets(read,NULL,error)/Poll을같은owner에연결해조건부중복Sets/수신뒤Poll을유지한다. 고정false callback으로대체하지않는다.",
+    "shutdown": "7f140은listener포인터가있고flags40일때만현재활성4세션을순서대로End하고listener를반납/NULL로만든다.7ef90은Shutdown→서버handler해제→세션역순소멸이다.세션마다현재handler가있으므로listener비활성시남은세션도소멸에서End한다.",
+    "hostBoundaries": [
+      "실제버퍼/길이·NULL장치·포인터폭을호스트에서명시검사하며구형32비트5000BYTE구조/SEH·힙/스택물리자체일치는주장하지않음",
+      "원문vsprintf1024넘침/깨진DWORD버퍼오프셋은명시오류이며memcpy겹침은memmove로같은현재바이트를보존함",
+      "callback교체/예외·소멸중예외/동시재진입/실제네트워크실패와전체수명은실행미검증",
+      "중복Open으로미반납된원문listener는즉시닫지않되최종host owner에서반납하므로원문프로세스힙누수전체동일성은주장하지않음",
+      "기존WSA2.2/현대IPv4장치와LAN허용정책을사용하며원문WSA1.1/IPX소켓ABI를복제하지않음",
+      "최종새R.exe owner/실제Bind·Shutdown·초기화/Run호출은아직없음"
+    ],
+    "receiverInventory": [
+      {
+        "type": "0xb",
+        "receiver": "00475070",
+        "status": "implemented"
+      },
+      {
+        "type": "0xc",
+        "receiver": "00475040",
+        "status": "implemented"
+      },
+      {
+        "type": "0x10",
+        "receiver": "004763d0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x83",
+        "receiver": "00476490",
+        "status": "implemented"
+      },
+      {
+        "type": "0x11",
+        "receiver": "00475260",
+        "status": "implemented"
+      },
+      {
+        "type": "0x12",
+        "receiver": "00475580",
+        "status": "implemented"
+      },
+      {
+        "type": "0x16",
+        "receiver": "00475660",
+        "status": "implemented"
+      },
+      {
+        "type": "0x17",
+        "receiver": "00476070",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1c",
+        "receiver": "00476180",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1e",
+        "receiver": "00476700",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1f",
+        "receiver": "004767c0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x87",
+        "receiver": "00476550",
+        "status": "implemented"
+      },
+      {
+        "type": "0x41",
+        "receiver": "00476880",
+        "status": "implemented"
+      },
+      {
+        "type": "0x66",
+        "receiver": "00475f90",
+        "status": "implemented"
+      },
+      {
+        "type": "0x67",
+        "receiver": "00476940",
+        "status": "implemented"
+      },
+      {
+        "type": "0x68",
+        "receiver": "00476a00",
+        "status": "implemented"
+      },
+      {
+        "type": "0x71",
+        "receiver": "00476ac0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x80",
+        "receiver": "00476640",
+        "status": "retired-validation-disabled"
+      }
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "actualAuxiliaryServerAndFourSessionBodiesImplemented": true,
+    "sameActualSocketDeviceAndNetworkBindImplemented": true,
+    "opensPortInConstructor": false,
+    "nativeDefaultRootCallsOpen": false,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsBindOrRun": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "newRemoteCommandOrSession": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "전체전역패킷/477e10초기화·478af0정리·새R.exe최종owner/entry·실제Bind/Install/Run",
+    "세.server콘텐츠/배포·LAN hostname·클라이언트0F존47/서버3BYTE·0F/1d·메타/OSlaunch",
+    "LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
