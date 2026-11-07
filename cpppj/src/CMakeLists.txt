@@ -559,3 +559,6 @@ target_sources(netstorm PRIVATE o/RawBattleOptionMutation.h o/RawBattleOptionMut
 
 # BattleInfo 입력 분기/기본값 적용 부모다. 실제 메뉴 자식을 결합한 뒤 UI 분배기에 연결한다.
 target_sources(netstorm PRIVATE client/NativeBattleInfoInput.h client/NativeBattleInfoInput.cpp)
+
+# BattleInfo의 다섯 실제 controlled 메뉴 자식과 현재 TYPE/지식 정렬 부모다.
+target_sources(netstorm PRIVATE client/NativeBattleInfoMenus.h client/NativeBattleInfoMenus.cpp)

@@ -1,0 +1,61 @@
+{
+  "unit": 1116,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12620800,
+      "sha256": "e62bd46943d58d5f3989f1f1240e50c7deb6c7bced01bf32e4ab966b6c056017"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "385706066f5fa1ae6c86bd1723102c535fd6cc2b20b189ae69e25af8445a83cf"
+    }
+  },
+  "staticAudit": {
+    "native": "0047b8f0 다섯메뉴전체·다음47c430까지기계어",
+    "options": "정렬현재mode/활성1..21·개별포함max·choice/current포인터정체성비교·choice재조회/명령·Take/제목·현재부착",
+    "exclude": "현재전역옵션/12별칭단축순서/70부터현재count·spell/Devastation분기",
+    "knowledge": "492960(type,0,1) 실제장치요구·여섯그룹50/기타100물리상한",
+    "sort": "기존CRT동률정렬Sun/Wind/Thunder/Rain/기타/Spells·출력Spells/Sun/Wind/Rain/Thunder만",
+    "remove": "현재TYPE→Fancy→번역/현재설명/256BYTE→Yes/No TYPE/0"
+  },
+  "integration": {
+    "compiledInProduct": true,
+    "battleInfoHandleBound": false,
+    "menuChildrenBound": false,
+    "choiceIdentityAndKnowledgeDeviceRequired": true,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "같은실제메뉴/현재TYPE별칭·선택문자열정체성/492960·1115입력분배",
+    "CS 수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신 상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
