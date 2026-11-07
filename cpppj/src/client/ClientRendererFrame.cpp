@@ -9,6 +9,7 @@
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientNsInfoGlobals.h"
 #include "client/NativeMetaScene.h" //같은현재CS/실제Pool·Gump를메타표시본체에연결한다.
+#include "client/NativeIslandRig.h" //같은 현재 Client/Kernel/ProcessForm과 실제 메타 섬 애니메이션을 연결한다.
 #include "client/CameraHome.h" //메타전체배치뒤의실제4340d0을현재Renderer한계에연결한다.
 #include "o/OriginalText.h" //현재번역문을기존영어/한국어표시바이트경계로변환한다.
 #include "client/ClientAudio.h"
@@ -99,6 +100,18 @@ void ClientRendererFrame::RefreshMetaDisplay(bool whole) {
     else PollMetaDisplay(globals,hooks.display);
 }
 void Client::RefreshNativeMetaDisplay(bool whole) { if (!rendererFrame_) throw std::logic_error("메타표시의실제Renderer owner미설치");rendererFrame_->RefreshMetaDisplay(whole); } //원문State Poll의두표시위치를같은실제Frame장치에전달한다.
+
+// 장기 Rig의 콜백은 매번 현재 UI/Session을 다시 찾고 CS Image owner는 최종 반납까지 pin한다.
+NativeIslandRig& ClientRendererFrame::AcquireIslandRig(std::uint32_t object,float height,std::uint32_t kill) {
+    if (object>65535U || object>=client_.SurfaceStorage()->pool.Capacity()) throw std::out_of_range("Rig 실제 DWORD SID 물리 범위");
+    const auto devices=MetaDevices().display;NativeIslandRigHooks hooks;hooks.object.raw=devices.raw;hooks.object.unpop=devices.unpop;hooks.object.setKind=devices.setKind;hooks.object.destroy=devices.destroy;hooks.object.move=devices.move;hooks.object.assertion=devices.assertion; //실제로 쓰는 장기 World/Pool 장치만 보관하고 이전 UI callback 묶음은 남기지 않는다.
+    hooks.object.findGump=[this](auto id)->GumpCreateNode* { NativeMetaDisplayHooks current;if (!client_.menu_ || !client_.menu_->rawButtons_ || !client_.menu_->rawButtons_->Menus()) throw std::logic_error("Rig 현재 Gump 장치 미설치");client_.menu_->rawButtons_->Menus()->BindMetaDisplayGumps(current);return current.findGump(id); }; //이전 Uber의 RawMenuControls 포인터를 장기 Rig에 저장하지 않는다.
+    hooks.killGump=[this](auto id) { if (!client_.menu_ || !client_.menu_->rawButtons_ || !client_.menu_->rawButtons_->Menus()) throw std::logic_error("Rig 현재 Gump Kill 장치 미설치");client_.menu_->rawButtons_->Menus()->KillRegisteredGump(id); };
+    NativeIslandRigGlobalsGetter globals=[this,owner=client_.ChallengeGlobals()] { return NativeIslandRigGlobals{MetaGlobals(),{client_.Time().game,client_.gameplayGlobals_->player.special,owner->Projection().camera.height}}; };
+    const auto core=client_.GameplayGlobals()->RequireSession().Core();auto* rig=FindOrCreateNativeIslandRig(core.processes,core.kernel,o::Sid{static_cast<std::uint16_t>(object)},height,kill,std::move(globals),hooks);if (!rig) throw std::runtime_error("실제 메타 IslandRig 생성/부착 실패");return *rig;
+}
+// 실제 Client의 장기 Renderer 조립기만 빌리며 조회만으로 프레임/네트워크를 진행하지 않는다.
+NativeIslandRig& Client::AcquireNativeIslandRig(std::uint32_t object,float height,std::uint32_t kill) { if (!rendererFrame_) throw std::logic_error("Rig 실제 Renderer owner 미설치");return rendererFrame_->AcquireIslandRig(object,height,kill); }
 
 // 실제 파일/난수/색/클립/잠금은 Client가 소유한 동일 장치를 빌린다.
 RendererCloudHooks ClientRendererFrame::CloudDevices() {

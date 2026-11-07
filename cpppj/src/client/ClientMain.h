@@ -43,6 +43,7 @@ class ClientSpGlobals; // 공통 시작의 SP/추적 offset을 사제와 Session
 class ClientKencloudGlobals; // 같은 구름/팔레트 전역과 현재 메모리를 모든 메뉴/장치 교체에서 유지한다.
 class ClientTitleBitmaps; // startup의실제8칸bitmap과WM_PAINT깊이owner다.
 class ClientRendererFrame; //같은 Renderer 전역과 실제 Frame의 구름/지형 장치를 조립한다.
+class NativeIslandRig; // 실제 Kernel/ProcessForm의 메타 섬 애니메이션 객체다.
 class ClientCaptureSequence; //연속 화면 저장의 장기 상태와 실제 프레임 할당을 소유한다.
 class ClientSubscriberGlobals; // 같은 Client의 실제 my/login 두 DWORD만 장기 소유한다.
 class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
@@ -236,6 +237,7 @@ public:
     void TraceObject(std::uint32_t sid); // 선택한 실제 SID의 가상+70/모든 Form 재귀를 실행한다.
     void HighlightDeveloperPoint(float x,float y); //4345e0의 세 겹 노란 사각형과 즉시 viewport 출력을 같은 Renderer 장치에 요청한다.
     void RefreshNativeMetaDisplay(bool whole); //현재메타Poll/전체존재배치를같은CS/World·Renderer·글자장치에연결한다.새수신/게임상태는합성하지않는다.
+    NativeIslandRig& AcquireNativeIslandRig(std::uint32_t object,float height,std::uint32_t kill); //현재 실제 Host/Kernel에서 첫 같은 부모 Rig를 찾거나 생성한다. NULL 생성은 물리 경계 오류로 거부한다.
     void DumpDiagnostics(); // 객체 덤프가 끝난 뒤 현재 같은 Kernel의 프로세스 요약을 저장한다.
     void DumpObjectDiagnostics(); //CD SID 소진은 객체 덤프만 호출하고 프로세스 요약을 추가하지 않는다.
     const std::shared_ptr<o::Kernel>& ProcessKernelOwner() const; // 같은 실제 전역 Kernel 소유권만 전달한다.

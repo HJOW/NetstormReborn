@@ -29,6 +29,10 @@
 #include "client/LocalServerProcess.h"
 #include "client/RootServerListDisk.h"
 #include "client/NativeMetaBattleOptions.h" //현재CS의실제67h수신/음향·NSInfo갱신을공통등록표에결합한다.
+#include "client/NativeMetaBattleCreate.h" //23h 생성 부모를 실제 공장·QA·Pop·Rig에 연결한다.
+#include "client/ClientMetaBattleObjects.h"
+#include "client/NativeIslandRig.h"
+#include "client/NativeMetaBattleRemove.h" //24h 삭제는 같은 진입 CS와 실제 Rig/Image를 사용한다.
 #include "client/ClientAudio.h" //원문의guy.wav는같은Client장기음향을사용한다.
 #include "client/ClientStateStorageCleanup.h"
 #include "client/ClientRandomGlobals.h"
@@ -114,6 +118,16 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         const auto length=std::uint32_t(packet[5])|(std::uint32_t(packet[6])<<8);Put(packet,2,length+7U,2); //0040ae80은진단이복귀한뒤같은현재WORD를다시읽는다.
     });dispatch.Version(0x67,1,0);dispatch.RequireLength(0x67,0xffff); //송신관찰/버전은그대로유지하고수신부모를따로등록한다.
     dispatch.Register(0x67,[this](auto,auto&,auto packet) { NativeMetaBattleOptionsHooks receive;receive.owner=[this] { return client_.GameplayGlobals()->player.battleOwner; };receive.log=[this](auto text) { client_.WriteDiagnosticLog(9,text); };receive.guySound=[this] { client_.WorldAudio().Sounds().PlayByName("guy.wav",0,0,0,0,0); };receive.refreshInfo=refreshInfo_;ReceiveNativeMetaBattleOptions(*client_.ChallengeGlobals(),packet,receive); }); //sender/phase/known추가필터없이같은현재CS·실제음향/UI를소비한다.
+    dispatch.Observe(0x23,{});dispatch.Version(0x23,1,0);dispatch.RequireLength(0x23,20); //0040b380의 빈 관찰기와 보호 PE의 고정20BYTE다.
+    dispatch.Register(0x23,[this](auto,auto&,auto packet) {
+        if (!client_.SurfaceStorage()->ownerMode.challenge) return;if (!client_.ChallengeGlobals()->Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xce6);NativeMetaBattleCreateHooks receive;BindClientMetaBattleObjects(receive,client_);
+        receive.animate=[this](auto object,auto delay) { auto& rig=client_.AcquireNativeIslandRig(object,12.0F,0);EnterNativeBattleRig(rig,delay); };ReceiveNativeMetaBattleAdd(*client_.ChallengeGlobals(),packet,receive);
+    }); //004b4640의 메타 관문/CS 진단 뒤 전체 생성 부모를 호출하며 sender/phase/known 조건은 추가하지 않는다.
+    dispatch.Observe(0x24,{});dispatch.Version(0x24,1,0);dispatch.RequireLength(0x24,5); //원문의 빈 관찰기와 고정5BYTE다.
+    dispatch.Register(0x24,[this](auto,auto&,auto packet) {
+        if (!client_.SurfaceStorage()->ownerMode.challenge) return;if (!client_.ChallengeGlobals()->Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xcdd);NativeMetaBattleRemoveHooks receive;receive.log=[this](auto text) { client_.WriteDiagnosticLog(9,text); };receive.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };
+        receive.leave=[this](auto object) { auto& rig=client_.AcquireNativeIslandRig(object,0.0F,1);LeaveNativeIslandRig(rig,false); };ReceiveNativeMetaBattleRemove(*client_.ChallengeGlobals(),packet,receive);
+    }); //004b4600의 원래 메타 관문/CS 진단·삭제 부분 효과를 그대로 유지한다.
 }
 MetaConnectionRuntime::~MetaConnectionRuntime()=default; //자기OS/노드수명은실제TCP/UDP소유자의소멸자가반납한다.
 // minor 차이는 로그만 남기고 major 차이만 현재 설정값/실제 Tell 결과로 거부한다.

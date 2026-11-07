@@ -683,6 +683,8 @@ void RawMenuControls::BindMetaDisplayGumps(NativeMetaDisplayHooks& hooks) const 
     hooks.attach=impl_->common.attach; //NSInfo/다중줄/일반Text각자의실제파생Attach분배를유지한다.
     hooks.findGump=[this](auto id)->GumpCreateNode* { if (id>=impl_->common.create.entries.size()) throw std::out_of_range("메타 종속Gump 등록ID 물리 범위");const auto token=impl_->common.create.entries[id];return token ? impl_->common.node(token):nullptr; };
 }
+// 이미 선택한 등록ID를 현재 공통 트리 수명에 전달하며 가짜 창이나 별도 삭제 표를 만들지 않는다.
+void RawMenuControls::KillRegisteredGump(std::uint32_t id) { if (id>=impl_->common.create.entries.size()) throw std::out_of_range("Rig Gump 등록ID 물리 범위");const auto token=impl_->common.create.entries[id];if (!token) throw std::logic_error("Rig가 선택한 실제 Gump 등록이 반납됨");impl_->common.lifetime.Kill(token); }
 // 원격존의세이름표도기존실제TextGump/등록표/GumpForm으로작성한다.
 void RawMenuControls::BindMetaSceneGumps(NativeMetaSceneHooks& hooks) {
     BindMetaDisplayGumps(hooks.display);

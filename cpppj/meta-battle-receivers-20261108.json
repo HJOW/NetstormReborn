@@ -1,0 +1,58 @@
+{
+  "unit": 1125,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      "-first",
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12719616,
+      "sha256": "2c7e2f498c660111c5b92dee0282656686183f1137d09c89476abba0a651b174"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "e4d38e767a32cfb558b5d791d04fe396276a4d73e38befdb7e417a965acbd362"
+    }
+  },
+  "staticAudit": {
+    "native": "004b4640/4b4600 wrapper와0042c670/42c6e0 전체·각 다음 함수까지 기계어·초기 등록/보호PE 두 헤더",
+    "binding": "현재 실제 Session의 ProcessHost/Kernel·World·Pool·게임 시각·special·Projection·CS Image owner pin과 현재 Gump 조회/Kill을 실제 Rig에 공급한다.",
+    "lifetime": "장기 Rig는 현재 UI/Gump를 지연 조회한다. 사용하지 않는 이전 UI callback은 저장하지 않으며 CS Image owner는 closure가 마지막 반납까지 pin한다.",
+    "receivers": "23h/24h는 같은 공유 TCP/UDP 표·원래 메타 모드 관문/CS 진단·버전1/0·고정20/5BYTE·빈 관찰기와 연결했다. sender/phase/known 관문은 추가하지 않는다.",
+    "remove": "진입 CS를 캡처하고 현재 active→같은SID 퇴장 Rig→Image 해제→73DWORD0→max-1/min256→현재packetID로40참가자 진단을 수행한다. 별도 NSInfo/참가자 이동은 추가하지 않는다.",
+    "integration": "실제23h 생성 소비자가1122 물리 바인더와1124 Rig 공장을 호출한다. 실제24h도 동일 Rig를 사용한다. 카메라 Rig/객체 이미지 출력/전체메타 State는 후속이다.",
+    "newRemaining": "1120은67h의 CS 수신 자식까지만 직접 등록했다.004b4900의 전역87BYTE 복사/CS 선택/파생 갱신/재접속UI와 일반 Session의 CS hook은 후속으로 분리하여 기록한다.",
+    "limits": "사용자 지시로 신규 단위/MP/게임/통신 실행0. 빌드를 실제 수신/애니메이션·전체 장면 검증으로 쓰지 않는다."
+  },
+  "remaining": [
+    "67h 전체 State 부모/일반 수신의 CS hook·카메라 Rig·메타 객체 그림/나머지 CS 수신/참가자 생성/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

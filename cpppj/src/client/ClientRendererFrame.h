@@ -11,6 +11,7 @@
 
 namespace netstorm::client { // OS 화면 장치와 실제 게임 전역 사이의 프레임 조립 계층이다.
 class Client;class RawSurfaceStorage;class TileGroupCollection;class ObjectCollection; //동일 Client/Pool/해시의 실제 소유자를 빌린다.
+class NativeIslandRig; // 현재 Kernel이 소유하며 Frame이 소유권을 대신 보관하지 않는다.
 struct NativeMetaPollGlobals;struct NativeMetaSceneHooks; //메타의실제현재전역과하위장치뷰를반환할때만사용한다.
 o::RenderWorldRect RendererCollectionViewport(ScreenRect dirty,ScreenRect map,const RawCameraViewState& view); //현재 분수 카메라로 두 사각형을 환산하고 원문 순서로 지도 안에 제한한다.
 std::int32_t RendererCollectionRowLimit(std::int32_t width,std::int32_t height); //현재 화면 크기로 원문 정수 곱셈/나눗셈의 지형 행 제한을 계산한다.
@@ -27,6 +28,7 @@ public:
     void DrawWater(); //00436450의 capture 뒤·499fe0 앞에서00434dd0의 같은 현재 물리/Screen을 표시한다.
     void HighlightDeveloperPoint(float x,float y); // 현재 snapshot으로 투영한 좌표의 원문 세 겹 강조이며 Frame/난수는 진행하지 않는다.
     void RefreshMetaDisplay(bool whole); //같은실제CS/Pool·가상효과/Renderer·Gump장치로479760또는47dd60을수행한다.
+    NativeIslandRig& AcquireIslandRig(std::uint32_t object,float height,std::uint32_t kill); //실제 현재 장치를 같은52 TYPE 공장/검색에 공급하며 socket이나 프레임을 실행하지 않는다.
     void Finish(); //정상 Draw의 화면 잠금 반납 뒤470ca0을 실행한다. 실패 경로에서는 부르지 않는다.
     std::string Diagnostics() const; //현재 실제 owner/cache·요청/반환을 읽을 뿐 게임 상태를 바꾸지 않는다.
 private:

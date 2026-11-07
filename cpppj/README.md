@@ -1,12 +1,12 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 현재 제품 기준은1124 / 표시 버전11.01이며 /goal 진행 중이다.** 제품 기준은 **1124 / 11.01**이다. CS Image의 깊은 복사·현재 Animator TYPE와 실제 Kernel/ProcessForm IslandRig의 생성/부착/프레임/반납 본체를 컴파일했다. 현재 전역 getter를 사용하며 실제 Client 장치 바인더·소비자/23h 등록은 후속이다. NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0·보호2800파일 불변이다. 새fixture/C++ 단위/MP/게임/통신/전체검사/34미션/ZIP 실행0이며 마지막 C++ 실행검사는1052 기존7개다. 다음은 실제 Client Rig 장치/생성 소비자·23h 등록·카메라 Rig·메타 객체 그림/나머지 CS 수신/참가자 생성/HTML→1dh/28~33 등록/1095 송신 상태 호출이다. 나머지 우선순위와 사용자 검사 제외를 유지하며 전체 목표는 미완료다. [1124 기록](../docs/exe/cpp-meta-island-rig-20261108.md)·[현재 인계](../LEFT_JOBS.md). 986후보는 미적용이다.
+**2026-11-08 현재 제품 기준은1125 / 표시 버전11.01이며 /goal 진행 중이다.** 제품 기준은 **1125 / 11.01**이다. 실제 Client/현재 Session·Kernel·Gump·시각·CS Image owner를 IslandRig에 연결하고 원래 State wrapper를 포함한23h 추가/24h 삭제를 같은 TCP/UDP 표에 등록·컴파일했다. 전체 메타 장면 실행 검증은 아니다. NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0·보호2800파일 불변이다. 새fixture/C++ 단위/MP/게임/통신/전체검사/34미션/ZIP 실행0이며 마지막 C++ 실행검사는1052 기존7개다. 다음은 67h 전체 State 부모/일반 수신의 CS hook·카메라 Rig·메타 객체 그림/나머지 CS 수신/참가자 생성/HTML→1dh/28~33 등록/1095 송신 상태 호출이다. 나머지 우선순위와 사용자 검사 제외를 유지하며 전체 목표는 미완료다. [1125 기록](../docs/exe/cpp-meta-battle-receivers-20261108.md)·[현재 인계](../LEFT_JOBS.md). 986후보는 미적용이다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 
 비멀티 UI929·Edit943·미션 수명956·내부 수명/FILE980의 구현·대조 범위를 마감했다. 4차 로컬MCP/와이드·5차 사용자 홈 저장·7차AA/FSR1을 구현했고, 6차 한국어는1차까지만 제품에 반영했다. LAN 전송/공유 수명/일반Login/원격Fort 수신/참가자별 동기화/전투섬·중앙섬 배치는982~993에서 시간 동기화/일반 시작 세부 경로와 함께 사전 구현했다. 1000에서는 LAN UI/일반 State7 앞단을 연결했다. 일반 전투 전체·파생 writer/decoder·Outpust는 미완료이며 신규MP/통신 검사는 하지 않았다.
 
-미션 플레이 경로가 있으며 마지막 전체34경로 진입 검증은645의제품644, 마지막 실제 단독GUI는984, 마지막 제품빌드는1124이다. 원본 전체 동일성과 모든 자연 완주는 사용자 확인 대상이다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**이다. 현재 값·남은 작업은 [LEFT_JOBS.md](../LEFT_JOBS.md), 한국어/시나리오 미적용 후보는 [986 인계](../docs/exe/handoffs/cpp-pause-20261106/README.md)가 기준이다.
+미션 플레이 경로가 있으며 마지막 전체34경로 진입 검증은645의제품644, 마지막 실제 단독GUI는984, 마지막 제품빌드는1125이다. 원본 전체 동일성과 모든 자연 완주는 사용자 확인 대상이다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**이다. 현재 값·남은 작업은 [LEFT_JOBS.md](../LEFT_JOBS.md), 한국어/시나리오 미적용 후보는 [986 인계](../docs/exe/handoffs/cpp-pause-20261106/README.md)가 기준이다.
 
 ## 과거 작업 기록 — 당시 제품 기준
 
