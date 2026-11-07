@@ -1,0 +1,148 @@
+{
+  "unit": 1046,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "bootstrap1 접속 완료 통지와 실제 별도22송신버퍼 복제/송신/해제",
+  "sourceFunctions1078": [
+    "004e2270",
+    "004e2620",
+    "004dece0",
+    "004e2f00",
+    "004e2940"
+  ],
+  "implemented": [
+    "실제 TCP/내부/Editor의 공유 등록표에1번 소비자 설치",
+    "버전/정책/observer/기존 수신기를 보존",
+    "새 TCP 노드 공개 뒤 기존 버퍼free/0·비NULL 초기 패킷 observer1→길이 재조회→복제→현재 칸 공개",
+    "현재 비음수 ID/버퍼 관문 뒤 현재 노드의 가상+4 직접 송신",
+    "송신 뒤 현재 버퍼 칸 재조회/free/0 및 기존 개별 Disconnect의 같은 버퍼 반납",
+    "동일opaque 발급기의 노드와 별도 복제 물리 소유권"
+  ],
+  "static": {
+    "directCalls": [
+      {
+        "call": "0x4b3f8c",
+        "before": [
+          "004b3f65 mov ecx, dword ptr [esp + 0x78]",
+          "004b3f69 add esp, 4",
+          "004b3f6c test ecx, ecx",
+          "004b3f6e jne 0x4b3f72",
+          "004b3f70 mov ecx, eax",
+          "004b3f72 push 0",
+          "004b3f74 push ecx",
+          "004b3f75 lea eax, [esp + 0x18]",
+          "004b3f79 push eax",
+          "004b3f7a mov eax, dword ptr [esp + 0x84]",
+          "004b3f81 xor ecx, ecx",
+          "004b3f83 test eax, eax",
+          "004b3f85 setne cl",
+          "004b3f88 add ecx, 0xa",
+          "004b3f8b push ecx"
+        ]
+      },
+      {
+        "call": "0x4b77b2",
+        "before": [
+          "004b7780 jmp 0x4b7795",
+          "004b7782 push 0x5141a0",
+          "004b7787 call 0x4de9a0",
+          "004b778c push eax",
+          "004b778d lea eax, [esp + 0x450]",
+          "004b7794 push eax",
+          "004b7795 call 0x4a89c0",
+          "004b779a push eax",
+          "004b779b call 0x4cf570",
+          "004b77a0 add esp, 0x10",
+          "004b77a3 mov ecx, dword ptr [0x5c8864]",
+          "004b77a9 push ebp",
+          "004b77aa push ecx",
+          "004b77ab push 0x5c883c",
+          "004b77b0 push 9"
+        ]
+      },
+      {
+        "call": "0x4b857e",
+        "before": [
+          "004b854a cmp edi, 9",
+          "004b854d jle 0x4b8540",
+          "004b854f cmp esi, dword ptr [0x540c70]",
+          "004b8555 jne 0x4b855e",
+          "004b8557 call 0x4b2c00",
+          "004b855c jmp 0x4b8586",
+          "004b855e mov ecx, dword ptr [0x5318e8]",
+          "004b8564 mov eax, dword ptr [0x5467d8]",
+          "004b8569 mov edx, esi",
+          "004b856b imul edx, edx, 0x1cc",
+          "004b8571 push 0",
+          "004b8573 push ecx",
+          "004b8574 lea ecx, [edx + eax + 0xd10]",
+          "004b857b push ecx",
+          "004b857c push 9"
+        ]
+      },
+      {
+        "call": "0x4b85c6",
+        "before": [
+          "004b8592 cmp esi, -1",
+          "004b8595 je 0x4b8640",
+          "004b859b push 9",
+          "004b859d call 0x4e2b10",
+          "004b85a2 add esp, 4",
+          "004b85a5 test eax, eax",
+          "004b85a7 jne 0x4b85ce",
+          "004b85a9 mov edx, dword ptr [0x5318e8]",
+          "004b85af imul esi, esi, 0x1cc",
+          "004b85b5 push eax",
+          "004b85b6 mov eax, dword ptr [0x5467d8]",
+          "004b85bb push edx",
+          "004b85bc lea ecx, [esi + eax + 0xd10]",
+          "004b85c3 push ecx",
+          "004b85c4 push 9"
+        ]
+      }
+    ],
+    "stateEbpWrites": [
+      "004b6dd1 mov ebp, esp",
+      "004b6df5 xor ebp, ebp"
+    ],
+    "allFourKnownInitialPacketArgumentsNull": true,
+    "decompilerOutputsChanged": false
+  },
+  "hostBoundaries": [
+    "포인터를DWORD로절삭하지않고같은opaque토큰을사용",
+    "호스트밖/짧은헤더/observer뒤범위초과는명시오류",
+    "원문callback중해제된버퍼접근은현재호출의공유물리pin으로호스트수명보호",
+    "기존TCP의빈현재칸접속계약/로컬IPv4정책은이번비제로버퍼복원과별개"
+  ],
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1046\\build.log",
+    "exeSize": 12164608,
+    "exeSha256": "3c953c6e92fd2f7c66930cf767d9c7ad0acdab72bd5a6a849d22de45c07bbf88"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1046\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remaining": [
+    "endpoint/서버/boss·리슨/수락·기존 연결 재사용 감사",
+    "나머지 writer/decoder·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

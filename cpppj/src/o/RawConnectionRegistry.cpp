@@ -1,5 +1,6 @@
 // 같은 실제 연결을 등록/재배치/지연 반환하며 callback 예외의 prefix를 유지한다.
 #include "o/RawConnectionRegistry.h"
+#include <bit>
 #include <stdexcept>
 #include <utility>
 
@@ -26,6 +27,22 @@ bool RawConnectionRegistry::SendMutable(std::int32_t id,std::span<std::uint8_t> 
 bool RawConnectionRegistry::Owns(std::uint32_t token) const { return bindings_.contains(token); }
 std::uint32_t RawConnectionRegistry::TokenFor(const PacketConnection& connection) const { for (const auto& entry:bindings_) if (entry.second.node==&connection) return entry.first;throw std::out_of_range("직접 송신의 현재 노드 token 누락"); } // 실제 살아 있는 동일 주소만 선택하며 sender 번호로 다른 노드를 대신하지 않는다.
 void RawConnectionRegistry::SendDirect(std::uint32_t token,std::span<std::uint8_t> packet) const { const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.send) throw std::logic_error("직접 연결의 실제 가상 송신 장치 미연결");const auto send=found->second.send;send(packet); } // callback 중 해제에도 선택한 callable의 수명을 보유한다.
+// 실제 접속 성공 뒤의 부분 효과만 수행하며 새 접속/Player 상태를 만들지 않는다.
+void RawConnectionRegistry::StoreConnectPacket(std::int32_t id,std::span<std::uint8_t> packet,RawPacketDispatch& dispatch) {
+    if (id<0 || id>=static_cast<std::int32_t>(buffers_.size())) throw std::out_of_range("접속 초기 패킷의 실제22칸 범위");auto& slot=buffers_[static_cast<std::size_t>(id)];if (slot) { Release(slot);slot=0; } // 기존 복제 반납 뒤에만 새 observer/할당을 수행한다.
+    if (packet.empty()) return;if (packet.size()<4) throw std::out_of_range("접속 초기 패킷의 실제 헤더 부족");const auto entry=dispatch.Registration(packet[1]);const auto pin=entry.Pin();entry.NotifyObserver(packet,1);
+    const auto length=std::size_t(packet[2])|(std::size_t(packet[3])<<8);if (length>packet.size()) throw std::out_of_range("접속 초기 패킷의 observer 뒤 길이 초과");auto copy=std::make_shared<std::vector<std::uint8_t>>(packet.begin(),packet.begin()+static_cast<std::ptrdiff_t>(length));
+    if (!nextToken_) throw std::overflow_error("접속 초기 패킷 opaque 토큰 소진");const auto token=nextToken_++;connectPackets_.emplace(token,std::move(copy));slot=token; //4dece0의 전체 복사가 끝난 뒤에만 현재 칸에 공개한다.
+}
+// 송신 callback이 현재 버퍼 칸을 바꿔도 원문처럼 free 단계에서 다시 읽는다.
+void RawConnectionRegistry::SendConnectPacket(std::int32_t id) {
+    if (id<0) return;if (id>=static_cast<std::int32_t>(buffers_.size())) throw std::out_of_range("접속 통지의 실제22칸 범위");auto& slot=buffers_[static_cast<std::size_t>(id)];if (!slot) return;const auto found=connectPackets_.find(slot);if (found==connectPackets_.end()) throw std::logic_error("접속 통지의 현재 복제 버퍼 물리 미연결");const auto packet=found->second;
+    SendDirect(transceivers_[static_cast<std::size_t>(id)],*packet);if (slot) Release(slot);slot=0; // Player/현재ID 송신 관문을 반복하지 않는다. callback 중 반납된 복제 물리는 이 호출이 끝날 때까지만 C++ pin한다.
+}
+// 각 실제 backend가 같은 등록표를 빌릴 때 기존 bootstrap/사용자 수신기는 그대로 둔다.
+void RegisterConnectPacketReceiver(RawPacketDispatch& dispatch,const std::shared_ptr<RawConnectionRegistry>& registry) {
+    if (!registry) throw std::invalid_argument("접속 통지의 실제 Registry 없음");if (!dispatch.Registration(1).receive) dispatch.Register(1,[registry](auto sender,auto&,auto) { registry->SendConnectPacket(std::bit_cast<std::int32_t>(sender)); });
+}
 PacketConnection& RawConnectionRegistry::Node(std::uint32_t token) const { const auto it=bindings_.find(token);if (it==bindings_.end()) throw std::out_of_range("해제되거나 다른 owner의 연결 토큰");return *it->second.node; }
 ConnectionRegistrationHooks RawConnectionRegistry::RegistrationHooks(std::function<void(std::uint32_t)> buffered) {
     return {[this](auto token)->PacketConnection& { return Node(token); },std::move(buffered),[](auto line) { throw std::logic_error("원문 연결 등록 진단:"+std::to_string(line)); }};
@@ -45,6 +62,7 @@ void RawConnectionRegistry::RemoveAliases(std::uint32_t token) {
     for (std::size_t slot=1;slot<pending_.size();++slot) if (pending_[slot]==token) { pending_[slot]=0;--pendingCount_; } //일반 분배가 반납한 pending의 실제 현재 개수만 감소한다.
 }
 void RawConnectionRegistry::Release(std::uint32_t token) {
+    if (const auto packet=connectPackets_.find(token);packet!=connectPackets_.end()) { connectPackets_.erase(packet);return; } // Native free는 노드 장치와 별개인 복제 버퍼도 반납한다. 현재 칸0 쓰기는 호출 부모가 담당한다.
     const auto found=bindings_.find(token);if (found==bindings_.end()) throw std::out_of_range("현재 연결/송신버퍼 free 장치 누락");const auto operation=found->second.release;operation();
     if (!cleanupDepth_) RemoveAliases(token);bindings_.erase(token); //실제 free 성공 전에 표/장치를 지우지 않으며 Native 부모는 자신의 store를 직접 마친다.
 }

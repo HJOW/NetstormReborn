@@ -3,6 +3,7 @@
 #include "o/RawConnectionRegistration.h"
 #include <map>
 #include <memory>
+#include <vector>
 
 namespace netstorm::o { //숫자 토큰은 호스트 포인터를32비트로 절삭하지 않는다.
 // 실제 Node 주소는 owner가 유지하며 표와 장치는 Session보다 오래 보관할 수 있다.
@@ -21,6 +22,8 @@ public:
     bool SendMutable(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players) const; //004e2dc0의현재슬롯/Playerflag1/NULL관문뒤같은가상송신장치를호출한다.반환은장치호출여부이며전달성공값이아니다.
     std::uint32_t TokenFor(const PacketConnection& connection) const; // 실제 고정 노드 주소의 현재 token을 찾아 ID 재배치와 구별한다.
     void SendDirect(std::uint32_t token,std::span<std::uint8_t> packet) const; // 이미 선택된 this의 가상+4를 직접 호출하며 Player/번호 관문을 반복하지 않는다.
+    void StoreConnectPacket(std::int32_t id,std::span<std::uint8_t> packet,RawPacketDispatch& dispatch); //004e2620의 성공 후 기존 버퍼free/0→비NULL의 observer1·길이 재조회·복제·현재 칸 공개다. 빈 span은 NULL이다.
+    void SendConnectPacket(std::int32_t id); //004e2f00의 비음수 ID/비영 버퍼→현재 가상+4→현재 버퍼free→칸0 순서다.
     bool Owns(std::uint32_t token) const; //해제 후 노드를 다시 읽지 않는 순수 존재 조회다.
     PacketConnection& Node(std::uint32_t token) const; //같은 현재 생존 노드만 읽는다.
     std::array<std::uint8_t,20> Address(std::int32_t id) const; //004e2a50의 현재 슬롯 주소 또는0.0.0.0:0을 읽는다.
@@ -51,6 +54,8 @@ private:
     std::uint32_t* synchronization_{&localSynchronization_}; //실제 Client 바인딩 시 기존005c8bf4를 직접 가리킨다.
     std::shared_ptr<void> synchronizationOwner_; //외부 동기화 주소가 대여자보다 먼저 사라지지 않게 한다.
     std::map<std::uint32_t,Binding> bindings_; //현재 실제 연결만 보관하며 해제된 노드의 주소는 남기지 않는다.
+    std::map<std::uint32_t,std::shared_ptr<std::vector<std::uint8_t>>> connectPackets_; // 노드와 별도인22칸 송신버퍼의 실제 복제 물리다. 같은 opaque 발급기를 쓰며 최종 owner가 잔류 물리를 반납한다.
     std::uint32_t cleanupDepth_{}; //원문 부모의 직접 슬롯/count 쓰기와 일반 free의 별칭 해제를 구별하는 호스트 경계다.
 };
+void RegisterConnectPacketReceiver(RawPacketDispatch& dispatch,const std::shared_ptr<RawConnectionRegistry>& registry); // bootstrap1의 현재 버퍼 소비자를 한 번 등록하며 버전/정책/observer와 기존 수신기를 덮지 않는다.
 }

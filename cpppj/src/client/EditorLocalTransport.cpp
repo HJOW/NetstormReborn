@@ -17,6 +17,7 @@ template<class Function> const Function& Need(const Function& function) { // 선
 EditorLocalTransport::EditorLocalTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<o::PacketRegistrationTable> registrations)
     :hooks_(std::move(hooks)),players_(players),registry_(registry?std::move(registry):std::make_shared<o::RawConnectionRegistry>()),dispatcher_(players_,server,WrappedHooks(),registry_,std::move(registrations)) {
     Need(hooks_.now);Need(hooks_.record);Need(hooks_.terminate);Need(hooks_.close);Need(hooks_.release);
+    o::RegisterConnectPacketReceiver(dispatcher_.Dispatch(),registry_); // 로그인 없는 Editor의 실제1번 통지도 같은 장기 버퍼 표를 사용한다.
 }
 EditorLocalTransport::~EditorLocalTransport() { registry_->Forget(clientToken_);registry_->Forget(pendingToken_); }
 // 같은 전송의 현재 실제 노드만 숫자 토큰으로 변환한다.

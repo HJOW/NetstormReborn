@@ -106,6 +106,7 @@ LocalMissionTransport::LocalMissionTransport(std::span<const std::uint8_t> playe
     :players_(players),serverMode_(server),hooks_(std::move(hooks)),registry_(registry?std::move(registry):std::make_shared<o::RawConnectionRegistry>()),dispatch_(o::OriginalEdition::Patch1078,WrappedHooks(),std::move(registrations)) {
     if (players.size()!=kPlayers*kPlayerBytes) throw std::invalid_argument("로컬 전송 같은 실제 Player9 누락");
     if (!hooks_.now || !hooks_.record || !hooks_.terminate || !hooks_.close || !hooks_.release) throw std::invalid_argument("로컬 전송의 실제 분배 장치 누락"); //감싼 함수의 존재로 원래 장치 누락을 가리지 않는다.
+    o::RegisterConnectPacketReceiver(dispatch_,registry_); // 내부/TCP 공통표의1번 bootstrap 몸체이며 기존 수신기는 재등록하지 않는다.
     dispatch_.Observe(0x87,{});dispatch_.Version(0x87,1,0);dispatch_.RequireLength(0x87,0x112); //원문bootstrap의Zsend는빈observer/버전1이며클라이언트수신기를추가하지않는다.
 }
 // Native 부모를 대신 실행하지 않고 C++ owner가 실제 없애는 자기 주소의 별칭만 반납한다.

@@ -23,9 +23,9 @@ public:
 
     void Listen(std::uint32_t port,std::string_view bindAddress="0.0.0.0"); //004e2430/004e02d0의 TCP listener만 연다. bind 주소는 wildcard 또는 로컬 IPv4 literal이다.
     void StopListening(); // 현재 accepted/등록 연결은 보존하고 신규 수락만 중단한다.
-    void Connect(std::string_view address,std::uint32_t port,std::int32_t id=9); //004e2620의 명시 LAN IPv4에 비동기 접속하고 같은 id에 실제 노드를 등록한다. DNS를 조회하지 않는다.
-    void Connect(std::span<const std::uint8_t> address,std::uint32_t port,std::int32_t id=9); // 원문 AF_INET/port/IP/flags의20BYTE 주소를 읽고 실제 TCP 접속을 시작한다.
-    void ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id=9); // 저장 Player의 IP:port 또는tcp,IP:port,cn을 읽고 별도 현재 포트를 적용한다. DNS/공개주소는 기존 정책대로 허용하지 않는다.
+    void Connect(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); //004e2620의 명시 LAN 접속 성공 뒤 별도 초기 패킷을 복제한다. 빈 span은 기존 호출의 NULL이며 DNS를 조회하지 않는다.
+    void Connect(std::span<const std::uint8_t> address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // 원문20BYTE 주소와 현재 포트/초기 패킷을 실제 TCP 접속 부모에 전달한다.
+    void ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // IP:port 또는tcp,IP:port,cn과 별도 포트를 읽고 같은 초기 패킷을 전달한다. DNS/공개주소는 기존 정책대로 허용하지 않는다.
     void AssignConnection(std::int32_t pending,std::int32_t owner); //004e27b0의 같은 accepted 노드를 owner1..8 또는 비서버9로 이동하고 buffered 모드로 바꾼다.
     void Close(std::int32_t id); // 선택한 자기 연결만 closed로 표시하며 수신 depth가0일 때 실제 OS/등록표 반납을 수행한다.
     void CloseAll(); // 자기 listener와 모든 자기 노드를 닫는다. 다른 내부/외부 전송의 공유 등록표를 지우지 않는다.
