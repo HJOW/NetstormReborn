@@ -38,7 +38,7 @@ std::uint32_t ReadStateWord(const ClientStateWorldContext& c,std::uint32_t addre
     case 0x595088:return aux.ResourcePoolBits();case 0x59508c:return std::bit_cast<std::uint32_t>(aux.TotalCost());case 0x595090:return aux.SavedGeyserCount();case 0x5950ac:return aux.OrdinaryGeysers();case 0x5950b0:return aux.GeyserFrameFlag();case 0x595124:return aux.IncomePrimed();case 0x595344:return game.player.playerKnown;
     case 0x59a8ac:return game.HideBuildings();case 0x59a8b0:return c.client.KencloudGlobals()->WorldRedraw();
     case 0x5c7a74:return local.Begin();case 0x5c848c:return std::bit_cast<std::uint32_t>(aux.LostX());case 0x5c8490:return std::bit_cast<std::uint32_t>(aux.LostY());
-    case 0x5c85a0:return local.CentralCreated();case 0x5c85a4:return game.world.editor;case 0x5c85b4:return local.ConnectionNotified();case 0x5c85c0:return local.ZonePending();case 0x5c85c8:return local.MetadataMode();case 0x5c85cc:return local.StateAuxCC();case 0x5c85d4:return local.SavedGame();case 0x5c85e0:return local.AbortPending();
+    case 0x5c85a0:return local.CentralCreated();case 0x5c85a4:return game.world.editor;case 0x5c85b4:return local.ConnectionNotified();case 0x5c85c0:return local.ZonePending();case 0x5c85c4:return local.MetaConnected();case 0x5c85c8:return local.MetadataMode();case 0x5c85cc:return local.StateAuxCC();case 0x5c85d4:return local.SavedGame();case 0x5c85e0:return local.AbortPending();
     case 0x5c8758:return local.State().phase[0];case 0x5c8bb0:return aux.Archipelago();case 0x5ca8f0:return aux.PriestQuarterHp();case 0x5ca938:return c.menus.PopupState().command;
     default:throw std::out_of_range("State 직접 읽기의 미등록 Native DWORD 주소");
     }
@@ -61,7 +61,7 @@ void WriteStateWord(const ClientStateWorldContext& c,std::uint32_t address,std::
     case 0x595088:aux.StoreResourcePoolBits(value);return;case 0x59508c:aux.TotalCost()=std::bit_cast<std::int32_t>(value);return;case 0x595090:aux.SavedGeyserCount()=value;return;case 0x5950ac:aux.OrdinaryGeysers()=value;return;case 0x5950b0:aux.GeyserFrameFlag()=value;return;case 0x595124:aux.IncomePrimed()=value;return;case 0x595344:game.player.playerKnown=value;return;
     case 0x59a8ac:game.HideBuildings()=value;return;case 0x59a8b0:c.client.KencloudGlobals()->WorldRedraw()=value;return;
     case 0x5c7a74:local.Begin()=value;return;case 0x5c848c:aux.LostX()=std::bit_cast<float>(value);return;case 0x5c8490:aux.LostY()=std::bit_cast<float>(value);return;
-    case 0x5c85a0:local.CentralCreated()=value;return;case 0x5c85a4:game.world.editor=value;return;case 0x5c85b4:local.ConnectionNotified()=value;return;case 0x5c85c0:local.ZonePending()=value;return;case 0x5c85c8:local.MetadataMode()=value;return;case 0x5c85cc:local.StateAuxCC()=value;return;case 0x5c85d4:local.SavedGame()=StateBoolean(value);return;case 0x5c85e0:local.AbortPending()=value;return;
+    case 0x5c85a0:local.CentralCreated()=value;return;case 0x5c85a4:game.world.editor=value;return;case 0x5c85b4:local.ConnectionNotified()=value;return;case 0x5c85c0:local.ZonePending()=value;return;case 0x5c85c4:local.MetaConnected()=value;return;case 0x5c85c8:local.MetadataMode()=value;return;case 0x5c85cc:local.StateAuxCC()=value;return;case 0x5c85d4:local.SavedGame()=StateBoolean(value);return;case 0x5c85e0:local.AbortPending()=value;return;
     case 0x5c8bb0:aux.Archipelago()=value;return;case 0x5ca8f0:aux.PriestQuarterHp()=StateBoolean(value);return;case 0x5ca938:c.menus.PopupState().command=value;return;
     default:throw std::out_of_range("State 직접 쓰기의 미등록 Native DWORD 주소");
     }

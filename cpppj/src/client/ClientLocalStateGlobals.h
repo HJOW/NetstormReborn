@@ -69,6 +69,8 @@ public:
     const std::uint32_t& StateAuxCC() const { return stateAuxCC_; } // 확인된 Native 직접 writer는004b2df0의0 store다.
     std::uint32_t& MetadataMode() { return metadataMode_; } // 005c85c8은004b6dd0의1 store와0047d8c0/0047e630의 읽기를 보존한다.
     const std::uint32_t& MetadataMode() const { return metadataMode_; } // 이름은 편의 표기이며 미복원 부모의 전체 역할을 확정하지 않는다.
+    std::uint32_t& MetaConnected() { return metaConnected_; } //005c85c4의 실제 DWORD이며 상태29/30/31이 현재 값을 쓴다.
+    const std::uint32_t& MetaConnected() const { return metaConnected_; } //metadataMode와 별개인 같은 장기 주소를 읽는다.
     std::uint32_t& ConnectionNotified() { return connectionNotified_; } // 005c85b4는004b6dd0의 별도0검사/1쓰기 DWORD다.
     const std::uint32_t& ConnectionNotified() const { return connectionNotified_; } // 명칭과 무관하게 Native State의 현재 비트 폭을 유지한다.
     std::uint32_t& CachedPeerIndex() { return cachedPeerIndex_; } // 00542534의 State 선택 인덱스 캐시이며004b2cc0도ffffffff로 무효화한다.
@@ -139,6 +141,7 @@ private:
     std::uint32_t abortPending_{}; // 005c85e0의 최초 BSS0이다. 미복원 Abort 부모의 요청 상태와 같은 수명이다.
     std::uint32_t stateAuxCC_{}; // 005c85cc의 최초 BSS0이며 알려지지 않은 역할을 다른 필드와 합치지 않는다.
     std::uint32_t metadataMode_{}; // 005c85c8의 최초 BSS0이며 Native 부모 접합 전에도 현재 DWORD를 유지한다.
+    std::uint32_t metaConnected_{}; //005c85c4의 최초 BSS0이며 메타 연결 표시를 Session 교체로 재초기화하지 않는다.
     std::uint32_t connectionNotified_{}; // 005c85b4의 최초 BSS0이며 requestPhase와 별도로 보존한다.
     std::uint32_t cachedPeerIndex_{0xffffffffU}; // 보호 PE00542534의 최초 캐시 무효값이다.
     std::uint32_t cachedPeerValue_{0xffffffffU}; // 보호 PE00542538의 최초 DWORD를 독립적으로 보존한다.

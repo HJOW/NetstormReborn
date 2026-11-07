@@ -1,0 +1,82 @@
+{
+  "unit": 1094,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp/NetstormRoot",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12397056,
+      "sha256": "0de92d5af191249a101e5647c372c54be0dd40b3b61863607005b9db4b962d9e"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "0b514825a564bddd006521d525f2ac933f95dab11c979ad07ce387348c7654e7"
+    }
+  },
+  "staticAudit": {
+    "nativeClientFunctions": 10,
+    "reasonTable": [
+      "Unspecified reason",
+      "Login successful",
+      "Initial info sent",
+      "Player already logged in",
+      "Name length is bad",
+      "The server is full"
+    ],
+    "response": "로그→현재Subscriber→current+38/status,current28→메타버전거부시current12/status0→동기Run",
+    "states": "28~33 본체/CS Reset·실패Tell/immediate serial·29 표시/11번Root요청·현재listener·캐시·32실제창감시·33선택게임서버감시",
+    "master": "현재 자기+a4 전투의8참가자에서0을제외한 flags BYTE bit4 첫일치",
+    "negativeStatus": "33의9번status는양수가아닌비영검사",
+    "rootLoginTarget": "004b40c0의실제connection인자를복원,기존State22는10유지/새29본문은11",
+    "connectedDword": "별도005c85c4 BSS0을장기Client owner/직접read/write에추가",
+    "sourceOnly": true
+  },
+  "integration": {
+    "newReplyAndMetaStateBodiesCompiled": true,
+    "newReplyRegistered": false,
+    "meta28Through33Dispatched": false,
+    "rootLoginTargetParameterApplied": true,
+    "connectedDwordOwnerApplied": true,
+    "pendingDevices": [
+      "실제0047dd60/479760/47cab0 표시와Poll",
+      "현재실제CS수신·가상표/오브젝트와카메라·HTMLserial",
+      "004b2c00/master통지·004b62b0/Login·실제동일전송장치",
+      "완성한뒤MetaConnectionRuntime의1dh/28..33 실제등록·분배"
+    ]
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "boundaries": [
+    "새수신/상태본체는라이브러리컴파일이며실제1dh수신/28..33완료로세지않음",
+    "선택된필수표시/전송장치미연결은명시예외이며빈성공/가짜ACK/메타화면을추가하지않음",
+    "실제CS참가자/전투상한·패킷/주소NUL물리밖접근은호스트예외",
+    "단일게임스레드/CS owner와참조·hooks의호출전체생존을요구",
+    "새MP/통신/장치/수신·상태실행은사용자지시로생략"
+  ],
+  "remaining": [
+    "메타표시/CS·현재장치완성뒤1dh/28..33실제등록",
+    "세.server콘텐츠·LANhostname/ConfigregistryValue경계",
+    "LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03/HJOW-Athlon",
+    "lastRoot": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

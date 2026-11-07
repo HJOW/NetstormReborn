@@ -132,10 +132,10 @@ std::uint8_t MetaConnectionRuntime::Weight(std::span<const std::uint8_t> core) {
     hooks.type=[this](auto index) { const auto& type=client_.SurfaceStorage()->types.at(static_cast<std::size_t>(index));return o::CoreTechnologyWeightType{type.techBitIndex,type.level}; };return o::CoreTechnologyWeight(core,hooks);
 }
 // 미작성 scratch를 현재 할당 입력으로 보존하고 observer가 실제18BYTE 길이를 확정한다.
-void MetaConnectionRuntime::SendRootLogin() {
+void MetaConnectionRuntime::SendRootLogin(std::uint32_t connection) {
     std::array<std::uint8_t,78> packet;CurrentAllocationBytes(packet);Header(packet,0x16);Put(packet,4,0,1);std::int32_t serverSubscriber{};
     client_.NsInfoGlobals()->ReadServerFields(std::bit_cast<std::int32_t>(client_.LocalStateGlobals()->State().phase[0x44/4]),{},{},&serverSubscriber);
-    Put(packet,6,std::bit_cast<std::uint32_t>(serverSubscriber),4);Put(packet,5,1,1);Put(packet,14,client_.CurrentSubscriber(),4);Put(packet,10,Weight(Core()),4);static_cast<void>(tcp_->SendMutable(10,packet));
+    Put(packet,6,std::bit_cast<std::uint32_t>(serverSubscriber),4);Put(packet,5,1,1);Put(packet,14,client_.CurrentSubscriber(),4);Put(packet,10,Weight(Core()),4);static_cast<void>(tcp_->SendMutable(connection,packet));
 }
 // 현재 채팅 재생성→원문300BYTE 요청→Core/언어/CD/진단/이름 쓰기 순서를 유지한다.
 void MetaConnectionRuntime::SendChallengeLogin() {
@@ -159,7 +159,7 @@ o::LocalMissionParentResult MetaConnectionRuntime::Run(std::uint32_t selected) {
     }
     case 22: {
         const auto status=tcp_->Status(10);const auto open=tcp_->IsOpen(10);if (!open || status<0) { client_.ConnectionGlobals()->Disconnect(10);Progress("Root Server login failure.");request_(20); }
-        else if (!status) state.next[0]=22;else { SendRootLogin();request_(23); }break;
+        else if (!status) state.next[0]=22;else { SendRootLogin(10);request_(23); }break;
     }
     case 23:Progress("Root Server connected. Awaiting login reply.");break;
     case 24:request_(25);break;

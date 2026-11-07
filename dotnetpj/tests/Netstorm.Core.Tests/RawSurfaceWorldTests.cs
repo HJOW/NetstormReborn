@@ -451,6 +451,45 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.SetAssetOwner(5, 3u));
     }
 
+    /// <summary>같은 풀의 종속 해제 묶음을 만든다. 2026-11-07 F2d 월드 본체 종속 묶음 이식에서 추가됐다.</summary>
+    /// <param name="pool">묶을 풀이다.</param>
+    /// <returns>같은 풀의 종속 해제다.</returns>
+    private static RawSquidContainedUnpop ContainedBinding(RawSidPool pool) =>
+        new(pool, new SquidContainedUnpopState
+        {
+            ContentFormType = new UIntBox { Value = 6u },
+            GumpFormType = new UIntBox { Value = 3u },
+            UiEvent = new UIntBox { Value = 0x02000039u },
+        }, new SquidContainedUnpopHooks());
+
+    /// <summary>빈 묶음을 받아들이는지 검증한다. 2026-11-07 F2d 월드 본체 종속 묶음 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindContainedUnpopAcceptsNull()
+    {
+        // null이면 기본 종단으로 되돌린다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.BindContainedUnpop(null);
+    }
+
+    /// <summary>같은 풀의 Session 종단을 빌리는지 검증한다. 2026-11-07 F2d 월드 본체 종속 묶음 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindContainedUnpopAcceptsSamePool()
+    {
+        // 같은 실제 풀의 종단은 약한 참조로 빌린다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.BindContainedUnpop(ContainedBinding(world.Storage().Pool));
+    }
+
+    /// <summary>다른 풀의 종단을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 종속 묶음 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindContainedUnpopRejectsDifferentPool()
+    {
+        // 다른 실제 풀의 종단은 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        var other = new RawSurfaceStorage(OriginalEdition.Patch1078);
+        Assert.Throws<ArgumentException>(() => world.BindContainedUnpop(ContainedBinding(other.Pool)));
+    }
+
     /// <summary>같은 저장소 커널을 빌리는지 검증한다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>
     [Fact]
     public void KernelSharesStorageKernel()

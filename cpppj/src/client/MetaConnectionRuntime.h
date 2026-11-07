@@ -21,7 +21,7 @@ private:
     bool Connect(std::string_view endpoint,std::uint32_t port,std::uint32_t challenge); //004b3ed0의현재 해석 뒤 TCP10/11을 실제 선택한다. 공개/DNS 주소는 기존 LAN 장치가 거부한다.
     std::span<std::uint8_t> Core(); //0048f0d0의 같은 현재 Client Core와 실제 진단을 읽는다.
     std::uint8_t Weight(std::span<const std::uint8_t> core); //0042b210의 현재 TYPE/기술 비트/level 합계다.
-    void SendRootLogin(); //004b40c0의16h/18BYTE 요청과 현재서버 subscriber/Core 기술 합계를 쓴다.
+    void SendRootLogin(std::uint32_t connection); //004b40c0의16h/18BYTE 요청을 실제 인자10/11로 보내며 현재서버 subscriber/Core 기술 합계를 쓴다.
     void SendChallengeLogin(); //004b4480의1ch/현재Core/이름·언어·CD/진단 플래그 요청이다.
     bool CheckMetaVersion(std::uint32_t major,std::uint32_t minor); //004b4160의10.78 비교/로그·major 차이에서만 옵션/Tell 거부다.
     void ReceiveRootReply(std::span<const std::uint8_t> packet); //004b4250의 실제 현재 표/서버 목록/사용자 홈 저장과 next24·메타 갱신을 연결한다.
