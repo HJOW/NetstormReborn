@@ -876,6 +876,90 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.Create(6u, 0u));
     }
 
+    /// <summary>188개가 아닌 TYPE 월드의 받침 지정을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetSupportOwnerRejectsNon188World()
+    {
+        // CD 171개 TYPE의 표면 연결은 후속 단위에서 잇는다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.SetSupportOwner(10f, 10f, 3u));
+    }
+
+    /// <summary>프레임 표가 맞지 않는 월드의 받침 지정을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetSupportOwnerRejectsMismatchedFrames()
+    {
+        // 껍데기 호출의 표면 연결은 전체 조립 단위에서 잇는다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.SetSupportOwner(10f, 10f, 3u));
+    }
+
+    /// <summary>빈 칸의 받침 지정을 조용히 무시하는지 검증한다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetSupportOwnerIgnoresEmptyCell()
+    {
+        // 지도에 머리가 없으면 갈고리 없이 돌아간다. 원본처럼 변경은 남긴다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u, null, Frames188());
+        Assert.True(world.TakeChanged());
+        world.SetSupportOwner(10f, 10f, 3u);
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>무인도가 아닌 칸의 받침 지정을 조용히 무시하는지 검증한다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetSupportOwnerIgnoresNonNoIsland()
+    {
+        // 머리 종류가 무인도가 아니면 소유자를 건드리지 않는다. 원본처럼 변경은 남긴다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u, null, Frames188());
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        WriteSlot(raw, 14, BitConverter.SingleToUInt32Bits(10f), 4);
+        WriteSlot(raw, 18, BitConverter.SingleToUInt32Bits(10f), 4);
+        world.Storage().Hash.MutableEntries(0)[10 * 256 + 10] = (ushort)sid;
+        Assert.True(world.TakeChanged());
+        world.SetSupportOwner(10f, 10f, 3u);
+        Assert.Equal(0, world.Storage().Pool.Slot(sid)[34]);
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>3×3 받침 소유자 전파가 같은 풀에 적히는지 검증한다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetSupportOwnerPropagatesSupportOwners()
+    {
+        // 연결 조회 미연결에서 멈추기 전 3×3 소유자 쓰기와 변경 알림을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u, null, Frames188());
+        int target = world.Storage().Pool.Allocate();
+        Span<byte> targetRaw = world.Storage().Pool.AllocatedBytes(target);
+        targetRaw[RawSidPool.StateOffset] = 0;
+        targetRaw[RawSidPool.TypeOffset] = 157;
+        WriteSlot(targetRaw, 14, BitConverter.SingleToUInt32Bits(10f), 4);
+        WriteSlot(targetRaw, 18, BitConverter.SingleToUInt32Bits(10f), 4);
+        int support = world.Storage().Pool.Allocate();
+        Span<byte> supportRaw = world.Storage().Pool.AllocatedBytes(support);
+        supportRaw[RawSidPool.StateOffset] = 0;
+        supportRaw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        Span<ushort> heads = world.Storage().Hash.MutableEntries(0);
+        for (int cx = 8; cx <= 10; cx++)
+        {
+            for (int cy = 8; cy <= 10; cy++)
+            {
+                if (cx != 10 || cy != 10)
+                {
+                    heads[cy * 256 + cx] = (ushort)support;
+                }
+            }
+        }
+
+        heads[10 * 256 + 10] = (ushort)target;
+
+        Assert.True(world.TakeChanged());
+        Assert.Throws<InvalidOperationException>(() => world.SetSupportOwner(10f, 10f, 5u));
+        Assert.Equal(5, world.Storage().Pool.Slot(support)[34]);
+        Assert.True(world.TakeChanged());
+    }
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {

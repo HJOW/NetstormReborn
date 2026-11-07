@@ -60,6 +60,9 @@ public sealed class RawSurfaceWorld
     /// <summary>타입에 맞는 객체를 생성하는 처리기다. 원본 Impl.factory에 대응하며 188개 TYPE가 아니면 비워 둔다. 진단·분리·전송 묶음은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 생성 연결 이식에서 추가됐다.</summary>
     private readonly RawSquidFactory? _factory;
 
+    /// <summary>무인도 최초 등록과 3×3 받침 소유자 전파를 복원한 처리기다. 원본 Impl.surface에 대응하며 188개 TYPE·같은 수 프레임이 아니면 비워 둔다. 연결 조회·표시 갱신은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+    private readonly RawIslandPostPop? _surface;
+
     private readonly RawUnpop? _unpop;
 
     /// <summary>자산 삭제의 기본 몸체다. 원본 Impl.baseDestroy에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
@@ -136,6 +139,19 @@ public sealed class RawSurfaceWorld
             _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph.Records, _storage.Graph.Stack, null, GraphRecovery.FullPool);
             _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots);
             _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);
+            if (_frames.Count == _types.Count)
+            {
+                _surface = new RawIslandPostPop(_storage.Pool, new HashLevelView(_storage.Hash), _types, _frames, _storage.Links, _loadState, new IslandPostPopHooks
+                {
+                    Objects = new BridgeConnectHooks { SetOwner = (sid, owner) => SetAssetOwner(sid, owner) },
+                    Connect = _ => throw new InvalidOperationException("실제 표면 연결의 현재 생성기가 연결되지 않았습니다."),
+                    FindTypeAt = (_, _, _) => throw new InvalidOperationException("실제 표면 연결의 현재 조회가 연결되지 않았습니다."),
+                    UpdateDisplay = _ => _changed = true, // 표시 갱신(display->Update)은 후속 단위에서 잇는다.
+                    IncompleteSupport = (_, _, _) => throw new InvalidOperationException("원본 표면 월드의 불완전한 받침 묶음입니다."),
+                    Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
+                    Detail = text => _storage.RecordAssertionDetail(text),
+                });
+            }
             _baseDestroy = new RawSquidDestroy(_storage.Pool, _unpop, _types);
         }
 
@@ -537,6 +553,57 @@ public sealed class RawSurfaceWorld
 
         _changed = true;
         return _factory.Create(type, (SidAllocation)flags);
+    }
+
+    /// <summary>저장소 해시 0단계 머리를 표면 지도 보기로 빌리는 어댑터다. 사본이 아니라 같은 실제 배열을 읽는다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+    private sealed class HashLevelView : IReadOnlyList<ushort>
+    {
+        /// <summary>머리를 빌릴 실제 공간 해시다. 월드·저장소보다 오래 살 수 없다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+        private readonly RawSquidHash _hash;
+
+        /// <summary>실제 공간 해시를 감싼다.</summary>
+        /// <param name="hash">0단계 머리를 읽을 해시다.</param>
+        public HashLevelView(RawSquidHash hash)
+        {
+            _hash = hash;
+        }
+
+        /// <summary>지도 한 변의 칸 수(256×256)다.</summary>
+        public int Count => _hash.Entries(0).Length;
+
+        /// <summary>해당 칸의 머리 번호를 읽는다.</summary>
+        /// <param name="index">읽을 칸 번호다.</param>
+        /// <returns>머리 번호다.</returns>
+        public ushort this[int index] => _hash.Entries(0)[index];
+
+        /// <summary>머리를 순서대로 열거한다.</summary>
+        /// <returns>머리 열거자다.</returns>
+        public IEnumerator<ushort> GetEnumerator()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                yield return this[i];
+            }
+        }
+
+        /// <summary>머리를 순서대로 열거한다.</summary>
+        /// <returns>머리 열거자다.</returns>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    /// <summary>저장 건물의 소유자를 받침에 반영하는 기존 초기 월드 어댑터의 경계다. 연결 조회는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+    /// <param name="x">기준 가로 좌표다.</param>
+    /// <param name="y">기준 세로 좌표다.</param>
+    /// <param name="owner">쓸 소유자다.</param>
+    public void SetSupportOwner(float x, float y, uint owner)
+    {
+        if (_surface is null)
+        {
+            throw new InvalidOperationException("실제 월드 받침 처리가 연결되지 않았습니다.");
+        }
+
+        _surface.SetSupportOwner(x, y, owner);
+        _changed = true;
     }
 
     /// <summary>깊이·Graph·프로세스·공간의 실제 상태를 읽기 전용으로 노출한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
