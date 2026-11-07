@@ -1,0 +1,61 @@
+{
+  "unit": 1106,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "firstBuildExitCode": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12545024,
+      "sha256": "0c356d9db09e42eff0204118fa59fca535ed87bf8aeb09f8a232730b67fa9e29"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "9052d969f98ad35c588cf357e1d71e6f40bbd647d1d0be3e1da13e285959b794"
+    }
+  },
+  "staticAudit": {
+    "body": "004252b0 전체: Bounds/활성 캡처·현재 frame→TYPE·배경3e40000·안쪽2픽셀 단색·현재fortGump TYPE/L·선택적6/7그림",
+    "arithmetic": "32비트 좌표/프레임 감김과 signed 차이/2의0방향 절삭",
+    "devices": "같은 공통 Bounds/클립/배경/단색·실제 현재 TYPE/frames/SHP loaded·원색 그림",
+    "lifetime": "일시 callback은같은WithDrawing 호출 안에서만 유효하며 별도 표면/상태는 없음",
+    "limits": "현재 정상 자산의 연결을 정적으로 대조. 전체 픽셀/x87/비정상 원본 메모리 입력 동등 검증은 아님"
+  },
+  "integration": {
+    "specialButtonFullDrawBound": true,
+    "nsInfoLayoutsBound": true,
+    "metaInputBound": false,
+    "wholeMetaScreenComplete": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "NSInfo 메타 입력",
+    "CS 수신/참가자·전투섬 생성·카메라 Rig/HTML",
+    "1dh/28~33 등록 및1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

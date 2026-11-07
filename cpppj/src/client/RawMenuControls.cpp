@@ -29,6 +29,7 @@
 #include "client/ClientGameplayGlobals.h"
 #include "client/HudNsInfoCreate.h"
 #include "client/HudNsInfoMeta.h" //메타루트/참가자순서도같은CS·공통문자/트리를사용한다.
+#include "client/HudPlayerButtonDraw.h" //같은특수버튼의배경/단색/원색그림전체Draw다.
 #include "o/RawPlayerNotification.h" //원문참가자기술합계는현재TYPE기반공통몸체를재사용한다.
 #include "o/RawChatManagerPrefix.h" //메타참가자의랭크도같은현재icon B/C의기존몸체를사용한다.
 #include "client/NativeMetaDisplay.h"
@@ -1002,10 +1003,13 @@ void RawMenuControls::WithDrawing(std::span<std::uint8_t> pixels,int pitch,int h
         Impl& state; // 현재 출력 동안만 연결된 실제 픽셀 문맥이다.
         ~ResetDraw() { state.activeText=nullptr;state.activeBackground={};state.activePicture={};state.activeImage={};state.activeMetaImage={};state.activeImageListFill={}; } // 정상/예외 반환의 같은 정리다.
     } reset{s};
+    HudPlayerButtonDrawHooks playerButton;playerButton.node=[&s](auto token)->const HudPlayerButtonNode& { return *s.nsButtons.at(token); };playerButton.bounds=[&s](auto token) { return s.common.collection.Bounds(token); };playerButton.read=[&s](auto address) { return s.NsRead(address); };
+    playerButton.background=[&s](auto rect,auto flags,auto type,auto frame) { s.backgroundDraw->Background(rect,flags,type,frame); };playerButton.fill=[&target](auto rect,auto color) { target.Fill(rect,color,false); }; //체크무늬/소유자색변환을추가하지않는다.
+    playerButton.type=[&s](auto type) { static_cast<void>(s.nsContext->storage->types.at(type));return type; };playerButton.firstL=[&s](auto type) { return s.nsContext->storage->frames.at(type).Run('L').first; };const auto buttonPixels=bgPixels.Hooks(s.clip);playerButton.shape=[&s,&buttonPixels](auto type,auto frame,auto point) { if (!s.nsContext->storage->shapes.at(type).loaded) return;buttonPixels.shape({type,frame,point,false}); }; //현재공통클립/실제SHP의원색기준점출력을같이쓴다.
     draw.draw=[&](auto token) {
         if (s.imageLists.contains(token)) { s.imageList->Draw(token);return; }
         if (s.metaImages.contains(token)) { s.metaImage->Draw(token);return; }
-        if (s.movies && s.movies->Node(token)) s.movies->Draw(token,target,s.clip.clip);else if (s.gifWindows && s.gifWindows->Node(token)) s.gifWindows->Draw(token,target);else if (s.textEntries && s.textEntries->Node(token)) s.textEntries->Draw(token,text,target);else if (s.helpButtons.contains(token)) s.common.stones.Draw(token,s.common.collection,text,target);else if (s.helpImages.contains(token)) s.helpImage->Draw(token);else if (const auto* external=s.External(token)) external->draw(token,target,s.colors,*s.backgroundDraw);else if (s.costs.contains(token) || s.plainTexts.contains(token)) s.costText->Draw(token);else if (s.nsButtons.contains(token)) throw std::logic_error("PlayerInfo 전용 버튼의 전체 메타맵 Draw 미연결");else if (s.islandRoots.contains(token) || s.saveFortRoots.contains(token) || s.htmlRoots.contains(token) || s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
+        if (s.movies && s.movies->Node(token)) s.movies->Draw(token,target,s.clip.clip);else if (s.gifWindows && s.gifWindows->Node(token)) s.gifWindows->Draw(token,target);else if (s.textEntries && s.textEntries->Node(token)) s.textEntries->Draw(token,text,target);else if (s.helpButtons.contains(token)) s.common.stones.Draw(token,s.common.collection,text,target);else if (s.helpImages.contains(token)) s.helpImage->Draw(token);else if (const auto* external=s.External(token)) external->draw(token,target,s.colors,*s.backgroundDraw);else if (s.costs.contains(token) || s.plainTexts.contains(token)) s.costText->Draw(token);else if (s.nsButtons.contains(token)) DrawPlayerInfoButton(token,playerButton);else if (s.islandRoots.contains(token) || s.saveFortRoots.contains(token) || s.htmlRoots.contains(token) || s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
         else if (s.thumbs.contains(token)) s.sliderWidgets->DrawThumb(token,s.common.collection,*s.backgroundDraw);else if (s.Background(token)) s.backgroundDraw->Draw(token);
     };
     MenuGumpDrawHooks mh;mh.node=[&](auto token) { return Find(s.menus,token); };mh.base=s.common.node;GumpDecorationPixelTarget decorationPixels(target,s.assets);BindMenuGumpDrawAssets(mh,s.assets,decorationPixels);

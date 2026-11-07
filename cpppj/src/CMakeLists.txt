@@ -535,3 +535,6 @@ target_sources(netstorm PRIVATE o/RawAviaryProcessData.cpp o/RawAviaryProcessDat
 
 # 실제 메타 전투 옵션의22개 이름/선택 포인터 표다.
 target_sources(netstorm PRIVATE o/RawBattleOptionText.h o/RawBattleOptionText.cpp)
+
+# PlayerInfo 특수버튼의 전체 가상 Draw와 실제 공통 픽셀 배선이다.
+target_sources(netstorm PRIVATE client/HudPlayerButtonDraw.h client/HudPlayerButtonDraw.cpp)
