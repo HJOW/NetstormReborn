@@ -6462,7 +6462,7 @@
       "bytes": 183257,
       "lines": 613,
       "fixtureCommit": "f02ea8d1",
-      "webCommit": "worktree",
+      "webCommit": "c50d5b73",
       "cpppjBasis": {
         "cpppj/src/o/RawBombStatus.cpp": "566f44d6"
       }
@@ -6491,9 +6491,154 @@
       "bytes": 897513,
       "lines": 742,
       "fixtureCommit": "570a969c",
-      "webCommit": "worktree",
+      "webCommit": "c50d5b73",
       "cpppjBasis": {
         "cpppj/src/o/RawBombRegular.cpp": "570a969c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E54",
+      "id": "bomb-targets",
+      "path": "cpppj/tests/fixtures/bomb-targets-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 주문 대상 검색 41e4b0의 기하·순서·배열·헤더·13슬롯 (두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/bomb-targets.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-targets.js"
+      ],
+      "doc": "docs/webpj-bomb-strike-family-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombTargets.cpp"
+      ],
+      "scope": "300행 전부 사용(53/64 비트 두 정밀도 열은 같은 값)",
+      "text": true,
+      "sha256": "43f5b4b207fd60089a42cf2f94119adecefaf1d742f17fa08c693cb2307b05af",
+      "bytes": 1366900,
+      "lines": 301,
+      "fixtureCommit": "fa516f5a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombTargets.cpp": "0f0b70e2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E54",
+      "id": "bomb-blast",
+      "path": "cpppj/tests/fixtures/bomb-blast-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 폭발 계열 자격 41e9c0·효과 41ea30의 반환·효과·네 슬롯·권한 (두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/bomb-blast.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-blast.js"
+      ],
+      "doc": "docs/webpj-bomb-strike-family-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombBlast.cpp"
+      ],
+      "scope": "2082행 전부 사용(53/64 비트 두 정밀도 열은 같은 값)",
+      "text": true,
+      "sha256": "697e3ced9b5ff78c62b731cecaa9c86fa68b0ecc528d5bd1fab20a154a097461",
+      "bytes": 1973041,
+      "lines": 2083,
+      "fixtureCommit": "0f0b70e2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombBlast.cpp": "0f0b70e2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E54",
+      "id": "bomb-blast-dais",
+      "path": "cpppj/tests/fixtures/bomb-blast-dais-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 폭발 계열의 dais 추상 genus 추가 입력 (두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/bomb-blast.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-blast.js"
+      ],
+      "doc": "docs/webpj-bomb-strike-family-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombBlast.cpp"
+      ],
+      "scope": "64행 전부 사용(53/64 비트 두 정밀도 열은 같은 값)",
+      "text": true,
+      "sha256": "e0a91a336da61b341e16ea8408b172e8eeec649b880e7be4cf941f856f642656",
+      "bytes": 60072,
+      "lines": 65,
+      "fixtureCommit": "0f0b70e2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombBlast.cpp": "0f0b70e2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E54",
+      "id": "bomb-effect",
+      "path": "cpppj/tests/fixtures/bomb-effect-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 0x5f 주문 효과 수신 420bf0의 효과·10슬롯·패킷·누적·전역 (두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/bomb-effect.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-effect.js"
+      ],
+      "doc": "docs/webpj-bomb-strike-family-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombEffect.cpp"
+      ],
+      "scope": "1676행 전부 사용(53/64 비트 두 정밀도 열은 같은 값)",
+      "text": true,
+      "sha256": "44f9032ce5e96488e4bfb5e5c425a129308debed96e2995b46930c8fcb9fd3a1",
+      "bytes": 3920874,
+      "lines": 1677,
+      "fixtureCommit": "12eff4b3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombEffect.cpp": "e210c755"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E54",
+      "id": "bomb-strike",
+      "path": "cpppj/tests/fixtures/bomb-strike-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 네 직접 피해 주문의 반환·효과·다섯 슬롯·공유 난수·권한 (두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/bomb-strike.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-strike.js"
+      ],
+      "doc": "docs/webpj-bomb-strike-family-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombStrike.cpp"
+      ],
+      "scope": "1420행 전부 사용(53/64 비트 두 정밀도 열은 같은 값)",
+      "text": true,
+      "sha256": "93014a92c7cdcf803be84d2e9a1fd16123de3bab56362d2b6630b9dcff2a6a03",
+      "bytes": 1759830,
+      "lines": 1421,
+      "fixtureCommit": "1ccb8ae1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombStrike.cpp": "1ccb8ae1"
       }
     }
   ]
