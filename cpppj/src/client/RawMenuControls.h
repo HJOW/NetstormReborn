@@ -20,6 +20,7 @@ class RawCampaignSession; // 현재 지식 창도 같은 세션의 실제 기술
 class RawImage;class MetaImageGump;struct MetaImageGumpNode; // 같은 공통 트리의 전용 동적 Image 파생이다.
 class MetaImageList;struct MetaImageListNode; // 실제21개 후보의 목록 파생과 같은 공통 저장소다.
 struct RawNsInfoContext; // 전체 NSInfo 생성의 실제 Client 전역과 문자열 수명이다.
+struct NativeMetaDisplayHooks;struct ClientNsInfoGlobals; //메타 표시도 같은 Gump/NSInfo 공용 장치를 빌린다.
 struct RawTextEntryContext;class RawTextEntryControls; // 같은 실제 편집 버퍼/Console 조립 계층이다.
 struct RawChatWindowContext;class ChatWindow;class HudChatGeometry; // 전체 Chat 공장과 같은 실제 자식 기하다.
 struct RawHtmlWindowContext;class HtmlWindowGump; // 실제 HTML 부모의 전역/본문·수명 처리기다.
@@ -99,6 +100,11 @@ public:
     void UnregisterExternalGumps(std::uint32_t registration); // 해당 소유자의 출력만 반납한다. 다른 HUD나 기존 고정 슬롯은 보존한다.
     std::uint32_t BaseHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const; // 외부 파생도 같은 기본 우클릭 Help로 위임한다. // 생산 패널의 현재 저장소를 같은 출력 계층에 연결/해제한다.
     const TextGump& TextBackend() const; // 수량/예산도 기존 원본 한 줄 글자 처리기를 공유한다.
+    void BindMetaDisplayGumps(NativeMetaDisplayHooks& hooks) const; //실제노드/Push/문자·스크롤/가상Attach/등록ID조회만현재메타장치에연결한다.객체/Renderer/번역장치는호출자가연결한다.
+    std::uint32_t CreateMetaText(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은등록표에new(a4)/TextGump를생성한다.미부착실패노드도공통Cleanup이소유한다.
+    std::uint32_t CreateMetaName(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은new(d8)/다중줄/버퍼·Slider를생성하여메타참가자이름표로사용한다.
+    void CloseMetaDisplayGumps(); //같은메타공장에서생성한등록/미등록노드만공통자식우선수명으로정리한다.
+    void RefreshMetaNsInfo(ClientNsInfoGlobals& globals) const; //같은기존NSInfo 슬롯으로0047cab0 Push/재조회/Attach를실행한다.
     const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.
     void SetHelpText(std::uint32_t token,std::string_view text); //464ed0의 실제 소유 문자열을 같은 노드의 textPointer에 설치한다.
     void SetHelpWord(std::uint32_t token,std::string_view text); //464f80의 실제 소유 도움말 키를 alternateTextPointer에 설치한다.

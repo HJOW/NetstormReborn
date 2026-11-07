@@ -1,0 +1,74 @@
+{
+  "unit": 1099,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp/NetstormRoot",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "initialAttempt": {
+      "exitCode": 1,
+      "errors": [
+        "C2678"
+      ],
+      "cause": "shared_ptr와raw포인터직접비교, .get()으로실제주소비교뒤재빌드",
+      "log": "extracted/cpp-resume-1099/build-initial.log"
+    }
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12405760,
+      "sha256": "dfeb790879dc775fe1abb7da9c2f611e7365644983336ce7ee9a016873718597"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "91e3b569b435f5396801442fa1f204479ae472009f3d2dd8edbbce10922a5b2a"
+    }
+  },
+  "staticAudit": {
+    "baseVtable": "0050ac70+18→00464560 Push→가상+8(true)",
+    "sharedNsInfo": "00593150은기존ClientNsInfoGlobals.current,중복CS슬롯제거",
+    "uiDevices": [
+      "실제공통노드",
+      "트리Push",
+      "다중줄Replace/Append/Parse/Fit/RequestScroll",
+      "실제파생Attach",
+      "실제등록ID배열조회"
+    ],
+    "factories": "동일한줄/다중줄/버퍼·Slider와등록표/serial·부분생성소유집합/공통scalar수명"
+  },
+  "integration": {
+    "realUiHooksConnected": true,
+    "sameNsInfoOwnerUsed": true,
+    "metaThirdBoundToUi": true,
+    "realMetaTextFactoriesAdded": true,
+    "actualFullSceneApplied": false,
+    "newReplyRegistered": false,
+    "meta28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "0047dd60 전체·CS수신/실제Pool·가상객체/Renderer/HTML장치와NSInfo메타배치",
+    "1095송신/1096투영/1097갱신/1098Poll 실제장치와1dh/28..33등록",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03/HJOW-Athlon",
+    "lastRoot": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

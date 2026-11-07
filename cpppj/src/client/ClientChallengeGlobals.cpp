@@ -10,8 +10,6 @@ o::ChallengeGeometry& ClientChallengeGlobals::Geometry() { return geometry_; } /
 const o::ChallengeGeometry& ClientChallengeGlobals::Geometry() const { return geometry_; } // 현재 같은 표를 읽는 const 소비자다.
 MetaProjectionState& ClientChallengeGlobals::Projection() { return projection_; } //메타 표시/카메라 부모가 같은 물리를 변경한다.
 const MetaProjectionState& ClientChallengeGlobals::Projection() const { return projection_; } //보고/표시는 보정이나 상태 변경 없이 현재값을 읽는다.
-std::uint32_t& ClientChallengeGlobals::PlayerList() { return playerList_; } //생성/갱신/정리가 같은 실제 목록 슬롯을 사용한다.
-const std::uint32_t& ClientChallengeGlobals::PlayerList() const { return playerList_; } //조회만으로 목록 노드를 만들거나 값/가시성을 바꾸지 않는다.
 bool ClientChallengeGlobals::Prepare(const std::function<void()>& uninitialized) { // 객체 포인터 존재와 좌표 초기화 플래그를 별개로 확인한다.
     if (current_) {
         if (!geometry_.initialized) { if (!uninitialized) throw std::logic_error("기존 CS listsInitialized의 실제 진단 장치 미연결");const auto assertion=uninitialized;assertion(); }

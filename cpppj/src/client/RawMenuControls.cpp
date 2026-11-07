@@ -28,6 +28,7 @@
 #include "client/RawNsInfoContext.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/HudNsInfoCreate.h"
+#include "client/NativeMetaDisplay.h"
 #include "client/RawTextEntryControls.h"
 #include "client/RawChatWindowContext.h"
 #include "client/RawBackgroundGifControls.h"
@@ -69,6 +70,7 @@ struct RawMenuControls::Impl {
     std::map<std::uint32_t,std::unique_ptr<HudNsInfoNode>> nsRoots;std::map<std::uint32_t,std::unique_ptr<HudPlayerInfoNode>> nsPlayers; // 실제 NSInfo/PlayerInfo 파생 저장소다.
     std::map<std::uint32_t,std::unique_ptr<HudBattleInfoNode>> nsBattles;std::map<std::uint32_t,std::unique_ptr<HudPlayerButtonNode>> nsButtons; // 실제 BattleInfo/특수 버튼이다.
     std::map<std::uint32_t,std::unique_ptr<TextGumpNode>> plainTexts;std::map<std::uint32_t,std::string> nsTranslated; // 같은 실제 한 줄 처리기와 번역 포인터의 현재 바이트다.
+    std::set<std::uint32_t> metaOwned;bool metaAllocating{}; //메타글자/다중줄 공장의 실제 부분생성 노드만 추적하며 다른메뉴/NSInfo 소유와 구별한다.
     std::unique_ptr<HudNsInfoCreate> nsCreate;std::unique_ptr<HudNsInfo> nsGeometry;bool nsRootAllocation{}; // 같은 Native 생성/일반 부착 몸체와 첫0xd8 할당의 형 문맥이다.
     std::set<std::uint32_t> nsOwned; // 원문 생성 경계가 직접 할당한50노드의 실제 토큰이다. 포인터 대입/부착 전 실패도 소유한다.
     std::unique_ptr<RawTextEntryControls> textEntries; // 같은 공통 수명/클립과 실제 문자 물리를 사용하는 편집 노드다.
@@ -285,7 +287,7 @@ struct RawMenuControls::Impl {
         else if (bytes==0x178) arrows.emplace(token,std::make_unique<ScrollGumpArrowNode>());
         else if (bytes==0x38 && context==1) return token;
         else if (bytes==0xb8 && context==3) costs.emplace(token,std::make_unique<FloatingSpGumpNode>());
-        else throw std::logic_error("원본 메뉴 파생 할당 크기/문맥 오류");return token;
+        else throw std::logic_error("원본 메뉴 파생 할당 크기/문맥 오류");if (metaAllocating) metaOwned.insert(token);return token;
     }
     // Native new의 현재 생성 위치에 따라 같은 크기라도 올바른 실제 파생 저장소를 만든다.
     std::uint32_t AllocateNs(std::size_t bytes) {
@@ -554,6 +556,7 @@ void RawMenuControls::SetGumpModal(std::uint32_t token,bool enabled) { impl_->Se
 void RawMenuControls::SetMainMenuSerial(std::uint32_t serial) { impl_->mainMenuSerial=serial; } //생성자와 Help 허용 조회만 공유하며 현재 모달/죽음을 추정해 바꾸지 않는다.
 // 노드는 소유자의 공통 GumpLifetime으로 먼저 삭제한다.
 RawMenuControls::~RawMenuControls() {
+    CloseMetaDisplayGumps(); //메타의미부착/부분생성노드도실제처리기/공통등록표가살아있을때반납한다.
     CloseEditorIslandWindows();CloseEmbeddedTells();CloseSaveFortNameDialogs();CloseMovies();CloseHtmlWindows();CloseBackgroundGifs();CloseChatWindows();auto& s=*impl_;if (s.chatContext && s.chatContext->globals->uiOwner==&s) { s.buffers->Destroy(0x548758);s.chatContext->globals->uiOwner=nullptr; } // 표시 자식 뒤에 Client 공유 버퍼의 실제 조각을 반납한다.
 }
 // 실제 생산 자식도 기존 파서/글리프/배경과 같은 현재 문맥을 사용한다.
@@ -573,6 +576,42 @@ void RawMenuControls::UnregisterExternalGumps(std::uint32_t registration) { impl
 // 기본 Help가 읽는 노드/문자열과 메뉴 생성기는 현재 공통 상태다.
 std::uint32_t RawMenuControls::BaseHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const { return impl_->BaseHelp(token,event,first,second); }
 const TextGump& RawMenuControls::TextBackend() const { return *impl_->costText; } // 같은 한 줄 처리기다.
+// 새 메타 표시도 기존 실제 공통 트리/다중 줄/등록표를 사용하며 별도 화면 노드를 합성하지 않는다.
+void RawMenuControls::BindMetaDisplayGumps(NativeMetaDisplayHooks& hooks) const {
+    hooks.gump=[this](auto token)->GumpCreateNode& { auto* node=impl_->common.node(token);if (!node) throw std::out_of_range("메타 Gump의 현재 실제 노드 없음");return *node; };
+    hooks.push=[this](auto token) { impl_->common.tree.Push(token); }; //Native+18을Redraw(false)로대체하지않고실제분리/후속Redraw(true)를수행한다.
+    hooks.replaceText=[this](auto token,std::string_view text,auto metadata) { const std::string bytes(text);impl_->title->ReplaceText(token,{bytes.data(),bytes.size()+1},metadata); };
+    hooks.appendText=[this](auto token,std::string_view text,const auto& context,auto length,auto metadata) { const std::string bytes(text);impl_->title->AppendText(token,{bytes.data(),bytes.size()+1},context,length,metadata); };
+    hooks.parseName=[this](auto token,auto text) { impl_->titleMarkup->Parse(token,text); };
+    hooks.fit=[this](auto token,auto width,auto height) { impl_->title->FitContent(token,width,height); };
+    hooks.scroll=[this](auto token,auto position) { impl_->title->RequestScroll(token,position); };
+    hooks.attach=impl_->common.attach; //NSInfo/다중줄/일반Text각자의실제파생Attach분배를유지한다.
+    hooks.findGump=[this](auto id)->GumpCreateNode* { if (id>=impl_->common.create.entries.size()) throw std::out_of_range("메타 종속Gump 등록ID 물리 범위");const auto token=impl_->common.create.entries[id];return token ? impl_->common.node(token):nullptr; };
+}
+// 부분 생성도 기존 map/공통 수명에서 추적되며 새 독립 폰트/렌더러를 만들지 않는다.
+std::uint32_t RawMenuControls::CreateMetaText(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color) {
+    const auto token=impl_->common.token();impl_->plainTexts.emplace(token,std::make_unique<TextGumpNode>());impl_->metaOwned.insert(token);return impl_->costText->Construct(token,width,height,font,color);
+}
+// 기존 제목과 같은 실제 다중 줄 생성자를 써서버퍼/숨긴Slider/등록serial계약을그대로사용한다.
+std::uint32_t RawMenuControls::CreateMetaName(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color) {
+    if (impl_->metaAllocating) throw std::logic_error("메타이름표공장의중첩로컬할당금지");impl_->metaAllocating=true;
+    try { const auto token=impl_->Allocate(0xd8,0);const auto result=impl_->titleWidgets->Construct(token,width,height,font,color);impl_->metaAllocating=false;return result; }
+    catch (...) { impl_->metaAllocating=false;throw; }
+}
+// 등록노드는기존가상scalar로지우고기본생성전실패한미등록노드만호스트저장소에서반납한다.
+void RawMenuControls::CloseMetaDisplayGumps() {
+    auto& s=*impl_;if (s.metaOwned.empty()) return;
+    // 실제메타공장이소유한등록1..999만Kill하며다른NSInfo/Help/메뉴등록을포함하지않는다.
+    for (std::size_t id=1;id<s.common.create.entries.size();++id) { const auto token=s.common.create.entries[id];const auto* node=s.metaOwned.contains(token) ? s.common.node(token):nullptr;if (node && !(node->flags&0x10000U)) s.common.lifetime.Kill(token); }
+    s.common.lifetime.Cleanup();
+    // Cleanup뒤에는미등록부분생성만남아야하며같은Release가소유집합/실제map을함께갱신한다.
+    while (!s.metaOwned.empty()) { const auto token=*s.metaOwned.begin();if (std::find(s.common.create.entries.begin(),s.common.create.entries.end(),token)!=s.common.create.entries.end()) throw std::logic_error("메타표시정리뒤실제등록이남음");Release(token); }
+}
+// 현재 NSInfo owner의 정체성을 보존한 채 실제 UI 장치를 같은 원문 갱신 함수에 연결한다.
+void RawMenuControls::RefreshMetaNsInfo(ClientNsInfoGlobals& globals) const {
+    if (impl_->nsContext && impl_->nsContext->globals.get()!=&globals) throw std::logic_error("메타 NSInfo의 실제 Client 슬롯 불일치");
+    NativeMetaDisplayHooks hooks;BindMetaDisplayGumps(hooks);netstorm::client::RefreshMetaNsInfo(globals,hooks);
+}
 const StyleText& RawMenuControls::StyleBackend() const { return *impl_->style; } // 같은 조각 소유자다.
 // 초기 도움말 문자열도 다른 메뉴/생산 노드와 같은 공통 수명에서 반납한다.
 void RawMenuControls::SetHelpText(std::uint32_t token,std::string_view text) {
@@ -629,7 +668,7 @@ void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) cons
     else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.plainTexts.contains(token)) s.costText->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.multiplayerOwned.erase(token);s.multiplayerContexts.erase(token);s.multiplayerRoots.erase(token);s.islandOwned.erase(token);s.islandContexts.erase(token);s.islandRoots.erase(token);s.embeddedTells.erase(token);s.imageLists.erase(token);s.metaImages.erase(token);s.saveFortOwned.erase(token);s.saveFortContexts.erase(token);s.saveFortRoots.erase(token);s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.metaOwned.erase(token);s.multiplayerOwned.erase(token);s.multiplayerContexts.erase(token);s.multiplayerRoots.erase(token);s.islandOwned.erase(token);s.islandContexts.erase(token);s.islandRoots.erase(token);s.embeddedTells.erase(token);s.imageLists.erase(token);s.metaImages.erase(token);s.saveFortOwned.erase(token);s.saveFortContexts.erase(token);s.saveFortRoots.erase(token);s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
 // 생성자는 같은 등록표를 사용하고 Image의 소유권은 호출자에게 남긴다.
 std::uint32_t RawMenuControls::CreateMetaImage(RawImage& image) {
     return impl_->CreateMeta(image);

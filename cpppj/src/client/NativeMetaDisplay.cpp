@@ -1,5 +1,6 @@
 // 원문 CS 기록/객체/Gump 주소를 유지하고 가상 효과 뒤 필요한 현재 값만 재조회한다.
 #include "client/NativeMetaDisplay.h"
+#include "client/ClientNsInfoGlobals.h"
 #include <bit>
 #include <stdexcept>
 #include <unordered_set>
@@ -59,7 +60,7 @@ void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask,NativeMet
     }
     const auto token=Read(record,0xd4);const bool own=Read(raw,0x22,1)==g.localOwner;auto& label=Need(h.gump)(token);
     if (Read(record,0xd0)!=label.serial) Need(h.assertion)("c->gumpHandle == tg->uniqueHandle",".\\Metadisplay.cpp",0x55d);
-    Need(h.redraw)(token);const auto color=g.textColor;const auto ownFont=g.ownFont;const auto normalFont=g.normalFont;
+    Need(h.push)(token);const auto color=g.textColor;const auto ownFont=g.ownFont;const auto normalFont=g.normalFont;
     const std::array<std::uint32_t,8> ownContext{2,0,ownFont,0,color,0,1,1},normalContext{2,0,normalFont,0,color,0,1,1};
     if (mask&4U) {
         Need(h.replaceText)(token,"",0);const auto flags=Read(record,0x64);
@@ -125,7 +126,7 @@ void PollMetaDisplay(NativeMetaPollGlobals g,const NativeMetaDisplayHooks& h) {
             if (placed) Need(h.move)(sid,point.position[0],point.position[1],0);
         }
         const auto token=Read(record,0xd4);auto& label=Need(h.gump)(token);if (Read(record,0xd0)!=label.serial) Need(h.assertion)("c->gumpHandle == tg->uniqueHandle",".\\Metadisplay.cpp",0x491);
-        Need(h.redraw)(token);if (clipped) label.flags&=~1U;else label.flags|=1U;Need(h.attach)(token,label.x,label.y,d.attachParent,1);
+        Need(h.push)(token);if (clipped) label.flags&=~1U;else label.flags|=1U;Need(h.attach)(token,label.x,label.y,d.attachParent,1);
     }
     // 전투1..9의 일반 투영은00479c40의 특수BYTE10 쓰기를 하지 않는다.
     for (std::uint32_t battle=1;battle<o::kChallengeBattleCount;++battle) {
@@ -144,8 +145,8 @@ void PollMetaDisplay(NativeMetaPollGlobals g,const NativeMetaDisplayHooks& h) {
         Need(h.move)(sid,point.position[0],point.position[1],0);ZoneLabels(sid,point.clipped,g,h);
     }
 }
-// redraw가 현재 목록을 바꿀 수 있으므로 다음 실제 포인터/좌표는 반환 뒤 재조회한다.
-void RefreshMetaPlayerList(std::uint32_t& current,const NativeMetaDisplayHooks& h) {
-    if (!current) return;Need(h.redraw)(current);const auto token=current;auto& label=Need(h.gump)(token);label.flags|=1U;Need(h.attach)(token,label.x,label.y,0,0);
+// Push의 가상 Redraw가 현재 NSInfo를 바꿀 수 있으므로 반환 뒤 같은 공용 슬롯/좌표를 재조회한다.
+void RefreshMetaNsInfo(ClientNsInfoGlobals& globals,const NativeMetaDisplayHooks& h) {
+    if (!globals.current) return;Need(h.push)(globals.current);const auto token=globals.current;auto& label=Need(h.gump)(token);label.flags|=1U;Need(h.attach)(token,label.x,label.y,0,0);
 }
 }
