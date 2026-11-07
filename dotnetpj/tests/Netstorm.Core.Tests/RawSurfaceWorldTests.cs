@@ -960,6 +960,39 @@ public sealed class RawSurfaceWorldTests
         Assert.Equal(5, world.Storage().Pool.Slot(support)[34]);
         Assert.True(world.TakeChanged());
     }
+
+    /// <summary>188개가 아닌 TYPE 월드의 해제를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UnpopRejectsNon188World()
+    {
+        // CD 171개 TYPE의 해제 연결은 후속 단위에서 잇는다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.Unpop(5, 0u));
+    }
+
+    /// <summary>void 자산의 해제가 조용히 끝나는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UnpopVoidAssetIsNoOp()
+    {
+        // 배치 전 void 슬롯은 원본처럼 해제 없이 돌아간다. 변경은 남긴다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, TypesWithAddresses(), 97u, null, Frames188());
+        int sid = world.Create(70u, 0u);
+        Assert.True(world.TakeChanged());
+        world.Unpop(sid, 0u);
+        Assert.Equal(70, world.Storage().Pool.Slot(sid)[RawSidPool.TypeOffset]);
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>Form 슬롯의 해제를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UnpopRejectsFormSlot()
+    {
+        // 자산 밖 번호는 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, TypesWithAddresses(), 97u, null, Frames188());
+        int sid = world.Create(6u, 0u);
+        Assert.Throws<InvalidOperationException>(() => world.Unpop(sid, 0u));
+    }
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {

@@ -606,6 +606,20 @@ public sealed class RawSurfaceWorld
         _changed = true;
     }
 
+    /// <summary>현재 raw 타입의 실제 공간·표시 해제 몸체를 호출한다. `Pop` 배치·표시 갱신 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
+    /// <param name="sid">해제할 객체 번호다.</param>
+    /// <param name="flags">해제 플래그다.</param>
+    public void Unpop(int sid, uint flags = 0u)
+    {
+        if (_unpop is null)
+        {
+            throw new InvalidOperationException("실제 월드 공간 해제가 연결되지 않았습니다.");
+        }
+
+        _unpop.Unpop(sid, _types[_storage.Pool.Slot(sid)[RawSidPool.TypeOffset]], flags);
+        _changed = true;
+    }
+
     /// <summary>깊이·Graph·프로세스·공간의 실제 상태를 읽기 전용으로 노출한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
     /// <returns>원본 CLI 관측과 같은 여러 줄 보고서다.</returns>
     public string Report()
