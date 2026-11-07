@@ -47,7 +47,7 @@ bool RawConstructionConfirm::Confirm(const ConstructionConfirmRequest& request) 
     hooks_.broadcast(notice);
     hooks_.handle(notice);
     // 조각이 없을 때 원본은 초기화되지 않은 지역 값을 기록기에 넘긴다. 여기서는 0을 넘기며 원본 값이라고 주장하지 않는다.
-    if (state_.recorderEnabled && hooks_.recorderActive()) hooks_.record(Sid{notice.sids.empty() ? std::uint16_t{0} : notice.sids.front()});
+    if (state_.RecorderEnabled() && hooks_.recorderActive()) hooks_.record(Sid{notice.sids.empty() ? std::uint16_t{0} : notice.sids.front()});
     return true;
 }
 // 어댑터와 호출자가 같은 풀을 쓰는지 확인할 수 있게 실제 풀을 돌려준다.

@@ -1,0 +1,88 @@
+{
+  "unit": 1043,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "기록 재생의 실제 Client/Kernel·사용자 파일·Ctrl F7·건설 확정/선택 부모 접합",
+  "sourceFunctions1078": [
+    "004955b0",
+    "00495910",
+    "004957a0",
+    "00495710",
+    "00495730",
+    "004958d0",
+    "004d92d1",
+    "0040a7c0"
+  ],
+  "integrated": [
+    "현재 Client의 playing DWORD/현재 재생 객체",
+    "사용자 Captures/BuildRecords/d의 연속 파일 중 마지막 rec 읽기",
+    "현재 Player source와 현재 TYPE49의 실제 ProcessForm/Kernel Attach·Run·Kill",
+    "일반 Ctrl F7 관문 및 Ctrl Shift F7의 NextStage FIFO",
+    "건설 broadcast/직접 처리 뒤 현재 playing→IsLabel→Notify",
+    "기존 RawSquidSelection/표시 virtual88/현재 GameWorld 사용자 선택",
+    "현재 GameAux의3eh 헤더/길이를 기존 건설 송신과 공유"
+  ],
+  "static": {
+    "processType": 49,
+    "requestHeader": "3e011900",
+    "shiftCommand": "0x20000d3",
+    "constructorVtableCount": 83,
+    "markMethods": [
+      "0x41c0b0",
+      "0x44b2b0"
+    ],
+    "displayMethods": [
+      "0x45ac90",
+      "0x473770",
+      "0x4787c0",
+      "0x4791b0",
+      "0x4ad500"
+    ],
+    "decompilerOutputsChanged": false
+  },
+  "build": {
+    "first": {
+      "exitCode": 0,
+      "warnings": 3,
+      "errors": 0,
+      "cause": "Client 수명 토큰 make_shared<uint8_t>(int)의 축소 초기화",
+      "log": "extracted\\cpp-resume-1043\\build.log"
+    },
+    "final": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "target": "NetstormCpp",
+      "log": "extracted\\cpp-resume-1043\\build-final.log",
+      "exeSize": 12145664,
+      "exeSha256": "e54dc05d24d939cb870ee8b6d90bcd64683ad2e16b2937846cea6d1ae8862177"
+    }
+  },
+  "boundaries": [
+    "재생 패킷의 C++ 초기 품질BYTE0을 원문 미정 stack의 기대값으로 보지 않음",
+    "current 약한 참조가 만료된 선택 접근은 명시 호스트 오류이며 playing을 합성 초기화하지 않음",
+    "기본 special/specialAuxiliary 플래그를 켜거나 새 콘솔·조작 UI를 추가하지 않음"
+  ],
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1043\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remaining": [
+    "나머지 LAN 수신/송신·재동기화/Activate",
+    "메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

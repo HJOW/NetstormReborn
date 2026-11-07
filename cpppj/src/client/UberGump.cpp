@@ -32,6 +32,7 @@
 #include "client/ClientCdGlobals.h"
 #include "client/TechnicalHelp.h" //실제 파일 가용성 조회와 별도 Technical Help 명령을 연결한다.
 #include "client/ClientDiagnostics.h"
+#include "client/ClientBuildReplay.h" // 일반 F7의 기존 UI/정지 관문 뒤 원문 재생 입력을 소비한다.
 #include "client/SendMoneyInput.h"
 #include "client/ClientBridgeDecay.h"
 #include "client/DialogCommandLifetime.h"
@@ -1458,6 +1459,7 @@ void UberGump::Event(InputEvent event) {
         hooks.queue=[this](auto command,auto first,auto second) { client_.Input().PushCommand(command,first,second); };
         static_cast<void>(DispatchPauseKeyInput(event,hooks));return; //정지/재개와 음향은 다음 일반 Pause 명령이 소비한다.
     }
+    if (transitionCode==0x760000U && !rawButtons_->CurrentDialog() && DispatchBuildReplayKey(client_,event)) return; // 기존 Guide/Gump/Console 뒤이며 재생 입력이 실제 선택된 경우 일반 배너 토글보다 먼저 끝난다.
     if (transitionCode==0x710000U || transitionCode==0x720000U || transitionCode==0x770000U || (transitionCode==0x760000U && (event.code&(InputCode::kShift|InputCode::kControl))!=(InputCode::kShift|InputCode::kControl))) {
         if (rawButtons_->CurrentDialog()) return; // 원문565dd4 모달 관문은 일반 F2/F3/F8보다 앞이다. Guide 뒤 조기 F8 예약을 하지 않는다.
         ViewKeyInputHooks hooks; // 같은 Client 표시 전역과 현재 설정/Tell/큐를 사용한다.

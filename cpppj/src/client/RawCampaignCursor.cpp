@@ -1,5 +1,6 @@
 // 기존 원본 몸체들의 계산을 재구현하지 않고 실제 월드의 단일 상태로 연결한다.
 #include "client/RawCampaignCursor.h"
+#include "o/RawGameAuxState.h" // 로컬 배치와 재생의3e 생성자가 같은 현재 헤더를 읽는다.
 #include "client/RawCampaignCursorDisplay.h"
 #include "client/RawCursorPreviews.h"
 #include "client/RawCursorActions.h"
@@ -93,7 +94,7 @@ struct RawCampaignCursor::Impl {
         localHooks.destroyPreview=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };
         localHooks=MakeReturnPieceHooks(core.pool,*returned,std::move(localHooks));localHooks.moveBuilder=game.moveBuilder;
         localHooks.send=[this](std::uint32_t destination,const o::ConstructionLocalMessage& message) {
-            std::array<std::uint8_t,25> packet{};o::WriteConstructionCommand(message,packet);
+            std::array<std::uint8_t,25> packet{};auto& aux=*data.world.Storage()->GameAux();o::WriteConstructionCommand(message,packet,{aux.ConstructionRequestHeader()[0],aux.ConstructionRequestHeader()[1],aux.ConstructionRequestLength()});
             Current(effects.send,"로컬 건설 송신")(destination,packet);
         };
         localState.decoderDiagnostics=&data.geometry.decoderDiagnostics; // 실제 예측 배치도 커서 미리보기와 같은 현재 진단 장치를 읽는다.

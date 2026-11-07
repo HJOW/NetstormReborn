@@ -6,6 +6,7 @@
 #include "o/RawSquidRegion.h" // 같은 TYPE 진단과 raw 지역 WORD의 getter/setter를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/ClientBuildReplay.h" // 실제 건설 확정과 재생 프로세스가 같은 현재 객체/playing을 사용한다.
 #include "client/CompositeMissionTransport.h" // 현재 ID 복합 전송과 실제 전체 Runtime 등록 대여를 연결한다.
 #include "o/RawSidRobust.h" // 상세 SID 진단의 실제 부모다.
 #include "o/RawCheckingDiagnostics.h" // 원문4ad730의 실제 순수 Form 검사다.
@@ -2481,6 +2482,8 @@ struct RawCampaignSession::Impl {
         FillMissing(effects.negativeQuantity);FillMissing(effects.boundsAssertion);
         effects.islandExists=[this](std::int32_t region) { return islands->Exists(region); }; //같은 현재 섬 목록을 읽으며 청크의 존재 여부로 추정하지 않는다.
         RawCampaignConstructionGameplay gameplay; // 첫 객체 설치 뒤 선택될 현재 원본 하위만 지연 연결한다.
+        constructionState.confirm.sharedRecorderEnabled=services.buildReplay ? &services.buildReplay->playing : nullptr; //같은 Client 전역의 주소이며 Session 교체로 재초기화하지 않는다.
+        gameplay.confirm.recorderActive=[this] { return CurrentBuildReplayIsLabel(services.buildReplay); };gameplay.confirm.record=[this](Sid sid) { NotifyCurrentBuildReplay(services.buildReplay,sid.value); }; // broadcast/자기 수신 뒤 같은 현재 재생 객체를 각각 다시 읽는다.
         gameplay.setOwner=[this](Sid sid,std::uint32_t owner) { priests->SetOwner(sid,owner); }; // 같은 Pool의 사제 가상+74와 나머지 공통 소유자를 분배한다.
         gameplay.request.mayPlace=[this](const CanonPlacementQuery& query) { return MayPlaceGameplay(query); };
         gameplay.request.displace=[this](float x,float y,std::uint32_t type,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("요청의 실제 건설 효과 미설치");PrepareBuilding(core.processState.Now());return buildingEffects->Displace(x,y,type,owner); };
@@ -4158,6 +4161,10 @@ void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 // 실제 worldLoad의 loginSubscriber 복사 대상과 같은 장기 전역을 매번 읽는다.
 const std::uint32_t& RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
 const std::shared_ptr<ClientCoreDataGlobals>& RawCampaignSession::PlayerCoreGlobals() const { return impl_->coreDataGlobals; } // 같은 현재 슬롯/active/cache 소유자를 관측한다.
+//4958d0의 가상7c(1)→가상88→4d5c90을 기존 파생 선택/표시 실행기와 공유한다.
+void RawCampaignSession::ApplyBuildReplaySelection(std::uint32_t number) {
+    auto& s=*impl_;if (number>65535U) throw std::out_of_range("건설 재생 선택의 현재 SID WORD 범위");const Sid sid{static_cast<std::uint16_t>(number)};const auto refresh=[&s](Sid target) { s.core.display.Update(s.core.pool.Slot(target)); };RawSquidSelection(s.core.pool,refresh).Mark(sid,1);refresh(sid);if (!s.services.developerSelectObject) throw std::logic_error("건설 재생의 실제 사용자 선택 미연결");s.services.developerSelectObject(number);
+}
 // 큰 Subscriber 변경도 같은 실제 Client My/Session handle과 Template 노드 writer를 사용한다.
 void RawCampaignSession::ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name) { impl_->ChangeFortSubscriber(id,name); }
 // UI와31h가 같은 현재 Template/handle/My 및 writer·통지 순서를 사용한다.

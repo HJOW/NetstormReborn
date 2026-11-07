@@ -181,11 +181,14 @@ struct CampaignCameraCommitContext {
     std::int32_t width{},height{}; // 즉시 중심 요청이 사용한 현재 논리 화면 크기다.
 };
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
+struct ClientBuildReplayGlobals; // 같은 Client의 현재 재생 playing과 객체를 장기 소유권으로 빌린다.
 struct RawCampaignSessionServices {
     std::function<void(const CampaignCameraCommitContext&)> cameraCommit; // 실제497960의 커서/화면/dirty/Gump 장치다. 생략된 실제 호출은 두setter/noop로 대체하지 않는다.
     std::function<ScreenPoint()> cameraScreenSize; // 34h 수신이 현재005c78f0/f4 논리 화면 크기를 읽는다. 지도 Gump 크기나 호스트 표시 크기와 구별한다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> developerQueue; // 개발자 cr의452fe0을 같은 실제 입력 큐에 넣고 직접 UI 변경으로 대체하지 않는다.
     std::function<void(float,float)> developerHighlight; //4345e0의 현재 좌표 강조를 실제 Screen/카메라/즉시 출력에 연결한다.
+    std::shared_ptr<ClientBuildReplayGlobals> buildReplay; // 건설 Confirm의 현재495710/495730이 읽는 실제 Client 전역이다.
+    std::function<void(std::uint32_t)> developerSelectObject; //4958d0의 마지막4d5c90(SID,0,1)을 같은 실제 World 선택기로 전달한다.
     std::function<void(std::string_view)> developerRecordLabel; //4954f0의 현재 파일/RL 라벨 기록이며 원문 활성 관문 뒤에만 호출한다.
     std::function<void()> developerQueryDirectDraw; // qdd는 같은 Client 로그와 Windows 시스템 DLL 버전 장치를 사용한다.
     std::function<void(std::uint32_t)> developerHeapTrace; //31h ht는 같은 Client 프레임의0054dab0만 설정하고 즉시 로그/힙 순회를 실행하지 않는다.
@@ -374,6 +377,7 @@ public:
     // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.
     const std::uint32_t& CurrentSubscriber() const; // 같은 Client 또는 독립 Session의 실제 My DWORD 참조다.
     const std::shared_ptr<ClientCoreDataGlobals>& PlayerCoreGlobals() const; // 같은 현재 Core 소유자를 조회하며 선택/캐시 복사를 하지 않는다.
+    void ApplyBuildReplaySelection(std::uint32_t sid); //4958d0의 실제 가상7c/88 후 현재 사용자 선택을 실행한다.
     void ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name); //004b32f0의 현재 Template/fort 관문과 실제 handle/설정/제목/My/Subscriber 저장·통지를 연결한다.
     std::string_view CurrentHandle() const; // 실제 월드 로더가 갱신한 같은64BYTE 사용자 이름을 NUL까지 빌린다.
     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.

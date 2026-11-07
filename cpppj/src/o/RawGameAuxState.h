@@ -71,6 +71,9 @@ public:
     std::uint32_t& IslandStumpType() { return islandStumpType_; } //005411d8의 현재 그루터기 TYPE이며 섬 정리의 가상 삭제 비교가 읽는다.
     std::array<std::uint32_t,7>& MissionSettings() { return missionSettings_; } //32h의 현재7DWORD이며 각 원문 전역을 같은 Client 수명에서 순서대로 읽고 쓴다.
     const std::array<std::uint32_t,7>& MissionSettings() const { return missionSettings_; } // 진단/송신도 Login이나 Session 사본을 만들지 않는다.
+    std::uint32_t& BuildReplayProcessType() { return buildReplayProcessType_; } //00541134의 현재 프로세스 TYPE이며 재생 생성자가 판독 뒤 읽는다.
+    std::array<std::uint8_t,2>& ConstructionRequestHeader() { return constructionRequestHeader_; } //0052ede6/7의 실제3e/type·version BYTE 두 개다.
+    std::uint16_t& ConstructionRequestLength() { return constructionRequestLength_; } //0052ede8의 현재 생성 길이WORD이며 송신 observer의 다른 길이와 구별한다.
     std::uint32_t& QuickBuild() { return quickBuild_; } //0055a49c의 현재 건설 즉시 완료 DWORD다.
     std::uint32_t& QuickVortex() { return quickVortex_; } //0055a498의 현재 신전 건설 즉시 완료 DWORD다.
     std::int32_t& DeveloperScatterRow() { return developerScatterRow_; } //005326d8의 현재 signed 행 번호이며 실제 scatter의 CRT 사용과 함께 유지한다.
@@ -177,6 +180,9 @@ private:
     std::int32_t pathTraceLevel_{99}; // 보호 PE00540c68의 초기99이며 실제 공통 로그의 현재 임계값과 별개다.
     std::uint32_t islandDropBlocked_{},islandStumpType_{96}; // 보호 PE0054db84의 BSS0과005411d8의 최초96이며 Session 대여로 초기화하지 않는다.
     std::array<std::uint32_t,7> missionSettings_{1,0,0,0,0,1,8}; //5326cc/55a488/55a48c/55a490/55a494/5326d0/5326d4의 실제 최초값이며 월드 교체에서 재설정하지 않는다.
+    std::uint32_t buildReplayProcessType_{49}; // 보호 PE00541134의 최초49이며 World 대여/반납에서 지우지 않는다.
+    std::array<std::uint8_t,2> constructionRequestHeader_{0x3e,1}; // 보호 PE의 현재 건설 요청 생성자 헤더이며 원문 wire는 version/type 순서다.
+    std::uint16_t constructionRequestLength_{25}; // 원문 생성자 길이25WORD이며 높은 플래그를 추가하지 않는다.
     std::uint32_t quickBuild_{},quickVortex_{}; // 두 보호 PE BSS0을 새 Client에서만 만들고 Session 교체로 지우지 않는다.
     std::int32_t developerScatterRow_{3}; // 보호 PE005326d8의 최초3이며 scatter 뒤 signed (행+2)%10으로 갱신한다.
     std::uint32_t developerCombatResizeCommand_{0x02000065}; // 보호 PE0054288c의 최초 입력 코드이며 현재 원문 명령 주소와 대응한다.

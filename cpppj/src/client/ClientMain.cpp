@@ -26,6 +26,7 @@
 #include "client/ProductPresentation.h"
 #include "client/RawCampaignSession.h" //Sleep 뒤의 실제 프레임말 Player 결과 소비에 장기 Session을 빌린다.
 #include "client/ClientDiagnostics.h"
+#include "client/ClientBuildReplay.h" // 현재 재생 전역을 메뉴/Session 생성 전에 구성한다.
 #include "client/ClientOptionsFile.h"
 #include "client/ClientOptionsDisk.h"
 #include "client/StartupFiles.h"
@@ -215,6 +216,7 @@ Client::Client(ClientOptions options)
     if (options_.edition==o::OriginalEdition::Patch1078) files_.DeferPrimaryArchiveRegistration();else files_.RegisterArchives(); // 원본10.78은441790의setup탐색뒤에등록한다. 독립조회는첫TAFF접근까지예약하고10.72기존초기화는유지한다.
     rendererFrame_=std::make_unique<ClientRendererFrame>(*this); //생성은 BSS0 owner/참조만 준비하며 아직 화면/파일/난수를 사용하지 않는다.
     captureSequence_=std::make_unique<ClientCaptureSequence>(*this); //원문BSS0처럼파일/화면 없이 장기 상태만 준비한다.
+    trace_->buildReplay=std::make_shared<ClientBuildReplayGlobals>(); // Native BSS 재생 전역의 같은 주소를 첫 메뉴와 모든 Session에 공유한다.
     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
     configuration_.Registry().environment = Environment;
     if (options_.userData) { // 5차: 설정은 사용자 홈 Saves의 options.cfg를 먼저 읽고, 없을 때만 설치 폴더의 옛 d\options.cfg를 읽는다(기존 설정 이관, 설치 폴더는 쓰지 않는다).

@@ -83,6 +83,7 @@ constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,57> kCommands{{
 }
 // 등록한원문전역과동일명령ID의첫쌍만반환한다.
 std::optional<std::uint32_t> GameMenuCommandValue(std::uint32_t address) {
+    if (address==0x00542a40U) return 0x020000d3U; // 개발자 Ctrl+Shift+F7도 원문의 NextStage 전역과 같은 명령을 큐에 예약한다.
     if (address==0x0054279cU) return kChangePalCommand;if (address==0x0054291cU) return kChangePriorityCommand;if (address==0x00542a10U) return kSetFortTypeCommand; //세 설정명령의 원문 현재 전역도 같은 숫자 조회로 연결한다.
     for (const auto& [source,value]:kCommands) if (source==address) return value; // 주소와명령숫자를뒤바꾸지않는다.
     return {};

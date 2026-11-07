@@ -21,10 +21,13 @@ bool DispatchBuildRecordKey(Client& client,InputEvent event);
 // 같은 실제 기록 파일에 RL 라벨 또는 배치 정보 한 행을 쓰며 현재 cursor.recording 관문은 호출자가 유지한다.
 void RecordDeveloperBuildLabel(Client& client,std::string_view label);
 void RecordDeveloperBuildPlacement(Client& client,std::uint32_t token,std::string_view type,float x,float y,std::uint32_t argument,std::uint32_t rotation);
+struct ClientBuildReplayGlobals; // 실제 재생 전역은 Client 초기화 때 한 번만 만들고 Session에 같은 소유자를 빌린다.
 struct ClientTraceGlobals {
     std::uint32_t heapTrace{},heapAllocated{}; //0054dab0/00557dfc의 BSS0이며 Session 교체와 무관한 원문 프레임 진단이다. 빈437f0에 호스트 힙 집계를 추가하지 않는다.
     std::shared_ptr<FILE> buildRecord; //495860의 실제 기록 stream이며 Client 반납 때 fclose하고 Session 교체에서 유지한다.
     float lastBuildRecordTime{}; // 실제 기록기+18의 단정도 시각이며 시작/배치 기록만 갱신하고 라벨은 바꾸지 않는다.
+    std::shared_ptr<ClientBuildReplayGlobals> buildReplay; //59a7e0/e4의 현재 재생 객체와 playing을 같은 Client 수명으로 보유한다.
+    std::shared_ptr<std::uint8_t> buildReplayLifetime{std::make_shared<std::uint8_t>(std::uint8_t{0})}; // 외부 Kernel의 Client 반납 후 호출을 거부하는 C++ 수명 표식이며 원문 게임 값이 아니다.
     TraceLogState log; //00542658/005ca8d0 이후의 같은 FILE/버퍼/들여쓰기/필터다.
     std::uint32_t depth{},suppress{},traceToChat{}; //0055a4a0/005c8454/00531854의 최초BSS0이며 미션 전환 때 보존한다.
 };

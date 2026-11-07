@@ -17,6 +17,8 @@ struct ConstructionConfirmState {
     const std::uint32_t* sharedFullDeck{}; // 실제0054db14 owner를 선택적으로 빌리며 기존 독립 aggregate의 순서를 유지한다.
     bool SkipBuilderCheck() const { return sharedFullDeck ? *sharedFullDeck!=0 : skipBuilderCheck; } // 각 Confirm의 원문 분기에서 현재 비영 여부를 다시 읽는다.
     const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
+    const std::uint32_t* sharedRecorderEnabled{}; // 실제59a7e4를 broadcast/자기 수신 뒤 현재 주소에서 읽는다. 독립 입력의 bool fallback은 유지한다.
+    bool RecorderEnabled() const { return sharedRecorderEnabled ? *sharedRecorderEnabled!=0 : recorderEnabled; } // 현재 재생 플래그이며 Prepare 시점 사본으로 바꾸지 않는다.
 };
 // 확정 한 번의 입력이다. 원본 열 개 인자와 같은 순서다.
 struct ConstructionConfirmRequest {

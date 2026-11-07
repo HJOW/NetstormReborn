@@ -11,7 +11,8 @@
 #include "client/UberGump.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
-#include "client/ClientDiagnostics.h" //31h ht와 실제 Frame이 동일한 장기 진단 전역을 공유한다.
+#include "client/ClientDiagnostics.h"
+#include "client/ClientBuildReplay.h" // Session과 실제 Kernel 재생기가 같은 전역을 공유한다. //31h ht와 실제 Frame이 동일한 장기 진단 전역을 공유한다.
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientColorSortInput.h" // 같은 Client의 공통 현재 색표 소유자를 빌린다.
 #include "client/ClientChatRuntime.h"
@@ -171,6 +172,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.cameraScreenSize=[&client] { return ScreenPoint{client.GetScreen().Width(),client.GetScreen().Height()}; }; // 수신 직전의 같은 논리 Screen을 읽으며 FSR 출력 픽셀이나 도킹 영역을 사용하지 않는다.
     services.developerQueue=[&client](auto code,auto first,auto second) { client.Input().PushCommand(code,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); }; // 같은 원문 명령 정규화/큐 용량/소비 순서를 유지한다.
     services.developerHighlight=[&client](float x,float y) { client.HighlightDeveloperPoint(x,y); }; // 같은 현재 Screen/카메라/파일 팔레트를 지연 조회한다.
+    services.buildReplay=client.DiagnosticGlobals().buildReplay;services.developerSelectObject=[&client](auto sid) { if (!client.Menu()) throw std::logic_error("재생 선택의 실제 UberGump 미설치");client.Menu()->SelectBuildReplayObject(sid); }; // 직접 Select의force0/activate1 부모를 사용한다.
     services.developerRecordLabel=[&client](auto label) { RecordDeveloperBuildLabel(client,label); }; // 같은 실제 기록 stream과 현재 실패점/배치 시각을 사용한다.
     services.developerQueryDirectDraw=[&client] { QueryDeveloperDirectDraw([&client](auto text) { client.WriteDiagnosticLog(29,text); }); }; // 드라이버 열거의 실제 NULL 반환과 현재 시스템 버전만 읽는다.
     services.developerHeapTrace=[&client](auto enabled) { client.DiagnosticGlobals().heapTrace=enabled; }; // 현재 Client의 원문 플래그만 바꾸며 Frame 이후 소비 위치를 유지한다.
