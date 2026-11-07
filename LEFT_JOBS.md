@@ -2,26 +2,26 @@
 
 cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용자 확인, 재개 절차**를 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-08 재개 진행:** 제품 기준은 **1099 / 11.01**이다. 실제공통Gump Push/문자·스크롤/Attach/등록ID장치와메타글자공장을연결·컴파일했다.00593150은기존NSInfo.current로통합하고잘못추가한CS별도목록슬롯을제거했다.가상+18도PE의00464560 Push로정정했으며metaThird를실제NSInfo에연결했다. **전체0047dd60·CS수신/Pool·가상객체/Renderer·HTML/NSInfo메타배치·1dh등록/28~33분배는미적용**이다.두Release 종료0·경고/오류0·보호2800불변·새C++/MP/게임/통신실행0이다.다음은위실제장면/CS장치→1dh/28~33접합이며세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI도남아전체목표는미완료다.
+**2026-11-08 재개 진행:** 제품 기준은 **1100 / 11.01**이다.0047dd60 전체 존 배치·두 링/세 이름표와 실제 TextGump·SHP 하위를 작성·컴파일했다.누락FPU의asin·스택문맥/팔레트색·명시저장/현재geometry모드를PE와대조했다. **실제World/Pool·CS수신/Renderer·HTML/NSInfo메타배치·상태이탈수명과1dh/28~33등록은후속**이다.두Release 종료0·경고/오류0·보호2800불변·새C++/MP/게임/통신실행0이다.다음은위실제장치접합이며세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI도남아전체목표는미완료다.
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-08, 제품1099)
+### 0.1 현재 값 (2026-11-08, 제품1100)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **새 /goal로 재개하여1099 완료/다음 실제 메타 장치 작업 진행.** 전체 목표는 미완료이며0.116을 따른다. |
-| 현재 제품 | **1099 / 표시·파일·제품11.01.** 실제메타Gump장치/글자공장과기존NSInfo/current·Push를연결했다.전체메타장면/CS·객체/Renderer·HTML/NSInfo메타배치→1dh/28~33등록은후속이다. |
+| 진행 상태 | **새 /goal로 재개하여1100 완료/다음 실제 메타 World·CS 장치 작업 진행.** 전체 목표는 미완료이며0.117을 따른다. |
+| 현재 제품 | **1100 / 표시·파일·제품11.01.** 전체0047dd60·실제UI/SHP하위를컴파일했다.실제World/CS·객체/Renderer·HTML/NSInfo메타배치·상태이탈수명→1dh/28~33등록은후속이다. |
 | 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반31+데모3의 마지막 전체 진입 검증은 **645의644 제품**이며 현재 제품의 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | Netstorm.exe `dfeb790879dc775fe1abb7da9c2f611e7365644983336ce7ee9a016873718597` (12,405,760바이트), 새R.exe `91e3b569b435f5396801442fa1f204479ae472009f3d2dd8edbbce10922a5b2a` (669,696바이트),1099/11.01 |
-| 최신 빌드·집중 검사 | **1099 NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0.** 원문/PE가상표·Push/NSInfo·실제UI배선 정적대조·보호2800불변.새C++/MP/게임/통신실행0이며마지막C++실행검사는1052 기존7개다.[1099 기록](docs/exe/cpp-meta-gump-devices-20261108.md). |
+| EXE SHA-256 | Netstorm.exe `08de1124a56efc492decef8858f4671e166f816e1f2ca17aa120f223ca573e11` (12,405,760바이트), 새R.exe `9e233c221cf84be4c83fa9cce942695fad532abbcde90f588a8bdbe5d9a9a6f6` (669,696바이트),1100/11.01 |
+| 최신 빌드·집중 검사 | **1100 NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0.** 원문/PE의FPU·상수·문맥과실제UI/SHP배선정적대조·보호2800불변.새C++/MP/게임/통신실행0이며마지막C++실행검사는1052 기존7개다.[1100 기록](docs/exe/cpp-meta-scene-20261108.md). |
 | checking 잔여 | **5함수=부모2+부분0+MP분류3.** 1014에서004b8cb0 전체 몸체/현재 진단·수동 입력을 연결했다. 완료부모40/부분6다. 메타맵2표/004b02d0·Descend/004b4df0/004b8b20 등은3절8번 잔여다. |
-| 최신 정적 감사 | **1099:0050ac70+18→464560 Push·47cab0의기존NSInfo/current재조회와실제공통UI노드/등록/수명배선을대조했다.** 새공장/전체메타장면·MP·통신실행검증은아니다. |
+| 최신 정적 감사 | **1100:0047dd60 전체와004e7790/77ad asin·PE상수/글자문맥·실제TYPE/SHP/글자배선을대조했다.** x87전체비트/픽셀·전체메타장면/MP·통신실행검증은아니다. |
 | 마지막 GUI | **984 실제 단독MCP 1실행:** 격리1920×1080 tutorial1 진입·비정지100프레임 대기·WM_CLOSE 종료0, 입력5/관측7·PNG 확인·설치1351개/보호 불변. LAN/공격/포획/희생/승리/물리 입력 검증이 아니다. |
 | 전체 검사 기준 | 활성 솔루션84프로젝트: Application79(검사 이름73/게임1/서버1/probe·dump4),라이브러리2,Utility3. 디스크의잔류10프로젝트는제외한다. 현재 제품의 전체 검사 통과 기록은 없다. 과거 전체 결과는 보관본, 알려진 실패/기준선 판정은2.5절을 따른다. |
 | 전체 34·ZIP | 마지막전체34진입은645의644제품이다. 최신ZIP만1092/1384항목·게임자료1358개·202,440,265바이트·SHA-256 `33b2459cca9dcbde8b10c7e2cca2e12cc071715244868e3a60908fb085089ae7`/전체CRC·두EXE동일바이트다. 1092 ZIP추출후게임/서버실행은0이며645의전체GUI검증과구분한다. |
-| 보호 기준 | **987의AGENTS.md·원본/CD/fixture2800파일을1099 종료 때도 모두 불변으로 확인했다.** 새fixture0,DN/WB 제외.기준은 `extracted/cpp-resume-1099/protected-before.json`이다. |
+| 보호 기준 | **987의AGENTS.md·원본/CD/fixture2800파일을1100 종료 때도 모두 불변으로 확인했다.** 새fixture0,DN/WB 제외.기준은 `extracted/cpp-resume-1100/protected-before.json`이다. |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 | R.exe 전용 정밀 디컴파일 | **HJOW-Athlon / 2026-11-07**.5308함수/실패0·미정규약184. 클라이언트양판본전체날짜와구분하며 [1057 기록](docs/exe/cpp-local-server-discovery-20261107.md)의전용스크립트로재생성한다. |
 
@@ -30,7 +30,7 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 1. 사용자 재개 요청 뒤 AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 해당 인계도 읽는다. `git status`와 `git fetch`로 다른 PC/세션 변경을 확인하며 push는 하지 않는다.
 2. 현재 호스트가 마지막 디컴파일 호스트와 다르면 cpppj 작업/디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 문서에 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 불완전하므로 쓰지 않는다.
 3. 실제 게임·별도 창 실행은 AGENTS.md의 확인 규칙을 따른다. 예외는 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94) 및 사용자가 직접 요청한 원본 수동 컨트롤/녹화 분석의 해당 단계다. 다른 PC는 실행 목적·필요성 설명 후 명시적 확인이 필요하다.
-4. 최신 제품1099의 보고서는 `cpppj/meta-gump-devices-20261108.json`이다. R원문이필요한새PC에서는기존클라이언트전체정밀절차와별도로`tools/ghidra/refine_root_server.ps1`을실행하고호스트를갱신한다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-996/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
+4. 최신 제품1100의 보고서는 `cpppj/meta-scene-20261108.json`이다. R원문이필요한새PC에서는기존클라이언트전체정밀절차와별도로`tools/ghidra/refine_root_server.ps1`을실행하고호스트를갱신한다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-996/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj/webpj·staged 파일·실행 출력은 포함하지 않는다. 한 단위를 마치면 0.1절·0.4절·2.1절 완료 항목·3절 잔여·단위 문서를 갱신하고 해당 파일만 로컬 커밋한다.
 6. 완료 범위는2.1절, 잔여 우선순위는3절을 따른다. 단위986까지의 상세 인계·옛 검사 수·대체된 지시는 [정리 전 전체 원문](LEFT_JOBS.old.md#archive-20261106-through-986)과 각 단위 기록에서 확인한다. 과거의 다음 작업 예고를 현재 미완료 목록으로 되살리지 않는다.
 
@@ -516,6 +516,11 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 
 1098은 `39c89889 / 20261108-04 CP`로커밋됐다.1099는기존공통Gump의Push/다중줄·문자/스크롤/가상Attach/등록ID장치와같은메타글자공장·수명을연결했다.00593150은기존ClientNsInfoGlobals.current이며1098의별도CS목록슬롯을제거했다.가상+18은Redraw가아닌00464560 Push로정정하고실제metaThird에연결했다.두Release 종료0·경고/오류0·보호2800불변·새fixture/C++/MP/게임/통신실행0이다.[1099 기록](docs/exe/cpp-meta-gump-devices-20261108.md).전체0047dd60·CS수신/Pool·가상객체/Renderer·HTML/NSInfo메타배치·전용정리의상태이탈부모와1dh/28~33등록은남는다.실제장치완성뒤접합하며기존우선순위/사용자검사제외를유지한다.
 
+
+### 0.117 최근 단위 — 1100 전체 메타 존 장면·실제 글자/SHP 하위
+
+1099는 `030bae94 / 20261108-06 CP`로커밋됐다.1100은0047dd60 전체·FPU asin/PE상수·두링/세이름표·카메라예약과실제TextGump/SHP/frameCheck·serial/Reference를작성·컴파일했다.글자문맥slot1글꼴/slot2색을구별해기존색전역이름을정정했고geometryMode/존그림TYPE를같은Client수명에더했다.두Release 종료0·경고/오류0·보호2800불변·새fixture/C++/MP/게임/통신실행0이다.[1100 기록](docs/exe/cpp-meta-scene-20261108.md).다음은실제World/Pool·CS수신/Renderer·HTML/NSInfo메타배치·상태이탈수명→1095~1100실제접합/1dh·28~33등록이다.전체메타화면성공으로쓰지않으며나머지우선순위/사용자검사제외를유지한다.
+
 ## 1. 현행 목표
 
 ### 1.1 cpppj 단계 (AGENTS.md 기준)
@@ -580,6 +585,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 ## 2. 현재까지 완료한 범위와 검증 한계
 
 ### 2.1 완료 범위 색인
+
+1100에서0047dd60 전체와실제글자/SHP하위를컴파일했다.실제World/Pool·CS/Renderer/NSInfo메타배치·수명과1dh/28~33등록은후속이다([1100 기록](docs/exe/cpp-meta-scene-20261108.md)).
 
 1099에서실제Gump장치/글자공장·Push와기존NSInfo/current를연결했다.1098의중복CS슬롯/+18해석을정정했고전체장면/CS·객체/Renderer·NSInfo메타배치/1dh등록은후속이다([1099 기록](docs/exe/cpp-meta-gump-devices-20261108.md)).
 
@@ -796,6 +803,8 @@ AI 미완료 체크 항목이 아니며 단계 전환을 막지 않는다. 부�
 - 표시결함981해소뒤환경/사용자확인만남았으므로Windows11/ARM실기검증없이8번을진행한다. 전체호환성무오류보증이나실기완료로표현하지않는다.
 
 ### 8. 멀티플레이·배포·후속 단계
+
+- **1100 최신 잔여:** 0047dd60 전체·UI/SHP하위는작성/컴파일완료다.실제World/Pool·가상객체/Renderer·CS수신·HTML/NSInfo메타배치·상태이탈수명→1095~1100본체접합/1dh·28~33등록이남는다.이후세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI다.신규MP검사는제외한다.
 
 - **1099 최신 잔여/정정:** 실제Gump/문자공장·수명·metaThird를연결했다.00593150은기존NSInfo.current만사용하며CS별도슬롯은제거했고가상+18은Push다.전체0047dd60·CS수신/실제Pool·가상객체/Renderer·HTML/NSInfo메타배치·전용정리부모→1dh/28~33등록이남는다.이후세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI다.신규MP검사는제외한다.
 

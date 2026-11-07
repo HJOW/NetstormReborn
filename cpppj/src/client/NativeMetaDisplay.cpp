@@ -31,8 +31,8 @@ std::string_view Name(std::span<const std::uint8_t> record) {
     while (length<tail.size() && tail[length]) ++length;
     if (length==tail.size()) throw std::out_of_range("메타 이름표의 실제 이름 NUL 없음");return {reinterpret_cast<const char*>(tail.data()),length};
 }
-// append용 notice 문맥은004248a0(0,font,0,0,0,0)의 실제8DWORD다.
-std::array<std::uint32_t,8> Notice(std::uint32_t font) { return {0,0,font,0,0,0,1,1}; }
+// append용 notice 문맥은004248a0(0,color,0,0,0,0)의 실제8DWORD이며 font=0이다.
+std::array<std::uint32_t,8> Notice(std::uint32_t color) { return {0,0,color,0,0,0,1,1}; }
 // 기존 위치는 mask6이 꺼졌거나 알 수 없는 슬롯일 때 그대로 보존한다.
 std::array<float,2> LabelPosition(std::span<const std::uint8_t> record,const GumpCreateNode& label,std::uint8_t mask) {
     std::array<float,2> result{label.x,label.y};if (!(mask&6U)) return result;
@@ -60,14 +60,14 @@ void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask,NativeMet
     }
     const auto token=Read(record,0xd4);const bool own=Read(raw,0x22,1)==g.localOwner;auto& label=Need(h.gump)(token);
     if (Read(record,0xd0)!=label.serial) Need(h.assertion)("c->gumpHandle == tg->uniqueHandle",".\\Metadisplay.cpp",0x55d);
-    Need(h.push)(token);const auto color=g.textColor;const auto ownFont=g.ownFont;const auto normalFont=g.normalFont;
-    const std::array<std::uint32_t,8> ownContext{2,0,ownFont,0,color,0,1,1},normalContext{2,0,normalFont,0,color,0,1,1};
+    Need(h.push)(token);const auto color=g.textColor;const auto ownColor=g.ownColor;const auto normalColor=g.normalColor;
+    const std::array<std::uint32_t,8> ownContext{2,0,ownColor,0,color,0,1,1},normalContext{2,0,normalColor,0,color,0,1,1};
     if (mask&4U) {
         Need(h.replaceText)(token,"",0);const auto flags=Read(record,0x64);
-        if (flags&0x1000U) Need(h.appendText)(token,"BETA:",Notice(g.noticeFont),-1,0);
-        else if (flags&0x100U) Need(h.appendText)(token,"DEMO:",Notice(g.noticeFont),-1,0);
+        if (flags&0x1000U) Need(h.appendText)(token,"BETA:",Notice(g.noticeColor),-1,0);
+        else if (flags&0x100U) Need(h.appendText)(token,"DEMO:",Notice(g.noticeColor),-1,0);
         label.textContext=own && g.metadataMode ? ownContext:normalContext;Need(h.parseName)(token,Name(record));
-        if (Read(record,0x64,1)&4U) { const auto text=Need(h.translate)("BATTLEMASTER\n");Need(h.appendText)(token,text,Notice(g.noticeFont),-1,0); }
+        if (Read(record,0x64,1)&4U) { const auto text=Need(h.translate)("BATTLEMASTER\n");Need(h.appendText)(token,text,Notice(g.noticeColor),-1,0); }
         Need(h.fit)(token,0,0);Need(h.scroll)(token,0);
     }
     const auto position=LabelPosition(record,label,mask);if (!clipped) label.flags|=1U;else label.flags&=~1U;

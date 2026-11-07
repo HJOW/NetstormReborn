@@ -21,6 +21,7 @@ class RawImage;class MetaImageGump;struct MetaImageGumpNode; // 같은 공통 �
 class MetaImageList;struct MetaImageListNode; // 실제21개 후보의 목록 파생과 같은 공통 저장소다.
 struct RawNsInfoContext; // 전체 NSInfo 생성의 실제 Client 전역과 문자열 수명이다.
 struct NativeMetaDisplayHooks;struct ClientNsInfoGlobals; //메타 표시도 같은 Gump/NSInfo 공용 장치를 빌린다.
+struct NativeMetaSceneHooks; //전체원격존장면도기존한줄TextGump/serial/객체부착을공유한다.
 struct RawTextEntryContext;class RawTextEntryControls; // 같은 실제 편집 버퍼/Console 조립 계층이다.
 struct RawChatWindowContext;class ChatWindow;class HudChatGeometry; // 전체 Chat 공장과 같은 실제 자식 기하다.
 struct RawHtmlWindowContext;class HtmlWindowGump; // 실제 HTML 부모의 전역/본문·수명 처리기다.
@@ -101,6 +102,7 @@ public:
     std::uint32_t BaseHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const; // 외부 파생도 같은 기본 우클릭 Help로 위임한다. // 생산 패널의 현재 저장소를 같은 출력 계층에 연결/해제한다.
     const TextGump& TextBackend() const; // 수량/예산도 기존 원본 한 줄 글자 처리기를 공유한다.
     void BindMetaDisplayGumps(NativeMetaDisplayHooks& hooks) const; //실제노드/Push/문자·스크롤/가상Attach/등록ID조회만현재메타장치에연결한다.객체/Renderer/번역장치는호출자가연결한다.
+    void BindMetaSceneGumps(NativeMetaSceneHooks& hooks); //같은TextGump생성/Clear/Append/Fit/serial/객체부착과현재NSInfo의TYPE/SHP장치를연결한다.실제World/카메라장치는호출자가공급한다.
     std::uint32_t CreateMetaText(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은등록표에new(a4)/TextGump를생성한다.미부착실패노드도공통Cleanup이소유한다.
     std::uint32_t CreateMetaName(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은new(d8)/다중줄/버퍼·Slider를생성하여메타참가자이름표로사용한다.
     void CloseMetaDisplayGumps(); //같은메타공장에서생성한등록/미등록노드만공통자식우선수명으로정리한다.

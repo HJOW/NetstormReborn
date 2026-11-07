@@ -10,6 +10,10 @@ o::ChallengeGeometry& ClientChallengeGlobals::Geometry() { return geometry_; } /
 const o::ChallengeGeometry& ClientChallengeGlobals::Geometry() const { return geometry_; } // 현재 같은 표를 읽는 const 소비자다.
 MetaProjectionState& ClientChallengeGlobals::Projection() { return projection_; } //메타 표시/카메라 부모가 같은 물리를 변경한다.
 const MetaProjectionState& ClientChallengeGlobals::Projection() const { return projection_; } //보고/표시는 보정이나 상태 변경 없이 현재값을 읽는다.
+std::uint32_t& ClientChallengeGlobals::GeometryMode() { return geometryMode_; } //실제메타카메라/배치writer가같은DWORD를변경한다.
+const std::uint32_t& ClientChallengeGlobals::GeometryMode() const { return geometryMode_; } //값의조회로공통좌표나CS기록을재생성하지않는다.
+std::uint32_t& ClientChallengeGlobals::ZoneGlyphType() { return zoneGlyphType_; } //현재TYPE번호를그림/생성/기본프레임경계가공유한다.
+const std::uint32_t& ClientChallengeGlobals::ZoneGlyphType() const { return zoneGlyphType_; } //조회시고정TYPE161로덮지않고현재값을보존한다.
 bool ClientChallengeGlobals::Prepare(const std::function<void()>& uninitialized) { // 객체 포인터 존재와 좌표 초기화 플래그를 별개로 확인한다.
     if (current_) {
         if (!geometry_.initialized) { if (!uninitialized) throw std::logic_error("기존 CS listsInitialized의 실제 진단 장치 미연결");const auto assertion=uninitialized;assertion(); }

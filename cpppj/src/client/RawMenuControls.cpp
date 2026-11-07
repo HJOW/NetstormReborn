@@ -29,6 +29,7 @@
 #include "client/ClientGameplayGlobals.h"
 #include "client/HudNsInfoCreate.h"
 #include "client/NativeMetaDisplay.h"
+#include "client/NativeMetaScene.h"
 #include "client/RawTextEntryControls.h"
 #include "client/RawChatWindowContext.h"
 #include "client/RawBackgroundGifControls.h"
@@ -587,6 +588,16 @@ void RawMenuControls::BindMetaDisplayGumps(NativeMetaDisplayHooks& hooks) const 
     hooks.scroll=[this](auto token,auto position) { impl_->title->RequestScroll(token,position); };
     hooks.attach=impl_->common.attach; //NSInfo/다중줄/일반Text각자의실제파생Attach분배를유지한다.
     hooks.findGump=[this](auto id)->GumpCreateNode* { if (id>=impl_->common.create.entries.size()) throw std::out_of_range("메타 종속Gump 등록ID 물리 범위");const auto token=impl_->common.create.entries[id];return token ? impl_->common.node(token):nullptr; };
+}
+// 원격존의세이름표도기존실제TextGump/등록표/GumpForm으로작성한다.
+void RawMenuControls::BindMetaSceneGumps(NativeMetaSceneHooks& hooks) {
+    BindMetaDisplayGumps(hooks.display);
+    hooks.glyphExtent=[this](auto type) { if (!impl_->nsContext || !impl_->nsContext->storage) throw std::logic_error("메타존현재TYPE/SHP의실제Client저장소미연결");return MetaSceneGlyphExtent(*impl_->nsContext->storage,type); };
+    hooks.createText=[this] { return CreateMetaText(0,0,0,0); };hooks.findSerial=[this](auto serial) { return impl_->Reference(serial); };
+    hooks.clearText=[this](auto token) { impl_->costText->Clear(token); };
+    hooks.appendText=[this](auto token,std::string_view text,const auto& context,auto length) { const std::string bytes(text);impl_->costText->AppendText(token,{bytes.data(),bytes.size()+1},context,length); };
+    hooks.fitText=[this](auto token,auto width,auto height) { impl_->costText->Fit(token,width,height); };
+    hooks.reference=[this](auto token,auto sid) { impl_->widgets->Reference(token,sid);auto* node=impl_->common.node(token);if (!node) throw std::logic_error("메타존객체부착뒤실제Gump부재");node->flags|=0x2000U; }; //00464540의4644e0/GumpForm뒤world비트순서다.
 }
 // 부분 생성도 기존 map/공통 수명에서 추적되며 새 독립 폰트/렌더러를 만들지 않는다.
 std::uint32_t RawMenuControls::CreateMetaText(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color) {

@@ -1,0 +1,59 @@
+{
+  "unit": 1100,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp/NetstormRoot",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12405760,
+      "sha256": "08de1124a56efc492decef8858f4671e166f816e1f2ca17aa120f223ca573e11"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "9e233c221cf84be4c83fa9cce942695fad532abbcde90f588a8bdbe5d9a9a6f6"
+    }
+  },
+  "staticAudit": {
+    "fullNativeBody": "0047dd60의39참가자/9전투/51존선행갱신·두링/세이름표·카메라예약",
+    "math": "004e7790/004e77ad FPU는asin, PE의PI/역22/전체원상수·명시저장/감김사용",
+    "contexts": "통계/설명font6흰색·번호font0초록·양쪽검정배경",
+    "actualDevices": "같은Mutable TYPE/SHP frameCheck/진단·TextGump/serial·GumpForm/Reference·world2000h",
+    "colorCorrection": "기존ownFont/normalFont/noticeFont는문맥slot2팔레트색이므로Color로개명"
+  },
+  "integration": {
+    "fullSceneBodyCompiled": true,
+    "realUiAndShapeDevicesBound": true,
+    "actualWorldRendererCsBound": false,
+    "newReplyRegistered": false,
+    "meta28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "실제World/Pool·가상객체/Renderer·CS수신·HTML/NSInfo메타배치·상태이탈수명",
+    "1095~1100본체의실제장치접합과1dh/28..33등록",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03/HJOW-Athlon",
+    "lastRoot": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

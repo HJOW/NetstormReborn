@@ -14,8 +14,8 @@ struct NativeMetaDisplayGlobals { // 원문 필드의 현재 주소를 빌리며
     const std::uint32_t& playerKnown;const std::uint32_t& localOwner; //00595344/00540c70의 현재 자기 상태다.
     const std::uint32_t& metadataMode;const std::uint32_t& screenFlags; //005c85c8/005c78d4의 현재 표시 관문이다.
     const std::uint32_t& capacity;const std::uint32_t& attachParent; //005c847c의 Pool 상한과00563e38의 현재 Gump 부모다.
-    const std::uint32_t& ownFont;const std::uint32_t& normalFont; //0059afd8/005bec2c의 두 표시 글꼴을 구별한다.
-    const std::uint32_t& noticeFont;const std::uint32_t& textColor; //005b5e58/005c78d0의 추가 안내 글꼴/현재 색이다.
+    const std::uint32_t& ownColor;const std::uint32_t& normalColor; //0059afd8/005bec2c의 노랑/흰색 표시 색을 구별한다.
+    const std::uint32_t& noticeColor;const std::uint32_t& textColor; //005b5e58/005c78d0의 추가 안내 빨강/현재 문맥 값이다.
     MetaProjectionView view; //실제 현재 Renderer/viewport/화면 크기를1096 계산에 전달한다.
 };
 struct NativeMetaDisplayHooks { // 선택된 실제 하위는 필수이며 빈 callback/가짜 노드를 허용하지 않는다.
