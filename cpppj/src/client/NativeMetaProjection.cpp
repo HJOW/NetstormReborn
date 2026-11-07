@@ -25,9 +25,9 @@ void Put(std::span<std::uint8_t> raw,std::size_t at,std::uint32_t value,std::siz
 // 보호PE00501b18의 double 각도를 사용하며 x87 FSIN/FCOS의 저장 위치에 맞춰 float로 축소한다.
 MetaProjectionCamera CreateMetaProjectionCamera() {
     constexpr double angle=0x1.921fb6p-1; // 원문0.7853981852531433이며 수학 pi/4로 바꾸지 않는다.
-    return {static_cast<float>(std::sin(angle)),static_cast<float>(std::cos(angle)),0.0F,0.0F};
+    return {static_cast<float>(std::sin(angle)),static_cast<float>(std::cos(angle)),0.0F,0U};
 }
-// 원문 setter는 단정도 비트를 그대로 보존하며 재보정/화면 갱신을 요청하지 않는다.
+// 원문 setter는 높이의 단정도 비트를 보존하며 기울기/애니메이션 개수·화면 갱신을 바꾸지 않는다.
 void SetMetaProjectionHeight(MetaProjectionCamera& camera,float height) { camera.height=height; }
 // C 디컴파일에 생략된 FPU 계산을 실제00418a00 기계어에서 복원한다.
 std::int32_t MetaProjectionDenominator(const MetaProjectionCamera& camera) {

@@ -1,0 +1,58 @@
+{
+  "unit": 1126,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12719616,
+      "sha256": "0cba8d2eb4cae56212190ff9c4fb6a4d7f2f829525b95017c79ca8f00a492f3d"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "ff1d588cfab51116b44892ee0c2d4c7f635ca1076c17887cec66c11503386039"
+    }
+  },
+  "staticAudit": {
+    "native": "00419190/419210/419600/419730/419840 전체·각 다음 함수까지 기계어·470d20/479650 현재 객체 getter·실제 VT501ae8",
+    "cameraFieldCorrection": "544d78은 예약 float가 아닌 현재 animating DWORD다. 1096의 최초 host 표현을 uint32로 정정하고 기존 비영 관문을 직접 읽게 했다. 크기/필드 순서는 유지한다.",
+    "sharedGlobals": "카메라 완료는 기존 LocalState.MetaRefresh(c85d8), 실제 이동은 MetaRebuild(c85dc)를 증가시킨다. 별도 카메라 통계/갱신 사본을 만들지 않는다.",
+    "constructorAndReuse": "현재owner0 조기 반환→같은 Kernel0..39999/현재TYPE53 첫 부모 일치 시 목표만 변경. 새 객체는0x70 필드/내장spring·목표·개수증가→두번째현재owner 조회→0이면소멸/개수감소, 비영이면flags10h Host 부착이다.",
+    "frame": "완료관문→같은refresh++/Kill. 진행이면Spring→반환비영때같은rebuild++→이전카메라높이로분모선택→새높이저장. 도착한 다음 프레임에 반납한다.",
+    "binding": "실제 game/CS/clock/LocalState/구름 owner pin·같은 Kernel/Host·현재 Pool·현재 기술 부모/메타 자기 섬·실제 Renderer 분모/dirty를 연결했다. owner0에서 Session/Host를 요구하지 않는다.",
+    "buildHistory": "첫 Release 빌드는 서로 다른 shared_ptr를 같은 auto 선언에 묶은 C3538 1건으로 종료1이었다. 선언을 분리해 최종 두 Release를 재빌드했다. 최초 실패와 최종 결과를 구분한다.",
+    "integration": "클래스·공장·실제 Client 바인더/intro wrapper는 컴파일 완료. 실제 참가자 생성에서 intro를 호출하는 부모와 메타 전체 State는 후속이다.",
+    "limits": "새 C++/MP/게임/통신 실행0. x87 전체 비트·비정상 포인터/모든 실패·실제 카메라/화면 실행 동일성은 미검증이다."
+  },
+  "remaining": [
+    "67h 전체 State 부모/일반 CS hook·메타 객체 그림/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

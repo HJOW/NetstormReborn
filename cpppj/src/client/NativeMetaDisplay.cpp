@@ -100,8 +100,8 @@ void ClearMetaDisplayZones(std::span<std::uint8_t> records,const NativeMetaDispl
     for (std::uint32_t index=0;index<o::kMetaZoneCleanupCount;++index) o::ClearMetaZoneMarker(records,index,{h.destroy});
 }
 namespace { // 전체 Poll의 현재 존 물리와 종속 finder를 원문 단계에서만 읽는다.
-// 카메라+0c는 float 비교가 아닌 원문 DWORD 비영 판정이며 음수0 비트도 유지한다.
-bool Moving(const MetaProjectionState& projection,std::uint32_t flags) { return std::bit_cast<std::uint32_t>(projection.camera.reserved)!=0 || (flags&0x10U)!=0; }
+// 카메라+0c의 원래 DWORD 개수를 직접 읽으며 임의 bool/float 변환을 추가하지 않는다.
+bool Moving(const MetaProjectionState& projection,std::uint32_t flags) { return projection.camera.animating!=0 || (flags&0x10U)!=0; }
 // 실제0..50의 고정 기록 물리만 검사하며 상태/현재 존 관문은 caller가 판단한다.
 std::span<std::uint8_t> Zone(std::span<std::uint8_t> records,std::uint32_t index) {
     const auto at=std::size_t(index)*o::kMetaZoneCleanupStride;

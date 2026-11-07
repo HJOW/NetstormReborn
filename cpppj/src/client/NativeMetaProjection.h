@@ -6,9 +6,9 @@
 #include <span>
 
 namespace netstorm::client { // 원문 AngleCamera와 Metadisplay의 계산만 공유하며 화면/통신을 실행하지 않는다.
-struct MetaProjectionCamera { // AngleCamera의 네 float를 같은 원문 필드 순서로 보관한다.
+struct MetaProjectionCamera { // AngleCamera의 세 float와 애니메이션 DWORD를 원문 필드 순서로 보관한다.
     float sine{},cosine{}; //00544d6c/70의 실제 기울기이며 기본 생성자는 원문 각도의 sin/cos를 저장한다.
-    float height{},reserved{}; //00544d74/78의 두 float이며 높이 쓰기는 첫 필드만 변경한다.
+    float height{};std::uint32_t animating{}; //00544d74의 높이와00544d78의 현재 CameraRig 개수다. 높이 setter는 개수를 바꾸지 않는다.
 };
 MetaProjectionCamera CreateMetaProjectionCamera(); //00419570의 고정 각도·두0 저장을 수행하며 OS/CS 객체 생성은 하지 않는다.
 struct MetaProjectionState { // Client 수명의 카메라와 최초 보정 전역을 CS 기록과 구별해 보관한다.
@@ -26,7 +26,7 @@ struct MetaProjectedPoint { // 원근 좌표·배율과 후행 UI 클리핑 결�
     std::uint32_t clipped{}; // 투영 평면 및 메타 UI 배율 범위 판정을 차례로 반영하는 실제0/1이다.
     float scale{}; // 원문 float 출력 배율이며 raw의16.16 저장값과 별개다.
 };
-void SetMetaProjectionHeight(MetaProjectionCamera& camera,float height); //004189f0의+8만 저장하고 다른 기울기/예약 필드를 보존한다.
+void SetMetaProjectionHeight(MetaProjectionCamera& camera,float height); //004189f0의+8만 저장하고 기울기/애니메이션 개수를 보존한다.
 std::int32_t MetaProjectionDenominator(const MetaProjectionCamera& camera); //00418a00의 높이20 미만 공식/FTOL 하위DWORD이며 그 밖은1이다.
 std::array<float,2> MetaViewportCenter(const MetaProjectionView& view); //00497e50의 경계합/2→현재 픽셀 더하기→현재 칸 float 나누기다.
 std::array<float,2> MetaScreenCenter(const MetaProjectionView& view); //00497ec0의 화면크기/2와 같은 현재 Renderer 픽셀/칸으로 계산한다.

@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE client/NativeCameraRig.h client/NativeCameraRig.cpp) #1126:같은 카메라/메타 예약·실제 Kernel/Host/Renderer의 CameraRig를 복원한다.
+
 target_sources(netstorm PRIVATE client/NativeMetaBattleRemove.h client/NativeMetaBattleRemove.cpp) #1125:실제 Rig 장치/23h 추가·24h 삭제와 원래 State wrapper를 같은 표에 연결한다.
 
 target_sources(netstorm PRIVATE client/ClientChallengeImages.cpp client/NativeIslandRig.h client/NativeIslandRig.cpp) #1124:CS Image 깊은 복사·실제 Kernel/ProcessForm Rig 생성/프레임/반납을 복원한다.
