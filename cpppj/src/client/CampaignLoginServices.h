@@ -41,5 +41,6 @@ struct CampaignLoginServices {
     std::function<void()> closeTimerProgress; //005c85b0만4c8d90으로 닫으며 공통 transient serial과 합치지 않는다.
     std::optional<o::SavedStateWriteHooks> reconnectFile; // 실제 Client만 같은 사용자 홈 경로/VFS/FILE을 제공하며 미션의 자연 반환에는 요구하지 않는다.
     std::function<void(std::int32_t,std::int32_t,std::int32_t)> clearStatus; //State15의종류1/player0/표시0/parameter0을 같은 실제 MessageBoard에 전달한다.
+    std::function<void()> reconnectUi; //67h의 현재 battle&&!mission&&saved 관문 뒤004c7880 전체 HUD 재생성을 수행한다.
 };
 }

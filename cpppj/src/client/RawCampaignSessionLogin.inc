@@ -239,6 +239,7 @@ struct RawCampaignSession::Impl::Login {
         server=std::make_unique<RawMissionLogin>(s.players,*s.participation,MissionLoginGlobals{s.core.processState.Server(),s.assetState.Boss(),simul,s.objectState.mission,s.globals.missionPost,s.core.ownerMode.challenge,s.playerState,s.globals.mySubscriber,fortCount,lastPlayer,predictable,begin,beginSeed,battleSeed,burst,clockStamp,baseClock,captureEnd,currentCore,cachedCore,Zone(),s.battleOptions,&s.gameplayGlobals->GameAux()->ResourcePool(),&saved,&s.assetState.inBattle},std::move(serverHooks)); // 실제 저장게임/전투 bool 주소를 빌리며 일반 모드를 강제로 켜지 않는다.
         MissionClientPacketHooks receive;receive.clock=effects.clock;receive.wallSeconds=effects.wallSeconds;receive.runState=[this] { state->Run(); };receive.resetCamera=s.services.install.resetCamera;receive.refreshSp=effects.refresh;
         receive.outpostOptions=effects.metaBattleOptions; //State67h의 현재 CS 비영 분기만 실제 Client CS/음향/NSInfo 자식에 연결한다.
+        receive.reconnectUi=effects.reconnectUi; //같은 현재 savedGame 선택이004c7880 전체 HUD 재생성을 호출한다.
         receive.localFort=[this](auto owner) { LocalFort(owner); }; // savedGame 여부와 무관한 !missionPost의 실제 자기 Fort 사슬이다.
         receive.openFortImage=[this](auto owner) { OpenRemoteFort(owner); };receive.readFortImage=[this](auto owner,auto image) { ReadRemoteFort(owner,image); }; // packet2a는 두 선택을 분리해 manager를 중복 생성하지 않는다.
         receive.buildFort=[this](auto owner) { s.BuildBattleIsland(owner); }; // 비서버 packet2a의 현재 이미지 뒤 실제 전투섬을 만든다. boss가 아니면 Objects를 자연 생략한다.

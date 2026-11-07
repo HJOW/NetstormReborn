@@ -116,4 +116,10 @@ void UberRootGump::Replace() const {
     }
     Need(hooks_.replaceRoot)(token);
 }
+// 이전 루트가0이어도 삭제 큐를 먼저 정리하며 이후 실패에서 이전 HUD를 되살리지 않는다.
+void UberRootGump::Recreate() const {
+    if (create_.entries[0]) Need(hooks_.kill)(create_.entries[0]);Need(hooks_.cleanup)();
+    const auto allocated=Need(hooks_.allocate)(0xc8);const auto token=allocated ? Construct(allocated):0U;auto& node=Base(token);
+    if (node.id>=create_.entries.size()) throw std::out_of_range("Uber 재생성 임시 등록ID 물리 범위");create_.entries[node.id]=0;create_.collection.root=create_.entries[0];node.id=0;Need(hooks_.replaceRoot)(token);
+}
 }

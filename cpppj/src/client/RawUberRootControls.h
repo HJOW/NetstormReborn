@@ -18,6 +18,7 @@ public:
     RawUberRootControls(RawMenuTree tree,RawMenuControls& menus,RawUberRootContext context); // 생성 중 노드를 만들지 않고 실제 분배를 먼저 설치한다.
     ~RawUberRootControls(); // 공통 노드 정리 뒤 자기 출력 대여만 반납한다.
     void Replace(); // 전체 원문 공장과 기존 자식 이동/루트 교체를 실행한다.
+    void Recreate(); //004c7880의 삭제 선행 전체 생성과 같은 공통 장치·루트 별칭 갱신을 수행한다.
     void Reflow(); // 화면 장치 크기 변경 때 기존 실제 구분선/슬레이브를 재부착하고 아래쪽 거리를 보존한다.
     GumpCreateNode* Node(std::uint32_t token) const; // 같은 실제 기본 주소만 반환한다.
     GumpBackgroundNode* Background(std::uint32_t token) const; // 실제 구분선 배경이며 별도 복사본을 만들지 않는다.

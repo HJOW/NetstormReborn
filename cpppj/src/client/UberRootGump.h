@@ -38,6 +38,7 @@ struct UberRootHooks {
     std::function<void(std::uint32_t,bool)> overlay; //466600의 공통 Overlay 등록이다.
     std::function<void(std::uint32_t,std::uint32_t)> setDepth; //4652f0의 현재 자식 우선 전체 깊이 쓰기다.
     std::function<void(std::uint32_t)> replaceRoot; //4666a0의 실제 이전루트Kill/Cleanup/등록0 교체다.
+    std::function<void(std::uint32_t)> kill; //004c7880이 기존 루트 비영일 때 먼저 선택하는00466480이다.
 };
 // 원본 전체 부모를 기존 자식 처리기에 조립한다. 미연결 자식은 선택된 위치에서 실패한다.
 class UberRootGump {
@@ -45,6 +46,7 @@ public:
     UberRootGump(GumpCreateState& create,UberRootHooks hooks); // 실제 단일 등록표와 고정 노드 주소를 빌린다.
     std::uint32_t Construct(std::uint32_t token) const; //004c7160: 전체200BYTE Uber 생성자다.
     void Replace() const; //004c77c0: 새 전체 Uber→임시등록 반납→이전자식 이동→공통 루트 교체다.
+    void Recreate() const; //004c7880: 기존루트 Kill/Cleanup→새 전체 Uber→임시등록 반납→공통 루트 공개다. 자식을 이관하지 않는다.
     HudDockNodeView DockView(std::uint32_t token) const; // 이 처리기/해당 실제 노드보다 짧게 빌리는 현재필드 뷰다.전체자식사본을만들지않는다.
 private:
     GumpCreateNode& Base(std::uint32_t token) const; // 실제 소비 시점의 고정 기본 주소를 요구한다.

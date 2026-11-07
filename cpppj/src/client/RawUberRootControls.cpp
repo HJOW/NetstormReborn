@@ -59,6 +59,7 @@ struct RawUberRootControls::Impl {
         effects.attach=common.attach;effects.move=dockHooks.move;effects.push=dockHooks.push;
         effects.registerSlave=[this](auto master,auto slave,auto flags) { divider->RegisterSlave(master,slave,flags); };
         effects.cleanup=[this] { common.lifetime.Cleanup(); };effects.overlay=[this](auto token,bool enabled) { common.lifetime.SetOverlay(token,enabled); };
+        effects.kill=[this](auto token) { common.lifetime.Kill(token); }; //전체 재생성도 실제 공통 지연 Kill과 같은 삭제 큐를 사용한다.
         effects.setDepth=[this](auto token,auto depth) { common.tree.SetDepth(token,depth); };
         effects.replaceRoot=[this](auto token) { common.lifetime.ReplaceRoot(token);if (!context.replaced) throw std::logic_error("Uber 실제 루트 별칭 반납 미연결");context.replaced(token);common.changed(); };
         root=std::make_unique<UberRootGump>(common.create,std::move(effects));
@@ -73,6 +74,7 @@ RawUberRootControls::~RawUberRootControls() {
     s.menus.UnregisterExternalGumps(s.drawRegistration);
 } // 살아 있는 다른 HUD의 출력은 반납하지 않는다.
 void RawUberRootControls::Replace() { auto& s=*impl_;s.root->Replace();s.previousWidth=s.common.create.screenWidth;s.previousHeight=s.common.create.screenHeight; } // 전체 생성자와 원문 교체 본체를 그대로 호출한다.
+void RawUberRootControls::Recreate() { auto& s=*impl_;s.root->Recreate();s.previousWidth=s.common.create.screenWidth;s.previousHeight=s.common.create.screenHeight; } //정상 루트 공개 뒤에만 호스트의 화면 크기 관측을 갱신한다.
 // 화면 크기 변경 시 실제 구분선과 숨긴 Chat 복원 위치의 하단 간격을 유지한다. 고정 해상도 원본에 없는 Windows 호환 재배치다.
 void RawUberRootControls::Reflow() {
     auto& s=*impl_;if (!Current()) throw std::logic_error("실제 전체 HUD 없는 화면 재배치");

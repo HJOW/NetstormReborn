@@ -117,6 +117,7 @@ public:
     RawMenuControls* Menus() const;
     RawUberRootControls& EnableUberRoot(RawUberRootContext context); // 실제 전체 루트/구분선의 가상 분배를 한 번 설치한다.
     RawUberRootControls* UberRoot() const; // 같은 실제 루트 처리기를 빌린다.
+    void RecreateUberRoot(); //이미 설치한 실제 전체 HUD 처리기로004c7880을 호출한다. 루트0도 허용하며 가짜 기본 HUD는 만들지 않는다.
     ScreenRect& MapViewRect(); // GumpTree 정렬과 실제 dock가 같은 원문 정수 지도LTRB를 직접 공유한다.
     std::uint32_t CurrentOverride() const; //00463fe0의 실제 overrideHead를 조회하며 dialog/Guide로 대신하지 않는다.
     std::uint32_t BubbleGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second); // 원문00464e90의 현재 부모 체인에만 전달한다.

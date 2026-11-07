@@ -1,0 +1,56 @@
+{
+  "unit": 1128,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12729344,
+      "sha256": "488588a600946bb71cb18fa3d5085c16aa8192a8719bc0fb2930135ec53e79e4"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "e87dba0b85776a13ed1c9bb4b5664dc17305227dcc697ed8b7b47d44dfb0976a"
+    }
+  },
+  "staticAudit": {
+    "native": "004c7880 전체와 각 다음 함수까지 기계어·기존004c77c0/전체004c7160 및 공통 Kill/Cleanup/ReplaceRoot 수명",
+    "parent": "기존등록0 비영일때만Kill→루트0이어도Cleanup→new(c8)→전체 Uber ctor→그때의id 등록칸0→id0→실제 공통 ReplaceRoot. 이전 자식 이관/원문에 없는 선행 empty 호출은 없다.",
+    "devices": "기존 공통 지연Kill/자식 우선Cleanup·네 실제 패널/세 divider 전체 생성·임시등록/같은root0·기존 Renderer/도킹 후처리를 재사용한다. 성공/빈 HUD로 대체하지 않는다.",
+    "integration": "RawUberRootControls/RawButtonControls를 통해 실제 CampaignLoginServices.reconnectUi와 일반 Session.receive.reconnectUi를 연결했다. 호출 관문은 공통67h 부모의 현재battle&&!mission&&saved에 남긴다.",
+    "failure": "기존 루트 정리 뒤 생성 실패/미연결 자식은 해당 위치에서 거부하고 기존 HUD를 복구하거나 새 루트 공개를 앞당기지 않는다. Native NULL/비정상 메모리 자체를 실행하지 않는다.",
+    "remainingIntegration": "MetaConnectionRuntime67의 전체 부모 등록과 공유 공급 반경/파생 전역은 후속이다. 기존 UI의 전체 외관/메타 장면 실행 성공을 주장하지 않는다.",
+    "validation": "Release 빌드/원문 대조/보호2800 확인만 수행하며 신규 단위/MP/게임/통신 실행0이다."
+  },
+  "remaining": [
+    "메타67h 전체 부모 등록/공유 반경·파생 전역·메타 객체 그림/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
