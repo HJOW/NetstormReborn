@@ -5279,9 +5279,38 @@
       "bytes": 2675715,
       "lines": 3459,
       "fixtureCommit": "82b754e4",
-      "webCommit": "worktree",
+      "webCommit": "8bb36c0a",
       "cpppjBasis": {
         "cpppj/src/o/RawSalvageCommand.cpp": "82b754e4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E36",
+      "id": "production-shortcuts",
+      "path": "cpppj/tests/fixtures/production-shortcuts-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 생산 조각 문자 키의 Guide/Gump/뗌/콘솔 관문과 일반 키 구간 예약 인자·활성 큐",
+      "consumers": [
+        "webpj/tests/production-shortcuts.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/production-shortcuts.js"
+      ],
+      "doc": "docs/webpj-production-shortcuts-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/ProductionShortcuts.cpp"
+      ],
+      "scope": "8040행 전부 사용(도달 4280행 제품 대조, 앞선 관문 3760행은 도달 여부만)",
+      "text": true,
+      "sha256": "e97fbf01c4e571fa09dcda69c1041fd0d9d7a30cf05ed7c07ea73ad0b6ed43aa",
+      "bytes": 10079264,
+      "lines": 8041,
+      "fixtureCommit": "3db2dc47",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ProductionShortcuts.cpp": "3477db51"
       }
     }
   ]

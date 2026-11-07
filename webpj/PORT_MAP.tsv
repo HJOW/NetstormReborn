@@ -231,7 +231,7 @@ cpppj/src/client/PriestSelectionShortcut.cpp	port	www/core/selection-shortcuts.j
 cpppj/src/client/ProductionColorMaps.cpp	port			todo	[client-default]
 cpppj/src/client/ProductionControlContext.h	port			todo	[client-default]
 cpppj/src/client/ProductionHintGump.cpp	port			todo	[client-default]
-cpppj/src/client/ProductionShortcuts.cpp	port			todo	[client-default]
+cpppj/src/client/ProductionShortcuts.cpp	port	www/core/production-shortcuts.js	1f00a25a	port	[client-default] WB04-E36: 생산 조각 문자 키 예약. fixture production-shortcuts 8040행 중 도달 4280행 전부(나머지 3760행은 도달 여부만). D/d 최근 항목은 계약 검사만
 cpppj/src/client/ProductPresentation.cpp	port	www/assets/product.js	1f00a25a	port	[client-default] WB03-AC 11.01 표시·세 번째 Credits
 cpppj/src/client/ProductVersion.h	port	www/assets/product.js	1f00a25a	port	[client-default] WB03-AC
 cpppj/src/client/QuickHelpControl.cpp	port	www/ui/help-window.js	1f00a25a	partial	[client-default] 이력·Back
