@@ -17,6 +17,8 @@ public:
     o::LocalMissionParentResult Run(std::uint32_t selected); //20~27/34~38의부모와37의실제새R lan실행을연결하고공통144BYTE확정은바깥분배기에남긴다.
     void Pump(); //같은 원문 slot4의 flush→수신을 World 없이 진행한다.
     bool CallbackActive() const; //동기 수신/송신 중 전체 Native 정리의 재진입을 막는다.
+    void NotifyMetaMaster(); //004b2c00의 현재 자기 flags에2000h를 저장하고 같은 TCP11로1fh/12BYTE를 전송한다.
+    void SendMetaGameLogin(); //004b62b0의 실제 master/자기 CS 기록으로7ch/28BYTE를 작성해 같은 TCP9로 전송한다.
 private:
     bool Connect(std::string_view endpoint,std::uint32_t port,std::uint32_t challenge); //004b3ed0의현재 해석 뒤 TCP10/11을 실제 선택한다. 공개/DNS 주소는 기존 LAN 장치가 거부한다.
     std::span<std::uint8_t> Core(); //0048f0d0의 같은 현재 Client Core와 실제 진단을 읽는다.

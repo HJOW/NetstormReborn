@@ -19,6 +19,8 @@
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientCdGlobals.h"
 #include "client/ClientChatRuntime.h"
+#include "client/ClientChallengeGlobals.h"
+#include "client/NativeMetaConnectedState.h"
 #include "client/CurrentAllocationBytes.h"
 #include "client/CdDirectory.h"
 #include "client/RootServerEndpoint.h"
@@ -53,6 +55,21 @@ void Put(std::span<std::uint8_t> packet,std::size_t at,std::uint32_t value,std::
 }
 // df590의 header0/종류/version/초기 길이0만 작성한다.
 void Header(std::span<std::uint8_t> packet,std::uint8_t type) { Put(packet,0,1,1);Put(packet,1,type,1);Put(packet,2,0,2); }
+// 캡처한 같은 CS의 참가자 물리만 빌리며 active/master 조건을 추가하지 않는다.
+std::span<std::uint8_t> PeerRecord(std::span<std::uint8_t> bytes,std::uint32_t index) {
+    if (index>=o::kChallengeParticipantCount) throw std::out_of_range("메타 요청의 실제 참가자40칸 범위");
+    const auto at=o::kChallengeParticipantOffset+index*o::kChallengeParticipantBytes;
+    if (at>bytes.size() || o::kChallengeParticipantBytes>bytes.size()-at) throw std::out_of_range("메타 요청의 실제 CS 물리 부족");
+    return bytes.subspan(at,o::kChallengeParticipantBytes);
+}
+// 원문 비정렬 DWORD를 낮은 BYTE부터 조립해 호스트 정렬/포인터 폭과 분리한다.
+std::uint32_t PeerWord(std::span<const std::uint8_t> bytes,std::size_t at) {
+    if (at>bytes.size() || 4>bytes.size()-at) throw std::out_of_range("메타 요청의 실제 DWORD 물리 부족");
+    std::uint32_t value{};
+    // 선택된 네 BYTE만 읽으며 다른 현재 기록을 복사하거나 초기화하지 않는다.
+    for (std::size_t byte=0;byte<4;++byte) value|=std::uint32_t(bytes[at+byte])<<(8*byte);
+    return value;
+}
 // 00435a60의제목부분일치를검사하고모든창의열거를계속한다.실제LPARAM폭으로결과주소를전달한다.
 BOOL CALLBACK FindRootWindow(HWND window,LPARAM value) {
     std::array<char,256> title{};GetWindowTextA(window,title.data(),static_cast<int>(title.size()));if (std::strstr(title.data(),"Netstorm Root Server")) *reinterpret_cast<bool*>(value)=true;return TRUE;
@@ -87,6 +104,8 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         o::LocalServerDiscoveryReceiveHooks receive;receive.wall=[this] { return client_.WallSeconds(); };receive.peerAddress=[this](auto id) { return CampaignPeerAddressText(client_.ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(id))); };receive.processState=processState_;
         o::ReceiveLocalServerDiscovery(client_.LocalStateGlobals()->State(),Discovery(),sender,packet,receive);
     }); //서버발견은현재36직접쓰기뒤실제Run을동기실행한다.검색토큰비교만인경우Run하지않는다.
+    dispatch.Observe(0x1f,{});dispatch.Version(0x1f,1,0);dispatch.RequireLength(0x1f,12); //0040a300의 고정12BYTE/master 준비 통지이며 별도 수신기를 합성하지 않는다.
+    dispatch.Observe(0x7c,{});dispatch.Version(0x7c,1,0);dispatch.RequireLength(0x7c,28); //0040b340/0040b380의 고정28BYTE/빈 관찰기다. 게임 로그인 수신은 별도 부모다.
 }
 MetaConnectionRuntime::~MetaConnectionRuntime()=default; //자기OS/노드수명은실제TCP/UDP소유자의소멸자가반납한다.
 // minor 차이는 로그만 남기고 major 차이만 현재 설정값/실제 Tell 결과로 거부한다.
@@ -105,6 +124,25 @@ void MetaConnectionRuntime::ReceiveRootReply(std::span<const std::uint8_t> packe
     o::ReceiveRootLoginReply(packet,{local.State(),local.MetaZones().records,local.MetaRefresh()},hooks);
 }
 bool MetaConnectionRuntime::CallbackActive() const { return pumping_; } //현재 대여 중인 이 owner를 Native cleanup이 반납하지 않게 한다.
+// 현재 자기 CS 기록을 먼저 캡처하고 원문처럼 로컬 flags를 실제 송신 관문보다 앞서 쓴다.
+void MetaConnectionRuntime::NotifyMetaMaster() {
+    const auto own=client_.ChallengeGlobals()->Participant(client_.GameplayGlobals()->player.battleOwner);
+    std::array<std::uint8_t,12> packet;Header(packet,0x1f);Put(packet,2,12,2);
+    Put(packet,4,client_.CurrentSubscriber(),4);
+    const auto flags=PeerWord(own,0x64)|0x2000U;Put(own,0x64,flags,4);Put(packet,8,flags,4);
+    static_cast<void>(tcp_->SendMutable(11,packet)); //실제 전송 실패여도 앞선 원문 flags 쓰기를 되돌리지 않는다.
+}
+// master 진단이 복귀하면 현재 CS를 다시 읽고 같은 스냅샷의 master/자기 필드를 순서대로 전송한다.
+void MetaConnectionRuntime::SendMetaGameLogin() {
+    std::array<std::uint8_t,28> packet;Header(packet,0x7c);Put(packet,2,28,2);Put(packet,4,0,4);
+    auto& challenge=*client_.ChallengeGlobals();const auto master=FindMetaBattleMaster(challenge,client_.GameplayGlobals()->player.battleOwner);
+    if (master<0) client_.SurfaceStorage()->AssertDisplay("master >= 0",".\\State.cpp",0x6f7);
+    const auto bytes=challenge.Bytes();Put(packet,8,PeerWord(PeerRecord(bytes,std::bit_cast<std::uint32_t>(master)),4),4);
+    const auto subscriber=client_.CurrentSubscriber();const auto owner=client_.GameplayGlobals()->player.battleOwner;
+    Put(packet,12,owner,4);const auto own=PeerRecord(bytes,owner);Put(packet,16,subscriber,4);
+    Put(packet,20,PeerWord(own,0xa4),4);Put(packet,24,PeerWord(own,0xa8),4);
+    static_cast<void>(tcp_->SendMutable(9,packet)); //PlayerKnown/접속 상태/ACK를 새로 합성하지 않고 기존 송신 관문을 사용한다.
+}
 // 기존slot4의TCP뒤UDP를진행한다.66h발견은원문처럼수신뒤같은Run을동기실행한다.
 void MetaConnectionRuntime::Pump() { if (pumping_) throw std::logic_error("메타 TCP/UDP 중첩 Poll 금지");pumping_=true;try { tcp_->Flush();static_cast<void>(tcp_->Poll());static_cast<void>(udp_->Poll()); }catch (...) { pumping_=false;throw; }pumping_=false; }
 // 완성한UTF-8문구를한번만번역한뒤호스트HTML장치가글꼴바이트로변환한다.

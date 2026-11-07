@@ -1,0 +1,80 @@
+{
+  "unit": 1095,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp/NetstormRoot",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12397568,
+      "sha256": "71094c7ae157c7cd4da71857748f93c379158faef6c4f125c9c0d2d15ebad3a5"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "8424e075b6bf94371772a5ca3a03ebdfff03a5b6733e11bfa42bd55eb156e757"
+    }
+  },
+  "staticAudit": {
+    "nativeFunctions": [
+      "004b2c00",
+      "004b62b0",
+      "0040a300",
+      "0040b340",
+      "0040b380"
+    ],
+    "masterPacket": {
+      "type": "1f",
+      "bytes": 12,
+      "destination": 11,
+      "flagsWriteBeforeSend": true
+    },
+    "gameLoginPacket": {
+      "type": "7c",
+      "bytes": 28,
+      "destination": 9,
+      "fields": [
+        "zero",
+        "master+4",
+        "currentOwner",
+        "currentSubscriber",
+        "self+a4",
+        "self+a8"
+      ]
+    },
+    "currentCsAfterDiagnostic": true
+  },
+  "integration": {
+    "realSharedCsAndTcpSendDevicesCompiled": true,
+    "state33CallsApplied": false,
+    "newReplyRegistered": false,
+    "meta28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "0047dd60/479760/47cab0와 현재 CS 수신·실제 오브젝트/카메라/HTML 장치",
+    "완성 뒤 1dh/28..33 등록과 두 실제 송신 메서드 접합",
+    "세.server 콘텐츠·LAN hostname/Config registryValue·나머지 LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03/HJOW-Athlon",
+    "lastRoot": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
