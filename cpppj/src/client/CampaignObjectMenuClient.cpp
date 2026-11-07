@@ -8,6 +8,7 @@
 #include "client/ClientChallengeGlobals.h" //메타신뢰도는같은현재CS의두WORD를사용한다.
 #include "client/ClientMetaPlayerMenu.h" //같은LAN주소문법의실제해석을공유한다.
 #include "client/NativeMetaPlayerMenu.h" //메뉴신뢰도의원문정수관문/비율을공유한다.
+#include "client/ClientMetaObjectInput.h" //메타+ac는 메뉴 없이 입력만 예약해도1을 반환하므로 공통 루트 작성기 앞에서 호출한다.
 #include "client/GameWorld.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -125,6 +126,9 @@ CampaignObjectMenuClient::CampaignObjectMenuClient(Client& client,RawButtonContr
 CampaignObjectMenuClient::~CampaignObjectMenuClient() { Clear(); }
 // 실제 객체 메뉴는 게임 시계를 멈추지 않고 원본 controlled 생성/부착을 사용한다.
 std::uint32_t CampaignObjectMenuClient::Open(GameWorld& world,o::Sid sid,const InputEvent& event) {
+    const auto bytes=world.Session().Core().pool.Slot(sid);std::uint32_t vtable{};
+    for (std::size_t index=0;index<4;++index) vtable|=std::uint32_t(bytes[index])<<(index*8); //현재 슬롯 VT의+ac만 선택하며 생성자 목록을 다시 실행하지 않는다.
+    if (ObjectMenuSlots(vtable).open==0x4789b0U) return InputClientMetaObject(impl_->client,*impl_->buttons.Menus(),sid.value,event,impl_->tell) ? 1U:0U;
     Clear();auto& s=*impl_;s.world=&world;std::uint32_t accepted{}; //원문 가상ac의 반환과 실제 루트토큰은 별개다.
     s.buttons.Menus()->OpenAttached([&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& raw) {
         s.chain=world.Session().MakeObjectMenus(s.Ui(widgets,controls,raw));ObjectMenuOpenHooks hooks;

@@ -4484,6 +4484,7 @@ bool RawCampaignSession::SelectAiDropType(std::uint32_t owner) { if (!impl_->loa
 bool RawCampaignSession::ManageAiDrops(std::uint32_t owner) { if (!impl_->loaded || owner<1 || owner>=9) throw std::logic_error("설치 후 owner1..8 AI 전체 배치 행동만 허용");const auto token=impl_->participation->Brain(owner);if (!token) return false;impl_->aiDropActions->Run(token);return true; }
 // 현재가상표의실제원본이름을반환한다.
 std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 객체 이름 조회");return impl_->objectNames->Name(parent); }
+std::string RawCampaignSession::ObjectBaseName(Sid parent) const { if (!impl_->objectNames) throw std::logic_error("현재 기본 객체 이름 장치 미설치");return impl_->objectNames->BaseName(parent); } //같은 현재 언어/TYPE/80BYTE 치환 장치를 실제 선택 위치에서 사용한다.
 // 명시 해제의 오류는 caller에 전파하고 destructor의 마지막 정리와 구분한다.
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.

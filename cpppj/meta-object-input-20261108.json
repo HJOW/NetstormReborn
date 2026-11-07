@@ -1,0 +1,56 @@
+{
+  "unit": 1134,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12818944,
+      "sha256": "e7928e0193e1f8c3ca2300f381973cfd63a4ecd185dd9b75511cdadad0aa5ea3"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "ca109c6aa8568f243f3d6f9a71cb7dda0b201d20d8b3425ea1c015eb8472701f"
+    }
+  },
+  "staticAudit": {
+    "native": "4789b0 전체 C/기계어·읽기 전용9좌석표·PE의 세 명령 DWORD와 실제 UI/설정/CS/SHP/입력 큐의 연결·원문 재조회/부분효과·signed lowDWORD/IDIV 순서를 대조했다. 전체 정밀 디컴파일2026-11-03/HJOW-Athlon, R전용2026-11-07/HJOW-Athlon이며 생성 원문 변경0이다.",
+    "menus": "현재 controlled·기존 참가자4785f0·TYPE49af80·설정helpWord·AttachObjectCurrent를 공유한다. f3 매개변수는 현재CS 논리 주소이며 소비자 복원은 후속이다. 선행Close/중복 요약·부착을 하지 않는다.",
+    "seats": "현재 snapshot 투영→frame0 검사/진단→signed WORD 좌표와lowDWORD/IDIV→clamp→좌석표→현재CS 버전/좌석→실제Tell 또는FIFO 순서다. 다른 전투 참가 여부는 현재 로컬 owner로 다시 읽는다.",
+    "remaining": "메타 월드 객체 입력/선택 caller·f3/6b 소비자/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출이며 이 단위를 전체 메타 입력/항해 성공으로 쓰지 않는다.",
+    "validation": "Release 빌드/정적 대조/보호2800 확인만 수행하며 새 C++/MP/게임/통신/전체/34미션/ZIP 실행0이다.",
+    "edition": "10.78만 근거로 하며10.72 입력/가상표 동일성은 추가 판정하지 않는다.",
+    "pause": "사용자2026-11-08 요청에 따라 현재 단위 문서/커밋 후 목표 일시 중지. 전체 목표 미완료."
+  },
+  "remaining": [
+    "메타 월드 객체 입력/선택 caller·f3/6b 소비자/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

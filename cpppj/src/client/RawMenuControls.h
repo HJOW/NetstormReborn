@@ -22,6 +22,7 @@ class MetaImageList;struct MetaImageListNode; // 실제21개 후보의 목록 �
 struct RawNsInfoContext; // 전체 NSInfo 생성의 실제 Client 전역과 문자열 수명이다.
 struct NativeMetaDisplayHooks;struct ClientNsInfoGlobals; //메타 표시도 같은 Gump/NSInfo 공용 장치를 빌린다.
 struct NativeMetaSceneHooks; //전체원격존장면도기존한줄TextGump/serial/객체부착을공유한다.
+struct NativeMetaObjectInputHooks; //메타+ac도 같은 controlled 생성/제목/행/객체 부착 장치를 빌린다.
 struct RawTextEntryContext;class RawTextEntryControls; // 같은 실제 편집 버퍼/Console 조립 계층이다.
 struct RawChatWindowContext;class ChatWindow;class HudChatGeometry; // 전체 Chat 공장과 같은 실제 자식 기하다.
 struct RawHtmlWindowContext;class HtmlWindowGump; // 실제 HTML 부모의 전역/본문·수명 처리기다.
@@ -110,6 +111,7 @@ public:
     void CloseMetaDisplayGumps(); //같은메타공장에서생성한등록/미등록노드만공통자식우선수명으로정리한다.
     void RefreshMetaNsInfo(ClientNsInfoGlobals& globals) const; //같은기존NSInfo 슬롯으로0047cab0 Push/재조회/Attach를실행한다.
     void OpenMetaParticipant(std::uint32_t participant,ScreenPoint point); //004785f0의두전체메뉴경로를같은실제Client/controlled트리/객체Form에연결한다.활성관문은caller가판정한다.
+    void BindMetaObjectInput(NativeMetaObjectInputHooks& hooks); //기존 controlled 공장만 연결하며 바인딩으로 메뉴/객체를 생성하거나 이전 팝업을 닫지 않는다.
     const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.
     void SetHelpText(std::uint32_t token,std::string_view text); //464ed0의 실제 소유 문자열을 같은 노드의 textPointer에 설치한다.
     void SetHelpWord(std::uint32_t token,std::string_view text); //464f80의 실제 소유 도움말 키를 alternateTextPointer에 설치한다.

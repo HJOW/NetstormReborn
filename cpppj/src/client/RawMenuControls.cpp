@@ -31,6 +31,7 @@
 #include "client/HudNsInfoMeta.h" //메타루트/참가자순서도같은CS·공통문자/트리를사용한다.
 #include "client/HudPlayerButtonDraw.h" //같은특수버튼의배경/단색/원색그림전체Draw다.
 #include "client/NativeMetaPlayerMenu.h" //같은controlled메뉴의자기/다른참가자부착을실행한다.
+#include "client/NativeMetaObjectInput.h" //메타+ac도 같은 현재 controlled/Gump 장치를 사용한다.
 #include "client/NativeNsInfoInput.h" //루트 입력도 실제 정렬표/CS·공통 메뉴/카메라·송신을 사용한다.
 #include "client/NativePlayerInfoInput.h" //두 자기 버튼/슬롯 변경/추방 확인도 전체 원문 입력을 사용한다.
 #include "client/NativeBattleInfoInput.h" //같은실제옵션/메뉴/송신·재부착으로BattleInfo입력부모를실행한다.
@@ -954,6 +955,12 @@ void RawMenuControls::CloseChatWindows() {
     while (!s.chatOwned.empty()) { const auto token=*s.chatOwned.begin();if (std::find(s.common.create.entries.begin(),s.common.create.entries.end(),token)!=s.common.create.entries.end()) throw std::logic_error("Chat 정리 뒤 등록 객체 잔류");Release(token); } // 기본 생성 전 저장소만 직접 반납한다.
 }
 void RawMenuControls::OpenMetaParticipant(std::uint32_t participant,ScreenPoint point) { impl_->OpenMetaParticipant(participant,point); } //같은CS/공통메뉴/객체부착공장만선택한다.
+void RawMenuControls::BindMetaObjectInput(NativeMetaObjectInputHooks& hooks) {
+    hooks.playerMenu=[this](auto participant,auto point) { OpenMetaParticipant(participant,point); };
+    hooks.begin=[this] { impl_->widgets->BeginFancy(); };hooks.title=[this](auto text) { impl_->controls->AddTitle(text); };
+    hooks.item=[this](auto text,auto command,auto parameter) { impl_->controls->AddText(text,command,parameter,true,true,false); };
+    hooks.reference=[this](auto object,auto point) { const auto token=impl_->menu->Current();impl_->menu->AttachObjectCurrent(object,point.x,point.y);impl_->popup=token;impl_->common.changed(); };
+} //현재 controlled 공장을 빌려 원문 호출 위치에서만 메뉴를 만들고 객체에 부착한다.
 // 실제 현재 토큰의 생존 여부만 조회한다. 원문이 보존하는 죽은 current 전역을 임의0으로 쓰지 않는다.
 std::uint32_t RawMenuControls::NsInfoRoot() const { const auto& s=*impl_;if (!s.nsContext) return 0;const auto token=s.nsContext->globals->current;const auto* node=Find(s.nsRoots,token);return node && !(node->flags&0x10000U) ? token : 0U; }
 // 공통 기본 버튼 처리기는 실제 특수 파생의 동일 기본 주소를 빌린다.

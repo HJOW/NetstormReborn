@@ -482,6 +482,7 @@ public:
     bool SelectAiDropType(std::uint32_t owner); //00413100의실제기술순환/회전/직전후보재사용·기한선택이다.true는본체존재/호출이며TYPE비영을뜻하지않는다.
     bool ManageAiDrops(std::uint32_t owner); //004162e0 전체 배치 행동이다.true는 본체 존재/호출이며 실제 배치/성공표적이 생겼다는 뜻이 아니다.자동프레임은 후속이다.
     std::string ObjectName(o::Sid parent) const; //실제가상68의현재번역/치환·Factory레벨접미사다.
+    std::string ObjectBaseName(o::Sid parent) const; //현재TYPE의0049af80만 사용하며 Factory 레벨 접미사와 별도 loaded 관문을 추가하지 않는다.
     // 같은 현재 Player의 실제 목록 소멸→본체 반납→포인터0을 수행한다. flags20은 원본대로 보존한다.
     void RemoveAi(std::uint32_t owner);
     // 후속 실제 전략/검사가 같은 본체/목록 소유 저장소를 확인한다. 여기서 메모리를 합성하지 않는다.
