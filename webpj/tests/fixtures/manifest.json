@@ -3554,7 +3554,7 @@
       "bytes": 115006,
       "lines": 435,
       "fixtureCommit": "d43f1d29",
-      "webCommit": "worktree",
+      "webCommit": "eb97f3f2",
       "cpppjBasis": {
         "cpppj/src/o/RawBombActivation.cpp": "d43f1d29"
       }
@@ -3584,9 +3584,38 @@
       "bytes": 199920,
       "lines": 1920,
       "fixtureCommit": "e5a198df",
-      "webCommit": "worktree",
+      "webCommit": "eb97f3f2",
       "cpppjBasis": {
         "cpppj/src/o/RawAmbientWind.cpp": "e5a198df"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E18",
+      "id": "static-string-runtime",
+      "path": "cpppj/tests/fixtures/static-string-runtime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 임시 문자열 고리 초기화/예약/서식의 두 8192 BYTE 영역·네 전역·부분 중단·하위 호출 순서",
+      "consumers": [
+        "webpj/tests/static-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-static-strings.js"
+      ],
+      "doc": "docs/webpj-static-factory-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawStaticStrings.cpp"
+      ],
+      "scope": "204행 전부 사용",
+      "text": true,
+      "sha256": "dad250c54fd9f5b5c43a460dfef4a8080cd5b4f2f391c20d314efca0ae44cf57",
+      "bytes": 6701504,
+      "lines": 205,
+      "fixtureCommit": "a49c451e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawStaticStrings.cpp": "a49c451e"
       }
     }
   ]

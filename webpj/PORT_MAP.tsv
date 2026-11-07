@@ -666,7 +666,7 @@ cpppj/src/o/RawEvilRayFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawEvilRayLifetime.cpp	port			todo	[o-default]
 cpppj/src/o/RawExistingEditorInstallOuter.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawFactoryDraw.cpp	port			todo	[o-default]
-cpppj/src/o/RawFactoryInput.cpp	port			todo	[o-default]
+cpppj/src/o/RawFactoryInput.cpp	port	www/core/raw-factory-input.js	1f00a25a	port	[o-default] WB04-E18: 004547d0 Factory 가상 입력(순환·업그레이드 자금 관문·연구/부모 위임). 원본 관측 없음, cpppj 독립 계약 검사 이식
 cpppj/src/o/RawFactoryPostPop.cpp	port			todo	[o-default] 아웃포스트 분기는 단독 도달 여부를 이식 때 확인
 cpppj/src/o/RawFactoryResearch.cpp	port			todo	[o-default]
 cpppj/src/o/RawFactoryUpgrade.cpp	port			todo	[o-default]
@@ -912,7 +912,7 @@ cpppj/src/o/RawStateBridgeReset.cpp	port	www/core/raw-state-bridge-reset.js	1f00
 cpppj/src/o/RawStateSidLists.cpp	port			todo	[o-default]
 cpppj/src/o/RawStateWorldCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawStateZoneReset.cpp	port	www/core/raw-state-zone-reset.js	1f00a25a	port	[o-default] WB04-E11: 004bfd60 State Zone 정확히 6 BYTE 쓰기. fixture state-zone-reset 10.78 10행 + 길이 0..8 경계
-cpppj/src/o/RawStaticStrings.cpp	port			todo	[o-default]
+cpppj/src/o/RawStaticStrings.cpp	port	www/core/raw-static-strings.js	1f00a25a	port	[o-default] WB04-E18: Staticstring.cpp 외곽(004b92b0 초기화·004b9320 예약·004b9390 서식). fixture static-string-runtime 10.78 204행 전부. ClientStaticStrings 통합은 Client 단위에서
 cpppj/src/o/RawSubscriberIdGenerate.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawSunAviaryCapture.cpp	port			todo	[o-default]
 cpppj/src/o/RawSunAviaryProcess.cpp	port			todo	[o-default]
