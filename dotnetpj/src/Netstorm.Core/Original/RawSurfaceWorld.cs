@@ -56,6 +56,12 @@ public sealed class RawSurfaceWorld
     /// <summary>자산 삭제의 기본 몸체다. 원본 Impl.baseDestroy에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
     private readonly RawSquidDestroy? _baseDestroy;
 
+    /// <summary>소유자 변경을 객체 필드와 장부에 반영하는 처리기다. 원본 Impl.owner에 대응한다. 판본에 맞는 TYPE 개수가 아니면 비워 두며 표면 받침 분배는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
+    private readonly SquidOwner? _owner;
+
+    /// <summary>생산·표면 재정의를 현재 가상 표로 분배하는 소유자 지정이다. 원본 Impl.assetOwner에 대응한다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
+    private readonly Action<int, uint>? _assetOwner;
+
     /// <summary>교체한 현재 공통 삭제 몸체다. 원본 Impl.common에 대응하며 BindDeletion 전에는 비어 있다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
     private RawSquidDestroyLifecycle? _common;
 
@@ -92,6 +98,16 @@ public sealed class RawSurfaceWorld
             _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph.Records, _storage.Graph.Stack, null, GraphRecovery.FullPool);
             _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots);
             _baseDestroy = new RawSquidDestroy(_storage.Pool, _unpop, _types);
+        }
+
+        // 소유자 처리는 판본에 맞는 개수(패치 188·CD 171)일 때만 둔다. 어긋난 기존 껍데기 호출은 명시 오류로 멈춘다.
+        bool ownerReady = (_edition == OriginalEdition.Patch1078 && _types.Count == OriginalConstructors.TypeCount)
+            || (_edition == OriginalEdition.Cd1072 && _types.Count == 171);
+        if (ownerReady)
+        {
+            SquidOwner owner = new(_storage.Pool, _types, _bookkeeping, _storage.OwnerMode);
+            _owner = owner;
+            _assetOwner = RawBridgeConnect.MakeOwnerDispatch(_storage.Pool, _storage.Links, owner.Set);
         }
 
         _bookkeeping.LocalOwner = 1;
@@ -371,6 +387,20 @@ public sealed class RawSurfaceWorld
         }
 
         return _common;
+    }
+
+    /// <summary>사제·신전의 전용 몸체를 상위에서 선택한 뒤 나머지 자산 +74를 현재 표로 호출한다. 받침 분배는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
+    /// <param name="sid">지정할 객체 번호다.</param>
+    /// <param name="owner">쓸 소유자 번호다.</param>
+    public void SetAssetOwner(int sid, uint owner)
+    {
+        if (_assetOwner is null)
+        {
+            throw new InvalidOperationException("자산 소유자 지정이 연결되지 않았습니다.");
+        }
+
+        _assetOwner(sid, owner);
+        _changed = true;
     }
 
     /// <summary>모든 Form·경로·Regular가 쓰는 같은 실제 커널을 빌린다. 새 커널을 만들지 않는다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>

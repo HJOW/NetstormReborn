@@ -398,6 +398,59 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.BindDeletion(() => 0, DeletionHooks()));
     }
 
+    /// <summary>자산 소유자 지정이 슬롯에 적히는지 검증한다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetAssetOwnerWritesOwnerByte()
+    {
+        // 원본 패치 소유자 위치(0x22) 쓰기와 변경 알림을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        Assert.True(world.TakeChanged());
+        world.SetAssetOwner(sid, 3u);
+        Assert.Equal(3, world.Storage().Pool.Slot(sid)[34]);
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>범위 밖 소유자 번호를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetAssetOwnerRejectsBadOwner()
+    {
+        // 목록이 없는 소유자 번호 지정은 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        Assert.Throws<ArgumentException>(() => world.SetAssetOwner(sid, 9u));
+    }
+
+    /// <summary>CD 소유자 위치에 적히는지 검증한다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetAssetOwnerWritesOwnerByteCd()
+    {
+        // 원본 CD 소유자 위치(0x20) 쓰기를 검증한다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        world.SetAssetOwner(sid, 5u);
+        Assert.Equal(5, world.Storage().Pool.Slot(sid)[32]);
+    }
+
+    /// <summary>판본과 맞지 않는 TYPE 표의 지정을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetAssetOwnerRejectsMismatchedTypes()
+    {
+        // 어긋난 기존 껍데기 호출은 명시 오류로 멈춘다(결정 6).
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.SetAssetOwner(5, 3u));
+    }
+
     /// <summary>같은 저장소 커널을 빌리는지 검증한다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>
     [Fact]
     public void KernelSharesStorageKernel()
