@@ -291,6 +291,8 @@ cpppj/src/o/RawBattleIsland.cpp	Netstorm.Core/Original/RawBattleIsland.cs	dc6d19
 cpppj/src/o/RawBattleIsland.h	Netstorm.Core/Original/RawBattleIsland.cs	dc6d19331da4212a048b85c6ad0d609cfe9f1c93	port
 cpppj/src/o/RawBombPreDestroy.cpp	Netstorm.Core/Original/RawBombPreDestroy.cs	0e66d91ba40ac55542ec2e2747b68e406c27de43	L1
 cpppj/src/o/RawBridgeConnect.h	Netstorm.Core/Original/RawBridgeConnectTypes.cs	db8969da1348ceef52157cc341f52290fb504fa3	port
+cpppj/src/o/RawBridgeConnect.cpp	Netstorm.Core/Original/RawBridgeConnect.cs	0c06fa666c7b11c9c16de659439c3454b073a984	L1
+cpppj/src/o/RawBridgeConnect.h	Netstorm.Core/Original/RawBridgeConnect.cs	db8969da1348ceef52157cc341f52290fb504fa3	L1
 cpppj/src/o/RawBridgeEvents.cpp	Netstorm.Core/Original/RawBridgeEvent.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawBridgeLifecycle.cpp	Netstorm.Core/Original/RawBridgeLifecycle.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawBuildingSpace.cpp	Netstorm.Core/Original/RawBuildingSpace.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
