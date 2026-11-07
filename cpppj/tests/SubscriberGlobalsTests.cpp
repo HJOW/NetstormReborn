@@ -35,15 +35,24 @@ std::vector<std::string> SubscriberFields(std::string_view line) {
 }
 }
 
-// PE 초기 두 DWORD만 새 Client 소유자가 구성하며 같은 const/nonconst 주소를 제공한다.
+// PE 초기 두 DWORD와 별도 현재 이름 버퍼가 같은 const/nonconst 주소와 독립 저장소를 제공한다.
 TEST_CASE(SubscriberGlobals_OriginalInitialValuesAndStableReferences) {
-    static_assert(sizeof(ClientSubscriberGlobals)==8); // editor/post를 숨은 공유 상태로 추가하지 않는다.
+    static_assert(sizeof(std::remove_reference_t<decltype(std::declval<ClientSubscriberGlobals&>().MySubscriber())>)==4 &&
+        sizeof(std::remove_reference_t<decltype(std::declval<ClientSubscriberGlobals&>().LoginSubscriber())>)==4); // 두 원문 필드의 DWORD 폭을 검증하며 호스트 클래스 전체 크기를 ABI로 고정하지 않는다.
+    static_assert(std::is_same_v<decltype(std::declval<const ClientSubscriberGlobals&>().MySubscriber()),const std::uint32_t&> &&
+        std::is_same_v<decltype(std::declval<const ClientSubscriberGlobals&>().LoginSubscriber()),const std::uint32_t&>); // 현재값을 임시 복사로 반환하지 않는다.
+    static_assert(std::is_same_v<decltype(std::declval<ClientSubscriberGlobals&>().Handle()),std::array<std::uint8_t,64>&> &&
+        std::is_same_v<decltype(std::declval<const ClientSubscriberGlobals&>().Handle()),const std::array<std::uint8_t,64>&>); // 별도64BYTE 현재 이름도 같은 실제 버퍼를 빌린다.
     static_assert(!std::is_copy_constructible_v<ClientSubscriberGlobals> && !std::is_move_constructible_v<ClientSubscriberGlobals>); // 빌린 주소를 이동하지 않는다.
     ClientSubscriberGlobals owner;const auto& readOnly=owner; // 실제 새 owner와 같은 읽기 view다.
+    const std::array<std::uint8_t,64> emptyHandle{}; // 새 Client의 현재 이름은64BYTE 전체가0인 별도 저장소다.
     CHECK(owner.MySubscriber()==0xffffffffU && owner.LoginSubscriber()==1);
     CHECK(&owner.MySubscriber()==&readOnly.MySubscriber() && &owner.LoginSubscriber()==&readOnly.LoginSubscriber());
+    CHECK(owner.Handle()==emptyHandle && &owner.Handle()==&readOnly.Handle());
+    owner.Handle()[0]='H';owner.Handle()[1]='J';owner.Handle()[2]=0;
     owner.MySubscriber()=0x80000000U;owner.LoginSubscriber()=0xabcdef01U;
     CHECK(readOnly.MySubscriber()==0x80000000U && readOnly.LoginSubscriber()==0xabcdef01U);
+    CHECK(readOnly.Handle()[0]=='H' && readOnly.Handle()[1]=='J' && readOnly.Handle()[2]==0);
 }
 
 // 기존 독립 기본/부분 중괄호 입력은 자기 저장소를 소유하는 값 생성으로 보존한다.

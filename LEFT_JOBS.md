@@ -2,7 +2,7 @@
 
 cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용자 확인, 재개 절차**를 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-07 재개 진행:** 실행 제품은 **1051 / 11.01**이다. 실제 신전명령/확인WORD·event4의 현재Fort 지역→ViewMeta 큐와 입력/저장 뒤State19 요청을 연결했다. 전체 목표는 미완료이며 **State19/CS·메타 부모→나머지 송신·endpoint/서버·LAN writer/decoder·Outpost/checking5→한국어 후속→Edit 시나리오 UI** 순서다. 지정된 공격/포획/희생/승리·사용자 확인·MP/신규 단위·공중3종 전용 검사는 제외한다.986까지의 상세 이력은[보관본](LEFT_JOBS.old.md#archive-20261106-through-986)에 있다.
+**2026-11-07 재개 진행:** 실행 제품은 **1051 / 11.01**이며1052에서 사용자 제보 SubscriberGlobalsTests C2607을 수정했다(같은 파일 컴파일/기존7검사 통과·게임EXE 불변). 실제 신전명령/확인WORD·event4의 현재Fort 지역→ViewMeta 큐와 입력/저장 뒤State19 요청을 연결했다. 전체 목표는 미완료이며 **State19/CS·메타 부모→나머지 송신·endpoint/서버·LAN writer/decoder·Outpost/checking5→한국어 후속→Edit 시나리오 UI** 순서다. 지정된 공격/포획/희생/승리·사용자 확인·MP/신규 단위·공중3종 전용 검사는 제외한다.986까지의 상세 이력은[보관본](LEFT_JOBS.old.md#archive-20261106-through-986)에 있다.
 
 ## 0. 재개 전 확인 사항
 
@@ -15,13 +15,13 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 | 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반31+데모3의 마지막 전체 진입 검증은 **645의644 제품**이며 현재 제품의 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
 | EXE SHA-256 | `ac9dd246e2bf5c574fedbf90871cf08ae50d9cecb3e6d5e13bfbe480d89e6fd8` (1051 / 11.01, 12,219,904바이트) |
-| 최신 빌드·집중 검사 | **1051 Release 종료0·경고/오류0.** 신규 MP/단위/게임/통신 검사0. [1051 기록](docs/exe/cpp-vortex-command-descend-20261107.md)·`cpppj/vortex-command-descend-20261107.json`. |
+| 최신 빌드·집중 검사 | 게임1051 Release 종료0·경고/오류0. **1052 사용자 제보 C2607 재현/수정: 해당 실제 파일 Release 종료0·경고/오류0·기존7검사 통과.** [1052 기록](docs/exe/cpp-subscriber-globals-compile-fix-20261107.md). 전체 테스트 대상 빌드/전체 통과는 아니다. 신규MP/게임/통신0. |
 | checking 잔여 | **5함수=부모2+부분0+MP분류3.** 1014에서004b8cb0 전체 몸체/현재 진단·수동 입력을 연결했다. 완료부모40/부분6다. 메타맵2표/004b02d0·Descend/004b4df0/004b8b20 등은3절8번 잔여다. |
 | 최신 정적 감사 | **1051:4dbac0/492770·event4/46f650/5a0·4b3620/3760·4d7627 입력과 보호 명령 이름표를 대조했다.** 02000013은ViewMeta이며 State19/CS 실제부모는 후속이다. |
 | 마지막 GUI | **984 실제 단독MCP 1실행:** 격리1920×1080 tutorial1 진입·비정지100프레임 대기·WM_CLOSE 종료0, 입력5/관측7·PNG 확인·설치1351개/보호 불변. LAN/공격/포획/희생/승리/물리 입력 검증이 아니다. |
 | 전체 검사 기준 | 활성 솔루션83프로젝트: Application78(검사 이름73/게임1/probe·dump4), 라이브러리2, Utility3. 현재 제품의 전체 검사 통과 기록은 없다. 과거 전체 결과는 보관본, 알려진 실패/기준선 판정은2.5절을 따른다. |
 | 전체 34·ZIP | 645의644 제품, 최종34/34 진입·비정지 시각 증가·창DC RGB·Native Frame 확인. ZIP SHA-256 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73`, 1376항목/게임 자산1358개, 한글😀 경로 압축 해제 실행 확인 |
-| 보호 기준 | **987에서 새로 고정한 AGENTS.md·원본/CD/fixture2800파일을1051 종료 때도 모두 불변으로 확인했다.** 새 fixture 없음. 다른 세션의 DN/WB 파일은 보존하고 CP 커밋에서 제외한다. 원시 기준은 `extracted/cpp-resume-1051/protected-before.json`이다. |
+| 보호 기준 | **987에서 새로 고정한 AGENTS.md·원본/CD/fixture2800파일을1052 종료 때도 모두 불변으로 확인했다.** 새 fixture 없음. 다른 세션의 DN/WB 파일은 보존하고 CP 커밋에서 제외한다. 원시 기준은 `extracted/cpp-resume-1052/protected-before.json`이다. |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 
 ### 0.2 재개 절차
@@ -309,6 +309,10 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 
 1050은 `11fbb988 / 20261107-66 CP`로 커밋됐다.1051은 네 신전VT의 실제 명령/확인WORD·같은 섬 사제 검사/51h 요청과Descend event4의 실제Fort지역→현재서버/ViewMeta 큐를 연결했다. 일반 입력의 서버 검증/무효설정과 현재Territory/전체Fort 저장 뒤State19 요청을 연결했다. 이름표상02000013은ViewMeta이며 State19/CS 실제부모는 아직 미연결이다.Release 종료0·경고/오류0·보호2800불변·신규MP/단위/게임/통신0이다. [1051 기록](docs/exe/cpp-vortex-command-descend-20261107.md). 다음은State19/CS·메타와 LAN 나머지→한국어 후속→시나리오 UI다.
 
+### 0.68 최근 단위 — 1052 사용자 제보 SubscriberGlobalsTests C2607
+
+1051은 `da2bf5b8 / 20261107-68 CP`로 커밋됐다.1052는 사용자 제보의40행/50열 C2607을 같은 실제 파일로 재현하고, Handle64BYTE 추가 뒤 남은 전체클래스8BYTE 단언을 실제 필드 폭/참조·이름 버퍼 계약 검사로 교정했다. 제품1051/EXE는 불변이다. 해당 파일 격리Release 종료0·경고/오류0·기존7검사 통과·보호2800불변이며 전체테스트/게임/통신 검사는 하지 않았다. [1052 기록](docs/exe/cpp-subscriber-globals-compile-fix-20261107.md). 제보 건 해결, 다음은State19/CS·메타와 기존 LAN 나머지다.
+
 ## 1. 현행 목표
 
 ### 1.1 cpppj 단계 (AGENTS.md 기준)
@@ -374,6 +378,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 
 ### 2.1 완료 범위 색인
 
+1052에서 사용자 제보 SubscriberGlobalsTests.cpp의 구형 크기 단언/C2607을 수정하고 같은 파일의 기존7검사 통과를 확인했다. 게임 실행 제품은1051 그대로다([1052 기록](docs/exe/cpp-subscriber-globals-compile-fix-20261107.md)).
+
 1049의 제외 방송 진단에 이어1050에서 실제 caller004dc050/51h·004dbce0의 Territory/표면·자산 정리·마지막 섬과 기존 Tick/event3를 연결했다. 1051에서 신전command/event4·ViewMeta 저장/State19 요청까지 연결했다. State19/CS·메타의 실제 부모는 남는다([1051 기록](docs/exe/cpp-vortex-command-descend-20261107.md)).
 
 아래의 완료는 **표에 적힌 구현·대조 범위**다. 원본 전체 동일성이나 최신 제품의 전체 회귀 완료를 뜻하지 않는다. 단위별 원문 관측·검사 수·최초 실패·교정 내역·제품 해시는 [정리 전 전체 원문](LEFT_JOBS.old.md#archive-20261106-through-986)과 각 근거 문서에 보존했다. 과거 검사 수와 미연결 예고를 반복 나열하지 않는다.
@@ -427,6 +433,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 | Graph/글꼴/사용자 제보 | 대표 Graph와 캐시 수명은721~724, 비ASCII 글꼴 경계는774, 제보 2건은677/678 완료. 글꼴/플레이 한계는2.5절과3절5~7번을 따름 |
 
 ### 2.5 이월한 검사 실패·표시/환경 한계
+
+- **사용자 제보 C2607 해결(1052):** SubscriberGlobalsTests.cpp(40,50)의 전체클래스8BYTE 단언은1011의Handle64BYTE 추가와 불일치했다. 실제 필드/참조 계약으로 교정해 해당 파일 Release컴파일/기존7검사를 통과했다. 다른 테스트 파일/전체 솔루션 통과로 확대하지 않는다.
 
 - **전체 검사 최신 통과 아님:** 938의68집중 대상 중48완전 통과/20실패 관측과 그 뒤의 개별 통과를 구별한다. `guide_release`151개와 `startup_file_names`3개(`names.Index()`)는6차 이전 HEAD `1f5b4177`에서도 같은 실패를 확인했다. `world_generation`은 같은 `CampaignSessionTests`1028의1024×768 건물 스프라이트 비교/장치 미연결 계열이며 기준선 개별 비교는 하지 않았다.
 - **분류·원인 조사 잔여:** 당시 `file_tests`5, `pop_context`29, `menu_session`3, `mission_entry`1, `guide_fort_request`1, `renderer_presentation`1 및 `startup_*`/`file_directory`의 경로 고리 실패가 있었다. 후속 개별 단위 통과를 이 이름들의 최신 전체 재검사로 쓰지 않는다. 허용된 집중 검사에서 해당 실패를 다시 만나면 현재 제품으로 원인을 가리고 수정하며, 문서 정리만으로 통과 처리하지 않는다. 전체 CTest 반복은 사용자 실행 빈도 정책을 따른다.

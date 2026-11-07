@@ -1,0 +1,60 @@
+{
+  "unit": 1052,
+  "type": "사용자 제보 테스트 컴파일 수정",
+  "host": "HJOW-Athlon",
+  "product": {
+    "version": "11.01",
+    "unit": 1051,
+    "exeUnchanged": true,
+    "exeSize": 12219904,
+    "exeSha256": "ac9dd246e2bf5c574fedbf90871cf08ae50d9cecb3e6d5e13bfbe480d89e6fd8"
+  },
+  "issue": {
+    "file": "cpppj\\tests\\SubscriberGlobalsTests.cpp",
+    "line": 40,
+    "column": 50,
+    "code": "C2607",
+    "reproduced": true,
+    "beforeBuildExit": 1,
+    "cause": "1011/bed549ff에서 현재 사용자 이름64BYTE가 추가됐지만 전체 클래스8BYTE 단언이 남음"
+  },
+  "change": [
+    "전체 클래스 크기 대신 두 실제 DWORD 폭/const참조 반환 검증",
+    "별도64BYTE Handle의 mutable/const참조·0초기화/같은 주소와 두 DWORD 변경 뒤 보존 검증",
+    "기존 복사/이동 금지·초기값·Subscriber alias 검사 유지"
+  ],
+  "sourceSha256": {
+    "before": "1eda584d573a32e8dcb00e3e00444c72d6fb2574535a4cb5d2c0fc7576b8c177",
+    "after": "ed7db806ca3361aa415057f0e334944fe8c3c7d4d7dccddc1cd938cf4b91b0fa"
+  },
+  "verification": {
+    "compiler": "MSVC/Visual Studio18 2026·MSBuild18.11.1",
+    "standard": "C++20",
+    "configuration": "Release/x64",
+    "sameActualSourceFile": true,
+    "sameProductLibrary1051": true,
+    "afterBuildExit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "existingTestCasesPassed": 7,
+    "failedChecks": 0,
+    "newTestCases": 0,
+    "target": "격리 subscriber_globals_check",
+    "beforeLog": "extracted\\cpp-resume-1052\\before-build.log",
+    "afterLog": "extracted\\cpp-resume-1052\\after-build.log",
+    "testLog": "extracted\\cpp-resume-1052\\focused-tests.log",
+    "wholeNetstormTestsBuilt": false
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1052\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remainingGoal": "State19/CS·메타 부모와 기존 LAN 나머지→한국어 후속→시나리오 UI"
+}
