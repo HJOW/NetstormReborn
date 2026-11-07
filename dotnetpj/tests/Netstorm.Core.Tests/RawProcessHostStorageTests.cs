@@ -133,4 +133,153 @@ public sealed class RawProcessHostStorageTests
         Assert.Equal(KernelShape.CdProcessCapacity, cdHost.Kernel().Capacity());
         Assert.True(cdHost.UsesKernel(cdHost.Kernel()));
     }
+
+    /// <summary>같은 188개 타입으로 대여 장면을 만든다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    private static (RawSidPool Pool, RawProcessHostStorage Storage, ProcessHostRuntimeBindings Runtime) LeaseScene()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var storage = new RawProcessHostStorage(pool, types, new RawAuthorityState(), new UIntBox { Value = 122u }, new RawGameAuxState());
+        var destroy = new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types);
+        var runtime = new ProcessHostRuntimeBindings { Destroy = destroy };
+        return (pool, storage, runtime);
+    }
+
+    /// <summary>첫 사용에 안정된 Host를 만들고 같은 주소를 유지한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    [Fact]
+    public void HostIsStableAndWired()
+    {
+        (RawSidPool pool, RawProcessHostStorage storage, ProcessHostRuntimeBindings _) = LeaseScene();
+        Assert.Same(storage.Host(), storage.Host());
+        Assert.Same(pool, storage.Host().Pool());
+        Assert.True(storage.Host().HasOnlyRegularProcesses());
+    }
+
+    /// <summary>중복·다른 풀·빈 묶음은 현재 바인딩을 바꾸기 전에 거부한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindGuardsSingleLease()
+    {
+        (RawSidPool pool, RawProcessHostStorage storage, ProcessHostRuntimeBindings runtime) = LeaseScene();
+        Assert.Throws<ArgumentException>(() => storage.Bind(null!));
+        Assert.Throws<ArgumentException>(() => storage.Bind(new ProcessHostRuntimeBindings()));
+        var foreignPool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var foreignTypes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var foreignDestroy = new RawSquidDestroy(foreignPool, new RawUnpop(foreignPool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), foreignTypes);
+        Assert.Throws<ArgumentException>(() => storage.Bind(new ProcessHostRuntimeBindings { Destroy = foreignDestroy }));
+        runtime.Factory = new RawSquidFactory(foreignPool, foreignTypes);
+        Assert.Throws<ArgumentException>(() => storage.Bind(runtime));
+        runtime.Factory = null;
+        using (RawProcessHostStorage.Use first = storage.Bind(runtime))
+        {
+            Assert.Throws<ArgumentException>(() => storage.Bind(runtime));
+            Assert.Throws<ArgumentException>(() => storage.BindLegacyAllocationReclaim(_ => { }));
+        }
+    }
+
+    /// <summary>같은 대여의 증빙과 현재 잔류 종류를 확인하고 실제 바인딩을 반납한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ClearAndReturnPassProof()
+    {
+        (RawSidPool _, RawProcessHostStorage storage, ProcessHostRuntimeBindings runtime) = LeaseScene();
+        using (RawProcessHostStorage.Use lease = storage.Bind(runtime))
+        {
+            RawProcessHostStorage.ClearPass pass = lease.ClearForState();
+            RawProcessHostStorage.Returned returned = lease.ReturnForState(pass);
+            Assert.Same(storage.Kernel(), returned.Kernel);
+            Assert.Throws<ArgumentException>(() => lease.ReturnForState(pass));
+        }
+
+        using (RawProcessHostStorage.Use next = storage.Bind(runtime))
+        {
+            Assert.NotNull(next);
+        }
+    }
+
+    /// <summary>대여 없는 Clear와 진행 중 호출·비정기 잔류의 반납을 거부한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReturnGuardsProofAndResiduals()
+    {
+        (RawSidPool _, RawProcessHostStorage storage, ProcessHostRuntimeBindings runtime) = LeaseScene();
+        var stray = new RawProcessHostStorage.Use(storage, runtime);
+        stray.Dispose();
+        Assert.Throws<InvalidOperationException>(() => stray.ClearForState());
+        using (RawProcessHostStorage.Use lease = storage.Bind(runtime))
+        {
+            RawProcessHostStorage.ClearPass pass = lease.ClearForState();
+            using (new RuntimeCallGuard(runtime))
+            {
+                Assert.Throws<InvalidOperationException>(() => lease.ReturnForState(pass));
+            }
+
+            var plain = new SquidProcess();
+            plain.HostLink = storage.Host();
+            storage.Kernel().Add(plain);
+            Assert.Throws<InvalidOperationException>(() => lease.ReturnForState(pass));
+            storage.Kernel().Remove(1u);
+            RawProcessHostStorage.Returned returned = lease.ReturnForState(pass);
+            Assert.Same(storage.Kernel(), returned.Kernel);
+        }
+    }
+
+    /// <summary>raw 외부 커널의 현재 월드만 회수 callable을 소유한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LegacyReclaimBindsSingleWorld()
+    {
+        (RawSidPool _, RawProcessHostStorage storage, ProcessHostRuntimeBindings _) = LeaseScene();
+        Assert.Throws<ArgumentNullException>(() => storage.BindLegacyAllocationReclaim(null!));
+        int seen = -1;
+        Action<int> reclaim = storage.BindLegacyAllocationReclaim(sid => seen = sid);
+        Assert.Throws<ArgumentException>(() => storage.BindLegacyAllocationReclaim(_ => { }));
+        reclaim(0);
+        storage.ReclaimForAllocation(9);
+        Assert.Equal(9, seen);
+    }
+
+    /// <summary>현재 가상 삭제가 없으면 소진 복구를 명시 실패한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReclaimRequiresCurrentDestroy()
+    {
+        (RawSidPool _, RawProcessHostStorage storage, ProcessHostRuntimeBindings runtime) = LeaseScene();
+        Assert.Throws<InvalidOperationException>(() => storage.ReclaimForAllocation(5));
+        string seen = string.Empty;
+        runtime.Asset = new SquidDestroyHooks
+        {
+            Emit = @event =>
+            {
+                Assert.Equal(SquidDestroyEffect.DestroyDependent, @event.Effect);
+                Assert.Equal(5, @event.Sid);
+                Assert.Equal(1ul, runtime.ActiveCalls);
+                seen = "emitted";
+            },
+        };
+        using (RawProcessHostStorage.Use lease = storage.Bind(runtime))
+        {
+            storage.ReclaimForAllocation(5);
+            Assert.Equal("emitted", seen);
+        }
+
+        Assert.Equal(0ul, runtime.ActiveCalls);
+    }
+
+    /// <summary>생성 실패·일반 종료에서 자기 대여가 만든 객체만 반납한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UseDrainReturnsOwnedOnly()
+    {
+        (RawSidPool _, RawProcessHostStorage storage, ProcessHostRuntimeBindings runtime) = LeaseScene();
+        var use = storage.Bind(runtime);
+        var owned = new SquidProcess();
+        owned.HostLink = storage.Host();
+        owned.RuntimeLink = runtime;
+        storage.Kernel().Add(owned);
+        var foreign = new SquidProcess();
+        storage.Kernel().Add(foreign);
+        use.DrainOwnedForShutdown();
+        Assert.Null(storage.Kernel().Get(1u));
+        Assert.NotNull(storage.Kernel().Get(2u));
+        use.Dispose();
+        using (RawProcessHostStorage.Use next = storage.Bind(runtime))
+        {
+            Assert.NotNull(next);
+        }
+    }
 }
