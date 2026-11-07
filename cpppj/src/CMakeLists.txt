@@ -10,6 +10,8 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+# 기록 재생의 원문 판독/180BYTE Run 몸체를 컴파일한다. 실제 Client/Kernel 부착은 후속 연결 단위에서 수행한다.
+target_sources(netstorm PRIVATE client/RawBuildReplay.cpp client/RawBuildReplay.h)
 # 메모리 실패의 원문 부모와 실제 Run 등록 수명·Client 종료 연결을 함께 빌드한다(979).
 target_sources(netstorm PRIVATE o/RawAllocationFailure.cpp o/RawAllocationFailure.h client/ClientAllocationFailure.cpp platform/ScopedNewHandler.h)
 # 원문 TCP 프레이밍/현재 연결표를 사용하는 LAN 전송 부품을 컴파일한다. 실제 Login/UI 접합은 후속 단위다(982).
