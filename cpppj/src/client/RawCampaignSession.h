@@ -183,8 +183,10 @@ struct CampaignCameraCommitContext {
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct ClientBuildReplayGlobals; // 같은 Client의 현재 재생 playing과 객체를 장기 소유권으로 빌린다.
 struct ClientNsInfoGlobals; // 같은 Client의 현재 서버 선택/시작 목록이며 새 접속이나 서버 조회를 만들지 않는다.
+class ClientChallengeGlobals; // 실제 CS 포인터/기록과 공통 배치 좌표의 Client 소유자다.
 struct RawCampaignSessionServices {
     std::shared_ptr<ClientNsInfoGlobals> nsInfoGlobals; // Descend의 현재0054db4c를 신전 큐/State19 요청이 같은 주소에서 읽는다.
+    std::shared_ptr<ClientChallengeGlobals> challengeGlobals; // 메타 이후 로그인 응답도 같은005467d8을 현재 참조로 빌린다.
     std::function<void(const CampaignCameraCommitContext&)> cameraCommit; // 실제497960의 커서/화면/dirty/Gump 장치다. 생략된 실제 호출은 두setter/noop로 대체하지 않는다.
     std::function<ScreenPoint()> cameraScreenSize; // 34h 수신이 현재005c78f0/f4 논리 화면 크기를 읽는다. 지도 Gump 크기나 호스트 표시 크기와 구별한다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> developerQueue; // cr/신전 ViewMeta의452fe0을 같은 실제 입력 큐에 넣고 직접 UI/State 변경으로 대체하지 않는다.

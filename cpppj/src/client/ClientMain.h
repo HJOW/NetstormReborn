@@ -59,6 +59,7 @@ class ClientGameplayGlobals; // 실제 현재 Player/커서/미션 전역과 짧
 struct ClientChatWindowGlobals; // 실제 Chat 현재 전역과 공유 로그의 장기 소유자다.
 struct ClientHtmlWindowGlobals; // 같은 Client의 HTML 수/serial/종료 시각 소유자다.
 struct ClientNsInfoGlobals; // 실제 NSInfo/zone/선택 서버와 이름 버퍼의 장기 소유자다.
+class ClientChallengeGlobals; //005467d8 CS 객체/기록·최초 배치 좌표를 Client 수명에 소유한다.
 struct ClientAudioOptions;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
@@ -213,6 +214,7 @@ public:
     const std::shared_ptr<ClientHtmlWindowGlobals>& HtmlWindowGlobals() const; // 같은 장기 HTML 전역을 빌린다.
     const std::shared_ptr<ClientChatWindowGlobals>& ChatWindowGlobals() const; // 같은 실제 Chat 현재/공유 로그 상태를 빌린다.
     const std::shared_ptr<ClientNsInfoGlobals>& NsInfoGlobals() const; // 현재 NSInfo와 서버 이름을 같은 고정 주소에서 빌린다.
+    const std::shared_ptr<ClientChallengeGlobals>& ChallengeGlobals() const; // 현재 CS 슬롯/기록을 빌리며 조회 자체로 객체를 생성하지 않는다.
     const std::shared_ptr<ClientChatManagerGlobals>& ChatManagerGlobals() const; //실제 manager 소유자를 빌리며 조회로 공통 startup을 실행하지 않는다.
     const std::shared_ptr<ClientStaticStrings>& StaticStrings() const; // 같은 고리의 실제 수명을 빌리며 조회 자체는 예약/할당하지 않는다.
     const std::shared_ptr<ClientDotCommandGlobals>& DotCommandGlobals() const; //최초 say를 보존하는 같은 장기 등록 표를 빌린다.
@@ -338,6 +340,7 @@ private:
     std::shared_ptr<ClientHtmlWindowGlobals> htmlWindowGlobals_; // 표시 부모 교체보다 오래 유지하는 실제 HTML 전역이다.
     std::shared_ptr<ClientChatWindowGlobals> chatWindowGlobals_; // 표시 부모 교체보다 오래 유지하는 공유 상태다.
     std::shared_ptr<ClientNsInfoGlobals> nsInfoGlobals_; // 모든 실제 NSInfo 자식/문자 소비자보다 오래 유지한다.
+    std::shared_ptr<ClientChallengeGlobals> challengeGlobals_; // Session/메타 전환이 같은 현재 CS와 기록·좌표를 장기 대여한다.
     std::shared_ptr<ClientChatManagerGlobals> chatManagerGlobals_; //같은 Client의 현재 manager/할당을 보유하며 Session마다 재구성하지 않는다.
     std::shared_ptr<ClientStaticStrings> staticStrings_; // 메뉴/Session보다 먼저 만들고 그 소비자 뒤에 반납하는 원문 임시 고리다.
     std::shared_ptr<ClientDotCommandGlobals> dotCommandGlobals_; //menu/Session보다 먼저 구성한 실제 인접 표이며 현재 count를 별도로 복제하지 않는다.

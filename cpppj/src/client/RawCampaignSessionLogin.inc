@@ -25,7 +25,8 @@ struct RawCampaignSession::Impl::Login {
     bool& simul{s.localStateGlobals->Simulconnect()};std::uint32_t& adjust{s.gameplayGlobals->GameAux()->TerrainEnabled()};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},localTitle{};std::uint8_t& battleByte{s.localStateGlobals->BattleByte()}; //State의 현재 입력과 생성/Zone 보정은 같은 Client 수명이며 독립 검사만 별도 배경 첫BYTE를 사용한다.
     std::uint8_t& title{s.services.htmlWindowGlobals ? reinterpret_cast<std::uint8_t&>(s.services.htmlWindowGlobals->text.background[0]) : localTitle}; //현재 HTML 배경80BYTE의 첫BYTE만 같은 주소로 빌린다.
     std::uint32_t& activeStamp{s.connectionActivityGlobals->ActiveStamp()};std::uint32_t& zoneWord{s.connectionActivityGlobals->ActiveZoneWord()}; // 두 활동 표 사이005c8540/544의 실제 현재 Zone 출력을 직접 빌린다.
-    std::uint32_t pendingStamp{},beginSeed{},battleSeed{},burst{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
+    std::uint32_t pendingStamp{},beginSeed{},battleSeed{},burst{},localOutpost{}; // 독립 Login만 실제 Client 없는 CS0 입력을 자체 보관한다.
+    std::uint32_t& outpost{s.services.challengeGlobals ? s.services.challengeGlobals->Current() : localOutpost}; //005467d8의 현재 객체 존재를 메타/일반 Session이 같은 주소에서 읽는다.
     std::uint32_t& predictable{s.core.pool.PredictableCursorValue()}; // 실제 할당/Reset과 같은005424b0을 빌리며 이전 지역 사본0을 사용하지 않는다.
     std::uint32_t& archipelago{s.gameplayGlobals->GameAux()->ArchipelagoPercent()}; // 같은bb4의 metadata와 군도 강제 밀도를 Session 교체 뒤에도 공유한다.
     std::uint32_t& clockStamp{s.gameplayGlobals->BattleClockStamp()};std::uint32_t& baseClock{s.gameplayGlobals->BattleClockOrigin()}; //메시지와같은00594fb0/4의Clientowner를로그인/타이머/수신도직접쓴다.

@@ -1,0 +1,64 @@
+{
+  "unit": 1053,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "CS 객체의 실제 기록/최초 좌표 생성·재사용과 Client/로그인 같은 현재 슬롯 연결",
+  "sourceFunctions1078": [
+    "0042cec0",
+    "0042b9c0",
+    "0042ce80",
+    "0042ba10"
+  ],
+  "sourceComparison1072": [
+    "0048d660",
+    "0048da00"
+  ],
+  "layout1078": {
+    "bytes": 21328,
+    "battleOffset": 8,
+    "battleStride": 292,
+    "battleCount": 10,
+    "participantOffset": 2928,
+    "participantStride": 460,
+    "participantCount": 40
+  },
+  "implemented": [
+    "같은 Client 수명의 CS 현재DWORD/실제 할당/9쌍 ring·40쌍 grid/현재 크기 전역",
+    "새 CS의21328BYTE 구성 및 header→참가자40→전투10 지우기",
+    "기존 CS의listsInitialized 진단 정상 복귀→현재 객체 재조회/기록 재사용",
+    "보호PE 상수/Native float32 저장 위치·grid0 보존/같은4x4 반복·9누적각도·마지막initialized1",
+    "실제 Client/서비스 공유와 로그인 응답의 outpost 지역0을 같은 CS 슬롯 참조로 교정"
+  ],
+  "notCompleted": [
+    "State19/30의 실제 전체 호출자·메타 입력/표시/후속 상태는 아직 미연결",
+    "명시 CS 파생 반납 부모는 후속·호스트 final owner는 보유 할당 수명을 정리",
+    "Native x87 초월함수/모든 저장 비트의 실제 대조와 전체 CD 복원은 하지 않음"
+  ],
+  "decompilerOutputsChanged": false,
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1053\\build.log",
+    "exeSize": 12221952,
+    "exeSha256": "f4acf92b61922a72a4e632794d65a7b5492191fde98e626f43163efcf1848b01"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1053\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remainingGoal": "State19/CS 실제 부모·메타/나머지LAN·Outpost/checking5→한국어 후속→시나리오 UI"
+}

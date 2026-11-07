@@ -366,3 +366,6 @@ target_sources(netstorm PRIVATE RawMonitorTime.h RawMonitorTime.cpp)
 
 # 신전 가상 명령의 확인WORD와 일반 Descend의 서버/지역 검증을 실제 입력에 연결한다.
 target_sources(netstorm PRIVATE VortexCommandInput.h VortexCommandInput.cpp)
+
+# 메타 서비스의 같은 CS 포인터/실제 할당/좌표를 Client 수명으로 소유한다.
+target_sources(netstorm PRIVATE ClientChallengeGlobals.h ClientChallengeGlobals.cpp)

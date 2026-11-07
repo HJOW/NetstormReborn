@@ -181,6 +181,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.mapView=[&controls] { return controls.MapViewRect(); }; //초기 Reset 전에도 현재 도킹의 같은005ca9cc 영역을 사용한다.
     services.chatGlobals=client.ChatWindowGlobals();services.chatReceive=std::move(ui.receiveChat); // 수신 마스크/무시 상태와 실제 UI는 같은 Client/현재 게임을 빌린다.
     services.nsInfoGlobals=client.NsInfoGlobals(); // 신전/Descend/State 요청이 옵션과 같은 현재 서버 선택을 빌린다.
+    services.challengeGlobals=client.ChallengeGlobals(); // 같은 CS owner를 World/Session에 대여하며 NULL을 생성으로 바꾸지 않는다.
     services.subscriberGlobals=client.SubscriberGlobals(); // Init/Chat/모든 Session이 같은 두 DWORD를 수명째 빌린다.
     services.playerRecords=client.PlayerRecords(); // 실제 Player/factory를 Client 수명에 소유하고 Session 대여 중 재할당하지 않는다.
     services.connectionRegistry=client.ConnectionGlobals(); //실제 로컬 연결도 State 정리와 같은 장기22/32칸을 사용한다.

@@ -593,3 +593,6 @@ target_sources(netstorm PRIVATE RawVortexOwnerDiagnostic.h RawVortexOwnerDiagnos
 
 # 신전51h 수신과 실제 Territory/표면/객체/마지막 섬 정리 부모를 함께 컴파일한다.
 target_sources(netstorm PRIVATE RawVortexDeparture.h RawVortexDeparture.cpp)
+
+# 원문 CS 객체의10개 전투/40개 참가자 기록과 최초 배치 좌표 초기화를 컴파일한다.
+target_sources(netstorm PRIVATE RawChallengeState.h RawChallengeState.cpp)

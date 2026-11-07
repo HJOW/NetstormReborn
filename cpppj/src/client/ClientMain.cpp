@@ -60,6 +60,7 @@
 #include "client/ClientPlayerRuntime.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientNsInfoGlobals.h"
+#include "client/ClientChallengeGlobals.h" // 메타 CS는 같은 Client가 현재 포인터/실제 기록/좌표를 소유한다.
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ClientHtmlWindowGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
@@ -209,6 +210,7 @@ Client::Client(ClientOptions options)
       htmlWindowGlobals_(std::make_shared<ClientHtmlWindowGlobals>()),
       chatWindowGlobals_(std::make_shared<ClientChatWindowGlobals>()),
       nsInfoGlobals_(std::make_shared<ClientNsInfoGlobals>()),
+      challengeGlobals_(std::make_shared<ClientChallengeGlobals>()),
       chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
       staticStrings_(std::make_shared<ClientStaticStrings>(files_.FileNameOwner())),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
@@ -1285,6 +1287,7 @@ const std::shared_ptr<ClientGameplayGlobals>& Client::GameplayGlobals() const { 
 const std::shared_ptr<ClientHtmlWindowGlobals>& Client::HtmlWindowGlobals() const { return htmlWindowGlobals_; } // 같은 실제 장기 HTML 상태를 조회한다.
 const std::shared_ptr<ClientChatWindowGlobals>& Client::ChatWindowGlobals() const { return chatWindowGlobals_; } // 같은 장기 소유자를 조회한다.
 const std::shared_ptr<ClientNsInfoGlobals>& Client::NsInfoGlobals() const { return nsInfoGlobals_; }
+const std::shared_ptr<ClientChallengeGlobals>& Client::ChallengeGlobals() const { return challengeGlobals_; } // 현재 CS owner만 빌리고 Native 생성/목록 초기화는 앞당기지 않는다.
 //현재 manager와 실제 할당의 한 소유자를 반환하며 공통 초기화 시점을 앞당기지 않는다.
 const std::shared_ptr<ClientChatManagerGlobals>& Client::ChatManagerGlobals() const { return chatManagerGlobals_; }
 const std::shared_ptr<ClientStaticStrings>& Client::StaticStrings() const { return staticStrings_; } // 같은 실제 고리의 소유자를 조회한다.

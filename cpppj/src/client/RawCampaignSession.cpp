@@ -83,6 +83,7 @@
 #include "o/RawFortTerritorySave.h"
 #include "o/RawVortexDeparture.h" //51h 수신과 실제 섬/현재 Territory 정리를 같은 Session에 연결한다.
 #include "client/ClientNsInfoGlobals.h" // Descend가 현재 서버 선택을 값 사본 없이 읽는다.
+#include "client/ClientChallengeGlobals.h" // 실제 메타 CS 포인터를 로그인 응답이 같은 현재 참조로 읽는다.
 #include "client/RawProductionMaintenance.h"
 #include "client/RawKnowledgeMenu.h"
 #include "client/RawGameMenus.h"
