@@ -37,8 +37,9 @@ void ChallengeRuntime::Observe(std::uint8_t type,std::span<std::uint8_t> packet,
 void ChallengeRuntime::InstallPacketObservers() {
     auto& dispatch=transport_.PacketHandlers();
     for (const auto type:std::array<std::uint8_t,10>{0x17,0x1d,0x20,0x21,0x22,0x23,0x26,0x41,0x71,0x7b}) { // 원문 실제 송신 타입만 등록하며 기존 receiver를 바꾸지 않는다.
-        dispatch.ObservePacket(type,[this,type](auto packet,auto sending) { Observe(type,packet,sending); });dispatch.Version(type,type==0x41 ? 3:1,0);
+        dispatch.ObservePacket(type,[this,type](auto packet,auto sending) { Observe(type,packet,sending); });dispatch.Version(type,1,0); // 원문41h 등록은1이며 실제 작성기의version3과 별개다. 불일치 정책0도 보존한다.
     }
+    dispatch.RequireLength(0x41,0xffff);dispatch.RegisterDirect(0x41,[this](auto sender,auto*,auto packet) { ReceiveChat(sender,{const_cast<std::uint8_t*>(packet.data()),packet.size()}); }); // 공통 프레임과 Root 직접 호출의 원래 mutable 버퍼를 같은 주소로 빌린다. NULL 연결은 읽지 않는다.
     dispatch.Observe(0x88,{});dispatch.Version(0x88,1,0);dispatch.RequireLength(0x88,98); // 별칭의 실제 고정98BYTE다.
 }
 void ChallengeRuntime::EndParticipant(std::uint32_t challenge,std::uint32_t participant) {

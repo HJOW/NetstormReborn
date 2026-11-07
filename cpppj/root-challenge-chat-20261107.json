@@ -1,0 +1,157 @@
+{
+  "unit": 1077,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "ffa5e47e9a27601cfdd79be84d19f6e0e03853bbd0b44b0a9653ee5655ff5755"
+  },
+  "nativeAudit": {
+    "scope": "같은 호스트의 R 원문/보호 PE·전체 함수 기계어와 실제 소스 등록·전송 접합을 대조한 정적 감사이며 수신 실행 검사가 아님",
+    "registration": "00442950은41h observer446160/version1/mismatch0/receiver476880을 등록한다. writer version3과 등록1을 구별하며 기본 가변 길이ffff를 유지한다.",
+    "wrapper": "00476880: exitRequested→_exit0,CHAL진단1439,복합sender의signed sar8/lowBYTE,양수·현재개수·같은현재CCh토큰 관문. 연결NULL 허용·추가local/active필터 없음.",
+    "body": "004512b0:첫NUL문자열복사→.test/.test1 부분검색→LF수/관리자1예외→~4공백쌍→CRT타이머/제한→전체또는개별/감시자 순서.",
+    "command": "00451160/449ef0은대소문자구분/부분검색이다.450ff0의특별41h는bufferLen=strlen(응답),nameLen1/빈이름/recipient0이며recipient의첫0이문자열NUL도맡는다.",
+    "timer": "451890 DWORD차이→signed idiv1000→float저장;penalty=max(signed(count-3),0);threshold>elapsed-penalty일때증가·같으면별도clock으로기준재설정/카운트0.값2/3/6은같은Options를읽고clock이GameClock으로대체되지않음.",
+    "recipients": "446280의nameLen signed/4462b0의bufferLen unsigned.원수신자수를캡처하고addrLen1/첫recipientDWORD를매회현재물리에덮음.첫0..39subscriber일치/실제레코드id로현재연결조회·destination+75=0/발신+74=0또는자기만전송.그뒤연결이있고+75비영인0..39감시자에같은패킷송신.",
+    "broadcast": "addrLen1/첫recipient0이면addrLen0으로바꾸고기존현재40연결Broadcast만수행/감시자꼬리생략.동일RootBroadcast지역패킷을다음CCh로복사하지않아앞수신/송신observer의변경도보존.",
+    "bytes": "PE004be518의CP1252 92 아포스트로피와원문줄끝/철자를wire문자열로보존.소스파일은UTF-8.",
+    "mutableContract": "공통DispatchPacketFrame의기존mutable전송물리계약과같다.RegisterDirect의const보기에서원래mutable물리를복구하며실제Root직접입력도vector다.진짜const저장소의수신호출은지원계약이아님.",
+    "hostBoundaries": [
+      "물리범위밖/음수본문시작/없는NUL/불법40칸은명시오류",
+      "원문StringList의힙범위초과와450ff0의반납된스택주소자체는재현하지않고같은논리바이트의호스트owner사용",
+      "실제CRTclock기준/런타임교체와장치·힙/SEH/x87제어어전체동일성은실행미검증"
+    ],
+    "remainingReceiverInventory": [
+      {
+        "type": "0xb",
+        "receiver": "00475070",
+        "status": "pending"
+      },
+      {
+        "type": "0xc",
+        "receiver": "00475040",
+        "status": "pending"
+      },
+      {
+        "type": "0x10",
+        "receiver": "004763d0",
+        "status": "pending"
+      },
+      {
+        "type": "0x83",
+        "receiver": "00476490",
+        "status": "pending"
+      },
+      {
+        "type": "0x11",
+        "receiver": "00475260",
+        "status": "pending"
+      },
+      {
+        "type": "0x12",
+        "receiver": "00475580",
+        "status": "pending"
+      },
+      {
+        "type": "0x16",
+        "receiver": "00475660",
+        "status": "implemented"
+      },
+      {
+        "type": "0x17",
+        "receiver": "00476070",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1c",
+        "receiver": "00476180",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1e",
+        "receiver": "00476700",
+        "status": "pending"
+      },
+      {
+        "type": "0x1f",
+        "receiver": "004767c0",
+        "status": "pending"
+      },
+      {
+        "type": "0x87",
+        "receiver": "00476550",
+        "status": "pending"
+      },
+      {
+        "type": "0x41",
+        "receiver": "00476880",
+        "status": "implemented"
+      },
+      {
+        "type": "0x66",
+        "receiver": "00475f90",
+        "status": "pending"
+      },
+      {
+        "type": "0x67",
+        "receiver": "00476940",
+        "status": "pending"
+      },
+      {
+        "type": "0x68",
+        "receiver": "00476a00",
+        "status": "pending"
+      },
+      {
+        "type": "0x71",
+        "receiver": "00476ac0",
+        "status": "pending"
+      },
+      {
+        "type": "0x80",
+        "receiver": "00476640",
+        "status": "retired-validation-disabled"
+      }
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "chatReceiverAndFullBodyImplemented": true,
+    "sameMutablePacketAndActualSendBindingImplemented": true,
+    "installedFromExistingObserverParent": true,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsInstallOrRun": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "chatOrClockCalls": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "13개Root/CS수신(등록18중구현4/폐기80하나제외)·보조객체/전체초기화·정리",
+    "새R.exe 최종owner/entry와현재Clock/Random·Config/표·파일/주소/기록/전송·실제Install/Run호출",
+    "다른LAN hostname·클라이언트0F존47/서버3BYTE·0F/1d수신·메타/OSlaunch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

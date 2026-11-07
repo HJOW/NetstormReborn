@@ -23,7 +23,7 @@ class ChallengeRuntime final { // 같은 CCh/전송·Root callback보다 오래 
 public:
     ChallengeRuntime(ConnectionState& state,TransceiverTransport& transport,ChallengeStore& challenges,Options& options,ChallengeMessages& messages,ClockState& clock,Random& random,ChallengeRuntimeHooks hooks); // 생성은 서버/소켓/파일을 열지 않으며 같은 프로세스 시계/난수를 빌린다.
     ChallengeRuntime(const ChallengeRuntime&)=delete;ChallengeRuntime& operator=(const ChallengeRuntime&)=delete; // 현재 전역/전역 scratch/콜백 this를 복제하지 않는다.
-    void InstallPacketObservers(); // 실제 CCh 송신이 사용하는 원문 관찰기·버전/고정 길이를 명시 등록한다.
+    void InstallPacketObservers(); // 실제 CCh 송신 관찰기·버전/고정 길이와41h nullable 수신을 명시 등록한다. 수신 버퍼는 원문처럼 쓰기 가능한 전송 물리여야 한다.
     void Login(std::uint32_t challenge,std::uint32_t source,std::span<std::uint8_t> request); //0044e940의 실제 참가자 준비/명단·응답·뉴스/길드 이름 전체 부모다.
     void EndParticipant(std::uint32_t challenge,std::uint32_t participant); //0044e0d0의 Root 통지/전투 재선택·삭제/현재 socket close·명단 제거다.
     std::int32_t Tick(std::uint32_t challenge); //004581e0의 현재 전투 재생성/가상 참가자·명단 송신을 수행하고 원문처럼1을 반환한다.
@@ -39,6 +39,9 @@ private:
     void SendBattle(std::uint32_t challenge,std::uint32_t battle,std::span<std::uint8_t> packet); //0044e430의 유효 전투/8참가자 현재 명단 순서다.
     void Assert(std::string_view expression,std::uint32_t line); // 실제 ch.cpp 진단이 복귀하면 뒤의 원문 쓰기를 계속한다.
     void Observe(std::uint8_t type,std::span<std::uint8_t> packet,std::uint32_t sending); // 원문 동적 길이/진단만 같은 mutable packet에 쓴다.
+    void ReceiveChat(std::uint32_t sender,std::span<std::uint8_t> packet); //00476880의 종료/CHAL 진단·signed 존/현재 토큰 관문을 거쳐 같은41h 물리를 전달한다.
+    void Chat(std::uint32_t challenge,std::uint32_t participant,std::span<std::uint8_t> packet); //004512b0의 명령·줄/빈도 제한·직접 수신자/감시자 전달이며 입력 패킷을 제자리에서 수정한다.
+    bool ChatCommand(std::uint32_t challenge,std::uint32_t participant,std::string_view text); //00451160의 대소문자 구분 부분 검색으로 .test/.test1을 찾으면 실제 특별41h 응답을 보낸다.
     void InitializePlayer(std::uint32_t challenge,std::uint32_t participant,std::span<const std::uint8_t> request); //0044c7b0/후속 실제 버전·주소 필드를 현재 참가자에 쓴다.
     void DeletePlayer(std::uint32_t challenge,std::uint32_t participant); //0044d550/0044c9a0의 전투 소속 정리·로그/188BYTE 지우기다.
     void RecalculateBattleVersions(std::uint32_t challenge,std::uint32_t battle); //0044d130의 현재8참가자+b4/+b2 집계다.
