@@ -554,3 +554,4 @@ cpppj/src/o/RawSavedStateRead.cpp	Netstorm.Core/Original/RawSavedState.cs	455872
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceSeed.cs	b8cadde14fbf9cd9e2d89a3102c5db2d5645c494	port
 cpppj/src/o/RawAuthorityState.h	Netstorm.Core/Original/RawAuthorityState.cs	815fbd67e3d1ed889d6f39d4ededa373c96a6ff8	port
 cpppj/src/client/RawNormalTerrainWorldBinding.h	Netstorm.Core/Original/RawNormalTerrainRequest.cs	2d50804c8e2796f498c79cb79956848b54c5e5f0	port
+cpppj/src/o/RawAmbientWind.h	Netstorm.Core/Original/RawAmbientWind.cs	e5a198df450ae720da38f5110ebc611119ea2f38	port
