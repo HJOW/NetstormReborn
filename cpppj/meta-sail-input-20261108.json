@@ -1,0 +1,143 @@
+{
+  "unit": 1136,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "a949d135 / 20261108-104 CP",
+  "summary": "메타6b/6c·직접/경고억제 확인 e3/fe의 좌석 계산·실제1eh/TCP11·현재 참가자 좌표/Rig와 경고 Tell·설정을 연결했다. 실제 메뉴→큐의 f3/항해 허용 관문과 원문 항해 이름4개도 보완했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1136\\build-first.log",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1136\\build-menu-gate.log",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1136\\build-names.log",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1136\\build.log"
+    ]
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12855296,
+      "sha256": "1d3e4b0de38b6acfcbb7cf73a20efd9c3d40ed1cd4188ed3ec810960863ae2fb"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "f55a053b3fcb8804a3264aa2c3f2f952b8f9e2ed8133f13193c71ec409f96c26"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "0042bd10/0042be00/0042beb0/0041d180/00419520·4d74ed~75f3 C/기계어·두8쌍 표/좌석 순서·14BYTE 헤더·이름표·실제 CS/SHP/TCP11/Rig·송신 전후 부분 효과를 대조했다.",
+  "nativeTables": {
+    "commands": {
+      "005428a4": 33554539,
+      "005428a8": 33554540,
+      "00542a80": 33554659,
+      "00542aec": 33554686
+    },
+    "offsetBits": [
+      0,
+      1065353216,
+      0,
+      3212836864,
+      3212836864,
+      0,
+      1065353216,
+      0,
+      3207922936,
+      3207922936,
+      1060439288,
+      1060439288,
+      3207922936,
+      1060439288,
+      1060439288,
+      3207922936
+    ],
+    "scaleBits": [
+      1056964608,
+      1065353216,
+      1056964608,
+      0,
+      0,
+      1056964608,
+      1065353216,
+      1056964608,
+      0,
+      0,
+      1065353216,
+      1065353216,
+      0,
+      1065353216,
+      1065353216,
+      0
+    ],
+    "packetTemplateHex": "1e010e00",
+    "names": {
+      "00542ee0": {
+        "name": "ChalSailJoinBattle",
+        "address": "005428a4",
+        "code": 33554539
+      },
+      "00542ee8": {
+        "name": "ChalSailPos",
+        "address": "005428a8",
+        "code": 33554540
+      },
+      "005432a0": {
+        "name": "ChalForceJoinBattle",
+        "address": "00542a80",
+        "code": 33554659
+      },
+      "00543378": {
+        "name": "ChalJoinBattleNoWarning",
+        "address": "00542aec",
+        "code": 33554686
+      }
+    }
+  },
+  "nativeEvidenceSha256": {
+    "0040a2c0.asm": "4ce3bd3d983dccd2c9b547da2c8caac1d64b6cebca05ec461cbb05cc73762e56",
+    "00419520.asm": "31f9a2d8d454c3b1b83b8b78d78b5e0b57c843dc569ba656f8b01a281bbc70f2",
+    "0041d180.asm": "dbf1e33b926f577f0887af9b1713d1a952bc23a7e0d6b1e39b78837f7a51b2bf",
+    "0042bd10.asm": "e8da86a3c28b2e2c8779cd466733123c52b4479324d35fdc49009e5fdec2a5a2",
+    "0042be00.asm": "00024a07a111c8747aa601fd5e2a062b47271b2d97bd8cf90408c37647ced254",
+    "0042beb0.asm": "a371378f4393dbdae0ae65e095657cf537d56e1f092b2881a87bdb1fe3d157ae",
+    "004d62b0.asm": "054badcb9bd88942a9476cf5ee1b11b2e54699f6d09522a7b1f1d6fa795374bb"
+  },
+  "orderAudit": {
+    "joinWritesBeforeSend": true,
+    "sailRequeriesAfterSend": true,
+    "realMenuGateIncludesF3AndSail": true,
+    "pressContinuesGeneralInputTail": true
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "실제 MP 동작/수신/메타 마우스 선택 검사는 제외했다.",
+    "MSVC long double과 x87 80비트 중간 정밀도의 전체 입력 일치는 입증하지 않았다.",
+    "BattleDesc의 HTML 이름/문자열 고리와 CS 논리 주소 통합은 후속이며 f3는 현재 내부 객체 메뉴 경로다."
+  ],
+  "remaining": [
+    "메타 월드 마우스 객체 입력/선택 caller·나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ]
+}

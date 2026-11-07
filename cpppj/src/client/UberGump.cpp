@@ -7,6 +7,7 @@
 #include "client/CampaignUserInputServices.h"
 #include "client/ClientCampaignTransport.h" // 같은 실제 World/장기 전역과 공유 전송 수명을 로그인 전에 연결한다.
 #include "client/RitualChoiceInput.h" //의식선택은실제일반명령에서6b요청만작성한다.
+#include "client/NativeMetaSail.h" //의식 패킷6b와 구별되는 일반 입력6b/6c/e3/fe의 원문 항해 소비자다.
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
@@ -371,7 +372,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
             state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
         } else {
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && !IsScenarioObjectCommand(command) && !IsScenarioEffectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x020000f3U && !IsNativeMetaSailCommand(command) && !IsScenarioObjectCommand(command) && !IsScenarioEffectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command)); //실제 메타 f3/항해 소비자까지 연결된 다섯 명령도 같은 메뉴→큐 경계에서 허용한다.
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
@@ -1404,6 +1405,10 @@ void UberGump::Event(InputEvent event) {
     }
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
     if (MultiplayerOptionsEvent(event)) return; // 일반 옵션의 이름/연결 예약도 같은 Guide/Gump 뒤 일반 입력 큐에서 소비한다.
+    NativeMetaSailInputHooks metaSail;metaSail.passedDiags=[this] { return client_.NsInfoGlobals()->passedDiags; };metaSail.noShowWarn=[this] { return client_.Configuration().GetInt("noShowWarnFailedDiags"); };metaSail.serverSelection=[this] { return client_.NsInfoGlobals()->serverSelection; };
+    metaSail.freeSlots=[this](auto battle) { return client_.ChallengeGlobals()->FreeBattleSlots(battle); };metaSail.tell=[this](auto section) { Tell(std::string(section)); };metaSail.suppress=[this] { client_.Configuration().SetInt("noShowWarnFailedDiags",1); };
+    metaSail.join=[this](auto parameter) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("전투 참가 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->JoinBattle(parameter); };metaSail.sail=[this](auto position) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("항해 위치 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->SailPosition(position); };
+    if (DispatchNativeMetaSailInput(event,metaSail)) { recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //누름의 효과 뒤 원문 일반 입력 꼬리를 유지하고 뗌은 장치를 읽지 않는다.
     if (transitionCode==0x020000f3U) { if (!(event.code&InputCode::kRelease)) OpenMetaBattleDescription(std::bit_cast<std::uint32_t>(event.y));return; } //004d8ab5는 Guide/Gump/뗌 뒤·Console/정지 앞에서 현재param2를 설명 모달에 전달한다.
     if (transitionCode==0x020000f5U) { if (!(event.code&InputCode::kRelease)) client_.LocalStateGlobals()->Begin()=1;return; } // ServerForceBattleStart는 원문처럼 Begin만1을 쓰며 다음 타이머가 실제6e를 송신한다.
     if (transitionCode==0x020000acU) { if (!(event.code&InputCode::kRelease)) static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile()));return; } // DelStateFile은4b5880처럼 현재 경로를 작성해 unlink하고 반환을 무시한다. 새 상태 요청/월드 반납을 추가하지 않는다.

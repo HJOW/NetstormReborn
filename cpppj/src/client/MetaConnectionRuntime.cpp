@@ -34,6 +34,8 @@
 #include "o/RawStateBattleOptions.h" //메타도 일반 수신과 같은67h 전체 부모/복사 순서를 사용한다.
 #include "o/RawMissionBattleOptions.h" //현재 공급 반경·TYPE 비용·환불 비율의 같은 순수 getter다.
 #include "client/NativeMetaBattleCreate.h" //23h 생성 부모를 실제 공장·QA·Pop·Rig에 연결한다.
+#include "client/NativeMetaSail.h" //좌석/임의 항해의 서로 다른 현재 기록 쓰기/송신 순서를 연결한다.
+#include "o/RawRiftShapeAccess.h" //같은 현재 전투 TYPE의 C 프레임/포구와 복귀형 진단이다.
 #include "client/ClientMetaBattleObjects.h"
 #include "client/NativeIslandRig.h"
 #include "client/NativeMetaBattleRemove.h" //24h 삭제는 같은 진입 CS와 실제 Rig/Image를 사용한다.
@@ -115,6 +117,7 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         o::ReceiveLocalServerDiscovery(client_.LocalStateGlobals()->State(),Discovery(),sender,packet,receive);
     }); //서버발견은현재36직접쓰기뒤실제Run을동기실행한다.검색토큰비교만인경우Run하지않는다.
     dispatch.Observe(0x1f,{});dispatch.Version(0x1f,1,0);dispatch.RequireLength(0x1f,12); //0040a300의 고정12BYTE/master 준비 통지이며 별도 수신기를 합성하지 않는다.
+    dispatch.Observe(0x1e,{});dispatch.Version(0x1e,1,0);dispatch.RequireLength(0x1e,14); //0040a2c0/0040b380의 고정14BYTE·빈 관찰기이며 수신 부모를 합성하지 않는다.
     dispatch.Observe(0x7c,{});dispatch.Version(0x7c,1,0);dispatch.RequireLength(0x7c,28); //0040b340/0040b380의 고정28BYTE/빈 관찰기다. 게임 로그인 수신은 별도 부모다.
     dispatch.ObservePacket(0x67,[this](auto packet,auto sending) {
         if (!sending) return;if (packet.size()<7) throw std::out_of_range("메타67h 관찰기의 실제7BYTE 부족");const auto first=std::uint32_t(packet[5])|(std::uint32_t(packet[6])<<8);
@@ -162,6 +165,21 @@ void MetaConnectionRuntime::ReceiveRootReply(std::span<const std::uint8_t> packe
     o::ReceiveRootLoginReply(packet,{local.State(),local.MetaZones().records,local.MetaRefresh()},hooks);
 }
 bool MetaConnectionRuntime::CallbackActive() const { return pumping_; } //현재 대여 중인 이 owner를 Native cleanup이 반납하지 않게 한다.
+//실제 포구/SHP 조회 뒤 같은 CS 좌표를 읽고 현재 Rig의 목표만 변경한다.
+NativeMetaSailHooks MetaConnectionRuntime::SailDevices() {
+    NativeMetaSailHooks hooks;hooks.subscriber=[this] { return client_.CurrentSubscriber(); };hooks.send=[this](auto packet) { static_cast<void>(tcp_->SendMutable(11,packet)); };
+    hooks.animate=[this](auto record) { auto& rig=client_.AcquireNativeIslandRig(PeerWord(record,0xb8),0,0);MoveNativeParticipantRig(rig,record); };
+    hooks.seat=[this](auto participant,auto battle,auto seat) {
+        auto& storage=*client_.SurfaceStorage();NativeMetaSeatHooks shape;shape.firstFrame=[&storage](auto type) { return storage.frames.at(type).Run('C').first; };
+        shape.muzzle=[&storage](auto type,auto frame) { const auto& selected=storage.types.at(type);const auto& current=storage.shapes.at(type);o::RiftShapeAccessHooks access;
+            access.typeNumber=[](auto value) { return value.token; };access.frameError=[&storage](auto number,auto index,auto abstract) { storage.RecordDisplayFrameError(number,index,abstract); };access.assertion=[&storage](auto expression,auto file,auto line) { storage.AssertDisplay(expression,file,line); };
+            access.shape=[&storage](auto number,auto index) { const auto& value=storage.shapes.at(number);if (!value.loaded || index<0 || static_cast<std::size_t>(index)>=value.frames.size()) throw std::out_of_range("메타 좌석 진단복귀 뒤 SHP 포구 물리 범위");const auto& header=value.frames[static_cast<std::size_t>(index)];return std::array<float,2>{static_cast<float>(header.muzzleX),static_cast<float>(header.muzzleY)}; };
+            return o::ReadRiftShapeFrame({type,selected.flags1,current.frameCount,current.loaded,selected.maxHitPoints},frame,0,access);
+        };return NativeMetaSeatPosition(*client_.ChallengeGlobals(),participant,battle,seat,client_.GameplayGlobals()->Camera().RendererView(),shape);
+    };return hooks;
+}
+void MetaConnectionRuntime::JoinBattle(std::uint32_t parameter) { JoinNativeMetaBattle(*client_.ChallengeGlobals(),parameter,SailDevices()); } //실제 입력을 선택한 때만 현재 장치를 구성한다.
+void MetaConnectionRuntime::SailPosition(std::array<std::uint32_t,2> position) { SailNativeMetaParticipant(*client_.ChallengeGlobals(),position,SailDevices()); } //송신 뒤 조회하는 현재 참가자와 같은 Rig를 사용한다.
 //설명 모달이 닫히기 전 현재 자기 CS와 권한을 다시 읽고 같은 TCP11/가변 길이 관찰기를 사용한다.
 void MetaConnectionRuntime::SendBattleDescription(std::string_view description) {
     NativeMetaDescriptionSendHooks hooks;hooks.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };

@@ -105,6 +105,10 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto object=ScenarioObjectScriptCode(name);if (object!=0xffffffffU) return object; // 시나리오/메뉴 버튼도 원문 객체 이름표를 공유한다.
     const auto vortex=VortexCommandScriptCode(name);if (vortex!=0xffffffffU) return vortex; // 보호 이름표의 네 항목만 허용하며 신규 메뉴는 추가하지 않는다.
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
+    if (key=="chalsailjoinbattle") return 0x0200006bU; //PE542ee0의 실제 이름이며 현재 진단 경고/좌석 참가 소비자에 연결한다.
+    if (key=="chalsailpos") return 0x0200006cU; //PE542ee8의 실제 이름이며 packed 위치를 현재 항해 소비자가 읽는다.
+    if (key=="chalforcejoinbattle") return 0x020000e3U; //PE5432a0의 실제 경고 확인은 옵션을 바꾸지 않고 직접 참가한다.
+    if (key=="chaljoinbattlenowarning") return 0x020000feU; //PE543378의 실제 확인은 경고 억제 설정 뒤 참가한다.
     if (key=="serverforcebattlestart") return 0x020000f5U; //PE00543330 이름표/00542ac8의 실제 일반 명령이다.
     if (key=="delstatefile") return 0x020000acU; //PE005430e8→005429a4의 실제 저장상태 삭제 명령이다.
     if (key=="statereconnect") return 0x020000abU; //PE005430e0→005429a0의 실제 저장 복구 명령이다.
