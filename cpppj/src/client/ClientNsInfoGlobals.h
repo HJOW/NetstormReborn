@@ -21,6 +21,8 @@ struct ClientNsInfoGlobals {
     std::uint32_t zoneFormat{0x50c894}; //540bac의 실제 초기 형식 문자열 포인터 토큰이다.
     std::uint32_t leaveMenuCommand{0x02000006}; //00542714의현재DWORD다.Leave this Battle행도원문대로이값을읽으며라벨로명령을추측하지않는다.
     std::uint32_t kickoffCommand{0x020000ba}; //005429dc의 같은 현재 명령이며 PlayerInfo 확인 메뉴와 루트 추방 입력이 공유한다.
+    std::uint32_t sortOptionsCommand{0x0200012e},setOptionCommand{0x0200012d}; //00542b80/7c의현재정렬/개별설정명령이며생성메뉴와입력이공유한다.
+    std::uint32_t excludeTypeCommand{0x020000bb},restoreTypeCommand{0x020000bc}; //005429e0/e4의현재제외추가/제거명령이며확인의TYPE/0도같은값을쓴다.
     void LoadServerNames(std::span<const std::uint8_t> file); // 시작 서버 파일의 현재 행을 읽는다. 보호 파일에 쓰지 않는다.
     std::string_view ResolveServerName(const std::function<std::string(std::string_view)>& translate); //47c430→유효 행58f90/58e70의 현재 이름 출력 경계다.
     void ReadServerFields(std::int32_t index,std::span<char> endpoint,std::span<char> name,std::int32_t* subscriber) const; //00458f90의 유효 인덱스에서만 실제 행 parser를 실행한다. 무효이면 기존 출력도 보존한다.

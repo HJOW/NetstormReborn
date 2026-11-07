@@ -1,0 +1,60 @@
+{
+  "unit": 1118,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12662272,
+      "sha256": "678bd319c7ed3b8aac44ce5c887cef3e03e3951e5215898d295afbd1a6a3a83d"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "e17e7b796e38c5a87664525fb11639f981ef5b7a49e3195076c4a5d4ae08e147"
+    }
+  },
+  "staticAudit": {
+    "input": "1115 BattleInfo 전체분기/1114실제writer·67h와실제현재가상Push/Attach를공통분배에등록",
+    "menus": "1116다섯메뉴/실제Fancy·Vertical/문자/Take/하위부착·Current/루트/원시좌표",
+    "choice": "1117지정getter/76주소·현재Client/Xlat정체성과실제글꼴BYTE를현재선택에결합",
+    "knowledge": "492960(type,0,1)의실제mana/현재설명·F760→F4D0동일Deck/전체DWORD조회·112BYTE문자범위",
+    "globals": "52f7e0의같은전역87BYTE/현재13TYPE별칭·네명령현재슬롯과보호PE초깃값대조",
+    "lifetime": "생성때없는Session/전송을미리요구하지않고선택소비시현재owner를조회"
+  },
+  "integration": {
+    "rootHandleBound": true,
+    "playerHandleBound": true,
+    "battleInfoHandleBound": true,
+    "menuChildrenBound": true,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "CS 수신/참가자·전투섬생성·카메라Rig/HTML→1dh/28~33등록/1095송신 상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

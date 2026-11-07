@@ -391,6 +391,7 @@ public:
     std::uint32_t TemplateOwner() const; // 실제00540cac의 템플릿 소유자이며 로컬 소유자와 구별한다.
     std::uint32_t BattleActive() const; // 원문00594fbc의 현재 실제 자산 Battle 관문을 읽는다. Editor/표시phase로 대체하지 않는다.
     std::uint32_t CurrentTechnologyParent() const; // 현재48fc60의 실제 기술 부모다.
+    std::uint32_t MetaMenuType(std::uint32_t address) const; //메타제외메뉴의13개현재TYPE별칭을같은실제Session/Client저장소에서조회한다.임의주소는거부한다.
     void AddRandomObjects(std::uint32_t type,std::uint32_t quantity); //0040dfd0의 고정 범위/지역 난수를 현재 완전 배치/섬/Factory에 연결한다.
     void CreateAt(std::string_view location); //0044c660의 같은 parser/현재 지면·가상Owner/직접HP·frame/Pop을 실제 Runtime에 실행한다.
     void DestroyAt(std::string_view location); //0044c790의 현재점검색/타입·owner필터를같은월드의가상삭제에연결한다.

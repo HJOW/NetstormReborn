@@ -6,6 +6,7 @@
 namespace netstorm::o { class RawPlayerIdentity; } //메타공장이실제Client기록을빌리는조회몸체를반환한다.
 namespace netstorm::client {
 struct PlayerMenuHooks; //실제Client의주소/Chat/현재전역을기존전체Player메뉴에연결한다.
+struct BattleOptionMenuText; //실제선택문자열과현재Xlat저장소의포인터정체성이다.
 class ClientGameplayGlobals;class RawSurfaceStorage; // 초기 HUD와 Session의 실제 장기 저장소다.
 class ClientChallengeGlobals; //메타목록/패널이같은실제CS할당을빌리며별도참가자사본을만들지않는다.
 struct RawNsInfoContext {
@@ -25,5 +26,8 @@ struct RawNsInfoContext {
     std::function<void(const std::function<void(std::span<std::uint8_t>)>&)> status; // 현재 메타 전송 owner를 소비 시점에 조회하며 실제 헤더/11번 송신을 사용한다.
     std::function<void()> kickoffSound; // 현재 실제 음향의 chalKickedoff.wav 우선순위1 재생이다.
     std::function<void(std::uint32_t,std::span<const std::uint8_t>,std::uint32_t)> sendData; // 현재 실제 메타 전송 owner의67h 자료 송신이며 옵션87BYTE도 같은 장치에 전달한다.
+    std::function<std::uint32_t(std::uint32_t)> menuType; //현재Session의실제TYPE별칭만선택시조회한다.별도메뉴상수사본을만들지않는다.
+    std::function<bool(std::uint32_t)> globallyExcluded; //52f7e0의같은현재87BYTE전역옵션을읽는다.편집중인전투옵션과구별한다.
+    std::function<BattleOptionMenuText(std::int32_t,std::uint32_t)> optionChoice; //현재선택getter/원문주소·실제Xlat정체성/원본글꼴BYTE를같은Client에서읽는다.
 };
 }

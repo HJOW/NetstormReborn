@@ -8,6 +8,11 @@ void UberGump::BindMetaNsInfoInput(RawNsInfoContext& context) {
     context.status=[this](const auto& writer) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("NSInfo 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->SendMetaStatus(writer); }; //1fh 실제 헤더가 먼저 작성된 뒤 caller가 CS/음향 부분효과를 수행한다.
     context.kickoffSound=[this] { client_.WorldAudio().Sounds().PlayByName("chalKickedoff.wav",0,0,0,1,0); }; //원문 priority1을 일반 메뉴 소리의0으로 바꾸지 않는다.
     context.sendData=[this](auto key,auto data,auto count) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("NSInfo 자료 송신의 현재 메타 전송 owner 미연결");editor_->metaTransport->SendMetaData(key,data,count); }; //실제 옵션 변경 뒤에만 현재67h/TCP11을 선택한다.
+    context.menuType=[this](auto address) { return client_.GameplayGlobals()->RequireSession().MetaMenuType(address); };context.globallyExcluded=[this](auto type) { return o::BattleTypeExcluded(*missionOptions_,type)!=0; }; //편집중인CS옵션이아닌같은현재전역87BYTE를읽는다.
+    context.optionChoice=[this](auto index,auto selected) {
+        const auto number=std::bit_cast<std::uint32_t>(index);const auto address=o::BattleOptionChoiceAddress(number,selected);auto text=o::BattleOptionChoiceText(number,selected,[this](auto key) { return FontBytes(client_.Translate(key)); });const auto& definition=o::BattleOptionText(number);
+        const auto identity=definition.translateValue ? client_.TranslationIdentity(definition.values[selected],address):std::uint64_t(address);return BattleOptionMenuText{std::move(text),identity}; //표시바이트와현재소유Xlat정체성을구별하며임시string주소를쓰지않는다.
+    };
 }
 // 실제 State19의 World 정리 뒤 같은 Client Fort/Core/CS/Chat 장치를 선택한다.
 o::LocalMissionParentResult UberGump::InstallMetaNativeState(std::uint32_t selected) {

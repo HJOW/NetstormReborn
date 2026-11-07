@@ -4182,6 +4182,17 @@ std::uint32_t RawCampaignSession::TemplateOwner() const { return impl_->playerSt
 std::uint32_t RawCampaignSession::BattleActive() const { return impl_->assetState.inBattle ? 1U : 0U; } // 동일Session의 실제00594fbc 관문이며 새 표시 상태를 만들지 않는다.
 // 원본48fc60의 현재 기술 부모를 값 복사 없이 같은 Player 저장소에서 읽는다.
 std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_->player->CurrentTechnology(); }
+// 각선택위치에서같은현재별칭을읽는다.메뉴전용TYPE값/별도Player나Session을만들지않는다.
+std::uint32_t RawCampaignSession::MetaMenuType(std::uint32_t address) const {
+    auto& s=*impl_;auto& game=*s.gameplayGlobals;auto& aux=*game.GameAux();
+    switch (address) {
+    case 0x5412d0:return s.priestState.movement.priest;case 0x54126c:return s.templeProduct;
+    case 0x5411e8:return aux.WorldDecorationTypes()[0];case 0x5411ec:return aux.WorldDecorationTypes()[2];case 0x5411f0:return game.TerrainBitmaps().fringeType;
+    case 0x5411a8:return s.geyserMinedState.emptyGeyserType;case 0x541240:return aux.GeyserType();case 0x54123c:return aux.EdgeFarmType();
+    case 0x541280:return s.windFlyerType;case 0x541298:return s.rainFlyerType;case 0x5412b0:return aux.GrowingRainBlockerType();case 0x54117c:return s.sunFlyerType;case 0x5412f8:return s.carrierPickupState.silentType;
+    default:throw std::out_of_range("메타 제외 메뉴의 알려지지 않은 현재 TYPE 별칭");
+    }
+}
 // 별도 Player 사본/포획 실행 없이 기존 실제 기술/획득/현재 snapshot 자식을 재사용한다.
 void RawCampaignSession::NotifyPlayerResults() {
     auto& s=*impl_;o::PlayerNotificationHooks hooks;
