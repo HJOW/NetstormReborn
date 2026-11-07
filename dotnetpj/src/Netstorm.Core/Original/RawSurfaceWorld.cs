@@ -14,6 +14,9 @@ public sealed class RawSurfaceWorld
     /// <summary>호출자가 소유하는 같은 전역 TYPE 표다. 조립 때 실제 물리로 옮긴다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
     private readonly IReadOnlyList<OriginalTypeRecord> _types;
 
+    /// <summary>호출자가 소유하는 같은 장기 프레임 표다. 표면·이웃 조회가 프레임 자료를 읽을 때 쓴다. 비우면 빈 목록을 둔다. 2026-11-07 F2d 월드 본체 프레임 소유 이식에서 추가됐다.</summary>
+    private readonly IReadOnlyList<RiftTypeFrames> _frames;
+
     /// <summary>초기 지면에 쓰는 지형 종류 번호다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
     private readonly uint _terrainType;
 
@@ -85,7 +88,8 @@ public sealed class RawSurfaceWorld
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
     /// <param name="terrainType">초기 지면에 쓰는 지형 종류 번호다.</param>
     /// <param name="storage">빌릴 물리 저장소다. null이면 같은 판본으로 새로 만든다.</param>
-    public RawSurfaceWorld(OriginalEdition edition, IReadOnlyList<OriginalTypeRecord> types, uint terrainType, RawSurfaceStorage? storage = null)
+    /// <param name="frames">같은 장기 프레임 표다. null이면 빈 목록을 둔다.</param>
+    public RawSurfaceWorld(OriginalEdition edition, IReadOnlyList<OriginalTypeRecord> types, uint terrainType, RawSurfaceStorage? storage = null, IReadOnlyList<RiftTypeFrames>? frames = null)
     {
         ArgumentNullException.ThrowIfNull(types);
         if (types.Count == 0)
@@ -95,6 +99,7 @@ public sealed class RawSurfaceWorld
 
         _edition = edition;
         _types = types;
+        _frames = frames ?? [];
         _terrainType = terrainType;
         _storage = storage ?? new RawSurfaceStorage(edition);
         _processState = _storage.Processes().State();
@@ -145,6 +150,23 @@ public sealed class RawSurfaceWorld
     /// <summary>생성 때 받은 같은 전역 TYPE 표다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
     /// <returns>TYPE 표다.</returns>
     public IReadOnlyList<OriginalTypeRecord> Types() => _types;
+
+    /// <summary>생성 때 받은 같은 장기 프레임 표다. 비었으면 빈 목록이다. 2026-11-07 F2d 월드 본체 프레임 소유 이식에서 추가됐다.</summary>
+    /// <returns>프레임 표다.</returns>
+    public IReadOnlyList<RiftTypeFrames> Frames() => _frames;
+
+    /// <summary>같은 장기 프레임 표의 수정 가능 범위를 표면·이웃 소비자에게만 빌린다. 새 사본을 만들지 않는다. 2026-11-07 F2d 월드 본체 프레임 소유 이식에서 추가됐다.</summary>
+    /// <returns>생성 때 받은 같은 프레임 목록의 수정 가능 보기다.</returns>
+    public IList<RiftTypeFrames> MutableFrames()
+    {
+        // 원본 span 프레임을 직역한다. 목록 자체가 바뀔 수 있으므로 같은 참조를 빌린다.
+        if (_frames is IList<RiftTypeFrames> mutable)
+        {
+            return mutable;
+        }
+
+        throw new InvalidOperationException("서피스 월드의 실제 프레임 표가 수정 가능한 목록이 아닙니다.");
+    }
 
     /// <summary>빌리거나 새로 만든 같은 물리 저장소다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
     /// <returns>물리 저장소다.</returns>

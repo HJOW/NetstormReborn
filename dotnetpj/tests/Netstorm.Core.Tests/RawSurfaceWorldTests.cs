@@ -451,6 +451,51 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.SetAssetOwner(5, 3u));
     }
 
+    /// <summary>188개 프레임 목록을 만든다. 2026-11-07 F2d 월드 본체 프레임 소유 이식에서 추가됐다.</summary>
+    private static List<RiftTypeFrames> Frames188() =>
+        Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new RiftTypeFrames([])).ToList();
+
+    /// <summary>받은 프레임 표를 그대로 돌려준다. 2026-11-07 F2d 월드 본체 프레임 소유 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FramesReturnsConstructionValues()
+    {
+        // 생성 때 받은 같은 장기 프레임 표 정체성을 검증한다.
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u, null, frames);
+        Assert.Same(frames, world.Frames());
+    }
+
+    /// <summary>프레임 표를 주지 않으면 빈 목록을 두는지 검증한다. 2026-11-07 F2d 월드 본체 프레임 소유 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FramesEmptyWhenMissing()
+    {
+        // 기존 껍데기 호출과의 호환을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Empty(world.Frames());
+    }
+
+    /// <summary>수정 가능한 프레임 보기가 같은 목록 참조인지 검증한다. 2026-11-07 F2d 월드 본체 프레임 소유 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MutableFramesReturnsSameReference()
+    {
+        // 원본 span이 새 사본이 아닌 같은 장기 표임을 검증한다.
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u, null, frames);
+        Assert.Same(frames, world.MutableFrames());
+        Assert.Same(world.Frames(), world.MutableFrames());
+    }
+
+    /// <summary>수정 가능 보기의 쓰기가 읽기 보기에도 보이는지 검증한다. 2026-11-07 F2d 월드 본체 프레임 소유 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MutableFramesMutationVisibleThroughFrames()
+    {
+        // 표면·이웃 소비자의 쓰기가 같은 표에 반영되는 공유 의미를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u, null, Frames188());
+        var replacement = new RiftTypeFrames([]);
+        world.MutableFrames()[3] = replacement;
+        Assert.Same(replacement, world.Frames()[3]);
+    }
+
     /// <summary>같은 풀의 종속 해제 묶음을 만든다. 2026-11-07 F2d 월드 본체 종속 묶음 이식에서 추가됐다.</summary>
     /// <param name="pool">묶을 풀이다.</param>
     /// <returns>같은 풀의 종속 해제다.</returns>
