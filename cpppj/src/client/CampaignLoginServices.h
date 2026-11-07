@@ -9,6 +9,7 @@
 namespace netstorm::o { enum class LocalMissionProgress; } // 진행 종류만 빌리며 상태 분배기를 서비스에 소유하지 않는다.
 namespace netstorm::client {
 struct CampaignLoginServices {
+    std::function<void(std::uint32_t,std::span<const std::uint8_t>)> metaBattleDescription; //일반71h도 실제 현재 CS 자식/가상88·특정 전투 표시를 선택한다.
     std::function<void(std::uint32_t,std::span<const std::uint8_t>)> metaBattleOptions; //일반67h도 현재 CS가 비영이면 같은0042c920/실제음향·NSInfo를 선택한다.
     bool frameLoginTimer{}; // 실제 Client만 원문439ae3 위치에서 타이머를 호출하며 독립 Session은 기존 Pump 호출을 유지한다.
     std::function<std::int32_t(std::string_view,std::int32_t)> configInt; //현재 원본 설정값과 누락 기본값이다.

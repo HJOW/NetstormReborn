@@ -1,5 +1,6 @@
 // 검사 관찰 콜백을 사용하지 않고 현재 클라이언트의 실제 서비스를 빌린다.
 #include "client/CampaignClientServices.h"
+#include "client/ClientMetaBattleDescription.h" //일반71h도 같은 실제 Client의 설명/표시 장치를 빌린다.
 #include "client/NativeMetaBattleOptions.h" //일반 로그인67h도 실제 CS 수신 자식과 같은 현재 장치를 사용한다.
 #include "client/MissionFortRequest.h"
 #include "client/ClientGameplayGlobals.h"
@@ -130,6 +131,7 @@ o::EditorPlayersHooks MakeEditorPlayerClientHooks(Client& client) {
 // State7/13이 호출하는 장치는 사용 시점의 같은 Client 전역/Config/Gump를 조회한다.
 void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& controls,CampaignLoginServices& login) {
     if (client.Edition()!=o::OriginalEdition::Patch1078) return; //10.72의 기존 어댑터를10.78 State 몸체로 덮지 않는다. 장치를 연결할 때 자산/창을 먼저 요구하지 않는다.
+    login.metaBattleDescription=[&client](auto,auto packet) { ReceiveNativeMetaBattleDescription(*client.ChallengeGlobals(),packet,MakeClientMetaBattleDescriptionHooks(client)); }; //CS 비영 관문은 같은 공통 State 등록에 둔다.
     login.metaBattleOptions=[&client,&controls](auto,auto packet) { NativeMetaBattleOptionsHooks receive;receive.owner=[&client] { return client.GameplayGlobals()->player.battleOwner; };receive.log=[&client](auto text) { client.WriteDiagnosticLog(9,text); };receive.guySound=[&client] { client.WorldAudio().Sounds().PlayByName("guy.wav",0,0,0,0,0); };receive.refreshInfo=[&client,&controls] { if (!controls.Menus()) throw std::logic_error("일반67h의 현재 NSInfo 메뉴 장치 미설치");controls.Menus()->RefreshMetaNsInfo(*client.NsInfoGlobals()); };ReceiveNativeMetaBattleOptions(*client.ChallengeGlobals(),packet,receive); }; //현재 CS 존재 관문은 상위 공통 State 부모에 남긴다.
     login.initializeRenderer=[&client] { client.InitializeNativeRendererView(); };
     login.reconnectUi=[&controls] { controls.RecreateUberRoot(); }; //입력/수신에서 선택된 때만 현재 실제 HUD를 원문 순서로 다시 만든다.

@@ -100,6 +100,9 @@ void ClientRendererFrame::RefreshMetaDisplay(bool whole) {
     if (whole) { const auto& colors=client_.screen_->Colors();BuildMetaScene({globals,client_.gameplayGlobals_->Camera().Target(),client_.ChallengeGlobals()->GeometryMode(),client_.ChallengeGlobals()->ZoneGlyphType(),colors.basic[0],colors.basic[7],colors.basic[2],client_.localStateGlobals_->MetaPending()},hooks); }
     else PollMetaDisplay(globals,hooks.display);
 }
+// 설명 수신은 다른 참가자/전투의 Poll 대신 지정한 현재 전투 한 개만 갱신한다.
+void ClientRendererFrame::UpdateMetaBattle(std::uint32_t battle) { const auto globals=MetaGlobals();const auto hooks=MetaDevices();netstorm::client::UpdateMetaBattle(battle,globals.display,hooks.display); }
+void Client::UpdateNativeMetaBattle(std::uint32_t battle) { if (!rendererFrame_) throw std::logic_error("특정 메타 전투의 실제 Renderer owner 미설치");rendererFrame_->UpdateMetaBattle(battle); } //실제 장기 owner로만 위임하며 장치를 생성하지 않는다.
 void Client::RefreshNativeMetaDisplay(bool whole) { if (!rendererFrame_) throw std::logic_error("메타표시의실제Renderer owner미설치");rendererFrame_->RefreshMetaDisplay(whole); } //원문State Poll의두표시위치를같은실제Frame장치에전달한다.
 
 // 장기 Rig의 콜백은 매번 현재 UI/Session을 다시 찾고 CS Image owner는 최종 반납까지 pin한다.

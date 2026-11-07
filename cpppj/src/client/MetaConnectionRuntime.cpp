@@ -29,6 +29,8 @@
 #include "client/LocalServerProcess.h"
 #include "client/RootServerListDisk.h"
 #include "client/NativeMetaBattleOptions.h" //현재CS의실제67h수신/음향·NSInfo갱신을공통등록표에결합한다.
+#include "o/RawStateMetaBattleDescription.h" //일반과 같은71h 전체 observer/State CS 관문이다.
+#include "client/ClientMetaBattleDescription.h" //실제 CS 설명 자식과 현재 표시 장치다.
 #include "o/RawStateBattleOptions.h" //메타도 일반 수신과 같은67h 전체 부모/복사 순서를 사용한다.
 #include "o/RawMissionBattleOptions.h" //현재 공급 반경·TYPE 비용·환불 비율의 같은 순수 getter다.
 #include "client/NativeMetaBattleCreate.h" //23h 생성 부모를 실제 공장·QA·Pop·Rig에 연결한다.
@@ -120,6 +122,7 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         const auto length=std::uint32_t(packet[5])|(std::uint32_t(packet[6])<<8);Put(packet,2,length+7U,2); //0040ae80은진단이복귀한뒤같은현재WORD를다시읽는다.
     });dispatch.Version(0x67,1,0);dispatch.RequireLength(0x67,0xffff); //송신관찰/버전은그대로유지하고수신부모를따로등록한다.
     dispatch.Register(0x67,[this](auto sender,auto&,auto packet) { ReceiveBattleOptions(sender,packet); }); //원문과같이sender/phase/known 관문 없이 전체 State 부모를 호출한다.
+    o::RegisterStateMetaBattleDescription(dispatch,client_.ChallengeGlobals()->Current(),[this](auto,auto packet) { ReceiveNativeMetaBattleDescription(*client_.ChallengeGlobals(),packet,MakeClientMetaBattleDescriptionHooks(client_)); },[this](auto expression) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",0xae3); }); //sender/phase/known/mode 조건을 추가하지 않는다.
     dispatch.Observe(0x23,{});dispatch.Version(0x23,1,0);dispatch.RequireLength(0x23,20); //0040b380의 빈 관찰기와 보호 PE의 고정20BYTE다.
     dispatch.Register(0x23,[this](auto,auto&,auto packet) {
         if (!client_.SurfaceStorage()->ownerMode.challenge) return;if (!client_.ChallengeGlobals()->Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xce6);NativeMetaBattleCreateHooks receive;BindClientMetaBattleObjects(receive,client_);

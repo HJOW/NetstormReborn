@@ -186,6 +186,7 @@
 #include "client/FortCoreDataLoad.h"
 #include "client/ClientSpGlobals.h"
 #include "o/RawPlayerCoreRefresh.h"
+#include "o/RawStateMetaBattleDescription.h" //일반 수신의71h도 같은 실제 observer/CS 부모를 등록한다.
 #include "o/RawSquidSelection.h"
 #include "o/RawCarrierRegular.h"
 #include "o/RawContentPreviewProcess.h"

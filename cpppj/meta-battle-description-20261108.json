@@ -1,0 +1,55 @@
+{
+  "unit": 1132,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12791296,
+      "sha256": "e24bade2324b5eb85349348ff5f4785096496a289ec5967002bcb5143d71b65c"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "a9086b97dc30ca25e49e42d148bd9c62c28d26d9d330f09a8ffa914aedaa4026"
+    }
+  },
+  "staticAudit": {
+    "native": "0040b0d0/0040b330/004b49c0/0042cad0의 전체다음함수경계까지C/기계어와raw.c의71h등록3행·보호PE0052ec40+71h*2의WORDffff를읽었다. 생성 원문 변경0이다.",
+    "state": "일반/메타가 같은 전체observer/버전1,0/가변ffff/현재CS비영관문을 등록한다. 수신 observer는packet본문을읽지않고CS0도자식/packet본문을소비하지않는다. mode/sender/known 조건을추가하지않는다.",
+    "observer": "송신시descLen FF이면원문packet파일ae3진단→현재descLen을다시읽어WORD2=len+10을쓴다. 두등록표의진단경로바이트를대조했다.",
+    "child": "active없으면수준9로그만반환한다.len>41은로그뒤현재번호전투갱신만한다.정상은캐시len의DWORD/BYTE복사→현재len+f8NUL(0이면f8)→f9현재NUL까지7ASCII제어문자만공백→현재기록SID88→현재packet4의특정전투갱신이다.",
+    "effects": "같은실제Client로그/Pool·현재Session display.Update·현재Renderer479c40을사용한다.전체Poll/다른참가자갱신·가짜World/표시성공을만들지않는다.도달한필드/장치만요구하고물리범위외는그위치에서거부한다.",
+    "validation": "Release 빌드/정적 원문 대조/보호2800 확인만 수행한다. 신규 C++ 단위/MP/게임/통신 실행0이다."
+  },
+  "remaining": [
+    "메타 객체 입력/일반 선택 캡처 접합/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
