@@ -597,7 +597,7 @@ cpppj/src/o/RawClockSyncReset.cpp	port			todo	[o-default]
 cpppj/src/o/RawColorMapCache.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawColorSortPrimary.cpp	port			todo	[o-default]
 cpppj/src/o/RawColorSortStartup.cpp	port			todo	[o-default]
-cpppj/src/o/RawCommonOwner.cpp	port			todo	[o-default]
+cpppj/src/o/RawCommonOwner.cpp	port	www/core/raw-common-owner.js	1f00a25a	port	[o-default] WB04-E2: 004adf00 공통 소유자 지정(범위 진단 0x9ff/0xa02·작업장 목록 제거/추가)
 cpppj/src/o/RawConfigFileLoad.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawConnectionActivity.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionCleanup.cpp	port			todo	[o-default]
@@ -894,19 +894,19 @@ cpppj/src/o/RawSquidDestroy.cpp	port	www/core/squid-destroy.js	1f00a25a	port	[o-
 cpppj/src/o/RawSquidDestroyDispatch.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidDisplayParent.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidFinder.cpp	port	www/core/raw-squid-finder.js	1f00a25a	port	[o-default] WB04-B
-cpppj/src/o/RawSquidHitPoints.cpp	port			todo	[o-default]
-cpppj/src/o/RawSquidLevel.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidHitPoints.cpp	port	www/core/raw-squid-word.js	1f00a25a	port	[o-default] WB04-E2: 004adca0 현재 HP DWORD setter(옆 필드 보존)
+cpppj/src/o/RawSquidLevel.cpp	port	www/core/raw-squid-level.js	1f00a25a	port	[o-default] WB04-E2: hasLevel/getLevel/setLevel. fixture squid-level 10.78 행
 cpppj/src/o/RawSquidName.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidNeighbors.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidPoolReset.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidPopParent.cpp	port	www/core/raw-squid-pop-parent.js	1f00a25a	port	[o-default] WB04-E1: 004b02d0 공통 Pop 부모. fixture pop-world-bounds 260행(Point.isValid·float 저장·NaN 단락)
 cpppj/src/o/RawSquidPostPopParent.cpp	port			todo	[o-default]
-cpppj/src/o/RawSquidRegion.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidRegion.cpp	port	www/core/raw-squid-region.js	9cb0547f	port	[o-default] WB04-E2: 004acd20 setter + 3.6②→반영: 기준선 뒤 9cb0547f 가 추가한 004acda0 getter(GetSquidRegion)를 getSquidRegion 으로 이식
 cpppj/src/o/RawSquidSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidTake.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(004af610)
 cpppj/src/o/RawSquidTransmission.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidUnpopParent.cpp	port	www/core/squid-unpop.js	1f00a25a	port	[o-default] WB04-D1
-cpppj/src/o/RawSquidWord.h	port			todo	[o-default]
+cpppj/src/o/RawSquidWord.h	port	www/core/raw-squid-word.js	1f00a25a	port	[o-default] WB04-E2: 004ac220 표면 WORD setter(현재 다리 TYPE 통지)
 cpppj/src/o/RawStartupStateCheck.cpp	exclude-mp			-	[mp-saved-battle]
 cpppj/src/o/RawStateBridgeReset.cpp	port			todo	[o-default]
 cpppj/src/o/RawStateSidLists.cpp	port			todo	[o-default]
@@ -969,9 +969,9 @@ cpppj/src/o/SquidFrame.cpp	port			todo	[o-default]
 cpppj/src/o/SquidFrameBinding.cpp	port			todo	[o-default]
 cpppj/src/o/SquidHash.cpp	port	www/core/squid-hash.js	1f00a25a	port	[o-default] WB04-B
 cpppj/src/o/SquidNameVtables.inc	port			todo	[o-default]
-cpppj/src/o/SquidOwner.cpp	port			todo	[o-default]
+cpppj/src/o/SquidOwner.cpp	port	www/core/squid-owner.js	1f00a25a	port	[o-default] WB04-E2: 소유자 지정(vtable +0x74) 처리기. fixture owner-x86 10.78 행(≥1000)·계약 3장면
 cpppj/src/o/SquidPop.cpp	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 공통 Pop 처리기(pop/popCurrent/supports/옆면·미니맵·전송·진단 연결). 표시(SquidDisplay)와 공통 postPop(SquidPostPop)은 선택 연결 계약만 두고 본체는 이후 단위. fixture pop-x86 10.78 2456단계·pop-vtables 83행
-cpppj/src/o/SquidPostPop.cpp	port			todo	[o-default]
+cpppj/src/o/SquidPostPop.cpp	port	www/core/squid-postpop-state.js	1f00a25a	partial	[o-default] WB04-E2: 장부 구조 SquidPostPopList/RawTotalMadeStorage/SquidPostPopState 만. SquidPostPop 처리기(Graph·Player·종류별 후처리 연결)와 BridgePrefix 등은 이후 WB04-E 단위
 cpppj/src/o/SquidPostPopPatch.cpp	port			todo	[o-default]
 cpppj/src/o/SquidProcess.cpp	port	www/core/squid-process.js	02b00b12	port	[o-default] WB04-D5c: SquidProcess/RegularProcess/SquidProcessState/SquidProcessHost·ScheduleBridgeFall. fixture process 시나리오·processform Attach 288·processretake 194·processtransmit·regular-current finder 1232/ctor 32 행. 3.6절 판정(02b00b12): ① 기준선 뒤 ReceiveSharedRegular/WriteFormPacket/shared_/writeFullData 는 LAN 전체 수신·참가자 월드 동기화(웹 제외, 단독 경로 결과 동일), ③ 발사/회전 애니메이션 프로세스 TYPE 두 칸(fireAnimationType·rotateAnimationType)은 애니메이션 소비자(RawCampaignArcherBindings) 이식 때 추가
 cpppj/src/o/SquidReward.cpp	port	www/core/squid-reward.js	1f00a25a	port	[o-default] WB04-D5b(0044c2f0 보상·SP 가산 비트·AI 지갑·최대 HP, reward 2400행·sp-add-bits 504행·HP 579행). 장부는 SquidPostPopState(WB04-E)의 localOwner/aiAttached 를 읽음

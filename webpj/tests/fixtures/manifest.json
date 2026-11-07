@@ -616,7 +616,7 @@
       "bytes": 224284,
       "lines": 4633,
       "fixtureCommit": "65927742",
-      "webCommit": "worktree",
+      "webCommit": "78860d24",
       "cpppjBasis": {
         "cpppj/src/o/SquidHash.cpp": "a9af29da",
         "cpppj/src/o/SquidHash.h": "a9af29da",
@@ -779,7 +779,7 @@
       "bytes": 419588,
       "lines": 1300,
       "fixtureCommit": "6ff267a1",
-      "webCommit": "worktree",
+      "webCommit": "78860d24",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459",
         "cpppj/src/o/RawSquidUnpopParent.h": "6ff267a1",
@@ -2376,7 +2376,7 @@
       "bytes": 780077,
       "lines": 6241,
       "fixtureCommit": "6c6765e3",
-      "webCommit": "worktree",
+      "webCommit": "78860d24",
       "cpppjBasis": {
         "cpppj/src/o/SquidPop.cpp": "48385349",
         "cpppj/src/o/RawSquidPopParent.cpp": "48385349",
@@ -2408,7 +2408,7 @@
       "bytes": 5606,
       "lines": 152,
       "fixtureCommit": "6c6765e3",
-      "webCommit": "worktree",
+      "webCommit": "78860d24",
       "cpppjBasis": {
         "cpppj/src/o/SquidPop.cpp": "48385349",
         "cpppj/src/o/PopVtables.inc": "6c6765e3"
@@ -2438,9 +2438,73 @@
       "bytes": 14261,
       "lines": 261,
       "fixtureCommit": "48385349",
-      "webCommit": "worktree",
+      "webCommit": "78860d24",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidPopParent.cpp": "48385349"
+      }
+    },
+    {
+      "id": "owner",
+      "path": "cpppj/tests/fixtures/owner-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 제한 x86 소유자 지정(004adf00) 관측(요새/전투/challenge 모드·genus·상태·extra·이전/새 소유자·소유자별 작업장 목록의 개수와 stale 꼬리·슬롯 Adler)",
+      "consumers": [
+        "webpj/tests/squid-owner.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-owner.js",
+        "webpj/www/core/raw-common-owner.js",
+        "webpj/www/core/squid-postpop-state.js"
+      ],
+      "unit": "WB04-E2",
+      "doc": "docs/webpj-squid-owner-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidOwner.cpp",
+        "cpppj/src/o/RawCommonOwner.cpp",
+        "cpppj/src/o/SquidPostPop.cpp"
+      ],
+      "scope": "10.78(originals) Owner 행 전체(≥1000). CD 10.72·10.37 행과 실제 Player 레코드 연결(bound) 재생 제외",
+      "text": true,
+      "sha256": "83de310340ea458c9d22d7417a0489dfaecc08761bfb567ad8d03b0c655c43fa",
+      "bytes": 1175828,
+      "lines": 3002,
+      "fixtureCommit": "218f2358",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidOwner.cpp": "5b98047b",
+        "cpppj/src/o/RawCommonOwner.cpp": "5b98047b",
+        "cpppj/src/o/SquidPostPop.cpp": "b04fd743"
+      }
+    },
+    {
+      "id": "squid-level",
+      "path": "cpppj/tests/fixtures/squid-level-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Squid hasLevel/getLevel/setLevel x86 관측(범위 진단 복귀와 전체 슬롯)",
+      "consumers": [
+        "webpj/tests/squid-small-setters.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-level.js"
+      ],
+      "unit": "WB04-E2",
+      "doc": "docs/webpj-squid-owner-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidLevel.cpp"
+      ],
+      "scope": "10.78 행. CD 행 제외",
+      "text": true,
+      "sha256": "abc458e72971188a606e4069d893603a7afcebb29ddba3efaaf2b521eb037436",
+      "bytes": 11032,
+      "lines": 96,
+      "fixtureCommit": "6fabde2e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidLevel.cpp": "90ffe7e5"
       }
     }
   ]
