@@ -2,6 +2,20 @@ using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Original;
 
+// 공통 Form 해제의 실제 종속 분리만 연결한다. 2026-11-07 F2d Host 분리 종단 이식에서 추가됐다.
+public sealed class FormUnpopHooks
+{
+    /// <summary>void 설정·부모 free 관문 뒤 실제 공통 종속 분리만 실행한다. null이면 기본 종속 분리를 쓴다. 2026-11-07 F2d Host 분리 종단 이식에서 추가됐다.</summary>
+    public Action<int>? Detach { get; set; }
+
+    /// <summary>현재 훅 묶음의 얕은 사본을 만든다. 2026-11-07 F2d Host 분리 종단 이식에서 추가됐다.</summary>
+    /// <returns>복사된 훅 묶음이다.</returns>
+    public FormUnpopHooks Clone() => new()
+    {
+        Detach = Detach,
+    };
+}
+
 /// <summary>
 /// 원본 Squid.cpp 의 내장 Form 네 종류(타입 1·2·3·6) 생성자, 지정 슬롯 Take, 부모 종속 체인 부착,
 /// 공통 Pop/Unpop 을 같은 raw 슬롯 풀에 옮긴 몸체 (004af530·004af610·004ac560·004ae140, CD 004ab390·004ab440·004abfb0·004af270).
@@ -94,6 +108,9 @@ public sealed class RawSquidForms
     /// <summary>바인딩된 현재 Pop 장치다. 없으면 기존 직접 순서로 Pop 한다. 2026-11-07 F2d Form Pop 바인딩 이식에서 추가됐다.</summary>
     private FormPopHooks? _boundPop;
 
+    /// <summary>바인딩된 현재 해제 장치다. 없으면 기존 직접 순서로 공통 종속 분리를 실행한다. 2026-11-07 F2d Host 분리 종단 이식에서 추가됐다.</summary>
+    private FormUnpopHooks? _boundUnpop;
+
     /// <summary>장기 공유 깊이를 빌리지 않는 독립 편의 객체의 현재 DWORD다. 2026-11-07 F2d Form Pop 바인딩 이식에서 추가됐다.</summary>
     private uint _localPostPopDepth;
 
@@ -103,12 +120,17 @@ public sealed class RawSquidForms
     /// <param name="pool">Form 슬롯을 가진 풀.</param>
     /// <param name="notice">ContentForm 부모 제거 알림(부모, Form). 없으면 그 경로에서 예외다.</param>
     /// <param name="transmit">서버 Pop 전송 경계(Form, 플래그). 없으면 서버 전송 경로에서 예외다.</param>
-    public RawSquidForms(RawSidPool pool, Action<int, int>? notice = null, Action<int, uint>? transmit = null)
+    /// <param name="unpop">공통 해제 종속 분리 경계다. 없으면 기본 종속 분리를 쓴다.</param>
+    public RawSquidForms(RawSidPool pool, Action<int, int>? notice = null, Action<int, uint>? transmit = null, FormUnpopHooks? unpop = null)
     {
         ArgumentNullException.ThrowIfNull(pool);
         _pool = pool;
         _notice = notice;
         _transmit = transmit;
+        if (unpop is not null)
+        {
+            BindUnpop(unpop);
+        }
     }
 
     /// <summary>다른 모듈이 같은 풀을 쓰는지 확인할 때 쓴다.</summary>
@@ -386,6 +408,18 @@ public sealed class RawSquidForms
     }
 
     /// <summary>
+    /// 실제 World의 현재 종속 분리 장치를 같은 수명 안에서 빌린다. 다음 해제부터 바인딩된 분리만 실행한다.
+    /// 바인딩 전에는 기존 직접 순서로 공통 종속 분리를 실행한다.
+    /// 근거: cpppj/src/o/SquidForms.h BindUnpop (F2d Host 분리 종단, 2026-11-07).
+    /// </summary>
+    /// <param name="hooks">빌릴 해제 장치 묶음이다.</param>
+    public void BindUnpop(FormUnpopHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        _boundUnpop = hooks.Clone();
+    }
+
+    /// <summary>
     /// 기본 Form 을 부모의 첫 종속 항목으로 부착하고 공통 Pop 을 호출한다. ContentForm 은 정렬 부착기를 써야 한다.
     /// 부모 0 은 원본 10.78 처럼 아무것도 바꾸지 않고 돌아온다.
     /// 바인딩된 장치가 있으면 공통 부착 몸체에 현재 장치를 채워 위임한다.
@@ -492,6 +526,14 @@ public sealed class RawSquidForms
         _pool.RawSlot(form)[StateOffset] |= VoidBit;
         if ((parentState & FreeBit) != 0)
         {
+            return;
+        }
+        // 바인딩된 분리는 기본 종속 분리 대신 실제 공통 분리만 실행한다 (원문 detach 분기).
+        // 근거: cpppj/src/o/SquidForms.cpp Unpop (F2d Host 분리 종단, 2026-11-07).
+        Action<int>? detach = _boundUnpop?.Detach;
+        if (detach is not null)
+        {
+            detach(form);
             return;
         }
         if ((_pool.RawSlot(form)[StateOffset] & ContainedBit) == 0)

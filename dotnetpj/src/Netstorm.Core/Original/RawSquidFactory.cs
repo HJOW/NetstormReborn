@@ -184,16 +184,18 @@ public sealed class RawSquidFactory
         forms.Attach(form, parent, flags);
     }
 
-    /// <summary>공통 진단의 현재 장치와 같은 풀의 종속 분리만 호출한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    /// <summary>바인딩된 분리 경계가 있으면 실제 공통 분리만 실행하고, 없으면 공통 순서를 쓴다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐고 0.218에서 분리 종단 재작업을 이었다.</summary>
     /// <param name="sid">해제할 Form 번호다.</param>
     public void UnpopForm(int sid)
     {
+        var forms = new RawSquidForms(_pool);
         if (_formDetach is not null)
         {
-            throw new InvalidOperationException("Form 분리 종단의 실제 분리 미연결");
+            Action<int> detach = _formDetach;
+            forms.BindUnpop(new FormUnpopHooks { Detach = detach });
         }
 
-        new RawSquidForms(_pool).Unpop(sid);
+        forms.Unpop(sid);
     }
 
     /// <summary>실제 현재 진단·깊이를 같은 호출 수명으로 빌려 직접 Pop 한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>

@@ -118,7 +118,7 @@ public sealed class RawFactoryAttachTests
         Assert.Equal(form, sent[0].Form);
     }
 
-    /// <summary>공통 순서로 폼을 푼다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    /// <summary>공통 순서로 폼을 풀고 바인딩된 분리는 기본 분리 대신 실행한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐고 0.218에서 분리 종단 재작업을 이었다.</summary>
     [Fact]
     public void UnpopFormFollowsCommonOrder()
     {
@@ -127,8 +127,52 @@ public sealed class RawFactoryAttachTests
         factory.UnpopForm(101);
         Assert.Equal(4, pool.Slot(101)[11]);
         Assert.Equal(0, pool.Slot(100)[6] | (pool.Slot(100)[7] << 8));
-        factory.BindFormDetach(_ => { });
-        Assert.Throws<InvalidOperationException>(() => factory.UnpopForm(101));
+        // 바인딩된 분리는 void·부모 관문 뒤 기본 분리 대신 실행하고 링크를 보존한다
+        FormChain(pool, 100, 101);
+        var detached = new List<int>();
+        factory.BindFormDetach(detached.Add);
+        factory.UnpopForm(101);
+        Assert.Equal([101], detached);
+        Assert.Equal(4 | 8, pool.Slot(101)[11]);
+        Assert.Equal(101, pool.Slot(100)[6] | (pool.Slot(100)[7] << 8));
+    }
+
+    /// <summary>빈 묶음을 거부하고 생성자·메서드 묶음의 분리를 실행한다. 2026-11-07 F2d Host 분리 종단 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindUnpopGuardsAndRunsDetach()
+    {
+        (RawSidPool pool, List<OriginalTypeRecord> _, RawSquidFactory _) = Scene();
+        var forms = new RawSquidForms(pool);
+        Assert.Throws<ArgumentNullException>(() => forms.BindUnpop(null!));
+        // 생성자 묶음과 메서드 묶음 모두 기본 분리 대신 실행한다
+        FormChain(pool, 100, 101);
+        var first = new List<int>();
+        new RawSquidForms(pool, null, null, new FormUnpopHooks { Detach = first.Add }).Unpop(101);
+        Assert.Equal([101], first);
+        Assert.Equal(101, pool.Slot(100)[6] | (pool.Slot(100)[7] << 8));
+        FormChain(pool, 100, 101);
+        var second = new List<int>();
+        forms.BindUnpop(new FormUnpopHooks { Detach = second.Add });
+        forms.Unpop(101);
+        Assert.Equal([101], second);
+        Assert.Equal(101, pool.Slot(100)[6] | (pool.Slot(100)[7] << 8));
+    }
+
+    /// <summary>서버 영역 부착 폼의 Take는 바인딩된 분리로 공간을 푼다. 2026-11-07 F2d Host 분리 종단 이식에서 추가됐다.</summary>
+    [Fact]
+    public void TakeFormUsesBoundDetach()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Types188();
+        types[2].ConstructorAddress = OriginalConstructors.Address(pool.Edition, 2);
+        var factory = new RawSquidFactory(pool, types);
+        FormChain(pool, 16000, 16001);
+        var detached = new List<int>();
+        factory.BindFormDetach(detached.Add);
+        Assert.Equal(16001, factory.Take(2u, 16001));
+        Assert.Equal([16001], detached);
+        Assert.Equal(2, pool.Slot(16001)[RawSidPool.TypeOffset]);
+        Assert.Equal(16001, pool.Slot(16000)[6] | (pool.Slot(16000)[7] << 8));
     }
 
     /// <summary>묶은 깊이로 직접 Pop 한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
