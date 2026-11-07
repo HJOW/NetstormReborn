@@ -173,6 +173,8 @@ cpppj/src/client/QuickHelpRequest.h	Netstorm.Client/Gump/QuickHelpRequest.cs	2ae
 cpppj/src/client/QuickHelpWindow.cpp	Netstorm.Client/Gump/QuickHelpWindow.cs	c6b19afd39c66da4129bb6f06eb0fd305b1e0777	L1
 cpppj/src/client/QuickHelpWindow.h	Netstorm.Client/Gump/QuickHelpWindow.cs	c6b19afd39c66da4129bb6f06eb0fd305b1e0777	L1
 cpppj/src/client/RawBackgroundGifControls.cpp	Netstorm.Client/Gump/BackgroundGifStorage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	port
+cpppj/src/client/RawChatChannels.cpp	Netstorm.Client/Chat/RawChatChannels.cs	65bc3e0c7019fd3a9265703f30daac9b8fbab373	L1
+cpppj/src/client/RawChatChannels.h	Netstorm.Client/Chat/RawChatChannels.cs	65bc3e0c7019fd3a9265703f30daac9b8fbab373	L1
 cpppj/src/client/RawImage.cpp	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawImage.h	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Gump/HtmlBodyTextParser.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	port
@@ -445,6 +447,8 @@ cpppj/src/o/RawPlayerCoreData.cpp	Netstorm.Core/Original/RawPlayerCoreData.cs	79
 cpppj/src/o/RawPlayerCoreData.h	Netstorm.Core/Original/RawPlayerCoreData.cs	79c3a5815fdc8244c4509c8d1e6bac34f6068af5	L1
 cpppj/src/o/RawPlayerCoreRecords.cpp	Netstorm.Core/Original/RawPlayerCoreRecords.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	L1
 cpppj/src/o/RawPlayerCoreRecords.h	Netstorm.Core/Original/RawPlayerCoreRecords.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	L1
+cpppj/src/o/RawPlayerInitialization.cpp	Netstorm.Core/Original/RawPlayerInitialization.cs	7e53489e9d0c2f4bcba9f026c845ff0a3941cc3f	port
+cpppj/src/o/RawPlayerInitialization.h	Netstorm.Core/Original/RawPlayerInitialization.cs	7e53489e9d0c2f4bcba9f026c845ff0a3941cc3f	port
 cpppj/src/o/RawPlayerTemplateState.cpp	Netstorm.Core/Original/RawPlayerTemplateState.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawPlayerTemplateState.h	Netstorm.Core/Original/RawPlayerTemplateState.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawPriestDamage.cpp	Netstorm.Core/Original/RawPriestDamage.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
