@@ -2942,9 +2942,154 @@
       "bytes": 351385,
       "lines": 1084,
       "fixtureCommit": "72fed9ba",
-      "webCommit": "worktree",
+      "webCommit": "3192890f",
       "cpppjBasis": {
         "cpppj/src/o/RawManaRegistration.cpp": "72fed9ba"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E11",
+      "id": "clock-sync-reset",
+      "path": "cpppj/tests/fixtures/clock-sync-reset-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 시간 동기화 Reset 의 96 BYTE 두 영역 전체(두 x87 제어값·반복)",
+      "consumers": [
+        "webpj/tests/state-resets.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-clock-sync-reset.js"
+      ],
+      "doc": "docs/webpj-state-resets-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawClockSyncReset.cpp"
+      ],
+      "scope": "64행 전부 사용",
+      "text": true,
+      "sha256": "c6d7c9cc0d365ee28a167e7fac55b80caad33be2a750b8829ed4359c6247e475",
+      "bytes": 57749,
+      "lines": 65,
+      "fixtureCommit": "adb9739e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawClockSyncReset.cpp": "adb9739e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E11",
+      "id": "state-zone-reset",
+      "path": "cpppj/tests/fixtures/state-zone-reset-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: State Zone 초기화 24 BYTE 와 두 store 의 폭·순서",
+      "consumers": [
+        "webpj/tests/state-resets.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-state-zone-reset.js"
+      ],
+      "doc": "docs/webpj-state-resets-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawStateZoneReset.cpp"
+      ],
+      "scope": "10행 전부 사용",
+      "text": true,
+      "sha256": "eeac9e9bc3f6741d7193ac582956496f2ade0133fd8cdc2c1d31c708ac4c9eef",
+      "bytes": 993,
+      "lines": 11,
+      "fixtureCommit": "35041198",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawStateZoneReset.cpp": "35041198"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E11",
+      "id": "state-bridge-reset",
+      "path": "cpppj/tests/fixtures/state-bridge-reset-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 소유자 색 표와 다리 붕괴 스캔 초기화의 212 BYTE 네 영역과 store 주소/폭",
+      "consumers": [
+        "webpj/tests/state-resets.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-state-bridge-reset.js"
+      ],
+      "doc": "docs/webpj-state-resets-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawStateBridgeReset.cpp"
+      ],
+      "scope": "64행 전부 사용",
+      "text": true,
+      "sha256": "ff0b91cb76c5b4a2abc52abecb5921445621391b76abc5c7b8b3bfdbee532b34",
+      "bytes": 61436,
+      "lines": 65,
+      "fixtureCommit": "881b0ef7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawStateBridgeReset.cpp": "881b0ef7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E11",
+      "id": "ritual-refresh",
+      "path": "cpppj/tests/fixtures/ritual-refresh-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 의식 뒤 로컬 갱신의 두 현재 owner load·세 자식 호출·각 중단 부분 효과",
+      "consumers": [
+        "webpj/tests/state-resets.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ritual-refresh.js"
+      ],
+      "doc": "docs/webpj-state-resets-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawRitualRefresh.cpp"
+      ],
+      "scope": "54행 전부 사용",
+      "text": true,
+      "sha256": "c2c7499fd73144f50ac90f2b02183f3cf4e7752cf006bf33a69274097e871126",
+      "bytes": 1543,
+      "lines": 55,
+      "fixtureCommit": "4e66a874",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawRitualRefresh.cpp": "4e66a874"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E11",
+      "id": "bulwark-hit",
+      "path": "cpppj/tests/fixtures/bulwark-hit-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 불워크 피해 관문의 입력별 효과·두 슬롯 전체·반환 DWORD",
+      "consumers": [
+        "webpj/tests/state-resets.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bulwark-hit.js"
+      ],
+      "doc": "docs/webpj-state-resets-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBulwarkHit.cpp"
+      ],
+      "scope": "492행 전부 사용",
+      "text": true,
+      "sha256": "501e3a39524b3554087e080f21face2d79e9bea0330d513eb2ac760154dd4e2a",
+      "bytes": 120154,
+      "lines": 493,
+      "fixtureCommit": "18c35f0e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBulwarkHit.cpp": "18c35f0e"
       }
     }
   ]

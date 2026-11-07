@@ -550,7 +550,7 @@ cpppj/src/o/RawBridgeFallParent.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeLifecycle.cpp	port	www/core/bridge-lifecycle.js	1f00a25a	partial	[o-default] WB04-D2 다리 삭제 훅. 다리 가상 삭제 분배는 WB07
 cpppj/src/o/RawBuildingSpace.cpp	port	www/core/squid-space.js	1f00a25a	port	[o-default] WB04-D1(Unpop 옆면·표면 통지) + WB04-E1(popSide·hasIsland)
 cpppj/src/o/RawBulfFrame.cpp	port			todo	[o-default]
-cpppj/src/o/RawBulwarkHit.cpp	port			todo	[o-default]
+cpppj/src/o/RawBulwarkHit.cpp	port	www/core/raw-bulwark-hit.js	1f00a25a	port	[o-default] WB04-E11: 48ef20 불워크 피해 관문(공격자 비행 genus면 0, 아니면 일반 피해 연결). fixture bulwark-hit 10.78 492행 전부
 cpppj/src/o/RawBuriedPostPop.cpp	port			todo	[o-default]
 cpppj/src/o/RawBuriedRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawBurningFrame.cpp	port			todo	[o-default]
@@ -593,7 +593,7 @@ cpppj/src/o/RawCarrierTransfer.cpp	port			todo	[o-default]
 cpppj/src/o/RawChatManagerPrefix.cpp	port			todo	[o-default] 단독 HUD Chat 의 manager 초기화. 랭크 prefix 는 단독 관문 그대로
 cpppj/src/o/RawCheckingDiagnostics.h	port			todo	[o-default]
 cpppj/src/o/RawCheckingFlag.h	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 소비 위치마다 읽는 현재 DWORD 뷰는 웹에서 checking() getter 함수 계약으로 대신한다(squid-unpop.js·squid-pop.js·squid-space.js)
-cpppj/src/o/RawClockSyncReset.cpp	port			todo	[o-default]
+cpppj/src/o/RawClockSyncReset.cpp	port	www/core/raw-clock-sync-reset.js	1f00a25a	port	[o-default] WB04-E11: 004c1f20 시간 동기화 세 DWORD 0 쓰기. fixture clock-sync-reset 10.78 64행 전부
 cpppj/src/o/RawColorMapCache.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawColorSortPrimary.cpp	port			todo	[o-default]
 cpppj/src/o/RawColorSortStartup.cpp	port			todo	[o-default]
@@ -874,7 +874,7 @@ cpppj/src/o/RawRenderCollection.cpp	port			todo	[o-default]
 cpppj/src/o/RawRiftHitPoints.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(TYPE HP 0049fce0). WB04-D5b: 음수 1/4 몫의 -0 교정, rifttype-hit-points 10.78 579행 대조
 cpppj/src/o/RawRiftShapeAccess.cpp	port			todo	[o-default]
 cpppj/src/o/RawRitualChoice.cpp	port			todo	[o-default] cpppj CMake 주석상 6b 입력/수신 MP 사전 구현. 단독 의식 보상 선택 도달 여부는 WB10 에서 확인
-cpppj/src/o/RawRitualRefresh.cpp	port			todo	[o-default]
+cpppj/src/o/RawRitualRefresh.cpp	port	www/core/raw-ritual-refresh.js	1f00a25a	port	[o-default] WB04-E11: 의식 뒤 로컬 Core/CoreData/snapshot 세 호출과 두 현재 owner 읽기. fixture ritual-refresh 10.78 54행 전부
 cpppj/src/o/RawRunePostPop.cpp	port			todo	[o-default]
 cpppj/src/o/RawSalvageCommand.cpp	port			todo	[o-default]
 cpppj/src/o/RawSavedStateRead.cpp	exclude-mp			-	[mp-saved-battle]
@@ -908,10 +908,10 @@ cpppj/src/o/RawSquidTransmission.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidUnpopParent.cpp	port	www/core/squid-unpop.js	1f00a25a	port	[o-default] WB04-D1
 cpppj/src/o/RawSquidWord.h	port	www/core/raw-squid-word.js	1f00a25a	port	[o-default] WB04-E2: 004ac220 표면 WORD setter(현재 다리 TYPE 통지)
 cpppj/src/o/RawStartupStateCheck.cpp	exclude-mp			-	[mp-saved-battle]
-cpppj/src/o/RawStateBridgeReset.cpp	port			todo	[o-default]
+cpppj/src/o/RawStateBridgeReset.cpp	port	www/core/raw-state-bridge-reset.js	1f00a25a	port	[o-default] WB04-E11: 0043b540 소유자 색 앞 9칸·00422490 다리 붕괴 스캔 초기화. fixture state-bridge-reset 10.78 64행 전부. 실제 Client/World 통합 대조는 해당 단위에서
 cpppj/src/o/RawStateSidLists.cpp	port			todo	[o-default]
 cpppj/src/o/RawStateWorldCleanup.cpp	port			todo	[o-default]
-cpppj/src/o/RawStateZoneReset.cpp	port			todo	[o-default]
+cpppj/src/o/RawStateZoneReset.cpp	port	www/core/raw-state-zone-reset.js	1f00a25a	port	[o-default] WB04-E11: 004bfd60 State Zone 정확히 6 BYTE 쓰기. fixture state-zone-reset 10.78 10행 + 길이 0..8 경계
 cpppj/src/o/RawStaticStrings.cpp	port			todo	[o-default]
 cpppj/src/o/RawSubscriberIdGenerate.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawSunAviaryCapture.cpp	port			todo	[o-default]
