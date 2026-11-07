@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE root/GuildManagement.cpp root/SharedGuildStorage.cpp) #1085:현재 길드/요청의 실제 변경·저장/조회와 같은 CCh 파일 owner를 연결한다.
 target_sources(netstorm PRIVATE root/CommandPages.cpp root/CommandPages.h) #1084:87h 명령의 실제 템플릿/섹션·OS시각/현재존 치환과 CCh 확장응답 부품을 연결한다.
 target_sources(netstorm PRIVATE root/RootControl.cpp root/RootControl.h) #1082:실제0b/0c 인사와66h LAN 수신/현재공지·하위pending guard를 같은 R 장치에 연결한다.
 target_sources(netstorm PRIVATE root/RootDiagnostic.cpp) #1083:실제11/12h 수신·대기/상위 연결 관문과 역방향 TCP를 같은 Root 장치에 연결한다.

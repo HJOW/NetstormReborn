@@ -4,7 +4,7 @@
 #include "root/Configuration.h"
 
 namespace netstorm::root { // CCh0044e940/0044e0d0의 현재 부모와 실제 패킷 작성기를 소유한다.
-struct ClockState;class Random; // 같은 R 프로세스의 현재 게임 시각과 별도 전역 난수 스트림이다.
+struct ClockState;class Random;class SharedFiles; // 같은 R 프로세스의 현재 게임 시각/난수와 실제 길드·관리 파일 owner다.
 struct ChallengeMessages { // 실제 R 프로세스가 뉴스 파일 로드 결과를 갱신하는 같은 BSS다.
     std::optional<std::string> news;std::uint32_t newsChecksum{}; //004d05c4/c8의 NULL/소유 문자열과 현재 checksum이다.
 };
@@ -21,6 +21,7 @@ struct ChallengeRuntimeHooks { // 실제 상위 표/파일/주소·Root 라우�
     std::function<void(std::uint32_t,double)> schedule; //00479090의 현재 reset/shutdown 선택과 초 단위 delay를 같은 메인 예약 상태에 적용한다.
     std::function<std::optional<std::string>(std::uint32_t)> guildName; //0045d7e0/004d0870의 현재 subscriber 소속 길드 이름 조회다.
     std::function<std::string()> commandTemplates;std::function<void(std::string&)> expandCommandPage; //00451f30/452570의 실제 현재 서버 템플릿/OS시각·존 치환 장치다. 같은 CommandPages owner가 연결한다.
+    SharedFiles* sharedFiles{}; //87h 전체 부모가 같은 현재 길드/요청·관리 표와 실제 저장 장치를 빌린다. SharedFiles.Bind로 연결하며 이 owner는 CCh callback보다 오래 살아야 한다.
     std::function<void(std::int32_t,std::string_view)> log; // 원문 level/이미 완성한 전체 로그다.
 };
 class ChallengeRuntime final { // 같은 CCh/전송·Root callback보다 오래 사는 실제 실행 부모다.

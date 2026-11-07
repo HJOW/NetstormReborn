@@ -1,0 +1,161 @@
+{
+  "unit": 1085,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "f8bdea4263f9e2dce626cdc198ea5ad348a980c88fb560e4af81f1d5312545d7"
+  },
+  "nativeAudit": {
+    "scope": "동일 호스트 R 원문/보호 PE·길드/요청/문자열/실제 저장 몸체와 기계어의 현재 장치 접합 정적 감사다. MP/길드/파일 왕복 실행 검사가 아니다.",
+    "sameTablesAndFields": "기존 SharedFileTables/SharedFiles owner를 유지하고 CCh hooks.sharedFiles를 같은 Bind에서 연결한다. Guild 첫DWORD는 id가 아니라 recruiting이며+4는 name/+c는 password다. GuildRequest 두번째 문자열은 playerName, 마지막DWORD는 approved다. 기존 파일 바이트/추출 순서·원래 DWORD 값은 그대로다.",
+    "lookup": "5c720은 case-sensitive strcmp/현재순서 첫 이름,5d7e0은 길드→회원순서 첫 subscriber다.0/중복을 별도 필터로 제외하지 않는다. 같은 현재 표를 직접 읽으며 레코드 참조는 변경/재로드 뒤 재사용하지 않는다.",
+    "create": "5c9d0은 기존소속2→동일이름3→원문빈리터럴 포인터동일4→모집0/현재이름·비밀번호/회원한명 추가·현재길드저장1이다. 빈 내용 비교가 아니다.44aa60은 빈 문자열도 별도할당/strcpy하므로87h의 복사된 이름은 빈값도 literal포인터와 같지 않다. GuildNameSource가 실제 입력의 원문 동일성을 명시하며 기본 CopiedString이다.",
+    "mutations": "5c7a0은 길드 한행 제거/저장만 하고 요청을 지우지 않는다.5cd60은 중복제외 없이 회원추가/저장(원문caller0).5d3e0은 첫 회원만 제거하고 마지막이면 길드제거/저장,그외길드저장,미일치면쓰기없다.5d730은 정확히1→0/그외→1과저장,5d7a0은 비밀번호교체/저장이다.",
+    "login": "5d960은 요청자가 어느 길드든 소속되어 있을 때 지정 이름/비밀번호를 비교하고 그 번호를 반환한다. 지정길드와 원래소속의 동일성·관리자/창설자 관문을 새로 추가하지 않는다.",
+    "joinRequest": "5dfe0은 이름없음0→모집!=1이면2→이미회원1→현재요청같은길드명/같은subscriber첫일치3→새요청(name/playerName/subscriber/approved0) 추가·요청전체저장4다.다른길드 요청/승인여부를 중복 관문에 넣지 않는다.",
+    "approvalAndRemoval": "87h GUILDREQAPROVE의 첫 길드명/subscriber 일치에 approved1/즉시전체저장을 연결했다.소속/권한은 실제 명령부모의관문이다.5e1b0은 해당요청만제거/저장.5e210은 count부터먼저감소/index>0만검사하므로0번을건너뛰고 각삭제마다저장(원문caller0). 승인만으로 회원추가를 합성하지 않는다.",
+    "guildSave": "5c220은 사용자Saves/guild.txt를text/trunc로열고unsigned길드수+endl,각행 signed모집상태/space/이름/space/비밀번호/space/unsigned회원수/space,각 signed회원/space,endl이다.현재순서/중복과 마지막공백을 유지한다.인용/이스케이프를 추가하지 않는다.",
+    "requestSave": "5dde0은 사용자Saves/guildreq.txt의 unsigned요청수+endl,각요청 길드명/space/요청자명/space/signedsubscriber/endl/space/signedapproved/endl이다.원문의 두물리줄·선두공백/각endl실제flush를 유지한다.일반stream 실패를 성공검증으로 보고하지 않는다.",
+    "policyAndHostBoundaries": [
+      "실제 자동저장은 기존 WritableFile/사용자Saves/Unicode 경로이며 reader도 기존 Saves우선·원래CWD겸용이다.설치/원본파일을 쓰지 않는다.",
+      "길드/요청 vector 물리밖은 at의 명시오류다.숫자개수의DWORD/signed물리초과는명시거부한다.",
+      "기존 누락파일/32·40BYTE 필수문자열/미초기화 숫자 입력의 호스트 경계는 유지한다.",
+      "구형 vector/CharString 힙·포인터/스택물리자체,실제파일오류/왕복·동시수신/수명은 실행미검증이다.",
+      "87h 전체 길드/관리자 부모·목록HTML/관찰기·실제등록/최종owner 호출은 남는다."
+    ],
+    "receiverInventory": [
+      {
+        "type": "0xb",
+        "receiver": "00475070",
+        "status": "implemented"
+      },
+      {
+        "type": "0xc",
+        "receiver": "00475040",
+        "status": "implemented"
+      },
+      {
+        "type": "0x10",
+        "receiver": "004763d0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x83",
+        "receiver": "00476490",
+        "status": "implemented"
+      },
+      {
+        "type": "0x11",
+        "receiver": "00475260",
+        "status": "implemented"
+      },
+      {
+        "type": "0x12",
+        "receiver": "00475580",
+        "status": "implemented"
+      },
+      {
+        "type": "0x16",
+        "receiver": "00475660",
+        "status": "implemented"
+      },
+      {
+        "type": "0x17",
+        "receiver": "00476070",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1c",
+        "receiver": "00476180",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1e",
+        "receiver": "00476700",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1f",
+        "receiver": "004767c0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x87",
+        "receiver": "00476550",
+        "status": "pending"
+      },
+      {
+        "type": "0x41",
+        "receiver": "00476880",
+        "status": "implemented"
+      },
+      {
+        "type": "0x66",
+        "receiver": "00475f90",
+        "status": "implemented"
+      },
+      {
+        "type": "0x67",
+        "receiver": "00476940",
+        "status": "implemented"
+      },
+      {
+        "type": "0x68",
+        "receiver": "00476a00",
+        "status": "implemented"
+      },
+      {
+        "type": "0x71",
+        "receiver": "00476ac0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x80",
+        "receiver": "00476640",
+        "status": "retired-validation-disabled"
+      }
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "sameGuildAndRequestMutationsImplemented": true,
+    "actualUserSaveWritersImplemented": true,
+    "sameTypedCChOwnerBindingImplemented": true,
+    "full87ReceiverRegistered": false,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsBindOrRun": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newGuildOrRequests": 0,
+    "newFileRoundTrip": 0,
+    "newPacketOrReply": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "87h 전체 길드/관리자 부모·목록HTML·관찰기/실제등록·관리제재 변경·템플릿콘텐츠",
+    "보조객체·전체패킷/초기화/정리·새R.exe 최종owner/entry·실제 Bind/Install/Run·LAN hostname",
+    "클라이언트0F존47/서버3BYTE·0F/1d·메타/OSlaunch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

@@ -31,6 +31,7 @@ std::optional<std::string> ReadWhole(const std::filesystem::path& path) {
 SharedFiles::SharedFiles(SharedFileTables& tables,ChallengeMessages& messages,SharedFileStorage& storage,std::function<void(std::int32_t,std::string_view)> log)
     :tables_(tables),messages_(messages),storage_(storage),log_(std::move(log)) {}
 void SharedFiles::Bind(ConfigurationHooks& config,ChallengeRuntimeHooks& challenge) {
+    challenge.sharedFiles=this; //87h가 기존 로더/로그인 조회와 다른 길드 표나 저장 경로를 만들지 않도록 같은 실제 owner를 빌린다.
     config.reloadModeration=[this] { Reload(); };challenge.blockedSubscriber=[this](auto subscriber) { return BlockedSubscriber(subscriber); };challenge.markedSubscriber=[this](auto subscriber) { return MarkedSubscriber(subscriber); };challenge.banAndSave=[this](auto subscriber) { BanAndSave(subscriber); };challenge.blockedAddress=[this](auto address) { return BlockedAddress(address); };challenge.guildName=[this](auto subscriber) { return GuildName(subscriber); };
 }
 bool SharedFiles::BlockedSubscriber(std::uint32_t subscriber) const { return std::find(tables_.blockedSubscribers.begin(),tables_.blockedSubscribers.end(),subscriber)!=tables_.blockedSubscribers.end(); }
