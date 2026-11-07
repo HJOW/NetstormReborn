@@ -614,3 +614,7 @@ cpppj/src/o/RawFormPop.cpp	Netstorm.Core/Original/RawFormPop.cs	09ad72b071d7864e
 cpppj/src/o/RawSquidTransmission.h	Netstorm.Core/Original/RawSquidTransmissionState.cs	b8cadde14fbf9cd9e2d89a3102c5db2d5645c494	port
 cpppj/src/o/RawSquidContainedUnpop.h	Netstorm.Core/Original/RawSquidContainedUnpop.cs	f83db66ca229cc8fe9676d8ed52787277768869d	port
 cpppj/src/o/RawSquidContainedUnpop.cpp	Netstorm.Core/Original/RawSquidContainedUnpop.cs	f83db66ca229cc8fe9676d8ed52787277768869d	port
+cpppj/src/o/Bridge.h	Netstorm.Core/Original/RawBridgeConnects.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/RawBridgeConnects.cs	11b04c8e06f280b1e9c06b604cef339343342c3a	port
+cpppj/src/o/RawCanonPlacementSurrounding.h	Netstorm.Core/Original/RawCanonSurfaceWalk.cs	9ece3b530aa687895e73e407f2d17f88fe19f44a	port
+cpppj/src/o/RawCanonPlacementSurrounding.cpp	Netstorm.Core/Original/RawCanonSurfaceWalk.cs	9ece3b530aa687895e73e407f2d17f88fe19f44a	port
