@@ -563,3 +563,7 @@ cpppj/src/o/RawGameRandomSeed.cpp	Netstorm.Core/Original/RawGameRandom.cs	a24db9
 cpppj/src/o/RawBoardAngle.h	Netstorm.Core/Original/RawBoardAngle.cs	56a2827006471f443975fc52d6f43c79b6c54657	L1
 cpppj/src/o/RawBoardAngle.cpp	Netstorm.Core/Original/RawBoardAngle.cs	56a2827006471f443975fc52d6f43c79b6c54657	L1
 cpppj/src/o/RawAmbientWind.cpp	Netstorm.Core/Original/RawAmbientWind.cs	e5a198df450ae720da38f5110ebc611119ea2f38	L1
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.cs	b8cadde14fbf9cd9e2d89a3102c5db2d5645c494	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.cs	435cfa1da96a960c9233f366b6e6818c4bbd658e	port
+cpppj/src/o/RawBoardTarget.h	Netstorm.Core/Original/RawBoardTargetState.cs	b7932e867cac5136577021d0ee5854c188ee75ce	port
+cpppj/src/o/Bridge.h	Netstorm.Core/Original/RawSurfaceStorage.cs	225f2322cf7936604306b6534fd4edf18f246c12	port

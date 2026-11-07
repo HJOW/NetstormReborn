@@ -10,6 +10,13 @@ public sealed class UIntBox
     public uint Value { get; set; }
 }
 
+// 외부 문자열 상세 owner를 빌리는 상자다. 원문 `std::optional&lt;string&gt;&amp;` 빌림을 옮긴다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.
+public sealed class StringBox
+{
+    /// <summary>빌린 문자열 값이다. null이면 비어 있는 원문 optional과 같다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
+    public string? Value { get; set; }
+}
+
 // 실제 부모 prologue와 선택한 mission 후처리가 읽는 현재 전역이다. 2026-11-07 F2d 캠페인 월드 적재 이식에서 추가됐다.
 public sealed class CampaignWorldGlobals
 {
