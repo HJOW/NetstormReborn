@@ -5,6 +5,8 @@
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ClientAudio.h"
 #include "client/ClientGameplayGlobals.h"
+#include "client/ClientChallengeGlobals.h" //메타신뢰도는같은현재CS의두WORD를사용한다.
+#include "client/NativeMetaPlayerMenu.h" //메뉴신뢰도의원문정수관문/비율을공유한다.
 #include "client/GameWorld.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -89,7 +91,7 @@ struct CampaignObjectMenuClient::Impl {
         ui.player.ignored=[this](std::uint32_t subscriber) { const auto& ignored=client.ChatWindowGlobals()->ignored;return std::find(ignored.begin(),ignored.end(),subscriber)!=ignored.end(); }; // 수신과 같은 현재 Client 목록을 읽는다.
         ui.player.whispered=[this](std::uint32_t subscriber) { return Whispered(subscriber); };
         ui.player.parseAddress=[](std::string_view,std::uint32_t) { throw std::logic_error("원격 Player 메뉴 주소 해석 미연결"); };
-        ui.player.reliability=[](std::uint32_t)->std::uint32_t { throw std::logic_error("메타맵 Player 메뉴 신뢰도 미연결"); };
+        ui.player.reliability=[this](std::uint32_t participant) { return MetaPlayerReliability(client.SurfaceStorage()->ownerMode.challenge,participant,[this](auto index)->std::span<const std::uint8_t> { return client.ChallengeGlobals()->Participant(index); }); }; //비메타일때는아직없는CS를선행조회하지않는다.
         ui.player.assertion=[](PlayerMenuAssertion assertion) { std::clog<<"객체 Player 메뉴 원본 진단 "<<static_cast<int>(assertion)<<'\n'; };
         ui.info.translate=ui.player.translate;ui.info.description=ui.priest.description;ui.info.print=PrintMenu;
         ui.info.substitute=[this](std::string_view source) { const auto text=client.Configuration().SubstituteLocal(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()}));const auto bytes=o::EncodeDisplayText(text);return std::string(bytes.begin(),bytes.end()); };

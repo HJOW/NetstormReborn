@@ -1,0 +1,61 @@
+{
+  "unit": 1110,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12549632,
+      "sha256": "704741f2693b04ef95dd4381c2a0463532f7106a0916858ff95fcfe63bfd7035"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "c8f9f395f72468b88cef676ed1af1cc0f4ee83c48034cd07a63ee89e9a0ecb22"
+    }
+  },
+  "staticAudit": {
+    "menu": "004785f0 전체: 현재subscriber 비교·자기메뉴조건/번역/항목/객체현재부착·다른전체PlayerMenu/직접가상부착",
+    "reliability": "00478310 전체:meta0은CS조회없이100·현재두WORD/정수비율·분모0/100초과는100",
+    "consumer": "기존CampaignObjectMenuClient의실제신뢰도훅을같은현재CS getter에연결",
+    "limits": "256BYTE서식/실제이름 NUL/물리범위밖은명시거부.새World없는메뉴공장/입력접합은후속"
+  },
+  "integration": {
+    "participantMenuFullBodyCompiled": true,
+    "campaignPlayerMenuReliabilityBound": true,
+    "worldlessMetaMenuDevicesBound": false,
+    "nsInfoThreeHandleBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "World없는메타참가자메뉴의실제controlled/PlayerMenu·주소/identity공장",
+    "NSInfo 세Handle/카메라/1107슬롯·1108송신 UI 호출",
+    "CS 수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

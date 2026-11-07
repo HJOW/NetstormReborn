@@ -541,3 +541,6 @@ target_sources(netstorm PRIVATE client/HudPlayerButtonDraw.h client/HudPlayerBut
 
 # 메타 입력/표시가 공유할 실제8슬롯 색/랭크/특수 상태 몸체다.
 target_sources(netstorm PRIVATE o/RawBattleOptionSlots.h o/RawBattleOptionSlots.cpp)
+
+# 원문 메타 참가자 메뉴 본체와 현재 신뢰도 getter다.
+target_sources(netstorm PRIVATE client/NativeMetaPlayerMenu.h client/NativeMetaPlayerMenu.cpp)
