@@ -49,4 +49,15 @@ public sealed class RawSurfaceWorldTests
         Assert.Same(storage, world.Storage());
         Assert.Throws<ArgumentNullException>(() => new RawSurfaceWorld(OriginalEdition.Patch1078, null!, 97u, storage));
     }
+
+    /// <summary>변경 요청을 한 번만 소비한다. 2026-11-07 F2d 월드 본체 TakeChanged 이식에서 추가됐다.</summary>
+    [Fact]
+    public void TakeChangedConsumesOnce()
+    {
+        // 생성 직후 초기값 true를 한 번만 소비하는 원본 std::exchange 순서를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.True(world.TakeChanged());
+        Assert.False(world.TakeChanged());
+        Assert.False(world.TakeChanged());
+    }
 }

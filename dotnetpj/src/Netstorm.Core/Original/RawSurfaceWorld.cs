@@ -18,6 +18,9 @@ public sealed class RawSurfaceWorld
     /// <summary>같은 물리 저장소다. 없으면 이 월드가 새로 만든다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
     private readonly RawSurfaceStorage _storage;
 
+    /// <summary>후속 갱신이 필요한 상태 변경이 남았는지다. 원본 Impl.changed에 대응하며 초기값은 true다. 표시 억제와 무관하게 TakeChanged로 한 번만 소비한다. 2026-11-07 F2d 월드 본체 TakeChanged 이식에서 추가됐다.</summary>
+    private bool _changed = true;
+
     /// <summary>같은 판본·타입·지형으로 월드를 만들고 물리 저장소를 빌리거나 새로 만든다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -52,4 +55,14 @@ public sealed class RawSurfaceWorld
     /// <summary>빌리거나 새로 만든 같은 물리 저장소다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
     /// <returns>물리 저장소다.</returns>
     public RawSurfaceStorage Storage() => _storage;
+
+    /// <summary>변경 요청을 한 번만 소비한다. 원본 표시가 전체 갱신으로 억제되어도 논리 변경은 남는다. 2026-11-07 F2d 월드 본체 TakeChanged 이식에서 추가됐다.</summary>
+    /// <returns>소비 전에 변경이 남았으면 true, 이미 소비했으면 false다.</returns>
+    public bool TakeChanged()
+    {
+        // 원본 std::exchange(impl_->changed, false)를 직역한다.
+        bool previous = _changed;
+        _changed = false;
+        return previous;
+    }
 }
