@@ -67,6 +67,25 @@ void BindClientKernelDiagnostics(const std::shared_ptr<o::Kernel>& kernel,const 
     diagnostics.assertion=[weakSurface=std::weak_ptr<RawSurfaceStorage>(surface)](auto expression,auto file,auto line) { const auto actual=weakSurface.lock();if (!actual) throw std::logic_error("Client Kernel 단언의 실제 물리 수명 종료");actual->AssertDisplay(expression,file,line); }; // 소비 위치의 현재 진단을 읽는다.
     kernel->BindDiagnostics(std::move(diagnostics));
 }
+// 495330/495460/4954f0의 공통 기록 서식이며 원문 stack 이름 영역을 넘기는 복사는 호스트에서 거부한다.
+void WriteDeveloperBuildRecord(Client& client,std::string_view name,float x,float y,std::uint32_t argument,std::uint32_t rotation,float delta) {
+    if (name.size()>=20 || name.find('\0')!=std::string_view::npos) throw std::length_error("건설 기록의 원문20BYTE 이름 범위");auto& state=client.DiagnosticGlobals();if (!state.buildRecord) throw std::logic_error("활성 건설 기록의 실제 FILE 없음");
+    static_cast<void>(std::fprintf(state.buildRecord.get(),"%s (%f, %f) canon=%d rotation=%d delta=%f\n",std::string(name).c_str(),static_cast<double>(x),static_cast<double>(y),std::bit_cast<std::int32_t>(argument),std::bit_cast<std::int32_t>(rotation),static_cast<double>(delta))); // 원문 fprintf 실패 반환은 소비하지 않고 다음 시각 갱신을 계속한다.
+}
+void RecordDeveloperBuildPlacement(Client& client,std::uint32_t token,std::string_view type,float x,float y,std::uint32_t argument,std::uint32_t rotation) {
+    if (!token || token!=client.GameplayGlobals()->cursor.recorder) throw std::logic_error("건설 기록의 현재 recorder 식별자 불일치");auto& state=client.DiagnosticGlobals();const auto now=static_cast<float>(client.Time().game);const auto delta=static_cast<float>(now-state.lastBuildRecordTime);WriteDeveloperBuildRecord(client,type,x,y,argument,rotation,delta);state.lastBuildRecordTime=static_cast<float>(client.Time().game); // 출력 뒤 현재 시각을 다시 읽어 단정도로 저장한다.
+}
+void RecordDeveloperBuildLabel(Client& client,std::string_view label) {
+    const auto point=client.SurfaceStorage()->boardTargetState.invalid;WriteDeveloperBuildRecord(client,"RL"+std::string(label),point.x,point.y,0xffffffffU,0xffffffffU,0.0F); // 실제 RL 접두와 현재 실패점/두-1/기한0이며 마지막 배치 시각은 바꾸지 않는다.
+}
+bool DispatchBuildRecordKey(Client& client,InputEvent event) {
+    if ((event.code&0x03ffffffU)!=0x750000U || (event.code&InputCode::kRelease) || client.Paused() || !client.GameplayGlobals()->player.special || !(event.code&InputCode::kControl)) return false;auto& cursor=client.GameplayGlobals()->cursor;auto& state=client.DiagnosticGlobals();
+    if (cursor.recording) { client.WriteDiagnosticLog(29,"closing record file\n");state.buildRecord.reset();cursor.recording=0;return true; } // 원문 로그→닫기→플래그0 순서다.
+    if (!cursor.recorder) throw std::logic_error("건설 기록의 실제 초기화495860 이전 입력");state.lastBuildRecordTime=static_cast<float>(client.Time().game);
+    const auto root=client.UserData() ? *client.UserData() : platform::UserDataRoot::Resolve();const auto directory=root.Captures()/L"BuildRecords"/L"d";platform::UserDataRoot::EnsureDirectory(directory);std::filesystem::path path; // 5차 정책: 자동 생성 rec도 설치 폴더가 아닌 사용자 홈에 쓰며 원문의 d/번호.rec 규칙을 유지한다.
+    for (std::uint32_t number=0;;++number) { path=directory/(std::to_string(std::bit_cast<std::int32_t>(number))+".rec");if (!std::filesystem::exists(path)) break; } // 원문0부터의 첫 빈 파일을 고르고 기존 기록은 덮어쓰지 않는다.
+    FILE* file{};if (_wfopen_s(&file,path.c_str(),L"w") || !file) throw std::runtime_error("건설 기록 파일 열기 실패");state.buildRecord=std::shared_ptr<FILE>(file,[](FILE* current) { std::fclose(current); });const auto bytes=path.u8string();client.WriteDiagnosticLog(29,"recording to "+std::string(reinterpret_cast<const char*>(bytes.data()),bytes.size())+"\n");cursor.recording=1;return true; // 열기→현재 로그→활성1이며 텍스트 모드의 원문 CRLF를 유지한다.
+}
 bool DispatchDiagnosticKey(InputEvent event,const std::function<void()>& dump) { // 원문 누름 관문과 두 수정키를 함께 요구하며 Alt는 별도 금지하지 않는다.
     if ((event.code&0x03ffffffU)!=0x760000U || (event.code&InputCode::kRelease) || (event.code&(InputCode::kShift|InputCode::kControl))!=(InputCode::kShift|InputCode::kControl)) return false;
     if (!dump) throw std::logic_error("개발자 F7 실제 덤프 미연결");dump();return true;

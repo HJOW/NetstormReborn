@@ -3,6 +3,7 @@
 #include "client/CampaignCursorClientEffects.h"
 #include "client/RawMenuControls.h"
 #include "client/ClientMain.h"
+#include "client/ClientDiagnostics.h" // 실제 내려놓기와31h 라벨이 같은 기록 파일을 공유한다.
 #include "client/RawButtonControls.h"
 #include "o/OriginalText.h"
 #include <bit>
@@ -40,6 +41,7 @@ void BindCampaignCursorGumps(CampaignCursorEffects& effects,RawButtonControls& c
 // 장치는 사용 시 조회하여 해상도/Renderer 교체 뒤에도 이전 포인터를 보관하지 않는다.
 CampaignCursorEffects MakeCampaignCursorClientEffects(Client& client,RawButtonControls& controls,CampaignCursorEffects effects) {
     BindCampaignCursorGumps(effects,controls);
+    effects.drop.record=[&client](auto token,auto type,auto x,auto y,auto argument,auto rotation) { RecordDeveloperBuildPlacement(client,token,type,x,y,argument,rotation); }; //473e0의 snap/배치 직전 원문 기록 위치를 유지한다.
     effects.drop.showSp=[&controls](auto cost,auto x,auto y,auto reference) {
         auto* gumps=controls.Menus();if (!gumps) throw std::logic_error("커서 비용 표시의 실제 Gump 트리 미연결");gumps->ShowSp(cost,x,y,reference);
     };

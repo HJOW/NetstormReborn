@@ -4635,8 +4635,9 @@ void RawCampaignSession::Impl::ExecuteDeveloperCommand(std::string_view text) {
         RawBoardTarget board(world.Storage()->boardTargetState,[storage=world.Storage()](auto line) { storage->AssertDisplay("false","\\Ns\\O\\Boardcoord.cpp",line); });const auto point=board.Side(core.neighbors.Footprint(priest),2,4);world.Pop(created,point.x,point.y,0); // 로컬 사제의 현재 발자국을 동쪽/flags4로 확장한 변 중간점이다.
         if (!developerDamage) throw std::logic_error("개발자 getPriest의 실제 가상98 미연결");developerDamage(created,10000,core.pool.Slot(priest)[34],priest.value);return; // PE는 원래 사제SID를 마지막 인자로 넘긴다. 새 검사에서 포획/피해 실행은 하지 않는다.
     }
-    for (const auto pending:{"addlabel","al"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
-        if (key==pending) throw std::logic_error("개발자 명령의 실제 후속 본체 미접합: "+key);
+    if (key=="addlabel" || key=="al") {
+        if (!gameplayGlobals->cursor.recording) return;std::array<char,256> label{}; // 비활성 기록은 원문처럼 파싱/실제 장치를 조회하지 않는다.
+        if (std::sscanf(input.c_str(),"%*s %255s",label.data())!=1) return;if (!services.developerRecordLabel) throw std::logic_error("개발자 addLabel의 실제 기록 파일 미연결");services.developerRecordLabel(label.data());return;
     }
 }
 //433c30은 별도 세계나 새 Player 기록을 만들지 않으며 압축 decoder도 직접 같은 본문을 사용한다.

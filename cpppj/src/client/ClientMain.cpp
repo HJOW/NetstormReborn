@@ -432,6 +432,8 @@ int Client::Run() {
     if (ready) ready(*this);
     else { menu_ = std::make_unique<UberGump>(*this); if (!options_.mission.empty()) menu_->StartMission(options_.mission); }
 
+    if (options_.edition==o::OriginalEdition::Patch1078) gameplayGlobals_->cursor.recorder=1; //495860의 장기 기록기 식별자를 UI 초기화 뒤/첫 프레임 전에 설치한다. 실제 FILE은 원문처럼 기록 시작 때 연다.
+
     // 메인 루프(docs/exe/main-loop.md 2절). 옮기지 않은 단계는 순서의 자리에 적는다.
     while (true) {
         // 0. 창이 활성이면 설정한 우선순위로, 아니면 보통으로.

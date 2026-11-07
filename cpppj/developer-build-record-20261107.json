@@ -1,0 +1,71 @@
+{
+  "unit": 1040,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "addLabel과 실제 개발자 건설 기록 시작/종료·배치 writer 연결",
+  "sourceFunctions1078": [
+    "0044dc70",
+    "00495330",
+    "00495380",
+    "00495430",
+    "00495460",
+    "004954f0",
+    "00495860",
+    "004473e0",
+    "004d62b0"
+  ],
+  "referenceFunctions1072": [
+    "004a4290",
+    "0049ee20",
+    "0049ef20",
+    "0049eff0",
+    "0049f080",
+    "0049f0e0",
+    "0049f450",
+    "0043d660"
+  ],
+  "developerCommands": {
+    "added": [
+      "addLabel"
+    ],
+    "implementedTotal": 33,
+    "remainingCommandBranches": [],
+    "commandBranchesComplete": true,
+    "totalComplete": false,
+    "remainingParents": [
+      "31h 실제 입력/송신·cr65h 소비 감사",
+      "기록 재생/관련 개발자 입력 감사"
+    ]
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1040\\build.log",
+    "exeSize": 12116992,
+    "exeSha256": "ca3740b278c9a831a3a6d91b53c616eb36a93abc470e8cdc2a6597daaedd1bc1"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1040\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remaining": [
+    "31h 입력/송신·cr65h·기록 재생 감사",
+    "나머지 LAN/재동기화·Activate·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

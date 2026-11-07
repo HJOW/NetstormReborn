@@ -1476,6 +1476,7 @@ void UberGump::Event(InputEvent event) {
         };
         if (DispatchViewKeyInput(event,{hideBuildings_,worldRedraw_},hooks)) rebuild_=true;return;
     }
+    if (transitionCode==0x750000U) { if (!rawButtons_->CurrentDialog()) static_cast<void>(DispatchBuildRecordKey(client_,event));return; } // 일반 Console/모달 뒤 원문 Ctrl+F6/special/정지 관문이다. 개발자 플래그를 새로 켜지 않는다.
     if (transitionCode=='C' || transitionCode=='c') {
         if (rawButtons_->CurrentDialog()) return; //원문의 현재 Console/모달 관문 뒤에서만 C의 정지를 조회한다.
         static_cast<void>(DispatchRotationKeyInput(event,client_.GameplayGlobals()->CursorGlobals().RotationMode(),{[this] { return client_.Paused(); },[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration()); }}));
