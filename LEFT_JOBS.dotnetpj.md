@@ -12,17 +12,17 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-07, 단위 기록 0.190 기준 — `/goal` 지시로 재개 후 작업 중)
+### 0.1 현재 값 (2026-11-07, 단위 기록 0.191 기준 — `/goal` 지시로 재개 후 작업 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.190(호출 수명·부착 배선)이며, 다음 단위는 F2d·F3 나머지(Host `Attach` 본체·`RawSurfaceWorld` 본체·`RawFortWorldLoadBinding`·`RawCampaignSession` 연결)이다. |
-| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, 게임 난수·보드 각도·바람 진행·저장소 껍데기·해시 선택/주소·물리 자료형·풀 생성/전체 대여·게임 시계·커널·프로세스 상태·호스트 저장소 껍데기·프로세스 기본/정기·호스트 묶음·표시 진단·호스트 껍데기·부착 부모·호출 수명 완료, `RawFortWorldLoadBinding`·Host 본체·월드 본체·F3 미착수). R5 이후는 미착수 |
+| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.191(월드 런타임 훅)이며, 다음 단위는 F2d·F3 나머지(Host `Attach` 본체·`RawSurfaceWorld` 본체·`RawFortWorldLoadBinding`·`RawCampaignSession` 연결)이다. |
+| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, 게임 난수·보드 각도·바람 진행·저장소 껍데기·해시 선택/주소·물리 자료형·풀 생성/전체 대여·게임 시계·커널·프로세스 상태·호스트 저장소 껍데기·프로세스 기본/정기·호스트 묶음·표시 진단·호스트 껍데기·부착 부모·호출 수명·런타임 훅 완료, `RawFortWorldLoadBinding`·Host 본체·월드 본체·F3 미착수). R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.189 `7b16cb38 / 20261107-113 DN`(부착 부모 함수, 이전: 0.188 `7b11ea4a / 20261107-112 DN`, 0.187 `4dd01098 / 20261107-111 DN`). |
-| 검사 | 0.190에서 Release **Core 집중 13개**(프로세스 직접 9개 + 무결성·매니페스트 4개) 통과, 실패·건너뜀 0. Core 전체는 0.176 완주 1,416개가 마지막이며 변경이 기존 2개 확장뿐이라 기존 검사에 영향을 주지 않으며(솔루션 빌드 경고·오류 0), 무결성·매니페스트 검사는 통과했다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.190 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
-| 포트 맵 | `PORT_MAP.tsv` 총 593줄 유지(자료 588행: L1 323, port 265)이다. 0.190은 이미 port인 행의 본체 범위 확장이라 신규 행이 없다. |
+| 마지막 구현 커밋 | 0.190 `6ed87a82 / 20261107-114 DN`(호출 수명·부착 배선, 이전: 0.189 `7b16cb38 / 20261107-113 DN`, 0.188 `7b11ea4a / 20261107-112 DN`). |
+| 검사 | 0.191에서 Release **Core 집중 7개**(런타임 훅 직접 3개 + 무결성·매니페스트 4개) 통과, 실패·건너뜀 0. Core 전체는 0.176 완주 1,416개가 마지막이며 변경이 신규 파일 2개 추가뿐이라 기존 검사에 영향을 주지 않으며(솔루션 빌드 경고·오류 0), 무결성·매니페스트 검사는 통과했다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.191 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
+| 포트 맵 | `PORT_MAP.tsv` 총 597줄(자료 592행: L1 323, port 269)이다. 0.191에서 4행(port 4)을 더했다. 단위별 증가 내역은 0.155~0.191 기록과 이관 파일에 있다. |
 | fixture | 연결 229개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.167은 월드 본체 기준 `fe3d121d`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한다. |
@@ -222,6 +222,7 @@
     - [x] 프로세스 호스트 껍데기(`SquidProcessHost` 생성·조회·번호 직접 6종, 0.188 — 부착·검색·삭제·전송 본체는 잔여)
     - [x] 부착 부모 함수(`AttachBaseProcess` 48행 전수 1종+직접 2종, 0.189 — Host `Attach` 접합은 잔여)
     - [x] 호출 수명·부착 배선(`RuntimeCallGuard`·프로세스 배선 직접 3종, 0.190 — Host 본체에서 소비)
+    - [x] 월드 런타임 훅(`RawWorldRuntimeHooks`·전송 대리자 2종 직접 3종, 0.191 — 월드 본체에서 소비)
     - [ ] F2c 나머지: `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요)
     - [ ] F2d 나머지: `RawSurfaceWorld`
     - [ ] F3: `RawCampaignSession` 연결. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS·F 단계만으로는 화면 변화가 거의 없다.
@@ -295,6 +296,16 @@
 - **PORT_MAP:** 신규 2행(`RawFortPriestPreparation.cpp/.h` → `RawFortPriestPreparation.cs`, 모두 L1, 기준 `b8ce42c7`). 총 509행(L1 291, port 218).
 - **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 보호 원본은 새 검사가 읽기·쓰기 모두 풀 범위 안에서만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리에서 다른 세션의 cpppj 미커밋 변경(`cpppj/tests/SubscriberGlobalsTests.cpp` 1개)은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
 - **남은 것:** F2c 나머지·F2d·F3부터다. `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요), F2d World·저장 나머지(`RawSurfaceWorld` 63KB·`RawSurfaceStorage` 등 월드 스택), F3 `RawCampaignSession` 연결 순이다. `RawIslandPostPop`·`RawIslandLifecycle`의 x86 전수 재생(`islandpostpop-x86.tsv` 1988행·`islandlifecycle-x86.tsv` 2055행)은 월드 스택 하네스(생성·소유자·Pop 실제 모듈)가 필요해 F3 실제 조립 때 잇는다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 지시에 따라 건너뛴다. 멀티플레이는 3차 로컬 구현 때 `LocalNetworkPolicy` 루프백 전용으로 사전 구현만 잇는다.
+
+### 0.191 단위 기록 — 월드 런타임 훅 이식 (2026-11-07, HJOW-Athlon)
+
+- **범위:** 전송 대리자 2종(`FormPopTransmit`·`BattlePacketSend`)과 런타임 훅 1종(`RawWorldRuntimeHooks` 12경계) 및 직접 검사 3종. 자산 삭제 대리자는 기이식(`RawSquidFormDispatch.cs`)이라 빌렸다. 월드 본체(`BindRuntime` 소비)는 후속 단위에서 잇는다.
+- **구현(새 파일 2개):** `Netstorm.Core/Original/RawWorldRuntimeHooks.cs`(대리자 2종·12경계 묶음과 복사), 검사 `RawWorldRuntimeHooksTests.cs`(직접 3개: 기본값·전달·복사). fixture·링크·매니페스트 변경 없음(총 229개 유지).
+- **C#에서 달라진 모양:** (1) 원문 span 바이트는 배열 복사로 옮겼다. (2) `size_t` 개수는 쓰지 않고 대리자만 둔다. (3) 묶음 복사는 `Clone`으로 옮겼다(기존 훅 규칙). (4) 자산 삭제 대리자 중복 정의를 걷고 기존 것을 빌렸다(빌드가 잡아 고침).
+- **검증:** 집중 7건 통과(직접 3개 + 무결성·매니페스트 4개). **불일치 0.** 개발 중 대리자 시그니처 오류 2건(void 반환 람다 값 반환·바이트 리터럴 추론)을 빌드가 잡아 고쳤다. 변이 검사로 복사 누락(`SquidPacket` 미복사) 변이 시 복사 검사가 실패로 검출함을 확인하고 `--no-incremental` 원복·재통과했다. Release 솔루션 빌드 경고·오류 0. Core 전체는 0.176 완주 1,416개가 마지막이며 변경이 신규 2개뿐이라 기존 검사에 영향을 주지 않는다.
+- **PORT_MAP:** 신규 4행(`RawSurfaceWorld.h`·`SquidForms.h`·`RawBattleBroadcast.h`·`SquidFormDispatch.h` → `RawWorldRuntimeHooks.cs`, 모두 port). 총 597줄(자료 592행: L1 323, port 269).
+- **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 새 검사는 값·대리자 범위 안의 생성·호출만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리의 다른 세션 cpppj 변경·미커밋 파일은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
+- **남은 것:** F2d 나머지(Host 본체·할당 배선·월드 본체)·`RawFortWorldLoadBinding`·F3부터다(0.9절 참조).
 
 ### 0.190 단위 기록 — 호출 수명·부착 배선 이식 (2026-11-07, HJOW-Athlon)
 
