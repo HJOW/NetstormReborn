@@ -20,7 +20,7 @@ std::string_view Name(std::span<const std::uint8_t> record) {
     const auto text=record.subspan(0x26);const auto end=std::find(text.begin(),text.end(),std::uint8_t{});if (end==text.end()) throw std::out_of_range("NSInfo 이름의 실제 NUL 없음");return {reinterpret_cast<const char*>(text.data()),static_cast<std::size_t>(end-text.begin())};
 }
 // 원문현재자식의기본폭을쓴뒤같은배율의float결과만저장한다.
-void Width(std::uint32_t token,float width,const HudNsInfoMetaHooks& h) { auto& node=Need(h.node)(token);node.baseWidth=width;node.width=static_cast<float>(static_cast<double>(width)*node.scale); }
+void Width(std::uint32_t token,double width,const HudNsInfoMetaHooks& h) { auto& node=Need(h.node)(token);node.baseWidth=static_cast<float>(width);node.width=static_cast<float>(width*node.scale); }
 void Height(std::uint32_t token,double height,const HudNsInfoMetaHooks& h) { auto& node=Need(h.node)(token);node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(height*node.scale); } //FST32뒤에도남은원문계산값으로배율을곱하며저장높이를재조회하지않는다.
 void Visible(std::uint32_t token,bool visible,const HudNsInfoMetaHooks& h) { auto& node=Need(h.node)(token);if (visible) node.flags|=1U;else node.flags&=~1U; } //다른Gump플래그는보존한다.
 // 바뀐대상또는0대상에서만+b8을지우며고정PlayerInfo의현재+b0을그대로쓴다.
@@ -29,6 +29,17 @@ void Select(std::uint32_t token,std::uint32_t participant,const HudNsInfoMetaHoo
 void Help(std::uint32_t token,bool battle,const HudNsInfoMetaHooks& h) {
     Need(h.helpText)(token,"");const auto title=Need(h.translate)(battle ? "Battle Status Window":"Player List Window");h.helpText(token,title);Need(h.helpWord)(token,"");h.helpWord(token,battle ? "battleStatusView":"playerListView");
 }
+// 원문256BYTE서식은현재숫자의signed해석을그대로쓰고물리범위밖출력만거부한다.
+template<class... Args> std::string Format(const char* format,Args... arguments) {
+    std::array<char,256> bytes;const auto size=std::snprintf(bytes.data(),bytes.size(),format,arguments...);if (size<0 || static_cast<std::size_t>(size)>=bytes.size()) throw std::out_of_range("PlayerInfo 실제256BYTE 서식 범위");return {bytes.data(),static_cast<std::size_t>(size)};
+}
+// 0041c5b0은유효slot0..7에서만options+4f의BYTE를24DWORD표로변환한다.
+std::int32_t Rank(std::span<const std::uint8_t> options,std::uint32_t slot) {
+    constexpr std::array<std::int32_t,24> values{0,1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,60,70,80,90,100}; //원문지역표이며레벨선형보간은추가하지않는다.
+    if (std::bit_cast<std::int32_t>(slot)<0 || slot>=8) return 0;return values.at(Read(options,0x4f+slot,1));
+}
+// +40에계산값을저장해도배율곱에는원문FST뒤의잔류계산값을사용한다.
+void PanelHeight(std::uint32_t token,double height,const HudNsInfoMetaHooks& h) { auto& node=Need(h.node)(token);node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(height*node.scale); }
 }
 // 원문은정렬되지않은유효표를표준sort가아닌전체39×39쌍교환으로재배치한다.
 void RefreshNsInfoRoster(std::uint32_t token,HudNsInfoMetaGlobals g,const HudNsInfoMetaHooks& h) {
@@ -85,5 +96,49 @@ void LayoutMetaNsInfo(std::uint32_t token,HudNsInfoMetaGlobals g,const HudNsInfo
     }
     // 남은패널도숨긴뒤실제Attach를호출한다.미복원자식본문을빈성공으로우회하지않는다.
     for (std::uint32_t index=used;index<8;++index) { const auto panel=root.players[index];Need(h.push)(panel);Width(panel,root.baseWidth,h);auto& player=Need(h.player)(panel);player.reserved=0;player.player=0;Visible(panel,false,h);Need(h.attach)(panel,0,0,root.background,0); }
+}
+// 일반Attach/현재meta/known관문은HudNsInfoCreate가먼저수행한다.
+void LayoutMetaPlayerInfo(std::uint32_t token,HudNsInfoMetaGlobals g,const HudNsInfoMetaHooks& h) {
+    auto& panel=Need(h.player)(token);Need(h.push)(panel.text);h.push(panel.button);h.push(panel.start);h.push(panel.master);
+    auto& textFlags=Need(h.textFlags)(panel.text);if (Read(g.challenge.Participant(g.owner),0x64,1)&4U) textFlags|=8U;else textFlags&=~8U;
+    const auto white=Need(h.read)(0x5bec2c),yellow=h.read(0x59afd8);static_cast<void>(white);const std::array<std::uint32_t,8> emptyContext{0,0,yellow,0,0,0,1,1};float extraHeight{}; //원문초기흰문맥의색은후행이름색으로덮어쓰지만선행getter조회는유지한다.
+    if (!panel.player) {
+        Need(h.replace)(panel.text,"");Need(h.append)(panel.text,"Slot empty\n",emptyContext,0);Need(h.enabled)(panel.button,false);Need(h.value)(panel.button,0);h.enabled(panel.start,false);h.value(panel.start,0);
+    } else {
+        const auto participant=g.challenge.Participant(panel.player);const auto options=g.challenge.Battle(Read(participant,0xa4)).subspan(0x59);const bool ownMaster=(Read(g.challenge.Participant(g.owner),0x64)&4U)!=0;Need(h.textFlags)(panel.text)&=~0x10U;
+        Need(h.enabled)(panel.start,false);Visible(panel.start,false,h);Visible(panel.master,false,h);std::uint32_t metadata{};h.enabled(panel.button,true);Visible(panel.button,true,h);const auto targetMaster=Read(participant,0x64)&4U;
+        if (targetMaster && !ownMaster) { Visible(panel.master,true,h);extraHeight=Need(h.node)(panel.master).baseHeight; }
+        else if (ownMaster) {
+            if (targetMaster) {
+                Visible(panel.start,true,h);h.enabled(panel.start,true);const auto battle=g.challenge.Battle(Read(participant,0xa4));
+                // 실제8슬롯을원문순서로읽고첫미준비참가자에서만시작버튼을끈다.
+                for (std::uint32_t slot=0;slot<8;++slot) { const auto other=Read(battle,0x38+slot*4);if (!other) continue;const auto flags=Read(g.challenge.Participant(other),0x64);if (!(flags&2U) || !(flags&0x2000U)) { h.enabled(panel.start,false);Visible(panel.start,false,h);break; } }
+                metadata=panel.player;extraHeight=h.node(panel.start).baseHeight;
+            } else metadata=panel.player;
+            Need(h.textFlags)(panel.text)|=0x10U;
+        }
+        if (!(Read(participant,0x64,1)&2U)) { Need(h.readyButton)(panel.button).entry=0;Need(h.value)(panel.button,0); }
+        else { Need(h.value)(panel.button,1);Need(h.readyButton)(panel.button).entry=(Read(participant,0x64)&0x2000U) ? 1U:0U; }
+        if (panel.player!=g.owner) Need(h.enabled)(panel.button,false);
+        Need(h.replace)(panel.text,"");const auto slot=Read(participant,0xa8);const auto colorAddress=0x5c78b0U+slot*4U;const auto nameColor=Need(h.read)(colorAddress);const std::array<std::uint32_t,8> iconContext{2,0,h.read(0x5b5e58),1,0,h.read(0x5bec2c),1,1};
+        Need(h.readyButton)(panel.button).untouchedC0=(Read(participant,0x64)&0x2000U) ? h.read(0x5accfcU+slot*4U):h.read(0x5bec3c);
+        const bool special=Read(options,0x3f+Read(participant,0xa8),1)!=0;auto saved=Need(h.node)(panel.text).textContext;h.node(panel.text).textContext=iconContext;
+        Need(h.parse)(panel.text,Format("~[T%d]",std::bit_cast<std::int32_t>(panel.player+100U)));h.parse(panel.text,special ? "~[IfortGump.L10]":"~[IfortGump.L9]");h.parse(panel.text,"~[T0]");
+        if (!special) { h.parse(panel.text,Format("~[T%d]",std::bit_cast<std::int32_t>(panel.player+200U)));h.parse(panel.text,Format("~[IfortGump.L%d]",static_cast<int>(Read(options,0x47+Read(participant,0xa8),1)+11U)));h.parse(panel.text,"~[T0]"); }
+        h.node(panel.text).textContext=saved;
+        // 두상태아이콘은각각현재문맥을새로보관/대입하고정상파싱뒤에만복원한다.
+        for (const auto flag:{0x800U,0x200U}) { if (!(Read(participant,0x64)&flag)) continue;saved=h.node(panel.text).textContext;h.node(panel.text).textContext=iconContext;h.parse(panel.text,flag==0x800U ? "~[IfortGump.L1]":"~[IfortGump.L0]");h.node(panel.text).textContext=saved; }
+        if (!special) {
+            h.parse(panel.text,Format("~[T%d]",std::bit_cast<std::int32_t>(panel.player+300U)));const auto rank=Rank(options,Read(participant,0xa8));const auto pictures=Need(h.rankPicture)(rank);h.parse(panel.text,Format("%s",pictures.c_str()));h.parse(panel.text,Format("~[T0]"));
+        }
+        std::array<std::uint32_t,8> nameContext{2,0,(Read(participant,0x64)&0x2000U) ? nameColor:h.read(0x5bec3c),0,0,0,1,1};
+        if (Read(participant,0x64,1)&4U) Need(h.append)(panel.text,Name(participant),nameContext,metadata);
+        else { const std::string name(Name(participant));h.parse(panel.text,Format("~[T%d]~B~E~[C.%d]%s~[T0]",std::bit_cast<std::int32_t>(panel.player+400U),std::bit_cast<std::int32_t>(nameContext[2]),name.c_str())); }
+        Need(h.appendDefault)(panel.text,"\n");
+    }
+    Need(h.attach)(panel.button,0,0,0,0);Need(h.requestTop)(panel.text);Need(h.fitContent)(panel.text);const auto width=static_cast<double>(panel.baseWidth)-Need(h.node)(panel.button).baseWidth-2.0F;Width(panel.text,width,h);
+    h.attach(panel.text,static_cast<float>(static_cast<double>(h.node(panel.button).baseWidth)+2.0F),0,0,0);
+    h.attach(panel.start,static_cast<float>((static_cast<double>(panel.baseWidth)-h.node(panel.start).baseWidth)*0.5F),static_cast<float>(static_cast<double>(h.node(panel.text).baseHeight)+2.0F),0,0);
+    h.attach(panel.master,0,static_cast<float>(static_cast<double>(h.node(panel.text).baseHeight)+2.0F),0,0);PanelHeight(token,static_cast<double>(extraHeight)+h.node(panel.text).baseHeight+2.0F,h);
 }
 }

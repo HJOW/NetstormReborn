@@ -30,6 +30,7 @@
 #include "client/HudNsInfoCreate.h"
 #include "client/HudNsInfoMeta.h" //메타루트/참가자순서도같은CS·공통문자/트리를사용한다.
 #include "o/RawPlayerNotification.h" //원문참가자기술합계는현재TYPE기반공통몸체를재사용한다.
+#include "o/RawChatManagerPrefix.h" //메타참가자의랭크도같은현재icon B/C의기존몸체를사용한다.
 #include "client/NativeMetaDisplay.h"
 #include "client/NativeMetaScene.h"
 #include "client/RawTextEntryControls.h"
@@ -339,6 +340,13 @@ struct RawMenuControls::Impl {
         h.player=[this](auto token)->HudPlayerInfoNode& { const auto found=Find(nsPlayers,token);if (!found) throw std::out_of_range("NSInfo 메타 PlayerInfo 저장소 없음");return *found; };
         h.battle=[this](auto token)->HudBattleInfoNode& { const auto found=Find(nsBattles,token);if (!found) throw std::out_of_range("NSInfo 메타 BattleInfo 저장소 없음");return *found; };
         h.node=[this](auto token)->GumpCreateNode& { auto* node=common.node(token);if (!node) throw std::out_of_range("NSInfo 메타 실제 공통 노드 없음");return *node; };
+        h.textFlags=[this](auto token)->std::uint32_t& { return titles.at(token)->textFlags; };h.readyButton=[this](auto token)->HudPlayerButtonNode& { return *nsButtons.at(token); };h.enabled=nsContext->enabled;h.value=nsContext->value;
+        h.requestTop=[this](auto token) { title->RequestScroll(token,0); };h.fitContent=[this](auto token) { title->FitContent(token,0,0); };h.appendDefault=[this](auto token,std::string_view text) { const std::string bytes(text);title->AppendText(token,{bytes.data(),bytes.size()+1},-1,0); };
+        h.rankPicture=[this](auto rank) {
+            const auto count=[this](auto letter) { const auto kind=assets.Find("icon").block+o::kFirstAssetTypeNumber;return nsContext->storage->frames.at(kind).Run(letter).count; }; //매getter마다같은현재TYPE B/C개수를다시읽는다.
+            o::ChatManagerPrefixHooks prefix;prefix.minorCount=[count] { return count('B'); };prefix.maximumRank=[count] { const auto minor=static_cast<std::uint32_t>(count('B')),major=static_cast<std::uint32_t>(count('C'));return std::bit_cast<std::int32_t>(minor*major-1U); };prefix.assertion=[](auto line) { std::clog<<"PlayerInfo 랭크 원문 진단:"<<line<<'\n'; };
+            std::array<std::uint8_t,256> output,temporary;const auto result=o::ChatPrefixIcons(output,temporary,rank,prefix);const auto end=std::find(result.begin(),result.end(),std::uint8_t{});if (end==result.end()) throw std::out_of_range("PlayerInfo 랭크 실제 NUL 없음");return std::string(reinterpret_cast<const char*>(result.data()),static_cast<std::size_t>(end-result.begin()));
+        };
         h.push=[this](auto token) { common.tree.Push(token); };h.attach=common.attach;h.fitHeight=[this](auto token) { title->FitHeight(token); };
         h.replace=[this](auto token,std::string_view text) { const std::string bytes(text);title->ReplaceText(token,{bytes.data(),bytes.size()+1},0); };h.parse=[this](auto token,auto text) { titleMarkup->Parse(token,text); };h.wrap=[this](auto token,auto wrap) { titleWidgets->SetWrap(token,wrap); };
         h.append=[this](auto token,std::string_view text,const auto& context,auto metadata) { const std::string bytes(text);title->AppendText(token,{bytes.data(),bytes.size()+1},context,-1,metadata); };h.read=[this](auto address) { return NsRead(address); };
@@ -368,7 +376,7 @@ struct RawMenuControls::Impl {
         h.translate=[this](auto token) { nsTranslated[token]=nsContext->translate(NsText(token,true));return token; };h.type=[this](auto type) { if (type>=assets.TypeTable().Types().size()) throw std::out_of_range("NSInfo 실제 TYPE 범위");return 0x100000U+type; }; // 유효한 실제 TYPE0도 비null인 같은 논리 레코드 토큰이다.
         h.serverName=[this] { nsContext->globals->ResolveServerName(nsContext->translate);return 0x594970U; };
         h.formatZone=[this](auto format,auto server,auto zone) { const auto fmt=NsText(format),name=NsText(server);const auto size=std::snprintf(nullptr,0,fmt.c_str(),name.c_str(),zone);if (size<0) throw std::runtime_error("NSInfo 원본 zone 형식 오류");std::string value(static_cast<std::size_t>(size)+1,'\0');std::snprintf(value.data(),value.size(),fmt.c_str(),name.c_str(),zone);value.resize(size);return nsContext->storeText(value); };
-        h.assertion=[](auto line) { throw std::logic_error("NSInfo 원본 진단: "+std::to_string(line)); };h.metamapLayout=[](auto,auto) { throw std::logic_error("NSInfo 자식의 전체 메타맵 배치 미연결"); };
+        h.assertion=[](auto line) { throw std::logic_error("NSInfo 원본 진단: "+std::to_string(line)); };h.metamapLayout=[this](auto kind,auto token) { if (kind==HudNsInfoChild::Player) LayoutMetaPlayerInfo(token,NsMetaGlobals(),NsMetaHooks());else throw std::logic_error("NSInfo BattleInfo의 전체 메타맵 배치 미연결"); }; //Player의전체본문만연결하고Battle미연결은실제선택위치에서유지한다.
         nsCreate=std::make_unique<HudNsInfoCreate>(nsContext->globals->current,std::move(h));HudNsInfoHooks geometry;
         geometry.node=[this](auto token) { return Find(nsRoots,token); };geometry.base=common.node;geometry.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };geometry.push=[this](auto token) { common.tree.Push(token); };geometry.attach=common.attach;
         geometry.metamapLayout=[this](auto token) { LayoutMetaNsInfo(token,NsMetaGlobals(),NsMetaHooks()); }; //일반앞단/관문뒤원문루트본문을같은실제배치장치로실행한다.

@@ -21,6 +21,13 @@ struct HudNsInfoMetaHooks { // 실제 UI 처리기·현재 색/기술 값만 선
     std::function<void(std::uint32_t,std::string_view,const std::array<std::uint32_t,8>&,std::uint32_t)> append; //004ba0f0의길이-1/실제정렬행metadata다.
     std::function<std::uint32_t(std::uint32_t)> read; //현재팔레트색/metadataMode의원문DWORD를읽는다.
     std::function<std::uint32_t(std::uint32_t)> objectOwner; //같은Pool의실제SID+22 BYTE다.추가active필터는없다.
+    std::function<std::uint32_t&(std::uint32_t)> textFlags; //같은ScrollingText+d0의현재플래그를빌린다.
+    std::function<HudPlayerButtonNode&(std::uint32_t)> readyButton; //+c0 현재색/+c4 체크그림값을쓰는같은특수버튼이다.
+    std::function<void(std::uint32_t,bool)> enabled; //실제Button가상+3c의활성화/Redraw다.
+    std::function<void(std::uint32_t,std::uint32_t)> value; //실제Button가상+40의값/돌배경/Redraw다.
+    std::function<void(std::uint32_t)> requestTop,fitContent; //004ba360(0)/004b9fb0(0,0)의같은실제스크롤/내용맞춤이다.
+    std::function<void(std::uint32_t,std::string_view)> appendDefault; //004ba090은현재기본문맥으로문자열/metadata0을추가한다.
+    std::function<std::string(std::int32_t)> rankPicture; //0042f480의같은현재icon B/C와전체256BYTE처리다.
     std::function<std::uint8_t(std::span<const std::uint8_t>)> weight; //0042b210의현재TYPE기술합계다.
     std::function<std::string(bool)> header; //번역→zone캡처→현재server조회→256BYTE서식을원문순서로수행한다.
     std::function<std::string(std::string_view)> translate; //현재표시바이트언어번역이며원문숫자행은번역하지않는다.
@@ -28,4 +35,5 @@ struct HudNsInfoMetaHooks { // 실제 UI 처리기·현재 색/기술 값만 선
 };
 void RefreshNsInfoRoster(std::uint32_t token,HudNsInfoMetaGlobals globals,const HudNsInfoMetaHooks& hooks); //0047e630전체의39명초기순서·원문쌍교환정렬·이름/문맥/행metadata다.
 void LayoutMetaNsInfo(std::uint32_t token,HudNsInfoMetaGlobals globals,const HudNsInfoMetaHooks& hooks); //0047e9d0의일반앞단/관문뒤전체본문이다.실제자식Attach가Player/Battle후속을선택한다.
+void LayoutMetaPlayerInfo(std::uint32_t token,HudNsInfoMetaGlobals globals,const HudNsInfoMetaHooks& hooks); //00479fb0의기존일반부착/관문뒤전체메타본문이다.실제이름/버튼/아이콘과최종높이를쓴다.
 }

@@ -1,0 +1,64 @@
+{
+  "unit": 1104,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "earlierBuilds": [
+      "first=0",
+      "slot-read=0"
+    ]
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12519936,
+      "sha256": "f1cbdf58abb8d78b5fd71e97e5071689cd2d0c8a97f4418c43d3412e298ce5bd"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "26793b505437b1744ddc47f5ff283b7d05a0dda8988a345f308d99351e15d40a"
+    }
+  },
+  "staticAudit": {
+    "body": "00479fb0 일반 앞단/관문 뒤 전체: 4자식 Push·빈 슬롯·마스터/준비/시작·문맥/아이콘/이름/metadata·최종 크기",
+    "machineCodeCorrections": "options 포인터는 별도 보존·slot은 원문 각 위치에서 재조회·최종 높이의 첫 항은 캡처한 마스터/시작 버튼 여백",
+    "devices": "같은 CS/TYPE/팔레트·현재 Button 활성/값/Redraw·공통 Markup/Scrolling/Attach·기존 ChatPrefixIcons",
+    "rank": "0041c5b0의 slot0..7/24DWORD와0042f480의현재 icon B/C·진단 복귀를 재사용/대조",
+    "limits": "원문256BYTE 서식·배열의 물리 범위 밖은 명시 거부. 전체 x87 입력/픽셀 동등 검증은 아님"
+  },
+  "integration": {
+    "playerFullLayoutBound": true,
+    "battleFullLayoutBound": false,
+    "metaInputAndButtonDrawBound": false,
+    "wholeNsInfoScreenComplete": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "BattleInfo 전체 배치·NSInfo 메타 입력/버튼 Draw",
+    "CS 수신/참가자·전투섬 생성·카메라 Rig/HTML",
+    "1dh/28~33 등록 및1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

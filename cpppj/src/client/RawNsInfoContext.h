@@ -14,5 +14,7 @@ struct RawNsInfoContext {
     std::function<std::string(std::string_view)> translate; // 실제 현재 번역을 원본 글꼴 바이트로 제공한다.
     std::function<std::uint32_t(std::string_view)> storeText;std::function<std::string_view(std::uint32_t)> text; // 실제80칸 형식 문자열 고리의 같은 수명이다.
     std::function<void(std::uint32_t,std::int32_t,std::int32_t,std::uint32_t)> constructButton; // 공통 ButtonGump::ConstructBase를 RawButtonControls가 연결한다.
+    std::function<void(std::uint32_t,bool)> enabled; //같은Button가상+3c의현재활성화/Redraw다.
+    std::function<void(std::uint32_t,std::uint32_t)> value; //같은Button가상+40의기본/돌버튼현재값쓰기다.
 };
 }
