@@ -26,7 +26,7 @@
     "native": "0042b3a0/42c670 전체·각다음함수까지기계어",
     "callingConvention": "ret18h=DWORD스택6칸·8BYTE값구조체에6BYTE만작성·논리id/식별자/x/y/기존표시5개",
     "record": "id/식별자4/2/x/active1/y→8슬롯0→max-1/min256·패딩/이미지헤더미작성보존",
-    "objects": "현재TYPE109장치/flags2→현재id QA→같은raw+8WORD0→owner0→현재y/x Pop→SID저장",
+    "objects": "현재TYPE109장치/flags2→현재id QA→같은raw+8WORD0→배율DWORD0→현재y/x Pop→SID저장",
     "animation": "마지막기존표시가0일때만같은SID/지연10 Rig장치요구",
     "receive": "23h현재active면수준9반환·기존packet5&2/y/x/식별자4/2캡처→생성부모"
   },
@@ -49,7 +49,7 @@
     "zip": 0
   },
   "remaining": [
-    "실제공장/QA/owner/Pop·Rig장치와23h등록/나머지CS수신·참가자생성·HTML→1dh/28~33등록/1095송신상태호출",
+    "실제공장/QA/배율/Pop·Rig장치와23h등록/나머지CS수신·참가자생성·HTML→1dh/28~33등록/1095송신상태호출",
     "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
   ],
   "decompilation": {

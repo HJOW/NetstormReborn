@@ -568,3 +568,6 @@ target_sources(netstorm PRIVATE client/NativeMetaBattleOptions.h client/NativeMe
 
 # 메타전투 생성/23h 수신 부모다. 실제공장/QA/Pop/Rig 장치뒤에등록한다.
 target_sources(netstorm PRIVATE client/NativeMetaBattleCreate.h client/NativeMetaBattleCreate.cpp)
+
+# 메타전투의실제현재팩터리/QA·Pool/가상Pop장치를원문생성부모에바인딩한다.
+target_sources(netstorm PRIVATE client/ClientMetaBattleObjects.h client/ClientMetaBattleObjects.cpp)

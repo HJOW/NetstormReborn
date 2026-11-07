@@ -18,10 +18,10 @@ struct NativeMetaBattleCreateHooks {
     std::function<std::uint32_t()> battleType; //같은현재54120c를객체생성직전에읽는다.
     std::function<std::uint32_t(std::uint32_t,std::uint32_t)> create; //현재TYPE/flags2의실제4af530공장이같은Pool의SID를반환한다.
     std::function<std::span<std::uint8_t>(std::uint32_t)> raw; //생성한같은50BYTE객체의현재물리다.
-    std::function<void(std::uint32_t,std::uint32_t)> setKind,owner; //현재QA WORD의4ac220과실제asset owner0의4adca0이다.
+    std::function<void(std::uint32_t,std::uint32_t)> setKind; //현재QA WORD의4ac220이다.4adca0은owner가아닌raw+1a배율DWORD직접쓰기다.
     std::function<void(std::uint32_t,float,float,std::uint32_t)> pop; //생성객체의가상+90(현재x/y/0)이다.
     std::function<void(std::uint32_t,std::uint32_t)> animate; //4194c0의같은객체/지연10 Rig생성이다.기존전투는요구하지않는다.
 };
-void ConstructNativeMetaBattle(std::span<std::uint8_t> record,NativeMetaBattleCreateData input,const NativeMetaBattleCreateHooks& hooks); //0042b3a0 전체기록쓰기/실제공장·QA/owner/Pop·조건부Rig부모다.논리인자5개중식별자가스택2DWORD를쓴다.
+void ConstructNativeMetaBattle(std::span<std::uint8_t> record,NativeMetaBattleCreateData input,const NativeMetaBattleCreateHooks& hooks); //0042b3a0 전체기록쓰기/실제공장·QA/배율0/Pop·조건부Rig부모다.논리인자5개중식별자가스택2DWORD를쓴다.
 void ReceiveNativeMetaBattleAdd(ClientChallengeGlobals& challenge,std::span<const std::uint8_t> packet,const NativeMetaBattleCreateHooks& hooks); //0042c670 전체:이미active면진단반환·23h필드/식별자6BYTE·packet5&2→같은생성자다.
 }

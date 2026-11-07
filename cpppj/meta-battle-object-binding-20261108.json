@@ -1,0 +1,50 @@
+{
+  "unit": 1122,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12670976,
+      "sha256": "1af9d6e4f0c8aaa88fc9c97de73b5c094726c3764af34c6762355014f89bf41d"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "1073feb51bbbb67fbe9f2bb10ea2108dd2063a8e6a2c53bf9521c8640d895e3b"
+    }
+  },
+  "staticAudit": {
+    "scaleCorrection": "004adca0은 raw+1a DWORD 배율 쓰기이며 owner 변경이 아니다. 기존 생성부의 미등록 owner 훅을 실제 필드 쓰기로 정정했다.",
+    "binding": "현재 Client TYPE·같은 Session World.Create/Pool.Slot·QA WORD/조건부 NotifySurface·World.Pop",
+    "lifetime": "바인딩 시 CS/Session을 요구하지 않고 선택한 효과 위치에서 현재 장치를 조회한다. 기존 animate는 보존한다.",
+    "integration": "바인더 제공·컴파일 완료, 소비자 호출/Rig와 23h 등록은 후속"
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "Rig 및 생성 소비자 연결·23h 등록·나머지 CS 수신/참가자 생성/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
