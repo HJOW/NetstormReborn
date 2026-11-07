@@ -2,6 +2,7 @@
 #include "client/HudNsInfoMeta.h"
 #include "client/RawCameraView.h"
 #include "o/RawBattleOptionText.h" //실제선택문자열의번역플래그와포함최댓값을공유한다.
+#include "o/RawBattleOptionSlots.h" //표시/입력의같은24DWORD 랭크변환과실제슬롯필드를공유한다.
 #include <algorithm>
 #include <bit>
 #include <cstdio>
@@ -33,11 +34,6 @@ void Help(std::uint32_t token,bool battle,const HudNsInfoMetaHooks& h) {
 // 원문256BYTE서식은현재숫자의signed해석을그대로쓰고물리범위밖출력만거부한다.
 template<class... Args> std::string Format(const char* format,Args... arguments) {
     std::array<char,256> bytes;const auto size=std::snprintf(bytes.data(),bytes.size(),format,arguments...);if (size<0 || static_cast<std::size_t>(size)>=bytes.size()) throw std::out_of_range("PlayerInfo 실제256BYTE 서식 범위");return {bytes.data(),static_cast<std::size_t>(size)};
-}
-// 0041c5b0은유효slot0..7에서만options+4f의BYTE를24DWORD표로변환한다.
-std::int32_t Rank(std::span<const std::uint8_t> options,std::uint32_t slot) {
-    constexpr std::array<std::int32_t,24> values{0,1,2,3,4,5,6,7,8,9,10,15,20,25,30,35,40,45,50,60,70,80,90,100}; //원문지역표이며레벨선형보간은추가하지않는다.
-    if (std::bit_cast<std::int32_t>(slot)<0 || slot>=8) return 0;return values.at(Read(options,0x4f+slot,1));
 }
 // +40에계산값을저장해도배율곱에는원문FST뒤의잔류계산값을사용한다.
 void PanelHeight(std::uint32_t token,double height,const HudNsInfoMetaHooks& h) { auto& node=Need(h.node)(token);node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(height*node.scale); }
@@ -134,7 +130,7 @@ void LayoutMetaPlayerInfo(std::uint32_t token,HudNsInfoMetaGlobals g,const HudNs
         // 두상태아이콘은각각현재문맥을새로보관/대입하고정상파싱뒤에만복원한다.
         for (const auto flag:{0x800U,0x200U}) { if (!(Read(participant,0x64)&flag)) continue;saved=h.node(panel.text).textContext;h.node(panel.text).textContext=iconContext;h.parse(panel.text,flag==0x800U ? "~[IfortGump.L1]":"~[IfortGump.L0]");h.node(panel.text).textContext=saved; }
         if (!special) {
-            h.parse(panel.text,Format("~[T%d]",std::bit_cast<std::int32_t>(panel.player+300U)));const auto rank=Rank(options,Read(participant,0xa8));const auto pictures=Need(h.rankPicture)(rank);h.parse(panel.text,Format("%s",pictures.c_str()));h.parse(panel.text,Format("~[T0]"));
+            h.parse(panel.text,Format("~[T%d]",std::bit_cast<std::int32_t>(panel.player+300U)));const auto rank=o::BattleSlotRank(options,std::bit_cast<std::int32_t>(Read(participant,0xa8)));const auto pictures=Need(h.rankPicture)(rank);h.parse(panel.text,Format("%s",pictures.c_str()));h.parse(panel.text,Format("~[T0]"));
         }
         std::array<std::uint32_t,8> nameContext{2,0,(Read(participant,0x64)&0x2000U) ? nameColor:h.read(0x5bec3c),0,0,0,1,1};
         if (Read(participant,0x64,1)&4U) Need(h.append)(panel.text,Name(participant),nameContext,metadata);

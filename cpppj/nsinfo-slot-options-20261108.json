@@ -1,0 +1,67 @@
+{
+  "unit": 1107,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12545536,
+      "sha256": "7b31e65d80b957b10ba6bd15fc69a41e59390d77316f01e973255dbc6b421d93"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "7032048f74791bbe48d15a3fcfd16a973071739c9b33c810bf6baf8c6dddf8ba"
+    }
+  },
+  "staticAudit": {
+    "functions": [
+      "0041c4f0",
+      "0041c520",
+      "0041c550",
+      "0041c580",
+      "0041c5b0",
+      "0041c6a0"
+    ],
+    "color": "BYTE 연산→첫 저장→상한7/정확한ff 비교→선택적 두 번째 저장",
+    "rank": "BYTE zero확장→DWORD 연산/23 비교→최종 BYTE 저장·실제24DWORD getter공유",
+    "special": "정확한!=1 비교이며 XOR/단순 bool반전은 없음",
+    "gate": "signed0..7 밖은 span 접근 없이0·실제 선택 필드 밖 물리만호스트거부"
+  },
+  "integration": {
+    "playerRankGetterShared": true,
+    "slotWritersBoundToInput": false,
+    "nsInfoMetaInputBound": false,
+    "wholeMetaScreenComplete": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "NSInfo 세 Handle/메타 참가자 메뉴·1fh 상태/옵션 송신의 실제 입력 접합",
+    "CS 수신/참가자·전투섬 생성·카메라 Rig/HTML",
+    "1dh/28~33 등록 및1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
