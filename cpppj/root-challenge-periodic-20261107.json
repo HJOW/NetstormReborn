@@ -1,0 +1,102 @@
+{
+  "unit": 1074,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "c3ee65e3ac129a034d9d27708d38d248272f0c8c9daff5b854e8d668f23b37b0"
+  },
+  "nativeAudit": {
+    "scope": "원문/PE·전체 함수 기계어와 현재 저장소/시계/난수·기존 송신 writer 접합의 정적 확인이며 실행 검사 아님",
+    "native": {
+      "periodic": "004581e0 현재1..9전투/1..39참가자 수→10목표 재생성/deadTime→가상참가자·전투배정/20h.정상반환1",
+      "battle": "0044c3f0 유효진단455/flags1·id·identity6/위치·8회원0/버전ffffffff,100/현재game double/나머지보존",
+      "identity": "00457cb0 초기identity6=0,rand%21과다음rand BYTE3/bit100;위치/Core 인자는 사용 안 함",
+      "core": "0044b900 초기10BYTE0→0044b960 26난수/22능력비트·현재WORD/BYTE",
+      "position": "00457d40 기본거리225/범위50/5후보·y먼저x다음/전투10현재위치와 실제 stale 참가자0+10/14 참조40회",
+      "pointerProof": "00457e77..9d는별도참가자포인터-38을초기화/증가하지만457ea6/eb2의거리읽기는전투후stale포인터-24를사용.후보선택으로임의수정하지않음",
+      "fakeMembers": "subscriber0/같은생성자·PE25이름→rand%4<3→rand%(fakeBattles-1)+1/valid·빈칸>4/첫칸·8빈칸이면master/마지막39포인터·count>39 관문",
+      "random": "0048bad0 현재process전역004cda10의LCG343fd/269ec3/상위15비트,PE초기1/0048bac0 seed.새CrtRandom TLS나std::rand 스트림을사용하지않음",
+      "mainCaller": "00479760의min선택은wait<첫Tick이면wait,그외같은CCh의Tick을다시호출.반환1이므로실제메인루프접합시중복호출보존필요"
+    },
+    "sameCurrentState": [
+      "ChallengeRuntime가 같은 ClockState.game과 R Random 참조를 생성자에서 대여",
+      "같은 ChallengeStore raw전투/참가자·Geometry와 기존23h/20h/공유 scratch/현재 전송",
+      "Random은CrtRandom의계산만Borrow로재사용하고R자기DWORD를보존"
+    ],
+    "fakeNames": [
+      "JiMBoB",
+      "killer",
+      "torpedo",
+      "Sgt Bilko",
+      "zippy",
+      "uppity",
+      "psi-master",
+      "fanTom",
+      "WillyW",
+      "JQuest",
+      "CaptX",
+      "DollarDog",
+      "MasterMind",
+      "Oinker",
+      "PKarpas",
+      "Sammy",
+      "BB_Ghali",
+      "KJohnson",
+      "Scratcher",
+      "SMeyer",
+      "CheeseBoy",
+      "ZeroDog",
+      "StickMyEye",
+      "Mariah",
+      "gypsy"
+    ],
+    "hostBoundaries": [
+      "float32 저장 경계를 따르되 모든 x87 중간 반올림/NaN payload 일치 미검증",
+      "원문0제수/범위 밖 전투·미초기화 best/NULL 참가자는 명시 물리 오류",
+      "0제수 진단 전에도 원문 rand 소비를 보존하며 공개 참가자 쓰기를 되돌리지 않음",
+      "원본 스택/할당 배치·실제 RNG 시드 변경/OS·통신 전체 동작 미검증"
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "challengePeriodicBodyImplemented": true,
+    "battleCreationAndFakeParticipantPlacementImplemented": true,
+    "sameProcessRandomAndClockStateRequired": true,
+    "rootExeTargetExists": false,
+    "rootRuntimeCallsPeriodic": false,
+    "mainLoopDoubleTickBindingRequired": true
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "dns": 0,
+    "newClockOrRngOrPeriodicRuntime": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "메인루프의현재CCh Tick/중복호출·파일watcher/설정·예약리셋/종료·보조객체/나머지Root·CS수신",
+    "새R.exe 전체초기화/최종owner·현재Clock/Random/Config/표·전송/실제호출",
+    "다른LAN hostname해석·클라이언트0F존47/서버3BYTE·0F/1d수신·메타/OS launch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

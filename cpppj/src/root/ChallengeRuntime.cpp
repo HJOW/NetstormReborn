@@ -3,8 +3,8 @@
 
 namespace netstorm::root { // Root와 같은 실제 소유자/옵션을 대여한다.
 using namespace challenge_detail; // 이 모듈의 비정렬 바이트 helper만 사용한다.
-ChallengeRuntime::ChallengeRuntime(ConnectionState& state,TransceiverTransport& transport,ChallengeStore& challenges,Options& options,ChallengeMessages& messages,ChallengeRuntimeHooks hooks)
-    :state_(state),transport_(transport),challenges_(challenges),options_(options),messages_(messages),hooks_(std::move(hooks)) {}
+ChallengeRuntime::ChallengeRuntime(ConnectionState& state,TransceiverTransport& transport,ChallengeStore& challenges,Options& options,ChallengeMessages& messages,ClockState& clock,Random& random,ChallengeRuntimeHooks hooks)
+    :state_(state),transport_(transport),challenges_(challenges),options_(options),messages_(messages),clock_(clock),random_(random),hooks_(std::move(hooks)) {}
 std::span<std::uint8_t> ChallengeRuntime::Player(std::uint32_t challenge,std::uint32_t participant) { if (participant>=40) throw std::out_of_range("R CCh 참가자40칸 범위");return challenges_.Bytes(challenge).subspan(kChallengeParticipantOffset+participant*kChallengeParticipantBytes,kChallengeParticipantBytes); }
 std::span<std::uint8_t> ChallengeRuntime::Battle(std::uint32_t challenge,std::uint32_t battle) { if (battle>=10) throw std::out_of_range("R CCh 전투10칸 범위");return challenges_.Bytes(challenge).subspan(kChallengeBattleOffset+battle*kChallengeBattleBytes,kChallengeBattleBytes); }
 void ChallengeRuntime::Assert(std::string_view expression,std::uint32_t line) { Need(transport_.Lifecycle().assertion)(expression,"c:\\ns\\o\\ch.cpp",line); }

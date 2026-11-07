@@ -4,6 +4,7 @@
 #include "root/Configuration.h"
 
 namespace netstorm::root { // CCh0044e940/0044e0d0의 현재 부모와 실제 패킷 작성기를 소유한다.
+struct ClockState;class Random; // 같은 R 프로세스의 현재 게임 시각과 별도 전역 난수 스트림이다.
 struct ChallengeMessages { // 실제 R 프로세스가 뉴스 파일 로드 결과를 갱신하는 같은 BSS다.
     std::optional<std::string> news;std::uint32_t newsChecksum{}; //004d05c4/c8의 NULL/소유 문자열과 현재 checksum이다.
 };
@@ -20,14 +21,15 @@ struct ChallengeRuntimeHooks { // 실제 상위 표/파일/주소·Root 라우�
 };
 class ChallengeRuntime final { // 같은 CCh/전송·Root callback보다 오래 사는 실제 실행 부모다.
 public:
-    ChallengeRuntime(ConnectionState& state,TransceiverTransport& transport,ChallengeStore& challenges,Options& options,ChallengeMessages& messages,ChallengeRuntimeHooks hooks); // 생성은 서버/소켓/파일을 열지 않는다.
+    ChallengeRuntime(ConnectionState& state,TransceiverTransport& transport,ChallengeStore& challenges,Options& options,ChallengeMessages& messages,ClockState& clock,Random& random,ChallengeRuntimeHooks hooks); // 생성은 서버/소켓/파일을 열지 않으며 같은 프로세스 시계/난수를 빌린다.
     ChallengeRuntime(const ChallengeRuntime&)=delete;ChallengeRuntime& operator=(const ChallengeRuntime&)=delete; // 현재 전역/전역 scratch/콜백 this를 복제하지 않는다.
     void InstallPacketObservers(); // 실제 CCh 송신이 사용하는 원문 관찰기·버전/고정 길이를 명시 등록한다.
     void Login(std::uint32_t challenge,std::uint32_t source,std::span<std::uint8_t> request); //0044e940의 실제 참가자 준비/명단·응답·뉴스/길드 이름 전체 부모다.
     void EndParticipant(std::uint32_t challenge,std::uint32_t participant); //0044e0d0의 Root 통지/전투 재선택·삭제/현재 socket close·명단 제거다.
+    std::int32_t Tick(std::uint32_t challenge); //004581e0의 현재 전투 재생성/가상 참가자·명단 송신을 수행하고 원문처럼1을 반환한다.
     std::span<std::uint8_t> SharedPacket() { return scratch_; } //004cf220부터 다음 전역까지 확인한5000BYTE 공유 구간이며 재초기화 때 지우지 않는다.
 private:
-    ConnectionState& state_;TransceiverTransport& transport_;ChallengeStore& challenges_;Options& options_;ChallengeMessages& messages_; // 같은 현재 R 표/장치/옵션·뉴스를 빌린다.
+    ConnectionState& state_;TransceiverTransport& transport_;ChallengeStore& challenges_;Options& options_;ChallengeMessages& messages_;ClockState& clock_;Random& random_; // 같은 현재 R 표/장치/옵션·뉴스/시계·프로세스 난수를 빌린다.
     ChallengeRuntimeHooks hooks_;std::array<std::uint8_t,5000> scratch_{}; // 실제 상위 장치와 PE 로더 초기0인 공유 작성 물리다.
     std::span<std::uint8_t> Player(std::uint32_t challenge,std::uint32_t participant); // 실제188BYTE 참가자0..39를 빌린다.
     std::span<std::uint8_t> Battle(std::uint32_t challenge,std::uint32_t battle); // 실제344BYTE 전투0..9를 빌린다.
@@ -41,6 +43,10 @@ private:
     void DeletePlayer(std::uint32_t challenge,std::uint32_t participant); //0044d550/0044c9a0의 전투 소속 정리·로그/188BYTE 지우기다.
     void RecalculateBattleVersions(std::uint32_t challenge,std::uint32_t battle); //0044d130의 현재8참가자+b4/+b2 집계다.
     void UpdateBattleMaster(std::uint32_t challenge,std::uint32_t battle); //00458a40의 master 선택/현재 ready·설명 초기화와 실제 통지다.
+    void InitializeBattle(std::uint32_t challenge,std::uint32_t battle,std::span<const std::uint8_t,6> identity,const ChallengePoint& position); //0044c3f0의 지정 필드/8회원/현재 게임 시각을 쓰며 나머지 현재 바이트를 보존한다.
+    std::array<std::uint8_t,6> RandomIdentity(); //00457cb0의 초기0 identity/두 난수·21개 형상/byte3/bit100이다. 위치 인자를 사용하지 않는 원문을 따른다.
+    std::array<std::uint8_t,10> RandomCore(); //0044b900/4b960의 초기0 Core/현재26난수·능력22비트를 작성한다.
+    ChallengePoint FindPosition(std::uint32_t challenge,const ChallengePoint& center,std::int32_t distance=0,std::int32_t range=0); //00457d40의5후보/두 난수 순서·실제 원문 거리 참조와 현재 best 선택이다.
     std::span<std::uint8_t> PlayerPacket(std::uint32_t challenge,std::uint32_t participant,bool existing); //0044c540의20h 전체 참가자/53BYTE+이름 작성이다.
     std::span<std::uint8_t> PlayerChange(std::uint32_t challenge,std::uint32_t participant); //0044c700의22h17BYTE 변경 패킷이다.
     std::span<std::uint8_t> BattlePacket(std::uint32_t challenge,std::uint32_t battle,bool existing); //0044bfa0의23h 작성이며 flag2를 기존 scratch에 OR한다.
