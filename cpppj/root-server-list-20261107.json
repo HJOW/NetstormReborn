@@ -1,0 +1,82 @@
+{
+  "unit": 1076,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "firstWarning": "C4244 std::fill int→char",
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "f88b99a3ffaff34dd1a21de8427fdd4f57826f25525e685fb7a4cbf40387a57a"
+  },
+  "nativeAudit": {
+    "scope": "원문/PE·기계어·실제 파일/같은 체크섬 및 메인 hook의 정적 접합 확인이며 실행 검사 아님",
+    "native": {
+      "constructor": "004ba320→004715a0 현재flags7/count0/capacity20/checksum0,문자열표 확장은중복검사전1.5배",
+      "reload": "00471ec0의고정..\\d\\rootservers.dat 검색→00471710 Clear/Plain binary/256보관·전체줄소비/flag1 CRLF제거/비어있지않은행/최종체크섬",
+      "eof": "00449680→00449700→00448ff0 fread1/00448e90 feof:실패EOF fread가이전byte를보존하므로LF없는끝글자1회추가",
+      "case": "00471b80 full은flag2 _stricmp,partial은저장행만소문자화하고원문query로strstr.순서/첫표기보존·flag4중복제외",
+      "checksum": "00471d00 각비NULL C문자열의unsigned byte+1 합/DWORD감김.구분자·NUL합산이나CRC/정렬아님",
+      "rows": "00471fa0/47c790 고정세미콜론패턴/출력0/버퍼-1 캡처·숫자79BYTE atoi.720f0 유효행만출력변경",
+      "upsert": "00472250 name소문자/부분조회·신규Add(recalc1),기존Replace는checksum비재계산.721b0 push0/Getter/Upsert2인자 기계어로preserve=false확인",
+      "write": "00471f50/718c0 현재행순서·첫NUL까지binary w+b/LF없는행만LF추가.저장은사용자홈으로이동",
+      "response": "RootDirectory가읽는004d0e8c를참조로빌린다.제공R00475660의별도빈localvector를이표로임의대체하지않음"
+    },
+    "storage": {
+      "read": "같은RawFileName고리로원문..와d를작성/사용자Saves동명파일우선·그외실제workingDirectory상대경로",
+      "write": "기존UserDataRoot/Saves/rootservers.dat,원문경로존재여부와독립적으로생성가능한5차정책",
+      "lookupOrIoPerformsDnsOrSocket": false
+    },
+    "sameCurrentBinding": [
+      "RootDirectory와같은checksum DWORD 참조계약",
+      "ServerList.Bind→실제MainLoopHooks.reloadRootServers",
+      "현재SharedFileStorage 사용자홈/workingDirectory 장치"
+    ],
+    "hostBoundaries": [
+      "unique_ptr로문자열주소를Add확장중보존하며원문Remove해제누락/구형포인터힙배치는재현하지않음",
+      "실제I/O오류무한반복은명시오류·크기/할당실패/CRTlocale·atoi오버플로와SEH전체동일성미검증",
+      "5차저장은원문existing-probe의NULL경로를따르지않고사용자Saves에새파일생성"
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "serverTableAndChecksumImplemented": true,
+    "recordParsingAndMetadataUpdatesImplemented": true,
+    "actualFileReloadAndUserHomeSaveImplemented": true,
+    "sameChecksumReferenceAndLoopHookBindingImplemented": true,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerLoadsOrSavesTable": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "dns": 0,
+    "newTableReadOrWrite": 0,
+    "rootMainOr41Receive": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "보조 객체·나머지Root/CS/41h 수신·전체 초기화/정리",
+    "새R.exe 최종owner/entry와현재Clock/Random·Config/표·파일/주소/기록/전송·실제Run/Reload호출",
+    "다른LAN hostname해석·클라이언트0F존47/서버3BYTE·0F/1d수신·메타/OS launch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

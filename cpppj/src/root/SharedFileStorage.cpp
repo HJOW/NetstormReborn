@@ -14,6 +14,10 @@ std::filesystem::path SharedFileStorage::Select(std::string_view name,const std:
 }
 std::ifstream SharedFileStorage::OpenWorking(std::string_view name) const { return std::ifstream(Select(name,workingDirectory_)); } // 기본 텍스트 모드의 CRLF/EOF 처리를 실제 CRT에 맡긴다.
 std::filesystem::path SharedFileStorage::DataFile(std::string_view name) const { return Select(name,dataDirectory_); }
+std::filesystem::path SharedFileStorage::WorkingFile(const std::filesystem::path& relative) const { return Select(platform::PathToUtf8(relative.filename()),workingDirectory_/relative.parent_path()); }
+std::filesystem::path SharedFileStorage::WritableFile(std::string_view name) const {
+    const auto leaf=platform::PathFromUtf8(name);if (leaf.empty() || leaf.has_parent_path() || leaf!=leaf.filename() || leaf==L"." || leaf==L"..") throw std::invalid_argument("R 자동 생성 파일의 단일 파일 이름 필요");platform::UserDataRoot::EnsureDirectory(user_.Saves());return user_.Saves()/leaf;
+}
 void SharedFileStorage::SaveBlacklist(std::span<const std::uint32_t> subscribers) const {
     platform::UserDataRoot::EnsureDirectory(user_.Saves());std::ofstream output(user_.Saves()/L"blacklist.txt",std::ios::out|std::ios::trunc);
     for (const auto subscriber:subscribers) output<<std::bit_cast<std::int32_t>(subscriber)<<std::endl; // 현재 표 순서를 유지하며 각 signed DWORD 뒤 LF/flush를 수행한다. 원문처럼 stream 실패를 별도 성공으로 보고하지 않는다.

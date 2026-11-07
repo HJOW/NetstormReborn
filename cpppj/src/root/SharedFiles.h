@@ -29,6 +29,8 @@ public:
     void DataDirectory(std::filesystem::path directory); // Configuration::DataPrefix가 확정된 뒤 실제 최종 owner가 갱신한다.
     std::ifstream OpenWorking(std::string_view name) const; // 사용자 Saves 우선, 그 외 원문 CWD의 실제 텍스트 입력을 연다.
     std::filesystem::path DataFile(std::string_view name) const; // 사용자 Saves 우선, 그 외 현재 dataPrefix의 실제 전체 읽기/시각 경로다.
+    std::filesystem::path WorkingFile(const std::filesystem::path& relative) const; // 사용자 Saves의 같은 파일명 우선,그 외 현재 workingDirectory와 원문 상대 경로를 결합한다.
+    std::filesystem::path WritableFile(std::string_view name) const; // 현재 사용자 Saves를 만들고 단일 생성 파일의 실제 wide 경로만 반환한다.
     void SaveBlacklist(std::span<const std::uint32_t> subscribers) const; //00458770의 현재 순서/정수·endl을 사용자 Saves/blacklist.txt에 쓴다.
 private:
     std::filesystem::path workingDirectory_,dataDirectory_;platform::UserDataRoot user_; // 실제 프로세스 CWD/현재 데이터 폴더와 기존 사용자 저장 정책이다.
