@@ -1,0 +1,82 @@
+{
+  "unit": 1097,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp/NetstormRoot",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12397568,
+      "sha256": "7bc51e5b953b8b7545dad7f0e663c4d100224568cee256b3500b1337e7a9e65f"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "65e139a5503a70e621253a836fb55cdccce6119a30a94bc55d484578eab8a544"
+    }
+  },
+  "staticAudit": {
+    "nativeFunctions": [
+      "0047d8c0",
+      "00479c40",
+      "00479560",
+      "004248a0",
+      "0042b050"
+    ],
+    "participant": "실제known/active/SID/dead·mask1 객체/마스크4 내용/마스크6 배치·최종 visible/attach",
+    "battle": "현재flags/owner·WORD0/HP0/특수BYTE10·1096투영/기존배치시 move",
+    "labels": "실제serial/현재같은노드·BETA>DEMO/자기글꼴/명칭/원문번역/BATTLEMASTER·8자리",
+    "zoneCleanup": "기존00479520 본체 재사용/51기록·양수존·비영SID·실제삭제뒤0",
+    "slotBranches": [
+      "0x47dbd8",
+      "0x47dc45",
+      "0x47dca7",
+      "0x47dc26",
+      "0x47dcdc",
+      "0x47dc07",
+      "0x47dcd0",
+      "0x47dc7e"
+    ]
+  },
+  "integration": {
+    "displayUpdateBodiesCompiled": true,
+    "projection1096Used": true,
+    "actualDisplayHooksBound": false,
+    "fullMetaDisplayApplied": false,
+    "newReplyRegistered": false,
+    "meta28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "boundaries": [
+    "라이브러리 본체 컴파일이며 현재 실제 UI/가상 객체 장치 접합은 후속",
+    "Gump 토큰/serial과CS 기록·raw 객체 물리는 호출 전체 같은 주소로 생존해야 함",
+    "원문 DWORD SID를 미리 WORD로 줄이거나 새 free/active 필터를 넣지 않음",
+    "새 MP/통신/게임 실행 검사는 사용자 지시로 생략"
+  ],
+  "remaining": [
+    "0047dd60/479760 전체/47cab0 및 CS실제수신·객체/가상표·Gump장치 접합",
+    "1dh/28..33 등록·1095송신/1096투영/1097갱신 실제 호출",
+    "세.server·LAN hostname/Config registryValue·나머지 LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03/HJOW-Athlon",
+    "lastRoot": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
