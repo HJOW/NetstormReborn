@@ -551,3 +551,4 @@ cpppj/src/o/RawSavedStateWrite.h	Netstorm.Core/Original/RawSavedState.cs	4558729
 cpppj/src/o/RawSavedStateWrite.cpp	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	port
 cpppj/src/o/RawSavedStateRead.h	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	L1
 cpppj/src/o/RawSavedStateRead.cpp	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	L1
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceSeed.cs	b8cadde14fbf9cd9e2d89a3102c5db2d5645c494	port
