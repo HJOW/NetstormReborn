@@ -1,5 +1,6 @@
 // Root1Ch의 실제 관문과 pending close 전에 소켓을 보존하는 부모를 복원한다.
 #include "root/LoginRequest.h"
+#include "root/PacketRegistration.h"
 #include <bit>
 #include <limits>
 #include <stdexcept>
@@ -26,11 +27,8 @@ std::unique_ptr<SocketDevice> LoginRequest::ClaimSocket(std::uint32_t token) {
     const auto found=sockets_.find(token);if (found==sockets_.end()) throw std::out_of_range("R CCh가 소비할 생존 socket 이전 토큰 없음");auto socket=std::move(found->second);sockets_.erase(found);return socket;
 }
 void LoginRequest::Trace(std::uint32_t line) { Need(hooks_.log)(29,std::to_string(line)+"\n"); }
-void LoginRequest::Observe(std::span<std::uint8_t> packet,std::uint32_t sending) {
-    if (!sending) return;const auto length=Read(packet,45,1);if (length==255) Need(transport_.Lifecycle().assertion)("nameLen != (unsigned char)-1","c:\\ns\\o\\_p_packets.cpp",1223);Put(packet,2,length+46U,2);
-}
 void LoginRequest::Install() {
-    auto& dispatch=transport_.PacketHandlers();dispatch.ObservePacket(0x1c,[this](auto packet,auto sending) { Observe(packet,sending); });dispatch.Version(0x1c,1,0);dispatch.RequireLength(0x1c,0xffff);
+    auto& dispatch=transport_.PacketHandlers();dispatch.ObservePacket(0x1c,[this](auto packet,auto sending) { ObservePacketFields(0x1c,packet,sending,transport_.Lifecycle().assertion); });dispatch.Version(0x1c,1,0);dispatch.RequireLength(0x1c,0xffff);
     dispatch.RegisterDirect(0x1c,[this](auto sender,auto* connection,auto packet) { if (!connection) throw std::out_of_range("R1Ch 실제 연결 주소의 원문 NULL 읽기 거부");Receive(std::bit_cast<std::int32_t>(sender),*connection,packet); }); // 현재 수신 노드의 깊이 대여 안에서만 소켓 이전/기존 노드 닫힘을 수행한다.
 }
 void LoginRequest::Receive(std::int32_t sender,o::PacketConnection& connection,std::span<const std::uint8_t> request) {

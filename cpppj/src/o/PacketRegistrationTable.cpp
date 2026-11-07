@@ -19,6 +19,13 @@ PacketRegistrationTable::PacketRegistrationTable(OriginalEdition edition):lastTy
 }
 // 표를 공유하는 backend의 판본 검증에만 쓴다.
 std::uint32_t PacketRegistrationTable::LastType() const { return lastType_; }
+// 원문의 새 전역 함수/버전 표 할당을 현재 공유 owner 안에서 수행하며 정적 길이표는 바꾸지 않는다.
+void PacketRegistrationTable::ResetCallbacks() {
+    if (currentIdentity_ || ConnectionCallbackActive()) throw std::logic_error("Session 대여/콜백 실행 중 패킷 전역 초기화 금지");
+    for (std::size_t type=0;type<=lastType_;++type) { // 원문 last+1개 receiver/observer·두 버전 BYTE를 같은 순서로 비운다.
+        PacketRegistration empty;empty.length=entries_[type].length;std::swap(entries_[type],empty); // 호스트 함수 저장소는 반납하되 기존 실제 길이/표 주소를 유지한다.
+    }
+}
 // 등록을 반납한 콜백도 실제 owner를 아직 빌리므로 상위 정리 거부에 포함한다.
 bool PacketRegistrationTable::ConnectionCallbackActive() const noexcept {
     const auto current=current_.lock();const auto retiring=retiring_.lock();return (current && current->calls_) || (retiring && retiring->calls_);

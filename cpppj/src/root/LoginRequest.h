@@ -20,7 +20,6 @@ private:
     ConnectionState& state_;TransceiverTransport& transport_;ChallengeStore& challenges_; // 현재 R 번호표/실제 노드/같은 CCh 물리다.
     LoginRequestHooks hooks_; // 원문 순서에서 실제로 선택한 장치만 호출한다.
     std::unordered_map<std::uint32_t,std::unique_ptr<SocketDevice>> sockets_;std::uint32_t serial_{}; // 콜백 대여 중 이전 핸들/WSA를 보관하는 비재사용 내부 토큰이다.
-    void Observe(std::span<std::uint8_t> packet,std::uint32_t sending); //004444f0의 송신 nameLen 진단/최종 길이 WORD다.
     void Receive(std::int32_t sender,o::PacketConnection& connection,std::span<const std::uint8_t> request); //00476180의 종료/모드/주소/존/현재 소켓 이전 순서다.
     void Trace(std::uint32_t line); // 원문 level29의 숫자 한 줄 로그다.
 };

@@ -1,0 +1,1226 @@
+{
+  "unit": 1088,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "a4edd36e0ce10e99b0cedec8483f9022a5242e025814395473a9a444dc5805ee"
+  },
+  "nativeAudit": {
+    "scope": "제품/패킷/통신을 실행하지 않은 원문·PE·전체 함수범위 기계어/소스 정적 대조다. 길이식의 필드·signed/unsigned/곱셈·상수/하위WORD 쓰기는 수동 기계어 감사도 수행했다.",
+    "nativeObserverRegistrations": 104,
+    "nativeNull": 9,
+    "nativeEmptyNonNull": 62,
+    "nativeDynamic": 33,
+    "enabledRegistrations": 102,
+    "enabledEmptyNonNull": 61,
+    "enabledDynamic": 32,
+    "checkedFields": 38,
+    "receiverRegistrations": [
+      {
+        "type": 11,
+        "address": "00475070"
+      },
+      {
+        "type": 12,
+        "address": "00475040"
+      },
+      {
+        "type": 16,
+        "address": "004763d0"
+      },
+      {
+        "type": 131,
+        "address": "00476490"
+      },
+      {
+        "type": 17,
+        "address": "00475260"
+      },
+      {
+        "type": 18,
+        "address": "00475580"
+      },
+      {
+        "type": 22,
+        "address": "00475660"
+      },
+      {
+        "type": 23,
+        "address": "00476070"
+      },
+      {
+        "type": 28,
+        "address": "00476180"
+      },
+      {
+        "type": 30,
+        "address": "00476700"
+      },
+      {
+        "type": 31,
+        "address": "004767c0"
+      },
+      {
+        "type": 135,
+        "address": "00476550"
+      },
+      {
+        "type": 65,
+        "address": "00476880"
+      },
+      {
+        "type": 102,
+        "address": "00475f90"
+      },
+      {
+        "type": 103,
+        "address": "00476940"
+      },
+      {
+        "type": 104,
+        "address": "00476a00"
+      },
+      {
+        "type": 113,
+        "address": "00476ac0"
+      },
+      {
+        "type": 128,
+        "address": "00476640"
+      }
+    ],
+    "observerInventory": [
+      {
+        "type": 11,
+        "observer": "thunk_FUN_00443a00",
+        "address": "00443a00",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 8,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "extraDataLen != (int)-1",
+            "line": 885
+          }
+        ]
+      },
+      {
+        "type": 12,
+        "observer": "thunk_FUN_00443b10",
+        "address": "00443b10",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 8,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "extraDataLen != (int)-1",
+            "line": 917
+          }
+        ]
+      },
+      {
+        "type": 15,
+        "observer": "thunk_FUN_00443c20",
+        "address": "00443c20",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 12,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "rootServerLen != (int)-1",
+            "line": 949
+          },
+          {
+            "offset": 10,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "numChals != (char)-1",
+            "line": 950
+          },
+          {
+            "offset": 11,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "numFriendsInChal != (char)-1",
+            "line": 951
+          }
+        ]
+      },
+      {
+        "type": 16,
+        "observer": "thunk_FUN_00443fd0",
+        "address": "00443fd0",
+        "empty": true
+      },
+      {
+        "type": 17,
+        "observer": "thunk_FUN_00444060",
+        "address": "00444060",
+        "empty": true
+      },
+      {
+        "type": 18,
+        "observer": "thunk_FUN_004440f0",
+        "address": "004440f0",
+        "empty": true
+      },
+      {
+        "type": 22,
+        "observer": "thunk_FUN_00444180",
+        "address": "00444180",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 5,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "numFriends != (char)-1",
+            "line": 1109
+          }
+        ]
+      },
+      {
+        "type": 23,
+        "observer": "thunk_FUN_00444290",
+        "address": "00444290",
+        "empty": true
+      },
+      {
+        "type": 26,
+        "observer": "thunk_FUN_00444330",
+        "address": "00444330",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 14,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "numClients != (unsigned char)-1",
+            "line": 1164
+          }
+        ]
+      },
+      {
+        "type": 27,
+        "observer": "thunk_FUN_00444440",
+        "address": "00444440",
+        "empty": true
+      },
+      {
+        "type": 28,
+        "observer": "thunk_FUN_004444f0",
+        "address": "004444f0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 45,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "nameLen != (unsigned char)-1",
+            "line": 1223
+          }
+        ]
+      },
+      {
+        "type": 29,
+        "observer": "thunk_FUN_00444600",
+        "address": "00444600",
+        "empty": true
+      },
+      {
+        "type": 30,
+        "observer": "thunk_FUN_004446a0",
+        "address": "004446a0",
+        "empty": true
+      },
+      {
+        "type": 31,
+        "observer": "thunk_FUN_00444730",
+        "address": "00444730",
+        "empty": true
+      },
+      {
+        "type": 32,
+        "observer": "thunk_FUN_004447f0",
+        "address": "004447f0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 18,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "nameLen != (unsigned char)-1",
+            "line": 1329
+          }
+        ]
+      },
+      {
+        "type": 136,
+        "observer": "thunk_FUN_00444a00",
+        "address": "00444a00",
+        "empty": true
+      },
+      {
+        "type": 33,
+        "observer": "thunk_FUN_00444ad0",
+        "address": "00444ad0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 4,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "numPlayers != (unsigned char)-1",
+            "line": 1411
+          }
+        ]
+      },
+      {
+        "type": 34,
+        "observer": "thunk_FUN_00444c70",
+        "address": "00444c70",
+        "empty": true
+      },
+      {
+        "type": 35,
+        "observer": "thunk_FUN_00444d20",
+        "address": "00444d20",
+        "empty": true
+      },
+      {
+        "type": 36,
+        "observer": "thunk_FUN_00444db0",
+        "address": "00444db0",
+        "empty": true
+      },
+      {
+        "type": 37,
+        "observer": "thunk_FUN_00444e40",
+        "address": "00444e40",
+        "empty": true
+      },
+      {
+        "type": 38,
+        "observer": "thunk_FUN_00444ed0",
+        "address": "00444ed0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 4,
+            "width": 2,
+            "sentinel": "65535",
+            "expression": "modLen != (unsigned short)-1",
+            "line": 1512
+          },
+          {
+            "offset": 6,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "contactLen != (unsigned char)-1",
+            "line": 1513
+          }
+        ]
+      },
+      {
+        "type": 39,
+        "observer": "thunk_FUN_00445050",
+        "address": "00445050",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 12,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "len != (unsigned char)-1",
+            "line": 1550
+          },
+          {
+            "offset": 13,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "fortFileSize != (int)-1",
+            "line": 1551
+          }
+        ]
+      },
+      {
+        "type": 40,
+        "observer": "thunk_FUN_004452a0",
+        "address": "004452a0",
+        "empty": true
+      },
+      {
+        "type": 41,
+        "observer": "thunk_FUN_00445440",
+        "address": "00445440",
+        "empty": true
+      },
+      {
+        "type": 42,
+        "observer": "thunk_FUN_004454d0",
+        "address": "004454d0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 12,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "fortFileSize != (int)-1",
+            "line": 1647
+          }
+        ]
+      },
+      {
+        "type": 43,
+        "observer": "thunk_FUN_004455e0",
+        "address": "004455e0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 51,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "nameLen != (unsigned char)-1",
+            "line": 1682
+          }
+        ]
+      },
+      {
+        "type": 44,
+        "observer": "thunk_FUN_00445700",
+        "address": "00445700",
+        "empty": true
+      },
+      {
+        "type": 45,
+        "observer": "thunk_FUN_00445790",
+        "address": "00445790",
+        "empty": true
+      },
+      {
+        "type": 46,
+        "observer": "thunk_FUN_00445820",
+        "address": "00445820",
+        "empty": true
+      },
+      {
+        "type": 47,
+        "observer": "thunk_FUN_004458c0",
+        "address": "004458c0",
+        "empty": true
+      },
+      {
+        "type": 48,
+        "observer": "thunk_FUN_00445950",
+        "address": "00445950",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 13,
+            "width": 2,
+            "sentinel": "65535",
+            "expression": "nodeCount != (short)-1",
+            "line": 1811
+          }
+        ]
+      },
+      {
+        "type": 49,
+        "observer": "thunk_FUN_00445a60",
+        "address": "00445a60",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 4,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "len != (int)-1",
+            "line": 1864
+          }
+        ]
+      },
+      {
+        "type": 50,
+        "observer": "thunk_FUN_00445b70",
+        "address": "00445b70",
+        "empty": true
+      },
+      {
+        "type": 51,
+        "observer": "thunk_FUN_00445c00",
+        "address": "00445c00",
+        "empty": true
+      },
+      {
+        "type": 52,
+        "observer": "thunk_FUN_00445ca0",
+        "address": "00445ca0",
+        "empty": true
+      },
+      {
+        "type": 53,
+        "observer": "thunk_FUN_00445d30",
+        "address": "00445d30",
+        "empty": true
+      },
+      {
+        "type": 55,
+        "observer": "0",
+        "address": null
+      },
+      {
+        "type": 56,
+        "observer": "0",
+        "address": null
+      },
+      {
+        "type": 57,
+        "observer": "0",
+        "address": null
+      },
+      {
+        "type": 58,
+        "observer": "0",
+        "address": null
+      },
+      {
+        "type": 59,
+        "observer": "0",
+        "address": null
+      },
+      {
+        "type": 60,
+        "observer": "0",
+        "address": null
+      },
+      {
+        "type": 61,
+        "observer": "thunk_FUN_00445dc0",
+        "address": "00445dc0",
+        "empty": true
+      },
+      {
+        "type": 62,
+        "observer": "thunk_FUN_00445e70",
+        "address": "00445e70",
+        "empty": true
+      },
+      {
+        "type": 63,
+        "observer": "thunk_FUN_00445f20",
+        "address": "00445f20",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 26,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "sidCount != (unsigned char)-1",
+            "line": 1990
+          }
+        ]
+      },
+      {
+        "type": 64,
+        "observer": "thunk_FUN_00446040",
+        "address": "00446040",
+        "empty": true
+      },
+      {
+        "type": 135,
+        "observer": "thunk_FUN_00443e40",
+        "address": "00443e40",
+        "empty": true
+      },
+      {
+        "type": 134,
+        "observer": "thunk_FUN_004460d0",
+        "address": "004460d0",
+        "empty": true
+      },
+      {
+        "type": 65,
+        "observer": "thunk_FUN_00446160",
+        "address": "00446160",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 10,
+            "width": 2,
+            "sentinel": "65535",
+            "expression": "nameLen != (short)-1",
+            "line": 2074
+          },
+          {
+            "offset": 12,
+            "width": 2,
+            "sentinel": "0xffffffffU",
+            "expression": "bufferLen != (short)-1",
+            "line": 2075
+          },
+          {
+            "offset": 14,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "addrLen != (unsigned char)-1",
+            "line": 2076
+          }
+        ]
+      },
+      {
+        "type": 66,
+        "observer": "thunk_FUN_00446360",
+        "address": "00446360",
+        "empty": true
+      },
+      {
+        "type": 74,
+        "observer": "thunk_FUN_004463f0",
+        "address": "004463f0",
+        "empty": true
+      },
+      {
+        "type": 75,
+        "observer": "thunk_FUN_00446480",
+        "address": "00446480",
+        "empty": true
+      },
+      {
+        "type": 77,
+        "observer": "thunk_FUN_00446510",
+        "address": "00446510",
+        "empty": true
+      },
+      {
+        "type": 79,
+        "observer": "thunk_FUN_004465a0",
+        "address": "004465a0",
+        "empty": true
+      },
+      {
+        "type": 80,
+        "observer": "thunk_FUN_00446630",
+        "address": "00446630",
+        "empty": true
+      },
+      {
+        "type": 81,
+        "observer": "thunk_FUN_004466c0",
+        "address": "004466c0",
+        "empty": true
+      },
+      {
+        "type": 82,
+        "observer": "thunk_FUN_00446750",
+        "address": "00446750",
+        "empty": true
+      },
+      {
+        "type": 83,
+        "observer": "thunk_FUN_004467e0",
+        "address": "004467e0",
+        "empty": true
+      },
+      {
+        "type": 84,
+        "observer": "thunk_FUN_00446870",
+        "address": "00446870",
+        "empty": true
+      },
+      {
+        "type": 85,
+        "observer": "thunk_FUN_00446900",
+        "address": "00446900",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 4,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "count != (int)-1",
+            "line": 2265
+          }
+        ]
+      },
+      {
+        "type": 86,
+        "observer": "thunk_FUN_00446a10",
+        "address": "00446a10",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 8,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "dataLength != (int)-1",
+            "line": 2293
+          }
+        ]
+      },
+      {
+        "type": 87,
+        "observer": "thunk_FUN_00446b20",
+        "address": "00446b20",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 8,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "specLength != (int)-1",
+            "line": 2323
+          }
+        ]
+      },
+      {
+        "type": 88,
+        "observer": "thunk_FUN_00446c40",
+        "address": "00446c40",
+        "empty": true
+      },
+      {
+        "type": 90,
+        "observer": "thunk_FUN_00446cd0",
+        "address": "00446cd0",
+        "empty": true
+      },
+      {
+        "type": 91,
+        "observer": "thunk_FUN_00446d60",
+        "address": "00446d60",
+        "empty": true
+      },
+      {
+        "type": 92,
+        "observer": "thunk_FUN_00446df0",
+        "address": "00446df0",
+        "empty": true
+      },
+      {
+        "type": 95,
+        "observer": "thunk_FUN_00446e80",
+        "address": "00446e80",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 6,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "count != (int)-1",
+            "line": 2408
+          }
+        ]
+      },
+      {
+        "type": 96,
+        "observer": "thunk_FUN_00446f90",
+        "address": "00446f90",
+        "empty": true
+      },
+      {
+        "type": 97,
+        "observer": "thunk_FUN_00447020",
+        "address": "00447020",
+        "empty": true
+      },
+      {
+        "type": 98,
+        "observer": "thunk_FUN_004470b0",
+        "address": "004470b0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 4,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "count != (int)-1",
+            "line": 2473
+          }
+        ]
+      },
+      {
+        "type": 99,
+        "observer": "thunk_FUN_004471c0",
+        "address": "004471c0",
+        "empty": true
+      },
+      {
+        "type": 100,
+        "observer": "thunk_FUN_00447250",
+        "address": "00447250",
+        "empty": true
+      },
+      {
+        "type": 101,
+        "observer": "thunk_FUN_004472e0",
+        "address": "004472e0",
+        "empty": true
+      },
+      {
+        "type": 102,
+        "observer": "thunk_FUN_00447370",
+        "address": "00447370",
+        "empty": true
+      },
+      {
+        "type": 103,
+        "observer": "thunk_FUN_00447400",
+        "address": "00447400",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 5,
+            "width": 2,
+            "sentinel": "65535",
+            "expression": "dataLen != (unsigned short)-1",
+            "line": 2564
+          }
+        ]
+      },
+      {
+        "type": 133,
+        "observer": "thunk_FUN_00447510",
+        "address": "00447510",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 5,
+            "width": 2,
+            "sentinel": "65535",
+            "expression": "dataLen != (unsigned short)-1",
+            "line": 2601
+          }
+        ]
+      },
+      {
+        "type": 104,
+        "observer": "thunk_FUN_00447620",
+        "address": "00447620",
+        "empty": true
+      },
+      {
+        "type": 105,
+        "observer": "thunk_FUN_004476b0",
+        "address": "004476b0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 4,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "len != (unsigned char)-1",
+            "line": 2652
+          }
+        ]
+      },
+      {
+        "type": 106,
+        "observer": "0",
+        "address": null
+      },
+      {
+        "type": 107,
+        "observer": "thunk_FUN_004477c0",
+        "address": "004477c0",
+        "empty": true
+      },
+      {
+        "type": 108,
+        "observer": "thunk_FUN_00447850",
+        "address": "00447850",
+        "empty": true
+      },
+      {
+        "type": 109,
+        "observer": "&LAB_0043e8f1",
+        "address": "004478e0",
+        "empty": true
+      },
+      {
+        "type": 110,
+        "observer": "thunk_FUN_00447970",
+        "address": "00447970",
+        "empty": true
+      },
+      {
+        "type": 111,
+        "observer": "thunk_FUN_00447a00",
+        "address": "00447a00",
+        "empty": true
+      },
+      {
+        "type": 112,
+        "observer": "thunk_FUN_00447a90",
+        "address": "00447a90",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 4,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "tellLength != (int)-1",
+            "line": 2756
+          }
+        ]
+      },
+      {
+        "type": 113,
+        "observer": "thunk_FUN_00447ba0",
+        "address": "00447ba0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 9,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "descLen != (unsigned char)-1",
+            "line": 2784
+          }
+        ]
+      },
+      {
+        "type": 114,
+        "observer": "thunk_FUN_00447cb0",
+        "address": "00447cb0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 6,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "len != (int)-1",
+            "line": 2816
+          }
+        ]
+      },
+      {
+        "type": 115,
+        "observer": "0",
+        "address": null
+      },
+      {
+        "type": 116,
+        "observer": "0",
+        "address": null
+      },
+      {
+        "type": 117,
+        "observer": "thunk_FUN_00447dd0",
+        "address": "00447dd0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 16,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "count != (int)-1",
+            "line": 2848
+          }
+        ]
+      },
+      {
+        "type": 118,
+        "observer": "thunk_FUN_00447ee0",
+        "address": "00447ee0",
+        "empty": true
+      },
+      {
+        "type": 119,
+        "observer": "thunk_FUN_00447f70",
+        "address": "00447f70",
+        "empty": true
+      },
+      {
+        "type": 120,
+        "observer": "thunk_FUN_00448000",
+        "address": "00448000",
+        "empty": true
+      },
+      {
+        "type": 121,
+        "observer": "thunk_FUN_00448090",
+        "address": "00448090",
+        "empty": true
+      },
+      {
+        "type": 122,
+        "observer": "thunk_FUN_00448120",
+        "address": "00448120",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 8,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "dataLength != (unsigned char)-1",
+            "line": 2944
+          }
+        ]
+      },
+      {
+        "type": 123,
+        "observer": "thunk_FUN_00448230",
+        "address": "00448230",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 9,
+            "width": 1,
+            "sentinel": "255",
+            "expression": "addrLen != (char)-1",
+            "line": 2981
+          }
+        ]
+      },
+      {
+        "type": 124,
+        "observer": "thunk_FUN_00448340",
+        "address": "00448340",
+        "empty": true
+      },
+      {
+        "type": 125,
+        "observer": "thunk_FUN_004483e0",
+        "address": "004483e0",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 16,
+            "width": 2,
+            "sentinel": "65535",
+            "expression": "numSids != (unsigned short)-1",
+            "line": 3031
+          }
+        ]
+      },
+      {
+        "type": 126,
+        "observer": "thunk_FUN_00448500",
+        "address": "00448500",
+        "empty": true
+      },
+      {
+        "type": 127,
+        "observer": "thunk_FUN_00448590",
+        "address": "00448590",
+        "empty": false
+      },
+      {
+        "type": 128,
+        "observer": "thunk_FUN_004486a0",
+        "address": "004486a0",
+        "empty": true
+      },
+      {
+        "type": 129,
+        "observer": "thunk_FUN_00448730",
+        "address": "00448730",
+        "empty": false,
+        "fieldChecks": [
+          {
+            "offset": 4,
+            "width": 4,
+            "sentinel": "0xffffffffU",
+            "expression": "numPlayers != (int)-1",
+            "line": 3130
+          }
+        ]
+      },
+      {
+        "type": 132,
+        "observer": "thunk_FUN_004451d0",
+        "address": "004451d0",
+        "empty": true
+      }
+    ],
+    "retiredDisabled": [
+      127,
+      128
+    ],
+    "type83Version": 0,
+    "type83Observer": null,
+    "lengths": [
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      8,
+      12,
+      12,
+      65535,
+      65535,
+      65535,
+      65535,
+      14,
+      65535,
+      65535,
+      65535,
+      38,
+      65535,
+      13,
+      14,
+      12,
+      65535,
+      65535,
+      17,
+      20,
+      5,
+      8,
+      65535,
+      65535,
+      18,
+      34,
+      65535,
+      65535,
+      35,
+      18,
+      8,
+      15,
+      65535,
+      65535,
+      32,
+      18,
+      12,
+      20,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      9,
+      25,
+      65535,
+      18,
+      65535,
+      12,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      7,
+      6,
+      65535,
+      10,
+      65535,
+      9,
+      9,
+      8,
+      5,
+      6,
+      8,
+      65535,
+      65535,
+      65535,
+      16,
+      65535,
+      5,
+      6,
+      6,
+      65535,
+      65535,
+      65535,
+      10,
+      11,
+      65535,
+      8,
+      5,
+      13,
+      12,
+      65535,
+      5,
+      65535,
+      65535,
+      10,
+      11,
+      8,
+      8,
+      6,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      65535,
+      6,
+      6,
+      6,
+      6,
+      65535,
+      65535,
+      28,
+      65535,
+      28,
+      65535,
+      8,
+      65535,
+      65535,
+      176,
+      8,
+      65535,
+      20,
+      274,
+      98,
+      267
+    ],
+    "thunk6d": "0043e8f1 -> 004478e0, 빈 몸체",
+    "sameTableOwnerAndLengthPreserved": true,
+    "resetRejectsSessionLeaseOrCallback": true,
+    "testsExecuted": 0
+  },
+  "runtime": {
+    "globalPacketInitializationImplemented": true,
+    "sameActualReceiverParentsAndObserverBody": true,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsInitializePacketsOrRun": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "477e10시작/478af0정리·새R.exe최종owner/entry·실제번호발행/InitializePackets/Bind/Run",
+    "세.server콘텐츠/배포·LAN hostname·클라이언트0F존47/서버3BYTE·0F/1d·메타/OSlaunch",
+    "LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

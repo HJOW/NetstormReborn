@@ -9,7 +9,7 @@ Routing::Routing(ConnectionState& state,TransceiverTransport& transport,Challeng
     :state_(state),transport_(transport),challenges_(challenges),defaults_(defaults),log_(std::move(log)) {}
 void Routing::Assert(std::string_view expression,std::uint32_t line) { Need(transport_.Lifecycle().assertion)(expression,"c:\\ns\\r\\r.cpp",line); }
 void Routing::Install() {
-    auto& dispatch=transport_.PacketHandlers();dispatch.Observe(0x17,{});dispatch.Version(0x17,1,0);dispatch.RequireLength(0x17,14);dispatch.RegisterDirect(0x17,[this](auto sender,auto*,auto packet) { ReceiveChange(std::bit_cast<std::int32_t>(sender),packet); }); // 현재 실제 등록표가 네트워크/NULL 직접 호출 양쪽을 소유한다.
+    auto& dispatch=transport_.PacketHandlers();dispatch.ObservePacket(0x17,[](auto,auto) {});dispatch.Version(0x17,1,0);dispatch.RequireLength(0x17,14);dispatch.RegisterDirect(0x17,[this](auto sender,auto*,auto packet) { ReceiveChange(std::bit_cast<std::int32_t>(sender),packet); }); // 현재 실제 등록표가 네트워크/NULL 직접 호출 양쪽을 소유한다.
 }
 void Routing::Relay(std::uint32_t challenge,std::span<std::uint8_t> packet) {
     static_cast<void>(challenge);if (!(state_.modeFlags&kChallengeMode)) Assert("smModeFlags & smCHAL",247);const auto type=Read(packet,1,1);if (type==0x7f || type==0x80) return; // 사용자 지시의 폐기 검증은 내부 직접 경로에서도 제외한다.

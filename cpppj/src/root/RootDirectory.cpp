@@ -1,5 +1,6 @@
 // R의 존 선택/참가자 통계/친구 검색과 음수 응답 뒤 닫힘 순서를 복원한다.
 #include "root/RootDirectory.h"
+#include "root/PacketRegistration.h"
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -46,20 +47,9 @@ ChallengeDirectoryView RootDirectory::Challenge(std::uint32_t index) const {
 void RootDirectory::Assert(std::string_view expression,std::string_view file,std::uint32_t line) const {
     const auto hooks=transport_.Lifecycle();if (!hooks.assertion) throw std::logic_error("R Root의 실제 진단 장치 누락");hooks.assertion(expression,file,line);
 }
-void RootDirectory::Observe(std::span<std::uint8_t> packet,std::uint32_t sending,bool reply) const {
-    if (!sending) return;
-    if (!reply) {
-        const auto friends=std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(Read(packet,5,1)));
-        if (friends==-1) Assert("numFriends != (char)-1","c:\\ns\\o\\_p_packets.cpp",1109);Put(packet,2,static_cast<std::uint16_t>(14+friends*4),2);return;
-    }
-    const auto roots=Read(packet,12);if (roots==0xffffffffU) Assert("rootServerLen != (int)-1","c:\\ns\\o\\_p_packets.cpp",949);
-    const auto chals=std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(Read(packet,10,1)));if (chals==-1) Assert("numChals != (char)-1","c:\\ns\\o\\_p_packets.cpp",950);
-    const auto friends=std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(Read(packet,11,1)));if (friends==-1) Assert("numFriendsInChal != (char)-1","c:\\ns\\o\\_p_packets.cpp",951);
-    Put(packet,2,static_cast<std::uint16_t>(roots+20U+std::uint32_t(chals*3+friends*5)),2);
-}
 void RootDirectory::Install() {
-    auto& dispatch=transport_.PacketHandlers();dispatch.ObservePacket(0x16,[this](auto packet,auto sending) { Observe(packet,sending,false); });dispatch.Version(0x16,1,0);dispatch.RequireLength(0x16,0xffff);
-    dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { Observe(packet,sending,true); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
+    auto& dispatch=transport_.PacketHandlers();dispatch.ObservePacket(0x16,[this](auto packet,auto sending) { ObservePacketFields(0x16,packet,sending,transport_.Lifecycle().assertion); });dispatch.Version(0x16,1,0);dispatch.RequireLength(0x16,0xffff);
+    dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { ObservePacketFields(0x0f,packet,sending,transport_.Lifecycle().assertion); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
     dispatch.RegisterDirect(0x16,[this](auto sender,auto*,auto packet) { Receive(std::bit_cast<std::int32_t>(sender),packet); }); // 현재 수신 노드의 깊이 대여 안에서만 응답/guard를 수행한다.
 }
 void RootDirectory::Receive(std::int32_t sender,std::span<const std::uint8_t> request) {

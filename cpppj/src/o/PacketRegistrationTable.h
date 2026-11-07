@@ -15,6 +15,7 @@ public:
     PacketRegistrationTable(PacketRegistrationTable&&)=delete; // currentIdentity와 공유 owner의 주소를 이동하지 않는다.
     PacketRegistrationTable& operator=(PacketRegistrationTable&&)=delete; // 생존 Session 대여를 다른 표로 옮기지 않는다.
     std::uint32_t LastType() const; // 다른 판본 표의 잘못된 공유를 생성 시 거부하는 한도다.
+    void ResetCallbacks(); // R00482b60처럼 지원 슬롯0..last의 함수/버전을0으로 만들고 같은 길이표/owner는 보존한다. Session 대여/실행 중에는 거부한다.
     bool ConnectionCallbackActive() const noexcept; // 활성/반납 세대의 콜백 중에는 전체 Runtime 정리를 시작하지 않는다.
     std::shared_ptr<PacketRegistrationLease> BindSession(const std::shared_ptr<void>& owner); // 실제 Session 전체 owner를 약하게 빌린다. 진행 중/중복 대여는 거부한다.
 private:

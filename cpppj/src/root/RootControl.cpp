@@ -1,5 +1,6 @@
 // 실제 R의 인사 응답/빈 수신과 LAN 요청·현재 포트 공지를 복원한다.
 #include "root/RootControl.h"
+#include "root/PacketRegistration.h"
 #include "root/ChallengeDetail.h"
 #include "root/AddressCodec.h"
 #include "o/RawLocalServerDiscovery.h"
@@ -10,13 +11,10 @@ RootControl::RootControl(ConnectionState& state,TransceiverTransport& transport,
     :state_(state),transport_(transport),options_(options),addresses_(addresses),clock_(clock),log_(std::move(log)) {}
 void RootControl::CheckExit() { if (state_.exitRequested) { Need(transport_.Lifecycle().exit)(0);throw std::logic_error("R 인사/LAN _exit 장치가 복귀했습니다"); } }
 void RootControl::Assert(std::string_view expression,std::string_view file,std::uint32_t line) { Need(transport_.Lifecycle().assertion)(expression,file,line); }
-void RootControl::ObserveGreeting(std::span<std::uint8_t> packet,std::uint32_t sending,bool reply) {
-    if (!sending) return;const auto extra=Read(packet,8);if (extra==0xffffffffU) Assert("extraDataLen != (int)-1","c:\\ns\\o\\_p_packets.cpp",reply ? 917:885);Put(packet,2,extra+12U,2); // 원문 DWORD 덧셈의 최종 하위WORD만 쓰며 진단 복귀 뒤에도 계속한다.
-}
 void RootControl::Install() {
     auto& dispatch=transport_.PacketHandlers();
     for (const auto type:std::array<std::uint8_t,2>{0x0b,0x0c}) { // 두 원문 가변 길이 인사의 현재observer/version·정책만 등록한다.
-        dispatch.ObservePacket(type,[this,type](auto packet,auto sending) { ObserveGreeting(packet,sending,type==0x0c); });dispatch.Version(type,1,0);dispatch.RequireLength(type,0xffff);
+        dispatch.ObservePacket(type,[this,type](auto packet,auto sending) { ObservePacketFields(type,packet,sending,transport_.Lifecycle().assertion); });dispatch.Version(type,1,0);dispatch.RequireLength(type,0xffff);
     }
     dispatch.RegisterDirect(0x0b,[this](auto sender,auto* connection,auto) { ReceiveGreeting(std::bit_cast<std::int32_t>(sender),connection); });dispatch.RegisterDirect(0x0c,[this](auto,auto*,auto) { CheckExit(); }); //0ch의 실제 몸체는 종료 관문 뒤 즉시 반환한다.
     dispatch.ObservePacket(0x66,[](auto,auto) {});dispatch.Version(0x66,1,0);dispatch.RequireLength(0x66,12);dispatch.RegisterDirect(0x66,[this](auto sender,auto*,auto packet) { ReceiveDiscovery(std::bit_cast<std::int32_t>(sender),packet); }); //66h의 원문 observer는 빈 몸체이며 실제 연결 인자는 읽지 않는다.

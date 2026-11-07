@@ -30,7 +30,6 @@ private:
     std::function<std::span<const std::uint8_t>(std::uint32_t)> challenge_; // 실제 관리자의 현재 CCh 토큰 조회 장치다. 빈 상태를 합성하지 않는다.
     ChallengeDirectoryView Challenge(std::uint32_t index) const; // 현재51칸에서 토큰을 다시 읽고 실제 물리를 조회한다.
     void Assert(std::string_view expression,std::string_view file,std::uint32_t line) const; // 선택된 원문 진단만 실제 전송의 프로세스 장치에 전달한다.
-    void Observe(std::span<std::uint8_t> packet,std::uint32_t sending,bool reply) const; // 00444180/00443c20의 송신일 때만 길이 WORD를 작성한다.
     void Receive(std::int32_t sender,std::span<const std::uint8_t> request); // 00475660의 종료 관문/추천·목록/현재 연결별 응답과 pending guard다.
     void Reply(std::int32_t sender,std::span<std::uint8_t> packet); // 대기/일반/Challenge 복합 번호의 실제 현재 노드로 송신한다.
 };

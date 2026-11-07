@@ -16,7 +16,6 @@ private:
     Clock& clock_;std::function<void(std::int32_t,std::string_view)> log_; // 같은 원문 CaptureGame과 완성된 로그의 실제 프로세스 장치다.
     void CheckExit(); // 원문 exitRequested가 비영일 때 실제_exit0 장치를 호출하며 정상 복귀는 거부한다.
     void Assert(std::string_view expression,std::string_view file,std::uint32_t line); // 원문 표현식/파일·줄의 선택 진단만 실제 프로세스 장치에 전달한다.
-    void ObserveGreeting(std::span<std::uint8_t> packet,std::uint32_t sending,bool reply); //00443a00/443b10의extraDataLen DWORD/진단 뒤 최종WORD 길이+12를 쓴다.
     void ReceiveGreeting(std::int32_t sender,o::PacketConnection* connection); //00475070의 현재상위조회/실제 연결 동일성 진단과10.71·extra0 응답/같은노드flush다.
     void ReceiveDiscovery(std::int32_t sender,std::span<const std::uint8_t> packet); //00475f90의 현재Root명령0 재공지/비Root 일반종료·실제pending sender guard다.
     void ReceiveDiagnostic(std::int32_t sender,std::span<const std::uint8_t> packet); //00475260의 exit/diag 관문·실제pending guard/역방향 TCP·같은11h 응답/flush·현재입력 로그다.
