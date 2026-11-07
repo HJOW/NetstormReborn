@@ -373,12 +373,14 @@ public sealed class SquidProcessHost
                     throw new InvalidOperationException("Process Unpop의 현재 공장 미연결");
                 }
 
-                throw new InvalidOperationException("Process Unpop의 Form 공장 미연결");
+                runtime.Factory.UnpopForm(form);
+                return;
             }
 
             if (_directFormFactory is not null)
             {
-                throw new InvalidOperationException("Process Unpop의 직접 Form 공장 미연결");
+                _directFormFactory.UnpopForm(form);
+                return;
             }
 
             // 독립 Host도 같은 공통 해제 순서를 사용한다

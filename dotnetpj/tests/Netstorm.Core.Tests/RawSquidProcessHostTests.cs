@@ -582,14 +582,32 @@ public sealed class RawSquidProcessHostTests
         Assert.Throws<InvalidOperationException>(() => host.UnpopForm(101));
     }
 
-    /// <summary>직접 공장은 Form 분리를 아직 잇지 않아 명시 오류다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
+    /// <summary>직접 공장은 같은 공통 순서로 폼을 푼다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
     [Fact]
-    public void UnpopFormDirectFactoryThrowsExplicit()
+    public void UnpopFormDirectFactoryReleases()
     {
         (RawSidPool pool, Kernel _, RawSquidDestroy _, SquidProcessHost host) = DestroyScene();
         var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
         host.BindFormFactory(new RawSquidFactory(pool, types));
-        Assert.Throws<InvalidOperationException>(() => host.UnpopForm(101));
+        FormChain(pool, 100, 101);
+        host.UnpopForm(101);
+        Assert.Equal(4, pool.Slot(101)[11]);
+        Assert.Equal(0, pool.Slot(100)[6] | (pool.Slot(100)[7] << 8));
+    }
+
+    /// <summary>현재 공장이 있으면 런타임 분리는 같은 공통 순서로 푼다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UnpopFormRuntimeFactoryReleases()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState state, SquidProcessHost _) = LookupScene();
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var destroy = new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types);
+        var runtime = new ProcessHostRuntimeBindings { Destroy = destroy, Factory = new RawSquidFactory(pool, types) };
+        var host = new SquidProcessHost(pool, types, kernel, state, () => runtime);
+        FormChain(pool, 100, 101);
+        host.UnpopForm(101);
+        Assert.Equal(4, pool.Slot(101)[11]);
+        Assert.Equal(0, pool.Slot(100)[6] | (pool.Slot(100)[7] << 8));
     }
 
     /// <summary>권한이 없으면 서버 번호·플래그 없는 삭제는 조용히 둔다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>

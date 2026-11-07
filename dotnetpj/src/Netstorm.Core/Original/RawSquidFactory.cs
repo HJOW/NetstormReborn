@@ -70,6 +70,18 @@ public sealed class RawSquidFactory
     /// <summary>void 가 아닌 오브젝트를 Take 할 때 쓰는 공간 해제. 연결 전이면 null 이며 그 경우 Take 는 거부한다.</summary>
     private readonly IRawUnpop? _unpop;
 
+    /// <summary>선택된 Form 해제 때 실제 공통 종속 분리만 실행하는 경계다. 없으면 공통 순서를 쓴다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    private Action<int>? _formDetach;
+
+    /// <summary>죽은 Session 주소를 저장하지 않는 Form 전송 경계다. 없으면 서버 전송 경로에서 예외다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    private Action<int, uint>? _formTransmit;
+
+    /// <summary>Pop 뒤 현재 전체 contentFormType DWORD다. 없으면 6을 쓴다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    private Func<uint>? _formContentType;
+
+    /// <summary>호출 중 같은 World 저장소를 바꾸지 않는 공유 깊이 상자다. 없으면 지역 깊이를 쓴다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    private UIntBox? _formPostPopDepth;
+
     /// <summary>팩토리를 만든다.</summary>
     /// <param name="pool">슬롯 풀.</param>
     /// <param name="types">타입 번호 순서의 타입 레코드. 개수는 <see cref="OriginalConstructors.TypeCount"/> 와 같아야 한다.</param>
@@ -95,6 +107,99 @@ public sealed class RawSquidFactory
 
     /// <summary>이 팩토리가 쓰는 슬롯 풀. 생성 효과 어댑터가 같은 풀인지 확인하는 데 쓴다.</summary>
     public RawSidPool Pool => _pool;
+
+    /// <summary>새 대여는 이후 선택된 Form 해제부터 분리 경계를 사용한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    /// <param name="detach">void 설정·부모 free 관문 뒤 실행할 분리 경계다. null이면 공통 순서를 쓴다.</param>
+    public void BindFormDetach(Action<int>? detach)
+    {
+        _formDetach = detach;
+    }
+
+    /// <summary>죽은 Session 주소를 공장에 저장하지 않고 전송·종류 경계만 둔다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    /// <param name="contentType">Pop 뒤 현재 전체 contentFormType DWORD다. null이면 6을 쓴다.</param>
+    /// <param name="transmit">서버 Pop 전송 경계다. null이면 서버 전송 경로에서 예외다.</param>
+    public void BindFormAttach(Func<uint>? contentType, Action<int, uint>? transmit)
+    {
+        _formContentType = contentType;
+        _formTransmit = transmit;
+    }
+
+    /// <summary>호출 중 같은 World 저장소를 바꾸지 않고 실제 동일 DWORD를 읽고 쓴다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    /// <param name="current">공유할 깊이 상자다.</param>
+    public void BindFormPopDepth(UIntBox current)
+    {
+        ArgumentNullException.ThrowIfNull(current);
+        if (_formPostPopDepth is not null && !ReferenceEquals(_formPostPopDepth, current))
+        {
+            throw new ArgumentException("Form Pop의 다른 공유 깊이 주소 재연결");
+        }
+
+        _formPostPopDepth = current;
+    }
+
+    /// <summary>같은 공장의 현재 진단·공유 깊이를 부착·직접 Pop에 함께 연결한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    /// <param name="forms">연결할 Form 몸체다. 같은 풀을 써야 한다.</param>
+    public void BindCurrentFormPop(RawSquidForms forms)
+    {
+        ArgumentNullException.ThrowIfNull(forms);
+        if (!ReferenceEquals(forms.Pool, _pool))
+        {
+            throw new ArgumentException("Form Pop 연결의 실제 Pool 불일치", nameof(forms));
+        }
+
+        var hooks = new FormPopHooks();
+        if (_formPostPopDepth is not null)
+        {
+            hooks.Depth = () => _formPostPopDepth.Value;
+            hooks.SetDepth = value => _formPostPopDepth.Value = value;
+        }
+
+        forms.BindPop(hooks);
+    }
+
+    /// <summary>파생 직렬화 접두 뒤에만 공통 현재 genus·링크·Pop 진단을 실행한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    /// <param name="form">부를 Form SID다.</param>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="flags">Pop 플래그다.</param>
+    /// <param name="transmit">서버 Pop 전송 경계다. null이면 바인딩된 경계를 쓴다.</param>
+    public void AttachForm(int form, int parent, uint flags, Action<int, uint>? transmit = null)
+    {
+        var forms = new RawSquidForms(_pool, null, transmit ?? _formTransmit);
+        BindCurrentFormPop(forms);
+        var hooks = new FormAttachHooks
+        {
+            // 각 호출에서 현재 빌린 TYPE 표를 읽는다
+            Genus = number => number >= _types.Count
+                ? throw new ArgumentOutOfRangeException(nameof(number), number, "Form 부착의 현재 TYPE 범위 오류")
+                : _types[number].Flags2,
+            ContentType = _formContentType ?? (() => 6u),
+        };
+        forms.BindAttach(hooks);
+        forms.Attach(form, parent, flags);
+    }
+
+    /// <summary>공통 진단의 현재 장치와 같은 풀의 종속 분리만 호출한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    /// <param name="sid">해제할 Form 번호다.</param>
+    public void UnpopForm(int sid)
+    {
+        if (_formDetach is not null)
+        {
+            throw new InvalidOperationException("Form 분리 종단의 실제 분리 미연결");
+        }
+
+        new RawSquidForms(_pool).Unpop(sid);
+    }
+
+    /// <summary>실제 현재 진단·깊이를 같은 호출 수명으로 빌려 직접 Pop 한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
+    /// <param name="form">Pop 할 Form 번호.</param>
+    /// <param name="flags">Pop 플래그다.</param>
+    /// <param name="transmit">서버 Pop 전송 경계다. null이면 바인딩된 경계를 쓴다.</param>
+    public void PopForm(int form, uint flags, Action<int, uint>? transmit = null)
+    {
+        var forms = new RawSquidForms(_pool, null, transmit ?? _formTransmit);
+        BindCurrentFormPop(forms);
+        forms.Pop(form, flags);
+    }
 
     /// <summary>
     /// 오브젝트를 만든다. 슬롯 할당 → 생성자 쓰기 → 타입 바이트 → postCreate 순서이며 새 슬롯 번호를 돌려준다.
