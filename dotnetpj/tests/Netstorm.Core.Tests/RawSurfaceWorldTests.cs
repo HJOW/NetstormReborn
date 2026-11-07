@@ -116,6 +116,43 @@ public sealed class RawSurfaceWorldTests
         Assert.Equal(0u, world.LoadingDepth());
     }
 
+    /// <summary>붕괴 실행 상태 초기값이 싱글 플레이인지 검증한다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DecayModeStartsAsSinglePlayer()
+    {
+        // 원본 Impl.mode 기본값(로컬이 서버 전투 화면)을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.True(world.DecayMode().Server);
+        Assert.True(world.DecayMode().Authority);
+        Assert.False(world.DecayMode().Editor);
+    }
+
+    /// <summary>설치 모드 지정이 세션 전역에 함께 적히는지 검증한다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ConfigureInstallModesSetsModes()
+    {
+        // 원본 ownerMode·links.battle·mode.editor 대입 순서를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.ConfigureInstallModes(true, true, false, true);
+        Assert.True(world.Storage().OwnerMode.Fort);
+        Assert.True(world.Storage().OwnerMode.Battle);
+        Assert.False(world.Storage().OwnerMode.Challenge);
+        Assert.True(world.Storage().Links.Battle);
+        Assert.True(world.DecayMode().Editor);
+        Assert.True(world.DecayMode().Server);
+        Assert.True(world.DecayMode().Authority);
+    }
+
+    /// <summary>객체가 생긴 뒤의 늦은 설치 모드 지정을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ConfigureInstallModesRejectsLateCall()
+    {
+        // 첫 객체 뒤의 늦은 설치는 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.Storage().Pool.Allocate();
+        Assert.Throws<InvalidOperationException>(() => world.ConfigureInstallModes(true, true, false, false));
+    }
+
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {

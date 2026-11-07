@@ -1,4 +1,6 @@
 // 같은 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드의 껍데기를 공유한다.
+using Netstorm.Core.Bridges;
+
 namespace Netstorm.Core.Original;
 
 // 서피스 월드 모듈을 담는 네임스페이스다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.
@@ -23,6 +25,18 @@ public sealed class RawSurfaceWorld
 
     /// <summary>중첩 로딩의 표면/사제/자산 후처리가 같은 값을 읽는 로딩 상태다. 원본 Impl.loadState에 대응하며 초기 깊이는 1이다. 런타임 전달과 저장 게임 공유 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 SetLoadingDepth 이식에서 추가됐다.</summary>
     private readonly IslandPostPopState _loadState = new() { LoadingDepth = 1u };
+
+    /// <summary>붕괴 처리가 읽는 원본 실행 상태 전역이다. 원본 Impl.mode에 대응하며 초기값은 싱글 플레이(로컬이 서버) 전투 화면이다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
+    private BridgeDecayMode _mode = BridgeDecayMode.SinglePlayer;
+
+    /// <summary>런타임 경계를 설치했는지다. 원본 Impl.runtimeBound에 대응한다. 첫 객체 생성 전 한 번만 연결하며 BeginLoad·FinishLoad·BindRuntime 단위에서 갱신한다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
+    private bool _runtimeBound = false;
+
+    /// <summary>적재 작업 중인지다. 원본 Impl.loading에 대응한다. BeginLoad·FinishLoad 단위에서 갱신한다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
+    private bool _loading = false;
+
+    /// <summary>현재 자료의 적재가 끝났는지다. 원본 Impl.loaded에 대응한다. FinishLoad 단위에서 갱신한다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
+    private bool _loaded = false;
 
     /// <summary>같은 판본·타입·지형으로 월드를 만들고 물리 저장소를 빌리거나 새로 만든다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
@@ -93,4 +107,39 @@ public sealed class RawSurfaceWorld
     /// <summary>현재 로딩 중첩 깊이를 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 SetLoadingDepth 이식에서 추가됐다.</summary>
     /// <returns>현재 로딩 중첩 깊이다.</returns>
     public uint LoadingDepth() => _loadState.LoadingDepth;
+
+    /// <summary>최초 객체·런타임 등록 전에 원본 모드의 실제 소유권·연결색·다리 붕괴 소비자를 함께 설정한다. 세션 전역만 바꾸고 비공개 편집 값은 남기지 않는다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
+    /// <param name="fort">현재(편집) 모드다. 켜져 있으면 작업장 목록을 고친다.</param>
+    /// <param name="battle">전투 모드다. 연결색과 작업장 목록 조건에 쓴다.</param>
+    /// <param name="challenge">도전 모드다. 켜지면 유효 소유자 번호가 1~39로 바뀐다.</param>
+    /// <param name="editor">편집기다. 켜져 있으면 다리 붕괴 스캔을 돌리지 않는다.</param>
+    public void ConfigureInstallModes(bool fort, bool battle, bool challenge, bool editor)
+    {
+        // 원본 첫 객체/Runtime 등록 전 관문을 직역한다. 지정 Take가 freeCount를 보존할 수 있어 실제 슬롯도 함께 검사한다.
+        RawSidPool pool = _storage.Pool;
+        if (_runtimeBound || _loading || _loaded || pool.FreeCount != (uint)(pool.Capacity - RawSidPool.FirstOrdinary))
+        {
+            throw new InvalidOperationException("실제 설치 모드는 첫 객체·런타임 등록 전에 설정해야 합니다.");
+        }
+
+        // 이미 만든 실제 슬롯이 하나라도 있으면 늦은 설정을 거부한다.
+        for (int sid = RawSidPool.FirstOrdinary; sid < pool.Capacity; sid++)
+        {
+            if ((pool.Slot(sid)[RawSidPool.StateOffset] & RawSidPool.FreeBit) == 0)
+            {
+                throw new InvalidOperationException("실제 설치 모드 설정 전에 객체가 존재합니다.");
+            }
+        }
+
+        SquidOwnerMode ownerMode = _storage.OwnerMode;
+        ownerMode.Fort = fort;
+        ownerMode.Battle = battle;
+        ownerMode.Challenge = challenge;
+        _storage.Links.Battle = battle;
+        _mode = _mode with { Editor = editor };
+    }
+
+    /// <summary>현재 붕괴 처리 실행 상태 전역을 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
+    /// <returns>현재 실행 상태 전역이다.</returns>
+    public BridgeDecayMode DecayMode() => _mode;
 }
