@@ -107,4 +107,7 @@ public static partial class OriginalConstructors
 
     /// <summary>지원하는 파생 생성자 목록을 읽기 전용으로 돌려준다. 검사와 도구가 개수와 주소를 확인하는 데 쓴다.</summary>
     public static IReadOnlyList<ConstructorRecipe> Recipes => RecipeTable;
+
+    /// <summary>지원하는 CD 파생 생성자 목록을 읽기 전용으로 돌려준다. 판본별 가상 표 판별이 CD 표를 읽는 데 쓴다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
+    public static IReadOnlyList<ConstructorRecipe> CdRecipes => CdRecipeTable;
 }

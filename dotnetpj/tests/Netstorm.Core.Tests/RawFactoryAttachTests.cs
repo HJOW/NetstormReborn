@@ -386,4 +386,66 @@ public sealed class RawFactoryAttachTests
         factory2.BindWeakenedMana(new BoolBox { Value = false });
         Assert.Equal(1001, BitConverter.ToInt32(pool2.Slot(factory2.Create(158u)).Slice(26, 4)));
     }
+
+    /// <summary>같은 판본의 기본·검증 표에 있는 가상 표만 허용한다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SupportsConstructedVtableMatchesBaseAndRecipes()
+    {
+        Assert.NotEmpty(OriginalConstructors.Recipes);
+        Assert.NotEmpty(OriginalConstructors.CdRecipes);
+        // 기본 가상 표는 양판본에서 허용된다
+        Assert.True(RawSquidFactory.SupportsConstructedVtable(OriginalEdition.Patch1078, OriginalConstructors.BaseVtableFor(OriginalEdition.Patch1078)));
+        Assert.True(RawSquidFactory.SupportsConstructedVtable(OriginalEdition.Cd1072, OriginalConstructors.BaseVtableFor(OriginalEdition.Cd1072)));
+        // 각 판본의 첫 생성자 표 가상 표는 같은 판본에서 허용된다
+        Assert.True(RawSquidFactory.SupportsConstructedVtable(OriginalEdition.Patch1078, OriginalConstructors.Recipes[0].Vtable));
+        Assert.True(RawSquidFactory.SupportsConstructedVtable(OriginalEdition.Cd1072, OriginalConstructors.CdRecipes[0].Vtable));
+        // 표에 없는 값은 양판본에서 거부된다
+        Assert.False(RawSquidFactory.SupportsConstructedVtable(OriginalEdition.Patch1078, 0x12345678u));
+        Assert.False(RawSquidFactory.SupportsConstructedVtable(OriginalEdition.Cd1072, 0x12345678u));
+    }
+
+    /// <summary>현재 슬롯 타입의 생성자만 다시 실행한다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ConstructCurrentAppliesCurrentConstructor()
+    {
+        (RawSidPool pool, List<OriginalTypeRecord> types, RawSquidFactory factory) = Scene();
+        // 기본 생성 타입은 기본 가상 표로 돌아온다
+        int sid = factory.Create(74u);
+        pool.RawSlot(sid)[0] = pool.RawSlot(sid)[1] = pool.RawSlot(sid)[2] = pool.RawSlot(sid)[3] = 0;
+        Assert.Equal(sid, factory.ConstructCurrent(sid));
+        Assert.Equal(OriginalConstructors.BaseVtableFor(pool.Edition), BitConverter.ToUInt32(pool.Slot(sid).Slice(0, 4)));
+        // 내장 Form 타입은 Form 가상 표로 돌아온다
+        types[2].ConstructorAddress = OriginalConstructors.Address(pool.Edition, 2);
+        int form = factory.Create(2u);
+        uint before = BitConverter.ToUInt32(pool.Slot(form).Slice(0, 4));
+        pool.RawSlot(form)[0] = pool.RawSlot(form)[1] = pool.RawSlot(form)[2] = pool.RawSlot(form)[3] = 0;
+        Assert.Equal(form, factory.ConstructCurrent(form));
+        Assert.Equal(before, BitConverter.ToUInt32(pool.Slot(form).Slice(0, 4)));
+    }
+
+    /// <summary>받침 보조 생성자는 진단 복귀 뒤 가상 표만 쓴다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ConstructRawDaisRequiresDiagnosticsAndWritesVtable()
+    {
+        (RawSidPool pool, List<OriginalTypeRecord> _, RawSquidFactory factory) = Scene();
+        int sid = factory.Create(74u);
+        // 진단 미연결이면 쓰기 전에 거부한다
+        Assert.Throws<InvalidOperationException>(() => factory.ConstructRaw(0x44a420u, sid, false));
+        var calls = new List<(string Expression, string File, uint Line)>();
+        factory.BindDiagnostics(new SquidFactoryDiagnostics
+        {
+            Assertion = (expression, file, line) => calls.Add((expression, file, line)),
+        });
+        Assert.Equal(sid, factory.ConstructRaw(0x44a420u, sid, false));
+        Assert.Single(calls);
+        Assert.Equal("false", calls[0].Expression);
+        Assert.Equal(".\\Dais.cpp", calls[0].File);
+        Assert.Equal(0x484u, calls[0].Line);
+        Assert.Equal(0x507950u, BitConverter.ToUInt32(pool.Slot(sid).Slice(0, 4)));
+        // CD판에서는 같은 주소가 미지원 생성자로 거부된다
+        var cdPool = new RawSidPool(RawSurfaceStorage.PoolCapacity, true, null, OriginalEdition.Cd1072);
+        var cdFactory = new RawSquidFactory(cdPool, Types188());
+        int cdSid = cdFactory.Create(74u);
+        Assert.Throws<InvalidOperationException>(() => cdFactory.ConstructRaw(0x44a420u, cdSid, false));
+    }
 }

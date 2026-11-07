@@ -56,7 +56,7 @@ public sealed class SquidFactoryDiagnostics
 /// 슬롯 필드 위치(10.78): 가상 표 +0, 섬 번호 +8, 타입 +10, 상태 +11, HP +26(4바이트), 소유자 +34, zOrder +35, 추가 비트 +40.
 /// 생산 칸 contained Form 과 GumpForm 의 생성은 Form 모듈(W03)에서 옮긴다.
 /// 근거: docs/exe/cpp-creation-reconstruction.md, docs/exe/cpp-derived-reconstruction.md, cpppj/src/o/SquidFactory.cpp (W02 첫 조각, 2026-10-16; Retype·생성자 표 명시 오류는 R0-4 재대조, 2026-10-28).
-/// 최종 가상 표 판별(SupportsConstructedVtable)과 약화 전역 공유(BindWeakenedMana)는 판본·세션 소유 문제라 R4·R6에서 연결한다.
+/// 최종 가상 표 판별(SupportsConstructedVtable)은 0.224에서 연결했고 약화 전역 공유(BindWeakenedMana)는 0.223에서 연결했다. 타입 HP 읽기(TypeHitPoints)는 R6에서 연결한다.
 /// 생성·타입 변경·최초 Pop 플래그의 판본별 표·위치는 F2c-11에서 이었다. Take·공통 postCreate의 나머지 CD 분기는 별도 범위다.
 /// </summary>
 public sealed class RawSquidFactory
@@ -96,6 +96,12 @@ public sealed class RawSquidFactory
 
     /// <summary>원문 NULL 생성자 주소. 반환 객체가 필요하면 생성을 거부한다. 2026-11-07 F2d 공장 폼 생성 이식에서 추가됐다.</summary>
     private const uint NullConstructorAddress = 0x4429E0u;
+
+    /// <summary>원문 받침 보조 생성자 주소(패치판). 진단 정상 복귀 뒤 가상 표만 쓴다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
+    private const uint DaisAuxAddress = 0x44a420u;
+
+    /// <summary>받침 보조 생성자가 진단 복귀 뒤 쓰는 가상 표 값이다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
+    private const uint DaisAuxVtable = 0x507950u;
 
     /// <summary>슬롯을 할당받을 풀. 팩토리는 풀의 목록·카운터를 Allocate 로만 바꾼다.</summary>
     private readonly RawSidPool _pool;
@@ -777,6 +783,32 @@ public sealed class RawSquidFactory
         return false;
     }
 
+    /// <summary>같은 판본의 기본·검증된 생성자 표에 있는 현재 가상 표인지 확인한다. 타입과 가상 표의 쌍 일치는 강제하지 않는다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
+    /// <param name="edition">원본 판본.</param>
+    /// <param name="table">확인할 가상 표 값이다.</param>
+    /// <returns>같은 판본의 실제 최종 가상 표이면 참이다.</returns>
+    public static bool SupportsConstructedVtable(OriginalEdition edition, uint table)
+    {
+        if (table == OriginalConstructors.BaseVtableFor(edition))
+        {
+            return true;
+        }
+
+        // 현재 판본의 실제 최종 가상 표만 허용한다
+        IReadOnlyList<ConstructorRecipe> recipes = edition == OriginalEdition.Cd1072
+            ? OriginalConstructors.CdRecipes
+            : OriginalConstructors.Recipes;
+        foreach (ConstructorRecipe recipe in recipes)
+        {
+            if (recipe.Vtable == table)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /// <summary>진단 뒤에도 같은 현재 표를 조회한다. 빌린 표가 없으면 기존 독립 소유 표를 복사 없이 읽는다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
     /// <returns>현재 타입 표다.</returns>
     private IReadOnlyList<OriginalTypeRecord> CurrentTypes()
@@ -827,6 +859,15 @@ public sealed class RawSquidFactory
         return record;
     }
 
+    /// <summary>현재 슬롯의 타입이 가리키는 생성자만 실행하고 반환 객체는 무시한다. 타입·상태 선행 검사를 하지 않는다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
+    /// <param name="sid">대상 슬롯 번호.</param>
+    /// <returns>같은 슬롯 번호다.</returns>
+    public int ConstructCurrent(int sid)
+    {
+        uint address = TypeRecord(_pool.RawSlot(sid)[RawSidPool.TypeOffset]).ConstructorAddress;
+        return ConstructRaw(address, sid, false);
+    }
+
     /// <summary>원문 cdecl 주소를 타입·상태 선행 검사 없이 같은 물리 슬롯에 적용한다. Form은 가상 표 DWORD만 남긴다.</summary>
     /// <param name="address">원문 생성자 주소.</param>
     /// <param name="sid">대상 슬롯 번호.</param>
@@ -858,6 +899,21 @@ public sealed class RawSquidFactory
                 throw new InvalidOperationException("void NULL 생성자는 Create의 반환 객체를 제공하지 않습니다");
             }
 
+            return sid;
+        }
+
+        // 패치판 받침 보조 생성자는 진단 정상 복귀 뒤 같은 슬롯에 가상 표만 쓴다
+        if (_pool.Edition == OriginalEdition.Patch1078 && address == DaisAuxAddress)
+        {
+            Action<string, string, uint>? assertion = _diagnostics?.Assertion;
+            if (assertion is null)
+            {
+                throw new InvalidOperationException("Dais 보조 생성자의 실제 진단 장치 미연결");
+            }
+
+            assertion("false", ".\\Dais.cpp", 0x484);
+            Span<byte> daisBytes = _pool.RawSlot(sid);
+            Put(daisBytes, VtableOffset, DaisAuxVtable, 4);
             return sid;
         }
 
