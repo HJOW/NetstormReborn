@@ -18,6 +18,7 @@ public:
     std::array<std::uint32_t,51> challenges{}; //004d05f0의서로다른51개Challenge상태토큰이다.대기연결표가아니다.
     std::uint32_t pendingCount{1},pendingInitialized{}; //004cd908의보호PE초기1과004d8a9c의BSS0을구별한다.
     std::uint32_t modeFlags{},localLaunch{},assertions{},exitRequested{}; //004d21b8/004d21cc/004d8ac4/004d2204의별도현재DWORD다.
+    std::uint32_t udpBroadcastId{},ipxBroadcastId{}; //004d21d8/dc의 현재 일반 연결 번호이며 노드 토큰이나 OS 핸들이 아니다. 최초BSS는0이다.
     std::int32_t challengeStateCount{}; //004d21e0의현재signed개수이며LAN모드해석은1로쓴뒤마지막증가로2를만든다.
 };
 struct ConnectionHooks {

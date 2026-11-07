@@ -1,0 +1,158 @@
+{
+  "unit": 1082,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "50308f6d730307aa2f975d148cff387c27f1dad8106b027e1e1cddcec30c8597"
+  },
+  "nativeAudit": {
+    "scope": "동일호스트R원문/보호PE·인사/LAN·주소·pending주요몸체기계어와현재표·장치접합정적감사.실제인사/LAN송수신실행검사아님",
+    "registration": "RootControl.Install은0b/0c가변길이extraDataLen관찰·버전1/정책0과66h빈원문observer/버전1·고정12/nullable세수신을현재표에연결한다.",
+    "greeting": "00475070은exit0→같은ReadTransceiver상위조회→실제connection포인터동일성진단462→비영일때0ch10.71/extra0응답→같은조회노드flush.유효pending음수에서상위조회0인원문관문도보존하며일반pending조회로바꾸지않음.제품표시11.01과wire10.71구분.",
+    "emptyReplyAndObserver": "00475040은exit0관문뿐이며내용처리없음.443a00/443b10송신observer는extraDataLenDWORD==-1진단885/917후DWORD덧셈extra+12의최종WORD를쓴다.수신방향은필드읽기없음.",
+    "discoveryReceive": "00475f90은exit0후Root명령0만Announce.비Root는signed sender>=256진단1132후음수이면4754e0처럼실제pending토큰/475520처럼그노드의현재sender로ClosePending.양수1..255는현재노드Terminate.대상검색토큰/회신커맨드로임의응답하지않음.",
+    "announce": "00475e60은기존MakeLocalServerDiscoveryPacket(1,현재basePort)writer로동일12BYTE를한번작성.현재UDP일반번호상위조회→20BYTE초기0/family2/htons낮은WORD포트/ffffffff주소·tail0→같은노드SendTo3번.그뒤현재IPX일반번호를새로조회/기존주소Parse(0.ffffffffffff,현재포트)→동일packet3번.첫NUL/패킷재작성·노드재검색반복으로바꾸지않음.",
+    "currentIds": "ConnectionState의현재udpBroadcastId/ipxBroadcastId는원문004d21d8/dc의일반연결번호/BSS0이며토큰/핸들이아님.최종시작부모가초기화/실제OpenDatagram후일반번호를발행해야함.번호0도기존상위조회함수의슬롯0규칙을따름.",
+    "ipxBoundary": "원문IPX주소구성/호출순서만보존.현재SocketDevice는LAN IPv4장치이며실제IPX통신미지원/실패를성공으로합성하지않음.새로IPX소켓/드라이버를열지않음.",
+    "hostBoundaries": [
+      "필드/실제256·32칸밖/이미반납된노드접근은기존명시오류",
+      "송신실패callback으로노드가반납된뒤원문재가상호출의동일한실패/수명전체는실행미검증",
+      "구형힙/스택·SEH/미작성물리자체일치미주장"
+    ],
+    "receiverInventory": [
+      {
+        "type": "0xb",
+        "receiver": "00475070",
+        "status": "implemented"
+      },
+      {
+        "type": "0xc",
+        "receiver": "00475040",
+        "status": "implemented"
+      },
+      {
+        "type": "0x10",
+        "receiver": "004763d0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x83",
+        "receiver": "00476490",
+        "status": "implemented"
+      },
+      {
+        "type": "0x11",
+        "receiver": "00475260",
+        "status": "pending"
+      },
+      {
+        "type": "0x12",
+        "receiver": "00475580",
+        "status": "pending"
+      },
+      {
+        "type": "0x16",
+        "receiver": "00475660",
+        "status": "implemented"
+      },
+      {
+        "type": "0x17",
+        "receiver": "00476070",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1c",
+        "receiver": "00476180",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1e",
+        "receiver": "00476700",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1f",
+        "receiver": "004767c0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x87",
+        "receiver": "00476550",
+        "status": "pending"
+      },
+      {
+        "type": "0x41",
+        "receiver": "00476880",
+        "status": "implemented"
+      },
+      {
+        "type": "0x66",
+        "receiver": "00475f90",
+        "status": "implemented"
+      },
+      {
+        "type": "0x67",
+        "receiver": "00476940",
+        "status": "implemented"
+      },
+      {
+        "type": "0x68",
+        "receiver": "00476a00",
+        "status": "implemented"
+      },
+      {
+        "type": "0x71",
+        "receiver": "00476ac0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x80",
+        "receiver": "00476640",
+        "status": "retired-validation-disabled"
+      }
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "threeReceiversAndFullBodiesImplemented": true,
+    "sameActualGreetingReplyAndFlushImplemented": true,
+    "sameAnnouncerPacketAndCurrentSendToImplemented": true,
+    "currentBroadcastIdGlobalsImplemented": true,
+    "actualIpxTransportSupported": false,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsInstallAnnounceOrPublishesIds": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "newGreetingOrAnnounce": 0,
+    "ipx": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "Root/CS3수신(11/12/87)·보조객체·전체패킷/초기화·정리",
+    "새R.exe최종owner/entry·실제UDP번호발행/Announce/Bind/Install/Run·LAN hostname",
+    "클라이언트0F존47/서버3BYTE·0F/1d·메타/OSlaunch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
