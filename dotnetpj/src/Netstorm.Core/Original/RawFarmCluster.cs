@@ -18,11 +18,21 @@ public sealed class FarmClusterState
     /// <summary>로그인 bb4와 별개인 현재 bb0 DWORD를 직접 빌린다.</summary>
     public Func<uint>? SharedArchipelago { get; set; }
 
+    /// <summary>군도 root·간헐천·보충과 같은 00542654/CD00537188을 직접 빌린다.</summary>
+    public Func<int>? SharedArchipelagoSpan { get; set; }
+
     /// <summary>실제 FarmCluster는 로그인 bb4와 별개인 현재 bb0 DWORD를 읽고 반대 bool 사본을 무시한다.</summary>
     /// <returns>군도 모드이면 참이다.</returns>
     public bool CurrentArchipelago()
     {
         return SharedArchipelago is null ? Archipelago : SharedArchipelago() != 0;
+    }
+
+    /// <summary>빌린 확장 owner가 있으면 그 값을 읽고 없으면 자체값을 읽는다.</summary>
+    /// <returns>현재 섬 확장 범위다.</returns>
+    public int CurrentSpan()
+    {
+        return SharedArchipelagoSpan is null ? ArchipelagoSpan : SharedArchipelagoSpan();
     }
 }
 
@@ -188,7 +198,7 @@ public sealed class RawFarmCluster
         int radius = 1;
         if (_state.CurrentArchipelago() && region == 0)
         {
-            uint span = unchecked((uint)_state.ArchipelagoSpan);
+            uint span = unchecked((uint)_state.CurrentSpan());
             uint extension = unchecked(span * 16u);
             int start = unchecked((int)(extension - 16u));
             int end = unchecked((int)extension);

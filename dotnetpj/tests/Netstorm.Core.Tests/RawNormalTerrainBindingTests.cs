@@ -517,4 +517,99 @@ public sealed class RawNormalTerrainBindingTests
             Assert.Equal(right.Calls[index], left.Calls[index]);
         }
     }
+
+    /// <summary>생성 입력 장면을 만든다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    private static TerrainGenerationInputs GenerationScene()
+    {
+        return new TerrainGenerationInputs
+        {
+            Enabled = new RawCheckingFlag(true),
+            Battle = new RawCheckingFlag(false),
+            Mission = new RawCheckingFlag(false),
+            Span = new IntBox { Value = 2 },
+            Minimum = new IntBox { Value = 15 },
+            Maximum = new IntBox { Value = 35 },
+            Percent = new UIntBox { Value = 0u },
+            Archipelago = new UIntBox { Value = 0u },
+            Growth = new TerrainGrowthDiagnostics(),
+        };
+    }
+
+    /// <summary>생성 입력 연결은 상자를 공유하고 플래그는 복사한다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindGenerationInputsSharesBoxesAndCopiesFlags()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        Assert.False(binding.HasGenerationInputs());
+        Assert.Throws<InvalidOperationException>(() => binding.GenerationInputs());
+        var farm = new FarmClusterState();
+        TerrainGenerationInputs inputs = GenerationScene();
+        binding.BindGenerationInputs(farm, inputs);
+        Assert.True(binding.HasGenerationInputs());
+        // 같은 상자를 공유하므로 호출자 쓰기가 보관·군집에 보인다
+        inputs.Span.Value = 3;
+        inputs.Archipelago.Value = 1u;
+        Assert.Equal(3, binding.GenerationInputs().Span.Value);
+        Assert.Equal(1u, binding.GenerationInputs().Archipelago.Value);
+        Assert.Equal(3, farm.CurrentSpan());
+        Assert.True(farm.CurrentArchipelago());
+        // 플래그는 복사하므로 원본 교체가 보관에 닿지 않는다
+        inputs.Enabled = new RawCheckingFlag(false);
+        Assert.True(binding.GenerationInputs().Enabled.IsEnabled);
+        // 성장은 같은 owner를 공유한다
+        Assert.Same(inputs.Growth, binding.GenerationInputs().Growth);
+    }
+
+    /// <summary>같은 상자 재연결은 허용하고 다른 상자는 거부한다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindGenerationInputsGuardsOtherOwners()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        var farm = new FarmClusterState();
+        TerrainGenerationInputs first = GenerationScene();
+        binding.BindGenerationInputs(farm, first);
+        // 같은 상자 묶음은 다시 묶을 수 있다
+        var same = first.Clone();
+        binding.BindGenerationInputs(farm, same);
+        Assert.Same(first.Span, binding.GenerationInputs().Span);
+        // 다른 확장 상자는 거부한다
+        var otherSpan = GenerationScene();
+        otherSpan.Span = new IntBox { Value = 2 };
+        Assert.Throws<ArgumentException>(() => binding.BindGenerationInputs(farm, otherSpan));
+        // 다른 군도 상자는 거부한다
+        var otherArchipelago = first.Clone();
+        otherArchipelago.Archipelago = new UIntBox { Value = 0u };
+        Assert.Throws<ArgumentException>(() => binding.BindGenerationInputs(farm, otherArchipelago));
+        Assert.Throws<ArgumentNullException>(() => binding.BindGenerationInputs(null!, first));
+        Assert.Throws<ArgumentNullException>(() => binding.BindGenerationInputs(farm, null!));
+    }
+
+    /// <summary>첫 연결은 군집의 기존 빌림을 덮어쓴다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindGenerationInputsOverwritesFarmSharing()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        var farm = new FarmClusterState
+        {
+            Archipelago = true,
+            ArchipelagoSpan = 7,
+            SharedArchipelago = () => 0u,
+            SharedArchipelagoSpan = () => 7,
+        };
+        Assert.False(farm.CurrentArchipelago());
+        Assert.Equal(7, farm.CurrentSpan());
+        TerrainGenerationInputs inputs = GenerationScene();
+        binding.BindGenerationInputs(farm, inputs);
+        // 기존 대리자는 단일 owner 한계로 덮어쓴다
+        Assert.False(farm.CurrentArchipelago());
+        Assert.Equal(2, farm.CurrentSpan());
+        inputs.Archipelago.Value = 5u;
+        Assert.True(farm.CurrentArchipelago());
+    }
 }

@@ -207,6 +207,75 @@ public static class RawNormalTerrainChecks
     }
 }
 
+// 실제 004c1510/CD0049e620이 읽는 현재 전역과 선택된 군도 하위의 같은 장치를 빌린다. 생성·도장 본체는 후속 단위에서 잇는다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.
+public sealed class TerrainGenerationInputs
+{
+    /// <summary>후보 조건의 현재 00540a2c를 읽는 플래그다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public RawCheckingFlag Enabled { get; set; } = new();
+
+    /// <summary>후보 조건의 현재 00594fbc를 읽는 플래그다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public RawCheckingFlag Battle { get; set; } = new();
+
+    /// <summary>후보 조건의 현재 00594fa0을 읽는 플래그다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public RawCheckingFlag Mission { get; set; } = new();
+
+    /// <summary>PATCH는 constructor 뒤 현재 0052f7e5를 읽는다. CD root에는 이 관문이 없다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public Func<byte>? Layout { get; set; }
+
+    /// <summary>PATCH0041ca10을 두 번 따로 호출한다. 첫 결과를 두 번째에 재사용하지 않는다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public Func<int>? Spacing { get; set; }
+
+    /// <summary>실제 00542654/CD00537188이며 간헐천·군집과 같은 장기 owner다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public IntBox Span { get; set; } = new();
+
+    /// <summary>밀도 난수의 하한을 만드는 현재 15 DWORD다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public IntBox Minimum { get; set; } = new();
+
+    /// <summary>밀도 난수의 상한을 만드는 현재 35 DWORD다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public IntBox Maximum { get; set; } = new();
+
+    /// <summary>bb4 강제 밀도이며 0이면 같은 로컬 난수로 두 번 추출한다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public UIntBox Percent { get; set; } = new();
+
+    /// <summary>도장·정규화 뒤 1을 쓰는 실제 bb0이며 일반 분기에서 지우지 않는다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public UIntBox Archipelago { get; set; } = new();
+
+    /// <summary>각 플레이어의 현재 base+owner*stride+2c DWORD를 읽는다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public Func<int, uint>? Subscriber { get; set; }
+
+    /// <summary>같은 실제 PlayerBounds의 00432050이다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public Func<int, byte[], ChunkRect>? Placement { get; set; }
+
+    /// <summary>성장 전에 원문 1d 채널로 signed 백분율을 출력한다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public Action<int>? LogPercent { get; set; }
+
+    /// <summary>첫 시드·청크 getter가 읽는 현재 checking과 진단 복귀 장치다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public TerrainGrowthDiagnostics Growth { get; set; } = new();
+
+    /// <summary>플래그는 복사하고 상자·대리자·성장은 같은 owner를 공유하는 사본을 만든다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    /// <returns>같은 상자를 공유하는 입력 묶음이다.</returns>
+    public TerrainGenerationInputs Clone()
+    {
+        return new TerrainGenerationInputs
+        {
+            Enabled = new RawCheckingFlag(Enabled),
+            Battle = new RawCheckingFlag(Battle),
+            Mission = new RawCheckingFlag(Mission),
+            Layout = Layout,
+            Spacing = Spacing,
+            Span = Span,
+            Minimum = Minimum,
+            Maximum = Maximum,
+            Percent = Percent,
+            Archipelago = Archipelago,
+            Subscriber = Subscriber,
+            Placement = Placement,
+            LogPercent = LogPercent,
+            Growth = Growth,
+        };
+    }
+}
+
 // 같은 실제 월드 소유에 묶어 분기·개수·기록·후처리를 위임하는 바인딩 껍데기다. 생성·도장·군집 조립은 후속 단위에서 잇는다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.
 public sealed class RawNormalTerrainWorldBinding
 {
@@ -239,6 +308,9 @@ public sealed class RawNormalTerrainWorldBinding
 
     /// <summary>호출자가 준 진단 묶음의 복사본이다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
     private readonly NormalTerrainDiagnostics _diagnostics;
+
+    /// <summary>원문 상위의 비소유 전역 참조·선택 장치 묶음이며 모드나 Player 사본이 아니다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    private TerrainGenerationInputs? _generation;
 
     /// <summary>같은 실제 저장소를 묶고 타입·지역 연결을 확인한다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
     /// <param name="chunks">같은 실제 월드의 청크 지도다.</param>
@@ -315,4 +387,37 @@ public sealed class RawNormalTerrainWorldBinding
         RequireNormal(farm);
         PostprocessCurrentFarms(selectedRegion, place);
     }
+
+    /// <summary>현재 장기 전역·Player 장치의 수명은 이 소비자보다 길어야 하며 누락 분기를 일반으로 대신하지 않는다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    /// <param name="farm">같은 군도·확장 owner를 공유할 군집 상태다. 기존 빌림은 첫 연결 때 덮어쓴다(단일 owner 한계).</param>
+    /// <param name="inputs">보관할 상위 입력 묶음이다. 상자·대리자·성장은 공유하고 플래그는 복사한다.</param>
+    public void BindGenerationInputs(FarmClusterState farm, TerrainGenerationInputs inputs)
+    {
+        ArgumentNullException.ThrowIfNull(farm);
+        ArgumentNullException.ThrowIfNull(inputs);
+        ArgumentNullException.ThrowIfNull(inputs.Span);
+        ArgumentNullException.ThrowIfNull(inputs.Minimum);
+        ArgumentNullException.ThrowIfNull(inputs.Maximum);
+        ArgumentNullException.ThrowIfNull(inputs.Percent);
+        ArgumentNullException.ThrowIfNull(inputs.Archipelago);
+        if (_generation is not null &&
+            (!ReferenceEquals(_generation.Span, inputs.Span) || !ReferenceEquals(_generation.Archipelago, inputs.Archipelago)))
+        {
+            throw new ArgumentException("지형 root와 군집의 같은 군도/확장 owner 불일치");
+        }
+
+        // 원문처럼 군집의 두 포인터를 입력의 같은 주소로 교체한다. 기존 Func 빌림은 첫 연결 때 덮어쓴다.
+        farm.SharedArchipelago = () => inputs.Archipelago.Value;
+        farm.SharedArchipelagoSpan = () => inputs.Span.Value;
+        _generation = inputs.Clone();
+    }
+
+    /// <summary>상위 입력 묶음을 보관했는지 확인한다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    /// <returns>보관했으면 참이다.</returns>
+    public bool HasGenerationInputs() => _generation is not null;
+
+    /// <summary>보관한 상위 입력 묶음을 돌려준다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    /// <returns>보관한 입력 묶음이다.</returns>
+    public TerrainGenerationInputs GenerationInputs() =>
+        _generation ?? throw new InvalidOperationException("실제 지형 생성 상위의 현재 전역/장치 미연결");
 }

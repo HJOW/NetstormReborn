@@ -10,6 +10,13 @@ public sealed class UIntBox
     public uint Value { get; set; }
 }
 
+// 외부 signed DWORD 저장소를 빌리는 상자다. 원문 `std::int32_t&amp;` 빌림을 옮긴다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.
+public sealed class IntBox
+{
+    /// <summary>빌린 signed DWORD 값이다. 같은 주소를 직접 읽고 쓴다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
+    public int Value { get; set; }
+}
+
 // 외부 bool 전역을 빌리는 상자다. 원문 `const bool&amp;` 빌림을 옮긴다. 2026-11-07 F2d 공장 약화 공유 이식에서 추가됐다.
 public sealed class BoolBox
 {
