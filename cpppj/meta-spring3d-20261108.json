@@ -1,0 +1,50 @@
+{
+  "unit": 1123,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12670976,
+      "sha256": "19f5426d3aed57f3f32314876c6d88834e1491c90a434247767729d2471d4db8"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "2700e325122887c0159fcb6fdff3f6a20eae7d790359f9406ff1b4db6ba28eeb"
+    }
+  },
+  "staticAudit": {
+    "native": "00418520/4185b0/418640 전체와 각 다음 함수까지 기계어·관련 거리/CRT hypot 본문",
+    "fields": "0x5c 바이트 뷰·+4c/끝 패딩 미작성·현재 시각/fast/카메라 높이 주소",
+    "time": "원본 double 1/30초·엄격 초과 반복·시간별 float 저장·횟수 DWORD 감김",
+    "motion": "수평/높이 완료 비트·속도 제한/방향 정규화·끌림/감쇠·음수 높이속도는 z<=target에서 완료",
+    "reviewCorrection": "첫 빌드 후 기계어 FCOM/parity 재대조로 음수 높이속도의 완료 비교를 <=로 정정하고 재빌드했다.",
+    "precisionLimit": "호스트 double/CRT로 x87 계산·hypot를 대체한다. 명시 F32 저장을 보존하되 확장정밀도/NaN/모든 입력 비트 동일성은 미검증이다.",
+    "integration": "공통 계산부 컴파일 완료, 실제 Rig/카메라 프로세스·생성 소비자·23h 등록은 후속"
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

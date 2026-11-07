@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE client/NativeSpring3d.h client/NativeSpring3d.cpp) #1123:Animator3d의 실제 필드/시간 간격/목표·완료 비트를 복원한다.
+
 target_sources(netstorm PRIVATE client/NativeMetaScene.h client/NativeMetaScene.cpp) #1100:전체메타원격존배치·세이름표·현재TYPE/SHP진단과실제UI장치를복원한다.
 target_sources(netstorm PRIVATE client/HudNsInfoMeta.h client/HudNsInfoMeta.cpp) #1103:실제NSInfo메타루트배치·참가자순서표/행문맥을복원한다.
 
