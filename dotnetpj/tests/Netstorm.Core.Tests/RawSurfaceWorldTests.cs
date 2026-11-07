@@ -264,6 +264,54 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.FinishLoadAfterGraph());
     }
 
+    /// <summary>188개 TYPE면 표면 Graph를 갖는지 검증한다. 2026-11-07 F2d 월드 본체 그래프 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void GraphAvailableForPatchTypes()
+    {
+        // 원본 전체 풀 재구성용 Graph 소유를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.NotNull(world.Graph());
+    }
+
+    /// <summary>188개가 아니면 Graph를 비워 두는지 검증한다. 2026-11-07 F2d 월드 본체 그래프 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void GraphNullForNon188Types()
+    {
+        // CD 171개 TYPE의 그래프 연결은 후속 단위에서 잇는다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Null(world.Graph());
+        world.BeginLoad();
+        Assert.Throws<InvalidOperationException>(() => world.FinishLoad());
+    }
+
+    /// <summary>적재 종료가 그래프 재구성 뒤 상태를 닫는지 검증한다. 2026-11-07 F2d 월드 본체 그래프 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FinishLoadCompletes()
+    {
+        // 원본 FinishLoad의 재구성·종료 순서를 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.BeginLoad();
+        Assert.True(world.TakeChanged());
+        world.FinishLoad();
+        Assert.False(world.Loading());
+        Assert.True(world.Loaded());
+        Assert.Equal(0u, world.LoadingDepth());
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>순서 없는 적재 종료(그래프 포함)를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 그래프 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FinishLoadRejectsOutOfOrder()
+    {
+        // 시작 전과 완료 뒤의 종료는 원본처럼 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.FinishLoad());
+        world.BeginLoad();
+        world.FinishLoad();
+        Assert.Throws<InvalidOperationException>(() => world.FinishLoad());
+    }
+
     /// <summary>같은 삭제 전역 참조를 빌리는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 상태 이식에서 추가됐다.</summary>
     [Fact]
     public void DeletionStateReturnsSameReference()

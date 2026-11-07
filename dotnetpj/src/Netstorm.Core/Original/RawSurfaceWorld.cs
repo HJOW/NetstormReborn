@@ -47,6 +47,9 @@ public sealed class RawSurfaceWorld
     /// <summary>객체 종류·소유자별 등록 목록과 개수를 관리하는 제어 장부다. 원본 Impl.bookkeeping에 대응한다. 공유 집계 연결은 세션 조립에서 잇는다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
     private readonly RawPostPopState _bookkeeping = new();
 
+    /// <summary>서로 연결된 표면의 Graph 소속을 관리하는 처리기다. 원본 Impl.graph에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 그래프 적재 이식에서 추가됐다.</summary>
+    private readonly RawGraph? _graph;
+
     /// <summary>후설치와 같은 현재 원본 삭제 전역이다. 원본 Impl.deletion에 대응한다. 별도 세션 사본을 만들지 않으며 공유 좌표 연결은 BindDeletion 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 상태 이식에서 추가됐다.</summary>
     private readonly SquidDeletionState _deletion = new();
 
@@ -72,6 +75,11 @@ public sealed class RawSurfaceWorld
         _storage = storage ?? new RawSurfaceStorage(edition);
         _processState = _storage.Processes().State();
         _kernel = _storage.Processes().Kernel();
+        if (_types.Count == OriginalConstructors.TypeCount)
+        {
+            _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph.Records, _storage.Graph.Stack, null, GraphRecovery.FullPool);
+        }
+
         _bookkeeping.LocalOwner = 1;
     }
 
@@ -264,6 +272,27 @@ public sealed class RawSurfaceWorld
         _loaded = true;
         _changed = true;
     }
+
+    /// <summary>모든 실제 객체를 등록한 뒤 원본 Graph·장부를 활성화한다. 2026-11-07 F2d 월드 본체 그래프 적재 이식에서 추가됐다.</summary>
+    public void FinishLoad()
+    {
+        if (!_loading || _loaded)
+        {
+            throw new InvalidOperationException("원본 월드 로드 종료 순서 오류입니다.");
+        }
+
+        if (_graph is null)
+        {
+            throw new InvalidOperationException("원본 월드 그래프가 연결되지 않았습니다.");
+        }
+
+        _graph.Rebuild(true);
+        FinishLoadAfterGraph();
+    }
+
+    /// <summary>같은 월드가 소유한 표면 Graph 처리기를 빌린다. 188개 TYPE가 아니면 비어 있다. 2026-11-07 F2d 월드 본체 그래프 적재 이식에서 추가됐다.</summary>
+    /// <returns>표면 Graph 처리기다. 없으면 null이다.</returns>
+    public RawGraph? Graph() => _graph;
 
     /// <summary>적재 작업 중인지 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
     /// <returns>적재 중이면 참이다.</returns>
