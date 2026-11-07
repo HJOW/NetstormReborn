@@ -16,7 +16,7 @@ struct NativeMetaSceneHooks { //원문에서 선택된 실제 생성/글자/카�
     NativeMetaDisplayHooks display; //1099의 실제Gump/객체 장치와1096 투영을 공유한다.
     std::function<std::int32_t(std::uint32_t)> glyphExtent; //현재TYPE/SHP frame0의 signed폭/16·높이/11 중최댓값이다.
     std::function<std::uint32_t(std::uint32_t,std::uint32_t)> create; //004af530의현재타입/flags2를같은Pool에생성하고실제SID를반환한다.
-    std::function<std::uint32_t(std::uint32_t)> defaultFrame,remapFrame; //가상+78/004558c0의기본코드·현재난수선택을순서대로수행한다.
+    std::function<std::uint32_t(std::uint32_t)> frameCount,selectFrame; //004ad6c0의현재TYPE+114 프레임개수와004558c0의같은게임난수선택을순서대로수행한다.
     std::function<std::uint32_t()> createText; //new(a4)→TextGump(0,0,0,0)의실제노드생성이다.
     std::function<std::uint32_t(std::uint32_t)> findSerial; //00464020의같은등록표/serial 조회이며없으면0이다.
     std::function<void(std::uint32_t)> clearText; //004bb240의실제소유조각반납이다.

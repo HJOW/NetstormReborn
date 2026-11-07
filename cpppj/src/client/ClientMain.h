@@ -235,6 +235,7 @@ public:
     void WriteDiagnosticLog(std::int32_t level,std::string_view text,std::size_t prefixBytes=0); // 서식 후 바이트를 같은 현재1024BYTE 로그에 전달한다.
     void TraceObject(std::uint32_t sid); // 선택한 실제 SID의 가상+70/모든 Form 재귀를 실행한다.
     void HighlightDeveloperPoint(float x,float y); //4345e0의 세 겹 노란 사각형과 즉시 viewport 출력을 같은 Renderer 장치에 요청한다.
+    void RefreshNativeMetaDisplay(bool whole); //현재메타Poll/전체존재배치를같은CS/World·Renderer·글자장치에연결한다.새수신/게임상태는합성하지않는다.
     void DumpDiagnostics(); // 객체 덤프가 끝난 뒤 현재 같은 Kernel의 프로세스 요약을 저장한다.
     void DumpObjectDiagnostics(); //CD SID 소진은 객체 덤프만 호출하고 프로세스 요약을 추가하지 않는다.
     const std::shared_ptr<o::Kernel>& ProcessKernelOwner() const; // 같은 실제 전역 Kernel 소유권만 전달한다.

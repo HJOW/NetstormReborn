@@ -304,6 +304,7 @@ RawButtonInputResult RawButtonControls::RouteInput(InputEvent event) {
 }
 // 루트 교체 뒤에도 처음 생성한 토큰의 사본을 반환하지 않는다.
 std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entries[0]; }
+const std::uint32_t& RawButtonControls::RootTokenValue() const { return impl_->create.entries[0]; } //슬롯을복사하지않고현재루트교체결과를같은주소에서읽는다.
 // 현재 화면 번호에 대응하는 실제 버튼만 조회한다. 생성 순서나 serial을 화면 번호로 간주하지 않는다.
 std::uint32_t RawButtonControls::ControlGump(int id) const { const auto found=impl_->controls.find(id);return found==impl_->controls.end() ? 0U : found->second; }
 void RawButtonControls::BindMainMenu(RawMainMenuHooks hooks) { if (!hooks.enabled || !hooks.htmlInstances || !hooks.queue) throw std::invalid_argument("메인 현재 Client 경계 없음");impl_->mainHooks=std::move(hooks); } //장치 연결은 부모를 만들거나 옵션을 읽어 쓰지 않는다.

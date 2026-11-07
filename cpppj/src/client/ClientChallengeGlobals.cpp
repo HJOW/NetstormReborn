@@ -14,6 +14,10 @@ std::uint32_t& ClientChallengeGlobals::GeometryMode() { return geometryMode_; } 
 const std::uint32_t& ClientChallengeGlobals::GeometryMode() const { return geometryMode_; } //값의조회로공통좌표나CS기록을재생성하지않는다.
 std::uint32_t& ClientChallengeGlobals::ZoneGlyphType() { return zoneGlyphType_; } //현재TYPE번호를그림/생성/기본프레임경계가공유한다.
 const std::uint32_t& ClientChallengeGlobals::ZoneGlyphType() const { return zoneGlyphType_; } //조회시고정TYPE161로덮지않고현재값을보존한다.
+std::uint32_t& ClientChallengeGlobals::ParticipantType() { return participantType_; } //현재참가자생성/메타카메라검색에같은DWORD를제공한다.
+const std::uint32_t& ClientChallengeGlobals::ParticipantType() const { return participantType_; } //조회만으로현재TYPE를다시초기화하지않는다.
+std::uint32_t& ClientChallengeGlobals::BattleType() { return battleType_; } //현재전투섬공장/프레임크기가같은TYPE를사용한다.
+const std::uint32_t& ClientChallengeGlobals::BattleType() const { return battleType_; } //CS Reset/Session 교체후에도현재DWORD를그대로읽는다.
 bool ClientChallengeGlobals::Prepare(const std::function<void()>& uninitialized) { // 객체 포인터 존재와 좌표 초기화 플래그를 별개로 확인한다.
     if (current_) {
         if (!geometry_.initialized) { if (!uninitialized) throw std::logic_error("기존 CS listsInitialized의 실제 진단 장치 미연결");const auto assertion=uninitialized;assertion(); }

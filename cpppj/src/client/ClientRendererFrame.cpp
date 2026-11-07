@@ -6,6 +6,11 @@
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientKencloudGlobals.h"
 #include "client/ClientRandomGlobals.h"
+#include "client/ClientLocalStateGlobals.h"
+#include "client/ClientNsInfoGlobals.h"
+#include "client/NativeMetaScene.h" //같은현재CS/실제Pool·Gump를메타표시본체에연결한다.
+#include "client/CameraHome.h" //메타전체배치뒤의실제4340d0을현재Renderer한계에연결한다.
+#include "o/OriginalText.h" //현재번역문을기존영어/한국어표시바이트경계로변환한다.
 #include "client/ClientAudio.h"
 #include "client/RawRendererPrelude.h"
 #include "client/RawSurfaceWorld.h"
@@ -48,6 +53,52 @@ std::int32_t RendererCollectionRowLimit(std::int32_t width,std::int32_t height) 
 ClientRendererFrame::ClientRendererFrame(Client& client):client_(client) {}
 ClientRendererFrame::~ClientRendererFrame()=default; //collector를 실제 storage보다 먼저 반납한다.
 void ClientRendererFrame::ReadOptions() { client_.configuration_.ReadInt("showSoftAsserts",client_.gameplayGlobals_->AiDebug().Checking());client_.gameplayGlobals_->DrawFire()=0; } //현재 Checking을 읽고 원문4356a6처럼 Fire만 끈다. 다른 진단 DWORD는 보존한다.
+
+// 현재 장기 DWORD와 실제 Screen/루트 슬롯의 주소만 빌려 callback 뒤의 읽기도 같은 물리를 사용한다.
+NativeMetaPollGlobals ClientRendererFrame::MetaGlobals() {
+    auto& game=*client_.gameplayGlobals_;auto& local=*client_.localStateGlobals_;auto& screen=*client_.screen_;auto& ui=*client_.menu_->rawButtons_;auto& storage=*client_.SurfaceStorage();auto& aux=*game.GameAux();
+    const auto& colors=screen.Colors();if (colors.named.size()<=36) throw std::out_of_range("메타의현재10.78팔레트색표부족");
+    return {{*client_.ChallengeGlobals(),game.player.playerKnown,game.player.battleOwner,local.MetadataMode(),screen.flags_,storage.pool.CapacityValue(),ui.RootTokenValue(),colors.basic[5],colors.basic[7],colors.basic[1],colors.named[36].index,
+        {game.Camera().RendererView(),ui.MapViewRect(),screen.width_,screen.height_}},local.MetaZones().records,client_.NsInfoGlobals()->zone,aux.DependFormType(),aux.ProcessTypeEnd(),storage.Checking(),storage.ownerMode.challenge,game.Boss()};
+}
+// 선택된 가상효과는 같은 현재 Session을 다시 조회하고 free/active의 새 관문을 추가하지 않는다.
+NativeMetaSceneHooks ClientRendererFrame::MetaDevices() {
+    NativeMetaSceneHooks hooks;client_.menu_->rawButtons_->Menus()->BindMetaSceneGumps(hooks);
+    const auto sid=[this](std::uint32_t number) { if (number>65535U || number>=client_.SurfaceStorage()->pool.Capacity()) throw std::out_of_range("메타의현재DWORD SID물리범위");return o::Sid{static_cast<std::uint16_t>(number)}; }; //전체DWORD를검사한뒤에만같은WORD주소를사용한다.
+    hooks.display.raw=[this,sid](auto number)->std::span<std::uint8_t> {
+        auto& pool=client_.gameplayGlobals_->RequireSession().Core().pool;const auto bytes=pool.Slot(sid(number));
+        return {const_cast<std::uint8_t*>(bytes.data()),bytes.size()}; //실제비const Pool의현재물리다. AllocatedBytes의free필터를추가하지않고원문50BYTE쓰기만허용한다.
+    };
+    hooks.display.unpop=[this,sid](auto number,auto flags) { client_.gameplayGlobals_->RequireSession().World().Unpop(sid(number),flags); };
+    hooks.display.setKind=[this,sid,raw=hooks.display.raw](auto number,auto kind) {
+        auto bytes=raw(number);bytes[12]=static_cast<std::uint8_t>(kind);bytes[13]=static_cast<std::uint8_t>(kind>>8);const auto core=client_.gameplayGlobals_->RequireSession().Core();if (bytes[10]==core.bridgeState.bridgeType) core.building.NotifySurface(sid(number));
+    }; //004ac220은소유자BYTE가아닌QA WORD와조건부현재다리통지다.
+    hooks.display.paintOwner=[this,sid](auto number,auto owner) { client_.gameplayGlobals_->RequireSession().World().SetAssetOwner(sid(number),owner); };
+    hooks.display.destroy=[this,sid](auto number,auto flags) { static_cast<void>(client_.gameplayGlobals_->RequireSession().World().Destroy(sid(number),flags)); };
+    hooks.display.move=[this,sid](auto number,float x,float y,auto flags) { client_.gameplayGlobals_->RequireSession().World().Pop(sid(number),x,y,flags); };
+    hooks.display.translate=[this](auto text) { const auto encoded=o::EncodeDisplayText(client_.Translate(text));return std::string(encoded.begin(),encoded.end()); }; //안내는실제현재언어와같은글꼴바이트로한번변환한다.
+    hooks.display.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };
+    hooks.display.denominator=[this](auto value) { client_.gameplayGlobals_->Camera().SelectDenominator(value,client_.kencloudGlobals_->WorldRedraw()); };
+    hooks.display.dirty=[this](auto rectangle,auto flags) { client_.renderer_->Invalidate(rectangle,flags); };
+    hooks.create=[this](auto type,auto flags) { return std::uint32_t(client_.gameplayGlobals_->RequireSession().World().Create(type,flags).value); };
+    hooks.frameCount=[this,sid](auto number) { const auto core=client_.gameplayGlobals_->RequireSession().Core();const auto type=core.pool.Slot(sid(number))[10];if (type>=core.shapes.size()) throw std::out_of_range("메타현재TYPE프레임개수물리부족");return std::bit_cast<std::uint32_t>(core.shapes[type].frameCount); }; //004ad6c0은현재TYPE+114의SHP프레임개수다.가상78의기본프레임과구별한다.
+    hooks.selectFrame=[this](auto count) { return client_.randomGlobals_->Game().Next(count); }; //004558c0의같은게임난수를한번소비하며0한계를임의로고치지않는다.
+    hooks.resetCamera=[this] {
+        auto& camera=client_.gameplayGlobals_->Camera();CameraHomeState state;state.width=client_.screen_->width_;state.height=client_.screen_->height_;state.challengeType=client_.ChallengeGlobals()->ParticipantType();state.worldWidth=camera.Target().limits[0];state.worldHeight=camera.Target().limits[1];
+        client_.gameplayGlobals_->RequireSession().ResetCamera(state,[this](auto,auto) { client_.menu_->CommitCameraNow(); });
+    };return hooks;
+}
+// 논리 표시의 현재 view만 공급하고 전체/주기 본체의 원문 관문과 효과 순서는 그대로 둔다.
+void ClientRendererFrame::RefreshMetaDisplay(bool whole) {
+    auto globals=MetaGlobals();const auto hooks=MetaDevices();
+    if (globals.display.playerKnown) {
+        const auto& view=client_.gameplayGlobals_->Camera().Snapshot();client_.gameplayGlobals_->RequireSession().World().SetDisplay({view.pixels[0],view.pixels[1],std::bit_cast<std::int32_t>(view.zoom),{globals.display.view.viewport.left,globals.display.view.viewport.top,globals.display.view.viewport.right,globals.display.view.viewport.bottom}},
+            {[this] { return client_.renderer_->FullRedrawPending(); },[this](auto rect,auto flags) { client_.renderer_->Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }});
+    }
+    if (whole) { const auto& colors=client_.screen_->Colors();BuildMetaScene({globals,client_.gameplayGlobals_->Camera().Target(),client_.ChallengeGlobals()->GeometryMode(),client_.ChallengeGlobals()->ZoneGlyphType(),colors.basic[0],colors.basic[7],colors.basic[2],client_.localStateGlobals_->MetaPending()},hooks); }
+    else PollMetaDisplay(globals,hooks.display);
+}
+void Client::RefreshNativeMetaDisplay(bool whole) { if (!rendererFrame_) throw std::logic_error("메타표시의실제Renderer owner미설치");rendererFrame_->RefreshMetaDisplay(whole); } //원문State Poll의두표시위치를같은실제Frame장치에전달한다.
 
 // 실제 파일/난수/색/클립/잠금은 Client가 소유한 동일 장치를 빌린다.
 RendererCloudHooks ClientRendererFrame::CloudDevices() {
@@ -104,9 +155,9 @@ std::uint32_t ClientRendererFrame::Collect(ScreenRect clip,std::uint32_t flags) 
     hooks.ui=[this](auto rect,auto output,auto limit) { return client_.menu_->rawButtons_->Menus()->CollectDrawing(rect,output,limit); };
     hooks.groups=[this](auto rect,auto limit,auto& covered) { return groups_->Collect(rect,limit,covered); };
     hooks.objects=[this](auto rect,auto output,auto limit) { return objects_->Collect(rect,output,limit); };
-    if (auto* world=client_.menu_->world_.get()) {
-        hooks.construction=[world](auto rect,auto output,auto limit) { return world->Session().Particles().CollectDrawing(rect,output,limit); };
-        if (world->Session().HasCursorRuntimeForState()) hooks.preview=[world](auto rect,auto output,auto limit) { return world->Session().Cursor().Display().CollectDrawing(rect,output,limit); }; // 원문 커서가 아직 생성되지 않은 연결 화면에는 미리보기 항목이 없다.
+    if (client_.gameplayGlobals_->Borrowed()) {
+        auto& session=client_.gameplayGlobals_->RequireSession();hooks.construction=[&session](auto rect,auto output,auto limit) { return session.Particles().CollectDrawing(rect,output,limit); };
+        if (session.HasCursorRuntimeForState()) hooks.preview=[&session](auto rect,auto output,auto limit) { return session.Cursor().Display().CollectDrawing(rect,output,limit); }; //메타도같은실제표시목록을사용하며미생성커서미리보기는추가하지않는다.
     }
     const auto result=CollectDrawEntries({clip,visible,WorldRect(clip,camera),flags,RendererCollectionRowLimit(client_.screenWidth_,client_.screenHeight_)},entries_,hooks);
     entryCount_=result.count;
@@ -128,14 +179,14 @@ void ClientRendererFrame::Submit(std::span<std::uint8_t> pixels,int pitch,int he
     menus.WithDrawing(pixels,pitch,height,client_.screen_->Colors(),client_.screen_->ShadeMaps(),clip,[&](const RawMenuControls::DrawingToken& ui) {
         DrawDispatchHooks hooks;
         hooks.sprite=[&](const auto& entry) {
-            auto* world=client_.menu_->world_.get();if (!world || !world->factoryDisplay_) throw std::logic_error("Native SpriteDraw 실제 World/공통 출력기 부재");
-            auto& session=world->Session();
-            world->factoryDisplay_->DrawEntry(entry,pixels,pitch,height,clip,client_.gameplayGlobals_->Camera().Snapshot().pixels,session.LocalOwner(),client_.menu_->hideBuildings_,
+            auto* world=client_.menu_->world_.get();auto* display=world ? world->factoryDisplay_.get() : client_.menu_->MetaSpriteDisplay();if (!display) throw std::logic_error("Native SpriteDraw 실제 게임/메타 공통 출력기 부재");
+            auto& session=client_.gameplayGlobals_->RequireSession();
+            display->DrawEntry(entry,pixels,pitch,height,clip,client_.gameplayGlobals_->Camera().Snapshot().pixels,session.LocalOwner(),client_.menu_->hideBuildings_,
                 [&session](auto sid,auto x,auto y) { session.DrawBridgeAdditional(sid,x,y); });
         };
         hooks.group=[this](auto token) { return groups_->Group(token); };hooks.ui=ui;
-        hooks.construction=[&](auto token) { auto* world=client_.menu_->world_.get();if (!world) throw std::logic_error("Native RenderProcess 실제 Session 부재");world->Session().Particles().DrawEntry(token,pixels,pitch,height,clip); };
-        hooks.preview=[&](const auto& entry) { auto* world=client_.menu_->world_.get();if (!world) throw std::logic_error("Native Preview 실제 Session 부재");world->Session().Cursor().Display().DrawEntry(entry,pixels,pitch,height,clip); };
+        hooks.construction=[&](auto token) { client_.gameplayGlobals_->RequireSession().Particles().DrawEntry(token,pixels,pitch,height,clip); };
+        hooks.preview=[&](const auto& entry) { client_.gameplayGlobals_->RequireSession().Cursor().Display().DrawEntry(entry,pixels,pitch,height,clip); }; //수집때실제존재를확인한같은Session커서만출력한다.
         for (const auto& entry:entries) { //묶음 숨김은 상위 항목마다 현재 DWORD를 다시 읽는다. 내부 묶음은 별도 정렬하지 않는다.
             if (entry.kind<submittedKinds_.size()) ++submittedKinds_[entry.kind];
             DispatchDrawEntries(std::span(&entry,1),{globals_.HideGroups()!=0,false},hooks);
@@ -157,7 +208,7 @@ RendererDiagnosticHooks ClientRendererFrame::DiagnosticDevices() {
     hooks.line=[paint](auto first,auto second,auto color) { paint([&](auto pixels,auto pitch,auto height,auto clip) { DrawVfxLine(pixels,pitch,height,clip,{first[0],first[1]},{second[0],second[1]},color); }); };
     hooks.screen.present=[&screen] { screen.PresentPaletteClear(); };
     hooks.colors=[&screen]()->std::span<const std::uint32_t> { return screen.Colors().basic; };
-    hooks.invalidGraph=[this]()->std::uint32_t { if (!client_.menu_ || !client_.menu_->world_) throw std::logic_error("Renderer진단의현재graph소유자미설치");return client_.menu_->world_->Session().Core().bookkeeping.invalidGraph; };
+    hooks.invalidGraph=[this]()->std::uint32_t { return client_.gameplayGlobals_->RequireSession().Core().bookkeeping.invalidGraph; }; //메타도현재Session의같은Graph장부를읽고없는월드를합성하지않는다.
     hooks.distances=[storage]()->std::span<const std::int16_t> { const auto& current=storage->pathSearchWork;if (!current.initialized || !current.work) return {};return current.work->distance; }; //기존실제BFS가쓴원문거리표만읽고새검색은하지않는다.
     hooks.assertion=[](auto line) { std::clog<<"원문 Renderer 진단 "<<line<<'\n'; };return hooks;
 }

@@ -150,6 +150,7 @@
 #include "client/FortCoreDataLoad.h"
 #include "client/ClientChallengeGlobals.h"
 #include "client/NativeMetaDisplay.h" //메타 이탈도 같은 CS/Pool의 실제 삭제와 가변 배열 반납을 사용한다.
+#include "client/RawCampaignFactoryDisplay.h" //메타의같은가상표/배율그림도기존공통출력기를사용한다.
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
 #include "client/EditorTestBattle.h" //c2의 snapshot/Guide 교체와 편집 복귀 순서를 실제 일반 입력에 연결한다.
 #include "client/SaveFortNameDialog.h" //실제 TextEntry/두 버튼/전체 Fort 이름 부모를 사용하는 모달이다.
@@ -512,7 +513,7 @@ void UberGump::RetireWorldForState() {
     client_.GetRenderer().SetExtraCollection({});client_.GetRenderer().SetOverlayProcedure({}); //새 HUD를 지우지 않고 이전 월드 Draw callback만 닫는다.
     DetachMissionWorldBindings();briefingSections_.clear();briefingIndex_=0;fortObjects_=0; //Runtime의 Session 참조만 반납한다. gate/state/Script와 Native mission은 State1 이름 비교 뒤 실제 closeGuide 또는 메인 메뉴 해제까지 유지한다.
     session->DetachConnectionTransport(); // 같은 실제 Session의 등록을 하위 처리기 소멸보다 먼저 닫는다.
-    if (world_) { auto retiring=std::move(world_);retiring.reset(); }else editor_->metaWorld.reset(); //같은 Session의 실제 자식 증빙이 C++ 소멸자의 중복 전역 쓰기를 막는다.
+    if (world_) { auto retiring=std::move(world_);retiring.reset(); }else { editor_->metaDisplay.reset();editor_->metaWorld.reset(); } //실제표시기의비소유참조를Session보다먼저반납한다.
 }
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
 void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
@@ -1703,6 +1704,7 @@ void UberGump::Refresh() { rebuild_=true;client_.GetRenderer().InvalidateAll(); 
 // 새 RGB를 월드에 공급한 뒤 UI의 장식·글자·선택 색도 다시 합성한다.
 void UberGump::PaletteChanged() {
     if (world_) world_->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
+    if (auto* display=MetaSpriteDisplay()) display->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps()); //메타도새파일팔레트와같은9색표를사용한다.
     rawButtons_->SetPalette(ButtonColors(client_.GetScreen().Colors()));
     if (rawButtons_->Production()) rawButtons_->Production()->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
     if (rawButtons_->Minimap()) rawButtons_->Minimap()->SetPalette(client_.GetScreen().Colors());

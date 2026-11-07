@@ -2,26 +2,26 @@
 
 cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용자 확인, 재개 절차**를 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-08 재개 진행:** 제품 기준은 **1101 / 11.01**이다.State19가읽은Fort/Core캐시를보존하는실제MetaMap Session·공통Form과004795a0전체이탈/배열free·Native반납을연결·컴파일했다. **CS수신/생성·전체Renderer/카메라·HTML/NSInfo메타배치·1095~1100접합/1dh·28~33등록은후속**이다.두Release 종료0·경고/오류0·보호2800불변·새C++/MP/게임/통신실행0이다.다음은같은실제메타장치접합이며세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI도남아전체목표는미완료다.
+**2026-11-08 재개 진행:** 제품 기준은 **1102 / 11.01**이다.같은실제메타Session에479760/47dd60 Poll·실제물리/QA/Owner·Renderer/카메라Reset·공통SpriteDraw/팔레트를접합했다.004ac220은QA WORD,004ad6c0은프레임개수로정정했다. **CS수신/생성·카메라Rig·HTML/NSInfo메타배치·1dh/28~33등록/1095송신상태호출은후속**이다.두Release 종료0·경고/오류0·보호2800불변·새C++/MP/게임/통신실행0이다.다음은위실제CS/UI장치이며세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI도남아전체목표는미완료다.
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-08, 제품1101)
+### 0.1 현재 값 (2026-11-08, 제품1102)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **새 /goal로 재개하여1101 완료/다음 CS수신·실제메타표시 장치 작업 진행.** 전체 목표는 미완료이며0.118을 따른다. |
-| 현재 제품 | **1101 / 표시·파일·제품11.01.** 실제메타Session/Form·Fort/Core보존·전체이탈수명을연결했다.CS수신/생성·전체Renderer/카메라·HTML/NSInfo메타배치→1dh/28~33등록은후속이다. |
+| 진행 상태 | **새 /goal로 재개하여1102 완료/다음 CS수신·생성/카메라Rig·NSInfo 작업 진행.** 전체 목표는 미완료이며0.119를 따른다. |
+| 현재 제품 | **1102 / 표시·파일·제품11.01.** 실제메타Pool/Gump/Renderer·Poll/전체배치·공통Draw/카메라Reset을접합했다.CS수신/생성·카메라Rig·HTML/NSInfo메타배치→1dh/28~33등록은후속이다. |
 | 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반31+데모3의 마지막 전체 진입 검증은 **645의644 제품**이며 현재 제품의 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | Netstorm.exe `295f4fc4f5c8d0d1624cff8765895414c5879903497f1ad1601a59d771324d28` (12,415,488바이트), 새R.exe `8e72e0e346f6cb4eca6aa717f4bde9f7269ad08925031b9107e290a2986b3dce` (669,696바이트),1101/11.01 |
-| 최신 빌드·집중 검사 | **1101 NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0.** 원문/PE의전체이탈·두free·현재CS재조회와실제Session/Form·Fort/Core보존·Native반납배선정적대조·보호2800불변.새C++/MP/게임/통신실행0이며마지막C++실행검사는1052 기존7개다.[1101 기록](docs/exe/cpp-meta-world-lifetime-20261108.md). |
+| EXE SHA-256 | Netstorm.exe `859756ed551c87160edf75b9ce79b2cc24f198080c29e91c6c1a65d4239b2ba7` (12,468,224바이트), 새R.exe `1060d18119ce8e77cd690b31c4fdff31a6284b7277dacfae8fef11835ac520ca` (669,696바이트),1102/11.01 |
+| 최신 빌드·집중 검사 | **1102 NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0.** 원문/PE의QA WORD·프레임개수·현재참조와실제World/UI/Renderer·Draw배선정적대조·보호2800불변.새C++/MP/게임/통신실행0이며마지막C++실행검사는1052 기존7개다.[1102 기록](docs/exe/cpp-meta-renderer-integration-20261108.md). |
 | checking 잔여 | **5함수=부모2+부분0+MP분류3.** 1014에서004b8cb0 전체 몸체/현재 진단·수동 입력을 연결했다. 완료부모40/부분6다. 메타맵2표/004b02d0·Descend/004b4df0/004b8b20 등은3절8번 잔여다. |
-| 최신 정적 감사 | **1101:004795a0/46d8a0 전체·실제메타Session의동일장기owner·Fort/Core보존·Form/Native반납배선을대조했다.** 전체메타장면/MP·통신실행검증은아니다. |
+| 최신 정적 감사 | **1102:004ac220 QA WORD/004ad6c0 TYPE+114·실제Pool/현재참조·Poll/전체배치/공통Renderer·카메라Reset/표시수명을대조했다.** 전체메타장면/MP·통신실행검증은아니다. |
 | 마지막 GUI | **984 실제 단독MCP 1실행:** 격리1920×1080 tutorial1 진입·비정지100프레임 대기·WM_CLOSE 종료0, 입력5/관측7·PNG 확인·설치1351개/보호 불변. LAN/공격/포획/희생/승리/물리 입력 검증이 아니다. |
 | 전체 검사 기준 | 활성 솔루션84프로젝트: Application79(검사 이름73/게임1/서버1/probe·dump4),라이브러리2,Utility3. 디스크의잔류10프로젝트는제외한다. 현재 제품의 전체 검사 통과 기록은 없다. 과거 전체 결과는 보관본, 알려진 실패/기준선 판정은2.5절을 따른다. |
 | 전체 34·ZIP | 마지막전체34진입은645의644제품이다. 최신ZIP만1092/1384항목·게임자료1358개·202,440,265바이트·SHA-256 `33b2459cca9dcbde8b10c7e2cca2e12cc071715244868e3a60908fb085089ae7`/전체CRC·두EXE동일바이트다. 1092 ZIP추출후게임/서버실행은0이며645의전체GUI검증과구분한다. |
-| 보호 기준 | **987의AGENTS.md·원본/CD/fixture2800파일을1101 종료 때도 모두 불변으로 확인했다.** 새fixture0,DN/WB 제외.기준은 `extracted/cpp-resume-1101/protected-before.json`이다. |
+| 보호 기준 | **987의AGENTS.md·원본/CD/fixture2800파일을1102 종료 때도 모두 불변으로 확인했다.** 새fixture0,DN/WB 제외.기준은 `extracted/cpp-resume-1102/protected-before.json`이다. |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 | R.exe 전용 정밀 디컴파일 | **HJOW-Athlon / 2026-11-07**.5308함수/실패0·미정규약184. 클라이언트양판본전체날짜와구분하며 [1057 기록](docs/exe/cpp-local-server-discovery-20261107.md)의전용스크립트로재생성한다. |
 
@@ -30,7 +30,7 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 1. 사용자 재개 요청 뒤 AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 해당 인계도 읽는다. `git status`와 `git fetch`로 다른 PC/세션 변경을 확인하며 push는 하지 않는다.
 2. 현재 호스트가 마지막 디컴파일 호스트와 다르면 cpppj 작업/디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 문서에 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 불완전하므로 쓰지 않는다.
 3. 실제 게임·별도 창 실행은 AGENTS.md의 확인 규칙을 따른다. 예외는 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94) 및 사용자가 직접 요청한 원본 수동 컨트롤/녹화 분석의 해당 단계다. 다른 PC는 실행 목적·필요성 설명 후 명시적 확인이 필요하다.
-4. 최신 제품1101의 보고서는 `cpppj/meta-world-lifetime-20261108.json`이다. R원문이필요한새PC에서는기존클라이언트전체정밀절차와별도로`tools/ghidra/refine_root_server.ps1`을실행하고호스트를갱신한다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-996/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
+4. 최신 제품1102의 보고서는 `cpppj/meta-renderer-integration-20261108.json`이다. R원문이필요한새PC에서는기존클라이언트전체정밀절차와별도로`tools/ghidra/refine_root_server.ps1`을실행하고호스트를갱신한다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-996/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj/webpj·staged 파일·실행 출력은 포함하지 않는다. 한 단위를 마치면 0.1절·0.4절·2.1절 완료 항목·3절 잔여·단위 문서를 갱신하고 해당 파일만 로컬 커밋한다.
 6. 완료 범위는2.1절, 잔여 우선순위는3절을 따른다. 단위986까지의 상세 인계·옛 검사 수·대체된 지시는 [정리 전 전체 원문](LEFT_JOBS.old.md#archive-20261106-through-986)과 각 단위 기록에서 확인한다. 과거의 다음 작업 예고를 현재 미완료 목록으로 되살리지 않는다.
 
@@ -526,6 +526,11 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 
 1100은 `ecb1c779 / 20261108-10 CP`로커밋됐다.1101은State19의기존Fort/Core캐시를보존하는MetaMap Session과같은Pool/Player/Kernel·공통Form/투영/삭제를연결했다.004795a0전체·0046d8a0두free/현재CS재조회·가변배열owner와Native증빙뒤실제메타수명반납도접합했다.게임Load/Login/loaded공개는하지않는다.두Release 종료0·경고/오류0·보호2800불변·새fixture/C++/MP/게임/통신실행0이다.[1101 기록](docs/exe/cpp-meta-world-lifetime-20261108.md).다음은같은Session의CS수신/생성·전체Renderer/카메라·HTML/NSInfo메타배치→1095~1100접합/1dh·28~33등록이다.State19/HUD/전체메타화면성공으로쓰지않으며나머지우선순위/사용자검사제외를유지한다.
 
+
+### 0.119 최근 단위 — 1102 실제 메타 World·Poll/Renderer 접합
+
+1101은 `6317535a / 20261108-16 CP`로커밋됐다.1102는같은메타Session의실제QA WORD/Owner·공장/Pool·Renderer/카메라Reset·공통SpriteDraw/팔레트와479760/47dd60 Poll을접합했다.004ac220은QA WORD,004ad6c0은TYPE+114프레임개수로정정했고현재Root/Capacity·Process상한/팔레트참조도연결했다.최종두Release 종료0·경고/오류0·보호2800불변·새fixture/C++/MP/게임/통신실행0이다.[1102 기록](docs/exe/cpp-meta-renderer-integration-20261108.md).다음은CS수신/참가자·전투섬생성·카메라Rig·HTML/NSInfo메타배치→1dh·28~33등록/1095송신상태호출이다.전체메타화면성공으로쓰지않으며나머지우선순위/사용자검사제외를유지한다.
+
 ## 1. 현행 목표
 
 ### 1.1 cpppj 단계 (AGENTS.md 기준)
@@ -590,6 +595,8 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 ## 2. 현재까지 완료한 범위와 검증 한계
 
 ### 2.1 완료 범위 색인
+
+1102에서실제메타World/UI/Renderer·Poll/전체배치·공통Draw/카메라Reset을접합했다.CS수신/생성·카메라Rig·HTML/NSInfo메타배치와1dh·28~33등록은후속이다([1102 기록](docs/exe/cpp-meta-renderer-integration-20261108.md)).
 
 1101에서실제MetaMap Session·공통Form과전체이탈/Native반납수명을연결했다.CS수신/생성·전체Renderer/카메라·HTML/NSInfo메타배치/1dh·28~33등록은후속이다([1101 기록](docs/exe/cpp-meta-world-lifetime-20261108.md)).
 
@@ -810,6 +817,8 @@ AI 미완료 체크 항목이 아니며 단계 전환을 막지 않는다. 부�
 - 표시결함981해소뒤환경/사용자확인만남았으므로Windows11/ARM실기검증없이8번을진행한다. 전체호환성무오류보증이나실기완료로표현하지않는다.
 
 ### 8. 멀티플레이·배포·후속 단계
+
+- **1102 최신 잔여:** 실제메타World/UI/Renderer·479760/47dd60 Poll/전체배치·공통Draw/카메라Reset은접합·컴파일완료다.CS수신/참가자·전투섬생성·카메라Rig·HTML/NSInfo메타배치→1dh·28~33등록/1095송신상태호출이남는다.이후세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI다.신규MP검사는제외한다.
 
 - **1101 최신 잔여:** 실제MetaMap Session·같은Pool/Form·Fort/Core보존과004795a0전체이탈/Native반납은연결·컴파일완료다.CS수신/생성·가상객체/전체Renderer·카메라·HTML/NSInfo메타배치→1095~1100접합/1dh·28~33등록이남는다.이후세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI다.신규MP검사는제외한다.
 

@@ -11,6 +11,7 @@
 
 namespace netstorm::client { // OS 화면 장치와 실제 게임 전역 사이의 프레임 조립 계층이다.
 class Client;class RawSurfaceStorage;class TileGroupCollection;class ObjectCollection; //동일 Client/Pool/해시의 실제 소유자를 빌린다.
+struct NativeMetaPollGlobals;struct NativeMetaSceneHooks; //메타의실제현재전역과하위장치뷰를반환할때만사용한다.
 o::RenderWorldRect RendererCollectionViewport(ScreenRect dirty,ScreenRect map,const RawCameraViewState& view); //현재 분수 카메라로 두 사각형을 환산하고 원문 순서로 지도 안에 제한한다.
 std::int32_t RendererCollectionRowLimit(std::int32_t width,std::int32_t height); //현재 화면 크기로 원문 정수 곱셈/나눗셈의 지형 행 제한을 계산한다.
 // 각 실제 PresentScene 호출에서 Prepare→Drawing→Finish 순서로 사용한다. 생성은 장치/난수를 실행하지 않는다.
@@ -25,9 +26,12 @@ public:
     void DrawDiagnosticsAfterWater(); //같은부모의Board는DrawWater뒤·Present앞이다.
     void DrawWater(); //00436450의 capture 뒤·499fe0 앞에서00434dd0의 같은 현재 물리/Screen을 표시한다.
     void HighlightDeveloperPoint(float x,float y); // 현재 snapshot으로 투영한 좌표의 원문 세 겹 강조이며 Frame/난수는 진행하지 않는다.
+    void RefreshMetaDisplay(bool whole); //같은실제CS/Pool·가상효과/Renderer·Gump장치로479760또는47dd60을수행한다.
     void Finish(); //정상 Draw의 화면 잠금 반납 뒤470ca0을 실행한다. 실패 경로에서는 부르지 않는다.
     std::string Diagnostics() const; //현재 실제 owner/cache·요청/반환을 읽을 뿐 게임 상태를 바꾸지 않는다.
 private:
+    NativeMetaPollGlobals MetaGlobals(); //현재Screen·카메라·CS/존·권한과장기DWORD의주소만빌린다.
+    NativeMetaSceneHooks MetaDevices(); //실제현재Session/공장·글자/Renderer·난수·카메라장치를호출위치에서다시조회한다.
     void DrawOutlineRectangle(ScreenRect rectangle,std::uint32_t color); //4a2270의 임시 전체 clip/lock/네 선/clip 복구를 물 진단과 개발자 강조가 공유한다.
     void DrawDiagnostic(RendererDiagnosticKind kind,const std::uint32_t& flag); //선택한진단만현재물리/Screen을빌린다.
     RendererDiagnosticHooks DiagnosticDevices(); //같은clip/lock/palette/BFS거리표를지연조회한다.

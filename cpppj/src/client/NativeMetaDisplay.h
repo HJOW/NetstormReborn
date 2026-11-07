@@ -20,7 +20,7 @@ struct NativeMetaDisplayGlobals { // 원문 필드의 현재 주소를 빌리며
 };
 struct NativeMetaDisplayHooks { // 선택된 실제 하위는 필수이며 빈 callback/가짜 노드를 허용하지 않는다.
     std::function<std::span<std::uint8_t>(std::uint32_t)> raw; //같은 Pool의 실제50BYTE를 반환한다. callback 뒤 새 free/활성 필터를 추가하지 않는다.
-    std::function<void(std::uint32_t,std::uint32_t)> unpop,setOwner,paintOwner,destroy; //가상+48/004ac220/가상+74/가상+10의 실제 몸체다.
+    std::function<void(std::uint32_t,std::uint32_t)> unpop,setKind,paintOwner,destroy; //가상+48/004ac220 종류WORD/가상+74 소유자BYTE/가상+10의 실제 몸체다.
     std::function<void(std::uint32_t,float,float,std::uint32_t)> move; //가상+90의 실제 위치 쓰기/공간 재등록이다.
     std::function<GumpCreateNode&(std::uint32_t)> gump; //CS+d4 토큰의 같은 실제 노드/serial/문맥을 빌린다.
     std::function<void(std::uint32_t)> push; //Gump 가상+18=00464560의 실제 트리 분리/후속 가상Redraw(true)다.
@@ -39,7 +39,7 @@ struct NativeMetaDisplayHooks { // 선택된 실제 하위는 필수이며 빈 c
 struct NativeMetaPollGlobals { // 전체 Poll의 존/현재 TYPE·권한·진단 전역을 같은 실제 주소로 빌린다.
     NativeMetaDisplayGlobals display; //참가자/전투/투영과 같은 CS·Pool·카메라·Gump 주소다.
     std::span<std::uint8_t> zones;const std::uint32_t& zone; //00546908의51×144BYTE와005467b8의 현재 자기 존이다.
-    const std::uint32_t& excludedType;const std::int32_t& processTypeEnd; //00541074의 전체DWORD 비교와0054116c의 signed Process 상한이다.
+    const std::uint32_t& excludedType;const std::uint32_t& processTypeEnd; //00541074의 전체DWORD 비교와0054116c의 현재비트다. 비교 위치에서만signed로해석한다.
     o::RawCheckingFlag checking;const bool& metamap;const bool& boss; //finder의 현재 checking/메타모드/권한을 복사값으로 대체하지 않는다.
 };
 void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask,NativeMetaDisplayGlobals globals,const NativeMetaDisplayHooks& hooks); //0047d8c0 전체: 객체 갱신/이름표 내용/8자리 배치와 가시성을 원문 순서로 처리한다.

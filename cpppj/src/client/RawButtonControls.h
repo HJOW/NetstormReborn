@@ -78,6 +78,7 @@ public:
     std::optional<int> Event(InputEvent event);
     RawButtonInputResult RouteInput(InputEvent event); // 같은 실제 Route를 한 번 실행해 월드 전 입력 소비를 돌려준다.
     std::uint32_t RootToken() const; // 현재 등록표0칸의 실제 공통 루트다.
+    const std::uint32_t& RootTokenValue() const; //00563e38에대응하는같은등록표0번슬롯을메타표시부모가참조로빌린다.
     std::uint32_t ControlGump(int id) const; // 현재 페이지의 실제 돌 버튼 토큰이다. Help/Options는 클릭한 버튼의 현재 기하를 읽으며 없는 번호는0이다.
     void LayoutMainMenuControls(std::span<GumpControl> controls); // 004ce940: 실제 글자에 맞춘 공통 폭과 두 행 중앙 배치를 적용하고 같은 입력 영역을 갱신한다.
     void BindMainMenu(RawMainMenuHooks hooks); //같은 Client의 현재 autoDemo/HTML 인스턴스/원문 문자열 큐를 한 번 연결한다.

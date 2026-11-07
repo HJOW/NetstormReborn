@@ -106,8 +106,8 @@ void BuildMetaScene(NativeMetaSceneGlobals g,const NativeMetaSceneHooks& h) {
         const auto record=Zone(g.poll.zones,index);const auto zone=Read(record,0);if (std::bit_cast<std::int32_t>(zone)<=0 || zone==g.poll.zone) continue;
         if (ring>=2) { Need(h.display.assertion)("rIndex < CL_NUM_ZONE_RINGS",".\\Metadisplay.cpp",0x681);throw std::out_of_range("메타 존 두 링의 실제 지역배열 범위"); }
         const auto old=Read(record,0x4c);auto sid=old;
-        if (!old) { sid=Need(h.create)(g.glyphType,2);Put(record,0x4c,sid);Put(record,0x50,0);Put(record,0x54,0);Put(record,0x58,0);const auto frame=Need(h.defaultFrame)(sid);const auto raw=Need(h.display.raw)(sid);Put(raw,0x24,Need(h.remapFrame)(frame)); }
-        const auto raw=Need(h.display.raw)(sid);if (old) Need(h.display.unpop)(sid,0);Need(h.display.setOwner)(sid,index);
+        if (!old) { sid=Need(h.create)(g.glyphType,2);Put(record,0x4c,sid);Put(record,0x50,0);Put(record,0x54,0);Put(record,0x58,0);const auto frameLimit=Need(h.frameCount)(sid);const auto raw=Need(h.display.raw)(sid);Put(raw,0x24,Need(h.selectFrame)(frameLimit)); }
+        const auto raw=Need(h.display.raw)(sid);if (old) Need(h.display.unpop)(sid,0);Need(h.display.setKind)(sid,index);
         const auto capacity=rings.count[ring];const auto flags=d.screenFlags&0x10U;
         constexpr double fullCircle=6.2831854820251465; //0050d1d8의실제double값이다.
         const double angle=(fullCircle/static_cast<double>(capacity))*slot;

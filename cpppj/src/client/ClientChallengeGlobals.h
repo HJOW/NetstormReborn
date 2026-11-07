@@ -17,6 +17,8 @@ public:
     MetaProjectionState& Projection();const MetaProjectionState& Projection() const; //00544d6c/5930a0/540adc·ae0의 같은 장기 투영/기준값을 빌린다.
     std::uint32_t& GeometryMode();const std::uint32_t& GeometryMode() const; //005467d4의현재DWORD이며0은고정22링/비영은공통CS배치반경을선택한다.
     std::uint32_t& ZoneGlyphType();const std::uint32_t& ZoneGlyphType() const; //005412dc의현재원격존그림TYPE이며보호PE초기161을같은장기주소에서읽는다.
+    std::uint32_t& ParticipantType();const std::uint32_t& ParticipantType() const; //00541208의현재참가자그림TYPE108을생성/카메라검색이공유한다.
+    std::uint32_t& BattleType();const std::uint32_t& BattleType() const; //0054120c의현재전투섬그림TYPE109이며참가자/존그림과독립이다.
     bool Prepare(const std::function<void()>& uninitialized); //State19의 새 생성 또는 listsInitialized 진단→기존Reset이다. State28의 직접Reset 부모는 이 생성/진단 경로와 구별한다.
     std::span<std::uint8_t> Bytes();std::span<const std::uint8_t> Bytes() const; // 현재 할당21328BYTE를 직접 빌린다.0/다른 포인터는 물리 경계에서 거부한다.
     std::span<std::uint8_t> Battle(std::uint32_t index); // 실제0..9의292BYTE 전투 기록이다.
@@ -33,6 +35,7 @@ private:
     o::ChallengeGeometry geometry_; // CS 객체 재사용/교체에서도 유지하는 같은 Client BSS다.
     MetaProjectionState projection_; // 실제 메타 기울기/높이와 최초 보정값이며 기록 Reset·Session 교체로 재생성하지 않는다.
     std::uint32_t geometryMode_{},zoneGlyphType_{161}; //005467d4의BSS0/005412dc의PE161이며CS Reset·Session 교체로초기화하지않는다.
+    std::uint32_t participantType_{108},battleType_{109}; //00541208/20c의보호PE초기값이며같은장기주소를실제소비자가빌린다.
     std::map<std::uint32_t,std::unique_ptr<std::uint8_t[]>> allocations_; // 교체된 실제 할당도 최종 Client 수명까지 소유한다. 명시 파생 해제 부모는 별도다.
     std::uint32_t nextArrayToken_{1};std::map<std::uint32_t,ArrayAllocation> arrays_; // CS 객체와 분리된 포인터 주소공간이며 재사용/Reset으로 실제 미반납 배열을 지우지 않는다.
 };

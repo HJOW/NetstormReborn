@@ -33,7 +33,8 @@ void UberGump::PollEdgeScroll(const InputEvent& mouse) {
 //497960의 실제 장치/dirty/두 setter를 같은 현재 Client에서 실행한다. 표시/음향 공개 시점은 호출자가 소유한다.
 void UberGump::CommitCameraNow() {
     auto& gameplay=*client_.GameplayGlobals();auto& camera=gameplay.Camera();auto& renderer=client_.GetRenderer();auto& screen=client_.GetScreen();
-    const auto clip=world_ ? world_->MapView() : ScreenRect{0,0,screen.Width(),screen.Height()};
+    const bool meta=gameplay.Borrowed() && client_.SurfaceStorage()->ownerMode.challenge; //실제메타대여의현재지도는게임GameWorld없이도같은HUD영역을사용한다.
+    const auto clip=world_ ? world_->MapView() : meta ? rawButtons_->MapViewRect() : ScreenRect{0,0,screen.Width(),screen.Height()};
     const RawCameraCommitViewport viewport{clip.left,clip.top,clip.right-clip.left,clip.bottom-clip.top};const auto width=screen.Width(),height=screen.Height();const auto flags=screen.Flags();
     RawCameraCommitHooks apply;
     apply.lockCursor=[this,&gameplay](auto skip) {

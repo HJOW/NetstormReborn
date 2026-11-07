@@ -1,0 +1,77 @@
+{
+  "unit": 1102,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "initialAttempt": {
+      "exitCode": 1,
+      "errors": [
+        "C2039",
+        "C2672"
+      ],
+      "warning": "C4456",
+      "cause": "훅개명뒤Poll세호출누락/지역변수중복을교정하고재빌드",
+      "log": "extracted/cpp-resume-1102/build-initial.log"
+    }
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12468224,
+      "sha256": "859756ed551c87160edf75b9ce79b2cc24f198080c29e91c6c1a65d4239b2ba7"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "1060d18119ce8e77cd690b31c4fdff31a6284b7277dacfae8fef11835ac520ca"
+    }
+  },
+  "staticAudit": {
+    "correctedNativeMeanings": "4ac220은QA WORD/현재다리통지,4ad6c0은TYPE+114프레임개수→같은GameRandom.Next",
+    "currentGlobals": "실제Screen flags/크기/팔레트·Renderer/viewport·CS/존·CapacityValue/RootTokenValue·권한·전체ProcessTypeEnd",
+    "objectDevices": "현재Session의물리50BYTE/Unpop/QA/가상Owner/Pop/Destroy/Create·같은Renderer분모/dirty·번역/진단",
+    "camera": "같은Session.ResetCamera·현재참가자TYPE108·Renderer limits·같은로딩깊이/즉시Commit·현재HUD viewport",
+    "draw": "같은Pool의공통수집/정렬/SpriteDraw/479340·현재소유자색/팔레트·Session앞출력기반납"
+  },
+  "integration": {
+    "poll479760Connected": true,
+    "scene47dd60Connected": true,
+    "realObjectUiRendererDevicesBound": true,
+    "metaSpriteDisplayConnected": true,
+    "metaCameraResetConnected": true,
+    "challengeReceiversConnected": false,
+    "metaCameraRigConnected": false,
+    "metaNsInfoLayoutConnected": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalRoot": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "CS수신/참가자·전투섬생성·원문메타카메라Rig",
+    "HTML/NSInfo메타배치·1dh/28~33·1095송신실제접합",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

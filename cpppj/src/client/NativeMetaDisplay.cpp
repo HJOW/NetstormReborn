@@ -65,7 +65,7 @@ void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask,NativeMet
     const auto sid=Read(record,0xb8);if (sid<1 || sid>=g.capacity) return;const auto raw=Need(h.raw)(sid);if (Read(raw,0xb,1)&1U) return;
     std::uint32_t clipped{};
     if ((mask&1U) && !(Read(raw,0x28,1)&8U)) {
-        const bool placed=(Read(raw,0xb,1)&4U)==0;if (placed) Need(h.unpop)(sid,0);Need(h.setOwner)(sid,participant);
+        const bool placed=(Read(raw,0xb,1)&4U)==0;if (placed) Need(h.unpop)(sid,0);Need(h.setKind)(sid,participant);
         if (!(Read(raw,0xb,1)&4U)) Need(h.assertion)("isVoid()","c:\\ns\\o\\squid.h",0x282);
         Put(raw,0x28,Read(raw,0x28,1)&0xfeU,1);Put(raw,0x1a,0);Put(raw,0x23,0,1);Need(h.paintOwner)(sid,participant);
         const auto point=ProjectMetaObject(raw,g.challenge.Projection(),g.view,g.screenFlags,std::bit_cast<float>(Read(record,0x9c)),std::bit_cast<float>(Read(record,0xa0)),0.0F,false);clipped=point.clipped;
@@ -89,7 +89,7 @@ void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask,NativeMet
 // 전투0을 별도 필터링하지 않고 실제 caller가 준 기록/상태 비트만 따른다.
 void UpdateMetaBattle(std::uint32_t battle,NativeMetaDisplayGlobals g,const NativeMetaDisplayHooks& h) {
     const auto record=g.challenge.Battle(battle);if (!(Read(record,0,1)&1U)) return;const auto sid=Read(record,0x20);const auto raw=Need(h.raw)(sid);if (Read(raw,0x28,1)&8U) return;
-    const bool placed=(Read(raw,0xb,1)&4U)==0;if (placed) Need(h.unpop)(sid,0);Need(h.setOwner)(sid,battle);
+    const bool placed=(Read(raw,0xb,1)&4U)==0;if (placed) Need(h.unpop)(sid,0);Need(h.setKind)(sid,battle);
     Put(raw,8,0,2);Put(raw,0x1a,0);Put(raw,0x23,10,1);
     const auto point=ProjectMetaObject(raw,g.challenge.Projection(),g.view,g.screenFlags,std::bit_cast<float>(Read(record,0x10)),std::bit_cast<float>(Read(record,0x14)),0.0F,false);
     if (placed) Need(h.move)(sid,point.position[0],point.position[1],0);
@@ -116,7 +116,7 @@ void ZoneLabels(std::uint32_t parent,std::uint32_t clipped,const NativeMetaPollG
     // 원문은 효과 전에 next를 저장한다. 손상된 순환만 호스트 예외로 거부한다.
     while (current) {
         if (!visited.insert(current).second) throw std::logic_error("메타 존 종속 finder의 순환");const auto raw=Need(h.raw)(current);const auto next=Read(raw,4,2);const auto type=Read(raw,10,1);
-        if (type<70 && type!=g.excludedType && !(type>=10 && static_cast<std::int32_t>(type)<g.processTypeEnd)) {
+        if (type<70 && type!=g.excludedType && !(type>=10 && static_cast<std::int32_t>(type)<std::bit_cast<std::int32_t>(g.processTypeEnd))) {
             if (auto* label=Need(h.findGump)(Read(raw,0x12))) { if (clipped) label->flags&=~1U;else label->flags|=1U; }
         }
         current=next;
@@ -132,7 +132,7 @@ void PollMetaDisplay(NativeMetaPollGlobals g,const NativeMetaDisplayHooks& h) {
     for (std::uint32_t participant=1;participant<o::kChallengeParticipantCount;++participant) {
         const auto record=d.challenge.Participant(participant);if (!(Read(record,0x64,1)&1U)) continue;const auto sid=Read(record,0xb8);const auto raw=Need(h.raw)(sid);std::uint32_t clipped{};
         if (!(Read(raw,0x28,1)&8U)) {
-            const bool placed=(Read(raw,0xb,1)&4U)==0;if (placed) Need(h.unpop)(sid,0);Need(h.setOwner)(sid,participant);
+            const bool placed=(Read(raw,0xb,1)&4U)==0;if (placed) Need(h.unpop)(sid,0);Need(h.setKind)(sid,participant);
             if (!(Read(raw,0xb,1)&4U)) Need(h.assertion)("isVoid()","c:\\ns\\o\\squid.h",0x282);
             Put(raw,0x28,Read(raw,0x28,1)&0xfeU,1);Put(raw,0x1a,0);Need(h.paintOwner)(sid,participant);
             const auto point=ProjectMetaObject(raw,d.challenge.Projection(),d.view,d.screenFlags,std::bit_cast<float>(Read(record,0x9c)),std::bit_cast<float>(Read(record,0xa0)),0.0F,false);clipped=point.clipped;
@@ -144,7 +144,7 @@ void PollMetaDisplay(NativeMetaPollGlobals g,const NativeMetaDisplayHooks& h) {
     // 전투1..9의 일반 투영은00479c40의 특수BYTE10 쓰기를 하지 않는다.
     for (std::uint32_t battle=1;battle<o::kChallengeBattleCount;++battle) {
         const auto record=d.challenge.Battle(battle);if (!(Read(record,0,1)&1U)) continue;const auto sid=Read(record,0x20);const auto raw=Need(h.raw)(sid);if (Read(raw,0x28,1)&8U) continue;
-        const bool placed=(Read(raw,0xb,1)&4U)==0;if (placed) Need(h.unpop)(sid,0);Need(h.setOwner)(sid,battle);Put(raw,8,0,2);Put(raw,0x1a,0);
+        const bool placed=(Read(raw,0xb,1)&4U)==0;if (placed) Need(h.unpop)(sid,0);Need(h.setKind)(sid,battle);Put(raw,8,0,2);Put(raw,0x1a,0);
         const auto point=ProjectMetaObject(raw,d.challenge.Projection(),d.view,d.screenFlags,std::bit_cast<float>(Read(record,0x10)),std::bit_cast<float>(Read(record,0x14)),0.0F,false);
         if (placed) Need(h.move)(sid,point.position[0],point.position[1],0);
     }
@@ -152,7 +152,7 @@ void PollMetaDisplay(NativeMetaPollGlobals g,const NativeMetaDisplayHooks& h) {
     // 현재 양수·자기 존 아님·marker 비영인1..50 존만 실제 객체/종속 이름표를 갱신한다.
     for (std::uint32_t index=1;index<o::kMetaZoneCleanupCount;++index) {
         const auto record=Zone(g.zones,index);const auto zone=Read(record,0);if (std::bit_cast<std::int32_t>(zone)<=0 || zone==g.zone) continue;const auto sid=Read(record,0x4c);if (!sid) continue;
-        const auto raw=Need(h.raw)(sid);Need(h.setOwner)(sid,index);Need(h.unpop)(sid,0);
+        const auto raw=Need(h.raw)(sid);Need(h.setKind)(sid,index);Need(h.unpop)(sid,0);
         const float height=(d.screenFlags&0x10U) ? 4.0F:0.0F;
         const auto point=ProjectMetaObject(raw,d.challenge.Projection(),d.view,d.screenFlags,std::bit_cast<float>(Read(record,0x88)),std::bit_cast<float>(Read(record,0x8c)),height,true);
         Need(h.move)(sid,point.position[0],point.position[1],0);ZoneLabels(sid,point.clipped,g,h);

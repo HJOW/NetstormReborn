@@ -36,7 +36,10 @@ void UberGump::PrepareMetaWorldRuntime() {
     services.installMode=CampaignInstallMode::MetaMap;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.localLogin.reset();
     services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;
     editor_->metaWorld=std::make_unique<RawCampaignSession>(client_.Assets(),client_.Files(),o::FortTemplate{},std::string(client_.FortGlobals()->Current()),std::move(services));
+    auto* session=editor_->metaWorld.get();editor_->metaDisplay=std::make_unique<RawCampaignFactoryDisplay>(session->Core(),client_.Assets(),[session](auto sid,const auto& draw) { session->DrawTemple(sid,draw); },&client_.GameplayGlobals()->PatchDiagnostic());
+    editor_->metaDisplay->BindOwnerColors(client_.ColorSortInput()->OwnerTables());editor_->metaDisplay->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
 }
+RawCampaignFactoryDisplay* UberGump::MetaSpriteDisplay() const { return editor_ ? editor_->metaDisplay.get() : nullptr; } //현재owner를조회만하며출력기나Session을새로만들지않는다.
 // 실제19의 World 정리 뒤 같은 Client 물리로만 메타 연결 owner를 처음 만든다.
 o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t selected) {
     if (!editor_ || world_ || !((selected>=20 && selected<=27) || (selected>=34 && selected<=38))) throw std::logic_error("World 없는 실제 메타 연결/검색 부모 계약");
