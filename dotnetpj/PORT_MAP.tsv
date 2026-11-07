@@ -544,3 +544,4 @@ cpppj/src/platform/Bitmap.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d
 cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/o/RawCampaignWorldLoad.h	Netstorm.Core/Original/CampaignWorldGlobals.cs	b8ce42c7db0f762d0b836c50d557cc4556e04a52	port
+cpppj/src/o/RawCampaignWorldLoad.cpp	Netstorm.Core/Original/RawCampaignWorldLoad.cs	b8ce42c7db0f762d0b836c50d557cc4556e04a52	port
