@@ -31,6 +31,7 @@
 #include "client/HudNsInfoMeta.h" //메타루트/참가자순서도같은CS·공통문자/트리를사용한다.
 #include "client/HudPlayerButtonDraw.h" //같은특수버튼의배경/단색/원색그림전체Draw다.
 #include "client/NativeMetaPlayerMenu.h" //같은controlled메뉴의자기/다른참가자부착을실행한다.
+#include "client/NativeNsInfoInput.h" //루트 입력도 실제 정렬표/CS·공통 메뉴/카메라·송신을 사용한다.
 #include "client/RawPlayerMenu.h" //World없는메타도기존전체Player메뉴본문을사용한다.
 #include "client/ClientSubscriberGlobals.h" //메뉴선택때현재subscriber를실제장기슬롯에서읽는다.
 #include "o/RawPlayerNotification.h" //원문참가자기술합계는현재TYPE기반공통몸체를재사용한다.
@@ -318,6 +319,7 @@ struct RawMenuControls::Impl {
         case 0x540421:return value.nsKind;case 0x540440:return value.playerKind;case 0x540457:return value.battleKind;
         case 0x5467b8:return value.zone;case 0x540bac:return value.zoneFormat;case 0x593150:return value.current;
         case 0x542714:return value.leaveMenuCommand;case 0x542960:return metaPlayerState.viewInfo; //자기메뉴/다른Player메뉴가같은실제ViewInfo명령을읽는다.
+        case 0x542790:return titleState.leftTagEvent;case 0x54278c:return titleState.rightTagEvent;case 0x5429dc:return value.kickoffCommand; //실제 다중줄 행과 추방 확인 메뉴가 같은 현재 명령을 공유한다.
         case 0x54db4c:return std::bit_cast<std::uint32_t>(value.serverSelection);case 0x594fc8:return nsContext->storage->ownerMode.challenge;case 0x595344:return nsContext->gameplay->player.playerKnown;
         default:return nsContext->read(address);
         }
@@ -402,10 +404,14 @@ struct RawMenuControls::Impl {
         geometry.metamapLayout=[this](auto token) { LayoutMetaNsInfo(token,NsMetaGlobals(),NsMetaHooks()); }; //일반앞단/관문뒤원문루트본문을같은실제배치장치로실행한다.
         nsGeometry=std::make_unique<HudNsInfo>(HudNsInfoModeView{[this] { return NsRead(0x594fc8); },[this] { return NsRead(0x595344); }},std::move(geometry));
     }
-    // 전용 메타맵 입력은 미복원을 숨기지 않는다. 초기 일반 노드의 기본 Help는 같은 실제 경로다.
-    std::uint32_t NsHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
-        const auto code=event&0x03ffffffU;
-        if ((nsRoots.contains(token) && second && (code==titleState.leftTagEvent || code==titleState.rightTagEvent)) || (NsRead(0x594fc8) && NsRead(0x595344))) throw std::logic_error("NSInfo 전용 메타플레이어 입력 미연결");
+    // 루트 전체 입력을 먼저 분배하고 아직 남은 두 자식 입력은 명시적으로 구별한다.
+    std::uint32_t NsHandle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) {
+        if (nsRoots.contains(token)) {
+            NativeNsInfoInputHooks h;h.command=[this](auto address) { return NsRead(address); };h.roster=[this](auto row) { return nsContext->globals->rosterOrder.at(row); };
+            h.participant=[this](auto index)->std::span<const std::uint8_t> { if (!nsContext->challenge) throw std::logic_error("NSInfo 루트 입력의 실제 CS 미연결");return nsContext->challenge->Participant(index); };h.mouse=[this] { return nsContext->gameplay->selection.mouse; };h.menu=[this](auto index,auto point) { OpenMetaParticipant(index,point); };
+            h.center=nsContext->center;h.status=nsContext->status;h.kickoffSound=nsContext->kickoffSound;h.base=[this,token](auto original,auto a,auto b) { return BaseHelp(token,original,a,b); };return HandleNativeNsInfo(event,first,second,h);
+        }
+        if (NsRead(0x594fc8) && NsRead(0x595344)) throw std::logic_error("NSInfo PlayerInfo/BattleInfo 메타 입력 미연결");
         return BaseHelp(token,event,first,second);
     }
     #include "client/RawMenuHtml.inc" // 같은 실제 장식/본문/돌 버튼과 부모 수명을 연결한다.
@@ -476,7 +482,7 @@ struct RawMenuControls::Impl {
             return chatWindow->Handle(token,event,first,second,text);
         }
         if (textEntries && textEntries->Node(token)) return textEntries->Handle(token,event,first,second);
-        if (nsRoots.contains(token) || nsPlayers.contains(token) || nsBattles.contains(token)) return NsHandle(token,event,first,second);
+        if (nsRoots.contains(token) || nsPlayers.contains(token) || nsBattles.contains(token)) return const_cast<Impl*>(this)->NsHandle(token,event,first,second);
         if (helpWindows.contains(token)) return HelpEvent(token,{event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)});
         if (menus.contains(token)) return input->Handle(token,event,first,second);if (titles.contains(token)) return titleWidgets->Handle(token,event,first,second);
         if (sliders.contains(token)) return slider->Handle(token,event,first,second);if (thumbs.contains(token)) return slider->ThumbHandle(token,event,first,second);return BaseHelp(token,event,first,second);

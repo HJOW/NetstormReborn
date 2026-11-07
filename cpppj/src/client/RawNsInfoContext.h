@@ -21,5 +21,8 @@ struct RawNsInfoContext {
     std::function<void(std::uint32_t,std::uint32_t)> value; //같은Button가상+40의기본/돌버튼현재값쓰기다.
     std::function<o::RawPlayerIdentity()> identity; //실제현재Player/CS/Chat과Client이름을빌리는같은식별자공장이다.
     std::function<void(PlayerMenuHooks&)> playerMenuHooks; //같은현재번역/주소/신뢰도/Chat와미션허용조건을연결한다.UI작성은메뉴소유자가연결한다.
+    std::function<void(std::uint32_t)> center; // 현재 SID를 같은 Session의 433ba0와 실제 즉시 카메라 적용에 전달한다.
+    std::function<void(const std::function<void(std::span<std::uint8_t>)>&)> status; // 현재 메타 전송 owner를 소비 시점에 조회하며 실제 헤더/11번 송신을 사용한다.
+    std::function<void()> kickoffSound; // 현재 실제 음향의 chalKickedoff.wav 우선순위1 재생이다.
 };
 }

@@ -37,6 +37,7 @@ class CampaignTemplateStorage; // 원본 명시 Init/State 정리까지 같은9�
 struct CampaignGuideRuntime; // 같은 실제 Guide 상태와 소멸을 창 없는 World 검사에도 공유한다.
 struct RawHtmlWindowContext; // 실제 전체 HTML에 현재 게임 소유자의 장치를 빌린다.
 struct RawChatWindowContext; // 실제 Chat UI/시간 알림이 같은 제출 장치를 구성한다.
+struct RawNsInfoContext; // 실제 NSInfo 입력도 같은 Client와 현재 메타 전송/Session 장치를 빌린다.
 struct RawMovieContext; // 실제 MovieGump의 화면/두 정지/음향 장치를 빌린다.
 class TellFileMenus; // 실제 파일 목록의 등록 Config를 부모/미션보다 오래 유지한다.
 class TextClipboard; //같은 Client UI의 모든 문자 입력이 공유하는 실제 CF_TEXT 부모다.
@@ -137,6 +138,7 @@ private:
     EditorFortFileDevices& EnsureEditorFortFiles(); // World/State 설치 전에 실제 현재 파일 경계가 필요할 때만 장기 작업본 장치를 준비한다.
     FortSelectionHooks FortEditEffects(); //실제 선택된 Battle14의 파일/State 보존 경계도 같은 현재 World와 작업 파일에 연결한다.
     RawChatWindowContext MakeChatContext(); // 창을 만들지 않고 현재 이름/Identity/제출/패킷 장치를 조립해 알림과 UI가 공유한다.
+    void BindMetaNsInfoInput(RawNsInfoContext& context); // 같은 현재 Session 카메라·실제 음향/메타 송신 장치를 두 NSInfo 생성자에 연결한다.
     void EnsureHudFactories(); //현재 Client 장기 전역·물리로 네 공장만 준비하며 새 월드/Session을 생성하지 않는다.
     std::uint32_t ReadChatGlobal(std::uint32_t address); // 현재 Client/실제 월드·팔레트에서 채팅이 읽는 전역만 조회한다.
     void ReceiveChatMessage(std::span<std::uint8_t> packet); // 같은 실제 Chat 로그/설정·음향·표시 사건에 수신 부모를 연결한다.

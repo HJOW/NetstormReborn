@@ -547,3 +547,6 @@ target_sources(netstorm PRIVATE client/NativeMetaPlayerMenu.h client/NativeMetaP
 
 # 실제Client/CS/Chat/Session을World없는전체메타Player메뉴공장에연결한다.
 target_sources(netstorm PRIVATE client/ClientMetaPlayerMenu.h client/ClientMetaPlayerMenu.cpp)
+
+# NSInfo 루트의 전체 입력도 같은 현재 CS/정렬표와 실제 메뉴·카메라·송신 장치를 사용한다.
+target_sources(netstorm PRIVATE client/NativeNsInfoInput.h client/NativeNsInfoInput.cpp)

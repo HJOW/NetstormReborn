@@ -1,0 +1,61 @@
+{
+  "unit": 1112,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "firstBuild": "const 호출 오류1건/후속 경고1건 뒤 실제 Impl의 기존 가변 입력 위임 방식으로 교정"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12600320,
+      "sha256": "2a7d0764a9692b8e3bbcd7a5819b06d12caf39657c6fbb44e1f6be9243ef5177"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "3f3d6068f2e710f9aef445dc8d3bb51563af62e80aec72cae7e407f3fce5a1ac"
+    }
+  },
+  "staticAudit": {
+    "native": "0047c8c0 전체61줄·0047ca50까지 기계어",
+    "left": "signed 양수 행→현재 정렬표→실제 flag BYTE1→현재 원시 좌표/전체 메뉴",
+    "right": "같은 정렬표/활성 BYTE→현재 SID→같은 Session/즉시카메라",
+    "kick": "직접 참가자번호→활성 BYTE→1fh 실제 헤더→subscriber/8→우선순위1 음향→TCP11",
+    "fallback": "별도 mode/known 관문 없이 수정하지 않은 세 DWORD→BaseHelp",
+    "devices": "실제 current 명령/CS/selection.mouse·두 NSInfo 공장과 지연 Session/메타 전송 owner"
+  },
+  "integration": {
+    "rootHandleBound": true,
+    "playerHandleBound": false,
+    "battleHandleBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "PlayerInfo/BattleInfo 전체 입력·1107슬롯/1108자료송신 UI 호출",
+    "CS 수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신 상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

@@ -1,3 +1,13 @@
+// 바인딩 때 아직 없는 메타 Session/전송 owner는 실제 입력을 선택한 시점에 조회한다.
+void UberGump::BindMetaNsInfoInput(RawNsInfoContext& context) {
+    context.center=[this](auto sid) {
+        auto& camera=client_.GameplayGlobals()->Camera();const auto before=camera.RendererView().pixels;CameraHomeState state;state.width=client_.GetScreen().Width();state.height=client_.GetScreen().Height();
+        client_.GameplayGlobals()->RequireSession().CenterCameraOn(sid,state,[this](auto,auto) { CommitCameraNow(); });
+        if (camera.RendererView().pixels!=before) { if (world_) world_->CameraApplied();rebuild_=true; }
+    };
+    context.status=[this](const auto& writer) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("NSInfo 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->SendMetaStatus(writer); }; //1fh 실제 헤더가 먼저 작성된 뒤 caller가 CS/음향 부분효과를 수행한다.
+    context.kickoffSound=[this] { client_.WorldAudio().Sounds().PlayByName("chalKickedoff.wav",0,0,0,1,0); }; //원문 priority1을 일반 메뉴 소리의0으로 바꾸지 않는다.
+}
 // 실제 State19의 World 정리 뒤 같은 Client Fort/Core/CS/Chat 장치를 선택한다.
 o::LocalMissionParentResult UberGump::InstallMetaNativeState(std::uint32_t selected) {
     if (selected!=19 || !editor_) throw std::logic_error("실제 State19 장기 부모 계약");
