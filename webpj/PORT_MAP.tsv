@@ -466,7 +466,7 @@ cpppj/src/o/OriginalText.cpp	port	www/assets/text-encoding.js	1f00a25a	partial	[
 cpppj/src/o/PacketRegistrationTable.cpp	port			todo	[o-default]
 cpppj/src/o/ParticleGradient.cpp	port			todo	[o-default]
 cpppj/src/o/Player.cpp	port			todo	[o-default]
-cpppj/src/o/PopVtables.inc	port			todo	[o-default]
+cpppj/src/o/PopVtables.inc	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 10.78 PE 가상 표 26칸(PATCH_POP_VTABLES). CD 표는 범위 밖
 cpppj/src/o/RawAcidFence.cpp	port			todo	[o-default]
 cpppj/src/o/RawAcidZap.cpp	port			todo	[o-default]
 cpppj/src/o/RawAddRandom.cpp	port			todo	[o-default]
@@ -548,7 +548,7 @@ cpppj/src/o/RawBridgeEditor.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawBridgeEvents.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeFallParent.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeLifecycle.cpp	port	www/core/bridge-lifecycle.js	1f00a25a	partial	[o-default] WB04-D2 다리 삭제 훅. 다리 가상 삭제 분배는 WB07
-cpppj/src/o/RawBuildingSpace.cpp	port	www/core/squid-space.js	1f00a25a	partial	[o-default] WB04-D1 Unpop 옆면 해제·다리 통지만. Pop 쪽은 WB04-E
+cpppj/src/o/RawBuildingSpace.cpp	port	www/core/squid-space.js	1f00a25a	port	[o-default] WB04-D1(Unpop 옆면·표면 통지) + WB04-E1(popSide·hasIsland)
 cpppj/src/o/RawBulfFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawBulwarkHit.cpp	port			todo	[o-default]
 cpppj/src/o/RawBuriedPostPop.cpp	port			todo	[o-default]
@@ -592,7 +592,7 @@ cpppj/src/o/RawCarrierTask.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierTransfer.cpp	port			todo	[o-default]
 cpppj/src/o/RawChatManagerPrefix.cpp	port			todo	[o-default] 단독 HUD Chat 의 manager 초기화. 랭크 prefix 는 단독 관문 그대로
 cpppj/src/o/RawCheckingDiagnostics.h	port			todo	[o-default]
-cpppj/src/o/RawCheckingFlag.h	port			todo	[o-default]
+cpppj/src/o/RawCheckingFlag.h	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 소비 위치마다 읽는 현재 DWORD 뷰는 웹에서 checking() getter 함수 계약으로 대신한다(squid-unpop.js·squid-pop.js·squid-space.js)
 cpppj/src/o/RawClockSyncReset.cpp	port			todo	[o-default]
 cpppj/src/o/RawColorMapCache.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawColorSortPrimary.cpp	port			todo	[o-default]
@@ -886,7 +886,7 @@ cpppj/src/o/RawSnart.cpp	port			todo	[o-default]
 cpppj/src/o/RawSoloMapList.cpp	exclude-edit			-	[edit-map-list]
 cpppj/src/o/RawSpecialDamage.cpp	port			todo	[o-default]
 cpppj/src/o/RawSpStoreNoticeBindings.cpp	port			todo	[o-default]
-cpppj/src/o/RawSquidActivate.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidActivate.cpp	port	www/core/raw-squid-activate.js	1f00a25a	port	[o-default] WB04-E1: 004ac560 공통 Activate(void·권한·전송·깊이 진단)
 cpppj/src/o/RawSquidContainedUnpop.cpp	port	www/core/squid-contained-unpop.js	1f00a25a	port	[o-default] 3.6②→반영(WB04-D5a): 정렬 Content 부착용 PreviousAtTable getter/setter
 cpppj/src/o/RawSquidCreation.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(004af530)
 cpppj/src/o/RawSquidDefense.cpp	port			todo	[o-default]
@@ -899,7 +899,7 @@ cpppj/src/o/RawSquidLevel.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidName.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidNeighbors.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidPoolReset.cpp	port			todo	[o-default]
-cpppj/src/o/RawSquidPopParent.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidPopParent.cpp	port	www/core/raw-squid-pop-parent.js	1f00a25a	port	[o-default] WB04-E1: 004b02d0 공통 Pop 부모. fixture pop-world-bounds 260행(Point.isValid·float 저장·NaN 단락)
 cpppj/src/o/RawSquidPostPopParent.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidRegion.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidSelection.cpp	port			todo	[o-default]
@@ -970,7 +970,7 @@ cpppj/src/o/SquidFrameBinding.cpp	port			todo	[o-default]
 cpppj/src/o/SquidHash.cpp	port	www/core/squid-hash.js	1f00a25a	port	[o-default] WB04-B
 cpppj/src/o/SquidNameVtables.inc	port			todo	[o-default]
 cpppj/src/o/SquidOwner.cpp	port			todo	[o-default]
-cpppj/src/o/SquidPop.cpp	port			todo	[o-default]
+cpppj/src/o/SquidPop.cpp	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 공통 Pop 처리기(pop/popCurrent/supports/옆면·미니맵·전송·진단 연결). 표시(SquidDisplay)와 공통 postPop(SquidPostPop)은 선택 연결 계약만 두고 본체는 이후 단위. fixture pop-x86 10.78 2456단계·pop-vtables 83행
 cpppj/src/o/SquidPostPop.cpp	port			todo	[o-default]
 cpppj/src/o/SquidPostPopPatch.cpp	port			todo	[o-default]
 cpppj/src/o/SquidProcess.cpp	port	www/core/squid-process.js	02b00b12	port	[o-default] WB04-D5c: SquidProcess/RegularProcess/SquidProcessState/SquidProcessHost·ScheduleBridgeFall. fixture process 시나리오·processform Attach 288·processretake 194·processtransmit·regular-current finder 1232/ctor 32 행. 3.6절 판정(02b00b12): ① 기준선 뒤 ReceiveSharedRegular/WriteFormPacket/shared_/writeFullData 는 LAN 전체 수신·참가자 월드 동기화(웹 제외, 단독 경로 결과 동일), ③ 발사/회전 애니메이션 프로세스 TYPE 두 칸(fireAnimationType·rotateAnimationType)은 애니메이션 소비자(RawCampaignArcherBindings) 이식 때 추가

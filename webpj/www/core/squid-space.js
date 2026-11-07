@@ -2,8 +2,8 @@
 //  - effectiveGenus(004afd30): 타입 genus 에 발자국 안쪽 칸이면 비트 8 을 보정한다(지붕 가운데 열 윗부분 제외). 기준점은 +0.9999 후 0 방향 절삭이다.
 //  - RawBuildingSpace: 표면 WORD 지도(공간 해시 0단계)를 조회하고 건물 Unpop 의 옆면 BYTE 를 지우며, 다리 표면 통지(004214a0)의 진단을 고른다.
 // 근거: cpppj `o/Squid.cpp`(EffectiveGenus, 커밋 65927742), `o/RawBuildingSpace.cpp/.h`(edc7db85), 원본 관측 `cpppj/tests/fixtures/hash-x86.tsv` Genus 3216행.
-// 건물 Pop 의 옆면 쓰기(PopSide·HasIsland)는 Pop 과 함께 WB04-E 에서 옮긴다. CD 10.72 경로는 범위 밖이다.
-// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-05 WB04-D1: 공통 공간 해제의 기반으로 추가)
+// 건물 Pop 의 옆면 쓰기(PopSide·HasIsland)는 Pop 과 함께 WB04-E1 에서 옮겼다. CD 10.72 경로는 범위 밖이다.
+// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-05 WB04-D1: 공통 공간 해제의 기반으로 추가, 2026-11-08 WB04-E1: popSide·hasIsland 추가)
 import { WORLD_CELLS } from '../assets/terrain-mask.js';
 
 // 내부 spot 보정을 받는 건물군 genus 마스크이다(원본 DAT_005424b8). (2026-11-05 WB04-D1)
@@ -84,6 +84,35 @@ export class RawBuildingSpace {
     surface(x, y) {
         if (x < 0 || y < 0 || x >= WORLD_CELLS || y >= WORLD_CELLS) return 0;
         return this.#hash.cell(0, x, y);
+    }
+
+    // 원본 CRT 절삭의 유효 정수 범위(int32)만 허용하며 음수 소수를 floor 로 바꾸지 않는다. 범위 밖·NaN·무한대는 RangeError 이다. (2026-11-08 WB04-E1)
+    static #truncate(value) {
+        const truncated = Math.trunc(Math.fround(value));
+        if (!Number.isFinite(truncated) || truncated < -2147483648 || truncated > 2147483647) throw new RangeError('건물 지면 좌표 절삭 범위 오류');
+        return truncated;
+    }
+
+    // 원본 boolean 섬 확인: 전달 좌표(Pop 은 건물 자체의 좌표)의 표면 SID 가 있고 그 현재 TYPE 이 섬 TYPE 이면 참이다. (2026-11-08 WB04-E1)
+    hasIsland(x, y) {
+        const sid = this.surface(RawBuildingSpace.#truncate(x), RawBuildingSpace.#truncate(y));
+        return sid !== 0 && this.#pool.slot(sid)[TYPE] === this.#state.islandType;
+    }
+
+    // Pop 의 옆면 한 칸: 유효 SID 의 현재 TYPE 이 표면(flags1 0x800)일 때만, 건물 좌표가 섬이면 표면 WORD 낮은 BYTE 의 bit2 를 지우고 bit1 을 켜고
+    // 아니면 두 비트(1·2)를 지운 뒤 통지한다. side 판정과 spot 쓰기는 호출자가 처리하고 이 몸체는 그 직후의 현재 후보를 다시 조회한다.
+    // 타입 번호가 표 밖이면 RangeError 이다. 사용: building.popSide(cellX, cellY, buildingX, buildingY). (2026-11-08 WB04-E1)
+    popSide(x, y, buildingX, buildingY) {
+        const sid = this.surface(x, y);
+        if (sid === 0 || sid >= this.#pool.capacity) return;
+        const old = this.#pool.slot(sid);
+        if (old[TYPE] >= this.#types.length) throw new RangeError('건물 옆면 표면 타입 오류');
+        if (!(this.#types[old[TYPE]].flags1 & 0x800)) return;
+        const island = this.hasIsland(buildingX, buildingY);
+        const raw = this.#pool.physical(sid);
+        // 섬이면 WORD 의 bit2 만 지우고 bit1 을 켜며, 그 외에는 BYTE 의 두 비트만 지운다.
+        raw[SURFACE_WORD] = island ? (raw[SURFACE_WORD] & 0xfb) | 2 : raw[SURFACE_WORD] & 0xf9;
+        this.notifySurface(sid);
     }
 
     // Unpop 의 옆면 한 칸: 표면 플래그·섬 확인 없이 유효 SID 의 표면 WORD 낮은 BYTE 비트 1/2 를 지우고 통지한다(높은 BYTE 유지).

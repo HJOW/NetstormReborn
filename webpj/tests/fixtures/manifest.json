@@ -616,7 +616,7 @@
       "bytes": 224284,
       "lines": 4633,
       "fixtureCommit": "65927742",
-      "webCommit": "41cb8da9",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidHash.cpp": "a9af29da",
         "cpppj/src/o/SquidHash.h": "a9af29da",
@@ -779,7 +779,7 @@
       "bytes": 419588,
       "lines": 1300,
       "fixtureCommit": "6ff267a1",
-      "webCommit": "3ef1d18b",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459",
         "cpppj/src/o/RawSquidUnpopParent.h": "6ff267a1",
@@ -2106,7 +2106,7 @@
       "bytes": 819581,
       "lines": 361,
       "fixtureCommit": "a3fa0596",
-      "webCommit": "worktree",
+      "webCommit": "71ddc952",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "6fefcff5",
         "cpppj/src/o/RawBaseProcessAttach.cpp": "877cc129",
@@ -2137,7 +2137,7 @@
       "bytes": 6383,
       "lines": 49,
       "fixtureCommit": "4c449132",
-      "webCommit": "worktree",
+      "webCommit": "71ddc952",
       "cpppjBasis": {
         "cpppj/src/o/RawProcessAttach.cpp": "4c449132"
       }
@@ -2166,7 +2166,7 @@
       "bytes": 9168,
       "lines": 49,
       "fixtureCommit": "877cc129",
-      "webCommit": "worktree",
+      "webCommit": "71ddc952",
       "cpppjBasis": {
         "cpppj/src/o/RawBaseProcessAttach.cpp": "877cc129"
       }
@@ -2195,7 +2195,7 @@
       "bytes": 518003,
       "lines": 1837,
       "fixtureCommit": "e2dd58a8",
-      "webCommit": "worktree",
+      "webCommit": "71ddc952",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "6fefcff5"
       }
@@ -2226,7 +2226,7 @@
       "bytes": 141552,
       "lines": 389,
       "fixtureCommit": "a5afdafb",
-      "webCommit": "worktree",
+      "webCommit": "71ddc952",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "6fefcff5",
         "cpppj/src/o/Kernel.cpp": "c6536398"
@@ -2256,7 +2256,7 @@
       "bytes": 159901,
       "lines": 377,
       "fixtureCommit": "ada85427",
-      "webCommit": "worktree",
+      "webCommit": "71ddc952",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "6fefcff5"
       }
@@ -2285,7 +2285,7 @@
       "bytes": 2102,
       "lines": 65,
       "fixtureCommit": "98c3aea8",
-      "webCommit": "worktree",
+      "webCommit": "71ddc952",
       "cpppjBasis": {
         "cpppj/src/o/RawProcessRemoval.cpp": "98c3aea8"
       }
@@ -2314,7 +2314,7 @@
       "bytes": 32988,
       "lines": 1233,
       "fixtureCommit": "9dd15ef2",
-      "webCommit": "worktree",
+      "webCommit": "71ddc952",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "6fefcff5"
       }
@@ -2343,9 +2343,104 @@
       "bytes": 3735,
       "lines": 65,
       "fixtureCommit": "9dd15ef2",
-      "webCommit": "worktree",
+      "webCommit": "71ddc952",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "6fefcff5"
+      }
+    },
+    {
+      "id": "pop-raw",
+      "path": "cpppj/tests/fixtures/pop-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 raw 등록/해제/반납 x86 관측(Create→Pop/재등록→Unpop→반납의 슬롯 전체와 풀·머리·spot Adler 체크섬)",
+      "consumers": [
+        "webpj/tests/squid-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-pop.js",
+        "webpj/www/core/raw-squid-pop-parent.js",
+        "webpj/www/core/raw-squid-activate.js"
+      ],
+      "unit": "WB04-E1",
+      "doc": "docs/webpj-squid-pop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidPop.cpp",
+        "cpppj/src/o/RawSquidPopParent.cpp",
+        "cpppj/src/o/RawSquidActivate.cpp"
+      ],
+      "scope": "10.78(originals) 4블록 2456단계. CD 10.72 4블록 제외",
+      "text": true,
+      "sha256": "a2033f026d6feda15bb4805ce4d12c65c66928a9345bc45f53939751930b1581",
+      "bytes": 780077,
+      "lines": 6241,
+      "fixtureCommit": "6c6765e3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidPop.cpp": "48385349",
+        "cpppj/src/o/RawSquidPopParent.cpp": "48385349",
+        "cpppj/src/o/RawSquidActivate.cpp": "bd36f6e6"
+      }
+    },
+    {
+      "id": "pop-vtables",
+      "path": "cpppj/tests/fixtures/pop-vtables.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj PE 가상 표 firstPop/postPop 주소와 표시 경로 지원 여부 메타데이터",
+      "consumers": [
+        "webpj/tests/squid-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-pop.js"
+      ],
+      "unit": "WB04-E1",
+      "doc": "docs/webpj-squid-pop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidPop.cpp",
+        "cpppj/src/o/PopVtables.inc"
+      ],
+      "scope": "10.78(originals) 83행. CD 행 제외",
+      "text": true,
+      "sha256": "959807dbe3c3173232512ab6bd75268158218d33333a720720c1632f322c6577",
+      "bytes": 5606,
+      "lines": 152,
+      "fixtureCommit": "6c6765e3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidPop.cpp": "48385349",
+        "cpppj/src/o/PopVtables.inc": "6c6765e3"
+      }
+    },
+    {
+      "id": "pop-world-bounds",
+      "path": "cpppj/tests/fixtures/pop-world-bounds-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Point.isValid 전체와 Pop 입구의 현재 signed 크기/float 저장/NaN 단락 x86 관측(비트와 메모리 조회 횟수)",
+      "consumers": [
+        "webpj/tests/squid-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-pop-parent.js"
+      ],
+      "unit": "WB04-E1",
+      "doc": "docs/webpj-squid-pop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidPopParent.cpp"
+      ],
+      "scope": "260행(판본 열 없는 10.78 전용 표)",
+      "text": true,
+      "sha256": "f7266004f4a79668af5ad08bbe8fd62afe19dca5f793c1107d0f26e274ec7a50",
+      "bytes": 14261,
+      "lines": 261,
+      "fixtureCommit": "48385349",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidPopParent.cpp": "48385349"
       }
     }
   ]
