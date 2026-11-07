@@ -85,6 +85,9 @@ public sealed class RawSquidFactory
     /// <summary>mana 타입 번호. 약화 옵션이 켜지면 최대 HP 를 4 로 나눈다.</summary>
     private const int ManaType = 158;
 
+    /// <summary>받침(dais) 기본 타입 번호. HP 바인딩 미연결 때 쓴다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    private const int DaisType = 165;
+
     /// <summary>패치판에서 생성이 금지된 fakeThreeByThreeSurface 타입 번호.</summary>
     private const int FakeSurfaceType = 162;
 
@@ -120,6 +123,15 @@ public sealed class RawSquidFactory
 
     /// <summary>호출 중 같은 World 저장소를 바꾸지 않는 공유 깊이 상자다. 없으면 지역 깊이를 쓴다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
     private UIntBox? _formPostPopDepth;
+
+    /// <summary>타입 HP가 읽는 같은 장기 사제 타입 DWORD다. 미연결이면 158을 쓴다. R6 TypeHitPoints에서 소비하며 그 전까지는 보관만 한다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    private UIntBox? _sharedPriestType;
+
+    /// <summary>타입 HP가 읽는 같은 장기 받침 타입 DWORD다. 미연결이면 165를 쓴다. R6 TypeHitPoints에서 소비하며 그 전까지는 보관만 한다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    private UIntBox? _sharedDaisType;
+
+    /// <summary>Create가 읽는 같은 장기 fakeThreeByThreeSurface 타입 DWORD다. 미연결이면 162를 쓴다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    private UIntBox? _sharedFakeSurfaceType;
 
     /// <summary>팩토리를 만든다.</summary>
     /// <param name="pool">슬롯 풀.</param>
@@ -188,6 +200,51 @@ public sealed class RawSquidFactory
 
         _formPostPopDepth = current;
     }
+
+    /// <summary>타입 HP가 읽는 같은 장기 사제·받침 DWORD 두 주소를 빌린다. 둘 다 null이면 거부하고 다른 주소 재연결도 거부한다. R6 TypeHitPoints에서 소비하며 그 전까지는 보관만 한다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    /// <param name="priest">빌릴 사제 타입 상자다.</param>
+    /// <param name="dais">빌릴 받침 타입 상자다.</param>
+    public void BindHitPointTypes(UIntBox? priest, UIntBox? dais)
+    {
+        if (priest is null || dais is null)
+        {
+            throw new ArgumentException("생성 HP의 특별 TYPE 주소 연결 오류");
+        }
+
+        if ((_sharedPriestType is not null && !ReferenceEquals(_sharedPriestType, priest))
+            || (_sharedDaisType is not null && !ReferenceEquals(_sharedDaisType, dais)))
+        {
+            throw new ArgumentException("생성 HP의 특별 TYPE 주소 연결 오류");
+        }
+
+        _sharedPriestType = priest;
+        _sharedDaisType = dais;
+    }
+
+    /// <summary>Create가 읽는 같은 장기 fakeThreeByThreeSurface DWORD를 빌린다. 다른 주소 재연결은 거부한다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    /// <param name="current">빌릴 fake 표면 타입 상자다.</param>
+    public void BindFakeSurfaceType(UIntBox current)
+    {
+        ArgumentNullException.ThrowIfNull(current);
+        if (_sharedFakeSurfaceType is not null && !ReferenceEquals(_sharedFakeSurfaceType, current))
+        {
+            throw new ArgumentException("Create fakeSurface TYPE의 중복 다른 주소 연결");
+        }
+
+        _sharedFakeSurfaceType = current;
+    }
+
+    /// <summary>현재 사제 HP 타입 번호다. 미연결이면 158을 쓴다. R6 소비 전까지 보관값 확인용이다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    /// <returns>사제 타입 번호다.</returns>
+    public uint CurrentPriestType() => _sharedPriestType?.Value ?? (uint)ManaType;
+
+    /// <summary>현재 받침 HP 타입 번호다. 미연결이면 165를 쓴다. R6 소비 전까지 보관값 확인용이다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    /// <returns>받침 타입 번호다.</returns>
+    public uint CurrentDaisType() => _sharedDaisType?.Value ?? (uint)DaisType;
+
+    /// <summary>현재 fakeThreeByThreeSurface 타입 번호다. 미연결이면 162를 쓴다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    /// <returns>fake 표면 타입 번호다.</returns>
+    public uint CurrentFakeSurfaceType() => _sharedFakeSurfaceType?.Value ?? (uint)FakeSurfaceType;
 
     /// <summary>같은 공장의 현재 진단·공유 깊이를 부착·직접 Pop에 함께 연결한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
     /// <param name="forms">연결할 Form 몸체다. 같은 풀을 써야 한다.</param>
@@ -262,15 +319,15 @@ public sealed class RawSquidFactory
     /// <summary>
     /// 오브젝트를 만든다. 슬롯 할당 → 생성자 쓰기 → 타입 바이트 → postCreate 순서이며 새 슬롯 번호를 돌려준다.
     /// 내장 Form(1·2·3·6)은 가상 표와 타입만 쓰고 자산 후처리를 건너뛴다.
-    /// 지원하지 않는 타입(미복원 생성자, 패치판 금지 타입 162, 자산·Form 밖)은 슬롯을 할당하기 전에 예외로 거부한다.
-    /// 근거: cpppj/src/o/SquidFactory.cpp Create·RawSquidCreation.cpp CreateRawSquid (F2d 공장 폼 생성, 2026-11-07).
+    /// 지원하지 않는 타입(미복원 생성자, 현재 fake 표면 타입, 자산·Form 밖)은 슬롯을 할당하기 전에 예외로 거부한다.
+    /// 근거: cpppj/src/o/SquidFactory.cpp Create·RawSquidCreation.cpp CreateRawSquid (F2d 공장 폼 생성, 2026-11-07; fake 연결 F2d 0.221, 2026-11-07).
     /// </summary>
     /// <param name="type">타입 번호(내장 Form 1·2·3·6 또는 70 이상).</param>
     /// <param name="flags">할당 영역 비트(1 예측, 2 클라이언트).</param>
     public int Create(uint type, SidAllocation flags = SidAllocation.Server)
     {
         OriginalTypeRecord record = TypeForCreate(type);
-        if (type == FakeSurfaceType)
+        if (type == CurrentFakeSurfaceType())
         {
             throw new InvalidOperationException("패치판 fakeThreeByThreeSurface 는 생성할 수 없습니다");
         }

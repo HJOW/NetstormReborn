@@ -225,4 +225,55 @@ public sealed class RawFactoryAttachTests
         factory.BindDiagnostics(new SquidFactoryDiagnostics());
         Assert.Equal(owned, BitConverter.ToUInt32(pool.Slot(factory.Create(83u)).Slice(0, 4).ToArray(), 0));
     }
+
+    /// <summary>HP 특별 타입 두 주소를 빌리고 관문을 확인한다. R6 소비 전까지는 보관만 한다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindHitPointTypesGuards()
+    {
+        (RawSidPool _, List<OriginalTypeRecord> _, RawSquidFactory factory) = Scene();
+        // 미연결 기본값은 사제 158·받침 165다
+        Assert.Equal(158u, factory.CurrentPriestType());
+        Assert.Equal(165u, factory.CurrentDaisType());
+        Assert.Throws<ArgumentException>(() => factory.BindHitPointTypes(null!, new UIntBox()));
+        Assert.Throws<ArgumentException>(() => factory.BindHitPointTypes(new UIntBox(), null!));
+        var priest = new UIntBox { Value = 158u };
+        var dais = new UIntBox { Value = 165u };
+        factory.BindHitPointTypes(priest, dais);
+        Assert.Equal(158u, factory.CurrentPriestType());
+        Assert.Equal(165u, factory.CurrentDaisType());
+        // 같은 상자 재연결은 허용한다
+        factory.BindHitPointTypes(priest, dais);
+        // 다른 주소 재연결은 거부한다
+        Assert.Throws<ArgumentException>(() => factory.BindHitPointTypes(new UIntBox(), dais));
+        Assert.Throws<ArgumentException>(() => factory.BindHitPointTypes(priest, new UIntBox()));
+        // 상자 값을 바꾸면 현재값도 바뀐다
+        priest.Value = 70u;
+        dais.Value = 71u;
+        Assert.Equal(70u, factory.CurrentPriestType());
+        Assert.Equal(71u, factory.CurrentDaisType());
+    }
+
+    /// <summary>fake 표면 타입 공유 관문과 Create 연결을 확인한다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindFakeSurfaceTypeGuardsAndCreate()
+    {
+        (RawSidPool _, List<OriginalTypeRecord> _, RawSquidFactory factory) = Scene();
+        // 미연결 기본값은 162다
+        Assert.Equal(162u, factory.CurrentFakeSurfaceType());
+        Assert.Throws<ArgumentNullException>(() => factory.BindFakeSurfaceType(null!));
+        var box = new UIntBox { Value = 70u };
+        factory.BindFakeSurfaceType(box);
+        Assert.Equal(70u, factory.CurrentFakeSurfaceType());
+        // 같은 상자 재연결은 허용한다
+        factory.BindFakeSurfaceType(box);
+        // 다른 주소 재연결은 거부한다
+        Assert.Throws<ArgumentException>(() => factory.BindFakeSurfaceType(new UIntBox { Value = 70u }));
+        // 묶은 번호는 생성이 금지되고 기존 162는 허용된다
+        Assert.Throws<InvalidOperationException>(() => factory.Create(70u));
+        factory.Create(162u);
+        // 상자 값을 바꾸면 금지 번호도 따라간다
+        box.Value = 71u;
+        Assert.Throws<InvalidOperationException>(() => factory.Create(71u));
+        factory.Create(70u);
+    }
 }
