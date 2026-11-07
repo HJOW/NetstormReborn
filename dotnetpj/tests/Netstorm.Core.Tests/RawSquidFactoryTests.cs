@@ -32,15 +32,16 @@ public sealed class RawSquidFactoryTests
     /// <param name="pool">대상 풀.</param>
     private static byte[] Snapshot(RawSidPool pool) => pool.Bytes.ToArray();
 
-    /// <summary>미복원 생성자·자산 밖 번호·패치판 금지 타입·클라이언트 권한 오류는 슬롯을 할당하기 전에 거부한다.</summary>
+    /// <summary>미복원 생성자·자산/Form 밖 번호·패치판 금지 타입·클라이언트 권한 오류는 슬롯을 할당하기 전에 거부한다.</summary>
+    /// <remarks>2026-11-07 F2d 공장 폼 생성에서 내장 Form(1·2·3·6)을 허용하므로 자산·Form 밖 번호는 4로 확인한다.</remarks>
     [Fact]
     public void CreateGuardsRejectBeforeAllocating()
     {
         var pool = new RawSidPool(32768, server: false);
         var factory = new RawSquidFactory(pool, Types());
         byte[] before = Snapshot(pool);
-        // 자산 밖(1), 표 밖(188), 지원 안 하는 153, 패치판 금지 162, 서버 권한 없는 기본 할당(74, flags 0)
-        Assert.ThrowsAny<Exception>(() => factory.Create(1, SidAllocation.Client));
+        // 자산·Form 밖(4), 표 밖(188), 지원 안 하는 153, 패치판 금지 162, 서버 권한 없는 기본 할당(74, flags 0)
+        Assert.ThrowsAny<Exception>(() => factory.Create(4, SidAllocation.Client));
         Assert.ThrowsAny<Exception>(() => factory.Create(188, SidAllocation.Client));
         Assert.ThrowsAny<Exception>(() => factory.Create(153, SidAllocation.Client));
         Assert.ThrowsAny<Exception>(() => factory.Create(162, SidAllocation.Client));
@@ -310,5 +311,117 @@ public sealed class RawSquidFactoryTests
         pool.AllocatedBytes(sid)[RawSidPool.TypeOffset] = 74;
         pool.AllocatedBytes(sid)[35] = (byte)extra;
         Assert.Equal(expected, factory.FirstPopFlags(sid));
+    }
+
+    /// <summary>
+    /// 공개 ConstructRaw는 내장 Form 주소에서 가상 표 DWORD만 쓰고 이웃 바이트를 보존하며,
+    /// NULL·미등록 주소 경계를 슬롯 변경 전에 거부한다.
+    /// 근거: cpppj/src/o/SquidFactory.cpp ConstructRaw·SquidForms.cpp ConstructVtableAt (F2d 공장 폼 생성, 2026-11-07).
+    /// </summary>
+    [Fact]
+    public void ConstructRawWritesFormVtableOnlyAndRejectsNullUnknown()
+    {
+        var pool = new RawSidPool(32768);
+        var factory = new RawSquidFactory(pool, Types());
+        uint[] formTypes = [1u, 2u, 3u, 6u];
+        uint[] expectedTables = [0x512110u, 0x512098u, 0x512188u, 0x512208u];
+        // 네 Form 주소마다 가상 표 DWORD만 바뀌고 나머지는 그대로다
+        for (int i = 0; i < formTypes.Length; i++)
+        {
+            int sid = pool.Allocate(SidAllocation.Server);
+            Span<byte> bytes = pool.RawSlot(sid);
+            // 패턴을 채워 이웃 보존을 관측한다
+            for (int j = 0; j < 50; j++)
+            {
+                bytes[j] = (byte)(0xA0 + j);
+            }
+            uint address = OriginalConstructors.Address((int)formTypes[i]);
+            Assert.Equal(sid, factory.ConstructRaw(address, sid, true));
+            Assert.Equal(expectedTables[i], BitConverter.ToUInt32(bytes.Slice(0, 4).ToArray(), 0));
+            // 앞 4바이트를 제외한 나머지는 패턴 그대로다
+            for (int j = 4; j < 50; j++)
+            {
+                Assert.Equal((byte)(0xA0 + j), bytes[j]);
+            }
+        }
+        // NULL 생성자는 반환 객체가 필요하면 거부하고, 필요 없으면 슬롯을 건드리지 않고 돌아온다
+        int nullSid = pool.Allocate(SidAllocation.Server);
+        byte[] beforeNull = Snapshot(pool);
+        Assert.Throws<InvalidOperationException>(() => factory.ConstructRaw(0x4429E0u, nullSid, true));
+        Assert.Equal(beforeNull, Snapshot(pool));
+        Assert.Equal(nullSid, factory.ConstructRaw(0x4429E0u, nullSid, false));
+        Assert.Equal(beforeNull, Snapshot(pool));
+        // 표에 없는 주소는 명시 오류로 거부한다
+        byte[] beforeUnknown = Snapshot(pool);
+        Assert.Throws<InvalidOperationException>(() => factory.ConstructRaw(0x12345678u, nullSid, true));
+        Assert.Equal(beforeUnknown, Snapshot(pool));
+    }
+
+    /// <summary>
+    /// 공장 Create는 내장 Form(1·2·3·6)에서 가상 표와 타입만 쓰고 자산 후처리(PostCreate)를 건너뛴다.
+    /// 근거: cpppj/src/o/SquidFactory.cpp Create·RawSquidCreation.cpp CreateRawSquid (F2d 공장 폼 생성, 2026-11-07).
+    /// </summary>
+    [Fact]
+    public void CreateFormWritesVtableAndTypeWithoutPostCreate()
+    {
+        OriginalTypeRecord[] types = Types();
+        // 후처리가 복사할 zOrder를 눈에 띄는 값으로 둔다
+        types[1].ZOrder = 0x5A;
+        types[2].ZOrder = 0x5B;
+        types[3].ZOrder = 0x5C;
+        types[6].ZOrder = 0x5D;
+        var pool = new RawSidPool(32768);
+        var factory = new RawSquidFactory(pool, types);
+        uint[] formTypes = [1u, 2u, 3u, 6u];
+        uint[] expectedTables = [0x512110u, 0x512098u, 0x512188u, 0x512208u];
+        // 네 Form 모두 할당→가상 표→타입→빈 후처리 순서로 만든다
+        for (int i = 0; i < formTypes.Length; i++)
+        {
+            int sid = factory.Create(formTypes[i]);
+            ReadOnlySpan<byte> slot = pool.Slot(sid);
+            Assert.Equal(expectedTables[i], BitConverter.ToUInt32(slot.Slice(0, 4).ToArray(), 0));
+            Assert.Equal((byte)formTypes[i], slot[RawSidPool.TypeOffset]);
+            Assert.Equal(RawSidPool.VoidBit, slot[RawSidPool.StateOffset]);
+            // 후처리를 건너뛰므로 zOrder 바이트(+35)는 타입 값이 아니라 할당 직후 0 그대로다
+            Assert.Equal((byte)0, slot[35]);
+        }
+    }
+
+    /// <summary>
+    /// 공장 Take는 내장 Form의 void 슬롯을 공간 해제 연결 없이 받고 자산 후처리(PostTake)를 건너뛰며,
+    /// Form의 contained 비트를 자산과 달리 허용한다.
+    /// 근거: cpppj/src/o/SquidFactory.cpp Take (F2d 공장 폼 생성, 2026-11-07).
+    /// </summary>
+    [Fact]
+    public void TakeFormOnVoidSlotSkipsPostTakeAndAllowsContained()
+    {
+        OriginalTypeRecord[] types = Types();
+        // 후처리가 복사할 zOrder를 눈에 띄는 값으로 둔다
+        types[1].ZOrder = 0x5A;
+        var pool = new RawSidPool(32768);
+        var factory = new RawSquidFactory(pool, types);
+        // void Form 슬롯은 Unpop 연결 없이 받는다
+        int sid = factory.Create(1);
+        Span<byte> bytes = pool.AllocatedBytes(sid);
+        bytes[35] = 0x77;
+        bytes[HpOffset] = 0xA1;
+        Assert.Equal(sid, factory.Take(1, sid));
+        Assert.Equal(0x512110u, BitConverter.ToUInt32(bytes.Slice(0, 4).ToArray(), 0));
+        Assert.Equal((byte)1, bytes[RawSidPool.TypeOffset]);
+        Assert.Equal(RawSidPool.VoidBit, bytes[RawSidPool.StateOffset]);
+        // 후처리를 건너뛰므로 zOrder는 호출자가 둔 값 그대로고 HP도 보존된다
+        Assert.Equal((byte)0x77, bytes[35]);
+        Assert.Equal((byte)0xA1, bytes[HpOffset]);
+        // Form은 contained 비트가 있어도 받는다 (자산 Take는 거부한다)
+        bytes[RawSidPool.StateOffset] = (byte)(RawSidPool.VoidBit | 8);
+        bytes[35] = 0x77;
+        Assert.Equal(sid, factory.Take(1, sid));
+        Assert.Equal((byte)(RawSidPool.VoidBit | 8), bytes[RawSidPool.StateOffset]);
+        Assert.Equal((byte)0x77, bytes[35]);
+        // 빈 서버 슬롯도 받는다
+        Assert.Equal(16000, factory.Take(1, 16000));
+        ReadOnlySpan<byte> empty = pool.Slot(16000);
+        Assert.Equal(0x512110u, BitConverter.ToUInt32(empty.Slice(0, 4).ToArray(), 0));
+        Assert.Equal((byte)1, empty[RawSidPool.TypeOffset]);
     }
 }

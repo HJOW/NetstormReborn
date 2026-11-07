@@ -58,6 +58,12 @@ public sealed class RawSquidFactory
     /// <summary>패치판에서 생성이 금지된 fakeThreeByThreeSurface 타입 번호.</summary>
     private const int FakeSurfaceType = 162;
 
+    /// <summary>내장 Form 타입 번호 네 개. 일반 Create·Take도 원문 생성자·가상 표를 쓴다. 2026-11-07 F2d 공장 폼 생성 이식에서 추가됐다.</summary>
+    private static readonly uint[] FormTypes = [1u, 2u, 3u, 6u];
+
+    /// <summary>원문 NULL 생성자 주소. 반환 객체가 필요하면 생성을 거부한다. 2026-11-07 F2d 공장 폼 생성 이식에서 추가됐다.</summary>
+    private const uint NullConstructorAddress = 0x4429E0u;
+
     /// <summary>슬롯을 할당받을 풀. 팩토리는 풀의 목록·카운터를 Allocate 로만 바꾼다.</summary>
     private readonly RawSidPool _pool;
 
@@ -203,22 +209,24 @@ public sealed class RawSquidFactory
 
     /// <summary>
     /// 오브젝트를 만든다. 슬롯 할당 → 생성자 쓰기 → 타입 바이트 → postCreate 순서이며 새 슬롯 번호를 돌려준다.
-    /// 지원하지 않는 타입(미복원 생성자, 패치판 금지 타입 162, 자산 타입 밖)은 슬롯을 할당하기 전에 예외로 거부한다.
+    /// 내장 Form(1·2·3·6)은 가상 표와 타입만 쓰고 자산 후처리를 건너뛴다.
+    /// 지원하지 않는 타입(미복원 생성자, 패치판 금지 타입 162, 자산·Form 밖)은 슬롯을 할당하기 전에 예외로 거부한다.
+    /// 근거: cpppj/src/o/SquidFactory.cpp Create·RawSquidCreation.cpp CreateRawSquid (F2d 공장 폼 생성, 2026-11-07).
     /// </summary>
-    /// <param name="type">타입 번호(70 이상).</param>
+    /// <param name="type">타입 번호(내장 Form 1·2·3·6 또는 70 이상).</param>
     /// <param name="flags">할당 영역 비트(1 예측, 2 클라이언트).</param>
     public int Create(uint type, SidAllocation flags = SidAllocation.Server)
     {
-        OriginalTypeRecord record = Type(type, requireSupported: true);
+        OriginalTypeRecord record = TypeForCreate(type);
         if (type == FakeSurfaceType)
         {
             throw new InvalidOperationException("패치판 fakeThreeByThreeSurface 는 생성할 수 없습니다");
         }
         int sid = _pool.Allocate(flags);
-        Span<byte> bytes = _pool.AllocatedBytes(sid);
-        ApplyConstructor(bytes, record);
-        bytes[RawSidPool.TypeOffset] = (byte)type;
-        PostCreate(sid);
+        ConstructRaw(record.ConstructorAddress, sid, true);
+        uint table = ReadVtable(_pool.AllocatedBytes(sid));
+        _pool.AllocatedBytes(sid)[RawSidPool.TypeOffset] = (byte)type;
+        VirtualPostCreate(sid, table);
         return sid;
     }
 
@@ -313,20 +321,23 @@ public sealed class RawSquidFactory
 
     /// <summary>
     /// 서버가 정한 번호의 슬롯을 받는다(원본 Take). 풀 목록·빈 번호 카운터는 바꾸지 않는다.
-    /// 이미 쓰는 슬롯이면 같은 타입·같은 클래스(가상 표)여야 하고, void 가 아니면 공간 해제(<see cref="IRawUnpop"/>)를 먼저 한다.
-    /// 그다음 free/dead 를 지우고 void 를 켠 뒤 생성자 필드와 타입 바이트를 쓰고 postTake 를 적용한다. 그 밖의 필드는 보존한다.
+    /// 이미 쓰는 슬롯이면 같은 타입·같은 클래스(가상 표)여야 하고, void 가 아니면 공간 해제(Form은 <see cref="UnpopForm"/>, 자산은 <see cref="IRawUnpop"/>)를 먼저 한다.
+    /// 내장 Form(1·2·3·6)은 가상 표·타입만 쓰고 자산 후처리를 건너뛴다.
+    /// 그다음 free/dead 를 지우고 void 를 켠 뒤 생성자 필드와 타입 바이트를 쓴다. 그 밖의 필드는 보존한다.
+    /// 근거: cpppj/src/o/SquidFactory.cpp Take (F2d 공장 폼 생성, 2026-11-07).
     /// </summary>
-    /// <param name="type">타입 번호.</param>
+    /// <param name="type">타입 번호(내장 Form 1·2·3·6 또는 70 이상).</param>
     /// <param name="sid">서버 영역의 슬롯 번호.</param>
     public int Take(uint type, int sid)
     {
-        OriginalTypeRecord record = Type(type, requireSupported: true);
+        OriginalTypeRecord record = TypeForCreate(type);
         if (sid < RawSidPool.ServerFirst)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), sid, "Take 는 서버 영역 번호만 받습니다");
         }
+        bool isForm = IsFormTypeNumber(type);
         Span<byte> bytes = _pool.RawSlot(sid);
-        if ((bytes[RawSidPool.StateOffset] & ContainedBit) != 0)
+        if (!isForm && (bytes[RawSidPool.StateOffset] & ContainedBit) != 0)
         {
             throw new InvalidOperationException("contained 오브젝트의 base Take 는 지원하지 않습니다");
         }
@@ -336,24 +347,36 @@ public sealed class RawSquidFactory
             {
                 throw new InvalidOperationException("Take 타입이 기존 오브젝트와 다릅니다");
             }
-            if (ReadVtable(bytes) != ConstructorVtable(record))
+            uint beforeTable = ReadVtable(bytes);
+            if (beforeTable != ConstructorVtable(record))
             {
                 throw new InvalidOperationException("Take 의 미복원 가상/공간 해제 효과가 필요합니다");
             }
             if ((bytes[RawSidPool.StateOffset] & RawSidPool.VoidBit) == 0)
             {
-                if (_unpop is null)
+                if (isForm)
                 {
-                    throw new InvalidOperationException("Take 의 non-void 공간 해제 연결이 없습니다");
+                    UnpopForm(sid);
+                    bytes = _pool.RawSlot(sid);
                 }
-                _unpop.Unpop(sid, record);
+                else
+                {
+                    if (_unpop is null)
+                    {
+                        throw new InvalidOperationException("Take 의 non-void 공간 해제 연결이 없습니다");
+                    }
+                    _unpop.Unpop(sid, record);
+                }
             }
             // 이미 void 인 오브젝트의 기본 Unpop 은 쓰기 없이 돌아온다
         }
         bytes[RawSidPool.StateOffset] = (byte)((bytes[RawSidPool.StateOffset] & 0xFC) | RawSidPool.VoidBit);
-        ApplyConstructor(bytes, record);
-        bytes[RawSidPool.TypeOffset] = (byte)type;
-        PostTake(sid);
+        ConstructRaw(record.ConstructorAddress, sid, true);
+        _pool.RawSlot(sid)[RawSidPool.TypeOffset] = (byte)type;
+        if (!isForm)
+        {
+            PostTake(sid);
+        }
         return sid;
     }
 
@@ -445,9 +468,9 @@ public sealed class RawSquidFactory
     }
 
     /// <summary>
-    /// 타입의 최종 가상 표 값. 생성자 주소가 0 이면 판본별 기본 Squid, 아니면 판본별 표의 파생 생성자가 마지막에 쓰는 값이다.
+    /// 타입의 최종 가상 표 값. 생성자 주소가 0 이면 판본별 기본 Squid, 내장 Form 주소이면 Form 가상 표, 아니면 판본별 표의 파생 생성자가 마지막에 쓰는 값이다.
     /// 표에 없는 생성자 주소는 원문처럼 명시 오류로 거부한다(호스트 역참조 전에 검사한다).
-    /// 근거: cpppj/src/o/SquidFactory.cpp ConstructorVtable (R0-4 재대조, 2026-10-28; 판본별 표 F2c-11, 2026-11-04).
+    /// 근거: cpppj/src/o/SquidFactory.cpp ConstructorVtable (R0-4 재대조, 2026-10-28; 판본별 표 F2c-11, 2026-11-04; Form 분기 F2d 0.215, 2026-11-07).
     /// </summary>
     /// <param name="type">타입 레코드.</param>
     private uint ConstructorVtable(OriginalTypeRecord type)
@@ -455,6 +478,14 @@ public sealed class RawSquidFactory
         if (type.ConstructorAddress == 0)
         {
             return OriginalConstructors.BaseVtableFor(_pool.Edition);
+        }
+        // 내장 Form 네 종류는 일반 Create·Take도 원문 생성자·가상 표를 쓴다
+        foreach (uint formType in FormTypes)
+        {
+            if (type.ConstructorAddress == OriginalConstructors.Address(_pool.Edition, (int)formType))
+            {
+                return FormVtable(formType);
+            }
         }
         ConstructorRecipe? recipe = OriginalConstructors.Recipe(_pool.Edition, type.ConstructorAddress);
         if (recipe is null)
@@ -477,6 +508,15 @@ public sealed class RawSquidFactory
             Put(bytes, VtableOffset, OriginalConstructors.BaseVtableFor(_pool.Edition), 4);
             return;
         }
+        // 내장 Form은 가상 표 DWORD만 남긴다
+        foreach (uint formType in FormTypes)
+        {
+            if (type.ConstructorAddress == OriginalConstructors.Address(_pool.Edition, (int)formType))
+            {
+                Put(bytes, VtableOffset, FormVtable(formType), 4);
+                return;
+            }
+        }
         // 쓰기 순서와 폭을 유지해 섬 번호·플래그·anim HP 처리를 원본대로 한다
         foreach (ConstructorWrite write in OriginalConstructors.Recipe(_pool.Edition, type.ConstructorAddress)!.Writes)
         {
@@ -491,6 +531,181 @@ public sealed class RawSquidFactory
             }
             Put(bytes, write.Offset, value, write.Width);
         }
+    }
+
+    /// <summary>내장 Form 타입 번호인지 판단한다.</summary>
+    /// <param name="number">확인할 타입 번호.</param>
+    private static bool IsFormTypeNumber(uint number)
+    {
+        // 고정된 네 종류만 Form 경로를 쓴다
+        foreach (uint formType in FormTypes)
+        {
+            if (number == formType)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>원문 생성자 주소가 내장 Form 네 종류 중 하나인지 판단한다.</summary>
+    /// <param name="address">확인할 생성자 주소.</param>
+    private bool IsFormAddress(uint address)
+    {
+        // 판본별 주소 표와 직접 대조한다
+        foreach (uint formType in FormTypes)
+        {
+            if (address == OriginalConstructors.Address(_pool.Edition, (int)formType))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>내장 Form 타입의 실제 가상 표 기록값을 돌려준다. CD판은 명시 경계로 둔다.</summary>
+    /// <param name="formType">내장 Form 타입 번호.</param>
+    private uint FormVtable(uint formType)
+    {
+        if (_pool.Edition != OriginalEdition.Patch1078)
+        {
+            throw new InvalidOperationException("CD Form 가상 표 미연결");
+        }
+
+        return RawSquidForms.VtableFor(formType);
+    }
+
+    /// <summary>가상 표 값이 내장 Form 네 종류 중 하나인지 판단한다.</summary>
+    /// <param name="table">확인할 가상 표 값.</param>
+    private bool IsFormVtable(uint table)
+    {
+        if (_pool.Edition != OriginalEdition.Patch1078)
+        {
+            return false;
+        }
+
+        // 네 종류의 패치 가상 표와 대조한다
+        foreach (uint formType in FormTypes)
+        {
+            if (table == RawSquidForms.VtableFor(formType))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>타입 번호의 레코드를 범위만 확인해 찾는다. Form도 허용한다.</summary>
+    /// <param name="number">타입 번호.</param>
+    private OriginalTypeRecord TypeRecord(uint number)
+    {
+        if (number >= (uint)_types.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(number), number, "공장 현재 TYPE 번호 오류");
+        }
+
+        return _types[(int)number];
+    }
+
+    /// <summary>Create·Take가 쓰는 타입 조회다. 내장 Form(1·2·3·6) 또는 자산(70 이상)만 받고 지원 여부를 미리 검사한다.</summary>
+    /// <param name="type">타입 번호.</param>
+    private OriginalTypeRecord TypeForCreate(uint type)
+    {
+        if (type >= (uint)_types.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(type), type, "공장 현재 TYPE 번호 오류");
+        }
+
+        if (!IsFormTypeNumber(type) && type < (uint)OriginalConstructors.FirstAssetType)
+        {
+            throw new ArgumentOutOfRangeException(nameof(type), type, "base 오브젝트 타입 번호 오류");
+        }
+
+        OriginalTypeRecord record = _types[(int)type];
+        if (record.ConstructorAddress != 0 && !IsFormAddress(record.ConstructorAddress)
+            && OriginalConstructors.Recipe(_pool.Edition, record.ConstructorAddress) is null)
+        {
+            throw new InvalidOperationException("null/assert 또는 미복원 생성자는 지원하지 않습니다");
+        }
+
+        return record;
+    }
+
+    /// <summary>원문 cdecl 주소를 타입·상태 선행 검사 없이 같은 물리 슬롯에 적용한다. Form은 가상 표 DWORD만 남긴다.</summary>
+    /// <param name="address">원문 생성자 주소.</param>
+    /// <param name="sid">대상 슬롯 번호.</param>
+    /// <param name="requireObject">참이면 void NULL 생성자의 객체 반환을 거부한다.</param>
+    public int ConstructRaw(uint address, int sid, bool requireObject)
+    {
+        if (address == 0)
+        {
+            Span<byte> baseBytes = _pool.RawSlot(sid);
+            Put(baseBytes, VtableOffset, OriginalConstructors.BaseVtableFor(_pool.Edition), 4);
+            return sid;
+        }
+
+        // 네 Form 생성자는 TYPE·부모·목록을 쓰지 않고 가상 표 DWORD만 남긴다
+        foreach (uint formType in FormTypes)
+        {
+            if (address == OriginalConstructors.Address(_pool.Edition, (int)formType))
+            {
+                Span<byte> formBytes = _pool.RawSlot(sid);
+                Put(formBytes, VtableOffset, FormVtable(formType), 4);
+                return sid;
+            }
+        }
+
+        if (_pool.Edition == OriginalEdition.Patch1078 && address == NullConstructorAddress)
+        {
+            if (requireObject)
+            {
+                throw new InvalidOperationException("void NULL 생성자는 Create의 반환 객체를 제공하지 않습니다");
+            }
+
+            return sid;
+        }
+
+        ConstructorRecipe? recipe = OriginalConstructors.Recipe(_pool.Edition, address);
+        if (recipe is null)
+        {
+            throw new InvalidOperationException("Create/현재 TYPE의 선택된 cdecl 생성자 미연결");
+        }
+
+        Span<byte> bytes = _pool.RawSlot(sid);
+        // 쓰기 순서와 폭을 유지해 원본대로 적용한다
+        foreach (ConstructorWrite write in recipe.Writes)
+        {
+            uint value = write.Value;
+            if (write.OrBits)
+            {
+                // OR 에 필요한 기존 바이트만 읽는다
+                for (int i = 0; i < write.Width; i++)
+                {
+                    value |= (uint)bytes[write.Offset + i] << (i * 8);
+                }
+            }
+
+            Put(bytes, write.Offset, value, write.Width);
+        }
+
+        return sid;
+    }
+
+    /// <summary>실제 가상 표를 보고 Form이면 빈 후처리로 끝내고 자산이면 공통 후처리를 실행한다.</summary>
+    /// <param name="sid">대상 슬롯 번호.</param>
+    /// <param name="table">생성 직후 읽은 가상 표 값.</param>
+    private void VirtualPostCreate(int sid, uint table)
+    {
+        // 네 Form의 후처리는 빈 함수다
+        if (IsFormVtable(table))
+        {
+            return;
+        }
+
+        PostCreate(sid);
     }
 
     /// <summary>값을 리틀 엔디언으로 슬롯에 쓴다. 4 의 배수가 아닌 위치(+26 의 HP 등)에도 안전하다.</summary>
