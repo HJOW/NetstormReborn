@@ -541,8 +541,8 @@ cpppj/src/o/RawBombTargets.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombTimerPacket.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeCarriers.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeConnect.cpp	port	www/core/raw-bridge-connect.js	1f00a25a	port	[o-default] WB04-E42: 연결 순회·연결 객체 생성·소유자 전파·한 칸 조회·섬 받침 접두·색 프레임·소유자 분배. fixture bridgeconnect 10.78 3,600행(Walk 1856·Connect 464·Link 392·Owner 330·FindAt 270·Color 42·IslandOwner/StalagOwner 각 96·IslandPost 54). 실제 SquidFrame·bridge.type 프레임표 통합 검사는 SquidFrame 단위에서
-cpppj/src/o/RawBridgeDecay.cpp	port			todo	[o-default]
-cpppj/src/o/RawBridgeDecayScan.cpp	port			todo	[o-default]
+cpppj/src/o/RawBridgeDecay.cpp	port	www/core/raw-bridge-decay.js	1f00a25a	port	[o-default] WB04-E45: raw 슬롯 위 한 칸 붕괴/수명 감소(진단 0x268·현재 WORD 재조회·4비트 직접 쓰기). fixture bridgedecay Cell 4241·Life 3264, bridge-decay-checking 272
+cpppj/src/o/RawBridgeDecayScan.cpp	port	www/core/raw-bridge-decay.js	1f00a25a	port	[o-default] WB04-E45: 프레임 스캔(기한/주기 비례 방문·칸 예외 삼킴·재설정). fixture bridge-decay-scan-runtime 73행
 cpppj/src/o/RawBridgeDraw.h	port			todo	[o-default]
 cpppj/src/o/RawBridgeEditor.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawBridgeEvents.cpp	port	www/core/raw-bridge-events.js	1f00a25a	port	[o-default] WB04-E43: 이벤트 처리기(0x2691/0x2692)·끝 칸 변환·Regular 분배·이웃 훅. fixture bridgeevent 10.78 Handler 1,207·End 726·Table 306, 실제 다리 프레임 60개(bridgedecay Frames 0). 프로세스 호스트/실제 월드 수명 통합 검사는 월드 조립 단위에서

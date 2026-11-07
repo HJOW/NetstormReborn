@@ -6064,18 +6064,20 @@
       "producer": "cpppj 독립 PE 관측: 다리 붕괴(Frames 행에 실제 bridge.type 프레임 코드 60개)",
       "consumers": [
         "webpj/tests/bridge-events.test.mjs",
-        "webpj/tests/bridge-decay.test.mjs"
+        "webpj/tests/bridge-decay.test.mjs",
+        "webpj/tests/raw-bridge-decay.test.mjs"
       ],
       "modules": [
         "webpj/www/core/raw-bridge-events.js",
-        "webpj/www/core/bridge-decay.js"
+        "webpj/www/core/bridge-decay.js",
+        "webpj/www/core/raw-bridge-decay.js"
       ],
       "doc": "docs/webpj-bridge-decay-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawBridgeDecay.cpp",
         "cpppj/src/o/Bridge.cpp"
       ],
-      "scope": "bridge-decay.test.mjs는 Cell·Life·Destroy·Crack·Normal·Weaken·Restore·Init·Scan 전 행(세 PE)을 사용, bridge-events.test.mjs는 Frames 0 행(실제 bridge.type 프레임 60개)만 사용",
+      "scope": "bridge-decay.test.mjs는 Cell·Life·Destroy·Crack·Normal·Weaken·Restore·Init·Scan 전 행(세 PE)을 사용, bridge-events.test.mjs는 Frames 0 행(실제 bridge.type 프레임 60개)만 사용 · raw-bridge-decay.test.mjs는 Cell 4241·Life 3264행과 Frames 0 행을 raw 풀 위에서 재생",
       "text": true,
       "sha256": "1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638",
       "bytes": 2413945,
@@ -6085,6 +6087,64 @@
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeDecay.cpp": "cc328596",
         "cpppj/src/o/Bridge.cpp": "11b04c8e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E45",
+      "id": "bridge-decay-checking",
+      "path": "cpppj/tests/fixtures/bridge-decay-checking-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리 붕괴 최소 수명 진단(0x268)의 접두·복귀 뒤 현재 WORD 재조회",
+      "consumers": [
+        "webpj/tests/raw-bridge-decay.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bridge-decay.js"
+      ],
+      "doc": "docs/webpj-raw-bridge-decay-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeDecay.cpp"
+      ],
+      "scope": "272입력 전부 사용",
+      "text": true,
+      "sha256": "5679832c469f1597cc72ece4690a6184281bca860846b3ab0fd8d622c45d9507",
+      "bytes": 54079,
+      "lines": 273,
+      "fixtureCommit": "cc328596",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeDecay.cpp": "cc328596"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E45",
+      "id": "bridge-decay-scan-runtime",
+      "path": "cpppj/tests/fixtures/bridge-decay-scan-runtime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리 붕괴 프레임 스캔의 주기/끝 번호/커서/기한 변경과 호출 순서",
+      "consumers": [
+        "webpj/tests/raw-bridge-decay.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bridge-decay.js"
+      ],
+      "doc": "docs/webpj-raw-bridge-decay-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeDecayScan.cpp"
+      ],
+      "scope": "73행 전부 사용",
+      "text": true,
+      "sha256": "59bcfadb5850433e6601995d6a0d24378369d8a599e9065c99f68768ef15fa6f",
+      "bytes": 10089,
+      "lines": 74,
+      "fixtureCommit": "53a639f0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeDecayScan.cpp": "53a639f0"
       }
     }
   ]
