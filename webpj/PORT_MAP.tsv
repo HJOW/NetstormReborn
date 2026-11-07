@@ -433,7 +433,7 @@ cpppj/src/client/WindowTitle.cpp	adapt			todo	[adapt-screen]
 cpppj/src/client/XlatFileRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/BaseFile.cpp	adapt	www/assets/game-files.js;www/assets/taff.js;www/assets/asset-loader.js	1f00a25a	partial	[adapt-file] 느슨한 파일→TAFF 조회(웹 대체, docs/formats/vfs.md)
 cpppj/src/o/BaseProcess.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(BaseProcess 기반)·WB04-D5c(Process/BaseProcess 부착은 squid-process.js 호스트)
-cpppj/src/o/Bridge.cpp	port			todo	[o-default]
+cpppj/src/o/Bridge.cpp	port	www/core/surface-finder.js	1f00a25a	partial	[o-default] WB04-E12: Bridge::Connects(프레임/방향 접합 판정)만 surface-finder.js 에 이식. CollectDecay 등 나머지는 todo
 cpppj/src/o/BurningVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/CampaignDamageVtables.inc	port			todo	[o-default]
 cpppj/src/o/CanonDecoder.cpp	port	www/assets/territory.js	1f00a25a	partial	[o-default] 3.6①(WB02-G): 기준선의 패치 checking 금 간 프레임 진단·명시 프레임 진단 복귀·Side 범위 검사는 정상 경로 결과 동일(웹은 진단을 명시 오류로 둠). 커서 배치 소비자는 WB06
@@ -457,7 +457,7 @@ cpppj/src/o/FieryTailVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/FileSpecQuery.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/FortSerializationGlobals.h	port			todo	[o-default]
 cpppj/src/o/GameClock.cpp	port	www/core/game-clock.js	3e9dc2c7	port	[o-default] WB04-C1 / 3.6③(3e9dc2c7, WB04-D5b 판정): 시간 동기화 보정 0055b4ac 바인딩과 (ms−origin−보정) 감산. 보정 0 이면 기준선과 같은 결과 → WB05 시간 패킷(5번)의 단독 도달 확인 때
-cpppj/src/o/Graph.cpp	port			todo	[o-default]
+cpppj/src/o/Graph.cpp	port	www/core/graph.js	1f00a25a	port	[o-default] WB04-E12: Graph 정수 연산(Allocate·Flood·Add·Detach·Rebuild·Remove·Free·진단 복귀). fixture graph 10.78 구간 1280개 검사 지점 + 독립 6건. RawGraph/RawGraphLive 연결은 이후 단위
 cpppj/src/o/GumpFormHost.cpp	port	www/core/gump-form-host.js	1f00a25a	port	[o-default] WB04-D5a
 cpppj/src/o/Islandbuilder.cpp	port	www/assets/territory.js	1f00a25a	partial	[o-default] WB03-V 영역 패턴 배치
 cpppj/src/o/Kernel.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(1..39999 현재 슬롯 순서) / WB04-D5c: 기준선 정렬 — 진단 장치(소진 요약→상세→단언 0x7a, 빈 슬롯 삭제 단언 0x82), 슬롯 0 조회·삭제(순회 제외), 밀려난 객체 보관, drainOwnedForShutdown. KernelDiagnosticCurrentTests 의 Client 접합 2장면은 WB05
@@ -962,7 +962,7 @@ cpppj/src/o/Squid.cpp	port	www/core/squid-space.js;www/core/squid-hash.js	1f00a2
 cpppj/src/o/SquidDestroyLifecycle.cpp	port			todo	[o-default]
 cpppj/src/o/SquidDisplay.cpp	port			todo	[o-default]
 cpppj/src/o/SquidFactory.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4. 웹 타입 로더의 zorder/생성자 주소를 Factory 에 넘기는 연결은 WB05-A(4절 타입 표 생성 메타)
-cpppj/src/o/SquidFinder.cpp	port			todo	[o-default]
+cpppj/src/o/SquidFinder.cpp	port	www/core/surface-finder.js	1f00a25a	port	[o-default] WB04-E12: flag 8 표면 이웃 탐색(Neighbors·OriginInterior·Connects). graph fixture 1280개 검사 지점을 통해 대조. Bridge::CollectDecay 계열 대조는 Bridge 단위에서
 cpppj/src/o/SquidFormDispatch.cpp	port	www/core/squid-form-dispatch.js	1f00a25a	port	[o-default] WB04-D5b + WB04-D5c: Process 호스트 bind 와 혼합 체인 분배(자기 삭제 프로세스·Kernel)
 cpppj/src/o/SquidForms.cpp	port	www/core/squid-forms.js	1f00a25a	port	[o-default] WB04-D3
 cpppj/src/o/SquidFrame.cpp	port			todo	[o-default]

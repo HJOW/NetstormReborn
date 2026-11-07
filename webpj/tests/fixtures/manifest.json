@@ -2971,7 +2971,7 @@
       "bytes": 57749,
       "lines": 65,
       "fixtureCommit": "adb9739e",
-      "webCommit": "worktree",
+      "webCommit": "59c1baa5",
       "cpppjBasis": {
         "cpppj/src/o/RawClockSyncReset.cpp": "adb9739e"
       }
@@ -3000,7 +3000,7 @@
       "bytes": 993,
       "lines": 11,
       "fixtureCommit": "35041198",
-      "webCommit": "worktree",
+      "webCommit": "59c1baa5",
       "cpppjBasis": {
         "cpppj/src/o/RawStateZoneReset.cpp": "35041198"
       }
@@ -3029,7 +3029,7 @@
       "bytes": 61436,
       "lines": 65,
       "fixtureCommit": "881b0ef7",
-      "webCommit": "worktree",
+      "webCommit": "59c1baa5",
       "cpppjBasis": {
         "cpppj/src/o/RawStateBridgeReset.cpp": "881b0ef7"
       }
@@ -3058,7 +3058,7 @@
       "bytes": 1543,
       "lines": 55,
       "fixtureCommit": "4e66a874",
-      "webCommit": "worktree",
+      "webCommit": "59c1baa5",
       "cpppjBasis": {
         "cpppj/src/o/RawRitualRefresh.cpp": "4e66a874"
       }
@@ -3087,9 +3087,41 @@
       "bytes": 120154,
       "lines": 493,
       "fixtureCommit": "18c35f0e",
-      "webCommit": "worktree",
+      "webCommit": "59c1baa5",
       "cpppjBasis": {
         "cpppj/src/o/RawBulwarkHit.cpp": "18c35f0e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E12",
+      "id": "graph",
+      "path": "cpppj/tests/fixtures/graph-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Graph 의 Add/Flood/Allocate/Free/Remove 뒤 표 255행·4096 DWORD 스택·객체별 번호/상태(양 판본 x 두 제어값)",
+      "consumers": [
+        "webpj/tests/graph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/graph.js",
+        "webpj/www/core/surface-finder.js"
+      ],
+      "doc": "docs/webpj-graph-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/Graph.cpp",
+        "cpppj/src/o/SquidFinder.cpp"
+      ],
+      "scope": "Begin 4구간 중 originals(10.78) 2구간 1280개 검사 지점 사용. originalCD(10.72) 2구간 제외",
+      "text": true,
+      "sha256": "93e21a38e9d761de5234122e5bf7962dba262ea3849b51637f92e15eadb46c18",
+      "bytes": 1894511,
+      "lines": 3077,
+      "fixtureCommit": "f1cb614f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/Graph.cpp": "588c0e9c",
+        "cpppj/src/o/SquidFinder.cpp": "364d4a48"
       }
     }
   ]
