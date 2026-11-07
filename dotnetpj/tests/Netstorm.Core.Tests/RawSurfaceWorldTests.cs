@@ -642,6 +642,199 @@ public sealed class RawSurfaceWorldTests
         }
     }
 
+    /// <summary>188개가 아닌 TYPE 월드의 보고서를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportRejectsNon188World()
+    {
+        // 원본은 Graph·삭제 몸체를 항상 역참조하므로 CD 171개 연결은 명시 오류로 멈춘다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.Report());
+    }
+
+    /// <summary>프레임 표가 맞지 않는 월드의 보고서를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportRejectsMismatchedFrames()
+    {
+        // 원본 생성자는 자산 배열 일치를 강제하므로 프레임 없는 껍데기 호출은 명시 오류로 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.Report());
+    }
+
+    /// <summary>빈 월드의 보고서 머리·표·주기를 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportEmptyWorld()
+    {
+        // 원본 CLI 관측의 줄 순서와 초기값을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u, null, Frames188());
+        string report = world.Report();
+        string[] lines = report.Split('\n');
+        Assert.Equal(256, lines.Length);
+        Assert.Equal("raw_world\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0", lines[0]);
+        Assert.Equal("raw_graph_record\t0\t0\t0", lines[1]);
+        Assert.Equal("raw_graph_record\t250\t0\t0", lines[251]);
+        Assert.Equal("bridge_decay\t-1\t-1\t0\t0\t10", lines[252]);
+        Assert.Equal("raw_terrain_type\t97\t-1\t0", lines[253]);
+        Assert.Equal("raw_islands\t0", lines[254]);
+        Assert.Equal(string.Empty, lines[255]);
+    }
+
+    /// <summary>살아 있는 자산 한 개의 보고서 줄을 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportLiveObject()
+    {
+        // 원본 객체·자산 필드 줄의 순서와 서식을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u, null, Frames188());
+        world.PrepareFrame(new FrameTime { Game = 2.5 });
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        raw[34] = 7;
+        WriteSlot(raw, 36, 0u, 4);
+        WriteSlot(raw, 14, BitConverter.SingleToUInt32Bits(1.5f), 4);
+        WriteSlot(raw, 18, BitConverter.SingleToUInt32Bits(-2.25f), 4);
+        raw[40] = 11;
+        WriteSlot(raw, 26, 0x22u, 4);
+        string report = world.Report();
+        Assert.StartsWith("raw_world\t2.5\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n", report);
+        Assert.Contains($"raw_object\t{sid}\t70\t7\t0\t1.5\t-2.25\n", report);
+        Assert.Contains($"raw_asset_fields\t{sid}\t0\t11\t34\n", report);
+        Assert.DoesNotContain("raw_surface_graph", report);
+        Assert.DoesNotContain("raw_bridge_fields", report);
+    }
+
+    /// <summary>표면 소속 줄이 같은 바이트를 관측하는지 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportSurfaceGraphLine()
+    {
+        // 원본 표면 플래그 분기의 소속 바이트 읽기를 검증한다.
+        var types = Types188();
+        types[OriginalConstructors.FirstAssetType].Flags1 = TypeFlag1.Surface;
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, null, Frames188());
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        raw[30] = 9;
+        string report = world.Report();
+        Assert.Contains($"raw_surface_graph\t{sid}\t9\n", report);
+    }
+
+    /// <summary>다리 수명 줄이 같은 프레임 코드를 관측하는지 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportBridgeFieldsLine()
+    {
+        // 원본 다리 플래그 분기의 수명·코드 플래그 읽기를 검증한다.
+        var types = Types188();
+        types[OriginalConstructors.FirstAssetType].Flags2 = 4u;
+        var frames = Frames188();
+        frames[OriginalConstructors.FirstAssetType] = new RiftTypeFrames([new RiftFrameCode((byte)'A', 0, 0, 7)]);
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, null, frames);
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        WriteSlot(raw, 36, 0u, 4);
+        WriteSlot(raw, 12, 5u, 2);
+        string report = world.Report();
+        Assert.Contains($"raw_bridge_fields\t{sid}\t5\t7\n", report);
+    }
+
+    /// <summary>범위 밖 다리 프레임의 보고서를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportBridgeFieldsRejectsOutOfRangeFrame()
+    {
+        // 원본 out_of_range 경계를 직역한다.
+        var types = Types188();
+        types[OriginalConstructors.FirstAssetType].Flags2 = 4u;
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, null, Frames188());
+        int sid = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        WriteSlot(raw, 36, 3u, 4);
+        Assert.Throws<ArgumentOutOfRangeException>(() => world.Report());
+    }
+
+    /// <summary>종속 체인 진단용 전체 물리 저장소를 만든다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    /// <param name="types">같은 전역 TYPE 표다.</param>
+    /// <param name="frames">같은 장기 프레임 표다.</param>
+    /// <returns>호스트 조회까지 되는 저장소다.</returns>
+    private static RawSurfaceStorage FullStorage(List<OriginalTypeRecord> types, List<RiftTypeFrames> frames)
+    {
+        // 장기 호스트는 저장소 TYPE으로 만들므로 껍데기 자동 생성분으로는 조회할 수 없다.
+        var shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+        return new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+    }
+
+    /// <summary>종속 체인의 Regular 예약 줄을 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportRegularChain()
+    {
+        // 원본 비석·주문 진단의 Form 체인 관측을 검증한다.
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
+        int parent = world.Storage().Pool.Allocate();
+        Span<byte> parentRaw = world.Storage().Pool.AllocatedBytes(parent);
+        parentRaw[RawSidPool.StateOffset] = 0;
+        parentRaw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        int form = world.Storage().Pool.Allocate();
+        Span<byte> formRaw = world.Storage().Pool.AllocatedBytes(form);
+        formRaw[RawSidPool.TypeOffset] = 46;
+        WriteSlot(parentRaw, 0, 0x50a748u, 4);
+        WriteSlot(parentRaw, 6, (uint)form, 2);
+        var regular = new RegularProcess(9u, 0.5f);
+        uint pid = world.Kernel().Add(regular);
+        regular.SetIdentity(form, parent, pid);
+        WriteSlot(formRaw, 18, pid, 4);
+        string report = world.Report();
+        uint bits = BitConverter.SingleToUInt32Bits(0.5f);
+        Assert.Contains($"raw_object_regular\t{parent}\t{form}\t46\t9\t0\t{bits}\t0\n", report);
+        Assert.Contains($"raw_object_regular_count\t{parent}\t1\n", report);
+    }
+
+    /// <summary>등록과 맞지 않는 Regular 체인의 보고서를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportRegularChainRejectsMismatch()
+    {
+        // 실제 커널에 없는 Form 체인은 원본처럼 명시 오류로 멈춘다.
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
+        int parent = world.Storage().Pool.Allocate();
+        Span<byte> parentRaw = world.Storage().Pool.AllocatedBytes(parent);
+        parentRaw[RawSidPool.StateOffset] = 0;
+        parentRaw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        int form = world.Storage().Pool.Allocate();
+        world.Storage().Pool.AllocatedBytes(form)[RawSidPool.TypeOffset] = 46;
+        WriteSlot(parentRaw, 0, 0x50a748u, 4);
+        WriteSlot(parentRaw, 6, (uint)form, 2);
+        Assert.Throws<InvalidOperationException>(() => world.Report());
+    }
+
+    /// <summary>Factory Form 체인 줄을 검증한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportFactoryChain()
+    {
+        // 원본 Factory 진단의 저장 종류·flags 관측을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u, null, Frames188());
+        int parent = world.Storage().Pool.Allocate();
+        Span<byte> parentRaw = world.Storage().Pool.AllocatedBytes(parent);
+        parentRaw[RawSidPool.StateOffset] = 0;
+        parentRaw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        int form = world.Storage().Pool.Allocate();
+        Span<byte> formRaw = world.Storage().Pool.AllocatedBytes(form);
+        formRaw[RawSidPool.TypeOffset] = 6;
+        WriteSlot(formRaw, 18, 3u, 2);
+        WriteSlot(formRaw, 20, 8u, 2);
+        WriteSlot(parentRaw, 0, 0x509148u, 4);
+        WriteSlot(parentRaw, 6, (uint)form, 2);
+        string report = world.Report();
+        Assert.Contains($"raw_factory_content\t{parent}\t{form}\t3\t8\n", report);
+    }
+
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {

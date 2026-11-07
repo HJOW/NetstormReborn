@@ -1,5 +1,7 @@
 // 같은 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드의 껍데기를 공유한다.
 using Netstorm.Core.Bridges;
+using System.Globalization;
+using System.Text;
 
 namespace Netstorm.Core.Original;
 
@@ -82,6 +84,12 @@ public sealed class RawSurfaceWorld
 
     /// <summary>모든 Form·경로·Regular가 쓰는 같은 실제 커널이다. 원본 Impl.kernel에 대응하며 호출자 저장소보다 오래 살 수 없다. 외부에서 빌린 커널의 수명은 호출자가 둔다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>
     private readonly Kernel _kernel;
+
+    /// <summary>독립 관측과 실제 세션 효과를 구별하는 효과 요청 수다. 원본 Impl.effectRequests에 대응하며 런타임 연결 전에는 쌓이기만 한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    private ulong _effectRequests = 0ul;
+
+    /// <summary>독립 관측과 실제 세션 효과를 구별하는 삭제 요청 수다. 원본 Impl.deletionRequests에 대응하며 BindDeletion 교체 뒤에는 공통 몸체가 센다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    private ulong _deletionRequests = 0ul;
 
     /// <summary>같은 판본·타입·지형으로 월드를 만들고 물리 저장소를 빌리거나 새로 만든다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
@@ -491,5 +499,160 @@ public sealed class RawSurfaceWorld
     {
         // 원본 squidTransmission 미설치 logic_error를 직역한다. 실제 Transmit 연결은 3차 로컬 구현 때 잇는다.
         throw new InvalidOperationException("현재 판본의 실제 삭제 전송기가 설치되지 않았습니다.");
+    }
+
+    /// <summary>원본 정밀도(유효 12자리)로 부동소수 값을 같은 CLI 관측 문자열로 만든다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    /// <param name="value">적을 값이다.</param>
+    /// <returns>원본 기본 표시와 같은 문자열이다.</returns>
+    private static string FormatReportDouble(double value)
+    {
+        // 원본 ostringstream 기본 표시(precision 12)와 같은 유효 자릿수로 적는다.
+        return value.ToString("G12", CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>원본 float 값을 같은 CLI 관측 문자열로 만든다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    /// <param name="value">적을 값이다.</param>
+    /// <returns>원본 기본 표시와 같은 문자열이다.</returns>
+    private static string FormatReportDouble(float value)
+    {
+        // 원본 float 스트림 삽입은 double로 정확히 넓힌 뒤 같은 자릿수로 적는다.
+        return ((double)value).ToString("G12", CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>깊이·Graph·프로세스·공간의 실제 상태를 읽기 전용으로 노출한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
+    /// <returns>원본 CLI 관측과 같은 여러 줄 보고서다.</returns>
+    public string Report()
+    {
+        // 원본은 Graph·삭제 몸체를 항상 역참조하므로 188개가 아니면 명시 오류로 멈춘다.
+        if (_graph is null || _baseDestroy is null)
+        {
+            throw new InvalidOperationException("실제 월드 보고서는 188개 TYPE 월드에서만 만듭니다.");
+        }
+
+        if (_frames.Count != _types.Count)
+        {
+            throw new InvalidOperationException("실제 월드 보고서의 프레임 표가 TYPE 표와 맞지 않습니다.");
+        }
+
+        bool patch = _edition == OriginalEdition.Patch1078;
+        var text = new StringBuilder();
+        uint surfaces = 0u;
+        uint graphs = 0u;
+        // 예약 0번 다음의 실제 연결 성분을 센다. 원본처럼 부호 없는 16비트 재해석으로 더한다.
+        for (int i = 1; i < SurfaceGraph.Count; i++)
+        {
+            GraphRecord record = _graph.Records[i];
+            if (record.InUse != 0)
+            {
+                graphs++;
+                surfaces += unchecked((ushort)record.Surfaces);
+            }
+        }
+
+        text.Append("raw_world\t").Append(FormatReportDouble(_time.Game)).Append('\t').Append(_time.Number).Append('\t').Append(_kernel.Size()).Append('\t').Append(surfaces).Append('\t').Append(graphs).Append('\t').Append(_bookkeeping.TotalCost).Append('\t').Append(_bookkeeping.Depth).Append('\t').Append(_baseDestroy.PreDepth).Append('\t').Append(_baseDestroy.PostDepth).Append('\t').Append(_effectRequests).Append('\t').Append(_deletionRequests).Append('\n');
+        // 실제 Graph 표의 앞 두 부호 WORD를 그대로 관측한다. 배치 직후 장부와 실제 소속 수의 차이는 보정하지 않는다.
+        for (int index = 0; index < SurfaceGraph.Count; index++)
+        {
+            GraphRecord record = _graph.Records[index];
+            text.Append("raw_graph_record\t").Append(index).Append('\t').Append(record.Surfaces).Append('\t').Append(record.InUse).Append('\n');
+        }
+
+        BridgeDecayScanState scan = _storage.BridgeDecayScan;
+        text.Append("bridge_decay\t").Append(scan.First).Append('\t').Append(scan.Last).Append('\t').Append(scan.Cursor).Append('\t').Append(FormatReportDouble(scan.Next)).Append('\t').Append(FormatReportDouble(_storage.BridgeDecayPeriod)).Append('\n');
+        // 실제 지면의 기본·원소 프레임 범위를 읽기만 한다.
+        RiftTypeFrames.LetterRun terrainRun = _frames[(int)_terrainType].Run((byte)'J');
+        text.Append("raw_terrain_type\t").Append(_terrainType).Append('\t').Append(terrainRun.First).Append('\t').Append(terrainRun.Count).Append('\n');
+        // 실제 신전 참조·존재·소유자를 관측하며 목록이나 테마를 다시 계산하지 않는다.
+        byte[] islands = _storage.Islands.Records;
+        uint islandCount = ReadSlot(islands, 0, 4);
+        text.Append("raw_islands\t").Append(islandCount).Append('\n');
+        for (uint index = 0; index < Math.Min(islandCount, 100u); index++)
+        {
+            int at = 4 + (int)index * 32;
+            text.Append("raw_island\t").Append(index).Append('\t').Append(ReadSlot(islands, at, 4)).Append('\t').Append(islands[at + 4]).Append('\t').Append(ReadSlot(islands, at + 8, 4)).Append('\n');
+        }
+
+        // 렌더링과 같은 raw 조회 결과 번호별로 제공한다.
+        foreach (SurfaceSnapshot snapshot in Objects())
+        {
+            SurfaceSeed seed = snapshot.Object;
+            text.Append("raw_object\t").Append(snapshot.Sid).Append('\t').Append(seed.Type).Append('\t').Append(seed.Owner).Append('\t').Append(seed.Frame).Append('\t').Append(FormatReportDouble(seed.X)).Append('\t').Append(FormatReportDouble(seed.Y)).Append('\n');
+            ReadOnlySpan<byte> raw = _storage.Pool.Slot(snapshot.Sid);
+            // 같은 실제 슬롯의 상태·extra·HP 저장 비트다.
+            text.Append("raw_asset_fields\t").Append(snapshot.Sid).Append('\t').Append((uint)raw[RawSidPool.StateOffset]).Append('\t').Append((uint)raw[patch ? 40 : 35]).Append('\t').Append(ReadSlot(raw, 26, patch ? 4 : 2)).Append('\n');
+            if ((_types[raw[RawSidPool.TypeOffset]].Flags1 & TypeFlag1.Surface) != 0)
+            {
+                // 렌더링에 쓰는 같은 표면의 실제 소속 바이트며 번호 재할당이나 flood를 실행하지 않는다.
+                text.Append("raw_surface_graph\t").Append(snapshot.Sid).Append('\t').Append((uint)raw[patch ? 30 : 28]).Append('\n');
+            }
+
+            if ((_types[raw[RawSidPool.TypeOffset]].Flags2 & 4u) != 0)
+            {
+                IReadOnlyList<RiftFrameCode> codes = _frames[raw[RawSidPool.TypeOffset]].Codes;
+                if (seed.Frame < 0 || (long)seed.Frame >= (long)codes.Count)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(seed.Frame), "다리 현재 수명 보고의 프레임 범위 오류");
+                }
+
+                text.Append("raw_bridge_fields\t").Append(snapshot.Sid).Append('\t').Append(ReadSlot(raw, 12, 2)).Append('\t').Append((uint)codes[seed.Frame].Flags).Append('\n');
+            }
+
+            uint table = ReadSlot(raw, 0, 4);
+            // 타입 전환·저장 재적재 전후에 같은 실제 Form과 현재 Regular 예약을 관측한다.
+            if (patch && RawObjectConversion.ObjectConversionBody(table) != 0)
+            {
+                int visited = 0;
+                int regulars = 0;
+                // 현재 부모의 실제 종속 체인만 따라가며 임의 프로세스를 찾아 붙이지 않는다.
+                for (int form = (int)ReadSlot(raw, 6, 2); form != 0;)
+                {
+                    if (++visited > _storage.Pool.Capacity)
+                    {
+                        throw new InvalidOperationException("비석·주문 진단의 Form 체인 순환");
+                    }
+
+                    ReadOnlySpan<byte> content = _storage.Pool.Slot(form);
+                    // 같은 50바이트 물리의 종류와 다음 링크다.
+                    if (content[RawSidPool.TypeOffset] == 46 || content[RawSidPool.TypeOffset] == 61)
+                    {
+                        RegularProcess? process = _storage.Processes().Host().FromForm(form) as RegularProcess;
+                        if (process is null || process.Form() != form || process.Parent() != snapshot.Sid)
+                        {
+                            throw new InvalidOperationException("비석·주문 진단의 실제 Regular 등록 불일치");
+                        }
+
+                        text.Append("raw_object_regular\t").Append(snapshot.Sid).Append('\t').Append(form).Append('\t').Append((uint)content[RawSidPool.TypeOffset]).Append('\t').Append(process.Event()).Append('\t').Append(process.Count()).Append('\t').Append(BitConverter.SingleToUInt32Bits(process.Payload())).Append('\t').Append(FormatReportDouble(process.Time())).Append('\n');
+                        regulars++;
+                    }
+
+                    form = (int)ReadSlot(content, 4, 2);
+                }
+
+                text.Append("raw_object_regular_count\t").Append(snapshot.Sid).Append('\t').Append(regulars).Append('\n');
+            }
+
+            if (patch ? (table == 0x509148u || table == 0x509210u) : (raw[RawSidPool.TypeOffset] == 85 || raw[RawSidPool.TypeOffset] == 126))
+            {
+                int visited = 0;
+                // 같은 실제 Form 체인 전체를 읽고 저장 종류·flags와 client/server SID를 기록한다.
+                for (int form = (int)ReadSlot(raw, 6, 2); form != 0;)
+                {
+                    if (++visited > _storage.Pool.Capacity)
+                    {
+                        throw new InvalidOperationException("Factory 진단의 Form 체인 순환");
+                    }
+
+                    ReadOnlySpan<byte> content = _storage.Pool.Slot(form);
+                    if (content[RawSidPool.TypeOffset] == 6)
+                    {
+                        text.Append("raw_factory_content\t").Append(snapshot.Sid).Append('\t').Append(form).Append('\t').Append(ReadSlot(content, 18, 2)).Append('\t').Append(ReadSlot(content, 20, 2)).Append('\n');
+                    }
+
+                    form = (int)ReadSlot(content, 4, 2);
+                }
+            }
+        }
+
+        return text.ToString();
     }
 }
