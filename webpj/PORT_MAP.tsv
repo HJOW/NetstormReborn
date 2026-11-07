@@ -468,7 +468,7 @@ cpppj/src/o/ParticleGradient.cpp	port			todo	[o-default]
 cpppj/src/o/Player.cpp	port			todo	[o-default]
 cpppj/src/o/PopVtables.inc	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 10.78 PE 가상 표 26칸(PATCH_POP_VTABLES). CD 표는 범위 밖
 cpppj/src/o/RawAcidFence.cpp	port			todo	[o-default]
-cpppj/src/o/RawAcidZap.cpp	port			todo	[o-default]
+cpppj/src/o/RawAcidZap.cpp	port	www/core/raw-acid-zap.js	1f00a25a	port	[o-default] WB04-E48: 애시드 11바이트 포획 명령 작성(40ad30)과 수신(48bfe0). fixture acid-zap 수신 927·헤더 90행. 실제 소리/분해 Form/가상 삭제는 월드 조립에서
 cpppj/src/o/RawAddRandom.cpp	port	www/core/raw-add-random.js	1f00a25a	port	[o-default] WB04-E30: 0040dfd0 AddRandom 고정 범위 부모와 시각 seed(RawFortFinishOwner TimeSeed 공유)·섬 검색 두 함수(RawFortTerritorySave의 검색 부분만, 저장 본체는 exclude-edit 유지). fixture add-random-parent 720행 전부
 cpppj/src/o/RawAiBrain.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBrainInitialUpdate.cpp	port			todo	[o-default]

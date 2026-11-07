@@ -6201,9 +6201,38 @@
       "bytes": 411705,
       "lines": 1990,
       "fixtureCommit": "83c6ac6c",
-      "webCommit": "worktree",
+      "webCommit": "f29eeb43",
       "cpppjBasis": {
         "cpppj/src/o/RawIslandPostPop.cpp": "0c06fa66"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E48",
+      "id": "acid-zap",
+      "path": "cpppj/tests/fixtures/acid-zap-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 애시드 포획 명령 수신(필터·콜백 뒤 현재 owner/가상 표)과 11바이트 헤더 작성",
+      "consumers": [
+        "webpj/tests/acid-zap.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-acid-zap.js"
+      ],
+      "doc": "docs/webpj-acid-zap-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAcidZap.cpp"
+      ],
+      "scope": "1017행 전부 사용(판본 열 없는 10.78 단일 관측)",
+      "text": true,
+      "sha256": "d98553359ce0380510e4aaa4d84f82207f1f471e257205bec1a776df8c147e73",
+      "bytes": 704792,
+      "lines": 1018,
+      "fixtureCommit": "253e6a99",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAcidZap.cpp": "253e6a99"
       }
     }
   ]
