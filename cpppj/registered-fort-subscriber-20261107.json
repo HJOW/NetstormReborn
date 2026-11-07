@@ -1,0 +1,69 @@
+{
+  "unit": 1061,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "exeBytes": 12365824,
+    "exeSha256": "fcf0ad4132dfa548b01bf56fa2ea8036f0d82486e1660a060b5e4bb783a33b3a",
+    "reviewAdjustment": "공유 Notify에서 기존 Session callback을 진입 시 복제하지 않고 선택 시 현재 멤버를 호출하도록 보완"
+  },
+  "scope": [
+    "비Session 현재 Fort의 등록 ID/이름 NULL 변경→실제 Subscriber 생성/ID·문자열 쓰기→현재 Notify",
+    "같은 Client 등록 Config/ID 최초시드·CRT/현재 handle·hidden9/TYPE/저장 관문 공유",
+    "004bd360 부모를 기존 Session Changed와 실제 비Session 경로에서 공유",
+    "AccountSetup/0200007a와 setup.exe register·Tell Setup/활성 도구400h 원문 호출 분류"
+  ],
+  "nativeReferences": [
+    "004b32f0",
+    "004bd400",
+    "004b38d0",
+    "004bc950",
+    "004bd360",
+    "0044d8d0",
+    "004d52c0",
+    "004d62b0/004d7ab7..004d7af7",
+    "004d5070",
+    "005428e0",
+    "00542b90"
+  ],
+  "accountSetup": {
+    "id": "0200007a",
+    "name": "AccountSetup",
+    "argument": "register",
+    "tell": "Setup",
+    "externalRegistrationLaunchConnected": false,
+    "legacySetupExecuted": false,
+    "policy": "사용자 지시로 폐기된 외부 검증/등록 실행을 복구하지 않음. 로컬 Fort 등록 ID 동기화와 구별"
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "originalR": 0,
+    "registeredMessageBroadcast": 0,
+    "fileSave": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "새 R.exe/OS launch·실제256칸 전송/Root·CS·17h/1dh 응답",
+    "004b9230 수동 검색 UI/28~33·메타/LAN/Outpost/checking5/선택적 packet-record",
+    "전체 InterpretOptions 부모·한국어 후속·Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

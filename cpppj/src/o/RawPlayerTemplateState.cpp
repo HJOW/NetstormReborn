@@ -74,21 +74,29 @@ std::span<std::uint8_t> RawPlayerTemplateState::Get(std::uint32_t slot) const {
     }
     if (stream.bytes.size()<28 || stream.end>stream.bytes.size()) throw std::out_of_range("Player 현재State물리BYTE범위");return stream.bytes;
 }
-// 실제isMine후재검사에의한earlyreturn은빈callback대체가아니다.
-void RawPlayerTemplateState::Changed(std::uint32_t slot) const {
+// 같은 원문 Notify를 Session/비Session 양쪽에서 실제 현재 조회로 수행한다.
+void NotifyPlayerTemplateChanged(std::uint32_t slot,const PlayerTemplateChangedHooks& hooks) {
     if (slot>=9) throw std::out_of_range("Player Notify 실제9칸 범위");
-    // 원본은 첫 manager+c BYTE를 진단보다 먼저 읽으므로 manager0은 여기서 물리 경계로 거부한다.
-    if (!Header(slot,0)) throw std::out_of_range("Player Notify manager0 파일명 첫BYTE 물리접근경계");
-    const auto& name=names_(slot);
-    // 빈 정상 std::string의 c_str 첫 NUL도 원본의 유효한 첫BYTE이며 점 이름만 진단한다.
-    if (name.c_str()[0]=='.') assertion_(PlayerTemplateStateAssertion::DotFileName);
-    if (Header(slot,8)) {
-        if (Header(slot,12)) assertion_(PlayerTemplateStateAssertion::MineTransientFlag);
-        if (Header(slot,8)) return;
+    if (!hooks.header || !hooks.name || !hooks.assertion) throw std::logic_error("Player Notify 실제 헤더/이름/진단 미연결");
+    if (!hooks.header(slot,0)) throw std::out_of_range("Player Notify manager0 파일명 첫BYTE 물리접근경계");
+    const auto& name=hooks.name(slot); // 원문은 진단 전에 현재 manager+c의 첫 BYTE를 읽는다.
+    if (name.c_str()[0]=='.') hooks.assertion(PlayerTemplateStateAssertion::DotFileName);
+    if (hooks.header(slot,8)) {
+        if (hooks.header(slot,12)) hooks.assertion(PlayerTemplateStateAssertion::MineTransientFlag);
+        if (hooks.header(slot,8)) return;
     }
-    if (mission_) assertion_(PlayerTemplateStateAssertion::InMissionSave);
-    if (!Header(slot,0)) assertion_(PlayerTemplateStateAssertion::MissingNotifyTemplate);
-    if (Header(slot,16)) return;
-    if (!save_) throw std::logic_error("Player Template실제DataManager파일저장44d8d0/CD44cc40미연결");save_(slot);
+    if (!hooks.mission) throw std::logic_error("Player Notify 현재 미션 조회 미연결");
+    if (hooks.mission()) hooks.assertion(PlayerTemplateStateAssertion::InMissionSave);
+    if (!hooks.header(slot,0)) hooks.assertion(PlayerTemplateStateAssertion::MissingNotifyTemplate);
+    if (hooks.header(slot,16)) return;
+    if (!hooks.save) throw std::logic_error("Player Template실제DataManager파일저장44d8d0/CD44cc40미연결");hooks.save(slot);
+}
+// 기존 Session도 같은 raw 부모와 현재 참조를 사용하며 별도 헤더/미션 사본을 만들지 않는다.
+void RawPlayerTemplateState::Changed(std::uint32_t slot) const {
+    NotifyPlayerTemplateChanged(slot,{
+        [this](auto selected,auto offset) { return Header(selected,offset); },
+        [this](auto selected)->const std::string& { return names_(selected); },
+        [this] { return mission_; },[this](auto assertion) { assertion_(assertion); },
+        [this](auto selected) { if (!save_) throw std::logic_error("Player Template실제DataManager파일저장44d8d0/CD44cc40미연결");save_(selected); }}); // 선행 진단이 callback을 바꾸면 뒤 선택은 현재 멤버를 사용한다.
 }
 }

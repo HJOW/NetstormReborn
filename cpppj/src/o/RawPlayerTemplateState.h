@@ -27,6 +27,14 @@ enum class PlayerTemplateStateAssertion {
     InMissionSave, // isMine자연반환이없는데현재inMission이0이아니다.
     MissingNotifyTemplate // Notify의isMine/미션진단뒤Template첫DWORD가0이다.
 };
+struct PlayerTemplateChangedHooks { //004bd360의 현재 조회/진단/저장만 빌리며 State getter나 Session을 요구하지 않는다.
+    std::function<std::uint32_t(std::uint32_t,std::size_t)> header; // 같은 현재20BYTE 헤더의 지정 DWORD를 매번 읽는다.
+    std::function<const std::string&(std::uint32_t)> name; // 첫 파일명 BYTE를 조회할 때만 같은 manager의 현재 이름을 읽는다.
+    std::function<bool()> mission; // 선행 진단 복귀 뒤 현재00594fa0을 읽는다.
+    std::function<void(PlayerTemplateStateAssertion)> assertion; // 원문 진단에서 복귀하면 현재 관문을 재조회한다.
+    std::function<void(std::uint32_t)> save; // isMine/preventSave 자연 반환을 통과할 때만 실제 저장 부모를 호출한다.
+};
+void NotifyPlayerTemplateChanged(std::uint32_t slot,const PlayerTemplateChangedHooks& hooks); //004bd360을 현재 Session과 World 없는 Fort에서 공유한다.
 // 실제Template9 header/이름/Statecursor를같은원본전역으로조립하는좁은서비스다.
 class RawPlayerTemplateState {
 public:
