@@ -1,0 +1,69 @@
+{
+  "unit": 1114,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12620800,
+      "sha256": "6f74aee437766a8172c89b16964ea7282154c56f0aa38aa0ab56238cea727756"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "09ae99ba0dc695e7194e329b6ed4b40d3ead809c1e1fb927b5c2a7deb74757ad"
+    }
+  },
+  "staticAudit": {
+    "native": [
+      "0041c3c0",
+      "0041c460",
+      "0041c4b0",
+      "0041c4d0",
+      "0041c6d0",
+      "0041c730",
+      "0041c7a0"
+    ],
+    "table": "1105 보호PE의 같은22레코드/76선택·포함최댓값",
+    "cycle": "BYTE증가/최댓값순환계산→guy.wav→현재BYTE저장",
+    "set": "음수는표조회없이반환·0..포함max만BYTE쓰기",
+    "add": "전체DWORD입력/실제BYTE비교·중복1·초기count40관문·추가/count증가→음향",
+    "remove": "첫일치/초기count길이memmove→음향→현재countBYTE감소·끝잔존BYTE보존",
+    "get": "최초count캡처·추가/제거반복은현재count재조회"
+  },
+  "integration": {
+    "compiledInProduct": true,
+    "battleInfoHandleCallsMutation": false,
+    "battleInfoHandleBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "BattleInfo 전체 입력/실제 옵션·제외 메뉴/1114호출",
+    "CS 수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신 상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

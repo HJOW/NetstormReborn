@@ -553,3 +553,6 @@ target_sources(netstorm PRIVATE client/NativeNsInfoInput.h client/NativeNsInfoIn
 
 # PlayerInfo의 전체 입력과 현재 슬롯 writer·실제 옵션/상태 송신을 연결한다.
 target_sources(netstorm PRIVATE client/NativePlayerInfoInput.h client/NativePlayerInfoInput.cpp)
+
+# BattleInfo의 현재 옵션 변경/제외 목록 getter·writer와 음향 전후 순서를 복원한다.
+target_sources(netstorm PRIVATE o/RawBattleOptionMutation.h o/RawBattleOptionMutation.cpp)
