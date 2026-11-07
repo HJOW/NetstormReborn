@@ -433,7 +433,7 @@ cpppj/src/client/WindowTitle.cpp	adapt	www/core/window-title.js	1f00a25a	port	[a
 cpppj/src/client/XlatFileRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/BaseFile.cpp	adapt	www/assets/game-files.js;www/assets/taff.js;www/assets/asset-loader.js	1f00a25a	partial	[adapt-file] 느슨한 파일→TAFF 조회(웹 대체, docs/formats/vfs.md)
 cpppj/src/o/BaseProcess.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(BaseProcess 기반)·WB04-D5c(Process/BaseProcess 부착은 squid-process.js 호스트)
-cpppj/src/o/Bridge.cpp	port	www/core/surface-finder.js	1f00a25a	partial	[o-default] WB04-E12: Bridge::Connects(프레임/방향 접합 판정)만 surface-finder.js 에 이식. CollectDecay 등 나머지는 todo
+cpppj/src/o/Bridge.cpp	port	www/core/surface-finder.js;www/core/bridge-decay.js	1f00a25a	port	[o-default] WB04-E44(+E12 Connects): 열린 방향·방문 목록·수명 감소·프레임 전환·destroy 재정의·한 칸 처리·스캔. fixture bridgedecay Cell 4241·Life 3264·Destroy 1152·Crack 348·Normal 174·Weaken/Restore 696·Init 12·Scan 3941. raw 풀 위의 실행기(RawBridgeDecay/Scan/Carriers)는 별도 단위
 cpppj/src/o/BurningVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/CampaignDamageVtables.inc	port			todo	[o-default]
 cpppj/src/o/CanonDecoder.cpp	port	www/assets/territory.js	1f00a25a	partial	[o-default] 3.6①(WB02-G): 기준선의 패치 checking 금 간 프레임 진단·명시 프레임 진단 복귀·Side 범위 검사는 정상 경로 결과 동일(웹은 진단을 명시 오류로 둠). 커서 배치 소비자는 WB06

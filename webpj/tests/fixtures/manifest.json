@@ -6049,7 +6049,7 @@
       "bytes": 728154,
       "lines": 4659,
       "fixtureCommit": "9d1ed7e5",
-      "webCommit": "worktree",
+      "webCommit": "0efb3ea1",
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeEvents.cpp": "8bb3d9ca"
       }
@@ -6063,16 +6063,19 @@
       "path": "cpppj/tests/fixtures/bridgedecay-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 다리 붕괴(Frames 행에 실제 bridge.type 프레임 코드 60개)",
       "consumers": [
-        "webpj/tests/bridge-events.test.mjs"
+        "webpj/tests/bridge-events.test.mjs",
+        "webpj/tests/bridge-decay.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-bridge-events.js"
+        "webpj/www/core/raw-bridge-events.js",
+        "webpj/www/core/bridge-decay.js"
       ],
-      "doc": "docs/webpj-bridge-events-20261108.md",
+      "doc": "docs/webpj-bridge-decay-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawBridgeDecay.cpp"
+        "cpppj/src/o/RawBridgeDecay.cpp",
+        "cpppj/src/o/Bridge.cpp"
       ],
-      "scope": "`Frames 0` 행(실제 다리 프레임 60개)만 사용. 붕괴 연산 행은 RawBridgeDecay 단위에서",
+      "scope": "bridge-decay.test.mjs는 Cell·Life·Destroy·Crack·Normal·Weaken·Restore·Init·Scan 전 행(세 PE)을 사용, bridge-events.test.mjs는 Frames 0 행(실제 bridge.type 프레임 60개)만 사용",
       "text": true,
       "sha256": "1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638",
       "bytes": 2413945,
@@ -6080,7 +6083,8 @@
       "fixtureCommit": "4118523c",
       "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawBridgeDecay.cpp": "cc328596"
+        "cpppj/src/o/RawBridgeDecay.cpp": "cc328596",
+        "cpppj/src/o/Bridge.cpp": "11b04c8e"
       }
     }
   ]
