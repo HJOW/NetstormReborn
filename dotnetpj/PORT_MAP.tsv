@@ -618,3 +618,7 @@ cpppj/src/o/Bridge.h	Netstorm.Core/Original/RawBridgeConnects.cs	225f2322cf79366
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/RawBridgeConnects.cs	11b04c8e06f280b1e9c06b604cef339343342c3a	port
 cpppj/src/o/RawCanonPlacementSurrounding.h	Netstorm.Core/Original/RawCanonSurfaceWalk.cs	9ece3b530aa687895e73e407f2d17f88fe19f44a	port
 cpppj/src/o/RawCanonPlacementSurrounding.cpp	Netstorm.Core/Original/RawCanonSurfaceWalk.cs	9ece3b530aa687895e73e407f2d17f88fe19f44a	port
+cpppj/src/o/Bridge.h	Netstorm.Core/Original/RawBridgeFrames.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/RawBridgeFrames.cs	11b04c8e06f280b1e9c06b604cef339343342c3a	port
+cpppj/src/o/Bridge.h	Netstorm.Core/Original/RawBridgeDecay.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/RawBridgeDecay.cs	11b04c8e06f280b1e9c06b604cef339343342c3a	port
