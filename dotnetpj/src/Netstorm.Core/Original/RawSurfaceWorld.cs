@@ -47,6 +47,9 @@ public sealed class RawSurfaceWorld
     /// <summary>객체 종류·소유자별 등록 목록과 개수를 관리하는 제어 장부다. 원본 Impl.bookkeeping에 대응한다. 공유 집계 연결은 세션 조립에서 잇는다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
     private readonly RawPostPopState _bookkeeping = new();
 
+    /// <summary>후설치와 같은 현재 원본 삭제 전역이다. 원본 Impl.deletion에 대응한다. 별도 세션 사본을 만들지 않으며 공유 좌표 연결은 BindDeletion 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 상태 이식에서 추가됐다.</summary>
+    private readonly SquidDeletionState _deletion = new();
+
     /// <summary>같은 판본·타입·지형으로 월드를 만들고 물리 저장소를 빌리거나 새로 만든다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -269,6 +272,10 @@ public sealed class RawSurfaceWorld
     /// <summary>같은 월드가 소유한 제어 장부를 빌린다. 새 사본을 만들지 않는다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
     /// <returns>제어 장부다.</returns>
     public RawPostPopState Bookkeeping() => _bookkeeping;
+
+    /// <summary>후설치와 같은 현재 원본 삭제 전역이다. 별도 세션 사본을 만들지 않는다. 2026-11-07 F2d 월드 본체 삭제 상태 이식에서 추가됐다.</summary>
+    /// <returns>현재 원본 삭제 전역이다.</returns>
+    public SquidDeletionState DeletionState() => _deletion;
 
     /// <summary>같은 월드·전송·공간 재등록을 참가자별로 실행한다. 멀티플레이 3차 사전 구현이며 전송기가 없어 명시 오류로 멈춘다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
     /// <param name="owner">동기화할 참가자 번호다.</param>

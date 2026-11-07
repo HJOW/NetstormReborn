@@ -264,6 +264,27 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.FinishLoadAfterGraph());
     }
 
+    /// <summary>같은 삭제 전역 참조를 빌리는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 상태 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DeletionStateReturnsSameReference()
+    {
+        // 후설치와 같은 현재 원본 삭제 전역임을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Same(world.DeletionState(), world.DeletionState());
+    }
+
+    /// <summary>삭제 전역 초기값이 원본과 같은지 검증한다. 2026-11-07 F2d 월드 본체 삭제 상태 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DeletionStateStartsWithDefaults()
+    {
+        // 공유 좌표 연결은 BindDeletion 단위에서 잇고 기본값만 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Equal(0, world.DeletionState().Selected);
+        Assert.Equal(0x50444200u, world.DeletionState().RegionMask);
+        Assert.Equal(157, world.DeletionState().SpecialSurfaceType);
+        Assert.False(world.DeletionState().RebuildGraph);
+    }
+
     /// <summary>살아 있는 자산이 없으면 빈 목록을 돌려주는지 검증한다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
     [Fact]
     public void ObjectsEmptyWhenNoLiveAssets()
