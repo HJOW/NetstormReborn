@@ -2797,7 +2797,7 @@
       "bytes": 1089404,
       "lines": 163,
       "fixtureCommit": "adb9739e",
-      "webCommit": "worktree",
+      "webCommit": "462fc137",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerLinksCleanup.cpp": "adb9739e"
       }
@@ -2826,7 +2826,7 @@
       "bytes": 388986,
       "lines": 118,
       "fixtureCommit": "c8f775b1",
-      "webCommit": "worktree",
+      "webCommit": "462fc137",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerNotification.cpp": "c8f775b1"
       }
@@ -2855,7 +2855,7 @@
       "bytes": 18017,
       "lines": 92,
       "fixtureCommit": "c8f775b1",
-      "webCommit": "worktree",
+      "webCommit": "462fc137",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerNotification.cpp": "c8f775b1"
       }
@@ -2884,9 +2884,38 @@
       "bytes": 4250,
       "lines": 145,
       "fixtureCommit": "68ca4e3a",
-      "webCommit": "worktree",
+      "webCommit": "462fc137",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerDamageNotice.cpp": "68ca4e3a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E9",
+      "id": "player-content-notice",
+      "path": "cpppj/tests/fixtures/player-content-notice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Player 내용물 통지의 전역 11필드·SP 조회/가상 handle 순서·네 슬롯 200 BYTE",
+      "consumers": [
+        "webpj/tests/player-content-notice.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-content-notice.js"
+      ],
+      "doc": "docs/webpj-player-content-notice-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerContentNotice.cpp"
+      ],
+      "scope": "88행(판본 열 없는 10.78 전용 표) 전부 사용",
+      "text": true,
+      "sha256": "a1959c5abc986ade068e4973b4dbd7c9202052ad9add1c648afb0602b783a68e",
+      "bytes": 45288,
+      "lines": 89,
+      "fixtureCommit": "7477610d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerContentNotice.cpp": "0cb53fac"
       }
     }
   ]
