@@ -822,7 +822,7 @@ cpppj/src/o/RawPlayerCoreRefresh.cpp	port	www/core/raw-player-core-refresh.js	1f
 cpppj/src/o/RawPlayerDamageNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerGeyserBounds.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerIdentity.cpp	port	www/core/raw-player-identity.js	1f00a25a	port	[o-default] WB04-E4: 004841c0 PlayerFinder(초기화·resolve 4단계 우선순위·네 getter). fixture player-identity 10.78 851행 중 menu 24행(client RawObjectMenu 단위 필요) 제외 827행
-cpppj/src/o/RawPlayerInitialization.cpp	port			todo	[o-default]
+cpppj/src/o/RawPlayerInitialization.cpp	port	www/core/raw-player-initialization.js	1f00a25a	port	[o-default] WB04-E7: 004910a0 Player 전체 초기화(이전 공장 9회 해제·Player 반납·NULL 재기록·1620 할당·405 DWORD 0·행 필드·자기 동맹 mask 재조회). fixture player-initialization 10.78 202행 전부(동맹·Chat 하위는 E5·E6 모듈이 실제 수행). ClientCoreDataGlobals 연동 대조는 client Core 단위에서
 cpppj/src/o/RawPlayerLinksCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerNotification.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerParticipation.cpp	port	www/core/raw-player-participation.js	1f00a25a	port	[o-default] WB04-E5: 004a6dc0 로그인·00490ea0 방향별 동맹·0048f6a0 동맹 추가·00491220 수신·004911a0 AI 부착/해제·State 반납 증빙(BrainResetPass 의 JS 대응: 비공개 수명 토큰·1회 소비·진행 중 소비 거부). fixture player-participation 608행·player-alliance-packet 288행 전부(10.78). RawAiCreate 연동 거부 대조는 RawAiCreate 단위에서

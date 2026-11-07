@@ -2737,9 +2737,40 @@
       "bytes": 497719,
       "lines": 2449,
       "fixtureCommit": "fb1b2900",
-      "webCommit": "worktree",
+      "webCommit": "4c395df2",
       "cpppjBasis": {
         "cpppj/src/client/RawChatChannels.cpp": "65bc3e0c"
+      }
+    },
+    {
+      "id": "player-initialization",
+      "path": "cpppj/tests/fixtures/player-initialization-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 PE 관측: Player 전체 초기화의 반환·전역·세 Player 물리·방향표·채팅 4800 BYTE·채팅 이벤트·호출/전역 재조회 순서(x87 제어값 027f/037f)",
+      "consumers": [
+        "webpj/tests/player-initialization.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-initialization.js",
+        "webpj/www/core/raw-player-participation.js",
+        "webpj/www/core/raw-chat-channels.js"
+      ],
+      "unit": "WB04-E7",
+      "doc": "docs/webpj-player-initialization-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerInitialization.cpp"
+      ],
+      "scope": "202행(독립 입력 101개 × 두 제어값) 전부 사용",
+      "text": true,
+      "sha256": "71a08f435250150de5a4ec528f638ca63b90e5dd31bbb09497c955d7ef5b703f",
+      "bytes": 4254429,
+      "lines": 203,
+      "fixtureCommit": "7e53489e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerInitialization.cpp": "7e53489e"
       }
     }
   ]
