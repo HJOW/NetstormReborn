@@ -1,0 +1,88 @@
+{
+  "unit": 1071,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "cd9fa2b2d237c333c9133ad6986c68e9e843be4f952e02be3146f8ce1aec0b04"
+  },
+  "nativeAudit": {
+    "scope": "원문/PE/기계어·같은 저장소와 실제 파일 장치의 정적 접합 확인이며 실행 검사 아님",
+    "native": {
+      "interpret": "00477570 blacklist→ipbanlist→chatlist→guild→guildreq→filter",
+      "numbers": "00479df0/79f00 signed 추출 실패까지 현재 표에004741f0 중복 제외 삽입; 정상 재로드는 clear 없음",
+      "addresses": "00479c30→0047a1f0은 공백 std::string 추출;00457a50 구간3문자0보충/현재 표 추가;004576c0 조회 입력은 정규화 안 함",
+      "match": "00457800 기계어457874 strlen(current pointer)/457880 index 비교·4578a0/a9 두포인터 전진: 길이15는 앞8BYTE 비교.00457970 양쪽* 일치",
+      "filter": "0047a010→00465620 char* 토큰,32BYTE 지역/NUL 앞 중단/순서대로 slash 연결",
+      "guild": "0045cda0 현재 guild clear/행수·id·32BYTE 이름/연락처·회원수/현재 회원;0045d7e0 첫 회원 포함 길드",
+      "requests": "0045da40 현재 requests clear/40BYTE 두문자열·두DWORD/0045c720 case-sensitive이름 존재+미소속회원만 삽입",
+      "news": "00478ca0 stat mtime변경→현재 뉴스 반납→00448860 binary read→mtime checksum; stat실패/동일시각 보존",
+      "blacklistWatch": "00478dd0 mtime변경→현재 표 clear→전체binary/LF별sscanf 선두 signed정수",
+      "writer": "00458770 현재 순서 전체 출력·004597e0→num_put vtable004bf398+1c→00467430 format004bf3c4 ld→004685a0/기본%ld·004581b0 LF/flush",
+      "binaryMode": "00448ad0 mode0 pointer004cd4d8→004bd3ec rb"
+    },
+    "sameOwnerBindings": [
+      "ConfigurationHooks.reloadModeration",
+      "ChallengeRuntimeHooks.blockedSubscriber/markedSubscriber/banAndSave/blockedAddress/guildName",
+      "ChallengeMessages 현재 news/checksum 참조"
+    ],
+    "storage": {
+      "unicodePaths": true,
+      "textReadersUseNativeCrtTextMode": true,
+      "dataReadsBinaryAndCrtMtimeSeconds": true,
+      "readUserSavesBeforeWorkingOrDataPrefix": true,
+      "workingAndDataPrefixSeparated": true,
+      "allAutomaticWritesInUserSaves": true,
+      "onlyCurrentWriter": "blacklist.txt"
+    },
+    "hostBoundaries": [
+      "미발견 guild/guildreq는 빈 현재 표: 원문 미초기화 지역 count를 소비하지 않는 호스트 정의",
+      "불완전 필수 길드 행/지역char 또는 IP 버퍼 초과는 명시 물리 오류",
+      "numeric 삽입은 호스트vector/할당실패 미삽입이며 원문CRT _expand 주소/용량 재현 아님",
+      "실제 CRT/locale와 IO 오류의 모든 구형 구현/SEH/힙·시각2038 바깥 동일성 미검증"
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "allSixModerationAndGuildLoadersImplemented": true,
+    "newsAndBlacklistChangeWatchersImplemented": true,
+    "realUnicodeFileStorageAndUserHomeBlacklistWriteImplemented": true,
+    "sameCurrentConfigAndChallengeHookBindingImplemented": true,
+    "newRootExeTargetExists": false,
+    "rootRuntimeCallsLoadersOrWatchers": false,
+    "rootFinalOwnerAndTimerBindingRequired": true
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "dns": 0,
+    "fileWriteByNewRuntime": 0,
+    "newRuntimeFileRead": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "주소 서식/해석·시계/기록/보조 객체·나머지 Root/CS 수신·입력",
+    "새R.exe 전체 초기화/최종 owner에서 Config/CCh/Router/파일과 시각 감지·실제 장치/호출 연결",
+    "클라이언트0F 존47/서버3BYTE·0F/1d 수신·메타/OS launch·LAN/Outpost/checking5·한국어 후속/Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
