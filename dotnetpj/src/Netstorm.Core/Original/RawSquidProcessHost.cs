@@ -798,6 +798,154 @@ public sealed class SquidProcessHost
         }
     }
 
+    /// <summary>
+    /// 일반 Regular를 새로 만들어 부모에 붙인다. 첫 실행은 현재 시각 이후의 커널 프레임이다.
+    /// 근거: cpppj/src/o/SquidProcess.cpp AddRegular (F2d Host 정기 예약, 2026-11-07).
+    /// </summary>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="ev">대상 처리기에 전달할 사건 번호다.</param>
+    /// <param name="payload">예약 사건과 함께 전달할 실수 인자다.</param>
+    /// <param name="flags">원문 플래그다.</param>
+    /// <returns>붙은 정기 프로세스다. 부분 실패면 null이다.</returns>
+    public RegularProcess? AddRegular(int parent, uint ev, float payload, uint flags = 0x50u)
+    {
+        return AttachRegular(new RegularProcess(ev, payload), parent, false, flags);
+    }
+
+    /// <summary>
+    /// 같은 Regular 객체를 공유 타입으로 붙인다. 부모 체인·커널·예약 규칙을 재사용한다.
+    /// 원본: 00496f00 / CD 0048f1d0. 실행 가상 표 +0x18은 일반 Regular와 동일하다.
+    /// 근거: cpppj/src/o/SquidProcess.cpp AddSharedRegular (F2d Host 정기 예약, 2026-11-07).
+    /// </summary>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="ev">대상 처리기에 전달할 사건 번호다.</param>
+    /// <param name="payload">예약 사건과 함께 전달할 실수 인자다.</param>
+    /// <returns>붙은 공유 정기 프로세스다. 부분 실패면 null이다.</returns>
+    public RegularProcess? AddSharedRegular(int parent, uint ev, float payload)
+    {
+        return AttachRegular(new RegularProcess(ev, payload), parent, true);
+    }
+
+    /// <summary>
+    /// 수신한 28바이트 공유 Regular 패킷을 같은 실제 부모에 붙인다. 원문 full 생성자는 일반 공유 생성자의 깊이 진단·현재 시각 저장을 호출하지 않는다.
+    /// 원본: 00497030/00496fa0의 7e 28바이트 수신이다. 실행 시각·횟수를 부착 전에 복원하고 현재 시각으로 덮지 않는다.
+    /// C#의 할당 실패(null 반환) 분기는 가비지 수집기가 맡으므로 두지 않는다.
+    /// 근거: cpppj/src/o/SquidProcess.cpp ReceiveSharedRegular (F2d Host 정기 예약, 2026-11-07).
+    /// </summary>
+    /// <param name="packet">수신 패킷 바이트다. 28바이트 이상이어야 한다.</param>
+    /// <returns>붙은 공유 정기 프로세스다. 부분 실패면 null이다.</returns>
+    public RegularProcess? ReceiveSharedRegular(ReadOnlySpan<byte> packet)
+    {
+        if (_pool.Edition != OriginalEdition.Patch1078 || packet.Length < 28)
+        {
+            throw new ArgumentException("공유 Regular 수신의 PATCH28BYTE 계약", nameof(packet));
+        }
+
+        int parent = (int)(ushort)ReadPacketField(packet, 6, 2);
+        var process = new RegularProcess((uint)ReadPacketField(packet, 16, 4), BitConverter.Int32BitsToSingle(unchecked((int)ReadPacketField(packet, 20, 4))));
+        process.SetNextTime(BitConverter.Int64BitsToDouble(unchecked((long)ReadPacketField(packet, 8, 8))));
+        process.SetInitialCount((uint)ReadPacketField(packet, 24, 4));
+        process.MarkShared(true);
+        process.SetIdentity(0, parent, 0u);
+        return (RegularProcess?)Attach(process, _state.SharedRegularType(), parent, 0x50u);
+    }
+
+    /// <summary>
+    /// 이미 확보한 예약을 같은 현재 생성자 번호로 붙인다. 공유 Regular의 원문 진단 뒤에도 현재 값을 다시 읽는다.
+    /// 부착 호출이 돌아온 뒤 현재 double 시각을 읽어 다음 실행 시각으로 둔다(원문 00496e80/00496f00).
+    /// 근거: cpppj/src/o/SquidProcess.cpp AttachRegular (F2d Host 정기 예약, 2026-11-07).
+    /// </summary>
+    /// <param name="process">부를 정기 프로세스다. 실패하면 소멸 효과를 실행한다.</param>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="shared">공유 생성분이면 참이다. 부착 전에 실제 writer 구별을 보존한다.</param>
+    /// <param name="flags">원문 플래그다.</param>
+    /// <returns>붙은 정기 프로세스다. 부분 실패면 null이다.</returns>
+    public RegularProcess? AttachRegular(RegularProcess process, int parent, bool shared, uint flags = 0x50u)
+    {
+        ArgumentNullException.ThrowIfNull(process);
+        process.MarkShared(shared);
+        if (shared && _pool.Edition == OriginalEdition.Patch1078)
+        {
+            ProcessHostRuntimeBindings? runtime = _currentRuntime is not null ? Runtime() : null;
+            using (var call = new RuntimeCallGuard(runtime))
+            {
+                Func<uint>? depth = runtime?.PostPopDepth;
+                if (runtime is not null && depth is null)
+                {
+                    throw new InvalidOperationException("SharedRegular 현재 Pop 깊이 미연결");
+                }
+
+                if ((depth is not null ? depth() : _state.PostPopDepth) != 0u)
+                {
+                    Action<string, string, uint>? assertion = runtime is not null ? runtime.Assertion : _state.Assertion;
+                    if (assertion is null)
+                    {
+                        throw new InvalidOperationException("SharedRegular 원문 진단 장치 미연결");
+                    }
+
+                    assertion("basePostPop == 0", @"\Ns\O\Regular.cpp", 0x70u);
+                }
+            }
+        }
+
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        uint type = patch
+            ? (shared ? _state.SharedRegularType() : _state.RegularType())
+            : (shared ? SharedRegularTypeNumber : RegularTypeNumber);
+        var attached = (RegularProcess?)Attach(process, type, parent, flags);
+        if (attached is not null)
+        {
+            attached.SetNextTime(_state.Now);
+        }
+
+        return attached;
+    }
+
+    /// <summary>패킷 WORD/DWORD/double의 원래 비트만 읽는다. 2026-11-07 F2d Host 정기 예약 이식에서 추가됐다.</summary>
+    /// <param name="packet">읽을 패킷 바이트다.</param>
+    /// <param name="offset">읽을 위치다.</param>
+    /// <param name="width">읽을 바이트 수다.</param>
+    private static ulong ReadPacketField(ReadOnlySpan<byte> packet, int offset, int width)
+    {
+        // 각 필드의 낮은 바이트부터 지정 폭만 읽는다
+        ulong value = 0u;
+        for (int i = 0; i < width; i++)
+        {
+            value |= (ulong)packet[offset + i] << (i * 8);
+        }
+
+        return value;
+    }
+
+    /// <summary>
+    /// 다리 낙하 예약(원문 0x2692)을 부모 다리에 건다. 좌표 포장은 기계어 대조 계산을 그대로 쓴다.
+    /// 원본은 new(0x28) 뒤 Regular 생성자를 부른다. C++ 자유 함수(SquidProcess.cpp)를 같은 파일의 정적 경계로 옮긴다.
+    /// 근거: cpppj/src/o/SquidProcess.cpp ScheduleBridgeFall (F2d Host 정기 예약, 2026-11-07).
+    /// </summary>
+    /// <param name="host">예약할 호스트다.</param>
+    /// <param name="bridge">낙하할 다리 SID다.</param>
+    /// <param name="x">추락 지점 x 좌표다.</param>
+    /// <param name="y">추락 지점 y 좌표다.</param>
+    /// <returns>붙은 낙하 예약이다. 부분 실패면 null이다.</returns>
+    public static RegularProcess? ScheduleBridgeFall(SquidProcessHost host, int bridge, float x, float y)
+    {
+        ArgumentNullException.ThrowIfNull(host);
+        return host.AddRegular(bridge, RawBridgeEvents.FallEvent, RawBridgeLifecycle.DelayedFallPayload(x, y));
+    }
+
+    /// <summary>
+    /// 부모 다리에 낙하 예약(원문 0x2692)이 있는지 조회한다. C++ 자유 함수를 같은 파일의 정적 경계로 옮긴다.
+    /// 근거: cpppj/src/o/SquidProcess.cpp HasScheduledBridgeFall (F2d Host 정기 예약, 2026-11-07).
+    /// </summary>
+    /// <param name="host">조회할 호스트다.</param>
+    /// <param name="bridge">조회할 다리 SID다.</param>
+    /// <returns>예약이 있으면 참이다.</returns>
+    public static bool HasScheduledBridgeFall(SquidProcessHost host, int bridge)
+    {
+        ArgumentNullException.ThrowIfNull(host);
+        return host.FindEvent(bridge, RawBridgeEvents.FallEvent) is not null;
+    }
+
     /// <summary>서버 조회가 저장한 실제 포인터만 writer에서 사용하며 파생 직렬화 접두 뒤에 공통 부착을 실행한다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
     /// <param name="form">부를 Form SID다.</param>
     /// <param name="parent">부를 부모 SID다.</param>

@@ -95,7 +95,7 @@ public sealed class RegularProcess : SquidProcess
     private uint _count;
 
     /// <summary>실제 공유 생성자로 준비한 객체의 가상 writer 구별이다. 실행·예약 수치와 별개다. 공유 부착은 Host 본체 단위에서 잇는다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
-    private readonly bool _shared = false;
+    private bool _shared = false;
 
     /// <summary>원본 필드 초기값이다. 시각은 부착 때의 현재 시각으로 정해진다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <param name="ev">대상 처리기에 전달할 이벤트 ID다.</param>
@@ -171,6 +171,13 @@ public sealed class RegularProcess : SquidProcess
     /// <summary>원문 SharedRegular의 실제 writer 가상 표와 일반 Regular를 구별한다. raw TYPE 변경으로 이 값을 추측하지 않는다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <returns>공유 생성분이면 참이다.</returns>
     public bool Shared() => _shared;
+
+    /// <summary>공유 생성자·수신 패킷의 실제 writer 구별을 둔다. 원문 friend 쓰기와 같다. 2026-11-07 F2d Host 정기 예약 이식에서 추가됐다.</summary>
+    /// <param name="shared">공유 생성분이면 참이다.</param>
+    internal void MarkShared(bool shared)
+    {
+        _shared = shared;
+    }
 }
 
 // 실제 선택 효과가 반환하기 전에 그 월드 대여를 소비하지 못하게 하는 호출 수명이다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.
