@@ -10,10 +10,12 @@ class GameAssets;class OwnerColorTableState; // 실제 자산과 장기 현재 �
 class RawCampaignFactoryDisplay {
 public:
     using TempleDraw=std::function<void(o::Sid,const std::function<void(std::int32_t)>&)>; // 같은 Session의 실제+a4와 조건부 음향 경계다.
+    using MetaPixels=std::function<void(o::Sid,ScreenPoint,std::span<std::uint8_t>,int,int,ScreenRect)>; //같은 Client 메타+a4를 지정한 실제 표면/clip에 동기 출력하는 장치다.
     RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets,TempleDraw templeDraw={},const std::uint32_t* patchDiagnostic=nullptr); // 실제 GameWorld는 장기005318ec도 빌린다. 독립 표시 검사는 PE 초기값6을 유지한다.
     ~RawCampaignFactoryDisplay(); // 현재 장면의 procedure보다 오래 살아야 한다.
     bool Handles(o::Sid sid) const; // 실제 가상 표가 확인된 건물·간헐천·다이스인가.
     void BindOwnerColors(std::shared_ptr<OwnerColorTableState> owner); // 실제 Client의 같은 현재 표/배너 DWORD를 Draw와 Hit에 빌린다.
+    void BindMetaPixels(MetaPixels draw); //현재 메타 월드의 선택 캡처도 같은 실제 CS/Image·글꼴 장치를 사용하게 한다.
     bool Hit(o::Sid sid,int x,int y,const std::array<std::int32_t,2>& camera,std::uint32_t localPlayer,const std::function<void(o::Sid,int,int)>& bridgeDraw) const; // 같은현재+78/+a4와200×200 선택용 버퍼를 사용한다. 다리는Session의실제전역을공유한다.
     void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={},const std::array<ColorMap,9>* colorMaps=nullptr); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다. // 파일 팔레트의 원본 색 표를 갱신한다.
     // 실제 화면 영역을 월드 영역으로 바꿔 본체·그림자를 별도 정렬 항목으로 수집한다.

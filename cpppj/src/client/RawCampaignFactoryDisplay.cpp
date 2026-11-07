@@ -58,6 +58,7 @@ struct RawCampaignFactoryDisplay::Impl {
     std::map<std::uint32_t,OwnerColorMaps> ownerColors; // 원본 일반12종/전용5종의 실제9색표이며 현재 팔레트로 갱신한다.
     std::shared_ptr<OwnerColorTableState> sharedOwnerColors; // 실제 Client의 현재 표와 배너 DWORD이며 Session 반납으로 초기화하지 않는다.
     TempleDraw templeDraw; // 같은 Session의 현재 전용Draw/상승음이며 그리기 시점에만 호출한다.
+    RawCampaignFactoryDisplay::MetaPixels metaPixels; //같은 실제 Client/메뉴의 현재 장치를 선택 캡처 동안만 동기 호출한다.
     std::vector<std::int32_t> templeBaseFrames; // 같은TYPE+128의 고정 본체 번호이며 썬더의-1을 보존한다.
     bool ready{}; // 파일 팔레트가 설치되기 전에 출력하지 않는다.
 
@@ -206,7 +207,8 @@ struct RawCampaignFactoryDisplay::Impl {
         };
         hooks.additional=[this,&bridgeDraw](o::Sid object,auto px,auto py,std::span<std::uint8_t> pixels) { // 실제497280의추상/로컬관문과Factory의plain을보존한다.
             SpritePixelTarget target(pixels,200,200,{0,0,200,200},MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
-            Additional(object,{px,py},target.Hooks().shape,bridgeDraw);
+            const auto meta=[this,pixels](o::Sid sid,int metaX,int metaY) { if (!metaPixels) throw std::logic_error("메타 선택 캡처의 실제 픽셀 장치 미연결");metaPixels(sid,{metaX,metaY},pixels,200,200,{0,0,200,200}); }; //원본 임시 pane의200×200/원점0/끝점199를 같은 추가Draw에 전달한다.
+            Additional(object,{px,py},target.Hooks().shape,bridgeDraw,meta);
         };
         return RawObjectHit(core.pool,core.types,core.shapes,std::move(hooks)).Hit(sid,x,y,camera);
     }
@@ -266,6 +268,7 @@ RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const Gam
 RawCampaignFactoryDisplay::~RawCampaignFactoryDisplay()=default; // procedure가 더 이상 호출되지 않을 때 반납한다.
 bool RawCampaignFactoryDisplay::Hit(o::Sid sid,int x,int y,const std::array<std::int32_t,2>& camera,std::uint32_t localPlayer,const std::function<void(o::Sid,int,int)>& bridgeDraw) const { return impl_->Hit(sid,x,y,camera,localPlayer,bridgeDraw); } // 선택의현재raw와실제추가그림을공유한다.
 bool RawCampaignFactoryDisplay::Handles(o::Sid sid) const { return impl_->Handles(sid); } // 별도 TYPE 이름 휴리스틱을 쓰지 않는다.
+void RawCampaignFactoryDisplay::BindMetaPixels(MetaPixels draw) { if (!draw) throw std::invalid_argument("현재 메타 선택 픽셀 장치 누락");impl_->metaPixels=std::move(draw); } //장치 설치로 그림/선택/프레임을 실행하지 않는다.
 // 통합 목록의 원문 토큰은 같은 풀/stride이며 Draw 직전의 카메라/현재 소유자를 읽는다.
 void RawCampaignFactoryDisplay::DrawEntry(const o::RenderCollectionEntry& entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip,const std::array<std::int32_t,2>& camera,std::uint32_t localPlayer,std::uint32_t hideBuildings,const std::function<void(o::Sid,int,int)>& bridge,const std::function<void(o::Sid,int,int)>& meta) {
     auto& state=impl_->state;state.cameraX=camera[0];state.cameraY=camera[1];state.localPlayer=localPlayer;state.specialMode=hideBuildings;

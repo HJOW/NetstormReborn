@@ -54,6 +54,7 @@ void UberGump::PrepareMetaWorldRuntime() {
     editor_->metaWorld=std::make_unique<RawCampaignSession>(client_.Assets(),client_.Files(),o::FortTemplate{},std::string(client_.FortGlobals()->Current()),std::move(services));
     BindClientMetaSpriteRefresh(client_,*rawButtons_,editor_->metaWorld->World()); //첫 메타 객체 생성/Pop 이전에 같은 World의 실제 파생 표시 장치를 설치한다.
     auto* session=editor_->metaWorld.get();editor_->metaDisplay=std::make_unique<RawCampaignFactoryDisplay>(session->Core(),client_.Assets(),[session](auto sid,const auto& draw) { session->DrawTemple(sid,draw); },&client_.GameplayGlobals()->PatchDiagnostic());
+    editor_->metaDisplay->BindMetaPixels([this](auto sid,auto point,auto pixels,auto pitch,auto height,auto clip) { auto* menus=rawButtons_->Menus();if (!menus) throw std::logic_error("현재 메타 선택 캡처의 실제 메뉴 장치 미연결");menus->WithTextDrawing(pixels,pitch,height,clip,[&] { DrawClientMetaSprite(client_,*menus,sid,point,pixels,pitch,height,clip); }); }); //같은 현재 장치를 빌리며 별도 FontStore/메타 객체/선택 그림을 만들지 않는다.
     editor_->metaDisplay->BindOwnerColors(client_.ColorSortInput()->OwnerTables());editor_->metaDisplay->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
 }
 RawCampaignFactoryDisplay* UberGump::MetaSpriteDisplay() const { return editor_ ? editor_->metaDisplay.get() : nullptr; } //현재owner를조회만하며출력기나Session을새로만들지않는다.

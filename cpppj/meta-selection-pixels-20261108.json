@@ -1,0 +1,56 @@
+{
+  "unit": 1133,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "logs": [
+      ""
+    ],
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12795392,
+      "sha256": "6bc2e4c54ae3f717fab4b72cb47fd7b04b6e41c3b47da1568e6f0b636171c141"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "697518bbd0d8e966e9228de590085097bc891eaa712421ace2b075017df119eb"
+    }
+  },
+  "staticAudit": {
+    "native": "498000/4a2b10/4a2c70 전체 다음 함수 경계까지 C/기계어를 읽었다. 선택은200×200/색255 버퍼와 같은 실제+a4를 사용한다. 생성 원문 변경0이다.",
+    "pixels": "기존 RawObjectHit의 음수/opaque/200범위·plain/추가Draw 순서를 바꾸지 않고 실제 메타+a4 선택 위치에만 Client 픽셀 장치를 전달한다. 다른 타입은 기존 장치를 그대로 사용한다.",
+    "text": "같은 RawMenuControls/FontStore/GumpGlyphColorState를 지정된 임시 표면/clip에 빌린다. 이전const activeText 포인터는 정상/예외 모두 복원하며 메뉴의현재clip/팔레트/표면을영구변경하지않는다. 별도글꼴/색/게임상태사본을만들지않는다.",
+    "binding": "실제 메타 display 생성 직후 현재 Client/controls를 동기 장치로 설치하고 정상 화면과 같은 DrawClientMetaSprite를 호출한다. 해당 장치가 없을 때 새 선택 그림이나 성공을 합성하지 않는다.",
+    "remaining": "MetaSpriteDisplay.Hit의 픽셀 장치 접합이며 실제 메타 포인터 입력/선택 caller와4789b0 전체 메뉴/항해 입력 연결은 후속이다. 전체 메타 입력 완료로 쓰지 않는다.",
+    "validation": "Release 빌드/정적 원문 대조/보호2800 확인만 수행한다. 신규 C++ 단위/MP/게임/통신 실행0이다.",
+    "edition": "현재 접합/주소 근거는10.78이다.10.72의메타가상표/선택pane동일성은이번에추가판정하지않으며같다고가정하지않는다."
+  },
+  "remaining": [
+    "메타 객체 입력/메타 선택 caller/나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오 UI"
+  ],
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

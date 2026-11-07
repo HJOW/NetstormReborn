@@ -731,6 +731,14 @@ void RawMenuControls::SetHelpWord(std::uint32_t token,std::string_view text) {
 }
 void RawMenuControls::MeasureText(std::span<const char> bytes,const std::array<std::uint32_t,8>& context,std::int32_t& width,std::int32_t& height,std::uint32_t limit) const { impl_->metrics.Measure(bytes,DecodeGumpTextContext(context),width,height,std::bit_cast<std::int32_t>(limit)); } // 같은 원본 문맥과 signed 길이다.
 void RawMenuControls::DrawCurrentText(std::span<const char> bytes,ScreenPoint position,const std::array<std::uint32_t,8>& context) const { if (!impl_->activeText) throw std::logic_error("현재 통합 Draw 문맥 밖의 글자 출력");impl_->activeText->Draw(bytes,position,DecodeGumpTextContext(context),-1); } //새 글꼴/표면/색 상태를 만들지 않고 현재4a3f70 장치를 빌린다.
+// 원문 선택용 pane은 기존 메뉴의 clip/현재 표면을 영구 변경하지 않는다.
+void RawMenuControls::WithTextDrawing(std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect region,const std::function<void()>& body) {
+    if (!body) throw std::invalid_argument("임시 글자 출력 본문 누락");auto& s=*impl_;GumpDrawState clip;SetGumpDrawClip(clip,region);GumpPixelTarget target(pixels,pitch,height,clip);GumpTextDraw text(s.fonts,MakeGumpGlyphPixelHooks(target,s.colors),s.assets.Edition());const auto oldText=s.activeText;s.activeText=&text;
+    struct RestoreText { //임시 표면/글꼴 장치를 본문 밖으로 보관하지 않는 정상·예외 공통 수명 보호다.
+        Impl& state;const GumpTextDraw* previousText; //같은 실제 메뉴 저장소와 이전 표시 문맥의 빌린 주소다.
+        ~RestoreText() { state.activeText=previousText; } //기존 문맥을 복원하되 실제 같은 현재 glyph 색 상태는 복제하지 않는다.
+    } restore{s,oldText};body();
+}
 const GumpBackgroundCreate& RawMenuControls::BackgroundBackend() const { return *impl_->backgroundCreate; } // 같은 실제 자산이다.
 QuickHelpPopupState& RawMenuControls::PopupState() const { return impl_->popupState; } // 현재 팝업 표식 사본을 만들지 않는다.
 void RawMenuControls::EnableHelp(RawHelpHooks hooks) { impl_->EnableHelp(std::move(hooks)); } // 같은 실제 처리기를 설치한다.
