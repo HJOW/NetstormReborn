@@ -3708,7 +3708,7 @@
       "bytes": 302694,
       "lines": 247,
       "fixtureCommit": "4a1362e5",
-      "webCommit": "worktree",
+      "webCommit": "b366c2c2",
       "cpppjBasis": {
         "cpppj/src/client/PauseKeyInput.cpp": "4a1362e5"
       }
@@ -3737,7 +3737,7 @@
       "bytes": 11865,
       "lines": 265,
       "fixtureCommit": "75b4a466",
-      "webCommit": "worktree",
+      "webCommit": "b366c2c2",
       "cpppjBasis": {
         "cpppj/src/client/RotationKeyInput.cpp": "e46d8981"
       }
@@ -3766,9 +3766,96 @@
       "bytes": 3339,
       "lines": 97,
       "fixtureCommit": "6ce32a27",
-      "webCommit": "worktree",
+      "webCommit": "b366c2c2",
       "cpppjBasis": {
         "cpppj/src/client/UrlInput.cpp": "6ce32a27"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E21",
+      "id": "destroy-at-input",
+      "path": "cpppj/tests/fixtures/destroy-at-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DestroyAt 일반 입력의 모드/뗌/전체 y 전달",
+      "consumers": [
+        "webpj/tests/script-command-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/script-command-inputs.js"
+      ],
+      "doc": "docs/webpj-script-command-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/DestroyAtInput.cpp"
+      ],
+      "scope": "48행(머리글 제외) 전부 사용",
+      "text": true,
+      "sha256": "085de60d7c28b6c9e044418c6d3d00acb988002cb74f0a065c4760c54563a16a",
+      "bytes": 1552,
+      "lines": 49,
+      "fixtureCommit": "f5d46ada",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/DestroyAtInput.cpp": "f5d46ada"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E21",
+      "id": "add-random-input",
+      "path": "cpppj/tests/fixtures/add-random-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AddRandom 일반 입력의 signed 255 비교/모드/뗌/조회 결과 전달",
+      "consumers": [
+        "webpj/tests/script-command-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/script-command-inputs.js"
+      ],
+      "doc": "docs/webpj-script-command-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/AddRandomInput.cpp"
+      ],
+      "scope": "288행(머리글 제외) 전부 사용",
+      "text": true,
+      "sha256": "bbe76e4e4e4e9f6d8ac99fa9da3b98762c05350888eafede69e409b7498b805a",
+      "bytes": 9847,
+      "lines": 289,
+      "fixtureCommit": "d48ea756",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/AddRandomInput.cpp": "d48ea756"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E21",
+      "id": "make-ai-input",
+      "path": "cpppj/tests/fixtures/make-ai-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: MakeAi 일반 입력의 Editor OR missionPost 관문/뗌/전체 DWORD 인자",
+      "consumers": [
+        "webpj/tests/script-command-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/script-command-inputs.js"
+      ],
+      "doc": "docs/webpj-script-command-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/MakeAiCommandInput.cpp"
+      ],
+      "scope": "64행 전부 사용",
+      "text": true,
+      "sha256": "a56464da152f4e73608568b34c2d9980a32f10204f8a657b8df5989e0b57f1dd",
+      "bytes": 2122,
+      "lines": 65,
+      "fixtureCommit": "b466c127",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MakeAiCommandInput.cpp": "b466c127"
       }
     }
   ]

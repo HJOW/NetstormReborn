@@ -3,7 +3,7 @@
 # 분류를 바꿀 때는 이 파일이 아니라 tools/port-map.mjs 의 RULES 와 사유를 고치고 --write 로 다시 만든다. web·base·status·사람 메모는 --write 가 보존한다.
 # 상세 규칙과 판정 기록: docs/webpj-port-map-20261106.md, LEFT_JOBS.webpj.md 3.0·3.6절.
 cpp	class	web	base	status	note
-cpppj/src/client/AddRandomInput.cpp	port			todo	[client-default]
+cpppj/src/client/AddRandomInput.cpp	port	www/core/script-command-inputs.js	1f00a25a	port	[client-default] WB04-E21: 4d7c33 AddRandom 일반 입력 분배(signed 255 타입 조회). fixture add-random-input 10.78 288행 전부
 cpppj/src/client/AiDebugCommandInput.cpp	port			todo	[client-default]
 cpppj/src/client/AiTypeRequiredEnergy.cpp	port			todo	[client-default]
 cpppj/src/client/AiUtilityCommandInput.cpp	port			todo	[client-default]
@@ -86,7 +86,7 @@ cpppj/src/client/Cursor.cpp	adapt	www/ui/cursor.js	1f00a25a	partial	[adapt-scree
 cpppj/src/client/CursorObjectPickup.cpp	port			todo	[client-default]
 cpppj/src/client/CursorPreviewSource.h	port			todo	[client-default]
 cpppj/src/client/DataManagerFileRead.cpp	adapt			todo	[adapt-file]
-cpppj/src/client/DestroyAtInput.cpp	port			todo	[client-default]
+cpppj/src/client/DestroyAtInput.cpp	port	www/core/script-command-inputs.js	1f00a25a	port	[client-default] WB04-E21: 004d8528 DestroyAt 일반 입력 분배. fixture destroy-at-input 10.78 48행 전부. 스크립트 큐/실제 부모 대조는 해당 단위에서
 cpppj/src/client/DetonateInput.cpp	port			todo	[client-default]
 cpppj/src/client/DialogBodyLayout.cpp	port			todo	[client-default]
 cpppj/src/client/DialogCommandLifetime.cpp	port			todo	[client-default]
@@ -178,7 +178,7 @@ cpppj/src/client/LanguageRequest.cpp	port			todo	[client-default]
 cpppj/src/client/LocalTcpTransport.cpp	exclude-mp			-	[mp-lan-tcp]
 cpppj/src/client/LostPositionKey.cpp	port			todo	[client-default]
 cpppj/src/client/MainMenuActivity.cpp	port			todo	[client-default]
-cpppj/src/client/MakeAiCommandInput.cpp	port			todo	[client-default]
+cpppj/src/client/MakeAiCommandInput.cpp	port	www/core/script-command-inputs.js	1f00a25a	port	[client-default] WB04-E21: MakeAi 일반 입력 분배(Editor OR missionPost). fixture make-ai-input 10.78 64행 전부. make-ai-names 12행(스크립트 큐)은 해당 단위에서
 cpppj/src/client/Markup.cpp	port			todo	[client-default]
 cpppj/src/client/MenuGump.cpp	port	www/ui/menu-list.js;www/ui/popup-menu.js	1f00a25a	partial	[client-default] 세로 메뉴·controlled 메뉴 스택(메인 메뉴 펼침)
 cpppj/src/client/MenuGumpControls.cpp	port	www/ui/menu-list.js	1f00a25a	partial	[client-default] 문자열/체크/구분선 항목
