@@ -62,6 +62,6 @@ o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t s
     if (!editor_->metaTransport) editor_->metaTransport=std::make_unique<MetaConnectionRuntime>(client_,[this](auto text) { static_cast<void>(ShowLoginWaiting(FontBytes(text))); },[this](auto next) { editor_->state->Request(next); },[this] { editor_->state->Run(); },[this](auto section) {
         const auto result=ShowTellInConfig(client_.HtmlWindowGlobals()->tell,section,0,client_.Configuration(),[this](auto name)->std::optional<std::string> { return mission_ ? mission_->Section(name):std::nullopt; },[this](auto body,auto mode,auto width,auto height) { return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext(CurrentMapView()),FontBytes(body),mode,width,height); });
         if (!result.found) client_.WriteDiagnosticLog(0x1d,"TELL cannot find \""+std::string(section)+"\".\n");rebuild_=true;
-    }); //004b4160의 실제 버전 Tell도 현재 원문 설정/HTML/serial 수명을 공유한다.
+    },[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); }); //버전Tell과67h수신의현재NSInfo도같은실제설정/HTML/Gump수명을공유한다.
     return editor_->metaTransport->Run(selected);
 }

@@ -28,6 +28,8 @@
 #include "client/NativeLocalServerLaunch.h"
 #include "client/LocalServerProcess.h"
 #include "client/RootServerListDisk.h"
+#include "client/NativeMetaBattleOptions.h" //현재CS의실제67h수신/음향·NSInfo갱신을공통등록표에결합한다.
+#include "client/ClientAudio.h" //원문의guy.wav는같은Client장기음향을사용한다.
 #include "client/ClientStateStorageCleanup.h"
 #include "client/ClientRandomGlobals.h"
 #include "client/CampaignTransportServices.h"
@@ -76,9 +78,9 @@ BOOL CALLBACK FindRootWindow(HWND window,LPARAM value) {
 }
 }
 // 현재 저장소를 검증하고 observer/기본 연결 종료를 설치하며 실제 소켓 열기는 Connect까지 지연한다.
-MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell)
-    :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)),tell_(std::move(tell)) {
-    if (!progress_ || !request_ || !processState_ || !tell_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run 장치 필요");
+MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo)
+    :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)),tell_(std::move(tell)),refreshInfo_(std::move(refreshInfo)) {
+    if (!progress_ || !request_ || !processState_ || !tell_ || !refreshInfo_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run/NSInfo 장치 필요");
     o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client_.WallSeconds()); };
     hooks.record=[](auto&,auto,auto) {}; //World 없는 현재 메타의 선택적 기록은 미연결이다. 수신/로그인 성공을 합성하지 않는다.
     hooks.terminate=[](auto& connection) { connection.flags|=0x40U; }; //실제소켓/노드반납은각TCP/UDP소유자가수행한다.
@@ -110,7 +112,8 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         if (!sending) return;if (packet.size()<7) throw std::out_of_range("메타67h 관찰기의 실제7BYTE 부족");const auto first=std::uint32_t(packet[5])|(std::uint32_t(packet[6])<<8);
         if (first==0xffffU) client_.SurfaceStorage()->AssertDisplay("dataLen != (unsigned short)-1","\\Ns\\O\\_p_packets.cpp",0xa07);
         const auto length=std::uint32_t(packet[5])|(std::uint32_t(packet[6])<<8);Put(packet,2,length+7U,2); //0040ae80은진단이복귀한뒤같은현재WORD를다시읽는다.
-    });dispatch.Version(0x67,1,0);dispatch.RequireLength(0x67,0xffff); //실제관찰/버전만등록하며미복원수신기를합성하지않는다.
+    });dispatch.Version(0x67,1,0);dispatch.RequireLength(0x67,0xffff); //송신관찰/버전은그대로유지하고수신부모를따로등록한다.
+    dispatch.Register(0x67,[this](auto,auto&,auto packet) { NativeMetaBattleOptionsHooks receive;receive.owner=[this] { return client_.GameplayGlobals()->player.battleOwner; };receive.log=[this](auto text) { client_.WriteDiagnosticLog(9,text); };receive.guySound=[this] { client_.WorldAudio().Sounds().PlayByName("guy.wav",0,0,0,0,0); };receive.refreshInfo=refreshInfo_;ReceiveNativeMetaBattleOptions(*client_.ChallengeGlobals(),packet,receive); }); //sender/phase/known추가필터없이같은현재CS·실제음향/UI를소비한다.
 }
 MetaConnectionRuntime::~MetaConnectionRuntime()=default; //자기OS/노드수명은실제TCP/UDP소유자의소멸자가반납한다.
 // minor 차이는 로그만 남기고 major 차이만 현재 설정값/실제 Tell 결과로 거부한다.

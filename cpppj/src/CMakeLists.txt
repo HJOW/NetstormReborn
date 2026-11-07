@@ -562,3 +562,6 @@ target_sources(netstorm PRIVATE client/NativeBattleInfoInput.h client/NativeBatt
 
 # BattleInfo의 다섯 실제 controlled 메뉴 자식과 현재 TYPE/지식 정렬 부모다.
 target_sources(netstorm PRIVATE client/NativeBattleInfoMenus.h client/NativeBattleInfoMenus.cpp)
+
+# 실제CS 전투옵션67h 수신과 현재음향/NSInfo 부모다.
+target_sources(netstorm PRIVATE client/NativeMetaBattleOptions.h client/NativeMetaBattleOptions.cpp)

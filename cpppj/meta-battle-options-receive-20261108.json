@@ -1,0 +1,57 @@
+{
+  "unit": 1120,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12670976,
+      "sha256": "635147b5c8c17474791e9ad39742d0b8bb85da0b60a5fa45d8c0e9e43c599751"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "2330560ccb4dfc053d10684a5a59259966c11e30e93dc218e39c1d394d5712ed"
+    }
+  },
+  "staticAudit": {
+    "native": "0042c920 전체/다음42ca20까지기계어",
+    "gates": "현재전투activeBYTE→수신160포함상한→자기현재owner/battle/master·sender/phase/known추가없음",
+    "effects": "원문수준9진단·현재guy.wav→현재WORD길이→DWORD/나머지BYTE복사→현재BYTE길이저장→자기전투현재NSInfo",
+    "integration": "같은실제TCP/UDP공유등록표67h·기존송신observer/Version1/가변길이그대로·실제현재CS/음향/NSInfo"
+  },
+  "integration": {
+    "battleOptions67ReceiveBound": true,
+    "otherCsReceiversBound": false,
+    "metaObjectCreationBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "나머지CS수신/참가자·전투섬생성·현재조회/버전집계호출·카메라Rig/HTML→1dh/28~33등록/1095송신상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

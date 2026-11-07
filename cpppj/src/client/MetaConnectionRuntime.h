@@ -11,7 +11,7 @@ class Client; //실제 Client는 이 장기 EditorRuntime 자식보다 오래 �
 class LocalUdpTransport; //실제UDP12의물리소유자이며구현은같은Meta부모의cpp에서결합한다.
 class MetaConnectionRuntime {
 public:
-    MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell); //생성은소켓을열지않으며현재Player/표·실제Run과버전Tell 부모를연결한다.
+    MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo); //생성은소켓을열지않으며현재Player/표·실제Run/버전Tell과현재NSInfo갱신을연결한다.
     MetaConnectionRuntime(const MetaConnectionRuntime&)=delete;MetaConnectionRuntime& operator=(const MetaConnectionRuntime&)=delete; //등록된 callback의 주소/실제 socket owner를 복제하지 않는다.
     ~MetaConnectionRuntime(); //Native CloseAll 뒤 남은 자기 노드만 실제 TCP owner가 반납한다.
     o::LocalMissionParentResult Run(std::uint32_t selected); //20~27/34~38의부모와37의실제새R lan실행을연결하고공통144BYTE확정은바깥분배기에남긴다.
@@ -37,6 +37,7 @@ private:
     std::function<void(std::uint32_t)> request_; //실제 분배기의004b2bc0 즉시 요청 장치다.
     std::function<void()> processState_; //66h서버발견의현재36직접쓰기뒤같은실제004b6dd0을동기실행한다.
     std::function<void(std::string_view)> tell_; //실제 현재 HTML Tell 장치이며 버전 차이 안내를 고정 문자열 창으로 대체하지 않는다.
+    std::function<void()> refreshInfo_; //같은현재NSInfo의0047cab0이며수신전체보다오래사는실제UI를빌린다.
     std::unique_ptr<LocalTcpTransport> tcp_; //같은 Registry10/11의 실제 OS 노드/분배 owner다.
     std::unique_ptr<LocalUdpTransport> udp_; //TCP와같은Registry/등록표의실제검색12이며생성은소켓을열지않는다.
     bool pumping_{}; //호스트 재진입 보호이며 접속 성공/Native 상태를 나타내지 않는다.
