@@ -10,6 +10,8 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+
+target_sources(netstorm PRIVATE root/Lifecycle.h root/Lifecycle.cpp) #1089:R 실제 시작/정리·노드 생성/등록과 같은 메인 hook을 연결한다.
 target_sources(netstorm PRIVATE root/PacketRegistration.h root/PacketRegistration.cpp root/PacketObservers.cpp) #1088:R 전체 전역 관찰/버전·실제 수신 초기화와 공통 길이 계산을 연결한다.
 
 target_sources(netstorm PRIVATE root/RemoteCommand.h root/RemoteCommandSession.cpp root/RemoteCommandServer.cpp) #1087:실제 원격 명령4세션/OS장치·현재select/Poll과 종료 수명을 연결한다.

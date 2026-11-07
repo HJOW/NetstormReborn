@@ -29,6 +29,7 @@ public:
     TransceiverTransport(const TransceiverTransport&)=delete;TransceiverTransport& operator=(const TransceiverTransport&)=delete; // 고정 노드/콜백 this와 OS 소유권을 복제하지 않는다.
     std::uint32_t OpenDatagram(std::uint32_t port,std::uint32_t capacity=512); // R LAN UDP의 실제 새 일반 번호/512BYTE 버퍼다. 실패는0이며 성공 상태를 합성하지 않는다.
     std::uint32_t Listen(std::uint32_t port,std::uint32_t capacity=4096); // listener 자체 버퍼8과 수락 노드4096을 구별하고 최초 pending 초기화를 수행한다.
+    std::uint32_t CreateServer(std::uint32_t sender,std::span<const std::uint8_t,20> address,std::uint32_t capacity); //477e10의 실제 wildcard IPv4 서버 노드만 생성한다. 실패 socket도 반환하며 번호표 공개/open판정·반납은 호출자가 원문 위치에서 수행한다. IPX/SPX는 명시 미지원이다.
     std::uint32_t ConnectStream(const std::string& text,AddressCodec& addresses,std::uint32_t capacity=512); //00474920의 번호선택→실제 TCP 생성/현재표 공개·실패 닫힘이다. 원문처럼 생성 실패 뒤에도 선택 번호를 반환하며 시간/모드 관문은 Root 부모가 수행한다.
     void InstallTerminationReceiver(); //477e10이 실제 초기화 위치에서 등록하는2번→75170을 연결한다.
     std::unique_ptr<SocketDevice> DetachSocket(std::uint32_t token); // 현재 대기 노드의 실제 socket만 이전한다. 뒤의 ClosePending은 그 OS 핸들을 닫지 않는다.
@@ -61,6 +62,7 @@ private:
     Node& From(o::PacketConnection& connection); // close/release 단계에서도 같은 실제 물리를 찾는다.
     std::uint32_t Adopt(std::unique_ptr<SocketDevice> socket,std::uint32_t sender,std::uint32_t capacity,bool listener=false,std::uint32_t acceptedCapacity=4096); // 두 시각/ff 버퍼를 원문 순서로 만들고 안정된 노드를 소유한다.
     std::uint32_t Open(std::uint32_t port,std::uint32_t capacity,bool listener); // 일반 번호 선택/실제 열기/생성/공개/실패 반납을 공유한다.
+    std::uint32_t CreateServer(std::uint32_t port,std::uint32_t sender,std::uint32_t capacity,bool listener); // 외곽 CallGuard 안에서 실제 socket/두 시각·버퍼와 listener 최초 pending 초기화만 구성한다. 표를 바꾸지 않는다.
     o::PacketDispatchHooks DispatchHooks(); // 실제 시각/방향 기록/종료/소멸/반납을 공통 분배기에 연결한다.
     ReceivedFrame Receive(Node& node,bool dispatch); // 현재 버퍼의 부분 헤더/본문과 observer/분배를 처리한다.
     void Accept(Node& node); // signed pendingCount<31 동안만 실제 수락/새 노드/음수 sender 공개를 반복한다.

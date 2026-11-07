@@ -1,0 +1,112 @@
+{
+  "unit": 1089,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "692bc973f28bee347f454431f5f6727e2c40ff026b62f233c9e762f4e17e5e49"
+  },
+  "nativeAudit": {
+    "scope": "소켓/서버/메인/패킷 실행 없이 원문·PE·모든 함수범위 기계어/현재 C++ 접합을 정적으로 대조했다.",
+    "startupResetDwords": 12,
+    "processHandles": 50,
+    "processHandleWidth": "호스트 uintptr_t, 원문 DWORD 핸들은 절삭하지 않음",
+    "processOwners": 51,
+    "generalSlots": 256,
+    "generalResets": 2,
+    "pendingSlotsAtStartup": 32,
+    "pendingCountReset": false,
+    "packetInitializer": "같은1088 InitializePackets,17실제수신/102관찰/2번 종료",
+    "startupSequence": [
+      "m.connections.modeFlags=0",
+      "CloseAllPending(",
+      "m.process.processHandles.fill(0)",
+      "m.process.unusedProcessValue=0",
+      "m.store.ProcessOwners().fill(0)",
+      "m.connections.transceivers.fill(0)",
+      "Log(29,\"options",
+      "options.flushAfterTrace=1",
+      "m.servers.Reload()",
+      "m.servers.Count()",
+      "m.servers.Decode(",
+      "m.configuration.Startup(root_)",
+      "m.storage.DataDirectory(",
+      "smModeFlags & (smDIAG|smROOT|smCHAL)",
+      "rootServerBasePort",
+      "m.connections.transceivers.fill(0)",
+      "m.clock.Initialize()",
+      "InitializePackets(",
+      "Broadcast();",
+      "Listen();",
+      "m.store.InitializeRoot(",
+      "m.files.CheckNews()",
+      "m.files.CheckBlacklist()",
+      "const auto mode=m.connections.modeFlags",
+      "GetCurrentProcessId()"
+    ],
+    "datagramCapacity": 512,
+    "listenerCapacity": 8,
+    "acceptedCapacity": 4096,
+    "broadcastCalls": "같은 RootControl.Announce, 성공/실패 분기 공통",
+    "broadcastNumber": "현재 일반번호를 생성 전 발행/생성 뒤 현재 번호에 노드 공개; 실패close/현재칸0/번호0,성공log/현재노드 noMainTimeout1",
+    "listenerFailure": "실제 실패 socket도 노드/두 시각·버퍼/공개·open판정/close·칸0 순서를 거침",
+    "shutdownSequence": [
+      "현재 일반0..255 close/각칸0",
+      "현재 CCh1..50 소멸/각칸0",
+      "현재 기본 RemoteCommandServer.Shutdown"
+    ],
+    "mainBindings": [
+      "initialize 동일Start",
+      "shutdown",
+      "같은 ServerList.Reload",
+      "같은 실제 RemoteCommandServer.Active/Sets/Poll"
+    ],
+    "remotePortOpenAdded": false,
+    "readPathBinding": "Configuration.DataPrefix 확정 뒤 같은 SharedFileStorage.DataDirectory,UTF-8 경로",
+    "unsupported": "기존 현대 IPv4 TCP/UDP 장치만 실제 구현됨. 원문IPX/SPX 선택/주소해석은 보존하지만 선택 생성은 명시 logic_error로 거부. OS 실패/정상 실행을 합성하지 않음.",
+    "hostBoundaries": [
+      "callback 중 시작/반납 거부",
+      "표/물리 범위 오류 명시",
+      "최초 미작성 목록 문자열은 오류,유효행 뒤 사라진행은 이전80BYTE 출력/현재값0 보존",
+      "원문힙/SEH·포인터 ABI 전체동일성/비정상 예외정리·동시 재진입 실행미검증",
+      "최종 새R.exe owner/entry·실제Bind/Start/Run은 아직 없음"
+    ],
+    "testsExecuted": 0
+  },
+  "runtime": {
+    "rootStartAndShutdownParentsImplemented": true,
+    "sameActualServerNodeConstructionPublicationAndMainBindings": true,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsBindStartOrRun": false,
+    "legacyIpxSpxDeviceSupported": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "새R.exe최종owner/entry·실제Bind/Start/Run와클라이언트OSlaunch·배포",
+    "세.server콘텐츠/배포·LAN hostname·클라이언트0F존47/서버3BYTE·0F/1d·메타",
+    "LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

@@ -34,9 +34,20 @@ std::uint32_t TransceiverTransport::Adopt(std::unique_ptr<SocketDevice> socket,s
 }
 std::uint32_t TransceiverTransport::Open(std::uint32_t port,std::uint32_t capacity,bool listener) {
     const CallGuard guard(*this);const auto id=FindFreeTransceiver(connections_);if (!id) return 0;
-    auto socket=std::make_unique<SocketDevice>();if (listener) static_cast<void>(socket->Listen(port));else static_cast<void>(socket->OpenDatagram(port)); // 실패한 실제 socket도 원문 버퍼 ctor/공개/반납 순서를 통과한다.
-    const auto token=Adopt(std::move(socket),listener ? 0U:id,listener ? 8U:capacity,listener,capacity);if (listener) InitializePending(connections_);
+    const auto token=CreateServer(port,listener ? 0U:id,capacity,listener);
     connections_.transceivers[id]=token;if (!Get(token).socket->IsOpen()) { Close(token);connections_.transceivers[id]=0;return 0; }return id;
+}
+// 생성자와 표 공개를 분리해 상위 초기화가 현재 broadcast 번호를 원문 위치에서 다시 읽게 한다.
+std::uint32_t TransceiverTransport::CreateServer(std::uint32_t port,std::uint32_t sender,std::uint32_t capacity,bool listener) {
+    auto socket=std::make_unique<SocketDevice>();if (listener) static_cast<void>(socket->Listen(port));else static_cast<void>(socket->OpenDatagram(port));
+    const auto token=Adopt(std::move(socket),sender,listener ? 8U:capacity,listener,capacity);if (listener) InitializePending(connections_);return token; // 실제 열기 실패도 같은 노드/두 시각·버퍼를 만들며 상위에서 정리한다.
+}
+// 원문 주소 parser가 만든 낮은WORD 포트와 TCP/UDP 분기를 실제 기존 장치에 전달한다.
+std::uint32_t TransceiverTransport::CreateServer(std::uint32_t sender,std::span<const std::uint8_t,20> address,std::uint32_t capacity) {
+    const CallGuard guard(*this);const auto family=std::uint32_t(address[0])|(std::uint32_t(address[1])<<8U);std::uint32_t mode{};std::memcpy(&mode,address.data()+16,4);
+    if (family!=2 || (mode&0x30U)==0 || (mode&0x30U)==0x30U || !(mode&2U)) throw std::logic_error("R 서버 생성의 현재 장치는 IPv4 TCP/UDP이며 레거시 IPX/SPX는 미지원입니다");
+    if (std::any_of(address.begin()+4,address.begin()+16,[](auto byte) { return byte!=0; })) throw std::invalid_argument("R 서버 생성은 원문의 wildcard 주소만 지원합니다");
+    const bool listener=(mode&0x10U)!=0;const auto port=(std::uint32_t(address[2])<<8U)|address[3];return CreateServer(port,listener ? 0U:sender,capacity,listener);
 }
 std::uint32_t TransceiverTransport::OpenDatagram(std::uint32_t port,std::uint32_t capacity) { return Open(port,capacity,false); } // R LAN의 원문 기본512 물리를 사용한다.
 std::uint32_t TransceiverTransport::Listen(std::uint32_t port,std::uint32_t capacity) { return Open(port,capacity,true); } // 수락용 물리는 기본4096이며 listener8과 구별한다.
