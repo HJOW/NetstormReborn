@@ -11,6 +11,7 @@
 #include "o/RawCheckingDiagnostics.h" // 원문4ad730의 실제 순수 Form 검사다.
 #include "client/AiDebugCommandInput.h" //일반진단입력도현재AI본문을직접사용한다.
 #include "client/ObjectOwnerCommands.h" //편집 객체 추적이 같은 Session의 실제 월드 다시 그리기 DWORD를 사용한다.
+#include "o/RawStateBridgeReset.h" //sbkp도 현재 주기/시각의 동일00422490 스캔 초기화를 사용한다.
 #include "o/RawFortSubscriberChange.h" // 현재 Fort의 Champion 변경도 같은 실제 Template writer를 사용한다.
 #include "o/RawBattleCompletion.h" // 재접속/Player 변경의 실제 전투 종료 관문도 같은 현재 물리를 쓴다.
 #include "client/RitualChoiceInput.h" //6b요청은같은현재선택제단과실제전송을사용한다.
@@ -419,6 +420,7 @@ struct RawCampaignSession::Impl {
     ChatRelayHooks ChatDevices(); // 같은 현재 Player/연결 표와 UI를 중계 부모에 공급한다.
     void SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet); // 준비된 현재 로컬 전송의 observer와 큐에 원시 패킷을 넘긴다.
     void SendRemoteTell(std::uint32_t owner,std::string_view section,bool others); // 같은실제mutable송신을004c9150/4c9200부모에제공한다.
+    void ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name); //004b32f0의 실제 현재 Fort 변경을 UI와 개발자 명령에서 공유한다.
     void ExecuteDeveloperCommand(std::string_view text); //44dc70의 현재 설정/생성·삭제·피해/배치 명령과 미접합 분기 진단이다.
     void ReceiveSquid(std::span<const std::uint8_t> packet); //2ch/7ah의 같은00433c30 본문과 현재 실제 장치를 공유한다.
     void ReceiveGunPacket(std::span<const std::uint8_t> packet); //0046a0c0의 신규 Form/기존 PID 수신을 같은 Kernel과 현재 총 본체에 연결한다.
@@ -4157,8 +4159,10 @@ void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 const std::uint32_t& RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
 const std::shared_ptr<ClientCoreDataGlobals>& RawCampaignSession::PlayerCoreGlobals() const { return impl_->coreDataGlobals; } // 같은 현재 슬롯/active/cache 소유자를 관측한다.
 // 큰 Subscriber 변경도 같은 실제 Client My/Session handle과 Template 노드 writer를 사용한다.
-void RawCampaignSession::ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name) {
-    auto& s=*impl_;o::FortSubscriberChangeHooks hooks;
+void RawCampaignSession::ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name) { impl_->ChangeFortSubscriber(id,name); }
+// UI와31h가 같은 현재 Template/handle/My 및 writer·통지 순서를 사용한다.
+void RawCampaignSession::Impl::ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name) {
+    auto& s=*this;o::FortSubscriberChangeHooks hooks;
     hooks.owner=[&s] { return s.playerState.templateOwner; };hooks.manager=[&s](auto slot) { if (slot>=9) throw std::out_of_range("Subscriber 변경 Template9 범위");return Read(s.templateStorage->Headers(),slot*20); };
     hooks.fortMode=[&s] { return s.core.ownerMode.fort ? 1U : 0U; };hooks.handle=[&s] { return std::span(s.handle); };
     hooks.configure=[&s](auto key,auto value) { if (!s.services.install.setConfig) throw std::logic_error("Subscriber 변경 실제 Config 누락");s.services.install.setConfig(key,{reinterpret_cast<const std::uint8_t*>(value.data()),value.size()+1}); };
@@ -4556,6 +4560,20 @@ void RawCampaignSession::Impl::ExecuteDeveloperCommand(std::string_view text) {
         return;
     }
 
+    if (key=="setsubid" || key=="ssi") {
+        std::array<char,256> name{}; // sscanf의 이름 토큰을 NUL 포함으로 보관하고 원문 물리 스택 손상은 복제하지 않는다.
+        if (std::sscanf(input.c_str(),"%*s %d %255s",&arguments[0],name.data())==2) ChangeFortSubscriber(std::bit_cast<std::uint32_t>(arguments[0]),std::span(reinterpret_cast<const std::uint8_t*>(name.data()),std::strlen(name.data())+1));
+        const auto end=std::find(handle.begin(),handle.end(),0);if (end==handle.end()) throw std::out_of_range("개발자 Subscriber 현재 handle NUL 누락");log("subid = "+std::to_string(std::bit_cast<std::int32_t>(globals.mySubscriber))+" handle = "+std::string(reinterpret_cast<const char*>(handle.data()),static_cast<std::size_t>(end-handle.begin()))+"\n");return; // 불완전한 입력도 현재 ID/이름을 출력한다.
+    }
+    if (key=="setbridgekillperiod" || key=="sbkp") {
+        float period{}; // %f가 쓰는32비트 값을 먼저 저장하며 미기입 원문 stack은 합성하지 않는다.
+        if (std::sscanf(input.c_str(),"%*s %f",&period)!=1) throw std::invalid_argument("개발자 다리 스캔 주기의 원문 미정 입력");const auto storage=world.Storage();storage->bridgeDecayPeriod=period;
+        std::array<char,512> message{};const auto count=std::snprintf(message.data(),message.size(),"bkPERIOD now %f\nresetting bridge killer\n",static_cast<double>(period));if (count<0 || static_cast<std::size_t>(count)>=message.size()) throw std::length_error("개발자 주기 로그 물리 범위");log({message.data(),static_cast<std::size_t>(count)});ResetStateBridgeDecayScan(storage->bridgeDecayScan,storage->bridgeDecayPeriod,storage->ReadGraphClock());return; // 로그 복귀 뒤 현재 주기/게임 시각을 다시 읽는다.
+    }
+    if (key=="settracelevel" || key=="stl") {
+        std::array<char,256> value{}; // 정수로 먼저 변환하지 않고 원문 두번째 토큰을 그대로 Config에 전달한다.
+        if (std::sscanf(input.c_str(),"%*s %255s",value.data())!=1) throw std::invalid_argument("개발자 tracelevel의 원문 미정 문자열 입력");if (!services.install.setConfig) throw std::logic_error("개발자 tracelevel 실제 Config 미연결");services.install.setConfig("tracelevel",{reinterpret_cast<const std::uint8_t*>(value.data()),std::strlen(value.data())+1});return;
+    }
     if (key=="sethackmove" || key=="shm") { settings[1]=required()!=0;log("hackmover now "+std::to_string(settings[1])+"\n");return; }
     if (key=="setnodamage" || key=="snd") { settings[2]=required()!=0;log("nodamagedebug now "+std::to_string(settings[2])+"\n");log("requested server to do same.\n***Not echoed to other clients.  This will FUCK EVERYTHING!***\n");return; }
     if (key=="shootmyfriends" || key=="smf") { const auto value=one()==1 ? arguments[0] : 1;settings[3]=value!=0;return; }
@@ -4584,7 +4602,7 @@ void RawCampaignSession::Impl::ExecuteDeveloperCommand(std::string_view text) {
         if (two()!=2) { log("bad command.\n");return; }const auto target=sid(arguments[0]);world.Unpop(target,0);auto raw=core.pool.AllocatedBytes(target);if (!(raw[11]&4U)) world.Storage()->AssertDisplay("isVoid()","c:\\ns\\o\\squid.h",0x282);raw=core.pool.AllocatedBytes(target);raw[40]^=static_cast<std::uint8_t>((raw[40]^static_cast<std::uint8_t>(arguments[1]))&1U);world.Repop(target,0);return;
     }
     if (key=="applydamage" || key=="ad") { if (two()!=2 || arguments[0]<0) { log("bad command\n");return; }if (!developerDamage) throw std::logic_error("개발자 피해의 실제 가상98 미연결");developerDamage(sid(arguments[0]),std::bit_cast<std::uint32_t>(arguments[1]),0,0);return; }
-    for (const auto pending:{"setsubid","ssi","setbridgekillperiod","sbkp","dumptypes","dts","dumptype","settracelevel","stl","heaptrace","ht","dumpartdata","dad","dumpgraph","dg","querydirectdraw","qdd","addlabel","al","getpriest","gp"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
+    for (const auto pending:{"dumptypes","dts","dumptype","heaptrace","ht","dumpartdata","dad","dumpgraph","dg","querydirectdraw","qdd","addlabel","al","getpriest","gp"}) { // 남은 원문 명령을 unknown의 자연 반환으로 숨기지 않는다.
         if (key==pending) throw std::logic_error("개발자 명령의 실제 후속 본체 미접합: "+key);
     }
 }

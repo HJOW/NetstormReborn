@@ -1,0 +1,66 @@
+{
+  "unit": 1037,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "개발자 Subscriber·다리 스캔 주기·tracelevel의 실제 공유 몸체 연결",
+  "sourceFunctions1078": [
+    "0044dc70",
+    "004b32f0",
+    "00422490",
+    "004414d0"
+  ],
+  "referenceFunctions1072": [
+    "004a4290",
+    "0042fa40",
+    "00449200"
+  ],
+  "developerCommands": {
+    "added": [
+      "setsubid",
+      "setbridgekillperiod",
+      "settracelevel"
+    ],
+    "implementedTotal": 25,
+    "remaining": [
+      "dumptypes",
+      "dumptype",
+      "heaptrace",
+      "dumpArtData",
+      "dumpgraph",
+      "queryDirectDraw",
+      "addLabel",
+      "getPriest"
+    ],
+    "totalComplete": false
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted\\cpp-resume-1037\\build.log",
+    "exeSize": 12098560,
+    "exeSha256": "a5c6e179a96e394c13a6ea87e268b9c1f2516b6603cd134a23ec4ad59828247e"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1037\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remaining": [
+    "31h 잔여8명령/실제 입력·cr65h",
+    "나머지 LAN/재동기화·Activate·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}
