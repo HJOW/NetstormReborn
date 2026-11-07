@@ -5308,9 +5308,96 @@
       "bytes": 10079264,
       "lines": 8041,
       "fixtureCommit": "3db2dc47",
-      "webCommit": "worktree",
+      "webCommit": "5ad99f7f",
       "cpppjBasis": {
         "cpppj/src/client/ProductionShortcuts.cpp": "3477db51"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E37",
+      "id": "squid-pool-reset",
+      "path": "cpppj/tests/fixtures/squid-pool-reset-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 월드 Pool 정리 부모의 전체 raw Pool·카운터·목록·삭제 기록·실패점 Y/X(두 PE)",
+      "consumers": [
+        "webpj/tests/squid-pool-reset.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-pool-reset.js"
+      ],
+      "doc": "docs/webpj-pool-reset-battle-options-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidPoolReset.cpp"
+      ],
+      "scope": "12행 중 10.78(originals) 6행 사용(originalCD 6행은 범위 밖)",
+      "text": true,
+      "sha256": "52bd917cbbb73babe44211570461446bb1c7dc0eaebd197e6378d861ac679d25",
+      "bytes": 30721,
+      "lines": 13,
+      "fixtureCommit": "74bc5941",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidPoolReset.cpp": "74bc5941"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E37",
+      "id": "mission-option-reset",
+      "path": "cpppj/tests/fixtures/mission-option-reset-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미션 옵션 초기화의 이웃/예약 바이트 보존·네 번째 float·실제 파생값",
+      "consumers": [
+        "webpj/tests/mission-battle-options.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-battle-options.js"
+      ],
+      "doc": "docs/webpj-pool-reset-battle-options-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionBattleOptions.cpp"
+      ],
+      "scope": "296행 전부 사용",
+      "text": true,
+      "sha256": "0d52009c05d9026c46656abcb27e76033cb4aedf29d6f053ceca4f4cdd8cd757",
+      "bytes": 130243,
+      "lines": 297,
+      "fixtureCommit": "32ea6611",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionBattleOptions.cpp": "7f1ae00e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E37",
+      "id": "mission-battle-options",
+      "path": "cpppj/tests/fixtures/mission-battle-options-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미션 옵션 Range/Cost/Value/Clear/Apply의 범위·값·TYPE 비용·사용표·옵션 바이트(x87 특수 float)",
+      "consumers": [
+        "webpj/tests/mission-battle-options.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-battle-options.js"
+      ],
+      "doc": "docs/webpj-pool-reset-battle-options-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionBattleOptions.cpp"
+      ],
+      "scope": "3305행 전부 사용",
+      "text": true,
+      "sha256": "cc55ca5d315e9e379185ff33082754dd5928e623ae91d8beb8b6a76aadcb2a5e",
+      "bytes": 1309542,
+      "lines": 3306,
+      "fixtureCommit": "05d7cb57",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionBattleOptions.cpp": "7f1ae00e"
       }
     }
   ]
