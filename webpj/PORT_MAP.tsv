@@ -900,7 +900,7 @@ cpppj/src/o/RawSquidName.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidNeighbors.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidPoolReset.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidPopParent.cpp	port	www/core/raw-squid-pop-parent.js	1f00a25a	port	[o-default] WB04-E1: 004b02d0 공통 Pop 부모. fixture pop-world-bounds 260행(Point.isValid·float 저장·NaN 단락)
-cpppj/src/o/RawSquidPostPopParent.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidPostPopParent.cpp	port	www/core/squid-postpop-parent.js	1f00a25a	port	[o-default] WB04-E24: 004b0d30 공통 postPop 부모(suppressed·영역/그래프·진단 복귀·장부 효과·깊이). 원본 관측 없이 PE 정적 계약 11건(실제 SquidPostPop 마나 진단 연결 1건은 본체 단위에서)
 cpppj/src/o/RawSquidRegion.cpp	port	www/core/raw-squid-region.js	9cb0547f	port	[o-default] WB04-E2: 004acd20 setter + 3.6②→반영: 기준선 뒤 9cb0547f 가 추가한 004acda0 getter(GetSquidRegion)를 getSquidRegion 으로 이식
 cpppj/src/o/RawSquidSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidTake.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(004af610)
