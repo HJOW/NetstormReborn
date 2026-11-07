@@ -164,7 +164,7 @@ struct CampaignSubscriberServices {
     std::function<void(o::FortSubscriberLoadAssertion)> assertion; //고정Template/직접읽기의원문진단이다.
 };
 // 생성전선택이며캠페인생성후Editor bool을켜는전환으로대체하지않는다.
-enum class CampaignInstallMode { Campaign,ExistingEditor,GeneralBattle }; // Fort 편집과 일반 LAN의 준비된 전역 대여를 미션 파일/World 적재와 구별한다.
+enum class CampaignInstallMode { Campaign,ExistingEditor,GeneralBattle,MetaMap }; // Fort 편집·일반 LAN·메타의 준비된 전역 대여를 미션 파일/World 적재와 구별한다.
 // 기존raw부모가소유한외곽순서에현재Client장치만공급한다.게임저장소는Session이덮어연결한다.
 struct CampaignExistingEditorCheckpointServices {
     o::ExistingEditorFortHooks fort; //현재/pending이름·비교·Guide·setName·Config·outside만외부에서공급한다.CoreWrite를포함한게임child는Session이연결한다.
@@ -204,7 +204,7 @@ struct RawCampaignSessionServices {
     CampaignInstallMode installMode{CampaignInstallMode::Campaign}; //기존모든호출은캠페인입력을보존한다.
     bool deferExistingEditorFile{}; //명시ExistingEditor만ctor파일설치를checkpoint의실제File.load까지지연한다.기존Campaign/LocalLogin/단계검사는false를유지한다.
     bool adoptMainMenuFort{}; // State3 continuation/일반 복귀6은 Editor/missionPost0인 실제 앞단을 빌린다. 같은 준비/State1·2·6 계약을 검증하며 모드를 새로 쓰지 않는다.
-    bool adoptPreparedWorld{}; // 실제 State cleanup/prefix가 준비한 같은 Client 전역·표면·Player를 초기화 없이 빌린다. 지연 ExistingEditor 설치에서만 사용한다.
+    bool adoptPreparedWorld{}; // 실제 State cleanup/prefix가 준비한 같은 Client 전역·표면·Player를 초기화 없이 빌린다. ExistingEditor/일반LAN/MetaMap의 명시 계약에서 사용한다.
     std::function<void(std::span<std::uint8_t>)> templateStateBytes; // 빈 State 초기화의 미정 바이트를 현재 실제 할당 입력으로 공급한다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage; // Init의 명시 정리까지 실제 manager/State/이미지를 같은 저장소에 유지한다.
     std::shared_ptr<const std::vector<std::uint8_t>> missionFortImage; // 실제 선택 파일의 같은 원문이며 초기 manager 읽기 부모가 소비한 뒤 반납한다.

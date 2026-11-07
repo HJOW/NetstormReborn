@@ -154,6 +154,7 @@ private:
     void PrepareNativeFortState(bool editor); //State1/3의 같은 실제 cleanup/Chat/listener/Fort/Core/Renderer/Chunk/options 준비를 실행한다. HUD는 각 원문 위치의 별도 호출이다.
     o::LocalMissionParentResult InstallMainMenuNativeState(std::uint32_t selected); //State3의 실제 전체 부모를 실행하며 호스트 메뉴 표시는 Native 공통 확정 뒤에만 공개한다.
     o::LocalMissionParentResult InstallMetaNativeState(std::uint32_t selected); //State19의 실제 정리/Fort/Core/CS/뉴스/채널 부모를 실행한다. 즉시 다음 상태는 공통 분배기에 남긴다.
+    void PrepareMetaWorldRuntime(); //State19가 읽은 Fort/Core와 같은 Pool·Player·Kernel을 빌린 메타 Session/GumpForm을 HUD 앞에서 구성한다. 게임 Load/로그인·loaded 공개는 실행하지 않는다.
     o::LocalMissionParentResult InstallMetaConnectionState(std::uint32_t selected); //실제 메타20~27/검색34~38과TCP10/11·UDP12/현재HTML·Run을같은장기owner에접합한다.37의새서버실행은후속이다.
     o::StartupStateCheckHooks EditorStartupStateHooks(); //State1/3이 같은 실제 saved-state reader/벽시각을 사용한다. 기본 옵션을 강제로 바꾸지 않는다.
     void PublishNativeMainMenuState(); //실제 State3 공통 확정/다음4/world 반납을 확인한 뒤 Native 전역 재작성 없이 호스트 메뉴 표시만 공개한다.

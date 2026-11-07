@@ -1,0 +1,67 @@
+{
+  "unit": 1101,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12415488,
+      "sha256": "295f4fc4f5c8d0d1624cff8765895414c5879903497f1ad1601a59d771324d28"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "8e72e0e346f6cb4eca6aa717f4bde9f7269ad08925031b9107e290a2986b3dce"
+    }
+  },
+  "staticAudit": {
+    "preparedMode": "명시MetaMap·State19·같은Client Pool/Player/Core캐시/CS/Kernel/Template·권한0/0",
+    "preservedTemplate": "기존19의LoadFort/Core뒤Session을구성하고Install/Clear/게임Load/Login/loaded쓰기없음",
+    "gumpForms": "같은현재Session의공통삭제/투영/객체부착과실제GumpFormHost",
+    "leave": "004795a0 존→참가자0..39 비영SID삭제/0/두배열free→전투0..9 비영SID삭제/0,현재CS재조회",
+    "arrays": "0046d8a0 두포인터free뒤0/4/c/8 쓰기,실제할당토큰/범위·미등록거부",
+    "retirement": "기존State의AI/Player링크/Kernel/Core0 증빙뒤실제메타owner반납"
+  },
+  "integration": {
+    "metaSessionCreatedAtState19": true,
+    "sameCurrentGumpFormsBound": true,
+    "leaveMetamapDeviceConnected": true,
+    "metaWorldOwnerRetiredByNativeCleanup": true,
+    "fullMetaRendererConnected": false,
+    "challengeReceiversConnected": false,
+    "metaNsInfoLayoutConnected": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalRoot": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "CS수신/생성·같은World 가상객체·전체Renderer/카메라·HTML/NSInfo메타배치",
+    "1095~1100표시/송신본체실제접합과1dh/28~33등록",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

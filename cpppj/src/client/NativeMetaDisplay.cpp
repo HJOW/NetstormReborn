@@ -46,6 +46,19 @@ std::array<float,2> LabelPosition(std::span<const std::uint8_t> record,const Gum
     }
 }
 }
+// 원문 MapMode004437f0은 RET이며 실제 선택된 객체/가변 배열만 반납한다.
+void LeaveMetaDisplay(ClientChallengeGlobals& challenge,std::span<std::uint8_t> zones,const NativeMetaDisplayHooks& h) {
+    ClearMetaDisplayZones(zones,h);
+    // 참가자0도 포함하며 SID0의 배열은 원문처럼 그대로 둔다. 삭제 callback 뒤 현재 CS를 다시 읽는다.
+    for (std::uint32_t index=0;index<o::kChallengeParticipantCount;++index) {
+        const auto sid=Read(challenge.Participant(index),0xb8);if (!sid) continue;Need(h.destroy)(sid,0);
+        Put(challenge.Participant(index),0xb8,0);challenge.ClearArray(challenge.Participant(index).subspan(0xbc,16));
+    }
+    // 전투0..9도 비영 SID의 실제 가상 삭제 뒤 해당 슬롯만0으로 쓴다.
+    for (std::uint32_t index=0;index<o::kChallengeBattleCount;++index) {
+        const auto sid=Read(challenge.Battle(index),0x20);if (!sid) continue;Need(h.destroy)(sid,0);Put(challenge.Battle(index),0x20,0);
+    }
+}
 // 실제 보이는 참가자/유효 SID/raw+0B bit0 관문을 통과한 뒤에만 가상 객체와 Gump를 갱신한다.
 void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask,NativeMetaDisplayGlobals g,const NativeMetaDisplayHooks& h) {
     if (!g.playerKnown) return;const auto record=g.challenge.Participant(participant);if (!(Read(record,0x64,1)&1U)) return;

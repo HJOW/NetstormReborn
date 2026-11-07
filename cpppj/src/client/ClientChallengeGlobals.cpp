@@ -37,4 +37,27 @@ std::span<std::uint8_t> ClientChallengeGlobals::Battle(std::uint32_t index) { //
 std::span<std::uint8_t> ClientChallengeGlobals::Participant(std::uint32_t index) { // 물리40개와 각 기록의 실제 폭만 제한한다.
     if (index>=o::kChallengeParticipantCount) throw std::out_of_range("CS 참가자40기록 물리 범위");return Bytes().subspan(o::kChallengeParticipantOffset+index*o::kChallengeParticipantBytes,o::kChallengeParticipantBytes);
 }
+// 실제 할당 성공 뒤만 토큰을 발행하고 아직 초기화하지 않은 원소는 caller의 native 쓰기에 맡긴다.
+std::uint32_t ClientChallengeGlobals::AllocateArray(std::size_t bytes) {
+    if (!nextArrayToken_) throw std::overflow_error("CS 가변 배열 토큰 소진");std::unique_ptr<std::uint8_t[]> value(new(std::nothrow) std::uint8_t[bytes]);if (!value) return 0;
+    const auto token=nextArrayToken_;arrays_.emplace(token,ArrayAllocation{std::move(value),bytes});++nextArrayToken_;return token;
+}
+std::span<std::uint8_t> ClientChallengeGlobals::ArrayBytes(std::uint32_t token) { // 같은 원문 포인터를 조회하며없는 할당을 빈 배열로 합성하지 않는다.
+    const auto found=arrays_.find(token);if (!token || found==arrays_.end()) throw std::logic_error("CS 가변 배열의 실제 할당 미등록");return {found->second.bytes.get(),found->second.size};
+}
+void ClientChallengeGlobals::ClearArray(std::span<std::uint8_t> header) { // 원문 free 실패 경계에서 아직 쓰지 않은 헤더/둘째 포인터를 보존한다.
+    if (header.size()<16) throw std::out_of_range("CS 가변 배열의 실제16BYTE 헤더 부족");
+    // 두 포인터는 순서대로 다시 읽으며 NULL일 때만 free를 생략한다.
+    for (const auto at:{0U,4U}) {
+        std::uint32_t token{};
+        // 비정렬 DWORD를 낮은 BYTE부터 읽는다.
+        for (std::size_t byte=0;byte<4;++byte) token|=std::uint32_t(header[at+byte])<<(byte*8);
+        if (token && arrays_.erase(token)!=1) throw std::logic_error("CS 가변 배열 free의 실제 할당 미등록");
+    }
+    // 원문은 두 free가 끝난 뒤에만 네 DWORD를 이 순서로 쓴다.
+    for (const auto at:{0U,4U,12U,8U}) {
+        // 선택된 DWORD의 네 BYTE만 지워 인접 헤더를 보존한다.
+        for (std::size_t byte=0;byte<4;++byte) header[at+byte]=0;
+    }
+}
 }

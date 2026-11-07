@@ -149,6 +149,7 @@
 #include "client/MetaConnectionRuntime.h"
 #include "client/FortCoreDataLoad.h"
 #include "client/ClientChallengeGlobals.h"
+#include "client/NativeMetaDisplay.h" //메타 이탈도 같은 CS/Pool의 실제 삭제와 가변 배열 반납을 사용한다.
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
 #include "client/EditorTestBattle.h" //c2의 snapshot/Guide 교체와 편집 복귀 순서를 실제 일반 입력에 연결한다.
 #include "client/SaveFortNameDialog.h" //실제 TextEntry/두 버튼/전체 Fort 이름 부모를 사용하는 모달이다.
@@ -343,13 +344,13 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
         [this] { return client_.WallSeconds(); },[this](auto code) { return client_.Poll(code); },
         [this] { if (client_.Audio()) client_.Audio()->Sounds().PlayByName("button.wav",0,0,0,0,0); },
         [this](std::uint32_t form,std::uint32_t flags) {
-            if (!world_ || form>65535U) throw std::logic_error("현재Client UI Form삭제의월드/SID오류");
-            world_->Session().GumpForms().Destroy(o::Sid{static_cast<std::uint16_t>(form)},flags);
+            if (form>65535U) throw std::logic_error("현재Client UI Form삭제의SID오류");
+            client_.GameplayGlobals()->RequireSession().GumpForms().Destroy(o::Sid{static_cast<std::uint16_t>(form)},flags);
         }};
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) {
         buttonHooks.invalidate=[this](auto rectangle,auto flags) { client_.GetRenderer().Invalidate(rectangle,flags); }; //장치 교체 뒤에도 같은 현재 Renderer의 원문 dirty 저장소에 전달한다.
         buttonHooks.invalidateAll=[this] { client_.GetRenderer().InvalidateAll(); }; //영역 정보가 없는 기존 적응 계층 요청은 각 소비자의 원문 영역 복원 전까지 이전 그림을 지운다.
-        buttonHooks.project=[this](auto object) { if (!world_) throw std::logic_error("월드 부착 Gump의 현재 Session 없음");return ProjectGumpObject(world_->Session().Core().pool,client_.GameplayGlobals()->Camera().Snapshot(),object); }; // 미션/Editor 교체와 카메라 이동 뒤에도 같은 현재 Pool/497220을 조회한다.
+        buttonHooks.project=[this](auto object) { return ProjectGumpObject(client_.GameplayGlobals()->RequireSession().Core().pool,client_.GameplayGlobals()->Camera().Snapshot(),object); }; // 미션/Editor/메타 교체와 카메라 이동 뒤에도 같은 현재 Pool/497220을 조회한다.
     }
     rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),std::move(buttonHooks),&client_.GameplayGlobals()->MapRevision()); //전체 HUD와 같은 현재 원본 DWORD를 첫 미니맵 생성 전부터 빌린다.
     rawButtons_->BindChecking(o::RawCheckingFlag{client_.GameplayGlobals()->AiDebug().Checking()},&client_.GameplayGlobals()->AiDebug().AssertionDetail()); //기본 UI 생성/메뉴보다 먼저 같은 Client 진단 DWORD와 부착 오류 상세를 연결한다.
@@ -370,7 +371,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     menuHooks.readInt=[this](std::string_view key,std::int32_t& value) { value=client_.Configuration().GetInt(key); };
     menuHooks.sound=[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); };
     menuHooks.poll=[this](auto code) { return client_.Poll(code); };menuHooks.cursor=[this](auto number) { client_.GetCursor().Set(static_cast<int>(number)); };
-    menuHooks.objectForms=[this]() -> o::GumpFormHost& { if (!world_) throw std::logic_error("현재Client 메뉴Form의월드미설치");return world_->Session().GumpForms(); };
+    menuHooks.objectForms=[this]() -> o::GumpFormHost& { return client_.GameplayGlobals()->RequireSession().GumpForms(); }; //게임 GameWorld 또는 명시 메타 Session의 같은 실제 호스트만 조회한다.
     menuHooks.gameSeconds=[this] { return client_.Time().game; }; // 비용 표시도 같은 프레임의 게임 시각을 읽는다.
     rawButtons_->EnableMenus(client_.Assets(),client_.Fonts(),std::move(menuHooks)).SetPalette(client_.GetScreen().Colors());
     rawButtons_->Menus()->BindColorMaps([owner=client_.ColorSortInput()]() -> const std::array<ColorMap,9>& { return owner->Maps(); }); // 메뉴 그림/도움말도 현재9표를 사용하며 파일 hit 뒤 재계산하지 않는다.
@@ -481,6 +482,7 @@ void UberGump::ClearWorld() {
     if (rawButtons_) rawButtons_->DisableProduction(); // 실제 Session보다 먼저 UI Form을 반납한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseNsInfo(); // 현재 모드/문자/공통 부모가 살아 있을 때 NSInfo 전체 자식을 먼저 반납한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseChatWindows(); // 실제 Chat 자식도 현재 월드 장치가 살아 있을 때 반납한다.
+    if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseMetaDisplayGumps(); //메타 Form이 빌린 Session보다 먼저 같은 실제 글자/버퍼를 반납한다.
     client_.ClearThunderFlashes();
     if (world_) client_.GetRenderer().SetExtraCollection({}); // 월드 반납 전에 빌린 실제 커서 수집/Draw callback을 해제한다.
     client_.GetRenderer().SetOverlayProcedure({}); // 실제 메뉴 픽셀 소비자가 반납한 월드를 다시 읽지 않도록 먼저 제거한다.
@@ -500,16 +502,17 @@ bool UberGump::HasWorld() const { return world_!=nullptr; }
 ScreenRect UberGump::CurrentMapView() const { return rawButtons_->MapViewRect(); } // 원문4c6b30의 현재 지도 전역이며 World의 과거 clip을 사용하지 않는다.
 // Native 부모가 실제 AI/링크/Kernel을 정리하고 Core0을 선택한 뒤 호출하는 호스트 소비자 반납이다.
 void UberGump::RetireWorldForState() {
-    if (!world_) throw std::logic_error("State Runtime 반납의 현재 GameWorld 소유자 누락");
-    if (world_->Session().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 State Runtime 반납 재진입"); // 공유 Pool/Player를 사용하는 실행자가 남아 있으면 전체 부모가 시작되면 안 된다.
+    auto* session=world_ ? &world_->Session() : editor_ ? editor_->metaWorld.get() : nullptr;
+    if (!session) throw std::logic_error("State Runtime 반납의 현재 게임/메타 Session 소유자 누락");
+    if (session->ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 State Runtime 반납 재진입"); // 공유 Pool/Player를 사용하는 실행자가 남아 있으면 전체 부모가 시작되면 안 된다.
     CloseLanLobby(); // Native 자식/Player 반납 전에 제어 소켓을 닫되 같은 State7 요청의 장기 owner는 유지한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // State 전환도 같은 숫자/이름 모달의 장치를 먼저 닫는다.
-    mapUserName_=world_->Session().CurrentHandle(); //State7은 새 Guide의 Init이 작성한 요청/Zone을 사용한다. 이전 Session 반납으로 그 owner를 지우지 않는다.
+    if (world_) mapUserName_=session->CurrentHandle(); //메타 수명은 호스트 사용자 이름을 빈 게임 handle로 덮지 않는다. State7의 새 Guide 요청/Zone도 보존한다.
     gameMenuState_.reset();if (objectMenus_) objectMenus_->Clear(); //현재 Runtime에 대한 메뉴/Form 비소유 참조만 반납한다.
     client_.GetRenderer().SetExtraCollection({});client_.GetRenderer().SetOverlayProcedure({}); //새 HUD를 지우지 않고 이전 월드 Draw callback만 닫는다.
     DetachMissionWorldBindings();briefingSections_.clear();briefingIndex_=0;fortObjects_=0; //Runtime의 Session 참조만 반납한다. gate/state/Script와 Native mission은 State1 이름 비교 뒤 실제 closeGuide 또는 메인 메뉴 해제까지 유지한다.
-    world_->Session().DetachConnectionTransport(); // 같은 실제 Session의 등록을 하위 처리기 소멸보다 먼저 닫는다.
-    auto retiring=std::move(world_);retiring.reset(); //같은 Session의 실제 자식 증빙이 C++ 소멸자의 중복 전역 쓰기를 막는다.
+    session->DetachConnectionTransport(); // 같은 실제 Session의 등록을 하위 처리기 소멸보다 먼저 닫는다.
+    if (world_) { auto retiring=std::move(world_);retiring.reset(); }else editor_->metaWorld.reset(); //같은 Session의 실제 자식 증빙이 C++ 소멸자의 중복 전역 쓰기를 막는다.
 }
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
 void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
@@ -517,6 +520,12 @@ void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
     ClientStateWorldDevices devices;devices.cancelInitialCursor=[this] { CancelClientCursorForState(client_,*client_.SurfaceStorage()); };
     devices.killGumps=[this] { KillGumpsForState(); };devices.cleanupGumps=[this] { CleanupGumpsForState(); };devices.replaceUber=[this] { ReplaceHudForState(); };devices.refreshSp=[this] { RefreshStormPower(); };
     devices.retireRuntime=[this] { RetireWorldForState(); };devices.assertion=[](auto line) { throw std::logic_error("원문 State 중복 모드 진단:"+std::to_string(line)); };
+    devices.leaveMetamap=[this] {
+        NativeMetaDisplayHooks hooks;hooks.destroy=[this](auto sid,auto flags) {
+            auto& session=client_.GameplayGlobals()->RequireSession();if (sid>65535U || sid>=session.Core().pool.Capacity()) throw std::out_of_range("메타 이탈의 실제 DWORD SID 범위");
+            static_cast<void>(session.World().Destroy(o::Sid{static_cast<std::uint16_t>(sid)},flags));
+        };LeaveMetaDisplay(*client_.ChallengeGlobals(),client_.LocalStateGlobals()->MetaZones().records,hooks);
+    }; //004795a0의현재CS/존을지우고필요한가상삭제만같은실제World에위임한다.
     CleanupClientStateWorld(reason,{client_,*client_.SurfaceStorage(),*templateStorage_,*rawButtons_->Menus(),client_.WorldAudio()},client_.SurfaceStorage(),devices);
     if (editor_) editor_->metaTransport.reset(); //Native가10/11을 끊고 Player를 재초기화한 뒤 옛 span을 더 읽기 전에 host TCP owner를 반납한다.
 }

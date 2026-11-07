@@ -329,8 +329,10 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     }
     const bool editorPrepared=services.installMode==CampaignInstallMode::ExistingEditor && services.deferExistingEditorFile && !services.localLogin; // Editor의 실제 파일 지연/비로그인 계약이다.
     const bool generalPrepared=services.installMode==CampaignInstallMode::GeneralBattle && services.localLogin && services.generalBattleStart && !services.missionFortRequest && !services.deferExistingEditorFile && !services.editorTransport; // 일반 LAN은 실제 State7 요청과 Login 전송을 별도로 요구한다.
+    const bool metaPrepared=services.installMode==CampaignInstallMode::MetaMap && !services.localLogin && !services.generalBattleStart && !services.missionFortRequest && !services.deferExistingEditorFile && !services.editorTransport && services.templateStorage && services.challengeGlobals; // 메타는 실제19의 Fort/Core/CS를 빌리고 게임 로그인·새 Fort 설치를 실행하지 않는다.
     if (services.installMode==CampaignInstallMode::GeneralBattle && !services.adoptPreparedWorld) throw std::invalid_argument("일반 LAN은 실제 State7 정리 뒤 준비된 전역 대여가 필요함");
-    if (services.adoptPreparedWorld && ((!editorPrepared && !generalPrepared) || !services.adoptInitializedPlayers || !services.gameplayGlobals || !services.surfaceStorage || !services.localStateGlobals || !services.playerRecords || !services.coreDataGlobals || !services.randomGlobals || !services.spGlobals || !services.processKernel)) throw std::invalid_argument("준비된 Editor/LAN의 같은 전역/표면/State/Player/Core/SP/Kernel 대여 계약"); // 대여 전에 실제 소유자를 확인하며 World/로그인 성공을 합성하지 않는다.
+    if (services.installMode==CampaignInstallMode::MetaMap && (!services.adoptPreparedWorld || !metaPrepared)) throw std::invalid_argument("메타는 실제 State19의 같은 장기 Fort/Core/CS 준비 대여가 필요함");
+    if (services.adoptPreparedWorld && ((!editorPrepared && !generalPrepared && !metaPrepared) || !services.adoptInitializedPlayers || !services.gameplayGlobals || !services.surfaceStorage || !services.localStateGlobals || !services.playerRecords || !services.coreDataGlobals || !services.randomGlobals || !services.spGlobals || !services.processKernel)) throw std::invalid_argument("준비된 Editor/LAN/메타의 같은 전역/표면/State/Player/Core/SP/Kernel 대여 계약"); // 대여 전에 실제 소유자를 확인하며 World/로그인 성공을 합성하지 않는다.
     if (services.gameplayGlobals && services.gameplayGlobals->Subscribers()!=services.subscriberGlobals) throw std::invalid_argument("Session의 실제 현재 전역/Subscriber 소유자 불일치");
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->Authority()!=services.surfaceStorage->Authority()) throw std::invalid_argument("Session의 실제 현재 전역/표면 권한 소유자 불일치"); // 대여/fresh 쓰기 이전에 정체성을 검증한다.
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
@@ -1016,7 +1018,13 @@ struct RawCampaignSession::Impl {
         anchorState.graphAssertion=[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph SID 조회 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 현재 상태의 복사본도 같은 장기 Session 서비스를 매 호출 읽는다.
         placement.anchor.graphAssertion=anchorState.graphAssertion; // 지형 생성용 고정 파이프라인도 같은 현재 진단을 빌리며 gameplay 쪽은 매 요청 anchorState 전체를 복사한다.
         assetState.sharedAuthority=gameplayGlobals->Authority().get();gunState.sharedAuthority=gameplayGlobals->Authority().get();regularState.sharedAuthority=gameplayGlobals->Authority().get(); // 첫 파생 모듈 전에 같은 owner를 연결하며 준비된false를 true로 덮지 않는다.
-        assetState.inBattle=true;assetState.localOwner=services.installMode==CampaignInstallMode::GeneralBattle ? static_cast<std::uint8_t>(playerState.battleOwner) : 1;
+        assetState.inBattle=true;assetState.localOwner=services.installMode==CampaignInstallMode::GeneralBattle || services.installMode==CampaignInstallMode::MetaMap ? static_cast<std::uint8_t>(playerState.battleOwner) : 1;
+        if (services.installMode==CampaignInstallMode::MetaMap) {
+            // State19의 같은 모드/캐시를 검사하고 비편집 처리기 별칭만 맞춘다. 원문 known0은 HUD 뒤 부모가 쓴다.
+            if (localStateGlobals->State().current[0]!=19 || !core.ownerMode.challenge || core.ownerMode.fort || core.ownerMode.battle || globals.editor || core.processState.Server() || gameplayGlobals->Boss() || playerState.battleOwner!=1 || playerState.templateOwner!=1) throw std::logic_error("메타의 실제 State19/현재 owner·권한 계약");
+            world.ConfigureInstallModes(core.ownerMode.fort,core.ownerMode.battle,core.ownerMode.challenge,false);
+            assetState.fortMode=false;assetState.inBattle=false;regularState.fortMode=false;objectState.mission=false;objectState.fort=false;objectState.special=false;finishState.special=false;finishState.fort=false;
+        }
         if (services.installMode==CampaignInstallMode::GeneralBattle) {
             // Native State7 정리/전투 모드 쓰기를 대여하며 ctor에서 미션/서버/현재 Player를 다시 만들지 않는다.
             if (localStateGlobals->State().current[0]!=7 || !core.ownerMode.battle || core.ownerMode.fort || core.ownerMode.challenge || core.bridgeState.mission || globals.missionPost || globals.editor || !services.missionFortFileSelect) throw std::logic_error("일반 LAN의 실제 State7/비미션 전투/파일 선택 계약");
@@ -1039,7 +1047,8 @@ struct RawCampaignSession::Impl {
             priestState.regen.modeBlocked=true;
         }
         if (services.adoptPreparedWorld) {
-            const auto current=coreDataGlobals->Current();if (current.size()!=10 || current.data()!=players.data()+180+0x6c || coreDataGlobals->Players().data()!=players.data()) throw std::logic_error("준비된 Editor/LAN의 실제 cleanup/prefix Core1 선택 불일치"); // 원문 prefix/정리가 선택한 같은 Player뷰를 검증하며 active/cache/owner를 다시 쓰지 않는다.
+            const auto current=coreDataGlobals->Current();const auto expected=services.installMode==CampaignInstallMode::MetaMap ? coreDataGlobals->Cached().data() : players.data()+180+0x6c;
+            if (current.size()!=10 || current.data()!=expected || coreDataGlobals->Players().data()!=players.data()) throw std::logic_error("준비된 Editor/LAN/메타의 실제 cleanup/prefix Core 선택 불일치"); // 메타의 캐시10BYTE와 일반 Player1 Core를 구별하며 현재값을 다시 쓰지 않는다.
         } else if (services.coreDataGlobals) { const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,1,1); } // 기존 독립/캠페인 어댑터는 종전 선택 순서를 보존한다.
         constructionState.command.chargeBlockedRead=constructionState.place.chargeBlockedRead=[this] { return globals.missionPost; }; // 원본00594fa4는 캠페인/편집/일반 전투 모두의 현재 미션 전역이다. 각 소비 위치에서 읽어 캠페인 배치 확정의 중복 비용 검사와 잘못된 부족 안내를 막는다. 생산 가격·AI 자금 판정은 별도 몸체가 유지한다.
         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
@@ -1669,7 +1678,8 @@ struct RawCampaignSession::Impl {
         };
         normal->BindGenerationInputs(std::move(terrainGeneration));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.Residences(),finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
-        if (services.missionFortFileSelect && services.localLogin) { if (services.missionFortImage) throw std::logic_error("지연 미션 파일 선택에 선행 이미지가 함께 전달됨"); } // 실제10.78은 State9 지역Template 읽기와 서버 수신의 전역 설치까지 파일을 열거나 manager를 공개하지 않는다.
+        if (services.installMode==CampaignInstallMode::MetaMap) { if (services.missionFortImage) throw std::logic_error("메타의 이미 읽은 Fort에 선행 이미지 중복 전달"); } // State19가 읽은 같은 manager/stream을 보존하고 빈 Fort로 Install/Clear하지 않는다.
+        else if (services.missionFortFileSelect && services.localLogin) { if (services.missionFortImage) throw std::logic_error("지연 미션 파일 선택에 선행 이미지가 함께 전달됨"); } // 실제10.78은 State9 지역Template 읽기와 서버 수신의 전역 설치까지 파일을 열거나 manager를 공개하지 않는다.
         else if (services.deferExistingEditorFile) deferredEditorFort.emplace(std::move(fort)); //manager를공개하거나현재Slot을Clear하지않고입력/파일요청수명만보유한다.
         else if (services.missionFortImage) { templateStorage->InstallFile(1,std::move(fort),*services.missionFortImage,services.missionFortFileName.empty() ? std::string(mission) : services.missionFortFileName,static_cast<std::int32_t>(core.types.size()));services.missionFortImage.reset(); } //실제 Client는 같은 최초 읽기의 파일 경로를 manager에 설치한다. 기존 독립 호출은 논리 이름 계약을 유지한다.
         else templateStorage->Install(1,std::move(fort),std::string(mission)); //기존합성입력의실제섹션목록도변경하지않는다.
@@ -5447,7 +5457,7 @@ std::unique_ptr<RawObjectMenuOpen> RawCampaignSession::MakeObjectMenuOpen(Object
     return std::make_unique<RawObjectMenuOpen>(current->core.pool,current->core.types,std::move(hooks));
 }
 // 초기설치이전에는Form생성/부착을노출하지않는다. 별도UI전용풀을만들지않는다.
-GumpFormHost& RawCampaignSession::GumpForms() { if ((!impl_->loaded && !impl_->editorUiInstalling) || !impl_->gumpForms) throw std::logic_error("설치 전 실제 Session GumpForm 요청");return *impl_->gumpForms; } // 설치 scope의 실제 생산 격자 두 개가 같은 기술 부모에 부착할 때만 선행 조회를 허용한다.
+GumpFormHost& RawCampaignSession::GumpForms() { if ((!impl_->loaded && !impl_->editorUiInstalling && impl_->services.installMode!=CampaignInstallMode::MetaMap) || !impl_->gumpForms) throw std::logic_error("설치 전 실제 Session GumpForm 요청");return *impl_->gumpForms; } // 준비된 메타와 Editor UI 설치도 같은 실제 호스트를 빌린다. 게임 loaded/커서 관문을 열지 않는다.
 // 큰 UI/현재 관문을 보존하고 같은 월드가 이미 소유하는 게임 계산·표시 프로세스만 연결한다.
 std::unique_ptr<RawUserSelection> RawCampaignSession::MakeUserSelection(UserSelectionState state,UserSelectionHooks hooks) {
     if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 선택 요청");auto* current=impl_.get(); // 반환 몸체가 빌리는 같은 장기 Session이다.

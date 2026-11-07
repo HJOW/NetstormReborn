@@ -21,13 +21,21 @@ o::LocalMissionParentResult UberGump::InstallMetaNativeState(std::uint32_t selec
         context.seed=[this]()->std::uint32_t& { return client_.RandomGlobals()->FortCoreSeed(); };
         context.assertion=[](auto expression,auto file,auto line) { std::clog<<file<<':'<<line<<' '<<expression<<'\n'; };
         context.refreshRank=[this,&surface] { RefreshClientChatRankPrefix(client_,client_.Assets(),surface); };context.invalidData=[&game] { game.PatchDiagnostic()=game.PatchSample(); };
-        LoadFortCoreData(*templateStorage_,owner,minimum!=0,std::move(context));
+        LoadFortCoreData(*templateStorage_,owner,minimum!=0,std::move(context));PrepareMetaWorldRuntime(); //같은Fort/캐시읽기뒤HUD가필요로하는실제Pool·Form처리기만구성한다.
     };
     hooks.hud=[this](auto command,auto mode,auto,auto) { rawButtons_->NotifyHudMode(command,mode); }; //기존 장치는 원문 인자0/숨김포함1을 그대로 사용한다.
     hooks.wallSeconds=[this] { return client_.WallSeconds(); };hooks.loadNewsTime=[this] { LoadClientSystemNewsTime(client_); };
     hooks.battleChannel=[this](auto mode) { RefreshClientBattleChatChannel(client_,*rawButtons_->Menus(),mode); };
     hooks.inputVisible=[this](auto visible) { const auto token=client_.ChatWindowGlobals()->window.current;if (token) rawButtons_->Menus()->ChatGeometryBackend()->SetInputVisible(token,visible); };
     return netstorm::client::InstallNativeMetaState({local.State(),htmlGlobals_.background,local.MetaCdPresent(),surface.ownerMode.challenge,game.Server(),game.Boss(),local.MetaPending(),game.player,local.HudModeCommand(),local.ActivityEnd(),*client_.ChallengeGlobals()},hooks);
+}
+// 호스트 처리기 대여는 Native 메타 전역을 다시 초기화하거나 Fort의 빈 복사본을 설치하지 않는다.
+void UberGump::PrepareMetaWorldRuntime() {
+    if (!editor_ || world_ || editor_->metaWorld || client_.LocalStateGlobals()->State().current[0]!=19) throw std::logic_error("실제 State19 메타 Runtime의 한 번 대여 계약");
+    auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }});
+    services.installMode=CampaignInstallMode::MetaMap;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.localLogin.reset();
+    services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;
+    editor_->metaWorld=std::make_unique<RawCampaignSession>(client_.Assets(),client_.Files(),o::FortTemplate{},std::string(client_.FortGlobals()->Current()),std::move(services));
 }
 // 실제19의 World 정리 뒤 같은 Client 물리로만 메타 연결 owner를 처음 만든다.
 o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t selected) {

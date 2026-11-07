@@ -45,6 +45,7 @@ struct NativeMetaPollGlobals { // 전체 Poll의 존/현재 TYPE·권한·진단
 void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask,NativeMetaDisplayGlobals globals,const NativeMetaDisplayHooks& hooks); //0047d8c0 전체: 객체 갱신/이름표 내용/8자리 배치와 가시성을 원문 순서로 처리한다.
 void UpdateMetaBattle(std::uint32_t battle,NativeMetaDisplayGlobals globals,const NativeMetaDisplayHooks& hooks); //00479c40의 현재 전투섬 owner/HP/특수BYTE10/투영·재등록이다.
 void ClearMetaDisplayZones(std::span<std::uint8_t> records,const NativeMetaDisplayHooks& hooks); //00479560의51기록 순회/현재 양수존·비영SID 삭제→SID0이다.
+void LeaveMetaDisplay(ClientChallengeGlobals& challenge,std::span<std::uint8_t> zones,const NativeMetaDisplayHooks& hooks); //004795a0의 존→참가자40/SID·배열→전투10/SID 정리를 실제 현재 저장소에 수행한다.
 void PollMetaDisplay(NativeMetaPollGlobals globals,const NativeMetaDisplayHooks& hooks); //00479760 전체: 최초보정/분모→39참가자/9전투→현재50존/종속Gump의 가시성이다.
 void RefreshMetaNsInfo(ClientNsInfoGlobals& globals,const NativeMetaDisplayHooks& hooks); //0047cab0의 기존NSInfo Push→현재 같은 슬롯 재조회→visible/루트부착이다.
 }
