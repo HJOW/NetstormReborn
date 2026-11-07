@@ -540,7 +540,7 @@ cpppj/src/o/RawBombStrike.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombTargets.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombTimerPacket.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeCarriers.cpp	port			todo	[o-default]
-cpppj/src/o/RawBridgeConnect.cpp	port			todo	[o-default]
+cpppj/src/o/RawBridgeConnect.cpp	port	www/core/raw-bridge-connect.js	1f00a25a	port	[o-default] WB04-E42: 연결 순회·연결 객체 생성·소유자 전파·한 칸 조회·섬 받침 접두·색 프레임·소유자 분배. fixture bridgeconnect 10.78 3,600행(Walk 1856·Connect 464·Link 392·Owner 330·FindAt 270·Color 42·IslandOwner/StalagOwner 각 96·IslandPost 54). 실제 SquidFrame·bridge.type 프레임표 통합 검사는 SquidFrame 단위에서
 cpppj/src/o/RawBridgeDecay.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeDecayScan.cpp	port			todo	[o-default]
 cpppj/src/o/RawBridgeDraw.h	port			todo	[o-default]

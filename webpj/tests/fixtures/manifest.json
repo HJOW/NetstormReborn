@@ -5835,7 +5835,7 @@
       "bytes": 218979,
       "lines": 2141,
       "fixtureCommit": "4ed429ca",
-      "webCommit": "worktree",
+      "webCommit": "e0cc9be6",
       "cpppjBasis": {
         "cpppj/src/o/SquidPostPop.cpp": "b04fd743",
         "cpppj/src/o/SquidPostPopPatch.cpp": "99ff1a5f"
@@ -5865,7 +5865,7 @@
       "bytes": 8204,
       "lines": 241,
       "fixtureCommit": "8bb3d9ca",
-      "webCommit": "worktree",
+      "webCommit": "e0cc9be6",
       "cpppjBasis": {
         "cpppj/src/o/SquidPostPop.cpp": "b04fd743"
       }
@@ -5896,7 +5896,7 @@
       "bytes": 10343491,
       "lines": 1797,
       "fixtureCommit": "398e67b0",
-      "webCommit": "worktree",
+      "webCommit": "e0cc9be6",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85",
         "cpppj/src/o/SquidPostPop.cpp": "b04fd743"
@@ -5928,7 +5928,7 @@
       "bytes": 2349133,
       "lines": 1927,
       "fixtureCommit": "44815f5a",
-      "webCommit": "worktree",
+      "webCommit": "e0cc9be6",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85",
         "cpppj/src/o/SquidPostPop.cpp": "b04fd743"
@@ -5959,7 +5959,7 @@
       "bytes": 2065280,
       "lines": 1549,
       "fixtureCommit": "09d24c09",
-      "webCommit": "worktree",
+      "webCommit": "e0cc9be6",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85"
       }
@@ -5989,9 +5989,39 @@
       "bytes": 1355851,
       "lines": 391,
       "fixtureCommit": "561e2803",
-      "webCommit": "worktree",
+      "webCommit": "e0cc9be6",
       "cpppjBasis": {
         "cpppj/src/o/RawGraph.cpp": "5626fa85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E42",
+      "id": "bridgeconnect",
+      "path": "cpppj/tests/fixtures/bridgeconnect-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리/섬 연결·연결 객체 생성·소유자 전파·한 칸 조회·색 프레임·섬 받침 소유자 지정·postPop (232 장면)",
+      "consumers": [
+        "webpj/tests/bridge-connect.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bridge-connect.js",
+        "webpj/www/core/raw-squid-neighbors.js"
+      ],
+      "doc": "docs/webpj-bridge-connect-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeConnect.cpp"
+      ],
+      "scope": "10.78(originals) 구간만 사용(original1037·originalCD 구간은 범위 밖)",
+      "text": true,
+      "sha256": "90319a6bfd80f2325843638e63b59c6096b36afc1ea5514b01ca54b14f845d15",
+      "bytes": 982108,
+      "lines": 11861,
+      "fixtureCommit": "6a0907de",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeConnect.cpp": "0c06fa66"
       }
     }
   ]
