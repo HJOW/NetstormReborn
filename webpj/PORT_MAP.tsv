@@ -755,7 +755,7 @@ cpppj/src/o/RawIslandBuilder.cpp	port			todo	[o-default]
 cpppj/src/o/RawIslandLifecycle.cpp	port			todo	[o-default]
 cpppj/src/o/RawIslandPlacement.cpp	exclude-edit			-	[edit-island-add]
 cpppj/src/o/RawIslandPopulation.cpp	port			todo	[o-default]
-cpppj/src/o/RawIslandPostPop.cpp	port	www/assets/island-supports.js	1f00a25a	partial	[o-default] 3.6③: 기준선의 패치판 진단 복귀·현재 좌표 재조회·FootDelta 는 WB04-E PostPop 이식 때 반영. 웹의 정적 3×3 받침 소유자 계산 결과는 그대로
+cpppj/src/o/RawIslandPostPop.cpp	port	www/assets/island-supports.js;www/core/raw-island-post-pop.js	1f00a25a	port	[o-default] WB04-E47(+3.6③): noIsland 최초 등록 접두·3×3 받침 소유자 전파·표면 글자(패치판 진단 복귀·현재 좌표 재조회·FootDelta 포함). fixture islandpostpop SurfacePostPop 402·SupportOwner 150행. 실제 SquidFactory/SquidOwner 통합 검사는 월드 조립에서
 cpppj/src/o/RawIslandQueries.cpp	port			todo	[o-default]
 cpppj/src/o/RawIslandRuntime.cpp	port			todo	[o-default]
 cpppj/src/o/RawKencloud.cpp	port			todo	[o-default] WB02-H: 메인 메뉴 구름 배경 생성(ClientKencloudGlobals 메모 참조)

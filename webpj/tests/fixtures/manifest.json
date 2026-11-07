@@ -6171,9 +6171,39 @@
       "bytes": 128144,
       "lines": 259,
       "fixtureCommit": "29dbc48c",
-      "webCommit": "worktree",
+      "webCommit": "14dd9e74",
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeCarriers.cpp": "8b467ca0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E47",
+      "id": "islandpostpop",
+      "path": "cpppj/tests/fixtures/islandpostpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: noIsland postPop 최초 등록과 받침 소유자 전파(생성/가상 소유자/Pop/표시/공통 postPop/진단은 기록 대체)",
+      "consumers": [
+        "webpj/tests/island-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-island-post-pop.js",
+        "webpj/www/core/raw-bridge-connect.js"
+      ],
+      "doc": "docs/webpj-island-post-pop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIslandPostPop.cpp"
+      ],
+      "scope": "10.78(originals) SurfacePostPop 402행·SupportOwner 150행 사용(original1037·originalCD는 범위 밖)",
+      "text": true,
+      "sha256": "e6282ce1dc8385a6c8ecafc6a18a1175f882f57d03610e4d36f7ca2eb88ecfcc",
+      "bytes": 411705,
+      "lines": 1990,
+      "fixtureCommit": "83c6ac6c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIslandPostPop.cpp": "0c06fa66"
       }
     }
   ]
