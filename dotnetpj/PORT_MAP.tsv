@@ -605,3 +605,5 @@ cpppj/src/o/RawContentAttach.h	Netstorm.Core/Original/RawContentAttach.cs	f83db6
 cpppj/src/o/RawContentAttach.cpp	Netstorm.Core/Original/RawContentAttach.cs	f83db66ca229cc8fe9676d8ed52787277768869d	L1
 cpppj/src/client/RawNormalTerrainWorldBinding.h	Netstorm.Core/Original/RawNormalTerrainBinding.cs	2d50804c8e2796f498c79cb79956848b54c5e5f0	port
 cpppj/src/client/RawNormalTerrainWorldBinding.cpp	Netstorm.Core/Original/RawNormalTerrainBinding.cs	2d50804c8e2796f498c79cb79956848b54c5e5f0	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceWorld.cs	b8cadde14fbf9cd9e2d89a3102c5db2d5645c494	port
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.cs	b8cadde14fbf9cd9e2d89a3102c5db2d5645c494	port
