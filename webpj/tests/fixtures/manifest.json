@@ -4319,7 +4319,7 @@
       "bytes": 76997,
       "lines": 1633,
       "fixtureCommit": "cbafd5fe",
-      "webCommit": "worktree",
+      "webCommit": "4c032fbb",
       "cpppjBasis": {
         "cpppj/src/o/RawRegionOwner.cpp": "cbafd5fe"
       }
@@ -4348,7 +4348,7 @@
       "bytes": 153706,
       "lines": 1013,
       "fixtureCommit": "8b467ca0",
-      "webCommit": "worktree",
+      "webCommit": "4c032fbb",
       "cpppjBasis": {
         "cpppj/src/o/RawSidRobust.cpp": "8b467ca0"
       }
@@ -4377,7 +4377,7 @@
       "bytes": 215391,
       "lines": 67,
       "fixtureCommit": "1e8e43d9",
-      "webCommit": "worktree",
+      "webCommit": "4c032fbb",
       "cpppjBasis": {
         "cpppj/src/o/RawStateSidLists.cpp": "1e8e43d9"
       }
@@ -4406,9 +4406,183 @@
       "bytes": 53527,
       "lines": 2353,
       "fixtureCommit": "10735a35",
-      "webCommit": "worktree",
+      "webCommit": "4c032fbb",
       "cpppjBasis": {
         "cpppj/src/o/RawTypeRequiredEnergy.cpp": "10735a35"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E27",
+      "id": "configuration-commands",
+      "path": "cpppj/tests/fixtures/configuration-commands-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: ChangePal/ChangePriority/SetFortType의 공통 관문 뒤 순서·현재 전역 재조회·State 출력",
+      "consumers": [
+        "webpj/tests/command-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/configuration-command-input.js"
+      ],
+      "doc": "docs/webpj-command-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/ConfigurationCommandInput.cpp"
+      ],
+      "scope": "238행 전부 사용",
+      "text": true,
+      "sha256": "f0154f41759efa6797af4de90f58de225deabe9cc8e9d33a2692e2bd39b27267",
+      "bytes": 37543,
+      "lines": 239,
+      "fixtureCommit": "9e20b1c9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ConfigurationCommandInput.cpp": "9e20b1c9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E27",
+      "id": "configuration-command-names",
+      "path": "cpppj/tests/fixtures/configuration-command-names-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 설정 명령 이름표·토큰·큐 예약",
+      "consumers": [
+        "webpj/tests/command-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/configuration-command-input.js"
+      ],
+      "doc": "docs/webpj-command-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/ConfigurationCommandInput.cpp"
+      ],
+      "scope": "30행의 이름→명령 번호만 사용(인자·문자열 고리·큐 예약은 대본 큐 단위)",
+      "text": true,
+      "sha256": "6d265064c96551d7c61e8fcd68068965d1ff23dc9f6e42d88b037e32cefe7371",
+      "bytes": 2448,
+      "lines": 31,
+      "fixtureCommit": "9e20b1c9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ConfigurationCommandInput.cpp": "9e20b1c9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E27",
+      "id": "send-money-input",
+      "path": "cpppj/tests/fixtures/send-money-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 송금 고정 세 금액의 분기·차감·지갑·패킷 순서와 AI 진단",
+      "consumers": [
+        "webpj/tests/command-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/send-money-input.js"
+      ],
+      "doc": "docs/webpj-command-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/SendMoneyInput.cpp"
+      ],
+      "scope": "888행 전부 사용",
+      "text": true,
+      "sha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08",
+      "bytes": 83458,
+      "lines": 889,
+      "fixtureCommit": "ca0c01eb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SendMoneyInput.cpp": "ae3236e4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E27",
+      "id": "ai-debug-input",
+      "path": "cpppj/tests/fixtures/ai-debug-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI reporting 토글과 debug 29/99 토글의 본문·전역 변화",
+      "consumers": [
+        "webpj/tests/command-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/ai-debug-command-input.js"
+      ],
+      "doc": "docs/webpj-command-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/AiDebugCommandInput.cpp"
+      ],
+      "scope": "200행 전부 사용",
+      "text": true,
+      "sha256": "81ff05d4454b92594212c20f5f68f3cf5ebaed0607c6aa875f114017c2816715",
+      "bytes": 5634,
+      "lines": 201,
+      "fixtureCommit": "8d6c325c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/AiDebugCommandInput.cpp": "8d6c325c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E27",
+      "id": "scenario-object-input",
+      "path": "cpppj/tests/fixtures/scenario-object-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 메뉴 없는 객체 명령의 대상 SID·뗌·반환 무시",
+      "consumers": [
+        "webpj/tests/command-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/scenario-object-input.js"
+      ],
+      "doc": "docs/webpj-command-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScenarioObjectInput.cpp"
+      ],
+      "scope": "480행 전부 사용",
+      "text": true,
+      "sha256": "99fc7cda7c8d7b06bbaea8e99ef014675adbd21b46427aee5745925ac1514b54",
+      "bytes": 27726,
+      "lines": 481,
+      "fixtureCommit": "e5e2f433",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScenarioObjectInput.cpp": "e5e2f433"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E27",
+      "id": "saved-camera-key",
+      "path": "cpppj/tests/fixtures/saved-camera-key-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 숫자 키 저장 카메라의 언어/수정키/유효성/현재 중심/부분 쓰기 전체 장부",
+      "consumers": [
+        "webpj/tests/command-inputs.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/saved-camera-key.js"
+      ],
+      "doc": "docs/webpj-command-inputs-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/SavedCameraKey.cpp"
+      ],
+      "scope": "1750행 전부 사용",
+      "text": true,
+      "sha256": "aff166aad233756cf65ac9e2215b818a415461e0dc6d74f4943e4e9ff95a4025",
+      "bytes": 939962,
+      "lines": 1751,
+      "fixtureCommit": "aae2f0ab",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SavedCameraKey.cpp": "e46d8981"
       }
     }
   ]
