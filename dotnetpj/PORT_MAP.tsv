@@ -547,3 +547,7 @@ cpppj/src/o/RawCampaignWorldLoad.h	Netstorm.Core/Original/CampaignWorldGlobals.c
 cpppj/src/o/RawCampaignWorldLoad.cpp	Netstorm.Core/Original/RawCampaignWorldLoad.cs	b8ce42c7db0f762d0b836c50d557cc4556e04a52	port
 cpppj/src/o/RawSurfaceLifecycle.h	Netstorm.Core/Original/RawSurfaceLifecycle.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
 cpppj/src/o/RawSurfaceLifecycle.cpp	Netstorm.Core/Original/RawSurfaceLifecycle.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/o/RawSavedStateWrite.h	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	port
+cpppj/src/o/RawSavedStateWrite.cpp	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	port
+cpppj/src/o/RawSavedStateRead.h	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	L1
+cpppj/src/o/RawSavedStateRead.cpp	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	L1
