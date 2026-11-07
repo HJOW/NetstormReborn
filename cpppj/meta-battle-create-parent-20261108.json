@@ -1,0 +1,60 @@
+{
+  "unit": 1121,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12670976,
+      "sha256": "9e9032dcdae21d337f3afc61b79660f2df1d8b3b594d9ae7943582bcf33b8bb7"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "880b859d4649b468cf4b05a234bb62b862b0609fae9c84c6a307396faf438bbb"
+    }
+  },
+  "staticAudit": {
+    "native": "0042b3a0/42c670 전체·각다음함수까지기계어",
+    "callingConvention": "ret18h=DWORD스택6칸·8BYTE값구조체에6BYTE만작성·논리id/식별자/x/y/기존표시5개",
+    "record": "id/식별자4/2/x/active1/y→8슬롯0→max-1/min256·패딩/이미지헤더미작성보존",
+    "objects": "현재TYPE109장치/flags2→현재id QA→같은raw+8WORD0→owner0→현재y/x Pop→SID저장",
+    "animation": "마지막기존표시가0일때만같은SID/지연10 Rig장치요구",
+    "receive": "23h현재active면수준9반환·기존packet5&2/y/x/식별자4/2캡처→생성부모"
+  },
+  "integration": {
+    "constructorAnd23ParentCompiled": true,
+    "worldAndRigDevicesBound": false,
+    "battle23ReceiveRegistered": false,
+    "battleOptions67ReceiveBoundIn1120": true,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "실제공장/QA/owner/Pop·Rig장치와23h등록/나머지CS수신·참가자생성·HTML→1dh/28~33등록/1095송신상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
