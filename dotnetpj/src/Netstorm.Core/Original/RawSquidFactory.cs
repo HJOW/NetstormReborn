@@ -18,6 +18,36 @@ public interface IRawUnpop
 }
 
 /// <summary>
+/// 같은 월드·세션의 현재 타입 표와 정상 복귀 가능한 원본 진단을 빌린다
+/// (cpppj <c>o/SquidFactory.h</c>의 <c>SquidFactoryDiagnostics</c>).
+/// </summary>
+/// <remarks>2026-11-07 F2d 공장 진단 묶음 이식에서 추가했다. 현재 표만 소비 위치에서 읽고, 진단 장치는 F3·R6 소비자가 연결한다.</remarks>
+public sealed class SquidFactoryDiagnostics
+{
+    /// <summary>빌린 현재 타입 표다. 비어 있으면 기존 독립 생성자의 타입 사본을 쓴다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    public IReadOnlyList<OriginalTypeRecord>? Types { get; set; }
+
+    /// <summary>Take·PostTake의 원문 식·파일·줄을 실제 진단 장치에 전달한다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    public Action<string, string, uint>? Assertion { get; set; }
+
+    /// <summary>타입 불일치 문구를 같은 Client 소유자에 복사한다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    public Action<string>? Detail { get; set; }
+
+    /// <summary>타입 HP의 선택된 진단에서 현재값을 읽는다. R6 HP 경로에서 소비한다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    public RawCheckingFlag? Checking { get; set; }
+
+    /// <summary>현재 진단 묶음의 얕은 사본을 만든다. 표·장치는 공유하고 검사 표시는 복사하지 않는다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    /// <returns>복사된 진단 묶음이다.</returns>
+    public SquidFactoryDiagnostics Clone() => new()
+    {
+        Types = Types,
+        Assertion = Assertion,
+        Detail = Detail,
+        Checking = Checking is null ? null : new RawCheckingFlag(Checking),
+    };
+}
+
+/// <summary>
 /// 오브젝트 슬롯을 할당해 타입별 생성자 필드를 채우는 원본 팩토리(Squid.cpp 의 생성·Take·공통 초기화, 10.78).
 /// 순서는 원본 그대로 "슬롯 할당 → 생성자 쓰기 → 타입 바이트 → 공통 postCreate" 이고, Take 는 풀 목록·카운터를 건드리지 않고
 /// free/dead 를 지운 뒤 생성자 필드만 다시 쓴다(<c>004af530</c> 생성, <c>004af610</c> Take, <c>004b0c60</c> postCreate, <c>004ad4a0</c> postTake,
@@ -79,6 +109,9 @@ public sealed class RawSquidFactory
     /// <summary>선택된 Form 해제 때 실제 공통 종속 분리만 실행하는 경계다. 없으면 공통 순서를 쓴다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
     private Action<int>? _formDetach;
 
+    /// <summary>같은 월드·세션의 현재 타입 표와 정상 복귀 가능한 원본 진단 묶음이다. 비어 있으면 기존 독립 생성자의 타입 사본을 쓴다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    private SquidFactoryDiagnostics? _diagnostics;
+
     /// <summary>죽은 Session 주소를 저장하지 않는 Form 전송 경계다. 없으면 서버 전송 경로에서 예외다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
     private Action<int, uint>? _formTransmit;
 
@@ -113,6 +146,19 @@ public sealed class RawSquidFactory
 
     /// <summary>이 팩토리가 쓰는 슬롯 풀. 생성 효과 어댑터가 같은 풀인지 확인하는 데 쓴다.</summary>
     public RawSidPool Pool => _pool;
+
+    /// <summary>같은 판본 길이의 현재 타입 표와 실제 진단 장치를 연결한다. 빈 표는 기존 독립 사본을 유지한다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    /// <param name="diagnostics">연결할 진단 묶음이다.</param>
+    public void BindDiagnostics(SquidFactoryDiagnostics diagnostics)
+    {
+        ArgumentNullException.ThrowIfNull(diagnostics);
+        if (diagnostics.Types is not null && diagnostics.Types.Count != 0 && diagnostics.Types.Count != _types.Count)
+        {
+            throw new ArgumentException("Factory 현재 TYPE의 판본/길이 오류", nameof(diagnostics));
+        }
+
+        _diagnostics = diagnostics.Clone();
+    }
 
     /// <summary>새 대여는 이후 선택된 Form 해제부터 분리 경계를 사용한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
     /// <param name="detach">void 설정·부모 free 관문 뒤 실행할 분리 경계다. null이면 공통 순서를 쓴다.</param>
@@ -175,9 +221,13 @@ public sealed class RawSquidFactory
         var hooks = new FormAttachHooks
         {
             // 각 호출에서 현재 빌린 TYPE 표를 읽는다
-            Genus = number => number >= _types.Count
-                ? throw new ArgumentOutOfRangeException(nameof(number), number, "Form 부착의 현재 TYPE 범위 오류")
-                : _types[number].Flags2,
+            Genus = number =>
+            {
+                IReadOnlyList<OriginalTypeRecord> current = CurrentTypes();
+                return number >= current.Count
+                    ? throw new ArgumentOutOfRangeException(nameof(number), number, "Form 부착의 현재 TYPE 범위 오류")
+                    : current[number].Flags2;
+            },
             ContentType = _formContentType ?? (() => 6u),
         };
         forms.BindAttach(hooks);
@@ -441,11 +491,12 @@ public sealed class RawSquidFactory
     /// <param name="requireSupported">생성자 지원 여부까지 확인할지.</param>
     private OriginalTypeRecord Type(uint number, bool requireSupported)
     {
-        if (number < OriginalConstructors.FirstAssetType || number >= _types.Count)
+        IReadOnlyList<OriginalTypeRecord> current = CurrentTypes();
+        if (number < OriginalConstructors.FirstAssetType || number >= current.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(number), number, "base 오브젝트 타입 번호 오류");
         }
-        OriginalTypeRecord type = _types[(int)number];
+        OriginalTypeRecord type = current[(int)number];
         if (requireSupported && type.ConstructorAddress != 0 && OriginalConstructors.Recipe(_pool.Edition, type.ConstructorAddress) is null)
         {
             throw new InvalidOperationException("null/assert 또는 미복원 생성자는 지원하지 않습니다");
@@ -600,23 +651,37 @@ public sealed class RawSquidFactory
         return false;
     }
 
+    /// <summary>진단 뒤에도 같은 현재 표를 조회한다. 빌린 표가 없으면 기존 독립 소유 표를 복사 없이 읽는다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    /// <returns>현재 타입 표다.</returns>
+    private IReadOnlyList<OriginalTypeRecord> CurrentTypes()
+    {
+        if (_diagnostics?.Types is { Count: > 0 } current)
+        {
+            return current;
+        }
+
+        return _types;
+    }
+
     /// <summary>타입 번호의 레코드를 범위만 확인해 찾는다. Form도 허용한다.</summary>
     /// <param name="number">타입 번호.</param>
     private OriginalTypeRecord TypeRecord(uint number)
     {
-        if (number >= (uint)_types.Count)
+        IReadOnlyList<OriginalTypeRecord> current = CurrentTypes();
+        if (number >= (uint)current.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(number), number, "공장 현재 TYPE 번호 오류");
         }
 
-        return _types[(int)number];
+        return current[(int)number];
     }
 
     /// <summary>Create·Take가 쓰는 타입 조회다. 내장 Form(1·2·3·6) 또는 자산(70 이상)만 받고 지원 여부를 미리 검사한다.</summary>
     /// <param name="type">타입 번호.</param>
     private OriginalTypeRecord TypeForCreate(uint type)
     {
-        if (type >= (uint)_types.Count)
+        IReadOnlyList<OriginalTypeRecord> current = CurrentTypes();
+        if (type >= (uint)current.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(type), type, "공장 현재 TYPE 번호 오류");
         }
@@ -626,7 +691,7 @@ public sealed class RawSquidFactory
             throw new ArgumentOutOfRangeException(nameof(type), type, "base 오브젝트 타입 번호 오류");
         }
 
-        OriginalTypeRecord record = _types[(int)type];
+        OriginalTypeRecord record = current[(int)type];
         if (record.ConstructorAddress != 0 && !IsFormAddress(record.ConstructorAddress)
             && OriginalConstructors.Recipe(_pool.Edition, record.ConstructorAddress) is null)
         {

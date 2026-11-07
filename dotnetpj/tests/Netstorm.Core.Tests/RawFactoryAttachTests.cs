@@ -189,4 +189,40 @@ public sealed class RawFactoryAttachTests
         Assert.Equal(3u, box.Value);
         Assert.Equal(0, pool.Slot(form)[RawSidPool.StateOffset] & 4);
     }
+
+    /// <summary>빈 묶음을 거부하고 길이 어긋난 표를 거부한다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindDiagnosticsGuards()
+    {
+        (RawSidPool _, List<OriginalTypeRecord> _, RawSquidFactory factory) = Scene();
+        Assert.Throws<ArgumentNullException>(() => factory.BindDiagnostics(null!));
+        Assert.Throws<ArgumentException>(() => factory.BindDiagnostics(new SquidFactoryDiagnostics
+        {
+            Types = new List<OriginalTypeRecord>(new OriginalTypeRecord[10]),
+        }));
+        // 빈 표는 기존 독립 사본을 유지한다
+        factory.BindDiagnostics(new SquidFactoryDiagnostics());
+        factory.BindDiagnostics(new SquidFactoryDiagnostics { Types = [] });
+    }
+
+    /// <summary>빌린 현재 표로 생성자 조회를 바꾸고 다시 묶으면 바꾼 표를 쓴다. 2026-11-07 F2d 공장 진단 묶음 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindDiagnosticsOverridesCurrentTypes()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount)
+            .Select(i => new OriginalTypeRecord { ConstructorAddress = OriginalConstructors.Address(i) }).ToList();
+        var factory = new RawSquidFactory(pool, types);
+        uint owned = BitConverter.ToUInt32(pool.Slot(factory.Create(83u)).Slice(0, 4).ToArray(), 0);
+        // 83번 생성자 주소를 지운 표를 묶으면 기본 가상 표로 만든다
+        var over = Enumerable.Range(0, OriginalConstructors.TypeCount)
+            .Select(i => new OriginalTypeRecord { ConstructorAddress = OriginalConstructors.Address(i) }).ToList();
+        over[83].ConstructorAddress = 0u;
+        factory.BindDiagnostics(new SquidFactoryDiagnostics { Types = over });
+        Assert.Equal(0x00501DD0u, BitConverter.ToUInt32(pool.Slot(factory.Create(83u)).Slice(0, 4).ToArray(), 0));
+        Assert.NotEqual(0x00501DD0u, owned);
+        // 빈 표를 다시 묶으면 기존 독립 사본으로 돌아간다
+        factory.BindDiagnostics(new SquidFactoryDiagnostics());
+        Assert.Equal(owned, BitConverter.ToUInt32(pool.Slot(factory.Create(83u)).Slice(0, 4).ToArray(), 0));
+    }
 }
