@@ -52,7 +52,7 @@ cpppj/src/client/ClientGameplayGlobals.cpp	port			todo	[client-default]
 cpppj/src/client/ClientHtmlWindowGlobals.h	port			todo	[client-default]
 cpppj/src/client/ClientKencloudGlobals.cpp	port			todo	[client-default] WB02-H M1 오라클: 메인 메뉴 구름 배경은 이 Kencloud 출력이다. 웹은 GIF 단순 타일이라 행별 1픽셀 어긋남(37054픽셀) → WB03-M2 이식 대상
 cpppj/src/client/ClientLocalStateGlobals.h	port			todo	[client-default]
-cpppj/src/client/ClientMain.cpp	adapt	www/core/main-loop.js;www/netstorm.js	1f00a25a	partial	[adapt-main] WB04-C3 메인 루프 순서 실행기와 앱 수명. Win32 창/메시지는 웹 대체
+cpppj/src/client/ClientMain.cpp	adapt	www/core/main-loop.js;www/netstorm.js	44e53bdc	partial	[adapt-main] WB04-C3 메인 루프 순서 실행기와 앱 수명. Win32 창/메시지는 웹 대체 / 3.6③(44e53bdc, WB04-D5b 판정): 메인 루프의 연결 감시(439ad8)·전투 자원 프레임(439b34)·재접속 주기 저장 단계, 기록 재생 전역·커서 기록기 식별자, 시간 보정 시계 바인딩 → WB05 세션/메인 루프 연결 때 단독 도달과 단계 순서 재확인. 힙 진단 로그·Monitor AutoRestart 는 ①
 cpppj/src/client/ClientNsInfoGlobals.cpp	port			todo	[client-default]
 cpppj/src/client/ClientOptionsDisk.cpp	adapt	www/platform/settings.js;www/platform/progress.js	1f00a25a	partial	[adapt-options] options.cfg 키를 브라우저 저장소에 보관(웹 대체)
 cpppj/src/client/ClientOptionsFile.cpp	adapt			todo	[adapt-options]
@@ -415,7 +415,7 @@ cpppj/src/client/TraceChat.cpp	port			todo	[client-default]
 cpppj/src/client/TutorialInit.cpp	port			todo	[client-default]
 cpppj/src/client/TypeFileRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/client/UberEditor.inc	exclude-edit			-	[edit-editor]
-cpppj/src/client/UberGump.cpp	port	www/ui/main-menu.js;www/netstorm.js	9cb0547f	partial	[client-default] 메인 메뉴·Tell 진입. MissionBegin/StartDemo 미션 진입은 WB05-C. 3.6①(기준선 뒤 a328ac1f): 원격 Fort 경로 연결만 추가(MP) / 3.6③(9cb0547f, WB02-H 판정): 로그인 중 "Creating Islands." 안내(localLogin.creatingIslands)는 일반 전투섬 생성 경로 소비자. WB05 로그인 이식 때 단독 도달 여부 확인 / WB02-H M1 오라클: 원본 비교 모드의 메인 메뉴·Welcome·Campaign·Demo·Credits·Help 펼침 메뉴가 구름 배경 외 픽셀 일치(docs/webpj-cpp-oracle-20261107.md)
+cpppj/src/client/UberGump.cpp	port	www/ui/main-menu.js;www/netstorm.js	11fbb988	partial	[client-default] 메인 메뉴·Tell 진입. MissionBegin/StartDemo 미션 진입은 WB05-C. 3.6①(기준선 뒤 a328ac1f): 원격 Fort 경로 연결만 추가(MP) / 3.6③(9cb0547f, WB02-H 판정): 로그인 중 "Creating Islands." 안내(localLogin.creatingIslands)는 일반 전투섬 생성 경로 소비자. WB05 로그인 이식 때 단독 도달 여부 확인 / WB02-H M1 오라클: 원본 비교 모드의 메인 메뉴·Welcome·Campaign·Demo·Credits·Help 펼침 메뉴가 구름 배경 외 픽셀 일치(docs/webpj-cpp-oracle-20261107.md) / 3.6①③(11fbb988, WB04-D5b 판정): LAN 대기실·재접속·Multiplayer 옵션/메뉴 연결은 ①(웹 제외). ShowLoginProgress 의 단독 안내(Initializing./Starting Mission...)·PollBattleResources(486bc0)·F7/Ctrl+F6 건설 기록 재생 입력은 ③ → WB05 로그인·WB06 입력 이식 때
 cpppj/src/client/UberGumpCamera.cpp	port			todo	[client-default]
 cpppj/src/client/UberHud.inc	port			todo	[client-default]
 cpppj/src/client/UberRootGump.cpp	port			todo	[client-default]
@@ -445,7 +445,7 @@ cpppj/src/o/Config.cpp	port	www/assets/config.js	1f00a25a	partial	[o-default] 3.
 cpppj/src/o/ConfigInterface.cpp	port	www/assets/config.js;www/assets/game-data.js	1f00a25a	partial	[o-default] 3.6①(WB02-G): Startup 인자 순서(identity·user·options·dev·guild·setup)는 같고, 실제 FILE/FileSpec 장치·5차 사용자 홈 우선 읽기·인자 첫 NUL 절단은 웹 adapt(game-data 직접 조립·브라우저 저장소) 경계라 결과 영향 없음
 cpppj/src/o/ConstructionVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/ContentFormHost.cpp	port	www/core/content-form-host.js	1f00a25a	port	[o-default] WB04-D5a(정렬 부착 004aec10)
-cpppj/src/o/ContentFormLifetime.cpp	port			todo	[o-default]
+cpppj/src/o/ContentFormLifetime.cpp	port	www/core/content-form-lifetime.js	1f00a25a	port	[o-default] WB04-D5b(preDestroy 004aeeb0·너겟 수입·Content 삭제 훅, contentlifetime 198행·커서 폭 28행)
 cpppj/src/o/ContentNoticeVtables.inc	port	www/core/squid-vtables.js;www/core/content-parent-notice.js	1f00a25a	port	[o-default] WB04-D2·D5a
 cpppj/src/o/CrtRandom.cpp	port	www/core/random.js	1f00a25a	port	[o-default] WB04-C1
 cpppj/src/o/DependFormHost.cpp	port	www/core/depend-form-host.js	1f00a25a	port	[o-default] WB04-D5a
@@ -456,7 +456,7 @@ cpppj/src/o/EvilRayVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/FieryTailVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/FileSpecQuery.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/FortSerializationGlobals.h	port			todo	[o-default]
-cpppj/src/o/GameClock.cpp	port	www/core/game-clock.js	1f00a25a	port	[o-default] WB04-C1
+cpppj/src/o/GameClock.cpp	port	www/core/game-clock.js	3e9dc2c7	port	[o-default] WB04-C1 / 3.6③(3e9dc2c7, WB04-D5b 판정): 시간 동기화 보정 0055b4ac 바인딩과 (ms−origin−보정) 감산. 보정 0 이면 기준선과 같은 결과 → WB05 시간 패킷(5번)의 단독 도달 확인 때
 cpppj/src/o/Graph.cpp	port			todo	[o-default]
 cpppj/src/o/GumpFormHost.cpp	port	www/core/gump-form-host.js	1f00a25a	port	[o-default] WB04-D5a
 cpppj/src/o/Islandbuilder.cpp	port	www/assets/territory.js	1f00a25a	partial	[o-default] WB03-V 영역 패턴 배치
@@ -694,7 +694,7 @@ cpppj/src/o/RawForcefieldLifecycle.cpp	port			todo	[o-default]
 cpppj/src/o/RawForeignRitualReward.cpp	port			todo	[o-default]
 cpppj/src/o/RawFormAttach.cpp	port	www/core/squid-forms.js	1f00a25a	port	[o-default] WB04-D3(004ac800)
 cpppj/src/o/RawFormLinked.cpp	port	www/core/raw-form-linked.js	1f00a25a	port	[o-default] WB04-D5a(004ae080)
-cpppj/src/o/RawFormPacket.cpp	port	www/core/squid-vtables.js	1f00a25a	partial	[o-default] Form VT 4종 칸만. 패킷 작성(+54/+58)은 미이식
+cpppj/src/o/RawFormPacket.cpp	port	www/core/squid-vtables.js	b8cadde1	partial	[o-default] Form VT 4종 칸만. 패킷 작성(+54/+58)은 미이식 / 3.6③(b8cadde1, WB04-D5b 판정): 삭제 패킷 writer 의 헤더 선기록·client SID 진단 정상 복귀 → 패킷 writer 이식 때 반영. VT 4종 칸은 ①
 cpppj/src/o/RawFormPop.cpp	port	www/core/squid-forms.js	1f00a25a	port	[o-default] WB04-D3(004ac560)
 cpppj/src/o/RawFortBadgesGlobals.cpp	port			todo	[o-default]
 cpppj/src/o/RawFortBadgesSave.cpp	exclude-edit			-	[edit-fort-save]
@@ -729,7 +729,7 @@ cpppj/src/o/RawFortTypeNamesLoad.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawFortWorldLoad.cpp	port			todo	[o-default]
 cpppj/src/o/RawFrameAdvance.cpp	port			todo	[o-default]
 cpppj/src/o/RawFrameChoose.cpp	port	www/assets/terrain-fringe.js;www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] 프레임 선택
-cpppj/src/o/RawGameAuxState.h	port	www/core/game-aux-state.js	9cb0547f	port	[o-default] WB04-C2·D3(Form 종속 전역 3칸) / 3.6①(9cb0547f, WB02-H 판정): 중앙섬 X/Y(00568afc/00568b00) 칸 추가는 멀티플레이 중앙섬·메타 몫(웹 제외)
+cpppj/src/o/RawGameAuxState.h	port	www/core/game-aux-state.js	11fbb988	port	[o-default] WB04-C2·D3(Form 종속 전역 3칸) / 3.6①(9cb0547f, WB02-H 판정): 중앙섬 X/Y(00568afc/00568b00) 칸 추가는 멀티플레이 중앙섬·메타 몫(웹 제외) / 3.6③(11fbb988, WB04-D5b 판정): 새 장기 전역 칸(StateNotifyType 82·Spell/Income·프로세스 TYPE·건설 헤더·미션 설정 7칸·Quick 건설 등) 추가와 지정 칸 의미 갱신 → 각 소비자 이식 단위에서 보호 PE 초기값과 함께 추가. 기존 웹 칸의 값/폭 변화 없음
 cpppj/src/o/RawGameRandomSeed.cpp	port	www/core/random.js;www/assets/terrain-tiles.js	1f00a25a	port	[o-default] WB04-C1(시드 Initialize/Reseed)
 cpppj/src/o/RawGemReward.cpp	port			todo	[o-default]
 cpppj/src/o/RawGeyserAiRegistration.cpp	port			todo	[o-default]
@@ -871,7 +871,7 @@ cpppj/src/o/RawRegionOwner.cpp	port			todo	[o-default]
 cpppj/src/o/RawRegionOwnership.cpp	port			todo	[o-default] outpost 분기는 RawOutpostLifecycle(exclude-mp)로 명시 웹 제외
 cpppj/src/o/RawRegionPaint.cpp	port	www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] 지역 도장 일부
 cpppj/src/o/RawRenderCollection.cpp	port			todo	[o-default]
-cpppj/src/o/RawRiftHitPoints.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(TYPE HP 0049fce0)
+cpppj/src/o/RawRiftHitPoints.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(TYPE HP 0049fce0). WB04-D5b: 음수 1/4 몫의 -0 교정, rifttype-hit-points 10.78 579행 대조
 cpppj/src/o/RawRiftShapeAccess.cpp	port			todo	[o-default]
 cpppj/src/o/RawRitualChoice.cpp	port			todo	[o-default] cpppj CMake 주석상 6b 입력/수신 MP 사전 구현. 단독 의식 보상 선택 도달 여부는 WB10 에서 확인
 cpppj/src/o/RawRitualRefresh.cpp	port			todo	[o-default]
@@ -957,13 +957,13 @@ cpppj/src/o/SelectionVtables.inc	port			todo	[o-default]
 cpppj/src/o/ShrapnelVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/SidPool.cpp	port	www/core/sid-pool.js	9cb0547f	port	[o-default] 3.6③(WB04-D3 판정 유지): 기준선의 패치판 할당 진단 복귀·소진 시 현재 World 다리 회수(BindAllocation 최대50)·물리 슬롯 friend 는 WB05 World 수명 때 반영. 웹은 소진/진단에서 명시 오류로 멈춘다 / 3.6①(9cb0547f, WB02-H 판정): 예측 커서 쓰기 접근자 PredictableCursorValue 추가만이며 할당 결과 같음. 로그인/저장 부모 이식(WB05) 때 같은 접근이 필요하면 둔다
 cpppj/src/o/SmokeVisualSystem.cpp	port			todo	[o-default]
-cpppj/src/o/SpStore.cpp	port	www/core/random.js	1f00a25a	partial	[o-default] 게임 전역 난수(004558c0)만. SP 저장소는 WB06
+cpppj/src/o/SpStore.cpp	port	www/core/random.js;www/core/sp-store.js	1f00a25a	port	[o-default] 게임 전역 난수(004558c0, random.js)와 분산 SP 저장소(ScrambledSpStore, sp-store.js, WB04-D5b). 세션 연결·사제 추적 offset 소유자 연결은 WB05/WB06
 cpppj/src/o/Squid.cpp	port	www/core/squid-space.js;www/core/squid-hash.js	1f00a25a	partial	[o-default] 저장 필드·공간 단계 일부
 cpppj/src/o/SquidDestroyLifecycle.cpp	port			todo	[o-default]
 cpppj/src/o/SquidDisplay.cpp	port			todo	[o-default]
 cpppj/src/o/SquidFactory.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4. 웹 타입 로더의 zorder/생성자 주소를 Factory 에 넘기는 연결은 WB05-A(4절 타입 표 생성 메타)
 cpppj/src/o/SquidFinder.cpp	port			todo	[o-default]
-cpppj/src/o/SquidFormDispatch.cpp	port			todo	[o-default]
+cpppj/src/o/SquidFormDispatch.cpp	port	www/core/squid-form-dispatch.js	1f00a25a	partial	[o-default] WB04-D5b(Depend/Gump/Content 현재 VT 분배·루트 자산 재정의). Process 호스트 등록(Bind(SquidProcessHost))은 WB04-D5c
 cpppj/src/o/SquidForms.cpp	port	www/core/squid-forms.js	1f00a25a	port	[o-default] WB04-D3
 cpppj/src/o/SquidFrame.cpp	port			todo	[o-default]
 cpppj/src/o/SquidFrameBinding.cpp	port			todo	[o-default]
@@ -974,7 +974,7 @@ cpppj/src/o/SquidPop.cpp	port			todo	[o-default]
 cpppj/src/o/SquidPostPop.cpp	port			todo	[o-default]
 cpppj/src/o/SquidPostPopPatch.cpp	port			todo	[o-default]
 cpppj/src/o/SquidProcess.cpp	port			todo	[o-default]
-cpppj/src/o/SquidReward.cpp	port			todo	[o-default]
+cpppj/src/o/SquidReward.cpp	port	www/core/squid-reward.js	1f00a25a	port	[o-default] WB04-D5b(0044c2f0 보상·SP 가산 비트·AI 지갑·최대 HP, reward 2400행·sp-add-bits 504행·HP 579행). 장부는 SquidPostPopState(WB04-E)의 localOwner/aiAttached 를 읽음
 cpppj/src/o/SquidSpatial.cpp	port			todo	[o-default]
 cpppj/src/o/SquidUnpop.cpp	port	www/core/squid-unpop.js;www/core/squid-vtables.js	1f00a25a	port	[o-default] WB04-D2(현재 TYPE 표·진단 연결)
 cpppj/src/o/StartupArchiveFiles.cpp	adapt			todo	[adapt-file]

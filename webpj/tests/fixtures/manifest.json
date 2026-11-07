@@ -808,7 +808,7 @@
       "bytes": 944860,
       "lines": null,
       "fixtureCommit": "ddfce6c4",
-      "webCommit": "worktree",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
     },
     {
@@ -834,7 +834,7 @@
       "bytes": 901847,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "worktree",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
     },
     {
@@ -860,7 +860,7 @@
       "bytes": 850127,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "worktree",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
     },
     {
@@ -886,7 +886,7 @@
       "bytes": 920155,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "worktree",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
     },
     {
@@ -1037,7 +1037,7 @@
       "bytes": 873500,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "worktree",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
     },
     {
@@ -1063,7 +1063,7 @@
       "bytes": 909221,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "worktree",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
     },
     {
@@ -1089,7 +1089,7 @@
       "bytes": 929779,
       "lines": null,
       "fixtureCommit": "dc62a9d2",
-      "webCommit": "worktree",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
     },
     {
@@ -1114,7 +1114,7 @@
       "bytes": 814877,
       "lines": null,
       "fixtureCommit": "ddfce6c4",
-      "webCommit": "worktree",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
     },
     {
@@ -1295,7 +1295,7 @@
       "bytes": 1573181,
       "lines": 1993,
       "fixtureCommit": "5edb2b6d",
-      "webCommit": "7dd335e0",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidDestroy.cpp": "f2215dc5",
         "cpppj/src/o/RawSquidDestroy.h": "886f2d23",
@@ -1514,7 +1514,7 @@
       "bytes": 220690,
       "lines": 1037,
       "fixtureCommit": "0d163f6e",
-      "webCommit": "7dd335e0",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/DerivedConstructors.inc": "f7675661",
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
@@ -1544,7 +1544,7 @@
       "bytes": 148872,
       "lines": 589,
       "fixtureCommit": "e6259e97",
-      "webCommit": "7dd335e0",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidCreation.cpp": "e6259e97"
       }
@@ -1573,7 +1573,7 @@
       "bytes": 325827,
       "lines": 721,
       "fixtureCommit": "e1a617ac",
-      "webCommit": "7dd335e0",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidTake.cpp": "e1a617ac"
       }
@@ -1604,7 +1604,7 @@
       "bytes": 146005,
       "lines": 577,
       "fixtureCommit": "21da8875",
-      "webCommit": "7dd335e0",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
         "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a5"
@@ -1634,7 +1634,7 @@
       "bytes": 8250,
       "lines": 513,
       "fixtureCommit": "cf4bdec8",
-      "webCommit": "7dd335e0",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
       }
@@ -1665,7 +1665,7 @@
       "bytes": 164662,
       "lines": 1649,
       "fixtureCommit": "078ea3e8",
-      "webCommit": "7dd335e0",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
       }
@@ -1697,7 +1697,7 @@
       "bytes": 975424,
       "lines": 7469,
       "fixtureCommit": "f7675661",
-      "webCommit": "7dd335e0",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
         "cpppj/src/o/DerivedConstructors.inc": "f7675661"
@@ -1731,7 +1731,7 @@
       "bytes": 862447,
       "lines": 8423,
       "fixtureCommit": "a86150db",
-      "webCommit": "7dd335e0",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
         "cpppj/src/o/SquidUnpop.cpp": "ea848459",
@@ -1888,8 +1888,8 @@
       "sha256": "24ea26b4fab1acea08eedf30bb48b8e5ff947f81b98261235c9728a283e4e3ac",
       "bytes": 7575,
       "lines": 259,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "5bf64ed5",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
     },
     {
@@ -1920,9 +1920,164 @@
       "sha256": "4f5fe359e092afe07f46b3c5c8e9bdb30814700bcf51b796096affb04c616b39",
       "bytes": 5596,
       "lines": 71,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "5bf64ed5",
+      "webCommit": "5bf64ed5",
       "cpppjBasis": {}
+    },
+    {
+      "id": "reward",
+      "path": "cpppj/tests/fixtures/reward-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 삭제/해체 보상(0044c2f0) x86 관측(비용 곡선·비율/환불·SP 저장소 쓰기·AI 지갑·샘 풀·가상 개수 대본·SP 표시 호출)",
+      "consumers": [
+        "webpj/tests/squid-reward.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-reward.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-D5b",
+      "doc": "docs/webpj-content-lifetime-20261107.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidReward.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "10.78(originals) 2400행 전체. CD 10.72·10.37 행 제외",
+      "text": true,
+      "sha256": "a1fedbc77eca2e3f73976138aec2ea15d10a50b90967400b1f0ca6f6e5a8879c",
+      "bytes": 2565258,
+      "lines": 7201,
+      "fixtureCommit": "40cf5167",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidReward.cpp": "df2f5fa7",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d"
+      }
+    },
+    {
+      "id": "sp-add-bits",
+      "path": "cpppj/tests/fixtures/sp-add-bits-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 SP 가산(0040eec0/0041df80) x86 관측(소유자 0/1/3·고정 두 모드·큰 유한/무한대/NaN/서브노멀 비트의 저장 float·지갑 절삭·호출 순서)",
+      "consumers": [
+        "webpj/tests/squid-reward.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-reward.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-D5b",
+      "doc": "docs/webpj-content-lifetime-20261107.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidReward.cpp"
+      ],
+      "scope": "10.78 504행 전체(판본 열 없는 10.78 전용 표)",
+      "text": true,
+      "sha256": "4b3e88cafe531ba46a66cba1f8eda2b019ad337ca148973884bb26cb52066f0b",
+      "bytes": 33097,
+      "lines": 505,
+      "fixtureCommit": "58839028",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidReward.cpp": "df2f5fa7"
+      }
+    },
+    {
+      "id": "rifttype-hit-points",
+      "path": "cpppj/tests/fixtures/rifttype-hit-points-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 TYPE HP getter(0049fce0) x86 관측(HP 플래그 진단·사제 1/4·진단 복귀 뒤 표 기준 이동/전역 변경)",
+      "consumers": [
+        "webpj/tests/squid-reward.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-reward.js",
+        "webpj/www/core/squid-factory.js"
+      ],
+      "unit": "WB04-D5b",
+      "doc": "docs/webpj-content-lifetime-20261107.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawRiftHitPoints.cpp",
+        "cpppj/src/o/SquidReward.cpp"
+      ],
+      "scope": "10.78 행 중 초기 번호 음수가 아닌 579행(cpppj RewardHitPointDiagnosticsTests 와 같은 선택). CD 행 제외",
+      "text": true,
+      "sha256": "58197e3d412b3a01482039fe00930b831ce302ab63c6de319e6bdd7121d5d9e1",
+      "bytes": 107011,
+      "lines": 1161,
+      "fixtureCommit": "804b87a5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a5",
+        "cpppj/src/o/SquidReward.cpp": "df2f5fa7"
+      }
+    },
+    {
+      "id": "content-lifetime",
+      "path": "cpppj/tests/fixtures/contentlifetime-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 ContentForm 삭제 수명(004aeeb0) x86 관측(커서 취소·로컬/원격 수입 알림·지갑 선가산·SP·위치 소리 당시 전체 슬롯과 명시 변경·부모 통지·풀/깊이)",
+      "consumers": [
+        "webpj/tests/content-form-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/content-form-lifetime.js",
+        "webpj/www/core/content-form-host.js"
+      ],
+      "unit": "WB04-D5b",
+      "doc": "docs/webpj-content-lifetime-20261107.md",
+      "cpppjSources": [
+        "cpppj/src/o/ContentFormLifetime.cpp",
+        "cpppj/src/o/ContentFormHost.cpp"
+      ],
+      "scope": "10.78 198행 전체(Destroy 158·Attach 16·Linked 24). 알림/송신은 명시 장치(네트워크 없음). CD 행 제외",
+      "text": true,
+      "sha256": "5e701e7b56e3060cdc23b45fb5647f67ea42bb8f3b08cb3068e506b27307ec66",
+      "bytes": 297933,
+      "lines": 397,
+      "fixtureCommit": "6c9cfce9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/ContentFormLifetime.cpp": "b08059ac",
+        "cpppj/src/o/ContentFormHost.cpp": "34891d67"
+      }
+    },
+    {
+      "id": "content-cursor-width",
+      "path": "cpppj/tests/fixtures/content-cursor-width-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 원본 Content preDestroy 의 커서 DWORD 전체 비교 x86 관측(높은 WORD·부모 자기 WORD·취소 호출 수·취소 뒤 커서)",
+      "consumers": [
+        "webpj/tests/content-form-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/content-form-lifetime.js"
+      ],
+      "unit": "WB04-D5b",
+      "doc": "docs/webpj-content-lifetime-20261107.md",
+      "cpppjSources": [
+        "cpppj/src/o/ContentFormLifetime.cpp"
+      ],
+      "scope": "10.78 28행 × 값형/현재 getter 2경로. 웹은 슬롯 VT 에 실제 Content 생성자 VT 를 넣는다(cpppj 검사 입력은 VT 0, 문서 4절)",
+      "text": true,
+      "sha256": "1dbbcddbf61e0c6354e8c70419c9a4bee4e4d690d92df5525313c5b59193e084",
+      "bytes": 2308,
+      "lines": 57,
+      "fixtureCommit": "46e65408",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/ContentFormLifetime.cpp": "b08059ac"
+      }
     }
   ]
 }

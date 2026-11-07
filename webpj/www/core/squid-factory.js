@@ -138,8 +138,8 @@ export function readRiftHitPoints(type, globals, hooks = {}) {
         quarter = number === (globals.priest() >>> 0);
     }
     const hp = type.maxHitPoints | 0;
-    // signed 나눗셈은 0 방향으로 절삭한다.
-    return quarter ? Math.trunc(hp / 4) : hp;
+    // signed 나눗셈은 0 방향으로 절삭한다. 음수 몫 0 이 JS -0 으로 남지 않게 정수로 되돌린다(2026-11-07 WB04-D5b: TYPE HP 579행 대조에서 -1/4 결과 교정).
+    return quarter ? Math.trunc(hp / 4) | 0 : hp;
 }
 
 // 선택한 TYPE 레코드의 현재 표 기준 번호(getNum)이다. 같은 레코드 객체가 선택 표와 현재 표에 모두 있어야 하며, 현재 표가 선택 표를 옮겨 본 것이면 그 상대 위치다. (2026-11-06 WB04-D4)
