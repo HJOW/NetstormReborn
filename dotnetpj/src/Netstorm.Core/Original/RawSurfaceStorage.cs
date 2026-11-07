@@ -133,6 +133,9 @@ public sealed class RawSurfaceStorage
     /// <summary>성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     private ulong _generation;
 
+    /// <summary>실제 Pool·TYPE 뒤에 두어 그 참조보다 먼저 최종 반납하는 장기 호스트 owner다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    private RawProcessHostStorage? _processes;
+
     /// <summary>참조 배열을 원본 자산에서 최초 한 번만 복사해 이후 주소를 고정한다. 풀 할당 진단 배선·장기 ProcessHost·자산 소스는 후속 단위에서 잇는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     /// <param name="edition">바람 잡음 순서와 스캔 초기값이 읽는 판본이다.</param>
     /// <param name="authority">빌릴 실제 권한 owner다. null이면 자체 owner를 만든다.</param>
@@ -308,6 +311,14 @@ public sealed class RawSurfaceStorage
     /// <summary>현재 실제 월드가 물리를 빌렸는지 읽는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     /// <returns>대여 중이면 참이다.</returns>
     public bool Borrowed() => _borrowed;
+
+    /// <summary>같은 저장소의 장기 호스트·상태와 현재 월드 대여를 제공한다. 한 번 만든 상태·Host 주소는 다음 월드에서도 유지한다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    /// <returns>같은 장기 프로세스 호스트 저장소다.</returns>
+    public RawProcessHostStorage Processes()
+    {
+        _processes ??= new RawProcessHostStorage(Pool, Types, Authority(), GameAux().GeyserTypeBox, GameAux());
+        return _processes;
+    }
 
     /// <summary>성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     /// <returns>대여 횟수다.</returns>

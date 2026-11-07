@@ -18,10 +18,10 @@ public sealed class StringBox
 }
 
 // 외부 배정밀도 시각 owner를 빌리는 상자다. 원문 `double*` 빌림을 옮긴다. 2026-11-07 F2d 프로세스 상태 이식에서 추가됐다.
-public sealed class DoubleBox
+public class DoubleBox
 {
-    /// <summary>빌린 배정밀도 값이다. 2026-11-07 F2d 프로세스 상태 이식에서 추가됐다.</summary>
-    public double Value { get; set; }
+    /// <summary>빌린 배정밀도 값이다. 파생 상자는 같은 주소를 직접 읽고 쓴다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 가상으로 바꿨다.</summary>
+    public virtual double Value { get; set; }
 }
 
 // 실제 부모 prologue와 선택한 mission 후처리가 읽는 현재 전역이다. 2026-11-07 F2d 캠페인 월드 적재 이식에서 추가됐다.

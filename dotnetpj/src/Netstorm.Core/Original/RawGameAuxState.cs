@@ -66,8 +66,96 @@ public sealed class RawGameAuxState
     /// <summary>00540bdc의 초기 2000 부호 있는 정수이며 타입 비용과는 float로 변환해 둔다.</summary>
     public int DefaultSp { get; set; } = 2000;
 
-    /// <summary>00541240의 실제 현재 간헐천 타입이며 호스트 pollType이 같은 주소를 고정한다.</summary>
-    public uint GeyserType { get; set; } = 122u;
+    /// <summary>00541240의 실제 현재 간헐천 타입이며 호스트 pollType이 같은 주소를 고정한다. 주소 빌림은 같은 상자를 쓴다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 상자 공유로 바꿨다.</summary>
+    public uint GeyserType
+    {
+        get => _geyserTypeBox.Value;
+        set => _geyserTypeBox.Value = value;
+    }
+
+    /// <summary>같은 간헐천 타입 DWORD의 공유 owner다. 호스트 pollType이 이 주소를 고정한다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public UIntBox GeyserTypeBox => _geyserTypeBox;
+
+    /// <summary>같은 간헐천 타입 DWORD를 빌리는 상자다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    private readonly UIntBox _geyserTypeBox = new() { Value = 122u };
+
+    /// <summary>두 보호 PE의 최초 ProcessForm 번호이며 일반 World 준비에서도 유지한다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public uint ProcessFormType
+    {
+        get => _processFormTypeBox.Value;
+        set => _processFormTypeBox.Value = value;
+    }
+
+    /// <summary>같은 ProcessForm 번호 DWORD의 공유 owner다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public UIntBox ProcessFormTypeBox => _processFormTypeBox;
+
+    /// <summary>같은 ProcessForm 번호 DWORD를 빌리는 상자다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    private readonly UIntBox _processFormTypeBox = new() { Value = 2u };
+
+    /// <summary>일반 절차 번호의 실제 초기 DWORD다. 일반 World 준비에서도 유지한다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public uint RegularProcessType
+    {
+        get => _regularProcessTypeBox.Value;
+        set => _regularProcessTypeBox.Value = value;
+    }
+
+    /// <summary>같은 일반 절차 번호 DWORD의 공유 owner다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public UIntBox RegularProcessTypeBox => _regularProcessTypeBox;
+
+    /// <summary>같은 일반 절차 번호 DWORD를 빌리는 상자다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    private readonly UIntBox _regularProcessTypeBox = new() { Value = 46u };
+
+    /// <summary>공유 절차 번호의 실제 초기 DWORD다. 일반 World 준비에서도 유지한다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public uint SharedRegularProcessType
+    {
+        get => _sharedRegularProcessTypeBox.Value;
+        set => _sharedRegularProcessTypeBox.Value = value;
+    }
+
+    /// <summary>같은 공유 절차 번호 DWORD의 공유 owner다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public UIntBox SharedRegularProcessTypeBox => _sharedRegularProcessTypeBox;
+
+    /// <summary>같은 공유 절차 번호 DWORD를 빌리는 상자다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    private readonly UIntBox _sharedRegularProcessTypeBox = new() { Value = 61u };
+
+    /// <summary>절차 상한의 실제 초기 DWORD다. 일반 World 준비에서도 유지한다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public uint ProcessTypeEnd
+    {
+        get => _processTypeEndBox.Value;
+        set => _processTypeEndBox.Value = value;
+    }
+
+    /// <summary>같은 절차 상한 DWORD의 공유 owner다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public UIntBox ProcessTypeEndBox => _processTypeEndBox;
+
+    /// <summary>같은 절차 상한 DWORD를 빌리는 상자다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    private readonly UIntBox _processTypeEndBox = new() { Value = 63u };
+
+    /// <summary>발사 애니메이션 절차의 실제 초기 DWORD다. 일반 World 준비에서도 유지한다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public uint FireAnimationProcessType
+    {
+        get => _fireAnimationProcessTypeBox.Value;
+        set => _fireAnimationProcessTypeBox.Value = value;
+    }
+
+    /// <summary>같은 발사 번호 DWORD의 공유 owner다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public UIntBox FireAnimationProcessTypeBox => _fireAnimationProcessTypeBox;
+
+    /// <summary>같은 발사 번호 DWORD를 빌리는 상자다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    private readonly UIntBox _fireAnimationProcessTypeBox = new() { Value = 35u };
+
+    /// <summary>회전 애니메이션 절차의 실제 초기 DWORD다. 일반 World 준비에서도 유지한다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public uint RotateAnimationProcessType
+    {
+        get => _rotateAnimationProcessTypeBox.Value;
+        set => _rotateAnimationProcessTypeBox.Value = value;
+    }
+
+    /// <summary>같은 회전 번호 DWORD의 공유 owner다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public UIntBox RotateAnimationProcessTypeBox => _rotateAnimationProcessTypeBox;
+
+    /// <summary>같은 회전 번호 DWORD를 빌리는 상자다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    private readonly UIntBox _rotateAnimationProcessTypeBox = new() { Value = 36u };
 
     /// <summary>005411dc의 같은 현재 지형 타입이며 지역 조회·진단이 빌린다.</summary>
     public uint TerrainType { get; set; } = 97u;

@@ -580,3 +580,5 @@ cpppj/src/o/BaseProcess.cpp	Netstorm.Core/Original/RawKernel.cs	73134971e199e886
 cpppj/src/o/Kernel.h	Netstorm.Core/Original/RawKernel.cs	c6536398b7bd4d5c0b8ef164395a484f0ab17b2a	port
 cpppj/src/o/Kernel.cpp	Netstorm.Core/Original/RawKernel.cs	c6536398b7bd4d5c0b8ef164395a484f0ab17b2a	port
 cpppj/src/o/SquidProcess.h	Netstorm.Core/Original/RawSquidProcessState.cs	02b00b124e9a6d5de4314878926ede9135b5b4bb	port
+cpppj/src/client/RawProcessHostStorage.h	Netstorm.Core/Original/RawProcessHostStorage.cs	122c82364e280ff071ab7561bd3151bbc20e6d37	port
+cpppj/src/client/RawProcessHostStorage.cpp	Netstorm.Core/Original/RawProcessHostStorage.cs	02b00b124e9a6d5de4314878926ede9135b5b4bb	port

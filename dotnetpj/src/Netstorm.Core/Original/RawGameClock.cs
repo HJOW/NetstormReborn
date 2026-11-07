@@ -3,6 +3,13 @@ namespace Netstorm.Core.Original;
 
 // 게임 시계 모듈을 담는 네임스페이스다. 2026-11-07 F2d 게임 시계 이식에서 추가됐다.
 
+// 장기 소유자가 pin하는 같은 FrameTime 주소다. `shared_ptr&lt;FrameTime&gt;` 빌림을 옮긴다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.
+public sealed class FrameTimeBox
+{
+    /// <summary>빌린 프레임 시각 값이다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
+    public FrameTime Value;
+}
+
 // 프레임의 게임 시각과 벽 시각 및 시간차다. 2026-11-07 F2d 게임 시계 이식에서 추가됐다.
 public struct FrameTime
 {
