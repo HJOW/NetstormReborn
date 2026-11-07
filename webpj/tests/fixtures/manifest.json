@@ -106,25 +106,29 @@
       "required": false,
       "producer": "cpppj 원본 스크립트 명령 해석 x86 관측",
       "consumers": [
-        "webpj/tests/startup.test.mjs"
+        "webpj/tests/startup.test.mjs",
+        "webpj/tests/data-manager-names.test.mjs"
       ],
       "modules": [
-        "webpj/www/ui/script-command.js"
+        "webpj/www/ui/script-command.js",
+        "webpj/www/core/raw-text-token.js"
       ],
       "unit": "WB03-J",
       "doc": "docs/webpj-startup-dialogs-20261030.md",
       "cpppjSources": [
-        "cpppj/src/client/ScriptCommand.cpp"
+        "cpppj/src/client/ScriptCommand.cpp",
+        "cpppj/src/o/RawTextToken.cpp"
       ],
-      "scope": "`<$이름,인자>` 이름/인자 분리. 명령 실행은 Config/Tell/TellTip 만 연결",
+      "scope": "`<$이름,인자>` 이름/인자 분리. 명령 실행은 Config/Tell/TellTip 만 연결. WB04-E19 에서 Token 128행을 raw-text-token.js 로 추가 대조",
       "text": true,
       "sha256": "34ddbcb593f7f38ffd206aae777438697c7c194f5b1215a2a488f0ff7f878d4d",
       "bytes": 29665,
       "lines": 263,
       "fixtureCommit": "7f1c4740",
-      "webCommit": "404c43ec",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/client/ScriptCommand.cpp": "2054e074"
+        "cpppj/src/client/ScriptCommand.cpp": "2054e074",
+        "cpppj/src/o/RawTextToken.cpp": "7f1c4740"
       }
     },
     {
@@ -3613,9 +3617,71 @@
       "bytes": 6701504,
       "lines": 205,
       "fixtureCommit": "a49c451e",
-      "webCommit": "worktree",
+      "webCommit": "b394fa89",
       "cpppjBasis": {
         "cpppj/src/o/RawStaticStrings.cpp": "a49c451e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E19",
+      "id": "template-section-names",
+      "path": "cpppj/tests/fixtures/template-section-names-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Template 구역 이름표 lazy 생성의 manager/두 표/호출 순서",
+      "consumers": [
+        "webpj/tests/data-manager-names.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-template-section-names.js"
+      ],
+      "doc": "docs/webpj-data-manager-names-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTemplateSectionNames.cpp"
+      ],
+      "scope": "12행 전부 사용",
+      "text": true,
+      "sha256": "af4e140f46ddaaefc7b7e6335b234065bef5d495b329c262ff025d871f51117a",
+      "bytes": 25961,
+      "lines": 13,
+      "fixtureCommit": "c4b75d7a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTemplateSectionNames.cpp": "c4b75d7a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E19",
+      "id": "data-manager-initialize",
+      "path": "cpppj/tests/fixtures/data-manager-initialize-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DataManager 초기화의 root 진단·이름표 조회·이름별 Create·미래 이름 변경",
+      "consumers": [
+        "webpj/tests/data-manager-names.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-data-manager-initialize.js",
+        "webpj/www/core/raw-snart.js",
+        "webpj/www/core/raw-template-section-names.js"
+      ],
+      "doc": "docs/webpj-data-manager-names-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDataManagerInitialize.cpp",
+        "cpppj/src/o/RawSnart.cpp"
+      ],
+      "scope": "64행 전부 사용",
+      "text": true,
+      "sha256": "402557fde72688da3f6f2b694767e08a711b428ab5b916aeff6aa4a818c1298d",
+      "bytes": 182972,
+      "lines": 65,
+      "fixtureCommit": "c4b75d7a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDataManagerInitialize.cpp": "c4b75d7a",
+        "cpppj/src/o/RawSnart.cpp": "c4b75d7a"
       }
     }
   ]
