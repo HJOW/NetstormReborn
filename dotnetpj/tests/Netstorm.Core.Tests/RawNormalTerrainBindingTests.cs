@@ -283,4 +283,120 @@ public sealed class RawNormalTerrainBindingTests
         // 부호 없는 255로는 만나지 않고 영 기록이다
         Assert.Equal(new byte[6], RawNormalTerrainChecks.FirstRecord(chunks, islands, 255, OriginalEdition.Patch1078, null));
     }
+
+    /// <summary>후처리 배치 효과를 기록한다. 2026-11-07 F2d 군집 후처리 이식에서 추가됐다.</summary>
+    private sealed class PlaceSpy
+    {
+        /// <summary>받은 사각·지역·개수다.</summary>
+        public readonly List<(FortRandomRectangle Cells, int Region, uint Count)> Calls = [];
+
+        /// <summary>군집 몸체 대신 호출을 기록한다. 2026-11-07 F2d 군집 후처리 이식에서 추가됐다.</summary>
+        /// <param name="cells">받은 사각이다.</param>
+        /// <param name="region">받은 지역이다.</param>
+        /// <param name="count">받은 개수다.</param>
+        public void Place(FortRandomRectangle cells, int region, uint count)
+        {
+            Calls.Add((cells, region, count));
+        }
+    }
+
+    /// <summary>세 섬 장면으로 후처리를 실행한다. 2026-11-07 F2d 군집 후처리 이식에서 추가됐다.</summary>
+    /// <param name="postpass">받을 진단 목록이다.</param>
+    /// <param name="spy">받을 배치 기록이다.</param>
+    /// <param name="selectedRegion">고를 지역이다.</param>
+    private static void RunPostprocess(List<TerrainFarmPostpassAssertion> postpass, PlaceSpy spy, int selectedRegion)
+    {
+        (TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp, List<OriginalTypeRecord> types, RawSidPool pool) = Scene();
+        var chunks = new ChunkMap();
+        byte[] record = [3, 1, 0, 7, 0, 0];
+        PutChunk(chunks, 2, 2, 0, record);
+        PutChunk(chunks, 4, 5, 1, record);
+        PutChunk(chunks, 6, 7, 2, record);
+        RawIslandRuntime islands = IslandScene(OriginalEdition.Patch1078, 3u, 0, 1, 2);
+        RawNormalTerrainChecks.PostprocessCurrentFarms(chunks, islands, globals, placement, stamp, types, pool,
+            0u, CoveringFrames(), OriginalEdition.Patch1078, null, postpass.Add, selectedRegion, spy.Place);
+    }
+
+    /// <summary>빈 입력·null 입력을 거부한다. 2026-11-07 F2d 군집 후처리 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PostprocessGuardsNulls()
+    {
+        (TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp, List<OriginalTypeRecord> types, RawSidPool pool) = Scene();
+        var chunks = new ChunkMap();
+        RawIslandRuntime islands = IslandScene(OriginalEdition.Patch1078, 1u, 0);
+        var spy = new PlaceSpy();
+        Assert.Throws<ArgumentNullException>(() => RawNormalTerrainChecks.PostprocessCurrentFarms(null!, islands, globals, placement, stamp, types, pool,
+            0u, CoveringFrames(), OriginalEdition.Patch1078, null, null, 127, spy.Place));
+        Assert.Throws<ArgumentNullException>(() => RawNormalTerrainChecks.PostprocessCurrentFarms(chunks, null!, globals, placement, stamp, types, pool,
+            0u, CoveringFrames(), OriginalEdition.Patch1078, null, null, 127, spy.Place));
+        Assert.Throws<ArgumentNullException>(() => RawNormalTerrainChecks.PostprocessCurrentFarms(chunks, islands, globals, placement, stamp, types, pool,
+            0u, CoveringFrames(), OriginalEdition.Patch1078, null, null, 127, null!));
+    }
+
+    /// <summary>현재 noRegion이면 모두, 고른 지역이면 그것만 실행한다. 2026-11-07 F2d 군집 후처리 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PostprocessRespectsSelectedRegion()
+    {
+        var postpass = new List<TerrainFarmPostpassAssertion>();
+        var spy = new PlaceSpy();
+        RunPostprocess(postpass, spy, 127);
+        Assert.Equal([0, 1, 2], spy.Calls.ConvertAll(call => call.Region));
+        Assert.Empty(postpass);
+        postpass.Clear();
+        spy.Calls.Clear();
+        RunPostprocess(postpass, spy, 1);
+        Assert.Equal([1], spy.Calls.ConvertAll(call => call.Region));
+        Assert.Empty(postpass);
+    }
+
+    /// <summary>사각·개수를 같은 첫 기록·범위·패턴 개수와 같이 계산한다. 2026-11-07 F2d 군집 후처리 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PostprocessComputesCellsAndCounts()
+    {
+        var postpass = new List<TerrainFarmPostpassAssertion>();
+        var spy = new PlaceSpy();
+        RunPostprocess(postpass, spy, 1);
+        Assert.Single(spy.Calls);
+        (FortRandomRectangle cells, int region, uint count) = spy.Calls[0];
+        Assert.Equal(1, region);
+        // 한 칸 (4,5)의 범위는 (4,5,5,6)이며 16을 곱한다
+        Assert.Equal(new FortRandomRectangle(64f, 80f, 80f, 96f), cells);
+        byte[] record = [3, 1, 0, 7, 0, 0];
+        Assert.Equal(RawNormalTerrainChecks.PatternCount(CoveringFrames(), 0u, record, OriginalEdition.Patch1078, null), count);
+    }
+
+    /// <summary>판본별 누락 진단을 순서대로 보고한다. 2026-11-07 F2d 군집 후처리 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PostprocessReportsDiagnostics()
+    {
+        (TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp, List<OriginalTypeRecord> types, RawSidPool pool) = Scene();
+        // 패치판은 없는 섬의 Bounds 부재만 보고한다
+        var chunks = new ChunkMap();
+        PutChunk(chunks, 2, 2, 0, [3, 1, 0, 7, 0, 0]);
+        RawIslandRuntime patch = IslandScene(OriginalEdition.Patch1078, 2u, 0);
+        var calls = new List<TerrainFarmPostpassAssertion>();
+        var spy = new PlaceSpy();
+        RawNormalTerrainChecks.PostprocessCurrentFarms(chunks, patch, globals, placement, stamp, types, pool,
+            0u, CoveringFrames(), OriginalEdition.Patch1078, null, calls.Add, 127, spy.Place);
+        Assert.Equal([TerrainFarmPostpassAssertion.BoundsMissingIsland], calls);
+        Assert.Equal(2, spy.Calls.Count);
+        // CD판은 없는 섬의 네 진단을 순서대로 보고한다
+        RawIslandRuntime cd = IslandScene(OriginalEdition.Cd1072, 1u);
+        calls.Clear();
+        spy.Calls.Clear();
+        RawNormalTerrainChecks.PostprocessCurrentFarms(new ChunkMap(), cd, globals, placement, stamp, types, pool,
+            0u, CoveringFrames(), OriginalEdition.Cd1072, null, calls.Add, 127, spy.Place);
+        Assert.Equal(
+            [TerrainFarmPostpassAssertion.RecordMissingIsland, TerrainFarmPostpassAssertion.RecordNotFound,
+                TerrainFarmPostpassAssertion.BoundsMissingIsland, TerrainFarmPostpassAssertion.BoundsNotFound],
+            calls);
+        Assert.Single(spy.Calls);
+        // 적중한 CD·패치는 조용하다
+        calls.Clear();
+        spy.Calls.Clear();
+        RawNormalTerrainChecks.PostprocessCurrentFarms(chunks, IslandScene(OriginalEdition.Cd1072, 1u, 0), globals, placement, stamp, types, pool,
+            0u, CoveringFrames(), OriginalEdition.Cd1072, null, calls.Add, 0, spy.Place);
+        Assert.Empty(calls);
+        Assert.Single(spy.Calls);
+    }
 }

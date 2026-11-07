@@ -3,7 +3,7 @@ namespace Netstorm.Core.Original;
 
 // 일반지형 바인딩 계약 모듈을 담는 네임스페이스다. 2026-11-07 F2d 지형 바인딩 계약 이식에서 추가됐다.
 
-// 군도와 미복원 부모를 정상 지형으로 대체하지 않는 검사다. 패턴 개수 잎까지 포함하며 생성·도장·군집 본체는 후속 단위에서 잇는다. 2026-11-07 F2d 지형 바인딩 계약 이식에서 추가됐고 0.202에서 패턴 개수를 이었다.
+// 군도와 미복원 부모를 정상 지형으로 대체하지 않는 검사다. 패턴 개수·첫 기록·군집 후처리 잎까지 포함하며 생성·도장 본체는 후속 단위에서 잇는다. 2026-11-07 F2d 지형 바인딩 계약 이식에서 추가됐고 0.202에서 패턴 개수를, 0.203에서 첫 기록을 이었다.
 public static class RawNormalTerrainChecks
 {
     /// <summary>일반 분기가 아니면 거부한다. 2026-11-07 F2d 지형 바인딩 계약 이식에서 추가됐다.</summary>
@@ -157,5 +157,52 @@ public static class RawNormalTerrainChecks
         }
 
         return new byte[6];
+    }
+
+    /// <summary>도장 뒤 현재 섬별로 첫 기록·범위를 읽어 같은 군집 몸체에 순서대로 넣는다. 2026-11-07 F2d 군집 후처리 이식에서 추가됐다.</summary>
+    /// <param name="chunks">같은 실제 월드의 청크 지도다.</param>
+    /// <param name="islands">같은 실제 월드의 섬 목록이다.</param>
+    /// <param name="globals">문자 mapping 전역이다.</param>
+    /// <param name="placement">매 실제 배치가 읽는 타입 전역이다.</param>
+    /// <param name="stamp">수명이 긴 초기 캐시 상태다.</param>
+    /// <param name="types">같은 실제 TYPE 표다.</param>
+    /// <param name="pool">같은 실제 풀이다.</param>
+    /// <param name="puzzlePieceType">패턴을 펼칠 때 쓰는 현재 조각 타입 번호다.</param>
+    /// <param name="frames">같은 실제 월드의 타입별 프레임 표다.</param>
+    /// <param name="edition">디코더·후처리 판본이다.</param>
+    /// <param name="decoderDiagnostics">디코더 진단 묶음이다. null이면 금 간 검사를 건너뛴다.</param>
+    /// <param name="postpass">상위의 첫 record/Bounds 조회 진단이다. null이면 보고를 건너뛴다.</param>
+    /// <param name="selectedRegion">현재 noRegion이면 모든 섬을 실행한다.</param>
+    /// <param name="place">같은 군집 몸체의 배치 효과다.</param>
+    public static void PostprocessCurrentFarms(ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp, IReadOnlyList<OriginalTypeRecord> types, RawSidPool pool, uint puzzlePieceType, IReadOnlyList<RiftTypeFrames> frames, OriginalEdition edition, CanonDecoderDiagnostics? decoderDiagnostics, Action<TerrainFarmPostpassAssertion>? postpass, int selectedRegion, Action<FortRandomRectangle, int, uint> place)
+    {
+        ArgumentNullException.ThrowIfNull(chunks);
+        ArgumentNullException.ThrowIfNull(islands);
+        ArgumentNullException.ThrowIfNull(place);
+        RequireStorage(globals, placement, stamp, types, pool);
+        bool cd = edition == OriginalEdition.Cd1072;
+        // 원본 상위처럼 count는 unsigned 저장값을 signed DWORD로 해석하며 회마다 다시 읽는다
+        for (int region = 0; region < unchecked((int)islands.Count()); region++)
+        {
+            if (selectedRegion != globals.NoRegion && selectedRegion != region)
+            {
+                continue;
+            }
+
+            byte[] record = FirstRecord(chunks, islands, region, edition, postpass);
+            if (islands.Exists(region) == 0)
+            {
+                postpass?.Invoke(TerrainFarmPostpassAssertion.BoundsMissingIsland);
+            }
+
+            ChunkRect bounds = chunks.Bounds(region);
+            if (cd && bounds.Left == 16 && bounds.Top == 16)
+            {
+                postpass?.Invoke(TerrainFarmPostpassAssertion.BoundsNotFound);
+            }
+
+            var cells = new FortRandomRectangle(bounds.Left * 16f, bounds.Top * 16f, bounds.Right * 16f, bounds.Bottom * 16f);
+            place(cells, region, PatternCount(frames, puzzlePieceType, record, edition, decoderDiagnostics));
+        }
     }
 }
