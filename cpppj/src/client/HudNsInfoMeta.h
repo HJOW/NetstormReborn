@@ -18,6 +18,7 @@ struct HudNsInfoMetaHooks { // 실제 UI 처리기·현재 색/기술 값만 선
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach; //각 파생의 실제 가상+20이다.
     std::function<void(std::uint32_t,std::string_view)> replace,parse; //004bc250 모드0과004ba8f0의 실제 문자열 처리다.
     std::function<void(std::uint32_t,std::int32_t)> wrap; //004ba210은같은버퍼의noWrap만쓴다.
+    std::function<void(std::uint32_t,std::uint32_t)> scrollable,slider; //004ba230/004ba1b0의같은현재스크롤/슬라이더상태다.
     std::function<void(std::uint32_t,std::string_view,const std::array<std::uint32_t,8>&,std::uint32_t)> append; //004ba0f0의길이-1/실제정렬행metadata다.
     std::function<std::uint32_t(std::uint32_t)> read; //현재팔레트색/metadataMode의원문DWORD를읽는다.
     std::function<std::uint32_t(std::uint32_t)> objectOwner; //같은Pool의실제SID+22 BYTE다.추가active필터는없다.
@@ -31,9 +32,12 @@ struct HudNsInfoMetaHooks { // 실제 UI 처리기·현재 색/기술 값만 선
     std::function<std::uint8_t(std::span<const std::uint8_t>)> weight; //0042b210의현재TYPE기술합계다.
     std::function<std::string(bool)> header; //번역→zone캡처→현재server조회→256BYTE서식을원문순서로수행한다.
     std::function<std::string(std::string_view)> translate; //현재표시바이트언어번역이며원문숫자행은번역하지않는다.
+    std::function<std::string(std::uint32_t)> description; //0049a840→0049af80의현재TYPE설명/번역/80BYTE설정치환이다.
     std::function<void(std::uint32_t,std::string_view)> helpText,helpWord; //00464ed0/00464f80의실제소유문자열교체다.
 };
 void RefreshNsInfoRoster(std::uint32_t token,HudNsInfoMetaGlobals globals,const HudNsInfoMetaHooks& hooks); //0047e630전체의39명초기순서·원문쌍교환정렬·이름/문맥/행metadata다.
 void LayoutMetaNsInfo(std::uint32_t token,HudNsInfoMetaGlobals globals,const HudNsInfoMetaHooks& hooks); //0047e9d0의일반앞단/관문뒤전체본문이다.실제자식Attach가Player/Battle후속을선택한다.
 void LayoutMetaPlayerInfo(std::uint32_t token,HudNsInfoMetaGlobals globals,const HudNsInfoMetaHooks& hooks); //00479fb0의기존일반부착/관문뒤전체메타본문이다.실제이름/버튼/아이콘과최종높이를쓴다.
+void PrepareMetaBattleSettings(HudBattleInfoNode& node,std::uint32_t gameType); //0047b1c0의게임종류별현재설정쌍과공통필드를원문순서로쓴다.
+void LayoutMetaBattleInfo(std::uint32_t token,HudNsInfoMetaGlobals globals,const HudNsInfoMetaHooks& hooks); //0047b480의기존일반부착/관문뒤전체옵션/제외목록·스크롤·자식배치다.
 }

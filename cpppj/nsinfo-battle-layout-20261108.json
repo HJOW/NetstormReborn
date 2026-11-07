@@ -1,0 +1,71 @@
+{
+  "unit": 1105,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12535808,
+      "sha256": "a3accb60b13b8284b4528be6dbc562cdeec4cfed8eaf1d5392c730639933f520"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "42b4f1608fb54ca8071701e971eb114f29669ef61b60261bea694b580bb1283b"
+    }
+  },
+  "staticAudit": {
+    "battleBody": "0047b480 일반 앞단/관문 뒤 전체: 세 자식/두 텍스트·전투 유효 관문·두 옵션 모드·제외 목록·스크롤/실제 배치",
+    "presets": {
+      "assignmentOrderCount": 82,
+      "wholeTextOrderEqual": true,
+      "gotoTargetsEqual": true,
+      "executedCpp": false
+    },
+    "optionText": {
+      "records": 22,
+      "choiceStrings": 76,
+      "source": "PE0052f5d0/24BYTE와실제선택포인터전체",
+      "maximumInclusive": true,
+      "namesAndValuesAndTranslationFlagsEqual": true
+    },
+    "helpers": "0047b430 범주 그림·0041c3c0/3d0/440 실제 BYTE/조건부 번역·49a840/49af80 현재 TYPE/80BYTE 치환",
+    "devices": "같은 CS/설정쌍·공통 Scrolling/Markup/RequestScroll/Attach·현재 TYPE·실제 Config 치환"
+  },
+  "integration": {
+    "battleFullLayoutBound": true,
+    "rootRosterPlayerFullLayoutsBound": true,
+    "metaInputAndButtonDrawBound": false,
+    "wholeMetaScreenComplete": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "NSInfo 메타 입력/특수 버튼 Draw",
+    "CS 수신/참가자·전투섬 생성·카메라 Rig/HTML",
+    "1dh/28~33 등록 및1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

@@ -1,6 +1,7 @@
 // 누락된 FPU/레지스터 지역값은 같은 호스트의 전체 PE 기계어로 보완한다.
 #include "client/HudNsInfoMeta.h"
 #include "client/RawCameraView.h"
+#include "o/RawBattleOptionText.h" //실제선택문자열의번역플래그와포함최댓값을공유한다.
 #include <algorithm>
 #include <bit>
 #include <cstdio>
@@ -40,6 +41,10 @@ std::int32_t Rank(std::span<const std::uint8_t> options,std::uint32_t slot) {
 }
 // +40에계산값을저장해도배율곱에는원문FST뒤의잔류계산값을사용한다.
 void PanelHeight(std::uint32_t token,double height,const HudNsInfoMetaHooks& h) { auto& node=Need(h.node)(token);node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(height*node.scale); }
+// 0047b430은원문범위에맞는고정그림문자열을반환하며현재언어번역을추가하지않는다.
+const char* Category(std::int32_t option) { if (option>0 && option<5) return "~[I93.110]";if (option>4 && option<11) return "~[I93.117]";if (option>10 && option<14) return "~[I93.116]";if (option>=14 && option<=21) return "~[I93.115]";return "~[I93.112]"; }
+// 파생+b4..163의실제현재DWORD를주소순서가아닌원문쓰기순서로지정한다.
+void Setting(HudBattleInfoNode& node,std::size_t offset,std::uint32_t value) { const auto relative=offset-0xb4;node.settings.at(relative/8).at(relative%8/4)=value; }
 }
 // 원문은정렬되지않은유효표를표준sort가아닌전체39×39쌍교환으로재배치한다.
 void RefreshNsInfoRoster(std::uint32_t token,HudNsInfoMetaGlobals g,const HudNsInfoMetaHooks& h) {
@@ -140,5 +145,41 @@ void LayoutMetaPlayerInfo(std::uint32_t token,HudNsInfoMetaGlobals g,const HudNs
     h.attach(panel.text,static_cast<float>(static_cast<double>(h.node(panel.button).baseWidth)+2.0F),0,0,0);
     h.attach(panel.start,static_cast<float>((static_cast<double>(panel.baseWidth)-h.node(panel.start).baseWidth)*0.5F),static_cast<float>(static_cast<double>(h.node(panel.text).baseHeight)+2.0F),0,0);
     h.attach(panel.master,0,static_cast<float>(static_cast<double>(h.node(panel.text).baseHeight)+2.0F),0,0);PanelHeight(token,static_cast<double>(extraHeight)+h.node(panel.text).baseHeight+2.0F,h);
+}
+// 일부현재설정쌍을보존하는원문분기를전체초기화로대체하지않는다.
+void PrepareMetaBattleSettings(HudBattleInfoNode& node,std::uint32_t gameType) {
+    switch (gameType) {
+    case 1: Setting(node,0xd4,2);Setting(node,0xe4,1);Setting(node,0x138,0);Setting(node,0x144,1);break;
+    case 2: Setting(node,0xd4,3);Setting(node,0xe0,1);Setting(node,0xe4,2);Setting(node,0x100,1);Setting(node,0x128,1);Setting(node,0x138,1);Setting(node,0x140,1);Setting(node,0x144,2);Setting(node,0x148,1);goto extra;
+    case 3: Setting(node,0xd4,3);Setting(node,0xe0,0);Setting(node,0xe4,2);Setting(node,0x100,0);Setting(node,0x128,0);Setting(node,0x138,0);Setting(node,0x140,0);Setting(node,0x144,0);Setting(node,0x148,0);Setting(node,0x154,2);Setting(node,0x158,1);Setting(node,0x15c,1);Setting(node,0x160,2);goto lower;
+    case 4: Setting(node,0xd4,3);Setting(node,0xe0,1);Setting(node,0xe4,2);Setting(node,0x100,1);Setting(node,0x128,1);Setting(node,0x138,1);Setting(node,0x140,1);Setting(node,0x144,2);Setting(node,0x148,1);Setting(node,0x150,1);Setting(node,0x154,0);Setting(node,0x158,1);Setting(node,0x15c,0);Setting(node,0x160,1);goto common;
+    default: Setting(node,0xd4,3);Setting(node,0xe4,2);Setting(node,0x138,1);Setting(node,0x144,2);break;
+    }
+    Setting(node,0xe0,0);Setting(node,0x100,0);Setting(node,0x128,0);Setting(node,0x140,0);Setting(node,0x148,0);
+extra: Setting(node,0x154,0);Setting(node,0x158,0);Setting(node,0x15c,0);Setting(node,0x160,0);
+lower: Setting(node,0x150,0);
+common: Setting(node,0xbc,2);Setting(node,0xc4,2);Setting(node,0x12c,2);Setting(node,0x134,2);Setting(node,0x14c,2);Setting(node,0xc0,1);Setting(node,0xc8,1);Setting(node,0xcc,0);Setting(node,0xd0,0);Setting(node,0xd8,1);Setting(node,0xdc,0);Setting(node,0xe8,1);Setting(node,0xec,1);Setting(node,0xf0,1);Setting(node,0xf4,1);Setting(node,0xf8,1);Setting(node,0xfc,0);Setting(node,0x104,0);Setting(node,0x108,0);Setting(node,0x10c,1);Setting(node,0x110,1);Setting(node,0x114,0);Setting(node,0x118,1);Setting(node,0x11c,1);Setting(node,0x120,1);Setting(node,0x124,1);Setting(node,0x130,1);Setting(node,0x13c,1);
+}
+// 일반부착/두현재관문뒤에는비활성전투도공통스크롤/자식배치를수행한다.
+void LayoutMetaBattleInfo(std::uint32_t token,HudNsInfoMetaGlobals g,const HudNsInfoMetaHooks& h) {
+    auto& panel=Need(h.battle)(token);Need(h.push)(panel.title);h.push(panel.body);h.push(panel.summary);Need(h.replace)(panel.title,"");Need(h.textFlags)(panel.title)&=~8U;h.textFlags(panel.title)&=~0x10U;Need(h.scrollable)(panel.title,1);Need(h.slider)(panel.title,1);h.replace(panel.body,"");h.textFlags(panel.body)&=~8U;h.textFlags(panel.body)&=~0x10U;
+    if (panel.battle) {
+        const auto battle=g.challenge.Battle(panel.battle);
+        if (Read(battle,0,1)&1U) {
+            h.textFlags(panel.title)|=8U;const auto options=battle.subspan(0x59);PrepareMetaBattleSettings(panel,Read(options,0,1));Need(h.parse)(panel.title,"~y~E~[T1]Game Type~[T0]\n");const auto type=o::BattleOptionValueText(options,0,h.translate);h.parse(panel.title,Format("~a~[T%u]~w~E%s~[T0]\n",1U,type.c_str()));h.parse(panel.title,Format("~y~E~[T%i]Game Options~[T0]~w~[T%i]  (~sSort By~w)~[T0]\n",23,24));
+            // mode2는활성전체값/편집태그를쓰고그외는현재값이기준과다른활성행만쓴다.
+            for (std::uint32_t option=1;option<22;++option) {
+                if (panel.mode==2) { if (!panel.settings[option][1]) continue;const auto value=o::BattleOptionValueText(options,option,h.translate);const auto name=o::BattleOptionNameText(option,h.translate);h.parse(panel.title,Format("%s~[T%i]~w~E%s: ~[T0]~[T%i]~i%s~[T0]\n",Category(option),static_cast<int>(option+1),name.c_str(),static_cast<int>(option+27),value.c_str())); }
+                else { if (Read(options,option,1)==panel.settings[option][0] || !panel.settings[option][1]) continue;const auto value=o::BattleOptionValueText(options,option,h.translate);const auto name=o::BattleOptionNameText(option,h.translate);h.parse(panel.title,Format("%s~[T%i]~w~E%s: ~[T0]~i%s~[T0]\n",Category(option),static_cast<int>(option+1),name.c_str(),value.c_str())); }
+            }
+            if (panel.mode==1) h.parse(panel.title,Format("~w~E~[T%i]Click To Add~[T0]\n",23));h.parse(panel.title,"~y~E~[T1000]Excluded:~[T0]\n");std::uint32_t excluded{};
+            // 원문은count를매회다시읽는다.첫행번호1과TYPE+122태그를사용하고실제배열밖은명시거부한다.
+            while (excluded<Read(options,0x16,1)) { const auto typeNumber=Read(options,0x17+excluded,1);const auto name=Need(h.description)(typeNumber);const auto tag=Read(options,0x17+excluded,1)+122U;h.parse(panel.title,Format("~j~E%d) ~[T%u]~N~w%s~[T0]\n",static_cast<int>(excluded+1),tag,name.c_str()));++excluded; }
+            if (excluded+122U<162U) { const auto add=Need(h.translate)("Click To Add");h.parse(panel.title,Format("~j~E%d) ~[T1000]~N~w%s~[T0]\n",static_cast<int>(excluded+1),add.c_str())); }
+        }
+    }
+    Width(panel.summary,panel.baseWidth,h);Width(panel.title,panel.baseWidth,h);PanelHeight(panel.title,panel.baseHeight,h);
+    if (!panel.bytes[0]) { Need(h.requestTop)(panel.title);h.requestTop(panel.body);panel.bytes[0]=1; }
+    Need(h.attach)(panel.title,0,0,token,0);h.attach(panel.summary,static_cast<float>((static_cast<double>(panel.baseWidth)-Need(h.node)(panel.summary).baseWidth)*0.5F),static_cast<float>(static_cast<double>(h.node(panel.title).baseHeight)+2.0F),token,0);h.attach(panel.body,0,static_cast<float>(static_cast<double>(h.node(panel.summary).y)+h.node(panel.summary).baseHeight+2.0F),token,0);
 }
 }
