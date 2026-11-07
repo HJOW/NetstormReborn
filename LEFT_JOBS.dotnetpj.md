@@ -12,18 +12,18 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-07, 단위 기록 0.155 기준)
+### 0.1 현재 값 (2026-11-07, 단위 기록 0.156 기준 — 사용자 요청으로 일시 중지)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **작업 진행 중.** 전체 목표는 미완료다. 최근 단위는 0.155(F2c-12)다. |
-| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12 완료, F2c 나머지 `RawFortWorldLoadBinding`·F2d·F3 미착수). R5 이후는 미착수 |
+| 진행 상태 | **일시 중지(사용자 요청).** 전체 목표는 미완료다. 최근 완료 단위는 0.156(R4 지형·섬 생성 및 인구/배치 1차)이며, 다음 재개 단위는 0.157(R4 지형·섬 생성 및 사제/포탑 배치·섬 수명주기/PostPop·월드 바인딩 2차)이다. |
+| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12 완료, R4 지형·섬 생성 1차 12모듈 완료, R4 지형·섬 생성 2차 및 `RawFortWorldLoadBinding`·F2d·F3 미착수). R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.155(F2c-12 Canon 디코더·섬 빌더/배치/검색·Fort 월드 적재 부모 및 UnpopVtables 동기화) 커밋 직전(이전: 0.154 `3a9a741c / 20261104-24 DN`, 해시 기록 `ee69e4a4 / 20261104-25 DN`). |
-| 검사 | 0.155에서 Release 전체 **Core 1,261개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0. PORT_MAP 무결성 2개와 fixture 목록 검사도 통과했다. 서로 다른 프로젝트 값이며 한 번의 `sln` 전체 실행 합계가 아니다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 단위별 집중 검사·변이 검사 수는 0.154~0.155 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
-| 포트 맵 | `PORT_MAP.tsv` 483행 (L1 273, port 210). 0.155에서 16행을 더하고 1행(`UnpopVtables.inc`)의 기준을 올렸다. 단위별 증가 내역은 이관 파일에 있다. |
-| fixture | 연결 207개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
+| 마지막 구현 커밋 | 0.156(R4 지형·섬 생성 컨텍스트·성장·도장 및 섬 인구·추가·전투·중앙·군도 분리 1차 이식) 커밋 직전(이전: 0.155 `e26587c0 / 20261107-57 DN`, 0.154 `3a9a741c / 20261104-24 DN`, 해시 기록 `ee69e4a4 / 20261104-25 DN`). |
+| 검사 | 0.156에서 Release 전체 **Core 1,278개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0. PORT_MAP 무결성 2개와 fixture 목록 검사도 통과했다. 서로 다른 프로젝트 값이며 한 번의 `sln` 전체 실행 합계가 아니다. Assets·Core의 기존 경로 검사 수를 새 경로의 진행도로 세지 않는다. 단위별 집중 검사·변이 검사 수는 0.154~0.156 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
+| 포트 맵 | `PORT_MAP.tsv` 507행 (L1 289, port 218). 0.156에서 24행(L1 16, port 8)을 더했다. 단위별 증가 내역은 0.155~0.156 기록과 이관 파일에 있다. |
+| fixture | 연결 213개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.154는 HEAD `da27e191`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규·상향 행만 HEAD). cpppj 현재 값은 단위861/표시 11.01(`0c06fa66`)이며 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한다. |
 
@@ -187,6 +187,8 @@
     - [x] F2a Money·Meta 로더(0.139), F2b TypeNames·Deck·Contents·Subscriber 적재(0.140)
     - [x] F2c-1 Territory·팔레트(0.141), F2c-2 객체 적재 본체(0.142), F2c-3 객체 스트림·Meta ContentsHooks(0.143)
     - [x] F2c-4~F2c-8 저장 모듈 14종·`ChunkMap`·FinishOwner(0.144~0.148), F2c-9 변환 저장소(0.149), F2c-10 AddRandom 부모·입력(0.153), F2c-11 섬 목록·단일 배치·군집·게임 보조·Notify(0.154), F2c-12 Canon 디코더·섬 빌더/배치/검색·Fort 월드 적재 부모(`CanonDecoder`·`CanonTypeDecoder`·`RawCheckingFlag`·`RawIslandBuilder`·`RawIslandPlacement`·`RawIslandQueries`·`RawFortWorldLoad`·`MakeFortWorldChildrenHooks`, 0.155)
+    - [x] R4 지형·섬 생성 1차(`TerrainBuilder`·`RawSquidRegion`·`RawFrameChoose`·`RawTerrainBitmap`·`RawTerrainStamp`·`RawTerrainContext`·`RawTerrainGrowth`·`RawIslandPopulation`·`RawIslandAdd`·`RawBattleIsland`·`RawCentralIsland`·`RawIslandPartition`, 0.156)
+    - [ ] R4 지형·섬 생성 2차(다음 단위 0.157 재개 지점): `RawIslandLifecycle`·`RawIslandPostPop`·`RawFortPriestPreparation`·`RawCanonPlacementTerrain`·`RawPriestPlacementTerrain`·`RawTerrainRun`·`RawTerrainPipeline`·`RawNormalTerrainWorldBinding`
     - [ ] F2c 나머지: `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요)
     - [ ] F2d: World·저장 나머지
     - [ ] F3: `RawCampaignSession` 연결. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS·F 단계만으로는 화면 변화가 거의 없다.
@@ -242,6 +244,14 @@
 - **검증:** 집중 19건 통과(`CanonTypeDecoderTests` 6개: `canontype-x86.tsv` 3927행·`canon-decoder-checking-x86.tsv` 156행 + 직접 4개, `IslandBuilderTests` 4개: `islandbuilder-x86.tsv` 1156행 패치/CD + 직접 2개, `IslandPlacementTests` 2개: `island-placement-x86.tsv` 4896행 패치/CD, `IslandQueriesTests` 3개: `islandqueries-x86.tsv` 8490행 + 직접 1개, `FortWorldLoadTests` 3개: `fortworldload-x86.tsv` 534행 + 직접 1개, `DisplaySupportTableMatchesOriginalVtables` 1개). fixture 6개를 링크·등록했다(총 207개, `cpp_sync.py` 0종료). 변이 검사로 `RawIslandQueries.NotFound`(`127u`→`126u`) 변이 시 `IslandQueriesTests` 3개 모두 실패로 검출됨을 확인하고 원복했다. Release 전체 **Core 1,261개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0.
 - **PORT_MAP:** 신규 16행(`CanonDecoder` 3행·`CanonTypeDecoder` 3행·`Islandbuilder` 2행·`RawCheckingFlag.h` 1행·`RawFortWorldLoad` 2행·`RawIslandBuilder` 2행·`RawIslandPlacement` 2행·`RawIslandQueries` 2행 중 L1 10행·port 6행), 기존 1행(`UnpopVtables.inc` → `fbc27346564e5245d36c00e0b151777204a22efe`) 기준 상향. 총 483행(L1 273, port 210).
 - **남은 것:** R4 섬·지형 본체(`TerrainBuilder`·`RawSquidRegion`·`RawFrameChoose`·`RawTerrain*`·`RawIslandLifecycle`·`RawIslandPostPop`·`RawIslandPopulation`·`RawIslandAdd`·`RawFortPriestPreparation`·`RawBattleIsland`·`RawCentralIsland`·`RawIslandPartition`·`RawCanonPlacementTerrain`·`RawPriestPlacementTerrain`)와 `RawNormalTerrainWorldBinding`·`RawFortWorldLoadBinding`·F2d(World·저장 나머지)·F3 `RawCampaignSession` 연결.
+
+### 0.156 단위 기록 — R4 지형·섬 생성 컨텍스트·성장·도장 및 섬 인구·추가·전투·중앙·군도 분리 1차 이식 (2026-11-07)
+
+- **범위:** 지형 생성·도장·성장 기반 7종(`TerrainBuilder`·`RawSquidRegion`·`RawFrameChoose`·`RawTerrainBitmap`·`RawTerrainStamp`·`RawTerrainContext`·`RawTerrainGrowth`), 섬 인구·편집기 섬 추가·전투/중앙/군도 분리 5종(`RawIslandPopulation`·`RawIslandAdd`·`RawBattleIsland`·`RawCentralIsland`·`RawIslandPartition`) 및 cpp 검사 직역 6종(`TerrainContextTests` 2개·`TerrainGrowthTests` 2개·`TerrainArchHelpersTests` 4개·`TerrainSeedTests` 4개·`TerrainStampTests` 3개·`IslandPopulationTests` 2개).
+- **구현(새 파일 12개, 모두 `Netstorm.Core/Original`):** `TerrainBuilder.cs`(원본 본섬 성장·통로·프린지 후보·간헐천/나무/다리 배치·8이웃 표·로컬 LCG 보조), `RawSquidRegion.cs`(`0043de40`/CD `0047ff90` 지역 슬롯 필드 기록·무효/범위 밖/비섬 진단), `RawFrameChoose.cs`(`0042ae70`/CD `004bb560` 초기 지형 및 다리 공유 최대 256 후보 추첨), `RawTerrainBitmap.cs`(256×256 1비트 비트맵·4바이트 정렬 스캔라인), `RawTerrainStamp.cs`(`004c19a0`·`004c1770` 초기 99칸 CRT 캐시·8이웃 variant 마스크·프린지 생성), `RawTerrainContext.cs`(`004c0ef0`·`004c15b0`·`004c16f0` 65536 문자/지역 지도·별칭/타입 매핑·테두리 표시·도장 후 정규화), `RawTerrainGrowth.cs`(`004c10a0` 일반 성장·통로·빈틈 보정·`FirstChunkSeed`·`Scatter`·`GrowRectangle`·`RemoveSparseCell`·`RemoveSparse`·`ClearPlacement`), `RawIslandPopulation.cs`(`0040e120`·`0040e340`·`0040e240` 거주 구역·비보스 간헐천·나무/식물 무작위 배치·초기 타입 치환), `RawIslandAdd.cs`(`0046f910` 편집기 섬 드롭·임시 충돌 검사·`PlaceIslandOnSurface`·지형 생성·그래프·영역 저장), `RawBattleIsland.cs`(`00470b10` 전투 섬 사각형 선택·나무 제거·영역 배정), `RawCentralIsland.cs`(`00470410`·`00470820` 중앙 섬 테두리 탐색·사각형 선택·성배/식물 배치), `RawIslandPartition.cs`(`00470100` 군도 잔여 조각 분리·BFS 라벨링·최소 크기/간격 검사). **기존 파일 수정 1개:** `RawCheckingFlag.cs`(함수 대리자 생성자 3종 추가).
+- **검증:** 집중 17건 통과(`TerrainContextTests` 2개: `terraincontext-x86.tsv` 224행 + 직접 1개, `TerrainGrowthTests` 2개: `terraingrowth-x86.tsv` 108행 + 직접 1개, `TerrainArchHelpersTests` 4개: `terrain-arch-helpers-x86.tsv` 1734행, `TerrainSeedTests` 4개: `terrain-seed-x86.tsv` 378행 + 직접 2개, `TerrainStampTests` 3개: `terrainstamp-x86.tsv` 1560행 패치/CD + 직접 1개, `IslandPopulationTests` 2개: `island-population-x86.tsv` 118행 + `IslandAdd` 직접 1개). fixture 6개를 링크·등록했다(총 213개, `cpp_sync.py` 0종료). 변이 검사로 `RawTerrainGrowth.RunNormal`의 `FixGaps(2)`→`FixGaps(1)` 변이 시 `TerrainGrowth_ReplaysBothNativeFullArrays`가 즉시 실패로 검출함을 확인하고 원복했다. Release 전체 **Core 1,278개, Client 858개, Assets 366개** 통과, 실패·건너뜀 0.
+- **PORT_MAP:** 신규 24행(`RawBattleIsland` 2행 port, `RawCentralIsland` 2행 port, `RawFrameChoose` 2행 L1, `RawIslandAdd` 2행 L1, `RawIslandPartition` 2행 port, `RawIslandPopulation` 2행 L1, `RawSquidRegion` 2행 L1, `RawTerrainBitmap` 2행 port, `RawTerrainContext` 2행 L1, `RawTerrainGrowth` 2행 L1, `RawTerrainStamp` 2행 L1, `TerrainBuilder` 2행 L1). 총 507행(L1 289, port 218).
+- **남은 것(일시 중지 후 재개 지점 — 단위 0.157):** R4 지형·섬 생성 2차(`RawIslandLifecycle`·`RawIslandPostPop`·`RawFortPriestPreparation`·`RawCanonPlacementTerrain`·`RawPriestPlacementTerrain`·`RawTerrainRun`·`RawTerrainPipeline`·`RawNormalTerrainWorldBinding` 및 관련 x86 fixture 대조 검사), 이어서 `RawFortWorldLoadBinding`·F2d(World·저장 나머지)·F3 `RawCampaignSession` 연결.
 
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 

@@ -58,6 +58,27 @@ public sealed class RawCheckingFlag
         _local = other._local;
     }
 
+    /// <summary>외부 DWORD 읽기 대리자에 바인딩된 진단 뷰를 만든다 (2026-11-07 R4 지형·섬 생성 1차 이식).</summary>
+    /// <param name="getter">현재 DWORD를 읽는 대리자.</param>
+    public RawCheckingFlag(Func<uint> getter)
+    {
+        Bind(getter);
+    }
+
+    /// <summary>외부 signed DWORD 읽기 대리자에 바인딩된 진단 뷰를 만든다 (2026-11-07 R4 지형·섬 생성 1차 이식).</summary>
+    /// <param name="getter">현재 signed DWORD를 읽는 대리자.</param>
+    public RawCheckingFlag(Func<int> getter)
+    {
+        Bind(getter);
+    }
+
+    /// <summary>외부 bool 읽기 대리자에 바인딩된 진단 뷰를 만든다 (2026-11-07 R4 지형·섬 생성 1차 이식).</summary>
+    /// <param name="getter">현재 bool을 읽는 대리자.</param>
+    public RawCheckingFlag(Func<bool> getter)
+    {
+        Bind(getter);
+    }
+
     /// <summary>독립 입력의 불리언 대입 의미를 유지하며 외부 owner에는 쓰지 않는다 (2026-11-07 F2c-12 이식).</summary>
     /// <param name="value">설정할 불리언 값.</param>
     public void Set(bool value)
