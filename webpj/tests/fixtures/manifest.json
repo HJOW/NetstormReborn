@@ -5192,7 +5192,7 @@
       "bytes": 27731,
       "lines": 338,
       "fixtureCommit": "05c2233b",
-      "webCommit": "worktree",
+      "webCommit": "4660f8ab",
       "cpppjBasis": {
         "cpppj/src/client/LanguageRequest.cpp": "05c2233b"
       }
@@ -5221,7 +5221,7 @@
       "bytes": 187471,
       "lines": 1153,
       "fixtureCommit": "b4113da2",
-      "webCommit": "worktree",
+      "webCommit": "4660f8ab",
       "cpppjBasis": {
         "cpppj/src/client/WindowTitle.cpp": "b4113da2"
       }
@@ -5250,9 +5250,38 @@
       "bytes": 5184,
       "lines": 168,
       "fixtureCommit": "8d51d63d",
-      "webCommit": "worktree",
+      "webCommit": "4660f8ab",
       "cpppjBasis": {
         "cpppj/src/client/GameTimeDisplay.cpp": "8d51d63d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E35",
+      "id": "salvage-command",
+      "path": "cpppj/tests/fixtures/salvage-command-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 회수 요청/54h 송수신의 호출 순서·패킷·현재 전역·raw 슬롯·수신 버퍼(두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/salvage-ritual-technology.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-salvage-command.js"
+      ],
+      "doc": "docs/webpj-salvage-ritual-technology-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSalvageCommand.cpp"
+      ],
+      "scope": "3458행 전부 사용",
+      "text": true,
+      "sha256": "ecf9bff0c09a7e6fb38a016da38ac012c82b6012ab9f19c21880d8eaeeb6b308",
+      "bytes": 2675715,
+      "lines": 3459,
+      "fixtureCommit": "82b754e4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSalvageCommand.cpp": "82b754e4"
       }
     }
   ]
