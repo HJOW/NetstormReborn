@@ -73,6 +73,10 @@ public class SquidProcess : BaseProcess
     /// <summary>부착한 host다. 부착 전에는 null이다. Host 본체 단위에서 잇는다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <returns>커널의 프로세스 등록 번호다. 부착 전에는 0이다.</returns>
     protected uint Pid() => _pid;
+
+    /// <summary>커널 등록 번호를 같은 어셈블리의 Host 실행 본체에 제공한다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    /// <returns>커널의 프로세스 등록 번호다.</returns>
+    internal uint KernelId => _pid;
 }
 
 // 정해진 시각에 부모의 이벤트 처리기를 부르고 반환값으로 다음 시각을 정한다. 실행 본체는 Host 본체 단위에서 잇는다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.
@@ -102,10 +106,16 @@ public sealed class RegularProcess : SquidProcess
         _payload = payload;
     }
 
-    /// <summary>Host 본체 단위에서 실제 정기 실행으로 잇는다. 미연결 호출은 명시 실패한다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
+    /// <summary>Host 본체 단위에서 실제 정기 실행으로 잇는다. 미연결 호출은 명시 실패한다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐고 0.205에서 Host 실행에 연결했다.</summary>
     public override void RunFrame()
     {
-        throw new InvalidOperationException("정기 프로세스 호스트 미연결");
+        SquidProcessHost? host = HostLink;
+        if (host is null)
+        {
+            throw new InvalidOperationException("정기 프로세스 호스트 미연결");
+        }
+
+        host.RunRegular(this);
     }
 
     /// <summary>원본 이벤트 번호다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
@@ -146,6 +156,16 @@ public sealed class RegularProcess : SquidProcess
     public void SetInitialCount(uint count)
     {
         _count = count;
+    }
+
+    /// <summary>처리기가 돌려준 다음 payload·시각·횟수를 원문 순서대로 둔다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    /// <param name="result">처리기가 돌려준 다음 payload다.</param>
+    /// <param name="now">더할 현재 시각이다.</param>
+    internal void ApplyHandlerResult(float result, double now)
+    {
+        _payload = result;
+        _time = (double)result + now;
+        ++_count;
     }
 
     /// <summary>원문 SharedRegular의 실제 writer 가상 표와 일반 Regular를 구별한다. raw TYPE 변경으로 이 값을 추측하지 않는다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>

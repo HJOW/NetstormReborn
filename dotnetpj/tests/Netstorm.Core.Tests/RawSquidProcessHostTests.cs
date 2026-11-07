@@ -715,4 +715,186 @@ public sealed class RawSquidProcessHostTests
         raw[3] = 0x00;
         Assert.Throws<InvalidOperationException>(() => host.Hooks().UnpopForm!(9999));
     }
+
+    /// <summary>정기 실행 장면을 만든다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    /// <param name="handler">호출을 기록한 뒤 돌려줄 값을 정하는 처리기다.</param>
+    /// <param name="now">현재 시각이다.</param>
+    private static (RawSidPool Pool, Kernel Kernel, SquidProcessState State, SquidProcessHost Host, RegularProcess Process, uint Pid, List<(int Parent, uint Event, uint Count, float Payload)> Calls) RegularScene(Func<int, uint, uint, float, float> handler, double now = 10.0)
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var kernel = new Kernel(8u);
+        var state = new SquidProcessState { Now = now };
+        var calls = new List<(int, uint, uint, float)>();
+        RegularHandler spy = (parent, ev, count, payload) =>
+        {
+            calls.Add((parent, ev, count, payload));
+            return handler(parent, ev, count, payload);
+        };
+        var host = new SquidProcessHost(pool, types, kernel, new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types), state, spy);
+        Span<byte> parent = pool.RawSlot(100);
+        parent.Fill(0);
+        parent[10] = 80;
+        var process = new RegularProcess(7u, 1.5f);
+        process.ResetTask(7u, now);
+        uint pid = kernel.Add(process);
+        process.SetIdentity(0, 100, pid);
+        return (pool, kernel, state, host, process, pid, calls);
+    }
+
+    /// <summary>죽음·빈 부모는 처리기를 부르지 않는다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunRegularSkipsDeadParent()
+    {
+        (RawSidPool pool, Kernel _, SquidProcessState _, SquidProcessHost host, RegularProcess process, uint _, List<(int Parent, uint Event, uint Count, float Payload)> calls) = RegularScene((_, _, _, _) => 2.5f);
+        pool.RawSlot(100)[11] = 1;
+        host.RunRegular(process);
+        pool.RawSlot(100)[11] = 2;
+        host.RunRegular(process);
+        Assert.Empty(calls);
+        Assert.Equal(0u, process.Count());
+    }
+
+    /// <summary>미래 시각·void 부모는 처리기를 부르지 않는다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunRegularSkipsFutureOrVoid()
+    {
+        (RawSidPool pool, Kernel _, SquidProcessState state, SquidProcessHost host, RegularProcess process, uint _, List<(int Parent, uint Event, uint Count, float Payload)> calls) = RegularScene((_, _, _, _) => 2.5f);
+        process.ResetTask(7u, state.Now + 10.0);
+        host.RunRegular(process);
+        Assert.Empty(calls);
+        process.ResetTask(7u, state.Now);
+        pool.RawSlot(100)[11] = 4;
+        host.RunRegular(process);
+        Assert.Empty(calls);
+        Assert.Equal(0u, process.Count());
+    }
+
+    /// <summary>간헐천의 먼 예약은 당겨서 실행한다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunRegularClampsGeyserReservation()
+    {
+        (RawSidPool pool, Kernel _, SquidProcessState state, SquidProcessHost host, RegularProcess process, uint _, List<(int Parent, uint Event, uint Count, float Payload)> calls) = RegularScene((_, _, _, _) => 2.5f);
+        pool.RawSlot(100)[10] = 122;
+        process.ResetTask(7u, state.Now + 10.0);
+        host.RunRegular(process);
+        Assert.Single(calls);
+        Assert.Equal(2.5f, process.Payload());
+        Assert.Equal(2.5 + state.Now, process.Time());
+        Assert.Equal(1u, process.Count());
+    }
+
+    /// <summary>양수 반환은 다음 payload·시각·횟수가 된다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunRegularReschedulesPositive()
+    {
+        (RawSidPool _, Kernel _, SquidProcessState state, SquidProcessHost host, RegularProcess process, uint _, List<(int Parent, uint Event, uint Count, float Payload)> calls) = RegularScene((_, _, _, _) => 2.5f);
+        host.RunRegular(process);
+        Assert.Single(calls);
+        Assert.Equal((100, 7u, 0u, 1.5f), calls[0]);
+        Assert.Equal(2.5f, process.Payload());
+        Assert.Equal(2.5 + state.Now, process.Time());
+        Assert.Equal(1u, process.Count());
+    }
+
+    /// <summary>0 반환은 삭제 호출로 이어진다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunRegularKillsOnZero()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var kernel = new Kernel(8u);
+        var state = new SquidProcessState { Now = 10.0, Boss = false };
+        var host = new SquidProcessHost(pool, types, kernel, new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types), state, (_, _, _, _) => 0f);
+        Span<byte> parent = pool.RawSlot(100);
+        parent.Fill(0);
+        parent[10] = 80;
+        var process = new RegularProcess(7u, 1.5f);
+        process.ResetTask(7u, 10.0);
+        uint pid = kernel.Add(process);
+        process.SetIdentity(16000, 100, pid);
+        host.RunRegular(process);
+        Assert.Same(process, kernel.Get(pid));
+        Assert.Equal(0u, process.Count());
+        Assert.Equal(1.5f, process.Payload());
+        Assert.Throws<ArgumentNullException>(() => host.RunRegular(null!));
+    }
+
+    /// <summary>패치판 NaN은 재예약하고 CD판 NaN은 둔다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunRegularReschedulesPatchNaNOnly()
+    {
+        (RawSidPool _, Kernel _, SquidProcessState _, SquidProcessHost host, RegularProcess process, uint _, List<(int Parent, uint Event, uint Count, float Payload)> _) = RegularScene((_, _, _, _) => float.NaN);
+        host.RunRegular(process);
+        Assert.Equal(1u, process.Count());
+        Assert.Equal(float.NaN, process.Payload());
+        var cdPool = new RawSidPool(RawSurfaceStorage.PoolCapacity, true, null, OriginalEdition.Cd1072);
+        var cdTypes = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var cdKernel = new Kernel(8u);
+        var cdState = new SquidProcessState { Now = 10.0 };
+        var cdHost = new SquidProcessHost(cdPool, cdTypes, cdKernel, new RawSquidDestroy(cdPool, new RawUnpop(cdPool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), Types188()), cdState, (_, _, _, _) => float.NaN);
+        Span<byte> parent = cdPool.RawSlot(100);
+        parent.Fill(0);
+        parent[10] = 80;
+        var cdProcess = new RegularProcess(7u, 1.5f);
+        cdProcess.ResetTask(7u, 10.0);
+        cdProcess.SetIdentity(0, 100, cdKernel.Add(cdProcess));
+        cdHost.RunRegular(cdProcess);
+        Assert.Equal(0u, cdProcess.Count());
+        Assert.Equal(1.5f, cdProcess.Payload());
+    }
+
+    /// <summary>추상 부모는 패치판만 건너뛴다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunRegularSkipsAbstractPatchOnly()
+    {
+        (RawSidPool pool, Kernel _, SquidProcessState _, SquidProcessHost host, RegularProcess process, uint _, List<(int Parent, uint Event, uint Count, float Payload)> calls) = RegularScene((_, _, _, _) => 2.5f);
+        pool.RawSlot(100)[40] = 1;
+        host.RunRegular(process);
+        Assert.Empty(calls);
+        var cdPool = new RawSidPool(RawSurfaceStorage.PoolCapacity, true, null, OriginalEdition.Cd1072);
+        var cdTypes = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var cdKernel = new Kernel(8u);
+        var cdState = new SquidProcessState { Now = 10.0 };
+        int cdCalls = 0;
+        var cdHost = new SquidProcessHost(cdPool, cdTypes, cdKernel, new RawSquidDestroy(cdPool, new RawUnpop(cdPool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), Types188()), cdState, (_, _, _, _) => { ++cdCalls; return 2.5f; });
+        Span<byte> parent = cdPool.RawSlot(100);
+        parent.Fill(0);
+        parent[10] = 80;
+        parent[40] = 1;
+        var cdProcess = new RegularProcess(7u, 1.5f);
+        cdProcess.ResetTask(7u, 10.0);
+        cdProcess.SetIdentity(0, 100, cdKernel.Add(cdProcess));
+        cdHost.RunRegular(cdProcess);
+        Assert.Equal(1, cdCalls);
+    }
+
+    /// <summary>처리기가 지운 프로세스는 건드리지 않는다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunRegularSkipsWhenHandlerDeletes()
+    {
+        (RawSidPool _, Kernel kernel, SquidProcessState _, SquidProcessHost host, RegularProcess process, uint pid, List<(int Parent, uint Event, uint Count, float Payload)> _) = RegularScene((_, _, _, _) => 5f);
+        bool ran = false;
+        host.SetRegularHandler((_, _, _, _) =>
+        {
+            ran = true;
+            kernel.Remove(pid);
+            return 5f;
+        });
+        host.RunRegular(process);
+        Assert.True(ran);
+        Assert.Equal(0u, process.Count());
+        Assert.Null(kernel.Get(pid));
+    }
+
+    /// <summary>연결된 RunFrame은 호스트 실행으로 이어진다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunFrameRunsRegularWhenLinked()
+    {
+        (RawSidPool _, Kernel _, SquidProcessState _, SquidProcessHost host, RegularProcess process, uint _, List<(int Parent, uint Event, uint Count, float Payload)> calls) = RegularScene((_, _, _, _) => 2.5f);
+        process.HostLink = host;
+        process.RunFrame();
+        Assert.Single(calls);
+        Assert.Equal(1u, process.Count());
+    }
 }

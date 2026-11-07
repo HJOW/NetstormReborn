@@ -1,11 +1,11 @@
-// 객체 Form과 커널 프로세스의 부착·삭제 기반(생성·조회·번호·해제·삭제)을 공유한다.
+// 객체 Form과 커널 프로세스의 부착·삭제·실행 기반(생성·조회·번호·해제·삭제·정기)을 공유한다.
 using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Original;
 
 // 프로세스 호스트 모듈을 담는 네임스페이스다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.
 
-// 객체 Form과 커널 프로세스의 부착·통지·수명·삭제를 연결하는 호스트 본체다. 부착·검색·전송 본체와 정기 실행은 후속 단위에서 잇는다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐고 0.204에서 삭제 본체를 이었다.
+// 객체 Form과 커널 프로세스의 부착·통지·수명·삭제·정기 실행을 연결하는 호스트 본체다. 부착·검색·전송 본체는 후속 단위에서 잇는다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐고 0.204에서 삭제 본체를, 0.205에서 정기 실행을 이었다.
 public sealed class SquidProcessHost
 {
     /// <summary>CD판의 절차 상한 비트다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
@@ -410,6 +410,64 @@ public sealed class SquidProcessHost
         }
     }
 
+    /// <summary>원본 004ae300의 부모·시각 관문을 지나 가상 사건을 부르고 반환값으로 재예약·삭제한다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    /// <param name="process">실행할 정기 프로세스다.</param>
+    public void RunRegular(RegularProcess process)
+    {
+        ArgumentNullException.ThrowIfNull(process);
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        ReadOnlySpan<byte> raw = _pool.Slot(process.Parent());
+        if ((raw[StateOffset] & (FreeBit | DeadBit)) != 0)
+        {
+            return;
+        }
+
+        // 간헐천은 0.5초보다 먼 예약을 현재 시각으로 당긴다
+        if (raw[TypeOffset] == _state.PollType && process.Time() - _state.Now > PollLimit)
+        {
+            process.SetNextTime(_state.Now);
+        }
+
+        // 패치판만 추상 부모(factory·vortex·dais 제외)를 건너뛴다. CD판은 genus를 읽기만 한다
+        if (patch && (raw[ParentAbstractOffset] & 1) != 0 && (Type(raw[TypeOffset]).Flags2 & AbstractRunGenus) == 0u)
+        {
+            return;
+        }
+
+        // 아직 시각이 안 됐거나 비교할 수 없으면(NaN) 실행하지 않는다
+        if (!(process.Time() <= _state.Now))
+        {
+            return;
+        }
+
+        if ((raw[StateOffset] & VoidBit) != 0)
+        {
+            return;
+        }
+
+        uint pid = process.KernelId;
+        using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
+        {
+            RegularHandler? handler = Regular();
+            float result = handler is not null ? handler(process.Parent(), process.Event(), process.Count(), process.Payload()) : process.Payload();
+            // 처리기가 이 프로세스를 지웠으면 더 건드리지 않는다
+            if (!ReferenceEquals(_kernel.Get(pid), process))
+            {
+                return;
+            }
+
+            if (result > 0.0f || (patch && float.IsNaN(result)))
+            {
+                // 반환값이 다음 payload와 지연이 된다. 패치판은 NaN도 재예약으로 취급한다
+                process.ApplyHandlerResult(result, _state.Now);
+            }
+            else if (result == 0.0f)
+            {
+                Kill(process, 0u);
+            }
+        }
+    }
+
     /// <summary>원본의 선택·분리·효과 분배를 같은 현재 대여·자산에 연결한다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
     /// <returns>현재 삭제 효과 묶음이다.</returns>
     public SquidDestroyHooks Hooks()
@@ -535,8 +593,23 @@ public sealed class SquidProcessHost
     /// <summary>상태 바이트의 위치다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
     private const int StateOffset = 11;
 
+    /// <summary>상태 바이트의 빈 슬롯 비트다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    private const byte FreeBit = 1;
+
     /// <summary>상태 바이트의 죽음 비트다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
     private const byte DeadBit = 2;
+
+    /// <summary>상태 바이트의 공간 없음(void) 비트다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    private const byte VoidBit = 4;
+
+    /// <summary>부모 추상 비트의 위치다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    private const int ParentAbstractOffset = 40;
+
+    /// <summary>추상 상태여도 실제 Regular를 실행하는 부모 genus 비트다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    private const uint AbstractRunGenus = 0x404200u;
+
+    /// <summary>간헐천에 붙은 Regular가 허용하는 가장 먼 예약(초)이다. 2026-11-07 F2d 프로세스 호스트 정기 실행 이식에서 추가됐다.</summary>
+    private const double PollLimit = 0.5;
 
     /// <summary>Form의 비정렬 커널 번호 DWORD 위치다. 2026-11-07 F2d 프로세스 호스트 통지·검색 이식에서 추가됐다.</summary>
     private const int FormPidOffset = 18;
