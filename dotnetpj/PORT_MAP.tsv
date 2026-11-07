@@ -575,3 +575,7 @@ cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraphStorage.cs	5626fa85b1ef8
 cpppj/src/o/RawPathSearch.h	Netstorm.Core/Original/RawPathSearchStorage.cs	7f903eba024c6e8caa737167a45e5d65f07defac	port
 cpppj/src/o/GameClock.h	Netstorm.Core/Original/RawGameClock.cs	3e9dc2c7a9b54a53d55eb7eadb1896ea2052d2ed	L1
 cpppj/src/o/GameClock.cpp	Netstorm.Core/Original/RawGameClock.cs	3e9dc2c7a9b54a53d55eb7eadb1896ea2052d2ed	L1
+cpppj/src/o/BaseProcess.h	Netstorm.Core/Original/RawKernel.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/o/BaseProcess.cpp	Netstorm.Core/Original/RawKernel.cs	73134971e199e886c35ddea2842e96e41554f35d	port
+cpppj/src/o/Kernel.h	Netstorm.Core/Original/RawKernel.cs	c6536398b7bd4d5c0b8ef164395a484f0ab17b2a	port
+cpppj/src/o/Kernel.cpp	Netstorm.Core/Original/RawKernel.cs	c6536398b7bd4d5c0b8ef164395a484f0ab17b2a	port
