@@ -1,0 +1,57 @@
+{
+  "unit": 1048,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "zlocal 우선 수락/signed31 상한과 실제 select/accept·진단 반환 교정",
+  "sourceFunctions1078": [
+    "004e28b0",
+    "004e02d0",
+    "004e18d0",
+    "004dfb90",
+    "004e1130"
+  ],
+  "implemented": [
+    "현재Poll의zlocal→TCP→생략SPX listener 순서",
+    "pending DWORD의signed31 상한/증가 뒤 재조회",
+    "실제select 읽기/exception 조회 뒤 준비0 자연 반환",
+    "준비/accept 음수는 마지막WSA오류와 원문printf 뒤 반환·listener보존",
+    "Windows accept의 부모 속성/원문 복제에 맞춰 추가ioctl 및 별도 실패 분기 제거"
+  ],
+  "reconciled": [
+    "정상22칸 flush와pending 각1회/정상ID별반복은 기존 복합 전송 사용",
+    "출력 감사에서 제외 방송4e2e80의 진단 정상 복귀/실제 Session 장치 미연결을 후속으로 확인"
+  ],
+  "primaryPlatformSource": "https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-accept",
+  "decompilerOutputsChanged": false,
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "log": "extracted\\cpp-resume-1048\\build.log",
+    "exeSize": 12168192,
+    "exeSha256": "0f9ad90e5841a70053fbe7adcce51426dc186c8911c7f4dfa8c0b7fa5c37c5ce"
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1048\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remaining": [
+    "송신 제외 방송의 server 진단/정상 복귀와 전체 송신 감사",
+    "endpoint/서버/boss·나머지 writer/decoder·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

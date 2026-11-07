@@ -52,7 +52,7 @@ ConnectionRegistrationHooks RawConnectionRegistry::RegistrationHooks(std::functi
 void RawConnectionRegistry::Register(std::int32_t id,std::uint32_t token) { static_cast<void>(Node(token));RegisterTransceiver(id,token,Cleanup(),RegistrationHooks()); }
 // 원문 접속 생성자는 새 노드의 sender를 이미 쓴 뒤 기존 칸을 진단 없이 대체한다.
 void RawConnectionRegistry::PublishConnect(std::int32_t id,std::uint32_t token) { static_cast<void>(Node(token));if (id<0 || id>=static_cast<std::int32_t>(transceivers_.size())) throw std::out_of_range("접속 공개의 실제22칸 범위");transceivers_[static_cast<std::size_t>(id)]=token; }
-bool RawConnectionRegistry::CanAccept() const { return pendingCount_<31; }
+bool RawConnectionRegistry::CanAccept() const { return std::bit_cast<std::int32_t>(pendingCount_)<31; } //004e02f1의jge/4e038c의jl은signed비교이며 저장DWORD의unsigned감산과 구별한다.
 std::int32_t RawConnectionRegistry::Accept(std::uint32_t token) {
     auto& connection=Node(token);if (!CanAccept()) throw std::logic_error("현재 pending 개수31 관문");
     for (std::size_t slot=1;slot<pending_.size();++slot) if (!pending_[slot]) { pending_[slot]=token;connection.sender=0U-static_cast<std::uint32_t>(slot);++pendingCount_;return -static_cast<std::int32_t>(slot); } //현재 첫 빈칸을 원문 순서로 선택한다.

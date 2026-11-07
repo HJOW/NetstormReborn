@@ -121,7 +121,7 @@ std::size_t CompositeMissionTransport::Poll() {
     } reset{polling_};
     try {
         if (tcp_) { tcp_->BeginPoll();tcpBegun=true; }if (internal_) { internal_->BeginPoll();localBegun=true; }if (editor_) { editor_->BeginPoll();editorBegun=true; }
-        if (tcp_) tcp_->AcceptPending();if (internal_) internal_->AcceptPending();if (editor_) editor_->AcceptPending(); //004e28b0의 TCP→생략SPX→zlocal listener 순서다.
+        if (internal_) internal_->AcceptPending();if (editor_) editor_->AcceptPending();if (tcp_) tcp_->AcceptPending(); //004e28b0은5e4a10의zlocal→5e4a08의TCP→생략SPX 순서다. 같은 프레임의 첫 pending 선택도 이 순서를 따른다.
         for (std::int32_t id=-1;id>-static_cast<std::int32_t>(o::kPendingConnectionSlots);--id) { const auto result=ReceiveOne(id);if (result.consumed) ++count; } //004df560의 현재 각 pending 한 번이다.
         for (std::int32_t id=0;id<static_cast<std::int32_t>(o::kTransceiverSlots);++id) { for (;;) { const auto result=ReceiveOne(id);if (result.consumed) ++count;if (!result.again) break; } } // callback의 재배치/반납을 매 회 현재 표에서 반영한다.
     }catch (...) {

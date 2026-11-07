@@ -13,6 +13,7 @@
 #include <bit>
 #include <charconv>
 #include <cstring>
+#include <cstdio>
 #include <limits>
 #include <stdexcept>
 #include <utility>
@@ -193,10 +194,13 @@ void LocalTcpTransport::AssignConnection(std::int32_t pending,std::int32_t owner
 void LocalTcpTransport::Accept() {
     if (listener_==kInvalidSocket) return;
     while (registry_->CanAccept()) { // 원문31개 대기 연결 상한을 현재 표에서 매번 읽는다.
+        fd_set readable,errors;FD_ZERO(&readable);FD_ZERO(&errors);FD_SET(Socket(listener_),&readable);FD_SET(Socket(listener_),&errors);timeval timeout{};const auto ready=select(0,&readable,nullptr,&errors,&timeout);
+        if (ready==SOCKET_ERROR || FD_ISSET(Socket(listener_),&errors)) { lastError_=WSAGetLastError();std::printf("listening socket shutdown\n");return; } //4e18d0의준비오류는listener를닫거나예외를던지지않고4e02d0의진단뒤반환한다.
+        if (!FD_ISSET(Socket(listener_),&readable)) return; // 현재 준비0은새노드/수락/진단없이자연반환한다.
         sockaddr_in address{};int size=sizeof(address);SocketOwner socket{accept(Socket(listener_),reinterpret_cast<sockaddr*>(&address),&size)};
-        if (socket.socket==INVALID_SOCKET) { const auto error=WSAGetLastError();if (error==WSAEWOULDBLOCK) return;lastError_=error;throw SocketError("LAN accept",error); }
-        std::array<std::uint8_t,4> bytes{};std::memcpy(bytes.data(),&address.sin_addr,bytes.size());if (address.sin_family!=AF_INET || !LocalAddress(bytes)) { lastError_=WSAEACCES;continue; }u_long nonblocking=1;
-        if (ioctlsocket(socket.socket,FIONBIO,&nonblocking)==SOCKET_ERROR) { lastError_=WSAGetLastError();throw SocketError("accepted nonblocking",lastError_); }static_cast<void>(Adopt(static_cast<std::uintptr_t>(socket.Release()),-1,false,false,AddressBytes(address)));
+        if (socket.socket==INVALID_SOCKET) { lastError_=WSAGetLastError();std::printf("listening socket shutdown\n");return; } // select뒤실제accept실패도원문음수결과다. would-block을별도성공으로바꾸지않는다.
+        std::array<std::uint8_t,4> bytes{};std::memcpy(bytes.data(),&address.sin_addr,bytes.size());if (address.sin_family!=AF_INET || !LocalAddress(bytes)) { lastError_=WSAEACCES;continue; }
+        static_cast<void>(Adopt(static_cast<std::uintptr_t>(socket.Release()),-1,false,false,AddressBytes(address))); //4dfb90/4e1130처럼수락socket의부모속성을사용하며추가ioctl/새실패분기를만들지않는다.
     }
 }
 //004e1800의 TCP 부분이다. select 오류/exception이면 원문4e1770처럼 socket만 닫고 WSA 오류를 저장한다.
