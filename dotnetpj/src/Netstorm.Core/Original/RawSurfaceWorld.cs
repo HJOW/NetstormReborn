@@ -1,5 +1,6 @@
 // 같은 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드의 껍데기를 공유한다.
 using Netstorm.Core.Bridges;
+using Netstorm.Core.Simulation;
 using System.Globalization;
 using System.Text;
 
@@ -56,6 +57,9 @@ public sealed class RawSurfaceWorld
     private readonly RawGraph? _graph;
 
     /// <summary>자산 뿌리의 공간 해제기다. 원본 Impl.unpop에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
+    /// <summary>타입에 맞는 객체를 생성하는 처리기다. 원본 Impl.factory에 대응하며 188개 TYPE가 아니면 비워 둔다. 진단·분리·전송 묶음은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 생성 연결 이식에서 추가됐다.</summary>
+    private readonly RawSquidFactory? _factory;
+
     private readonly RawUnpop? _unpop;
 
     /// <summary>자산 삭제의 기본 몸체다. 원본 Impl.baseDestroy에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
@@ -131,6 +135,7 @@ public sealed class RawSurfaceWorld
         {
             _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph.Records, _storage.Graph.Stack, null, GraphRecovery.FullPool);
             _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots);
+            _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);
             _baseDestroy = new RawSquidDestroy(_storage.Pool, _unpop, _types);
         }
 
@@ -517,6 +522,21 @@ public sealed class RawSurfaceWorld
     {
         // 원본 float 스트림 삽입은 double로 정확히 넓힌 뒤 같은 자릿수로 적는다.
         return ((double)value).ToString("G12", CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>복원된 타입 생성자를 같은 풀에서 실행한다. 2026-11-07 F2d 월드 본체 생성 연결 이식에서 추가됐다.</summary>
+    /// <param name="type">만들 타입 번호다.</param>
+    /// <param name="flags">할당 영역 비트(1 예측, 2 클라이언트, 0 서버)다.</param>
+    /// <returns>새 객체 번호다.</returns>
+    public int Create(uint type, uint flags = 0u)
+    {
+        if (_factory is null)
+        {
+            throw new InvalidOperationException("실제 월드 생성이 연결되지 않았습니다.");
+        }
+
+        _changed = true;
+        return _factory.Create(type, (SidAllocation)flags);
     }
 
     /// <summary>깊이·Graph·프로세스·공간의 실제 상태를 읽기 전용으로 노출한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>

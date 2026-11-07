@@ -835,6 +835,47 @@ public sealed class RawSurfaceWorldTests
         Assert.Contains($"raw_factory_content\t{parent}\t{form}\t3\t8\n", report);
     }
 
+    /// <summary>생성자 주소 표를 채운 타입 레코드 188개를 만든다. 2026-11-07 F2d 월드 본체 생성 연결 이식에서 추가됐다.</summary>
+    /// <returns>공장 생성이 통하는 타입 표다.</returns>
+    private static List<OriginalTypeRecord> TypesWithAddresses() =>
+        Enumerable.Range(0, OriginalConstructors.TypeCount).Select(i => new OriginalTypeRecord { ConstructorAddress = OriginalConstructors.Address(i) }).ToList();
+
+    /// <summary>내장 Form 생성이 같은 풀에 슬롯을 쓰는지 검증한다. 2026-11-07 F2d 월드 본체 생성 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void CreateFormWritesSlot()
+    {
+        // 원본 생성자·가상 소유자 경로의 공장 위임을 검증한다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, TypesWithAddresses(), 97u, null, Frames188());
+        Assert.True(world.TakeChanged());
+        int sid = world.Create(6u, 0u);
+        Assert.Equal(6, world.Storage().Pool.Slot(sid)[RawSidPool.TypeOffset]);
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>자산 생성이 같은 풀에 슬롯을 쓰고 보고서에 보이는지 검증한다. 2026-11-07 F2d 월드 본체 생성 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void CreateAssetWritesSlot()
+    {
+        // 원본 자산 생성자·후처리 경로의 공장 위임을 검증한다. Pop 전이라 void 상태로 남는다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, TypesWithAddresses(), 97u, null, Frames188());
+        int sid = world.Create(70u, 0u);
+        ReadOnlySpan<byte> slot = world.Storage().Pool.Slot(sid);
+        Assert.Equal(70, slot[RawSidPool.TypeOffset]);
+        Assert.Equal(RawSidPool.VoidBit, slot[RawSidPool.StateOffset]);
+        Assert.Empty(world.Objects());
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>188개가 아닌 TYPE 월드의 생성을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 생성 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void CreateRejectsNon188World()
+    {
+        // CD 171개 TYPE의 공장 연결은 후속 단위에서 잇는다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.Create(6u, 0u));
+    }
+
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {
