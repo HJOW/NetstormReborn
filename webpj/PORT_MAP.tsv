@@ -511,7 +511,7 @@ cpppj/src/o/RawAmbientSound.cpp	port			todo	[o-default]
 cpppj/src/o/RawAmbientWind.cpp	port	www/core/raw-ambient-wind.js	1f00a25a	port	[o-default] WB04-E17: 004dd2b0 공유 바람 갱신(감쇠·잡음 난수·atan2 각도·Boardcoord 정규화, 10.78 경로). fixture ambient-wind-hardware originals 960행 전부. Client Storage 수명 대조는 해당 단위에서
 cpppj/src/o/RawArcherAnimation.cpp	port			todo	[o-default]
 cpppj/src/o/RawArcherTypeData.cpp	port			todo	[o-default]
-cpppj/src/o/RawArcSpire.cpp	port			todo	[o-default]
+cpppj/src/o/RawArcSpire.cpp	port	www/core/raw-arc-spire.js	1f00a25a	port	[o-default] WB04-E49: 아크 스파이어 최초 Regular 예약 후처리(48c080)·Regular(48c6e0)·공격(48c110)·이웃 수집(48c300)·연쇄 타격(48c410). fixture arc-spire 665행. 실제 공간 검색/빔/피해/프레임 변경은 월드 조립에서
 cpppj/src/o/RawAssetOwner.cpp	port			todo	[o-default]
 cpppj/src/o/RawAssetPostPop.cpp	port			todo	[o-default]
 cpppj/src/o/RawAssetRegular.cpp	port			todo	[o-default]

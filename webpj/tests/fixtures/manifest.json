@@ -6230,9 +6230,38 @@
       "bytes": 704792,
       "lines": 1018,
       "fixtureCommit": "253e6a99",
-      "webCommit": "worktree",
+      "webCommit": "9eb519eb",
       "cpppjBasis": {
         "cpppj/src/o/RawAcidZap.cpp": "253e6a99"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E49",
+      "id": "arc-spire",
+      "path": "cpppj/tests/fixtures/arc-spire-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 아크 스파이어 다섯 몸체(후처리·Regular·Collect·Attack·Strike)의 효과 순서와 슬롯·반환·개수·버퍼",
+      "consumers": [
+        "webpj/tests/arc-spire.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-arc-spire.js"
+      ],
+      "doc": "docs/webpj-arc-spire-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawArcSpire.cpp"
+      ],
+      "scope": "665행 전부 사용(판본 열 없는 10.78 단일 관측)",
+      "text": true,
+      "sha256": "6eb5d0a42837bce4b373884d808adb93e95c93d9044929de687d62ff9436568a",
+      "bytes": 1036264,
+      "lines": 666,
+      "fixtureCommit": "eb739b80",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawArcSpire.cpp": "eb739b80"
       }
     }
   ]
