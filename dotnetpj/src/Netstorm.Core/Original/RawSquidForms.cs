@@ -129,6 +129,10 @@ public sealed class RawSquidForms
         return PatchVtables[index];
     }
 
+    /// <summary>지원 내장 타입의 생성자가 쓰는 판본별 실제 가상 표 기록값이다. Host 부착의 테이블 분기에서 쓴다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    /// <param name="type">내장 Form 타입 번호.</param>
+    internal static uint VtableFor(uint type) => Vtable(type);
+
     /// <summary>
     /// 원본의 정렬되지 않은 WORD/DWORD 를 낮은 바이트부터 읽는다.
     /// </summary>

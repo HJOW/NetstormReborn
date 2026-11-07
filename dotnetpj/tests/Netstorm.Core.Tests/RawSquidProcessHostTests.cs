@@ -1,5 +1,6 @@
 // 프로세스 호스트 껍데기의 생성·조회·번호를 검증한다.
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Tests;
 
@@ -915,4 +916,217 @@ public sealed class RawSquidProcessHostTests
         Assert.Single(calls);
         Assert.Equal(1u, process.Count());
     }
+
+    /// <summary>같은 공장·번호로 부착 장면을 만든다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    private static (RawSidPool Pool, Kernel Kernel, SquidProcessState State, SquidProcessHost Host, int Parent) AttachScene()
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        types[80].ConstructorAddress = OriginalConstructors.Address(pool.Edition, 2);
+        var kernel = new Kernel(8u);
+        var state = new SquidProcessState { CurrentProcessFormType = new UIntBox { Value = 80u } };
+        var host = new SquidProcessHost(pool, types, kernel, DestroyFor(pool, types), state);
+        int parent = pool.Allocate(SidAllocation.Server);
+        pool.RawSlot(parent).Fill(0);
+        return (pool, kernel, state, host, parent);
+    }
+
+    /// <summary>소멸 효과를 기록하는 검사 전용 프로세스다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    private sealed class DisposeSpy : SquidProcess
+    {
+        /// <summary>소멸 효과를 받았는지다.</summary>
+        public bool Disposed { get; private set; }
+
+        /// <summary>소멸 효과를 기록한다.</summary>
+        public override void Dispose()
+        {
+            Disposed = true;
+        }
+    }
+
+    /// <summary>빈 입력·타입 밖 번호를 거부한다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void AttachGuardsNullAndType()
+    {
+        (RawSidPool _, Kernel _, SquidProcessState _, SquidProcessHost host, int parent) = AttachScene();
+        var process = new RegularProcess(0x123u, 1f);
+        Assert.Throws<ArgumentNullException>(() => host.Attach(null!, 46u, parent, 0x50u));
+        Assert.Throws<ArgumentNullException>(() => host.Reattach(null!, 46u, parent, 0x50u, 0));
+        Assert.Throws<ArgumentNullException>(() => host.RefreshForm(null!));
+        var bad = new RegularProcess(1u, 0f);
+        Assert.Throws<InvalidOperationException>(() => host.Attach(bad, 5u, parent, 0x50u, 0));
+    }
+
+    /// <summary>명시 폼 슬롯을 만든다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    /// <param name="pool">같은 풀이다.</param>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="type">쓸 타입 바이트다.</param>
+    private static int ExplicitForm(RawSidPool pool, int parent, byte type)
+    {
+        int sid = pool.Allocate(SidAllocation.Server);
+        Span<byte> raw = pool.RawSlot(sid);
+        raw.Fill(0);
+        raw[10] = type;
+        raw[11] = 4;
+        raw[0] = 0x98;
+        raw[1] = 0x20;
+        raw[2] = 0x51;
+        raw[3] = 0x00;
+        raw[16] = unchecked((byte)parent);
+        raw[17] = unchecked((byte)(parent >> 8));
+        PutPid(pool, sid, 1u);
+        return sid;
+    }
+
+    /// <summary>살아 있는 부착 폼 슬롯을 만든다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    /// <param name="pool">같은 풀이다.</param>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="type">쓸 타입 바이트다.</param>
+    private static int LiveForm(RawSidPool pool, int parent, byte type)
+    {
+        int sid = ExplicitForm(pool, parent, type);
+        // 살아 있는 부착 폼은 void가 꺼지고 contained가 켜져 있다. 검증 전용 경로는 슬롯을 바꾸지 않는다
+        pool.RawSlot(sid)[RawSidPool.StateOffset] = 8;
+        return sid;
+    }
+
+    /// <summary>신규 프로세스를 등록·연결한다. 명시 폼 경로만 쓴다(신규 생성은 공장 폼 생성이 필요해 후속에서 잇는다). 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void AttachExplicitFormSucceeds()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState _, SquidProcessHost host, int parent) = AttachScene();
+        int sid = ExplicitForm(pool, parent, 80);
+        var process = new RegularProcess(0x123u, 1f);
+        SquidProcess? attached = host.Attach(process, 46u, parent, 0x50u, sid);
+        Assert.Same(process, attached);
+        Assert.True(host.IsRegistered(1u, process));
+        Assert.Same(host, process.HostLink);
+        Assert.Equal(sid, process.Form());
+        Assert.Equal(parent, process.Parent());
+        Assert.Equal(0x123u, ((RegularProcess)attached!).Event());
+    }
+
+    /// <summary>같은 포인터는 해제 후 재수신으로 넘긴다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void AttachDuplicateReattaches()
+    {
+        (RawSidPool _, Kernel kernel, SquidProcessState _, SquidProcessHost host, int parent) = AttachScene();
+        var pool = host.Pool();
+        int first = ExplicitForm(pool, parent, 80);
+        int second = ExplicitForm(pool, parent, 80);
+        var process = new RegularProcess(0x123u, 1f);
+        Assert.Same(process, host.Attach(process, 46u, parent, 0x50u, first));
+        Assert.Equal(1, kernel.Size());
+        Assert.Same(process, host.Attach(process, 46u, parent, 0x50u, second));
+        Assert.Equal(1, kernel.Size());
+        Assert.Equal(second, process.Form());
+        var other = new SquidProcessHost(
+            new RawSidPool(RawSurfaceStorage.PoolCapacity),
+            Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList(),
+            kernel,
+            new SquidProcessState(),
+            () => null);
+        process.HostLink = other;
+        Assert.Throws<ArgumentException>(() => host.Reattach(process, 46u, parent, 0x50u, second));
+        var missing = new RegularProcess(2u, 0f);
+        Assert.Throws<ArgumentException>(() => host.Reattach(missing, 46u, parent, 0x50u, second));
+    }
+
+    /// <summary>비활성 부모는 소멸만 하고 null을 둔다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void AttachInactiveParentDisposesOnly()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState _, SquidProcessHost host, int _) = AttachScene();
+        int idle = pool.Allocate(SidAllocation.Server);
+        pool.RawSlot(idle)[RawSidPool.StateOffset] |= 1;
+        var process = new DisposeSpy();
+        Assert.Null(host.Attach(process, 46u, idle, 0x50u, 0));
+        Assert.True(process.Disposed);
+        Assert.Equal(0, kernel.Size());
+    }
+
+    /// <summary>생성 실패 뒤에도 앞선 등록·할당은 남는다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void AttachFailureKeepsEarlierRegistration()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState _, SquidProcessHost host, int parent) = AttachScene();
+        uint free = pool.FreeCount;
+        var process = new DisposeSpy();
+        pool.RawSlot(parent).Fill(0);
+        var types = host.Type(80);
+        types.ConstructorAddress = 0xfffffff0u;
+        Assert.Throws<InvalidOperationException>(() => host.Attach(process, 46u, parent, 0x50u, 0));
+        Assert.True(process.Disposed);
+        Assert.Equal(1, kernel.Size());
+        Assert.Equal(free, pool.FreeCount);
+    }
+
+    /// <summary>공통 가상 표는 공장 부착으로 간다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void AttachFormRoutesCommonTable()
+    {
+        (RawSidPool pool, Kernel _, SquidProcessState _, SquidProcessHost host, int parent) = AttachScene();
+        var forms = new RawSquidForms(pool, null, (form, flags) => { });
+        int form = forms.Create(1, SidAllocation.Client);
+        pool.RawSlot(form)[RawSidPool.StateOffset] |= 4;
+        host.AttachForm(form, parent, 0u);
+        Assert.Equal(form, pool.Slot(parent)[6] | (pool.Slot(parent)[7] << 8));
+        Span<byte> raw = pool.RawSlot(300);
+        raw.Fill(0);
+        raw[10] = 2;
+        raw[0] = 0xef;
+        raw[1] = 0xbe;
+        raw[2] = 0xad;
+        raw[3] = 0xde;
+        Assert.Throws<InvalidOperationException>(() => host.AttachForm(300, parent, 0u));
+    }
+
+    /// <summary>프로세스 가상 표는 서버 조회·writer로 간다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void AttachFormRoutesProcessTable()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState _, SquidProcessHost host, int parent) = AttachScene();
+        var process = new SquidProcess();
+        kernel.Add(process);
+        Span<byte> raw = pool.RawSlot(400);
+        raw.Fill(0);
+        raw[10] = 2;
+        raw[11] = 4;
+        raw[0] = 0x98;
+        raw[1] = 0x20;
+        raw[2] = 0x51;
+        raw[3] = 0x00;
+        PutPid(pool, 400, 1u);
+        var sent = new List<int>();
+        host.SetFormTransmit(new ProcessFormTransmission
+        {
+            WriteData = (_, _) => 1,
+            Transmit = size => sent.Add(size),
+        });
+        host.AttachForm(400, parent, 0x80u);
+        Assert.Equal([1], sent);
+        Assert.Equal(400, pool.Slot(parent)[6] | (pool.Slot(parent)[7] << 8));
+    }
+
+    /// <summary>부모를 다시 읽어 같은 폼을 걸고 커널에서는 뺀다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RefreshFormReattachesSameForm()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState _, SquidProcessHost host, int parent) = AttachScene();
+        int sid = LiveForm(pool, parent, 2);
+        var process = new RegularProcess(0x123u, 1f);
+        host.Attach(process, 46u, parent, 0x50u, sid);
+        var sent = new List<int>();
+        host.SetFormTransmit(new ProcessFormTransmission
+        {
+            WriteData = (_, _) => 1,
+            Transmit = size => sent.Add(size),
+        });
+        host.RefreshForm(process);
+        Assert.Equal(sid, process.Form());
+        Assert.Same(process, kernel.Get(1u));
+        var stray = new RegularProcess(9u, 0f);
+        Assert.Throws<InvalidOperationException>(() => host.RefreshForm(stray));
+    }
+
 }

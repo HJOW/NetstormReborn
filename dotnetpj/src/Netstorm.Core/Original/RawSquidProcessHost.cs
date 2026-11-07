@@ -5,7 +5,7 @@ namespace Netstorm.Core.Original;
 
 // 프로세스 호스트 모듈을 담는 네임스페이스다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.
 
-// 객체 Form과 커널 프로세스의 부착·통지·수명·삭제·정기 실행을 연결하는 호스트 본체다. 부착·검색·전송 본체는 후속 단위에서 잇는다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐고 0.204에서 삭제 본체를, 0.205에서 정기 실행을 이었다.
+// 객체 Form과 커널 프로세스의 부착·통지·수명·삭제·정기 실행을 연결하는 호스트 본체다. 검색·전송 본체와 패킷 직렬화는 후속 단위에서 잇는다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐고 0.204에서 삭제 본체를, 0.205에서 정기 실행을, 0.214에서 부착 본체를 이었다.
 public sealed class SquidProcessHost
 {
     /// <summary>CD판의 절차 상한 비트다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
@@ -686,5 +686,254 @@ public sealed class SquidProcessHost
         }
 
         return factory.Create(type, (flags & ClientForm) != 0u ? SidAllocation.Client : SidAllocation.Server);
+    }
+
+    /// <summary>C++ 소유권을 가진 신규 입력도 같은 원문 부모에 전달한다. 동일 포인터는 해제 후 재수신으로 넘긴다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    /// <param name="process">부를 프로세스다. 실패하면 소멸 효과를 실행한다.</param>
+    /// <param name="processType">부착할 프로세스 타입 번호다.</param>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="flags">원문 플래그다.</param>
+    /// <param name="form">고를 Form SID다. 0이면 신규 생성이다.</param>
+    /// <returns>붙은 프로세스다. 부분 실패면 null이다.</returns>
+    public SquidProcess? Attach(SquidProcess process, uint processType, int parent, uint flags, int form = 0)
+    {
+        ArgumentNullException.ThrowIfNull(process);
+        if (_kernel.Find(process) != 0u)
+        {
+            return Reattach(process, processType, parent, flags, form);
+        }
+
+        bool attached;
+        try
+        {
+            attached = AttachBase(process, processType, parent, flags, form, true);
+        }
+        catch
+        {
+            process.Dispose();
+            throw;
+        }
+
+        if (!attached)
+        {
+            process.Dispose();
+            return null;
+        }
+
+        return process;
+    }
+
+    /// <summary>실제 Kernel이 소유한 기존 포인터는 새 소유권 없이 같은 상위 부모에 등록한다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    /// <param name="process">다시 받을 프로세스다.</param>
+    /// <param name="processType">부착할 프로세스 타입 번호다.</param>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="flags">원문 플래그다.</param>
+    /// <param name="form">고를 Form SID다.</param>
+    /// <returns>붙은 프로세스다. 부분 실패면 null이다.</returns>
+    public SquidProcess? Reattach(SquidProcess process, uint processType, int parent, uint flags, int form)
+    {
+        ArgumentNullException.ThrowIfNull(process);
+        if (_kernel.Find(process) == 0u || (process.HostLink is not null && !ReferenceEquals(process.HostLink, this)))
+        {
+            throw new ArgumentException("재수신 프로세스의 C++ Kernel/host 소유권 불일치", nameof(process));
+        }
+
+        return AttachBase(process, processType, parent, flags, form, false) ? process : null;
+    }
+
+    /// <summary>장기 Host의 현재 장치와 실제 두 필드를 원문 부모에 제공하며 부분 실패를 숨기지 않는다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    /// <param name="process">부를 프로세스다.</param>
+    /// <param name="processType">부착할 프로세스 타입 번호다.</param>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="flags">원문 플래그다.</param>
+    /// <param name="form">고를 Form SID다. 0이면 신규 생성이다.</param>
+    /// <param name="owned">커널 등록을 새 소유로 넘기면 참이다.</param>
+    /// <returns>부착했으면 참이다.</returns>
+    private bool AttachBase(SquidProcess process, uint processType, int parent, uint flags, int form, bool owned)
+    {
+        using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
+        {
+            process.HostLink = this;
+            process.RuntimeLink = _currentRuntime?.Invoke();
+            uint pid = 0u;
+            var hooks = new BaseProcessAttachHooks
+            {
+                TypeEnd = () => ProcessTypeEnd(),
+                ProcessFormType = () => _state.ProcessFormType(),
+                Assertion = (expression, file, line) =>
+                {
+                    Action<string, string, uint>? device = _currentRuntime is not null ? Runtime().Assertion : _state.Assertion;
+                    if (device is null)
+                    {
+                        throw new InvalidOperationException("BaseProcess 부착의 선택된 원문 진단 장치 미연결");
+                    }
+
+                    device(expression, file, line);
+                },
+                RegisterProcess = () =>
+                {
+                    if (_pool.Edition == OriginalEdition.Patch1078)
+                    {
+                        _state.TypeRotation = unchecked((_state.TypeRotation + 1u) % (uint)TypeCount());
+                    }
+
+                    uint assigned = owned ? _kernel.Add(process) : _kernel.AddRef(process);
+                    pid = assigned;
+                    return assigned;
+                },
+                Create = allocationFlags => CreateOrTakeForm(allocationFlags == 2u ? ClientForm : 0u, 0),
+                Take = selected => { CreateOrTakeForm(0u, selected); },
+                Parent = selected => RawContainedLink.CommonContainedParent(_pool, selected),
+                Attach = (selected, into, popFlags) => AttachForm(selected, into, popFlags),
+                OnAttached = () => process.OnAttached(),
+            };
+            var fields = new BaseProcessAttachFields();
+            bool attached = RawBaseProcessAttach.Attach(_pool, fields, processType, parent, form, flags, hooks);
+            if (attached)
+            {
+                process.SetIdentity(fields.Form, fields.Parent, pid);
+            }
+
+            return attached;
+        }
+    }
+
+    /// <summary>서버 조회가 저장한 실제 포인터만 writer에서 사용하며 파생 직렬화 접두 뒤에 공통 부착을 실행한다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    /// <param name="form">부를 Form SID다.</param>
+    /// <param name="parent">부를 부모 SID다.</param>
+    /// <param name="flags">원문 플래그다.</param>
+    public void AttachForm(int form, int parent, uint flags)
+    {
+        using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
+        {
+            SquidProcess? selected = null;
+            Action<int, int, uint> attach = (attachForm, attachParent, attachFlags) =>
+            {
+                if (_currentRuntime is not null)
+                {
+                    ProcessHostRuntimeBindings bindings = Runtime();
+                    if (bindings.Factory is null)
+                    {
+                        throw new InvalidOperationException("현재 World의 공통 Form 부착 공장 미연결");
+                    }
+
+                    bindings.Factory.AttachForm(attachForm, attachParent, attachFlags);
+                }
+                else if (_directFormFactory is not null)
+                {
+                    _directFormFactory.AttachForm(attachForm, attachParent, attachFlags);
+                }
+                else
+                {
+                    // 독립 입력도 같은 현재 표·진단 부모를 쓴다
+                    new RawSquidFactory(_pool, _types).AttachForm(attachForm, attachParent, attachFlags);
+                }
+            };
+            var hooks = new ProcessAttachHooks
+            {
+                Server = () => _pool.IsServer,
+                Lookup = sid => { selected = FromForm(sid); },
+                WriteData = changed =>
+                {
+                    if (selected is null)
+                    {
+                        throw new InvalidOperationException("Process 부착의 선택된 실제 PID 미연결");
+                    }
+
+                    ProcessFormTransmission? device = Transmission();
+                    if (device?.WriteData is null)
+                    {
+                        throw new InvalidOperationException("Process 부착의 선택된 실제 writer 미연결");
+                    }
+
+                    return device.WriteData(selected, changed);
+                },
+                Transmit = size =>
+                {
+                    ProcessFormTransmission? device = Transmission();
+                    if (device?.Transmit is null)
+                    {
+                        throw new InvalidOperationException("Process 부착의 선택된 실제 송신 장치 미연결");
+                    }
+
+                    device.Transmit(size);
+                },
+                Assertion = (expression, file, line) =>
+                {
+                    Action<string, string, uint>? device = _currentRuntime is not null ? Runtime().Assertion : _state.Assertion;
+                    if (device is null)
+                    {
+                        throw new InvalidOperationException("Process 부착의 선택된 원문 진단 장치 미연결");
+                    }
+
+                    device(expression, file, line);
+                },
+                Attach = attach,
+            };
+            // TYPE를 바꾸어도 실제 생성 VT의 +74를 선택한다
+            uint table = (uint)Word(form, 0) | ((uint)Word(form, 2) << 16);
+            if (table == FormVtable())
+            {
+                RawProcessAttach.Attach(_pool, form, parent, flags, hooks);
+                return;
+            }
+
+            bool common = false;
+            foreach (uint kind in new uint[] { 1u, 3u, 6u })
+            {
+                if (table == RawSquidForms.VtableFor(kind))
+                {
+                    common = true;
+                }
+            }
+
+            if (!common)
+            {
+                throw new InvalidOperationException("BaseProcess 부착의 미복원 현재 VT+74");
+            }
+
+            attach(form, parent, flags);
+        }
+    }
+
+    /// <summary>현재 raw 부모를 다시 읽어 프로세스의 오래된 parent 복사값으로 재부착하지 않는다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
+    /// <param name="process">갱신할 프로세스다.</param>
+    public void RefreshForm(SquidProcess process)
+    {
+        ArgumentNullException.ThrowIfNull(process);
+        using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
+        {
+            if (!ReferenceEquals(process.HostLink, this) || !IsRegistered(process.KernelId, process))
+            {
+                throw new InvalidOperationException("Form 갱신 프로세스의 C++ 소유권 불일치");
+            }
+
+            // 부모는 첫 getter에서 저장하고 Form 필드는 각 가상 진입 전에 다시 읽는다
+            int parent = RawContainedLink.CommonContainedParent(_pool, process.Form());
+            ReadOnlySpan<byte> raw = _pool.Slot(parent);
+            bool patch = _pool.Edition == OriginalEdition.Patch1078;
+            Action<string, uint, uint> diagnose = (expression, patchLine, cdLine) =>
+            {
+                Action<string, string, uint>? device = _currentRuntime is not null ? Runtime().Assertion : _state.Assertion;
+                if (device is null)
+                {
+                    throw new InvalidOperationException("Form 갱신의 선택된 원문 진단 장치 미연결");
+                }
+
+                device(expression, patch ? "\\Ns\\O\\Baseprocess.cpp" : "\\ns\\o\\BaseProcess.cpp", patch ? patchLine : cdLine);
+            };
+            if ((raw[11] & DeadBit) != 0)
+            {
+                diagnose("!parent.isDead()", 0xb0u, 0xabu);
+            }
+
+            if ((raw[11] & FreeBit) != 0)
+            {
+                diagnose("!parent.isFree()", 0xb1u, 0xacu);
+            }
+
+            UnpopForm(process.Form());
+            AttachForm(process.Form(), parent, 0u);
+        }
     }
 }
