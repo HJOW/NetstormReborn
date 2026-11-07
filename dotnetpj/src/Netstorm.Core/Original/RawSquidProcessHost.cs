@@ -1,4 +1,6 @@
 // 객체 Form과 커널 프로세스의 부착 기반(생성·조회·번호)을 공유한다.
+using Netstorm.Core.Simulation;
+
 namespace Netstorm.Core.Original;
 
 // 프로세스 호스트 모듈을 담는 네임스페이스다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.
@@ -226,4 +228,67 @@ public sealed class SquidProcessHost
     /// <param name="process">비교할 프로세스다.</param>
     /// <returns>같은 주소면 참이다.</returns>
     public bool IsRegistered(uint pid, SquidProcess? process) => process is not null && ReferenceEquals(_kernel.Get(pid), process);
+
+    /// <summary>부착 플래그의 client 번호 비트다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    private const uint ClientForm = 0x10u;
+
+    /// <summary>raw WORD를 호스트 정렬과 무관하게 읽는다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    /// <param name="sid">읽을 번호다.</param>
+    /// <param name="offset">읽을 위치다.</param>
+    private ushort Word(int sid, int offset)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        return (ushort)(raw[offset] | (raw[offset + 1] << 8));
+    }
+
+    /// <summary>정렬되지 않은 form의 현재 커널 번호를 읽는다. 다른 종류의 기본 프로세스는 null로 거부한다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    /// <param name="form">조회할 Form 번호다.</param>
+    /// <returns>찾은 프로세스다. 없으면 null이다.</returns>
+    public SquidProcess? FromForm(int form)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(form);
+        uint pid = (uint)raw[18] | ((uint)raw[19] << 8) | ((uint)raw[20] << 16) | ((uint)raw[21] << 24);
+        return _kernel.Get(pid) as SquidProcess;
+    }
+
+    /// <summary>인자 계산 뒤 현재 번호를 읽고 실제 선택 장치만 요구한다. 지정 슬롯의 Take 반환은 원문처럼 무시하고 원래 SID를 후단에 사용한다. 부착 본체 단위에서 소비한다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    /// <param name="flags">원문 플래그다.</param>
+    /// <param name="form">고를 Form SID다. 0이면 신규 생성이다.</param>
+    /// <returns>쓸 Form SID다.</returns>
+    internal int CreateOrTakeForm(uint flags, int form)
+    {
+        RawSquidFactory factory;
+        if (_currentRuntime is not null)
+        {
+            ProcessHostRuntimeBindings runtime = Runtime();
+            if (runtime.Factory is null)
+            {
+                throw new InvalidOperationException("현재 월드의 ProcessForm 공장 미연결");
+            }
+
+            factory = runtime.Factory;
+        }
+        else if (_directFormFactory is not null)
+        {
+            factory = _directFormFactory;
+        }
+        else
+        {
+            factory = new RawSquidFactory(_pool, _types);
+        }
+
+        if (!ReferenceEquals(factory.Pool, _pool))
+        {
+            throw new ArgumentException("ProcessForm 공장의 실제 Pool 불일치");
+        }
+
+        uint type = _state.ProcessFormType();
+        if (form != 0)
+        {
+            factory.Take(type, form);
+            return form;
+        }
+
+        return factory.Create(type, (flags & ClientForm) != 0u ? SidAllocation.Client : SidAllocation.Server);
+    }
 }

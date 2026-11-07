@@ -159,4 +159,83 @@ public sealed class RawSquidProcessHostTests
         kernel.Remove(1u);
         Assert.False(host.IsRegistered(1u, process));
     }
+
+    /// <summary>같은 호스트·풀·상태로 조회3종 장면을 만든다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    private static (RawSidPool Pool, Kernel Kernel, SquidProcessState State, SquidProcessHost Host) LookupScene(uint formType = 80u)
+    {
+        var pool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var kernel = new Kernel(8u);
+        var state = new SquidProcessState { CurrentProcessFormType = new UIntBox { Value = formType } };
+        var host = new SquidProcessHost(pool, types, kernel, new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types), state);
+        return (pool, kernel, state, host);
+    }
+
+    /// <summary>PID DWORD를 쓰는 정적 보조 함수다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    /// <param name="pool">같은 풀이다.</param>
+    /// <param name="sid">쓸 번호다.</param>
+    /// <param name="pid">쓸 번호다.</param>
+    private static void PutPid(RawSidPool pool, int sid, uint pid)
+    {
+        Span<byte> raw = pool.RawSlot(sid);
+        // 낮은 바이트부터 지정 폭만 쓰는 반복문이다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.
+        for (int index = 0; index < 4; ++index)
+        {
+            raw[18 + index] = unchecked((byte)(pid >> (index * 8)));
+        }
+    }
+
+    /// <summary>정렬되지 않은 form의 현재 커널 번호를 읽는다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FromFormReadsCurrentKernelNumber()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState _, SquidProcessHost host) = LookupScene();
+        Assert.Null(host.FromForm(5));
+        var process = new SquidProcess();
+        kernel.Add(process);
+        PutPid(pool, 5, 1u);
+        Assert.Same(process, host.FromForm(5));
+        PutPid(pool, 5, 2u);
+        Assert.Null(host.FromForm(5));
+        kernel.Add(new KernelDiagnosticStub());
+        PutPid(pool, 5, 2u);
+        Assert.Null(host.FromForm(5));
+    }
+
+    /// <summary>커널에 직접 올리지 않는 검사 전용 프로세스다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    private sealed class KernelDiagnosticStub : BaseProcess
+    {
+    }
+
+    /// <summary>지정 슬롯 Take와 신규 생성을 같은 공장에서 고른다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void CreateOrTakeFormSelectsFactoryPath()
+    {
+        (RawSidPool pool, Kernel _, SquidProcessState _, SquidProcessHost host) = LookupScene();
+        int created = host.CreateOrTakeForm(0u, 0);
+        Assert.True(created >= RawSidPool.FirstOrdinary);
+        Assert.Equal(80u, pool.RawSlot(created)[10]);
+        int taken = host.CreateOrTakeForm(0u, 15005);
+        Assert.Equal(15005, taken);
+        Assert.Equal(80u, pool.RawSlot(15005)[10]);
+        int client = host.CreateOrTakeForm(0x10u, 0);
+        Assert.True(client >= RawSidPool.FirstOrdinary);
+        Assert.NotEqual(created, client);
+    }
+
+    /// <summary>다른 풀 공장과 비어 있는 런타임 공장은 거부한다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void CreateOrTakeFormRejectsForeignOrMissingFactory()
+    {
+        (RawSidPool pool, Kernel kernel, SquidProcessState state, SquidProcessHost _) = LookupScene();
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        var destroy = new RawSquidDestroy(pool, new RawUnpop(pool, new RawSquidHash(), new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]), types);
+        var runtime = new ProcessHostRuntimeBindings { Destroy = destroy };
+        var host = new SquidProcessHost(pool, types, kernel, state, () => runtime);
+        Assert.Throws<InvalidOperationException>(() => host.CreateOrTakeForm(0u, 0));
+        var foreignPool = new RawSidPool(RawSurfaceStorage.PoolCapacity);
+        var foreignTypes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        runtime.Factory = new RawSquidFactory(foreignPool, foreignTypes);
+        Assert.Throws<ArgumentException>(() => host.CreateOrTakeForm(0u, 0));
+    }
 }
