@@ -1,0 +1,89 @@
+{
+  "unit": 1073,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "84cfbabce3d2cce2caeb5994f6485da1bf19146e073e18e50e8b1ac6649f295f"
+  },
+  "nativeAudit": {
+    "scope": "원문/PE·송신 호출 기계어와 실제 OS/파일 장치 접합의 정적 확인이며 실행 검사 아님",
+    "native": {
+      "clockCapture": "004737d0 uint32(baseSeconds*1000+timeGetTime-origin[-sync])→/1000,%1000;004739b0 wall/00473880 game와 누적 정지·저장 시각",
+      "pause": "00473a60/ac0/a30/b30 최초 캡처/마지막 해제 누적/양수 판정/누적만0",
+      "tick": "00473b80 game→별도wall/firstGame0 조건/delta/10개 초기화·signed index/frame별fps와frame>10 numerator10/현재frame증가",
+      "initialization": "00473e40 HIGH_PRIORITY/UTC 초 변경 대기→timeGetTime origin→time32-32c85780→Tick/우선순위 복원. 현재 pause/history/frame을 초기화하지 않음",
+      "receiveTime": "00483870 timestamp는 현재004d1b28 wall;새노드4739b0 두 별도캡처는기존부모",
+      "record": "004826d0/82720 close→enabled1/w+b;00482770 direction1+wall8+frame4+IPv4DWORD4+sender4=21BYTE/현재헤더길이packet/6fwrite+flush",
+      "callProof": "send-record.asm48515a len/15e packet/165 sender,48516c IPv4getter후171 IP/172 direction1→174 writer.5번째length는 writer가 사용하지 않고 현재GetLength 재조회"
+    },
+    "pe": {
+      "constants": {
+        "0x4bd1d0": 0.0,
+        "0x4bf860": 1000.0,
+        "0x4bf8d0": 10.0,
+        "0x4bf8e0": 1.0,
+        "0x4bf8f0": -1.0,
+        "0x4c04d0": 60.0,
+        "0x4c0578": 300.0
+      },
+      "initialClockZero": true,
+      "assertLine": 77
+    },
+    "sameOwnerBindings": [
+      "Clock.Bind→TransceiverHooks.now/captureNow",
+      "PacketRecord.Bind→ConfigurationHooks.openRecord/TransceiverHooks.record",
+      "동일 ClockState wall/frame 참조"
+    ],
+    "hostBoundaries": [
+      "호스트double 중간 반올림/원본 x87 control word 전체 동일성 미검증",
+      "signed history 음수 index/NULL FILE·패킷 물리 밖은 명시 오류",
+      "Initialize 중 호스트 예외도 실제 우선순위를 복원",
+      "기록 요청의 파일명은 사용자 Diagnostics로 이동하며 설치 경로에 쓰지 않음",
+      "실제 time32/OS 시간 실패·실제 기록 IO실패/원본 힙/SEH 전체 동일성 미검증"
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "rootClockAndStatisticsImplemented": true,
+    "actualWindowsClockAndPacketFileImplemented": true,
+    "sameCurrentClockAndHooksBound": true,
+    "rootExeTargetExists": false,
+    "rootRuntimeInitializesOrTicksClockOrWritesRecord": false,
+    "rootFinalOwnerRequired": true
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "dns": 0,
+    "clockInitializeOrTick": 0,
+    "priorityChange": 0,
+    "runtimeRecordReadOrWrite": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "보조 객체·나머지 Root/CS 수신/입력·실제CCh주기와 메인루프/리셋·종료",
+    "새R.exe 전체 초기화/최종 owner·Config/CCh/Router/파일 watcher·주소/시계/기록 실제 연결/호출",
+    "다른 LAN hostname의 외부 DNS 없는 해석·클라이언트0F 존47/서버3BYTE·0F/1d 수신·메타/OS launch·LAN/Outpost/checking5·한국어 후속/Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

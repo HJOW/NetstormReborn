@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE root/Clock.cpp root/Clock.h root/PacketRecord.cpp root/PacketRecord.h) #1073:R FullTime/프레임 통계와 같은 현재 시계의 실제 사용자 홈 패킷 기록을 연결한다.
 target_sources(netstorm PRIVATE root/AddressCodec.cpp root/AddressCodec.h root/LocalAddressDevice.cpp) #1072:주소 문법/서식 고리와 실제 DNS 없는 로컬 주소를 Root/CCh 장치에 연결한다.
 target_sources(netstorm PRIVATE root/SharedFiles.cpp root/SharedFiles.h root/SharedFilesDetail.h root/SharedFileStorage.cpp root/SharedGuildFiles.cpp) #1071:실제 관리 표/길드·뉴스 로더와 사용자 홈 blacklist 저장을 같은 현재 Config/CCh 장치에 연결한다.
 target_sources(netstorm PRIVATE root/Routing.cpp root/Routing.h root/ParticipantState.cpp root/ParticipantState.h) #1070:같은 현재 등록표의 Root NULL 직접 호출과 원격 CCh 요약/공유 생성자를 연결한다.
@@ -42,7 +43,7 @@ target_sources(netstorm PRIVATE
     client/CompositeMissionTransport.cpp client/CompositeMissionTransport.h
     client/CampaignTransportServices.cpp client/CampaignTransportServices.h
     client/ClientCampaignTransport.cpp client/ClientCampaignTransport.h)
-target_link_libraries(netstorm PUBLIC ws2_32 version iphlpapi) # 실제 소켓·qdd 버전과 DNS 없는 로컬 어댑터 주소를 Windows API에 연결한다.
+target_link_libraries(netstorm PUBLIC ws2_32 version iphlpapi winmm) # 실제 소켓/qdd 버전·로컬 어댑터와 R의 timeGetTime 장치를 연결한다.
 target_sources(netstorm PRIVATE client/ScreenModeTransition.cpp client/ScreenModeTransition.h) #원문 화면 변경 부모의 실패 복구/설정/공유 갱신 순서다(746).
 target_sources(netstorm PRIVATE client/SavedCameraKey.cpp client/SavedCameraKey.h) #숫자/Shift 기호와 현재 Renderer 중심의 저장 카메라다(719).
 target_sources(netstorm PRIVATE client/LostPositionKey.cpp client/LostPositionKey.h) #U/u는 공통 삭제가 기록한 현재 손실 위치로 즉시 이동한다(751).
