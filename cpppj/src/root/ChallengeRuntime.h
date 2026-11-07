@@ -15,6 +15,7 @@ struct ChallengeRuntimeHooks { // 실제 상위 표/파일/주소·Root 라우�
     std::function<bool(std::string_view)> blockedAddress; //004d23e8의 현재 문자열 표 조회 결과다.
     std::function<std::string(std::span<const std::uint8_t,20>,bool)> addressText; //004864b0의 첫 flag0/1과 나머지0/0 서식이다.
     std::function<std::array<std::uint8_t,20>(const std::optional<std::string>&)> parseAddress; //00486870의 NULL/현재 문자열 주소 해석이다. 폐기 외부 DNS를 복구하지 않는다.
+    std::function<void(std::span<std::uint8_t,20>)> localAddress; //004870d0을 현재 주소 자체에 적용한다. 실패 때 family만0이고 나머지 기존 바이트를 보존한다.
     std::function<void(std::uint32_t,std::span<std::uint8_t>)> relayRoot; //00456f50→00474b00의 현재 zone/17h 통지를 실제 Root 라우터에 보낸다.
     std::function<std::optional<std::string>(std::uint32_t)> guildName; //0045d7e0/004d0870의 현재 subscriber 소속 길드 이름 조회다.
     std::function<void(std::int32_t,std::string_view)> log; // 원문 level/이미 완성한 전체 로그다.
@@ -23,7 +24,7 @@ class ChallengeRuntime final { // 같은 CCh/전송·Root callback보다 오래 
 public:
     ChallengeRuntime(ConnectionState& state,TransceiverTransport& transport,ChallengeStore& challenges,Options& options,ChallengeMessages& messages,ClockState& clock,Random& random,ChallengeRuntimeHooks hooks); // 생성은 서버/소켓/파일을 열지 않으며 같은 프로세스 시계/난수를 빌린다.
     ChallengeRuntime(const ChallengeRuntime&)=delete;ChallengeRuntime& operator=(const ChallengeRuntime&)=delete; // 현재 전역/전역 scratch/콜백 this를 복제하지 않는다.
-    void InstallPacketObservers(); // 실제 CCh 관찰기·버전/길이와10h/1eh/41h/67h/68h/71h nullable 수신을 등록한다. 입력은 쓰기 가능한 전송 물리여야 한다.
+    void InstallPacketObservers(); // 실제 CCh 관찰기·버전/길이와10h/1eh/1fh/41h/67h/68h/71h 수신을 등록한다. 입력은 쓰기 가능한 전송 물리여야 한다.
     void Login(std::uint32_t challenge,std::uint32_t source,std::span<std::uint8_t> request); //0044e940의 실제 참가자 준비/명단·응답·뉴스/길드 이름 전체 부모다.
     void EndParticipant(std::uint32_t challenge,std::uint32_t participant); //0044e0d0의 Root 통지/전투 재선택·삭제/현재 socket close·명단 제거다.
     std::int32_t Tick(std::uint32_t challenge); //004581e0의 현재 전투 재생성/가상 참가자·명단 송신을 수행하고 원문처럼1을 반환한다.
@@ -42,7 +43,7 @@ private:
     void ReceiveChat(std::uint32_t sender,std::span<std::uint8_t> packet); //00476880의 종료/CHAL 진단·signed 존/현재 토큰 관문을 거쳐 같은41h 물리를 전달한다.
     void Chat(std::uint32_t challenge,std::uint32_t participant,std::span<std::uint8_t> packet); //004512b0의 명령·줄/빈도 제한·직접 수신자/감시자 전달이며 입력 패킷을 제자리에서 수정한다.
     bool ChatCommand(std::uint32_t challenge,std::uint32_t participant,std::string_view text); //00451160의 대소문자 구분 부분 검색으로 .test/.test1을 찾으면 실제 특별41h 응답을 보낸다.
-    void ReceiveBattleControl(std::uint8_t type,std::uint32_t sender,std::span<std::uint8_t> packet); //10h/1eh/67h/68h/71h의 각각 원문 진단 줄과 현재 signed 존 관문 뒤 같은 CCh 몸체를 호출한다.
+    void ReceiveBattleControl(std::uint8_t type,std::uint32_t sender,std::span<std::uint8_t> packet); //10h/1eh/1fh/67h/68h/71h의 각각 원문 진단 줄과 현재 signed 존 관문 뒤 같은 CCh 몸체를 호출한다.
     void BattleOptions(std::uint32_t challenge,std::uint32_t participant,std::span<std::uint8_t> packet); //0044d6d0의 소속/master 확인·실제 옵션 바이트/bit2 해제·공유22h와 입력67h 전송이다.
     void QueryBattleOptions(std::uint32_t challenge,std::uint32_t participant,std::span<const std::uint8_t> packet); //0044e580은 요청 전투의 현재 valid 뒤 항상160BYTE를67h로 응답한다. 소속/권한 검사를 추가하지 않는다.
     void UpdateBattleDescription(std::uint32_t challenge,std::uint32_t participant,std::span<std::uint8_t> packet); //0044dd90의 관리자 예외·현재 자기 전투 설명/길이0 쓰기와 입력71h 전체 통지를 보존한다.
@@ -50,6 +51,10 @@ private:
     void SailResult(std::uint32_t challenge,std::uint32_t participant,std::uint16_t status); //00444dd0 지역25h의 미작성4/5BYTE를 호스트 할당 입력으로 보존하고 상태WORD만6에 쓴다.
     std::int32_t CountBattlePirates(std::uint32_t challenge,std::uint32_t battle); //0044df90의 현재 명단/valid 진단과 기존flag200 수를 읽는다. 원문 이동은 반환값을 사용하지 않으며 외부 검증을 호출하지 않는다.
     bool HasBattleMaster(std::uint32_t challenge,std::uint32_t battle); //00458950의 현재8명/valid 진단·첫 master bit4 조회다. 상태나 명단을 수정하지 않는다.
+    void ReadyParticipant(std::uint32_t challenge,std::uint32_t participant,std::span<std::uint8_t> packet); //00450530의 대상 조회/실제 종료·준비 플래그/시작·퇴장과 현재 명단 통지다. 폐기 PIRATE 제한은 적용하지 않는다.
+    void StartBattle(std::uint32_t challenge,std::uint32_t battle); //004570c0의 현재 명단/프로세스 난수·master/접속 안내→전체flush→현재연결종료→전투삭제다.
+    void RepositionBattle(std::uint32_t challenge,std::uint32_t battle,std::optional<std::uint32_t> participant={}); //00450240/4503b0의 전체 또는 지정 참가자 재배치다. 매회 현재 명단을 읽고 이동 뒤 같은22h를 방송한다.
+    void SailOut(std::uint32_t challenge,std::uint32_t participant,std::uint32_t battle,bool clearStart); //현재flag8/선택flag10·실제게임난수 위치→같은MoveParticipant→flag8복구이며 준비퇴장/재배치가 공유한다.
     void InitializePlayer(std::uint32_t challenge,std::uint32_t participant,std::span<const std::uint8_t> request); //0044c7b0/후속 실제 버전·주소 필드를 현재 참가자에 쓴다.
     void DeletePlayer(std::uint32_t challenge,std::uint32_t participant); //0044d550/0044c9a0의 전투 소속 정리·로그/188BYTE 지우기다.
     void RecalculateBattleVersions(std::uint32_t challenge,std::uint32_t battle); //0044d130의 현재8참가자+b4/+b2 집계다.

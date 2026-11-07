@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE root/ChallengeBattleLaunch.cpp root/ChallengeReady.cpp) #1080:실제1fh 준비·전투 시작/접속안내/현재연결 종료와 전투 재배치 부모를 연결한다.
 target_sources(netstorm PRIVATE root/ChallengeMove.cpp) #1079:실제1eh 이동·입장 검증/기존 소속 탈퇴·master 선택과 명단/옵션 전송을 연결한다.
 target_sources(netstorm PRIVATE root/ChallengeBattleControl.cpp) #1078:실제10h 관문/67h 옵션·68h 조회·71h 설명 수신과 같은 CCh/공유 송신을 연결한다.
 target_sources(netstorm PRIVATE root/ChallengeChat.cpp) #1077:실제41h 수신/명령·줄과 빈도 제한·수신자 및 감시자 전달을 같은 패킷 물리에 연결한다.

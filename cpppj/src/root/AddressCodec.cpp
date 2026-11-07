@@ -56,6 +56,6 @@ std::array<std::uint8_t,20> AddressCodec::Parse(const std::optional<std::string>
     Port(result,port);return result;
 }
 void AddressCodec::Bind(LoginRequestHooks& login,ChallengeRuntimeHooks& challenge) {
-    login.localAddress=[this] { std::array<std::uint8_t,20> address{};Local(address);return address; };challenge.addressText=[this](auto address,bool port) { return std::string(Format(address,port)); };challenge.parseAddress=[this](const auto& text) { return Parse(text); }; // callback 반환 전에 고리 문자열을 소유 복사한다.
+    login.localAddress=[this] { std::array<std::uint8_t,20> address{};Local(address);return address; };challenge.localAddress=[this](auto address) { Local(address); };challenge.addressText=[this](auto address,bool port) { return std::string(Format(address,port)); };challenge.parseAddress=[this](const auto& text) { return Parse(text); }; // 반환 전 고리 문자열을 소유 복사하며 전투 시작은 같은 주소에 Local을 적용해 실패 후 기존 바이트도 유지한다.
 }
 }

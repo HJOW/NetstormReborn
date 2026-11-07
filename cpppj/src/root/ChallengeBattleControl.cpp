@@ -13,11 +13,12 @@ std::string BattleViolation(std::string_view operation,std::uint32_t participant
 }
 void ChallengeRuntime::ReceiveBattleControl(std::uint8_t type,std::uint32_t sender,std::span<std::uint8_t> packet) {
     if (state_.exitRequested) { Need(transport_.Lifecycle().exit)(0);throw std::logic_error("R 전투 제어 _exit 장치가 복귀했습니다"); }
-    const auto line=type==0x10 ? 1333U:(type==0x1e ? 1409U:(type==0x67 ? 1455U:(type==0x68 ? 1471U:1487U)));if (!(state_.modeFlags&kChallengeMode)) Need(transport_.Lifecycle().assertion)("smModeFlags & smCHAL","c:\\ns\\r\\r.cpp",line);
+    const auto line=type==0x10 ? 1333U:(type==0x1e ? 1409U:(type==0x1f ? 1424U:(type==0x67 ? 1455U:(type==0x68 ? 1471U:1487U))));if (!(state_.modeFlags&kChallengeMode)) Need(transport_.Lifecycle().assertion)("smModeFlags & smCHAL","c:\\ns\\r\\r.cpp",line);
     const auto zone=std::bit_cast<std::int32_t>(sender)>>8;if (zone<=0 || zone>=state_.challengeStateCount) return;const auto current=state_.challenges.at(static_cast<std::size_t>(zone));if (!current) return;const auto participant=sender&0xffU;
     switch (type) {
     case 0x10:Put(challenges_.Bytes(current),kChallengeCounterOffset,Read(packet,4) ? 1:0);break; //004518e0은 참가자/권한·원래 요청 수치를 사용하지 않고 마지막 카운터를0/1로 쓴다.
     case 0x1e:MoveParticipant(current,participant,packet);break;
+    case 0x1f:ReadyParticipant(current,participant,packet);break;
     case 0x67:BattleOptions(current,participant,packet);break;
     case 0x68:QueryBattleOptions(current,participant,packet);break;
     case 0x71:UpdateBattleDescription(current,participant,packet);break;

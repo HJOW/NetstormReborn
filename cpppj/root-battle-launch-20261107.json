@@ -1,0 +1,161 @@
+{
+  "unit": 1080,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "firstWarnings": 0,
+    "finalWarnings": 0,
+    "errors": 0,
+    "exeBytes": 12366336,
+    "exeSha256": "e28a12cdd535ded0827dc5c7ebaefa00e9e1c8eea09812d6491ab71bbdbe527d"
+  },
+  "nativeAudit": {
+    "scope": "같은 호스트 R 원문/보호 PE와 주요몸체전체기계어·현재CCh/등록·실제전송/장치접합의정적감사이며준비/전투시작실행검사아님",
+    "ready": "004767c0→00450530/CHAL진단1424/signed존·현재토큰/1fh12BYTE·버전1/정책0.첫0..39subscriber조회/없으면현재발신연결Terminate·원문로그3264/3268.",
+    "flags": "대상소속0..9·요청4000이면입력4000/2해제·현재8명bit2/공유22h.대상flags를1f6d로내린뒤현재입력flags&ffffe092를합치는두쓰기.발신자master이면시작/퇴장분기.별도sender==target관문을추가하지않음.",
+    "readyStartAndKick": "시작10은현재8명순회·첫미준비에서멈춤/전원준비면현재StartBattle.퇴장8은현재subscriber재조회·소속비교/인자먼저캡처→16금지명단15칸이동/마지막추가→flag8/실제난수위치로MoveParticipant→flag8해제.전체재배치와달리시작10은따로내리지않음.마지막22h는대상전투명단또는퇴장전체방송.",
+    "retiredQuota": "기존Configuration의legacyLimitPirates기록전용정책을유지한다.준비수/기존flag200집계는보존하되과반PIRATE+limitPirates의25h5거부/재배치분기는연결하지않음.원문전분기동일성변경이며폐기클라이언트검증비활성화요구에따른명시정책.7f/80·온라인검증도비활성유지.",
+    "launch": "004570c0:현재8명bit20/공유22h방송·마지막master선택/실제주소→1ah15+71*num레코드·identity6·네processRNG lowBYTE seed→master만송신→1bh현재master접속안내를현재8명→현재CCh40연결flush→현재8명연결Terminate→공유24h삭제방송→344BYTE0/버전ffffffff·256/현재game시간.",
+    "launchBytes": "1ahcapacity583·이름32strncpy(32밖NUL불필요)/주소30초기0중29strncpy.1bh고정38·seed4/주소30C문자열·미작성후미는호스트할당입력.관찰1ah numClients*71+15/진단1164,master진단5273.처리중변한명단/연결은매번재조회하며snapshot종료목록없음.",
+    "localAddress": "master주소가family2/정확히127.0.0.1일때만같은AddressCodec.Local을현재20BYTE자체에적용한다.실패family만0/기존후미유지.기존어댑터장치/숫자서식이며DNS/새socket없음.",
+    "reposition": "00450240전체비영명단/4503b0지정값일치→현재valid만flag8/시작10해제→같은FindPosition(center,10,10)/R processRNG→실제id로MoveParticipant→원래레코드flag8해제·22h전체방송.다음슬롯은현재명단을다시읽음.",
+    "hostBoundaries": [
+      "빈전투시작의원문미초기화로그읽기는명시오류이며가짜빈로그/성공을만들지않음",
+      "원문NULL연결/없는재조회대상·실제물리밖/현재30BYTE주소초과는명시오류",
+      "구형스택/힙·SEH/미작성바이트자체일치·실제장치/종료/실패는미검증"
+    ],
+    "receiverInventory": [
+      {
+        "type": "0xb",
+        "receiver": "00475070",
+        "status": "pending"
+      },
+      {
+        "type": "0xc",
+        "receiver": "00475040",
+        "status": "pending"
+      },
+      {
+        "type": "0x10",
+        "receiver": "004763d0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x83",
+        "receiver": "00476490",
+        "status": "pending"
+      },
+      {
+        "type": "0x11",
+        "receiver": "00475260",
+        "status": "pending"
+      },
+      {
+        "type": "0x12",
+        "receiver": "00475580",
+        "status": "pending"
+      },
+      {
+        "type": "0x16",
+        "receiver": "00475660",
+        "status": "implemented"
+      },
+      {
+        "type": "0x17",
+        "receiver": "00476070",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1c",
+        "receiver": "00476180",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1e",
+        "receiver": "00476700",
+        "status": "implemented"
+      },
+      {
+        "type": "0x1f",
+        "receiver": "004767c0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x87",
+        "receiver": "00476550",
+        "status": "pending"
+      },
+      {
+        "type": "0x41",
+        "receiver": "00476880",
+        "status": "implemented"
+      },
+      {
+        "type": "0x66",
+        "receiver": "00475f90",
+        "status": "pending"
+      },
+      {
+        "type": "0x67",
+        "receiver": "00476940",
+        "status": "implemented"
+      },
+      {
+        "type": "0x68",
+        "receiver": "00476a00",
+        "status": "implemented"
+      },
+      {
+        "type": "0x71",
+        "receiver": "00476ac0",
+        "status": "implemented"
+      },
+      {
+        "type": "0x80",
+        "receiver": "00476640",
+        "status": "retired-validation-disabled"
+      }
+    ],
+    "protectedFiles": 2800,
+    "newFixtures": 0
+  },
+  "runtime": {
+    "readyReceiverAndCurrentStartBattleImplemented": true,
+    "realRepositionAndSailOutImplemented": true,
+    "sameRngClockRosterActualSendFlushTerminateImplemented": true,
+    "sameLocalAddressBindingImplemented": true,
+    "retiredPirateQuotaEnabled": false,
+    "rootExeTargetExists": false,
+    "rootFinalOwnerCallsInstallOrRun": false
+  },
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "newReadyOrBattleStart": 0,
+    "newLocalAddressQuery": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "Root/CS나머지7수신·83h관리명령의예약종료/Root문구장치·87h명령",
+    "보조객체·전체초기화/정리·새R.exe최종owner/entry·현재장치및실제Install/Run",
+    "LAN hostname·클라이언트0F존47/서버3BYTE·0F/1d·메타/OSlaunch·LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
