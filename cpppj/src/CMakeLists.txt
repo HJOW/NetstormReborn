@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE root/Server.h root/Server.cpp) #1091:같은 실제 서버 전역/모든 장기 모듈과 수신·파일·메인 hook을 최종owner로 묶는다.
+
 target_sources(netstorm PRIVATE root/ProcessTrace.h root/ProcessTrace.cpp) #1090:R 최종owner가 사용할 실제 로그/OS시각·사용자 홈 진단/스택·복귀 장치를 연결한다.
 
 target_sources(netstorm PRIVATE root/Lifecycle.h root/Lifecycle.cpp) #1089:R 실제 시작/정리·노드 생성/등록과 같은 메인 hook을 연결한다.
@@ -197,6 +199,16 @@ set_target_properties(NetstormCpp PROPERTIES OUTPUT_NAME Netstorm ARCHIVE_OUTPUT
 target_sources(NetstormCpp PRIVATE app/NetstormCpp.manifest) # 원본ANSI와 다른 Windows10/11의 프로세스 UTF-8 경로 호환 선언이다.
 netstorm_apply_compiler_options(NetstormCpp)
 target_link_libraries(NetstormCpp PRIVATE netstorm)
+
+# 원본 서버를 실행/복사하는 대신 복원된 현재 owner와 실제 메인 진입점으로 새 R.exe를 빌드한다.
+add_executable(NetstormRoot root/main.cpp root/ProductVersion.rc app/NetstormCpp.manifest)
+set_target_properties(NetstormRoot PROPERTIES OUTPUT_NAME R ARCHIVE_OUTPUT_NAME NetstormRoot)
+netstorm_apply_compiler_options(NetstormRoot)
+target_link_libraries(NetstormRoot PRIVATE netstorm)
+if(MSVC)
+    target_link_options(NetstormRoot PRIVATE "/MAP:$<TARGET_FILE_DIR:NetstormRoot>/NetstormRoot.map") # 실행 없이 최종 링크의 실제 Server/메인·수신 부모를 대조하는 빌드 산출물이다.
+endif()
+add_dependencies(NetstormCpp NetstormRoot) # 기존 게임 빌드 명령으로 새 서버도 함께 만들며 import library는 netstorm.lib와 분리한다.
 
 # 실제 커서 마나의 월드 객체와 프로세스 수명을 연결한다.
 target_sources(netstorm PRIVATE client/RawCursorMana.cpp client/RawCursorMana.h)

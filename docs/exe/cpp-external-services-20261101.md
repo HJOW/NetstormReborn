@@ -1,5 +1,7 @@
 # 외부 접속 기능 목록과 구 클라이언트 검증 비활성화 — 단위684
 
+**2026-11-07 / 1091 갱신:** 원본R을실행/복사하지않고 같은실제서버모듈/환경·VFS/진단/주소·전송/수신/메인을묶은 새R.exe를 빌드했다. 진입점은현재CWD/정확한lan인자→같은Lifecycle/MainLoop호출이며기존LAN IPv4경계와외부DNS/7f·80비활성을유지한다. 기본원격포트Open/handler등록을추가하지않았다. 실제서버/통신실행0·클라이언트OSlaunch/배포는후속이다([1091 기록](cpp-root-server-entry-20261107.md)).
+
 **2026-11-07 / 1090 갱신:** R485e42의 ZAssertion 표시에는 bugs@titanic.com으로 정보를 보내 달라는 문구가 있다. 표시문구이며 함수 자체에 접속/메일발송은 없다. 새 ProcessTrace는 사용자 Diagnostics/assert.html 위치 안내로 바꾸고 외부메일/HTTP/DNS를 추가하지 않았다. 새진단표시는11.01이며 폐기7f/80·온라인검증은 비활성 유지한다. 실제로그/진단/대화상자/서버실행은0이고 최종owner 연결은 후속이다([1090 기록](cpp-root-process-trace-20261107.md)).
 
 **2026-11-07 / 1087 갱신:** R의004d23f8은 원격명령 TCP/4세션 장치다. 기본생성7ee90은 listener/handler NULL이며 현재R시작/전역참조에는 Open/handler등록이 없다. rootTelnetPort 읽기만으로 포트를 열지 않는다. 명시Open API는 실제LAN IPv4 listener/기존Accept허용범위를 사용하고 외부DNS/폐기공식서버 접속을 추가하지 않았다. 최종owner/실제Bind·Run/통신실행은 아직없다([1087 기록](cpp-root-remote-command-20261107.md)).
