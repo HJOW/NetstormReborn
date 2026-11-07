@@ -1,0 +1,135 @@
+{
+  "unit": 1057,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "date": "2026-11-07",
+  "scope": "R.exe 전용 정밀 디컴파일과66h/State34·35 원문 부품 준비. 실제 UDP/메타 접합은 미완료",
+  "lastFullNetstormDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "rootServerDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-07",
+    "binary": {
+      "path": "originals/R.exe",
+      "bytes": 614400,
+      "sha256": "831e2ecbbba4654b97a270da8da91d7aa7302090f3198c4365f78c44d59dbf0b"
+    },
+    "functions": 5308,
+    "failed": 0,
+    "conventions": {
+      "__cdecl": 1581,
+      "__fastcall": 2,
+      "__stdcall": 46,
+      "__thiscall": 1043,
+      "unknown": 184
+    },
+    "selected": {
+      "00447300": {
+        "sha256": "d1fb07350e8dc4178bab0b9192357f5be178dc114f76b6dae0d4c884aa8275c0",
+        "unaffEdi": false
+      },
+      "00447370": {
+        "sha256": "1a93711411f0bceb522dc474fef9b6b972f5399439d32209cc66538f390cabe7",
+        "unaffEdi": false
+      },
+      "00475e60": {
+        "sha256": "edcbce07dd2f84e6160fff8309c6046069767f5770093ee11d82c99eb27f3fdc",
+        "unaffEdi": false
+      },
+      "00475f90": {
+        "sha256": "60723ba110756f74deb3f2dcfd6a655851a9a933862ccfad9add6cd58e02dfb8",
+        "unaffEdi": false
+      },
+      "00477950": {
+        "sha256": "55261e75977f0a5685fff89c8a0a1a514de2e4d8f211f622acd84648ce631bc0",
+        "unaffEdi": false
+      },
+      "00477e10": {
+        "sha256": "ad7981d6ea10b05eb964a61277b4335c8bbf03401241fe5debb32933c9406d2f",
+        "unaffEdi": false
+      }
+    },
+    "artifacts": [
+      {
+        "path": "extracted\\refined\\root-server\\raw.c",
+        "bytes": 3556019,
+        "sha256": "1a9b85b3a5165f99c59eb47ba900bbc96b8f654f1bb78c63fc360e78e04f0f92"
+      },
+      {
+        "path": "extracted\\refined\\root-server\\functions.tsv",
+        "bytes": 764592,
+        "sha256": "06e25b8f385c75c880c073eb9fa5815b405a772544ea086cf4b7b422c978b53f"
+      },
+      {
+        "path": "extracted\\refined\\root-server\\conventions.tsv",
+        "bytes": 145857,
+        "sha256": "fc3041ed680928000eb755228f6e19bda2cca8f8d991e8c1487de84bcc86e13d"
+      },
+      {
+        "path": "extracted\\refined\\root-server\\missing.tsv",
+        "bytes": 29,
+        "sha256": "ce578f84c6f66fb7221fe817e44258464cc03876fa63ee1d95b8c94d66eb8ca2"
+      },
+      {
+        "path": "extracted\\refined\\root-server\\gaps.tsv",
+        "bytes": 1720,
+        "sha256": "e8ba6f59f3782de7183b2d98d640fcf0a5768d0a70538597cf328f1117fbf018"
+      },
+      {
+        "path": "extracted\\refined\\root-server\\switches.tsv",
+        "bytes": 3976,
+        "sha256": "517c851d109942b5d181cacf9707e6ba08e726b8079d2a89403b87698caa5dad"
+      }
+    ]
+  },
+  "build": {
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exe": {
+      "path": "cpppj/build/bin/Release/Netstorm.exe",
+      "bytes": 12292096,
+      "sha256": "0d415d68e4eb7713284ca2abeb5237a14a0be88f5f8dc427001eae37523c1745"
+    },
+    "attempts": 3
+  },
+  "executedTests": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "staticAnalysis": {
+    "ghidraImports": 1,
+    "ghidraFullExports": 3,
+    "readOnlyFocusedFunctions": 6,
+    "runtimePacketCalls": 0,
+    "nativeTypeVersionLength": {
+      "originals/Netstorm.exe": "66010c00",
+      "originals/R.exe": "66010c00"
+    }
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "현재 Client의005c85a8/005c8600/005c8608 소유자·공유CRT 연결",
+    "실제 UDP12·상태34~38/새 로컬 서버 구현·실제 수신 부모 연결",
+    "17h/1dh 응답·State28~33/메타 표시·나머지LAN/Outpost/checking5",
+    "한국어 후속·Edit 시나리오 UI"
+  ],
+  "limitations": [
+    "정밀 디컴파일 성공은 원형/함수 전체의 정확성 증명이 아니다",
+    "미정 호출 규약과 x87 중간 정밀도는 기계어 추가 대조가 필요하다",
+    "서버 원본을 실행하지 않았고 기본 폐기 도메인/유효성 검사를 되살리지 않았다"
+  ],
+  "finalReview": [
+    "State34/35의immediate DWORD직접store를원문대로보존하고Request진단callback을추가하지않는다",
+    "R447300/475e60/475f90의가짜unaff_EDI인자가최종원문에서해소됐다"
+  ]
+}

@@ -97,12 +97,23 @@ public class ApplyConventions extends GhidraScript {
     private BasicBlockModel blockModel;
     // 주소 → 스택 프로브 함수 여부 (같은 대상을 여러 번 읽지 않게 기억한다)
     private final Map<Long, Boolean> probeCache = new HashMap<>();
+    // 선택적 thunk 추적은 R.exe의 점프 스텁을 실제 호출자/피호출 함수의 근거로 연결한다. 기본 판본 분석은 기존대로다.
+    private boolean followThunks;
+
+    // 옵션이 켜진 경우에만 Ghidra가 확인한 thunk의 최종 함수를 읽는다. 임의 JMP를 함수로 추정하지 않는다.
+    private Address actualTarget(Address target) {
+        if (!followThunks) return target;
+        Function function = currentProgram.getFunctionManager().getFunctionAt(target);
+        if (function == null || !function.isThunk()) return target;
+        Function actual = function.getThunkedFunction(true);
+        return actual == null ? target : actual.getEntryPoint();
+    }
 
     // 호출 명령어의 대상이 스택 프로브 함수인지 확인한다
     private boolean callsStackProbe(Instruction call) {
         Address[] flows = call.getFlows();
         if (flows.length != 1) return false;
-        Address target = flows[0];
+        Address target = actualTarget(flows[0]);
         Boolean known = probeCache.get(target.getOffset());
         if (known != null) return known;
         boolean probe = false;
@@ -263,20 +274,31 @@ public class ApplyConventions extends GhidraScript {
         return hints;
     }
 
-    // 스크립트 진입점: 인자는 근거 TSV 파일, (선택) 힌트 TSV 파일
+    // 스크립트 진입점: 근거 TSV/선택 힌트/선택 thunk 추적/선택 분석 인자 해제를 받는다. 기존 두 인자 실행은 유지한다.
     @Override
     public void run() throws Exception {
         String[] args = getScriptArgs();
         if (args.length < 1) {
-            printerr("사용법: ApplyConventions.java <근거 TSV 파일> [<힌트 TSV 파일>]");
+            printerr("사용법: ApplyConventions.java <근거 TSV 파일> [<힌트 TSV 파일|->] [follow-thunks] [clear-analysis-parameters]");
             return;
         }
         ecx = currentProgram.getRegister("ECX");
         edx = currentProgram.getRegister("EDX");
         blockModel = new BasicBlockModel(currentProgram);
-        Map<Long, String> hints = readHints(args.length >= 2 ? args[1] : null);
+        followThunks = args.length >= 3 && args[2].equals("follow-thunks");
+        boolean clearAnalysisParameters = args.length >= 4 && args[3].equals("clear-analysis-parameters"); // 옛 자동 fastcall 인자가 새 thiscall의 가짜 스택 인자로 남는 것을 선택적으로 해제한다.
+        Map<Long, String> hints = readHints(args.length >= 2 && !args[1].equals("-") ? args[1] : null);
         Listing listing = currentProgram.getListing();
         FunctionManager fm = currentProgram.getFunctionManager();
+        Map<Long, List<Address>> thunkEntries = new HashMap<>(); // 실제 최종 함수별로 이미 확인된 thunk 진입점만 모은다.
+        if (followThunks) {
+            for (Function function : fm.getFunctions(true)) { // 스텁의 직접 호출 근거를 최종 함수에 보존한다.
+                if (monitor.isCancelled()) return;
+                if (!function.isThunk()) continue;
+                Address target = actualTarget(function.getEntryPoint());
+                thunkEntries.computeIfAbsent(target.getOffset(), ignored -> new ArrayList<>()).add(function.getEntryPoint());
+            }
+        }
 
         // 1) 피호출 쪽 근거: 함수마다 ECX, EDX 의 첫 사용을 판정한다
         List<Function> functions = new ArrayList<>();
@@ -293,7 +315,7 @@ public class ApplyConventions extends GhidraScript {
             if (first == FIRST_READ || liveAtEntry(f, ecx)) {
                 ecxIn.add(entry);
             } else if (first == FIRST_CALL && callOut[0] != null) {
-                passTarget.put(entry, callOut[0].getOffset());
+                passTarget.put(entry, actualTarget(callOut[0]).getOffset());
             }
             if (firstUse(f, edx, null) == FIRST_READ || liveAtEntry(f, edx)) edxIn.add(entry);
         }
@@ -328,20 +350,27 @@ public class ApplyConventions extends GhidraScript {
 
                 // 직접 호출 지점마다 ECX, EDX 가 넘어가는지 확인하고, 데이터 포인터 참조 수도 센다
                 int sites = 0, ecxSet = 0, edxSet = 0, dataRefs = 0;
-                ReferenceIterator refs = currentProgram.getReferenceManager().getReferencesTo(entry);
-                while (refs.hasNext()) {
-                    Reference ref = refs.next();
-                    if (ref.getReferenceType().isData()) {
-                        dataRefs++;
-                        continue;
+                List<Address> entries = new ArrayList<>(); // 기본 진입점과 선택된 실제 thunk의 참조를 함께 읽는다.
+                entries.add(entry);
+                if (followThunks) entries.addAll(thunkEntries.getOrDefault(key, new ArrayList<>()));
+                Set<Address> seenReferences = new HashSet<>(); // 별칭이 같은 호출 주소를 중복 집계하지 않게 한다.
+                for (Address referencedEntry : entries) { // thunk 옵션이 없으면 원래 진입점 하나만 처리한다.
+                    ReferenceIterator refs = currentProgram.getReferenceManager().getReferencesTo(referencedEntry);
+                    while (refs.hasNext()) {
+                        Reference ref = refs.next();
+                        if (followThunks && !seenReferences.add(ref.getFromAddress())) continue;
+                        if (ref.getReferenceType().isData()) {
+                            dataRefs++;
+                            continue;
+                        }
+                        if (!ref.getReferenceType().isCall()) continue;
+                        Instruction call = listing.getInstructionAt(ref.getFromAddress());
+                        if (call == null) continue;
+                        Function caller = fm.getFunctionContaining(ref.getFromAddress());
+                        sites++;
+                        if (passedToCall(call, ecx, caller)) ecxSet++;
+                        if (passedToCall(call, edx, caller)) edxSet++;
                     }
-                    if (!ref.getReferenceType().isCall()) continue;
-                    Instruction call = listing.getInstructionAt(ref.getFromAddress());
-                    if (call == null) continue;
-                    Function caller = fm.getFunctionContaining(ref.getFromAddress());
-                    sites++;
-                    if (passedToCall(call, ecx, caller)) ecxSet++;
-                    if (passedToCall(call, edx, caller)) edxSet++;
                 }
 
                 // ret N 의 N (피호출 함수가 정리하는 스택 인자 크기). 알 수 없으면 -1
@@ -380,9 +409,12 @@ public class ApplyConventions extends GhidraScript {
                 if (f.getSignatureSource() == SourceType.USER_DEFINED || f.getSignatureSource() == SourceType.IMPORTED) {
                     basis = "kept-" + f.getSignatureSource();
                     decision = previous;
-                } else if (!decision.equals(previous)) {
+                } else {
                     // 다시 실행해도 같은 결과가 나오도록, 이전 실행이 지정한 규약도 "unknown" 으로 되돌린다
-                    f.setCallingConvention(decision);
+                    if (!decision.equals(previous)) f.setCallingConvention(decision);
+                    if (clearAnalysisParameters) {
+                        f.replaceParameters(Function.FunctionUpdateType.DYNAMIC_STORAGE_ALL_PARAMS, true, SourceType.DEFAULT);
+                    } // 새 원형을 추측해 잠그지 않고 디컴파일러가 실제 함수 몸체에서 인자를 다시 읽게 한다.
                 }
                 decided.merge(decision, 1, Integer::sum);
                 out.println(Long.toHexString(key) + "\t" + (readsEcx ? 1 : 0) + "\t" + (readsEdx ? 1 : 0)

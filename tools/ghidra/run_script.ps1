@@ -13,7 +13,7 @@ param(
     # 스크립트에 넘길 인자 목록
     [string[]]$ScriptArgs = @(),
     # 분석할 판본 (run_decomp.ps1 의 -Edition 과 같다)
-    [ValidateSet('originals', 'originalCD', 'original1037', 'original1037JP', 'original1062', 'original1082', 'original1082-launcher', 'original1082v12', 'original1082v12-launcher', 'patch1062')]
+    [ValidateSet('originals', 'originalCD', 'original1037', 'original1037JP', 'original1062', 'original1082', 'original1082-launcher', 'original1082v12', 'original1082v12-launcher', 'patch1062', 'root-server')]
     [string]$Edition = 'originals',
     # 정밀 분석 프로젝트(extracted\refined\<판본>\ghidra)를 열지 여부
     [switch]$Refined,
@@ -27,7 +27,11 @@ param(
 $Root = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 
 # 판본별 프로젝트 이름과 프로그램 이름
-if ($Edition -eq 'original1082v12') {
+if ($Edition -eq 'root-server') {
+    $ProjectName = 'NetstormRootServer' # 원본 R.exe의 전용 정밀 프로젝트이며 클라이언트 프로젝트를 공유하지 않는다.
+    $Program = 'R.exe'
+    $BaseProjectDir = Join-Path $Root 'extracted\refined\root-server\ghidra'
+} elseif ($Edition -eq 'original1082v12') {
     $ProjectName = 'netstorm'
     $Program = 'netstorm.game'
     $BaseProjectDir = Join-Path $Root 'extracted\original1082v12\ghidra'
