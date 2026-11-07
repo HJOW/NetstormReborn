@@ -145,6 +145,7 @@
 #include "client/NativeMainMenuState.h" //State3의 원문 부모와 호스트 표시 확정은 다른 시점이다.
 #include "client/NativeIntroState.h" // 첫 설치의 영상 부재도 원문 39→40→41→3 순서를 사용한다.
 #include "client/NativeMetaState.h"
+#include "client/MetaConnectionRuntime.h"
 #include "client/FortCoreDataLoad.h"
 #include "client/ClientChallengeGlobals.h"
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
@@ -511,11 +512,12 @@ void UberGump::RetireWorldForState() {
 }
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
 void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
-    if (world_ && world_->Session().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 Native/LAN 정리 금지");CloseLanLobby(); // 제어 연결이 빌린 Player 주소를 실제 재할당하기 전에 반납한다.
+    if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive())) throw std::logic_error("패킷 콜백 실행 중 Native/LAN 정리 금지");CloseLanLobby(); //제어 연결이 빌린 Player 주소를 재할당하기 전에 현재 callback 대여부터 확인한다.
     ClientStateWorldDevices devices;devices.cancelInitialCursor=[this] { CancelClientCursorForState(client_,*client_.SurfaceStorage()); };
     devices.killGumps=[this] { KillGumpsForState(); };devices.cleanupGumps=[this] { CleanupGumpsForState(); };devices.replaceUber=[this] { ReplaceHudForState(); };devices.refreshSp=[this] { RefreshStormPower(); };
     devices.retireRuntime=[this] { RetireWorldForState(); };devices.assertion=[](auto line) { throw std::logic_error("원문 State 중복 모드 진단:"+std::to_string(line)); };
     CleanupClientStateWorld(reason,{client_,*client_.SurfaceStorage(),*templateStorage_,*rawButtons_->Menus(),client_.WorldAudio()},client_.SurfaceStorage(),devices);
+    if (editor_) editor_->metaTransport.reset(); //Native가10/11을 끊고 Player를 재초기화한 뒤 옛 span을 더 읽기 전에 host TCP owner를 반납한다.
 }
 // 별도 로그인 값 없이 현재 월드의 같은 Session 전역을 직접 조회한다.
 std::uint32_t UberGump::CurrentSubscriber() const { return client_.CurrentSubscriber(); }
@@ -1634,7 +1636,7 @@ bool UberGump::Input() {
 }
 // 예약 명령은 메시지/입력보다 앞서 실행한다(원본 004b88c0 자리).
 void UberGump::Tick() {
-    if (world_ && world_->Session().ConnectionCallbackActive()) return; // 재진입 Tick의 State/후속 명령 전체를 다음 정상 Tick까지 유지한다. 정리만 건너뛰고 부모 후반을 실행하지 않는다.
+    if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive())) return; //재진입 Tick의 State/후속 명령 전체를 현재 수신 뒤 정상 Tick까지 유지한다.
     const auto action=state_.TakeAfterPoll([this] { if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); }); // 원문 Poll은 한 번만 소비한다. 여기서 새로 예약한 Guide/미션 설치와 timeout의next3는 다음 Tick까지 유지한다.
     const bool loading = state_.phase == ClientPhase::LoadingMission;
     if (action) Execute(*action);
@@ -1645,6 +1647,7 @@ void UberGump::Tick() {
 // 실제 로컬 큐는 일반 원문 슬롯4에서 진행하며 완료가 Guide/입력보다 먼저 현재 UI를 설치한다.
 void UberGump::PollMissionPackets() {
     PollLanLobby(); // 대기실 callback이 반환한 뒤에만 다음 Tick의 World 교체를 예약한다.
+    if (editor_ && editor_->metaTransport) editor_->metaTransport->Pump(); //World 없는 메타도 실제 slot4의 flush→수신을 진행하고 상태 확정은 다음 Tick에 남긴다.
     const auto world=world_; // 이 폴링과 완료 후처리가 끝날 때까지 실제 표시/Session 소비자를 함께 보유한다.
     if (!world || world->PreparingFort()) return;world->Session().PumpLocalConnection();
     if (world_!=world) return; // callback이 현재 호스트를 바꿨으면 이전 결과를 새 월드에 공개하지 않는다.

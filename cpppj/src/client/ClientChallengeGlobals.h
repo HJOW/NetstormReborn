@@ -13,7 +13,7 @@ public:
     ClientChallengeGlobals(ClientChallengeGlobals&&)=delete;ClientChallengeGlobals& operator=(ClientChallengeGlobals&&)=delete; // 이미 빌린 DWORD/좌표 주소를 이동하지 않는다.
     std::uint32_t& Current();const std::uint32_t& Current() const; //005467d8의 실제 같은 DWORD를 Session/메타 입력이 빌린다.
     o::ChallengeGeometry& Geometry();const o::ChallengeGeometry& Geometry() const; // 같은 최초 초기화 표와 현재 표시 크기를 반환한다.
-    bool Prepare(const std::function<void()>& uninitialized); // State19/30의 새 생성 또는 listsInitialized 진단→기존Reset을 실행한다.
+    bool Prepare(const std::function<void()>& uninitialized); //State19의 새 생성 또는 listsInitialized 진단→기존Reset이다. State28의 직접Reset 부모는 이 생성/진단 경로와 구별한다.
     std::span<std::uint8_t> Bytes();std::span<const std::uint8_t> Bytes() const; // 현재 할당21328BYTE를 직접 빌린다.0/다른 포인터는 물리 경계에서 거부한다.
     std::span<std::uint8_t> Battle(std::uint32_t index); // 실제0..9의292BYTE 전투 기록이다.
     std::span<std::uint8_t> Participant(std::uint32_t index); // 실제0..39의460BYTE 참가자 기록이다.

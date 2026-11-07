@@ -314,6 +314,7 @@ target_sources(netstorm PRIVATE ClientOptionsDisk.cpp ClientOptionsDisk.h Client
 target_sources(netstorm PRIVATE NativeIntroState.cpp NativeIntroState.h) # 새 설치도 원문 State39/40/41을 거쳐 메뉴에 도달한다.
 target_sources(netstorm PRIVATE NativeMetaState.cpp NativeMetaState.h SystemNewsTime.cpp SystemNewsTime.h) # State19 부모와 실제 서버별 뉴스 시각/수신 HTML을 복원한다.
 target_sources(netstorm PRIVATE FortCoreDataLoad.cpp FortCoreDataLoad.h UberMeta.inc) #메타와 Session의 같은 Core 읽기/실제 State19 장치를 연결한다.
+target_sources(netstorm PRIVATE RootServerEndpoint.cpp RootServerEndpoint.h MetaConnectionRuntime.cpp MetaConnectionRuntime.h) #서버 행/포트·실제 TCP10/11과 연결20~27/16h·1ch를 연결한다.
 target_sources(netstorm PRIVATE TraceChat.cpp TraceChat.h) # 실제 공유 로그의 원문 Chat 전달 관문/문맥을 연결한다.
 
 target_sources(netstorm PRIVATE RawDotCommandDispatch.cpp RawDotCommandDispatch.h) # 로컬 점 명령의 고정 문법/현재 표/콜백 뒤 검색 상태를 복원한다.

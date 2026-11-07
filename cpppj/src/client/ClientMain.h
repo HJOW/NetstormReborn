@@ -155,6 +155,7 @@ public:
     std::span<const std::uint8_t> ChatRecords() const;
     // 번역 표와 동일한 현재 원본 언어 번호를 지식 창의 언어3 설명 생략 분기에 제공한다.
     int LanguageNumber() const { return languageNumber_; }
+    std::int32_t CurrentLanguage() const { return currentLanguage_; } //005435b4의 현재 언어 DWORD다. 메타 요청은 별도 공개번호00542384 대신 이 값의 하위BYTE를 쓴다.
     void InitializeNativeTranslations(); //10.78의 고정 세 Xlat 파일을 실제 파일 장치에서 한 번 적재한다.
     void SetLanguage(std::uint32_t language); //원문 요청은 같은 Config/입력 큐/메타 갱신 DWORD를 사용한다.
     void InterpretLanguageOptions(); //원문 언어 부분만 현재 Config에 적용한다. 창/OS 감지는 수행하지 않는다.

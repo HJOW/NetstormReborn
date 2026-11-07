@@ -34,7 +34,7 @@
     "실제 Client/서비스 공유와 로그인 응답의 outpost 지역0을 같은 CS 슬롯 참조로 교정"
   ],
   "notCompleted": [
-    "State19/30의 실제 전체 호출자·메타 입력/표시/후속 상태는 아직 미연결",
+    "State19/28의 실제 전체 호출자·메타 입력/표시/후속 상태는 아직 미연결",
     "명시 CS 파생 반납 부모는 후속·호스트 final owner는 보유 할당 수명을 정리",
     "Native x87 초월함수/모든 저장 비트의 실제 대조와 전체 CD 복원은 하지 않음"
   ],
@@ -60,5 +60,6 @@
     "networkRuns": 0,
     "newFixtures": 0
   },
-  "remainingGoal": "State19/CS 실제 부모·메타/나머지LAN·Outpost/checking5→한국어 후속→시나리오 UI"
+  "remainingGoal": "State19/CS 실제 부모·메타/나머지LAN·Outpost/checking5→한국어 후속→시나리오 UI",
+  "correction1056": "다른 CS reset 부모는 Native State28(004b833b)이며30이 아니다. State28 직접Reset과 State19 Prepare는 구별한다."
 }

@@ -29,3 +29,9 @@ o::LocalMissionParentResult UberGump::InstallMetaNativeState(std::uint32_t selec
     hooks.inputVisible=[this](auto visible) { const auto token=client_.ChatWindowGlobals()->window.current;if (token) rawButtons_->Menus()->ChatGeometryBackend()->SetInputVisible(token,visible); };
     return netstorm::client::InstallNativeMetaState({local.State(),htmlGlobals_.background,local.MetaCdPresent(),surface.ownerMode.challenge,game.Server(),game.Boss(),local.MetaPending(),game.player,local.HudModeCommand(),local.ActivityEnd(),*client_.ChallengeGlobals()},hooks);
 }
+// 실제19의 World 정리 뒤 같은 Client 물리로만 메타 연결 owner를 처음 만든다.
+o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t selected) {
+    if (!editor_ || world_ || selected<20 || selected>27) throw std::logic_error("World 없는 실제 메타 연결20~27 부모 계약");
+    if (!editor_->metaTransport) editor_->metaTransport=std::make_unique<MetaConnectionRuntime>(client_,[this](auto text) { static_cast<void>(ShowLoginWaiting(FontBytes(client_.Translate(text)))); },[this](auto next) { editor_->state->Request(next); });
+    return editor_->metaTransport->Run(selected);
+}

@@ -4,6 +4,7 @@ struct UberGump::EditorRuntime {
     EditorFiles files; //읽기 전용 자산과 다른 형제 디렉터리의 편집 작업본만 쓴다.
     std::unique_ptr<EditorFortFileDevices> paths; //현재 Fort 이름/고정 FileSpec의 경로 scratch를 Session보다 오래 유지한다.
     std::shared_ptr<EditorLocalTransport> transport; //prefix에서 연 listener/client9와 뒤 수신기가 같은 실제 양끝을 빌린다.
+    std::unique_ptr<MetaConnectionRuntime> metaTransport; //World 없는 메타10/11의 실제 TCP/요청/현재 상태 장치다.
     std::unique_ptr<o::RawLocalMissionState> state; //Client의 동일 다섯144BYTE를 소비하는 원문 State 분배기다.
     std::string savedPath; //004b5470의 게임 폴더/d/!state.dat 절대 경로를 reader 동기 호출 동안 보존한다.
     std::function<void(std::uint32_t)> selectCursor; //실제 커서 장치를 공통 State 확정 뒤의 호스트 입력 구성에도 같은 callback으로 전달한다.
@@ -12,7 +13,7 @@ struct UberGump::EditorRuntime {
     std::function<void()> connectLan; // 실제 로컬 host/join 선택을 같은 일반 입력 소비자에 연결한다.
     explicit EditorRuntime(Client& value):client(value),files(ResolveEditorRoots(value.GameDirectory(),value.UserData()).work,ResolveEditorRoots(value.GameDirectory(),value.UserData()).protectedRoots) {} //기존에는 자산 디렉터리의 형제 작업본, 5차 사용자 홈 정책에서는 CustomMaps를 작업 루트로, 같은 보호 루트를 선택한다. 생성만으로 파일/게임 상태를 쓰지 않는다.
     //호스트 메인 메뉴/종료에서 Session 수신기를 반납한 뒤 남은 실제 양끝/리스너를 닫는다.
-    void Close() { if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); } }
+    void Close() { if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); }metaTransport.reset(); } //호스트 종료의 남은 메타 노드도 자기 owner로 반납한다.
     //큐/노드 소유권은 기존 전송의 SocketClosed/Track이 처리하고 이 경계는 실제 시각과 진단만 제공한다.
     o::PacketDispatchHooks Hooks() {
         o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client.WallSeconds()); };
@@ -272,11 +273,11 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
 // 미션 Login은 기존 분배기에 남기고 Edit1/2·메인3·인트로39~42과 다음4를 같은 분배기로 처리한다.
 void UberGump::PollEditorState() {
     auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2 || next==6; // 일반 복귀6도 같은 Fort 설치/공통 확정을 사용하며 첫 배경/결과만 전용 부모가 처리한다.
-    if (!fort && next!=3 && next!=19 && !(next>=39 && next<=42) && !(editor_ && next==4)) return; //메타19/PlayIntro도 Editor 장치가 없어도 같은 장기 분배기를 처음 구성한다.
+    if (!fort && next!=3 && !(next>=19 && next<=27) && !(next>=39 && next<=42) && !(editor_ && next==4)) return; //메타19/연결20~27도 같은 장기 분배기를 사용한다.
     if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
     if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
         auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
-        o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { if (selected>=39 && selected<=42) return InstallIntroNativeState(selected);if (selected==19) return InstallMetaNativeState(selected);if (selected==6) return InstallBattleReturnNativeState(selected);return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
+        o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { if (selected>=39 && selected<=42) return InstallIntroNativeState(selected);if (selected==19) return InstallMetaNativeState(selected);if (selected>=20 && selected<=27) return InstallMetaConnectionState(selected);if (selected==6) return InstallBattleReturnNativeState(selected);return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
         hooks.invalidState=[](auto state) { throw std::logic_error("Editor/메인 분배기의 선택된 Native State 미연결:"+std::to_string(state)); };
         editor_->state=std::make_unique<o::RawLocalMissionState>(client_.Assets().Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),surface.ownerMode.battle,game.world.missionPost,local.SavedGame(),surface.links.mission,local.Simulconnect(),surface.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.CdPresent(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(htmlGlobals_.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client_.Time().game,client_.Time().wall},std::move(hooks));
     }

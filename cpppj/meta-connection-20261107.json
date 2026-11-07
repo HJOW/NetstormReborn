@@ -1,0 +1,149 @@
+{
+  "unit": 1056,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "서버 행/endpoint 및 실제 메타 연결20~27·TCP10/11·16h/1ch 요청 연결",
+  "sourceFunctions1078": [
+    "00458e70",
+    "00458f90",
+    "004b3ed0",
+    "004b40c0",
+    "004b4480",
+    "0040a190",
+    "0040a270",
+    "004b6dd0:20..27",
+    "0042b210"
+  ],
+  "sourceComparisonCD": [
+    "00430b70",
+    "004cfc20",
+    "004cfd30",
+    "00430e50",
+    "004311d0"
+  ],
+  "nativeJumpTable": {
+    "20": "004b8159",
+    "21": "004b8163",
+    "22": "004b81ce",
+    "23": "004b821f",
+    "24": "004b823c",
+    "25": "004b824b",
+    "26": "004b82ac",
+    "27": "004b86bd",
+    "28": "004b833b",
+    "30": "004b864e",
+    "34": "004b7e75",
+    "38": "004b80f3"
+  },
+  "implemented": [
+    "현재 서버 행의 선택 출력0/첫 세미콜론 패턴/길이 제한·subscriber atol과 NSInfo 이름 재사용",
+    "원문 지역80BYTE/첫 콜론·숫자 그룹→필요 시 기본 포트 조회→명시 포트 우선",
+    "같은 Client의 World 없는 실제 TCP10/11·상태20~27과 slot4 pump/콜백 수명·Native cleanup 뒤 owner 반납",
+    "16h 요청/현재 서버 subscriber·자기 subscriber/현재 Core 기술 합계와 observer18BYTE",
+    "1ch 요청/실제 Core·기술 합계/현재 언어·CD·passedDiags/handle·관찰 길이/미작성29h DWORD 보존",
+    "현재 passedDiags 옵션 슬롯/현재005435b4 언어 getter·원격 검증 비활성 유지",
+    "일반 IPv4 LAN 정책을 재사용해 DNS/공개주소/폐기 기본 도메인을 실제 접속 전에 거부"
+  ],
+  "notCompleted": [
+    "State34~38 로컬 검색/로컬 root 서버 시작·발견/주소 수명은 미연결이며26 실패 뒤38은 아직 명시 경계",
+    "17h/1dh 로그인 응답 및 메타 등록표/선택적 패킷 기록·목록/채팅·State28~33/메타 표시·나머지LAN/Outpost/checking5는 후속",
+    "passedDiags는 정보 비트이며 이번에 원본 초기 DiagResults 레지스트리 reader/진단 실행을 추가하지 않음",
+    "실제 멀티플레이/새 단위/게임/통신 검사0·전체 회귀/ZIP 미실행"
+  ],
+  "correction": "CS reset의 다른 큰 부모는 Native State28(004b833b)이며 이전 State30 표기는 정정한다. State28은 State19 Prepare의 생성/진단과 구별되는 직접Reset이다.",
+  "decompilerOutputsChanged": false,
+  "buildAttempts": [
+    {
+      "exitCode": 1,
+      "errors": [
+        "C1075:RootServerEndpoint namespace 닫힘 누락"
+      ],
+      "log": "extracted\\cpp-resume-1056\\build-first.log"
+    },
+    {
+      "exitCode": 0,
+      "warningCodes": [
+        "C4244",
+        "C4244"
+      ],
+      "log": "extracted\\cpp-resume-1056\\build-second.log"
+    },
+    {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "extracted\\cpp-resume-1056\\build-third.log"
+    },
+    {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "description": "빈 capture 복사를 명시 건너뛰고 State28 설명과 함께 컴파일",
+      "log": "extracted\\cpp-resume-1056\\build-fourth.log"
+    },
+    {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "description": "기존 TCP 문자열 접두 해석/준비 재사용을 선택한 최종 증분 빌드",
+      "log": "extracted\\cpp-resume-1056\\build.log"
+    }
+  ],
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "target": "NetstormCpp",
+    "exeSize": 12292096,
+    "exeSha256": "692c04d1680c4eecf404ea83fc70fb2a5a7051b1b35cee39c3c56ce1d4456fc1",
+    "imports": [
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-time-l1-1-0.dll",
+      "api-ms-win-crt-utility-l1-1-0.dll",
+      "d3d11.dll",
+      "d3dcompiler_47.dll",
+      "dwmapi.dll",
+      "gdi32.dll",
+      "kernel32.dll",
+      "mmdevapi.dll",
+      "msvcp140.dll",
+      "ole32.dll",
+      "shell32.dll",
+      "user32.dll",
+      "vcruntime140.dll",
+      "vcruntime140_1.dll",
+      "version.dll",
+      "winmm.dll",
+      "ws2_32.dll"
+    ]
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1056\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remainingGoal": "State34~38 실제 로컬 검색/서버·로그인 응답17h/1dh·State28~33/메타·나머지LAN/Outpost/checking5→한국어 후속→시나리오 UI",
+  "finalReview": [
+    "빈 캡처는 Native 루프처럼 실제 복사를 하지 않고 NUL만 쓴다",
+    "RootServerEndpoint의 host는 기존 ConnectPeerText에 전달해 tcp, 접두/문자 주소 해석을 재사용하며 DNS/공개 주소는 계속 거부한다"
+  ]
+}
