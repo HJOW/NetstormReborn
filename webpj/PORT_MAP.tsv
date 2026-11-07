@@ -789,7 +789,7 @@ cpppj/src/o/RawMissionServerPackets.cpp	port			todo	[o-default] 중앙섬 metada
 cpppj/src/o/RawMissionSettingsPacket.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionStart.cpp	port			todo	[o-default]
 cpppj/src/o/RawNewFort.cpp	exclude-edit			-	[edit-new-fort]
-cpppj/src/o/RawNewTechnology.cpp	port			todo	[o-default]
+cpppj/src/o/RawNewTechnology.cpp	port	www/core/raw-new-technology.js	1f00a25a	port	[o-default] WB04-E13: 00492a30 기술 획득 부모(조회/추가/snapshot/이름·그림 Config/안내 순서). fixture new-technology 10.78 45행 전부
 cpppj/src/o/RawNuggetPostPop.cpp	port			todo	[o-default]
 cpppj/src/o/RawNuggetRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawNuggetReplenish.cpp	port			todo	[o-default]
@@ -814,7 +814,7 @@ cpppj/src/o/RawPathStart.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlainAssetDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlainUnitCapture.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlainWorkshopCapture.cpp	port			todo	[o-default]
-cpppj/src/o/RawPlayerColor.h	port			todo	[o-default]
+cpppj/src/o/RawPlayerColor.h	port	www/core/raw-player-color.js	1f00a25a	port	[o-default] WB04-E13: 0043ca70 소유자 색 변경(색 표 선기록·섬 받침/종유석 프레임 요청). OwnerColorFrame 포함. fixture player-color 10.78 216행 전부
 cpppj/src/o/RawPlayerContentNotice.cpp	port	www/core/raw-player-content-notice.js	1f00a25a	port	[o-default] WB04-E9: 00490750→004d55e0 Player 내용물 통지(진단 접두·종속 Form 체인 순회·Gump 가상 handle). fixture player-content-notice 10.78 88행 전부. World 삭제 장부(RawCampaignLifetimeBindings) 통합 대조는 해당 단위에서
 cpppj/src/o/RawPlayerCoreData.cpp	port	www/core/raw-player-core-data.js	1f00a25a	port	[o-default] WB04-E3: 0048f0d0 조회·0048f3b0 선택/정리는 fixture player-core-data 804행으로 대조. 0048fb30 복원은 cpppj 직접 원본 관측이 없어 소스 계약 검사만(웹 검사 1장면)
 cpppj/src/o/RawPlayerCoreRecords.cpp	port	www/core/raw-player-core-records.js	1f00a25a	port	[o-default] WB04-E3: 9×16 BYTE Core 장부(0042ce70·004feac0·0048f350). fixture player-core-records 192행(Core 186 + 색 표 감사 6)
@@ -928,7 +928,7 @@ cpppj/src/o/RawTerrainContext.cpp	port	www/assets/terrain-mask.js;www/assets/ter
 cpppj/src/o/RawTerrainGrowth.cpp	port			todo	[o-default]
 cpppj/src/o/RawTerrainStamp.cpp	port	www/assets/terrain-fringe.js;www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] WB03-X/Y 지면/fringe 계산
 cpppj/src/o/RawTextToken.cpp	port			todo	[o-default]
-cpppj/src/o/RawThemeTechnology.cpp	port			todo	[o-default]
+cpppj/src/o/RawThemeTechnology.cpp	port	www/core/raw-theme-technology.js	1f00a25a	port	[o-default] WB04-E13: 00492ae0 CheatAllTechnology 테마 지급(타입 필터·현재 개수/부모 재조회). fixture theme-technology 10.78 1200행 전부
 cpppj/src/o/RawThunderCannonCapture.cpp	port			todo	[o-default]
 cpppj/src/o/RawTotalMade.cpp	port			todo	[o-default]
 cpppj/src/o/RawTransportPolling.h	port			todo	[o-default] LocalMissionTransport 가 쓰는 현재 ID 순회

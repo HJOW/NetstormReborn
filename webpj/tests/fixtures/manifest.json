@@ -3118,10 +3118,97 @@
       "bytes": 1894511,
       "lines": 3077,
       "fixtureCommit": "f1cb614f",
-      "webCommit": "worktree",
+      "webCommit": "bec204fe",
       "cpppjBasis": {
         "cpppj/src/o/Graph.cpp": "588c0e9c",
         "cpppj/src/o/SquidFinder.cpp": "364d4a48"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E13",
+      "id": "new-technology",
+      "path": "cpppj/tests/fixtures/new-technology-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 기술 획득 부모의 전체 callback 순서와 중단 뒤 두 Config 부분 효과",
+      "consumers": [
+        "webpj/tests/technology-color.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-new-technology.js"
+      ],
+      "doc": "docs/webpj-technology-color-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawNewTechnology.cpp"
+      ],
+      "scope": "45행 전부 사용",
+      "text": true,
+      "sha256": "8361d908c62f03b317c00e2ed4d21a0bff4ae919e34af1b4b0af2edf36a0fca1",
+      "bytes": 11396,
+      "lines": 46,
+      "fixtureCommit": "67cce492",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawNewTechnology.cpp": "67cce492"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E13",
+      "id": "theme-technology",
+      "path": "cpppj/tests/fixtures/theme-technology-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: CheatAllTechnology 의 1200 고유 입력별 호출 순서·현재 count/부모·생성 기록",
+      "consumers": [
+        "webpj/tests/technology-color.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-theme-technology.js"
+      ],
+      "doc": "docs/webpj-technology-color-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawThemeTechnology.cpp"
+      ],
+      "scope": "1200행 전부 사용",
+      "text": true,
+      "sha256": "8a1cf581c52716c2444208fb62aeeeaa1661e9fc44139ce13f935d27a67d8843",
+      "bytes": 198483,
+      "lines": 1201,
+      "fixtureCommit": "229a2c10",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawThemeTechnology.cpp": "229a2c10"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E13",
+      "id": "player-color",
+      "path": "cpppj/tests/fixtures/player-color-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 소유자 색 변경의 색 표 36 BYTE·풀 800 BYTE 창·프레임 요청 순서",
+      "consumers": [
+        "webpj/tests/technology-color.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-color.js"
+      ],
+      "doc": "docs/webpj-technology-color-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerColor.h"
+      ],
+      "scope": "216행 전부 사용",
+      "text": true,
+      "sha256": "fbfe051220bccb0c2732cdb8954208b9787eb91e5216994938ca395db30d6603",
+      "bytes": 373944,
+      "lines": 217,
+      "fixtureCommit": "4738731f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerColor.h": "4738731f"
       }
     }
   ]
