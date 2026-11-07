@@ -39,6 +39,9 @@ struct SocketDevice::System { // 같은 accept 계열이 공유하는 실제 WSA
 SocketDevice::~SocketDevice() { Close(); } // 자기 핸들을 반납한 뒤 공유 WSA owner가 소멸한다.
 bool SocketDevice::IsOpen() const { return socket_!=kInvalidSocket; } // 실제 소켓0도 현대 OS의 유효한 반환이면 보존한다.
 void SocketDevice::Close() { if (IsOpen()) { closesocket(Socket(socket_));socket_=kInvalidSocket; }flags_&=~0x40U; } // 원문 close의 반환 무시와 기존 오류 보존을 유지한다.
+void SocketDevice::CloseNative() {
+    if (flags_&8U) throw std::logic_error("R 관리 명령의 원문 Zlocal 메모리 장치 미연결");if ((flags_&0x40U) && IsOpen()) { if (flags_&0x400U) Sleep(500);closesocket(Socket(socket_));socket_=kInvalidSocket; }error_=WSAGetLastError();flags_&=~0x40U; // 기존 RAII Close와 달리 원문 호출 시점의 오류를 캡처하고 부모 노드를 보존한다.
+}
 std::unique_ptr<SocketDevice> SocketDevice::Detach() {
     auto result=std::make_unique<SocketDevice>();result->system_=system_;result->socket_=socket_;result->flags_=flags_;result->error_=error_;result->peer_=peer_;socket_=kInvalidSocket;return result; // 할당 성공 뒤에만 옛 핸들을 무효화한다. 새 소유자가 최종 close 권한과 WSA 수명을 유지한다.
 }

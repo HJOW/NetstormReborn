@@ -16,6 +16,8 @@ struct MainLoopHooks { // 남은 실제 프로세스 초기화/정리·서버 �
     std::function<void(std::int32_t,std::string_view)> log; // 원문의 Running/예약 안내 level·완성된 출력이다.
     NetworkHooks network; // 같은 실제 보조 객체/집합·Poll이며 CCh 수신/송신은 ChallengeStore에서 연결한다.
 };
+void RequestSchedule(ClockState& clock,MainLoopState& state,Routing& routing,std::uint32_t goingDown,double seconds,const std::function<void(std::int32_t,std::string_view)>& log); //00479090의 현재예약없음 관문/초지연·즉시요청/로그인차단·전체안내를같은전역에연결한다.
+void BindSchedule(ChallengeRuntimeHooks& challenge,ClockState& clock,MainLoopState& state,Routing& routing,std::function<void(std::int32_t,std::string_view)> log); //메인객체생성전에도같은장기상태/라우터에예약hook을연결해CCh와메인객체의생성순서순환을피한다.
 class MainLoop final { // 같은 전송/CCh·현재 상태와 모든 hook owner는 실행이 끝날 때까지 살아야 한다.
 public:
     MainLoop(ConnectionState& connections,Clock& clock,TransceiverTransport& transport,ChallengeStore& store,ChallengeRuntime& challenges,Routing& routing,SharedFiles& files,MainLoopState& state,MainLoopHooks hooks); // 생성은 창/OS/시계/소켓/파일을 실행하지 않는다.

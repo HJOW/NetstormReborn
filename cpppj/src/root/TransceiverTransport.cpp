@@ -49,6 +49,7 @@ std::uint32_t TransceiverTransport::TokenFor(const o::PacketConnection& connecti
 }
 o::PacketConnection& TransceiverTransport::Connection(std::uint32_t token) { return Get(token).connection; } // 현재 sender/깊이/주소/시각을 같은 노드에서 빌린다.
 std::uint32_t TransceiverTransport::SocketFlags(std::uint32_t token) { return Get(token).socket->Flags(); } // CCh의 실제 socket 플래그다.
+void TransceiverTransport::CloseSocket(std::uint32_t token) { Get(token).socket->CloseNative(); } // 같은 현재 노드/번호는 남기고 실제 하위 OS 소켓만 닫는다.
 std::array<std::uint8_t,20> TransceiverTransport::SocketPeerAddress(std::uint32_t token) { return Get(token).socket->PeerAddress(); } // 마지막 실제 getpeername 결과이며 새 주소를 합성하지 않는다.
 std::uint32_t& TransceiverTransport::NoMainTimeout(std::uint32_t token) { return Get(token).noMainTimeout; } // 실제+90의 현재 참조다.
 std::int32_t& TransceiverTransport::WriteLimit(std::uint32_t token) { return Get(token).writeLimit; } // 실제+70의 현재 signed 참조다.

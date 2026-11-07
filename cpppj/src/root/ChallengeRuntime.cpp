@@ -42,8 +42,8 @@ void ChallengeRuntime::InstallPacketObservers() {
         dispatch.ObservePacket(type,[this,type](auto packet,auto sending) { Observe(type,packet,sending); });dispatch.Version(type,1,0); // 원문41h 등록은1이며 실제 작성기의version3과 별개다. 불일치 정책0도 보존한다.
     }
     dispatch.RequireLength(0x41,0xffff);dispatch.RegisterDirect(0x41,[this](auto sender,auto*,auto packet) { ReceiveChat(sender,{const_cast<std::uint8_t*>(packet.data()),packet.size()}); }); // 공통 프레임과 Root 직접 호출의 원래 mutable 버퍼를 같은 주소로 빌린다. NULL 연결은 읽지 않는다.
-    for (const auto type:std::array<std::uint8_t,6>{0x10,0x1e,0x1f,0x67,0x68,0x71}) { // 현재 이동/준비·전투 제어 수신기를 같은 표에 등록하며 실제 mutable 물리와 NULL 연결을 지원한다.
-        dispatch.RequireLength(type,type==0x10 ? 8:(type==0x1e ? 14:(type==0x1f ? 12:(type==0x68 ? 5:0xffff))));dispatch.RegisterDirect(type,[this,type](auto sender,auto*,auto packet) { ReceiveBattleControl(type,sender,{const_cast<std::uint8_t*>(packet.data()),packet.size()}); });
+    for (const auto type:std::array<std::uint8_t,7>{0x10,0x1e,0x1f,0x67,0x68,0x71,0x83}) { // 현재 이동/준비·관리/전투 제어 수신기를 같은 표에 등록하며 실제 mutable 물리와 NULL 연결을 지원한다.
+        dispatch.RequireLength(type,type==0x10 ? 8:(type==0x1e ? 14:(type==0x1f ? 12:(type==0x68 ? 5:(type==0x83 ? 176:0xffff)))));dispatch.RegisterDirect(type,[this,type](auto sender,auto*,auto packet) { ReceiveBattleControl(type,sender,{const_cast<std::uint8_t*>(packet.data()),packet.size()}); });
     }
     dispatch.RequireLength(0x1a,0xffff);dispatch.RequireLength(0x1b,38);dispatch.RequireLength(0x24,5); // 원문의 가변1ah/고정1bh 접속 안내와24h 전투 삭제의 실제 길이다.
     dispatch.RequireLength(0x25,8); // 이동 오류 응답25h는 원문 생성자가 쓰는 고정8BYTE다.

@@ -37,6 +37,7 @@ public:
     void Flush(std::uint32_t token); //853e0의 집합 확정/실제 부분 송신/접두 이동을 수행한다.
     void SetBuffered(std::uint32_t token,bool enabled); //856a0처럼 켤 때 현재 포인터를 다시4/0으로 쓰고 끌 때 먼저 flush한다.
     void Close(std::uint32_t token); //84820의 killed쓰기→depth0 소멸/flush/지연 물리 반납이다.
+    void CloseSocket(std::uint32_t token); //83h 명령0의 노드+4 하위소켓 CloseNative만 수행한다. Terminate/노드kill·flush를 호출하지 않는다.
     void Terminate(std::uint32_t token); //83ea0의 실제2번 처리기가 있고 최초일 때만 통지한다.
     NetworkPumpResult Pump(std::int32_t waitSeconds,NetworkHooks upper); // 실제 SocketDevice/select/현재 노드를1062 부모에 연결한다. Challenge/보조 객체의 실제 장치는 upper가 제공한다.
     o::RawPacketDispatch& PacketHandlers() { return dispatch_; } // 등록 API 전용이다. 수신 실행은 이 owner의 ReceiveOne을 통해 수명을 보장한다.
