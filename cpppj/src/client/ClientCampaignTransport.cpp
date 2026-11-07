@@ -4,6 +4,10 @@
 #include "client/ClientConnectionGlobals.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientPlayerRecords.h"
+#include "client/ClientLocalStateGlobals.h"
+#include "client/ClientConnectionActivityGlobals.h"
+#include "o/RawConnectionEnded.h"
+#include <bit>
 #include "client/GameWorld.h"
 #include "client/RawCampaignSession.h"
 #include <iostream>
@@ -46,6 +50,12 @@ std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& c
     hooks.terminate=[](o::PacketConnection& connection) { connection.flags|=0x40;std::clog<<"로컬 미션 연결 종료\n"; }; // 원문 분배기의 종료 표시만 쓰고 물리 반납은 실제 backend에 맡긴다.
     hooks.close=[](o::PacketConnection&) { std::clog<<"로컬 연결 큐/소켓 종료\n"; }; // 실제 노드 owner가 close를 수행하는 같은 위치의 진단이다.
     hooks.release=[](o::PacketConnection&) { std::clog<<"로컬 연결 반납\n"; }; // 실제 노드 owner가 free를 수행하는 같은 위치의 진단이다.
-    return CompositeMissionTransport::Create(role,globals->players->Records(),globals->game->Server(),std::move(hooks),client.ConnectionGlobals(),globals);
+    auto transport=CompositeMissionTransport::Create(role,globals->players->Records(),globals->game->Server(),std::move(hooks),client.ConnectionGlobals(),globals);
+    transport->Dispatch().Register(2,[runtime=std::weak_ptr<GameWorld>(world),globals,registry=client.ConnectionGlobals(),local=client.LocalStateGlobals(),activity=client.ConnectionActivityGlobals()](auto sender,auto& connection,auto) {
+        const auto current=runtime.lock();if (!current) throw std::logic_error("연결 종료 통지의 실제 현재 World 수명 종료");o::ConnectionEndedHooks effects;
+        effects.saveServerFailure=[current] { current->Session().SaveServerFailure(); };effects.disconnect=[registry](auto id) { registry->Disconnect(id); };effects.broadcastPlayer=[current](auto owner) { current->Session().BroadcastConnectionPlayer(owner); };
+        o::ReceiveConnectionEnded(std::bit_cast<std::int32_t>(sender),registry->TokenFor(connection),{globals->game->Server(),local->ClockSynchronization().connection,local->State().phase[0],local->State().next[0],activity->Frames(),[globals] { return globals->players->Records(); }},effects);
+    }); //004e2270의2번 수신기만 실제 Session 대여 전에 등록한다. 버전/정책/observer를 임의로 바꾸지 않는다.
+    return transport;
 }
 }

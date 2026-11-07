@@ -324,6 +324,7 @@ public:
     void TakeServerForState(); //004b8cb0이 요청하는 현재15를 같은 실제 Login/State 공통부로 실행한다. callback 안에서는 실행하지 않는다.
     void SendConnectionHeartbeat(bool broadcast); // 실제64h/1/5의 끝BYTE0을 서버9 또는 같은 실제 참가자 broadcast로 송신한다.
     void SaveServerFailure(); //004b6560의 서버 flags 변경→같은 실제976BYTE 저장 writer를 실행한다.
+    void BroadcastConnectionPlayer(std::uint32_t owner); //00491270의 현재 서버 진단/접속 대상별 Player 상태 송신이며 Login 없는 Editor도 같은 writer를 사용한다.
     void RunConnectionLoginTimer(); // 실제 Client439ae3의 동일 타이머이며 Editor에는 Login을 만들지 않는다.
     void RunBattleResources(); //00486bc0 전체 스펠/SP 주기/일반 간헐천을 같은 실제 현재 월드로 실행한다.
     void SendPlayerTell(std::uint32_t owner,std::string_view section,bool others=false); //004c9150/4c9200의 실제70h를현재대상또는해당대상을뺀1..8에보낸다.

@@ -1,0 +1,72 @@
+{
+  "unit": 1045,
+  "productVersion": "11.01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "description": "실제2번 연결 종료 통지와 Player flags/상태 방송·선택 활동 프레임 정리",
+  "sourceFunctions1078": [
+    "004b6660",
+    "004e2270",
+    "00491270",
+    "004b6560"
+  ],
+  "implemented": [
+    "현재 동기화 token 일치0",
+    "비서버9의 실제 서버 장애 flags/저장 후 현재server 재조회·자연 반환",
+    "서버9 이외 실제 Registry 지연 종료",
+    "현재server/Player1..8의 flags100 설정·1/40 별개 해제",
+    "현재 접속자별 기존 Player writer 방송 뒤 선택 활동frame0",
+    "10번/현재23·다음24/12 제외의 다음20 요청",
+    "Client 실제 복합 전송의2번 bootstrap 등록과 현재 Session callback pin/반납 복원",
+    "Login 없는 Editor의 동일 Player 상태 writer 및 저장 writer의 post/미known 자연 관문"
+  ],
+  "reconciled": [
+    "frame22는 패킷종류22h가 아니라22DWORD 연결 활동표",
+    "전체22칸 clear는 기존 RawStateWorldCleanup/ClientStateWorldGlobals에 연결됨",
+    "64h 수신/주기 송신·timeout/status UI/자동 실패 부모는1015 연결"
+  ],
+  "remainingBootstrap": [
+    "1번004e2f00은 빈 함수가 아님: 현재22송신버퍼의 선택 칸을 실제 가상+4 송신→free→0",
+    "현재 OS backend의 접속 전 큐와 이 전역버퍼의 도달/수명 대조 필요"
+  ],
+  "decompilerOutputsChanged": false,
+  "build": {
+    "first": {
+      "exitCode": 1,
+      "warnings": 0,
+      "errors": 1,
+      "cause": "방송 대상 BYTE 조회에서 기존 Read의 없는3인자 호출/C2660",
+      "log": "extracted\\cpp-resume-1045\\build.log"
+    },
+    "final": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "target": "NetstormCpp",
+      "log": "extracted\\cpp-resume-1045\\build-final.log",
+      "exeSize": 12160000,
+      "exeSha256": "7d11881eec76c95b00f1da87eccd4a43fabfbabf5c4d5aa0c3ee4146f7674a0d"
+    }
+  },
+  "protected": {
+    "files": 2800,
+    "changed": [],
+    "baseline": "extracted\\cpp-resume-1045\\protected-before.json"
+  },
+  "excluded": {
+    "newMultiplayerTests": 0,
+    "unitTestRuns": 0,
+    "gameRuns": 0,
+    "networkRuns": 0,
+    "newFixtures": 0
+  },
+  "remaining": [
+    "1번 연결 통지/접속 전22송신버퍼·endpoint/서버/listener 감사",
+    "나머지 writer/decoder·메타/Outpost/checking5",
+    "한국어 후속",
+    "Edit 시나리오 UI"
+  ]
+}

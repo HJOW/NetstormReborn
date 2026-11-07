@@ -11,6 +11,7 @@ namespace netstorm::zacket { class LocalMissionTransport; } // 기존 단독 미
 namespace netstorm::client { // 이 API 생성만으로 listener/소켓/게임 상태를 만들지 않는다.
 class LocalTcpTransport;class EditorLocalTransport; // 실제 네트워크/내부 큐 owner이며 별도 Login을 합성하지 않는다.
 class CompositeMissionTransport; // 같은 Registry/등록표/per-ID 순서로 실제 backend를 조립하는 owner다.
+std::string CampaignPeerAddressText(const std::array<std::uint8_t,20>& address); // 현재20BYTE 주소를 원문 IP/포트 표시로 변환하며 DNS를 조회하지 않는다.
 // 공유 Registry/분배 등록표의 정체성과 실제 하위 호출을 함께 빌린다.
 // 복합 LAN host는 별도의 전역 번호순 coordinator가 이 계약을 채워야 한다.
 // 독립 backend의 Poll 두 개를 이어 호출한 값을 복합 원문 순서라고 쓰면 안 된다.

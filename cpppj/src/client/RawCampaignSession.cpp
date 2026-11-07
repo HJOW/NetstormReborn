@@ -3859,7 +3859,15 @@ void RawCampaignSession::TakeServerForState() {
 void RawCampaignSession::SendConnectionHeartbeat(bool broadcast) { auto& s=*impl_;if (!s.login) throw std::logic_error("활동 송신의 실제 Login 없음");std::array<std::uint8_t,5> packet{1,0x64,5,0,0};if (broadcast) s.broadcast->Send(packet);else s.login->Send(9,packet); } //0040ae00/0052ee4e의 길이5와 payload0을 그대로 사용한다.
 // 서버 표식은 남기고 flags1/40만 지우며 실패한 저장의 부분 효과도 되돌리지 않는다.
 void RawCampaignSession::SaveServerFailure() {
-    auto& s=*impl_;if (!s.login) throw std::logic_error("서버 장애 저장의 실제 Login 없음");for (std::uint32_t owner=1;owner<9;++owner) { const auto flags=Impl::Login::Get(s.players,owner*180+0x50);if (flags&8U) Impl::Login::Put(s.players,owner*180+0x50,(flags&0xffffffbeU)|0x100U); }s.login->SaveReconnect(); // 원문 고정8행 뒤 같은 writer를 호출한다.
+    auto& s=*impl_;for (std::uint32_t owner=1;owner<9;++owner) { const auto flags=Impl::Login::Get(s.players,owner*180+0x50);if (flags&8U) Impl::Login::Put(s.players,owner*180+0x50,(flags&0xffffffbeU)|0x100U); }if (s.globals.missionPost || !s.playerState.playerKnown) return;if (!s.login) throw std::logic_error("서버 장애 저장의 실제 Login 없음");s.login->SaveReconnect(); // 고정8행 뒤 writer의 post/미known 자연 관문을 유지하며 Editor에 Login을 합성하지 않는다.
+}
+// 같은 현재 Player/Zone/헤더 writer로 연결 상태 변경을 각 실제 접속자에게 보낸다.
+void RawCampaignSession::BroadcastConnectionPlayer(std::uint32_t owner) {
+    auto& s=*impl_;if (!s.core.processState.Server()) s.world.Storage()->AssertDisplay("server","\\Ns\\O\\Player.cpp",0x1ec);if (!s.services.connectionRegistry) throw std::logic_error("Player 상태 방송의 실제 Registry 없음");auto registry=s.services.connectionRegistry;
+    MissionServerPacketHooks hooks;hooks.assertion=[&s](auto expression) { if (!s.services.ai.assertion) throw std::logic_error("Player 상태 writer 진단 미연결");s.services.ai.assertion(expression); };hooks.peerAddress=[registry](auto target) { return CampaignPeerAddressText(registry->Address(static_cast<std::int32_t>(target))); };
+    hooks.send=[registry,&s](auto target,auto bytes) { std::vector<std::uint8_t> packet(bytes.begin(),bytes.end());static_cast<void>(registry->SendMutable(target,packet,s.players)); }; // 같은 현재 가상+4를 쓰며 수신을 동기 호출하지 않는다.
+    RawMissionServerPackets packets(s.players,{s.core.processState.Server(),s.core.ownerMode.challenge,s.playerState.battleOwner,s.localStateGlobals->CentralCreated(),s.gameplayGlobals->GameAux()->ArchipelagoPercent(),s.localStateGlobals->Zone()},std::move(hooks));
+    for (std::uint32_t target=1;target<9;++target) if (s.players[target*180+0x50]&1U) packets.SendPlayer(owner,static_cast<std::int32_t>(target)); // 원문의 BYTE flags를 각 송신 효과 뒤 현재 다음 접속자에서 다시 읽는다.
 }
 void RawCampaignSession::RunConnectionLoginTimer() { if (impl_->login) impl_->login->timer->Run(false); } // timer 자체의 현재 LoginEnd 관문을 사용한다.
 // 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.

@@ -15,19 +15,21 @@ o::PacketConnection* Current(const std::shared_ptr<o::RawConnectionRegistry>& re
     auto table=registry->Cleanup();if (id<=-static_cast<std::int32_t>(table.pending.size()) || id>=static_cast<std::int32_t>(table.transceivers.size())) throw std::out_of_range("현재 전송 ID 범위 오류");
     const auto token=id<0 ? table.pending[static_cast<std::size_t>(-id)] : table.transceivers[static_cast<std::size_t>(id)];return token ? &registry->Node(token) : nullptr;
 }
+} // 현재 노드 조회만 이 번역 단위에 제한한다.
 // 원문004e0a30(1,0,0)의 IP 또는 wildcard와 포트를 DNS 없이 작성한다.
-std::string PeerText(const std::array<std::uint8_t,20>& address) {
+std::string CampaignPeerAddressText(const std::array<std::uint8_t,20>& address) {
     const auto family=static_cast<std::uint32_t>(address[0])|(static_cast<std::uint32_t>(address[1])<<8);
     if (family==6) throw std::logic_error("LAN 전송 바인더의 SPX 주소는 범위 밖입니다");
     const bool wildcard=address[4]==0 && address[5]==0 && address[6]==0 && address[7]==0;
     auto text=wildcard ? std::string("*") : std::to_string(address[4])+'.'+std::to_string(address[5])+'.'+std::to_string(address[6])+'.'+std::to_string(address[7]);
     return text+':'+std::to_string((static_cast<std::uint32_t>(address[2])<<8)|address[3]);
 }
+namespace { // 내부/TCP/Editor가 같은 실제 현재 주소 formatter를 재사용한다.
 // 필수 실제 owner/표만 요구하며 생성자에서 연결이나 수신을 진행하지 않는다.
 template<class Transport> CampaignTransportServices Basic(const std::shared_ptr<Transport>& transport) {
     if (!transport || !transport->Registry()) throw std::invalid_argument("실제 전송 owner/현재 Registry가 필요합니다");CampaignTransportServices services;services.lifetime=transport;services.registry=transport->Registry();services.dispatch=&transport->Dispatch();
     services.send=[transport](auto id,auto packet) { return transport->Send(id,packet); };services.sendMutable=[transport](auto id,auto packet) { return transport->SendMutable(id,packet); };services.poll=[transport] { return transport->Poll(); };
-    services.address=[registry=services.registry](auto id) { return registry->Address(id); };services.peerAddress=[address=services.address](auto id) { return PeerText(address(id)); };services.close=[registry=services.registry](auto id) { registry->Disconnect(id); };return services;
+    services.address=[registry=services.registry](auto id) { return registry->Address(id); };services.peerAddress=[address=services.address](auto id) { return CampaignPeerAddressText(address(id)); };services.close=[registry=services.registry](auto id) { registry->Disconnect(id); };return services;
 }
 }
 // 기존 단독 미션은 같은 내부 두끝을 사용하며 buffered flag를 연결완료로 오인하지 않는다.
@@ -58,9 +60,10 @@ CampaignTransportServices BindEditorCampaignTransport(std::shared_ptr<EditorLoca
 // 하나의 실제 coordinator를 모든 writer/State/Chat/배치 부모에 공급하고 Session 수신 대여도 반납한다.
 CampaignTransportServices BindCompositeCampaignTransport(std::shared_ptr<CompositeMissionTransport> transport,const std::shared_ptr<void>& sessionOwner) {
     if (!transport) throw std::invalid_argument("복합 전송 실제 owner 누락");auto lease=transport->BindSession(sessionOwner);auto services=Basic(transport);
+    if (transport->Dispatch().Registration(2).receive) transport->Dispatch().Register(2,transport->Dispatch().Registration(2).receive); // 같은 bootstrap 몸체도 현재 Session을 사용하므로 대여의 실행 pin/정리 관문에 포함하고 detach 때 이전 전역 등록을 복원한다.
     services.detachSession=[lease] { lease->Detach(); }; // 자기 세대만 즉시 detach하며 실행 중 callback은 같은 owner pin으로 정상 복귀한다.
     services.callbacksActive=[transport] { return transport->ConnectionCallbackActive(); }; // table의 현재/반납 대여를 함께 조회한다.
-    services.address=[transport](auto id) { return transport->Address(id); };services.peerAddress=[address=services.address](auto id) { return PeerText(address(id)); }; // 다른 backend owner의 주소도 canonical 현재 ID 검증을 거친다.
+    services.address=[transport](auto id) { return transport->Address(id); };services.peerAddress=[address=services.address](auto id) { return CampaignPeerAddressText(address(id)); }; // 다른 backend owner의 주소도 canonical 현재 ID 검증을 거친다.
     services.serve=[transport](auto port) { transport->Serve(port); };services.listen=[transport](auto port) { transport->ListenLan(port); };services.connect=[transport](auto address,auto port) { transport->Connect(address,port); };services.assign=[transport](auto pending,auto owner) { transport->Assign(pending,owner); };services.flush=[transport] { transport->Flush(); };services.peer=[transport](auto owner) { return transport->Peer(owner); };
     services.connectPeerText=[transport](auto address,auto port) { transport->ConnectPeerText(address,port); }; // 저장 문자열도 같은 Registry/등록 대여/역할을 사용한다.
     services.connection=[transport](auto id) { return transport->Connection(id); };services.exists=[transport](auto id) { return transport->Exists(id); };services.isOpen=[transport](auto id) { return transport->IsOpen(id); };services.status=[transport](auto id) { return transport->Status(id); };return services;
