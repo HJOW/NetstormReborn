@@ -3,6 +3,7 @@
 #include "client/ClientChallengeGlobals.h"
 #include "client/GumpCreate.h"
 #include "o/RawMetaZoneCleanup.h"
+#include "o/RawCheckingFlag.h"
 #include <string>
 #include <string_view>
 
@@ -30,8 +31,19 @@ struct NativeMetaDisplayHooks { // 선택된 실제 하위는 필수이며 빈 c
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach; //Gump 가상+20의 실제 현재 부모/모드1이다.
     std::function<std::string(std::string_view)> translate; //BATTLEMASTER 안내만 원문 위치에서 현재 언어로 번역한다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //Squid/Metadisplay의 실제 복귀형 진단이다.
+    std::function<void(std::int32_t)> denominator; //004978d0의 같은 Renderer 배경 분모/실제 dirty 전역을 선택한다.
+    std::function<void(ScreenRect,std::uint32_t)> dirty; //00497580의 실제 viewport 변경 영역 등록이다.
+    std::function<GumpCreateNode*(std::uint32_t)> findGump; //00463ff0의 handle 조회이며 현재 객체가 없으면NULL을 반환한다.
+};
+struct NativeMetaPollGlobals { // 전체 Poll의 존/현재 TYPE·권한·진단 전역을 같은 실제 주소로 빌린다.
+    NativeMetaDisplayGlobals display; //참가자/전투/투영과 같은 CS·Pool·카메라·Gump 주소다.
+    std::span<std::uint8_t> zones;const std::uint32_t& zone; //00546908의51×144BYTE와005467b8의 현재 자기 존이다.
+    const std::uint32_t& excludedType;const std::int32_t& processTypeEnd; //00541074의 전체DWORD 비교와0054116c의 signed Process 상한이다.
+    o::RawCheckingFlag checking;const bool& metamap;const bool& boss; //finder의 현재 checking/메타모드/권한을 복사값으로 대체하지 않는다.
 };
 void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask,NativeMetaDisplayGlobals globals,const NativeMetaDisplayHooks& hooks); //0047d8c0 전체: 객체 갱신/이름표 내용/8자리 배치와 가시성을 원문 순서로 처리한다.
 void UpdateMetaBattle(std::uint32_t battle,NativeMetaDisplayGlobals globals,const NativeMetaDisplayHooks& hooks); //00479c40의 현재 전투섬 owner/HP/특수BYTE10/투영·재등록이다.
 void ClearMetaDisplayZones(std::span<std::uint8_t> records,const NativeMetaDisplayHooks& hooks); //00479560의51기록 순회/현재 양수존·비영SID 삭제→SID0이다.
+void PollMetaDisplay(NativeMetaPollGlobals globals,const NativeMetaDisplayHooks& hooks); //00479760 전체: 최초보정/분모→39참가자/9전투→현재50존/종속Gump의 가시성이다.
+void RefreshMetaPlayerList(std::uint32_t& current,const NativeMetaDisplayHooks& hooks); //0047cab0의 현재 목록 재그리기→현재 포인터 재조회→visible/루트부착이다.
 }

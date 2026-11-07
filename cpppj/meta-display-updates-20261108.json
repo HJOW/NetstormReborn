@@ -27,7 +27,7 @@
       "004248a0",
       "0042b050"
     ],
-    "participant": "실제known/active/SID/dead·mask1 객체/마스크4 내용/마스크6 배치·최종 visible/attach",
+    "participant": "실제known/active/SID/raw+0Bh bit0·mask1 객체/마스크4 내용/마스크6 배치·최종 visible/attach",
     "battle": "현재flags/owner·WORD0/HP0/특수BYTE10·1096투영/기존배치시 move",
     "labels": "실제serial/현재같은노드·BETA>DEMO/자기글꼴/명칭/원문번역/BATTLEMASTER·8자리",
     "zoneCleanup": "기존00479520 본체 재사용/51기록·양수존·비영SID·실제삭제뒤0",

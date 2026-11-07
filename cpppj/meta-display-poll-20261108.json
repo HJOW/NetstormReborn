@@ -1,0 +1,70 @@
+{
+  "unit": 1098,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp/NetstormRoot",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12397568,
+      "sha256": "0cae209ca27eaad1a75bbad0508984192e1f25302c4e360a494abbf81ca6736b"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "e979f036b8abf59d30daf0f9b1e652e109e55cbb79d0671c9558f2f79e001451"
+    }
+  },
+  "staticAudit": {
+    "nativeFunctions": [
+      "00479760:full",
+      "0047cab0:full",
+      "004b22d0",
+      "004b1b80",
+      "004b1bd0",
+      "004b1bf0"
+    ],
+    "poll": "known→최초보정/분모→현재카메라DWORD/flags→39참가자→9전투→다시현재카메라관문→50존",
+    "nativeCorrections": [
+      "존 owner 카운터는별도esp+14이며투영높이와공유하지않음",
+      "존가시성은방금받은esp+20 clip을사용"
+    ],
+    "finder": "next선저장·TYPE<70·전체DWORD excluded 비교·signed Process상한·현재Gump handle",
+    "playerList": "redraw뒤현재포인터재조회·visible·parent0/mode0"
+  },
+  "integration": {
+    "fullPollAndListBodiesCompiled": true,
+    "samePlayerListOwnerAdded": true,
+    "actualDisplayHooksBound": false,
+    "fullMetaSceneCreationApplied": false,
+    "newReplyRegistered": false,
+    "meta28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "newRoot": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "0047dd60 전체/CS 실제 수신·가상표·객체/카메라/Gump·HTML 장치 접합",
+    "1095송신/1096투영/1097갱신/1098Poll과1dh/28..33실제등록",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5",
+    "한국어 후속→Edit 시나리오 UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03/HJOW-Athlon",
+    "lastRoot": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}
