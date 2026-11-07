@@ -1,0 +1,82 @@
+{
+  "unit": 1065,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12365824,
+    "exeSha256": "16d80aadd1a345e53a8ec81e65fa08c8a34c0eb3c4324f91d2e7520f87c74907",
+    "exeUnchangedFrom1064": false
+  },
+  "scope": [
+    "Root16h 요청→0Fh 응답/추천 존·현재 활성 수·평균 레벨·친구 최대16건",
+    "실제 CCh2b80BYTE 뷰/현재 토큰 조회·R 전송/observer·음수 응답 guard 접합",
+    "17h 응답이라는 현행 인계 오류 정정과 제공 R/10.78 존 항목 폭 차이 명시"
+  ],
+  "nativeAudit": {
+    "responseType": "004756e5 PE004cd27e BYTE0F / version1 / initialLength0→4",
+    "responseCapacity": 253,
+    "wireVersion": "10.71; 제품 표시11.01과 구분",
+    "rootServerList": "00475697/69e 지역 begin/end0 뒤 변경 없음. checksum 양쪽 분기 길이0",
+    "recommendation": "signed IMUL 하위DWORD/IDIV43·빈 존 하강→가득 찬 존 상승/하강→최초 추천 복귀",
+    "participants": "0044d050/00456e70: 1..39 +64h DWORD&1 / +5eh BYTE 평균",
+    "friends": "0044d3b0: 0..39 +4 subscriber 비교, 활성 관문 없음; 요청 순서/중복 유지",
+    "pendingGuard": "004754e0 lower PendingTransceiver, 송신 뒤 현재 sender로00475520→ClosePending",
+    "entryWidthMismatch": "R00443d40=3 BYTE, client0040a110=47 BYTE, client0040a130 friend offset는여전히3 BYTE; 실제 호환 미해결"
+  },
+  "runtime": {
+    "rootDirectoryComponentImplemented": true,
+    "explicitInstallBindsRealTransport": true,
+    "rootRuntimeInstallsReceiver": false,
+    "rootExeTargetExists": false,
+    "challengeStorageManagerExists": false,
+    "client0FReceiverConnected": false,
+    "client1DReceiverConnected": false
+  },
+  "nativeReferences": [
+    "R00475660",
+    "R00443c20",
+    "R00444180",
+    "R00443d40",
+    "R00443d80",
+    "R004441f0",
+    "R0044d050",
+    "R0044d9d0",
+    "R0044d3b0",
+    "R00456e70",
+    "R004754e0",
+    "R00475520",
+    "R00482970",
+    "10.78 0040a110",
+    "10.78 0040a130",
+    "10.78 004b4250"
+  ],
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "새R.exe/실제 초기화·옵션·CCh 생성/관리·Root/CS나머지 수신·보조 객체·시계/기록/formatter·호출",
+    "0Fh 존 항목47/3BYTE 차이 복원/안전한 클라이언트 수신·1dh 응답·실제 메타",
+    "OS launch·수동 검색/28~33·메타/LAN/Outpost/checking5·한국어 후속·Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
