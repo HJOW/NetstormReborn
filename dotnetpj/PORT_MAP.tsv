@@ -601,3 +601,5 @@ cpppj/src/o/RawSquidContainedUnpop.h	Netstorm.Core/Original/RawContainedLink.cs	
 cpppj/src/o/RawSquidContainedUnpop.cpp	Netstorm.Core/Original/RawContainedLink.cs	f83db66ca229cc8fe9676d8ed52787277768869d	port
 cpppj/src/o/RawFormAttach.h	Netstorm.Core/Original/RawFormAttach.cs	d678fcad3197841ae8398e840e5c9d2bbcbf7c79	L1
 cpppj/src/o/RawFormAttach.cpp	Netstorm.Core/Original/RawFormAttach.cs	d678fcad3197841ae8398e840e5c9d2bbcbf7c79	L1
+cpppj/src/o/RawContentAttach.h	Netstorm.Core/Original/RawContentAttach.cs	f83db66ca229cc8fe9676d8ed52787277768869d	L1
+cpppj/src/o/RawContentAttach.cpp	Netstorm.Core/Original/RawContentAttach.cs	f83db66ca229cc8fe9676d8ed52787277768869d	L1
