@@ -12,18 +12,18 @@
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-07, 단위 기록 0.175 기준 — `/goal` 지시로 재개 후 작업 중)
+### 0.1 현재 값 (2026-11-07, 단위 기록 0.176 기준 — `/goal` 지시로 재개 후 작업 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.175(F2d 서피스 월드 바람)이며, 다음 단위는 F2d·F3 나머지(`RawSurfaceWorld` 본체·`RawFortWorldLoadBinding`·`RawCampaignSession` 연결)이다. |
-| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, `RawFortWorldLoadBinding`·F2d 나머지·F3 미착수). R5 이후는 미착수 |
+| 진행 상태 | **재개 후 작업 진행 중(`/goal` 지시).** 전체 목표는 미완료다. 최근 완료 단위는 0.176(F2d 게임 난수·보드 각도·바람 진행)이며, 다음 단위는 F2d·F3 나머지(`RawSurfaceWorld` 본체·`RawFortWorldLoadBinding`·`RawCampaignSession` 연결)이다. |
+| 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 일부 이식(Template 저장소 TS0~TS6과 Fort 단계 F1·F2a~F2c-12·연결 본체·전수 재생·Player Core·초기화·Chat·참여·장부·갱신·월드 본체 10모듈 완료, R4 지형·섬 생성 1차 12모듈·2차 5모듈 완료, 게임 난수·보드 각도·바람 진행 완료, `RawFortWorldLoadBinding`·F2d 나머지·F3 미착수). R5 이후는 미착수 |
 | 실행·플레이 가능 여부 | 플레이 가능한 기본 실행은 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)의 1-1·1-2 근사 플레이다. 새 경로 호스트 `Netstorm.Client.Host`는 타이틀·메인 메뉴 등 메뉴 계열 화면 일부까지이고 미션 월드는 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 아직 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.174 `31d4dce3 / 20261107-97 DN`(F2c 일반지형 요청형, 이전: 0.173 `708b2556 / 20261107-96 DN`, 0.172 `06a773fd / 20261107-95 DN`). |
-| 검사 | 0.175에서 Release **Core 집중 9개**(바람 직접 3개 + 무결성·매니페스트 6개) 통과, 실패·건너뜀 0. Core 전체는 시간 관계로 완주하지 못했으나(0.158 기준 비X86 1,049개 통과가 마지막 완주), 빌드 경고·오류 0이다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.175 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
-| 포트 맵 | `PORT_MAP.tsv` 총 557줄(자료 552행: L1 315, port 237)이다. 0.175에서 1행(port 1)을 더했다. 단위별 증가 내역은 0.155~0.175 기록과 이관 파일에 있다. |
-| fixture | 연결 225개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
+| 마지막 구현 커밋 | 0.175 `a1fe899c / 20261107-98 DN`(F2d 서피스 월드 바람, 이전: 0.174 `31d4dce3 / 20261107-97 DN`, 0.173 `708b2556 / 20261107-96 DN`). |
+| 검사 | 0.176에서 Release **Core 전체 1,416개** 통과, 실패·건너뜀 0(신규 18개: 난수 직접 11개·각도 1088행 전수 1개+직접 3개·바람 1920행 전수 1개+직접 2개, 무결성·매니페스트 포함 집중 25개 통과). 빌드 경고·오류 0이다. Client·Assets는 0.164 값을 유지한다. 단위별 집중 검사·변이 검사 수는 0.154~0.176 기록과 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)의 0.127~0.153을 본다. |
+| 포트 맵 | `PORT_MAP.tsv` 총 565줄(자료 560행: L1 318, port 242)이다. 0.176에서 8행(L1 3, port 5)을 더했다. 단위별 증가 내역은 0.155~0.176 기록과 이관 파일에 있다. |
+| fixture | 연결 227개(`cpp_sync.py` 0종료). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다(0.167은 월드 본체 기준 `fe3d121d`). 영향 검토 전이라 `reflected-commit`(`f95a8db2`)과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한다. |
 
@@ -207,6 +207,7 @@
     - [x] F2d 서피스 월드 권한(`RawAuthorityState`·초기값/독립/관문 직접 3종, 0.173)
     - [x] F2c 일반지형 요청형(`NormalTerrainBranch`·`NormalTerrainRequest`·농지 후처리 진단 직접 6종, 0.174)
     - [x] F2d 서피스 월드 바람(`AmbientWindState`·초기값/독립/읽기쓰기 직접 3종, 0.175)
+    - [x] F2d 게임 난수·보드 각도·바람 진행(`GameRandom`·`CrtRandom`·`RawGameRandomSeed` 직접 11종, `BoardAngleDiagnostics`·`Normalize` 1088행 전수 1종+직접 3종, `RawAmbientWind.Step` 1920행 전수 1종+직접 2종, 0.176 — 0.175의 `StepAmbientWind` 잔여 해소)
     - [ ] F2c 나머지: `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요)
     - [ ] F2d 나머지: `RawSurfaceWorld`
     - [ ] F3: `RawCampaignSession` 연결. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작하며, TS·F 단계만으로는 화면 변화가 거의 없다.
@@ -239,7 +240,7 @@
   - 0.152: `LocalMissionTransport`는 바이트 큐 골격만 있고 검사가 없다. Zone·로그인·분배 검사는 F3 세션 연결 때, TCP/IP 소켓은 3차 로컬 구현 때 `LocalNetworkPolicy`의 루프백 전용으로 더한다.
   - 0.153: `AddRandom_Native288`의 대본 GameMenu 후반부(`QueueScriptCommand`·`GameMenuScriptCode`)는 R6에서 옮긴다.
   - 0.154: 판본 분기 잔여와 탐색기 발자국 조건 차이, 옮기지 않은 지형 Builder 계열 검사는 아래 0.154 기록의 '남은 것'과 'C#에서 달라진 모양' (6)을 따른다.
-  - 0.175: `StepAmbientWind`는 `GameRandom` 미이식으로 옮기지 않았다(`RawSurfaceStorage.UpdateAmbientWind`·F3에서 잇는다).
+  - 0.175: `StepAmbientWind`는 `GameRandom` 미이식으로 옮기지 않았다 — 0.176에서 해소했다(`RawSurfaceStorage.UpdateAmbientWind`·F3 연결은 남는다).
 
 ### 0.10~0.153 — 이관
 
@@ -280,6 +281,16 @@
 - **PORT_MAP:** 신규 2행(`RawFortPriestPreparation.cpp/.h` → `RawFortPriestPreparation.cs`, 모두 L1, 기준 `b8ce42c7`). 총 509행(L1 291, port 218).
 - **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 보호 원본은 새 검사가 읽기·쓰기 모두 풀 범위 안에서만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리에서 다른 세션의 cpppj 미커밋 변경(`cpppj/tests/SubscriberGlobalsTests.cpp` 1개)은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
 - **남은 것:** F2c 나머지·F2d·F3부터다. `RawFortWorldLoadBinding`(R4 지형 `RawNormalTerrainWorldBinding` 및 `RawSurfaceWorld` 필요), F2d World·저장 나머지(`RawSurfaceWorld` 63KB·`RawSurfaceStorage` 등 월드 스택), F3 `RawCampaignSession` 연결 순이다. `RawIslandPostPop`·`RawIslandLifecycle`의 x86 전수 재생(`islandpostpop-x86.tsv` 1988행·`islandlifecycle-x86.tsv` 2055행)은 월드 스택 하네스(생성·소유자·Pop 실제 모듈)가 필요해 F3 실제 조립 때 잇는다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 지시에 따라 건너뛴다. 멀티플레이는 3차 로컬 구현 때 `LocalNetworkPolicy` 루프백 전용으로 사전 구현만 잇는다.
+
+### 0.176 단위 기록 — F2d 게임 난수·보드 각도·바람 진행 이식 (2026-11-07, HJOW-Athlon)
+
+- **범위:** 게임 난수 3종(`GameRandom`의 `Next`·`State`·`SetState`, `CrtRandom`의 `Next`·`Borrow`·`Thread`·`SetState`, `RawGameRandomSeed`의 `NextCrt`·`Initialize`·`Reseed`), 보드 각도 2종(`BoardAngleDiagnostics`·`RawBoardAngle.Normalize`), 바람 진행 1종(`RawAmbientWind.Step`) 및 직접 검사 14종+전수 2종. `RawSurfaceStorage.UpdateAmbientWind` 본체·`RawSurfaceWorld` 본체·F3 세션 연결은 제외했다.
+- **구현(새 파일 2개, 기존 파일 수정 1개):** `Netstorm.Core/Original/RawGameRandom.cs`(게임·CRT·시드, 구 경로 `Simulation/NetstormRandom`·`MsvcRandom`은 동결 유지하며 신구 대응을 주석에 명시), `Netstorm.Core/Original/RawBoardAngle.cs`(진단 묶음·판본별 끝각), `Netstorm.Core/Original/RawAmbientWind.cs` 확장(정적 `RawAmbientWind.Step` — 판본별 잡음 곱셈 순서·`Math.Atan2`·끝각 위임). 검사 `RawGameRandomTests.cs`(직접 11개)·`RawBoardAngleTests.cs`(1088행 전수 1개+직접 3개)·`RawAmbientWindStepTests.cs`(1920행 전수 1개+직접 2개). **기존 파일 수정 1개:** `Netstorm.Core.Tests.csproj`(fixture 링크 2행).
+- **C#에서 달라진 모양:** (1) 원문 `uint32_t&` 공유 상태(CRT 빌림·시드의 CRT·모드)는 외부 `UIntBox` 공유 상자로 옮겼다(0.168 규칙). (2) 스레드 지역 공유 난수는 `ThreadLocal<CrtRandom>`으로 옮겼다. (3) C++ 나머지 연산은 C# 배정밀도 `%`로 옮겼다(0 절삭 나머지 동일). (4) 끝각 상수는 `359.9999f` 리터럴로 옮겼다(비트 `0x43b3fffd` 일치 확인). (5) `BoardAngleDiagnostics`의 검사 뷰는 호출 때마다 다시 읽는 대리자 바인딩으로 옮겼다(원문 비소유 주소 의미). (6) 구 경로 `NetstormRandom`·`MsvcRandom`과 식이 같으나 세션 조립 전까지 병존하며 은퇴는 F3에서 한다.
+- **검증:** 집중 25건 통과(난수 직접 11개·각도 전수 1088행+직접 3개·바람 전수 1920행+직접 2개+바람 상태 3개+무결성·매니페스트 4개 중 집중 해당). **불일치 0.** fixture 2개를 링크·등록했다(총 227개, `cpp_sync.py` 0종료). 변이 검사 2종을 검출하고 원복했다(M1 게임 곱셈 `0x10003`→`0x10004` 시 직접·바람 전수 3개 실패, M2 끝각 `359.9999f`→`359.0f` 시 각도 3개 실패). 원복 뒤 `--no-incremental` 전체 빌드로 집중 25개 통과를 재확인하고 Core 전체 **1,416개** 통과(8분 17초), 실패·건너뜀 0, 솔루션 빌드 경고·오류 0을 확인했다. 증분 빌드가 변이 바이너리를 그대로 돌린 사례가 있어 원복 확인은 `--no-incremental`로 했다.
+- **PORT_MAP:** 신규 8행(`SpStore.h`·`CrtRandom.h/.cpp`·`RawGameRandomSeed.h/.cpp` 5행 port, `RawBoardAngle.h/.cpp` 2행 L1, `RawAmbientWind.cpp` 1행 L1). 총 565줄(자료 560행: L1 318, port 242).
+- **원본·CD 파일은 수정하지 않았고 게임을 실행하지 않았다.** 새 검사는 값·배열 범위 안의 읽기·계산만 했다. 외부 접속 관점: 이 단위는 소켓·HTTP 코드를 추가하지 않았다. 같은 작업 트리의 다른 세션 cpppj 변경·미커밋 파일(`cpppj/src/root/` 5개)은 건드리지 않고 보존했다. `options.cfg`는 만지지 않았다. 빌드·검사 외에 별도 창이 뜨는 작업은 없었다. 영향 검토 전이라 `reflected-commit`·PORT_MAP `base`는 올리지 않았다(신규 행의 기준만 파일별 HEAD).
+- **남은 것:** F2d 나머지·F3부터다(0.9절 참조). 0.175의 `StepAmbientWind` 잔여는 해소됐다.
 
 ### 0.175 단위 기록 — F2d 서피스 월드 바람 이식 (2026-11-07, HJOW-Athlon)
 
