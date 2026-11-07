@@ -91,6 +91,12 @@ public sealed class RawSquidForms
     /// <summary>바인딩된 현재 부착 장치다. 없으면 기존 직접 순서로 부착한다. 2026-11-07 F2d Forms 부착 바인딩 이식에서 추가됐다.</summary>
     private FormAttachHooks? _boundAttach;
 
+    /// <summary>바인딩된 현재 Pop 장치다. 없으면 기존 직접 순서로 Pop 한다. 2026-11-07 F2d Form Pop 바인딩 이식에서 추가됐다.</summary>
+    private FormPopHooks? _boundPop;
+
+    /// <summary>장기 공유 깊이를 빌리지 않는 독립 편의 객체의 현재 DWORD다. 2026-11-07 F2d Form Pop 바인딩 이식에서 추가됐다.</summary>
+    private uint _localPostPopDepth;
+
     /// <summary>
     /// Form 수신 몸체를 만든다. 풀은 이 객체보다 오래 살아야 한다.
     /// </summary>
@@ -287,12 +293,30 @@ public sealed class RawSquidForms
     }
 
     /// <summary>
+    /// 현재 World의 같은 깊이/진단과 선택된 실제 +20을 대여한다.
+    /// 바인딩 전에는 기존 직접 순서를 그대로 둔다(기존 검사와 L1 대조 유지).
+    /// </summary>
+    /// <param name="hooks">빌릴 Pop 장치 묶음이다.</param>
+    public void BindPop(FormPopHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        _boundPop = hooks.Clone();
+    }
+
+    /// <summary>
     /// 원본 004ac560 의 순서를 지켜 void 를 먼저 끄고, 필요한 서버 전송을 한 번 부른 뒤 임시 비트를 되돌린다.
+    /// 바인딩된 장치가 있으면 공통 Pop 몸체에 현재 장치를 채워 위임한다.
     /// </summary>
     /// <param name="form">Pop 할 Form 번호.</param>
     /// <param name="flags">Pop 플래그.</param>
     public void Pop(int form, uint flags)
     {
+        if (_boundPop is not null)
+        {
+            PopBound(form, flags);
+            return;
+        }
+
         flags = ValidatePop(form, flags);
         _pool.RawSlot(form)[StateOffset] &= unchecked((byte)~VoidBit);
         if (_pool.IsServer && (flags & TransmitMask) == 0)
@@ -304,6 +328,46 @@ public sealed class RawSquidForms
             _transmit!(form, flags);
             _pool.RawSlot(form)[StateOffset] &= unchecked((byte)~TransmittingBit);
         }
+    }
+
+    /// <summary>바인딩된 현재 장치에 풀 기본값을 채워 공통 Pop 몸체에 위임한다. 2026-11-07 F2d Form Pop 바인딩 이식에서 추가됐다.</summary>
+    /// <param name="form">Pop 할 Form 번호.</param>
+    /// <param name="flags">Pop 플래그.</param>
+    private void PopBound(int form, uint flags)
+    {
+        FormPopHooks effective = _boundPop!.Clone();
+        // 호출 위치의 현재 장기 권한이다
+        effective.Server ??= () => _pool.IsServer;
+        // 원문 고정 -1/-1/0을 쓰는 기존 Form 전송 경계다
+        effective.Transmit ??= (sid, _, _, _, value) =>
+        {
+            if (_transmit is null)
+            {
+                throw new InvalidOperationException("현재 공통 Form Pop 전송 미연결");
+            }
+
+            _transmit(sid, value);
+        };
+        // 독립 미연결 입력의 명시 지역 깊이다
+        effective.Depth ??= () => _localPostPopDepth;
+        // 원문 DWORD wrap을 보존한다
+        effective.SetDepth ??= value => _localPostPopDepth = value;
+        // 현재 실제 VT가 네 Form 빈 후처리인지 선택한다
+        effective.PostPop ??= (sid, table, _) =>
+        {
+            foreach (uint type in Types)
+            {
+                // PE004ac1d0/CD004abab0의 같은 공유 DWORD 감소다
+                if (table == Vtable(type))
+                {
+                    effective.SetDepth!(effective.Depth!() - 1u);
+                    return;
+                }
+            }
+
+            throw new InvalidOperationException("공통 Form Pop의 선택된 현재 VT+20 미연결");
+        };
+        RawFormPop.PopCommonForm(_pool, form, flags, effective);
     }
 
     /// <summary>
