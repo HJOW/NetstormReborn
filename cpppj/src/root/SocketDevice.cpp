@@ -88,6 +88,10 @@ std::int32_t SocketDevice::Write(std::span<const std::uint8_t> bytes,const std::
     const auto saved=result<0 ? WSAGetLastError():0;if (result<0) error_=saved;nonblocking=0;if (ioctlsocket(Socket(socket_),FIONBIO,&nonblocking)) return Error(WSAGetLastError());
     if (result<0) return saved==WSAEWOULDBLOCK ? 0:Error(saved);return result; // would-block만 원문처럼0이며 짧은 성공 길이는 감추지 않는다.
 }
+std::array<std::uint8_t,20> SocketDevice::QueryPeerAddress() {
+    sockaddr_in address{};int size=sizeof(address);if (getpeername(Socket(socket_),reinterpret_cast<sockaddr*>(&address),&size)<0) error_=WSAGetLastError(); // 원문은 이 조회 오류에서2000 flag를 추가하지 않는다.
+    std::memcpy(peer_.data(),&address,sizeof(address));return peer_; //896d0은 앞16BYTE만 쓰므로 기존 프로토콜 tail을 보존한다.
+}
 std::array<std::uint8_t,20> SocketDevice::LocalAddress() {
     sockaddr_in address{};int size=sizeof(address);if (getsockname(Socket(socket_),reinterpret_cast<sockaddr*>(&address),&size)==SOCKET_ERROR) { Error(WSAGetLastError());return {}; }return Address(address);
 }

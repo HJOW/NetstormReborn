@@ -12,6 +12,7 @@
 add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE o/RawLocalServerDiscovery.cpp o/RawLocalServerDiscovery.h) #1057검색몸체와1058실제UDP/상태접합이다.새R서버실행은후속이다.
 target_sources(netstorm PRIVATE client/LocalUdpTransport.cpp client/LocalUdpTransport.h) #1058:실제UDP12를같은연결/패킷표에연결한다.원본R서버복원은별도후속이다.
+target_sources(netstorm PRIVATE root/TransceiverTransport.cpp root/TransceiverTransport.h root/TransceiverInternals.h root/TransceiverReceive.cpp root/TransceiverSend.cpp) #1064:R 고정 전송 노드/버퍼/번호·닫힘과 실제 소켓/메인 부모를 연결한다.
 target_sources(netstorm PRIVATE root/SocketDevice.cpp root/SocketDevice.h o/RawPacketFrame.cpp o/RawPacketFrame.h) #1063:R 실제 WinSock 장치와 Player 없는 공통 프레임 분배다.
 target_sources(netstorm PRIVATE root/NetworkPump.cpp root/NetworkPump.h) #1062:R의256/32/51x40 통신 부모와64칸 select 집합을 분리해 복원한다.
 target_sources(netstorm PRIVATE root/ConnectionState.cpp root/ConnectionState.h client/NativeLocalServerLaunch.cpp client/NativeLocalServerLaunch.h) #1059:R전용번호/모드와실제37검색부모이며새서버OS장치는후속이다.

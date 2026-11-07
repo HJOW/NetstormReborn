@@ -1,0 +1,83 @@
+{
+  "unit": 1064,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp",
+    "configuration": "Release/x64",
+    "firstExitCode": 0,
+    "finalExitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12365824,
+    "exeSha256": "592d70f40d8d453392092a637f483953a718f077745bdcd2c425a47a089a545a"
+  },
+  "scope": [
+    "R TransceiverTransport의 실제 UDP512/listener8·accepted4096/부분 수신/observer·공통 분배/숫자 토큰·깊이 닫힘",
+    "직접/집합 송신·부분 flush/포인터·한계/버퍼 모드·소멸 flush·실제 OS/번호표/메인 부모 접합",
+    "현재 connection 참조→생존 토큰 조회·2번 종료 수신 명시 등록·getpeername 실제 오류/주소 조회"
+  ],
+  "runtime": {
+    "rootTransceiverImplemented": true,
+    "socketDeviceBindingImplemented": true,
+    "networkPumpBindingImplemented": true,
+    "rootExeTargetExists": false,
+    "rootRuntimeCallsPump": false,
+    "rootManagerConnected": false,
+    "challengeManagerConnected": false,
+    "challengeAndAuxiliaryHooksRequired": true
+  },
+  "nativeAudit": {
+    "pendingCapacity": "00485be0 CMP/SETL: signed pendingCount <31. data초기1 포함해 최대30개 수락",
+    "observer": "004835f0=0/00483610=no-op: 매 송신 observer1이며 byte0 highbit marker 아님",
+    "close": "00484820 killed/depth0→00484620 flush/버퍼/소켓 반납",
+    "buffer": "004856a0 enable마다4/0 재설정·disable먼저flush. write realloc은+38 논리 크기 변경, 입력 물리 별도",
+    "header": "00444b40은type BYTE만 쓰고00444c50/483e00은no-op. control/집합 BYTE0 보존"
+  },
+  "nativeReferences": [
+    "R004840b0",
+    "R00484150",
+    "R004842a0",
+    "R00484820",
+    "R00484620",
+    "R004848c0",
+    "R00484e90",
+    "R00485250",
+    "R004853e0",
+    "R004856a0",
+    "R00485a20",
+    "R00485aa0",
+    "R00485be0",
+    "R004835f0",
+    "R00483610",
+    "R00444b40",
+    "R00444c50",
+    "R00489620",
+    "R004896d0",
+    "R00476b80"
+  ],
+  "executions": {
+    "newUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "새 R.exe/실제 프로세스 초기화·옵션·Root/CS 관리자/수신·보조 객체/시계/기록·주소 formatter",
+    "R 지연 호출 큐/세부 packet trace·OS launch·17h/1dh 응답",
+    "수동 검색/28~33·메타/LAN/Outpost/checking5·한국어 후속·Edit 시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}

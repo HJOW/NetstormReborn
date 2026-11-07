@@ -18,6 +18,7 @@ public:
     std::int32_t Send(std::span<const std::uint8_t> bytes); //88e90의 FIONBIO1→send→FIONBIO0이며 would-block은0/부분 송신은실제길이다.
     std::int32_t SendTo(std::span<const std::uint8_t> bytes,std::span<const std::uint8_t,20> destination); // 실제 로컬 IPv4/broadcast sendto만 허용한다. DNS/구 서버 조회를 하지 않는다.
     std::int32_t Status(); //88590의 UDP0/IPv4 stream의 write/error select0 판정이다.
+    std::array<std::uint8_t,20> QueryPeerAddress(); //89620의 실제 getpeername/마지막 오류를 조회하며 주소 마지막DWORD를 보존한다.
     std::array<std::uint8_t,20> LocalAddress(); // 실제 getsockname 결과이며 wildcard를 임의 호스트 IP로 대체하지 않는다.
     const std::array<std::uint8_t,20>& PeerAddress() const { return peer_; } // accept가 받은 같은 실제 peer 주소다.
     std::uintptr_t Handle() const { return socket_; } // OS 핸들의 포인터 폭을 유지한다.
