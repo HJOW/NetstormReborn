@@ -1,0 +1,60 @@
+{
+  "unit": 1117,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12621312,
+      "sha256": "1d2d45c841241bb44a4c50c1a3f3a148ffde57e28d9f4aab8277f26cfb1ddbfa"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "e4d9ec9c0cd29e132502a3016b8baf46381eb60151eff1aaf08b65e40af70728"
+    }
+  },
+  "staticAudit": {
+    "getter": "0041c410 실제선택포인터→+c 조건부번역·현재옵션BYTE조회없음",
+    "addresses": "보호PE22레코드/76선택주소/23경계전체대조",
+    "identity": "현재Client/Native RawXlat/한국어·기존Xlat의동일저장소포인터정체성·폴백은원문32비트주소",
+    "temporary": "임시UTF8/ANSI뷰주소는반환하지않고실제소유번역주소만64비트영역표식과함께반환",
+    "api": "기존Client::Translate/XlatTable::Translate 본문정적동일·추가View조회만사용"
+  },
+  "integration": {
+    "compiledInProduct": true,
+    "battleInfoHandleBound": false,
+    "menuIdentityApiAvailable": true,
+    "menuChildrenBound": false,
+    "reply1dRegistered": false,
+    "states28Through33Dispatched": false
+  },
+  "protectedFiles": 2800,
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "remaining": [
+    "같은실제메뉴/현재TYPE별칭·492960·1115/1116/1117실제입력분배",
+    "CS 수신/생성·카메라Rig/HTML→1dh/28~33등록/1095송신 상태호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어후속→Edit시나리오UI"
+  ],
+  "decompilation": {
+    "full": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "rerun": false
+  }
+}

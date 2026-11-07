@@ -54,6 +54,16 @@ const std::array<BattleOptionTextDefinition,22> kDefinitions{{ //원문 순서�
 }
 // 원문 필드 접근 위치에서 실제 정적 표의 범위만 확인한다.
 const BattleOptionTextDefinition& BattleOptionText(std::uint32_t index) { return kDefinitions.at(index); }
+// 현재옵션을읽지않고원문선택포인터/번역플래그를같은정적표에서조회한다.
+std::string BattleOptionChoiceText(std::uint32_t index,std::uint32_t selected,const std::function<std::string(std::string_view)>& translate) {
+    const auto& definition=BattleOptionText(index);if (selected>=definition.values.size()) throw std::out_of_range("BattleOptions 실제 선택 포인터 표 범위");const auto value=definition.values[selected];if (!definition.translateValue) return std::string(value);if (!translate) throw std::logic_error("BattleOptions 현재 번역기 미연결");return translate(value);
+}
+namespace { //보호10.78의정적선택문자열주소는호스트메모리로역참조하지않는다.
+constexpr std::array<std::uint32_t,76> kChoiceSourceAddresses{0x502118U,0x502104U,0x5020f0U,0x5020dcU,0x5020c8U,0x501614U,0x5015f4U,0x501610U,0x502278U,0x502270U,0x502268U,0x50225cU,0x502254U,0x50224cU,0x502244U,0x50223cU,0x502230U,0x5021dcU,0x5021ccU,0x5021b0U,0x502270U,0x5021a8U,0x50219cU,0x5021c8U,0x502270U,0x5021c0U,0x5021b8U,0x50220cU,0x502208U,0x502140U,0x5021c8U,0x502270U,0x5021c0U,0x502140U,0x50213cU,0x50220cU,0x502208U,0x50220cU,0x502208U,0x50220cU,0x502208U,0x5021e8U,0x502134U,0x50212cU,0x50222cU,0x502228U,0x502224U,0x502220U,0x502218U,0x502210U,0x502200U,0x5021f8U,0x5021f0U,0x5021e8U,0x5021c8U,0x502270U,0x5021c0U,0x5021b8U,0x500fecU,0x502194U,0x50218cU,0x500fecU,0x502184U,0x50217cU,0x502174U,0x50216cU,0x500fecU,0x502184U,0x50217cU,0x502174U,0x50216cU,0x502164U,0x50215cU,0x502154U,0x50214cU,0x502144U}; //원문22레코드의모든76선택포인터다.
+constexpr std::array<std::size_t,23> kChoiceSourceOffsets{0,5,8,11,13,17,19,23,27,29,33,35,37,39,41,44,50,54,58,61,66,72,76}; //각레코드의시작과최종76경계다.
+}
+//현재표의정상선택범위를먼저검증하고그선택의원문주소값을반환한다.
+std::uint32_t BattleOptionChoiceAddress(std::uint32_t index,std::uint32_t selected) { if (selected>=BattleOptionText(index).values.size()) throw std::out_of_range("BattleOptions 실제 선택 주소 범위");return kChoiceSourceAddresses[kChoiceSourceOffsets[index]+selected]; }
 // BYTE 읽기와 포인터 조회 뒤에만 조건부 번역을 실행한다.
 std::string BattleOptionValueText(std::span<const std::uint8_t> options,std::uint32_t index,const std::function<std::string(std::string_view)>& translate) {
     if (index>=options.size()) throw std::out_of_range("BattleOptions 현재 BYTE 물리 범위");const auto selected=options[index];const auto& definition=BattleOptionText(index);if (selected>=definition.values.size()) throw std::out_of_range("BattleOptions 실제 선택 포인터 표 범위");const auto value=definition.values[selected];if (!definition.translateValue) return std::string(value);if (!translate) throw std::logic_error("BattleOptions 현재 번역기 미연결");return translate(value);

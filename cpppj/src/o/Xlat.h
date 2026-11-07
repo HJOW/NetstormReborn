@@ -12,6 +12,7 @@ public:
     explicit XlatTable(std::string text);
     // 원본 언어 번호 0·1은 원문, 나머지는 번역 실패 시 원문을 돌려준다.
     std::string Translate(std::string_view original, int languageNumber) const;
+    std::string_view TranslateView(std::string_view original,int languageNumber) const; //같은현재번역저장소를빌리며메뉴포인터비교가임시string주소를쓰지않도록한다.폴백은입력뷰그대로다.
     // 중복 원문을 제외한 실제 번역 키 개수.
     std::size_t Size() const;
 private:

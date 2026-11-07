@@ -1362,6 +1362,18 @@ std::string Client::Translate(std::string_view text) const {
     }
     return translations_ ? translations_->Translate(text, languageNumber_) : std::string(text);
 }
+// Native선택문자열비교는문자열내용대신같은원문/번역저장소의포인터정체성을사용한다.
+std::uint64_t Client::TranslationIdentity(std::string_view text,std::uint32_t sourceAddress) const {
+    constexpr std::uint64_t kOwnedText=std::uint64_t{1}<<63; //호스트번역포인터와보호PE의32비트원문주소영역을구별한다.
+    const auto identity=[sourceAddress](std::string_view input,std::string_view output) { return input.data()==output.data() ? std::uint64_t(sourceAddress):kOwnedText|static_cast<std::uint64_t>(reinterpret_cast<std::uintptr_t>(output.data())); }; //폴백입력뷰의임시주소는외부에노출하지않는다.
+    if (currentLanguage_==static_cast<std::int32_t>(kKoreanLanguageNumber)) return koreanTranslations_ ? identity(text,koreanTranslations_->TranslateView(text,currentLanguage_)):sourceAddress;
+    if (nativeTranslations_) {
+        if (currentLanguage_==0 || currentLanguage_==1) return sourceAddress;std::vector<std::uint8_t> bytes;
+        try { bytes=o::EncodeOriginalText(text); }catch (const std::invalid_argument&) { return sourceAddress; }
+        const std::string_view original(reinterpret_cast<const char*>(bytes.data()),bytes.size());return identity(original,nativeTranslations_->Translate(original,currentLanguage_));
+    }
+    return translations_ ? identity(text,translations_->TranslateView(text,languageNumber_)):sourceAddress;
+}
 
 }  // namespace netstorm::client
 

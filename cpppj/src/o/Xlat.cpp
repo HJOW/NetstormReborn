@@ -37,6 +37,10 @@ std::string XlatTable::Translate(std::string_view original, int languageNumber) 
     const auto found = translations_.find(std::string(original));
     return found == translations_.end() ? std::string(original) : found->second;
 }
+// 실제같은map값의수명만빌린다.기존복사반환API와언어/누락키조건은동일하다.
+std::string_view XlatTable::TranslateView(std::string_view original,int languageNumber) const {
+    if (languageNumber==0 || languageNumber==1) return original;const auto found=translations_.find(std::string(original));return found==translations_.end() ? original:std::string_view(found->second);
+}
 // 원본 중복 블록은 같은 키를 덮어쓰므로 최종 키 수만 센다.
 std::size_t XlatTable::Size() const { return translations_.size(); }
 }

@@ -284,6 +284,7 @@ public:
     bool Active() const;
     // 번역표로 글을 바꾼다(원본 FUN_004de9a0).
     std::string Translate(std::string_view text) const;
+    std::uint64_t TranslationIdentity(std::string_view text,std::uint32_t sourceAddress) const; //현재같은Xlat값의안정정체성이다.폴백은원문포인터값을유지하고임시UTF-8/ANSI버퍼주소는반환하지않는다.
     // 창 프로시저의 본체(원본 FUN_00436550). 정적 창 프로시저가 부른다.
     std::intptr_t HandleMessage(NativeHandle window, unsigned message, std::uintptr_t wParam, std::intptr_t lParam);
 private:
