@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE client/LocalServerProcess.h client/LocalServerProcess.cpp) #1092:메타37의새R 파일식별/Unicode 실제lan 실행·작업폴더와 자식핸들을 연결한다.
+
 target_sources(netstorm PRIVATE root/Server.h root/Server.cpp) #1091:같은 실제 서버 전역/모든 장기 모듈과 수신·파일·메인 hook을 최종owner로 묶는다.
 
 target_sources(netstorm PRIVATE root/ProcessTrace.h root/ProcessTrace.cpp) #1090:R 최종owner가 사용할 실제 로그/OS시각·사용자 홈 진단/스택·복귀 장치를 연결한다.

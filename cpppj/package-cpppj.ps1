@@ -3,7 +3,7 @@
     cpppj(C++ 클론) 배포판 압축파일(zip)을 만든다.
 
 .DESCRIPTION
-    클론 실행 파일(Netstorm.exe), Visual C++ 런타임 DLL, 게임 데이터(원본 10.78),
+    클론 실행 파일(Netstorm.exe), 재빌드 로컬 서버(R.exe), 두 실행 파일의 Visual C++ 런타임 DLL, 게임 데이터(원본 10.78),
     원본 CD 인트로 SMK(원천이 있을 때), 실행용 배치 파일(Netstorm.bat), 안내문을 하나의 zip 으로 묶는다.
     받은 사람이 압축을 풀고 Netstorm.bat 를 실행하면 별도 설치 없이 클론이 시작되도록 구성한다.
     (2026-10-23 신규. AGENTS.md 의 "배포판 압축파일 생성용 스크립트" 요구사항을 따른다.)
@@ -24,7 +24,7 @@
 
 .PARAMETER ExePath
     묶을 클론 실행 파일. 기본값은 cpppj\build\bin\Release\Netstorm.exe 이다.
-    직접 지정하면 빌드와 오래됨 검사를 하지 않는다.
+    직접 지정하면 빌드와 오래됨 검사를 하지 않는다. 같은 폴더의 새11.01 R.exe도 필요하며 원본 R.exe로 대신하지 않는다.
 
 .PARAMETER MovieSource
     인트로 SMK 원천 폴더다. 생략하면 게임 데이터의 MOVIE, 저장소 originalCD\MOVIE 순으로 찾는다.
@@ -90,6 +90,9 @@ $PackageRootName = 'NetstormReborn-cpppj'
 
 # 압축파일 최상위의 클론 이름이다. game/Netstorm.exe는 원본 리소스 자료이며 서로 다른 경로다.
 $ExeName = 'Netstorm.exe'
+
+# 클론 실행 파일과 같은 폴더에서 빌드된11.01 로컬 서버만 동봉한다. 원본 게임 자료의 R.exe는 사용하지 않는다.
+$RootExeName = 'R.exe'
 
 # 압축파일 안의 게임 데이터 폴더 이름이다. 실행 배치 파일이 `--run game` 으로 이 폴더를 가리킨다. (2026-10-23 신규)
 $GameFolderName = 'game'
@@ -262,7 +265,17 @@ function Get-NewestSourceTime {
     return $newest
 }
 
-# NetstormCpp 대상만 최대4개 병렬 작업의 Release 증분 빌드로 확인한다. 미구성 폴더는 먼저 구성한다.
+# 원본 R과 구분되는 현재 서버의 실제 파일버전/제품버전/식별 리소스를 읽기만 한다. 파일을 실행하지 않는다.
+function Test-RebuiltRootExecutable {
+    param([string] $File)
+    if (-not (Test-Path -LiteralPath $File -PathType Leaf)) { return $false }
+    $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($File)
+    return ($info.FileMajorPart -eq 11 -and $info.FileMinorPart -eq 1 -and $info.FileBuildPart -eq 0 -and $info.FilePrivatePart -eq 0 -and
+        $info.ProductMajorPart -eq 11 -and $info.ProductMinorPart -eq 1 -and $info.ProductBuildPart -eq 0 -and $info.ProductPrivatePart -eq 0 -and
+        $info.OriginalFilename -ieq 'R.exe')
+}
+
+# NetstormCpp와 의존 NetstormRoot를 최대4개 병렬 작업의 Release 증분 빌드로 확인한다. 미구성 폴더는 먼저 구성한다.
 # 시험 프로그램까지 빌드하면 오래 걸려 실행 파일 대상만 지정한다. (2026-10-23 신규)
 function Invoke-ExeBuild {
     $cmake = Find-CMakeTool
@@ -275,7 +288,7 @@ function Invoke-ExeBuild {
         & $cmake -S $CppRoot -B $buildDir
         if ($LASTEXITCODE -ne 0) { throw "cmake 구성에 실패했습니다(종료 코드 ${LASTEXITCODE})." }
     }
-    Write-Host 'NetstormCpp 를 Release 증분 빌드합니다(최대 4개 병렬 작업)...'
+    Write-Host 'NetstormCpp 및 새 R.exe를 Release 증분 빌드합니다(최대 4개 병렬 작업)...'
     # 생성기 공통 작업 상한이다. 최신 실행 파일도 CMake가 실제 포함 파일/리소스 의존성을 확인하게 한다.
     $buildArguments = @('--build', $buildDir, '--config', 'Release', '--target', 'NetstormCpp', '--parallel', '4')
     # Visual Studio의 내부 컴파일 작업도 제한한다. 다른 생성기에 MSBuild 전용 인자를 전달하지 않는다.
@@ -426,6 +439,7 @@ function New-ReadmeText {
         '',
         '[폴더 구성]',
         '  Netstorm.exe     클론 실행 파일',
+        '  R.exe             재빌드된 로컬 서버. 게임의 로컬 서버 시작 기능에서 사용합니다.',
         '  *.dll               Visual C++ 런타임 및 인트로 디코더',
         '  third-party\libsmacker\  디코더 라이선스와 대응 소스(동봉된 경우)',
         '  Netstorm.bat        창 모드 실행',
@@ -451,7 +465,7 @@ function New-ReadmeText {
         '[알림]',
         '- 첫 실행의 인트로는 동봉된 원본 언어별 SMK를 사용합니다. ESC/Space/좌우 클릭으로 건너뜁니다.',
         '- 원본의 CD 전용 영상은 이 배포본에서 game\MOVIE에 동봉됩니다. 영상 원천이 없으면 생략됩니다.',
-        '- 개발 중인 클론이라 원본의 모든 기능이 구현된 것은 아닙니다. 멀티플레이는 포함되지 않습니다.',
+        '- 개발 중인 클론이라 원본의 모든 기능이 구현된 것은 아닙니다. 새 로컬 서버 R.exe가 포함되지만 멀티플레이 연결·플레이는 아직 개발 및 확인 중입니다.',
         '',
         '[How to run]',
         '1. Extract the archive anywhere. Settings and saves go to %USERPROFILE%\Saved Games\Netstorm\, so the install folder may be read-only.',
@@ -461,7 +475,7 @@ function New-ReadmeText {
         '5. Delete %USERPROFILE%\Saved Games\Netstorm\Saves\options.cfg and fullscreenStateFile.dat to reset settings.',
         '6. Korean: fonts\ (D2Coding) and lang\xlat.korean are bundled; pick Options > Language > Korean.',
         '7. Optional Anti-Aliasing and AMD FidelityFX Super Resolution 1.0 (MIT, see third-party\fsr1\) are in Options (off by default); 2560x1440/3840x2160 appear when a Direct3D 11 device exists.',
-        '8. This is a work-in-progress clone; multiplayer is not included.')
+        '8. The rebuilt LAN server R.exe is bundled. Multiplayer remains under development and has not been verified.')
     return (($lines -join "`r`n") + "`r`n")
 }
 
@@ -669,6 +683,18 @@ function Test-ZipPackage {
                     $problems.Add(('크기 불일치: {0} (계획 {1}, 실제 {2})' -f $item.Entry, $item.Length, $actual[$item.Entry]))
                 }
             }
+            # 새 서버가 반드시 하나 포함되고 ZIP 안의 실제 바이트도 계획한 재빌드 R.exe와 같은지 확인한다. 서버를 실행하지 않는다.
+            $rootEntryName = $PackageRootName + '/' + $RootExeName
+            $rootPlan = @($Items | Where-Object { $_.Entry -eq $rootEntryName })
+            if (-not $actual.ContainsKey($rootEntryName) -or $rootPlan.Count -ne 1) {
+                $problems.Add('새 로컬 서버 R.exe 항목이 없거나 중복됩니다.')
+            } else {
+                $rootStream = $zip.GetEntry($rootEntryName).Open()
+                $algorithm = [System.Security.Cryptography.SHA256]::Create()
+                try { $rootHash = ([System.BitConverter]::ToString($algorithm.ComputeHash($rootStream))).Replace('-', '').ToLowerInvariant() }
+                finally { $algorithm.Dispose(); $rootStream.Dispose() }
+                if ($rootHash -ne (Get-PackageFileHash -FilePath $rootPlan[0].Source)) { $problems.Add('ZIP의 새 R.exe SHA256이 원본 빌드 산출물과 다릅니다.') }
+            }
             # 사용자별 상태 파일이나 서버 잔재가 섞였는지 이름으로 확인한다.
             foreach ($name in $actual.Keys) {
                 $leaf = $name.Substring($name.LastIndexOf('/') + 1)
@@ -737,15 +763,17 @@ try {
         $ExePath = $DefaultExePath
     }
     $exeExists = Test-Path -LiteralPath $ExePath -PathType Leaf
+    $rootExePath = Join-Path (Split-Path -Parent $ExePath) $RootExeName
+    $rootExists = Test-Path -LiteralPath $rootExePath -PathType Leaf
     $buildNeeded = $false
     $buildReason = ''
     if (-not $exeExplicit) {
-        if (-not $exeExists) {
+        if (-not $exeExists -or -not $rootExists) {
             $buildNeeded = $true
-            $buildReason = '실행 파일이 없습니다'
+            $buildReason = '게임 또는 새 로컬 서버 실행 파일이 없습니다'
         } else {
             $newestSource = Get-NewestSourceTime
-            $exeTime = (Get-Item -LiteralPath $ExePath).LastWriteTimeUtc
+            $exeTime = @((Get-Item -LiteralPath $ExePath).LastWriteTimeUtc, (Get-Item -LiteralPath $rootExePath).LastWriteTimeUtc) | Sort-Object | Select-Object -First 1
             if ($exeTime -lt $newestSource) {
                 $buildNeeded = $true
                 $buildReason = ('실행 파일({0:yyyy-MM-dd HH:mm})이 가장 최근 소스({1:yyyy-MM-dd HH:mm})보다 오래됐습니다' -f $exeTime.ToLocalTime(), $newestSource.ToLocalTime())
@@ -768,22 +796,41 @@ try {
             Write-Host "${buildReason}."
             Invoke-ExeBuild
             $exeExists = Test-Path -LiteralPath $ExePath -PathType Leaf
+            $rootExists = Test-Path -LiteralPath $rootExePath -PathType Leaf
         }
     }
     if (-not $exeExists -and -not ($DryRun -and $buildNeeded)) {
         throw "실행 파일을 찾을 수 없습니다: ${ExePath}"
     }
+    if ($rootExists -and -not (Test-RebuiltRootExecutable -File $rootExePath)) {
+        if ($DryRun -and $buildNeeded -and -not $NoBuild) { $rootExists = $false }
+        else { throw "새11.01 로컬 서버 식별과 일치하지 않습니다: ${rootExePath}. 현재 NetstormRoot를 빌드한 R.exe가 필요합니다." }
+    }
+    if (-not $rootExists -and -not ($DryRun -and $buildNeeded -and -not $NoBuild)) { throw "새 로컬 서버를 찾을 수 없습니다: ${rootExePath}. NetstormCpp를 빌드하거나 지정한 클론 실행 파일 옆에 새 R.exe를 두세요." }
 
     # 4) 전체 항목 목록을 조립한다. 순서는 실행 파일, 런타임 DLL, 배치 파일, 안내문, 라이선스, 게임 데이터이다.
     $items = New-Object System.Collections.Generic.List[object]
     $runtimePlan = @()
     $exeHash = '(빌드 후 계산)'
+    $rootHash = '(빌드 후 계산)'
+    if ($rootExists) {
+        Add-FileItem -Items $items -Entry ($PackageRootName + '/' + $RootExeName) -Source $rootExePath
+        $rootHash = Get-PackageFileHash -FilePath $rootExePath
+    }
     if ($exeExists) {
         Add-FileItem -Items $items -Entry ($PackageRootName + '/' + $ExeName) -Source $ExePath
         $exeHash = Get-PackageFileHash -FilePath $ExePath
         if (-not $NoRuntime) {
-            $runtimePlan = @(Get-RuntimeDllPlan -ExeFile $ExePath)
-            # 필요한 런타임 DLL 을 실행 파일 옆에 넣는다. 같은 폴더가 DLL 검색 순서의 첫 번째이다.
+            $runtimeByName = @{}
+            $runtimePrograms = @($ExePath)
+            if ($rootExists) { $runtimePrograms += $rootExePath } # DryRun에서 아직 재빌드할 잘못된 옛R의 임포트를 계획에 넣지 않는다.
+            # 실제 게임/서버가 각각 가져오는 런타임 목록의 합집합을 만들고 같은 DLL은 한 번만 동봉한다.
+            foreach ($program in $runtimePrograms) {
+                if (-not (Test-Path -LiteralPath $program -PathType Leaf)) { continue }
+                foreach ($dll in @(Get-RuntimeDllPlan -ExeFile $program)) { if (-not $runtimeByName.ContainsKey($dll.Name)) { $runtimeByName[$dll.Name] = $dll } } # 각 실제 임포트 이름의 첫 재배포 경로/버전을 보존한다.
+            }
+            $runtimePlan = @($runtimeByName.Values | Sort-Object Name)
+            # 필요한 런타임 DLL 을 두 실행 파일 옆에 넣는다. 같은 폴더가 DLL 검색 순서의 첫 번째이다.
             foreach ($dll in $runtimePlan) {
                 Add-FileItem -Items $items -Entry ($PackageRootName + '/' + $dll.Name) -Source $dll.Path
             }
@@ -846,6 +893,11 @@ try {
         $infoLines.Add(('Executable   : {0}  {1:N0} bytes  built {2:yyyy-MM-dd HH:mm:ss}' -f $ExeName, $exeInfo.Length, $exeInfo.LastWriteTime))
         $infoLines.Add('Executable SHA256: ' + $exeHash)
     }
+    if ($rootExists) {
+        $rootInfo = Get-Item -LiteralPath $rootExePath
+        $infoLines.Add(('Root server  : {0}  {1:N0} bytes  built {2:yyyy-MM-dd HH:mm:ss}' -f $RootExeName, $rootInfo.Length, $rootInfo.LastWriteTime))
+        $infoLines.Add('Root server SHA256: ' + $rootHash)
+    }
     $infoLines.Add(('Game data    : original 10.78 files from "{0}"  ({1} files, {2:N0} bytes, {3} excluded)' -f $sourceLabel, $game.Items.Count, $gameBytes, $game.Skipped.Count))
     $infoLines.Add(('인트로 영상  : "{0}" ({1} SMK), 원본 CD 파일을 game\MOVIE에 동봉' -f $movies.Source, $movies.Items.Count))
     foreach ($item in $movies.Items) { $infoLines.Add(('영상 SHA256  : {0}  {1}' -f $item.Entry, (Get-PackageFileHash -FilePath $item.Source))) } # 동봉 파일의 출처/원문 바이트를 사용자가 확인할 수 있게 기록한다.
@@ -864,6 +916,7 @@ try {
     Write-Host ''
     Write-Host ('저장 위치      : ' + $zipPath)
     Write-Host ('실행 파일      : ' + $ExePath)
+    Write-Host ('새 로컬 서버   : ' + $rootExePath)
     Write-Host ('게임 데이터 원천: ' + $GameSource)
     # 동봉할 런타임 DLL 을 출처와 함께 보여 준다.
     foreach ($dll in $runtimePlan) {

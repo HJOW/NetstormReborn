@@ -24,6 +24,7 @@
 #include "client/RootServerEndpoint.h"
 #include "client/LocalUdpTransport.h"
 #include "client/NativeLocalServerLaunch.h"
+#include "client/LocalServerProcess.h"
 #include "client/ClientRandomGlobals.h"
 #include "client/CampaignTransportServices.h"
 #include "client/RawSurfaceWorld.h"
@@ -31,6 +32,7 @@
 #include "o/RawPlayerNotification.h"
 #include "o/RawFileName.h"
 #include "platform/Utf8Path.h"
+#include "platform/PortableStartup.h"
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -160,8 +162,9 @@ o::LocalMissionParentResult MetaConnectionRuntime::Run(std::uint32_t selected) {
     case 37: {
         NativeLocalServerLaunchHooks hooks;hooks.progress=[this] { Progress("Becoming local %s server.",true); };hooks.closeDiscovery=[this] { udp_->Close();client_.ConnectionGlobals()->Disconnect(13); };
         hooks.executable=[this] { std::string value;client_.Configuration().ReadString("rootServerExe",value);return value; }; //같은ReadString의변경여부와실제현재이름을구별한다.
-        hooks.format=[this](auto prefix,auto name) { const auto root=platform::PathToUtf8(client_.GameDirectory());const std::array<o::FileNamePart,3> parts{{{-2,root},{-2,prefix},{-3,name}}};return std::string(client_.Files().FileNameOwner()->Format(parts)); };
-        hooks.exists=[this](auto name) { return client_.Files().Probe(name); }; //새R실행장치는Root/CS런타임준비후결합한다.선택되면현재미연결장치에서명시오류다.
+        hooks.format=[this](auto prefix,auto name) { const auto root=platform::PathToUtf8(platform::CurrentExecutableFile().parent_path());const std::array<o::FileNamePart,3> parts{{{-2,root},{-2,prefix},{-3,name}}};return std::string(client_.Files().FileNameOwner()->Format(parts)); }; // 자료폴더와분리된현대배포에서는새R을클론모듈폴더기준의같은여섯순서로검색한다.
+        hooks.exists=[this](auto name) { const auto source=client_.Files().Probe(name);return source && IsRebuiltLocalServer(name) ? source:0U; }; // 실제출처조회효과뒤새11.01서버식별을확인하며원본R을대신실행하지않는다.
+        hooks.launch=[this](auto program,auto arguments,auto wait) { static_cast<void>(StartRebuiltLocalServer(program,arguments,wait,client_.GameDirectory())); }; // 실제시작실패도원문void부모처럼반환값을버리고다음38을확정한다. 준비성공알림은합성하지않는다.
         return InstallNativeLocalServerLaunch(state,hooks);
     }
     case 38: {

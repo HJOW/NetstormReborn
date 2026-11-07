@@ -1,0 +1,169 @@
+{
+  "unit": 1092,
+  "version": "11.01",
+  "date": "2026-11-07",
+  "host": "HJOW-Athlon",
+  "build": {
+    "target": "NetstormCpp/NetstormRoot",
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "exeBytes": 12370944,
+    "exeSha256": "228b158634e984f179abfb349fffb07900ece5f15fc08c4081df66d3804d4aec",
+    "rootExeBytes": 669696,
+    "rootExeSha256": "25d7bfba53a5dc935864eb3f4fae4fe9c17026a811b6efac903750118c70a061"
+  },
+  "nativeAndPackageAudit": {
+    "scope": "동일호스트 원문/PE·현재소스 정적대조와 실제 PowerShell5.1 배포계획/ZIP 파일 검증이다. C++실행장치/게임/서버·통신 실행0이며 MP 테스트가 아니다.",
+    "nativePrefixes": [
+      ".\\debug\\",
+      "..\\r\\debug\\",
+      "..\\..\\r\\debug\\",
+      ".\\r\\debug\\",
+      ".\\",
+      "..\\"
+    ],
+    "nativeParent": "안내→12/13닫기→rootServerExe ReadString→같은여섯후보/첫채택·실패34→lan/wait0실행뒤38/공통확정",
+    "hostAdjustments": [
+      "게임자료폴더와분리된새R검색은클론모듈폴더기준,실제자식CWD는같은Client.GameDirectory",
+      "실제파일출처 Probe뒤11.01 파일/제품버전·R.exe 식별을확인해원본R채택제외",
+      "CreateProcessW의명시실행파일/인용된argv0+lan으로한글·공백설치경로를보존",
+      "현대GUI/console·MCP겸용부모의콘솔/표준출력을바꾸지않게자식전용콘솔/최초숨김,이후원문R의자기제목/최소화동작은그대로",
+      "원문에없던명시자식CWD/핸들반납은현대분리배치·반복실행소유권경계이며대기/준비ACK·성공상태를추가하지않음"
+    ],
+    "launchResult": "실제시작BOOL은원문void부모처럼버리고다음38을확정한다. 500알림은실제R이초기화전에보내는사전통지이며새로합성하지않음",
+    "package": {
+      "path": "extracted\\cpp-resume-1092\\NetstormReborn-cpppj-1092.zip",
+      "bytes": 202440265,
+      "sha256": "33b2459cca9dcbde8b10c7e2cca2e12cc071715244868e3a60908fb085089ae7",
+      "entries": 1384,
+      "gameEntries": 1358,
+      "uncompressedBytes": 239201484,
+      "crcAllEntries": true,
+      "clientAndRootExactBytes": true,
+      "rebuiltRootOnly": true,
+      "runtimeUnion": [
+        "msvcp140.dll",
+        "vcruntime140.dll",
+        "vcruntime140_1.dll"
+      ],
+      "powershellVersion": "5.1",
+      "dryRunExit": 0,
+      "packageExit": 0,
+      "scriptRootHashCheckPassed": true,
+      "buildInfo": "실행파일두해시포함,현재단위커밋전개발스냅샷"
+    },
+    "clientExe": {
+      "bytes": 12370944,
+      "sha256": "228b158634e984f179abfb349fffb07900ece5f15fc08c4081df66d3804d4aec",
+      "fileVersion": "11.01",
+      "originalFilename": "Netstorm.exe",
+      "imports": [
+        "WS2_32.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "d3d11.dll",
+        "D3DCOMPILER_47.dll",
+        "SHELL32.dll",
+        "ole32.dll",
+        "MMDevAPI.DLL",
+        "USER32.dll",
+        "GDI32.dll",
+        "dwmapi.dll",
+        "KERNEL32.dll",
+        "MSVCP140.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ]
+    },
+    "rootExe": {
+      "bytes": 669696,
+      "sha256": "25d7bfba53a5dc935864eb3f4fae4fe9c17026a811b6efac903750118c70a061",
+      "fileVersion": "11.01",
+      "originalFilename": "R.exe",
+      "imports": [
+        "WS2_32.dll",
+        "IPHLPAPI.DLL",
+        "WINMM.dll",
+        "SHELL32.dll",
+        "ole32.dll",
+        "USER32.dll",
+        "KERNEL32.dll",
+        "MSVCP140.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ]
+    },
+    "originalRootReadOnlyMetadata": {
+      "fileVersion": null,
+      "sha256": "831e2ecbbba4654b97a270da8da91d7aa7302090f3198c4365f78c44d59dbf0b",
+      "matchesCurrentProduct": false
+    },
+    "newCppFunctionExecutions": 0,
+    "gameExecutions": 0,
+    "newRootExecutions": 0,
+    "originalRootExecutions": 0,
+    "multiplayerTests": 0,
+    "hostBoundaries": [
+      "실제CreateProcess/자식콘솔·CWD/환경·프로세스수명/동시파일교체·시작실패·알림/후속TCP는실행미검증",
+      "현재실제파일검사는현재11.01 영문리소스040904b0/OriginalFilename=R.exe 계약을사용",
+      "원문실행헬퍼의비영wait범용분기는이37/wait0전용장치에서구현하지않음",
+      "Root실제IPv4 TCP/UDP·IPX/SPX명시미지원·외부DNS/폐기7f·80/PIRATE quota비활성은유지",
+      "세.server콘텐츠/Config레지스트리/다른LAN hostname/0F·1d/메타·나머지LAN은후속"
+    ]
+  },
+  "runtime": {
+    "clientRealRebuiltRootOsLaunchConnected": true,
+    "rootEntryAndMainConnected": true,
+    "rebuiltRootPackagedAndExactBytesVerified": true
+  },
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "socketOpen": 0,
+    "cppLaunchDevice": 0,
+    "newRootExe": 0,
+    "originalR": 0,
+    "fullSuite": 0,
+    "missions34": 0,
+    "powershell51DryRun": 1,
+    "zipCreated": 1,
+    "zipArtifactValidated": 1
+  },
+  "protectedFiles": 2800,
+  "newFixtures": 0,
+  "remaining": [
+    "클라이언트0F존47/서버3BYTE 차이·0F/1d수신과메타실제연결",
+    "세.server콘텐츠/배포·LAN hostname·Config registryValue경계",
+    "LAN/Outpost/checking5·한국어후속/Edit시나리오UI"
+  ],
+  "decompilation": {
+    "lastFullNetstorm": "2026-11-03 / HJOW-Athlon",
+    "lastRootServer": "2026-11-07 / HJOW-Athlon",
+    "rerun": false
+  }
+}
