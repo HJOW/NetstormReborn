@@ -534,8 +534,8 @@ cpppj/src/o/RawBombEffect.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombEffectTimer.cpp	port	www/core/raw-bomb-effect-timer.js	1f00a25a	port	[o-default] WB04-E52: 상태 주문 타이머 필드/생성/Frame(41e100)과 SquidProcess 래퍼. fixture bomb-effect-timer 4416·bomb-timer-constructor 12행. 실제 가상 호출/썬 바리케이드/호스트 kill은 월드 조립에서
 cpppj/src/o/RawBombPostPop.cpp	port	www/core/raw-bomb-post-pop.js	1f00a25a	port	[o-default] WB04-E51: 그라비테이션·힐·미티어 최초 Regular 예약 접두(41f870/41f920/41fab0). fixture bomb-postpop 432행(SquidPostPop 분배 포함). RawCarrierSteal 두 VT 분배는 해당 단위에서
 cpppj/src/o/RawBombPreDestroy.cpp	port	www/core/raw-bomb-pre-destroy.js	1f00a25a	port	[o-default] WB04-E51: Point Blast 가상 전처리(41e960) 폭발 관문·효과 뒤 현재 좌표 소리·공통 전처리. fixture bomb-predestroy 96행. 실제 폭발/소리/공통 전처리는 월드 조립에서
-cpppj/src/o/RawBombRegular.cpp	port			todo	[o-default]
-cpppj/src/o/RawBombStatus.cpp	port			todo	[o-default]
+cpppj/src/o/RawBombRegular.cpp	port	www/core/raw-bomb-regular.js	1f00a25a	port	[o-default] WB04-E53: 주문 Regular 41e6a0(초기화·시전 시간 비교·210바이트 대상 패킷 배포/수신/해제). fixture bomb-regular 741행. 실제 통지/프레임/검색/송신/수신은 월드 조립에서
+cpppj/src/o/RawBombStatus.cpp	port	www/core/raw-bomb-status.js	1f00a25a	port	[o-default] WB04-E53: 117/118 상태 주문 자격(41eca0/41fdb0)과 적용(41fc50/41fdd0). fixture bomb-status 612행. 실제 표시 갱신/재배치/울타리/플레어는 월드 조립에서
 cpppj/src/o/RawBombStrike.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombTargets.cpp	port			todo	[o-default]
 cpppj/src/o/RawBombTimerPacket.cpp	port	www/core/raw-bomb-timer-packet.js	1f00a25a	port	[o-default] WB04-E52: 상태 타이머 가변 패킷 writer(41e280)·읽기(41e230)·observer(40b390)·부모 선택(41e0a0)·수신(41e320). fixture bomb-timer-packet 602행

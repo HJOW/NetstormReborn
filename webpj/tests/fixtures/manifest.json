@@ -6375,7 +6375,7 @@
       "bytes": 1672140,
       "lines": 4417,
       "fixtureCommit": "98d72ebe",
-      "webCommit": "worktree",
+      "webCommit": "2e70ff2d",
       "cpppjBasis": {
         "cpppj/src/o/RawBombEffectTimer.cpp": "9a4a01ea"
       }
@@ -6404,7 +6404,7 @@
       "bytes": 10951,
       "lines": 13,
       "fixtureCommit": "9a4a01ea",
-      "webCommit": "worktree",
+      "webCommit": "2e70ff2d",
       "cpppjBasis": {
         "cpppj/src/o/RawBombEffectTimer.cpp": "9a4a01ea"
       }
@@ -6433,9 +6433,67 @@
       "bytes": 435798,
       "lines": 603,
       "fixtureCommit": "914745c8",
-      "webCommit": "worktree",
+      "webCommit": "2e70ff2d",
       "cpppjBasis": {
         "cpppj/src/o/RawBombTimerPacket.cpp": "f02ea8d1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E53",
+      "id": "bomb-status",
+      "path": "cpppj/tests/fixtures/bomb-status-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 117/118 상태 주문의 대상 자격·적용 효과 순서와 두 슬롯, 송신 observer 선언 길이",
+      "consumers": [
+        "webpj/tests/bomb-status.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-status.js"
+      ],
+      "doc": "docs/webpj-bomb-status-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombStatus.cpp"
+      ],
+      "scope": "612행 전부 사용(판본 열 없는 10.78 단일 관측)",
+      "text": true,
+      "sha256": "e01a5f5499029fdeac910ed106385e9acca1f1443e98e048ce9961d62092db26",
+      "bytes": 183257,
+      "lines": 613,
+      "fixtureCommit": "f02ea8d1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombStatus.cpp": "566f44d6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E53",
+      "id": "bomb-regular",
+      "path": "cpppj/tests/fixtures/bomb-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 주문 Regular 41e6a0의 반환 float·효과 순서·대상 패킷·부모 raw (두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/bomb-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-regular.js"
+      ],
+      "doc": "docs/webpj-bomb-status-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombRegular.cpp"
+      ],
+      "scope": "741행 전부 사용(53/64 비트 두 정밀도 열은 같은 값)",
+      "text": true,
+      "sha256": "29af05b0f7761c8c9b66ae98966a7549bb1e35f38adef062276e17e104849c0c",
+      "bytes": 897513,
+      "lines": 742,
+      "fixtureCommit": "570a969c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombRegular.cpp": "570a969c"
       }
     }
   ]
