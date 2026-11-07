@@ -281,7 +281,7 @@ cpppj/src/client/RawCaptureSequence.cpp	exclude-host			-	[host-capture]
 cpppj/src/client/RawCarrierDropPoint.cpp	port			todo	[client-default]
 cpppj/src/client/RawCarrierInput.cpp	port			todo	[client-default]
 cpppj/src/client/RawCarrierMenu.cpp	port			todo	[client-default]
-cpppj/src/client/RawChatChannels.cpp	port			todo	[client-default]
+cpppj/src/client/RawChatChannels.cpp	port	www/core/raw-chat-channels.js	1f00a25a	port	[client-default] WB04-E6: 00444ee0 Add(자기/-1/첫 빈칸/기존 검색·이름 40·Unknown%08x)·0042b0e0 이름 정제·004437f0 갱신 두 번·Clear·00445140 ResetOccupied. fixture chat-channels 10.78 2448행 전부. Client 수명/AI 서비스 공유 대조는 client 단위에서
 cpppj/src/client/RawChatFormat.cpp	port			todo	[client-default]
 cpppj/src/client/RawChatMessage.cpp	port			todo	[client-default]
 cpppj/src/client/RawChatPacket.cpp	port			todo	[client-default]

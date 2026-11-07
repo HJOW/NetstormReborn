@@ -2679,7 +2679,7 @@
       "bytes": 2402254,
       "lines": 609,
       "fixtureCommit": "ddf0a837",
-      "webCommit": "worktree",
+      "webCommit": "eda361ee",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerParticipation.cpp": "3cea1b14"
       }
@@ -2708,9 +2708,38 @@
       "bytes": 2311266,
       "lines": 289,
       "fixtureCommit": "4963da20",
-      "webCommit": "worktree",
+      "webCommit": "eda361ee",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerParticipation.cpp": "3cea1b14"
+      }
+    },
+    {
+      "id": "chat-channels",
+      "path": "cpppj/tests/fixtures/chat-channels-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 PE 관측: Chat 기록 100개의 Add/Clear 전체 4800 BYTE 변경과 하위 진입(이름 정제·갱신) 순서",
+      "consumers": [
+        "webpj/tests/chat-channels.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-chat-channels.js"
+      ],
+      "unit": "WB04-E6",
+      "doc": "docs/webpj-chat-channels-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawChatChannels.cpp"
+      ],
+      "scope": "2448행(판본 열 없는 10.78 전용 표) 전부 사용",
+      "text": true,
+      "sha256": "2e8bbcdcf0ff3d053cc1e721991cd8e1aa1a97ea6e9e28c4eceb3fdf99d9bb6d",
+      "bytes": 497719,
+      "lines": 2449,
+      "fixtureCommit": "fb1b2900",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawChatChannels.cpp": "65bc3e0c"
       }
     }
   ]
