@@ -2768,9 +2768,125 @@
       "bytes": 4254429,
       "lines": 203,
       "fixtureCommit": "7e53489e",
-      "webCommit": "worktree",
+      "webCommit": "6e2efbc9",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerInitialization.cpp": "7e53489e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E8",
+      "id": "player-links-cleanup",
+      "path": "cpppj/tests/fixtures/player-links-cleanup-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Player 링크 정리의 두 Player 1620 BYTE·현재 base/free 순서·NULL 물리",
+      "consumers": [
+        "webpj/tests/player-notices.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-links-cleanup.js"
+      ],
+      "doc": "docs/webpj-player-notices-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerLinksCleanup.cpp"
+      ],
+      "scope": "162행(정상 138·중단 18·NULL 6) 전부 사용",
+      "text": true,
+      "sha256": "df2bbeff41340afb945de9aa84abba215a07c38d49934645b84e6c7d3e205617",
+      "bytes": 1089404,
+      "lines": 163,
+      "fixtureCommit": "adb9739e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerLinksCleanup.cpp": "adb9739e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E8",
+      "id": "player-notices",
+      "path": "cpppj/tests/fixtures/player-notices-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 프레임 끝 Player 대기 결과의 전체 9기록·owner·부분 효과·호출 순서",
+      "consumers": [
+        "webpj/tests/player-notices.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-notification.js"
+      ],
+      "doc": "docs/webpj-player-notices-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerNotification.cpp"
+      ],
+      "scope": "118행 전부 사용",
+      "text": true,
+      "sha256": "aaaf1c5a5317cf9ef897fba730829ef7ce7b475ef59ab76357300bf926abebae",
+      "bytes": 388986,
+      "lines": 118,
+      "fixtureCommit": "c8f775b1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerNotification.cpp": "c8f775b1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E8",
+      "id": "core-technology-weight",
+      "path": "cpppj/tests/fixtures/core-technology-weight-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Core 기술 합계의 결과 BYTE·Core 마스크/rank 재조회·TYPE 개수 변경·getter 순서",
+      "consumers": [
+        "webpj/tests/player-notices.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-notification.js"
+      ],
+      "doc": "docs/webpj-player-notices-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerNotification.cpp"
+      ],
+      "scope": "92행 전부 사용",
+      "text": true,
+      "sha256": "88a413987e3fb09be13daae2ea224c73bccfc2e26c3fafb5b20eea167a98be8c",
+      "bytes": 18017,
+      "lines": 92,
+      "fixtureCommit": "c8f775b1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerNotification.cpp": "c8f775b1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E8",
+      "id": "player-damage-notice",
+      "path": "cpppj/tests/fixtures/player-damage-notice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Player AI 피해 통지 래퍼의 호출 여부와 세 인자",
+      "consumers": [
+        "webpj/tests/player-notices.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-damage-notice.js"
+      ],
+      "doc": "docs/webpj-player-notices-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerDamageNotice.cpp"
+      ],
+      "scope": "144행(판본 열 없는 10.78 전용 표) 전부 사용",
+      "text": true,
+      "sha256": "6fcc7595701879970253adc8ab187550868ced183739d5991725abec3def621a",
+      "bytes": 4250,
+      "lines": 145,
+      "fixtureCommit": "68ca4e3a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerDamageNotice.cpp": "68ca4e3a"
       }
     }
   ]

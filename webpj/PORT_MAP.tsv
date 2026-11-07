@@ -819,12 +819,12 @@ cpppj/src/o/RawPlayerContentNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerCoreData.cpp	port	www/core/raw-player-core-data.js	1f00a25a	port	[o-default] WB04-E3: 0048f0d0 조회·0048f3b0 선택/정리는 fixture player-core-data 804행으로 대조. 0048fb30 복원은 cpppj 직접 원본 관측이 없어 소스 계약 검사만(웹 검사 1장면)
 cpppj/src/o/RawPlayerCoreRecords.cpp	port	www/core/raw-player-core-records.js	1f00a25a	port	[o-default] WB04-E3: 9×16 BYTE Core 장부(0042ce70·004feac0·0048f350). fixture player-core-records 192행(Core 186 + 색 표 감사 6)
 cpppj/src/o/RawPlayerCoreRefresh.cpp	port	www/core/raw-player-core-refresh.js	1f00a25a	port	[o-default] WB04-E3: 0044fc00 Core 갱신. fixture player-core-refresh 지원 618행(+논리 span 쓰기 정지 24행 제외)·guard 지원 16행(Unicorn 부분 store 4행 제외)
-cpppj/src/o/RawPlayerDamageNotice.cpp	port			todo	[o-default]
+cpppj/src/o/RawPlayerDamageNotice.cpp	port	www/core/raw-player-damage-notice.js	1f00a25a	port	[o-default] WB04-E8: 00416760 Player AI 조회와 피해 통지 래퍼(10.78 전용). fixture player-damage-notice 144행 전부
 cpppj/src/o/RawPlayerGeyserBounds.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerIdentity.cpp	port	www/core/raw-player-identity.js	1f00a25a	port	[o-default] WB04-E4: 004841c0 PlayerFinder(초기화·resolve 4단계 우선순위·네 getter). fixture player-identity 10.78 851행 중 menu 24행(client RawObjectMenu 단위 필요) 제외 827행
 cpppj/src/o/RawPlayerInitialization.cpp	port	www/core/raw-player-initialization.js	1f00a25a	port	[o-default] WB04-E7: 004910a0 Player 전체 초기화(이전 공장 9회 해제·Player 반납·NULL 재기록·1620 할당·405 DWORD 0·행 필드·자기 동맹 mask 재조회). fixture player-initialization 10.78 202행 전부(동맹·Chat 하위는 E5·E6 모듈이 실제 수행). ClientCoreDataGlobals 연동 대조는 client Core 단위에서
-cpppj/src/o/RawPlayerLinksCleanup.cpp	port			todo	[o-default]
-cpppj/src/o/RawPlayerNotification.cpp	port			todo	[o-default]
+cpppj/src/o/RawPlayerLinksCleanup.cpp	port	www/core/raw-player-links-cleanup.js	1f00a25a	port	[o-default] WB04-E8: 0048fcd0 Player0..8 +9c/+08 0 쓰기·+68 Deck 반납 뒤 현재 base 재조회 0 쓰기. fixture player-links-cleanup 10.78 162행 전부(정상 138·중단 18·NULL 6)
+cpppj/src/o/RawPlayerNotification.cpp	port	www/core/raw-player-notification.js	1f00a25a	port	[o-default] WB04-E8: 00490da0 프레임 끝 대기 결과(제단 승급·Core 합계 43 획득·내용물 조회)·0042b210 Core 기술 합계. fixture player-notices 118행·core-technology-weight 92행 전부(10.78)
 cpppj/src/o/RawPlayerParticipation.cpp	port	www/core/raw-player-participation.js	1f00a25a	port	[o-default] WB04-E5: 004a6dc0 로그인·00490ea0 방향별 동맹·0048f6a0 동맹 추가·00491220 수신·004911a0 AI 부착/해제·State 반납 증빙(BrainResetPass 의 JS 대응: 비공개 수명 토큰·1회 소비·진행 중 소비 거부). fixture player-participation 608행·player-alliance-packet 288행 전부(10.78). RawAiCreate 연동 거부 대조는 RawAiCreate 단위에서
 cpppj/src/o/RawPlayerPlacementAnchor.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerRegular.cpp	port			todo	[o-default]
