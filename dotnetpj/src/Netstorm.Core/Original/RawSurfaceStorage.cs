@@ -253,6 +253,20 @@ public sealed class RawSurfaceStorage
         _displayAssertion(expression, file, line);
     }
 
+    /// <summary>현재 같은 TYPE·셰이프로 프레임 오류의 상세를 저장한다. 장치가 없는 독립 저장소는 명시 실패한다. 2026-11-07 F2d 표시 진단 이식에서 추가됐다.</summary>
+    /// <param name="type">타입 번호다.</param>
+    /// <param name="frame">프레임 번호다.</param>
+    /// <param name="abstractValue">추상 플래그다.</param>
+    public void RecordDisplayFrameError(uint type, int frame, uint abstractValue)
+    {
+        if (_displayDetail is null)
+        {
+            throw new InvalidOperationException("표시 오류 상세 Client owner 미연결");
+        }
+
+        _displayDetail.Value = SquidDisplayDetail.BuildFrameAssertionDetail(Types, Shapes, type, frame, abstractValue);
+    }
+
     /// <summary>CD 소진의 객체 덤프와 Tell을 World보다 긴 Client 수명으로 연결한다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     /// <param name="dump">현재 Client 객체 덤프 장치다.</param>
     /// <param name="tell">현재 Client Tell 장치다.</param>
