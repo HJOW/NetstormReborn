@@ -12008,9 +12008,38 @@
       "bytes": 3020870,
       "lines": 6723,
       "fixtureCommit": "6649e44f",
-      "webCommit": "worktree",
+      "webCommit": "c653752a",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPlacementTerrain.cpp": "6649e44f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E159",
+      "id": "pathcleanup",
+      "path": "cpppj/tests/fixtures/pathcleanup-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: PathProcess 삭제 통지의 공간 접두 뒤 실제 예약·운반 nugget·신전 의식·건설 helper 정리와 귀환 장소/근처 타입 조회(10.78 866행)",
+      "consumers": [
+        "webpj/tests/path-cleanup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-cleanup.js"
+      ],
+      "doc": "docs/webpj-path-cleanup-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathCleanup.cpp"
+      ],
+      "scope": "10.78 실제 PE 866행 전부",
+      "text": true,
+      "sha256": "55b2d406caf9ac1759f00f4b205edaebcae2b5a5dd50585ab45c314c22a99e5f",
+      "bytes": 1133544,
+      "lines": 1733,
+      "fixtureCommit": "b76adf95",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathCleanup.cpp": "0d82e448"
       }
     }
   ]

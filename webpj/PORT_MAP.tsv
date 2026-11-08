@@ -803,7 +803,7 @@ cpppj/src/o/RawPacketDispatch.cpp	port			todo	[o-default]
 cpppj/src/o/RawPacketLengths.h	port			todo	[o-default]
 cpppj/src/o/RawPathAnimation.cpp	port	www/core/raw-path-animation.js	1f00a25a	port	[o-default] WB04-E62: 보행 도착 프레임 접두 0048bd90과 Squid 방향 조회 004ad680/004ad710. fixture pathanimation 10.78 Read 608·Stop 1408행 전부. 보행 프로세스(경로 종료·타이머)는 PathProcess 단위에서
 cpppj/src/o/RawPathArrivalParent.cpp	port	www/core/raw-path-arrival-parent.js	1f00a25a	port	[o-default] WB04-E145: 공통 경로 도착 부모(0048b340: Step 좌표 공간 갱신·도착 막힘 판정·Halt·finished·부모 도착 반환 분기·삭제 뒤 정리)와 기반 SID 범위 진단(0041be80). fixture path-arrival-parent-hardware 실제 CPU 860행 전부. 남음: 경로 프로세스 본체 연결
-cpppj/src/o/RawPathCleanup.cpp	port			todo	[o-default]
+cpppj/src/o/RawPathCleanup.cpp	port	www/core/raw-path-cleanup.js	1f00a25a	port	[o-default] WB04-E159: 경로 정리(패치 0048aa00 공간 접두 뒤 건설 helper 예약·귀환 장소 nugget 삭제·신전 의식 요청·남은 helper 환불/삭제, 귀환 장소/근처 타입 finder, 연결 훅 어댑터). fixture pathcleanup 실제 PE 866행 전부. 남음: 경로 프로세스/사제 postPop 한 장면 통합 시험
 cpppj/src/o/RawPathData.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathHaltParent.cpp	port	www/core/raw-path-halt-parent.js	1f00a25a	port	[o-default] WB04-E144: 공통 경로 Halt 부모(00489ff0: 저장 부모·가상 Halt 결과·자기 삭제 뒤 진단 복귀·강제 정지·운반 계열 재지정). fixture path-halt-parent-hardware 실제 CPU 2288행 전부. 남음: 경로 프로세스 본체 연결
 cpppj/src/o/RawPathProcess.cpp	port			todo	[o-default]
