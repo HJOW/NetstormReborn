@@ -7612,7 +7612,7 @@
       "bytes": 3318484,
       "lines": 23042,
       "fixtureCommit": "54bf1411",
-      "webCommit": "worktree",
+      "webCommit": "7f686194",
       "cpppjBasis": {
         "cpppj/src/o/RawFrameAdvance.cpp": "54bf1411"
       }
@@ -7643,7 +7643,7 @@
       "bytes": 353692,
       "lines": 2030,
       "fixtureCommit": "68cea453",
-      "webCommit": "worktree",
+      "webCommit": "7f686194",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierCheck.cpp": "68cea453",
         "cpppj/src/o/RawPriestFall.cpp": "ca10924a"
@@ -7673,9 +7673,125 @@
       "bytes": 239998,
       "lines": 1370,
       "fixtureCommit": "e143e856",
-      "webCommit": "worktree",
+      "webCommit": "7f686194",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestFall.cpp": "ca10924a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E66",
+      "id": "priestlookup",
+      "path": "cpppj/tests/fixtures/priestlookup-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 소유 사제 조회 전체(대체 함수 없음)의 반환 SID·입력 128슬롯 raw 와 목록의 Adler-32",
+      "consumers": [
+        "webpj/tests/priest-lookup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-lookup.js"
+      ],
+      "doc": "docs/webpj-priest-small-parts-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestLookup.cpp"
+      ],
+      "scope": "10.78(originals) 1617행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "c18f6985bd89a33cb65951fc70253960658170b8f7f40e97f9053446f531c907",
+      "bytes": 563661,
+      "lines": 4853,
+      "fixtureCommit": "7f03b648",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestLookup.cpp": "1e8e43d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E66",
+      "id": "priest-prayer",
+      "path": "cpppj/tests/fixtures/priest-prayer-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 기도 명령/수신/605 진행의 호출 순서·슬롯 60 raw·반환 비트·최종 권한(큰 하위는 명시 경계)",
+      "consumers": [
+        "webpj/tests/priest-prayer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-prayer.js"
+      ],
+      "doc": "docs/webpj-priest-small-parts-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPrayer.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1126행 전부 사용",
+      "text": true,
+      "sha256": "9697c1760aeea6b5a153da21f7a10ea66c4a1604ec2eac1940f6c5d191941c8d",
+      "bytes": 197809,
+      "lines": 1127,
+      "fixtureCommit": "6a1ddf20",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPrayer.cpp": "6a1ddf20"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E66",
+      "id": "priest-panic",
+      "path": "cpppj/tests/fixtures/priest-panic-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 공황 이동의 호출 순서·사제/신전 raw·두 TYPE 속도 비트·난수 상태(큰 하위는 명시 경계)",
+      "consumers": [
+        "webpj/tests/priest-panic.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-panic.js"
+      ],
+      "doc": "docs/webpj-priest-small-parts-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPanic.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 600행 전부 사용",
+      "text": true,
+      "sha256": "2edee42327cb649db426ff16470992fb6512bd44864c559b8a45d0ca4b631ffa",
+      "bytes": 293550,
+      "lines": 601,
+      "fixtureCommit": "ab3ef43d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPanic.cpp": "ab3ef43d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E66",
+      "id": "priesthalt",
+      "path": "cpppj/tests/fixtures/priesthalt-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 사제 +38/공통 Halt 의 반환 코드·호출 순서(지면 조회/공간 복귀/포획/전달)·슬롯 50 raw",
+      "consumers": [
+        "webpj/tests/priest-halt.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-halt.js"
+      ],
+      "doc": "docs/webpj-priest-small-parts-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestHalt.cpp"
+      ],
+      "scope": "10.78(originals) 432행 전부 사용(originalCD 행은 범위 밖)",
+      "text": true,
+      "sha256": "44a098cf999666322e0a3460bffc159b680792e5fdf06b89e5a6cf2644ba251c",
+      "bytes": 219057,
+      "lines": 865,
+      "fixtureCommit": "ab9361f1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestHalt.cpp": "ab9361f1"
       }
     }
   ]

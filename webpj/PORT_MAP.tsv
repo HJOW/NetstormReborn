@@ -835,10 +835,10 @@ cpppj/src/o/RawPriestArrival.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestDamage.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestFall.cpp	port	www/core/raw-priest-fall.js	1f00a25a	port	[o-default] WB04-E65: 사제 낙하 요청 004941f0·tryFall 00494e80·0x25b 이벤트 00494580/00493e60·분배기/훅 연결(makePriestFallHandler/Walker/Hooks/FrameHooks). fixture priestfall 10.78 456행 전부. 회복 분배기 합성(RawPriestRegen)은 해당 단위에서
 cpppj/src/o/RawPriestForcefield.cpp	port	www/core/raw-priest-forcefield.js	1f00a25a	port	[o-default] WB04-E63: 사제 보호막 조회 004918e0. fixture priestforcefield 10.78 2976행(Find/Pre) 전부
-cpppj/src/o/RawPriestHalt.cpp	port			todo	[o-default]
-cpppj/src/o/RawPriestLookup.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestHalt.cpp	port	www/core/raw-priest-halt.js	1f00a25a	port	[o-default] WB04-E66: 사제 +38 Halt(지면 모드·저 HP 공간 보정)·공통 Halt 0042a5f0(Carrier 조회 12·운반체 포획/너겟 전달). fixture priesthalt 10.78 432행 전부
+cpppj/src/o/RawPriestLookup.cpp	port	www/core/raw-priest-lookup.js	1f00a25a	port	[o-default] WB04-E66: 소유 사제 조회 004921f0(signed 개수·DWORD 소유자·dead 제외·첫 일치 조기 종료). fixture priestlookup 10.78 1617행 전부. 건설 확정/통지/기준점 어댑터 합성은 해당 파일 단위에서
 cpppj/src/o/RawPriestOwner.cpp	port	www/core/raw-priest-owner.js	1f00a25a	port	[o-default] WB04-E62: 사제 소유자 재정의 00491790(원래 소유자 WORD·알림·공통 지정·로컬 표식 비트)·사제 분배기. fixture priestowner 10.78 3528행·priest-owner-current-local 10.78 72행 전부(CD·1037 행은 범위 밖)
-cpppj/src/o/RawPriestPanic.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestPanic.cpp	port	www/core/raw-priest-panic.js	1f00a25a	port	[o-default] WB04-E66: 사제 공황 이동 00491db0(임시 두 배 속도 신전 복귀·±20 임의 같은 영역 점 경로). fixture priest-panic 600행 전부(10.78 전용 파일). RawDudeNotice 이식 때 속도 표를 같은 표에 연결
 cpppj/src/o/RawPriestParticipation.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacement.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacementCollision.cpp	port			todo	[o-default]
@@ -848,7 +848,7 @@ cpppj/src/o/RawPriestPlacementShape.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacementTerrain.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPostPop.cpp	port	www/core/raw-priest-post-pop.js	1f00a25a	port	[o-default] WB04-E63: 사제 후처리 접두 004950f0(목록 00414450·회복 예약·소유자 상태)·PriestPostPopState·resetPriestOwnerState. fixture priestpostpop 10.78 Prefix 2392행 전부. ProcessHost 통합 장면은 호스트 장면 단위에서
 cpppj/src/o/RawPriestPostPopTail.cpp	port	www/core/raw-priest-post-pop-tail.js	1f00a25a	port	[o-default] WB04-E64: 사제 postPop 후반 004950f0(Carrier 뒤 이동 불가 조회·낙하/보호막)·makePriestPostPopTailShieldHooks. fixture priestpostpoptail 10.78 2048행·priestpop 10.78 1280행 전부. 회복 Form/Kernel·낙하(RawPriestFall) 통합 장면은 해당 단위에서
-cpppj/src/o/RawPriestPrayer.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestPrayer.cpp	port	www/core/raw-priest-prayer.js	1f00a25a	port	[o-default] WB04-E66: 사제 기도 입력 4940b0·수신 493f80·605 진행 494580. fixture priest-prayer 1126행 전부(10.78 전용 파일)
 cpppj/src/o/RawPriestPreDestroy.cpp	port	www/core/raw-priest-pre-destroy.js	1f00a25a	port	[o-default] WB04-E63: 사제 삭제 준비 004919b0(목록 압축·보호막 삭제 요청·Carrier). fixture priestdestroy 10.78 2184행 전부. Damageable/Kernel 정리 통합은 해당 단위에서
 cpppj/src/o/RawPriestRegen.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestRegenHitPoints.cpp	port	www/core/raw-priest-regen-hit-points.js	1f00a25a	port	[o-default] WB04-E15: 4945ee 사제 회복 HP(10.78 경로). fixture priest-regen-hit-points-current originals 432행 전부
