@@ -1222,6 +1222,44 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<InvalidOperationException>(() => world.Pop(5, 10f, 10f));
     }
 
+    /// <summary>연결 조회가 없으면 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 연결 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ConnectRejectsNon188World()
+    {
+        // CD 171개 TYPE의 연결 조회는 후속 단위에서 잇는다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.BridgeConnections());
+        Assert.Throws<InvalidOperationException>(() => world.Find(10f, 10f, 70u));
+    }
+
+    /// <summary>같은 연결 생성기를 빌리는지 검증한다. 2026-11-07 F2d 월드 본체 연결 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BridgeConnectionsReturnsSame()
+    {
+        var world = DisplayPopWorld();
+        Assert.Same(world.BridgeConnections(), world.BridgeConnections());
+    }
+
+    /// <summary>등록된 객체를 좌표·타입으로 찾는지 검증한다. 2026-11-07 F2d 월드 본체 연결 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FindReturnsPlacedObject()
+    {
+        var world = DisplayPopWorld();
+        int sid = world.Create(70u, 0u);
+        world.Pop(sid, 10f, 10f);
+        Assert.Equal(sid, world.Find(10f, 10f, 70u));
+        Assert.Equal(0, world.Find(10f, 10f, 71u));
+    }
+
+    /// <summary>표 밖 타입을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 연결 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FindRejectsBadType()
+    {
+        var world = DisplayPopWorld();
+        Assert.Throws<ArgumentOutOfRangeException>(() => world.Find(10f, 10f, 999u));
+    }
+
     /// <summary>188개가 아닌 TYPE 월드의 해제를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
     [Fact]
     public void UnpopRejectsNon188World()

@@ -85,6 +85,12 @@ public sealed class RawSurfaceWorld
     /// <summary>객체를 공간 지도에 등록하는 처리기다. 원본 Impl.pop에 대응하며 188개 TYPE가 아니면 비워 둔다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
     private readonly RawPop? _pop;
 
+    /// <summary>발자국에 인접한 표면·객체를 조회하는 검색기다. 원본 Impl.neighbors에 대응한다. 같은 수 프레임 표가 없으면 비워 둔다. 2026-11-07 F2d 월드 본체 연결 조회 이식에서 추가됐다.</summary>
+    private readonly RawSquidNeighbors? _neighbors;
+
+    /// <summary>같은 월드의 실제 연결 생성기를 빌린다. 원본 Impl.connect에 대응한다. 같은 수 프레임 표가 없으면 비워 둔다. 2026-11-07 F2d 월드 본체 연결 조회 이식에서 추가됐다.</summary>
+    private readonly RawBridgeConnect? _connect;
+
     private readonly RawUnpop? _unpop;
 
     /// <summary>자산 삭제의 기본 몸체다. 원본 Impl.baseDestroy에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
@@ -175,6 +181,23 @@ public sealed class RawSurfaceWorld
                     IncompleteSupport = (_, _, _) => throw new InvalidOperationException("원본 표면 월드의 불완전한 받침 묶음입니다."),
                     Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
                     Detail = text => _storage.RecordAssertionDetail(text),
+                });
+                _neighbors = new RawSquidNeighbors(_storage.Pool, _storage.Hash, _storage.Spots, _types, new RiftFrameCodeTables(_frames));
+                _connect = new RawBridgeConnect(_storage.Pool, _neighbors, _storage.Links, new BridgeConnectHooks
+                {
+                    Create = (type, flags) =>
+                    {
+                        _changed = true;
+                        return _factory!.Create(type, (SidAllocation)flags);
+                    },
+                    SetOwner = (sid, owner) =>
+                    {
+                        SetAssetOwner(sid, owner);
+                        _changed = true;
+                    },
+                    Pop = (sid, x, y, flags) => Pop(sid, x, y, flags),
+                    SetFrame = (_, _, _) => throw new InvalidOperationException("실제 프레임 지정이 연결되지 않았습니다."),
+                    NotifySurface = sid => _building!.NotifySurface(sid),
                 });
             }
             _baseDestroy = new RawSquidDestroy(_storage.Pool, _unpop, _types);
@@ -737,6 +760,33 @@ public sealed class RawSurfaceWorld
     {
         ReadOnlySpan<byte> raw = _storage.Pool.Slot(sid);
         Pop(sid, BitConverter.UInt32BitsToSingle(ReadSlot(raw, 14, 4)), BitConverter.UInt32BitsToSingle(ReadSlot(raw, 18, 4)), flags);
+    }
+
+    /// <summary>실제 월드가 소유한 연결 생성기를 빌리며 별도 생성기를 만들지 않는다.</summary>
+    /// <returns>현재 연결 생성기다.</returns>
+    public RawBridgeConnect BridgeConnections()
+    {
+        if (_connect is null)
+        {
+            throw new InvalidOperationException("실제 월드 연결 생성기가 연결되지 않았습니다.");
+        }
+
+        return _connect;
+    }
+
+    /// <summary>지정 위치의 실제 객체·받침을 조회한다. 없으면 0이다.</summary>
+    /// <param name="x">가로 좌표다.</param>
+    /// <param name="y">세로 좌표다.</param>
+    /// <param name="type">찾을 타입 번호다.</param>
+    /// <returns>찾은 번호다. 없으면 0이다.</returns>
+    public int Find(float x, float y, uint type)
+    {
+        if (_connect is null)
+        {
+            throw new InvalidOperationException("실제 월드 연결 조회가 연결되지 않았습니다.");
+        }
+
+        return _connect.FindTypeAt(x, y, type);
     }
 
     /// <summary>현재 카메라의 원본 픽셀 기준값과 GUI 변경 표를 연결한다.</summary>
