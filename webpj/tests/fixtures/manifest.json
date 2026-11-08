@@ -11217,7 +11217,7 @@
       "bytes": 1009583,
       "lines": 3929,
       "fixtureCommit": "3c570b27",
-      "webCommit": "worktree",
+      "webCommit": "b42ac0d6",
       "cpppjBasis": {
         "cpppj/src/o/CanonTypeDecoder.cpp": "167866d9",
         "cpppj/src/o/CanonDecoder.cpp": "167866d9"
@@ -11247,9 +11247,38 @@
       "bytes": 22538,
       "lines": 157,
       "fixtureCommit": "167866d9",
-      "webCommit": "worktree",
+      "webCommit": "b42ac0d6",
       "cpppjBasis": {
         "cpppj/src/o/CanonDecoder.cpp": "167866d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E137",
+      "id": "constructionclear",
+      "path": "cpppj/tests/fixtures/constructionclear-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 예측 조각 정리의 칸 탐색 범위와 지운 후보·삭제 플래그 순서(세 판본 1020행)",
+      "consumers": [
+        "webpj/tests/construction-clear.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-clear.js"
+      ],
+      "doc": "docs/webpj-construction-clear-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionClear.cpp"
+      ],
+      "scope": "10.78(originals) 420행 사용, originalCD 300행은 10.72, original1037 300행은 10.37",
+      "text": true,
+      "sha256": "9453f28cccf71d2cff848744f53b1b3ebec39821110d3188a9100e68c1b63f88",
+      "bytes": 206524,
+      "lines": 1022,
+      "fixtureCommit": "c0146d4d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionClear.cpp": "2a8f937e"
       }
     }
   ]
