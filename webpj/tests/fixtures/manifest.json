@@ -8959,7 +8959,7 @@
       "bytes": 45973,
       "lines": 691,
       "fixtureCommit": "8eaaf082",
-      "webCommit": "worktree",
+      "webCommit": "81b99eb3",
       "cpppjBasis": {
         "cpppj/src/o/RawGunBlocker.cpp": "815fbd67"
       }
@@ -8988,9 +8988,38 @@
       "bytes": 509,
       "lines": 7,
       "fixtureCommit": "8eaaf082",
-      "webCommit": "worktree",
+      "webCommit": "81b99eb3",
       "cpppjBasis": {
         "cpppj/src/o/RawGunBlocker.cpp": "815fbd67"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E88",
+      "id": "fence-neighbors",
+      "path": "cpppj/tests/fixtures/fence-neighbors-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 바리케이드 이웃 최근접 선택 결과·검색 경계 네 float 비트·축 사거리 판정과 입력 객체 전체 250바이트 불변(1904행)",
+      "consumers": [
+        "webpj/tests/fence-neighbors.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-neighbors.js"
+      ],
+      "doc": "docs/webpj-fence-neighbors-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFenceNeighbors.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1904행 전부 사용",
+      "text": true,
+      "sha256": "79cbc909b122529f0738a4c40b9cce847c40484fc25d23388301fc509dc646a4",
+      "bytes": 1132816,
+      "lines": 1905,
+      "fixtureCommit": "6b4ffe65",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFenceNeighbors.cpp": "6b4ffe65"
       }
     }
   ]
