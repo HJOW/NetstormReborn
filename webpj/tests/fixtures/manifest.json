@@ -10393,9 +10393,97 @@
       "bytes": 360863,
       "lines": 1497,
       "fixtureCommit": "4e532fd1",
-      "webCommit": "worktree",
+      "webCommit": "130ffad4",
       "cpppjBasis": {
         "cpppj/src/o/RawVortexAscend.cpp": "11fbb988"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E121",
+      "id": "windaviarystate",
+      "path": "cpppj/tests/fixtures/wind-aviary-state-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 데빌메이커 80바이트의 생성자/쓰기/읽기 전체 이미지·패킷 64바이트·부모 출력·반환 길이(1894행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/wind-aviary-state.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-wind-aviary-state.js"
+      ],
+      "doc": "docs/webpj-wind-aviary-state-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWindAviaryState.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1894행 전부 사용",
+      "text": true,
+      "sha256": "9de1895040c7b643dfbd30e48ec8ff0b4b8be174c43398f24d223fcb3c79a273",
+      "bytes": 596781,
+      "lines": 1895,
+      "fixtureCommit": "93f9c1c2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWindAviaryState.cpp": "8b15b357"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E121",
+      "id": "windcirclepoint",
+      "path": "cpppj/tests/fixtures/wind-circle-point-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 윈드 원주 점의 두 float 저장(기본 53비트/64비트 정밀도 열, 232행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/wind-spell.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-wind-circle.js"
+      ],
+      "doc": "docs/webpj-wind-aviary-state-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWindCircle.cpp"
+      ],
+      "scope": "10.78 전용 232행 전부 사용(기본 53비트 열)",
+      "text": true,
+      "sha256": "10148eb52d02372c31c404c811279d25c1bc08c3bd2b35f017c2ca9b2fbd119c",
+      "bytes": 14684,
+      "lines": 233,
+      "fixtureCommit": "566f44d6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWindCircle.cpp": "566f44d6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E121",
+      "id": "windspell",
+      "path": "cpppj/tests/fixtures/wind-spell-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 세 윈드 소환 주문의 반환·조회/확보/부착 호출 순서와 인수·부착한 80바이트 이미지(300행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/wind-spell.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-wind-spell.js",
+        "webpj/www/core/raw-wind-aviary-state.js"
+      ],
+      "doc": "docs/webpj-wind-aviary-state-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWindSpell.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 300행 전부 사용",
+      "text": true,
+      "sha256": "d76c1e931e38c3c880fdbeb5a8a4de3ba47dbbe0536d970a301032b7da9080c2",
+      "bytes": 27128,
+      "lines": 301,
+      "fixtureCommit": "566f44d6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWindSpell.cpp": "566f44d6"
       }
     }
   ]
