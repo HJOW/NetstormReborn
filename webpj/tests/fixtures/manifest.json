@@ -8607,7 +8607,7 @@
       "bytes": 51766,
       "lines": 605,
       "fixtureCommit": "ab9361f1",
-      "webCommit": "worktree",
+      "webCommit": "7360a2a2",
       "cpppjBasis": {
         "cpppj/src/o/RawGeyserAiRegistration.cpp": "af9cc28e"
       }
@@ -8636,9 +8636,38 @@
       "bytes": 40935,
       "lines": 97,
       "fixtureCommit": "b3f1a1b6",
-      "webCommit": "worktree",
+      "webCommit": "7360a2a2",
       "cpppjBasis": {
         "cpppj/src/o/RawVortexOwnerDiagnostic.cpp": "b3f1a1b6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E79",
+      "id": "vortex-owner",
+      "path": "cpppj/tests/fixtures/vortex-owner-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 신전 가상 소유자 변경의 외부 효과 호출 순서(I/P/R)·슬롯 50 raw·아홉 Player 신전 네 DWORD·공통 Owner 아홉 소유자 목록(stale 포함)·revision(원본 PATCH/CD 두 판본 1728행)",
+      "consumers": [
+        "webpj/tests/vortex-owner.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-vortex-owner.js"
+      ],
+      "doc": "docs/webpj-vortex-owner-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawVortexOwner.cpp"
+      ],
+      "scope": "10.78(originals) 864행 전부 사용(CD 10.72 864행은 범위 밖)",
+      "text": true,
+      "sha256": "6793098e34d190f6b25e794a34145756ccfc34a04f74b045c4f1a4316f192e70",
+      "bytes": 975411,
+      "lines": 1729,
+      "fixtureCommit": "637ad767",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawVortexOwner.cpp": "637ad767"
       }
     }
   ]

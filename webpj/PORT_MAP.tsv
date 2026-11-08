@@ -938,7 +938,7 @@ cpppj/src/o/RawTutorialOne.cpp	port			todo	[o-default]
 cpppj/src/o/RawTutorialTwo.cpp	port			todo	[o-default]
 cpppj/src/o/RawTypeRequiredEnergy.cpp	port	www/core/raw-type-required-energy.js	1f00a25a	port	[o-default] WB04-E26: 0049c3b0/0049b0d0 TYPE 요구 에너지. fixture type-required-energy 2352행 전부 + 경계 거부
 cpppj/src/o/RawVortexAscend.cpp	port			todo	[o-default]
-cpppj/src/o/RawVortexOwner.cpp	port			todo	[o-default]
+cpppj/src/o/RawVortexOwner.cpp	port	www/core/raw-vortex-owner.js	1f00a25a	port	[o-default] WB04-E79: 신전 가상 소유자 변경 004dc4e0(이전 소유자 신전 DWORD 해제·섬 조회/진단/소유자·지역 소유·추가 목록 현재 개수/항목 순회·공통 Owner 뒤 현재 소유자 신전 기록·생산 갱신·revision+1). fixture vortex-owner 10.78 864행 전부(CD 864행은 웹 범위 밖). 섬 목록/지역 투표/생산 갱신 본체와 캠페인 조립(RawCampaignOwnership)은 해당 단위에서
 cpppj/src/o/RawVortexOwnerDiagnostic.cpp	port	www/core/raw-vortex-owner-diagnostic.js	1f00a25a	port	[o-default] WB04-E78: 신전 소유자 missingIsland 진단 004dc58f(원문 6줄 상세 문자열—ftol 좌표·signed 정수—을 상세 장치에 쓴 뒤 Vortex.cpp 0x235 진단). fixture vortex-owner-diagnostic-local 10.78 48행 전부(CD 48행은 웹 범위 밖). 부모 RawVortexOwner(슬롯 필드 제거·Player 18필드)는 해당 단위에서
 cpppj/src/o/RawVortexPreDestroy.cpp	port			todo	[o-default]
 cpppj/src/o/RawWalkerFrame.cpp	port			todo	[o-default]
