@@ -1,0 +1,192 @@
+{
+  "unit": 1180,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "summary": "Meta8 장기 수신/현재 옵션 owner·32h 같은 F 대여와 현재 DWORD 전투 관문 접합",
+  "sourceSha256": {
+    "cpppj/src/client/CMakeLists.txt": "ad3c24147037e793e0e4d236b7ea9769e1a63eab2795ef51fcbe67fc0c8178ea",
+    "cpppj/src/client/ClientCampaignTransport.cpp": "1bc2e9c4ecbb7b0578ec6e6ca5941896890ac15564b9503be38b882400d1050f",
+    "cpppj/src/client/ClientGameplayGlobals.h": "e224863a2a89a858823e24fe0fc9e78f4ecf3c344a942fdea500a19099873315",
+    "cpppj/src/client/ClientMetaBattleObjects.cpp": "ac266fef0bc7112caa763426130d89818d03627ecce8864d290db6ea0898bb8a",
+    "cpppj/src/client/ClientMetaPacketReceivers.cpp": "498cff53d2fd1437c75bb44fe8f0fb74241d9fe92f28b3e1dca50003e1ca00e7",
+    "cpppj/src/client/ClientMetaPacketReceivers.h": "18d0ba9c3f03b982df0b6bb466a7731da62eeceab54632cf97285fe8d98bb0d4",
+    "cpppj/src/client/ClientRendererFrame.cpp": "61bfa8f5f0a51f36669f7a1a0afec713a95bd266759bc0fa84dbfd4a4e629f25",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "0b7d055c46a2b4681c9a22967ce0dabf457b15b3625f3e666569c9259bad58a2",
+    "cpppj/src/client/RawCampaignEditorIsland.inc": "f7534e92a7515e4cafd9cc5e8d1a110f699e782389822fdb27406edd4fe642a3",
+    "cpppj/src/client/RawCampaignSession.h": "8f201c124fa930ec58350a8d070bf1e1ae8ad06ba1b09bff0cf3e537b47141c8",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "8ed01f94c681cdba1a11db733b49b143853ee0c9426a013b2ff509df6c1a376b",
+    "cpppj/src/client/RawSurfaceWorld.h": "f3f9f016141d273eef1d2bf50c5741a9b52f87e3217ac5730c252ffeb4a275e6",
+    "cpppj/src/client/UberGump.cpp": "23861b3e0b8a22d02d933c3ccebbb89e3177b9463a958d9d96bddc50e6369e0b",
+    "cpppj/src/client/UberGump.h": "468cbc9cae90e6b1ef1a4ea0d7925ef55c71531462fd78464365325ecfe3bc30",
+    "cpppj/src/client/UberMeta.inc": "2cf0cd65591c883d97efbe4a2db18f7df0215b900a55e43b26777cdb3dd9714a",
+    "cpppj/src/o/RawMissionSettingsPacket.cpp": "8af642e71ef5111b446025d0bd5a2a71b442f1a6d9733821cb2a570965812497",
+    "cpppj/src/o/RawMissionSettingsPacket.h": "fabceb886c01040d348db7a2abb85fd04bd74d50aa6b5793abe9938351b09da1",
+    "cpppj/src/o/RawStateBattleOptions.h": "9c946365779662527f9cb61a0d2125f1dd47c7463260a43f2204090f563fa1d5"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13511168,
+      "sha256": "6aaaf5ac147f4a6b296c3204927ace56145131b98c419c0b84f7e5464794b274"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "daefa246917fd349b093fb71e30b8585ae0ce3bb98c6a40611d0ee44067dcecf"
+    }
+  },
+  "nativeEvidence": {
+    "extracted/cpp-m6-meta-canonical-patch/meta-three/evidence.json": "2cf485f7fdfedf4de9476287462732faa7c88aae7d2afead1346cbc685cece24",
+    "extracted/cpp-m6-meta-canonical-patch/meta-three/meta-eight-cumulative.patch": "224c0791d32d0d23909a47f5120bd444b60804cc07d76b6d734557929ffc12c8",
+    "extracted/cpp-m6-settings-canonical-prep/cpe-hashes.json": "dc5d16e771663da2091a6e351b1c61b5bc844706234b80b521185206a6afeef5",
+    "extracted/cpp-m6-settings-canonical-prep/settings-canonical.patch": "9a43aebeaf97041e48491c4c599a9e75ff0462eda27474c791d7694b45ba8ef9"
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-1180/build-initial.log",
+      "exitCode": 0
+    },
+    {
+      "log": "extracted/cpp-resume-1180/build.log",
+      "exitCode": 0
+    }
+  ],
+  "live": {
+    "passed": true,
+    "unit": 1180,
+    "mission": "thewarbegins",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1180\\live-thewarbegins\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "6aaaf5ac147f4a6b296c3204927ace56145131b98c419c0b84f7e5464794b274",
+    "exeSha256After": "6aaaf5ac147f4a6b296c3204927ace56145131b98c419c0b84f7e5464794b274",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1180\\live-thewarbegins\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1180\\live-thewarbegins\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "Play Mission"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "ready",
+      "entry-waited",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "ready",
+        "after": "entry-waited",
+        "gameTimeBefore": 11.008,
+        "gameTimeAfter": 12.896,
+        "mission": "thewarbegins",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "audit": {
+    "metaNativeEntries": [
+      "004b4710",
+      "004b46d0",
+      "004b4820",
+      "004b4640",
+      "004b4600",
+      "004b47e0",
+      "004b4900",
+      "004b4680"
+    ],
+    "settingsNativeEntry": "0044dc20",
+    "clientLongBattleOptions": true,
+    "participantEntryHeight": -12,
+    "battleDwordReadAtUiGate": true,
+    "typedBoolAddressPreserved": true,
+    "sameSettingsFBorrowed": true,
+    "originalNativeInventory": 89,
+    "disabledValidation": 1,
+    "activeTarget": 88,
+    "canonicalTags": 24,
+    "canonicalNativeEntries": [
+      "004437f0",
+      "0044dc20",
+      "004b2cc0",
+      "004b3af0",
+      "004b4250",
+      "004b45a0",
+      "004b4600",
+      "004b4640",
+      "004b4680",
+      "004b46d0",
+      "004b4710",
+      "004b4790",
+      "004b47e0",
+      "004b4820",
+      "004b4900",
+      "004b49c0",
+      "004b49e0",
+      "004b4df0",
+      "004b6660",
+      "004b8a10",
+      "004b8ac0",
+      "004b8b20",
+      "004c1f60",
+      "004e2f00"
+    ],
+    "untagged": 64,
+    "tagIsNotFullScopeCompletion": true,
+    "noWorldMetaChildrenComplete": false,
+    "queueActivated": false,
+    "m6Complete": false
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "packet": 0,
+    "network": 0,
+    "nonMp": 1,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  },
+  "remaining": [
+    "Meta image/지면/삭제의 실제 NoWorld 하위, 24태그 전scope/무태그64F",
+    "41h 장기 수신·전역 Source/listener/공통표/Poll·backend/Node queue·지연 큐",
+    "전용 Regular/파생 삭제/NoWorld frame·큰 AI/다른 Form·JoinTestBattle·debugBurst",
+    "M7·M8·K1~K5·S1~S4와 별도 후순위"
+  ]
+}

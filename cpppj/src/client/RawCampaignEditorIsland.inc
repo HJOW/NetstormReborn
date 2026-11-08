@@ -25,6 +25,12 @@ std::optional<o::TerrainBitmapImage> RawCampaignSession::BuildEditorIslandMapIma
     auto& s=*impl_;const auto owner=s.playerState.templateOwner;
     return client::BuildEditorIslandBitmap(s.assets.game,target,owner>=1 && owner<=8 ? owner : 0,{0,0,14,14},s.terrainGlobals,s.gameplayGlobals->TerrainBitmaps(),s.services.editorIslandGreen);
 }
+//Meta 참가자 생성은 원문의 독립 지도/owner0/ignorePosition을 사용하며 Editor mode를 선요구하지 않는다.
+o::TerrainBitmapImage RawCampaignSession::BuildMetaParticipantImage(std::span<const std::uint8_t,6> record) {
+    auto& s=*impl_;o::ChunkMap map(14,14);o::RawIslandBuilderState state{{0,0,14,14},0};
+    o::RawIslandBuilder builder(map,s.chunks,*s.islands,s.core.frames,s.piece,state,SessionMissing<void,o::RawIslandBuilderAssertion>());static_cast<void>(builder.Place(record,0,true));
+    return client::BuildEditorIslandBitmap(s.assets.game,map,0,{0,0,14,14},s.terrainGlobals,s.gameplayGlobals->TerrainBitmaps(),s.services.editorIslandGreen);
+}
 // 목록 이미지도 실제 임시 지도에 Place(ignorePosition)를 실행한 뒤 같은 renderer를 사용한다.
 o::TerrainBitmapImage RawCampaignSession::BuildEditorIslandChoiceImage(std::span<const std::uint8_t,6> record) {
     o::ChunkMap map(14,14);BuildEditorIslandChoiceMap(record,map);auto& s=*impl_;

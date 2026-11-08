@@ -57,6 +57,8 @@ public:
     // 원본 루프 시작의 State 자리에서 대기 명령을 실행하고 시간 제한을 갱신한다.
     void Tick();
     void RunNativePacketState(); //장기 수신 F가 선택한 현재 State를 기존 실제 동기 Run 부모로 전달한다.
+    void RecreateNativePacketHud(); //67h의 실제 현재 HUD 재생성만 같은 UI에 요청한다.
+    void RefreshNativePacketInfo(); //47cab0의 실제 현재 NSInfo/메뉴 Push·Attach를 같은 UI에 요청한다.
     void ShowNativePacketTell(std::string_view section); //같은 현재 Config/미션 HTML Tell을 사용하고 상태나 성공값을 만들지 않는다.
     NativeBattleSource CurrentNativeBattleSource() const; //현재 실제 Composite/Meta/Editor device만 읽으며 phase 추정/새Source 생성을 하지 않는다.
     void DispatchNativeBattleStart(NativeBattleSource source,bool direct); //1a는 기존next7에weak로 기억하고1b는같은current7을즉시실행한다.
@@ -222,7 +224,7 @@ private:
     std::shared_ptr<MissionFortLoadRequest> missionFortRequest_; //현재 Guide의 지연 요청이다. Guide/전체 종료에서 반납하며 이전 World의 State 반납은 보존한다.
     std::shared_ptr<GeneralBattleStartRequest> nativeBattleStart_; //대기실 ACK와 별개인 실제 메타 State7의 현재 Zone/설치 요청이다.
     std::optional<WeakNativeBattleSource> pendingNativeBattleSource_; //1ah의같은다음7만실제전체Source에연결한다. 전송 owner/새 게임 요청을 소유하거나 만들지 않는다.
-    std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
+    std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions_{std::make_shared<std::array<std::uint32_t,256>>()}; // 설치 전/후가 공유하는 기술 허용 표다.
     std::uint32_t missionNumber_{},tutorialSeen_{}; // 실제5ca8e0/f0의 현재 전역이다.
     std::uint32_t& initLoginSubscriber_; //호환 이름이며 실제540c74의 같은 Client DWORD다.

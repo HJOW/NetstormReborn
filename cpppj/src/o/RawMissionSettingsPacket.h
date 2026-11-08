@@ -34,6 +34,7 @@ private:
     MissionSettingsPacketHooks hooks_; //현재 getter와 실제 송신 수명만 빌리며 값 캐시는 없다.
 };
 //0040b91a가 선택한 실제0x32/version1/정책0/자연ret4 observer와 수신기를 등록한다.
+void ReceiveCurrentMissionSettingsPacket(std::array<std::uint32_t,7>& current,std::span<const std::uint8_t> packet); //44dc20의 실제7개 현재DWORD 직접쓰기를 기본F와 독립typed등록이 공유한다.
 void RegisterMissionSettingsPacket(RawPacketDispatch& dispatch,RawMissionSettingsPacket& packet);
 void RegisterMissionSettingsPacket(RawPacketDispatch& dispatch,std::array<std::uint32_t,7>& current); // Editor/현재 Session은 송신 객체 없이 같은 원문7DWORD 수신을 등록한다.
 }

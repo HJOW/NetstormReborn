@@ -89,14 +89,14 @@ NativeMetaSceneHooks ClientRendererFrame::MetaDevices() {
         auto bytes=raw(number);bytes[12]=static_cast<std::uint8_t>(kind);bytes[13]=static_cast<std::uint8_t>(kind>>8);const auto storage=client_.SurfaceStorage();if (bytes[10]==storage->links.bridgeType) storage->Building().NotifySurface(sid(number));
     }; //004ac220은소유자BYTE가아닌QA WORD와조건부현재다리통지다.
     hooks.display.paintOwner=[this,sid](auto number,auto owner) { client_.SurfaceStorage()->SetAssetOwner(sid(number),owner); }; //공통owner직접호출로좁히지않고동일현재가상owner분배를공유한다.
-    hooks.display.destroy=[this,sid](auto number,auto flags) { static_cast<void>(client_.gameplayGlobals_->RequireSession().World().Destroy(sid(number),flags)); };
+    hooks.display.destroy=[this,sid](auto number,auto flags) { auto& session=client_.gameplayGlobals_->RequireSession();const auto runtimePin=client_.gameplayGlobals_->PinCurrentRuntime(session);static_cast<void>(session.World().Destroy(sid(number),flags)); }; //실제 Destroy 파생이 선택된 하위만 현재 전체 Runtime을 호출 끝까지 보유한다. NoWorld 삭제 부모는 별도 잔여다.
     hooks.display.move=[this,sid](auto number,float x,float y,auto flags) { static_cast<void>(client_.SurfaceStorage()->PopAsset(sid(number),x,y,flags)); }; //현재TYPE/SHP·전송/후처리·실제runtime pin은1175의장기Pop부모가선택한다.
     hooks.display.translate=[this](auto text) { const auto encoded=o::EncodeDisplayText(client_.Translate(text));return std::string(encoded.begin(),encoded.end()); }; //안내는실제현재언어와같은글꼴바이트로한번변환한다.
     hooks.display.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };
     hooks.display.denominator=[this](auto value) { client_.gameplayGlobals_->Camera().SelectDenominator(value,client_.kencloudGlobals_->WorldRedraw()); };
     hooks.display.dirty=[this](auto rectangle,auto flags) { client_.renderer_->Invalidate(rectangle,flags); };
-    hooks.create=[this](auto type,auto flags) { return std::uint32_t(client_.gameplayGlobals_->RequireSession().World().Create(type,flags).value); };
-    hooks.frameCount=[this,sid](auto number) { const auto core=client_.gameplayGlobals_->RequireSession().Core();const auto type=core.pool.Slot(sid(number))[10];if (type>=core.shapes.size()) throw std::out_of_range("메타현재TYPE프레임개수물리부족");return std::bit_cast<std::uint32_t>(core.shapes[type].frameCount); }; //004ad6c0은현재TYPE+114의SHP프레임개수다.가상78의기본프레임과구별한다.
+    hooks.create=[this](auto type,auto flags) { return std::uint32_t(client_.SurfaceStorage()->CreateAsset(type,flags).value); };
+    hooks.frameCount=[this,sid](auto number) { const auto storage=client_.SurfaceStorage();const auto type=storage->pool.Slot(sid(number))[10];if (type>=storage->shapes.size()) throw std::out_of_range("메타현재TYPE프레임개수물리부족");return std::bit_cast<std::uint32_t>(storage->shapes[type].frameCount); }; //004ad6c0은현재TYPE+114의SHP프레임개수다.가상78의기본프레임과구별한다.
     hooks.selectFrame=[this](auto count) { return client_.randomGlobals_->Game().Next(count); }; //004558c0의같은게임난수를한번소비하며0한계를임의로고치지않는다.
     hooks.resetCamera=[this] {
         auto& camera=client_.gameplayGlobals_->Camera();CameraHomeState state;state.width=client_.screen_->width_;state.height=client_.screen_->height_;state.challengeType=client_.ChallengeGlobals()->ParticipantType();state.worldWidth=camera.Target().limits[0];state.worldHeight=camera.Target().limits[1];
@@ -125,7 +125,7 @@ void ClientRendererFrame::RefreshMetaChatMode(std::uint32_t mode) { if (!client_
 void Client::RefreshNativeMetaChatMode(std::uint32_t mode) { if (!rendererFrame_) throw std::logic_error("메타 Chat 대상의 실제 Frame owner 미설치");rendererFrame_->RefreshMetaChatMode(mode); } //기존 친구 Frame이 현재 UI를 조회한다.
 // 원문 객체 SID0도 읽되 물리 밖을 임의 객체/가짜 성공으로 바꾸지 않는다.
 void ClientRendererFrame::ShowObjectNote(std::uint32_t object,std::string_view translated) {
-    const auto core=client_.GameplayGlobals()->RequireSession().Core();if (object>65535U || object>=core.pool.Capacity()) throw std::out_of_range("객체 안내의 실제 DWORD SID 물리 범위");const auto raw=core.pool.Slot(o::Sid{static_cast<std::uint16_t>(object)});
+    const auto storage=client_.SurfaceStorage();if (object>65535U || object>=storage->pool.Capacity()) throw std::out_of_range("객체 안내의 실제 DWORD SID 물리 범위");const auto raw=storage->pool.Slot(o::Sid{static_cast<std::uint16_t>(object)}); //원문의 장기 객체/현재 카메라만 읽고 Session을 요구하지 않는다.
     const auto coordinate=[raw](std::size_t at) { std::uint32_t bits{};for (std::size_t byte=0;byte<4;++byte) bits|=std::uint32_t(raw[at+byte])<<(8*byte);return std::bit_cast<float>(bits); }; //같은 현재 객체의 비정렬 float x/y를 읽는다.
     const auto point=ProjectCameraView(client_.GameplayGlobals()->Camera().Snapshot(),coordinate(0xe),coordinate(0x12));if (!client_.menu_ || !client_.menu_->rawButtons_ || !client_.menu_->rawButtons_->Menus()) throw std::logic_error("객체 안내의 실제 UI owner 미설치");client_.menu_->rawButtons_->Menus()->ShowObjectNote(object,{point[0],point[1]},translated);
 }
@@ -140,7 +140,7 @@ NativeIslandRig& ClientRendererFrame::AcquireIslandRig(std::uint32_t object,floa
     hooks.object.findGump=[this](auto id)->GumpCreateNode* { NativeMetaDisplayHooks current;if (!client_.menu_ || !client_.menu_->rawButtons_ || !client_.menu_->rawButtons_->Menus()) throw std::logic_error("Rig 현재 Gump 장치 미설치");client_.menu_->rawButtons_->Menus()->BindMetaDisplayGumps(current);return current.findGump(id); }; //이전 Uber의 RawMenuControls 포인터를 장기 Rig에 저장하지 않는다.
     hooks.killGump=[this](auto id) { if (!client_.menu_ || !client_.menu_->rawButtons_ || !client_.menu_->rawButtons_->Menus()) throw std::logic_error("Rig 현재 Gump Kill 장치 미설치");client_.menu_->rawButtons_->Menus()->KillRegisteredGump(id); };
     NativeIslandRigGlobalsGetter globals=[this,owner=client_.ChallengeGlobals()] { return NativeIslandRigGlobals{MetaGlobals(),{client_.Time().game,client_.gameplayGlobals_->player.special,owner->Projection().camera.height}}; };
-    const auto core=client_.GameplayGlobals()->RequireSession().Core();auto* rig=FindOrCreateNativeIslandRig(core.processes,core.kernel,o::Sid{static_cast<std::uint16_t>(object)},height,kill,std::move(globals),hooks);if (!rig) throw std::runtime_error("실제 메타 IslandRig 생성/부착 실패");return *rig;
+    const auto storage=client_.SurfaceStorage();auto& processes=storage->Processes();auto* rig=FindOrCreateNativeIslandRig(processes.Host(),processes.Kernel(),o::Sid{static_cast<std::uint16_t>(object)},height,kill,std::move(globals),hooks);if (!rig) throw std::runtime_error("실제 메타 IslandRig 생성/부착 실패");return *rig;
 }
 // 실제 Client의 장기 Renderer 조립기만 빌리며 조회만으로 프레임/네트워크를 진행하지 않는다.
 NativeIslandRig& Client::AcquireNativeIslandRig(std::uint32_t object,float height,std::uint32_t kill) { if (!rendererFrame_) throw std::logic_error("Rig 실제 Renderer owner 미설치");return rendererFrame_->AcquireIslandRig(object,height,kill); }

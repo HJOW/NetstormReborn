@@ -1,5 +1,7 @@
 // 지난 Login의 raw this를 장기 backend에 저장하지 않고 실제 현재 World와 장기 전역을 빌린다.
 #include "client/ClientCampaignTransport.h"
+#include "client/ClientMetaPacketReceivers.h" //Meta 전용 Source 없이 같은 Client 기본 8F를 설치한다.
+#include "o/RawMissionSettingsPacket.h" //장기 GameAux의 같은7DWORD를32h 기본F가 직접 쓴다.
 #include "client/CurrentAllocationBytes.h" //7ch응답의미작성stacktail은기존실제할당입력을유지한다.
 #include "client/NativeMetaConnectedState.h" //현재CS의같은master검색을공유한다.
 #include "client/ClientPacketSources.h" //actual device/network는 배송 지점에서만 선택한다.
@@ -255,6 +257,7 @@ void InstallClientMetaGameLoginReceiver(Client& client,o::RawPacketDispatch& dis
     dispatch.RegisterCanonicalDirect(0x7c,0x004b2cc0U,[client=&client](auto sender,auto*,auto packet) { ReceiveClientMetaGameLogin(*client,sender,packet); }); //NULLconnection/현재phase/known/CS0을선행검사하지않는다.
 }
 void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) {
+    InstallClientMetaPacketReceivers(client,dispatch); //20/21/22/23/24/25/67/88의 같은 전역 본문·관찰기를 모든 실제 Client 기본 표에 둔다.
     InstallClientMetaGameLoginReceiver(client,dispatch); //Meta/일반/Editor및Session반납뒤에도같은전역F와비NULL40b380을보존한다.
     InstallClientMetaDescriptionReceiver(client,dispatch); //Meta/일반/Editor의같은장기기본F이며Session반납뒤에도유지한다.
     InstallClientMetaGlobalReceivers(client,dispatch); //원문 앱 전역F이므로 Meta 생성 전후/일반/Editor에 같은 baseline이 남는다.
@@ -264,6 +267,8 @@ void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) 
     InstallClientMissionSendObservers(client,dispatch); //같은 네 순수 관찰기를 재사용하며 실제 기능 수신기를 추가하지 않는다.
     const auto storage=client.SurfaceStorage(); //진단의 장기 Client storage만 보유하고 Session/World/Meta this는 빌리지 않는다.
     const auto game=client.GameplayGlobals(); //69h 기본 receiver는장기전역만보유하고이전Session/World를고정하지않는다.
+    dispatch.Observe(0x32,[](std::uint32_t) {});dispatch.Version(0x32,1,0);dispatch.RequireLength(0x32,32); //40b380의 비NULL 빈observer와 version1/policy0/고정32BYTE다.
+    dispatch.RegisterCanonicalDirect(0x32,0x0044dc20U,[aux=game->GameAux()](auto,auto*,auto packet) { o::ReceiveCurrentMissionSettingsPacket(aux->MissionSettings(),packet); }); //장기7DWORD만 보유하고 송신자/연결/Session/phase를 조회하지 않는다.
     o::RegisterTechnologyTypesPacket(dispatch,game->GameAux()->TypeUse(),[game](auto type) { auto& session=game->RequireSession();const auto runtimePin=game->PinCurrentRuntime(session);session.IndicateTechnology(type); },
         [storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); //합집합뒤비영항목마다현재Session/실제전체owner를선택하며반환/예외까지pin한다.빈목록은World를요구하지않는다.
     dispatch.ObservePacket(0x7b,[storage](auto packet,auto sending) { ObserveClientPacketDefault(0x7b,packet,sending,storage); }); //40b2f0은 수신 방향에서 payload를 읽지 않고 송신 진단 뒤 signed BYTE 길이를 재조회한다.

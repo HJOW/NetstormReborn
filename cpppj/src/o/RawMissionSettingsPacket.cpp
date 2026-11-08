@@ -6,6 +6,11 @@
 
 namespace netstorm::o {
 namespace {
+constexpr std::uint32_t kMissionSettingsReceiver=0x0044dc20U; //32h의 실제 원문 코드 정체성이며 현재 packet type으로 다시 고르지 않는다.
+//실제 장기32h가 설치된 Client만 같은 F를 대여하며 독립typed의 기존 등록은 유지한다.
+bool BorrowCurrentMissionSettingsReceiver(RawPacketDispatch& dispatch) {
+    const auto receiver=dispatch.Registration(0x32).canonicalReceive;if (!receiver || receiver->nativeEntry!=kMissionSettingsReceiver) return false;dispatch.RegisterCanonical(0x32,receiver);return true;
+}
 // packet의 비정렬 DWORD를 원본 little endian으로 쓴다.
 void SettingsDword(std::span<std::uint8_t> packet,std::size_t offset,std::uint32_t value) {
     // 각 현재 DWORD의 네 BYTE를 낮은 위치부터 기록한다.
@@ -48,14 +53,18 @@ void RawMissionSettingsPacket::Receive(std::span<const std::uint8_t> packet) con
 }
 // 원본observer0040b380은 인자를 버리는ret4뿐이며 송신/수신 모두 추가효과 없이 자연반환한다.
 void RegisterMissionSettingsPacket(RawPacketDispatch& dispatch,RawMissionSettingsPacket& packet) {
+    if (BorrowCurrentMissionSettingsReceiver(dispatch)) return; //실제 Client 기본F/observer를 짧은 Login 객체로 덮지 않는다.
     dispatch.Observe(0x32,[](std::uint32_t) {});dispatch.Version(0x32,1,0);
     dispatch.Register(0x32,[&packet](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> bytes) { packet.Receive(bytes); });
 }
 // 비Login에서도 원문32h의 현재 입력→직접 store를0..6순서로 실행하며 UI/값 정규화를 추가하지 않는다.
 void RegisterMissionSettingsPacket(RawPacketDispatch& dispatch,std::array<std::uint32_t,7>& current) {
+    if (BorrowCurrentMissionSettingsReceiver(dispatch)) return; //일반/Editor도 같은 장기F를 재등록해 정상·예외 반납의 같은baseline을 유지한다.
     dispatch.Observe(0x32,{});dispatch.Version(0x32,1,0);dispatch.RequireLength(0x32,32);
-    dispatch.Register(0x32,[&current](auto,auto&,auto packet) {
-        for (std::size_t index=0;index<current.size();++index) current[index]=SettingsRead(packet,4+index*4); // 앞선 store를 되돌리지 않고 다음 현재 DWORD를 읽는다.
-    });
+    dispatch.Register(0x32,[&current](auto,auto&,auto packet) { ReceiveCurrentMissionSettingsPacket(current,packet); });
+}
+//앞선store는 보존하고 다음packet DWORD를 그때 읽는다. Session/송신자/연결·UI 관문은 없다.
+void ReceiveCurrentMissionSettingsPacket(std::array<std::uint32_t,7>& current,std::span<const std::uint8_t> packet) {
+    for (std::size_t index=0;index<current.size();++index) current[index]=SettingsRead(packet,4+index*4); //원문44dc20의7개DWORD 직접쓰기순서이며 사본/정규화/새설정초기화가 아니다.
 }
 }

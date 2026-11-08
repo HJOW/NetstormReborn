@@ -139,6 +139,7 @@ public:
     o::SquidDisplay& Display(); //같은TYPE/SHP/진단과현재Renderer로실제표시부모를World없이제공한다.
     void BindDisplayDevices(RawSurfaceDisplayBindings devices); //첫실제Client물리준비뒤현재Renderer/카메라getter만결합하며조회/난수/그리기는실행하지않는다.
     void BindDisplayRuntime(const std::shared_ptr<const RawSurfaceDisplayBindings>& runtime); //같은현재World대여만weak로공개하고만료뒤장기Client장치를쓴다.
+    o::Sid CreateAsset(std::uint32_t type,std::uint32_t flags=0); //기존 World의 changed prefix 뒤 같은 현재 Factory Create를 실행하고 새 World를 요구하지 않는다.
     o::SquidFactory& Factory(); //같은Pool/현재TYPE/HP·깊이/진단으로실제Create를World없이실행하며Acquire/reset/Host대여를추가하지않는다.
     RawProcessHostStorage& Processes(); // 같은 Storage의 장기 Host/상태와 현재 World 대여를 제공한다.
     RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr,std::shared_ptr<o::RawAuthorityState> authority={},std::shared_ptr<o::RawGameAuxState> gameAux={}); // 배열은 최초 한 번만 확보한다.

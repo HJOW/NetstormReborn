@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1179 현행:** M6-a~k 완료와15태그/무태그73을 유지하며 장기Host 공장/공통삭제·baseRegular16VT·현재전체선택값·자원7VT PostPop을 부분접합했다. 전용Regular/삭제·NoWorld caller/큰AI/다른Form·전역Source/잔여F·l/n/큐는 미완료다. 새MP실행0, 빌드/허용3비MP 근거는 [현행보고](cpp-host-resource-postpop-20261108.md)에 한정한다.
+**1180 현행:** Meta8 장기 F/옵션 owner·32h 같은 F 대여·현재 DWORD 관문을 부분 접합했다. 직접 Native 태그24/무태그64이며 전scope 완료 수가 아니다. NoWorld 하위·전역 Source/표/Poll·자원 Regular/삭제·JoinTestBattle·M6-l/m/n/큐는 미완료다. 새MP 실행0이며 빌드/허용 비MP 근거는 [1180](cpp-meta-settings-canonical-20261108.md)에 한정한다.
 
 제품 코드/LEFT_JOBS/추적 문서는 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

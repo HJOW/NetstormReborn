@@ -314,6 +314,7 @@ o::SquidDisplay& RawSurfaceStorage::Display() {
     return *display_;
 }
 // 원문의 실제 공통생성자를 같은 장기물리에 한 번 구성한다. 생성의 선택효과는 기존Factory가 결정한다.
+o::Sid RawSurfaceStorage::CreateAsset(std::uint32_t type,std::uint32_t flags) { NoteChanged();return Factory().Create(type,flags); } //실제 현재 표시 대여가 있을 때만 같은 changed bool을 알리고 Native 생성 순서는 보존한다.
 o::SquidFactory& RawSurfaceStorage::Factory() {
     if (!factory_) {
         auto factory=std::make_unique<o::SquidFactory>(pool,types); //새Pool/World를만들지않으며Create가현재Allocate/생성자/가상+28을직접실행한다.

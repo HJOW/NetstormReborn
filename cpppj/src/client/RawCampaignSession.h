@@ -554,6 +554,7 @@ public:
     void SnapshotBattle(std::uint32_t slot); //실제004bf880의 기술/Deck/Objects/Territory/Money/Mission/CoreData/Notify를 같은 저장소로 실행한다.
     bool BuildEditorIslandMap(o::ChunkMap& target); // 0046e4a0의 독립14×14 지도 부분이다. Bitmap 생성과 전체 GUI 완료를 뜻하지 않는다.
     std::optional<o::TerrainBitmapImage> BuildEditorIslandMapImage(o::ChunkMap& target); // 같은 실제 지도와004c1cc0 Bitmap을 만들고 manager 부재는 nullopt로 구별한다.
+    o::TerrainBitmapImage BuildMetaParticipantImage(std::span<const std::uint8_t,6> record); //46e5a0의 독립14×14 지도/bitmap이며 ExistingEditor 설치 관문과 구별한다. NoWorld 전역 자원 접합은 별도다.
     o::TerrainBitmapImage BuildEditorIslandChoiceImage(std::span<const std::uint8_t,6> record); // 원문 owner0 단일 지도/로컬 난수/보호 texture의 실제 목록 이미지를 만든다.
     std::optional<RawImage> BuildEditorIslandMapShape(o::ChunkMap& target); //0047f9b0의 현재 지도는 crop0으로 변환하고 bitmap 소유권을 소비한다.
     RawImage BuildEditorIslandChoiceShape(std::span<const std::uint8_t,6> record); // 같은 후보 bitmap을 crop1 Image로 바꾸어 전용 목록/드래그의 실제 크기를 제공한다.

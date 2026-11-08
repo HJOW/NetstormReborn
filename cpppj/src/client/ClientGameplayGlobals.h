@@ -49,6 +49,7 @@ public:
     bool RuntimeCallActive(const RawCampaignSession& session) const noexcept; //실제 owner pin의 배송 중 호출만 세며 대기 중 큐/weak 공개는 정리 관문을 잠그지 않는다.
     bool Borrowed() const; // 현재 대여 여부의 읽기 전용 관측이다.
     const std::shared_ptr<ClientSubscriberGlobals>& Subscribers() const; // 다른 Client의 참조를 잘못 합치지 않는다.
+    const std::shared_ptr<std::array<std::uint8_t,87>>& BattleOptionsOwner() const { return battleOptions_; } //현재87BYTE를 반환하며 Session/UI 교체에서 reset하지 않는다.
     float& ManaRadius() { return manaRadius_; } //0052f488의 실제 공급 반경을 옵션/커서/AI가 같은 주소에서 읽고 쓴다.
     const float& ManaRadius() const { return manaRadius_; } //Session 교체/반납에서22 사본을 새로 만들지 않는다.
     std::span<float,4> ManaRanges() { return manaRanges_; } //005425f4의 현재4float 선택표이며 옵션 해석이 같은 표를 읽는다.
@@ -165,6 +166,7 @@ private:
     o::RawSidRobustDiagnostics sidRobustDiagnostics_; // 두원문BSS DWORD를새Client에서한번만0으로만들며Session재생성으로초기화하지않는다.
     ClientAiDebugGlobals aiDebug_; // World/Session교체에서도유지하는현재진단전역이다.
     std::array<double,9> priestTakenDeadlines_{}; // 원문 BSS의9개0 기한이며 새 Client에서 한 번만 만든다.
+    std::shared_ptr<std::array<std::uint8_t,87>> battleOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; //기존 Uber의 최초0 배열을 실제 Client 수명으로 옮기며 Native 명시 Reset/수신 writer만 값을 쓴다.
     RawCampaignSession* current_{};bool borrowed_{}; // 게임 값의 대체가 아닌 현재 C++ Runtime 대여다.
     std::weak_ptr<void> runtimeOwner_; //현재 실제 GameWorld 또는 Session/표시/입력을 함께 소유한 EditorRuntime이며 장기 전역과 순환을 만들지 않는다.
     RawCampaignSession* runtimeOwnerSession_{}; //weak owner가 소유한 실제 Session 정체성이며 현재 raw 포인터와 별도로 대조한다.
