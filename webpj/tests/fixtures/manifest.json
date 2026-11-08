@@ -12677,7 +12677,7 @@
       "bytes": 42805,
       "lines": 257,
       "fixtureCommit": "db9b626c",
-      "webCommit": "worktree",
+      "webCommit": "985128f4",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningVisual.cpp": "961f6be5"
       }
@@ -12707,7 +12707,7 @@
       "bytes": 4243477,
       "lines": 653,
       "fixtureCommit": "ab9361f1",
-      "webCommit": "worktree",
+      "webCommit": "985128f4",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningSources.cpp": "24785574"
       }
@@ -12736,7 +12736,7 @@
       "bytes": 262063,
       "lines": 37,
       "fixtureCommit": "ae60fabc",
-      "webCommit": "worktree",
+      "webCommit": "985128f4",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningSources.cpp": "24785574"
       }
@@ -12767,10 +12767,100 @@
       "bytes": 652107,
       "lines": 5653,
       "fixtureCommit": "24785574",
-      "webCommit": "worktree",
+      "webCommit": "985128f4",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningSourceCount.cpp": "24785574",
         "cpppj/src/o/RawBurningSources.cpp": "24785574"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E184",
+      "id": "burninglifetimedraw",
+      "path": "cpppj/tests/fixtures/burning-lifetime-draw-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 Burning 5픽셀 출력(579)/삭제(64)/cold 색 표 생성(12)(입자 수명·clip·반납 순서·gradient 인수)(10.78 655행)",
+      "consumers": [
+        "webpj/tests/burning-lifetime-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-lifetime-draw.js",
+        "webpj/www/core/raw-burning-visual.js"
+      ],
+      "doc": "docs/webpj-burning-lifetime-draw-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningLifetimeDraw.cpp",
+        "cpppj/src/o/RawBurningVisual.cpp"
+      ],
+      "scope": "10.78 실제 PE 655행 전부",
+      "text": true,
+      "sha256": "9e5d319e8325b53b587a41a1091e7dd13ac32ef6cf09fa44578b102dbc0a550c",
+      "bytes": 54031,
+      "lines": 656,
+      "fixtureCommit": "961f6be5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningLifetimeDraw.cpp": "961f6be5",
+        "cpppj/src/o/RawBurningVisual.cpp": "961f6be5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E184",
+      "id": "renderframegate",
+      "path": "cpppj/tests/fixtures/render-frame-gate-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 487940 표시 slot/현재 frame 의 파생 +24 선택(signed slot·DWORD frame)(10.78 128행)",
+      "consumers": [
+        "webpj/tests/burning-lifetime-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-lifetime-draw.js"
+      ],
+      "doc": "docs/webpj-burning-lifetime-draw-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningLifetimeDraw.cpp"
+      ],
+      "scope": "10.78 실제 PE 128행 전부",
+      "text": true,
+      "sha256": "1eb5872cee58d17dce60a28fe80d5b7dba329632251c6d6b400a8f2dcdf0b8b7",
+      "bytes": 996,
+      "lines": 129,
+      "fixtureCommit": "961f6be5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningLifetimeDraw.cpp": "961f6be5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E184",
+      "id": "burningarchercapture",
+      "path": "cpppj/tests/fixtures/burning-archer-capture-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 71/128 의 +78/+a4 캡처 그림 제출(현재 프레임·출력 WORD·extra 별 그림/포구 디스크 요청)(10.78 88행)",
+      "consumers": [
+        "webpj/tests/burning-lifetime-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-lifetime-draw.js"
+      ],
+      "doc": "docs/webpj-burning-lifetime-draw-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningLifetimeDraw.cpp"
+      ],
+      "scope": "10.78 실제 PE 88행 전부",
+      "text": true,
+      "sha256": "27fc2c6de576fc6550d5b9f0250c073918f21850e0f32bd6139d6fc4ac1862ee",
+      "bytes": 2822,
+      "lines": 89,
+      "fixtureCommit": "961f6be5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningLifetimeDraw.cpp": "961f6be5"
       }
     }
   ]
