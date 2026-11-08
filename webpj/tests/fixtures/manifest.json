@@ -9394,7 +9394,7 @@
       "bytes": 2285,
       "lines": 33,
       "fixtureCommit": "38742606",
-      "webCommit": "worktree",
+      "webCommit": "6a095ac5",
       "cpppjBasis": {
         "cpppj/src/o/RawPathRuntime.cpp": "8a555c99"
       }
@@ -9423,7 +9423,7 @@
       "bytes": 37981,
       "lines": 361,
       "fixtureCommit": "ada85427",
-      "webCommit": "worktree",
+      "webCommit": "6a095ac5",
       "cpppjBasis": {
         "cpppj/src/o/RawPathRuntime.cpp": "8a555c99"
       }
@@ -9452,9 +9452,38 @@
       "bytes": 8550,
       "lines": 91,
       "fixtureCommit": "8bf76206",
-      "webCommit": "worktree",
+      "webCommit": "6a095ac5",
       "cpppjBasis": {
         "cpppj/src/o/RawPathRuntime.cpp": "8a555c99"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E99",
+      "id": "carrier-move",
+      "path": "cpppj/tests/fixtures/carrier-move-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 운반체 이동 요청/수신의 외부 효과 순서·현재 전역·송신 패킷·두 부모 슬롯 raw·경로 이미지 Adler-32(982행; 53/64비트 열 동일)",
+      "consumers": [
+        "webpj/tests/carrier-move.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-move.js"
+      ],
+      "doc": "docs/webpj-carrier-move-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierMove.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 982행 전부 사용",
+      "text": true,
+      "sha256": "e59f542e07dd2248bfba155c7957bd51297706a7074687d939956d00dc5c346a",
+      "bytes": 630169,
+      "lines": 983,
+      "fixtureCommit": "f3e45255",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierMove.cpp": "9388cd63"
       }
     }
   ]
