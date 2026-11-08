@@ -9658,7 +9658,7 @@
       "bytes": 392115,
       "lines": 697,
       "fixtureCommit": "33302112",
-      "webCommit": "worktree",
+      "webCommit": "98210f0f",
       "cpppjBasis": {
         "cpppj/src/o/RawBoardApproach.cpp": "35de22d2"
       }
@@ -9687,7 +9687,7 @@
       "bytes": 18832,
       "lines": 433,
       "fixtureCommit": "ac29d049",
-      "webCommit": "worktree",
+      "webCommit": "98210f0f",
       "cpppjBasis": {
         "cpppj/src/o/RawSpecialDamage.cpp": "18c35f0e"
       }
@@ -9716,9 +9716,41 @@
       "bytes": 9119,
       "lines": 217,
       "fixtureCommit": "18c35f0e",
-      "webCommit": "worktree",
+      "webCommit": "98210f0f",
       "cpppjBasis": {
         "cpppj/src/o/RawSpecialDamage.cpp": "18c35f0e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E105",
+      "id": "gem-reward",
+      "path": "cpppj/tests/fixtures/gem-reward-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 오벨리스크 보상 선택/공개와 직접 Deck 추첨의 결과·외부 효과 순서·게임 난수 상태·Deck 352바이트·슬롯 raw·power·TYPE 개수(1250행; 두 정밀도 열 동일)",
+      "consumers": [
+        "webpj/tests/gem-reward.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-deck-draw.js",
+        "webpj/www/core/raw-gem-reward.js"
+      ],
+      "doc": "docs/webpj-gem-reward-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDeckDraw.cpp",
+        "cpppj/src/o/RawGemReward.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1250행 전부 사용(53비트 열 사용, 64비트 열 동일 확인)",
+      "text": true,
+      "sha256": "4aa9033630b83976e528f354bb0df89e4f4226911b0a3d5e9c2c810c0a94bd09",
+      "bytes": 2424203,
+      "lines": 1251,
+      "fixtureCommit": "a192ea5c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDeckDraw.cpp": "a192ea5c",
+        "cpppj/src/o/RawGemReward.cpp": "a192ea5c"
       }
     }
   ]

@@ -646,7 +646,7 @@ cpppj/src/o/RawDataManagerLifetime.cpp	port			todo	[o-default]
 cpppj/src/o/RawDataManagerList.cpp	port			todo	[o-default]
 cpppj/src/o/RawDataManagerResize.cpp	port			todo	[o-default]
 cpppj/src/o/RawDataManagerSelection.cpp	port			todo	[o-default]
-cpppj/src/o/RawDeckDraw.cpp	port			todo	[o-default]
+cpppj/src/o/RawDeckDraw.cpp	port	www/core/raw-deck-draw.js	1f00a25a	port	[o-default] WB04-E105: 352바이트 Deck 초기화 44f200·추가 44f290·열기/닫기 44f250/44f280·벽시각 난수 추첨 44f510·wallSeed 4bcab0. fixture gem-reward 1250행 중 직접 Draw 포함 전부(10.78 전용 파일). Player 소유 Deck 수명(RawProductionDeck)은 RawPlayerWorld 이식 뒤
 cpppj/src/o/RawDeckRestore.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawDependCreate.cpp	port	www/core/depend-form-host.js	1f00a25a	port	[o-default] WB04-D5a 감시 쌍 생성(004b1510). Process VT 부착은 기준선도 DependFormHost 에서 미연결(명시 오류)이며 실제 Process 부착 접두는 squid-process.js(WB04-D5c)
 cpppj/src/o/RawDestroyAt.cpp	port	www/core/raw-destroy-at.js	1f00a25a	port	[o-default] WB04-E30: 0044c540 위치 해석·0044c790 점 검색/삭제 루프. fixture destroy-at-parse 16·destroy-at-parent 804행 전부. 실제 삭제 가상/월드 연결은 소비자 단위에서
@@ -731,7 +731,7 @@ cpppj/src/o/RawFrameAdvance.cpp	port	www/core/raw-frame-advance.js	1f00a25a	port
 cpppj/src/o/RawFrameChoose.cpp	port	www/assets/terrain-fringe.js;www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] 프레임 선택
 cpppj/src/o/RawGameAuxState.h	port	www/core/game-aux-state.js	11fbb988	port	[o-default] WB04-C2·D3(Form 종속 전역 3칸) / 3.6①(9cb0547f, WB02-H 판정): 중앙섬 X/Y(00568afc/00568b00) 칸 추가는 멀티플레이 중앙섬·메타 몫(웹 제외) / 3.6③(11fbb988, WB04-D5b 판정): 새 장기 전역 칸(StateNotifyType 82·Spell/Income·프로세스 TYPE·건설 헤더·미션 설정 7칸·Quick 건설 등) 추가와 지정 칸 의미 갱신 → 각 소비자 이식 단위에서 보호 PE 초기값과 함께 추가. 기존 웹 칸의 값/폭 변화 없음
 cpppj/src/o/RawGameRandomSeed.cpp	port	www/core/random.js;www/assets/terrain-tiles.js	1f00a25a	port	[o-default] WB04-C1(시드 Initialize/Reseed)
-cpppj/src/o/RawGemReward.cpp	port			todo	[o-default]
+cpppj/src/o/RawGemReward.cpp	port	www/core/raw-gem-reward.js	1f00a25a	port	[o-default] WB04-E105: 오벨리스크 보상 선택 461f00(레벨별 가중 Deck)·공개 4620c0(생성→현재 좌표 배치→원 객체 삭제). fixture gem-reward 1250행 전부(10.78 전용 파일). 생성/배치/삭제는 훅 경계
 cpppj/src/o/RawGeyserAiRegistration.cpp	port	www/core/raw-geyser-ai-registration.js	1f00a25a	port	[o-default] WB04-E78: 간헐천 AI 등록 00416720(Player 0xb4 의 1..8 +0xb0 포인터 번호순 재조회·연결된 004153c0 하위 호출·미연결 nonnull 은 첫 요청 경계 거부). fixture geyser-ai-registration 10.78 302행 전부(CD 302행은 웹 범위 밖). 004153c0 AI 갱신 본체와 Player 저장소 실제 연결은 RawAiBrain 단위에서
 cpppj/src/o/RawGeyserCapture.cpp	port			todo	[o-default]
 cpppj/src/o/RawGeyserLifetime.cpp	port	www/core/raw-geyser-lifetime.js	1f00a25a	port	[o-default] WB04-E75: 간헐천 고유 수명 전처리 485580·후처리 485540(기본 프레임 직접 쓰기·AI 제거·지면 목록 중복 제거·편집 모드 섬 정리). fixture geyser-lifetime 2016행 전부(10.78 전용 파일). 기본 프레임 getter/표시/AI/Damageable/섬 정리 본체는 해당 파일 단위에서
