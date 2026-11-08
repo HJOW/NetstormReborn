@@ -60,6 +60,7 @@
 #include "o/RawFileName.h"
 #include "o/RawRootLoginReply.h"
 #include "o/RawChallengeLoginReply.h" //1dh는 현재28/12 직접 쓰기 뒤 같은 실제 Run을 동기 호출한다.
+#include "o/RawStateBattleStart.h" //1ah는 같은 실제 Zone/State/기록 FILE과10/11 정리를 사용한다.
 #include "o/OriginalText.h" //현재 이름표 번역을 공통 영어/한국어 표시 바이트로 변환한다.
 #include "platform/Utf8Path.h"
 #include "platform/PortableStartup.h"
@@ -118,6 +119,11 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     }); //sender9의 실제 장애 저장/1..8 방송과 sender10/phase23의 다음20을 원문 같은 부모가 선택한다. type1은 TCP 생성자가 같은 Registry에 이미 등록한다.
     dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { o::ObserveRootLoginReply(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
     dispatch.Register(0x0f,[this](auto,auto&,auto packet) { ReceiveRootReply(packet); }); //원문과같이sender/연결번호·현재phase 관문을 수신 앞에 추가하지 않는다.
+    dispatch.ObservePacket(0x1a,[this](auto packet,auto sending) { o::StateBattleStartHooks h;h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };o::ObserveBattleStartZone(packet,sending,h); });dispatch.Version(0x1a,1,0);dispatch.RequireLength(0x1a,0xffff);
+    dispatch.Register(0x1a,[this](auto,auto&,auto packet) {
+        auto& local=*client_.LocalStateGlobals();auto& game=*client_.GameplayGlobals();const auto record=client_.PacketRecordOwner();o::StateBattleStartHooks h;h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };h.duplicate=[this,&local](auto bytes) { return local.ZonePackets().Duplicate(bytes,tcp_->Dispatch()); };h.openRecord=[record](auto name) { record->Open(name); };h.disconnect=[this](auto id) { client_.ConnectionGlobals()->Disconnect(id); };
+        o::ReceiveBattleStartZone({const_cast<std::uint8_t*>(packet.data()),packet.size()},{local.State(),local.ZonePending(),game.GameServerPort(),game.Subscribers()->MySubscriber(),record->Requested(),client_.SurfaceStorage()->Checking()},h);
+    }); //원문처럼 sender/known/메타 모드 관문 없이 checking 복귀 뒤 실제 같은 버퍼를 처리한다.
     dispatch.Observe(0x1d,{});dispatch.Version(0x1d,1,0);dispatch.RequireLength(0x1d,13); //원문0b380의 빈 관찰기/버전1과 실제13BYTE의 고정 응답이다.
     dispatch.Observe(0x88,{});dispatch.Version(0x88,1,0);dispatch.RequireLength(0x88,98); //0040b380 빈 관찰기와 보호 PE0052ec40의 고정98BYTE다.
     dispatch.ObservePacket(0x20,[this](auto packet,auto sending) { ObserveNativeMetaParticipantAdd(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x20,1,0);dispatch.RequireLength(0x20,0xffff);

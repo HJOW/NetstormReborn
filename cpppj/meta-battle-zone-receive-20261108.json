@@ -1,0 +1,76 @@
+{
+  "unit": 1154,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "43eaad12 / 20261108-124 CP",
+  "summary": "M2.3의 전체1ah/4b4df0와 mutable40a1e0 observer를 실제 공유 등록표·장기 Zone 장부/기록 FILE·현재 State와10/11 정리에 연결했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1154\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13146624,
+      "sha256": "2baf993fbbbebc17f7418aee06b27a636035361cb1a6e3af45d999b8c1f434ae"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "1a60fe39f36dfcb1e0830d86223d015f5e17672cc085b5aff7ab003cbe24dca6"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "원문 C/PE의 등록3개/버전1·정책0/가변ffff, zlocal,*9BYTE·마지막BYTE만0, phase29/33 checking 복귀/현재 포트/복제 observer 뒤 현재 BYTE14·길이/Zone 예약 증가/현재 packet+10·Subscriber로 기록Open/10→11 정리 순서를 대조했다.",
+  "nativeEvidenceSha256": {
+    "0040a1e0.asm": "e40d7ce96fc17546ad92b2a55c118cf0fe54921d0caec71637a9359f1f7d77e1",
+    "0040a1e0.c": "68b51984405d234590d604e7b02f5b4d958e39770c9f90bad5542e39ef6e475d",
+    "004b4df0.asm": "b5298c9214537f589294a405f0462dfa32b6d9df7f2394265f425ad88e95e43e",
+    "004b4df0.c": "5e7b18455666e266663417015ebc1b461ba440fa7ce44905dc5c76c4e0582caf",
+    "004b8b20.asm": "5ca5d0128c8affca622d114490386c031dac72a832fdde6167f99c0b07222eff",
+    "004b8b20.c": "2e3836671ba68cfc61bc4258145c08ab28826f3a7cf187944d17447c94bd7653",
+    "004e2620.asm": "172e4ef7f1ade55434a55fc444dd001692cb63a7385f7fcb9a577e3cfae50c6e",
+    "004e2620.c": "caa8027d0f0fdb1b72a4489fc149b3e88445646c754d2d489720fc83c97ce99a",
+    "004e2940.asm": "fea8655bd74ebc1d2f47fad33598afe51b2351ae39fe64b6fb99a7b98db96296",
+    "004e2940.c": "19e7f876781f7a3841db93c72b27f5f401cab4c96a544a2808dc6460b50e5d50",
+    "004e2dc0.asm": "f1c8729d324361ac9d921b19fa3f444192647a6a84edb226281393dff04af5ab",
+    "004e2dc0.c": "4fdb65830262cdc154ecb1d1be45aa0c7cc5dce9784a9480be86e0a9eb2ce9aa"
+  },
+  "sourceAudit": {
+    "sameMutablePacketForCopyObserverAndPostCopyRecording": true,
+    "sameCurrentStateAndRequestedSubscriberPortReferences": true,
+    "zoneTokenOwnedUntilSameState7ConsumesAndReleases": true,
+    "noSyntheticSenderKnownModeOrPhaseGate": true,
+    "receiveUsesRealDisconnectOf10Then11": true,
+    "newRuntimeExecutionCount": 0
+  },
+  "remaining": {
+    "next": "M2.4 / 1bh",
+    "checkingFunctions": [
+      "004b02d0",
+      "004dc220",
+      "004b8b20"
+    ],
+    "stage3Groups": 7,
+    "m2Complete": false,
+    "hiddenDirectCallerFor1b": "004b8be0: 개발자 이름 제한 test battle 부모는M6의 남은 Caller 전수 대조 대상이다."
+  },
+  "limitations": [
+    "원문과 다른 임의 추가 관문을 만들지 않았다. 불충분한 물리는 선택된 실제 접근 위치에서 예외로 드러내며 앞선 부분 효과를 되돌리지 않는다.",
+    "사용자 지시로 새 MP 단위/패킷/게임/통신 검사를 실행하지 않았다. 실제 메타 로그인/전투 진입 동작을 통과했다고 주장하지 않는다.",
+    "1bh 부모는 아직 미연결이며 M2 전체와 3차/전체 목표는 미완료다."
+  ],
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}
