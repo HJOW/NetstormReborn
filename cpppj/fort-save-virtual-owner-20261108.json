@@ -1,0 +1,319 @@
+{
+  "unit": 1184,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "summary": "장기 Native 가상 저장/보상 조회를 실제 호출자와 공유하고 bool 타입 오진단 정정",
+  "sourceSha256": {
+    "cpppj/src/client/NativeFortSaveVirtual.h": "ff9ab35d17326ad38055aa1422de536402e5ce6d0add38523319ab833b30b7f4",
+    "cpppj/src/client/NativeFortSaveVirtual.cpp": "47d1e4cef0ec376a8d18de9c76167a6e581e608124054477c3b3f908050425a7",
+    "cpppj/src/client/CMakeLists.txt": "aa48b1209e793763a4b40e837c4ed62a5c4fe2c2b88ac4fca01ced8c19dd9072",
+    "cpppj/src/client/RawSurfaceWorld.h": "1a5502b0cdf6b445bc5c75cfb6a411a708608b37eea15294a1b62e4e4f6da233",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "b1977852d6b0d3391177de947928057ba85f6e198eaf0dfa57296e482f32650e",
+    "cpppj/src/client/RawCampaignSession.cpp": "db8eb6d21bb141ad7bd4cfe4f4dbe5d68a2006386574d6cc48c0e6e19a68cd10",
+    "cpppj/src/o/RawStateBattleOptions.h": "9014f66f916af9884a74e6191dd3334599b1073ee77db8721c92f120ecc27be6"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13537792,
+      "sha256": "6bafaff0ba1f0c7302230d25e8ba3f8ac9cb5f102550f6c6faeeb0191484e52f"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "02e3a61e11d9da4b3ca7dfedc86729065507a2bad69005318e6fc629f1bf26c7"
+    }
+  },
+  "nativeEvidence": {
+    "extracted/cpp-m6-fort-save-virtual-patch/manifest.json": "36ccd4fe49e0c82ed852b0ade9059f11c5270d8d7cc23def77ff4e634cc6c473",
+    "extracted/cpp-resume-1182/fort-getter-vtables.json": "63a6d245ae3ca3eb4435b937bf71cbf31e48eda248c38e87cc8912aafa67a4f6"
+  },
+  "nativeEntries": [
+    "0042ae60",
+    "004429e0",
+    "004478f0",
+    "0044a480",
+    "004ac1e0",
+    "004ad0a0",
+    "004ad0f0",
+    "004ad710",
+    "004aea60",
+    "004b1fa0",
+    "004bcb50"
+  ],
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-1184/build-initial.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "log": "extracted/cpp-resume-1184/build.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "tests": {
+    "filter": "FortObjectLoad_",
+    "exitCode": 0,
+    "passed": true,
+    "tests": 5,
+    "multiplayer": 0,
+    "packet": 0,
+    "network": 0
+  },
+  "live": {
+    "passed": true,
+    "exeSha256": "6bafaff0ba1f0c7302230d25e8ba3f8ac9cb5f102550f6c6faeeb0191484e52f",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1184\\live-editor-game-fixed",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "intro=1;tellTips=0;autoDemo=0;currentLanguage=english;mayEditMissions=1;fortSpec=d/title950/{local.1}.fort;SOLOSpec=d/title950/{local.1}.fort;blankWindowName=MAIN;EditorWindowName=EDITOR:{local.1};missionWindowName=MISSION:{local.1};testBattleWindowName=TEST:{local.1};demoWindowName=DEMO:{local.1}"
+    ],
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "actions": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "Edit"
+      },
+      {
+        "op": "click",
+        "arg": "TEST01"
+      },
+      {
+        "op": "esc",
+        "arg": ""
+      },
+      {
+        "op": "click",
+        "arg": "Game"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "No"
+      }
+    ],
+    "observations": [
+      {
+        "label": "main-0",
+        "reportFile": "000-main-0.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "Welcome"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "main-1",
+        "reportFile": "001-main-1.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "Welcome2"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "main-2",
+        "reportFile": "002-main-2.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "main"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "map-list",
+        "reportFile": "003-map-list.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "LoadEditable"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "editor-0",
+        "reportFile": "004-editor-0.tsv",
+        "title": "EDITOR:TEST01",
+        "phase": [
+          [
+            "4"
+          ]
+        ],
+        "page": [
+          [
+            "editor"
+          ]
+        ],
+        "mission": null,
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "leave-editor",
+        "reportFile": "005-leave-editor.tsv",
+        "title": "EDITOR:TEST01",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "LeaveEditMode"
+          ]
+        ],
+        "mission": null,
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "main-0",
+        "reportFile": "006-main-0.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "main"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      }
+    ]
+  },
+  "liveChecks": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0
+  },
+  "audit": {
+    "sameStorageAndGameAux": true,
+    "lazyReadAdapterNoWorldCreation": true,
+    "nativeVirtualCountCaller": true,
+    "nativeObjectRobustCaller": true,
+    "nativeHasLevelCaller": true,
+    "nativeContentRobustCaller": true,
+    "independentTypedCallersPreserved": true,
+    "noPhaseOrPlayerKnownGateAdded": true,
+    "allFormVirtualContractsComplete": false,
+    "fullNoWorldSnapshotConnected": false,
+    "noWorldHpRewardSpConnected": false,
+    "canonicalTags": 25,
+    "untagged": 63,
+    "tagIsNotFullScopeCompletion": true,
+    "queueActivated": false,
+    "m6Complete": false
+  },
+  "correction1180": {
+    "fieldType": "SquidOwnerMode::battle은 bool; const bool&에 직접 결합했으며 DWORD 변환 임시값이 아님",
+    "initialDiagnosis": "1180의 DWORD→bool 임시값 문제 진단과 복원 주장 정정",
+    "productChange": "불필요한 StateBattleOptionFlag를 제거하고 기존 const bool&로 복귀",
+    "historicalBuildLiveSourceHashesChanged": false,
+    "beforeRecord": "extracted/cpp-resume-1184/report-1180-before-correction.json"
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "executions": {
+    "existingNonMpCppUnitCases": 5,
+    "newMpUnit": 0,
+    "multiplayer": 0,
+    "packet": 0,
+    "network": 0,
+    "testBattle": 0,
+    "nonMpGui": 1,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  },
+  "remaining": [
+    "같은 조회기를 사용할 NoWorld HP/보상/SP·파생 삭제·큰 AI/Carrier owner·다른 Form",
+    "m1/m2a/m2c2·전체 NoWorld Snapshot/JoinTestBattle, Source/listener/공통표/Poll·63잔여F·큐·M6 전수",
+    "M7·M8·K1~K5·S1~S4·B1~B4와 기존 별도 후순위"
+  ]
+}

@@ -1,5 +1,6 @@
 // Client의 실제 배열을 Session보다 오래 보관하고 같은 물리를 두 월드에 중복 설치하지 않는다.
 #include "client/RawSurfaceWorld.h"
+#include "client/NativeFortSaveVirtual.h" //완전 형식의 조회기 생성/반납을 Storage 구현에서만 수행한다.
 #include "o/RawAssetRegular.h" //현재NativeGeyser의독립실제본문을같은Storage에서사용한다.
 #include "o/RawContainedLookup.h" //건설재시도의실제현재Form타입조회이며가짜존재값을반환하지않는다.
 #include "o/RawDaisProcessData.h" //현재PID의실제6a writer를장기기본직렬화에연결한다.
@@ -336,6 +337,9 @@ o::SquidDisplay& RawSurfaceStorage::Display() {
 }
 // 원문의 실제 공통생성자를 같은 장기물리에 한 번 구성한다. 생성의 선택효과는 기존Factory가 결정한다.
 o::Sid RawSurfaceStorage::CreateAsset(std::uint32_t type,std::uint32_t flags) { NoteChanged();return Factory().Create(type,flags); } //실제 현재 표시 대여가 있을 때만 같은 changed bool을 알리고 Native 생성 순서는 보존한다.
+NativeFortSaveVirtual& RawSurfaceStorage::FortSaveVirtual() {
+    if (!fortSaveVirtual_) fortSaveVirtual_=std::make_unique<NativeFortSaveVirtual>(*this,*gameAux_);return *fortSaveVirtual_;
+} //현재 장기 물리/보조 전역만 참조하며 Runtime을 확보하거나 초기화하지 않는다.
 o::SquidFactory& RawSurfaceStorage::Factory() {
     if (!factory_) {
         auto factory=std::make_unique<o::SquidFactory>(pool,types); //새Pool/World를만들지않으며Create가현재Allocate/생성자/가상+28을직접실행한다.

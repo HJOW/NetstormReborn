@@ -41,6 +41,7 @@
 
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
+class NativeFortSaveVirtual; //저장/보상 가상 조회가 같은 현재 Pool/TYPE/Hash를 빌리는 순수 장치다.
 struct RawSurfaceResourceDevices { //같은Client게임난수와선택된큰자산장치만장기로빌린다.
     std::function<o::GameRandom&()> random; //새seed/snapshot없이실제현재GameRandom한개를조회한다.
     std::function<void(o::Sid)> carrierCheck; //실제가상cc의현재Carrier검사를선택위치에서호출한다.
@@ -144,6 +145,7 @@ public:
     void BindDisplayDevices(RawSurfaceDisplayBindings devices); //첫실제Client물리준비뒤현재Renderer/카메라getter만결합하며조회/난수/그리기는실행하지않는다.
     void BindDisplayRuntime(const std::shared_ptr<const RawSurfaceDisplayBindings>& runtime); //같은현재World대여만weak로공개하고만료뒤장기Client장치를쓴다.
     o::Sid CreateAsset(std::uint32_t type,std::uint32_t flags=0); //기존 World의 changed prefix 뒤 같은 현재 Factory Create를 실행하고 새 World를 요구하지 않는다.
+    NativeFortSaveVirtual& FortSaveVirtual(); //현재 Robust/HasLevel/Count의 동일 장기 조회기를 처음 필요할 때 구성하며 World/파일/등록을 만들지 않는다.
     o::SquidFactory& Factory(); //같은Pool/현재TYPE/HP·깊이/진단으로실제Create를World없이실행하며Acquire/reset/Host대여를추가하지않는다.
     RawProcessHostStorage& Processes(); // 같은 Storage의 장기 Host/상태와 현재 World 대여를 제공한다.
     RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr,std::shared_ptr<o::RawAuthorityState> authority={},std::shared_ptr<o::RawGameAuxState> gameAux={}); // 배열은 최초 한 번만 확보한다.
@@ -239,6 +241,7 @@ private:
     std::unique_ptr<o::RawCarrierPostPop> resourceCarrier_; //같은공통PostPop을직접호출하는장기실제부모다.
     std::unique_ptr<o::RawAssetPostPop> resourceGeyser_; //Geyser전용본문만공유하며다른자산의가상등록을합성하지않는다.
     std::unique_ptr<o::RawNuggetRegular> resourceNuggetRegular_; //장기기본Host의실제왕복/낙하본문이며현재Sessionoverride를보존한다.
+    std::unique_ptr<NativeFortSaveVirtual> fortSaveVirtual_; //같은 Storage/GameAux를 빌리는 실제 조회기이며 해당 소유자보다 먼저 반납한다.
     std::unique_ptr<o::RawNuggetPostPop> resourceNugget_; //같은Host/난수/확보메모리의너겟후처리다.
     std::unique_ptr<o::RegularProcess> resourceRegular_; //할당과생성사이동일new28의소유권만보존한다.
     std::unique_ptr<o::RawSquidDestroy> baseDestroy_; //같은Native공통pre/post깊이를World반납뒤에도보존한다.

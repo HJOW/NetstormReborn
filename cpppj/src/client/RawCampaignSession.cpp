@@ -6,6 +6,7 @@
 #include "o/RawSquidRegion.h" // 같은 TYPE 진단과 raw 지역 WORD의 getter/setter를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/NativeFortSaveVirtual.h" //Native 저장·보상은 같은 장기 가상 조회기를 공유한다.
 #include "client/ClientBuildReplay.h" // 실제 건설 확정과 재생 프로세스가 같은 현재 객체/playing을 사용한다.
 #include "client/CompositeMissionTransport.h" // 현재 ID 복합 전송과 실제 전체 Runtime 등록 대여를 연결한다.
 #include "o/RawSidRobust.h" // 상세 SID 진단의 실제 부모다.
@@ -915,6 +916,7 @@ struct RawCampaignSession::Impl {
 
     // 현재 생성 VT의+80을 TYPE 생성자와 쌍으로 묶지 않고 공통81/제단/다이스 몸체에 분배한다.
     std::uint32_t VirtualCount(Sid sid) const {
+        if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->FortSaveVirtual().Level(sid); //실제 Client 장치가 연결된 경우만 같은 현재 장기 Count를 사용한다.
         if (!sid.value || sid.value>=core.pool.Capacity()) throw std::out_of_range("가상80 SID 범위 오류");
         const auto raw=core.pool.Slot(sid);if (raw[10]>=core.types.size()) throw std::out_of_range("가상80 현재 TYPE 범위 오류");
         const auto table=Read(raw,0); // typed Dais의 현재 VT가 base여도 실제 base level을 선택한다.
@@ -2404,7 +2406,9 @@ struct RawCampaignSession::Impl {
         hooks.begin=[this](auto selected) { if (selected>=core.pool.Capacity()) throw std::out_of_range("실제 Technology 부모 SID 범위");auto cursor=std::make_shared<Cursor>(core.pool,contentFinder,Sid{static_cast<std::uint16_t>(selected)});
             return FortContentSaveCursor{[cursor] { return cursor->current.value; },[cursor] { cursor->current=cursor->finder.Next(); }};
         };
-        hooks.poolLimit=[this] { return core.pool.Capacity(); };hooks.robust=[this](auto candidate) { return contentForms->Robust(Sid{static_cast<std::uint16_t>(candidate)}); };
+        hooks.poolLimit=[this] { return core.pool.Capacity(); };hooks.robust=[this](auto candidate)->std::uint32_t {
+            const Sid sid{static_cast<std::uint16_t>(candidate)};return world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->FortSaveVirtual().ContentRobust(sid):contentForms->Robust(sid);
+        }; //Native의 현재 listflags 진단/재조회만 같은 장기 가상60에 전달하고 typed의 기존 본문은 유지한다.
         hooks.form=[this](auto candidate)->std::span<const std::uint8_t> { if (candidate>=core.pool.Capacity()) throw std::out_of_range("실제 Technology 현재 SID 범위");return core.pool.Slot(Sid{static_cast<std::uint16_t>(candidate)}); };
         hooks.type=[this](auto kind) { if (kind>=core.types.size()) throw std::out_of_range("실제 Technology TYPE 범위");const auto& type=core.types[kind];return FortContentSaveType{type.flags1,type.contentListFlags,type.containerListFlags}; };
         hooks.parentType=[this](auto selected) { if (selected>=core.pool.Capacity()) throw std::out_of_range("현재 내용물 부모 SID 범위");const auto kind=core.pool.Slot(Sid{static_cast<std::uint16_t>(selected)})[10];if (kind>=core.types.size()) throw std::out_of_range("현재 내용물 부모 TYPE 범위");const auto& type=core.types[kind];return FortContentSaveType{type.flags1,type.contentListFlags,type.containerListFlags}; };hooks.assertion=SessionMissing<void,FortContentSaveAssertion>();
@@ -2437,13 +2441,14 @@ struct RawCampaignSession::Impl {
         hooks.flags1=[this](auto selected) { const auto kind=core.pool.Slot(Sid{static_cast<std::uint16_t>(selected)})[10];if (kind>=core.types.size()) throw std::out_of_range("Fort 저장 flags1 TYPE 범위");return core.types[kind].flags1; };
         hooks.flags2=[this](auto selected) { const auto kind=core.pool.Slot(Sid{static_cast<std::uint16_t>(selected)})[10];if (kind>=core.types.size()) throw std::out_of_range("Fort 저장 flags2 TYPE 범위");return core.types[kind].flags2; };
         hooks.robust=[this](auto selected)->std::uint32_t {
+            if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->FortSaveVirtual().ObjectRobust(Sid{static_cast<std::uint16_t>(selected)}); //Native 저장은 같은 현재 가상60을 선택하고 독립 typed의 기존 분배는 유지한다.
             const Sid sid{static_cast<std::uint16_t>(selected)};const auto table=SaveVtable(sid); // 현재 가상60은9개 거부/2개 풍선/나머지 공통으로 분배된다.
             constexpr std::array<std::uint32_t,9> rejected{0x5070c0,0x508cc8,0x5092d0,0x5096a0,0x509758,0x509810,0x50a8e8,0x50db78,0x50ee08}; // 실제 생성 범위 중 항상0을 반환하는 가상 표다.
             if (std::find(rejected.begin(),rejected.end(),table)!=rejected.end()) return 0;
             if (balloonBody->Handles(sid)) return balloonBody->Robust(sid);
             const auto kind=core.pool.Slot(sid)[10];if (kind>=core.types.size()) throw std::out_of_range("Fort Robust TYPE 범위");return !(core.types[kind].flags1&0x20000000U);
         };
-        hooks.hasLevel=[this](auto selected) { return level->Has(Sid{static_cast<std::uint16_t>(selected)}); };
+        hooks.hasLevel=[this](auto selected) { const Sid sid{static_cast<std::uint16_t>(selected)};return world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->FortSaveVirtual().HasLevel(sid):level->Has(sid); }; //Native의 현재 TYPE/진단 조회만 장기 부모에 연결한다.
         hooks.level=[this](auto selected)->std::uint32_t { return VirtualCount(Sid{static_cast<std::uint16_t>(selected)}); }; // 객체 저장도 같은 현재 가상80을 재분배한다.
         hooks.island=[this](auto x,auto y) { return core.building.HasIsland(std::bit_cast<float>(x),std::bit_cast<float>(y)); };
         hooks.write=[this,stream](auto token,auto bytes) { if (token!=1) throw std::logic_error("객체 저장 stream 선택 불일치");templateStorage->WriteSection(stream,bytes); };

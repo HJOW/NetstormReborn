@@ -2,7 +2,7 @@
   "unit": 1180,
   "version": "11.01",
   "host": "HJOW-Athlon",
-  "summary": "Meta8 장기 수신/현재 옵션 owner·32h 같은 F 대여와 현재 DWORD 전투 관문 접합",
+  "summary": "Meta8 장기 수신/현재 옵션 owner·32h 같은 F 대여; 전투 플래그 진단은1184에서 정정",
   "sourceSha256": {
     "cpppj/src/client/CMakeLists.txt": "ad3c24147037e793e0e4d236b7ea9769e1a63eab2795ef51fcbe67fc0c8178ea",
     "cpppj/src/client/ClientCampaignTransport.cpp": "1bc2e9c4ecbb7b0578ec6e6ca5941896890ac15564b9503be38b882400d1050f",
@@ -127,7 +127,7 @@
     "settingsNativeEntry": "0044dc20",
     "clientLongBattleOptions": true,
     "participantEntryHeight": -12,
-    "battleDwordReadAtUiGate": true,
+    "battleDwordReadAtUiGate": false,
     "typedBoolAddressPreserved": true,
     "sameSettingsFBorrowed": true,
     "originalNativeInventory": 89,
@@ -164,7 +164,8 @@
     "tagIsNotFullScopeCompletion": true,
     "noWorldMetaChildrenComplete": false,
     "queueActivated": false,
-    "m6Complete": false
+    "m6Complete": false,
+    "battleBoolReferenceReadAtUiGate": true
   },
   "protected": {
     "count": 2800,
@@ -188,5 +189,12 @@
     "41h 장기 수신·전역 Source/listener/공통표/Poll·backend/Node queue·지연 큐",
     "전용 Regular/파생 삭제/NoWorld frame·큰 AI/다른 Form·JoinTestBattle·debugBurst",
     "M7·M8·K1~K5·S1~S4와 별도 후순위"
-  ]
+  ],
+  "correction1184": {
+    "fieldType": "SquidOwnerMode::battle은 bool; const bool&에 직접 결합했으며 DWORD 변환 임시값이 아님",
+    "initialDiagnosis": "1180의 DWORD→bool 임시값 문제 진단과 복원 주장 정정",
+    "productChange": "불필요한 StateBattleOptionFlag를 제거하고 기존 const bool&로 복귀",
+    "historicalBuildLiveSourceHashesChanged": false,
+    "beforeRecord": "extracted/cpp-resume-1184/report-1180-before-correction.json"
+  }
 }
