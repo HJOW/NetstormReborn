@@ -83,7 +83,8 @@
     "원문 전체 옵션 해석 순서·10.72 전체·x87 전체 입력/픽셀·실제 OS/MP 실행을 입증하지 않았다."
   ],
   "remaining": [
-    "메타 게임 Peer의1/2 접속·종료 부모와 나머지 CS 수신/참가자 생성·카메라 caller·HTML 하강/참가 후속·1095 송신 상태 호출",
+    "메타 게임 Peer의2 종료 부모와 나머지 CS 수신/참가자 생성·카메라 caller·HTML 하강/참가 후속·1095 송신 상태 호출",
     "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
-  ]
+  ],
+  "correction1141": "type1은 LocalTcpTransport 생성자가 실제 같은 Registry에 등록한다. MetaConnectionRuntime 직접 등록만 보고 미등록으로 적은 판정을 정정했다. 제품1140의 동작/바이너리는 바꾸지 않는다."
 }

@@ -426,6 +426,7 @@ struct RawCampaignSession::Impl {
     std::shared_ptr<FortTypeConversionStorage> fortTypeConversion{services.fortTypeConversion ? services.fortTypeConversion : std::make_shared<FortTypeConversionStorage>()}; // Client의 현재표를 빌리며 독립 Session만 같은 종류의 실제 소유자를 한 번 만든다.
     std::shared_ptr<ClientChatWindowGlobals> chatGlobals{services.chatGlobals ? services.chatGlobals : std::make_shared<ClientChatWindowGlobals>()}; // 실제 Client 또는 독립 Session의 같은 중계 마스크 수명이다.
     ChatRelayHooks ChatDevices(); // 같은 현재 Player/연결 표와 UI를 중계 부모에 공급한다.
+    void WriteReconnect(o::SavedStateWriteHooks hooks); //004b54e0의 같은 현재 SP/Player·복구 슬롯과 실제 FILE writer를 일반/메타에서 공유한다.
     void SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet); // 준비된 현재 로컬 전송의 observer와 큐에 원시 패킷을 넘긴다.
     void SendRemoteTell(std::uint32_t owner,std::string_view section,bool others); // 같은실제mutable송신을004c9150/4c9200부모에제공한다.
     void ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name); //004b32f0의 실제 현재 Fort 변경을 UI와 개발자 명령에서 공유한다.
@@ -3748,6 +3749,20 @@ struct RawCampaignSession::Impl {
 };
 #include "client/RawCampaignEditorIsland.inc" // 설치된 같은 Editor의 실제 Pool/지도에 섬 배치 부모를 연결한다.
 #include "client/RawCampaignSessionLogin.inc"
+//게임 Login이 없는 메타도 같은004b54e0의 진단·현재 값·저장 부분 효과를 실행한다.
+void RawCampaignSession::Impl::WriteReconnect(SavedStateWriteHooks hooks) {
+    hooks.diagnose=[this] {
+        auto& patch=priestState.regen.patch;const auto mismatch=sp.OffsetCurrent()!=static_cast<std::uint32_t>(sp.TrackingOffsetCurrent());auto fallback=patch.Sample();
+        if (mismatch) gameplayGlobals->PatchDiagnostic()=fallback;
+        if (patch.remaining) {
+            const auto amount=playerState.playerKnown ? std::bit_cast<float>(sp.Get(playerState.battleOwner)):0.0F;fallback=patch.Sample(); //현재 known/owner/Get 뒤 같은 실제 진단값을 다시 읽는다.
+            if (amount>7000.0F) gameplayGlobals->PatchDiagnostic()=fallback;--patch.remaining;
+        }
+        if (!sp.FirstPoolCurrent()) gameplayGlobals->PatchDiagnostic()=fallback;if (sp.Permutation()[0]==-1) gameplayGlobals->PatchDiagnostic()=fallback;
+    };
+    hooks.localSp=[this] { return playerState.playerKnown ? std::bit_cast<float>(sp.Get(playerState.battleOwner)):0.0F; }; //저장 DWORD는 현재 SP float의 정수부이며 게임시각으로 대신하지 않는다.
+    WriteSavedState(SavedStateWriteGlobals{[this] { return globals.missionPost; },[this] { return playerState.playerKnown; },[this] { return gunState.checking; },[this] { return playerState.battleOwner; },[this] { return globals.mySubscriber; },[this] { return std::span<const std::uint8_t>(handle); },[this] { return std::span<const std::uint8_t>(players); },localStateGlobals->RestoreOwner(),localStateGlobals->RestoreSubscriber(),localStateGlobals->PreviousHandle(),{[this] { return gameplayGlobals->GameAux()->SpellCount(); },[this] { return localStateGlobals->SourceType(); },[this] { return localStateGlobals->GameTicks(); }},loginEnd},hooks);
+}
 // 로컬 주소/등록/Player를 같은 현재 전송에서 조회하며 이미 반납한 Session 포인터를 외부에 남기지 않는다.
 ChatRelayHooks RawCampaignSession::Impl::ChatDevices() {
     ChatRelayHooks hooks;hooks.read=[this](auto at)->std::uint32_t { if (at==0x594fbc) return core.ownerMode.battle;if (at==0x540bc0) return core.processState.Server();if (at==0x540c74) return globals.mySubscriber;throw std::out_of_range("Chat 중계의 실제 Session 전역 없음"); };
@@ -3844,7 +3859,7 @@ void RawCampaignSession::TakeServerForState() {
 void RawCampaignSession::SendConnectionHeartbeat(bool broadcast) { auto& s=*impl_;if (!s.login) throw std::logic_error("활동 송신의 실제 Login 없음");std::array<std::uint8_t,5> packet{1,0x64,5,0,0};if (broadcast) s.broadcast->Send(packet);else s.login->Send(9,packet); } //0040ae00/0052ee4e의 길이5와 payload0을 그대로 사용한다.
 // 서버 표식은 남기고 flags1/40만 지우며 실패한 저장의 부분 효과도 되돌리지 않는다.
 void RawCampaignSession::SaveServerFailure() {
-    auto& s=*impl_;for (std::uint32_t owner=1;owner<9;++owner) { const auto flags=Impl::Login::Get(s.players,owner*180+0x50);if (flags&8U) Impl::Login::Put(s.players,owner*180+0x50,(flags&0xffffffbeU)|0x100U); }if (s.globals.missionPost || !s.playerState.playerKnown) return;if (!s.login) throw std::logic_error("서버 장애 저장의 실제 Login 없음");s.login->SaveReconnect(); // 고정8행 뒤 writer의 post/미known 자연 관문을 유지하며 Editor에 Login을 합성하지 않는다.
+    auto& s=*impl_;for (std::uint32_t owner=1;owner<9;++owner) { const auto flags=Impl::Login::Get(s.players,owner*180+0x50);if (flags&8U) Impl::Login::Put(s.players,owner*180+0x50,(flags&0xffffffbeU)|0x100U); }if (s.globals.missionPost || !s.playerState.playerKnown) return;if (s.login) s.login->SaveReconnect();else if (s.services.installMode==CampaignInstallMode::MetaMap) s.WriteReconnect(s.services.reconnectFile.value_or(SavedStateWriteHooks{}));else throw std::logic_error("서버 장애 저장의 실제 Login 없음"); //고정8행/자연 관문 뒤 메타도 같은 writer를 사용하며 Login·Player·실행 상태를 합성하지 않는다.
 }
 // 같은 현재 Player/Zone/헤더 writer로 연결 상태 변경을 각 실제 접속자에게 보낸다.
 void RawCampaignSession::BroadcastConnectionPlayer(std::uint32_t owner) {

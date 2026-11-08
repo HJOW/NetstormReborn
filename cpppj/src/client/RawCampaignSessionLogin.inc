@@ -358,21 +358,8 @@ struct RawCampaignSession::Impl::Login {
             static_cast<void>(s.world.Destroy(sid,0)); // 현재 가상+10/인자0을 사용하며 별도 SID 반납/부분 효과 복구를 추가하지 않는다.
         }
     }
-    //004b54e0의 SP 진단/현재 Player와 같은 Client 소유 복구 슬롯을 실제 File writer에 연결한다.
-    void SaveReconnect() {
-        auto hooks=effects.reconnectFile.value_or(SavedStateWriteHooks{}); // 미션/미known 자연 반환은 File 장치 부재도 허용한다.
-        hooks.diagnose=[this] {
-            auto& patch=s.priestState.regen.patch;const auto mismatch=s.sp.OffsetCurrent()!=static_cast<std::uint32_t>(s.sp.TrackingOffsetCurrent());auto fallback=patch.Sample();
-            if (mismatch) s.gameplayGlobals->PatchDiagnostic()=fallback;
-            if (patch.remaining) {
-                const auto amount=s.playerState.playerKnown ? std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner)):0.0F;fallback=patch.Sample(); //40ee90의 현재 known/owner/Get 뒤 현재 진단값을 다시 읽는다.
-                if (amount>7000.0F) s.gameplayGlobals->PatchDiagnostic()=fallback;--patch.remaining;
-            }
-            if (!s.sp.FirstPoolCurrent()) s.gameplayGlobals->PatchDiagnostic()=fallback;if (s.sp.Permutation()[0]==-1) s.gameplayGlobals->PatchDiagnostic()=fallback;
-        };
-        hooks.localSp=[this] { return s.playerState.playerKnown ? std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner)):0.0F; }; // 저장DWORD는 게임시각이 아니라 현재 SP float의 정수부다.
-        WriteSavedState(SavedStateWriteGlobals{[this] { return s.globals.missionPost; },[this] { return s.playerState.playerKnown; },[this] { return s.gunState.checking; },[this] { return s.playerState.battleOwner; },[this] { return s.globals.mySubscriber; },[this] { return std::span<const std::uint8_t>(s.handle); },[this] { return std::span<const std::uint8_t>(s.players); },s.localStateGlobals->RestoreOwner(),s.localStateGlobals->RestoreSubscriber(),s.localStateGlobals->PreviousHandle(),{[this] { return s.gameplayGlobals->GameAux()->SpellCount(); },[this] { return source; },[this] { return ticks; }},s.loginEnd},hooks);
-    }
+    //일반 Login은 기존 파일 장치를 유지하고 메타와 공유한 같은 SP/Player/복구 슬롯 writer에 위임한다.
+    void SaveReconnect() { s.WriteReconnect(effects.reconnectFile.value_or(SavedStateWriteHooks{})); } //미션/미known 자연 관문은 공통 writer 안에서 파일 장치보다 먼저 실행된다.
     // 부모/독립 상태8이 같은 로컬 접속 몸체를 사용하며 원문 현재 블록을 검증한다.
     void Connect(std::span<const std::uint8_t> address,std::uint32_t port) {
         if (address.size()!=20 || blocks[3][0]!=8) throw std::logic_error("실제 현재8/typed주소20BYTE 접속 계약 오류");

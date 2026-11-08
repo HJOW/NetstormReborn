@@ -222,6 +222,7 @@ struct RawCampaignSessionServices {
     std::function<void()> refreshSp; // 같은 실제 Reward.AddSp의0043dad0 표시 요청이다. 장치 없는 독립 검사는 비워 둘 수 있다.
     o::NewTechnologyHooks newTechnology; // 이름/설정/지역 그림 서식/Tell의 실제 Client 장치다. 게임 조회/추가/저장은 Session이 덮어 연결한다.
     std::optional<CampaignLoginServices> localLogin; //실제Client는 원본 로컬로그인을 사용하며 독립 모듈 검사는 명시Load를 유지한다.
+    std::optional<o::SavedStateWriteHooks> reconnectFile; //메타도 같은 사용자 홈/FILE 저장 장치를 빌리며 게임 Login을 생성하지 않는다. SP/현재 Player 진단은 Session 공통 writer가 결합한다.
     std::shared_ptr<EditorLocalTransport> editorTransport; // 준비된 기존 Editor만 동일 Player 물리의 로그인 없는 실제 송수신 큐를 빌린다. Session보다 긴 Client 수명을 허용한다.
     std::function<std::int32_t()> unixSeconds; // 실제 time32의 현재 Unix 초다.
     CampaignSubscriberServices subscriber; //현재같은Client등록Config/CRT clock/진단이며소진로그9는player.log를사용한다.

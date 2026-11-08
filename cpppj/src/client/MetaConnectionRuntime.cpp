@@ -12,6 +12,7 @@
 #include "client/ClientConnectionGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
 #include "client/ClientGameplayGlobals.h"
+#include "client/RawCampaignSession.h" //type2가 빌린 현재 Session의 실제 장애 저장/Player 방송 본체를 호출한다.
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientNsInfoGlobals.h"
 #include "client/ClientPlayerRecords.h"
@@ -100,9 +101,9 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     udp_=std::make_unique<LocalUdpTransport>(client_.PlayerRecords()->Records(),client_.GameplayGlobals()->Server(),udpHooks,client_.ConnectionGlobals(),tcp_->Dispatch().Registrations()); //실제등록표와연결표를복제하지않고공유한다.
     auto& dispatch=tcp_->Dispatch();dispatch.Register(2,[this](auto sender,auto& connection,auto) {
         auto& local=*client_.LocalStateGlobals();o::ConnectionEndedHooks ended;ended.disconnect=[this](auto id) { client_.ConnectionGlobals()->Disconnect(id); };
-        ended.saveServerFailure=[] { throw std::logic_error("메타10/11 밖의 Game Server9 종료 부모 미연결"); };ended.broadcastPlayer=[](auto) { throw std::logic_error("메타 전송의 게임 Player 종료 통지 미연결"); };
+        ended.saveServerFailure=[this] { client_.GameplayGlobals()->RequireSession().SaveServerFailure(); };ended.broadcastPlayer=[this](auto owner) { client_.GameplayGlobals()->RequireSession().BroadcastConnectionPlayer(owner); }; //현재 실제 메타/게임 Session의 flags·공유 저장 writer·접속자별 방송을 사용한다.
         o::ReceiveConnectionEnded(std::bit_cast<std::int32_t>(sender),client_.ConnectionGlobals()->TokenFor(connection),{client_.GameplayGlobals()->Server(),local.ClockSynchronization().connection,local.State().phase[0],local.State().next[0],client_.ConnectionActivityGlobals()->Frames(),[this] { return client_.PlayerRecords()->Records(); }},ended);
-    }); //sender10/phase23의 실제 종료는 다음20을 예약한다.
+    }); //sender9의 실제 장애 저장/1..8 방송과 sender10/phase23의 다음20을 원문 같은 부모가 선택한다. type1은 TCP 생성자가 같은 Registry에 이미 등록한다.
     dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { o::ObserveRootLoginReply(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
     dispatch.Register(0x0f,[this](auto,auto&,auto packet) { ReceiveRootReply(packet); }); //원문과같이sender/연결번호·현재phase 관문을 수신 앞에 추가하지 않는다.
     dispatch.Observe(0x1d,{});dispatch.Version(0x1d,1,0);dispatch.RequireLength(0x1d,13); //원문0b380의 빈 관찰기/버전1과 실제13BYTE의 고정 응답이다.

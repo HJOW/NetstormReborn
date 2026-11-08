@@ -1,0 +1,92 @@
+{
+  "unit": 1141,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "23b16b54 / 20261108-109 CP",
+  "summary": "메타 type2의 GameServer9 장애 저장·서버 Player 상태 방송을 같은 실제 Session에 연결하고004b54e0 writer를 일반/메타 공통 몸체로 옮겼다. type1은 공통 TCP의 기존 Registry 등록이 이미 수행함을 확인해 이전 미등록 판정을 정정했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "initialFailure": {
+      "exitCode": 1,
+      "errors": 4,
+      "cause": "MetaConnectionRuntime의 RawCampaignSession 완전 정의 include 누락",
+      "correction": "실제 Session 헤더 추가 뒤 최종 빌드0"
+    },
+    "logs": [
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1141\\build-first-failure.log",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1141\\build.log"
+    ]
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12962304,
+      "sha256": "298f544b154dcf8a6c8814749bf2bcf1be0c173b0a614a0db5b8e7b7ebc7872e"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "c4c01a48def6f21c19fcf2deb5fa9c54b8730cbd85cb858599049c0bfaf841b0"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4e2f00/4b6660/4b6560/4b54e0 C/PE·실제 TCP 생성자/Registry/type1 초기 버퍼·type2 부분 효과·공통 writer의 토큰/alias/순서·같은 사용자 홈 FILE 장치를 대조했다.",
+  "writerMove": {
+    "writerBodyTokenOrderUnchanged": true,
+    "sourceAndTicksAliasesMatch": true,
+    "type1AlreadyRegisteredByActualTcp": true,
+    "newGameOrCppExecution": 0
+  },
+  "nativeEvidenceSha256": {
+    "004b54e0.asm": "f599610201b610679c609cb30c1d7b2bbb338b39647596ce40b2d2130ea63061",
+    "004b54e0.c": "b8ba55cece2960609fc5b8c8d1eccca5074e23de1b2752e9f09162dbaddd534d",
+    "004b6560.asm": "0e76e416936050a48b8f0828c035f5a630836dd5641e921d6bea5e92f599621b",
+    "004b6560.c": "469355937e202341ae0cf3bc4172fac8c72ab7fadf42a44e8d292c82c2fe73f1",
+    "004b6660.asm": "1e4302488bb3c21fa60a7c59530c866a45b639df478c5ac796fc039f27f3fca6",
+    "004b6660.c": "646c27d044ca489b5d91e72c29c3b9b6bcdf58285f5f6759ce4594be6afe50ca",
+    "004e2f00.asm": "483e733255ef45124725d15b6345bd8ad5772bb203b9d7ba4370f317b691ca48",
+    "004e2f00.c": "e8a3e71d3ab8b3332bc0387809316a20eb8f2acbbe0a661331af86f3fe091e4b",
+    "registration.c": "deb56fa3fb9999d3d6f81f35b92751a98ae7653f8750c9f5798803152ba52795"
+  },
+  "sourceAudit": {
+    "existingType1BackendRegistryPreserved": true,
+    "sameActualSessionType2Effects": true,
+    "metaHasSameFileHooksWithoutGameLogin": true,
+    "normalLoginDelegatesSameWriter": true,
+    "writerTokenOrderAndNativeAliasesUnchanged": true,
+    "noStateOrAckSynthesized": true
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "assetDataQuery": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "신규 MP/단위/게임/실제 통신·장애 저장 실행은 제외했으며 동작/안정성을 확정하지 않았다.",
+    "메타 CS 나머지 수신·참가자/카메라/HTML/송신 caller는 잔여다.",
+    "helpWord 전역 캐시 수명과 기존 강제 활성 커서·조기/원격 희생·marker 진단 경계는 잔여다.",
+    "원문 전체 옵션 순서·10.72 전체·x87 전체 입력/픽셀·실제 OS 고갈/장애는 입증하지 않았다."
+  ],
+  "remaining": [
+    "나머지 메타 CS 수신/참가자 생성·카메라 caller·HTML 하강/참가 후속·1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
+  ]
+}
