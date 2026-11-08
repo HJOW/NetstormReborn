@@ -250,7 +250,7 @@
       "bytes": 207615,
       "lines": 2993,
       "fixtureCommit": "2f7c2d51",
-      "webCommit": "worktree",
+      "webCommit": "3ba74d81",
       "cpppjBasis": {
         "cpppj/src/o/CanonDecoder.cpp": "167866d9",
         "cpppj/src/o/ChunkMap.cpp": "da6c61ae",
@@ -6847,7 +6847,7 @@
       "bytes": 43454,
       "lines": 440,
       "fixtureCommit": "5326d2b1",
-      "webCommit": "worktree",
+      "webCommit": "3ba74d81",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerGeyserBounds.cpp": "2a8f937e",
         "cpppj/src/o/CanonDecoder.cpp": "167866d9"
@@ -6877,9 +6877,186 @@
       "bytes": 11959995,
       "lines": 4796,
       "fixtureCommit": "e6afe25a",
-      "webCommit": "worktree",
+      "webCommit": "3ba74d81",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerPlacementAnchor.cpp": "2d166e07"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E58",
+      "id": "squid-display-parent",
+      "path": "cpppj/tests/fixtures/squid-display-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측(804): 표시 부모 004ad500 의 효과 순서·raw 50바이트·두 TYPE 필드·checking·결과(번호 getter 대체 장치·첫 로그 인자)",
+      "consumers": [
+        "webpj/tests/squid-display-parent.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-display-parent.js"
+      ],
+      "doc": "docs/webpj-squid-display-name-selection-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidDisplayParent.cpp"
+      ],
+      "scope": "696행 전부 사용(10.78 PE 전용 관측)",
+      "text": true,
+      "sha256": "e74a168a3593833ba3690b019f562827b432a1dc8a231364f0169e14ab543e6a",
+      "bytes": 212463,
+      "lines": 697,
+      "fixtureCommit": "12d07372",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidDisplayParent.cpp": "023a0a93"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E58",
+      "id": "squid-display-number",
+      "path": "cpppj/tests/fixtures/squid-display-number-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 표시 부모 004ad500 의 실제 TYPE 번호 getter 와 세 오류 인자(번호·프레임·abstract)가 포함된 효과 순서·raw·TYPE 필드·결과",
+      "consumers": [
+        "webpj/tests/squid-display-parent.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-display-parent.js"
+      ],
+      "doc": "docs/webpj-squid-display-name-selection-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidDisplayParent.cpp"
+      ],
+      "scope": "696행 전부 사용(10.78 PE 전용 관측)",
+      "text": true,
+      "sha256": "ccdeeb1eb1b4ef42f454f11ed38ebb7fc948eaac297da2de05dc51e9881a35fe",
+      "bytes": 209199,
+      "lines": 697,
+      "fixtureCommit": "023a0a93",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidDisplayParent.cpp": "023a0a93"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E58",
+      "id": "squiddefense",
+      "path": "cpppj/tests/fixtures/squiddefense-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 두 판본 기본 가상+9c 몸체(10.78 0043d9b0·CD 004aed90)의 5바이트 xor/ret 4 반환과 raw 불변",
+      "consumers": [
+        "webpj/tests/squid-defense.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-defense.js"
+      ],
+      "doc": "docs/webpj-squid-display-name-selection-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidDefense.cpp"
+      ],
+      "scope": "10.78(originals) 24행 전부 사용(originalCD 24행은 범위 밖)",
+      "text": true,
+      "sha256": "28a04960b853dfcd558e7dfb69d8a38190020768c79b6d0a55c4ff8453b1cb67",
+      "bytes": 5198,
+      "lines": 49,
+      "fixtureCommit": "a349e63c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidDefense.cpp": "a349e63c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E58",
+      "id": "squid-selection",
+      "path": "cpppj/tests/fixtures/squid-selection-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 객체 선택 비트 쓰기(41c0b0/44b2b0)·사정거리 종류(474240)·내용물 표시 입구(426080)의 결과·효과 순서·현재 VT/extra/TYPE",
+      "consumers": [
+        "webpj/tests/squid-selection.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-selection.js",
+        "webpj/www/core/squid-selection-vtables.js"
+      ],
+      "doc": "docs/webpj-squid-display-name-selection-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidSelection.cpp",
+        "cpppj/src/o/SelectionVtables.inc"
+      ],
+      "scope": "5600행 전부 사용(10.78 PE 전용 관측)",
+      "text": true,
+      "sha256": "fa1d2a0cf63a02b5701a957ee7da7cac6325e18f1081e8eb1e8090a205a29e92",
+      "bytes": 358579,
+      "lines": 5601,
+      "fixtureCommit": "02c75a7a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidSelection.cpp": "02c75a7a",
+        "cpppj/src/o/SelectionVtables.inc": "02c75a7a"
+      }
+    },
+    {
+      "id": "src-squid-name-vtables",
+      "path": "cpppj/src/o/SquidNameVtables.inc",
+      "kind": "source",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 복원 소스(보호 PE 83개 가상 표 +0x68 이름 진입점)",
+      "consumers": [
+        "webpj/tests/squid-name.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-name-vtables.js"
+      ],
+      "unit": "WB04-E58",
+      "doc": "docs/webpj-squid-display-name-selection-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidNameVtables.inc"
+      ],
+      "scope": "83칸을 웹 표와 행 단위로 교차 확인",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "9388cd63",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidNameVtables.inc": "9388cd63"
+      }
+    },
+    {
+      "id": "src-selection-vtables",
+      "path": "cpppj/src/o/SelectionVtables.inc",
+      "kind": "source",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 복원 소스(독립 PE 도구가 만든 83개 생성자 VT 의 +7c/+88)",
+      "consumers": [
+        "webpj/tests/squid-selection.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-selection-vtables.js"
+      ],
+      "unit": "WB04-E58",
+      "doc": "docs/webpj-squid-display-name-selection-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SelectionVtables.inc"
+      ],
+      "scope": "83칸을 웹 표와 행 단위로 교차 확인",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "02c75a7a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SelectionVtables.inc": "02c75a7a"
       }
     }
   ]

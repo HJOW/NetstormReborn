@@ -889,20 +889,20 @@ cpppj/src/o/RawSpStoreNoticeBindings.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidActivate.cpp	port	www/core/raw-squid-activate.js	1f00a25a	port	[o-default] WB04-E1: 004ac560 공통 Activate(void·권한·전송·깊이 진단)
 cpppj/src/o/RawSquidContainedUnpop.cpp	port	www/core/squid-contained-unpop.js	1f00a25a	port	[o-default] 3.6②→반영(WB04-D5a): 정렬 Content 부착용 PreviousAtTable getter/setter
 cpppj/src/o/RawSquidCreation.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(004af530)
-cpppj/src/o/RawSquidDefense.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidDefense.cpp	port	www/core/raw-squid-defense.js	1f00a25a	port	[o-default] WB04-E58: 기본 방어 0043d9b0 false·현재 가상 표 5칸 분배·다른 파생 fallback 보존. fixture squiddefense 10.78 24행(CD 4aed90 24행은 범위 밖). 실제 rejectDamage 소비자 연결은 DamageableHit 단위
 cpppj/src/o/RawSquidDestroy.cpp	port	www/core/squid-destroy.js	1f00a25a	port	[o-default] WB04-D2
 cpppj/src/o/RawSquidDestroyDispatch.cpp	port			todo	[o-default]
-cpppj/src/o/RawSquidDisplayParent.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidDisplayParent.cpp	port	www/core/raw-squid-display-parent.js	1f00a25a	port	[o-default] WB04-E58: 표시 부모 004ad500·프레임 고정·현재 TYPE 두 조회·846 진단·mark. fixture squid-display-parent 696·squid-display-number 696행 전부. 실제 TYPE 뷰/표시 장치 연결은 SquidDisplay 단위
 cpppj/src/o/RawSquidFinder.cpp	port	www/core/raw-squid-finder.js	1f00a25a	port	[o-default] WB04-B
 cpppj/src/o/RawSquidHitPoints.cpp	port	www/core/raw-squid-word.js	1f00a25a	port	[o-default] WB04-E2: 004adca0 현재 HP DWORD setter(옆 필드 보존)
 cpppj/src/o/RawSquidLevel.cpp	port	www/core/raw-squid-level.js	1f00a25a	port	[o-default] WB04-E2: hasLevel/getLevel/setLevel. fixture squid-level 10.78 행
-cpppj/src/o/RawSquidName.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidName.cpp	port	www/core/raw-squid-name.js	8ee7666b	port	[o-default] WB04-E58: 가상+68 이름 004ace20/00454d30·언어 조회 순서·치환·Factory 레벨 접미사. cpppj SquidNameTests 4건 계약(원본 PE 관측 fixture 없음). ①: 기준선 뒤 BaseName 공개 접근자(8ee7666b)는 웹 baseName() 로 공개. 한국어 이름 바이트 길이는 이름 표시 월드 연결 단위에서
 cpppj/src/o/RawSquidNeighbors.cpp	port	www/core/raw-squid-neighbors.js	1f00a25a	partial	[o-default] WB04-E39: 표면 지도 순회(flag 8)·일반 finder 필터·발자국/중심/방향. fixture surface 125장면·surface-neighbor-current 10.78 16행·neighbor-boundary 18행. 일반 해시 flag 0/4의 다리 이벤트 장면(neighbor-x86 Event 행)은 다리 이벤트 단위에서, 울타리(fence-neighbors 1904행)는 울타리 단위에서
 cpppj/src/o/RawSquidPoolReset.cpp	port	www/core/raw-squid-pool-reset.js	1f00a25a	port	[o-default] WB04-E37: 004af170 월드 Pool 정리 부모. fixture squid-pool-reset 12행 중 10.78 6행(originalCD 제외). Client 대여 거부/Board·Dais 실패점 재조회는 소비자 단위에서
 cpppj/src/o/RawSquidPopParent.cpp	port	www/core/raw-squid-pop-parent.js	1f00a25a	port	[o-default] WB04-E1: 004b02d0 공통 Pop 부모. fixture pop-world-bounds 260행(Point.isValid·float 저장·NaN 단락)
 cpppj/src/o/RawSquidPostPopParent.cpp	port	www/core/squid-postpop-parent.js	1f00a25a	port	[o-default] WB04-E24: 004b0d30 공통 postPop 부모(suppressed·영역/그래프·진단 복귀·장부 효과·깊이). 원본 관측 없이 PE 정적 계약 11건(실제 SquidPostPop 마나 진단 연결 1건은 본체 단위에서)
 cpppj/src/o/RawSquidRegion.cpp	port	www/core/raw-squid-region.js	9cb0547f	port	[o-default] WB04-E2: 004acd20 setter + 3.6②→반영: 기준선 뒤 9cb0547f 가 추가한 004acda0 getter(GetSquidRegion)를 getSquidRegion 으로 이식
-cpppj/src/o/RawSquidSelection.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidSelection.cpp	port	www/core/raw-squid-selection.js	1f00a25a	port	[o-default] WB04-E58: 선택 비트 41c0b0/44b2b0·사정거리 종류 474240·내용물 표시 입구 426080. fixture squid-selection 5600행 전부. 실제 표시 갱신(+88)·Regular 등록은 소비자 단위
 cpppj/src/o/RawSquidTake.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(004af610)
 cpppj/src/o/RawSquidTransmission.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidUnpopParent.cpp	port	www/core/squid-unpop.js	1f00a25a	port	[o-default] WB04-D1
@@ -953,7 +953,7 @@ cpppj/src/o/RawXlat.cpp	port			todo	[o-default]
 cpppj/src/o/RenderProcessSystem.cpp	port			todo	[o-default]
 cpppj/src/o/RiftType.cpp	port	www/assets/type-table.js	1f00a25a	partial	[o-default] 타입 레코드 일부
 cpppj/src/o/RiftTypeTable.cpp	port	www/assets/type-flags.js;www/assets/fort.js;www/assets/type-table.js	1f00a25a	partial	[o-default] 3.6③: 기준선의 defaultFrame(+0x128) 보관은 웹 type-table 정의에는 있으나 Factory 용 타입 레코드에 없음 → WB03-M2/WB05 Draw·타입 레코드 연결 때. zorder/생성자 주소 연결도 WB05-A
-cpppj/src/o/SelectionVtables.inc	port			todo	[o-default]
+cpppj/src/o/SelectionVtables.inc	port	www/core/squid-selection-vtables.js	1f00a25a	port	[o-default] WB04-E58: 생성자 83칸 VT 의 +7c/+88. cpppj .inc 와 행 단위 대조(tests/squid-selection)
 cpppj/src/o/ShrapnelVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/SidPool.cpp	port	www/core/sid-pool.js	9cb0547f	port	[o-default] 3.6③(WB04-D3 판정 유지): 기준선의 패치판 할당 진단 복귀·소진 시 현재 World 다리 회수(BindAllocation 최대50)·물리 슬롯 friend 는 WB05 World 수명 때 반영. 웹은 소진/진단에서 명시 오류로 멈춘다 / 3.6①(9cb0547f, WB02-H 판정): 예측 커서 쓰기 접근자 PredictableCursorValue 추가만이며 할당 결과 같음. 로그인/저장 부모 이식(WB05) 때 같은 접근이 필요하면 둔다
 cpppj/src/o/SmokeVisualSystem.cpp	port			todo	[o-default]
@@ -968,7 +968,7 @@ cpppj/src/o/SquidForms.cpp	port	www/core/squid-forms.js	1f00a25a	port	[o-default
 cpppj/src/o/SquidFrame.cpp	port			todo	[o-default]
 cpppj/src/o/SquidFrameBinding.cpp	port			todo	[o-default]
 cpppj/src/o/SquidHash.cpp	port	www/core/squid-hash.js	1f00a25a	port	[o-default] WB04-B
-cpppj/src/o/SquidNameVtables.inc	port			todo	[o-default]
+cpppj/src/o/SquidNameVtables.inc	port	www/core/squid-name-vtables.js	1f00a25a	port	[o-default] WB04-E58: 이름 가상 표 83칸. cpppj .inc 와 행 단위 대조(tests/squid-name)
 cpppj/src/o/SquidOwner.cpp	port	www/core/squid-owner.js	1f00a25a	port	[o-default] WB04-E2: 소유자 지정(vtable +0x74) 처리기. fixture owner-x86 10.78 행(≥1000)·계약 3장면
 cpppj/src/o/SquidPop.cpp	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 공통 Pop 처리기(pop/popCurrent/supports/옆면·미니맵·전송·진단 연결). 표시(SquidDisplay)와 공통 postPop(SquidPostPop)은 선택 연결 계약만 두고 본체는 이후 단위. fixture pop-x86 10.78 2456단계·pop-vtables 83행
 cpppj/src/o/SquidPostPop.cpp	port	www/core/squid-postpop-state.js;www/core/squid-postpop.js	1f00a25a	partial	[o-default] WB04-E41: 가상 분배·Validate/ValidateBase/Activate/PostPopVirtual·TotalCost·BridgePrefix·공통 PostPop 연결(+E2 장부 구조). fixture postpop 492행·bridgepostpop 80행·rawgraph 768·regiongraph 512·graphremove 386·graphrecovery 64. 표시 dirty 열은 SquidDisplay 단위, 파생 몸체 본체(자산·Factory·Priest·Rune·Dais·Dude·Player·buried·비행·벌룬·크랩·Carrier·주문·보호막)와 섬/표면/Teleport 접두는 각 종류 단위에서 setBody/set*Prefix로 연결
