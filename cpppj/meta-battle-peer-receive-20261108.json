@@ -1,0 +1,77 @@
+{
+  "unit": 1155,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "60b8e73b / 20261108-125 CP",
+  "summary": "M2.4의 전체1bh/4b8b20·빈observer/고정38BYTE를 실제 공유 등록표와 같은 기록 FILE/현재State·동기Run에 연결했다. 인계 이후 재수신/재진입의 현재owner 복원은 새M2.5로 남긴다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1155\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13152256,
+      "sha256": "4732a47a4b6538b80abd0be8898df4e64410071e6b6c15f58fee6ac61f5569cc"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "01bf678c938db2ce07a61dec034c0774e57b8c77b64fb5f683a7941ad3edbe3d"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4b8b20 C/PE의 진입server/Zone예약 조기반환→checking29/33·e39 진단→선택적 현재packet+4/Subscriber 기록Open→packet+8을현재+54에NUL포함BYTE복사→현재포트/current7→직접Run, 실제세번째packet 인자·빈observer/version1·정책0/고정38을 대조했다.",
+  "nativeEvidenceSha256": {
+    "0040a1e0.asm": "e40d7ce96fc17546ad92b2a55c118cf0fe54921d0caec71637a9359f1f7d77e1",
+    "0040a1e0.c": "68b51984405d234590d604e7b02f5b4d958e39770c9f90bad5542e39ef6e475d",
+    "004b4df0.asm": "b5298c9214537f589294a405f0462dfa32b6d9df7f2394265f425ad88e95e43e",
+    "004b4df0.c": "5e7b18455666e266663417015ebc1b461ba440fa7ce44905dc5c76c4e0582caf",
+    "004b8b20.asm": "5ca5d0128c8affca622d114490386c031dac72a832fdde6167f99c0b07222eff",
+    "004b8b20.c": "2e3836671ba68cfc61bc4258145c08ab28826f3a7cf187944d17447c94bd7653",
+    "004e2620.asm": "172e4ef7f1ade55434a55fc444dd001692cb63a7385f7fcb9a577e3cfae50c6e",
+    "004e2620.c": "caa8027d0f0fdb1b72a4489fc149b3e88445646c754d2d489720fc83c97ce99a",
+    "004e2940.asm": "fea8655bd74ebc1d2f47fad33598afe51b2351ae39fe64b6fb99a7b98db96296",
+    "004e2940.c": "19e7f876781f7a3841db93c72b27f5f401cab4c96a544a2808dc6460b50e5d50",
+    "004e2dc0.asm": "f1c8729d324361ac9d921b19fa3f444192647a6a84edb226281393dff04af5ab",
+    "004e2dc0.c": "4fdb65830262cdc154ecb1d1be45aa0c7cc5dce9784a9480be86e0a9eb2ce9aa"
+  },
+  "sourceAudit": {
+    "serverAndPendingReturnBeforeSelectedPacketReadsAndDiagnostics": true,
+    "checkingDiagnosticReturnsIntoActualBody": true,
+    "recordOpenBeforeCurrentAddressCopy": true,
+    "byteForwardCopyIncludingNulWithoutPreflightOrRollback": true,
+    "usesCurrentGamePortAfterOpenAndCopy": true,
+    "writesCurrent7ThenRunsSynchronously": true,
+    "normalMetaState7AndSameTcpUdpHandoffConnected": true,
+    "newRuntimeExecutionCount": 0
+  },
+  "remaining": {
+    "next": "M2.5 / 인계 이후 같은 등록표의1ah/1bh 재수신·현재 Source/World 재진입",
+    "checkingFunctions": [
+      "004b02d0",
+      "004dc220"
+    ],
+    "stage3Groups": 7,
+    "m2Complete": false,
+    "knownGap": "1153의LoadNativeBattleWorldBody는현재editor.metaTransport를요구한다. 첫State7은그필드를비우고실제옛Meta를일반전송의lifetime으로보유하므로,같은표에남은1bh가다시current7을동기Run하면현재owner가없어거부된다.1ah의next7도이미World가있으면외부메타PollStarting경로가선택되지않는다.원문은추가phase거부없이계속하므로실제같은Source/현재World·노드를보존하는M2.5가필요하다."
+  },
+  "limitations": [
+    "사용자 지시로 새MP 단위/패킷/게임/통신 검사를 실행하지 않았다. 실제 정상/반복 로그인을 통과했다고 주장하지 않는다.",
+    "M2.4의전체 수신 본체와 정상 메타→전투 연결은 구현했으나 인계 후 같은 수신 callback 재진입은M2.5의 구체적 미완료다. 추가phase/known/sender필터나 다음Tick연기로숨기지 않는다.",
+    "개발자이름 제한4b8be0→1bh직접Caller·기록요청 활성writer와나머지 전송은M6 전수대조대상이다."
+  ],
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

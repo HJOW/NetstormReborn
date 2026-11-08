@@ -1,4 +1,4 @@
-// 1ah의 전체 Zone 수신과 같은 실제 패킷 observer/장기 State 저장소를 연결한다.
+// 1ah/1bh의 전체 전투 시작 수신과 같은 실제 패킷 observer/장기 State 저장소를 연결한다.
 #pragma once
 #include "o/RawCheckingFlag.h"
 #include "o/RawLocalMissionState.h"
@@ -18,7 +18,9 @@ struct StateBattleStartHooks { //선택된 원문 위치에서만 실제 외부 
     std::function<std::uint32_t(std::span<std::uint8_t>)> duplicate; //같은 mutable 패킷의 observer(1)→가변 복제/장부 token이다.
     std::function<void(std::string_view)> openRecord; //현재 이름으로 같은 Client FILE을 닫고 새로 연다.
     std::function<void(std::int32_t)> disconnect; //현재 실제10/11을 순서대로 닫는다.
+    std::function<void()> run; //1bh의 현재7 쓰기 뒤 같은 실제 상태 처리기를 동기 실행한다.
 };
 void ObserveBattleStartZone(std::span<std::uint8_t> packet,std::uint32_t sending,const StateBattleStartHooks& hooks); //40a1e0: sending0은 읽기0이며 진단 복귀 뒤 현재 BYTE14로15+71*n을 쓴다.
 void ReceiveBattleStartZone(std::span<std::uint8_t> packet,StateBattleStartGlobals globals,const StateBattleStartHooks& hooks); //4b4df0: 진단→next7/주소/포트→복제/예약→선택적 기록Open→10/11 정리다.
+void ReceiveBattleStartPeer(std::span<const std::uint8_t> packet,StateBattleStartGlobals globals,const bool& server,const StateBattleStartHooks& hooks); //4b8b20: server/예약 조기반환→진단/기록→현재 주소/포트/7→직접Run이다.
 }

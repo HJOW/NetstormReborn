@@ -20,4 +20,12 @@ void ReceiveBattleStartZone(std::span<std::uint8_t> packet,StateBattleStartGloba
     if (g.recordRequested) { std::array<char,256> name{};std::snprintf(name.data(),name.size(),"%08X.%X.c.dat",Read(packet,10,4),g.subscriber);Need(h.openRecord)(name.data()); } //복제/observer 뒤의 현재 packet+10과 자기 subscriber로 같은 파일을 연다.
     Need(h.disconnect)(10);Need(h.disconnect)(11); //수신 중인 노드의 지연 반납/깊이는 같은 실제 TCP owner가 처리한다.
 }
+void ReceiveBattleStartPeer(std::span<const std::uint8_t> packet,StateBattleStartGlobals g,const bool& server,const StateBattleStartHooks& h) {
+    if (server || g.zonePending) return; //원문 두 전역 관문은 checking·파일/패킷 접근보다 먼저다.
+    if (g.checking && g.state.phase[0]!=29 && g.state.phase[0]!=33) Need(h.assertion)("currState.state == S_META_CHAL_CONNECTED || currState.state == S_META_CHAL_CONNECTED_MONITOR",".\\State.cpp",0xe39);
+    if (g.recordRequested) { std::array<char,256> name{};std::snprintf(name.data(),name.size(),"%08X.%X.c.dat",Read(packet,4,4),g.subscriber);Need(h.openRecord)(name.data()); } //1ah의+10과 구별되는 실제+4이며 Open이 복귀한 뒤 주소를 읽는다.
+    auto current=std::span<std::uint8_t>{reinterpret_cast<std::uint8_t*>(g.state.current.data()),sizeof(g.state.current)};std::size_t offset{};
+    do { const auto value=Read(packet,8+offset,1);Put(current,0x54+offset,value,1);++offset;if (!value) break; } while (true); //NUL도 같은 현재 블록에 한 BYTE씩 복사하며 사전 문자열 검사/전체 복사를 하지 않는다.
+    g.state.current[0x7c/4]=g.gamePort;g.state.current[0]=7;Need(h.run)(); //next 요청/명령 큐 없이 같은004b6dd0을 수신 중 직접 실행한다.
+}
 }
