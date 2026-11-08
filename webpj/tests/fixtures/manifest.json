@@ -12242,7 +12242,7 @@
       "bytes": 1194171,
       "lines": 211,
       "fixtureCommit": "fca3ae92",
-      "webCommit": "worktree",
+      "webCommit": "96fc459c",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgeCandidates.cpp": "55ef3103"
       }
@@ -12271,7 +12271,7 @@
       "bytes": 39180,
       "lines": 400,
       "fixtureCommit": "55ef3103",
-      "webCommit": "worktree",
+      "webCommit": "96fc459c",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgeCandidates.cpp": "55ef3103"
       }
@@ -12300,7 +12300,7 @@
       "bytes": 23639,
       "lines": 262,
       "fixtureCommit": "23828d9b",
-      "webCommit": "worktree",
+      "webCommit": "96fc459c",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgePlanning.cpp": "23828d9b"
       }
@@ -12329,7 +12329,7 @@
       "bytes": 3390,
       "lines": 86,
       "fixtureCommit": "23828d9b",
-      "webCommit": "worktree",
+      "webCommit": "96fc459c",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgePlanning.cpp": "23828d9b"
       }
@@ -12358,7 +12358,7 @@
       "bytes": 438,
       "lines": 25,
       "fixtureCommit": "23828d9b",
-      "webCommit": "worktree",
+      "webCommit": "96fc459c",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgePlanning.cpp": "23828d9b"
       }
@@ -12387,9 +12387,67 @@
       "bytes": 158896,
       "lines": 29,
       "fixtureCommit": "23828d9b",
-      "webCommit": "worktree",
+      "webCommit": "96fc459c",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgePlanning.cpp": "23828d9b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E177",
+      "id": "aibridgeinitialize",
+      "path": "cpppj/tests/fixtures/ai-bridge-initialize-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 다리 경로 초기화 0040fde0(NaN/무한대/음수 0 좌표와 호출 전 채움 바이트의 전체 0xb08 본체)(10.78 144입력)",
+      "consumers": [
+        "webpj/tests/ai-bridge-path.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-bridge-path.js"
+      ],
+      "doc": "docs/webpj-ai-bridge-path-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBridgePath.cpp"
+      ],
+      "scope": "10.78 실제 PE 144행 전부",
+      "text": true,
+      "sha256": "0450a3947aa6a4c6d07c5f5d368c0abd7656ea817c84756e8c5c83a219314901",
+      "bytes": 821082,
+      "lines": 145,
+      "fixtureCommit": "13b4a4f7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBridgePath.cpp": "13b4a4f7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E177",
+      "id": "aibridgestep",
+      "path": "cpppj/tests/fixtures/ai-bridge-step-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 다리 경로 단계 004167a0(상태 0..5·wanted/available/하위 모드별 호출 뒤 상태·완료 반환·소스 좌표·첫 하위 진입)(10.78 600입력)",
+      "consumers": [
+        "webpj/tests/ai-bridge-path.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-bridge-path.js"
+      ],
+      "doc": "docs/webpj-ai-bridge-path-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBridgePath.cpp"
+      ],
+      "scope": "10.78 실제 PE 600행 전부",
+      "text": true,
+      "sha256": "2cd0d570668e97f0c45ffb720692b417bed0c8d4ba117e0a1a0be30822c6f19e",
+      "bytes": 28826,
+      "lines": 601,
+      "fixtureCommit": "da3a5c8a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBridgePath.cpp": "13b4a4f7"
       }
     }
   ]
