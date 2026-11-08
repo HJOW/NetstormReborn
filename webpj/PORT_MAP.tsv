@@ -607,7 +607,7 @@ cpppj/src/o/RawConstructionArrival.cpp	port	www/core/raw-construction-arrival.js
 cpppj/src/o/RawConstructionBuilder.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionClear.cpp	port	www/core/raw-construction-clear.js	1f00a25a	port	[o-default] WB04-E137: 건설 배치 통지 직전의 로컬 예측 조각 정리(00441fd0: 칸 범위·Canon 디코더 칸 순회·abstract 후보 하나 삭제·같은 조각 플래그). fixture constructionclear originals 420행 전부(originalCD·original1037 제외). 남음: Place/Confirm 이식 뒤 통합 시험
 cpppj/src/o/RawConstructionCommand.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionConfirm.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionConfirm.cpp	port	www/core/raw-construction-confirm.js	1f00a25a	port	[o-default] WB04-E139: 서버 건설 확정(00444590: typed confirm·실제 wire actualConfirm·기준점 조회·조각별 SID 생성·통지 전송/직접 처리·기록기)과 factory 어댑터. fixture constructionconfirm originals 508행 전부(originalCD·original1037 제외). 실제 Confirm→Notice→Clear→Place 통합 시험 포함(construction-chain). 남음: Request/Command 연결
 cpppj/src/o/RawConstructionData.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionEffects.cpp	port	www/core/raw-construction-effects.js	1f00a25a	port	[o-default] WB04-E135: 건설 유닛 밀어내기(00443800)와 섬 실패 정리(0046e6c0)와 요청 어댑터. fixture constructioneffects originals 1178행 전부(originalCD·original1037 제외). 남음: 실제 Request/Factory/Destroy 통합 시험(RawConstructionRequest 이식 뒤)
 cpppj/src/o/RawConstructionFrame.cpp	port	www/core/raw-construction-frame.js	1f00a25a	port	[o-default] WB04-E130: 건설 표시 프레임 갱신(Run)·Draw·Expand·Append·Color·Clock. fixture constructionframe originals 435행 전부(originalCD/original1037 은 범위 밖). 남음: Run 의 Kill 을 표시 해제에 연결하는 통합 시험(ConstructionProcess 계열과 함께)

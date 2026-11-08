@@ -11217,7 +11217,7 @@
       "bytes": 1009583,
       "lines": 3929,
       "fixtureCommit": "3c570b27",
-      "webCommit": "worktree",
+      "webCommit": "19489327",
       "cpppjBasis": {
         "cpppj/src/o/CanonTypeDecoder.cpp": "167866d9",
         "cpppj/src/o/CanonDecoder.cpp": "167866d9"
@@ -11247,7 +11247,7 @@
       "bytes": 22538,
       "lines": 157,
       "fixtureCommit": "167866d9",
-      "webCommit": "worktree",
+      "webCommit": "19489327",
       "cpppjBasis": {
         "cpppj/src/o/CanonDecoder.cpp": "167866d9"
       }
@@ -11306,9 +11306,38 @@
       "bytes": 1611139,
       "lines": 3684,
       "fixtureCommit": "c0146d4d",
-      "webCommit": "worktree",
+      "webCommit": "19489327",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionPlace.cpp": "976f2b7b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E139",
+      "id": "constructionconfirm",
+      "path": "cpppj/tests/fixtures/constructionconfirm-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 서버 건설 확정의 기준점 조회·SID 생성·통지 필드·전송/직접 처리/기록기 순서(세 판본 1300행)",
+      "consumers": [
+        "webpj/tests/construction-confirm.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-confirm.js"
+      ],
+      "doc": "docs/webpj-construction-confirm-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionConfirm.cpp"
+      ],
+      "scope": "10.78(originals) 508행 사용, originalCD 396행은 10.72, original1037 396행은 10.37",
+      "text": true,
+      "sha256": "0970aaa9df5042a43d41d858d49e66e8beccc65c3a5841ea179c8e697ccb1777",
+      "bytes": 281802,
+      "lines": 1302,
+      "fixtureCommit": "c0146d4d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionConfirm.cpp": "77a0c3a4"
       }
     }
   ]
