@@ -772,6 +772,13 @@ public sealed class RawSurfaceWorld
     /// <returns>반납 증빙을 보관했으면 참이다.</returns>
     public bool ProcessBindingsReturned() => _returnedProcesses is not null;
 
+    /// <summary>현재 대여의 생성 실패·일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 저장소가 둔다. 소멸자 대신 세션 종료 경로가 직접 부른다. 2026-11-08 F2d 월드 본체 종료 반납 이식에서 추가됐다.</summary>
+    public void DrainCurrentProcessBindingsForShutdown()
+    {
+        // 원본 Impl.DrainCurrentProcessesForShutdown의 현재 대여 분기를 직역한다. raw Kernel* 직결 유산 호스트 분기는 C# 생성자가 만들지 않아 잇지 않는다(결정 6 — 해당 경로가 필요해지면 별도 단위에서 잇는다).
+        _processUse?.DrainOwnedForShutdown();
+    }
+
     /// <summary>같은 월드·전송·공간 재등록을 참가자별로 실행한다. 멀티플레이 3차 사전 구현이며 전송기가 없어 명시 오류로 멈춘다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
     /// <param name="owner">동기화할 참가자 번호다.</param>
     public void SynchronizePeer(uint owner)

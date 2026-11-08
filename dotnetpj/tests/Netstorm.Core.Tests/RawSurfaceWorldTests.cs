@@ -1683,6 +1683,74 @@ public sealed class RawSurfaceWorldTests
         RawProcessHostStorage.ClearPass foreign = second.ClearProcessesForState();
         Assert.Throws<ArgumentException>(() => first.ReturnProcessBindingsForState(foreign));
     }
+
+    /// <summary>대여 없는 월드의 종료 반납이 조용히 끝나는지 검증한다. 2026-11-08 F2d 월드 본체 종료 반납 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DrainCurrentProcessBindingsWithoutUseIsNoOp()
+    {
+        // 자동 껍데기 저장소는 호스트를 묶지 않으므로 대여가 없으며 종료 반납도 명시 오류 없이 끝난다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        world.DrainCurrentProcessBindingsForShutdown();
+        Assert.False(world.ProcessBindingsReturned());
+        Assert.Equal(0, world.Kernel().Size());
+        world.DrainCurrentProcessBindingsForShutdown();
+        Assert.False(world.ProcessBindingsReturned());
+    }
+
+    /// <summary>대여 유지 상태에서 종료 반납이 대여를 소비하지 않는지 검증한다. 2026-11-08 F2d 월드 본체 종료 반납 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DrainCurrentProcessBindingsKeepsLeaseWhenIdle()
+    {
+        // 비어 있는 커널의 종료 반납 뒤에도 같은 증빙 발급·반납 순서가 그대로 동작해야 한다.
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
+        world.DrainCurrentProcessBindingsForShutdown();
+        Assert.False(world.ProcessBindingsReturned());
+        RawProcessHostStorage.ClearPass pass = world.ClearProcessesForState();
+        Assert.False(world.ProcessBindingsReturned());
+        world.ReturnProcessBindingsForState(pass);
+        Assert.True(world.ProcessBindingsReturned());
+    }
+
+    /// <summary>종료 반납이 자기 현재 대여의 잔류만 걷어내는지 검증한다. 2026-11-08 F2d 월드 본체 종료 반납 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DrainCurrentProcessBindingsRemovesOwnedOnly()
+    {
+        // 같은 호스트·런타임 소유만 반납하고 외부 잔류는 남긴다.
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
+        SquidProcessHost host = world.Storage().Processes().Host();
+        ProcessHostRuntimeBindings runtime = host.Runtime();
+        var owned = new SquidProcess();
+        owned.HostLink = host;
+        owned.RuntimeLink = runtime;
+        uint ownedPid = world.Kernel().Add(owned);
+        var foreign = new SquidProcess();
+        uint foreignPid = world.Kernel().Add(foreign);
+        Assert.Equal(2, world.Kernel().Size());
+        world.DrainCurrentProcessBindingsForShutdown();
+        Assert.Null(world.Kernel().Get(ownedPid));
+        Assert.Same(foreign, world.Kernel().Get(foreignPid));
+        Assert.False(world.ProcessBindingsReturned());
+    }
+
+    /// <summary>증빙 반납 뒤 종료 반납이 조용히 끝나는지 검증한다. 2026-11-08 F2d 월드 본체 종료 반납 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DrainCurrentProcessBindingsAfterReturnIsNoOp()
+    {
+        // 현재 대여를 소비한 뒤에는 종료 반납이 할 일이 없으므로 명시 오류 없이 끝난다.
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
+        RawProcessHostStorage.ClearPass pass = world.ClearProcessesForState();
+        world.ReturnProcessBindingsForState(pass);
+        Assert.True(world.ProcessBindingsReturned());
+        world.DrainCurrentProcessBindingsForShutdown();
+        Assert.True(world.ProcessBindingsReturned());
+        Assert.Throws<InvalidOperationException>(() => world.ClearProcessesForState());
+    }
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {
