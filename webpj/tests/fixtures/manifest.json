@@ -11802,9 +11802,38 @@
       "bytes": 10736934,
       "lines": 22682,
       "fixtureCommit": "a072d5d9",
-      "webCommit": "worktree",
+      "webCommit": "08cabb9a",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPlacementCollision.cpp": "a072d5d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E154",
+      "id": "canonmayplace",
+      "path": "cpppj/tests/fixtures/canonmayplace-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 전체 MayPlace 정상 반환(임시 160바이트 확보/반납만 대체, 10.78 144행)",
+      "consumers": [
+        "webpj/tests/canon-placement-pipeline.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement-pipeline.js"
+      ],
+      "doc": "docs/webpj-canon-placement-pipeline-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacementPipeline.cpp"
+      ],
+      "scope": "10.78 실제 PE 144행 전부",
+      "text": true,
+      "sha256": "5a1d36214360b972fd9b1eaaa8d0184bb2e21a27bfc73b34d02d6c8c3271b318",
+      "bytes": 296183,
+      "lines": 434,
+      "fixtureCommit": "ea856953",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacementPipeline.cpp": "3d568ff6"
       }
     }
   ]

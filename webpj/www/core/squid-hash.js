@@ -92,6 +92,10 @@ export class SquidHash {
     // 단계 배열의 읽기 사본이다. 반환값을 바꿔도 해시는 바뀌지 않는다(SID 풀의 slot 사본과 같은 정책).
     entries(level) { return this.#heads[checkLevel(level)].slice(); }
 
+    // 단계 머리 배열의 살아 있는 읽기 전용 용도 참조이다(사본 아님). 원본의 표면 지도(0단계)처럼 같은 저장소를 직접 공유해야 하는 소비자(일반 배치 파이프라인의
+    // 현재 표면·기준점 지도)에만 쓰며, 쓰기는 반드시 setCell/setBucket/setAt 으로 한다. (2026-11-09 WB04-E154: 일반 배치 파이프라인이 해시 0단계를 공유하도록 추가)
+    view(level) { return this.#heads[checkLevel(level)]; }
+
     // 객체의 해시 단계를 고른다(원본 004ace40): 섬/다리(flags2 0x2|0x4)는 0, 그 밖은 현재 SHP 프레임 크기의 큰 변이 2 이하 1, 4 이하 2, 그보다 크면 3.
     // 프레임 크기는 float 입력이며 음수·NaN·무한대는 RangeError 이다. 사용: SquidHash.objectLevel(record.flags2, frame.width, frame.height).
     static objectLevel(flags2, frameWidth, frameHeight) {
