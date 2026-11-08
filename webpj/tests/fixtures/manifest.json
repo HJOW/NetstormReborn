@@ -8694,9 +8694,38 @@
       "bytes": 377987,
       "lines": 103,
       "fixtureCommit": "463aad22",
-      "webCommit": "worktree",
+      "webCommit": "85a23432",
       "cpppjBasis": {
         "cpppj/src/o/RawVortexPreDestroy.cpp": "463aad22"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E81",
+      "id": "fence-create",
+      "path": "cpppj/tests/fixtures/fence-create-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 바리케이드 생성 함수의 부모/새 슬롯 전체 raw 와 호출 순서(표식 M 106·포스필드 S 306·재생성 R 166; 이번 단위는 R 만 소비)",
+      "consumers": [
+        "webpj/tests/fence-rebuild.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-rebuild.js"
+      ],
+      "doc": "docs/webpj-fence-rebuild-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFenceRebuild.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 578행 중 재생성(R) 166행 사용(표식/포스필드 행은 RawFenceCreate 단위)",
+      "text": true,
+      "sha256": "84c1247a20c3a7cc1321f0fa36b5a36553a13f1e01e3df41caa3444a1dc12fd1",
+      "bytes": 2102432,
+      "lines": 579,
+      "fixtureCommit": "233d223b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFenceRebuild.cpp": "233d223b"
       }
     }
   ]
