@@ -603,7 +603,7 @@ cpppj/src/o/RawConnectionActivity.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionRegistration.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionRegistry.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionArrival.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionArrival.cpp	port	www/core/raw-construction-arrival.js	1f00a25a	port	[o-default] WB04-E133: 건설 운반 도착 판정(정수 칸 finder 방문·서버 대상 건설 시작·예측 대기 contained 삭제·자기 삭제)과 start 어댑터. fixture constructionarrival originals 153행 전부(originalCD 는 10.72). 남음: 마나볼트 도착 101행(RawManaBoltArrival 이식 뒤)·PathProcess 도착 호출 연결
 cpppj/src/o/RawConstructionBuilder.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionClear.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionCommand.cpp	port			todo	[o-default]

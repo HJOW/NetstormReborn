@@ -9,6 +9,7 @@
 // 사용(저장소 루트 또는 webpj 에서):
 //   node webpj/tools/fixture-manifest.mjs            → 검사만 한다(해시 불일치 시 종료 코드 1). cpppj 근거 소스가 basis 뒤에 바뀐 커밋 수도 보고한다.
 //   node webpj/tools/fixture-manifest.mjs --write    → 계산 칸을 다시 채워 저장한다(파일 변경을 검토한 뒤에만 쓴다).
+//   node webpj/tools/fixture-manifest.mjs --write --only 아이디,아이디 → 지정한 항목과 작업 사본 표시 항목만 다시 채운다(2026-11-08 WB04-E134: 단위마다 전체 계산이 너무 느려 추가).
 // 이 도구는 로컬 파일과 git 기록만 읽고 네트워크를 쓰지 않는다.
 // (2026-11-05 WB02-F: LEFT_JOBS.webpj.md 3.1절 이식 추적 요구로 추가)
 import crypto from 'node:crypto';
@@ -153,7 +154,10 @@ export function check(manifest = readManifest(), { withDrift = true } = {}) {
 function main(argv) {
     const manifest = readManifest();
     if (argv.includes('--write')) {
-        const updated = { ...manifest, entries: manifest.entries.map(compute) };
+        // --only 아이디,아이디: 지정한 항목과 아직 작업 사본 표시인 항목만 다시 계산한다(항목마다 git 조회를 하므로 전체 계산은 PC 가 바쁠 때 10분 넘게 걸린다). 나머지는 그대로 둔다.
+        const onlyIndex = argv.indexOf('--only');
+        const only = onlyIndex >= 0 ? new Set((argv[onlyIndex + 1] ?? '').split(',').filter(Boolean)) : null;
+        const updated = { ...manifest, entries: manifest.entries.map((entry) => (!only || only.has(entry.id) || entry.webCommit === WORKTREE ? compute(entry) : entry)) };
         fs.writeFileSync(path.join(REPO_ROOT, MANIFEST_PATH), `${JSON.stringify(updated, null, 2)}\n`, 'utf8');
         console.log(`이식 추적 목록 갱신: ${updated.entries.length}개 항목`);
         return 0;

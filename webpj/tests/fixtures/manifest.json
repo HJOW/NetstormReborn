@@ -11040,7 +11040,7 @@
       "bytes": 830816,
       "lines": 2870,
       "fixtureCommit": "f4688206",
-      "webCommit": "worktree",
+      "webCommit": "6164085a",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionProcess.cpp": "a942a75a"
       }
@@ -11069,9 +11069,38 @@
       "bytes": 4630,
       "lines": 65,
       "fixtureCommit": "72012e83",
-      "webCommit": "worktree",
+      "webCommit": "6164085a",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionProcess.cpp": "a942a75a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E133",
+      "id": "constructionarrival",
+      "path": "cpppj/tests/fixtures/constructionarrival-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 운반 도착의 정상/예측/무대상/현재 자료 변형 6가지 반환 코드와 하위 효과 순서(두 판본 306행)",
+      "consumers": [
+        "webpj/tests/construction-arrival.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-arrival.js"
+      ],
+      "doc": "docs/webpj-construction-arrival-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionArrival.cpp"
+      ],
+      "scope": "10.78(originals) 153행 사용, originalCD 153행은 10.72",
+      "text": true,
+      "sha256": "de99e6d0f8d2816101d30b6245603a7caffffe64b9b5c7fda505af252a9da691",
+      "bytes": 44300,
+      "lines": 307,
+      "fixtureCommit": "a5afdafb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionArrival.cpp": "fa80cc90"
       }
     }
   ]
