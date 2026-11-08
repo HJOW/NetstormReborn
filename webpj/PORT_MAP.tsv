@@ -584,7 +584,7 @@ cpppj/src/o/RawCarrierMining.cpp	port	www/core/raw-carrier-mining.js	1f00a25a	po
 cpppj/src/o/RawCarrierMove.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierPickup.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierPostPop.cpp	port			todo	[o-default]
-cpppj/src/o/RawCarrierPreDestroy.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierPreDestroy.cpp	port	www/core/raw-carrier-pre-destroy.js	1f00a25a	port	[o-default] WB04-E56: Carrier 삭제 준비 00426890·FindContained 004ac9f0·사제 훅 연결. fixture carrierpredestroy 10.78 960행 전부. 실제 Damageable/전역 후처리는 해당 이식 단위
 cpppj/src/o/RawCarrierRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierSteal.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierTarget.cpp	port			todo	[o-default]
@@ -622,7 +622,7 @@ cpppj/src/o/RawConstructionRequest.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionVisual.cpp	port			todo	[o-default]
 cpppj/src/o/RawContainedCreate.cpp	port	www/core/contained-create.js	1f00a25a	port	[o-default] WB04-D5a(004afa70)
-cpppj/src/o/RawContainedFinder.cpp	port			todo	[o-default]
+cpppj/src/o/RawContainedFinder.cpp	port	www/core/raw-contained-finder.js	1f00a25a	port	[o-default] WB04-E56: 내용물 검색기 004b2270 Begin·004b1b20 Next·004acc60 CountContained와 ContainedFinderState(공유 boss/checking 대여). fixture carrierpredestroy 경유 대조. 실제 Client 권한/checking 연결은 WB05
 cpppj/src/o/RawContainedLookup.cpp	port			todo	[o-default]
 cpppj/src/o/RawContentAttach.cpp	port	www/core/content-form-host.js	1f00a25a	port	[o-default] WB04-D5a
 cpppj/src/o/RawContentParentNotice.cpp	port	www/core/content-parent-notice.js	1f00a25a	port	[o-default] WB04-D5a(+0x24 분배)
@@ -828,7 +828,7 @@ cpppj/src/o/RawPlayerNotification.cpp	port	www/core/raw-player-notification.js	1
 cpppj/src/o/RawPlayerParticipation.cpp	port	www/core/raw-player-participation.js	1f00a25a	port	[o-default] WB04-E5: 004a6dc0 로그인·00490ea0 방향별 동맹·0048f6a0 동맹 추가·00491220 수신·004911a0 AI 부착/해제·State 반납 증빙(BrainResetPass 의 JS 대응: 비공개 수명 토큰·1회 소비·진행 중 소비 거부). fixture player-participation 608행·player-alliance-packet 288행 전부(10.78). RawAiCreate 연동 거부 대조는 RawAiCreate 단위에서
 cpppj/src/o/RawPlayerPlacementAnchor.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlayerRegular.cpp	port	www/core/raw-player-regular.js	1f00a25a	port	[o-default] WB04-E55: Player 가상 +5c 소어 루저 Regular 처리기 00490810. fixture player-regular 10.78 329행 전부. 실제 로그/처리기 등록/5→60초 사슬은 WB05
-cpppj/src/o/RawPlayerTechnology.cpp	port			todo	[o-default]
+cpppj/src/o/RawPlayerTechnology.cpp	port	www/core/raw-player-technology.js	1f00a25a	port	[o-default] WB04-E56: 기술 조회 00490330·삭제 004903b0·보장 00490420·목록 004914e0/004915c0·이름 조회 바인딩. fixture player-technology 158행 전부. 실제 가상 삭제는 월드 조립에서
 cpppj/src/o/RawPlayerTemplateState.cpp	port	www/core/raw-player-template-state.js	f261f530	port	[o-default] WB04-E55: State getter 004bd550·Notify 004bd540/004bd360. fixture player-regular·player-state-expand 99·player-state-initialization 2560행. 기준선 뒤 f261f530(Notify 자유 함수 분리) ①. CampaignTemplateStorage 연결은 WB05
 cpppj/src/o/RawPlayerWorld.cpp	port	www/core/raw-player-world.js	1f00a25a	port	[o-default] WB04-E55: Player152 생성 00490250·파생 postPop 004905d0·Technology getter 0048fc60/0048fc90. fixture player-world 10.78 840행 전부. RawSurfaceWorld 연결 검사는 WB05
 cpppj/src/o/RawPriestArrival.cpp	port			todo	[o-default]

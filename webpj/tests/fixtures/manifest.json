@@ -6665,7 +6665,7 @@
       "bytes": 5726929,
       "lines": 1681,
       "fixtureCommit": "ab9361f1",
-      "webCommit": "worktree",
+      "webCommit": "16a28bcd",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerWorld.cpp": "fe3d121d"
       }
@@ -6696,7 +6696,7 @@
       "bytes": 734133,
       "lines": 659,
       "fixtureCommit": "ab9361f1",
-      "webCommit": "worktree",
+      "webCommit": "16a28bcd",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerRegular.cpp": "ab9361f1",
         "cpppj/src/o/RawPlayerTemplateState.cpp": "f261f530"
@@ -6726,7 +6726,7 @@
       "bytes": 13441,
       "lines": 100,
       "fixtureCommit": "0cb53fac",
-      "webCommit": "worktree",
+      "webCommit": "16a28bcd",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerTemplateState.cpp": "f261f530"
       }
@@ -6755,9 +6755,70 @@
       "bytes": 741878,
       "lines": 2561,
       "fixtureCommit": "0429e571",
-      "webCommit": "worktree",
+      "webCommit": "16a28bcd",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerTemplateState.cpp": "f261f530"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E56",
+      "id": "carrierpredestroy",
+      "path": "cpppj/tests/fixtures/carrierpredestroy-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Carrier 삭제 준비 00426890·FindContained 004ac9f0 의 반환·Damageable 대체 사건·전역 후처리·boss·다섯 슬롯 (Damageable 와 전역 후처리만 대체)",
+      "consumers": [
+        "webpj/tests/carrier-pre-destroy.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-pre-destroy.js",
+        "webpj/www/core/raw-contained-finder.js"
+      ],
+      "doc": "docs/webpj-player-technology-contained-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierPreDestroy.cpp",
+        "cpppj/src/o/RawContainedFinder.cpp"
+      ],
+      "scope": "10.78(originals) 960행 전부 사용(originalCD·original1037 각 960행은 범위 밖)",
+      "text": true,
+      "sha256": "e549025d8c54eedddbca3958c4b0def795a0fc08bb215749f8c5626567440bf1",
+      "bytes": 1473429,
+      "lines": 2882,
+      "fixtureCommit": "d2fc6d2d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierPreDestroy.cpp": "da27e191",
+        "cpppj/src/o/RawContainedFinder.cpp": "da27e191"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E56",
+      "id": "player-technology",
+      "path": "cpppj/tests/fixtures/player-technology-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Player 기술 조회·삭제·보장 생성·목록 사슬의 반환·외부 경계 순서·목록·다섯 슬롯·생성 슬롯·기술 부모",
+      "consumers": [
+        "webpj/tests/player-technology.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-technology.js"
+      ],
+      "doc": "docs/webpj-player-technology-contained-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerTechnology.cpp"
+      ],
+      "scope": "158행 전부 사용(10.78 PE 전용 관측, 첫 행은 열 이름)",
+      "text": true,
+      "sha256": "f3970d37d545c272fab7b0e80c04932ef0f6d9838a67f5789fe3b8de7f832690",
+      "bytes": 124720,
+      "lines": 159,
+      "fixtureCommit": "507a2913",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerTechnology.cpp": "507a2913"
       }
     }
   ]
