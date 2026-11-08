@@ -1,6 +1,7 @@
 // 실제 서버 writer/metadata의 전체 Player·wire bytes·효과 순서를 독립 PE와 비교한다.
 #include "RawSceneSupport.h"
 #include "o/RawMissionServerPackets.h"
+#include "o/RawMissionClientPackets.h" //가변writer의송신hook도제품과같은실제observer후wire를캡처한다.
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 namespace {
@@ -37,12 +38,14 @@ TEST_CASE(MissionServerPackets_Native187) {
         bool server=Number(fields[4])!=0,metamap=Number(fields[5])!=0;std::uint32_t local=1,created=Number(fields[7]),archipelago=Number(fields[9]);std::array<std::uint8_t,6> zone{};Put(zone,0,Number(fields[8]));
         std::string trace; // 외부 진단/주소/로그/송신의 실제 요청 순서다.
         const auto effect=[&](std::string event) { if (!trace.empty()) trace+=';';trace+=event; }; // 기대 결과를 계산하지 않는 단순 외부 관찰자다.
+        RawMissionServerPackets* current{}; //fixture의송신장치가같은72observer를빌리며호출전에아래실제처리기를연결한다.
         MissionServerPacketHooks hooks;
         hooks.assertion=[&](std::string_view text) { effect("A,"+Hex(std::span(reinterpret_cast<const std::uint8_t*>(text.data()),text.size()))); };
         hooks.log=[&](std::string_view text) { effect("L,"+Hex(std::span(reinterpret_cast<const std::uint8_t*>(text.data()),text.size()))); };
         hooks.peerAddress=[&](std::uint32_t player) { effect("IP,"+std::to_string(player));return std::string("127.0.0.1"); };
-        hooks.send=[&](std::int32_t target,std::span<const std::uint8_t> bytes) { effect("S,"+std::to_string(std::bit_cast<std::uint32_t>(target))+","+Hex(bytes)); };
+        hooks.send=[&](std::int32_t target,std::span<std::uint8_t> bytes) { if (bytes[1]==0x72) current->ObserveMetadata(bytes,1);else ObserveMissionClientPacket(bytes[1],bytes,1,[&](auto text,auto,auto) { effect("A,"+Hex(std::span(reinterpret_cast<const std::uint8_t*>(text.data()),text.size()))); });effect("S,"+std::to_string(std::bit_cast<std::uint32_t>(target))+","+Hex(bytes.first(Get(bytes,2,2)))); }; //기존PE기대wire는유지하고새fullcapacity계약은장치의실제관찰뒤에좁힌다.
         RawMissionServerPackets packets(players,{server,metamap,local,created,archipelago,zone},std::move(hooks));
+        current=&packets; //실제송신callback기간에만살아있는동일처리기이며별도원문상태사본을만들지않는다.
         const auto target=std::bit_cast<std::int32_t>(Number(fields[6])); // 원본 signed destination의 DWORD 비트를 보존한다.
         if (fields[0]=="P") packets.SendPlayer(owner,target);
         else if (fields[0]=="M") packets.SendMetadata(target);

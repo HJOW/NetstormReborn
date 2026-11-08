@@ -75,6 +75,7 @@ struct MissionClientPacketHooks {
 };
 // 0042b0e0의 실제 이름 삭제/빈 이름 규칙이다. Player와 이후 송신 이름 처리도 같은 몸체를 사용할 수 있다.
 void SanitizeMissionPlayerName(std::uint32_t subscriber,std::span<std::uint8_t> name);
+void ObserveMissionClientPacket(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending,const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion); //2a/2b/67/81의원문가변observer를같은mutable예약과선택된진단장치로실행한다.송신장치gate뒤호출한다.
 // 같은 Session의 Player9/SP/참여 모듈을 참조하며 실제8종 수신 분기를 실행한다.
 class RawMissionClientPackets {
 public:

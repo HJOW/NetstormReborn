@@ -66,12 +66,11 @@ TEST_CASE(FortImagePackets_Native) {
             MissionFortPacketHooks hooks;
             hooks.log=[&](std::uint32_t owner,std::int32_t target) { CHECK(owner==input[6] && std::bit_cast<std::uint32_t>(target)==input[7]);event("L");if (input[12]==1) current=&second;else if (input[12]==2) current=nullptr; };
             hooks.missingTemplate=[&] { event("A,template");CHECK(input[12]==2);current=&second; };
-            hooks.send=[&](std::int32_t target,std::span<const std::uint8_t> bytes) {
-                event("S,"+std::to_string(std::bit_cast<std::uint32_t>(target)));wire=Hex(bytes);const auto imageSize=Get(bytes,12);CHECK(bytes.size()==imageSize+17);
+            hooks.send=[&](std::int32_t target,std::span<std::uint8_t> bytes) {
+                event("S,"+std::to_string(std::bit_cast<std::uint32_t>(target)));const auto imageSize=Get(bytes,12);CHECK(bytes.size()==imageSize+20); //공개송신hook은wire보다3BYTE큰실제mutable예약을빌린다.
                 const auto image=bytes.subspan(17,imageSize);imageText=FortHex(image);
-                // 실제 송신 출력에서 같은 예약 helper를 별도 재생해 ff stale tail까지 비교한다.
-                auto packet=MakeMissionFortPacket(input[6],input[8],bytes[16],image,static_cast<std::uint16_t>(input[10]));before=Hex(packet.storage);
-                FinalizeMissionFortPacket(packet.storage,true);after=Hex(packet.storage);CHECK(Hex(packet.Bytes())==wire);
+                // 독립fixture의송신장치경계에서실제observer를호출하고선언wire와미작성꼬리를각각대조한다.
+                before=Hex(bytes);FinalizeMissionFortPacket(bytes,true);after=Hex(bytes);CHECK(Get(bytes,2,2)==imageSize+17);wire=Hex(bytes.first(Get(bytes,2,2)));
             };
             RawMissionLoginPackets packets(OriginalEdition::Patch1078,players,std::move(reads),imageHooks,std::move(hooks));CHECK(packets.SendFort(input[6],std::bit_cast<std::int32_t>(input[7]),input[8])==(input[11]!=0));
         }

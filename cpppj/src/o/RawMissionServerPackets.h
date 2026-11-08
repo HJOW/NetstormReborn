@@ -16,7 +16,7 @@ struct MissionServerPacketState {
 struct MissionServerPacketHooks {
     std::function<void(std::string_view)> assertion; // 원본 진단 뒤 계속하는 실제 소비자다.
     std::function<std::string(std::uint32_t)> peerAddress; //004e2a50→004e0a30(1,0,0)의 현재 주소 문자열이다.
-    std::function<void(std::int32_t,std::span<const std::uint8_t>)> send; // observer가 확정한 실제 wire바이트의 현재 송신이다.
+    std::function<void(std::int32_t,std::span<std::uint8_t>)> send; //2b/72로컬writer의전체mutable예약을실제연결gate에넘기며장치가observer뒤선언길이만복사한다.
     std::function<void(std::string_view)> log; // 중앙섬 없음의 실제004a68e0 로그다.
     std::function<void()> creatingIslands; // 번역한 Creating Islands.를 실제004cf570 안내 창에 전달한다.
     std::function<void(std::uint32_t)> setArchipelago,setCentralCreated; //005c8bb4/005c85a0의 같은 실제 DWORD에 쓴다.

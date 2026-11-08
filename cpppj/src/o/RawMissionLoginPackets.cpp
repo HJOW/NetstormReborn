@@ -39,7 +39,7 @@ void FinalizeMissionFortPacket(std::span<std::uint8_t> packet,bool writeLength,s
     if (!writeLength) return;
     if (packet.size()<kImageOffset) throw std::out_of_range("sendFort 길이 observer 물리 범위 오류");const auto size=Read(packet,12,4);
     if (size==0xffffffffU) { if (!assertion) throw std::logic_error("sendFort 실제 크기 진단 미연결");assertion(); }
-    Write(packet,2,size+static_cast<std::uint32_t>(kImageOffset),2);
+    Write(packet,2,Read(packet,12,2)+static_cast<std::uint32_t>(kImageOffset),2); //진단이정상복귀한뒤현재하위WORD를다시읽으며앞서검사한DWORD사본으로대체하지않는다.
 }
 // 실제현재조회없이값형기본Template를삽입하지않는다.
 RawMissionLoginPackets::RawMissionLoginPackets(OriginalEdition edition,std::span<const std::uint8_t> players,MissionFortPacketReads reads,FortImageHooks image,MissionFortPacketHooks hooks)
@@ -57,6 +57,6 @@ bool RawMissionLoginPackets::SendFort(std::uint32_t owner,std::int32_t target,st
     const auto image=RawFortImage(OriginalEdition::Patch1078,*current,image_).Save();
     const auto initialLength=reads_.initialLength();const auto watcher=players_[owner*kStride+0x58]; //원본은길이WORD조회/헤더작성뒤현재watcher를읽는다.
     auto packet=MakeMissionFortPacket(owner,predictable,watcher,image.Bytes(),initialLength);
-    FinalizeMissionFortPacket(packet.storage,true);Need(hooks_.send)(target,packet.Bytes());return true;
+    Need(hooks_.send)(target,packet.storage);return true; //원문004a7240은길이를미리확정하지않으며실제송신장치가gate뒤observer와현재선언범위를사용한다.
 }
 }

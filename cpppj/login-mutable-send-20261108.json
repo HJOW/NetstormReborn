@@ -1,0 +1,354 @@
+{
+  "unit": 1166,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "aa91f53b / 20261108-137 CP",
+  "summary": "M6-a2의 로컬 writer를 같은 mutable 송신 장치에 연결하고 로그인 밖 Meta/Editor/일반 생성 경계의 기본 관찰기 네 종을 설치했다.",
+  "builds": [
+    {
+      "targets": [
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_tests"
+      ],
+      "configuration": "Release/x64",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1166\\build.log",
+      "execution": false
+    },
+    {
+      "targets": [
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_tests"
+      ],
+      "configuration": "Release/x64",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1166\\build-final.log",
+      "execution": false
+    }
+  ],
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13209600,
+      "sha256": "4a66e530ca53c19b6a8b02b6075bee2b785aa828168dc3746ed78d317dc20d20"
+    },
+    "R.exe": {
+      "bytes": 677888,
+      "sha256": "1c934fe759cdcccdd86396dc73831fb976e9c767ece4dbfd561b3b3dcc73557b"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "nativeEvidence": {
+    "originals-004a7240": {
+      "bytes": 269,
+      "ranges": [
+        {
+          "first": "004a7240",
+          "last": "004a734c",
+          "bytes": 269,
+          "sha256": "7295bcd6760b33d7199a59cac3c0cd22bb4077f1608e445c4c918db70e4d842a"
+        }
+      ],
+      "concatenatedRangesSha256": "7295bcd6760b33d7199a59cac3c0cd22bb4077f1608e445c4c918db70e4d842a",
+      "cSha256": "16fb33066d5d937fec255630b8bd36dc82a28144a23f51a33d1062700a595a5c"
+    },
+    "originals-0048f9f0": {
+      "bytes": 309,
+      "ranges": [
+        {
+          "first": "0048f9f0",
+          "last": "0048fa6c",
+          "bytes": 125,
+          "sha256": "8c2a104dde146b11572ad48a8e74ecd02e842ea32ea720967b18bb6d1c7af4c3"
+        },
+        {
+          "first": "0048fa70",
+          "last": "0048fb27",
+          "bytes": 184,
+          "sha256": "dfecb66f1662295952f8a3d34cda769a514648ccdd12b31c155353ce0a60948d"
+        }
+      ],
+      "concatenatedRangesSha256": "4aa9243cfa264c6b1ed2f35a898edfb10fd6a6f51516a0694f1a1dc9e42a323c",
+      "cSha256": "194ca1b1dc0cedaa375effc0ae00279908a54f42a487bf0972a0d786cbc1ffd5"
+    },
+    "originals-004e2dc0": {
+      "bytes": 109,
+      "ranges": [
+        {
+          "first": "004e2dc0",
+          "last": "004e2e2c",
+          "bytes": 109,
+          "sha256": "a3abef555f99d4fa990a03e8ab3d5c8baebea348c148d6d9f1f937639b3fcd06"
+        }
+      ],
+      "concatenatedRangesSha256": "a3abef555f99d4fa990a03e8ab3d5c8baebea348c148d6d9f1f937639b3fcd06",
+      "cSha256": "70207967e10cf9e994e9a68efdc7489baefb0e9070727ca228273bb0e8efffa5"
+    },
+    "originals-0040b110": {
+      "bytes": 56,
+      "ranges": [
+        {
+          "first": "0040b110",
+          "last": "0040b147",
+          "bytes": 56,
+          "sha256": "432f077959ac639b30b4e7ebb742d62b981954a2f0e5b9d30a190523144e6778"
+        }
+      ],
+      "concatenatedRangesSha256": "432f077959ac639b30b4e7ebb742d62b981954a2f0e5b9d30a190523144e6778",
+      "cSha256": "54444592d3f2d82b26e1e84fc9ebe2f075e9e216961502d8027ad313a053069f"
+    },
+    "originals-0047c8c0": {
+      "bytes": 391,
+      "ranges": [
+        {
+          "first": "0047c8c0",
+          "last": "0047c9a1",
+          "bytes": 226,
+          "sha256": "506f0b1c7a80fce97ca487f1b1583a6a4c7728530012d15f1830afcde736db4e"
+        },
+        {
+          "first": "0047c9a8",
+          "last": "0047ca4c",
+          "bytes": 165,
+          "sha256": "92b4d4e62e4a5817a92ad61fe8ab29db8bfe7f55e57e808a92781229018579a0"
+        }
+      ],
+      "concatenatedRangesSha256": "dd08cc311911f309d50f42dbc982274c75507173f524c874567f672557c3d1ef",
+      "cSha256": "97d0c2bef6512718efdfe8015f85a6a4eab5e0461f19240df6b4dc56e70e7d4d"
+    },
+    "originals-004d62b0": {
+      "bytes": 16945,
+      "ranges": [
+        {
+          "first": "004d62b0",
+          "last": "004d6cf6",
+          "bytes": 2631,
+          "sha256": "c0f00544bf82b67d650c0e2e96b82e7971cfcd6c1f8fe2a2dc7e9734faeb5aa0"
+        },
+        {
+          "first": "004d6d00",
+          "last": "004d6dc9",
+          "bytes": 202,
+          "sha256": "b217e90c9a2fb9942082e501b3a727abedb83c0c84358f92d64be8e12b2e834f"
+        },
+        {
+          "first": "004d6dd0",
+          "last": "004d787a",
+          "bytes": 2731,
+          "sha256": "d709001c47aa637abe679006c0d288ccf0677870429d6433561a527bcac8c5de"
+        },
+        {
+          "first": "004d7880",
+          "last": "004d79f7",
+          "bytes": 376,
+          "sha256": "705417dcde6446445b20973a8853c888d635c09488e6d4e3eda16ec63898dd13"
+        },
+        {
+          "first": "004d7a00",
+          "last": "004d7a45",
+          "bytes": 70,
+          "sha256": "8fe136d6991c0cb208f1e4709d03537157d3a6cdb778c92ffbd53429a0df145b"
+        },
+        {
+          "first": "004d7a50",
+          "last": "004da506",
+          "bytes": 10935,
+          "sha256": "f7df7c6883bc98d5c991e1eae1edf2dc11d3cbe87f96038653010599542e5c29"
+        }
+      ],
+      "concatenatedRangesSha256": "bab16beedbea48817a9e213584293578788a1ae716c2343716ce0a855fbfde82",
+      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+    },
+    "originals-004795a0": {
+      "bytes": 160,
+      "ranges": [
+        {
+          "first": "004795a0",
+          "last": "004795ac",
+          "bytes": 13,
+          "sha256": "35a789b8b1e190bc34bc763245eb3d284267d23da262ae42346d0c023b44bf99"
+        },
+        {
+          "first": "004795b0",
+          "last": "00479607",
+          "bytes": 88,
+          "sha256": "fb7ea08f10aab1bef3fcc92f29d3e13b08d35b79674f33abef8c1dc6538a5c70"
+        },
+        {
+          "first": "00479610",
+          "last": "0047964a",
+          "bytes": 59,
+          "sha256": "fffa05b718298bdc78d510df08c9368f2300c560b92b961b5551ce488c7983d4"
+        }
+      ],
+      "concatenatedRangesSha256": "5378ae8df756a2ea0cb5d3f08ab05ff08423ce25c56683754fe4c2719e149389",
+      "cSha256": "851ee2325f0d67a45b085a12999619552a56f4c4e439282688344577a10005b0"
+    },
+    "originals-0042dc90": {
+      "bytes": 333,
+      "ranges": [
+        {
+          "first": "0042dc90",
+          "last": "0042dd49",
+          "bytes": 186,
+          "sha256": "fd1497442044f0caff9500d760f07f77d1656b43e7e71ab93f2c94d8ce3142e9"
+        },
+        {
+          "first": "0042dd50",
+          "last": "0042dde2",
+          "bytes": 147,
+          "sha256": "f532d9d38a218bb413df380a35aa57368b862b33c223112fbd68a0d3bd41ba6e"
+        }
+      ],
+      "concatenatedRangesSha256": "aa57d8741543a92f7ebaff55fc13c5de106f2f7b48376cad1211dd01cabd8a18",
+      "cSha256": "b10156c741423677bd019f6dafafaa723d12713ab545c000e67c6043dcb3dd5f"
+    },
+    "originals-004a6e70": {
+      "bytes": 190,
+      "ranges": [
+        {
+          "first": "004a6e70",
+          "last": "004a6f2d",
+          "bytes": 190,
+          "sha256": "03a05042a47ab0a38c6b44f17a41608dfd6d97f4be5167ee79b2dbe2560f017f"
+        }
+      ],
+      "concatenatedRangesSha256": "03a05042a47ab0a38c6b44f17a41608dfd6d97f4be5167ee79b2dbe2560f017f",
+      "cSha256": "8246c7a9e9e3cfdf8ab01c46bda339c653fe5f660d9185dae908775f1bee97b2"
+    },
+    "originals-004a7800": {
+      "bytes": 1430,
+      "ranges": [
+        {
+          "first": "004a7800",
+          "last": "004a7882",
+          "bytes": 131,
+          "sha256": "e5340c7793c777f7ddb3fb1b7282b9afd6685b4bdd47c28b31b981a1b4d7ce4c"
+        },
+        {
+          "first": "004a7890",
+          "last": "004a7da2",
+          "bytes": 1299,
+          "sha256": "369416515cd6100e757c31d8adb7962db021b0f33d8ccd8933426b7671a0a605"
+        }
+      ],
+      "concatenatedRangesSha256": "19d6db8df337cbeb6dc2e568fb16d6a798f769f53e67891ea30796d8e04ca0b2",
+      "cSha256": "5cae16af6bad5f57660d87666bc9defef891d23a801be68aa4a1839405c5a5a0"
+    },
+    "originals-004df590": {
+      "bytes": 68,
+      "ranges": [
+        {
+          "first": "004df590",
+          "last": "004df5d3",
+          "bytes": 68,
+          "sha256": "fd16184cb5899159205a8dab2587711940cb127ae6247c930cef5848a8cea8fd"
+        }
+      ],
+      "concatenatedRangesSha256": "fd16184cb5899159205a8dab2587711940cb127ae6247c930cef5848a8cea8fd",
+      "cSha256": "f260ec0cf6d1395862dd4090ca56c7924751ed4030c5c452fc8e8e4b30e97ebe"
+    },
+    "root-server-00452f50": {
+      "bytes": 8555,
+      "ranges": [
+        {
+          "first": "00452f50",
+          "last": "004550a7",
+          "bytes": 8536,
+          "sha256": "03d5a60c1fad9c254f92e8a92d53fbe7cc900cd067eeec9937fc00634e5d7c5c"
+        },
+        {
+          "first": "00455e19",
+          "last": "00455e2b",
+          "bytes": 19,
+          "sha256": "dab8783ae49bd94fda576935bb2d81e68fa83f313a86638627f477024eb568ac"
+        }
+      ],
+      "concatenatedRangesSha256": "de4821585646ae124f1faf30c39695073d2020084990d6a973a67818f9bec643",
+      "cSha256": "e1f124bd135b0cee2c996bd3cf14bb9ebbbf8675e118afc0ca8958516f82d006"
+    }
+  },
+  "observerEvidence1165": {
+    "0040a540": {
+      "bytes": 56,
+      "peSha256": "dff1e4ede2bc5237e28ea5b26075c5c13e81e16b84990d14680590b34c3b671a",
+      "cSha256": "45976cab564d483f0399a178be6251eadc706c32dbe3a7e1f9c2e0ceab5c6f84"
+    },
+    "0040a590": {
+      "bytes": 56,
+      "peSha256": "96e5482fdf3b3c68afc5486222ebbdca6f0d9064e24de0fe843b8dcd8c8ceee1",
+      "cSha256": "8e53e73f9b8bd8a2d4eba7f997ef7935641f8c64b2893caebec1cd250432c6ad"
+    },
+    "0040ae80": {
+      "bytes": 58,
+      "peSha256": "bd3df2c840d44a3041a7c6eab65f479f99813994739f27ad9818f5e8226afce3",
+      "cSha256": "2284d7b53fe5a238f954a368b76eed41de71db4b8f96498ab8d22553834d751d"
+    },
+    "0040b460": {
+      "bytes": 61,
+      "peSha256": "627c36ade6c1dc4fd814bb926378fe4649afe4c08e5f2a915d78df8dc8a2f81c",
+      "cSha256": "6f100ed88ec454a62f214f3a39f8ef8183077b08e473f82fff12457723de4ff5"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "eddc556ffccdba6beedef4b1b2328dcf3ea317a4ba994666a1860ba11ce29cfc",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "f8ebe75523ff1c113bbfb8e974f3d17e9207f4d85a967d5660199555a2c26dea",
+    "cpppj/src/client/ClientCampaignTransport.h": "83cb452846f88f913abc2b58f4b63f6fa97291942df66845acd21a0caf07a56f",
+    "cpppj/src/client/ClientCampaignTransport.cpp": "9ed9127f6eec8023d6695c02624063c7a4ebcf481e1cd35ab0f9d627549b803d",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "2c80ac51b79bd2a1fef2ccbc0f3b2644017c5ff4da1ecbe613c8ff9ee57aa375",
+    "cpppj/src/client/UberEditor.inc": "d289b88340b6b27aa5f3a6ae4c499d081da00d0929c5f5c63c22e937e0d258f5",
+    "cpppj/src/o/RawMissionClientPackets.cpp": "b34d1310d0a9b788189fd3c9411cd6e4a147d93076904c56af81ea30e736198a",
+    "cpppj/src/o/RawMissionClientPackets.h": "3fac6bdaa840f24769456103c9139385a305dedb18342ec7ff0ce37cdff92deb",
+    "cpppj/src/o/RawMissionLogin.cpp": "0fa15ee81255c08ef897e4b2733285dc340ef431b52640b2b20c66fb6af31ef6",
+    "cpppj/src/o/RawMissionLogin.h": "1ecbe1432b31a1e8bcbe3bef7aefea819727ae5f9b870a7a04b50544a3596a1d",
+    "cpppj/src/o/RawMissionLoginPackets.cpp": "6d83c6a296358bca23e6c0bcec572a10e06dde52ca2841403a2c71125cadc17f",
+    "cpppj/src/o/RawMissionLoginPackets.h": "001f1eceb8ed3c3bdf61276273787340a3f1420b1e7632ebbf6982f6458f7315",
+    "cpppj/src/o/RawMissionServerPackets.cpp": "94fcac1eae8308cbfe9af1b4bbb680c77a5ee01a23a167c86862bd6b4ecf95a4",
+    "cpppj/src/o/RawMissionServerPackets.h": "7eb6d01f2b7f045de2161aacd34b42b85ff3dac632a14c327357224c0326a58a",
+    "cpppj/tests/FortImagePacketsTests.cpp": "c4103124d3f4fcf739747de6f16b8aa025efaa9ecdd4eba99ce7d7d8744c38e0",
+    "cpppj/tests/MissionClientPacketsTests.cpp": "e13e142246badaeba3bef6674d429a91ebb5defc872363067bd365d11da0e110",
+    "cpppj/tests/MissionLoginTests.cpp": "c9792c2dbd2049c1c959e0d4cca91d550a38065af5982a7b32e0be5e7a91fceb",
+    "cpppj/tests/MissionServerPacketsTests.cpp": "b09035a75724ee5a9ec73f71ce209840afe25d02dbd7019f08c4ff002eea3df9"
+  },
+  "audit": {
+    "ownedLocalWriterHooksMutable": true,
+    "receiveRelayConstPreserved": true,
+    "fullReservationPassedBeforeBackendGate": true,
+    "lengthObservedAfterActualGate": true,
+    "fortReservationImagePlus20AndWireImagePlus17": true,
+    "67And81InitialLengthFour": true,
+    "72SameHookUsesExistingMetadataObserver": true,
+    "broadcastPlayerNoExtraCopy": true,
+    "baseObserversBeforeSessionLeaseAtThreeClientCreationPaths": true,
+    "baseObserverCapturesOnlyLongLivedStorageAndType": true,
+    "meta67DuplicateObserverRemovedWithoutReceiverChange": true,
+    "existingFixtureAdaptersOnlyNoExpectedDataChanges": true
+  },
+  "peRangeCorrection": "과거1161/1162/1164의일부peSha256은entry부터함수size만큼읽은연속window였다. 원래값을보존하고함수표의모든inclusive range별SHA와연결SHA를추가했다. 생성C본문은이전에도전체였고현재수정대상명령branch는기존window내에있었다. 제품기능변경근거와해시범위정정을구별한다.",
+  "remaining": {
+    "next": "M6-b / C3 일곱 수신과 관찰 전용 metadata의 장기 기본 등록",
+    "m6aComplete": true,
+    "m6Complete": false,
+    "stage3Groups": 3
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

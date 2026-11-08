@@ -22,7 +22,7 @@ struct MissionFortPacketReads {
 // 실제선택된로그/송신/누락manager진단만외부경계다.
 struct MissionFortPacketHooks {
     std::function<void(std::uint32_t,std::int32_t)> log; //004a68e0("sendFort from %d to %d\n",owner,target)이다.
-    std::function<void(std::int32_t,std::span<const std::uint8_t>)> send; //현재연결gate를통과할실제최종wire송신이다.
+    std::function<void(std::int32_t,std::span<std::uint8_t>)> send; //image+20의전체mutable예약을현재연결gate에넘긴다.장치가40a540뒤image+17선언만복사하며3BYTE꼬리는보존한다.
     std::function<void()> missingTemplate; //004bf520의manager누락진단후실제현재manager를다시읽는다.
 };
 // 실효image와현재Player+58 watcher를작성한다.메타데이터/다른Player패킷을합성하지않는다.
@@ -31,7 +31,7 @@ public:
     // 같은9Player와현재Template/타입개수/송신수명은이객체보다오래살아야한다.
     RawMissionLoginPackets(OriginalEdition edition,std::span<const std::uint8_t> players,MissionFortPacketReads reads,
         FortImageHooks image,MissionFortPacketHooks hooks);
-    //004a7240:Template없음은자연false,그외현재image작성→현재watcher→실제길이확정/송신이다.
+    //004a7240:Template없음은자연false,그외현재image작성→현재watcher→전체예약송신이다.길이확정은실제장치gate뒤observer가수행한다.
     bool SendFort(std::uint32_t owner,std::int32_t target,std::uint32_t predictable) const;
 private:
     std::span<const std::uint8_t> players_; //동일9×0xb4의현재+58 BYTE를읽으며watcher사본을두지않는다.

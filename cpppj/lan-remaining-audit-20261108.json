@@ -530,5 +530,11 @@
     "m6aComplete": false,
     "correction": "아래초기상시throw판정은const Send경로에는해당하지않는다. 실제mutable경로만기존throw를실행한다.",
     "evidence": "docs/exe/cpp-login-send-observers-20261108.md"
+  },
+  "progress1166": {
+    "m6a": "완료: mutable observer 본체1165와 실제writer/기본생성경계1166",
+    "next": "M6-b",
+    "report": "cpppj/login-mutable-send-20261108.json",
+    "newMpExecutions": 0
   }
 }

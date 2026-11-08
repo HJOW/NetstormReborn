@@ -3867,7 +3867,7 @@ void RawCampaignSession::SaveServerFailure() {
 void RawCampaignSession::BroadcastConnectionPlayer(std::uint32_t owner) {
     auto& s=*impl_;if (!s.core.processState.Server()) s.world.Storage()->AssertDisplay("server","\\Ns\\O\\Player.cpp",0x1ec);if (!s.services.connectionRegistry) throw std::logic_error("Player 상태 방송의 실제 Registry 없음");auto registry=s.services.connectionRegistry;
     MissionServerPacketHooks hooks;hooks.assertion=[&s](auto expression) { if (!s.services.ai.assertion) throw std::logic_error("Player 상태 writer 진단 미연결");s.services.ai.assertion(expression); };hooks.peerAddress=[registry](auto target) { return CampaignPeerAddressText(registry->Address(static_cast<std::int32_t>(target))); };
-    hooks.send=[registry,&s](auto target,auto bytes) { std::vector<std::uint8_t> packet(bytes.begin(),bytes.end());static_cast<void>(registry->SendMutable(target,packet,s.players)); }; // 같은 현재 가상+4를 쓰며 수신을 동기 호출하지 않는다.
+    hooks.send=[registry,&s](auto target,std::span<std::uint8_t> bytes) { static_cast<void>(registry->SendMutable(target,bytes,s.players)); }; //같은로컬writer예약을현재가상+4에직접전달해관찰기의부분쓰기를보존하며별도사본/직접수신을만들지않는다.
     RawMissionServerPackets packets(s.players,{s.core.processState.Server(),s.core.ownerMode.challenge,s.playerState.battleOwner,s.localStateGlobals->CentralCreated(),s.gameplayGlobals->GameAux()->ArchipelagoPercent(),s.localStateGlobals->Zone()},std::move(hooks));
     for (std::uint32_t target=1;target<9;++target) if (s.players[target*180+0x50]&1U) packets.SendPlayer(owner,static_cast<std::int32_t>(target)); // 원문의 BYTE flags를 각 송신 효과 뒤 현재 다음 접속자에서 다시 읽는다.
 }

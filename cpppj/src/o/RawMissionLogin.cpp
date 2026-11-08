@@ -24,8 +24,8 @@ std::uint32_t ReadBytes(std::span<const std::uint8_t> bytes,std::size_t offset,s
     for (std::size_t index=0;index<width;++index) value|=std::uint32_t(bytes[offset+index])<<(index*8);return value;
 }
 // fixed packet은 생성자의 실제 초기값을, variable은004df590의ff 채움을 사용한다.
-std::vector<std::uint8_t> Packet(std::uint8_t type,std::size_t size,std::uint8_t fill=0) {
-    std::vector<std::uint8_t> bytes(size,fill);bytes[0]=1;bytes[1]=type;Write(bytes,2,static_cast<std::uint32_t>(size),2);return bytes;
+std::vector<std::uint8_t> Packet(std::uint8_t type,std::size_t size,std::uint8_t fill=0,std::uint16_t initialLength=0) {
+    std::vector<std::uint8_t> bytes(size,fill);bytes[0]=1;bytes[1]=type;Write(bytes,2,initialLength ? initialLength:static_cast<std::uint32_t>(size),2);return bytes; //df590의가변예약은실제초기WORD4와전체예약크기를구별하고고정생성자는기존선언크기를사용한다.
 }
 // CRT _ftol의64비트 절삭값 하위 DWORD이며 비유한/64비트 범위 밖은 하위0이다.
 std::uint32_t Ftol(float value) {
@@ -53,7 +53,7 @@ std::vector<std::uint8_t> RawMissionLogin::Reply(std::int32_t owner,std::uint8_t
     const auto now=Need(hooks_.wallSeconds)();const auto bits=std::bit_cast<std::uint64_t>(globals_.captureEnd-now);Write(bytes,10,static_cast<std::uint32_t>(bits));Write(bytes,14,static_cast<std::uint32_t>(bits>>32));return bytes;
 }
 // 같은 응답 writer를 CheckLogin의 실제 거부 경계에도 빌려 준다.
-void RawMissionLogin::SendReply(std::int32_t owner,std::uint8_t accepted) const { const auto bytes=Reply(owner,accepted);Need(hooks_.send)(owner,bytes); }
+void RawMissionLogin::SendReply(std::int32_t owner,std::uint8_t accepted) const { auto bytes=Reply(owner,accepted);Need(hooks_.send)(owner,bytes); }
 //004a6990의34바이트 전부는 생성자 초기화와 실제 현재 필드로 정해진다.
 void RawMissionLogin::SendBegin(std::uint32_t owner) const {
     auto bytes=Packet(0x29,34);Write(bytes,4,owner);std::copy(globals_.zoneAddress.begin(),globals_.zoneAddress.end(),bytes.begin()+8);
@@ -62,7 +62,7 @@ void RawMissionLogin::SendBegin(std::uint32_t owner) const {
 }
 // 원본은 owner0 슬롯을ff로 남기며 현재1..8 float SP를 각각 절삭한다.
 void RawMissionLogin::SendSp(std::uint32_t owner) const {
-    auto bytes=Packet(0x81,44,0xff);
+    auto bytes=Packet(0x81,44,0xff,4); //004a6e70의df590은BSS00544ca0의0을최소선언4로올리고observer가나중에44로확정한다.
     // 각 SP 조회는 실제0040ec50을 한 번 실행하여 그 시점의 현재 값을 쓴다.
     for (std::uint32_t player=1;player<9;++player) Write(bytes,8+player*4,Ftol(std::bit_cast<float>(Need(hooks_.spBits)(player))));
     Write(bytes,4,9);Need(hooks_.send)(static_cast<std::int32_t>(owner),bytes);
@@ -108,7 +108,7 @@ void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,
     const auto previous=(Read(owner,kFlags)>>1)&1U; //CheckLogin 이전의 사람 참여 bit2를 끝까지 보존한다.
     if (!previous && (hooks_.restoreCoreData || !globals_.missionPost)) Need(hooks_.restoreCoreData)(owner); // 실제 Client는 원문처럼 previous0에서 부모를 호출한다. 독립 미션Post1의 장치 누락만 하위 첫 자연 반환과 같다.
     participation_.CheckLogin(pending,static_cast<std::int32_t>(owner));Need(hooks_.flush)();SendBegin(owner);Need(hooks_.flush)();
-    auto options=Packet(0x67,94,0xff);options[4]=0;Write(options,5,87,2);std::copy(globals_.battleOptions.begin(),globals_.battleOptions.end(),options.begin()+7);
+    auto options=Packet(0x67,94,0xff,4);options[4]=0;Write(options,5,87,2);std::copy(globals_.battleOptions.begin(),globals_.battleOptions.end(),options.begin()+7); //004a7998의df590초기선언4를유지하고전체94BYTE예약을같은송신gate에전달한다.
     Need(hooks_.send)(static_cast<std::int32_t>(owner),options);if (counts_.Participating()<2) Need(hooks_.applyOptions)(options);Need(hooks_.flush)();
     if (!globals_.fortCount) Need(hooks_.clearTypes)();Need(hooks_.flush)();
     //004a6a70은 subscriber가 있는 모든 현재 Player를 순서대로 보낸다.

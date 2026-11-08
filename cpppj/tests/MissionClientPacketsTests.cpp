@@ -53,7 +53,7 @@ struct ClientPacketFixture {
         hooks.assertion=[](PlayerParticipationAssertion) { CHECK(false); };
         participation=std::make_unique<RawPlayerParticipation>(OriginalEdition::Patch1078,players,allies,hidden,participationState,std::move(hooks));
         participation->BindCurrentInputs({[this] { return player.battleOwner; },[this] { return player.playerKnown; },[this] { return battle; },[this] { return metamap; },[this] { return simulconnect; }});
-        MissionLoginHooks loginHooks;loginHooks.send=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); };loginHooks.broadcast=[this](std::span<const std::uint8_t> bytes) { Send(0,bytes); };loginHooks.assertion=[this](std::string_view text) { Assert(text); };
+        MissionLoginHooks loginHooks;loginHooks.send=[this](std::int32_t target,std::span<std::uint8_t> bytes) { ObserveMissionClientPacket(bytes[1],bytes,1,[this](auto text,auto,auto) { Assert(text); });Send(target,bytes.first(Get(bytes,2,2))); };loginHooks.broadcast=[this](std::span<const std::uint8_t> bytes) { Send(0,bytes); };loginHooks.assertion=[this](std::string_view text) { Assert(text); }; //로컬송신hook의fullcapacity를실제관찰뒤wire로기록하고수신relay의const Send는그대로둔다.
         login=std::make_unique<RawMissionLogin>(players,*participation,MissionLoginGlobals{server,boss,simulconnect,mission,mission,metamap,player,subscriber,fortCount,lastPlayer,predictable,begin,seed,battleSeed,burst,clockStamp,baseClock,capture,core,cached,zone,options},std::move(loginHooks));
         packets=std::make_unique<RawMissionClientPackets>(players,*participation,sp,State(),Hooks());
     }

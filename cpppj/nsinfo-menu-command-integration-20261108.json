@@ -33,7 +33,8 @@
     "0047c8c0": {
       "bytes": 391,
       "peSha256": "4e1a55a9b432eb354985e63bc2af53f5d14e8adcc7dbb007b8593883096bb3fe",
-      "cSha256": "97d0c2bef6512718efdfe8015f85a6a4eab5e0461f19240df6b4dc56e70e7d4d"
+      "cSha256": "97d0c2bef6512718efdfe8015f85a6a4eab5e0461f19240df6b4dc56e70e7d4d",
+      "peSha256Meaning": "entry부터function size만큼읽은연속window의해시다. 비연속함수전체구간의연결해시로해석하지않는다."
     },
     "0047b8f0": {
       "bytes": 2854,
@@ -48,7 +49,8 @@
     "004d62b0": {
       "bytes": 16945,
       "peSha256": "9e9cd511e4a0f74e1555ea2d93fcd17bd2e4ac3eef2b65afb656b22abe925b02",
-      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2",
+      "peSha256Meaning": "entry부터function size만큼읽은연속window의해시다. 비연속함수전체구간의연결해시로해석하지않는다."
     }
   },
   "sourceSha256": {
@@ -87,5 +89,75 @@
     "root": "2026-11-07 / HJOW-Athlon",
     "generatedSourcesChanged": false
   },
-  "sourceHashNote": "UberGump.cpp는1161만선택한Git index 바이트를해시했다.작업트리의다음1162영역하강hunk는1161빌드/커밋대상이아니다."
+  "sourceHashNote": "UberGump.cpp는1161만선택한Git index 바이트를해시했다.작업트리의다음1162영역하강hunk는1161빌드/커밋대상이아니다.",
+  "peRangeEvidenceCorrection1166": {
+    "originalCUnchanged": true,
+    "productSourceChangedByCorrection": false,
+    "correctedFunctions": {
+      "0047c8c0": {
+        "bytes": 391,
+        "ranges": [
+          {
+            "first": "0047c8c0",
+            "last": "0047c9a1",
+            "bytes": 226,
+            "sha256": "506f0b1c7a80fce97ca487f1b1583a6a4c7728530012d15f1830afcde736db4e"
+          },
+          {
+            "first": "0047c9a8",
+            "last": "0047ca4c",
+            "bytes": 165,
+            "sha256": "92b4d4e62e4a5817a92ad61fe8ab29db8bfe7f55e57e808a92781229018579a0"
+          }
+        ],
+        "concatenatedRangesSha256": "dd08cc311911f309d50f42dbc982274c75507173f524c874567f672557c3d1ef",
+        "cSha256": "97d0c2bef6512718efdfe8015f85a6a4eab5e0461f19240df6b4dc56e70e7d4d"
+      },
+      "004d62b0": {
+        "bytes": 16945,
+        "ranges": [
+          {
+            "first": "004d62b0",
+            "last": "004d6cf6",
+            "bytes": 2631,
+            "sha256": "c0f00544bf82b67d650c0e2e96b82e7971cfcd6c1f8fe2a2dc7e9734faeb5aa0"
+          },
+          {
+            "first": "004d6d00",
+            "last": "004d6dc9",
+            "bytes": 202,
+            "sha256": "b217e90c9a2fb9942082e501b3a727abedb83c0c84358f92d64be8e12b2e834f"
+          },
+          {
+            "first": "004d6dd0",
+            "last": "004d787a",
+            "bytes": 2731,
+            "sha256": "d709001c47aa637abe679006c0d288ccf0677870429d6433561a527bcac8c5de"
+          },
+          {
+            "first": "004d7880",
+            "last": "004d79f7",
+            "bytes": 376,
+            "sha256": "705417dcde6446445b20973a8853c888d635c09488e6d4e3eda16ec63898dd13"
+          },
+          {
+            "first": "004d7a00",
+            "last": "004d7a45",
+            "bytes": 70,
+            "sha256": "8fe136d6991c0cb208f1e4709d03537157d3a6cdb778c92ffbd53429a0df145b"
+          },
+          {
+            "first": "004d7a50",
+            "last": "004da506",
+            "bytes": 10935,
+            "sha256": "f7df7c6883bc98d5c991e1eae1edf2dc11d3cbe87f96038653010599542e5c29"
+          }
+        ],
+        "concatenatedRangesSha256": "bab16beedbea48817a9e213584293578788a1ae716c2343716ce0a855fbfde82",
+        "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+      }
+    },
+    "evidence": "docs/exe/cpp-login-mutable-send-20261108.md",
+    "note": "당시원문C는전체였으나PE연속window는구간사이padding을포함하고일부후행구간을덜읽었다.1166에서functions.tsv의모든inclusive range별로발췌/해시하고관련실제호출/정리몸체를재대조했다."
+  }
 }

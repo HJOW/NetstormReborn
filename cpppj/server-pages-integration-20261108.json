@@ -98,7 +98,8 @@
     "originals-004d62b0": {
       "bytes": 16945,
       "peSha256": "9e9cd511e4a0f74e1555ea2d93fcd17bd2e4ac3eef2b65afb656b22abe925b02",
-      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2",
+      "peSha256Meaning": "entry부터function size만큼읽은연속window의해시다. 비연속함수전체구간의연결해시로해석하지않는다."
     },
     "originals-0040a150": {
       "bytes": 52,
@@ -113,7 +114,8 @@
     "originals-0042dc90": {
       "bytes": 333,
       "peSha256": "04e7be91f846a50e1c21a811ef1afcb11ce86b1641f2759996f2d9f1fc3acc20",
-      "cSha256": "b10156c741423677bd019f6dafafaa723d12713ab545c000e67c6043dcb3dd5f"
+      "cSha256": "b10156c741423677bd019f6dafafaa723d12713ab545c000e67c6043dcb3dd5f",
+      "peSha256Meaning": "entry부터function size만큼읽은연속window의해시다. 비연속함수전체구간의연결해시로해석하지않는다."
     },
     "root-server-00451f30": {
       "bytes": 460,
@@ -133,7 +135,8 @@
     "root-server-00452f50": {
       "bytes": 8555,
       "peSha256": "367c66cfcf76f4a5bbb410e4956951c80b7ecc2d602805a643c65391b02aff3e",
-      "cSha256": "e1f124bd135b0cee2c996bd3cf14bb9ebbbf8675e118afc0ca8958516f82d006"
+      "cSha256": "e1f124bd135b0cee2c996bd3cf14bb9ebbbf8675e118afc0ca8958516f82d006",
+      "peSha256Meaning": "entry부터function size만큼읽은연속window의해시다. 비연속함수전체구간의연결해시로해석하지않는다."
     }
   },
   "sourceSha256": {
@@ -185,5 +188,94 @@
     "client": "2026-11-03 / HJOW-Athlon",
     "root": "2026-11-07 / HJOW-Athlon",
     "generatedSourcesChanged": false
+  },
+  "peRangeEvidenceCorrection1166": {
+    "originalCUnchanged": true,
+    "productSourceChangedByCorrection": false,
+    "correctedFunctions": {
+      "originals-004d62b0": {
+        "bytes": 16945,
+        "ranges": [
+          {
+            "first": "004d62b0",
+            "last": "004d6cf6",
+            "bytes": 2631,
+            "sha256": "c0f00544bf82b67d650c0e2e96b82e7971cfcd6c1f8fe2a2dc7e9734faeb5aa0"
+          },
+          {
+            "first": "004d6d00",
+            "last": "004d6dc9",
+            "bytes": 202,
+            "sha256": "b217e90c9a2fb9942082e501b3a727abedb83c0c84358f92d64be8e12b2e834f"
+          },
+          {
+            "first": "004d6dd0",
+            "last": "004d787a",
+            "bytes": 2731,
+            "sha256": "d709001c47aa637abe679006c0d288ccf0677870429d6433561a527bcac8c5de"
+          },
+          {
+            "first": "004d7880",
+            "last": "004d79f7",
+            "bytes": 376,
+            "sha256": "705417dcde6446445b20973a8853c888d635c09488e6d4e3eda16ec63898dd13"
+          },
+          {
+            "first": "004d7a00",
+            "last": "004d7a45",
+            "bytes": 70,
+            "sha256": "8fe136d6991c0cb208f1e4709d03537157d3a6cdb778c92ffbd53429a0df145b"
+          },
+          {
+            "first": "004d7a50",
+            "last": "004da506",
+            "bytes": 10935,
+            "sha256": "f7df7c6883bc98d5c991e1eae1edf2dc11d3cbe87f96038653010599542e5c29"
+          }
+        ],
+        "concatenatedRangesSha256": "bab16beedbea48817a9e213584293578788a1ae716c2343716ce0a855fbfde82",
+        "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+      },
+      "originals-0042dc90": {
+        "bytes": 333,
+        "ranges": [
+          {
+            "first": "0042dc90",
+            "last": "0042dd49",
+            "bytes": 186,
+            "sha256": "fd1497442044f0caff9500d760f07f77d1656b43e7e71ab93f2c94d8ce3142e9"
+          },
+          {
+            "first": "0042dd50",
+            "last": "0042dde2",
+            "bytes": 147,
+            "sha256": "f532d9d38a218bb413df380a35aa57368b862b33c223112fbd68a0d3bd41ba6e"
+          }
+        ],
+        "concatenatedRangesSha256": "aa57d8741543a92f7ebaff55fc13c5de106f2f7b48376cad1211dd01cabd8a18",
+        "cSha256": "b10156c741423677bd019f6dafafaa723d12713ab545c000e67c6043dcb3dd5f"
+      },
+      "root-server-00452f50": {
+        "bytes": 8555,
+        "ranges": [
+          {
+            "first": "00452f50",
+            "last": "004550a7",
+            "bytes": 8536,
+            "sha256": "03d5a60c1fad9c254f92e8a92d53fbe7cc900cd067eeec9937fc00634e5d7c5c"
+          },
+          {
+            "first": "00455e19",
+            "last": "00455e2b",
+            "bytes": 19,
+            "sha256": "dab8783ae49bd94fda576935bb2d81e68fa83f313a86638627f477024eb568ac"
+          }
+        ],
+        "concatenatedRangesSha256": "de4821585646ae124f1faf30c39695073d2020084990d6a973a67818f9bec643",
+        "cSha256": "e1f124bd135b0cee2c996bd3cf14bb9ebbbf8675e118afc0ca8958516f82d006"
+      }
+    },
+    "evidence": "docs/exe/cpp-login-mutable-send-20261108.md",
+    "note": "당시원문C는전체였으나PE연속window는구간사이padding을포함하고일부후행구간을덜읽었다.1166에서functions.tsv의모든inclusive range별로발췌/해시하고관련실제호출/정리몸체를재대조했다."
   }
 }

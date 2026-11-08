@@ -1,6 +1,7 @@
 // 독립 원본 부모48입력의 전체 Player/현재 전역/packet/호출 순서를 대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawMissionLogin.h"
+#include "o/RawMissionClientPackets.h" //로컬writer의전체예약은기존fixture송신장치에서도실제observer뒤wire로관찰한다.
 #include "zacket/LocalMissionTransport.h"
 #include <set>
 using namespace netstorm::o;
@@ -42,8 +43,9 @@ struct LoginFixture {
     MissionLoginHooks Hooks() {
         MissionLoginHooks hooks;
         hooks.disconnect=[this](std::int32_t owner) { trace.push_back("Disconnect,"+std::to_string(owner)); };
-        hooks.send=[this](std::int32_t target,std::span<const std::uint8_t> bytes) {
-            trace.push_back("S,"+std::to_string(target)+","+Hex(bytes));
+        hooks.send=[this](std::int32_t target,std::span<std::uint8_t> bytes) {
+            ObserveMissionClientPacket(bytes[1],bytes,1,[this](auto text,auto,auto) { trace.push_back("A,"+Hex(std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(text.data()),text.size()))); }); //같은67/81현재버퍼를수정하며기대fixture의길이수식을복제하지않는다.
+            trace.push_back("S,"+std::to_string(target)+","+Hex(bytes.first(Get(bytes,2,2))));
             if (mutate==1 && !mutated && bytes[1]==0x29) { Put(players,360+0x2c,2);Put(players,360+0x50,0x143);mutated=true; }
         };
         hooks.broadcast=[this](std::span<const std::uint8_t> bytes) { trace.push_back("Broadcast,"+Hex(bytes)); };

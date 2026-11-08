@@ -50,12 +50,14 @@
     "004795a0": {
       "bytes": 160,
       "peSha256": "c578b26f32b4c2fda7e99f5ddbae4550857cc322424e55adff3c8132e52d2d9e",
-      "cSha256": "851ee2325f0d67a45b085a12999619552a56f4c4e439282688344577a10005b0"
+      "cSha256": "851ee2325f0d67a45b085a12999619552a56f4c4e439282688344577a10005b0",
+      "peSha256Meaning": "entry부터function size만큼읽은연속window의해시다. 비연속함수전체구간의연결해시로해석하지않는다."
     },
     "004d62b0": {
       "bytes": 16945,
       "peSha256": "9e9cd511e4a0f74e1555ea2d93fcd17bd2e4ac3eef2b65afb656b22abe925b02",
-      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2",
+      "peSha256Meaning": "entry부터function size만큼읽은연속window의해시다. 비연속함수전체구간의연결해시로해석하지않는다."
     }
   },
   "sourceSha256": {
@@ -95,5 +97,81 @@
     "client": "2026-11-03 / HJOW-Athlon",
     "root": "2026-11-07 / HJOW-Athlon",
     "generatedSourcesChanged": false
+  },
+  "peRangeEvidenceCorrection1166": {
+    "originalCUnchanged": true,
+    "productSourceChangedByCorrection": false,
+    "correctedFunctions": {
+      "004795a0": {
+        "bytes": 160,
+        "ranges": [
+          {
+            "first": "004795a0",
+            "last": "004795ac",
+            "bytes": 13,
+            "sha256": "35a789b8b1e190bc34bc763245eb3d284267d23da262ae42346d0c023b44bf99"
+          },
+          {
+            "first": "004795b0",
+            "last": "00479607",
+            "bytes": 88,
+            "sha256": "fb7ea08f10aab1bef3fcc92f29d3e13b08d35b79674f33abef8c1dc6538a5c70"
+          },
+          {
+            "first": "00479610",
+            "last": "0047964a",
+            "bytes": 59,
+            "sha256": "fffa05b718298bdc78d510df08c9368f2300c560b92b961b5551ce488c7983d4"
+          }
+        ],
+        "concatenatedRangesSha256": "5378ae8df756a2ea0cb5d3f08ab05ff08423ce25c56683754fe4c2719e149389",
+        "cSha256": "851ee2325f0d67a45b085a12999619552a56f4c4e439282688344577a10005b0"
+      },
+      "004d62b0": {
+        "bytes": 16945,
+        "ranges": [
+          {
+            "first": "004d62b0",
+            "last": "004d6cf6",
+            "bytes": 2631,
+            "sha256": "c0f00544bf82b67d650c0e2e96b82e7971cfcd6c1f8fe2a2dc7e9734faeb5aa0"
+          },
+          {
+            "first": "004d6d00",
+            "last": "004d6dc9",
+            "bytes": 202,
+            "sha256": "b217e90c9a2fb9942082e501b3a727abedb83c0c84358f92d64be8e12b2e834f"
+          },
+          {
+            "first": "004d6dd0",
+            "last": "004d787a",
+            "bytes": 2731,
+            "sha256": "d709001c47aa637abe679006c0d288ccf0677870429d6433561a527bcac8c5de"
+          },
+          {
+            "first": "004d7880",
+            "last": "004d79f7",
+            "bytes": 376,
+            "sha256": "705417dcde6446445b20973a8853c888d635c09488e6d4e3eda16ec63898dd13"
+          },
+          {
+            "first": "004d7a00",
+            "last": "004d7a45",
+            "bytes": 70,
+            "sha256": "8fe136d6991c0cb208f1e4709d03537157d3a6cdb778c92ffbd53429a0df145b"
+          },
+          {
+            "first": "004d7a50",
+            "last": "004da506",
+            "bytes": 10935,
+            "sha256": "f7df7c6883bc98d5c991e1eae1edf2dc11d3cbe87f96038653010599542e5c29"
+          }
+        ],
+        "concatenatedRangesSha256": "bab16beedbea48817a9e213584293578788a1ae716c2343716ce0a855fbfde82",
+        "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+      }
+    },
+    "evidence": "docs/exe/cpp-login-mutable-send-20261108.md",
+    "note": "당시원문C는전체였으나PE연속window는구간사이padding을포함하고일부후행구간을덜읽었다.1166에서functions.tsv의모든inclusive range별로발췌/해시하고관련실제호출/정리몸체를재대조했다."
   }
 }

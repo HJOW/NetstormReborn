@@ -171,32 +171,36 @@ void RawMissionClientPackets::Receive(std::uint32_t sender,PacketConnection&,std
     }
 }
 // 선택된observer의진단이현재packet을바꿀수있으므로선언길이는복귀뒤원문폭으로다시읽는다.
-void RawMissionClientPackets::Observe(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending) const {
+void ObserveMissionClientPacket(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending,const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion) {
     if (!sending) return;
     switch (type) {
     case 0x2a:
-        if (Get(packet,0xc)==0xffffffffU) Need(hooks_.observerAssertion)("fortFileSize != (int)-1","\\Ns\\O\\_p_packets.cpp",0x672);
+        if (Get(packet,0xc)==0xffffffffU) Need(assertion)("fortFileSize != (int)-1","\\Ns\\O\\_p_packets.cpp",0x672);
         Write(packet,2,Get(packet,0xc,2)+0x11U,2);return;
     case 0x2b:
-        if (Get(packet,0x33,1)==0xffU) Need(hooks_.observerAssertion)("nameLen != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x695);
+        if (Get(packet,0x33,1)==0xffU) Need(assertion)("nameLen != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x695);
         Write(packet,2,Get(packet,0x33,1)+0x3bU,2);return;
     case 0x67:
-        if (Get(packet,5,2)==0xffffU) Need(hooks_.observerAssertion)("dataLen != (unsigned short)-1","\\Ns\\O\\_p_packets.cpp",0xa07);
+        if (Get(packet,5,2)==0xffffU) Need(assertion)("dataLen != (unsigned short)-1","\\Ns\\O\\_p_packets.cpp",0xa07);
         Write(packet,2,Get(packet,5,2)+7U,2);return;
     case 0x81: {
-        if (Get(packet,4)==0xffffffffU) Need(hooks_.observerAssertion)("numPlayers != (int)-1","\\Ns\\O\\_p_packets.cpp",0xc3d);
+        if (Get(packet,4)==0xffffffffU) Need(assertion)("numPlayers != (int)-1","\\Ns\\O\\_p_packets.cpp",0xc3d);
         const auto count=(Get(packet,4,2)+2U)&65535U; //40b48a의현재하위WORD와ADD AX의16비트감김을SHL전에보존한다.
         Write(packet,2,count*4U,2);return;
     }
     default:return; //나머지등록4종의원문observer는입력/출력효과없는몸체다.
     }
 }
+// 실제Session의같은진단장치를빌리며부품검사/송신등록이서로다른길이수식을복제하지않는다.
+void RawMissionClientPackets::Observe(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending) const { ObserveMissionClientPacket(type,packet,sending,hooks_.observerAssertion); }
 //원본버전/정책과실제수신기를등록하며같은mutable전송버퍼를송신observer에전달한다.
 void RegisterMissionClientPackets(RawPacketDispatch& dispatch,RawMissionClientPackets& packets) {
     constexpr std::array<std::uint32_t,8> types{0x29,0x67,0x2b,0x2a,0x28,0x81,0x84,0x6e}; //실제복원한8종등록번호다.
     //각타입은버전1/정책0과동일처리기를가지며원본길이표는분배기가이미소유한다.
     for (const auto type:types) {
-        dispatch.ObservePacket(type,[&packets,type](std::span<std::uint8_t> packet,std::uint32_t sending) { packets.Observe(type,packet,sending); });dispatch.Version(type,1,0);
+        if (type==0x2a || type==0x2b || type==0x67 || type==0x81) dispatch.ObservePacket(type,[&packets,type](std::span<std::uint8_t> packet,std::uint32_t sending) { packets.Observe(type,packet,sending); });
+        else dispatch.Observe(type,[](std::uint32_t) {}); //고정4종의진짜빈원문몸체는버퍼를읽지않으며거부응답등의기존const송신에도mutable포인터를요구하지않는다.
+        dispatch.Version(type,1,0);
         dispatch.Register(type,[&packets](std::uint32_t sender,PacketConnection& connection,std::span<const std::uint8_t> packet) { packets.Receive(sender,connection,packet); });
     }
 }

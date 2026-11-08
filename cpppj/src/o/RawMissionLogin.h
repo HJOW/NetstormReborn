@@ -41,7 +41,7 @@ struct MissionLoginGlobals {
 // 큰 외부 몸체는 선택된 실제 위치에서 필수다. 패킷을 버리는 성공 처리기를 공급하지 않는다.
 struct MissionLoginHooks {
     std::function<void(std::int32_t)> disconnect; // 004e2940의 실제 연결 해제다.
-    std::function<void(std::int32_t,std::span<const std::uint8_t>)> send; // 004e2dc0의 현재 연결/접속 gate와 송신 소비자다.
+    std::function<void(std::int32_t,std::span<std::uint8_t>)> send; //로컬writer의전체mutable예약을004e2dc0의현재연결gate에넘기며선택된장치가observer후현재선언길이를사용한다.
     std::function<void(std::span<const std::uint8_t>)> broadcast; // target0 Ready의004e2e30 실제 현재 연결 전체분배다.
     std::function<void(PacketConnection&,std::span<const std::uint8_t>)> pendingReply; // owner 미발견의 연결 가상+4 직접 송신이다.
     std::function<void()> flush; // 004e2920의 실제 모든 전송 폴링이다.

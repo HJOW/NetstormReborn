@@ -54,7 +54,7 @@ void RawMissionServerPackets::SendPlayer(std::uint32_t owner,std::int32_t target
     else { const auto address=Need(hooks_.peerAddress)(Owner(owner));Copy(packet,4,address); }
     Put(packet,0x2a,Read(owner,0x50));Put(packet,0x22,Read(owner,0x54));packet[0x34]=static_cast<std::uint8_t>(Read(owner,0x5c,1));Put(packet,0x35,Read(owner,0x60,2),2);
     packet[0x37]=static_cast<std::uint8_t>(Read(owner,0xa0,1));packet[0x38]=static_cast<std::uint8_t>(Read(owner,0xa4,1));packet[0x39]=static_cast<std::uint8_t>(Read(owner,0xa5,1));packet[0x3a]=static_cast<std::uint8_t>(Read(owner,0x71,1));
-    Put(packet,2,0x3bU+packet[0x33],2);Need(hooks_.send)(target,std::span<const std::uint8_t>(packet).first(Get(packet,2,2)));
+    Need(hooks_.send)(target,packet); //현재연결/Player관문뒤40a590이같은100BYTE예약의이름길이를읽고선언WORD를확정한다.
 }
 // Zone 관문 뒤 실제 안내/배치/밀도/현재 생성 전역과 원문 두 중앙섬 경로를 실행한다.
 void RawMissionServerPackets::ReceiveMetadata(std::span<const std::uint8_t> packet) const {
@@ -74,7 +74,7 @@ void RawMissionServerPackets::SendMetadata(std::int32_t target) const {
     constexpr std::string_view name="$Random"; // 원본00511790의 실제 고정 좁은문자열이다.
     auto packet=Packet(0x72,name.size()+11,4);packet[4]=0;Put(packet,6,static_cast<std::uint32_t>(name.size()+1));Copy(packet,10,name);packet[5]=static_cast<std::uint8_t>(state_.archipelago);
     if (!state_.centralCreated) { if (!state_.server) Need(hooks_.assertion)("server");ReceiveMetadata(packet); }
-    if (static_cast<std::uint32_t>(target)!=state_.localOwner) { Put(packet,2,Get(packet,6,2)+10,2);Need(hooks_.send)(target,std::span<const std::uint8_t>(packet).first(Get(packet,2,2))); }
+    if (static_cast<std::uint32_t>(target)!=state_.localOwner) Need(hooks_.send)(target,packet); //자기처리/현재번호비교뒤같은전체예약을송신하고40b110의실제observer에길이확정을맡긴다.
 }
 // 원본이 실제 등록한0x72 observer는0040b110이며 길이는현재+6 WORD+10이다.
 void RegisterMissionMetadata(RawPacketDispatch& dispatch,RawMissionServerPackets& packets) {

@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1165 현행 정정:** M6-a1의네mutable observer본체/등록은복원했다. 다만기존일반Login writer는const Send로관찰기를우회하므로아래최초감사의상시throw활성판정은그경로에대해정정한다. M6-a2의실제mutable writer접합은미완료다. M6-b~n도남는다. [현행근거](cpp-login-send-observers-20261108.md).
+**1166 현행:** M6-a는1165의네관찰기본문과1166의실제mutable writer/Meta·Editor·일반기본표접합으로완료했다. 최초감사의일반const송신상시throw판정은1165에서정정했다. M6-b~n은미완료이며다음M6-b다. [현행근거](cpp-login-mutable-send-20261108.md).
 
 제품 코드/LEFT_JOBS/추적 문서는 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 
