@@ -10277,9 +10277,38 @@
       "bytes": 1635827,
       "lines": 2639,
       "fixtureCommit": "34510965",
-      "webCommit": "worktree",
+      "webCommit": "fd77db64",
       "cpppjBasis": {
         "cpppj/src/o/RawCrossbowAnimation.cpp": "02b00b12"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E117",
+      "id": "lightningpath",
+      "path": "cpppj/tests/fixtures/lightning-path-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 빔 경로의 생성자/Seed/Step 모든 중간 64바이트 이미지·입자 꼬리·난수 상태와 120입자 전체(216행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/lightning-path.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-lightning-path.js"
+      ],
+      "doc": "docs/webpj-lightning-path-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawLightningPath.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 216행 전부 사용",
+      "text": true,
+      "sha256": "4649c8284babb1b999fcac6987eb92714bb57d8f18b921dcc93a073f9e016f0a",
+      "bytes": 1416394,
+      "lines": 217,
+      "fixtureCommit": "7a5d2972",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawLightningPath.cpp": "65b21851"
       }
     }
   ]
