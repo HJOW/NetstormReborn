@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1195 현행:**실제 삭제 bool을 Session→Client/Runtime pin→Storage→건설 Runtime으로 보존하고 Native Runtime의 마지막 World 캡처를 제거했다. 비MP30검사/최종 Tutorial4 실제TYPE75·600frame 대기/정상 종료0이다.1194의 별도 Client 상태는 유지하며 전체 body는 Session이다. 큰 NoWorld/장치·AI/Carrier·다른 Form/일반 삭제·Source/listener/표/Poll·63F·Snapshot/JoinTestBattle·M6-l/m/n/큐는 남는다. 새MP/패킷/통신 실행0·큐OFF다. [1195 근거](cpp-construction-destroy-runtime-20261109.md).
+**1197 현행:**전체 Native 건설 본체를 Client owner에 보유하고 같은 장기 SP/HP/Canon/지도/목록/현재Player와25개 큰 효과의 weak 대여/실제 선택 pin·Host 반납 후 효과 수명을 연결했다.68비MP 집중 검사/최종 Tutorial4 TYPE75·600frame/같은Client Edit왕복2회가 종료0이다. 큰 NoWorld/AI/Carrier·다른 Form/일반 삭제·전용Regular·Source/listener/표/Poll·63F·Snapshot/debugBurst·JoinTestBattle·지연큐/M6는 남는다. 새MP/패킷/통신 실행0·큐OFF다. [1197 근거](cpp-construction-body-owner-20261109.md).
 
 이하 본문의 초기 조사는 제품 코드/LEFT_JOBS/추적 문서를 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

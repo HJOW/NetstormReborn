@@ -34,19 +34,23 @@ RawConstructionCore BindConstructionCore(RawSurfaceStorage& storage) {
     if (!storage.UsesNativeTransmissionDevices()) throw std::invalid_argument("Native 건설 뷰의 실제 장기 owner 누락");
     return {storage.pool,storage.hash,storage.spots,storage.types,storage.frames,storage.postPopState,storage.ownerMode,storage.Factory(),storage.Owner(),storage.Building(),storage.VirtualDestroy(),storage.SurfaceLifetime(),storage.links};
 }
-// 기존 World adapter만 자기 짧은 실행기를 참조하며 장기 Storage에 World 포인터를 설치하지 않는다.
+// 같은 Native Client 물리만 빌려 네 실제 장치를 연결하며 World/Acquire/초기화를 실행하지 않는다.
+RawConstructionRuntime BindConstructionRuntime(const std::shared_ptr<RawSurfaceStorage>& storage) {
+    if (!storage || !storage->UsesNativeTransmissionDevices()) throw std::invalid_argument("장기 건설 Runtime의 실제 Native 저장소 필요");
+    RawConstructionRuntime runtime{BindConstructionCore(*storage),storage,
+        [storage](auto type,auto flags) { return storage->CreateAsset(type,flags); },
+        [storage](auto sid,auto x,auto y,auto flags) { static_cast<void>(storage->PopAsset(sid,x,y,flags)); },
+        [storage](auto sid,auto flags) { return storage->DestroyAsset(sid,flags); }};
+    runtime.broadcast=[storage](auto packet) { storage->BroadcastAssetPacket(packet); }; //같은 실제 현재 Player/Source 장치를 사용한다.
+    return runtime;
+}
+// Native는 장기 저장소를 직접 선택하고 독립 typed만 기존 짧은 World 참조 계약을 유지한다.
 RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world) {
-    const auto storage=world.Storage();RawConstructionRuntime runtime{storage->UsesNativeTransmissionDevices() ? BindConstructionCore(*storage):BindConstructionCore(world.Core()),storage,
+    if (world.Storage()->UsesNativeTransmissionDevices()) return BindConstructionRuntime(world.Storage());
+    return {BindConstructionCore(world.Core()),world.Storage(),
         [&world](auto type,auto flags) { return world.Create(type,flags); },
         [&world](auto sid,auto x,auto y,auto flags) { world.Pop(sid,x,y,flags); },
         [&world](auto sid,auto flags) { return world.Destroy(sid,flags); }};
-    if (storage->UsesNativeTransmissionDevices()) {
-        runtime.create=[storage](auto type,auto flags) { return storage->CreateAsset(type,flags); };
-        runtime.pop=[storage](auto sid,auto x,auto y,auto flags) { static_cast<void>(storage->PopAsset(sid,x,y,flags)); };
-        runtime.destroy=[storage](auto sid,auto flags) { return storage->DestroyAsset(sid,flags); }; //장기 Runtime은 선택 시 현재 실제 전체 owner를 pin하는 Client 장치만 사용한다.
-        runtime.broadcast=[storage](auto packet) { storage->BroadcastAssetPacket(packet); }; // 같은 실제 장기 Client 장치이며 새 Source/수신/ACK를 만들지 않는다.
-    }
-    return runtime;
 }
 // 외부의 단일 상태/월드 주소를 빌리며 실제 계산/공간/삭제 몸체만 내부에 조립한다.
 struct RawCampaignConstructionBindings::Impl {

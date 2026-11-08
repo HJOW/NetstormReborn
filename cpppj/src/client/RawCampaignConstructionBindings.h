@@ -67,7 +67,8 @@ struct RawConstructionRuntime {
     std::function<std::span<std::uint8_t>()> players; // Native는 같은 ClientPlayerRecords의 현재base를 원문 선택 위치에서 조회한다. 독립 World는 기존 span 계약을 유지한다.
     std::function<void(std::span<std::uint8_t>)> broadcast; // Native는 Session 방송 객체 없이 같은 현재 Player/Source와 호출별 mutable 버퍼를 사용한다.
 };
-RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world); //기존 실제 World의 Core/Create/Pop/Destroy를 빌린다. World는 이 뷰와 결합한 모듈보다 오래 살아야 한다.
+RawConstructionRuntime BindConstructionRuntime(const std::shared_ptr<RawSurfaceStorage>& storage); //Native의 장기 실제 부품과 장치만 빌리며 World 없이 구성한다.
+RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world); //Native는 장기 저장소, 독립 typed만 본체보다 오래 사는 기존 World를 빌린다.
 // 원본 일반 서버 확정/배치 통지와 로컬 간헐천이 같은 실제 월드를 사용한다.
 class RawCampaignConstructionBindings {
 public:

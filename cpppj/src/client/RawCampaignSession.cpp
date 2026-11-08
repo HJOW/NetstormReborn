@@ -920,7 +920,10 @@ struct RawCampaignSession::Impl {
     SquidPostPopList& recentGeysers{world.Storage()->recentGeysers}; //00595094/98은같은Client전용최근5목록이며전체geysers와분리한다.
     std::uint8_t& geyserMapSize{battleOptions[6]}; //41ca10은현재0052f7e6을읽는다. Session지역0사본으로현재옵션을가리지않는다.
     std::array<std::uint32_t,9>& playerDirections{world.Storage()->geyserPlayerDirections}; //같은현재9DWORD를PlayerBounds와World없는생성부모가공유한다.
-    std::unique_ptr<RawCampaignConstructionBindings> construction; // 같은 실제 HP/SP/장부/Player/지도에 첫 객체 전 설치한다.
+    std::unique_ptr<RawCampaignConstructionBindings> localConstruction; //독립 typed만 기존 지역 본체를 소유한다.
+    RawCampaignConstructionBindings* construction{}; //Native는 같은 Client의 장기 본체를 빌리며 typed는 위 지역 본체를 가리킨다.
+    std::shared_ptr<ClientConstructionRuntimeBindings> constructionRuntime; //큰 효과의 현재 대여만 Session이 소유하고 Client 본체에는 weak로 공개한다.
+    std::function<std::shared_ptr<void>()> constructionRuntimePin; //본체 설치 전 공개한 실제 외곽 pin도 이후 효과 대여에 전달한다.
 
     // 현재 생성 VT의+80을 TYPE 생성자와 쌍으로 묶지 않고 공통81/제단/다이스 몸체에 분배한다.
     std::uint32_t VirtualCount(Sid sid) const {
@@ -2620,11 +2623,14 @@ struct RawCampaignSession::Impl {
         };
         gameplay.notice.tryMove=[this](Sid priest,float x,float y,Sid target) { if (!motion) throw std::logic_error("일반 통지의 실제54 미설치");return motion->Paths().StartPriest({priest,{x,y},0,target.value,0,0,0})!=nullptr; };
         gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
-        auto constructionRuntime=BindConstructionRuntime(world);if (world.Storage()->UsesNativeTransmissionDevices()) constructionRuntime.players=[records=playerRecords] { return records->Records(); }; // 장기 Player owner만 보관하며 Session this나 현재 span을 고정하지 않는다.
-        const bool& boundsMission=world.Storage()->UsesNativeTransmissionDevices() ? core.bridgeState.mission:objectState.mission; // Native는 이미 준비된 실제00594fa0을 읽고 독립 로더의 편의 writer를 alias하지 않는다.
-        const PlayerGeyserBoundsState boundsState{core.ownerMode.battle,boundsMission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections,&metadata.geometry.decoderDiagnostics}; // 같은 장기 모드/표/진단 주소만 빌린다.
-        if (world.Storage()->UsesNativeTransmissionDevices()) construction=std::make_unique<RawCampaignConstructionBindings>(std::move(constructionRuntime),hp,sp,rewardState,metadata.frames,chunks,constructionState,boundsState,recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay));
-        else construction=std::make_unique<RawCampaignConstructionBindings>(std::move(constructionRuntime),hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,boundsState,recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay)); // 독립 경로의 기존 Player span/방송 대여 계약을 유지한다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) {
+            constructionRuntime=std::make_shared<ClientConstructionRuntimeBindings>();constructionRuntime->effects=std::move(effects);constructionRuntime->gameplay=std::move(gameplay);constructionRuntime->pin=constructionRuntimePin;
+            services.constructionGlobals->BindRuntime(constructionRuntime); //같은 실제 Session만 효과 대여를 소유하며 이전 반납 뒤에만 교체한다.
+            construction=&services.constructionGlobals->Body(services.spGlobals,playerRecords,services.missionOptions); //SP/Canon/지도/현재Player와 본체는 장기 owner에서 직접 선택한다.
+        } else {
+            const PlayerGeyserBoundsState boundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections,&metadata.geometry.decoderDiagnostics}; //독립 로더의 기존 지역 미션/방송 계약이다.
+            localConstruction=std::make_unique<RawCampaignConstructionBindings>(BindConstructionRuntime(world),hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,boundsState,recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay));construction=localConstruction.get();
+        }
     }
     // 실제 AI 계산/색 표/섬 프레임은 Session이 연결하고 언어/채팅/표시 통지는 외부 소비자에 남긴다.
     void ConnectAi() {
@@ -3823,6 +3829,7 @@ struct RawCampaignSession::Impl {
         try { world.DrainCurrentProcessBindingsForShutdown(); } // 자기 현재 처리기가 만든 객체만 모듈보다 먼저 반납하고 이전 Native 잔류는 장기 Storage에 남긴다.
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
+        constructionRuntime.reset();construction=nullptr; //실제 현재 Host 정리가 끝난 뒤 큰 건설 효과만 반납하고 장기 본체/State는 보존한다.
         world.BindContainedUnpop({});containedUnpop.reset(); // 실제 Kernel 정리 뒤 파생 부모/UI 수명을 반납하고 World 기본 종단으로 복귀한다.
         core.postPop.BindPatchAiNotice({});if (!world.Storage()->UsesNativeTransmissionDevices()) world.CommonDeletion().BindPatchAiNotice({}); // AI 본체/통지 처리기를 해제하기 전에 외부 공통 몸체의 참조를 분리한다.
         core.postPop.BindPatchSelectionRecheck({});core.postPop.BindPatchLocalOwner({}); //외부World에이전Session/UI주소를남기지않는다.
@@ -4076,7 +4083,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 }
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession() {
-    impl_->world.BindRuntimePin({}); //실제외곽owner의최종소멸이시작된뒤자기Kernel/모듈정리는이미소유한직접수명을사용한다.외부pin중에는이소멸자에진입할수없다.
+    BindRuntimePin({}); //최종 소멸의 자기 Kernel/모듈 정리는 직접 수명을 사용하며 World와 건설 효과의 외곽 pin을 함께 반납한다.
     DetachConnectionTransport(); // 전역 분배기의 짧은 수신기를 실제 하위 모듈 해제보다 먼저 반납한다.
     impl_->ReleaseEditorCommandReceivers();bool stateReturned{}; //같은 실제 수신기를 먼저 닫은 뒤 자식 증빙을 검사한다.
     try { stateReturned=impl_->StateChildrenReturned(); }
@@ -4556,7 +4563,9 @@ std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->play
 // 명시 State 호출은 선택된 free 실패를 전파하며 앞선 Player 쓰기와 나머지 월드 수명을 보존한다.
 // 실제 Native Clear 단계와 그 증빙의 현재 대여 반납만 노출하며 전체 AI/UI cleanup을 대신하지 않는다.
 RawProcessHostStorage::ClearPass RawCampaignSession::ClearProcessesForState() { return impl_->world.ClearProcessesForState(); }
-void RawCampaignSession::ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass) { impl_->world.ReturnProcessBindingsForState(std::move(pass)); } // 일반 소멸 fallback과 실제 소비된 반납을 구분한다.
+void RawCampaignSession::ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass) { impl_->world.ReturnProcessBindingsForState(std::move(pass));if (impl_->constructionRuntime) { impl_->constructionRuntime.reset();impl_->construction=nullptr; } } //실제 Host 반납이 정상 복귀한 뒤 Native의 큰 건설 효과 대여만 끝낸다.
+// 공개 전 직접 로드와 공개 뒤 실제 전체 Runtime 수명을 World/건설 효과가 같은 장치로 따른다.
+void RawCampaignSession::BindRuntimePin(std::function<std::shared_ptr<void>()> pin) { impl_->world.BindRuntimePin(pin);impl_->constructionRuntimePin=std::move(pin);if (impl_->constructionRuntime) impl_->constructionRuntime->pin=impl_->constructionRuntimePin; }
 void RawCampaignSession::ReleasePlayerLinks() { impl_->ReleasePlayerLinks(); }
 // 실제 Native 부모의 선택 위치에서만 기존 AI/링크 자식을 실행하고 정상 복귀 증빙을 이동한다.
 RawProductionDeck::PlayerLinksPass RawCampaignSession::ClearPlayerLinksForState() {

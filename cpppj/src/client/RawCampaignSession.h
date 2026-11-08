@@ -665,6 +665,7 @@ public:
     std::uint32_t EscapeCarrier(o::Sid parent,float distance,std::uint32_t event); // 같은 현재 경로/난수/공간에서 실제429010 회피를 실행한다.
     const o::RawCarrierChoice& CarrierChoice() const; // 현재 실제 Player/목록/Graph/BFS의 귀환·간헐천 선택기를 빌린다.
     // 화면/명령은 같은 현재 raw 월드와 HP를 읽는다.
+    void BindRuntimePin(std::function<std::shared_ptr<void>()> pin); //같은 실제 외곽 owner를 World/현재 건설 효과에 함께 공개하거나 최종 소멸에서 반납한다.
     RawSurfaceWorld& World();
     // 같은 월드의 현재 Pool/장부/Host 참조를 빌린다.
     RawWorldCore Core();

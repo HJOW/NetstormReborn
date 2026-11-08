@@ -4,6 +4,8 @@
 #include "client/ClientConstructionGlobals.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientBuildReplay.h"
+#include "client/ClientSpGlobals.h" //장기 본체의 실제 SP backing과 초기화 지연을 확인한다.
+#include "client/ClientPlayerRecords.h" //본체 구성 전 Player base0을 유지하는 실제 할당 owner다.
 #include "o/RawCanonPlacementCollision.h"
 
 using namespace netstorm::client;
@@ -114,4 +116,58 @@ TEST_CASE(ConstructionOwner_RuntimeDeletionSurvivesWorldReturnAndPreservesResult
     failed=true;bool thrown=false;try { static_cast<void>(runtime->destroy(Sid{5},0x1000)); }catch (const std::runtime_error&) { thrown=true; }
     CHECK(thrown && calls==3 && storage->Generation()==generation && !storage->Borrowed() && random.State()==123);
     storage.reset();CHECK(!physicalWatch.expired());runtime.reset();CHECK(physicalWatch.expired());
+}
+
+namespace { //World/Session/패킷을 만들지 않고 장기 본체의 실제 backing을 조립한다.
+struct LongConstructionScene {
+    std::shared_ptr<ClientGameplayGlobals> gameplay{std::make_shared<ClientGameplayGlobals>()}; //실제 현재 모드/TYPE/옵션 owner다.
+    std::shared_ptr<RawSurfaceStorage> storage{OwnerStorage(gameplay)}; //같은 원본 자산/Pool/목록이며 Native 전송은 금지한다.
+    std::shared_ptr<ClientRandomGlobals> random{std::make_shared<ClientRandomGlobals>()}; //같은 장기 난수이며 생성 중 seed를 쓰지 않는다.
+    std::shared_ptr<ClientSpGlobals> sp{std::make_shared<ClientSpGlobals>(random,[] { return 123; })}; //초기화 전의 실제 분산 SP 몸체다.
+    std::shared_ptr<ClientPlayerRecords> players{std::make_shared<ClientPlayerRecords>()}; //실제 Player base0이며 할당/대여를 하지 않는다.
+    std::shared_ptr<ClientConstructionGlobals> owner{std::make_shared<ClientConstructionGlobals>()}; //본체와 같은 State/backing의 실제 장기 owner다.
+    //장치 계약을 연결만 하며 큰 효과/전송은 선택 시 실패하게 한다.
+    LongConstructionScene() {
+        RawSurfaceDisplayBindings display;display.view=[] { return SquidDisplayView{0,0,65536,{0,0,1024,768}}; }; //Client가 미리 공개하는 현재 논리 카메라/지도 입력이며 실제 출력은 금지한다.
+        display.suppressed=OwnerForbidden<bool>();display.invalidate=OwnerForbidden<void,SquidDisplayRect,std::uint32_t>();storage->BindDisplayDevices(std::move(display));
+        storage->BindSerializationGlobals(std::make_shared<FortSerializationGlobals>());
+        storage->BindRewardDevices({std::shared_ptr<ScrambledSpStore>(sp,&sp->Store()),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->world.editor),OwnerForbidden<void>(),OwnerForbidden<void,std::uint32_t,std::int32_t>()});
+        storage->BindPostPopDevices({OwnerForbidden<void,std::uint32_t,Sid,bool>(),[current=gameplay] { return current->player.battleOwner; },OwnerForbidden<void>()});
+        storage->BindDeletionDevices({OwnerForbidden<void,std::uint32_t,std::uint32_t,std::uint32_t>(),OwnerForbidden<void,Sid>()});owner->Bind(storage,gameplay,{});
+    }
+    RawCampaignConstructionBindings& Body() { return owner->Body(sp,players,gameplay->BattleOptionsOwner()); } //동일 실제 backing만 전달하며 현재 Player를 조회하지 않는다.
+};
+}
+
+// 전체 body를 World/Player 구성 전에 만들고 같은 backing과 현재 상태를 재초기화하지 않는다.
+TEST_CASE(ConstructionOwner_LongBodyBeforeWorldAndPlayerAllocation) {
+    LongConstructionScene scene;CHECK(OwnerRejected([&] { scene.owner->Body(); }));auto* body=&scene.Body();scene.owner->State().notice.historyCounter=17;
+    CHECK(&scene.Body()==body && &scene.owner->Body()==body && scene.storage->Generation()==0 && !scene.storage->Borrowed() && !scene.players->Initialized() && scene.players->Base()==0);
+    auto options=std::make_shared<std::array<std::uint8_t,87>>();CHECK(OwnerRejected([&] { scene.owner->Body(scene.sp,scene.players,options); }));
+    auto otherPlayers=std::make_shared<ClientPlayerRecords>();CHECK(OwnerRejected([&] { scene.owner->Body(scene.sp,otherPlayers,scene.gameplay->BattleOptionsOwner()); }));
+    GameRandom random(123);body->PopulateGeysers(0,random,{},{});CHECK(random.State()==123 && scene.owner->State().notice.historyCounter==17 && scene.players->Base()==0);
+    CHECK(OwnerRejected([&] { body->GenerateLocalGeysers(); }));CHECK(scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed()); //실제 설정 효과가 없으면 Player/생성/방송 전에 명시 실패한다.
+}
+
+// 선택된 설정 콜백의 대여/전체 pin은 콜백이 외부 owner를 반납해도 예외 복귀까지 살아 있고 다음 대여만 새로 선택한다.
+TEST_CASE(ConstructionOwner_LongBodyWeakRuntimePinsSelectedEffectAndRebinds) {
+    LongConstructionScene scene;auto* body=&scene.Body();scene.owner->State().notice.historyCounter=23;
+    auto runtime=std::make_shared<ClientConstructionRuntimeBindings>();auto whole=std::make_shared<int>(7);std::weak_ptr<int> wholeWatch=whole;std::weak_ptr<ClientConstructionRuntimeBindings> runtimeWatch=runtime;std::uint32_t calls=0;
+    runtime->pin=[wholeWatch]()->std::shared_ptr<void> { auto current=wholeWatch.lock();if (!current) throw std::logic_error("검사의 실제 선택 pin 만료");return current; }; //선택 호출만 실제 외곽 owner를 strong으로 빌린다.
+    runtime->effects.configInt=[&](auto key,auto fallback)->std::int32_t {
+        CHECK(key=="predictableGeysers" && fallback==1 && !wholeWatch.expired() && !runtimeWatch.expired());++calls;runtime.reset();whole.reset();CHECK(!wholeWatch.expired() && !runtimeWatch.expired());throw std::runtime_error("선택 설정의 원래 실패"); //Player/패킷/실제 생성에 들어가기 전 예외 경계를 확인한다.
+    };
+    scene.owner->BindRuntime(runtime);auto other=std::make_shared<ClientConstructionRuntimeBindings>();CHECK(OwnerRejected([&] { scene.owner->BindRuntime(other); }));
+    bool failed=false;try { body->GenerateLocalGeysers(); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="선택 설정의 원래 실패"; }
+    CHECK(failed && calls==1 && wholeWatch.expired() && runtimeWatch.expired() && scene.players->Base()==0);
+    other->effects.configInt=[&](auto,auto)->std::int32_t { ++calls;throw std::runtime_error("다음 설정의 원래 실패"); }; //반납된 Session 콜백을 다시 실행하지 않는다.
+    scene.owner->BindRuntime(other);failed=false;try { body->GenerateLocalGeysers(); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="다음 설정의 원래 실패"; }
+    CHECK(failed && calls==2 && &scene.Body()==body && scene.owner->State().notice.historyCounter==23 && scene.players->Base()==0 && !scene.storage->Borrowed());other.reset();CHECK(OwnerRejected([&] { body->GenerateLocalGeysers(); }));
+}
+
+// 전체 body가 모든 실제 backing을 보유하고 최종 owner 반납 뒤 참조 순환 없이 함께 해제한다.
+TEST_CASE(ConstructionOwner_LongBodyRetainsAndReleasesActualBacking) {
+    LongConstructionScene scene;auto* body=&scene.Body();std::weak_ptr<RawSurfaceStorage> physical=scene.storage;std::weak_ptr<ClientGameplayGlobals> gameplay=scene.gameplay;std::weak_ptr<ClientSpGlobals> sp=scene.sp;std::weak_ptr<ClientPlayerRecords> players=scene.players;
+    scene.storage.reset();scene.gameplay.reset();scene.sp.reset();scene.players.reset();scene.random.reset();CHECK(!physical.expired() && !gameplay.expired() && !sp.expired() && !players.expired() && &scene.owner->Body()==body);
+    scene.owner.reset();CHECK(physical.expired() && gameplay.expired() && sp.expired() && players.expired());
 }
