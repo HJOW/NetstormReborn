@@ -7966,7 +7966,7 @@
       "bytes": 135254,
       "lines": 1051,
       "fixtureCommit": "4ed94013",
-      "webCommit": "worktree",
+      "webCommit": "8f0647e8",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestRitualFrame.cpp": "4ed94013"
       }
@@ -7995,7 +7995,7 @@
       "bytes": 237189,
       "lines": 1753,
       "fixtureCommit": "b76adf95",
-      "webCommit": "worktree",
+      "webCommit": "8f0647e8",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestRitualActions.cpp": "b76adf95"
       }
@@ -8024,9 +8024,67 @@
       "bytes": 1646,
       "lines": 14,
       "fixtureCommit": "b8ce42c7",
-      "webCommit": "worktree",
+      "webCommit": "8f0647e8",
       "cpppjBasis": {
         "cpppj/src/o/RawFortPriestPreparation.cpp": "b8ce42c7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E71",
+      "id": "nugget-replenish",
+      "path": "cpppj/tests/fixtures/nugget-replenish-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 너겟 보충의 진단/배치 호출 순서와 효과 뒤 현재 저장소 8칸(x87 정밀도 53/64 두 관측 포함)",
+      "consumers": [
+        "webpj/tests/nugget-replenish.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-nugget-replenish.js"
+      ],
+      "doc": "docs/webpj-nugget-asset-owner-gun-mode-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawNuggetReplenish.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 372행 전부 사용",
+      "text": true,
+      "sha256": "a8f283c172744a3529023b31d7d69b98ed96610e96fb6fd48e117b2622a23858",
+      "bytes": 62320,
+      "lines": 373,
+      "fixtureCommit": "e7d9ff94",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawNuggetReplenish.cpp": "e7d9ff94"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E71",
+      "id": "asset-owner-current-local",
+      "path": "cpppj/tests/fixtures/asset-owner-current-local-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 파생 소유자 로컬 입력의 종료 원인·공통 부모 호출·생산 카운터·슬롯 raw(공통 부모는 명시 장치)",
+      "consumers": [
+        "webpj/tests/asset-owner.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-asset-owner.js"
+      ],
+      "doc": "docs/webpj-nugget-asset-owner-gun-mode-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAssetOwner.cpp"
+      ],
+      "scope": "10.78(originals) 64행 전부 사용(originalCD 행은 범위 밖)",
+      "text": true,
+      "sha256": "daa7b30762b24f9a3b71759ea6c63ea1efc126d5c46aee0c452af645b7cd3e0f",
+      "bytes": 17726,
+      "lines": 129,
+      "fixtureCommit": "30d49562",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAssetOwner.cpp": "30d49562"
       }
     }
   ]

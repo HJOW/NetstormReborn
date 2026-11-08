@@ -512,7 +512,7 @@ cpppj/src/o/RawAmbientWind.cpp	port	www/core/raw-ambient-wind.js	1f00a25a	port	[
 cpppj/src/o/RawArcherAnimation.cpp	port			todo	[o-default]
 cpppj/src/o/RawArcherTypeData.cpp	port			todo	[o-default]
 cpppj/src/o/RawArcSpire.cpp	port	www/core/raw-arc-spire.js	1f00a25a	port	[o-default] WB04-E49: 아크 스파이어 최초 Regular 예약 후처리(48c080)·Regular(48c6e0)·공격(48c110)·이웃 수집(48c300)·연쇄 타격(48c410). fixture arc-spire 665행. 실제 공간 검색/빔/피해/프레임 변경은 월드 조립에서
-cpppj/src/o/RawAssetOwner.cpp	port			todo	[o-default]
+cpppj/src/o/RawAssetOwner.cpp	port	www/core/raw-asset-owner.js	1f00a25a	port	[o-default] WB04-E71: 자산 가상 소유자 지정 분배(중립 소유자 0·생산 카운터 접두·섬 받침 분배). fixture asset-owner-current-local 10.78 64행 전부. 실제 World 생성자/생산 장부 합성은 RawSurfaceWorld 단위에서
 cpppj/src/o/RawAssetPostPop.cpp	port	www/core/raw-asset-post-pop-state.js	1f00a25a	partial	[o-default] WB04-E61: AssetPostPopState·AssetPostPopPlayer(서버/boss 권한·거주/신전/간헐천/아웃포스트 목록·Bridge TYPE) 이식(Factory 후처리가 사용). Gun·제네레이터·거주 구역·바리케이드·간헐천·신전 분배 본체와 AssetPostPopHooks 는 남음
 cpppj/src/o/RawAssetRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawAuthorityState.h	port	www/core/raw-authority-state.js	1f00a25a	port	[o-default] WB04-D5c(server/boss 두 논리 전역, 호스트 상태가 빌림)
@@ -744,7 +744,7 @@ cpppj/src/o/RawGunBlocker.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunGroundTarget.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunHit.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunImpact.cpp	port			todo	[o-default]
-cpppj/src/o/RawGunMode.cpp	port			todo	[o-default]
+cpppj/src/o/RawGunMode.cpp	port	www/core/raw-gun-mode.js	1f00a25a	port	[o-default] WB04-E71: 총 공격 방향 getter 004d4d00(크로스보우 graph×2·signed 문자×2−152). cpppj 에 독립 fixture 가 없어 소스 계약 시험(gun-mode 3건)으로 대조. 소비자(캠페인 프레임·얼음/천둥 미사일)는 해당 파일 단위에서
 cpppj/src/o/RawGunProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunTarget.cpp	port			todo	[o-default]
 cpppj/src/o/RawIceCannonFire.cpp	port			todo	[o-default]
@@ -792,7 +792,7 @@ cpppj/src/o/RawNewFort.cpp	exclude-edit			-	[edit-new-fort]
 cpppj/src/o/RawNewTechnology.cpp	port	www/core/raw-new-technology.js	1f00a25a	port	[o-default] WB04-E13: 00492a30 기술 획득 부모(조회/추가/snapshot/이름·그림 Config/안내 순서). fixture new-technology 10.78 45행 전부
 cpppj/src/o/RawNuggetPostPop.cpp	port	www/core/raw-nugget-post-pop.js	1f00a25a	port	[o-default] WB04-E16: 00484f90 너겟 PostPop(두 Regular 예약·난수 소비·Damageable 위임). fixture nugget-postpop 10.78 288행 전부
 cpppj/src/o/RawNuggetRegular.cpp	port			todo	[o-default]
-cpppj/src/o/RawNuggetReplenish.cpp	port			todo	[o-default]
+cpppj/src/o/RawNuggetReplenish.cpp	port	www/core/raw-nugget-replenish.js	1f00a25a	port	[o-default] WB04-E71: 너겟 보충 00485e40(권한 진단 재독·모드 관문·지역 0 원점 배치와 확장 단위 사각형). fixture nugget-replenish 372행 전부(10.78 전용 파일). 실제 무작위 배치 0040e050 본체는 해당 파일 단위에서
 cpppj/src/o/RawObjectCommand.cpp	port			todo	[o-default]
 cpppj/src/o/RawObjectConversion.cpp	port			todo	[o-default]
 cpppj/src/o/RawObjectTrace.cpp	port			todo	[o-default]
