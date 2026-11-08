@@ -29,5 +29,7 @@ struct NativeMetaObjectInputHooks { //도달한 실제 효과만 해당 원문 �
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //Metadisplay.cpp1fe의 실제 복귀형 진단이다.
 };
 bool InputNativeMetaObject(std::uint32_t sid,std::span<const std::uint8_t> object,InputEvent event,NativeMetaObjectInputGlobals globals,const NativeMetaObjectInputHooks& hooks); //4789b0 전체이며 원문이 반환하는0/1을 유지한다. 실제 picking/caller는 별도다.
-std::optional<std::uint32_t> MetaObjectInputCommandValue(std::uint32_t originalAddress); //10.78 PE의 세 명령 DWORD만 변환하며 미등록 주소는 소비자에게 돌려준다.
+bool InputNativeMetaZoneObject(std::uint32_t sid,std::span<const std::uint8_t> object,InputEvent event,std::span<const std::uint8_t> zones,const NativeMetaObjectInputHooks& hooks); //479390의 같은 배율 관문·영역 제목/하강·도움말·객체 부착이다.
+bool DispatchNativeMetaZoneRequest(InputEvent event,const std::function<void(std::string_view)>& tell); //4d7680의 e8은 signed 영역 번호의 원문 확인 Tell만 예약한다.
+std::optional<std::uint32_t> MetaObjectInputCommandValue(std::uint32_t originalAddress); //10.78 PE의 네 명령 DWORD만 변환하며 미등록 주소는 소비자에게 돌려준다.
 }

@@ -18,6 +18,7 @@ target_sources(netstorm PRIVATE client/NativeMetaSpriteRefresh.h client/NativeMe
 target_sources(netstorm PRIVATE client/NativeMetaSpriteDraw.h client/NativeMetaSpriteDraw.cpp client/ClientMetaSpriteDraw.h client/ClientMetaSpriteDraw.cpp) #1130:실제 메타 섬+a4의 Image·TYPE·버전/설명·8자리 그림을 현재 통합 화면에 연결한다.
 target_sources(netstorm PRIVATE client/NativeMetaObjectInput.h client/NativeMetaObjectInput.cpp client/ClientMetaObjectInput.h client/ClientMetaObjectInput.cpp) #1134:메타+ac의 전체 메뉴/좌석 입력을 실제 controlled·CS·SHP·입력 큐에 연결한다.
 target_sources(netstorm PRIVATE client/NativeMetaSail.h client/NativeMetaSail.cpp) #1136:실제 좌석/항해 입력·1eh/TCP11·현재 참가자 좌표/Rig를 연결한다.
+target_sources(netstorm PRIVATE client/ClientMetaPointerInput.h client/ClientMetaPointerInput.cpp) #1137:메타의 실제 마우스 선택/픽셀·영역+ac/항해 메뉴와 현재 단일·다중 선택을 연결한다.
 
 target_sources(netstorm PRIVATE o/RawStateBattleOptions.h o/RawStateBattleOptions.cpp) #1127:67h 전체 공통 부모·부분 복사와 일반 Session의 실제 CS 자식을 연결한다.
 

@@ -8,6 +8,8 @@
 #include "client/ClientCampaignTransport.h" // 같은 실제 World/장기 전역과 공유 전송 수명을 로그인 전에 연결한다.
 #include "client/RitualChoiceInput.h" //의식선택은실제일반명령에서6b요청만작성한다.
 #include "client/NativeMetaSail.h" //의식 패킷6b와 구별되는 일반 입력6b/6c/e3/fe의 원문 항해 소비자다.
+#include "client/ClientMetaPointerInput.h" //GameWorld 없는 메타의 현재 마우스/픽셀 선택과 객체 입력 수명이다.
+#include "client/NativeMetaObjectInput.h" //영역 클릭/메뉴의 e8 확인 Tell도 같은 일반 입력에 분배한다.
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
@@ -372,7 +374,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
             state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
         } else {
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x020000f3U && !IsNativeMetaSailCommand(command) && !IsScenarioObjectCommand(command) && !IsScenarioEffectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command)); //실제 메타 f3/항해 소비자까지 연결된 다섯 명령도 같은 메뉴→큐 경계에서 허용한다.
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x020000f3U && command!=0x020000e8U && !IsNativeMetaSailCommand(command) && !IsScenarioObjectCommand(command) && !IsScenarioEffectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command)); //실제 메타 설명/항해/영역 확인 소비자까지 연결된 명령만 같은 메뉴→큐 경계에서 허용한다.
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
@@ -520,7 +522,7 @@ void UberGump::RetireWorldForState() {
     client_.GetRenderer().SetExtraCollection({});client_.GetRenderer().SetOverlayProcedure({}); //새 HUD를 지우지 않고 이전 월드 Draw callback만 닫는다.
     DetachMissionWorldBindings();briefingSections_.clear();briefingIndex_=0;fortObjects_=0; //Runtime의 Session 참조만 반납한다. gate/state/Script와 Native mission은 State1 이름 비교 뒤 실제 closeGuide 또는 메인 메뉴 해제까지 유지한다.
     session->DetachConnectionTransport(); // 같은 실제 Session의 등록을 하위 처리기 소멸보다 먼저 닫는다.
-    if (world_) { auto retiring=std::move(world_);retiring.reset(); }else { editor_->metaDisplay.reset();editor_->metaWorld.reset(); } //실제표시기의비소유참조를Session보다먼저반납한다.
+    if (world_) { auto retiring=std::move(world_);retiring.reset(); }else { editor_->metaInput.reset();editor_->metaDisplay.reset();editor_->metaWorld.reset(); } //선택/입력과 표시기의 비소유 참조를 Session보다 먼저 반납한다.
 }
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
 void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
@@ -1296,7 +1298,7 @@ void UberGump::Event(InputEvent event) {
         if (missionRuntime_->tutorial->Event(event)) return; //F4/H의 실제 ViewHome 큐가 다음 사건으로 한 번 도착한다. 원시 키를 별도 Home 명령으로 합성하지 않는다.
     }
     bool worldUiRouted=false; // 실제 HTML 모달과 월드 사건은 같은 공통 Gump에서 먼저 한 번만 소비를 판정한다.
-    if (popup_.empty() && ((world_ && state_.phase==ClientPhase::Mission) || rawButtons_->Menus()->HtmlWindowsOpen() || (state_.phase==ClientPhase::MainMenu && rawButtons_->Menus()->HasMenus()))) {
+    if (popup_.empty() && ((world_ && state_.phase==ClientPhase::Mission) || (editor_ && editor_->metaInput) || rawButtons_->Menus()->HtmlWindowsOpen() || (state_.phase==ClientPhase::MainMenu && rawButtons_->Menus()->HasMenus()))) {
         const auto old=rawButtons_->Pressed();const auto routed=rawButtons_->RouteInput(event);worldUiRouted=true; // nativeGuide뒤466200의현재성공토큰이다.
         if (old!=rawButtons_->Pressed()) rebuild_=true;
         if (routed.activated) {
@@ -1409,6 +1411,7 @@ void UberGump::Event(InputEvent event) {
     metaSail.freeSlots=[this](auto battle) { return client_.ChallengeGlobals()->FreeBattleSlots(battle); };metaSail.tell=[this](auto section) { Tell(std::string(section)); };metaSail.suppress=[this] { client_.Configuration().SetInt("noShowWarnFailedDiags",1); };
     metaSail.join=[this](auto parameter) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("전투 참가 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->JoinBattle(parameter); };metaSail.sail=[this](auto position) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("항해 위치 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->SailPosition(position); };
     if (DispatchNativeMetaSailInput(event,metaSail)) { recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //누름의 효과 뒤 원문 일반 입력 꼬리를 유지하고 뗌은 장치를 읽지 않는다.
+    if (DispatchNativeMetaZoneRequest(event,[this](auto section) { Tell(std::string(section)); })) { recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //e8은 일반 입력의 현재 signed 번호로 확인창만 열고 누름 꼬리를 유지한다.
     if (transitionCode==0x020000f3U) { if (!(event.code&InputCode::kRelease)) OpenMetaBattleDescription(std::bit_cast<std::uint32_t>(event.y));return; } //004d8ab5는 Guide/Gump/뗌 뒤·Console/정지 앞에서 현재param2를 설명 모달에 전달한다.
     if (transitionCode==0x020000f5U) { if (!(event.code&InputCode::kRelease)) client_.LocalStateGlobals()->Begin()=1;return; } // ServerForceBattleStart는 원문처럼 Begin만1을 쓰며 다음 타이머가 실제6e를 송신한다.
     if (transitionCode==0x020000acU) { if (!(event.code&InputCode::kRelease)) static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile()));return; } // DelStateFile은4b5880처럼 현재 경로를 작성해 unlink하고 반환을 무시한다. 새 상태 요청/월드 반납을 추가하지 않는다.
@@ -1608,6 +1611,10 @@ void UberGump::Event(InputEvent event) {
     if (!worldUiRouted && objectMenus_ && objectMenus_->Active() && rawButtons_->Menus()->Contains({event.x,event.y})) {
         static_cast<void>(rawButtons_->Event(event));rebuild_=true;return;
     }
+    if (!world_ && editor_ && editor_->metaInput && popup_.empty()) { //메타는 같은 공통 GUI/모달 뒤에 실제 현재 Pool 선택기로 분배한다.
+        if (rawButtons_->CurrentDialog()) return;const auto code=event.code&0x03ffffffU;const bool mouse=code==InputCode::kLeftButton || code==InputCode::kRightButton || code==InputCode::kMiddleButton;
+        const bool ui=mouse && (rawButtons_->PickGump({event.x,event.y})!=0 || std::any_of(input_.Controls().begin(),input_.Controls().end(),[&](const GumpControl& control) { return GumpControlInput::Contains(control.rect,{event.x,event.y}); }));if (!ui && !rawButtons_->HasCapture() && editor_->metaInput->Event(event)) { rebuild_=true;return; }
+    }
     if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
         if (rawButtons_->CurrentDialog()) return; //4d8c60의 현재 모달은 하위Gump가0을 반환해도 세계 입력 꼬리를 차단한다. 선행 일반명령/정지 중ESC는 위에서 처리한다.
         // 가상키도 상위16비트에 있으므로 버튼과 정확히 일치할 때만 좌표로 UI를 가린다.
@@ -1640,8 +1647,9 @@ bool UberGump::Input() {
     const auto mouse=PrepareGumpPointerBoundary(pointerBoundary_,static_cast<std::uint32_t>(client_.LanguageNumber()),
         [this](auto code) { return client_.Poll(code); },client_.Input()); // Alt/언어3 Ctrl·재진입 release를 같은 원본40칸 큐에 연결한다.
     if (missionRuntime_ && missionRuntime_->tutorial) static_cast<void>(missionRuntime_->tutorial->Event(mouse)); //4d65a7의Guide 폴링 통지는 반환을 검사하지 않는다. 일반 큐 Event의 소비 관문은 별개다.
+    if (editor_ && editor_->metaInput) client_.GameplayGlobals()->selection.mouse={mouse.x,mouse.y}; //현재 메타 NSInfo/viewport 관문도 앞선 폴링의 같은 두 DWORD를 읽는다.
     PollEdgeScroll(mouse); // 같은 pointerBoundary flags와 장기 since를 사용하는004d65ac의 실제 호출 위치다.
-    const auto mode=world_ ? world_->InputMode() : 0U; //005cae90의 현재 강조 모드이며 페이지 phase로 대체하지 않는다.
+    const auto mode=world_ ? world_->InputMode() : editor_ && editor_->metaInput ? client_.GameplayGlobals()->selection.mode : 0U; //메타도 같은005cae90을 읽고 페이지 phase로 대체하지 않는다.
     const bool cursorActive=world_ && world_->Session().CursorDropSettings().lockDepth==0; //445330은5325c8==0이며 Session의 같은 깊이를 읽는다.
     const bool logicalModal=!popup_.empty(); // 실제 HTML 모달은 공통 트리에 맡기고 남은 호스트 팝업의 overlay만 막는다.
     const auto pointer=rawButtons_->NotifyPointer(mouse,mode,cursorActive,!logicalModal); // 원본4d69f4는 일반 큐 Pop보다 앞이다.
@@ -1653,6 +1661,7 @@ bool UberGump::Input() {
         ActivatePageAction(actions_[static_cast<std::size_t>(*pointer.activated)]);rebuild_=true;
     }
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->UpdateCursor(mouse); //4d6b46의446b50은 포인터/Overlay 처리 뒤이며 별도 임시 Scroll을 실행하지 않는다.
+    if (!world_ && editor_ && editor_->metaInput && popup_.empty()) editor_->metaInput->Poll(mouse); //같은 원문 Overlay 뒤 위치에서 메타의 현재 이동 강조만 갱신한다.
     const bool cameraPan=PollCameraPan(mouse); //4d6b54의 현재 가운데 폴링은 커서 갱신 뒤·큐 Pop 앞이다.
     while (!client_.Input().Empty()) { //원문 pan 경로는 일반 명령을 재분배하지 않고 같은 큐를 소비한다.
         const auto event=client_.Input().Pop(false);if (cameraPan) continue; //Windows10/11 호환 Alt+Enter는 기존 WM_SYSKEYDOWN이 직접 처리하므로 일반 Enter/건설로 중복 전달하지 않는다.

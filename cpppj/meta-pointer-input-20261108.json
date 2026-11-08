@@ -1,0 +1,129 @@
+{
+  "unit": 1137,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "44626991 / 20261108-105 CP",
+  "summary": "같은 메타 Session/Pool의 픽셀 선택·좌우 클릭·모드6 위치 항해·빈 공간 항해 메뉴·영역 glyph 메뉴/e8 확인을 실제 입력 큐와 공통 Gump에 연결했다. 이전 메인 메뉴 버튼 재생성을 막는 호스트 지도 화면 전환도 보완했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logDiagnostics": {
+      "build-first-failure.log": {
+        "warnings": 0,
+        "errors": 10
+      },
+      "build-header-fixed.log": {
+        "warnings": 0,
+        "errors": 0
+      },
+      "build-config-api-failure.log": {
+        "warnings": 0,
+        "errors": 4
+      },
+      "build.log": {
+        "warnings": 0,
+        "errors": 0
+      }
+    },
+    "initialFailure": "ClientChallengeGlobals 불완전 형식 10진단을 include로 교정한 뒤 재빌드0. 후속 ConfigInterface.Get 미존재4진단은 실제 Configuration().Get으로 교정했다."
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12918272,
+      "sha256": "8bf36e281459d8c08e9f47eb84c359f5c8fd0cd8e0774e647f337ebcf641f1e9"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "3ca5a77471859aa7fa1061352a0b5e5589879051ba867a7a50c640ef41981d99"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "40ea40/479390/4d5840/4d62b0·4d9a00~da477 C/PE 기계어·두 실제 VT+ac·e8 이름/명령·폴링/사건 좌표·선택/SID 유지·메뉴 크기/부착 순서를 대조했다.",
+  "native": {
+    "strings": {
+      "00519304": "QueryDecendToChalLevel(%d)",
+      "00519100": "QueryLeaveChalBattle(%d)",
+      "0051913c": "Battle Island\n",
+      "0051912c": "Sail to here",
+      "00506770": "opengump.wav",
+      "0050ccd4": "Challenge Area (id %d)\n",
+      "0050ccbc": "Decend to this Level"
+    },
+    "zoneCommandAddress": "00542a94",
+    "zoneCommand": 33554664,
+    "zoneName": "QueryDecendToChalLevel",
+    "vtableOpen": {
+      "0050cc08": "00479390",
+      "0050c9f0": "004789b0"
+    }
+  },
+  "nativeEvidenceSha256": {
+    "0040ea40.asm": "dbe96e67f55b581d7e00ca9754116c80f8ff5b9b50bf816539bbf78f08994935",
+    "0040ea40.c": "8d21fb5d1f9b735c6ef28374498b9aea1ce3d8c6bc3db9359733b341f714fd1b",
+    "00479390.asm": "b6a06ae98c70d905ff32c74c0a2296fdf02057469f7d5ad9d0f42e01a1fda633",
+    "00479390.c": "ace4810cba0884a69a1e9d5f51b6fcea28384543970ceed7bd6dcdc42f9814fa",
+    "00487500.asm": "b9d5ba208ace4193f42e0e1d39af88fc39da2b3a840c76551ee4e3aef2f963aa",
+    "00487500.c": "42b2e7079c9789cf37224fc507a5367d14c518acd25dae0e89a5578386318768",
+    "004d5840.asm": "2706224e74b020a61ce9a06b5c15fac03a79179ff6e11fb11617f3ecb9c08da5",
+    "004d5840.c": "a374c7aa9a7ca99d3d6082b1dd9a38ca13139caaf01b2f8b9eb6b545d73104d0",
+    "004d5c90.asm": "c84e9d8edcb0ac11e9957f708800b162863f2c97a257798a3bc470a44a9ec51f",
+    "004d5c90.c": "81607ffa0f3e12645572adafa74eecbe2d90f465da40cc8a098def04c7f2882a",
+    "004d62b0.asm": "054badcb9bd88942a9476cf5ee1b11b2e54699f6d09522a7b1f1d6fa795374bb",
+    "004d62b0.c": "1895f01fd894f948e73b9b4486bed83af327308243efd67b82dbbb55694cbe22",
+    "pointer-tail.asm": "0452e213d3ed394d2836c6b3e68a4e6781418662c7d870a8f7651cbae03fe66f"
+  },
+  "sourceOrderAudit": {
+    "sharedActualSelectionPicker": true,
+    "rightEditorSelectArgsAndOriginalSid": true,
+    "polledViewportEventProjection": true,
+    "sameCurrentMenuAttach": true,
+    "pointerPollAfterOverlayBeforePan": true,
+    "hostMapPhaseOnly": true
+  },
+  "assetDataQuery": {
+    "product": 1136,
+    "command": "cpppj/build/bin/Release/Netstorm.exe --dump-types originals",
+    "queries": 1,
+    "rows": [
+      "108\tplayerIsland\t51194041\t00000002\t00000000\t10\t-\t0\t0\t1\t1",
+      "109\tbattleIsland\t4c2c283a\t00800002\t00000000\t10\t-\t0\t0\t1\t1",
+      "161\tchallengeIsland\t40a78595\t00800002\t00000000\t10\t-\t0\t0\t1\t1"
+    ]
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "멀티플레이 신규 단위/게임/통신 검사는 제외했으며 컴파일과 정적 대조만 완료했다.",
+    "메타 ESC/H/F4 등 공통 키보드·메뉴 caller는 잔여다.",
+    "BattleDesc HTML 문자열 고리와 CS 논리 주소의 구별/통합은 잔여다.",
+    "메타의 자연 커서 깊이는 정리 뒤1이며 강제 활성 건설 커서와 기존 조기/원격 희생·진단 marker 경계를 완성하거나 실행 검증하지 않았다.",
+    "helpWord는 현재 실제 Config의 빈 문자열/누락을 구별하나 원문 전역 캐시 포인터의 전체 수명·키 삭제 동등성은 확정하지 않았다.",
+    "호스트 Mission phase는 지도 합성 상태이며 Native loaded/known/State를 쓰거나 실제 미션 시작을 뜻하지 않는다.",
+    "x87 중간 정밀도·물리 입력·전체 픽셀·10.72 전체 동등은 입증하지 않았다."
+  ],
+  "remaining": [
+    "메타 ESC/공통 키보드·메뉴 caller·나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
+  ]
+}

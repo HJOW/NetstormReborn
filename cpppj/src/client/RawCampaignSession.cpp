@@ -5473,7 +5473,7 @@ std::unique_ptr<RawObjectMenuOpen> RawCampaignSession::MakeObjectMenuOpen(Object
 GumpFormHost& RawCampaignSession::GumpForms() { if ((!impl_->loaded && !impl_->editorUiInstalling && impl_->services.installMode!=CampaignInstallMode::MetaMap) || !impl_->gumpForms) throw std::logic_error("설치 전 실제 Session GumpForm 요청");return *impl_->gumpForms; } // 준비된 메타와 Editor UI 설치도 같은 실제 호스트를 빌린다. 게임 loaded/커서 관문을 열지 않는다.
 // 큰 UI/현재 관문을 보존하고 같은 월드가 이미 소유하는 게임 계산·표시 프로세스만 연결한다.
 std::unique_ptr<RawUserSelection> RawCampaignSession::MakeUserSelection(UserSelectionState state,UserSelectionHooks hooks) {
-    if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 선택 요청");auto* current=impl_.get(); // 반환 몸체가 빌리는 같은 장기 Session이다.
+    if (!impl_->loaded && impl_->services.installMode!=CampaignInstallMode::MetaMap) throw std::logic_error("설치 전 실제 Session 선택 요청");auto* current=impl_.get(); //준비된 MetaMap도 같은 실제 Pool/선택·Host를 빌리며 loaded/게임 로그인은 쓰지 않는다.
     hooks.blocked=[current] { return current->services.missionOutcome.demo()!=0 ? 1U : 0U; }; // 원본463b50은 현재 Guide+68의 demo이며 콘솔/missionPost나 생성 시점의 값이 아니다.
     hooks.localOwner=[current] { return current->playerState.battleOwner; };hooks.editor=[current] { return current->globals.editor; };
     hooks.dais=[current] { return current->runeState.DaisType(); };hooks.manaProcess=[current] { return current->cursorManaGlobals.processType; };hooks.rangeProcess=[current] { return current->cursorRangeGlobals.processType; };

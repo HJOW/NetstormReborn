@@ -128,7 +128,7 @@ CampaignObjectMenuClient::~CampaignObjectMenuClient() { Clear(); }
 std::uint32_t CampaignObjectMenuClient::Open(GameWorld& world,o::Sid sid,const InputEvent& event) {
     const auto bytes=world.Session().Core().pool.Slot(sid);std::uint32_t vtable{};
     for (std::size_t index=0;index<4;++index) vtable|=std::uint32_t(bytes[index])<<(index*8); //현재 슬롯 VT의+ac만 선택하며 생성자 목록을 다시 실행하지 않는다.
-    if (ObjectMenuSlots(vtable).open==0x4789b0U) return InputClientMetaObject(impl_->client,*impl_->buttons.Menus(),sid.value,event,impl_->tell) ? 1U:0U;
+    if (const auto open=ObjectMenuSlots(vtable).open;open==0x4789b0U || open==0x479390U) return InputClientMetaObject(impl_->client,*impl_->buttons.Menus(),sid.value,event,impl_->tell) ? 1U:0U;
     Clear();auto& s=*impl_;s.world=&world;std::uint32_t accepted{}; //원문 가상ac의 반환과 실제 루트토큰은 별개다.
     s.buttons.Menus()->OpenAttached([&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& raw) {
         s.chain=world.Session().MakeObjectMenus(s.Ui(widgets,controls,raw));ObjectMenuOpenHooks hooks;

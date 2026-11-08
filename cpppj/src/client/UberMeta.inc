@@ -43,7 +43,8 @@ o::LocalMissionParentResult UberGump::InstallMetaNativeState(std::uint32_t selec
     hooks.wallSeconds=[this] { return client_.WallSeconds(); };hooks.loadNewsTime=[this] { LoadClientSystemNewsTime(client_); };
     hooks.battleChannel=[this](auto mode) { RefreshClientBattleChatChannel(client_,*rawButtons_->Menus(),mode); };
     hooks.inputVisible=[this](auto visible) { const auto token=client_.ChatWindowGlobals()->window.current;if (token) rawButtons_->Menus()->ChatGeometryBackend()->SetInputVisible(token,visible); };
-    return netstorm::client::InstallNativeMetaState({local.State(),htmlGlobals_.background,local.MetaCdPresent(),surface.ownerMode.challenge,game.Server(),game.Boss(),local.MetaPending(),game.player,local.HudModeCommand(),local.ActivityEnd(),*client_.ChallengeGlobals()},hooks);
+    const auto result=netstorm::client::InstallNativeMetaState({local.State(),htmlGlobals_.background,local.MetaCdPresent(),surface.ownerMode.challenge,game.Server(),game.Boss(),local.MetaPending(),game.player,local.HudModeCommand(),local.ActivityEnd(),*client_.ChallengeGlobals()},hooks);
+    page_={};popup_.clear();pageName_="meta";state_.phase=ClientPhase::Mission;RebuildControls();return result; //호스트 합성만 지도 화면으로 전환하여 이전 MainMenu 버튼을 재생성하지 않는다. Native State/loaded/known은 쓰지 않는다.
 }
 // 호스트 처리기 대여는 Native 메타 전역을 다시 초기화하거나 Fort의 빈 복사본을 설치하지 않는다.
 void UberGump::PrepareMetaWorldRuntime() {
@@ -51,11 +52,13 @@ void UberGump::PrepareMetaWorldRuntime() {
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }});
     services.installMode=CampaignInstallMode::MetaMap;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.localLogin.reset();
     services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;
+    services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; //원문463b50은 실제 현재 Guide가 없으면0이며 현재 미션이 있으면 같은 demo DWORD를 읽는다.
     editor_->metaWorld=std::make_unique<RawCampaignSession>(client_.Assets(),client_.Files(),o::FortTemplate{},std::string(client_.FortGlobals()->Current()),std::move(services));
     BindClientMetaSpriteRefresh(client_,*rawButtons_,editor_->metaWorld->World()); //첫 메타 객체 생성/Pop 이전에 같은 World의 실제 파생 표시 장치를 설치한다.
     auto* session=editor_->metaWorld.get();editor_->metaDisplay=std::make_unique<RawCampaignFactoryDisplay>(session->Core(),client_.Assets(),[session](auto sid,const auto& draw) { session->DrawTemple(sid,draw); },&client_.GameplayGlobals()->PatchDiagnostic());
     editor_->metaDisplay->BindMetaPixels([this](auto sid,auto point,auto pixels,auto pitch,auto height,auto clip) { auto* menus=rawButtons_->Menus();if (!menus) throw std::logic_error("현재 메타 선택 캡처의 실제 메뉴 장치 미연결");menus->WithTextDrawing(pixels,pitch,height,clip,[&] { DrawClientMetaSprite(client_,*menus,sid,point,pixels,pitch,height,clip); }); }); //같은 현재 장치를 빌리며 별도 FontStore/메타 객체/선택 그림을 만들지 않는다.
     editor_->metaDisplay->BindOwnerColors(client_.ColorSortInput()->OwnerTables());editor_->metaDisplay->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());
+    editor_->metaInput=std::make_unique<ClientMetaPointerInput>(client_,*session,*editor_->metaDisplay,*rawButtons_->Menus(),[this] { return CurrentMapView(); },[this] { return hideBuildings_; },[this](auto section) { Tell(std::string(section)); }); //같은 준비된 메타의 실제 장치만 연결하며 선택/게임 시작을 앞당기지 않는다.
 }
 RawCampaignFactoryDisplay* UberGump::MetaSpriteDisplay() const { return editor_ ? editor_->metaDisplay.get() : nullptr; } //현재owner를조회만하며출력기나Session을새로만들지않는다.
 //원문 CS의 논리 주소를 같은 실제 할당에서 읽고 호스트 포인터를32비트로 자르지 않는다.

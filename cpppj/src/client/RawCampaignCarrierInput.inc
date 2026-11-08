@@ -1,6 +1,6 @@
 // Impl 정의 뒤 같은 namespace에서 포함하여 실제 사용자 명령을 동일 Session에 연결한다.
 std::unique_ptr<RawCarrierInput> RawCampaignSession::MakeCarrierInput(CarrierInputHooks hooks) {
-    if (!impl_->loaded) throw std::logic_error("설치 전 실제 운반체 사용자입력 요청");auto* s=impl_.get(); //동일 월드/로그인/소리 장부의 고정주소다.
+    if (!impl_->loaded && impl_->services.installMode!=CampaignInstallMode::MetaMap) throw std::logic_error("설치 전 실제 운반체 사용자입력 요청");auto* s=impl_.get(); //준비된 MetaMap도 실제 공통 입력 장치를 빌리며 게임 loaded/로그인 관문을 열지 않는다.
     // 각 TYPE의 기존 자산 정의에 등록된 실제 음향 핸들만 읽는다.
     for (const auto& asset:s->assets.game.Types()) {
         auto& audio=s->inputAudio.at(70+asset.block); //원본+78은moveSound,+80은dropSound다.

@@ -112,6 +112,7 @@ public:
     void RefreshMetaNsInfo(ClientNsInfoGlobals& globals) const; //같은기존NSInfo 슬롯으로0047cab0 Push/재조회/Attach를실행한다.
     void OpenMetaParticipant(std::uint32_t participant,ScreenPoint point); //004785f0의두전체메뉴경로를같은실제Client/controlled트리/객체Form에연결한다.활성관문은caller가판정한다.
     void BindMetaObjectInput(NativeMetaObjectInputHooks& hooks); //기존 controlled 공장만 연결하며 바인딩으로 메뉴/객체를 생성하거나 이전 팝업을 닫지 않는다.
+    void OpenMetaSailMenu(std::uint32_t parameter,ScreenPoint point,const std::function<std::string(std::string_view)>& translate); //4d9e86의 실제 fancy/한 항목과 현재 크기 기준 가운데 배치·object0 부착이다.
     const StyleText& StyleBackend() const; // 생산 글자도 같은 실제 조각·글꼴·그림 파서를 공유한다.
     void SetHelpText(std::uint32_t token,std::string_view text); //464ed0의 실제 소유 문자열을 같은 노드의 textPointer에 설치한다.
     void SetHelpWord(std::uint32_t token,std::string_view text); //464f80의 실제 소유 도움말 키를 alternateTextPointer에 설치한다.

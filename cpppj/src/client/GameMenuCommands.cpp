@@ -109,6 +109,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="chalsailpos") return 0x0200006cU; //PE542ee8의 실제 이름이며 packed 위치를 현재 항해 소비자가 읽는다.
     if (key=="chalforcejoinbattle") return 0x020000e3U; //PE5432a0의 실제 경고 확인은 옵션을 바꾸지 않고 직접 참가한다.
     if (key=="chaljoinbattlenowarning") return 0x020000feU; //PE543378의 실제 확인은 경고 억제 설정 뒤 참가한다.
+    if (key=="querydecendtochallevel") return 0x020000e8U; //PE5432c8의 원문 오자를 그대로 지원하며 현재 영역 번호의 확인 Tell을 연다.
     if (key=="serverforcebattlestart") return 0x020000f5U; //PE00543330 이름표/00542ac8의 실제 일반 명령이다.
     if (key=="delstatefile") return 0x020000acU; //PE005430e8→005429a4의 실제 저장상태 삭제 명령이다.
     if (key=="statereconnect") return 0x020000abU; //PE005430e0→005429a0의 실제 저장 복구 명령이다.

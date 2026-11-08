@@ -7,6 +7,7 @@ struct UberGump::EditorRuntime {
     std::unique_ptr<MetaConnectionRuntime> metaTransport; //World 없는 메타10/11의 실제 TCP/요청/현재 상태 장치다.
     std::unique_ptr<RawCampaignSession> metaWorld; //게임 GameWorld/커서와 구별하며 같은 실제 Pool·GumpForm·가상 자산 처리기를 빌리는 메타 수명이다.
     std::unique_ptr<RawCampaignFactoryDisplay> metaDisplay; //같은메타Session의Pool·Frame/현재팔레트출력기를빌리고Session보다먼저반납한다.
+    std::unique_ptr<ClientMetaPointerInput> metaInput; //같은메타Session/표시기를 빌리는 선택·마우스 입력이며 두 owner보다 먼저 반납한다.
     std::unique_ptr<o::RawLocalMissionState> state; //Client의 동일 다섯144BYTE를 소비하는 원문 State 분배기다.
     std::string savedPath; //004b5470의 게임 폴더/d/!state.dat 절대 경로를 reader 동기 호출 동안 보존한다.
     std::function<void(std::uint32_t)> selectCursor; //실제 커서 장치를 공통 State 확정 뒤의 호스트 입력 구성에도 같은 callback으로 전달한다.
@@ -15,7 +16,7 @@ struct UberGump::EditorRuntime {
     std::function<void()> connectLan; // 실제 로컬 host/join 선택을 같은 일반 입력 소비자에 연결한다.
     explicit EditorRuntime(Client& value):client(value),files(ResolveEditorRoots(value.GameDirectory(),value.UserData()).work,ResolveEditorRoots(value.GameDirectory(),value.UserData()).protectedRoots) {} //기존에는 자산 디렉터리의 형제 작업본, 5차 사용자 홈 정책에서는 CustomMaps를 작업 루트로, 같은 보호 루트를 선택한다. 생성만으로 파일/게임 상태를 쓰지 않는다.
     //호스트 메인 메뉴/종료에서 Session 수신기를 반납한 뒤 남은 실제 양끝/리스너를 닫는다.
-    void Close() { metaDisplay.reset();metaWorld.reset();if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); }metaTransport.reset(); } //호스트 종료는 UI/출력기를 먼저 닫은 뒤 실제 메타 Session/노드를 자기 owner로 반납한다.
+    void Close() { metaInput.reset();metaDisplay.reset();metaWorld.reset();if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); }metaTransport.reset(); } //호스트 종료는 입력/출력기를 먼저 닫은 뒤 실제 메타 Session/노드를 자기 owner로 반납한다.
     //큐/노드 소유권은 기존 전송의 SocketClosed/Track이 처리하고 이 경계는 실제 시각과 진단만 제공한다.
     o::PacketDispatchHooks Hooks() {
         o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client.WallSeconds()); };

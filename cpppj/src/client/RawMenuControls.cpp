@@ -32,6 +32,7 @@
 #include "client/HudPlayerButtonDraw.h" //같은특수버튼의배경/단색/원색그림전체Draw다.
 #include "client/NativeMetaPlayerMenu.h" //같은controlled메뉴의자기/다른참가자부착을실행한다.
 #include "client/NativeMetaObjectInput.h" //메타+ac도 같은 현재 controlled/Gump 장치를 사용한다.
+#include "client/RawCameraView.h" //빈 공간 항해 메뉴의 원문 FTOL 하위 DWORD를 공유한다.
 #include "client/NativeNsInfoInput.h" //루트 입력도 실제 정렬표/CS·공통 메뉴/카메라·송신을 사용한다.
 #include "client/NativePlayerInfoInput.h" //두 자기 버튼/슬롯 변경/추방 확인도 전체 원문 입력을 사용한다.
 #include "client/NativeBattleInfoInput.h" //같은실제옵션/메뉴/송신·재부착으로BattleInfo입력부모를실행한다.
@@ -969,6 +970,12 @@ void RawMenuControls::BindMetaObjectInput(NativeMetaObjectInputHooks& hooks) {
     hooks.item=[this](auto text,auto command,auto parameter) { impl_->controls->AddText(text,command,parameter,true,true,false); };
     hooks.reference=[this](auto object,auto point) { const auto token=impl_->menu->Current();impl_->menu->AttachObjectCurrent(object,point.x,point.y);impl_->popup=token;impl_->common.changed(); };
 } //현재 controlled 공장을 빌려 원문 호출 위치에서만 메뉴를 만들고 객체에 부착한다.
+//현재 controlled 메뉴 크기를 읽은 뒤 화면 좌표를 절삭하고 원문 object0 부착으로 스택을 반납한다.
+void RawMenuControls::OpenMetaSailMenu(std::uint32_t parameter,ScreenPoint point,const std::function<std::string(std::string_view)>& translate) {
+    if (!translate) throw std::logic_error("메타 항해 메뉴의 현재 번역 장치 미연결");auto& s=*impl_;s.widgets->BeginFancy();s.controls->AddTitle(translate("Battle Island\n"));s.controls->AddText(translate("Sail to here"),0x0200006cU,parameter,true,true,false);
+    const auto token=s.menu->Current();const auto* node=Find(s.menus,token);if (!node) throw std::logic_error("메타 항해 메뉴의 실제 current 없음");const auto y=CameraFtolLow(static_cast<double>(point.y)-static_cast<double>(node->baseHeight)*0.5),x=CameraFtolLow(static_cast<double>(point.x)-static_cast<double>(node->baseWidth)*0.5);
+    s.menu->AttachObjectCurrent(0,x,y);s.popup=token;s.common.changed();
+}
 // 실제 현재 토큰의 생존 여부만 조회한다. 원문이 보존하는 죽은 current 전역을 임의0으로 쓰지 않는다.
 std::uint32_t RawMenuControls::NsInfoRoot() const { const auto& s=*impl_;if (!s.nsContext) return 0;const auto token=s.nsContext->globals->current;const auto* node=Find(s.nsRoots,token);return node && !(node->flags&0x10000U) ? token : 0U; }
 // 공통 기본 버튼 처리기는 실제 특수 파생의 동일 기본 주소를 빌린다.
