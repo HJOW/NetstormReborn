@@ -620,7 +620,7 @@ cpppj/src/o/RawConstructionPlace.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionRequest.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionSelection.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionVisual.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionVisual.cpp	port	www/core/raw-construction-visual.js	1f00a25a	port	[o-default] WB04-E128: 건설 표시 생성·색 표 캐시·좌표 동기화·초기 입자 선택. fixture constructionvisual originals 592행 전부(originalCD/original1037 은 범위 밖). 남음: 실제 RawConstructionProcess::Start 연결 시험(RawConstructionProcess 이식 뒤)
 cpppj/src/o/RawContainedCreate.cpp	port	www/core/contained-create.js	1f00a25a	port	[o-default] WB04-D5a(004afa70)
 cpppj/src/o/RawContainedFinder.cpp	port	www/core/raw-contained-finder.js	1f00a25a	port	[o-default] WB04-E56: 내용물 검색기 004b2270 Begin·004b1b20 Next·004acc60 CountContained와 ContainedFinderState(공유 boss/checking 대여). fixture carrierpredestroy 경유 대조. 실제 Client 권한/checking 연결은 WB05
 cpppj/src/o/RawContainedLookup.cpp	port	www/core/raw-contained-lookup.js	1f00a25a	port	[o-default] WB04-E108: 종속 객체 타입/순번 조회·권한별 가상 삭제 004b1a90(삭제 뒤 next 재독·DWORD 순번 감김·손상 체인 거부)·건설 완료 removeContained 연결. fixture contained originals 805행 전부(originalCD/original1037 행은 다른 판본). 건설 프로세스/소리 프로세스/Kernel 통합 시험은 해당 단위에서

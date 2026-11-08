@@ -10894,9 +10894,38 @@
       "bytes": 100396,
       "lines": 45,
       "fixtureCommit": "5bdb5bed",
-      "webCommit": "worktree",
+      "webCommit": "2a991ddc",
       "cpppjBasis": {
         "cpppj/src/o/RawArcherTypeData.cpp": "5bdb5bed"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E128",
+      "id": "constructionvisual",
+      "path": "cpppj/tests/fixtures/constructionvisual-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 표시 생성/좌표 동기화/초기 입자 선택의 외부 요청 순서·필드·픽셀·출력·입자·난수·색 표 캐시(세 판본 1776행)",
+      "consumers": [
+        "webpj/tests/construction-visual.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-visual.js"
+      ],
+      "doc": "docs/webpj-construction-visual-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionVisual.cpp"
+      ],
+      "scope": "10.78(originals) 592행 사용, originalCD·original1037 은 범위 밖",
+      "text": true,
+      "sha256": "acb0401220bc253434c8a8d1cc97137d54d97cc8a8db59faa12b6cb6628370fb",
+      "bytes": 5046193,
+      "lines": 1777,
+      "fixtureCommit": "5389347d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionVisual.cpp": "5389347d"
       }
     }
   ]
