@@ -1,5 +1,6 @@
 // 지난 Login의 raw this를 장기 backend에 저장하지 않고 실제 현재 World와 장기 전역을 빌린다.
 #include "client/ClientCampaignTransport.h"
+#include "client/ClientChatPacketReceiver.h" //41h도 현재 Client의 같은 장기 중계/표시 처리를 사용한다.
 #include "client/ClientMetaPacketReceivers.h" //Meta 전용 Source 없이 같은 Client 기본 8F를 설치한다.
 #include "o/RawMissionSettingsPacket.h" //장기 GameAux의 같은7DWORD를32h 기본F가 직접 쓴다.
 #include "client/CurrentAllocationBytes.h" //7ch응답의미작성stacktail은기존실제할당입력을유지한다.
@@ -257,6 +258,7 @@ void InstallClientMetaGameLoginReceiver(Client& client,o::RawPacketDispatch& dis
     dispatch.RegisterCanonicalDirect(0x7c,0x004b2cc0U,[client=&client](auto sender,auto*,auto packet) { ReceiveClientMetaGameLogin(*client,sender,packet); }); //NULLconnection/현재phase/known/CS0을선행검사하지않는다.
 }
 void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) {
+    InstallClientChatPacketReceiver(client,dispatch); //Meta/일반/Editor와 Session 반납 뒤 같은42dc90/40a8d0을 보존한다.
     InstallClientMetaPacketReceivers(client,dispatch); //20/21/22/23/24/25/67/88의 같은 전역 본문·관찰기를 모든 실제 Client 기본 표에 둔다.
     InstallClientMetaGameLoginReceiver(client,dispatch); //Meta/일반/Editor및Session반납뒤에도같은전역F와비NULL40b380을보존한다.
     InstallClientMetaDescriptionReceiver(client,dispatch); //Meta/일반/Editor의같은장기기본F이며Session반납뒤에도유지한다.

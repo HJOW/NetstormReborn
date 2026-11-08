@@ -1,0 +1,298 @@
+{
+  "unit": 1181,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "summary": "41h 장기 Native F·현재 Chat0 자연 반환·같은 기본값 대여와 Editor 반납 접합",
+  "sourceSha256": {
+    "cpppj/src/client/ClientCampaignTransport.cpp": "5d64ed2a33cc262ee3adb39bd6d83f8f9616f26392f001bb777b22a23bcd688e",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "1f53dbf3cecfc8e722d6ab61124a817c5864ffbe2107d64b42857b01db9ba5d3",
+    "cpppj/src/client/RawCampaignSession.cpp": "383958cd1d74002b299449ae543f6a63033846e90d0b2decf79fd90a134cd47f",
+    "cpppj/src/client/RawChatRelay.h": "2f5b634cfc1ed4337e34de0fd8097f74a3924ae692626f9573635a7ae2c79fa8",
+    "cpppj/src/client/RawChatRelay.cpp": "2201dbffac0b9ab10336210d8d9bc18fec0ea741ef250a11de03f1adf4dff238",
+    "cpppj/src/client/CMakeLists.txt": "56ff6e48e64cc0d484a7e4d7fa342b56e528c0804e84d217e6d7799de9af1953",
+    "cpppj/src/client/ClientChatPacketReceiver.h": "184fa0e6e96e4b46beb5d1974550cc3465b3b8336465465ece40979c0f7c0044",
+    "cpppj/src/client/ClientChatPacketReceiver.cpp": "421dcecd042194823c6973784941da9388cff5e0c9f4db2e6f7aab08b188e4de",
+    "cpppj/src/client/UberGump.h": "48e57437db37da8338b3f25af0b75edd0262cbe7a1060107d2265a187fae77aa",
+    "cpppj/src/client/UberHud.inc": "7a69ddea1aacb2e36f3351e485a5e679f65ebc179eb2bb43183c40c53efb8fe1"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13512704,
+      "sha256": "a2ef9b5aeaee63d95b2ccf344044cdf8f53559e9d86d3b7bd166129aea1bb136"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "f2fa3a51e0d59b8a6b7dbcb60fb247993844fd6ea55075afa37284d7b0785635"
+    }
+  },
+  "nativeEvidence": {
+    "extracted/cpp-m6-global-device-owner-patch/chat41/evidence.json": "8f9db4b1f2869c4ae6b12b9413f4dd4520c791b985e372761fb15628d8097694",
+    "extracted/cpp-m6-global-device-owner-patch/chat41/chat41.patch": "df93ddd3019c49223d89946ddaf31731421ac529eb30f3c04ba6a7b02011763c",
+    "extracted/cpp-resume-1180/chat-review/evidence.json": "c45905359894c40f52055b12e551107aed06ea855dc9c0c00fe283f58d92abf1"
+  },
+  "build": {
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "log": "extracted/cpp-resume-1181/build.log"
+  },
+  "initialBuild": {
+    "exitCode": 1,
+    "cause": "C2248 기존 private ReceiveChatMessage 접근 및 후행 C2679",
+    "log": "extracted/cpp-resume-1181/build-failed-private.log",
+    "resolved": "공개 ReceiveNativePacketChat으로 동일 기존 본문 연결"
+  },
+  "live": {
+    "passed": true,
+    "exeSha256": "a2ef9b5aeaee63d95b2ccf344044cdf8f53559e9d86d3b7bd166129aea1bb136",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1181\\live-editor-game-fixed",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "intro=1;tellTips=0;autoDemo=0;currentLanguage=english;mayEditMissions=1;fortSpec=d/title950/{local.1}.fort;SOLOSpec=d/title950/{local.1}.fort;blankWindowName=MAIN;EditorWindowName=EDITOR:{local.1};missionWindowName=MISSION:{local.1};testBattleWindowName=TEST:{local.1};demoWindowName=DEMO:{local.1}"
+    ],
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "actions": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "Edit"
+      },
+      {
+        "op": "click",
+        "arg": "TEST01"
+      },
+      {
+        "op": "esc",
+        "arg": ""
+      },
+      {
+        "op": "click",
+        "arg": "Game"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "No"
+      }
+    ],
+    "observations": [
+      {
+        "label": "main-0",
+        "reportFile": "000-main-0.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "Welcome"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "main-1",
+        "reportFile": "001-main-1.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "Welcome2"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "main-2",
+        "reportFile": "002-main-2.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "main"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "map-list",
+        "reportFile": "003-map-list.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "LoadEditable"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "editor-0",
+        "reportFile": "004-editor-0.tsv",
+        "title": "EDITOR:TEST01",
+        "phase": [
+          [
+            "4"
+          ]
+        ],
+        "page": [
+          [
+            "editor"
+          ]
+        ],
+        "mission": null,
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "leave-editor",
+        "reportFile": "005-leave-editor.tsv",
+        "title": "EDITOR:TEST01",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "LeaveEditMode"
+          ]
+        ],
+        "mission": null,
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "main-0",
+        "reportFile": "006-main-0.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "main"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      }
+    ]
+  },
+  "liveChecks": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0
+  },
+  "firstLive": {
+    "passed": false,
+    "cause": "기존 도구의 d/title950 전용 폴더 자료 부재로 TEST01 UI 선택 실패",
+    "summary": "extracted/cpp-resume-1181/live-editor/summary.json",
+    "corrected": "새 격리 설치 사본에 실제 TEST01 두 파일을 준비해 재실행"
+  },
+  "audit": {
+    "nativeEntry": "0042dc90",
+    "observer": "0040a8d0",
+    "version": 1,
+    "policy": 0,
+    "length": 65535,
+    "sameRelayBody": true,
+    "chatWindow548740ZeroReturnBeforeUi": true,
+    "chatManager548714NotSubstituted": true,
+    "sameNonLeasedDefaultBorrowed": true,
+    "editorSameDefaultRestored": true,
+    "canonicalTags": 25,
+    "untagged": 63,
+    "activeTarget": 88,
+    "tagIsNotFullScopeCompletion": true,
+    "queueActivated": false,
+    "m6Complete": false
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "packet": 0,
+    "network": 0,
+    "testBattle": 0,
+    "nonMpAttempts": 2,
+    "nonMpPassed": 1,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  },
+  "remaining": [
+    "25태그 전scope/63잔여F·전역 Source/listener/공통표/Poll·backend/Node큐·지연 큐",
+    "자원 Regular/삭제/NoWorld·큰 AI/다른 Form·JoinTestBattle·debugBurst·M6 전수 마감",
+    "M7·M8·K1~K5·S1~S4와 별도 후순위"
+  ]
+}

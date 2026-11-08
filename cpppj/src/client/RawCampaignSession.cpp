@@ -3766,8 +3766,9 @@ struct RawCampaignSession::Impl {
             const auto saved=std::find_if(editorCanonicalBaselines.begin(),editorCanonicalBaselines.end(),[type](const auto& item) { return item.first==type; });
             if (saved!=editorCanonicalBaselines.end()) editorRegisteredDispatch->RegisterCanonical(type,saved->second);else editorRegisteredDispatch->Register(type,{});
         }
-        editorCanonicalBaselines.clear(); //기본표가 소유권을 되찾은 뒤 이 대여의 사본만 반납한다.
-        editorRegisteredDispatch->Register(0x41,{}); // 같은 Session을 빌린 Chat 수신도 원본 observer/버전은 남기고 반납한다.
+        const auto chat=std::find_if(editorCanonicalBaselines.begin(),editorCanonicalBaselines.end(),[](const auto& item) { return item.first==0x41U; }); //41h는 gameplay 목록과 다른 전역 Chat 기본값이다.
+        if (chat!=editorCanonicalBaselines.end()) editorRegisteredDispatch->RegisterCanonical(0x41,chat->second);else editorRegisteredDispatch->Register(0x41,{}); //실제 long F가 없던 독립 Editor만 기존 short callback을 비운다.
+        editorCanonicalBaselines.clear(); //gameplay와 Chat의 동일 기본값 복구가 모두 끝난 뒤 사본을 반납한다.
         editorRegisteredDispatch->Register(0x52,{}); // 같은 Player span을 빌리는 종료 통지도 Session보다 먼저 해제한다.
         editorRegisteredDispatch=nullptr;editorRegisteringCommands=false;
     }
@@ -4141,8 +4142,10 @@ void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& ow
     if (s.services.editorTransport) {
         auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch || s.editorActivityRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
         for (const auto type:kEditorGameplayMessages) { const auto& entry=dispatch.Registration(type);if (entry.receive && (entry.leased || !entry.canonicalReceive)) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); } //대여 중/짧은 다른 소유자는 거부하고 검토된 장기 기본 F만 보존 대여한다.
-        if (dispatch.Registration(0x64).receive || dispatch.Registration(0x41).receive || dispatch.Registration(0x52).receive) throw std::logic_error("Editor 실제64h/41h/52h 수신 등록표의 다른 소유자 존재"); // 모든 receive 충돌을 쓰기 전에 거부한다.
+        const auto& chat=dispatch.Registration(0x41);if (chat.receive && (chat.leased || !chat.canonicalReceive || chat.canonicalReceive->nativeEntry!=0x0042dc90U)) throw std::logic_error("Editor 실제41h 수신 등록표의 다른 소유자 존재"); //검토된 비임대 장기 Chat만 허용한다.
+        if (dispatch.Registration(0x64).receive || dispatch.Registration(0x52).receive) throw std::logic_error("Editor 실제64h/52h 수신 등록표의 다른 소유자 존재"); // 모든 receive 충돌을 쓰기 전에 거부한다.
         s.editorCanonicalBaselines.clear();for (const auto type:kEditorGameplayMessages) if (const auto receiver=dispatch.Registration(type).canonicalReceive) s.editorCanonicalBaselines.emplace_back(type,receiver); //전체 충돌 검사 뒤 실제 장기 기본값만 쓰기 전에 보존한다.
+        if (chat.canonicalReceive) s.editorCanonicalBaselines.emplace_back(0x41U,chat.canonicalReceive); //모든 충돌 검사 뒤 같은 실제 F를 값으로 보관하고 전역 observer/metadata는 덮지 않는다.
         s.editorRegisteredDispatch=&dispatch;s.editorActivityRegisteredDispatch=&dispatch;s.editorRegisteringCommands=true;
         try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);RegisterConnectionActivity(dispatch,*s.connectionActivity);RegisterChatPacket(dispatch,s.chatGlobals->receivedMask,s.ChatDevices());RegisterBattleLeavePacket(dispatch,s.players);s.editorRegisteringCommands=false; }
         catch (...) { s.ReleaseEditorCommandReceivers();throw; } // 부분 등록 예외도 살아 있는 Session 포인터를 외부 표에 남기지 않는다.

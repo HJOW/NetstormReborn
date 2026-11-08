@@ -2,6 +2,7 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    ClientChatPacketReceiver.cpp ClientChatPacketReceiver.h #현재 Client의41h 장기 중계와 현재 Chat 수신을 연결한다.
     ClientMetaPacketReceivers.cpp ClientMetaPacketReceivers.h #장기 Client의 Meta 8F·현재 표시/NSInfo를 공통 기본표에 설치한다.
     ClientPacketSources.cpp ClientPacketSources.h # actual connection/device/network와 선택Metaowner를 Runtime 없이 인계한다.
     NativeShapeFile.cpp NativeShapeFile.h # 실제SHP의같은map/view와자산수명을연결한다.

@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1180 현행:** Meta8 장기 F/옵션 owner·32h 같은 F 대여·현재 DWORD 관문을 부분 접합했다. 직접 Native 태그24/무태그64이며 전scope 완료 수가 아니다. NoWorld 하위·전역 Source/표/Poll·자원 Regular/삭제·JoinTestBattle·M6-l/m/n/큐는 미완료다. 새MP 실행0이며 빌드/허용 비MP 근거는 [1180](cpp-meta-settings-canonical-20261108.md)에 한정한다.
+**1181 현행:** Meta8/설정1180 뒤41h 장기 F·현재 Chat0/Editor 같은 F 반납을 접합했다. 직접 Native 태그25/무태그63이며 전scope 완료 수가 아니다. 전역 Source/listener/표/Poll·자원 Regular/삭제/NoWorld·JoinTestBattle·M6-l/m/n/큐는 미완료다. 새MP 실행0이며 빌드/허용 비MP 근거는 [1181](cpp-chat-canonical-lifetime-20261108.md)에 한정한다.
 
 제품 코드/LEFT_JOBS/추적 문서는 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

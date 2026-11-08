@@ -51,7 +51,14 @@ void RelayChatPacket(std::uint32_t sender,std::span<std::uint8_t> packet,std::ui
 }
 // packet의 mutable this를 가진 observer를 등록해 길이4인 원시 패킷을 실제 전송 전에 확정한다.
 void RegisterChatPacket(o::RawPacketDispatch& dispatch,std::uint32_t& mask,ChatRelayHooks hooks) {
+    const auto baseline=dispatch.Registration(0x41);if (!baseline.leased && baseline.canonicalReceive && baseline.canonicalReceive->nativeEntry==0x0042dc90U) return; //원문 앱 전역 F가 이미 있으면 같은 장기 observer/F를 그대로 빌리고 Session this로 덮지 않는다.
     dispatch.Version(0x41,1,0);dispatch.ObservePacket(0x41,[assertion=hooks.assertion](auto bytes,auto sending) { ObserveChatPacket(bytes,sending,assertion); });
     dispatch.Register(0x41,[&mask,hooks=std::move(hooks)](auto sender,auto&,auto bytes) { RelayChatPacket(sender,{const_cast<std::uint8_t*>(bytes.data()),bytes.size()},mask,hooks); }); // 실제 전송은 소유 mutable vector를 수신하며 같은 바이트에 원문 변경을 보존한다.
 }
+//같은 long Client 장치와 실제 마스크 주소만 보관하며 지난 Meta/Session/World는 저장하지 않는다.
+void RegisterCanonicalChatPacket(o::RawPacketDispatch& dispatch,std::uint32_t& mask,ChatRelayHooks hooks) {
+    dispatch.Version(0x41,1,0);dispatch.RequireLength(0x41,0xffff);dispatch.ObservePacket(0x41,[assertion=hooks.assertion](auto packet,auto sending) { ObserveChatPacket(packet,sending,assertion); });
+    dispatch.RegisterCanonicalDirect(0x41,0x0042dc90U,[mask=&mask,hooks=std::move(hooks)](auto sender,auto*,auto packet) { RelayChatPacket(sender,{const_cast<std::uint8_t*>(packet.data()),packet.size()},*mask,hooks); }); //저장 F는 변경된 packet type으로 재선택하지 않는다.
+}
+
 }

@@ -18,4 +18,5 @@ struct ChatRelayHooks { // 실제 도달한 경계만 요구하며 원격 송신
 void RelayChatPacket(std::uint32_t sender,std::span<std::uint8_t> packet,std::uint32_t& mask,const ChatRelayHooks& hooks);
 // 같은 원본0x41/버전1·정책0과 실제 패킷 observer/중계를 한 분배 표에 등록한다.
 void RegisterChatPacket(o::RawPacketDispatch& dispatch,std::uint32_t& mask,ChatRelayHooks hooks);
+void RegisterCanonicalChatPacket(o::RawPacketDispatch& dispatch,std::uint32_t& mask,ChatRelayHooks hooks); //실제 Client 장기 장치만42dc90/40a8d0의 불변 기본값으로 설치한다. typed/R 입구는 기존 계약을 유지한다.
 }

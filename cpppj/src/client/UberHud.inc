@@ -95,6 +95,7 @@ std::uint32_t UberGump::ReadChatGlobal(std::uint32_t address) {
     }
 }
 // 일반 수신은 실제 UI/장기 상태만 빌리며 packet을 새 문자열 로그로 우회하지 않는다.
+void UberGump::ReceiveNativePacketChat(std::span<std::uint8_t> packet) { ReceiveChatMessage(packet); } //공통 등록표는 공개 입구만 사용하며 실제 필터/로그/HTML 본문은 같은 기존 처리기다.
 void UberGump::ReceiveChatMessage(std::span<std::uint8_t> packet) {
     ChatReceiveHooks hooks;hooks.read=[this](auto at) { return ReadChatGlobal(at); };
     hooks.ignored=[this](auto subscriber) { const auto& rows=client_.ChatWindowGlobals()->ignored;return std::find(rows.begin(),rows.end(),subscriber)!=rows.end(); };

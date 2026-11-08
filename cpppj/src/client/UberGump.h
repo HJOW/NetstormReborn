@@ -59,6 +59,7 @@ public:
     void RunNativePacketState(); //장기 수신 F가 선택한 현재 State를 기존 실제 동기 Run 부모로 전달한다.
     void RecreateNativePacketHud(); //67h의 실제 현재 HUD 재생성만 같은 UI에 요청한다.
     void RefreshNativePacketInfo(); //47cab0의 실제 현재 NSInfo/메뉴 Push·Attach를 같은 UI에 요청한다.
+    void ReceiveNativePacketChat(std::span<std::uint8_t> packet); //장기41h가 선택한 현재 UI에서 기존42f0e0/42ed30 수신 부모를 그대로 실행한다.
     void ShowNativePacketTell(std::string_view section); //같은 현재 Config/미션 HTML Tell을 사용하고 상태나 성공값을 만들지 않는다.
     NativeBattleSource CurrentNativeBattleSource() const; //현재 실제 Composite/Meta/Editor device만 읽으며 phase 추정/새Source 생성을 하지 않는다.
     void DispatchNativeBattleStart(NativeBattleSource source,bool direct); //1a는 기존next7에weak로 기억하고1b는같은current7을즉시실행한다.
