@@ -13372,9 +13372,38 @@
       "bytes": 6159068,
       "lines": 894,
       "fixtureCommit": "e6d638a0",
-      "webCommit": "worktree",
+      "webCommit": "c63b57f5",
       "cpppjBasis": {
         "cpppj/src/o/RawSmokeEffect.cpp": "e6d638a0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E192",
+      "id": "renderremoval",
+      "path": "cpppj/tests/fixtures/render-removal-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 공통 표시 00487960 Form 삭제 dirty 영역(영역 float·카메라 → signed DWORD 넷·flags 0)(10.78 기본 027f 48 + 비교 037f 48행)",
+      "consumers": [
+        "webpj/tests/smoke-visual-system.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/render-process-system.js"
+      ],
+      "doc": "docs/webpj-render-process-smoke-visual-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RenderProcessSystem.cpp"
+      ],
+      "scope": "10.78 기본 027f 48입력 전부(037f 비교 행은 건너뜀)",
+      "text": true,
+      "sha256": "70592ed5bf0dde8a825da5f6cc377d49a78a0bac08542f9734dc4c1cb4dd893f",
+      "bytes": 10483,
+      "lines": 97,
+      "fixtureCommit": "3fda610d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RenderProcessSystem.cpp": "c258c7f3"
       }
     }
   ]
