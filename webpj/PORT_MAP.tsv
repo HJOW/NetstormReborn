@@ -653,10 +653,10 @@ cpppj/src/o/RawDestroyAt.cpp	port	www/core/raw-destroy-at.js	1f00a25a	port	[o-de
 cpppj/src/o/RawDiscRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawDissolveFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawDissolveLifetime.cpp	port			todo	[o-default]
-cpppj/src/o/RawDudeBehavior.cpp	port			todo	[o-default]
+cpppj/src/o/RawDudeBehavior.cpp	port	www/core/raw-dude-behavior.js	1f00a25a	port	[o-default] WB04-E122: Dude 이동 정지 450e60·지면 판정 450e80·추락 450f50·도착 450960·population 삭제 후처리 450920. fixture dude-behavior 410행 전부(10.78 전용). task 재예약/이동 삭제/부모 삭제/공통 후처리/진단은 훅 경계
 cpppj/src/o/RawDudeDrop.cpp	port			todo	[o-default]
 cpppj/src/o/RawDudeNotice.cpp	port			todo	[o-default]
-cpppj/src/o/RawDudeRegular.cpp	port			todo	[o-default]
+cpppj/src/o/RawDudeRegular.cpp	port	www/core/raw-dude-regular.js	1f00a25a	port	[o-default] WB04-E122: Dude 정기 분배 450fa0·방황 451190·복귀 451210·투하 451270·낙하 451340·목표 이동 4508b0·정적 초기화. fixture dude-regular 1600행 전부(10.78 전용; 정기 1597+초기화 3). 지면/경로/거주 구역/진입점/이동/공간/삭제/진단은 훅 경계
 cpppj/src/o/RawDudeSpawn.cpp	port			todo	[o-default]
 cpppj/src/o/RawDudeTask.cpp	port	www/core/raw-dude-task.js	1f00a25a	port	[o-default] WB04-E76: 일반 Dude task 설정 00450670(낙하 0x5105 교체 진단·현재 Regular 조회/생성·같은 Regular 갱신·task WORD·다리 82 표면 통지)과 Host 훅. fixture dudetask 10.78 384행 전부(CD 396행은 웹 범위 밖). Dude 생성/드롭은 RawDudeSpawn/RawDudeDrop 단위에서
 cpppj/src/o/RawEditorPlayers.cpp	exclude-edit			-	[edit-editor]

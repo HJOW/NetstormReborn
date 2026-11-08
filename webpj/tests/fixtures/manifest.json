@@ -10422,7 +10422,7 @@
       "bytes": 596781,
       "lines": 1895,
       "fixtureCommit": "93f9c1c2",
-      "webCommit": "worktree",
+      "webCommit": "8721a6ce",
       "cpppjBasis": {
         "cpppj/src/o/RawWindAviaryState.cpp": "8b15b357"
       }
@@ -10451,7 +10451,7 @@
       "bytes": 14684,
       "lines": 233,
       "fixtureCommit": "566f44d6",
-      "webCommit": "worktree",
+      "webCommit": "8721a6ce",
       "cpppjBasis": {
         "cpppj/src/o/RawWindCircle.cpp": "566f44d6"
       }
@@ -10481,9 +10481,67 @@
       "bytes": 27128,
       "lines": 301,
       "fixtureCommit": "566f44d6",
-      "webCommit": "worktree",
+      "webCommit": "8721a6ce",
       "cpppjBasis": {
         "cpppj/src/o/RawWindSpell.cpp": "566f44d6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E122",
+      "id": "dudebehavior",
+      "path": "cpppj/tests/fixtures/dude-behavior-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Dude 부모 Halt/CheckSpace/Fall/Arrival/PostDestroy 의 반환·효과 순서·population 5 DWORD 전체(410행, 10.78 전용, 두 x87 정밀도 열 동일)",
+      "consumers": [
+        "webpj/tests/dude-behavior.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dude-behavior.js"
+      ],
+      "doc": "docs/webpj-dude-behavior-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDudeBehavior.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 410행 전부 사용",
+      "text": true,
+      "sha256": "575864387a77b4e29d1644d40b1adf5296c2fbcfd1605d16a7c9fec2bb0ca2f5",
+      "bytes": 32182,
+      "lines": 411,
+      "fixtureCommit": "c6931d8e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDudeBehavior.cpp": "f396a821"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E122",
+      "id": "duderegular",
+      "path": "cpppj/tests/fixtures/dude-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Dude 정기 분배/방황/복귀/투하/낙하/목표 이동의 반환 float 비트·큰 효과 인자 순서·슬롯 50바이트·난수·순환 값과 정적 초기화(1600행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/dude-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dude-regular.js"
+      ],
+      "doc": "docs/webpj-dude-behavior-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDudeRegular.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1600행 전부 사용",
+      "text": true,
+      "sha256": "6a8c466ab671e13f68b67d8c7f6862bff35a5e2d0bc571db10c1cb25ea1fffc6",
+      "bytes": 579756,
+      "lines": 1601,
+      "fixtureCommit": "f396a821",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDudeRegular.cpp": "513cbece"
       }
     }
   ]
