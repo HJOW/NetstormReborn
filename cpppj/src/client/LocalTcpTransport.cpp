@@ -282,7 +282,8 @@ void LocalTcpTransport::SendNode(Node& node,std::span<const std::uint8_t> packet
     if (node.connection.flags&kBuffered) {
         if (node.aggregate.size()+packet.size()+kHeader>kWireLimit) { Finalize(node);Drain(node);if (node.retired || (node.connection.flags&kClosed)) return; }
         if (packet.size()+kHeader>kWireLimit) { Fail(node,WSAEMSGSIZE);return; }node.aggregate.insert(node.aggregate.end(),packet.begin(),packet.end());
-    } else { Compact(node);if (node.wire.size()+packet.size()>kWriteBacklog) { Fail(node,WSAEMSGSIZE);return; }node.wire.insert(node.wire.end(),packet.begin(),packet.end());Drain(node); }
+    } else { Compact(node);if (node.wire.size()+packet.size()>kWriteBacklog) { Fail(node,WSAEMSGSIZE);return; }node.wire.insert(node.wire.end(),packet.begin(),packet.end());Drain(node);if (node.retired || (node.connection.flags&kClosed)) return; }
+    if (hooks_.sent) hooks_.sent(node.connection,packet,static_cast<std::uint16_t>(Read(packet,2,2))); //4dff00의 실제 버퍼 복사/쓰기 성공 뒤 현재 원문 packet을 방향1로 기록한다. buffered 복사 뒤 새 flags 관문이나 Flush type4 중복 기록을 더하지 않는다.
 }
 // 원문0xff version/종류4/전체WORD를 payload 앞에 붙여 wire 순서에 보관한다.
 void LocalTcpTransport::Finalize(Node& node) {

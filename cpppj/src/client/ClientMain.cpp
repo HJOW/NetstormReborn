@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ClientPacketRecord.h" //메타/일반 전송이 같은 실제 기록 FILE/프레임을 공유한다.
 #include "client/FontFaceEncoding.h" //Config 내부UTF-8 글꼴 이름을 원문 GDI A의 현재 ACP로 옮긴다.
 #include "client/ConfigFileRead.h" //실제10.78 Config만 현재 FILE/키와40380 부모를 사용한다.
 #include "client/TypeFileRead.h"
@@ -714,6 +715,7 @@ void Client::InterpretOptions() {
     }
     configuration_.ReadInt("highPriorityValue", highPriority_);
     configuration_.ReadInt("initWindowPos", initWindowPos_);
+    PacketRecordOwner()->Requested()=0; //435220은sound 설정을 읽기 전에0054dbac 요청만0으로 재설정한다. 이미 열린 기록 FILE/enabled는 닫거나 지우지 않는다.
     static_cast<void>(ReadAudioOptions());InterpretMainMenuOptions(); //원문의 음질/음량/maxSimulSounds ReadInt 뒤 tellTips를 읽는다. 이 부분 부모는 음향 장치 적용이나 전체435220 완료를 대신하지 않는다.
     configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff); //원문0054db18은 표시 여부 캐시가 아니라 프레임말 전환 요청이다. 설정 재해석마다 현재값을 읽는다.
     InterpretFortFileOptions(); // 원본처럼 sleepPerLoop/maxFPS보다 먼저 같은 저장 관문 DWORD를 읽는다.
@@ -1329,6 +1331,7 @@ const GameAssets& Client::Assets() const { return *assets_; }
 o::Kernel& Client::GetKernel() { return *kernel_; }
 const std::shared_ptr<o::Kernel>& Client::ProcessKernelOwner() const { return kernel_; } // 실제 전역 Kernel 객체를 공유한다.
 const std::shared_ptr<o::FrameTime>& Client::FrameClockOwner() const { return time_; } // 같은 현재 프레임의 수명을 공유한다.
+const std::shared_ptr<ClientPacketRecord>& Client::PacketRecordOwner() { if (!packetRecord_) packetRecord_=std::make_shared<ClientPacketRecord>(time_,options_.userData);return packetRecord_; } //생성만으로 디렉토리/기록 파일이나 요청 값을 바꾸지 않는다.
 // 자산 초기화 이전에 가짜 빈 월드로 성공하지 않는다.
 const std::shared_ptr<RawSurfaceStorage>& Client::SurfaceStorage() const { if (!surfaceStorage_) throw std::logic_error("Client 실제 월드 물리 초기화 전 조회");return surfaceStorage_; }
 // 원본 변경 영역 기반의 Renderer.

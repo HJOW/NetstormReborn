@@ -597,6 +597,7 @@ target_sources(netstorm PRIVATE client/NativeMetaParticipantRemove.h client/Nati
 # 22h의 실제 mutable 이동/좌석 효과·master/항해/Chat 부모다.
 target_sources(netstorm PRIVATE client/NativeMetaParticipantMove.h client/NativeMetaParticipantMove.cpp)
 target_sources(netstorm PRIVATE client/NativeMetaSailError.h client/NativeMetaSailError.cpp) #25h 항해 오류도 같은 실제 참가자/객체 안내에 연결한다.
+target_sources(netstorm PRIVATE client/ClientPacketRecord.h client/ClientPacketRecord.cpp) #메타/일반/편집의 선택적 기록 FILE를 같은 실제 Client 수명에 연결한다.
 
 # 26h의 실제 화면 한계와 같은 CS 원점/반경 배치 전역 수신이다.
 target_sources(netstorm PRIVATE client/NativeMetaGeometry.h client/NativeMetaGeometry.cpp)

@@ -191,6 +191,7 @@ bool LocalMissionTransport::SendPacket(std::int32_t destination,std::span<const 
     auto& output=client ? clientOutput_ : serverOutput_;const auto bytes=packet.first(length);
     if (!client && !serverBuffered_) toClient_.emplace_back(bytes.begin(),bytes.end());
     else { if (output.size()+length>65531U) throw std::out_of_range("로컬 buffered 전송65535바이트 범위 초과");output.insert(output.end(),bytes.begin(),bytes.end()); }
+    if (hooks_.sent) hooks_.sent(client ? client_:server_,packet,static_cast<std::uint16_t>(Read(packet,2,2))); //같은 가상 this의 복사/버퍼 추가 뒤 방향1을 기록하며 실제 peer sender를 임의로 다시 선택하지 않는다.
     return true;
 }
 // 원본 초기0xff 헤더의 첫 BYTE는 그대로 두고 kind4/전체WORD만 확정한다.

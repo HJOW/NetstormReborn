@@ -1,0 +1,108 @@
+{
+  "unit": 1151,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "d479b400 / 20261108-119 CP",
+  "summary": "M2의 선행 기록 장치: 같은 Client 수명의 실제 FILE/프레임·요청 DWORD를 만들고 메타/일반 TCP·UDP·내부/편집 송수신에 원문 방향/순서로 연결했다.1ah/1bh 부모와 Open Caller는 다음이다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1151\\build.log",
+    "initialBuild": {
+      "exitCode": 0,
+      "warnings": 2,
+      "errors": 0,
+      "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1151\\build-before-warning-fix.log",
+      "corrections": [
+        "UDP의 현재 WORD 길이를 uint16 인자에 명시 변환(C4267)",
+        "1150 객체 안내 hook의 ph 이름을 objectHintHooks로 분리(C4456)"
+      ]
+    }
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13108736,
+      "sha256": "d9f8ef197c79ccab31346960ca8b73dc418c05528554c42fced6aa0343236338"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "c9512cc6932d241b562b9920ef820885c498e57194b01f58248157fbaf2aabdb"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4debe0/4dec30/4dff00/4e00e0 C/PE와 수신 callsite를 대조했다.6회 fwrite/후행 현재 WORD 길이·flush, 공유 실제 프레임 wall/low32번호·진입 주소/sender, disabled/NULL FILE/부분 효과·사용자 홈, 가상 송신의 observer/복사 뒤 기록·UDP 실패 후 기록·같은 장기 owner를 확인했다.",
+  "nativeEvidenceSha256": {
+    "00435220.asm": "5f9cf8e851903ac32636b5416b9ac81026b3d0930b9c472770a8374ea6f4e37e",
+    "00435220.c": "06e0cae8103210ca310fc8f45289d9f1e377620979bd868b7b04e0aa483c3278",
+    "004b4df0.asm": "b5298c9214537f589294a405f0462dfa32b6d9df7f2394265f425ad88e95e43e",
+    "004b4df0.c": "5e7b18455666e266663417015ebc1b461ba440fa7ce44905dc5c76c4e0582caf",
+    "004b8b20.asm": "5ca5d0128c8affca622d114490386c031dac72a832fdde6167f99c0b07222eff",
+    "004b8b20.c": "2e3836671ba68cfc61bc4258145c08ab28826f3a7cf187944d17447c94bd7653",
+    "004debe0.asm": "c797239964b4d6e742595d4381bfc326721ab3ee624a9735f60db06c3d36b3e1",
+    "004debe0.c": "a76d13cfc14fbc265afcd305b27a15e2df64d732fa08b16b68f1e2b001568f46",
+    "004dec30.asm": "0a84306ffe847879dc2e74ba7e123cbfdd23f722b56f24b29c9fe1e82b20f465",
+    "004dec30.c": "1d79dc585977a7c2f545630ca6bd4bba3260d72d4841ad8bfc52e2836fef8cb0",
+    "004dece0.asm": "8f2787276012ef829f47dc12d4af49dc2fb4064a31d9b37ffdfcda15a1192a9b",
+    "004dece0.c": "0c82a23031181423987a5291ebbbc1aa0a98e721faad3513fa1a1ecda33e7d5c",
+    "004dff00.asm": "0a2b8e388f9c1e0a104f2f08f274c8f444e5699bbbe6c6420ceb57fc80e2e8c0",
+    "004dff00.c": "596532912e7dce13a70ea71fff2d894fb1fb7f186ed9664cc5f8ae3d1d320809",
+    "004e00e0.asm": "a9ecf27119dadc7dda1714308380713e505519c177d5f59472a7ce2abf888f66",
+    "004e00e0.c": "5f562a06cb05d75f1a3d6cdd488cbfaf97463f42e61c6b455cb0de0aff545893"
+  },
+  "sourceAudit": {
+    "sameClientFileOwnerAcrossSessionsAndMeta": true,
+    "sameActualFrameWallAndLow32Number": true,
+    "sixWritesAndCurrentPacketLengthAfterPrefix": true,
+    "entryAddressAndSenderPreserved": true,
+    "enabled0AndOpenFailureEnabled1Preserved": true,
+    "userDiagnosticsOnlyAndNoCreateDuringConstruction": true,
+    "incomingRecordBeforeExistingMissionObservation": true,
+    "outgoingAfterActualCopyOrWriteWithoutSyntheticType4DoubleRecord": true,
+    "udpTerminationThenRecordAlsoOnShortOrFailedWrite": true,
+    "rootRecordSourceUnchanged": true,
+    "nativeOptionsResetRequestedBeforeSoundWithoutClosingFile": true,
+    "priorHintHookNameOnlyCorrection": true
+  },
+  "plan": {
+    "completed": "M2 선행 / 공통 기록 파일·전송 장치",
+    "next": "M2.2 / 4dece0 Zone 복제의 실제 장기 소유권·State7 소비자 접합, 이어1ah/1bh 부모·Open Caller",
+    "remainingMajorMpGroups": 7,
+    "checkingParents": [
+      "004b02d0",
+      "004dc220"
+    ],
+    "checkingMpReceive": [
+      "004b4df0",
+      "004b8b20"
+    ]
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "recordFileOpen": 0,
+    "wholeSuite": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "새 MP/단위/게임/통신/실제 기록 파일 검사는 사용자 요청대로 제외했다. 파일 바이트/네트워크 실행 검증이 아니다.",
+    "435220의 설정 해석에서 요청 DWORD만0으로 쓰는 실제 writer를 연결했다.1ah/1bh의 Open Caller와 다른 활성 writer/기록 진입점 유무는 M2/M6의 잔여다.",
+    "헤더/본문 물리 밖·enabled1의NULL FILE는 해당 접근 위치의 호스트 오류다. 실제 OS 고갈/디스크 장애·원문 FILE/SEH 자체 일치를 보장하지 않는다. 사용자 폴더 확보 실패도 원문 fopen과 다른 명시 호스트 경계다.",
+    "M2 전체·M3~M8·K/S 및 기존 후순위가 남아 있다."
+  ]
+}

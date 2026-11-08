@@ -8,6 +8,7 @@
 #include <windows.h>
 #include "client/MetaConnectionRuntime.h"
 #include "client/ClientMain.h"
+#include "client/ClientPacketRecord.h" //메타도 같은 Client 수명의 선택적 실제 FILE에 기록한다.
 #include "client/ClientStaticStrings.h"
 #include "client/ClientConnectionGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
@@ -104,7 +105,7 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)),tell_(std::move(tell)),refreshInfo_(std::move(refreshInfo)),options_(std::move(options)),recreateHud_(std::move(recreateHud)) {
     if (!progress_ || !request_ || !processState_ || !tell_ || !refreshInfo_ || !options_ || !recreateHud_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run/NSInfo/전역옵션/HUD 장치 필요");
     o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client_.WallSeconds()); };
-    hooks.record=[](auto&,auto,auto) {}; //World 없는 현재 메타의 선택적 기록은 미연결이다. 수신/로그인 성공을 합성하지 않는다.
+    const auto record=client_.PacketRecordOwner();hooks.record=[record](auto& connection,auto packet,auto length) { record->Write(false,connection,packet,length); };hooks.sent=[record](auto& connection,auto packet,auto length) { record->Write(true,connection,packet,length); }; //World 없는 메타도 같은 현재 실제 프레임/주소/FILE를 사용하며 초기 disabled에서는 파일을 만들지 않는다.
     hooks.terminate=[](auto& connection) { connection.flags|=0x40U; }; //실제소켓/노드반납은각TCP/UDP소유자가수행한다.
     hooks.close=[](auto&) {};hooks.release=[](auto&) {}; //이 위치의 추가 외부 장치가 없으며 TCP 노드가 실제 close/free를 소유한다.
     const auto udpHooks=hooks;tcp_=std::make_unique<LocalTcpTransport>(client_.PlayerRecords()->Records(),client_.GameplayGlobals()->Server(),std::move(hooks),client_.ConnectionGlobals());

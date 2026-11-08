@@ -53,6 +53,7 @@ class ClientConnectionGlobals; //연결22칸·버퍼22칸·pending32칸을 장�
 class ClientFortGlobals; // 현재/pending 이름·FileSpec·목록 dirty와 선택 모드의 실제 Client 소유자다.
 class ClientCoreDataGlobals; //현재Core/active/캐시와 빌린 Player 슬롯을 Client 수명에 소유한다.
 class ClientPlayerRecords; // Player/factory 전체 할당과 로그인 카운터를 Session보다 오래 소유한다.
+class ClientPacketRecord; //메타/일반/편집의 같은 선택적 패킷 기록 파일과 요청 DWORD를 장기 소유한다.
 class ClientChatManagerGlobals; //현재 Chatmanager와 실제 미초기화 할당들을 Client 수명에 소유한다.
 class ClientStaticStrings; // 원문 공유 임시 고리의 같은 네 DWORD와 실제 할당 수명을 소유한다.
 class ClientDotCommandGlobals; //최초 say와 같은 인접 명령 표를 Session보다 오래 보유한다.
@@ -250,6 +251,7 @@ public:
     void DumpObjectDiagnostics(); //CD SID 소진은 객체 덤프만 호출하고 프로세스 요약을 추가하지 않는다.
     const std::shared_ptr<o::Kernel>& ProcessKernelOwner() const; // 같은 실제 전역 Kernel 소유권만 전달한다.
     const std::shared_ptr<o::FrameTime>& FrameClockOwner() const; // 같은 Time().game 주소가 외부 Storage보다 먼저 사라지지 않게 한다.
+    const std::shared_ptr<ClientPacketRecord>& PacketRecordOwner(); //파일을 열지 않고 같은 현재 프레임/사용자 홈의 단일 기록 owner를 처음 한 번 확보한다.
     const std::shared_ptr<o::GameClock>& GameClockOwner() const; // 장기 전송도 같은 원점·정지 상태의 실제 시계를 보유하며 현재 벽시각을 읽는다.
     const std::shared_ptr<RawSurfaceStorage>& SurfaceStorage() const; // 자산 초기화 뒤 모든 Session과 초기 HUD가 같은 물리를 빌린다.
     const std::shared_ptr<RawSurfaceStorage>& SurfaceStorageIfInitialized() const { return surfaceStorage_; } // 초기 정리 연결은 미초기화 NULL도 순수 조회한다. 기존 SurfaceStorage의 필수 초기화 검사는 유지한다.
@@ -355,6 +357,7 @@ private:
     std::shared_ptr<ClientFortGlobals> fortGlobals_; // 모든 메뉴/Session보다 오래 사는 같은 두 이름/목록/dirty 소유자다.
     std::shared_ptr<ClientCoreDataGlobals> coreDataGlobals_; //menu/Session보다 먼저 선언해 소비자 반납 뒤에도 현재/캐시가 살아 있게 한다.
     std::shared_ptr<ClientPlayerRecords> playerRecords_; // 모든 Session 고정뷰가 소멸한 뒤에 실제 Player/factory를 반납한다.
+    std::shared_ptr<ClientPacketRecord> packetRecord_; //모든 UI/Session/전송보다 오래 살며 자체 frame owner도 실제 기록 완료까지 pin한다.
     std::shared_ptr<ClientGameplayGlobals> gameplayGlobals_; // Subscriber 뒤·UI/Session 앞에 구성한 실제 현재 전역이다.
     std::shared_ptr<ClientHtmlWindowGlobals> htmlWindowGlobals_; // 표시 부모 교체보다 오래 유지하는 실제 HTML 전역이다.
     std::shared_ptr<ClientChatWindowGlobals> chatWindowGlobals_; // 표시 부모 교체보다 오래 유지하는 공유 상태다.

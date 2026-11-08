@@ -1,6 +1,7 @@
 // 지난 Login의 raw this를 장기 backend에 저장하지 않고 실제 현재 World와 장기 전역을 빌린다.
 #include "client/ClientCampaignTransport.h"
 #include "client/ClientMain.h"
+#include "client/ClientPacketRecord.h" //새 World도 같은 장기 기록 FILE/현재 프레임을 빌린다.
 #include "client/ClientConnectionGlobals.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientPlayerRecords.h"
@@ -44,7 +45,9 @@ std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& c
         throw std::logic_error("현재 Client 전송의 OS 벽시계 미연결");
 #endif
     };
-    hooks.record=[runtime=std::weak_ptr<GameWorld>(world)](o::PacketConnection& connection,std::span<const std::uint8_t> packet,std::uint16_t) {
+    const auto record=client.PacketRecordOwner();hooks.sent=[record](auto& connection,auto packet,auto length) { record->Write(true,connection,packet,length); }; //실제 전송 본체의 복사/쓰기 뒤에만 방향1을 기록한다.
+    hooks.record=[runtime=std::weak_ptr<GameWorld>(world),record](o::PacketConnection& connection,std::span<const std::uint8_t> packet,std::uint16_t length) {
+        record->Write(false,connection,packet,length); //원문 방향0 기록은 수신기/기존 읽기 관측보다 먼저 실행하며 현재 Login 존재 여부와 별개다.
         if (const auto current=runtime.lock()) current->Session().RecordConnectionPacket(connection,packet); // 기록하는 동안에도 실제 World 전체를 보유하며 이전 Login을 캐시하지 않는다.
     };
     hooks.terminate=[](o::PacketConnection& connection) { connection.flags|=0x40;std::clog<<"로컬 미션 연결 종료\n"; }; // 원문 분배기의 종료 표시만 쓰고 물리 반납은 실제 backend에 맡긴다.

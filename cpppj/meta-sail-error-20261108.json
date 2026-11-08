@@ -16,7 +16,10 @@
     "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1150\\build.log",
     "preAuditBuild": {
       "exitCode": 0,
-      "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1150\\build-before-capture-audit.log"
+      "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1150\\build-before-capture-audit.log",
+      "warnings": 1,
+      "errors": 0,
+      "warningCorrection1151": "C4456의 안내 hook 지역 이름만 분리했다.1150의 최종 증분 빌드 경고0은 그대로이며 첫 컴파일 경고1은 별도로 보충한다."
     },
     "staticCorrection": "PE의 진입 subscriber 한 번 캡처를 확인하고 이를 명시한 뒤 재빌드했다. 최초 컴파일 실패는 없었다."
   },

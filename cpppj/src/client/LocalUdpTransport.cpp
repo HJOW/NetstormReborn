@@ -101,10 +101,11 @@ bool LocalUdpTransport::Broadcast(std::span<std::uint8_t> packet,std::uint32_t p
 bool LocalUdpTransport::SendNode(Node& nodeValue,std::span<std::uint8_t> packet,std::optional<std::uint32_t> broadcastPort) {
     if (packet.size()<4) throw std::out_of_range("UDP 송신물리헤더부족");if (Retired(packet)) return false;const CallGuard call(activeCalls_);auto* node=&nodeValue;if (node->retired || node->socket==kInvalidSocket || (node->connection.flags&kClosed)) return false;
     const auto observer=dispatcher_.Dispatch().Registration(packet[1]);const auto pin=observer.Pin();observer.NotifyObserver(packet,1);const auto length=Length(packet);if (length>packet.size()) throw std::out_of_range("UDP 송신선언길이물리초과");if (node->retired || node->socket==kInvalidSocket) return false;
-    if (Retired(packet)) return false;sockaddr_in target{};target.sin_family=AF_INET;target.sin_port=htons(static_cast<u_short>(broadcastPort.value_or(0)));target.sin_addr.s_addr=INADDR_BROADCAST;u_long nonblocking=1;
-    if (ioctlsocket(Socket(node->socket),FIONBIO,&nonblocking)==SOCKET_ERROR) { Fail(*node,WSAGetLastError());return false; }
+    if (Retired(packet)) return false;const auto record=[this,node,packet] { if (hooks_.sent) hooks_.sent(node->connection,packet,static_cast<std::uint16_t>(Length(packet))); }; //4e00e0은 실제 쓰기/종료 통지가 끝난 뒤 실패 경로도 방향1을 기록한다. 현재 WORD 길이를 명시적으로 같은16비트 인자에 전달한다.
+    sockaddr_in target{};target.sin_family=AF_INET;target.sin_port=htons(static_cast<u_short>(broadcastPort.value_or(0)));target.sin_addr.s_addr=INADDR_BROADCAST;u_long nonblocking=1;
+    if (ioctlsocket(Socket(node->socket),FIONBIO,&nonblocking)==SOCKET_ERROR) { Fail(*node,WSAGetLastError());record();return false; }
     const auto sent=broadcastPort ? sendto(Socket(node->socket),reinterpret_cast<const char*>(packet.data()),static_cast<int>(length),0,reinterpret_cast<const sockaddr*>(&target),sizeof(target)) : send(Socket(node->socket),reinterpret_cast<const char*>(packet.data()),static_cast<int>(length),0);const auto error=sent==SOCKET_ERROR ? WSAGetLastError():0;nonblocking=0;
-    if (ioctlsocket(Socket(node->socket),FIONBIO,&nonblocking)==SOCKET_ERROR) { Fail(*node,WSAGetLastError());return false; }if (sent<0 || static_cast<std::size_t>(sent)<length) { Fail(*node,error);return false; }return true;
+    if (ioctlsocket(Socket(node->socket),FIONBIO,&nonblocking)==SOCKET_ERROR) { Fail(*node,WSAGetLastError());record();return false; }if (sent<0 || static_cast<std::size_t>(sent)<length) { Fail(*node,error);record();return false; }record();return true;
 }
 // select0 뒤 한 데이터그램만 읽는다. 원문의 짧은 헤더는 sentinel이며 연결 종료가 아니다.
 o::TransportPollResult LocalUdpTransport::ReceiveOne(Node& node) {

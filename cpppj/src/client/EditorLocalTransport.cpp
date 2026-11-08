@@ -95,6 +95,7 @@ bool EditorLocalTransport::SendPacket(std::int32_t destination,std::span<const s
     const auto length=std::size_t(packet[2])|(std::size_t(packet[3])<<8); //observer가 변경한 현재 원문 선언 길이를 읽는다.
     if (length<4 || length>packet.size()) throw std::out_of_range("Editor 송신 선언 길이의 실제 버퍼 부족");
     (client ? toPending_ : toClient_).emplace_back(packet.begin(),packet.begin()+static_cast<std::ptrdiff_t>(length));
+    if (hooks_.sent) hooks_.sent(connection,packet,static_cast<std::uint16_t>(std::size_t(packet[2])|(std::size_t(packet[3])<<8))); //같은 실제 내부 가상 송신의 복사 뒤 현재 packet을 방향1로 기록한다.
     return true;
 }
 void EditorLocalTransport::Accept() {
