@@ -749,7 +749,7 @@ cpppj/src/o/RawGunProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunTarget.cpp	port	www/core/raw-gun-target.js	1f00a25a	partial	[o-default] WB04-E82: Gun 표적 findTarget 0046b6f0·mayTarget 0046af80·mayShoot 0046ac00·mayFire 0046b070·cannonRay 00469190·footprint/center(Archer/Cannon finder 순서·float 저장 순서·진단 출력). fixture guntarget 10.78 1727행 전부(값형/현재 Player 조회기 두 방식). 남음: MakeGunTargetHooks(RawGunProcess 선행)·보호 SHP 자산 sunCannon 사정선 48행(cannon-asset-ray)
 cpppj/src/o/RawIceCannonFire.cpp	port			todo	[o-default]
 cpppj/src/o/RawIceRicochet.cpp	port			todo	[o-default]
-cpppj/src/o/RawIceTower.cpp	port			todo	[o-default]
+cpppj/src/o/RawIceTower.cpp	port	www/core/raw-ice-tower.js	1f00a25a	port	[o-default] WB04-E109: 아이스 타워 완성형 파괴 48edf0·성장형 예약 48ead0·삭제 48eb80·이벤트 0x3a6 48ebe0. fixture ice-tower 1426행 전부(10.78 전용 파일). 예약/표면 칸/finder/생성/공간/소유자/받침 정리/공통 후처리/프레임 갱신은 훅 경계
 cpppj/src/o/RawIslandAdd.cpp	exclude-edit			-	[edit-island-add]
 cpppj/src/o/RawIslandBuilder.cpp	port			todo	[o-default]
 cpppj/src/o/RawIslandLifecycle.cpp	port			todo	[o-default]

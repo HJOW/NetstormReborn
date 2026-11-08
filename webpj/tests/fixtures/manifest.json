@@ -9928,7 +9928,7 @@
       "bytes": 1669971,
       "lines": 2416,
       "fixtureCommit": "7572a3c3",
-      "webCommit": "worktree",
+      "webCommit": "e830291e",
       "cpppjBasis": {
         "cpppj/src/o/RawContainedLookup.cpp": "7572a3c3"
       }
@@ -9957,9 +9957,38 @@
       "bytes": 553540,
       "lines": 2313,
       "fixtureCommit": "5c2d0a1e",
-      "webCommit": "worktree",
+      "webCommit": "e830291e",
       "cpppjBasis": {
         "cpppj/src/o/RawGeyserMined.cpp": "0d82e448"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E109",
+      "id": "ice-tower",
+      "path": "cpppj/tests/fixtures/ice-tower-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 아이스 타워 네 몸체(P/R/D/G)의 외부 효과 순서·부모/표면/생성물 세 슬롯 전체 raw·반환 float(1426행)",
+      "consumers": [
+        "webpj/tests/ice-tower.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ice-tower.js"
+      ],
+      "doc": "docs/webpj-ice-tower-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIceTower.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1426행 전부 사용",
+      "text": true,
+      "sha256": "92e9e45544b20f4ee40e1443e6b3be340a59b095e1bdcda02e0687d708d3ee5b",
+      "bytes": 491781,
+      "lines": 1427,
+      "fixtureCommit": "ab9486b5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIceTower.cpp": "e7427079"
       }
     }
   ]
