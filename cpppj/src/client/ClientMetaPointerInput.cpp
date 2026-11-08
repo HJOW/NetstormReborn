@@ -19,6 +19,11 @@
 #include "client/ClientMetaObjectInput.h"
 #include "client/SpecialPointerTrace.h"
 #include "client/ObjectOwnerCommands.h"
+#include "client/SelectionKeyInput.h" //메타도 같은 H/N/P/R/F4/F5/F6 부모와 일반 View 큐를 공유한다.
+#include "client/NextUnitSelection.h" //다음 유닛은 현재 같은 Pool/선택과 실제 카메라를 사용한다.
+#include "client/PriestSelectionShortcut.h" //P/R의 실제 참여 조회와 Client 장기 누적 카운터를 빌린다.
+#include "client/ProductionShortcuts.h" //원문 공통 키 처리 순서에서 실제 생산 단축 명령만 예약한다.
+#include "client/GameMenuCommands.h" //현재 View/지식 명령의 원문 주소표를 공유한다.
 #include "o/RawSquidFinder.h"
 #include "o/RawObjectTraceMain.h"
 #include "o/OriginalText.h"
@@ -63,10 +68,17 @@ struct ClientMetaPointerInput::Impl { //같은 실제 저장소의 원본 처리
         trace.trace=[this,&core](auto number) { o::TraceRawObjectVirtual(core.pool,core.types,client.DiagnosticGlobals().suppress,number,[this](auto level,auto text,auto) { std::size_t prefix{};while (prefix+1<text.size() && text[prefix]=='~') prefix+=2;client.WriteDiagnosticLog(level,text,prefix); }); }; //직접 가상70의 색 접두만 로그에서 구별하며 Form 재귀로 바꾸지 않는다.
         TraceSpecialPointer(control,Game().player.special,event,trace);EditorPrimarySelectionHooks edit;edit.editor=[this] { return Game().world.editor; };edit.selected=[this] { return Game().selection.selected; };edit.localOwner=[this] { return Game().player.battleOwner; };edit.readOwner=[this](auto number) { return Read(Raw(number),34,1); };edit.flags2=[this](auto number) { const auto core=session.Core();const auto type=Read(Raw(number),10,1);if (type>=core.types.size()) throw std::out_of_range("메타 편집 후처리의 현재 TYPE 범위");return core.types[type].flags2; };edit.assignOwner=[this](auto number,auto owner) { session.SetObjectOwner(o::Sid{static_cast<std::uint16_t>(number)},owner); };edit.cycleBridge=[this](auto number) { session.CycleBridgeQuality(number); };edit.follow=[this](auto number) { session.FollowObjectOwner(number); };FinishEditorPrimarySelection(control,edit);
     }
-    bool Event(InputEvent event) { //공통 GUI/모달 이후의 현재 메타 포인터만 소비한다.
-        const auto code=event.code&0x03ffffffU;if (code!=InputCode::kLeftButton && code!=InputCode::kRightButton) return false;if ((event.code&InputCode::kRelease) || client.Paused()) return true;
+    void CenterOn(std::uint32_t sid) { CameraHomeState state;state.width=client.GetScreen().Width();state.height=client.GetScreen().Height();session.CenterCameraOn(sid,state,[this,&state](auto,auto) { session.CommitRequestedCamera(state.width,state.height); }); } //같은 현재 화면/Session의 실제 즉시 카메라 적용을 사용한다.
+    void ViewPriest(std::uint32_t owner) { CameraHomeState state;state.width=client.GetScreen().Width();state.height=client.GetScreen().Height();session.ViewYourPriest(owner,state,[this,&state](auto,auto) { session.CommitRequestedCamera(state.width,state.height); }); } //실제 참여 조회에서0이면 CenterOn도 실행하지 않는다.
+    bool Event(InputEvent event) { //공통 GUI/모달 이후의 현재 메타 키와 포인터를 원문 순서로 소비한다.
+        const auto code=event.code&0x03ffffffU;const bool mouse=code==InputCode::kLeftButton || code==InputCode::kRightButton;if ((event.code&InputCode::kRelease) || client.Paused()) return mouse;
         std::int32_t snap=0,cannot=0;client.Configuration().ReadInt("cursorSnapToGrid",snap);client.Configuration().ReadInt("cursorShowCannotPlace",cannot);auto& cursor=Game().CursorGlobals();cursor.SnapToGrid()=std::bit_cast<std::uint32_t>(snap);cursor.Placement().placementFlags=std::bit_cast<std::uint32_t>(cannot);
-        if (!session.CursorDropSettings().lockDepth && session.Cursor().HandleInput(event,cursor.RotationMode())) return true;const bool control=(event.code&InputCode::kControl)!=0;
+        if (!session.CursorDropSettings().lockDepth && session.Cursor().HandleInput(event,cursor.RotationMode())) return true;
+        if (QueueProductionShortcut(event,client.Paused(),{[] { return kProductionBridgeCommand; },[this](auto command,auto slot,auto zero) { client.Input().PushCommand(command,slot,zero); },[] { return kProductionRepeatCommand; }})) return true;
+        SelectionKeyInputHooks keys;keys.paused=[this] { return client.Paused(); };keys.command=[](auto address) { return GameMenuCommandValue(address).value(); };keys.localOwner=[this] { return session.LocalOwner(); };keys.queue=[this](auto command,auto first,auto second) { client.Input().PushCommand(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };
+        keys.next=[this](auto add) { const auto core=session.Core();NextUnitSelectionHooks hooks;hooks.localOwner=[this] { return session.LocalOwner(); };hooks.paused=[this] { return client.Paused() ? 1U:0U; };hooks.select=[this](auto sid,auto force,auto activate) { static_cast<void>(selection->Select(sid,force,activate)); };hooks.center=[this](auto sid) { CenterOn(sid); };hooks.multiple=[this](auto sid,auto value) { selection->ToggleMultiple(sid,value); };SelectNextMovingUnit(core.pool,core.types,Game().selection.selected,add,hooks); }; //원문은 후보 선택 뒤 현재 정지를 다시 읽으며 Shift 비트 전체를 보존한다.
+        keys.priest=[this,queue=keys.queue] { PriestSelectionShortcutHooks hooks;hooks.localOwner=[this] { return session.LocalOwner(); };hooks.find=[this](auto owner) { return session.FindPriestParticipation(owner); };hooks.select=[this](auto sid,auto force,auto activate) { static_cast<void>(selection->Select(sid,force,activate)); };hooks.viewCommand=[] { return GameMenuCommandValue(0x005429d4U).value(); };hooks.queue=queue;SelectPriestByKey(Game().selection.selected,Game().selection.priestSelections,hooks); }; //조회 전 SID와 장기 누적 카운터는 같은 현재 Client 주소다.
+        if (DispatchSelectionKeyInput(event,keys)) return true;if (!mouse) return false;const bool control=(event.code&InputCode::kControl)!=0;
         if (code==InputCode::kRightButton) {
             if (Game().selection.mode) { highlight->Highlight(0);static_cast<void>(selection->Select(0,0,0));return true; }const auto sid=Pick(event,control && (Game().player.special || Game().world.editor) ? 1U:0U);
             if (Valid(sid)) { if (Game().world.editor) { static_cast<void>(selection->Select(sid,0,0));if (Game().world.editor) session.FollowObjectOwner(sid); }Open(sid,event);return true; }
@@ -88,4 +100,7 @@ ClientMetaPointerInput::ClientMetaPointerInput(Client& client,RawCampaignSession
 ClientMetaPointerInput::~ClientMetaPointerInput()=default; //비소유 Session 참조는 바깥 owner가 먼저 해제하지 않아야 한다.
 bool ClientMetaPointerInput::Event(InputEvent event) { return impl_->Event(event); } //실제 동일 입력 몸체에 위임한다.
 void ClientMetaPointerInput::Poll(InputEvent pointer) { impl_->Poll(pointer); } //별도 프레임/통신 진행 없이 현재 포인터만 위임한다.
+void ClientMetaPointerInput::ResetSelection() { static_cast<void>(impl_->selection->Select(0,0,0)); } //정지 중에도 원문의 enabled/demo·정리·가상 통지 순서를 유지한다.
+void ClientMetaPointerInput::CenterOn(std::uint32_t sid) { impl_->CenterOn(sid); } //카메라 저장소를 복사하거나 별도 월드를 만들지 않는다.
+void ClientMetaPointerInput::ViewPriest(std::uint32_t owner) { impl_->ViewPriest(owner); } //원문 명령의 owner DWORD를 축소하지 않는다.
 }

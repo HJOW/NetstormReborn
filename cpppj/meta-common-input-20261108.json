@@ -1,0 +1,84 @@
+{
+  "unit": 1138,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "bcf8a663 / 20261108-106 CP",
+  "summary": "메타 ESC의 실제 선택 정리·커서 취소/메뉴 serial 토글과 공통 Game/View/Options 메뉴 작성기를 같은 Session/SP/현재 HUD에 연결했다. H/N/P/R/F4/F5/F6·생산 키·F9 예약/실제 카메라 경로와 일반 F6의 조기 소비 누락도 보완했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1138\\build.log"
+    ]
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12933120,
+      "sha256": "fabc5568b05ec2768ffc04a055ce08efd8bdad6f3518f36e2242fd73fb4d20c4"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "9078d237d386bfb38fc27218455cf8f343c9e45a91ce824885a52507c6b93b6e"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4cc210/4d9494~d960c/4da880/4950d0와 기존 선택·메뉴·카메라 몸체의 실제 getter·Select(0,0,0)·serial/Kill/0쓰기·지도 원점/검산·일반 F6 진행을 대조했다.",
+  "nativeEvidenceSha256": {
+    "004950d0.asm": "1fc20cadbb93bdecef273004403e055b022f00d412a74a8c4b3e4bba3c9bb34c",
+    "004950d0.c": "14717d4c4862473e87452bab4eecf9ec4894dd471af58520807483b73bfa0771",
+    "004cc210.asm": "d82a35b98026a81c154096d3ac33bfa617ac6f34d36ecc0afe2e6b5f02da990a",
+    "004cc210.c": "012f3c3441c9c6381d6a51debbd88f5911aa2acd3713633dc40ffbb85d539d1b",
+    "004d5490.asm": "6a4113e25dde65f7dca6d7f84d64cb1ad7d8eeb48db3bf7de216943cfd28caa4",
+    "004d5490.c": "f3127bb84d1c046e60144b29f3f7dca80f16cb6d23b14a4723aed53bc844b072",
+    "004d5bb0.asm": "03b70c03a32c8e0a7959c4e67c3318047e4d70e893022622ffcf1c24fc00caf3",
+    "004d5bb0.c": "98b58feb91af23293e8ce8814366ee319462515abd65e46bafefaa2c8cd1aaf8",
+    "004d62b0.asm": "054badcb9bd88942a9476cf5ee1b11b2e54699f6d09522a7b1f1d6fa795374bb",
+    "004d62b0.c": "1895f01fd894f948e73b9b4486bed83af327308243efd67b82dbbb55694cbe22",
+    "004da880.asm": "bfc3f421bb5e6376bdc6f92d7acc4217485059e5cea5ff892359ea34172f16b9",
+    "004da880.c": "8702ddaba0d468b4b434fe9dbc1ccd6a2de553608616da01bb48bdb6a066e157"
+  },
+  "sourceOrderAudit": {
+    "escapeSelectBeforeCursorOrMenu": true,
+    "samePreparedMetaSessionOnly": true,
+    "nativeSerialAndCurrentMapLeft": true,
+    "commonProductionBeforeSelectionKey": true,
+    "ordinaryF6Continues": true,
+    "sameLongLivedPriestCount": true,
+    "metaPlayersReturnsZero": true
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "assetDataQuery": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "신규 MP/단위/게임/실제 통신 검사는 제외했으며 동작/안정성을 확정하지 않았다.",
+    "메타 ViewHome/Players 등 각 기존 원문 모드 관문의 자연 무효 동작을 유지한다.",
+    "메타 Refresh Zones c6·CS 수신/참가자/camera의 나머지 부모·HTML→1dh/State28~33 등록은 잔여다.",
+    "BattleDesc HTML 문자열 고리/CS 주소 구별·helpWord 원문 캐시 수명은 잔여다.",
+    "강제 활성 메타 건설 커서·조기/원격 희생·marker 진단의 기존 미연결 경계는 이 단위에서 성공으로 대체하지 않았다."
+  ],
+  "remaining": [
+    "메타 Refresh Zones(c6)·나머지 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
+  ]
+}

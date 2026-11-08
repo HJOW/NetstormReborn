@@ -15,6 +15,9 @@ public:
     ClientMetaPointerInput(const ClientMetaPointerInput&)=delete;ClientMetaPointerInput& operator=(const ClientMetaPointerInput&)=delete; //활성 선택의 this/Session 연결을 복제하지 않는다.
     bool Event(InputEvent event); //4d9c23~da477의 메타 좌/우 클릭·모드6·빈 공간 항해를 현재 입력 큐에 연결한다.
     void Poll(InputEvent pointer); //Overlay 뒤의 현재 이동 강조/실제 활성 커서만 갱신한다. outside이면 갱신하지 않는다.
+    void ResetSelection(); //ESC의 enabled/demo 관문·다중/기존 선택·강조 정리를 같은 Select(0,0,0) 몸체로 실행한다.
+    void CenterOn(std::uint32_t sid); //현재 메타 Session의 실제433ba0→433aa0→497960 카메라 부모를 실행한다.
+    void ViewPriest(std::uint32_t owner); //명시 owner의 현재 참여 사제를 같은 원문 카메라 부모로 이동한다.
 private:
     struct Impl;std::unique_ptr<Impl> impl_; //실제 RawUserSelection/Highlight/Carrier 입력과 빌린 화면 장치를 소유한다.
 };

@@ -118,6 +118,7 @@ public:
     std::uint32_t CurrentDialog() const; //565dd4의 현재 실제 모달 토큰이며 serial/인스턴스 수와 구별한다.
     std::uint32_t CurrentDialogSerial() const; // 테스트 전용 읽기다. 현재 모달 Gump의 실제 serial이며 없으면 0이다. RecheckCD 검사가 005c85ec에 넣을 값을 읽을 때만 쓴다(단위696).
 private:
+    RawCampaignSession* InputSession() const; //현재 실제 GameWorld/준비된 MetaMap의 Session을 빌리며 미설치일 때만 nullptr다.
     // 원본 Tell의 파일.섹션/현재 tell 섹션을 읽어 대화상자를 연다.
     void Tell(std::string target, bool briefing = false);
     // 원본00482de0처럼 현재 미션/일반 섹션이 없으면 false로 반환하며 기존 페이지를 유지한다.

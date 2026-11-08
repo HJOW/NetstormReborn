@@ -4279,15 +4279,15 @@ MissionAiSettingsState& RawCampaignSession::MissionAiSettings() { return impl_->
 const ScrambledSpStore& RawCampaignSession::SpStore() const { return impl_->sp; }
 // 메뉴부모가호출하는491680도기존사제회복과동일한SP저장소/난수를쓴다.
 void RawCampaignSession::PrepareGameMenus() {
-    if (!impl_->loaded) throw std::logic_error("설치전게임메뉴SP준비요청");impl_->sp.Rotate();
+    if (!impl_->loaded && impl_->services.installMode!=CampaignInstallMode::MetaMap) throw std::logic_error("설치전게임메뉴SP준비요청");impl_->sp.Rotate(); //준비된 메타도 원문의 같은 장기 SP/난수 회전을 사용한다.
 }
 // SpStore가첫초기화전부터빌린같은기존소유자의주소를반환한다.
 std::int32_t& RawCampaignSession::GameMenuTrackingOffset() {
-    if (!impl_->loaded) throw std::logic_error("설치전게임메뉴추적주소요청");return impl_->sp.TrackingOffsetCurrent(); // 실제 Client는 장기 SP 추적 주소를 빌리고 독립 Session만 기존 patch.sequence에 연결되어 있다.
+    if (!impl_->loaded && impl_->services.installMode!=CampaignInstallMode::MetaMap) throw std::logic_error("설치전게임메뉴추적주소요청");return impl_->sp.TrackingOffsetCurrent(); //실제 Client/MetaMap은 같은 장기 SP 추적 주소를 빌리고 독립 Session만 기존 patch.sequence를 사용한다.
 }
 // GUI/설정/현재미션/네트워크경계는caller가유지하고실제Session소유자료만현재getter로연결한다.
 GameMenusHooks RawCampaignSession::BindGameMenus(GameMenusHooks hooks) {
-    if (!impl_->loaded) throw std::logic_error("설치전게임메뉴현재연결요청");auto* current=impl_.get(); // 반환훅이빌리는같은장기Session주소다.
+    if (!impl_->loaded && impl_->services.installMode!=CampaignInstallMode::MetaMap) throw std::logic_error("설치전게임메뉴현재연결요청");auto* current=impl_.get(); //준비된 메타도 실제 모듈/Player를 빌릴 뿐 loaded/로그인 성공은 쓰지 않는다.
     const auto otherGlobal=hooks.global; // 화면/음향/명령등다른실제소유자의현재조회는보존한다.
     hooks.global=[current,otherGlobal](std::uint32_t address)->std::uint32_t {
         switch (address) {

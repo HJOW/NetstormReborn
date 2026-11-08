@@ -510,6 +510,7 @@ void UberGump::ClearWorld() {
 // 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.
 bool UberGump::HasWorld() const { return world_!=nullptr; }
 ScreenRect UberGump::CurrentMapView() const { return rawButtons_->MapViewRect(); } // 원문4c6b30의 현재 지도 전역이며 World의 과거 clip을 사용하지 않는다.
+RawCampaignSession* UberGump::InputSession() const { return world_ ? &world_->Session() : editor_ ? editor_->metaWorld.get() : nullptr; } //호출마다 현재 owner를 읽고 Session/loaded/Native State를 새로 만들지 않는다.
 // Native 부모가 실제 AI/링크/Kernel을 정리하고 Core0을 선택한 뒤 호출하는 호스트 소비자 반납이다.
 void UberGump::RetireWorldForState() {
     auto* session=world_ ? &world_->Session() : editor_ ? editor_->metaWorld.get() : nullptr;
@@ -1025,7 +1026,7 @@ void UberGump::AdvanceBriefing() {
 bool UberGump::GameMenuOpen() const { return gameMenuState_ && rawButtons_->SerialGump(gameMenuState_->menuSerial)!=0; }
 // 004d958c의serial조회와Kill/0쓰기/66710순서를유지한다.
 void UberGump::ToggleGameMenu() {
-    if (!world_) return;
+    if (!InputSession()) return; //메타도 실제 준비된 Session과 같은 메뉴 serial을 사용한다.
     const auto token=gameMenuState_ ? rawButtons_->SerialGump(gameMenuState_->menuSerial) : 0U; // 현재비dead인동일serial만선택한다.
     if (!token) OpenGameMenu();
     else { rawButtons_->KillGump(token);gameMenuState_->menuSerial=0;rawButtons_->RequestClosePopups();rebuild_=true; }
@@ -1085,13 +1086,13 @@ void UberGump::OpenMainMenuPopup(bool options) {
 }
 // 실제현재Session의조회/검산과기존공통controlled메뉴를한수명안에서작성한다.
 void UberGump::OpenGameMenu(bool playerList) {
-    if (!world_ || state_.phase!=ClientPhase::Mission) throw std::logic_error("게임메뉴의현재설치월드없음"); //Editor도 실제 Session/Template의 같은 원본 메뉴를 사용한다.
-    auto& session=world_->Session(); // 원본cc210은앞서열린다른팝업을임의로닫지않는다.
+    auto* current=InputSession();if (!current || state_.phase!=ClientPhase::Mission) throw std::logic_error("게임메뉴의 현재 실제 Session 없음"); //Editor/메타도 같은 장기 저장소와 원본 메뉴를 사용한다.
+    auto& session=*current; //원본cc210은 앞서 열린 다른 팝업을 임의로 닫지 않는다.
     if (!gameMenuState_) gameMenuState_=std::make_unique<GameMenuBarState>(session.GameMenuTrackingOffset());
     rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
     rawButtons_->Menus()->OpenAttached([&](const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& menu) {
         auto hooks=CurrentGameMenuHooks();
-        hooks.playerMenu=[&](auto subscriber) { return objectMenus_->BuildPlayerMenu(*world_,subscriber,widgets,controls,menu); };
+        hooks.playerMenu=[&](auto subscriber) { if (!world_) throw std::logic_error("비메타 Player 하위의 현재 GameWorld 없음");return objectMenus_->BuildPlayerMenu(*world_,subscriber,widgets,controls,menu); }; //메타 Players는 원문처럼 작성 전에0을 반환한다.
         BindGameMenusControls(hooks,widgets,controls,menu,[this](auto text) { return scriptStrings_.Store(text); });
         hooks.node=[this](auto token) { return rawButtons_->Menus()->Node(token); };
         hooks=session.BindGameMenus(std::move(hooks));const auto globals=hooks.global;const auto translate=hooks.translate; // 바인더가교체한같은현재소유자의getter를빌린다.
@@ -1109,7 +1110,7 @@ void UberGump::OpenGameMenu(bool playerList) {
             case GameMenuBarValue::Mission:return globals(0x594fa4);
             case GameMenuBarValue::Cheat:return globals(0x5cab30);
             case GameMenuBarValue::Width:return static_cast<std::uint32_t>(client_.GetScreen().Width());
-            case GameMenuBarValue::Left:return static_cast<std::uint32_t>(world_->MinimapView().viewport.left);
+            case GameMenuBarValue::Left:return std::bit_cast<std::uint32_t>(CurrentMapView().left); //005ca99c는 같은 공통 HUD가 도킹한 현재 지도 원점이다.
             case GameMenuBarValue::Root:return rawButtons_->RootToken();
             }
             throw std::logic_error("게임메뉴조회종류오류");
@@ -1187,8 +1188,8 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
     }
     if (!IsGameMenuCommand(code)) return false;
     if (DispatchTechnicalHelpInput(event.code,[this] { static_cast<void>(LaunchClientTechnicalHelp(client_)); })) { Refresh();return true; } //원문 일반 명령은 현재 설정을 다시 해석하고435f10을 실행한다.
-    auto binding=world_ ? world_->Session().BindGameMenus({}) : GameMenusHooks{}; // 종료/음량은 월드 설치 전후에도 같은 Client 명령이다.
-    if (!world_) binding.global=[this](std::uint32_t address)->std::uint32_t {
+    auto* inputSession=InputSession();auto binding=inputSession ? inputSession->BindGameMenus({}) : GameMenusHooks{}; //메타도 같은 실제 Player/SP/모드 getter를 빌린다.
+    if (!inputSession) binding.global=[this](std::uint32_t address)->std::uint32_t {
         const auto& gameplay=*client_.GameplayGlobals();const auto& surface=*client_.SurfaceStorage(); // 월드 반납 뒤에도 같은 Client 소유자의 현재 모드/Player를 읽으며 초기0을 합성하지 않는다.
         switch (address) {
         case 0x5c85a4:return gameplay.world.editor;case 0x594fb8:return surface.ownerMode.fort;case 0x594fc8:return surface.ownerMode.challenge;
@@ -1196,7 +1197,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
         default:throw std::logic_error("월드 밖 메뉴의 다른 현재 전역 미연결");
         }
     };
-    const auto session=[this]()->RawCampaignSession& { if (!world_) throw std::logic_error("현재 메뉴 명령의 Session 없음");return world_->Session(); }; // 필요한 분기에서만 현재 월드를 다시 조회한다.
+    const auto session=[this]()->RawCampaignSession& { auto* current=InputSession();if (!current) throw std::logic_error("현재 메뉴 명령의 Session 없음");return *current; }; //필요한 분기에서만 현재 GameWorld/MetaMap owner를 다시 조회한다.
     GameMenuActionHooks hooks;
     hooks.command=[](auto command) { const auto value=GameMenuCommandValue(static_cast<std::uint32_t>(command));if (!value) throw std::logic_error("메뉴 명령의 현재 원문 ID 없음");return *value; };
     hooks.queue=[this](auto command,auto first,auto second) { client_.Input().PushCommand(command,first,second); };
@@ -1212,8 +1213,8 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
     hooks.cancelCursor=[session] { session().Cursor().Cancel(); };
     hooks.pauseClock=[this] { client_.PushGamePause(); };hooks.resumeClock=[this] { client_.PopGamePause(); };
     hooks.muteSound=[this] { client_.WorldAudio().PushMute(); };hooks.resumeSound=[this] { client_.WorldAudio().PopMute(); };
-    hooks.player=binding.player;hooks.centerObject=[this,session](auto sid) { static_cast<void>(session());world_->CenterOnObject(sid); };
-    hooks.viewPriest=[this](auto owner) { if (world_) world_->ViewPriest(owner); }; // 일반 F5와 명시 메뉴 owner를 구별한다.
+    hooks.player=binding.player;hooks.centerObject=[this,session](auto sid) { static_cast<void>(session());if (world_) world_->CenterOnObject(sid);else if (editor_ && editor_->metaInput) editor_->metaInput->CenterOn(sid);else throw std::logic_error("메뉴 카메라의 현재 입력 owner 없음"); };
+    hooks.viewPriest=[this](auto owner) { if (world_) world_->ViewPriest(owner);else if (editor_ && editor_->metaInput) editor_->metaInput->ViewPriest(owner); }; //일반 F5와 명시 메뉴 owner를 구별하며 메타도 실제 참여 조회를 사용한다.
     hooks.reloadCount=[this,session](auto list) { return world_ ? session().GameMenuReloadCount(list==GameMenuReloadList::Second) : 0; };
     hooks.reloadSid=[session](auto list,auto index) { return session().GameMenuReloadSid(list==GameMenuReloadList::Second,index); };
     hooks.form=[session](auto sid)->std::span<const std::uint8_t> { if (sid>65535) throw std::out_of_range("메뉴 Form SID 폭");return session().Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)}); };
@@ -1228,7 +1229,7 @@ void UberGump::OpenMenu(std::string name) {
     if (client_.Edition()==o::OriginalEdition::Patch1078 && !world_ && state_.phase==ClientPhase::MainMenu) {
         const auto key=o::AsciiLower(name);if (key=="help" || key=="options") { OpenMainMenuPopup(key=="options");return; }
     } // 10.78 메인 버튼은 원문 전용 팝업을 즉시 작성한다. CD/기존 호스트 보조 메뉴의 계약은 별도로 유지한다.
-    if (o::AsciiLower(name)=="game" && world_) { OpenGameMenu();return; } // 미션의실제수평부모는중앙임시메뉴와구별한다.
+    if (o::AsciiLower(name)=="game" && InputSession()) { OpenGameMenu();return; } //미션/메타의 실제 수평 부모를 같은 현재 Session에 연결한다.
     popup_ = o::AsciiLower(name); ClearPage(); auto& config = client_.Configuration();
     // 목록 행에는 돌 버튼과 달리 누름 즉시 실행 규칙을 적용한다.
     const auto add = [this](std::string label, std::string command, std::string argument, bool checked = false, bool enabled = true) {
@@ -1527,7 +1528,7 @@ void UberGump::Event(InputEvent event) {
         };
         if (DispatchViewKeyInput(event,{hideBuildings_,worldRedraw_},hooks)) rebuild_=true;return;
     }
-    if (transitionCode==0x750000U) { if (!rawButtons_->CurrentDialog()) static_cast<void>(DispatchBuildRecordKey(client_,event));return; } // 일반 Console/모달 뒤 원문 Ctrl+F6/special/정지 관문이다. 개발자 플래그를 새로 켜지 않는다.
+    if (transitionCode==0x750000U) { if (rawButtons_->CurrentDialog()) return;if (DispatchBuildRecordKey(client_,event)) return; } //원문 기록 키만 소비하며 일반 F6는 공통 정지 뒤 실제 지식 명령 예약으로 진행한다.
     if (transitionCode=='C' || transitionCode=='c') {
         if (rawButtons_->CurrentDialog()) return; //원문의 현재 Console/모달 관문 뒤에서만 C의 정지를 조회한다.
         static_cast<void>(DispatchRotationKeyInput(event,client_.GameplayGlobals()->CursorGlobals().RotationMode(),{[this] { return client_.Paused(); },[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration()); }}));
@@ -1564,7 +1565,7 @@ void UberGump::Event(InputEvent event) {
         rebuild_=true;return; //원문추가두명령도같은뗌/PlayerKnown/메타맵관문을사용하며기본F6에는새UI를노출하지않는다.
     }
     // F6는 아래 실제 UserInput의 공통 정지 관문 뒤에서 처리한다. 직접 ShowTechnology 메뉴 명령과 F9의 정지 앞 예약은 별개다(원문4d96b6/4d9a00).
-    if (world_ && state_.phase==ClientPhase::Mission && QueuePlayerListKey(event,client_.Input())) return; // F9와 Shift+F9는 실제 메뉴/정지 명령을 큐 끝에 예약한다.
+    if (InputSession() && state_.phase==ClientPhase::Mission && QueuePlayerListKey(event,client_.Input())) return; //메타도 F9/Shift+F9의 같은 Player List/정지 명령을 예약하고 각 소비자의 모드 관문에 맡긴다.
     if (!worldUiRouted && rawButtons_->Menus()->KnowledgeOpen()) {
         if (IsEscapeKeyPress(event)) { rawButtons_->Menus()->RequestClosePopups();rebuild_=true;return; }
         if (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton || transitionCode==InputCode::kMiddleButton) { static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; }
@@ -1593,6 +1594,9 @@ void UberGump::Event(InputEvent event) {
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if (IsEscapeKeyPress(event)) {
         if (state_.phase == ClientPhase::Briefing || state_.phase == ClientPhase::LoadingMission) return;
+        if (!world_ && editor_ && editor_->metaInput && popup_.empty()) { //원문 ESC는 공통 정지 뒤가 아니며 같은 선택 정리를 먼저 실행한다.
+            editor_->metaInput->ResetSelection();if (!editor_->metaWorld->CursorDropSettings().lockDepth) { editor_->metaWorld->CancelCursorForState();rawButtons_->RequestClosePopups();rebuild_=true; }else ToggleGameMenu();return;
+        }
         if (world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) {
             world_->ResetSelection(); // 원문4d9494의정리와Select(0,0,0)은154입력/두정밀도의전체효과가같다.정지중에도선택/강조를먼저정리한다.
             if (!world_->Session().CursorDropSettings().lockDepth) { world_->Session().CancelCursorForState();rawButtons_->RequestClosePopups();rebuild_=true; } // 원문446e70→66710만호출하며일반마우스/설정읽기와팝업닫기를중복하지않는다.
