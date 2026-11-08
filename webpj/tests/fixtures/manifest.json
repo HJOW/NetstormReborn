@@ -11831,9 +11831,38 @@
       "bytes": 296183,
       "lines": 434,
       "fixtureCommit": "ea856953",
-      "webCommit": "worktree",
+      "webCommit": "670355dd",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPlacementPipeline.cpp": "3d568ff6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E155",
+      "id": "priestplacement",
+      "path": "cpppj/tests/fixtures/priestplacement-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 배치 접두(전역 초기화·강제 허용·모양 여백·지도 경계, 하위 모양/후반 경계 대체, 10.78 1008행)",
+      "consumers": [
+        "webpj/tests/priest-placement.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-placement.js"
+      ],
+      "doc": "docs/webpj-priest-placement-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPlacement.cpp"
+      ],
+      "scope": "10.78 실제 PE 1008행 전부",
+      "text": true,
+      "sha256": "a12d5342510a4579335044eee9b973e8de8c081a591fe793b2489301f6db67ab",
+      "bytes": 419468,
+      "lines": 3026,
+      "fixtureCommit": "352ec8d4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPlacement.cpp": "4df5da6a"
       }
     }
   ]

@@ -840,7 +840,7 @@ cpppj/src/o/RawPriestLookup.cpp	port	www/core/raw-priest-lookup.js	1f00a25a	port
 cpppj/src/o/RawPriestOwner.cpp	port	www/core/raw-priest-owner.js	1f00a25a	port	[o-default] WB04-E62: 사제 소유자 재정의 00491790(원래 소유자 WORD·알림·공통 지정·로컬 표식 비트)·사제 분배기. fixture priestowner 10.78 3528행·priest-owner-current-local 10.78 72행 전부(CD·1037 행은 범위 밖)
 cpppj/src/o/RawPriestPanic.cpp	port	www/core/raw-priest-panic.js	1f00a25a	port	[o-default] WB04-E66: 사제 공황 이동 00491db0(임시 두 배 속도 신전 복귀·±20 임의 같은 영역 점 경로). fixture priest-panic 600행 전부(10.78 전용 파일). RawDudeNotice 이식 때 속도 표를 같은 표에 연결
 cpppj/src/o/RawPriestParticipation.cpp	port	www/core/raw-priest-participation.js	1f00a25a	port	[o-default] WB04-E68: 사제 참여 조회 00494f10/갱신 00495060(live 목록→Carrier 포획 내용물→마지막 일치 제단·소유자 상태 0/1/2). fixture priest-participation 304행 전부(10.78 전용 파일). 설치된 제단 몸체(RawAltarSacrifice) 연결은 해당 파일 단위에서
-cpppj/src/o/RawPriestPlacement.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestPlacement.cpp	port	www/core/raw-priest-placement.js	a84509c9	port	[o-default] WB04-E155: 사제 배치 접두(사제 genus 한정 MayPlace 접두를 일반 배치 접두에 위임·요청 값 복사·사제 생성 훅 어댑터). fixture priestplacement 실제 PE 1008행 전부와 사제 생성자 연결. 남음: 기하·모양·미리보기·충돌·지형 단위 연결
 cpppj/src/o/RawPriestPlacementCollision.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacementGeometry.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacementPreview.cpp	port			todo	[o-default]
