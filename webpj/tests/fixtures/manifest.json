@@ -10364,9 +10364,38 @@
       "bytes": 161230,
       "lines": 945,
       "fixtureCommit": "7553aefd",
-      "webCommit": "worktree",
+      "webCommit": "eea73f2e",
       "cpppjBasis": {
         "cpppj/src/o/RawKencloudRender.cpp": "7553aefd"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E120",
+      "id": "vortexascend",
+      "path": "cpppj/tests/fixtures/vortexascend-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 신전 Ascend Candidate/Tick/Count 의 반환·게임 난수·외부 효과 순서·슬롯 60..99 상태·신전 소유자(두 판본 1496행)",
+      "consumers": [
+        "webpj/tests/vortex-ascend.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-vortex-ascend.js"
+      ],
+      "doc": "docs/webpj-vortex-ascend-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawVortexAscend.cpp"
+      ],
+      "scope": "10.78(originals) 748행 사용, originalCD 748행은 범위 밖",
+      "text": true,
+      "sha256": "6f77aec0c642c3cc10c405ef03150c65e9aa0698ff3abe5b1f5ec85670c54a75",
+      "bytes": 360863,
+      "lines": 1497,
+      "fixtureCommit": "4e532fd1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawVortexAscend.cpp": "11fbb988"
       }
     }
   ]
