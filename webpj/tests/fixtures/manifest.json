@@ -11741,7 +11741,7 @@
       "bytes": 467610,
       "lines": 3362,
       "fixtureCommit": "4df5da6a",
-      "webCommit": "worktree",
+      "webCommit": "c08d9ff4",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPlacement.cpp": "a84509c9"
       }
@@ -11772,10 +11772,39 @@
       "bytes": 2761003,
       "lines": 4862,
       "fixtureCommit": "b024fa1e",
-      "webCommit": "worktree",
+      "webCommit": "c08d9ff4",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPlacement.cpp": "a84509c9",
         "cpppj/src/o/RawCanonPlacementPreview.cpp": "b024fa1e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E153",
+      "id": "canoncollision",
+      "path": "cpppj/tests/fixtures/canoncollision-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 무시 함수 및 한 후보 인라인 구간(모양/finder/지형/전체 MayPlace 미실행, 10.78 7560행)",
+      "consumers": [
+        "webpj/tests/canon-placement-collision.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement-collision.js"
+      ],
+      "doc": "docs/webpj-canon-placement-collision-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacementCollision.cpp"
+      ],
+      "scope": "10.78 실제 PE 7560행 전부",
+      "text": true,
+      "sha256": "c83e9d19f380b110a18c04a42029fe4b8877a936d71b51d46d3996bc8ece582f",
+      "bytes": 10736934,
+      "lines": 22682,
+      "fixtureCommit": "a072d5d9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacementCollision.cpp": "a072d5d9"
       }
     }
   ]
