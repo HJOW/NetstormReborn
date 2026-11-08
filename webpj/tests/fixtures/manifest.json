@@ -10102,9 +10102,38 @@
       "bytes": 333026,
       "lines": 2059,
       "fixtureCommit": "4e532fd1",
-      "webCommit": "worktree",
+      "webCommit": "ef7730d9",
       "cpppjBasis": {
         "cpppj/src/o/RawGunHit.cpp": "230528e3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E113",
+      "id": "gunanimation",
+      "path": "cpppj/tests/fixtures/gunanimation-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 캐논 회전/발사/원위치 프레임과 launch 의 반환/Missile ctor 접두·외부 효과 순서·0x40바이트 필드 이미지·부모 프레임(두 판본 2560행)",
+      "consumers": [
+        "webpj/tests/gun-animation.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-animation.js"
+      ],
+      "doc": "docs/webpj-gun-animation-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunAnimation.cpp"
+      ],
+      "scope": "10.78(originals) 1280행 사용, originalCD 1280행은 범위 밖",
+      "text": true,
+      "sha256": "7ed89da7895a89b1d65efcbdbef0bddbc5855d525ef51b30d17305b3c7145d6f",
+      "bytes": 470063,
+      "lines": 2561,
+      "fixtureCommit": "8abd00ac",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunAnimation.cpp": "02b00b12"
       }
     }
   ]
